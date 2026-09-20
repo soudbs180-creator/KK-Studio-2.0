@@ -1,8 +1,15 @@
 # KK Studio 工作台协作规范
 
+## 所有 AI 必须先理解意图
+
+- 先读根目录 `AI_RULES.md` 和 `docs/engineering/PROMPTING.md`。用户不必提供专业提示词，AI 负责将自然语言转换成有范围、约束、验收与失败边界的工程任务；允许中英术语混用，最终回复简洁、通俗、中文。
+- 普通已授权技术工作由 AI 写好 intent/spec/plan 后自主执行，不逐阶段索取形式批准。用户主要负责产品含义、设计/交互和最终验收；真实高影响操作沿用具体授权。用户新反馈应同步更新任务，不丢弃此前目标。
+- `CLAUDE.md`、`GEMINI.md`、`.github/copilot-instructions.md`、`.cursor/rules/project.mdc` 只是兼容入口，必须引用本文件和 AI_RULES，不能另立矛盾政策。新工具未加载规则不得写入；CI 不能证明模型确实读懂规则。
+- 产品代码、配置、脚本和现行文档可作为冲突审计输入；修正须在当前用户授权范围内。用户限定只写规则时，不接管产品实现、既有测试或其他提交。历史证据用勘误和新证据纠正，不伪造旧结果。具体流程见 `docs/engineering/SDLC.md`、`docs/engineering/BRANCH-POLICY.md` 与 `docs/engineering/REVIEW.md`。
+
 ## 唯一工程与目标
 
-- 唯一工程仓库是 `D:\\kk-studio-next`。任务隔离可以使用该仓库登记的 `.worktrees/<TASK-ID>`；这不是第二套工程或旧目录复活。每个 worktree 只承载一个 task branch。
+- 本机唯一工程仓库是 `D:\\kk-studio-next`。任务隔离可以使用该仓库登记的 `.worktrees/<TASK-ID>`；这不是第二套工程或旧目录复活。每个 worktree 只承载一个 task branch。其他设备可使用自己的路径，但必须核对相同 Git remote、已推送 SHA 和仓库规则，不将本机绝对路径写成跨平台依赖。
 - `D:\\kk-studio` 已清理，不得重新创建或作为运行目录。
 - 历史代码和用户数据只从 `D:\\KK-Studio-legacy-archive-20260909`、`D:\\KK-Studio-user-data-backup-20260909` 读取；迁移必须经过 schema、checksum 和用户明确操作。
 
@@ -57,7 +64,7 @@
 ## Git、并行与交付
 
 - 默认稳定主线为 main；历史 master 未经过审阅迁移前不自动重命名、不假设为新 main。主线禁止直接开发、普通 direct push 和 force push。
-- 使用 `<type>/<TASK-ID>-<description>` 短期分支（feat/fix/perf/refactor/test/docs/chore/hotfix）。先列任务依赖图，只有独立且低冲突任务并行；多代理不得同时改同一 dirty worktree。原 checkout 的无关改动不可 reset、clean、覆盖或悄悄提交。
+- 使用 `<type>/<TASK-ID>-<description>` 短期分支（codex/feat/fix/perf/refactor/test/docs/chore/hotfix）。先列任务依赖图，只有独立且低冲突任务并行；多代理不得同时改同一 dirty worktree。原 checkout 的无关改动不可 reset、clean、覆盖或悄悄提交。
 - 进入 task worktree 后记录依赖安装、lint/typecheck/相关测试基线，已有失败记 PRE-EXISTING FAILURE。需捕获未提交实现时只创建明确标为未验收的候选快照，不移动主线、不改变原 checkout/index；排除 secrets、运行数据、临时文件和生成证据。
 - 合并前 self-review、lint/typecheck/test/build、相关 regression、文档与验收全部通过；UI/runtime 适用时必须完成上述运行链路门禁。冲突在源分支解决，解决后重新验证。
 - PR 一项逻辑目标，使用 `.github/PULL_REQUEST_TEMPLATE.md`；默认 squash merge，合并后验证最新主线。无 remote/权限时保留可审阅本地提交与 PR 内容并明确 remote gate 未完成。远端保护需实际托管配置，不能把 CI 文件当 ruleset 已启用。

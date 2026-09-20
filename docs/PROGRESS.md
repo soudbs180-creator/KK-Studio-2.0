@@ -327,3 +327,6 @@ TASK-UI-MAIN-001 已完成并同步到目标仓库：PR #3（https://github.com/
 TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点击不关闭；同状态三环境专项与191项浏览器回归通过。详见 docs/changes/2026-09-20-ui-main-alignment/followup.md。稳定main提交以Git回读为准，上述旧SHA是阶段记录。UI-004设计来源缺口与PERF-001压力边界继续保留。
 
 - 补充云端大图重绘失败调查：优化归档/请求的逐字节转换，route提前捕获请求、点击后开始I/O预算。unknown用例的瞬时审批检查已改为等待异步审批；最终完整verify通过（浏览器191项、0失败/重试），unknown/音频定向10次通过，大图20倍CPU连续3次通过；新bundle index-Be6XJzPc.js已在dev/preview/隔离Desktop核对。PERF-001大规模素材库工作保持未完成。
+## 2026-09-20 AI自主开发、分支和规则一致性（TASK-GOV-002）
+
+- 最新治理规则已合入本候选；TASK-GOV-002 仍由独立 owner 维护，远端保护 API403 继续记录为 BLOCKED，不由本任务代替其 PR/审批。

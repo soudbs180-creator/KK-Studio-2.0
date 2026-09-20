@@ -1,0 +1,6 @@
+---
+description: Shared KK Studio development contract
+alwaysApply: true
+---
+
+Before any write, read AGENTS.md and AI_RULES.md at repository root, docs/engineering/SDLC.md, docs/engineering/BRANCH-POLICY.md, docs/engineering/REVIEW.md, docs/engineering/PROMPTING.md and current docs/governance/ sources. Translate user intent into a precise scoped engineering brief; complete authorized technical work and report concise Chinese results. This rule is an entry pointer; the referenced files are authoritative.
