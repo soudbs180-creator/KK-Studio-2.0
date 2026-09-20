@@ -1,26 +1,50 @@
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import type { Asset } from "../../domain/assets";
 import { listStoredAssets } from "./assetRepository";
+import { clearAssetPreviews, loadAssetPreview } from "./assetPreview";
+
+const PAGE_SIZE = 40;
 
 export interface AssetArchiveState {
   loading: boolean;
   error: string;
   retry: () => void;
+  hasMore: boolean;
+  loadMore: () => void;
+  loadPreview: (
+    assetId: string,
+    signal?: AbortSignal,
+  ) => Promise<string | null>;
 }
 
 export function useAssetArchive(
   setAssets: Dispatch<SetStateAction<Asset[]>>,
 ): AssetArchiveState {
   const [revision, setRevision] = useState(0);
+  const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [hasMore, setHasMore] = useState(false);
+  const loadingRef = useRef(true);
+  const mimeById = useRef(new Map<string, string>());
   useEffect(() => {
     let mounted = true;
+    loadingRef.current = true;
     setLoading(true);
     setError("");
-    void listStoredAssets()
+    void listStoredAssets({ offset: page * PAGE_SIZE, limit: PAGE_SIZE })
       .then((stored) => {
         if (!mounted) return;
+        for (const asset of stored)
+          mimeById.current.set(asset.assetId, asset.mime);
+        setHasMore(stored.length === PAGE_SIZE);
         setAssets((current) => {
           const existing = new Set(current.map((asset) => asset.id));
           return [
@@ -31,14 +55,13 @@ export function useAssetArchive(
                 id: asset.assetId,
                 name:
                   asset.isAiGenerated === false
-                    ? `本地参考 ${index + 1}`
-                    : `AI 结果 ${index + 1}`,
+                    ? `本地参考 ${page * PAGE_SIZE + index + 1}`
+                    : `AI 结果 ${page * PAGE_SIZE + index + 1}`,
                 type: asset.mime.startsWith("video/")
                   ? ("video" as const)
                   : ("image" as const),
                 tag: asset.tags[0] ?? "AI生成",
                 createdAt: asset.provenance.generatedAt,
-                src: asset.preview,
                 isAiGenerated: asset.isAiGenerated ?? true,
                 provider: asset.provenance.provider,
                 model: asset.provenance.model,
@@ -62,11 +85,39 @@ export function useAssetArchive(
           );
       })
       .finally(() => {
-        if (mounted) setLoading(false);
+        if (mounted) {
+          loadingRef.current = false;
+          setLoading(false);
+        }
       });
     return () => {
       mounted = false;
     };
-  }, [revision, setAssets]);
-  return { loading, error, retry: () => setRevision((value) => value + 1) };
+  }, [page, revision, setAssets]);
+
+  const retry = useCallback(() => {
+    loadingRef.current = true;
+    clearAssetPreviews();
+    setPage(0);
+    setRevision((value) => value + 1);
+  }, []);
+  const loadMore = useCallback(() => {
+    if (!loadingRef.current && hasMore) {
+      loadingRef.current = true;
+      setPage((value) => value + 1);
+    }
+  }, [hasMore]);
+  const loadPreview = useCallback(
+    (assetId: string, signal?: AbortSignal) =>
+      loadAssetPreview(assetId, mimeById.current.get(assetId) ?? "", signal),
+    [],
+  );
+  return {
+    loading,
+    error,
+    retry,
+    hasMore,
+    loadMore,
+    loadPreview,
+  };
 }

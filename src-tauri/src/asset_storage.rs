@@ -115,6 +115,22 @@ impl AssetRepository {
         }))
     }
     pub fn list(&self) -> Result<Vec<Value>, String> {
+        self.list_page_internal(0, usize::MAX, true)
+    }
+
+    /// Returns a bounded metadata page without decoding every original blob.
+    /// The full `list` method above remains the integrity-audited compatibility
+    /// path used by existing tests and recovery checks.
+    pub fn list_page(&self, offset: usize, limit: usize) -> Result<Vec<Value>, String> {
+        self.list_page_internal(offset, limit, false)
+    }
+
+    fn list_page_internal(
+        &self,
+        offset: usize,
+        limit: usize,
+        verify_originals: bool,
+    ) -> Result<Vec<Value>, String> {
         let _guard = self.lock.lock().map_err(|_| io::error("素材锁不可用"))?;
         let _file_lock = self.prepare()?;
         let mut entries: Vec<_> = fs::read_dir(self.root.join("records"))
@@ -123,7 +139,16 @@ impl AssetRepository {
             .map_err(io::error)?;
         entries.sort_by_key(|entry| entry.file_name());
         let mut records = Vec::new();
+        let page_limit = if verify_originals {
+            limit
+        } else {
+            limit.min(100)
+        };
+        let mut index = 0;
         for entry in entries {
+            if records.len() >= page_limit {
+                break;
+            }
             let path = entry.path();
             // Crash-interrupted temporary files do not represent committed records.
             if path
@@ -132,6 +157,11 @@ impl AssetRepository {
             {
                 continue;
             }
+            if index < offset {
+                index += 1;
+                continue;
+            }
+            index += 1;
             let id = path
                 .file_stem()
                 .and_then(|stem| stem.to_str())
@@ -140,7 +170,16 @@ impl AssetRepository {
             let record = self
                 .record(id)?
                 .ok_or_else(|| "missing: 素材记录已丢失".to_string())?;
-            self.verified_blob(&record)?;
+            if verify_originals {
+                self.verified_blob(&record)?;
+            } else {
+                let sha = record["sha256"]
+                    .as_str()
+                    .ok_or_else(|| "corrupt: 素材记录缺少 SHA-256".to_string())?;
+                if !io::original_exists(&self.blob_path(sha), validation::MAX_BYTES)? {
+                    return Err("missing: 素材记录对应的原件丢失，未重置归档".into());
+                }
+            }
             records.push(record);
         }
         Ok(records)

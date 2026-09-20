@@ -63,6 +63,41 @@ fn metadata(bytes: &[u8], job: &str) -> Value {
 const BYTES: &[u8] = b"synthetic image bytes used only to verify archival";
 
 #[test]
+fn metadata_pages_cover_large_archive_without_truncating_full_integrity_list() {
+    let f = Fixture::new();
+    for index in 0..125 {
+        let bytes = format!("synthetic original {index}").into_bytes();
+        f.save(&bytes, metadata(&bytes, &format!("job-{index}")));
+    }
+    fs::write(
+        f.root.join("records").join("000-interrupted.tmp"),
+        b"partial",
+    )
+    .unwrap();
+    let complete = f.repo.list().unwrap();
+    assert_eq!(complete.len(), 125);
+    let mut pages = Vec::new();
+    for offset in [0, 40, 80, 120] {
+        pages.extend(f.repo.list_page(offset, 40).unwrap());
+    }
+    assert_eq!(pages, complete);
+    assert_eq!(f.repo.list_page(0, 999).unwrap().len(), 100);
+    assert!(f.repo.list_page(125, 40).unwrap().is_empty());
+    let first = &complete[0];
+    fs::write(f.blob(first), b"corrupted bytes").unwrap();
+    // Metadata navigation does not hash all originals. Every actual read still does.
+    assert_eq!(f.repo.list_page(0, 40).unwrap().len(), 40);
+    assert!(f
+        .repo
+        .read(first["assetId"].as_str().unwrap())
+        .unwrap_err()
+        .starts_with("corrupt:"));
+    assert!(f.repo.list().unwrap_err().starts_with("corrupt:"));
+    fs::remove_file(f.blob(first)).unwrap();
+    assert!(f.repo.list_page(0, 40).unwrap_err().starts_with("missing:"));
+}
+
+#[test]
 fn stores_raw_blob_and_versioned_metadata_then_reopens_without_preview() {
     let f = Fixture::new();
     let m = metadata(BYTES, "job1");

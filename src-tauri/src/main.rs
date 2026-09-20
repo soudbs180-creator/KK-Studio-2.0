@@ -469,12 +469,18 @@ async fn asset_read(
         .map_err(|_| "io: 素材读取任务中断".to_string())?
 }
 
-#[tauri::command]
-async fn asset_list(state: State<'_, AppState>) -> Result<Vec<serde_json::Value>, String> {
+#[tauri::command(rename_all = "camelCase")]
+async fn asset_list(
+    state: State<'_, AppState>,
+    offset: Option<usize>,
+    limit: Option<usize>,
+) -> Result<Vec<serde_json::Value>, String> {
     let assets = Arc::clone(&state.assets);
-    tauri::async_runtime::spawn_blocking(move || assets.list())
-        .await
-        .map_err(|_| "io: 素材列表任务中断".to_string())?
+    tauri::async_runtime::spawn_blocking(move || {
+        assets.list_page(offset.unwrap_or(0), limit.unwrap_or(50))
+    })
+    .await
+    .map_err(|_| "io: 素材列表任务中断".to_string())?
 }
 
 #[tauri::command]

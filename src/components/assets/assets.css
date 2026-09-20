@@ -337,6 +337,17 @@
   font-size: 11px;
   color: var(--text-primary);
 }
+.asset-load-more {
+  position: absolute;
+  right: 30px;
+  bottom: 35px;
+  padding: 6px 10px;
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 11px;
+}
 .asset-empty {
   grid-column: 1/-1;
   min-height: 380px;
@@ -374,7 +385,9 @@
   width: 80px;
   height: 80px;
 }
-.asset-large-preview > img:not(.asset-icon) {
+.asset-large-preview > img:not(.asset-icon),
+.asset-large-preview > video,
+.asset-large-preview > audio {
   max-width: 100%;
   max-height: 350px;
 }

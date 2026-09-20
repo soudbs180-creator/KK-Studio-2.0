@@ -51,6 +51,15 @@ pub fn read(path: &Path, max: usize) -> Result<Option<Vec<u8>>, String> {
     }
     Ok(Some(bytes))
 }
+pub fn original_exists(path: &Path, max: usize) -> Result<bool, String> {
+    let Some(metadata) = checked_metadata(path)? else {
+        return Ok(false);
+    };
+    if !metadata.is_file() || metadata.len() == 0 || metadata.len() > max as u64 {
+        return Err("corrupt: 素材文件类型或大小无效".into());
+    }
+    Ok(true)
+}
 pub fn lock(root: &Path) -> Result<File, String> {
     let path = root.join("repository.lock");
     checked_metadata(&path)?;
