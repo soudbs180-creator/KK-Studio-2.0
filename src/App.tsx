@@ -19,6 +19,11 @@ import {
 import LibraryPage from "./components/LibraryPage";
 import CatalogPanel from "./components/CatalogPanel";
 import StartPage from "./components/StartPage";
+import SkillsPage from "./components/SkillsPage";
+import {
+  createSkillRegistry,
+  type SkillRecord,
+} from "./features/skills/skillRegistry";
 import {
   createProject,
   emptyDraft,
@@ -156,6 +161,7 @@ export default function App() {
   const [chat, setChat] = useState(true);
   const [mobileChat, setMobileChat] = useState(false);
   const [assets, setAssets] = useState(initialAssets);
+  const [skillRegistry] = useState(() => createSkillRegistry());
   const assetArchive = useAssetArchive(setAssets);
   const [subjects, setSubjects] = useState(initialSubjects);
   const [localWorkflows, setLocalWorkflows] = useState<WorkflowRecord[]>(() =>
@@ -257,6 +263,28 @@ export default function App() {
       homeDraft: { ...draft, updatedAt: Date.now() },
     };
     commitCreation(next);
+  }
+  function applySkillToHome(record: SkillRecord): void {
+    const draft = creationRef.current.homeDraft;
+    const block = `[Skill: ${record.manifest.name}]\n${record.instructions}`;
+    updateHomeDraft({
+      ...draft,
+      prompt: `${draft.prompt.trim()}\n\n${block}`.trim(),
+      updatedAt: Date.now(),
+    });
+    const project = creationRef.current.projects.find(
+      (item) => item.id === creationRef.current.activeProjectId,
+    );
+    if (project)
+      updateProject(project.id, (current) => ({
+        ...current,
+        composerDraft: {
+          ...current.composerDraft,
+          prompt: `${current.composerDraft.prompt.trim()}\n\n${block}`.trim(),
+          updatedAt: Date.now(),
+        },
+        updatedAt: Date.now(),
+      }));
   }
   function replaceCanvasItems(
     action: SetStateAction<CanvasCollectionItem[]>,
@@ -1778,10 +1806,13 @@ export default function App() {
               />
             </div>
           </div>
-          {["projects", "skills", "comfyui"].includes(active) && (
+          {active === "skills" && (
+            <SkillsPage registry={skillRegistry} onApply={applySkillToHome} />
+          )}
+          {["projects", "comfyui"].includes(active) && (
             <LibraryPage
               key={active}
-              view={active as "projects" | "skills" | "comfyui"}
+              view={active as "projects" | "comfyui"}
               onOpen={open}
               projects={creation.projects}
               localWorkflows={localWorkflows}
@@ -1849,6 +1880,7 @@ export default function App() {
               initialSection={settingsSection}
               saveState={saveState}
               revision={creation.revision}
+              registry={skillRegistry}
               onClose={() => setModal("")}
             />
           ) : modal === "assets" ? (
