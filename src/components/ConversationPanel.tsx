@@ -8,6 +8,7 @@ import type {
 import ConversationMessages from "./ConversationMessages";
 import ConversationActions from "./ConversationActions";
 import { useComposerMenus } from "./useComposerMenus";
+import type { SkillRecord } from "../features/skills/skillRegistry";
 export default function ConversationPanel({
   onClose,
   onOpen,
@@ -20,6 +21,8 @@ export default function ConversationPanel({
   modelOptions = [],
   onSend,
   onDeleteMessage,
+  skills = [],
+  onApplySkill,
 }: {
   onClose: () => void;
   onOpen: (id: string) => void;
@@ -34,6 +37,8 @@ export default function ConversationPanel({
   composerDraft?: CreationDraft;
   onDraftChange?: (draft: CreationDraft) => void;
   voiceEnabled?: boolean;
+  skills?: SkillRecord[];
+  onApplySkill?: (record: SkillRecord) => void;
 }) {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
@@ -222,6 +227,12 @@ export default function ConversationPanel({
           onTogglePlugin={() => toggleMenu("plugin")}
           modeMenuRef={modeMenuRef}
           modeMenuOpen={modeMenuOpen}
+          skills={skills}
+          onApplySkill={(record) => {
+            onApplySkill?.(record);
+            closeMenus();
+            setStatus(`已将「${record.manifest.name}」加入对话草稿。`);
+          }}
           approvalMode={approvalMode}
           onToggleMode={() => toggleMenu("mode")}
           onSelectMode={(value) => {
