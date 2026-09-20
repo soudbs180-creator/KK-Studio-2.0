@@ -976,5 +976,43 @@
     "verification": "最终完整verify通过：150 Node、191浏览器、0失败/重试；三运行模式专项通过；2.35MB重绘20倍CPU连续3次通过，完整原图字节断言保留。中途unknown用例重试已定位并修正异步审批等待。",
     "verificationResult": "PASS",
     "updated": "2026-09-20"
+  },
+  {
+    "id": "TASK-GOV-002",
+    "title": "跨AI自主开发与分支质量门禁",
+    "goal": "落实共同规则、代码文档一致性、Git/CI防线和真实保护边界",
+    "scope": "AI规则/SDLC/PR/Git防线/交付门禁/规则场景",
+    "acceptance": [
+      "入口统一、中文自然语言转工程任务",
+      "真实push拒绝回归与delivery门禁通过",
+      "规则、模板、脚本入口和账本绑定一致",
+      "独立review和实际规则验证证据",
+      "产品代码、产品测试、既有证据和其他人的提交保持只读"
+    ],
+    "dependencies": [
+      "TASK-GOV-001",
+      "TASK-KK2-MAIN-SYNC"
+    ],
+    "owner": "root",
+    "branch": "codex/TASK-GOV-002-ai-sdlc",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-GOV-002",
+    "affectedModules": [
+      "docs",
+      "scripts/governance",
+      ".github",
+      ".githooks",
+      "config",
+      "tests/unit/deliveryPolicy.test.ts",
+      "tests/unit/gitPushPolicy.test.ts",
+      "tests/evals"
+    ],
+    "status": "REVIEW",
+    "evidence": [
+      "docs/changes/2026-09-20-ai-sdlc/verification.md",
+      "docs/evidence/ai-sdlc-2026-09-20/remote-audit.json"
+    ],
+    "verification": "规则门禁31tasks/0、push9/9、delivery12/12、场景结构12/12、基线正反例2/2；f7425d6 hosted verify成功。最终diff无产品/既有测试/旧证据改动。PR4保持draft，main前进到a1d8629导致冲突，遵用户要求不再处理新上游；远端保护API403仍BLOCKED。当前不具备合并/发布条件。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-09-20"
   }
 ]

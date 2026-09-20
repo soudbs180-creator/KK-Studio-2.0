@@ -1,11 +1,18 @@
 # 当前进度
 
+## 2026-09-20 AI自主开发、分支和规则一致性（TASK-GOV-002）
+
+- 在origin/main@8aca3ab独立分支补全共同AI入口、自然语言转工程需求、风险分级自主流程、独立review/ADR/发布/事故模板。
+- 增加本地Git push防线、真实临时仓库测试、CI delivery变更包门禁与可审阅rulesets；不伪称能强制所有模型理解文档。
+- 只读核对当前代码、产品测试、既有证据和旧规范，用于发现规则冲突；本任务只写入共同规则、流程模板、Git/CI/delivery 防线和规则场景，不接管产品实现或其他人的提交。
+- 当次GitHub回读private main未受保护，API403套餐限制仍为EXT-GIT BLOCKED。最新主线CI失败仅登记为产品任务 follow-up，未修复或改写其测试、截图和报告。
+- 规则候选验证：governance 31 tasks/0 violations、push policy 9/9、delivery policy 12/12、AI 场景结构 12/12，规则文件 lint/typecheck/format/links 通过；未发布、未清理分支、未改写历史。
+
 ## 2026-09-20 Astra 迁移计划与分支规则复核
 
 - TASK-ASTRA-001 从已验收的稳定 main 建立独立 task worktree，校正旧 checkout 初稿，复用已完成的 T3b/T4 与已集成的 T5，补齐项目包和 unknown 状态迁移验收。尚未实施 Astra 功能。
 - 已检查 AGENTS、CONTRIBUTING、governance、SDLC/评审、ADR、PR 模板和 CI；不直接写 main，不推送历史任务分支，不合并原 dirty 工作区。
 - 用户指定 https://github.com/soudbs180-creator/KK-Studio-2.0 为 2.0 远端；该仓库与本地历史不相干，阶段 0 文档分支 `docs/TASK-ASTRA-001-remote-manifest`（回读 `9edb528`）保留为历史审计；首次 2.0 树已通过 PR #1 合并。
-
 
 ## 2026-09-19 T5 原生 TaskHost 集成与未知受理保护（本地集成完成，运行态待收口）
 
@@ -26,7 +33,6 @@
 
 - 已接通 Desktop 设置→储存的导出、预检、独立目录恢复和打开副本入口；原生端完成严格 manifest/ZIP/schema/checksum/引用校验、隔离 staging、写后校验和新目标发布。Web 入口显示禁用原因。
 - 新增跨语言 checksum、非法包、七个写入阶段故障注入和 UI 异步/取消回归；修复原生 JSON 字段排序导致画布打开即误保存的问题。已在源码 379b302 完成 129 unit、156 browser、UI 117/0、50 Rust、fmt/check 和 release build；全新 WebView 的完整快照/原件恢复通过，T3b Desktop Windows 单元关闭。
-
 
 ## 2026-09-18 T3a 原生素材及引用最终验收
 
@@ -296,7 +302,6 @@
 Confirmed and repaired stylesheet import deduplication/cascade issues; preserved existing pages and interactions. Latest 404:28667 / 410:67357 / 410:59708 contexts were read through Figma MCP. Current Web process PID16112 serves D:/kk-studio-next on1421; its actual browser screenshots and measured panel/sidebar/composer geometry show source changes. Full browser suite96/96 without retries, unit20/20, typecheck/build/ui:check/format:check passed. Tauri release rebuilt2026-09-10 23:10:01 and freshness reports current.
 
 Not complete: original reported window provenance, native Tauri visual check, full same-content Figma and all auxiliary frame/state comparisons. Collapsed search retained by explicit user request. See docs/changes/2026-09-10-ui-runtime-diagnosis/verification.md and docs/evidence/ui-runtime-2026-09-10/live-browser.json. These current results supersede earlier pending validation notes, not the remaining visual acceptance boundaries.
-
 
 ## 2026-09-20 KK Studio 2.0 main 同步候选
 

@@ -1,0 +1,13 @@
+# Repository owner confirmed through origin metadata. Ownership routes review;
+# it does not fabricate a second reviewer or enable server enforcement by itself.
+* @soudbs180-creator
+/.github/ @soudbs180-creator
+/.githooks/ @soudbs180-creator
+/scripts/governance/ @soudbs180-creator
+/config/github-rulesets/ @soudbs180-creator
+/AGENTS.md @soudbs180-creator
+/AI_RULES.md @soudbs180-creator
+/src-tauri/ @soudbs180-creator
+/src/runtime/ @soudbs180-creator
+/src/integrations/ @soudbs180-creator
+/docs/engineering/ @soudbs180-creator

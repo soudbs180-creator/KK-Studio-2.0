@@ -37,6 +37,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-UNMERGED-001 | dirty checkout 未合并 UI 回归候选 | DONE | TASK-GOV-001 | root |
 | TASK-UI-MAIN-001 | 现行Figma页面校正与交互修复主线整合 | DONE | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 | TASK-UI-DISMISS-002 | 窄屏侧栏关闭与大图重绘稳定性 | DONE | TASK-UI-MAIN-001 | root |
+| TASK-GOV-002 | 跨AI自主开发与分支质量门禁 | REVIEW | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -413,4 +414,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/Sidebar.tsx, tests/browser/menu-boundaries.spec.ts, tests/browser/unified-image-command.spec.ts, src/features/creation/assetRepository.ts, src/features/creation/imageGeneration.ts, tests/browser/task-intent.spec.ts
 - Verification: PASS — 最终完整verify通过：150 Node、191浏览器、0失败/重试；三运行模式专项通过；2.35MB重绘20倍CPU连续3次通过，完整原图字节断言保留。中途unknown用例重试已定位并修正异步审批等待。
 - Evidence: [docs/changes/2026-09-20-ui-main-alignment/followup.md](../../docs/changes/2026-09-20-ui-main-alignment/followup.md), [docs/evidence/2026-09-20-ui-main-alignment/followup/browser-summary.json](../../docs/evidence/2026-09-20-ui-main-alignment/followup/browser-summary.json)
+- Updated: 2026-09-20
+
+## TASK-GOV-002 — 跨AI自主开发与分支质量门禁
+
+- Goal: 落实共同规则、代码文档一致性、Git/CI防线和真实保护边界
+- Scope: AI规则/SDLC/PR/Git防线/交付门禁/规则场景
+- Acceptance: 入口统一、中文自然语言转工程任务; 真实push拒绝回归与delivery门禁通过; 规则、模板、脚本入口和账本绑定一致; 独立review和实际规则验证证据; 产品代码、产品测试、既有证据和其他人的提交保持只读
+- Branch: `codex/TASK-GOV-002-ai-sdlc`
+- Worktree: `D:/kk-studio-next/.worktrees/TASK-GOV-002`
+- Modules: docs, scripts/governance, .github, .githooks, config, tests/unit/deliveryPolicy.test.ts, tests/unit/gitPushPolicy.test.ts, tests/evals
+- Verification: PARTIAL — 规则门禁31tasks/0、push9/9、delivery12/12、场景结构12/12、基线正反例2/2；f7425d6 hosted verify成功。最终diff无产品/既有测试/旧证据改动。PR4保持draft，main前进到a1d8629导致冲突，遵用户要求不再处理新上游；远端保护API403仍BLOCKED。当前不具备合并/发布条件。
+- Evidence: [docs/changes/2026-09-20-ai-sdlc/verification.md](../../docs/changes/2026-09-20-ai-sdlc/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json)
 - Updated: 2026-09-20

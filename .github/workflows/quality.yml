@@ -2,7 +2,20 @@ name: quality
 
 on:
   push:
-    branches: [main, master, 'codex/**', 'chore/**', 'fix/**', 'feat/**', 'docs/**', 'test/**', 'perf/**', 'refactor/**', 'hotfix/**']
+    branches:
+      [
+        main,
+        master,
+        "codex/**",
+        "chore/**",
+        "fix/**",
+        "feat/**",
+        "docs/**",
+        "test/**",
+        "perf/**",
+        "refactor/**",
+        "hotfix/**",
+      ]
   pull_request:
   merge_group:
 
@@ -10,18 +23,40 @@ permissions:
   contents: read
 
 jobs:
+  delivery:
+    if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Validate current change package
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: node scripts/check-delivery.mjs --base "$env:BASE_SHA" --head "$env:HEAD_SHA"
   verify:
     runs-on: windows-latest
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
       - run: npm ci
       - run: node node_modules/@playwright/test/cli.js install msedge
-      - run: npm run verify
+      - name: Run repository verification
+        env:
+          GOVERNANCE_BASE: origin/main
+        run: npm run verify
       - run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
       - run: cargo test --manifest-path src-tauri/Cargo.toml --no-default-features --locked
       - run: npm run client:check
