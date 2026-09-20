@@ -41,7 +41,7 @@ UI 的实现链路固定为：
 
 ## 浏览器验证
 
-源码修改后重新启动实际项目，必要时清理 `node_modules/.vite`、`dist` 并重建，但不得删除用户数据或工作区修改。至少验证桌面和窄屏的布局、sidebar、toolbar、panel、间距、对齐、字体、图标、控件高度与状态交互，并保存同状态 DOM/截图。`pnpm run typecheck`、`pnpm run build` 和适用的 UI/screenshot tests 通过后，仍需报告任何尚未与 Figma 对齐的部分。
+源码修改后重新启动实际项目，必要时清理 `node_modules/.vite`、`dist` 并重建，但不得删除用户数据或工作区修改。至少验证桌面和窄屏的布局、sidebar、toolbar、panel、间距、对齐、字体、图标、控件高度与状态交互，并保存同状态 DOM/截图。`npm run typecheck`、`npm run build` 和适用的 UI/screenshot tests 通过后，仍需报告任何尚未与 Figma 对齐的部分。
 
 ## 2026-09-10 actual runtime and current design contract
 

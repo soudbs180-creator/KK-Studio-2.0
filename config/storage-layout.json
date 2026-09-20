@@ -13,6 +13,7 @@
     "projects": "项目图、revision、checksum",
     "conversations": "会话索引和消息",
     "assets": "资产元数据和内容寻址 Blob",
+    "tasks": "原生 TaskHost journal；状态、幂等身份和输出引用",
     "models": "受管模型索引，不存默认权重",
     "comfyui": "外部实例连接与扫描摘要",
     "cache": "可删除缓存",

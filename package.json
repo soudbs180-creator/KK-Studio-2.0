@@ -21,7 +21,9 @@
     "client:build": "tauri build",
     "client:check": "cargo check --manifest-path src-tauri/Cargo.toml",
     "governance:check": "node scripts/check-governance.mjs",
-    "governance:write": "node scripts/check-governance.mjs --write"
+    "governance:write": "node scripts/check-governance.mjs --write",
+    "git:guards": "node scripts/install-git-guards.mjs",
+    "delivery:check": "node scripts/check-delivery.mjs"
   },
   "engines": {
     "node": ">=24"

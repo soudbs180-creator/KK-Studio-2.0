@@ -31,7 +31,7 @@ test("菜单 Escape 先收起菜单，再次 Escape 收起编辑器并保留草�
   await expect(page.getByLabel("图片提示词")).toHaveValue("切换时保留内容");
   await page
     .getByTestId("image-composer")
-    .screenshot({ path: "docs/evidence/image-composer-refined.png" });
+    .screenshot({ path: test.info().outputPath("image-composer-refined.png") });
 });
 
 test("窄屏会话面板为画布工具栏留出空间，顶部和输入控件尺寸稳定", async ({

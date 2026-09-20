@@ -1,5 +1,15 @@
 # AI handoff
 
+## 2026-09-20 TASK-GOV-002 当前覆盖说明
+
+- 今后新任务从 fetch 后的 origin/main 派生，本次基线 8aca3ab；任务分支 codex/TASK-GOV-002-ai-sdlc。旧本地 main@39f6a6e 与远端无共同祖先，下面首次同步/tree相等记录是历史范围，不能直接 pull 合并旧本地main。
+- 本次共享规则、Git防线、CI变更包和存储契约修正进行中，状态以task-ledger为准；不会把全部产品完成。完整说明见 docs/changes/2026-09-20-ai-sdlc/。
+- 当前托管回读 main protected=false，private仓库protection/rulesets API403，EXT-GIT仍BLOCKED；自动分支清理为false。
+- 最新main CI run35492697622失败：sidebar motion中间帧缺失；旧候选成功不代表当前main成功。正在修取样并重新验证。
+- 先读AGENTS/AI_RULES与engineering规则。npm ci后安装npm run git:guards；本地hook不是远端保护。最终用户汇报简洁中文。
+
+## 以下为此前交付快照（保留历史，不覆盖上面当次核对）
+
 更新：2026-09-20。先读 PROJECT_STATE.md、SPEC_BASELINE.md、task-ledger.json，再核对 git/worktree/进程；不要凭旧测试总数或默认快捷方式继续。
 
 ## 当前恢复点
@@ -32,7 +42,6 @@
 - TASK-ASTRA-001 在独立 docs 分支校正迁移计划并审计规则；原 checkout 和 main 不直接编辑。工作树由 Codex 原生工具登记，准确路径见 task-ledger.json。
 - 用户指定 https://github.com/soudbs180-creator/KK-Studio-2.0 为 2.0 远端。远端初始 main 是既有旧树，与本地 2.0 无共同基线；旧 soudbs180-creator/kk-studio 仍不作为目标。首次同步采用从云端 main 派生的替换分支和 PR；阶段 0 文档分支仅作历史审计。
 - 计划与规则审计见 docs/changes/2026-09-20-gpt-6-astra/；Astra 尚未实现，T5/T6 等原任务状态保持。
-
 
 ## 2026-09-20 KK Studio 2.0 main 同步候选
 

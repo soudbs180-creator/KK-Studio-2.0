@@ -1,8 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { waitForConversationPanelSettled } from "./helpers";
 
-const evidence = "docs/evidence/ui-runtime-2026-09-10";
-
 test("latest Figma shell is loaded by the real production page", async ({
   page,
 }) => {
@@ -22,7 +20,7 @@ test("latest Figma shell is loaded by the real production page", async ({
     "rgb(22, 22, 22)",
   );
   await page.screenshot({
-    path: evidence + "/after-landing.png",
+    path: test.info().outputPath("after-landing.png"),
     animations: "disabled",
   });
   await page
@@ -69,7 +67,7 @@ test("latest Figma shell is loaded by the real production page", async ({
     "22px",
   );
   await page.screenshot({
-    path: evidence + "/after-workspace.png",
+    path: test.info().outputPath("after-workspace.png"),
     animations: "disabled",
   });
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
@@ -83,7 +81,7 @@ test("latest Figma shell is loaded by the real production page", async ({
     .poll(async () => (await page.locator(".canvas-toolbar").boundingBox())!.x)
     .toBeCloseTo(719, 0);
   await page.screenshot({
-    path: evidence + "/after-collapsed.png",
+    path: test.info().outputPath("after-collapsed.png"),
     animations: "disabled",
   });
 });
@@ -120,7 +118,7 @@ test("scaled desktop keeps the complete surface visible and input interactions w
   await page.keyboard.press("Escape");
   await expect(page.locator(".chat-mode-popover")).toHaveCount(0);
   await page.screenshot({
-    path: evidence + "/after-1440.png",
+    path: test.info().outputPath("after-1440.png"),
     animations: "disabled",
   });
 });

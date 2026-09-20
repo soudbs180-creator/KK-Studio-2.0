@@ -35,6 +35,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-ASTRA-001 | Astra 迁移计划与 Git 分支规则同步 | DONE | T0, TASK-GOV-001 | root |
 | TASK-KK2-MAIN-SYNC | KK Studio 2.0 本地与云端 main 树同步 | DONE | T0, TASK-GOV-001 | root |
 | TASK-UI-UNMERGED-001 | dirty checkout 未合并 UI 回归候选 | TODO | TASK-GOV-001 | root |
+| TASK-GOV-002 | 跨AI自主开发与分支质量门禁 | IN_PROGRESS | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -104,9 +105,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src-tauri/src/asset_storage.rs, src/features/creation/assetRepository.ts, src/features/creation/snapshotAssets.ts
-- Verification: PASS — main@c855881 的 Node 24/Web/Rust/Tauri release 验证通过；隔离数据根目录与三个全新 WebView profile 验证原生素材 SHA-256、快照引用恢复和篡改后读取保护。T3b 项目包仍未完成。
-- Evidence: [docs/changes/2026-09-16-native-assets/spec.md](../../docs/changes/2026-09-16-native-assets/spec.md), [docs/changes/2026-09-16-native-assets/verification.md](../../docs/changes/2026-09-16-native-assets/verification.md), [docs/evidence/native-assets-2026-09-18/native-acceptance.json](../../docs/evidence/native-assets-2026-09-18/native-acceptance.json), [docs/evidence/native-assets-2026-09-18/build-artifacts.json](../../docs/evidence/native-assets-2026-09-18/build-artifacts.json)
-- Updated: 2026-09-18
+- Verification: PASS — main@c855881 的 Node 24/Web/Rust/Tauri release 验证通过；隔离数据根目录与三个全新 WebView profile 验证原生素材 SHA-256、快照引用恢复和篡改后读取保护。2026-09-20 状态勘误：后续 T3b Desktop 项目包已完成，见该任务及项目包 verification；Web 文件适配仍属 T9。
+- Evidence: [docs/changes/2026-09-16-native-assets/spec.md](../../docs/changes/2026-09-16-native-assets/spec.md), [docs/changes/2026-09-16-native-assets/verification.md](../../docs/changes/2026-09-16-native-assets/verification.md), [docs/evidence/native-assets-2026-09-18/native-acceptance.json](../../docs/evidence/native-assets-2026-09-18/native-acceptance.json), [docs/evidence/native-assets-2026-09-18/build-artifacts.json](../../docs/evidence/native-assets-2026-09-18/build-artifacts.json), [docs/changes/2026-09-18-project-package/verification.md](../../docs/changes/2026-09-18-project-package/verification.md)
+- Updated: 2026-09-20
 
 ## T3b — 完整项目包导出导入与恢复
 
@@ -136,13 +137,13 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 持久本地 TaskHost 与未知受理恢复
 - Scope: src/features/generation-server, src-tauri, src/features/creation, deploy
-- Acceptance: durable intent先于提交; 重启同一身份不重复计费; unknown不可直接普通retry; 本地宿主随包且不依赖VPS
+- Acceptance: durable intent先于提交; 重启同一身份不重复计费; unknown不可直接普通retry; 本地宿主随包且不依赖VPS; Desktop 提交前执行连接状态/冷却/并发复核，原生失败分类更新 health，租约崩溃恢复可验证
 - Branch: `main`
 - Worktree: `D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001`
 - Modules: src/features/generation-server, src-tauri, src/features/creation, deploy
-- Verification: PARTIAL — 集成 main 已将 durable intent、稳定幂等身份、unknown 受理保护、原生 TaskHost journal、系统凭据库读取、Desktop IPC、取消竞态和逐 slot 输出提交接入 Tauri 主进程；npm verify 150/169、UI119/0，Rust 58/58，client check/release 通过。隔离 Tauri/WebView 的提交、取消、进程重启和逐 slot 恢复证据尚未完成；部署脚本仅覆盖静态 Web Prototype。
-- Evidence: [docs/changes/2026-09-19-taskhost-durable-intent/verification.md](../../docs/changes/2026-09-19-taskhost-durable-intent/verification.md), [tests/browser/task-intent.spec.ts](../../tests/browser/task-intent.spec.ts), [tests/unit/nativeTaskHost.test.ts](../../tests/unit/nativeTaskHost.test.ts), [deploy/README.md](../../deploy/README.md)
-- Updated: 2026-09-19
+- Verification: PARTIAL — 集成 main 已将 durable intent、稳定幂等身份、unknown 受理保护、原生 TaskHost journal、系统凭据库读取、Desktop IPC、取消竞态和逐 slot 输出提交接入 Tauri 主进程；npm verify 150/169、UI119/0，Rust 58/58，client check/release 通过。隔离 Tauri/WebView 的提交、取消、进程重启和逐 slot 恢复证据尚未完成；部署脚本仅覆盖静态 Web Prototype。 2026-09-20 当前源码补审：Desktop 原生提交缺 reservation/assertCurrent，结构化失败 health 丢失，租约崩溃回收未定义；这是实现缺口，不能仅补运行截图关闭 T5。
+- Evidence: [docs/changes/2026-09-19-taskhost-durable-intent/verification.md](../../docs/changes/2026-09-19-taskhost-durable-intent/verification.md), [tests/browser/task-intent.spec.ts](../../tests/browser/task-intent.spec.ts), [tests/unit/nativeTaskHost.test.ts](../../tests/unit/nativeTaskHost.test.ts), [deploy/README.md](../../deploy/README.md), [docs/evidence/ai-sdlc-2026-09-20/desktop-provider-gap-audit.md](../../docs/evidence/ai-sdlc-2026-09-20/desktop-provider-gap-audit.md)
+- Updated: 2026-09-20
 
 ## T6 — Desktop ComfyUI最小链实现
 
@@ -337,8 +338,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `unallocated`
 - Modules: Git hosting
 - Verification: NOT_VERIFIED — NOT VERIFIED
-- Evidence: [docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md](../../docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md), [docs/changes/2026-09-20-gpt-6-astra/verification.md](../../docs/changes/2026-09-20-gpt-6-astra/verification.md)
-- External condition: 目标仓库 authenticated API 已确认 private、默认分支 main 与写权限；main protected=false，required checks 为空，rulesets/protection API 因当前 GitHub 计划返回 403。需完成最终候选 PR、CI、合并和 main tree 回读；托管保护能力仍未启用。
+- Evidence: [docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md](../../docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md), [docs/changes/2026-09-20-gpt-6-astra/verification.md](../../docs/changes/2026-09-20-gpt-6-astra/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json)
+- External condition: Private个人仓库当前计划不支持保护；2026-09-20 authenticated protection/rulesets API403，需用户升级支持的计划，不能改公开或伪称hook等效。
 - Updated: 2026-09-20
 
 ## TEST-PROV-001 — Provider真实入口浏览器回归
@@ -387,4 +388,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/useDismissible.ts, src/components/Modal.tsx, src/components/TopBar.tsx, src/components/TaskPanelPopover.tsx, src/components/settings/SettingsControls.tsx, src/components/settings/ConnectionSettings.tsx, tests/browser
 - Verification: NOT_VERIFIED — dirty checkout 中的 UI 候选尚未迁移或验收；本次首发同步不包含这些改动。
 - Evidence: [docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md](../../docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md)
+- Updated: 2026-09-20
+
+## TASK-GOV-002 — 跨AI自主开发与分支质量门禁
+
+- Goal: 落实共同规则、代码文档一致性、Git/CI防线和真实保护边界
+- Scope: AI规则/SDLC/PR/Git防线/契约勘误
+- Acceptance: 入口统一、中文自然语言转工程任务; 真实push拒绝回归与delivery门禁通过; 规范与tasks目录契约冲突修正; 独立review和实际验证证据
+- Branch: `codex/TASK-GOV-002-ai-sdlc`
+- Worktree: `D:/kk-studio-next/.worktrees/TASK-GOV-002`
+- Modules: docs, scripts/governance, .github, .githooks, config, src/runtime/storage-contract.ts, tests
+- Verification: NOT_VERIFIED — 本次规则与本地门禁实施验证中；远端保护计划限制独立记录EXT-GIT。
+- Evidence: [docs/changes/2026-09-20-ai-sdlc/verification.md](../../docs/changes/2026-09-20-ai-sdlc/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json)
 - Updated: 2026-09-20
