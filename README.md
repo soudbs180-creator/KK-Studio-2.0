@@ -6,7 +6,7 @@ KK Studio 是以无限画布为中心的多模态 Agent 工作台。当前唯一
 
 ```powershell
 cd D:\kk-studio-next
-npm install
+npm ci
 npm run dev
 ```
 

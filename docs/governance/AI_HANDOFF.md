@@ -4,8 +4,8 @@
 
 ## 当前恢复点
 
-- 唯一仓库 D:/kk-studio-next；集成主线在 D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001，本轮核对的 main 文档 HEAD 为 `80544af`，最近 TaskHost 实现提交为 `d894779`。T5 原生 TaskHost 已编译进 Tauri 主进程并接入 Desktop UI；release bundle 为 `index-BmJ91wly.js`，Tauri release 已从该主线重新构建。
-- 原 checkout 的 178 项 dirty 与索引未改动；无 remote，不可误接旧 monorepo 或声称 PR/CI/main protection。
+- 唯一仓库 D:/kk-studio-next；集成主线在 D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001，当前提交与 tree 以最终 Git 回读为准。T5 原生 TaskHost 已编译进 Tauri 主进程并接入 Desktop UI；release bundle 为 `index-BmJ91wly.js`，Tauri release 已从该主线重新构建。
+- 原 checkout 的 dirty 状态与索引未改动；不把它作为首次同步来源，不可误接旧 monorepo。PR、CI 和 main protection 以目标仓库回读为准。
 - T4 已 DONE：统一 submitImageCommand，画布/结果编辑/上传重绘走 executeTask；sourceItemId 同步 browser/native/package；结果边只发布一次，取消与恢复准确映射来源。连接 configured/verified 分开，保存配置或 models 探测不验证图片生成。
 - 当前集成主线 `npm run verify` 为 150 unit/169 browser/UI119/0；Rust58/58、fmt/check、client:check 和 client:build 通过。最新 bundle 与 executable hash 见 PROJECT_STATE.md 与本次 T5 verification 记录。
 - 图片比例/清晰度当前只持久化草稿，HTTP按供应商默认值；视频/音频/文本仍为明确本地demo。真实付费Provider、ComfyUI以及 T5 原生宿主的运行态证据不能被本地 fixtures 单独算作完成。
@@ -30,13 +30,13 @@
 ## 2026-09-20 Astra 计划与同步准备
 
 - TASK-ASTRA-001 在独立 docs 分支校正迁移计划并审计规则；原 checkout 和 main 不直接编辑。工作树由 Codex 原生工具登记，准确路径见 task-ledger.json。
-- 用户指定 https://github.com/soudbs180-creator/KK-Studio-2.0 为 2.0 远端。远端 main@f00b5a4 是既有 v1.6.1 monorepo，与本地 main@80544af 无共同基线；旧 soudbs180-creator/kk-studio 仍不作为目标。阶段 0 已推送白名单文档分支 docs/TASK-ASTRA-001-remote-manifest@9edb528；不整库上传、不硬合并，PR 尚未创建。
+- 用户指定 https://github.com/soudbs180-creator/KK-Studio-2.0 为 2.0 远端。远端初始 main 是既有旧树，与本地 2.0 无共同基线；旧 soudbs180-creator/kk-studio 仍不作为目标。首次同步采用从云端 main 派生的替换分支和 PR；阶段 0 文档分支仅作历史审计。
 - 计划与规则审计见 docs/changes/2026-09-20-gpt-6-astra/；Astra 尚未实现，T5/T6 等原任务状态保持。
 
 
 ## 2026-09-20 KK Studio 2.0 main 同步候选
 
-- 本地稳定 main 已快进到 455078d；原 checkout 仍保持 dirty/index 原样。
-- 从云端 main@f00b5a4 建立 chore/TASK-KK2-MAIN-SYNC，候选提交 7bdac9d；其 tree SHA b217fcf404020cc034e1fc7aaa53ef8366d5f998 与本地 main 完全一致。
-- 候选树包含本地 2.0 当前已跟踪文件；云端旧 v1.6.1 当前目录在候选提交中被删除，旧历史仍可追溯。
+- 本地稳定 main 已在隔离 worktree 完成候选整理；原 checkout 仍保持 dirty/index 原样。
+- 从云端 main 建立 chore/TASK-KK2-MAIN-SYNC，最终审计命令确认候选 tree 与本地 main 相同。
+- 候选树只包含本地 2.0 当前已跟踪目录；云端旧 monorepo 当前目录在候选提交中被删除，旧历史仍可追溯。
 - PR 比较入口：https://github.com/soudbs180-creator/KK-Studio-2.0/compare/main...chore/TASK-KK2-MAIN-SYNC?expand=1。云端 main 尚未改写；合并后必须回读 main SHA/tree SHA。

@@ -1,66 +1,45 @@
 # Verification
 
-- ID：GPT6-ASTRA-20260920
-- 状态：计划已完成；迁移尚未实施，产品能力未验证。
-- 初稿源码基线：`codex/desktop-data-stability` / `609f5243e434494216a5e070b2bb2a4c4b7137dd` 加已有工作区改动。
+- ID：GPT6-ASTRA-20260920 / TASK-KK2-MAIN-SYNC
+- 状态：Astra 迁移计划已完成；首次 main 同步正在按受控 PR 流程收口，Astra 功能本身尚未实施。
 
-## 本次已完成
+## 已完成的审计与修正
 
-- 读取当前 AGENTS、PROGRESS、数据/生成架构、文档模板、模型/凭据/图片生成/聊天命令/快照校验/测试配置。
-- 搜索并打开官方 GPT-6 Astra 模型与迁移页面；Markdown 指南的浏览工具不支持 content-type 后，通过只读 HTTP 获取原页面正文；使用当前官方内容，未使用模型版本推断。
-- 两个独立只读审查覆盖模型集成和验证/持久化风险。
-- 确认当前活跃前端无 Responses 调用、Rust 旧聊天命令无前端调用者；当前消息不能安全存储 assistant 角色。
-- 新增本目录 intent/spec/plan/verification，未更改应用源码、配置、依赖、凭据或既有进度条目。
-- 文档验证：四份 Markdown 的 Prettier check 通过；无尾随空白、合并冲突标记或未填占位词。核对了计划中的现有关键文件路径，新 transport/测试路径明确标为待创建。
-- 独立计划复核的三项意见已纳入：v3 普通备份转换及中断次序、第一交付文字/图像外发审批、整库 schema 升级与逐项目助手启用的区别。另补充超过 10,000 字符的历史保护，以及既有 system 状态消息不得升级为模型指令。
+- 读取当前 AGENTS、PROGRESS、数据/生成架构、文档模板、模型/凭据、快照校验与测试配置。
+- 依据官方 OpenAI 文档形成 GPT-6 Astra 迁移计划；未读取或使用 provider key，也未执行付费请求。
+- 清理重复的 `docs/migrations/kk-studio-2.0/` 目录，将同步入口统一为 `docs/changes/2026-09-20-gpt-6-astra/`。
+- 修正历史 UI 审计中指向不存在证据目录的链接；这些历史截图不再作为当前交付证据。
+- 修正 `tests/browser/task-intent.spec.ts` 的宽匹配 locator，改为 `.creation-storage-notice[role="alert"]`，避免 storage alert 与 status 文本重复命中。
+- `README.md` 的安装示例与仓库规则统一为 `npm ci`。
 
-## 未执行与未来证据
+## 当前独立验证
 
-- 本次没有运行 API 请求，没有读取/使用用户密钥，没有执行真实付费测试。
-- 初稿阶段没有运行 npm verify、应用构建、Rust 检查或启动浏览器/Tauri；以下“本轮独立 worktree 验证”是后续补做的单独证据，不把历史 PROGRESS 数字冒充本轮结果。
-- Figma 与同状态浏览器证据：本次不适用；实施 UI 后按 plan Task 4/6 采集。
-- 未来必须记录：真实 model/endpoint、权限、参数、成功/失败/取消、多轮、参考图、快照升级/回滚、敏感字段保护、usage/成本及运行入口。
-- 第一交付和图片工具第二交付分别判定；任何未通过真实服务验收的路径继续显示 Prototype 或具体不可用原因。
+- `node scripts/check-governance.mjs --write`：待本轮 ledger 更新后执行；必须 0 violations。
+- `npm run build`：PASS；Vite 产物生成成功，仅保留已有警告。
+- `node ... playwright test tests/browser/task-intent.spec.ts --workers=1 --retries=0`：PASS，5/5。
+- `npm run client:check`：PASS；保留 3 个既有 dead_code warnings。
+- 先前完整 `npm run verify`：168 passed，1 flaky；该 flaky 已由上述严格 locator 修正，未重新宣称完整 verify 已重跑。
+- `git diff --check`：提交前执行。
 
-## 官方来源（2026-09-20 查阅）
+## GitHub 目标核对
+
+- 目标：<https://github.com/soudbs180-creator/KK-Studio-2.0>。authenticated REST 确认仓库为 private、默认分支 `main`、当前凭据具备 admin/maintain/push/triage/pull 权限。
+- 当前远端 `main` 是旧 monorepo 初始树；候选分支从它派生，完整 tree 改为本地已验证 2.0 tree。
+- `main` API 返回 `protected=false`、required checks 为空；rulesets/protection API 返回 403（当前 GitHub 计划不支持），因此 EXT-GIT 保持 BLOCKED。
+- open PR 初始为空；最终 PR URL、CI run、merge SHA 与合并后 tree 由最终回读补入本文件。
+
+## 首发候选验收
+
+- 本地稳定 main 与 `chore/TASK-KK2-MAIN-SYNC` 的 tree equality：以最终 `git rev-parse <ref>^{tree}` 回读为准。
+- 候选 diff 预计替换旧远端当前文件树；旧 `apps/`、`packages/`、`services/` 等路径不应出现在候选 tree。
+- secret/path/构建产物扫描：候选提交不得包含 `.env`、`node_modules/`、`dist/`、`target/`、`test-results/`、`.tmp/`、数据库、安装包、私钥或 API key。
+- 合并前必须满足：候选 SHA 对应的 quality workflow 成功、PR base/head 正确、工作树干净。
+- 合并后必须满足：远端 `main` 的 commit/tree 与本地稳定 `main` 的 tree 相等；任何治理状态更新使用后续小 PR 重新收敛。
+
+## 官方来源
 
 - [GPT-6 Astra 模型](https://developers.openai.com/api/docs/models/gpt-6-astra)
 - [GPT-6 Astra 迁移指南](https://developers.openai.com/api/docs/guides/latest-model/gpt-6-astra.md#migration-quickstart)
 - [迁移到 Responses](https://developers.openai.com/api/docs/guides/migrate-to-responses)
 - [Responses streaming](https://developers.openai.com/api/docs/guides/streaming-responses)
 - [Responses create](https://developers.openai.com/api/reference/resources/responses/methods/create)
-
-## GitHub 同步前复核
-
-- 当前源基线为本地 main@80544af；已记录的最后 TaskHost 实现为 d894779，两者之间只含文档变化。当前任务 docs/TASK-ASTRA-001-migration-plan 从该 main 隔离，原 checkout 和 main 均不在本任务中修改。
-- 已纠正 Desktop/Web 图片路由、T3b/T4 完成状态、T5 剩余验收、项目包 v3 schema 和 unknown/slot 迁移回归。
-- 完整规则与远端身份检查见 branch-rules-audit.md；本轮新增验证结果单独记录，初稿未运行应用检查的历史陈述不代表本轮结果。
-
-## 本轮独立 worktree 验证
-
-工作树：Codex 原生登记的 C:/Users/Administrator/.codex/worktrees/task-astra-001/kk-studio-next，分支 docs/TASK-ASTRA-001-migration-plan，基于 main@80544af10ce3bd39988395ed12934d9940150e17。测试生成的 tracked evidence 与 Rust schema 已按白名单恢复；原 checkout 指纹保持不变。
-
-- npm ci：PASS，178 packages，0 vulnerabilities。
-- node scripts/check-governance.mjs --write：PASS，27 tasks，0 violations。
-- npm run verify：PASS（lint/governance/typecheck/format/build/Edge/Unit/UI）；浏览器首轮为 168 passed、1 flaky，flaky test tests/browser/task-intent.spec.ts:224 重试后通过。失败是既有严格 locator 同时匹配 storage alert 与 status 文本，未修改源码或测试。
-- npm run client:check：PASS；Rust fmt/check/test 通过，保留 3 个既有 dead_code warnings。
-- git diff --check、计划文档 Prettier check：PASS。
-- 本轮没有 API 请求、provider key、付费请求、运行数据或 UI 源码变更。
-
-## 阶段 0 GitHub 同步回读
-
-- 目标：https://github.com/soudbs180-creator/KK-Studio-2.0；远端 main=`f00b5a43ff11e9e4025d9a29b3c78b9754775827`。
-- 推送分支：docs/TASK-ASTRA-001-remote-manifest；远端回读 SHA=`9edb5281b5d9d8a77586136ef570973fc28c67fd`。
-- 远端 diff 白名单：仅 docs/migrations/kk-studio-2.0/ 下 9 个 Markdown 文件；无 apps、packages、services、tests、锁文件、构建产物或运行数据。
-- PR 尚未创建；可审阅比较链接：https://github.com/soudbs180-creator/KK-Studio-2.0/compare/main...docs/TASK-ASTRA-001-remote-manifest?expand=1
-- 分支保护、required checks 和合并结果尚未验收，EXT-GIT 仍保持 BLOCKED。
-
-- Git fetch/push 在当前凭据下可用；匿名 GitHub REST 的 repository、branches、rulesets、pulls 返回 404，classic protection 返回 401，因此仓库可见性、写权限范围、required checks 与分支保护不能据此确认。
-
-## main 树同步验证
-
-- 本地 main：455078d44914c7b9229cc0c2b5de1a13a58031b6；本地 tree：b217fcf404020cc034e1fc7aaa53ef8366d5f998。
-- 云端候选：chore/TASK-KK2-MAIN-SYNC@7bdac9d3b1990f4e88a57b705bf587c126f7b667；远端 tree：b217fcf404020cc034e1fc7aaa53ef8366d5f998；tree equality：PASS。
-- 候选 diff 统计：3,678 个路径变化（旧 v1.6.1 当前树被替换为本地 2.0 树）；扫描未发现 tracked node_modules/target/dist/test-results/.tmp/.env 或私钥/API key 形态。
-- 云端 main 仍为 f00b5a4；PR 合并、CI、保护规则和合并后回读尚未完成。
-- 审阅链接：https://github.com/soudbs180-creator/KK-Studio-2.0/compare/main...chore/TASK-KK2-MAIN-SYNC?expand=1

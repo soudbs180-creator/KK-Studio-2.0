@@ -3,7 +3,7 @@
 - ID：`2026-09-16-ui-system-audit`
 - 命令与结果：`node scripts/check-ui-standards.mjs` → `115 个文件，0 项违规`。
 - 浏览器视口/状态：1440×900、390×844；Landing、Workspace、Assets、Tasks、Task Workbench、Settings、Account 及 popover 状态。
-- 截图或 DOM 证据：`docs/evidence/ui-audit-2026-09-16/` 下本轮已验收的 15 张运行态截图、`runtime.json`、`source-inventory.json`。
+- 截图或 DOM 证据：原记录引用的 `docs/evidence/ui-audit-2026-09-16/` 当前不存在，本条不作为当前交付证据。
 - Figma 对比：`404:28667`、`410:67357`、`410:67353`、`458:948`、`458:972`、`312:2436`；`410:59708` 当前 node not found。
 - 结论：Prototype（当前 web 证据完成；Tauri release 与完整实现回归留待后续阶段）。
 
@@ -19,11 +19,7 @@
 
 ## 证据文件
 
-- 截图和运行态 JSON：[docs/evidence/ui-audit-2026-09-16](../../evidence/ui-audit-2026-09-16)
-- 页面/组件样式清单：[source-inventory.json](../../evidence/ui-audit-2026-09-16/source-inventory.json)
-- 运行态 DOM/几何/计算样式：[runtime.json](../../evidence/ui-audit-2026-09-16/runtime.json)
-- 当前 Figma Workspace：[figma-workspace-current.png](../../evidence/ui-audit-2026-09-16/figma-workspace-current.png)
-- 当前 Figma 收纳态：[figma-collection-current.png](../../evidence/ui-audit-2026-09-16/figma-collection-current.png)
+- 运行态截图、JSON 与 Figma 截图链接：原记录引用的 `docs/evidence/ui-audit-2026-09-16/` 当前不存在；需重新采集同状态证据后再恢复链接。
 
 ## 限制
 

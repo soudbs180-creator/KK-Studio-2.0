@@ -28,14 +28,7 @@ KK Studio 已经形成一套可辨认的深色创作工作台语言：黑色应�
 | 设置 | 通用、模型供应商 | 设置导航较完整；provider 页面明确浏览器 session 与桌面凭据边界 |
 | 账号 | 1440px popup | 账号、UID、切换/退出、积分、订阅、主题、版本更新；需保持 Prototype/服务边界 |
 
-代表性截图：
-
-- [Landing 1440](../../evidence/ui-audit-2026-09-16/01-landing-1440.png)
-- [Workspace 1440](../../evidence/ui-audit-2026-09-16/04-workspace-1440.png)
-- [资产面板](../../evidence/ui-audit-2026-09-16/08-assets-panel-1440.png)
-- [任务工作台](../../evidence/ui-audit-2026-09-16/10-task-workbench-1440.png)
-- [模型供应商设置](../../evidence/ui-audit-2026-09-16/12-settings-model-provider-1440.png)
-- [Landing 390](../../evidence/ui-audit-2026-09-16/15-landing-390.png)
+代表性截图：原记录引用的 `docs/evidence/ui-audit-2026-09-16/` 不在当前树中；这些截图不作为当前交付证据。请使用当前存在的同状态记录重新采集后再恢复链接。
 
 ### 视觉语言
 

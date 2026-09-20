@@ -250,7 +250,9 @@ test("durable intent write failure prevents every provider POST", async ({
   });
   await configure(page);
   await submitHome(page);
-  await expect(page.locator(".start-status")).toContainText(/写入|失败|io/i);
+  await expect(
+    page.locator('.creation-storage-notice[role="alert"]'),
+  ).toContainText(/写入|失败|io/i);
   const writes = await page.evaluate(
     () =>
       (window as Window & { t5StorageTest: { writes: number } }).t5StorageTest

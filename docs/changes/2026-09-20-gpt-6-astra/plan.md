@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- 唯一 Git 仓库 D:\kk-studio-next；当前基线为 main@80544af，保护原 dirty checkout。每个 task 使用独立注册 worktree 与 `<type>/<TASK-ID>-<description>` 分支；主线禁止直接开发、普通 direct push 和 force push。
+- 唯一 Git 仓库 D:\kk-studio-next；当前基线为已验收的稳定 main，保护原 dirty checkout。每个 task 使用独立注册 worktree 与 `<type>/<TASK-ID>-<description>` 分支；主线禁止直接开发、普通 direct push 和 force push。
 - assistant model 固定 gpt-6-astra；图片、视频、音频和历史任务模型不批量替换。
 - Desktop First / Local First；local_only 不发送 Astra 远程请求。
 - 凭据只在 com.kkstudio.provider 或 Web 请求内存，不进快照、URL、日志、导出。

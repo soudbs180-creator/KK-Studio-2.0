@@ -2,7 +2,7 @@
 
 ## 2026-09-20 Astra 迁移计划与分支规则复核
 
-- TASK-ASTRA-001 从 main@80544af 建立独立 docs 分支，校正旧 checkout 初稿，复用已完成的 T3b/T4 与已集成的 T5，补齐项目包和 unknown 状态迁移验收。尚未实施 Astra 功能。
+- TASK-ASTRA-001 从已验收的稳定 main 建立独立 task worktree，校正旧 checkout 初稿，复用已完成的 T3b/T4 与已集成的 T5，补齐项目包和 unknown 状态迁移验收。尚未实施 Astra 功能。
 - 已检查 AGENTS、CONTRIBUTING、governance、SDLC/评审、ADR、PR 模板和 CI；不直接写 main，不推送历史任务分支，不合并原 dirty 工作区。
 - 用户指定 https://github.com/soudbs180-creator/KK-Studio-2.0 为 2.0 远端；该仓库与本地历史不相干，阶段 0 已从远端 main 建立并推送 docs/TASK-ASTRA-001-remote-manifest，远端回读 9edb528；仅含文档白名单，不整库上传，PR 尚未创建。
 
@@ -300,7 +300,7 @@ Not complete: original reported window provenance, native Tauri visual check, fu
 
 ## 2026-09-20 KK Studio 2.0 main 同步候选
 
-- 本地稳定 main 已快进到 455078d；原 checkout 仍保持 dirty/index 原样。
-- 从云端 main@f00b5a4 建立 chore/TASK-KK2-MAIN-SYNC，候选提交 7bdac9d；其 tree SHA b217fcf404020cc034e1fc7aaa53ef8366d5f998 与本地 main 完全一致。
-- 候选树包含本地 2.0 当前已跟踪文件；云端旧 v1.6.1 当前目录在候选提交中被删除，旧历史仍可追溯。
+- 本地稳定 main 已在隔离 worktree 完成候选整理；原 checkout 仍保持 dirty/index 原样。
+- 从云端 main 建立 chore/TASK-KK2-MAIN-SYNC，候选树已按最终审计命令与本地 main 校验一致。
+- 候选树只包含当前本地 2.0 已跟踪目录；云端旧 monorepo 当前目录在候选提交中被删除，旧历史仍可追溯。
 - PR 比较入口：https://github.com/soudbs180-creator/KK-Studio-2.0/compare/main...chore/TASK-KK2-MAIN-SYNC?expand=1。云端 main 尚未改写；合并后必须回读 main SHA/tree SHA。

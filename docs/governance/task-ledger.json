@@ -766,13 +766,14 @@
       "Git hosting"
     ],
     "status": "BLOCKED",
-    "evidence": [
-      "docs/changes/2026-09-17-governance-baseline/verification.md"
-    ],
     "verification": "NOT VERIFIED",
     "updated": "2026-09-20",
-    "blocker": "目标为 https://github.com/soudbs180-creator/KK-Studio-2.0；远端 main@f00b5a4 是既有 v1.6.1 monorepo，与本地 main@80544af 无共同基线。本轮只准备白名单文档分支，远端保护与 CI 尚未验收。",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "NOT_VERIFIED",
+    "blocker": "目标仓库 authenticated API 已确认 private、默认分支 main 与写权限；main protected=false，required checks 为空，rulesets/protection API 因当前 GitHub 计划返回 403。需完成最终候选 PR、CI、合并和 main tree 回读；托管保护能力仍未启用。",
+    "evidence": [
+      "docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md",
+      "docs/changes/2026-09-20-gpt-6-astra/verification.md"
+    ]
   },
   {
     "id": "TEST-PROV-001",
@@ -819,8 +820,6 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "docs/TASK-ASTRA-001-migration-plan",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/task-astra-001/kk-studio-next",
     "affectedModules": [
       "docs/changes/2026-09-20-gpt-6-astra",
       "docs/governance",
@@ -831,9 +830,11 @@
       "docs/changes/2026-09-20-gpt-6-astra/verification.md",
       "docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md"
     ],
-    "verification": "本地计划校正、规则审计和阶段0白名单同步已完成；目标仓库为 https://github.com/soudbs180-creator/KK-Studio-2.0，远端 docs/TASK-ASTRA-001-remote-manifest@9edb528 已回读，PR/保护/CI 尚未验收。",
-    "updated": "2026-09-20",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "NOT_VERIFIED",
+    "branch": "codex/TASK-KK2-main-integration",
+    "worktree": "C:/Users/Administrator/.codex/worktrees/task-astra-001/kk-studio-next",
+    "verification": "迁移计划、规则审计、目录清理和本地验证已完成；Astra 功能未实施，最终 GitHub PR/CI/main 回读仍在进行。",
+    "updated": "2026-09-20"
   },
   {
     "id": "TASK-KK2-MAIN-SYNC",
@@ -860,14 +861,48 @@
       "main"
     ],
     "status": "IN_PROGRESS",
+    "updated": "2026-09-20",
+    "verificationResult": "NOT_VERIFIED",
+    "verification": "候选分支已从目标远端 main 派生；最终审计命令确认候选 tree 与本地稳定 main 相同。PR、CI、合并及合并后 main 回读待完成。",
+    "blocker": "需要在目标仓库通过 PR 合并候选分支并回读 main commit/tree；main protection 当前为 false，rulesets/protection API 受 GitHub 计划限制。",
     "evidence": [
       "docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md",
       "docs/changes/2026-09-20-gpt-6-astra/verification.md",
-      "docs/changes/2026-09-20-gpt-6-astra/sync-manifest.md"
+      "docs/changes/2026-09-20-gpt-6-astra/sync-manifest.md",
+      "docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md"
+    ]
+  },
+  {
+    "id": "TASK-UI-UNMERGED-001",
+    "title": "dirty checkout 未合并 UI 回归候选",
+    "goal": "审查并在独立分支验收脏工作区中发现的 UI 交互修复",
+    "scope": "UI interaction/regression",
+    "acceptance": [
+      "复核 useDismissible、Modal、TopBar、TaskPanelPopover、settings focus/switch 改动的源代码差异",
+      "从最新稳定 main 建立独立 task branch/worktree，不复制 dirty checkout 全量内容",
+      "运行定向浏览器回归和完整 verify，并保留同状态证据"
     ],
-    "verification": "候选远端 chore/TASK-KK2-MAIN-SYNC@7bdac9d 已推送；tree b217fcf404020cc034e1fc7aaa53ef8366d5f998 与本地 main@455078d 相同。PR、分支保护、CI 和远端 main 合并回读尚未完成。",
+    "dependencies": [
+      "TASK-GOV-001"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/components/useDismissible.ts",
+      "src/components/Modal.tsx",
+      "src/components/TopBar.tsx",
+      "src/components/TaskPanelPopover.tsx",
+      "src/components/settings/SettingsControls.tsx",
+      "src/components/settings/ConnectionSettings.tsx",
+      "tests/browser"
+    ],
+    "status": "TODO",
+    "evidence": [
+      "docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md"
+    ],
+    "verification": "dirty checkout 中的 UI 候选尚未迁移或验收；本次首发同步不包含这些改动。",
     "updated": "2026-09-20",
-    "verificationResult": "NOT_VERIFIED",
-    "blocker": "需要在 https://github.com/soudbs180-creator/KK-Studio-2.0 合并 chore/TASK-KK2-MAIN-SYNC 到 main，并回读 main 的 commit/tree；匿名 GitHub REST 返回 404/401，required checks 与 protection 未确认。"
+    "verificationResult": "NOT_VERIFIED"
   }
 ]

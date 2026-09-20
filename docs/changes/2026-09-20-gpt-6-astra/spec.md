@@ -3,7 +3,7 @@
 - ID：GPT6-ASTRA-20260920
 - 状态：拟议方案，尚未实施。
 - 初稿调研基线：原目录 `codex/desktop-data-stability@609f524` 加已有未提交改动，保留为历史来源。
-- 当前实施基线：已复核的本地 `main@80544af10ce3bd39988395ed12934d9940150e17`。集成工作树在 `D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001`，复核时干净。本任务位于独立 `docs/TASK-ASTRA-001-migration-plan` 分支；后续执行从届时最新已验收 main 起步。
+- 当前实施基线：已复核的本地稳定 `main`。集成工作树在 `D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001`；本任务在独立 `codex/TASK-KK2-main-integration` worktree 中整理，后续执行从最终回读的已验收 main 起步。
 - 远端边界：用户明确选择 https://github.com/soudbs180-creator/KK-Studio-2.0 作为 2.0 远端；该仓库与本地 main 历史不相干，本轮只做分阶段、白名单同步；不绑定旧 `soudbs180-creator/kk-studio`，不把旧 main 与本地 main 混同。
 
 ## 当前事实与迁移范围
