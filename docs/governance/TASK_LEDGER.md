@@ -38,6 +38,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-MAIN-001 | 现行Figma页面校正与交互修复主线整合 | DONE | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 | TASK-UI-DISMISS-002 | 窄屏侧栏关闭与大图重绘稳定性 | DONE | TASK-UI-MAIN-001 | root |
 | TASK-GOV-002 | 跨AI自主开发与分支质量门禁 | REVIEW | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
+| TASK-CAP-001 | 本地 Skill/MCP/ComfyUI 能力补齐 | PARTIAL | TASK-GOV-001, T6 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -427,3 +428,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — 规则门禁31tasks/0、push9/9、delivery12/12、场景结构12/12、基线正反例2/2；f7425d6 hosted verify成功。最终diff无产品/既有测试/旧证据改动。PR4保持draft，main前进到a1d8629导致冲突，遵用户要求不再处理新上游；远端保护API403仍BLOCKED。当前不具备合并/发布条件。
 - Evidence: [docs/changes/2026-09-20-ai-sdlc/verification.md](../../docs/changes/2026-09-20-ai-sdlc/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json)
 - Updated: 2026-09-20
+
+## TASK-CAP-001 — 本地 Skill/MCP/ComfyUI 能力补齐
+
+- Goal: 复刻可安全落地的本地 Skill、MCP 工具发现与 ComfyUI 工作流交互，并保持未接入外部服务的边界可见
+- Scope: src/features/skills, src/features/mcp, src/features/comfyui, Settings, Catalog, Composer, browser/unit tests
+- Acceptance: 本地 Skill 可安全导入、安装、编辑、启停、导出并应用到 Composer 草稿; MCP Streamable HTTP 可完成握手、分页工具发现、inputSchema 展示和显式确认调用; ComfyUI 工作流可本地创建、导入、导出、删除并显示真实运行边界; 凭据、token、脚本执行、远程市场和未接入服务不被伪造为已完成
+- Branch: `feat/TASK-CAP-001-integrated`
+- Worktree: `D:/kk-studio-next/.worktrees/TASK-CAP-001-INTEGRATED`
+- Modules: src/features/skills, src/features/mcp, src/features/comfyui, src/components/settings, src/components/LibraryPage.tsx, src/App.tsx, tests/unit, tests/browser
+- Verification: PARTIAL — Skill、MCP、ComfyUI 定向单测 16/16，UI 标准 127/0，production preview 定向浏览器 9/9，typecheck/build 通过；MiniMax 仅完成安装包静态审计，桌面控制 RPC 不可用，1421/Tauri 和真实 ComfyUI 提交待后续验收。
+- Evidence: [docs/changes/2026-09-21-local-capabilities/intent.md](../../docs/changes/2026-09-21-local-capabilities/intent.md), [docs/changes/2026-09-21-local-capabilities/spec.md](../../docs/changes/2026-09-21-local-capabilities/spec.md), [docs/changes/2026-09-21-local-capabilities/verification.md](../../docs/changes/2026-09-21-local-capabilities/verification.md)
+- Updated: 2026-09-21

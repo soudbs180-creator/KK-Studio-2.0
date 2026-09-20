@@ -546,6 +546,31 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+.settings-mcp-tool-input {
+  display: grid;
+  gap: 4px;
+  color: var(--settings-muted);
+  font-size: 11px;
+}
+.settings-mcp-tool-input textarea {
+  width: 100%;
+  min-height: 54px;
+  padding: 7px;
+  border: 1px solid var(--settings-border);
+  border-radius: 6px;
+  background: var(--bg-input);
+  color: var(--settings-text);
+  font:
+    11px/1.4 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  resize: vertical;
+}
+.settings-mcp-tool-result {
+  max-height: 120px;
+  overflow: auto;
+}
 @media (max-width: 720px) {
   .settings-mcp-server > header {
     flex-direction: column;

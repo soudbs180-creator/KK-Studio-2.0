@@ -60,6 +60,20 @@ test("MCP 设置保存 endpoint，完成真实握手并展示 tools/list 返回�
       });
       return;
     }
+    if (body.method === "tools/call") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: body.id,
+          result: {
+            content: [{ type: "text", text: "canvas-ready" }],
+          },
+        }),
+      });
+      return;
+    }
     await route.fulfill({ status: 404, body: "" });
   });
 
@@ -88,6 +102,16 @@ test("MCP 设置保存 endpoint，完成真实握手并展示 tools/list 返回�
       exact: false,
     }),
   ).toBeVisible();
+  page.once("dialog", (browserDialog) => {
+    expect(browserDialog.message()).toContain("read_canvas");
+    void browserDialog.accept();
+  });
+  await dialog
+    .getByRole("button", { name: "调用工具（需确认）", exact: true })
+    .click();
+  await expect(dialog.locator(".settings-mcp-tool-result")).toContainText(
+    "canvas-ready",
+  );
 });
 
 test("MCP 设置拒绝不安全的远程 HTTP endpoint", async ({ page }) => {

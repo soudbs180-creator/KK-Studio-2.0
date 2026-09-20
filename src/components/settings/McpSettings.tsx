@@ -132,6 +132,22 @@ export default function McpSettings({
     }
   }
 
+  async function callTool(
+    server: McpServerConfig,
+    tool: McpTool,
+    arguments_: Record<string, unknown>,
+  ): Promise<unknown> {
+    if (
+      !window.confirm(`确认向 ${server.name} 发送工具 ${tool.name} 的参数吗？`)
+    )
+      throw new Error("工具调用已取消。");
+    const client = clients.get(server.id);
+    if (!client) throw new Error("MCP 服务器尚未连接。");
+    const result = await client.callTool(tool.name, arguments_, true);
+    onFeedback(`已调用 ${server.name} · ${tool.name}。`);
+    return result;
+  }
+
   return (
     <div className="settings-mcp">
       <p className="settings-section-intro">
@@ -207,6 +223,9 @@ export default function McpSettings({
               onRemove={() => removeServer(server)}
               onToggleTools={() =>
                 setExpanded(expanded === server.id ? null : server.id)
+              }
+              onCallTool={(tool, arguments_) =>
+                callTool(server, tool, arguments_)
               }
             />
           ))

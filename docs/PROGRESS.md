@@ -8,6 +8,14 @@
 - 当次GitHub回读private main未受保护，API403套餐限制仍为EXT-GIT BLOCKED。最新主线CI失败仅登记为产品任务 follow-up，未修复或改写其测试、截图和报告。
 - 规则候选验证：governance 31 tasks/0 violations、push policy 9/9、delivery policy 12/12、AI 场景结构 12/12，规则文件 lint/typecheck/format/links 通过；未发布、未清理分支、未改写历史。
 
+## 2026-09-21 本地 Skill、MCP 与 ComfyUI 能力补齐（TASK-CAP-001，部分验收）
+
+- 基于 MiniMax Design 安装包静态审计，新增本地 Skill registry：安全 manifest/schema、受限 instructions、JSON/SKILL.md 导入导出、安装/编辑/启停/搜索、设置面板与首页/对话 Composer 选择器；应用 Skill 时保留用户原有 prompt，保存失败不静默改写内存状态。
+- 新增真实 MCP Streamable HTTP（2025-11-25）连接：endpoint 安全校验、initialize/initialized/tools/list 分页与 SSE、取消/断开、工具 inputSchema 展示和显式确认后的 tools/call；不保存 token、Authorization 或 session ID，stdio/OAuth/Agent 自动调用仍为 Prototype。
+- 新增 ComfyUI 本地工作流目录：创建 starter、导入 API JSON/UI export、导出、删除和本地运行请求状态。当前运行请求尚未接入 Tauri/真实 ComfyUI 提交，不把 pending 当生成成功。
+- 源码和预览专项验证：typecheck、UI 标准（127/0）、16 项 Skill/MCP/ComfyUI 单测、build 通过；production preview `http://127.0.0.1:1423/` 的 Catalog/MCP 定向浏览器回归 9/9 通过。MiniMax 原生窗口控制通道返回 `Trusted RPC service is not configured: sky`，因此未宣称原生交互证据；1421 开发态、Tauri release、完整 verify 待主线收口。
+- TASK-CAP-001 保持 **PARTIAL**：实际 ComfyUI/Tauri 提交与恢复、stdio/OAuth、Agent 自主调用、远程 Skill 市场、云端同步和完整 Figma parity 不在本轮完成范围。
+
 ## 2026-09-20 Astra 迁移计划与分支规则复核
 
 - TASK-ASTRA-001 从已验收的稳定 main 建立独立 task worktree，校正旧 checkout 初稿，复用已完成的 T3b/T4 与已集成的 T5，补齐项目包和 unknown 状态迁移验收。尚未实施 Astra 功能。
