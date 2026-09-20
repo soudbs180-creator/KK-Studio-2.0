@@ -398,6 +398,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-GOV-002-ai-sdlc`
 - Worktree: `D:/kk-studio-next/.worktrees/TASK-GOV-002`
 - Modules: docs, scripts/governance, .github, .githooks, config, src/runtime/storage-contract.ts, tests
-- Verification: PARTIAL — 候选 311e6fa8574780fcd7c33753b1748dd958275072 本地验证 PASS：治理30/0、unit172/172、browser169/169、UI119/0、Rust58/58；delivery/push/storage 定向门禁通过。远端保护因私有个人仓库套餐 API403 仍 BLOCKED，Desktop Provider/T5 follow-up 仍 PARTIAL。
+- Verification: PARTIAL — 候选 2e96910f2b67649a40fe8da7ea492809434110c0 本地验证 PASS：治理30/0、unit172/172、browser169/169、UI119/0、Rust58/58；delivery/push/storage 定向门禁通过。远端保护因私有个人仓库套餐 API403 仍 BLOCKED，Desktop Provider/T5 follow-up 仍 PARTIAL。
 - Evidence: [docs/changes/2026-09-20-ai-sdlc/verification.md](../../docs/changes/2026-09-20-ai-sdlc/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json)
 - Updated: 2026-09-20
