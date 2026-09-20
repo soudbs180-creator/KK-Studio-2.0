@@ -405,6 +405,158 @@
   gap: 16px;
   width: 100%;
 }
+
+.settings-mcp {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+.settings-mcp-add,
+.settings-mcp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+.settings-mcp h3 {
+  margin: 0;
+  color: var(--settings-text);
+  font-size: 14px;
+  line-height: 20px;
+}
+.settings-mcp-add {
+  padding: 16px;
+  border: 1px solid var(--settings-border);
+  border-radius: 10px;
+  background: var(--bg-card);
+}
+.settings-mcp-add .settings-field {
+  gap: 7px;
+  font-size: 12px;
+  color: var(--settings-muted);
+}
+.settings-mcp-add .settings-field input {
+  color: var(--settings-text);
+}
+.settings-mcp-error {
+  margin: 0;
+  color: var(--text-danger);
+  font-size: 12px;
+  line-height: 18px;
+  overflow-wrap: anywhere;
+}
+.settings-mcp-server {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--settings-border);
+  border-radius: 10px;
+  background: var(--bg-card);
+}
+.settings-mcp-server > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.settings-mcp-server-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.settings-mcp-server-copy strong {
+  color: var(--settings-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+.settings-mcp-server-copy code {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  color: var(--settings-muted);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 11px;
+}
+.settings-mcp-server-copy span {
+  color: var(--settings-muted);
+  font-size: 11px;
+}
+.settings-mcp-server-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 7px;
+}
+.settings-mcp-server-actions .settings-action {
+  min-height: 30px;
+  padding: 5px 10px;
+}
+.settings-mcp-tools-toggle {
+  align-self: flex-start;
+  color: var(--text-accent);
+  font-size: 12px;
+}
+.settings-mcp-tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 8px;
+}
+.settings-mcp-tool {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--settings-border);
+  border-radius: 8px;
+  background: var(--settings-bg);
+}
+.settings-mcp-tool strong {
+  overflow-wrap: anywhere;
+  color: var(--settings-text);
+  font-size: 12px;
+}
+.settings-mcp-tool code {
+  overflow-wrap: anywhere;
+  color: var(--text-accent);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 10px;
+}
+.settings-mcp-tool p {
+  margin: 0;
+  color: var(--settings-muted);
+  font-size: 11px;
+  line-height: 16px;
+}
+.settings-mcp-tool details {
+  color: var(--settings-muted);
+  font-size: 11px;
+}
+.settings-mcp-tool pre {
+  max-height: 160px;
+  margin: 6px 0 0;
+  padding: 7px;
+  overflow: auto;
+  border-radius: 5px;
+  background: var(--bg-app);
+  color: var(--settings-text);
+  font-size: 10px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 720px) {
+  .settings-mcp-server > header {
+    flex-direction: column;
+  }
+  .settings-mcp-server-actions {
+    width: 100%;
+  }
+  .settings-mcp-server-actions .settings-action {
+    flex: 1;
+  }
+}
 .settings-detail-label {
   color: var(--settings-muted);
   font-size: 12px;

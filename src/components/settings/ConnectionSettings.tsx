@@ -1,5 +1,6 @@
 import type { SettingsSection } from "./SettingsSectionData";
 import ModelProviderSettings from "./ModelProviderSettings";
+import McpSettings from "./McpSettings";
 
 const PENDING_SETTINGS: Partial<
   Record<SettingsSection, { title: string; description: string }>
@@ -40,6 +41,7 @@ export default function ConnectionSettings({
 }) {
   if (section === "providers")
     return <ModelProviderSettings onFeedback={onFeedback} />;
+  if (section === "mcp") return <McpSettings onFeedback={onFeedback} />;
   if (section === "updates")
     return (
       <div className="settings-version">
