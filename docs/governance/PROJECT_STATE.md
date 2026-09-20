@@ -32,10 +32,18 @@ Figma 认证本轮已可用，404:28667 只返回 Frame 边界元数据，尚无
 5. **T9、T10-PREP（TODO）**：Web 容量/离线/项目包适配和部署备份回滚产物；T10/T11 仍依赖 VPS/DNS/切换外部条件。
 6. **T12（TODO）**：Desktop/Core/Web 稳定后推进 Mobile。
 
-27 项账本统计：9 DONE、2 PARTIAL、10 TODO、5 BLOCKED、1 IN_PROGRESS。外部条件只阻塞对应验收，不能阻断 T5 等本地可实施项。
+28 项账本统计：9 DONE、2 PARTIAL、10 TODO、5 BLOCKED、2 IN_PROGRESS。外部条件只阻塞对应验收，不能阻断 T5 等本地可实施项。
 
 ## 2026-09-20 Astra 计划与同步准备
 
 - TASK-ASTRA-001 在独立 docs 分支校正迁移计划并审计规则；原 checkout 和 main 不直接编辑。工作树由 Codex 原生工具登记，准确路径见 task-ledger.json。
 - 用户指定 https://github.com/soudbs180-creator/KK-Studio-2.0 为 2.0 远端。远端 main@f00b5a4 是既有 v1.6.1 monorepo，与本地 main@80544af 无共同基线；旧 soudbs180-creator/kk-studio 仍不作为目标。阶段 0 已推送白名单文档分支 docs/TASK-ASTRA-001-remote-manifest@9edb528；不整库上传、不硬合并，PR 尚未创建。
 - 计划与规则审计见 docs/changes/2026-09-20-gpt-6-astra/；Astra 尚未实现，T5/T6 等原任务状态保持。
+
+
+## 2026-09-20 KK Studio 2.0 main 同步候选
+
+- 本地稳定 main 已快进到 f011ecf；原 checkout 仍保持 dirty/index 原样。
+- 从云端 main@f00b5a4 建立 chore/TASK-KK2-MAIN-SYNC，候选提交 c8133fb；其 tree SHA 78b885cad05f78e75d605b8f58a2dfedda0a2782 与本地 main 完全一致。
+- 候选树包含本地 2.0 当前已跟踪文件；云端旧 v1.6.1 当前目录在候选提交中被删除，旧历史仍可追溯。
+- PR 比较入口：https://github.com/soudbs180-creator/KK-Studio-2.0/compare/main...chore/TASK-KK2-MAIN-SYNC?expand=1。云端 main 尚未改写；合并后必须回读 main SHA/tree SHA。

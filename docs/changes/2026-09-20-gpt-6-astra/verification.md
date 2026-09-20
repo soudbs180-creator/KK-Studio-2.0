@@ -56,3 +56,11 @@
 - 分支保护、required checks 和合并结果尚未验收，EXT-GIT 仍保持 BLOCKED。
 
 - Git fetch/push 在当前凭据下可用；匿名 GitHub REST 的 repository、branches、rulesets、pulls 返回 404，classic protection 返回 401，因此仓库可见性、写权限范围、required checks 与分支保护不能据此确认。
+
+## main 树同步验证
+
+- 本地 main：f011ecf9037d8d92a204f374f6dbbd0d40ef74c3；本地 tree：78b885cad05f78e75d605b8f58a2dfedda0a2782。
+- 云端候选：chore/TASK-KK2-MAIN-SYNC@c8133fba16c60721a053c453b455afd21d66c501；远端 tree：78b885cad05f78e75d605b8f58a2dfedda0a2782；tree equality：PASS。
+- 候选 diff 统计：3,678 个路径变化（旧 v1.6.1 当前树被替换为本地 2.0 树）；扫描未发现 tracked node_modules/target/dist/test-results/.tmp/.env 或私钥/API key 形态。
+- 云端 main 仍为 f00b5a4；PR 合并、CI、保护规则和合并后回读尚未完成。
+- 审阅链接：https://github.com/soudbs180-creator/KK-Studio-2.0/compare/main...chore/TASK-KK2-MAIN-SYNC?expand=1

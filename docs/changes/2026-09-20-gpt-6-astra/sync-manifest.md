@@ -62,3 +62,8 @@ packages/kk-studio-2.0-shared/         # 仅抽取平台无关 DTO/schema
 3. 运行目标仓库要求的 architecture、governance、typecheck、build 与相关测试。
 4. PR base 固定为 `main`，只允许本阶段目录；不自动合并。
 5. 回读远端 commit、PR、CI 和分支保护状态后，才更新 EXT-GIT；未回读不标记 DONE。
+
+## 阶段 3：main 树同步（当前候选）
+
+阶段 0 文档分支已经独立推送；本次 main 同步候选 chore/TASK-KK2-MAIN-SYNC 从远端 main 建立，并以 Git tree 对象替换为本地 main@f011ecf 的完整跟踪树。候选 tree SHA 为 78b885cad05f78e75d605b8f58a2dfedda0a2782，与本地 main 相同。该分支只通过 PR 合并，禁止直接推送 main；合并后回读远端 main SHA/tree SHA，确认两端一致后才关闭 TASK-KK2-MAIN-SYNC。
+候选 PR：https://github.com/soudbs180-creator/KK-Studio-2.0/compare/main...chore/TASK-KK2-MAIN-SYNC?expand=1

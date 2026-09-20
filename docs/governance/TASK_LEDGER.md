@@ -33,6 +33,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | EXT-GIT | 远端PR与main保护规则 | BLOCKED | TASK-GOV-001, T0 | root |
 | TEST-PROV-001 | Provider真实入口浏览器回归 | DONE | TASK-GOV-001 | root |
 | TASK-ASTRA-001 | Astra 迁移计划与 Git 分支规则同步 | IN_PROGRESS | T0, TASK-GOV-001 | root |
+| TASK-KK2-MAIN-SYNC | KK Studio 2.0 本地与云端 main 树同步 | IN_PROGRESS | T0, TASK-GOV-001 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -361,4 +362,17 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: docs/changes/2026-09-20-gpt-6-astra, docs/governance, docs/PROGRESS.md
 - Verification: NOT_VERIFIED — 本地计划校正、规则审计和阶段0白名单同步已完成；目标仓库为 https://github.com/soudbs180-creator/KK-Studio-2.0，远端 docs/TASK-ASTRA-001-remote-manifest@9edb528 已回读，PR/保护/CI 尚未验收。
 - Evidence: [docs/changes/2026-09-20-gpt-6-astra/verification.md](../../docs/changes/2026-09-20-gpt-6-astra/verification.md), [docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md](../../docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md)
+- Updated: 2026-09-20
+
+## TASK-KK2-MAIN-SYNC — KK Studio 2.0 本地与云端 main 树同步
+
+- Goal: 将目标仓库 main 的当前文件树替换为已验证的本地 KK Studio 2.0 main，并保持两端 tree 一致
+- Scope: Git hosting、全仓库文件树、main 分支同步
+- Acceptance: 本地 main 已从最新已验收提交快进整合; 目标远端 main 的替换分支只基于远端 main 创建; 替换分支 tree SHA 与本地 main 完全一致; secret/path/构建产物扫描通过且旧 v1.6.1 当前文件不再出现在候选树; PR 合并后回读远端 main SHA/tree SHA 与本地 main 一致
+- Branch: `chore/TASK-KK2-MAIN-SYNC`
+- Worktree: `D:/kk-studio-next/.worktrees/TASK-KK2-MAIN-SYNC`
+- Modules: Git hosting, repository tree, main
+- Verification: NOT_VERIFIED — 候选远端 chore/TASK-KK2-MAIN-SYNC@c8133fb 已推送；tree 78b885cad05f78e75d605b8f58a2dfedda0a2782 与本地 main@f011ecf 相同。PR、分支保护、CI 和远端 main 合并回读尚未完成。
+- Evidence: [docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md](../../docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md), [docs/changes/2026-09-20-gpt-6-astra/verification.md](../../docs/changes/2026-09-20-gpt-6-astra/verification.md), [docs/changes/2026-09-20-gpt-6-astra/sync-manifest.md](../../docs/changes/2026-09-20-gpt-6-astra/sync-manifest.md)
+- External condition: 需要在 https://github.com/soudbs180-creator/KK-Studio-2.0 合并 chore/TASK-KK2-MAIN-SYNC 到 main，并回读 main 的 commit/tree；匿名 GitHub REST 返回 404/401，required checks 与 protection 未确认。
 - Updated: 2026-09-20
