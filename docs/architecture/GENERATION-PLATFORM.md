@@ -4,13 +4,7 @@
 
 `npm run gateway -- <config.json>` 启动 Node 24 独立服务。HTTP Gateway 和 `PersistentGenerationWorker` 共用 SQLite，页面关闭、刷新或 HTTP 断线不影响已提交任务。服务器适配器实现 `GenerationProviderAdapter`，支持正式 OpenAI-compatible / Gemini API 与本地 ComfyUI，每次供应商请求一个输出，批次按队列控制并发。
 
-当前交付为可运行单机后端，未发布公网服务，未连接真实计费账户或执行付费供应商测试。首页、对话、画布图片及结果编辑共用 `submitImageCommand → executeTask`；随后按平台分为下列实际调用链，不能把一条链的验收推广到另一条。
-
-- Web BYOK：`generateImages` 直接调用 OpenAI-compatible 图片接口并归档到 IndexedDB。
-- Desktop BYOK：`submitNativeTask → task_host_submit` 由随 Tauri 打包的 Rust TaskHost 读取系统凭据库、请求 Provider、写原生素材仓库与 `tasks/native-host/` journal；UI 轮询 IPC，不回退浏览器 Provider。T5 实现已接入，但原生提交缺少连接 reservation/assertCurrent 与结构化失败 health 回写，不能沿用 Web 门禁已完成的结论；[当前缺口审计](../evidence/ai-sdlc-2026-09-20/desktop-provider-gap-audit.md)与隔离 Tauri/WebView 提交、取消和进程重启验收仍为 PARTIAL。
-- 独立 Gateway：本页 Node SQLite Gateway/Worker 提供 `GenerationJobClient` 和 `/v1/jobs`；当前 UI 尚未接入，不代表正式平台账户或账单已上线。
-
-产品任务保留可选 `sourceItemId`，结果通过 result edge 连回来源。三条链的任务/凭据/存储边界分别记录和验证；原生 TaskHost 现状见 `docs/changes/2026-09-19-taskhost-durable-intent/verification.md`。没有个人 ChatGPT Pro / Google AI Pro 登录共享、OAuth 会话轮换、跨账号限额绕过。
+当前交付为可运行单机后端，未发布公网服务，未连接真实计费账户或执行付费供应商测试。2026-09-18 T4 已将首页、对话、画布图片及结果编辑统一为 `submitImageCommand → executeTask → generateImages`，使用 BYOK OpenAI-compatible 图片接口并归档原件；任务保留可选 `sourceItemId`，结果通过 result edge 连回来源。UI 尚未使用本页的独立 Gateway/Worker，持久本地 TaskHost 属于 T5。新后端提供 `GenerationJobClient` 和 `/v1/jobs` 接口，不冒称 UI 已切换到正式平台账户。没有个人 ChatGPT Pro / Google AI Pro 登录共享、OAuth 会话轮换、跨账号限额绕过。
 
 连接元数据的 `active` 表示已配置并可尝试提交；`verificationStatus` 与 `lastSuccessfulGenerationAt` 单独记录成功图片响应。保存配置和 `/models` 成功不生成验证记录；模型/地址/凭据改变清除旧验证并使旧请求无法回写验证，不清除 cooldown/quarantine。比例和清晰度目前仅保存为画布草稿参数，图片请求使用供应商默认参数。
 

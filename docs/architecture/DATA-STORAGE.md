@@ -10,7 +10,7 @@
 - macOS：`~/Library/Application Support/kk-studio/`
 - Linux：`$XDG_DATA_HOME/kk-studio/`（默认 `~/.local/share/kk-studio/`）
 
-默认根目录仍为 `dirs::data_dir()/kk-studio`，没有 `KK_DATA_DIR` 环境变量覆盖。`AppPaths::initialize()` 现在接受显式 `--data-dir <绝对路径>`，用于用户指定目录或隔离 release 验收；缺值、相对路径和重复参数会报错。它不迁移原目录，也不改变 WebView 浏览器 profile；验收需另设独立 `WEBVIEW2_USER_DATA_FOLDER`。正常启动不把用户数据写进仓库；测试使用系统临时目录或 `src-tauri/target/` 下专用合成目录，不写真实用户 profile。
+默认根目录仍为 `dirs::data_dir()/kk-studio`，没有 `KK_DATA_DIR` 环境变量覆盖。`AppPaths::initialize()` 现在接受显式 `--data-dir <绝对路径>`，用于用户指定目录或隔离 release 验收；缺值、相对路径和重复参数会报错。它不迁移原目录，也不改变 WebView 浏览器 profile；验收需另设独立 `WEBVIEW2_USER_DATA_FOLDER`。正常启动不把用户数据写进仓库，测试仅向 `src-tauri/target/` 下专用合成目录写入。
 
 启动只创建规范目录并保留旧文件，旧数据不会自动迁移。创作快照使用下方安全仓库契约；聊天与配置文件仍按各自命令的现有边界写入，不能把创作仓库的保证推广到所有文件。
 
@@ -36,8 +36,6 @@ kk-studio/
 │  ├─ records/<assetId>.json # version=1及非敏感metadata
 │  ├─ blobs/<sha256>    # 无扩展名的原始字节，内容寻址
 │  └─ repository.lock  # 进程间互斥
-├─ tasks/
-│  └─ native-host/      # TaskHost journal：幂等身份、状态和逐 slot 输出引用
 ├─ cache/               # 可删除缓存（缩略图、模型列表、临时响应）
 ├─ backups/             # 自动/手动快照，受保留策略管理
 └─ logs/                # 脱敏诊断日志，不写请求头、API Key 或完整提示词
@@ -49,13 +47,11 @@ kk-studio/
 
 当前 `kk-studio-next` 的浏览器端保存主题偏好、供应商元数据和创作快照恢复副本；完整创作快照在 Web 使用 IndexedDB，在 Tauri 使用 `projects/creation-v2.json` IPC 命令。浏览器端 API Key 只在当前会话内存中，Windows 桌面端通过 `com.kkstudio.provider` 凭据命令读写系统凭据库：
 
-| Key                                      | Schema                                         | 用途                                                 | 风险/边界                                                  |
-| ---------------------------------------- | ---------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
-| `kk-studio-next:settings:v1`             | `src/domain/settings.ts`，version=1            | 主题、语言、浮动布局、水印偏好                       | 只允许非敏感偏好                                           |
-| `kk-studio-next:model-provider:v1`       | `src/domain/modelProvider.ts`，version=1       | 供应商名称、Base URL、默认模型                       | API Key 只在当前 React state                               |
-| `kk-studio-next:provider-connections:v1` | `src/domain/providerConnections.ts`            | 连接、能力、健康验证与占用元数据                     | 只含 opaque credentialRef，不含密钥                        |
-| `kk-studio-next:asset-collections:v1`    | `src/components/assets/useAssetCollections.ts` | 素材集合元数据                                       | 不作为素材原件仓库                                         |
-| `kk-studio-next:creation:v1`             | `src/features/creation/model.ts`，version=2    | 小型恢复副本；项目、任务、消息、附件草稿不含 API Key | 大附件优先以 IndexedDB 为耐久源，localStorage 仅作恢复副本 |
+| Key                                | Schema                                      | 用途                                                 | 风险/边界                                                  |
+| ---------------------------------- | ------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| `kk-studio-next:settings:v1`       | `src/domain/settings.ts`，version=1         | 主题、语言、浮动布局、水印偏好                       | 只允许非敏感偏好                                           |
+| `kk-studio-next:model-provider:v1` | `src/domain/modelProvider.ts`，version=1    | 供应商名称、Base URL、默认模型                       | API Key 只在当前 React state                               |
+| `kk-studio-next:creation:v1`       | `src/features/creation/model.ts`，version=2 | 小型恢复副本；项目、任务、消息、附件草稿不含 API Key | 大附件优先以 IndexedDB 为耐久源，localStorage 仅作恢复副本 |
 
 ## 创作快照与画布契约（2026-09-16）
 
@@ -71,9 +67,7 @@ kk-studio/
 
 对应实现和证据见 `docs/changes/2026-09-16-desktop-data-stability/verification.md`。
 
-`src-tauri/src/storage_paths.rs` 已将桌面端文件固定为 `providers/config.json`、`conversations/index.json` 和 `projects/creation-v2.json`，并创建 `tasks/`；`main.rs` 将原生任务 journal 放到 `tasks/native-host/`。启动时只保留旧根目录文件作为只读迁移来源，不会自动解析、复制或删除它们。创作页通过 `read_creation_snapshot` / `write_creation_snapshot` 使用项目快照边界；设置元数据仍由 provider schema 管理。目录与偏好/元数据 key 见 `src/runtime/storage-contract.ts`；创作快照 key 与派生 sessionStorage journal key 见 `src/features/creation/model.ts`、`storage.ts`。
-
-原生 TaskHost 已接入 Desktop 图片任务：先持久化创作 intent，再通过 IPC 提交；journal 保存 task/idempotency identity、请求 fingerprint、状态及逐 slot asset 引用，不保存密钥或完整请求。启动时未决 `submitted` 转为 `unknown`，禁止盲目重发。独立 Node Gateway 使用自己的 SQLite 与凭据注入边界，不能与原生 TaskHost 混称一个账本。T5 的隔离 Tauri/WebView 提交、取消和重启运行验收仍为 PARTIAL，见 `docs/changes/2026-09-19-taskhost-durable-intent/verification.md`。
+`src-tauri/src/storage_paths.rs` 已将桌面端文件固定为 `providers/config.json`、`conversations/index.json` 和 `projects/creation-v2.json`，启动时只保留旧根目录文件作为只读迁移来源，不会自动解析、复制或删除它们。创作页通过 `read_creation_snapshot` / `write_creation_snapshot` 使用项目快照边界；设置元数据仍由 provider schema 管理。目录常量与浏览器 key 集中在 `src/runtime/storage-contract.ts`。
 
 账号/记忆当前没有真实 schema 或持久化：`AccountPopup` 和账号页只是界面占位，`ConnectionSettings` 的 memory 页只有空状态。任何 UID、积分和更新版本显示都不能当作服务数据。
 
@@ -107,7 +101,7 @@ API Key、OAuth refresh token、代理凭据等只进入系统凭据库（Window
 
 ## 迁移原则
 
-1. 目标行为是启动时只读当前 schema。当前 Rust 配置加载仍允许 serde 默认值及读取/解析失败后默认配置；会话命令仅在文件不存在时返回空数组，读取或 JSON 损坏会报错并保留原件（`main.rs::read_conversations`）。这两条旧命令没有与创作快照相同的统一版本/迁移状态，不能宣称所有数据域均完成 schema 迁移。
+1. 目标行为是启动时只读当前 schema；当前 Rust 启动逻辑对配置使用 serde 默认值、对会话使用空数组回退，尚未提供统一版本错误状态，因此接线前不能宣称完成 schema 迁移。
 2. 旧 localStorage（`kk-studio:canvas`、`kk-studio:last-workspace`、`kkstudio_settings`）和旧 `data/` 备份只通过一次性、用户触发的迁移导入；当前 `storage_paths.rs` 仅创建目录并保留同一 AppData 根目录下的旧 config/conversations 文件，不执行迁移。
 3. 导入项目先验证 Zod schema、引用完整性和 checksum，再原子写入新 repository。Desktop 的 .kkproject 已校验 schema/checksum/引用并在独立新目录 staging/回读/发布；既有目标（包括空目录）拒绝。Web 文件 adapter 与旧数据迁移仍未完成。
 4. 迁移成功前不删除旧数据；失败时保留诊断和恢复路径。

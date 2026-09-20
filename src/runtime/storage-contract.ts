@@ -15,7 +15,6 @@ export const DESKTOP_DATA_DIRECTORIES = {
   projects: "projects",
   conversations: "conversations",
   assets: "assets",
-  tasks: "tasks",
   models: "models",
   comfyui: "comfyui",
   cache: "cache",

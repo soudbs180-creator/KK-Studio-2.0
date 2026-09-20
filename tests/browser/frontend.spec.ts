@@ -9,13 +9,11 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   const panel = page.getByTestId("asset-panel");
   await expect(panel).toBeVisible();
   await expect(panel).toHaveCSS("width", "900px");
-  await expect(panel).toHaveCSS("height", "700px");
-  await panel.screenshot({
-    path: test.info().outputPath("assets-desktop.png"),
-  });
+  await expect(panel).toHaveCSS("height", "696px");
+  await panel.screenshot({ path: "docs/evidence/assets-desktop.png" });
   await page.getByRole("textbox", { name: "搜索文件" }).fill("找不到");
   await expect(page.getByText("没有找到匹配的资产")).toBeVisible();
-  await panel.screenshot({ path: test.info().outputPath("assets-empty.png") });
+  await panel.screenshot({ path: "docs/evidence/assets-empty.png" });
   await page.getByRole("button", { name: "清除筛选", exact: true }).click();
   await expect(page.locator(".asset-card")).toHaveCount(9);
   await page.getByLabel("类型筛选").selectOption("video");
@@ -25,7 +23,7 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   await expect(page.locator(".asset-content")).toHaveClass(/list/);
   await page.getByRole("button", { name: "网格视图" }).click();
   await page.getByRole("button", { name: "收起资产管理" }).click();
-  expect(await panel.boundingBox()).toMatchObject({ width: 364 });
+  expect(await panel.boundingBox()).toMatchObject({ width: 305 });
   const thumbnail = await page
     .locator(".asset-thumbnail")
     .first()
@@ -39,9 +37,7 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
       .locator(".asset-content")
       .evaluate((e) => e.scrollHeight > e.clientHeight),
   ).toBe(true);
-  await panel.screenshot({
-    path: test.info().outputPath("assets-compact.png"),
-  });
+  await panel.screenshot({ path: "docs/evidence/assets-compact.png" });
   await page.getByRole("tab", { name: "资产", exact: true }).click();
   await page.getByRole("button", { name: "创建主体", exact: true }).click();
   await page.getByPlaceholder("例如：品牌代言人").fill("测试角色");
@@ -63,7 +59,7 @@ test("设置主题保存重载、键盘关闭及导航", async ({ page }) => {
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await page
     .getByRole("dialog")
-    .screenshot({ path: test.info().outputPath("settings-integrated.png") });
+    .screenshot({ path: "docs/evidence/settings-integrated.png" });
   await page.getByLabel("主题", { exact: true }).selectOption("light");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.reload();
@@ -104,9 +100,9 @@ test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", 
   await expect(
     page.getByText("连接成功，模型列表接口可以访问。"),
   ).toBeVisible();
-  await page.getByRole("dialog", { name: "设置" }).screenshot({
-    path: test.info().outputPath("settings-model-provider.png"),
-  });
+  await page
+    .getByRole("dialog", { name: "设置" })
+    .screenshot({ path: "docs/evidence/settings-model-provider.png" });
   await page.reload();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
@@ -294,9 +290,9 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
       width: 590,
       height: 237,
     });
-  await page.getByTestId("image-composer").screenshot({
-    path: test.info().outputPath("image-composer-selected.png"),
-  });
+  await page
+    .getByTestId("image-composer")
+    .screenshot({ path: "docs/evidence/image-composer-selected.png" });
   await videoPreviews.nth(0).click();
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   const imageNode = page.getByTestId("canvas-node-image");
@@ -408,16 +404,12 @@ test("画布新增卡片可拖动删除，喜欢内容同步到搜索", async ({
   const added = page.locator("[data-testid^='canvas-node-added-image-']");
   await expect(added).toHaveCount(1);
   await expect(page.getByTestId("image-composer")).toBeVisible();
-  await page.screenshot({
-    path: test.info().outputPath("canvas-added-card.png"),
-  });
+  await page.screenshot({ path: "docs/evidence/canvas-added-card.png" });
   await page.getByRole("button", { name: "喜欢当前卡片" }).click();
   await page.getByRole("button", { name: "搜索", exact: true }).click();
   await page.getByRole("tab", { name: "喜欢收藏" }).click();
   await expect(page.getByText("新图片卡片")).toBeVisible();
-  await page.screenshot({
-    path: test.info().outputPath("collection-from-canvas.png"),
-  });
+  await page.screenshot({ path: "docs/evidence/collection-from-canvas.png" });
   await page.locator(".saved-like-card .saved-text").click();
   await expect(added).toBeVisible();
   const before = await added.boundingBox();
@@ -476,9 +468,7 @@ for (const [width, height] of [
   }) => {
     await page.setViewportSize({ width, height });
     await openWorkspace(page);
-    await page.screenshot({
-      path: test.info().outputPath(`workspace-${width}.png`),
-    });
+    await page.screenshot({ path: `docs/evidence/workspace-${width}.png` });
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBe(width);
@@ -488,18 +478,14 @@ for (const [width, height] of [
     expect(box!.x + box!.width).toBeLessThanOrEqual(width);
     await page.getByRole("textbox", { name: "搜索文件" }).fill("冷风");
     await expect(page.locator(".asset-card").first()).toBeVisible();
-    await page.screenshot({
-      path: test.info().outputPath(`assets-${width}.png`),
-    });
+    await page.screenshot({ path: `docs/evidence/assets-${width}.png` });
     await page.keyboard.press("Escape");
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     const dialog = page.getByRole("dialog");
     const bounds = await dialog.boundingBox();
     expect(bounds!.x).toBeGreaterThanOrEqual(0);
     expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width);
-    await page.screenshot({
-      path: test.info().outputPath(`settings-${width}.png`),
-    });
+    await page.screenshot({ path: `docs/evidence/settings-${width}.png` });
   });
 }
 

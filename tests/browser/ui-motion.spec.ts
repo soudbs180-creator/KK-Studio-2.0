@@ -21,7 +21,7 @@ test("搜索弹窗按原稿展示喜欢与收藏双栏，收藏可编辑、查�
   await expect(dialog.locator(".saved-like-card")).toHaveCount(1);
   await expect(dialog.locator(".saved-prompt-card")).toHaveCount(0);
   await dialog.screenshot({
-    path: test.info().outputPath("catalog-saved-desktop.png"),
+    path: "docs/evidence/catalog-saved-desktop.png",
     animations: "disabled",
   });
   await dialog
@@ -52,7 +52,7 @@ test("视频编辑器只在选中时出现，参数与提示词在切换后保�
   await expect(editor).toBeVisible();
   await page.getByLabel("视频提示词").fill("猎豹在草原上奔跑");
   await page.screenshot({
-    path: test.info().outputPath("video-composer-desktop.png"),
+    path: "docs/evidence/video-composer-desktop.png",
     animations: "disabled",
   });
   await page.getByRole("button", { name: "视频参数", exact: true }).click();
@@ -89,7 +89,7 @@ test("任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响�
   const panel = page.getByRole("region", { name: "任务列表" });
   await expect(panel).toHaveAttribute("data-node-id", "396:938");
   await expect(panel.getByText("点击查看")).toBeVisible();
-  await expect(panel.getByText("正在生成中")).toBeVisible();
+  await expect(panel.getByText("演示 · 生成中")).toBeVisible();
   await expect
     .poll(() => panel.boundingBox())
     .toEqual({
@@ -102,7 +102,7 @@ test("任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响�
     panel.getByRole("button", { name: "全部", exact: true }),
   ).toHaveCSS("min-height", "14px");
   await panel.screenshot({
-    path: test.info().outputPath("runtime-tasks-2026-09-11/task-panel.png"),
+    path: "docs/evidence/runtime-tasks-2026-09-11/task-panel.png",
     animations: "disabled",
   });
   await expect(panel.locator(".task-card")).toHaveCount(2);
@@ -122,7 +122,7 @@ test("任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响�
   );
   await panel.getByRole("button", { name: "执行中", exact: true }).click();
   await expect(panel.locator(".task-card")).toHaveCount(1);
-  await expect(panel.getByText("正在生成中")).toBeVisible();
+  await expect(panel.getByText("演示 · 生成中")).toBeVisible();
   await panel.getByRole("button", { name: "失败", exact: true }).click();
   await expect(panel.getByText("暂无失败任务")).toBeVisible();
   await page.keyboard.press("Escape");
@@ -148,7 +148,7 @@ test("整理画布与小地图可实际定位节点，导航控件不跟随画�
   const map = page.getByRole("region", { name: "画布小地图" });
   await expect(map).toBeVisible();
   await map.screenshot({
-    path: test.info().outputPath("canvas-minimap.png"),
+    path: "docs/evidence/canvas-minimap.png",
     animations: "disabled",
   });
   await map.getByRole("button", { name: "定位 图片创建卡片" }).click();
@@ -240,7 +240,7 @@ for (const [width, height] of [
     await expect(page.getByLabel("搜索内容")).toBeFocused();
     await panel.getByRole("tab", { name: "喜欢收藏" }).click();
     await panel.screenshot({
-      path: test.info().outputPath(`catalog-${width}.png`),
+      path: `docs/evidence/catalog-${width}.png`,
       animations: "disabled",
     });
     const box = await panel.boundingBox();

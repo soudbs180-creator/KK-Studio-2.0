@@ -18,100 +18,6 @@ async function rect(page: Page, selector: string, expected: number[]) {
     .toBeLessThan(0.1);
 }
 
-async function armSidebarTransitionSampling(page: Page): Promise<void> {
-  await page.evaluate(() => {
-    const sidebar = document.querySelector<HTMLElement>(".sidebar");
-    if (!sidebar) throw new Error("Expected the sidebar before sampling");
-
-    const observer = new MutationObserver(() => {
-      const transitions = sidebar
-        .getAnimations()
-        .filter(
-          (item) =>
-            "transitionProperty" in item && item.playState !== "finished",
-        );
-      if (!transitions.length) return;
-
-      for (const transition of transitions) {
-        transition.pause();
-        transition.currentTime = 0;
-      }
-      observer.disconnect();
-    });
-    observer.observe(sidebar, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-  });
-}
-
-async function sampleSidebarTransition(page: Page) {
-  return page.evaluate(async () => {
-    const sidebar = document.querySelector<HTMLElement>(".sidebar");
-    if (!sidebar) throw new Error("Expected the sidebar while sampling");
-
-    let transitions: Animation[] = [];
-    for (let attempt = 0; attempt < 60; attempt += 1) {
-      transitions = sidebar
-        .getAnimations()
-        .filter(
-          (item) =>
-            "transitionProperty" in item && item.playState !== "finished",
-        );
-      if (
-        transitions.length &&
-        transitions.every((item) => item.playState === "paused")
-      )
-        break;
-      await new Promise(requestAnimationFrame);
-    }
-    if (
-      !transitions.length ||
-      transitions.some((item) => item.playState !== "paused")
-    )
-      throw new Error("Expected the real sidebar width/padding transitions");
-
-    const durations = transitions.map(
-      (item) => item.effect?.getComputedTiming().duration,
-    );
-    const duration = durations.find(
-      (value): value is number => typeof value === "number" && value > 0,
-    );
-    if (duration === undefined)
-      throw new Error("Expected a nonzero sidebar transition duration");
-
-    const samples = [0, 0.25, 0.5, 0.75, 1].map((fraction) => {
-      for (const transition of transitions) {
-        transition.currentTime = duration * fraction;
-      }
-      const frame = document
-        .querySelector(".workspace-content")!
-        .getBoundingClientRect();
-      const task = document
-        .querySelector(".task-button")!
-        .getBoundingClientRect();
-      const toolbar = document
-        .querySelector(".canvas-toolbar")!
-        .getBoundingClientRect();
-      return {
-        frameX: frame.x,
-        taskX: task.x,
-        toolbarX: toolbar.x,
-        width: sidebar.getBoundingClientRect().width,
-        rows: [...document.querySelectorAll(".project-link")].map((el) => {
-          const row = el.getBoundingClientRect();
-          return [row.width, row.height];
-        }),
-        brand: Number(
-          getComputedStyle(document.querySelector(".brand strong")!).opacity,
-        ),
-      };
-    });
-    for (const transition of transitions) transition.finish();
-    return samples;
-  });
-}
-
 test("latest two Figma frames retain exact shell anchors through independent collapse", async ({
   page,
 }) => {
@@ -180,20 +86,50 @@ test("sidebar motion keeps the task attached to the frame and toolbar stationary
   page,
 }) => {
   await openWorkspace(page);
-  await armSidebarTransitionSampling(page);
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
-  const samples = await sampleSidebarTransition(page);
-  expect(
-    samples.some((sample) => sample.frameX > 71 && sample.frameX < 290),
-  ).toBe(true);
-  for (const sample of samples) {
-    expect(Math.abs(sample.taskX - sample.frameX - 30)).toBeLessThan(0.1);
-    expect(Math.abs(sample.toolbarX - 719)).toBeLessThan(0.1);
+  const samples = await page.evaluate(async () => {
+    const result: number[][] = [];
+    const start = performance.now();
+    while (performance.now() - start < 360) {
+      const frame = document
+        .querySelector(".workspace-content")!
+        .getBoundingClientRect();
+      const task = document
+        .querySelector(".task-button")!
+        .getBoundingClientRect();
+      const toolbar = document
+        .querySelector(".canvas-toolbar")!
+        .getBoundingClientRect();
+      result.push([frame.x, task.x, toolbar.x]);
+      await new Promise(requestAnimationFrame);
+    }
+    return result;
+  });
+  expect(samples.some(([x]) => x > 71 && x < 290)).toBe(true);
+  for (const [x, task, toolbar] of samples) {
+    expect(Math.abs(task - x - 30)).toBeLessThan(0.1);
+    expect(Math.abs(toolbar - 719)).toBeLessThan(0.1);
   }
-
-  await armSidebarTransitionSampling(page);
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
-  const opening = await sampleSidebarTransition(page);
+  const opening = await page.evaluate(async () => {
+    const frames: { width: number; rows: number[][]; brand: number }[] = [];
+    const start = performance.now();
+    while (performance.now() - start < 360) {
+      frames.push({
+        width: document.querySelector(".sidebar")!.getBoundingClientRect()
+          .width,
+        rows: [...document.querySelectorAll(".project-link")].map((el) => {
+          const r = el.getBoundingClientRect();
+          return [r.width, r.height];
+        }),
+        brand: Number(
+          getComputedStyle(document.querySelector(".brand strong")!).opacity,
+        ),
+      });
+      await new Promise(requestAnimationFrame);
+    }
+    return frames;
+  });
   expect(opening.some((frame) => frame.width > 71 && frame.width < 290)).toBe(
     true,
   );

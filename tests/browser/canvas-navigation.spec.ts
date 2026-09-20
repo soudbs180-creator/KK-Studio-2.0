@@ -115,7 +115,7 @@ for (const [width, height] of [
       expect(box!.x + box!.width).toBeLessThanOrEqual(width);
     }
     await page.screenshot({
-      path: test.info().outputPath(`navigation-${width}.png`),
+      path: `docs/evidence/navigation-${width}.png`,
       animations: "disabled",
     });
     await page.keyboard.press("Escape");

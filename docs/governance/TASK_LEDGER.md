@@ -393,11 +393,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## TASK-GOV-002 — 跨AI自主开发与分支质量门禁
 
 - Goal: 落实共同规则、代码文档一致性、Git/CI防线和真实保护边界
-- Scope: AI规则/SDLC/PR/Git防线/契约勘误
-- Acceptance: 入口统一、中文自然语言转工程任务; 真实push拒绝回归与delivery门禁通过; 规范与tasks目录契约冲突修正; 独立review和实际验证证据
+- Scope: AI规则/SDLC/PR/Git防线/交付门禁/规则场景
+- Acceptance: 入口统一、中文自然语言转工程任务; 真实push拒绝回归与delivery门禁通过; 规则、模板、脚本入口和账本绑定一致; 独立review和实际规则验证证据; 产品代码、产品测试、既有证据和其他人的提交保持只读
 - Branch: `codex/TASK-GOV-002-ai-sdlc`
 - Worktree: `D:/kk-studio-next/.worktrees/TASK-GOV-002`
-- Modules: docs, scripts/governance, .github, .githooks, config, src/runtime/storage-contract.ts, tests
-- Verification: PARTIAL — 候选 2e96910f2b67649a40fe8da7ea492809434110c0 本地验证 PASS：治理30/0、unit172/172、browser169/169、UI119/0、Rust58/58；delivery/push/storage 定向门禁通过。远端保护因私有个人仓库套餐 API403 仍 BLOCKED，Desktop Provider/T5 follow-up 仍 PARTIAL。
+- Modules: docs, scripts/governance, .github, .githooks, config, tests/governance
+- Verification: PARTIAL — 规则候选验证 PASS：governance 30 tasks/0 violations、push policy 9/9、delivery policy 12/12、AI 场景结构 12/12；规则文件 lint/typecheck/format/links 通过。产品代码、产品测试、既有证据和其他提交未写入。远端保护因私有个人仓库套餐 API403 仍 BLOCKED，产品/Desktop follow-up 仍由各自任务负责。
 - Evidence: [docs/changes/2026-09-20-ai-sdlc/verification.md](../../docs/changes/2026-09-20-ai-sdlc/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json)
 - Updated: 2026-09-20

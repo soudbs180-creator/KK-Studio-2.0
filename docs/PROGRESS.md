@@ -4,9 +4,9 @@
 
 - 在origin/main@8aca3ab独立分支补全共同AI入口、自然语言转工程需求、风险分级自主流程、独立review/ADR/发布/事故模板。
 - 增加本地Git push防线、真实临时仓库测试、CI delivery变更包门禁与可审阅rulesets；不伪称能强制所有模型理解文档。
-- 依据当前代码修正规范中的Web存储、Native TaskHost链路、会话损坏保护、T3a/T3b、旧Figma/前端阶段及npm命令；补齐JSON/TS/Rust tasks目录契约。
-- 当次GitHub回读private main未受保护，API403套餐限制仍为EXT-GIT BLOCKED。最新主线CI失败已识别，sidebar动画测试保持原断言修正跨进程取样，验证结果写本任务verification。
-- 本地候选 `2e96910f2b67649a40fe8da7ea492809434110c0` 已完成验证：unit172/172、browser169/169、UI119/0、Rust58/58；等待 PR 远端检查。未发布、未清理分支、未改写历史、未接通额外真实Provider服务。
+- 只读核对当前代码、产品测试、既有证据和旧规范，用于发现规则冲突；本任务只写入共同规则、流程模板、Git/CI/delivery 防线和规则场景，不接管产品实现或其他人的提交。
+- 当次GitHub回读private main未受保护，API403套餐限制仍为EXT-GIT BLOCKED。最新主线CI失败仅登记为产品任务 follow-up，未修复或改写其测试、截图和报告。
+- 规则候选验证：governance 30 tasks/0 violations、push policy 9/9、delivery policy 12/12、AI 场景结构 12/12，规则文件 lint/typecheck/format/links 通过；未发布、未清理分支、未改写历史。
 
 ## 2026-09-20 Astra 迁移计划与分支规则复核
 

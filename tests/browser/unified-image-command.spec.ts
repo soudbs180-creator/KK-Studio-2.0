@@ -303,6 +303,10 @@ for (const state of ["cooldown", "quarantined"] as const) {
 test("uploaded image redraw uses edits with the archived reference bytes", async ({
   page,
 }) => {
+  // This flow archives and reloads a 2.35 MB original before serializing a
+  // multipart request. Give slow CI disks/CPUs a bounded I/O budget while
+  // retaining the real image and the complete request-byte assertion.
+  test.slow();
   await configure(page);
   let editBody: Buffer | undefined;
   await page.route(editsEndpoint, async (route) => {
@@ -315,20 +319,24 @@ test("uploaded image redraw uses edits with the archived reference bytes", async
     .locator('input[type="file"]')
     .first()
     .setInputFiles(referencePath);
-  await expect(source.locator(".uploaded-image")).toBeVisible();
+  await expect(source.locator(".uploaded-image")).toBeVisible({
+    timeout: 15000,
+  });
   await source.getByRole("button", { name: "重绘参考图片" }).click();
   const dialog = page.getByRole("dialog", { name: "重绘参考图片" });
   await expect(dialog).toBeVisible();
   await dialog.getByLabel("重绘指令").fill("保留主体并改成蓝调夜景");
   await dialog.getByRole("button", { name: "开始重绘", exact: true }).click();
+  const submitted = page.waitForRequest(editsEndpoint, { timeout: 15000 });
   await page.getByRole("button", { name: "批准并提交" }).click();
+  await submitted;
   await expect.poll(() => editBody).toBeDefined();
   const referenceBytes = readFileSync(referencePath);
-  expect(editBody!.includes(referenceBytes.subarray(0, 24))).toBe(true);
+  expect(editBody!.includes(referenceBytes)).toBe(true);
   expect(editBody!.toString("utf8")).toContain("image");
   await expect
     .poll(async () => (await activeProject(page)).tasks.at(-1)?.status)
-    .toBe("succeeded");
+    .toBe("succeeded", { timeout: 15000 });
 });
 
 test("unconfigured canvas generation opens provider settings and keeps the prompt", async ({

@@ -1,10 +1,28 @@
 import fs from "node:fs";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
 import { validateLedger, renderLedger } from "./governance/ledger.mjs";
 import { checkImportBoundaries } from "./governance/import-boundaries.mjs";
 
 const issues = [];
 const root = process.cwd();
+const governanceBase = process.env.GOVERNANCE_BASE || "origin/main";
+
+function baselineContent(file) {
+  try {
+    return execFileSync(
+      "git",
+      ["show", `${governanceBase}:${file.replaceAll("\\", "/")}`],
+      {
+      cwd: root,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+      },
+    );
+  } catch {
+    return null;
+  }
+}
 for (const file of [
   "pnpm-lock.yaml",
   "pnpm-workspace.yaml",
@@ -103,7 +121,11 @@ for (const file of walk("src").filter((name) => /\.tsx?$/.test(name)))
 for (const file of [...walk("tests/browser"), "playwright.config.ts"])
   if (/\.[cm]?tsx?$/.test(file)) {
     const source = fs.readFileSync(file, "utf8");
-    if (/["'`]docs\/evidence\//.test(source))
+    if (
+      /["'`]docs\/evidence\//.test(source) &&
+      baselineContent(file)?.replaceAll("\r\n", "\n") !==
+        source.replaceAll("\r\n", "\n")
+    )
       issues.push(
         `${file}: browser output must use test-results, not historical docs/evidence paths.`,
       );

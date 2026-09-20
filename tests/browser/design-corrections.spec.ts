@@ -79,7 +79,7 @@ test("工具与帮助菜单保持可读尺寸、快捷键三栏及窄屏可用",
   expect(toolsBox!.width).toBe(90);
   expect(toolsBox!.height).toBe(50);
   await tools.screenshot({
-    path: test.info().outputPath("user-comments-2026-09-08/tool-menu.png"),
+    path: "docs/evidence/user-comments-2026-09-08/tool-menu.png",
   });
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "帮助与快捷键", exact: true }).click();
@@ -88,7 +88,7 @@ test("工具与帮助菜单保持可读尺寸、快捷键三栏及窄屏可用",
   expect(helpBox!.width).toBe(103);
   expect(helpBox!.height).toBe(50);
   await help.screenshot({
-    path: test.info().outputPath("user-comments-2026-09-08/help-menu.png"),
+    path: "docs/evidence/user-comments-2026-09-08/help-menu.png",
   });
   await help.getByRole("menuitem", { name: "快捷按键", exact: true }).click();
   const panel = page.getByRole("dialog", { name: "快捷按键" });
@@ -99,9 +99,7 @@ test("工具与帮助菜单保持可读尺寸、快捷键三栏及窄屏可用",
     expect(panelBounds.x + panelBounds.width / 2).toBeCloseTo(960, 0);
     await panel.screenshot({
       animations: "disabled",
-      path: test
-        .info()
-        .outputPath(`user-comments-2026-09-08/shortcuts-${tab}.png`),
+      path: `docs/evidence/user-comments-2026-09-08/shortcuts-${tab}.png`,
     });
   }
   for (const width of [1440, 768, 663, 390]) {
@@ -117,7 +115,7 @@ test("工具与帮助菜单保持可读尺寸、快捷键三栏及窄屏可用",
     ).toBe(true);
   }
   await panel.screenshot({
-    path: test.info().outputPath("user-comments-2026-09-08/shortcuts-390.png"),
+    path: "docs/evidence/user-comments-2026-09-08/shortcuts-390.png",
   });
   await page.keyboard.press("Escape");
   await expect(

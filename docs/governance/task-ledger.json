@@ -13,7 +13,11 @@
     "owner": "root",
     "branch": "main",
     "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
-    "affectedModules": ["Git", "package.json", "release"],
+    "affectedModules": [
+      "Git",
+      "package.json",
+      "release"
+    ],
     "status": "DONE",
     "evidence": [
       "docs/changes/2026-09-17-governance-baseline/verification.md",
@@ -36,7 +40,9 @@
       "实际完整 verify 与 Rust compile",
       "规则不把局部通过当全项目 DONE"
     ],
-    "dependencies": ["T0"],
+    "dependencies": [
+      "T0"
+    ],
     "owner": "root",
     "branch": "chore/TASK-GOV-001-engineering-baseline",
     "worktree": "D:/kk-studio-next/.worktrees/TASK-GOV-001",
@@ -70,7 +76,9 @@
       "满载和不支持操作不可选",
       "首页/对话/重试在实际提交前检查绑定连接，不回退绕过隔离/冷却"
     ],
-    "dependencies": ["TASK-GOV-001"],
+    "dependencies": [
+      "TASK-GOV-001"
+    ],
     "owner": "root",
     "branch": "main",
     "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
@@ -101,7 +109,9 @@
       "已记录范围内Web恢复及原生正常重启不丢数据",
       "失败不覆盖原件"
     ],
-    "dependencies": ["T0"],
+    "dependencies": [
+      "T0"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
@@ -127,7 +137,9 @@
       "已记录范围内Web恢复及原生正常重启不丢数据",
       "失败不覆盖原件"
     ],
-    "dependencies": ["T0"],
+    "dependencies": [
+      "T0"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
@@ -155,7 +167,10 @@
       "缺失原件冻结保存",
       "原生/浏览器证据与最终build对应"
     ],
-    "dependencies": ["T1", "T2"],
+    "dependencies": [
+      "T1",
+      "T2"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
@@ -187,11 +202,17 @@
       "隔离数据根目录恢复",
       "非法包/写失败不损原件"
     ],
-    "dependencies": ["T3a"],
+    "dependencies": [
+      "T3a"
+    ],
     "owner": "root",
     "branch": "main",
     "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
-    "affectedModules": ["src/features/projects", "src-tauri", "src/components"],
+    "affectedModules": [
+      "src/features/projects",
+      "src-tauri",
+      "src/components"
+    ],
     "status": "DONE",
     "evidence": [
       "docs/changes/2026-09-18-project-package/intent.md",
@@ -220,7 +241,10 @@
       "参考图不丢弃",
       "失败/取消/离线与归档完整"
     ],
-    "dependencies": ["T3b", "TASK-PROV-001"],
+    "dependencies": [
+      "T3b",
+      "TASK-PROV-001"
+    ],
     "owner": "root",
     "branch": "main",
     "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
@@ -253,7 +277,9 @@
       "本地宿主随包且不依赖VPS",
       "Desktop 提交前执行连接状态/冷却/并发复核，原生失败分类更新 health，租约崩溃恢复可验证"
     ],
-    "dependencies": ["T4"],
+    "dependencies": [
+      "T4"
+    ],
     "owner": "root",
     "branch": "main",
     "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
@@ -286,7 +312,9 @@
       "仅取消本任务",
       "Web禁用原生能力"
     ],
-    "dependencies": ["T5"],
+    "dependencies": [
+      "T5"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
@@ -296,7 +324,9 @@
       "src/features/comfyui"
     ],
     "status": "PARTIAL",
-    "evidence": ["docs/changes/2026-09-16-launch-readiness-audit/plan.md"],
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+    ],
     "verification": "只读审计确认：localComfyUiAdapter.ts 具备 /prompt、/history、/view、/interrupt HTTP 原语，但 App/imageTaskCommand 尚未接入，local_only 明确拒绝；Tauri ComfyUI 命令尚无前端 invoke 桥，缺少 Desktop-only workflow/template 持久化、任务 journal、逐任务取消、结果归档与重启恢复。下一步需先接一条显式 workflow 的最小链，不下载模型；EXT-COMFY 仍等待用户选定服务、目录、workflow 和模型。",
     "updated": "2026-09-17",
     "verificationResult": "PARTIAL"
@@ -310,11 +340,15 @@
       "授权真实服务执行最小生成和编辑",
       "结果持久化与成本语义真实"
     ],
-    "dependencies": ["T4"],
+    "dependencies": [
+      "T4"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
-    "affectedModules": ["Provider live acceptance"],
+    "affectedModules": [
+      "Provider live acceptance"
+    ],
     "status": "BLOCKED",
     "evidence": [
       "docs/changes/2026-09-16-launch-readiness-audit/verification.md"
@@ -329,12 +363,18 @@
     "title": "真实 ComfyUI/模型验收",
     "goal": "真实 ComfyUI/模型验收",
     "scope": "ComfyUI live acceptance",
-    "acceptance": ["真实workflow成功/缺模型/断连/重启与原图hash验收"],
-    "dependencies": ["T6"],
+    "acceptance": [
+      "真实workflow成功/缺模型/断连/重启与原图hash验收"
+    ],
+    "dependencies": [
+      "T6"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
-    "affectedModules": ["ComfyUI live acceptance"],
+    "affectedModules": [
+      "ComfyUI live acceptance"
+    ],
     "status": "BLOCKED",
     "evidence": [
       "docs/changes/2026-09-16-launch-readiness-audit/verification.md"
@@ -355,13 +395,25 @@
       "最终exe/commit/hash对应",
       "可回滚"
     ],
-    "dependencies": ["T3b", "T4", "T5", "T6", "EXT-PROVIDER", "EXT-COMFY"],
+    "dependencies": [
+      "T3b",
+      "T4",
+      "T5",
+      "T6",
+      "EXT-PROVIDER",
+      "EXT-COMFY"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
-    "affectedModules": ["release", "tests/native"],
+    "affectedModules": [
+      "release",
+      "tests/native"
+    ],
     "status": "TODO",
-    "evidence": ["docs/changes/2026-09-16-launch-readiness-audit/plan.md"],
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+    ],
     "verification": "NOT VERIFIED",
     "updated": "2026-09-17",
     "verificationResult": "NOT_VERIFIED"
@@ -376,7 +428,9 @@
       "UI通过服务与平台能力接口",
       "Desktop回归保持"
     ],
-    "dependencies": ["T7"],
+    "dependencies": [
+      "T7"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
@@ -387,7 +441,9 @@
       "src/features"
     ],
     "status": "TODO",
-    "evidence": ["docs/changes/2026-09-16-launch-readiness-audit/plan.md"],
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+    ],
     "verification": "NOT VERIFIED",
     "updated": "2026-09-17",
     "verificationResult": "NOT_VERIFIED"
@@ -403,7 +459,9 @@
       "项目包跨origin",
       "会话凭据不持久化"
     ],
-    "dependencies": ["T8"],
+    "dependencies": [
+      "T8"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
@@ -414,7 +472,9 @@
       "src/features/creation"
     ],
     "status": "TODO",
-    "evidence": ["docs/changes/2026-09-16-launch-readiness-audit/plan.md"],
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+    ],
     "verification": "NOT VERIFIED",
     "updated": "2026-09-17",
     "verificationResult": "NOT_VERIFIED"
@@ -429,13 +489,20 @@
       "部署配置/health/权限/资源限制",
       "备份还原及回滚runbook可审阅"
     ],
-    "dependencies": ["T9"],
+    "dependencies": [
+      "T9"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
-    "affectedModules": ["deploy", "scripts/release"],
+    "affectedModules": [
+      "deploy",
+      "scripts/release"
+    ],
     "status": "TODO",
-    "evidence": ["docs/changes/2026-09-16-launch-readiness-audit/plan.md"],
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+    ],
     "verification": "NOT VERIFIED",
     "updated": "2026-09-17",
     "verificationResult": "NOT_VERIFIED"
@@ -450,11 +517,17 @@
       "外网TLS/鉴权/端口实测",
       "备份恢复及回滚演练"
     ],
-    "dependencies": ["T10-PREP"],
+    "dependencies": [
+      "T10-PREP"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
-    "affectedModules": ["VPS", "DNS", "TLS"],
+    "affectedModules": [
+      "VPS",
+      "DNS",
+      "TLS"
+    ],
     "status": "BLOCKED",
     "evidence": [
       "docs/changes/2026-09-16-launch-readiness-audit/verification.md"
@@ -474,13 +547,21 @@
       "新站验收后有限回滚窗口",
       "逐项退役不删除用户数据"
     ],
-    "dependencies": ["T10"],
+    "dependencies": [
+      "T10"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
-    "affectedModules": ["Vercel", "DNS", "legacy migration"],
+    "affectedModules": [
+      "Vercel",
+      "DNS",
+      "legacy migration"
+    ],
     "status": "BLOCKED",
-    "evidence": ["docs/changes/2026-09-16-launch-readiness-audit/plan.md"],
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+    ],
     "verification": "NOT VERIFIED",
     "updated": "2026-09-17",
     "blocker": "需外部旧部署权限、切换授权与回滚窗口",
@@ -497,13 +578,20 @@
       "共享新契约/本地恢复",
       "真机验收"
     ],
-    "dependencies": ["T11"],
+    "dependencies": [
+      "T11"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
-    "affectedModules": ["Mobile", "Shared Core"],
+    "affectedModules": [
+      "Mobile",
+      "Shared Core"
+    ],
     "status": "TODO",
-    "evidence": ["docs/changes/2026-09-16-launch-readiness-audit/plan.md"],
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+    ],
     "verification": "当前MUR不含；全项目范围仍保留TODO，形态需产品决定",
     "updated": "2026-09-17",
     "verificationResult": "NOT_VERIFIED"
@@ -518,7 +606,9 @@
       "按语义组件迁移",
       "Figma节点例外有证据"
     ],
-    "dependencies": ["TASK-GOV-001"],
+    "dependencies": [
+      "TASK-GOV-001"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
@@ -528,7 +618,9 @@
       "scripts/check-ui-standards.mjs"
     ],
     "status": "TODO",
-    "evidence": ["docs/changes/2026-09-16-ui-system-audit/plan.md"],
+    "evidence": [
+      "docs/changes/2026-09-16-ui-system-audit/plan.md"
+    ],
     "verification": "NOT VERIFIED",
     "updated": "2026-09-17",
     "verificationResult": "NOT_VERIFIED"
@@ -544,7 +636,9 @@
       "同状态DOM/截图",
       "键盘焦点与IME保持"
     ],
-    "dependencies": ["UI-001"],
+    "dependencies": [
+      "UI-001"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
@@ -554,7 +648,9 @@
       "src/components/ConversationPanel.tsx"
     ],
     "status": "TODO",
-    "evidence": ["docs/changes/2026-09-16-ui-system-audit/audit.md"],
+    "evidence": [
+      "docs/changes/2026-09-16-ui-system-audit/audit.md"
+    ],
     "verification": "历史有溢出证据，当前需复现并修复",
     "updated": "2026-09-17",
     "verificationResult": "NOT_VERIFIED"
@@ -570,7 +666,9 @@
       "不可用服务说明一致",
       "Figma/运行态验收"
     ],
-    "dependencies": ["UI-001"],
+    "dependencies": [
+      "UI-001"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
@@ -580,7 +678,9 @@
       "src/components/settings"
     ],
     "status": "TODO",
-    "evidence": ["docs/changes/2026-09-16-ui-system-audit/audit.md"],
+    "evidence": [
+      "docs/changes/2026-09-16-ui-system-audit/audit.md"
+    ],
     "verification": "NOT VERIFIED",
     "updated": "2026-09-17",
     "verificationResult": "NOT_VERIFIED"
@@ -595,7 +695,10 @@
       "六态及异步/键盘/离线",
       "dev1421/preview1423/Tauri最终source分别确认"
     ],
-    "dependencies": ["UI-002", "UI-003"],
+    "dependencies": [
+      "UI-002",
+      "UI-003"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
@@ -608,7 +711,9 @@
       "Account"
     ],
     "status": "TODO",
-    "evidence": ["docs/changes/2026-09-16-ui-system-audit/plan.md"],
+    "evidence": [
+      "docs/changes/2026-09-16-ui-system-audit/plan.md"
+    ],
     "verification": "NOT VERIFIED",
     "updated": "2026-09-17",
     "verificationResult": "NOT_VERIFIED"
@@ -624,7 +729,9 @@
       "大型库有测量证据",
       "原图校验/来源不回归"
     ],
-    "dependencies": ["T3a"],
+    "dependencies": [
+      "T3a"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
@@ -634,7 +741,9 @@
       "src-tauri"
     ],
     "status": "TODO",
-    "evidence": ["docs/architecture/DATA-STORAGE.md"],
+    "evidence": [
+      "docs/architecture/DATA-STORAGE.md"
+    ],
     "verification": "当前全量原件data URL加载，性能整改仍待执行",
     "updated": "2026-09-17",
     "verificationResult": "NOT_VERIFIED"
@@ -649,11 +758,16 @@
       "PR/required checks/block force/delete有效",
       "实际CI运行证据"
     ],
-    "dependencies": ["TASK-GOV-001", "T0"],
+    "dependencies": [
+      "TASK-GOV-001",
+      "T0"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
-    "affectedModules": ["Git hosting"],
+    "affectedModules": [
+      "Git hosting"
+    ],
     "status": "BLOCKED",
     "verification": "NOT VERIFIED",
     "updated": "2026-09-20",
@@ -675,11 +789,15 @@
       "审批后二次检查与固定连接不回退",
       "429冷却到期重试及403隔离"
     ],
-    "dependencies": ["TASK-GOV-001"],
+    "dependencies": [
+      "TASK-GOV-001"
+    ],
     "owner": "root",
     "branch": "main",
     "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
-    "affectedModules": ["tests/browser/provider-scheduling.spec.ts"],
+    "affectedModules": [
+      "tests/browser/provider-scheduling.spec.ts"
+    ],
     "status": "DONE",
     "evidence": [
       "docs/changes/2026-09-17-provider-submission-gates/verification.md",
@@ -701,7 +819,10 @@
       "适用规则和 Git 目标身份核对",
       "指定新远端后仅推明确范围任务分支并交付可审阅 PR"
     ],
-    "dependencies": ["T0", "TASK-GOV-001"],
+    "dependencies": [
+      "T0",
+      "TASK-GOV-001"
+    ],
     "owner": "root",
     "affectedModules": [
       "docs/changes/2026-09-20-gpt-6-astra",
@@ -731,11 +852,18 @@
       "secret/path/构建产物扫描通过且旧 v1.6.1 当前文件不再出现在候选树",
       "PR 合并后回读远端 main SHA/tree SHA 与本地 main 一致"
     ],
-    "dependencies": ["T0", "TASK-GOV-001"],
+    "dependencies": [
+      "T0",
+      "TASK-GOV-001"
+    ],
     "owner": "root",
     "branch": "chore/TASK-KK2-MAIN-SYNC",
     "worktree": "D:/kk-studio-next/.worktrees/TASK-KK2-MAIN-SYNC",
-    "affectedModules": ["Git hosting", "repository tree", "main"],
+    "affectedModules": [
+      "Git hosting",
+      "repository tree",
+      "main"
+    ],
     "status": "DONE",
     "updated": "2026-09-20",
     "verificationResult": "PASS",
@@ -758,7 +886,9 @@
       "从最新稳定 main 建立独立 task branch/worktree，不复制 dirty checkout 全量内容",
       "运行定向浏览器回归和完整 verify，并保留同状态证据"
     ],
-    "dependencies": ["TASK-GOV-001"],
+    "dependencies": [
+      "TASK-GOV-001"
+    ],
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
@@ -772,7 +902,9 @@
       "tests/browser"
     ],
     "status": "TODO",
-    "evidence": ["docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md"],
+    "evidence": [
+      "docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md"
+    ],
     "verification": "dirty checkout 中的 UI 候选尚未迁移或验收；本次首发同步不包含这些改动。",
     "updated": "2026-09-20",
     "verificationResult": "NOT_VERIFIED"
@@ -781,14 +913,18 @@
     "id": "TASK-GOV-002",
     "title": "跨AI自主开发与分支质量门禁",
     "goal": "落实共同规则、代码文档一致性、Git/CI防线和真实保护边界",
-    "scope": "AI规则/SDLC/PR/Git防线/契约勘误",
+    "scope": "AI规则/SDLC/PR/Git防线/交付门禁/规则场景",
     "acceptance": [
       "入口统一、中文自然语言转工程任务",
       "真实push拒绝回归与delivery门禁通过",
-      "规范与tasks目录契约冲突修正",
-      "独立review和实际验证证据"
+      "规则、模板、脚本入口和账本绑定一致",
+      "独立review和实际规则验证证据",
+      "产品代码、产品测试、既有证据和其他人的提交保持只读"
     ],
-    "dependencies": ["TASK-GOV-001", "TASK-KK2-MAIN-SYNC"],
+    "dependencies": [
+      "TASK-GOV-001",
+      "TASK-KK2-MAIN-SYNC"
+    ],
     "owner": "root",
     "branch": "codex/TASK-GOV-002-ai-sdlc",
     "worktree": "D:/kk-studio-next/.worktrees/TASK-GOV-002",
@@ -798,15 +934,14 @@
       ".github",
       ".githooks",
       "config",
-      "src/runtime/storage-contract.ts",
-      "tests"
+      "tests/governance"
     ],
     "status": "REVIEW",
     "evidence": [
       "docs/changes/2026-09-20-ai-sdlc/verification.md",
       "docs/evidence/ai-sdlc-2026-09-20/remote-audit.json"
     ],
-    "verification": "候选 2e96910f2b67649a40fe8da7ea492809434110c0 本地验证 PASS：治理30/0、unit172/172、browser169/169、UI119/0、Rust58/58；delivery/push/storage 定向门禁通过。远端保护因私有个人仓库套餐 API403 仍 BLOCKED，Desktop Provider/T5 follow-up 仍 PARTIAL。",
+    "verification": "规则候选验证 PASS：governance 30 tasks/0 violations、push policy 9/9、delivery policy 12/12、AI 场景结构 12/12；规则文件 lint/typecheck/format/links 通过。产品代码、产品测试、既有证据和其他提交未写入。远端保护因私有个人仓库套餐 API403 仍 BLOCKED，产品/Desktop follow-up 仍由各自任务负责。",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-20"
   }

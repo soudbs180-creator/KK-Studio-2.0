@@ -16,6 +16,6 @@ export default defineConfig({
   },
   reporter: [
     ["list"],
-    ["json", { outputFile: "test-results/browser-results.json" }],
+    ["json", { outputFile: "docs/evidence/browser-results.json" }],
   ],
 });
