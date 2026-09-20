@@ -392,15 +392,16 @@ export class SkillRegistry {
   registerManifest(value: unknown): SkillManifest {
     const manifest = parseSkillManifest(value);
     const current = this.records.get(manifest.id);
+    const next = new Map(this.records);
     if (current)
-      this.records.set(manifest.id, {
+      next.set(manifest.id, {
         ...current,
         manifest,
         updatedAt: Date.now(),
       });
     else {
       const now = Date.now();
-      this.records.set(manifest.id, {
+      next.set(manifest.id, {
         manifest,
         instructions: manifest.description,
         imports: [],
@@ -410,6 +411,7 @@ export class SkillRegistry {
         updatedAt: now,
       });
     }
+    if (!this.persist(next)) throw new Error("Skill 保存失败，原记录未改变。");
     return manifest;
   }
   registerManifests(values: readonly unknown[]): SkillManifest[] {
@@ -473,6 +475,7 @@ export class SkillRegistry {
     const manifest = patch.manifest
       ? parseSkillManifest({ ...current.manifest, ...patch.manifest })
       : current.manifest;
+    if (manifest.id !== id) throw new Error("Skill ID 不能在编辑时改变。");
     const record = skillRecordSchema.parse({
       ...current,
       manifest,
