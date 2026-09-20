@@ -1,0 +1,151 @@
+const imgIconScan = "https://www.figma.com/api/mcp/asset/d157a569-e497-475e-a058-e54076f7d52c.svg";
+
+export default function Component() {
+  return (
+    <div className="contents relative size-full" data-node-id="170:8853" data-name="参数设置">
+      <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid h-[229px] left-[519px] rounded-[10px] top-[572px] w-[297px]" data-node-id="170:8854" />
+      <div className="absolute bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid h-[29px] left-[531px] rounded-[6px] top-[600px] w-[273px]" data-node-id="170:8855" />
+      <div className="absolute inset-[56.39%_65.78%_42.5%_33.59%]" data-node-id="170:8856" data-name="icon-scan">
+        <div className="absolute inset-[-4.17%]">
+          <img alt="" className="block max-w-none size-full" src={imgIconScan} />
+        </div>
+      </div>
+      <div className="absolute gap-x-[5px] gap-y-[5px] grid-cols-[repeat(4,fit-content(100%))] grid-rows-[repeat(1,fit-content(100%))] inline-grid leading-[0] left-[531px] top-[763px]" data-node-id="170:8861">
+        <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-center place-items-start relative row-1 self-start shrink-0" data-node-id="170:8862">
+          <div className="bg-[#313131] border-[#808080] border-[0.5px] border-solid col-1 h-[25px] ml-0 mt-0 relative rounded-[6px] row-1 w-[64px]" data-node-id="170:8863" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[20px] mt-[8px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="170:8864">
+            自适应
+          </p>
+        </div>
+        <div className="col-2 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-center place-items-start relative row-1 self-center shrink-0" data-node-id="170:8865">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 h-[25px] ml-[69px] mt-0 relative rounded-[6px] row-1 w-[64px]" data-node-id="170:8866" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[96px] mt-[8px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="170:8867">
+            1K
+          </p>
+        </div>
+        <div className="col-3 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-center place-items-start relative row-1 self-center shrink-0" data-node-id="170:8868">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 h-[25px] ml-[138px] mt-0 relative rounded-[6px] row-1 w-[64px]" data-node-id="170:8869" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[165px] mt-[8px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="170:8870">
+            2K
+          </p>
+        </div>
+        <div className="col-4 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-center place-items-start relative row-1 self-center shrink-0" data-node-id="170:8871">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 h-[25px] ml-[207px] mt-0 relative rounded-[6px] row-1 w-[64px]" data-node-id="170:8872" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[234px] mt-[8px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="170:8873">
+            4K
+          </p>
+        </div>
+      </div>
+      <div className="absolute gap-x-[4px] gap-y-[4px] grid grid-cols-[repeat(5,minmax(0,1fr))] grid-rows-[repeat(2,minmax(0,1fr))] h-[106px] leading-[0] left-[531px] top-[633px] w-[271px]" data-node-id="170:8874">
+        <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-1 self-start shrink-0" data-node-id="170:8875">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-0 mt-0 relative rounded-[6px] row-1 size-[51px]" data-node-id="170:8876" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[15px] mt-[11px] place-items-start relative row-1" data-node-id="170:8877">
+            <div className="border border-[#707070] border-solid col-1 ml-[15px] mt-[11px] relative rounded-[3px] row-1 size-[20px]" data-node-id="170:8878" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[20px] mt-[34px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="170:8879">
+              1:1
+            </p>
+          </div>
+        </div>
+        <div className="col-2 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-1 self-start shrink-0" data-node-id="170:8880">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-[55px] mt-0 relative rounded-[6px] row-1 size-[51px]" data-node-id="170:8881" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[70px] mt-[14px] place-items-start relative row-1" data-node-id="170:8882">
+            <div className="border border-[#707070] border-solid col-1 h-[14px] ml-[70px] mt-[14px] relative rounded-[3px] row-1 w-[20px]" data-node-id="170:8883" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[71px] mt-[34px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="170:8884">
+              16:9
+            </p>
+          </div>
+        </div>
+        <div className="col-3 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-1 self-start shrink-0" data-node-id="170:8885">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-[110px] mt-0 relative rounded-[6px] row-1 size-[51px]" data-node-id="170:8886" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[127px] mt-[11px] place-items-start relative row-1" data-node-id="170:8887">
+            <div className="border border-[#707070] border-solid col-1 h-[20px] ml-[128px] mt-[11px] relative rounded-[3px] row-1 w-[14px]" data-node-id="170:8888" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[127px] mt-[34px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="170:8889">
+              9:16
+            </p>
+          </div>
+        </div>
+        <div className="col-4 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-center place-items-start relative row-1 self-start shrink-0" data-node-id="170:8890">
+          <div className="bg-[#313131] border-[#808080] border-[0.5px] border-solid col-1 ml-[165px] mt-0 relative rounded-[6px] row-1 size-[51px]" data-node-id="170:8891" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[182px] mt-[11px] place-items-start relative row-1" data-node-id="170:8892">
+            <div className="border border-[#707070] border-solid col-1 h-[20px] ml-[calc(50%+46.5px)] mt-[calc(50%-42px)] relative rounded-[3px] row-1 w-[16px]" data-node-id="170:8893" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[184px] mt-[34px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="170:8894">
+              3:4
+            </p>
+          </div>
+        </div>
+        <div className="col-5 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-1 self-start shrink-0" data-node-id="170:8895">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-[220px] mt-0 relative rounded-[6px] row-1 size-[51px]" data-node-id="170:8896" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[235px] mt-[13px] place-items-start relative row-1" data-node-id="170:8897">
+            <div className="border border-[#707070] border-solid col-1 h-[16px] ml-[235px] mt-[13px] relative rounded-[3px] row-1 w-[20px]" data-node-id="170:8898" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[239px] mt-[34px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="170:8899">
+              4:3
+            </p>
+          </div>
+        </div>
+        <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-2 self-start shrink-0" data-node-id="170:8900">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-0 mt-[55px] relative rounded-[6px] row-1 size-[51px]" data-node-id="170:8901" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[15px] mt-[69px] place-items-start relative row-1" data-node-id="170:8902">
+            <div className="border border-[#707070] border-solid col-1 h-[14px] ml-[15px] mt-[69px] relative rounded-[3px] row-1 w-[20px]" data-node-id="170:8903" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[19px] mt-[89px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="170:8904">
+              3:2
+            </p>
+          </div>
+        </div>
+        <div className="col-2 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-2 self-start shrink-0" data-node-id="170:8905">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-[55px] mt-[55px] relative rounded-[6px] row-1 size-[51px]" data-node-id="170:8906" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[73px] mt-[66px] place-items-start relative row-1" data-node-id="170:8907">
+            <div className="border border-[#707070] border-solid col-1 h-[20px] ml-[73px] mt-[66px] relative rounded-[3px] row-1 w-[14px]" data-node-id="170:8908" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[74px] mt-[89px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="170:8909">
+              2:3
+            </p>
+          </div>
+        </div>
+        <div className="col-3 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-2 self-start shrink-0" data-node-id="170:8910">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-[110px] mt-[55px] relative rounded-[6px] row-1 size-[51px]" data-node-id="170:8911" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[125px] mt-[67px] place-items-start relative row-1" data-node-id="170:8912">
+            <div className="border border-[#707070] border-solid col-1 h-[18px] ml-[125px] mt-[67px] relative rounded-[3px] row-1 w-[20px]" data-node-id="170:8913" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[129px] mt-[89px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="170:8914">
+              5:4
+            </p>
+          </div>
+        </div>
+        <div className="col-4 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-2 self-start shrink-0" data-node-id="170:8915">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-[165px] mt-[55px] relative rounded-[6px] row-1 size-[51px]" data-node-id="170:8916" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[181px] mt-[66px] place-items-start relative row-1" data-node-id="170:8917">
+            <div className="border border-[#707070] border-solid col-1 h-[20px] ml-[181px] mt-[66px] relative rounded-[3px] row-1 w-[18px]" data-node-id="170:8918" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[184px] mt-[89px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="170:8919">
+              4:5
+            </p>
+          </div>
+        </div>
+        <div className="col-5 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-2 self-start shrink-0" data-node-id="170:8920">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-[220px] mt-[55px] relative rounded-[6px] row-1 size-[51px]" data-node-id="170:8921" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[235px] mt-[71px] place-items-start relative row-1" data-node-id="170:8922">
+            <div className="border border-[#707070] border-solid col-1 h-[10px] ml-[235px] mt-[71px] relative rounded-[3px] row-1 w-[20px]" data-node-id="170:8923" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[237px] mt-[89px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="170:8924">
+              21:9
+            </p>
+          </div>
+        </div>
+      </div>
+      <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium leading-[normal] left-[531px] not-italic text-[#707070] text-[8px] top-[582px] whitespace-nowrap" data-node-id="170:8925">
+        比例
+      </p>
+      <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium leading-[normal] left-[531px] not-italic text-[#707070] text-[8px] top-[749px] whitespace-nowrap" data-node-id="170:8926">
+        清晰度
+      </p>
+      <p className="-translate-x-1/2 [word-break:break-word] absolute font-['Inter:Medium'] font-medium leading-[normal] left-[676px] not-italic text-[#707070] text-[8px] text-center top-[610px] whitespace-nowrap" data-node-id="170:8927">
+        自适应
+      </p>
+    </div>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

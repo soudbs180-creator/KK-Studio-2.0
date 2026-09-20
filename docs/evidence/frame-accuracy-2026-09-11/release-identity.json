@@ -1,0 +1,9 @@
+{
+  "releaseExePath": "D:\\kk-studio-next\\src-tauri\\target\\release\\kk-studio.exe",
+  "releaseMtimeMs": 1789128962082.431,
+  "newestInputPath": "D:\\kk-studio-next\\src\\components\\canvas\\CanvasNodeLayer.tsx",
+  "newestInputMtimeMs": 1789129373077.2712,
+  "needsBuild": true,
+  "reason": "stale",
+  "sha256": "7c40956e5f77324ef726fdb56e922c8ae3013cfa3a9ce4b505a066575c05e9a2"
+}

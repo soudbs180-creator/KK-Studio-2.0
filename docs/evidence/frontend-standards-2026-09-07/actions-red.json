@@ -1,0 +1,208 @@
+{
+  "config": {
+    "argv": [
+      "D:\\tools\\node-v24.20.0-win-x64\\node.exe",
+      "D:\\kk-studio-next\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/browser/canvas-actions.spec.ts",
+      "--reporter=list,json",
+      "--timeout=6000"
+    ],
+    "configFile": "D:\\kk-studio-next\\playwright.config.ts",
+    "rootDir": "D:/kk-studio-next/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/kk-studio-next/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/kk-studio-next/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 6000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 12,
+    "webServer": {
+      "command": "npm run preview -- --host 127.0.0.1 --port 1422 --strictPort",
+      "url": "http://127.0.0.1:1422",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "canvas-actions.spec.ts",
+      "file": "canvas-actions.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "右侧添加按钮随节点移动，下游卡片和连接可用，删除可撤销",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5172,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '从图片创建卡片添加下游' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('button', { name: '从图片创建卡片添加下游' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '从图片创建卡片添加下游' })\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '从图片创建卡片添加下游' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('button', { name: '从图片创建卡片添加下游' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '从图片创建卡片添加下游' })\u001b[22m\n\n    at D:\\kk-studio-next\\tests\\browser\\canvas-actions.spec.ts:7:21",
+                    "location": {
+                      "file": "D:\\kk-studio-next\\tests\\browser\\canvas-actions.spec.ts",
+                      "column": 21,
+                      "line": 7
+                    },
+                    "snippet": "   5 |   const node = page.getByTestId(\"canvas-node-image\");\n   6 |   const add = page.getByRole(\"button\", { name: \"从图片创建卡片添加下游\" });\n>  7 |   await expect(add).toBeVisible();\n     |                     ^\n   8 |   const before = await add.boundingBox();\n   9 |   await node.focus();\n  10 |   await page.keyboard.press(\"ArrowRight\");"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\canvas-actions.spec.ts",
+                        "column": 21,
+                        "line": 7
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '从图片创建卡片添加下游' })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('button', { name: '从图片创建卡片添加下游' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '从图片创建卡片添加下游' })\u001b[22m\n\n\n   5 |   const node = page.getByTestId(\"canvas-node-image\");\n   6 |   const add = page.getByRole(\"button\", { name: \"从图片创建卡片添加下游\" });\n>  7 |   await expect(add).toBeVisible();\n     |                     ^\n   8 |   const before = await add.boundingBox();\n   9 |   await node.focus();\n  10 |   await page.keyboard.press(\"ArrowRight\");\n    at D:\\kk-studio-next\\tests\\browser\\canvas-actions.spec.ts:7:21"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T06:31:04.659Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\canvas-actions-右侧添加按钮随节点移动，下游卡片和连接可用，删除可撤销\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\kk-studio-next\\tests\\browser\\canvas-actions.spec.ts",
+                    "column": 21,
+                    "line": 7
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "b9bf8353d8b818907eec-5c46bd8914a1785145c3",
+          "file": "canvas-actions.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "下游菜单 Escape 回焦且不改动卡片，连线删除不删除节点",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 6000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 6032,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 6000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 6000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 6000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\canvas-actions.spec.ts",
+                        "column": 13,
+                        "line": 30
+                      },
+                      "message": "Error: locator.click: Test timeout of 6000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '从视频卡片 1添加下游' })\u001b[22m\n\n\n  28 |   const add = page.getByRole(\"button\", { name: \"从视频卡片 1添加下游\" });\n  29 |   const before = await page.getByTestId(\"canvas-node-video1\").getAttribute(\"style\");\n> 30 |   await add.click();\n     |             ^\n  31 |   await page.keyboard.press(\"Escape\");\n  32 |   await expect(add).toBeFocused();\n  33 |   await expect(page.getByTestId(\"canvas-node-video1\")).toHaveAttribute(\"style\", before!);\n    at D:\\kk-studio-next\\tests\\browser\\canvas-actions.spec.ts:30:13"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T06:31:10.419Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\canvas-actions-下游菜单-Escape-回焦且不改动卡片，连线删除不删除节点\\error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "b9bf8353d8b818907eec-c9d4ecc60534bdd5643b",
+          "file": "canvas-actions.spec.ts",
+          "line": 26,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-07T06:31:04.349Z",
+    "duration": 12459.33,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

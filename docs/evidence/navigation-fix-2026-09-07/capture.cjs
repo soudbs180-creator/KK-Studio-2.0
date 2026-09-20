@@ -1,0 +1,56 @@
+const { chromium } = require('playwright');
+const fs = require('node:fs');
+const path = require('node:path');
+let browser;
+
+(async () => {
+  const output = __dirname;
+  browser = await chromium.launch({ channel: 'msedge' });
+  const context = await browser.newContext({ viewport: { width: 1920, height: 1080 }, recordVideo: { dir: output, size: { width: 1280, height: 720 } } });
+  const page = await context.newPage();
+  const video = page.video();
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  const settle = () => page.evaluate(() => Promise.all(document.getAnimations().map(animation => animation.finished.catch(() => {}))));
+  await page.goto('http://127.0.0.1:1422');
+  await page.getByRole('button', { name: '画布缩放', exact: true }).click();
+  await page.getByRole('menuitemradio', { name: '200%', exact: true }).click();
+  await page.getByRole('button', { name: '画布缩放', exact: true }).click();
+  const navigation = await page.getByRole('group', { name: '画布导航' }).boundingBox();
+  await page.screenshot({ path: path.join(output, 'navigation-final.png'), clip: { x: navigation.x, y: navigation.y, width: 229, height: 168 }, animations: 'disabled' });
+  await page.keyboard.press('Escape');
+  await page.goto('http://127.0.0.1:1422');
+  await page.getByTestId('canvas-node-video1').focus();
+  await page.keyboard.press('Enter');
+  await settle();
+  await page.getByRole('button', { name: '画布缩放', exact: true }).click();
+  await page.getByRole('menuitemradio', { name: '100%', exact: true }).click();
+  await page.getByRole('button', { name: '生成数量', exact: true }).click();
+  await page.getByRole('group', { name: '生成数量选项', exact: true }).screenshot({ path: path.join(output, 'count-final.png') });
+  await page.keyboard.press('ArrowLeft');
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: '视频声音' }).click();
+  await page.getByLabel('视频提示词').fill('黄昏的城市街道，镜头缓慢推进。');
+  await page.getByTestId('video-composer').screenshot({ path: path.join(output, 'video-editor-final.png'), animations: 'disabled' });
+  await page.getByRole('button', { name: '展开提示词', exact: true }).click();
+  await settle();
+  await page.getByRole('button', { name: '收起提示词', exact: true }).click();
+  await settle();
+  const views = [];
+  for (const [width, height] of [[1920,1080],[1440,900],[768,1024],[390,844]]) {
+    await page.setViewportSize({ width, height });
+    await settle();
+    await page.screenshot({ path: path.join(output, `video-${width}.png`), animations: 'disabled' });
+    await page.getByRole('button', { name: '生成数量', exact: true }).click();
+    const countBox = await page.getByRole('group', { name: '生成数量选项', exact: true }).boundingBox();
+    const scroll = await page.getByTestId('infinite-canvas').evaluate(element => ({ x: element.scrollLeft, y: element.scrollTop }));
+    views.push({ width, height, countBox, scroll });
+    if (countBox.x < 0 || countBox.x + countBox.width > width || scroll.x || scroll.y) throw new Error(`Viewport ${width} is not contained`);
+    await page.keyboard.press('Escape');
+  }
+  await context.close();
+  await video.saveAs(path.join(output, 'navigation-and-editor.webm'));
+  await browser.close();
+  fs.writeFileSync(path.join(output, 'visual-checks.json'), JSON.stringify({ navigation, views, errors, recording: 'navigation-and-editor.webm', motionSource: 'Existing frontend 140/220ms supplements, not confirmed Figma timing.' }, null, 2));
+  console.log(JSON.stringify({ navigation, viewports: views.map(view => view.width), errors, recording: 'navigation-and-editor.webm' }));
+})().catch(async error => { console.error(error); await browser?.close(); process.exitCode = 1; });

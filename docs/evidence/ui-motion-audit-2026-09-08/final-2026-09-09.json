@@ -1,0 +1,66 @@
+{
+  "canvas": {
+    "x": 287,
+    "y": 45,
+    "width": 1637,
+    "height": 1217,
+    "top": 45,
+    "right": 1924,
+    "bottom": 1262,
+    "left": 287
+  },
+  "panel": {
+    "x": 1433,
+    "y": 63,
+    "width": 470,
+    "height": 1177,
+    "top": 63,
+    "right": 1903,
+    "bottom": 1240,
+    "left": 1433
+  },
+  "empty": {
+    "x": 1453,
+    "y": 486,
+    "width": 430,
+    "height": 180,
+    "top": 486,
+    "right": 1883,
+    "bottom": 666,
+    "left": 1453
+  },
+  "emptyCenterError": 0,
+  "toolbar": {
+    "x": 705,
+    "y": 1190,
+    "width": 294,
+    "height": 50,
+    "top": 1190,
+    "right": 999,
+    "bottom": 1240,
+    "left": 705
+  },
+  "dividers": [
+    {
+      "x": 757,
+      "y": 1205,
+      "width": 0,
+      "height": 20,
+      "top": 1205,
+      "right": 757,
+      "bottom": 1225,
+      "left": 757
+    },
+    {
+      "x": 953,
+      "y": 1205,
+      "width": 0,
+      "height": 20,
+      "top": 1205,
+      "right": 953,
+      "bottom": 1225,
+      "left": 953
+    }
+  ],
+  "canvasColor": "rgb(17, 19, 23)"
+}

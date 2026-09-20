@@ -1,0 +1,554 @@
+{
+  "sources": [
+    {
+      "id": "404:28293",
+      "name": "logo",
+      "type": "FRAME",
+      "width": 26,
+      "height": 26,
+      "clipsContent": true,
+      "isMask": false,
+      "cornerRadius": 8,
+      "children": [
+        {
+          "id": "404:28237",
+          "name": "Vector",
+          "type": "VECTOR",
+          "width": 21.236719131469727,
+          "height": 21.236719131469727,
+          "isMask": false,
+          "cornerRadius": 0
+        },
+        {
+          "id": "404:28238",
+          "name": "Vector",
+          "type": "VECTOR",
+          "width": 6.063282489776611,
+          "height": 24.263280868530273,
+          "isMask": false,
+          "cornerRadius": 0
+        },
+        {
+          "id": "404:28239",
+          "name": "Vector",
+          "type": "VECTOR",
+          "width": 6.063282489776611,
+          "height": 24.263280868530273,
+          "isMask": false,
+          "cornerRadius": 0
+        }
+      ]
+    },
+    {
+      "id": "399:27833",
+      "name": "kk-studio 1",
+      "type": "FRAME",
+      "width": 63.140621185302734,
+      "height": 63.140621185302734,
+      "clipsContent": true,
+      "isMask": false,
+      "cornerRadius": 0,
+      "children": [
+        {
+          "id": "399:27834",
+          "name": "Clip path group",
+          "type": "GROUP",
+          "width": 63.140621185302734,
+          "height": 63.140621185302734,
+          "isMask": false,
+          "children": [
+            {
+              "id": "399:27835",
+              "name": "r",
+              "type": "GROUP",
+              "width": 63.140621185302734,
+              "height": 63.140621185302734,
+              "isMask": true,
+              "children": [
+                {
+                  "id": "399:27836",
+                  "name": "Vector",
+                  "type": "VECTOR",
+                  "width": 63.140621185302734,
+                  "height": 63.140621185302734,
+                  "isMask": false,
+                  "cornerRadius": 0
+                }
+              ]
+            },
+            {
+              "id": "399:27837",
+              "name": "Group",
+              "type": "GROUP",
+              "width": 63.140621185302734,
+              "height": 83.66133117675781,
+              "isMask": false,
+              "children": [
+                {
+                  "id": "399:27838",
+                  "name": "Vector",
+                  "type": "VECTOR",
+                  "width": 63.140621185302734,
+                  "height": 63.140621185302734,
+                  "isMask": false,
+                  "cornerRadius": 0
+                },
+                {
+                  "id": "399:27839",
+                  "name": "Vector",
+                  "type": "VECTOR",
+                  "width": 51.573062896728516,
+                  "height": 51.573062896728516,
+                  "isMask": false,
+                  "cornerRadius": 0
+                },
+                {
+                  "id": "399:27840",
+                  "name": "Vector",
+                  "type": "VECTOR",
+                  "width": 14.724593162536621,
+                  "height": 58.92301940917969,
+                  "isMask": false,
+                  "cornerRadius": 0
+                },
+                {
+                  "id": "399:27841",
+                  "name": "Vector",
+                  "type": "VECTOR",
+                  "width": 14.724593162536621,
+                  "height": 58.92301940917969,
+                  "isMask": false,
+                  "cornerRadius": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "399:27842",
+          "name": "Rectangle 20",
+          "type": "RECTANGLE",
+          "width": 63.140621185302734,
+          "height": 63.140621185302734,
+          "isMask": false,
+          "cornerRadius": 18.213642120361328
+        }
+      ]
+    }
+  ],
+  "heroSvg": "<svg width=\"64\" height=\"64\" viewBox=\"0 0 64 64\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0_399_27833)\">\n<mask id=\"mask0_399_27833\" style=\"mask-type:luminance\" maskUnits=\"userSpaceOnUse\" x=\"0\" y=\"0\" width=\"64\" height=\"64\">\n<path d=\"M44.1491 0H18.9915C8.50279 0 0 8.50279 0 18.9915V44.1491C0 54.6378 8.50279 63.1406 18.9915 63.1406H44.1491C54.6378 63.1406 63.1406 54.6378 63.1406 44.1491V18.9915C63.1406 8.50279 54.6378 0 44.1491 0Z\" fill=\"white\"/>\n</mask>\n<g mask=\"url(#mask0_399_27833)\">\n<path d=\"M63.1406 0H0V63.1406H63.1406V0Z\" fill=\"#0A0A0E\"/>\n<path d=\"M31.5707 83.6614C45.8122 83.6614 57.3572 72.1164 57.3572 57.8749C57.3572 43.6334 45.8122 32.0884 31.5707 32.0884C17.3292 32.0884 5.78418 43.6334 5.78418 57.8749C5.78418 72.1164 17.3292 83.6614 31.5707 83.6614Z\" fill=\"white\"/>\n<path d=\"M28.8261 62.8538C32.8526 62.2879 34.281 48.7671 32.0165 32.6543C29.752 16.5415 24.6521 3.93829 20.6256 4.50418C16.5991 5.07006 15.1707 18.5908 17.4352 34.7036C19.6997 50.8164 24.7996 63.4196 28.8261 62.8538Z\" fill=\"white\"/>\n<path d=\"M34.3138 62.8537C38.3403 63.4196 43.4402 50.8163 45.7047 34.7036C47.9692 18.5908 46.5408 5.07002 42.5143 4.50413C38.4878 3.93824 33.3879 16.5415 31.1234 32.6543C28.8589 48.7671 30.2873 62.2878 34.3138 62.8537Z\" fill=\"white\"/>\n</g>\n<rect x=\"0.243337\" y=\"0.242849\" width=\"62.6549\" height=\"62.6549\" rx=\"17.9708\" stroke=\"#707070\" stroke-width=\"0.485697\"/>\n</g>\n<defs>\n<clipPath id=\"clip0_399_27833\">\n<rect width=\"63.1406\" height=\"63.1406\" fill=\"white\"/>\n</clipPath>\n</defs>\n</svg>\n",
+  "otherLogos": [
+    {
+      "id": "21:119316",
+      "name": "kk-studio 3",
+      "type": "FRAME",
+      "width": 30,
+      "height": 30,
+      "parent": "人物信息",
+      "parentId": "73:15675"
+    },
+    {
+      "id": "21:119345",
+      "name": "kk-studio 5",
+      "type": "FRAME",
+      "width": 11,
+      "height": 11,
+      "parent": "用户积分订阅",
+      "parentId": "73:15676"
+    },
+    {
+      "id": "I312:3179;19:96869",
+      "name": "kk-studio 3",
+      "type": "FRAME",
+      "width": 20,
+      "height": 20,
+      "parent": "模型选择",
+      "parentId": "I312:3179;82:15739"
+    },
+    {
+      "id": "I312:3179;21:104347",
+      "name": "kk-studio 4",
+      "type": "FRAME",
+      "width": 11,
+      "height": 11,
+      "parent": "积分和发送按钮",
+      "parentId": "I312:3179;82:15742"
+    },
+    {
+      "id": "I312:3180;83:15789",
+      "name": "logo占位",
+      "type": "RECTANGLE",
+      "width": 12,
+      "height": 12,
+      "parent": "模型选择",
+      "parentId": "I312:3180;84:15817"
+    },
+    {
+      "id": "I312:3180;84:15822",
+      "name": "logo占位",
+      "type": "RECTANGLE",
+      "width": 12,
+      "height": 12,
+      "parent": "模型选择",
+      "parentId": "I312:3180;84:15818"
+    },
+    {
+      "id": "I312:3180;84:15831",
+      "name": "logo占位",
+      "type": "RECTANGLE",
+      "width": 12,
+      "height": 12,
+      "parent": "模型选择",
+      "parentId": "I312:3180;84:15827"
+    },
+    {
+      "id": "I312:3180;84:15840",
+      "name": "logo占位",
+      "type": "RECTANGLE",
+      "width": 12,
+      "height": 12,
+      "parent": "模型选择",
+      "parentId": "I312:3180;84:15836"
+    },
+    {
+      "id": "I312:3180;84:15849",
+      "name": "logo占位",
+      "type": "RECTANGLE",
+      "width": 12,
+      "height": 12,
+      "parent": "模型选择",
+      "parentId": "I312:3180;84:15845"
+    },
+    {
+      "id": "I404:28669;404:28325",
+      "name": "logo带字",
+      "type": "FRAME",
+      "width": 111,
+      "height": 26,
+      "parent": "app名字和功能键",
+      "parentId": "I404:28669;404:28333"
+    },
+    {
+      "id": "I404:28669;404:28293",
+      "name": "logo",
+      "type": "FRAME",
+      "width": 26,
+      "height": 26,
+      "parent": "logo带字",
+      "parentId": "I404:28669;404:28325"
+    },
+    {
+      "id": "406:28916",
+      "name": "logo带字",
+      "type": "FRAME",
+      "width": 111,
+      "height": 26,
+      "parent": "app名字和功能键",
+      "parentId": "406:28915"
+    },
+    {
+      "id": "406:28917",
+      "name": "logo",
+      "type": "FRAME",
+      "width": 26,
+      "height": 26,
+      "parent": "logo带字",
+      "parentId": "406:28916"
+    },
+    {
+      "id": "407:29274",
+      "name": "logo+状态",
+      "type": "FRAME",
+      "width": 166,
+      "height": 13,
+      "parent": "Frame 51",
+      "parentId": "407:29273"
+    },
+    {
+      "id": "407:29275",
+      "name": "logo",
+      "type": "FRAME",
+      "width": 12,
+      "height": 12,
+      "parent": "logo+状态",
+      "parentId": "407:29274"
+    },
+    {
+      "id": "410:74646",
+      "name": "logo带字",
+      "type": "FRAME",
+      "width": 111,
+      "height": 26,
+      "parent": "app名字和功能键",
+      "parentId": "410:74645"
+    },
+    {
+      "id": "410:97449",
+      "name": "logo",
+      "type": "FRAME",
+      "width": 26,
+      "height": 26,
+      "parent": "logo带字",
+      "parentId": "410:74646"
+    },
+    {
+      "id": "410:74647",
+      "name": "logo",
+      "type": "FRAME",
+      "width": 26,
+      "height": 26,
+      "parent": "收纳后的",
+      "parentId": "410:105400"
+    },
+    {
+      "id": "410:74729",
+      "name": "logo+状态",
+      "type": "FRAME",
+      "width": 166,
+      "height": 13,
+      "parent": "Frame 51",
+      "parentId": "410:74728"
+    },
+    {
+      "id": "410:74730",
+      "name": "logo",
+      "type": "FRAME",
+      "width": 12,
+      "height": 12,
+      "parent": "logo+状态",
+      "parentId": "410:74729"
+    },
+    {
+      "id": "I410:66917;404:28325",
+      "name": "logo带字",
+      "type": "FRAME",
+      "width": 111,
+      "height": 26,
+      "parent": "app名字和功能键",
+      "parentId": "I410:66917;404:28333"
+    },
+    {
+      "id": "I410:66917;404:28293",
+      "name": "logo",
+      "type": "FRAME",
+      "width": 26,
+      "height": 26,
+      "parent": "logo带字",
+      "parentId": "I410:66917;404:28325"
+    },
+    {
+      "id": "410:66997",
+      "name": "logo带字",
+      "type": "FRAME",
+      "width": 111,
+      "height": 26,
+      "parent": "app名字和功能键",
+      "parentId": "410:66996"
+    },
+    {
+      "id": "410:66998",
+      "name": "logo",
+      "type": "FRAME",
+      "width": 26,
+      "height": 26,
+      "parent": "logo带字",
+      "parentId": "410:66997"
+    },
+    {
+      "id": "399:27833",
+      "name": "kk-studio 1",
+      "type": "FRAME",
+      "width": 63.140621185302734,
+      "height": 63.140621185302734,
+      "parent": "Container",
+      "parentId": "367:1088"
+    },
+    {
+      "id": "83:15789",
+      "name": "logo占位",
+      "type": "RECTANGLE",
+      "width": 12,
+      "height": 12,
+      "parent": "模型选择",
+      "parentId": "84:15817"
+    },
+    {
+      "id": "84:15822",
+      "name": "logo占位",
+      "type": "RECTANGLE",
+      "width": 12,
+      "height": 12,
+      "parent": "模型选择",
+      "parentId": "84:15818"
+    },
+    {
+      "id": "84:15831",
+      "name": "logo占位",
+      "type": "RECTANGLE",
+      "width": 12,
+      "height": 12,
+      "parent": "模型选择",
+      "parentId": "84:15827"
+    },
+    {
+      "id": "84:15840",
+      "name": "logo占位",
+      "type": "RECTANGLE",
+      "width": 12,
+      "height": 12,
+      "parent": "模型选择",
+      "parentId": "84:15836"
+    },
+    {
+      "id": "84:15849",
+      "name": "logo占位",
+      "type": "RECTANGLE",
+      "width": 12,
+      "height": 12,
+      "parent": "模型选择",
+      "parentId": "84:15845"
+    },
+    {
+      "id": "19:96869",
+      "name": "kk-studio 3",
+      "type": "FRAME",
+      "width": 20,
+      "height": 20,
+      "parent": "模型选择",
+      "parentId": "82:15739"
+    },
+    {
+      "id": "21:104347",
+      "name": "kk-studio 4",
+      "type": "FRAME",
+      "width": 11,
+      "height": 11,
+      "parent": "积分和发送按钮",
+      "parentId": "82:15742"
+    },
+    {
+      "id": "404:28325",
+      "name": "logo带字",
+      "type": "FRAME",
+      "width": 111,
+      "height": 26,
+      "parent": "app名字和功能键",
+      "parentId": "404:28333"
+    },
+    {
+      "id": "404:28293",
+      "name": "logo",
+      "type": "FRAME",
+      "width": 26,
+      "height": 26,
+      "parent": "logo带字",
+      "parentId": "404:28325"
+    }
+  ],
+  "workspaceLogos": [
+    {
+      "frame": "404:28667",
+      "logos": [
+        {
+          "id": "I404:28669;404:28325",
+          "name": "logo带字",
+          "width": 111,
+          "height": 26
+        },
+        {
+          "id": "I404:28669;404:28293",
+          "name": "logo",
+          "width": 26,
+          "height": 26
+        },
+        {
+          "id": "406:28916",
+          "name": "logo带字",
+          "width": 111,
+          "height": 26
+        },
+        {
+          "id": "406:28917",
+          "name": "logo",
+          "width": 26,
+          "height": 26
+        },
+        {
+          "id": "407:29274",
+          "name": "logo+状态",
+          "width": 166,
+          "height": 13
+        },
+        {
+          "id": "407:29275",
+          "name": "logo",
+          "width": 12,
+          "height": 12
+        }
+      ]
+    },
+    {
+      "frame": "410:67357",
+      "logos": [
+        {
+          "id": "410:74646",
+          "name": "logo带字",
+          "width": 111,
+          "height": 26
+        },
+        {
+          "id": "410:97449",
+          "name": "logo",
+          "width": 26,
+          "height": 26
+        },
+        {
+          "id": "410:74647",
+          "name": "logo",
+          "width": 26,
+          "height": 26
+        },
+        {
+          "id": "410:74729",
+          "name": "logo+状态",
+          "width": 166,
+          "height": 13
+        },
+        {
+          "id": "410:74730",
+          "name": "logo",
+          "width": 12,
+          "height": 12
+        }
+      ]
+    }
+  ],
+  "exports": [
+    {
+      "id": "19:96869",
+      "width": 20,
+      "height": 20,
+      "svg": "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0_19_96869)\">\n<mask id=\"mask0_19_96869\" style=\"mask-type:luminance\" maskUnits=\"userSpaceOnUse\" x=\"0\" y=\"0\" width=\"20\" height=\"20\">\n<path d=\"M13.9844 0H6.01562C2.69329 0 0 2.69329 0 6.01562V13.9844C0 17.3067 2.69329 20 6.01562 20H13.9844C17.3067 20 20 17.3067 20 13.9844V6.01562C20 2.69329 17.3067 0 13.9844 0Z\" fill=\"white\"/>\n</mask>\n<g mask=\"url(#mask0_19_96869)\">\n<path d=\"M20 0H0V20H20V0Z\" fill=\"#0A0A0E\"/>\n<path d=\"M10 26.5C14.511 26.5 18.168 22.8431 18.168 18.332C18.168 13.821 14.511 10.1641 10 10.1641C5.48896 10.1641 1.83203 13.821 1.83203 18.332C1.83203 22.8431 5.48896 26.5 10 26.5Z\" fill=\"white\"/>\n<path d=\"M9.13081 19.9092C10.4062 19.73 10.8587 15.4472 10.1414 10.3434C9.42409 5.23966 7.80869 1.24754 6.53327 1.42679C5.25786 1.60603 4.80542 5.88877 5.52271 10.9926C6.24 16.0963 7.8554 20.0885 9.13081 19.9092Z\" fill=\"white\"/>\n<path d=\"M10.8692 19.9092C12.1446 20.0884 13.76 16.0963 14.4773 10.9925C15.1946 5.88872 14.7422 1.60598 13.4667 1.42673C12.1913 1.24748 10.5759 5.2396 9.85864 10.3434C9.14135 15.4472 9.5938 19.7299 10.8692 19.9092Z\" fill=\"white\"/>\n</g>\n</g>\n<defs>\n<clipPath id=\"clip0_19_96869\">\n<rect width=\"20\" height=\"20\" fill=\"white\"/>\n</clipPath>\n</defs>\n</svg>\n"
+    },
+    {
+      "id": "21:104347",
+      "width": 11,
+      "height": 11,
+      "svg": "<svg width=\"11\" height=\"11\" viewBox=\"0 0 11 11\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0_21_104347)\">\n<mask id=\"mask0_21_104347\" style=\"mask-type:luminance\" maskUnits=\"userSpaceOnUse\" x=\"0\" y=\"0\" width=\"11\" height=\"11\">\n<path d=\"M7.69141 0H3.30859C1.48131 0 0 1.48131 0 3.30859V7.69141C0 9.51869 1.48131 11 3.30859 11H7.69141C9.51869 11 11 9.51869 11 7.69141V3.30859C11 1.48131 9.51869 0 7.69141 0Z\" fill=\"white\"/>\n</mask>\n<g mask=\"url(#mask0_21_104347)\">\n<path d=\"M7.40625 0.784688C8.10773 0.883274 8.35642 3.23933 7.96191 6.04641C7.94992 6.13171 7.93574 6.21618 7.92285 6.30031C9.16723 7.09908 9.99215 8.49405 9.99219 10.0825C9.99219 12.5636 7.98107 14.5747 5.5 14.5747C3.01893 14.5747 1.00781 12.5636 1.00781 10.0825C1.00785 8.49453 1.83242 7.10018 3.07617 6.30129C3.06324 6.21686 3.04914 6.13203 3.03711 6.04641C2.6427 3.24001 2.89168 0.884332 3.59277 0.784688C4.2515 0.69211 5.0744 2.62295 5.49902 5.18313C5.92354 2.62342 6.74758 0.693061 7.40625 0.784688Z\" fill=\"white\"/>\n</g>\n</g>\n<defs>\n<clipPath id=\"clip0_21_104347\">\n<rect width=\"11\" height=\"11\" fill=\"white\"/>\n</clipPath>\n</defs>\n</svg>\n"
+    },
+    {
+      "id": "21:119316",
+      "width": 30,
+      "height": 30,
+      "svg": "<svg width=\"30\" height=\"30\" viewBox=\"0 0 30 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0_21_119316)\">\n<mask id=\"mask0_21_119316\" style=\"mask-type:luminance\" maskUnits=\"userSpaceOnUse\" x=\"0\" y=\"0\" width=\"30\" height=\"30\">\n<path d=\"M20.9766 0H9.02344C4.03993 0 0 4.03993 0 9.02344V20.9766C0 25.9601 4.03993 30 9.02344 30H20.9766C25.9601 30 30 25.9601 30 20.9766V9.02344C30 4.03993 25.9601 0 20.9766 0Z\" fill=\"white\"/>\n</mask>\n<g mask=\"url(#mask0_21_119316)\">\n<path d=\"M30 0H0V30H30V0Z\" fill=\"#0A0A0E\"/>\n<path d=\"M15 39.75C21.7666 39.75 27.252 34.2646 27.252 27.498C27.252 20.7315 21.7666 15.2461 15 15.2461C8.23343 15.2461 2.74805 20.7315 2.74805 27.498C2.74805 34.2646 8.23343 39.75 15 39.75Z\" fill=\"white\"/>\n<path d=\"M13.6962 29.8638C15.6094 29.5949 16.288 23.1708 15.2121 15.5151C14.1362 7.85943 11.7131 1.87125 9.79994 2.14012C7.88682 2.40899 7.20815 8.8331 8.28409 16.4888C9.36002 24.1444 11.7831 30.1326 13.6962 29.8638Z\" fill=\"white\"/>\n<path d=\"M16.304 29.8638C18.2171 30.1327 20.6403 24.1445 21.7162 16.4888C22.7921 8.83314 22.1134 2.40903 20.2003 2.14015C18.2872 1.87128 15.8641 7.85947 14.7882 15.5151C13.7122 23.1708 14.3909 29.5949 16.304 29.8638Z\" fill=\"white\"/>\n</g>\n<rect x=\"0.1\" y=\"0.1\" width=\"29.8\" height=\"29.8\" rx=\"8.9\" stroke=\"#707070\" stroke-width=\"0.2\"/>\n</g>\n<defs>\n<clipPath id=\"clip0_21_119316\">\n<rect width=\"30\" height=\"30\" fill=\"white\"/>\n</clipPath>\n</defs>\n</svg>\n"
+    },
+    {
+      "id": "407:29275",
+      "width": 12,
+      "height": 12,
+      "svg": "<svg width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0_407_29275)\">\n<path d=\"M5.9999 15.9001C8.70653 15.9001 10.9007 13.7059 10.9007 10.9993C10.9007 8.29266 8.70653 6.09851 5.9999 6.09851C3.29328 6.09851 1.09912 8.29266 1.09912 10.9993C1.09912 13.7059 3.29328 15.9001 5.9999 15.9001Z\" fill=\"white\"/>\n<path d=\"M5.4783 11.9456C6.24355 11.838 6.51502 9.26837 6.08464 6.2061C5.65427 3.14383 4.68503 0.74856 3.91978 0.856109C3.15453 0.963657 2.88307 3.5333 3.31344 6.59557C3.74381 9.65784 4.71306 12.0531 5.4783 11.9456Z\" fill=\"white\"/>\n<path d=\"M6.52142 11.9455C7.28666 12.0531 8.25591 9.65778 8.68628 6.59551C9.11665 3.53324 8.84518 0.963598 8.07994 0.85605C7.31469 0.748501 6.34545 3.14378 5.91508 6.20604C5.4847 9.26831 5.75617 11.838 6.52142 11.9455Z\" fill=\"white\"/>\n</g>\n<defs>\n<clipPath id=\"clip0_407_29275\">\n<rect width=\"12\" height=\"12\" rx=\"3.69231\" fill=\"white\"/>\n</clipPath>\n</defs>\n</svg>\n"
+    }
+  ],
+  "authority": "0nU0A7pq6eyjwfwm1TtWkO",
+  "date": "2026-09-11"
+}

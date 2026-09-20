@@ -1,0 +1,53 @@
+{
+  "title": "视频参数弹层 170:8853 设计比对（Doubao 会话实测）",
+  "date": "2026-09-07",
+  "design": {
+    "source": "docs/reference/navigation-fix-2026-09-07/170-8853-context.txt（Figma 参数设置，视频模块 170:8490 内）",
+    "popover": { "w": 297, "h": 229, "bg": "#1a1a1a", "border": "#3c3c3c", "radius": 10 },
+    "labels": { "font": "Inter Medium 500", "size": 8, "color": "#707070" },
+    "qualitySegments": { "row": "273x29", "radius": 6, "bg": "#1a1a1a", "border": "#3c3c3c", "selectedBg": "#313131", "selectedBorder": "#808080", "options": ["自适应", "1K", "2K", "4K"], "optionSize": "64x25" },
+    "ratioGrid": { "grid": "271x106", "gap": 4, "tile": "51x51", "tileRadius": 6, "tileBg": "#1a1a1a", "tileBorder": "#3c3c3c", "selectedBg": "#313131", "selectedBorder": "#808080", "tiles": ["1:1", "16:9", "9:16", "3:4", "4:3", "3:2", "2:3", "5:4", "4:5", "21:9"], "glyphBorder": "#707070 1px", "glyphRadius": 3 },
+    "selectedState": { "quality": "自适应", "ratio": "3:4" },
+    "duration": "弹层内无时长；170:8490 编辑器底栏参数条含计时图标 261:514 + '7S'"
+  },
+  "implementationBefore": {
+    "popover": { "w": 280, "h": 311, "radius": 11 },
+    "order": "比例区（头部自适应按钮+比例网格）→ 清晰度区 → 时长",
+    "qualityBtns": { "size": "61x38", "radius": 10, "font": "12px 400", "activeBg": "#202020", "activeBorder": "#3c3c3c" },
+    "ratioTiles": { "size": "46-50x63", "transparentBg": true, "radius": 10 },
+    "glyphBorder": "#858585 1.5px",
+    "labels": "10px/12px",
+    "selected": { "quality": "2K", "ratio": "自适应(头部按钮)" }
+  },
+  "implementationAfter": {
+    "popover": { "w": 297, "h": 244.19, "radius": 10, "bg": "#1a1a1a", "border": "#3c3c3c" },
+    "order": "比例标签 → 清晰度分段行 → 比例网格 → 清晰度标签 → 时长(video)",
+    "qualityBtns": { "size": "63x22", "radius": 6, "font": "8px 500", "color": "#707070", "activeBg": "#313131", "activeBorder": "#808080" },
+    "ratioTiles": { "size": "51x52", "radius": 6, "bg": "#1a1a1a", "border": "#3c3c3c", "activeBg": "#313131", "activeBorder": "#808080" },
+    "glyphBorder": "#707070 1px radius3",
+    "labels": "8px 500 #707070",
+    "adaptiveHeaderButton": "已移除（原稿无；比例'自适应'为无网格项选中的自动态）",
+    "duration": "保留（工程项，见 remainingDiffs）"
+  },
+  "deltasFixed": [
+    "弹层宽 280→297、圆角 11→10、高 311→244",
+    "结构顺序改为原稿：比例标签→清晰度段→比例格→清晰度标签",
+    "清晰度段按钮 61x38→63x22、8px Medium、选中 #313131/#808080",
+    "比例格 10 格 51x51 圆角 6、底色 #1a1a1a 边框 #3c3c3c、选中 #313131/#808080",
+    "字形框按原稿尺寸（3:4=16x20、4:3=20x16、21:9=20x10 等），边框 #707070 1px 圆角 3",
+    "标签 8px 500 #707070；移除原稿不存在的 自适应 头部按钮"
+  ],
+  "remainingDiffs": [
+    "弹层高 244 vs 设计 229：+15px 来自保留的'时长'行（原稿时长'7S'在编辑器底栏参数条 261:514，迁移需改底栏交互并更新 ui-motion.spec 的 视频时长 定位）",
+    "清晰度/比例标签与原稿一样分处上/下（原稿 170:8925 比例@582、170:8926 清晰度@749），标签与控件配对在视觉上不贴邻——按原稿字面还原，待 Figma 重读核对是否导出错位",
+    "选中态文本色保持 #707070（原稿 170:8864/170:8894 未随选中变化）",
+    "原稿选中态（清晰度=自适应、比例=3:4）为示例状态；实现默认视频=2K/自适应，属状态差异非几何差异",
+    "图片参数弹层共用本组件，结构一并更新；图片原稿弹层节点未缓存，待 Figma 重读补证"
+  ],
+  "evidence": [
+    "docs/evidence/frontend-standards-2026-09-07/video-params-impl.png（1920x1080 全帧，弹层展开）",
+    "docs/evidence/frontend-standards-2026-09-07/diag-video-params.cjs（测量脚本）",
+    "docs/reference/navigation-fix-2026-09-07/170-8853-context.txt（原稿上下文）"
+  ],
+  "verification": "typecheck、build 通过；ui-motion+composer-fidelity+frontend 27 项通过；npm run verify 全量 52 passed / 0 failed，exit 0"
+}

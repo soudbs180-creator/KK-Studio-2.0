@@ -1,0 +1,167 @@
+{
+  "source": {
+    "sidebarWidth": 61,
+    "nav": {
+      "x": 12,
+      "y": [
+        140,
+        192,
+        244,
+        296
+      ],
+      "width": 39,
+      "height": 48
+    },
+    "search": {
+      "x": 18,
+      "y": 955,
+      "width": 26,
+      "height": 20
+    },
+    "toggle": {
+      "x": 18,
+      "y": 994,
+      "width": 26,
+      "height": 18
+    },
+    "account": {
+      "x": 18,
+      "y": 1031,
+      "width": 26,
+      "height": 26
+    },
+    "settings": {
+      "x": 72,
+      "y": 1031,
+      "width": 29,
+      "height": 29
+    }
+  },
+  "actual": {
+    "width": 1920,
+    "height": 1080,
+    "state": "compact",
+    "sidebar": {
+      "x": 0,
+      "y": 40,
+      "width": 61,
+      "height": 1040,
+      "display": "flex"
+    },
+    "canvas": {
+      "x": 61,
+      "y": 45,
+      "width": 1848,
+      "height": 1025,
+      "display": "block"
+    },
+    "nav": [
+      {
+        "x": 12,
+        "y": 140,
+        "width": 39,
+        "height": 48
+      },
+      {
+        "x": 12,
+        "y": 192,
+        "width": 39,
+        "height": 48
+      },
+      {
+        "x": 12,
+        "y": 244,
+        "width": 39,
+        "height": 48
+      },
+      {
+        "x": 12,
+        "y": 296,
+        "width": 39,
+        "height": 48
+      }
+    ],
+    "search": {
+      "x": 18,
+      "y": 955,
+      "width": 26,
+      "height": 20,
+      "display": "grid"
+    },
+    "toggle": {
+      "x": 18,
+      "y": 994,
+      "width": 26,
+      "height": 18,
+      "display": "grid"
+    },
+    "account": {
+      "x": 18,
+      "y": 1031,
+      "width": 26,
+      "height": 26,
+      "display": "flex"
+    },
+    "settings": {
+      "x": 72,
+      "y": 1031,
+      "width": 29,
+      "height": 29,
+      "display": "grid"
+    },
+    "overflow": false
+  },
+  "deltas": {
+    "sidebarWidth": 0,
+    "nav": [
+      {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    ],
+    "search": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "toggle": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "account": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "settings": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    }
+  }
+}

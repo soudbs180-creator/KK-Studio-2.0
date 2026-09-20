@@ -1,138 +1,64 @@
-# AGENTS.md - AI Agent 项目总指导文件 — KK Studio v1.6.1
+# KK Studio 工作台协作规范
 
-Last updated: 2026-06-25
-Project version: 1.6.1
-Version source of truth: `config/release-manifest.json`
+## 唯一工程与目标
 
-本文件只保留当前事实和修改边界。历史计划、迁移记录和旧架构描述只能用于追溯，不能覆盖当前源码、`package.json`、`config/release-manifest.json`、构建脚本和治理脚本。
+- 唯一工程仓库是 `D:\\kk-studio-next`。任务隔离可以使用该仓库登记的 `.worktrees/<TASK-ID>`；这不是第二套工程或旧目录复活。每个 worktree 只承载一个 task branch。
+- `D:\\kk-studio` 已清理，不得重新创建或作为运行目录。
+- 历史代码和用户数据只从 `D:\\KK-Studio-legacy-archive-20260909`、`D:\\KK-Studio-user-data-backup-20260909` 读取；迁移必须经过 schema、checksum 和用户明确操作。
 
-## 1. 当前项目事实
+## 技术边界
 
-| 领域 | 当前事实 |
-|---|---|
-| 产品名 | KK Studio |
-| 当前发布线 | KK Studio v1.6.1 |
-| 主版本源 | `config/release-manifest.json` |
-| Web 运行时 | `apps/web/` |
-| 后端运行时 | `services/api/` Express / VPS |
-| 共享契约 | `packages/shared/` |
-| HTTP Client | `packages/api-client/` |
-| UI / Token | `packages/ui/` |
-| 数据库迁移 | `infrastructure/database/migrations/` |
-| AI 接管入口 | `apps/web/src/features/ai-takeover/` 与 `apps/web/src/features/ai-assistant-runtime/` |
-| AI 能力文档 | `AI_ASSISTANT_CAPABILITY_OPTIMIZATION.md`、`docs/ai-assistant/` |
+- React 18 + TypeScript strict + Vite；桌面壳为 Tauri 2；Node 24；npm lockfile 是唯一锁文件。
+- `src/components`：页面与组件；`src/domain`：Zod schema、领域模型、demo fixture；`src/integrations`：模型/API/provider 适配器；`src/runtime`：浏览器存储契约和运行时边界；`src-tauri`：桌面命令与文件系统。
+- `public/design/figma` 是 Figma 导出资源，`public/fixtures/demo` 是固定本地演示素材，`design/figma-plugin` 是可编辑插件源。
+- 新功能优先按 `src/features/<feature>` 拆分；组件超过 300 行按职责拆分。
 
-## 2. 事实优先级
+## 数据与安全
 
-```text
-当前源码和类型定义
-  > config/release-manifest.json / package.json / 构建脚本
-  > 自动化测试与治理脚本
-  > AGENTS.md
-  > docs/governance/PROJECT_STATE_AND_VALIDATION.md
-  > 当前 docs/ 文档
-  > docs/archive/、旧计划、旧审计、旧提示词
-```
+- 桌面数据根目录为 `%APPDATA%\\kk-studio`（跨平台规则见 `docs/architecture/DATA-STORAGE.md`）。模型权重留在用户选择的 ComfyUI 根目录，仓库只放适配器和索引契约。
+- API key、OAuth token 和代理凭据只进系统凭据库（service `com.kkstudio.provider`）或请求内存，禁止进入 localStorage、项目文件、导出包、URL 和日志。
+- Web 的项目/任务/消息和素材在 IndexedDB 本地持久化，localStorage 保存非敏感设置、provider 元数据与恢复副本；Desktop 创作快照及素材使用原生仓库。具体契约以 `docs/architecture/DATA-STORAGE.md` 为准。本地持久化不代表云端保存；账号、积分、记忆、云端保存或 Provider 生成未接真实服务时必须明确标为 Prototype 或禁用。
 
-遇到冲突时，使用更高优先级事实继续执行，并把文档漂移记录到 `docs/development/session-handoff.md` 或相关治理文件。不要把历史目录、历史版本或旧部署方式重新接入主运行链路。
+## 设计与交互
 
-## 3. 修改边界
+- Figma 文件 `0nU0A7pq6eyjwfwm1TtWkO` 是 UI 唯一权威；当前基线为 Workspace `404:28667`、收纳 `410:67357`、Landing `410:59708`，其他界面从 page `0:1` 读取最新节点。历史 `1:2` 不得覆盖最新 Frame。实现前读取 `docs/UI-ALIGNMENT.md`、`docs/UI-STANDARDS.md`、`docs/UI_SPEC.md`。
+- 每个可见控件必须有真实行为，或显示禁用原因；异步操作必须覆盖 loading、success、error、cancel 和离线状态。
+- 视觉验收必须有相同状态的浏览器截图/DOM 证据；构建通过不等于 Figma 一致。
 
-| 需求 | 应修改位置 | 禁止事项 |
-|---|---|---|
-| Web 页面、桌面交互、无限画布 | `apps/web/` | 禁止回到根 `src/` |
-| 移动端原生交互 | `apps/mobile/` | 禁止直接依赖 DOM / BOM |
-| 类型、DTO、枚举、领域契约 | `packages/shared/` | 禁止引入 React、DOM、Node 专属实现 |
-| 鉴权、Session、跨端 API | `packages/api-client/` | 禁止硬编码平台存储 |
-| 设计 Token、基础组件、UI Bridge | `packages/ui/` | 禁止放业务状态和模型调用逻辑 |
-| API 代理、计费、数据库、Stripe | `services/api/` | 禁止前端直连密钥、数据库或支付状态 |
-| 数据库结构变化 | `infrastructure/database/migrations/` | 禁止在业务代码里执行 DDL |
-| AI 助手与自动化能力 | `apps/web/src/features/ai-takeover/`、`apps/web/src/features/ai-assistant-runtime/` | 禁止另起平行助手 |
+## 文档与验证
 
-跨层修改顺序：`packages/shared` -> `packages/api-client` -> `server` -> `apps/web` -> `tests` -> `docs`。
+- 当前需求按 `docs/templates/` 创建 intent、spec、plan、verification，放入对应日期的 `docs/changes/<date>-<task>/`；旧整合记录是历史依据，不是后续任务的默认目录。
+- 代码、数据契约或行为改变时同步 `docs/PROGRESS.md`。
+- 常用命令：`npm run typecheck`、`npm run test`、`npm run ui:check`、`npm run format:check`、`npm run build`、`npm run client:check`；交付前执行 `npm run verify`。
+- 验证不足只能写 `Prototype`，不能把占位 UI、硬编码账号或本地 demo 描述为真实服务。
 
-## 4. AI / Agent 执行协议
+## UI 运行链路门禁
 
-Agent 接到任意代码任务时，先读取：
+- UI 改动必须按 `最新 Figma Frame → Design Tokens → Shared Components → Actual Source → Browser Verification` 执行。
+- 报告 UI 完成前，必须记录实际启动命令、浏览器 URL/端口、运行模式（Vite development、Vite preview 或 Tauri release）、当前 route、route 到页面组件的 import 链路，以及同状态浏览器 DOM/截图证据。
+- 代码 diff、Figma 读取或构建通过都不能代替浏览器验证；如果页面没有发生可见变化，必须继续检查端口、旧 build、缓存、重复 app/package 和路由引用，不能标记完成。
+- Web（Vite）与 Desktop（Tauri `frontendDist`）必须分别验证；修改源码后要重新生成实际被加载的 production `dist` 或 release 包。
+- 页面级 CSS 的加载顺序由 `App.tsx` 统一管理；同一 CSS 从组件提前 import 后，再次 import 不会改变顺序。必须以浏览器 style sheet 顺序和 computed style 确认最终生效规则。
+- 默认、hover、active、selected、disabled、focus 必须消费同一套语义 tokens；原稿未定义的状态标记为工程补充。示例内容、真实运行内容与桌面专属控件不得混作同状态验收。
+- 运行 Vite 时必须固定端口 1421（`vite.config.ts` 中设置 `strictPort: true`）；如果 1421 被占用，不得自动切到其他端口渲染。
+- 若启动后页面仍是旧界面，需先确认 `index.html` 与当前进程的 `script/src`（`/src/main.tsx` 或 `/assets/index-*.js`）、`data-runtime-mode`、`data-runtime-entry`，再排除：
+  - 旧窗口/旧端口残留
+  - 浏览器缓存（`Ctrl+Shift+R` 后重试）
+  - 错误指向其他 app 的 `dist` 或其他 checkout
 
-1. `AGENTS.md`
-2. `package.json`
-3. `config/release-manifest.json`
-4. 与任务直接相关的源码、测试和规格
-5. `docs/governance/PROJECT_STATE_AND_VALIDATION.md`
+## 上下文、任务与证据
 
-AI 助手和画布 Agent 必须通过 `IntentGate -> Planner -> ToolRegistry -> PermissionPolicy -> Executor -> Verification -> Memory / Knowledge Update` 执行。LLM 只负责理解意图、生成计划、输出结构化工具调用和总结结果。
+- 新 session 先检查当前和嵌套 AGENTS、`docs/governance/`、相关 architecture/spec/change records、Git status/history/worktrees，再读取相关实现。当前事实、规范、历史证据发生冲突时记录 CONFLICT 并据来源与时间判定；代码与规范冲突不自动以代码为准。
+- `docs/governance/PROJECT_STATE.md` 保存当前事实；`SPEC_BASELINE.md` 指向已有规范；`task-ledger.json` 是任务/已知问题状态的机器可读权威，`TASK_LEDGER.md` 是生成视图；`AI_HANDOFF.md` 只保存恢复入口。`docs/PROGRESS.md` 和 change verification 保存已完成迭代证据。
+- 修改模块前检查相关 TODO/FIXME/PARTIAL/REGRESSION/Prototype 与旧方案；不因没有 TODO 字符串就宣布没有遗留任务。额外独立问题加入账本，明确目标、验收、依赖、Owner、Branch、Worktree、Affected Modules、状态、证据和更新时间。
+- FACT 必须有直接证据，推断标 INFERENCE，缺证据标 UNKNOWN，可信来源冲突标 CONFLICT；BLOCKED 只用于外部必要条件。Prototype/Mock/构建通过不等于真实服务完成。
+- AI 自主执行可从仓库决定的技术工作。只升级真正的产品语义分歧、不可逆操作、外部权限/密钥/付款、无法解决的有效规范冲突和重大范围扩展。不要重复要求用户确认已授权动作。
 
-涉及画布、批量生成、资源整理、ZIP、自动排版、下载原图等能力时，优先调用项目内能力，不模拟 UI 点击或手动输入。关键名词必须保持一致：`ToolRegistry`、`CanvasRuntimeState`、`DurableGenerationQueue`、`assets.zipOriginals`、`generation.createBatchJob`。
+## Git、并行与交付
 
-## 5. 安全边界
-
-禁止在前端或文档中写入真实密钥、生产数据库凭据、付款状态、积分余额、Webhook Secret、用户隐私文件或本机路径。涉及支付、JWT、CORS、Provider 直连、数据库迁移、生产部署时，必须小步变更并留下验证记录。
-
-## 6. 清理与轻量化规则
-
-当前主链路不得依赖以下历史入口：
-
-- 根 `src/`
-- `apps/admin/`
-- `apps/api/`
-- `apps/payment-sidecar/`
-- 根 `billing/`
-- `payment-server/`
-
-历史内容只能放在 `docs/archive/` 或明确标记为 archive 的文件中。新功能不得引用旧入口；需要兼容旧数据时，必须通过 adapter/service 隔离，并注明删除条件。
-
-## 7. 验证要求
-
-常规变更至少运行相关检查；项目级清理必须运行：
-
-```bash
-npm run architecture:check
-npm run governance:check
-npm run typecheck
-npm run build
-```
-
-完整发布前运行：
-
-```bash
-npm run verify:changes
-```
-
-如果无法运行验证，交接中必须写明未运行命令和原因。
-
-## 8. 交接格式
-
-每次修改结束时记录：
-
-- 修改范围
-- 修改文件
-- 当前设计决策
-- 已运行验证
-- 未运行验证及原因
-- 风险与下一步
-
-优先记录到 `docs/development/session-handoff.md`，复杂能力变更再补充 `openspec/changes/<change-id>/tasks.md`。
-
-## 9. 多 Agent 协作与状态同步守卫协议 (Multi-Agent Sync Protocol)
-
-由于本项目经常由不同 AI 代理 (例如 Codex 和 Antigravity) 在同一物理代码库上进行协作开发，为避免不同 Agent 编辑器缓存覆盖、工作区代码冲突以及状态无法同步等问题，所有 AI 代理在处理任务时必须遵循以下协议：
-
-### 9.1 任务开始：接手期校验 (Pre-flight Check)
-1. **获取最新本地状态**：
-   - 接手任何任务时，Agent 第一步必须在控制台运行 `npm run agents:status` 检查本地状态。
-   - 若检测到工作区存在未提交的脏文件（Changes not staged for commit），必须先将之前遗留的工作提交或告知用户，严禁直接在脏工作区修改文件。
-2. **强制文件重读，废弃老缓存**：
-   - 严禁使用大模型自带的旧 Context 记忆去推测代码。在修改任何代码文件之前，**必须重新调用文件读取工具 (如 view_file)**，以获取当前磁盘上的最新源码内容。
-
-### 9.2 任务执行：小步变更与局部验证 (Implementation)
-1. 遵循 `AGENTS.md` 的修改边界进行操作。
-2. 每次完成子任务后，执行相应的单测与构建检查。
-
-### 9.3 任务结束：交付期同步 (Post-flight Sync)
-1. **追加 Handoff 记录**：
-   - 在 `docs/development/session-handoff.md` 中按最新版序号追加本次会话的修改范围、设计决策和验证记录。
-2. **强制本地 Git 提交**：
-   - 文档和验证全部通过后，**必须在控制台运行 `npm run agents:commit`** 将当前工作成果固化为本地 Git Commit。
-   - `agents:commit` 会自动分析 Handoff 最新追加条目的标题作为 Git Commit 信息，确保文档描述与 Git 提交内容强一致。
-   - 此提交将跳过 Husky 针对 portable 编译资产的验证，实现一键安全存档，绝对防止后续 Agent 接手时强行覆盖代码。
+- 默认稳定主线为 main；历史 master 未经过审阅迁移前不自动重命名、不假设为新 main。主线禁止直接开发、普通 direct push 和 force push。
+- 使用 `<type>/<TASK-ID>-<description>` 短期分支（feat/fix/perf/refactor/test/docs/chore/hotfix）。先列任务依赖图，只有独立且低冲突任务并行；多代理不得同时改同一 dirty worktree。原 checkout 的无关改动不可 reset、clean、覆盖或悄悄提交。
+- 进入 task worktree 后记录依赖安装、lint/typecheck/相关测试基线，已有失败记 PRE-EXISTING FAILURE。需捕获未提交实现时只创建明确标为未验收的候选快照，不移动主线、不改变原 checkout/index；排除 secrets、运行数据、临时文件和生成证据。
+- 合并前 self-review、lint/typecheck/test/build、相关 regression、文档与验收全部通过；UI/runtime 适用时必须完成上述运行链路门禁。冲突在源分支解决，解决后重新验证。
+- PR 一项逻辑目标，使用 `.github/PULL_REQUEST_TEMPLATE.md`；默认 squash merge，合并后验证最新主线。无 remote/权限时保留可审阅本地提交与 PR 内容并明确 remote gate 未完成。远端保护需实际托管配置，不能把 CI 文件当 ruleset 已启用。
+- DONE = 实现 + 验收 + 相关验证/回归 + 文档同步；未完成写 PARTIAL，未验证写 NOT VERIFIED。结束迭代更新 ledger、Project State、Handoff 和相关规范；相同错误复发必须补自动 guardrail。不要因文件长而机械拆分，按职责边界整理。

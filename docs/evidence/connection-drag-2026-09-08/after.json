@@ -1,0 +1,16 @@
+{
+  "errors": [],
+  "measurements": {
+    "image": {
+      "x": 466,
+      "y": 211,
+      "width": 400,
+      "height": 400
+    },
+    "start": {
+      "x": 866,
+      "y": 411
+    },
+    "deltaY": 0
+  }
+}

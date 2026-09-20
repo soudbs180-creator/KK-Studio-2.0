@@ -1,0 +1,132 @@
+const imgLine10 = "https://www.figma.com/api/mcp/asset/9d6fcba3-1ad7-43b8-bb5e-90d878965c44.svg";
+const img298 = "https://www.figma.com/api/mcp/asset/4ca73f5d-f71a-4958-bc29-68fb4a2685dc.svg";
+const imgIconRoute = "https://www.figma.com/api/mcp/asset/cf19f3c2-4d7b-4a93-a319-861e8a5f9b99.svg";
+const imgLayerIcon = "https://www.figma.com/api/mcp/asset/d519a527-cbfa-474e-b15e-7a5988bc5bfd.svg";
+const imgIconGrid2X2 = "https://www.figma.com/api/mcp/asset/cdbf3410-67b1-46b8-9268-7bc6d89933d2.svg";
+const imgLine12 = "https://www.figma.com/api/mcp/asset/482856b2-4ac3-4188-93e8-f146477d1aad.svg";
+const imgGroup81 = "https://www.figma.com/api/mcp/asset/69cc77f8-7046-4a6f-8d74-ecf9b8bda3c8.svg";
+
+export default function Component() {
+  return (
+    <div className="contents relative size-full" data-node-id="100:16335" data-name="左下角地图功能按钮">
+      <div className="absolute contents left-[1158px] top-[112px]" data-node-id="100:16338" data-name="弹出画布比例操作">
+        <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid h-[140px] left-[1158px] rounded-[13px] top-[112px] w-[97px]" data-node-id="97:16273" />
+        <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[16.02%_38.49%_83.33%_60.83%] leading-[normal] not-italic text-[#dbdbdb] text-[6px] whitespace-nowrap" data-node-id="97:16274">
+          50%
+        </p>
+        <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[14.44%_37.92%_84.91%_60.83%] leading-[normal] not-italic text-[#dbdbdb] text-[6px] whitespace-nowrap" data-node-id="98:16280">
+          适应视图
+        </p>
+        <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[14.44%_35.21%_84.91%_63.91%] leading-[normal] not-italic text-[#707070] text-[6px] text-right whitespace-nowrap" data-node-id="98:16288">
+          Shift1
+        </p>
+        <div className="absolute h-0 left-[1164px] top-[168px] w-[84px]" data-node-id="98:16285">
+          <div className="absolute inset-[-0.5px_0_0_0]">
+            <img alt="" className="block max-w-none size-full" src={imgLine10} />
+          </div>
+        </div>
+        <div className="absolute h-0 left-[1164px] top-[152px] w-[84px]" data-node-id="98:16287">
+          <div className="absolute inset-[-0.5px_0_0_0]">
+            <img alt="" className="block max-w-none size-full" src={imgLine10} />
+          </div>
+        </div>
+        <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[12.87%_38.54%_86.48%_60.83%] leading-[normal] not-italic text-[#dbdbdb] text-[6px] whitespace-nowrap" data-node-id="98:16281">
+          放大
+        </p>
+        <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[12.87%_35.21%_86.48%_64.01%] leading-[normal] not-italic text-[#707070] text-[6px] text-right whitespace-nowrap" data-node-id="98:16289">
+          Ctrl+
+        </p>
+        <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[11.48%_38.54%_87.87%_60.83%] leading-[normal] not-italic text-[#dbdbdb] text-[6px] whitespace-nowrap" data-node-id="98:16282">{`缩小 `}</p>
+        <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[11.48%_35.21%_87.87%_64.06%] leading-[normal] not-italic text-[#707070] text-[6px] text-right whitespace-nowrap" data-node-id="98:16290">
+          Ctrl-
+        </p>
+        <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[17.41%_38.33%_81.94%_60.83%] leading-[normal] not-italic text-[#dbdbdb] text-[6px] whitespace-nowrap" data-node-id="97:16275">
+          100%
+        </p>
+        <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[18.8%_38.28%_80.56%_60.83%] leading-[normal] not-italic text-[#dbdbdb] text-[6px] whitespace-nowrap" data-node-id="98:16276">
+          200%
+        </p>
+        <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[20.19%_38.28%_79.17%_60.83%] leading-[normal] not-italic text-[#dbdbdb] text-[6px] whitespace-nowrap" data-node-id="98:16277">
+          300%
+        </p>
+        <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[21.57%_38.28%_77.78%_60.83%] leading-[normal] not-italic text-[#dbdbdb] text-[6px] whitespace-nowrap" data-node-id="98:16278">
+          400%
+        </p>
+      </div>
+      <div className="absolute contents left-[1158px] top-[84px]" data-node-id="100:16337" data-name="画布比例按钮">
+        <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid h-[26px] left-[1158px] rounded-[13px] top-[84px] w-[63px]" data-node-id="21:119301" />
+        <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[8.33%_37.55%_90.46%_60.83%] leading-[normal] not-italic text-[#707070] text-[11px] whitespace-nowrap" data-node-id="21:119302">
+          200%
+        </p>
+        <div className="-translate-y-1/2 absolute aspect-[12/6] left-[62.55%] right-[37.03%] top-[calc(50%-443px)]" data-node-id="21:119303" data-name="路径 298">
+          <div className="absolute inset-[-12.5%_-6.25%]">
+            <img alt="" className="block max-w-none size-full" src={img298} />
+          </div>
+        </div>
+      </div>
+      <div className="absolute contents left-[1223px] top-[84px]" data-node-id="100:16334" data-name="画布功能模块">
+        <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid h-[26px] left-[1223px] rounded-[13px] top-[84px] w-[164px]" data-node-id="89:15929" />
+        <div className="absolute contents left-[1231px] top-[88px]" data-node-id="100:16333" data-name="功能按钮">
+          <div className="absolute contents left-[1304px] top-[88px]" data-node-id="100:16321" data-name="显示线">
+            <div className="absolute bg-[#3c3c3c] left-[1304px] rounded-[4px] size-[18px] top-[88px]" data-node-id="98:16297" />
+            <div className="absolute inset-[8.43%_31.35%_90.55%_68.13%]" data-node-id="98:16291" data-name="icon-route">
+              <div className="absolute inset-[-4.5%_-5%]">
+                <img alt="" className="block max-w-none size-full" src={imgIconRoute} />
+              </div>
+            </div>
+          </div>
+          <div className="absolute contents left-[1324px] top-[88px]" data-node-id="100:16320" data-name="显示地图">
+            <div className="absolute h-[18px] left-[1324px] rounded-[4px] top-[88px] w-[55px]" data-node-id="98:16299" />
+            <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[8.33%_28.39%_90.46%_69.9%] leading-[normal] not-italic text-[#707070] text-[11px] whitespace-nowrap" data-node-id="99:16313">
+              小地图
+            </p>
+            <div className="absolute inset-[8.52%_30.31%_90.56%_69.17%]" data-node-id="99:16310" data-name="layer-icon">
+              <div className="absolute inset-[-5%]">
+                <img alt="" className="block max-w-none size-full" src={imgLayerIcon} />
+              </div>
+            </div>
+          </div>
+          <div className="absolute contents left-[1284px] top-[88px]" data-node-id="100:16322" data-name="调整画布背景颜色">
+            <div className="absolute left-[1284px] rounded-[4px] size-[18px] top-[88px]" data-node-id="100:16314" />
+            <div className="absolute inset-[8.52%_32.4%_90.56%_67.08%]" data-node-id="100:16315" data-name="icon-grid2-x2">
+              <div className="absolute inset-[-5%]">
+                <img alt="" className="block max-w-none size-full" src={imgIconGrid2X2} />
+              </div>
+            </div>
+          </div>
+          <div className="absolute flex h-[12px] items-center justify-center left-[1281px] top-[91px] w-0" data-node-id="100:16323">
+            <div className="flex-none rotate-90">
+              <div className="h-0 relative w-[12px]">
+                <div className="absolute inset-[-1px_0_0_0]">
+                  <img alt="" className="block max-w-none size-full" src={imgLine12} />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="absolute contents inset-[8.15%_33.44%_90.19%_64.11%]" data-node-id="100:16324" data-name="整理">
+            <div className="absolute contents left-[1231px] top-[88px]" data-node-id="100:16332">
+              <div className="absolute h-[18px] left-[1231px] rounded-[4px] top-[88px] w-[47px]" data-node-id="100:16328" />
+              <div className="absolute inset-[8.52%_35.08%_90.51%_64.38%]" data-node-id="100:16330">
+                <div className="absolute inset-[-4.76%]">
+                  <img alt="" className="block max-w-none size-full" src={imgGroup81} />
+                </div>
+              </div>
+              <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[8.33%_33.75%_90.46%_65.1%] leading-[normal] not-italic text-[#707070] text-[11px] whitespace-nowrap" data-node-id="100:16331">
+                整理
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

@@ -1,0 +1,26 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "const imgIconPlus = \"https://www.figma.com/api/mcp/asset/ccb54d29-5727-4dc0-a9a0-84312f991612.svg\";\n\nexport default function IconPlus() {\n  return (\n    <div className=\"relative size-full\" data-node-id=\"170:8374\" data-name=\"icon-plus\">\n      <div className=\"absolute inset-[-8.75%]\">\n        <img alt=\"\" className=\"block max-w-none size-full\" src={imgIconPlus} />\n      </div>\n    </div>\n  );\n}"
+    },
+    {
+      "type": "text",
+      "text": "SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.\n1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens\n2. Convert React syntax to the target framework/library\n3. Transform all Tailwind classes to the target styling system while preserving exact visual design\n4. Follow the project's existing patterns and conventions\nDO NOT install any Tailwind as a dependency unless the user instructs you to do so.\n"
+    },
+    {
+      "type": "text",
+      "text": "Node ids have been added to the code as data attributes, e.g. `data-node-id=\"1:2\"`."
+    },
+    {
+      "type": "text",
+      "text": "Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire."
+    },
+    {
+      "type": "image",
+      "data": "iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAAHZJREFUeAHNkLENwCAQA01ExQoswATMwzjMwRqIkoYBEAuwAAsQfZnPK0oTKVfasv5tZYzZYOScUUpBjJFbOCBgrYVzTrLkwBPfB1StddPPb0gpQdMavKD3HmstjDEu+pwTSpq1947WGkIItys/XElLIq1BBSVO/aAklTMaGGkAAAAASUVORK5CYII=",
+      "mimeType": "image/png"
+    }
+  ],
+  "isError": false
+}

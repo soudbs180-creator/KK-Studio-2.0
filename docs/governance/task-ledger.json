@@ -1,0 +1,908 @@
+[
+  {
+    "id": "T0",
+    "title": "可复现候选源码与主线整合",
+    "goal": "可复现候选源码与主线整合",
+    "scope": "Git, package.json, release",
+    "acceptance": [
+      "保留原工作区与索引",
+      "候选快照可从干净 checkout 重建",
+      "验证后整合主线且产物对应提交"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "main",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "affectedModules": [
+      "Git",
+      "package.json",
+      "release"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-09-17-governance-baseline/verification.md",
+      "docs/architecture/adr/ADR-002-local-main-integration.md",
+      "docs/changes/2026-09-17-provider-submission-gates/verification.md",
+      "docs/evidence/provider-submission-2026-09-18/native-main-acceptance.json"
+    ],
+    "verification": "本地main整合 PASS：从609f524快进86c40d0并合入14dbe11；原checkout dirty/index保留；main执行npm ci/verify、Rust检查、Tauri release和隔离桌面运行。",
+    "updated": "2026-09-18",
+    "verificationResult": "PASS"
+  },
+  {
+    "id": "TASK-GOV-001",
+    "title": "治理源、ESLint、架构门禁和 CI",
+    "goal": "治理源、ESLint、架构门禁和 CI",
+    "scope": "AGENTS.md, docs/governance, scripts, tests, package.json, .github, src lint corrections",
+    "acceptance": [
+      "账本 schema/依赖/证据校验可执行",
+      "ESLint errors=0",
+      "实际完整 verify 与 Rust compile",
+      "规则不把局部通过当全项目 DONE"
+    ],
+    "dependencies": [
+      "T0"
+    ],
+    "owner": "root",
+    "branch": "chore/TASK-GOV-001-engineering-baseline",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-GOV-001",
+    "affectedModules": [
+      "AGENTS.md",
+      "docs/governance",
+      "scripts",
+      "tests",
+      "package.json",
+      ".github",
+      "src lint corrections"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-09-17-governance-baseline/spec.md",
+      "docs/changes/2026-09-17-governance-baseline/verification.md",
+      "docs/evidence/governance-2026-09-17/verification.json"
+    ],
+    "verification": "治理本地验收 PASS：干净提交 npm ci/verify，115 Node、139 Edge、UI116/0、lint/typecheck/format/build；Rust36/fmt/check/release build；1421与Tauri隔离运行检查通过。远端整合另见 EXT-GIT/T0，产品验收另见后续任务。",
+    "updated": "2026-09-17",
+    "verificationResult": "PASS"
+  },
+  {
+    "id": "TASK-PROV-001",
+    "title": "冷却恢复与产品调度入口边界",
+    "goal": "冷却到期恢复调度且保留隔离/并发边界",
+    "scope": "首页、对话、审批、重试/恢复的绑定连接校验和实际HTTP提交边界",
+    "acceptance": [
+      "统一时钟覆盖 deadline 前/时/后",
+      "缺 deadline 的冷却和 quarantined/disabled/degraded 均不可选",
+      "满载和不支持操作不可选",
+      "首页/对话/重试在实际提交前检查绑定连接，不回退绕过隔离/冷却"
+    ],
+    "dependencies": [
+      "TASK-GOV-001"
+    ],
+    "owner": "root",
+    "branch": "main",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "affectedModules": [
+      "src/domain/providerConnections.ts",
+      "src/features/creation/generationQueue.ts",
+      "tests/unit/generationQueue.test.ts",
+      "src/App.tsx",
+      "src/features/creation/providerRegistry.ts",
+      "tests/browser/provider-scheduling.spec.ts"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-09-17-provider-submission-gates/verification.md",
+      "docs/evidence/provider-submission-2026-09-18/README.md",
+      "docs/evidence/provider-submission-2026-09-18/native-main-acceptance.json"
+    ],
+    "verification": "源修复、本地main合并和桌面生产复验 PASS：118 unit、151 browser、UI116/0；主线14dbe11加载CBwa_Zj7 bundle并完成隔离Provider提交。",
+    "updated": "2026-09-18",
+    "verificationResult": "PASS"
+  },
+  {
+    "id": "T1",
+    "title": "读取保护、备份和 revision 冲突",
+    "goal": "读取保护、备份和 revision 冲突",
+    "scope": "src/features/creation/storage.ts, src-tauri/src/creation_storage.rs, src/domain/projectCanvas.ts",
+    "acceptance": [
+      "已记录范围内Web恢复及原生正常重启不丢数据",
+      "失败不覆盖原件"
+    ],
+    "dependencies": [
+      "T0"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/features/creation/storage.ts",
+      "src-tauri/src/creation_storage.rs",
+      "src/domain/projectCanvas.ts"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-09-16-desktop-data-stability/verification.md"
+    ],
+    "verification": "2026-09-16 原生及Web验收记录，仅该记录范围；不证明断电、未提交编辑或完整产品就绪",
+    "updated": "2026-09-17",
+    "verificationResult": "PASS"
+  },
+  {
+    "id": "T2",
+    "title": "画布图持久化与稳定节点身份",
+    "goal": "画布图持久化与稳定节点身份",
+    "scope": "src/features/creation/storage.ts, src-tauri/src/creation_storage.rs, src/domain/projectCanvas.ts",
+    "acceptance": [
+      "已记录范围内Web恢复及原生正常重启不丢数据",
+      "失败不覆盖原件"
+    ],
+    "dependencies": [
+      "T0"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/features/creation/storage.ts",
+      "src-tauri/src/creation_storage.rs",
+      "src/domain/projectCanvas.ts"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-09-16-desktop-data-stability/verification.md"
+    ],
+    "verification": "2026-09-16 原生及Web验收记录，仅该记录范围；不证明断电、未提交编辑或完整产品就绪",
+    "updated": "2026-09-17",
+    "verificationResult": "PASS"
+  },
+  {
+    "id": "T3a",
+    "title": "原生素材及引用最终验收",
+    "goal": "原生素材及引用最终验收",
+    "scope": "src-tauri/src/asset_storage.rs, src/features/creation/assetRepository.ts, src/features/creation/snapshotAssets.ts",
+    "acceptance": [
+      "原图hash一致",
+      "新WebView恢复",
+      "缺失原件冻结保存",
+      "原生/浏览器证据与最终build对应"
+    ],
+    "dependencies": [
+      "T1",
+      "T2"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src-tauri/src/asset_storage.rs",
+      "src/features/creation/assetRepository.ts",
+      "src/features/creation/snapshotAssets.ts"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-09-16-native-assets/spec.md",
+      "docs/changes/2026-09-16-native-assets/verification.md",
+      "docs/evidence/native-assets-2026-09-18/native-acceptance.json",
+      "docs/evidence/native-assets-2026-09-18/build-artifacts.json"
+    ],
+    "verification": "main@c855881 的 Node 24/Web/Rust/Tauri release 验证通过；隔离数据根目录与三个全新 WebView profile 验证原生素材 SHA-256、快照引用恢复和篡改后读取保护。T3b 项目包仍未完成。",
+    "updated": "2026-09-18",
+    "verificationResult": "PASS"
+  },
+  {
+    "id": "T3b",
+    "title": "完整项目包导出导入与恢复",
+    "goal": "完整项目包导出导入与恢复",
+    "scope": "src/features/projects, src-tauri, src/components",
+    "acceptance": [
+      "包包含所有项目图与原件",
+      "schema/checksum/引用预检",
+      "隔离数据根目录恢复",
+      "非法包/写失败不损原件"
+    ],
+    "dependencies": [
+      "T3a"
+    ],
+    "owner": "root",
+    "branch": "main",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "affectedModules": [
+      "src/features/projects",
+      "src-tauri",
+      "src/components"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-09-18-project-package/intent.md",
+      "docs/changes/2026-09-18-project-package/spec.md",
+      "docs/changes/2026-09-18-project-package/plan.md",
+      "docs/changes/2026-09-18-project-package/verification.md",
+      "src/features/projects/projectPackage.ts",
+      "src/features/projects/nativeProjectPackageAdapter.ts",
+      "tests/unit/projectPackage.test.ts",
+      "src-tauri/src/project_package.rs",
+      "docs/evidence/project-package-2026-09-18/native-acceptance.json",
+      "docs/evidence/project-package-2026-09-18/web-acceptance.json"
+    ],
+    "verification": "源码 main@379b302：129 unit、156 browser、UI117/0、50 Rust、fmt/check/release 通过；全新 WebView/独立 data root 恢复 2 项目/3 节点/图/消息/任务/原件；7 个事务故障点保留源文件。Web 文件适配归 T9，Figma 新入口为工程补充。",
+    "updated": "2026-09-18",
+    "verificationResult": "PASS"
+  },
+  {
+    "id": "T4",
+    "title": "统一实际图片生成入口及健康语义",
+    "goal": "统一实际图片生成入口及健康语义",
+    "scope": "src/App.tsx, src/features/creation, src/integrations/generation, src/components/nodes",
+    "acceptance": [
+      "首页/对话/画布走同一command",
+      "已配置不冒充已验证",
+      "参考图不丢弃",
+      "失败/取消/离线与归档完整"
+    ],
+    "dependencies": [
+      "T3b",
+      "TASK-PROV-001"
+    ],
+    "owner": "root",
+    "branch": "main",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "affectedModules": [
+      "src/App.tsx",
+      "src/features/creation",
+      "src/integrations/generation",
+      "src/components/nodes"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md",
+      "docs/changes/2026-09-18-unified-image-command/verification.md",
+      "docs/evidence/unified-image-command-2026-09-18/native-acceptance.json",
+      "docs/evidence/unified-image-command-2026-09-18/main/native-acceptance.json"
+    ],
+    "verification": "本地main源码2de3c68：146 unit/164 browser/UI119/0全量verify通过；Rust51/fmt/check/release通过；1421/1423/Tauri三入口与全新WebView原件恢复通过。动画测试改为真实CSS时间点采样后全量无重试通过。真实付费Provider仍属EXT-PROVIDER。",
+    "updated": "2026-09-18",
+    "verificationResult": "PASS"
+  },
+  {
+    "id": "T5",
+    "title": "持久本地 TaskHost 与未知受理恢复",
+    "goal": "持久本地 TaskHost 与未知受理恢复",
+    "scope": "src/features/generation-server, src-tauri, src/features/creation, deploy",
+    "acceptance": [
+      "durable intent先于提交",
+      "重启同一身份不重复计费",
+      "unknown不可直接普通retry",
+      "本地宿主随包且不依赖VPS"
+    ],
+    "dependencies": [
+      "T4"
+    ],
+    "owner": "root",
+    "branch": "main",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "affectedModules": [
+      "src/features/generation-server",
+      "src-tauri",
+      "src/features/creation",
+      "deploy"
+    ],
+    "status": "PARTIAL",
+    "evidence": [
+      "docs/changes/2026-09-19-taskhost-durable-intent/verification.md",
+      "tests/browser/task-intent.spec.ts",
+      "tests/unit/nativeTaskHost.test.ts",
+      "deploy/README.md"
+    ],
+    "verification": "集成 main 已将 durable intent、稳定幂等身份、unknown 受理保护、原生 TaskHost journal、系统凭据库读取、Desktop IPC、取消竞态和逐 slot 输出提交接入 Tauri 主进程；npm verify 150/169、UI119/0，Rust 58/58，client check/release 通过。隔离 Tauri/WebView 的提交、取消、进程重启和逐 slot 恢复证据尚未完成；部署脚本仅覆盖静态 Web Prototype。",
+    "updated": "2026-09-19",
+    "verificationResult": "PARTIAL"
+  },
+  {
+    "id": "T6",
+    "title": "Desktop ComfyUI最小链实现",
+    "goal": "Desktop ComfyUI最小链实现",
+    "scope": "src/integrations/generation/localComfyUiAdapter.ts, src-tauri, src/features/comfyui",
+    "acceptance": [
+      "能力探测/模板/任务/素材/恢复完整接线",
+      "不自动下载模型",
+      "仅取消本任务",
+      "Web禁用原生能力"
+    ],
+    "dependencies": [
+      "T5"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/integrations/generation/localComfyUiAdapter.ts",
+      "src-tauri",
+      "src/features/comfyui"
+    ],
+    "status": "PARTIAL",
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+    ],
+    "verification": "只读审计确认：localComfyUiAdapter.ts 具备 /prompt、/history、/view、/interrupt HTTP 原语，但 App/imageTaskCommand 尚未接入，local_only 明确拒绝；Tauri ComfyUI 命令尚无前端 invoke 桥，缺少 Desktop-only workflow/template 持久化、任务 journal、逐任务取消、结果归档与重启恢复。下一步需先接一条显式 workflow 的最小链，不下载模型；EXT-COMFY 仍等待用户选定服务、目录、workflow 和模型。",
+    "updated": "2026-09-17",
+    "verificationResult": "PARTIAL"
+  },
+  {
+    "id": "EXT-PROVIDER",
+    "title": "真实 Provider/GPU 生成验收",
+    "goal": "真实 Provider/GPU 生成验收",
+    "scope": "Provider live acceptance",
+    "acceptance": [
+      "授权真实服务执行最小生成和编辑",
+      "结果持久化与成本语义真实"
+    ],
+    "dependencies": [
+      "T4"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "Provider live acceptance"
+    ],
+    "status": "BLOCKED",
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/verification.md"
+    ],
+    "verification": "NOT VERIFIED",
+    "updated": "2026-09-17",
+    "blocker": "缺少本轮授权可用的Provider凭据、服务与模型；本地mock不能替代",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
+    "id": "EXT-COMFY",
+    "title": "真实 ComfyUI/模型验收",
+    "goal": "真实 ComfyUI/模型验收",
+    "scope": "ComfyUI live acceptance",
+    "acceptance": [
+      "真实workflow成功/缺模型/断连/重启与原图hash验收"
+    ],
+    "dependencies": [
+      "T6"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "ComfyUI live acceptance"
+    ],
+    "status": "BLOCKED",
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/verification.md"
+    ],
+    "verification": "NOT VERIFIED",
+    "updated": "2026-09-17",
+    "blocker": "尚无已确认的用户选择ComfyUI目录、运行服务、workflow与模型",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
+    "id": "T7",
+    "title": "Desktop可用版本及安装恢复验收",
+    "goal": "Desktop可用版本及安装恢复验收",
+    "scope": "release, tests/native",
+    "acceptance": [
+      "干净Windows安装完整故事",
+      "离线/损坏恢复",
+      "最终exe/commit/hash对应",
+      "可回滚"
+    ],
+    "dependencies": [
+      "T3b",
+      "T4",
+      "T5",
+      "T6",
+      "EXT-PROVIDER",
+      "EXT-COMFY"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "release",
+      "tests/native"
+    ],
+    "status": "TODO",
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+    ],
+    "verification": "NOT VERIFIED",
+    "updated": "2026-09-17",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
+    "id": "T8",
+    "title": "成熟Core职责和平台能力边界",
+    "goal": "成熟Core职责和平台能力边界",
+    "scope": "src/App.tsx, src/domain, src/runtime, src/features",
+    "acceptance": [
+      "按职责拆分composition root",
+      "UI通过服务与平台能力接口",
+      "Desktop回归保持"
+    ],
+    "dependencies": [
+      "T7"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/App.tsx",
+      "src/domain",
+      "src/runtime",
+      "src/features"
+    ],
+    "status": "TODO",
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+    ],
+    "verification": "NOT VERIFIED",
+    "updated": "2026-09-17",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
+    "id": "T9",
+    "title": "Web本地版及浏览器容量/离线能力",
+    "goal": "Web本地版及浏览器容量/离线能力",
+    "scope": "src/components/Sidebar.tsx, src/components/LibraryPage.tsx, src/runtime, src/features/creation",
+    "acceptance": [
+      "无Comfy/原生假入口",
+      "配额错误/持久存储/离线恢复",
+      "项目包跨origin",
+      "会话凭据不持久化"
+    ],
+    "dependencies": [
+      "T8"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/components/Sidebar.tsx",
+      "src/components/LibraryPage.tsx",
+      "src/runtime",
+      "src/features/creation"
+    ],
+    "status": "TODO",
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+    ],
+    "verification": "NOT VERIFIED",
+    "updated": "2026-09-17",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
+    "id": "T10-PREP",
+    "title": "VPS发布、备份回滚与部署配置准备",
+    "goal": "VPS发布、备份回滚与部署配置准备",
+    "scope": "deploy, scripts/release",
+    "acceptance": [
+      "独立next服务不覆盖旧站",
+      "部署配置/health/权限/资源限制",
+      "备份还原及回滚runbook可审阅"
+    ],
+    "dependencies": [
+      "T9"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "deploy",
+      "scripts/release"
+    ],
+    "status": "TODO",
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+    ],
+    "verification": "NOT VERIFIED",
+    "updated": "2026-09-17",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
+    "id": "T10",
+    "title": "VPS staging和生产实机验收",
+    "goal": "VPS staging和生产实机验收",
+    "scope": "VPS, DNS, TLS",
+    "acceptance": [
+      "用户域名直达VPS",
+      "外网TLS/鉴权/端口实测",
+      "备份恢复及回滚演练"
+    ],
+    "dependencies": [
+      "T10-PREP"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "VPS",
+      "DNS",
+      "TLS"
+    ],
+    "status": "BLOCKED",
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/verification.md"
+    ],
+    "verification": "NOT VERIFIED",
+    "updated": "2026-09-17",
+    "blocker": "缺少本轮生产写入授权、正式/staging域名和DNS权限；先完成可审阅部署产物",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
+    "id": "T11",
+    "title": "旧Web/Vercel切换与退役",
+    "goal": "旧Web/Vercel切换与退役",
+    "scope": "Vercel, DNS, legacy migration",
+    "acceptance": [
+      "旧origin可导出备份",
+      "新站验收后有限回滚窗口",
+      "逐项退役不删除用户数据"
+    ],
+    "dependencies": [
+      "T10"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "Vercel",
+      "DNS",
+      "legacy migration"
+    ],
+    "status": "BLOCKED",
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+    ],
+    "verification": "NOT VERIFIED",
+    "updated": "2026-09-17",
+    "blocker": "需外部旧部署权限、切换授权与回滚窗口",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
+    "id": "T12",
+    "title": "Mobile 2.0适配",
+    "goal": "Mobile 2.0适配",
+    "scope": "Mobile, Shared Core",
+    "acceptance": [
+      "保留移动交互",
+      "正式目标runtime明确",
+      "共享新契约/本地恢复",
+      "真机验收"
+    ],
+    "dependencies": [
+      "T11"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "Mobile",
+      "Shared Core"
+    ],
+    "status": "TODO",
+    "evidence": [
+      "docs/changes/2026-09-16-launch-readiness-audit/plan.md"
+    ],
+    "verification": "当前MUR不含；全项目范围仍保留TODO，形态需产品决定",
+    "updated": "2026-09-17",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
+    "id": "UI-001",
+    "title": "UI tokens和共享组件契约",
+    "goal": "UI tokens和共享组件契约",
+    "scope": "src/styles, src/components/ui, scripts/check-ui-standards.mjs",
+    "acceptance": [
+      "可执行token/图标/状态规范",
+      "按语义组件迁移",
+      "Figma节点例外有证据"
+    ],
+    "dependencies": [
+      "TASK-GOV-001"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/styles",
+      "src/components/ui",
+      "scripts/check-ui-standards.mjs"
+    ],
+    "status": "TODO",
+    "evidence": [
+      "docs/changes/2026-09-16-ui-system-audit/plan.md"
+    ],
+    "verification": "NOT VERIFIED",
+    "updated": "2026-09-17",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
+    "id": "UI-002",
+    "title": "窄屏composer和动态文案溢出",
+    "goal": "窄屏composer和动态文案溢出",
+    "scope": "src/components/StartComposer.tsx, src/styles, src/components/ConversationPanel.tsx",
+    "acceptance": [
+      "390/768/1440/1920主操作可达",
+      "长模型文案不遮挡",
+      "同状态DOM/截图",
+      "键盘焦点与IME保持"
+    ],
+    "dependencies": [
+      "UI-001"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/components/StartComposer.tsx",
+      "src/styles",
+      "src/components/ConversationPanel.tsx"
+    ],
+    "status": "TODO",
+    "evidence": [
+      "docs/changes/2026-09-16-ui-system-audit/audit.md"
+    ],
+    "verification": "历史有溢出证据，当前需复现并修复",
+    "updated": "2026-09-17",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
+    "id": "UI-003",
+    "title": "示例任务/账号与真实服务边界",
+    "goal": "示例任务/账号与真实服务边界",
+    "scope": "src/components/canvas/TaskPanel.tsx, src/components/AccountPopup.tsx, src/components/settings",
+    "acceptance": [
+      "空真实任务不冒充正在生成",
+      "fixture首屏可辨识",
+      "不可用服务说明一致",
+      "Figma/运行态验收"
+    ],
+    "dependencies": [
+      "UI-001"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/components/canvas/TaskPanel.tsx",
+      "src/components/AccountPopup.tsx",
+      "src/components/settings"
+    ],
+    "status": "TODO",
+    "evidence": [
+      "docs/changes/2026-09-16-ui-system-audit/audit.md"
+    ],
+    "verification": "NOT VERIFIED",
+    "updated": "2026-09-17",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
+    "id": "UI-004",
+    "title": "逐页对齐、IA和最终视觉运行态",
+    "goal": "逐页对齐、IA和最终视觉运行态",
+    "scope": "Landing, Workspace, Assets, Settings, Tasks, Account",
+    "acceptance": [
+      "最新Figma同状态视觉对比",
+      "六态及异步/键盘/离线",
+      "dev1421/preview1423/Tauri最终source分别确认"
+    ],
+    "dependencies": [
+      "UI-002",
+      "UI-003"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "Landing",
+      "Workspace",
+      "Assets",
+      "Settings",
+      "Tasks",
+      "Account"
+    ],
+    "status": "TODO",
+    "evidence": [
+      "docs/changes/2026-09-16-ui-system-audit/plan.md"
+    ],
+    "verification": "NOT VERIFIED",
+    "updated": "2026-09-17",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
+    "id": "PERF-001",
+    "title": "原生素材缩略图/分页及内存IO",
+    "goal": "原生素材缩略图/分页及内存IO",
+    "scope": "src/features/creation/assetRepository.ts, src/features/creation/useAssetArchive.ts, src-tauri",
+    "acceptance": [
+      "原件与预览分离",
+      "可见素材按需加载",
+      "大型库有测量证据",
+      "原图校验/来源不回归"
+    ],
+    "dependencies": [
+      "T3a"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/features/creation/assetRepository.ts",
+      "src/features/creation/useAssetArchive.ts",
+      "src-tauri"
+    ],
+    "status": "TODO",
+    "evidence": [
+      "docs/architecture/DATA-STORAGE.md"
+    ],
+    "verification": "当前全量原件data URL加载，性能整改仍待执行",
+    "updated": "2026-09-17",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
+    "id": "EXT-GIT",
+    "title": "远端PR与main保护规则",
+    "goal": "远端PR与main保护规则",
+    "scope": "Git hosting",
+    "acceptance": [
+      "remote明确并可访问",
+      "PR/required checks/block force/delete有效",
+      "实际CI运行证据"
+    ],
+    "dependencies": [
+      "TASK-GOV-001",
+      "T0"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "Git hosting"
+    ],
+    "status": "BLOCKED",
+    "verification": "NOT VERIFIED",
+    "updated": "2026-09-20",
+    "verificationResult": "NOT_VERIFIED",
+    "blocker": "目标仓库 authenticated API 已确认 private、默认分支 main 与写权限；main protected=false，required checks 为空，rulesets/protection API 因当前 GitHub 计划返回 403。需完成最终候选 PR、CI、合并和 main tree 回读；托管保护能力仍未启用。",
+    "evidence": [
+      "docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md",
+      "docs/changes/2026-09-20-gpt-6-astra/verification.md"
+    ]
+  },
+  {
+    "id": "TEST-PROV-001",
+    "title": "Provider真实入口浏览器回归",
+    "goal": "独立复现旧入口绕过并验证拒绝不发送HTTP",
+    "scope": "tests/browser/provider-scheduling.spec.ts",
+    "acceptance": [
+      "首页拒绝保持草稿",
+      "审批后二次检查与固定连接不回退",
+      "429冷却到期重试及403隔离"
+    ],
+    "dependencies": [
+      "TASK-GOV-001"
+    ],
+    "owner": "root",
+    "branch": "main",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "affectedModules": [
+      "tests/browser/provider-scheduling.spec.ts"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-09-17-provider-submission-gates/verification.md",
+      "docs/evidence/provider-submission-2026-09-18/baseline-red.txt",
+      "docs/evidence/provider-submission-2026-09-18/native-main-acceptance.json"
+    ],
+    "verification": "12项浏览器回归和3项submission gate单元测试 PASS；主线verify及桌面运行证据已复验。",
+    "verificationResult": "PASS",
+    "updated": "2026-09-18"
+  },
+  {
+    "id": "TASK-ASTRA-001",
+    "title": "Astra 迁移计划与 Git 分支规则同步",
+    "goal": "以最新 main 校正 Astra 计划并向用户指定的 2.0 仓库安全同步",
+    "scope": "计划文档、适用规则审计、治理记录、明确范围的 Git 同步",
+    "acceptance": [
+      "基于已验收 main，保护原工作区与索引",
+      "计划与 T3b/T4/T5 现状一致",
+      "适用规则和 Git 目标身份核对",
+      "指定新远端后仅推明确范围任务分支并交付可审阅 PR"
+    ],
+    "dependencies": [
+      "T0",
+      "TASK-GOV-001"
+    ],
+    "owner": "root",
+    "affectedModules": [
+      "docs/changes/2026-09-20-gpt-6-astra",
+      "docs/governance",
+      "docs/PROGRESS.md"
+    ],
+    "status": "IN_PROGRESS",
+    "evidence": [
+      "docs/changes/2026-09-20-gpt-6-astra/verification.md",
+      "docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md"
+    ],
+    "verificationResult": "NOT_VERIFIED",
+    "branch": "codex/TASK-KK2-main-integration",
+    "worktree": "C:/Users/Administrator/.codex/worktrees/task-astra-001/kk-studio-next",
+    "verification": "迁移计划、规则审计、目录清理和本地验证已完成；Astra 功能未实施，最终 GitHub PR/CI/main 回读仍在进行。",
+    "updated": "2026-09-20"
+  },
+  {
+    "id": "TASK-KK2-MAIN-SYNC",
+    "title": "KK Studio 2.0 本地与云端 main 树同步",
+    "goal": "将目标仓库 main 的当前文件树替换为已验证的本地 KK Studio 2.0 main，并保持两端 tree 一致",
+    "scope": "Git hosting、全仓库文件树、main 分支同步",
+    "acceptance": [
+      "本地 main 已从最新已验收提交快进整合",
+      "目标远端 main 的替换分支只基于远端 main 创建",
+      "替换分支 tree SHA 与本地 main 完全一致",
+      "secret/path/构建产物扫描通过且旧 v1.6.1 当前文件不再出现在候选树",
+      "PR 合并后回读远端 main SHA/tree SHA 与本地 main 一致"
+    ],
+    "dependencies": [
+      "T0",
+      "TASK-GOV-001"
+    ],
+    "owner": "root",
+    "branch": "chore/TASK-KK2-MAIN-SYNC",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-KK2-MAIN-SYNC",
+    "affectedModules": [
+      "Git hosting",
+      "repository tree",
+      "main"
+    ],
+    "status": "IN_PROGRESS",
+    "updated": "2026-09-20",
+    "verificationResult": "NOT_VERIFIED",
+    "verification": "候选分支已从目标远端 main 派生；最终审计命令确认候选 tree 与本地稳定 main 相同。PR、CI、合并及合并后 main 回读待完成。",
+    "blocker": "需要在目标仓库通过 PR 合并候选分支并回读 main commit/tree；main protection 当前为 false，rulesets/protection API 受 GitHub 计划限制。",
+    "evidence": [
+      "docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md",
+      "docs/changes/2026-09-20-gpt-6-astra/verification.md",
+      "docs/changes/2026-09-20-gpt-6-astra/sync-manifest.md",
+      "docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md"
+    ]
+  },
+  {
+    "id": "TASK-UI-UNMERGED-001",
+    "title": "dirty checkout 未合并 UI 回归候选",
+    "goal": "审查并在独立分支验收脏工作区中发现的 UI 交互修复",
+    "scope": "UI interaction/regression",
+    "acceptance": [
+      "复核 useDismissible、Modal、TopBar、TaskPanelPopover、settings focus/switch 改动的源代码差异",
+      "从最新稳定 main 建立独立 task branch/worktree，不复制 dirty checkout 全量内容",
+      "运行定向浏览器回归和完整 verify，并保留同状态证据"
+    ],
+    "dependencies": [
+      "TASK-GOV-001"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/components/useDismissible.ts",
+      "src/components/Modal.tsx",
+      "src/components/TopBar.tsx",
+      "src/components/TaskPanelPopover.tsx",
+      "src/components/settings/SettingsControls.tsx",
+      "src/components/settings/ConnectionSettings.tsx",
+      "tests/browser"
+    ],
+    "status": "TODO",
+    "evidence": [
+      "docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md"
+    ],
+    "verification": "dirty checkout 中的 UI 候选尚未迁移或验收；本次首发同步不包含这些改动。",
+    "updated": "2026-09-20",
+    "verificationResult": "NOT_VERIFIED"
+  }
+]

@@ -1,0 +1,223 @@
+{
+  "sourceNode": "171:787",
+  "frameDelta": {
+    "width": 0,
+    "height": 0
+  },
+  "title": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0
+  },
+  "rows": [
+    {
+      "label": "menu-item-文本",
+      "frameDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "iconDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "labelOrigin": {
+        "x": 84,
+        "y": 78.5
+      },
+      "disabledSupplement": false
+    },
+    {
+      "label": "menu-item-表格",
+      "frameDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "iconDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "labelOrigin": {
+        "x": 84,
+        "y": 142.5
+      },
+      "disabledSupplement": true
+    },
+    {
+      "label": "menu-item-图片",
+      "frameDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "iconDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "labelOrigin": {
+        "x": 84,
+        "y": 206.5
+      },
+      "disabledSupplement": false
+    },
+    {
+      "label": "menu-item-视频",
+      "frameDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "iconDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "labelOrigin": {
+        "x": 84,
+        "y": 270.5
+      },
+      "disabledSupplement": false
+    },
+    {
+      "label": "menu-item-音频",
+      "frameDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "iconDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "labelOrigin": {
+        "x": 84,
+        "y": 334.5
+      },
+      "disabledSupplement": false
+    },
+    {
+      "label": "menu-item-3D 导演台",
+      "frameDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "iconDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "labelOrigin": {
+        "x": 84,
+        "y": 398.5
+      },
+      "disabledSupplement": true
+    },
+    {
+      "label": "menu-item-视频剪辑",
+      "frameDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "iconDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "labelOrigin": {
+        "x": 84,
+        "y": 462.5
+      },
+      "disabledSupplement": true
+    },
+    {
+      "label": "menu-item-ComfyUI 工作流",
+      "frameDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "iconDelta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "labelOrigin": {
+        "x": 84,
+        "y": 526.5
+      },
+      "disabledSupplement": true
+    }
+  ],
+  "modelBadgeDelta": {
+    "x": 0,
+    "y": 0,
+    "width": 0.09375,
+    "height": 0
+  },
+  "assets": [
+    {
+      "file": "public/figma/node-menu-text.svg",
+      "match": true
+    },
+    {
+      "file": "public/figma/node-menu-table.svg",
+      "match": true
+    },
+    {
+      "file": "public/figma/node-menu-image.svg",
+      "match": true
+    },
+    {
+      "file": "public/figma/node-menu-video.svg",
+      "match": true
+    },
+    {
+      "file": "public/figma/node-menu-audio.svg",
+      "match": true
+    },
+    {
+      "file": "public/figma/node-menu-director.svg",
+      "match": true
+    },
+    {
+      "file": "public/figma/node-menu-edit.svg",
+      "match": true
+    },
+    {
+      "file": "public/figma/node-menu-workflow.svg",
+      "match": true
+    },
+    {
+      "file": "public/figma/node-menu-next.svg",
+      "match": true
+    },
+    {
+      "file": "public/figma/node-port-plus.svg",
+      "match": true
+    }
+  ]
+}

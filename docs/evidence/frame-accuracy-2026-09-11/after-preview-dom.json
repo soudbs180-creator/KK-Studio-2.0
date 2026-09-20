@@ -1,0 +1,3234 @@
+{
+  "base": "http://127.0.0.1:1423/",
+  "prefix": "after-preview",
+  "errors": [],
+  "states": [
+    {
+      "state": "expanded",
+      "url": "http://127.0.0.1:1423/",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "runtime": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "production"
+      },
+      "scripts": [
+        "http://127.0.0.1:1423/assets/index-peaOiUkj.js"
+      ],
+      "styleSheets": [
+        "http://127.0.0.1:1423/assets/index-BAP_4LSX.css"
+      ],
+      "elements": {
+        ".app": [
+          {
+            "rect": [
+              0,
+              0,
+              1920,
+              1080
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "matrix(1, 0, 0, 1, -960, -540)"
+          }
+        ],
+        ".workspace-content": [
+          {
+            "rect": [
+              291,
+              45,
+              1619,
+              1025
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar": [
+          {
+            "rect": [
+              0,
+              40,
+              291,
+              1040
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".topbar strong": [
+          {
+            "rect": [
+              19,
+              12.5,
+              58.015625,
+              15
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-toggle": [
+          {
+            "rect": [
+              245,
+              75,
+              26,
+              26
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-search": [
+          {
+            "rect": [
+              204,
+              75,
+              26,
+              26
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-account": [
+          {
+            "rect": [
+              27.5,
+              1007,
+              105.90625,
+              26
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-settings": [
+          {
+            "rect": [
+              233.5,
+              1007,
+              26,
+              26
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(133, 133, 133)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".primary-nav": [
+          {
+            "rect": [
+              14,
+              131,
+              263,
+              212
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".project-groups-header": [
+          {
+            "rect": [
+              14,
+              383,
+              263,
+              21
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".project-entry": [
+          {
+            "rect": [
+              14,
+              409,
+              263,
+              29
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          },
+          {
+            "rect": [
+              46,
+              443,
+              231,
+              29
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          },
+          {
+            "rect": [
+              14,
+              511,
+              263,
+              29
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".account-row": [
+          {
+            "rect": [
+              14,
+              999,
+              259,
+              41
+            ],
+            "display": "flex",
+            "background": "rgb(31, 31, 31)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "10px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".task-button": [
+          {
+            "rect": [
+              321,
+              72,
+              93,
+              30
+            ],
+            "display": "flex",
+            "background": "rgb(26, 26, 26)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "8px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".canvas-top-right": [
+          {
+            "rect": [
+              1138.015625,
+              72,
+              280.984375,
+              31.09375
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-reopen": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "none",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "10px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".canvas-toolbar": [
+          {
+            "rect": [
+              719,
+              998,
+              294,
+              50
+            ],
+            "display": "flex",
+            "background": "rgb(26, 26, 26)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "25px",
+            "transition": "none",
+            "transform": "matrix(1, 0, 0, 1, -147, 0)"
+          }
+        ],
+        ".conversation-panel": [
+          {
+            "rect": [
+              1430,
+              61,
+              470,
+              998
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".conversation-panel > header": [
+          {
+            "rect": [
+              1450.5,
+              78,
+              426,
+              24
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer": [
+          {
+            "rect": [
+              1450,
+              844,
+              426,
+              170
+            ],
+            "display": "flex",
+            "background": "rgb(31, 31, 31)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer textarea": [
+          {
+            "rect": [
+              1463,
+              857,
+              400,
+              64
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer > div": [
+          {
+            "rect": [
+              1463,
+              977,
+              400,
+              24
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ]
+      },
+      "grid": {
+        "position": "calc(100% - 1887px) -44px",
+        "size": "24px 24px"
+      },
+      "images": [
+        {
+          "src": "/design/figma/sidebar-search-container.svg",
+          "loaded": true,
+          "rect": [
+            204,
+            75,
+            26,
+            26
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-toggle.svg",
+          "loaded": true,
+          "rect": [
+            247.25,
+            77.25,
+            21.5,
+            21.5
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-add.svg",
+          "loaded": true,
+          "rect": [
+            20,
+            142,
+            26,
+            26
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-archive.svg",
+          "loaded": true,
+          "rect": [
+            22.5,
+            197.5,
+            21,
+            19
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-skill.svg",
+          "loaded": true,
+          "rect": [
+            22.5,
+            248.5,
+            20.984375,
+            20.984375
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-workflow.svg",
+          "loaded": true,
+          "rect": [
+            23.25,
+            301.25,
+            19.5,
+            19.5
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-settings-container.svg",
+          "loaded": true,
+          "rect": [
+            233.5,
+            1007,
+            26,
+            26
+          ]
+        }
+      ]
+    },
+    {
+      "state": "left-collapsed",
+      "url": "http://127.0.0.1:1423/",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "runtime": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "production"
+      },
+      "scripts": [
+        "http://127.0.0.1:1423/assets/index-peaOiUkj.js"
+      ],
+      "styleSheets": [
+        "http://127.0.0.1:1423/assets/index-BAP_4LSX.css"
+      ],
+      "elements": {
+        ".app": [
+          {
+            "rect": [
+              0,
+              0,
+              1920,
+              1080
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "matrix(1, 0, 0, 1, -960, -540)"
+          }
+        ],
+        ".workspace-content": [
+          {
+            "rect": [
+              70,
+              45,
+              1840,
+              1025
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar": [
+          {
+            "rect": [
+              0,
+              40,
+              70,
+              1040
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".topbar strong": [
+          {
+            "rect": [
+              19,
+              12.5,
+              58.015625,
+              15
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-toggle": [
+          {
+            "rect": [
+              22,
+              75,
+              26,
+              26
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-search": [
+          {
+            "rect": [
+              22,
+              942,
+              26,
+              26
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-account": [
+          {
+            "rect": [
+              22,
+              1022,
+              26,
+              26
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-settings": [
+          {
+            "rect": [
+              22,
+              982,
+              26,
+              26
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(133, 133, 133)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".primary-nav": [
+          {
+            "rect": [
+              14,
+              131,
+              38,
+              212
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".project-groups-header": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".project-entry": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          },
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          },
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".account-row": [
+          {
+            "rect": [
+              14,
+              343,
+              38,
+              0
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "10px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".task-button": [
+          {
+            "rect": [
+              100,
+              72,
+              93,
+              30
+            ],
+            "display": "flex",
+            "background": "rgb(26, 26, 26)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "8px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".canvas-top-right": [
+          {
+            "rect": [
+              1138.015625,
+              72,
+              280.984375,
+              31.09375
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-reopen": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "none",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "10px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".canvas-toolbar": [
+          {
+            "rect": [
+              719,
+              998,
+              294,
+              50
+            ],
+            "display": "flex",
+            "background": "rgb(26, 26, 26)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "25px",
+            "transition": "none",
+            "transform": "matrix(1, 0, 0, 1, -147, 0)"
+          }
+        ],
+        ".conversation-panel": [
+          {
+            "rect": [
+              1430,
+              61,
+              470,
+              998
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".conversation-panel > header": [
+          {
+            "rect": [
+              1450.5,
+              78,
+              426,
+              24
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer": [
+          {
+            "rect": [
+              1450,
+              844,
+              426,
+              170
+            ],
+            "display": "flex",
+            "background": "rgb(31, 31, 31)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer textarea": [
+          {
+            "rect": [
+              1463,
+              857,
+              400,
+              64
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer > div": [
+          {
+            "rect": [
+              1463,
+              977,
+              400,
+              24
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ]
+      },
+      "grid": {
+        "position": "calc(100% - 1887px) -44px",
+        "size": "24px 24px"
+      },
+      "images": [
+        {
+          "src": "/design/figma/sidebar-search-container.svg",
+          "loaded": true,
+          "rect": [
+            22,
+            942,
+            26,
+            26
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-expand.svg",
+          "loaded": true,
+          "rect": [
+            24.25,
+            77.25,
+            21.5,
+            21.5
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-add.svg",
+          "loaded": true,
+          "rect": [
+            20,
+            142,
+            26,
+            26
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-archive.svg",
+          "loaded": true,
+          "rect": [
+            22.5,
+            197.5,
+            21,
+            19
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-skill.svg",
+          "loaded": true,
+          "rect": [
+            22.5,
+            248.5,
+            21,
+            21
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-workflow.svg",
+          "loaded": true,
+          "rect": [
+            23.25,
+            301.25,
+            19.5,
+            19.5
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-settings-container.svg",
+          "loaded": true,
+          "rect": [
+            22,
+            982,
+            26,
+            26
+          ]
+        }
+      ]
+    },
+    {
+      "state": "both-collapsed",
+      "url": "http://127.0.0.1:1423/",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "runtime": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "production"
+      },
+      "scripts": [
+        "http://127.0.0.1:1423/assets/index-peaOiUkj.js"
+      ],
+      "styleSheets": [
+        "http://127.0.0.1:1423/assets/index-BAP_4LSX.css"
+      ],
+      "elements": {
+        ".app": [
+          {
+            "rect": [
+              0,
+              0,
+              1920,
+              1080
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "matrix(1, 0, 0, 1, -960, -540)"
+          }
+        ],
+        ".workspace-content": [
+          {
+            "rect": [
+              70,
+              45,
+              1840,
+              1025
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar": [
+          {
+            "rect": [
+              0,
+              40,
+              70,
+              1040
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".topbar strong": [
+          {
+            "rect": [
+              19,
+              12.5,
+              58.015625,
+              15
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-toggle": [
+          {
+            "rect": [
+              22,
+              75,
+              26,
+              26
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-search": [
+          {
+            "rect": [
+              22,
+              942,
+              26,
+              26
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-account": [
+          {
+            "rect": [
+              22,
+              1022,
+              26,
+              26
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-settings": [
+          {
+            "rect": [
+              22,
+              982,
+              26,
+              26
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(133, 133, 133)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".primary-nav": [
+          {
+            "rect": [
+              14,
+              131,
+              38,
+              212
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".project-groups-header": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".project-entry": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          },
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          },
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".account-row": [
+          {
+            "rect": [
+              14,
+              343,
+              38,
+              0
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "10px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".task-button": [
+          {
+            "rect": [
+              100,
+              72,
+              93,
+              30
+            ],
+            "display": "flex",
+            "background": "rgb(26, 26, 26)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "8px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".canvas-top-right": [
+          {
+            "rect": [
+              1562.015625,
+              72,
+              280.984375,
+              31.09375
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-reopen": [
+          {
+            "rect": [
+              1859,
+              79,
+              18,
+              18
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "10px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".canvas-toolbar": [
+          {
+            "rect": [
+              719,
+              998,
+              294,
+              50
+            ],
+            "display": "flex",
+            "background": "rgb(26, 26, 26)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "25px",
+            "transition": "none",
+            "transform": "matrix(1, 0, 0, 1, -147, 0)"
+          }
+        ],
+        ".conversation-panel": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".conversation-panel > header": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "flex",
+            "background": "rgb(31, 31, 31)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer textarea": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer > div": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ]
+      },
+      "grid": {
+        "position": "calc(100% - 1887px) -44px",
+        "size": "24px 24px"
+      },
+      "images": [
+        {
+          "src": "/design/figma/sidebar-search-container.svg",
+          "loaded": true,
+          "rect": [
+            22,
+            942,
+            26,
+            26
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-expand.svg",
+          "loaded": true,
+          "rect": [
+            24.25,
+            77.25,
+            21.5,
+            21.5
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-add.svg",
+          "loaded": true,
+          "rect": [
+            20,
+            142,
+            26,
+            26
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-archive.svg",
+          "loaded": true,
+          "rect": [
+            22.5,
+            197.5,
+            21,
+            19
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-skill.svg",
+          "loaded": true,
+          "rect": [
+            22.5,
+            248.5,
+            21,
+            21
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-workflow.svg",
+          "loaded": true,
+          "rect": [
+            23.25,
+            301.25,
+            19.5,
+            19.5
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-settings-container.svg",
+          "loaded": true,
+          "rect": [
+            22,
+            982,
+            26,
+            26
+          ]
+        }
+      ]
+    },
+    {
+      "state": "right-collapsed",
+      "url": "http://127.0.0.1:1423/",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "runtime": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "production"
+      },
+      "scripts": [
+        "http://127.0.0.1:1423/assets/index-peaOiUkj.js"
+      ],
+      "styleSheets": [
+        "http://127.0.0.1:1423/assets/index-BAP_4LSX.css"
+      ],
+      "elements": {
+        ".app": [
+          {
+            "rect": [
+              0,
+              0,
+              1920,
+              1080
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "matrix(1, 0, 0, 1, -960, -540)"
+          }
+        ],
+        ".workspace-content": [
+          {
+            "rect": [
+              291,
+              45,
+              1619,
+              1025
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar": [
+          {
+            "rect": [
+              0,
+              40,
+              291,
+              1040
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".topbar strong": [
+          {
+            "rect": [
+              19,
+              12.5,
+              58.015625,
+              15
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-toggle": [
+          {
+            "rect": [
+              245,
+              75,
+              26,
+              26
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-search": [
+          {
+            "rect": [
+              204,
+              75,
+              26,
+              26
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-account": [
+          {
+            "rect": [
+              27.5,
+              1007,
+              105.90625,
+              26
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-settings": [
+          {
+            "rect": [
+              233.5,
+              1007,
+              26,
+              26
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(133, 133, 133)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".primary-nav": [
+          {
+            "rect": [
+              14,
+              131,
+              263,
+              212
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".project-groups-header": [
+          {
+            "rect": [
+              14,
+              383,
+              263,
+              21
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".project-entry": [
+          {
+            "rect": [
+              14,
+              409,
+              263,
+              29
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          },
+          {
+            "rect": [
+              46,
+              443,
+              231,
+              29
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          },
+          {
+            "rect": [
+              14,
+              511,
+              263,
+              29
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".account-row": [
+          {
+            "rect": [
+              14,
+              999,
+              259,
+              41
+            ],
+            "display": "flex",
+            "background": "rgb(31, 31, 31)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "10px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".task-button": [
+          {
+            "rect": [
+              321,
+              72,
+              93,
+              30
+            ],
+            "display": "flex",
+            "background": "rgb(26, 26, 26)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "8px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".canvas-top-right": [
+          {
+            "rect": [
+              1562.015625,
+              72,
+              280.984375,
+              31.09375
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-reopen": [
+          {
+            "rect": [
+              1859,
+              79,
+              18,
+              18
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "10px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".canvas-toolbar": [
+          {
+            "rect": [
+              719,
+              998,
+              294,
+              50
+            ],
+            "display": "flex",
+            "background": "rgb(26, 26, 26)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "25px",
+            "transition": "none",
+            "transform": "matrix(1, 0, 0, 1, -147, 0)"
+          }
+        ],
+        ".conversation-panel": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".conversation-panel > header": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "flex",
+            "background": "rgb(31, 31, 31)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer textarea": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer > div": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ]
+      },
+      "grid": {
+        "position": "calc(100% - 1887px) -44px",
+        "size": "24px 24px"
+      },
+      "images": [
+        {
+          "src": "/design/figma/sidebar-search-container.svg",
+          "loaded": true,
+          "rect": [
+            204,
+            75,
+            26,
+            26
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-toggle.svg",
+          "loaded": true,
+          "rect": [
+            247.25,
+            77.25,
+            21.5,
+            21.5
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-add.svg",
+          "loaded": true,
+          "rect": [
+            20,
+            142,
+            26,
+            26
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-archive.svg",
+          "loaded": true,
+          "rect": [
+            22.5,
+            197.5,
+            21,
+            19
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-skill.svg",
+          "loaded": true,
+          "rect": [
+            22.5,
+            248.5,
+            20.984375,
+            20.984375
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-workflow.svg",
+          "loaded": true,
+          "rect": [
+            23.25,
+            301.25,
+            19.5,
+            19.5
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-settings-container.svg",
+          "loaded": true,
+          "rect": [
+            233.5,
+            1007,
+            26,
+            26
+          ]
+        }
+      ]
+    },
+    {
+      "state": "1600",
+      "url": "http://127.0.0.1:1423/",
+      "viewport": {
+        "width": 1600,
+        "height": 900
+      },
+      "runtime": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "production"
+      },
+      "scripts": [
+        "http://127.0.0.1:1423/assets/index-peaOiUkj.js"
+      ],
+      "styleSheets": [
+        "http://127.0.0.1:1423/assets/index-BAP_4LSX.css"
+      ],
+      "elements": {
+        ".app": [
+          {
+            "rect": [
+              0,
+              0,
+              1600,
+              900
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "matrix(0.833333, 0, 0, 0.833333, -960, -540)"
+          }
+        ],
+        ".workspace-content": [
+          {
+            "rect": [
+              242.5,
+              37.5,
+              1349.1666259765625,
+              854.1666259765625
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar": [
+          {
+            "rect": [
+              0,
+              33.33333206176758,
+              242.5,
+              866.6666870117188
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".topbar strong": [
+          {
+            "rect": [
+              15.833333015441895,
+              10.416666030883789,
+              48.34635543823242,
+              12.5
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-toggle": [
+          {
+            "rect": [
+              204.16665649414062,
+              62.5,
+              21.666671752929688,
+              21.666664123535156
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-search": [
+          {
+            "rect": [
+              170,
+              62.5,
+              21.666656494140625,
+              21.666664123535156
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-account": [
+          {
+            "rect": [
+              22.91666603088379,
+              839.1666259765625,
+              88.25521087646484,
+              21.66668701171875
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-settings": [
+          {
+            "rect": [
+              194.5833282470703,
+              839.1666259765625,
+              21.666671752929688,
+              21.66668701171875
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(133, 133, 133)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".primary-nav": [
+          {
+            "rect": [
+              11.666666030883789,
+              109.16666412353516,
+              219.16665649414062,
+              176.66665649414062
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".project-groups-header": [
+          {
+            "rect": [
+              11.666666030883789,
+              319.1666564941406,
+              219.16665649414062,
+              17.5
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".project-entry": [
+          {
+            "rect": [
+              11.666666030883789,
+              340.83331298828125,
+              219.16665649414062,
+              24.16668701171875
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          },
+          {
+            "rect": [
+              38.33333206176758,
+              369.1666564941406,
+              192.5,
+              24.166656494140625
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          },
+          {
+            "rect": [
+              11.666666030883789,
+              425.83331298828125,
+              219.16665649414062,
+              24.16668701171875
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".account-row": [
+          {
+            "rect": [
+              11.666666030883789,
+              832.5,
+              215.8333282470703,
+              34.1666259765625
+            ],
+            "display": "flex",
+            "background": "rgb(31, 31, 31)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "10px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".task-button": [
+          {
+            "rect": [
+              267.5,
+              60,
+              77.5,
+              25
+            ],
+            "display": "flex",
+            "background": "rgb(26, 26, 26)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "8px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".canvas-top-right": [
+          {
+            "rect": [
+              948.3463134765625,
+              60,
+              234.1536865234375,
+              25.911453247070312
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-reopen": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "none",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "10px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".canvas-toolbar": [
+          {
+            "rect": [
+              599.1666259765625,
+              831.6666259765625,
+              245,
+              41.66668701171875
+            ],
+            "display": "flex",
+            "background": "rgb(26, 26, 26)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "25px",
+            "transition": "none",
+            "transform": "matrix(1, 0, 0, 1, -147, 0)"
+          }
+        ],
+        ".conversation-panel": [
+          {
+            "rect": [
+              1191.6666259765625,
+              50.83333206176758,
+              391.6666259765625,
+              831.6666870117188
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".conversation-panel > header": [
+          {
+            "rect": [
+              1208.75,
+              65,
+              355,
+              20
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer": [
+          {
+            "rect": [
+              1208.333251953125,
+              703.3333129882812,
+              355,
+              141.66668701171875
+            ],
+            "display": "flex",
+            "background": "rgb(31, 31, 31)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer textarea": [
+          {
+            "rect": [
+              1219.1666259765625,
+              714.1666259765625,
+              333.3333740234375,
+              53.3333740234375
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer > div": [
+          {
+            "rect": [
+              1219.1666259765625,
+              814.1666259765625,
+              333.3333740234375,
+              20
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ]
+      },
+      "grid": {
+        "position": "calc(100% - 1887px) -44px",
+        "size": "24px 24px"
+      },
+      "images": [
+        {
+          "src": "/design/figma/sidebar-search-container.svg",
+          "loaded": true,
+          "rect": [
+            170,
+            62.5,
+            21.666656494140625,
+            21.666664123535156
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-toggle.svg",
+          "loaded": true,
+          "rect": [
+            206.04165649414062,
+            64.375,
+            17.916671752929688,
+            17.916664123535156
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-add.svg",
+          "loaded": true,
+          "rect": [
+            16.66666603088379,
+            118.33332824707031,
+            21.66666603088379,
+            21.666671752929688
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-archive.svg",
+          "loaded": true,
+          "rect": [
+            18.75,
+            164.5833282470703,
+            17.5,
+            15.833328247070312
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-skill.svg",
+          "loaded": true,
+          "rect": [
+            18.75,
+            207.0833282470703,
+            17.486976623535156,
+            17.486984252929688
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-workflow.svg",
+          "loaded": true,
+          "rect": [
+            19.375,
+            251.04165649414062,
+            16.25,
+            16.25
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-settings-container.svg",
+          "loaded": true,
+          "rect": [
+            194.5833282470703,
+            839.1666259765625,
+            21.666671752929688,
+            21.66668701171875
+          ]
+        }
+      ]
+    },
+    {
+      "state": "1440",
+      "url": "http://127.0.0.1:1423/",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "runtime": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "production"
+      },
+      "scripts": [
+        "http://127.0.0.1:1423/assets/index-peaOiUkj.js"
+      ],
+      "styleSheets": [
+        "http://127.0.0.1:1423/assets/index-BAP_4LSX.css"
+      ],
+      "elements": {
+        ".app": [
+          {
+            "rect": [
+              0,
+              45,
+              1440,
+              810
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "matrix(0.75, 0, 0, 0.75, -960, -540)"
+          }
+        ],
+        ".workspace-content": [
+          {
+            "rect": [
+              218.25,
+              78.75,
+              1214.25,
+              768.75
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar": [
+          {
+            "rect": [
+              0,
+              75,
+              218.25,
+              780
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".topbar strong": [
+          {
+            "rect": [
+              14.25,
+              54.375,
+              43.51171875,
+              11.25
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-toggle": [
+          {
+            "rect": [
+              183.75,
+              101.25,
+              19.5,
+              19.5
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-search": [
+          {
+            "rect": [
+              153,
+              101.25,
+              19.5,
+              19.5
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-account": [
+          {
+            "rect": [
+              20.625,
+              800.25,
+              79.4296875,
+              19.5
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-settings": [
+          {
+            "rect": [
+              175.125,
+              800.25,
+              19.5,
+              19.5
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(133, 133, 133)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".primary-nav": [
+          {
+            "rect": [
+              10.5,
+              143.25,
+              197.25,
+              159
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".project-groups-header": [
+          {
+            "rect": [
+              10.5,
+              332.25,
+              197.25,
+              15.75
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".project-entry": [
+          {
+            "rect": [
+              10.5,
+              351.75,
+              197.25,
+              21.75
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          },
+          {
+            "rect": [
+              34.5,
+              377.25,
+              173.25,
+              21.75
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          },
+          {
+            "rect": [
+              10.5,
+              428.25,
+              197.25,
+              21.75
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".account-row": [
+          {
+            "rect": [
+              10.5,
+              794.25,
+              194.25,
+              30.75
+            ],
+            "display": "flex",
+            "background": "rgb(31, 31, 31)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "10px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".task-button": [
+          {
+            "rect": [
+              240.75,
+              99,
+              69.75,
+              22.5
+            ],
+            "display": "flex",
+            "background": "rgb(26, 26, 26)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "8px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".canvas-top-right": [
+          {
+            "rect": [
+              853.51171875,
+              99,
+              210.73828125,
+              23.3203125
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-reopen": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "none",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "10px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".canvas-toolbar": [
+          {
+            "rect": [
+              539.25,
+              793.5,
+              220.5,
+              37.5
+            ],
+            "display": "flex",
+            "background": "rgb(26, 26, 26)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "25px",
+            "transition": "none",
+            "transform": "matrix(1, 0, 0, 1, -147, 0)"
+          }
+        ],
+        ".conversation-panel": [
+          {
+            "rect": [
+              1072.5,
+              90.75,
+              352.5,
+              748.5
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".conversation-panel > header": [
+          {
+            "rect": [
+              1087.875,
+              103.5,
+              319.5,
+              18
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer": [
+          {
+            "rect": [
+              1087.5,
+              678,
+              319.5,
+              127.5
+            ],
+            "display": "flex",
+            "background": "rgb(31, 31, 31)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer textarea": [
+          {
+            "rect": [
+              1097.25,
+              687.75,
+              300,
+              48
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer > div": [
+          {
+            "rect": [
+              1097.25,
+              777.75,
+              300,
+              18
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ]
+      },
+      "grid": {
+        "position": "calc(100% - 1887px) -44px",
+        "size": "24px 24px"
+      },
+      "images": [
+        {
+          "src": "/design/figma/sidebar-search-container.svg",
+          "loaded": true,
+          "rect": [
+            153,
+            101.25,
+            19.5,
+            19.5
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-toggle.svg",
+          "loaded": true,
+          "rect": [
+            185.4375,
+            102.9375,
+            16.125,
+            16.125
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-add.svg",
+          "loaded": true,
+          "rect": [
+            15,
+            151.5,
+            19.5,
+            19.5
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-archive.svg",
+          "loaded": true,
+          "rect": [
+            16.875,
+            193.125,
+            15.75,
+            14.25
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-skill.svg",
+          "loaded": true,
+          "rect": [
+            16.875,
+            231.375,
+            15.73828125,
+            15.73828125
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-workflow.svg",
+          "loaded": true,
+          "rect": [
+            17.4375,
+            270.9375,
+            14.625,
+            14.625
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-settings-container.svg",
+          "loaded": true,
+          "rect": [
+            175.125,
+            800.25,
+            19.5,
+            19.5
+          ]
+        }
+      ]
+    },
+    {
+      "state": "390",
+      "url": "http://127.0.0.1:1423/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "runtime": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "production"
+      },
+      "scripts": [
+        "http://127.0.0.1:1423/assets/index-peaOiUkj.js"
+      ],
+      "styleSheets": [
+        "http://127.0.0.1:1423/assets/index-BAP_4LSX.css"
+      ],
+      "elements": {
+        ".app": [
+          {
+            "rect": [
+              0,
+              0,
+              390,
+              844
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".workspace-content": [
+          {
+            "rect": [
+              61,
+              45,
+              319,
+              789
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar": [
+          {
+            "rect": [
+              0,
+              40,
+              61,
+              804
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".topbar strong": [
+          {
+            "rect": [
+              19,
+              10,
+              58.015625,
+              15
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(133, 133, 133)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-toggle": [
+          {
+            "rect": [
+              18,
+              67,
+              26,
+              26
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-search": [
+          {
+            "rect": [
+              22,
+              703,
+              20,
+              20
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(112, 112, 112)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-account": [
+          {
+            "rect": [
+              19,
+              786,
+              26,
+              26
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".sidebar-settings": [
+          {
+            "rect": [
+              17,
+              741,
+              29,
+              29
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(133, 133, 133)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".primary-nav": [
+          {
+            "rect": [
+              12,
+              120,
+              39,
+              204
+            ],
+            "display": "grid",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".project-groups-header": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".project-entry": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          },
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          },
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".account-row": [
+          {
+            "rect": [
+              12,
+              324,
+              35,
+              0
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "10px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".task-button": [
+          {
+            "rect": [
+              74,
+              65.921875,
+              93,
+              30
+            ],
+            "display": "flex",
+            "background": "rgb(26, 26, 26)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "8px",
+            "transition": "none",
+            "transform": "matrix(1, 0, 0, 1, 0, -0.015625)"
+          }
+        ],
+        ".canvas-top-right": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "none",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-reopen": [
+          {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "display": "none",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "10px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".canvas-toolbar": [
+          {
+            "rect": [
+              -6,
+              762,
+              294,
+              50
+            ],
+            "display": "flex",
+            "background": "rgb(26, 26, 26)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "25px",
+            "transition": "none",
+            "transform": "matrix(1, 0, 0, 1, -147, 0)"
+          }
+        ],
+        ".conversation-panel": [
+          {
+            "rect": [
+              73,
+              56,
+              283,
+              757
+            ],
+            "display": "flex",
+            "background": "rgb(22, 22, 22)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".conversation-panel > header": [
+          {
+            "rect": [
+              90,
+              73,
+              249,
+              30
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer": [
+          {
+            "rect": [
+              90,
+              598,
+              249,
+              170
+            ],
+            "display": "flex",
+            "background": "rgb(31, 31, 31)",
+            "border": "1px solid rgb(60, 60, 60)",
+            "borderRadius": "20px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer textarea": [
+          {
+            "rect": [
+              103,
+              611,
+              223,
+              72
+            ],
+            "display": "block",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ],
+        ".chat-composer > div": [
+          {
+            "rect": [
+              103,
+              691,
+              223,
+              64
+            ],
+            "display": "flex",
+            "background": "rgba(0, 0, 0, 0)",
+            "border": "0px none rgb(219, 219, 219)",
+            "borderRadius": "0px",
+            "transition": "none",
+            "transform": "none"
+          }
+        ]
+      },
+      "grid": {
+        "position": "10px 14px",
+        "size": "24px 24px"
+      },
+      "images": [
+        {
+          "src": "/design/figma/sidebar-search-container.svg",
+          "loaded": true,
+          "rect": [
+            22,
+            703,
+            26,
+            26
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-expand.svg",
+          "loaded": true,
+          "rect": [
+            20.25,
+            69.25,
+            21.5,
+            21.5
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-add.svg",
+          "loaded": true,
+          "rect": [
+            19,
+            131,
+            26,
+            26
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-archive.svg",
+          "loaded": true,
+          "rect": [
+            21.5,
+            186.5,
+            21,
+            19
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-skill.svg",
+          "loaded": true,
+          "rect": [
+            22,
+            238,
+            20,
+            20
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-workflow.svg",
+          "loaded": true,
+          "rect": [
+            23,
+            291,
+            18,
+            18
+          ]
+        },
+        {
+          "src": "/design/figma/sidebar-settings-container.svg",
+          "loaded": true,
+          "rect": [
+            18.5,
+            742.5,
+            26,
+            26
+          ]
+        }
+      ]
+    }
+  ]
+}

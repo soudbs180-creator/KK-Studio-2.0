@@ -1,0 +1,189 @@
+@import "@fontsource/inter/latin-400.css";
+@import "@fontsource/inter/latin-500.css";
+@import "@fontsource/inter/latin-600.css";
+@import "@fontsource/inter/latin-700.css";
+:root {
+  --design-scale: 1;
+  --bg-app: #0a0a0a;
+  --bg-surface: #161616;
+  --bg-card: #1a1a1a;
+  --bg-card-hover: #202020;
+  --bg-card-soft: #333333;
+  --bg-input: #1f1f1f;
+  --bg-accent: #635bff;
+  --bg-accent-hover: #756fff;
+  --border-default: #3c3c3c;
+  --border-subtle: #292929;
+  --border-accent: #635bff;
+  --text-primary: #dbdbdb;
+  --text-secondary: #858585;
+  --text-tertiary: #707070;
+  --text-accent: #b2adff;
+  --text-danger: #ef6d6d;
+  /* Latest Figma Runtime frames 404:28667 / 410:59708 use a 291px rail. */
+  --sidebar-width: 291px;
+  --conversation-width: 470px;
+  --topbar-height: 40px;
+  font-family: Inter, "Microsoft YaHei", "PingFang SC", sans-serif;
+  font-size: 13px;
+  color: var(--text-primary);
+  color-scheme: dark;
+}
+:root[data-theme="light"] {
+  --bg-app: #ededed;
+  --bg-surface: #f7f7f7;
+  --bg-card: #eee;
+  --bg-card-hover: #e5e5e5;
+  --bg-card-soft: #f7f7f7;
+  --bg-input: #eaeaea;
+  --border-default: #c4c4c4;
+  --border-subtle: #dedede;
+  --text-primary: #252525;
+  --text-secondary: #646464;
+  --text-tertiary: #777;
+  --text-accent: #594bcb;
+  color-scheme: light;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  scrollbar-width: none;
+}
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-surface);
+}
+
+/* Stage 1 uses the Figma desktop frame as the browser design viewport.
+   Keep narrow/mobile breakpoints responsive until their dedicated frames are
+   implemented; desktop windows are letterboxed to the same 16:9 surface. */
+@media (min-width: 1201px) {
+  #root {
+    position: relative;
+    background: #000;
+  }
+
+  /* Render one fixed Figma coordinate space and scale the complete surface.
+     Keeping the app at 1920×1080 means every child retains its measured
+     Figma px geometry at 1280×720 and 1600×900 as well as at 1920×1080. */
+  #root > .app {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1920px;
+    height: 1080px;
+    flex: 0 0 1920px;
+    transform: translate(-50%, -50%) scale(var(--design-scale));
+    transform-origin: center;
+    margin: 0;
+    overflow: hidden;
+  }
+}
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+button:not(:disabled):hover {
+  filter: brightness(1.18);
+}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: var(--ui-focus-width) solid var(--ui-focus);
+  outline-offset: var(--ui-focus-offset);
+}
+input,
+textarea {
+  border: 0;
+  background: none;
+  color: inherit;
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-tertiary);
+}
+select {
+  color: inherit;
+}
+button[aria-pressed="true"] {
+  color: var(--text-primary);
+}
+.modal {
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  max-width: calc(100vw - 16px);
+  max-height: calc(100dvh - 16px);
+  overflow: auto;
+}
+.modal::backdrop {
+  background: #0008;
+  backdrop-filter: blur(3px);
+}
+.primary-button {
+  background: var(--text-primary);
+  color: var(--bg-surface);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+.text-button {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  justify-self: start;
+  font-size: 12px;
+}
+.muted {
+  color: var(--text-secondary);
+}
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+[data-floating-layout="false"] .canvas,
+[data-floating-layout="false"] .workspace-content,
+[data-floating-layout="false"] .conversation-panel,
+[data-floating-layout="false"] .library-page {
+  border-radius: 0;
+}
+::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}

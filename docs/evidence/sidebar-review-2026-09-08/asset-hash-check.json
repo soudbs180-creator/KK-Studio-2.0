@@ -1,0 +1,30 @@
+[
+  {
+    "file": "public/figma/sidebar-add.svg",
+    "matches": true
+  },
+  {
+    "file": "public/figma/sidebar-archive.svg",
+    "matches": true
+  },
+  {
+    "file": "public/figma/sidebar-skill.svg",
+    "matches": true
+  },
+  {
+    "file": "public/figma/sidebar-workflow.svg",
+    "matches": true
+  },
+  {
+    "file": "public/figma/sidebar-search.svg",
+    "matches": true
+  },
+  {
+    "file": "public/figma/sidebar-settings.svg",
+    "matches": true
+  },
+  {
+    "file": "public/figma/sidebar-toggle.svg",
+    "matches": true
+  }
+]

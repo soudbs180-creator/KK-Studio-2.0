@@ -1,0 +1,510 @@
+const imgIconX = "https://www.figma.com/api/mcp/asset/80334407-6b99-49f6-b52e-b522a6a61a38.svg";
+const imgIconScan = "https://www.figma.com/api/mcp/asset/0bce590c-6656-43f5-93dd-c6fe67f35d8a.svg";
+const img304 = "https://www.figma.com/api/mcp/asset/2f30c404-22f2-474e-9b15-3e6015ea56ee.svg";
+const img305 = "https://www.figma.com/api/mcp/asset/02e8515b-eb35-4e4b-b352-03fd0ecad8ea.svg";
+const imgIconMic = "https://www.figma.com/api/mcp/asset/db926561-7e5f-47bf-aac9-6dfaac15e1b6.svg";
+const img = "https://www.figma.com/api/mcp/asset/43e908ef-56a5-4375-aeb8-4b4841156d6b.svg";
+const img1020 = "https://www.figma.com/api/mcp/asset/cef9bbf6-b334-4fe6-9744-4921cfebd12c.svg";
+const imgVector = "https://www.figma.com/api/mcp/asset/dc2997e3-da7d-40a0-a405-aae99ce846ae.svg";
+const imgVector1 = "https://www.figma.com/api/mcp/asset/b1b0cb03-7742-441b-abf5-68fc5b946294.svg";
+const imgVector2 = "https://www.figma.com/api/mcp/asset/6052c3e5-8dda-4cce-b373-0c48f807deca.svg";
+const imgVector3 = "https://www.figma.com/api/mcp/asset/33414806-f96b-488e-aad9-753d648ca89f.svg";
+const imgVector4 = "https://www.figma.com/api/mcp/asset/d18b5ca2-2002-42ef-9141-a534d14d4243.svg";
+const img1 = "https://www.figma.com/api/mcp/asset/4f24f2af-259d-4582-978e-9a8756443991.svg";
+const img33 = "https://www.figma.com/api/mcp/asset/8851a767-6c31-4edd-b3a0-13f25711787d.svg";
+const imgEllipse1 = "https://www.figma.com/api/mcp/asset/7e6bdf5d-3d08-42e9-8a37-08cf15d0bc65.svg";
+const imgUnion = "https://www.figma.com/api/mcp/asset/98e17c1c-89ea-4b4e-8e10-a287fbba0165.svg";
+const imgGroup = "https://www.figma.com/api/mcp/asset/b5603604-9a8b-40a0-a3e7-b2c72bc054e8.svg";
+const imgGroup1 = "https://www.figma.com/api/mcp/asset/07a5991e-3dbe-4a53-ad85-80bad9e0b7f4.svg";
+const imgGroup60 = "https://www.figma.com/api/mcp/asset/95e241d3-e3af-4ac9-b7ee-c99baf45612d.svg";
+const imgIconUpload = "https://www.figma.com/api/mcp/asset/87fcd5c5-2dce-4aa7-ac05-298a97c9e0d7.svg";
+const imgGroup4 = "https://www.figma.com/api/mcp/asset/ec5a5cc4-0ae3-42ac-967a-d4c2d8772196.svg";
+const img2 = "https://www.figma.com/api/mcp/asset/3094648f-1924-4b6e-aa79-a9f652b48cc0.svg";
+const imgGroup7 = "https://www.figma.com/api/mcp/asset/d94f9602-ac6f-4d23-8eb7-cb65b7f74af4.svg";
+
+function Component({ className }: { className?: string }) {
+  return (
+    <div className={className || "h-[47px] relative w-[116px]"} data-node-id="312:2704" data-name="生成数量滑块">
+      <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid inset-0 rounded-[10px]" data-node-id="89:15897" />
+      <div className="absolute bg-[#3c3c3c] inset-[55.32%_10.34%_40.43%_10.34%] rounded-[10px]" data-node-id="89:15900" />
+      <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[21.28%_62.07%_57.45%_10.34%] leading-[normal] not-italic text-[#707070] text-[8px] whitespace-nowrap" data-node-id="89:15898">
+        生成数量
+      </p>
+      <div className="[word-break:break-word] absolute content-stretch flex font-['Inter:Medium'] font-medium gap-[16.5px] inset-[65.96%_13.79%_21.28%_12.93%] items-center leading-[normal] not-italic text-[#707070] text-[5px] text-center" data-node-id="89:15922">
+        <p className="relative shrink-0 whitespace-nowrap" data-node-id="89:15904">
+          1
+        </p>
+        <p className="relative shrink-0 whitespace-nowrap" data-node-id="89:15921">
+          2
+        </p>
+        <p className="relative shrink-0 whitespace-nowrap" data-node-id="89:15905">
+          4
+        </p>
+        <p className="relative shrink-0 whitespace-nowrap" data-node-id="89:15908">
+          6
+        </p>
+        <p className="h-[6px] relative shrink-0 w-[4px]" data-node-id="89:15906">
+          8
+        </p>
+      </div>
+      <div className="absolute bg-[#d9d9d9] inset-[53.19%_12.07%_38.3%_81.03%] rounded-[20px]" data-node-id="89:15903" />
+      <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[17.02%_10.34%_55.32%_83.62%] leading-[normal] not-italic text-[#d3d3d3] text-[11px] whitespace-nowrap" data-node-id="89:15923">
+        8
+      </p>
+      <div className="absolute inset-[27.66%_17.24%_63.83%_79.31%]" data-node-id="89:15924" data-name="icon-x">
+        <div className="absolute inset-[-12.5%]">
+          <img alt="" className="block max-w-none size-full" src={imgIconX} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Component1({ className }: { className?: string }) {
+  return (
+    <div className={className || "h-[229px] relative w-[297px]"} data-node-id="312:2677" data-name="参数设置">
+      <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid inset-0 rounded-[10px]" data-node-id="84:15856" />
+      <div className="absolute bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid inset-[12.23%_4.04%_75.11%_4.04%] rounded-[6px]" data-node-id="87:15865" />
+      <div className="absolute inset-[16.16%_53.54%_78.6%_42.42%]" data-node-id="94:16184" data-name="icon-scan">
+        <div className="absolute inset-[-4.17%]">
+          <img alt="" className="block max-w-none size-full" src={imgIconScan} />
+        </div>
+      </div>
+      <div className="absolute gap-x-[5px] gap-y-[5px] grid-cols-[repeat(4,fit-content(100%))] grid-rows-[repeat(1,fit-content(100%))] inline-grid inset-[83.41%_4.71%_5.68%_4.04%] leading-[0]" data-node-id="94:16158">
+        <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-center place-items-start relative row-1 self-start shrink-0" data-node-id="97:16255">
+          <div className="bg-[#313131] border-[#808080] border-[0.5px] border-solid col-1 h-[25px] ml-0 mt-0 relative rounded-[6px] row-1 w-[64px]" data-node-id="87:15892" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[20px] mt-[8px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="97:16253">
+            自适应
+          </p>
+        </div>
+        <div className="col-2 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-center place-items-start relative row-1 self-center shrink-0" data-node-id="97:16258">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 h-[25px] ml-[69px] mt-0 relative rounded-[6px] row-1 w-[64px]" data-node-id="87:15893" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[96px] mt-[8px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="97:16256">
+            1K
+          </p>
+        </div>
+        <div className="col-3 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-center place-items-start relative row-1 self-center shrink-0" data-node-id="97:16259">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 h-[25px] ml-[138px] mt-0 relative rounded-[6px] row-1 w-[64px]" data-node-id="97:16260" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[165px] mt-[8px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="97:16261">
+            2K
+          </p>
+        </div>
+        <div className="col-4 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-center place-items-start relative row-1 self-center shrink-0" data-node-id="97:16263">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 h-[25px] ml-[207px] mt-0 relative rounded-[6px] row-1 w-[64px]" data-node-id="97:16264" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[234px] mt-[8px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="97:16265">
+            4K
+          </p>
+        </div>
+      </div>
+      <div className="absolute gap-x-[4px] gap-y-[4px] grid grid-cols-[repeat(5,minmax(0,1fr))] grid-rows-[repeat(2,minmax(0,1fr))] inset-[26.64%_4.71%_27.07%_4.04%] leading-[0]" data-node-id="94:16157">
+        <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-1 self-start shrink-0" data-node-id="94:16192">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-0 mt-0 relative rounded-[6px] row-1 size-[51px]" data-node-id="87:15874" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[15px] mt-[11px] place-items-start relative row-1" data-node-id="97:16200">
+            <div className="border border-[#707070] border-solid col-1 ml-[15px] mt-[11px] relative rounded-[3px] row-1 size-[20px]" data-node-id="97:16198" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[20px] mt-[34px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="94:16159">
+              1:1
+            </p>
+          </div>
+        </div>
+        <div className="col-2 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-1 self-start shrink-0" data-node-id="97:16204">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-[55px] mt-0 relative rounded-[6px] row-1 size-[51px]" data-node-id="97:16205" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[70px] mt-[14px] place-items-start relative row-1" data-node-id="97:16206">
+            <div className="border border-[#707070] border-solid col-1 h-[14px] ml-[70px] mt-[14px] relative rounded-[3px] row-1 w-[20px]" data-node-id="97:16207" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[71px] mt-[34px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="97:16208">
+              16:9
+            </p>
+          </div>
+        </div>
+        <div className="col-3 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-1 self-start shrink-0" data-node-id="97:16210">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-[110px] mt-0 relative rounded-[6px] row-1 size-[51px]" data-node-id="97:16211" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[127px] mt-[11px] place-items-start relative row-1" data-node-id="97:16212">
+            <div className="border border-[#707070] border-solid col-1 h-[20px] ml-[128px] mt-[11px] relative rounded-[3px] row-1 w-[14px]" data-node-id="97:16213" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[127px] mt-[34px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="97:16214">
+              9:16
+            </p>
+          </div>
+        </div>
+        <div className="col-4 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-center place-items-start relative row-1 self-start shrink-0" data-node-id="94:16191">
+          <div className="bg-[#313131] border-[#808080] border-[0.5px] border-solid col-1 ml-[165px] mt-0 relative rounded-[6px] row-1 size-[51px]" data-node-id="87:15875" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[182px] mt-[11px] place-items-start relative row-1" data-node-id="97:16203">
+            <div className="border border-[#707070] border-solid col-1 h-[20px] ml-[calc(50%+46.5px)] mt-[calc(50%-42px)] relative rounded-[3px] row-1 w-[16px]" data-node-id="97:16202" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[184px] mt-[34px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="97:16201">
+              3:4
+            </p>
+          </div>
+        </div>
+        <div className="col-5 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-1 self-start shrink-0" data-node-id="97:16216">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-[220px] mt-0 relative rounded-[6px] row-1 size-[51px]" data-node-id="97:16217" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[235px] mt-[13px] place-items-start relative row-1" data-node-id="97:16218">
+            <div className="border border-[#707070] border-solid col-1 h-[16px] ml-[235px] mt-[13px] relative rounded-[3px] row-1 w-[20px]" data-node-id="97:16219" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[239px] mt-[34px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="97:16220">
+              4:3
+            </p>
+          </div>
+        </div>
+        <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-2 self-start shrink-0" data-node-id="97:16222">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-0 mt-[55px] relative rounded-[6px] row-1 size-[51px]" data-node-id="97:16223" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[15px] mt-[69px] place-items-start relative row-1" data-node-id="97:16224">
+            <div className="border border-[#707070] border-solid col-1 h-[14px] ml-[15px] mt-[69px] relative rounded-[3px] row-1 w-[20px]" data-node-id="97:16225" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[19px] mt-[89px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="97:16226">
+              3:2
+            </p>
+          </div>
+        </div>
+        <div className="col-2 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-2 self-start shrink-0" data-node-id="97:16228">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-[55px] mt-[55px] relative rounded-[6px] row-1 size-[51px]" data-node-id="97:16229" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[73px] mt-[66px] place-items-start relative row-1" data-node-id="97:16230">
+            <div className="border border-[#707070] border-solid col-1 h-[20px] ml-[73px] mt-[66px] relative rounded-[3px] row-1 w-[14px]" data-node-id="97:16231" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[74px] mt-[89px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="97:16232">
+              2:3
+            </p>
+          </div>
+        </div>
+        <div className="col-3 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-2 self-start shrink-0" data-node-id="97:16234">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-[110px] mt-[55px] relative rounded-[6px] row-1 size-[51px]" data-node-id="97:16235" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[125px] mt-[67px] place-items-start relative row-1" data-node-id="97:16236">
+            <div className="border border-[#707070] border-solid col-1 h-[18px] ml-[125px] mt-[67px] relative rounded-[3px] row-1 w-[20px]" data-node-id="97:16237" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[129px] mt-[89px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="97:16238">
+              5:4
+            </p>
+          </div>
+        </div>
+        <div className="col-4 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-2 self-start shrink-0" data-node-id="97:16240">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-[165px] mt-[55px] relative rounded-[6px] row-1 size-[51px]" data-node-id="97:16241" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[181px] mt-[66px] place-items-start relative row-1" data-node-id="97:16242">
+            <div className="border border-[#707070] border-solid col-1 h-[20px] ml-[181px] mt-[66px] relative rounded-[3px] row-1 w-[18px]" data-node-id="97:16243" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[184px] mt-[89px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="97:16244">
+              4:5
+            </p>
+          </div>
+        </div>
+        <div className="col-5 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-2 self-start shrink-0" data-node-id="97:16246">
+          <div className="bg-[#1a1a1a] border-[#3c3c3c] border-[0.5px] border-solid col-1 ml-[220px] mt-[55px] relative rounded-[6px] row-1 size-[51px]" data-node-id="97:16247" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[235px] mt-[71px] place-items-start relative row-1" data-node-id="97:16248">
+            <div className="border border-[#707070] border-solid col-1 h-[10px] ml-[235px] mt-[71px] relative rounded-[3px] row-1 w-[20px]" data-node-id="97:16249" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[237px] mt-[89px] not-italic relative row-1 text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="97:16250">
+              21:9
+            </p>
+          </div>
+        </div>
+      </div>
+      <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[4.37%_90.57%_91.27%_4.04%] leading-[normal] not-italic text-[#707070] text-[8px] whitespace-nowrap" data-node-id="84:15857">
+        比例
+      </p>
+      <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[77.29%_87.88%_18.34%_4.04%] leading-[normal] not-italic text-[#707070] text-[8px] whitespace-nowrap" data-node-id="87:15889">
+        清晰度
+      </p>
+      <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[16.59%_43.1%_79.04%_48.82%] leading-[normal] not-italic text-[#707070] text-[8px] text-center whitespace-nowrap" data-node-id="94:16190">
+        自适应
+      </p>
+    </div>
+  );
+}
+
+function Component2({ className }: { className?: string }) {
+  return (
+    <div className={className || "h-[247px] relative w-[227px]"} data-node-id="312:2680" data-name="模型选择模块">
+      <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid inset-0 rounded-[10px]" data-node-id="71:15663" />
+      <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[4.05%_87.67%_91.9%_5.29%] leading-[normal] not-italic text-[#707070] text-[8px] whitespace-nowrap" data-node-id="83:15788">
+        模型
+      </p>
+      <div className="absolute content-stretch flex flex-col gap-[4px] inset-[11.34%_1.32%_1.21%_1.32%] items-start leading-[0]" data-node-id="84:15854">
+        <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="84:15817" data-name="模型选择">
+          <div className="col-1 h-[40px] ml-0 mt-0 relative rounded-[10px] row-1 w-[221px]" data-node-id="84:15808" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[29px] mt-[7px] not-italic relative row-1 text-[#d3d3d3] text-[12px] w-[153px]" data-node-id="83:15798">
+            kk Image 2
+          </p>
+          <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[29px] mt-[24px] not-italic relative row-1 text-[#707070] text-[8px] w-[153px]" data-node-id="84:15804">
+            1k-4k
+          </p>
+          <div className="bg-[#707070] col-1 ml-[11px] mt-[9px] relative row-1 size-[12px]" data-node-id="83:15789" data-name="logo占位" />
+          <div className="col-1 h-[6px] ml-[198px] mt-[17px] relative row-1 w-[8px]" data-node-id="84:15810" data-name="路径 304">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={img304} />
+          </div>
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[54px] mt-[9px] place-items-start relative row-1" data-node-id="84:15816">
+            <div className="bg-[#e2e2e2] col-1 h-[12px] ml-[47px] mt-0 relative rounded-[6px] row-1 w-[58px]" data-node-id="84:15813" data-name="供应商" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-0 mt-px not-italic relative row-1 text-[8px] text-black text-center w-[153px]" data-node-id="84:15814">
+              YYKK供应商
+            </p>
+          </div>
+        </div>
+        <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="84:15818" data-name="模型选择">
+          <div className="bg-[#282828] col-1 h-[40px] ml-0 mt-0 relative rounded-[10px] row-1 w-[221px]" data-node-id="84:15819" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[29px] mt-[7px] not-italic relative row-1 text-[#d3d3d3] text-[12px] w-[153px]" data-node-id="84:15820">
+            kk Image 2
+          </p>
+          <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[29px] mt-[24px] not-italic relative row-1 text-[#707070] text-[8px] w-[153px]" data-node-id="84:15821">
+            1k-4k
+          </p>
+          <div className="bg-[#707070] col-1 ml-[11px] mt-[9px] relative row-1 size-[12px]" data-node-id="84:15822" data-name="logo占位" />
+          <div className="col-1 h-[6px] ml-[198px] mt-[17px] relative row-1 w-[8px]" data-node-id="84:15823" data-name="路径 304">
+            <div className="absolute inset-[-14.58%_-10.94%]">
+              <img alt="" className="block max-w-none size-full" src={img305} />
+            </div>
+          </div>
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[54px] mt-[9px] place-items-start relative row-1" data-node-id="84:15824">
+            <div className="bg-[#16a36a] col-1 h-[12px] ml-[47px] mt-0 relative rounded-[6px] row-1 w-[58px]" data-node-id="84:15825" data-name="供应商" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-0 mt-px not-italic relative row-1 text-[8px] text-black text-center w-[153px]" data-node-id="84:15826">
+              YYKK供应商
+            </p>
+          </div>
+        </div>
+        <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="84:15827" data-name="模型选择">
+          <div className="col-1 h-[40px] ml-0 mt-0 relative rounded-[10px] row-1 w-[221px]" data-node-id="84:15828" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[29px] mt-[7px] not-italic relative row-1 text-[#d3d3d3] text-[12px] w-[153px]" data-node-id="84:15829">
+            kk Image 2
+          </p>
+          <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[29px] mt-[24px] not-italic relative row-1 text-[#707070] text-[8px] w-[153px]" data-node-id="84:15830">
+            1k-4k
+          </p>
+          <div className="bg-[#707070] col-1 ml-[11px] mt-[9px] relative row-1 size-[12px]" data-node-id="84:15831" data-name="logo占位" />
+          <div className="col-1 h-[6px] ml-[198px] mt-[17px] relative row-1 w-[8px]" data-node-id="84:15832" data-name="路径 304">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={img304} />
+          </div>
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[54px] mt-[9px] place-items-start relative row-1" data-node-id="84:15833">
+            <div className="bg-[#e5484d] col-1 h-[12px] ml-[47px] mt-0 relative rounded-[6px] row-1 w-[58px]" data-node-id="84:15834" data-name="供应商" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-0 mt-px not-italic relative row-1 text-[8px] text-black text-center w-[153px]" data-node-id="84:15835">
+              YYKK供应商
+            </p>
+          </div>
+        </div>
+        <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="84:15836" data-name="模型选择">
+          <div className="col-1 h-[40px] ml-0 mt-0 relative rounded-[10px] row-1 w-[221px]" data-node-id="84:15837" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[29px] mt-[7px] not-italic relative row-1 text-[#d3d3d3] text-[12px] w-[153px]" data-node-id="84:15838">
+            kk Image 2
+          </p>
+          <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[29px] mt-[24px] not-italic relative row-1 text-[#707070] text-[8px] w-[153px]" data-node-id="84:15839">
+            1k-4k
+          </p>
+          <div className="bg-[#707070] col-1 ml-[11px] mt-[9px] relative row-1 size-[12px]" data-node-id="84:15840" data-name="logo占位" />
+          <div className="col-1 h-[6px] ml-[198px] mt-[17px] relative row-1 w-[8px]" data-node-id="84:15841" data-name="路径 304">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={img304} />
+          </div>
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[54px] mt-[9px] place-items-start relative row-1" data-node-id="84:15842">
+            <div className="bg-[#635bff] col-1 h-[12px] ml-[47px] mt-0 relative rounded-[6px] row-1 w-[58px]" data-node-id="84:15843" data-name="供应商" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-0 mt-px not-italic relative row-1 text-[8px] text-black text-center w-[153px]" data-node-id="84:15844">
+              YYKK供应商
+            </p>
+          </div>
+        </div>
+        <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="84:15845" data-name="模型选择">
+          <div className="col-1 h-[40px] ml-0 mt-0 relative rounded-[10px] row-1 w-[221px]" data-node-id="84:15846" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[29px] mt-[7px] not-italic relative row-1 text-[#d3d3d3] text-[12px] w-[153px]" data-node-id="84:15847">
+            kk Image 2
+          </p>
+          <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[29px] mt-[24px] not-italic relative row-1 text-[#707070] text-[8px] w-[153px]" data-node-id="84:15848">
+            1k-4k
+          </p>
+          <div className="bg-[#707070] col-1 ml-[11px] mt-[9px] relative row-1 size-[12px]" data-node-id="84:15849" data-name="logo占位" />
+          <div className="col-1 h-[6px] ml-[198px] mt-[17px] relative row-1 w-[8px]" data-node-id="84:15850" data-name="路径 304">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={img304} />
+          </div>
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[54px] mt-[9px] place-items-start relative row-1" data-node-id="84:15851">
+            <div className="bg-[#d98a00] col-1 h-[12px] ml-[47px] mt-0 relative rounded-[6px] row-1 w-[58px]" data-node-id="84:15852" data-name="供应商" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-0 mt-px not-italic relative row-1 text-[8px] text-black text-center w-[153px]" data-node-id="84:15853">
+              YYKK供应商
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Component3({ className }: { className?: string }) {
+  return (
+    <button className={className || "block cursor-pointer h-[34px] relative w-[32px]"} data-node-id="21:104318">
+      <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid inset-0 rounded-[10px]" data-node-id="21:104294" data-name="鼠标悬浮高亮4" />
+      <div className="absolute inset-[29.41%_32.81%_26.47%_34.38%]" data-node-id="21:104281" data-name="icon-mic">
+        <div className="absolute inset-[-3.33%_-4.76%]">
+          <img alt="" className="block max-w-none size-full" src={imgIconMic} />
+        </div>
+      </div>
+    </button>
+  );
+}
+
+function Component4({ className }: { className?: string }) {
+  return (
+    <div className={className || "h-[237px] relative w-[590px]"} data-node-id="312:2678" data-name="输入框创作">
+      <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid inset-0 rounded-[30px]" data-node-id="19:74728" data-name="图片占位框" />
+      <div className="absolute inset-[8.44%_89.15%_74.26%_3.9%]" data-node-id="82:15743" data-name="上传按钮">
+        <div className="absolute inset-[-2.13%]">
+          <img alt="" className="block max-w-none size-full" src={img} />
+        </div>
+      </div>
+      <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[31.65%_79.15%_63.29%_3.9%] leading-[normal] not-italic text-[#4b4b4b] text-[10px] whitespace-nowrap" data-node-id="19:82099">
+        描述你想要生成的内容
+      </p>
+      <div className="absolute inset-[9.7%_4.58%_82.7%_92.37%]" data-node-id="19:96858" data-name="增加画布输入框文字展示的大小原本10行打开后展示20行">
+        <div className="absolute inset-[-4.86%]">
+          <img alt="" className="block max-w-none size-full" src={img1020} />
+        </div>
+      </div>
+      <div className="absolute contents inset-[77.22%_76.27%_8.44%_1.86%]" data-node-id="82:15739" data-name="模型选择">
+        <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid inset-[77.22%_76.27%_8.44%_1.86%] rounded-[10px]" data-node-id="19:96866" data-name="鼠标悬浮高亮4" />
+        <p className="[word-break:break-word] absolute font-['Inter:Bold'] font-bold inset-[81.43%_81.19%_12.24%_7.97%] leading-[normal] not-italic text-[#d3d3d3] text-[12px] whitespace-nowrap" data-node-id="19:96867">
+          kk Image 2
+        </p>
+        <div className="absolute aspect-[42/42] left-[3.56%] overflow-clip right-[93.05%] top-[190px]" data-node-id="19:96869" data-name="kk-studio 3">
+          <div className="absolute contents inset-0" data-node-id="19:96870" data-name="Clip path group">
+            <div className="absolute contents inset-[0_0_-32.5%_0]" data-node-id="19:96873" data-name="Group">
+              <div className="absolute inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[20px_20px]" data-node-id="19:96874" style={{ maskImage: `url("${imgVector}")` }} data-name="Vector">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgVector1} />
+              </div>
+              <div className="absolute inset-[50.82%_9.16%_-32.5%_9.16%] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-1.832px_-10.164px] mask-size-[20px_20px]" data-node-id="19:96875" style={{ maskImage: `url("${imgVector}")` }} data-name="Vector">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgVector2} />
+              </div>
+              <div className="absolute flex inset-[5.51%_42.8%_-1.17%_21.12%] items-center justify-center" data-node-id="19:96876" style={{ containerType: "size" }}>
+                <div className="-rotate-8 flex-none h-[hypot(35.9958cqw,96.6071cqh)] w-[hypot(64.0042cqw,-3.39289cqh)]">
+                  <div className="mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-4.224px_-1.102px] mask-size-[20px_20px] relative size-full" style={{ maskImage: `url("${imgVector}")` }} data-name="Vector">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgVector3} />
+                  </div>
+                </div>
+              </div>
+              <div className="absolute flex inset-[5.51%_21.12%_-1.17%_42.8%] items-center justify-center" data-node-id="19:96877" style={{ containerType: "size" }}>
+                <div className="flex-none h-[hypot(-35.9958cqw,96.6071cqh)] rotate-8 w-[hypot(64.0042cqw,3.39289cqh)]">
+                  <div className="mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-8.56px_-1.102px] mask-size-[20px_20px] relative size-full" style={{ maskImage: `url("${imgVector}")` }} data-name="Vector">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgVector4} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="absolute flex inset-[81.01%_75.59%_12.24%_24.41%] items-center justify-center" data-node-id="21:96883" style={{ containerType: "size" }}>
+        <div className="flex-none h-[0px] rotate-90 w-[100cqh]">
+          <div className="relative size-full" data-name="分割线">
+            <div className="absolute inset-[-1px_0_0_0]">
+              <img alt="" className="block max-w-none size-full" src={img1} />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="absolute flex inset-[81.01%_23.73%_12.24%_76.27%] items-center justify-center" data-node-id="21:104333" style={{ containerType: "size" }}>
+        <div className="flex-none h-[0px] rotate-90 w-[100cqh]">
+          <div className="relative size-full" data-name="分割线">
+            <div className="absolute inset-[-1px_0_0_0]">
+              <img alt="" className="block max-w-none size-full" src={img1} />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="absolute contents inset-[77.22%_59.66%_8.44%_25.25%]" data-node-id="82:15740" data-name="参数选择">
+        <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid inset-[77.22%_59.66%_8.44%_25.25%] rounded-[10px]" data-node-id="21:104276" data-name="鼠标悬浮高亮4" />
+        <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[81.86%_68.64%_12.66%_28.81%] leading-[normal] not-italic text-[#d3d3d3] text-[11px] tracking-[-3.3px] whitespace-nowrap" data-node-id="21:96886">
+          1：1
+        </p>
+        <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[81.86%_64.92%_12.66%_33.05%] leading-[normal] not-italic text-[#d3d3d3] text-[11px] whitespace-nowrap" data-node-id="21:104278">
+          1k
+        </p>
+        <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[81.86%_61.36%_12.66%_36.78%] leading-[normal] not-italic text-[#d3d3d3] text-[11px] whitespace-nowrap" data-node-id="21:104280">
+          中
+        </p>
+        <div className="absolute flex inset-[82.7%_71.69%_13.08%_26.61%] items-center justify-center" data-node-id="21:96884" style={{ containerType: "size" }}>
+          <div className="-scale-x-100 flex-none h-[100cqh] w-[100cqw]">
+            <div className="relative size-full" data-name="矩形 33">
+              <div className="absolute inset-[-5%]">
+                <img alt="" className="block max-w-none size-full" src={img33} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="absolute inset-[84.39%_67.63%_14.77%_32.03%]" data-node-id="21:104277">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse1} />
+        </div>
+        <div className="absolute inset-[84.39%_63.9%_14.77%_35.76%]" data-node-id="21:104279">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse1} />
+        </div>
+      </div>
+      <Component3 className="absolute block cursor-pointer inset-[77.22%_24.41%_8.44%_70.17%]" />
+      <div className="absolute contents inset-[77.22%_17.12%_8.44%_77.12%]" data-node-id="82:15741" data-name="生成数量选择">
+        <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid inset-[77.22%_17.12%_8.44%_77.12%] rounded-[10px]" data-node-id="21:104334" data-name="鼠标悬浮高亮4" />
+        <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[81.43%_18.98%_13.08%_79.83%] leading-[normal] not-italic text-[#d3d3d3] text-[11px] whitespace-nowrap" data-node-id="21:104337">
+          8
+        </p>
+        <div className="absolute inset-[83.54%_20.34%_14.77%_78.98%]" data-node-id="21:104338" data-name="icon-x">
+          <div className="absolute inset-[-12.5%]">
+            <img alt="" className="block max-w-none size-full" src={imgIconX} />
+          </div>
+        </div>
+      </div>
+      <div className="absolute contents inset-[77.22%_1.53%_8.44%_84.58%]" data-node-id="82:15742" data-name="积分和发送按钮">
+        <div className="absolute inset-[77.22%_1.53%_8.44%_84.58%]" data-node-id="21:104358" data-name="Union">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgUnion} />
+        </div>
+        <p className="[word-break:break-word] absolute font-['Inter:Bold_Italic'] font-bold inset-[81.43%_6.61%_12.24%_88.14%] italic leading-[normal] text-[#d3d3d3] text-[12px] text-center whitespace-nowrap" data-node-id="21:111784">
+          1000
+        </p>
+        <div className="absolute aspect-[42/42] left-[85.93%] overflow-clip right-[12.2%] top-[195px]" data-node-id="21:104347" data-name="kk-studio 4">
+          <div className="absolute contents inset-0" data-node-id="21:104348" data-name="Clip path group">
+            <div className="absolute inset-[7.1%_9.16%_-32.5%_9.16%] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-1.008px_-0.781px] mask-size-[11px_11px]" data-node-id="21:104351" style={{ maskImage: `url("${imgGroup}")` }} data-name="Group">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup1} />
+            </div>
+          </div>
+        </div>
+        <div className="absolute inset-[80.59%_2.88%_11.81%_94.07%]" data-node-id="94:16103">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup60} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function Component5({ className }: { className?: string }) {
+  return (
+    <div className={className || "h-[705px] relative w-[590px]"} data-node-id="312:3183" data-name="完整的展示卡片节点">
+      <div className="absolute contents inset-[0_7.8%_35.04%_16.27%]" data-node-id="82:15751" data-name="创建卡片">
+        <div className="absolute contents inset-[0_38.47%_94.33%_38.81%]" data-node-id="16:74650" data-name="上传按钮">
+          <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid inset-[0_38.47%_94.33%_38.81%] rounded-[30px]" data-node-id="16:74641" />
+          <div className="absolute inset-[1.56%_54.75%_95.89%_42.2%]" data-node-id="16:74643" data-name="icon-upload">
+            <div className="absolute inset-[-4.86%]">
+              <img alt="" className="block max-w-none size-full" src={imgIconUpload} />
+            </div>
+          </div>
+          <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[1.56%_42.2%_95.74%_46.95%] leading-[normal] not-italic text-[16px] text-white whitespace-nowrap" data-node-id="16:74648">
+            上传图片
+          </p>
+        </div>
+        <div className="absolute contents inset-[6.24%_76.95%_91.91%_16.61%]" data-node-id="82:15745" data-name="角标">
+          <div className="absolute inset-[6.38%_81.02%_91.91%_16.61%]" data-node-id="23:127608">
+            <div className="absolute inset-[-2.08%_-1.79%]">
+              <img alt="" className="block max-w-none size-full" src={imgGroup4} />
+            </div>
+          </div>
+          <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[6.24%_76.95%_92.06%_19.66%] leading-[normal] not-italic text-[10px] text-white whitespace-nowrap" data-node-id="23:127607">
+            图片
+          </p>
+        </div>
+        <div className="absolute inset-[35.32%_7.8%_62.13%_89.15%]" data-node-id="19:74687" data-name="添加节点链接标志">
+          <div className="absolute inset-[-4.86%]">
+            <img alt="" className="block max-w-none size-full" src={img2} />
+          </div>
+        </div>
+        <div className="absolute contents inset-[8.23%_15.93%_35.04%_16.27%]" data-node-id="82:15746" data-name="占位卡">
+          <div className="absolute aspect-[441/441] bg-[#1a1a1a] border border-[#e0e0e0] border-solid left-[16.27%] right-[15.93%] rounded-[30px] top-[58px]" data-node-id="16:60004" />
+          <div className="absolute inset-[28.94%_40.68%_55.74%_41.02%]" data-node-id="23:127760">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup7} />
+          </div>
+        </div>
+      </div>
+      <Component4 className="absolute inset-[66.38%_0_0_0]" />
+      <Component2 className="absolute inset-[56.88%_59.66%_8.09%_1.86%]" />
+      <Component1 className="absolute inset-[59.43%_24.41%_8.09%_25.25%]" />
+      <Component className="absolute inset-[85.25%_10.17%_8.09%_70.17%]" />
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

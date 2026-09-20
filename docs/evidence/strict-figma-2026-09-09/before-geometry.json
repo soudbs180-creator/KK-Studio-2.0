@@ -1,0 +1,17 @@
+{
+  "capturedAt": "2026-09-09",
+  "url": "http://127.0.0.1:1422/?cacheBust",
+  "server": "D:/kk-studio-next/node_modules/vite/bin/vite.js --host 127.0.0.1 --port 1422",
+  "viewport": {
+    "1920x1080": {
+      "landing": {"sidebar":{"x":0,"y":40,"w":287,"h":1040},"primaryNav":{"x":12,"y":120,"w":263,"h":204},"account":{"x":12,"y":1015,"w":259,"h":41}},
+      "canvas": {"sidebar":{"x":0,"y":40,"w":287,"h":1040},"workspace":{"x":287,"y":40,"w":1633,"h":1040},"canvas":{"x":287,"y":45,"w":1622,"h":1025},"hud":{"x":310,"y":82,"w":1071,"h":30},"taskButton":{"x":310,"y":82,"w":103,"h":30},"topRight":{"x":1146,"y":84,"w":235,"h":26},"toolbar":{"x":697.5,"y":998,"w":294,"h":50},"conversation":{"x":1418,"y":63,"w":470,"h":985}}
+    },
+    "1115x698": {
+      "landing": {"sidebar":{"x":0,"y":40,"w":235,"h":658},"primaryNav":{"x":12,"y":120,"w":211,"h":204},"account":{"x":12,"y":633,"w":207,"h":41}},
+      "canvas": {"sidebar":{"x":0,"y":40,"w":235,"h":658},"workspace":{"x":235,"y":40,"w":880,"h":658},"canvas":{"x":235,"y":45,"w":869,"h":643},"hud":{"x":258,"y":82,"w":825,"h":30},"taskButton":{"x":258,"y":82,"w":103,"h":30},"topRight":{"x":810,"y":84,"w":235,"h":26},"toolbar":{"x":522.5,"y":616,"w":294,"h":50},"conversation":{"display":"none"}}
+    }
+  },
+  "routeCheck": {"from":"projects","click":"button[aria-label=开始创作]","result":{"active":"projects","dialogCount":1,"current":"项目库","modal":"landing"},"cause":"App.open allowed view list omits landing"},
+  "iconRects1920": {"navAdd":{"x":21,"y":133,"w":22,"h":22},"archive":{"x":21,"y":186.5,"w":21,"h":19},"skill":{"x":21,"y":238,"w":20,"h":20},"workflow":{"x":21,"y":291,"w":18,"h":18},"projectPin":{"x":235,"y":434,"w":6,"h":11},"projectMore":{"x":255.39,"y":438.36,"w":11.22,"h":2.27}}
+}

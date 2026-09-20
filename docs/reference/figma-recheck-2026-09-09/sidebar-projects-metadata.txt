@@ -1,0 +1,67 @@
+<frame id="82:15735" name="项目展示区" x="12" y="402" width="263" height="258">
+  <frame id="82:15731" name="Group 29" x="14" y="402" width="252" height="17">
+    <text id="17:74651" name="开始创作" x="14" y="402" width="28" height="17" />
+    <vector id="17:74653" name="路径 287" x="46" y="409" width="8" height="4" />
+    <frame id="338:1000" name="icon-ellipsis" x="237.27734375" y="406" width="1.2773729261261906" height="10.219022806690191" />
+    <frame id="338:1005" name="icon-plus" x="256" y="406" width="10" height="10" />
+  </frame>
+  <frame id="82:15733" name="Group 31" x="14" y="540" width="55" height="17">
+    <text id="17:74664" name="开始创作" x="14" y="540" width="42" height="17" />
+    <vector id="17:74665" name="路径 288" x="61" y="547" width="8" height="4" />
+  </frame>
+  <frame id="82:15732" name="Group 30" x="12" y="425" width="263" height="235">
+    <frame id="133:17948" name="Frame 11" x="12" y="563" width="263" height="97">
+      <frame id="107:17078" name="Group 86" x="0" y="0" width="263" height="29">
+        <rounded-rectangle id="17:74666" name="鼠标悬浮高亮4" x="0" y="0" width="263" height="29" />
+        <rounded-rectangle id="338:984" name="鼠标悬浮高亮4" x="0" y="0" width="263" height="29" />
+        <text id="17:74667" name="开始创作" x="32" y="9" width="44" height="12" />
+        <vector id="17:74668" name="Rectangle 24" x="2" y="2" width="25" height="25" />
+        <vector id="19:82122" name="Rectangle 29" x="239" y="5" width="19" height="19" />
+        <vector id="107:17104" name="Rectangle 30" x="216" y="5" width="19" height="19" />
+        <frame id="19:82113" name="layer-icon" x="223" y="10" width="5" height="10" />
+        <frame id="107:17110" name="icon-ellipsis" x="249.27734375" y="10" width="1.277372568498322" height="10.219022806690191" />
+      </frame>
+      <frame id="107:17079" name="Group 87" x="0" y="34" width="263" height="29">
+        <rounded-rectangle id="107:17080" name="鼠标悬浮高亮4" x="0" y="34" width="263" height="29" />
+        <text id="107:17081" name="开始创作" x="32" y="43" width="44" height="12" />
+        <vector id="107:17082" name="Rectangle 24" x="2" y="36" width="25" height="25" />
+        <vector id="107:17083" name="Rectangle 29" x="239" y="39" width="19" height="19" hidden="true" />
+        <vector id="107:17106" name="Rectangle 30" x="216" y="39" width="19" height="19" hidden="true" />
+        <frame id="107:17085" name="layer-icon" x="223" y="44" width="5" height="10" />
+        <frame id="107:17115" name="icon-ellipsis" x="249.27734375" y="44" width="1.277372568498322" height="10.219022806690191" />
+      </frame>
+      <frame id="107:17090" name="Group 88" x="0" y="68" width="263" height="29">
+        <rounded-rectangle id="107:17091" name="鼠标悬浮高亮4" x="0" y="68" width="263" height="29" />
+        <text id="107:17092" name="开始创作" x="32" y="77" width="44" height="12" />
+        <vector id="107:17093" name="Rectangle 24" x="2" y="70" width="25" height="25" />
+        <vector id="107:17094" name="Rectangle 29" x="239" y="73" width="19" height="19" hidden="true" />
+        <vector id="107:17108" name="Rectangle 30" x="216" y="73" width="19" height="19" hidden="true" />
+        <frame id="107:17096" name="layer-icon" x="223" y="78" width="5" height="10" />
+        <frame id="107:17119" name="icon-ellipsis" x="249.27734375" y="78" width="1.277372568498322" height="10.219022806690191" />
+      </frame>
+    </frame>
+    <frame id="133:17980" name="Frame 12" x="12" y="425" width="263" height="63">
+      <frame id="133:17949" name="项目菜单" x="0" y="0" width="263" height="29">
+        <rounded-rectangle id="17:74655" name="鼠标悬浮高亮4" x="0" y="0" width="263" height="29" />
+        <vector id="17:74670" name="Rectangle 25" x="2" y="2" width="25" height="25" />
+        <vector id="19:89487" name="Rectangle 30" x="239" y="5" width="19" height="19" hidden="true" />
+        <text id="17:74656" name="开始创作" x="32" y="8" width="44" height="12" />
+        <frame id="17:74661" name="icon-folder-open" x="9" y="9" width="12" height="10.40000057220459" />
+        <frame id="17:74657" name="icon-redo2" x="252" y="18" width="8" height="8.000000349691163" />
+        <vector id="19:96854" name="Rectangle 31" x="216" y="5" width="19" height="19" hidden="true" />
+        <frame id="19:96855" name="Group 3" x="222" y="11" width="7" height="7" />
+      </frame>
+      <frame id="338:986" name="Group 89" x="27" y="34" width="236" height="29">
+        <rounded-rectangle id="338:988" name="鼠标悬浮高亮4" x="27" y="34" width="236" height="29" />
+        <text id="338:989" name="开始创作" x="59" y="43" width="44" height="12" />
+        <vector id="338:990" name="Rectangle 24" x="29" y="36" width="25" height="25" />
+        <vector id="338:991" name="Rectangle 29" x="239" y="39" width="19" height="19" />
+        <vector id="338:992" name="Rectangle 30" x="216" y="39" width="19" height="19" />
+        <frame id="338:993" name="layer-icon" x="223" y="44" width="5" height="10" />
+        <frame id="338:995" name="icon-ellipsis" x="249.27734375" y="44" width="1.277372568498322" height="10.219022806690191" />
+      </frame>
+    </frame>
+  </frame>
+</frame>
+
+IMPORTANT: After you call this tool, you MUST call get_design_context if trying to implement the design, since this tool only returns metadata. If you do not call get_design_context, the agent will not be able to implement the design.

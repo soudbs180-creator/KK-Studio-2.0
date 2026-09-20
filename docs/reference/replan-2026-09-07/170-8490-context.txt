@@ -1,0 +1,171 @@
+const imgRectangle28 = "https://www.figma.com/api/mcp/asset/bb5fdb9c-d8d6-4431-8687-e76b8d933d69.png";
+const imgGroup9 = "https://www.figma.com/api/mcp/asset/9130bfd0-39b4-416a-a9b9-e94a458e83ac.svg";
+const imgGroup5 = "https://www.figma.com/api/mcp/asset/dae3e7df-e5dd-4a1a-9c2f-5d8df7f3fbbb.svg";
+const img = "https://www.figma.com/api/mcp/asset/d67ee07e-d578-4b4d-8224-ecf62580d573.svg";
+const img1 = "https://www.figma.com/api/mcp/asset/06e38003-987c-4394-8af4-4e8eaa4cfdf2.svg";
+const imgGroup = "https://www.figma.com/api/mcp/asset/e4f3a0df-edbb-447c-8033-80877cd00c01.svg";
+const imgGroup1 = "https://www.figma.com/api/mcp/asset/85dd21fb-a848-4e74-9521-2a72fa9f5ae4.svg";
+const imgLine5 = "https://www.figma.com/api/mcp/asset/8b678ece-47ec-45d7-92af-a9e21317c95e.svg";
+const imgEllipse1 = "https://www.figma.com/api/mcp/asset/6dd21bce-796d-4cd9-843a-dd3f161c5946.svg";
+const imgGroup2 = "https://www.figma.com/api/mcp/asset/b8d510c8-750e-4a0b-938c-8c2656f63cb0.svg";
+const imgGroup3 = "https://www.figma.com/api/mcp/asset/ee151344-1df8-46ef-b70e-f6c30ce921f6.svg";
+const imgIconMic = "https://www.figma.com/api/mcp/asset/ffe737fb-5590-447d-914d-03e5e3a43ad3.svg";
+const imgIconX = "https://www.figma.com/api/mcp/asset/63909cbd-b4c5-4e96-abd9-76f128e2fbda.svg";
+const imgUnion = "https://www.figma.com/api/mcp/asset/2e1f48c5-aaf7-40b0-9209-4b11c6aee2b3.svg";
+const imgGroup4 = "https://www.figma.com/api/mcp/asset/2458ece7-efba-4d17-8685-77dc20934cc4.svg";
+const imgGroup6 = "https://www.figma.com/api/mcp/asset/5fd6d08a-207c-430f-8a41-6efb441aaf82.svg";
+const imgGroup60 = "https://www.figma.com/api/mcp/asset/3b682d2b-22c1-4166-9e14-41c7f5f4dd20.svg";
+
+export default function Component() {
+  return (
+    <div className="contents relative size-full" data-node-id="170:8490" data-name="视频模块">
+      <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid h-[208px] left-[786px] rounded-[30px] top-[490px] w-[370px]" data-node-id="170:8491" />
+      <div className="absolute inset-[52.41%_48.12%_42.41%_48.96%]" data-node-id="170:8492">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup9} />
+      </div>
+      <div className="absolute contents left-[784px] top-[474px]" data-node-id="170:8497">
+        <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal leading-[normal] left-[803px] not-italic text-[10px] text-white top-[474px] whitespace-nowrap" data-node-id="170:8498">
+          视频
+        </p>
+        <div className="absolute inset-[43.98%_58.39%_55%_40.83%]" data-node-id="170:8499">
+          <div className="absolute inset-[-2.27%_-1.67%]">
+            <img alt="" className="block max-w-none size-full" src={imgGroup5} />
+          </div>
+        </div>
+      </div>
+      <div className="absolute contents left-[676px] top-[708px]" data-node-id="170:8515" data-name="输入框创作">
+        <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid h-[237px] left-[676px] rounded-[30px] top-[708px] w-[590px]" data-node-id="170:8516" />
+        <div className="absolute contents left-[699px] top-[728px]" data-node-id="170:8517" data-name="上传">
+          <div className="absolute border border-[#3c3c3c] border-solid left-[699px] rounded-[8px] size-[41px] top-[728px]" data-node-id="170:8520">
+            <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[8px] size-full" src={imgRectangle28} />
+          </div>
+        </div>
+        <div className="absolute left-[746px] size-[41px] top-[728px]" data-node-id="253:558" data-name="上传">
+          <div className="absolute inset-[-2.13%]">
+            <img alt="" className="block max-w-none size-full" src={img} />
+          </div>
+        </div>
+        <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal h-[70px] leading-[normal] left-[699px] not-italic text-[#d3d3d3] text-[10px] top-[783px] w-[542px]" data-node-id="170:8521">
+          动态高速平行跟随镜头。 非洲大草原上，一只猎豹正在全力冲刺。它的脊椎呈现极其流畅的拉伸与收缩，肌肉线条在皮毛下清晰可见，强有力的四肢扬起地上的尘土。强烈的日光，极高的生物运动连贯性和肌肉张力，背景由于高速移动产生自然的动态模糊
+        </p>
+        <div className="absolute inset-[67.69%_35.47%_30.65%_63.59%]" data-node-id="170:8522" data-name="展开">
+          <div className="absolute inset-[-4.86%]">
+            <img alt="" className="block max-w-none size-full" src={img1} />
+          </div>
+        </div>
+        <div className="absolute contents left-[687px] top-[891px]" data-node-id="170:8527">
+          <div className="absolute h-[34px] left-[687px] rounded-[10px] top-[891px] w-[129px]" data-node-id="170:8528" data-name="鼠标悬浮高亮4" />
+          <p className="[word-break:break-word] absolute font-['Inter:Bold'] font-bold inset-[83.43%_58.7%_15.19%_37.66%] leading-[normal] not-italic text-[#d3d3d3] text-[12px] whitespace-nowrap" data-node-id="170:8529">
+            MiniMax H3
+          </p>
+          <div className="absolute left-[697px] overflow-clip size-[20px] top-[898px]" data-node-id="170:8530" data-name="kk-studio 3">
+            <div className="absolute contents inset-0" data-node-id="170:8531" data-name="Clip path group">
+              <div className="absolute inset-[0_0_-32.5%_0] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[20px_20px]" data-node-id="170:8534" style={{ maskImage: `url("${imgGroup}")` }} data-name="Group">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup1} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="absolute flex h-[16px] items-center justify-center left-[820px] top-[900px] w-0" data-node-id="170:8539">
+          <div className="flex-none rotate-90">
+            <div className="h-0 relative w-[16px]">
+              <div className="absolute inset-[-1px_0_0_0]">
+                <img alt="" className="block max-w-none size-full" src={imgLine5} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="absolute flex h-[16px] items-center justify-center left-[1126px] top-[900px] w-0" data-node-id="170:8540">
+          <div className="flex-none rotate-90">
+            <div className="h-0 relative w-[16px]">
+              <div className="absolute inset-[-1px_0_0_0]">
+                <img alt="" className="block max-w-none size-full" src={imgLine5} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="absolute contents left-[825px] top-[891px]" data-node-id="170:8541">
+          <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid h-[34px] left-[825px] rounded-[10px] top-[891px] w-[176px]" data-node-id="170:8542" data-name="鼠标悬浮高亮4" />
+          <div className="absolute content-stretch flex gap-[4px] items-center left-[838px] top-[902px]" data-node-id="253:562">
+            <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#d3d3d3] text-[11px] whitespace-nowrap" data-node-id="170:8543">
+              全能参考
+            </p>
+            <div className="relative shrink-0 size-[2px]" data-node-id="170:8547">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse1} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#d3d3d3] text-[11px] whitespace-nowrap" data-node-id="170:8544">
+              自适应
+            </p>
+            <div className="relative shrink-0 size-[2px]" data-node-id="170:8548">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse1} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#d3d3d3] text-[11px] whitespace-nowrap" data-node-id="170:8545">
+              2K
+            </p>
+            <div className="relative shrink-0 size-[2px]" data-node-id="253:563">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse1} />
+            </div>
+            <div className="overflow-clip relative shrink-0 size-[12px]" data-node-id="261:514" data-name="iconsax-timer-start">
+              <div className="absolute contents inset-0" data-node-id="261:522" data-name="Clip path group">
+                <div className="absolute inset-[8.33%_10.42%_8.33%_16.67%] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-2px_-1px] mask-size-[12px_12px]" data-node-id="261:515" style={{ maskImage: `url("${imgGroup2}")` }} data-name="Group">
+                  <div className="absolute inset-[-5%_-5.71%]">
+                    <img alt="" className="block max-w-none size-full" src={imgGroup3} />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#d3d3d3] text-[11px] whitespace-nowrap" data-node-id="261:512">
+              7S
+            </p>
+          </div>
+        </div>
+        <button className="absolute block cursor-pointer h-[34px] left-[1090px] top-[891px] w-[32px]" data-node-id="170:8549" data-name="声音">
+          <div className="absolute inset-0 rounded-[10px]" data-node-id="I170:8549;143:27086" data-name="鼠标悬浮高亮4" />
+          <div className="absolute inset-[29.41%_32.81%_26.47%_34.38%]" data-node-id="I170:8549;143:27087" data-name="icon-mic">
+            <div className="absolute inset-[-3.33%_-4.76%]">
+              <img alt="" className="block max-w-none size-full" src={imgIconMic} />
+            </div>
+          </div>
+        </button>
+        <div className="absolute contents left-[1131px] top-[891px]" data-node-id="170:8550">
+          <div className="absolute left-[1131px] rounded-[10px] size-[34px] top-[891px]" data-node-id="170:8551" data-name="鼠标悬浮高亮4" />
+          <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[83.43%_39.9%_15.37%_59.74%] leading-[normal] not-italic text-[#d3d3d3] text-[11px] whitespace-nowrap" data-node-id="170:8552">
+            8
+          </p>
+          <div className="absolute inset-[83.89%_40.31%_15.74%_59.48%]" data-node-id="170:8553" data-name="icon-x">
+            <div className="absolute inset-[-12.5%]">
+              <img alt="" className="block max-w-none size-full" src={imgIconX} />
+            </div>
+          </div>
+        </div>
+        <div className="absolute contents left-[1175px] top-[891px]" data-node-id="170:8556">
+          <div className="absolute h-[34px] left-[1175px] top-[891px] w-[82px]" data-node-id="170:8557" data-name="Union">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgUnion} />
+          </div>
+          <p className="[word-break:break-word] absolute font-['Inter:Bold_Italic'] font-bold inset-[83.43%_36.09%_15.19%_62.29%] italic leading-[normal] text-[#d3d3d3] text-[12px] text-center whitespace-nowrap" data-node-id="170:8559">
+            1000
+          </p>
+          <div className="absolute left-[1183px] overflow-clip size-[11px] top-[903px]" data-node-id="170:8560" data-name="kk-studio 4">
+            <div className="absolute contents inset-0" data-node-id="170:8561" data-name="Clip path group">
+              <div className="absolute inset-[7.1%_9.16%_-32.5%_9.16%] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-1.008px_-0.781px] mask-size-[11px_11px]" data-node-id="170:8564" style={{ maskImage: `url("${imgGroup4}")` }} data-name="Group">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup6} />
+              </div>
+            </div>
+          </div>
+          <div className="absolute left-[1231px] size-[18px] top-[899px]" data-node-id="170:8570">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup60} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

@@ -1,0 +1,13 @@
+[WebServer] (node:58712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:69916) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\browser\composer-fidelity.spec.ts:4:1 › 图片编辑器展开后仍在卡片下方，输入区不覆盖底部控件 (1.4s)
+  ok 2 tests\browser\composer-fidelity.spec.ts:17:1 › 菜单 Escape 先收起菜单，再次 Escape 收起编辑器并保留草稿 (1.5s)
+  ok 3 tests\browser\composer-fidelity.spec.ts:37:1 › 窄屏会话面板为画布工具栏留出空间，顶部和输入控件尺寸稳定 (1.5s)
+  ok 4 tests\browser\composer-fidelity.spec.ts:134:1 › 桌面会话入口使用关闭态图标并从右侧滑入，不挤动地图导航 (873ms)
+
+  4 passed (6.8s)

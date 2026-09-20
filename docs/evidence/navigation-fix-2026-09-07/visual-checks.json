@@ -1,0 +1,69 @@
+{
+  "navigation": {
+    "x": 1158,
+    "y": 84,
+    "width": 229,
+    "height": 26
+  },
+  "views": [
+    {
+      "width": 1920,
+      "height": 1080,
+      "countBox": {
+        "x": 1165,
+        "y": 472.5,
+        "width": 116,
+        "height": 47
+      },
+      "scroll": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "countBox": {
+        "x": 801,
+        "y": 472.5,
+        "width": 116,
+        "height": 47
+      },
+      "scroll": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "countBox": {
+        "x": 366.6474304199219,
+        "y": 380.6559143066406,
+        "width": 86.115234375,
+        "height": 34.89154052734375
+      },
+      "scroll": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "countBox": {
+        "x": 263.3220520019531,
+        "y": 282.1652526855469,
+        "width": 54.067779541015625,
+        "height": 21.906768798828125
+      },
+      "scroll": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "errors": [],
+  "recording": "navigation-and-editor.webm",
+  "motionSource": "Existing frontend 140/220ms supplements, not confirmed Figma timing."
+}

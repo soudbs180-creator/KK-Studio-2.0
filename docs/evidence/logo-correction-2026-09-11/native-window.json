@@ -1,0 +1,16 @@
+{
+  "window": {
+    "app": "process:D:\\kk-studio-next\\src-tauri\\target\\release\\kk-studio.exe",
+    "id": 4275462,
+    "title": "KK Studio"
+  },
+  "screenshot": {
+    "id": "screenshot-0",
+    "width": 1923,
+    "height": 1111,
+    "originX": 465,
+    "originY": 421,
+    "zIndex": 0
+  },
+  "runtime": "Tauri release src-tauri/target/release/kk-studio.exe"
+}

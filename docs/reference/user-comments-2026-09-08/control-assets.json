@@ -1,0 +1,62 @@
+[
+  {
+    "node": "143-26947",
+    "name": "tool-hand",
+    "url": "https://www.figma.com/api/mcp/asset/39b52182-dbd4-41ce-8e46-ecf0f0c23a5b.svg",
+    "sha": "9D75B06F980B5D7A4E94F0D76C491632480AB4CCA9F38EACE6C64C1E52EE6CE2"
+  },
+  {
+    "node": "143-26947",
+    "name": "tool-select",
+    "url": "https://www.figma.com/api/mcp/asset/279c1a67-e48a-4f91-bc7e-f6d7c59c727a.svg",
+    "sha": "038C6A837C5721CB37388E2C128677FF05E3457F3E8D6D7E5959643DF5E10AFB"
+  },
+  {
+    "node": "143-26947",
+    "name": "tool-check",
+    "url": "https://www.figma.com/api/mcp/asset/83d5ad4a-c642-40b9-b4f3-c00f2ef9ffe2.svg",
+    "sha": "525D2985F57160CFEFF3F68AA551CA37813A0D45CD056EB00FC82131870B3017"
+  },
+  {
+    "node": "143-27012",
+    "name": "help-next",
+    "url": "https://www.figma.com/api/mcp/asset/b448bb59-f972-4ac9-8cc9-130d75b9f924.svg",
+    "sha": "C149E779F39535F9C74913D5DDAF8846136402A5011F7F39F8D3BF3A33AD544C"
+  },
+  {
+    "node": "143-27012",
+    "name": "help-tutorial",
+    "url": "https://www.figma.com/api/mcp/asset/e3919e5c-96d6-44f1-b6fc-529659804622.svg",
+    "sha": "08D6337A3BEA75522E3CBB5788ABCDE74A987054FB56B946237B4482AD880567"
+  },
+  {
+    "node": "143-27012",
+    "name": "help-shortcuts",
+    "url": "https://www.figma.com/api/mcp/asset/c15d0752-56b5-4bb7-a218-7264502556d3.svg",
+    "sha": "3325F4285A157BC76F1710A6DE584D30D10B2C374564639E3089C1ADFD6CD145"
+  },
+  {
+    "node": "143-28073",
+    "name": "chat-open",
+    "url": "https://www.figma.com/api/mcp/asset/925dd70f-ab7d-422c-a8f0-67c4a7860a5a.svg",
+    "sha": "B2962D6088BF2DEC147120B2D1CA426C9F256026486FBED798F7D66A47DEC1AD"
+  },
+  {
+    "node": "170-8254",
+    "name": "chat-close",
+    "url": "https://www.figma.com/api/mcp/asset/3e085b29-5872-4f9a-9f41-8b21032fd8bd.svg",
+    "sha": "B2962D6088BF2DEC147120B2D1CA426C9F256026486FBED798F7D66A47DEC1AD"
+  },
+  {
+    "node": "253-511",
+    "name": "connection-port",
+    "url": "https://www.figma.com/api/mcp/asset/5ed07b25-a9d1-4813-abf7-e08127fe4929.svg",
+    "sha": "0BA43211CA9F9CF48E6C66F1F266414B8BBDFEB23F7F1AB7B2E44001C5C18EDA"
+  },
+  {
+    "node": "253-512",
+    "name": "connection-port-plus",
+    "url": "https://www.figma.com/api/mcp/asset/db288ac2-081a-44f7-b0bb-b61b0656ad2b.svg",
+    "sha": "5EE44EBB756304DC1411F240BCFA4261C0C1B039D9EF3AC23BBFB43FD1DF0CAD"
+  }
+]

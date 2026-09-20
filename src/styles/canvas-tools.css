@@ -1,0 +1,190 @@
+/* 143:26947 and 143:27012: source-size tool and help menus. */
+.canvas-tool-menu,
+.canvas-help-menu {
+  position: absolute;
+  bottom: 51px;
+  width: 90px;
+  height: 50px;
+  min-height: 50px;
+  padding: 6px;
+  display: grid;
+  gap: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+}
+.canvas-tool-menu {
+  left: 50px;
+}
+.canvas-help-menu {
+  right: 0;
+  width: 103px;
+}
+.canvas-tool-menu > button,
+.canvas-help-menu > button {
+  position: relative;
+  height: 18px;
+  width: 100%;
+  border-radius: 4px;
+  font-size: 8px;
+  font-weight: 500;
+  line-height: 14px;
+  color: var(--text-primary);
+}
+.canvas-tool-menu > button[aria-checked="true"],
+.canvas-tool-menu > button:hover,
+.canvas-help-menu > button:hover {
+  background: var(--ui-neutral-selected);
+}
+.canvas-tool-menu img,
+.canvas-help-menu img {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  left: 31px;
+  top: 4px;
+}
+.canvas-tool-menu .tool-menu-check {
+  width: 8px;
+  height: 6px;
+  left: 12px;
+  top: 6px;
+}
+.canvas-tool-menu button > span {
+  position: absolute;
+  right: 11px;
+}
+.canvas-help-menu img {
+  left: 13px;
+}
+.canvas-help-menu button > span {
+  position: absolute;
+  left: 26px;
+}
+.canvas-help-menu .help-menu-next {
+  left: auto;
+  right: 9px;
+  width: 4px;
+  height: 8px;
+  top: 5px;
+}
+.tool-hand-current {
+  width: 18px;
+  height: 18px;
+  background: var(--ui-tool-active);
+  mask: url("/design/figma/tool-hand.svg") center / contain no-repeat;
+}
+.toolbar-divider {
+  position: relative;
+  width: 0;
+  height: 20px;
+  flex: 0 0 0;
+  background: transparent;
+}
+.toolbar-divider::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 2px;
+  height: 18px;
+  border-radius: 2px;
+  background: var(--border-default);
+}
+.toolbar-divider img {
+  display: none;
+}
+.canvas-hud .chat-reopen {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+/* Figma toolbar/Default (4:52098): preserve the 294x50 source geometry.
+   This component stylesheet intentionally owns the final overrides so shared
+   workspace layout rules cannot introduce a one-pixel drift or reorder gap. */
+.canvas-toolbar {
+  padding: 4px !important;
+}
+.canvas-toolbar > .toolbar-current-tool + .toolbar-toggle {
+  margin-left: 0 !important;
+}
+.canvas-toolbar .toolbar-divider {
+  position: relative;
+  width: 0 !important;
+  height: 20px !important;
+  flex: 0 0 0 !important;
+  align-self: center;
+  background: transparent !important;
+}
+.canvas-toolbar .toolbar-divider::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 2px;
+  height: 18px;
+  border-radius: 2px;
+  background: var(--border-default);
+}
+@media (min-width: 1201px) {
+  .canvas-hud .chat-reopen.only-narrow {
+    display: none;
+  }
+}
+.canvas-marquee {
+  position: absolute;
+  pointer-events: none;
+  border: 1px solid var(--ui-selected);
+  background: color-mix(in srgb, var(--ui-selected) 12%, transparent);
+  z-index: 4;
+}
+.infinite-canvas[data-tool="select"] {
+  cursor: default;
+}
+.infinite-canvas[data-tool="hand"],
+.infinite-canvas[data-space-pan="true"] {
+  cursor: grab;
+}
+.infinite-canvas[data-tool="hand"] .canvas-node,
+.infinite-canvas[data-space-pan="true"] .canvas-node {
+  cursor: inherit;
+}
+.infinite-canvas.is-panning,
+.infinite-canvas.is-panning .canvas-node {
+  cursor: grabbing;
+}
+/* Preserve source visuals for a mouse; touch menus need larger distinct targets. */
+@media (pointer: coarse) {
+  .canvas-tool-menu,
+  .canvas-help-menu {
+    width: 140px;
+    height: auto;
+    padding: 6px;
+    gap: 4px;
+  }
+  .canvas-tool-menu > button,
+  .canvas-help-menu > button {
+    height: 44px;
+    line-height: 44px;
+    font-size: 13px;
+  }
+  .canvas-tool-menu img,
+  .canvas-help-menu img {
+    top: 15px;
+    width: 14px;
+    height: 14px;
+  }
+  .canvas-tool-menu .tool-menu-check {
+    top: 20px;
+  }
+  .canvas-help-menu button > span {
+    left: 26px;
+  }
+  .canvas-help-menu .help-menu-next {
+    top: 19px;
+  }
+}

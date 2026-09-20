@@ -1,0 +1,7 @@
+<frame id="71:15673" name="打开个人信息设置按钮" x="12" y="1015" width="259" height="41">
+  <rounded-rectangle id="21:119311" name="鼠标悬浮高亮4" x="12" y="1015" width="259" height="41" />
+  <text id="16:74593" name="开始创作" x="61" y="1028" width="41" height="15" />
+  <frame id="16:67289" name="kk-studio 2" x="27" y="1022" width="26" height="26" />
+</frame>
+
+IMPORTANT: After you call this tool, you MUST call get_design_context if trying to implement the design, since this tool only returns metadata. If you do not call get_design_context, the agent will not be able to implement the design.

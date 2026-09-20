@@ -1,0 +1,172 @@
+{
+  "capturedAt": "2026-09-07T06:07:41.777Z",
+  "sourceNode": "100:16335",
+  "sourceRead": "2026-09-07 cached design; current get_design_context returned reauthentication error",
+  "state": "1920x1080, 200%, zoom menu open, connections visible, pointer away from menu",
+  "geometry": {
+    "navigation": {
+      "x": 1158,
+      "y": 84,
+      "width": 229,
+      "height": 26
+    },
+    "zoom": {
+      "x": 1158,
+      "y": 84,
+      "width": 63,
+      "height": 26
+    },
+    "tools": {
+      "x": 1223,
+      "y": 84,
+      "width": 164,
+      "height": 26
+    },
+    "menu": {
+      "x": 1158,
+      "y": 112,
+      "width": 97,
+      "height": 140
+    },
+    "chat": {
+      "x": 1412,
+      "y": 63,
+      "width": 476,
+      "height": 985
+    }
+  },
+  "source": {
+    "navigation": {
+      "x": 1158,
+      "y": 84,
+      "width": 229,
+      "height": 26
+    },
+    "zoom": {
+      "x": 1158,
+      "y": 84,
+      "width": 63,
+      "height": 26
+    },
+    "tools": {
+      "x": 1223,
+      "y": 84,
+      "width": 164,
+      "height": 26
+    },
+    "menu": {
+      "x": 1158,
+      "y": 112,
+      "width": 97,
+      "height": 140
+    }
+  },
+  "deltas": {
+    "navigation": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "zoom": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "tools": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "menu": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    }
+  },
+  "chatGap": 25,
+  "style": {
+    "background": "rgb(26, 26, 26)",
+    "border": "rgb(60, 60, 60)",
+    "radius": "13px",
+    "rows": [
+      {
+        "text": "缩小Ctrl−",
+        "x": 1165,
+        "y": 119,
+        "height": 15,
+        "color": "rgb(218, 218, 218)",
+        "font": "6px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "text": "放大Ctrl+",
+        "x": 1165,
+        "y": 134,
+        "height": 15,
+        "color": "rgb(218, 218, 218)",
+        "font": "6px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "text": "适应视图Shift1",
+        "x": 1165,
+        "y": 152,
+        "height": 15,
+        "color": "rgb(218, 218, 218)",
+        "font": "6px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "text": "50%",
+        "x": 1165,
+        "y": 170,
+        "height": 15,
+        "color": "rgb(218, 218, 218)",
+        "font": "6px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "text": "100%",
+        "x": 1165,
+        "y": 185,
+        "height": 15,
+        "color": "rgb(218, 218, 218)",
+        "font": "6px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "text": "200%",
+        "x": 1165,
+        "y": 200,
+        "height": 15,
+        "color": "rgb(218, 218, 218)",
+        "font": "6px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+        "background": "rgb(31, 31, 31)"
+      },
+      {
+        "text": "300%",
+        "x": 1165,
+        "y": 215,
+        "height": 15,
+        "color": "rgb(218, 218, 218)",
+        "font": "6px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      {
+        "text": "400%",
+        "x": 1165,
+        "y": 230,
+        "height": 15,
+        "color": "rgb(218, 218, 218)",
+        "font": "6px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    ]
+  },
+  "errors": [],
+  "status": "Geometry checked; visual differences documented separately."
+}

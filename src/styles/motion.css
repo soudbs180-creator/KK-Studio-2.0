@@ -1,0 +1,108 @@
+/* Supplemental frontend motion. Source prototype reactions are recorded separately in docs/reference/user-comments-2026-09-08/. */
+:root {
+  --motion-fast: 140ms;
+  --motion-panel: 220ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Figma toolbar hover reactions: SMART_ANIMATE, 300ms, EASE_IN_AND_OUT_BACK. */
+  --motion-toolbar: 300ms;
+  --motion-toolbar-ease: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --bg-hover: var(--bg-card-hover);
+  --border-hover: var(--text-tertiary);
+}
+@keyframes surface-enter {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes backdrop-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes conversation-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.modal[open],
+.creation-composer,
+.account-popup,
+.menu-popover,
+.toolbar-options,
+.node-popover,
+.task-panel,
+.canvas-minimap,
+.collection-page,
+.search-page,
+.library-page,
+.message-bubble,
+.generation-feedback {
+  animation: surface-enter var(--motion-panel) var(--motion-ease) both;
+}
+.modal::backdrop {
+  animation: backdrop-enter var(--motion-panel) ease-out both;
+}
+.workspace-content .conversation-panel {
+  animation: conversation-panel-enter var(--motion-panel) var(--motion-ease)
+    both;
+}
+button,
+.image-preview,
+.video-placeholder,
+.asset-card {
+  transition:
+    background-color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease;
+}
+.group-heading svg {
+  transition: rotate var(--motion-fast) ease;
+}
+.group-heading[aria-expanded="false"] svg {
+  rotate: -90deg;
+}
+.canvas-toolbar > .toolbar-add,
+.canvas-toolbar > .toolbar-current-tool,
+.canvas-toolbar > .toolbar-favorite {
+  transition:
+    background-color var(--motion-toolbar) var(--motion-toolbar-ease),
+    border-color var(--motion-toolbar) var(--motion-toolbar-ease),
+    color var(--motion-toolbar) var(--motion-toolbar-ease),
+    filter var(--motion-toolbar) var(--motion-toolbar-ease),
+    box-shadow var(--motion-toolbar) var(--motion-toolbar-ease);
+}
+.creation-composer {
+  transition: height var(--motion-panel) var(--motion-ease);
+}
+.creation-composer textarea {
+  transition: height var(--motion-panel) var(--motion-ease);
+}
+.canvas-node.is-dragging,
+.is-panning .canvas-stage {
+  animation: none;
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after,
+  ::backdrop {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

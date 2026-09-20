@@ -1,0 +1,319 @@
+{
+  "authority": {
+    "file": "0nU0A7pq6eyjwfwm1TtWkO",
+    "workspace": "404:28667",
+    "collapsed": "410:67357",
+    "reopen": [1859, 79, 18, 18],
+    "navigation": [1562, 72, 281, 31.109]
+  },
+  "closed": {
+    "state": "chat-closed",
+    "scroll": {
+      "left": 0,
+      "top": 0
+    },
+    "elements": {
+      "workspace": {
+        "rect": {
+          "x": 291,
+          "y": 45,
+          "width": 1619,
+          "height": 1025
+        },
+        "display": "flex",
+        "transform": "none",
+        "animation": "none"
+      },
+      "canvas": {
+        "rect": {
+          "x": 291,
+          "y": 45,
+          "width": 1619,
+          "height": 1025
+        },
+        "display": "block",
+        "transform": "none",
+        "animation": "none"
+      },
+      "navigation": {
+        "rect": {
+          "x": 1562.015625,
+          "y": 72,
+          "width": 280.984375,
+          "height": 31.09375
+        },
+        "display": "flex",
+        "transform": "none",
+        "animation": "none"
+      },
+      "map": {
+        "rect": {
+          "x": 1768.625,
+          "y": 77.78125,
+          "width": 65.796875,
+          "height": 21.53125
+        },
+        "display": "flex",
+        "transform": "none",
+        "animation": "none"
+      },
+      "reopen": {
+        "rect": {
+          "x": 1859,
+          "y": 79,
+          "width": 18,
+          "height": 18
+        },
+        "display": "grid",
+        "transform": "none",
+        "animation": "none"
+      },
+      "reopenIcon": {
+        "x": 1857.25,
+        "y": 77.25,
+        "width": 21.5,
+        "height": 21.5
+      },
+      "toolbar": {
+        "rect": {
+          "x": 719,
+          "y": 998,
+          "width": 294,
+          "height": 50
+        },
+        "display": "flex",
+        "transform": "matrix(1, 0, 0, 1, -147, 0)",
+        "animation": "none"
+      },
+      "panel": {
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "display": "flex",
+        "transform": "none",
+        "animation": "conversation-panel-enter"
+      },
+      "chatContainer": {
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "display": "none",
+        "transform": "none",
+        "animation": "none"
+      }
+    },
+    "reopenSrc": "/design/figma/chat-close.svg"
+  },
+  "opened": {
+    "state": "chat-open",
+    "scroll": {
+      "left": 0,
+      "top": 0
+    },
+    "elements": {
+      "workspace": {
+        "rect": {
+          "x": 291,
+          "y": 45,
+          "width": 1619,
+          "height": 1025
+        },
+        "display": "flex",
+        "transform": "none",
+        "animation": "none"
+      },
+      "canvas": {
+        "rect": {
+          "x": 291,
+          "y": 45,
+          "width": 1619,
+          "height": 1025
+        },
+        "display": "block",
+        "transform": "none",
+        "animation": "none"
+      },
+      "navigation": {
+        "rect": {
+          "x": 1138.015625,
+          "y": 72,
+          "width": 280.984375,
+          "height": 31.09375
+        },
+        "display": "flex",
+        "transform": "none",
+        "animation": "none"
+      },
+      "map": {
+        "rect": {
+          "x": 1344.625,
+          "y": 77.78125,
+          "width": 65.796875,
+          "height": 21.53125
+        },
+        "display": "flex",
+        "transform": "none",
+        "animation": "none"
+      },
+      "reopen": {
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "display": "none",
+        "transform": "none",
+        "animation": "none"
+      },
+      "reopenIcon": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "toolbar": {
+        "rect": {
+          "x": 719,
+          "y": 998,
+          "width": 294,
+          "height": 50
+        },
+        "display": "flex",
+        "transform": "matrix(1, 0, 0, 1, -147, 0)",
+        "animation": "none"
+      },
+      "panel": {
+        "rect": {
+          "x": 1430,
+          "y": 61,
+          "width": 470,
+          "height": 998
+        },
+        "display": "flex",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "animation": "conversation-panel-enter"
+      },
+      "chatContainer": {
+        "rect": {
+          "x": 292,
+          "y": 46,
+          "width": 1617,
+          "height": 1023
+        },
+        "display": "block",
+        "transform": "none",
+        "animation": "none"
+      }
+    },
+    "reopenSrc": "/design/figma/chat-close.svg"
+  },
+  "motionSamples": [
+    {
+      "x": 1900,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1751.5128173828125,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1637.7034912109375,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1558.280517578125,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1507.337646484375,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1475.4114990234375,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1455.9774169921875,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1444.1824951171875,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1437.2506103515625,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1433.3486328125,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1431.3187255859375,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1430.3826904296875,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1430.0557861328125,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1430.000244140625,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1430,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1430,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1430,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1430,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1430,
+      "y": 61,
+      "toolbarX": 719
+    },
+    {
+      "x": 1430,
+      "y": 61,
+      "toolbarX": 719
+    }
+  ]
+}

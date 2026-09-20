@@ -1,0 +1,615 @@
+{
+  "config": {
+    "argv": [
+      "D:\\tools\\node-v24.20.0-win-x64\\node.exe",
+      "D:\\kk-studio-next\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--grep",
+      "窄屏会话|加号区域|本地导入成功|无限画布隐藏|对话空态|收起侧栏沿|四视口保留|侧栏快速",
+      "--retries=0",
+      "--workers=4",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\kk-studio-next\\playwright.config.ts",
+    "rootDir": "D:/kk-studio-next/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 4
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/kk-studio-next/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/kk-studio-next/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 4,
+    "webServer": {
+      "command": "node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 1423 --strictPort",
+      "url": "http://127.0.0.1:1423",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "composer-fidelity.spec.ts",
+      "file": "composer-fidelity.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "窄屏会话面板为画布工具栏留出空间，顶部和输入控件尺寸稳定",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1398,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeCloseTo\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m, \u001b[22mprecision\u001b[2m)\u001b[22m\n\nExpected: \u001b[32m1037\u001b[39m\nReceived: \u001b[31m1020\u001b[39m\n\nExpected precision:    1\nExpected difference: < \u001b[32m0.05\u001b[39m\nReceived difference:   \u001b[31m17\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeCloseTo\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m, \u001b[22mprecision\u001b[2m)\u001b[22m\n\nExpected: \u001b[32m1037\u001b[39m\nReceived: \u001b[31m1020\u001b[39m\n\nExpected precision:    1\nExpected difference: < \u001b[32m0.05\u001b[39m\nReceived difference:   \u001b[31m17\u001b[39m\n    at D:\\kk-studio-next\\tests\\browser\\composer-fidelity.spec.ts:78:41",
+                    "location": {
+                      "file": "D:\\kk-studio-next\\tests\\browser\\composer-fidelity.spec.ts",
+                      "column": 41,
+                      "line": 78
+                    },
+                    "snippet": "  76 |     .getByRole(\"button\", { name: \"收起对话\", exact: true })\n  77 |     .boundingBox();\n> 78 |   expect(closeBox!.x + closeBox!.width).toBeCloseTo(\n     |                                         ^\n  79 |     panelBox!.x + panelBox!.width,\n  80 |     1,\n  81 |   );"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\composer-fidelity.spec.ts",
+                        "column": 41,
+                        "line": 78
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeCloseTo\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m, \u001b[22mprecision\u001b[2m)\u001b[22m\n\nExpected: \u001b[32m1037\u001b[39m\nReceived: \u001b[31m1020\u001b[39m\n\nExpected precision:    1\nExpected difference: < \u001b[32m0.05\u001b[39m\nReceived difference:   \u001b[31m17\u001b[39m\n\n  76 |     .getByRole(\"button\", { name: \"收起对话\", exact: true })\n  77 |     .boundingBox();\n> 78 |   expect(closeBox!.x + closeBox!.width).toBeCloseTo(\n     |                                         ^\n  79 |     panelBox!.x + panelBox!.width,\n  80 |     1,\n  81 |   );\n    at D:\\kk-studio-next\\tests\\browser\\composer-fidelity.spec.ts:78:41"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-10T14:56:42.595Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\composer-fidelity-窄屏会话面板为画布工具栏留出空间，顶部和输入控件尺寸稳定\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\kk-studio-next\\tests\\browser\\composer-fidelity.spec.ts",
+                    "column": 41,
+                    "line": 78
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "82aca1325f7b125f9188-096a15baccb78e0d32f2",
+          "file": "composer-fidelity.spec.ts",
+          "line": 37,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "connection-drag.spec.ts",
+      "file": "connection-drag.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "加号区域磁吸，拖动只预览，释放后选类型才创建并连线",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 1230,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m1\u001b[39m\nReceived:    \u001b[31m21\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m1\u001b[39m\nReceived:    \u001b[31m21\u001b[39m\n    at D:\\kk-studio-next\\tests\\browser\\connection-drag.spec.ts:99:37",
+                    "location": {
+                      "file": "D:\\kk-studio-next\\tests\\browser\\connection-drag.spec.ts",
+                      "column": 37,
+                      "line": 99
+                    },
+                    "snippet": "   97 |   // width or desktop surface scaling; old world coordinates assumed x=287.\n   98 |   const visible = (await created.locator(\".video-placeholder\").boundingBox())!;\n>  99 |   expect(Math.abs(visible.x - 940)).toBeLessThanOrEqual(1);\n      |                                     ^\n  100 |   expect(Math.abs(visible.y + visible.height / 2 - 690)).toBeLessThanOrEqual(1);\n  101 | });\n  102 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\connection-drag.spec.ts",
+                        "column": 37,
+                        "line": 99
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m1\u001b[39m\nReceived:    \u001b[31m21\u001b[39m\n\n   97 |   // width or desktop surface scaling; old world coordinates assumed x=287.\n   98 |   const visible = (await created.locator(\".video-placeholder\").boundingBox())!;\n>  99 |   expect(Math.abs(visible.x - 940)).toBeLessThanOrEqual(1);\n      |                                     ^\n  100 |   expect(Math.abs(visible.y + visible.height / 2 - 690)).toBeLessThanOrEqual(1);\n  101 | });\n  102 |\n    at D:\\kk-studio-next\\tests\\browser\\connection-drag.spec.ts:99:37"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-10T14:56:42.609Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\connection-drag-加号区域磁吸，拖动只预览，释放后选类型才创建并连线\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\kk-studio-next\\tests\\browser\\connection-drag.spec.ts",
+                    "column": 37,
+                    "line": 99
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c56ef3b30248e7377c80-c4ceb753e038200667cb",
+          "file": "connection-drag.spec.ts",
+          "line": 50,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "frontend.spec.ts",
+      "file": "frontend.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "本地导入成功与错误恢复，不伪造生成和回复",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "failed",
+                  "duration": 6731,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.local-generation-status')\nExpected substring: \u001b[32m\"本地演示\"\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('.local-generation-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.local-generation-status')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.local-generation-status')\nExpected substring: \u001b[32m\"本地演示\"\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('.local-generation-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.local-generation-status')\u001b[22m\n\n    at D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts:154:58",
+                    "location": {
+                      "file": "D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts",
+                      "column": 58,
+                      "line": 154
+                    },
+                    "snippet": "  152 |   await page.getByLabel(\"图片提示词\").fill(\"一个白色风扇\");\n  153 |   await page.getByRole(\"button\", { name: \"生成图片\", exact: true }).click();\n> 154 |   await expect(page.locator(\".local-generation-status\")).toContainText(\n      |                                                          ^\n  155 |     \"本地演示\",\n  156 |   );\n  157 |   await page.getByLabel(\"对话内容\").fill(\"你好\");"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts",
+                        "column": 58,
+                        "line": 154
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.local-generation-status')\nExpected substring: \u001b[32m\"本地演示\"\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" locator('.local-generation-status') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.local-generation-status')\u001b[22m\n\n\n  152 |   await page.getByLabel(\"图片提示词\").fill(\"一个白色风扇\");\n  153 |   await page.getByRole(\"button\", { name: \"生成图片\", exact: true }).click();\n> 154 |   await expect(page.locator(\".local-generation-status\")).toContainText(\n      |                                                          ^\n  155 |     \"本地演示\",\n  156 |   );\n  157 |   await page.getByLabel(\"对话内容\").fill(\"你好\");\n    at D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts:154:58"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-10T14:56:42.610Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\frontend-本地导入成功与错误恢复，不伪造生成和回复\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts",
+                    "column": 58,
+                    "line": 154
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-4975fb5e501519906828",
+          "file": "frontend.spec.ts",
+          "line": 115,
+          "column": 1
+        },
+        {
+          "title": "无限画布隐藏滚动条，卡片拖动时连接线跟随",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 593,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 2\u001b[39m\n\u001b[31m+ Received  + 2\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"height\": 1025,\u001b[22m\n\u001b[32m-   \"width\": 1623,\u001b[39m\n\u001b[32m-   \"x\": 287,\u001b[39m\n\u001b[31m+   \"width\": 1619,\u001b[39m\n\u001b[31m+   \"x\": 291,\u001b[39m\n\u001b[2m    \"y\": 45,\u001b[22m\n\u001b[2m  }\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 2\u001b[39m\n\u001b[31m+ Received  + 2\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"height\": 1025,\u001b[22m\n\u001b[32m-   \"width\": 1623,\u001b[39m\n\u001b[32m-   \"x\": 287,\u001b[39m\n\u001b[31m+   \"width\": 1619,\u001b[39m\n\u001b[31m+   \"x\": 291,\u001b[39m\n\u001b[2m    \"y\": 45,\u001b[22m\n\u001b[2m  }\u001b[22m\n    at D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts:168:38",
+                    "location": {
+                      "file": "D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts",
+                      "column": 38,
+                      "line": 168
+                    },
+                    "snippet": "  166 |   const canvas = page.getByTestId(\"infinite-canvas\");\n  167 |   await expect(canvas).toBeVisible();\n> 168 |   expect(await canvas.boundingBox()).toEqual({\n      |                                      ^\n  169 |     x: 287,\n  170 |     y: 45,\n  171 |     width: 1623,"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts",
+                        "column": 38,
+                        "line": 168
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 2\u001b[39m\n\u001b[31m+ Received  + 2\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"height\": 1025,\u001b[22m\n\u001b[32m-   \"width\": 1623,\u001b[39m\n\u001b[32m-   \"x\": 287,\u001b[39m\n\u001b[31m+   \"width\": 1619,\u001b[39m\n\u001b[31m+   \"x\": 291,\u001b[39m\n\u001b[2m    \"y\": 45,\u001b[22m\n\u001b[2m  }\u001b[22m\n\n  166 |   const canvas = page.getByTestId(\"infinite-canvas\");\n  167 |   await expect(canvas).toBeVisible();\n> 168 |   expect(await canvas.boundingBox()).toEqual({\n      |                                      ^\n  169 |     x: 287,\n  170 |     y: 45,\n  171 |     width: 1623,\n    at D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts:168:38"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-10T14:56:50.289Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\frontend-无限画布隐藏滚动条，卡片拖动时连接线跟随\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts",
+                    "column": 38,
+                    "line": 168
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-a23e900871e67c20e299",
+          "file": "frontend.spec.ts",
+          "line": 164,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "interaction-state.spec.ts",
+      "file": "interaction-state.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "对话空态在消息区垂直居中，语音输入保持统一禁用态",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "failed",
+                  "duration": 5987,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCSS\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('button', { name: '语音输入（尚未接入）' })\nExpected: \u001b[32m\"2\u001b[7m4\u001b[27mpx\"\u001b[39m\nReceived: \u001b[31m\"2\u001b[7m2\u001b[27mpx\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCSS\" getByRole('button', { name: '语音输入（尚未接入）' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '语音输入（尚未接入）' })\u001b[22m\n\u001b[2m    14 × locator resolved to <button disabled type=\"button\" title=\"语音输入尚未接入\" aria-label=\"语音输入（尚未接入）\">…</button>\u001b[22m\n\u001b[2m       - unexpected value \"22px\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCSS\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('button', { name: '语音输入（尚未接入）' })\nExpected: \u001b[32m\"2\u001b[7m4\u001b[27mpx\"\u001b[39m\nReceived: \u001b[31m\"2\u001b[7m2\u001b[27mpx\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCSS\" getByRole('button', { name: '语音输入（尚未接入）' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '语音输入（尚未接入）' })\u001b[22m\n\u001b[2m    14 × locator resolved to <button disabled type=\"button\" title=\"语音输入尚未接入\" aria-label=\"语音输入（尚未接入）\">…</button>\u001b[22m\n\u001b[2m       - unexpected value \"22px\"\u001b[22m\n\n    at D:\\kk-studio-next\\tests\\browser\\interaction-state.spec.ts:105:23",
+                    "location": {
+                      "file": "D:\\kk-studio-next\\tests\\browser\\interaction-state.spec.ts",
+                      "column": 23,
+                      "line": 105
+                    },
+                    "snippet": "  103 |   await expect(voice).toHaveCSS(\"opacity\", \"1\");\n  104 |   // Fresh Figma 71:15664 uses a 24px footer at the desktop design viewport.\n> 105 |   await expect(voice).toHaveCSS(\"height\", \"24px\");\n      |                       ^\n  106 |   await expect(voice.locator(\"img\")).toHaveAttribute(\n  107 |     \"src\",\n  108 |     \"/design/figma/composer-mic.svg\","
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\interaction-state.spec.ts",
+                        "column": 23,
+                        "line": 105
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCSS\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('button', { name: '语音输入（尚未接入）' })\nExpected: \u001b[32m\"2\u001b[7m4\u001b[27mpx\"\u001b[39m\nReceived: \u001b[31m\"2\u001b[7m2\u001b[27mpx\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCSS\" getByRole('button', { name: '语音输入（尚未接入）' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '语音输入（尚未接入）' })\u001b[22m\n\u001b[2m    14 × locator resolved to <button disabled type=\"button\" title=\"语音输入尚未接入\" aria-label=\"语音输入（尚未接入）\">…</button>\u001b[22m\n\u001b[2m       - unexpected value \"22px\"\u001b[22m\n\n\n  103 |   await expect(voice).toHaveCSS(\"opacity\", \"1\");\n  104 |   // Fresh Figma 71:15664 uses a 24px footer at the desktop design viewport.\n> 105 |   await expect(voice).toHaveCSS(\"height\", \"24px\");\n      |                       ^\n  106 |   await expect(voice.locator(\"img\")).toHaveAttribute(\n  107 |     \"src\",\n  108 |     \"/design/figma/composer-mic.svg\",\n    at D:\\kk-studio-next\\tests\\browser\\interaction-state.spec.ts:105:23"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-10T14:56:42.602Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\interaction-state-对话空态在消息区垂直居中，语音输入保持统一禁用态\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\kk-studio-next\\tests\\browser\\interaction-state.spec.ts",
+                    "column": 23,
+                    "line": 105
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "a827a0acbf08d5493391-8b7bb9a937842fb4246d",
+          "file": "interaction-state.spec.ts",
+          "line": 86,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "sidebar.spec.ts",
+      "file": "sidebar.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "收起侧栏沿原稿61px边界、39×48导航与底部搜索排列，搜索关闭回焦",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 5366,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCSS\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('complementary', { name: '工作台侧栏' })\nExpected: \u001b[32m\"\u001b[7m61\u001b[27mpx\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m70\u001b[27mpx\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCSS\" getByRole('complementary', { name: '工作台侧栏' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('complementary', { name: '工作台侧栏' })\u001b[22m\n\u001b[2m    2 × locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m      - unexpected value \"291px\"\u001b[22m\n\u001b[2m    - locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m    - unexpected value \"285.766px\"\u001b[22m\n\u001b[2m    - locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m    - unexpected value \"203.922px\"\u001b[22m\n\u001b[2m    - locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m    - unexpected value \"121.703px\"\u001b[22m\n\u001b[2m    9 × locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m      - unexpected value \"70px\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCSS\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('complementary', { name: '工作台侧栏' })\nExpected: \u001b[32m\"\u001b[7m61\u001b[27mpx\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m70\u001b[27mpx\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCSS\" getByRole('complementary', { name: '工作台侧栏' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('complementary', { name: '工作台侧栏' })\u001b[22m\n\u001b[2m    2 × locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m      - unexpected value \"291px\"\u001b[22m\n\u001b[2m    - locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m    - unexpected value \"285.766px\"\u001b[22m\n\u001b[2m    - locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m    - unexpected value \"203.922px\"\u001b[22m\n\u001b[2m    - locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m    - unexpected value \"121.703px\"\u001b[22m\n\u001b[2m    9 × locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m      - unexpected value \"70px\"\u001b[22m\n\n    at D:\\kk-studio-next\\tests\\browser\\sidebar.spec.ts:17:25",
+                    "location": {
+                      "file": "D:\\kk-studio-next\\tests\\browser\\sidebar.spec.ts",
+                      "column": 25,
+                      "line": 17
+                    },
+                    "snippet": "  15 |   await page.getByRole(\"button\", { name: \"收起侧边栏\", exact: true }).click();\n  16 |   const sidebar = page.getByRole(\"complementary\", { name: \"工作台侧栏\" });\n> 17 |   await expect(sidebar).toHaveCSS(\"width\", \"61px\");\n     |                         ^\n  18 |   expect(await sidebar.boundingBox()).toMatchObject({ x: 0, width: 61 });\n  19 |   const rows = await sidebar.locator(\".primary-nav button\").all();\n  20 |   for (const [i, row] of rows.entries()) {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\sidebar.spec.ts",
+                        "column": 25,
+                        "line": 17
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCSS\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('complementary', { name: '工作台侧栏' })\nExpected: \u001b[32m\"\u001b[7m61\u001b[27mpx\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m70\u001b[27mpx\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCSS\" getByRole('complementary', { name: '工作台侧栏' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('complementary', { name: '工作台侧栏' })\u001b[22m\n\u001b[2m    2 × locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m      - unexpected value \"291px\"\u001b[22m\n\u001b[2m    - locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m    - unexpected value \"285.766px\"\u001b[22m\n\u001b[2m    - locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m    - unexpected value \"203.922px\"\u001b[22m\n\u001b[2m    - locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m    - unexpected value \"121.703px\"\u001b[22m\n\u001b[2m    9 × locator resolved to <aside aria-label=\"工作台侧栏\" class=\"sidebar is-collapsed \">…</aside>\u001b[22m\n\u001b[2m      - unexpected value \"70px\"\u001b[22m\n\n\n  15 |   await page.getByRole(\"button\", { name: \"收起侧边栏\", exact: true }).click();\n  16 |   const sidebar = page.getByRole(\"complementary\", { name: \"工作台侧栏\" });\n> 17 |   await expect(sidebar).toHaveCSS(\"width\", \"61px\");\n     |                         ^\n  18 |   expect(await sidebar.boundingBox()).toMatchObject({ x: 0, width: 61 });\n  19 |   const rows = await sidebar.locator(\".primary-nav button\").all();\n  20 |   for (const [i, row] of rows.entries()) {\n    at D:\\kk-studio-next\\tests\\browser\\sidebar.spec.ts:17:25"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-10T14:56:44.986Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\sidebar-收起侧栏沿原稿61px边界、39×48导航与底部搜索排列，搜索关闭回焦\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\kk-studio-next\\tests\\browser\\sidebar.spec.ts",
+                    "column": 25,
+                    "line": 17
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "19544871d9648c30f4b7-67f02834ee61cc35dc9a",
+          "file": "sidebar.spec.ts",
+          "line": 11,
+          "column": 1
+        },
+        {
+          "title": "四视口保留搜索、账号和设置命中，窄屏展开可操作且Escape回焦",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 1,
+                  "status": "timedOut",
+                  "duration": 30033,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\sidebar.spec.ts",
+                        "column": 32,
+                        "line": 67
+                      },
+                      "message": "Error: locator.evaluate: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.sidebar').getByRole('button', { name: '搜索', exact: true })\u001b[22m\n\n\n  65 |     for (const name of [\"搜索\", \"个人信息\", \"打开设置\"]) {\n  66 |       const button = sidebar.getByRole(\"button\", { name, exact: true });\n> 67 |       const hit = await button.evaluate((el) => {\n     |                                ^\n  68 |         const b = el.getBoundingClientRect();\n  69 |         return el.contains(\n  70 |           document.elementFromPoint(b.x + b.width / 2, b.y + b.height / 2),\n    at D:\\kk-studio-next\\tests\\browser\\sidebar.spec.ts:67:32"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-10T14:56:51.162Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\sidebar-四视口保留搜索、账号和设置命中，窄屏展开可操作且Escape回焦\\error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "19544871d9648c30f4b7-145f203986f567ca1b37",
+          "file": "sidebar.spec.ts",
+          "line": 47,
+          "column": 1
+        },
+        {
+          "title": "侧栏快速反向切换和视口切换保留同一搜索控件，减弱动态无残留动画",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 30037,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\sidebar.spec.ts",
+                        "column": 16,
+                        "line": 164
+                      },
+                      "message": "Error: locator.focus: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '搜索', exact: true })\u001b[22m\n\n\n  162 |   await expect(toggle).toHaveAttribute(\"aria-expanded\", \"false\");\n  163 |   const search = page.getByRole(\"button\", { name: \"搜索\", exact: true });\n> 164 |   await search.focus();\n      |                ^\n  165 |   await page.setViewportSize({ width: 390, height: 844 });\n  166 |   await expect(search).toBeFocused();\n  167 |   await page.keyboard.press(\"Enter\");\n    at D:\\kk-studio-next\\tests\\browser\\sidebar.spec.ts:164:16"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-10T14:57:21.912Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\sidebar-侧栏快速反向切换和视口切换保留同一搜索控件，减弱动态无残留动画\\error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "19544871d9648c30f4b7-711e8e759cf6aa1fd83d",
+          "file": "sidebar.spec.ts",
+          "line": 154,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-10T14:56:41.617Z",
+    "duration": 71082.606,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 8,
+    "flaky": 0
+  }
+}

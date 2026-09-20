@@ -1,0 +1,301 @@
+{
+  "states": [
+    {
+      "width": 1920,
+      "height": 1080,
+      "state": "compact",
+      "sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 72.015625,
+        "height": 1040,
+        "display": "flex"
+      },
+      "canvas": {
+        "x": 72.015625,
+        "y": 45,
+        "width": 1836.984375,
+        "height": 1025,
+        "display": "block"
+      },
+      "nav": [
+        {
+          "x": 10,
+          "y": 140,
+          "width": 52.015625,
+          "height": 48
+        },
+        {
+          "x": 10,
+          "y": 192,
+          "width": 52.015625,
+          "height": 48
+        },
+        {
+          "x": 10,
+          "y": 244,
+          "width": 52.015625,
+          "height": 48
+        },
+        {
+          "x": 10,
+          "y": 296,
+          "width": 52.015625,
+          "height": 48
+        }
+      ],
+      "search": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "none"
+      },
+      "toggle": {
+        "x": 38,
+        "y": 88,
+        "width": 20,
+        "height": 20,
+        "display": "grid"
+      },
+      "account": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "none"
+      },
+      "settings": {
+        "x": 29.015625,
+        "y": 1021,
+        "width": 29,
+        "height": 29,
+        "display": "grid"
+      },
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "state": "compact",
+      "sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 72,
+        "height": 860,
+        "display": "flex"
+      },
+      "canvas": {
+        "x": 72,
+        "y": 45,
+        "width": 1357,
+        "height": 845,
+        "display": "block"
+      },
+      "nav": [
+        {
+          "x": 10,
+          "y": 140,
+          "width": 52,
+          "height": 48
+        },
+        {
+          "x": 10,
+          "y": 192,
+          "width": 52,
+          "height": 48
+        },
+        {
+          "x": 10,
+          "y": 244,
+          "width": 52,
+          "height": 48
+        },
+        {
+          "x": 10,
+          "y": 296,
+          "width": 52,
+          "height": 48
+        }
+      ],
+      "search": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "none"
+      },
+      "toggle": {
+        "x": 38,
+        "y": 88,
+        "width": 20,
+        "height": 20,
+        "display": "grid"
+      },
+      "account": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "none"
+      },
+      "settings": {
+        "x": 29,
+        "y": 841,
+        "width": 29,
+        "height": 29,
+        "display": "grid"
+      },
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "state": "compact",
+      "sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 72,
+        "height": 984,
+        "display": "flex"
+      },
+      "canvas": {
+        "x": 72,
+        "y": 45,
+        "width": 685,
+        "height": 969,
+        "display": "block"
+      },
+      "nav": [
+        {
+          "x": 10,
+          "y": 118,
+          "width": 52,
+          "height": 48
+        },
+        {
+          "x": 10,
+          "y": 170,
+          "width": 52,
+          "height": 48
+        },
+        {
+          "x": 10,
+          "y": 222,
+          "width": 52,
+          "height": 48
+        },
+        {
+          "x": 10,
+          "y": 274,
+          "width": 52,
+          "height": 48
+        }
+      ],
+      "search": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "none"
+      },
+      "toggle": {
+        "x": 38,
+        "y": 74,
+        "width": 20,
+        "height": 20,
+        "display": "grid"
+      },
+      "account": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "none"
+      },
+      "settings": {
+        "x": 29,
+        "y": 977,
+        "width": 29,
+        "height": 29,
+        "display": "grid"
+      },
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "compact",
+      "sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 72,
+        "height": 804,
+        "display": "flex"
+      },
+      "canvas": {
+        "x": 72,
+        "y": 45,
+        "width": 307,
+        "height": 789,
+        "display": "block"
+      },
+      "nav": [
+        {
+          "x": 10,
+          "y": 118,
+          "width": 52,
+          "height": 48
+        },
+        {
+          "x": 10,
+          "y": 170,
+          "width": 52,
+          "height": 48
+        },
+        {
+          "x": 10,
+          "y": 222,
+          "width": 52,
+          "height": 48
+        },
+        {
+          "x": 10,
+          "y": 274,
+          "width": 52,
+          "height": 48
+        }
+      ],
+      "search": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "none"
+      },
+      "toggle": {
+        "x": 38,
+        "y": 74,
+        "width": 20,
+        "height": 20,
+        "display": "grid"
+      },
+      "account": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "display": "none"
+      },
+      "settings": {
+        "x": 29,
+        "y": 797,
+        "width": 29,
+        "height": 29,
+        "display": "grid"
+      },
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

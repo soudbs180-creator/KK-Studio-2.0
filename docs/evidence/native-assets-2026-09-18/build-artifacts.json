@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "c8558818f221d924be001ffcfc50365653cf8d55",
+  "sourceTree": "ed04c174be4b169ac263c0a5c92a4fbdc09005b8",
+  "buildCommand": "npm run client:build -- --no-bundle",
+  "frontendBuildCommand": "npm run build",
+  "runtime": "Tauri release / tauri.localhost",
+  "entry": "src/main.tsx",
+  "bundle": "dist\\assets\\index-CBwa_Zj7.js",
+  "bundleSha256": "a5dc4d02dc0bba25b42960cccc3bf3bb075dc38c06a20aaba2da025f1bdaea50",
+  "executable": "src-tauri\\target\\release\\kk-studio.exe",
+  "executableSha256": "3d0a58e7ce2e225523e98ccef7eddbc5574ead3724d2386116591704775984d9",
+  "css": "dist\\assets\\index-CMZpbv5y.css",
+  "cssSha256": "56ed4ece46bc5a65a0bc77f8a492f49913098da41756c4d89a3a76f3cf90289c",
+  "capturedAt": "2026-09-18T11:55:14.8860650Z"
+}

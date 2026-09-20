@@ -1,0 +1,82 @@
+[
+  {
+    "name": "add",
+    "url": "https://www.figma.com/api/mcp/asset/acf029af-f4f7-4199-bfea-48fd70596cab.svg",
+    "width": "40",
+    "height": "40",
+    "viewBox": "0 0 40 40",
+    "bytes": 767,
+    "sha256": "CEBF67D0764F7ADE0F5885F41E1CF311A1F481C8B890D174D21F222D380B3A71",
+    "result": "success"
+  },
+  {
+    "name": "help",
+    "url": "https://www.figma.com/api/mcp/asset/82773883-944c-40fa-9090-f2ee2262feca.svg",
+    "width": "21.75",
+    "height": "21.75",
+    "viewBox": "0 0 21.75 21.75",
+    "bytes": 1092,
+    "sha256": "B71D14EF7DBEF2DDD474AB85D7F9E3A1C284947D77B6C7345CC16799591124C8",
+    "result": "success"
+  },
+  {
+    "name": "collapse",
+    "url": "https://www.figma.com/api/mcp/asset/3d8ad21a-ab74-4c17-ab72-97d99c82d2b8.svg",
+    "width": "20",
+    "height": "40",
+    "viewBox": "0 0 20 40",
+    "bytes": 464,
+    "sha256": "D8F0A7503BCC1FA244D598298E9CA4FF3D147D21CAE13E8ADE1A24CD438CB0A4",
+    "result": "success"
+  },
+  {
+    "name": "favorite",
+    "url": "https://www.figma.com/api/mcp/asset/3ebfbb4e-35ee-4505-a5af-4d98ec25b148.svg",
+    "width": "40",
+    "height": "40",
+    "viewBox": "0 0 40 40",
+    "bytes": 1244,
+    "sha256": "24F0B17B23F14FE2BC5C43D4FA1EC854EB6C2AAE9240E1D0FF5697D005BCCC3A",
+    "result": "success"
+  },
+  {
+    "name": "select",
+    "url": "https://www.figma.com/api/mcp/asset/fc9b9277-fb5d-40ec-a431-d56182ddbe82.svg",
+    "width": "40",
+    "height": "40",
+    "viewBox": "0 0 40 40",
+    "bytes": 1113,
+    "sha256": "BEF721F390AAF9B33B2051A212A03D201CAECD5DD087BBA3458E89F9B817144D",
+    "result": "success"
+  },
+  {
+    "name": "assets",
+    "url": "https://www.figma.com/api/mcp/asset/6401320f-9039-4bdf-9812-e2129e6e17fa.svg",
+    "width": "40",
+    "height": "40",
+    "viewBox": "0 0 40 40",
+    "bytes": 1289,
+    "sha256": "B2401ADBE44567219D3B2658ECBE94665CD2F9E0650BFF4308273897763A4FA9",
+    "result": "success"
+  },
+  {
+    "name": "divider-left",
+    "url": "https://www.figma.com/api/mcp/asset/6dfb9945-4fff-4114-a1e5-5f43a753e4c7.svg",
+    "width": "30",
+    "height": "1",
+    "viewBox": "0 0 30 1",
+    "bytes": 268,
+    "sha256": "AC618EEF85F923DB94A84BA321F53D6AF603D3AC5B88F990F9B0AA518612C4AD",
+    "result": "success"
+  },
+  {
+    "name": "divider-right",
+    "url": "https://www.figma.com/api/mcp/asset/e5b6a63b-c1df-4db3-9c77-a2cb7019f0a5.svg",
+    "width": "20",
+    "height": "2",
+    "viewBox": "0 0 20 2",
+    "bytes": 277,
+    "sha256": "3B628F30A563753B02EBBDEAD985BF4AC9BB99CB38B1F3C55D7D04E745EA8E62",
+    "result": "success"
+  }
+]

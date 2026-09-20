@@ -1,0 +1,207 @@
+const img287 = "https://www.figma.com/api/mcp/asset/f560a62a-8d31-4eb1-ae77-c243f94f100b.svg";
+const imgIconEllipsis = "https://www.figma.com/api/mcp/asset/c178407a-f0aa-42c7-bdb6-c4d4de79aa22.svg";
+const imgIconPlus = "https://www.figma.com/api/mcp/asset/0eb811ec-77c1-44a3-b5de-8d04be4dcc64.svg";
+const imgRectangle24 = "https://www.figma.com/api/mcp/asset/482aac42-8ece-46a9-a5f4-b8d3c4e91648.svg";
+const imgRectangle29 = "https://www.figma.com/api/mcp/asset/18fa8907-19f0-45a4-a9e4-ea10bab2fbcd.svg";
+const imgLayerIcon = "https://www.figma.com/api/mcp/asset/5193ce80-ff7e-4680-a3bf-9b1d682c1857.svg";
+const imgIconEllipsis1 = "https://www.figma.com/api/mcp/asset/5c19f75e-86b9-4322-965d-ebf3b8b88815.svg";
+const imgRectangle25 = "https://www.figma.com/api/mcp/asset/030c62b7-7dca-404a-814c-994d688dee69.svg";
+const imgLayerIcon1 = "https://www.figma.com/api/mcp/asset/4d351755-556b-4f0e-a900-9728ec6b3686.svg";
+const imgIconEllipsis2 = "https://www.figma.com/api/mcp/asset/4c4ef531-41a5-490d-b78c-685537c04bb1.svg";
+const imgRectangle26 = "https://www.figma.com/api/mcp/asset/789f4cb5-f251-4793-a084-266e4c5247c0.svg";
+const imgRectangle27 = "https://www.figma.com/api/mcp/asset/2cc1d735-dc54-4ddb-b81f-571bfc03e7f0.svg";
+const imgIconFolderOpen = "https://www.figma.com/api/mcp/asset/caf56125-db30-4ec3-9492-0f9e71efa61e.svg";
+const imgIconRedo2 = "https://www.figma.com/api/mcp/asset/592f7174-b0a6-4369-aeb4-2b01da1366f7.svg";
+const imgGroup3 = "https://www.figma.com/api/mcp/asset/a0fbf25f-0882-4e2f-8a3c-c71b329783e6.svg";
+
+export default function Component() {
+  return (
+    <div className="contents relative size-full" data-node-id="82:15735" data-name="项目展示区">
+      <div className="absolute contents left-[0.73%] right-[86.15%] top-[402px]" data-node-id="82:15731">
+        <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-[37.22%_97.81%_61.2%_0.73%] leading-[normal] not-italic text-[#707070] text-[14px] whitespace-nowrap" data-node-id="17:74651">
+          项目
+        </p>
+        <div className="-translate-y-1/2 absolute aspect-[12/6] left-[2.4%] right-[97.19%] top-[calc(50%-129px)]" data-node-id="17:74653" data-name="路径 287">
+          <div className="absolute inset-[-18.75%_-9.38%]">
+            <img alt="" className="block max-w-none size-full" src={img287} />
+          </div>
+        </div>
+        <div className="absolute flex inset-[37.59%_87.64%_61.46%_12.29%] items-center justify-center" data-node-id="338:1000" style={{ containerType: "size" }}>
+          <div className="flex-none h-[100cqw] rotate-90 w-[100cqh]">
+            <div className="relative size-full" data-name="icon-ellipsis">
+              <div className="absolute inset-[-39.14%_-4.89%]">
+                <img alt="" className="block max-w-none size-full" src={imgIconEllipsis} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="absolute inset-[37.59%_86.15%_61.48%_13.33%]" data-node-id="338:1005" data-name="icon-plus">
+          <div className="absolute inset-[-5%]">
+            <img alt="" className="block max-w-none size-full" src={imgIconPlus} />
+          </div>
+        </div>
+      </div>
+      <div className="absolute contents left-[0.73%] right-[96.41%] top-[540px]" data-node-id="82:15733">
+        <p className="[word-break:break-word] absolute bottom-[48.43%] font-['Inter:Medium'] font-medium leading-[normal] left-[0.73%] not-italic right-[97.08%] text-[#707070] text-[14px] top-1/2 whitespace-nowrap" data-node-id="17:74664">
+          未分组
+        </p>
+        <div className="-translate-y-1/2 absolute aspect-[12/6] left-[3.18%] right-[96.41%] top-[calc(50%+9px)]" data-node-id="17:74665" data-name="路径 288">
+          <div className="absolute inset-[-18.75%_-9.38%]">
+            <img alt="" className="block max-w-none size-full" src={img287} />
+          </div>
+        </div>
+      </div>
+      <div className="absolute contents leading-[0] left-[12px] top-[425px]" data-node-id="82:15732">
+        <div className="absolute content-stretch flex flex-col gap-[5px] items-start left-[12px] top-[563px] w-[263px]" data-node-id="133:17948">
+          <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="107:17078">
+            <div className="bg-[#282828] col-1 h-[29px] ml-0 mt-0 relative rounded-[10px] row-1 w-[263px]" data-node-id="17:74666" data-name="鼠标悬浮高亮4" />
+            <div className="bg-[#282828] col-1 h-[29px] ml-0 mt-0 relative rounded-[10px] row-1 w-[263px]" data-node-id="338:984" data-name="鼠标悬浮高亮4" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[32px] mt-[9px] not-italic relative row-1 text-[#d3d3d3] text-[10px] whitespace-nowrap" data-node-id="17:74667">
+              KK工作流
+            </p>
+            <div className="col-1 ml-[2px] mt-[2px] relative row-1 size-[25px]" data-node-id="17:74668">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRectangle24} />
+            </div>
+            <div className="col-1 ml-[239px] mt-[5px] relative row-1 size-[19px]" data-node-id="19:82122">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRectangle29} />
+            </div>
+            <div className="col-1 ml-[216px] mt-[5px] relative row-1 size-[19px]" data-node-id="107:17104">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRectangle29} />
+            </div>
+            <div className="col-1 h-[10px] ml-[223px] mt-[10px] relative row-1 w-[5px]" data-node-id="19:82113" data-name="layer-icon">
+              <div className="absolute inset-[-5%_-10%]">
+                <img alt="" className="block max-w-none size-full" src={imgLayerIcon} />
+              </div>
+            </div>
+            <div className="col-1 flex h-[10.219px] items-center justify-center ml-[248px] mt-[10px] relative row-1 w-[1.277px]" data-node-id="107:17110">
+              <div className="flex-none rotate-90">
+                <div className="h-[1.277px] relative w-[10.219px]" data-name="icon-ellipsis">
+                  <div className="absolute inset-[-39.14%_-4.89%]">
+                    <img alt="" className="block max-w-none size-full" src={imgIconEllipsis1} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="107:17079">
+            <div className="bg-[#1a1a1a] col-1 h-[29px] ml-0 mt-0 relative rounded-[10px] row-1 w-[263px]" data-node-id="107:17080" data-name="鼠标悬浮高亮4" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[32px] mt-[9px] not-italic relative row-1 text-[#d3d3d3] text-[10px] whitespace-nowrap" data-node-id="107:17081">
+              KK工作流
+            </p>
+            <div className="col-1 ml-[2px] mt-[2px] relative row-1 size-[25px]" data-node-id="107:17082">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRectangle25} />
+            </div>
+            <div className="col-1 h-[10px] ml-[223px] mt-[10px] relative row-1 w-[5px]" data-node-id="107:17085" data-name="layer-icon">
+              <div className="absolute inset-[-5%_-10%]">
+                <img alt="" className="block max-w-none size-full" src={imgLayerIcon1} />
+              </div>
+            </div>
+            <div className="col-1 flex h-[10.219px] items-center justify-center ml-[248px] mt-[10px] relative row-1 w-[1.277px]" data-node-id="107:17115">
+              <div className="flex-none rotate-90">
+                <div className="h-[1.277px] relative w-[10.219px]" data-name="icon-ellipsis">
+                  <div className="absolute inset-[-39.14%_-4.89%]">
+                    <img alt="" className="block max-w-none size-full" src={imgIconEllipsis2} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="107:17090">
+            <div className="bg-[#1a1a1a] col-1 h-[29px] ml-0 mt-0 relative rounded-[10px] row-1 w-[263px]" data-node-id="107:17091" data-name="鼠标悬浮高亮4" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[32px] mt-[9px] not-italic relative row-1 text-[#d3d3d3] text-[10px] whitespace-nowrap" data-node-id="107:17092">
+              KK工作流
+            </p>
+            <div className="col-1 ml-[2px] mt-[2px] relative row-1 size-[25px]" data-node-id="107:17093">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRectangle26} />
+            </div>
+            <div className="col-1 h-[10px] ml-[223px] mt-[10px] relative row-1 w-[5px]" data-node-id="107:17096" data-name="layer-icon">
+              <div className="absolute inset-[-5%_-10%]">
+                <img alt="" className="block max-w-none size-full" src={imgLayerIcon1} />
+              </div>
+            </div>
+            <div className="col-1 flex h-[10.219px] items-center justify-center ml-[248px] mt-[10px] relative row-1 w-[1.277px]" data-node-id="107:17119">
+              <div className="flex-none rotate-90">
+                <div className="h-[1.277px] relative w-[10.219px]" data-name="icon-ellipsis">
+                  <div className="absolute inset-[-39.14%_-4.89%]">
+                    <img alt="" className="block max-w-none size-full" src={imgIconEllipsis2} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="absolute content-stretch flex flex-col gap-[5px] items-end justify-center left-[12px] top-[425px] w-[263px]" data-node-id="133:17980">
+          <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="133:17949" data-name="项目菜单">
+            <div className="bg-[#1a1a1a] col-1 h-[29px] ml-0 mt-0 relative rounded-[10px] row-1 w-[263px]" data-node-id="17:74655" data-name="鼠标悬浮高亮4" />
+            <div className="col-1 ml-[2px] mt-[2px] relative row-1 size-[25px]" data-node-id="17:74670">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRectangle27} />
+            </div>
+            <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[32px] mt-[8px] not-italic relative row-1 text-[#d3d3d3] text-[10px] whitespace-nowrap" data-node-id="17:74656">
+              KK工作流
+            </p>
+            <div className="col-1 h-[10.4px] ml-[9px] mt-[9px] relative row-1 w-[12px]" data-node-id="17:74661" data-name="icon-folder-open">
+              <div className="absolute inset-[-4.81%_-4.17%]">
+                <img alt="" className="block max-w-none size-full" src={imgIconFolderOpen} />
+              </div>
+            </div>
+            <div className="col-1 flex items-center justify-center ml-[244px] mt-[10px] relative row-1 size-[8px]" data-node-id="17:74657">
+              <div className="-rotate-90 -scale-y-100 flex-none">
+                <div className="relative size-[8px]" data-name="icon-redo2">
+                  <div className="absolute inset-[-6.25%]">
+                    <img alt="" className="block max-w-none size-full" src={imgIconRedo2} />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-1 ml-[222px] mt-[11px] relative row-1 size-[7px]" data-node-id="19:96855">
+              <div className="absolute inset-[-7.14%]">
+                <img alt="" className="block max-w-none size-full" src={imgGroup3} />
+              </div>
+            </div>
+          </div>
+          <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="338:986">
+            <div className="bg-[#282828] col-1 h-[29px] ml-0 mt-0 relative rounded-[10px] row-1 w-[236px]" data-node-id="338:988" data-name="鼠标悬浮高亮4" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[32px] mt-[9px] not-italic relative row-1 text-[#d3d3d3] text-[10px] whitespace-nowrap" data-node-id="338:989">
+              KK工作流
+            </p>
+            <div className="col-1 ml-[2px] mt-[2px] relative row-1 size-[25px]" data-node-id="338:990">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRectangle24} />
+            </div>
+            <div className="col-1 ml-[212px] mt-[5px] relative row-1 size-[19px]" data-node-id="338:991">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRectangle29} />
+            </div>
+            <div className="col-1 ml-[189px] mt-[5px] relative row-1 size-[19px]" data-node-id="338:992">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRectangle29} />
+            </div>
+            <div className="col-1 h-[10px] ml-[196px] mt-[10px] relative row-1 w-[5px]" data-node-id="338:993" data-name="layer-icon">
+              <div className="absolute inset-[-5%_-10%]">
+                <img alt="" className="block max-w-none size-full" src={imgLayerIcon} />
+              </div>
+            </div>
+            <div className="col-1 flex h-[10.219px] items-center justify-center ml-[221px] mt-[10px] relative row-1 w-[1.277px]" data-node-id="338:995">
+              <div className="flex-none rotate-90">
+                <div className="h-[1.277px] relative w-[10.219px]" data-name="icon-ellipsis">
+                  <div className="absolute inset-[-39.14%_-4.89%]">
+                    <img alt="" className="block max-w-none size-full" src={imgIconEllipsis1} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

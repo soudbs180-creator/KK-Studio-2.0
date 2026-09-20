@@ -1,0 +1,734 @@
+{
+  "stage": "after-preview",
+  "errors": [],
+  "states": [
+    {
+      "state": "landing",
+      "url": "http://127.0.0.1:1423/",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "runtime": {
+        "theme": "dark",
+        "floatingLayout": "true"
+      },
+      "app": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "production"
+      },
+      "scripts": [
+        "http://127.0.0.1:1423/assets/index-C2oiZT_j.js"
+      ],
+      "styleSheets": [
+        "http://127.0.0.1:1423/assets/index-DK9giM7r.css"
+      ],
+      "logos": [
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 20,
+            "y": 75,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 24,
+            "y": 1007,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-hero.svg",
+          "class": "",
+          "parent": "start-brand",
+          "natural": [
+            64,
+            64
+          ],
+          "rect": {
+            "x": 1069.421875,
+            "y": 202.421875,
+            "width": 63.140625,
+            "height": 63.140625
+          },
+          "style": {
+            "width": "63.1406px",
+            "height": "63.1406px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        }
+      ],
+      "favicon": "http://127.0.0.1:1423/design/figma/logo.svg"
+    },
+    {
+      "state": "account",
+      "url": "http://127.0.0.1:1423/",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "runtime": {
+        "theme": "dark",
+        "floatingLayout": "true"
+      },
+      "app": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "production"
+      },
+      "scripts": [
+        "http://127.0.0.1:1423/assets/index-C2oiZT_j.js"
+      ],
+      "styleSheets": [
+        "http://127.0.0.1:1423/assets/index-DK9giM7r.css"
+      ],
+      "logos": [
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 20,
+            "y": 75,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-account.svg",
+          "class": "",
+          "parent": "account-logo logo",
+          "natural": [
+            30,
+            30
+          ],
+          "rect": {
+            "x": 26,
+            "y": 818,
+            "width": 30,
+            "height": 30
+          },
+          "style": {
+            "width": "30px",
+            "height": "30px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/account-logout.svg",
+          "class": "",
+          "parent": "",
+          "natural": [
+            16,
+            15
+          ],
+          "rect": {
+            "x": 173.5,
+            "y": 860,
+            "width": 14,
+            "height": 14
+          },
+          "style": {
+            "width": "14px",
+            "height": "14px",
+            "objectFit": "fill",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 24,
+            "y": 1007,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-hero.svg",
+          "class": "",
+          "parent": "start-brand",
+          "natural": [
+            64,
+            64
+          ],
+          "rect": {
+            "x": 1069.421875,
+            "y": 202.421875,
+            "width": 63.140625,
+            "height": 63.140625
+          },
+          "style": {
+            "width": "63.1406px",
+            "height": "63.1406px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        }
+      ],
+      "favicon": "http://127.0.0.1:1423/design/figma/logo.svg"
+    },
+    {
+      "state": "workspace",
+      "url": "http://127.0.0.1:1423/",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "runtime": {
+        "theme": "dark",
+        "floatingLayout": "true"
+      },
+      "app": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "production"
+      },
+      "scripts": [
+        "http://127.0.0.1:1423/assets/index-C2oiZT_j.js"
+      ],
+      "styleSheets": [
+        "http://127.0.0.1:1423/assets/index-DK9giM7r.css"
+      ],
+      "logos": [
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 20,
+            "y": 75,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 24,
+            "y": 1007,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-message.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            12,
+            12
+          ],
+          "rect": {
+            "x": 1650.5,
+            "y": 427.5,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        }
+      ],
+      "favicon": "http://127.0.0.1:1423/design/figma/logo.svg"
+    },
+    {
+      "state": "model-menu",
+      "url": "http://127.0.0.1:1423/",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "runtime": {
+        "theme": "dark",
+        "floatingLayout": "true"
+      },
+      "app": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "production"
+      },
+      "scripts": [
+        "http://127.0.0.1:1423/assets/index-C2oiZT_j.js"
+      ],
+      "styleSheets": [
+        "http://127.0.0.1:1423/assets/index-DK9giM7r.css"
+      ],
+      "logos": [
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 20,
+            "y": 75,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 24,
+            "y": 1007,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-model.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            20,
+            20
+          ],
+          "rect": {
+            "x": 396,
+            "y": 810.5,
+            "width": 20,
+            "height": 20
+          },
+          "style": {
+            "width": "20px",
+            "height": "20px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-model.svg",
+          "class": "model-glyph",
+          "parent": "model-option",
+          "natural": [
+            20,
+            20
+          ],
+          "rect": {
+            "x": 410,
+            "y": 555.5,
+            "width": 20,
+            "height": 20
+          },
+          "style": {
+            "width": "20px",
+            "height": "20px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-model.svg",
+          "class": "model-glyph",
+          "parent": "model-option",
+          "natural": [
+            20,
+            20
+          ],
+          "rect": {
+            "x": 410,
+            "y": 605.5,
+            "width": 20,
+            "height": 20
+          },
+          "style": {
+            "width": "20px",
+            "height": "20px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-model.svg",
+          "class": "model-glyph",
+          "parent": "model-option",
+          "natural": [
+            20,
+            20
+          ],
+          "rect": {
+            "x": 410,
+            "y": 655.5,
+            "width": 20,
+            "height": 20
+          },
+          "style": {
+            "width": "20px",
+            "height": "20px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-model.svg",
+          "class": "model-glyph",
+          "parent": "model-option",
+          "natural": [
+            20,
+            20
+          ],
+          "rect": {
+            "x": 410,
+            "y": 705.5,
+            "width": 20,
+            "height": 20
+          },
+          "style": {
+            "width": "20px",
+            "height": "20px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-credit.svg",
+          "class": "",
+          "parent": "cost-logo",
+          "natural": [
+            11,
+            11
+          ],
+          "rect": {
+            "x": 881,
+            "y": 815,
+            "width": 11,
+            "height": 11
+          },
+          "style": {
+            "width": "11px",
+            "height": "11px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-message.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            12,
+            12
+          ],
+          "rect": {
+            "x": 1650.5,
+            "y": 427.5,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        }
+      ],
+      "favicon": "http://127.0.0.1:1423/design/figma/logo.svg"
+    },
+    {
+      "state": "collapsed",
+      "url": "http://127.0.0.1:1423/",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "runtime": {
+        "theme": "dark",
+        "floatingLayout": "true"
+      },
+      "app": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "production"
+      },
+      "scripts": [
+        "http://127.0.0.1:1423/assets/index-C2oiZT_j.js"
+      ],
+      "styleSheets": [
+        "http://127.0.0.1:1423/assets/index-DK9giM7r.css"
+      ],
+      "logos": [
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 22,
+            "y": 999,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-model.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            20,
+            20
+          ],
+          "rect": {
+            "x": 175,
+            "y": 810.5,
+            "width": 20,
+            "height": 20
+          },
+          "style": {
+            "width": "20px",
+            "height": "20px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-credit.svg",
+          "class": "",
+          "parent": "cost-logo",
+          "natural": [
+            11,
+            11
+          ],
+          "rect": {
+            "x": 660,
+            "y": 815,
+            "width": 11,
+            "height": 11
+          },
+          "style": {
+            "width": "11px",
+            "height": "11px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-message.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            12,
+            12
+          ],
+          "rect": {
+            "x": 1650.5,
+            "y": 427.5,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        }
+      ],
+      "favicon": "http://127.0.0.1:1423/design/figma/logo.svg"
+    },
+    {
+      "state": "landing-390",
+      "url": "http://127.0.0.1:1423/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "runtime": {
+        "theme": "dark",
+        "floatingLayout": "true"
+      },
+      "app": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "production"
+      },
+      "scripts": [
+        "http://127.0.0.1:1423/assets/index-C2oiZT_j.js"
+      ],
+      "styleSheets": [
+        "http://127.0.0.1:1423/assets/index-DK9giM7r.css"
+      ],
+      "logos": [
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 19,
+            "y": 786,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-hero.svg",
+          "class": "",
+          "parent": "start-brand",
+          "natural": [
+            64,
+            64
+          ],
+          "rect": {
+            "x": 198.5,
+            "y": 97,
+            "width": 54,
+            "height": 54
+          },
+          "style": {
+            "width": "54px",
+            "height": "54px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        }
+      ],
+      "favicon": "http://127.0.0.1:1423/design/figma/logo.svg"
+    }
+  ]
+}

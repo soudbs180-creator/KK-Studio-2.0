@@ -1,0 +1,153 @@
+{
+  "config": {
+    "argv": [
+      "D:\\tools\\node-v24.20.0-win-x64\\node.exe",
+      "D:\\kk-studio-next\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/browser/canvas-actions.spec.ts",
+      "--grep",
+      "鼠标能从",
+      "--reporter=list,json"
+    ],
+    "configFile": "D:\\kk-studio-next\\playwright.config.ts",
+    "rootDir": "D:/kk-studio-next/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/kk-studio-next/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/kk-studio-next/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 12,
+    "webServer": {
+      "command": "npm run preview -- --host 127.0.0.1 --port 1422 --strictPort",
+      "url": "http://127.0.0.1:1422",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "canvas-actions.spec.ts",
+      "file": "canvas-actions.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "鼠标能从连线移动到删除按钮，键盘新增后可继续微调节点",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5608,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('canvas-node-added-video-1')\nExpected: focused\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" getByTestId('canvas-node-added-video-1') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('canvas-node-added-video-1')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('canvas-node-added-video-1')\nExpected: focused\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" getByTestId('canvas-node-added-video-1') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('canvas-node-added-video-1')\u001b[22m\n\n    at D:\\kk-studio-next\\tests\\browser\\canvas-actions.spec.ts:94:22",
+                    "location": {
+                      "file": "D:\\kk-studio-next\\tests\\browser\\canvas-actions.spec.ts",
+                      "column": 22,
+                      "line": 94
+                    },
+                    "snippet": "  92 |   await page.keyboard.press(\"Enter\");\n  93 |   const node = page.getByTestId(\"canvas-node-added-video-1\");\n> 94 |   await expect(node).toBeFocused();\n     |                      ^\n  95 |   const before = await node.getAttribute(\"style\");\n  96 |   await page.keyboard.press(\"ArrowRight\");\n  97 |   await expect(node).not.toHaveAttribute(\"style\", before!);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\canvas-actions.spec.ts",
+                        "column": 22,
+                        "line": 94
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('canvas-node-added-video-1')\nExpected: focused\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" getByTestId('canvas-node-added-video-1') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('canvas-node-added-video-1')\u001b[22m\n\n\n  92 |   await page.keyboard.press(\"Enter\");\n  93 |   const node = page.getByTestId(\"canvas-node-added-video-1\");\n> 94 |   await expect(node).toBeFocused();\n     |                      ^\n  95 |   const before = await node.getAttribute(\"style\");\n  96 |   await page.keyboard.press(\"ArrowRight\");\n  97 |   await expect(node).not.toHaveAttribute(\"style\", before!);\n    at D:\\kk-studio-next\\tests\\browser\\canvas-actions.spec.ts:94:22"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T07:53:09.182Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\canvas-actions-鼠标能从连线移动到删除按钮，键盘新增后可继续微调节点\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\kk-studio-next\\tests\\browser\\canvas-actions.spec.ts",
+                    "column": 22,
+                    "line": 94
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "b9bf8353d8b818907eec-de07ad5e416eecb6b163",
+          "file": "canvas-actions.spec.ts",
+          "line": 62,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-07T07:53:08.848Z",
+    "duration": 6325.648999999999,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

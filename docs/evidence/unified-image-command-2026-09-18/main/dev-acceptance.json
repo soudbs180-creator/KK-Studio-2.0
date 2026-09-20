@@ -1,0 +1,64 @@
+{
+  "mode": "dev",
+  "sourceCommit": "2de3c68e09ef5a94fb9a8b11d48f9ac4e0b3b592",
+  "runtime": {
+    "url": "http://127.0.0.1:1421/",
+    "mode": "development",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://127.0.0.1:1421/@vite/client",
+      "http://127.0.0.1:1421/src/main.tsx"
+    ],
+    "route": "workspace"
+  },
+  "requests": [
+    {
+      "url": "https://t4-dev.example.test/v1/images/generations"
+    },
+    {
+      "url": "https://t4-dev.example.test/v1/images/generations"
+    },
+    {
+      "url": "https://t4-dev.example.test/v1/images/edits",
+      "editHasOriginal": true
+    }
+  ],
+  "sourceIds": [
+    "project-mu74vbig-kul3jtgd-prompt",
+    "project-mu74vbig-kul3jtgd-prompt",
+    "project-mu74vbig-kul3jtgd-project-mu74vbig-kul3jtgd-task-mu74vc2n-z3xzs7-result-1"
+  ],
+  "taskStatuses": [
+    "succeeded",
+    "succeeded",
+    "succeeded"
+  ],
+  "results": [
+    "project-mu74vbig-kul3jtgd-project-mu74vbig-kul3jtgd-task-mu74vbig-ixef33-result-1",
+    "project-mu74vbig-kul3jtgd-project-mu74vbig-kul3jtgd-task-mu74vc2n-z3xzs7-result-1",
+    "project-mu74vbig-kul3jtgd-project-mu74vbig-kul3jtgd-task-mu74vctw-93g170-result-1"
+  ],
+  "resultEdges": [
+    {
+      "id": "result-project-mu74vbig-kul3jtgd-project-mu74vbig-kul3jtgd-task-mu74vbig-ixef33-result-1",
+      "source": "project-mu74vbig-kul3jtgd-prompt",
+      "target": "project-mu74vbig-kul3jtgd-project-mu74vbig-kul3jtgd-task-mu74vbig-ixef33-result-1",
+      "kind": "result"
+    },
+    {
+      "id": "result-project-mu74vbig-kul3jtgd-project-mu74vbig-kul3jtgd-task-mu74vc2n-z3xzs7-result-1",
+      "source": "project-mu74vbig-kul3jtgd-prompt",
+      "target": "project-mu74vbig-kul3jtgd-project-mu74vbig-kul3jtgd-task-mu74vc2n-z3xzs7-result-1",
+      "kind": "result"
+    },
+    {
+      "id": "result-project-mu74vbig-kul3jtgd-project-mu74vbig-kul3jtgd-task-mu74vctw-93g170-result-1",
+      "source": "project-mu74vbig-kul3jtgd-project-mu74vbig-kul3jtgd-task-mu74vc2n-z3xzs7-result-1",
+      "target": "project-mu74vbig-kul3jtgd-project-mu74vbig-kul3jtgd-task-mu74vctw-93g170-result-1",
+      "kind": "result"
+    }
+  ],
+  "freshProfileRestored": false,
+  "credentialCleared": true,
+  "errors": []
+}

@@ -1,0 +1,55 @@
+/* Desktop uses the 1920×1080 Figma coordinate space, including when the
+   browser is 1280×720 or 1600×900. These overrides prevent legacy viewport
+   breakpoints from changing the design geometry before the surface scales. */
+@media (min-width: 1201px) {
+  :root {
+    --sidebar-compact-width: 70px;
+  }
+  /* Menus are portaled to body and therefore sit outside the transformed app.
+     Scale their own visual box while retaining client-pixel placement. */
+  .add-node-menu,
+  .canvas-context-menu {
+    transform: scale(var(--design-scale));
+    transform-origin: top left;
+  }
+
+  .app[data-design-surface="desktop"] .conversation-panel {
+    width: var(--conversation-width);
+  }
+
+  .app[data-design-surface="desktop"] .sidebar {
+    width: var(--sidebar-width);
+  }
+
+  .app[data-design-surface="desktop"] .sidebar.is-collapsed {
+    width: var(--sidebar-compact-width);
+  }
+
+  .app[data-design-surface="desktop"] .canvas.has-chat {
+    right: -1px;
+  }
+
+  /* The source grid spans the whole 1920px frame: first dot bounds (9,11)
+     with 24px pitch. Keep its phase stable while the left crop changes. */
+  .app[data-design-surface="desktop"] .canvas-pattern-dots {
+    background-position: calc(
+        100% - 1887px + var(--canvas-pan-x) + (var(--canvas-dot-cell) - 24px) /
+          2
+      )
+      calc(-44px + var(--canvas-pan-y) - (var(--canvas-dot-cell) - 24px) / 2);
+  }
+
+  /* The fixed 1080px surface must not inherit the browser-height helper that
+     appends a 570px settings-nav spacer at a 720px outer viewport. */
+  .app[data-design-surface="desktop"] .settings-nav::after {
+    display: none;
+  }
+
+  /* Workspace's legacy grid selector has higher specificity. Keep the
+     conversation rail opaque on the fixed Figma surface in every background
+     mode. */
+  .app[data-design-surface="desktop"] .conversation-panel::before {
+    background-image: none !important;
+    opacity: 0 !important;
+  }
+}

@@ -1,0 +1,510 @@
+{
+  "inventory": [
+    {
+      "file": "src/App.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 261
+    },
+    {
+      "file": "src/components/assets/AssetPanel.tsx",
+      "colors": {},
+      "lucide": [
+        "ArrowLeft",
+        "Plus",
+        "Upload",
+        "X"
+      ],
+      "lines": 284
+    },
+    {
+      "file": "src/components/assets/assets.css",
+      "colors": {
+        "#333": 2
+      },
+      "lucide": [],
+      "lines": 463
+    },
+    {
+      "file": "src/components/assets/CreateSubject.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 46
+    },
+    {
+      "file": "src/components/canvas/CanvasConnections.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 97
+    },
+    {
+      "file": "src/components/canvas/CanvasMinimap.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 65
+    },
+    {
+      "file": "src/components/canvas/CanvasNavigation.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 149
+    },
+    {
+      "file": "src/components/canvas/CanvasNodeContent.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 39
+    },
+    {
+      "file": "src/components/canvas/CanvasToolbar.tsx",
+      "colors": {},
+      "lucide": [
+        "ChevronDown",
+        "ChevronUp",
+        "Folder",
+        "Heart",
+        "HelpCircle",
+        "Image",
+        "MousePointer2",
+        "Plus",
+        "Video"
+      ],
+      "lines": 208
+    },
+    {
+      "file": "src/components/canvas/CanvasZoomMenu.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 89
+    },
+    {
+      "file": "src/components/canvas/ConnectionFeedback.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 23
+    },
+    {
+      "file": "src/components/canvas/DemoLibrary.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 64
+    },
+    {
+      "file": "src/components/canvas/NodeActions.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 98
+    },
+    {
+      "file": "src/components/canvas/TaskPanel.tsx",
+      "colors": {},
+      "lucide": [
+        "ClipboardList"
+      ],
+      "lines": 63
+    },
+    {
+      "file": "src/components/Canvas.tsx",
+      "colors": {
+        "#0a0a0a": 1
+      },
+      "lucide": [],
+      "lines": 290
+    },
+    {
+      "file": "src/components/CatalogPanel.tsx",
+      "colors": {},
+      "lucide": [
+        "X"
+      ],
+      "lines": 248
+    },
+    {
+      "file": "src/components/CollectionPage.tsx",
+      "colors": {},
+      "lucide": [
+        "ArrowUpRight",
+        "Heart",
+        "LayoutGrid",
+        "List",
+        "Search",
+        "Star"
+      ],
+      "lines": 99
+    },
+    {
+      "file": "src/components/ConversationPanel.tsx",
+      "colors": {},
+      "lucide": [
+        "ArrowUp",
+        "Box",
+        "Copy",
+        "MessageCircle",
+        "Mic",
+        "PanelRightClose",
+        "Plus",
+        "Puzzle",
+        "Trash2"
+      ],
+      "lines": 145
+    },
+    {
+      "file": "src/components/InfoPanel.tsx",
+      "colors": {},
+      "lucide": [
+        "X"
+      ],
+      "lines": 50
+    },
+    {
+      "file": "src/components/LibraryPage.tsx",
+      "colors": {},
+      "lucide": [
+        "ArrowUpRight",
+        "Folder",
+        "GitBranch",
+        "Plus",
+        "Puzzle",
+        "Search"
+      ],
+      "lines": 83
+    },
+    {
+      "file": "src/components/Modal.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 55
+    },
+    {
+      "file": "src/components/nodes/CreationComposer.tsx",
+      "colors": {},
+      "lucide": [
+        "Heart",
+        "Plus",
+        "Square"
+      ],
+      "lines": 281
+    },
+    {
+      "file": "src/components/nodes/CreationParameters.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 87
+    },
+    {
+      "file": "src/components/nodes/DemoMediaPreview.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 143
+    },
+    {
+      "file": "src/components/nodes/DemoResultNode.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 111
+    },
+    {
+      "file": "src/components/nodes/DemoRunButton.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 96
+    },
+    {
+      "file": "src/components/nodes/GenerationCount.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 71
+    },
+    {
+      "file": "src/components/nodes/ImageCreationNode.tsx",
+      "colors": {},
+      "lucide": [
+        "Image",
+        "Upload"
+      ],
+      "lines": 92
+    },
+    {
+      "file": "src/components/nodes/VideoNode.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 123
+    },
+    {
+      "file": "src/components/SavedPane.tsx",
+      "colors": {},
+      "lucide": [
+        "Heart",
+        "Star"
+      ],
+      "lines": 159
+    },
+    {
+      "file": "src/components/SearchPage.tsx",
+      "colors": {
+        "#8b9dc3": 1,
+        "#f5a623": 1,
+        "#e85d75": 1,
+        "#9b8cff": 1
+      },
+      "lucide": [
+        "ArrowUpRight",
+        "Folder",
+        "Heart",
+        "Puzzle",
+        "Search",
+        "Star",
+        "X"
+      ],
+      "lines": 169
+    },
+    {
+      "file": "src/components/settings/ConnectionSettings.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 169
+    },
+    {
+      "file": "src/components/settings/GeneralSettings.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 124
+    },
+    {
+      "file": "src/components/settings/ModelProviderSettings.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 238
+    },
+    {
+      "file": "src/components/settings/settings.css",
+      "colors": {
+        "#161616": 1,
+        "#3c3c3c": 2,
+        "#dadada": 1,
+        "#858585": 1,
+        "#fafafa": 1,
+        "#d4d4d4": 1,
+        "#282828": 1,
+        "#686868": 1,
+        "#e7e7e7": 1,
+        "#363636": 1,
+        "#ccc": 1,
+        "#635bff": 2,
+        "#fff": 2,
+        "#908aff": 1,
+        "#0003": 1,
+        "#b89b67": 1,
+        "#58b67a": 1,
+        "#8c86ff": 1,
+        "#8c86ff26": 1,
+        "#e07676": 1
+      },
+      "lucide": [],
+      "lines": 584
+    },
+    {
+      "file": "src/components/settings/SettingsControls.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 66
+    },
+    {
+      "file": "src/components/settings/SettingsPanel.tsx",
+      "colors": {},
+      "lucide": [
+        "X"
+      ],
+      "lines": 163
+    },
+    {
+      "file": "src/components/settings/SettingsSectionData.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 64
+    },
+    {
+      "file": "src/components/settings/SettingsSections.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 135
+    },
+    {
+      "file": "src/components/Sidebar.tsx",
+      "colors": {},
+      "lucide": [
+        "Archive",
+        "ArrowUpRight",
+        "ChevronDown",
+        "Folder",
+        "GitBranch",
+        "Plus",
+        "Puzzle",
+        "Search",
+        "Settings"
+      ],
+      "lines": 129
+    },
+    {
+      "file": "src/components/TopBar.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 77
+    },
+    {
+      "file": "src/components/UiIcon.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 50
+    },
+    {
+      "file": "src/main.tsx",
+      "colors": {},
+      "lucide": [],
+      "lines": 10
+    },
+    {
+      "file": "src/styles/canvas-actions.css",
+      "colors": {},
+      "lucide": [],
+      "lines": 111
+    },
+    {
+      "file": "src/styles/canvas-navigation.css",
+      "colors": {
+        "#0003": 2,
+        "#111": 1,
+        "#444": 1,
+        "#777": 1,
+        "#858585": 1
+      },
+      "lucide": [],
+      "lines": 182
+    },
+    {
+      "file": "src/styles/catalog.css",
+      "colors": {
+        "#ef6d6d": 2
+      },
+      "lucide": [],
+      "lines": 389
+    },
+    {
+      "file": "src/styles/demo-results.css",
+      "colors": {},
+      "lucide": [],
+      "lines": 291
+    },
+    {
+      "file": "src/styles/generation-count.css",
+      "colors": {
+        "#d9d9d9": 2
+      },
+      "lucide": [],
+      "lines": 93
+    },
+    {
+      "file": "src/styles/global.css",
+      "colors": {
+        "#0a0a0a": 1,
+        "#161616": 1,
+        "#1a1a1a": 1,
+        "#202020": 1,
+        "#333333": 1,
+        "#1f1f1f": 1,
+        "#635bff": 2,
+        "#756fff": 1,
+        "#3c3c3c": 2,
+        "#292929": 1,
+        "#dbdbdb": 1,
+        "#858585": 1,
+        "#707070": 1,
+        "#b2adff": 1,
+        "#ef6d6d": 1,
+        "#ededed": 1,
+        "#f7f7f7": 2,
+        "#eee": 1,
+        "#e5e5e5": 1,
+        "#eaeaea": 1,
+        "#c4c4c4": 1,
+        "#dedede": 1,
+        "#252525": 1,
+        "#646464": 1,
+        "#777": 1,
+        "#594bcb": 1,
+        "#aaa3ff": 1,
+        "#0008": 1
+      },
+      "lucide": [],
+      "lines": 164
+    },
+    {
+      "file": "src/styles/interaction.css",
+      "colors": {},
+      "lucide": [],
+      "lines": 135
+    },
+    {
+      "file": "src/styles/motion.css",
+      "colors": {},
+      "lucide": [],
+      "lines": 87
+    },
+    {
+      "file": "src/styles/responsive.css",
+      "colors": {},
+      "lucide": [],
+      "lines": 16
+    },
+    {
+      "file": "src/styles/ui-tokens.css",
+      "colors": {
+        "#aaa3ff": 1,
+        "#ef6d6d": 1,
+        "#402329": 1,
+        "#79cda8": 1,
+        "#e6b96a": 1,
+        "#b2adff": 1,
+        "#3a3a40": 1,
+        "#0004": 1,
+        "#252525": 1,
+        "#646464": 1,
+        "#594bcb": 2,
+        "#aa263b": 1,
+        "#fce7eb": 1,
+        "#216947": 1,
+        "#8a590c": 1
+      },
+      "lucide": [],
+      "lines": 62
+    },
+    {
+      "file": "src/styles/workspace.css",
+      "colors": {
+        "#343434": 1,
+        "#363636": 2,
+        "#d99500": 1,
+        "#292929": 2,
+        "#262626": 1,
+        "#aaa": 1,
+        "#0c9568": 1,
+        "#d4e8e0": 1,
+        "#202020": 1,
+        "#0008": 1,
+        "#aaa3ff": 1,
+        "rgba(0, 0, 0, 0.3)": 1,
+        "#4b4b4b": 2,
+        "#707070": 5,
+        "#313131": 2,
+        "#808080": 2,
+        "#858585": 1,
+        "#fff": 1,
+        "#f5a623": 2,
+        "#e85d75": 2
+      },
+      "lucide": [],
+      "lines": 1709
+    }
+  ],
+  "issues": []
+}

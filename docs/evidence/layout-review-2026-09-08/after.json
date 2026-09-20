@@ -1,0 +1,822 @@
+{
+  "measurements": [
+    {
+      "name": "1920",
+      "boxes": {
+        "canvas": {
+          "x": 287,
+          "y": 45,
+          "width": 1622,
+          "height": 1025
+        },
+        "chat": {
+          "x": 1412,
+          "y": 63,
+          "width": 476,
+          "height": 985
+        },
+        "toolbar": {
+          "x": 709,
+          "y": 998,
+          "width": 266,
+          "height": 50
+        },
+        "task": {
+          "x": 310,
+          "y": 82,
+          "width": 103,
+          "height": 30
+        },
+        "demo": {
+          "x": 427,
+          "y": 82,
+          "width": 87,
+          "height": 30
+        },
+        "navigation": {
+          "x": 624,
+          "y": 84,
+          "width": 229,
+          "height": 26
+        },
+        "reopen": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "arrange": {
+          "x": 697,
+          "y": 88,
+          "width": 47,
+          "height": 18
+        },
+        "background": {
+          "x": 750,
+          "y": 88,
+          "width": 18,
+          "height": 18
+        },
+        "lines": {
+          "x": 770,
+          "y": 88,
+          "width": 18,
+          "height": 18
+        },
+        "map": {
+          "x": 790,
+          "y": 88,
+          "width": 55,
+          "height": 18
+        }
+      },
+      "collisions": [],
+      "toolbarCenterError": 0.5,
+      "anchors": {
+        "gap": 8,
+        "addOffsetY": 0,
+        "addSize": 28,
+        "deleteOffsetX": 0,
+        "deleteOffsetY": 0
+      },
+      "focus": null
+    },
+    {
+      "name": "collapsed",
+      "boxes": {
+        "canvas": {
+          "x": 287,
+          "y": 45,
+          "width": 1622,
+          "height": 1025
+        },
+        "chat": {
+          "x": 1412,
+          "y": 63,
+          "width": 476,
+          "height": 985
+        },
+        "toolbar": {
+          "x": 817,
+          "y": 998,
+          "width": 50,
+          "height": 50
+        },
+        "task": {
+          "x": 310,
+          "y": 82,
+          "width": 103,
+          "height": 30
+        },
+        "demo": {
+          "x": 427,
+          "y": 82,
+          "width": 87,
+          "height": 30
+        },
+        "navigation": {
+          "x": 624,
+          "y": 84,
+          "width": 229,
+          "height": 26
+        },
+        "reopen": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "arrange": {
+          "x": 697,
+          "y": 88,
+          "width": 47,
+          "height": 18
+        },
+        "background": {
+          "x": 750,
+          "y": 88,
+          "width": 18,
+          "height": 18
+        },
+        "lines": {
+          "x": 770,
+          "y": 88,
+          "width": 18,
+          "height": 18
+        },
+        "map": {
+          "x": 790,
+          "y": 88,
+          "width": 55,
+          "height": 18
+        }
+      },
+      "collisions": [],
+      "toolbarCenterError": 0.5,
+      "anchors": {
+        "gap": 8,
+        "addOffsetY": 0,
+        "addSize": 28,
+        "deleteOffsetX": 0,
+        "deleteOffsetY": 0
+      },
+      "focus": "展开画布工具栏"
+    },
+    {
+      "name": "1920-zoom-50",
+      "boxes": {
+        "canvas": {
+          "x": 287,
+          "y": 45,
+          "width": 1622,
+          "height": 1025
+        },
+        "chat": {
+          "x": 1412,
+          "y": 63,
+          "width": 476,
+          "height": 985
+        },
+        "toolbar": {
+          "x": 709,
+          "y": 998,
+          "width": 266,
+          "height": 50
+        },
+        "task": {
+          "x": 310,
+          "y": 82,
+          "width": 103,
+          "height": 30
+        },
+        "demo": {
+          "x": 427,
+          "y": 82,
+          "width": 87,
+          "height": 30
+        },
+        "navigation": {
+          "x": 624,
+          "y": 84,
+          "width": 229,
+          "height": 26
+        },
+        "reopen": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "arrange": {
+          "x": 697,
+          "y": 88,
+          "width": 47,
+          "height": 18
+        },
+        "background": {
+          "x": 750,
+          "y": 88,
+          "width": 18,
+          "height": 18
+        },
+        "lines": {
+          "x": 770,
+          "y": 88,
+          "width": 18,
+          "height": 18
+        },
+        "map": {
+          "x": 790,
+          "y": 88,
+          "width": 55,
+          "height": 18
+        }
+      },
+      "collisions": [],
+      "toolbarCenterError": 0.5,
+      "anchors": {
+        "gap": 8,
+        "addOffsetY": 0,
+        "addSize": 28,
+        "deleteOffsetX": 0,
+        "deleteOffsetY": 0
+      },
+      "focus": "画布缩放"
+    },
+    {
+      "name": "1920-zoom-200",
+      "boxes": {
+        "canvas": {
+          "x": 287,
+          "y": 45,
+          "width": 1622,
+          "height": 1025
+        },
+        "chat": {
+          "x": 1412,
+          "y": 63,
+          "width": 476,
+          "height": 985
+        },
+        "toolbar": {
+          "x": 709,
+          "y": 998,
+          "width": 266,
+          "height": 50
+        },
+        "task": {
+          "x": 310,
+          "y": 82,
+          "width": 103,
+          "height": 30
+        },
+        "demo": {
+          "x": 427,
+          "y": 82,
+          "width": 87,
+          "height": 30
+        },
+        "navigation": {
+          "x": 624,
+          "y": 84,
+          "width": 229,
+          "height": 26
+        },
+        "reopen": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "arrange": {
+          "x": 697,
+          "y": 88,
+          "width": 47,
+          "height": 18
+        },
+        "background": {
+          "x": 750,
+          "y": 88,
+          "width": 18,
+          "height": 18
+        },
+        "lines": {
+          "x": 770,
+          "y": 88,
+          "width": 18,
+          "height": 18
+        },
+        "map": {
+          "x": 790,
+          "y": 88,
+          "width": 55,
+          "height": 18
+        }
+      },
+      "collisions": [],
+      "toolbarCenterError": 0.5,
+      "anchors": {
+        "gap": 8,
+        "addOffsetY": 0,
+        "addSize": 28,
+        "deleteOffsetX": 0,
+        "deleteOffsetY": 0
+      },
+      "focus": "画布缩放"
+    },
+    {
+      "name": "1440",
+      "boxes": {
+        "canvas": {
+          "x": 287,
+          "y": 45,
+          "width": 1142,
+          "height": 1025
+        },
+        "chat": {
+          "x": 1048,
+          "y": 63,
+          "width": 360,
+          "height": 985
+        },
+        "toolbar": {
+          "x": 527,
+          "y": 998,
+          "width": 266,
+          "height": 50
+        },
+        "task": {
+          "x": 310,
+          "y": 82,
+          "width": 103,
+          "height": 30
+        },
+        "demo": {
+          "x": 427,
+          "y": 82,
+          "width": 87,
+          "height": 30
+        },
+        "navigation": {
+          "x": 260,
+          "y": 84,
+          "width": 229,
+          "height": 26
+        },
+        "reopen": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "arrange": {
+          "x": 333,
+          "y": 88,
+          "width": 47,
+          "height": 18
+        },
+        "background": {
+          "x": 386,
+          "y": 88,
+          "width": 18,
+          "height": 18
+        },
+        "lines": {
+          "x": 406,
+          "y": 88,
+          "width": 18,
+          "height": 18
+        },
+        "map": {
+          "x": 426,
+          "y": 88,
+          "width": 55,
+          "height": 18
+        }
+      },
+      "collisions": [
+        "task / navigation",
+        "demo / navigation"
+      ],
+      "toolbarCenterError": 0.5,
+      "anchors": {
+        "gap": 8,
+        "addOffsetY": 0,
+        "addSize": 28,
+        "deleteOffsetX": 0,
+        "deleteOffsetY": 0
+      },
+      "focus": null
+    },
+    {
+      "name": "1024",
+      "boxes": {
+        "canvas": {
+          "x": 235,
+          "y": 45,
+          "width": 778,
+          "height": 1025
+        },
+        "chat": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "toolbar": {
+          "x": 491,
+          "y": 998,
+          "width": 266,
+          "height": 50
+        },
+        "task": {
+          "x": 258,
+          "y": 82,
+          "width": 103,
+          "height": 30
+        },
+        "demo": {
+          "x": 375,
+          "y": 82,
+          "width": 87,
+          "height": 30
+        },
+        "navigation": {
+          "x": 631,
+          "y": 84,
+          "width": 229,
+          "height": 26
+        },
+        "reopen": {
+          "x": 578.5,
+          "y": 82,
+          "width": 66,
+          "height": 30
+        },
+        "arrange": {
+          "x": 704,
+          "y": 88,
+          "width": 47,
+          "height": 18
+        },
+        "background": {
+          "x": 757,
+          "y": 88,
+          "width": 18,
+          "height": 18
+        },
+        "lines": {
+          "x": 777,
+          "y": 88,
+          "width": 18,
+          "height": 18
+        },
+        "map": {
+          "x": 797,
+          "y": 88,
+          "width": 55,
+          "height": 18
+        }
+      },
+      "collisions": [
+        "navigation / reopen"
+      ],
+      "toolbarCenterError": 0,
+      "anchors": {
+        "gap": 8,
+        "addOffsetY": 0,
+        "addSize": 28,
+        "deleteOffsetX": 0,
+        "deleteOffsetY": 0
+      },
+      "focus": null
+    },
+    {
+      "name": "768",
+      "boxes": {
+        "canvas": {
+          "x": 72,
+          "y": 45,
+          "width": 685,
+          "height": 845
+        },
+        "chat": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "toolbar": {
+          "x": 281.5,
+          "y": 818,
+          "width": 266,
+          "height": 50
+        },
+        "task": {
+          "x": 85,
+          "y": 66,
+          "width": 103,
+          "height": 30
+        },
+        "demo": {
+          "x": 196,
+          "y": 66,
+          "width": 83,
+          "height": 30
+        },
+        "navigation": {
+          "x": 385,
+          "y": 68,
+          "width": 229,
+          "height": 26
+        },
+        "reopen": {
+          "x": 366,
+          "y": 66,
+          "width": 62,
+          "height": 30
+        },
+        "arrange": {
+          "x": 458,
+          "y": 72,
+          "width": 47,
+          "height": 18
+        },
+        "background": {
+          "x": 511,
+          "y": 72,
+          "width": 18,
+          "height": 18
+        },
+        "lines": {
+          "x": 531,
+          "y": 72,
+          "width": 18,
+          "height": 18
+        },
+        "map": {
+          "x": 551,
+          "y": 72,
+          "width": 55,
+          "height": 18
+        }
+      },
+      "collisions": [
+        "navigation / reopen"
+      ],
+      "toolbarCenterError": 0,
+      "anchors": {
+        "gap": 8,
+        "addOffsetY": 0,
+        "addSize": 44,
+        "deleteOffsetX": 0,
+        "deleteOffsetY": 0
+      },
+      "focus": null
+    },
+    {
+      "name": "390",
+      "boxes": {
+        "canvas": {
+          "x": 72,
+          "y": 45,
+          "width": 307,
+          "height": 845
+        },
+        "chat": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "toolbar": {
+          "x": 92.5,
+          "y": 818,
+          "width": 266,
+          "height": 50
+        },
+        "task": {
+          "x": 85,
+          "y": 66,
+          "width": 103,
+          "height": 30
+        },
+        "demo": {
+          "x": 196,
+          "y": 66,
+          "width": 83,
+          "height": 30
+        },
+        "navigation": {
+          "x": 121,
+          "y": 164,
+          "width": 229,
+          "height": 26
+        },
+        "reopen": {
+          "x": 304,
+          "y": 66,
+          "width": 62,
+          "height": 30
+        },
+        "arrange": {
+          "x": 194,
+          "y": 168,
+          "width": 47,
+          "height": 18
+        },
+        "background": {
+          "x": 247,
+          "y": 168,
+          "width": 18,
+          "height": 18
+        },
+        "lines": {
+          "x": 267,
+          "y": 168,
+          "width": 18,
+          "height": 18
+        },
+        "map": {
+          "x": 287,
+          "y": 168,
+          "width": 55,
+          "height": 18
+        }
+      },
+      "collisions": [],
+      "toolbarCenterError": 0,
+      "anchors": {
+        "gap": 8,
+        "addOffsetY": 0,
+        "addSize": 44,
+        "deleteOffsetX": 0,
+        "deleteOffsetY": 0
+      },
+      "focus": null
+    },
+    {
+      "name": "390-zoom-50",
+      "boxes": {
+        "canvas": {
+          "x": 72,
+          "y": 45,
+          "width": 307,
+          "height": 845
+        },
+        "chat": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "toolbar": {
+          "x": 92.5,
+          "y": 818,
+          "width": 266,
+          "height": 50
+        },
+        "task": {
+          "x": 85,
+          "y": 66,
+          "width": 103,
+          "height": 30
+        },
+        "demo": {
+          "x": 196,
+          "y": 66,
+          "width": 83,
+          "height": 30
+        },
+        "navigation": {
+          "x": 121,
+          "y": 164,
+          "width": 229,
+          "height": 26
+        },
+        "reopen": {
+          "x": 304,
+          "y": 66,
+          "width": 62,
+          "height": 30
+        },
+        "arrange": {
+          "x": 194,
+          "y": 168,
+          "width": 47,
+          "height": 18
+        },
+        "background": {
+          "x": 247,
+          "y": 168,
+          "width": 18,
+          "height": 18
+        },
+        "lines": {
+          "x": 267,
+          "y": 168,
+          "width": 18,
+          "height": 18
+        },
+        "map": {
+          "x": 287,
+          "y": 168,
+          "width": 55,
+          "height": 18
+        }
+      },
+      "collisions": [],
+      "toolbarCenterError": 0,
+      "anchors": {
+        "gap": 8,
+        "addOffsetY": 0,
+        "addSize": 44,
+        "deleteOffsetX": 0,
+        "deleteOffsetY": 0
+      },
+      "focus": "画布缩放"
+    },
+    {
+      "name": "390-zoom-200",
+      "boxes": {
+        "canvas": {
+          "x": 72,
+          "y": 45,
+          "width": 307,
+          "height": 845
+        },
+        "chat": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "toolbar": {
+          "x": 92.5,
+          "y": 818,
+          "width": 266,
+          "height": 50
+        },
+        "task": {
+          "x": 85,
+          "y": 66,
+          "width": 103,
+          "height": 30
+        },
+        "demo": {
+          "x": 196,
+          "y": 66,
+          "width": 83,
+          "height": 30
+        },
+        "navigation": {
+          "x": 121,
+          "y": 164,
+          "width": 229,
+          "height": 26
+        },
+        "reopen": {
+          "x": 304,
+          "y": 66,
+          "width": 62,
+          "height": 30
+        },
+        "arrange": {
+          "x": 194,
+          "y": 168,
+          "width": 47,
+          "height": 18
+        },
+        "background": {
+          "x": 247,
+          "y": 168,
+          "width": 18,
+          "height": 18
+        },
+        "lines": {
+          "x": 267,
+          "y": 168,
+          "width": 18,
+          "height": 18
+        },
+        "map": {
+          "x": 287,
+          "y": 168,
+          "width": 55,
+          "height": 18
+        }
+      },
+      "collisions": [],
+      "toolbarCenterError": 0,
+      "anchors": {
+        "gap": 8,
+        "addOffsetY": 0,
+        "addSize": 44,
+        "deleteOffsetX": 0,
+        "deleteOffsetY": 0
+      },
+      "focus": "画布缩放"
+    }
+  ],
+  "errors": []
+}

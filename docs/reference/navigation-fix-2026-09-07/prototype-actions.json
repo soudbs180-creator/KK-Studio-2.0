@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"result\":[{\"id\":\"100:16335\",\"name\":\"左下角地图功能按钮\",\"visited\":45,\"actions\":[]},{\"id\":\"170:8490\",\"name\":\"视频模块\",\"visited\":81,\"actions\":[{\"id\":\"170:8549\",\"name\":\"声音\",\"reactions\":[{\"action\":{\"type\":\"NODE\",\"destinationId\":\"143:27097\",\"navigation\":\"CHANGE_TO\",\"transition\":null,\"resetVideoPosition\":false,\"resetScrollPosition\":false},\"actions\":[{\"type\":\"NODE\",\"destinationId\":\"143:27097\",\"navigation\":\"CHANGE_TO\",\"transition\":null,\"resetVideoPosition\":false,\"resetScrollPosition\":false}],\"trigger\":{\"type\":\"ON_CLICK\"}},{\"action\":{\"type\":\"NODE\",\"destinationId\":\"143:27091\",\"navigation\":\"CHANGE_TO\",\"transition\":null,\"resetVideoPosition\":false,\"resetScrollPosition\":false},\"actions\":[{\"type\":\"NODE\",\"destinationId\":\"143:27091\",\"navigation\":\"CHANGE_TO\",\"transition\":null,\"resetVideoPosition\":false,\"resetScrollPosition\":false}],\"trigger\":{\"type\":\"MOUSE_LEAVE\",\"delay\":0}}]}]},{\"id\":\"89:15928\",\"name\":\"Group 50\",\"visited\":15,\"actions\":[]}],\"related\":[{\"id\":\"170:8248\",\"name\":\"背景框\",\"width\":476,\"height\":985},{\"id\":\"170:8804\",\"name\":\"模型选择模块\",\"width\":227,\"height\":247},{\"id\":\"170:8808\",\"name\":\"模型选择\",\"width\":221,\"height\":40},{\"id\":\"170:8817\",\"name\":\"模型选择\",\"width\":221,\"height\":40},{\"id\":\"170:8826\",\"name\":\"模型选择\",\"width\":221,\"height\":40},{\"id\":\"170:8835\",\"name\":\"模型选择\",\"width\":221,\"height\":40},{\"id\":\"170:8844\",\"name\":\"模型选择\",\"width\":221,\"height\":40},{\"id\":\"170:8853\",\"name\":\"参数设置\",\"width\":297,\"height\":229},{\"id\":\"170:8967\",\"name\":\"画布比例按钮\",\"width\":63,\"height\":26},{\"id\":\"170:8985\",\"name\":\"调整画布背景颜色\",\"width\":18,\"height\":18},{\"id\":\"170:8952\",\"name\":\"弹出画布比例操作\",\"width\":97,\"height\":140}],\"relatedCount\":11}"
+    }
+  ],
+  "isError": false
+}

@@ -1,0 +1,1541 @@
+{
+  "config": {
+    "argv": [
+      "D:\\tools\\node-v24.20.0-win-x64\\node.exe",
+      "D:\\kk-studio-next\\node_modules\\@playwright\\test\\cli.js",
+      "test"
+    ],
+    "configFile": "D:\\kk-studio-next\\playwright.config.ts",
+    "rootDir": "D:/kk-studio-next/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 5
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/kk-studio-next/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 5
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/kk-studio-next/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "docs/evidence/browser-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 12,
+    "webServer": {
+      "command": "npm run preview -- --host 127.0.0.1 --port 1422 --strictPort",
+      "url": "http://127.0.0.1:1422",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "canvas-navigation.spec.ts",
+      "file": "canvas-navigation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "比例菜单缩放到400%并适应视图，不改变卡片位置或草稿",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 776,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:28.774Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "211ad5a0904e4d66dae3-f3619ac224e80bb35bc2",
+          "file": "canvas-navigation.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "连线和背景控制真实生效，操作不平移画布",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 337,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:29.789Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "211ad5a0904e4d66dae3-9d79b8dfe1eced672de7",
+          "file": "canvas-navigation.spec.ts",
+          "line": 42,
+          "column": 1
+        },
+        {
+          "title": "缩放快捷键只在画布内生效，输入和中文合成不触发",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5401,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('图片提示词')\nExpected: \u001b[32m\"!\"\u001b[39m\nReceived: \u001b[31m\"1\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" getByLabel('图片提示词') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('图片提示词')\u001b[22m\n\u001b[2m    14 × locator resolved to <textarea maxlength=\"7500\" aria-label=\"图片提示词\" placeholder=\"描述你想要生成的内容\">1</textarea>\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('图片提示词')\nExpected: \u001b[32m\"!\"\u001b[39m\nReceived: \u001b[31m\"1\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" getByLabel('图片提示词') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('图片提示词')\u001b[22m\n\u001b[2m    14 × locator resolved to <textarea maxlength=\"7500\" aria-label=\"图片提示词\" placeholder=\"描述你想要生成的内容\">1</textarea>\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n    at D:\\kk-studio-next\\tests\\browser\\canvas-navigation.spec.ts:75:24",
+                    "location": {
+                      "file": "D:\\kk-studio-next\\tests\\browser\\canvas-navigation.spec.ts",
+                      "column": 24,
+                      "line": 75
+                    },
+                    "snippet": "  73 |   const before = await trigger.textContent();\n  74 |   await page.keyboard.press(\"Shift+1\");\n> 75 |   await expect(prompt).toHaveValue(\"!\");\n     |                        ^\n  76 |   await expect(trigger).toHaveText(before!);\n  77 |   await node.focus();\n  78 |   await node.dispatchEvent(\"keydown\", {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\canvas-navigation.spec.ts",
+                        "column": 24,
+                        "line": 75
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('图片提示词')\nExpected: \u001b[32m\"!\"\u001b[39m\nReceived: \u001b[31m\"1\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" getByLabel('图片提示词') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('图片提示词')\u001b[22m\n\u001b[2m    14 × locator resolved to <textarea maxlength=\"7500\" aria-label=\"图片提示词\" placeholder=\"描述你想要生成的内容\">1</textarea>\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n\n  73 |   const before = await trigger.textContent();\n  74 |   await page.keyboard.press(\"Shift+1\");\n> 75 |   await expect(prompt).toHaveValue(\"!\");\n     |                        ^\n  76 |   await expect(trigger).toHaveText(before!);\n  77 |   await node.focus();\n  78 |   await node.dispatchEvent(\"keydown\", {\n    at D:\\kk-studio-next\\tests\\browser\\canvas-navigation.spec.ts:75:24"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:30.137Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\canvas-navigation-缩放快捷键只在画布内生效，输入和中文合成不触发\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\kk-studio-next\\tests\\browser\\canvas-navigation.spec.ts",
+                    "column": 24,
+                    "line": 75
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "211ad5a0904e4d66dae3-46b21b1bf26507f0f212",
+          "file": "canvas-navigation.spec.ts",
+          "line": 61,
+          "column": 1
+        },
+        {
+          "title": "画布导航与菜单 1920 可触达",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 742,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:36.005Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "211ad5a0904e4d66dae3-30eebfe2a24bae5eea9a",
+          "file": "canvas-navigation.spec.ts",
+          "line": 92,
+          "column": 3
+        },
+        {
+          "title": "画布导航与菜单 1440 可触达",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 585,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:36.909Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "211ad5a0904e4d66dae3-fbb9f41aca05472c9f72",
+          "file": "canvas-navigation.spec.ts",
+          "line": 92,
+          "column": 3
+        },
+        {
+          "title": "画布导航与菜单 768 可触达",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 555,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:37.501Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "211ad5a0904e4d66dae3-99dba5515a1ba8426bb6",
+          "file": "canvas-navigation.spec.ts",
+          "line": 92,
+          "column": 3
+        },
+        {
+          "title": "画布导航与菜单 390 可触达",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 530,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:38.061Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "211ad5a0904e4d66dae3-9fa0d9bdd6f0a541e44b",
+          "file": "canvas-navigation.spec.ts",
+          "line": 92,
+          "column": 3
+        }
+      ]
+    },
+    {
+      "title": "composer-fidelity.spec.ts",
+      "file": "composer-fidelity.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "图片编辑器展开后仍在卡片下方，输入区不覆盖底部控件",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 933,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:28.774Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "82aca1325f7b125f9188-8242737dc38cf0fcb493",
+          "file": "composer-fidelity.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "菜单 Escape 先收起菜单，再次 Escape 收起编辑器并保留草稿",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 912,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:29.947Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "82aca1325f7b125f9188-6447ff2ffa92ff055f2e",
+          "file": "composer-fidelity.spec.ts",
+          "line": 16,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "frontend.spec.ts",
+      "file": "frontend.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "资产搜索、空态恢复、列表、紧凑视图及创建主体",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 1864,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:28.788Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-72faf9333e8a79565af7",
+          "file": "frontend.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "设置主题保存重载、键盘关闭及导航",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 827,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:30.902Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-a477cd82c01e8016195c",
+          "file": "frontend.spec.ts",
+          "line": 55,
+          "column": 1
+        },
+        {
+          "title": "模型供应商使用 API 地址，连接状态真实且密钥不落盘",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 1164,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:31.735Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-19b90e79fc3764e00a68",
+          "file": "frontend.spec.ts",
+          "line": 80,
+          "column": 1
+        },
+        {
+          "title": "本地导入成功与错误恢复，不伪造生成和回复",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 888,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:32.905Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-4975fb5e501519906828",
+          "file": "frontend.spec.ts",
+          "line": 114,
+          "column": 1
+        },
+        {
+          "title": "无限画布隐藏滚动条，卡片拖动时连接线跟随",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 1624,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:33.800Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-a23e900871e67c20e299",
+          "file": "frontend.spec.ts",
+          "line": 163,
+          "column": 1
+        },
+        {
+          "title": "画布可新增卡片、拖动、删除并把收藏同步到收藏页",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 1362,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:35.430Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-8b62bbc3c595891e00e9",
+          "file": "frontend.spec.ts",
+          "line": 352,
+          "column": 1
+        },
+        {
+          "title": "收藏与全局搜索弹窗可导航、筛选并恢复焦点",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 622,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:36.797Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-ea546595c4770b4306f9",
+          "file": "frontend.spec.ts",
+          "line": 382,
+          "column": 1
+        },
+        {
+          "title": "布局 1920×1080 无页面溢出，资产与设置可用",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 468,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:37.426Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-335e4ec11a067d083e78",
+          "file": "frontend.spec.ts",
+          "line": 417,
+          "column": 3
+        },
+        {
+          "title": "布局 1440×900 无页面溢出，资产与设置可用",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 467,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:37.900Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-035c8d5ff1076a6a9bdc",
+          "file": "frontend.spec.ts",
+          "line": 417,
+          "column": 3
+        },
+        {
+          "title": "布局 768×1024 无页面溢出，资产与设置可用",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 440,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:38.372Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-06fe5d8395e68dcd1b22",
+          "file": "frontend.spec.ts",
+          "line": 417,
+          "column": 3
+        },
+        {
+          "title": "布局 390×844 无页面溢出，资产与设置可用",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 414,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:38.819Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-74dafb4a98c0951543f5",
+          "file": "frontend.spec.ts",
+          "line": 417,
+          "column": 3
+        },
+        {
+          "title": "草稿与消息在收起对话及页面切换后保留",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 389,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:39.237Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-b4b25af47e56bf818492",
+          "file": "frontend.spec.ts",
+          "line": 443,
+          "column": 1
+        },
+        {
+          "title": "窗口缩小后对话可重新展开",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 340,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:39.631Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-0b46d6109352a2773612",
+          "file": "frontend.spec.ts",
+          "line": 461,
+          "column": 1
+        },
+        {
+          "title": "创建主体的 Escape 与焦点仅作用于当前弹窗",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 524,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:39.976Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-88ab9ca4f091ccd80b3a",
+          "file": "frontend.spec.ts",
+          "line": 471,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "interaction-regressions.spec.ts",
+      "file": "interaction-regressions.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "删除前一个节点后，后一个节点保留自己的草稿",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 1190,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:28.788Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "de6f41d3e5af6cf87e63-dbbf9f5f899932847170",
+          "file": "interaction-regressions.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "新增卡片的完整编辑区在可操作区域内 1920",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 639,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:30.238Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "de6f41d3e5af6cf87e63-b0928307db93b359b29a",
+          "file": "interaction-regressions.spec.ts",
+          "line": 20,
+          "column": 3
+        },
+        {
+          "title": "新增卡片的完整编辑区在可操作区域内 390",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "failed",
+                  "duration": 587,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m72\u001b[39m\nReceived:    \u001b[31m49\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m72\u001b[39m\nReceived:    \u001b[31m49\u001b[39m\n    at D:\\kk-studio-next\\tests\\browser\\interaction-regressions.spec.ts:32:21",
+                    "location": {
+                      "file": "D:\\kk-studio-next\\tests\\browser\\interaction-regressions.spec.ts",
+                      "column": 21,
+                      "line": 32
+                    },
+                    "snippet": "  30 |       .getByRole(\"toolbar\", { name: \"画布工具\" })\n  31 |       .boundingBox();\n> 32 |     expect(card!.x).toBeGreaterThanOrEqual(canvas!.x);\n     |                     ^\n  33 |     expect(card!.y).toBeGreaterThanOrEqual(canvas!.y + 60);\n  34 |     expect(card!.x + card!.width).toBeLessThanOrEqual(\n  35 |       canvas!.x + canvas!.width,"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\interaction-regressions.spec.ts",
+                        "column": 21,
+                        "line": 32
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m72\u001b[39m\nReceived:    \u001b[31m49\u001b[39m\n\n  30 |       .getByRole(\"toolbar\", { name: \"画布工具\" })\n  31 |       .boundingBox();\n> 32 |     expect(card!.x).toBeGreaterThanOrEqual(canvas!.x);\n     |                     ^\n  33 |     expect(card!.y).toBeGreaterThanOrEqual(canvas!.y + 60);\n  34 |     expect(card!.x + card!.width).toBeLessThanOrEqual(\n  35 |       canvas!.x + canvas!.width,\n    at D:\\kk-studio-next\\tests\\browser\\interaction-regressions.spec.ts:32:21"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:30.885Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\interaction-regressions-新增卡片的完整编辑区在可操作区域内-390\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\kk-studio-next\\tests\\browser\\interaction-regressions.spec.ts",
+                    "column": 21,
+                    "line": 32
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "de6f41d3e5af6cf87e63-92342e1087d7842406da",
+          "file": "interaction-regressions.spec.ts",
+          "line": 20,
+          "column": 3
+        },
+        {
+          "title": "模型测试拒绝 HTML 假成功并可从 HTTP 错误恢复",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 804,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:32.088Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "de6f41d3e5af6cf87e63-24df43b5986622166c59",
+          "file": "interaction-regressions.spec.ts",
+          "line": 45,
+          "column": 1
+        },
+        {
+          "title": "取消、编辑配置与离线状态不会留下过期的连接成功提示",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 621,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:33.059Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "de6f41d3e5af6cf87e63-35fb01af07d68c4a159d",
+          "file": "interaction-regressions.spec.ts",
+          "line": 70,
+          "column": 1
+        },
+        {
+          "title": "配置入口定位到对应设置分类，菜单支持 Escape",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 817,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:33.686Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "de6f41d3e5af6cf87e63-6974915ff2e0df28ffe5",
+          "file": "interaction-regressions.spec.ts",
+          "line": 106,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "ui-motion.spec.ts",
+      "file": "ui-motion.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "搜索弹窗按原稿展示喜欢与收藏双栏，收藏可编辑、查找与移除",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 1568,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:28.787Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-97fc705f41098b6f9dd2",
+          "file": "ui-motion.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "视频编辑器只在选中时出现，参数与提示词在切换后保留",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 661,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:30.607Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-910222927d2142590814",
+          "file": "ui-motion.spec.ts",
+          "line": 47,
+          "column": 1
+        },
+        {
+          "title": "任务面板显示真实空态，滚轮和 Escape 不影响画布",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 400,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:31.276Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-ee49a5925929c454da44",
+          "file": "ui-motion.spec.ts",
+          "line": 75,
+          "column": 1
+        },
+        {
+          "title": "整理画布与小地图可实际定位节点，导航控件不跟随画布平移",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 445,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:31.681Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-2669498c02d062c84e72",
+          "file": "ui-motion.spec.ts",
+          "line": 100,
+          "column": 1
+        },
+        {
+          "title": "减少动态效果模式关闭进场动画，弹窗关闭恢复焦点",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 305,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:32.133Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-2171158e4c0f0b1edf37",
+          "file": "ui-motion.spec.ts",
+          "line": 124,
+          "column": 1
+        },
+        {
+          "title": "窄桌面展开编辑器后，参数与生成按钮不被工具栏遮挡",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 897,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:32.445Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-37edc2443526a1d633be",
+          "file": "ui-motion.spec.ts",
+          "line": 139,
+          "column": 1
+        },
+        {
+          "title": "键盘关闭任务弹层不取消卡片选择，上传只由可见按钮触发",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 257,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:33.348Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-3a72f47d6d8308412461",
+          "file": "ui-motion.spec.ts",
+          "line": 170,
+          "column": 1
+        },
+        {
+          "title": "搜索收藏弹窗 1920 可操作且无横向溢出",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 602,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:33.612Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-06a142601e7a055349fd",
+          "file": "ui-motion.spec.ts",
+          "line": 194,
+          "column": 3
+        },
+        {
+          "title": "搜索收藏弹窗 1440 可操作且无横向溢出",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 596,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:34.219Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-c61802b13ebc2905ce12",
+          "file": "ui-motion.spec.ts",
+          "line": 194,
+          "column": 3
+        },
+        {
+          "title": "搜索收藏弹窗 768 可操作且无横向溢出",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 623,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:34.820Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-9b729eadfbc4641ca15b",
+          "file": "ui-motion.spec.ts",
+          "line": 194,
+          "column": 3
+        },
+        {
+          "title": "搜索收藏弹窗 390 可操作且无横向溢出",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 653,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-07T01:53:35.448Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-d88a9b03f83234e46d24",
+          "file": "ui-motion.spec.ts",
+          "line": 194,
+          "column": 3
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-07T01:53:27.408Z",
+    "duration": 13756.487000000001,
+    "expected": 38,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

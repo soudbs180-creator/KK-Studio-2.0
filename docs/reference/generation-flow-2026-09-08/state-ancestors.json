@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "[{\"id\":\"170:8709\",\"chain\":[{\"id\":\"170:8709\",\"name\":\"正在生成中\",\"type\":\"TEXT\",\"width\":20.125,\"height\":5,\"reactions\":[]},{\"id\":\"170:8703\",\"name\":\"Group 53\",\"type\":\"GROUP\",\"width\":40.25,\"height\":52,\"reactions\":[]},{\"id\":\"170:8693\",\"name\":\"Frame 6\",\"type\":\"FRAME\",\"width\":170,\"height\":174,\"reactions\":[]},{\"id\":\"170:8687\",\"name\":\"任务栏展开\",\"type\":\"GROUP\",\"width\":196,\"height\":240,\"reactions\":[]},{\"id\":\"170:1029\",\"name\":\"视频展示的状态\",\"type\":\"FRAME\",\"width\":1920,\"height\":1080,\"reactions\":[]}]},{\"id\":\"170:8296\",\"chain\":[{\"id\":\"170:8296\",\"name\":\"描述你想要生成的内容\",\"type\":\"TEXT\",\"width\":100,\"height\":12,\"reactions\":[]},{\"id\":\"170:8294\",\"name\":\"输入框\",\"type\":\"GROUP\",\"width\":430,\"height\":170,\"reactions\":[]},{\"id\":\"170:8247\",\"name\":\"右边侧边栏\",\"type\":\"GROUP\",\"width\":476,\"height\":985,\"reactions\":[]},{\"id\":\"170:1029\",\"name\":\"视频展示的状态\",\"type\":\"FRAME\",\"width\":1920,\"height\":1080,\"reactions\":[]},{\"id\":\"0:1\",\"name\":\"Page 1\",\"type\":\"PAGE\",\"reactions\":[]}]},{\"id\":\"170:8550\",\"chain\":[{\"id\":\"170:8550\",\"name\":\"生成数量选择\",\"type\":\"GROUP\",\"width\":34,\"height\":34,\"reactions\":[]},{\"id\":\"170:8515\",\"name\":\"输入框创作\",\"type\":\"GROUP\",\"width\":590,\"height\":237,\"reactions\":[]},{\"id\":\"170:8490\",\"name\":\"视频模块\",\"type\":\"GROUP\",\"width\":590,\"height\":471,\"reactions\":[]},{\"id\":\"170:1029\",\"name\":\"视频展示的状态\",\"type\":\"FRAME\",\"width\":1920,\"height\":1080,\"reactions\":[]},{\"id\":\"0:1\",\"name\":\"Page 1\",\"type\":\"PAGE\",\"reactions\":[]}]}]"
+    }
+  ],
+  "isError": false
+}

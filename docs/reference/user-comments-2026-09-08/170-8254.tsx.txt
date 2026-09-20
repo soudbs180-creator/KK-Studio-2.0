@@ -1,0 +1,22 @@
+const imgProperty1 = "https://www.figma.com/api/mcp/asset/3e085b29-5872-4f9a-9f41-8b21032fd8bd.svg";
+const imgProperty2 = "https://www.figma.com/api/mcp/asset/e89aee69-daf1-4172-b035-07d367bcc977.svg";
+
+type ComponentProps = {
+  className?: string;
+  property1?: "右打开" | "右关闭";
+};
+
+function Component({ className, property1 = "右打开" }: ComponentProps) {
+  const is = property1 === "右关闭";
+  return (
+    <button className={className || "block relative size-[18px]"} id={is ? "node-143_28077" : "node-143_28073"}>
+      <div className="absolute inset-[-9.72%]">
+        <img alt="" className="block max-w-none size-full" src={is ? imgProperty2 : imgProperty1} />
+      </div>
+    </button>
+  );
+}
+
+export default function Component1() {
+  return <Component className="block cursor-pointer relative size-full" property1="右关闭" />;
+}

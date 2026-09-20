@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "[{\"id\":\"170:8515\",\"name\":\"输入框创作\",\"parent\":\"170:8490\",\"width\":590,\"height\":237,\"reactions\":[],\"children\":[{\"id\":\"170:8549\",\"name\":\"语音输入与禁用\",\"reactions\":[{\"action\":{\"type\":\"NODE\",\"destinationId\":\"143:27097\",\"navigation\":\"CHANGE_TO\",\"transition\":null,\"resetVideoPosition\":false,\"resetScrollPosition\":false},\"actions\":[{\"type\":\"NODE\",\"destinationId\":\"143:27097\",\"navigation\":\"CHANGE_TO\",\"transition\":null,\"resetVideoPosition\":false,\"resetScrollPosition\":false}],\"trigger\":{\"type\":\"ON_CLICK\"}},{\"action\":{\"type\":\"NODE\",\"destinationId\":\"143:27091\",\"navigation\":\"CHANGE_TO\",\"transition\":null,\"resetVideoPosition\":false,\"resetScrollPosition\":false},\"actions\":[{\"type\":\"NODE\",\"destinationId\":\"143:27091\",\"navigation\":\"CHANGE_TO\",\"transition\":null,\"resetVideoPosition\":false,\"resetScrollPosition\":false}],\"trigger\":{\"type\":\"MOUSE_LEAVE\",\"delay\":0}}]}]}]"
+    }
+  ],
+  "isError": false
+}

@@ -1,0 +1,33 @@
+export default function Component() {
+  return (
+    <div className="[word-break:break-word] contents font-['Inter:Bold'] font-bold leading-[normal] not-italic relative size-full text-[#707070] text-[12px] whitespace-nowrap" data-node-id="16:59996" data-name="顶部">
+      <p className="absolute inset-[0.93%_95.99%_97.69%_0.99%]" data-node-id="1:7222">
+        KK Studio
+      </p>
+      <p className="absolute inset-[0.93%_91.2%_97.69%_7.55%]" data-node-id="1:7224">
+        文件
+      </p>
+      <p className="absolute inset-[0.93%_88.59%_97.69%_10.16%]" data-node-id="1:7225">
+        编辑
+      </p>
+      <p className="absolute inset-[0.93%_85.99%_97.69%_12.76%]" data-node-id="1:7226">
+        窗口
+      </p>
+      <p className="absolute inset-[0.93%_83.39%_97.69%_15.36%]" data-node-id="1:7227">
+        帮助
+      </p>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

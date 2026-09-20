@@ -1,0 +1,454 @@
+[
+  {
+    "state": "landing",
+    "url": "http://127.0.0.1:1421/",
+    "logos": [
+      {
+        "src": "/design/figma/logo.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 20,
+          "y": 75,
+          "width": 26,
+          "height": 26
+        },
+        "natural": [
+          26,
+          26
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 24,
+          "y": 1007,
+          "width": 26,
+          "height": 26
+        },
+        "natural": [
+          26,
+          26
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-hero.svg",
+        "class": "",
+        "parent": "start-brand",
+        "rect": {
+          "x": 1069.421875,
+          "y": 202.421875,
+          "width": 63.140625,
+          "height": 63.140625
+        },
+        "natural": [
+          64,
+          64
+        ],
+        "loaded": true
+      }
+    ]
+  },
+  {
+    "state": "account",
+    "url": "http://127.0.0.1:1421/",
+    "logos": [
+      {
+        "src": "/design/figma/logo.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 20,
+          "y": 75,
+          "width": 26,
+          "height": 26
+        },
+        "natural": [
+          26,
+          26
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-account.svg",
+        "class": "",
+        "parent": "account-logo logo",
+        "rect": {
+          "x": 26,
+          "y": 818,
+          "width": 30,
+          "height": 30
+        },
+        "natural": [
+          30,
+          30
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/account-logout.svg",
+        "class": "",
+        "parent": "",
+        "rect": {
+          "x": 173.5,
+          "y": 860,
+          "width": 14,
+          "height": 14
+        },
+        "natural": [
+          16,
+          15
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 24,
+          "y": 1007,
+          "width": 26,
+          "height": 26
+        },
+        "natural": [
+          26,
+          26
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-hero.svg",
+        "class": "",
+        "parent": "start-brand",
+        "rect": {
+          "x": 1069.421875,
+          "y": 202.421875,
+          "width": 63.140625,
+          "height": 63.140625
+        },
+        "natural": [
+          64,
+          64
+        ],
+        "loaded": true
+      }
+    ]
+  },
+  {
+    "state": "workspace",
+    "url": "http://127.0.0.1:1421/",
+    "logos": [
+      {
+        "src": "/design/figma/logo.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 20,
+          "y": 75,
+          "width": 26,
+          "height": 26
+        },
+        "natural": [
+          26,
+          26
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 24,
+          "y": 1007,
+          "width": 26,
+          "height": 26
+        },
+        "natural": [
+          26,
+          26
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-message.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 1650.5,
+          "y": 427.5,
+          "width": 26,
+          "height": 26
+        },
+        "natural": [
+          12,
+          12
+        ],
+        "loaded": true
+      }
+    ]
+  },
+  {
+    "state": "model-menu",
+    "url": "http://127.0.0.1:1421/",
+    "logos": [
+      {
+        "src": "/design/figma/logo.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 20,
+          "y": 75,
+          "width": 26,
+          "height": 26
+        },
+        "natural": [
+          26,
+          26
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 24,
+          "y": 1007,
+          "width": 26,
+          "height": 26
+        },
+        "natural": [
+          26,
+          26
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-model.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 396,
+          "y": 810.5,
+          "width": 20,
+          "height": 20
+        },
+        "natural": [
+          20,
+          20
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-model.svg",
+        "class": "model-glyph",
+        "parent": "model-option",
+        "rect": {
+          "x": 410,
+          "y": 555.5,
+          "width": 20,
+          "height": 20
+        },
+        "natural": [
+          20,
+          20
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-model.svg",
+        "class": "model-glyph",
+        "parent": "model-option",
+        "rect": {
+          "x": 410,
+          "y": 605.5,
+          "width": 20,
+          "height": 20
+        },
+        "natural": [
+          20,
+          20
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-model.svg",
+        "class": "model-glyph",
+        "parent": "model-option",
+        "rect": {
+          "x": 410,
+          "y": 655.5,
+          "width": 20,
+          "height": 20
+        },
+        "natural": [
+          20,
+          20
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-model.svg",
+        "class": "model-glyph",
+        "parent": "model-option",
+        "rect": {
+          "x": 410,
+          "y": 705.5,
+          "width": 20,
+          "height": 20
+        },
+        "natural": [
+          20,
+          20
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-credit.svg",
+        "class": "",
+        "parent": "cost-logo",
+        "rect": {
+          "x": 881,
+          "y": 815,
+          "width": 11,
+          "height": 11
+        },
+        "natural": [
+          11,
+          11
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-message.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 1650.5,
+          "y": 427.5,
+          "width": 26,
+          "height": 26
+        },
+        "natural": [
+          12,
+          12
+        ],
+        "loaded": true
+      }
+    ]
+  },
+  {
+    "state": "collapsed",
+    "url": "http://127.0.0.1:1421/",
+    "logos": [
+      {
+        "src": "/design/figma/logo.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 22,
+          "y": 999,
+          "width": 26,
+          "height": 26
+        },
+        "natural": [
+          26,
+          26
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-model.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 175,
+          "y": 810.5,
+          "width": 20,
+          "height": 20
+        },
+        "natural": [
+          20,
+          20
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-credit.svg",
+        "class": "",
+        "parent": "cost-logo",
+        "rect": {
+          "x": 660,
+          "y": 815,
+          "width": 11,
+          "height": 11
+        },
+        "natural": [
+          11,
+          11
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-message.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 1650.5,
+          "y": 427.5,
+          "width": 26,
+          "height": 26
+        },
+        "natural": [
+          12,
+          12
+        ],
+        "loaded": true
+      }
+    ]
+  },
+  {
+    "state": "landing-390",
+    "url": "http://127.0.0.1:1421/",
+    "logos": [
+      {
+        "src": "/design/figma/logo.svg",
+        "class": "",
+        "parent": "logo",
+        "rect": {
+          "x": 19,
+          "y": 786,
+          "width": 26,
+          "height": 26
+        },
+        "natural": [
+          26,
+          26
+        ],
+        "loaded": true
+      },
+      {
+        "src": "/design/figma/logo-hero.svg",
+        "class": "",
+        "parent": "start-brand",
+        "rect": {
+          "x": 198.5,
+          "y": 97,
+          "width": 54,
+          "height": 54
+        },
+        "natural": [
+          64,
+          64
+        ],
+        "loaded": true
+      }
+    ]
+  }
+]

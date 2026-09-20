@@ -1,0 +1,63 @@
+{
+  "mode": "preview",
+  "sourceCommit": "2de3c68e09ef5a94fb9a8b11d48f9ac4e0b3b592",
+  "runtime": {
+    "url": "http://127.0.0.1:1423/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://127.0.0.1:1423/assets/index-DONtT_Pj.js"
+    ],
+    "route": "workspace"
+  },
+  "requests": [
+    {
+      "url": "https://t4-preview.example.test/v1/images/generations"
+    },
+    {
+      "url": "https://t4-preview.example.test/v1/images/generations"
+    },
+    {
+      "url": "https://t4-preview.example.test/v1/images/edits",
+      "editHasOriginal": true
+    }
+  ],
+  "sourceIds": [
+    "project-mu74vfs7-wkis5qvl-prompt",
+    "project-mu74vfs7-wkis5qvl-prompt",
+    "project-mu74vfs7-wkis5qvl-project-mu74vfs7-wkis5qvl-task-mu74vgc4-6j0d1f-result-1"
+  ],
+  "taskStatuses": [
+    "succeeded",
+    "succeeded",
+    "succeeded"
+  ],
+  "results": [
+    "project-mu74vfs7-wkis5qvl-project-mu74vfs7-wkis5qvl-task-mu74vfs7-dv3klm-result-1",
+    "project-mu74vfs7-wkis5qvl-project-mu74vfs7-wkis5qvl-task-mu74vgc4-6j0d1f-result-1",
+    "project-mu74vfs7-wkis5qvl-project-mu74vfs7-wkis5qvl-task-mu74vh3i-1498x0-result-1"
+  ],
+  "resultEdges": [
+    {
+      "id": "result-project-mu74vfs7-wkis5qvl-project-mu74vfs7-wkis5qvl-task-mu74vfs7-dv3klm-result-1",
+      "source": "project-mu74vfs7-wkis5qvl-prompt",
+      "target": "project-mu74vfs7-wkis5qvl-project-mu74vfs7-wkis5qvl-task-mu74vfs7-dv3klm-result-1",
+      "kind": "result"
+    },
+    {
+      "id": "result-project-mu74vfs7-wkis5qvl-project-mu74vfs7-wkis5qvl-task-mu74vgc4-6j0d1f-result-1",
+      "source": "project-mu74vfs7-wkis5qvl-prompt",
+      "target": "project-mu74vfs7-wkis5qvl-project-mu74vfs7-wkis5qvl-task-mu74vgc4-6j0d1f-result-1",
+      "kind": "result"
+    },
+    {
+      "id": "result-project-mu74vfs7-wkis5qvl-project-mu74vfs7-wkis5qvl-task-mu74vh3i-1498x0-result-1",
+      "source": "project-mu74vfs7-wkis5qvl-project-mu74vfs7-wkis5qvl-task-mu74vgc4-6j0d1f-result-1",
+      "target": "project-mu74vfs7-wkis5qvl-project-mu74vfs7-wkis5qvl-task-mu74vh3i-1498x0-result-1",
+      "kind": "result"
+    }
+  ],
+  "freshProfileRestored": false,
+  "credentialCleared": true,
+  "errors": []
+}

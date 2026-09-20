@@ -1,0 +1,18 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "This app connection requires reauthentication before other actions on this app can succeed."
+    }
+  ],
+  "structuredContent": {
+    "error": "This app connection requires reauthentication before other actions on this app can succeed.",
+    "error_code": "UNAUTHORIZED",
+    "error_data": {
+      "detail": "Reauthentication required",
+      "action": "TRIGGER_REAUTHENTICATION",
+      "reason": "oauth_token_invalid_grant"
+    }
+  },
+  "isError": true
+}

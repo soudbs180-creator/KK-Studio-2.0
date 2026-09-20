@@ -1,0 +1,65 @@
+const imgGroup1 = "https://www.figma.com/api/mcp/asset/47af62b4-6001-4e44-ad2d-5290ce948fec.svg";
+const imgIconArchive = "https://www.figma.com/api/mcp/asset/d5976d6f-bac9-438d-9a60-5730c52593f5.svg";
+const img108 = "https://www.figma.com/api/mcp/asset/e45e1ff8-24a8-4358-a567-d1df6c6ac759.svg";
+const imgIconGitBranch = "https://www.figma.com/api/mcp/asset/4a7b83fd-32e2-46a9-b9c8-f5d12e562b6e.svg";
+
+export default function Component() {
+  return (
+    <div className="contents relative size-full" data-node-id="82:15730" data-name="功能快捷选择区">
+      <div className="absolute contents left-[12px] top-[120px]" data-node-id="82:15726">
+        <div className="absolute bg-gradient-to-r border border-[#3c3c3c] border-solid from-[#1a1a1a] h-[48px] left-[12px] rounded-[10px] to-[#333] top-[120px] w-[263px]" data-node-id="16:74614" data-name="鼠标悬浮高亮1" />
+        <div className="absolute bottom-[85.46%] left-[19px] top-[12.13%] w-[26px]" data-node-id="4:2">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup1} />
+        </div>
+        <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[12.41%_94.43%_86.02%_2.66%] leading-[normal] not-italic text-[#d3d3d3] text-[14px] whitespace-nowrap" data-node-id="1:7232">
+          开始创作
+        </p>
+      </div>
+      <div className="absolute contents left-[12px] top-[172px]" data-node-id="82:15727">
+        <div className="absolute h-[48px] left-[12px] rounded-[10px] top-[172px] w-[263px]" data-node-id="16:74615" data-name="鼠标悬浮高亮2" />
+        <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[17.31%_95.16%_81.11%_2.66%] leading-[normal] not-italic text-[#d3d3d3] text-[14px] whitespace-nowrap" data-node-id="16:74616">
+          项目库
+        </p>
+        <div className="absolute inset-[17.41%_97.81%_80.93%_1.15%]" data-node-id="16:74617" data-name="icon-archive">
+          <div className="absolute inset-[-2.78%_-2.5%]">
+            <img alt="" className="block max-w-none size-full" src={imgIconArchive} />
+          </div>
+        </div>
+      </div>
+      <div className="absolute contents left-[12px] top-[224px]" data-node-id="82:15728">
+        <div className="absolute h-[48px] left-[12px] rounded-[10px] top-[224px] w-[263px]" data-node-id="16:74622" data-name="鼠标悬浮高亮3" />
+        <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[22.13%_95.94%_76.3%_2.66%] leading-[normal] not-italic text-[#d3d3d3] text-[14px] whitespace-nowrap" data-node-id="16:74623">
+          Skill
+        </p>
+        <div className="absolute inset-[22.04%_97.81%_76.11%_1.15%]" data-node-id="16:74624" data-name="路径 108">
+          <div className="absolute inset-[-2.5%]">
+            <img alt="" className="block max-w-none size-full" src={img108} />
+          </div>
+        </div>
+      </div>
+      <div className="absolute contents left-[12px] top-[276px]" data-node-id="82:15729">
+        <div className="absolute h-[48px] left-[12px] rounded-[10px] top-[276px] w-[263px]" data-node-id="16:74628" data-name="鼠标悬浮高亮4" />
+        <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[26.94%_91.93%_71.48%_2.66%] leading-[normal] not-italic text-[#d3d3d3] text-[14px] whitespace-nowrap" data-node-id="16:74629">
+          ComfyUI 工作流
+        </p>
+        <div className="absolute inset-[27.04%_97.81%_71.3%_1.25%]" data-node-id="16:74634" data-name="icon-git-branch">
+          <div className="absolute inset-[-4.17%]">
+            <img alt="" className="block max-w-none size-full" src={imgIconGitBranch} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

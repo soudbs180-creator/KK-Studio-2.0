@@ -1,0 +1,59 @@
+.canvas-context-menu {
+  position: fixed;
+  z-index: 70;
+  width: 280px;
+  min-height: 213px;
+  max-width: calc(100vw - 32px);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+  border: 1px solid var(--ui-node-menu-border);
+  border-radius: 14px;
+  background: var(--ui-context-menu-bg);
+  color: var(--ui-node-menu-text);
+  box-shadow: var(--ui-context-menu-shadow);
+  animation: surface-enter var(--motion-fast) var(--motion-ease) both;
+}
+.canvas-context-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 36px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+}
+.canvas-context-item:not(:disabled):hover,
+.canvas-context-item:not(:disabled):focus-visible {
+  background: var(--ui-context-menu-hover);
+}
+.canvas-context-item:focus-visible {
+  outline: 2px solid var(--ui-focus);
+  outline-offset: -2px;
+}
+.canvas-context-item kbd {
+  color: var(--ui-node-menu-muted);
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.canvas-context-divider-wrap {
+  display: contents;
+}
+.canvas-context-divider {
+  height: 1px;
+  margin: 0 12px;
+  background: var(--ui-node-menu-border);
+}
+@media (prefers-reduced-motion: reduce) {
+  .canvas-context-menu {
+    animation: none;
+  }
+}
