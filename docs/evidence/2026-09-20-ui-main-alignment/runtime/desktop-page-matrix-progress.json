@@ -1,0 +1,2622 @@
+[
+  {
+    "id": "landing",
+    "selector": ".start-page",
+    "figma": null,
+    "geometry": {
+      "x": 291,
+      "y": 45,
+      "width": 1619,
+      "height": 1025,
+      "background": "rgb(10, 10, 10)",
+      "radius": "20px",
+      "scrollWidth": 1618,
+      "clientWidth": 1618,
+      "controls": [
+        {
+          "name": "创作提示词",
+          "disabled": false
+        },
+        {
+          "name": "添加参考素材",
+          "disabled": false
+        },
+        {
+          "name": "模型",
+          "disabled": false
+        },
+        {
+          "name": "生成数量",
+          "disabled": false
+        },
+        {
+          "name": "隐私模式",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "插件",
+          "disabled": false
+        },
+        {
+          "name": "开启语音输入",
+          "disabled": false
+        },
+        {
+          "name": "当前模式：自动",
+          "disabled": false
+        },
+        {
+          "name": "开始创建项目",
+          "disabled": false
+        },
+        {
+          "name": "创作灵感",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "H3 精选",
+          "disabled": false
+        },
+        {
+          "name": "特效包装",
+          "disabled": false
+        },
+        {
+          "name": "品牌广告",
+          "disabled": false
+        },
+        {
+          "name": "影视片头",
+          "disabled": false
+        },
+        {
+          "name": "MV",
+          "disabled": false
+        },
+        {
+          "name": "二次元 PV",
+          "disabled": false
+        },
+        {
+          "name": "H3 精选蓝调时刻 · 城市短片用一张参考图规划镜头、节奏和配乐，适合快速验证画面方向。",
+          "disabled": false
+        },
+        {
+          "name": "品牌广告产品故事板把产品卖点拆成可编辑的画面节点，再交给模型继续完善。",
+          "disabled": false
+        },
+        {
+          "name": "音乐 MV音乐 MV 分镜从一句歌词开始，生成镜头草稿与视觉参考，保持创作方向可控。",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-landing.png"
+  },
+  {
+    "id": "projects",
+    "selector": ".catalog-page",
+    "figma": null,
+    "geometry": {
+      "x": 291,
+      "y": 40,
+      "width": 1629,
+      "height": 1040,
+      "background": "rgb(10, 10, 10)",
+      "radius": "0px",
+      "scrollWidth": 1629,
+      "clientWidth": 1629,
+      "controls": [
+        {
+          "name": "新建项目",
+          "disabled": false
+        },
+        {
+          "name": "查看教程",
+          "disabled": false
+        },
+        {
+          "name": "本地项目",
+          "disabled": false
+        },
+        {
+          "name": "共享项目",
+          "disabled": false
+        },
+        {
+          "name": "搜索项目库",
+          "disabled": false
+        },
+        {
+          "name": "新建文件夹",
+          "disabled": false
+        },
+        {
+          "name": "上传文件",
+          "disabled": true
+        },
+        {
+          "name": "▱未命名项目2026/9/20 · 本地项目 · 3 个画布节点↗",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-projects.png"
+  },
+  {
+    "id": "skills",
+    "selector": ".catalog-page",
+    "figma": null,
+    "geometry": {
+      "x": 291,
+      "y": 40,
+      "width": 1629,
+      "height": 1040,
+      "background": "rgb(10, 10, 10)",
+      "radius": "0px",
+      "scrollWidth": 1629,
+      "clientWidth": 1629,
+      "controls": [
+        {
+          "name": "通过 KK Studio 创建",
+          "disabled": true
+        },
+        {
+          "name": "安装 Skill",
+          "disabled": true
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "我的 Skill",
+          "disabled": false
+        },
+        {
+          "name": "搜索Skill",
+          "disabled": false
+        },
+        {
+          "name": "全部",
+          "disabled": false
+        },
+        {
+          "name": "精选",
+          "disabled": false
+        },
+        {
+          "name": "短剧漫剧",
+          "disabled": false
+        },
+        {
+          "name": "专业影视",
+          "disabled": false
+        },
+        {
+          "name": "动画",
+          "disabled": false
+        },
+        {
+          "name": "商业广告",
+          "disabled": false
+        },
+        {
+          "name": "电商",
+          "disabled": false
+        },
+        {
+          "name": "教育",
+          "disabled": false
+        },
+        {
+          "name": "创意实验",
+          "disabled": false
+        },
+        {
+          "name": "音频音乐",
+          "disabled": false
+        },
+        {
+          "name": "平台工具",
+          "disabled": false
+        },
+        {
+          "name": "H33D 动画短片根据故事创意完成角色、场景、镜头规划与视频整合。KK Studio　✓　 ↧ 11.1k",
+          "disabled": false
+        },
+        {
+          "name": "H3品牌宣传短片生成器基于品牌素材与推广目标，完成脚本、分镜和音画合成。KK Studio　✓　 ↧ 8.0k",
+          "disabled": false
+        },
+        {
+          "name": "H3极简产品广告生成器从产品图片和广告需求出发，输出可编辑的卖点表达。KK Studio　✓　 ↧ 7.8k",
+          "disabled": false
+        },
+        {
+          "name": "H3H3 提示词专家把参考素材整理成可控的多模态视频生成指令。KK Studio　✓　 ↧ 7.0k",
+          "disabled": false
+        },
+        {
+          "name": "H3人物微表情视频生成根据角色图、剧本或情绪短语设计分镜。KK Studio　✓　 ↧ 6.4k",
+          "disabled": false
+        },
+        {
+          "name": "H3纸拼贴讲解动画将文案、故事节点或抽象概念转成可确认的画面。KK Studio　✓　 ↧ 5.9k",
+          "disabled": false
+        },
+        {
+          "name": "H3音乐 MV 动态字幕生成器基于音乐和歌词完成节奏拆解、镜头设计与字幕。KK Studio　✓　 ↧ 5.2k",
+          "disabled": false
+        },
+        {
+          "name": "H3第一视角短片生成将创意、剧本或参考素材规划为严格主观镜头。KK Studio　✓　 ↧ 4.8k",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-skills.png"
+  },
+  {
+    "id": "comfyui",
+    "selector": ".catalog-page",
+    "figma": null,
+    "geometry": {
+      "x": 291,
+      "y": 40,
+      "width": 1629,
+      "height": 1040,
+      "background": "rgb(10, 10, 10)",
+      "radius": "0px",
+      "scrollWidth": 1629,
+      "clientWidth": 1629,
+      "controls": [
+        {
+          "name": "导入/新建工作流",
+          "disabled": true
+        },
+        {
+          "name": "探索开源",
+          "disabled": true
+        },
+        {
+          "name": "精选工作流",
+          "disabled": false
+        },
+        {
+          "name": "我的工作流",
+          "disabled": false
+        },
+        {
+          "name": "搜索ComfyUI 工作流",
+          "disabled": false
+        },
+        {
+          "name": "MiniMax H3文生视频H3 轻量版 · 文生视频轻量快速文字生成，接入文生视频与 2K 链路。文本　·　本地精选预览",
+          "disabled": false
+        },
+        {
+          "name": "MiniMax H3首尾帧H3 轻量版 · 首尾帧轻量快速首尾帧生成，兼顾镜头控制和高清细节。图片　·　本地精选预览",
+          "disabled": false
+        },
+        {
+          "name": "MiniMax H3多参考H3 轻量版 · 多参考轻量多参考生成，全方位控制人物、风格、动作与声音。参考图　·　本地精选预览",
+          "disabled": false
+        },
+        {
+          "name": "MiniMax H3已下载H3 轻量版 · 文生视频（已下载）输入文字即可生成音画同步视频，适合快速预览。本地　·　本地精选预览",
+          "disabled": false
+        },
+        {
+          "name": "MiniMax H3首尾帧H3 轻量版 · 首尾帧（本地）以首帧和尾帧约束镜头变化，保留创作控制。本地　·　本地精选预览",
+          "disabled": false
+        },
+        {
+          "name": "MiniMax H3多参考H3 轻量版 · 多参考（本地）从多个参考素材中提取主体、动作和风格。本地　·　本地精选预览",
+          "disabled": false
+        },
+        {
+          "name": "MiniMax H32KH3 满血版 · 2K + IR高质量文生视频，适合面向高画面正式成片。高质量　·　本地精选预览",
+          "disabled": false
+        },
+        {
+          "name": "MiniMax H32KH3 满血版 · 2K + T2V高质量图生视频，适合镜头延展与风格保持。图生视频　·　本地精选预览",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-comfyui.png"
+  },
+  {
+    "id": "settings-0",
+    "selector": ".settings-panel",
+    "figma": "399:27506",
+    "geometry": {
+      "x": 500,
+      "y": 190,
+      "width": 920,
+      "height": 700,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 919,
+      "clientWidth": 919,
+      "controls": [
+        {
+          "name": "通用",
+          "disabled": false
+        },
+        {
+          "name": "账号管理",
+          "disabled": false
+        },
+        {
+          "name": "储存",
+          "disabled": false
+        },
+        {
+          "name": "网络",
+          "disabled": false
+        },
+        {
+          "name": "记忆",
+          "disabled": false
+        },
+        {
+          "name": "模型供应商",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "MCP",
+          "disabled": false
+        },
+        {
+          "name": "Comfy UI",
+          "disabled": false
+        },
+        {
+          "name": "高级",
+          "disabled": false
+        },
+        {
+          "name": "软件更新",
+          "disabled": false
+        },
+        {
+          "name": "中文",
+          "disabled": true
+        },
+        {
+          "name": "深色浅色跟随系统",
+          "disabled": false
+        },
+        {
+          "name": "",
+          "disabled": false
+        },
+        {
+          "name": "",
+          "disabled": false
+        },
+        {
+          "name": "",
+          "disabled": true
+        },
+        {
+          "name": "",
+          "disabled": true
+        },
+        {
+          "name": "",
+          "disabled": true
+        },
+        {
+          "name": "关闭设置",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-settings-0.png"
+  },
+  {
+    "id": "settings-1",
+    "selector": ".settings-panel",
+    "figma": null,
+    "geometry": {
+      "x": 500,
+      "y": 190,
+      "width": 920,
+      "height": 700,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 919,
+      "clientWidth": 919,
+      "controls": [
+        {
+          "name": "通用",
+          "disabled": false
+        },
+        {
+          "name": "账号管理",
+          "disabled": false
+        },
+        {
+          "name": "储存",
+          "disabled": false
+        },
+        {
+          "name": "网络",
+          "disabled": false
+        },
+        {
+          "name": "记忆",
+          "disabled": false
+        },
+        {
+          "name": "模型供应商",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "MCP",
+          "disabled": false
+        },
+        {
+          "name": "Comfy UI",
+          "disabled": false
+        },
+        {
+          "name": "高级",
+          "disabled": false
+        },
+        {
+          "name": "软件更新",
+          "disabled": false
+        },
+        {
+          "name": "删除账号",
+          "disabled": true
+        },
+        {
+          "name": "关闭设置",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-settings-1.png"
+  },
+  {
+    "id": "settings-2",
+    "selector": ".settings-panel",
+    "figma": null,
+    "geometry": {
+      "x": 500,
+      "y": 190,
+      "width": 920,
+      "height": 700,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 919,
+      "clientWidth": 919,
+      "controls": [
+        {
+          "name": "通用",
+          "disabled": false
+        },
+        {
+          "name": "账号管理",
+          "disabled": false
+        },
+        {
+          "name": "储存",
+          "disabled": false
+        },
+        {
+          "name": "网络",
+          "disabled": false
+        },
+        {
+          "name": "记忆",
+          "disabled": false
+        },
+        {
+          "name": "模型供应商",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "MCP",
+          "disabled": false
+        },
+        {
+          "name": "Comfy UI",
+          "disabled": false
+        },
+        {
+          "name": "高级",
+          "disabled": false
+        },
+        {
+          "name": "软件更新",
+          "disabled": false
+        },
+        {
+          "name": "导出偏好备份",
+          "disabled": false
+        },
+        {
+          "name": "导出项目包",
+          "disabled": false
+        },
+        {
+          "name": "选择项目包",
+          "disabled": false
+        },
+        {
+          "name": "关闭设置",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-settings-2.png"
+  },
+  {
+    "id": "settings-3",
+    "selector": ".settings-panel",
+    "figma": null,
+    "geometry": {
+      "x": 500,
+      "y": 190,
+      "width": 920,
+      "height": 700,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 919,
+      "clientWidth": 919,
+      "controls": [
+        {
+          "name": "通用",
+          "disabled": false
+        },
+        {
+          "name": "账号管理",
+          "disabled": false
+        },
+        {
+          "name": "储存",
+          "disabled": false
+        },
+        {
+          "name": "网络",
+          "disabled": false
+        },
+        {
+          "name": "记忆",
+          "disabled": false
+        },
+        {
+          "name": "模型供应商",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "MCP",
+          "disabled": false
+        },
+        {
+          "name": "Comfy UI",
+          "disabled": false
+        },
+        {
+          "name": "高级",
+          "disabled": false
+        },
+        {
+          "name": "软件更新",
+          "disabled": false
+        },
+        {
+          "name": "连接方式",
+          "disabled": true
+        },
+        {
+          "name": "关闭设置",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-settings-3.png"
+  },
+  {
+    "id": "settings-4",
+    "selector": ".settings-panel",
+    "figma": null,
+    "geometry": {
+      "x": 500,
+      "y": 190,
+      "width": 920,
+      "height": 700,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 919,
+      "clientWidth": 919,
+      "controls": [
+        {
+          "name": "通用",
+          "disabled": false
+        },
+        {
+          "name": "账号管理",
+          "disabled": false
+        },
+        {
+          "name": "储存",
+          "disabled": false
+        },
+        {
+          "name": "网络",
+          "disabled": false
+        },
+        {
+          "name": "记忆",
+          "disabled": false
+        },
+        {
+          "name": "模型供应商",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "MCP",
+          "disabled": false
+        },
+        {
+          "name": "Comfy UI",
+          "disabled": false
+        },
+        {
+          "name": "高级",
+          "disabled": false
+        },
+        {
+          "name": "软件更新",
+          "disabled": false
+        },
+        {
+          "name": "搜索描述或正文",
+          "disabled": true
+        },
+        {
+          "name": "作用域",
+          "disabled": true
+        },
+        {
+          "name": "类型",
+          "disabled": true
+        },
+        {
+          "name": "＋ 新建",
+          "disabled": true
+        },
+        {
+          "name": "关闭设置",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-settings-4.png"
+  },
+  {
+    "id": "settings-5",
+    "selector": ".settings-panel",
+    "figma": null,
+    "geometry": {
+      "x": 500,
+      "y": 190,
+      "width": 920,
+      "height": 700,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 919,
+      "clientWidth": 919,
+      "controls": [
+        {
+          "name": "通用",
+          "disabled": false
+        },
+        {
+          "name": "账号管理",
+          "disabled": false
+        },
+        {
+          "name": "储存",
+          "disabled": false
+        },
+        {
+          "name": "网络",
+          "disabled": false
+        },
+        {
+          "name": "记忆",
+          "disabled": false
+        },
+        {
+          "name": "模型供应商",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "MCP",
+          "disabled": false
+        },
+        {
+          "name": "Comfy UI",
+          "disabled": false
+        },
+        {
+          "name": "高级",
+          "disabled": false
+        },
+        {
+          "name": "软件更新",
+          "disabled": false
+        },
+        {
+          "name": "",
+          "disabled": false
+        },
+        {
+          "name": "",
+          "disabled": false
+        },
+        {
+          "name": "",
+          "disabled": false
+        },
+        {
+          "name": "",
+          "disabled": false
+        },
+        {
+          "name": "保存供应商",
+          "disabled": false
+        },
+        {
+          "name": "测试连接",
+          "disabled": false
+        },
+        {
+          "name": "关闭设置",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-settings-5.png"
+  },
+  {
+    "id": "settings-6",
+    "selector": ".settings-panel",
+    "figma": null,
+    "geometry": {
+      "x": 500,
+      "y": 190,
+      "width": 920,
+      "height": 700,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 919,
+      "clientWidth": 919,
+      "controls": [
+        {
+          "name": "通用",
+          "disabled": false
+        },
+        {
+          "name": "账号管理",
+          "disabled": false
+        },
+        {
+          "name": "储存",
+          "disabled": false
+        },
+        {
+          "name": "网络",
+          "disabled": false
+        },
+        {
+          "name": "记忆",
+          "disabled": false
+        },
+        {
+          "name": "模型供应商",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "MCP",
+          "disabled": false
+        },
+        {
+          "name": "Comfy UI",
+          "disabled": false
+        },
+        {
+          "name": "高级",
+          "disabled": false
+        },
+        {
+          "name": "软件更新",
+          "disabled": false
+        },
+        {
+          "name": "关闭设置",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-settings-6.png"
+  },
+  {
+    "id": "settings-7",
+    "selector": ".settings-panel",
+    "figma": null,
+    "geometry": {
+      "x": 500,
+      "y": 190,
+      "width": 920,
+      "height": 700,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 919,
+      "clientWidth": 919,
+      "controls": [
+        {
+          "name": "通用",
+          "disabled": false
+        },
+        {
+          "name": "账号管理",
+          "disabled": false
+        },
+        {
+          "name": "储存",
+          "disabled": false
+        },
+        {
+          "name": "网络",
+          "disabled": false
+        },
+        {
+          "name": "记忆",
+          "disabled": false
+        },
+        {
+          "name": "模型供应商",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "MCP",
+          "disabled": false
+        },
+        {
+          "name": "Comfy UI",
+          "disabled": false
+        },
+        {
+          "name": "高级",
+          "disabled": false
+        },
+        {
+          "name": "软件更新",
+          "disabled": false
+        },
+        {
+          "name": "关闭设置",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-settings-7.png"
+  },
+  {
+    "id": "settings-8",
+    "selector": ".settings-panel",
+    "figma": null,
+    "geometry": {
+      "x": 500,
+      "y": 190,
+      "width": 920,
+      "height": 700,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 919,
+      "clientWidth": 919,
+      "controls": [
+        {
+          "name": "通用",
+          "disabled": false
+        },
+        {
+          "name": "账号管理",
+          "disabled": false
+        },
+        {
+          "name": "储存",
+          "disabled": false
+        },
+        {
+          "name": "网络",
+          "disabled": false
+        },
+        {
+          "name": "记忆",
+          "disabled": false
+        },
+        {
+          "name": "模型供应商",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "MCP",
+          "disabled": false
+        },
+        {
+          "name": "Comfy UI",
+          "disabled": false
+        },
+        {
+          "name": "高级",
+          "disabled": false
+        },
+        {
+          "name": "软件更新",
+          "disabled": false
+        },
+        {
+          "name": "关闭设置",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-settings-8.png"
+  },
+  {
+    "id": "settings-9",
+    "selector": ".settings-panel",
+    "figma": null,
+    "geometry": {
+      "x": 500,
+      "y": 190,
+      "width": 920,
+      "height": 700,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 919,
+      "clientWidth": 919,
+      "controls": [
+        {
+          "name": "通用",
+          "disabled": false
+        },
+        {
+          "name": "账号管理",
+          "disabled": false
+        },
+        {
+          "name": "储存",
+          "disabled": false
+        },
+        {
+          "name": "网络",
+          "disabled": false
+        },
+        {
+          "name": "记忆",
+          "disabled": false
+        },
+        {
+          "name": "模型供应商",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "MCP",
+          "disabled": false
+        },
+        {
+          "name": "Comfy UI",
+          "disabled": false
+        },
+        {
+          "name": "高级",
+          "disabled": false
+        },
+        {
+          "name": "软件更新",
+          "disabled": false
+        },
+        {
+          "name": "导出偏好备份",
+          "disabled": false
+        },
+        {
+          "name": "恢复默认偏好",
+          "disabled": false
+        },
+        {
+          "name": "关闭设置",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-settings-9.png"
+  },
+  {
+    "id": "settings-10",
+    "selector": ".settings-panel",
+    "figma": null,
+    "geometry": {
+      "x": 500,
+      "y": 190,
+      "width": 920,
+      "height": 700,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 919,
+      "clientWidth": 919,
+      "controls": [
+        {
+          "name": "通用",
+          "disabled": false
+        },
+        {
+          "name": "账号管理",
+          "disabled": false
+        },
+        {
+          "name": "储存",
+          "disabled": false
+        },
+        {
+          "name": "网络",
+          "disabled": false
+        },
+        {
+          "name": "记忆",
+          "disabled": false
+        },
+        {
+          "name": "模型供应商",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "MCP",
+          "disabled": false
+        },
+        {
+          "name": "Comfy UI",
+          "disabled": false
+        },
+        {
+          "name": "高级",
+          "disabled": false
+        },
+        {
+          "name": "软件更新",
+          "disabled": false
+        },
+        {
+          "name": "更新服务未接入",
+          "disabled": true
+        },
+        {
+          "name": "自动安装更新不可用",
+          "disabled": true
+        },
+        {
+          "name": "关闭设置",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-settings-10.png"
+  },
+  {
+    "id": "search",
+    "selector": ".catalog-panel",
+    "figma": "388:938",
+    "geometry": {
+      "x": 510,
+      "y": 192,
+      "width": 900,
+      "height": 696,
+      "background": "rgb(31, 31, 31)",
+      "radius": "80px",
+      "scrollWidth": 899,
+      "clientWidth": 899,
+      "controls": [
+        {
+          "name": "搜索内容",
+          "disabled": false
+        },
+        {
+          "name": "全部",
+          "disabled": false
+        },
+        {
+          "name": "喜欢收藏",
+          "disabled": false
+        },
+        {
+          "name": "创作页",
+          "disabled": false
+        },
+        {
+          "name": "项目",
+          "disabled": false
+        },
+        {
+          "name": "类型",
+          "disabled": false
+        },
+        {
+          "name": "文件资产",
+          "disabled": false
+        },
+        {
+          "name": "图片创建卡片kk Image 2 · 1:1 · 1k图片",
+          "disabled": false
+        },
+        {
+          "name": "视频卡片 1图片转视频工作流视频",
+          "disabled": false
+        },
+        {
+          "name": "视频卡片 2图片转视频工作流视频",
+          "disabled": false
+        },
+        {
+          "name": "KK工作流当前会话 · 创作画布项目",
+          "disabled": false
+        },
+        {
+          "name": "静音冷风扇3.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "静音冷风扇.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "静音冷风扇2.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "静音冷风扇4.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "图片名字1.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "图片名字2.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "图片名字3.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "图片名字4.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "图片名字5.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "人物在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "文件夹名字或资源包名字在资产管理中查看文件资产",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-search.png"
+  },
+  {
+    "id": "search-0",
+    "selector": ".catalog-panel",
+    "figma": "398:25274",
+    "geometry": {
+      "x": 510,
+      "y": 192,
+      "width": 900,
+      "height": 696,
+      "background": "rgb(31, 31, 31)",
+      "radius": "80px",
+      "scrollWidth": 899,
+      "clientWidth": 899,
+      "controls": [
+        {
+          "name": "搜索内容",
+          "disabled": false
+        },
+        {
+          "name": "全部",
+          "disabled": false
+        },
+        {
+          "name": "喜欢收藏",
+          "disabled": false
+        },
+        {
+          "name": "创作页",
+          "disabled": false
+        },
+        {
+          "name": "项目",
+          "disabled": false
+        },
+        {
+          "name": "类型",
+          "disabled": false
+        },
+        {
+          "name": "文件资产",
+          "disabled": false
+        },
+        {
+          "name": "喜欢排序",
+          "disabled": false
+        },
+        {
+          "name": "收藏排序",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-search-0.png"
+  },
+  {
+    "id": "search-1",
+    "selector": ".catalog-panel",
+    "figma": null,
+    "geometry": {
+      "x": 510,
+      "y": 192,
+      "width": 900,
+      "height": 696,
+      "background": "rgb(31, 31, 31)",
+      "radius": "80px",
+      "scrollWidth": 899,
+      "clientWidth": 899,
+      "controls": [
+        {
+          "name": "搜索内容",
+          "disabled": false
+        },
+        {
+          "name": "全部",
+          "disabled": false
+        },
+        {
+          "name": "喜欢收藏",
+          "disabled": false
+        },
+        {
+          "name": "创作页",
+          "disabled": false
+        },
+        {
+          "name": "项目",
+          "disabled": false
+        },
+        {
+          "name": "类型",
+          "disabled": false
+        },
+        {
+          "name": "文件资产",
+          "disabled": false
+        },
+        {
+          "name": "图片创建卡片kk Image 2 · 1:1 · 1k图片",
+          "disabled": false
+        },
+        {
+          "name": "视频卡片 1图片转视频工作流视频",
+          "disabled": false
+        },
+        {
+          "name": "视频卡片 2图片转视频工作流视频",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-search-1.png"
+  },
+  {
+    "id": "search-2",
+    "selector": ".catalog-panel",
+    "figma": null,
+    "geometry": {
+      "x": 510,
+      "y": 192,
+      "width": 900,
+      "height": 696,
+      "background": "rgb(31, 31, 31)",
+      "radius": "80px",
+      "scrollWidth": 899,
+      "clientWidth": 899,
+      "controls": [
+        {
+          "name": "搜索内容",
+          "disabled": false
+        },
+        {
+          "name": "全部",
+          "disabled": false
+        },
+        {
+          "name": "喜欢收藏",
+          "disabled": false
+        },
+        {
+          "name": "创作页",
+          "disabled": false
+        },
+        {
+          "name": "项目",
+          "disabled": false
+        },
+        {
+          "name": "类型",
+          "disabled": false
+        },
+        {
+          "name": "文件资产",
+          "disabled": false
+        },
+        {
+          "name": "KK工作流当前会话 · 创作画布项目",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-search-2.png"
+  },
+  {
+    "id": "search-3",
+    "selector": ".catalog-panel",
+    "figma": null,
+    "geometry": {
+      "x": 510,
+      "y": 192,
+      "width": 900,
+      "height": 696,
+      "background": "rgb(31, 31, 31)",
+      "radius": "80px",
+      "scrollWidth": 899,
+      "clientWidth": 899,
+      "controls": [
+        {
+          "name": "搜索内容",
+          "disabled": false
+        },
+        {
+          "name": "全部",
+          "disabled": false
+        },
+        {
+          "name": "喜欢收藏",
+          "disabled": false
+        },
+        {
+          "name": "创作页",
+          "disabled": false
+        },
+        {
+          "name": "项目",
+          "disabled": false
+        },
+        {
+          "name": "类型",
+          "disabled": false
+        },
+        {
+          "name": "文件资产",
+          "disabled": false
+        },
+        {
+          "name": "卡片类型",
+          "disabled": false
+        },
+        {
+          "name": "图片创建卡片kk Image 2 · 1:1 · 1k图片",
+          "disabled": false
+        },
+        {
+          "name": "视频卡片 1图片转视频工作流视频",
+          "disabled": false
+        },
+        {
+          "name": "视频卡片 2图片转视频工作流视频",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-search-3.png"
+  },
+  {
+    "id": "search-4",
+    "selector": ".catalog-panel",
+    "figma": null,
+    "geometry": {
+      "x": 510,
+      "y": 192,
+      "width": 900,
+      "height": 696,
+      "background": "rgb(31, 31, 31)",
+      "radius": "80px",
+      "scrollWidth": 899,
+      "clientWidth": 899,
+      "controls": [
+        {
+          "name": "搜索内容",
+          "disabled": false
+        },
+        {
+          "name": "全部",
+          "disabled": false
+        },
+        {
+          "name": "喜欢收藏",
+          "disabled": false
+        },
+        {
+          "name": "创作页",
+          "disabled": false
+        },
+        {
+          "name": "项目",
+          "disabled": false
+        },
+        {
+          "name": "类型",
+          "disabled": false
+        },
+        {
+          "name": "文件资产",
+          "disabled": false
+        },
+        {
+          "name": "静音冷风扇3.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "静音冷风扇.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "静音冷风扇2.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "静音冷风扇4.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "图片名字1.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "图片名字2.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "图片名字3.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "图片名字4.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "图片名字5.png在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "人物在资产管理中查看文件资产",
+          "disabled": false
+        },
+        {
+          "name": "文件夹名字或资源包名字在资产管理中查看文件资产",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-search-4.png"
+  },
+  {
+    "id": "workspace",
+    "selector": ".app",
+    "figma": "404:28667",
+    "geometry": {
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080,
+      "background": "rgb(22, 22, 22)",
+      "radius": "0px",
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "controls": [
+        {
+          "name": "文件",
+          "disabled": false
+        },
+        {
+          "name": "编辑",
+          "disabled": false
+        },
+        {
+          "name": "窗口",
+          "disabled": false
+        },
+        {
+          "name": "帮助",
+          "disabled": false
+        },
+        {
+          "name": "搜索",
+          "disabled": false
+        },
+        {
+          "name": "收起侧边栏",
+          "disabled": false
+        },
+        {
+          "name": "开始创作",
+          "disabled": false
+        },
+        {
+          "name": "项目库",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "ComfyUI 工作流",
+          "disabled": false
+        },
+        {
+          "name": "项目",
+          "disabled": false
+        },
+        {
+          "name": "项目显示与排序",
+          "disabled": false
+        },
+        {
+          "name": "创建项目文件夹",
+          "disabled": false
+        },
+        {
+          "name": "KK项目",
+          "disabled": false
+        },
+        {
+          "name": "打开 KK项目 工作台",
+          "disabled": false
+        },
+        {
+          "name": "添加创作页面",
+          "disabled": true
+        },
+        {
+          "name": "KK工作流",
+          "disabled": false
+        },
+        {
+          "name": "置顶项目",
+          "disabled": false
+        },
+        {
+          "name": "更多项目设置",
+          "disabled": false
+        },
+        {
+          "name": "未分组",
+          "disabled": false
+        },
+        {
+          "name": "打开未分组项目库",
+          "disabled": false
+        },
+        {
+          "name": "创建创作页",
+          "disabled": true
+        },
+        {
+          "name": "KK工作流",
+          "disabled": false
+        },
+        {
+          "name": "置顶项目",
+          "disabled": false
+        },
+        {
+          "name": "更多项目设置",
+          "disabled": false
+        },
+        {
+          "name": "个人信息",
+          "disabled": false
+        },
+        {
+          "name": "打开设置",
+          "disabled": false
+        },
+        {
+          "name": "上传图片",
+          "disabled": false
+        },
+        {
+          "name": "从图片创建卡片添加下游",
+          "disabled": false
+        },
+        {
+          "name": "从视频卡片 1添加下游",
+          "disabled": false
+        },
+        {
+          "name": "从视频卡片 2添加下游",
+          "disabled": false
+        },
+        {
+          "name": "删除连线 图片创建卡片 → 视频卡片 1",
+          "disabled": false
+        },
+        {
+          "name": "删除连线 图片创建卡片 → 视频卡片 2",
+          "disabled": false
+        },
+        {
+          "name": "打开任务列表",
+          "disabled": false
+        },
+        {
+          "name": "画布缩放",
+          "disabled": false
+        },
+        {
+          "name": "整理画布",
+          "disabled": false
+        },
+        {
+          "name": "切换为网格背景",
+          "disabled": false
+        },
+        {
+          "name": "画布背景颜色",
+          "disabled": false
+        },
+        {
+          "name": "显示连线",
+          "disabled": false
+        },
+        {
+          "name": "小地图",
+          "disabled": false
+        },
+        {
+          "name": "添加资源",
+          "disabled": false
+        },
+        {
+          "name": "当前工具：选择",
+          "disabled": false
+        },
+        {
+          "name": "选择画布工具",
+          "disabled": false
+        },
+        {
+          "name": "资产管理",
+          "disabled": false
+        },
+        {
+          "name": "打开喜欢与收藏",
+          "disabled": false
+        },
+        {
+          "name": "帮助与快捷键",
+          "disabled": false
+        },
+        {
+          "name": "对话记录",
+          "disabled": false
+        },
+        {
+          "name": "收起对话",
+          "disabled": false
+        },
+        {
+          "name": "对话内容",
+          "disabled": false
+        },
+        {
+          "name": "添加对话素材",
+          "disabled": false
+        },
+        {
+          "name": "模型",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "插件",
+          "disabled": false
+        },
+        {
+          "name": "AI权限模式",
+          "disabled": false
+        },
+        {
+          "name": "开启语音输入",
+          "disabled": false
+        },
+        {
+          "name": "发送消息",
+          "disabled": true
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-workspace.png"
+  },
+  {
+    "id": "account",
+    "selector": ".account-popup",
+    "figma": "312:2436",
+    "geometry": {
+      "x": 10,
+      "y": 778,
+      "width": 260,
+      "height": 230,
+      "background": "rgb(31, 31, 31)",
+      "radius": "10px",
+      "scrollWidth": 259,
+      "clientWidth": 259,
+      "controls": [
+        {
+          "name": "切换账号",
+          "disabled": true
+        },
+        {
+          "name": "退出登录",
+          "disabled": true
+        },
+        {
+          "name": "打开主题设置",
+          "disabled": false
+        },
+        {
+          "name": "检测",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-account.png"
+  },
+  {
+    "id": "assets-canvas",
+    "selector": ".asset-panel",
+    "figma": "392:938",
+    "geometry": {
+      "x": 510,
+      "y": 192,
+      "width": 900,
+      "height": 696,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 899,
+      "clientWidth": 899,
+      "controls": [
+        {
+          "name": "收起资产管理",
+          "disabled": false
+        },
+        {
+          "name": "关闭资产管理",
+          "disabled": false
+        },
+        {
+          "name": "画布",
+          "disabled": false
+        },
+        {
+          "name": "资产",
+          "disabled": false
+        },
+        {
+          "name": "搜索文件",
+          "disabled": false
+        },
+        {
+          "name": "列表视图",
+          "disabled": false
+        },
+        {
+          "name": "网格视图",
+          "disabled": false
+        },
+        {
+          "name": "类型筛选",
+          "disabled": false
+        },
+        {
+          "name": "标签筛选",
+          "disabled": false
+        },
+        {
+          "name": "时间筛选",
+          "disabled": false
+        },
+        {
+          "name": "来源筛选",
+          "disabled": false
+        },
+        {
+          "name": "静音冷风扇3.png",
+          "disabled": false
+        },
+        {
+          "name": "静音冷风扇.png",
+          "disabled": false
+        },
+        {
+          "name": "静音冷风扇2.png",
+          "disabled": false
+        },
+        {
+          "name": "静音冷风扇4.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 静音冷风扇3.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 静音冷风扇.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 静音冷风扇2.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 静音冷风扇4.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 图片名字1.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 图片名字2.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 图片名字3.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 图片名字4.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 图片名字5.png",
+          "disabled": false
+        },
+        {
+          "name": "",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-assets-canvas.png"
+  },
+  {
+    "id": "assets-canvas-compact",
+    "selector": ".asset-panel",
+    "figma": "398:27304",
+    "geometry": {
+      "x": 807.5,
+      "y": 192,
+      "width": 305,
+      "height": 696,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 304,
+      "clientWidth": 304,
+      "controls": [
+        {
+          "name": "展开资产管理",
+          "disabled": false
+        },
+        {
+          "name": "关闭资产管理",
+          "disabled": false
+        },
+        {
+          "name": "画布",
+          "disabled": false
+        },
+        {
+          "name": "资产",
+          "disabled": false
+        },
+        {
+          "name": "搜索文件",
+          "disabled": false
+        },
+        {
+          "name": "列表视图",
+          "disabled": false
+        },
+        {
+          "name": "网格视图",
+          "disabled": false
+        },
+        {
+          "name": "类型筛选",
+          "disabled": false
+        },
+        {
+          "name": "标签筛选",
+          "disabled": false
+        },
+        {
+          "name": "时间筛选",
+          "disabled": false
+        },
+        {
+          "name": "来源筛选",
+          "disabled": false
+        },
+        {
+          "name": "选择 静音冷风扇3.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 静音冷风扇.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 静音冷风扇2.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 静音冷风扇4.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 图片名字1.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 图片名字2.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 图片名字3.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 图片名字4.png",
+          "disabled": false
+        },
+        {
+          "name": "选择 图片名字5.png",
+          "disabled": false
+        },
+        {
+          "name": "",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-assets-canvas-compact.png"
+  },
+  {
+    "id": "assets-library",
+    "selector": ".asset-panel",
+    "figma": "398:26864",
+    "geometry": {
+      "x": 510,
+      "y": 192,
+      "width": 900,
+      "height": 696,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 899,
+      "clientWidth": 899,
+      "controls": [
+        {
+          "name": "收起资产管理",
+          "disabled": false
+        },
+        {
+          "name": "关闭资产管理",
+          "disabled": false
+        },
+        {
+          "name": "画布",
+          "disabled": false
+        },
+        {
+          "name": "资产",
+          "disabled": false
+        },
+        {
+          "name": "搜索文件",
+          "disabled": false
+        },
+        {
+          "name": "列表视图",
+          "disabled": false
+        },
+        {
+          "name": "网格视图",
+          "disabled": false
+        },
+        {
+          "name": "类型筛选",
+          "disabled": false
+        },
+        {
+          "name": "标签筛选",
+          "disabled": false
+        },
+        {
+          "name": "时间筛选",
+          "disabled": false
+        },
+        {
+          "name": "来源筛选",
+          "disabled": false
+        },
+        {
+          "name": "人物",
+          "disabled": false
+        },
+        {
+          "name": "文件夹名字或资源包名字",
+          "disabled": false
+        },
+        {
+          "name": "选择 人物",
+          "disabled": false
+        },
+        {
+          "name": "选择 文件夹名字或资源包名字",
+          "disabled": false
+        },
+        {
+          "name": "创建主体",
+          "disabled": false
+        },
+        {
+          "name": "导入资源包",
+          "disabled": false
+        },
+        {
+          "name": "",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-assets-library.png"
+  },
+  {
+    "id": "assets-library-compact",
+    "selector": ".asset-panel",
+    "figma": "398:27079",
+    "geometry": {
+      "x": 807.5,
+      "y": 192,
+      "width": 305,
+      "height": 696,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 304,
+      "clientWidth": 304,
+      "controls": [
+        {
+          "name": "展开资产管理",
+          "disabled": false
+        },
+        {
+          "name": "关闭资产管理",
+          "disabled": false
+        },
+        {
+          "name": "画布",
+          "disabled": false
+        },
+        {
+          "name": "资产",
+          "disabled": false
+        },
+        {
+          "name": "搜索文件",
+          "disabled": false
+        },
+        {
+          "name": "列表视图",
+          "disabled": false
+        },
+        {
+          "name": "网格视图",
+          "disabled": false
+        },
+        {
+          "name": "类型筛选",
+          "disabled": false
+        },
+        {
+          "name": "标签筛选",
+          "disabled": false
+        },
+        {
+          "name": "时间筛选",
+          "disabled": false
+        },
+        {
+          "name": "来源筛选",
+          "disabled": false
+        },
+        {
+          "name": "选择 人物",
+          "disabled": false
+        },
+        {
+          "name": "选择 文件夹名字或资源包名字",
+          "disabled": false
+        },
+        {
+          "name": "创建主体",
+          "disabled": false
+        },
+        {
+          "name": "导入资源包",
+          "disabled": false
+        },
+        {
+          "name": "",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-assets-library-compact.png"
+  },
+  {
+    "id": "help",
+    "selector": ".info-panel",
+    "figma": "395:938",
+    "geometry": {
+      "x": 680,
+      "y": 343.15625,
+      "width": 560,
+      "height": 393.6770935058594,
+      "background": "rgb(22, 22, 22)",
+      "radius": "20px",
+      "scrollWidth": 559,
+      "clientWidth": 559,
+      "controls": [
+        {
+          "name": "关闭",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-help.png"
+  },
+  {
+    "id": "shortcuts-0",
+    "selector": ".shortcuts-panel",
+    "figma": "394:938",
+    "geometry": {
+      "x": 624,
+      "y": 300,
+      "width": 672,
+      "height": 480,
+      "background": "rgb(31, 31, 31)",
+      "radius": "18px",
+      "scrollWidth": 671,
+      "clientWidth": 671,
+      "controls": [
+        {
+          "name": "全局",
+          "disabled": false
+        },
+        {
+          "name": "画布",
+          "disabled": false
+        },
+        {
+          "name": "文件",
+          "disabled": false
+        },
+        {
+          "name": "关闭快捷键",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-shortcuts-0.png"
+  },
+  {
+    "id": "shortcuts-1",
+    "selector": ".shortcuts-panel",
+    "figma": null,
+    "geometry": {
+      "x": 460,
+      "y": 300,
+      "width": 1000,
+      "height": 480,
+      "background": "rgb(31, 31, 31)",
+      "radius": "18px",
+      "scrollWidth": 999,
+      "clientWidth": 999,
+      "controls": [
+        {
+          "name": "全局",
+          "disabled": false
+        },
+        {
+          "name": "画布",
+          "disabled": false
+        },
+        {
+          "name": "文件",
+          "disabled": false
+        },
+        {
+          "name": "关闭快捷键",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-shortcuts-1.png"
+  },
+  {
+    "id": "shortcuts-2",
+    "selector": ".shortcuts-panel",
+    "figma": null,
+    "geometry": {
+      "x": 624,
+      "y": 300,
+      "width": 672,
+      "height": 480,
+      "background": "rgb(31, 31, 31)",
+      "radius": "18px",
+      "scrollWidth": 671,
+      "clientWidth": 671,
+      "controls": [
+        {
+          "name": "全局",
+          "disabled": false
+        },
+        {
+          "name": "画布",
+          "disabled": false
+        },
+        {
+          "name": "文件",
+          "disabled": false
+        },
+        {
+          "name": "关闭快捷键",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-shortcuts-2.png"
+  },
+  {
+    "id": "tasks-popover",
+    "selector": ".task-panel",
+    "figma": "396:938",
+    "geometry": {
+      "x": 320.66668701171875,
+      "y": 107.66667175292969,
+      "width": 196,
+      "height": 240,
+      "background": "rgb(26, 26, 26)",
+      "radius": "8px",
+      "scrollWidth": 195,
+      "clientWidth": 195,
+      "controls": [
+        {
+          "name": "关闭任务列表",
+          "disabled": false
+        },
+        {
+          "name": "全部",
+          "disabled": false
+        },
+        {
+          "name": "执行中",
+          "disabled": false
+        },
+        {
+          "name": "未完成",
+          "disabled": false
+        },
+        {
+          "name": "失败",
+          "disabled": false
+        },
+        {
+          "name": "查看演示任务 2026/9/5",
+          "disabled": false
+        },
+        {
+          "name": "查看正在生成中的演示任务",
+          "disabled": false
+        },
+        {
+          "name": "打开任务工作台",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-tasks-popover.png"
+  },
+  {
+    "id": "tasks-workbench",
+    "selector": ".task-workbench",
+    "figma": null,
+    "geometry": {
+      "x": 410,
+      "y": 160,
+      "width": 1100,
+      "height": 760,
+      "background": "rgb(22, 22, 22)",
+      "radius": "24px",
+      "scrollWidth": 1099,
+      "clientWidth": 1099,
+      "controls": [
+        {
+          "name": "关闭任务工作台",
+          "disabled": false
+        },
+        {
+          "name": "配置模型连接",
+          "disabled": false
+        },
+        {
+          "name": "Queue",
+          "disabled": false
+        },
+        {
+          "name": "Prompt",
+          "disabled": false
+        },
+        {
+          "name": "Generate",
+          "disabled": false
+        },
+        {
+          "name": "Review",
+          "disabled": false
+        },
+        {
+          "name": "Export",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-tasks-workbench.png"
+  },
+  {
+    "id": "workspace-folded",
+    "selector": ".app",
+    "figma": "410:67357",
+    "geometry": {
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080,
+      "background": "rgb(22, 22, 22)",
+      "radius": "0px",
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "controls": [
+        {
+          "name": "文件",
+          "disabled": false
+        },
+        {
+          "name": "编辑",
+          "disabled": false
+        },
+        {
+          "name": "窗口",
+          "disabled": false
+        },
+        {
+          "name": "帮助",
+          "disabled": false
+        },
+        {
+          "name": "搜索",
+          "disabled": false
+        },
+        {
+          "name": "展开侧边栏",
+          "disabled": false
+        },
+        {
+          "name": "开始创作",
+          "disabled": false
+        },
+        {
+          "name": "项目库",
+          "disabled": false
+        },
+        {
+          "name": "Skill",
+          "disabled": false
+        },
+        {
+          "name": "ComfyUI 工作流",
+          "disabled": false
+        },
+        {
+          "name": "个人信息",
+          "disabled": false
+        },
+        {
+          "name": "打开设置",
+          "disabled": false
+        },
+        {
+          "name": "上传图片",
+          "disabled": false
+        },
+        {
+          "name": "从图片创建卡片添加下游",
+          "disabled": false
+        },
+        {
+          "name": "从视频卡片 1添加下游",
+          "disabled": false
+        },
+        {
+          "name": "从视频卡片 2添加下游",
+          "disabled": false
+        },
+        {
+          "name": "删除连线 图片创建卡片 → 视频卡片 1",
+          "disabled": false
+        },
+        {
+          "name": "删除连线 图片创建卡片 → 视频卡片 2",
+          "disabled": false
+        },
+        {
+          "name": "打开任务列表",
+          "disabled": false
+        },
+        {
+          "name": "画布缩放",
+          "disabled": false
+        },
+        {
+          "name": "整理画布",
+          "disabled": false
+        },
+        {
+          "name": "切换为网格背景",
+          "disabled": false
+        },
+        {
+          "name": "画布背景颜色",
+          "disabled": false
+        },
+        {
+          "name": "显示连线",
+          "disabled": false
+        },
+        {
+          "name": "小地图",
+          "disabled": false
+        },
+        {
+          "name": "打开对话",
+          "disabled": false
+        },
+        {
+          "name": "添加资源",
+          "disabled": false
+        },
+        {
+          "name": "当前工具：选择",
+          "disabled": false
+        },
+        {
+          "name": "选择画布工具",
+          "disabled": false
+        },
+        {
+          "name": "资产管理",
+          "disabled": false
+        },
+        {
+          "name": "打开喜欢与收藏",
+          "disabled": false
+        },
+        {
+          "name": "帮助与快捷键",
+          "disabled": false
+        }
+      ]
+    },
+    "screenshot": "screenshots/desktop-workspace-folded.png"
+  }
+]

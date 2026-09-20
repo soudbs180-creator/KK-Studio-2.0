@@ -113,7 +113,7 @@ test("窄屏会话面板为画布工具栏留出空间，顶部和输入控件�
   ]);
   const composerIcons = await page
     .locator(
-      ".chat-composer > div > button img:not(.composer-plus-arm), .chat-composer > div > button svg",
+      ".chat-composer > div > button img:not(.composer-plus-arm), .chat-composer > div > button svg, .chat-composer > div > .chat-model-picker-wrap > button img, .chat-composer > div > .chat-resource-picker > button img",
     )
     .evaluateAll((icons) =>
       icons.map((icon) => {

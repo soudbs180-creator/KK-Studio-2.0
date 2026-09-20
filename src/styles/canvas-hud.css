@@ -122,15 +122,23 @@
   text-align: center;
 }
 .canvas-hud .task-workbench-link {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
   display: block;
   width: 170px;
-  margin: 12px auto 0;
+  margin: 0;
   padding: 6px 8px;
   border: 1px solid var(--border-subtle);
   border-radius: 8px;
   color: var(--text-accent);
   font-size: 9px;
   text-align: center;
+}
+.canvas-hud .task-grid {
+  height: auto;
+  max-height: 138px;
+  overflow-y: auto;
 }
 .canvas-hud .task-detail-action {
   width: 100%;

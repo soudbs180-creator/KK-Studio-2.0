@@ -153,7 +153,10 @@ export default function CanvasToolbar({
       <button
         className="toolbar-assets"
         aria-label="资产管理"
-        onClick={() => onOpen("assets")}
+        onClick={() => {
+          setPopup(null);
+          onOpen("assets");
+        }}
       >
         <ToolbarIcon name="assets" />
       </button>
@@ -161,7 +164,10 @@ export default function CanvasToolbar({
         className="toolbar-favorite"
         aria-label="打开喜欢与收藏"
         title="喜欢与收藏"
-        onClick={() => onOpen("favorites")}
+        onClick={() => {
+          setPopup(null);
+          onOpen("favorites");
+        }}
       >
         <ToolbarIcon name="favorite" />
       </button>

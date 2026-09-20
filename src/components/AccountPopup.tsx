@@ -1,12 +1,16 @@
 import BrandLogo from "./BrandLogo";
+import type { RefObject } from "react";
 
 export default function AccountPopup({
   onOpenSettings,
+  popupRef,
 }: {
   onOpenSettings: (section?: "general" | "updates") => void;
+  popupRef: RefObject<HTMLDivElement>;
 }) {
   return (
     <div
+      ref={popupRef}
       className="account-popup"
       aria-label="个人信息（本地 Prototype）"
       data-node-id="312:2436"

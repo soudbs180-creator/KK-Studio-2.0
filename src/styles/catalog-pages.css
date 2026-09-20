@@ -13,7 +13,8 @@
      10px right / bottom breathing room from the latest Landing frame. */
   inset: 5px 10px 10px 0;
   padding: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   /* Landing is a real Figma surface (410:67280), not an unframed child of
      the workspace shell. Keep the 20px frame radius and 1px outline visible
      in the browser so the loaded page has the same boundary as the design. */
@@ -25,8 +26,8 @@
   /* Frame 56 has a 1px border; 112px content offset yields the Figma
      absolute y=113 position from the outer frame edge. */
   top: 112px;
-  left: -80.23px;
-  width: 1778.462px;
+  left: 0;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -163,6 +164,12 @@
   position: relative;
   min-width: 0;
 }
+.start-resource-picker {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
 .start-model-picker .start-tool-button {
   width: max-content;
   min-width: 101.727px;
@@ -208,6 +215,8 @@
   left: 0;
   bottom: calc(100% + 10px);
   min-width: 190px;
+  width: max-content;
+  max-width: min(280px, calc(100vw - 120px));
   padding: 6px;
   border: 1px solid var(--border-default);
   border-radius: 12px;
@@ -221,7 +230,8 @@
   border-radius: 8px;
   color: var(--text-secondary);
   text-align: left;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .start-model-popover button:hover,
 .start-model-popover button[aria-checked="true"] {
@@ -236,7 +246,7 @@
 .start-skill-popover {
   position: absolute;
   z-index: 30;
-  left: 190px;
+  left: 0;
   bottom: calc(100% + 10px);
   width: 214px;
   padding: 10px;
@@ -265,7 +275,7 @@
   background: var(--bg-input);
 }
 .start-plugin-popover {
-  left: 300px;
+  left: 0;
 }
 .start-mode-popover {
   position: absolute;
@@ -646,6 +656,71 @@
   .start-inspiration-card p {
     font-size: 12px;
     line-height: 1.5;
+  }
+}
+
+@media (max-width: 900px) {
+  .start-composer {
+    min-height: 330px;
+  }
+
+  .start-composer-footer {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    height: auto;
+    gap: 10px;
+  }
+
+  .start-footer-left,
+  .start-footer-right {
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .start-footer-left {
+    overflow: visible;
+  }
+
+  .start-footer-right {
+    justify-content: flex-end;
+  }
+
+  .start-model-picker {
+    flex: 1 1 150px;
+    min-width: 0;
+  }
+
+  .start-model-picker .start-tool-button {
+    width: 100%;
+    max-width: none;
+    justify-content: flex-start;
+  }
+
+  .start-count-picker {
+    flex: 1 1 150px;
+    min-width: 0;
+    max-width: 100%;
+    padding-inline: 6px;
+  }
+
+  .start-count-picker select {
+    min-width: 0;
+    max-width: 100%;
+    flex: 1;
+  }
+
+  .start-tool-button {
+    min-width: 0;
+    padding-inline: 8px;
+  }
+  .start-skill-popover,
+  .start-plugin-popover {
+    left: auto;
+    right: 0;
+    max-width: calc(100vw - 120px);
   }
 }
 

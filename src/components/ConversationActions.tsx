@@ -62,6 +62,7 @@ export default function ConversationActions({
     <div ref={actionsRef} data-node-id="407:29315">
       <button
         type="button"
+        className="chat-attachment-trigger"
         aria-label="添加对话素材"
         disabled={submitting || !composerDraft}
         onClick={() => fileInput.current?.click()}
@@ -84,82 +85,96 @@ export default function ConversationActions({
           event.currentTarget.value = "";
         }}
       />
-      <ConversationModelPicker
-        currentModel={currentModel}
-        options={modelOptions}
-        open={modelMenuOpen}
-        onToggle={onToggleModel}
-        onSelect={onSelectModel}
-        onConfigure={onConfigureModel}
+      <div className="chat-model-picker-wrap">
+        <ConversationModelPicker
+          currentModel={currentModel}
+          options={modelOptions}
+          open={modelMenuOpen}
+          onToggle={onToggleModel}
+          onSelect={onSelectModel}
+          onConfigure={onConfigureModel}
+        />
+      </div>
+      <span
+        className="chat-footer-separator chat-model-separator"
+        aria-hidden="true"
       />
-      <span className="chat-footer-separator" aria-hidden="true" />
-      <button
-        type="button"
-        aria-haspopup="menu"
-        aria-expanded={skillMenuOpen}
-        onClick={onToggleSkill}
-      >
-        <img
-          src="/design/figma/composer-puzzle.svg"
-          width="12"
-          height="12"
-          alt=""
-        />
-        Skill
-      </button>
-      {skillMenuOpen && (
-        <div
-          className="chat-resource-popover"
-          role="menu"
-          aria-label="选择 Skill"
+      <div className="chat-resource-picker chat-skill-picker">
+        <button
+          type="button"
+          className="chat-skill-trigger"
+          aria-haspopup="menu"
+          aria-expanded={skillMenuOpen}
+          onClick={onToggleSkill}
         >
-          <p>当前项目还没有可用的本地 Skill。</p>
-          <button
-            type="button"
-            role="menuitem"
-            onClick={() => {
-              onToggleSkill();
-              onOpen("skills");
-            }}
+          <img
+            src="/design/figma/composer-puzzle.svg"
+            width="12"
+            height="12"
+            alt=""
+          />
+          Skill
+        </button>
+        {skillMenuOpen && (
+          <div
+            className="chat-resource-popover"
+            role="menu"
+            aria-label="选择 Skill"
           >
-            浏览 Skill 目录
-          </button>
-        </div>
-      )}
-      <span className="chat-footer-separator" aria-hidden="true" />
-      <button
-        type="button"
-        aria-haspopup="menu"
-        aria-expanded={pluginMenuOpen}
-        onClick={onTogglePlugin}
-      >
-        <img
-          src="/design/figma/composer-unplug.svg"
-          width="12"
-          height="12"
-          alt=""
-        />
-        插件
-      </button>
-      {pluginMenuOpen && (
-        <div
-          className="chat-resource-popover chat-plugin-popover"
-          role="menu"
-          aria-label="选择插件"
+            <p>当前项目还没有可用的本地 Skill。</p>
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                onToggleSkill();
+                onOpen("skills");
+              }}
+            >
+              浏览 Skill 目录
+            </button>
+          </div>
+        )}
+      </div>
+      <span
+        className="chat-footer-separator chat-skill-separator"
+        aria-hidden="true"
+      />
+      <div className="chat-resource-picker chat-plugin-picker">
+        <button
+          type="button"
+          className="chat-plugin-trigger"
+          aria-haspopup="menu"
+          aria-expanded={pluginMenuOpen}
+          onClick={onTogglePlugin}
         >
-          <p>当前没有已连接的插件。</p>
-          <button
-            type="button"
-            role="menuitem"
-            onClick={() => {
-              onTogglePlugin();
-              onOpen("settings/mcp");
-            }}
+          <img
+            src="/design/figma/composer-unplug.svg"
+            width="12"
+            height="12"
+            alt=""
+          />
+          插件
+        </button>
+        {pluginMenuOpen && (
+          <div
+            className="chat-resource-popover chat-plugin-popover"
+            role="menu"
+            aria-label="选择插件"
           >
-            管理插件连接
-          </button>
-        </div>
-      )}
+            <p>当前没有已连接的插件。</p>
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                onTogglePlugin();
+                onOpen("settings/mcp");
+              }}
+            >
+              管理插件连接
+            </button>
+          </div>
+        )}
+      </div>
       <div className="chat-mode-menu" ref={modeMenuRef}>
         <button
           type="button"

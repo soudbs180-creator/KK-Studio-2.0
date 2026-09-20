@@ -9,7 +9,7 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   const panel = page.getByTestId("asset-panel");
   await expect(panel).toBeVisible();
   await expect(panel).toHaveCSS("width", "900px");
-  await expect(panel).toHaveCSS("height", "700px");
+  await expect(panel).toHaveCSS("height", "696px");
   await panel.screenshot({ path: "docs/evidence/assets-desktop.png" });
   await page.getByRole("textbox", { name: "搜索文件" }).fill("找不到");
   await expect(page.getByText("没有找到匹配的资产")).toBeVisible();
@@ -23,7 +23,7 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   await expect(page.locator(".asset-content")).toHaveClass(/list/);
   await page.getByRole("button", { name: "网格视图" }).click();
   await page.getByRole("button", { name: "收起资产管理" }).click();
-  expect(await panel.boundingBox()).toMatchObject({ width: 364 });
+  expect(await panel.boundingBox()).toMatchObject({ width: 305 });
   const thumbnail = await page
     .locator(".asset-thumbnail")
     .first()

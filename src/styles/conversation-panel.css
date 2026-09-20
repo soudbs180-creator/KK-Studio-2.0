@@ -120,7 +120,7 @@
   font-size: var(--ui-font-caption);
   line-height: 13px;
 }
-.conversation-panel .chat-composer > div > button:first-child {
+.conversation-panel .chat-composer > div > button.chat-attachment-trigger {
   order: 1;
   width: var(--ui-composer-action-size);
   height: var(--ui-composer-action-size);
@@ -152,17 +152,36 @@
   flex: 0 0 12px;
   object-fit: contain;
 }
-.conversation-panel .chat-composer > div > button:nth-child(2) {
+.conversation-panel .chat-composer > div > .chat-model-picker-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
   order: 2;
+  width: max-content;
+  min-width: 58px;
+  max-width: 110px;
+  flex: 0 1 auto;
+  white-space: nowrap;
 }
 .chat-model-picker {
   display: flex;
   align-items: center;
 }
-.conversation-panel .chat-composer > div > button.chat-model-picker {
-  width: max-content;
+.conversation-panel
+  .chat-composer
+  > div
+  > .chat-model-picker-wrap
+  > button.chat-model-picker {
+  width: 100%;
   min-width: 58px;
-  max-width: 220px;
+  height: var(--ui-composer-control-height);
+  gap: 4px;
+  padding: 0;
+  border-radius: var(--ui-radius-menu);
+  background: var(--ui-composer-surface);
+  color: var(--text-tertiary);
+  font-size: var(--ui-font-caption);
+  line-height: 13px;
   white-space: nowrap;
 }
 .chat-model-name {
@@ -179,6 +198,8 @@
   left: 0;
   bottom: calc(100% + 8px);
   min-width: 160px;
+  width: max-content;
+  max-width: min(280px, calc(100vw - 120px));
   padding: 5px;
   border: 1px solid var(--border-default);
   border-radius: 10px;
@@ -192,28 +213,58 @@
   border-radius: 7px;
   color: var(--text-secondary);
   text-align: left;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .chat-model-popover button:hover {
   background: var(--ui-composer-surface);
   color: var(--text-primary);
 }
-.conversation-panel .chat-composer > div > button:nth-child(2) img {
+.conversation-panel
+  .chat-composer
+  > div
+  > .chat-model-picker-wrap
+  > button.chat-model-picker
+  img {
   width: 12.465px;
   height: 13.849px;
   flex-basis: 12.465px;
 }
-.conversation-panel .chat-composer > div > .chat-footer-separator:nth-child(3) {
+.conversation-panel .chat-composer > div > .chat-model-separator {
   order: 3;
 }
-.conversation-panel .chat-composer > div > button:nth-child(4) {
-  order: 4;
-}
-.conversation-panel .chat-composer > div > .chat-footer-separator:nth-child(5) {
+.conversation-panel .chat-composer > div > .chat-skill-separator {
   order: 5;
 }
-.conversation-panel .chat-composer > div > button:nth-child(6) {
+.conversation-panel .chat-composer > div > .chat-resource-picker {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+.conversation-panel .chat-composer > div > .chat-skill-picker {
+  order: 4;
+}
+.conversation-panel .chat-composer > div > .chat-plugin-picker {
   order: 6;
+}
+.conversation-panel .chat-composer > div > .chat-resource-picker > button {
+  width: 58px;
+  min-width: 58px;
+  height: var(--ui-composer-control-height);
+  gap: 4px;
+  padding: 0;
+  border-radius: var(--ui-radius-menu);
+  background: var(--ui-composer-surface);
+  color: var(--text-tertiary);
+  font-size: var(--ui-font-caption);
+  line-height: 13px;
+}
+.conversation-panel .chat-composer > div > .chat-resource-picker > button img {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+  object-fit: contain;
 }
 .conversation-panel .chat-footer-separator {
   position: relative;
@@ -254,7 +305,7 @@
 .conversation-panel .chat-resource-popover {
   position: absolute;
   z-index: 4;
-  left: 92px;
+  left: 0;
   bottom: 34px;
   width: 184px;
   padding: 8px;
@@ -282,7 +333,7 @@
   cursor: pointer;
 }
 .conversation-panel .chat-plugin-popover {
-  left: 160px;
+  left: 0;
 }
 .conversation-panel .chat-mode-trigger {
   width: 53px;
@@ -399,6 +450,12 @@
     gap: 4px;
   }
   .conversation-panel .chat-composer > div > button,
+  .conversation-panel
+    .chat-composer
+    > div
+    > .chat-model-picker-wrap
+    > button.chat-model-picker,
+  .conversation-panel .chat-composer > div > .chat-resource-picker > button,
   .conversation-panel .chat-composer > div > button:first-child,
   .conversation-panel .chat-composer .chat-send,
   .conversation-panel .chat-mode-trigger {
@@ -412,6 +469,18 @@
     .chat-composer
     > div
     > button:not(:first-child):not(.chat-send):not([aria-label*="语音输入"])
+    img,
+  .conversation-panel
+    .chat-composer
+    > div
+    > .chat-model-picker-wrap
+    > button.chat-model-picker
+    img,
+  .conversation-panel
+    .chat-composer
+    > div
+    > .chat-resource-picker
+    > button
     img {
     width: 16px;
     height: 16px;

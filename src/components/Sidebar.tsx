@@ -27,7 +27,9 @@ export default function Sidebar({
   narrow: boolean;
   onCollapse: () => void;
 }) {
-  const [account, setAccount] = useState(false);
+  const [menu, setMenu] = useState<"account" | "projects" | null>(null);
+  const account = menu === "account";
+  const projectMenuOpen = menu === "projects";
   const [groups, setGroups] = useState([true, true]);
   const [projectFilter, setProjectFilter] = useState<"all" | "ungrouped">(
     "all",
@@ -35,12 +37,13 @@ export default function Sidebar({
   const [sortMode, setSortMode] = useState<"manual" | "recent" | "priority">(
     "manual",
   );
-  const [projectMenuOpen, setProjectMenuOpen] = useState(false);
   const [folderCreated, setFolderCreated] = useState(false);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const root = useRef<HTMLElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
   const accountTrigger = useRef<HTMLButtonElement>(null);
+  const accountPopup = useRef<HTMLDivElement>(null);
+  const projectMenu = useRef<HTMLDivElement>(null);
   const projectFilterTrigger = useRef<HTMLButtonElement>(null);
   useLayoutEffect(() => {
     const focused = document.activeElement;
@@ -53,12 +56,15 @@ export default function Sidebar({
       toggle.current?.focus({ preventScroll: true });
     }
   }, [collapsed]);
-  useDismissible(account, root, () => setAccount(false), accountTrigger);
+  function navigate(id: string): void {
+    setMenu(null);
+    onNavigate(id);
+  }
   useDismissible(
-    projectMenuOpen,
-    root,
-    () => setProjectMenuOpen(false),
-    projectFilterTrigger,
+    menu !== null,
+    account ? accountPopup : projectMenu,
+    () => setMenu(null),
+    account ? accountTrigger : projectFilterTrigger,
   );
   useDismissible(
     narrow && !collapsed,
@@ -84,7 +90,7 @@ export default function Sidebar({
           aria-label="搜索"
           aria-keyshortcuts="Control+K Meta+K"
           title="搜索与收藏（Ctrl / ⌘ + K）"
-          onClick={() => onNavigate("search")}
+          onClick={() => navigate("search")}
         >
           <SidebarIcon name="search" />
         </button>
@@ -106,7 +112,7 @@ export default function Sidebar({
             aria-current={active === id ? "page" : undefined}
             aria-label={label}
             title={label}
-            onClick={() => onNavigate(id)}
+            onClick={() => navigate(id)}
           >
             <SidebarIcon name={icon} />
             <span className="nav-label">{label}</span>
@@ -140,7 +146,7 @@ export default function Sidebar({
               aria-label="项目显示与排序"
               aria-expanded={projectMenuOpen}
               title="项目显示与排序"
-              onClick={() => setProjectMenuOpen((value) => !value)}
+              onClick={() => setMenu(projectMenuOpen ? null : "projects")}
             >
               <img
                 className="sidebar-action-glyph sidebar-action-ellipsis"
@@ -167,6 +173,7 @@ export default function Sidebar({
           </div>
           {projectMenuOpen && (
             <div
+              ref={projectMenu}
               className="project-groups-menu"
               role="menu"
               aria-label="项目显示与排序"
@@ -180,7 +187,7 @@ export default function Sidebar({
                   aria-checked={projectFilter === value}
                   onClick={() => {
                     setProjectFilter(value);
-                    setProjectMenuOpen(false);
+                    setMenu(null);
                   }}
                 >
                   {value === "all" ? "显示全部项目" : "仅显示未分组"}
@@ -198,7 +205,7 @@ export default function Sidebar({
                   }
                   onClick={() => {
                     setSortMode(value);
-                    setProjectMenuOpen(false);
+                    setMenu(null);
                   }}
                 >
                   {value === "manual"
@@ -221,7 +228,7 @@ export default function Sidebar({
                   onToggle={() =>
                     setGroups(groups.map((v, index) => (i === index ? !v : v)))
                   }
-                  onOpenLibrary={() => onNavigate("projects")}
+                  onOpenLibrary={() => navigate("projects")}
                 />
               )}
               {groups[i] && (
@@ -234,7 +241,7 @@ export default function Sidebar({
                   }
                   onNavigate={(id) => {
                     setSelectedProject(name);
-                    onNavigate(id);
+                    navigate(id);
                   }}
                 />
               )}
@@ -254,9 +261,11 @@ export default function Sidebar({
       </div>
       {account && (
         <AccountPopup
-          onOpenSettings={(section = "general") =>
-            onNavigate(`settings/${section}`)
-          }
+          popupRef={accountPopup}
+          onOpenSettings={(section = "general") => {
+            accountTrigger.current?.focus({ preventScroll: true });
+            navigate(`settings/${section}`);
+          }}
         />
       )}
       <div className="account-row">
@@ -265,7 +274,7 @@ export default function Sidebar({
           className="sidebar-account sidebar-control"
           aria-label="个人信息"
           aria-expanded={account}
-          onClick={() => setAccount(!account)}
+          onClick={() => setMenu(account ? null : "account")}
         >
           <span className="logo">
             <BrandLogo />
@@ -277,7 +286,7 @@ export default function Sidebar({
         <button
           className="sidebar-settings"
           aria-label="打开设置"
-          onClick={() => onNavigate("settings")}
+          onClick={() => navigate("settings")}
         >
           <SidebarIcon name="settings" />
         </button>

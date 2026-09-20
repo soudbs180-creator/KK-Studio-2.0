@@ -26,15 +26,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | T11 | 旧Web/Vercel切换与退役 | BLOCKED | T10 | root |
 | T12 | Mobile 2.0适配 | TODO | T11 | root |
 | UI-001 | UI tokens和共享组件契约 | TODO | TASK-GOV-001 | root |
-| UI-002 | 窄屏composer和动态文案溢出 | TODO | UI-001 | root |
-| UI-003 | 示例任务/账号与真实服务边界 | TODO | UI-001 | root |
-| UI-004 | 逐页对齐、IA和最终视觉运行态 | TODO | UI-002, UI-003 | root |
+| UI-002 | 窄屏composer和动态文案溢出 | DONE | UI-001 | root |
+| UI-003 | 示例任务/账号与真实服务边界 | PARTIAL | UI-001 | root |
+| UI-004 | 逐页对齐、IA和最终视觉运行态 | PARTIAL | UI-002, UI-003 | root |
 | PERF-001 | 原生素材缩略图/分页及内存IO | TODO | T3a | root |
 | EXT-GIT | 远端PR与main保护规则 | BLOCKED | TASK-GOV-001, T0 | root |
 | TEST-PROV-001 | Provider真实入口浏览器回归 | DONE | TASK-GOV-001 | root |
 | TASK-ASTRA-001 | Astra 迁移计划与 Git 分支规则同步 | DONE | T0, TASK-GOV-001 | root |
 | TASK-KK2-MAIN-SYNC | KK Studio 2.0 本地与云端 main 树同步 | DONE | T0, TASK-GOV-001 | root |
-| TASK-UI-UNMERGED-001 | dirty checkout 未合并 UI 回归候选 | TODO | TASK-GOV-001 | root |
+| TASK-UI-UNMERGED-001 | dirty checkout 未合并 UI 回归候选 | DONE | TASK-GOV-001 | root |
+| TASK-UI-MAIN-001 | 现行Figma页面校正与交互修复主线整合 | REVIEW | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -285,36 +286,36 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 窄屏composer和动态文案溢出
 - Scope: src/components/StartComposer.tsx, src/styles, src/components/ConversationPanel.tsx
 - Acceptance: 390/768/1440/1920主操作可达; 长模型文案不遮挡; 同状态DOM/截图; 键盘焦点与IME保持
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `codex/TASK-UI-MAIN-001-alignment`
+- Worktree: `D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001`
 - Modules: src/components/StartComposer.tsx, src/styles, src/components/ConversationPanel.tsx
-- Verification: NOT_VERIFIED — 历史有溢出证据，当前需复现并修复
-- Evidence: [docs/changes/2026-09-16-ui-system-audit/audit.md](../../docs/changes/2026-09-16-ui-system-audit/audit.md)
-- Updated: 2026-09-17
+- Verification: PASS — 已选择性整合原root UI候选；最终verify150 Node/190浏览器/UI119/0、Rust60与dev/preview/桌面34页面矩阵均通过。
+- Evidence: [docs/changes/2026-09-16-ui-system-audit/audit.md](../../docs/changes/2026-09-16-ui-system-audit/audit.md), [docs/changes/2026-09-20-ui-main-alignment/verification.md](../../docs/changes/2026-09-20-ui-main-alignment/verification.md)
+- Updated: 2026-09-20
 
 ## UI-003 — 示例任务/账号与真实服务边界
 
 - Goal: 示例任务/账号与真实服务边界
 - Scope: src/components/canvas/TaskPanel.tsx, src/components/AccountPopup.tsx, src/components/settings
 - Acceptance: 空真实任务不冒充正在生成; fixture首屏可辨识; 不可用服务说明一致; Figma/运行态验收
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `codex/TASK-UI-MAIN-001-alignment`
+- Worktree: `D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001`
 - Modules: src/components/canvas/TaskPanel.tsx, src/components/AccountPopup.tsx, src/components/settings
-- Verification: NOT_VERIFIED — NOT VERIFIED
-- Evidence: [docs/changes/2026-09-16-ui-system-audit/audit.md](../../docs/changes/2026-09-16-ui-system-audit/audit.md)
-- Updated: 2026-09-17
+- Verification: PARTIAL — 交互和真实服务说明已在origin/main候选完成整合，定向浏览器回归通过；最终主线同步见TASK-UI-MAIN-001。
+- Evidence: [docs/changes/2026-09-16-ui-system-audit/audit.md](../../docs/changes/2026-09-16-ui-system-audit/audit.md), [docs/changes/2026-09-20-ui-main-alignment/verification.md](../../docs/changes/2026-09-20-ui-main-alignment/verification.md)
+- Updated: 2026-09-20
 
 ## UI-004 — 逐页对齐、IA和最终视觉运行态
 
 - Goal: 逐页对齐、IA和最终视觉运行态
 - Scope: Landing, Workspace, Assets, Settings, Tasks, Account
 - Acceptance: 最新Figma同状态视觉对比; 六态及异步/键盘/离线; dev1421/preview1423/Tauri最终source分别确认
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `codex/TASK-UI-MAIN-001-alignment`
+- Worktree: `D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001`
 - Modules: Landing, Workspace, Assets, Settings, Tasks, Account
-- Verification: NOT_VERIFIED — NOT VERIFIED
-- Evidence: [docs/changes/2026-09-16-ui-system-audit/plan.md](../../docs/changes/2026-09-16-ui-system-audit/plan.md)
-- Updated: 2026-09-17
+- Verification: PARTIAL — 已覆盖34运行页面状态，修复现行设置/搜索/资产几何；Landing现行节点及其他缺失Frame仍不能完成Figma视觉验收。
+- Evidence: [docs/changes/2026-09-16-ui-system-audit/plan.md](../../docs/changes/2026-09-16-ui-system-audit/plan.md), [docs/changes/2026-09-20-ui-main-alignment/verification.md](../../docs/changes/2026-09-20-ui-main-alignment/verification.md)
+- Updated: 2026-09-20
 
 ## PERF-001 — 原生素材缩略图/分页及内存IO
 
@@ -382,9 +383,21 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 审查并在独立分支验收脏工作区中发现的 UI 交互修复
 - Scope: UI interaction/regression
 - Acceptance: 复核 useDismissible、Modal、TopBar、TaskPanelPopover、settings focus/switch 改动的源代码差异; 从最新稳定 main 建立独立 task branch/worktree，不复制 dirty checkout 全量内容; 运行定向浏览器回归和完整 verify，并保留同状态证据
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `codex/TASK-UI-MAIN-001-alignment`
+- Worktree: `D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001`
 - Modules: src/components/useDismissible.ts, src/components/Modal.tsx, src/components/TopBar.tsx, src/components/TaskPanelPopover.tsx, src/components/settings/SettingsControls.tsx, src/components/settings/ConnectionSettings.tsx, tests/browser
-- Verification: NOT_VERIFIED — dirty checkout 中的 UI 候选尚未迁移或验收；本次首发同步不包含这些改动。
-- Evidence: [docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md](../../docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md)
+- Verification: PASS — 已选择性整合原root UI候选；最终verify150 Node/190浏览器/UI119/0、Rust60与dev/preview/桌面34页面矩阵均通过。
+- Evidence: [docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md](../../docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md), [docs/changes/2026-09-20-ui-main-alignment/verification.md](../../docs/changes/2026-09-20-ui-main-alignment/verification.md)
+- Updated: 2026-09-20
+
+## TASK-UI-MAIN-001 — 现行Figma页面校正与交互修复主线整合
+
+- Goal: 将审阅的交互/视觉修复和当前主线功能整合并经PR同步
+- Scope: UI geometry, popover lifecycle, selective integration, main provenance
+- Acceptance: 原root候选选择性三方整合，保留T3b/T4/T5; 现行Figma有节点页面同状态DOM与截图; 完整verify、Rust与三种运行模式通过; PR/CI及本地云端main同一提交回读；原工作区有可校验备份
+- Branch: `codex/TASK-UI-MAIN-001-alignment`
+- Worktree: `D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001`
+- Modules: src/components, src/styles, src-tauri/src/main.rs, tests/browser, scripts/audit, docs/governance
+- Verification: PARTIAL — 本地完整验证通过，等待PR/CI与主线同提交同步回读；Figma设计缺失独立记入UI-004。
+- Evidence: [docs/changes/2026-09-20-ui-main-alignment/verification.md](../../docs/changes/2026-09-20-ui-main-alignment/verification.md), [docs/changes/2026-09-20-ui-main-alignment/review.md](../../docs/changes/2026-09-20-ui-main-alignment/review.md)
 - Updated: 2026-09-20

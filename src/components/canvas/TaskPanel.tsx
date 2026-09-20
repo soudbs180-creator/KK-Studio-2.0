@@ -20,7 +20,7 @@ const PROTOTYPE_TASKS: PrototypeTask[] = [
   {
     id: "prototype-running",
     status: "running",
-    statusLabel: "正在生成中",
+    statusLabel: "演示 · 生成中",
     image: "/design/figma/task-placeholder-running.png",
   },
 ];
@@ -107,6 +107,7 @@ export default function TaskPanel({
       </button>
       {open && (
         <TaskPanelPopover
+          demo={tasks.length === 0}
           tab={tab}
           setTab={setTab}
           visibleTasks={visibleTasks}

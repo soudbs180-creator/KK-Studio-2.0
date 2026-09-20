@@ -164,7 +164,7 @@ test("配置入口定位到对应设置分类，菜单支持 Escape", async ({ p
   await expect(page.getByRole("button", { name: "添加资源" })).toBeFocused();
   await page.getByRole("button", { name: "打开任务列表" }).click();
   await expect(
-    page.getByRole("region", { name: "任务列表" }).getByText("正在生成中"),
+    page.getByRole("region", { name: "任务列表" }).getByText("演示 · 生成中"),
   ).toBeVisible();
   await page
     .getByRole("region", { name: "任务列表" })
