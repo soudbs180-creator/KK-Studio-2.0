@@ -32,13 +32,18 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
       - run: npm ci
       - run: node node_modules/@playwright/test/cli.js install msedge
-      - run: npm run verify
+      - name: Run repository verification
+        env:
+          GOVERNANCE_BASE: origin/main
+        run: npm run verify
       - run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
       - run: cargo test --manifest-path src-tauri/Cargo.toml --no-default-features --locked
       - run: npm run client:check
