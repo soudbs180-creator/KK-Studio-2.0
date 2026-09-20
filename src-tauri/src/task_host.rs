@@ -663,6 +663,14 @@ async fn download_result(
     client: &Client,
     value: &str,
 ) -> Result<(Vec<u8>, &'static str), &'static str> {
+    download_result_with_limit(client, value, MAX_RESPONSE_BYTES).await
+}
+
+async fn download_result_with_limit(
+    client: &Client,
+    value: &str,
+    max_bytes: usize,
+) -> Result<(Vec<u8>, &'static str), &'static str> {
     let parsed = reqwest::Url::parse(value).map_err(|_| "供应商结果地址无效")?;
     if !matches!(parsed.scheme(), "https" | "http")
         || parsed.query().is_some()
@@ -680,6 +688,12 @@ async fn download_result(
     if !response.status().is_success() {
         return Err("供应商结果读取失败");
     }
+    if response
+        .content_length()
+        .is_some_and(|size| size > max_bytes as u64)
+    {
+        return Err("供应商结果大小无效");
+    }
     let mime = response
         .headers()
         .get(header::CONTENT_TYPE)
@@ -694,11 +708,28 @@ async fn download_result(
             }
         })
         .unwrap_or("image/png");
-    let bytes = response.bytes().await.map_err(|_| "供应商结果读取中断")?;
-    if bytes.is_empty() || bytes.len() > MAX_RESPONSE_BYTES {
+    let mut bytes = Vec::new();
+    let mut stream = response.bytes_stream();
+    while let Some(chunk) = stream.next().await {
+        let chunk = chunk.map_err(|_| "供应商结果读取中断")?;
+        append_bounded_chunk(&mut bytes, &chunk, max_bytes)?;
+    }
+    if bytes.is_empty() {
         return Err("供应商结果大小无效");
     }
-    Ok((bytes.to_vec(), mime))
+    Ok((bytes, mime))
+}
+
+fn append_bounded_chunk(
+    bytes: &mut Vec<u8>,
+    chunk: &[u8],
+    max_bytes: usize,
+) -> Result<(), &'static str> {
+    if bytes.len().saturating_add(chunk.len()) > max_bytes {
+        return Err("供应商结果大小无效");
+    }
+    bytes.extend_from_slice(chunk);
+    Ok(())
 }
 
 fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
@@ -970,5 +1001,16 @@ mod tests {
             vec!["asset-1"]
         );
         let _ = fs::remove_dir_all(path);
+    }
+
+    #[test]
+    fn result_download_chunk_accumulator_caps_stream() {
+        let mut bytes = Vec::new();
+        append_bounded_chunk(&mut bytes, b"1234", 8).unwrap();
+        assert_eq!(
+            append_bounded_chunk(&mut bytes, b"56789", 8),
+            Err("供应商结果大小无效")
+        );
+        assert_eq!(bytes, b"1234");
     }
 }
