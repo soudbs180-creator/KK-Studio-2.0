@@ -5,7 +5,8 @@
 - 今后新任务从 fetch 后的 origin/main 派生；本任务初始基线为 8aca3ab，远端随后前进到 fb57529，已通过普通 merge 纳入任务分支。任务分支 codex/TASK-GOV-002-ai-sdlc。旧本地 main@39f6a6e 与远端无共同祖先，下面首次同步/tree相等记录是历史范围，不能直接 pull 合并旧本地main。
 - 本次只写入共享规则、Git防线、CI变更包、模板和规则场景；产品代码、产品测试、既有证据和其他人的提交只读审计，状态以task-ledger为准。规则候选等待 PR，完整说明见 docs/changes/2026-09-20-ai-sdlc/。
 - 当前托管回读 main protected=false，private仓库protection/rulesets API403，EXT-GIT仍BLOCKED；自动分支清理为false。
-- 最新main CI run35492697622失败：sidebar motion中间帧缺失；本任务只记录为产品测试 follow-up，不修复或回写既有产品证据。
+- 初始 main@8aca3ab 的 CI run35492697622 曾失败；这是历史审计范围，不代表后来主线状态。本任务只记录产品测试 follow-up，不修复或回写既有产品证据。
+- 规则候选 f7425d6 的 hosted verify 已通过；远端 main 后来前进到 a1d8629，PR #4 仍 draft 且显示冲突。用户限定其他提交暂不处理，因此新上游整合与合并复验留给后续任务。
 - 先读AGENTS/AI_RULES与engineering规则。npm ci后安装npm run git:guards；本地hook不是远端保护。最终用户汇报简洁中文。
 
 ## 以下为此前交付快照（保留历史，不覆盖上面当次核对）

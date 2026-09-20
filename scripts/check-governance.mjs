@@ -7,12 +7,25 @@ import { checkImportBoundaries } from "./governance/import-boundaries.mjs";
 const issues = [];
 const root = process.cwd();
 const governanceBase = process.env.GOVERNANCE_BASE || "origin/main";
+let governanceBaseSha;
+try {
+  governanceBaseSha = execFileSync(
+    "git",
+    ["rev-parse", "--verify", `${governanceBase}^{commit}`],
+    { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
+  ).trim();
+} catch {
+  console.error(
+    `Cannot resolve governance baseline ${governanceBase}. Fetch the required base commit and retry; do not change existing tests to resolve this error.`,
+  );
+  process.exit(1);
+}
 
 function baselineContent(file) {
   try {
     return execFileSync(
       "git",
-      ["show", `${governanceBase}:${file.replaceAll("\\", "/")}`],
+      ["show", `${governanceBaseSha}:${file.replaceAll("\\", "/")}`],
       {
         cwd: root,
         encoding: "utf8",

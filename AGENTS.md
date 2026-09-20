@@ -5,7 +5,7 @@
 - 先读根目录 `AI_RULES.md` 和 `docs/engineering/PROMPTING.md`。用户不必提供专业提示词，AI 负责将自然语言转换成有范围、约束、验收与失败边界的工程任务；允许中英术语混用，最终回复简洁、通俗、中文。
 - 普通已授权技术工作由 AI 写好 intent/spec/plan 后自主执行，不逐阶段索取形式批准。用户主要负责产品含义、设计/交互和最终验收；真实高影响操作沿用具体授权。用户新反馈应同步更新任务，不丢弃此前目标。
 - `CLAUDE.md`、`GEMINI.md`、`.github/copilot-instructions.md`、`.cursor/rules/project.mdc` 只是兼容入口，必须引用本文件和 AI_RULES，不能另立矛盾政策。新工具未加载规则不得写入；CI 不能证明模型确实读懂规则。
-- 产品代码、配置、脚本和现行文档都纳入冲突审计；发现错误做最小修正并验证。历史证据用勘误和新证据纠正，不伪造旧结果。具体流程见 `docs/engineering/SDLC.md`、`docs/engineering/BRANCH-POLICY.md` 与 `docs/engineering/REVIEW.md`。
+- 产品代码、配置、脚本和现行文档可作为冲突审计输入；修正须在当前用户授权范围内。用户限定只写规则时，不接管产品实现、既有测试或其他提交。历史证据用勘误和新证据纠正，不伪造旧结果。具体流程见 `docs/engineering/SDLC.md`、`docs/engineering/BRANCH-POLICY.md` 与 `docs/engineering/REVIEW.md`。
 
 ## 唯一工程与目标
 

@@ -410,7 +410,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Acceptance: 入口统一、中文自然语言转工程任务; 真实push拒绝回归与delivery门禁通过; 规则、模板、脚本入口和账本绑定一致; 独立review和实际规则验证证据; 产品代码、产品测试、既有证据和其他人的提交保持只读
 - Branch: `codex/TASK-GOV-002-ai-sdlc`
 - Worktree: `D:/kk-studio-next/.worktrees/TASK-GOV-002`
-- Modules: docs, scripts/governance, .github, .githooks, config, tests/governance
-- Verification: PARTIAL — 规则候选验证 PASS：governance 31 tasks/0 violations、push policy 9/9、delivery policy 12/12、AI 场景结构 12/12；规则文件 lint/typecheck/format/links 通过。产品代码、产品测试、既有证据和其他提交未写入。远端保护因私有个人仓库套餐 API403 仍 BLOCKED，产品/Desktop follow-up 仍由各自任务负责。
+- Modules: docs, scripts/governance, .github, .githooks, config, tests/unit/deliveryPolicy.test.ts, tests/unit/gitPushPolicy.test.ts, tests/evals
+- Verification: PARTIAL — 规则门禁31tasks/0、push9/9、delivery12/12、场景结构12/12、基线正反例2/2；f7425d6 hosted verify成功。最终diff无产品/既有测试/旧证据改动。PR4保持draft，main前进到a1d8629导致冲突，遵用户要求不再处理新上游；远端保护API403仍BLOCKED。当前不具备合并/发布条件。
 - Evidence: [docs/changes/2026-09-20-ai-sdlc/verification.md](../../docs/changes/2026-09-20-ai-sdlc/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json)
 - Updated: 2026-09-20

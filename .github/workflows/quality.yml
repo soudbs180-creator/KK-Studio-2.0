@@ -66,5 +66,6 @@ jobs:
         with:
           name: verification-evidence
           path: |
+            docs/evidence/browser-results.json
             test-results/
           if-no-files-found: ignore
