@@ -1,12 +1,11 @@
 # 当前进度
 
-## 2026-09-20 AI自主开发、分支和规则一致性（TASK-GOV-002）
+## 2026-09-21 AI 自主开发规则已合入主线
 
-- 在origin/main@8aca3ab独立分支补全共同AI入口、自然语言转工程需求、风险分级自主流程、独立review/ADR/发布/事故模板。
-- 增加本地Git push防线、真实临时仓库测试、CI delivery变更包门禁与可审阅rulesets；不伪称能强制所有模型理解文档。
-- 只读核对当前代码、产品测试、既有证据和旧规范，用于发现规则冲突；本任务只写入共同规则、流程模板、Git/CI/delivery 防线和规则场景，不接管产品实现或其他人的提交。
-- 当次GitHub回读private main未受保护，API403套餐限制仍为EXT-GIT BLOCKED。最新主线CI失败仅登记为产品任务 follow-up，未修复或改写其测试、截图和报告。
-- 规则候选验证：governance 31 tasks/0 violations、push policy 9/9、delivery policy 12/12、AI 场景结构 12/12，规则文件 lint/typecheck/format/links 通过；未发布、未清理分支、未改写历史。
+- PR #4 已 squash 合入远端 `main`，合并提交为 `92c1ef17c42030ef6976e039efe4775c4bdc0939`；合并前基线 `c3ff0871b3db674e0ab073f1445879d84fee3507`、规则分支 head `19215945573ca97dd4427f36ac8e074a1378f9fb` 均已回读。
+- hosted delivery、repository verification、Rust fmt/test、client check 和 Tauri no-bundle build 全部通过；规则账本 32 tasks/0 violations。规则变更仍不包含产品代码、既有产品测试或旧证据。
+- GitHub protection/rulesets API 仍返回 403，远端强制保护未部署，保留 EXT-GIT BLOCKED；本地 hook、CI 和 ruleset JSON 是可复用的补充防线。
+- 本次治理分支/工作树在合并和回读后清理；其他任务的分支、dirty worktree 和历史证据不删除。
 
 ## 2026-09-20 Astra 迁移计划与分支规则复核
 

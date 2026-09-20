@@ -1,4 +1,15 @@
-# Verification — TASK-GOV-002
+## 当前结论（2026-09-21）
+
+状态：规则治理已合入 `main`；远端服务器保护仍未启用，因此整体验证结果为 PARTIAL。
+
+- PR #4（[落实跨 AI 开发规则、分支防线与交付检查](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/4)）已 squash 合入，merge commit 为 `92c1ef17c42030ef6976e039efe4775c4bdc0939`。合并前 base 为 `c3ff0871b3db674e0ab073f1445879d84fee3507`，head 为 `19215945573ca97dd4427f36ac8e074a1378f9fb`。
+- hosted [delivery](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35520494220/job/106103614313)、[verify](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35520494220/job/106103614438) 及同 head 的 push verify 均成功；verify 包含 repository verification、Rust fmt/test、client check 和 Tauri no-bundle build。
+- 合入前本地/托管规则门禁：governance 32 tasks/0 violations、push policy 9/9、delivery policy 12/12、AI 场景结构 12/12、基线正反例 2/2；PR delivery 为 56 files/0 violations。
+- 最终治理 diff 仍只涉及规则、文档、脚本、CI、模板和规则场景；产品实现、既有产品测试、存储契约、旧证据和其他任务提交未由本任务写入。
+- GitHub private 仓库的 protection/rulesets 接口仍返回 403，服务器禁止 force-push、禁止删除分支、必须 PR 合并等强制项尚未由远端平台启用；本地 pre-push/CI/ruleset JSON 不能冒充服务器保护。
+- 原治理分支和工作树在合并回读后删除；PR、merge SHA、审查记录、变更包和历史证据保留。其他任务分支/工作树不在本次清理范围。
+
+## 历史候选记录# Verification — TASK-GOV-002
 
 状态：规则实现和定向门禁已验证；PR 保持草稿，尚未满足合并条件。当前记录只覆盖治理规则、执行脚本、模板和规则场景；后续 head 变化后须重新判断。
 

@@ -1,4 +1,11 @@
-# Review — TASK-GOV-002
+## 当前结论（2026-09-21）
+
+- 独立审查范围无 P0/P1；PR #4 已合入 `main`，merge commit 为 `92c1ef17c42030ef6976e039efe4775c4bdc0939`，head 为 `19215945573ca97dd4427f36ac8e074a1378f9fb`，base 为 `c3ff0871b3db674e0ab073f1445879d84fee3507`。
+- PR #4 hosted delivery/verify 全部成功，包含完整 repository verification、Rust fmt/test、client check 和 Tauri no-bundle build。
+- 服务器 branch protection/rulesets API403 仍是 P2/EXT-GIT BLOCKED；文档明确保留该限制，不用本地 hook 宣称服务器已强制执行。
+- PR、head SHA、merge SHA、check runs、审查和变更包均保留；治理分支/worktree 在合入后清理，其他任务不处理。
+
+## 历史审查记录# Review — TASK-GOV-002
 
 状态：规则范围独立审查无 P0/P1；PR 尚不可合并，新上游冲突和最终 head 复核不能省略。产品代码、产品测试、既有证据和其他人的提交均不在写入范围。
 评审范围：共享入口、自然语言转工程 brief、AI 自主流程、Git 与 CI 门禁、变更包/账本、历史证据保护及单用户审批可操作性。

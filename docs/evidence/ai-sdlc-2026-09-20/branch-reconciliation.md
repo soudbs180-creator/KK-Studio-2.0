@@ -1,4 +1,11 @@
-# 本次分支核对
+## 2026-09-21 合入回读
+
+- 合并前最新主线：`c3ff0871b3db674e0ab073f1445879d84fee3507`。治理分支 head：`19215945573ca97dd4427f36ac8e074a1378f9fb`。PR #4 squash merge：`92c1ef17c42030ef6976e039efe4775c4bdc0939`。
+- `git fetch origin` 后 `origin/main` 精确回读为 `92c1ef17c42030ef6976e039efe4775c4bdc0939`；PR #4 状态为 closed/merged，head/base/merge SHA 均可由 GitHub API 回读。
+- PR delivery、repository verification、Rust fmt/test、client check 和 Tauri no-bundle build 均为 success；没有使用旧 head 的结果替代本次 head。
+- 治理分支与治理 worktree 仅在上述证据确认后清理；其他 dirty worktree、历史分支和旧 evidence 保留。
+
+## 历史整合记录# 本次分支核对
 
 日期：2026-09-20。依据：本次 `git fetch origin`、远端 refs、GitHub PR API 与 check-runs API 回读。范围是治理任务的整合准备；未发布产品、未删除引用、未声称所有本地候选都已验收。
 
