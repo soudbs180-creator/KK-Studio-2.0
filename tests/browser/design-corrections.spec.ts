@@ -92,6 +92,10 @@ test("工具与帮助菜单保持可读尺寸、快捷键三栏及窄屏可用",
   });
   await help.getByRole("menuitem", { name: "快捷按键", exact: true }).click();
   const panel = page.getByRole("dialog", { name: "快捷按键" });
+  await expect(panel.locator(".shortcuts-panel")).toHaveCSS(
+    "border-top-color",
+    "rgb(60, 60, 60)",
+  );
   for (const tab of ["全局", "画布", "文件"]) {
     await panel.getByRole("tab", { name: tab, exact: true }).click();
     await expect(panel.getByRole("tabpanel")).toBeVisible();

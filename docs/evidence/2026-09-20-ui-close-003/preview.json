@@ -1,0 +1,27 @@
+{
+  "url": "http://127.0.0.1:1423/",
+  "scripts": [
+    "http://127.0.0.1:1423/assets/index-CsrpsEMe.js"
+  ],
+  "panel": {
+    "x": 624,
+    "y": 300,
+    "width": 672,
+    "height": 480,
+    "borderColor": "rgb(60, 60, 60)",
+    "borderWidth": "1px",
+    "borderRadius": "18px",
+    "background": "rgb(31, 31, 31)"
+  },
+  "headerDivider": "rgb(51, 51, 51)",
+  "source": "src/main.tsx -> App.tsx -> Canvas/CanvasToolbar.tsx -> Modal -> ShortcutsPanel.tsx",
+  "checks": [
+    "current Figma 394:938 frame border #3c3c3c",
+    "internal header divider remains #333",
+    "672x480 global panel",
+    "all tabs",
+    "390px canvas tab no horizontal overflow",
+    "Escape returns focus"
+  ],
+  "pageErrors": []
+}

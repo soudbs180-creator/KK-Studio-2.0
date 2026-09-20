@@ -10,7 +10,9 @@
   display: flex;
   flex-direction: column;
   background: var(--bg-input);
-  border: 1px solid var(--bg-card-soft);
+  /* Figma 394:938 uses the shared border token. The header's internal
+     divider remains the darker divider token below; keep those surfaces distinct. */
+  border: 1px solid var(--border-default);
   border-radius: 18px;
   color: var(--ui-shortcut-text);
   padding: 0 14px;
