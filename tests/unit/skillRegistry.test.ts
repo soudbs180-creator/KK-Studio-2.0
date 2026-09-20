@@ -2,6 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   createSkillRegistry,
+  applySkillInstructions,
+  parseSkillImport,
+  serializeSkill,
+  SKILL_RECORDS_STORAGE_KEY,
   parseSkillManifest,
   SKILL_REGISTRY_STORAGE_KEY,
   validateSkillManifest,
@@ -31,6 +35,10 @@ class MemoryStorage implements SkillRegistryStorage {
   setItem(key: string, value: string): void {
     if (this.failWrites) throw new Error("storage unavailable");
     this.values.set(key, value);
+  }
+
+  removeItem(key: string): void {
+    this.values.delete(key);
   }
 }
 
@@ -124,4 +132,80 @@ test("malformed persisted IDs are ignored and failed writes do not mutate memory
   assert.equal(registry.install("storyboard-helper"), false);
   assert.equal(registry.isInstalled("storyboard-helper"), false);
   assert.equal(registry.uninstall("unknown"), false);
+});
+
+test("imports bounded SKILL.md text, preserves imports, and round trips JSON", () => {
+  const source = `---
+id: storyboard-helper
+name: Storyboard Helper
+version: 1.2.3
+description: 整理分镜提示
+author: 本地作者
+category: 动画
+imports: prompt-reviewer
+---
+
+先拆分主体和镜头，再输出可编辑草稿。`;
+  const record = parseSkillImport(source);
+  assert.deepEqual(record.imports, ["prompt-reviewer"]);
+  assert.equal(record.installed, true);
+  const restored = parseSkillImport(JSON.parse(serializeSkill(record)));
+  assert.equal(restored.instructions, record.instructions);
+  assert.deepEqual(restored.manifest, record.manifest);
+  assert.equal(
+    applySkillInstructions("保留原始文字", restored),
+    "保留原始文字\n\n[Skill: Storyboard Helper]\n先拆分主体和镜头，再输出可编辑草稿。",
+  );
+});
+
+test("rejects malformed imports and secret-like content", () => {
+  assert.throws(
+    () => parseSkillImport({ manifest, instructions: { run: "script" } }),
+    /指令必须是文本/,
+  );
+  assert.throws(
+    () =>
+      parseSkillImport({
+        manifest,
+        instructions: "请使用 api_key: hidden-value",
+      }),
+    /密钥或凭据/,
+  );
+  assert.throws(
+    () => parseSkillImport(`---\nname: Duplicate\nname: Again\n---\n\n文本`),
+    /字段重复/,
+  );
+});
+
+test("persists complete local records and does not silently overwrite on write failure", () => {
+  const storage = new MemoryStorage();
+  const registry = createSkillRegistry(storage);
+  const created = registry.createSkill({
+    manifest: {
+      id: "local-template",
+      name: "Local Template",
+      version: "0.1.0",
+      description: "本地指令",
+      author: "本地",
+      category: "文本",
+      permissions: ["conversation:read"],
+      dependencies: ["storyboard-helper"],
+    },
+    instructions: "按步骤检查文本。",
+    imports: ["storyboard-helper"],
+  });
+  const persisted = JSON.parse(
+    storage.getItem(SKILL_RECORDS_STORAGE_KEY) ?? "null",
+  );
+  assert.equal(persisted.records[0].instructions, created.instructions);
+  assert.deepEqual(persisted.records[0].imports, ["storyboard-helper"]);
+  storage.failWrites = true;
+  assert.throws(
+    () => registry.updateSkill(created.manifest.id, { instructions: "新文本" }),
+    /保存失败/,
+  );
+  assert.equal(
+    registry.getRecord(created.manifest.id)?.instructions,
+    created.instructions,
+  );
 });

@@ -6,6 +6,7 @@ import {
   type CreateProjectInput,
   type CreationDraft,
 } from "../features/creation/model";
+import type { SkillRecord } from "../features/skills/skillRegistry";
 
 const INSPIRATIONS = [
   {
@@ -41,6 +42,8 @@ export default function StartPage({
   onDraftChange,
   saveState = "saved",
   onRetrySave,
+  skills = [],
+  onApplySkill,
 }: {
   onCreateProject: (
     input: CreateProjectInput,
@@ -53,6 +56,8 @@ export default function StartPage({
   onDraftChange?: (draft: CreationDraft) => void;
   saveState?: "saved" | "saving" | "error";
   onRetrySave?: () => void;
+  skills?: SkillRecord[];
+  onApplySkill?: (record: SkillRecord) => void;
 }) {
   const [localDraft, setLocalDraft] = useState(emptyDraft);
   const draft = externalDraft ?? localDraft;
@@ -90,6 +95,8 @@ export default function StartPage({
           onOpenSkills={onOpenSkills}
           onOpenPlugins={onOpenPlugins}
           defaultModel={defaultModel}
+          skills={skills}
+          onApplySkill={onApplySkill}
         />
         {status && (
           <p className="start-status" role="status">

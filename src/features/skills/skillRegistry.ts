@@ -114,6 +114,7 @@ const legacyRegistrySchema = z
 export interface SkillRegistryStorage {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
+  removeItem?(key: string): void;
 }
 function browserStorage(): SkillRegistryStorage | null {
   if (typeof window === "undefined") return null;
@@ -189,11 +190,26 @@ function writePersisted(
       .filter((record) => record.installed)
       .map((record) => record.manifest.id),
   };
+  let previousRecords: string | null = null;
+  let previousInstalled: string | null = null;
   try {
+    previousRecords = storage.getItem(SKILL_RECORDS_STORAGE_KEY);
+    previousInstalled = storage.getItem(SKILL_REGISTRY_STORAGE_KEY);
     storage.setItem(SKILL_RECORDS_STORAGE_KEY, JSON.stringify(parsed.data));
     storage.setItem(SKILL_REGISTRY_STORAGE_KEY, JSON.stringify(installed));
     return true;
   } catch {
+    try {
+      if (previousRecords === null)
+        storage.removeItem?.(SKILL_RECORDS_STORAGE_KEY);
+      else storage.setItem(SKILL_RECORDS_STORAGE_KEY, previousRecords);
+      if (previousInstalled === null)
+        storage.removeItem?.(SKILL_REGISTRY_STORAGE_KEY);
+      else storage.setItem(SKILL_REGISTRY_STORAGE_KEY, previousInstalled);
+    } catch {
+      // A storage backend may reject rollback as well; the in-memory registry
+      // still remains unchanged because callers only commit after true.
+    }
     return false;
   }
 }
@@ -256,6 +272,7 @@ function parseFrontmatter(text: string): {
       .replace(/^['"]|['"]$/g, "");
     if (!/^(name|id|version|description|author|category|imports)$/.test(key))
       throw new Error("SKILL.md 包含不支持的字段：" + key);
+    if (key in fields) throw new Error("SKILL.md frontmatter 字段重复：" + key);
     if (containsSecret(value)) throw new Error("SKILL.md 疑似包含密钥或凭据");
     fields[key] = value;
   }
@@ -290,9 +307,18 @@ export function parseSkillImport(value: unknown): SkillRecord {
   const manifest = (
     "manifest" in candidate ? candidate.manifest : candidate
   ) as SkillImportInput["manifest"];
+  if (typeof candidate.instructions !== "string")
+    throw new Error("Skill 指令必须是文本");
+  if ("imports" in candidate && !Array.isArray(candidate.imports))
+    throw new Error("Skill imports 必须是数组");
+  if (
+    Array.isArray(candidate.imports) &&
+    candidate.imports.some((item) => typeof item !== "string")
+  )
+    throw new Error("Skill imports 必须只包含 Skill ID");
   return createRecord({
     manifest: manifest,
-    instructions: String(candidate.instructions ?? ""),
+    instructions: candidate.instructions,
     imports: Array.isArray(candidate.imports)
       ? candidate.imports.filter(
           (item): item is string => typeof item === "string",

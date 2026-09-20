@@ -8,6 +8,7 @@ import VoiceInputButton from "./VoiceInputButton";
 import GenerationOptions from "./GenerationOptions";
 import GenerationPrivacyNotice from "./GenerationPrivacyNotice";
 import { useComposerMenus } from "./useComposerMenus";
+import type { SkillRecord } from "../features/skills/skillRegistry";
 
 export default function StartComposer({
   draft,
@@ -18,6 +19,8 @@ export default function StartComposer({
   onOpenSkills,
   onOpenPlugins,
   defaultModel = "",
+  skills = [],
+  onApplySkill,
 }: {
   draft: CreationDraft;
   onDraftChange: (draft: CreationDraft) => void;
@@ -27,6 +30,8 @@ export default function StartComposer({
   onOpenSkills: () => void;
   onOpenPlugins: () => void;
   defaultModel?: string;
+  skills?: SkillRecord[];
+  onApplySkill?: (record: SkillRecord) => void;
 }) {
   const [pendingSubmit, setPendingSubmit] = useState<CreationDraft | null>(
     null,
@@ -186,6 +191,12 @@ export default function StartComposer({
               {skillMenuOpen && (
                 <StartResourcePopover
                   kind="skill"
+                  skills={skills}
+                  onApplySkill={(record) => {
+                    onApplySkill?.(record);
+                    closeMenus();
+                    setStatus(`已将「${record.manifest.name}」加入草稿。`);
+                  }}
                   onOpen={() => {
                     closeMenus();
                     onOpenSkills();

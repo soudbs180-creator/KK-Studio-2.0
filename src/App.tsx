@@ -286,6 +286,22 @@ export default function App() {
         updatedAt: Date.now(),
       }));
   }
+  function applySkillToProject(record: SkillRecord): void {
+    const project = creationRef.current.projects.find(
+      (item) => item.id === creationRef.current.activeProjectId,
+    );
+    if (!project) return;
+    const block = `[Skill: ${record.manifest.name}]\n${record.instructions}`;
+    updateProject(project.id, (current) => ({
+      ...current,
+      composerDraft: {
+        ...current.composerDraft,
+        prompt: `${current.composerDraft.prompt.trim()}\n\n${block}`.trim(),
+        updatedAt: Date.now(),
+      },
+      updatedAt: Date.now(),
+    }));
+  }
   function replaceCanvasItems(
     action: SetStateAction<CanvasCollectionItem[]>,
   ): CanvasCollectionItem[] {
@@ -1643,6 +1659,8 @@ export default function App() {
               onOpenModel={() => open("settings/providers")}
               onOpenSkills={() => open("skills")}
               onOpenPlugins={() => open("settings/mcp")}
+              skills={skillRegistry.listRecords()}
+              onApplySkill={applySkillToHome}
               defaultModel={(() => {
                 void providerVersion;
                 try {
@@ -1786,6 +1804,8 @@ export default function App() {
                 onDeleteMessage={
                   activeProject ? handleDeleteMessage : undefined
                 }
+                skills={skillRegistry.listRecords()}
+                onApplySkill={applySkillToProject}
                 voiceEnabled={active === "workspace" && chat}
                 onClose={() => {
                   const focusAtClose = document.activeElement;
