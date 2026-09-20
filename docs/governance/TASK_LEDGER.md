@@ -35,7 +35,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-ASTRA-001 | Astra 迁移计划与 Git 分支规则同步 | DONE | T0, TASK-GOV-001 | root |
 | TASK-KK2-MAIN-SYNC | KK Studio 2.0 本地与云端 main 树同步 | DONE | T0, TASK-GOV-001 | root |
 | TASK-UI-UNMERGED-001 | dirty checkout 未合并 UI 回归候选 | DONE | TASK-GOV-001 | root |
-| TASK-UI-MAIN-001 | 现行Figma页面校正与交互修复主线整合 | REVIEW | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
+| TASK-UI-MAIN-001 | 现行Figma页面校正与交互修复主线整合 | DONE | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -398,6 +398,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-UI-MAIN-001-alignment`
 - Worktree: `D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001`
 - Modules: src/components, src/styles, src-tauri/src/main.rs, tests/browser, scripts/audit, docs/governance
-- Verification: PARTIAL — 本地完整验证通过，等待PR/CI与主线同提交同步回读；Figma设计缺失独立记入UI-004。
+- Verification: PASS — PR #3 已 squash 合并；双 CI 通过（npm verify、Rust fmt/60 tests、client check/build）；远端 main 与本地 main 均为 fb57529c；409项原工作逐项备份并归档，根目录工作树干净。UI-004 的独立设计来源缺口另行记录，不改变本任务已验证范围。
 - Evidence: [docs/changes/2026-09-20-ui-main-alignment/verification.md](../../docs/changes/2026-09-20-ui-main-alignment/verification.md), [docs/changes/2026-09-20-ui-main-alignment/review.md](../../docs/changes/2026-09-20-ui-main-alignment/review.md)
 - Updated: 2026-09-20

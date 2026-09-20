@@ -52,3 +52,10 @@ Figma 认证本轮已可用，404:28667 只返回 Frame 边界元数据，尚无
 ## 2026-09-20 UI 主线整合
 
 TASK-UI-MAIN-001 从 origin/main@8aca3ab 出发，三方整合27项原目录交互修复并保留主线T3b/T4/T5；现行 Figma 的设置、搜索、资产展开/收纳及任务入口偏差已修正。34种页面状态已用实际导航捕获；原目录尚未切换前不能把候选描述成原目录最新版。准确命令、运行矩阵和同步状态见 [verification](../changes/2026-09-20-ui-main-alignment/verification.md)。UI-004 保持 PARTIAL：当前唯一Figma页面中没有Landing410:59708及部分独立页面稿。治理候选TASK-GOV-002保持独立，未夹带合入。
+
+## 2026-09-20 UI 主线整合收口
+
+- 当前唯一根目录：`D:/kk-studio-next`，分支 `main`，HEAD 与 `origin/main` 同为 `fb57529c719924330ec0154f5374df8f5d508e00`。
+- PR #3 已 squash 合并；双 CI 的完整 verify、Rust、Tauri client check/build 均通过。
+- 原 dirty checkout 的 409 项、原 index 和额外根目录快捷方式已保存在 `.tmp/root-before-main-20260920/`，不进入远端；`master` 与旧本地 main 作为历史引用保留。
+- UI-004 仍是 PARTIAL：Landing 与若干独立页面没有当前 Figma 基准，不能宣称所有页面已完成逐页 Figma 验收。

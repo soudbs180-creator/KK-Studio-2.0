@@ -935,13 +935,13 @@
       "scripts/audit",
       "docs/governance"
     ],
-    "status": "REVIEW",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-09-20-ui-main-alignment/verification.md",
       "docs/changes/2026-09-20-ui-main-alignment/review.md"
     ],
-    "verification": "本地完整验证通过，等待PR/CI与主线同提交同步回读；Figma设计缺失独立记入UI-004。",
-    "verificationResult": "PARTIAL",
+    "verification": "PR #3 已 squash 合并；双 CI 通过（npm verify、Rust fmt/60 tests、client check/build）；远端 main 与本地 main 均为 fb57529c；409项原工作逐项备份并归档，根目录工作树干净。UI-004 的独立设计来源缺口另行记录，不改变本任务已验证范围。",
+    "verificationResult": "PASS",
     "updated": "2026-09-20"
   }
 ]
