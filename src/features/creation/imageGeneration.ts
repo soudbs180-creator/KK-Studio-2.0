@@ -74,7 +74,9 @@ function dataUrlToBlob(dataUrl: string): Blob {
   const mime =
     header.match(/^data:([^;]+)/i)?.[1] ?? "application/octet-stream";
   const binary = atob(encoded ?? "");
-  const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index++)
+    bytes[index] = binary.charCodeAt(index);
   return new Blob([bytes], { type: mime });
 }
 

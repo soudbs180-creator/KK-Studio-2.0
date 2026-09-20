@@ -15,10 +15,10 @@
 
 ## 当前恢复点
 
-- 唯一仓库 D:/kk-studio-next；集成主线在 D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001，当前提交与 tree 以最终 Git 回读为准。T5 原生 TaskHost 已编译进 Tauri 主进程并接入 Desktop UI；release bundle 为 `index-BmJ91wly.js`，Tauri release 已从该主线重新构建。
-- 原 checkout 的 dirty 状态与索引未改动；不把它作为首次同步来源，不可误接旧 monorepo。PR、CI 和 main protection 以目标仓库回读为准。
+- 唯一仓库与当前稳定main运行目录是 `D:/kk-studio-next`，跟踪 `origin/main`；先fetch并核对HEAD/tree/dirty。旧TASK-INTEGRATION-001已归档为历史分支，不再是当前main入口。
+- 原checkout的409项dirty/untracked内容和原index已校验归档到 `.tmp/root-before-main-20260920/`；不得把归档当新候选全量上传。根目录已迁移到main，PR #3/#5已合并；精确最新提交以Git回读为准。
 - T4 已 DONE：统一 submitImageCommand，画布/结果编辑/上传重绘走 executeTask；sourceItemId 同步 browser/native/package；结果边只发布一次，取消与恢复准确映射来源。连接 configured/verified 分开，保存配置或 models 探测不验证图片生成。
-- 当前集成主线 `npm run verify` 为 150 unit/169 browser/UI119/0；Rust58/58、fmt/check、client:check 和 client:build 通过。最新 bundle 与 executable hash 见 PROJECT_STATE.md 与本次 T5 verification 记录。
+- 本轮UI验证：150 Node、191 browser（0失败/重试）、UI119/0；Rust60、fmt/check、Tauri release通过。补充bundle `index-Be6XJzPc.js`；3模式菜单专项和34状态主矩阵见UI alignment verification/followup。字节转换优化后大图重绘20倍CPU连续3次通过；大规模素材库与同步大快照瓶颈仍由PERF-001跟踪。
 - 图片比例/清晰度当前只持久化草稿，HTTP按供应商默认值；视频/音频/文本仍为明确本地demo。真实付费Provider、ComfyUI以及 T5 原生宿主的运行态证据不能被本地 fixtures 单独算作完成。
 - T5 当前为 PARTIAL：已将 durable intent/submitted/unknown/terminal、原生 journal、系统凭据库读取、Desktop IPC、取消竞态和逐 slot 输出提交接入 Tauri；浏览器回归验证 unknown 不普通重试、队列意图保留原身份。剩余是隔离 Tauri/WebView 下用可控 Provider 验证提交、取消、进程重启和逐 slot 恢复；真实付费 Provider、GPU、ComfyUI 和 VPS 仍不在本地验收范围。
 
@@ -34,7 +34,7 @@
 
 - PowerShell；Node24路径 D:/tools/node-v24.20.0-win-x64；Cargo当前进程可设 CARGO_HTTP_PROXY=''。不修改全局工具链/代理。
 - npm run verify 会更新历史 tracked evidence；检查结束只还原这些自动产物，新dated evidence单独保留。1421/1423严格固定端口，启动前查进程。
-- 新源码必须重新build/release；Web与Desktop分别验收。Figma当前认证可用但目标仅返回稀疏Frame上下文，需继续获取子层才能宣称逐页视觉一致。
+- 新源码必须重新build/release并分别验证Web/Desktop。现行Figma可取得面板已经核对；Landing等独立稿件缺失，UI-004不宣称全页面完成。
 - 会话动画测试已改为观测真实 CSSAnimation 的固定时间点，避免跨进程点击后漏采首帧；位移、最终位置和toolbar几何断言均保留。
 - 按 task branch/worktree 开发；主线禁止直接开发。更新ledger、Progress、Project State/Handoff，不能仅更改聊天中的状态。
 
@@ -61,3 +61,8 @@ TASK-UI-MAIN-001 从 origin/main@8aca3ab 出发，三方整合27项原目录交�
 - PR #3 已 squash 合并到 `https://github.com/soudbs180-creator/KK-Studio-2.0`；本地 `D:/kk-studio-next` 的 `main` 与远端 `main` 同为 `fb57529c719924330ec0154f5374df8f5d508e00`。
 - 原根目录 409 项已校验备份并归档，旧 `master`、旧本地 `main` 未删除；不要从归档目录直接开发或上传。
 - 当前已验证的是现行 Figma 可取得基准和三种运行模式；Landing 等缺失设计来源仍保持 PARTIAL。
+
+
+## 窄屏关闭优先级补充
+
+TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点击不关闭；同状态三环境专项与191项浏览器回归通过。详见 docs/changes/2026-09-20-ui-main-alignment/followup.md。稳定main提交以Git回读为准，上述旧SHA是阶段记录。UI-004设计来源缺口与PERF-001压力边界继续保留。

@@ -135,12 +135,16 @@ async function configure(page: Page): Promise<void> {
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
 }
 
-async function submitHome(page: Page): Promise<void> {
+async function submitHome(
+  page: Page,
+  { approve = true }: { approve?: boolean } = {},
+): Promise<void> {
   await page.getByLabel("生成数量").selectOption("1");
   await page.getByLabel("创作提示词").fill("T5 durable intent fixture");
   await page.getByRole("button", { name: "开始创建项目" }).click();
-  const approval = page.getByRole("button", { name: "批准并提交" });
-  if (await approval.count()) await approval.click();
+  // The approval is rendered only after the durable intent write completes.
+  // A synchronous count can miss it and leave the task queued indefinitely.
+  if (approve) await page.getByRole("button", { name: "批准并提交" }).click();
 }
 
 async function storedSnapshot(page: Page): Promise<{
@@ -249,7 +253,7 @@ test("durable intent write failure prevents every provider POST", async ({
     await fulfillPixel(route);
   });
   await configure(page);
-  await submitHome(page);
+  await submitHome(page, { approve: false });
   await expect(
     page.locator('.creation-storage-notice[role="alert"]'),
   ).toContainText(/写入|失败|io/i);

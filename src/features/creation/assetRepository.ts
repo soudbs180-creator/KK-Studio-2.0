@@ -186,7 +186,9 @@ async function sourceToBlob(
     } catch {
       throw new Error("生成结果的 Base64 数据无效。");
     }
-    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+    const bytes = new Uint8Array(binary.length);
+    for (let index = 0; index < binary.length; index++)
+      bytes[index] = binary.charCodeAt(index);
     if (bytes.byteLength > MAX_ASSET_BYTES)
       throw new Error("生成结果超过 100 MB 大小限制。");
     return new Blob([bytes], {
