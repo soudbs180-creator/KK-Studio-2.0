@@ -2,7 +2,20 @@ name: quality
 
 on:
   push:
-    branches: [main, master, 'codex/**', 'chore/**', 'fix/**', 'feat/**', 'docs/**', 'test/**', 'perf/**', 'refactor/**', 'hotfix/**']
+    branches:
+      [
+        main,
+        master,
+        "codex/**",
+        "chore/**",
+        "fix/**",
+        "feat/**",
+        "docs/**",
+        "test/**",
+        "perf/**",
+        "refactor/**",
+        "hotfix/**",
+      ]
   pull_request:
   merge_group:
 
