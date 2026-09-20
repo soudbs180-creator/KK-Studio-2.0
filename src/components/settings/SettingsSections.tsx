@@ -53,7 +53,9 @@ export default function SettingsSections({
       </h2>
       <div className="settings-section-body">
         {section === "skills" && <SkillsSettings registry={registry} />}
-        <ConnectionSettings section={section} onFeedback={onFeedback} />
+        {section !== "skills" && (
+          <ConnectionSettings section={section} onFeedback={onFeedback} />
+        )}
 
         {section === "storage" && (
           <>

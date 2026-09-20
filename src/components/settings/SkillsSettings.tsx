@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { SkillRegistry } from "../../features/skills/skillRegistry";
 
 export default function SkillsSettings({
@@ -5,6 +6,13 @@ export default function SkillsSettings({
 }: {
   registry: SkillRegistry;
 }) {
+  const [, refresh] = useState(0);
+  const [status, setStatus] = useState("");
+  useEffect(() => {
+    const sync = () => refresh((value) => value + 1);
+    window.addEventListener("kk:skills-changed", sync);
+    return () => window.removeEventListener("kk:skills-changed", sync);
+  }, []);
   const records = registry.listRecords();
   return (
     <div className="settings-detail-stack">
@@ -24,8 +32,14 @@ export default function SkillsSettings({
             type="button"
             className="settings-action"
             onClick={() => {
-              registry.setEnabled(record.manifest.id, !record.enabled);
-              window.dispatchEvent(new Event("kk:skills-changed"));
+              const changed = registry.setEnabled(
+                record.manifest.id,
+                !record.enabled,
+              );
+              if (changed) {
+                setStatus("");
+                window.dispatchEvent(new Event("kk:skills-changed"));
+              } else setStatus("保存失败，Skill 状态未改变。");
             }}
             disabled={!record.installed}
           >
@@ -38,6 +52,11 @@ export default function SkillsSettings({
           <strong>暂无本地 Skill</strong>
           <p>请从 Skill 页面创建或导入模板。</p>
         </div>
+      )}
+      {status && (
+        <p className="settings-feedback is-error" role="alert">
+          {status}
+        </p>
       )}
     </div>
   );
