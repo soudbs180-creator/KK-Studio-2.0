@@ -1,0 +1,86 @@
+{
+  "mode": "preview",
+  "checks": [
+    "sidebar popup switches exclusively and closes on navigation",
+    "four exclusive menus; stable control rectangles; Escape restores focus",
+    "toolbar pointer propagation does not block dismissal",
+    "toolbar-to-dialog and navigation actions leave no stale menu",
+    "narrow account popup retains dismissal priority after keyboard expansion"
+  ],
+  "pageErrors": [],
+  "runtime": {
+    "url": "http://127.0.0.1:1423/",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "runtime": {
+      "designSurface": "desktop",
+      "runtimeEntry": "src/main.tsx",
+      "runtimeMode": "production"
+    },
+    "scripts": [
+      "http://127.0.0.1:1423/assets/index-Be6XJzPc.js"
+    ],
+    "stylesheets": [
+      "http://127.0.0.1:1423/assets/index-d6wOsWNL.css"
+    ]
+  },
+  "controlRects": [
+    {
+      "label": "添加对话素材",
+      "x": 1463,
+      "y": 977,
+      "w": 24,
+      "h": 24
+    },
+    {
+      "label": "模型",
+      "x": 1492,
+      "y": 978,
+      "w": 76.125,
+      "h": 22
+    },
+    {
+      "label": "Skill",
+      "x": 1578.125,
+      "y": 978,
+      "w": 58,
+      "h": 22
+    },
+    {
+      "label": "插件",
+      "x": 1646.125,
+      "y": 978,
+      "w": 58,
+      "h": 22
+    },
+    {
+      "label": "AI权限模式",
+      "x": 1777,
+      "y": 978,
+      "w": 53,
+      "h": 22
+    },
+    {
+      "label": "开启语音输入",
+      "x": 1737,
+      "y": 978,
+      "w": 22,
+      "h": 22
+    },
+    {
+      "label": "发送消息",
+      "x": 1839,
+      "y": 977,
+      "w": 24,
+      "h": 24
+    }
+  ],
+  "narrowViewport": {
+    "width": 390,
+    "height": 844,
+    "method": "Playwright device metrics"
+  },
+  "passed": true
+}
