@@ -1,0 +1,87 @@
+{
+  "mode": "desktop",
+  "checks": [
+    "sidebar popup switches exclusively and closes on navigation",
+    "four exclusive menus; stable control rectangles; Escape restores focus",
+    "toolbar pointer propagation does not block dismissal",
+    "toolbar-to-dialog and navigation actions leave no stale menu",
+    "narrow account popup retains dismissal priority after keyboard expansion"
+  ],
+  "pageErrors": [],
+  "isolatedDataRoot": true,
+  "runtime": {
+    "url": "http://tauri.localhost/",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "runtime": {
+      "designSurface": "desktop",
+      "runtimeEntry": "src/main.tsx",
+      "runtimeMode": "production"
+    },
+    "scripts": [
+      "http://tauri.localhost/assets/index-Bnq7D2jx.js"
+    ],
+    "stylesheets": [
+      "http://tauri.localhost/assets/index-d6wOsWNL.css"
+    ]
+  },
+  "controlRects": [
+    {
+      "label": "添加对话素材",
+      "x": 1462.666748046875,
+      "y": 977.3333740234375,
+      "w": 24,
+      "h": 24
+    },
+    {
+      "label": "模型",
+      "x": 1491.666748046875,
+      "y": 978.3333740234375,
+      "w": 76.13542175292969,
+      "h": 22
+    },
+    {
+      "label": "Skill",
+      "x": 1577.8021240234375,
+      "y": 978.3333740234375,
+      "w": 58,
+      "h": 22
+    },
+    {
+      "label": "插件",
+      "x": 1645.8021240234375,
+      "y": 978.3333740234375,
+      "w": 58,
+      "h": 22
+    },
+    {
+      "label": "AI权限模式",
+      "x": 1776.666748046875,
+      "y": 978.3333740234375,
+      "w": 53,
+      "h": 22
+    },
+    {
+      "label": "开启语音输入",
+      "x": 1736.666748046875,
+      "y": 978.3333740234375,
+      "w": 22,
+      "h": 22
+    },
+    {
+      "label": "发送消息",
+      "x": 1838.666748046875,
+      "y": 977.3333740234375,
+      "w": 24,
+      "h": 24
+    }
+  ],
+  "narrowViewport": {
+    "width": 390,
+    "height": 844,
+    "method": "Playwright device metrics"
+  },
+  "passed": true
+}

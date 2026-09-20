@@ -327,16 +327,19 @@ test("uploaded image redraw uses edits with the archived reference bytes", async
   await expect(dialog).toBeVisible();
   await dialog.getByLabel("重绘指令").fill("保留主体并改成蓝调夜景");
   await dialog.getByRole("button", { name: "开始重绘", exact: true }).click();
-  const submitted = page.waitForRequest(editsEndpoint, { timeout: 15000 });
-  await page.getByRole("button", { name: "批准并提交" }).click();
-  await submitted;
+  await Promise.all([
+    page.waitForRequest(editsEndpoint, { timeout: 15000 }),
+    page.getByRole("button", { name: "批准并提交" }).click(),
+  ]);
   await expect.poll(() => editBody).toBeDefined();
   const referenceBytes = readFileSync(referencePath);
   expect(editBody!.includes(referenceBytes)).toBe(true);
   expect(editBody!.toString("utf8")).toContain("image");
   await expect
-    .poll(async () => (await activeProject(page)).tasks.at(-1)?.status)
-    .toBe("succeeded", { timeout: 15000 });
+    .poll(async () => (await activeProject(page)).tasks.at(-1)?.status, {
+      timeout: 15000,
+    })
+    .toBe("succeeded");
 });
 
 test("unconfigured canvas generation opens provider settings and keeps the prompt", async ({

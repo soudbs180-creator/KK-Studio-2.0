@@ -67,7 +67,7 @@ export default function Sidebar({
     account ? accountTrigger : projectFilterTrigger,
   );
   useDismissible(
-    narrow && !collapsed,
+    narrow && !collapsed && menu === null,
     root,
     () => {
       if (!document.querySelector("dialog[open]")) onCollapse();
