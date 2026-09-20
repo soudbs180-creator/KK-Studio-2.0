@@ -5,7 +5,7 @@
 ## 当前主线
 
 - 稳定主线运行目录是 `D:/kk-studio-next` 的 `main`，跟踪目标仓库 `origin/main`。精确提交与tree用Git回读；旧 `.worktrees/TASK-INTEGRATION-001` 已改为 `codex/archive-local-main-20260920` 历史分支，不再作为当前main运行目录。
-- UI补充验证 bundle 为 `index-Bnq7D2jx.js`，验证包含dev1421、preview1423和隔离Tauri release。根目录启动入口 `start-kk-studio.bat` 会检查源码新鲜度；每次main推进后重新构建并验证实际加载包。旧bundle/hash是历史证据，不能用于判断当前运行版本。
+- UI补充验证 bundle 为 `index-Be6XJzPc.js`，验证包含dev1421、preview1423和隔离Tauri release。根目录启动入口 `start-kk-studio.bat` 会检查源码新鲜度；每次main推进后重新构建并验证实际加载包。旧bundle/hash是历史证据，不能用于判断当前运行版本。
 - 原根目录100个tracked修改、309个untracked文件与原index已按SHA-256校验归档到 `.tmp/root-before-main-20260920/`；额外快捷方式独立归档。代码主线与归档分开，临时数据、凭据、dist/target/node_modules不上传。
 - T5 已将持久 intent、稳定幂等身份、unknown 受理保护、原生 journal、凭据库读取、IPC 轮询、取消竞态和逐 slot 输出提交接入 Tauri 主进程；其本地验证和限制见 `docs/changes/2026-09-19-taskhost-durable-intent/verification.md`。隔离 Tauri/WebView 提交、取消、重启恢复证据尚未完成，T5 状态为 PARTIAL。
 

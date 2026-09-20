@@ -1,0 +1,21 @@
+{
+  "kind": "isolated byte conversion microbenchmark, not whole workflow",
+  "engine": "Edge",
+  "cpuThrottle": 20,
+  "bytes": 2348046,
+  "samples": [
+    {
+      "previousMs": 3491,
+      "indexedMs": 95.90000003576279
+    },
+    {
+      "previousMs": 2832.199999988079,
+      "indexedMs": 143.69999998807907
+    },
+    {
+      "previousMs": 2975.100000023842,
+      "indexedMs": 100.39999997615814
+    }
+  ],
+  "identical": true
+}

@@ -946,9 +946,9 @@
   },
   {
     "id": "TASK-UI-DISMISS-002",
-    "title": "窄屏侧栏账号菜单关闭优先级",
-    "goal": "修复跨断点与键盘展开后账号菜单无法外部关闭",
-    "scope": "Sidebar dismissal stack and redraw regression budget",
+    "title": "窄屏侧栏关闭与大图重绘稳定性",
+    "goal": "修复跨断点菜单关闭及大图重绘字节转换，校正异步审批回归时序",
+    "scope": "Sidebar dismissal stack and large-image redraw conversion/regression budget",
     "acceptance": [
       "重现跨断点+键盘展开场景",
       "账号关闭后侧栏保持可操作，后续外部点击仍收起侧栏",
@@ -963,14 +963,17 @@
     "affectedModules": [
       "src/components/Sidebar.tsx",
       "tests/browser/menu-boundaries.spec.ts",
-      "tests/browser/unified-image-command.spec.ts"
+      "tests/browser/unified-image-command.spec.ts",
+      "src/features/creation/assetRepository.ts",
+      "src/features/creation/imageGeneration.ts",
+      "tests/browser/task-intent.spec.ts"
     ],
     "status": "DONE",
     "evidence": [
       "docs/changes/2026-09-20-ui-main-alignment/followup.md",
       "docs/evidence/2026-09-20-ui-main-alignment/followup/browser-summary.json"
     ],
-    "verification": "复现后修复监听优先级；完整浏览器191/191、三环境菜单专项通过；数据原图与任务状态业务断言保留。",
+    "verification": "最终完整verify通过：150 Node、191浏览器、0失败/重试；三运行模式专项通过；2.35MB重绘20倍CPU连续3次通过，完整原图字节断言保留。中途unknown用例重试已定位并修正异步审批等待。",
     "verificationResult": "PASS",
     "updated": "2026-09-20"
   }

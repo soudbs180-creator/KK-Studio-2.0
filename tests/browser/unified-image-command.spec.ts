@@ -327,11 +327,10 @@ test("uploaded image redraw uses edits with the archived reference bytes", async
   await expect(dialog).toBeVisible();
   await dialog.getByLabel("重绘指令").fill("保留主体并改成蓝调夜景");
   await dialog.getByRole("button", { name: "开始重绘", exact: true }).click();
-  await Promise.all([
-    page.waitForRequest(editsEndpoint, { timeout: 15000 }),
-    page.getByRole("button", { name: "批准并提交" }).click(),
-  ]);
-  await expect.poll(() => editBody).toBeDefined();
+  await page.getByRole("button", { name: "批准并提交" }).click();
+  // The route is registered before submission, so it also captures a request
+  // sent during click(). Start the I/O budget after actionability has settled.
+  await expect.poll(() => editBody, { timeout: 15000 }).toBeDefined();
   const referenceBytes = readFileSync(referencePath);
   expect(editBody!.includes(referenceBytes)).toBe(true);
   expect(editBody!.toString("utf8")).toContain("image");

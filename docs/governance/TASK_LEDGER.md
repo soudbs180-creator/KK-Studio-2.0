@@ -36,7 +36,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-KK2-MAIN-SYNC | KK Studio 2.0 本地与云端 main 树同步 | DONE | T0, TASK-GOV-001 | root |
 | TASK-UI-UNMERGED-001 | dirty checkout 未合并 UI 回归候选 | DONE | TASK-GOV-001 | root |
 | TASK-UI-MAIN-001 | 现行Figma页面校正与交互修复主线整合 | DONE | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
-| TASK-UI-DISMISS-002 | 窄屏侧栏账号菜单关闭优先级 | DONE | TASK-UI-MAIN-001 | root |
+| TASK-UI-DISMISS-002 | 窄屏侧栏关闭与大图重绘稳定性 | DONE | TASK-UI-MAIN-001 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -403,14 +403,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Evidence: [docs/changes/2026-09-20-ui-main-alignment/verification.md](../../docs/changes/2026-09-20-ui-main-alignment/verification.md), [docs/changes/2026-09-20-ui-main-alignment/review.md](../../docs/changes/2026-09-20-ui-main-alignment/review.md)
 - Updated: 2026-09-20
 
-## TASK-UI-DISMISS-002 — 窄屏侧栏账号菜单关闭优先级
+## TASK-UI-DISMISS-002 — 窄屏侧栏关闭与大图重绘稳定性
 
-- Goal: 修复跨断点与键盘展开后账号菜单无法外部关闭
-- Scope: Sidebar dismissal stack and redraw regression budget
+- Goal: 修复跨断点菜单关闭及大图重绘字节转换，校正异步审批回归时序
+- Scope: Sidebar dismissal stack and large-image redraw conversion/regression budget
 - Acceptance: 重现跨断点+键盘展开场景; 账号关闭后侧栏保持可操作，后续外部点击仍收起侧栏; 完整浏览器回归及dev/preview/Desktop专项通过
 - Branch: `codex/TASK-UI-MAIN-001-followup`
 - Worktree: `D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001`
-- Modules: src/components/Sidebar.tsx, tests/browser/menu-boundaries.spec.ts, tests/browser/unified-image-command.spec.ts
-- Verification: PASS — 复现后修复监听优先级；完整浏览器191/191、三环境菜单专项通过；数据原图与任务状态业务断言保留。
+- Modules: src/components/Sidebar.tsx, tests/browser/menu-boundaries.spec.ts, tests/browser/unified-image-command.spec.ts, src/features/creation/assetRepository.ts, src/features/creation/imageGeneration.ts, tests/browser/task-intent.spec.ts
+- Verification: PASS — 最终完整verify通过：150 Node、191浏览器、0失败/重试；三运行模式专项通过；2.35MB重绘20倍CPU连续3次通过，完整原图字节断言保留。中途unknown用例重试已定位并修正异步审批等待。
 - Evidence: [docs/changes/2026-09-20-ui-main-alignment/followup.md](../../docs/changes/2026-09-20-ui-main-alignment/followup.md), [docs/evidence/2026-09-20-ui-main-alignment/followup/browser-summary.json](../../docs/evidence/2026-09-20-ui-main-alignment/followup/browser-summary.json)
 - Updated: 2026-09-20

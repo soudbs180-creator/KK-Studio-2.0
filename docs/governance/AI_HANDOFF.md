@@ -7,7 +7,7 @@
 - 唯一仓库与当前稳定main运行目录是 `D:/kk-studio-next`，跟踪 `origin/main`；先fetch并核对HEAD/tree/dirty。旧TASK-INTEGRATION-001已归档为历史分支，不再是当前main入口。
 - 原checkout的409项dirty/untracked内容和原index已校验归档到 `.tmp/root-before-main-20260920/`；不得把归档当新候选全量上传。根目录已迁移到main，PR #3/#5已合并；精确最新提交以Git回读为准。
 - T4 已 DONE：统一 submitImageCommand，画布/结果编辑/上传重绘走 executeTask；sourceItemId 同步 browser/native/package；结果边只发布一次，取消与恢复准确映射来源。连接 configured/verified 分开，保存配置或 models 探测不验证图片生成。
-- 本轮UI验证：150 Node、191 browser、UI119/0；Rust60、fmt/check、Tauri release通过。补充bundle `index-Bnq7D2jx.js`；3模式菜单专项和34状态主矩阵见UI alignment verification/followup。20倍CPU压力仍有I/O超时，PERF-001未关闭。
+- 本轮UI验证：150 Node、191 browser（0失败/重试）、UI119/0；Rust60、fmt/check、Tauri release通过。补充bundle `index-Be6XJzPc.js`；3模式菜单专项和34状态主矩阵见UI alignment verification/followup。字节转换优化后大图重绘20倍CPU连续3次通过；大规模素材库与同步大快照瓶颈仍由PERF-001跟踪。
 - 图片比例/清晰度当前只持久化草稿，HTTP按供应商默认值；视频/音频/文本仍为明确本地demo。真实付费Provider、ComfyUI以及 T5 原生宿主的运行态证据不能被本地 fixtures 单独算作完成。
 - T5 当前为 PARTIAL：已将 durable intent/submitted/unknown/terminal、原生 journal、系统凭据库读取、Desktop IPC、取消竞态和逐 slot 输出提交接入 Tauri；浏览器回归验证 unknown 不普通重试、队列意图保留原身份。剩余是隔离 Tauri/WebView 下用可控 Provider 验证提交、取消、进程重启和逐 slot 恢复；真实付费 Provider、GPU、ComfyUI 和 VPS 仍不在本地验收范围。
 
