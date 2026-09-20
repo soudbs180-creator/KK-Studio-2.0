@@ -104,11 +104,9 @@ test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", 
   await expect(
     page.getByText("连接成功，模型列表接口可以访问。"),
   ).toBeVisible();
-  await page
-    .getByRole("dialog", { name: "设置" })
-    .screenshot({
-      path: test.info().outputPath("settings-model-provider.png"),
-    });
+  await page.getByRole("dialog", { name: "设置" }).screenshot({
+    path: test.info().outputPath("settings-model-provider.png"),
+  });
   await page.reload();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
@@ -296,11 +294,9 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
       width: 590,
       height: 237,
     });
-  await page
-    .getByTestId("image-composer")
-    .screenshot({
-      path: test.info().outputPath("image-composer-selected.png"),
-    });
+  await page.getByTestId("image-composer").screenshot({
+    path: test.info().outputPath("image-composer-selected.png"),
+  });
   await videoPreviews.nth(0).click();
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   const imageNode = page.getByTestId("canvas-node-image");
