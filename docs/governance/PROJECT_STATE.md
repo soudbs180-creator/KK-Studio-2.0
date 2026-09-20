@@ -4,9 +4,9 @@
 
 ## 当前主线
 
-- T4 已 squash 合入本地 main，T5 durable intent、原生 TaskHost 与 Desktop IPC 适配已合入；当前稳定集成主线位于 `D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001`，当前提交与 tree 以最终 Git 回读为准。
-- 最新 release bundle 为 `index-BmJ91wly.js`；可执行文件为该 worktree 的 `src-tauri/target/release/kk-studio.exe`，SHA-256 为 `9FB3563D3A170BC14F69409FFE34D45CC776B41EBC0C548A1B923DE6D006B6BF`。本机默认旧快捷方式仍可能指向原 checkout。
-- 原 `D:/kk-studio-next` 保留既有 dirty 状态及原索引，未 reset/clean/覆盖；它不是首次同步来源。远端 PR、CI 和 main 保护状态单独记录在本次审计。
+- 稳定主线运行目录是 `D:/kk-studio-next` 的 `main`，跟踪目标仓库 `origin/main`。精确提交与tree用Git回读；旧 `.worktrees/TASK-INTEGRATION-001` 已改为 `codex/archive-local-main-20260920` 历史分支，不再作为当前main运行目录。
+- UI补充验证 bundle 为 `index-Bnq7D2jx.js`，验证包含dev1421、preview1423和隔离Tauri release。根目录启动入口 `start-kk-studio.bat` 会检查源码新鲜度；每次main推进后重新构建并验证实际加载包。旧bundle/hash是历史证据，不能用于判断当前运行版本。
+- 原根目录100个tracked修改、309个untracked文件与原index已按SHA-256校验归档到 `.tmp/root-before-main-20260920/`；额外快捷方式独立归档。代码主线与归档分开，临时数据、凭据、dist/target/node_modules不上传。
 - T5 已将持久 intent、稳定幂等身份、unknown 受理保护、原生 journal、凭据库读取、IPC 轮询、取消竞态和逐 slot 输出提交接入 Tauri 主进程；其本地验证和限制见 `docs/changes/2026-09-19-taskhost-durable-intent/verification.md`。隔离 Tauri/WebView 提交、取消、重启恢复证据尚未完成，T5 状态为 PARTIAL。
 
 ## 已完成范围
@@ -17,22 +17,22 @@ T4 将首页、对话、画布、结果继续编辑和上传重绘接入相同 B
 
 ## 当前验证
 
-当前集成主线 `npm run verify`：150 unit、169 Edge browser、UI119/0、lint/typecheck/format/build PASS；Rust58/58、fmt/check、Tauri client check/release PASS。当前 bundle 与 executable hash 记录在本文件上方；T5 原生 IPC 运行态证据仍待补充。
+UI主线及补充验证：150 Node、191 Edge browser、UI119/0、lint/typecheck/format/build通过；Rust60/60、Tauri check/release通过。当前补充细节、压力边界与三模式证据见 `docs/changes/2026-09-20-ui-main-alignment/followup.md`。T5原生IPC业务运行态验收仍独立保留。
 
 每个环境都完成首页→对话→画布结果编辑：3 个任务、3 条来源连线、编辑请求带归档原件；Desktop 全新 profile 恢复任务与图完全一致，原件 SHA-256 一致。HTTP fixtures 只证明产品链，真实付费 Provider 仍由 EXT-PROVIDER 单独验收。主线验收期间发现既有会话动画测试跨进程漏采首帧，已改为观测实际 CSS 动画的固定时间点，保留位移和布局断言。
 
-Figma 认证本轮已可用，404:28667 只返回 Frame 边界元数据，尚无完整子层上下文；新增状态为工程补充，未声称全页面视觉一致。
+Figma现行可取得面板的设计上下文、DOM和同状态截图已核对。Landing410:59708不存在，项目库/Skill/ComfyUI及部分设置缺独立现行Frame，因此UI-004仍为PARTIAL；工程补充状态不能当作Figma定义。
 
 ## 按依赖排列的剩余任务
 
 1. **T5（PARTIAL，下一收口）**：在隔离 Tauri/WebView 与可控 Provider 下验证原生 TaskHost 的提交、取消、进程重启、逐 slot 恢复和 unknown 人工核对边界；代码已随 Desktop 打包并接入产品主链。
 2. **T6（PARTIAL）**：ComfyUI 现有扫描/adapter 接入实际任务链，覆盖模板、任务、归档、取消与恢复；EXT-COMFY/EXT-PROVIDER 的真实外部验收缺本轮可用服务和授权凭据。
 3. **T7/T8（TODO）**：安装包生命周期、恢复/回滚验收，以及 Shared Core 与平台职责收口。
-4. **UI-001…004、PERF-001（TODO）**：共享组件/tokens、逐页同状态验收、剩余动态文案和 Prototype 边界，缩略图/分页/内存 IO。T4 局部修复不等于整体 UI 或性能任务关闭。
+4. **UI-001/003/004、PERF-001**：具体状态以ledger为准。菜单交互UI-002及主线整合已关闭；缺失Figma来源、剩余Prototype边界、缩略图/分页/内存IO仍独立验收。
 5. **T9、T10-PREP（TODO）**：Web 容量/离线/项目包适配和部署备份回滚产物；T10/T11 仍依赖 VPS/DNS/切换外部条件。
 6. **T12（TODO）**：Desktop/Core/Web 稳定后推进 Mobile。
 
-29 项账本统计：11 DONE、2 PARTIAL、11 TODO、5 BLOCKED、0 IN_PROGRESS。外部条件只阻塞对应验收，不能阻断 T5 等本地可实施项。
+31项账本统计：15 DONE、4 PARTIAL、5 BLOCKED、7 TODO。外部条件只阻塞对应验收，不能阻断本地可实施项。
 
 ## 2026-09-20 Astra 计划与同步准备
 
