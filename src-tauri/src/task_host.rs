@@ -614,10 +614,9 @@ fn replace_record(path: &Path, bytes: &[u8]) -> Result<(), String> {
         file.write_all(bytes).map_err(io::error)?;
         file.sync_all().map_err(io::error)?;
     }
-    #[cfg(windows)]
-    if path.exists() {
-        std::fs::remove_file(path).map_err(io::error)?;
-    }
+    // `rename` replaces the destination on the supported desktop platforms.
+    // Do not remove the durable journal first: a process termination between
+    // remove and rename would lose the only record of an accepted request.
     let result = std::fs::rename(&temp, path).map_err(io::error);
     if result.is_err() {
         let _ = std::fs::remove_file(&temp);
