@@ -14,9 +14,9 @@ function baselineContent(file) {
       "git",
       ["show", `${governanceBase}:${file.replaceAll("\\", "/")}`],
       {
-      cwd: root,
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
+        cwd: root,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
       },
     );
   } catch {

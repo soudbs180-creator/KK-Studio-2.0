@@ -2,7 +2,7 @@
 
 状态：规则候选验证完成，等待 PR 远端检查和合并。当前记录只覆盖治理规则、执行脚本、模板和规则场景；后续 head 变化后本记录需重新判断。
 
-- 基线 origin/main@8aca3abdd6386b6d6cee7fd9836e27e5aec38eab；独立任务分支/worktree。
+- 初始基线 origin/main@8aca3abdd6386b6d6cee7fd9836e27e5aec38eab；远端随后前进到 `fb57529c719924330ec0154f5374df8f5d508e00`，已通过普通 merge 纳入当前任务分支，未修改或审查该上游任务；当前为独立任务分支/worktree。
 - 当前读取 GitHub：private、默认main、protected=false；protection/rulesets API403要求Pro或公开仓库。未改变可见性/套餐，EXT-GIT仍BLOCKED。证据：docs/evidence/ai-sdlc-2026-09-20/remote-audit.json。
 - main现有CI run35492697622 failure；167 browser passed、1 failed sidebar motion、1 flaky creation-flow。这里只保留该失败的审计记录，不修复、不接管产品测试或证据；PR #4 的 hosted CI 以最终规则 head 单独回读。
 - 未调用付费模型、未部署生产、未删除分支/tag、未重写主线；模型eval尚未live执行。

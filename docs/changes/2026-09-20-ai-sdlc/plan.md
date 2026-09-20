@@ -1,6 +1,6 @@
 # Plan — TASK-GOV-002
 
-- 基线：origin/main@8aca3abdd6386b6d6cee7fd9836e27e5aec38eab；独立codex/TASK-GOV-002-ai-sdlc，D:/kk-studio-next/.worktrees/TASK-GOV-002。
+- 初始基线：origin/main@8aca3abdd6386b6d6cee7fd9836e27e5aec38eab；远端在任务期间前进到 `fb57529c719924330ec0154f5374df8f5d508e00`，已通过普通 merge 提交纳入任务分支，未改动或审查该上游任务；当前仍为独立 codex/TASK-GOV-002-ai-sdlc，D:/kk-studio-next/.worktrees/TASK-GOV-002。
 - 起始审计误用了旧master草稿，已仅撤回本轮自有修改并迁入新基线；旧root用户并发实现与索引保留。
 - 顺序：读取主线治理和原文 → 只读审计规则/源码/证据 → AI入口与SDLC模板 → push/delivery防线与反例测试 → 修正治理规则冲突 → 规则检查与独立review → 可审阅提交/PR。
 - 并行职责：文档代理负责engineering三文件和templates；Git代理负责push-policy/installer/tests；主代理整合入口、CI、delivery、账本和规则审计证据。产品代码、既有测试、旧证据和其他人的提交不分配写入者。

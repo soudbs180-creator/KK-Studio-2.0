@@ -2,7 +2,7 @@
 
 ## 2026-09-20 TASK-GOV-002 当前覆盖说明
 
-- 今后新任务从 fetch 后的 origin/main 派生，本次基线 8aca3ab；任务分支 codex/TASK-GOV-002-ai-sdlc。旧本地 main@39f6a6e 与远端无共同祖先，下面首次同步/tree相等记录是历史范围，不能直接 pull 合并旧本地main。
+- 今后新任务从 fetch 后的 origin/main 派生；本任务初始基线为 8aca3ab，远端随后前进到 fb57529，已通过普通 merge 纳入任务分支。任务分支 codex/TASK-GOV-002-ai-sdlc。旧本地 main@39f6a6e 与远端无共同祖先，下面首次同步/tree相等记录是历史范围，不能直接 pull 合并旧本地main。
 - 本次只写入共享规则、Git防线、CI变更包、模板和规则场景；产品代码、产品测试、既有证据和其他人的提交只读审计，状态以task-ledger为准。规则候选等待 PR，完整说明见 docs/changes/2026-09-20-ai-sdlc/。
 - 当前托管回读 main protected=false，private仓库protection/rulesets API403，EXT-GIT仍BLOCKED；自动分支清理为false。
 - 最新main CI run35492697622失败：sidebar motion中间帧缺失；本任务只记录为产品测试 follow-up，不修复或回写既有产品证据。
