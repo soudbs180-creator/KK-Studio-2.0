@@ -111,8 +111,11 @@ export class GenerationRepository {
            ON CONFLICT(id) DO UPDATE SET
              owner_id=excluded.owner_id,
              metadata_json=excluded.metadata_json,
-             state=excluded.state,
-             cooldown_until=excluded.cooldown_until,
+             -- Runtime health is durable state. Configuration reloads must
+             -- not clear cooldowns or quarantines; controls() is the explicit
+             -- administrative recovery path.
+             state=gateway_connections.state,
+             cooldown_until=gateway_connections.cooldown_until,
              unit_price=excluded.unit_price,
              cost_limit=excluded.cost_limit,
              credential_ref=excluded.credential_ref,

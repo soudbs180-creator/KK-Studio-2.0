@@ -49,9 +49,9 @@ test("re-registering a connection applies config and revokes removed ACL entries
   try {
     r.db
       .prepare(
-        "UPDATE gateway_connections SET spent=?, cooldown_until=? WHERE id=?",
+        "UPDATE gateway_connections SET spent=?, state=?, cooldown_until=? WHERE id=?",
       )
-      .run(7, 1234, "byok");
+      .run(7, "quarantined", 1234, "byok");
     r.register(
       {
         ...connection,
@@ -67,7 +67,8 @@ test("re-registering a connection applies config and revokes removed ACL entries
     assert.equal(row.unit_price, 2);
     assert.equal(row.cost_limit, 20);
     assert.equal(row.spent, 7);
-    assert.equal(row.cooldown_until, 0);
+    assert.equal(row.state, "quarantined");
+    assert.equal(row.cooldown_until, 1234);
     assert.equal(row.revision, 2);
     assert.deepEqual(
       r.db
