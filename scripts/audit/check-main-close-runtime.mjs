@@ -319,11 +319,9 @@ try {
     "border-top-color",
     "rgb(60, 60, 60)",
   );
-  await page
-    .locator(".shortcuts-panel")
-    .screenshot({
-      path: path.join(evidence, `screenshots/${mode}-shortcuts-current.png`),
-    });
+  await page.locator(".shortcuts-panel").screenshot({
+    path: path.join(evidence, `screenshots/${mode}-shortcuts-current.png`),
+  });
   await page.keyboard.press("Escape");
   report.assets = {
     records: 41,
