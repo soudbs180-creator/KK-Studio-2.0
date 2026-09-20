@@ -24,7 +24,7 @@ async function freezeSidebarMotion(page: Page) {
   await page.evaluate(() => {
     const sidebar = document.querySelector(".sidebar")!;
     const observer = new MutationObserver(() => {
-      const animations = document.getAnimations();
+      const animations = sidebar.getAnimations({ subtree: true });
       const width = animations.find(
         (animation) =>
           animation instanceof CSSTransition &&
@@ -48,7 +48,7 @@ async function freezeSidebarMotion(page: Page) {
 async function sampleSidebarMotion(page: Page) {
   return page.evaluate(() => {
     const sidebar = document.querySelector(".sidebar")!;
-    const animations = document.getAnimations();
+    const animations = sidebar.getAnimations({ subtree: true });
     const width = animations.find(
       (animation) =>
         animation instanceof CSSTransition &&
