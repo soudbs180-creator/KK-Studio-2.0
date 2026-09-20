@@ -6,5 +6,5 @@
 
 - Self-review：当前候选 `npm run verify`、`git diff --check`、delivery/push/storage 定向测试。
 - Independent AI review：`/root/repo_audit` 只读审查 7e85103，排除其自身契约文件；`/root/article_research` 只读审查存储、平台、UI 文档与 12 场景映射；后续格式-only head 变更已重跑完整验证。
-- Actual GitHub approval：尚未创建本次 PR；不能填写审批身份或数量。单用户方案不自批准。
+- Actual GitHub review：draft [PR #4](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/4) 已创建，当前无审批（0）；CI/服务器规则等待该 PR 最终 head 回读。不能填写不存在的审批身份或数量，单用户方案不自批准。
 - 用户产品验收/发布授权：本任务只获技术治理实施授权，未代填产品发布确认。
