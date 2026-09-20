@@ -86,7 +86,10 @@ async function seedArchive(
 test("大素材库按页读取元数据、可见缩略图与全库搜索，详情仍读取原件", async ({
   page,
 }) => {
-  test.setTimeout(90000);
+  // The fixture intentionally hashes and stores about 280 MiB of originals.
+  // Keep the test bounded while allowing slower hosted Windows runners to
+  // complete the same integrity path without retrying a partial seed.
+  test.setTimeout(180000);
   const rows = await seedArchive(page, 125);
   await expect
     .poll(() =>

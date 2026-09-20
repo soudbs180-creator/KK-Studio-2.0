@@ -7,6 +7,7 @@
 - 分工与证据：页面见 TASK-UI-CLOSE-003，素材性能见 TASK-PERF-ASSETS-001；集成和最终运行证据在本文件完成后补齐。
 - Rust `cargo test --no-default-features --locked` 61/61，cargo fmt 通过；`npm run client:build -- --no-bundle` 通过。release 仅有既有 dead-code warning，未关闭检查。
 - 素材专项 7/7、0 retry：125 项、每项 2,348,050 字节，总 293,506,250 字节；metadata 列表首次不读取原件，分页/末页搜索/320px 缩略图/详情原件 SHA/损坏重试/音视频控件/键盘回焦通过。
+- CI follow-up：Hosted Windows runner 曾在 90 秒 seed 上限触发大库测试超时，并在 1 秒动画等待窗口出现一次 flaky；将该大库用例上限设为 180 秒、共用动画 settle 窗口设为 5 秒，未放宽业务断言。定向 10/10 通过；最终 PR CI 需重新验证。
 - Figma：缺失 Frame 不得由浏览器截图或工程设计代替；页面子任务负责回读当前来源。
 - 三种运行模式实际验收结果见 `docs/evidence/2026-09-21-main-close-002/runtime/`；三个报告均 `passed: true`、`pageErrors: []`，预览和 Desktop 均加载 `index-C6RT8Uju.js`。
 
