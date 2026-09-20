@@ -84,6 +84,7 @@ import { mapWithConcurrency } from "./features/creation/generationQueue";
 import { compileDesignPrompt } from "./features/creation/promptCompiler";
 
 import {
+  abortedAfterProviderSubmission,
   canRetryTask,
   recoverInterruptedTasks,
 } from "./features/creation/taskRecovery";
@@ -822,12 +823,17 @@ export default function App() {
       }
     } catch (error) {
       const uncertain =
-        durableSubmission &&
-        (providerRequestStarted || nativeTaskHost) &&
-        !controller.signal.aborted &&
-        (error instanceof GenerationProviderError
-          ? error.failureClass === "network"
-          : !(error instanceof ProviderSubmissionError));
+        abortedAfterProviderSubmission({
+          durableSubmission,
+          providerRequestStarted,
+          nativeTaskHost,
+          aborted: controller.signal.aborted,
+        }) ||
+        (durableSubmission &&
+          (providerRequestStarted || nativeTaskHost) &&
+          (error instanceof GenerationProviderError
+            ? error.failureClass === "network"
+            : !(error instanceof ProviderSubmissionError)));
       const nativeCancelUncertain =
         nativeTaskHost &&
         nativeCancelRequested.current.has(taskId) &&

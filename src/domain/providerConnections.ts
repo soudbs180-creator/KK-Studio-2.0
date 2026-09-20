@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isAllowedProviderUrl } from "./providerUrl.ts";
 
 /** Credentials are referenced by id only; secret material lives in a vault. */
 export const connectionKindSchema = z.enum([
@@ -69,7 +70,7 @@ export const providerConnectionSchema = z.object({
       try {
         const url = new URL(value);
         return (
-          (url.protocol === "http:" || url.protocol === "https:") &&
+          isAllowedProviderUrl(value) &&
           !url.username &&
           !url.password &&
           !url.search &&
