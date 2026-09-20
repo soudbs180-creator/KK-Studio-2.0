@@ -11,6 +11,7 @@ import GeneralSettings from "./GeneralSettings";
 import SettingsSections, { SETTINGS_SECTIONS } from "./SettingsSections";
 import type { SettingsSection } from "./SettingsSections";
 import type { SaveState } from "../../features/creation/useCreationStorage";
+import type { SkillRegistry } from "../../features/skills/skillRegistry";
 import "./settings.css";
 
 function readInitialSettings(): {
@@ -44,11 +45,13 @@ export default function SettingsPanel({
   initialSection = "general",
   saveState = "loading",
   revision = 0,
+  registry,
 }: {
   onClose: () => void;
   initialSection?: SettingsSection;
   saveState?: SaveState;
   revision?: number;
+  registry: SkillRegistry;
 }) {
   const [initial] = useState(readInitialSettings);
   const [preferences, setPreferences] = useState(initial.preferences);
@@ -137,6 +140,7 @@ export default function SettingsPanel({
             saveState={saveState}
             revision={revision}
             preferences={preferences}
+            registry={registry}
             onReset={() =>
               updatePreferences(
                 { ...DEFAULT_SETTINGS },
