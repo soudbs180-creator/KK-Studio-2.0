@@ -212,9 +212,13 @@ test("Skill 与工作流卡片保持当前页面并反馈本地预览状态", as
   await expect(
     page.getByText("已选择工作流：H3 轻量版 · 文生视频。", { exact: false }),
   ).toBeVisible();
+  await page
+    .getByRole("button", { name: "导入/新建工作流", exact: true })
+    .click();
+  await page.getByRole("tab", { name: "我的工作流", exact: true }).click();
   await expect(
-    page.getByRole("button", { name: "导入/新建工作流", exact: true }),
-  ).toBeDisabled();
+    page.getByText("我的 ComfyUI 工作流", { exact: true }),
+  ).toBeVisible();
 });
 
 test("项目区支持筛选、排序和创建文件夹入口", async ({ page }) => {

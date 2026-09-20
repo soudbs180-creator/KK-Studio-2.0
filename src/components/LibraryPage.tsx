@@ -3,6 +3,11 @@ import { Plus, Search } from "lucide-react";
 import CatalogPageBody from "./CatalogPageBody";
 import type { CreationProject } from "../features/creation/model";
 import CatalogTutorial from "./CatalogTutorial";
+import {
+  createStarterWorkflow,
+  type WorkflowRecord,
+} from "../features/comfyui/workflowRegistry";
+import WorkflowImportButton, { downloadWorkflow } from "./WorkflowImportButton";
 
 type CatalogView = "projects" | "skills" | "comfyui";
 const SKILLS = [
@@ -106,11 +111,19 @@ export default function LibraryPage({
   onOpen,
   projects = [],
   onOpenProject,
+  localWorkflows = [],
+  onSaveWorkflow,
+  onDeleteWorkflow,
+  onRunWorkflow,
 }: {
   view: CatalogView;
   onOpen: (id: string) => void;
   projects?: CreationProject[];
   onOpenProject?: (id: string) => void;
+  localWorkflows?: readonly WorkflowRecord[];
+  onSaveWorkflow?: (workflow: WorkflowRecord) => void;
+  onDeleteWorkflow?: (workflow: WorkflowRecord) => void;
+  onRunWorkflow?: (workflow: WorkflowRecord) => void;
 }) {
   const [query, setQuery] = useState("");
   const [tab, setTab] = useState(
@@ -158,39 +171,43 @@ export default function LibraryPage({
         <div className="catalog-page-actions">
           <button
             className="primary-button"
-            disabled={view !== "projects"}
+            disabled={view === "skills"}
             title={
               view === "projects"
                 ? undefined
                 : view === "skills"
-                  ? "Skill 创建服务尚未接入"
-                  : "工作流导入服务尚未接入"
+                  ? "Skill 本地管理由目录卡片提供"
+                  : "在本地创建一个可编辑的 ComfyUI API 工作流"
             }
-            onClick={() => view === "projects" && onOpen("new-project")}
+            onClick={() => {
+              if (view === "projects") onOpen("new-project");
+              if (view === "comfyui") onSaveWorkflow?.(createStarterWorkflow());
+            }}
           >
             <Plus size={17} /> {meta.primary}
           </button>
-          <button
-            className="ui-button"
-            disabled={view !== "projects"}
-            title={
-              view === "projects"
-                ? undefined
-                : view === "skills"
-                  ? "Skill 安装服务尚未接入"
-                  : "工作流探索与导入服务尚未接入"
-            }
-            onClick={() => view === "projects" && setTutorialOpen(true)}
-          >
-            {meta.secondary}
-          </button>
+          {view === "comfyui" ? (
+            <WorkflowImportButton
+              onImported={(workflow, nodeCount) => {
+                onSaveWorkflow?.(workflow);
+                setStatus(
+                  `已导入 ${nodeCount} 个节点；请在“我的工作流”中检查后再运行。`,
+                );
+              }}
+              onError={setStatus}
+            />
+          ) : (
+            <button className="ui-button" onClick={() => setTutorialOpen(true)}>
+              {meta.secondary}
+            </button>
+          )}
         </div>
       </header>
       {view !== "projects" && (
         <p className="catalog-page-status" role="status">
           {view === "skills"
-            ? "当前仅可浏览和选择 Skill；安装、创建与账号同步服务尚未接入。"
-            : "当前仅可浏览和选择工作流；导入、运行与本地服务连接尚未接入。"}
+            ? "Skill 目录仍是本地元数据预览；安装与执行服务由本地 Skill registry 提供。"
+            : "工作流保存在当前浏览器元数据中；运行仍需配置本地 ComfyUI 连接。"}
         </p>
       )}
       {status && (
@@ -236,6 +253,26 @@ export default function LibraryPage({
         projects={projects}
         onCategory={setCategory}
         tab={tab}
+        localWorkflows={localWorkflows}
+        onOpenWorkflow={(workflow) => {
+          setStatus(
+            `${workflow.name} 已选中；编辑器入口将在 ComfyUI Desktop bridge 接入后开放。`,
+          );
+        }}
+        onExportWorkflow={(workflow) => {
+          downloadWorkflow(workflow);
+          setStatus(`已导出 ${workflow.name} 的 API prompt JSON。`);
+        }}
+        onDeleteWorkflow={(workflow) => {
+          onDeleteWorkflow?.(workflow);
+          setStatus(`已删除本地工作流 ${workflow.name}。`);
+        }}
+        onRunWorkflow={(workflow) => {
+          onRunWorkflow?.(workflow);
+          setStatus(
+            `已请求运行 ${workflow.name}；如果未连接 ComfyUI，将保持待配置状态。`,
+          );
+        }}
         onSelect={(label) => {
           if (view === "projects") {
             if (

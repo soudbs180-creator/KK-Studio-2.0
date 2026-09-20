@@ -110,6 +110,11 @@ import {
   DEFAULT_SETTINGS,
   type SettingsPreferences,
 } from "./domain/settings";
+import {
+  readLocalWorkflows,
+  writeLocalWorkflows,
+  type WorkflowRecord,
+} from "./features/comfyui/workflowRegistry";
 import "./styles/workspace.css";
 import "./styles/responsive.css";
 import "./styles/sidebar.css";
@@ -153,6 +158,9 @@ export default function App() {
   const [assets, setAssets] = useState(initialAssets);
   const assetArchive = useAssetArchive(setAssets);
   const [subjects, setSubjects] = useState(initialSubjects);
+  const [localWorkflows, setLocalWorkflows] = useState<WorkflowRecord[]>(() =>
+    readLocalWorkflows(),
+  );
   const persistence = useCreationStorage(
     recoverInterruptedTasks,
     reconcileNativeTasks,
@@ -161,6 +169,23 @@ export default function App() {
   const saveState = persistence.state;
   const submitLock = useRef(false);
   const [providerVersion, setProviderVersion] = useState(0);
+  function saveWorkflow(workflow: WorkflowRecord): void {
+    setLocalWorkflows((current) => {
+      const next = [
+        workflow,
+        ...current.filter((item) => item.id !== workflow.id),
+      ];
+      writeLocalWorkflows(next);
+      return next;
+    });
+  }
+  function deleteWorkflow(workflow: WorkflowRecord): void {
+    setLocalWorkflows((current) => {
+      const next = current.filter((item) => item.id !== workflow.id);
+      writeLocalWorkflows(next);
+      return next;
+    });
+  }
   const taskControllers = useRef<Record<string, AbortController>>({});
   const nativeTaskRecords = useRef<Record<string, NativeTaskHostRecord>>({});
   const nativeCancelRequested = useRef(new Set<string>());
@@ -1759,6 +1784,17 @@ export default function App() {
               view={active as "projects" | "skills" | "comfyui"}
               onOpen={open}
               projects={creation.projects}
+              localWorkflows={localWorkflows}
+              onSaveWorkflow={saveWorkflow}
+              onDeleteWorkflow={deleteWorkflow}
+              onRunWorkflow={(workflow) => {
+                setModal("tasks");
+                window.dispatchEvent(
+                  new CustomEvent("kk:comfyui-workflow-requested", {
+                    detail: workflow.id,
+                  }),
+                );
+              }}
               onOpenProject={(id) => {
                 commitCreation({ ...creationRef.current, activeProjectId: id });
                 setActive("workspace");
