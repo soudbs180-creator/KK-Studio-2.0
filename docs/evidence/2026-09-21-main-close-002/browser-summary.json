@@ -8,10 +8,12 @@
     "flaky": 0
   },
   "errors": [],
-  "verification": "npm run verify",
-  "nodeTests": 151,
+  "verification": "npm run verify (final candidate)",
+  "nodeTests": 172,
   "uiFiles": 121,
   "sourceBranch": "codex/TASK-MAIN-CLOSE-002",
-  "sourceCommit": "8369185",
-  "extraWorkingChange": "design-corrections screenshots now write test-results"
+  "sourceCommit": "e4fcf83",
+  "extraWorkingChange": "design-corrections screenshots now write test-results",
+  "finalHead": "e4fcf83",
+  "note": "三模式 runtime evidence generated from product candidate 8369185; subsequent commits merged governance/docs and formatted the audit script; final HEAD verify rerun at e4fcf83 with 172 Node tests and 197 browser tests."
 }

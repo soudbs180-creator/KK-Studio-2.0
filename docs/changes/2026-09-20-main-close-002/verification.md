@@ -1,9 +1,9 @@
 # Verification
 
 - ID：TASK-MAIN-CLOSE-002；本轮实施及运行验收 PASS，PR/CI 和同步在合并时单独回读。
-- 初始 base：c3ff0871b3db674e0ab073f1445879d84fee3507；整合代码 head：8369185。最终 PR 需合入最新 origin/main 治理规则，准确 head/tree 以 Git 与 PR 记录为准。
+- 初始 base：c3ff0871b3db674e0ab073f1445879d84fee3507；整合代码 head：e4fcf83（产品代码候选为 8369185；其后仅合入治理/文档/审计脚本变更）。最终 PR 需合入最新 origin/main 治理规则，准确 head/tree 以 Git 与 PR 记录为准。
 - 定向回归：`npm run build` 通过；`frame-accuracy.spec.ts --workers=1 --retries=0 --repeat-each=3` 共 12/12 通过；`creation-flow.spec.ts --grep 工作台消息属于 --workers=1 --retries=0 --repeat-each=5` 共 5/5 通过。新侧栏采样捕获真实 CSSTransition，固定五个时间点并保留全部原有几何断言。连续创作用例在第一张结果实际归档完成后再提交第二次编辑，符合产品同项目执行中的提交门禁。
-- 完整 `npm run verify` 通过：151 Node、197 browser，0 failure、0 flaky，UI121/0，lint/typecheck/format/build 通过。新增测试将截图写入 test-results，避免覆盖历史证据；摘要见 `docs/evidence/2026-09-21-main-close-002/browser-summary.json`。
+- 完整 `npm run verify` 通过：172 Node、197 browser，0 failure、0 flaky，UI121/0，lint/typecheck/format/build 通过。新增测试将截图写入 test-results，避免覆盖历史证据；摘要见 `docs/evidence/2026-09-21-main-close-002/browser-summary.json`。
 - 分工与证据：页面见 TASK-UI-CLOSE-003，素材性能见 TASK-PERF-ASSETS-001；集成和最终运行证据在本文件完成后补齐。
 - Rust `cargo test --no-default-features --locked` 61/61，cargo fmt 通过；`npm run client:build -- --no-bundle` 通过。release 仅有既有 dead-code warning，未关闭检查。
 - 素材专项 7/7、0 retry：125 项、每项 2,348,050 字节，总 293,506,250 字节；metadata 列表首次不读取原件，分页/末页搜索/320px 缩略图/详情原件 SHA/损坏重试/音视频控件/键盘回焦通过。
