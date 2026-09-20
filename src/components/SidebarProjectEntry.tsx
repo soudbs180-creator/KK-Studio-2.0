@@ -17,8 +17,9 @@ export default function SidebarProjectEntry({
   const [deleted, setDeleted] = useState(false);
   const [moved, setMoved] = useState(false);
   const root = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const menuTrigger = useRef<HTMLButtonElement>(null);
-  useDismissible(menuOpen, root, () => setMenuOpen(false), menuTrigger);
+  useDismissible(menuOpen, menuRef, () => setMenuOpen(false), menuTrigger);
   useLayoutEffect(() => {
     if (menuOpen)
       root.current
@@ -64,7 +65,10 @@ export default function SidebarProjectEntry({
           ref={grouped ? menuTrigger : undefined}
           className={`project-link ${selected ? "is-selected" : ""}`}
           aria-current={selected ? "page" : undefined}
-          onClick={() => onNavigate("workspace")}
+          onClick={() => {
+            setMenuOpen(false);
+            onNavigate("workspace");
+          }}
           title={
             grouped ? "打开项目工作台；右键或 Shift+F10 管理项目" : undefined
           }
@@ -139,6 +143,7 @@ export default function SidebarProjectEntry({
       </button>
       {menuOpen && (
         <div
+          ref={menuRef}
           className="project-menu"
           role="menu"
           aria-label={menuLabel}

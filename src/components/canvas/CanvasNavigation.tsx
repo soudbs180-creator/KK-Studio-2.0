@@ -97,7 +97,10 @@ export default function CanvasNavigation({
             backgroundPattern === "dots" ? "切换为网格背景" : "切换为点状背景"
           }
           aria-pressed={backgroundPattern === "grid"}
-          onClick={onToggleBackgroundPattern}
+          onClick={() => {
+            dismiss();
+            onToggleBackgroundPattern();
+          }}
         >
           <img
             src={
@@ -115,11 +118,17 @@ export default function CanvasNavigation({
           aria-label="画布背景颜色"
           tabIndex={-1}
           value={backgroundColor}
-          onChange={(event) => onBackgroundColor(event.target.value)}
+          onChange={(event) => {
+            dismiss();
+            onBackgroundColor(event.target.value);
+          }}
         />
         <button
           className="canvas-lines"
-          onClick={onToggleConnections}
+          onClick={() => {
+            dismiss();
+            onToggleConnections();
+          }}
           aria-label="显示连线"
           title={showConnections ? "隐藏连线" : "显示连线"}
           aria-pressed={showConnections}

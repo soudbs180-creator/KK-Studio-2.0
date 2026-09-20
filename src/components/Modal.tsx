@@ -18,11 +18,30 @@ export default function Modal({
       document.activeElement instanceof HTMLElement
         ? document.activeElement
         : null;
-    dialog?.showModal();
-    dialog?.querySelector<HTMLElement>("[data-initial-focus]")?.focus();
+    if (!dialog) return;
+    if (!dialog.open) dialog.showModal();
+    const initialFocus = dialog.querySelector<HTMLElement>(
+      "[data-initial-focus], input:not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]), [href], [tabindex]:not([tabindex='-1'])",
+    );
+    (initialFocus ?? dialog).focus({ preventScroll: true });
     return () => {
-      dialog?.close();
-      previous?.focus();
+      // A nested dialog can be opened as the parent unmounts. Closing the
+      // parent must not steal focus from the still-open child dialog.
+      const activeDialog =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement.closest("dialog[open]")
+          : null;
+      const focusBelongsToThisDialog = !activeDialog || activeDialog === dialog;
+      if (dialog.open) dialog.close();
+      if (
+        focusBelongsToThisDialog &&
+        previous?.isConnected &&
+        (document.activeElement === document.body ||
+          document.activeElement === dialog ||
+          dialog.contains(document.activeElement))
+      ) {
+        previous.focus({ preventScroll: true });
+      }
     };
   }, []);
   return (
@@ -30,6 +49,7 @@ export default function Modal({
       ref={ref}
       className={`modal ${className}`}
       aria-label={title}
+      tabIndex={-1}
       onKeyDown={(event) => event.stopPropagation()}
       onCancel={(e) => {
         e.preventDefault();

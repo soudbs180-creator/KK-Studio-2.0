@@ -184,11 +184,10 @@
       "docs/changes/2026-09-16-native-assets/spec.md",
       "docs/changes/2026-09-16-native-assets/verification.md",
       "docs/evidence/native-assets-2026-09-18/native-acceptance.json",
-      "docs/evidence/native-assets-2026-09-18/build-artifacts.json",
-      "docs/changes/2026-09-18-project-package/verification.md"
+      "docs/evidence/native-assets-2026-09-18/build-artifacts.json"
     ],
-    "verification": "main@c855881 的 Node 24/Web/Rust/Tauri release 验证通过；隔离数据根目录与三个全新 WebView profile 验证原生素材 SHA-256、快照引用恢复和篡改后读取保护。2026-09-20 状态勘误：后续 T3b Desktop 项目包已完成，见该任务及项目包 verification；Web 文件适配仍属 T9。",
-    "updated": "2026-09-20",
+    "verification": "main@c855881 的 Node 24/Web/Rust/Tauri release 验证通过；隔离数据根目录与三个全新 WebView profile 验证原生素材 SHA-256、快照引用恢复和篡改后读取保护。T3b 项目包仍未完成。",
+    "updated": "2026-09-18",
     "verificationResult": "PASS"
   },
   {
@@ -274,8 +273,7 @@
       "durable intent先于提交",
       "重启同一身份不重复计费",
       "unknown不可直接普通retry",
-      "本地宿主随包且不依赖VPS",
-      "Desktop 提交前执行连接状态/冷却/并发复核，原生失败分类更新 health，租约崩溃恢复可验证"
+      "本地宿主随包且不依赖VPS"
     ],
     "dependencies": [
       "T4"
@@ -294,11 +292,10 @@
       "docs/changes/2026-09-19-taskhost-durable-intent/verification.md",
       "tests/browser/task-intent.spec.ts",
       "tests/unit/nativeTaskHost.test.ts",
-      "deploy/README.md",
-      "docs/evidence/ai-sdlc-2026-09-20/desktop-provider-gap-audit.md"
+      "deploy/README.md"
     ],
-    "verification": "集成 main 已将 durable intent、稳定幂等身份、unknown 受理保护、原生 TaskHost journal、系统凭据库读取、Desktop IPC、取消竞态和逐 slot 输出提交接入 Tauri 主进程；npm verify 150/169、UI119/0，Rust 58/58，client check/release 通过。隔离 Tauri/WebView 的提交、取消、进程重启和逐 slot 恢复证据尚未完成；部署脚本仅覆盖静态 Web Prototype。 2026-09-20 当前源码补审：Desktop 原生提交缺 reservation/assertCurrent，结构化失败 health 丢失，租约崩溃回收未定义；这是实现缺口，不能仅补运行截图关闭 T5。",
-    "updated": "2026-09-20",
+    "verification": "集成 main 已将 durable intent、稳定幂等身份、unknown 受理保护、原生 TaskHost journal、系统凭据库读取、Desktop IPC、取消竞态和逐 slot 输出提交接入 Tauri 主进程；npm verify 150/169、UI119/0，Rust 58/58，client check/release 通过。隔离 Tauri/WebView 的提交、取消、进程重启和逐 slot 恢复证据尚未完成；部署脚本仅覆盖静态 Web Prototype。",
+    "updated": "2026-09-19",
     "verificationResult": "PARTIAL"
   },
   {
@@ -640,20 +637,21 @@
       "UI-001"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-UI-MAIN-001-alignment",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
     "affectedModules": [
       "src/components/StartComposer.tsx",
       "src/styles",
       "src/components/ConversationPanel.tsx"
     ],
-    "status": "TODO",
+    "status": "DONE",
     "evidence": [
-      "docs/changes/2026-09-16-ui-system-audit/audit.md"
+      "docs/changes/2026-09-16-ui-system-audit/audit.md",
+      "docs/changes/2026-09-20-ui-main-alignment/verification.md"
     ],
-    "verification": "历史有溢出证据，当前需复现并修复",
-    "updated": "2026-09-17",
-    "verificationResult": "NOT_VERIFIED"
+    "verification": "已选择性整合原root UI候选；最终verify150 Node/190浏览器/UI119/0、Rust60与dev/preview/桌面34页面矩阵均通过。",
+    "updated": "2026-09-20",
+    "verificationResult": "PASS"
   },
   {
     "id": "UI-003",
@@ -670,20 +668,21 @@
       "UI-001"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-UI-MAIN-001-alignment",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
     "affectedModules": [
       "src/components/canvas/TaskPanel.tsx",
       "src/components/AccountPopup.tsx",
       "src/components/settings"
     ],
-    "status": "TODO",
+    "status": "PARTIAL",
     "evidence": [
-      "docs/changes/2026-09-16-ui-system-audit/audit.md"
+      "docs/changes/2026-09-16-ui-system-audit/audit.md",
+      "docs/changes/2026-09-20-ui-main-alignment/verification.md"
     ],
-    "verification": "NOT VERIFIED",
-    "updated": "2026-09-17",
-    "verificationResult": "NOT_VERIFIED"
+    "verification": "交互和真实服务说明已在origin/main候选完成整合，定向浏览器回归通过；最终主线同步见TASK-UI-MAIN-001。",
+    "updated": "2026-09-20",
+    "verificationResult": "PARTIAL"
   },
   {
     "id": "UI-004",
@@ -700,8 +699,8 @@
       "UI-003"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-UI-MAIN-001-alignment",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
     "affectedModules": [
       "Landing",
       "Workspace",
@@ -710,13 +709,14 @@
       "Tasks",
       "Account"
     ],
-    "status": "TODO",
+    "status": "PARTIAL",
     "evidence": [
-      "docs/changes/2026-09-16-ui-system-audit/plan.md"
+      "docs/changes/2026-09-16-ui-system-audit/plan.md",
+      "docs/changes/2026-09-20-ui-main-alignment/verification.md"
     ],
-    "verification": "NOT VERIFIED",
-    "updated": "2026-09-17",
-    "verificationResult": "NOT_VERIFIED"
+    "verification": "已覆盖34运行页面状态，修复现行设置/搜索/资产几何；Landing现行节点及其他缺失Frame仍不能完成Figma视觉验收。",
+    "updated": "2026-09-20",
+    "verificationResult": "PARTIAL"
   },
   {
     "id": "PERF-001",
@@ -772,11 +772,10 @@
     "verification": "NOT VERIFIED",
     "updated": "2026-09-20",
     "verificationResult": "NOT_VERIFIED",
-    "blocker": "Private个人仓库当前计划不支持保护；2026-09-20 authenticated protection/rulesets API403，需用户升级支持的计划，不能改公开或伪称hook等效。",
+    "blocker": "目标仓库 authenticated API 已确认 private、默认分支 main 与写权限；main protected=false，required checks 为空，rulesets/protection API 因当前 GitHub 计划返回 403。需完成最终候选 PR、CI、合并和 main tree 回读；托管保护能力仍未启用。",
     "evidence": [
       "docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md",
-      "docs/changes/2026-09-20-gpt-6-astra/verification.md",
-      "docs/evidence/ai-sdlc-2026-09-20/remote-audit.json"
+      "docs/changes/2026-09-20-gpt-6-astra/verification.md"
     ]
   },
   {
@@ -890,8 +889,8 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-UI-MAIN-001-alignment",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
     "affectedModules": [
       "src/components/useDismissible.ts",
       "src/components/Modal.tsx",
@@ -901,13 +900,49 @@
       "src/components/settings/ConnectionSettings.tsx",
       "tests/browser"
     ],
-    "status": "TODO",
+    "status": "DONE",
     "evidence": [
-      "docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md"
+      "docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md",
+      "docs/changes/2026-09-20-ui-main-alignment/verification.md"
     ],
-    "verification": "dirty checkout 中的 UI 候选尚未迁移或验收；本次首发同步不包含这些改动。",
+    "verification": "已选择性整合原root UI候选；最终verify150 Node/190浏览器/UI119/0、Rust60与dev/preview/桌面34页面矩阵均通过。",
     "updated": "2026-09-20",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "PASS"
+  },
+  {
+    "id": "TASK-UI-MAIN-001",
+    "title": "现行Figma页面校正与交互修复主线整合",
+    "goal": "将审阅的交互/视觉修复和当前主线功能整合并经PR同步",
+    "scope": "UI geometry, popover lifecycle, selective integration, main provenance",
+    "acceptance": [
+      "原root候选选择性三方整合，保留T3b/T4/T5",
+      "现行Figma有节点页面同状态DOM与截图",
+      "完整verify、Rust与三种运行模式通过",
+      "PR/CI及本地云端main同一提交回读；原工作区有可校验备份"
+    ],
+    "dependencies": [
+      "TASK-GOV-001",
+      "TASK-KK2-MAIN-SYNC"
+    ],
+    "owner": "root",
+    "branch": "codex/TASK-UI-MAIN-001-alignment",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
+    "affectedModules": [
+      "src/components",
+      "src/styles",
+      "src-tauri/src/main.rs",
+      "tests/browser",
+      "scripts/audit",
+      "docs/governance"
+    ],
+    "status": "REVIEW",
+    "evidence": [
+      "docs/changes/2026-09-20-ui-main-alignment/verification.md",
+      "docs/changes/2026-09-20-ui-main-alignment/review.md"
+    ],
+    "verification": "本地完整验证通过，等待PR/CI与主线同提交同步回读；Figma设计缺失独立记入UI-004。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-09-20"
   },
   {
     "id": "TASK-GOV-002",

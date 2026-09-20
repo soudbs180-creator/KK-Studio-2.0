@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { CreationDraft } from "../features/creation/model";
 import StartAttachmentList from "./StartAttachmentList";
 import useConversationAttachments from "./useConversationAttachments";
@@ -7,6 +7,7 @@ import { StartApproval, StartModePicker } from "./StartComposerModes";
 import VoiceInputButton from "./VoiceInputButton";
 import GenerationOptions from "./GenerationOptions";
 import GenerationPrivacyNotice from "./GenerationPrivacyNotice";
+import { useComposerMenus } from "./useComposerMenus";
 
 export default function StartComposer({
   draft,
@@ -27,47 +28,25 @@ export default function StartComposer({
   onOpenPlugins: () => void;
   defaultModel?: string;
 }) {
-  const [modelMenuOpen, setModelMenuOpen] = useState(false);
-  const [skillMenuOpen, setSkillMenuOpen] = useState(false);
-  const [pluginMenuOpen, setPluginMenuOpen] = useState(false);
-  const [modeMenuOpen, setModeMenuOpen] = useState(false);
   const [pendingSubmit, setPendingSubmit] = useState<CreationDraft | null>(
     null,
   );
   const pickerRef = useRef<HTMLDivElement>(null);
+  const {
+    modelMenuOpen,
+    skillMenuOpen,
+    pluginMenuOpen,
+    modeMenuOpen,
+    toggleMenu,
+    openMenu,
+    closeMenus,
+  } = useComposerMenus(pickerRef);
   const model = draft.model || defaultModel || "kk-image-2";
   const modelOptions = [
     ...new Set(
       [defaultModel.trim(), draft.model.trim(), "kk-image-2"].filter(Boolean),
     ),
   ];
-  function closeMenus(): void {
-    setModelMenuOpen(false);
-    setSkillMenuOpen(false);
-    setPluginMenuOpen(false);
-    setModeMenuOpen(false);
-  }
-  useEffect(() => {
-    if (!modelMenuOpen && !skillMenuOpen && !pluginMenuOpen && !modeMenuOpen)
-      return;
-    const pointer = (event: PointerEvent) => {
-      if (!pickerRef.current?.contains(event.target as Node)) {
-        closeMenus();
-      }
-    };
-    const key = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        closeMenus();
-      }
-    };
-    document.addEventListener("pointerdown", pointer);
-    document.addEventListener("keydown", key);
-    return () => {
-      document.removeEventListener("pointerdown", pointer);
-      document.removeEventListener("keydown", key);
-    };
-  }, [modelMenuOpen, skillMenuOpen, pluginMenuOpen, modeMenuOpen]);
   function commit(patch: Partial<CreationDraft>): void {
     onDraftChange({ ...draft, ...patch, updatedAt: Date.now() });
   }
@@ -89,7 +68,8 @@ export default function StartComposer({
     }
     if (!model.trim()) {
       setStatus("请选择本次创作使用的模型。");
-      setModelMenuOpen(true);
+      closeMenus();
+      openMenu("model");
       return;
     }
     const nextDraft = {
@@ -154,7 +134,8 @@ export default function StartComposer({
                 aria-label="模型"
                 aria-haspopup="menu"
                 aria-expanded={modelMenuOpen}
-                onClick={() => setModelMenuOpen((open) => !open)}
+                title={model}
+                onClick={() => toggleMenu("model")}
               >
                 <img src="/design/figma/composer-package.svg" alt="" />
                 <span>{model || "模型"}</span>
@@ -169,7 +150,7 @@ export default function StartComposer({
                       aria-checked={model === option}
                       onClick={() => {
                         commit({ model: option });
-                        setModelMenuOpen(false);
+                        closeMenus();
                       }}
                     >
                       {option}
@@ -180,7 +161,7 @@ export default function StartComposer({
                     type="button"
                     className="start-model-configure"
                     onClick={() => {
-                      setModelMenuOpen(false);
+                      closeMenus();
                       onOpenModel();
                     }}
                   >
@@ -191,45 +172,49 @@ export default function StartComposer({
             </div>
             <GenerationOptions draft={draft} onChange={commit} />
             <span className="start-composer-divider" aria-hidden="true" />
-            <button
-              type="button"
-              className="start-tool-button"
-              aria-haspopup="menu"
-              aria-expanded={skillMenuOpen}
-              onClick={() => setSkillMenuOpen((open) => !open)}
-            >
-              <img src="/design/figma/composer-puzzle.svg" alt="" />
-              <span>Skill</span>
-            </button>
-            {skillMenuOpen && (
-              <StartResourcePopover
-                kind="skill"
-                onOpen={() => {
-                  setSkillMenuOpen(false);
-                  onOpenSkills();
-                }}
-              />
-            )}
+            <div className="start-resource-picker">
+              <button
+                type="button"
+                className="start-tool-button"
+                aria-haspopup="menu"
+                aria-expanded={skillMenuOpen}
+                onClick={() => toggleMenu("skill")}
+              >
+                <img src="/design/figma/composer-puzzle.svg" alt="" />
+                <span>Skill</span>
+              </button>
+              {skillMenuOpen && (
+                <StartResourcePopover
+                  kind="skill"
+                  onOpen={() => {
+                    closeMenus();
+                    onOpenSkills();
+                  }}
+                />
+              )}
+            </div>
             <span className="start-composer-divider" aria-hidden="true" />
-            <button
-              type="button"
-              className="start-tool-button"
-              aria-haspopup="menu"
-              aria-expanded={pluginMenuOpen}
-              onClick={() => setPluginMenuOpen((open) => !open)}
-            >
-              <img src="/design/figma/composer-unplug.svg" alt="" />
-              <span>插件</span>
-            </button>
-            {pluginMenuOpen && (
-              <StartResourcePopover
-                kind="plugin"
-                onOpen={() => {
-                  setPluginMenuOpen(false);
-                  onOpenPlugins();
-                }}
-              />
-            )}
+            <div className="start-resource-picker">
+              <button
+                type="button"
+                className="start-tool-button"
+                aria-haspopup="menu"
+                aria-expanded={pluginMenuOpen}
+                onClick={() => toggleMenu("plugin")}
+              >
+                <img src="/design/figma/composer-unplug.svg" alt="" />
+                <span>插件</span>
+              </button>
+              {pluginMenuOpen && (
+                <StartResourcePopover
+                  kind="plugin"
+                  onOpen={() => {
+                    closeMenus();
+                    onOpenPlugins();
+                  }}
+                />
+              )}
+            </div>
           </div>
           <div className="start-footer-right">
             <VoiceInputButton
@@ -243,10 +228,10 @@ export default function StartComposer({
             <StartModePicker
               draft={draft}
               open={modeMenuOpen}
-              onToggle={() => setModeMenuOpen((open) => !open)}
+              onToggle={() => toggleMenu("mode")}
               onSelect={(value) => {
                 commit({ approvalMode: value });
-                setModeMenuOpen(false);
+                closeMenus();
               }}
             />
             <button

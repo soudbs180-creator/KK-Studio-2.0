@@ -309,3 +309,8 @@ Not complete: original reported window provenance, native Tauri visual check, fu
 - PR #1 已将 chore/TASK-KK2-MAIN-SYNC squash 合并到目标云端 main；合并后回读确认远端 main tree 与本地稳定 main 相同。
 - 首发树只包含当前本地 2.0 已跟踪目录；云端旧 monorepo 当前目录已删除，旧历史仍可追溯。
 - PR 记录：https://github.com/soudbs180-creator/KK-Studio-2.0/pull/1。合并后已回读 main SHA/tree SHA。
+
+
+## 2026-09-20 UI 主线整合
+
+TASK-UI-MAIN-001 从 origin/main@8aca3ab 出发，三方整合27项原目录交互修复并保留主线T3b/T4/T5；现行 Figma 的设置、搜索、资产展开/收纳及任务入口偏差已修正。34种页面状态已用实际导航捕获；原目录尚未切换前不能把候选描述成原目录最新版。准确命令、运行矩阵和同步状态见 [verification](changes/2026-09-20-ui-main-alignment/verification.md)。UI-004 保持 PARTIAL：当前唯一Figma页面中没有Landing410:59708及部分独立页面稿。治理候选TASK-GOV-002保持独立，未夹带合入。

@@ -1,6 +1,6 @@
 .catalog-panel {
   width: 900px;
-  height: 725px;
+  height: 696px;
   max-width: calc(100vw - 24px);
   max-height: calc(100dvh - 24px);
   border: 1px solid var(--border-default);

@@ -21,6 +21,7 @@ export default function ConversationModelPicker({
         className="chat-model-picker"
         aria-haspopup="menu"
         aria-expanded={open}
+        title={currentModel || "模型"}
         onClick={onToggle}
       >
         <img
