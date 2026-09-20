@@ -37,3 +37,7 @@ ID：TASK-UI-MAIN-001。执行目录：D:/kk-studio-next/.worktrees/TASK-UI-MAIN
 原目录100个已修改、309个未跟踪文件及原index备份到 .tmp/root-before-main-20260920/，409项清单逐项SHA-256校验；约44.9MB，仅本地保留。原main@39f6a6e与origin/main树相同、历史不同；切换需保留历史引用，并让新的main跟踪origin/main，不能合并不相关历史或强推。
 
 PR/CI/merge与最终main回读结果由后续同步记录补充。当前独立治理分支TASK-GOV-002未夹带合并；外部GitHub保护仍protected=false，计划限制的403未解除。
+
+## 最终同步回读
+
+PR #3 已通过双 CI 并 squash 合并，云端与本地 `main` 均为 `fb57529c719924330ec0154f5374df8f5d508e00`。原根目录 100 个 tracked 修改、309 个 untracked 文件、原 index 与一个未被 Git 列出的快捷方式均已保留在 `.tmp/root-before-main-20260920/` 的校验归档中。Figma 缺失的 Landing 等独立稿件仍由 UI-004 记录为 PARTIAL。
