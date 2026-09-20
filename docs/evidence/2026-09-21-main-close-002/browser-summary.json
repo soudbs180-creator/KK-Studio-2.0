@@ -1,0 +1,17 @@
+{
+  "stats": {
+    "startTime": "2026-09-20T16:12:27.708Z",
+    "duration": 50833.276,
+    "expected": 197,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "errors": [],
+  "verification": "npm run verify",
+  "nodeTests": 151,
+  "uiFiles": 121,
+  "sourceBranch": "codex/TASK-MAIN-CLOSE-002",
+  "sourceCommit": "8369185",
+  "extraWorkingChange": "design-corrections screenshots now write test-results"
+}

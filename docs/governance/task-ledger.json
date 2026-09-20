@@ -714,8 +714,8 @@
       "docs/changes/2026-09-16-ui-system-audit/plan.md",
       "docs/changes/2026-09-20-ui-main-alignment/verification.md"
     ],
-    "verification": "已覆盖34运行页面状态，修复现行设置/搜索/资产几何；Landing现行节点及其他缺失Frame仍不能完成Figma视觉验收。",
-    "updated": "2026-09-20",
+    "verification": "已覆盖可取得Figma页面与34运行状态；Landing 410:59708 无效且项目库/Skill/ComfyUI/部分设置缺独立现行Frame，不能完成全页面Figma验收。",
+    "updated": "2026-09-21",
     "verificationResult": "PARTIAL"
   },
   {
@@ -740,13 +740,15 @@
       "src/features/creation/useAssetArchive.ts",
       "src-tauri"
     ],
-    "status": "TODO",
+    "status": "PARTIAL",
     "evidence": [
-      "docs/architecture/DATA-STORAGE.md"
+      "docs/architecture/DATA-STORAGE.md",
+      "docs/architecture/adr/ADR-003-asset-metadata-paging.md",
+      "docs/changes/2026-09-20-perf-assets-001/verification.md"
     ],
-    "verification": "当前全量原件data URL加载，性能整改仍待执行",
-    "updated": "2026-09-17",
-    "verificationResult": "NOT_VERIFIED"
+    "verification": "本轮已完成有界分页/预览和原件校验；永久缩略图、大快照和单件大图瞬时内存/不可抢占IO仍未完成。",
+    "updated": "2026-09-21",
+    "verificationResult": "PARTIAL"
   },
   {
     "id": "EXT-GIT",
@@ -1000,11 +1002,15 @@
     "goal": "未完成子任务汇总验收与主线同步",
     "status": "IN_PROGRESS",
     "evidence": [
-      "docs/changes/2026-09-20-main-close-002/plan.md"
+      "docs/changes/2026-09-20-main-close-002/intent.md",
+      "docs/changes/2026-09-20-main-close-002/spec.md",
+      "docs/changes/2026-09-20-main-close-002/plan.md",
+      "docs/changes/2026-09-20-main-close-002/verification.md",
+      "docs/changes/2026-09-20-main-close-002/review.md"
     ],
-    "verification": "独立worktree实施中，基线已核对；尚未集成验收。",
-    "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-20"
+    "verification": "整合候选已完成 npm verify（151 Node、197 browser、0 failure/flaky、UI121/0）、Rust 61/61、client build；dev1421、preview1423、Tauri 三模式 runtime 与实际 bundle C6RT8Uju/EXE SHA 已通过。待 PR/CI、合入最新main后再关闭。",
+    "verificationResult": "PASS",
+    "updated": "2026-09-21"
   },
   {
     "id": "TASK-UI-CLOSE-003",
@@ -1027,13 +1033,17 @@
       "TASK-UI-MAIN-001"
     ],
     "goal": "现行Figma页面缺口复核与交互收口",
-    "status": "IN_PROGRESS",
+    "status": "DONE",
     "evidence": [
-      "docs/changes/2026-09-20-main-close-002/plan.md"
+      "docs/changes/2026-09-20-ui-close-003/intent.md",
+      "docs/changes/2026-09-20-ui-close-003/spec.md",
+      "docs/changes/2026-09-20-ui-close-003/plan.md",
+      "docs/changes/2026-09-20-ui-close-003/verification.md",
+      "docs/changes/2026-09-20-ui-close-003/review.md"
     ],
-    "verification": "独立worktree实施中，基线已核对；尚未集成验收。",
-    "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-20"
+    "verification": "现行可取得Figma节点回读、快捷键边框修复、typecheck与整合三模式运行证据通过；Landing及若干缺失Frame不冒称完成。",
+    "verificationResult": "PASS",
+    "updated": "2026-09-21"
   },
   {
     "id": "TASK-PERF-ASSETS-001",
@@ -1056,12 +1066,17 @@
       "T3a"
     ],
     "goal": "素材列表元数据和原件按需读取",
-    "status": "IN_PROGRESS",
+    "status": "DONE",
     "evidence": [
-      "docs/changes/2026-09-20-main-close-002/plan.md"
+      "docs/changes/2026-09-20-perf-assets-001/intent.md",
+      "docs/changes/2026-09-20-perf-assets-001/spec.md",
+      "docs/changes/2026-09-20-perf-assets-001/plan.md",
+      "docs/changes/2026-09-20-perf-assets-001/verification.md",
+      "docs/changes/2026-09-20-perf-assets-001/review.md",
+      "docs/architecture/adr/ADR-003-asset-metadata-paging.md"
     ],
-    "verification": "独立worktree实施中，基线已核对；尚未集成验收。",
-    "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-20"
+    "verification": "元数据分页、按需缩略图、原件SHA与错身份/损坏重试、Rust分页与临时文件边界均通过；完整性能边界另由PERF-001跟踪。",
+    "verificationResult": "PASS",
+    "updated": "2026-09-21"
   }
 ]

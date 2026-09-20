@@ -2,6 +2,12 @@
 
 更新：2026-09-20。先读 PROJECT_STATE.md、SPEC_BASELINE.md、task-ledger.json，再核对 git/worktree/进程；不要凭旧测试总数或默认快捷方式继续。
 
+## 2026-09-21 当前恢复点
+
+- 整合 worktree 为 TASK-MAIN-CLOSE-002；候选已完成 151/197、Rust61/61 和三模式实际 runtime。先核对当前分支、origin/main 与 PR4（TASK-GOV-002）是否已合并，再继续，不得把候选直接推 main。
+- 当前证据目录为 docs/evidence/2026-09-21-main-close-002；实际 preview/Desktop bundle 为 index-C6RT8Uju.js。第一次占用1423的错误 bundle 已明确排除。
+- UI-004、PERF-001边界已写入 ledger；PR 前需 delivery:check、merge最新origin/main、重跑受影响检查，并保留根目录其他任务改动。
+
 ## 当前恢复点
 
 - 唯一仓库与当前稳定main运行目录是 `D:/kk-studio-next`，跟踪 `origin/main`；先fetch并核对HEAD/tree/dirty。旧TASK-INTEGRATION-001已归档为历史分支，不再是当前main入口。

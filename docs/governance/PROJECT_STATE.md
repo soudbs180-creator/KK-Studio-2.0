@@ -2,6 +2,11 @@
 
 更新：2026-09-20。task-ledger.json 是任务状态源；完整产品尚未达到 Definition of Done。
 
+## 2026-09-21 子任务汇总验收候选
+
+- TASK-MAIN-CLOSE-002 候选已完成 151 Node、197 browser、UI121/0、Rust61/61、Tauri client build；开发1421、预览1423和隔离 Desktop runtime 均加载当前候选并通过菜单、素材分页、原件 SHA、焦点与窄屏关闭专项。候选仍在 PR 前，不能写成稳定 main。
+- UI-004 继续 PARTIAL：Landing 410:59708 无效，项目库/Skill/ComfyUI/部分设置没有独立当前 Frame。PERF-001 继续 PARTIAL：永久缩略图、大快照、单件大图瞬时内存和不可抢占 IO 仍待后续验收。
+
 ## 当前主线
 
 - 稳定主线运行目录是 `D:/kk-studio-next` 的 `main`，跟踪目标仓库 `origin/main`。精确提交与tree用Git回读；旧 `.worktrees/TASK-INTEGRATION-001` 已改为 `codex/archive-local-main-20260920` 历史分支，不再作为当前main运行目录。

@@ -29,7 +29,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | UI-002 | 窄屏composer和动态文案溢出 | DONE | UI-001 | root |
 | UI-003 | 示例任务/账号与真实服务边界 | PARTIAL | UI-001 | root |
 | UI-004 | 逐页对齐、IA和最终视觉运行态 | PARTIAL | UI-002, UI-003 | root |
-| PERF-001 | 原生素材缩略图/分页及内存IO | TODO | T3a | root |
+| PERF-001 | 原生素材缩略图/分页及内存IO | PARTIAL | T3a | root |
 | EXT-GIT | 远端PR与main保护规则 | BLOCKED | TASK-GOV-001, T0 | root |
 | TEST-PROV-001 | Provider真实入口浏览器回归 | DONE | TASK-GOV-001 | root |
 | TASK-ASTRA-001 | Astra 迁移计划与 Git 分支规则同步 | DONE | T0, TASK-GOV-001 | root |
@@ -38,8 +38,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-MAIN-001 | 现行Figma页面校正与交互修复主线整合 | DONE | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 | TASK-UI-DISMISS-002 | 窄屏侧栏关闭与大图重绘稳定性 | DONE | TASK-UI-MAIN-001 | root |
 | TASK-MAIN-CLOSE-002 | 未完成子任务汇总验收与主线同步 | IN_PROGRESS | TASK-UI-MAIN-001 | root |
-| TASK-UI-CLOSE-003 | 现行Figma页面缺口复核与交互收口 | IN_PROGRESS | TASK-UI-MAIN-001 | finish_figma_pages |
-| TASK-PERF-ASSETS-001 | 素材列表元数据和原件按需读取 | IN_PROGRESS | T3a | finish_asset_performance |
+| TASK-UI-CLOSE-003 | 现行Figma页面缺口复核与交互收口 | DONE | TASK-UI-MAIN-001 | finish_figma_pages |
+| TASK-PERF-ASSETS-001 | 素材列表元数据和原件按需读取 | DONE | T3a | finish_asset_performance |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -317,9 +317,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-UI-MAIN-001-alignment`
 - Worktree: `D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001`
 - Modules: Landing, Workspace, Assets, Settings, Tasks, Account
-- Verification: PARTIAL — 已覆盖34运行页面状态，修复现行设置/搜索/资产几何；Landing现行节点及其他缺失Frame仍不能完成Figma视觉验收。
+- Verification: PARTIAL — 已覆盖可取得Figma页面与34运行状态；Landing 410:59708 无效且项目库/Skill/ComfyUI/部分设置缺独立现行Frame，不能完成全页面Figma验收。
 - Evidence: [docs/changes/2026-09-16-ui-system-audit/plan.md](../../docs/changes/2026-09-16-ui-system-audit/plan.md), [docs/changes/2026-09-20-ui-main-alignment/verification.md](../../docs/changes/2026-09-20-ui-main-alignment/verification.md)
-- Updated: 2026-09-20
+- Updated: 2026-09-21
 
 ## PERF-001 — 原生素材缩略图/分页及内存IO
 
@@ -329,9 +329,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/features/creation/assetRepository.ts, src/features/creation/useAssetArchive.ts, src-tauri
-- Verification: NOT_VERIFIED — 当前全量原件data URL加载，性能整改仍待执行
-- Evidence: [docs/architecture/DATA-STORAGE.md](../../docs/architecture/DATA-STORAGE.md)
-- Updated: 2026-09-17
+- Verification: PARTIAL — 本轮已完成有界分页/预览和原件校验；永久缩略图、大快照和单件大图瞬时内存/不可抢占IO仍未完成。
+- Evidence: [docs/architecture/DATA-STORAGE.md](../../docs/architecture/DATA-STORAGE.md), [docs/architecture/adr/ADR-003-asset-metadata-paging.md](../../docs/architecture/adr/ADR-003-asset-metadata-paging.md), [docs/changes/2026-09-20-perf-assets-001/verification.md](../../docs/changes/2026-09-20-perf-assets-001/verification.md)
+- Updated: 2026-09-21
 
 ## EXT-GIT — 远端PR与main保护规则
 
@@ -426,9 +426,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-MAIN-CLOSE-002`
 - Worktree: `C:/Users/Administrator/.codex/worktrees/task-main-close-002/kk-studio-next`
 - Modules: tests/browser, docs/governance, docs/PROGRESS.md
-- Verification: NOT_VERIFIED — 独立worktree实施中，基线已核对；尚未集成验收。
-- Evidence: [docs/changes/2026-09-20-main-close-002/plan.md](../../docs/changes/2026-09-20-main-close-002/plan.md)
-- Updated: 2026-09-20
+- Verification: PASS — 整合候选已完成 npm verify（151 Node、197 browser、0 failure/flaky、UI121/0）、Rust 61/61、client build；dev1421、preview1423、Tauri 三模式 runtime 与实际 bundle C6RT8Uju/EXE SHA 已通过。待 PR/CI、合入最新main后再关闭。
+- Evidence: [docs/changes/2026-09-20-main-close-002/intent.md](../../docs/changes/2026-09-20-main-close-002/intent.md), [docs/changes/2026-09-20-main-close-002/spec.md](../../docs/changes/2026-09-20-main-close-002/spec.md), [docs/changes/2026-09-20-main-close-002/plan.md](../../docs/changes/2026-09-20-main-close-002/plan.md), [docs/changes/2026-09-20-main-close-002/verification.md](../../docs/changes/2026-09-20-main-close-002/verification.md), [docs/changes/2026-09-20-main-close-002/review.md](../../docs/changes/2026-09-20-main-close-002/review.md)
+- Updated: 2026-09-21
 
 ## TASK-UI-CLOSE-003 — 现行Figma页面缺口复核与交互收口
 
@@ -438,9 +438,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-UI-CLOSE-003-figma`
 - Worktree: `C:/Users/Administrator/.codex/worktrees/task-ui-close-003/kk-studio-next`
 - Modules: src/components, src/styles, tests/browser
-- Verification: NOT_VERIFIED — 独立worktree实施中，基线已核对；尚未集成验收。
-- Evidence: [docs/changes/2026-09-20-main-close-002/plan.md](../../docs/changes/2026-09-20-main-close-002/plan.md)
-- Updated: 2026-09-20
+- Verification: PASS — 现行可取得Figma节点回读、快捷键边框修复、typecheck与整合三模式运行证据通过；Landing及若干缺失Frame不冒称完成。
+- Evidence: [docs/changes/2026-09-20-ui-close-003/intent.md](../../docs/changes/2026-09-20-ui-close-003/intent.md), [docs/changes/2026-09-20-ui-close-003/spec.md](../../docs/changes/2026-09-20-ui-close-003/spec.md), [docs/changes/2026-09-20-ui-close-003/plan.md](../../docs/changes/2026-09-20-ui-close-003/plan.md), [docs/changes/2026-09-20-ui-close-003/verification.md](../../docs/changes/2026-09-20-ui-close-003/verification.md), [docs/changes/2026-09-20-ui-close-003/review.md](../../docs/changes/2026-09-20-ui-close-003/review.md)
+- Updated: 2026-09-21
 
 ## TASK-PERF-ASSETS-001 — 素材列表元数据和原件按需读取
 
@@ -450,6 +450,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-PERF-ASSETS-001`
 - Worktree: `C:/Users/Administrator/.codex/worktrees/task-perf-assets-001/kk-studio-next`
 - Modules: src/features/creation, src/components/AssetPanel.tsx, src-tauri/src/asset_storage.rs
-- Verification: NOT_VERIFIED — 独立worktree实施中，基线已核对；尚未集成验收。
-- Evidence: [docs/changes/2026-09-20-main-close-002/plan.md](../../docs/changes/2026-09-20-main-close-002/plan.md)
-- Updated: 2026-09-20
+- Verification: PASS — 元数据分页、按需缩略图、原件SHA与错身份/损坏重试、Rust分页与临时文件边界均通过；完整性能边界另由PERF-001跟踪。
+- Evidence: [docs/changes/2026-09-20-perf-assets-001/intent.md](../../docs/changes/2026-09-20-perf-assets-001/intent.md), [docs/changes/2026-09-20-perf-assets-001/spec.md](../../docs/changes/2026-09-20-perf-assets-001/spec.md), [docs/changes/2026-09-20-perf-assets-001/plan.md](../../docs/changes/2026-09-20-perf-assets-001/plan.md), [docs/changes/2026-09-20-perf-assets-001/verification.md](../../docs/changes/2026-09-20-perf-assets-001/verification.md), [docs/changes/2026-09-20-perf-assets-001/review.md](../../docs/changes/2026-09-20-perf-assets-001/review.md), [docs/architecture/adr/ADR-003-asset-metadata-paging.md](../../docs/architecture/adr/ADR-003-asset-metadata-paging.md)
+- Updated: 2026-09-21

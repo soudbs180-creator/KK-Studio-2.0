@@ -1,5 +1,12 @@
 # 当前进度
 
+## 2026-09-21 未完成子任务汇总验收（整合候选）
+
+- TASK-MAIN-CLOSE-002 已在独立 worktree 汇入 Figma 收口、素材元数据分页/按需预览与动画回归稳定性修复。候选完整 `npm run verify` 为 151 Node、197 browser、UI121/0、0 failure/flaky；Rust 61/61、fmt、Tauri client build 通过。
+- dev1421、preview1423、Tauri release 均用当前候选重新启动并通过同状态交互检查：四个工作台菜单切换不改变按钮矩形，Escape/外部点击关闭并恢复焦点，窄屏账号弹层关闭优先级通过。素材专项 7/7 验证 40 项元数据页、320px WebP、41 项 fixture 详情 SHA 和错误/重试边界。
+- 证据：`docs/changes/2026-09-20-main-close-002/`、`docs/evidence/2026-09-21-main-close-002/`。当前候选尚未合并；TASK-MAIN-CLOSE-002 等待最新 main 合并、PR/CI 和主线回读。
+- UI-004 保持 PARTIAL（Landing/部分页面缺少当前 Figma Frame）；PERF-001 保持 PARTIAL（永久缩略图、大快照和单件大图 IO/峰值未完成）。Astra 仍为迁移计划，不在本轮实施。
+
 ## 2026-09-20 Astra 迁移计划与分支规则复核
 
 - TASK-ASTRA-001 从已验收的稳定 main 建立独立 task worktree，校正旧 checkout 初稿，复用已完成的 T3b/T4 与已集成的 T5，补齐项目包和 unknown 状态迁移验收。尚未实施 Astra 功能。
