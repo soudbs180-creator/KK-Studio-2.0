@@ -1,0 +1,65 @@
+   Compiling kk-studio v2.0.0 (D:\kk-studio-next\.worktrees\TASK-INTEGRATION-001\src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.21s
+     Running unittests src\main.rs (src-tauri\target\debug\deps\kk_studio-62e843fc9e92dbdb.exe)
+
+running 51 tests
+test asset_storage::tests::integrity::cross_process_writer_probe ... ok
+test conversation_tests::malformed_conversations_are_rejected_without_fallback_to_empty ... ok
+test asset_storage::tests::rejects_untrusted_hash_id_mime_base64_and_sensitive_or_unknown_metadata ... ok
+test creation_storage::tests::equal_revision_different_payload_is_conflict_but_identical_is_idempotent ... ok
+test creation_storage::tests::source_item_id_is_optional_bounded_and_history_safe ... ok
+test asset_storage::tests::integrity::corrupt_orphan_blob_cannot_be_silently_overwritten ... ok
+test creation_storage::tests::duplicate_canvas_endpoints_are_corrupt ... ok
+test creation_storage::tests::both_corrupt_is_error_and_write_preserves_both ... ok
+test creation_storage::tests::file_access_error_is_not_a_missing_snapshot ... ok
+test creation_storage::tests::invalid_members_and_duplicate_ids_are_rejected_before_overwrite ... ok
+test project_package::failure_tests::checksum_matches_shared_utf16_keys_and_ecmascript_numbers ... ok
+test creation_storage::tests::stale_expected_revision_cannot_overwrite_newer_bytes ... ok
+test creation_storage::tests::future_main_is_not_hidden_by_older_backup ... ok
+test project_package::failure_tests::duplicate_json_members_and_inflated_zip_directory_fail_closed ... ok
+test creation_storage::tests::unknown_canvas_version_does_not_fall_back_to_backup ... ok
+test asset_storage::tests::integrity::generated_at_requires_real_utc_calendar_date ... ok
+test project_package::failure_tests::raw_zip_traversal_symlink_executable_and_duplicate_are_rejected ... ok
+test asset_storage::tests::failed_first_commit_does_not_create_record_and_retry_reuses_verified_orphan_blob ... ok
+test asset_storage::tests::empty_and_oversize_payloads_are_rejected_before_persistence ... ok
+test asset_storage::tests::failed_metadata_commit_preserves_previous_record_and_durable_blob ... ok
+test project_package::tests::rejects_entry_over_limit_before_writing ... ok
+test project_package::tests::rejects_traversal_and_duplicate_entries ... ok
+test project_package::tests::round_trips_manifest_and_asset_entries ... ok
+test storage_paths::tests::explicit_root_requires_absolute_path_and_keeps_default_when_absent ... ok
+test creation_storage::tests::corrupt_main_never_replaces_good_backup_on_recovered_write ... ok
+test asset_storage::tests::stores_raw_blob_and_versioned_metadata_then_reopens_without_preview ... ok
+test asset_storage::tests::integrity::mismatched_record_identity_and_invalid_nested_fields_are_explicit_errors ... ok
+test creation_storage::tests::separate_repositories_cannot_overwrite_a_competing_commit ... ok
+test asset_storage::tests::duplicate_upload_keeps_ai_provenance_and_merges_tags_and_origins ... ok
+test asset_storage::tests::missing_record_is_none_but_missing_or_corrupt_original_is_error ... ok
+test asset_storage::tests::ai_metadata_promotes_previous_upload_and_retains_first_ai_afterward ... ok
+test asset_storage::tests::malformed_or_future_record_is_not_replaced_or_hidden ... ok
+test creation_storage::tests::malformed_canvas_main_recovers_from_valid_backup_without_erasing_original ... ok
+test creation_storage::tests::legacy_raw_pre_canvas_copy_survives_later_rotations ... ok
+test creation_storage::tests::sync_and_commit_failure_leave_original_main_and_valid_backup ... ok
+test project_package::failure_tests::command_target_guard_blocks_new_files_inside_active_data_root ... ok
+test storage_paths::tests::initialize_creates_canonical_directories_and_paths ... ok
+test storage_paths::tests::malformed_legacy_file_does_not_block_startup_or_create_destination ... ok
+test storage_paths::tests::leaves_legacy_conversations_for_explicit_user_approved_migration ... ok
+test storage_paths::tests::leaves_legacy_config_for_explicit_user_approved_migration ... ok
+test asset_storage::tests::integrity::cross_process_lock_rejects_competing_writer_then_releases_on_close ... ok
+test storage_paths::tests::existing_destination_is_preserved_without_reading_legacy ... ok
+test project_package::failure_tests::existing_targets_and_absolute_dotdot_are_never_replaced ... ok
+test project_package::tests::occupied_target_is_rejected_without_touching_source ... ok
+test project_package::failure_tests::complete_graph_and_original_survive_independent_repository_reopen ... ok
+test asset_storage::tests::concurrent_writers_on_one_repository_keep_all_origins ... ok
+test project_package::tests::exports_preflights_and_restores_into_a_fresh_root ... ok
+test project_package::failure_tests::all_export_faults_preserve_source_and_leave_no_visible_package ... ok
+test project_package::failure_tests::malformed_packages_fail_before_any_destination_write ... ok
+test project_package::failure_tests::all_import_faults_preserve_sources_remove_staging_and_allow_retry ... ok
+test asset_storage::tests::integrity::large_original_is_preserved_outside_small_metadata_record ... ok
+
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.27s
+
+
+> kk-studio-next@2.0.0 client:check
+> cargo check --manifest-path src-tauri/Cargo.toml
+
+    Checking kk-studio v2.0.0 (D:\kk-studio-next\.worktrees\TASK-INTEGRATION-001\src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.99s

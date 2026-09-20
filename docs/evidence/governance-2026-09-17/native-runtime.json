@@ -1,0 +1,18 @@
+{
+  "capturedAt": "2026-09-17T05:41:02.529Z",
+  "url": "http://tauri.localhost/",
+  "mode": "production",
+  "entry": "src/main.tsx",
+  "scripts": [
+    "http://tauri.localhost/assets/index-Bsm9uCZD.js"
+  ],
+  "route": "landing",
+  "storageRoot": "D:\\kk-studio-next\\.worktrees\\TASK-GOV-001\\src-tauri\\target\\governance-native-data",
+  "checks": [
+    "landing boot",
+    "settings open",
+    "theme persistence across reload",
+    "Escape close"
+  ],
+  "errors": []
+}

@@ -1,0 +1,63 @@
+{
+  "mode": "preview",
+  "sourceCommit": "20e1c64359e87f64340caaf91c2720cb7b3cc839",
+  "runtime": {
+    "url": "http://127.0.0.1:1423/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://127.0.0.1:1423/assets/index-DONtT_Pj.js"
+    ],
+    "route": "workspace"
+  },
+  "requests": [
+    {
+      "url": "https://t4-preview.example.test/v1/images/generations"
+    },
+    {
+      "url": "https://t4-preview.example.test/v1/images/generations"
+    },
+    {
+      "url": "https://t4-preview.example.test/v1/images/edits",
+      "editHasOriginal": true
+    }
+  ],
+  "sourceIds": [
+    "project-mu74lp5l-wf90l3t7-prompt",
+    "project-mu74lp5l-wf90l3t7-prompt",
+    "project-mu74lp5l-wf90l3t7-project-mu74lp5l-wf90l3t7-task-mu74lpqx-he8h0e-result-1"
+  ],
+  "taskStatuses": [
+    "succeeded",
+    "succeeded",
+    "succeeded"
+  ],
+  "results": [
+    "project-mu74lp5l-wf90l3t7-project-mu74lp5l-wf90l3t7-task-mu74lp5l-jofvul-result-1",
+    "project-mu74lp5l-wf90l3t7-project-mu74lp5l-wf90l3t7-task-mu74lpqx-he8h0e-result-1",
+    "project-mu74lp5l-wf90l3t7-project-mu74lp5l-wf90l3t7-task-mu74lqic-fcqei9-result-1"
+  ],
+  "resultEdges": [
+    {
+      "id": "result-project-mu74lp5l-wf90l3t7-project-mu74lp5l-wf90l3t7-task-mu74lp5l-jofvul-result-1",
+      "source": "project-mu74lp5l-wf90l3t7-prompt",
+      "target": "project-mu74lp5l-wf90l3t7-project-mu74lp5l-wf90l3t7-task-mu74lp5l-jofvul-result-1",
+      "kind": "result"
+    },
+    {
+      "id": "result-project-mu74lp5l-wf90l3t7-project-mu74lp5l-wf90l3t7-task-mu74lpqx-he8h0e-result-1",
+      "source": "project-mu74lp5l-wf90l3t7-prompt",
+      "target": "project-mu74lp5l-wf90l3t7-project-mu74lp5l-wf90l3t7-task-mu74lpqx-he8h0e-result-1",
+      "kind": "result"
+    },
+    {
+      "id": "result-project-mu74lp5l-wf90l3t7-project-mu74lp5l-wf90l3t7-task-mu74lqic-fcqei9-result-1",
+      "source": "project-mu74lp5l-wf90l3t7-project-mu74lp5l-wf90l3t7-task-mu74lpqx-he8h0e-result-1",
+      "target": "project-mu74lp5l-wf90l3t7-project-mu74lp5l-wf90l3t7-task-mu74lqic-fcqei9-result-1",
+      "kind": "result"
+    }
+  ],
+  "freshProfileRestored": false,
+  "credentialCleared": true,
+  "errors": []
+}

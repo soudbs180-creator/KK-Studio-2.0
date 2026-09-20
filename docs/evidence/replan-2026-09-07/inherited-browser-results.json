@@ -1,0 +1,346 @@
+{
+  "config": {
+    "argv": [
+      "D:\\tools\\node-v24.20.0-win-x64\\node.exe",
+      "D:\\kk-studio-next\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/browser/ui-motion.spec.ts",
+      "tests/browser/frontend.spec.ts",
+      "-g",
+      "无限画布|搜索收藏弹窗",
+      "--workers=2"
+    ],
+    "configFile": "D:\\kk-studio-next\\playwright.config.ts",
+    "rootDir": "D:/kk-studio-next/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/kk-studio-next/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/kk-studio-next/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "docs/evidence/browser-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 2,
+    "webServer": {
+      "command": "npm run preview -- --host 127.0.0.1 --port 1422 --strictPort",
+      "url": "http://127.0.0.1:1422",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "frontend.spec.ts",
+      "file": "frontend.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "无限画布隐藏滚动条，卡片拖动时连接线跟随",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1530,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m110\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m110\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n    at D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts:300:36",
+                    "location": {
+                      "file": "D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts",
+                      "column": 36,
+                      "line": 300
+                    },
+                    "snippet": "  298 |   await page.mouse.up();\n  299 |   const afterDrag = await imageNode.boundingBox();\n> 300 |   expect(afterDrag!.x - before!.x).toBeGreaterThan(110);\n      |                                    ^\n  301 |   expect(afterDrag!.y - before!.y).toBeGreaterThan(50);\n  302 |   expect(await connector.getAttribute(\"d\")).not.toBe(connectorBefore);\n  303 |   await expect(page.getByTestId(\"image-composer\")).toHaveCount(0);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts",
+                        "column": 36,
+                        "line": 300
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m110\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\n  298 |   await page.mouse.up();\n  299 |   const afterDrag = await imageNode.boundingBox();\n> 300 |   expect(afterDrag!.x - before!.x).toBeGreaterThan(110);\n      |                                    ^\n  301 |   expect(afterDrag!.y - before!.y).toBeGreaterThan(50);\n  302 |   expect(await connector.getAttribute(\"d\")).not.toBe(connectorBefore);\n  303 |   await expect(page.getByTestId(\"image-composer\")).toHaveCount(0);\n    at D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts:300:36"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-06T17:53:42.318Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\frontend-无限画布隐藏滚动条，卡片拖动时连接线跟随\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts",
+                    "column": 36,
+                    "line": 300
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "60aee255112e33b2be9f-a23e900871e67c20e299",
+          "file": "frontend.spec.ts",
+          "line": 163,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "ui-motion.spec.ts",
+      "file": "ui-motion.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "搜索收藏弹窗 1920 可操作且无横向溢出",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 660,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-06T17:53:42.305Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-06a142601e7a055349fd",
+          "file": "ui-motion.spec.ts",
+          "line": 194,
+          "column": 3
+        },
+        {
+          "title": "搜索收藏弹窗 1440 可操作且无横向溢出",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 563,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-06T17:53:43.152Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-c61802b13ebc2905ce12",
+          "file": "ui-motion.spec.ts",
+          "line": 194,
+          "column": 3
+        },
+        {
+          "title": "搜索收藏弹窗 768 可操作且无横向溢出",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "timedOut",
+                  "duration": 30042,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\ui-motion.spec.ts",
+                        "column": 65,
+                        "line": 197
+                      },
+                      "message": "Error: locator.focus: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '搜索', exact: true })\u001b[22m\n\n\n  195 |     await page.setViewportSize({ width, height });\n  196 |     await page.goto(\"/\");\n> 197 |     await page.getByRole(\"button\", { name: \"搜索\", exact: true }).focus();\n      |                                                                 ^\n  198 |     await page.keyboard.press(\"Control+k\");\n  199 |     const panel = page.getByTestId(\"catalog-panel\");\n  200 |     await expect(page.getByLabel(\"搜索内容\")).toBeFocused();\n    at D:\\kk-studio-next\\tests\\browser\\ui-motion.spec.ts:197:65"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-06T17:53:43.721Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\ui-motion-搜索收藏弹窗-768-可操作且无横向溢出\\error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-9b729eadfbc4641ca15b",
+          "file": "ui-motion.spec.ts",
+          "line": 194,
+          "column": 3
+        },
+        {
+          "title": "搜索收藏弹窗 390 可操作且无横向溢出",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 30030,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "D:\\kk-studio-next\\tests\\browser\\ui-motion.spec.ts",
+                        "column": 65,
+                        "line": 197
+                      },
+                      "message": "Error: locator.focus: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '搜索', exact: true })\u001b[22m\n\n\n  195 |     await page.setViewportSize({ width, height });\n  196 |     await page.goto(\"/\");\n> 197 |     await page.getByRole(\"button\", { name: \"搜索\", exact: true }).focus();\n      |                                                                 ^\n  198 |     await page.keyboard.press(\"Control+k\");\n  199 |     const panel = page.getByTestId(\"catalog-panel\");\n  200 |     await expect(page.getByLabel(\"搜索内容\")).toBeFocused();\n    at D:\\kk-studio-next\\tests\\browser\\ui-motion.spec.ts:197:65"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-06T17:54:14.209Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\kk-studio-next\\test-results\\ui-motion-搜索收藏弹窗-390-可操作且无横向溢出\\error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "55cf6a6831331b124b2e-d88a9b03f83234e46d24",
+          "file": "ui-motion.spec.ts",
+          "line": 194,
+          "column": 3
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-06T17:53:41.068Z",
+    "duration": 63995.061,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

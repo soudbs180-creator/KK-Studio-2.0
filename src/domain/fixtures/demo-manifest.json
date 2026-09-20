@@ -1,0 +1,37 @@
+[
+  {
+    "id": "blue-hour-image",
+    "kind": "image",
+    "title": "蓝调海岸",
+    "src": "/fixtures/demo/blue-hour.png",
+    "poster": "/fixtures/demo/blue-hour.png",
+    "description": "AI 生成图片 · 蓝调时刻的海滨城市",
+    "source": "demo"
+  },
+  {
+    "id": "blue-hour-video",
+    "kind": "video",
+    "title": "海岸镜头",
+    "src": "/fixtures/demo/blue-hour-motion.webm",
+    "poster": "/fixtures/demo/blue-hour.png",
+    "description": "6 秒 · 本地镜头推进动画 · 640×360",
+    "source": "demo"
+  },
+  {
+    "id": "blue-hour-audio",
+    "kind": "audio",
+    "title": "蓝调氛围",
+    "src": "/fixtures/demo/blue-hour-ambient.wav",
+    "description": "8 秒 · 原创合成和弦 · WAV",
+    "source": "demo"
+  },
+  {
+    "id": "blue-hour-text",
+    "kind": "text",
+    "title": "蓝调时刻文案",
+    "src": "/fixtures/demo/blue-hour-copy.txt",
+    "text": "蓝调时刻\n\n当最后一束暮光落向海面，城市慢慢亮起。窗里的暖光与水面的倒影，把匆忙的一天收进宁静。\n\n放慢一点，让灵感在此刻发生。\n\n——KK Studio 前端交互测试文案",
+    "description": "可编辑文案 · 可复制和下载",
+    "source": "demo"
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "url": "http://127.0.0.1:1421/",
+  "mode": "development",
+  "entry": "src/main.tsx",
+  "scripts": [
+    "http://127.0.0.1:1421/@vite/client",
+    "http://127.0.0.1:1421/src/main.tsx"
+  ],
+  "settings": true,
+  "errors": []
+}

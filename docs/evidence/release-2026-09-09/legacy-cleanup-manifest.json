@@ -1,0 +1,242 @@
+﻿{
+    "generatedAt":  "2026-09-09T01:04:50.8256717Z",
+    "active":  "D:\\kk-studio-next",
+    "legacy":  "D:\\kk-studio",
+    "archive":  "D:\\KK-Studio-legacy-archive-20260909",
+    "dataBackup":  "D:\\KK-Studio-user-data-backup-20260909",
+    "check":  "D:\\kk-studio-r2-index-check",
+    "authorization":  "鐢ㄦ埛鏄庣‘瑕佹眰娓呯悊涔嬪墠鐗堟湰锛涘巻鍙插疄鐜颁笌鐢ㄦ埛鏁版嵁鍏堝浠藉悗褰掓。",
+    "recovery":  "Move-Item -LiteralPath \u0027D:\\KK-Studio-legacy-archive-20260909\u0027 -Destination \u0027D:\\kk-studio\u0027",
+    "dataFiles":  [
+                      {
+                          "path":  "data\\projects.sqlite3",
+                          "length":  401408,
+                          "sha256":  "EBC124A6E5FA2874DCDEBA70F39A629EF5F1516372A32264ECFA4F2C31465F49"
+                      },
+                      {
+                          "path":  "data\\projects.sqlite3-shm",
+                          "length":  32768,
+                          "sha256":  "1B7EED215FB85F2D63FFBFE5CAB2B9EC7D29E18C05FFFEA63FED927C34DEEE9C"
+                      },
+                      {
+                          "path":  "data\\projects.sqlite3-wal",
+                          "length":  16512,
+                          "sha256":  "30039478E78F15FE535F10EB3CECD636E4486FCB997D5B562A1963DFBEE46DA8"
+                      },
+                      {
+                          "path":  "data\\legacy-canvas-backups\\canvas-2026-09-01T14-56-38-261Z-7281407aae07d39d.json",
+                          "length":  1765,
+                          "sha256":  "7281407AAE07D39DAEAEECEFC910A38972A73469F1B863DA5396E4826DAB094E"
+                      },
+                      {
+                          "path":  "data\\legacy-canvas-backups\\canvas-2026-09-01T14-57-33-782Z-d64ee41fe3e3e3ba.json",
+                          "length":  401,
+                          "sha256":  "D64EE41FE3E3E3BA72FEE02AEDFB217FC1B9DBEB890AA49A7B8D751C0DB729F1"
+                      },
+                      {
+                          "path":  "data\\legacy-canvas-backups\\canvas-2026-09-01T15-04-01-262Z-96aecac482a2942c.json",
+                          "length":  449,
+                          "sha256":  "96AECAC482A2942C9418C0DF5142CC31A0E16F1821509C15EEC05E434B142197"
+                      },
+                      {
+                          "path":  "data\\legacy-canvas-backups\\canvas-2026-09-01T15-05-08-505Z-d3790c122a1c1afc.json",
+                          "length":  449,
+                          "sha256":  "D3790C122A1C1AFCA97D5EBB59DAE81285FC5AD8E98CE8958D8B0C12D5D12B02"
+                      },
+                      {
+                          "path":  "data\\legacy-canvas-backups\\canvas-2026-09-01T15-10-02-158Z-7281407aae07d39d.json",
+                          "length":  1765,
+                          "sha256":  "7281407AAE07D39DAEAEECEFC910A38972A73469F1B863DA5396E4826DAB094E"
+                      },
+                      {
+                          "path":  "data\\legacy-canvas-backups\\canvas-2026-09-01T15-36-28-313Z-d14710698c262113.json",
+                          "length":  499,
+                          "sha256":  "D14710698C26211370EB6B18A7D2846B07433008DCDEFD89A8F000739A219010"
+                      },
+                      {
+                          "path":  "data\\legacy-canvas-backups\\canvas-2026-09-02T02-10-53-057Z-d14710698c262113.json",
+                          "length":  499,
+                          "sha256":  "D14710698C26211370EB6B18A7D2846B07433008DCDEFD89A8F000739A219010"
+                      },
+                      {
+                          "path":  "data\\legacy-canvas-backups\\canvas-2026-09-02T02-10-54-850Z-d14710698c262113.json",
+                          "length":  499,
+                          "sha256":  "D14710698C26211370EB6B18A7D2846B07433008DCDEFD89A8F000739A219010"
+                      },
+                      {
+                          "path":  "data\\project-backups\\pre-error-cleanup-2026-09-05T05-47-46-720Z.sqlite3",
+                          "length":  401408,
+                          "sha256":  "EBC124A6E5FA2874DCDEBA70F39A629EF5F1516372A32264ECFA4F2C31465F49"
+                      },
+                      {
+                          "path":  "data\\project-backups\\pre-resize-nodes-2026-09-05T11-27-33-651Z.sqlite3",
+                          "length":  401408,
+                          "sha256":  "EBC124A6E5FA2874DCDEBA70F39A629EF5F1516372A32264ECFA4F2C31465F49"
+                      },
+                      {
+                          "path":  "data\\project-backups\\pre-resize-nodes-2026-09-05T11-28-03-893Z.sqlite3",
+                          "length":  401408,
+                          "sha256":  "EBC124A6E5FA2874DCDEBA70F39A629EF5F1516372A32264ECFA4F2C31465F49"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-1.json",
+                          "length":  980,
+                          "sha256":  "F417AE2B00A21ED1A8C5D038F99FBA2E8110A07F9B5A1BD50BA6F3E38C8AEF12"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-10.json",
+                          "length":  1497,
+                          "sha256":  "54FCFEDCC1847B967EDD25A821E1893A9C3BAE7FD06AE1DD393E2626DF1B105E"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-11.json",
+                          "length":  1497,
+                          "sha256":  "4C853A07FF72201984AB3342FC6B188739E2D109DF97875E69DA0A4F35B39B06"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-12.json",
+                          "length":  1497,
+                          "sha256":  "845EEA92B7549B639B7FCA38ED483C3F3B9B3E01CC3AAFAFE422B527C529B520"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-13.json",
+                          "length":  1497,
+                          "sha256":  "82AD4401B412B0C85357CD59CC078DC25365DD8BA6635AE93D166FCCE0B2CBB0"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-14.json",
+                          "length":  1524,
+                          "sha256":  "F175D037CDB25CC285DEC43F07A392120ACC98B1FC5547A3F4CB1FA180F7B26D"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-15.json",
+                          "length":  1523,
+                          "sha256":  "51F409E3DB505C6E9B9B9A2E022A9B7D23C8B1B8B1286D6CC744B1AE87EE2425"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-16.json",
+                          "length":  1523,
+                          "sha256":  "D1571C39AD8DE791E4CBBD924425568D897E650FAC74933618D3C86CCCFD54CF"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-17.json",
+                          "length":  1993,
+                          "sha256":  "74D2800BD1F22F3C8C3E5A6AF35D89E5A5C09229D6990FE6126AA51AA06294F1"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-18.json",
+                          "length":  1776,
+                          "sha256":  "A7BA34BB7F88555125F73393E01C7E6206D5E93CEAF6C525C8F8CA2EA25A8E19"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-2.json",
+                          "length":  980,
+                          "sha256":  "9C394066A0C8397590C4DF84A46DF07C712F58C6A71501F7071C4F55AF902B35"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-3.json",
+                          "length":  980,
+                          "sha256":  "8C40D5AB656FCCC836BBEFEE8F9CB108C0E64110D9424C2E6E73767A4B0796A9"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-4.json",
+                          "length":  980,
+                          "sha256":  "5ECE5983AF0505A95E2B4B5BB9F548CC9E97E90D52A40AB8023FCBA4E7D82716"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-5.json",
+                          "length":  980,
+                          "sha256":  "9CA13321729599B33B409638678E8BBDD4C4F5D713C88AE0208A411E179234F1"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-6.json",
+                          "length":  980,
+                          "sha256":  "8C943FFA282D610A79C5FA94C9F6455D5F5728C95321E023D76BFF5654B14ABD"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-7.json",
+                          "length":  1213,
+                          "sha256":  "350554CE2CF6C9DDF3186963855FFE74ED8553A5CC3C9AB265251BE288C61DBD"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-8.json",
+                          "length":  1496,
+                          "sha256":  "B349B2378E79479AA24C5603DE21D8F13644519B4B8B56771B85B54CA643EF00"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_9E9LLIMobab0hBzYBUwEk\\2026-09-04\\revision-9.json",
+                          "length":  1496,
+                          "sha256":  "D239473F6B2F57D17C8D060D12EB4A9CEFEA1F352A23630646AF13269932E8B2"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_fuZhEiELactHK7L7myi2U\\2026-09-01\\revision-1.json",
+                          "length":  1025,
+                          "sha256":  "0F4839B7CF878415C7275D5407D9DC78113B8F971C10996F82EA9AE161DA721F"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_jxRLax96FQzbekiOpobQb\\2026-09-01\\revision-1.json",
+                          "length":  1025,
+                          "sha256":  "587AEF827EB34092CCD91FBD4C5078BD6DF5A276AC48176F1F97C497D07A9EFD"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_jxRLax96FQzbekiOpobQb\\2026-09-01\\revision-2.json",
+                          "length":  980,
+                          "sha256":  "2CC73F64E4A87D623C1BD0F6D7956718E1A09143BBC8921BB38AF1B6D9567D27"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_jxRLax96FQzbekiOpobQb\\2026-09-01\\revision-3.json",
+                          "length":  980,
+                          "sha256":  "1ADF98ECDFD23CF0147AE8DC72B8E732AEFA29772E0BCD5B7A00439C11ADE3A8"
+                      },
+                      {
+                          "path":  "data\\project-backups\\proj_SIPrUaOKyp1tZxlmEioqs\\2026-09-01\\revision-1.json",
+                          "length":  1075,
+                          "sha256":  "520F93FA101D9936F8BB82908EE3415020474232A4538E0D727FD54C58B5B8E1"
+                      },
+                      {
+                          "path":  "data\\projects\\perf-project-large-canvas.json",
+                          "length":  549901,
+                          "sha256":  "0665B0D2A90119D6D20B25751904A08BBE2BDD1C4FDF582EAEA61872B3A5D849"
+                      },
+                      {
+                          "path":  "data\\projects\\proj_9E9LLIMobab0hBzYBUwEk.json",
+                          "length":  1234,
+                          "sha256":  "8EB6B16050DC292BCEC522B8D15F694E87E38B1AE57EB9FFF464A91DE7503595"
+                      },
+                      {
+                          "path":  "data\\projects\\proj_fuZhEiELactHK7L7myi2U.json",
+                          "length":  498,
+                          "sha256":  "F85CBB5A07F7943C5DE8FA7891EF00D8B167F608C526D447E0D14BD7AF528A0B"
+                      },
+                      {
+                          "path":  "data\\projects\\proj_IWkBOUiOYm7A167bOqLkR.json",
+                          "length":  705,
+                          "sha256":  "A1AE190B5E61A59CEB574C0C81303D73896DE84194D6C7373D8B00DA54E77CB9"
+                      },
+                      {
+                          "path":  "data\\projects\\proj_jxRLax96FQzbekiOpobQb.json",
+                          "length":  498,
+                          "sha256":  "78D5FF2058D338A365E3C2A0EA135365D1145E92A2E376C9EA4E667CFB97FD0B"
+                      },
+                      {
+                          "path":  "data\\projects\\proj_Otqwtq6c0vTnUteHfjNOt.json",
+                          "length":  498,
+                          "sha256":  "79B76D21BCE7B19B142599D0D6BFC9880CC935BD318CFA4ABBA1866E3E64733B"
+                      },
+                      {
+                          "path":  "data\\projects\\proj_PNTvBAbWLFd7VjatF7wCy.json",
+                          "length":  1259,
+                          "sha256":  "C210CA2D068AB35AC2BA37F4E7DF3BFFEBD4C8F830A71A7237A852D992669419"
+                      },
+                      {
+                          "path":  "data\\projects\\proj_Q6aj0FCZJ0W3oKNOEaznw.json",
+                          "length":  532,
+                          "sha256":  "CBAD22E90067DB132DA90C8FFFF12E227B3A47779B3ACEE3DE2C86CB38D11573"
+                      },
+                      {
+                          "path":  "data\\projects\\proj_SIPrUaOKyp1tZxlmEioqs.json",
+                          "length":  548,
+                          "sha256":  "6EC64C6595F767F5236E4D9EB65E2BB05039A9EDB34CBF5596AAEC360386563C"
+                      }
+                  ]
+}

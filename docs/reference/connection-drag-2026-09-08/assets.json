@@ -1,0 +1,52 @@
+[
+  {
+    "url": "https://www.figma.com/api/mcp/asset/9f1c14d2-b06f-406a-ba82-64544ab15728.svg",
+    "file": "public/figma/node-menu-text.svg",
+    "sha256": "F7A4BCA52DDDF33DF63A3A29F17815DE72B0362941DC01F0629525C6955F7AC0"
+  },
+  {
+    "url": "https://www.figma.com/api/mcp/asset/6cfac0d9-8ec4-4e38-bd42-7a7f58719a5e.svg",
+    "file": "public/figma/node-menu-table.svg",
+    "sha256": "B973D55EEADC47449DC401A5D5C68F3ECAC3D8012687DB59027418CECBAD83A4"
+  },
+  {
+    "url": "https://www.figma.com/api/mcp/asset/61149a00-bea3-4f97-99af-8fdefb16e7c2.svg",
+    "file": "public/figma/node-menu-image.svg",
+    "sha256": "E1FA213606A0FEF10A32854315FA65766FD21F6277E778448EDFE851529D2782"
+  },
+  {
+    "url": "https://www.figma.com/api/mcp/asset/c020438a-5219-4daa-9f1d-91fbf82c041a.svg",
+    "file": "public/figma/node-menu-video.svg",
+    "sha256": "F147E6B8A209DAFFCB034D167B0B0D7B1C1C572D53EB66C7C4753D46A1D952ED"
+  },
+  {
+    "url": "https://www.figma.com/api/mcp/asset/f03656ba-06b6-4856-8684-e3f6acd2e9bf.svg",
+    "file": "public/figma/node-menu-audio.svg",
+    "sha256": "FD56CFE3D32CC799F48A15CEB08B0B107FA3B7001CC19F6F4362F4C5FFE2453C"
+  },
+  {
+    "url": "https://www.figma.com/api/mcp/asset/ae0ac607-1cef-4d2b-8a52-62a8efa0c7e0.svg",
+    "file": "public/figma/node-menu-director.svg",
+    "sha256": "5F63AEC55F0493475D24B572824414A34B09266ED1E9E25E308AD051376EECD8"
+  },
+  {
+    "url": "https://www.figma.com/api/mcp/asset/13ad49cb-1ba3-4c0e-a1eb-eaa8ad84d78b.svg",
+    "file": "public/figma/node-menu-edit.svg",
+    "sha256": "459A419B78DDCC28C1CCD2F7F6C55E0FB64733F6D062C0C58C6CB9E3241014E1"
+  },
+  {
+    "url": "https://www.figma.com/api/mcp/asset/908bbe9f-3d11-4e4f-98e8-19cf52ec2225.svg",
+    "file": "public/figma/node-menu-workflow.svg",
+    "sha256": "15FE490EA57727D5FA48CFC3F5BB59B82A42535FBAED3B5B8F6652FA0B980D06"
+  },
+  {
+    "url": "https://www.figma.com/api/mcp/asset/87465508-edb2-48c1-8765-d82bdffd1e1c.svg",
+    "file": "public/figma/node-menu-next.svg",
+    "sha256": "DC77B4DBBB700D1313975916E499166246AAFF34B68DCD4E223D40B99AB3DDE7"
+  },
+  {
+    "url": "https://www.figma.com/api/mcp/asset/ccb54d29-5727-4dc0-a9a0-84312f991612.svg",
+    "file": "public/figma/node-port-plus.svg",
+    "sha256": "2055A177AA12045A25328F0C47A881BCBF03C620591402AA30954A3DE014498F"
+  }
+]

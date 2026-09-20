@@ -1,0 +1,65 @@
+{
+  "mode": "native",
+  "sourceCommit": "2de3c68e09ef5a94fb9a8b11d48f9ac4e0b3b592",
+  "runtime": {
+    "url": "http://tauri.localhost/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://tauri.localhost/assets/index-DONtT_Pj.js"
+    ],
+    "route": "workspace"
+  },
+  "requests": [
+    {
+      "url": "https://t4-native.example.test/v1/images/generations"
+    },
+    {
+      "url": "https://t4-native.example.test/v1/images/generations"
+    },
+    {
+      "url": "https://t4-native.example.test/v1/images/edits",
+      "editHasOriginal": true
+    }
+  ],
+  "sourceIds": [
+    "project-mu74vk9n-e1vhtuoz-prompt",
+    "project-mu74vk9n-e1vhtuoz-prompt",
+    "project-mu74vk9n-e1vhtuoz-project-mu74vk9n-e1vhtuoz-task-mu74vku5-bwz8a0-result-1"
+  ],
+  "taskStatuses": [
+    "succeeded",
+    "succeeded",
+    "succeeded"
+  ],
+  "results": [
+    "project-mu74vk9n-e1vhtuoz-project-mu74vk9n-e1vhtuoz-task-mu74vk9n-7b5j7d-result-1",
+    "project-mu74vk9n-e1vhtuoz-project-mu74vk9n-e1vhtuoz-task-mu74vku5-bwz8a0-result-1",
+    "project-mu74vk9n-e1vhtuoz-project-mu74vk9n-e1vhtuoz-task-mu74vlmh-c7t1z3-result-1"
+  ],
+  "resultEdges": [
+    {
+      "id": "result-project-mu74vk9n-e1vhtuoz-project-mu74vk9n-e1vhtuoz-task-mu74vk9n-7b5j7d-result-1",
+      "kind": "result",
+      "source": "project-mu74vk9n-e1vhtuoz-prompt",
+      "target": "project-mu74vk9n-e1vhtuoz-project-mu74vk9n-e1vhtuoz-task-mu74vk9n-7b5j7d-result-1"
+    },
+    {
+      "id": "result-project-mu74vk9n-e1vhtuoz-project-mu74vk9n-e1vhtuoz-task-mu74vku5-bwz8a0-result-1",
+      "kind": "result",
+      "source": "project-mu74vk9n-e1vhtuoz-prompt",
+      "target": "project-mu74vk9n-e1vhtuoz-project-mu74vk9n-e1vhtuoz-task-mu74vku5-bwz8a0-result-1"
+    },
+    {
+      "id": "result-project-mu74vk9n-e1vhtuoz-project-mu74vk9n-e1vhtuoz-task-mu74vlmh-c7t1z3-result-1",
+      "kind": "result",
+      "source": "project-mu74vk9n-e1vhtuoz-project-mu74vk9n-e1vhtuoz-task-mu74vku5-bwz8a0-result-1",
+      "target": "project-mu74vk9n-e1vhtuoz-project-mu74vk9n-e1vhtuoz-task-mu74vlmh-c7t1z3-result-1"
+    }
+  ],
+  "originalHash": "431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460",
+  "freshProfileRestored": true,
+  "credentialCleared": true,
+  "errors": [],
+  "executableSha256": "b517d8ae39f0480eb479505bf06c7370071eab759081e47bb4a395f38e7bbee2"
+}

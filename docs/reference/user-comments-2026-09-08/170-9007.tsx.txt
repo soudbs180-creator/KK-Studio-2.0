@@ -1,0 +1,39 @@
+const img297 = "https://www.figma.com/api/mcp/asset/fe0e75bc-3dd7-4994-a201-a98bd85db025.svg";
+const imgIconHandshake = "https://www.figma.com/api/mcp/asset/aa628fd7-89ef-42e6-8ed9-728582915e7a.svg";
+const imgIconBriefcaseBusiness = "https://www.figma.com/api/mcp/asset/4e78a03a-9b45-4b0c-8d3e-321115059043.svg";
+
+export default function Component() {
+  return (
+    <div className="relative size-full" data-node-id="170:9007" data-name="使用说明">
+      <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid inset-0 rounded-[8px]" data-node-id="I170:9007;143:27013" />
+      <div className="absolute bg-[rgba(60,60,60,0)] inset-[10.26%_5%_53.85%_5%] rounded-[4px]" data-node-id="I170:9007;143:27014" />
+      <div className="absolute bg-[rgba(60,60,60,0)] inset-[53.85%_5%_10.26%_5%] rounded-[4px]" data-node-id="I170:9007;143:27015" />
+      <div className="-translate-y-1/2 absolute aspect-[6/12] left-[86.25%] right-[10%] top-[calc(50%-8.5px)]" data-node-id="I170:9007;143:27016" data-name="路径 297">
+        <div className="absolute inset-[-4.17%_-8.33%]">
+          <img alt="" className="block max-w-none size-full" src={img297} />
+        </div>
+      </div>
+      <div className="-translate-y-1/2 absolute aspect-[6/12] left-[86.25%] right-[10%] top-[calc(50%+8.5px)]" data-node-id="I170:9007;143:27017" data-name="路径 298">
+        <div className="absolute inset-[-4.17%_-8.33%]">
+          <img alt="" className="block max-w-none size-full" src={img297} />
+        </div>
+      </div>
+      <div className="absolute inset-[20.51%_77.5%_60.9%_12.5%]" data-node-id="I170:9007;143:27018" data-name="icon-handshake">
+        <div className="absolute inset-[-4.14%_-3.75%]">
+          <img alt="" className="block max-w-none size-full" src={imgIconHandshake} />
+        </div>
+      </div>
+      <p className="[word-break:break-word] absolute bottom-[15.38%] font-['Inter:Regular'] font-normal leading-[normal] left-1/4 not-italic right-[35%] text-[#e0e0e0] text-[8px] top-[58.97%] whitespace-nowrap" data-node-id="I170:9007;143:27024">
+        快捷按键
+      </p>
+      <p className="[word-break:break-word] absolute bottom-[58.97%] font-['Inter:Regular'] font-normal leading-[normal] left-1/4 not-italic right-[35%] text-[#e0e0e0] text-[8px] top-[15.38%] whitespace-nowrap" data-node-id="I170:9007;143:27025">
+        帮助教程
+      </p>
+      <div className="absolute inset-[61.54%_77.5%_20%_12.5%]" data-node-id="I170:9007;143:27026" data-name="icon-briefcase-business">
+        <div className="absolute inset-[-4.17%_-3.75%]">
+          <img alt="" className="block max-w-none size-full" src={imgIconBriefcaseBusiness} />
+        </div>
+      </div>
+    </div>
+  );
+}

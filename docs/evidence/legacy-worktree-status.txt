@@ -1,0 +1,251 @@
+ M .gitignore
+ M AGENTS.md
+ D assets/icons/README.md
+ M design-qa.md
+ M docs/00-BUILD-GUIDE.md
+ M docs/ARCHITECTURE-STANDARDS.md
+ M docs/LEGACY-REPO-INTEGRATION.md
+ M docs/M1-MANUAL-GATE-CHECKLIST.md
+ M docs/PROJECT-2.0-MASTER-PLAN.md
+ M docs/QUALITY-GATE.md
+ M docs/UI-UX-SPECIFICATION.md
+ M docs/superpowers/plans/2026-08-31-project-2.0-governance-and-m1-gates.md
+ M index.html
+ M package-lock.json
+ M package.json
+ M scripts/windows/desktop-release.mjs
+ M server/index.mjs
+ M server/proxyPolicy.mjs
+ M src-tauri/Cargo.lock
+ M src-tauri/Cargo.toml
+ M src-tauri/icons/icon.icns
+ M src-tauri/src/main.rs
+ M src/App.tsx
+ M src/bootstrap.ts
+ M src/comfyui/ComfyUIClient.ts
+ M src/components/Director3DStage.tsx
+ M src/components/ErrorBoundary.tsx
+ M src/components/agent/AgentPanel.tsx
+ M src/components/canvas/CanvasBottomToolbar.tsx
+ M src/components/canvas/CanvasConnectionLine.tsx
+ M src/components/canvas/CanvasCreateMenu.tsx
+ M src/components/canvas/CanvasMinimap.tsx
+ M src/components/canvas/CanvasSidebar.tsx
+ M src/components/canvas/NodeInspector.tsx
+ M src/components/canvas/nodes/AudioNodeContent.tsx
+ M src/components/canvas/nodes/ComfyUINodeContent.tsx
+ M src/components/canvas/nodes/DefaultNodeContent.tsx
+ M src/components/canvas/nodes/Director3DNodeContent.tsx
+ M src/components/canvas/nodes/ImageNodeContent.tsx
+ M src/components/canvas/nodes/PromptNodeContent.tsx
+ M src/components/canvas/nodes/TextNodeContent.tsx
+ M src/components/canvas/nodes/VideoNodeContent.tsx
+ M src/components/command/CommandPalette.tsx
+ M src/components/dock/Composer.tsx
+ M src/components/dock/InspectTab.tsx
+ M src/components/dock/IntelligenceDock.tsx
+ M src/components/dock/RunTab.tsx
+ M src/components/layout/Sidebar.tsx
+ M src/components/layout/StatusBar.tsx
+ M src/components/layout/StatusStrip.tsx
+ M src/components/task/TaskCenter.tsx
+ M src/components/workbench/BrandMark.tsx
+ M src/components/workbench/ComfyRouteNotice.tsx
+ M src/components/workbench/ConversationComposer.tsx
+ M src/components/workbench/ConversationPanel.tsx
+ M src/components/workbench/ConversationWelcome.tsx
+ M src/components/workbench/GlobalSidebar.tsx
+ M src/components/workbench/LayoutModeMenu.tsx
+ M src/components/workbench/LegacyWorkbenchShell.tsx
+ M src/components/workbench/PanelResizeHandle.tsx
+ M src/components/workbench/ProjectList.tsx
+ M src/components/workbench/WorkbenchMenuParts.tsx
+ M src/components/workbench/WorkbenchOverlayHost.tsx
+ M src/components/workbench/WorkbenchShell.tsx
+ M src/components/workbench/workbench.types.ts
+ M src/core/canvas/CanvasEngine.ts
+ M src/core/canvas/NodeRegistry.ts
+ M src/core/canvas/commandKernel.ts
+ M src/core/canvas/exportCanvas.ts
+ M src/core/canvas/historyPolicy.ts
+ M src/core/canvas/pinchGesture.ts
+ M src/core/canvas/viewportCulling.ts
+ M src/core/capabilities/matrix.ts
+ M src/core/code/syntaxHighlight.ts
+ M src/core/comfyui/comfyuiCatalog.ts
+ M src/core/comfyui/comfyuiDiscovery.ts
+ M src/core/config/featureFlags.ts
+ M src/core/contracts/dto/execution-authority.ts
+ M src/core/contracts/dto/task-projection.ts
+ M src/core/contracts/dto/workspace-canvas.ts
+ M src/core/contracts/generation/schema.ts
+ M src/core/contracts/providers/schema.ts
+ M src/core/contracts/providers/types.ts
+ M src/core/creation/creationMenu.ts
+ M src/core/creation/creationNodeRuntime.ts
+ M src/core/events/EventBus.ts
+ M src/core/input/composerInput.ts
+ M src/core/input/conversationActions.ts
+ M src/core/layout/sidebarWidth.ts
+ M src/core/layout/workbenchLayout.ts
+ M src/core/logging/diagnosticLogger.ts
+ M src/core/motion/tokens.ts
+ M src/core/navigation/modules.ts
+ M src/core/navigation/routes.ts
+ M src/core/navigation/workspaceMemory.ts
+ M src/core/navigation/workspaceRouteRecovery.ts
+ M src/core/state/createStore.ts
+ M src/core/storage/StorageAdapter.ts
+ M src/core/types/agent.ts
+ M src/core/types/canvas.ts
+ M src/core/types/generation.ts
+ M src/core/types/platform.ts
+ M src/core/types/project.ts
+ M src/core/utils/debounce.ts
+ M src/core/utils/geometry.ts
+ M src/core/utils/id.ts
+ M src/core/workflow/WorkflowRunner.ts
+ M src/hooks/useAppRoute.ts
+ M src/hooks/usePrefersReducedMotion.ts
+ M src/hooks/useResponsive.ts
+ M src/main.tsx
+ M src/modules/agent/AgentRuntime.ts
+ M src/modules/agent/MCPClient.ts
+ M src/modules/agent/ToolRegistry.ts
+ M src/modules/agent/builtInTools.ts
+ M src/modules/api/ApiClient.ts
+ M src/modules/api/projectSync.ts
+ M src/modules/asset/AssetService.ts
+ M src/modules/comfyui/ComfyUILocalService.ts
+ M src/modules/comfyui/ComfyUIService.ts
+ M src/modules/director3d/Director3DService.ts
+ M src/modules/generation/BaseProvider.ts
+ M src/modules/generation/GenerationPanel.tsx
+ M src/modules/generation/OpenAICompatibleProvider.ts
+ M src/modules/generation/TaskQueue.ts
+ M src/modules/generation/taskProjection.ts
+ M src/modules/generation/useGenerationStore.ts
+ M src/modules/mobile/useResponsive.ts
+ M src/modules/project/ProjectService.ts
+ M src/platform/desktop/DesktopAdapter.ts
+ M src/platform/web/WebAdapter.ts
+ M src/settings/SettingsManager.ts
+ M src/stores/assetStore.ts
+ M src/stores/conversationStore.ts
+ M src/stores/skillStore.ts
+ M src/stores/useCanvasStore.ts
+ M src/stores/useConfigStore.ts
+ M src/stores/useTaskStore.ts
+ M src/stores/useThemeStore.ts
+ M src/stores/useWorkbenchUiStore.ts
+ M src/views/AssetsView.tsx
+ M src/views/ClipStudioView.tsx
+ M src/views/CodeEditorView.tsx
+ M src/views/ComfyUIView.tsx
+ M src/views/Director3DView.tsx
+ M src/views/GenerationView.tsx
+ M src/views/MCPView.tsx
+ M src/views/ProjectsView.tsx
+ M src/views/SettingsView.tsx
+ M src/views/SkillView.tsx
+ M tests/agent-tools.test.mjs
+ M tests/canvas-command.test.mjs
+ M tests/canvas/node-registry-m3.test.mjs
+ M tests/capabilities/matrix.test.mjs
+ M tests/code/syntax-highlight.test.mjs
+ M tests/comfyui/discovery.test.mjs
+ M tests/config-key-redaction.test.mts
+ M tests/config/feature-flags.test.mjs
+ M tests/config/tauri-dev-url.test.mjs
+ M tests/config/workbench-ui-store.test.mjs
+ M tests/contracts/generation-schema.test.mjs
+ M tests/contracts/providers.test.mjs
+ M tests/contracts/task-projection.test.mjs
+ M tests/contracts/workspace-canvas.test.mjs
+ M tests/creation/creation-node-runtime.test.mjs
+ M tests/generation/task-projection.test.mjs
+ M tests/generation/task-queue-handle.test.mjs
+ M tests/history-policy.test.mjs
+ M tests/input/composer-input.test.mjs
+ M tests/layout/sidebar-width.test.mjs
+ M tests/layout/workbench-layout.test.mjs
+ M tests/logging/diagnostic-logger.test.mjs
+ M tests/navigation/workspace-memory.test.mjs
+ M tests/pinch-gesture.test.mjs
+ M tests/pointer-events.test.mjs
+ M tests/project-file.test.mjs
+ M tests/proxy-policy.test.mjs
+ M tests/release/brand-assets.test.mjs
+ M tests/release/desktop-release.test.mjs
+ M tests/router.test.mjs
+ M tests/server-origin.test.mjs
+ M tests/settings-migration/migration-model.test.tsx
+ M tests/viewport-culling.test.mjs
+?? .github/workflows/quality.yml
+?? docs/INTERRUPTED-WORKTREE-AUDIT-2026-09-01.md
+?? docs/coordination/restart-2026-09-05/plate-backup.partial.json
+?? docs/qa/recording-fidelity-2026-09-01/README.md
+?? docs/qa/settings-2026-09-01/01-appearance-desktop.png
+?? docs/qa/settings-2026-09-01/02-provider-desktop.png
+?? docs/qa/settings-2026-09-01/03-provider-narrow.png
+?? docs/qa/settings-2026-09-01/04-about-narrow.png
+?? docs/qa/settings-2026-09-01/README.md
+?? docs/superpowers/plans/2026-09-01-project-governance-and-parallel-coordination.md
+?? docs/superpowers/plans/2026-09-02-r6-004-recovery-copy.md
+?? docs/superpowers/specs/2026-09-01-project-2.0-governance-and-parallel-coordination-design.md
+?? docs/superpowers/specs/2026-09-02-r6-004-recovery-copy-design.md
+?? eslint.config.js
+?? scripts/check-diagnostics.mjs
+?? scripts/coordination/heartbeat-task.mjs
+?? scripts/coordination/release-task.mjs
+?? server/diagnosticLogger.mjs
+?? server/sanitizeFilename.mjs
+?? src/components/agent/AgentMessageList.tsx
+?? src/components/agent/AgentPanelComposer.tsx
+?? src/components/agent/AgentPanelHeader.tsx
+?? src/components/agent/AgentSessionTabs.tsx
+?? src/components/agent/agentPanelModel.ts
+?? src/components/agent/agentPanelTypes.ts
+?? src/components/agent/useAgentPanelSessions.ts
+?? src/components/agent/useAgentPanelSubmission.ts
+?? src/components/canvas/CanvasBackgroundLayer.tsx
+?? src/components/canvas/CanvasCreateMenuRow.tsx
+?? src/components/canvas/CanvasEmptyState.tsx
+?? src/components/canvas/CanvasSelectionBox.tsx
+?? src/components/canvas/canvasSurfaceModel.ts
+?? src/components/canvas/canvasViewControllerModel.ts
+?? src/components/canvas/downloadCanvasPNG.ts
+?? src/components/canvas/useCanvasEngineLifecycle.ts
+?? src/components/canvas/useCanvasGlobalCommands.ts
+?? src/components/canvas/useCanvasNodeInteractions.ts
+?? src/components/canvas/useCanvasViewController.ts
+?? src/components/settings/AboutSettingsPanel.tsx
+?? src/components/settings/AgentSettingsPanel.tsx
+?? src/components/settings/AppearanceSettingsPanel.tsx
+?? src/components/settings/DiagnosticExportPanel.tsx
+?? src/components/settings/ProviderForm.tsx
+?? src/components/settings/ProviderList.tsx
+?? src/components/settings/ProviderSettingsPanel.tsx
+?? src/components/settings/SettingsNavigation.tsx
+?? src/components/settings/settingsModel.ts
+?? src/core/canvas/canvasBackgroundPreference.ts
+?? src/core/canvas/createMenuPlacement.ts
+?? src/core/canvas/nodePlacement.ts
+?? src/core/canvas/workspaceRouteSync.ts
+?? src/modules/credentials/CredentialService.ts
+?? src/styles/settings.css
+?? tests/agent/permission-gate.test.mjs
+?? tests/canvas/compact-surface-inset.test.mjs
+?? tests/canvas/create-menu-placement.test.mjs
+?? tests/canvas/history-project-switch.test.mjs
+?? tests/canvas/update-project-data.test.mjs
+?? tests/canvas/workspace-route-sync.test.mjs
+?? tests/components/agent-panel.test.tsx
+?? tests/components/settings-view.a11y.test.tsx
+?? tests/credentials/credential-service.test.mjs
+?? tests/generation/provider-proxy-fallback.test.mts
+?? tests/generation/task-cancel.test.mjs
+?? tests/logging/server-diagnostic-logger.test.mjs
+?? tests/release/brand-identity.test.tsx
+?? tests/sanitize-filename.test.mjs
+?? tests/store-persist-failure.test.mts

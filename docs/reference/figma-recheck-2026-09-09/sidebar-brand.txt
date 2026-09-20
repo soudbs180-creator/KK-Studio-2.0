@@ -1,0 +1,59 @@
+const imgProperty1 = "https://www.figma.com/api/mcp/asset/535700ee-e4a5-4c60-9dcf-181c96e2e0e3.svg";
+const imgProperty2 = "https://www.figma.com/api/mcp/asset/d740686f-9f72-423a-899d-bd26469fc349.svg";
+const imgGroup = "https://www.figma.com/api/mcp/asset/cf1b85be-67d7-4ffb-af57-127027b111ca.svg";
+const imgGroup1 = "https://www.figma.com/api/mcp/asset/ece73b3a-85cc-44a1-ac43-dd748140bf9b.svg";
+const imgIconSearch = "https://www.figma.com/api/mcp/asset/5833cd48-1e15-4271-be32-0c49e7d0767c.svg";
+
+type ComponentProps = {
+  className?: string;
+  property1?: "左打开" | "左关闭";
+};
+
+function Component({ className, property1 = "左关闭" }: ComponentProps) {
+  const is = property1 === "左关闭";
+  return (
+    <button className={className || "block relative size-[18px]"} id={is ? "node-121_17649" : "node-121_17650"}>
+      <div className="absolute inset-[-9.72%]">
+        <img alt="" className="block max-w-none size-full" src={is ? imgProperty2 : imgProperty1} />
+      </div>
+    </button>
+  );
+}
+
+export default function App() {
+  return (
+    <div className="contents relative size-full" data-node-id="82:15737" data-name="app名字和功能键">
+      <div className="absolute contents left-[19px] top-[67px]" data-node-id="82:15736">
+        <p className="[word-break:break-word] absolute font-['Inter:Bold'] font-bold inset-[6.57%_89.58%_91.3%_2.66%] leading-[normal] not-italic text-[#dadada] text-[16px]" data-node-id="1:7223">
+          KK Studio
+        </p>
+        <div className="absolute left-[19px] overflow-clip size-[26px] top-[67px]" data-node-id="4:59986" data-name="kk-studio 1">
+          <div className="absolute contents inset-0" data-node-id="4:59994" data-name="Clip path group">
+            <div className="absolute inset-[0_0_-32.5%_0] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-size-[26px_26px]" data-node-id="4:59987" style={{ maskImage: `url("${imgGroup}")` }} data-name="Group">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup1} />
+            </div>
+          </div>
+          <div className="absolute border-[#707070] border-[0.2px] border-solid left-0 rounded-[7.5px] size-[26px] top-0" data-node-id="16:59995" />
+        </div>
+      </div>
+      <Component className="absolute flex items-center justify-center left-[248px] size-[18px] top-[71px]" property1="左打开" />
+      <div className="absolute inset-[6.48%_88.23%_91.67%_10.73%]" data-node-id="21:119297" data-name="icon-search">
+        <div className="absolute inset-[-4.38%_-4.37%_-4.38%_-4.38%]">
+          <img alt="" className="block max-w-none size-full" src={imgIconSearch} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

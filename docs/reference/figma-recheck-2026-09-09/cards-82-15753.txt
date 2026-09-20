@@ -1,0 +1,35 @@
+const imgGroup9 = "https://www.figma.com/api/mcp/asset/ab9d2b94-6a48-4525-90f3-8d222d7c7b47.svg";
+const imgGroup5 = "https://www.figma.com/api/mcp/asset/a5b2eae7-7c15-480f-929b-230c4abda7dd.svg";
+
+export default function Component() {
+  return (
+    <div className="contents relative size-full" data-node-id="82:15753" data-name="视频模块">
+      <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid h-[208px] left-[997px] rounded-[30px] top-[459px] w-[370px]" data-node-id="19:74704" />
+      <div className="absolute inset-[49.54%_36.98%_45.28%_60.1%]" data-node-id="23:127767">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup9} />
+      </div>
+      <div className="absolute contents left-[998px] top-[443px]" data-node-id="82:15752">
+        <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal leading-[normal] left-[1017px] not-italic text-[10px] text-white top-[443px] whitespace-nowrap" data-node-id="23:127614">
+          视频
+        </p>
+        <div className="absolute inset-[41.11%_47.24%_57.87%_51.98%]" data-node-id="23:127618">
+          <div className="absolute inset-[-2.27%_-1.67%]">
+            <img alt="" className="block max-w-none size-full" src={imgGroup5} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

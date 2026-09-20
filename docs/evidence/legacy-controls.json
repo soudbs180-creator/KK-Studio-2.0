@@ -1,0 +1,3469 @@
+{
+  "capturedAt": "2026-09-05T10:01:29.564Z",
+  "legacyRoot": "D:/kk-studio",
+  "head": "0be7483c668ad5fd0f407b556fe26a85e2e36ba1",
+  "evidence": "Static TSX declarations, including legacy and conditional UI. Not runtime button counts or functionality verification.",
+  "filesScanned": 78,
+  "declarations": [
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 420,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{onChange}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 456,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => onChange(Number(e.target.value))}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 478,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => onChange(Number(e.target.value))}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 521,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": "{(e) =>\n                onChange({ ...value, [axis]: Number(e.target.value) })\n              }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 579,
+      "tag": "button",
+      "label": "导演视角",
+      "text": "导演视角",
+      "handler": "{() => setViewMode(\"director\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 594,
+      "tag": "button",
+      "label": "机位视角",
+      "text": "机位视角",
+      "handler": "{() => setViewMode(\"camera\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 615,
+      "tag": "button",
+      "label": "\"竖屏\"",
+      "text": "",
+      "handler": "{() => setAspectRatio(\"portrait\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 628,
+      "tag": "button",
+      "label": "\"横屏\"",
+      "text": "",
+      "handler": "{() => setAspectRatio(\"landscape\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 651,
+      "tag": "button",
+      "label": "\"撤销\"",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 658,
+      "tag": "button",
+      "label": "\"重做\"",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 675,
+      "tag": "button",
+      "label": "\"切换面板\"",
+      "text": "",
+      "handler": "{() => setShowPanels(!showPanels)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 691,
+      "tag": "button",
+      "label": "\"返回 (Ctrl+W)\"",
+      "text": "",
+      "handler": "{onClose}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 744,
+      "tag": "input",
+      "label": "\"请输入搜索内容\"",
+      "text": "",
+      "handler": "{(e) => setSearchQuery(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 781,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 789,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setSelectedObject(obj.id)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 834,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 842,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setSelectedObject(obj.id)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 895,
+      "tag": "div",
+      "label": "\"重置视角\"",
+      "text": "",
+      "handler": "{resetView}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 959,
+      "tag": "button",
+      "label": "重置视角",
+      "text": "重置视角",
+      "handler": "{resetView}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 1061,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => setSkyColor(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 1097,
+      "tag": "select",
+      "label": "",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 1123,
+      "tag": "button",
+      "label": "全景",
+      "text": "全景",
+      "handler": "{() => setBgMode(\"panorama\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 1144,
+      "tag": "button",
+      "label": "平面",
+      "text": "平面",
+      "handler": "{() => setBgMode(\"plane\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 1234,
+      "tag": "button",
+      "label": "\"选择工具\"",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 1246,
+      "tag": "button",
+      "label": "\"添加物体\"",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 1258,
+      "tag": "button",
+      "label": "\"720视角\"",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 1270,
+      "tag": "button",
+      "label": "\"添加机位\"",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 1282,
+      "tag": "button",
+      "label": "\"曲线工具\"",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 1294,
+      "tag": "button",
+      "label": "\"截图\"",
+      "text": "",
+      "handler": "{handleScreenshot}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/Director3DStage.tsx",
+      "line": 1315,
+      "tag": "button",
+      "label": "\"全屏切换\"",
+      "text": "",
+      "handler": "{() => setShowPanels(!showPanels)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/ErrorBoundary.tsx",
+      "line": 93,
+      "tag": "button",
+      "label": "重新加载",
+      "text": "重新加载",
+      "handler": "{() => window.location.reload()}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/ErrorBoundary.tsx",
+      "line": 108,
+      "tag": "button",
+      "label": "忽略错误继续",
+      "text": "忽略错误继续",
+      "handler": "{() =>\n              this.setState({ hasError: false, error: null, errorInfo: null })\n            }",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/agent/AgentMessageList.tsx",
+      "line": 175,
+      "tag": "button",
+      "label": "\"复制功能尚未接入，暂不可用\"",
+      "text": "",
+      "handler": null,
+      "disabled": "true",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/agent/AgentMessageList.tsx",
+      "line": 183,
+      "tag": "button",
+      "label": "\"重新生成功能尚未接入，暂不可用\"",
+      "text": "",
+      "handler": null,
+      "disabled": "true",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/agent/AgentPanelComposer.tsx",
+      "line": 46,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => void onSend(action.prompt)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/agent/AgentPanelComposer.tsx",
+      "line": 81,
+      "tag": "button",
+      "label": "\"附件功能尚未接入，暂不可用\"",
+      "text": "",
+      "handler": null,
+      "disabled": "true",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/agent/AgentPanelComposer.tsx",
+      "line": 89,
+      "tag": "textarea",
+      "label": "\"输入消息，或描述你想要在画布上做什么...\"",
+      "text": "",
+      "handler": "{(event) => onInputChange(event.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/agent/AgentPanelComposer.tsx",
+      "line": 120,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => void onSend()}",
+      "disabled": "{!input.trim() || isSending}",
+      "dynamic": true
+    },
+    {
+      "file": "src/components/agent/AgentPanelHeader.tsx",
+      "line": 61,
+      "tag": "button",
+      "label": "{onOpenSettings ? \"设置\" : \"设置入口在当前投影中不可用\"}",
+      "text": "",
+      "handler": "{onOpenSettings}",
+      "disabled": "{!onOpenSettings}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/agent/AgentPanelHeader.tsx",
+      "line": 69,
+      "tag": "button",
+      "label": "\"新建对话\"",
+      "text": "",
+      "handler": "{onNewSession}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/agent/AgentPanelHeader.tsx",
+      "line": 77,
+      "tag": "button",
+      "label": "\"折叠 AI 助手面板\"",
+      "text": "",
+      "handler": "{onToggle}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/agent/AgentSessionTabs.tsx",
+      "line": 36,
+      "tag": "button",
+      "label": "{session.title}",
+      "text": "",
+      "handler": "{() => onSwitch(session.id)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/agent/AgentSessionTabs.tsx",
+      "line": 64,
+      "tag": "button",
+      "label": "\"新建会话\"",
+      "text": "新对话",
+      "handler": "{onCreate}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasBottomToolbar.tsx",
+      "line": 121,
+      "tag": "button",
+      "label": "{title}",
+      "text": "",
+      "handler": "{onClick}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasBottomToolbar.tsx",
+      "line": 136,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setShowHelp(false)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/CanvasBottomToolbar.tsx",
+      "line": 140,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{(event) => event.stopPropagation()}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/CanvasBottomToolbar.tsx",
+      "line": 151,
+      "tag": "button",
+      "label": "\"关闭帮助\"",
+      "text": "",
+      "handler": "{() => setShowHelp(false)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasConnectionLine.tsx",
+      "line": 53,
+      "tag": "g",
+      "label": "",
+      "text": "",
+      "handler": "{onDelete}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/CanvasConnectionLine.tsx",
+      "line": 121,
+      "tag": "g",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => {\n          e.stopPropagation();\n          onInsertNode();\n        }}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/CanvasContextMenu.tsx",
+      "line": 188,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => {\n              if (\"disabled\" in item && item.disabled) return;\n              item.action();\n              onClose();\n            }}",
+      "disabled": "{\"disabled\" in item ? item.disabled : false}",
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/CanvasCreateMenu.tsx",
+      "line": 72,
+      "tag": "CanvasCreateMenuRow",
+      "label": "{entry.title}",
+      "text": "",
+      "handler": "{() => onSelect(entry.nodeKind)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasCreateMenu.tsx",
+      "line": 84,
+      "tag": "CanvasCreateMenuRow",
+      "label": "{entry.title}",
+      "text": "",
+      "handler": "{() => setComfyExpanded((value) => !value)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasCreateMenu.tsx",
+      "line": 96,
+      "tag": "CanvasCreateMenuRow",
+      "label": "\"探索更多\"",
+      "text": "",
+      "handler": "{() => {\n              eventBus.emit(\"app:navigate\", {\n                route: { kind: \"comfy-library\" },\n              });\n            }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasCreateMenu.tsx",
+      "line": 107,
+      "tag": "CanvasCreateMenuRow",
+      "label": "\"新建工作流\"",
+      "text": "",
+      "handler": "{() => {\n              eventBus.emit(\"app:navigate\", {\n                route: { kind: \"comfy-editor\", workflowId: \"new\" },\n              });\n            }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasCreateMenu.tsx",
+      "line": 119,
+      "tag": "CanvasCreateMenuRow",
+      "label": "{workflow.name}",
+      "text": "",
+      "handler": "{() =>\n                onSelect(\"comfyui\", {\n                  workflowId: workflow.workflowId,\n                  workflowName: workflow.name,\n                })\n              }",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasCreateMenu.tsx",
+      "line": 226,
+      "tag": "CanvasCreateMenuRow",
+      "label": "\"其他节点\"",
+      "text": "",
+      "handler": "{() => setOtherExpanded((value) => !value)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasCreateMenu.tsx",
+      "line": 243,
+      "tag": "CanvasCreateMenuRow",
+      "label": "{definition.title}",
+      "text": "",
+      "handler": "{() => onSelect(definition.type)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasCreateMenuRow.tsx",
+      "line": 39,
+      "tag": "button",
+      "label": "{description ? `${title}：${description}` : title}",
+      "text": "",
+      "handler": "{onClick}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasEmptyState.tsx",
+      "line": 22,
+      "tag": "button",
+      "label": "创建新项目",
+      "text": "创建新项目",
+      "handler": "{onCreateProject}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasMinimap.tsx",
+      "line": 65,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{handleClick}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/CanvasSettings.tsx",
+      "line": 76,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{onClose}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/CanvasSettings.tsx",
+      "line": 114,
+      "tag": "button",
+      "label": "\"关闭\"",
+      "text": "✕",
+      "handler": "{onClose}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasSettings.tsx",
+      "line": 141,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setBgStyle(id)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/CanvasSettings.tsx",
+      "line": 189,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => onBackgroundColorChange(id)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/CanvasSettings.tsx",
+      "line": 227,
+      "tag": "button",
+      "label": "其他颜色",
+      "text": "其他颜色",
+      "handler": "{() => setShowAllColors(true)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasSidebar.tsx",
+      "line": 50,
+      "tag": "button",
+      "label": "画布",
+      "text": "画布",
+      "handler": "{() => setTab(\"canvas\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasSidebar.tsx",
+      "line": 69,
+      "tag": "button",
+      "label": "资产",
+      "text": "资产",
+      "handler": "{() => setTab(\"assets\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasSidebar.tsx",
+      "line": 88,
+      "tag": "button",
+      "label": "\"关闭画布侧栏\"",
+      "text": "",
+      "handler": "{onClose}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasSidebar.tsx",
+      "line": 126,
+      "tag": "button",
+      "label": "{node.title ?? node.type}",
+      "text": "",
+      "handler": "{() => selectNode(node.id)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasToolbar.tsx",
+      "line": 37,
+      "tag": "button",
+      "label": "\"缩小\"",
+      "text": "",
+      "handler": "{onZoomOut}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasToolbar.tsx",
+      "line": 41,
+      "tag": "button",
+      "label": "\"放大\"",
+      "text": "",
+      "handler": "{onZoomIn}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasToolbar.tsx",
+      "line": 44,
+      "tag": "button",
+      "label": "\"适应视图\"",
+      "text": "",
+      "handler": "{onFitView}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasToolbar.tsx",
+      "line": 51,
+      "tag": "button",
+      "label": "\"画布设置\"",
+      "text": "",
+      "handler": "{onOpenCanvasSettings}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/CanvasToolbar.tsx",
+      "line": 56,
+      "tag": "button",
+      "label": "\"小地图\"",
+      "text": "",
+      "handler": "{onToggleMinimap}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/NodeInspector.tsx",
+      "line": 193,
+      "tag": "button",
+      "label": "\"关闭\"",
+      "text": "",
+      "handler": "{onClose}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/NodeInspector.tsx",
+      "line": 212,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => saveTitle(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/NodeInspector.tsx",
+      "line": 234,
+      "tag": "textarea",
+      "label": "{\n            isGenerateable || node.type === \"prompt\"\n              ? \"描述你想生成的内容...\"\n              : \"节点内容...\"\n          }",
+      "text": "",
+      "handler": "{(e) => saveContent(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/NodeInspector.tsx",
+      "line": 274,
+      "tag": "button",
+      "label": "{\n              !node.metadata?.workflowId\n                ? \"先在添加菜单选择一个 ComfyUI 工作流\"\n                : \"运行当前画布工作流\"\n            }",
+      "text": "运行工作流",
+      "handler": "{() =>\n              eventBus.emit(\"canvas:run-workflow-request\", undefined)\n            }",
+      "disabled": "{!node.metadata?.workflowId}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/NodeInspector.tsx",
+      "line": 296,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{handleGenerate}",
+      "disabled": "{status === \"running\"}",
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/NodeInspector.tsx",
+      "line": 321,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": "{handleUpload}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/NodeInspector.tsx",
+      "line": 411,
+      "tag": "button",
+      "label": "删除节点",
+      "text": "删除节点",
+      "handler": "{handleDelete}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/nodes/ComfyUINodeContent.tsx",
+      "line": 74,
+      "tag": "button",
+      "label": "\"运行工作流（写入当前会话结果）\"",
+      "text": "运行",
+      "handler": "{handleRun}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 170,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => {\n                  onParameterChange(\"workflowId\", wf.id);\n                  onClose();\n                }}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 240,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => {\n                    onParameterChange(opt.key, val);\n                    onClose();\n                  }}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 280,
+      "tag": "button",
+      "label": "s",
+      "text": "s",
+      "handler": "{() => {\n                    onParameterChange(\"durationSeconds\", s);\n                    onClose();\n                  }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 319,
+      "tag": "button",
+      "label": "×",
+      "text": "×",
+      "handler": "{() => {\n                  onParameterChange(\"count\", c);\n                  onClose();\n                }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 699,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": "{handleUpload}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 781,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => persistDraft(fill)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 803,
+      "tag": "button",
+      "label": "\"上传图片\"",
+      "text": "",
+      "handler": "{() => fileInputRef.current?.click()}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 858,
+      "tag": "button",
+      "label": "\"点击填入视频提示词\"",
+      "text": "尝试",
+      "handler": "{() => persistDraft(\"请用 \" + (displayModel || \"MiniMax-H3\") + \" 生成视频：\\n\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 888,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => persistDraft(fill)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 973,
+      "tag": "button",
+      "label": "\"上传参考文件\"",
+      "text": "",
+      "handler": "{() => fileInputRef.current?.click()}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 997,
+      "tag": "textarea",
+      "label": "{`${definition.title}提示词`}",
+      "text": "",
+      "handler": "{(event) => {\n                setPrompt(event.target.value);\n                // 用户重新编辑时清除 error/cancelled 状态，回到干净输入态\n                if (state === \"error\" || state === \"cancelled\") {\n                  setCreationState(\"idle\");\n                }\n              }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 1100,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() =>\n              setActivePanel(activePanel === \"params\" ? null : \"params\")\n            }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 1125,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() =>\n              setActivePanel(activePanel === \"params\" ? null : \"params\")\n            }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 1201,
+      "tag": "button",
+      "label": "\"取消当前生成任务\"",
+      "text": "取消",
+      "handler": "{handleCancel}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/nodes/CreationNodeControls.tsx",
+      "line": 1222,
+      "tag": "button",
+      "label": "{\n              state === \"offline\"\n                ? \"恢复网络后才能发送\"\n                : state === \"loading\"\n                  ? \"任务进行中，请取消或等待完成\"\n                  : undefined\n            }",
+      "text": "",
+      "handler": "{handleSubmit}",
+      "disabled": "{state === \"loading\" || state === \"offline\"}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/canvas/nodes/PromptNodeContent.tsx",
+      "line": 77,
+      "tag": "textarea",
+      "label": "\"输入提示词，例如：未来城市夜景，霓虹灯，电影感...\"",
+      "text": "",
+      "handler": "{(e) => setText(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/nodes/PromptNodeContent.tsx",
+      "line": 206,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{handleGenerate}",
+      "disabled": "{status === \"running\"}",
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/nodes/TextNodeContent.tsx",
+      "line": 51,
+      "tag": "textarea",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => setText(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/canvas/nodes/TextNodeContent.tsx",
+      "line": 112,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => {\n                e.stopPropagation();\n                applyQuick(fill);\n              }}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/command/CommandPalette.tsx",
+      "line": 225,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setOpen(false)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/command/CommandPalette.tsx",
+      "line": 238,
+      "tag": "div",
+      "label": "\"命令面板\"",
+      "text": "",
+      "handler": "{(e) => e.stopPropagation()}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/command/CommandPalette.tsx",
+      "line": 261,
+      "tag": "input",
+      "label": "\"输入命令或工具名…（↑↓ 选择 · Enter 执行 · Esc 关闭）\"",
+      "text": "",
+      "handler": "{(e) => setQuery(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/command/CommandPalette.tsx",
+      "line": 301,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => runCommand(cmd)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/dock/Composer.tsx",
+      "line": 105,
+      "tag": "textarea",
+      "label": "\"描述你要生成的内容，或向 AI 提问…\"",
+      "text": "",
+      "handler": "{(e) => setText(e.target.value)}",
+      "disabled": "{busy}",
+      "dynamic": true
+    },
+    {
+      "file": "src/components/dock/Composer.tsx",
+      "line": 142,
+      "tag": "button",
+      "label": "\"配置 AI 模型\"",
+      "text": "",
+      "handler": "{() =>\n            eventBus.emit(\"app:navigate\", {\n              route: moduleIdToRoute(\"settings\"),\n            })\n          }",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/dock/Composer.tsx",
+      "line": 167,
+      "tag": "button",
+      "label": "\"Skill 路由待接入（R2）\"",
+      "text": "Skill",
+      "handler": null,
+      "disabled": "true",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/dock/Composer.tsx",
+      "line": 182,
+      "tag": "button",
+      "label": "自动",
+      "text": "自动",
+      "handler": "{() => setText((t) => (t ? t : \"\"))}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/dock/Composer.tsx",
+      "line": 197,
+      "tag": "button",
+      "label": "{sendTitle}",
+      "text": "",
+      "handler": "{submit}",
+      "disabled": "{!text.trim() || busy}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/dock/IntelligenceDock.tsx",
+      "line": 116,
+      "tag": "button",
+      "label": "\"新建对话\"",
+      "text": "新建对话",
+      "handler": "{() => setMode(\"new\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/dock/IntelligenceDock.tsx",
+      "line": 138,
+      "tag": "button",
+      "label": "\"关闭面板\"",
+      "text": "",
+      "handler": "{handleClose}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/dock/IntelligenceDock.tsx",
+      "line": 189,
+      "tag": "button",
+      "label": "\"新建对话\"",
+      "text": "",
+      "handler": "{() => setDraft(\"\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/dock/IntelligenceDock.tsx",
+      "line": 211,
+      "tag": "button",
+      "label": "\"关闭面板\"",
+      "text": "",
+      "handler": "{handleClose}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/dock/IntelligenceDock.tsx",
+      "line": 274,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setActiveTab(id)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/dock/IntelligenceDock.tsx",
+      "line": 312,
+      "tag": "button",
+      "label": "{tpl.prompt}",
+      "text": "",
+      "handler": "{() => applyTemplate(tpl.prompt)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/dock/IntelligenceDock.tsx",
+      "line": 393,
+      "tag": "button",
+      "label": "{skill.description}",
+      "text": "",
+      "handler": "{() =>\n                    applyTemplate(\n                      `使用「${skill.name}」技能：${skill.useCase || skill.description}`,\n                    )\n                  }",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/dock/IntelligenceDock.tsx",
+      "line": 495,
+      "tag": "textarea",
+      "label": "\"描述你要生成的内容，或查看使用指南 ↗\"",
+      "text": "",
+      "handler": "{(e) => setDraft(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/dock/IntelligenceDock.tsx",
+      "line": 528,
+      "tag": "button",
+      "label": "\"配置模型（打开设置）\"",
+      "text": "",
+      "handler": "{() => onOpenSettings?.()}",
+      "disabled": "{!onOpenSettings}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/dock/IntelligenceDock.tsx",
+      "line": 554,
+      "tag": "button",
+      "label": "\"自动模式：根据内容自动选择工具与参数\"",
+      "text": "",
+      "handler": "{() => setAutoMode(!autoMode)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/dock/IntelligenceDock.tsx",
+      "line": 578,
+      "tag": "button",
+      "label": "\"发送\"",
+      "text": "",
+      "handler": "{() => submit(draft)}",
+      "disabled": "{!draft.trim()}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/Sidebar.tsx",
+      "line": 141,
+      "tag": "button",
+      "label": "{collapsed ? label : undefined}",
+      "text": "",
+      "handler": "{() => navigateToModule(id)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/Sidebar.tsx",
+      "line": 335,
+      "tag": "button",
+      "label": "\"新建项目\"",
+      "text": "",
+      "handler": "{() => createProject()}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/Sidebar.tsx",
+      "line": 371,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => {\n                  switchProject(project.id);\n                  onModuleChange(\"canvas\");\n                }}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/layout/Sidebar.tsx",
+      "line": 425,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => {\n                      e.stopPropagation();\n                      setMenuOpen(menuOpen === project.id ? null : project.id);\n                    }}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/layout/Sidebar.tsx",
+      "line": 459,
+      "tag": "button",
+      "label": "复制",
+      "text": "复制",
+      "handler": "{(e) => {\n                          e.stopPropagation();\n                          duplicateProject(project.id);\n                          setMenuOpen(null);\n                        }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/Sidebar.tsx",
+      "line": 482,
+      "tag": "button",
+      "label": "删除",
+      "text": "删除",
+      "handler": "{(e) => {\n                          e.stopPropagation();\n                          if (\n                            window.confirm(\n                              `确定要删除项目“${project.title}”吗？此操作不可撤销。`,\n                            )\n                          ) {\n                            deleteProject(project.id);\n                          }\n                          setMenuOpen(null);\n                        }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/Sidebar.tsx",
+      "line": 545,
+      "tag": "button",
+      "label": "\"账号与设置\"",
+      "text": "",
+      "handler": "{() => setUserMenuOpen(!userMenuOpen)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/Sidebar.tsx",
+      "line": 601,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setUserMenuOpen(false)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/layout/Sidebar.tsx",
+      "line": 646,
+      "tag": "button",
+      "label": "主题：",
+      "text": "主题：",
+      "handler": "{() =>\n                      setThemeMode(themeMode === \"dark\" ? \"light\" : \"dark\")\n                    }",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/Sidebar.tsx",
+      "line": 667,
+      "tag": "button",
+      "label": "设置",
+      "text": "设置",
+      "handler": "{() => navigateToModule(\"settings\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/Sidebar.tsx",
+      "line": 679,
+      "tag": "button",
+      "label": "帮助与快捷键",
+      "text": "帮助与快捷键",
+      "handler": "{() =>\n                      alert(\n                        \"快捷键：Ctrl+K 命令面板 / Ctrl+Enter 提交 / 双击空白画布创建节点 / 双击节点打开编辑 / Ctrl+\\\\ 布局模式\",\n                      )\n                    }",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/Sidebar.tsx",
+      "line": 702,
+      "tag": "button",
+      "label": "\"桌面端暂不支持账号登录（R2 里程碑接入）\"",
+      "text": "退出登录（待接入）",
+      "handler": null,
+      "disabled": "true",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/Sidebar.tsx",
+      "line": 718,
+      "tag": "button",
+      "label": "{collapsed ? \"展开侧边栏\" : \"折叠侧边栏\"}",
+      "text": "",
+      "handler": "{() => setCollapsed(!collapsed)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 153,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setOpenMenu(openMenu === id ? null : id)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 177,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setOpenMenu(null)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 199,
+      "tag": "MenuItem",
+      "label": "\"重命名项目\"",
+      "text": "",
+      "handler": "{handleRename}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 205,
+      "tag": "MenuItem",
+      "label": "\"导入项目\"",
+      "text": "",
+      "handler": "{handleImport}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 210,
+      "tag": "MenuItem",
+      "label": "\"导出为 JSON\"",
+      "text": "",
+      "handler": "{handleExport}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 215,
+      "tag": "MenuItem",
+      "label": "\"复制项目\"",
+      "text": "",
+      "handler": "{handleDuplicate}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 220,
+      "tag": "MenuItem",
+      "label": "\"分享（复制 JSON）\"",
+      "text": "",
+      "handler": "{handleShare}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 226,
+      "tag": "MenuItem",
+      "label": "\"删除项目\"",
+      "text": "",
+      "handler": "{handleDelete}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 233,
+      "tag": "MenuItem",
+      "label": "{`主题：${themeMode}`}",
+      "text": "",
+      "handler": "{cycleTheme}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 242,
+      "tag": "MenuItem",
+      "label": "\"显示/隐藏 对话面板\"",
+      "text": "",
+      "handler": "{() =>\n                    eventBus.emit(\"app:toggle-agent-panel\", undefined)\n                  }",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 249,
+      "tag": "MenuItem",
+      "label": "\"显示/隐藏 侧栏\"",
+      "text": "",
+      "handler": "{() =>\n                    eventBus.emit(\"app:toggle-global-sidebar\", undefined)\n                  }",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 260,
+      "tag": "MenuItem",
+      "label": "\"快捷键\"",
+      "text": "",
+      "handler": "{() =>\n                    alert(\n                      \"Ctrl+K 打开命令面板；Ctrl+Enter 提交；双击空白画布创建节点；双击节点打开编辑。\",\n                    )\n                  }",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 269,
+      "tag": "MenuItem",
+      "label": "{`关于 KK Studio v2.0.0`}",
+      "text": "",
+      "handler": "{() =>\n                    alert(\"KK Studio 2.0 —— Agent 驱动的无限画布创作工作台。\")\n                  }",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 301,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": "{handleFileChange}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 331,
+      "tag": "button",
+      "label": "{`存储警告：${storageWarning}`}",
+      "text": "存储异常",
+      "handler": "{() => {\n            alert(\n              `${storageWarning}\\n\\n可先通过「文件 → 导出为 JSON」保存当前项目备份。`,\n            );\n          }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 350,
+      "tag": "button",
+      "label": "\"全局任务中心\"",
+      "text": "任务",
+      "handler": "{() => setShowTaskCenter(!showTaskCenter)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 380,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setShowTaskCenter(false)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/layout/StatusStrip.tsx",
+      "line": 413,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{onClick}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/settings/AgentSettingsPanel.tsx",
+      "line": 14,
+      "tag": "select",
+      "label": "",
+      "text": "",
+      "handler": "{(event) =>\n            updateConfig({ agentDefaultModel: event.target.value })\n          }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/settings/AgentSettingsPanel.tsx",
+      "line": 31,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": "{(event) =>\n              updateConfig({ agentRequireApproval: event.target.checked })\n            }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/settings/AppearanceSettingsPanel.tsx",
+      "line": 25,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setThemeMode(option.id)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/settings/DiagnosticExportPanel.tsx",
+      "line": 86,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{handleExport}",
+      "disabled": "{state === \"loading\"}",
+      "dynamic": true
+    },
+    {
+      "file": "src/components/settings/ProviderForm.tsx",
+      "line": 27,
+      "tag": "input",
+      "label": "\"如：OpenAI\"",
+      "text": "",
+      "handler": "{(event) =>\n                onChange({ ...draft, name: event.target.value })\n              }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/settings/ProviderForm.tsx",
+      "line": 39,
+      "tag": "select",
+      "label": "",
+      "text": "",
+      "handler": "{(event) =>\n                onChange({\n                  ...draft,\n                  protocolFamily: event.target.value as ProviderProtocolFamily,\n                })\n              }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/settings/ProviderForm.tsx",
+      "line": 59,
+      "tag": "input",
+      "label": "\"sk-...\"",
+      "text": "",
+      "handler": "{(event) =>\n              onChange({ ...draft, apiKey: event.target.value })\n            }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/settings/ProviderForm.tsx",
+      "line": 74,
+      "tag": "input",
+      "label": "\"https://api.openai.com/v1\"",
+      "text": "",
+      "handler": "{(event) =>\n              onChange({ ...draft, baseUrl: event.target.value })\n            }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/settings/ProviderForm.tsx",
+      "line": 84,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => void onSubmit()}",
+      "disabled": "{!draft.name || !draft.apiKey || saving}",
+      "dynamic": true
+    },
+    {
+      "file": "src/components/settings/ProviderList.tsx",
+      "line": 46,
+      "tag": "button",
+      "label": "{`删除提供商 ${provider.name}`}",
+      "text": "",
+      "handler": "{() => void onDelete(provider.id)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/settings/SettingsNavigation.tsx",
+      "line": 27,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => onSelect(tab.id)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/settings/migration/MigrationWizardActions.tsx",
+      "line": 35,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{onMigrate}",
+      "disabled": "{status === \"loading\"}",
+      "dynamic": true
+    },
+    {
+      "file": "src/components/settings/migration/MigrationWizardActions.tsx",
+      "line": 45,
+      "tag": "button",
+      "label": "重试",
+      "text": "重试",
+      "handler": "{onRetry}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/settings/migration/MigrationWizardActions.tsx",
+      "line": 50,
+      "tag": "button",
+      "label": "稍后处理",
+      "text": "稍后处理",
+      "handler": "{onDismiss}",
+      "disabled": "{status === \"loading\"}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/settings/migration/MigrationWizardActions.tsx",
+      "line": 61,
+      "tag": "button",
+      "label": "继续迁移",
+      "text": "继续迁移",
+      "handler": "{onRetry}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/settings/migration/MigrationWizardActions.tsx",
+      "line": 65,
+      "tag": "button",
+      "label": "进入本地工作台",
+      "text": "进入本地工作台",
+      "handler": "{onEnterLocalWorkspace}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/settings/migration/MigrationWizardActions.tsx",
+      "line": 76,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{onComplete}",
+      "disabled": "{isCompleting}",
+      "dynamic": true
+    },
+    {
+      "file": "src/components/settings/migration/RecoveryCopyPanel.tsx",
+      "line": 277,
+      "tag": "button",
+      "label": "继续恢复",
+      "text": "继续恢复",
+      "handler": "{handleRecovery}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/settings/migration/RecoveryCopyPanel.tsx",
+      "line": 280,
+      "tag": "button",
+      "label": "取消",
+      "text": "取消",
+      "handler": "{() => setState(\"cancelled\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/settings/migration/RecoveryCopyPanel.tsx",
+      "line": 341,
+      "tag": "button",
+      "label": "恢复旧版副本",
+      "text": "恢复旧版副本",
+      "handler": "{beginConfirmation}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/settings/migration/RecoveryCopyPanel.tsx",
+      "line": 346,
+      "tag": "button",
+      "label": "重试",
+      "text": "重试",
+      "handler": "{beginConfirmation}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/task/TaskCenter.tsx",
+      "line": 106,
+      "tag": "button",
+      "label": "清理已完成",
+      "text": "清理已完成",
+      "handler": "{clearCompleted}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/task/TaskCenter.tsx",
+      "line": 167,
+      "tag": "button",
+      "label": "\"取消任务\"",
+      "text": "",
+      "handler": "{() => {\n                  generationService.cancelTask(task.id);\n                  useTaskStore.getState().cancelTask(task.id);\n                }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ComfyRouteNotice.tsx",
+      "line": 29,
+      "tag": "button",
+      "label": "返回当前画布",
+      "text": "返回当前画布",
+      "handler": "{onReturnToWorkspace}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ComfyRouteNotice.tsx",
+      "line": 36,
+      "tag": "button",
+      "label": "打开 ComfyUI 设置",
+      "text": "打开 ComfyUI 设置",
+      "handler": "{onOpenSettings}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ConversationComposer.tsx",
+      "line": 70,
+      "tag": "textarea",
+      "label": "\"描述你要生成的内容\"",
+      "text": "",
+      "handler": "{(event) => onDraftChange(event.target.value)}",
+      "disabled": "{busy}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ConversationComposer.tsx",
+      "line": 81,
+      "tag": "button",
+      "label": "\"配置模型（打开设置）\"",
+      "text": "",
+      "handler": "{onOpenSettings}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ConversationComposer.tsx",
+      "line": 90,
+      "tag": "button",
+      "label": "\"查看可用 Skill\"",
+      "text": "Skill",
+      "handler": "{onOpenSkills}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ConversationComposer.tsx",
+      "line": 99,
+      "tag": "button",
+      "label": "\"自动模式：根据内容自动选择工具与参数\"",
+      "text": "",
+      "handler": "{() => onAutomaticChange(!automatic)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ConversationComposer.tsx",
+      "line": 109,
+      "tag": "button",
+      "label": "\"发送\"",
+      "text": "",
+      "handler": "{submit}",
+      "disabled": "{!canSubmit}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ConversationPanel.tsx",
+      "line": 169,
+      "tag": "button",
+      "label": "\"新建对话\"",
+      "text": "新建对话",
+      "handler": "{handleNewConversation}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ConversationPanel.tsx",
+      "line": 183,
+      "tag": "button",
+      "label": "\"新建对话\"",
+      "text": "",
+      "handler": "{handleNewConversation}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ConversationPanel.tsx",
+      "line": 200,
+      "tag": "button",
+      "label": "\"关闭对话面板\"",
+      "text": "",
+      "handler": "{handleClose}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ConversationWelcome.tsx",
+      "line": 98,
+      "tag": "button",
+      "label": "精选",
+      "text": "精选",
+      "handler": "{() => onActiveTabChange(\"featured\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ConversationWelcome.tsx",
+      "line": 108,
+      "tag": "button",
+      "label": "Skill",
+      "text": "Skill",
+      "handler": "{() => onActiveTabChange(\"skill\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ConversationWelcome.tsx",
+      "line": 131,
+      "tag": "button",
+      "label": "{template.prompt}",
+      "text": "",
+      "handler": "{() => submit(template.prompt)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ConversationWelcome.tsx",
+      "line": 156,
+      "tag": "button",
+      "label": "{skill.description}",
+      "text": "",
+      "handler": "{() =>\n                submit(\n                  `使用「${skill.name}」技能：${skill.useCase || skill.description}`,\n                )\n              }",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/GlobalSidebar.tsx",
+      "line": 156,
+      "tag": "button",
+      "label": "{entry.label}",
+      "text": "",
+      "handler": "{() => navigate(entry.route)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/GlobalSidebar.tsx",
+      "line": 192,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{toggleSidebarOverlay}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/workbench/GlobalSidebar.tsx",
+      "line": 219,
+      "tag": "button",
+      "label": "\"本地用户与设置\"",
+      "text": "",
+      "handler": "{() => setUserMenuOpen((open) => !open)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/GlobalSidebar.tsx",
+      "line": 244,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => {\n                    toggleTheme();\n                    closeUserMenu();\n                  }}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/workbench/GlobalSidebar.tsx",
+      "line": 262,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{openUserSettings}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/workbench/GlobalSidebar.tsx",
+      "line": 271,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{openHelp}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/workbench/LayoutModeMenu.tsx",
+      "line": 151,
+      "tag": "button",
+      "label": "\"布局模式\"",
+      "text": "",
+      "handler": "{() => setOpen((current) => !current)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/LayoutModeMenu.tsx",
+      "line": 182,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => selectLayoutMode(id)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/workbench/ProjectList.tsx",
+      "line": 74,
+      "tag": "button",
+      "label": "\"新建项目\"",
+      "text": "",
+      "handler": "{() => createProject()}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ProjectList.tsx",
+      "line": 96,
+      "tag": "button",
+      "label": "{project.title}",
+      "text": "",
+      "handler": "{() => openProject(project.id)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ProjectList.tsx",
+      "line": 107,
+      "tag": "button",
+      "label": "{`项目“${project.title}”操作`}",
+      "text": "",
+      "handler": "{() =>\n                    setOpenProjectMenu(isMenuOpen ? null : project.id)\n                  }",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/ProjectList.tsx",
+      "line": 127,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => {\n                        duplicateProject(project.id);\n                        setOpenProjectMenu(null);\n                        document\n                          .getElementById(\n                            `workbench-project-menu-${project.id}`,\n                          )\n                          ?.focus();\n                      }}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/workbench/ProjectList.tsx",
+      "line": 144,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => requestDelete(project.id, project.title)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 211,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setOpenMenu(expanded ? null : id)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 244,
+      "tag": "WorkbenchMenuItem",
+      "label": "\"重命名项目\"",
+      "text": "",
+      "handler": "{handleRename}",
+      "disabled": "{!currentProject}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 252,
+      "tag": "WorkbenchMenuItem",
+      "label": "\"导入项目\"",
+      "text": "",
+      "handler": "{handleImport}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 257,
+      "tag": "WorkbenchMenuItem",
+      "label": "\"导出为 JSON\"",
+      "text": "",
+      "handler": "{handleExport}",
+      "disabled": "{!currentProject}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 264,
+      "tag": "WorkbenchMenuItem",
+      "label": "\"复制项目\"",
+      "text": "",
+      "handler": "{() => {\n                    if (currentProject) duplicateProject(currentProject.id);\n                    closeMenu();\n                  }}",
+      "disabled": "{!currentProject}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 274,
+      "tag": "WorkbenchMenuItem",
+      "label": "\"分享（复制 JSON）\"",
+      "text": "",
+      "handler": "{() => {\n                    if (!currentProject) return;\n                    setFeedback(null);\n                    if (!navigator.clipboard?.writeText) {\n                      setFeedback({\n                        tone: \"error\",\n                        message:\n                          \"无法访问剪贴板：请改用“导出为 JSON”保存项目文件。\",\n                      });\n                      closeMenu();\n                      return;\n                    }\n                    let json: string;\n                    try {\n                      json = projectService.exportProject(currentProject.id);\n                    } catch (error) {\n                      reportDiagnostic(\n                        \"error\",\n                        \"workbench:project-share\",\n                        error,\n                      );\n                      setFeedback({\n                        tone: \"error\",\n                        message:\n                          \"分享失败：项目导出异常，请改用“导出为 JSON”重试。\",\n                      });\n                      closeMenu();\n                      return;\n                    }\n                    void navigator.clipboard\n                      .writeText(json)\n                      .then(() =>\n                        setFeedback({\n                          tone: \"success\",\n                          message: \"项目 JSON 已复制到剪贴板。\",\n                        }),\n                      )\n                      .catch((error: unknown) => {\n                        reportDiagnostic(\n                          \"error\",\n                          \"workbench:clipboard-write\",\n                          error,\n                        );\n                        setFeedback({\n                          tone: \"error\",\n                          message:\n                            \"复制失败：请检查剪贴板权限，或改用“导出为 JSON”。\",\n                        });\n                      });\n                    closeMenu();\n                  }}",
+      "disabled": "{!currentProject}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 332,
+      "tag": "WorkbenchMenuItem",
+      "label": "\"删除项目\"",
+      "text": "",
+      "handler": "{requestDelete}",
+      "disabled": "{!currentProject}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 341,
+      "tag": "WorkbenchMenuItem",
+      "label": "{`主题：${themeMode}`}",
+      "text": "",
+      "handler": "{() => {\n                    cycleTheme();\n                    closeMenu();\n                  }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 361,
+      "tag": "WorkbenchMenuItem",
+      "label": "\"撤销\"",
+      "text": "",
+      "handler": "{() => {\n                    undo();\n                    closeMenu();\n                  }}",
+      "disabled": "{!canUndo}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 371,
+      "tag": "WorkbenchMenuItem",
+      "label": "\"重做\"",
+      "text": "",
+      "handler": "{() => {\n                    redo();\n                    closeMenu();\n                  }}",
+      "disabled": "{!canRedo}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 382,
+      "tag": "WorkbenchMenuItem",
+      "label": "\"全选节点\"",
+      "text": "",
+      "handler": "{() => {\n                    selectAll();\n                    closeMenu();\n                  }}",
+      "disabled": "{!currentProject}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 396,
+      "tag": "WorkbenchMenuItem",
+      "label": "\"显示/隐藏 对话面板\"",
+      "text": "",
+      "handler": "{() => toggleCompactPanel(\"conversation\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 401,
+      "tag": "WorkbenchMenuItem",
+      "label": "\"显示/隐藏 侧栏\"",
+      "text": "",
+      "handler": "{() => toggleCompactPanel(\"sidebar\")}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 410,
+      "tag": "WorkbenchMenuItem",
+      "label": "\"快捷键\"",
+      "text": "",
+      "handler": "{() => {\n                    window.alert(\n                      \"Ctrl+K 打开命令面板；Ctrl+Enter 提交；Ctrl+\\\\ 打开布局模式；双击空白画布创建节点；双击节点打开编辑。\",\n                    );\n                    closeMenu();\n                  }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 420,
+      "tag": "WorkbenchMenuItem",
+      "label": "\"关于 KK Studio v2.0.0\"",
+      "text": "",
+      "handler": "{() => {\n                    window.alert(\n                      \"KK Studio 2.0 —— Agent 驱动的无限画布创作工作台。\",\n                    );\n                    closeMenu();\n                  }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 440,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": "{handleFileChange}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuBar.tsx",
+      "line": 457,
+      "tag": "button",
+      "label": "\"全局任务中心\"",
+      "text": "",
+      "handler": "{openTasks}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchMenuParts.tsx",
+      "line": 37,
+      "tag": "button",
+      "label": "{\n      disabled && disabledReason ? `${label}：${disabledReason}` : undefined\n    }",
+      "text": "",
+      "handler": "{onClick}",
+      "disabled": "{disabled}",
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchOverlayHost.tsx",
+      "line": 142,
+      "tag": "button",
+      "label": "取消",
+      "text": "取消",
+      "handler": "{close}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchOverlayHost.tsx",
+      "line": 145,
+      "tag": "button",
+      "label": "删除项目",
+      "text": "删除项目",
+      "handler": "{() => {\n              deleteProject(overlay.projectId);\n              closeOverlay();\n            }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/components/workbench/WorkbenchOverlayHost.tsx",
+      "line": 191,
+      "tag": "button",
+      "label": "\"关闭\"",
+      "text": "×",
+      "handler": "{close}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 127,
+      "tag": "button",
+      "label": "导入资产包",
+      "text": "导入资产包",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 143,
+      "tag": "button",
+      "label": "添加资产",
+      "text": "添加资产",
+      "handler": "{() => setShowAddDialog(true)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 187,
+      "tag": "input",
+      "label": "\"按资产名称, 资产描述, 或文件名搜索...\"",
+      "text": "",
+      "handler": "{(e) => setSearchQuery(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 207,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setActiveType(type)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 237,
+      "tag": "select",
+      "label": "",
+      "text": "",
+      "handler": "{(e) =>\n              setSortBy(e.target.value as \"最近更新\" | \"最近创建\" | \"名称\")\n            }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 282,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setViewMode(\"grid\")}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 298,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setViewMode(\"list\")}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 346,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setSelectedAsset(asset)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 425,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setSelectedAsset(asset)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 465,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => {\n                    e.stopPropagation();\n                    deleteAsset(asset.id);\n                  }}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 487,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setShowAddDialog(false)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 502,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => e.stopPropagation()}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 526,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setShowAddDialog(false)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 562,
+      "tag": "input",
+      "label": "\"资产名称\"",
+      "text": "",
+      "handler": "{(e) =>\n                      setNewAsset({ ...newAsset, name: e.target.value })\n                    }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 597,
+      "tag": "select",
+      "label": "",
+      "text": "",
+      "handler": "{(e) =>\n                      setNewAsset({\n                        ...newAsset,\n                        type: e.target.value as AssetType,\n                      })\n                    }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 651,
+      "tag": "textarea",
+      "label": "\"输入清晰的描述, 帮助 agent 更好地搜索和复用...\"",
+      "text": "",
+      "handler": "{(e) =>\n                    setNewAsset({ ...newAsset, description: e.target.value })\n                  }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 686,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{handleFileUpload}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 724,
+      "tag": "button",
+      "label": "添加标签（可选）",
+      "text": "添加标签（可选）",
+      "handler": "{() => setShowTags(!showTags)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 750,
+      "tag": "input",
+      "label": "\"用逗号分隔多个标签\"",
+      "text": "",
+      "handler": "{(e) =>\n                      setNewAsset({ ...newAsset, tags: e.target.value })\n                    }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 782,
+      "tag": "button",
+      "label": "取消",
+      "text": "取消",
+      "handler": "{() => setShowAddDialog(false)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 796,
+      "tag": "button",
+      "label": "创建资产",
+      "text": "创建资产",
+      "handler": "{handleCreate}",
+      "disabled": "{!newAsset.name.trim()}",
+      "dynamic": false
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 821,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setSelectedAsset(null)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 836,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => e.stopPropagation()}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 869,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setSelectedAsset(null)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 938,
+      "tag": "button",
+      "label": "删除",
+      "text": "删除",
+      "handler": "{() => {\n                    deleteAsset(selectedAsset.id);\n                    setSelectedAsset(null);\n                  }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/AssetsView.tsx",
+      "line": 960,
+      "tag": "button",
+      "label": "关闭",
+      "text": "关闭",
+      "handler": "{() => setSelectedAsset(null)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ClipStudioView.tsx",
+      "line": 201,
+      "tag": "button",
+      "label": "{tool.label}",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ClipStudioView.tsx",
+      "line": 221,
+      "tag": "button",
+      "label": "导入素材",
+      "text": "导入素材",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ClipStudioView.tsx",
+      "line": 237,
+      "tag": "button",
+      "label": "设置",
+      "text": "设置",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ClipStudioView.tsx",
+      "line": 253,
+      "tag": "button",
+      "label": "导出",
+      "text": "导出",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ClipStudioView.tsx",
+      "line": 327,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setIsPlaying(!isPlaying)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ClipStudioView.tsx",
+      "line": 363,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setCurrentTime(Math.max(0, currentTime - 5))}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ClipStudioView.tsx",
+      "line": 380,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setIsPlaying(!isPlaying)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ClipStudioView.tsx",
+      "line": 401,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() =>\n                setCurrentTime(Math.min(duration, currentTime + 5))\n              }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ClipStudioView.tsx",
+      "line": 435,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => setVolume(Number(e.target.value))}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ClipStudioView.tsx",
+      "line": 453,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ClipStudioView.tsx",
+      "line": 491,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ClipStudioView.tsx",
+      "line": 708,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setZoom(Math.max(50, zoom - 10))}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ClipStudioView.tsx",
+      "line": 735,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setZoom(Math.min(200, zoom + 10))}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ClipStudioView.tsx",
+      "line": 844,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setSelectedTrack(track.id)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/CodeEditorView.tsx",
+      "line": 147,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() =>\n                setExpandedFolders((prev) =>\n                  prev.includes(item.name)\n                    ? prev.filter((f) => f !== item.name)\n                    : [...prev, item.name],\n                )\n              }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/CodeEditorView.tsx",
+      "line": 185,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => {\n            if (!openFiles.includes(item.name))\n              setOpenFiles([...openFiles, item.name]);\n            setActiveFile(item.name);\n          }}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/CodeEditorView.tsx",
+      "line": 283,
+      "tag": "input",
+      "label": "\"搜索文件...\"",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/CodeEditorView.tsx",
+      "line": 297,
+      "tag": "button",
+      "label": "保存",
+      "text": "保存",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/CodeEditorView.tsx",
+      "line": 313,
+      "tag": "button",
+      "label": "运行",
+      "text": "运行",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/CodeEditorView.tsx",
+      "line": 365,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/CodeEditorView.tsx",
+      "line": 381,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/CodeEditorView.tsx",
+      "line": 397,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/CodeEditorView.tsx",
+      "line": 439,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setActiveFile(file)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/CodeEditorView.tsx",
+      "line": 465,
+      "tag": "button",
+      "label": "×",
+      "text": "×",
+      "handler": "{(e) => {\n                    e.stopPropagation();\n                    setOpenFiles(openFiles.filter((f) => f !== file));\n                    if (activeFile === file && openFiles.length > 1)\n                      setActiveFile(openFiles.find((f) => f !== file)!);\n                  }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/CodeEditorView.tsx",
+      "line": 569,
+      "tag": "button",
+      "label": "×",
+      "text": "×",
+      "handler": "{() => setShowTerminal(false)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/CodeEditorView.tsx",
+      "line": 631,
+      "tag": "button",
+      "label": "开始调试",
+      "text": "开始调试",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/CodeEditorView.tsx",
+      "line": 681,
+      "tag": "button",
+      "label": "编辑器设置",
+      "text": "编辑器设置",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ComfyUIView.tsx",
+      "line": 161,
+      "tag": "button",
+      "label": "打开 ComfyUI 编辑器",
+      "text": "打开 ComfyUI 编辑器",
+      "handler": "{openInBrowser}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ComfyUIView.tsx",
+      "line": 196,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setActiveTab(tab.key as any)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ComfyUIView.tsx",
+      "line": 475,
+      "tag": "button",
+      "label": "打开 ComfyUI 编辑器",
+      "text": "打开 ComfyUI 编辑器",
+      "handler": "{openInBrowser}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ComfyUIView.tsx",
+      "line": 493,
+      "tag": "button",
+      "label": "{\n                    modelPath ? \"打开已配置的模型目录\" : \"请先配置模型目录\"\n                  }",
+      "text": "打开模型目录",
+      "handler": "{() => void openConfiguredPath(modelPath, \"模型目录\")}",
+      "disabled": "{!modelPath}",
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ComfyUIView.tsx",
+      "line": 516,
+      "tag": "button",
+      "label": "\"暂无默认工作流，请先在工作流页保存一个工作流\"",
+      "text": "运行默认工作流",
+      "handler": null,
+      "disabled": "true",
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ComfyUIView.tsx",
+      "line": 536,
+      "tag": "button",
+      "label": "刷新状态",
+      "text": "刷新状态",
+      "handler": "{() => void checkConnection()}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ComfyUIView.tsx",
+      "line": 626,
+      "tag": "button",
+      "label": "{modelPath ? \"打开已配置的模型目录\" : \"请先配置模型目录\"}",
+      "text": "打开模型目录",
+      "handler": "{() => void openConfiguredPath(modelPath, \"模型目录\")}",
+      "disabled": "{!modelPath}",
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ComfyUIView.tsx",
+      "line": 766,
+      "tag": "button",
+      "label": "打开 ComfyUI 编辑器",
+      "text": "打开 ComfyUI 编辑器",
+      "handler": "{openInBrowser}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ComfyUIView.tsx",
+      "line": 804,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ComfyUIView.tsx",
+      "line": 831,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ComfyUIView.tsx",
+      "line": 858,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/Director3DView.tsx",
+      "line": 295,
+      "tag": "select",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => setCameraMode(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/Director3DView.tsx",
+      "line": 314,
+      "tag": "button",
+      "label": "网格",
+      "text": "网格",
+      "handler": "{() => setShowGrid(!showGrid)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/Director3DView.tsx",
+      "line": 331,
+      "tag": "button",
+      "label": "光照",
+      "text": "光照",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/Director3DView.tsx",
+      "line": 347,
+      "tag": "button",
+      "label": "设置",
+      "text": "设置",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/Director3DView.tsx",
+      "line": 381,
+      "tag": "button",
+      "label": "{tool.label}",
+      "text": "",
+      "handler": "{() => setSelectedTool(tool.id)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/Director3DView.tsx",
+      "line": 413,
+      "tag": "button",
+      "label": "\"放大\"",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/Director3DView.tsx",
+      "line": 430,
+      "tag": "button",
+      "label": "\"缩小\"",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/Director3DView.tsx",
+      "line": 447,
+      "tag": "button",
+      "label": "\"最大化\"",
+      "text": "",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/Director3DView.tsx",
+      "line": 660,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setIsPlaying(!isPlaying)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/Director3DView.tsx",
+      "line": 681,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setCurrentFrame(0)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/GenerationView.tsx",
+      "line": 172,
+      "tag": "textarea",
+      "label": "{modeConfig[mode].placeholder}",
+      "text": "",
+      "handler": "{(e) => setPrompt(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/GenerationView.tsx",
+      "line": 229,
+      "tag": "select",
+      "label": "",
+      "text": "",
+      "handler": "{(e) =>\n                  setSettings({ ...settings, model: e.target.value })\n                }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/GenerationView.tsx",
+      "line": 265,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": "{(e) =>\n                        setSettings({\n                          ...settings,\n                          width: parseInt(e.target.value),\n                        })\n                      }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/GenerationView.tsx",
+      "line": 296,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": "{(e) =>\n                        setSettings({\n                          ...settings,\n                          height: parseInt(e.target.value),\n                        })\n                      }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/GenerationView.tsx",
+      "line": 328,
+      "tag": "textarea",
+      "label": "\"不想要的元素...\"",
+      "text": "",
+      "handler": "{(e) => setNegativePrompt(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/GenerationView.tsx",
+      "line": 361,
+      "tag": "input",
+      "label": "",
+      "text": "",
+      "handler": "{(e) =>\n                      setSettings({\n                        ...settings,\n                        duration: parseInt(e.target.value),\n                      })\n                    }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/GenerationView.tsx",
+      "line": 394,
+      "tag": "select",
+      "label": "",
+      "text": "",
+      "handler": "{(e) =>\n                      setSettings({ ...settings, ratio: e.target.value })\n                    }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/GenerationView.tsx",
+      "line": 426,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{handleGenerate}",
+      "disabled": "{isGenerating || !prompt.trim()}",
+      "dynamic": true
+    },
+    {
+      "file": "src/views/GenerationView.tsx",
+      "line": 557,
+      "tag": "button",
+      "label": "下载",
+      "text": "下载",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/GenerationView.tsx",
+      "line": 563,
+      "tag": "button",
+      "label": "到画布",
+      "text": "到画布",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/MCPView.tsx",
+      "line": 223,
+      "tag": "input",
+      "label": "\"搜索服务器或工具...\"",
+      "text": "",
+      "handler": "{(e) => setSearch(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/MCPView.tsx",
+      "line": 239,
+      "tag": "button",
+      "label": "添加服务器",
+      "text": "添加服务器",
+      "handler": "{() => setShowAddDialog(true)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/MCPView.tsx",
+      "line": 272,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setActiveTab(tab.key as \"servers\" | \"tools\")}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/MCPView.tsx",
+      "line": 339,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() =>\n                      setExpandedServer(\n                        expandedServer === server.id ? null : server.id,\n                      )\n                    }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/MCPView.tsx",
+      "line": 460,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => {\n                          e.stopPropagation();\n                          connected\n                            ? handleDisconnect(server.id)\n                            : handleConnect(server.id);\n                        }}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/MCPView.tsx",
+      "line": 489,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => {\n                          e.stopPropagation();\n                          handleDelete(server.id);\n                        }}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/MCPView.tsx",
+      "line": 674,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setShowAddDialog(false)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/MCPView.tsx",
+      "line": 689,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => e.stopPropagation()}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/MCPView.tsx",
+      "line": 712,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setShowAddDialog(false)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/MCPView.tsx",
+      "line": 746,
+      "tag": "input",
+      "label": "\"如：My Server\"",
+      "text": "",
+      "handler": "{(e) =>\n                    setNewServer({ ...newServer, name: e.target.value })\n                  }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/MCPView.tsx",
+      "line": 775,
+      "tag": "input",
+      "label": "\"https://mcp.example.com\"",
+      "text": "",
+      "handler": "{(e) =>\n                    setNewServer({ ...newServer, url: e.target.value })\n                  }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/MCPView.tsx",
+      "line": 804,
+      "tag": "select",
+      "label": "",
+      "text": "",
+      "handler": "{(e) =>\n                    setNewServer({\n                      ...newServer,\n                      type: e.target.value as \"local\" | \"remote\",\n                    })\n                  }",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/MCPView.tsx",
+      "line": 837,
+      "tag": "button",
+      "label": "取消",
+      "text": "取消",
+      "handler": "{() => setShowAddDialog(false)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/MCPView.tsx",
+      "line": 851,
+      "tag": "button",
+      "label": "添加",
+      "text": "添加",
+      "handler": "{handleAddServer}",
+      "disabled": "{!newServer.name.trim()}",
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ProjectsView.tsx",
+      "line": 88,
+      "tag": "button",
+      "label": "创建",
+      "text": "创建",
+      "handler": "{() => setShowCreateDialog(true)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ProjectsView.tsx",
+      "line": 115,
+      "tag": "button",
+      "label": "\"关闭项目恢复提示\"",
+      "text": "",
+      "handler": "{onDismissRecovery}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ProjectsView.tsx",
+      "line": 155,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => handleOpenProject(project)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ProjectsView.tsx",
+      "line": 213,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => {\n                      e.stopPropagation();\n                      setMenuOpenId(\n                        menuOpenId === project.id ? null : project.id,\n                      );\n                    }}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ProjectsView.tsx",
+      "line": 237,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => e.stopPropagation()}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ProjectsView.tsx",
+      "line": 253,
+      "tag": "button",
+      "label": "删除项目",
+      "text": "删除项目",
+      "handler": "{(e) => handleDeleteProject(project.id, e)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ProjectsView.tsx",
+      "line": 321,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setMenuOpenId(null)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ProjectsView.tsx",
+      "line": 336,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setShowCreateDialog(false)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ProjectsView.tsx",
+      "line": 351,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => e.stopPropagation()}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ProjectsView.tsx",
+      "line": 375,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setShowCreateDialog(false)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ProjectsView.tsx",
+      "line": 396,
+      "tag": "input",
+      "label": "\"输入名称\"",
+      "text": "",
+      "handler": "{(e) => setProjectName(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/ProjectsView.tsx",
+      "line": 513,
+      "tag": "button",
+      "label": "取消",
+      "text": "取消",
+      "handler": "{() => setShowCreateDialog(false)}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/ProjectsView.tsx",
+      "line": 527,
+      "tag": "button",
+      "label": "创建",
+      "text": "创建",
+      "handler": "{handleCreate}",
+      "disabled": "{!projectName.trim()}",
+      "dynamic": false
+    },
+    {
+      "file": "src/views/SkillView.tsx",
+      "line": 58,
+      "tag": "button",
+      "label": "安装skill",
+      "text": "安装skill",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/SkillView.tsx",
+      "line": 74,
+      "tag": "button",
+      "label": "通过 Hub 创建",
+      "text": "通过 Hub 创建",
+      "handler": null,
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/SkillView.tsx",
+      "line": 102,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setActiveTab(tab)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/SkillView.tsx",
+      "line": 150,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setActiveCategory(cat)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/SkillView.tsx",
+      "line": 187,
+      "tag": "input",
+      "label": "\"搜索 Skill...\"",
+      "text": "",
+      "handler": "{(e) => setSearchQuery(e.target.value)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/SkillView.tsx",
+      "line": 252,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setSelectedSkill(skill)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/SkillView.tsx",
+      "line": 392,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{() => setSelectedSkill(null)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/SkillView.tsx",
+      "line": 407,
+      "tag": "div",
+      "label": "",
+      "text": "",
+      "handler": "{(e) => e.stopPropagation()}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/SkillView.tsx",
+      "line": 444,
+      "tag": "button",
+      "label": "",
+      "text": "",
+      "handler": "{() => setSelectedSkill(null)}",
+      "disabled": null,
+      "dynamic": true
+    },
+    {
+      "file": "src/views/SkillView.tsx",
+      "line": 538,
+      "tag": "button",
+      "label": "卸载",
+      "text": "卸载",
+      "handler": "{() => {\n                      uninstallSkill(selectedSkill.id);\n                      setSelectedSkill(null);\n                    }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/SkillView.tsx",
+      "line": 561,
+      "tag": "button",
+      "label": "安装使用",
+      "text": "安装使用",
+      "handler": "{() => {\n                      installSkill(selectedSkill.id);\n                      setSelectedSkill(null);\n                    }}",
+      "disabled": null,
+      "dynamic": false
+    },
+    {
+      "file": "src/views/SkillView.tsx",
+      "line": 585,
+      "tag": "button",
+      "label": "关闭",
+      "text": "关闭",
+      "handler": "{() => setSelectedSkill(null)}",
+      "disabled": null,
+      "dynamic": false
+    }
+  ]
+}

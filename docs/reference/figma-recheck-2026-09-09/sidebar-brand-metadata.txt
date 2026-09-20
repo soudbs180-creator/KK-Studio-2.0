@@ -1,0 +1,10 @@
+<frame id="82:15737" name="app名字和功能键" x="19" y="67" width="247" height="27.000062942504883">
+  <frame id="82:15736" name="Group 34" x="19" y="67.00005128388511" width="181" height="27">
+    <text id="1:7223" name="KK Studio" x="51" y="71.00005128388511" width="149" height="23" />
+    <frame id="4:59986" name="kk-studio 1" x="19" y="67.00005128388511" width="26" height="26" />
+  </frame>
+  <instance id="124:17680" name="左展开和关闭" x="266" y="89.00000190734863" width="18.000001573609552" height="18.000001573610007" />
+  <frame id="21:119297" name="icon-search" x="206" y="70.00005316734314" width="20" height="20" />
+</frame>
+
+IMPORTANT: After you call this tool, you MUST call get_design_context if trying to implement the design, since this tool only returns metadata. If you do not call get_design_context, the agent will not be able to implement the design.

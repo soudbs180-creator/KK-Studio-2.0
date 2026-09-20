@@ -1,0 +1,64 @@
+{
+  "mode": "dev",
+  "sourceCommit": "20e1c64359e87f64340caaf91c2720cb7b3cc839",
+  "runtime": {
+    "url": "http://127.0.0.1:1421/",
+    "mode": "development",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://127.0.0.1:1421/@vite/client",
+      "http://127.0.0.1:1421/src/main.tsx"
+    ],
+    "route": "workspace"
+  },
+  "requests": [
+    {
+      "url": "https://t4-dev.example.test/v1/images/generations"
+    },
+    {
+      "url": "https://t4-dev.example.test/v1/images/generations"
+    },
+    {
+      "url": "https://t4-dev.example.test/v1/images/edits",
+      "editHasOriginal": true
+    }
+  ],
+  "sourceIds": [
+    "project-mu74lkox-cbbl5ucc-prompt",
+    "project-mu74lkox-cbbl5ucc-prompt",
+    "project-mu74lkox-cbbl5ucc-project-mu74lkox-cbbl5ucc-task-mu74ll9b-mgm0lm-result-1"
+  ],
+  "taskStatuses": [
+    "succeeded",
+    "succeeded",
+    "succeeded"
+  ],
+  "results": [
+    "project-mu74lkox-cbbl5ucc-project-mu74lkox-cbbl5ucc-task-mu74lkox-8i0bvl-result-1",
+    "project-mu74lkox-cbbl5ucc-project-mu74lkox-cbbl5ucc-task-mu74ll9b-mgm0lm-result-1",
+    "project-mu74lkox-cbbl5ucc-project-mu74lkox-cbbl5ucc-task-mu74lm14-989lal-result-1"
+  ],
+  "resultEdges": [
+    {
+      "id": "result-project-mu74lkox-cbbl5ucc-project-mu74lkox-cbbl5ucc-task-mu74lkox-8i0bvl-result-1",
+      "source": "project-mu74lkox-cbbl5ucc-prompt",
+      "target": "project-mu74lkox-cbbl5ucc-project-mu74lkox-cbbl5ucc-task-mu74lkox-8i0bvl-result-1",
+      "kind": "result"
+    },
+    {
+      "id": "result-project-mu74lkox-cbbl5ucc-project-mu74lkox-cbbl5ucc-task-mu74ll9b-mgm0lm-result-1",
+      "source": "project-mu74lkox-cbbl5ucc-prompt",
+      "target": "project-mu74lkox-cbbl5ucc-project-mu74lkox-cbbl5ucc-task-mu74ll9b-mgm0lm-result-1",
+      "kind": "result"
+    },
+    {
+      "id": "result-project-mu74lkox-cbbl5ucc-project-mu74lkox-cbbl5ucc-task-mu74lm14-989lal-result-1",
+      "source": "project-mu74lkox-cbbl5ucc-project-mu74lkox-cbbl5ucc-task-mu74ll9b-mgm0lm-result-1",
+      "target": "project-mu74lkox-cbbl5ucc-project-mu74lkox-cbbl5ucc-task-mu74lm14-989lal-result-1",
+      "kind": "result"
+    }
+  ],
+  "freshProfileRestored": false,
+  "credentialCleared": true,
+  "errors": []
+}

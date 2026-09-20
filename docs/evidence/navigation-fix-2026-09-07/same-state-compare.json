@@ -1,0 +1,197 @@
+{
+  "state": "zoom menu open at 200% (matches Figma node 100:16335)",
+  "design": {
+    "trigger": {
+      "x": 1158,
+      "y": 84,
+      "w": 63,
+      "h": 26
+    },
+    "tools": {
+      "x": 1223,
+      "y": 84,
+      "w": 164,
+      "h": 26
+    },
+    "menu": {
+      "x": 1158,
+      "y": 112,
+      "w": 97,
+      "h": 140
+    },
+    "group": {
+      "x": 1158,
+      "y": 84,
+      "w": 229,
+      "h": 26
+    },
+    "menuItems": [
+      "缩小",
+      "放大",
+      "适应视图",
+      "50%",
+      "100%",
+      "200%",
+      "300%",
+      "400%"
+    ],
+    "shortcuts": [
+      "Ctrl−",
+      "Ctrl+",
+      "Shift1",
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "measured": {
+    "nav": {
+      "x": 1158,
+      "y": 84,
+      "width": 229,
+      "height": 26
+    },
+    "triggerBox": {
+      "x": 1158,
+      "y": 84,
+      "width": 63,
+      "height": 26
+    },
+    "toolsBox": {
+      "x": 1223,
+      "y": 84,
+      "width": 164,
+      "height": 26
+    },
+    "menuBox": {
+      "x": 1158,
+      "y": 112,
+      "width": 97,
+      "height": 140
+    },
+    "chat": {
+      "x": 1412,
+      "y": 63,
+      "width": 476,
+      "height": 985
+    },
+    "toolbar": {
+      "x": 719,
+      "y": 998,
+      "width": 266,
+      "height": 50
+    },
+    "chatGap": 25
+  },
+  "diffs": [
+    {
+      "label": "导航组",
+      "ok": true,
+      "dx": 0,
+      "dy": 0,
+      "dw": 0,
+      "dh": 0
+    },
+    {
+      "label": "缩放按钮",
+      "ok": true,
+      "dx": 0,
+      "dy": 0,
+      "dw": 0,
+      "dh": 0
+    },
+    {
+      "label": "功能组",
+      "ok": true,
+      "dx": 0,
+      "dy": 0,
+      "dw": 0,
+      "dh": 0
+    },
+    {
+      "label": "缩放菜单",
+      "ok": true,
+      "dx": 0,
+      "dy": 0,
+      "dw": 0,
+      "dh": 0
+    }
+  ],
+  "menuItemRows": [
+    {
+      "role": "menuitem",
+      "text": "缩小Ctrl−",
+      "disabled": false,
+      "checked": null
+    },
+    {
+      "role": "menuitem",
+      "text": "放大Ctrl+",
+      "disabled": false,
+      "checked": null
+    },
+    {
+      "role": "menuitem",
+      "text": "适应视图Shift1",
+      "disabled": false,
+      "checked": null
+    },
+    {
+      "role": "menuitemradio",
+      "text": "50%",
+      "disabled": false,
+      "checked": "false"
+    },
+    {
+      "role": "menuitemradio",
+      "text": "100%",
+      "disabled": false,
+      "checked": "false"
+    },
+    {
+      "role": "menuitemradio",
+      "text": "200%",
+      "disabled": false,
+      "checked": "true"
+    },
+    {
+      "role": "menuitemradio",
+      "text": "300%",
+      "disabled": false,
+      "checked": "false"
+    },
+    {
+      "role": "menuitemradio",
+      "text": "400%",
+      "disabled": false,
+      "checked": "false"
+    }
+  ],
+  "dividerCount": 2,
+  "dividerBoxes": [
+    {
+      "x": 1165,
+      "y": 150,
+      "width": 83,
+      "height": 1
+    },
+    {
+      "x": 1165,
+      "y": 168,
+      "width": 83,
+      "height": 1
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "same-state-nav-200.png",
+    "same-state-full-1920.png"
+  ],
+  "compare": {
+    "menuOrderOk": true,
+    "checkedItem": "200%",
+    "chatGapPx": 25
+  }
+}

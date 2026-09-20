@@ -1,0 +1,9 @@
+<frame id="16:59996" name="顶部" x="19" y="10" width="300" height="15">
+  <text id="1:7222" name="KK Studio" x="19" y="10" width="58" height="15" />
+  <text id="1:7224" name="文件" x="145" y="10" width="24" height="15" />
+  <text id="1:7225" name="编辑" x="195" y="10" width="24" height="15" />
+  <text id="1:7226" name="窗口" x="245" y="10" width="24" height="15" />
+  <text id="1:7227" name="帮助" x="295" y="10" width="24" height="15" />
+</frame>
+
+IMPORTANT: After you call this tool, you MUST call get_design_context if trying to implement the design, since this tool only returns metadata. If you do not call get_design_context, the agent will not be able to implement the design.

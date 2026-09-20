@@ -1,0 +1,160 @@
+{
+  "exe": "D:/kk-studio-next/src-tauri/target/release/kk-studio.exe",
+  "pid": 39480,
+  "mode": "Tauri release / WebView2",
+  "endpoint": "http://127.0.0.1:9333",
+  "expanded": {
+    "url": "http://tauri.localhost/",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "devicePixelRatio": 1.5,
+    "runtime": {
+      "designSurface": "desktop",
+      "runtimeEntry": "src/main.tsx",
+      "runtimeMode": "production"
+    },
+    "scripts": [
+      "http://tauri.localhost/assets/index-peaOiUkj.js"
+    ],
+    "navigation": [
+      1138.354248046875,
+      71.66667175292969,
+      280.97918701171875,
+      31.104167938232422
+    ],
+    "panel": [
+      1430.3333740234375,
+      60.66666793823242,
+      470,
+      998.6666870117188
+    ],
+    "map": null,
+    "trigger": [
+      1344.625,
+      77.11458587646484,
+      65.80208587646484,
+      21.53125
+    ],
+    "gap": 10.99993896484375,
+    "triggerHit": "小地图"
+  },
+  "mapOpen": {
+    "url": "http://tauri.localhost/",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "devicePixelRatio": 1.5,
+    "runtime": {
+      "designSurface": "desktop",
+      "runtimeEntry": "src/main.tsx",
+      "runtimeMode": "production"
+    },
+    "scripts": [
+      "http://tauri.localhost/assets/index-peaOiUkj.js"
+    ],
+    "navigation": [
+      1138.354248046875,
+      71.66667175292969,
+      280.97918701171875,
+      31.104167938232422
+    ],
+    "panel": [
+      1430.3333740234375,
+      60.66666793823242,
+      470,
+      998.6666870117188
+    ],
+    "map": [
+      1223.1146240234375,
+      106.66667175292969,
+      196.21875,
+      166.3125
+    ],
+    "trigger": [
+      1344.625,
+      77.11458587646484,
+      65.80208587646484,
+      21.53125
+    ],
+    "gap": 10.99993896484375,
+    "triggerHit": "小地图"
+  },
+  "collapsed": {
+    "url": "http://tauri.localhost/",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "devicePixelRatio": 1.5,
+    "runtime": {
+      "designSurface": "desktop",
+      "runtimeEntry": "src/main.tsx",
+      "runtimeMode": "production"
+    },
+    "scripts": [
+      "http://tauri.localhost/assets/index-peaOiUkj.js"
+    ],
+    "navigation": [
+      1562.354248046875,
+      71.66667175292969,
+      280.97918701171875,
+      31.104167938232422
+    ],
+    "panel": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "map": null,
+    "trigger": [
+      1768.625,
+      77.11458587646484,
+      65.80208587646484,
+      21.53125
+    ],
+    "gap": null,
+    "triggerHit": "小地图"
+  },
+  "reopened": {
+    "url": "http://tauri.localhost/",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "devicePixelRatio": 1.5,
+    "runtime": {
+      "designSurface": "desktop",
+      "runtimeEntry": "src/main.tsx",
+      "runtimeMode": "production"
+    },
+    "scripts": [
+      "http://tauri.localhost/assets/index-peaOiUkj.js"
+    ],
+    "navigation": [
+      1138.354248046875,
+      71.66667175292969,
+      280.97918701171875,
+      31.104167938232422
+    ],
+    "panel": [
+      1430.3333740234375,
+      60.66666793823242,
+      470,
+      998.6666870117188
+    ],
+    "map": null,
+    "trigger": [
+      1344.625,
+      77.11458587646484,
+      65.80208587646484,
+      21.53125
+    ],
+    "gap": 10.99993896484375,
+    "triggerHit": "小地图"
+  },
+  "errors": []
+}

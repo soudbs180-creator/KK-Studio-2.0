@@ -1,0 +1,214 @@
+[
+  {
+    "viewport": [
+      1071,
+      698
+    ],
+    "sidebar": {
+      "x": 0,
+      "y": 40,
+      "width": 235,
+      "height": 658
+    },
+    "nav": {
+      "x": 403,
+      "y": 84,
+      "width": 235,
+      "height": 26
+    },
+    "panel": {
+      "x": 675,
+      "y": 56,
+      "width": 360,
+      "height": 611
+    },
+    "toolbar": {
+      "x": 299.5,
+      "y": 616,
+      "width": 294,
+      "height": 50
+    },
+    "close": {
+      "x": 646,
+      "y": 84,
+      "width": 30,
+      "height": 30
+    },
+    "closeGap": 8,
+    "headerButtons": [
+      {
+        "width": 30,
+        "height": 30
+      },
+      {
+        "width": 30,
+        "height": 30
+      }
+    ],
+    "tokens": {
+      "sidebarIcon": "22px",
+      "navIcon": "10px",
+      "navGroupGap": "8px",
+      "title": "16px"
+    }
+  },
+  {
+    "viewport": [
+      1440,
+      900
+    ],
+    "sidebar": {
+      "x": 0,
+      "y": 40,
+      "width": 282,
+      "height": 860
+    },
+    "nav": {
+      "x": 775,
+      "y": 84,
+      "width": 235,
+      "height": 26
+    },
+    "panel": {
+      "x": 1047,
+      "y": 63,
+      "width": 360,
+      "height": 805
+    },
+    "toolbar": {
+      "x": 509,
+      "y": 818,
+      "width": 294,
+      "height": 50
+    },
+    "close": {
+      "x": 1018,
+      "y": 91,
+      "width": 30,
+      "height": 30
+    },
+    "closeGap": 8,
+    "headerButtons": [
+      {
+        "width": 30,
+        "height": 30
+      },
+      {
+        "width": 30,
+        "height": 30
+      }
+    ],
+    "tokens": {
+      "sidebarIcon": "22px",
+      "navIcon": "10px",
+      "navGroupGap": "8px",
+      "title": "16px"
+    }
+  },
+  {
+    "viewport": [
+      1600,
+      1047
+    ],
+    "sidebar": {
+      "x": 0,
+      "y": 40,
+      "width": 287,
+      "height": 1007
+    },
+    "nav": {
+      "x": 935,
+      "y": 84,
+      "width": 235,
+      "height": 26
+    },
+    "panel": {
+      "x": 1207,
+      "y": 63,
+      "width": 360,
+      "height": 952
+    },
+    "toolbar": {
+      "x": 591.5,
+      "y": 965,
+      "width": 294,
+      "height": 50
+    },
+    "close": {
+      "x": 1178,
+      "y": 91,
+      "width": 30,
+      "height": 30
+    },
+    "closeGap": 8,
+    "headerButtons": [
+      {
+        "width": 30,
+        "height": 30
+      },
+      {
+        "width": 30,
+        "height": 30
+      }
+    ],
+    "tokens": {
+      "sidebarIcon": "22px",
+      "navIcon": "10px",
+      "navGroupGap": "8px",
+      "title": "16px"
+    }
+  },
+  {
+    "viewport": [
+      1920,
+      1080
+    ],
+    "sidebar": {
+      "x": 0,
+      "y": 40,
+      "width": 287,
+      "height": 1040
+    },
+    "nav": {
+      "x": 1145,
+      "y": 84,
+      "width": 235,
+      "height": 26
+    },
+    "panel": {
+      "x": 1417,
+      "y": 63,
+      "width": 470,
+      "height": 985
+    },
+    "toolbar": {
+      "x": 696.5,
+      "y": 998,
+      "width": 294,
+      "height": 50
+    },
+    "close": {
+      "x": 1388,
+      "y": 91,
+      "width": 30,
+      "height": 30
+    },
+    "closeGap": 8,
+    "headerButtons": [
+      {
+        "width": 30,
+        "height": 30
+      },
+      {
+        "width": 30,
+        "height": 30
+      }
+    ],
+    "tokens": {
+      "sidebarIcon": "22px",
+      "navIcon": "10px",
+      "navGroupGap": "8px",
+      "title": "16px"
+    }
+  }
+]

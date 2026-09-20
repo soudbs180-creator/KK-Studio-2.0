@@ -1,0 +1,273 @@
+{
+  "trace": [
+    {
+      "type": "pointerdown",
+      "target": "<button class=\"toolbar-add\" aria-label=\"添加资源\" aria-haspopup=\"menu\" aria-expanded=\"false\"><img class=\"toolbar-icon-add\" src=\"/figma/toolbar-add.svg\" width=\"40\" height=\"40\" alt=\"\" draggable=\"false\"></button>",
+      "pointer": "touch",
+      "primary": true,
+      "detail": 0,
+      "x": 301,
+      "y": 967,
+      "t": 289.1000000014901,
+      "prevented": false
+    },
+    {
+      "type": "touchstart",
+      "target": "<button class=\"toolbar-add\" aria-label=\"添加资源\" aria-haspopup=\"menu\" aria-expanded=\"false\"><img class=\"toolbar-icon-add\" src=\"/figma/toolbar-add.svg\" width=\"40\" height=\"40\" alt=\"\" draggable=\"false\"></button>",
+      "detail": 0,
+      "t": 289.30000000074506,
+      "prevented": false
+    },
+    {
+      "type": "pointerup",
+      "target": "<button class=\"toolbar-add\" aria-label=\"添加资源\" aria-haspopup=\"menu\" aria-expanded=\"false\"><img class=\"toolbar-icon-add\" src=\"/figma/toolbar-add.svg\" width=\"40\" height=\"40\" alt=\"\" draggable=\"false\"></button>",
+      "pointer": "touch",
+      "primary": true,
+      "detail": 0,
+      "x": 301,
+      "y": 967,
+      "t": 289.5,
+      "prevented": false
+    },
+    {
+      "type": "touchend",
+      "target": "<button class=\"toolbar-add\" aria-label=\"添加资源\" aria-haspopup=\"menu\" aria-expanded=\"false\"><img class=\"toolbar-icon-add\" src=\"/figma/toolbar-add.svg\" width=\"40\" height=\"40\" alt=\"\" draggable=\"false\"></button>",
+      "detail": 0,
+      "t": 289.6000000014901,
+      "prevented": false
+    },
+    {
+      "type": "mousedown",
+      "target": "<button class=\"toolbar-add\" aria-label=\"添加资源\" aria-haspopup=\"menu\" aria-expanded=\"false\"><img class=\"toolbar-icon-add\" src=\"/figma/toolbar-add.svg\" width=\"40\" height=\"40\" alt=\"\" draggable=\"false\"></button>",
+      "detail": 1,
+      "x": 301,
+      "y": 967,
+      "t": 290.20000000298023,
+      "prevented": false
+    },
+    {
+      "type": "focusin",
+      "target": "<button class=\"toolbar-add\" aria-label=\"添加资源\" aria-haspopup=\"menu\" aria-expanded=\"false\"><img class=\"toolbar-icon-add\" src=\"/figma/toolbar-add.svg\" width=\"40\" height=\"40\" alt=\"\" draggable=\"false\"></button>",
+      "detail": 0,
+      "t": 290.30000000074506,
+      "prevented": false
+    },
+    {
+      "type": "mouseup",
+      "target": "<button class=\"toolbar-add\" aria-label=\"添加资源\" aria-haspopup=\"menu\" aria-expanded=\"false\"><img class=\"toolbar-icon-add\" src=\"/figma/toolbar-add.svg\" width=\"40\" height=\"40\" alt=\"\" draggable=\"false\"></button>",
+      "detail": 1,
+      "x": 301,
+      "y": 967,
+      "t": 290.4000000022352,
+      "prevented": false
+    },
+    {
+      "type": "click",
+      "target": "<button class=\"toolbar-add\" aria-label=\"添加资源\" aria-haspopup=\"menu\" aria-expanded=\"false\"><img class=\"toolbar-icon-add\" src=\"/figma/toolbar-add.svg\" width=\"40\" height=\"40\" alt=\"\" draggable=\"false\"></button>",
+      "pointer": "touch",
+      "primary": false,
+      "detail": 1,
+      "x": 301,
+      "y": 967,
+      "t": 290.4000000022352,
+      "prevented": false
+    },
+    {
+      "type": "focusin",
+      "target": "<button role=\"menuitem\" aria-label=\"文本\"><span class=\"add-node-icon-box\"><span class=\"add-node-icon add-node-icon-text\" aria-hidden=\"true\"></span></span><span class=\"add-node-label\">文本</span></button>",
+      "detail": 0,
+      "menu": "添加节点",
+      "t": 294.30000000074506,
+      "prevented": false
+    },
+    {
+      "type": "pointerdown",
+      "target": "<button role=\"menuitem\" aria-label=\"文本\"><span class=\"add-node-icon-box\"><span class=\"add-node-icon add-node-icon-text\" aria-hidden=\"true\"></span></span><span class=\"add-node-label\">文本</span></button>",
+      "pointer": "touch",
+      "primary": true,
+      "detail": 0,
+      "menu": "添加节点",
+      "x": 429,
+      "y": 443,
+      "t": 337.30000000074506,
+      "prevented": false
+    },
+    {
+      "type": "touchstart",
+      "target": "<button role=\"menuitem\" aria-label=\"文本\"><span class=\"add-node-icon-box\"><span class=\"add-node-icon add-node-icon-text\" aria-hidden=\"true\"></span></span><span class=\"add-node-label\">文本</span></button>",
+      "detail": 0,
+      "menu": "添加节点",
+      "t": 337.5,
+      "prevented": false
+    },
+    {
+      "type": "pointerup",
+      "target": "<button role=\"menuitem\" aria-label=\"文本\"><span class=\"add-node-icon-box\"><span class=\"add-node-icon add-node-icon-text\" aria-hidden=\"true\"></span></span><span class=\"add-node-label\">文本</span></button>",
+      "pointer": "touch",
+      "primary": true,
+      "detail": 0,
+      "menu": "添加节点",
+      "x": 429,
+      "y": 443,
+      "t": 337.6000000014901,
+      "prevented": false
+    },
+    {
+      "type": "touchend",
+      "target": "<button role=\"menuitem\" aria-label=\"文本\"><span class=\"add-node-icon-box\"><span class=\"add-node-icon add-node-icon-text\" aria-hidden=\"true\"></span></span><span class=\"add-node-label\">文本</span></button>",
+      "detail": 0,
+      "menu": "添加节点",
+      "t": 337.80000000074506,
+      "prevented": false
+    },
+    {
+      "type": "mousedown",
+      "target": "<button role=\"menuitem\" aria-label=\"文本\"><span class=\"add-node-icon-box\"><span class=\"add-node-icon add-node-icon-text\" aria-hidden=\"true\"></span></span><span class=\"add-node-label\">文本</span></button>",
+      "detail": 1,
+      "menu": "添加节点",
+      "x": 429,
+      "y": 443,
+      "t": 338.5,
+      "prevented": false
+    },
+    {
+      "type": "mouseup",
+      "target": "<button role=\"menuitem\" aria-label=\"文本\"><span class=\"add-node-icon-box\"><span class=\"add-node-icon add-node-icon-text\" aria-hidden=\"true\"></span></span><span class=\"add-node-label\">文本</span></button>",
+      "detail": 1,
+      "menu": "添加节点",
+      "x": 429,
+      "y": 443,
+      "t": 338.5,
+      "prevented": false
+    },
+    {
+      "type": "click",
+      "target": "<button role=\"menuitem\" aria-label=\"文本\"><span class=\"add-node-icon-box\"><span class=\"add-node-icon add-node-icon-text\" aria-hidden=\"true\"></span></span><span class=\"add-node-label\">文本</span></button>",
+      "pointer": "touch",
+      "primary": false,
+      "detail": 1,
+      "menu": "添加节点",
+      "x": 429,
+      "y": 443,
+      "t": 338.6000000014901,
+      "prevented": false
+    },
+    {
+      "type": "focusin",
+      "target": "<div class=\"canvas-node canvas-node-result is-selected \" data-canvas-node=\"true\" data-node-id=\"added-text-1\" data-selected=\"true\" data-testid=\"canvas-node-added-text-1\" role=\"group\" tabindex=\"0\" aria-label=\"新文案卡片，点击或按回车选择，拖动可移动，方向键可微调，按删除键可",
+      "detail": 0,
+      "t": 355.4000000022352,
+      "prevented": false
+    },
+    {
+      "type": "pointerdown",
+      "target": "<button class=\"node-add-follow\" aria-label=\"从新文案卡片添加下游\" aria-expanded=\"false\" aria-haspopup=\"menu\" title=\"拖出并释放以添加节点；也可点击或按回车\"><span class=\"node-add-visual\" style=\"translate: 0px;\"><span class=\"node-port-plus\" aria-hidden=\"true\"></span></sp",
+      "pointer": "touch",
+      "primary": true,
+      "detail": 0,
+      "x": 629,
+      "y": 515.5,
+      "t": 370.80000000074506,
+      "prevented": false
+    },
+    {
+      "type": "focusin",
+      "target": "<button class=\"node-add-follow\" aria-label=\"从新文案卡片添加下游\" aria-expanded=\"false\" aria-haspopup=\"menu\" title=\"拖出并释放以添加节点；也可点击或按回车\"><span class=\"node-add-visual\" style=\"translate: 0px;\"><span class=\"node-port-plus\" aria-hidden=\"true\"></span></sp",
+      "detail": 0,
+      "t": 370.9000000022352,
+      "prevented": false
+    },
+    {
+      "type": "touchstart",
+      "target": "<button class=\"node-add-follow\" aria-label=\"从新文案卡片添加下游\" aria-expanded=\"false\" aria-haspopup=\"menu\" title=\"拖出并释放以添加节点；也可点击或按回车\"><span class=\"node-add-visual\" style=\"translate: 0px;\"><span class=\"node-port-plus\" aria-hidden=\"true\"></span></sp",
+      "detail": 0,
+      "t": 371.1000000014901,
+      "prevented": false
+    },
+    {
+      "type": "touchmove",
+      "target": "<button class=\"node-add-follow\" aria-label=\"从新文案卡片添加下游\" aria-expanded=\"false\" aria-haspopup=\"menu\" title=\"拖出并释放以添加节点；也可点击或按回车\"><span class=\"node-add-visual\" style=\"translate: 0px;\"><span class=\"node-port-plus\" aria-hidden=\"true\"></span></sp",
+      "detail": 0,
+      "t": 403.4000000022352,
+      "prevented": false
+    },
+    {
+      "type": "pointerup",
+      "target": "<button class=\"node-add-follow\" aria-label=\"从新文案卡片添加下游\" aria-expanded=\"false\" aria-haspopup=\"menu\" title=\"拖出并释放以添加节点；也可点击或按回车\"><span class=\"node-add-visual\" style=\"translate: 0px;\"><span class=\"node-port-plus\" aria-hidden=\"true\"></span></sp",
+      "pointer": "touch",
+      "primary": true,
+      "detail": 0,
+      "x": 650,
+      "y": 650,
+      "t": 420.70000000298023,
+      "prevented": false
+    },
+    {
+      "type": "focusin",
+      "target": "<button role=\"menuitem\" aria-label=\"文本\"><span class=\"add-node-icon-box\"><span class=\"add-node-icon add-node-icon-text\" aria-hidden=\"true\"></span></span><span class=\"add-node-label\">文本</span></button>",
+      "detail": 0,
+      "menu": "新增下游卡片",
+      "t": 423.20000000298023,
+      "prevented": false
+    },
+    {
+      "type": "touchend",
+      "target": "<button class=\"node-add-follow\" aria-label=\"从新文案卡片添加下游\" aria-expanded=\"true\" aria-haspopup=\"menu\" title=\"拖出并释放以添加节点；也可点击或按回车\"><span class=\"node-add-visual\" style=\"translate: 0px;\"><span class=\"node-port-plus\" aria-hidden=\"true\"></span></spa",
+      "detail": 0,
+      "menu": "新增下游卡片",
+      "t": 423.5,
+      "prevented": false
+    },
+    {
+      "type": "pointerdown",
+      "target": "<button role=\"menuitem\" aria-label=\"音频\"><span class=\"add-node-icon-box\"><span class=\"add-node-icon add-node-icon-audio\" aria-hidden=\"true\"></span></span><span class=\"add-node-label\">音频</span></button>",
+      "pointer": "touch",
+      "primary": true,
+      "detail": 0,
+      "menu": "新增下游卡片",
+      "x": 604,
+      "y": 766,
+      "t": 1224.7000000029802,
+      "prevented": false
+    },
+    {
+      "type": "touchstart",
+      "target": "<button role=\"menuitem\" aria-label=\"音频\"><span class=\"add-node-icon-box\"><span class=\"add-node-icon add-node-icon-audio\" aria-hidden=\"true\"></span></span><span class=\"add-node-label\">音频</span></button>",
+      "detail": 0,
+      "menu": "新增下游卡片",
+      "t": 1224.7000000029802,
+      "prevented": false
+    },
+    {
+      "type": "pointerup",
+      "target": "<button role=\"menuitem\" aria-label=\"音频\"><span class=\"add-node-icon-box\"><span class=\"add-node-icon add-node-icon-audio\" aria-hidden=\"true\"></span></span><span class=\"add-node-label\">音频</span></button>",
+      "pointer": "touch",
+      "primary": true,
+      "detail": 0,
+      "menu": "新增下游卡片",
+      "x": 604,
+      "y": 766,
+      "t": 1239.5,
+      "prevented": false
+    },
+    {
+      "type": "touchend",
+      "target": "<button role=\"menuitem\" aria-label=\"音频\"><span class=\"add-node-icon-box\"><span class=\"add-node-icon add-node-icon-audio\" aria-hidden=\"true\"></span></span><span class=\"add-node-label\">音频</span></button>",
+      "detail": 0,
+      "menu": "新增下游卡片",
+      "t": 1239.6000000014901,
+      "prevented": false
+    }
+  ],
+  "nodes": [
+    "image",
+    "video1",
+    "video2",
+    "added-text-1"
+  ],
+  "edges": [
+    "<div class=\"connection \"><svg class=\"canvas-connectors\"><path d=\"M 578 365 C 636.95 365, 650.05 165, 709 165\" data-testid=\"connector-video1\"></path><path class=",
+    "<div class=\"connection \"><svg class=\"canvas-connectors\"><path d=\"M 578 365 C 636.95 365, 650.05 517, 709 517\" data-testid=\"connector-video2\"></path><path class="
+  ],
+  "menu": "<div class=\"add-node-menu\" role=\"menu\" aria-label=\"新增下游卡片\" style=\"left: 456px; top: 422px;\"><p class=\"add-node-title\">添加节点</p><div class=\"add-node-items\"><button role=\"menuitem\" ar"
+}

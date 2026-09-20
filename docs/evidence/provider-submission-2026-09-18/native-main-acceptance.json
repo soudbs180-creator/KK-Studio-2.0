@@ -1,0 +1,20 @@
+{
+  "runtime": {
+    "url": "http://tauri.localhost/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://tauri.localhost/assets/index-CBwa_Zj7.js"
+    ],
+    "route": "landing"
+  },
+  "taskState": "已完成",
+  "requests": 1,
+  "cleared": true,
+  "errors": [],
+  "sourceCommit": "14dbe11",
+  "mainHead": "f5dd095",
+  "executable": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001/src-tauri/target/release/kk-studio.exe",
+  "executableSha256": "EBAEBF33BC1082E70F6CC9469BDBA1EBC1CCD117D2F63B4AB1FE51BD2E7F5B10",
+  "dataRoot": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001/.tmp/provider-gates/native-data-2"
+}

@@ -1,0 +1,43 @@
+{
+  "deployment": "local",
+  "port": 4318,
+  "dataDirectory": "C:/Users/REPLACE_USER/AppData/Roaming/kk-studio/gateway",
+  "allowedOrigins": [
+    "http://127.0.0.1:1421",
+    "http://127.0.0.1:1423",
+    "http://tauri.localhost"
+  ],
+  "assetOrigins": [],
+  "principals": [
+    {
+      "ownerId": "REPLACE_OWNER",
+      "tokenEnv": "KK_GATEWAY_SESSION",
+      "admin": true,
+      "initialCredits": 100,
+      "concurrency": 4
+    }
+  ],
+  "connections": [
+    {
+      "metadata": {
+        "id": "own-api",
+        "provider": "OpenAI",
+        "kind": "user_byok",
+        "displayName": "My formal API",
+        "baseUrl": "https://api.openai.com/v1",
+        "credentialRef": "own-api-v1",
+        "capabilities": {
+          "modalities": ["image"],
+          "operations": ["generate"],
+          "async": false
+        },
+        "state": "active",
+        "concurrencyLimit": 4
+      },
+      "ownerId": "REPLACE_OWNER",
+      "unitPrice": 1,
+      "costLimit": 100
+    }
+  ],
+  "credentialEnv": { "own-api-v1": "KK_OWN_API_CREDENTIAL" }
+}

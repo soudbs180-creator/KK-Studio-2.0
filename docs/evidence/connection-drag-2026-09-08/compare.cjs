@@ -1,0 +1,13 @@
+const fs=require('node:fs');
+const crypto=require('node:crypto');
+const path=require('node:path');
+const root=path.resolve(__dirname,'../../..');
+const original=JSON.parse(fs.readFileSync(path.join(root,'docs/reference/connection-drag-2026-09-08/menu-geometry.json'),'utf8'));
+const source=JSON.parse(original.content.find(x=>x.type==='text').text);
+const actual=JSON.parse(fs.readFileSync(__dirname+'/final.json','utf8')).geometry;
+const delta=(a,b)=>Object.fromEntries(['x','y','width','height'].map(key=>[key,a[key]-b[key]]));
+const rows=source.nodes.filter(x=>x.name.startsWith('menu-item-'));
+const icons=source.nodes.filter(x=>x.name==='icon-container');
+const report={sourceNode:'171:787',frameDelta:{width:actual.width-source.width,height:actual.height-source.height},title:delta(actual.title,source.nodes.find(x=>x.id==='171:788')),rows:actual.rows.map((row,index)=>({label:rows[index].name,frameDelta:delta(row.row,rows[index]),iconDelta:delta(row.icon,icons[index]),labelOrigin:{x:row.label.x,y:row.label.y},disabledSupplement:row.disabled})),modelBadgeDelta:delta(actual.rows[3].badge,source.nodes.find(x=>x.id==='171:814')),assets:JSON.parse(fs.readFileSync(path.join(root,'docs/reference/connection-drag-2026-09-08/assets.json'),'utf8')).map(asset=>({file:asset.file,match:crypto.createHash('sha256').update(fs.readFileSync(path.join(root,asset.file))).digest('hex').toUpperCase()===asset.sha256}))};
+fs.writeFileSync(__dirname+'/source-compare.json',JSON.stringify(report,null,2));
+console.log(JSON.stringify({frame:report.frameDelta,title:report.title,maxRowDelta:Math.max(...report.rows.flatMap(x=>[...Object.values(x.frameDelta),...Object.values(x.iconDelta)]).map(Math.abs)),modelBadgeDelta:report.modelBadgeDelta,assetsMatch:report.assets.every(x=>x.match)}));

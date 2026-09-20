@@ -1,0 +1,179 @@
+ M AGENTS.md
+ M README.md
+ M docs/FRONTEND-SPEC.md
+ M docs/PROGRESS.md
+ M docs/UI-ALIGNMENT.md
+ M docs/evidence/assets-1440.png
+ M docs/evidence/assets-1920.png
+ M docs/evidence/assets-390.png
+ M docs/evidence/assets-768.png
+ M docs/evidence/assets-compact.png
+ M docs/evidence/assets-desktop.png
+ M docs/evidence/assets-empty.png
+ M docs/evidence/browser-results.json
+ M docs/evidence/canvas-added-card.png
+ M docs/evidence/collection-from-canvas.png
+ M docs/evidence/image-composer-refined.png
+ M docs/evidence/image-composer-selected.png
+ M docs/evidence/settings-1440.png
+ M docs/evidence/settings-1920.png
+ M docs/evidence/settings-390.png
+ M docs/evidence/settings-768.png
+ M docs/evidence/settings-integrated.png
+ M docs/evidence/settings-model-provider.png
+ M docs/evidence/workspace-1440.png
+ M docs/evidence/workspace-1920.png
+ M docs/evidence/workspace-390.png
+ M docs/evidence/workspace-768.png
+ M package-lock.json
+ M package.json
+ M src/App.tsx
+ M src/components/Canvas.tsx
+ M src/components/InfoPanel.tsx
+ M src/components/Modal.tsx
+ M src/components/Sidebar.tsx
+ M src/components/TopBar.tsx
+ M src/components/canvas/CanvasToolbar.tsx
+ M src/components/canvas/canvasModel.ts
+ M src/components/canvas/useCanvasControls.ts
+ M src/components/nodes/ImageCreationNode.tsx
+ M src/components/nodes/VideoNode.tsx
+ M src/components/settings/GeneralSettings.tsx
+ M src/components/settings/settings.css
+ M src/core/canvasItems.ts
+ M src/styles/global.css
+ M src/styles/responsive.css
+ M src/styles/workspace.css
+ M tests/browser/frontend.spec.ts
+ M tests/browser/interaction-regressions.spec.ts
+?? config/
+?? docs/UI-STANDARDS.md
+?? docs/evidence/canvas-minimap.png
+?? docs/evidence/catalog-1440.png
+?? docs/evidence/catalog-1920.png
+?? docs/evidence/catalog-390.png
+?? docs/evidence/catalog-768.png
+?? docs/evidence/catalog-saved-desktop.png
+?? docs/evidence/frontend-standards-2026-09-07/
+?? docs/evidence/layout-review-2026-09-08/
+?? docs/evidence/navigation-1440.png
+?? docs/evidence/navigation-1920.png
+?? docs/evidence/navigation-390.png
+?? docs/evidence/navigation-768.png
+?? docs/evidence/navigation-fix-2026-09-07/
+?? docs/evidence/navigation-review-2026-09-07/
+?? docs/evidence/recovery-2026-09-07/
+?? docs/evidence/replan-2026-09-07/
+?? docs/evidence/settings-review-2026-09-07/
+?? docs/evidence/sidebar-review-2026-09-08/
+?? docs/evidence/task-empty.png
+?? docs/evidence/user-comments-2026-09-08/
+?? docs/evidence/video-composer-desktop.png
+?? docs/reference/frontend-standards-2026-09-07/
+?? docs/reference/layout-review-2026-09-07/
+?? docs/reference/navigation-fix-2026-09-07/
+?? docs/reference/navigation-review-2026-09-07/
+?? docs/reference/replan-2026-09-07/
+?? docs/reference/settings-review-2026-09-07/
+?? docs/reference/sidebar-review-2026-09-08/
+?? docs/reference/toolbar-icons-2026-09-08/
+?? docs/reference/user-comments-2026-09-08/
+?? docs/superpowers/plans/2026-09-07-frontend-standards.md
+?? docs/superpowers/plans/2026-09-07-ui-motion-continuation.md
+?? docs/superpowers/plans/2026-09-08-ui-interaction-corrections.md
+?? docs/superpowers/specs/
+?? public/demo/
+?? public/figma/chat-close.svg
+?? public/figma/chat-open.svg
+?? public/figma/connection-cut.svg
+?? public/figma/connection-port.svg
+?? public/figma/count-x.svg
+?? public/figma/generate-arrow.svg
+?? public/figma/help-next.svg
+?? public/figma/help-shortcuts.svg
+?? public/figma/help-tutorial.svg
+?? public/figma/mic-off.svg
+?? public/figma/mic.svg
+?? public/figma/nav-arrange.svg
+?? public/figma/nav-background.svg
+?? public/figma/nav-chevron.svg
+?? public/figma/nav-lines.svg
+?? public/figma/nav-map.svg
+?? public/figma/settings-select-chevron.svg
+?? public/figma/settings-theme-dark.svg
+?? public/figma/sidebar-add.svg
+?? public/figma/sidebar-archive.svg
+?? public/figma/sidebar-search.svg
+?? public/figma/sidebar-settings.svg
+?? public/figma/sidebar-skill.svg
+?? public/figma/sidebar-toggle.svg
+?? public/figma/sidebar-workflow.svg
+?? public/figma/timer-start.png
+?? public/figma/tool-check.svg
+?? public/figma/tool-hand.svg
+?? public/figma/tool-select.svg
+?? public/figma/toolbar-add.svg
+?? public/figma/toolbar-assets.svg
+?? public/figma/toolbar-collapse.svg
+?? public/figma/toolbar-divider-left.svg
+?? public/figma/toolbar-divider-right.svg
+?? public/figma/toolbar-favorite.svg
+?? public/figma/toolbar-help.svg
+?? public/figma/toolbar-select.svg
+?? public/figma/video-label.svg
+?? public/figma/video-placeholder.svg
+?? scripts/
+?? src/components/CatalogPanel.tsx
+?? src/components/SavedPane.tsx
+?? src/components/ShortcutsPanel.tsx
+?? src/components/UiIcon.tsx
+?? src/components/canvas/CanvasConnections.tsx
+?? src/components/canvas/CanvasHud.tsx
+?? src/components/canvas/CanvasMarquee.tsx
+?? src/components/canvas/CanvasMinimap.tsx
+?? src/components/canvas/CanvasNavigation.tsx
+?? src/components/canvas/CanvasNodeContent.tsx
+?? src/components/canvas/CanvasZoomMenu.tsx
+?? src/components/canvas/ConnectionFeedback.tsx
+?? src/components/canvas/DemoLibrary.tsx
+?? src/components/canvas/NodeActions.tsx
+?? src/components/canvas/TaskPanel.tsx
+?? src/components/canvas/ToolbarIcon.tsx
+?? src/components/canvas/useCanvasNodeActions.ts
+?? src/components/canvas/useCanvasPointer.ts
+?? src/components/canvas/useCanvasView.ts
+?? src/components/canvas/useCanvasViewport.ts
+?? src/components/nodes/CreationComposer.tsx
+?? src/components/nodes/CreationParameters.tsx
+?? src/components/nodes/DemoMediaPreview.tsx
+?? src/components/nodes/DemoResultNode.tsx
+?? src/components/nodes/DemoRunButton.tsx
+?? src/components/nodes/GenerationCount.tsx
+?? src/components/useDismissible.ts
+?? src/components/useSidebarLayout.ts
+?? src/core/canvasGraph.ts
+?? src/core/canvasViewport.ts
+?? src/core/demoMedia.ts
+?? src/styles/canvas-actions.css
+?? src/styles/canvas-hud.css
+?? src/styles/canvas-navigation.css
+?? src/styles/canvas-tools.css
+?? src/styles/catalog.css
+?? src/styles/demo-results.css
+?? src/styles/generation-count.css
+?? src/styles/interaction.css
+?? src/styles/motion.css
+?? src/styles/shortcuts.css
+?? src/styles/sidebar.css
+?? src/styles/toolbar-icons.css
+?? src/styles/ui-tokens.css
+?? tests/browser/canvas-actions.spec.ts
+?? tests/browser/canvas-layout.spec.ts
+?? tests/browser/canvas-navigation.spec.ts
+?? tests/browser/canvas-pointer.spec.ts
+?? tests/browser/demo-results.spec.ts
+?? tests/browser/design-corrections.spec.ts
+?? tests/browser/generation-count.spec.ts
+?? tests/browser/sidebar.spec.ts
+?? tests/browser/ui-motion.spec.ts
+?? tests/canvasGraph.test.ts

@@ -1,0 +1,61 @@
+{
+  "date": "2026-09-17T05:42:16.158Z",
+  "task": "TASK-GOV-001",
+  "sourceCommit": "987c908aeaf508293f277f121e900883f3f2702a",
+  "cleanCheckout": "D:/kk-studio-next/.worktrees/TASK-GOV-001-verify",
+  "cleanBeforeInstall": true,
+  "npmCi": {
+    "exitCode": 0,
+    "installedPackages": 177,
+    "auditVulnerabilities": 0
+  },
+  "verify": {
+    "exitCode": 0,
+    "nodeTests": 115,
+    "nodeFailed": 0,
+    "browser": {
+      "startTime": "2026-09-17T05:36:18.134Z",
+      "duration": 28167.976,
+      "expected": 139,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "uiFiles": 116,
+    "uiViolations": 0,
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "format": "PASS",
+    "build": "PASS"
+  },
+  "rust": {
+    "tests": 36,
+    "failed": 0,
+    "fmt": "PASS",
+    "clientCheck": "PASS",
+    "releaseBuild": "PASS"
+  },
+  "bundles": {
+    "js": "index-Bsm9uCZD.js",
+    "css": "index-CMZpbv5y.css",
+    "taskJsSha256": "e5341369636d0d9e35780bfd31380b75d829465e8b79dbc11aa680f4fd459b86",
+    "cleanJsSha256": "e5341369636d0d9e35780bfd31380b75d829465e8b79dbc11aa680f4fd459b86"
+  },
+  "originalCheckout": {
+    "statusRecords": 178,
+    "manifestFilesCompared": 664,
+    "mismatches": 0,
+    "sourceAndIndexUnmodified": true
+  },
+  "runtimeEvidence": [
+    "dev-runtime.json",
+    "native-runtime.json",
+    "native-close.json"
+  ],
+  "boundaries": [
+    "Fresh dev and native smoke cover landing/settings/reload/Escape only",
+    "Production Edge suite uses local request stubs where documented, not paid external providers",
+    "No current Figma parity, native asset full acceptance or production deployment claim",
+    "Remote PR, CI execution and protected-main settings not available"
+  ]
+}

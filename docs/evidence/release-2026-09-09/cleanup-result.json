@@ -1,0 +1,48 @@
+{
+  "generatedAt": "2026-09-09T01:18:25.2686623Z",
+  "active": "D:\\kk-studio-next",
+  "legacyRoot": {
+    "path": "D:\\kk-studio",
+    "exists": true,
+    "childCount": 0,
+    "removal": "blocked-by-open-working-directory"
+  },
+  "disposableCheck": {
+    "path": "D:\\kk-studio-r2-index-check",
+    "exists": false,
+    "expectedTarget": "D:\\kk-studio\\node_modules"
+  },
+  "rollbackArchive": {
+    "path": "D:\\KK-Studio-legacy-archive-20260909",
+    "exists": true,
+    "topLevelCount": 50
+  },
+  "userDataBackup": {
+    "path": "D:\\KK-Studio-user-data-backup-20260909",
+    "exists": true,
+    "fileCount": 46
+  },
+  "clientArtifacts": [
+    {
+      "path": "D:\\kk-studio-next\\src-tauri\\target\\release\\kk-studio.exe",
+      "exists": true,
+      "length": 17353728
+    },
+    {
+      "path": "D:\\kk-studio-next\\src-tauri\\target\\release\\bundle\\msi\\KK Studio_2.0.0_x64_zh-CN.msi",
+      "exists": true,
+      "length": 8183808
+    },
+    {
+      "path": "D:\\kk-studio-next\\src-tauri\\target\\release\\bundle\\nsis\\KK Studio_2.0.0_x64-setup.exe",
+      "exists": true,
+      "length": 6683117
+    }
+  ],
+  "cleanup": {
+    "childrenMoved": true,
+    "disposableCheckRemoved": true,
+    "userDataDeleted": false,
+    "rollbackCommand": "Move-Item -LiteralPath 'D:\\KK-Studio-legacy-archive-20260909' -Destination 'D:\\kk-studio'"
+  }
+}

@@ -1,0 +1,65 @@
+const imgProperty1 = "https://www.figma.com/api/mcp/asset/cfa26157-4f0e-4896-9baa-c153a9d4f8e6.svg";
+const imgProperty2 = "https://www.figma.com/api/mcp/asset/a38076e8-0804-4284-8931-bcde7b2bf0fa.svg";
+const img = "https://www.figma.com/api/mcp/asset/69b27b60-4a08-4a54-9659-45a5f42dab38.svg";
+const imgLogo = "https://www.figma.com/api/mcp/asset/c63920da-a5d2-4b13-a354-a0b294f2a4ff.svg";
+const imgIconSearch = "https://www.figma.com/api/mcp/asset/ce732e35-ea04-479d-a959-f384a3776240.svg";
+
+type ComponentProps = {
+  className?: string;
+  property1?: "左打开" | "左关闭";
+};
+
+function Component({ className, property1 = "左关闭" }: ComponentProps) {
+  const is = property1 === "左关闭";
+  return (
+    <button className={className || "block relative size-[18px]"} id={is ? "node-121_17649" : "node-121_17650"}>
+      <div className="absolute inset-[-9.72%]">
+        <img alt="" className="block max-w-none size-full" src={is ? imgProperty2 : imgProperty1} />
+      </div>
+    </button>
+  );
+}
+
+export default function Component1() {
+  return (
+    <div className="relative size-full" data-node-id="404:28669" data-name="左侧收纳组件">
+      <img alt="" className="absolute block inset-0 max-w-none size-full" src={img} />
+      <div className="absolute inset-[4.17%_84.84%_87.87%_0]" data-node-id="I404:28669;404:28335" data-name="左侧栏">
+        <div className="absolute content-stretch flex items-center justify-between left-[20px] pt-[30px] top-0 w-[251px]" data-node-id="I404:28669;404:28333" data-name="app名字和功能键">
+          <div className="content-stretch flex gap-[6px] items-center relative shrink-0 w-[111px]" data-node-id="I404:28669;404:28325" data-name="logo带字">
+            <div className="relative shrink-0 size-[26px]" data-node-id="I404:28669;404:28293" data-name="logo">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgLogo} />
+            </div>
+            <div className="[word-break:break-word] flex flex-col font-['Inter:Bold'] font-bold h-[23px] justify-center leading-[0] not-italic relative shrink-0 text-[#dadada] text-[16px] w-[149px]" data-node-id="I404:28669;404:28230">
+              <p className="leading-[normal]">KK Studio</p>
+            </div>
+          </div>
+          <div className="content-stretch flex gap-[15px] items-center relative shrink-0" data-node-id="I404:28669;404:28332">
+            <div className="overflow-clip relative shrink-0 size-[26px]" data-node-id="I404:28669;404:28327" data-name="容器">
+              <div className="absolute inset-[11.54%]" data-node-id="I404:28669;404:28242" data-name="icon-search">
+                <div className="absolute inset-[-4.38%_-4.37%_-4.38%_-4.38%]">
+                  <img alt="" className="block max-w-none size-full" src={imgIconSearch} />
+                </div>
+              </div>
+            </div>
+            <button className="block cursor-pointer overflow-clip relative shrink-0 size-[26px]" data-node-id="I404:28669;404:28326" data-name="容器">
+              <Component className="absolute flex inset-[15.38%] items-center justify-center" property1="左打开" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

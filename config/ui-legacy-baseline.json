@@ -1,0 +1,138 @@
+{
+  "src/components/assets/AssetPanel.tsx": {
+    "colors": {},
+    "lucide": ["ArrowLeft", "Plus", "Upload", "X"]
+  },
+  "src/components/assets/assets.css": {
+    "colors": {
+      "#333": 2
+    },
+    "lucide": []
+  },
+  "src/components/canvas/TaskPanel.tsx": {
+    "colors": {},
+    "lucide": ["ClipboardList"]
+  },
+  "src/components/Canvas.tsx": {
+    "colors": {
+      "#0a0a0a": 1
+    },
+    "lucide": []
+  },
+  "src/components/CatalogPanel.tsx": {
+    "colors": {},
+    "lucide": ["X"]
+  },
+  "src/components/CollectionPage.tsx": {
+    "colors": {},
+    "lucide": ["ArrowUpRight", "Heart", "LayoutGrid", "List", "Search", "Star"]
+  },
+  "src/components/ConversationPanel.tsx": {
+    "colors": {},
+    "lucide": [
+      "ArrowUp",
+      "Box",
+      "Copy",
+      "MessageCircle",
+      "Mic",
+      "PanelRightClose",
+      "Plus",
+      "Puzzle",
+      "Trash2"
+    ]
+  },
+  "src/components/InfoPanel.tsx": {
+    "colors": {},
+    "lucide": ["X"]
+  },
+  "src/components/LibraryPage.tsx": {
+    "colors": {},
+    "lucide": [
+      "ArrowUpRight",
+      "Folder",
+      "GitBranch",
+      "Plus",
+      "Puzzle",
+      "Search"
+    ]
+  },
+  "src/components/nodes/CreationComposer.tsx": {
+    "colors": {},
+    "lucide": ["Heart", "Plus", "Square"]
+  },
+  "src/components/nodes/ImageCreationNode.tsx": {
+    "colors": {},
+    "lucide": ["Image", "Upload"]
+  },
+  "src/components/SavedPane.tsx": {
+    "colors": {},
+    "lucide": ["Heart", "Star"]
+  },
+  "src/components/SearchPage.tsx": {
+    "colors": {
+      "#8b9dc3": 1,
+      "#f5a623": 1,
+      "#e85d75": 1,
+      "#9b8cff": 1
+    },
+    "lucide": [
+      "ArrowUpRight",
+      "Folder",
+      "Heart",
+      "Puzzle",
+      "Search",
+      "Star",
+      "X"
+    ]
+  },
+  "src/components/settings/SettingsPanel.tsx": {
+    "colors": {},
+    "lucide": ["X"]
+  },
+  "src/components/Sidebar.tsx": {
+    "colors": {},
+    "lucide": ["ArrowUpRight", "ChevronDown", "Folder"]
+  },
+  "src/styles/canvas-navigation.css": {
+    "colors": {
+      "#0003": 2,
+      "#111": 1,
+      "#444": 1,
+      "#777": 1,
+      "#858585": 1
+    },
+    "lucide": []
+  },
+  "src/styles/catalog.css": {
+    "colors": {
+      "#ef6d6d": 2
+    },
+    "lucide": []
+  },
+  "src/styles/generation-count.css": {
+    "colors": {
+      "#d9d9d9": 2
+    },
+    "lucide": []
+  },
+  "src/styles/workspace.css": {
+    "colors": {
+      "#363636": 1,
+      "#d99500": 1,
+      "#292929": 1,
+      "#0c9568": 1,
+      "#d4e8e0": 1,
+      "#202020": 1,
+      "#0008": 1,
+      "#aaa3ff": 1,
+      "rgba(0, 0, 0, 0.3)": 1,
+      "#4b4b4b": 2,
+      "#707070": 5,
+      "#313131": 2,
+      "#808080": 2,
+      "#f5a623": 2,
+      "#e85d75": 2
+    },
+    "lucide": []
+  }
+}

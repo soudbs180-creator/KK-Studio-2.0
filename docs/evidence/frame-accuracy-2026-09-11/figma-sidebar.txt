@@ -1,0 +1,228 @@
+import { motion } from "motion/react";
+const img = "https://www.figma.com/api/mcp/asset/f3b2a406-1253-4df5-a4da-620e8fb2904b.svg";
+const imgIconArchive = "https://www.figma.com/api/mcp/asset/c310ac65-e4e9-4a80-9fb7-24d9d0f795c9.svg";
+const img1 = "https://www.figma.com/api/mcp/asset/4a4c1c7f-8836-4da7-a80e-4d0e7ce9c73b.svg";
+const img2 = "https://www.figma.com/api/mcp/asset/aa8d6e3e-dc08-47be-b47b-ca5c6e5724f2.svg";
+const img288 = "https://www.figma.com/api/mcp/asset/0283c071-f8cd-4218-a595-87eb9ce63043.svg";
+const img3 = "https://www.figma.com/api/mcp/asset/30831b85-a1a3-46a9-aa9e-02cd6c6ac46a.svg";
+const img4 = "https://www.figma.com/api/mcp/asset/841f12f1-7320-4768-92ef-562b7b4b888c.svg";
+const imgIconFolderOpen = "https://www.figma.com/api/mcp/asset/8206817b-c862-4563-818b-62d7e6e34be4.svg";
+const img5 = "https://www.figma.com/api/mcp/asset/4a9b411e-9f86-4cc3-b9da-262a2307f551.svg";
+const img6 = "https://www.figma.com/api/mcp/asset/1c254d85-70d9-471d-bce2-2026592410b0.svg";
+const img7 = "https://www.figma.com/api/mcp/asset/62fd9028-486d-49fa-b041-7dcbe720539e.svg";
+const img8 = "https://www.figma.com/api/mcp/asset/2cb4866d-6ffd-40f7-8c4e-dca3f63b2179.svg";
+const img9 = "https://www.figma.com/api/mcp/asset/640eb383-4009-412b-a2f0-e15813f53bd0.svg";
+const imgLogo = "https://www.figma.com/api/mcp/asset/a25620fa-67ad-4b7f-92e8-61f97ca89e31.svg";
+const imgIconSettings = "https://www.figma.com/api/mcp/asset/89fb0e31-90a3-4962-a798-e5c93a17618a.svg";
+
+function Component({ className }: { className?: string }) {
+  return (
+    <div className={className || "h-[212px] relative w-[263px]"} data-node-id="406:28754" data-name="功能快捷选择区">
+      <div className="absolute content-stretch flex flex-col gap-[4px] items-start left-0 top-0 w-[263px]" data-node-id="404:28337" data-name="功能快捷">
+        <motion.div className="h-[48px] relative rounded-[10px] shrink-0 w-[263px]" data-node-id="404:28338" data-name="容器">
+          <div className="absolute content-stretch flex gap-[6px] items-center left-0 px-[6px] top-[11px] w-[263px]" data-node-id="404:28339" data-name="开始创作">
+            <div className="bg-[#353536] content-stretch flex items-start p-[8px] relative rounded-[48px] shrink-0 size-[26px]" data-node-id="404:28340" data-name="添加图标">
+              <div className="relative shrink-0 size-[10px]" data-node-id="404:28341" data-name="增加">
+                <div className="absolute inset-[-8.75%]">
+                  <img alt="" className="block max-w-none size-full" src={img} />
+                </div>
+              </div>
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#d3d3d3] text-[14px] whitespace-nowrap" data-node-id="404:28345">
+              开始创作
+            </p>
+          </div>
+        </motion.div>
+        <motion.div className="h-[48px] relative rounded-[10px] shrink-0 w-[263px]" data-node-id="404:28346" data-name="容器">
+          <div className="absolute content-stretch flex gap-[6px] items-center left-0 px-[6px] top-[11px] w-[263px]" data-node-id="404:28347" data-name="项目库">
+            <div className="relative shrink-0 size-[26px]" data-node-id="404:28348" data-name="容器">
+              <div className="-translate-x-1/2 absolute bottom-[15.38%] left-1/2 top-[15.38%] w-[20px]" data-node-id="404:28349" data-name="icon-archive">
+                <div className="absolute inset-[-2.78%_-2.5%]">
+                  <img alt="" className="block max-w-none size-full" src={imgIconArchive} />
+                </div>
+              </div>
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#d3d3d3] text-[14px] whitespace-nowrap" data-node-id="404:28353">
+              项目库
+            </p>
+          </div>
+        </motion.div>
+        <motion.div className="h-[48px] relative rounded-[10px] shrink-0 w-[263px]" data-node-id="404:28354" data-name="容器">
+          <div className="absolute content-stretch flex gap-[6px] items-center left-0 px-[6px] top-[11px] w-[263px]" data-node-id="404:28355" data-name="Skill">
+            <div className="relative shrink-0 size-[26px]" data-node-id="404:28356" data-name="容器">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={img1} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#d3d3d3] text-[14px] whitespace-nowrap" data-node-id="404:28358">
+              Skill
+            </p>
+          </div>
+        </motion.div>
+        <motion.div className="h-[48px] relative rounded-[10px] shrink-0 w-[263px]" data-node-id="404:28359" data-name="容器">
+          <div className="absolute content-stretch flex gap-[6px] items-center left-0 px-[6px] top-[11px] w-[263px]" data-node-id="404:28360" data-name="ComfyUI 工作流">
+            <div className="relative shrink-0 size-[26px]" data-node-id="404:28361" data-name="容器">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={img2} />
+            </div>
+            <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#d3d3d3] text-[14px] whitespace-nowrap" data-node-id="404:28366">
+              ComfyUI 工作流
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+export default function Component1() {
+  return (
+    <div className="relative size-full" data-node-id="406:28820" data-name="左侧栏">
+      <div className="absolute content-stretch flex flex-col gap-[40px] h-[949px] items-start left-[14px] top-0 w-[263px]" data-node-id="406:28914">
+        <Component className="h-[212px] relative shrink-0 w-full" />
+        <div className="h-[576px] relative shrink-0 w-full" data-node-id="406:28840" data-name="项目展示区">
+          <div className="absolute content-stretch flex flex-col gap-[13px] items-start left-0 top-0 w-[263px]" data-node-id="406:28841" data-name="项目展示区">
+            <div className="content-stretch flex flex-col gap-[5px] items-end relative shrink-0 w-full" data-node-id="406:28842" data-name="项目组">
+              <div className="content-stretch flex items-center justify-between pr-[5px] relative shrink-0 w-full" data-node-id="406:28843" data-name="未分组标题功能">
+                <div className="content-stretch flex gap-[4px] items-center relative shrink-0" data-node-id="406:28844" data-name="名称">
+                  <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[#707070] text-[14px] whitespace-nowrap" data-node-id="406:28845">
+                    项目
+                  </p>
+                  <div className="h-[4px] relative shrink-0 w-[8px]" data-node-id="406:28846" data-name="路径 288">
+                    <div className="absolute inset-[-18.75%_-9.38%]">
+                      <img alt="" className="block max-w-none size-full" src={img288} />
+                    </div>
+                  </div>
+                </div>
+                <div className="content-stretch flex gap-[2px] items-center justify-end relative shrink-0" data-node-id="406:28847" data-name="功能">
+                  <div className="h-[21px] relative shrink-0 w-[20px]" data-node-id="406:28848" data-name="排序">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={img3} />
+                  </div>
+                  <div className="h-[21px] relative shrink-0 w-[20px]" data-node-id="406:28853" data-name="创建项目组">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={img4} />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[#1a1a1a] h-[29px] relative rounded-[10px] shrink-0 w-full" data-node-id="406:28857" data-name="组 / 子项目">
+                <div className="absolute h-[25px] left-[2px] top-[2px] w-[256px]" data-node-id="406:28858" data-name="组 / 子项目">
+                  <div className="absolute content-stretch flex items-center justify-between left-0 top-0 w-[256px]" data-node-id="406:28859" data-name="组 / 子项目">
+                    <div className="content-stretch flex gap-[5px] items-center relative shrink-0" data-node-id="406:28860" data-name="信息">
+                      <div className="bg-[#252525] relative rounded-[8px] shrink-0 size-[25px]" data-node-id="406:28861" data-name="缩略图">
+                        <div className="-translate-x-1/2 -translate-y-1/2 absolute h-[10.4px] left-[calc(50%+0.5px)] top-[calc(50%-0.3px)] w-[12.237px]" data-node-id="406:28862" data-name="icon-folder-open">
+                          <div className="absolute inset-[-4.81%_-4.09%]">
+                            <img alt="" className="block max-w-none size-full" src={imgIconFolderOpen} />
+                          </div>
+                        </div>
+                      </div>
+                      <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#d3d3d3] text-[10px] whitespace-nowrap" data-node-id="406:28864">
+                        KK项目
+                      </p>
+                    </div>
+                    <div className="content-stretch flex gap-[2px] items-center relative shrink-0" data-node-id="406:28865" data-name="功能">
+                      <div className="h-[21px] relative shrink-0 w-[20px]" data-node-id="406:28866" data-name="进入项目详情">
+                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={img5} />
+                      </div>
+                      <div className="h-[21px] relative shrink-0 w-[20px]" data-node-id="406:28870" data-name="添加创作页面">
+                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={img6} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[#282828] h-[29px] relative rounded-[10px] shrink-0 w-[231px]" data-node-id="406:28874" data-name="子项目">
+                <div className="absolute content-stretch flex items-center justify-between left-[2px] top-[2px] w-[224px]" data-node-id="406:28875" data-name="子项目">
+                  <div className="content-stretch flex gap-[5px] items-center relative shrink-0" data-node-id="406:28876" data-name="信息">
+                    <div className="bg-[#d98a00] relative rounded-[8px] shrink-0 size-[25px]" data-node-id="406:28877" data-name="缩略图" />
+                    <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#d3d3d3] text-[10px] whitespace-nowrap" data-node-id="406:28878">
+                      KK工作流
+                    </p>
+                  </div>
+                  <div className="content-stretch flex gap-[2px] items-center relative shrink-0" data-node-id="406:28879" data-name="功能">
+                    <div className="h-[21px] relative shrink-0 w-[20px]" data-node-id="406:28880" data-name="置顶">
+                      <img alt="" className="absolute block inset-0 max-w-none size-full" src={img7} />
+                    </div>
+                    <div className="h-[21px] relative shrink-0 w-[20px]" data-node-id="406:28882" data-name="更多">
+                      <img alt="" className="absolute block inset-0 max-w-none size-full" src={img8} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="content-stretch flex flex-col gap-[5px] items-start relative shrink-0 w-full" data-node-id="406:28887" data-name="未分组">
+              <div className="content-stretch flex items-center justify-between pr-[5px] relative shrink-0 w-full" data-node-id="406:28888" data-name="未分组标题功能">
+                <div className="content-stretch flex gap-[4px] items-center relative shrink-0" data-node-id="406:28889" data-name="名称">
+                  <p className="[word-break:break-word] font-['Inter:Medium'] font-medium leading-[normal] not-italic relative shrink-0 text-[#707070] text-[14px] whitespace-nowrap" data-node-id="406:28890">
+                    未分组
+                  </p>
+                  <div className="h-[4px] relative shrink-0 w-[8px]" data-node-id="406:28891" data-name="路径 288">
+                    <div className="absolute inset-[-18.75%_-9.38%]">
+                      <img alt="" className="block max-w-none size-full" src={img288} />
+                    </div>
+                  </div>
+                </div>
+                <div className="content-stretch flex gap-[2px] items-center justify-end relative shrink-0" data-node-id="406:28892" data-name="功能">
+                  <div className="h-[21px] relative shrink-0 w-[20px]" data-node-id="406:28893" data-name="前往">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={img9} />
+                  </div>
+                  <div className="h-[21px] relative shrink-0 w-[20px]" data-node-id="406:28897" data-name="创建创作页">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={img6} />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[#1a1a1a] h-[29px] relative rounded-[10px] shrink-0 w-[263px]" data-node-id="406:28901" data-name="未分组 / 子项目">
+                <div className="absolute content-stretch flex items-center justify-between left-[2px] top-[2px] w-[256px]" data-node-id="406:28902" data-name="未分组 / 子项目">
+                  <div className="content-stretch flex gap-[5px] items-center relative shrink-0" data-node-id="406:28903" data-name="信息">
+                    <div className="bg-[#d98a00] relative rounded-[8px] shrink-0 size-[25px]" data-node-id="406:28904" data-name="缩略图" />
+                    <p className="[word-break:break-word] font-['Inter:Regular'] font-normal leading-[normal] not-italic relative shrink-0 text-[#d3d3d3] text-[10px] whitespace-nowrap" data-node-id="406:28905">
+                      KK工作流
+                    </p>
+                  </div>
+                  <div className="content-stretch flex gap-[2px] items-center relative shrink-0" data-node-id="406:28906" data-name="功能">
+                    <div className="h-[21px] relative shrink-0 w-[20px]" data-node-id="406:28907" data-name="置顶">
+                      <img alt="" className="absolute block inset-0 max-w-none size-full" src={img7} />
+                    </div>
+                    <div className="h-[21px] relative shrink-0 w-[20px]" data-node-id="406:28909" data-name="更多">
+                      <img alt="" className="absolute block inset-0 max-w-none size-full" src={img8} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="bg-[#1f1f1f] h-[41px] relative rounded-[10px] shrink-0 w-[259px]" data-node-id="406:29065" data-name="个人信息和设置">
+          <div className="absolute content-stretch flex gap-[95px] items-center justify-center left-0 px-[10px] top-[8px] w-[259px]" data-node-id="406:28915" data-name="app名字和功能键">
+            <div className="content-stretch flex gap-[6px] items-center relative shrink-0 w-[111px]" data-node-id="406:28916" data-name="logo带字">
+              <div className="relative shrink-0 size-[26px]" data-node-id="406:28917" data-name="logo">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgLogo} />
+              </div>
+              <div className="[word-break:break-word] flex flex-col font-['Inter:Regular'] font-normal h-[23px] justify-center leading-[0] not-italic relative shrink-0 text-[#dadada] text-[16px] w-[149px]" data-node-id="406:28921">
+                <p className="leading-[normal]">YYYYKK</p>
+              </div>
+            </div>
+            <div className="content-stretch flex items-center justify-center relative shrink-0" data-node-id="406:28922">
+              <div className="overflow-clip relative shrink-0 size-[26px]" data-node-id="406:28927" data-name="容器">
+                <div className="absolute inset-[11.54%_13.12%_8.78%_15.38%]" data-node-id="406:29066" data-name="icon-settings">
+                  <div className="absolute inset-[-4.22%_-4.71%]">
+                    <img alt="" className="block max-w-none size-full" src={imgIconSettings} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.
+
+IMPORTANT: This design contains animated nodes. You MUST get the animation data (keyframe tracks, easing curves, code snippets, and timeline coordination hints) to faithfully recreate this design. IMMEDIATELY call the `get_motion_context` tool with the same node ID and file key.

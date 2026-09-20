@@ -1,0 +1,52 @@
+[
+  {
+    "url": "http://127.0.0.1:1421/",
+    "mode": "development",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://127.0.0.1:1421/@vite/client",
+      "http://127.0.0.1:1421/src/main.tsx"
+    ],
+    "overflow": false,
+    "width": 1440,
+    "webDisabled": true,
+    "errors": []
+  },
+  {
+    "url": "http://127.0.0.1:1421/",
+    "mode": "development",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://127.0.0.1:1421/@vite/client",
+      "http://127.0.0.1:1421/src/main.tsx"
+    ],
+    "overflow": false,
+    "width": 390,
+    "webDisabled": true,
+    "errors": []
+  },
+  {
+    "url": "http://127.0.0.1:1423/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://127.0.0.1:1423/assets/index-D54x02Sm.js"
+    ],
+    "overflow": false,
+    "width": 1440,
+    "webDisabled": true,
+    "errors": []
+  },
+  {
+    "url": "http://127.0.0.1:1423/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://127.0.0.1:1423/assets/index-D54x02Sm.js"
+    ],
+    "overflow": false,
+    "width": 390,
+    "webDisabled": true,
+    "errors": []
+  }
+]

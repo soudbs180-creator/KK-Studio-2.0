@@ -1,0 +1,39 @@
+.toolbar-icon {
+  display: block;
+  width: 40px;
+  height: 40px;
+  background: currentColor;
+  mask: var(--toolbar-icon-source, none) center / contain no-repeat;
+  pointer-events: none;
+}
+.toolbar-icon-add {
+  display: block;
+  pointer-events: none;
+}
+.toolbar-icon-select {
+  --toolbar-icon-source: url("/design/figma/toolbar-select.svg");
+  color: var(--text-primary);
+}
+.toolbar-icon-collapse {
+  --toolbar-icon-source: url("/design/figma/toolbar-collapse.svg");
+  width: 20px;
+}
+.is-collapsed .toolbar-icon-collapse {
+  transform: rotate(180deg);
+}
+.toolbar-icon-favorite {
+  --toolbar-icon-source: url("/design/figma/toolbar-favorite.svg");
+}
+.toolbar-icon-assets {
+  --toolbar-icon-source: url("/design/figma/toolbar-assets.svg");
+}
+.toolbar-icon-help {
+  --toolbar-icon-source: url("/design/figma/toolbar-help.svg");
+  width: 21.75px;
+  height: 21.75px;
+}
+.canvas-toolbar > .toolbar-favorite[aria-pressed="true"] {
+  color: var(--ui-selected);
+  background: var(--ui-neutral-selected);
+  border-radius: var(--ui-radius-control);
+}

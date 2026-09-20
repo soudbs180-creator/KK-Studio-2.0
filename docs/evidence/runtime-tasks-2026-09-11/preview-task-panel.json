@@ -1,0 +1,116 @@
+{
+  "mode": "production",
+  "runtimeEntry": "src/main.tsx",
+  "scriptSources": [
+    "http://127.0.0.1:1423/assets/index-BE4fsay9.js"
+  ],
+  "stylesheetSources": [
+    "http://127.0.0.1:1423/assets/index-gbDRN-Tn.css"
+  ],
+  "panel": {
+    "x": 321,
+    "y": 108,
+    "width": 196,
+    "height": 240,
+    "background": "rgb(26, 26, 26)",
+    "border": "1px solid rgb(60, 60, 60)",
+    "color": "rgb(219, 219, 219)",
+    "fontSize": "13px",
+    "lineHeight": "normal"
+  },
+  "heading": {
+    "x": 335,
+    "y": 119,
+    "width": 169,
+    "height": 10,
+    "background": "rgba(0, 0, 0, 0)",
+    "border": "0px none rgb(112, 112, 112)",
+    "color": "rgb(112, 112, 112)",
+    "fontSize": "8px",
+    "lineHeight": "10px"
+  },
+  "tabs": {
+    "x": 335,
+    "y": 138,
+    "width": 170,
+    "height": 14,
+    "background": "rgba(0, 0, 0, 0)",
+    "border": "0px none rgb(219, 219, 219)",
+    "color": "rgb(219, 219, 219)",
+    "fontSize": "13px",
+    "lineHeight": "normal"
+  },
+  "grid": {
+    "x": 335,
+    "y": 161,
+    "width": 170,
+    "height": 52,
+    "background": "rgba(0, 0, 0, 0)",
+    "border": "0px none rgb(219, 219, 219)",
+    "color": "rgb(219, 219, 219)",
+    "fontSize": "13px",
+    "lineHeight": "normal"
+  },
+  "cards": [
+    {
+      "x": 335,
+      "y": 161,
+      "width": 40.25,
+      "height": 52,
+      "text": "点击查看2026/9/550S"
+    },
+    {
+      "x": 378.25,
+      "y": 161,
+      "width": 40.25,
+      "height": 52,
+      "text": "正在生成中"
+    }
+  ],
+  "thumbs": [
+    {
+      "x": 335,
+      "y": 161,
+      "width": 40.25,
+      "height": 46,
+      "background": "rgb(31, 31, 31)",
+      "border": "1px solid rgb(60, 60, 60)"
+    },
+    {
+      "x": 378.25,
+      "y": 161,
+      "width": 40.25,
+      "height": 46,
+      "background": "rgb(31, 31, 31)",
+      "border": "1px solid rgb(60, 60, 60)"
+    }
+  ],
+  "assets": [
+    {
+      "src": "/design/figma/task-close.svg",
+      "complete": true,
+      "naturalWidth": 7,
+      "naturalHeight": 7
+    },
+    {
+      "src": "/design/figma/task-placeholder-complete.png",
+      "complete": true,
+      "naturalWidth": 40,
+      "naturalHeight": 39
+    },
+    {
+      "src": "/design/figma/task-placeholder-running.png",
+      "complete": true,
+      "naturalWidth": 40,
+      "naturalHeight": 39
+    }
+  ],
+  "detailVisible": true,
+  "closedAfterTrigger": 0,
+  "detailClearedAfterReopen": true,
+  "failure": {
+    "text": "暂无失败任务",
+    "cards": 0
+  },
+  "errors": []
+}

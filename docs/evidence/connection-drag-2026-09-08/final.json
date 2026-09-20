@@ -1,0 +1,340 @@
+{
+  "errors": [],
+  "measurements": {
+    "image": {
+      "x": 466,
+      "y": 211,
+      "width": 400,
+      "height": 400
+    },
+    "start": {
+      "x": 866,
+      "y": 411
+    },
+    "deltaY": 0
+  },
+  "geometry": {
+    "width": 296,
+    "height": 586,
+    "title": {
+      "x": 24,
+      "y": 24,
+      "width": 248,
+      "height": 18,
+      "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+      "size": "15px",
+      "weight": "600",
+      "color": "rgb(142, 142, 147)"
+    },
+    "rows": [
+      {
+        "row": {
+          "x": 24,
+          "y": 62,
+          "width": 248,
+          "height": 52,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "icon": {
+          "x": 24,
+          "y": 66,
+          "width": 44,
+          "height": 44,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "label": {
+          "x": 84,
+          "y": 78.5,
+          "width": 32,
+          "height": 19,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "badge": null,
+        "disabled": false
+      },
+      {
+        "row": {
+          "x": 24,
+          "y": 126,
+          "width": 248,
+          "height": 52,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "icon": {
+          "x": 24,
+          "y": 130,
+          "width": 44,
+          "height": 44,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "label": {
+          "x": 84,
+          "y": 142.5,
+          "width": 32,
+          "height": 19,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "badge": null,
+        "disabled": true
+      },
+      {
+        "row": {
+          "x": 24,
+          "y": 190,
+          "width": 248,
+          "height": 52,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "icon": {
+          "x": 24,
+          "y": 194,
+          "width": 44,
+          "height": 44,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "label": {
+          "x": 84,
+          "y": 206.5,
+          "width": 32,
+          "height": 19,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "badge": null,
+        "disabled": false
+      },
+      {
+        "row": {
+          "x": 24,
+          "y": 254,
+          "width": 248,
+          "height": 52,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "icon": {
+          "x": 24,
+          "y": 258,
+          "width": 44,
+          "height": 44,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "label": {
+          "x": 84,
+          "y": 270.5,
+          "width": 32,
+          "height": 19,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "badge": {
+          "x": 128,
+          "y": 268.5,
+          "width": 85.09375,
+          "height": 23,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "12px",
+          "weight": "600",
+          "color": "rgb(255, 255, 255)"
+        },
+        "disabled": false
+      },
+      {
+        "row": {
+          "x": 24,
+          "y": 318,
+          "width": 248,
+          "height": 52,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "icon": {
+          "x": 24,
+          "y": 322,
+          "width": 44,
+          "height": 44,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "label": {
+          "x": 84,
+          "y": 334.5,
+          "width": 32,
+          "height": 19,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "badge": null,
+        "disabled": false
+      },
+      {
+        "row": {
+          "x": 24,
+          "y": 382,
+          "width": 248,
+          "height": 52,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "icon": {
+          "x": 24,
+          "y": 386,
+          "width": 44,
+          "height": 44,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "label": {
+          "x": 84,
+          "y": 398.5,
+          "width": 73.84375,
+          "height": 19,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "badge": {
+          "x": 169.84375,
+          "y": 399.5,
+          "width": 27,
+          "height": 17,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "11px",
+          "weight": "700",
+          "color": "rgb(22, 22, 24)"
+        },
+        "disabled": true
+      },
+      {
+        "row": {
+          "x": 24,
+          "y": 446,
+          "width": 248,
+          "height": 52,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "icon": {
+          "x": 24,
+          "y": 450,
+          "width": 44,
+          "height": 44,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "label": {
+          "x": 84,
+          "y": 462.5,
+          "width": 64,
+          "height": 19,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "badge": {
+          "x": 160,
+          "y": 463.5,
+          "width": 27,
+          "height": 17,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "11px",
+          "weight": "700",
+          "color": "rgb(22, 22, 24)"
+        },
+        "disabled": true
+      },
+      {
+        "row": {
+          "x": 24,
+          "y": 510,
+          "width": 248,
+          "height": 52,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "icon": {
+          "x": 24,
+          "y": 514,
+          "width": 44,
+          "height": 44,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "label": {
+          "x": 84,
+          "y": 526.5,
+          "width": 119.359375,
+          "height": 19,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "16px",
+          "weight": "500",
+          "color": "rgb(255, 255, 255)"
+        },
+        "badge": {
+          "x": 215.359375,
+          "y": 527.5,
+          "width": 27,
+          "height": 17,
+          "font": "Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+          "size": "11px",
+          "weight": "700",
+          "color": "rgb(22, 22, 24)"
+        },
+        "disabled": true
+      }
+    ]
+  }
+}

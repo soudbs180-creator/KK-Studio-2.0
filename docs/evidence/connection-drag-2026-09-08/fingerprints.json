@@ -1,0 +1,658 @@
+[
+  {
+    "path": "config\\ui-legacy-baseline.json",
+    "sha256": "7EFEE29B24128B08DF8C6E504C60B88DDC6214A747DE32C1C9A7E1AD3FE25956"
+  },
+  {
+    "path": "package-lock.json",
+    "sha256": "B72F1F1C0D11EC4055996DBD473F1F1679AD5B499B2D1C7B436D2A89A21B7333"
+  },
+  {
+    "path": "package.json",
+    "sha256": "DF40DE1EA03E193C27E6EF1FBEFFBFBA17A4318200438ABDED70852D7250BAC2"
+  },
+  {
+    "path": "playwright.config.ts",
+    "sha256": "F970C9462458E322CE79A9CC8E51CFA842F98686A1220EF45195A0C79783A5B5"
+  },
+  {
+    "path": "public/figma\\asset-chevron.svg",
+    "sha256": "B7C775C16B2CDAA106CCD47580156CD3FB42CCA582F77BB7AAFFE60039E1580D"
+  },
+  {
+    "path": "public/figma\\asset-grid.svg",
+    "sha256": "F4F971A2C0767D179502BB07C7C5E46F8FD8C242EC9AFA9123E6946F7F8B4064"
+  },
+  {
+    "path": "public/figma\\asset-image-alt.svg",
+    "sha256": "3032C174408E1CB1F93EA0977B4AAB1D5DA4C79A61C5607875240769A2FA0769"
+  },
+  {
+    "path": "public/figma\\asset-image.svg",
+    "sha256": "9524CA728961A34D694D30E73CA01CC4DFDFA00A1FFB44F6853D50E137969FFD"
+  },
+  {
+    "path": "public/figma\\asset-list.svg",
+    "sha256": "19DC39622D760FFFE4DAD99B2CC80C6D3098793FC8B2DC7AAE8C5257A125648C"
+  },
+  {
+    "path": "public/figma\\chat-close.svg",
+    "sha256": "B2962D6088BF2DEC147120B2D1CA426C9F256026486FBED798F7D66A47DEC1AD"
+  },
+  {
+    "path": "public/figma\\chat-open.svg",
+    "sha256": "B2962D6088BF2DEC147120B2D1CA426C9F256026486FBED798F7D66A47DEC1AD"
+  },
+  {
+    "path": "public/figma\\collapse.svg",
+    "sha256": "3A40313F958DB8CEC652E74E70C4857A5A2FE1F7702FD4DC284CCC298414A76D"
+  },
+  {
+    "path": "public/figma\\connection-cut.svg",
+    "sha256": "5EE44EBB756304DC1411F240BCFA4261C0C1B039D9EF3AC23BBFB43FD1DF0CAD"
+  },
+  {
+    "path": "public/figma\\connection-port.svg",
+    "sha256": "0BA43211CA9F9CF48E6C66F1F266414B8BBDFEB23F7F1AB7B2E44001C5C18EDA"
+  },
+  {
+    "path": "public/figma\\count-x.svg",
+    "sha256": "9D402D0DD8552C228C23598659C3AC55204B170655467B3A2596E7C4942F722C"
+  },
+  {
+    "path": "public/figma\\expand.svg",
+    "sha256": "E4255FAF27D6773E0460971DF913EFF066D93116EB30938A1B5AE337F02A4A37"
+  },
+  {
+    "path": "public/figma\\generate-arrow.svg",
+    "sha256": "3057544FEB2D134A62AAAA696316F948768AD13E08E5FEF4972CD1B0B578B78F"
+  },
+  {
+    "path": "public/figma\\help-next.svg",
+    "sha256": "C149E779F39535F9C74913D5DDAF8846136402A5011F7F39F8D3BF3A33AD544C"
+  },
+  {
+    "path": "public/figma\\help-shortcuts.svg",
+    "sha256": "3325F4285A157BC76F1710A6DE584D30D10B2C374564639E3089C1ADFD6CD145"
+  },
+  {
+    "path": "public/figma\\help-tutorial.svg",
+    "sha256": "08D6337A3BEA75522E3CBB5788ABCDE74A987054FB56B946237B4482AD880567"
+  },
+  {
+    "path": "public/figma\\logo.svg",
+    "sha256": "657561B3C8925F80B14650DBAEFB8519E52C6CB6DD8839AD5986BD8665C89ADC"
+  },
+  {
+    "path": "public/figma\\mic-off.svg",
+    "sha256": "859A1DECCEC576A376DB1C48704A5064C0123A8AF3626A65CB10A204ACCC7DEF"
+  },
+  {
+    "path": "public/figma\\mic.svg",
+    "sha256": "9820468626A8C6FA6BA7479603A23E6D85A3B6A23ECFA6CCCE6EBE86FDB7261D"
+  },
+  {
+    "path": "public/figma\\nav-arrange.svg",
+    "sha256": "DFD448F47D724610441A1577EB0FEF673C7F096DD3309C91B837DF0920CAF606"
+  },
+  {
+    "path": "public/figma\\nav-background.svg",
+    "sha256": "87E606EB863AAFC6E9A027FFDB724A15BC754A8CB241DAFA65B68BA9003BFE38"
+  },
+  {
+    "path": "public/figma\\nav-chevron.svg",
+    "sha256": "5488889E2B591E712D039B8C39506EA9BABFDF16DCCAEE80BDDBE2547E740494"
+  },
+  {
+    "path": "public/figma\\nav-lines.svg",
+    "sha256": "E06322102E56A9FD5826D1B01023D192FF15E2719952CE30A970115786BFDB32"
+  },
+  {
+    "path": "public/figma\\nav-map.svg",
+    "sha256": "7E00DC1B81320E0D03A7A0573AEDA66DF1A6F255D2E22A31BF29A9D184582C96"
+  },
+  {
+    "path": "public/figma\\node-menu-audio.svg",
+    "sha256": "FD56CFE3D32CC799F48A15CEB08B0B107FA3B7001CC19F6F4362F4C5FFE2453C"
+  },
+  {
+    "path": "public/figma\\node-menu-director.svg",
+    "sha256": "5F63AEC55F0493475D24B572824414A34B09266ED1E9E25E308AD051376EECD8"
+  },
+  {
+    "path": "public/figma\\node-menu-edit.svg",
+    "sha256": "459A419B78DDCC28C1CCD2F7F6C55E0FB64733F6D062C0C58C6CB9E3241014E1"
+  },
+  {
+    "path": "public/figma\\node-menu-image.svg",
+    "sha256": "E1FA213606A0FEF10A32854315FA65766FD21F6277E778448EDFE851529D2782"
+  },
+  {
+    "path": "public/figma\\node-menu-next.svg",
+    "sha256": "DC77B4DBBB700D1313975916E499166246AAFF34B68DCD4E223D40B99AB3DDE7"
+  },
+  {
+    "path": "public/figma\\node-menu-table.svg",
+    "sha256": "B973D55EEADC47449DC401A5D5C68F3ECAC3D8012687DB59027418CECBAD83A4"
+  },
+  {
+    "path": "public/figma\\node-menu-text.svg",
+    "sha256": "F7A4BCA52DDDF33DF63A3A29F17815DE72B0362941DC01F0629525C6955F7AC0"
+  },
+  {
+    "path": "public/figma\\node-menu-video.svg",
+    "sha256": "F147E6B8A209DAFFCB034D167B0B0D7B1C1C572D53EB66C7C4753D46A1D952ED"
+  },
+  {
+    "path": "public/figma\\node-menu-workflow.svg",
+    "sha256": "15FE490EA57727D5FA48CFC3F5BB59B82A42535FBAED3B5B8F6652FA0B980D06"
+  },
+  {
+    "path": "public/figma\\node-port-plus.svg",
+    "sha256": "2055A177AA12045A25328F0C47A881BCBF03C620591402AA30954A3DE014498F"
+  },
+  {
+    "path": "public/figma\\search.svg",
+    "sha256": "0747314ADD8DE2805F772BB23505F6BF92F2F077ECA03B5FFB1BAC2259D8831E"
+  },
+  {
+    "path": "public/figma\\settings-select-chevron.svg",
+    "sha256": "4C70DFE4B8F1723963969F1ABA6B33CBEA3C6BBB6A49D0C1C6673B06E7C46336"
+  },
+  {
+    "path": "public/figma\\settings-theme-dark.svg",
+    "sha256": "98A91610E2A9424AE2B23D580E5AFBCEAE5A87036BBE4A274066484CE3BD6364"
+  },
+  {
+    "path": "public/figma\\sidebar-add.svg",
+    "sha256": "DE23CEC80498D7BE13BA038397C61D26C1FE9A30D5A7144774DB9C316839104D"
+  },
+  {
+    "path": "public/figma\\sidebar-archive.svg",
+    "sha256": "4CD5BF8917F483BAA8C3979E73A7209AF7B765EF77351777FFCB2ED0E53CBB87"
+  },
+  {
+    "path": "public/figma\\sidebar-collapse.svg",
+    "sha256": "3D4A513F3CEBB7052551A4999D6145D866BEFCD2238D724CFDC01ADE2D437AFF"
+  },
+  {
+    "path": "public/figma\\sidebar-search.svg",
+    "sha256": "0747314ADD8DE2805F772BB23505F6BF92F2F077ECA03B5FFB1BAC2259D8831E"
+  },
+  {
+    "path": "public/figma\\sidebar-settings.svg",
+    "sha256": "CE68F26E16ED6273212A3E75BA720BA340FCF69735A23332D2F01CC9FFE867E5"
+  },
+  {
+    "path": "public/figma\\sidebar-skill.svg",
+    "sha256": "AEEFDF9FDE2C356324AE75A0754CE3C6749527DF0FE23B4FE2FBA7786006B33E"
+  },
+  {
+    "path": "public/figma\\sidebar-toggle.svg",
+    "sha256": "5F29203DB58A5F42152B163846C9D03BBFFFD86A6397A4A7F2323DC32558FDAF"
+  },
+  {
+    "path": "public/figma\\sidebar-workflow.svg",
+    "sha256": "5A20BBD1A5C196BED5DF92A6FF2133A33B7E9D37AF79C143A6C6E7C9B0C73915"
+  },
+  {
+    "path": "public/figma\\timer-start.png",
+    "sha256": "BDA05E1507CFCCEE827AAB768AD5E8F43D60C724B22DD2D9FE043FD7C77E16C8"
+  },
+  {
+    "path": "public/figma\\tool-check.svg",
+    "sha256": "525D2985F57160CFEFF3F68AA551CA37813A0D45CD056EB00FC82131870B3017"
+  },
+  {
+    "path": "public/figma\\tool-hand.svg",
+    "sha256": "9D75B06F980B5D7A4E94F0D76C491632480AB4CCA9F38EACE6C64C1E52EE6CE2"
+  },
+  {
+    "path": "public/figma\\tool-select.svg",
+    "sha256": "038C6A837C5721CB37388E2C128677FF05E3457F3E8D6D7E5959643DF5E10AFB"
+  },
+  {
+    "path": "public/figma\\toolbar-add.svg",
+    "sha256": "CEBF67D0764F7ADE0F5885F41E1CF311A1F481C8B890D174D21F222D380B3A71"
+  },
+  {
+    "path": "public/figma\\toolbar-assets.svg",
+    "sha256": "B2401ADBE44567219D3B2658ECBE94665CD2F9E0650BFF4308273897763A4FA9"
+  },
+  {
+    "path": "public/figma\\toolbar-collapse.svg",
+    "sha256": "D8F0A7503BCC1FA244D598298E9CA4FF3D147D21CAE13E8ADE1A24CD438CB0A4"
+  },
+  {
+    "path": "public/figma\\toolbar-divider-left.svg",
+    "sha256": "AC618EEF85F923DB94A84BA321F53D6AF603D3AC5B88F990F9B0AA518612C4AD"
+  },
+  {
+    "path": "public/figma\\toolbar-divider-right.svg",
+    "sha256": "3B628F30A563753B02EBBDEAD985BF4AC9BB99CB38B1F3C55D7D04E745EA8E62"
+  },
+  {
+    "path": "public/figma\\toolbar-favorite.svg",
+    "sha256": "24F0B17B23F14FE2BC5C43D4FA1EC854EB6C2AAE9240E1D0FF5697D005BCCC3A"
+  },
+  {
+    "path": "public/figma\\toolbar-help.svg",
+    "sha256": "B71D14EF7DBEF2DDD474AB85D7F9E3A1C284947D77B6C7345CC16799591124C8"
+  },
+  {
+    "path": "public/figma\\toolbar-select.svg",
+    "sha256": "BEF721F390AAF9B33B2051A212A03D201CAECD5DD087BBA3458E89F9B817144D"
+  },
+  {
+    "path": "public/figma\\video-label.svg",
+    "sha256": "15A3F9703226C4F38E2BEF4968F22A2408C56D34C5ECE64AC0190EC6344ACC11"
+  },
+  {
+    "path": "public/figma\\video-placeholder.svg",
+    "sha256": "8E774A4E059F5A04D00410521E886D6423FE941EA7F722BF5F19F65F6031F312"
+  },
+  {
+    "path": "src\\App.tsx",
+    "sha256": "6E99D19C4A70BF9E3A6E0984D7AD64748A2C1B3CC53CDF5DFD629D81E1D6B565"
+  },
+  {
+    "path": "src\\components\\assets\\AssetPanel.tsx",
+    "sha256": "1BF23FF23BC4469C7C02BC2A435FA2E655E73F19DD938E277A16EEB9B3783B85"
+  },
+  {
+    "path": "src\\components\\assets\\assets.css",
+    "sha256": "BA7B3AEADF5F5B27370E1E30352794AF0A7AA19DD2067FAEAFCA25D67D2DA73A"
+  },
+  {
+    "path": "src\\components\\assets\\CreateSubject.tsx",
+    "sha256": "2E4301508704B594D08D722B39E4E0441700BBB769B603846707A1E88F7B4F21"
+  },
+  {
+    "path": "src\\components\\assets\\useAssetImport.ts",
+    "sha256": "EDE8E44C8CFB6C64DD74F8CE7C00F5138CB575502686D6ED5445C238DB5C60BB"
+  },
+  {
+    "path": "src\\components\\Canvas.tsx",
+    "sha256": "17CDB4889DA153313258B8E307D64A46A5C9B2BDDF2C26197F5DAE90DBD786DD"
+  },
+  {
+    "path": "src\\components\\canvas\\AddNodeMenu.tsx",
+    "sha256": "B0C11BAD563268F3EC751CC8726B1B34DE74CBF6419A760A8735C8FB8ABAB7EF"
+  },
+  {
+    "path": "src\\components\\canvas\\CanvasConnections.tsx",
+    "sha256": "B2A6337123FA948820F9503A5B8B0CEEED653A12822B3CB6C9ABCD7E8C040C7A"
+  },
+  {
+    "path": "src\\components\\canvas\\CanvasHud.tsx",
+    "sha256": "8C0FC85FB6C94DA3F757C0EB06855722B548B227E7316B623F4FBAE737C2F47A"
+  },
+  {
+    "path": "src\\components\\canvas\\CanvasMarquee.tsx",
+    "sha256": "7A58822406C5DDC6C5CD7C63D0E99AE886F77B21768E70B9B42082A5E2A987EA"
+  },
+  {
+    "path": "src\\components\\canvas\\CanvasMinimap.tsx",
+    "sha256": "B60862CB0A5658A928CD847AAA09D163876A3B7A99597029C04C2FBE9A51B6F3"
+  },
+  {
+    "path": "src\\components\\canvas\\canvasModel.ts",
+    "sha256": "330A37C166BEC64D4BE86DAFB2393D2B2099E0CC028E6B4A998B87F2219DBA3C"
+  },
+  {
+    "path": "src\\components\\canvas\\CanvasNavigation.tsx",
+    "sha256": "D4894F821465EC208B93BFD585E4EBD8863C749F8D6BF0C0BE9B8D9ACAE5F520"
+  },
+  {
+    "path": "src\\components\\canvas\\CanvasNodeContent.tsx",
+    "sha256": "A9CB1869F28952AEAF1D5B4C73D5569D51F0BF9478ED320AC93094EDECAA9D21"
+  },
+  {
+    "path": "src\\components\\canvas\\CanvasNodeFrame.tsx",
+    "sha256": "BE8E2FF88F6F71C07AC99B56607AB3CB9135E17405D3383D7235DD770F0BF590"
+  },
+  {
+    "path": "src\\components\\canvas\\CanvasToolbar.tsx",
+    "sha256": "5F8004A9A51DEE0B6419DBB6EEF58478B4E31BEC07F329D9CBEDE268A95DE3DB"
+  },
+  {
+    "path": "src\\components\\canvas\\CanvasZoomMenu.tsx",
+    "sha256": "AD2413090984800A074F090B81345D0CC11DE55D6321C6CBDB94BFA91083FA53"
+  },
+  {
+    "path": "src\\components\\canvas\\ConnectionFeedback.tsx",
+    "sha256": "C39B7B6F5184365DEF65F4E82D08E5FFF530E12ABE33EE51DE1AD70299107743"
+  },
+  {
+    "path": "src\\components\\canvas\\DemoLibrary.tsx",
+    "sha256": "D5D86789B4A9C6B78F82790E19583AB2618C39A167A6C8A7EA6D062A08E59226"
+  },
+  {
+    "path": "src\\components\\canvas\\NodeActions.tsx",
+    "sha256": "5785392DFF96644341D94EEC696D0263C0D89CD620B4034B47DBC96197046C9B"
+  },
+  {
+    "path": "src\\components\\canvas\\TaskPanel.tsx",
+    "sha256": "2559A9BC71CBBC5059EAD0AA042F72D423ED786791EF446AAC864A1D0F896F93"
+  },
+  {
+    "path": "src\\components\\canvas\\ToolbarIcon.tsx",
+    "sha256": "0445170E3D129F4A69D11D1D8DCE09465B964D3EA931F95290289C2C03560FCC"
+  },
+  {
+    "path": "src\\components\\canvas\\useCanvasAddMenu.ts",
+    "sha256": "4BDE6CC65692EDFEB405369BE1AB38E57D909510FAD0D6A58B9FDEA2A4FA4250"
+  },
+  {
+    "path": "src\\components\\canvas\\useCanvasControls.ts",
+    "sha256": "533F009462974A0410E595B756142185A24A076F515BE007C6DEA19F22DE444C"
+  },
+  {
+    "path": "src\\components\\canvas\\useCanvasNodeActions.ts",
+    "sha256": "67B43E227C144B4BB6992AD28C71DB97FB8FEF870FD29777F56D2D708AB7460D"
+  },
+  {
+    "path": "src\\components\\canvas\\useCanvasPointer.ts",
+    "sha256": "35A95A05E113365AC8223E9E75F403D9CBF415B70446904439175021FE3D66CD"
+  },
+  {
+    "path": "src\\components\\canvas\\useCanvasView.ts",
+    "sha256": "B605539AC3388D0E213C5DD374D1C411FE2FBBD13C5293A7853AA8AD6CCA64CC"
+  },
+  {
+    "path": "src\\components\\canvas\\useCanvasViewport.ts",
+    "sha256": "4BF6A2A5F70EE5D055809189446477DD57EAF0DAEC0230FB945056D09F5FF22B"
+  },
+  {
+    "path": "src\\components\\CatalogPanel.tsx",
+    "sha256": "58436A243E1581893721677DAD58E1F5800ED4B6DB9F835BF1C3A0C8173E55EE"
+  },
+  {
+    "path": "src\\components\\CollectionPage.tsx",
+    "sha256": "0BBDA5929965E86DF69AD6869CEA7C4C8AEE73232D969D44B6BD2E78EDCF30D8"
+  },
+  {
+    "path": "src\\components\\ConversationPanel.tsx",
+    "sha256": "1DCDCE5F213FF3E8D16C6CDBD4BE0D22AF7B307D6D335D79EF9BC4420E3C698E"
+  },
+  {
+    "path": "src\\components\\InfoPanel.tsx",
+    "sha256": "A6BA0AD4A5961E960C5715374CD48674353E9E2584F6CD672B434230BA38D099"
+  },
+  {
+    "path": "src\\components\\LibraryPage.tsx",
+    "sha256": "6DFA72487F41B4AF1203935A08283D0380A74E8ABE328ADFA707E934E078D2FE"
+  },
+  {
+    "path": "src\\components\\Modal.tsx",
+    "sha256": "E56322D2B27D0AC40C4EDE56D1C888A66AAA2E1D26AAF30867EDE7F1FABD9A38"
+  },
+  {
+    "path": "src\\components\\nodes\\CreationComposer.tsx",
+    "sha256": "4DFC2437D23E8E42322E393AAE7C6E60A8B9432B0CF3F6E37F1F56942D4D7C2D"
+  },
+  {
+    "path": "src\\components\\nodes\\CreationParameters.tsx",
+    "sha256": "7EA3D386813313F55F449EB8C74C47912410B5EF84B04EE65C3B5814115962A5"
+  },
+  {
+    "path": "src\\components\\nodes\\DemoMediaPreview.tsx",
+    "sha256": "A162135966212E4E974AB454BFF913885EC6EE76FD3014BB94F394EDE3C0AFDC"
+  },
+  {
+    "path": "src\\components\\nodes\\DemoResultNode.tsx",
+    "sha256": "0022F7B547F66D898440730E7E11F7344FD7964B3BF655BB6AD3E4C4138C516F"
+  },
+  {
+    "path": "src\\components\\nodes\\DemoRunButton.tsx",
+    "sha256": "BEF418B8302FE3882BAEACE2933E8CDA8D189C541D697BD91A9AD21207B43DDD"
+  },
+  {
+    "path": "src\\components\\nodes\\GenerationCount.tsx",
+    "sha256": "4457B1308BE48062195F3E76BB105C19C7C3D349503A3FF78186796FFEF4AA1B"
+  },
+  {
+    "path": "src\\components\\nodes\\ImageCreationNode.tsx",
+    "sha256": "1F0C3AC0136E9DA362D4AAF5E23DF50D4E087BEC9587E283E41232EA0D29C969"
+  },
+  {
+    "path": "src\\components\\nodes\\VideoNode.tsx",
+    "sha256": "6B36F9A396ECBA2B8C012CC830AB36D4B442A65D38E62BB85B5C781E6EA5AFC4"
+  },
+  {
+    "path": "src\\components\\SavedPane.tsx",
+    "sha256": "687FB4A9DCBF5C840AC4428F2F20D5E1592FDAC8CB97AED9D530971E10B6BDAB"
+  },
+  {
+    "path": "src\\components\\SearchPage.tsx",
+    "sha256": "D23A7474D63293E2F8E31B87531700C5DDB8111949E7AE2892F09D46D625B817"
+  },
+  {
+    "path": "src\\components\\settings\\assets\\settings-nav.svg",
+    "sha256": "B888DFD36C67DDCC16EEDEBD51D6E2A7953D8DC2347F9D764B38BAF525D66D63"
+  },
+  {
+    "path": "src\\components\\settings\\ConnectionSettings.tsx",
+    "sha256": "2E559E1AFB782F3D39E44B5225B807097F68CF34BA0FBBEBA710A6C1E947F4DD"
+  },
+  {
+    "path": "src\\components\\settings\\GeneralSettings.tsx",
+    "sha256": "C63C9A1ED16F81408BBE826E4E148A2CBC2DF3993804F2C70E5F3A6F2A1B4FD9"
+  },
+  {
+    "path": "src\\components\\settings\\ModelProviderSettings.tsx",
+    "sha256": "341F014BE5F898F8EDE6EEA324B43C8AD576B162DE6E73F880920028BC92735B"
+  },
+  {
+    "path": "src\\components\\settings\\settings.css",
+    "sha256": "F12DEFC1364171EB2236D8206CF0E96C5FDF2EEF151E3580732655F18C3717EE"
+  },
+  {
+    "path": "src\\components\\settings\\SettingsControls.tsx",
+    "sha256": "A32E3D778905176353915CC1D0108FF166EEE82685707953A9829F588999208A"
+  },
+  {
+    "path": "src\\components\\settings\\SettingsPanel.tsx",
+    "sha256": "A353E2C81B862CA502BC177F7F868A978C061928CA198D6C9D2F0C554CFCAD8F"
+  },
+  {
+    "path": "src\\components\\settings\\SettingsSectionData.tsx",
+    "sha256": "CBA64F5E9B54E0F47481C64424CB4DA0DEBFEAE06321A4049C544862396B4FCD"
+  },
+  {
+    "path": "src\\components\\settings\\SettingsSections.tsx",
+    "sha256": "F59DC0B90079EE276212796449D2A9347DA61AEEB59D83A9DEED9E5E263F3A3F"
+  },
+  {
+    "path": "src\\components\\ShortcutsPanel.tsx",
+    "sha256": "84A1AA12FFC0E946D0EE975D46401B3FE744A1038D29A79D0440B8BC451751BE"
+  },
+  {
+    "path": "src\\components\\Sidebar.tsx",
+    "sha256": "EDCE011918057CEB2430F1CA0278703E14288B7492BE47D255CB5A5AA28ED22F"
+  },
+  {
+    "path": "src\\components\\TopBar.tsx",
+    "sha256": "D01C81285FE490ED463E4B95FEF8D9E1FDAD73E62D811F142A0C80D39C12818C"
+  },
+  {
+    "path": "src\\components\\UiIcon.tsx",
+    "sha256": "AC5F2F992B9FAD3252DF1B2B5FA61D9BF18497B010E604A913A90F5BAD0D9424"
+  },
+  {
+    "path": "src\\components\\useDismissible.ts",
+    "sha256": "67247E7C125BAA8C0BB9066C89B3A771BFC3C265DAA6D5361D1F31DCC907387C"
+  },
+  {
+    "path": "src\\components\\useSidebarLayout.ts",
+    "sha256": "733C6BE4B842968B525459FA6637B98F6BE2EDC0819A6277B5FC018FEBD81983"
+  },
+  {
+    "path": "src\\core\\assets.ts",
+    "sha256": "E143715D501338EF9F4A17FA5848F4325F89FE5716D6D0E10CB8B17279F7FC1D"
+  },
+  {
+    "path": "src\\core\\canvasGraph.ts",
+    "sha256": "A3747A868E8C35D081E0C0A8B87FAB706FF7BE6AC0E9888335163784AB9A22B3"
+  },
+  {
+    "path": "src\\core\\canvasItems.ts",
+    "sha256": "A1900DC259C77D7ECF8352C97A548E77703EA90D7D2384CAE3BC7442707E5ECA"
+  },
+  {
+    "path": "src\\core\\canvasViewport.ts",
+    "sha256": "885B7583043056D093B7C7ACC0D7C0FB94A8E467AB59A60E83A88614B6B33405"
+  },
+  {
+    "path": "src\\core\\demoMedia.ts",
+    "sha256": "B9AE81E015BEB75AB51D3D0E4C5FE47034CEB76D7808A11D32B10DBEDA8F8C71"
+  },
+  {
+    "path": "src\\core\\modelProvider.ts",
+    "sha256": "D478E41D78EF09D52BD0A884B940BB0E57138713E0D567B4365538A0FD5CBFE4"
+  },
+  {
+    "path": "src\\core\\settings.ts",
+    "sha256": "A0FA2E117EA937ECDA864543F125F91CD4BC1F990A8A71406EEBF2139E187CF0"
+  },
+  {
+    "path": "src\\main.tsx",
+    "sha256": "3314827C7B363FA4B30BC1420E48E267C109CA1BB150F920CEF39CCB81EDF213"
+  },
+  {
+    "path": "src\\modules\\modelProvider.ts",
+    "sha256": "D5C5BBCC7B8F81FA3DE6EDC6E6328014AC340F12C6C53B8CFABC37DF72C80190"
+  },
+  {
+    "path": "src\\styles\\canvas-actions.css",
+    "sha256": "5BF84F98AE57FF6144BB8B79EA328D12B455BEA387B260B0D69101A0B29F2E01"
+  },
+  {
+    "path": "src\\styles\\canvas-hud.css",
+    "sha256": "66CF7CE4A191FB727A6F938332FB14A52C233DEE7728884EE9DC830851A9E834"
+  },
+  {
+    "path": "src\\styles\\canvas-navigation.css",
+    "sha256": "4A97A733BE92AF226DAC1084A7064DF71426BE329C797BA183EA6478ADC52F79"
+  },
+  {
+    "path": "src\\styles\\canvas-tools.css",
+    "sha256": "F79A98D649194BC14A1C3305FF3B81E467BEEF5A8CD483A3E44688CFE1C816A1"
+  },
+  {
+    "path": "src\\styles\\catalog.css",
+    "sha256": "2FF34834766941F4C0EADA745D2C382ECA85FE51E9087D31FB50FB206B50FF3B"
+  },
+  {
+    "path": "src\\styles\\demo-results.css",
+    "sha256": "BAA97ABE73EBB0266DF0E13E993F21436D11E30F24AE69CB1F8E9B6D8130AD47"
+  },
+  {
+    "path": "src\\styles\\generation-count.css",
+    "sha256": "5D7E0D2D971C1A55965C1AC9C580FB3D6483C0C90542C75B0097AD9FCED5D5B9"
+  },
+  {
+    "path": "src\\styles\\global.css",
+    "sha256": "58EDE03A008EE93E6ADE8B4DA5C3ED25C841D510DE2D20BB5AA970A433608390"
+  },
+  {
+    "path": "src\\styles\\interaction.css",
+    "sha256": "88A530809E217D7B893B2283D8E3E149E05B2D04308B459C751D9803D19EBA70"
+  },
+  {
+    "path": "src\\styles\\motion.css",
+    "sha256": "C4E3756673F71B9C69185C2F79E460F0F951C6496B6C0B161DD88CCDE8C0C8F2"
+  },
+  {
+    "path": "src\\styles\\node-menu.css",
+    "sha256": "89C175501D66FE7E4D90613B32AA7D71781161858EF9F3D495F5F75D724AEA2B"
+  },
+  {
+    "path": "src\\styles\\responsive.css",
+    "sha256": "699B174C6F6A6F47F89F2C7E1D1D167E5F0745813E65A7DEDCF74FFB5D768848"
+  },
+  {
+    "path": "src\\styles\\shortcuts.css",
+    "sha256": "7D89608C0FDF429E53266E4038A138FD8FD424384D7F32762ED45769D9960146"
+  },
+  {
+    "path": "src\\styles\\sidebar.css",
+    "sha256": "D092DA543473977D23C20BE12BBEDE82D819DB7989EDE6EA708212931BF0A93E"
+  },
+  {
+    "path": "src\\styles\\toolbar-icons.css",
+    "sha256": "6C541893B1533C887529D9C6B52F9BE268EA6BBA45FDA0F7D281137F86A10828"
+  },
+  {
+    "path": "src\\styles\\ui-tokens.css",
+    "sha256": "883D2EF299B9342B0E4D14F78B30E8AF8E9BA7F873ADE2C91B2B8691C9A7A996"
+  },
+  {
+    "path": "src\\styles\\workspace.css",
+    "sha256": "11CA72E232BCD417721FF2158174FBEC52B10B78849B75D4083F67E0B756BC14"
+  },
+  {
+    "path": "tests\\assets.test.ts",
+    "sha256": "9F50F64123ED0DF15B763F7B13EED0434795B05A025DD11C8ACDF93959FFAA38"
+  },
+  {
+    "path": "tests\\browser\\canvas-actions.spec.ts",
+    "sha256": "0E6EA150815994B35AC947433DE2A7E4F8E22019D5EF8AE95BD12589A83B3ECF"
+  },
+  {
+    "path": "tests\\browser\\canvas-layout.spec.ts",
+    "sha256": "DEF39651BA810150D2CC5D43AF24535B840EB22572AF5C301A3CDFB87C6EF053"
+  },
+  {
+    "path": "tests\\browser\\canvas-navigation.spec.ts",
+    "sha256": "5FE8C402DEB30596298DF412EE7A525D04AD54AF5B8F1D4DA09D341B239120E6"
+  },
+  {
+    "path": "tests\\browser\\canvas-pointer.spec.ts",
+    "sha256": "E0428BA0C3D5116160F2A93D9AEBBE9D8546185AF641005425DC3293540CA351"
+  },
+  {
+    "path": "tests\\browser\\composer-fidelity.spec.ts",
+    "sha256": "39751F13917926BCAD2550ABB79FB2D324132D47AF0AC2070E6452A5E0365CCE"
+  },
+  {
+    "path": "tests\\browser\\connection-drag.spec.ts",
+    "sha256": "B0376D1E15E03E4B812C0FD3A9DC6B4CC6B675A38B050FDA462BA763E2A1F878"
+  },
+  {
+    "path": "tests\\browser\\demo-results.spec.ts",
+    "sha256": "3672072F0D828D23B11E624AC2C3F50042856D7A6ED1004238A8457E6F2D5D44"
+  },
+  {
+    "path": "tests\\browser\\design-corrections.spec.ts",
+    "sha256": "40EA3C6AFEE3AA502F9512AF5815F4C6178B53395E05AA22049952FAC205BBA3"
+  },
+  {
+    "path": "tests\\browser\\frontend.spec.ts",
+    "sha256": "96EB5C3FE89A0452375DA5202A583CC4E361812D70C436D18399F117D0FE13CD"
+  },
+  {
+    "path": "tests\\browser\\generation-count.spec.ts",
+    "sha256": "A4606494D7BBCDD265DEFA1E76792CD75FDAC9DCB0F937CF6E7C85CEF8B564CC"
+  },
+  {
+    "path": "tests\\browser\\interaction-regressions.spec.ts",
+    "sha256": "6BB06FC266BCC4A871ED873684B2BF830456ACA6D3B71647542A5640230D047E"
+  },
+  {
+    "path": "tests\\browser\\sidebar.spec.ts",
+    "sha256": "54CCB4BB9FF8B0556A2D96D127ACE0169976DCB8D88A752881026A07A81DF75E"
+  },
+  {
+    "path": "tests\\browser\\ui-motion.spec.ts",
+    "sha256": "5F5DB4DCD5B69C05BAC7DB078C3651925D4B2B4A0C7A2AC5B5F536FCFF278D42"
+  },
+  {
+    "path": "tests\\canvasGraph.test.ts",
+    "sha256": "E094C04033CCD4351FB88F3189980F0A5608431E640F2AF39171C35799843594"
+  },
+  {
+    "path": "tests\\settings.test.ts",
+    "sha256": "A7008DCACF8A4E705EB06D169465713E6E49536A690AB3AEFAA3FE8C799DF442"
+  }
+]

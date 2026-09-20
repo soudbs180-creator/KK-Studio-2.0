@@ -1,0 +1,10 @@
+@media (max-width: 1200px) {
+  .workspace.chat-mobile .conversation-panel {
+    display: flex;
+    width: min(360px, calc(100% - 34px));
+    right: 23px;
+    top: 10px;
+    bottom: 20px;
+    z-index: 25;
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "capturedAt": "2026-09-07T12:09:07.787Z",
+  "connectorInteraction": {
+    "followDelta": {
+      "x": 64,
+      "y": 32
+    },
+    "pathChanged": true,
+    "deleteOpacity": "1",
+    "deleted": true,
+    "restored": true
+  },
+  "views": [
+    {
+      "width": 1920,
+      "button": {
+        "x": 783.4156494140625,
+        "y": 740.2530517578125,
+        "width": 28,
+        "height": 28
+      },
+      "canvas": {
+        "x": 287,
+        "y": 45,
+        "width": 1622,
+        "height": 1025
+      },
+      "inside": true
+    },
+    {
+      "width": 1440,
+      "button": {
+        "x": 783.4156494140625,
+        "y": 560.2530517578125,
+        "width": 28,
+        "height": 28
+      },
+      "canvas": {
+        "x": 287,
+        "y": 45,
+        "width": 1142,
+        "height": 845
+      },
+      "inside": true
+    },
+    {
+      "width": 768,
+      "button": {
+        "x": 483,
+        "y": 550.052001953125,
+        "width": 44,
+        "height": 44.0001220703125
+      },
+      "canvas": {
+        "x": 72,
+        "y": 45,
+        "width": 685,
+        "height": 969
+      },
+      "inside": true
+    },
+    {
+      "width": 390,
+      "button": {
+        "x": 320,
+        "y": 257.6602783203125,
+        "width": 44,
+        "height": 44.000030517578125
+      },
+      "canvas": {
+        "x": 72,
+        "y": 45,
+        "width": 307,
+        "height": 789
+      },
+      "inside": true
+    }
+  ],
+  "reducedAnimations": 0,
+  "errors": [],
+  "video": "frontend-flow.webm"
+}

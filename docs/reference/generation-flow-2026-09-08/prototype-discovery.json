@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"candidates\":[{\"id\":\"171:790\",\"name\":\"menu-item-文本\",\"width\":248,\"height\":52,\"visible\":true},{\"id\":\"171:816\",\"name\":\"menu-item-音频\",\"width\":248,\"height\":52,\"visible\":true}],\"generation\":[{\"id\":\"170:8296\",\"name\":\"描述你想要生成的内容\",\"type\":\"TEXT\",\"reactions\":[]},{\"id\":\"170:8550\",\"name\":\"生成数量选择\",\"type\":\"GROUP\",\"reactions\":[]},{\"id\":\"170:8709\",\"name\":\"正在生成中\",\"type\":\"TEXT\",\"reactions\":[]},{\"id\":\"170:8931\",\"name\":\"生成数量\",\"type\":\"TEXT\",\"reactions\":[]}]}"
+    }
+  ],
+  "isError": false
+}

@@ -1,0 +1,441 @@
+/* App.tsx loads this once, after workspace.css.
+   Fresh source: 404:28667 > 407:29265, 410:67357 > 410:74720. */
+.workspace-content .conversation-panel {
+  top: 15px;
+  bottom: 10px;
+  right: 9px;
+  width: var(--conversation-width);
+  padding: 16px 20px 16px 17px;
+  gap: var(--ui-space-4);
+  border-radius: var(--ui-radius-panel);
+  background: var(--bg-surface);
+  backdrop-filter: none;
+}
+.conversation-panel::before,
+.workspace-content:has(.canvas-pattern-grid) .conversation-panel::before {
+  display: none;
+}
+.conversation-panel > header {
+  position: relative;
+  width: var(--ui-composer-width);
+  height: 24px;
+  flex: 0 0 24px;
+  margin-left: 2.5px;
+  align-items: flex-start;
+}
+.conversation-panel > header strong {
+  margin-top: 1px;
+  font-size: var(--ui-font-title);
+  line-height: 23px;
+  color: var(--text-strong);
+}
+.conversation-panel > header button {
+  position: absolute;
+  top: 0;
+  left: 365px;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border-radius: 4px;
+}
+.conversation-panel > header button:last-child {
+  position: absolute;
+  left: 408px;
+  top: 1px;
+  margin: 0;
+  width: 18px;
+  height: 18px;
+}
+.conversation-panel > header button img {
+  width: 20px;
+  height: 20px;
+}
+.conversation-panel > header button:last-child img {
+  width: 21.5px;
+  height: 21.5px;
+}
+.conversation-panel .conversation-messages {
+  padding-top: 0;
+}
+.conversation-panel .message-bubble {
+  padding: 22px;
+  border: var(--ui-border-width) solid var(--border-default);
+  border-radius: var(--ui-radius-panel);
+  background: var(--bg-input);
+  font-size: var(--ui-font-body);
+  line-height: 15px;
+}
+.conversation-panel .chat-composer {
+  width: var(--ui-composer-width);
+  height: var(--ui-composer-height);
+  flex: 0 0 var(--ui-composer-height);
+  margin: 0 0 0 2px;
+  padding: 12px;
+  gap: 56px;
+  border: var(--ui-border-width) solid var(--border-default);
+  border-radius: var(--ui-radius-panel);
+  background: var(--bg-input);
+}
+.conversation-panel .chat-composer textarea {
+  width: 400px;
+  height: 64px;
+  flex: 0 0 64px;
+  margin: 0;
+  padding: 0;
+  font-size: 10px;
+  line-height: 12px;
+}
+.conversation-panel .chat-composer textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 1;
+}
+.conversation-panel .chat-composer > .chat-attachment-list {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 76px;
+  width: auto;
+  height: 32px;
+  overflow: visible;
+  pointer-events: auto;
+}
+.conversation-panel .chat-attachment-list .start-attachment-row {
+  max-width: none;
+  margin: 0;
+}
+.conversation-panel .chat-composer > div {
+  position: relative;
+  width: 400px;
+  height: var(--ui-composer-action-size);
+  flex: 0 0 var(--ui-composer-action-size);
+  gap: 5px;
+  align-items: center;
+}
+.conversation-panel .chat-composer > div > button {
+  padding: 0;
+  height: var(--ui-composer-control-height);
+  border-radius: var(--ui-radius-menu);
+  background: var(--ui-composer-surface);
+  color: var(--text-tertiary);
+  font-size: var(--ui-font-caption);
+  line-height: 13px;
+}
+.conversation-panel .chat-composer > div > button:first-child {
+  order: 1;
+  width: var(--ui-composer-action-size);
+  height: var(--ui-composer-action-size);
+  min-width: var(--ui-composer-action-size);
+  background: transparent;
+}
+.conversation-panel .chat-composer > div > button:first-child img,
+.conversation-panel .chat-composer .chat-send img {
+  display: block;
+  width: var(--ui-composer-action-size);
+  height: var(--ui-composer-action-size);
+}
+.conversation-panel
+  .chat-composer
+  > div
+  > button:not(:first-child):not(.chat-send):not([aria-label*="语音输入"]) {
+  width: 58px;
+  min-width: 58px;
+  gap: 4px;
+  padding: 0;
+}
+.conversation-panel
+  .chat-composer
+  > div
+  > button:not(:first-child):not(.chat-send):not([aria-label*="语音输入"])
+  img {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+  object-fit: contain;
+}
+.conversation-panel .chat-composer > div > button:nth-child(2) {
+  order: 2;
+}
+.chat-model-picker {
+  display: flex;
+  align-items: center;
+}
+.conversation-panel .chat-composer > div > button.chat-model-picker {
+  width: max-content;
+  min-width: 58px;
+  max-width: 220px;
+  white-space: nowrap;
+}
+.chat-model-name {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chat-model-popover {
+  position: absolute;
+  z-index: 40;
+  left: 0;
+  bottom: calc(100% + 8px);
+  min-width: 160px;
+  padding: 5px;
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  background: var(--ui-composer-surface);
+  box-shadow: var(--ui-shadow);
+}
+.chat-model-popover button {
+  display: block;
+  width: 100%;
+  padding: 7px 9px;
+  border-radius: 7px;
+  color: var(--text-secondary);
+  text-align: left;
+  white-space: nowrap;
+}
+.chat-model-popover button:hover {
+  background: var(--ui-composer-surface);
+  color: var(--text-primary);
+}
+.conversation-panel .chat-composer > div > button:nth-child(2) img {
+  width: 12.465px;
+  height: 13.849px;
+  flex-basis: 12.465px;
+}
+.conversation-panel .chat-composer > div > .chat-footer-separator:nth-child(3) {
+  order: 3;
+}
+.conversation-panel .chat-composer > div > button:nth-child(4) {
+  order: 4;
+}
+.conversation-panel .chat-composer > div > .chat-footer-separator:nth-child(5) {
+  order: 5;
+}
+.conversation-panel .chat-composer > div > button:nth-child(6) {
+  order: 6;
+}
+.conversation-panel .chat-footer-separator {
+  position: relative;
+  width: 0;
+  height: 16px;
+  flex: 0 0 0;
+}
+.conversation-panel .chat-footer-separator::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--ui-border-width);
+  height: 16px;
+  background: var(--border-default);
+}
+.conversation-panel .chat-composer button[aria-label*="语音输入"] {
+  order: 7;
+  margin-left: auto;
+  width: 22px;
+  min-width: 22px;
+  height: 22px;
+  background: transparent;
+}
+.conversation-panel .chat-composer button[aria-label*="语音输入"] img {
+  width: 16px;
+  height: 16px;
+}
+.conversation-panel .chat-footer-separator-right {
+  order: 8;
+  margin-left: 4px;
+}
+.conversation-panel .chat-mode-menu {
+  order: 9;
+  margin-left: 4px;
+}
+
+.conversation-panel .chat-resource-popover {
+  position: absolute;
+  z-index: 4;
+  left: 92px;
+  bottom: 34px;
+  width: 184px;
+  padding: 8px;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  box-shadow: var(--ui-shadow);
+}
+
+.conversation-panel .chat-resource-popover p {
+  margin: 0 0 6px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.conversation-panel .chat-resource-popover button {
+  width: 100%;
+  min-height: 26px;
+  border: 0;
+  border-radius: 5px;
+  color: var(--text-strong);
+  background: var(--bg-input);
+  font-size: 11px;
+  cursor: pointer;
+}
+.conversation-panel .chat-plugin-popover {
+  left: 160px;
+}
+.conversation-panel .chat-mode-trigger {
+  width: 53px;
+  min-width: 53px !important;
+  height: var(--ui-composer-control-height);
+  gap: 2px;
+  padding: 0 !important;
+  font-size: var(--ui-font-caption) !important;
+  line-height: 13px;
+  background: var(--ui-composer-surface);
+}
+.conversation-panel .chat-mode-chevron {
+  width: 10px;
+  height: 6px;
+  flex: 0 0 10px;
+}
+.conversation-panel .chat-composer .chat-send {
+  order: 10;
+  margin-left: 4px;
+  width: var(--ui-composer-action-size);
+  min-width: var(--ui-composer-action-size);
+  height: var(--ui-composer-action-size);
+  background: transparent;
+}
+.conversation-panel footer {
+  height: 12px;
+  flex: 0 0 12px;
+  padding: 0;
+  font-size: 10px;
+  line-height: 12px;
+}
+
+.chat-approval {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  margin: 6px 0 0;
+  padding: 6px 8px;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+.chat-approval span {
+  flex: 1;
+}
+
+.chat-approval button {
+  border: 0;
+  border-radius: 5px;
+  padding: 4px 8px;
+  color: var(--text-strong);
+  background: var(--ui-composer-surface);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.chat-approval button:first-of-type {
+  background: var(--ui-selected);
+}
+/* Narrow drawers use larger controls as an engineering supplement. */
+@media (max-width: 1200px) {
+  .workspace.chat-mobile .conversation-panel {
+    top: 10px;
+    bottom: 20px;
+    right: 23px;
+    width: min(360px, calc(100% - 34px));
+    padding: 16px;
+  }
+  .workspace.chat-mobile .canvas.has-chat .canvas-top-right {
+    /* Once the narrow rail is shown, the navigation is behind it and must
+       not intercept the rail's close button. */
+    display: none;
+  }
+  .conversation-panel > header {
+    width: 100%;
+    height: 30px;
+    flex-basis: 30px;
+    margin: 0;
+  }
+  .conversation-panel > header button,
+  .conversation-panel > header button:last-child {
+    position: static;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+  }
+  .conversation-panel > header button:last-child img {
+    width: 20px;
+    height: 20px;
+  }
+  .conversation-panel .chat-composer {
+    width: 100%;
+    margin: 0;
+    padding: 12px;
+    gap: 8px;
+  }
+  .conversation-panel .chat-composer textarea {
+    width: 100%;
+    height: auto;
+    flex: 1;
+    min-height: 32px;
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .conversation-panel .chat-composer > div {
+    width: 100%;
+    height: auto;
+    min-height: 30px;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .conversation-panel .chat-composer > div > button,
+  .conversation-panel .chat-composer > div > button:first-child,
+  .conversation-panel .chat-composer .chat-send,
+  .conversation-panel .chat-mode-trigger {
+    height: 30px;
+    font-size: 12px;
+  }
+  .conversation-panel .chat-footer-separator {
+    display: none;
+  }
+  .conversation-panel
+    .chat-composer
+    > div
+    > button:not(:first-child):not(.chat-send):not([aria-label*="语音输入"])
+    img {
+    width: 16px;
+    height: 16px;
+    flex-basis: 16px;
+  }
+  .conversation-panel .chat-composer > div > button:first-child img,
+  .conversation-panel .chat-composer .chat-send img {
+    width: 20px;
+    height: 20px;
+  }
+  .conversation-panel .chat-mode-menu,
+  .conversation-panel .chat-composer .chat-send {
+    margin-left: 0;
+  }
+}
+
+/* At the intermediate desktop width, keep the fixed bottom toolbar clear of
+   the conversation rail. The toolbar is centered 20px left of the shell
+   midpoint, so its right edge plus a 16px gutter starts the rail. */
+@media (min-width: 801px) and (max-width: 1200px) {
+  .workspace.chat-mobile .conversation-panel {
+    left: calc(50% + 160px);
+    right: 0;
+    width: calc(50% - 160px);
+    min-width: 0;
+  }
+}

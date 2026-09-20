@@ -1,0 +1,434 @@
+const imgLine17 = "https://www.figma.com/api/mcp/asset/cc25d50f-d45c-4908-b47f-bded1f96712a.svg";
+const imgLine18 = "https://www.figma.com/api/mcp/asset/b3825e3a-2a34-43bb-89a6-072cfcbfb762.svg";
+const imgIconSearch = "https://www.figma.com/api/mcp/asset/b9be6a32-3d79-4b78-a80c-d169e2e2e4ea.svg";
+const imgLine19 = "https://www.figma.com/api/mcp/asset/fb0900b3-be0f-4821-9a00-5c85100935a5.svg";
+const imgRectangle115 = "https://www.figma.com/api/mcp/asset/fd82a30c-e7de-4cd5-a806-f628dbd1b368.svg";
+const imgGroup94 = "https://www.figma.com/api/mcp/asset/c6853602-878c-4a42-a534-dfa3be03d688.svg";
+const imgGroup10 = "https://www.figma.com/api/mcp/asset/1d11b6e5-416b-44d6-9a6c-144914b80a82.svg";
+const img219Kimo20VAmazon35 = "https://www.figma.com/api/mcp/asset/95af1f0d-afb4-406b-855e-0b505ecde53b.svg";
+const imgIconPencil = "https://www.figma.com/api/mcp/asset/6e8912b4-ae10-411c-8c2a-ab198d1b7399.svg";
+const img458 = "https://www.figma.com/api/mcp/asset/5b49ab60-d097-4ee6-bc9b-d8d30157e7c0.svg";
+const imgGroup11 = "https://www.figma.com/api/mcp/asset/d4c10dd3-b98b-40ee-90e1-eeb71902e9b7.svg";
+const imgIconPencil1 = "https://www.figma.com/api/mcp/asset/4e3f197b-5644-4061-96e3-b7408de27c74.svg";
+const img459 = "https://www.figma.com/api/mcp/asset/c73f42fc-6d04-4b3f-a548-948dd6aa364d.svg";
+
+export default function Component() {
+  return (
+    <div className="contents relative size-full" data-node-id="156:28536" data-name="喜欢收藏页面">
+      <div className="absolute bg-[#1f1f1f] border border-[#3c3c3c] border-solid h-[725px] left-0 rounded-[80px] top-0 w-[900px]" data-node-id="156:28537" />
+      <div className="-translate-x-1/2 absolute bg-[#d9d9d9] h-[3px] left-0 rounded-[16px] top-0 w-[36px]" data-node-id="156:28538" />
+      <div className="absolute h-0 left-0 top-0 w-[900px]" data-node-id="156:28607">
+        <div className="absolute inset-[-1px_0_0_0]">
+          <img alt="" className="block max-w-none size-full" src={imgLine17} />
+        </div>
+      </div>
+      <div className="absolute h-0 left-0 top-0 w-[876px]" data-node-id="156:28608">
+        <div className="absolute inset-[-1px_0_0_0]">
+          <img alt="" className="block max-w-none size-full" src={imgLine18} />
+        </div>
+      </div>
+      <div className="absolute content-stretch flex flex-col gap-[32px] items-start leading-[0] left-0 top-0 w-[812px]" data-node-id="156:28539">
+        <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="156:28540" data-name="搜索框">
+          <div className="bg-[#1a1a1a] col-1 h-[58px] ml-0 mt-0 relative rounded-[20px] row-1 w-[812px]" data-node-id="156:28541" />
+          <div className="col-1 ml-[26px] mt-[22px] relative row-1 size-[14.724px]" data-node-id="156:28542" data-name="icon-search">
+            <div className="absolute inset-[-6.04%]">
+              <img alt="" className="block max-w-none size-full" src={imgIconSearch} />
+            </div>
+          </div>
+          <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[63px] mt-[18px] not-italic relative row-1 text-[#3c3c3c] text-[20px] w-[725px]" data-node-id="156:28545">
+            搜索收藏图片或提示词等操作...
+          </p>
+        </div>
+        <div className="content-stretch flex gap-[18px] items-center relative shrink-0 w-full" data-node-id="156:28546">
+          <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="156:28547">
+            <div className="col-1 h-[40.718px] ml-0 mt-0 relative rounded-[20px] row-1 w-[120.302px]" data-node-id="156:28548" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium h-[24.06px] leading-[normal] ml-[11.99px] mt-[9.8px] not-italic relative row-1 text-[#858585] text-[20px] text-center w-[96.242px]" data-node-id="156:28549">
+              全部
+            </p>
+          </div>
+          <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="156:28550">
+            <div className="bg-[#1a1a1a] col-1 h-[40.718px] ml-0 mt-0 relative rounded-[20px] row-1 w-[120.302px]" data-node-id="156:28551" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium h-[24.06px] leading-[normal] ml-[11.71px] mt-[9.8px] not-italic relative row-1 text-[#d9d9d9] text-[20px] text-center w-[96.242px]" data-node-id="156:28552">
+              喜欢收藏
+            </p>
+          </div>
+          <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="156:28553">
+            <div className="col-1 h-[40.718px] ml-0 mt-0 relative rounded-[20px] row-1 w-[120.302px]" data-node-id="156:28554" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium h-[24.06px] leading-[normal] ml-[10.71px] mt-[9.8px] not-italic relative row-1 text-[#858585] text-[20px] text-center w-[96.242px]" data-node-id="156:28555">
+              创作页
+            </p>
+          </div>
+          <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="156:28556">
+            <div className="col-1 h-[40.718px] ml-0 mt-0 relative rounded-[20px] row-1 w-[120.302px]" data-node-id="156:28557" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium h-[24.06px] leading-[normal] ml-[11.1px] mt-[9.8px] not-italic relative row-1 text-[#858585] text-[20px] text-center w-[96.242px]" data-node-id="156:28558">
+              项目
+            </p>
+          </div>
+          <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="156:28559">
+            <div className="col-1 h-[40.718px] ml-0 mt-0 relative rounded-[20px] row-1 w-[120.302px]" data-node-id="156:28560" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium h-[24.06px] leading-[normal] ml-[11.11px] mt-[9.8px] not-italic relative row-1 text-[#858585] text-[20px] text-center w-[96.242px]" data-node-id="156:28561">
+              类型
+            </p>
+          </div>
+          <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="156:28562">
+            <div className="col-1 h-[40.718px] ml-0 mt-0 relative rounded-[20px] row-1 w-[120.302px]" data-node-id="156:28563" />
+            <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium h-[24.06px] leading-[normal] ml-[11.1px] mt-[9.8px] not-italic relative row-1 text-[#858585] text-[20px] text-center w-[96.242px]" data-node-id="156:28564">
+              文件资产
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="absolute content-stretch flex gap-[14px] items-center justify-end left-0 top-0 w-[182px]" data-node-id="156:28609">
+        <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0" data-node-id="156:28615">
+          <div className="bg-[#1a1a1a] col-1 h-[18px] ml-0 mt-0 opacity-90 relative rounded-[9px] row-1 w-[54px]" data-node-id="156:28616" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[12px] mt-px not-italic relative row-1 text-[#858585] text-[12px] text-center whitespace-nowrap" data-node-id="156:28617">
+            Enter
+          </p>
+          <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[56.71px] mt-px not-italic relative row-1 text-[#858585] text-[12px] text-center whitespace-nowrap" data-node-id="156:28618">
+            打开
+          </p>
+        </div>
+        <div className="flex h-[7.358px] items-center justify-center relative shrink-0 w-[3.29px]" data-node-id="156:28619">
+          <div className="flex-none rotate-[114.09deg]">
+            <div className="h-0 relative w-[8.06px]">
+              <div className="absolute inset-[-0.5px_-6.2%]">
+                <img alt="" className="block max-w-none size-full" src={imgLine19} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0" data-node-id="156:28620">
+          <div className="bg-[#1a1a1a] col-1 h-[18px] ml-0 mt-0 opacity-90 relative rounded-[9px] row-1 w-[43px]" data-node-id="156:28621" />
+          <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[11px] mt-px not-italic relative row-1 text-[#858585] text-[12px] text-center whitespace-nowrap" data-node-id="156:28622">
+            Esc
+          </p>
+          <p className="[word-break:break-word] col-1 font-['Inter:Medium'] font-medium leading-[normal] ml-[45.71px] mt-px not-italic relative row-1 text-[#858585] text-[12px] text-center whitespace-nowrap" data-node-id="156:28623">
+            退出
+          </p>
+        </div>
+      </div>
+      <div className="absolute contents left-0 top-0" data-node-id="168:617" data-name="喜欢">
+        <div className="absolute h-[486px] left-0 top-0 w-[429px]" data-node-id="156:28626">
+          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRectangle115} />
+        </div>
+        <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal leading-[normal] left-0 not-italic text-[#858585] text-[14px] top-0 w-[28px]" data-node-id="156:28566">
+          喜欢
+        </p>
+        <div className="absolute contents left-0 top-0" data-node-id="156:28633" data-name="时间选项">
+          <div className="absolute contents left-0 top-0" data-node-id="156:28634">
+            <div className="absolute bg-[#1f1f1f] h-[22px] left-0 rounded-[20px] top-0 w-[89px]" data-node-id="156:28635" />
+            <div className="absolute inset-[-12.5%_-6.25%]">
+              <img alt="" className="block max-w-none size-full" src={imgGroup94} />
+            </div>
+            <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-0 leading-[normal] not-italic text-[#858585] text-[11px]" data-node-id="156:28638">
+              最近更新
+            </p>
+          </div>
+        </div>
+        <div className="absolute gap-x-[7px] gap-y-[8px] grid grid-cols-[repeat(2,minmax(0,1fr))] grid-rows-[repeat(2,minmax(0,1fr))] h-[429.41px] leading-[0] left-0 top-0 w-[396.53px]" data-node-id="168:458">
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-1 self-start shrink-0" data-node-id="168:249" data-name="喜欢磁卡">
+            <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-0 mt-0 place-items-start relative row-1" data-node-id="156:28649" data-name="展示">
+              <div className="bg-[#333] col-1 h-[210.705px] ml-0 mt-0 relative rounded-[10px] row-1 w-[194.765px]" data-node-id="156:28650" />
+              <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[1.32px] mt-[1.33px] place-items-start relative row-1" data-node-id="156:28651">
+                <div className="bg-[#1f1f1f] col-1 h-[132.519px] ml-[1.32px] mt-[1.33px] relative rounded-[10px] row-1 w-[192.115px]" data-node-id="156:28652" />
+                <div className="col-1 h-[42.305px] ml-[19.05%] mt-[10.8%] relative row-1 w-[42.485px]" data-node-id="156:28653">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup10} />
+                </div>
+              </div>
+              <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[1.32px] mt-[136.49px] place-items-start relative row-1" data-node-id="168:232" data-name="提示词">
+                <div className="bg-[#1f1f1f] col-1 h-[72.885px] ml-[1.32px] mt-[136.49px] relative rounded-[10px] row-1 w-[192.115px]" data-node-id="156:28665" />
+                <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[10.602px] leading-[normal] ml-[3.01%] mt-[33.02%] not-italic relative row-1 text-[#858585] text-[6px] w-[26.499px]" data-node-id="156:28657">
+                  提示词
+                </p>
+                <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[5.3px] mt-[140.47px] place-items-start relative row-1" data-node-id="156:28664" data-name="Mask group">
+                  <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[111.316px] leading-[normal] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-6.625px_-13.252px] mask-size-[184.166px_64.935px] ml-0 mt-[153.72px] not-italic relative row-1 text-[#858585] text-[6px] w-[173.566px]" data-node-id="156:28661" style={{ maskImage: `url("${img219Kimo20VAmazon35}")` }}>
+                    21:9 超宽横版，超写实电商套装产品摄影。画面参考专业电动工具“整套配件展示”的构图，但所有产品必须严格使用参考图中的 KIMO 20V 黑绿色电动工具套装。场景是一块非常干净、平整的暖白色展示台面，放置在浅色木质家居或木工作业空间中。背景只隐约出现浅色木板、木质结构和少量空间层次，背景轻微虚化，不出现杂乱工具、木屑、油污或施工垃圾。整体环境明亮、自然、高级，像真实拍摄的 Amazon 电商套装副图。镜头采用前上方约 35°轻微俯拍，不是完全正俯视。所有产品真实平放在同一个台面上，保持统一透视和真实接触阴影。
+                  </p>
+                </div>
+                <div className="bg-gradient-to-b col-1 from-[81.486%] from-[rgba(31,31,31,0)] h-[72.885px] ml-[1.32px] mt-[136.49px] relative rounded-[10px] row-1 to-[#1f1f1f] to-[93.636%] w-[192.115px]" data-node-id="156:28667" />
+              </div>
+            </div>
+            <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[12.01px] mt-[116.16px] place-items-start relative row-1" data-node-id="168:363">
+              <div className="bg-[#1f1f1f] border-[#333] border-[0.5px] border-solid col-1 h-[13.018px] ml-[122.15px] mt-[116.16px] relative rounded-[25px] row-1 w-[36.043px]" data-node-id="168:364" />
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[7.01px] leading-[normal] ml-[138.17px] mt-[119.17px] not-italic relative row-1 text-[#858585] text-[6px] w-[13.016px]" data-node-id="168:365">
+                编辑
+              </p>
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[7.01px] leading-[normal] ml-[12.01px] mt-[119.17px] not-italic relative row-1 text-[#858585] text-[6px] w-[99.12px]" data-node-id="168:373">
+                图片名字.png
+              </p>
+              <div className="col-1 h-[7.013px] ml-[32.57%] mt-[27.75%] relative row-1 w-[7.011px]" data-node-id="168:366" data-name="icon-pencil">
+                <div className="absolute inset-[-3.57%]">
+                  <img alt="" className="block max-w-none size-full" src={imgIconPencil} />
+                </div>
+              </div>
+            </div>
+            <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[160.19px] mt-[117.16px] place-items-start relative row-1" data-node-id="168:369">
+              <div className="bg-[#1f1f1f] border-[#333] border-[0.5px] border-solid col-1 h-[11.015px] ml-[160.19px] mt-[117.16px] relative rounded-[25px] row-1 w-[27.033px]" data-node-id="168:370" />
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[7.01px] leading-[normal] ml-[168.2px] mt-[119.17px] not-italic relative row-1 text-[#858585] text-[6px] w-[12.014px]" data-node-id="168:371">
+                删除
+              </p>
+            </div>
+            <div className="col-1 h-[9.013px] ml-[2.02%] mt-[2.1%] relative row-1 w-[11.013px]" data-node-id="156:28678" data-name="路径 458">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={img458} />
+            </div>
+          </div>
+          <div className="col-2 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-1 self-start shrink-0" data-node-id="168:374" data-name="喜欢磁卡">
+            <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[201.76px] mt-0 place-items-start relative row-1" data-node-id="168:375" data-name="展示">
+              <div className="bg-[#333] col-1 h-[210.705px] ml-[201.77px] mt-0 relative rounded-[10px] row-1 w-[194.765px]" data-node-id="168:376" />
+              <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[203.09px] mt-[1.33px] place-items-start relative row-1" data-node-id="168:377">
+                <div className="bg-[#1f1f1f] col-1 h-[132.519px] ml-[203.09px] mt-[1.33px] relative rounded-[10px] row-1 w-[192.115px]" data-node-id="168:378" />
+                <div className="col-1 h-[42.305px] ml-[69.93%] mt-[10.8%] relative row-1 w-[42.485px]" data-node-id="168:379">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup10} />
+                </div>
+              </div>
+              <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[203.09px] mt-[136.49px] place-items-start relative row-1" data-node-id="168:383" data-name="提示词">
+                <div className="bg-[#1f1f1f] col-1 h-[72.885px] ml-[203.09px] mt-[136.49px] relative rounded-[10px] row-1 w-[192.115px]" data-node-id="168:384" />
+                <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[10.602px] leading-[normal] ml-[53.89%] mt-[33.02%] not-italic relative row-1 text-[#858585] text-[6px] w-[26.499px]" data-node-id="168:385">
+                  提示词
+                </p>
+                <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[207.06px] mt-[140.47px] place-items-start relative row-1" data-node-id="168:386" data-name="Mask group">
+                  <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[111.316px] leading-[normal] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-6.625px_-13.252px] mask-size-[184.166px_64.935px] ml-0 mt-[153.72px] not-italic relative row-1 text-[#858585] text-[6px] w-[173.566px]" data-node-id="168:389" style={{ maskImage: `url("${img219Kimo20VAmazon35}")` }}>
+                    21:9 超宽横版，超写实电商套装产品摄影。画面参考专业电动工具“整套配件展示”的构图，但所有产品必须严格使用参考图中的 KIMO 20V 黑绿色电动工具套装。场景是一块非常干净、平整的暖白色展示台面，放置在浅色木质家居或木工作业空间中。背景只隐约出现浅色木板、木质结构和少量空间层次，背景轻微虚化，不出现杂乱工具、木屑、油污或施工垃圾。整体环境明亮、自然、高级，像真实拍摄的 Amazon 电商套装副图。镜头采用前上方约 35°轻微俯拍，不是完全正俯视。所有产品真实平放在同一个台面上，保持统一透视和真实接触阴影。
+                  </p>
+                </div>
+                <div className="bg-gradient-to-b col-1 from-[81.486%] from-[rgba(31,31,31,0)] h-[72.885px] ml-[203.09px] mt-[136.49px] relative rounded-[10px] row-1 to-[#1f1f1f] to-[93.636%] w-[192.115px]" data-node-id="168:390" />
+              </div>
+            </div>
+            <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[213.78px] mt-[116.16px] place-items-start relative row-1" data-node-id="168:391">
+              <div className="bg-[#1f1f1f] border-[#333] border-[0.5px] border-solid col-1 h-[13.018px] ml-[323.91px] mt-[116.16px] relative rounded-[25px] row-1 w-[36.043px]" data-node-id="168:392" />
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[7.01px] leading-[normal] ml-[339.93px] mt-[119.17px] not-italic relative row-1 text-[#858585] text-[6px] w-[13.016px]" data-node-id="168:393">
+                编辑
+              </p>
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[7.01px] leading-[normal] ml-[213.78px] mt-[119.17px] not-italic relative row-1 text-[#858585] text-[6px] w-[99.12px]" data-node-id="168:394">
+                图片名字.png
+              </p>
+              <div className="col-1 h-[7.013px] ml-[83.45%] mt-[27.75%] relative row-1 w-[7.011px]" data-node-id="168:395" data-name="icon-pencil">
+                <div className="absolute inset-[-3.57%]">
+                  <img alt="" className="block max-w-none size-full" src={imgIconPencil} />
+                </div>
+              </div>
+            </div>
+            <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[361.96px] mt-[117.16px] place-items-start relative row-1" data-node-id="168:398">
+              <div className="bg-[#1f1f1f] border-[#333] border-[0.5px] border-solid col-1 h-[11.015px] ml-[361.96px] mt-[117.16px] relative rounded-[25px] row-1 w-[27.033px]" data-node-id="168:399" />
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[7.01px] leading-[normal] ml-[369.97px] mt-[119.17px] not-italic relative row-1 text-[#858585] text-[6px] w-[12.014px]" data-node-id="168:400">
+                删除
+              </p>
+            </div>
+            <div className="col-1 h-[9.013px] ml-[52.9%] mt-[2.1%] relative row-1 w-[11.013px]" data-node-id="168:401" data-name="路径 458">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={img458} />
+            </div>
+          </div>
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-2 self-start shrink-0" data-node-id="168:402" data-name="喜欢磁卡">
+            <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-0 mt-[218.71px] place-items-start relative row-1" data-node-id="168:403" data-name="展示">
+              <div className="bg-[#333] col-1 h-[210.705px] ml-0 mt-[218.7px] relative rounded-[10px] row-1 w-[194.765px]" data-node-id="168:404" />
+              <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[1.32px] mt-[220.03px] place-items-start relative row-1" data-node-id="168:405">
+                <div className="bg-[#1f1f1f] col-1 h-[132.519px] ml-[1.32px] mt-[220.03px] relative rounded-[10px] row-1 w-[192.115px]" data-node-id="168:406" />
+                <div className="col-1 h-[42.305px] ml-[19.05%] mt-[61.73%] relative row-1 w-[42.485px]" data-node-id="168:407">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup11} />
+                </div>
+              </div>
+              <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[1.32px] mt-[355.2px] place-items-start relative row-1" data-node-id="168:411" data-name="提示词">
+                <div className="bg-[#1f1f1f] col-1 h-[72.885px] ml-[1.32px] mt-[355.2px] relative rounded-[10px] row-1 w-[192.115px]" data-node-id="168:412" />
+                <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[10.602px] leading-[normal] ml-[3.01%] mt-[83.95%] not-italic relative row-1 text-[#858585] text-[6px] w-[26.499px]" data-node-id="168:413">
+                  提示词
+                </p>
+                <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[5.3px] mt-[359.17px] place-items-start relative row-1" data-node-id="168:414" data-name="Mask group">
+                  <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[111.316px] leading-[normal] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-6.625px_-13.252px] mask-size-[184.166px_64.935px] ml-0 mt-[372.43px] not-italic relative row-1 text-[#858585] text-[6px] w-[173.566px]" data-node-id="168:417" style={{ maskImage: `url("${img219Kimo20VAmazon35}")` }}>
+                    21:9 超宽横版，超写实电商套装产品摄影。画面参考专业电动工具“整套配件展示”的构图，但所有产品必须严格使用参考图中的 KIMO 20V 黑绿色电动工具套装。场景是一块非常干净、平整的暖白色展示台面，放置在浅色木质家居或木工作业空间中。背景只隐约出现浅色木板、木质结构和少量空间层次，背景轻微虚化，不出现杂乱工具、木屑、油污或施工垃圾。整体环境明亮、自然、高级，像真实拍摄的 Amazon 电商套装副图。镜头采用前上方约 35°轻微俯拍，不是完全正俯视。所有产品真实平放在同一个台面上，保持统一透视和真实接触阴影。
+                  </p>
+                </div>
+                <div className="bg-gradient-to-b col-1 from-[81.486%] from-[rgba(31,31,31,0)] h-[72.885px] ml-[1.32px] mt-[355.2px] relative rounded-[10px] row-1 to-[#1f1f1f] to-[93.636%] w-[192.115px]" data-node-id="168:418" />
+              </div>
+            </div>
+            <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[12.01px] mt-[334.87px] place-items-start relative row-1" data-node-id="168:419">
+              <div className="bg-[#1f1f1f] border-[#333] border-[0.5px] border-solid col-1 h-[13.018px] ml-[122.15px] mt-[334.87px] relative rounded-[25px] row-1 w-[36.043px]" data-node-id="168:420" />
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[7.01px] leading-[normal] ml-[138.17px] mt-[337.87px] not-italic relative row-1 text-[#858585] text-[6px] w-[13.016px]" data-node-id="168:421">
+                编辑
+              </p>
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[7.01px] leading-[normal] ml-[12.01px] mt-[337.87px] not-italic relative row-1 text-[#858585] text-[6px] w-[99.12px]" data-node-id="168:422">
+                图片名字.png
+              </p>
+              <div className="col-1 h-[7.013px] ml-[32.57%] mt-[78.68%] relative row-1 w-[7.011px]" data-node-id="168:423" data-name="icon-pencil">
+                <div className="absolute inset-[-3.57%]">
+                  <img alt="" className="block max-w-none size-full" src={imgIconPencil} />
+                </div>
+              </div>
+            </div>
+            <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[160.19px] mt-[335.87px] place-items-start relative row-1" data-node-id="168:426">
+              <div className="bg-[#1f1f1f] border-[#333] border-[0.5px] border-solid col-1 h-[11.015px] ml-[160.19px] mt-[335.87px] relative rounded-[25px] row-1 w-[27.033px]" data-node-id="168:427" />
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[7.01px] leading-[normal] ml-[168.2px] mt-[337.87px] not-italic relative row-1 text-[#858585] text-[6px] w-[12.014px]" data-node-id="168:428">
+                删除
+              </p>
+            </div>
+            <div className="col-1 h-[9.013px] ml-[2.02%] mt-[53.03%] relative row-1 w-[11.013px]" data-node-id="168:429" data-name="路径 458">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={img458} />
+            </div>
+          </div>
+          <div className="col-2 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-2 self-start shrink-0" data-node-id="168:430" data-name="喜欢磁卡">
+            <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[201.76px] mt-[218.71px] place-items-start relative row-1" data-node-id="168:431" data-name="展示">
+              <div className="bg-[#333] col-1 h-[210.705px] ml-[201.76px] mt-[218.71px] relative rounded-[10px] row-1 w-[194.765px]" data-node-id="168:432" />
+              <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[203.09px] mt-[220.03px] place-items-start relative row-1" data-node-id="168:433">
+                <div className="bg-[#1f1f1f] col-1 h-[132.519px] ml-[203.09px] mt-[220.03px] relative rounded-[10px] row-1 w-[192.115px]" data-node-id="168:434" />
+                <div className="col-1 h-[42.305px] ml-[69.93%] mt-[61.73%] relative row-1 w-[42.485px]" data-node-id="168:435">
+                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup11} />
+                </div>
+              </div>
+              <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[203.09px] mt-[355.2px] place-items-start relative row-1" data-node-id="168:439" data-name="提示词">
+                <div className="bg-[#1f1f1f] col-1 h-[72.885px] ml-[203.09px] mt-[355.2px] relative rounded-[10px] row-1 w-[192.115px]" data-node-id="168:440" />
+                <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[10.602px] leading-[normal] ml-[53.89%] mt-[83.95%] not-italic relative row-1 text-[#858585] text-[6px] w-[26.499px]" data-node-id="168:441">
+                  提示词
+                </p>
+                <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[207.06px] mt-[359.17px] place-items-start relative row-1" data-node-id="168:442" data-name="Mask group">
+                  <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[111.316px] leading-[normal] mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[-6.625px_-13.252px] mask-size-[184.166px_64.935px] ml-0 mt-[372.43px] not-italic relative row-1 text-[#858585] text-[6px] w-[173.566px]" data-node-id="168:445" style={{ maskImage: `url("${img219Kimo20VAmazon35}")` }}>
+                    21:9 超宽横版，超写实电商套装产品摄影。画面参考专业电动工具“整套配件展示”的构图，但所有产品必须严格使用参考图中的 KIMO 20V 黑绿色电动工具套装。场景是一块非常干净、平整的暖白色展示台面，放置在浅色木质家居或木工作业空间中。背景只隐约出现浅色木板、木质结构和少量空间层次，背景轻微虚化，不出现杂乱工具、木屑、油污或施工垃圾。整体环境明亮、自然、高级，像真实拍摄的 Amazon 电商套装副图。镜头采用前上方约 35°轻微俯拍，不是完全正俯视。所有产品真实平放在同一个台面上，保持统一透视和真实接触阴影。
+                  </p>
+                </div>
+                <div className="bg-gradient-to-b col-1 from-[81.486%] from-[rgba(31,31,31,0)] h-[72.885px] ml-[203.09px] mt-[355.2px] relative rounded-[10px] row-1 to-[#1f1f1f] to-[93.636%] w-[192.115px]" data-node-id="168:446" />
+              </div>
+            </div>
+            <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[213.78px] mt-[334.87px] place-items-start relative row-1" data-node-id="168:447">
+              <div className="bg-[#1f1f1f] border-[#333] border-[0.5px] border-solid col-1 h-[13.018px] ml-[323.91px] mt-[334.87px] relative rounded-[25px] row-1 w-[36.043px]" data-node-id="168:448" />
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[7.01px] leading-[normal] ml-[339.93px] mt-[337.87px] not-italic relative row-1 text-[#858585] text-[6px] w-[13.016px]" data-node-id="168:449">
+                编辑
+              </p>
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[7.01px] leading-[normal] ml-[213.78px] mt-[337.87px] not-italic relative row-1 text-[#858585] text-[6px] w-[99.12px]" data-node-id="168:450">
+                图片名字.png
+              </p>
+              <div className="col-1 h-[7.013px] ml-[83.45%] mt-[78.68%] relative row-1 w-[7.011px]" data-node-id="168:451" data-name="icon-pencil">
+                <div className="absolute inset-[-3.57%]">
+                  <img alt="" className="block max-w-none size-full" src={imgIconPencil} />
+                </div>
+              </div>
+            </div>
+            <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[361.96px] mt-[335.87px] place-items-start relative row-1" data-node-id="168:454">
+              <div className="bg-[#1f1f1f] border-[#333] border-[0.5px] border-solid col-1 h-[11.015px] ml-[361.96px] mt-[335.87px] relative rounded-[25px] row-1 w-[27.033px]" data-node-id="168:455" />
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[7.01px] leading-[normal] ml-[369.97px] mt-[337.87px] not-italic relative row-1 text-[#858585] text-[6px] w-[12.014px]" data-node-id="168:456">
+                删除
+              </p>
+            </div>
+            <div className="col-1 h-[9.013px] ml-[52.9%] mt-[53.03%] relative row-1 w-[11.013px]" data-node-id="168:457" data-name="路径 458">
+              <img alt="" className="absolute block inset-0 max-w-none size-full" src={img458} />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="absolute contents left-0 top-0" data-node-id="168:618" data-name="收藏">
+        <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid h-[486px] left-0 rounded-[10px] top-0 w-[429px]" data-node-id="156:28629" />
+        <div className="absolute contents left-0 top-0" data-node-id="156:28640" data-name="时间选项">
+          <div className="absolute contents left-0 top-0" data-node-id="156:28641">
+            <div className="absolute bg-[#1f1f1f] h-[22px] left-0 rounded-[20px] top-0 w-[89px]" data-node-id="156:28642" />
+            <div className="absolute inset-[-12.5%_-6.25%]">
+              <img alt="" className="block max-w-none size-full" src={imgGroup94} />
+            </div>
+            <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-0 leading-[normal] not-italic text-[#858585] text-[11px]" data-node-id="156:28645">
+              最近更新
+            </p>
+          </div>
+        </div>
+        <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal leading-[normal] left-0 not-italic text-[#858585] text-[14px] top-0 w-[28px]" data-node-id="156:28628">
+          收藏
+        </p>
+        <div className="absolute content-stretch flex flex-col items-start left-0 top-0 w-[399px]" data-node-id="168:295">
+          <div className="content-stretch flex flex-col gap-[8px] items-start leading-[0] relative shrink-0" data-node-id="168:615">
+            <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="168:252">
+              <div className="bg-[#1f1f1f] border border-[#3c3c3c] border-solid col-1 h-[71px] ml-0 mt-0 relative rounded-[10px] row-1 w-[399px]" data-node-id="156:28647" />
+              <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[328px] mt-[53px] place-items-start relative row-1" data-node-id="168:236">
+                <div className="bg-[#1f1f1f] border-[#333] border-[0.5px] border-solid col-1 h-[13px] ml-0 mt-0 relative rounded-[25px] row-1 w-[36px]" data-node-id="168:237" />
+                <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[16px] mt-[3px] not-italic relative row-1 text-[#858585] text-[6px] w-[13px]" data-node-id="168:238">
+                  编辑
+                </p>
+                <div className="col-1 ml-[7px] mt-[3px] relative row-1 size-[7.003px]" data-node-id="168:239" data-name="icon-pencil">
+                  <div className="absolute inset-[-3.57%]">
+                    <img alt="" className="block max-w-none size-full" src={imgIconPencil1} />
+                  </div>
+                </div>
+              </div>
+              <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[366px] mt-[54px] place-items-start relative row-1" data-node-id="168:242">
+                <div className="bg-[#1f1f1f] border-[#333] border-[0.5px] border-solid col-1 h-[11px] ml-0 mt-0 relative rounded-[25px] row-1 w-[27px]" data-node-id="168:243" />
+                <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[8px] mt-[2px] not-italic relative row-1 text-[#858585] text-[6px] w-[12px]" data-node-id="168:244">
+                  删除
+                </p>
+              </div>
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[8px] leading-[normal] ml-[8px] mt-[7px] not-italic relative row-1 text-[#858585] text-[6px] w-[13px]" data-node-id="168:246">
+                会话
+              </p>
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[30px] leading-[normal] ml-[8px] mt-[18px] not-italic relative row-1 text-[#858585] text-[6px] w-[385px]" data-node-id="168:247">
+                21:9 超宽横版，超写实电商套装产品摄影。画面参考专业电动工具“整套配件展示”的构图，但所有产品必须严格使用参考图中的 KIMO 20V 黑绿色电动工具套装。场景是一块非常干净、平整的暖白色展示台面，放置在浅色木质家居或木工作业空间中。背景只隐约出现浅色木板、木质结构和少量空间层次，背景轻微虚化，不出现杂乱工具、木屑、油污或施工垃圾。整体环境明亮、自然、高级，像真实拍摄的 Amazon 电商套装副图。镜头采用前上方约 35°轻微俯拍，不是完全正俯视。所有产品真实平放在同一个台面上，保持统一透视和真实接触阴影。
+              </p>
+              <div className="col-1 h-[10px] ml-[8px] mt-[54px] relative row-1 w-[11px]" data-node-id="156:28679" data-name="路径 459">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={img459} />
+              </div>
+            </div>
+            <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="168:267">
+              <div className="bg-[#1f1f1f] border border-[#3c3c3c] border-solid col-1 h-[71px] ml-0 mt-0 relative rounded-[10px] row-1 w-[399px]" data-node-id="168:268" />
+              <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[328px] mt-[53px] place-items-start relative row-1" data-node-id="168:269">
+                <div className="bg-[#1f1f1f] border-[#333] border-[0.5px] border-solid col-1 h-[13px] ml-0 mt-0 relative rounded-[25px] row-1 w-[36px]" data-node-id="168:270" />
+                <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[16px] mt-[3px] not-italic relative row-1 text-[#858585] text-[6px] w-[13px]" data-node-id="168:271">
+                  编辑
+                </p>
+                <div className="col-1 ml-[7px] mt-[3px] relative row-1 size-[7.003px]" data-node-id="168:272" data-name="icon-pencil">
+                  <div className="absolute inset-[-3.57%]">
+                    <img alt="" className="block max-w-none size-full" src={imgIconPencil1} />
+                  </div>
+                </div>
+              </div>
+              <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[366px] mt-[54px] place-items-start relative row-1" data-node-id="168:275">
+                <div className="bg-[#1f1f1f] border-[#333] border-[0.5px] border-solid col-1 h-[11px] ml-0 mt-0 relative rounded-[25px] row-1 w-[27px]" data-node-id="168:276" />
+                <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[8px] mt-[2px] not-italic relative row-1 text-[#858585] text-[6px] w-[12px]" data-node-id="168:277">
+                  删除
+                </p>
+              </div>
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[8px] leading-[normal] ml-[8px] mt-[7px] not-italic relative row-1 text-[#858585] text-[6px] w-[13px]" data-node-id="168:278">
+                会话
+              </p>
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[30px] leading-[normal] ml-[8px] mt-[18px] not-italic relative row-1 text-[#858585] text-[6px] w-[385px]" data-node-id="168:279">
+                21:9 超宽横版，超写实电商套装产品摄影。画面参考专业电动工具“整套配件展示”的构图，但所有产品必须严格使用参考图中的 KIMO 20V 黑绿色电动工具套装。场景是一块非常干净、平整的暖白色展示台面，放置在浅色木质家居或木工作业空间中。背景只隐约出现浅色木板、木质结构和少量空间层次，背景轻微虚化，不出现杂乱工具、木屑、油污或施工垃圾。整体环境明亮、自然、高级，像真实拍摄的 Amazon 电商套装副图。镜头采用前上方约 35°轻微俯拍，不是完全正俯视。所有产品真实平放在同一个台面上，保持统一透视和真实接触阴影。
+              </p>
+              <div className="col-1 h-[10px] ml-[8px] mt-[54px] relative row-1 w-[11px]" data-node-id="168:280" data-name="路径 459">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={img459} />
+              </div>
+            </div>
+            <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid place-items-start relative shrink-0" data-node-id="168:281">
+              <div className="bg-[#1f1f1f] border border-[#3c3c3c] border-solid col-1 h-[71px] ml-0 mt-0 relative rounded-[10px] row-1 w-[399px]" data-node-id="168:282" />
+              <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[328px] mt-[53px] place-items-start relative row-1" data-node-id="168:283">
+                <div className="bg-[#1f1f1f] border-[#333] border-[0.5px] border-solid col-1 h-[13px] ml-0 mt-0 relative rounded-[25px] row-1 w-[36px]" data-node-id="168:284" />
+                <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[16px] mt-[3px] not-italic relative row-1 text-[#858585] text-[6px] w-[13px]" data-node-id="168:285">
+                  编辑
+                </p>
+                <div className="col-1 ml-[7px] mt-[3px] relative row-1 size-[7.003px]" data-node-id="168:286" data-name="icon-pencil">
+                  <div className="absolute inset-[-3.57%]">
+                    <img alt="" className="block max-w-none size-full" src={imgIconPencil1} />
+                  </div>
+                </div>
+              </div>
+              <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[366px] mt-[54px] place-items-start relative row-1" data-node-id="168:289">
+                <div className="bg-[#1f1f1f] border-[#333] border-[0.5px] border-solid col-1 h-[11px] ml-0 mt-0 relative rounded-[25px] row-1 w-[27px]" data-node-id="168:290" />
+                <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal leading-[normal] ml-[8px] mt-[2px] not-italic relative row-1 text-[#858585] text-[6px] w-[12px]" data-node-id="168:291">
+                  删除
+                </p>
+              </div>
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[8px] leading-[normal] ml-[8px] mt-[7px] not-italic relative row-1 text-[#858585] text-[6px] w-[13px]" data-node-id="168:292">
+                会话
+              </p>
+              <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[30px] leading-[normal] ml-[8px] mt-[18px] not-italic relative row-1 text-[#858585] text-[6px] w-[385px]" data-node-id="168:293">
+                21:9 超宽横版，超写实电商套装产品摄影。画面参考专业电动工具“整套配件展示”的构图，但所有产品必须严格使用参考图中的 KIMO 20V 黑绿色电动工具套装。场景是一块非常干净、平整的暖白色展示台面，放置在浅色木质家居或木工作业空间中。背景只隐约出现浅色木板、木质结构和少量空间层次，背景轻微虚化，不出现杂乱工具、木屑、油污或施工垃圾。整体环境明亮、自然、高级，像真实拍摄的 Amazon 电商套装副图。镜头采用前上方约 35°轻微俯拍，不是完全正俯视。所有产品真实平放在同一个台面上，保持统一透视和真实接触阴影。
+              </p>
+              <div className="col-1 h-[10px] ml-[8px] mt-[54px] relative row-1 w-[11px]" data-node-id="168:294" data-name="路径 459">
+                <img alt="" className="absolute block inset-0 max-w-none size-full" src={img459} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

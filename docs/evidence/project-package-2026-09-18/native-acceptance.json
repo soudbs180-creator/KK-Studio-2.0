@@ -1,0 +1,52 @@
+{
+  "sourceCommit": "379b302dfcc4586248e340e824378387c887e7d1",
+  "sourceTreeStatus": "?? docs/evidence/project-package-2026-09-18/",
+  "executable": "D:\\kk-studio-next\\.worktrees\\TASK-INTEGRATION-001\\src-tauri\\target\\release\\kk-studio.exe",
+  "executableSha256": "0c89a9c7083bf112add941518f1da7957c7e199b84303c095486297d12c7de73",
+  "packageSha256": "9eaf894ab9044b3a77bcbb279c3e6d99b1dd88ed22169478866a78e92893cfa9",
+  "manifestChecksum": "71681ed4732dbfcdfa985ec4793c92d1e9f15f371c1dc17544e1ea240b39cecc",
+  "sourceRoot": "D:\\kk-studio-next\\.worktrees\\TASK-INTEGRATION-001\\.tmp\\t3b-accept-1789741023899\\source",
+  "targetRoot": "D:\\kk-studio-next\\.worktrees\\TASK-INTEGRATION-001\\.tmp\\t3b-accept-1789741023899\\restored",
+  "sourceRuntime": {
+    "url": "http://tauri.localhost/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://tauri.localhost/assets/index-D54x02Sm.js"
+    ],
+    "body": "KK Studio\n文件\n编辑\n窗口\n帮助\n前端预览\nKK Studio\n开始创作\n项目库\nSkill\nComfyUI 工作流\n项目\nKK项目\nKK工作流\n未分组\nKK工作流\nPrototype\nKK Studio\n\n属于你的多模态 Agent 团队\n\nkk-image-2\n批量\n1 张\n4 张\n8 张\n16 张\n32 张\n数据\nBYOK 本地\n仅本地\n平台额度（Prototype）\nSkill\n插件\n自动\n创作灵感\nSkill\nH3 精选\n特效包装\n品牌广告\n影视片头\nMV\n二次元 PV\nH3 精选\n蓝调时刻 · 城市短片\n\n用一张参考图规划镜头、节奏和配乐，适合快速验证画面方向。\n\n品牌广告\n产品故事板\n\n把产品卖点拆成可编辑的画面节点，再交给模型继续完善。\n\n音乐 MV\n音乐 MV 分镜\n\n从一句歌词开始，生成镜头草稿与视觉参考，保持创作方向可控。\n\n设置\n通用\n账号管理\n储存\n网络\n记忆\n模型供应商\nSkill\nMCP\nComfy UI\n高级\n软件更新\n储存\n\n在当前浏览器中保存主题、布局等非敏感偏好。\n\n偏好保存位置\n当前浏览器\n导出内容\n通用设置\n导出偏好备份\n\n项目和资产单独保存在本机，不包含在偏好备份里。浏览器版暂不支持指定资产目录。\n\n项目包备份与恢复\n\n备份所有已保存项目、画布和引用原件。恢复会创建独立副本，不覆盖当前数据。此操作无需网络。\n\n导出项目包\n选择项目包"
+  },
+  "targetRuntime": {
+    "url": "http://tauri.localhost/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://tauri.localhost/assets/index-D54x02Sm.js"
+    ],
+    "body": "KK Studio\n文件\n编辑\n窗口\n帮助\n前端预览\nKK Studio\n开始创作\n项目库\nSkill\nComfyUI 工作流\n项目\nKK项目\nKK工作流\n未分组\nKK工作流\nPrototype\nT3b 项目包恢复\n已完成\n已保存\n图片\n已生成\n图片创作\n打开预览\n\n收藏\n删除\n上传图片\n图片\n剪开连线\n\n左键拖动空白处框选，中键或右键拖动画布；拖动卡片可移动，卡片聚焦后可用方向键微调。\n\n任务列表\n80%\n整理\n小地图\nT3b 项目包恢复\n\nT3b 项目包恢复\n\noriginal.png\n×\nfixture-model\nSkill\n插件\n自动\n请确保授权，合法使用"
+  },
+  "profiles": [
+    "D:\\kk-studio-next\\.worktrees\\TASK-INTEGRATION-001\\.tmp\\t3b-accept-1789741023899\\source-profile",
+    "D:\\kk-studio-next\\.worktrees\\TASK-INTEGRATION-001\\.tmp\\t3b-accept-1789741023899\\restored-fresh-profile"
+  ],
+  "counts": {
+    "projects": 2,
+    "nodes": 3,
+    "edges": 1,
+    "messages": 2,
+    "tasks": 1,
+    "assets": 1
+  },
+  "checks": {
+    "fullSnapshotEqual": true,
+    "sourceBytesUnchanged": true,
+    "restoredSnapshotBytesEqual": true,
+    "originalSha256": "431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460",
+    "restoredOriginalSha256": "431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460",
+    "freshWebviewMediaLoaded": true,
+    "occupiedTargetRejected": true,
+    "activeRootRejected": true,
+    "staleRevisionRejected": true
+  },
+  "errors": []
+}

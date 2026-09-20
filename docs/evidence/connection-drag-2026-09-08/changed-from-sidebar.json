@@ -1,0 +1,15 @@
+[
+  "src\\components\\Canvas.tsx",
+  "src\\components\\canvas\\canvasModel.ts",
+  "src\\components\\canvas\\CanvasToolbar.tsx",
+  "src\\components\\canvas\\NodeActions.tsx",
+  "src\\core\\canvasGraph.ts",
+  "src\\styles\\canvas-actions.css",
+  "src\\styles\\global.css",
+  "src\\styles\\ui-tokens.css",
+  "tests\\browser\\canvas-actions.spec.ts",
+  "tests\\browser\\canvas-layout.spec.ts",
+  "tests\\browser\\frontend.spec.ts",
+  "tests\\browser\\interaction-regressions.spec.ts",
+  "tests\\canvasGraph.test.ts"
+]

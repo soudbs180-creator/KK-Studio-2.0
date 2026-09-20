@@ -1,0 +1,89 @@
+{
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "toolbar": {
+    "x": 697.5,
+    "y": 998,
+    "width": 294,
+    "height": 50,
+    "children": [
+      {
+        "class": "toolbar-add",
+        "x": 5,
+        "y": 5,
+        "width": 40,
+        "height": 40
+      },
+      {
+        "class": "toolbar-divider toolbar-divider-left",
+        "x": 51,
+        "y": 15,
+        "width": 0,
+        "height": 20
+      },
+      {
+        "class": "toolbar-current-tool",
+        "x": 57,
+        "y": 5,
+        "width": 40,
+        "height": 40
+      },
+      {
+        "class": "toolbar-toggle",
+        "x": 103,
+        "y": 5,
+        "width": 20,
+        "height": 40
+      },
+      {
+        "class": "toolbar-assets",
+        "x": 129,
+        "y": 5,
+        "width": 40,
+        "height": 40
+      },
+      {
+        "class": "toolbar-favorite",
+        "x": 175,
+        "y": 5,
+        "width": 40,
+        "height": 40
+      },
+      {
+        "class": "toolbar-favorite-toggle",
+        "x": 221,
+        "y": 5,
+        "width": 20,
+        "height": 40
+      },
+      {
+        "class": "toolbar-divider toolbar-divider-right",
+        "x": 247,
+        "y": 15,
+        "width": 0,
+        "height": 20
+      },
+      {
+        "class": "toolbar-help",
+        "x": 253,
+        "y": 10,
+        "width": 30,
+        "height": 30
+      }
+    ]
+  },
+  "toolMenu": {
+    "x": 748.5,
+    "y": 946,
+    "width": 90,
+    "height": 50
+  },
+  "helpMenu": {
+    "x": 887.5,
+    "y": 946,
+    "width": 103,
+    "height": 50
+  }
+}

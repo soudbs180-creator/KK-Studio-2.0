@@ -1,0 +1,58 @@
+[
+  {
+    "name": "add",
+    "url": "https://www.figma.com/api/mcp/asset/73727ccd-e38b-4e92-aa2f-74bbc2537336.svg",
+    "file": "public/figma/sidebar-add.svg",
+    "status": 200,
+    "bytes": 703,
+    "sha256": "de23cec80498d7be13ba038397c61d26c1fe9a30d5a7144774db9c316839104d"
+  },
+  {
+    "name": "archive",
+    "url": "https://www.figma.com/api/mcp/asset/7131ebb3-b57d-48cd-bf07-ecdf66a87b74.svg",
+    "file": "public/figma/sidebar-archive.svg",
+    "status": 200,
+    "bytes": 932,
+    "sha256": "4cd5bf8917f483baa8c3979e73a7209af7b765ef77351777ffcb2ed0e53cbb87"
+  },
+  {
+    "name": "skill",
+    "url": "https://www.figma.com/api/mcp/asset/42b761af-511d-427e-bd98-d282a678f975.svg",
+    "file": "public/figma/sidebar-skill.svg",
+    "status": 200,
+    "bytes": 4277,
+    "sha256": "aeefdf9fde2c356324ae75a0754ce3c6749527df0fe23b4fe2fba7786006b33e"
+  },
+  {
+    "name": "workflow",
+    "url": "https://www.figma.com/api/mcp/asset/85f43308-416a-4fd5-9214-311dfa60590a.svg",
+    "file": "public/figma/sidebar-workflow.svg",
+    "status": 200,
+    "bytes": 1064,
+    "sha256": "5a20bbd1a5c196bed5df92a6ff2133a33b7e9d37af79c143a6c6e7c9b0c73915"
+  },
+  {
+    "name": "search",
+    "url": "https://www.figma.com/api/mcp/asset/e0dc7d0d-86be-4052-9d1c-2100ba872348.svg",
+    "file": "public/figma/sidebar-search.svg",
+    "status": 200,
+    "bytes": 723,
+    "sha256": "0747314add8de2805f772bb23505f6bf92f2f077eca03b5ffb1bac2259d8831e"
+  },
+  {
+    "name": "settings",
+    "url": "https://www.figma.com/api/mcp/asset/63062e66-620f-4b83-93d8-417f104c678e.svg",
+    "file": "public/figma/sidebar-settings.svg",
+    "status": 200,
+    "bytes": 2967,
+    "sha256": "ce68f26e16ed6273212a3e75ba720ba340fcf69735a23332d2f01cc9ffe867e5"
+  },
+  {
+    "name": "toggle",
+    "url": "https://www.figma.com/api/mcp/asset/a5cdc78a-6da4-4496-a2a6-410ec11a06c5.svg",
+    "file": "public/figma/sidebar-toggle.svg",
+    "status": 200,
+    "bytes": 585,
+    "sha256": "5f29203db58a5f42152b163846c9d03bbfffd86a6397a4a7f2323dc32558fdaf"
+  }
+]

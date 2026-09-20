@@ -1,0 +1,18 @@
+import { chromium, expect } from '@playwright/test';
+import { fileURLToPath } from 'node:url';
+const dir = new URL('./',import.meta.url);
+const browser = await chromium.launch({channel:'msedge'});
+const page = await browser.newPage({viewport:{width:1440,height:1100}});
+const errors=[]; page.on('pageerror',e=>errors.push(e.message));
+await page.goto(new URL('comparison.html',dir).href);
+await expect(page.locator('tbody tr')).toHaveCount(9);
+await page.getByRole('button',{name:'收纳',exact:true}).click();
+await expect(page.locator('tbody tr').first()).toContainText('70, 45, 1840, 1025');
+await page.getByRole('button',{name:'叠加',exact:true}).click();
+await expect(page.locator('.actual')).toHaveCSS('opacity','0.5');
+await page.getByRole('button',{name:'实际界面',exact:true}).click();
+await expect(page.locator('.actual')).toHaveCSS('opacity','1');
+await page.evaluate(async()=>{await Promise.all([...document.images].map(i=>i.decode()));});
+await page.screenshot({path:fileURLToPath(new URL('comparison-review.png',dir))});
+console.log(JSON.stringify({errors,imagesLoaded:await page.locator('img').evaluateAll(images=>images.every(i=>i.complete&&i.naturalWidth>0)),videoDuration:await page.locator('video').evaluate(v=>v.duration)}));
+await browser.close();

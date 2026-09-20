@@ -1,0 +1,268 @@
+{
+  "config": {
+    "argv": [
+      "D:\\tools\\node-v24.20.0-win-x64\\node.exe",
+      "D:\\kk-studio-next\\node_modules\\playwright\\cli.js",
+      "test",
+      "--last-failed",
+      "--retries=0",
+      "--workers=4",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\kk-studio-next\\playwright.config.ts",
+    "rootDir": "D:/kk-studio-next/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/kk-studio-next/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "",
+        "name": "",
+        "testDir": "D:/kk-studio-next/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 4,
+    "webServer": {
+      "command": "node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 1423 --strictPort",
+      "url": "http://127.0.0.1:1423",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\canvas-actions.spec.ts:4:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\canvas-actions.spec.ts",
+        "column": 1,
+        "line": 4
+      },
+      "snippet": "\u001b[90m   at \u001b[39mcanvas-actions.spec.ts:4\n\n  2 | import { openWorkspace } from \"./helpers\";\n  3 |\n> 4 | test(\"图片连续拖动不被浏览器原生图片拖放截断，加号始终跟随\", async ({\n    | ^\n  5 |   page,\n  6 | }) => {\n  7 |   await openWorkspace(page);"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\canvas-layout.spec.ts:4:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\canvas-layout.spec.ts",
+        "column": 1,
+        "line": 4
+      },
+      "snippet": "\u001b[90m   at \u001b[39mcanvas-layout.spec.ts:4\n\n  2 | import { openWorkspace } from \"./helpers\";\n  3 |\n> 4 | test(\"画布工具在窗口缩窄、聊天开关和侧栏收起后保持可用区居中且不互相覆盖\", async ({\n    | ^\n  5 |   page,\n  6 | }) => {\n  7 |   await openWorkspace(page);"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\canvas-navigation.spec.ts:4:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\canvas-navigation.spec.ts",
+        "column": 1,
+        "line": 4
+      },
+      "snippet": "\u001b[90m   at \u001b[39mcanvas-navigation.spec.ts:4\n\n  2 | import { openWorkspace } from \"./helpers\";\n  3 |\n> 4 | test(\"比例菜单缩放到400%并适应视图，不改变卡片位置或草稿\", async ({ page }) => {\n    | ^\n  5 |   await openWorkspace(page);\n  6 |   const node = page.getByTestId(\"canvas-node-image\");\n  7 |   await node.focus();"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\canvas-pointer.spec.ts:4:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\canvas-pointer.spec.ts",
+        "column": 1,
+        "line": 4
+      },
+      "snippet": "\u001b[90m   at \u001b[39mcanvas-pointer.spec.ts:4\n\n  2 | import { openWorkspace } from \"./helpers\";\n  3 |\n> 4 | test(\"左键框选可见卡片，不平移画布；空白点击清空选择\", async ({ page }) => {\n    | ^\n  5 |   await openWorkspace(page);\n  6 |   const canvas = page.getByTestId(\"infinite-canvas\");\n  7 |   const box = (await canvas.boundingBox())!;"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\catalog-pages.spec.ts:3:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\catalog-pages.spec.ts",
+        "column": 1,
+        "line": 3
+      },
+      "snippet": "\u001b[90m   at \u001b[39mcatalog-pages.spec.ts:3\n\n  1 | import { expect, test } from \"@playwright/test\";\n  2 |\n> 3 | test(\"开始创作首页、目录页和项目行操作保持真实状态\", async ({ page }) => {\n    | ^\n  4 |   await page.goto(\"/\");\n  5 |   await expect(page.getByRole(\"region\", { name: \"开始创作\" })).toBeVisible();\n  6 |   await expect(page.getByRole(\"region\", { name: \"无限画布\" })).toHaveCount(0);"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\composer-fidelity.spec.ts:4:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\composer-fidelity.spec.ts",
+        "column": 1,
+        "line": 4
+      },
+      "snippet": "\u001b[90m   at \u001b[39mcomposer-fidelity.spec.ts:4\n\n  2 | import { openWorkspace } from \"./helpers\";\n  3 |\n> 4 | test(\"图片编辑器展开后仍在卡片下方，输入区不覆盖底部控件\", async ({ page }) => {\n    | ^\n  5 |   await openWorkspace(page);\n  6 |   await expect(page.getByTestId(\"image-composer\")).toHaveCount(0);\n  7 |   await page.locator(\".image-preview\").click();"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\connection-drag.spec.ts:17:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\connection-drag.spec.ts",
+        "column": 1,
+        "line": 17
+      },
+      "snippet": "\u001b[90m   at \u001b[39mconnection-drag.spec.ts:17\n\n  15 | }\n  16 |\n> 17 | test(\"不同缩放下图片和两张视频连接均落在可见侧边正中\", async ({ page }) => {\n     | ^\n  18 |   await openWorkspace(page);\n  19 |   for (const scale of [\"50%\", \"100%\", \"200%\"]) {\n  20 |     await page.locator(\".canvas-zoom-trigger\").click();"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\context-menu.spec.ts:4:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\context-menu.spec.ts",
+        "column": 1,
+        "line": 4
+      },
+      "snippet": "\u001b[90m   at \u001b[39mcontext-menu.spec.ts:4\n\n  2 | import { openWorkspace } from \"./helpers\";\n  3 |\n> 4 | test(\"右键画布打开 172:367 菜单并可进入添加节点\", async ({ page }) => {\n    | ^\n  5 |   await openWorkspace(page);\n  6 |   const canvas = page.getByTestId(\"infinite-canvas\");\n  7 |   const bounds = (await canvas.boundingBox())!;"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\demo-results.spec.ts:6:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\demo-results.spec.ts",
+        "column": 1,
+        "line": 6
+      },
+      "snippet": "\u001b[90m   at \u001b[39mdemo-results.spec.ts:6\n\n  4 | /** The demo is reached through a normal node, so the UI keeps one honest path\n  5 |  * when a provider is not connected: prompt → local test asset → result card. */\n> 6 | test(\"普通节点生成本地结果，不显示独立示范入口\", async ({ page }) => {\n    | ^\n  7 |   await openWorkspace(page);\n  8 |   await expect(\n  9 |     page.getByRole(\"button\", { name: \"示范素材\", exact: true }),"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\design-corrections.spec.ts:4:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\design-corrections.spec.ts",
+        "column": 1,
+        "line": 4
+      },
+      "snippet": "\u001b[90m   at \u001b[39mdesign-corrections.spec.ts:4\n\n  2 | import { openWorkspace } from \"./helpers\";\n  3 |\n> 4 | test(\"底栏心形无需选择节点，直接打开喜欢与收藏搜索\", async ({ page }) => {\n    | ^\n  5 |   await openWorkspace(page);\n  6 |   const library = page.getByRole(\"button\", {\n  7 |     name: \"打开喜欢与收藏\","
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts:4:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\frontend.spec.ts",
+        "column": 1,
+        "line": 4
+      },
+      "snippet": "\u001b[90m   at \u001b[39mfrontend.spec.ts:4\n\n  2 | import { openWorkspace } from \"./helpers\";\n  3 |\n> 4 | test(\"资产搜索、空态恢复、列表、紧凑视图及创建主体\", async ({ page }) => {\n    | ^\n  5 |   const errors: string[] = [];\n  6 |   page.on(\"pageerror\", (e) => errors.push(e.message));\n  7 |   await openWorkspace(page);"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\generation-count.spec.ts:4:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\generation-count.spec.ts",
+        "column": 1,
+        "line": 4
+      },
+      "snippet": "\u001b[90m   at \u001b[39mgeneration-count.spec.ts:4\n\n  2 | import { openWorkspace } from \"./helpers\";\n  3 |\n> 4 | test(\"视频声音开关按原稿切换，离开卡片后保留选择\", async ({ page }) => {\n    | ^\n  5 |   await openWorkspace(page);\n  6 |   const node = page.getByTestId(\"canvas-node-video1\");\n  7 |   await node.focus();"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\generation-flow.spec.ts:11:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\generation-flow.spec.ts",
+        "column": 1,
+        "line": 11
+      },
+      "snippet": "\u001b[90m   at \u001b[39mgeneration-flow.spec.ts:11\n\n   9 | }\n  10 |\n> 11 | test(\"正常添加图片后从生成按钮加载本地结果，没有独立示范入口\", async ({\n     | ^\n  12 |   page,\n  13 | }) => {\n  14 |   await openWorkspace(page);"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\interaction-regressions.spec.ts:4:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\interaction-regressions.spec.ts",
+        "column": 1,
+        "line": 4
+      },
+      "snippet": "\u001b[90m   at \u001b[39minteraction-regressions.spec.ts:4\n\n  2 | import { openWorkspace } from \"./helpers\";\n  3 |\n> 4 | test(\"删除前一个节点后，后一个节点保留自己的草稿\", async ({ page }) => {\n    | ^\n  5 |   await openWorkspace(page);\n  6 |   for (const [index, draft] of [\"第一张草稿\", \"第二张草稿\"].entries()) {\n  7 |     await page.getByRole(\"button\", { name: \"添加资源\" }).click();"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\interaction-state.spec.ts:11:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\interaction-state.spec.ts",
+        "column": 1,
+        "line": 11
+      },
+      "snippet": "\u001b[90m   at \u001b[39minteraction-state.spec.ts:11\n\n   9 | }\n  10 |\n> 11 | test(\"画布背景在点和网格之间切换，缩放到最小时降低点阵密度\", async ({\n     | ^\n  12 |   page,\n  13 | }) => {\n  14 |   await openWorkspace(page);"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\runtime-ui.spec.ts:5:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\runtime-ui.spec.ts",
+        "column": 1,
+        "line": 5
+      },
+      "snippet": "\u001b[90m   at \u001b[39mruntime-ui.spec.ts:5\n\n  3 | const evidence = \"docs/evidence/ui-runtime-2026-09-10\";\n  4 |\n> 5 | test(\"latest Figma shell is loaded by the real production page\", async ({\n    | ^\n  6 |   page,\n  7 | }) => {\n  8 |   await page.goto(\"/\");"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\settings-scroll.spec.ts:8:3",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\settings-scroll.spec.ts",
+        "column": 3,
+        "line": 8
+      },
+      "snippet": "\u001b[90m   at \u001b[39msettings-scroll.spec.ts:8\n\n   6 |   { width: 390, height: 844 },\n   7 | ]) {\n>  8 |   test(`隐藏滚动条后设置仍可滚轮、键盘滚动并访问全部分类 ${viewport.width}`, async ({\n     |   ^\n   9 |     page,\n  10 |   }) => {\n  11 |     await page.setViewportSize(viewport);"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\sidebar.spec.ts:11:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\sidebar.spec.ts",
+        "column": 1,
+        "line": 11
+      },
+      "snippet": "\u001b[90m   at \u001b[39msidebar.spec.ts:11\n\n   9 | }\n  10 |\n> 11 | test(\"收起侧栏沿原稿61px边界、39×48导航与底部搜索排列，搜索关闭回焦\", async ({\n     | ^\n  12 |   page,\n  13 | }) => {\n  14 |   await page.goto(\"/\");"
+    },
+    {
+      "message": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.",
+      "stack": "Error: Playwright Test did not expect test() to be called here.\nMost common reasons include:\n- You are calling test() in a configuration file.\n- You are calling test() in a file that is imported by the configuration file.\n- You have two different versions of @playwright/test. This usually happens\n  when one of the dependencies in your package.json depends on @playwright/test.\n- You are calling test() from an async test.describe() block. Only sync ones are supported.\n    at _TestTypeImpl._currentSuite (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2224:13)\n    at _TestTypeImpl._createTest (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:2238:24)\n    at test (D:\\kk-studio-next\\node_modules\\.pnpm\\playwright@1.63.0\\node_modules\\playwright\\lib\\common\\index.js:1154:12)\n    at D:\\kk-studio-next\\tests\\browser\\ui-motion.spec.ts:4:1",
+      "location": {
+        "file": "D:\\kk-studio-next\\tests\\browser\\ui-motion.spec.ts",
+        "column": 1,
+        "line": 4
+      },
+      "snippet": "\u001b[90m   at \u001b[39mui-motion.spec.ts:4\n\n  2 | import { openWorkspace } from \"./helpers\";\n  3 |\n> 4 | test(\"搜索弹窗按原稿展示喜欢与收藏双栏，收藏可编辑、查找与移除\", async ({\n    | ^\n  5 |   page,\n  6 | }) => {\n  7 |   await openWorkspace(page);"
+    },
+    {
+      "message": "Error: No tests found",
+      "stack": "Error: No tests found"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-09-10T14:55:38.915Z",
+    "duration": 1047.0639999999999,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

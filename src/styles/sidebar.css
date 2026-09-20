@@ -1,0 +1,598 @@
+/* 170:8473 content; shell boundary x=61 comes from 170:8245, not the 89px group. */
+.sidebar-icon {
+  display: block;
+  flex: 0 0 auto;
+  position: relative;
+}
+.sidebar-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+/* Desktop expanded shell geometry comes directly from Figma 82:15737/82:15730.
+   Keep the hit boxes large enough for keyboard and pointer interaction while
+   centering each exported leaf at its source size. */
+@media (min-width: 1201px) {
+  .app .topbar {
+    align-items: center;
+    background: var(--bg-surface);
+    gap: 37px;
+    padding: 10px 19px;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    line-height: 15px;
+    font-weight: 700;
+  }
+  .app .topbar strong,
+  .app .topbar nav,
+  .app .topbar nav button {
+    font-size: 12px;
+    line-height: 15px;
+    font-weight: 700;
+  }
+  .app .topbar nav {
+    gap: 37px;
+  }
+  .app .top-menu > button {
+    padding: 0;
+  }
+
+  .sidebar:not(.is-collapsed):not(.is-narrow) {
+    background: var(--bg-surface);
+    /* Latest Landing/Workspace frames: the header rail begins at y=45,
+       navigation starts at y=131, and the account row ends at y=1040. */
+    padding: 35px 14px 40px;
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .brand {
+    height: 26px;
+    gap: 6px;
+    margin: 0 6px 30px;
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .brand strong {
+    font-size: 16px;
+    line-height: 23px;
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .primary-nav button {
+    padding-left: 6px;
+    gap: 6px;
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .primary-nav .sidebar-icon {
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .primary-nav .sidebar-icon img {
+    width: auto;
+    height: auto;
+    max-width: 26px;
+    max-height: 26px;
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .sidebar-icon-archive img {
+    width: 21px;
+    height: 19px;
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .sidebar-icon-skill img {
+    width: 21.002px;
+    height: 21px;
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .sidebar-icon-workflow img {
+    width: 19.5px;
+    height: 19.5px;
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .project-groups {
+    padding-top: 40px;
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .project-groups-header,
+  .sidebar:not(.is-collapsed):not(.is-narrow) .group-heading {
+    margin-left: 0;
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .account-row {
+    padding: 8px 13.5px 7px;
+    background: var(--bg-input);
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .account-row button:first-child {
+    font-size: 16px;
+    line-height: 23px;
+    gap: 6px;
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .project-link,
+  .sidebar:not(.is-collapsed):not(.is-narrow) .project-groups-header,
+  .sidebar:not(.is-collapsed):not(.is-narrow) .group-heading {
+    font-weight: 500;
+  }
+}
+.sidebar-icon-add {
+  width: var(--ui-icon-sidebar);
+  height: var(--ui-icon-sidebar);
+}
+.sidebar {
+  transition:
+    width var(--motion-panel) var(--motion-ease),
+    padding var(--motion-panel) var(--motion-ease);
+}
+.sidebar-icon-archive {
+  width: 21px;
+  height: 19px;
+}
+.sidebar-icon-skill {
+  width: 20px;
+  height: 20px;
+}
+.sidebar-icon-workflow {
+  width: 18px;
+  height: 18px;
+}
+.sidebar-icon-search {
+  width: 26px;
+  height: 26px;
+}
+.sidebar-icon-toggle,
+.sidebar-icon-expand {
+  width: 21.5px;
+  height: 21.5px;
+}
+.sidebar-icon-settings {
+  width: 20px;
+  height: 20px;
+}
+.sidebar-settings {
+  position: relative;
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+.sidebar-settings::before {
+  content: "";
+  position: absolute;
+  width: max(100%, 32px);
+  height: max(100%, 32px);
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  border-radius: 7px;
+}
+.sidebar .primary-nav button {
+  color: var(--ui-sidebar-icon);
+}
+.sidebar .primary-nav button > img,
+.sidebar .primary-nav button > .sidebar-icon {
+  flex-shrink: 0;
+}
+.sidebar-action-glyph {
+  display: block;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+.sidebar-action-ellipsis {
+  width: 11.219px;
+  height: 2.277px;
+}
+.sidebar-action-plus {
+  width: 11px;
+  height: 11px;
+}
+.project-external-glyph {
+  width: 8px;
+  height: 8px;
+  margin-left: 1px;
+}
+.project-pin-glyph {
+  width: 6px;
+  height: 11px;
+}
+.project-more-glyph {
+  width: 11.219px;
+  height: 2.277px;
+}
+.project-action-container {
+  width: 20px;
+  height: 21px;
+}
+.sidebar-heading-chevron {
+  width: 9.5px;
+  height: 5.5px;
+  transition: transform var(--motion-fast) var(--motion-ease);
+}
+[aria-expanded="false"] > .sidebar-heading-chevron {
+  transform: rotate(-90deg);
+}
+.group-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+.group-heading-row .group-heading {
+  margin-bottom: 0;
+}
+.sidebar .sidebar-search,
+.sidebar .sidebar-toggle {
+  position: relative;
+  color: var(--text-tertiary);
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+/* Use complete exported containers or stroke-inclusive glyph bounds. */
+.sidebar .sidebar-search > .sidebar-icon-search {
+  width: 26px;
+  height: 26px;
+}
+.sidebar .sidebar-toggle > .sidebar-icon-toggle,
+.sidebar .sidebar-toggle > .sidebar-icon-expand {
+  width: 21.5px;
+  height: 21.5px;
+}
+.sidebar .sidebar-control .sidebar-icon img {
+  width: 100%;
+  height: 100%;
+}
+.sidebar .sidebar-settings .sidebar-icon-settings {
+  width: 26px;
+  height: 26px;
+}
+@media (min-width: 1201px) {
+  /* Figma 1:2 places the search artwork at x=206 in the 287px rail. */
+  .sidebar:not(.is-collapsed) .brand .sidebar-search {
+    transform: none;
+  }
+}
+.sidebar-control::before {
+  content: "";
+  position: absolute;
+  width: max(100%, 32px);
+  height: max(100%, 32px);
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  border-radius: 7px;
+}
+.sidebar-control:focus-visible::before {
+  outline: 2px solid var(--ui-focus);
+  outline-offset: 3px;
+}
+.sidebar-control:focus-visible {
+  outline: none;
+}
+.sidebar .sidebar-account {
+  position: relative;
+}
+.sidebar.is-collapsed {
+  width: var(--sidebar-compact-width);
+  padding: 27px 10px 24px 12px;
+}
+/* 338:17211 retains the 61px rail, then an 8px gutter before the x=69 frame. */
+.sidebar.is-collapsed:not(.is-narrow) + .workspace {
+  padding-left: 8px;
+}
+.sidebar.is-collapsed:not(.is-narrow) + .workspace .canvas-hud {
+  left: 19px;
+  width: calc(var(--canvas-usable-width, 100%) - 40px);
+}
+.sidebar.is-collapsed .brand {
+  margin: 0 0 25px;
+}
+.sidebar.is-collapsed .brand strong,
+.sidebar.is-collapsed .nav-label,
+.sidebar.is-collapsed .project-groups,
+.sidebar.is-collapsed .account-name {
+  display: none;
+}
+.sidebar.is-collapsed .brand .logo {
+  display: none;
+}
+.sidebar.is-collapsed .primary-nav button {
+  width: 40px;
+  padding: 0;
+  justify-content: center;
+}
+.sidebar.is-collapsed .sidebar-search,
+.sidebar.is-collapsed .sidebar-toggle {
+  position: absolute;
+  margin: 0;
+  left: 18px;
+  width: 26px;
+  display: grid;
+  place-items: center;
+}
+.sidebar.is-collapsed .sidebar-search {
+  left: 22px;
+  bottom: 121px;
+  width: 20px;
+  height: 20px;
+}
+.sidebar.is-collapsed .sidebar-toggle {
+  top: 27px;
+  height: 26px;
+}
+.sidebar.is-collapsed .account-row {
+  padding: 0;
+  margin: 0;
+  min-height: 0;
+  background: none;
+}
+.sidebar.is-collapsed .sidebar-account {
+  position: absolute;
+  left: 19px;
+  bottom: 32px;
+  width: 26px;
+  height: 26px;
+}
+.sidebar.is-collapsed .sidebar-settings {
+  position: absolute;
+  left: 17px;
+  bottom: 74px;
+  z-index: 30;
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+}
+.sidebar.is-collapsed .account-popup {
+  bottom: 62px;
+  width: min(260px, calc(100vw - 24px));
+  z-index: 31;
+}
+@media (max-width: 800px) {
+  .sidebar.is-collapsed .sidebar-settings {
+    left: 17px;
+    bottom: 74px;
+  }
+}
+.sidebar.is-narrow:not(.is-collapsed) {
+  position: absolute;
+  z-index: 40;
+  top: var(--topbar-height);
+  bottom: 0;
+  width: min(var(--sidebar-width), calc(100vw - 32px));
+  box-shadow: var(--ui-shadow);
+  border-right: 1px solid var(--border-default);
+}
+.sidebar.is-narrow:not(.is-collapsed) + .workspace {
+  margin-left: var(--sidebar-compact-width);
+}
+/* Supplemental narrow-screen drawer and opacity; no source sidebar timing available. */
+.sidebar:not(.is-collapsed) .nav-label,
+.sidebar:not(.is-collapsed) .brand strong {
+  animation: backdrop-enter var(--motion-fast) var(--motion-ease) both;
+}
+@media (pointer: coarse) {
+  .sidebar.is-collapsed .primary-nav button {
+    width: 44px;
+    margin-left: -2.5px;
+  }
+  .sidebar-control::before {
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+  }
+  .sidebar-settings::before {
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+  }
+  .sidebar.is-collapsed .sidebar-search {
+    bottom: 125px;
+  }
+  .sidebar.is-collapsed .sidebar-toggle {
+    bottom: 80px;
+  }
+  .sidebar.is-collapsed .sidebar-settings {
+    bottom: 180px;
+  }
+}
+
+/* Desktop state contracts from the latest Runtime frames. Narrow-screen
+   drawers retain their existing 61px touch rail as an engineering supplement. */
+@media (min-width: 1201px) {
+  .sidebar {
+    transition: width var(--motion-sidebar) linear;
+  }
+  .sidebar .primary-nav {
+    height: 212px;
+    flex: 0 0 212px;
+    align-content: start;
+    width: 263px;
+    overflow: hidden;
+    transition: width var(--motion-sidebar) linear;
+  }
+  .sidebar .primary-nav button {
+    border: 0;
+    color: var(--ui-sidebar-settings-icon);
+    white-space: nowrap;
+    width: 263px;
+    overflow: hidden;
+    transition:
+      width var(--motion-sidebar) linear,
+      background-color var(--motion-fast) ease;
+  }
+  .sidebar .primary-nav button[aria-current] {
+    background: var(--ui-sidebar-control);
+  }
+  .sidebar .nav-label {
+    animation: none;
+    opacity: 1;
+    transition: opacity var(--motion-sidebar) var(--motion-sidebar-text-ease);
+  }
+  .sidebar .project-groups-header {
+    min-height: 21px;
+    margin-bottom: 5px;
+  }
+  .sidebar .project-groups {
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+  .sidebar .project-groups-header,
+  .sidebar .project-groups > section {
+    width: 263px;
+  }
+  .sidebar .project-link {
+    white-space: nowrap;
+  }
+  .sidebar .project-link > span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sidebar .project-folder,
+  .sidebar .project-yellow {
+    flex-shrink: 0;
+  }
+  /* Engineering transition: reveal the brand once the moving toggle has
+     cleared its fixed 111px area. Project rows keep their source width and
+     are clipped by the opening rail, so text never reflows mid-animation. */
+  .sidebar:not(.is-collapsed) .brand .logo,
+  .sidebar:not(.is-collapsed) .brand strong {
+    animation: sidebar-brand-enter var(--motion-fast) var(--motion-ease)
+      calc(var(--motion-sidebar) - var(--motion-fast)) both;
+  }
+  .sidebar .group-heading {
+    min-height: 21px;
+    margin-bottom: 5px;
+    align-items: center;
+  }
+  .sidebar .group-heading-row .group-heading {
+    margin-bottom: 0;
+  }
+  .sidebar .project-groups-title,
+  .sidebar .group-heading {
+    color: var(--text-tertiary);
+    line-height: 17px;
+  }
+  .sidebar .project-groups-action,
+  .sidebar .project-pin,
+  .sidebar .project-more {
+    width: 20px;
+    height: 21px;
+  }
+  .sidebar .project-groups-actions {
+    gap: 2px;
+    padding-right: 5px;
+  }
+  .sidebar .project-link {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--ui-sidebar-settings-icon);
+    background: var(--bg-card);
+    border-radius: var(--ui-radius-control);
+  }
+  .sidebar .project-link.is-selected {
+    background: var(--ui-sidebar-control);
+  }
+  .sidebar:not(.is-collapsed):not(.is-narrow) .project-link {
+    font-weight: 400;
+  }
+  .sidebar .project-yellow {
+    background: var(--ui-project-thumbnail);
+  }
+  .sidebar .project-folder {
+    background: var(--ui-composer-surface);
+  }
+  .sidebar .project-pin {
+    right: 27px;
+  }
+  .sidebar .project-more {
+    right: 5px;
+  }
+  .sidebar .project-groups section + section {
+    margin-top: 13px;
+  }
+  .sidebar .project-nested-entry {
+    width: 231px;
+    margin: 5px 0 0 auto;
+  }
+  .sidebar .account-row button:last-child {
+    width: 26px;
+    height: 26px;
+  }
+  .sidebar .sidebar-search {
+    position: absolute;
+    top: 35px;
+    left: 204px;
+    margin: 0;
+  }
+  .sidebar .sidebar-toggle {
+    position: absolute;
+    top: 35px;
+    left: auto;
+    right: 20px;
+    margin: 0;
+    transition: right var(--motion-sidebar) linear;
+  }
+  .sidebar.is-collapsed {
+    padding: 35px 14px 40px;
+  }
+  .sidebar.is-collapsed .brand {
+    height: 26px;
+    margin: 0 0 30px;
+  }
+  .sidebar.is-collapsed .primary-nav {
+    width: 38px;
+  }
+  .sidebar.is-collapsed .primary-nav button {
+    width: 38px;
+    padding: 0 6px;
+    justify-content: flex-start;
+    gap: 6px;
+  }
+  .sidebar.is-collapsed .primary-nav .sidebar-icon {
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+  }
+  .sidebar.is-collapsed .sidebar-icon-archive img {
+    width: 21px;
+    height: 19px;
+  }
+  .sidebar.is-collapsed .sidebar-icon-skill img {
+    width: 21.002px;
+    height: 21px;
+  }
+  .sidebar.is-collapsed .sidebar-icon-workflow img {
+    width: 19.5px;
+    height: 19.5px;
+  }
+  .sidebar.is-collapsed .nav-label {
+    display: block;
+    opacity: 0;
+  }
+  .sidebar.is-collapsed .sidebar-toggle {
+    top: 35px;
+    left: auto;
+    right: 22px;
+  }
+  .sidebar.is-collapsed .sidebar-search {
+    /* Fresh 448:472 is part of 410:67357: 26px at (22,942). */
+    display: grid;
+    left: 22px;
+    top: auto;
+    bottom: 112px;
+    width: 26px;
+    height: 26px;
+  }
+  .sidebar.is-collapsed .sidebar-settings {
+    left: 22px;
+    bottom: 72px;
+    width: 26px;
+    height: 26px;
+  }
+  .sidebar.is-collapsed .sidebar-account {
+    left: 22px;
+    bottom: 32px;
+  }
+  .sidebar.is-collapsed:not(.is-narrow) + .workspace {
+    padding-left: 0;
+  }
+  .sidebar.is-collapsed:not(.is-narrow) + .workspace .canvas-hud {
+    left: var(--ui-workspace-task-inset);
+    width: auto;
+  }
+}
+
+@keyframes sidebar-brand-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

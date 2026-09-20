@@ -1,0 +1,38 @@
+const imgIconHand = "https://www.figma.com/api/mcp/asset/cbc3c8e6-2180-42a5-998d-df137d9e5009.svg";
+const img83 = "https://www.figma.com/api/mcp/asset/bbd4409d-5237-4c26-b266-8791a33a0c7a.svg";
+const imgIconCheck = "https://www.figma.com/api/mcp/asset/6c6902c2-dde8-4725-97bb-1d9e94e0f55a.svg";
+const imgIconCheck1 = "https://www.figma.com/api/mcp/asset/e53479c4-649c-418c-930c-3c24192ae335.svg";
+
+export default function Component() {
+  return (
+    <div className="relative size-full" data-node-id="170:9006" data-name="弹出框选择">
+      <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid inset-0 rounded-[8px]" data-node-id="I170:9006;143:26948" />
+      <div className="absolute bg-[rgba(60,60,60,0)] inset-[53.85%_5.71%_10.26%_5.71%] rounded-[4px]" data-node-id="I170:9006;143:26949" />
+      <div className="absolute bg-[#3c3c3c] inset-[10.26%_5.71%_53.85%_5.71%] rounded-[4px]" data-node-id="I170:9006;143:26950" />
+      <div className="absolute inset-[61.54%_54.29%_18.04%_34.29%]" data-node-id="I170:9006;143:26951" data-name="icon-hand">
+        <div className="absolute inset-[-3.77%_-3.75%]">
+          <img alt="" className="block max-w-none size-full" src={imgIconHand} />
+        </div>
+      </div>
+      <div className="-translate-y-1/2 absolute aspect-[17.003156661987305/17.0041561126709] left-[34.29%] right-[54.29%] top-[calc(50%-8.5px)]" data-node-id="I170:9006;143:26956" data-name="路径 83">
+        <div className="absolute inset-[-3.75%]">
+          <img alt="" className="block max-w-none size-full" src={img83} />
+        </div>
+      </div>
+      <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[15.38%_12.86%_58.97%_78.57%] leading-[normal] not-italic text-[#707070] text-[8px] whitespace-nowrap" data-node-id="I170:9006;143:26957">
+        V
+      </p>
+      <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-[58.97%_12.86%_15.38%_78.57%] leading-[normal] not-italic text-[#707070] text-[8px] whitespace-nowrap" data-node-id="I170:9006;143:26958">
+        H
+      </p>
+      <div className="-translate-y-1/2 absolute aspect-[6/4] left-[12.86%] right-[78.57%] top-[calc(50%+8.5px)]" data-node-id="I170:9006;143:26959" data-name="icon-check">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgIconCheck} />
+      </div>
+      <div className="-translate-y-1/2 absolute aspect-[6/4] left-[12.86%] right-[78.57%] top-[calc(50%-8.5px)]" data-node-id="I170:9006;143:26961" data-name="icon-check">
+        <div className="absolute inset-[-7.5%_-5%]">
+          <img alt="" className="block max-w-none size-full" src={imgIconCheck1} />
+        </div>
+      </div>
+    </div>
+  );
+}

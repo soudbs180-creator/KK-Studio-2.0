@@ -1,0 +1,631 @@
+{
+  "fileKey": "0nU0A7pq6eyjwfwm1TtWkO",
+  "readDate": "2026-09-10",
+  "roots": [
+    "404:28667",
+    "410:67357",
+    "410:59708"
+  ],
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "source": "Fresh Figma MCP get_design_context and read-only use_figma calls",
+  "states": [
+    {
+      "id": "1:7239",
+      "name": "颜色",
+      "type": "GROUP",
+      "children": [
+        {
+          "id": "1:7240",
+          "name": "矩形 67",
+          "type": "GROUP",
+          "width": 647,
+          "height": 639,
+          "cornerRadius": null,
+          "variants": null,
+          "fills": []
+        },
+        {
+          "id": "1:7243",
+          "name": "矩形 66",
+          "type": "VECTOR",
+          "width": 285,
+          "height": 97,
+          "cornerRadius": 0,
+          "variants": null,
+          "fills": [
+            {
+              "color": {
+                "r": 0.8784313797950745,
+                "g": 0.8784313797950745,
+                "b": 0.8784313797950745
+              },
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "1:7244",
+          "name": "矩形 70",
+          "type": "VECTOR",
+          "width": 285,
+          "height": 97,
+          "cornerRadius": 0,
+          "variants": null,
+          "fills": [
+            {
+              "color": {
+                "r": 0.8274509906768799,
+                "g": 0.8274509906768799,
+                "b": 0.8274509906768799
+              },
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "1:7245",
+          "name": "矩形 78",
+          "type": "VECTOR",
+          "width": 285,
+          "height": 97,
+          "cornerRadius": 0,
+          "variants": null,
+          "fills": [
+            {
+              "color": {
+                "r": 0.43921568989753723,
+                "g": 0.43921568989753723,
+                "b": 0.43921568989753723
+              },
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "1:7246",
+          "name": "矩形 79",
+          "type": "VECTOR",
+          "width": 285,
+          "height": 97,
+          "cornerRadius": 0,
+          "variants": null,
+          "fills": [
+            {
+              "color": {
+                "r": 0.23529411852359772,
+                "g": 0.23529411852359772,
+                "b": 0.23529411852359772
+              },
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "1:7247",
+          "name": "矩形 71",
+          "type": "VECTOR",
+          "width": 285,
+          "height": 97,
+          "cornerRadius": 0,
+          "variants": null,
+          "fills": [
+            {
+              "color": {
+                "r": 0.9372549057006836,
+                "g": 0.9372549057006836,
+                "b": 0.9372549057006836
+              },
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "1:7248",
+          "name": "矩形 74",
+          "type": "VECTOR",
+          "width": 74,
+          "height": 111,
+          "cornerRadius": 0,
+          "variants": null,
+          "fills": [
+            {
+              "color": {
+                "r": 0.38823530077934265,
+                "g": 0.35686275362968445,
+                "b": 1
+              },
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "1:7249",
+          "name": "矩形 75",
+          "type": "VECTOR",
+          "width": 74,
+          "height": 111,
+          "cornerRadius": 0,
+          "variants": null,
+          "fills": [
+            {
+              "color": {
+                "r": 0.08627451211214066,
+                "g": 0.6392157077789307,
+                "b": 0.4156862795352936
+              },
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "1:7250",
+          "name": "矩形 76",
+          "type": "VECTOR",
+          "width": 74,
+          "height": 111,
+          "cornerRadius": 0,
+          "variants": null,
+          "fills": [
+            {
+              "color": {
+                "r": 0.8509804010391235,
+                "g": 0.5411764979362488,
+                "b": 0
+              },
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "1:7251",
+          "name": "矩形 77",
+          "type": "VECTOR",
+          "width": 74,
+          "height": 111,
+          "cornerRadius": 0,
+          "variants": null,
+          "fills": [
+            {
+              "color": {
+                "r": 0.8980392217636108,
+                "g": 0.2823529541492462,
+                "b": 0.3019607961177826
+              },
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "1:7252",
+          "name": "矩形 72",
+          "type": "VECTOR",
+          "width": 106,
+          "height": 111,
+          "cornerRadius": 0,
+          "variants": null,
+          "fills": [
+            {
+              "color": {
+                "r": 0.8509804010391235,
+                "g": 0.8666666746139526,
+                "b": 0.8980392217636108
+              },
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "1:7253",
+          "name": "矩形 68",
+          "type": "VECTOR",
+          "width": 285,
+          "height": 97,
+          "cornerRadius": 0,
+          "variants": null,
+          "fills": [
+            {
+              "color": {
+                "r": 0.03921568766236305,
+                "g": 0.03921568766236305,
+                "b": 0.03921568766236305
+              },
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "id": "1:7254",
+          "name": "矩形 69",
+          "type": "VECTOR",
+          "width": 285,
+          "height": 97,
+          "cornerRadius": 0,
+          "variants": null,
+          "fills": [
+            {
+              "color": {
+                "r": 0.10196078568696976,
+                "g": 0.10196078568696976,
+                "b": 0.10196078568696976
+              },
+              "opacity": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "143:26873",
+      "name": "添加卡片",
+      "type": "COMPONENT_SET",
+      "children": [
+        {
+          "id": "143:26874",
+          "name": "Property 1=1",
+          "type": "COMPONENT",
+          "width": 40,
+          "height": 40,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "1"
+          },
+          "fills": []
+        },
+        {
+          "id": "143:26879",
+          "name": "Property 1=2",
+          "type": "COMPONENT",
+          "width": 40,
+          "height": 40,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "2"
+          },
+          "fills": []
+        }
+      ]
+    },
+    {
+      "id": "143:26884",
+      "name": "选择",
+      "type": "COMPONENT_SET",
+      "children": [
+        {
+          "id": "143:26885",
+          "name": "选择=1",
+          "type": "COMPONENT",
+          "width": 40,
+          "height": 40,
+          "cornerRadius": 0,
+          "variants": {
+            "选择": "1"
+          },
+          "fills": []
+        },
+        {
+          "id": "143:26888",
+          "name": "选择=2",
+          "type": "COMPONENT",
+          "width": 40,
+          "height": 40,
+          "cornerRadius": 0,
+          "variants": {
+            "选择": "2"
+          },
+          "fills": []
+        }
+      ]
+    },
+    {
+      "id": "4:51102",
+      "name": "收藏",
+      "type": "COMPONENT_SET",
+      "children": [
+        {
+          "id": "4:51101",
+          "name": "Property 1=1",
+          "type": "COMPONENT",
+          "width": 40,
+          "height": 40,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "1"
+          },
+          "fills": []
+        },
+        {
+          "id": "4:51100",
+          "name": "Property 1=2",
+          "type": "COMPONENT",
+          "width": 40,
+          "height": 40,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "2"
+          },
+          "fills": []
+        },
+        {
+          "id": "4:52207",
+          "name": "Property 1=Variant3",
+          "type": "COMPONENT",
+          "width": 40,
+          "height": 40,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "Variant3"
+          },
+          "fills": []
+        }
+      ]
+    },
+    {
+      "id": "4:51362",
+      "name": "素材库",
+      "type": "COMPONENT_SET",
+      "children": [
+        {
+          "id": "4:51476",
+          "name": "Property 1=1",
+          "type": "COMPONENT",
+          "width": 40,
+          "height": 40,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "1"
+          },
+          "fills": []
+        },
+        {
+          "id": "4:51489",
+          "name": "Property 1=2",
+          "type": "COMPONENT",
+          "width": 40,
+          "height": 40,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "2"
+          },
+          "fills": []
+        },
+        {
+          "id": "4:52224",
+          "name": "Property 1=Variant3",
+          "type": "COMPONENT",
+          "width": 40,
+          "height": 40,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "Variant3"
+          },
+          "fills": []
+        },
+        {
+          "id": "4:52248",
+          "name": "Property 1=Variant4",
+          "type": "COMPONENT",
+          "width": 40,
+          "height": 40,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "Variant4"
+          },
+          "fills": []
+        }
+      ]
+    },
+    {
+      "id": "143:26933",
+      "name": "帮助",
+      "type": "COMPONENT_SET",
+      "children": [
+        {
+          "id": "143:26934",
+          "name": "Property 1=1",
+          "type": "COMPONENT",
+          "width": 30,
+          "height": 30,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "1"
+          },
+          "fills": []
+        },
+        {
+          "id": "143:26940",
+          "name": "Property 1=2",
+          "type": "COMPONENT",
+          "width": 30,
+          "height": 30,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "2"
+          },
+          "fills": []
+        }
+      ]
+    },
+    {
+      "id": "4:51916",
+      "name": "弹出框选择",
+      "type": "COMPONENT_SET",
+      "children": [
+        {
+          "id": "4:51915",
+          "name": "Property 1=1",
+          "type": "COMPONENT",
+          "width": 90,
+          "height": 50,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "1"
+          },
+          "fills": []
+        },
+        {
+          "id": "4:51914",
+          "name": "Property 1=2",
+          "type": "COMPONENT",
+          "width": 90,
+          "height": 50,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "2"
+          },
+          "fills": []
+        },
+        {
+          "id": "4:51913",
+          "name": "Property 1=3",
+          "type": "COMPONENT",
+          "width": 90,
+          "height": 50,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "3"
+          },
+          "fills": []
+        },
+        {
+          "id": "4:51912",
+          "name": "Property 1=4",
+          "type": "COMPONENT",
+          "width": 90,
+          "height": 50,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "4"
+          },
+          "fills": []
+        }
+      ]
+    },
+    {
+      "id": "21:104319",
+      "name": "语音输入",
+      "type": "COMPONENT_SET",
+      "children": [
+        {
+          "id": "21:104317",
+          "name": "Property 2=声音开",
+          "type": "COMPONENT",
+          "width": 32,
+          "height": 34,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 2": "声音开"
+          },
+          "fills": []
+        },
+        {
+          "id": "21:104315",
+          "name": "Property 2=声音关",
+          "type": "COMPONENT",
+          "width": 32,
+          "height": 34,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 2": "声音关"
+          },
+          "fills": []
+        }
+      ]
+    },
+    {
+      "id": "57:444",
+      "name": "开关按钮大蓝",
+      "type": "COMPONENT_SET",
+      "children": [
+        {
+          "id": "57:353",
+          "name": "Property 1=关闭按钮",
+          "type": "COMPONENT",
+          "width": 40,
+          "height": 20,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "关闭按钮"
+          },
+          "fills": []
+        },
+        {
+          "id": "57:368",
+          "name": "Property 1=打开蓝色按钮",
+          "type": "COMPONENT",
+          "width": 40,
+          "height": 20,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "打开蓝色按钮"
+          },
+          "fills": []
+        }
+      ]
+    },
+    {
+      "id": "143:28064",
+      "name": "左展开和关闭",
+      "type": "COMPONENT_SET",
+      "children": [
+        {
+          "id": "143:28065",
+          "name": "Property 1=左打开",
+          "type": "COMPONENT",
+          "width": 18,
+          "height": 18,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "左打开"
+          },
+          "fills": []
+        },
+        {
+          "id": "143:28069",
+          "name": "Property 1=左关闭",
+          "type": "COMPONENT",
+          "width": 18,
+          "height": 18,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "左关闭"
+          },
+          "fills": []
+        }
+      ]
+    },
+    {
+      "id": "143:28072",
+      "name": "右展开和关闭",
+      "type": "COMPONENT_SET",
+      "children": [
+        {
+          "id": "143:28073",
+          "name": "Property 1=右打开",
+          "type": "COMPONENT",
+          "width": 18,
+          "height": 18,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "右打开"
+          },
+          "fills": []
+        },
+        {
+          "id": "143:28077",
+          "name": "Property 1=右关闭",
+          "type": "COMPONENT",
+          "width": 18,
+          "height": 18,
+          "cornerRadius": 0,
+          "variants": {
+            "Property 1": "右关闭"
+          },
+          "fills": []
+        }
+      ]
+    }
+  ]
+}

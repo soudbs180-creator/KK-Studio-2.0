@@ -1,0 +1,201 @@
+const imgProperty1 = "https://www.figma.com/api/mcp/asset/01a4c5a3-1386-458c-be02-a8cb1852c165.svg";
+const imgProperty2 = "https://www.figma.com/api/mcp/asset/328f4a6f-3198-4c75-bf79-53b47592d260.svg";
+const imgRectangle50 = "https://www.figma.com/api/mcp/asset/a3ece23b-dd09-4941-a6b3-a54caec9e580.svg";
+const imgIconX = "https://www.figma.com/api/mcp/asset/e4913874-700a-4a02-9205-a9956f7b820d.svg";
+const imgIconX1 = "https://www.figma.com/api/mcp/asset/89873acf-b715-4e4b-83a2-0aa5e4567ce2.svg";
+const imgGroup100 = "https://www.figma.com/api/mcp/asset/fa6337af-5f13-44c7-8c41-6bd2b55e345e.svg";
+const imgGroup101 = "https://www.figma.com/api/mcp/asset/d229eb58-2a99-4776-9f9e-2cb4bc3ebd38.svg";
+const img = "https://www.figma.com/api/mcp/asset/c9ddd178-f53c-48f9-b348-2c21a56a147f.svg";
+const imgGroup94 = "https://www.figma.com/api/mcp/asset/65c9cba8-59be-4c40-a085-6eec9b157abe.svg";
+const imgGroup95 = "https://www.figma.com/api/mcp/asset/3faea15d-4128-490d-bdb2-8f0553c9973a.svg";
+const imgGroup97 = "https://www.figma.com/api/mcp/asset/a3a2193e-73a3-40c8-b06c-c6215681bca1.svg";
+
+type ComponentProps = {
+  className?: string;
+  property1?: "收缩" | "展开";
+};
+
+function Component({ className, property1 = "展开" }: ComponentProps) {
+  const is = property1 === "收缩";
+  return (
+    <button className={className || "block relative size-[11.739px]"} id={is ? "node-124_17758" : "node-120_17645"}>
+      <div className="absolute inset-[-4.26%]">
+        <img alt="" className="block max-w-none size-full" src={is ? imgProperty2 : imgProperty1} />
+      </div>
+    </button>
+  );
+}
+
+export default function Component1() {
+  return (
+    <div className="contents relative size-full" data-node-id="112:17178" data-name="资产管理设置">
+      <div className="absolute h-[700px] left-0 top-0 w-[900px]" data-node-id="112:17179">
+        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRectangle50} />
+      </div>
+      <div className="absolute contents inset-0" data-node-id="112:17182" data-name="icon-x">
+        <div className="absolute inset-[-7.29%]">
+          <img alt="" className="block max-w-none size-full" src={imgIconX} />
+        </div>
+        <div className="absolute inset-[-7.29%]">
+          <img alt="" className="block max-w-none size-full" src={imgIconX1} />
+        </div>
+        <Component className="absolute block cursor-pointer left-0 size-[11.739px] top-0" property1="收缩" />
+      </div>
+      <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-0 leading-[normal] not-italic text-[#858585] text-[14px] whitespace-nowrap" data-node-id="112:17188">
+        资产管理
+      </p>
+      <div className="absolute contents left-0 top-0" data-node-id="120:17431">
+        <div className="absolute bg-[#202020] h-[27px] left-0 rounded-[4px] top-0 w-[51px]" data-node-id="120:17432" />
+        <div className="absolute contents left-0 top-0" data-node-id="120:17433">
+          <div className="absolute bg-[#3c3c3c] left-0 rounded-[4px] size-[21px] top-0" data-node-id="120:17434" />
+          <div className="absolute inset-[-3.85%]">
+            <img alt="" className="block max-w-none size-full" src={imgGroup100} />
+          </div>
+        </div>
+        <div className="absolute contents left-0 top-0" data-node-id="120:17440">
+          <div className="absolute inset-[-3.85%_0_-3.85%_-3.85%]">
+            <img alt="" className="block max-w-none size-full" src={imgGroup101} />
+          </div>
+        </div>
+      </div>
+      <div className="absolute contents left-0 top-0" data-node-id="120:17449" data-name="搜索框">
+        <div className="absolute bg-[#202020] h-[27px] left-0 rounded-[20px] top-0 w-[178px]" data-node-id="120:17450" />
+        <div className="absolute inset-[-4.66%]">
+          <img alt="" className="block max-w-none size-full" src={img} />
+        </div>
+        <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-0 leading-[0] not-italic text-[#3c3c3c] text-[11px]" data-node-id="120:17454">
+          <span className="leading-[normal]">搜索文件</span>
+          <span className="leading-[normal] text-[#dadada]">(静音冷风扇)</span>
+        </p>
+      </div>
+      <div className="absolute contents left-0 top-0" data-node-id="112:17195" data-name="类型选项">
+        <div className="absolute contents left-0 top-0" data-node-id="112:17196">
+          <div className="absolute bg-[#202020] h-[22px] left-0 rounded-[20px] top-0 w-[63px]" data-node-id="112:17197" />
+          <div className="absolute inset-[-12.5%_-6.25%]">
+            <img alt="" className="block max-w-none size-full" src={imgGroup94} />
+          </div>
+          <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-0 leading-[normal] not-italic text-[#858585] text-[11px]" data-node-id="112:17200">
+            类型
+          </p>
+        </div>
+      </div>
+      <div className="absolute contents left-0 top-0" data-node-id="112:17201" data-name="标签选项">
+        <div className="absolute contents left-0 top-0" data-node-id="112:17202">
+          <div className="absolute bg-[#202020] h-[22px] left-0 rounded-[20px] top-0 w-[63px]" data-node-id="112:17203" />
+          <div className="absolute inset-[-12.5%_-6.25%]">
+            <img alt="" className="block max-w-none size-full" src={imgGroup94} />
+          </div>
+          <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-0 leading-[normal] not-italic text-[#858585] text-[11px]" data-node-id="112:17206">
+            标签
+          </p>
+        </div>
+      </div>
+      <div className="absolute contents left-0 top-0" data-node-id="112:17207" data-name="时间选项">
+        <div className="absolute contents left-0 top-0" data-node-id="112:17208">
+          <div className="absolute bg-[#202020] h-[22px] left-0 rounded-[20px] top-0 w-[63px]" data-node-id="112:17209" />
+          <div className="absolute inset-[-12.5%_-6.25%]">
+            <img alt="" className="block max-w-none size-full" src={imgGroup94} />
+          </div>
+          <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-0 leading-[normal] not-italic text-[#858585] text-[11px]" data-node-id="112:17212">
+            时间
+          </p>
+        </div>
+      </div>
+      <div className="absolute gap-x-[4px] gap-y-[4px] grid grid-cols-[repeat(3,minmax(0,1fr))] grid-rows-[repeat(1,minmax(0,1fr))] h-[195.811px] leading-[0] left-0 top-0 w-[552.064px]" data-node-id="112:17213">
+        <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-1 self-start shrink-0" data-node-id="112:17214" data-name="展示">
+          <div className="bg-[#333] col-1 h-[195.811px] ml-0 mt-0 relative rounded-[10px] row-1 w-[181.355px]" data-node-id="112:17215" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-px mt-[1.31px] place-items-start relative row-1" data-node-id="112:17216" data-name="堆叠展示">
+            <div className="bg-[#1f1f1f] col-1 ml-px mt-[1.31px] relative rounded-[10px] row-1 size-[178.726px]" data-node-id="112:17217" />
+          </div>
+          <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[9px] leading-[normal] ml-[2.54%] mt-[93.46%] not-italic relative row-1 text-[#858585] text-[6px] w-[78px]" data-node-id="112:17222">
+            人物
+          </p>
+        </div>
+        <div className="col-2 grid-cols-[max-content] grid-rows-[max-content] inline-grid justify-self-start place-items-start relative row-1 self-start shrink-0" data-node-id="112:17223" data-name="展示">
+          <div className="col-1 h-[195.811px] ml-[185.35px] mt-0 relative rounded-[10px] row-1 w-[181.355px]" data-node-id="112:17224" />
+          <div className="col-1 grid-cols-[max-content] grid-rows-[max-content] inline-grid ml-[186.67px] mt-[1.31px] place-items-start relative row-1" data-node-id="112:17225">
+            <div className="bg-[#1f1f1f] col-1 ml-[186.67px] mt-[1.31px] relative rounded-[10px] row-1 size-[178.726px]" data-node-id="112:17226" />
+          </div>
+          <p className="[word-break:break-word] col-1 font-['Inter:Regular'] font-normal h-[9px] leading-[normal] ml-[36.23%] mt-[93.46%] not-italic relative row-1 text-[#858585] text-[6px] w-[76px]" data-node-id="112:17231">
+            文件夹名字或资源包名字
+          </p>
+        </div>
+      </div>
+      <p className="[word-break:break-word] absolute font-['Inter:Bold'] font-bold inset-0 leading-[normal] not-italic text-[#dadada] text-[16px]" data-node-id="112:17295">
+        KK工作流画布
+      </p>
+      <div className="absolute contents left-0 top-0" data-node-id="112:17296" data-name="切换按钮">
+        <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid h-[40px] left-0 rounded-[10px] top-0 w-[232px]" data-node-id="112:17297" />
+        <div className="absolute bg-[#3c3c3c] h-[34px] left-0 rounded-[8px] top-0 w-[111px]" data-node-id="112:17298" />
+        <p className="[word-break:break-word] absolute font-['Inter:Bold'] font-bold inset-0 leading-[normal] not-italic text-[#858585] text-[16px] text-center" data-node-id="112:17299">
+          画布
+        </p>
+        <p className="[word-break:break-word] absolute font-['Inter:Bold'] font-bold inset-0 leading-[normal] not-italic text-[#dadada] text-[16px] text-center" data-node-id="112:17300">
+          资产
+        </p>
+      </div>
+      <div className="absolute contents left-0 top-0" data-node-id="112:17301">
+        <div className="absolute contents left-0 top-0" data-node-id="112:17302">
+          <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-0 leading-[normal] not-italic text-[#858585] text-[14px] whitespace-nowrap" data-node-id="112:17304">
+            人物.png
+          </p>
+          <div className="absolute bg-[#3c3c3c] left-0 rounded-[4px] size-[25px] top-0" data-node-id="112:17305" />
+        </div>
+        <div className="absolute contents left-0 top-0" data-node-id="112:17306">
+          <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-0 leading-[normal] not-italic text-[#858585] text-[14px] whitespace-nowrap" data-node-id="112:17308">
+            人物甲.png
+          </p>
+          <div className="absolute bg-[#3c3c3c] left-0 rounded-[4px] size-[25px] top-0" data-node-id="112:17309" />
+        </div>
+        <div className="absolute contents left-0 top-0" data-node-id="112:17310">
+          <div className="absolute bg-[#1a1a1a] border border-[#3c3c3c] border-solid h-[40px] left-0 rounded-[10px] top-0 w-[232px]" data-node-id="112:17311" />
+          <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-0 leading-[normal] not-italic text-[#858585] text-[14px] whitespace-nowrap" data-node-id="112:17312">
+            人物乙.png
+          </p>
+          <div className="absolute bg-[#3c3c3c] left-0 rounded-[4px] size-[25px] top-0" data-node-id="112:17313" />
+        </div>
+        <div className="absolute contents left-0 top-0" data-node-id="112:17314">
+          <p className="[word-break:break-word] absolute font-['Inter:Regular'] font-normal inset-0 leading-[normal] not-italic text-[#858585] text-[14px] whitespace-nowrap" data-node-id="112:17316">
+            人物丙.png
+          </p>
+          <div className="absolute bg-[#3c3c3c] left-0 rounded-[4px] size-[25px] top-0" data-node-id="112:17317" />
+        </div>
+      </div>
+      <div className="absolute contents left-0 top-0" data-node-id="117:17382">
+        <div className="absolute contents left-0 top-0" data-node-id="118:17410">
+          <div className="absolute bg-[#dadada] h-[25px] left-0 rounded-[6px] top-0 w-[115px]" data-node-id="117:17383" />
+          <div className="absolute contents left-0 top-0" data-node-id="118:17398">
+            <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-0 leading-[normal] not-italic text-[#161616] text-[10px] whitespace-nowrap" data-node-id="117:17384">
+              创建主体
+            </p>
+            <div className="absolute left-0 size-[6.971px] top-0" data-node-id="118:17394">
+              <div className="absolute inset-[-7.17%]">
+                <img alt="" className="block max-w-none size-full" src={imgGroup95} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="absolute contents left-0 top-0" data-node-id="118:17409">
+          <div className="absolute bg-[#3c3c3c] h-[25px] left-0 rounded-[6px] top-0 w-[115px]" data-node-id="118:17391" />
+          <div className="absolute contents left-0 top-0" data-node-id="118:17404">
+            <p className="[word-break:break-word] absolute font-['Inter:Medium'] font-medium inset-0 leading-[normal] not-italic text-[#dadada] text-[10px] whitespace-nowrap" data-node-id="118:17405">
+              导入资源包
+            </p>
+            <div className="absolute inset-[-7.14%]">
+              <img alt="" className="block max-w-none size-full" src={imgGroup97} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+Images and SVGs will be stored as constants, e.g. const image = 'https://www.figma.com/api/mcp/asset/550e8400-e29b-41d4-a716-446655440000.png'. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.

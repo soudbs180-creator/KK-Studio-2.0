@@ -1,0 +1,97 @@
+[WebServer] (node:59476) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:3696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\browser\provider-scheduling.spec.ts:58:3 › 首页capacity不创建任务且草稿保留 (5.8s)
+(node:46260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\browser\provider-scheduling.spec.ts:91:3 › 审批等待期间quarantined阻止HTTP且不释放其他任务槽位 (6.0s)
+(node:39888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 tests\browser\provider-scheduling.spec.ts:159:3 › 对话固定连接quarantined不回退且保留草稿 (6.1s)
+
+
+  1) tests\browser\provider-scheduling.spec.ts:58:3 › 首页capacity不创建任务且草稿保留 ─────────────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.start-status')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.start-status') with timeout 5000ms
+      - waiting for locator('.start-status')
+
+
+      76 |     await change(page, patch);
+      77 |     await submit(page);
+    > 78 |     await expect(page.locator(".start-status")).toBeVisible();
+         |                                                 ^
+      79 |     await expect(page.getByLabel("创作提示词")).toHaveValue("保留这份测试草稿");
+      80 |     await expect(
+      81 |       page.getByRole("dialog", { name: "人工审批任务" }),
+        at D:\kk-studio-next\.worktrees\TASK-GOV-001-verify\tests\browser\provider-scheduling.spec.ts:78:49
+
+    Error Context: test-results\provider-scheduling-首页capacity不创建任务且草稿保留\error-context.md
+
+  2) tests\browser\provider-scheduling.spec.ts:91:3 › 审批等待期间quarantined阻止HTTP且不释放其他任务槽位 ────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.project-task-failed')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.project-task-failed') with timeout 5000ms
+      - waiting for locator('.project-task-failed')
+
+
+      109 |     );
+      110 |     await approve(page);
+    > 111 |     await expect(page.locator(".project-task-failed")).toBeVisible();
+          |                                                        ^
+      112 |     expect(requests).toBe(0);
+      113 |     expect((await connections(page))[0].activeJobs).toBe(1);
+      114 |   });
+        at D:\kk-studio-next\.worktrees\TASK-GOV-001-verify\tests\browser\provider-scheduling.spec.ts:111:56
+
+    Error Context: test-results\provider-scheduling-审批等待期间quarantined阻止HTTP且不释放其他任务槽位\error-context.md
+
+  3) tests\browser\provider-scheduling.spec.ts:159:3 › 对话固定连接quarantined不回退且保留草稿 ───────────────────
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('.chat-status')
+    Expected substring: "隔离"
+    Received string:    "任务已提交，状态会显示在画布顶部。"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" locator('.chat-status') with timeout 5000ms
+      - waiting for locator('.chat-status')
+        14 × locator resolved to <p role="status" class="chat-status">任务已提交，状态会显示在画布顶部。</p>
+           - unexpected value "任务已提交，状态会显示在画布顶部。"
+
+
+      191 |     await page.getByLabel("对话内容").fill("固定连接草稿不丢失");
+      192 |     await page.getByRole("button", { name: "发送消息", exact: true }).click();
+    > 193 |     await expect(page.locator(".chat-status")).toContainText(
+          |                                                ^
+      194 |       condition === "removed" ? "移除" : "隔离",
+      195 |     );
+      196 |     await expect(page.getByLabel("对话内容")).toHaveValue("固定连接草稿不丢失");
+        at D:\kk-studio-next\.worktrees\TASK-GOV-001-verify\tests\browser\provider-scheduling.spec.ts:193:48
+
+    Error Context: test-results\provider-scheduling-对话固定连接quarantined不回退且保留草稿\error-context.md
+
+  3 failed
+    tests\browser\provider-scheduling.spec.ts:58:3 › 首页capacity不创建任务且草稿保留 ──────────────────────────
+    tests\browser\provider-scheduling.spec.ts:91:3 › 审批等待期间quarantined阻止HTTP且不释放其他任务槽位 ─────────────
+    tests\browser\provider-scheduling.spec.ts:159:3 › 对话固定连接quarantined不回退且保留草稿 ────────────────────

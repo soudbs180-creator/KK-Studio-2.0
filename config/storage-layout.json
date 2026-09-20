@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "dataRoot": {
+    "windows": "%APPDATA%\\kk-studio",
+    "macos": "~/Library/Application Support/kk-studio",
+    "linux": "$XDG_DATA_HOME/kk-studio"
+  },
+  "directories": {
+    "app": "非敏感应用偏好和版本",
+    "providers": "供应商元数据，不含密钥",
+    "profile": "用户资料",
+    "memory": "用户和品牌记忆，显式开启",
+    "projects": "项目图、revision、checksum",
+    "conversations": "会话索引和消息",
+    "assets": "资产元数据和内容寻址 Blob",
+    "models": "受管模型索引，不存默认权重",
+    "comfyui": "外部实例连接与扫描摘要",
+    "cache": "可删除缓存",
+    "backups": "恢复快照",
+    "logs": "脱敏诊断日志"
+  },
+  "credentials": {
+    "service": "com.kkstudio.provider",
+    "storage": "Windows Credential Manager or platform equivalent"
+  },
+  "models": {
+    "weights": "external-comfyui-root",
+    "index": "models/index.json",
+    "categories": [
+      "checkpoints",
+      "vae",
+      "loras",
+      "embeddings",
+      "controlnet",
+      "upscale_models",
+      "clip",
+      "unet",
+      "diffusion_models",
+      "hypernetworks",
+      "gligen"
+    ]
+  }
+}

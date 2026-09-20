@@ -1,0 +1,24 @@
+<frame id="82:15730" name="功能快捷选择区" x="12" y="120" width="263" height="204">
+  <frame id="82:15726" name="Group 24" x="12" y="120" width="263" height="48">
+    <rounded-rectangle id="16:74614" name="鼠标悬浮高亮1" x="12" y="120" width="263" height="48" />
+    <frame id="4:2" name="Group 1" x="19" y="131" width="26" height="26" />
+    <text id="1:7232" name="开始创作" x="51" y="134" width="56" height="17" />
+  </frame>
+  <frame id="82:15727" name="Group 25" x="12" y="172" width="263" height="48">
+    <rounded-rectangle id="16:74615" name="鼠标悬浮高亮2" x="12" y="172" width="263" height="48" />
+    <text id="16:74616" name="开始创作" x="51" y="187" width="42" height="17" />
+    <frame id="16:74617" name="icon-archive" x="22" y="188" width="20" height="18" />
+  </frame>
+  <frame id="82:15728" name="Group 26" x="12" y="224" width="263" height="48">
+    <rounded-rectangle id="16:74622" name="鼠标悬浮高亮3" x="12" y="224" width="263" height="48" />
+    <text id="16:74623" name="开始创作" x="51" y="239" width="27" height="17" />
+    <vector id="16:74624" name="路径 108" x="22" y="238" width="20.001680374145508" height="20.00017547607422" />
+  </frame>
+  <frame id="82:15729" name="Group 27" x="12" y="276" width="263" height="48">
+    <rounded-rectangle id="16:74628" name="鼠标悬浮高亮4" x="12" y="276" width="263" height="48" />
+    <text id="16:74629" name="开始创作" x="51" y="291" width="104" height="17" />
+    <frame id="16:74634" name="icon-git-branch" x="24" y="292" width="18" height="18" />
+  </frame>
+</frame>
+
+IMPORTANT: After you call this tool, you MUST call get_design_context if trying to implement the design, since this tool only returns metadata. If you do not call get_design_context, the agent will not be able to implement the design.

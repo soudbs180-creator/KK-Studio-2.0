@@ -1,0 +1,194 @@
+/* Supplemental semantic tokens: all new pages consume these, never per-page palettes. */
+:root {
+  --ui-composer-surface: #252525;
+  --ui-landing-shadow: 0 14.031px 21.047px rgb(0 0 0 / 25%);
+  --ui-node-menu-bg: #161618;
+  --ui-node-menu-border: #242426;
+  --ui-node-menu-icon-bg: #28282a;
+  --ui-node-menu-text: #fff;
+  --ui-node-menu-muted: #8e8e93;
+  --ui-node-menu-badge: #5c56e1;
+  --ui-node-menu-shadow: 0 16px 20px #0008;
+  --ui-context-menu-bg: #18181b;
+  --ui-context-menu-hover: #262629;
+  --ui-context-menu-shadow: 0 12px 12px #00000080;
+  --ui-text: var(--text-primary);
+  --ui-muted: var(--text-secondary);
+  --ui-tool-active: #e0e0e0;
+  --ui-shortcut-text: #a0a0a0;
+  --ui-sidebar-control: #282828;
+  --ui-sidebar-icon: var(--text-strong);
+  --ui-sidebar-settings-icon: #d3d3d3;
+  --ui-project-thumbnail: #d98a00;
+  --sidebar-compact-width: 61px;
+  --ui-focus: #aaa3ff;
+  --ui-disabled-opacity: 0.45;
+  --ui-danger: #ef6d6d;
+  --ui-danger-surface: #402329;
+  --ui-success: #79cda8;
+  /* Figma 312:2436 account popup source colors. */
+  --ui-account-danger: #ff1e1e;
+  --ui-account-action-bg: #252525;
+  --ui-account-panel-bg: #0d0d0d;
+  --ui-account-icon: #d3d3d3;
+  --ui-account-subscription: #16a36a;
+  --ui-account-muted: #a6a6a6;
+  --ui-account-check: #898989;
+  --ui-warning: #e6b96a;
+  --ui-selected: #b2adff;
+  --ui-neutral-selected: #3c3c3c;
+  --text-strong: #dadada;
+  --text-on-accent: #fff;
+  --ui-control-off: #363636;
+  --ui-control-thumb-off: #ccc;
+  --ui-connection: #3a3a40;
+  --ui-task-selected: #252525;
+  --ui-task-preview-surface: rgb(31 31 31 / 1%);
+  --ui-task-preview-text: #d3d3d3;
+  --ui-canvas-dot: #1a1a1a;
+  --ui-cut-foreground: #141416;
+  --ui-cut-surface: #f4f4f5;
+  /* Figma node 1:5 (无限画布底) is solid #0a0a0a. */
+  --ui-canvas-bg: #0a0a0a;
+  --ui-radius-control: 10px;
+  --ui-radius-card: 28px;
+  --ui-shadow: 0 8px 24px #0004;
+  --ui-space: 8px;
+  /* Reusable type, icon, and control tiers. Components consume these tiers
+     instead of inventing a new size for each page or viewport. */
+  --ui-font-caption: 11px;
+  --ui-font-body: 12px;
+  --ui-font-label: 14px;
+  --ui-font-title: 16px;
+  --ui-line-height-caption: 14px;
+  --ui-line-height-body: 16px;
+  --ui-line-height-label: 20px;
+  --ui-line-height-title: 22px;
+  --ui-border-width: 1px;
+  --ui-focus-width: 2px;
+  --ui-focus-offset: 3px;
+  /* Existing generic button geometry; source-specific controls retain their
+     measured Figma tiers rather than being stretched to this default. */
+  --ui-button-height: 32px;
+  --ui-button-gap: 6px;
+  --ui-button-padding-block: 6px;
+  --ui-button-padding-inline: 10px;
+  --ui-control-active: var(--ui-neutral-selected);
+  --ui-icon-xs: 14px;
+  --ui-icon-sm: 16px;
+  --ui-icon-md: 20px;
+  /* Source-aligned slots used by the shell controls. The slot stays stable
+     while the leaf asset can keep its own aspect ratio. */
+  --ui-icon-sidebar: 26px;
+  /* Complete clipped brand frames: 399:27833, 21:119316, 21:104347. */
+  --ui-logo-hero: 63.141px;
+  --ui-logo-account: 30px;
+  --ui-logo-credit: 11px;
+  --ui-icon-nav: 10px;
+  --ui-icon-toolbar: 20px;
+  --ui-control-h-nav: 31px;
+  --ui-control-h-toolbar: 40px;
+  --ui-control-w-toolbar-toggle: 20px;
+  --ui-control-h-toolbar-help: 30px;
+  --ui-toolbar-h: 50px;
+  --ui-control-h-compact: 30px;
+  --ui-control-h-standard: 40px;
+  --ui-gap-tight: 4px;
+  --ui-gap-standard: 8px;
+  --ui-gap-relaxed: 12px;
+  /* Fresh 404:28667 / 410:67357 / 410:59708 design context. */
+  --ui-space-1: 4px;
+  --ui-space-2: 8px;
+  --ui-space-3: 12px;
+  --ui-space-4: 16px;
+  --ui-space-5: 24px;
+  --ui-space-6: 40px;
+  --ui-radius-panel: 20px;
+  --ui-radius-menu: 12px;
+  --ui-radius-pill: 999px;
+  --ui-input-height: var(--ui-button-height);
+  --ui-composer-control-height: 22px;
+  --ui-composer-action-size: 24px;
+  --ui-composer-width: 426px;
+  --ui-composer-height: 170px;
+  /* 404:28667 / 410:67357: controls use screen anchors, not node zoom. */
+  --ui-workspace-task-inset: 30px;
+  --ui-workspace-toolbar-right-center: 1044px;
+  --ui-workspace-nav-right: 33px;
+  --motion-sidebar: 300ms;
+  --motion-sidebar-text-ease: cubic-bezier(0.5, 0, 0.5, 1);
+}
+:root[data-theme="light"] {
+  --ui-node-menu-bg: var(--bg-surface);
+  --ui-node-menu-border: var(--border-default);
+  --ui-node-menu-icon-bg: var(--bg-card-hover);
+  --ui-node-menu-text: var(--text-primary);
+  --ui-node-menu-muted: var(--text-secondary);
+  --ui-context-menu-bg: var(--bg-surface);
+  --ui-context-menu-hover: var(--bg-card-hover);
+  --ui-context-menu-shadow: var(--ui-shadow);
+  --ui-sidebar-control: var(--bg-card-hover);
+  --ui-sidebar-icon: var(--text-primary);
+  --ui-sidebar-settings-icon: var(--text-primary);
+  --ui-shortcut-text: var(--text-secondary);
+  --ui-tool-active: var(--text-primary);
+  --ui-text: #252525;
+  --ui-muted: #646464;
+  --ui-focus: #594bcb;
+  --ui-danger: #aa263b;
+  --ui-danger-surface: #fce7eb;
+  --ui-success: #216947;
+  --ui-warning: #8a590c;
+  --ui-selected: #594bcb;
+  --ui-neutral-selected: var(--bg-card-hover);
+  --text-strong: var(--text-primary);
+  --ui-control-off: var(--border-default);
+  --ui-control-thumb-off: var(--bg-surface);
+  --ui-task-selected: var(--bg-card-hover);
+  --ui-task-preview-surface: rgb(238 238 238 / 1%);
+  --ui-task-preview-text: var(--text-primary);
+  --ui-canvas-bg: #f4f4f5;
+  --ui-cut-foreground: #252525;
+  --ui-cut-surface: #ffffff;
+}
+.ui-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  line-height: 0;
+}
+.ui-icon svg {
+  flex-shrink: 0;
+}
+.ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-button-gap);
+  min-height: var(--ui-button-height);
+  padding: var(--ui-button-padding-block) var(--ui-button-padding-inline);
+  border: var(--ui-border-width) solid var(--border-default);
+  border-radius: var(--ui-radius-control);
+  background: var(--bg-card);
+  color: var(--ui-text);
+  font-size: var(--ui-font-body);
+  line-height: var(--ui-line-height-body);
+}
+.ui-button:not(:disabled):not([aria-disabled="true"]):hover {
+  background: var(--bg-card-hover);
+}
+.ui-button:not(:disabled):not([aria-disabled="true"]):active,
+.ui-button[aria-pressed="true"] {
+  background: var(--ui-control-active);
+}
+.ui-button.is-danger {
+  color: var(--ui-danger);
+}
+.ui-button.is-danger:not(:disabled):not([aria-disabled="true"]):hover {
+  background: var(--ui-danger-surface);
+}
+.ui-button:focus-visible {
+  outline: var(--ui-focus-width) solid var(--ui-focus);
+  outline-offset: var(--ui-focus-offset);
+}

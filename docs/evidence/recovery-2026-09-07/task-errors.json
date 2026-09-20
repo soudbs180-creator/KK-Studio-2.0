@@ -1,0 +1,86 @@
+{
+  "sourceThread": "01a077f7-e1ad-7d71-acf6-b98ab0226a57",
+  "capturedAt": "2026-09-07",
+  "timeline": [
+    {
+      "turnId": "01a0795f-76a7-7731-832c-5fb90bdbd9f8",
+      "status": "failed",
+      "startedAt": "2026-09-07T00:58:14.000Z",
+      "durationMs": 369511,
+      "error": "Error running remote compact task: stream disconnected before completion: Transport error: network error: error decoding response body",
+      "visibleItemCount": 0
+    },
+    {
+      "turnId": "01a07928-848b-7923-b06c-661982d49339",
+      "status": "failed",
+      "startedAt": "2026-09-06T23:58:13.000Z",
+      "durationMs": 368333,
+      "error": "Error running remote compact task: stream disconnected before completion: Transport error: network error: error decoding response body",
+      "visibleItemCount": 0
+    },
+    {
+      "turnId": "01a078f2-078d-7b33-bf1d-769aaa4ebc7d",
+      "status": "failed",
+      "startedAt": "2026-09-06T22:58:42.000Z",
+      "durationMs": 368287,
+      "error": "Error running remote compact task: stream disconnected before completion: Transport error: network error: error decoding response body",
+      "visibleItemCount": 0
+    },
+    {
+      "turnId": "01a078ba-2af1-7570-87c5-20361e66cf2a",
+      "status": "failed",
+      "startedAt": "2026-09-06T21:57:41.000Z",
+      "durationMs": 368171,
+      "error": "Error running remote compact task: stream disconnected before completion: Transport error: network error: error decoding response body",
+      "visibleItemCount": 0
+    },
+    {
+      "turnId": "01a07882-c3c4-78e2-a585-f299da386f94",
+      "status": "failed",
+      "startedAt": "2026-09-06T20:57:10.000Z",
+      "durationMs": 368181,
+      "error": "Error running remote compact task: stream disconnected before completion: Transport error: network error: error decoding response body",
+      "visibleItemCount": 0
+    },
+    {
+      "turnId": "01a0784b-559d-7cf0-9737-3ce6073b846d",
+      "status": "failed",
+      "startedAt": "2026-09-06T19:56:38.000Z",
+      "durationMs": 368136,
+      "error": "Error running remote compact task: stream disconnected before completion: Transport error: network error: error decoding response body",
+      "visibleItemCount": 0
+    },
+    {
+      "turnId": "01a07845-b41c-7123-b97f-3ecf3151af8c",
+      "status": "failed",
+      "startedAt": "2026-09-06T19:50:29.000Z",
+      "durationMs": 368162,
+      "error": "Error running remote compact task: stream disconnected before completion: Transport error: network error: error decoding response body",
+      "visibleItemCount": 0
+    },
+    {
+      "turnId": "01a07840-0351-78c3-ab6f-14bc98c2184e",
+      "status": "failed",
+      "startedAt": "2026-09-06T19:44:16.000Z",
+      "durationMs": 368223,
+      "error": "Error running remote compact task: stream disconnected before completion: Transport error: network error: error decoding response body",
+      "visibleItemCount": 0
+    },
+    {
+      "turnId": "01a0782f-d67f-72f0-af9c-6ef4db7194dd",
+      "status": "failed",
+      "startedAt": "2026-09-06T19:26:36.000Z",
+      "durationMs": 989365,
+      "error": "Error running remote compact task: stream disconnected before completion: Transport error: network error: error decoding response body",
+      "visibleItemCount": 0
+    },
+    {
+      "turnId": "01a07818-4cc6-7932-ad5d-3af781cbb080",
+      "status": "failed",
+      "startedAt": "2026-09-06T19:00:53.000Z",
+      "durationMs": 152664,
+      "error": "Your workspace is out of credits. Add credits to continue.",
+      "visibleItemCount": 17
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "url": "http://127.0.0.1:1423/",
+  "mode": "Vite production preview",
+  "route": "landing",
+  "importChain": "src/main.tsx -> src/App.tsx -> Sidebar -> AccountPopup",
+  "viewport": {
+    "browser": "1280x720",
+    "designScale": 0.6666667
+  },
+  "cssDesignRects": {
+    "account-popup": { "width": 260, "height": 230 },
+    "account-identity": { "width": 143, "height": 26, "top": 17, "left": 12 },
+    "account-popup-actions": {
+      "width": 236,
+      "height": 30,
+      "top": 53,
+      "left": 12
+    },
+    "account-credit-panel": {
+      "width": 236,
+      "height": 57,
+      "top": 93,
+      "left": 12
+    },
+    "account-theme-row": { "width": 236, "height": 22, "top": 160, "left": 12 },
+    "account-version-row": {
+      "width": 236,
+      "height": 22,
+      "top": 192,
+      "left": 12
+    }
+  },
+  "browserRegression": "7/7 passed",
+  "consoleErrors": []
+}

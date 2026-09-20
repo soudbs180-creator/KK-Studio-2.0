@@ -1,0 +1,890 @@
+{
+  "stage": "after",
+  "errors": [],
+  "states": [
+    {
+      "state": "landing",
+      "url": "http://127.0.0.1:1421/",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "runtime": {
+        "theme": "dark",
+        "floatingLayout": "true"
+      },
+      "app": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "development"
+      },
+      "scripts": [
+        "",
+        "http://127.0.0.1:1421/@vite/client",
+        "http://127.0.0.1:1421/src/main.tsx?t=1789060176162"
+      ],
+      "styleSheets": [
+        "D:/kk-studio-next/src/styles/global.css",
+        "D:/kk-studio-next/src/styles/ui-tokens.css",
+        "D:/kk-studio-next/src/styles/account-popup.css",
+        "D:/kk-studio-next/src/styles/canvas-hud.css",
+        "D:/kk-studio-next/src/styles/canvas-navigation.css",
+        "D:/kk-studio-next/src/styles/generation-count.css",
+        "D:/kk-studio-next/src/styles/local-generation.css",
+        "D:/kk-studio-next/src/styles/node-menu.css",
+        "D:/kk-studio-next/src/styles/canvas-context-menu.css",
+        "D:/kk-studio-next/src/styles/demo-results.css",
+        "D:/kk-studio-next/src/styles/canvas-actions.css",
+        "D:/kk-studio-next/src/styles/toolbar-icons.css",
+        "D:/kk-studio-next/src/styles/canvas-tools.css",
+        "D:/kk-studio-next/src/components/assets/assets.css",
+        "D:/kk-studio-next/src/components/settings/settings.css",
+        "D:/kk-studio-next/src/styles/shortcuts.css",
+        "D:/kk-studio-next/src/styles/workspace.css",
+        "D:/kk-studio-next/src/styles/responsive.css",
+        "D:/kk-studio-next/src/styles/sidebar.css",
+        "D:/kk-studio-next/src/styles/catalog-pages.css",
+        "D:/kk-studio-next/src/styles/conversation-panel.css",
+        "D:/kk-studio-next/src/styles/design-surface.css",
+        "D:/kk-studio-next/src/styles/interaction.css",
+        "D:/kk-studio-next/src/styles/motion.css",
+        "D:/kk-studio-next/src/styles/catalog.css"
+      ],
+      "logos": [
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 20,
+            "y": 75,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 24,
+            "y": 1007,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-hero.svg",
+          "class": "",
+          "parent": "start-brand",
+          "natural": [
+            64,
+            64
+          ],
+          "rect": {
+            "x": 1069.421875,
+            "y": 202.421875,
+            "width": 63.140625,
+            "height": 63.140625
+          },
+          "style": {
+            "width": "63.1406px",
+            "height": "63.1406px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        }
+      ],
+      "favicon": "http://127.0.0.1:1421/design/figma/logo.svg"
+    },
+    {
+      "state": "account",
+      "url": "http://127.0.0.1:1421/",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "runtime": {
+        "theme": "dark",
+        "floatingLayout": "true"
+      },
+      "app": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "development"
+      },
+      "scripts": [
+        "",
+        "http://127.0.0.1:1421/@vite/client",
+        "http://127.0.0.1:1421/src/main.tsx?t=1789060176162"
+      ],
+      "styleSheets": [
+        "D:/kk-studio-next/src/styles/global.css",
+        "D:/kk-studio-next/src/styles/ui-tokens.css",
+        "D:/kk-studio-next/src/styles/account-popup.css",
+        "D:/kk-studio-next/src/styles/canvas-hud.css",
+        "D:/kk-studio-next/src/styles/canvas-navigation.css",
+        "D:/kk-studio-next/src/styles/generation-count.css",
+        "D:/kk-studio-next/src/styles/local-generation.css",
+        "D:/kk-studio-next/src/styles/node-menu.css",
+        "D:/kk-studio-next/src/styles/canvas-context-menu.css",
+        "D:/kk-studio-next/src/styles/demo-results.css",
+        "D:/kk-studio-next/src/styles/canvas-actions.css",
+        "D:/kk-studio-next/src/styles/toolbar-icons.css",
+        "D:/kk-studio-next/src/styles/canvas-tools.css",
+        "D:/kk-studio-next/src/components/assets/assets.css",
+        "D:/kk-studio-next/src/components/settings/settings.css",
+        "D:/kk-studio-next/src/styles/shortcuts.css",
+        "D:/kk-studio-next/src/styles/workspace.css",
+        "D:/kk-studio-next/src/styles/responsive.css",
+        "D:/kk-studio-next/src/styles/sidebar.css",
+        "D:/kk-studio-next/src/styles/catalog-pages.css",
+        "D:/kk-studio-next/src/styles/conversation-panel.css",
+        "D:/kk-studio-next/src/styles/design-surface.css",
+        "D:/kk-studio-next/src/styles/interaction.css",
+        "D:/kk-studio-next/src/styles/motion.css",
+        "D:/kk-studio-next/src/styles/catalog.css"
+      ],
+      "logos": [
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 20,
+            "y": 75,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-account.svg",
+          "class": "",
+          "parent": "account-logo logo",
+          "natural": [
+            30,
+            30
+          ],
+          "rect": {
+            "x": 26,
+            "y": 818,
+            "width": 30,
+            "height": 30
+          },
+          "style": {
+            "width": "30px",
+            "height": "30px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/account-logout.svg",
+          "class": "",
+          "parent": "",
+          "natural": [
+            16,
+            15
+          ],
+          "rect": {
+            "x": 173.5,
+            "y": 860,
+            "width": 14,
+            "height": 14
+          },
+          "style": {
+            "width": "14px",
+            "height": "14px",
+            "objectFit": "fill",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 24,
+            "y": 1007,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-hero.svg",
+          "class": "",
+          "parent": "start-brand",
+          "natural": [
+            64,
+            64
+          ],
+          "rect": {
+            "x": 1069.421875,
+            "y": 202.421875,
+            "width": 63.140625,
+            "height": 63.140625
+          },
+          "style": {
+            "width": "63.1406px",
+            "height": "63.1406px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        }
+      ],
+      "favicon": "http://127.0.0.1:1421/design/figma/logo.svg"
+    },
+    {
+      "state": "workspace",
+      "url": "http://127.0.0.1:1421/",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "runtime": {
+        "theme": "dark",
+        "floatingLayout": "true"
+      },
+      "app": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "development"
+      },
+      "scripts": [
+        "",
+        "http://127.0.0.1:1421/@vite/client",
+        "http://127.0.0.1:1421/src/main.tsx?t=1789060176162"
+      ],
+      "styleSheets": [
+        "D:/kk-studio-next/src/styles/global.css",
+        "D:/kk-studio-next/src/styles/ui-tokens.css",
+        "D:/kk-studio-next/src/styles/account-popup.css",
+        "D:/kk-studio-next/src/styles/canvas-hud.css",
+        "D:/kk-studio-next/src/styles/canvas-navigation.css",
+        "D:/kk-studio-next/src/styles/generation-count.css",
+        "D:/kk-studio-next/src/styles/local-generation.css",
+        "D:/kk-studio-next/src/styles/node-menu.css",
+        "D:/kk-studio-next/src/styles/canvas-context-menu.css",
+        "D:/kk-studio-next/src/styles/demo-results.css",
+        "D:/kk-studio-next/src/styles/canvas-actions.css",
+        "D:/kk-studio-next/src/styles/toolbar-icons.css",
+        "D:/kk-studio-next/src/styles/canvas-tools.css",
+        "D:/kk-studio-next/src/components/assets/assets.css",
+        "D:/kk-studio-next/src/components/settings/settings.css",
+        "D:/kk-studio-next/src/styles/shortcuts.css",
+        "D:/kk-studio-next/src/styles/workspace.css",
+        "D:/kk-studio-next/src/styles/responsive.css",
+        "D:/kk-studio-next/src/styles/sidebar.css",
+        "D:/kk-studio-next/src/styles/catalog-pages.css",
+        "D:/kk-studio-next/src/styles/conversation-panel.css",
+        "D:/kk-studio-next/src/styles/design-surface.css",
+        "D:/kk-studio-next/src/styles/interaction.css",
+        "D:/kk-studio-next/src/styles/motion.css",
+        "D:/kk-studio-next/src/styles/catalog.css"
+      ],
+      "logos": [
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 20,
+            "y": 75,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 24,
+            "y": 1007,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-message.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            12,
+            12
+          ],
+          "rect": {
+            "x": 1650.5,
+            "y": 427.5,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        }
+      ],
+      "favicon": "http://127.0.0.1:1421/design/figma/logo.svg"
+    },
+    {
+      "state": "model-menu",
+      "url": "http://127.0.0.1:1421/",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "runtime": {
+        "theme": "dark",
+        "floatingLayout": "true"
+      },
+      "app": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "development"
+      },
+      "scripts": [
+        "",
+        "http://127.0.0.1:1421/@vite/client",
+        "http://127.0.0.1:1421/src/main.tsx?t=1789060176162"
+      ],
+      "styleSheets": [
+        "D:/kk-studio-next/src/styles/global.css",
+        "D:/kk-studio-next/src/styles/ui-tokens.css",
+        "D:/kk-studio-next/src/styles/account-popup.css",
+        "D:/kk-studio-next/src/styles/canvas-hud.css",
+        "D:/kk-studio-next/src/styles/canvas-navigation.css",
+        "D:/kk-studio-next/src/styles/generation-count.css",
+        "D:/kk-studio-next/src/styles/local-generation.css",
+        "D:/kk-studio-next/src/styles/node-menu.css",
+        "D:/kk-studio-next/src/styles/canvas-context-menu.css",
+        "D:/kk-studio-next/src/styles/demo-results.css",
+        "D:/kk-studio-next/src/styles/canvas-actions.css",
+        "D:/kk-studio-next/src/styles/toolbar-icons.css",
+        "D:/kk-studio-next/src/styles/canvas-tools.css",
+        "D:/kk-studio-next/src/components/assets/assets.css",
+        "D:/kk-studio-next/src/components/settings/settings.css",
+        "D:/kk-studio-next/src/styles/shortcuts.css",
+        "D:/kk-studio-next/src/styles/workspace.css",
+        "D:/kk-studio-next/src/styles/responsive.css",
+        "D:/kk-studio-next/src/styles/sidebar.css",
+        "D:/kk-studio-next/src/styles/catalog-pages.css",
+        "D:/kk-studio-next/src/styles/conversation-panel.css",
+        "D:/kk-studio-next/src/styles/design-surface.css",
+        "D:/kk-studio-next/src/styles/interaction.css",
+        "D:/kk-studio-next/src/styles/motion.css",
+        "D:/kk-studio-next/src/styles/catalog.css"
+      ],
+      "logos": [
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 20,
+            "y": 75,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 24,
+            "y": 1007,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-model.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            20,
+            20
+          ],
+          "rect": {
+            "x": 396,
+            "y": 810.5,
+            "width": 20,
+            "height": 20
+          },
+          "style": {
+            "width": "20px",
+            "height": "20px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-model.svg",
+          "class": "model-glyph",
+          "parent": "model-option",
+          "natural": [
+            20,
+            20
+          ],
+          "rect": {
+            "x": 410,
+            "y": 555.5,
+            "width": 20,
+            "height": 20
+          },
+          "style": {
+            "width": "20px",
+            "height": "20px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-model.svg",
+          "class": "model-glyph",
+          "parent": "model-option",
+          "natural": [
+            20,
+            20
+          ],
+          "rect": {
+            "x": 410,
+            "y": 605.5,
+            "width": 20,
+            "height": 20
+          },
+          "style": {
+            "width": "20px",
+            "height": "20px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-model.svg",
+          "class": "model-glyph",
+          "parent": "model-option",
+          "natural": [
+            20,
+            20
+          ],
+          "rect": {
+            "x": 410,
+            "y": 655.5,
+            "width": 20,
+            "height": 20
+          },
+          "style": {
+            "width": "20px",
+            "height": "20px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-model.svg",
+          "class": "model-glyph",
+          "parent": "model-option",
+          "natural": [
+            20,
+            20
+          ],
+          "rect": {
+            "x": 410,
+            "y": 705.5,
+            "width": 20,
+            "height": 20
+          },
+          "style": {
+            "width": "20px",
+            "height": "20px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-credit.svg",
+          "class": "",
+          "parent": "cost-logo",
+          "natural": [
+            11,
+            11
+          ],
+          "rect": {
+            "x": 881,
+            "y": 815,
+            "width": 11,
+            "height": 11
+          },
+          "style": {
+            "width": "11px",
+            "height": "11px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-message.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            12,
+            12
+          ],
+          "rect": {
+            "x": 1650.5,
+            "y": 427.5,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        }
+      ],
+      "favicon": "http://127.0.0.1:1421/design/figma/logo.svg"
+    },
+    {
+      "state": "collapsed",
+      "url": "http://127.0.0.1:1421/",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "runtime": {
+        "theme": "dark",
+        "floatingLayout": "true"
+      },
+      "app": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "development"
+      },
+      "scripts": [
+        "",
+        "http://127.0.0.1:1421/@vite/client",
+        "http://127.0.0.1:1421/src/main.tsx?t=1789060176162"
+      ],
+      "styleSheets": [
+        "D:/kk-studio-next/src/styles/global.css",
+        "D:/kk-studio-next/src/styles/ui-tokens.css",
+        "D:/kk-studio-next/src/styles/account-popup.css",
+        "D:/kk-studio-next/src/styles/canvas-hud.css",
+        "D:/kk-studio-next/src/styles/canvas-navigation.css",
+        "D:/kk-studio-next/src/styles/generation-count.css",
+        "D:/kk-studio-next/src/styles/local-generation.css",
+        "D:/kk-studio-next/src/styles/node-menu.css",
+        "D:/kk-studio-next/src/styles/canvas-context-menu.css",
+        "D:/kk-studio-next/src/styles/demo-results.css",
+        "D:/kk-studio-next/src/styles/canvas-actions.css",
+        "D:/kk-studio-next/src/styles/toolbar-icons.css",
+        "D:/kk-studio-next/src/styles/canvas-tools.css",
+        "D:/kk-studio-next/src/components/assets/assets.css",
+        "D:/kk-studio-next/src/components/settings/settings.css",
+        "D:/kk-studio-next/src/styles/shortcuts.css",
+        "D:/kk-studio-next/src/styles/workspace.css",
+        "D:/kk-studio-next/src/styles/responsive.css",
+        "D:/kk-studio-next/src/styles/sidebar.css",
+        "D:/kk-studio-next/src/styles/catalog-pages.css",
+        "D:/kk-studio-next/src/styles/conversation-panel.css",
+        "D:/kk-studio-next/src/styles/design-surface.css",
+        "D:/kk-studio-next/src/styles/interaction.css",
+        "D:/kk-studio-next/src/styles/motion.css",
+        "D:/kk-studio-next/src/styles/catalog.css"
+      ],
+      "logos": [
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 22,
+            "y": 999,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-model.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            20,
+            20
+          ],
+          "rect": {
+            "x": 175,
+            "y": 810.5,
+            "width": 20,
+            "height": 20
+          },
+          "style": {
+            "width": "20px",
+            "height": "20px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-credit.svg",
+          "class": "",
+          "parent": "cost-logo",
+          "natural": [
+            11,
+            11
+          ],
+          "rect": {
+            "x": 660,
+            "y": 815,
+            "width": 11,
+            "height": 11
+          },
+          "style": {
+            "width": "11px",
+            "height": "11px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-message.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            12,
+            12
+          ],
+          "rect": {
+            "x": 1650.5,
+            "y": 427.5,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        }
+      ],
+      "favicon": "http://127.0.0.1:1421/design/figma/logo.svg"
+    },
+    {
+      "state": "landing-390",
+      "url": "http://127.0.0.1:1421/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "runtime": {
+        "theme": "dark",
+        "floatingLayout": "true"
+      },
+      "app": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "development"
+      },
+      "scripts": [
+        "",
+        "http://127.0.0.1:1421/@vite/client",
+        "http://127.0.0.1:1421/src/main.tsx?t=1789060176162"
+      ],
+      "styleSheets": [
+        "D:/kk-studio-next/src/styles/global.css",
+        "D:/kk-studio-next/src/styles/ui-tokens.css",
+        "D:/kk-studio-next/src/styles/account-popup.css",
+        "D:/kk-studio-next/src/styles/canvas-hud.css",
+        "D:/kk-studio-next/src/styles/canvas-navigation.css",
+        "D:/kk-studio-next/src/styles/generation-count.css",
+        "D:/kk-studio-next/src/styles/local-generation.css",
+        "D:/kk-studio-next/src/styles/node-menu.css",
+        "D:/kk-studio-next/src/styles/canvas-context-menu.css",
+        "D:/kk-studio-next/src/styles/demo-results.css",
+        "D:/kk-studio-next/src/styles/canvas-actions.css",
+        "D:/kk-studio-next/src/styles/toolbar-icons.css",
+        "D:/kk-studio-next/src/styles/canvas-tools.css",
+        "D:/kk-studio-next/src/components/assets/assets.css",
+        "D:/kk-studio-next/src/components/settings/settings.css",
+        "D:/kk-studio-next/src/styles/shortcuts.css",
+        "D:/kk-studio-next/src/styles/workspace.css",
+        "D:/kk-studio-next/src/styles/responsive.css",
+        "D:/kk-studio-next/src/styles/sidebar.css",
+        "D:/kk-studio-next/src/styles/catalog-pages.css",
+        "D:/kk-studio-next/src/styles/conversation-panel.css",
+        "D:/kk-studio-next/src/styles/design-surface.css",
+        "D:/kk-studio-next/src/styles/interaction.css",
+        "D:/kk-studio-next/src/styles/motion.css",
+        "D:/kk-studio-next/src/styles/catalog.css"
+      ],
+      "logos": [
+        {
+          "src": "/design/figma/logo.svg",
+          "class": "",
+          "parent": "logo",
+          "natural": [
+            26,
+            26
+          ],
+          "rect": {
+            "x": 19,
+            "y": 786,
+            "width": 26,
+            "height": 26
+          },
+          "style": {
+            "width": "26px",
+            "height": "26px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        },
+        {
+          "src": "/design/figma/logo-hero.svg",
+          "class": "",
+          "parent": "start-brand",
+          "natural": [
+            64,
+            64
+          ],
+          "rect": {
+            "x": 198.5,
+            "y": 97,
+            "width": 54,
+            "height": 54
+          },
+          "style": {
+            "width": "54px",
+            "height": "54px",
+            "objectFit": "contain",
+            "overflow": "clip"
+          },
+          "loaded": true
+        }
+      ],
+      "favicon": "http://127.0.0.1:1421/design/figma/logo.svg"
+    }
+  ]
+}

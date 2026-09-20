@@ -1,0 +1,133 @@
+.add-node-menu {
+  position: fixed;
+  z-index: 60;
+  width: 296px;
+  height: 586px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 32px);
+  padding: 23px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--ui-node-menu-border);
+  border-radius: 24px;
+  background: var(--ui-node-menu-bg);
+  box-shadow: var(--ui-node-menu-shadow);
+  color: var(--ui-node-menu-text);
+  animation: backdrop-enter var(--motion-fast) var(--motion-ease) both;
+}
+.add-node-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--ui-node-menu-muted);
+}
+.add-node-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.add-node-items > button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 0 0 52px;
+  width: 100%;
+  gap: 12px;
+  padding: 4px 0;
+  border-radius: 12px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19px;
+}
+.add-node-items > button:not(:disabled):hover {
+  background: var(--ui-node-menu-icon-bg);
+}
+.add-node-icon-box {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  margin-right: 4px;
+  background: var(--ui-node-menu-icon-bg);
+  border-radius: 12px;
+}
+.add-node-label {
+  white-space: nowrap;
+}
+.add-node-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: currentColor;
+  mask: var(--node-menu-asset) center / contain no-repeat;
+  flex-shrink: 0;
+}
+.add-node-icon-text {
+  --node-menu-asset: url("/design/figma/node-menu-text.svg");
+}
+.add-node-icon-table {
+  --node-menu-asset: url("/design/figma/node-menu-table.svg");
+}
+.add-node-icon-image {
+  --node-menu-asset: url("/design/figma/node-menu-image.svg");
+}
+.add-node-icon-video {
+  --node-menu-asset: url("/design/figma/node-menu-video.svg");
+}
+.add-node-icon-audio {
+  --node-menu-asset: url("/design/figma/node-menu-audio.svg");
+}
+.add-node-icon-director {
+  --node-menu-asset: url("/design/figma/node-menu-director.svg");
+}
+.add-node-icon-edit {
+  --node-menu-asset: url("/design/figma/node-menu-edit.svg");
+}
+.add-node-icon-workflow {
+  --node-menu-asset: url("/design/figma/node-menu-workflow.svg");
+}
+.add-node-icon-next {
+  --node-menu-asset: url("/design/figma/node-menu-next.svg");
+  width: 16px;
+  height: 16px;
+  margin-left: auto;
+  color: var(--ui-node-menu-muted);
+}
+.add-node-badge {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  font-size: 11px;
+  line-height: 13px;
+  font-weight: 700;
+  border-radius: 10px;
+  background: var(--ui-node-menu-text);
+  color: var(--ui-node-menu-bg);
+}
+.add-node-badge.is-model {
+  border-radius: 6px;
+  background: var(--ui-node-menu-badge);
+  color: var(--text-on-accent);
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 600;
+}
+.add-node-unavailable {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 2px 4px;
+  background: var(--ui-node-menu-bg);
+  color: var(--ui-node-menu-text);
+  font-size: 10px;
+  line-height: 12px;
+}
+.add-node-items > button:disabled:hover .add-node-unavailable {
+  display: block;
+}

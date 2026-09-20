@@ -1,0 +1,246 @@
+{
+  "expanded": {
+    "url": "http://127.0.0.1:1421/",
+    "runtime": {
+      "designSurface": "desktop",
+      "runtimeEntry": "src/main.tsx",
+      "runtimeMode": "development"
+    },
+    "rects": {
+      ".sidebar": {
+        "rect": {
+          "x": 0,
+          "y": 40,
+          "width": 291,
+          "height": 1040,
+          "top": 40,
+          "right": 291,
+          "bottom": 1080,
+          "left": 0
+        },
+        "background": "rgb(10, 10, 10) none repeat scroll 0% 0% / auto padding-box border-box",
+        "font": "13px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      },
+      ".workspace-content": {
+        "rect": {
+          "x": 291,
+          "y": 45,
+          "width": 1619,
+          "height": 1025,
+          "top": 45,
+          "right": 1910,
+          "bottom": 1070,
+          "left": 291
+        },
+        "background": "rgb(22, 22, 22) none repeat scroll 0% 0% / auto padding-box border-box",
+        "font": "13px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      },
+      ".canvas-toolbar": {
+        "rect": {
+          "x": 719,
+          "y": 998,
+          "width": 294,
+          "height": 50,
+          "top": 998,
+          "right": 1013,
+          "bottom": 1048,
+          "left": 719
+        },
+        "background": "rgb(26, 26, 26) none repeat scroll 0% 0% / auto padding-box border-box",
+        "font": "13px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      },
+      ".conversation-panel": {
+        "rect": {
+          "x": 1430,
+          "y": 61,
+          "width": 470,
+          "height": 998,
+          "top": 61,
+          "right": 1900,
+          "bottom": 1059,
+          "left": 1430
+        },
+        "background": "color(srgb 0.0862745 0.0862745 0.0862745 / 0.36) none repeat scroll 0% 0% / auto padding-box border-box",
+        "font": "13px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      },
+      ".chat-composer": {
+        "rect": {
+          "x": 1448,
+          "y": 854,
+          "width": 430,
+          "height": 170,
+          "top": 854,
+          "right": 1878,
+          "bottom": 1024,
+          "left": 1448
+        },
+        "background": "rgb(31, 31, 31) url(\"http://127.0.0.1:1421/design/figma/composer-bg.svg\") no-repeat scroll 50% 50% / 100% 100% padding-box border-box",
+        "font": "13px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      },
+      ".chat-composer textarea": {
+        "rect": {
+          "x": 1462,
+          "y": 869,
+          "width": 402,
+          "height": 117,
+          "top": 869,
+          "right": 1864,
+          "bottom": 986,
+          "left": 1462
+        },
+        "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+        "font": "14px / 17px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      }
+    },
+    "styles": [
+      "D:/kk-studio-next/src/styles/sidebar.css",
+      "D:/kk-studio-next/src/styles/account-popup.css",
+      "D:/kk-studio-next/src/styles/canvas-hud.css",
+      "D:/kk-studio-next/src/styles/canvas-navigation.css",
+      "D:/kk-studio-next/src/styles/generation-count.css",
+      "D:/kk-studio-next/src/styles/local-generation.css",
+      "D:/kk-studio-next/src/styles/node-menu.css",
+      "D:/kk-studio-next/src/styles/canvas-context-menu.css",
+      "D:/kk-studio-next/src/styles/demo-results.css",
+      "D:/kk-studio-next/src/styles/canvas-actions.css",
+      "D:/kk-studio-next/src/styles/toolbar-icons.css",
+      "D:/kk-studio-next/src/styles/canvas-tools.css",
+      "D:/kk-studio-next/src/styles/conversation-panel.css",
+      "D:/kk-studio-next/src/components/assets/assets.css",
+      "D:/kk-studio-next/src/components/settings/settings.css",
+      "D:/kk-studio-next/src/styles/shortcuts.css",
+      "D:/kk-studio-next/src/styles/workspace.css",
+      "D:/kk-studio-next/src/styles/responsive.css",
+      "D:/kk-studio-next/src/styles/catalog-pages.css",
+      "D:/kk-studio-next/src/styles/design-surface.css",
+      "D:/kk-studio-next/src/styles/interaction.css",
+      "D:/kk-studio-next/src/styles/motion.css",
+      "D:/kk-studio-next/src/styles/catalog.css",
+      "D:/kk-studio-next/src/styles/global.css",
+      "D:/kk-studio-next/src/styles/ui-tokens.css"
+    ],
+    "serviceWorker": null
+  },
+  "collapsed": {
+    "url": "http://127.0.0.1:1421/",
+    "runtime": {
+      "designSurface": "desktop",
+      "runtimeEntry": "src/main.tsx",
+      "runtimeMode": "development"
+    },
+    "rects": {
+      ".sidebar": {
+        "rect": {
+          "x": 0,
+          "y": 40,
+          "width": 61,
+          "height": 1040,
+          "top": 40,
+          "right": 61,
+          "bottom": 1080,
+          "left": 0
+        },
+        "background": "rgb(22, 22, 22) none repeat scroll 0% 0% / auto padding-box border-box",
+        "font": "13px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      },
+      ".workspace-content": {
+        "rect": {
+          "x": 69,
+          "y": 45,
+          "width": 1841,
+          "height": 1025,
+          "top": 45,
+          "right": 1910,
+          "bottom": 1070,
+          "left": 69
+        },
+        "background": "rgb(22, 22, 22) none repeat scroll 0% 0% / auto padding-box border-box",
+        "font": "13px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      },
+      ".canvas-toolbar": {
+        "rect": {
+          "x": 608,
+          "y": 998,
+          "width": 294,
+          "height": 50,
+          "top": 998,
+          "right": 902,
+          "bottom": 1048,
+          "left": 608
+        },
+        "background": "rgb(26, 26, 26) none repeat scroll 0% 0% / auto padding-box border-box",
+        "font": "13px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      },
+      ".conversation-panel": {
+        "rect": {
+          "x": 1430,
+          "y": 61,
+          "width": 470,
+          "height": 998,
+          "top": 61,
+          "right": 1900,
+          "bottom": 1059,
+          "left": 1430
+        },
+        "background": "color(srgb 0.0862745 0.0862745 0.0862745 / 0.36) none repeat scroll 0% 0% / auto padding-box border-box",
+        "font": "13px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      },
+      ".chat-composer": {
+        "rect": {
+          "x": 1448,
+          "y": 854,
+          "width": 430,
+          "height": 170,
+          "top": 854,
+          "right": 1878,
+          "bottom": 1024,
+          "left": 1448
+        },
+        "background": "rgb(31, 31, 31) url(\"http://127.0.0.1:1421/design/figma/composer-bg.svg\") no-repeat scroll 50% 50% / 100% 100% padding-box border-box",
+        "font": "13px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      },
+      ".chat-composer textarea": {
+        "rect": {
+          "x": 1462,
+          "y": 869,
+          "width": 402,
+          "height": 117,
+          "top": 869,
+          "right": 1864,
+          "bottom": 986,
+          "left": 1462
+        },
+        "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+        "font": "14px / 17px Inter, \"Microsoft YaHei\", \"PingFang SC\", sans-serif"
+      }
+    },
+    "styles": [
+      "D:/kk-studio-next/src/styles/sidebar.css",
+      "D:/kk-studio-next/src/styles/account-popup.css",
+      "D:/kk-studio-next/src/styles/canvas-hud.css",
+      "D:/kk-studio-next/src/styles/canvas-navigation.css",
+      "D:/kk-studio-next/src/styles/generation-count.css",
+      "D:/kk-studio-next/src/styles/local-generation.css",
+      "D:/kk-studio-next/src/styles/node-menu.css",
+      "D:/kk-studio-next/src/styles/canvas-context-menu.css",
+      "D:/kk-studio-next/src/styles/demo-results.css",
+      "D:/kk-studio-next/src/styles/canvas-actions.css",
+      "D:/kk-studio-next/src/styles/toolbar-icons.css",
+      "D:/kk-studio-next/src/styles/canvas-tools.css",
+      "D:/kk-studio-next/src/styles/conversation-panel.css",
+      "D:/kk-studio-next/src/components/assets/assets.css",
+      "D:/kk-studio-next/src/components/settings/settings.css",
+      "D:/kk-studio-next/src/styles/shortcuts.css",
+      "D:/kk-studio-next/src/styles/workspace.css",
+      "D:/kk-studio-next/src/styles/responsive.css",
+      "D:/kk-studio-next/src/styles/catalog-pages.css",
+      "D:/kk-studio-next/src/styles/design-surface.css",
+      "D:/kk-studio-next/src/styles/interaction.css",
+      "D:/kk-studio-next/src/styles/motion.css",
+      "D:/kk-studio-next/src/styles/catalog.css",
+      "D:/kk-studio-next/src/styles/global.css",
+      "D:/kk-studio-next/src/styles/ui-tokens.css"
+    ],
+    "serviceWorker": null
+  }
+}

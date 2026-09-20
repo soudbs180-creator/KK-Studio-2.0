@@ -1,0 +1,220 @@
+.canvas-top-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 9.393px;
+  z-index: 15;
+  width: auto;
+  height: 31.109px;
+}
+.canvas-zoom-trigger,
+.canvas-navigation-tools {
+  height: 31.109px;
+  border: 1.197px solid var(--border-default);
+  border-radius: 15.555px;
+  background: var(--bg-card);
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+.canvas-zoom-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4.786px;
+  width: 75.38px;
+  flex-shrink: 0;
+  font-size: 13.162px;
+}
+.canvas-zoom-trigger img {
+  width: 10.769px;
+  height: 5.983px;
+}
+.canvas-navigation-tools {
+  position: relative;
+  display: block;
+  padding: 0;
+  width: 196.227px;
+}
+.canvas-navigation-tools button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 2.393px;
+  height: 21.537px;
+  border-radius: 4.786px;
+  font-size: 13.162px;
+}
+.canvas-navigation-tools button:hover,
+.canvas-navigation-tools button[aria-pressed="true"] {
+  background: var(--border-default);
+}
+.canvas-navigation-tools img {
+  object-fit: contain;
+}
+.canvas-arrange img {
+  width: 13.755px;
+  height: 13.755px;
+}
+.canvas-background img {
+  width: 13.162px;
+  height: 13.162px;
+}
+.canvas-lines img {
+  width: 13.162px;
+  height: 14.491px;
+}
+.canvas-map-trigger img {
+  width: 13.162px;
+  height: 13.162px;
+}
+.canvas-arrange {
+  position: absolute;
+  top: 4.786px;
+  left: 9.57px;
+  width: 56.236px;
+}
+.canvas-background,
+.canvas-lines {
+  position: absolute;
+  top: 4.786px;
+  width: 21.537px;
+}
+.canvas-background {
+  left: 72.99px;
+}
+.canvas-lines {
+  left: 96.92px;
+}
+.canvas-map-trigger {
+  position: absolute;
+  top: 4.786px;
+  left: 120.85px;
+  width: 65.808px;
+}
+.canvas-navigation-divider {
+  position: absolute;
+  top: 8.38px;
+  left: 69.4px;
+  width: 1px;
+  height: 14.358px;
+  background: var(--border-default);
+  flex-shrink: 0;
+  justify-self: center;
+}
+.canvas-color-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.canvas-zoom-menu {
+  position: absolute;
+  /* Figma 100:16335 / 312:2710: popup sits 35px below the 31.109px
+     navigation capsule. Keep the measured source frame size instead of the
+     earlier compact approximation. */
+  top: 35px;
+  left: 0;
+  width: 196.227px;
+  height: 283.214px;
+  min-height: 283.214px;
+  padding: 8px;
+  border: 1.197px solid var(--border-default);
+  border-radius: 26.298px;
+  background: var(--bg-card);
+  box-shadow: 0 8px 20px #0003;
+}
+.canvas-zoom-menu button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 30px;
+  padding: 0 8px;
+  font-size: var(--ui-font-body);
+  font-weight: 500;
+  color: var(--text-primary);
+  border-radius: 6px;
+}
+.canvas-zoom-menu button:hover,
+.canvas-zoom-menu button:focus-visible {
+  background: var(--border-default);
+}
+.canvas-zoom-menu button[aria-checked="true"] {
+  color: var(--text-primary);
+  background: var(--bg-input);
+}
+.canvas-zoom-menu kbd {
+  font-size: var(--ui-font-caption);
+  color: var(--text-tertiary);
+}
+.zoom-menu-divider {
+  height: 1px;
+  margin: 5px 0;
+  background: var(--border-default);
+}
+.canvas-minimap {
+  position: absolute;
+  /* Figma 312:2711 / 100:16358 map popup. */
+  top: 35px;
+  right: 0;
+  width: 196.227px;
+  height: 166.314px;
+  padding: 20.04px 31.11px 35px 44.27px;
+  border: 1.197px solid var(--border-default);
+  border-radius: 11.965px;
+  background: var(--bg-card);
+  box-shadow: 0 8px 20px #0003;
+}
+.minimap-surface {
+  position: relative;
+  width: 120.847px;
+  height: 111.275px;
+  background: #111;
+  border-radius: 2px;
+}
+.minimap-node {
+  position: absolute;
+  background: #444;
+  border-radius: 2px;
+}
+.minimap-node:hover,
+.minimap-node:focus-visible {
+  background: #777;
+}
+.minimap-empty {
+  color: #858585;
+  font-size: 10px;
+}
+@media (max-width: 800px) {
+  .canvas-navigation-tools {
+    display: grid;
+    grid-template-columns: 56.24px 1px 21.54px 21.54px 65.81px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 9px;
+    gap: 0;
+  }
+  .canvas-arrange,
+  .canvas-background,
+  .canvas-lines,
+  .canvas-map-trigger,
+  .canvas-navigation-divider {
+    position: static;
+  }
+  .canvas-zoom-menu {
+    width: 150px;
+    height: 224px;
+    min-height: 224px;
+    padding: 6px;
+  }
+  .canvas-zoom-menu button {
+    font-size: var(--ui-font-body);
+    height: 28px;
+  }
+}

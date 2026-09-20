@@ -1,0 +1,61 @@
+{
+  "node": "156:28536 喜欢收藏页面",
+  "source": "docs/reference/replan-2026-09-07/156-28536-context.txt + 156-28536.png (Figma MCP 缓存，2026-09-07 02:50)",
+  "compared": "src/components/CatalogPanel.tsx / SavedPane.tsx / src/styles/catalog.css",
+  "design": {
+    "shell": "900x725, bg #1f1f1f, border #3c3c3c, radius 80px",
+    "handle": "36x3 #d9d9d9 radius 16, 顶部居中",
+    "searchBox": "812x58, bg #1a1a1a, radius 20, 图标 14.7px @(26,22), 占位 20px #3c3c3c",
+    "tabs": "6 项(全部/喜欢收藏/创作页/项目/类型/文件资产), 120.3x40.7, gap 18, radius 20, 20px Medium; 选中=bg #1a1a1a + 文字 #d9d9d9, 未选中=无底 + #858585",
+    "likesColumn": "429 宽, 无边框盒; 2x2 磁卡网格 396.53x429.41, gap 7; 磁卡 194.8x210.7, 基座 #333 radius 10; 图片区 192.1x132.5 #1f1f1f radius 10; 提示词区 192.1x72.9 #1f1f1f radius 10; 名称行 图片名字.png + 编辑chip(36x13) + 铅笔 + 删除chip(27x11); 心形在图片左上角",
+    "favoritesColumn": "429 宽, 盒 bg #1a1a1a border #3c3c3c radius 10; 列表行 399x71 #1f1f1f border #3c3c3c radius 10, gap 8; 会话标签 + 提示词 2 行 + 编辑/删除",
+    "shortcutHints": "底栏 Enter 打开 / Esc 退出 (PNG OCR y≈692-707px 确认底部)",
+    "emptyState": "原稿无空态图(样例为填满态), 实现自备空态"
+  },
+  "implementationBefore": {
+    "likesPane": "带边框盒(border+bg-card+padding 15)",
+    "likeCard": "bg-input 单块+边框, 无 #333 基座与内区圆角",
+    "likeGrid": "gap 8, 卡片 ~210 宽",
+    "searchMargin": "50px 43px 32px",
+    "searchIcon": "16px",
+    "placeholder": "var(--text-tertiary) #707070",
+    "likeFooter": "心形图标 + 名称 + 编辑/删除"
+  },
+  "implementationAfter": {
+    "likesPane": "border 0 / background transparent / padding 0",
+    "likeCard": "bg var(--bg-card-soft) #333333, border 0; 图片区 var(--bg-input) radius 10 margin-bottom 5; 提示词区 var(--bg-input) radius 10 border-top 0",
+    "likeGrid": "width 396px, gap 7px",
+    "searchMargin": "50px 44px 32px (=812/900)",
+    "searchIcon": "15px (≈14.7)",
+    "placeholder": "var(--border-default) #3c3c3c",
+    "likeFooter": "仅 名称 + 编辑/删除 (心形已仅存图片左上角)",
+    "token": "新增 --bg-card-soft (dark #333333 / light #f7f7f7), 未扩 ui:check 基线"
+  },
+  "fixes": [
+    "喜欢栏去边框盒",
+    "磁卡 #333 基座 + #1f1f1f 圆角内区(图片/提示词两块)",
+    "网格 396px/7px gap",
+    "footer 去冗余心形",
+    "placeholder #3c3c3c",
+    "图标 15px",
+    "搜索边距 44px"
+  ],
+  "remainingDiffs": [
+    "提示词正文 10-11px vs 原稿 6px（6px 为设计稿缩放产物不可读，保留可读字号并登记）",
+    "收藏行星形标识为工程补充（原稿行无星形）",
+    "152:28350 搜索结果态原稿未缓存，交互已有测试覆盖待补证",
+    "编辑铅笔小图标未加（UiIcon 映射名待定）"
+  ],
+  "verification": {
+    "typecheck": "pass",
+    "build": "pass",
+    "ui:check": "0 违规 (注释内 #333/#1f1f1f 字面量误报已通过改注释消除)",
+    "format": "prettier --write SavedPane.tsx + 并行会话未跟踪 canvas-actions/demo-results spec (幂等无损)",
+    "browser": "frontend.spec + ui-motion.spec 25 passed",
+    "fullVerify": "55 passed / 0 failed, exit 0"
+  },
+  "evidence": [
+    "docs/evidence/catalog-saved-desktop.png (900x726 双栏同状态, 测试自动落盘)",
+    "docs/evidence/catalog-1920.png / catalog-1440.png / catalog-768.png / catalog-390.png"
+  ]
+}

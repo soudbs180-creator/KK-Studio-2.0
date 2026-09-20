@@ -1,0 +1,9 @@
+{
+  "name": "KK Studio · 可编辑补充页面",
+  "id": "kk-studio-editable-supplement",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": { "allowedDomains": ["none"] }
+}

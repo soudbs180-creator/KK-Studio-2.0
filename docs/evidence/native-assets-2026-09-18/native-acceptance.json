@@ -1,0 +1,50 @@
+{
+  "sourceCommit": "c855881",
+  "executable": "D:\\kk-studio-next\\.worktrees\\TASK-INTEGRATION-001\\src-tauri\\target\\release\\kk-studio.exe",
+  "bundle": "index-CBwa_Zj7.js",
+  "runtime": {
+    "url": "http://tauri.localhost/",
+    "entry": "src/main.tsx",
+    "dataRoot": "D:\\kk-studio-next\\.worktrees\\TASK-INTEGRATION-001\\.tmp\\t3a-native-data",
+    "webviewProfiles": [
+      "t3a-profile-1",
+      "t3a-profile-2",
+      "t3a-profile-3"
+    ],
+    "browser": "Edg/153.0.4234.46"
+  },
+  "asset": {
+    "assetId": "asset-431ced6916a2a21a156e3870",
+    "sha256": "431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460",
+    "bytes": 68,
+    "recordPath": "D:\\kk-studio-next\\.worktrees\\TASK-INTEGRATION-001\\.tmp\\t3a-native-data\\assets\\records\\asset-431ced6916a2a21a156e3870.json",
+    "blobPath": "D:\\kk-studio-next\\.worktrees\\TASK-INTEGRATION-001\\.tmp\\t3a-native-data\\assets\\blobs\\431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460",
+    "recordSha256": "f0b6ae774bb5f6dac7dadecd556d0686bbf9466ade8c05af26e8b44c0f6c1d35",
+    "beforeBlobHash": "431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460",
+    "afterTamperHash": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+    "restoredHash": "431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460"
+  },
+  "snapshot": {
+    "path": "D:\\kk-studio-next\\.worktrees\\TASK-INTEGRATION-001\\.tmp\\t3a-native-data\\projects\\creation-v2.json",
+    "beforeSha256": "5efd6f3f293c7485db5c630c122b77b7b755bfb350de02318f1fa5c072dcbec8",
+    "afterTamperSha256": "5efd6f3f293c7485db5c630c122b77b7b755bfb350de02318f1fa5c072dcbec8",
+    "unchanged": true
+  },
+  "checks": {
+    "initialListCount": 1,
+    "firstReadAssetSha256": "431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460",
+    "secondReadAssetSha256": "431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460",
+    "secondProfileBodyHasProject": false,
+    "missingError": [
+      "corrupt: 素材原件 SHA-256 校验失败，已保留原文件",
+      "corrupt: 素材原件 SHA-256 校验失败，已保留原文件"
+    ],
+    "missingBody": "KK Studio\n文件\n编辑\n窗口\n帮助\n前端预览\nKK Studio\n开始创作\n项目库\nSkill\nComfyUI 工作流\n项目\nKK项目\nKK工作流\n未分组\nKK工作流\nPrototype\n读取保护：项目数据无法完整读取，原件已保留。 本次修改仅在内存中。\n重新读取\n下载未保存草稿\nKK Studio\n\n属于你的多模态 Agent 团队\n\nkk-image-2\n批量\n1 张\n4 张\n8 张\n16 张\n32 张\n数据\nBYOK 本地\n仅本地\n平台额度（Prototype）\nSkill\n插件\n自动\n创作灵感\nSkill\nH3 精选\n特效包装\n品牌广告\n影视片头\nMV\n二次元 PV\nH3 精选\n蓝调时刻 · 城市短片\n\n用一张参考图规划镜头、节奏和配乐，适合快速验证画面方向。\n\n品牌广告\n产品故事板\n\n把产品卖点拆成可编辑的画面节点，再交给模型继续完善。\n\n音乐 MV\n音乐 MV 分镜\n\n从一句歌词开始，生成镜头草稿与视觉参考，保持创作方向可控。",
+    "missingBodyShowsProtection": true
+  },
+  "errors": {
+    "first": [],
+    "second": [],
+    "third": []
+  }
+}

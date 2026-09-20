@@ -1,0 +1,249 @@
+.canvas-hud {
+  position: absolute;
+  /* Narrow-screen layout; desktop anchors are specified below. */
+  top: 26.5px;
+  left: 19px;
+  width: calc(var(--canvas-usable-width, 100%) - 40px);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  z-index: 20;
+  pointer-events: none;
+}
+.canvas-hud > * {
+  pointer-events: auto;
+}
+.canvas-hud-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.canvas-hud-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  margin-right: 0;
+  flex-shrink: 0;
+}
+
+.canvas-hud .task-list-wrapper,
+.canvas-hud .demo-library-trigger,
+.canvas-hud .canvas-top-right {
+  position: relative;
+  inset: auto;
+  flex-shrink: 0;
+}
+.canvas-hud .task-button {
+  width: 93px;
+  min-width: 93px;
+  height: 30px;
+  top: auto;
+  left: auto;
+}
+.canvas-hud .demo-library-trigger {
+  height: 30px;
+  min-height: 30px;
+  padding: 0 8px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.canvas-hud .chat-reopen {
+  position: relative;
+  inset: auto;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+}
+.canvas-hud .task-panel {
+  /* Figma 312:2679 task panel: 196×240, 8px radius, zero inner padding.
+     The component stylesheet is loaded after workspace.css, so keep the
+     measured source geometry here instead of letting the responsive shell
+     approximation widen the panel. */
+  width: 196px;
+  height: 240px;
+  min-height: 240px;
+  padding: 0;
+  gap: 0;
+  border-radius: 8px;
+}
+.canvas-hud .task-list-wrapper {
+  /* Centering a 30px task capsule in the 31.109px Figma HUD row yields a
+     fractional 0.0545px drift in Chromium; cancel that subpixel remainder. */
+  margin-top: -0.07px;
+}
+.canvas-hud .task-button {
+  /* Chromium rounds layout coordinates to 1/64px; this keeps the source
+     y=67px edge exact after centering beside the 31.109px nav capsule. */
+  transform: translateY(-0.015625px);
+}
+.canvas-hud .task-panel-tabs {
+  gap: 4px;
+  padding-bottom: 0;
+  height: 14px;
+  align-items: flex-start;
+}
+.canvas-hud .task-tab {
+  min-height: 14px;
+  height: 14px;
+  position: relative;
+  padding: 2px 0 0;
+  font-size: 8px;
+  line-height: 10px;
+  background: transparent;
+  z-index: 0;
+}
+.canvas-hud .task-tab.active {
+  background: transparent;
+}
+.canvas-hud .task-tab.active::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 14px;
+  border-radius: 8px;
+  background: var(--bg-card-hover);
+  z-index: -1;
+}
+.canvas-hud .task-empty {
+  min-height: 174px;
+  gap: 8px;
+  padding: 18px 8px;
+}
+.canvas-hud .task-empty strong {
+  font-size: var(--ui-font-label);
+}
+.canvas-hud .task-empty p {
+  font-size: var(--ui-font-body);
+  line-height: 1.5;
+  text-align: center;
+}
+.canvas-hud .task-workbench-link {
+  display: block;
+  width: 170px;
+  margin: 12px auto 0;
+  padding: 6px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  color: var(--text-accent);
+  font-size: 9px;
+  text-align: center;
+}
+.canvas-hud .task-detail-action {
+  width: 100%;
+  margin-top: 8px;
+  padding: 5px 8px;
+  border: 1px solid var(--border-default);
+  border-radius: 7px;
+  color: var(--text-accent);
+  font-size: 9px;
+}
+@media (max-width: 1200px) {
+  .canvas-hud .canvas-top-right {
+    order: 2;
+  }
+  /* The narrow conversation layout owns the full canvas. The side-by-side
+     navigation placement below is reserved for the measured desktop frame. */
+  .workspace.chat-mobile .canvas-top-right {
+    display: none;
+  }
+  .canvas-hud-right {
+    gap: 8px;
+  }
+  .canvas-hud .chat-reopen.only-narrow {
+    display: grid;
+    order: 3;
+  }
+  .workspace.chat-mobile .canvas-hud .chat-reopen.only-narrow {
+    display: none;
+  }
+}
+@media (min-width: 801px) and (max-width: 1200px) {
+  .canvas-hud-right {
+    position: relative;
+  }
+  .canvas-hud .chat-reopen.only-narrow {
+    position: absolute;
+    right: 0;
+    top: 38px;
+    transition: none;
+  }
+}
+@media (max-width: 800px) {
+  .canvas-hud {
+    top: 21px;
+    left: 13px;
+    width: calc(var(--canvas-usable-width, 100%) - 24px);
+    gap: 8px;
+  }
+  .canvas-hud-actions {
+    gap: 8px;
+  }
+  .canvas-hud .demo-library-trigger,
+  .canvas-hud .chat-reopen {
+    font-size: 11px;
+  }
+  .canvas-hud .chat-reopen.only-narrow {
+    order: 3;
+  }
+  .canvas-hud .task-panel {
+    width: min(196px, calc(var(--canvas-usable-width) - 24px));
+  }
+}
+
+/* Latest frames: task follows the left frame edge; navigation and toolbar
+   stay fixed against the right edge through either sidebar state. */
+@media (min-width: 1201px) {
+  .canvas-hud {
+    top: 27px;
+    left: var(--ui-workspace-task-inset);
+    right: var(--ui-workspace-nav-right);
+    width: auto;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+  }
+  .canvas-hud .task-list-wrapper {
+    margin: 0;
+  }
+  .canvas-hud .task-button {
+    transform: none;
+  }
+  .canvas-hud-right {
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .canvas-hud .chat-reopen {
+    width: 18px;
+    height: 18px;
+    flex-basis: 18px;
+    min-width: 18px;
+    margin-top: 7px;
+  }
+  .canvas-hud .chat-reopen::before {
+    content: "";
+    position: absolute;
+    inset: -7px;
+  }
+  .canvas.has-chat .canvas-hud-right {
+    /* The navigation capsule remains usable while chat is open. Keep its
+       right edge 11px before the 470px conversation rail. */
+    margin-right: calc(var(--conversation-width) - 12px);
+  }
+  .canvas .canvas-toolbar {
+    left: calc(100% - var(--ui-workspace-toolbar-right-center));
+    margin-left: 0;
+  }
+  /* Figma's 18px right-panel instance carries a 21.5px stroke-inclusive
+     asset. Keep the hit box at 18px while matching the visible glyph size. */
+  .canvas-hud .chat-reopen img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 21.5px;
+    height: 21.5px;
+    transform: translate(-50%, -50%);
+  }
+}

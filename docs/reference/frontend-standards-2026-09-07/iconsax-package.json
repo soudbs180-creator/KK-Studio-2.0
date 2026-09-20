@@ -1,0 +1,10 @@
+{
+  "version": "0.0.8",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rendinjast/iconsax-react.git",
+    "directory": "packages/iconsax-react"
+  },
+  "dist.integrity": "sha512-l3dVk4zGtkkJHgvNYqAf0wDKqnKxXykee5/DoESGo2JvSYwaxajJUHSX2YrPRXSov8Hd8ClGFwJxCEaEjrFD1Q=="
+}

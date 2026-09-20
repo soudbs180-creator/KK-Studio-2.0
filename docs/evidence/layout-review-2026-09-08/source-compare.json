@@ -1,0 +1,205 @@
+{
+  "geometry": {
+    "toolbar": {
+      "toolbar-add": {
+        "x": 5,
+        "y": 5,
+        "width": 40,
+        "height": 40
+      },
+      "toolbar-current-tool": {
+        "x": 61,
+        "y": 5,
+        "width": 40,
+        "height": 40
+      },
+      "toolbar-toggle": {
+        "x": 103,
+        "y": 5,
+        "width": 20,
+        "height": 40
+      },
+      "toolbar-favorite": {
+        "x": 125,
+        "y": 5,
+        "width": 40,
+        "height": 40
+      },
+      "toolbar-assets": {
+        "x": 167,
+        "y": 5,
+        "width": 40,
+        "height": 40
+      },
+      "toolbar-help": {
+        "x": 225,
+        "y": 10,
+        "width": 30,
+        "height": 30
+      }
+    },
+    "navigation": {
+      "canvas-arrange": {
+        "x": 8,
+        "y": 4,
+        "width": 47,
+        "height": 18
+      },
+      "canvas-background": {
+        "x": 61,
+        "y": 4,
+        "width": 18,
+        "height": 18
+      },
+      "canvas-lines": {
+        "x": 81,
+        "y": 4,
+        "width": 18,
+        "height": 18
+      },
+      "canvas-map-trigger": {
+        "x": 101,
+        "y": 4,
+        "width": 55,
+        "height": 18
+      }
+    },
+    "disabledOpacity": "0.45",
+    "toolbarColor": "rgb(26, 26, 26)",
+    "openMenu": {
+      "x": 0,
+      "y": 28,
+      "width": 97,
+      "height": 140
+    }
+  },
+  "expectedToolbar": {
+    "toolbar-add": {
+      "x": 5,
+      "y": 5,
+      "width": 40,
+      "height": 40
+    },
+    "toolbar-current-tool": {
+      "x": 61,
+      "y": 5,
+      "width": 40,
+      "height": 40
+    },
+    "toolbar-toggle": {
+      "x": 103,
+      "y": 5,
+      "width": 20,
+      "height": 40
+    },
+    "toolbar-favorite": {
+      "x": 125,
+      "y": 5,
+      "width": 40,
+      "height": 40
+    },
+    "toolbar-assets": {
+      "x": 167,
+      "y": 5,
+      "width": 40,
+      "height": 40
+    },
+    "toolbar-help": {
+      "x": 225,
+      "y": 10,
+      "width": 30,
+      "height": 30
+    }
+  },
+  "expectedNavigation": {
+    "canvas-arrange": {
+      "x": 8,
+      "y": 4,
+      "width": 47,
+      "height": 18
+    },
+    "canvas-background": {
+      "x": 61,
+      "y": 4,
+      "width": 18,
+      "height": 18
+    },
+    "canvas-lines": {
+      "x": 81,
+      "y": 4,
+      "width": 18,
+      "height": 18
+    },
+    "canvas-map-trigger": {
+      "x": 101,
+      "y": 4,
+      "width": 55,
+      "height": 18
+    }
+  },
+  "toolbarDelta": {
+    "toolbar-add": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "toolbar-current-tool": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "toolbar-toggle": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "toolbar-favorite": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "toolbar-assets": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "toolbar-help": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    }
+  },
+  "navigationDelta": {
+    "canvas-arrange": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "canvas-background": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "canvas-lines": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "canvas-map-trigger": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    }
+  },
+  "remaining": "Glyphs in the bottom toolbar still use legacy Lucide; responsive placement and screen-space controls are engineering supplements."
+}

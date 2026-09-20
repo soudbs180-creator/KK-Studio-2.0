@@ -1,0 +1,66 @@
+<frame id="1:8090" name="右边侧边栏" x="1429" y="56" width="472" height="1003">
+  <frame id="71:15668" name="背景框" x="1429" y="56" width="472" height="1003">
+    <rounded-rectangle id="4:5" name="Rectangle 4" x="1431" y="56" width="470" height="1003" />
+    <rounded-rectangle id="4:18" name="Rectangle 5" x="1429" y="540" width="4" height="30" />
+  </frame>
+  <text id="21:111812" name="请确保不侵权，合法使用" x="1611" y="1035" width="110" height="12" />
+  <frame id="71:15667" name="顶部信息" x="1451" y="73" width="426" height="24">
+    <text id="21:119284" name="KK Studio" x="1451" y="74" width="149" height="23" />
+    <instance id="124:17691" name="右展开和关闭" x="1859" y="74" width="18" height="18" />
+    <vector id="21:119305" name="路径 201" x="1816" y="73" width="20.000837326049805" height="20.002151489257812" />
+  </frame>
+  <frame id="71:15666" name="聊天组件" x="1451" y="129" width="431" height="896">
+    <frame id="312:2708" name="AI回复" x="1451" y="429" width="430" height="181.77371215820312">
+      <text id="23:127648" name="KK Studio" x="1468" y="429" width="149" height="23" />
+      <frame id="23:127637" name="kk-studio 6" x="1451" y="429" width="11" height="11" />
+      <text id="94:16104" name="21:9 超宽横版，超写实电商套装产品摄影。画面参考专业电动工具“整套配件展示”的构图，但所有产品必须严格使用参考图中的 KIMO 20V 黑绿色电动工具套装。场景是一块非常干净、平整的暖白色展示台面，放置在浅色木质家居或木工作业空间中。背景只隐约出现浅色木板、木质结构和少量空间层次，背景轻微虚化，不出现杂乱工具、木屑、油污或施工垃圾。整体环境明亮、自然、高级，像真实拍摄的 Amazon 电商套装副图。镜头采用前上方约 35°轻微俯拍，不是完全正俯视。所有产品真实平放在同一个台面上，保持统一透视和真实接触阴影。" x="1451" y="459" width="430" height="120" />
+      <frame id="312:2705" name="Frame 26" x="1451" y="598" width="80.26168823242188" height="12.773719787597656">
+        <frame id="94:16105" name="icon-copy" x="0" y="0" width="12.773696899414062" height="12.773719787597656" />
+        <frame id="94:16117" name="icon-star" x="23.773696899414062" y="0.2979249954223633" width="12.77261734008789" height="12.17786979675293" />
+        <frame id="94:16108" name="icon-refresh-cw" x="47.54631423950195" y="0.6386861801147461" width="11.49634838104248" height="11.496347427368164" />
+        <frame id="94:16113" name="icon-ellipsis" x="70.04266357421875" y="5.748173713684082" width="10.219022750854492" height="1.277372121810913" />
+      </frame>
+    </frame>
+    <frame id="312:2709" name="我方对话" x="1451" y="129" width="431" height="292.82928466796875">
+      <rounded-rectangle id="23:127665" name="Rectangle 36" x="1451" y="242" width="431" height="160" />
+      <rounded-rectangle id="23:127678" name="Rectangle 37" x="1793" y="129" width="89" height="102" />
+      <frame id="312:2706" name="Group 127" x="1826.8770751953125" y="408.82928466796875" width="35.1229248046875" height="13" />
+      <text id="23:127666" name="21:9 超宽横版，超写实电商套装产品摄影。画面参考专业电动工具“整套配件展示”的构图，但所有产品必须严格使用参考图中的 KIMO 20V 黑绿色电动工具套装。场景是一块非常干净、平整的暖白色展示台面，放置在浅色木质家居或木工作业空间中。背景只隐约出现浅色木板、木质结构和少量空间层次，背景轻微虚化，不出现杂乱工具、木屑、油污或施工垃圾。整体环境明亮、自然、高级，像真实拍摄的 Amazon 电商套装副图。镜头采用前上方约 35°轻微俯拍，不是完全正俯视。所有产品真实平放在同一个台面上，保持统一透视和真实接触阴影。" x="1474" y="262" width="384" height="120" />
+      <frame id="23:127772" name="Group 10" x="1828" y="170" width="20" height="20" />
+    </frame>
+    <frame id="71:15665" name="输入框" x="1451" y="855" width="430" height="170">
+      <vector id="1:7216" name="矩形 6" x="1451" y="855" width="430" height="170" />
+      <text id="21:119283" name="描述你想要生成的内容" x="1465" y="871" width="140" height="17" />
+      <frame id="71:15664" name="输入框底部栏" x="1465" y="987" width="403" height="24">
+        <ellipse id="21:119277" name="Ellipse 5" x="1465" y="987" width="24" height="24" />
+        <instance id="94:16093" name="Component 1" x="1844" y="987" width="24" height="24" />
+        <rounded-rectangle id="21:111832" name="Rectangle 32" x="1780" y="987" width="58" height="24" />
+        <text id="21:119262" name="自动" x="1790" y="992" width="24" height="15" />
+        <vector id="21:119263" name="路径 295" x="1818" y="997" width="10" height="5" />
+        <vector id="21:119278" name="路径 297" x="1477" y="993" width="12.000000600782187" height="12.000000600781732" />
+        <vector id="21:119279" name="路径 296" x="1477" y="993" width="12.000000600782187" height="12.000000600781732" />
+        <line id="21:119296" name="Line 8" x="1773" y="991" width="6.993823262746446e-7" height="16" />
+        <frame id="21:119291" name="icon-mic" x="1755" y="992" width="10" height="14.285709381103516" />
+        <frame id="133:17947" name="Frame 10" x="1493" y="987" width="194" height="24">
+          <frame id="133:17944" name="Group 108" x="0" y="0" width="58" height="24">
+            <rounded-rectangle id="21:119267" name="Rectangle 34" x="0" y="0" width="58" height="24" />
+            <text id="21:119268" name="模型" x="24" y="5" width="24" height="15" />
+            <frame id="21:119269" name="icon-package" x="8" y="5" width="12.465323448181152" height="13.848916053771973" />
+          </frame>
+          <line id="21:119281" name="Line 7" x="63" y="4" width="6.993823262746446e-7" height="16" />
+          <frame id="133:17945" name="Group 109" x="68" y="0" width="58" height="24">
+            <rounded-rectangle id="21:119265" name="Rectangle 33" x="68" y="0" width="58" height="24" />
+            <text id="21:119266" name="Skill" x="93" y="6" width="24" height="15" />
+            <frame id="21:119274" name="icon-puzzle" x="78" y="6" width="12" height="12" />
+          </frame>
+          <line id="23:127780" name="Line 9" x="131" y="4" width="6.993823262746446e-7" height="16" />
+          <frame id="133:17946" name="Group 110" x="136" y="0" width="58" height="24">
+            <rounded-rectangle id="23:127776" name="Rectangle 38" x="136" y="0" width="58" height="24" />
+            <text id="23:127777" name="插件" x="161" y="5" width="24" height="15" />
+            <frame id="23:127781" name="icon-unplug" x="145" y="5.50390625" width="12" height="12" />
+          </frame>
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+</frame>
