@@ -89,6 +89,24 @@ fn get_provider_base_url(provider: &str) -> String {
     }
 }
 
+/// Provider response bodies and transport errors may contain URLs, request
+/// details, or echoed credentials. Keep the useful HTTP class while exposing
+/// only a fixed, user-facing message across the Tauri IPC boundary.
+fn safe_provider_error(status: reqwest::StatusCode) -> String {
+    let detail = match status.as_u16() {
+        401 => "认证失败，请检查 API Key。",
+        403 => "没有权限，请检查项目或模型权限。",
+        429 => "请求过于频繁，请稍后重试。",
+        500..=599 => "供应商暂时不可用，请稍后重试。",
+        _ => "供应商拒绝了请求，请检查模型和输入。",
+    };
+    format!("API 错误 ({})：{}", status.as_u16(), detail)
+}
+
+fn safe_provider_request_error() -> String {
+    "请求失败：无法连接模型服务，请检查地址和网络。".to_string()
+}
+
 // ========== 对话结构 ==========
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -587,6 +605,15 @@ async fn test_connection(
     api_key: String,
     model: Option<String>,
 ) -> Result<TestResult, String> {
+    test_connection_with_client(reqwest::Client::new(), base_url, api_key, model).await
+}
+
+async fn test_connection_with_client(
+    client: reqwest::Client,
+    base_url: String,
+    api_key: String,
+    model: Option<String>,
+) -> Result<TestResult, String> {
     if api_key.is_empty() {
         return Ok(TestResult {
             success: false,
@@ -594,7 +621,6 @@ async fn test_connection(
         });
     }
 
-    let client = reqwest::Client::new();
     let use_model = model.unwrap_or_else(|| "gpt-4o".to_string());
     let url = format!("{}/chat/completions", base_url.trim_end_matches('/'));
 
@@ -609,14 +635,13 @@ async fn test_connection(
         }))
         .send()
         .await
-        .map_err(|e| format!("请求失败: {}", e))?;
+        .map_err(|_| safe_provider_request_error())?;
 
     if !response.status().is_success() {
         let status = response.status();
-        let text = response.text().await.unwrap_or_default();
         return Ok(TestResult {
             success: false,
-            message: format!("API 错误 ({}): {}", status, text),
+            message: safe_provider_error(status),
         });
     }
 
@@ -699,12 +724,11 @@ async fn chat_completion(
         }))
         .send()
         .await
-        .map_err(|e| format!("API 请求失败: {}", e))?;
+        .map_err(|_| safe_provider_request_error())?;
 
     if !response.status().is_success() {
         let status = response.status();
-        let text = response.text().await.unwrap_or_default();
-        return Err(format!("API 错误 ({}): {}", status, text));
+        return Err(safe_provider_error(status));
     }
 
     let data: serde_json::Value = response
@@ -769,12 +793,11 @@ async fn chat_completion_stream(
         }))
         .send()
         .await
-        .map_err(|e| format!("API 请求失败: {}", e))?;
+        .map_err(|_| safe_provider_request_error())?;
 
     if !response.status().is_success() {
         let status = response.status();
-        let text = response.text().await.unwrap_or_default();
-        let err_msg = format!("API 错误 ({}): {}", status, text);
+        let err_msg = safe_provider_error(status);
         let _ = app.emit(
             "chat_chunk",
             ChatChunkEvent {
@@ -798,8 +821,8 @@ async fn chat_completion_stream(
     while let Some(chunk_result) = stream.next().await {
         let chunk = match chunk_result {
             Ok(c) => c,
-            Err(e) => {
-                let err_msg = format!("流读取错误: {}", e);
+            Err(_) => {
+                let err_msg = "流读取错误，请重试。".to_string();
                 let _ = app.emit(
                     "chat_chunk",
                     ChatChunkEvent {
@@ -1104,4 +1127,64 @@ fn main() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running kk Studio application");
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{test_connection, test_connection_with_client};
+    use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+    #[tokio::test]
+    async fn provider_error_body_does_not_cross_connection_command() {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = tokio::spawn(async move {
+            let (mut socket, _) = listener.accept().await.unwrap();
+            let mut request = [0; 4096];
+            socket.read(&mut request).await.unwrap();
+            let body = r#"{"error":"private-prompt api-key-test-only signed-url-test-only"}"#;
+            let response = format!(
+                "HTTP/1.1 429 Too Many Requests\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                body.len(), body
+            );
+            socket.write_all(response.as_bytes()).await.unwrap();
+        });
+        let result = tokio::time::timeout(
+            std::time::Duration::from_secs(5),
+            test_connection_with_client(
+                reqwest::Client::builder().no_proxy().build().unwrap(),
+                format!("http://{address}"),
+                "dummy-key".into(),
+                None,
+            ),
+        )
+        .await
+        .unwrap()
+        .unwrap();
+        server.abort();
+        let _ = server.await;
+        assert!(!result.success);
+        assert!(result.message.contains("429"));
+        for sensitive in [
+            "private-prompt",
+            "api-key-test-only",
+            "signed-url-test-only",
+        ] {
+            assert!(!result.message.contains(sensitive));
+        }
+    }
+
+    #[tokio::test]
+    async fn provider_invalid_url_does_not_echo_connection_details() {
+        let result = test_connection(
+            "unsupported-protocol://private-provider-token.invalid".into(),
+            "dummy-key".into(),
+            None,
+        )
+        .await
+        .unwrap_err();
+        assert!(!result.contains("private-provider-token"));
+        assert!(!result.contains("unsupported-protocol"));
+        assert!(!result.is_empty());
+    }
 }

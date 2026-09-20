@@ -10,7 +10,7 @@ export default function GeneralSettings({
   preferences,
   onChange,
 }: GeneralSettingsProps) {
-  const desktopReason = "浏览器版本暂不支持；需接入桌面系统能力后使用。";
+  const desktopReason = "Prototype · 系统集成尚未接入，当前不可用。";
   return (
     <>
       <h2 className="settings-page-title" id="settings-section-title">
@@ -73,11 +73,11 @@ export default function GeneralSettings({
           <SettingsToggle
             id="watermark"
             checked={preferences.removeWatermark}
-            hint="前端仅保存偏好，生成服务尚未接入，当前不会修改任何资产。"
+            hint="仅保存本地偏好；当前模型协议未支持水印选项，不会修改已有资产。"
             onChange={(removeWatermark) =>
               onChange(
                 { removeWatermark },
-                "已保存本地偏好。生成服务尚未接入，当前不会修改任何资产。",
+                "已保存本地偏好。当前模型协议未支持水印选项，不会修改已有资产。",
               )
             }
           />
@@ -85,17 +85,6 @@ export default function GeneralSettings({
         <p className="settings-system-label">
           系统 <span title={desktopReason}>仅桌面端</span>
         </p>
-        <SettingRow
-          id="autostart"
-          title="开机自启动"
-          description="登录时自动启动应用"
-        >
-          <SettingsToggle
-            id="autostart"
-            checked={false}
-            disabledReason={desktopReason}
-          />
-        </SettingRow>
         <SettingRow
           id="tray"
           title="系统托盘"
@@ -114,6 +103,17 @@ export default function GeneralSettings({
         >
           <SettingsToggle
             id="sleep"
+            checked={false}
+            disabledReason={desktopReason}
+          />
+        </SettingRow>
+        <SettingRow
+          id="autostart"
+          title="开机自启动"
+          description="登录时自动启动应用"
+        >
+          <SettingsToggle
+            id="autostart"
             checked={false}
             disabledReason={desktopReason}
           />

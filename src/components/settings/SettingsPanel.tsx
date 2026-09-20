@@ -1,5 +1,4 @@
 import { useState } from "react";
-import type { CSSProperties } from "react";
 import { X } from "lucide-react";
 import {
   DEFAULT_SETTINGS,
@@ -94,7 +93,7 @@ export default function SettingsPanel({
   }
 
   return (
-    <div className="settings-panel" data-figma-node="69:8087">
+    <div className="settings-panel" data-figma-node="399:27506">
       <aside className="settings-sidebar">
         <h1 id="settings-dialog-title">设置</h1>
         <nav className="settings-nav" aria-label="设置分类">
@@ -108,9 +107,14 @@ export default function SettingsPanel({
                 setSection(item.id);
                 setFeedback({ message: "", error: false });
               }}
-              style={{ "--nav-offset": `${item.offset}px` } as CSSProperties}
             >
-              <span className="settings-nav-icon" aria-hidden="true" />
+              <img
+                className="settings-nav-icon"
+                src={`/design/figma/settings-nav-${item.id}.svg`}
+                alt=""
+                width="22"
+                height="22"
+              />
               <span>{item.label}</span>
             </button>
           ))}
@@ -149,7 +153,12 @@ export default function SettingsPanel({
         aria-label="关闭设置"
         onClick={onClose}
       >
-        <X size={20} strokeWidth={1.75} />
+        <img
+          src="/design/figma/settings-close.svg"
+          width="14"
+          height="14"
+          alt=""
+        />
       </button>
       {feedback.message && (
         <div

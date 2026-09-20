@@ -637,20 +637,21 @@
       "UI-001"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-UI-MAIN-001-alignment",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
     "affectedModules": [
       "src/components/StartComposer.tsx",
       "src/styles",
       "src/components/ConversationPanel.tsx"
     ],
-    "status": "TODO",
+    "status": "DONE",
     "evidence": [
-      "docs/changes/2026-09-16-ui-system-audit/audit.md"
+      "docs/changes/2026-09-16-ui-system-audit/audit.md",
+      "docs/changes/2026-09-20-ui-main-alignment/verification.md"
     ],
-    "verification": "历史有溢出证据，当前需复现并修复",
-    "updated": "2026-09-17",
-    "verificationResult": "NOT_VERIFIED"
+    "verification": "已选择性整合原root UI候选；最终verify150 Node/190浏览器/UI119/0、Rust60与dev/preview/桌面34页面矩阵均通过。",
+    "updated": "2026-09-20",
+    "verificationResult": "PASS"
   },
   {
     "id": "UI-003",
@@ -667,20 +668,21 @@
       "UI-001"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-UI-MAIN-001-alignment",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
     "affectedModules": [
       "src/components/canvas/TaskPanel.tsx",
       "src/components/AccountPopup.tsx",
       "src/components/settings"
     ],
-    "status": "TODO",
+    "status": "PARTIAL",
     "evidence": [
-      "docs/changes/2026-09-16-ui-system-audit/audit.md"
+      "docs/changes/2026-09-16-ui-system-audit/audit.md",
+      "docs/changes/2026-09-20-ui-main-alignment/verification.md"
     ],
-    "verification": "NOT VERIFIED",
-    "updated": "2026-09-17",
-    "verificationResult": "NOT_VERIFIED"
+    "verification": "交互和真实服务说明已在origin/main候选完成整合，定向浏览器回归通过；最终主线同步见TASK-UI-MAIN-001。",
+    "updated": "2026-09-20",
+    "verificationResult": "PARTIAL"
   },
   {
     "id": "UI-004",
@@ -697,8 +699,8 @@
       "UI-003"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-UI-MAIN-001-alignment",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
     "affectedModules": [
       "Landing",
       "Workspace",
@@ -707,13 +709,14 @@
       "Tasks",
       "Account"
     ],
-    "status": "TODO",
+    "status": "PARTIAL",
     "evidence": [
-      "docs/changes/2026-09-16-ui-system-audit/plan.md"
+      "docs/changes/2026-09-16-ui-system-audit/plan.md",
+      "docs/changes/2026-09-20-ui-main-alignment/verification.md"
     ],
-    "verification": "NOT VERIFIED",
-    "updated": "2026-09-17",
-    "verificationResult": "NOT_VERIFIED"
+    "verification": "已覆盖34运行页面状态，修复现行设置/搜索/资产几何；Landing现行节点及其他缺失Frame仍不能完成Figma视觉验收。",
+    "updated": "2026-09-20",
+    "verificationResult": "PARTIAL"
   },
   {
     "id": "PERF-001",
@@ -886,8 +889,8 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-UI-MAIN-001-alignment",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
     "affectedModules": [
       "src/components/useDismissible.ts",
       "src/components/Modal.tsx",
@@ -897,12 +900,48 @@
       "src/components/settings/ConnectionSettings.tsx",
       "tests/browser"
     ],
-    "status": "TODO",
+    "status": "DONE",
     "evidence": [
-      "docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md"
+      "docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md",
+      "docs/changes/2026-09-20-ui-main-alignment/verification.md"
     ],
-    "verification": "dirty checkout 中的 UI 候选尚未迁移或验收；本次首发同步不包含这些改动。",
+    "verification": "已选择性整合原root UI候选；最终verify150 Node/190浏览器/UI119/0、Rust60与dev/preview/桌面34页面矩阵均通过。",
     "updated": "2026-09-20",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "PASS"
+  },
+  {
+    "id": "TASK-UI-MAIN-001",
+    "title": "现行Figma页面校正与交互修复主线整合",
+    "goal": "将审阅的交互/视觉修复和当前主线功能整合并经PR同步",
+    "scope": "UI geometry, popover lifecycle, selective integration, main provenance",
+    "acceptance": [
+      "原root候选选择性三方整合，保留T3b/T4/T5",
+      "现行Figma有节点页面同状态DOM与截图",
+      "完整verify、Rust与三种运行模式通过",
+      "PR/CI及本地云端main同一提交回读；原工作区有可校验备份"
+    ],
+    "dependencies": [
+      "TASK-GOV-001",
+      "TASK-KK2-MAIN-SYNC"
+    ],
+    "owner": "root",
+    "branch": "codex/TASK-UI-MAIN-001-alignment",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-UI-MAIN-001",
+    "affectedModules": [
+      "src/components",
+      "src/styles",
+      "src-tauri/src/main.rs",
+      "tests/browser",
+      "scripts/audit",
+      "docs/governance"
+    ],
+    "status": "REVIEW",
+    "evidence": [
+      "docs/changes/2026-09-20-ui-main-alignment/verification.md",
+      "docs/changes/2026-09-20-ui-main-alignment/review.md"
+    ],
+    "verification": "本地完整验证通过，等待PR/CI与主线同提交同步回读；Figma设计缺失独立记入UI-004。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-09-20"
   }
 ]

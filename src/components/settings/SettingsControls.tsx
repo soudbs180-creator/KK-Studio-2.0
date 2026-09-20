@@ -42,19 +42,21 @@ export function SettingsToggle({
   hint,
 }: ToggleProps) {
   const explanation = disabledReason || hint;
+  const disabled = Boolean(disabledReason);
   return (
     <span className="settings-control-wrap" title={explanation}>
       <button
         type="button"
         role="switch"
         aria-checked={checked}
+        aria-disabled={disabled || undefined}
         aria-labelledby={`${id}-label`}
         aria-describedby={`${id}-description${explanation ? ` ${id}-reason` : ""}`}
-        disabled={Boolean(disabledReason)}
+        disabled={disabled}
         className="settings-toggle"
         onClick={() => onChange?.(!checked)}
       >
-        <span />
+        <span aria-hidden="true" />
       </button>
       {explanation && (
         <span className="settings-visually-hidden" id={`${id}-reason`}>

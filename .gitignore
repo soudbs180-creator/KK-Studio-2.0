@@ -11,3 +11,15 @@ src-tauri/target/
 .env
 .env.*
 !.env.example
+
+# Local diagnostics and launch artifacts are not synchronization inputs.
+/tmp/
+/inspect.mjs
+/inspect-workspace.mjs
+/tmp-check-page.js
+/tmp-check-page.mjs
+/pnpm-lock.yaml
+/pnpm-workspace.yaml
+/*.lnk
+/*.lnk.before-ui-runtime-*.bak
+/start-kk-studio.bat.before-ui-runtime-*.bak

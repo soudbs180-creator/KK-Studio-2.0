@@ -77,12 +77,17 @@ export default function ConnectionSettings({
             <h3>自动安装更新</h3>
             <p>更新服务尚未接入，自动安装暂不可用。</p>
           </div>
-          <span
+          <button
+            type="button"
+            role="switch"
+            aria-checked="false"
+            aria-disabled="true"
             className="settings-toggle settings-toggle-disabled"
             aria-label="自动安装更新不可用"
+            disabled
           >
-            <span />
-          </span>
+            <span aria-hidden="true" />
+          </button>
         </div>
       </div>
     );
@@ -93,7 +98,7 @@ export default function ConnectionSettings({
         <div className="settings-detail-card">
           <div>
             <span>账号</span>
-            <strong>YYYKK</strong>
+            <strong>未登录 · Prototype</strong>
           </div>
           <div>
             <span>UID</span>
@@ -107,12 +112,13 @@ export default function ConnectionSettings({
         <div className="settings-danger-row">
           <div>
             <h3>永久删除账号</h3>
-            <p>删除后账号数据将被清除且无法恢复。</p>
+            <p>账号服务尚未接入，当前没有可删除的云端账号。</p>
           </div>
           <button
             type="button"
             className="settings-danger-button"
-            onClick={() => onFeedback("删除账号需要桌面端账号服务支持。")}
+            disabled
+            title="Prototype · 账号服务尚未接入"
           >
             删除账号
           </button>
@@ -127,13 +133,15 @@ export default function ConnectionSettings({
           <div>
             <h3>连接方式</h3>
             <p>
-              只影响新建或重试的 workspace；已打开的 workspace 保持当前连接。
+              Prototype · 应用内代理尚未接入，当前连接使用运行环境的网络设置。
             </p>
           </div>
           <select
             className="settings-select settings-network-select"
             aria-label="连接方式"
-            defaultValue="none"
+            defaultValue="system"
+            disabled
+            title="应用内代理尚未接入"
           >
             <option value="auto">自动</option>
             <option value="none">不使用代理</option>
@@ -146,26 +154,41 @@ export default function ConnectionSettings({
     return (
       <div className="settings-detail-stack">
         <div className="settings-memory-tools">
-          <input aria-label="搜索描述或正文" placeholder="搜索描述或正文..." />
-          <select aria-label="作用域" defaultValue="all">
+          <input
+            aria-label="搜索描述或正文"
+            placeholder="搜索描述或正文..."
+            disabled
+            title="Prototype · 记忆服务尚未接入"
+          />
+          <select
+            aria-label="作用域"
+            defaultValue="all"
+            disabled
+            title="Prototype · 记忆服务尚未接入"
+          >
             <option value="all">所有作用域</option>
           </select>
-          <select aria-label="类型" defaultValue="all">
+          <select
+            aria-label="类型"
+            defaultValue="all"
+            disabled
+            title="Prototype · 记忆服务尚未接入"
+          >
             <option value="all">所有类型</option>
           </select>
         </div>
         <button
           type="button"
           className="settings-action"
-          onClick={() => onFeedback("记忆创建入口已准备，当前仅保存界面状态。")}
+          disabled
+          title="Prototype · 记忆服务尚未接入"
         >
           ＋ 新建
         </button>
         <div className="settings-empty-state">
           <strong>暂无记忆</strong>
           <p>
-            记忆用于沉淀长期的用户/项目偏好。点击「新建」手动创建，或交给 Agent
-            自动沉淀。
+            Prototype · 记忆服务尚未接入，当前不会创建、搜索或自动保存长期记忆。
           </p>
         </div>
       </div>

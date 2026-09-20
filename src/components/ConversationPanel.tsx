@@ -7,6 +7,7 @@ import type {
 } from "../features/creation/model";
 import ConversationMessages from "./ConversationMessages";
 import ConversationActions from "./ConversationActions";
+import { useComposerMenus } from "./useComposerMenus";
 export default function ConversationPanel({
   onClose,
   onOpen,
@@ -41,13 +42,17 @@ export default function ConversationPanel({
     composerDraft?.approvalMode ?? "auto",
   );
   const [pendingApproval, setPendingApproval] = useState<string | null>(null);
-  const [modeMenuOpen, setModeMenuOpen] = useState(false);
-  const [modelMenuOpen, setModelMenuOpen] = useState(false);
-  const [skillMenuOpen, setSkillMenuOpen] = useState(false);
-  const [pluginMenuOpen, setPluginMenuOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const modeMenuRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
+  const {
+    modelMenuOpen,
+    skillMenuOpen,
+    pluginMenuOpen,
+    modeMenuOpen,
+    toggleMenu,
+    closeMenus,
+  } = useComposerMenus(actionsRef);
   useEffect(() => {
     setInput(project?.composerDraft.prompt ?? "");
     setApprovalMode(project?.composerDraft.approvalMode ?? "auto");
@@ -58,32 +63,6 @@ export default function ConversationPanel({
     project?.composerDraft.prompt,
     project?.composerDraft.approvalMode,
   ]);
-  useEffect(() => {
-    if (!modeMenuOpen && !modelMenuOpen && !skillMenuOpen && !pluginMenuOpen)
-      return;
-    const onPointerDown = (event: PointerEvent) => {
-      if (!actionsRef.current?.contains(event.target as Node)) {
-        setModeMenuOpen(false);
-        setModelMenuOpen(false);
-        setSkillMenuOpen(false);
-        setPluginMenuOpen(false);
-      }
-    };
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setModeMenuOpen(false);
-        setModelMenuOpen(false);
-        setSkillMenuOpen(false);
-        setPluginMenuOpen(false);
-      }
-    };
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [modeMenuOpen, modelMenuOpen, skillMenuOpen, pluginMenuOpen]);
   const visibleMessages =
     project?.messages ??
     messages.map((content, index) => ({ id: `local-${index}`, content }));
@@ -227,28 +206,28 @@ export default function ConversationPanel({
           currentModel={currentModel}
           modelOptions={modelOptions}
           modelMenuOpen={modelMenuOpen}
-          onToggleModel={() => setModelMenuOpen((open) => !open)}
+          onToggleModel={() => toggleMenu("model")}
           onSelectModel={(option) => {
             onModelChange?.(option);
-            setModelMenuOpen(false);
+            closeMenus();
           }}
           onConfigureModel={() => {
-            setModelMenuOpen(false);
+            closeMenus();
             onOpen("settings/providers");
           }}
           onOpen={onOpen}
           skillMenuOpen={skillMenuOpen}
-          onToggleSkill={() => setSkillMenuOpen((open) => !open)}
+          onToggleSkill={() => toggleMenu("skill")}
           pluginMenuOpen={pluginMenuOpen}
-          onTogglePlugin={() => setPluginMenuOpen((open) => !open)}
+          onTogglePlugin={() => toggleMenu("plugin")}
           modeMenuRef={modeMenuRef}
           modeMenuOpen={modeMenuOpen}
           approvalMode={approvalMode}
-          onToggleMode={() => setModeMenuOpen((open) => !open)}
+          onToggleMode={() => toggleMenu("mode")}
           onSelectMode={(value) => {
             setApprovalMode(value);
             updateDraft({ approvalMode: value });
-            setModeMenuOpen(false);
+            closeMenus();
             setStatus(
               value === "auto"
                 ? "已切换为自动模式，AI 可连续执行。"

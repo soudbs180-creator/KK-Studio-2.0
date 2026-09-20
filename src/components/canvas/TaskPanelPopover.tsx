@@ -40,6 +40,7 @@ export function tasksForFilter(
 }
 
 export function TaskPanelPopover({
+  demo = false,
   tab,
   setTab,
   visibleTasks,
@@ -50,6 +51,7 @@ export function TaskPanelPopover({
   onRetryTask,
   onDismiss,
 }: {
+  demo?: boolean;
   tab: TaskFilter;
   setTab: Dispatch<SetStateAction<TaskFilter>>;
   visibleTasks: PrototypeTask[];
@@ -72,7 +74,9 @@ export function TaskPanelPopover({
         data-node-id="398:25710"
         data-name="标题"
       >
-        <span data-node-id="398:25592">任务状态</span>
+        <span data-node-id="398:25592">
+          {demo ? "任务状态 · 本地演示" : "任务状态"}
+        </span>
         <button
           className="task-panel-close"
           type="button"
@@ -253,7 +257,10 @@ export function TaskPanelPopover({
         <button
           type="button"
           className="task-workbench-link"
-          onClick={onOpenTasks}
+          onClick={() => {
+            onDismiss();
+            onOpenTasks();
+          }}
         >
           打开任务工作台
         </button>

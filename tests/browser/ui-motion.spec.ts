@@ -89,7 +89,7 @@ test("任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响�
   const panel = page.getByRole("region", { name: "任务列表" });
   await expect(panel).toHaveAttribute("data-node-id", "396:938");
   await expect(panel.getByText("点击查看")).toBeVisible();
-  await expect(panel.getByText("正在生成中")).toBeVisible();
+  await expect(panel.getByText("演示 · 生成中")).toBeVisible();
   await expect
     .poll(() => panel.boundingBox())
     .toEqual({
@@ -122,7 +122,7 @@ test("任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响�
   );
   await panel.getByRole("button", { name: "执行中", exact: true }).click();
   await expect(panel.locator(".task-card")).toHaveCount(1);
-  await expect(panel.getByText("正在生成中")).toBeVisible();
+  await expect(panel.getByText("演示 · 生成中")).toBeVisible();
   await panel.getByRole("button", { name: "失败", exact: true }).click();
   await expect(panel.getByText("暂无失败任务")).toBeVisible();
   await page.keyboard.press("Escape");
