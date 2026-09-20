@@ -437,6 +437,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-CAP-001-integrated`
 - Worktree: `D:/kk-studio-next/.worktrees/TASK-CAP-001-INTEGRATED`
 - Modules: src/features/skills, src/features/mcp, src/features/comfyui, src/components/settings, src/components/LibraryPage.tsx, src/App.tsx, tests/unit, tests/browser
-- Verification: PARTIAL — Skill、MCP、ComfyUI 定向单测 16/16，UI 标准 127/0，production preview 定向浏览器 9/9，typecheck/build 通过；MiniMax 仅完成安装包静态审计，桌面控制 RPC 不可用，1421/Tauri 和真实 ComfyUI 提交待后续验收。
+- Verification: PARTIAL — 最终 npm run verify 通过：187 Node、193 production browser、UI 127/0、lint/typecheck/format/build；MCP/Catalog 定向 9/9；client:check 与 client:build -- --no-bundle 通过并生成 release exe。MiniMax 仅完成安装包静态审计，桌面控制 RPC 不可用，1421 开发态、Tauri 窗口交互和真实 ComfyUI 提交待后续验收。
 - Evidence: [docs/changes/2026-09-21-local-capabilities/intent.md](../../docs/changes/2026-09-21-local-capabilities/intent.md), [docs/changes/2026-09-21-local-capabilities/spec.md](../../docs/changes/2026-09-21-local-capabilities/spec.md), [docs/changes/2026-09-21-local-capabilities/verification.md](../../docs/changes/2026-09-21-local-capabilities/verification.md)
 - Updated: 2026-09-21

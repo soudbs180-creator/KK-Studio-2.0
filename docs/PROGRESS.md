@@ -13,7 +13,7 @@
 - 基于 MiniMax Design 安装包静态审计，新增本地 Skill registry：安全 manifest/schema、受限 instructions、JSON/SKILL.md 导入导出、安装/编辑/启停/搜索、设置面板与首页/对话 Composer 选择器；应用 Skill 时保留用户原有 prompt，保存失败不静默改写内存状态。
 - 新增真实 MCP Streamable HTTP（2025-11-25）连接：endpoint 安全校验、initialize/initialized/tools/list 分页与 SSE、取消/断开、工具 inputSchema 展示和显式确认后的 tools/call；不保存 token、Authorization 或 session ID，stdio/OAuth/Agent 自动调用仍为 Prototype。
 - 新增 ComfyUI 本地工作流目录：创建 starter、导入 API JSON/UI export、导出、删除和本地运行请求状态。当前运行请求尚未接入 Tauri/真实 ComfyUI 提交，不把 pending 当生成成功。
-- 源码和预览专项验证：typecheck、UI 标准（127/0）、16 项 Skill/MCP/ComfyUI 单测、build 通过；production preview `http://127.0.0.1:1423/` 的 Catalog/MCP 定向浏览器回归 9/9 通过。MiniMax 原生窗口控制通道返回 `Trusted RPC service is not configured: sky`，因此未宣称原生交互证据；1421 开发态、Tauri release、完整 verify 待主线收口。
+- 源码和预览专项验证：最终 `npm run verify` 通过（187 Node、193 production browser、lint/typecheck/format/build、UI 标准 127/0）；production preview `http://127.0.0.1:1423/` 的 Catalog/MCP 定向浏览器回归 9/9 通过；`npm run client:check` 与 `npm run client:build -- --no-bundle` 通过并生成 release exe。MiniMax 原生窗口控制通道返回 `Trusted RPC service is not configured: sky`，因此未宣称原生交互证据；1421 开发态和 Tauri 窗口内功能取证仍待后续。
 - TASK-CAP-001 保持 **PARTIAL**：实际 ComfyUI/Tauri 提交与恢复、stdio/OAuth、Agent 自主调用、远程 Skill 市场、云端同步和完整 Figma parity 不在本轮完成范围。
 
 ## 2026-09-20 Astra 迁移计划与分支规则复核

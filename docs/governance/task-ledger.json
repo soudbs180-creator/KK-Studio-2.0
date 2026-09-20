@@ -1049,7 +1049,7 @@
       "docs/changes/2026-09-21-local-capabilities/spec.md",
       "docs/changes/2026-09-21-local-capabilities/verification.md"
     ],
-    "verification": "Skill、MCP、ComfyUI 定向单测 16/16，UI 标准 127/0，production preview 定向浏览器 9/9，typecheck/build 通过；MiniMax 仅完成安装包静态审计，桌面控制 RPC 不可用，1421/Tauri 和真实 ComfyUI 提交待后续验收。",
+    "verification": "最终 npm run verify 通过：187 Node、193 production browser、UI 127/0、lint/typecheck/format/build；MCP/Catalog 定向 9/9；client:check 与 client:build -- --no-bundle 通过并生成 release exe。MiniMax 仅完成安装包静态审计，桌面控制 RPC 不可用，1421 开发态、Tauri 窗口交互和真实 ComfyUI 提交待后续验收。",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-21"
   }
