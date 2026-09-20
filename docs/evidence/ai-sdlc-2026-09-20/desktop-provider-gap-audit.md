@@ -1,7 +1,8 @@
 # Desktop Provider Gate Audit
 
-**Checked:** 2026-09-20  
-**Checkout:** `codex/TASK-GOV-002-ai-sdlc` at `8aca3abdd6386b6d6cee7fd9836e27e5aec38eab`  
+**Checked:** 2026-09-20
+
+**Checkout:** `codex/TASK-GOV-002-ai-sdlc` at `8aca3abdd6386b6d6cee7fd9836e27e5aec38eab`
 **Scope:** read-only audit of the current Desktop image submission path; no Rust or product-code changes are included in this audit.
 
 ## Verified path
