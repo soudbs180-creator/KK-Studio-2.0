@@ -47,6 +47,11 @@ const asset = {
 test("re-registering a connection applies config and revokes removed ACL entries", () => {
   const r = setup();
   try {
+    r.db
+      .prepare(
+        "UPDATE gateway_connections SET spent=?, cooldown_until=? WHERE id=?",
+      )
+      .run(7, 1234, "byok");
     r.register(
       {
         ...connection,
@@ -58,8 +63,11 @@ test("re-registering a connection applies config and revokes removed ACL entries
     const row = r.connection("byok")!;
     assert.equal(row.owner_id, "bob");
     assert.equal(row.credential_ref, "new-key");
+    assert.equal(JSON.parse(row.metadata_json).displayName, "Rotated API");
     assert.equal(row.unit_price, 2);
     assert.equal(row.cost_limit, 20);
+    assert.equal(row.spent, 7);
+    assert.equal(row.cooldown_until, 0);
     assert.equal(row.revision, 2);
     assert.deepEqual(
       r.db
