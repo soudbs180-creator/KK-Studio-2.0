@@ -19,12 +19,18 @@ export interface Principal {
 export function tokenAuthenticator(
   entries: Array<{ token: string; principal: Principal }>,
 ) {
-  const principals = new Map(
-    entries.map((e) => [
-      createHash("sha256").update(e.token).digest("hex"),
-      e.principal,
-    ]),
-  );
+  const principals = new Map<string, Principal>();
+  for (const entry of entries) {
+    const hash = createHash("sha256").update(entry.token).digest("hex");
+    const existing = principals.get(hash);
+    if (
+      existing &&
+      (existing.ownerId !== entry.principal.ownerId ||
+        Boolean(existing.admin) !== Boolean(entry.principal.admin))
+    )
+      throw new Error("DUPLICATE_APPLICATION_TOKEN");
+    principals.set(hash, entry.principal);
+  }
   return (req: IncomingMessage): Principal | undefined => {
     const token =
       req.headers.authorization?.match(/^Bearer ([^\s]+)$/)?.[1] ??

@@ -4,6 +4,7 @@ import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { GenerationRepository } from "../../src/features/generation-server/repository.ts";
+import { tokenAuthenticator } from "../../src/features/generation-server/http.ts";
 import type { ProviderConnection } from "../../src/domain/providerConnections.ts";
 const connection: ProviderConnection = {
   id: "byok",
@@ -42,6 +43,46 @@ const asset = {
   mime: "image/png",
   size: 68,
 };
+
+test("re-registering a connection applies config and revokes removed ACL entries", () => {
+  const r = setup();
+  try {
+    r.register(
+      {
+        ...connection,
+        displayName: "Rotated API",
+        credentialRef: "new-key",
+      },
+      { ownerId: "bob", unitPrice: 2, costLimit: 20 },
+    );
+    const row = r.connection("byok")!;
+    assert.equal(row.owner_id, "bob");
+    assert.equal(row.credential_ref, "new-key");
+    assert.equal(row.unit_price, 2);
+    assert.equal(row.cost_limit, 20);
+    assert.equal(row.revision, 2);
+    assert.deepEqual(
+      r.db
+        .prepare("SELECT owner_id FROM connection_acl")
+        .all()
+        .map((row) => String((row as { owner_id: string }).owner_id)),
+      ["bob"],
+    );
+  } finally {
+    r.close();
+  }
+});
+
+test("token collisions across principals fail closed during authenticator setup", () => {
+  assert.throws(
+    () =>
+      tokenAuthenticator([
+        { token: "same-token", principal: { ownerId: "alice" } },
+        { token: "same-token", principal: { ownerId: "bob", admin: true } },
+      ]),
+    /DUPLICATE_APPLICATION_TOKEN/,
+  );
+});
 
 test("semantic idempotency canonicalizes workflow key ordering and never reserves twice", () => {
   const r = setup();

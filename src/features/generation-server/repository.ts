@@ -98,25 +98,45 @@ export class GenerationRepository {
       credentialRef: undefined,
       activeJobs: undefined,
     };
+    const owners = [
+      ...new Set(
+        options.allowedOwners ?? (options.ownerId ? [options.ownerId] : []),
+      ),
+    ];
     this.transaction(() => {
       this.db
         .prepare(
-          "INSERT OR IGNORE INTO gateway_connections(id,owner_id,metadata_json,state,unit_price,cost_limit,credential_ref) VALUES(?,?,?,?,?,?,?)",
+          `INSERT INTO gateway_connections(id,owner_id,metadata_json,state,cooldown_until,unit_price,cost_limit,credential_ref)
+           VALUES(?,?,?,?,?,?,?,?)
+           ON CONFLICT(id) DO UPDATE SET
+             owner_id=excluded.owner_id,
+             metadata_json=excluded.metadata_json,
+             state=excluded.state,
+             cooldown_until=excluded.cooldown_until,
+             unit_price=excluded.unit_price,
+             cost_limit=excluded.cost_limit,
+             credential_ref=excluded.credential_ref,
+             revision=gateway_connections.revision+1`,
         )
         .run(
           parsed.id,
           options.ownerId ?? null,
           JSON.stringify(metadata),
           parsed.state,
+          parsed.state === "cooldown" ? (parsed.cooldownUntil ?? 0) : 0,
           options.unitPrice,
           options.costLimit,
           parsed.credentialRef ?? null,
         );
-      for (const owner of options.allowedOwners ??
-        (options.ownerId ? [options.ownerId] : []))
+      // The config is authoritative at process startup. Reconcile ACL entries
+      // so removing an owner actually revokes access after a restart.
+      this.db
+        .prepare("DELETE FROM connection_acl WHERE connection_id=?")
+        .run(parsed.id);
+      for (const owner of owners)
         this.db
           .prepare(
-            "INSERT OR IGNORE INTO connection_acl(connection_id,owner_id) VALUES(?,?)",
+            "INSERT INTO connection_acl(connection_id,owner_id) VALUES(?,?)",
           )
           .run(parsed.id, owner);
     });

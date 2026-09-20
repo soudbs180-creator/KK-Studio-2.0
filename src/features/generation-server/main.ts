@@ -29,7 +29,13 @@ const configSchema = z
           })
           .strict(),
       )
-      .min(1),
+      .min(1)
+      .refine(
+        (entries) =>
+          new Set(entries.map((entry) => entry.tokenEnv)).size ===
+          entries.length,
+        "principals.tokenEnv must be unique",
+      ),
     connections: z.array(
       z
         .object({
