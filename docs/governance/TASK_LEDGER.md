@@ -411,6 +411,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-GOV-002-ai-sdlc`
 - Worktree: `D:/kk-studio-next/.worktrees/TASK-GOV-002`
 - Modules: docs, scripts/governance, .github, .githooks, config, tests/governance
-- Verification: PARTIAL — 规则候选验证 PASS：governance 30 tasks/0 violations、push policy 9/9、delivery policy 12/12、AI 场景结构 12/12；规则文件 lint/typecheck/format/links 通过。产品代码、产品测试、既有证据和其他提交未写入。远端保护因私有个人仓库套餐 API403 仍 BLOCKED，产品/Desktop follow-up 仍由各自任务负责。
+- Verification: PARTIAL — 规则候选验证 PASS：governance 31 tasks/0 violations、push policy 9/9、delivery policy 12/12、AI 场景结构 12/12；规则文件 lint/typecheck/format/links 通过。产品代码、产品测试、既有证据和其他提交未写入。远端保护因私有个人仓库套餐 API403 仍 BLOCKED，产品/Desktop follow-up 仍由各自任务负责。
 - Evidence: [docs/changes/2026-09-20-ai-sdlc/verification.md](../../docs/changes/2026-09-20-ai-sdlc/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json)
 - Updated: 2026-09-20

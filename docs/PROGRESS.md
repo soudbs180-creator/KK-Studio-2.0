@@ -6,7 +6,7 @@
 - 增加本地Git push防线、真实临时仓库测试、CI delivery变更包门禁与可审阅rulesets；不伪称能强制所有模型理解文档。
 - 只读核对当前代码、产品测试、既有证据和旧规范，用于发现规则冲突；本任务只写入共同规则、流程模板、Git/CI/delivery 防线和规则场景，不接管产品实现或其他人的提交。
 - 当次GitHub回读private main未受保护，API403套餐限制仍为EXT-GIT BLOCKED。最新主线CI失败仅登记为产品任务 follow-up，未修复或改写其测试、截图和报告。
-- 规则候选验证：governance 30 tasks/0 violations、push policy 9/9、delivery policy 12/12、AI 场景结构 12/12，规则文件 lint/typecheck/format/links 通过；未发布、未清理分支、未改写历史。
+- 规则候选验证：governance 31 tasks/0 violations、push policy 9/9、delivery policy 12/12、AI 场景结构 12/12，规则文件 lint/typecheck/format/links 通过；未发布、未清理分支、未改写历史。
 
 ## 2026-09-20 Astra 迁移计划与分支规则复核
 

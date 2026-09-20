@@ -976,7 +976,7 @@
       "docs/changes/2026-09-20-ai-sdlc/verification.md",
       "docs/evidence/ai-sdlc-2026-09-20/remote-audit.json"
     ],
-    "verification": "规则候选验证 PASS：governance 30 tasks/0 violations、push policy 9/9、delivery policy 12/12、AI 场景结构 12/12；规则文件 lint/typecheck/format/links 通过。产品代码、产品测试、既有证据和其他提交未写入。远端保护因私有个人仓库套餐 API403 仍 BLOCKED，产品/Desktop follow-up 仍由各自任务负责。",
+    "verification": "规则候选验证 PASS：governance 31 tasks/0 violations、push policy 9/9、delivery policy 12/12、AI 场景结构 12/12；规则文件 lint/typecheck/format/links 通过。产品代码、产品测试、既有证据和其他提交未写入。远端保护因私有个人仓库套餐 API403 仍 BLOCKED，产品/Desktop follow-up 仍由各自任务负责。",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-20"
   }
