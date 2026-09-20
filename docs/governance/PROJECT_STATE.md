@@ -3,9 +3,9 @@
 ## 2026-09-20 TASK-GOV-002 当前覆盖说明
 
 - 今后新任务从 fetch 后的 origin/main 派生，本次基线 8aca3ab；任务分支 codex/TASK-GOV-002-ai-sdlc。旧本地 main@39f6a6e 与远端无共同祖先，下面首次同步/tree相等记录是历史范围，不能直接 pull 合并旧本地main。
-- 本次共享规则、Git防线、CI变更包和存储契约修正进行中，状态以task-ledger为准；不会把全部产品完成。完整说明见 docs/changes/2026-09-20-ai-sdlc/。
+- 本次共享规则、Git防线、CI变更包和存储契约修正已完成本地候选验证，状态以task-ledger为准；不会把全部产品完成。候选 `2e96910f2b67649a40fe8da7ea492809434110c0` 等待 PR，完整说明见 docs/changes/2026-09-20-ai-sdlc/。
 - 当前托管回读 main protected=false，private仓库protection/rulesets API403，EXT-GIT仍BLOCKED；自动分支清理为false。
-- 最新main CI run35492697622失败：sidebar motion中间帧缺失；旧候选成功不代表当前main成功。正在修取样并重新验证。
+- 最新main CI run35492697622失败：sidebar motion中间帧缺失；候选已修复并在固定 1423 preview 通过 169/169，但不把候选结果回写成旧 main 结果。
 - 先读AGENTS/AI_RULES与engineering规则。npm ci后安装npm run git:guards；本地hook不是远端保护。最终用户汇报简洁中文。
 
 ## 以下为此前交付快照（保留历史，不覆盖上面当次核对）
