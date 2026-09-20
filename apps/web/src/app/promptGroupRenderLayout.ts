@@ -1,0 +1,151 @@
+import type { CanvasCardDetailLevel } from '../canvas/performanceProfile';
+import { buildDockedHorizontalConnectorPath, buildDockedVerticalConnectorPath } from '../canvas/connectorGeometry';
+import type { GeneratedImage, PromptNode } from '../types';
+import { getCardDimensions, FOOTER_HEIGHT } from '../utils/styleUtils';
+import { getPromptNodeBoundsWidth } from '../utils/promptNodeCardWidth';
+import type {
+  Point,
+  PromptGroupLayoutPresentationState,
+  PromptGroupRegroupLayout,
+  PromptGroupRenderItem,
+} from './appCanvasTypes';
+
+interface BuildPromptGroupRenderLayoutArgs {
+  item: PromptGroupRenderItem;
+  groupStackZIndex: number;
+  focusedGroupId: string | null;
+  generatingGroupIds: string[];
+  canvasScale: number;
+  layoutMode: 'grid' | 'row' | 'column';
+  promptGroupLayoutState: PromptGroupLayoutPresentationState | undefined;
+  regroupLayoutsById: Map<string, PromptGroupRegroupLayout>;
+  imageCardHeightById: Record<string, number>;
+  resolveLivePromptPosition: (promptNode: PromptNode | undefined | null) => Point | null;
+  resolveLiveImagePosition: (imageNode: GeneratedImage | undefined | null) => Point | null;
+}
+
+function resolveChildImageHeight(childNode: GeneratedImage, renderedWidth: number) {
+  const { totalHeight: theoreticalHeight } = getCardDimensions(childNode.aspectRatio, true);
+  let imageHeight = theoreticalHeight;
+
+  if (childNode.dimensions && typeof childNode.dimensions === 'string') {
+    const match = childNode.dimensions.match(/(\d+)\s*[xX]\s*(\d+)/);
+    if (match?.[1] && match?.[2]) {
+      const width = parseInt(match[1], 10);
+      const height = parseInt(match[2], 10);
+      if (width > 0 && height > 0) {
+        imageHeight = (renderedWidth / (width / height)) + FOOTER_HEIGHT;
+      }
+    }
+  }
+
+  return imageHeight;
+}
+
+export function buildPromptGroupRenderLayout({
+  item,
+  groupStackZIndex,
+  focusedGroupId,
+  generatingGroupIds,
+  layoutMode,
+  promptGroupLayoutState,
+  regroupLayoutsById,
+  imageCardHeightById,
+  resolveLivePromptPosition,
+  resolveLiveImagePosition,
+}: BuildPromptGroupRenderLayoutArgs) {
+  const { groupView } = item;
+  const node = groupView.rootPrompt;
+  const isGroupFocused = focusedGroupId === node.id && groupView.isOverlapping;
+  const isGeneratingGroup = generatingGroupIds.includes(node.id);
+  const promptDetailLevel: CanvasCardDetailLevel = item.detailLevel === 'thumbnail-shell' ? 'compact' : item.detailLevel;
+  const groupConnectorStroke = isGroupFocused ? 1.5 : 1;
+  const promptCardZIndex = groupStackZIndex + 20;
+  const connectorLayerZIndex = -10; // 简体中文：将组内连接线 zIndex 固定为 -10，确保其沉在卡片最下方，不遮挡视线
+  const promptConnectorPosition = resolveLivePromptPosition(node) ?? node.position;
+  const renderedPromptNode = (
+    promptConnectorPosition.x === node.position.x && promptConnectorPosition.y === node.position.y
+  )
+    ? node
+    : { ...node, position: promptConnectorPosition };
+  const shadowBoost = isGroupFocused || isGeneratingGroup || groupView.isOverlapping || Boolean(promptGroupLayoutState);
+  const connectorCanvasPadding = 1024; // 简体中文：从 128 提升到 1024，给大范围拖拽留出足够的绘制缓冲区，解决连线在边缘消失的问题
+
+  const childVisualLayouts = groupView.childImages.map((childNode) => {
+    const livePosition = resolveLiveImagePosition(childNode) ?? childNode.position;
+    const regroupLayout = regroupLayoutsById.get(childNode.id);
+    const { width: renderedWidth } = getCardDimensions(childNode.aspectRatio, true);
+    const resolvedImageHeight = imageCardHeightById[childNode.id] ?? resolveChildImageHeight(childNode, renderedWidth);
+
+    return {
+      childNode,
+      renderedWidth,
+      resolvedImageHeight,
+      livePosition,
+      visualPosition: regroupLayout?.renderPosition ?? livePosition,
+      settledPosition: regroupLayout?.settledPosition ?? livePosition,
+    };
+  });
+
+  const connectorBounds = {
+    minX: groupView.bounds.x,
+    maxX: groupView.bounds.x + groupView.bounds.width,
+    minY: groupView.bounds.y,
+    maxY: groupView.bounds.y + groupView.bounds.height,
+  };
+  const connectorSvgLeft = connectorBounds.minX - connectorCanvasPadding;
+  const connectorSvgTop = connectorBounds.minY - connectorCanvasPadding;
+  const connectorSvgWidth = Math.max(1, (connectorBounds.maxX - connectorBounds.minX) + (connectorCanvasPadding * 2));
+  const connectorSvgHeight = Math.max(1, (connectorBounds.maxY - connectorBounds.minY) + (connectorCanvasPadding * 2));
+
+  const promptWidth = getPromptNodeBoundsWidth(node, false);
+  const promptHeight = node.height || 200;
+  const groupConnectorLayouts = childVisualLayouts.map((layout) => {
+    const isHorizontal = layoutMode === 'row';
+    const startX = isHorizontal
+      ? promptConnectorPosition.x + (promptWidth / 2)
+      : promptConnectorPosition.x;
+    const startY = isHorizontal
+      ? promptConnectorPosition.y - (promptHeight / 2)
+      : promptConnectorPosition.y;
+    const endX = isHorizontal
+      ? layout.visualPosition.x - (layout.renderedWidth / 2)
+      : layout.visualPosition.x;
+    const endY = isHorizontal
+      ? layout.visualPosition.y - (layout.resolvedImageHeight / 2)
+      : layout.visualPosition.y - layout.resolvedImageHeight;
+    const pathBuilder = isHorizontal
+      ? buildDockedHorizontalConnectorPath
+      : buildDockedVerticalConnectorPath;
+
+    return {
+      key: `${node.id}-${layout.childNode.id}`,
+      imageId: layout.childNode.id,
+      orientation: isHorizontal ? 'horizontal' as const : 'vertical' as const,
+      path: pathBuilder(
+        startX - connectorSvgLeft,
+        startY - connectorSvgTop,
+        endX - connectorSvgLeft,
+        endY - connectorSvgTop,
+      ),
+    };
+  });
+
+  return {
+    node,
+    isGroupFocused,
+    promptDetailLevel,
+    shadowBoost,
+    connectorLayerZIndex,
+    promptCardZIndex,
+    groupConnectorStroke,
+    connectorSvgLeft,
+    connectorSvgTop,
+    connectorSvgWidth,
+    connectorSvgHeight,
+    connectorOpacity: isGroupFocused ? 0.68 : 0.4,
+    renderedPromptNode,
+    childVisualLayouts,
+    groupConnectorLayouts,
+  };
+}

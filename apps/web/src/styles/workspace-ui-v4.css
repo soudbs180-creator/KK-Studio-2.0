@@ -1,0 +1,1202 @@
+/*
+ * Workspace v4 visual contract.
+ *
+ * These rules deliberately sit after the legacy morphic and v3 layers. They
+ * keep each desktop control as an independent floating surface while the
+ * underlying canvas remains unobstructed and interactive.
+ */
+
+@media (min-width: 769px) {
+  .desktop-left-chrome {
+    top: 0 !important;
+    right: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 52px !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    pointer-events: none;
+  }
+
+  .kk-workspace-chrome-v3,
+  .desktop-left-chrome .kk-workspace-chrome-v3 {
+    position: relative;
+    display: grid !important;
+    width: 100%;
+    height: 52px !important;
+    min-height: 52px;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    padding: 8px 12px !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    pointer-events: none;
+  }
+
+  .kk-workspace-chrome-v3__project,
+  .kk-workspace-chrome-v3__canvas,
+  .kk-workspace-chrome-v3__account {
+    border: 1px solid color-mix(in oklch, var(--kk-morphic-border) 88%, transparent) !important;
+    background: color-mix(in oklch, var(--kk-morphic-panel) 82%, transparent) !important;
+    box-shadow: 0 8px 24px color-mix(in oklch, black 18%, transparent) !important;
+    backdrop-filter: blur(18px) saturate(135%);
+    -webkit-backdrop-filter: blur(18px) saturate(135%);
+    pointer-events: auto;
+  }
+
+  .kk-workspace-chrome-v3__project {
+    border-radius: 12px !important;
+  }
+
+  .kk-workspace-chrome-v3__project > strong {
+    overflow: hidden;
+    color: var(--text-primary);
+    font-size: var(--kk-type-button);
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .kk-workspace-chrome-v3__canvas,
+  .kk-workspace-chrome-v3__account {
+    border-radius: 999px !important;
+  }
+
+  .kk-workspace-chrome-v3__canvas {
+    min-width: 104px;
+  }
+
+  .kk-workspace-chrome-v3__account {
+    gap: 3px;
+    padding: 4px 5px;
+  }
+
+  .kk-workspace-chrome-v3__billing {
+    min-height: 28px;
+    gap: 6px;
+    padding: 0 2px 0 7px;
+    border: 0;
+    background: transparent;
+  }
+
+  .kk-workspace-chrome-v3__billing > span {
+    gap: 3px;
+  }
+
+  .kk-workspace-chrome-v3__billing > span > svg {
+    color: var(--kk-morphic-action);
+  }
+
+  #btn-desktop-recharge {
+    min-height: 28px;
+    margin-inline-end: 2px;
+    padding-inline: 12px;
+    color: white;
+    border: 1px solid color-mix(in oklch, var(--kk-morphic-action) 82%, white 18%) !important;
+    background: var(--kk-morphic-action) !important;
+    box-shadow: inset 0 1px 0 color-mix(in oklch, white 18%, transparent) !important;
+  }
+
+  #btn-desktop-settings {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    padding: 0 !important;
+    color: var(--text-secondary) !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    box-shadow: none !important;
+  }
+
+  #btn-desktop-settings:hover,
+  #btn-desktop-settings:focus-visible {
+    color: var(--text-primary) !important;
+    background: transparent !important;
+  }
+
+  .kk-task-center-host:not([data-mobile='true']) {
+    top: 52px !important;
+    left: 50% !important;
+    width: 360px;
+    transform: translateX(-50%);
+  }
+
+  .kk-task-center-host:not([data-mobile='true']) .kk-task-center-morph[data-state='open'],
+  .kk-task-center-morph[data-state='open'] {
+    width: 360px;
+    max-width: min(360px, calc(100vw - 24px));
+    max-height: 70vh;
+    border: 1px solid color-mix(in oklch, var(--kk-morphic-border) 88%, transparent) !important;
+    background: color-mix(in oklch, var(--kk-morphic-panel) 86%, transparent) !important;
+    box-shadow: 0 18px 48px color-mix(in oklch, black 24%, transparent) !important;
+    backdrop-filter: blur(22px) saturate(135%);
+    -webkit-backdrop-filter: blur(22px) saturate(135%);
+    transform: translateY(0) !important;
+  }
+
+  .kk-morphic-project-panel[data-desktop-persistent='true'] {
+    --kk-project-panel-left: 12px;
+    top: 56px !important;
+    bottom: auto !important;
+    left: clamp(12px, var(--kk-project-panel-left), calc(100vw - var(--kk-morphic-left-panel-width) - 12px)) !important;
+    max-height: calc(100dvh - 68px);
+    border: 1px solid color-mix(in oklch, var(--kk-morphic-border) 88%, transparent) !important;
+    background: color-mix(in oklch, var(--kk-morphic-panel) 84%, transparent) !important;
+    box-shadow: 0 18px 48px color-mix(in oklch, black 24%, transparent) !important;
+    backdrop-filter: blur(22px) saturate(135%) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(135%) !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'] {
+    --kk-workspace-left-inset: 72px;
+    --kk-workspace-right-inset: 12px;
+    left: calc((var(--kk-workspace-left-inset) + 100vw - var(--kk-workspace-right-inset)) / 2) !important;
+    width: min(
+      calc(100vw - var(--kk-workspace-left-inset) - var(--kk-workspace-right-inset) - 24px),
+      var(--kk-morphic-composer-width)
+    ) !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .kk-composer-compact-footer .kk-composer-reference-button {
+    display: inline-flex;
+    min-width: max-content;
+    align-items: center;
+    gap: 5px;
+    padding-inline: 9px;
+    color: var(--text-secondary);
+    border: 1px solid var(--kk-morphic-border);
+    background: var(--kk-morphic-control);
+  }
+
+  .kk-composer-reference-count {
+    min-width: 16px;
+    padding-inline: 4px;
+    border-radius: 999px;
+    color: var(--text-primary);
+    background: var(--kk-morphic-control-hover);
+    font-size: 10px;
+    line-height: 16px;
+    text-align: center;
+  }
+
+  .kk-composer-compact-footer .prompt-bar-liquid-send {
+    width: auto !important;
+    min-width: 76px !important;
+    padding-inline: 11px 4px !important;
+    border: 1px solid color-mix(in oklch, var(--text-primary) 34%, transparent) !important;
+    border-radius: 999px !important;
+    box-shadow: inset 0 1px 0 color-mix(in oklch, white 7%, transparent) !important;
+  }
+
+  .kk-composer-compact-footer .prompt-bar-liquid-send:disabled {
+    border-color: color-mix(in oklch, var(--text-primary) 22%, transparent) !important;
+  }
+
+  .kk-composer-compact-footer .prompt-bar-liquid-send .kk-prompt-send-button-content {
+    display: flex !important;
+    padding-inline: 0 4px;
+  }
+
+  .desktop-navigation-panel {
+    right: var(--kk-canvas-navigation-right, 10px) !important;
+    bottom: 10px !important;
+  }
+
+  .desktop-navigation-panel .canvas-nav-panel {
+    border-radius: 18px !important;
+    background: color-mix(in oklch, var(--kk-morphic-panel) 84%, transparent) !important;
+    box-shadow: 0 14px 36px color-mix(in oklch, black 22%, transparent) !important;
+    backdrop-filter: blur(20px) saturate(135%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(135%) !important;
+  }
+
+  /*
+   * Keep the live Copilot as a right-side companion. This rule must remain
+   * later than the legacy full-stage rules so an older selector cannot reopen
+   * the canvas-wide assistant composition.
+   */
+  body[data-kk-workspace-mode='copilot'] #ai-assistant-sidebar {
+    top: 48px !important;
+    right: 10px !important;
+    bottom: 10px !important;
+    left: auto !important;
+    width: min(420px, calc(100vw - 24px)) !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+
+  #ai-assistant-sidebar {
+    height: auto !important;
+    overflow: visible;
+    border: 1px solid color-mix(in oklch, var(--kk-morphic-border) 92%, transparent) !important;
+    border-radius: 20px !important;
+    background: color-mix(in oklch, var(--kk-morphic-panel) 88%, transparent) !important;
+    box-shadow: 0 20px 56px color-mix(in oklch, black 28%, transparent) !important;
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+  }
+
+  #ai-assistant-sidebar > div:last-child {
+    border-radius: inherit;
+  }
+
+  #ai-assistant-sidebar .kk-chat-sidebar-header,
+  #ai-assistant-sidebar .kk-chat-sidebar-bottom {
+    border-color: var(--kk-morphic-border) !important;
+    background: color-mix(in oklch, var(--kk-morphic-panel) 78%, transparent) !important;
+    backdrop-filter: blur(20px) saturate(135%);
+    -webkit-backdrop-filter: blur(20px) saturate(135%);
+  }
+
+  #ai-assistant-sidebar .kk-chat-sidebar-header {
+    padding-top: 4px !important;
+  }
+
+  #ai-assistant-sidebar .kk-chat-sidebar-bottom {
+    padding: 10px 12px 12px !important;
+  }
+
+  #ai-assistant-sidebar .kk-chat-sidebar-composer {
+    padding: 10px !important;
+    border: 1px solid var(--kk-morphic-border) !important;
+    border-radius: 16px !important;
+    background: var(--kk-morphic-control) !important;
+    box-shadow: none !important;
+  }
+
+  #ai-assistant-sidebar .kk-chat-sidebar-composer-input {
+    min-height: 52px !important;
+    padding: 4px 2px 8px !important;
+    line-height: 1.5 !important;
+  }
+
+  #ai-assistant-sidebar .kk-chat-sidebar-composer-actions {
+    min-height: 40px;
+    padding-top: 6px !important;
+    border-color: var(--kk-morphic-border) !important;
+  }
+}
+
+@media (min-width: 769px) {
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce'] {
+    max-height: min(calc(100dvh - 86px), 430px) !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    [data-ecommerce-import-grid] {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-workbench-header__description,
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-import-panel__description,
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-import-card__description {
+    display: none !important;
+  }
+
+  /* Keep the Composer surface flat: the workflow header and import section
+   * are navigation bands, while the three upload cards carry the grouping. */
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    [data-testid='ecommerce-workflow-header'] {
+    padding: 0 2px !important;
+    border-color: transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-import-panel {
+    margin-bottom: 0 !important;
+    padding: 0 1px !important;
+    border-color: transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-import-panel {
+    margin-bottom: 0 !important;
+    padding: 0 1px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-import-card {
+    padding: 6px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-import-card .kk-ecommerce-import-card__icon {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'] .kk-composer-compact-footer {
+    gap: 2px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'] .prompt-bar-liquid-send {
+    width: 64px !important;
+    min-width: 64px !important;
+    padding: 0 2px !important;
+    gap: 0 !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop']
+    .prompt-bar-liquid-send .kk-prompt-send-button-content {
+    gap: 0 !important;
+    padding: 0 1px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop']
+    .prompt-bar-liquid-send .kk-prompt-send-button-icon {
+    width: 24px !important;
+    height: 24px !important;
+    margin-left: -3px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop']
+    .prompt-bar-liquid-send .kk-prompt-send-button-icon svg {
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  .desktop-navigation-panel [data-canvas-navigation-bar='true'] {
+    width: 220px !important;
+    max-width: 220px !important;
+  }
+
+  .desktop-navigation-panel [data-canvas-minimap-popover='true'] {
+    width: 248px !important;
+    max-width: 248px !important;
+  }
+
+  .desktop-navigation-panel [data-canvas-navigation-bar='true'] .zoom-slider {
+    min-width: 46px !important;
+  }
+
+  .desktop-navigation-panel .kk-workspace-icon-control,
+  .desktop-navigation-panel [data-canvas-navigation-bar='true'] > button {
+    width: 26px !important;
+    min-width: 26px !important;
+    height: 26px !important;
+    min-height: 26px !important;
+    padding: 0 !important;
+  }
+
+  .desktop-navigation-panel .canvas-nav-panel svg {
+    width: 13px !important;
+    height: 13px !important;
+    flex: 0 0 13px !important;
+  }
+
+  .kk-composer-floating-tools-host {
+    min-height: 32px;
+    max-width: calc(100vw - 32px);
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .kk-composer-floating-tools-host > * {
+    pointer-events: auto;
+  }
+
+  .kk-composer-floating-tools-host .kk-composer-type-picker__trigger {
+    width: 84px !important;
+    min-width: 84px !important;
+    padding-inline: 8px !important;
+  }
+
+  .kk-composer-floating-tools-host[data-composer-mode='ecommerce']
+    .kk-composer-type-picker__menu {
+    top: calc(100% + 8px);
+    bottom: auto;
+  }
+
+  .kk-composer-floating-tools-host svg {
+    width: 14px !important;
+    height: 14px !important;
+    flex: 0 0 14px !important;
+  }
+
+  /* Ecommerce stays compact on wide screens and grows naturally when review
+   * data needs more room. No workflow surface owns a scrollbar. */
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce'] {
+    width: min(
+      calc(100vw - var(--kk-workspace-left-inset) - var(--kk-workspace-right-inset) - 24px),
+      520px
+    ) !important;
+    max-width: 520px !important;
+    max-height: none !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    > .input-bar-inner {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    [data-ecommerce-composer-panel],
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-review-panel,
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    [data-testid='ecommerce-review-item-list'],
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    [data-testid='ecommerce-review-active-detail'],
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    [data-testid='ecommerce-slot-history-panel'] {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-workflow-tabs {
+    margin-top: 4px !important;
+    gap: 5px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-workflow-tab,
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-section-tab {
+    min-height: 28px !important;
+    height: 28px !important;
+    border-radius: 9px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-import-panel > .flex {
+    gap: 5px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    [data-ecommerce-import-grid] {
+    gap: 5px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-import-card {
+    min-height: 76px !important;
+    padding: 5px !important;
+    border-radius: 10px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-import-card > .mt-2 {
+    margin-top: 3px !important;
+    gap: 4px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-import-card > .mt-2 button {
+    height: 26px !important;
+    min-height: 26px !important;
+    border-radius: 8px !important;
+    padding-inline: 8px !important;
+    font-size: 10px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-import-analyze {
+    min-width: 96px !important;
+  }
+
+  #prompt-bar-container[data-composer-layout='desktop'][data-composer-mode='ecommerce']
+    .kk-ecommerce-import-card svg {
+    width: 14px !important;
+    height: 14px !important;
+    flex: 0 0 14px !important;
+  }
+
+  .kk-composer-floating-tools-host[data-composer-layout='desktop'] {
+    height: 32px !important;
+    min-height: 32px !important;
+    transform: none !important;
+  }
+
+  .kk-composer-floating-tools-host[data-composer-layout='desktop']
+    .kk-composer-type-picker__trigger {
+    flex: 0 0 84px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .kk-task-center-morph[data-state='open'] {
+    max-height: min(72dvh, 620px);
+  }
+}
+
+.kk-drawing-toolbar {
+  position: fixed;
+  z-index: 710;
+  display: flex;
+  align-items: center;
+  max-width: calc(100vw - 16px);
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid color-mix(in oklch, var(--kk-morphic-border) 88%, transparent);
+  border-radius: 11px;
+  background: color-mix(in oklch, var(--kk-morphic-panel) 86%, transparent);
+  box-shadow: 0 14px 36px color-mix(in oklch, black 22%, transparent);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  user-select: none;
+}
+
+.kk-drawing-toolbar__handle,
+.kk-drawing-toolbar__control,
+.kk-drawing-toolbar__swatch,
+.kk-drawing-toolbar__width {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: var(--text-secondary);
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+}
+
+.kk-drawing-toolbar__handle {
+  cursor: grab;
+  touch-action: none;
+}
+
+.kk-drawing-toolbar__handle:active {
+  cursor: grabbing;
+}
+
+.kk-drawing-toolbar__control:hover,
+.kk-drawing-toolbar__control[data-active='true'],
+.kk-drawing-toolbar__width:hover,
+.kk-drawing-toolbar__width[data-active='true'] {
+  color: var(--text-primary);
+  background: var(--kk-morphic-control-hover);
+}
+
+.kk-drawing-toolbar__control[data-active='true'],
+.kk-drawing-toolbar__width[data-active='true'] {
+  color: var(--kk-morphic-action);
+}
+
+.kk-drawing-toolbar__group {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding-inline-end: 3px;
+  border-inline-end: 1px solid var(--kk-morphic-border);
+}
+
+.kk-drawing-toolbar__shape-wrap {
+  position: relative;
+}
+
+.kk-drawing-toolbar__shape-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  display: flex;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid var(--kk-morphic-border);
+  border-radius: 12px;
+  background: var(--kk-morphic-panel);
+  box-shadow: 0 12px 28px color-mix(in oklch, black 22%, transparent);
+}
+
+.kk-drawing-toolbar__settings-group {
+  position: relative;
+}
+
+.kk-drawing-toolbar__settings-panel {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 0;
+  display: flex;
+  align-items: center;
+  max-width: min(340px, calc(100vw - 16px));
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 236px;
+  padding: 6px;
+  border: 1px solid var(--kk-morphic-border);
+  border-radius: 9px;
+  background: var(--kk-morphic-panel);
+  box-shadow: 0 12px 28px color-mix(in oklch, black 22%, transparent);
+}
+
+.kk-drawing-toolbar__color-indicator {
+  width: 13px;
+  height: 13px;
+  border: 1px solid color-mix(in oklch, white 28%, transparent);
+  border-radius: 50%;
+}
+
+.kk-drawing-toolbar__hex-field {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 6px;
+  border: 1px solid var(--kk-morphic-border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+.kk-drawing-toolbar__hex-field input {
+  width: 48px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+}
+
+.kk-drawing-toolbar__range-field {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 74px;
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+.kk-drawing-toolbar__range-field input {
+  width: 74px;
+  accent-color: var(--kk-morphic-action);
+}
+
+.kk-canvas-context-menu {
+  border-color: var(--kk-morphic-border);
+  background: var(--kk-morphic-panel);
+  box-shadow: 0 16px 36px color-mix(in oklch, black 24%, transparent);
+  backdrop-filter: blur(18px) saturate(135%);
+}
+
+.kk-canvas-context-menu__label {
+  padding: 7px 9px 5px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.kk-canvas-context-menu__item {
+  width: 100%;
+  padding: 7px 9px;
+  border-radius: 7px;
+  color: var(--text-primary);
+  text-align: left;
+  font-size: 12px;
+}
+
+.kk-canvas-context-menu__item:hover {
+  background: var(--kk-morphic-control-hover);
+}
+
+.kk-canvas-connection-flow {
+  stroke-dasharray: 5 8;
+  animation: kk-canvas-connection-flow 1.8s linear infinite;
+}
+
+.kk-canvas-connection-port-indicator {
+  transition: opacity 140ms ease;
+}
+
+.kk-canvas-connection-port-group:hover .kk-canvas-connection-port-indicator {
+  opacity: 0.72 !important;
+}
+
+@keyframes kk-canvas-connection-flow {
+  to { stroke-dashoffset: -26; }
+}
+
+.kk-drawing-toolbar__swatch > span {
+  width: 14px;
+  height: 14px;
+  border: 1px solid color-mix(in oklch, white 22%, transparent);
+  border-radius: 50%;
+}
+
+.kk-drawing-toolbar__swatch[data-active='true'] > span {
+  outline: 2px solid var(--kk-morphic-action);
+  outline-offset: 2px;
+}
+
+.kk-drawing-toolbar__width {
+  min-width: 30px;
+  padding-inline: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.kk-version-surface,
+.kk-version-help {
+  color: var(--text-secondary);
+  border-color: var(--kk-morphic-border) !important;
+  background: color-mix(in oklch, var(--kk-morphic-panel) 86%, transparent);
+  box-shadow: 0 8px 22px color-mix(in oklch, black 18%, transparent);
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+}
+
+.kk-version-help:hover {
+  color: var(--text-primary);
+  background: var(--kk-morphic-control-hover);
+}
+
+.kk-composer-reference-stack {
+  display: grid;
+  gap: 6px;
+  margin: 6px 10px 0;
+  padding: 6px;
+  border: 1px solid color-mix(in oklch, var(--kk-morphic-border) 78%, transparent);
+  border-radius: 12px;
+  background: color-mix(in oklch, var(--kk-morphic-control) 72%, transparent);
+}
+
+.kk-composer-reference-media-row {
+  min-height: 52px;
+  margin: 0 !important;
+  padding: 2px !important;
+}
+
+.kk-composer-reference-slot {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  place-items: center;
+  padding: 0;
+  color: var(--text-tertiary);
+  border: 1px dashed var(--kk-morphic-border);
+  border-radius: 10px;
+  background: transparent;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.kk-composer-reference-slot:hover {
+  color: var(--text-primary);
+  border-color: var(--kk-morphic-action);
+  background: var(--kk-morphic-control-hover);
+}
+
+.kk-composer-reference-arrow {
+  flex: 0 0 auto;
+  color: var(--text-tertiary);
+}
+
+.kk-composer-reference-role {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  left: 3px;
+  overflow: hidden;
+  padding: 2px 4px;
+  color: white;
+  border-radius: 6px;
+  background: color-mix(in oklch, black 64%, transparent);
+  font-size: 9px;
+  font-weight: 650;
+  line-height: 1.2;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.kk-composer-reference-context-row {
+  display: flex;
+  min-height: 28px;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 4px 2px 1px;
+  border-top: 1px solid var(--kk-morphic-border);
+}
+
+.kk-composer-context-reference {
+  display: inline-flex;
+  min-width: 0;
+  max-width: 180px;
+  align-items: center;
+  gap: 5px;
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  color: var(--text-secondary);
+  border: 1px solid var(--kk-morphic-border);
+  border-radius: 999px;
+  background: var(--kk-morphic-control);
+  font-size: 11px;
+}
+
+.kk-composer-context-reference > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspace-favorites-panel.is-desktop {
+  min-width: 420px;
+  min-height: 360px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 24px);
+}
+
+.workspace-favorites-panel.is-resizing,
+.workspace-favorites-panel.is-resizing * {
+  user-select: none;
+}
+
+.workspace-favorites-card {
+  container-name: favorites-panel;
+  container-type: inline-size;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--frost-card-framework-border);
+  background: color-mix(in oklch, var(--kk-morphic-panel) 96%, transparent);
+  background-image: none;
+  box-shadow: var(--frost-card-framework-shadow);
+  backdrop-filter: blur(28px) saturate(145%);
+  -webkit-backdrop-filter: blur(28px) saturate(145%);
+}
+
+.workspace-favorites-resize-handle {
+  position: absolute;
+  z-index: 2;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  touch-action: none;
+}
+
+.workspace-favorites-resize-handle.is-width {
+  top: 22px;
+  right: -5px;
+  bottom: 22px;
+  width: 10px;
+  cursor: ew-resize;
+}
+
+.workspace-favorites-resize-handle.is-height {
+  right: 22px;
+  bottom: -5px;
+  left: 22px;
+  height: 10px;
+  cursor: ns-resize;
+}
+
+.workspace-favorites-resize-handle.is-proportional {
+  right: -3px;
+  bottom: -3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 0 0 22px;
+  cursor: nwse-resize;
+}
+
+.workspace-favorites-resize-handle.is-proportional::after {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 7px;
+  height: 7px;
+  border-right: 1px solid var(--text-tertiary);
+  border-bottom: 1px solid var(--text-tertiary);
+  content: '';
+}
+
+@container favorites-panel (max-width: 560px) {
+  .workspace-favorites-card .workspace-favorites-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .workspace-favorites-card .workspace-favorites-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .workspace-favorites-card .workspace-favorites-detail-preview {
+    height: 128px;
+  }
+}
+
+/* Desktop controls keep desktop geometry even when the app window is narrow.
+   Shared touch targets remain available to the mobile layout below 769px. */
+@media (min-width: 769px) {
+  .kk-workspace-chrome-v3__account {
+    height: 36px !important;
+    min-height: 36px !important;
+    padding: 3px 5px !important;
+  }
+
+  .kk-workspace-chrome-v3__account > .relative,
+  .kk-workspace-chrome-v3 .kk-workspace-avatar-button {
+    width: 30px !important;
+    min-width: 30px !important;
+    height: 30px !important;
+    min-height: 30px !important;
+  }
+
+  .kk-workspace-chrome-v3__billing {
+    height: 30px !important;
+    min-height: 30px !important;
+  }
+
+  #btn-desktop-recharge {
+    height: 26px !important;
+    min-height: 26px !important;
+    padding-inline: 10px !important;
+  }
+
+  .kk-project-rail-host,
+  .kk-project-rail {
+    width: 38px !important;
+  }
+
+  .kk-project-rail button {
+    width: 30px !important;
+    min-width: 30px !important;
+    height: 30px !important;
+    min-height: 30px !important;
+    padding: 0 !important;
+    border-radius: 7px !important;
+  }
+
+  .kk-project-rail button svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .kk-version-help {
+    width: 28px !important;
+    min-width: 28px !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    padding: 0 !important;
+  }
+
+  .kk-morphic-workflow-panel {
+    top: 20px !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: 50% !important;
+    width: min(calc(100vw - 40px), 680px) !important;
+    max-width: 680px !important;
+    height: min(520px, calc(100dvh - 40px)) !important;
+    border-radius: 16px !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .kk-morphic-workflow-panel__header {
+    min-height: 52px;
+    align-items: center;
+    padding: 9px 10px 7px 14px;
+  }
+
+  .kk-morphic-workflow-panel__header h3 {
+    margin-bottom: 4px;
+  }
+
+  .kk-morphic-workflow-panel__body {
+    padding: 10px;
+  }
+
+  .kk-morphic-workflow-panel__grid,
+  .kk-morphic-workflow-panel__tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .kk-morphic-workflow-card {
+    min-height: 132px;
+    padding: 11px;
+  }
+
+  .kk-morphic-workflow-card__icon {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 9px;
+  }
+
+  .kk-morphic-workflow-panel__tools button {
+    min-height: 112px;
+    padding: 12px;
+  }
+
+  #prompt-bar-container:has(.kk-composer-options-stack) {
+    z-index: var(--kk-z-modal, 1200) !important;
+  }
+
+  .kk-composer-options-stack {
+    box-sizing: border-box;
+    width: 360px;
+    min-width: 0;
+    max-width: calc(100vw - 32px);
+    gap: 0 !important;
+    overflow: hidden;
+    border: 1px solid var(--kk-morphic-border);
+    border-radius: 14px;
+    padding: 7px;
+    background: var(--kk-morphic-panel);
+    box-shadow: 0 18px 44px color-mix(in oklch, black 30%, transparent);
+    backdrop-filter: blur(22px) saturate(140%);
+  }
+
+  .kk-composer-options-stack > .kk-image-options-panel {
+    width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 10px !important;
+    padding: 8px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .kk-composer-options-stack > .kk-image-options-panel > section {
+    margin-bottom: 9px !important;
+  }
+
+  .kk-composer-options-stack > .kk-image-options-panel > section > :first-child {
+    margin-bottom: 5px !important;
+  }
+
+  .kk-composer-options-stack .kk-image-options-panel button {
+    min-height: 30px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    border-radius: 8px !important;
+    font-size: 11px !important;
+  }
+
+  .kk-composer-options-stack .kk-aspect-ratio-grid {
+    grid-template-rows: 38px !important;
+  }
+
+  .kk-composer-options-stack .kk-aspect-ratio-grid > button {
+    height: 38px !important;
+  }
+
+  .kk-composer-options-stack > .kk-composer-parameter-count {
+    gap: 4px;
+    border: 0;
+    border-top: 1px solid var(--kk-morphic-border);
+    border-radius: 0;
+    padding: 7px 8px 5px;
+    background: transparent;
+  }
+
+  .kk-composer-options-stack .kk-composer-parameter-count__slider {
+    height: 16px;
+    min-height: 16px !important;
+  }
+
+  #prompt-bar-container[data-composer-mode='ecommerce']
+    .kk-ecommerce-workbench-header > .flex:first-child {
+    display: none !important;
+  }
+
+  #prompt-bar-container[data-composer-mode='ecommerce']
+    .kk-ecommerce-workflow-tabs {
+    margin-top: 0 !important;
+  }
+
+  #prompt-bar-container[data-composer-mode='ecommerce']
+    .kk-ecommerce-import-card {
+    min-height: 68px !important;
+  }
+}
+
+.kk-composer-voice-input {
+  position: relative;
+  overflow: visible;
+}
+
+.kk-composer-voice-status {
+  position: absolute;
+  z-index: var(--kk-z-dropdown, 1000);
+  right: 0;
+  bottom: calc(100% + 7px);
+  width: max-content;
+  max-width: min(240px, calc(100vw - 24px));
+  padding: 5px 8px;
+  border: 1px solid var(--kk-morphic-border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  background: var(--kk-morphic-panel);
+  box-shadow: 0 10px 28px color-mix(in oklch, black 24%, transparent);
+  font-size: 10px;
+  line-height: 1.35;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Mobile chrome shares one centered reading rail instead of stretching with
+ * wide phone viewports. The composer keeps its controls fixed while only the
+ * text area remains scrollable when content grows. */
+@media (max-width: 1023px) {
+  :root {
+    --kk-mobile-surface-width: min(580px, calc(100vw - 24px));
+  }
+
+  .mobile-header,
+  .mobile-header.w-full,
+  .ios-mobile-project-strip-wrap,
+  .ios-mobile-project-strip {
+    width: var(--kk-mobile-surface-width) !important;
+    max-width: var(--kk-mobile-surface-width) !important;
+    margin-inline: auto !important;
+  }
+
+  [data-mobile-primary-navigation='true'] {
+    display: flex !important;
+    justify-content: center;
+  }
+
+  [data-mobile-primary-navigation='true'] #mobile-tab-bar,
+  #mobile-tab-bar {
+    width: var(--kk-mobile-surface-width) !important;
+    max-width: var(--kk-mobile-surface-width) !important;
+    margin-inline: auto !important;
+  }
+
+  .kk-result-command-row {
+    width: var(--kk-mobile-surface-width) !important;
+    max-width: var(--kk-mobile-surface-width) !important;
+    margin-inline: auto !important;
+  }
+
+  #prompt-bar-container.kk-prompt-bar-mobile-expanded {
+    width: var(--kk-mobile-surface-width) !important;
+    max-width: var(--kk-mobile-surface-width) !important;
+    margin-inline: auto !important;
+  }
+
+  .kk-prompt-bar-mobile-collapse-handle,
+  .kk-prompt-bar-mobile-collapse-handle--embedded {
+    width: min(420px, calc(100vw - 48px)) !important;
+    min-width: min(420px, calc(100vw - 48px)) !important;
+    height: 24px !important;
+    min-height: 24px !important;
+    margin-inline: auto !important;
+  }
+
+  .kk-prompt-bar-mobile-collapse-handle--embedded .kk-prompt-bar-mobile-home-indicator {
+    width: min(160px, calc(100% - 72px)) !important;
+    height: 4px !important;
+  }
+}

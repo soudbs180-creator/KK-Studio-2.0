@@ -1,0 +1,667 @@
+import fs from 'fs';
+import { lookup } from 'node:dns/promises';
+import { isIP } from 'node:net';
+import path from 'path';
+import { fileURLToPath } from 'node:url';
+import { execSync } from 'child_process';
+import { defineConfig, loadEnv } from 'vite';
+import type { Plugin } from 'vite';
+import react from '@vitejs/plugin-react';
+import releaseManifestSource from '../../config/release-manifest.json' with { type: 'json' };
+import { parseReleaseManifest } from '../../scripts/lib/release-manifest.mjs';
+import { normalizeMultipartProxyBody } from './src/utils/devMultipartFormData.ts';
+import { shouldIgnoreWatchPath } from './viteWatchPolicy.ts';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const RELEASE_MANIFEST = parseReleaseManifest(releaseManifestSource);
+
+const VERSION_MANIFEST_FILENAME = 'app-version.json';
+const TURNSTILE_DIAGNOSTIC_ENTRY = path.resolve(__dirname, 'turnstile-diagnostic.html');
+
+const PRIVATE_IPV4_PATTERNS = [
+    /^0\./,
+    /^10\./,
+    /^127\./,
+    /^169\.254\./,
+    /^172\.(1[6-9]|2\d|3[0-1])\./,
+    /^192\.168\./,
+];
+
+const FORBIDDEN_HOSTNAME_SUFFIXES = [
+    '.internal',
+    '.local',
+    '.localdomain',
+    '.localhost',
+    '.home',
+    '.lan',
+];
+
+function normalizeHostForChecks(hostname: string): string {
+    return String(hostname || '')
+        .trim()
+        .toLowerCase()
+        .replace(/^\[|\]$/g, '')
+        .split('%')[0];
+}
+
+function isPrivateIpAddress(hostname: string): boolean {
+    const normalized = normalizeHostForChecks(hostname);
+    const ipVersion = isIP(normalized);
+
+    if (ipVersion === 4) {
+        return PRIVATE_IPV4_PATTERNS.some((pattern) => pattern.test(normalized));
+    }
+
+    if (ipVersion === 6) {
+        return normalized === '::'
+            || normalized === '::1'
+            || /^f[cd][0-9a-f]{0,2}:/i.test(normalized)
+            || /^fe[89ab][0-9a-f]?:/i.test(normalized)
+            || /^::ffff:(?:0:)?(?:10\.|127\.|169\.254\.|192\.168\.|172\.(1[6-9]|2\d|3[0-1])\.)/i.test(normalized);
+    }
+
+    return false;
+}
+
+function isForbiddenHostname(hostname: string): boolean {
+    const lower = normalizeHostForChecks(hostname);
+    if (!lower) return true;
+    if (lower === 'localhost') return true;
+    if (lower.includes('localhost')) return true;
+    if (FORBIDDEN_HOSTNAME_SUFFIXES.some((suffix) => lower.endsWith(suffix))) return true;
+    if (lower.endsWith('.nip.io') || lower.endsWith('.sslip.io')) return true;
+    if (isPrivateIpAddress(lower)) return true;
+    return false;
+}
+
+async function normalizeSupplierBaseUrl(rawBaseUrl: string): Promise<string> {
+    const parsed = new URL(String(rawBaseUrl || '').trim());
+
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+        throw new Error('Only http/https supplier URLs are allowed');
+    }
+
+    if (parsed.username || parsed.password) {
+        throw new Error('Supplier URL must not contain embedded credentials');
+    }
+
+    if (isForbiddenHostname(parsed.hostname)) {
+        throw new Error('Private, local, or loopback supplier URLs are not allowed');
+    }
+
+    const normalizedHost = normalizeHostForChecks(parsed.hostname);
+    if (normalizedHost && !isIP(normalizedHost)) {
+        const records = await lookup(normalizedHost, { all: true, verbatim: true });
+        if (!records.length) {
+            throw new Error('Supplier hostname did not resolve');
+        }
+
+        // Block domains that resolve into loopback or private network ranges in local dev too.
+        if (records.some((record) => isPrivateIpAddress(record.address))) {
+            throw new Error('Supplier hostname resolved to a private or loopback address');
+        }
+    }
+
+    parsed.hash = '';
+    parsed.search = '';
+    parsed.pathname = parsed.pathname
+        .replace(/\/(pricing(?:\.html)?|models)(\/.*)?$/i, '')
+        .replace(/\/v1\/?$/i, '')
+        .replace(/\/+$/, '') || '/';
+
+    return parsed.toString().replace(/\/$/, '');
+}
+
+const ROOT_WATCH_FILES = new Set([
+    '.env',
+    '.env.development',
+    '.env.local',
+    '.env.production',
+    'index.html',
+    'package-lock.json',
+    'package.json',
+    'postcss.config.cjs',
+    'postcss.config.js',
+    'tailwind.config.js',
+    'tailwind.config.ts',
+    'tsconfig.json',
+    'tsconfig.node.json',
+    'vite.config.js',
+    'vite.config.ts',
+]);
+
+const APP_MANUAL_CHUNK_GROUPS: Array<{ name: string; patterns: string[] }> = [
+    {
+        name: 'canvas-node-components',
+        patterns: [
+            '/src/components/canvas/PromptNodeComponent',
+            '/src/components/canvas/CanvasGroupComponent',
+            '/src/components/canvas/PendingNode',
+        ],
+    },
+    {
+        name: 'canvas-core',
+        patterns: [
+            '/src/components/canvas/',
+            '/src/context/CanvasContext.tsx',
+        ],
+    },
+    {
+        name: 'model-services',
+        patterns: [
+            '/src/services/model/',
+            '/src/services/auth/keyManager.ts',
+            '/src/services/api/providerStrategy.ts',
+            '/src/services/llm/syncImageBridge.ts',
+            '/src/hooks/useImageGeneration.ts',
+        ],
+    },
+    {
+        name: 'workspace-layout',
+        patterns: [
+            '/src/components/layout/PromptBar.tsx',
+            '/src/components/MobileChatFeed.tsx',
+        ],
+    },
+    {
+        name: 'image-workbench',
+        patterns: [
+            '/src/components/image/ImageCard.tsx',
+            '/src/components/image/ImageCard2.tsx',
+            '/src/components/image/ImageOptionsPanel.tsx',
+        ],
+    },
+    {
+        name: 'provider-adapters',
+        patterns: [
+            '/src/services/llm/',
+        ],
+    },
+    {
+        name: 'ecommerce-core',
+        patterns: [
+            '/src/services/ecommerce/assetRoleBindings.ts',
+            '/src/services/ecommerce/copyResolver.ts',
+            '/src/services/ecommerce/ecommerceModelPolicy.ts',
+            '/src/services/ecommerce/renderTaskBuilder.ts',
+            '/src/services/ecommerce/seriesTemplateExtractor.ts',
+            '/src/services/ecommerce/taskMerger.ts',
+        ],
+    },
+    {
+        name: 'ecommerce-analysis-tools',
+        patterns: [
+            '/src/services/ecommerce/ecommerceAnalysisClient.ts',
+            '/src/services/ecommerce/ecommerceAnalysisEnhancer.ts',
+        ],
+    },
+    {
+        name: 'ecommerce-normalize-tools',
+        patterns: [
+            '/src/services/ecommerce/normalize/',
+            '/src/services/ecommerce/xlsx/referenceBindingResolver.ts',
+        ],
+    },
+    {
+        name: 'ecommerce-document-tools',
+        patterns: [
+            '/src/services/ecommerce/text/',
+            '/src/services/ecommerce/xlsx/',
+            '/src/services/document/nutrientDocumentService.ts',
+        ],
+    },
+    {
+        name: 'ecommerce-export-tools',
+        patterns: [
+            '/src/services/ecommerce/groupExportManifest.ts',
+        ],
+    },
+    {
+        name: 'ecommerce-services',
+        patterns: [
+            '/src/services/ecommerce/',
+        ],
+    },
+];
+
+const DEFERRED_HTML_MODULE_PRELOAD_PREFIXES = [
+    'account-recharge-',
+    'account-tag-input-',
+    'account-user-profile-',
+    'settings-shell-',
+    'settings-views-',
+    'storage-modals-',
+    'search-tools-',
+    'image-viewer-modals-',
+    'GlobalLightbox-',
+    'PptDeckEditorModal-',
+    'PptStackPreviewModal-',
+    'RechargeModal-',
+    'TagInputModal-',
+    'UserProfileModal-',
+    'WechatQrModal-',
+    'RedrawWorkspace-',
+    'SearchPalette-',
+    'StorageSelectionModal-',
+    'MigrateModal-',
+    'TutorialOverlay-',
+    'animated-shader-background-',
+    'three-vendor-',
+    'authRedirect-',
+    'identityLinking-',
+    'rechargeSubmissionService-',
+    'ChatSidebar-',
+    'provider-adapters-',
+    'ecommerce-normalize-tools-',
+    'ecommerce-analysis-tools-',
+    'ecommerce-document-tools-',
+    'ecommerce-export-tools-',
+    'zip-vendor-',
+    'MarkdownToCardsModal-',
+    'MermaidRenderer-',
+];
+
+function getOutputAssetBasename(fileName: string): string {
+    return fileName.replace(/\\/g, '/').split('/').pop() || fileName;
+}
+
+function isDeferredHtmlModulePreload(fileName: string): boolean {
+    const basename = getOutputAssetBasename(fileName);
+    return DEFERRED_HTML_MODULE_PRELOAD_PREFIXES.some((prefix) => basename.startsWith(prefix));
+}
+
+function resolveManualChunk(id: string): string | undefined {
+    const normalizedId = id.replace(/\\/g, '/');
+
+    for (const group of APP_MANUAL_CHUNK_GROUPS) {
+        if (group.patterns.some((pattern) => normalizedId.includes(pattern))) {
+            return group.name;
+        }
+    }
+
+    if (normalizedId.includes('/node_modules/')) {
+        if (
+            normalizedId.includes('/node_modules/jszip/')
+            || normalizedId.includes('/node_modules/pako/')
+            || normalizedId.includes('/node_modules/lie/')
+            || normalizedId.includes('/node_modules/immediate/')
+        ) {
+            return 'zip-vendor';
+        }
+
+        if (normalizedId.includes('/framer-motion/') || normalizedId.includes('/motion/')) {
+            return 'motion-vendor';
+        }
+
+        if (normalizedId.includes('/lucide-react/')) {
+            return 'lucide-vendor';
+        }
+
+        if (normalizedId.includes('/three/')) {
+            return 'three-vendor';
+        }
+
+        return 'vendor';
+    }
+
+    return undefined;
+}
+
+function buildVersionManifestPlugin(): Plugin {
+    let projectRoot = process.cwd();
+
+    return {
+        name: 'kk-build-version-manifest',
+        apply: 'build',
+        configResolved(config) {
+            projectRoot = config.root;
+        },
+        generateBundle() {
+            let localGitSha: string | null = null;
+            try {
+                localGitSha = execSync('git rev-parse HEAD', { stdio: ['ignore', 'pipe', 'ignore'] })
+                    .toString()
+                    .trim();
+            } catch (e) {
+                // 忽略没有 git 仓库或环境时的错误
+            }
+
+            const commitSha = process.env.KK_STUDIO_COMMIT_SHA
+                || process.env.VERCEL_GIT_COMMIT_SHA
+                || process.env.COMMIT_REF
+                || process.env.GITHUB_SHA
+                || process.env.CF_PAGES_COMMIT_SHA
+                || localGitSha
+                || null;
+
+            const commitShortSha = commitSha ? commitSha.substring(0, 7) : null;
+
+            const manifest = {
+                schemaVersion: 1,
+                provenance: { kind: 'kk-studio-web-build' },
+                appName: RELEASE_MANIFEST.appName,
+                version: RELEASE_MANIFEST.releasedVersion,
+                releasedVersion: RELEASE_MANIFEST.releasedVersion,
+                displayVersion: RELEASE_MANIFEST.displayVersion,
+                releaseTarget: RELEASE_MANIFEST.releaseTarget,
+                releasePhase: RELEASE_MANIFEST.releasePhase,
+                releaseSequence: RELEASE_MANIFEST.releaseSequence,
+                artifactVersion: RELEASE_MANIFEST.artifactVersion,
+                buildTime: new Date().toISOString(),
+                releaseDate: RELEASE_MANIFEST.releaseDate,
+                releaseNotes: [...RELEASE_MANIFEST.releaseNotes],
+                channel: RELEASE_MANIFEST.releasePhase,
+                deploymentTarget: process.env.VERCEL_ENV
+                    || process.env.NODE_ENV
+                    || 'production',
+                commitSha,
+                commitShortSha,
+            };
+
+            this.emitFile({
+                type: 'asset',
+                fileName: VERSION_MANIFEST_FILENAME,
+                source: JSON.stringify(manifest, null, 2),
+            });
+        },
+    };
+}
+
+function getRequestPath(rawUrl: string | undefined): string {
+    try {
+        return new URL(rawUrl || '/', 'http://localhost').pathname;
+    } catch {
+        return rawUrl || '/';
+    }
+}
+
+function createProxyRequestHeaders(headers: Record<string, string | string[] | undefined>): Headers {
+    const proxyHeaders = new Headers();
+
+    Object.entries(headers).forEach(([key, value]) => {
+        if (!value) return;
+        if (key.toLowerCase() === 'host' || key.toLowerCase() === 'connection') return;
+
+        if (Array.isArray(value)) {
+            proxyHeaders.set(key, value.join(', '));
+            return;
+        }
+
+        proxyHeaders.set(key, value);
+    });
+
+    return proxyHeaders;
+}
+
+async function readIncomingBody(req: AsyncIterable<Buffer | string>): Promise<Buffer> {
+    const chunks: Buffer[] = [];
+
+    for await (const chunk of req) {
+        chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    }
+
+    return Buffer.concat(chunks);
+}
+
+async function writeFetchResponse(
+    res: {
+        statusCode: number;
+        setHeader: (name: string, value: string) => void;
+        end: (chunk?: Uint8Array | string) => void;
+    },
+    response: Response,
+) {
+    res.statusCode = response.status;
+    response.headers.forEach((value, key) => res.setHeader(key, value));
+    res.end(Buffer.from(await response.arrayBuffer()));
+}
+
+function shouldProxyToLocalApi(requestPath: string): boolean {
+    return requestPath === '/healthz'
+        || requestPath === '/api/manifest'
+        || requestPath === '/api/ai-assistant'
+        || requestPath.startsWith('/api/ai-assistant/')
+        || requestPath.startsWith('/api/v1/');
+}
+
+function buildLocalApiProxyUrl(rawUrl: string | undefined, targetOrigin: string): string {
+    const requestUrl = new URL(rawUrl || '/', 'http://localhost');
+    return new URL(`${requestUrl.pathname}${requestUrl.search}`, targetOrigin).toString();
+}
+
+let localApiServerPromise: Promise<void> | null = null;
+
+async function canReachLocalApi(targetOrigin: string): Promise<boolean> {
+    try {
+        const response = await fetch(new URL('/healthz', targetOrigin), { method: 'GET' });
+        return response.ok;
+    } catch {
+        return false;
+    }
+}
+
+function isAddressInUseError(error: unknown): boolean {
+    const message = error instanceof Error
+        ? `${error.name}: ${error.message}`
+        : String(error || '');
+
+    return message.includes('EADDRINUSE') || message.includes('address already in use');
+}
+async function ensureLocalApiServer(targetOrigin: string): Promise<void> {
+    if (await canReachLocalApi(targetOrigin)) {
+        return;
+    }
+    console.warn(`[API Proxy] 无法连接到本地 API 服务 ${targetOrigin}，请确保 backend 服务已启动。`);
+}
+
+function kkApiProxyPlugin(targetOrigin = 'http://127.0.0.1:3001'): Plugin {
+    return {
+        name: 'kk-api-proxy',
+        configureServer(server) {
+            server.middlewares.use(async (req, res, next) => {
+                const requestPath = getRequestPath(req.url);
+                if (!shouldProxyToLocalApi(requestPath)) {
+                    return next();
+                }
+
+                try {
+                    await ensureLocalApiServer(targetOrigin);
+
+                    const body = req.method && !['GET', 'HEAD'].includes(req.method.toUpperCase())
+                        ? await readIncomingBody(req)
+                        : undefined;
+
+                    const response = await fetch(buildLocalApiProxyUrl(req.url, targetOrigin), {
+                        method: req.method || 'GET',
+                        headers: createProxyRequestHeaders(req.headers),
+                        body,
+                    });
+
+                    await writeFetchResponse(res, response);
+                } catch (error: any) {
+                    res.statusCode = 502;
+                    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                    res.end(JSON.stringify({
+                        success: false,
+                        error: {
+                            code: 'LOCAL_API_PROXY_ERROR',
+                            message: error?.message || 'Failed to reach local API service.',
+                        },
+                    }));
+                }
+            });
+        },
+    };
+}
+
+/**
+ * 开发环境价格扫描代理插件
+ * 从服务端去爬取供应商的 /pricing 页面数据（实际请求 /api/pricing）
+ * 绕过浏览器 CORS 限制，生产环境由 services/api/ 后端或托管前端的同源代理处理
+ */
+function pricingProxyPlugin(): Plugin {
+    return {
+        name: 'pricing-proxy',
+        configureServer(server) {
+            server.middlewares.use(async (req, res, next) => {
+                if (req.url !== '/api/pricing-proxy' || req.method !== 'POST') {
+                    return next();
+                }
+
+                // 读取请求体
+                let body = '';
+                for await (const chunk of req) body += chunk;
+
+                // 简体中文注释：直接使用开发调试的回退代理，爬取供应商的实时价格数据
+
+
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+
+                try {
+                    const { baseUrl } = JSON.parse(body);
+                    const cleanUrl = await normalizeSupplierBaseUrl(baseUrl);
+
+                    if (!cleanUrl) {
+                        res.statusCode = 400;
+                        res.end(JSON.stringify({ error: '缺少 baseUrl 参数' }));
+                        return;
+                    }
+
+                    // 从服务端爬取供应商的价格页面数据源
+                    const pricingUrl = `${cleanUrl}/api/pricing`;
+                    console.log(`[pricing-proxy] 爬取价格页面: ${pricingUrl}`);
+
+                    const response = await fetch(pricingUrl, {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' },
+                    });
+
+                    if (!response.ok) {
+                        res.end(JSON.stringify({ error: `供应商返回 ${response.status}` }));
+                        return;
+                    }
+
+                    const text = await response.text();
+
+                    // 如果返回 HTML（SPA 页面），说明路径不对
+                    if (text.trimStart().startsWith('<!') || text.trimStart().startsWith('<html')) {
+                        res.end(JSON.stringify({ error: '供应商返回了 HTML 页面而非 JSON' }));
+                        return;
+                    }
+
+                    const data = JSON.parse(text);
+                    console.log(`[pricing-proxy] 成功获取 ${(data.data || []).length} 个模型价格`);
+                    res.end(JSON.stringify({
+                        success: true,
+                        data: data.data || [],
+                        group_ratio: data.group_ratio || {},
+                    }));
+                } catch (e: any) {
+                    console.error('[pricing-proxy] 错误:', e?.message);
+                    res.end(JSON.stringify({ error: e?.message || '代理请求失败' }));
+                }
+            });
+
+            // 处理 OPTIONS 预检请求
+            server.middlewares.use((req, res, next) => {
+                if (req.url === '/api/pricing-proxy' && req.method === 'OPTIONS') {
+                    res.setHeader('Access-Control-Allow-Origin', '*');
+                    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+                    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+                    res.statusCode = 200;
+                    res.end();
+                    return;
+                }
+                next();
+            });
+        },
+    };
+}
+
+
+export default defineConfig(({ mode }) => {
+    const env = loadEnv(mode, '.', '');
+    Object.entries(env).forEach(([key, value]) => {
+        if (!(key in process.env)) {
+            process.env[key] = value;
+        }
+    });
+    return {
+        root: __dirname,
+        server: {
+            port: 3000,
+            strictPort: true, // Fail if port 3000 is in use (don't auto-switch)
+            host: '0.0.0.0',
+            open: false, // Keep the browser stable and avoid repeated auto-open on dev server restarts
+            headers: {
+                'Cache-Control': 'no-store',
+            },
+            proxy: {
+                '/api/ai-assistant': {
+                    target: 'http://127.0.0.1:3001',
+                    changeOrigin: true,
+                },
+                '/api/v1': {
+                    target: 'http://127.0.0.1:3001',
+                    changeOrigin: true,
+                },
+                '/api/manifest': {
+                    target: 'http://127.0.0.1:3001',
+                    changeOrigin: true,
+                },
+                '/healthz': {
+                    target: 'http://127.0.0.1:3001',
+                    changeOrigin: true,
+                },
+            },
+            watch: {
+                // 🚀 [Critical Fix] 忽略应用自身生成的本地数据文档，防止 Vite HMR 触发强制刷新
+                ignored: shouldIgnoreWatchPath
+            }
+        },
+        plugins: [react(), kkApiProxyPlugin(), pricingProxyPlugin(), buildVersionManifestPlugin()],
+        resolve: {
+            dedupe: ['react', 'react-dom'],
+            alias: {
+                '@': path.resolve(__dirname, 'src'),
+                '@nano-banana/api-client': path.resolve(__dirname, '../../packages/api-client/src/index.ts'),
+                '@kk/ui/web': path.resolve(__dirname, '../../packages/ui/src/web/index.ts'),
+                '@kk/ui/core': path.resolve(__dirname, '../../packages/ui/src/core/tokens.ts'),
+                '@kk/ui/layout': path.resolve(__dirname, '../../packages/ui/src/core/layout.ts'),
+                '@kk/ui': path.resolve(__dirname, '../../packages/ui/src/index.ts'),
+            }
+        },
+        optimizeDeps: {
+            include: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime', 'react-dom/client']
+        },
+
+        build: {
+            // 确保构建时清理旧文件
+            emptyOutDir: true,
+            chunkSizeWarningLimit: 1100,
+            modulePreload: {
+                resolveDependencies(_filename, deps, context) {
+                    if (context.hostType !== 'html') {
+                        return deps;
+                    }
+
+                    return deps.filter((dep) => !isDeferredHtmlModulePreload(dep));
+                },
+            },
+            rollupOptions: {
+                input: {
+                    index: path.resolve(__dirname, 'index.html'),
+                    ...(fs.existsSync(TURNSTILE_DIAGNOSTIC_ENTRY)
+                        ? { 'turnstile-diagnostic': TURNSTILE_DIAGNOSTIC_ENTRY }
+                        : {}),
+                },
+                output: {
+                    manualChunks: resolveManualChunk,
+                },
+            },
+        }
+    };
+});

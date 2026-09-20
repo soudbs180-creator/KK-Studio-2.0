@@ -1,0 +1,902 @@
+import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import path from "node:path";
+import { spawn } from "node:child_process";
+
+import {
+  ensureLocalViteServer,
+  closeLocalViteServer,
+} from "./ensure-local-vite-server.mjs";
+import { runBrowserPreflight } from "./browser-preflight.mjs";
+
+const repoRoot = process.cwd();
+const stress10k = process.env.KK_CANVAS_CDP_10K === "1";
+const artifactDir = path.join(
+  repoRoot,
+  "temp",
+  "playwright",
+  stress10k ? "canvas-10k-cdp" : "canvas-responsive-cdp",
+);
+const profileDir = path.join(artifactDir, "chrome-profile");
+const port = 9337;
+const targetUrl = "http://127.0.0.1:3000";
+const tinyPng =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9sX6lzQAAAAASUVORK5CYII=";
+
+const responsiveViewportCases = [
+  { width: 1440, height: 900, surface: "canvas" },
+  { width: 1280, height: 720, surface: "canvas" },
+  { width: 1024, height: 720, surface: "canvas" },
+  { width: 1180, height: 820, surface: "canvas" },
+  { width: 1023, height: 720, surface: "canvas" },
+  { width: 834, height: 1112, surface: "results" },
+  { width: 768, height: 1024, surface: "results" },
+  { width: 430, height: 932, surface: "results" },
+  { width: 390, height: 844, surface: "results" },
+  { width: 375, height: 812, surface: "results" },
+];
+
+function createCanvasState() {
+  if (!stress10k)
+    return {
+      canvases: [
+        {
+          id: "default",
+          name: "Responsive V2",
+          presentationVersion: 2,
+          promptNodes: [
+            {
+              id: "prompt-responsive",
+              prompt: "Responsive canvas card",
+              position: { x: 0, y: 200 },
+              height: 180,
+              aspectRatio: "1:1",
+              imageSize: "1K",
+              model: "gemini-2.5-flash-image",
+              childImageIds: ["image-responsive"],
+              timestamp: 1,
+              presentation: {
+                kind: "prompt-result-group",
+                layoutMode: "column",
+                size: "standard",
+              },
+            },
+          ],
+          imageNodes: [
+            {
+              id: "image-responsive",
+              url: tinyPng,
+              prompt: "Responsive result",
+              position: { x: 0, y: 560 },
+              aspectRatio: "1:1",
+              model: "gemini-2.5-flash-image",
+              parentPromptId: "prompt-responsive",
+              canvasId: "default",
+              timestamp: 2,
+              presentation: {
+                kind: "media-only",
+                layoutMode: "column",
+                size: "standard",
+              },
+            },
+          ],
+          noteNodes: [
+            {
+              id: "note-responsive",
+              title: "Responsive notebook",
+              position: { x: -100, y: 0 },
+              width: 320,
+              height: 240,
+              elements: [],
+              presentation: {
+                version: 2,
+                kind: "notebook",
+                layoutMode: "column",
+                size: "standard",
+                ports: { source: "bottom", target: "top" },
+              },
+              createdAt: 3,
+              updatedAt: 3,
+            },
+          ],
+          workflow: {
+            version: 1,
+            nodes: [
+              {
+                id: "workflow-panel-responsive",
+                kind: "workflow-panel",
+                position: { x: 480, y: 0 },
+                width: 420,
+                height: 220,
+                presentation: {
+                  version: 2,
+                  kind: "workflow-panel",
+                  layoutMode: "column",
+                  size: "wide",
+                  ports: { source: "bottom", target: "top" },
+                },
+                data: {
+                  title: "Responsive workflow",
+                  status: "idle",
+                  steps: [
+                    {
+                      id: "workflow-step-responsive",
+                      label: "Generate",
+                      enabled: true,
+                      parameters: {},
+                      status: "idle",
+                    },
+                  ],
+                  outputNodeIds: [],
+                },
+              },
+            ],
+            edges: [],
+          },
+          groups: [],
+          drawings: [],
+          lastModified: 4,
+        },
+      ],
+      activeCanvasId: "default",
+      selectedNodeIds: [],
+      history: {},
+      fileSystemHandle: null,
+      folderName: null,
+    };
+
+  const promptNodes = [];
+  const imageNodes = [];
+  for (let groupIndex = 0; groupIndex < 100; groupIndex += 1) {
+    const groupColumn = groupIndex % 10;
+    const groupRow = Math.floor(groupIndex / 10);
+    const originX = groupColumn * 4200;
+    const originY = groupRow * 3600 + 200;
+    const childImageIds = [];
+    for (let childIndex = 0; childIndex < 99; childIndex += 1) {
+      const id = `image-stress-${groupIndex}-${childIndex}`;
+      childImageIds.push(id);
+      imageNodes.push({
+        id,
+        url: "data:,",
+        position: {
+          x: originX + (childIndex % 11) * 300,
+          y: originY + 360 + Math.floor(childIndex / 11) * 300,
+        },
+        parentPromptId: `prompt-stress-${groupIndex}`,
+        canvasId: "default",
+      });
+    }
+    promptNodes.push({
+      id: `prompt-stress-${groupIndex}`,
+      prompt: `10k canvas group ${groupIndex + 1}`,
+      position: { x: originX, y: originY },
+      childImageIds,
+      timestamp: groupIndex * 100 + 1,
+    });
+  }
+
+  return {
+    canvases: [
+      {
+        id: "default",
+        name: "10k Virtualized Canvas",
+        presentationVersion: 2,
+        promptNodes,
+        imageNodes,
+        noteNodes: [],
+        groups: [],
+        drawings: [],
+        lastModified: 10000,
+      },
+    ],
+    activeCanvasId: "default",
+    selectedNodeIds: [],
+    history: {},
+    fileSystemHandle: null,
+    folderName: null,
+  };
+}
+
+const viewportCases = stress10k
+  ? [{ width: 1440, height: 900, surface: "canvas" }]
+  : responsiveViewportCases;
+const seedState = createCanvasState();
+const seededCanvas = seedState.canvases[0];
+const sceneNodeCount =
+  seededCanvas.promptNodes.length +
+  seededCanvas.imageNodes.length +
+  seededCanvas.noteNodes.length +
+  (seededCanvas.workflow?.nodes.filter((node) => (
+    ["preview", "save", "agent", "workflow-panel"].includes(node.kind)
+  )).length || 0);
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function waitForJson(url, timeoutMs = 10000) {
+  const startedAt = Date.now();
+  while (Date.now() - startedAt < timeoutMs) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) return await response.json();
+    } catch {}
+    await wait(100);
+  }
+  throw new Error(`Timed out waiting for ${url}`);
+}
+
+async function connectCdp(webSocketDebuggerUrl) {
+  const socket = new WebSocket(webSocketDebuggerUrl);
+  await new Promise((resolve, reject) => {
+    socket.addEventListener("open", resolve, { once: true });
+    socket.addEventListener("error", reject, { once: true });
+  });
+  let nextId = 1;
+  const pending = new Map();
+  socket.addEventListener("message", (event) => {
+    const message = JSON.parse(event.data);
+    if (!message.id) return;
+    const handlers = pending.get(message.id);
+    if (!handlers) return;
+    pending.delete(message.id);
+    if (message.error) handlers.reject(new Error(message.error.message));
+    else handlers.resolve(message.result);
+  });
+  return {
+    send(method, params = {}) {
+      const id = nextId++;
+      return new Promise((resolve, reject) => {
+        pending.set(id, { resolve, reject });
+        socket.send(JSON.stringify({ id, method, params }));
+      });
+    },
+    close() {
+      socket.close();
+    },
+  };
+}
+
+async function evaluate(cdp, expression) {
+  const result = await cdp.send("Runtime.evaluate", {
+    expression,
+    returnByValue: true,
+    awaitPromise: true,
+  });
+  if (result.exceptionDetails)
+    throw new Error(
+      result.exceptionDetails.text || "Runtime evaluation failed",
+    );
+  return result.result.value;
+}
+
+async function measureDesktopAuxiliaryCard(cdp, cardId) {
+  return evaluate(
+    cdp,
+    `(() => {
+      const card = document.getElementById(${JSON.stringify(`canvas-card-${cardId}`)});
+      const handle = card?.querySelector(':scope > header, :scope > div:first-child');
+      const cardRect = card?.getBoundingClientRect();
+      const handleRect = handle?.getBoundingClientRect();
+      return cardRect && handleRect ? {
+        left: cardRect.left,
+        top: cardRect.top,
+        centerX: cardRect.left + cardRect.width / 2,
+        centerY: cardRect.top + cardRect.height / 2,
+        handleX: handleRect.left + Math.min(handleRect.width * 0.35, 120),
+        handleY: handleRect.top + handleRect.height / 2,
+        transform: card.style.transform,
+        dragging: card.dataset.dragging === 'true',
+      } : null;
+    })()`,
+  );
+}
+
+async function beginDesktopMouseDrag(cdp, start, end) {
+  await cdp.send("Input.dispatchMouseEvent", { type: "mouseMoved", ...start });
+  await cdp.send("Input.dispatchMouseEvent", {
+    type: "mousePressed",
+    ...start,
+    button: "left",
+    buttons: 1,
+    clickCount: 1,
+  });
+  await cdp.send("Input.dispatchMouseEvent", {
+    type: "mouseMoved",
+    ...end,
+    button: "left",
+    buttons: 1,
+  });
+}
+
+async function releaseDesktopMouseDrag(cdp, end) {
+  await cdp.send("Input.dispatchMouseEvent", {
+    type: "mouseReleased",
+    ...end,
+    button: "left",
+    buttons: 0,
+    clickCount: 1,
+  });
+}
+
+async function verifyDesktopAuxiliaryCardDrag(cdp, cardId, movement) {
+  const initial = await measureDesktopAuxiliaryCard(cdp, cardId);
+  if (!initial) throw new Error(`Desktop auxiliary card ${cardId} is unavailable`);
+  const start = { x: initial.handleX, y: initial.handleY };
+  const end = { x: start.x + movement.x, y: start.y + movement.y };
+  await beginDesktopMouseDrag(cdp, start, end);
+  await wait(120);
+  const during = await measureDesktopAuxiliaryCard(cdp, cardId);
+  await releaseDesktopMouseDrag(cdp, end);
+  await wait(120);
+  const released = await measureDesktopAuxiliaryCard(cdp, cardId);
+  await wait(350);
+  const settled = await measureDesktopAuxiliaryCard(cdp, cardId);
+  return {
+    initial,
+    during,
+    settled,
+    pointerError: {
+      x: Math.abs((during?.centerX || 0) - initial.centerX - movement.x),
+      y: Math.abs((during?.centerY || 0) - initial.centerY - movement.y),
+    },
+    settledPositionError: {
+      x: Math.abs((settled?.centerX || 0) - initial.centerX - movement.x),
+      y: Math.abs((settled?.centerY || 0) - initial.centerY - movement.y),
+    },
+    postReleaseDrift: Math.hypot(
+      (settled?.centerX || 0) - (released?.centerX || 0),
+      (settled?.centerY || 0) - (released?.centerY || 0),
+    ),
+  };
+}
+
+async function verifyComposerCopilotToggle(cdp) {
+  const collapsedNavigation = await evaluate(
+    cdp,
+    `(() => {
+      const navigation = document.querySelector('.desktop-navigation-panel');
+      const rect = navigation?.getBoundingClientRect();
+      return rect ? {
+        bottomInset: window.innerHeight - rect.bottom,
+        rightInset: window.innerWidth - rect.right,
+      } : null;
+    })()`,
+  );
+  const opened = await evaluate(
+    cdp,
+    `(() => {
+      const toggle = document.querySelector('[data-composer-copilot-toggle="true"]');
+      toggle?.click();
+      return !!toggle;
+    })()`,
+  );
+  await wait(500);
+  const expanded = await evaluate(
+    cdp,
+    `(() => {
+      const sidebarRect = document.querySelector('.kk-workspace-sidebar')?.getBoundingClientRect();
+      const canvasRect = document.querySelector('.canvas-container')?.getBoundingClientRect();
+      const edgeToggleRect = document.querySelector('.kk-workspace-sidebar > .kk-workspace-edge-toggle')?.getBoundingClientRect();
+      const centerComposerRect = document.querySelector('#prompt-bar-container[data-composer-layout="desktop"]')?.getBoundingClientRect();
+      const chatComposerRect = document.querySelector('.kk-chat-sidebar-composer')?.getBoundingClientRect();
+      const navigationRect = document.querySelector('.desktop-navigation-panel')?.getBoundingClientRect();
+      return {
+        workspaceMode: document.body.dataset.kkWorkspaceMode,
+        sidebarVisible: !!sidebarRect && sidebarRect.width > 0 && sidebarRect.height > 0,
+        sidebarWidth: sidebarRect?.width || 0,
+        sidebarRightInset: sidebarRect ? window.innerWidth - sidebarRect.right : null,
+        canvasVisible: !!canvasRect && canvasRect.width > 0 && canvasRect.height > 0,
+        edgeToggleVisible: !!edgeToggleRect && edgeToggleRect.width > 0 && edgeToggleRect.height > 0,
+        centerComposerVisible: !!centerComposerRect && centerComposerRect.width > 0 && centerComposerRect.height > 0,
+        chatComposerVisible: !!chatComposerRect && chatComposerRect.width > 0 && chatComposerRect.height > 0,
+        navigationVisible: !!navigationRect && navigationRect.width > 0 && navigationRect.height > 0,
+        navigationBottomInset: navigationRect ? window.innerHeight - navigationRect.bottom : null,
+        navigationRightInset: navigationRect ? window.innerWidth - navigationRect.right : null,
+      };
+    })()`,
+  );
+  const expandedScreenshot = await cdp.send("Page.captureScreenshot", {
+    format: "png",
+    captureBeyondViewport: false,
+  });
+  const expandedScreenshotPath = path.join(artifactDir, "1440x900-copilot.png");
+  writeFileSync(expandedScreenshotPath, Buffer.from(expandedScreenshot.data, "base64"));
+  const closed = await evaluate(
+    cdp,
+    `(() => {
+      const toggle = document.querySelector('.kk-workspace-sidebar > .kk-workspace-edge-toggle');
+      toggle?.click();
+      return !!toggle;
+    })()`,
+  );
+  await wait(350);
+  const restoredMode = await evaluate(cdp, `document.body.dataset.kkWorkspaceMode`);
+  return {
+    collapsedNavigation,
+    opened,
+    expanded,
+    expandedScreenshotPath,
+    closed,
+    restoredMode,
+  };
+}
+
+async function verifyWorkflowBrowser(cdp) {
+  const opened = await evaluate(
+    cdp,
+    `(() => {
+      const trigger = document.querySelector('.kk-composer-prompt-tools__workflow');
+      trigger?.click();
+      return !!trigger;
+    })()`,
+  );
+  await wait(250);
+  const dialog = await evaluate(
+    cdp,
+    `(() => {
+      const panel = document.querySelector('.kk-morphic-workflow-panel');
+      const rect = panel?.getBoundingClientRect();
+      return {
+        visible: !!rect && rect.width > 0 && rect.height > 0,
+        title: panel?.querySelector('#workflow-browser-title')?.textContent?.trim() || '',
+        hasSearch: !!panel?.querySelector('input[type="search"]'),
+        categoryCount: panel?.querySelectorAll('[data-workflow-category]').length || 0,
+      };
+    })()`,
+  );
+  const closed = await evaluate(
+    cdp,
+    `(() => {
+      const closeButton = document.querySelector('.kk-morphic-workflow-panel__close');
+      closeButton?.click();
+      return !!closeButton;
+    })()`,
+  );
+  await wait(150);
+  return { opened, dialog, closed };
+}
+
+async function verifyCanvasNavigationExpansion(cdp) {
+  const collapsed = await evaluate(
+    cdp,
+    `(() => {
+      const navigation = document.querySelector('.desktop-navigation-panel');
+      const dock = document.querySelector('[data-canvas-navigation-dock="true"]');
+      const rect = navigation?.getBoundingClientRect();
+      const dockRect = dock?.getBoundingClientRect();
+      document.querySelector('[data-canvas-minimap-toggle="true"]')?.click();
+      return rect && dockRect ? {
+        bottomInset: window.innerHeight - rect.bottom,
+        rightInset: window.innerWidth - rect.right,
+        dockHeight: dockRect.height,
+      } : null;
+    })()`,
+  );
+  await wait(260);
+  const expanded = await evaluate(
+    cdp,
+    `(() => {
+      const navigation = document.querySelector('.desktop-navigation-panel');
+      const popover = document.querySelector('[data-canvas-minimap-popover="true"]');
+      const actions = document.querySelectorAll('[data-canvas-navigation-action]');
+      const rect = navigation?.getBoundingClientRect();
+      const popoverRect = popover?.getBoundingClientRect();
+      return rect && popoverRect ? {
+        bottomInset: window.innerHeight - rect.bottom,
+        rightInset: window.innerWidth - rect.right,
+        top: rect.top,
+        popoverHeight: popoverRect.height,
+        actionCount: actions.length,
+      } : null;
+    })()`,
+  );
+  return { collapsed, expanded };
+}
+
+mkdirSync(artifactDir, { recursive: true });
+if (existsSync(profileDir))
+  rmSync(profileDir, { recursive: true, force: true });
+
+const server = await ensureLocalViteServer({ root: repoRoot, url: targetUrl });
+const preflight = await runBrowserPreflight();
+if (!preflight.ok || !preflight.executablePath)
+  throw new Error(`Browser unavailable: ${preflight.reason}`);
+
+const chrome = spawn(
+  preflight.executablePath,
+  [
+    "--headless=new",
+    `--remote-debugging-port=${port}`,
+    `--user-data-dir=${profileDir}`,
+    "--no-first-run",
+    "--no-default-browser-check",
+    "--disable-background-networking",
+    "--disable-component-update",
+    "--hide-scrollbars",
+    "about:blank",
+  ],
+  { stdio: "ignore" },
+);
+
+let cdp;
+try {
+  await waitForJson(`http://127.0.0.1:${port}/json/version`);
+  const target = await fetch(`http://127.0.0.1:${port}/json/new?about:blank`, {
+    method: "PUT",
+  }).then((response) => response.json());
+  cdp = await connectCdp(target.webSocketDebuggerUrl);
+  await cdp.send("Page.enable");
+  await cdp.send("Runtime.enable");
+  await cdp.send("Page.addScriptToEvaluateOnNewDocument", {
+    source: `(() => {
+      const now = Date.now();
+      const user = {
+        id: 'canvas-responsive-user', aud: 'authenticated', role: 'authenticated',
+        email: 'canvas-responsive@temp.local', created_at: new Date(now).toISOString(),
+        updated_at: new Date(now).toISOString(), app_metadata: { isTempUser: true },
+        user_metadata: { full_name: 'Canvas Responsive User', isTempUser: true }
+      };
+      localStorage.setItem('theme', 'dark');
+      localStorage.setItem('kk_theme', 'dark');
+      localStorage.setItem('kk_language', 'zh-CN');
+      localStorage.setItem('kk_studio_storage_mode', 'browser');
+      localStorage.setItem('kk_tutorial_seen', 'true');
+      localStorage.setItem('temp_user_session_v1', JSON.stringify({ user, createdAt: now, expiresAt: now + 86400000, isTempUser: true }));
+      localStorage.setItem('kkai.runtime.user-state.v1', JSON.stringify({ user, isTempUser: true, tempUserExpiry: now + 86400000 }));
+      localStorage.setItem('kk_studio_canvas_state', ${JSON.stringify(JSON.stringify(seedState))});
+      localStorage.setItem('kk_canvas_view:default:desktop', JSON.stringify({ x: 720, y: 460, scale: 1 }));
+      localStorage.setItem('kk_canvas_view:default:tablet-landscape', JSON.stringify({ x: 510, y: 400, scale: 0.85 }));
+    })();`,
+  });
+  await cdp.send("Emulation.setDeviceMetricsOverride", {
+    width: 1440,
+    height: 900,
+    deviceScaleFactor: 1,
+    mobile: false,
+  });
+  await cdp.send("Page.navigate", { url: targetUrl });
+
+  const documentStartedAt = Date.now();
+  while (Date.now() - documentStartedAt < 10000) {
+    if (await evaluate(cdp, `document.readyState === 'complete'`)) break;
+    await wait(100);
+  }
+  await wait(1200);
+  if (await evaluate(cdp, `!!document.querySelector('.kk-landing-root')`)) {
+    await evaluate(
+      cdp,
+      `document.querySelector('.kk-landing-nav__login')?.click()`,
+    );
+    const modalStartedAt = Date.now();
+    while (Date.now() - modalStartedAt < 5000) {
+      if (await evaluate(cdp, `!!document.querySelector('.auth-social-row')`))
+        break;
+      await wait(100);
+    }
+    await evaluate(
+      cdp,
+      `document.querySelector('.auth-social-row .auth-social-btn:last-child')?.click()`,
+    );
+  }
+
+  const readyStartedAt = Date.now();
+  while (Date.now() - readyStartedAt < 25000) {
+    const ready = await evaluate(
+      cdp,
+      `!!localStorage.getItem('temp_user_session_v1') && document.readyState === 'complete' && (!!document.querySelector('.canvas-container') || !!document.querySelector('[data-testid="mobile-app-shell"]'))`,
+    );
+    if (ready) break;
+    await wait(200);
+  }
+  await wait(1200);
+  const readyDurationMs = Date.now() - readyStartedAt;
+
+  const results = [];
+  for (const viewport of viewportCases) {
+    await cdp.send("Emulation.setDeviceMetricsOverride", {
+      width: viewport.width,
+      height: viewport.height,
+      deviceScaleFactor: 1,
+      mobile: viewport.width <= 1023,
+      screenWidth: viewport.width,
+      screenHeight: viewport.height,
+    });
+    await wait(500);
+    let desktopAuxiliaryDrags = null;
+    let copilotToggleFlow = null;
+    let workflowBrowserFlow = null;
+    if (viewport.surface === "canvas") {
+      if (viewport.width === 1440) {
+        desktopAuxiliaryDrags = {
+          note: await verifyDesktopAuxiliaryCardDrag(
+            cdp,
+            "note-responsive",
+            { x: 48, y: -32 },
+          ),
+          workflow: await verifyDesktopAuxiliaryCardDrag(
+            cdp,
+            "workflow-panel-responsive",
+            { x: -52, y: -24 },
+          ),
+        };
+        workflowBrowserFlow = await verifyWorkflowBrowser(cdp);
+        const canvasNavigationExpansion = await verifyCanvasNavigationExpansion(cdp);
+        copilotToggleFlow = await verifyComposerCopilotToggle(cdp);
+        copilotToggleFlow.canvasNavigationExpansion = canvasNavigationExpansion;
+      }
+      await evaluate(
+        cdp,
+        `(() => {
+          const card = document.querySelector('[data-card-id="prompt-responsive"]');
+          const rect = card?.getBoundingClientRect();
+          if (!card || !rect) return false;
+          card.dispatchEvent(new MouseEvent('mousedown', {
+            bubbles: true,
+            cancelable: true,
+            clientX: rect.left + rect.width / 2,
+            clientY: rect.top + rect.height / 2,
+            button: 2,
+            buttons: 2,
+          }));
+          card.dispatchEvent(new MouseEvent('contextmenu', {
+            bubbles: true,
+            cancelable: true,
+            clientX: rect.left + rect.width / 2,
+            clientY: rect.top + rect.height / 2,
+            button: 2,
+          }));
+          return true;
+        })()`,
+      );
+      await wait(100);
+    }
+    const metrics = await evaluate(
+      cdp,
+      `(() => {
+      const canvas = document.querySelector('.canvas-container');
+      const mobileShell = document.querySelector('[data-testid="mobile-app-shell"]');
+      const mobilePrimaryNavigation = document.querySelector('[data-mobile-primary-navigation]');
+      const mobileTaskStatus = document.querySelector('[data-testid="mobile-generation-task-status"]');
+      const composer = document.querySelector('#prompt-bar-container[data-composer-layout="desktop"]');
+      const rail = document.getElementById('project-manager-container');
+      const chromeRegions = document.querySelectorAll('[data-chrome-region]');
+      const composerCopilotToggle = document.querySelector('[data-composer-copilot-toggle="true"]');
+      const selectionToolbar = document.querySelector('.kk-canvas-selection-menu[data-placement]');
+      const composerRect = composer?.getBoundingClientRect();
+      const railRect = rail?.getBoundingClientRect();
+      const mobileTaskStatusRect = mobileTaskStatus?.getBoundingClientRect();
+      const composerCopilotToggleRect = composerCopilotToggle?.getBoundingClientRect();
+      const selectionToolbarRect = selectionToolbar?.getBoundingClientRect();
+      const cardRects = [...document.querySelectorAll('[data-card-kind]')]
+        .map((card) => card.getBoundingClientRect())
+        .filter((rect) => rect.width > 0 && rect.height > 0);
+      const rectsOverlap = (first, second) => !(
+        first.right <= second.left
+        || first.left >= second.right
+        || first.bottom <= second.top
+        || first.top >= second.bottom
+      );
+      return {
+        url: location.href,
+        title: document.title,
+        bodyText: document.body.innerText.slice(0, 240),
+        authReady: !!localStorage.getItem('temp_user_session_v1'),
+        canvasSeeded: !!localStorage.getItem('kk_studio_canvas_state'),
+        seededNodeCount: (() => {
+          try {
+            const state = JSON.parse(localStorage.getItem('kk_studio_canvas_state') || '{}');
+            const seededCanvas = state.canvases?.[0];
+            return (seededCanvas?.promptNodes?.length || 0)
+              + (seededCanvas?.imageNodes?.length || 0)
+              + (seededCanvas?.noteNodes?.length || 0)
+              + (seededCanvas?.workflow?.nodes?.filter((node) => (
+                ['preview', 'save', 'agent', 'workflow-panel'].includes(node.kind)
+              )).length || 0);
+          } catch {
+            return 0;
+          }
+        })(),
+        seededNodeCounts: (() => {
+          try {
+            const state = JSON.parse(localStorage.getItem('kk_studio_canvas_state') || '{}');
+            const seededCanvas = state.canvases?.[0];
+            return {
+              prompt: seededCanvas?.promptNodes?.length || 0,
+              image: seededCanvas?.imageNodes?.length || 0,
+              note: seededCanvas?.noteNodes?.length || 0,
+              workflow: seededCanvas?.workflow?.nodes?.length || 0,
+            };
+          } catch {
+            return null;
+          }
+        })(),
+        canvas: !!canvas,
+        mobileShell: !!mobileShell,
+        mobilePrimaryNavigation: !!mobilePrimaryNavigation,
+        mobileTaskStatusVisible: !!mobileTaskStatusRect
+          && mobileTaskStatusRect.width > 0
+          && mobileTaskStatusRect.height > 0,
+        chromeRegionCount: chromeRegions.length,
+        composerCopilotToggleVisible: !!composerCopilotToggleRect
+          && composerCopilotToggleRect.width > 0
+          && composerCopilotToggleRect.height > 0,
+        composerCopilotToggleInside: !!composer?.contains(composerCopilotToggle),
+        composerHeight: composerRect?.height || 0,
+        railWidth: railRect?.width || 0,
+        cardCount: document.querySelectorAll('[data-card-kind]').length,
+        selectionToolbarVisible: !!selectionToolbarRect,
+        selectionToolbarOverflow: !!selectionToolbarRect && (
+          selectionToolbarRect.left < 0
+          || selectionToolbarRect.right > window.innerWidth
+          || selectionToolbarRect.top < 48
+          || selectionToolbarRect.bottom > window.innerHeight
+        ),
+        selectionToolbarCardOverlap: !!selectionToolbarRect
+          && cardRects.some((cardRect) => rectsOverlap(selectionToolbarRect, cardRect)),
+        horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth + 1,
+        chromeOverlap: !!(composerRect && railRect && composerRect.left < railRect.right && composerRect.right > railRect.left && composerRect.top < railRect.bottom && composerRect.bottom > railRect.top),
+      };
+    })()`,
+    );
+    metrics.desktopAuxiliaryDrags = desktopAuxiliaryDrags;
+    metrics.copilotToggleFlow = copilotToggleFlow;
+    metrics.workflowBrowserFlow = workflowBrowserFlow;
+    const screenshot = await cdp.send("Page.captureScreenshot", {
+      format: "png",
+      captureBeyondViewport: false,
+    });
+    const screenshotPath = path.join(
+      artifactDir,
+      `${viewport.width}x${viewport.height}.png`,
+    );
+    writeFileSync(screenshotPath, Buffer.from(screenshot.data, "base64"));
+    console.log(JSON.stringify({ viewport, metrics, screenshotPath }));
+    if (viewport.surface === "canvas") {
+      if (!metrics.canvas || metrics.mobileShell)
+        throw new Error(
+          `${viewport.width}x${viewport.height} did not render the canvas surface`,
+        );
+      if (Math.abs(metrics.composerHeight - 94) > 1)
+        throw new Error(
+          `${viewport.width}x${viewport.height} composer height=${metrics.composerHeight}`,
+        );
+      if (Math.abs(metrics.railWidth - 38) > 1)
+        throw new Error(
+          `${viewport.width}x${viewport.height} rail width=${metrics.railWidth}`,
+        );
+      if (
+        metrics.chromeRegionCount !== 3
+        || !metrics.composerCopilotToggleVisible
+        || !metrics.composerCopilotToggleInside
+      )
+        throw new Error(
+          `${viewport.width}x${viewport.height} desktop V3 chrome is incomplete`,
+        );
+      if (
+        workflowBrowserFlow
+        && (
+          !workflowBrowserFlow.opened
+          || !workflowBrowserFlow.dialog.visible
+          || !workflowBrowserFlow.dialog.hasSearch
+          || workflowBrowserFlow.dialog.categoryCount !== 3
+          || !workflowBrowserFlow.closed
+        )
+      )
+        throw new Error(
+          `${viewport.width}x${viewport.height} workflow browser did not open from Composer`,
+        );
+      if (
+        copilotToggleFlow
+        && (
+          !copilotToggleFlow.opened
+          || !copilotToggleFlow.closed
+          || copilotToggleFlow.expanded.workspaceMode !== "copilot"
+          || !copilotToggleFlow.expanded.sidebarVisible
+          || Math.abs(copilotToggleFlow.expanded.sidebarWidth - 420) > 1
+          || Math.abs(copilotToggleFlow.expanded.sidebarRightInset - 10) > 1
+          || !copilotToggleFlow.expanded.canvasVisible
+          || !copilotToggleFlow.expanded.edgeToggleVisible
+          || copilotToggleFlow.expanded.centerComposerVisible
+          || !copilotToggleFlow.expanded.chatComposerVisible
+          || !copilotToggleFlow.expanded.navigationVisible
+          || Math.abs(copilotToggleFlow.expanded.navigationBottomInset - 10) > 1
+          || copilotToggleFlow.expanded.navigationRightInset
+            <= copilotToggleFlow.collapsedNavigation.rightInset + 200
+          || copilotToggleFlow.restoredMode !== "canvas"
+        )
+      )
+        throw new Error(
+          `${viewport.width}x${viewport.height} Composer Copilot expansion is incomplete`,
+        );
+      const navigationExpansion = copilotToggleFlow?.canvasNavigationExpansion;
+      if (
+        navigationExpansion
+        && (
+          !navigationExpansion.collapsed
+          || !navigationExpansion.expanded
+          || Math.abs(navigationExpansion.collapsed.bottomInset - 10) > 1
+          || Math.abs(navigationExpansion.expanded.bottomInset - 10) > 1
+          || Math.abs(
+            navigationExpansion.collapsed.rightInset
+            - navigationExpansion.expanded.rightInset
+          ) > 1
+          || navigationExpansion.expanded.actionCount !== 1
+          || navigationExpansion.expanded.top < 48
+        )
+      )
+        throw new Error(
+          `${viewport.width}x${viewport.height} canvas navigation does not remain bottom-anchored: ${JSON.stringify(navigationExpansion)}`,
+        );
+      if (metrics.cardCount < 1)
+        throw new Error(
+          `${viewport.width}x${viewport.height} rendered no cards`,
+        );
+      if (
+        !metrics.selectionToolbarVisible
+        || metrics.selectionToolbarOverflow
+        || metrics.selectionToolbarCardOverlap
+      )
+        throw new Error(
+          `${viewport.width}x${viewport.height} selection toolbar is hidden, outside the viewport, or overlapping a card`,
+        );
+      if (metrics.seededNodeCount !== sceneNodeCount)
+        throw new Error(
+          `${viewport.width}x${viewport.height} loaded ${metrics.seededNodeCount}/${sceneNodeCount} seeded nodes`,
+        );
+      for (const [cardKind, drag] of Object.entries(desktopAuxiliaryDrags || {})) {
+        if (
+          drag.pointerError.x > 2
+          || drag.pointerError.y > 2
+          || drag.settledPositionError.x > 2
+          || drag.settledPositionError.y > 2
+          || drag.postReleaseDrift > 1
+          || !drag.during.transform.includes("translate3d")
+          || drag.settled.transform
+          || drag.settled.dragging
+        ) {
+          throw new Error(
+            `${viewport.width}x${viewport.height} ${cardKind} drag is unstable: ${JSON.stringify(drag)}`,
+          );
+        }
+      }
+      if (stress10k && metrics.cardCount >= 1000)
+        throw new Error(
+          `10k canvas rendered ${metrics.cardCount} DOM cards instead of a virtualized subset`,
+        );
+    } else if (!metrics.mobileShell || metrics.canvas) {
+      throw new Error(
+        `${viewport.width}x${viewport.height} did not preserve the result-flow surface`,
+      );
+    } else {
+      if (metrics.mobilePrimaryNavigation || !metrics.mobileTaskStatusVisible) {
+        throw new Error(
+          `${viewport.width}x${viewport.height} mobile simple result hierarchy is incomplete`,
+        );
+      }
+    }
+    if (metrics.horizontalOverflow || metrics.chromeOverlap)
+      throw new Error(
+        `${viewport.width}x${viewport.height} has UI overflow or chrome overlap`,
+      );
+    if (Buffer.byteLength(screenshot.data, "base64") < 10000)
+      throw new Error(
+        `${viewport.width}x${viewport.height} screenshot is unexpectedly blank`,
+      );
+    results.push({ ...viewport, ...metrics, screenshotPath });
+  }
+  const report = {
+    targetUrl,
+    stress10k,
+    sceneNodeCount,
+    readyDurationMs,
+    results,
+  };
+  writeFileSync(
+    path.join(artifactDir, "report.json"),
+    JSON.stringify(report, null, 2),
+  );
+  console.log(JSON.stringify(report, null, 2));
+} finally {
+  cdp?.close();
+  chrome.kill();
+  await closeLocalViteServer(server.server);
+}

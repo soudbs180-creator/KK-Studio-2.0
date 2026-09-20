@@ -1,0 +1,259 @@
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { ChevronDown, ChevronUp, ExternalLink, Loader2 } from 'lucide-react';
+import { KK_LAYER } from '@kk/ui';
+
+import type { AdminRechargeSubmissionDto } from '../../../../../packages/shared/src/index.ts';
+import { kkWebApiClient } from '../../services/api/kkApiClient';
+import { listAdminRechargeSubmissions } from '../../services/billing/rechargeSubmissionService';
+import { notify } from '../../services/system/notificationService';
+import { readRuntimeEnv } from '../../utils/runtimeEnv';
+import { safeOpenLink } from '../../utils/browserUtils';
+
+interface AdminRechargeFloatingPanelProps {
+  enabled?: boolean;
+}
+
+function formatAmount(value: number | undefined, currencyCode: string | undefined): string {
+  const symbol = currencyCode === 'USD' ? '$' : '楼';
+  return `${symbol}${Number(value || 0).toFixed(2)}`;
+}
+
+function getRemainingSeconds(item: AdminRechargeSubmissionDto): number {
+  if (!item.expiresAt || item.status !== 'paying') {
+    return 0;
+  }
+
+  return Math.max(0, Math.ceil((new Date(item.expiresAt).getTime() - Date.now()) / 1000));
+}
+
+function formatRemaining(item: AdminRechargeSubmissionDto): string {
+  const seconds = getRemainingSeconds(item);
+  if (item.status !== 'paying') {
+    return item.status;
+  }
+  if (seconds <= 0) {
+    return '已超时';
+  }
+
+  const minutes = Math.floor(seconds / 60);
+  return `${minutes}:${String(seconds % 60).padStart(2, '0')}`;
+}
+
+function sortRechargeSubmissions(items: AdminRechargeSubmissionDto[]): AdminRechargeSubmissionDto[] {
+  return [...items].sort((left, right) => {
+    const leftMarked = left.status === 'paying' && Boolean(left.paymentMarkedAt);
+    const rightMarked = right.status === 'paying' && Boolean(right.paymentMarkedAt);
+    if (leftMarked !== rightMarked) {
+      return leftMarked ? -1 : 1;
+    }
+
+    const leftPaying = left.status === 'paying';
+    const rightPaying = right.status === 'paying';
+    if (leftPaying !== rightPaying) {
+      return leftPaying ? -1 : 1;
+    }
+
+    return new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime();
+  });
+}
+
+function openAdminRechargePage(submissionId?: string) {
+  const configuredAdminUrl = readRuntimeEnv('VITE_KK_ADMIN_URL');
+  const baseUrl = configuredAdminUrl || '/admin';
+  const suffix = submissionId
+    ? `/recharge-submissions?submissionId=${encodeURIComponent(submissionId)}`
+    : '/recharge-submissions';
+  safeOpenLink(`${baseUrl.replace(/\/$/, '')}${suffix}`);
+}
+
+const AdminRechargeFloatingPanel: React.FC<AdminRechargeFloatingPanelProps> = ({ enabled = false }) => {
+  const [items, setItems] = useState<AdminRechargeSubmissionDto[]>([]);
+  const [collapsed, setCollapsed] = useState(false);
+  const [processingId, setProcessingId] = useState<string | null>(null);
+  const [position, setPosition] = useState({ x: 0, y: 16 });
+  const dragRef = useRef<{ startX: number; startY: number; originX: number; originY: number } | null>(null);
+
+  const payingItems = useMemo(
+    () => sortRechargeSubmissions(items.filter((item) => item.status === 'paying')).slice(0, 10),
+    [items],
+  );
+  const latest = payingItems[0];
+
+  useEffect(() => {
+    if (!enabled) {
+      setItems([]);
+      return undefined;
+    }
+
+    let alive = true;
+    const load = async () => {
+      const response = await listAdminRechargeSubmissions({
+        requestId: `admin-floating-recharges-${Date.now()}`,
+      }).catch(() => undefined);
+      if (!alive || !response?.success) {
+        return;
+      }
+      setItems(response.data.items);
+    };
+
+    void load();
+    const timer = window.setInterval(load, 10000);
+    const clock = window.setInterval(() => {
+      setItems((current) => [...current]);
+    }, 1000);
+    return () => {
+      alive = false;
+      window.clearInterval(timer);
+      window.clearInterval(clock);
+    };
+  }, [enabled]);
+
+  if (!enabled || payingItems.length === 0) {
+    return null;
+  }
+
+  const handlePointerDown: React.PointerEventHandler<HTMLDivElement> = (event) => {
+    dragRef.current = {
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: position.x,
+      originY: position.y,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handlePointerMove: React.PointerEventHandler<HTMLDivElement> = (event) => {
+    if (!dragRef.current) {
+      return;
+    }
+    const nextX = dragRef.current.originX + event.clientX - dragRef.current.startX;
+    const nextY = Math.max(8, dragRef.current.originY + event.clientY - dragRef.current.startY);
+    setPosition({ x: nextX, y: nextY });
+  };
+
+  const handlePointerUp: React.PointerEventHandler<HTMLDivElement> = () => {
+    dragRef.current = null;
+  };
+
+  const handleDirectCredit = async (submissionId: string) => {
+    setProcessingId(submissionId);
+    try {
+      const response = await kkWebApiClient.reviewRechargeSubmission(submissionId, {
+        decision: 'credit',
+      }, {
+        requestId: `admin-floating-credit-${submissionId}-${Date.now()}`,
+      });
+      if (!response.success) {
+        throw new Error(response.error?.message || '处理充值失败。');
+      }
+      setItems((current) => current.map((item) => (
+        item.submissionId === submissionId ? response.data.submission : item
+      )));
+      notify.success('充值已入账', `已为 ${response.data.submission.userId} 增加 ${response.data.creditAmount} 积分。`);
+    } catch (error) {
+      notify.error('处理失败', error instanceof Error ? error.message : '处理充值失败。');
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  return (
+    <div
+      data-testid="admin-recharge-floating-panel"
+      className="admin-recharge-floating-panel fixed left-1/2 w-[min(92vw,760px)] select-none rounded-2xl"
+      style={{
+        zIndex: KK_LAYER.floatingPanel,
+        transform: `translate(calc(-50% + ${position.x}px), ${position.y}px)`,
+      }}
+    >
+      <div
+        className="admin-recharge-floating-panel__header flex cursor-move items-center justify-between gap-3 px-4 py-3"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+      >
+        <div className="min-w-0">
+          <div className="admin-recharge-floating-panel__title text-sm font-semibold">
+            {latest.paymentMarkedAt ? '用户已支付，请优先处理' : '用户正在支付，请处理'}
+          </div>
+          <div className="admin-recharge-floating-panel__meta truncate text-xs">
+            {latest.userId} · {formatAmount(latest.payableAmount ?? latest.amount, latest.currencyCode)} · {latest.creditAmount} 积分
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => openAdminRechargePage(latest.submissionId)}
+            className="admin-recharge-floating-panel__primary-action inline-flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-semibold"
+          >
+            进入处理
+            <ExternalLink size={13} />
+          </button>
+          <button
+            type="button"
+            onClick={() => setCollapsed((current) => !current)}
+            className="admin-recharge-floating-panel__icon-action rounded-lg p-2"
+            aria-label={collapsed ? '展开充值处理列表' : '缩小充值处理列表'}
+          >
+            {collapsed ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
+          </button>
+        </div>
+      </div>
+
+      {collapsed ? null : (
+        <div className="admin-recharge-floating-panel__list max-h-[420px] space-y-2 overflow-y-auto p-3">
+          {payingItems.map((item) => {
+            const marked = Boolean(item.paymentMarkedAt);
+            return (
+              <div
+                key={item.submissionId}
+                data-state={marked ? 'marked' : 'idle'}
+                className="admin-recharge-floating-panel__row grid gap-3 rounded-xl border p-3 text-xs md:grid-cols-[minmax(0,1.4fr)_90px_90px_70px_180px]"
+              >
+                <div className="min-w-0">
+                  <div className="truncate font-semibold">{item.userId}</div>
+                  <div className="admin-recharge-floating-panel__muted truncate">{item.submissionId}</div>
+                </div>
+                <div>
+                  <div className="admin-recharge-floating-panel__muted">渠道</div>
+                  <div>{item.manualProvider === 'wechat' ? '微信' : '支付宝'}</div>
+                </div>
+                <div>
+                  <div className="admin-recharge-floating-panel__muted">实付</div>
+                  <div>{formatAmount(item.payableAmount ?? item.amount, item.currencyCode)}</div>
+                </div>
+                <div>
+                  <div className="admin-recharge-floating-panel__muted">积分</div>
+                  <div>{item.creditAmount}</div>
+                </div>
+                <div className="flex items-center justify-end gap-2">
+                  <span className="admin-recharge-floating-panel__status" data-state={marked ? 'marked' : 'idle'}>
+                    {formatRemaining(item)}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => openAdminRechargePage(item.submissionId)}
+                    className="admin-recharge-floating-panel__primary-action rounded-lg px-3 py-2 text-xs font-semibold"
+                  >
+                    进入处理
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void handleDirectCredit(item.submissionId)}
+                    disabled={processingId === item.submissionId}
+                    className="admin-recharge-floating-panel__credit-action rounded-md px-2 py-1 text-[11px] disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {processingId === item.submissionId ? <Loader2 size={12} className="animate-spin" /> : '直接处理'}
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default AdminRechargeFloatingPanel;
+

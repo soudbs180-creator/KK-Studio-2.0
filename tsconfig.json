@@ -1,0 +1,51 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "ignoreDeprecations": "6.0",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "apps/web/src/*"
+      ],
+      "@nano-banana/api-client": [
+        "packages/api-client/src/index.ts"
+      ],
+      "@kk/ui/web": [
+        "packages/ui/src/web/index.ts"
+      ],
+      "@kk/ui/core": [
+        "packages/ui/src/core/tokens.ts"
+      ],
+      "@kk/ui": [
+        "packages/ui/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "apps/web/src"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/__create/**/*",
+    "**/__create",
+    "apps/web/src/app/api/vitest.config.ts"
+  ]
+}

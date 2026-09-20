@@ -1,0 +1,170 @@
+{
+  "generatedFromPlan": "KK Studio v1.6.0 architecture convergence governance (config/release-manifest.json)",
+  "entries": [
+    {
+      "path": "apps/web/src/services/billing/costSyncBridge.ts",
+      "role": "compatibility-layer",
+      "owner": "web-billing",
+      "reviewBy": "2026-09-30",
+      "currentPurpose": "Translates legacy frontend billing refresh triggers into the migrated billing/runtime model.",
+      "upstreamCanonicalSource": "services/api/routes",
+      "downstreamDependents": [
+        "apps/web/src/services/auth/keyManager.ts"
+      ],
+      "riskLevel": "medium",
+      "regressionTests": [
+        "tests/unit/generation-billing-coordinator.test.ts"
+      ],
+      "removalCondition": "Delete when billing refresh and pricing sync are requested only through typed billing clients."
+    },
+    {
+      "path": "apps/web/src/services/llm/syncImageBridge.ts",
+      "role": "compatibility-layer",
+      "owner": "web-generation",
+      "reviewBy": "2026-09-30",
+      "currentPurpose": "Bridges legacy image-generation responses into the synchronized workspace/update pipeline.",
+      "upstreamCanonicalSource": "services/api/routes",
+      "downstreamDependents": [
+        "apps/web/src/services/llm/LLMService.ts"
+      ],
+      "riskLevel": "medium",
+      "regressionTests": [
+        "tests/unit/generation-runtime-contract.test.ts"
+      ],
+      "removalCondition": "Delete when image sync events are emitted natively from the generation module end-to-end."
+    },
+    {
+      "path": "apps/web/src/services/model/modelPricingOverrideBridge.ts",
+      "role": "compatibility-layer",
+      "owner": "web-model-catalog",
+      "reviewBy": "2026-09-30",
+      "currentPurpose": "Applies pricing overrides while old provider pricing snapshots coexist with migrated model catalog data.",
+      "upstreamCanonicalSource": "services/api/routes",
+      "downstreamDependents": [
+        "apps/web/src/services/auth/keyManager.ts"
+      ],
+      "riskLevel": "medium",
+      "regressionTests": [
+        "tests/unit/provider-strategy.test.ts"
+      ],
+      "removalCondition": "Delete when pricing overrides live entirely in typed model-catalog responses."
+    },
+    {
+      "path": "apps/web/src/workflow/adapters/workflowToLegacy.ts",
+      "role": "compatibility-layer",
+      "owner": "web-workflow",
+      "reviewBy": "2026-09-30",
+      "currentPurpose": "Maps migrated workflow structures back into legacy canvas consumers during transition.",
+      "upstreamCanonicalSource": "services/api/routes",
+      "downstreamDependents": [
+        "apps/web/src/workflow/adapters/canvasToWorkflow.ts"
+      ],
+      "riskLevel": "medium",
+      "regressionTests": [
+        "tests/unit/canvas-workflow-updates-contract.test.ts"
+      ],
+      "removalCondition": "Delete when all workflow-aware UI surfaces consume the migrated workflow shape directly."
+    },
+    {
+      "path": "apps/web/src/components/settings/SettingsScaffold.tsx",
+      "role": "compatibility-layer",
+      "owner": "web-settings",
+      "reviewBy": "2026-09-30",
+      "currentPurpose": "Scaffold shell kept during the settings-area migration to avoid breaking route composition while final views stabilize.",
+      "upstreamCanonicalSource": "apps/web/src/components/settings/SettingsPanel.tsx",
+      "downstreamDependents": [
+        "apps/web/src/routes/settingsRoutes.tsx"
+      ],
+      "riskLevel": "low",
+      "regressionTests": [
+        "tests/unit/frontend-key-boundary-hardening.test.ts"
+      ],
+      "removalCondition": "Delete once the production settings routes no longer depend on scaffold composition."
+    },
+    {
+      "path": "apps/web/public/sync-image-bridge-sw.js",
+      "role": "compatibility-layer",
+      "owner": "web-platform",
+      "reviewBy": "2026-09-30",
+      "currentPurpose": "Service worker bridge for image synchronization.",
+      "upstreamCanonicalSource": "apps/web/src/services/llm",
+      "downstreamDependents": [
+        "apps/web/src/main.tsx"
+      ],
+      "riskLevel": "low",
+      "regressionTests": [
+        "tests/unit/canvas-live-unused-cleanup-contract.test.ts"
+      ],
+      "removalCondition": "Delete once native service worker handles image prefetching."
+    },
+    {
+      "path": "apps/web/src/services/ecommerce/text/fallbackTextAnalysis.ts",
+      "role": "compatibility-layer",
+      "owner": "web-ecommerce",
+      "reviewBy": "2026-09-30",
+      "currentPurpose": "Provides text fallback analysis capability.",
+      "upstreamCanonicalSource": "apps/web/src/services/ecommerce",
+      "downstreamDependents": [
+        "apps/web/src/services/ecommerce/text/fallbackTextAnalysis.ts"
+      ],
+      "riskLevel": "low",
+      "regressionTests": [
+        "tests/unit/ecommerce-text-fallback.test.ts"
+      ],
+      "removalCondition": "Delete when final ML analysis API is online."
+    },
+    {
+      "path": "apps/web/src/features/ai-assistant-runtime/browser/browserBridge.ts",
+      "role": "compatibility-layer",
+      "owner": "ai-runtime",
+      "reviewBy": "2026-09-30",
+      "currentPurpose": "Normalizes Browser Assistant daemon and Chrome extension commands for the AI ToolRegistry and settings UI while the external bridge transport remains optional.",
+      "upstreamCanonicalSource": "apps/web/src/features/ai-assistant-runtime/tools/browserTools.ts",
+      "downstreamDependents": [
+        "apps/web/src/components/settings/views/BrowserAssistantView.tsx",
+        "apps/web/src/features/ai-assistant-runtime/tools/browserTools.ts"
+      ],
+      "riskLevel": "medium",
+      "regressionTests": [
+        "tests/unit/browser-bridge-protocol.test.ts",
+        "tests/unit/ai-assistant-tool-registry.test.ts"
+      ],
+      "removalCondition": "Delete or rename when Browser Assistant transport is a stable first-party runtime module and no longer needs bridge-pattern compatibility registration."
+    },
+    {
+      "path": "services/api/lib/capability-graph/providerConnectionLegacyRouteAdapter.js",
+      "role": "compatibility-layer",
+      "owner": "server-provider-connections",
+      "reviewBy": "2026-09-30",
+      "currentPurpose": "Lets generation, dispatcher, and profile-owned execution reads prefer an owner-scoped available Provider Connection while legacy profile credentials remain readable during migration.",
+      "upstreamCanonicalSource": "services/api/lib/capability-graph/providerConnectionStore.js",
+      "downstreamDependents": [
+        "services/api/lib/dispatcher/localUserRouteStore.js",
+        "services/api/routes/user/shared/profileRouteResolver.js"
+      ],
+      "riskLevel": "high",
+      "regressionTests": [
+        "tests/unit/provider-connection-dual-read.test.ts",
+        "tests/unit/provider-connection-profile-dual-read.test.ts"
+      ],
+      "removalCondition": "Delete after profile routes and every supported Provider use canonical Connections, new writes have cut over, compatibility tests pass, and legacy reads have remained unused through two stable versions plus the required observation window."
+    },
+    {
+      "path": "services/api/routes/compat",
+      "role": "compatibility-layer",
+      "owner": "server-platform",
+      "reviewBy": "2026-09-30",
+      "currentPurpose": "Keeps transitional auth, billing, workspace, and admin HTTP contracts available while clients migrate to typed /api/v1 operations.",
+      "upstreamCanonicalSource": "services/api/routes/apiRouter.js",
+      "downstreamDependents": [
+        "services/api/routes/contract-compat.js"
+      ],
+      "riskLevel": "high",
+      "regressionTests": [
+        "tests/unit/legacy-compatibility-pruning.test.ts",
+        "tests/unit/unified-media-generation-server-contract.test.ts"
+      ],
+      "removalCondition": "Delete each compatibility operation only after consumers use typed /api/v1 contracts and the operation has an explicit replacement or deprecation decision."
+    }
+  ]
+}

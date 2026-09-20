@@ -1,0 +1,380 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Loader2 } from 'lucide-react';
+import { AspectRatio } from '../../types';
+import { getCardDimensions } from '../../utils/styleUtils';
+import { elevateCanvasStackZIndex } from '../../utils/canvasUtils';
+import { toReferenceImageDataUrl } from '../../utils/referenceImageStorage';
+
+interface ReferenceImage {
+    id?: string;
+    data: string;
+    mimeType: string;
+}
+
+interface PendingNodeProps {
+    prompt: string;
+    parallelCount: number;
+    isGenerating: boolean;
+    position: { x: number; y: number };
+    aspectRatio: AspectRatio;
+    onPositionChange?: (pos: { x: number; y: number }) => void;
+    isMobile?: boolean;
+    canvasTransform?: { x: number; y: number; scale: number };
+    referenceImages?: ReferenceImage[];
+    sourcePosition?: { x: number; y: number };
+    onDisconnect?: () => void;
+}
+
+const pendingPromptSurfaceStyle: React.CSSProperties = {
+    background: 'var(--frost-card-main-bg)',
+    borderColor: 'var(--frost-card-main-border)',
+    boxShadow: 'var(--frost-card-main-shadow)',
+    WebkitBackdropFilter: 'blur(var(--frost-card-main-blur)) saturate(1.12)',
+    backdropFilter: 'blur(var(--frost-card-main-blur)) saturate(1.12)',
+};
+
+const PendingNode: React.FC<PendingNodeProps> = ({
+    prompt,
+    parallelCount,
+    isGenerating,
+    position,
+    aspectRatio,
+    onPositionChange,
+    canvasTransform = { x: 0, y: 0, scale: 1 },
+    referenceImages = [],
+    onDisconnect
+}) => {
+    const [isDragging, setIsDragging] = useState(false);
+    const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+    const dragStartPos = useRef({ x: 0, y: 0 });
+    const stackZIndex = elevateCanvasStackZIndex(40, isDragging);
+
+    // 生成计时器
+    const [elapsedTime, setElapsedTime] = useState(0);
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+    // 预览卡30秒超时销毁
+    const [, setIdleTime] = useState(0);
+    const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+    // 计时器逻辑 (生成中计时)
+    useEffect(() => {
+        if (isGenerating) {
+            setElapsedTime(0);
+            timerRef.current = setInterval(() => {
+                setElapsedTime(prev => prev + 1);
+            }, 1000);
+        } else {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+                timerRef.current = null;
+            }
+        }
+        return () => {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+            }
+        };
+    }, [isGenerating]);
+
+    // 30秒无操作自动销毁预览卡
+    useEffect(() => {
+        if (!isGenerating && prompt) {
+            setIdleTime(0);
+            idleTimerRef.current = setInterval(() => {
+                setIdleTime(prev => {
+                    if (prev >= 29) {
+                        onDisconnect?.();
+                        return prev;
+                    }
+                    return prev + 1;
+                });
+            }, 1000);
+        } else {
+            if (idleTimerRef.current) {
+                clearInterval(idleTimerRef.current);
+                idleTimerRef.current = null;
+            }
+            setIdleTime(0);
+        }
+        return () => {
+            if (idleTimerRef.current) {
+                clearInterval(idleTimerRef.current);
+            }
+        };
+    }, [isGenerating, prompt, onDisconnect]);
+
+    const { width: w, totalHeight: h } = getCardDimensions(aspectRatio, true);
+
+    const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+        if ('button' in e && e.button === 1) {
+            return;
+        }
+        e.stopPropagation();
+        setIsDragging(true);
+        const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+        const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+        dragStartPos.current = { x: clientX, y: clientY };
+        setDragOffset({ x: 0, y: 0 });
+    };
+
+    useEffect(() => {
+        if (!isDragging) return;
+
+        const handleMove = (e: MouseEvent | TouchEvent) => {
+            const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+            const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+            const dx = (clientX - dragStartPos.current.x) / canvasTransform.scale;
+            const dy = (clientY - dragStartPos.current.y) / canvasTransform.scale;
+            setDragOffset({ x: dx, y: dy });
+        };
+
+        const handleUp = () => {
+            if (dragOffset.x !== 0 || dragOffset.y !== 0) {
+                onPositionChange?.({
+                    x: position.x + dragOffset.x,
+                    y: position.y + dragOffset.y
+                });
+            }
+            setIsDragging(false);
+            setDragOffset({ x: 0, y: 0 });
+        };
+
+        window.addEventListener('mousemove', handleMove);
+        window.addEventListener('mouseup', handleUp);
+        window.addEventListener('touchmove', handleMove);
+        window.addEventListener('touchend', handleUp);
+
+        return () => {
+            window.removeEventListener('mousemove', handleMove);
+            window.removeEventListener('mouseup', handleUp);
+            window.removeEventListener('touchmove', handleMove);
+            window.removeEventListener('touchend', handleUp);
+        };
+    }, [isDragging, dragOffset, position, canvasTransform.scale, onPositionChange]);
+
+    // 如果不在生成中显示预览模式
+    if (!isGenerating) {
+        return (
+            <div
+                className="absolute flex flex-col items-center"
+                style={{
+                    left: position.x + dragOffset.x,
+                    top: position.y + dragOffset.y,
+                    transform: 'translate(-50%, -100%)',
+                    zIndex: stackZIndex,
+                    cursor: isDragging ? 'grabbing' : 'grab'
+                }}
+                onMouseDown={handleMouseDown}
+                onTouchStart={handleMouseDown}
+            >
+                <div
+                    className="rounded-xl p-3 border min-w-[280px] max-w-[320px]"
+                    style={pendingPromptSurfaceStyle}
+                >
+                    <div className="flex items-center gap-2 text-[var(--text-tertiary)] mb-2">
+                        <Loader2 size={12} className="animate-spin" />
+                        <span className="text-[10px] font-medium">图像正在准备...</span>
+                        {onDisconnect && (
+                            <button
+                                onClick={(e) => { e.stopPropagation(); onDisconnect(); }}
+                                className="kk-canvas-pending-disconnect-button"
+                            >
+                                <span className="kk-canvas-pending-disconnect-icon">×</span>
+                            </button>
+                        )}
+                    </div>
+                    {referenceImages && referenceImages.length > 0 && (
+                        <div className="flex gap-1 mb-1 flex-wrap">
+                            {referenceImages.slice(0, 3).map((img, idx) => (
+                                <img
+                                    key={img.id || idx}
+                                    src={toReferenceImageDataUrl(img.data, img.mimeType)}
+                                    alt="参考图"
+                                    className="w-8 h-8 object-cover rounded border border-[color:var(--frost-card-sub-border)]"
+                                />
+                            ))}
+                            {referenceImages.length > 3 && (
+                                <div className="w-8 h-8 rounded border border-[color:var(--frost-card-sub-border)] bg-[var(--frost-card-sub-bg)] flex items-center justify-center text-[10px] text-[var(--text-tertiary)]">
+                                    +{referenceImages.length - 3}
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    <p className="text-[var(--text-secondary)] text-xs leading-relaxed line-clamp-3">{prompt}</p>
+                </div>
+            </div>
+        );
+    }
+
+    // 生成中状态 - 显示主卡和副占位卡
+    const cardWidth = w;
+    const cardHeight = h;
+    const gapToPlaceholders = 80; // 主卡到副卡的间距
+
+    // 2x2 宫格布局参数
+    const COLS = 2;
+    const GAP = 16;
+
+    return (
+        <div
+            className="absolute flex flex-col items-center"
+            style={{
+                left: position.x,
+                top: position.y,
+                transform: 'translate(-50%, -100%)',
+                zIndex: stackZIndex,
+                cursor: isDragging ? 'grabbing' : 'grab'
+            }}
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleMouseDown}
+        >
+            {/* 主Prompt卡 */}
+            <div
+                className="rounded-xl p-3 border min-w-[280px] max-w-[320px]"
+                style={pendingPromptSurfaceStyle}
+            >
+                <div className="flex items-center gap-2 text-[var(--text-tertiary)] mb-2">
+                    <div className="w-2 h-2 rounded-full bg-[var(--text-tertiary)] animate-pulse" />
+                    <span className="text-[10px] text-[var(--text-secondary)] font-bold tracking-wider">生成中 x{parallelCount}</span>
+                </div>
+                {referenceImages && referenceImages.length > 0 && (
+                    <div className="flex gap-1 mb-1 flex-wrap">
+                        {referenceImages.slice(0, 3).map((img, idx) => (
+                            <img
+                                key={img.id || idx}
+                                src={toReferenceImageDataUrl(img.data, img.mimeType)}
+                                alt="参考图"
+                                className="w-8 h-8 object-cover rounded border border-[color:var(--frost-card-sub-border)]"
+                            />
+                        ))}
+                        {referenceImages.length > 3 && (
+                            <div className="w-8 h-8 rounded border border-[color:var(--frost-card-sub-border)] bg-[var(--frost-card-sub-bg)] flex items-center justify-center text-[10px] text-[var(--text-tertiary)]">
+                                +{referenceImages.length - 3}
+                            </div>
+                        )}
+                    </div>
+                )}
+                <p className="text-[var(--text-secondary)] text-xs leading-relaxed line-clamp-3">{prompt}</p>
+            </div>
+
+            {/* Secondary placeholder cards in a 2x2 grid */}
+            <div className="relative" style={{ height: 0 }}>
+                {Array.from({ length: parallelCount }).map((_, i) => {
+                    const row = Math.floor(i / COLS);
+                    const indexInRow = i - row * COLS;
+
+                    // 计算居中: 实际列数 = min(COLS, parallelCount)
+                    const actualCols = Math.min(COLS, parallelCount - row * COLS);
+                    const totalW = actualCols * cardWidth + (actualCols - 1) * GAP;
+
+                    // 每个卡片的 left 偏移 (相对于中心点)
+                    const offsetX = -totalW / 2 + indexInRow * (cardWidth + GAP) + cardWidth / 2;
+
+                    // 每个卡片的 top 偏移
+                    const offsetY = gapToPlaceholders + row * (cardHeight + GAP);
+
+                    // 格式化计时
+                    const mins = Math.floor(elapsedTime / 60);
+                    const secs = elapsedTime % 60;
+                    const timeStr = mins > 0 ? `${mins}:${secs.toString().padStart(2, '0')}` : `${secs}s`;
+
+                    return (
+                        <React.Fragment key={i}>
+                            {/* 连接线 */}
+                            <svg
+                                className="kk-canvas-pending-connector pointer-events-none"
+                                style={{
+                                    position: 'absolute',
+                                    left: '50%',
+                                    top: 0,
+                                    overflow: 'visible',
+                                }}
+                            >
+                                <path
+                                    d={`M0,0 L${offsetX},${offsetY}`}
+                                    fill="none"
+                                    stroke="var(--kk-canvas-pending-connector-stroke)"
+                                    strokeWidth="1.5"
+                                    strokeDasharray="6 4"
+                                />
+                            </svg>
+
+                            {/* Secondary placeholder card with frosted motion */}
+                            <div
+                                className="kk-canvas-pending-placeholder-card"
+                                style={{
+                                    width: cardWidth,
+                                    height: cardHeight,
+                                    left: `calc(50% + ${offsetX}px)`,
+                                    top: offsetY,
+                                    transform: 'translateX(-50%)',
+                                }}
+                            >
+                                {/* 45度倾斜扫光动画 + 磨砂效果 */}
+                                <div className="kk-canvas-pending-shimmer" />
+
+                                {/* 流体光晕动画底座 */}
+                                <div className="kk-canvas-pending-ambient">
+                                    {/* 外层流体 */}
+                                    <div className="kk-canvas-pending-glow kk-canvas-pending-glow--outer" />
+                                    {/* Inner accent glow */}
+                                    <div className="kk-canvas-pending-glow kk-canvas-pending-glow--inner" />
+                                </div>
+
+                                {/* 内容 */}
+                                <div className="kk-canvas-pending-content">
+                                    <div className="kk-canvas-pending-spinner-shell">
+                                        <Loader2 size={24} style={{ color: 'var(--accent-coral)' }} className="animate-spin" />
+                                    </div>
+                                    <span style={{
+                                        fontSize: '24px',
+                                        color: 'var(--text-primary)',
+                                        fontWeight: 700,
+                                        fontFamily: 'monospace',
+                                        textShadow: 'none',
+                                        letterSpacing: '1px',
+                                        marginTop: '4px'
+                                    }}>
+                                        {timeStr}
+                                    </span>
+                                    <span style={{
+                                        fontSize: '10px',
+                                        color: 'var(--text-tertiary)',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '1px'
+                                    }}>
+                                        生成队列 #{i + 1}
+                                    </span>
+                                </div>
+                            </div>
+                        </React.Fragment>
+                    );
+                })}
+            </div>
+
+            {/* 动画CSS */}
+            <style>{`
+                @keyframes shimmer-move {
+                    0% { background-position: 200% 200%; }
+                    100% { background-position: -100% -100%; }
+                }
+                @keyframes fluid-shape {
+                    0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+                    50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+                    100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+                }
+                @keyframes spin-slow {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                @keyframes float-up-down {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-4px); }
+                }
+            `}</style>
+        </div>
+    );
+};
+
+export default PendingNode;

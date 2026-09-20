@@ -1,0 +1,83 @@
+Status: reference
+
+# Agent 可执行手册索引 (Skills Index) - KK Studio v1.6.1
+
+本文件是 KK Studio v1.6.1 规范下 AI 助手的可执行技能手册 (Skills) 索引。
+具体的技能细节与运行 Runbook 已被目录化拆分到 [skills/](skills/README.md) 专属子目录中，保证文档职责的清晰隔离。
+
+---
+
+## 🧭 可执行技能列表
+
+1. **[框选原图打包 Skill (download-selected-originals)](skills/download-selected-originals.md)**
+   - 职责：多卡片图片批量打包下载，包括原图优先级解析与 manifest 清单输出。
+   - 关联工具：`assets.zipOriginals`
+
+2. **[批量重绘生图 Skill (batch-generate-to-canvas)](skills/batch-generate-to-canvas.md)**
+   - 职责：绑定已导入资源池/图片集合发起批量重绘生成，支持电商紧凑布局、比例提取、输出自动打组，并基于持久化生成队列驱动与控制任务（暂停、恢复、重试失败项、取消；相对的“最近失败”意图在确认前冻结为具体 Job/版本/失败项集合）。
+   - 关联工具：`generation.createBatchJob`, `generation.createVideoJob`, `generation.createAudioJob`, `ecommerce.createBatchTransformJob`, `generation.retryJob`
+
+3. **[整理卡片布局 Skill (arrange-selected-cards)](skills/arrange-selected-cards.md)**
+   - 职责：对画布上被选中卡片进行智能自动排列。
+   - 关联工具：`canvas.arrangeNodes`
+
+4. **[本地优化提示词而不出图 Skill (optimize-prompt-without-generation)](skills/optimize-prompt-without-generation.md)**
+   - 职责：本地对用户输入的提示词进行词汇强化润色，但严禁自动拉起出图。
+   - 关联工具：`prompt.optimizeInput`
+
+5. **[增加新 AI 助手 Tool 规约 (add-new-agent-tool)](skills/add-new-agent-tool.md)**
+   - 职责：指导如何在系统中挂载和注册新的原子动作工具。
+   - 关联工具：`skills.upsertSkill`
+
+6. **[UI 变更后同步 UI Map 规约 (update-ui-map-after-layout-change)](skills/update-ui-map-after-layout-change.md)**
+   - 职责：重构界面元素时，规范更新 UI 地图位置以保障 AI 感知正常。
+   - 关联工具：`ui.recordLayoutChange`
+
+7. **[恢复中断任务 Skill (recover-interrupted-agent-task)](skills/recover-interrupted-agent-task.md)**
+   - 职责：应对网络断开或刷新，自动触发未完成队列任务重启与轮询恢复。
+   - 关联工具：`generation.getJobStatus`, `generation.retryJob`
+
+8. **[安全敏感修改防护 Skill (security-sensitive-change)](skills/security-sensitive-change.md)**
+   - 职责：处理密钥、数据库、安全等级与二次确认等红线操作的安全控制。
+   - 关联工具：`fillApiKey`
+
+9. **[单图生图 Skill (single-generate-to-canvas)](skills/single-generate-to-canvas.md)**
+   - 职责：规范单个提示词的出图与排队机制，进行成本估算确认。
+   - 关联工具：`generation.start`
+
+10. **[快速打开设置功能 Skill (quick-open-settings-view)](skills/quick-open-settings-view.md)**
+    - 职责：把“帮我打开个人中心 / API / 日志 / 存储 / 计费”等本地导航指令直接映射到底层设置路由能力。
+    - 关联工具：`ui.openSettings`
+
+11. **[Browser Bridge Automation Skill (browser-bridge-automation)](skills/browser-bridge-automation.md)**
+    - 职责：把浏览器助手、连接诊断、商品页提取、网页直通生图、社媒草稿和 DOM 回写请求映射到 Browser Bridge 工具链。
+    - 关联工具：`browser.getStatus`, `browser.openAssistant`, `browser.extractProduct`, `browser.generateExternal`, `browser.publishDraft`, `browser.inspectPage`, `browser.openDesktopProject`, `browser.checkLocalLlm`, `browser.writeBackDom`
+
+12. **[多模态图像理解与路由降级 Skill (agent-image-understanding-routing)](skills/agent-image-understanding-routing.md)**
+    - 职责：检测当前模型能力并根据多模态（Image Understanding）支持情况进行 Base64 降级防错提示。
+    - 关联工具：`provider.getModelCapabilities`
+
+13. **[工具箱插件运行时多实例与常驻 Skill (toolbox-plugin-multi-instance-runtime)](skills/toolbox-plugin-multi-instance-runtime.md)**
+    - 职责：管理 iframe 及 React 工具箱实例生命周期，配置多实例 `multiInstance` 和常驻 `autoPinOnOpen` 布局。
+    - 关联工具：`ui.openToolWindow`, `ui.pinTool`, `ui.updateWindowLayout`
+
+14. **[PPT大纲生图与幻灯片批量排版 Skill (ppt-outline-batch-generation)](skills/ppt-outline-batch-generation.md)**
+    - 职责：处理自然语言转 PPT 大纲与多页面批量生图的网格布局自动生成及 tag 注入。
+    - 关联工具：`generation.createBatchJob`, `canvas.arrangeNodes`
+
+15. **[音频多媒体生成与播放器并发控制 Skill (audio-multimedia-generation-playback)](skills/audio-multimedia-generation-playback.md)**
+    - 职责：支持创建音频多媒体卡片，并在播放多音频时控制排他性 `PAUSE` 信号并发。
+    - 关联工具：`canvas.createAudioCard`, `audio.playbackControl`
+
+16. **[智能 CDN 优先加载与离线兜底 SW 路由 Skill (smart-cdn-offline-fallback)](skills/smart-cdn-offline-fallback.md)**
+    - 职责：使用 Service Worker 缓存策略做 CDN 超时 (200ms) 自动回源站降级与测速偏好广播。
+    - 关联工具：`browser.getStatus` (Connectivity Doctor)
+
+17. **[项目与生成偏好管理 Skill (project-and-preferences-management)](skills/project-and-preferences-management.md)**
+    - 职责：基于实时用户范围项目快照执行项目切换、新建、重命名、删除和生成默认值更新，并对模糊目标、危险删除与未知偏好字段进行拦截。
+    - 关联工具：`project.list`, `project.getActive`, `project.open`, `project.create`, `project.rename`, `project.delete`, `preferences.get`, `preferences.updateGenerationDefaults`
+
+---
+
+## 🛡️ 静态 analysis 与校验支持
+本索引及子目录下的技能规范，通过静态脚本 `scripts/governance/ai-assistant/check-skills-consistency.mjs` 与 ToolRegistry 进行双向校验，确保敏感控制等级与防护说明绝对对齐。

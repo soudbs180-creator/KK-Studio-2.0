@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <meta name="description" content="KK Studio - AI Image Generation Workspace" />
+    <title>KK Studio - AI Image Workspace</title>
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body,
+        #root {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'HarmonyOS Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #000000;
+            color: #ffffff;
+        }
+
+        body:not(.dark-mode) {
+            background: #fffaf0;
+            color: #0a0a0a;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        // Apply the persisted theme before React mounts to avoid a first-paint flash.
+        (function () {
+            try {
+                var stored = localStorage.getItem('theme') || localStorage.getItem('kk_theme');
+                var isDark = false;
+                if (stored === 'dark') {
+                    isDark = true;
+                } else if (stored === 'light') {
+                    isDark = false;
+                } else {
+                    isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                }
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                    document.body.classList.add('dark-mode');
+                    document.documentElement.dataset.theme = 'dark';
+                    document.body.dataset.theme = 'dark';
+                    document.documentElement.style.colorScheme = 'dark';
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    document.body.classList.remove('dark-mode');
+                    document.documentElement.dataset.theme = 'light';
+                    document.body.dataset.theme = 'light';
+                    document.documentElement.style.colorScheme = 'light';
+                }
+            } catch (e) {}
+        })();
+    </script>
+    <div id="root">
+        <!-- Minimal startup indicator shown before React mounts. -->
+        <div class="app-startup-screen" style="display: flex; align-items: center; justify-content: center; position: fixed; inset: 0; z-index: 99999; background: #000000;">
+            <div class="spinner" style="width: 24px; height: 24px; border: 2px solid rgba(56, 189, 248, 0.2); border-top-color: rgb(56, 189, 248); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+        </div>
+        <style>
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+        </style>
+    </div>
+    <script type="module" src="/src/bootstrap.tsx"></script>
+    <script>
+        // Startup self-healing: if React still has not mounted after 6 seconds,
+        // retry once with a cache-busting query to recover from stale assets.
+        (function () {
+            window.setTimeout(function () {
+                var startupScreen = document.querySelector('.app-startup-screen');
+                if (startupScreen && window.getComputedStyle(startupScreen).display !== 'none') {
+                    console.warn('[Startup Self-Healing] React app failed to mount within 6s. Force reloading page to clear stale cache...');
+                    var url = new URL(window.location.href);
+                    if (!url.searchParams.has('kk_force_reload')) {
+                        url.searchParams.set('kk_force_reload', '1');
+                        window.location.replace(url.toString());
+                    } else {
+                        var info = document.createElement('div');
+                        info.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(239,68,68,0.9);color:white;padding:10px 20px;border-radius:8px;font-size:12px;z-index:999999;box-shadow:0 4px 12px rgba(0,0,0,0.35);font-family:sans-serif;';
+                        info.innerText = '\u68c0\u6d4b\u5230\u5e94\u7528\u52a0\u8f7d\u5f02\u5e38\uff0c\u8bf7\u5c1d\u8bd5\u624b\u52a8\u6e05\u7406\u6d4f\u89c8\u5668\u7f13\u5b58\u540e\u91cd\u8bd5\u3002';
+                        document.body.appendChild(info);
+                    }
+                }
+            }, 6000);
+        })();
+    </script>
+</body>
+
+</html>
