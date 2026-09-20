@@ -235,6 +235,8 @@ export interface SkillImportInput {
   imports?: string[];
 }
 function createRecord(input: SkillImportInput): SkillRecord {
+  if ((input.manifest as { readOnly?: boolean }).readOnly === false)
+    throw new Error("Skill 必须保持只读指令模式");
   const manifest = skillManifestSchema.parse({
     ...input.manifest,
     schemaVersion: input.manifest.schemaVersion ?? 1,
@@ -350,9 +352,8 @@ export function applySkillInstructions(
   prompt: string,
   record: SkillRecord,
 ): string {
-  const base = prompt.trim();
   const block = "[Skill: " + record.manifest.name + "]\n" + record.instructions;
-  return base ? base + "\n\n" + block : block;
+  return prompt ? prompt + "\n\n" + block : block;
 }
 export function searchSkillRecords(
   records: readonly SkillRecord[],

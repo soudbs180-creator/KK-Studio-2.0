@@ -153,8 +153,8 @@ imports: prompt-reviewer
   assert.equal(restored.instructions, record.instructions);
   assert.deepEqual(restored.manifest, record.manifest);
   assert.equal(
-    applySkillInstructions("保留原始文字", restored),
-    "保留原始文字\n\n[Skill: Storyboard Helper]\n先拆分主体和镜头，再输出可编辑草稿。",
+    applySkillInstructions("  保留原始文字  ", restored),
+    "  保留原始文字  \n\n[Skill: Storyboard Helper]\n先拆分主体和镜头，再输出可编辑草稿。",
   );
 });
 
@@ -174,6 +174,14 @@ test("rejects malformed imports and secret-like content", () => {
   assert.throws(
     () => parseSkillImport(`---\nname: Duplicate\nname: Again\n---\n\n文本`),
     /字段重复/,
+  );
+  assert.throws(
+    () =>
+      parseSkillImport({
+        manifest: { ...manifest, readOnly: false },
+        instructions: "文本",
+      }),
+    /只读指令模式/,
   );
 });
 

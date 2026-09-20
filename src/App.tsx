@@ -269,7 +269,7 @@ export default function App() {
     const block = `[Skill: ${record.manifest.name}]\n${record.instructions}`;
     updateHomeDraft({
       ...draft,
-      prompt: `${draft.prompt.trim()}\n\n${block}`.trim(),
+      prompt: draft.prompt ? `${draft.prompt}\n\n${block}` : block,
       updatedAt: Date.now(),
     });
     const project = creationRef.current.projects.find(
@@ -280,7 +280,9 @@ export default function App() {
         ...current,
         composerDraft: {
           ...current.composerDraft,
-          prompt: `${current.composerDraft.prompt.trim()}\n\n${block}`.trim(),
+          prompt: current.composerDraft.prompt
+            ? `${current.composerDraft.prompt}\n\n${block}`
+            : block,
           updatedAt: Date.now(),
         },
         updatedAt: Date.now(),
@@ -296,7 +298,9 @@ export default function App() {
       ...current,
       composerDraft: {
         ...current.composerDraft,
-        prompt: `${current.composerDraft.prompt.trim()}\n\n${block}`.trim(),
+        prompt: current.composerDraft.prompt
+          ? `${current.composerDraft.prompt}\n\n${block}`
+          : block,
         updatedAt: Date.now(),
       },
       updatedAt: Date.now(),
