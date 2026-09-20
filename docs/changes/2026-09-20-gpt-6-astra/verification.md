@@ -59,8 +59,8 @@
 
 ## main 树同步验证
 
-- 本地 main：f011ecf9037d8d92a204f374f6dbbd0d40ef74c3；本地 tree：78b885cad05f78e75d605b8f58a2dfedda0a2782。
-- 云端候选：chore/TASK-KK2-MAIN-SYNC@c8133fba16c60721a053c453b455afd21d66c501；远端 tree：78b885cad05f78e75d605b8f58a2dfedda0a2782；tree equality：PASS。
+- 本地 main：455078d44914c7b9229cc0c2b5de1a13a58031b6；本地 tree：b217fcf404020cc034e1fc7aaa53ef8366d5f998。
+- 云端候选：chore/TASK-KK2-MAIN-SYNC@7bdac9d3b1990f4e88a57b705bf587c126f7b667；远端 tree：b217fcf404020cc034e1fc7aaa53ef8366d5f998；tree equality：PASS。
 - 候选 diff 统计：3,678 个路径变化（旧 v1.6.1 当前树被替换为本地 2.0 树）；扫描未发现 tracked node_modules/target/dist/test-results/.tmp/.env 或私钥/API key 形态。
 - 云端 main 仍为 f00b5a4；PR 合并、CI、保护规则和合并后回读尚未完成。
 - 审阅链接：https://github.com/soudbs180-creator/KK-Studio-2.0/compare/main...chore/TASK-KK2-MAIN-SYNC?expand=1

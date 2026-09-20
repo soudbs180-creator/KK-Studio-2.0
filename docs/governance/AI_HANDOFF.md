@@ -36,7 +36,7 @@
 
 ## 2026-09-20 KK Studio 2.0 main 同步候选
 
-- 本地稳定 main 已快进到 f011ecf；原 checkout 仍保持 dirty/index 原样。
-- 从云端 main@f00b5a4 建立 chore/TASK-KK2-MAIN-SYNC，候选提交 c8133fb；其 tree SHA 78b885cad05f78e75d605b8f58a2dfedda0a2782 与本地 main 完全一致。
+- 本地稳定 main 已快进到 455078d；原 checkout 仍保持 dirty/index 原样。
+- 从云端 main@f00b5a4 建立 chore/TASK-KK2-MAIN-SYNC，候选提交 7bdac9d；其 tree SHA b217fcf404020cc034e1fc7aaa53ef8366d5f998 与本地 main 完全一致。
 - 候选树包含本地 2.0 当前已跟踪文件；云端旧 v1.6.1 当前目录在候选提交中被删除，旧历史仍可追溯。
 - PR 比较入口：https://github.com/soudbs180-creator/KK-Studio-2.0/compare/main...chore/TASK-KK2-MAIN-SYNC?expand=1。云端 main 尚未改写；合并后必须回读 main SHA/tree SHA。

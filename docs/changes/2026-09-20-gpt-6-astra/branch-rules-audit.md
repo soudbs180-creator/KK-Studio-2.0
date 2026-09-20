@@ -75,7 +75,7 @@
 
 ## main 树同步候选
 
-- 本地 f011ecf 与云端候选 c8133fb 的 tree SHA 均为 78b885cad05f78e75d605b8f58a2dfedda0a2782，因此候选文件树逐 blob 一致。
+- 本地 455078d 与云端候选 7bdac9d 的 tree SHA 均为 b217fcf404020cc034e1fc7aaa53ef8366d5f998，因此候选文件树逐 blob 一致。
 - 云端候选分支：chore/TASK-KK2-MAIN-SYNC；它以云端 main@f00b5a4 为父提交，未使用 unrelated-history merge、force push 或 direct main push。
 - 候选 PR：https://github.com/soudbs180-creator/KK-Studio-2.0/compare/main...chore/TASK-KK2-MAIN-SYNC?expand=1。只有 PR 合并并回读云端 main 后，TASK-KK2-MAIN-SYNC 才能从 IN_PROGRESS 关闭。
 - GitHub REST 元数据仍受 404/401 限制；visibility、required checks、branch protection 和合并权限保持 UNKNOWN。

@@ -372,7 +372,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `chore/TASK-KK2-MAIN-SYNC`
 - Worktree: `D:/kk-studio-next/.worktrees/TASK-KK2-MAIN-SYNC`
 - Modules: Git hosting, repository tree, main
-- Verification: NOT_VERIFIED — 候选远端 chore/TASK-KK2-MAIN-SYNC@c8133fb 已推送；tree 78b885cad05f78e75d605b8f58a2dfedda0a2782 与本地 main@f011ecf 相同。PR、分支保护、CI 和远端 main 合并回读尚未完成。
+- Verification: NOT_VERIFIED — 候选远端 chore/TASK-KK2-MAIN-SYNC@7bdac9d 已推送；tree b217fcf404020cc034e1fc7aaa53ef8366d5f998 与本地 main@455078d 相同。PR、分支保护、CI 和远端 main 合并回读尚未完成。
 - Evidence: [docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md](../../docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md), [docs/changes/2026-09-20-gpt-6-astra/verification.md](../../docs/changes/2026-09-20-gpt-6-astra/verification.md), [docs/changes/2026-09-20-gpt-6-astra/sync-manifest.md](../../docs/changes/2026-09-20-gpt-6-astra/sync-manifest.md)
 - External condition: 需要在 https://github.com/soudbs180-creator/KK-Studio-2.0 合并 chore/TASK-KK2-MAIN-SYNC 到 main，并回读 main 的 commit/tree；匿名 GitHub REST 返回 404/401，required checks 与 protection 未确认。
 - Updated: 2026-09-20

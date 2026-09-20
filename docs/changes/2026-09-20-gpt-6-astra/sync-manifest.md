@@ -65,5 +65,5 @@ packages/kk-studio-2.0-shared/         # 仅抽取平台无关 DTO/schema
 
 ## 阶段 3：main 树同步（当前候选）
 
-阶段 0 文档分支已经独立推送；本次 main 同步候选 chore/TASK-KK2-MAIN-SYNC 从远端 main 建立，并以 Git tree 对象替换为本地 main@f011ecf 的完整跟踪树。候选 tree SHA 为 78b885cad05f78e75d605b8f58a2dfedda0a2782，与本地 main 相同。该分支只通过 PR 合并，禁止直接推送 main；合并后回读远端 main SHA/tree SHA，确认两端一致后才关闭 TASK-KK2-MAIN-SYNC。
+阶段 0 文档分支已经独立推送；本次 main 同步候选 chore/TASK-KK2-MAIN-SYNC 从远端 main 建立，并以 Git tree 对象替换为本地 main@455078d 的完整跟踪树。候选 tree SHA 为 b217fcf404020cc034e1fc7aaa53ef8366d5f998，与本地 main 相同。该分支只通过 PR 合并，禁止直接推送 main；合并后回读远端 main SHA/tree SHA，确认两端一致后才关闭 TASK-KK2-MAIN-SYNC。
 候选 PR：https://github.com/soudbs180-creator/KK-Studio-2.0/compare/main...chore/TASK-KK2-MAIN-SYNC?expand=1
