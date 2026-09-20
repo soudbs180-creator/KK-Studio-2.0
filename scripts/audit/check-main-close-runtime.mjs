@@ -82,8 +82,13 @@ try {
     await page.goto(url);
   }
   page.on("pageerror", (error) => report.pageErrors.push(error.message));
-  const expectedBundle = (await fs.readFile(path.join(repo, "dist/index.html"), "utf8")).match(/assets\/(index-[^" ]+\.js)/)?.[1];
-  if (mode !== "development") expect(await page.locator("script[src*=assets]").getAttribute("src")).toContain(expectedBundle);
+  const expectedBundle = (
+    await fs.readFile(path.join(repo, "dist/index.html"), "utf8")
+  ).match(/assets\/(index-[^" ]+\.js)/)?.[1];
+  if (mode !== "development")
+    expect(
+      await page.locator("script[src*=assets]").getAttribute("src"),
+    ).toContain(expectedBundle);
 
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(page.getByLabel("创作提示词")).toBeVisible();
@@ -186,75 +191,176 @@ try {
   await page.keyboard.press("Escape");
 
   await page.keyboard.press("Escape");
-  const fixture = await fs.readFile(path.join(repo, "public/fixtures/demo/blue-hour.png"));
-  const seed = await page.evaluate(async ({base64, desktop}) => {
-    const binary = atob(base64); const base = new Uint8Array(binary.length);
-    for (let i=0;i<binary.length;i++) base[i]=binary.charCodeAt(i);
-    const rows=[];
-    const database = desktop ? null : await new Promise((resolve,reject)=>{const request=indexedDB.open("kk-studio-assets",1);request.onupgradeneeded=()=>request.result.createObjectStore("blobs");request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error);});
-    for(let i=0;i<41;i++) {
-      const bytes=new Uint8Array(base.length+4);bytes.set(base);new DataView(bytes.buffer).setUint32(base.length,i);
-      const sha=[...new Uint8Array(await crypto.subtle.digest("SHA-256",bytes))].map(b=>b.toString(16).padStart(2,"0")).join("");
-      const metadata={assetId:"asset-"+sha.slice(0,24),sha256:sha,mime:"image/png",tags:["runtime-fixture"],source:"provider",isAiGenerated:true,provenance:{provider:"fixture",generatedAt:"2026-09-21T00:00:00.000Z"}};
-      if(desktop) {
-        let raw="";for(let j=0;j<bytes.length;j+=32768)raw+=String.fromCharCode(...bytes.subarray(j,j+32768));
-        await window.__TAURI_INTERNALS__.invoke("asset_store",{dataBase64:btoa(raw),metadata});
-      } else await new Promise((resolve,reject)=>{const tx=database.transaction("blobs","readwrite");tx.objectStore("blobs").put({blob:new Blob([bytes],{type:"image/png"}),metadata},metadata.assetId);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});
-      rows.push(metadata);
-    }
-    database?.close();
-    if(desktop) {const first=await window.__TAURI_INTERNALS__.invoke("asset_list",{offset:0,limit:40});if(first.length!==40||first.some(r=>"preview"in r))throw Error("Native metadata page mismatch");}
-    return rows.sort((a,b)=>a.assetId.localeCompare(b.assetId));
-  },{base64:fixture.toString("base64"),desktop});
+  const fixture = await fs.readFile(
+    path.join(repo, "public/fixtures/demo/blue-hour.png"),
+  );
+  const seed = await page.evaluate(
+    async ({ base64, desktop }) => {
+      const binary = atob(base64);
+      const base = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) base[i] = binary.charCodeAt(i);
+      const rows = [];
+      const database = desktop
+        ? null
+        : await new Promise((resolve, reject) => {
+            const request = indexedDB.open("kk-studio-assets", 1);
+            request.onupgradeneeded = () =>
+              request.result.createObjectStore("blobs");
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+          });
+      for (let i = 0; i < 41; i++) {
+        const bytes = new Uint8Array(base.length + 4);
+        bytes.set(base);
+        new DataView(bytes.buffer).setUint32(base.length, i);
+        const sha = [
+          ...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),
+        ]
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("");
+        const metadata = {
+          assetId: "asset-" + sha.slice(0, 24),
+          sha256: sha,
+          mime: "image/png",
+          tags: ["runtime-fixture"],
+          source: "provider",
+          isAiGenerated: true,
+          provenance: {
+            provider: "fixture",
+            generatedAt: "2026-09-21T00:00:00.000Z",
+          },
+        };
+        if (desktop) {
+          let raw = "";
+          for (let j = 0; j < bytes.length; j += 32768)
+            raw += String.fromCharCode(...bytes.subarray(j, j + 32768));
+          await window.__TAURI_INTERNALS__.invoke("asset_store", {
+            dataBase64: btoa(raw),
+            metadata,
+          });
+        } else
+          await new Promise((resolve, reject) => {
+            const tx = database.transaction("blobs", "readwrite");
+            tx.objectStore("blobs").put(
+              { blob: new Blob([bytes], { type: "image/png" }), metadata },
+              metadata.assetId,
+            );
+            tx.oncomplete = resolve;
+            tx.onerror = () => reject(tx.error);
+          });
+        rows.push(metadata);
+      }
+      database?.close();
+      if (desktop) {
+        const first = await window.__TAURI_INTERNALS__.invoke("asset_list", {
+          offset: 0,
+          limit: 40,
+        });
+        if (first.length !== 40 || first.some((r) => "preview" in r))
+          throw Error("Native metadata page mismatch");
+      }
+      return rows.sort((a, b) => a.assetId.localeCompare(b.assetId));
+    },
+    { base64: fixture.toString("base64"), desktop },
+  );
   await page.reload();
-  await page.emulateMedia({reducedMotion:"reduce"});
-  await page.getByRole("button",{name:"文件",exact:true}).click();
-  await page.getByRole("button",{name:"资产管理",exact:true}).click();
-  const archivePanel=page.getByTestId("asset-panel");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.getByRole("button", { name: "文件", exact: true }).click();
+  await page.getByRole("button", { name: "资产管理", exact: true }).click();
+  const archivePanel = page.getByTestId("asset-panel");
   await expect(archivePanel.locator(".asset-card")).toHaveCount(49);
-  await archivePanel.getByRole("button",{name:"加载更多素材",exact:true}).click();
+  await archivePanel
+    .getByRole("button", { name: "加载更多素材", exact: true })
+    .click();
   await expect(archivePanel.locator(".asset-card")).toHaveCount(50);
   await archivePanel.getByLabel("搜索文件").fill(seed.at(-1).sha256);
-  const thumbnail=archivePanel.locator(".asset-card img:not(.asset-icon)");
-  await expect(thumbnail).toHaveAttribute("src",/^data:image\/webp/);
-  const thumbnailDimensions=await thumbnail.evaluate(img=>[img.naturalWidth,img.naturalHeight]);
+  const thumbnail = archivePanel.locator(".asset-card img:not(.asset-icon)");
+  await expect(thumbnail).toHaveAttribute("src", /^data:image\/webp/);
+  const thumbnailDimensions = await thumbnail.evaluate((img) => [
+    img.naturalWidth,
+    img.naturalHeight,
+  ]);
   expect(Math.max(...thumbnailDimensions)).toBeLessThanOrEqual(320);
-  await archivePanel.screenshot({path:path.join(evidence,`screenshots/${mode}-asset-thumbnail.png`)});
+  await archivePanel.screenshot({
+    path: path.join(evidence, `screenshots/${mode}-asset-thumbnail.png`),
+  });
   await archivePanel.locator(".asset-card").press("Enter");
-  const full=archivePanel.locator(".asset-large-preview img:not(.asset-icon)");
-  await expect(full).toHaveAttribute("src",/^data:image\/png/);
-  const actualHash=await full.evaluate(async img=>[...new Uint8Array(await crypto.subtle.digest("SHA-256",Uint8Array.from(atob(img.src.split(",")[1]), character => character.charCodeAt(0))))].map(b=>b.toString(16).padStart(2,"0")).join(""));
+  const full = archivePanel.locator(
+    ".asset-large-preview img:not(.asset-icon)",
+  );
+  await expect(full).toHaveAttribute("src", /^data:image\/png/);
+  const actualHash = await full.evaluate(async (img) =>
+    [
+      ...new Uint8Array(
+        await crypto.subtle.digest(
+          "SHA-256",
+          Uint8Array.from(atob(img.src.split(",")[1]), (character) =>
+            character.charCodeAt(0),
+          ),
+        ),
+      ),
+    ]
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join(""),
+  );
   expect(actualHash).toBe(seed.at(-1).sha256);
-  await archivePanel.getByRole("button",{name:"返回资产",exact:true}).click();
+  await archivePanel
+    .getByRole("button", { name: "返回资产", exact: true })
+    .click();
   await expect(archivePanel.locator(".asset-card")).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(archivePanel).toHaveCount(0);
-  await page.getByRole("button", {name:"项目库",exact:true}).click();
-  await page.getByRole("button", {name:"新建项目",exact:true}).click();
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page.getByRole("button", { name: "新建项目", exact: true }).click();
   await expect(page.locator(".conversation-panel")).toBeVisible();
-  await page.getByRole("button",{name:"帮助与快捷键",exact:true}).click();
-  await page.getByRole("menuitem",{name:"快捷按键",exact:true}).click();
-  await expect(page.locator(".shortcuts-panel")).toHaveCSS("border-top-color","rgb(60, 60, 60)");
-  await page.locator(".shortcuts-panel").screenshot({path:path.join(evidence,`screenshots/${mode}-shortcuts-current.png`)});
+  await page.getByRole("button", { name: "帮助与快捷键", exact: true }).click();
+  await page.getByRole("menuitem", { name: "快捷按键", exact: true }).click();
+  await expect(page.locator(".shortcuts-panel")).toHaveCSS(
+    "border-top-color",
+    "rgb(60, 60, 60)",
+  );
+  await page
+    .locator(".shortcuts-panel")
+    .screenshot({
+      path: path.join(evidence, `screenshots/${mode}-shortcuts-current.png`),
+    });
   await page.keyboard.press("Escape");
-  report.assets={records:41,originalBytesPerRecord:fixture.length+4,thumbnailDimensions,originalHashMatches:true,metadataPageSize:40};
-  report.checks.push("paged asset metadata, 320px visible preview, full original SHA, keyboard return, shortcuts Figma border");
-  await page.emulateMedia({reducedMotion:"reduce"});
-  await page.getByRole("button",{name:"个人信息",exact:true}).click();
-  await page.setViewportSize({width:390,height:844});
-  const sidebarToggle=page.locator(".sidebar-toggle");
-  await expect(sidebarToggle).toHaveAttribute("aria-expanded","false");
+  report.assets = {
+    records: 41,
+    originalBytesPerRecord: fixture.length + 4,
+    thumbnailDimensions,
+    originalHashMatches: true,
+    metadataPageSize: 40,
+  };
+  report.checks.push(
+    "paged asset metadata, 320px visible preview, full original SHA, keyboard return, shortcuts Figma border",
+  );
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.getByRole("button", { name: "个人信息", exact: true }).click();
+  await page.setViewportSize({ width: 390, height: 844 });
+  const sidebarToggle = page.locator(".sidebar-toggle");
+  await expect(sidebarToggle).toHaveAttribute("aria-expanded", "false");
   await sidebarToggle.focus();
   await page.keyboard.press("Enter");
   await expect(page.locator(".account-popup")).toBeVisible();
-  await page.getByRole("button",{name:"创建项目文件夹",exact:true}).click();
+  await page
+    .getByRole("button", { name: "创建项目文件夹", exact: true })
+    .click();
   await expect(page.locator(".account-popup")).toHaveCount(0);
-  await expect(sidebarToggle).toHaveAttribute("aria-expanded","true");
-  await page.mouse.click(375,470);
-  await expect(sidebarToggle).toHaveAttribute("aria-expanded","false");
-  report.checks.push("narrow account popup retains dismissal priority after keyboard expansion");
-  report.narrowViewport={width:390,height:844,method:"Playwright device metrics"};
-  await page.screenshot({path:path.join(evidence,`screenshots/${mode}-narrow-dismiss.png`)});
+  await expect(sidebarToggle).toHaveAttribute("aria-expanded", "true");
+  await page.mouse.click(375, 470);
+  await expect(sidebarToggle).toHaveAttribute("aria-expanded", "false");
+  report.checks.push(
+    "narrow account popup retains dismissal priority after keyboard expansion",
+  );
+  report.narrowViewport = {
+    width: 390,
+    height: 844,
+    method: "Playwright device metrics",
+  };
+  await page.screenshot({
+    path: path.join(evidence, `screenshots/${mode}-narrow-dismiss.png`),
+  });
   expect(report.pageErrors).toEqual([]);
   report.passed = true;
 } finally {
