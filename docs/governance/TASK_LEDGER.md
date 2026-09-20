@@ -331,7 +331,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `unallocated`
 - Modules: src/features/creation/assetRepository.ts, src/features/creation/useAssetArchive.ts, src-tauri
 - Verification: PARTIAL — 本轮已完成有界分页/预览和原件校验；永久缩略图、大快照和单件大图瞬时内存/不可抢占IO仍未完成。
-- Evidence: [docs/architecture/DATA-STORAGE.md](../../docs/architecture/DATA-STORAGE.md), [docs/architecture/adr/ADR-003-asset-metadata-paging.md](../../docs/architecture/adr/ADR-003-asset-metadata-paging.md), [docs/changes/2026-09-20-perf-assets-001/verification.md](../../docs/changes/2026-09-20-perf-assets-001/verification.md)
+- Evidence: [docs/architecture/DATA-STORAGE.md](../../docs/architecture/DATA-STORAGE.md), [docs/architecture/adr/ADR-003-asset-metadata-paging.md](../../docs/architecture/adr/ADR-003-asset-metadata-paging.md), [docs/changes/2026-09-20-main-close-002/verification.md](../../docs/changes/2026-09-20-main-close-002/verification.md)
 - Updated: 2026-09-21
 
 ## EXT-GIT — 远端PR与main保护规则
@@ -440,7 +440,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `C:/Users/Administrator/.codex/worktrees/task-ui-close-003/kk-studio-next`
 - Modules: src/components, src/styles, tests/browser
 - Verification: PASS — 现行可取得Figma节点回读、快捷键边框修复、typecheck与整合三模式运行证据通过；Landing及若干缺失Frame不冒称完成。
-- Evidence: [docs/changes/2026-09-20-ui-close-003/intent.md](../../docs/changes/2026-09-20-ui-close-003/intent.md), [docs/changes/2026-09-20-ui-close-003/spec.md](../../docs/changes/2026-09-20-ui-close-003/spec.md), [docs/changes/2026-09-20-ui-close-003/plan.md](../../docs/changes/2026-09-20-ui-close-003/plan.md), [docs/changes/2026-09-20-ui-close-003/verification.md](../../docs/changes/2026-09-20-ui-close-003/verification.md), [docs/changes/2026-09-20-ui-close-003/review.md](../../docs/changes/2026-09-20-ui-close-003/review.md)
+- Evidence: [docs/changes/2026-09-20-main-close-002/intent.md](../../docs/changes/2026-09-20-main-close-002/intent.md), [docs/changes/2026-09-20-main-close-002/spec.md](../../docs/changes/2026-09-20-main-close-002/spec.md), [docs/changes/2026-09-20-main-close-002/plan.md](../../docs/changes/2026-09-20-main-close-002/plan.md), [docs/changes/2026-09-20-main-close-002/verification.md](../../docs/changes/2026-09-20-main-close-002/verification.md), [docs/changes/2026-09-20-main-close-002/review.md](../../docs/changes/2026-09-20-main-close-002/review.md)
 - Updated: 2026-09-21
 
 ## TASK-PERF-ASSETS-001 — 素材列表元数据和原件按需读取
@@ -452,7 +452,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `C:/Users/Administrator/.codex/worktrees/task-perf-assets-001/kk-studio-next`
 - Modules: src/features/creation, src/components/AssetPanel.tsx, src-tauri/src/asset_storage.rs
 - Verification: PASS — 元数据分页、按需缩略图、原件SHA与错身份/损坏重试、Rust分页与临时文件边界均通过；完整性能边界另由PERF-001跟踪。
-- Evidence: [docs/changes/2026-09-20-perf-assets-001/intent.md](../../docs/changes/2026-09-20-perf-assets-001/intent.md), [docs/changes/2026-09-20-perf-assets-001/spec.md](../../docs/changes/2026-09-20-perf-assets-001/spec.md), [docs/changes/2026-09-20-perf-assets-001/plan.md](../../docs/changes/2026-09-20-perf-assets-001/plan.md), [docs/changes/2026-09-20-perf-assets-001/verification.md](../../docs/changes/2026-09-20-perf-assets-001/verification.md), [docs/changes/2026-09-20-perf-assets-001/review.md](../../docs/changes/2026-09-20-perf-assets-001/review.md), [docs/architecture/adr/ADR-003-asset-metadata-paging.md](../../docs/architecture/adr/ADR-003-asset-metadata-paging.md)
+- Evidence: [docs/changes/2026-09-20-main-close-002/intent.md](../../docs/changes/2026-09-20-main-close-002/intent.md), [docs/changes/2026-09-20-main-close-002/spec.md](../../docs/changes/2026-09-20-main-close-002/spec.md), [docs/changes/2026-09-20-main-close-002/plan.md](../../docs/changes/2026-09-20-main-close-002/plan.md), [docs/changes/2026-09-20-main-close-002/verification.md](../../docs/changes/2026-09-20-main-close-002/verification.md), [docs/changes/2026-09-20-main-close-002/review.md](../../docs/changes/2026-09-20-main-close-002/review.md), [docs/architecture/adr/ADR-003-asset-metadata-paging.md](../../docs/architecture/adr/ADR-003-asset-metadata-paging.md)
 - Updated: 2026-09-21
 
 ## TASK-GOV-002 — 跨AI自主开发与分支质量门禁

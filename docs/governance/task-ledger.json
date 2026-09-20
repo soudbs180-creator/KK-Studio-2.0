@@ -744,7 +744,7 @@
     "evidence": [
       "docs/architecture/DATA-STORAGE.md",
       "docs/architecture/adr/ADR-003-asset-metadata-paging.md",
-      "docs/changes/2026-09-20-perf-assets-001/verification.md"
+      "docs/changes/2026-09-20-main-close-002/verification.md"
     ],
     "verification": "本轮已完成有界分页/预览和原件校验；永久缩略图、大快照和单件大图瞬时内存/不可抢占IO仍未完成。",
     "updated": "2026-09-21",
@@ -1035,11 +1035,11 @@
     "goal": "现行Figma页面缺口复核与交互收口",
     "status": "DONE",
     "evidence": [
-      "docs/changes/2026-09-20-ui-close-003/intent.md",
-      "docs/changes/2026-09-20-ui-close-003/spec.md",
-      "docs/changes/2026-09-20-ui-close-003/plan.md",
-      "docs/changes/2026-09-20-ui-close-003/verification.md",
-      "docs/changes/2026-09-20-ui-close-003/review.md"
+      "docs/changes/2026-09-20-main-close-002/intent.md",
+      "docs/changes/2026-09-20-main-close-002/spec.md",
+      "docs/changes/2026-09-20-main-close-002/plan.md",
+      "docs/changes/2026-09-20-main-close-002/verification.md",
+      "docs/changes/2026-09-20-main-close-002/review.md"
     ],
     "verification": "现行可取得Figma节点回读、快捷键边框修复、typecheck与整合三模式运行证据通过；Landing及若干缺失Frame不冒称完成。",
     "verificationResult": "PASS",
@@ -1068,11 +1068,11 @@
     "goal": "素材列表元数据和原件按需读取",
     "status": "DONE",
     "evidence": [
-      "docs/changes/2026-09-20-perf-assets-001/intent.md",
-      "docs/changes/2026-09-20-perf-assets-001/spec.md",
-      "docs/changes/2026-09-20-perf-assets-001/plan.md",
-      "docs/changes/2026-09-20-perf-assets-001/verification.md",
-      "docs/changes/2026-09-20-perf-assets-001/review.md",
+      "docs/changes/2026-09-20-main-close-002/intent.md",
+      "docs/changes/2026-09-20-main-close-002/spec.md",
+      "docs/changes/2026-09-20-main-close-002/plan.md",
+      "docs/changes/2026-09-20-main-close-002/verification.md",
+      "docs/changes/2026-09-20-main-close-002/review.md",
       "docs/architecture/adr/ADR-003-asset-metadata-paging.md"
     ],
     "verification": "元数据分页、按需缩略图、原件SHA与错身份/损坏重试、Rust分页与临时文件边界均通过；完整性能边界另由PERF-001跟踪。",
