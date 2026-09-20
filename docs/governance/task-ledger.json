@@ -976,5 +976,43 @@
     "verification": "最终完整verify通过：150 Node、191浏览器、0失败/重试；三运行模式专项通过；2.35MB重绘20倍CPU连续3次通过，完整原图字节断言保留。中途unknown用例重试已定位并修正异步审批等待。",
     "verificationResult": "PASS",
     "updated": "2026-09-20"
+  },
+  {
+    "id": "TASK-AUDIT-SEC-001",
+    "title": "安全边界与异常任务状态审计",
+    "goal": "修复已复现的凭据泄露、重复提交、Gateway配置陈旧和原生响应内存风险，并保留未闭环风险",
+    "scope": "Web provider URL/state recovery, Gateway registration/authentication, native TaskHost journal/download limits",
+    "acceptance": [
+      "Provider请求发出后取消或暂停进入unknown并禁止普通重试",
+      "远程Provider只允许HTTPS，HTTP仅限本机回环地址",
+      "Gateway重启显式更新连接配置并撤销旧ACL，token冲突失败关闭",
+      "原生Provider结果下载按流式总字节上限读取，任务journal替换不先删除原件",
+      "记录并隔离跨窗口localStorage租约竞态、账户额度配置陈旧和TaskHost结果URL来源限制"
+    ],
+    "dependencies": [
+      "TASK-GOV-001"
+    ],
+    "owner": "root",
+    "branch": "fix/TASK-AUDIT-SEC-001-boundaries",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-AUDIT-SEC-001",
+    "affectedModules": [
+      "src/App.tsx",
+      "src/domain/modelProvider.ts",
+      "src/domain/providerConnections.ts",
+      "src/features/creation/taskRecovery.ts",
+      "src/features/generation-server/repository.ts",
+      "src/features/generation-server/http.ts",
+      "src/features/generation-server/main.ts",
+      "src-tauri/src/task_host.rs",
+      "tests/unit"
+    ],
+    "status": "PARTIAL",
+    "evidence": [
+      "docs/changes/2026-09-21-security-audit/audit.md",
+      "docs/changes/2026-09-21-security-audit/verification.md"
+    ],
+    "verification": "修复后155/155 Node单测、TypeScript、lint、format、build与Rust61/61通过；跨窗口租约原子协调、账户初始额度冲突处理和TaskHost结果URL来源限制仍未完成。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-09-21"
   }
 ]

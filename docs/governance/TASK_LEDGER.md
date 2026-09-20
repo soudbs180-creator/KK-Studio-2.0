@@ -37,6 +37,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-UNMERGED-001 | dirty checkout 未合并 UI 回归候选 | DONE | TASK-GOV-001 | root |
 | TASK-UI-MAIN-001 | 现行Figma页面校正与交互修复主线整合 | DONE | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 | TASK-UI-DISMISS-002 | 窄屏侧栏关闭与大图重绘稳定性 | DONE | TASK-UI-MAIN-001 | root |
+| TASK-AUDIT-SEC-001 | 安全边界与异常任务状态审计 | PARTIAL | TASK-GOV-001 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -414,3 +415,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — 最终完整verify通过：150 Node、191浏览器、0失败/重试；三运行模式专项通过；2.35MB重绘20倍CPU连续3次通过，完整原图字节断言保留。中途unknown用例重试已定位并修正异步审批等待。
 - Evidence: [docs/changes/2026-09-20-ui-main-alignment/followup.md](../../docs/changes/2026-09-20-ui-main-alignment/followup.md), [docs/evidence/2026-09-20-ui-main-alignment/followup/browser-summary.json](../../docs/evidence/2026-09-20-ui-main-alignment/followup/browser-summary.json)
 - Updated: 2026-09-20
+
+## TASK-AUDIT-SEC-001 — 安全边界与异常任务状态审计
+
+- Goal: 修复已复现的凭据泄露、重复提交、Gateway配置陈旧和原生响应内存风险，并保留未闭环风险
+- Scope: Web provider URL/state recovery, Gateway registration/authentication, native TaskHost journal/download limits
+- Acceptance: Provider请求发出后取消或暂停进入unknown并禁止普通重试; 远程Provider只允许HTTPS，HTTP仅限本机回环地址; Gateway重启显式更新连接配置并撤销旧ACL，token冲突失败关闭; 原生Provider结果下载按流式总字节上限读取，任务journal替换不先删除原件; 记录并隔离跨窗口localStorage租约竞态、账户额度配置陈旧和TaskHost结果URL来源限制
+- Branch: `fix/TASK-AUDIT-SEC-001-boundaries`
+- Worktree: `D:/kk-studio-next/.worktrees/TASK-AUDIT-SEC-001`
+- Modules: src/App.tsx, src/domain/modelProvider.ts, src/domain/providerConnections.ts, src/features/creation/taskRecovery.ts, src/features/generation-server/repository.ts, src/features/generation-server/http.ts, src/features/generation-server/main.ts, src-tauri/src/task_host.rs, tests/unit
+- Verification: PARTIAL — 修复后155/155 Node单测、TypeScript、lint、format、build与Rust61/61通过；跨窗口租约原子协调、账户初始额度冲突处理和TaskHost结果URL来源限制仍未完成。
+- Evidence: [docs/changes/2026-09-21-security-audit/audit.md](../../docs/changes/2026-09-21-security-audit/audit.md), [docs/changes/2026-09-21-security-audit/verification.md](../../docs/changes/2026-09-21-security-audit/verification.md)
+- Updated: 2026-09-21
