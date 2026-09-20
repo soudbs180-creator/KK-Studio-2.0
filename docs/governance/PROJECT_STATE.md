@@ -1,13 +1,12 @@
 # 当前项目状态
 
-## 2026-09-20 TASK-GOV-002 当前覆盖说明
+## 2026-09-21 TASK-GOV-002 合入后状态
 
-- 今后新任务从 fetch 后的 origin/main 派生；本任务初始基线为 8aca3ab，远端随后前进到 fb57529，已通过普通 merge 纳入任务分支。任务分支 codex/TASK-GOV-002-ai-sdlc。旧本地 main@39f6a6e 与远端无共同祖先，下面首次同步/tree相等记录是历史范围，不能直接 pull 合并旧本地main。
-- 本次只写入共享规则、Git防线、CI变更包、模板和规则场景；产品代码、产品测试、既有证据和其他人的提交只读审计，状态以task-ledger为准。规则候选等待 PR，完整说明见 docs/changes/2026-09-20-ai-sdlc/。
-- 当前托管回读 main protected=false，private仓库protection/rulesets API403，EXT-GIT仍BLOCKED；自动分支清理为false。
-- 初始 main@8aca3ab 的 CI run35492697622 曾失败；这是历史审计范围，不代表后来主线状态。本任务只记录产品测试 follow-up，不修复或回写既有产品证据。
-- 规则候选 f7425d6 的 hosted verify 已通过；远端 main 后来前进到 a1d8629，PR #4 仍 draft 且显示冲突。用户限定其他提交暂不处理，因此新上游整合与合并复验留给后续任务。
-- 先读AGENTS/AI_RULES与engineering规则。npm ci后安装npm run git:guards；本地hook不是远端保护。最终用户汇报简洁中文。
+- 远端 `origin/main` 已回读为 `92c1ef17c42030ef6976e039efe4775c4bdc0939`（squash merge PR #4）；合并前最新基线为 `c3ff0871b3db674e0ab073f1445879d84fee3507`，规则分支 head 为 `19215945573ca97dd4427f36ac8e074a1378f9fb`。PR：[规则治理 PR #4](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/4)。
+- PR #4 的 delivery、repository verification、Rust fmt/test、client check 和 Tauri no-bundle build 全部成功；PR delivery 运行：[35520494220](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35520494220)。
+- 本次写入范围仍是共享 AI 规则、SDLC/分支流程、Git/CI/delivery 门禁、模板和规则场景；产品实现、产品测试、既有证据及其他任务提交只随最新主线回读，不作为本任务改动。
+- 远端仓库当前仍未启用 branch protection/rulesets（private 仓库接口返回 403），所以服务器强制保护仍为 EXT-GIT BLOCKED；本地 pre-push 只是补充防线。不能把本地 hook 描述成 GitHub 服务器保护。
+- 原规则分支和工作树只作为已合入历史保留证据，完成回读后清理；其他任务的分支、dirty worktree 和既有证据不在本次清理范围。
 
 ## 以下为此前交付快照（保留历史，不覆盖上面当次核对）
 
