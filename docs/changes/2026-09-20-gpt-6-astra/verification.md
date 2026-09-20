@@ -1,7 +1,7 @@
 # Verification
 
 - ID：GPT6-ASTRA-20260920 / TASK-KK2-MAIN-SYNC
-- 状态：Astra 迁移计划已完成；首次 main 同步正在按受控 PR 流程收口，Astra 功能本身尚未实施。
+- 状态：Astra 迁移计划与首次 main 同步已按受控 PR 流程完成；Astra 应用功能本身尚未实施。
 
 ## 已完成的审计与修正
 
@@ -26,15 +26,16 @@
 - 目标：<https://github.com/soudbs180-creator/KK-Studio-2.0>。authenticated REST 确认仓库为 private、默认分支 `main`、当前凭据具备 admin/maintain/push/triage/pull 权限。
 - 当前远端 `main` 是旧 monorepo 初始树；候选分支从它派生，完整 tree 改为本地已验证 2.0 tree。
 - `main` API 返回 `protected=false`、required checks 为空；rulesets/protection API 返回 403（当前 GitHub 计划不支持），因此 EXT-GIT 保持 BLOCKED。
-- open PR 初始为空；最终 PR URL、CI run、merge SHA 与合并后 tree 由最终回读补入本文件。
+- PR #1：<https://github.com/soudbs180-creator/KK-Studio-2.0/pull/1>，已通过 squash 合并；合并提交为 `a9db71b342a53f0bb1929f95180396648c09afef`。
+- 候选 SHA `96fc440b4c0021ef37450c2acf4796dbc6c3ae45` 的 quality workflow 已成功：完整 `npm run verify`、Rust fmt/test、`client:check`、Tauri 无 bundle 构建和 evidence upload 均 PASS。
 
 ## 首发候选验收
 
-- 本地稳定 main 与 `chore/TASK-KK2-MAIN-SYNC` 的 tree equality：以最终 `git rev-parse <ref>^{tree}` 回读为准。
+- 合并后回读：远端 `main` commit 为 `a9db71b342a53f0bb1929f95180396648c09afef`；远端 tree 与本地稳定 main tree 均为 `a3cad24d11ded18f98495c5cddb7f953cb9630b1`，tree equality：PASS。
 - 候选 diff 预计替换旧远端当前文件树；旧 `apps/`、`packages/`、`services/` 等路径不应出现在候选 tree。
 - secret/path/构建产物扫描：候选提交不得包含 `.env`、`node_modules/`、`dist/`、`target/`、`test-results/`、`.tmp/`、数据库、安装包、私钥或 API key。
 - 合并前必须满足：候选 SHA 对应的 quality workflow 成功、PR base/head 正确、工作树干净。
-- 合并后必须满足：远端 `main` 的 commit/tree 与本地稳定 `main` 的 tree 相等；任何治理状态更新使用后续小 PR 重新收敛。
+- 合并后必须满足：远端 `main` 的 commit/tree 与本地稳定 `main` 的 tree 相等；本次账本收口若改变 tree，使用后续小 PR 重新收敛。
 
 ## 官方来源
 

@@ -4,7 +4,7 @@
 
 - TASK-ASTRA-001 从已验收的稳定 main 建立独立 task worktree，校正旧 checkout 初稿，复用已完成的 T3b/T4 与已集成的 T5，补齐项目包和 unknown 状态迁移验收。尚未实施 Astra 功能。
 - 已检查 AGENTS、CONTRIBUTING、governance、SDLC/评审、ADR、PR 模板和 CI；不直接写 main，不推送历史任务分支，不合并原 dirty 工作区。
-- 用户指定 https://github.com/soudbs180-creator/KK-Studio-2.0 为 2.0 远端；该仓库与本地历史不相干，阶段 0 已从远端 main 建立并推送 docs/TASK-ASTRA-001-remote-manifest，远端回读 9edb528；仅含文档白名单，不整库上传，PR 尚未创建。
+- 用户指定 https://github.com/soudbs180-creator/KK-Studio-2.0 为 2.0 远端；该仓库与本地历史不相干，阶段 0 文档分支 `docs/TASK-ASTRA-001-remote-manifest`（回读 `9edb528`）保留为历史审计；首次 2.0 树已通过 PR #1 合并。
 
 
 ## 2026-09-19 T5 原生 TaskHost 集成与未知受理保护（本地集成完成，运行态待收口）
@@ -301,6 +301,6 @@ Not complete: original reported window provenance, native Tauri visual check, fu
 ## 2026-09-20 KK Studio 2.0 main 同步候选
 
 - 本地稳定 main 已在隔离 worktree 完成候选整理；原 checkout 仍保持 dirty/index 原样。
-- 从云端 main 建立 chore/TASK-KK2-MAIN-SYNC，候选树已按最终审计命令与本地 main 校验一致。
-- 候选树只包含当前本地 2.0 已跟踪目录；云端旧 monorepo 当前目录在候选提交中被删除，旧历史仍可追溯。
-- PR 比较入口：https://github.com/soudbs180-creator/KK-Studio-2.0/compare/main...chore/TASK-KK2-MAIN-SYNC?expand=1。云端 main 尚未改写；合并后必须回读 main SHA/tree SHA。
+- PR #1 已将 chore/TASK-KK2-MAIN-SYNC squash 合并到目标云端 main；合并后回读确认远端 main tree 与本地稳定 main 相同。
+- 首发树只包含当前本地 2.0 已跟踪目录；云端旧 monorepo 当前目录已删除，旧历史仍可追溯。
+- PR 记录：https://github.com/soudbs180-creator/KK-Studio-2.0/pull/1。合并后已回读 main SHA/tree SHA。

@@ -32,8 +32,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | PERF-001 | 原生素材缩略图/分页及内存IO | TODO | T3a | root |
 | EXT-GIT | 远端PR与main保护规则 | BLOCKED | TASK-GOV-001, T0 | root |
 | TEST-PROV-001 | Provider真实入口浏览器回归 | DONE | TASK-GOV-001 | root |
-| TASK-ASTRA-001 | Astra 迁移计划与 Git 分支规则同步 | IN_PROGRESS | T0, TASK-GOV-001 | root |
-| TASK-KK2-MAIN-SYNC | KK Studio 2.0 本地与云端 main 树同步 | IN_PROGRESS | T0, TASK-GOV-001 | root |
+| TASK-ASTRA-001 | Astra 迁移计划与 Git 分支规则同步 | DONE | T0, TASK-GOV-001 | root |
+| TASK-KK2-MAIN-SYNC | KK Studio 2.0 本地与云端 main 树同步 | DONE | T0, TASK-GOV-001 | root |
 | TASK-UI-UNMERGED-001 | dirty checkout 未合并 UI 回归候选 | TODO | TASK-GOV-001 | root |
 
 ## T0 — 可复现候选源码与主线整合
@@ -361,7 +361,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-KK2-main-integration`
 - Worktree: `C:/Users/Administrator/.codex/worktrees/task-astra-001/kk-studio-next`
 - Modules: docs/changes/2026-09-20-gpt-6-astra, docs/governance, docs/PROGRESS.md
-- Verification: NOT_VERIFIED — 迁移计划、规则审计、目录清理和本地验证已完成；Astra 功能未实施，最终 GitHub PR/CI/main 回读仍在进行。
+- Verification: PASS — 迁移计划、规则审计、目录清理、本地验证和目标仓库 PR 同步均完成；Astra 应用功能本身仍按计划待实施。
 - Evidence: [docs/changes/2026-09-20-gpt-6-astra/verification.md](../../docs/changes/2026-09-20-gpt-6-astra/verification.md), [docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md](../../docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md)
 - Updated: 2026-09-20
 
@@ -373,9 +373,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `chore/TASK-KK2-MAIN-SYNC`
 - Worktree: `D:/kk-studio-next/.worktrees/TASK-KK2-MAIN-SYNC`
 - Modules: Git hosting, repository tree, main
-- Verification: NOT_VERIFIED — 候选分支已从目标远端 main 派生；最终审计命令确认候选 tree 与本地稳定 main 相同。PR、CI、合并及合并后 main 回读待完成。
+- Verification: PASS — PR #1 已 squash 合并到目标 main；远端 main 回读 commit=a9db71b，tree=a3cad24，与本地稳定 main tree 相同；候选 quality workflow 全部成功。
 - Evidence: [docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md](../../docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md), [docs/changes/2026-09-20-gpt-6-astra/verification.md](../../docs/changes/2026-09-20-gpt-6-astra/verification.md), [docs/changes/2026-09-20-gpt-6-astra/sync-manifest.md](../../docs/changes/2026-09-20-gpt-6-astra/sync-manifest.md), [docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md](../../docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md)
-- External condition: 需要在目标仓库通过 PR 合并候选分支并回读 main commit/tree；main protection 当前为 false，rulesets/protection API 受 GitHub 计划限制。
 - Updated: 2026-09-20
 
 ## TASK-UI-UNMERGED-001 — dirty checkout 未合并 UI 回归候选
