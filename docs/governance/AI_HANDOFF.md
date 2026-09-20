@@ -37,6 +37,6 @@
 ## 2026-09-20 KK Studio 2.0 main 同步候选
 
 - 本地稳定 main 已在隔离 worktree 完成候选整理；原 checkout 仍保持 dirty/index 原样。
-- 从云端 main 建立 chore/TASK-KK2-MAIN-SYNC，最终审计命令确认候选 tree 与本地 main 相同。
-- 候选树只包含本地 2.0 当前已跟踪目录；云端旧 monorepo 当前目录在候选提交中被删除，旧历史仍可追溯。
-- PR 比较入口：https://github.com/soudbs180-creator/KK-Studio-2.0/compare/main...chore/TASK-KK2-MAIN-SYNC?expand=1。云端 main 尚未改写；合并后必须回读 main SHA/tree SHA。
+- PR #1 已将 chore/TASK-KK2-MAIN-SYNC squash 合并到目标云端 main；合并后最终审计命令确认远端 main tree 与本地 main 相同。
+- 首发树只包含本地 2.0 当前已跟踪目录；云端旧 monorepo 当前目录已删除，旧历史仍可追溯。
+- PR 记录：https://github.com/soudbs180-creator/KK-Studio-2.0/pull/1。合并后已回读 main SHA/tree SHA。

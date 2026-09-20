@@ -825,15 +825,15 @@
       "docs/governance",
       "docs/PROGRESS.md"
     ],
-    "status": "IN_PROGRESS",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-09-20-gpt-6-astra/verification.md",
       "docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md"
     ],
-    "verificationResult": "NOT_VERIFIED",
+    "verificationResult": "PASS",
     "branch": "codex/TASK-KK2-main-integration",
     "worktree": "C:/Users/Administrator/.codex/worktrees/task-astra-001/kk-studio-next",
-    "verification": "迁移计划、规则审计、目录清理和本地验证已完成；Astra 功能未实施，最终 GitHub PR/CI/main 回读仍在进行。",
+    "verification": "迁移计划、规则审计、目录清理、本地验证和目标仓库 PR 同步均完成；Astra 应用功能本身仍按计划待实施。",
     "updated": "2026-09-20"
   },
   {
@@ -860,11 +860,11 @@
       "repository tree",
       "main"
     ],
-    "status": "IN_PROGRESS",
+    "status": "DONE",
     "updated": "2026-09-20",
-    "verificationResult": "NOT_VERIFIED",
-    "verification": "候选分支已从目标远端 main 派生；最终审计命令确认候选 tree 与本地稳定 main 相同。PR、CI、合并及合并后 main 回读待完成。",
-    "blocker": "需要在目标仓库通过 PR 合并候选分支并回读 main commit/tree；main protection 当前为 false，rulesets/protection API 受 GitHub 计划限制。",
+    "verificationResult": "PASS",
+    "verification": "PR #1 已 squash 合并到目标 main；远端 main 回读 commit=a9db71b，tree=a3cad24，与本地稳定 main tree 相同；候选 quality workflow 全部成功。",
+    "blocker": null,
     "evidence": [
       "docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md",
       "docs/changes/2026-09-20-gpt-6-astra/verification.md",

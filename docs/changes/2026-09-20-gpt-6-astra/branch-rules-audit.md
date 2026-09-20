@@ -27,6 +27,7 @@
 - authenticated GitHub REST 已确认仓库为 private，默认分支为 `main`，当前凭据具备 admin/maintain/push/triage/pull 权限；open PR 当前为空。
 - `main` 当前 `protected=false` 且 required checks 为空；rulesets/protection API 返回 403，GitHub 提示当前计划不能启用该功能。因此 EXT-GIT 仍保持 BLOCKED，不能把 workflow 文件冒充托管分支保护。
 - quality workflow 已存在并在候选分支运行；CI 结论必须以最终候选 SHA 的 run 为准。
+- PR #1 已 squash 合并；候选 SHA `96fc440` 的 quality workflow 成功，合并后远端 `main` 回读完成。
 
 ## 同步步骤与验收
 
@@ -34,7 +35,7 @@
 2. 将稳定本地 main fast-forward 到该提交；确认原始 dirty checkout 指纹没有变化。
 3. 从远端 main 派生 `chore/TASK-KK2-MAIN-SYNC`，写入稳定 main 的完整 Git tree；候选 tree 必须与本地 main 相等。
 4. 推送候选分支，创建 PR，等待该 SHA 的 quality workflow 成功；只通过 PR 合并到远端 main。
-5. 合并后 fetch 并回读远端 main commit/tree；两端 tree 不一致时保持任务未完成。若需要更新治理状态，使用后续小 PR，直到最终 tree 再次相等。
+5. 合并后 fetch 并回读远端 main commit/tree；本次回读通过。后续治理状态变更仍需小 PR，直到最终 tree 再次相等。
 
 ## 目录结构白名单
 
