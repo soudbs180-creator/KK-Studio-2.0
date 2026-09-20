@@ -87,6 +87,9 @@ test("工作台消息属于当前项目，刷新后项目库可重新打开", as
   await page.getByRole("button", { name: "开始创建项目" }).click();
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect(page.locator(".workspace-content:not([hidden])")).toBeVisible();
+  // This exercises sequential edits and persistence. The workspace opens before
+  // the first provider result is archived; a second task is rejected while busy.
+  await expect(page.locator(".project-task-succeeded")).toHaveCount(1);
   await page.getByLabel("对话内容").fill("第二次修改要求");
   await page.getByRole("button", { name: "发送消息" }).click();
   await page.getByRole("button", { name: "批准并提交" }).click();

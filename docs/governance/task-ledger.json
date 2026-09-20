@@ -976,5 +976,92 @@
     "verification": "最终完整verify通过：150 Node、191浏览器、0失败/重试；三运行模式专项通过；2.35MB重绘20倍CPU连续3次通过，完整原图字节断言保留。中途unknown用例重试已定位并修正异步审批等待。",
     "verificationResult": "PASS",
     "updated": "2026-09-20"
+  },
+  {
+    "id": "TASK-MAIN-CLOSE-002",
+    "title": "未完成子任务汇总验收与主线同步",
+    "scope": "review, regression stability, governance reconciliation, main parity",
+    "branch": "codex/TASK-MAIN-CLOSE-002",
+    "worktree": "C:/Users/Administrator/.codex/worktrees/task-main-close-002/kk-studio-next",
+    "owner": "root",
+    "affectedModules": [
+      "tests/browser",
+      "docs/governance",
+      "docs/PROGRESS.md"
+    ],
+    "acceptance": [
+      "独立审阅页面和素材子任务",
+      "完整验证与三模式运行证据",
+      "经PR与CI同步本地及云端main"
+    ],
+    "dependencies": [
+      "TASK-UI-MAIN-001"
+    ],
+    "goal": "未完成子任务汇总验收与主线同步",
+    "status": "IN_PROGRESS",
+    "evidence": [
+      "docs/changes/2026-09-20-main-close-002/plan.md"
+    ],
+    "verification": "独立worktree实施中，基线已核对；尚未集成验收。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-09-20"
+  },
+  {
+    "id": "TASK-UI-CLOSE-003",
+    "title": "现行Figma页面缺口复核与交互收口",
+    "scope": "current Figma source, page interaction and visual evidence",
+    "branch": "codex/TASK-UI-CLOSE-003-figma",
+    "worktree": "C:/Users/Administrator/.codex/worktrees/task-ui-close-003/kk-studio-next",
+    "owner": "finish_figma_pages",
+    "affectedModules": [
+      "src/components",
+      "src/styles",
+      "tests/browser"
+    ],
+    "acceptance": [
+      "重新读取现行设计来源",
+      "可获得基准的页面同状态核对",
+      "缺失设计来源和工程补充明确区分"
+    ],
+    "dependencies": [
+      "TASK-UI-MAIN-001"
+    ],
+    "goal": "现行Figma页面缺口复核与交互收口",
+    "status": "IN_PROGRESS",
+    "evidence": [
+      "docs/changes/2026-09-20-main-close-002/plan.md"
+    ],
+    "verification": "独立worktree实施中，基线已核对；尚未集成验收。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-09-20"
+  },
+  {
+    "id": "TASK-PERF-ASSETS-001",
+    "title": "素材列表元数据和原件按需读取",
+    "scope": "asset listing, paging, previews and original preservation",
+    "branch": "codex/TASK-PERF-ASSETS-001",
+    "worktree": "C:/Users/Administrator/.codex/worktrees/task-perf-assets-001/kk-studio-next",
+    "owner": "finish_asset_performance",
+    "affectedModules": [
+      "src/features/creation",
+      "src/components/AssetPanel.tsx",
+      "src-tauri/src/asset_storage.rs"
+    ],
+    "acceptance": [
+      "素材列表不批量读取原件",
+      "预览按需加载与分页",
+      "大库测量和原图字节一致性验证"
+    ],
+    "dependencies": [
+      "T3a"
+    ],
+    "goal": "素材列表元数据和原件按需读取",
+    "status": "IN_PROGRESS",
+    "evidence": [
+      "docs/changes/2026-09-20-main-close-002/plan.md"
+    ],
+    "verification": "独立worktree实施中，基线已核对；尚未集成验收。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-09-20"
   }
 ]

@@ -37,6 +37,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-UNMERGED-001 | dirty checkout 未合并 UI 回归候选 | DONE | TASK-GOV-001 | root |
 | TASK-UI-MAIN-001 | 现行Figma页面校正与交互修复主线整合 | DONE | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 | TASK-UI-DISMISS-002 | 窄屏侧栏关闭与大图重绘稳定性 | DONE | TASK-UI-MAIN-001 | root |
+| TASK-MAIN-CLOSE-002 | 未完成子任务汇总验收与主线同步 | IN_PROGRESS | TASK-UI-MAIN-001 | root |
+| TASK-UI-CLOSE-003 | 现行Figma页面缺口复核与交互收口 | IN_PROGRESS | TASK-UI-MAIN-001 | finish_figma_pages |
+| TASK-PERF-ASSETS-001 | 素材列表元数据和原件按需读取 | IN_PROGRESS | T3a | finish_asset_performance |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -413,4 +416,40 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/Sidebar.tsx, tests/browser/menu-boundaries.spec.ts, tests/browser/unified-image-command.spec.ts, src/features/creation/assetRepository.ts, src/features/creation/imageGeneration.ts, tests/browser/task-intent.spec.ts
 - Verification: PASS — 最终完整verify通过：150 Node、191浏览器、0失败/重试；三运行模式专项通过；2.35MB重绘20倍CPU连续3次通过，完整原图字节断言保留。中途unknown用例重试已定位并修正异步审批等待。
 - Evidence: [docs/changes/2026-09-20-ui-main-alignment/followup.md](../../docs/changes/2026-09-20-ui-main-alignment/followup.md), [docs/evidence/2026-09-20-ui-main-alignment/followup/browser-summary.json](../../docs/evidence/2026-09-20-ui-main-alignment/followup/browser-summary.json)
+- Updated: 2026-09-20
+
+## TASK-MAIN-CLOSE-002 — 未完成子任务汇总验收与主线同步
+
+- Goal: 未完成子任务汇总验收与主线同步
+- Scope: review, regression stability, governance reconciliation, main parity
+- Acceptance: 独立审阅页面和素材子任务; 完整验证与三模式运行证据; 经PR与CI同步本地及云端main
+- Branch: `codex/TASK-MAIN-CLOSE-002`
+- Worktree: `C:/Users/Administrator/.codex/worktrees/task-main-close-002/kk-studio-next`
+- Modules: tests/browser, docs/governance, docs/PROGRESS.md
+- Verification: NOT_VERIFIED — 独立worktree实施中，基线已核对；尚未集成验收。
+- Evidence: [docs/changes/2026-09-20-main-close-002/plan.md](../../docs/changes/2026-09-20-main-close-002/plan.md)
+- Updated: 2026-09-20
+
+## TASK-UI-CLOSE-003 — 现行Figma页面缺口复核与交互收口
+
+- Goal: 现行Figma页面缺口复核与交互收口
+- Scope: current Figma source, page interaction and visual evidence
+- Acceptance: 重新读取现行设计来源; 可获得基准的页面同状态核对; 缺失设计来源和工程补充明确区分
+- Branch: `codex/TASK-UI-CLOSE-003-figma`
+- Worktree: `C:/Users/Administrator/.codex/worktrees/task-ui-close-003/kk-studio-next`
+- Modules: src/components, src/styles, tests/browser
+- Verification: NOT_VERIFIED — 独立worktree实施中，基线已核对；尚未集成验收。
+- Evidence: [docs/changes/2026-09-20-main-close-002/plan.md](../../docs/changes/2026-09-20-main-close-002/plan.md)
+- Updated: 2026-09-20
+
+## TASK-PERF-ASSETS-001 — 素材列表元数据和原件按需读取
+
+- Goal: 素材列表元数据和原件按需读取
+- Scope: asset listing, paging, previews and original preservation
+- Acceptance: 素材列表不批量读取原件; 预览按需加载与分页; 大库测量和原图字节一致性验证
+- Branch: `codex/TASK-PERF-ASSETS-001`
+- Worktree: `C:/Users/Administrator/.codex/worktrees/task-perf-assets-001/kk-studio-next`
+- Modules: src/features/creation, src/components/AssetPanel.tsx, src-tauri/src/asset_storage.rs
+- Verification: NOT_VERIFIED — 独立worktree实施中，基线已核对；尚未集成验收。
+- Evidence: [docs/changes/2026-09-20-main-close-002/plan.md](../../docs/changes/2026-09-20-main-close-002/plan.md)
 - Updated: 2026-09-20
