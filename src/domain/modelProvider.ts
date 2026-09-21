@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { BROWSER_STORAGE_KEYS } from "../runtime/storage-contract.ts";
+import { isAllowedProviderUrl } from "./providerUrl.ts";
 
 export const MODEL_PROVIDER_STORAGE_KEY = BROWSER_STORAGE_KEYS.modelProvider;
 
@@ -11,6 +12,10 @@ export const modelProviderSchema = z.object({
     .trim()
     .url("请输入有效的 API 地址")
     .refine((value) => /^https?:\/\//i.test(value), "仅支持 HTTP 或 HTTPS 地址")
+    .refine(
+      isAllowedProviderUrl,
+      "远程供应商必须使用 HTTPS；HTTP 仅允许本机回环地址",
+    )
     .refine((value) => {
       try {
         const url = new URL(value);

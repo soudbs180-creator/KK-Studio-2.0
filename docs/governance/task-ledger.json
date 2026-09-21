@@ -1118,5 +1118,49 @@
     "verification": "PR #4 已 squash 合入 main；后续 PR #7 governance closeout merge 3c4d012；hosted delivery/verify、Rust fmt/test、client check、Tauri no-bundle build 全部成功；治理35tasks/0、push9/9、delivery12/12、AI场景12/12、基线正反例2/2。服务器 protection/rulesets API403仍BLOCKED，本地hook不能替代远端强制保护；产品代码、既有测试、旧证据和其他任务提交未由本任务写入。",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-21"
+  },
+  {
+    "id": "TASK-AUDIT-SEC-001",
+    "title": "安全边界与异常任务状态审计",
+    "goal": "修复已复现的凭据泄露、重复提交、Gateway配置陈旧、账户额度漂移、跨窗口租约竞态、原生响应内存和结果URL SSRF风险",
+    "scope": "Web provider URL/state recovery, Gateway registration/authentication, native TaskHost journal/download limits",
+    "acceptance": [
+      "Provider请求发出后取消或暂停进入unknown并禁止普通重试",
+      "远程Provider只允许HTTPS，HTTP仅限本机回环地址",
+      "Gateway重启显式更新连接配置并撤销旧ACL，token冲突失败关闭",
+      "Gateway初始额度只在首次 provisioning 生效，额度配置漂移 fail closed，并发策略可安全更新",
+      "Web提交租约以Web Locks跨窗口串行协调，崩溃/旧元数据按live locks回收，不支持时拒绝提交",
+      "原生Provider结果下载按同origin和DNS/IP策略收口并按流式总字节上限读取，任务journal替换不先删除原件"
+    ],
+    "dependencies": [
+      "TASK-GOV-001"
+    ],
+    "owner": "root",
+    "branch": "fix/TASK-AUDIT-SEC-001-boundaries",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-AUDIT-SEC-001",
+    "affectedModules": [
+      "src/App.tsx",
+      "src/domain/modelProvider.ts",
+      "src/domain/providerConnections.ts",
+      "src/features/creation/taskRecovery.ts",
+      "src/features/generation-server/repository.ts",
+      "src/features/generation-server/http.ts",
+      "src/features/generation-server/main.ts",
+      "src-tauri/src/task_host.rs",
+      "tests/unit"
+    ],
+    "status": "REVIEW",
+    "evidence": [
+      "docs/changes/2026-09-21-security-audit/audit.md",
+      "docs/changes/2026-09-21-security-audit/verification.md",
+      "docs/changes/2026-09-21-security-audit-closeout/intent.md",
+      "docs/changes/2026-09-21-security-audit-closeout/spec.md",
+      "docs/changes/2026-09-21-security-audit-closeout/plan.md",
+      "docs/changes/2026-09-21-security-audit-closeout/verification.md",
+      "docs/changes/2026-09-21-security-audit-closeout/review.md"
+    ],
+    "verification": "最终 head 4a3c0db：178/178 Node、TypeScript、lint、format、UI119/0、Rust63/63、fmt/check、production build、production preview 191/191、Tauri no-bundle 与隔离 Tauri WebView2 均通过；固定 1421 被另一 worktree 占用，未终止且不归因于本分支。",
+    "verificationResult": "PASS",
+    "updated": "2026-09-21"
   }
 ]

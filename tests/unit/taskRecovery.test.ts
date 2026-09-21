@@ -6,6 +6,7 @@ import {
   type CreationTask,
 } from "../../src/features/creation/model.ts";
 import {
+  abortedAfterProviderSubmission,
   canRetryTask,
   recoverInterruptedTasks,
 } from "../../src/features/creation/taskRecovery.ts";
@@ -185,4 +186,43 @@ test("unknown or submitted tasks cannot enter the ordinary retry path", () => {
   assert.equal(canRetryTask(unknown), false);
   assert.equal(canRetryTask(submitted), false);
   assert.equal(canRetryTask(task("failed", "failed")), true);
+});
+
+test("aborting after a provider request starts is always treated as unknown", () => {
+  assert.equal(
+    abortedAfterProviderSubmission({
+      durableSubmission: true,
+      providerRequestStarted: true,
+      nativeTaskHost: false,
+      aborted: true,
+    }),
+    true,
+  );
+  assert.equal(
+    abortedAfterProviderSubmission({
+      durableSubmission: true,
+      providerRequestStarted: false,
+      nativeTaskHost: true,
+      aborted: true,
+    }),
+    true,
+  );
+  assert.equal(
+    abortedAfterProviderSubmission({
+      durableSubmission: true,
+      providerRequestStarted: false,
+      nativeTaskHost: false,
+      aborted: true,
+    }),
+    false,
+  );
+  assert.equal(
+    abortedAfterProviderSubmission({
+      durableSubmission: false,
+      providerRequestStarted: true,
+      nativeTaskHost: false,
+      aborted: true,
+    }),
+    false,
+  );
 });

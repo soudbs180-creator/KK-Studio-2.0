@@ -69,12 +69,53 @@ export class GenerationRepository {
       limit > 256
     )
       throw new PlatformError("INVALID_ACCOUNT");
-    // Provision once. A process restart must never restore previously spent credit.
-    this.db
-      .prepare(
-        "INSERT OR IGNORE INTO credit_accounts(owner_id,balance,concurrency_limit) VALUES(?,?,?)",
-      )
-      .run(ownerId, balance, limit);
+    this.transaction(() => {
+      const existing = this.db
+        .prepare(
+          "SELECT balance, concurrency_limit FROM credit_accounts WHERE owner_id=?",
+        )
+        .get(ownerId) as
+        { balance: number; concurrency_limit: number } | undefined;
+      if (!existing) {
+        this.db
+          .prepare(
+            "INSERT INTO credit_accounts(owner_id,balance,concurrency_limit) VALUES(?,?,?)",
+          )
+          .run(ownerId, balance, limit);
+        this.db
+          .prepare("INSERT INTO credit_account_provisioning VALUES(?,?)")
+          .run(ownerId, balance);
+        return;
+      }
+      const provisioned = this.db
+        .prepare(
+          "SELECT initial_credits FROM credit_account_provisioning WHERE owner_id=?",
+        )
+        .get(ownerId) as { initial_credits: number } | undefined;
+      // Upgrade old accounts using balance + all settled debits, never the
+      // configured value. This detects config drift without replenishing spend.
+      const settled = this.db
+        .prepare(
+          `SELECT COALESCE(SUM(s.actual_units),0) AS spent
+          FROM credit_settlements s JOIN credit_reservations r ON r.id=s.reservation_id
+          WHERE r.owner_id=?`,
+        )
+        .get(ownerId) as { spent: number };
+      const initialCredits =
+        provisioned?.initial_credits ?? existing.balance + settled.spent;
+      if (!Number.isSafeInteger(initialCredits) || initialCredits !== balance)
+        throw new PlatformError("ACCOUNT_CONFIG_CONFLICT", 409);
+      if (!provisioned)
+        this.db
+          .prepare("INSERT INTO credit_account_provisioning VALUES(?,?)")
+          .run(ownerId, initialCredits);
+      if (existing.concurrency_limit !== limit)
+        this.db
+          .prepare(
+            "UPDATE credit_accounts SET concurrency_limit=? WHERE owner_id=?",
+          )
+          .run(limit, ownerId);
+    });
   }
   register(
     connection: ProviderConnection,
@@ -98,25 +139,48 @@ export class GenerationRepository {
       credentialRef: undefined,
       activeJobs: undefined,
     };
+    const owners = [
+      ...new Set(
+        options.allowedOwners ?? (options.ownerId ? [options.ownerId] : []),
+      ),
+    ];
     this.transaction(() => {
       this.db
         .prepare(
-          "INSERT OR IGNORE INTO gateway_connections(id,owner_id,metadata_json,state,unit_price,cost_limit,credential_ref) VALUES(?,?,?,?,?,?,?)",
+          `INSERT INTO gateway_connections(id,owner_id,metadata_json,state,cooldown_until,unit_price,cost_limit,credential_ref)
+           VALUES(?,?,?,?,?,?,?,?)
+           ON CONFLICT(id) DO UPDATE SET
+             owner_id=excluded.owner_id,
+             metadata_json=excluded.metadata_json,
+             -- Runtime health is durable state. Configuration reloads must
+             -- not clear cooldowns or quarantines; controls() is the explicit
+             -- administrative recovery path.
+             state=gateway_connections.state,
+             cooldown_until=gateway_connections.cooldown_until,
+             unit_price=excluded.unit_price,
+             cost_limit=excluded.cost_limit,
+             credential_ref=excluded.credential_ref,
+             revision=gateway_connections.revision+1`,
         )
         .run(
           parsed.id,
           options.ownerId ?? null,
           JSON.stringify(metadata),
           parsed.state,
+          parsed.state === "cooldown" ? (parsed.cooldownUntil ?? 0) : 0,
           options.unitPrice,
           options.costLimit,
           parsed.credentialRef ?? null,
         );
-      for (const owner of options.allowedOwners ??
-        (options.ownerId ? [options.ownerId] : []))
+      // The config is authoritative at process startup. Reconcile ACL entries
+      // so removing an owner actually revokes access after a restart.
+      this.db
+        .prepare("DELETE FROM connection_acl WHERE connection_id=?")
+        .run(parsed.id);
+      for (const owner of owners)
         this.db
           .prepare(
-            "INSERT OR IGNORE INTO connection_acl(connection_id,owner_id) VALUES(?,?)",
+            "INSERT INTO connection_acl(connection_id,owner_id) VALUES(?,?)",
           )
           .run(parsed.id, owner);
     });

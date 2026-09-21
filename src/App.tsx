@@ -77,13 +77,15 @@ import {
   readProviderConnections,
 } from "./features/creation/providerRegistry";
 import {
-  reserveProviderSubmission,
+  reserveProviderSubmissionAsync,
+  type ProviderSubmissionReservation,
   ProviderSubmissionError,
 } from "./features/creation/providerSubmission";
 import { mapWithConcurrency } from "./features/creation/generationQueue";
 import { compileDesignPrompt } from "./features/creation/promptCompiler";
 
 import {
+  abortedAfterProviderSubmission,
   canRetryTask,
   recoverInterruptedTasks,
 } from "./features/creation/taskRecovery";
@@ -405,7 +407,7 @@ export default function App() {
         if (latest) replaceCanvasItems(latest.items);
       }
     };
-    let reservation: ReturnType<typeof reserveProviderSubmission> | undefined;
+    let reservation: ProviderSubmissionReservation | undefined;
     const nativeTaskHost = usesNativeTaskHost();
     try {
       if (!task.providerBaseUrl)
@@ -421,7 +423,7 @@ export default function App() {
       const promptHash = await hashPrompt(compiledPrompt);
       if (controller.signal.aborted) throw new Error("任务已停止。");
       if (!nativeTaskHost)
-        reservation = reserveProviderSubmission(
+        reservation = await reserveProviderSubmissionAsync(
           {
             id: task.providerConnectionId,
             baseUrl: task.providerBaseUrl,
@@ -430,6 +432,7 @@ export default function App() {
           },
           { explicitRetry: explicitRetry || Boolean(task.retryOfTaskId) },
         );
+      if (controller.signal.aborted) throw new Error("任务已停止。");
       outputs = outputs.map((output) =>
         output.status === "succeeded"
           ? output
@@ -822,12 +825,17 @@ export default function App() {
       }
     } catch (error) {
       const uncertain =
-        durableSubmission &&
-        (providerRequestStarted || nativeTaskHost) &&
-        !controller.signal.aborted &&
-        (error instanceof GenerationProviderError
-          ? error.failureClass === "network"
-          : !(error instanceof ProviderSubmissionError));
+        abortedAfterProviderSubmission({
+          durableSubmission,
+          providerRequestStarted,
+          nativeTaskHost,
+          aborted: controller.signal.aborted,
+        }) ||
+        (durableSubmission &&
+          (providerRequestStarted || nativeTaskHost) &&
+          (error instanceof GenerationProviderError
+            ? error.failureClass === "network"
+            : !(error instanceof ProviderSubmissionError)));
       const nativeCancelUncertain =
         nativeTaskHost &&
         nativeCancelRequested.current.has(taskId) &&
@@ -903,7 +911,12 @@ export default function App() {
         });
       }
     } finally {
-      reservation?.release();
+      try {
+        await reservation?.release();
+      } catch {
+        // A failed release cannot silently submit another request: the live
+        // browser lock remains held until the task document terminates.
+      }
       if (taskControllers.current[taskId] === controller)
         delete taskControllers.current[taskId];
     }
