@@ -38,6 +38,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-MAIN-001 | 现行Figma页面校正与交互修复主线整合 | DONE | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 | TASK-UI-DISMISS-002 | 窄屏侧栏关闭与大图重绘稳定性 | DONE | TASK-UI-MAIN-001 | root |
 | TASK-GOV-002 | 跨AI自主开发与分支质量门禁 | PARTIAL | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
+| TASK-MINIMAX-001 | MiniMax Design 交互审计与本地技能/MCP复刻 | PARTIAL | TASK-GOV-002 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -426,4 +427,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: docs, scripts/governance, .github, .githooks, config, tests/unit/deliveryPolicy.test.ts, tests/unit/gitPushPolicy.test.ts, tests/evals
 - Verification: PARTIAL — PR #4 已 squash 合入 main，merge 92c1ef1；hosted delivery/verify、Rust fmt/test、client check、Tauri no-bundle build 全部成功；治理32tasks/0、push9/9、delivery12/12、AI场景12/12、基线正反例2/2。服务器 protection/rulesets API403仍BLOCKED，本地hook不能替代远端强制保护；产品代码、既有测试、旧证据和其他任务提交未由本任务写入。
 - Evidence: [docs/changes/2026-09-20-ai-sdlc/verification.md](../../docs/changes/2026-09-20-ai-sdlc/verification.md), [docs/changes/2026-09-21-ai-sdlc-closeout/verification.md](../../docs/changes/2026-09-21-ai-sdlc-closeout/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json)
+- Updated: 2026-09-21
+
+## TASK-MINIMAX-001 — MiniMax Design 交互审计与本地技能/MCP复刻
+
+- Goal: 依据真实 MiniMax Design 操作证据，补齐 KK Studio 的技能库、连接器目录和 MCP 发现交互
+- Scope: MiniMax Design skills/connectors/MCP/ComfyUI interaction audit; KK Studio skill registry, composer integration, connector prototype, MCP lifecycle
+- Acceptance: 真实检查 MiniMax 的技能、连接器、菜单、设置和 ComfyUI 入口，并记录付费生成不执行的边界; KK Studio 技能库支持本地 Skill 的查看、导入、创建、编辑、启用/禁用、卸载和应用到草稿; 连接器目录提供真实可操作的详情、Escape/焦点恢复和明确 Prototype 安装边界; MCP Streamable HTTP 配置覆盖发现、分页、连接失败清理、卸载清理、持久化损坏提示和大小上限; Web 开发运行时完成同状态浏览器证据，未验证范围明确记录，不把本地原型描述为云端/付费能力
+- Branch: `codex/feat/minimax-deep-replica-root`
+- Worktree: `D:/kk-studio-next`
+- Modules: src/components/SkillsPage.tsx, src/components/SkillEditor.tsx, src/components/ConnectorCatalog.tsx, src/components/settings/McpSettings.tsx, src/features/skills/skillRegistry.ts, src/features/mcp/mcpClient.ts, tests/unit, docs/changes/2026-09-21-minimax-deep-audit
+- Verification: PARTIAL — MiniMax 本地应用的技能、连接器、设置/MCP、ComfyUI 和菜单流程已完成只读审计；KK Studio Web 1421 已验证 Skill/Connector/MCP 的点击、Escape、焦点恢复和 HTTPS/HTTP 校验。完整生成、付费提交、桌面 Tauri release 和真实第三方连接器安装仍未验证，保持 PARTIAL。
+- Evidence: [docs/changes/2026-09-21-minimax-deep-audit/verification.md](../../docs/changes/2026-09-21-minimax-deep-audit/verification.md), [docs/evidence/minimax-deep-audit-2026-09-21/runtime.json](../../docs/evidence/minimax-deep-audit-2026-09-21/runtime.json)
 - Updated: 2026-09-21

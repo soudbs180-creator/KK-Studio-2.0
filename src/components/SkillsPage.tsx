@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   applySkillInstructions,
   createSkillRegistry,
@@ -8,7 +8,9 @@ import {
   type SkillRegistry,
 } from "../features/skills/skillRegistry";
 import SkillEditor from "./SkillEditor";
-import SkillRecordCard from "./SkillRecordCard";
+import ConnectorCatalog from "./ConnectorCatalog";
+import SkillCollection from "./SkillCollection";
+import SkillPageControls from "./SkillPageControls";
 
 const TEMPLATE_SKILLS = [
   {
@@ -45,6 +47,8 @@ const TEMPLATE_SKILLS = [
   },
 ] as const;
 
+const MAX_IMPORT_BYTES = 2 * 1024 * 1024;
+
 function ensureTemplates(registry: SkillRegistry): void {
   for (const template of TEMPLATE_SKILLS) {
     if (!registry.getRecord(template.manifest.id))
@@ -68,24 +72,45 @@ function downloadSkill(record: SkillRecord, format: "json" | "markdown"): void {
 export default function SkillsPage({
   registry = createSkillRegistry(),
   onApply,
+  onOpenMcp,
 }: {
   registry?: SkillRegistry;
-  onApply?: (record: SkillRecord) => void;
+  onApply?: (record: SkillRecord) => string | void;
+  onOpenMcp?: () => void;
 }) {
   const [, refresh] = useState(0);
   const [tab, setTab] = useState<"catalog" | "mine">("catalog");
+  const [view, setView] = useState<"skills" | "connectors">("skills");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("全部");
   const [status, setStatus] = useState("");
   const [editing, setEditing] = useState<SkillRecord | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
-  ensureTemplates(registry);
+  const importSequence = useRef(0);
+  const activeReader = useRef<FileReader | null>(null);
+  useEffect(() => {
+    try {
+      ensureTemplates(registry);
+      if (registry.persistenceWarning) setStatus(registry.persistenceWarning);
+    } catch (error) {
+      setStatus(
+        error instanceof Error
+          ? error.message
+          : "Skill 初始化失败，原有记录未改变。",
+      );
+    }
+    refresh((value) => value + 1);
+  }, [registry]);
+  useEffect(
+    () => () => {
+      importSequence.current += 1;
+      activeReader.current?.abort();
+      activeReader.current = null;
+    },
+    [],
+  );
   const records = registry.listRecords();
-  const categories = [
-    "全部",
-    ...new Set(records.map((record) => record.manifest.category)),
-  ];
   const visible = useMemo(
     () =>
       searchSkillRecords(
@@ -105,137 +130,82 @@ export default function SkillsPage({
     setStatus("");
   }
   function importFile(file: File): void {
+    const sequence = ++importSequence.current;
+    activeReader.current?.abort();
+    if (file.size > MAX_IMPORT_BYTES) {
+      setStatus("Skill 文件超过 2 MB 限制，未读取原文件。");
+      return;
+    }
     const reader = new FileReader();
+    activeReader.current = reader;
     reader.onload = () => {
+      if (sequence !== importSequence.current) return;
       try {
         const value = file.name.toLowerCase().endsWith(".json")
           ? JSON.parse(String(reader.result))
           : String(reader.result);
         registry.importSkill(value);
         redraw("Skill 已导入本地库；它只提供文本指令，不会自动执行。");
+        activeReader.current = null;
       } catch (error) {
         setStatus(
           error instanceof Error
             ? error.message
             : "Skill 导入失败，原记录未改变。",
         );
+      } finally {
+        if (sequence === importSequence.current) activeReader.current = null;
       }
     };
-    reader.onerror = () => setStatus("Skill 文件读取失败，原记录未改变。");
+    reader.onerror = () => {
+      if (sequence === importSequence.current)
+        setStatus("Skill 文件读取失败，原记录未改变。");
+      if (sequence === importSequence.current) activeReader.current = null;
+    };
+    reader.onabort = () => {
+      if (sequence === importSequence.current) activeReader.current = null;
+    };
     reader.readAsText(file);
   }
   return (
     <section className="catalog-page catalog-page-skills" aria-label="Skill">
-      <header className="catalog-page-header">
-        <div>
-          <h1>Skill</h1>
-          <p>
-            管理本地指令模板；应用时会把明确文本加入草稿，不会运行脚本或调用云端服务。
-          </p>
-        </div>
-        <div className="catalog-page-actions">
-          <button type="button" className="primary-button" onClick={openCreate}>
-            新建本地 Skill
-          </button>
-          <button
-            type="button"
-            className="ui-button"
-            onClick={() => fileInput.current?.click()}
-          >
-            导入 JSON / SKILL.md
-          </button>
-          <input
-            ref={fileInput}
-            hidden
-            type="file"
-            accept=".json,.md,.txt"
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-              if (file) importFile(file);
-              event.currentTarget.value = "";
-            }}
-          />
-        </div>
-      </header>
-      <p className="catalog-page-status" role="status">
-        本地 Skill 已保存到当前浏览器；没有联网安装、官方下载量或自动 Agent
-        运行。
-      </p>
-      {status && (
-        <p className="catalog-page-status" role="status">
-          {status}
-        </p>
-      )}
-      <div className="catalog-page-rule" />
-      <div className="catalog-page-toolbar">
-        <div
-          className="catalog-page-tabs"
-          role="tablist"
-          aria-label="Skill分类"
-        >
-          <button
-            type="button"
-            role="tab"
-            aria-selected={tab === "catalog"}
-            onClick={() => setTab("catalog")}
-          >
-            全部 Skill
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={tab === "mine"}
-            onClick={() => setTab("mine")}
-          >
-            我的 Skill
-          </button>
-        </div>
-        <label className="catalog-page-search">
-          <span aria-hidden="true">⌕</span>
-          <input
-            aria-label="搜索 Skill"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="搜索 Skill"
-          />
-        </label>
-      </div>
-      <div className="catalog-categories" role="list" aria-label="Skill分类">
-        {categories.map((item) => (
-          <button
-            key={item}
-            type="button"
-            className={category === item ? "is-selected" : ""}
-            onClick={() => setCategory(item)}
-          >
-            {item}
-          </button>
-        ))}
-      </div>
-      <h2 className="catalog-section-title">
-        {tab === "mine" ? "我的 Skill" : "本地模板与已导入"}
-      </h2>
-      <div className="catalog-card-grid">
-        {visible.map((record) => (
-          <SkillRecordCard
-            key={record.manifest.id}
-            record={record}
-            registry={registry}
-            onApply={onApply}
-            onEdit={(value) => {
-              setEditing(value);
-              setEditorOpen(true);
-            }}
-            onExport={(value) => downloadSkill(value, "markdown")}
-            onStatus={redraw}
-          />
-        ))}
-      </div>
-      {!visible.length && (
-        <div className="catalog-empty" role="status">
-          <strong>没有匹配的 Skill</strong>
-          <p>可以新建本地模板，或导入受限的 JSON / SKILL.md。</p>
-        </div>
+      <SkillPageControls
+        view={view}
+        tab={tab}
+        query={query}
+        status={status}
+        fileInput={fileInput}
+        onView={(next) => {
+          setView(next);
+          setQuery("");
+        }}
+        onTab={setTab}
+        onQuery={setQuery}
+        onCreate={openCreate}
+        onImport={importFile}
+        onOpenMcp={onOpenMcp}
+      />
+      {view === "skills" ? (
+        <SkillCollection
+          records={visible}
+          category={category}
+          tab={tab}
+          registry={registry}
+          onCategory={setCategory}
+          onApply={onApply}
+          onEdit={(value) => {
+            setEditing(value);
+            setEditorOpen(true);
+          }}
+          onExport={(value) => downloadSkill(value, "markdown")}
+          onStatus={redraw}
+        />
+      ) : (
+        <ConnectorCatalog
+          query={query}
+          onOpenMcp={onOpenMcp}
+          onStatus={setStatus}
+        />
       )}
       {editorOpen && (
         <SkillEditor
@@ -248,7 +218,7 @@ export default function SkillsPage({
                 : registry.createSkill(value);
               setEditorOpen(false);
               redraw("Skill 已保存到本地库。");
-              if (onApply) onApply(saved);
+              void saved;
             } catch (error) {
               setStatus(
                 error instanceof Error

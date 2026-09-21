@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { SkillRecord } from "../features/skills/skillRegistry";
 
 export default function SkillEditor({
@@ -21,6 +21,11 @@ export default function SkillEditor({
     imports?: string[];
   }) => void;
 }) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const firstFieldRef = useRef<HTMLInputElement>(null);
+  const previousFocus = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   const [name, setName] = useState(record?.manifest.name ?? "");
   const [id, setId] = useState(record?.manifest.id ?? "");
   const [version, setVersion] = useState(record?.manifest.version ?? "0.1.0");
@@ -30,8 +35,30 @@ export default function SkillEditor({
   const [author, setAuthor] = useState(record?.manifest.author ?? "本地");
   const [category, setCategory] = useState(record?.manifest.category ?? "本地");
   const [instructions, setInstructions] = useState(record?.instructions ?? "");
+  useEffect(() => {
+    previousFocus.current = document.activeElement as HTMLElement | null;
+    firstFieldRef.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onCloseRef.current();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      previousFocus.current?.focus({ preventScroll: true });
+    };
+  }, []);
   return (
-    <div className="catalog-tutorial" role="dialog" aria-label="编辑本地 Skill">
+    <div
+      ref={dialogRef}
+      className="catalog-tutorial"
+      role="dialog"
+      aria-modal="true"
+      aria-label="编辑本地 Skill"
+      tabIndex={-1}
+    >
       <div className="settings-detail-stack">
         <h2>{record ? "编辑 Skill" : "新建本地 Skill"}</h2>
         <p>
@@ -48,6 +75,7 @@ export default function SkillEditor({
         <label>
           名称
           <input
+            ref={firstFieldRef}
             value={name}
             onChange={(event) => setName(event.target.value)}
           />

@@ -1,5 +1,12 @@
 # 当前进度
 
+## 2026-09-21 MiniMax Design 深度交互审计与本地能力复刻（PARTIAL）
+
+- 只读操作了本机 MiniMax Design `current` 安装，覆盖项目库、开始创作、Skills、连接器、ComfyUI、设置、文件/窗口/帮助菜单及关键弹窗；未点击会员生成、未下载 40GB 工作流、未登录、未上传日志、未安装第三方连接器。
+- 候选分支 `codex/feat/minimax-deep-replica-root` 增加本地 Skill registry/UI：搜索、分类、导入 `SKILL.md`/zip、创建/编辑、启用/禁用、卸载、应用到创作草稿；补充 2MiB 文件上限、4,000 字指令上限、损坏持久化告警、Escape 与焦点恢复。
+- 增加连接器目录原型和 Blender 等目录项；详情、关闭、Escape、跳转 MCP 设置可操作，安装按钮保持 disabled 并写明 Prototype/未接入；MCP Streamable HTTP 增加分页、响应体上限、连接失败清理、组件卸载清理和损坏配置保护。
+- Web 开发运行时固定 `http://127.0.0.1:1421/` 完成同状态 DOM/交互证据；Tauri release、真实云端 provider、付费生成和真实第三方连接器仍未验证，任务账本为 `TASK-MINIMAX-001=PARTIAL`。详见 `docs/changes/2026-09-21-minimax-deep-audit/`。
+
 ## 2026-09-21 AI 自主开发规则已合入主线
 
 - PR #4 已 squash 合入远端 `main`，合并提交为 `92c1ef17c42030ef6976e039efe4775c4bdc0939`；合并前基线 `c3ff0871b3db674e0ab073f1445879d84fee3507`、规则分支 head `19215945573ca97dd4427f36ac8e074a1378f9fb` 均已回读。
@@ -309,7 +316,6 @@ Not complete: original reported window provenance, native Tauri visual check, fu
 - 首发树只包含当前本地 2.0 已跟踪目录；云端旧 monorepo 当前目录已删除，旧历史仍可追溯。
 - PR 记录：https://github.com/soudbs180-creator/KK-Studio-2.0/pull/1。合并后已回读 main SHA/tree SHA。
 
-
 ## 2026-09-20 UI 主线整合
 
 TASK-UI-MAIN-001 从 origin/main@8aca3ab 出发，三方整合27项原目录交互修复并保留主线T3b/T4/T5；现行 Figma 的设置、搜索、资产展开/收纳及任务入口偏差已修正。34种页面状态已用实际导航捕获；原目录尚未切换前不能把候选描述成原目录最新版。准确命令、运行矩阵和同步状态见 [verification](changes/2026-09-20-ui-main-alignment/verification.md)。UI-004 保持 PARTIAL：当前唯一Figma页面中没有Landing410:59708及部分独立页面稿。治理候选TASK-GOV-002保持独立，未夹带合入。
@@ -317,7 +323,6 @@ TASK-UI-MAIN-001 从 origin/main@8aca3ab 出发，三方整合27项原目录交�
 ## 2026-09-20 UI 主线整合收口
 
 TASK-UI-MAIN-001 已完成并同步到目标仓库：PR #3（https://github.com/soudbs180-creator/KK-Studio-2.0/pull/3）通过双 CI 后 squash 合并，远端与本地 `main` 均回读为 `fb57529c719924330ec0154f5374df8f5d508e00`。本地根目录已从 `master` 切换到跟踪 `origin/main`，原 `master`、旧本地 `main` 和原工作文件均保留在归档位置；原目录 409 项已逐项 SHA-256 核对，未上传未审阅内容。现行 Figma 可取得的页面已完成同状态 DOM/截图验收；缺失 Landing 等独立 Figma 稿件仍由 UI-004 标为 PARTIAL。
-
 
 ## 窄屏关闭优先级补充
 

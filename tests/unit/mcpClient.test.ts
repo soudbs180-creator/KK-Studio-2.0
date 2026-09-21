@@ -29,6 +29,13 @@ class MemoryStorage implements McpServerStorage {
   }
 }
 
+class CorruptedStorage extends MemoryStorage {
+  constructor() {
+    super();
+    this.values.set(MCP_SERVERS_STORAGE_KEY, "not-json");
+  }
+}
+
 test("MCP endpoint accepts loopback HTTP and remote HTTPS only", () => {
   assert.equal(
     parseMcpEndpoint("http://localhost:3000/mcp").hostname,
@@ -60,6 +67,12 @@ test("server registry persists endpoint metadata without credentials or session 
   assert.match(persisted, /local-tools/);
   assert.doesNotMatch(persisted, /token|session|authorization|secret/i);
   assert.deepEqual(new McpServerRegistry(storage).list(), [server]);
+});
+
+test("corrupted MCP persistence is reported and cannot be overwritten", () => {
+  const registry = new McpServerRegistry(new CorruptedStorage());
+  assert.match(registry.persistenceWarning, /无法读取/);
+  assert.throws(() => registry.add(server), /无法读取/);
 });
 
 test("Streamable HTTP performs initialize, initialized, paginated tools/list, and SSE parsing", async () => {

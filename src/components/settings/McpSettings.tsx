@@ -1,20 +1,13 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   McpHttpClient,
   McpServerRegistry,
   type McpServerConfig,
   type McpTool,
 } from "../../features/mcp/mcpClient";
+import McpServerCard from "./McpServerCard";
 
 type ConnectionState = "disconnected" | "connecting" | "connected" | "error";
-
-function toolSchema(tool: McpTool): string {
-  try {
-    return JSON.stringify(tool.inputSchema, null, 2);
-  } catch {
-    return "{}";
-  }
-}
 
 export default function McpSettings({
   onFeedback,
@@ -26,6 +19,7 @@ export default function McpSettings({
   const connectionControllers = useRef(
     new Map<string, AbortController>(),
   ).current;
+  const mounted = useRef(true);
   const [servers, setServers] = useState<McpServerConfig[]>(() =>
     registry.list(),
   );
@@ -36,6 +30,18 @@ export default function McpSettings({
   const [name, setName] = useState("");
   const [endpoint, setEndpoint] = useState("");
   const [formError, setFormError] = useState("");
+
+  useEffect(() => {
+    if (registry.persistenceWarning) setFormError(registry.persistenceWarning);
+    return () => {
+      mounted.current = false;
+      for (const controller of connectionControllers.values())
+        controller.abort();
+      for (const client of clients.values()) void client.disconnect();
+      connectionControllers.clear();
+      clients.clear();
+    };
+  }, [clients, connectionControllers, registry]);
 
   function updateServerList(): void {
     setServers(registry.list());
@@ -81,11 +87,12 @@ export default function McpSettings({
     setErrors((current) => ({ ...current, [server.id]: "" }));
     try {
       const discovered = await client.connect(controller.signal);
-      if (clients.get(server.id) !== client) return;
+      if (!mounted.current || clients.get(server.id) !== client) return;
       setTools((current) => ({ ...current, [server.id]: discovered }));
       setStates((current) => ({ ...current, [server.id]: "connected" }));
       onFeedback(`已连接 ${server.name}，发现 ${discovered.length} 个工具。`);
     } catch (error) {
+      if (!mounted.current) return;
       if (clients.get(server.id) === client) clients.delete(server.id);
       if (connectionControllers.get(server.id) === controller) {
         setStates((current) => ({
@@ -204,101 +211,21 @@ export default function McpSettings({
             const state = states[server.id] ?? "disconnected";
             const serverTools = tools[server.id] ?? [];
             return (
-              <article className="settings-mcp-server" key={server.id}>
-                <header>
-                  <div className="settings-mcp-server-copy">
-                    <strong>{server.name}</strong>
-                    <code>{server.endpoint}</code>
-                    <span>
-                      {state === "connected"
-                        ? `已连接 · ${serverTools.length} 个工具`
-                        : state === "connecting"
-                          ? "连接中…"
-                          : state === "error"
-                            ? "连接失败"
-                            : "未连接"}
-                    </span>
-                  </div>
-                  <div className="settings-mcp-server-actions">
-                    {state === "connected" ? (
-                      <button
-                        type="button"
-                        className="settings-action secondary"
-                        onClick={() => void disconnectServer(server)}
-                      >
-                        断开
-                      </button>
-                    ) : state === "connecting" ? (
-                      <button
-                        type="button"
-                        className="settings-action secondary"
-                        onClick={() => void cancelConnection(server)}
-                      >
-                        取消
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="settings-action"
-                        onClick={() => void connectServer(server)}
-                      >
-                        连接
-                      </button>
-                    )}
-                    <button
-                      type="button"
-                      className="settings-action secondary"
-                      onClick={() => removeServer(server)}
-                    >
-                      移除
-                    </button>
-                  </div>
-                </header>
-                {errors[server.id] && (
-                  <p className="settings-mcp-error" role="alert">
-                    {errors[server.id]}
-                  </p>
-                )}
-                {state === "connected" && (
-                  <>
-                    <button
-                      type="button"
-                      className="settings-mcp-tools-toggle"
-                      aria-expanded={expanded === server.id}
-                      onClick={() =>
-                        setExpanded(expanded === server.id ? null : server.id)
-                      }
-                    >
-                      {expanded === server.id ? "收起工具详情" : "查看工具详情"}
-                    </button>
-                    {expanded === server.id && (
-                      <div
-                        className="settings-mcp-tools"
-                        role="list"
-                        aria-label={`${server.name}工具`}
-                      >
-                        {serverTools.map((tool) => (
-                          <div
-                            className="settings-mcp-tool"
-                            role="listitem"
-                            key={tool.name}
-                          >
-                            <strong>{tool.title || tool.name}</strong>
-                            <code>{tool.name}</code>
-                            <p>
-                              {tool.description || "服务器未提供工具说明。"}
-                            </p>
-                            <details>
-                              <summary>inputSchema</summary>
-                              <pre>{toolSchema(tool)}</pre>
-                            </details>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                )}
-              </article>
+              <McpServerCard
+                key={server.id}
+                server={server}
+                state={state}
+                tools={serverTools}
+                error={errors[server.id]}
+                expanded={expanded === server.id}
+                onConnect={() => void connectServer(server)}
+                onCancel={() => void cancelConnection(server)}
+                onDisconnect={() => void disconnectServer(server)}
+                onRemove={() => removeServer(server)}
+                onToggleTools={() =>
+                  setExpanded(expanded === server.id ? null : server.id)
+                }
+              />
             );
           })
         )}

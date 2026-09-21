@@ -13,7 +13,7 @@ export default function SkillRecordCard({
 }: {
   record: SkillRecord;
   registry: SkillRegistry;
-  onApply?: (record: SkillRecord) => void;
+  onApply?: (record: SkillRecord) => string | void;
   onEdit: (record: SkillRecord) => void;
   onExport: (record: SkillRecord) => void;
   onStatus: (message: string) => void;
@@ -37,8 +37,20 @@ export default function SkillRecordCard({
         <button
           type="button"
           className="ui-button"
-          onClick={() => onApply?.(record)}
-          disabled={!record.installed || !record.enabled}
+          onClick={() => {
+            const message = onApply?.(record);
+            if (message) onStatus(message);
+          }}
+          disabled={
+            !record.installed ||
+            !record.enabled ||
+            record.instructions.length > 3600
+          }
+          title={
+            record.instructions.length > 3600
+              ? "Skill 指令过长，应用后可能超过图片任务的 4000 字限制。"
+              : undefined
+          }
         >
           应用到草稿
         </button>
@@ -57,21 +69,36 @@ export default function SkillRecordCard({
           导出
         </button>
         {record.installed ? (
-          <button
-            type="button"
-            className="ui-button"
-            onClick={() =>
-              redraw(
-                registry.setEnabled(record.manifest.id, !record.enabled)
-                  ? record.enabled
-                    ? "Skill 已停用。"
-                    : "Skill 已启用。"
-                  : "保存失败，状态未改变。",
-              )
-            }
-          >
-            {record.enabled ? "停用" : "启用"}
-          </button>
+          <>
+            <button
+              type="button"
+              className="ui-button"
+              onClick={() =>
+                redraw(
+                  registry.setEnabled(record.manifest.id, !record.enabled)
+                    ? record.enabled
+                      ? "Skill 已停用。"
+                      : "Skill 已启用。"
+                    : "保存失败，状态未改变。",
+                )
+              }
+            >
+              {record.enabled ? "停用" : "启用"}
+            </button>
+            <button
+              type="button"
+              className="ui-button"
+              onClick={() =>
+                redraw(
+                  registry.uninstall(record.manifest.id)
+                    ? "Skill 已卸载；本地指令仍保留，可再次安装。"
+                    : "卸载失败，原记录未改变。",
+                )
+              }
+            >
+              卸载
+            </button>
+          </>
         ) : (
           <button
             type="button"

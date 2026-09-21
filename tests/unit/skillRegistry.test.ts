@@ -8,6 +8,7 @@ import {
   SKILL_RECORDS_STORAGE_KEY,
   parseSkillManifest,
   SKILL_REGISTRY_STORAGE_KEY,
+  MAX_SKILL_PROMPT_LENGTH,
   validateSkillManifest,
   type SkillRegistryStorage,
 } from "../../src/features/skills/skillRegistry.ts";
@@ -118,14 +119,15 @@ test("registry installs registered manifests and persists only installed IDs", (
   assert.deepEqual(restored.getInstalledIds(), []);
 });
 
-test("malformed persisted IDs are ignored and failed writes do not mutate memory", () => {
+test("malformed persisted IDs are reported and failed writes do not mutate memory", () => {
   const storage = new MemoryStorage();
   storage.values.set(
     SKILL_REGISTRY_STORAGE_KEY,
     '{"version":1,"installedIds":[1]}',
   );
   const registry = createSkillRegistry(storage);
-  registry.registerManifest(manifest);
+  assert.match(registry.persistenceWarning, /无法读取/);
+  assert.throws(() => registry.registerManifest(manifest), /保存失败/);
   assert.deepEqual(registry.getInstalledIds(), []);
 
   storage.failWrites = true;
@@ -216,4 +218,36 @@ test("persists complete local records and does not silently overwrite on write f
     registry.getRecord(created.manifest.id)?.instructions,
     created.instructions,
   );
+});
+
+test("rejects a combined Skill prompt above the safe composer limit", () => {
+  assert.throws(
+    () =>
+      applySkillInstructions("x".repeat(MAX_SKILL_PROMPT_LENGTH), {
+        manifest: parseSkillManifest(manifest),
+        instructions: "y",
+        imports: [],
+        installed: true,
+        enabled: true,
+        createdAt: 0,
+        updatedAt: 0,
+      }),
+    /超过 4000 字/,
+  );
+});
+
+test("corrupted Skill persistence is reported and cannot be overwritten", () => {
+  const storage = new MemoryStorage();
+  storage.values.set(SKILL_RECORDS_STORAGE_KEY, "{broken");
+  const registry = createSkillRegistry(storage);
+  assert.match(registry.persistenceWarning, /无法读取/);
+  assert.throws(
+    () =>
+      registry.createSkill({
+        manifest: { ...manifest, id: "blocked" },
+        instructions: "文本",
+      }),
+    /保存失败/,
+  );
+  assert.equal(storage.getItem(SKILL_RECORDS_STORAGE_KEY), "{broken");
 });

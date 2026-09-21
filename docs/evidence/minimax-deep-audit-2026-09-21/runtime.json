@@ -1,0 +1,65 @@
+{
+  "date": "2026-09-21",
+  "candidateBranch": "codex/feat/minimax-deep-replica-root",
+  "workspace": "D:/kk-studio-next",
+  "web": {
+    "command": "node node_modules/vite/bin/vite.js --host 127.0.0.1",
+    "url": "http://127.0.0.1:1421/",
+    "mode": "Vite development",
+    "route": "/",
+    "entry": "src/main.tsx -> src/App.tsx -> src/components/SkillsPage.tsx -> src/components/SkillPageControls.tsx / ConnectorCatalog.tsx; settings path -> ConnectionSettings.tsx -> McpSettings.tsx",
+    "checks": [
+      {
+        "flow": "Skill sidebar -> Connector tab -> Add connector -> Escape",
+        "result": {
+          "connectorDialogBeforeEscape": 1,
+          "afterEscape": 0,
+          "focused": "添加连接器"
+        }
+      },
+      {
+        "flow": "Connector catalog -> Custom connector -> MCP settings -> reject remote HTTP",
+        "result": {
+          "mcpError": "[ { \"code\": \"custom\", \"path\": [ \"endpoint\" ], \"message\": \"远程 MCP 必须使用 HTTPS；HTTP 仅允许本机地址。\" } ]",
+          "mcpSettingsVisibleAfterEscape": 0
+        }
+      },
+      {
+        "flow": "Skill sidebar -> New local Skill -> Escape",
+        "result": {
+          "editorBeforeEscape": 1,
+          "editorAfterEscape": 0
+        }
+      }
+    ],
+    "screenshots": [
+      "docs/evidence/minimax-deep-audit-2026-09-21/connector-detail.png",
+      "docs/evidence/minimax-deep-audit-2026-09-21/skills-after-escape.png"
+    ]
+  },
+  "minimax": {
+    "installRoot": "C:/Users/Administrator/AppData/Local/Programs/MiniMax Design/current",
+    "app": "MiniMax Design",
+    "observedRoutes": [
+      "app://./skills",
+      "app://./connectors",
+      "app://./comfyui",
+      "app://./settings"
+    ],
+    "readOnlyAudit": true,
+    "paidGenerationTriggered": false,
+    "externalInstallTriggered": false,
+    "observed": [
+      "Project Library and Start composer",
+      "Skills tabs, import/create/detail modal and local downloaded state",
+      "Connector catalog and not-installed preparation modal",
+      "ComfyUI workflow library, import picker and 40GB download warning",
+      "File/Window/Help menus and Settings provider/network/memory/IM/Comfy sections",
+      "Bundled mcp-tools, gateway and editor plugin manifests"
+    ]
+  },
+  "desktop": {
+    "status": "NOT VERIFIED",
+    "reason": "本轮候选尚未重新生成并运行 Tauri tauri.localhost release；真实桌面连接器安装、provider 登录和付费生成均未执行。"
+  }
+}
