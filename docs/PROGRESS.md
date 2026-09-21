@@ -1,6 +1,5 @@
 # 当前进度
 
-<<<<<<< HEAD
 ## 2026-09-21 安全审计风险收口（IMPLEMENTED / 全量验证待最终 head）
 
 - `TASK-AUDIT-SEC-001-CLOSEOUT` 在 `fix/TASK-AUDIT-SEC-001-boundaries` 完成三项剩余修复：Web Locks 长生命周期连接租约与崩溃元数据重建；Gateway 初始额度 provisioning 记录、额度漂移 fail closed 和并发策略更新；TaskHost 结果 URL 同源、HTTPS/loopback、DNS/IP pinning、取消窗口和 IPv6 边界。
@@ -11,14 +10,13 @@
 - `TASK-AUDIT-SEC-001` 在独立 worktree `fix/TASK-AUDIT-SEC-001-boundaries` 完成一轮证据驱动审计。已修复：Provider 请求发出后取消/暂停的 unknown fencing、远程明文 HTTP API Key 外泄、Gateway 重启旧配置/ACL 静默保留、token collision 权限覆盖、TaskHost 无长度响应全量缓冲，以及 journal delete-first 丢失窗口。
 - 验证：155/155 Node、TypeScript、lint、format、production build、Rust 61/61 与 fmt 通过。证据见 [security audit](changes/2026-09-21-security-audit/verification.md)。
 - 仍为 PARTIAL：Web 跨窗口 localStorage 租约竞态/崩溃孤儿槽、Gateway `initialCredits` 配置陈旧，以及 TaskHost Provider 结果 URL 的 origin allowlist/DNS pinning 尚未收口；不能把本轮修复描述为完整提交并发或 SSRF 防护。
-=======
 ## 2026-09-21 AI 自主开发规则已合入主线
 
 - PR #4 已 squash 合入远端 `main`，合并提交为 `92c1ef17c42030ef6976e039efe4775c4bdc0939`；合并前基线 `c3ff0871b3db674e0ab073f1445879d84fee3507`、规则分支 head `19215945573ca97dd4427f36ac8e074a1378f9fb` 均已回读。
 - hosted delivery、repository verification、Rust fmt/test、client check 和 Tauri no-bundle build 全部通过；规则账本 32 tasks/0 violations。规则变更仍不包含产品代码、既有产品测试或旧证据。
 - GitHub protection/rulesets API 仍返回 403，远端强制保护未部署，保留 EXT-GIT BLOCKED；本地 hook、CI 和 ruleset JSON 是可复用的补充防线。
 - 本次治理分支/工作树在合并和回读后清理；其他任务的分支、dirty worktree 和历史证据不删除。
->>>>>>> origin/main
+
 
 ## 2026-09-20 Astra 迁移计划与分支规则复核
 

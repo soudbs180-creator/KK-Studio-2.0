@@ -37,11 +37,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-UNMERGED-001 | dirty checkout 未合并 UI 回归候选 | DONE | TASK-GOV-001 | root |
 | TASK-UI-MAIN-001 | 现行Figma页面校正与交互修复主线整合 | DONE | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 | TASK-UI-DISMISS-002 | 窄屏侧栏关闭与大图重绘稳定性 | DONE | TASK-UI-MAIN-001 | root |
-<<<<<<< HEAD
 | TASK-AUDIT-SEC-001 | 安全边界与异常任务状态审计 | REVIEW | TASK-GOV-001 | root |
-=======
 | TASK-GOV-002 | 跨AI自主开发与分支质量门禁 | PARTIAL | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
->>>>>>> origin/main
+
 
 ## T0 — 可复现候选源码与主线整合
 
