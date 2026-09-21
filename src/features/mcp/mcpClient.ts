@@ -10,6 +10,16 @@ const DEFAULT_TIMEOUT_MS = 15_000;
 
 export const MCP_SERVERS_STORAGE_KEY = "kk-studio-next:mcp-servers:v1";
 
+const CREDENTIAL_PATTERNS = [
+  /(?:api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret|password)\s*[:=]/i,
+  /sk-[A-Za-z0-9_-]{12,}/,
+  /-----BEGIN [A-Z ]+ PRIVATE KEY-----/,
+  /(?:Bearer|Basic)\s+[A-Za-z0-9+/._-]{16,}/i,
+];
+function containsCredentialLikeText(value: string): boolean {
+  return CREDENTIAL_PATTERNS.some((pattern) => pattern.test(value));
+}
+
 function isLoopback(hostname: string): boolean {
   const host = hostname.toLowerCase().replace(/^\[|\]$/g, "");
   return host === "localhost" || host === "127.0.0.1" || host === "::1";
@@ -35,7 +45,15 @@ export const mcpServerSchema = z
       .min(1)
       .max(100)
       .regex(/^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/),
-    name: z.string().trim().min(1).max(120),
+    name: z
+      .string()
+      .trim()
+      .min(1)
+      .max(120)
+      .refine(
+        (value) => !containsCredentialLikeText(value),
+        "MCP 名称疑似包含密钥或凭据",
+      ),
     transport: z.literal("streamable_http"),
     endpoint: z.string().trim().min(1).max(2048),
     enabled: z.boolean().default(true),
@@ -155,9 +173,35 @@ function timeoutSignal(
 }
 
 async function readResponseBody(response: Response): Promise<string> {
-  const bytes = await response.arrayBuffer();
-  if (bytes.byteLength > MAX_RESPONSE_BYTES)
-    throw new Error("MCP 响应超过 2 MB 限制。");
+  if (!response.body) {
+    const bytes = await response.arrayBuffer();
+    if (bytes.byteLength > MAX_RESPONSE_BYTES)
+      throw new Error("MCP 响应超过 2 MB 限制。");
+    return new TextDecoder().decode(bytes);
+  }
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  try {
+    while (true) {
+      const next = await reader.read();
+      if (next.done) break;
+      total += next.value.byteLength;
+      if (total > MAX_RESPONSE_BYTES) {
+        await reader.cancel();
+        throw new Error("MCP 响应超过 2 MB 限制。");
+      }
+      chunks.push(next.value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
   return new TextDecoder().decode(bytes);
 }
 
@@ -202,6 +246,10 @@ export class McpHttpClient {
         signal: timeout.signal,
       });
       const sessionId = response.headers.get("MCP-Session-Id") ?? undefined;
+      // Keep initialization headers even if body parsing fails, so connect's
+      // cleanup can terminate a session created by a malformed response.
+      if (payload.method === "initialize" && response.ok)
+        this.sessionId = sessionId;
       if (response.status === 202)
         return { sessionId, status: response.status };
       const body = await readResponseBody(response);
@@ -226,88 +274,103 @@ export class McpHttpClient {
   }
 
   async connect(signal?: AbortSignal): Promise<McpTool[]> {
+    await this.disconnect();
     this.connected = false;
     this.tools = [];
-    const initializeId = jsonRpcId();
-    const initialize = await this.post(
-      {
-        jsonrpc: "2.0",
-        id: initializeId,
-        method: "initialize",
-        params: {
-          protocolVersion: MCP_PROTOCOL_VERSION,
-          capabilities: {},
-          clientInfo: { name: MCP_CLIENT_NAME, version: MCP_CLIENT_VERSION },
-        },
-      },
-      signal,
-    );
-    this.sessionId = initialize.sessionId;
-    if (initialize.rpc?.error)
-      throw new Error(`MCP 初始化失败：${initialize.rpc.error.message}`);
-    const result = initialize.rpc?.result;
-    if (!result || typeof result !== "object")
-      throw new Error("MCP 初始化没有返回服务器信息。");
-    if (
-      (result as { protocolVersion?: unknown }).protocolVersion !==
-      MCP_PROTOCOL_VERSION
-    )
-      throw new Error("MCP 服务器返回了不受支持的协议版本。");
-
-    const initialized = await this.post(
-      { jsonrpc: "2.0", method: "notifications/initialized", params: {} },
-      signal,
-    );
-    if (initialized.status !== 202 && initialized.status >= 300)
-      throw new Error("MCP initialized 通知未被接受。");
-
-    let cursor: string | undefined;
-    const cursors = new Set<string>();
-    for (let page = 0; page < MAX_PAGES; page += 1) {
-      const listId = jsonRpcId();
-      const listed = await this.post(
+    try {
+      signal?.throwIfAborted();
+      const initializeId = jsonRpcId();
+      const initialize = await this.post(
         {
           jsonrpc: "2.0",
-          id: listId,
-          method: "tools/list",
-          params: cursor ? { cursor } : {},
+          id: initializeId,
+          method: "initialize",
+          params: {
+            protocolVersion: MCP_PROTOCOL_VERSION,
+            capabilities: {},
+            clientInfo: { name: MCP_CLIENT_NAME, version: MCP_CLIENT_VERSION },
+          },
         },
         signal,
       );
-      const listResult = listed.rpc?.result;
-      if (!listResult || typeof listResult !== "object")
-        throw new Error("MCP tools/list 没有返回工具列表。");
-      const rawTools = (listResult as { tools?: unknown }).tools;
-      if (!Array.isArray(rawTools)) throw new Error("MCP 工具列表格式无效。");
-      const pageTools = rawTools.map((tool) => {
-        const parsed = mcpToolSchema.safeParse(tool);
-        if (!parsed.success) throw new Error("MCP 工具列表格式无效。");
-        return parsed.data;
-      });
-      this.tools.push(...pageTools);
-      if (this.tools.length > MAX_TOOLS)
-        throw new Error("MCP 工具数量超过 500 个限制。");
-      const nextCursor = (listResult as { nextCursor?: unknown }).nextCursor;
-      if (typeof nextCursor !== "string" || !nextCursor) break;
-      if (cursors.has(nextCursor)) throw new Error("MCP 分页游标重复。");
-      cursors.add(nextCursor);
-      cursor = nextCursor;
+      this.sessionId = initialize.sessionId;
+      if (initialize.rpc?.error)
+        throw new Error(`MCP 初始化失败：${initialize.rpc.error.message}`);
+      const result = initialize.rpc?.result;
+      if (!result || typeof result !== "object")
+        throw new Error("MCP 初始化没有返回服务器信息。");
+      if (
+        (result as { protocolVersion?: unknown }).protocolVersion !==
+        MCP_PROTOCOL_VERSION
+      )
+        throw new Error("MCP 服务器返回了不受支持的协议版本。");
+
+      const initialized = await this.post(
+        { jsonrpc: "2.0", method: "notifications/initialized", params: {} },
+        signal,
+      );
+      if (initialized.status !== 202)
+        throw new Error("MCP initialized 通知未被接受。");
+
+      let cursor: string | undefined;
+      const cursors = new Set<string>();
+      for (let page = 0; page < MAX_PAGES; page += 1) {
+        const listId = jsonRpcId();
+        const listed = await this.post(
+          {
+            jsonrpc: "2.0",
+            id: listId,
+            method: "tools/list",
+            params: cursor ? { cursor } : {},
+          },
+          signal,
+        );
+        const listResult = listed.rpc?.result;
+        if (!listResult || typeof listResult !== "object")
+          throw new Error("MCP tools/list 没有返回工具列表。");
+        const rawTools = (listResult as { tools?: unknown }).tools;
+        if (!Array.isArray(rawTools)) throw new Error("MCP 工具列表格式无效。");
+        const pageTools = rawTools.map((tool) => {
+          const parsed = mcpToolSchema.safeParse(tool);
+          if (!parsed.success) throw new Error("MCP 工具列表格式无效。");
+          return parsed.data;
+        });
+        this.tools.push(...pageTools);
+        if (this.tools.length > MAX_TOOLS)
+          throw new Error("MCP 工具数量超过 500 个限制。");
+        const nextCursor = (listResult as { nextCursor?: unknown }).nextCursor;
+        if (typeof nextCursor !== "string" || !nextCursor) {
+          cursor = undefined;
+          break;
+        }
+        if (cursors.has(nextCursor)) throw new Error("MCP 分页游标重复。");
+        cursors.add(nextCursor);
+        cursor = nextCursor;
+      }
+      if (cursor && cursors.size >= MAX_PAGES)
+        throw new Error("MCP 工具分页超过 32 页限制。");
+      signal?.throwIfAborted();
+      this.connected = true;
+      return this.discoveredTools;
+    } catch (error) {
+      await this.disconnect();
+      throw error;
     }
-    if (cursor && cursors.size >= MAX_PAGES)
-      throw new Error("MCP 工具分页超过 32 页限制。");
-    this.connected = true;
-    return this.discoveredTools;
   }
 
   async disconnect(signal?: AbortSignal): Promise<void> {
-    if (this.sessionId) {
+    const sessionId = this.sessionId;
+    this.connected = false;
+    this.sessionId = undefined;
+    this.tools = [];
+    if (sessionId) {
       const timeout = timeoutSignal(DEFAULT_TIMEOUT_MS, signal);
       try {
         await fetch(this.server.endpoint, {
           method: "DELETE",
           headers: {
             Accept: "application/json",
-            "MCP-Session-Id": this.sessionId,
+            "MCP-Session-Id": sessionId,
             "MCP-Protocol-Version": MCP_PROTOCOL_VERSION,
           },
           credentials: "omit",
@@ -320,9 +383,6 @@ export class McpHttpClient {
         timeout.dispose();
       }
     }
-    this.connected = false;
-    this.sessionId = undefined;
-    this.tools = [];
   }
 
   /** Manual call is deliberately confirmation-bound and not wired to Agent. */
@@ -371,22 +431,33 @@ const persistedServersSchema = z.array(mcpServerSchema).max(50);
 export class McpServerRegistry {
   private readonly storage: McpServerStorage | null;
   private servers: McpServerConfig[];
+  private readonly corruptedOnRead: boolean;
 
   constructor(storage: McpServerStorage | null = defaultStorage()) {
     this.storage = storage;
-    this.servers = this.read();
+    const result = this.read();
+    this.servers = result.servers;
+    this.corruptedOnRead = result.corrupted;
   }
 
-  private read(): McpServerConfig[] {
-    if (!this.storage) return [];
+  private read(): { servers: McpServerConfig[]; corrupted: boolean } {
+    if (!this.storage) return { servers: [], corrupted: false };
     try {
       const raw = this.storage.getItem(MCP_SERVERS_STORAGE_KEY);
-      if (!raw) return [];
+      if (!raw) return { servers: [], corrupted: false };
       const parsed = persistedServersSchema.safeParse(JSON.parse(raw));
-      return parsed.success ? parsed.data : [];
+      return parsed.success
+        ? { servers: parsed.data, corrupted: false }
+        : { servers: [], corrupted: true };
     } catch {
-      return [];
+      return { servers: [], corrupted: true };
     }
+  }
+
+  get persistenceWarning(): string {
+    return this.corruptedOnRead
+      ? "MCP 本地记录无法读取，已停止覆盖原数据；请清理后重新添加。"
+      : "";
   }
 
   private write(): boolean {
@@ -407,6 +478,7 @@ export class McpServerRegistry {
   }
 
   add(value: unknown): McpServerConfig {
+    if (this.corruptedOnRead) throw new Error(this.persistenceWarning);
     const server = mcpServerSchema.parse(value);
     const previous = this.servers;
     this.servers = [
@@ -421,6 +493,7 @@ export class McpServerRegistry {
   }
 
   remove(id: string): boolean {
+    if (this.corruptedOnRead) throw new Error(this.persistenceWarning);
     const previous = this.servers;
     this.servers = previous.filter((item) => item.id !== id);
     if (this.servers.length === previous.length) return false;

@@ -19,9 +19,11 @@ import {
 import LibraryPage from "./components/LibraryPage";
 import CatalogPanel from "./components/CatalogPanel";
 import StartPage from "./components/StartPage";
-import SkillsPage from "./components/SkillsPage";
+import SkillsPage, { ensureTemplates } from "./components/SkillsPage";
 import {
   createSkillRegistry,
+  applySkillInstructions,
+  SKILLS_CHANGED_EVENT,
   type SkillRecord,
 } from "./features/skills/skillRegistry";
 import {
@@ -163,7 +165,25 @@ export default function App() {
   const [chat, setChat] = useState(true);
   const [mobileChat, setMobileChat] = useState(false);
   const [assets, setAssets] = useState(initialAssets);
-  const [skillRegistry] = useState(() => createSkillRegistry());
+  const [skillRegistry] = useState(() => {
+    const registry = createSkillRegistry();
+    if (!registry.persistenceWarning) ensureTemplates(registry, false);
+    return registry;
+  });
+  const [, refreshSkills] = useState(0);
+  useEffect(() => {
+    try {
+      if (!skillRegistry.persistenceWarning) ensureTemplates(skillRegistry);
+      skillRegistry.persistPending();
+    } catch {
+      // The Skill page will surface a storage error without blocking the shell.
+    }
+  }, [skillRegistry]);
+  useEffect(() => {
+    const syncSkills = () => refreshSkills((value) => value + 1);
+    window.addEventListener(SKILLS_CHANGED_EVENT, syncSkills);
+    return () => window.removeEventListener(SKILLS_CHANGED_EVENT, syncSkills);
+  }, []);
   const assetArchive = useAssetArchive(setAssets);
   const [subjects, setSubjects] = useState(initialSubjects);
   const [localWorkflows, setLocalWorkflows] = useState<WorkflowRecord[]>(() =>
@@ -266,47 +286,38 @@ export default function App() {
     };
     commitCreation(next);
   }
-  function applySkillToHome(record: SkillRecord): void {
+  function applySkillToHome(record: SkillRecord): string {
     const draft = creationRef.current.homeDraft;
-    const block = `[Skill: ${record.manifest.name}]\n${record.instructions}`;
-    updateHomeDraft({
-      ...draft,
-      prompt: draft.prompt ? `${draft.prompt}\n\n${block}` : block,
-      updatedAt: Date.now(),
-    });
+    try {
+      updateHomeDraft({
+        ...draft,
+        prompt: applySkillInstructions(draft.prompt, record),
+        updatedAt: Date.now(),
+      });
+      return "Skill 已应用到首页草稿。";
+    } catch {
+      return "应用失败：Skill 指令与当前草稿合计超过 4000 字，原草稿未改变。";
+    }
+  }
+  function applySkillToProject(record: SkillRecord): string {
     const project = creationRef.current.projects.find(
       (item) => item.id === creationRef.current.activeProjectId,
     );
-    if (project)
+    if (!project) return "当前没有可应用的项目草稿。";
+    try {
       updateProject(project.id, (current) => ({
         ...current,
         composerDraft: {
           ...current.composerDraft,
-          prompt: current.composerDraft.prompt
-            ? `${current.composerDraft.prompt}\n\n${block}`
-            : block,
+          prompt: applySkillInstructions(current.composerDraft.prompt, record),
           updatedAt: Date.now(),
         },
         updatedAt: Date.now(),
       }));
-  }
-  function applySkillToProject(record: SkillRecord): void {
-    const project = creationRef.current.projects.find(
-      (item) => item.id === creationRef.current.activeProjectId,
-    );
-    if (!project) return;
-    const block = `[Skill: ${record.manifest.name}]\n${record.instructions}`;
-    updateProject(project.id, (current) => ({
-      ...current,
-      composerDraft: {
-        ...current.composerDraft,
-        prompt: current.composerDraft.prompt
-          ? `${current.composerDraft.prompt}\n\n${block}`
-          : block,
-        updatedAt: Date.now(),
-      },
-      updatedAt: Date.now(),
-    }));
+      return "Skill 已应用到项目草稿。";
+    } catch {
+      return "应用失败：Skill 指令与当前项目草稿合计超过 4000 字，原草稿未改变。";
+    }
   }
   function replaceCanvasItems(
     action: SetStateAction<CanvasCollectionItem[]>,
@@ -1844,7 +1855,11 @@ export default function App() {
             </div>
           </div>
           {active === "skills" && (
-            <SkillsPage registry={skillRegistry} onApply={applySkillToHome} />
+            <SkillsPage
+              registry={skillRegistry}
+              onApply={applySkillToHome}
+              onOpenMcp={() => open("settings/mcp")}
+            />
           )}
           {["projects", "comfyui"].includes(active) && (
             <LibraryPage

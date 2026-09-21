@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { SkillRecord } from "../features/skills/skillRegistry";
+import Modal from "./Modal";
 
 export default function SkillEditor({
   record,
@@ -31,7 +32,11 @@ export default function SkillEditor({
   const [category, setCategory] = useState(record?.manifest.category ?? "本地");
   const [instructions, setInstructions] = useState(record?.instructions ?? "");
   return (
-    <div className="catalog-tutorial" role="dialog" aria-label="编辑本地 Skill">
+    <Modal
+      className="catalog-tutorial"
+      title="编辑本地 Skill"
+      onClose={onClose}
+    >
       <div className="settings-detail-stack">
         <h2>{record ? "编辑 Skill" : "新建本地 Skill"}</h2>
         <p>
@@ -107,6 +112,6 @@ export default function SkillEditor({
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }

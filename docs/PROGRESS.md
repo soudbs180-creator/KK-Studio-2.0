@@ -1,6 +1,11 @@
 # 当前进度
 
+## 2026-09-21 MiniMax Design 深度交互审计与本地能力复刻（PARTIAL）
 
+- 只读操作了本机 MiniMax Design `current` 安装，覆盖项目库、开始创作、Skills、连接器、ComfyUI、设置、文件/窗口/帮助菜单及关键弹窗；未点击会员生成、未下载 40GB 工作流、未登录、未上传日志、未安装第三方连接器。
+- 候选分支 `codex/feat/minimax-deep-replica-root` 增加本地 Skill registry/UI：搜索、分类、导入 JSON/裸 `SKILL.md`、创建/编辑、启用/禁用、卸载、应用到创作草稿；应用壳首次打开即准备内置 Skill，补充 2MiB 文件上限、4,000 字指令上限、损坏持久化告警、Escape 与焦点恢复。MiniMax 的 zip 导入契约已审计，记录为下一步有界实现。
+- 增加连接器目录原型和 Blender 等目录项；详情、关闭、Escape、跳转 MCP 设置可操作，安装按钮保持 disabled 并写明 Prototype/未接入；MCP Streamable HTTP 增加分页、响应体上限、连接失败清理、组件卸载清理和损坏配置保护。
+- Web 开发运行时固定 `http://127.0.0.1:1421/` 完成同状态 DOM/交互证据；Tauri release、真实云端 provider、付费生成和真实第三方连接器仍未验证，任务账本为 `TASK-MINIMAX-001=PARTIAL`。详见 `docs/changes/2026-09-21-minimax-deep-audit/`。
 
 ## 2026-09-21 安全审计风险收口（IMPLEMENTED / 1421 外部进程占用）
 

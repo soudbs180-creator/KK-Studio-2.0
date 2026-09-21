@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   McpHttpClient,
   McpServerRegistry,
@@ -6,6 +6,7 @@ import {
   type McpTool,
 } from "../../features/mcp/mcpClient";
 import McpServerCard from "./McpServerCard";
+import { z } from "zod";
 
 type ConnectionState = "disconnected" | "connecting" | "connected" | "error";
 
@@ -14,11 +15,12 @@ export default function McpSettings({
 }: {
   onFeedback: (message: string) => void;
 }) {
-  const registry = useRef(new McpServerRegistry()).current;
+  const [registry] = useState(() => new McpServerRegistry());
   const clients = useRef(new Map<string, McpHttpClient>()).current;
   const connectionControllers = useRef(
     new Map<string, AbortController>(),
   ).current;
+  const mounted = useRef(true);
   const [servers, setServers] = useState<McpServerConfig[]>(() =>
     registry.list(),
   );
@@ -30,21 +32,28 @@ export default function McpSettings({
   const [endpoint, setEndpoint] = useState("");
   const [formError, setFormError] = useState("");
 
+  useEffect(() => {
+    mounted.current = true;
+    if (registry.persistenceWarning) setFormError(registry.persistenceWarning);
+    return () => {
+      mounted.current = false;
+      for (const controller of connectionControllers.values())
+        controller.abort();
+      for (const client of clients.values()) void client.disconnect();
+      connectionControllers.clear();
+      clients.clear();
+    };
+  }, [clients, connectionControllers, registry]);
+
   function updateServerList(): void {
     setServers(registry.list());
   }
 
   function addServer(): void {
     try {
-      const id = name
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9._-]+/g, "-")
-        .replace(/^-+|-+$/g, "")
-        .slice(0, 80);
-      if (!id) throw new Error("请填写服务器名称。");
+      if (!name.trim()) throw new Error("请填写服务器名称。");
       registry.add({
-        id,
+        id: crypto.randomUUID(),
         name: name.trim(),
         transport: "streamable_http",
         endpoint: endpoint.trim(),
@@ -57,7 +66,11 @@ export default function McpSettings({
       onFeedback("MCP 服务器已保存；尚未连接或调用工具。");
     } catch (error) {
       setFormError(
-        error instanceof Error ? error.message : "MCP 服务器设置无效。",
+        error instanceof z.ZodError
+          ? error.issues.map((issue) => issue.message).join("；")
+          : error instanceof Error
+            ? error.message
+            : "MCP 服务器设置无效。",
       );
     }
   }
@@ -65,20 +78,25 @@ export default function McpSettings({
   async function connectServer(server: McpServerConfig): Promise<void> {
     connectionControllers.get(server.id)?.abort();
     const prior = clients.get(server.id);
-    if (prior) await prior.disconnect();
+    if (prior) void prior.disconnect();
     const client = new McpHttpClient(server);
     const controller = new AbortController();
     clients.set(server.id, client);
     connectionControllers.set(server.id, controller);
     setStates((current) => ({ ...current, [server.id]: "connecting" }));
     setErrors((current) => ({ ...current, [server.id]: "" }));
+    setTools((current) => ({ ...current, [server.id]: [] }));
     try {
       const discovered = await client.connect(controller.signal);
-      if (clients.get(server.id) !== client) return;
+      if (!mounted.current || clients.get(server.id) !== client) {
+        void client.disconnect();
+        return;
+      }
       setTools((current) => ({ ...current, [server.id]: discovered }));
       setStates((current) => ({ ...current, [server.id]: "connected" }));
       onFeedback(`已连接 ${server.name}，发现 ${discovered.length} 个工具。`);
     } catch (error) {
+      if (!mounted.current) return;
       if (clients.get(server.id) === client) clients.delete(server.id);
       if (connectionControllers.get(server.id) === controller) {
         setStates((current) => ({
@@ -98,30 +116,30 @@ export default function McpSettings({
     }
   }
 
-  async function cancelConnection(server: McpServerConfig): Promise<void> {
-    const controller = connectionControllers.get(server.id);
-    controller?.abort();
-    connectionControllers.delete(server.id);
-    await clients.get(server.id)?.disconnect(controller?.signal);
-    clients.delete(server.id);
-    setStates((current) => ({ ...current, [server.id]: "disconnected" }));
+  function cancelConnection(server: McpServerConfig): void {
+    releaseServer(server);
     onFeedback(`${server.name} 已取消连接。`);
   }
 
-  async function disconnectServer(server: McpServerConfig): Promise<void> {
+  function releaseServer(server: McpServerConfig): void {
     connectionControllers.get(server.id)?.abort();
     connectionControllers.delete(server.id);
-    await clients.get(server.id)?.disconnect();
+    const client = clients.get(server.id);
     clients.delete(server.id);
+    if (client) void client.disconnect();
     setTools((current) => ({ ...current, [server.id]: [] }));
     setStates((current) => ({ ...current, [server.id]: "disconnected" }));
+  }
+
+  function disconnectServer(server: McpServerConfig): void {
+    releaseServer(server);
     onFeedback(`${server.name} 已断开。`);
   }
 
   function removeServer(server: McpServerConfig): void {
-    void disconnectServer(server);
     try {
       registry.remove(server.id);
+      releaseServer(server);
       updateServerList();
       onFeedback(`${server.name} 已移除。`);
     } catch (error) {
@@ -158,7 +176,7 @@ export default function McpSettings({
       <div className="settings-connection-note">
         <span className="settings-status-dot" aria-hidden="true" />
         <div>
-          <strong>当前只支持真实工具发现</strong>
+          <strong>支持工具发现和手动确认调用</strong>
           <p>
             连接后会执行 initialize → initialized →
             tools/list，并显示服务器返回的 inputSchema。stdio、OAuth 和 Agent

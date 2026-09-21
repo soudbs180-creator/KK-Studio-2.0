@@ -80,6 +80,19 @@ test("开始创作的 Skill 选项卡与 Skill 目录页保持职责分离", asy
   ).toBeVisible();
 });
 
+test("开始创作首次打开即可选择内置 Skill", async ({ page }) => {
+  await page.goto("/");
+  await page
+    .getByRole("region", { name: "开始创作" })
+    .getByRole("button", { name: "Skill", exact: true })
+    .click();
+  await expect(
+    page
+      .getByRole("menu", { name: "选择 Skill" })
+      .getByRole("menuitem", { name: "镜头规划助手", exact: true }),
+  ).toBeVisible();
+});
+
 test("开始创作页的插件入口打开设置分类而不是 Skill 页面", async ({ page }) => {
   await page.goto("/");
   await page

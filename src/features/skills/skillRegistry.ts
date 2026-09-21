@@ -35,16 +35,24 @@ const instructionsSchema = z
   .min(1, "Skill 指令不能为空")
   .max(12_000, "Skill 指令不能超过 12000 字符")
   .refine((value) => !containsSecret(value), "Skill 指令疑似包含密钥或凭据");
+function metadataSchema(label: string, max: number) {
+  return z
+    .string()
+    .trim()
+    .min(1)
+    .max(max)
+    .refine((value) => !containsSecret(value), `${label}疑似包含密钥或凭据`);
+}
 
 export const skillManifestSchema = z
   .object({
     schemaVersion: z.literal(1).default(1),
     id: skillIdSchema,
-    name: z.string().trim().min(1).max(120),
+    name: metadataSchema("Skill 名称", 120),
     version: skillVersionSchema,
-    description: z.string().trim().min(1).max(2_000),
-    author: z.string().trim().min(1).max(120),
-    category: z.string().trim().min(1).max(80),
+    description: metadataSchema("Skill 描述", 2_000),
+    author: metadataSchema("Skill 作者", 120),
+    category: metadataSchema("Skill 分类", 80),
     permissions: z.array(skillPermissionSchema).max(16).default([]),
     dependencies: z.array(skillIdSchema).max(16).default([]),
     source: z.enum(["bundled", "local", "catalog"]).default("local"),
@@ -99,6 +107,8 @@ export type SkillRecord = z.infer<typeof skillRecordSchema>;
 
 export const SKILL_REGISTRY_STORAGE_KEY = "kk-studio-next:skills:v1";
 export const SKILL_RECORDS_STORAGE_KEY = "kk-studio-next:skills:records:v2";
+export const SKILLS_CHANGED_EVENT = "kk:skills-changed";
+export const MAX_SKILL_PROMPT_LENGTH = 4000;
 const persistedRegistrySchema = z
   .object({
     version: z.literal(2),
@@ -135,46 +145,54 @@ function slugify(value: string): string {
   );
 }
 
-function readPersisted(storage: SkillRegistryStorage | null): SkillRecord[] {
-  if (!storage) return [];
+type PersistedRead = { records: SkillRecord[]; corrupted: boolean };
+
+function readPersisted(storage: SkillRegistryStorage | null): PersistedRead {
+  if (!storage) return { records: [], corrupted: false };
   try {
     const recordsRaw = storage.getItem(SKILL_RECORDS_STORAGE_KEY);
     if (recordsRaw) {
       const recordsParsed = persistedRegistrySchema.safeParse(
         JSON.parse(recordsRaw) as unknown,
       );
-      if (recordsParsed.success) return recordsParsed.data.records;
+      if (recordsParsed.success)
+        return { records: recordsParsed.data.records, corrupted: false };
+      return { records: [], corrupted: true };
     }
     const raw = storage.getItem(SKILL_REGISTRY_STORAGE_KEY);
-    if (!raw) return [];
+    if (!raw) return { records: [], corrupted: Boolean(recordsRaw) };
     const parsed = JSON.parse(raw) as unknown;
     const current = persistedRegistrySchema.safeParse(parsed);
-    if (current.success) return current.data.records;
+    if (current.success)
+      return { records: current.data.records, corrupted: false };
     const legacy = legacyRegistrySchema.safeParse(parsed);
-    if (!legacy.success) return [];
-    return legacy.data.installedIds.map((id) => ({
-      manifest: {
-        schemaVersion: 1,
-        id,
-        name: id,
-        version: "0.0.0",
-        description: "旧版本 Skill 记录，等待重新发现。",
-        author: "本地",
-        category: "本地",
-        permissions: [],
-        dependencies: [],
-        source: "local" as const,
-        readOnly: true as const,
-      },
-      instructions: "请重新导入该 Skill 的指令文本。",
-      imports: [],
-      installed: true,
-      enabled: false,
-      createdAt: 0,
-      updatedAt: 0,
-    }));
+    if (!legacy.success) return { records: [], corrupted: true };
+    return {
+      records: legacy.data.installedIds.map((id) => ({
+        manifest: {
+          schemaVersion: 1,
+          id,
+          name: id,
+          version: "0.0.0",
+          description: "旧版本 Skill 记录，等待重新发现。",
+          author: "本地",
+          category: "本地",
+          permissions: [],
+          dependencies: [],
+          source: "local" as const,
+          readOnly: true as const,
+        },
+        instructions: "请重新导入该 Skill 的指令文本。",
+        imports: [],
+        installed: true,
+        enabled: false,
+        createdAt: 0,
+        updatedAt: 0,
+      })),
+      corrupted: false,
+    };
   } catch {
-    return [];
+    return { records: [], corrupted: true };
   }
 }
 function writePersisted(
@@ -184,6 +202,9 @@ function writePersisted(
   if (!storage) return false;
   const parsed = persistedRegistrySchema.safeParse({ version: 2, records });
   if (!parsed.success) return false;
+  // Both keys are written as one logical record. Without removeItem we cannot
+  // roll back a first successful write if the compatibility key fails next.
+  if (!storage.removeItem) return false;
   const installed = {
     version: 1,
     installedIds: records
@@ -353,7 +374,12 @@ export function applySkillInstructions(
   record: SkillRecord,
 ): string {
   const block = "[Skill: " + record.manifest.name + "]\n" + record.instructions;
-  return prompt ? prompt + "\n\n" + block : block;
+  const result = prompt ? prompt + "\n\n" + block : block;
+  if (result.length > MAX_SKILL_PROMPT_LENGTH)
+    throw new Error(
+      `应用 Skill 后的提示词超过 ${MAX_SKILL_PROMPT_LENGTH} 字，请缩短草稿或 Skill 指令。`,
+    );
+  return result;
 }
 export function searchSkillRecords(
   records: readonly SkillRecord[],
@@ -378,15 +404,28 @@ export function searchSkillRecords(
 export class SkillRegistry {
   private readonly records = new Map<string, SkillRecord>();
   private readonly storage: SkillRegistryStorage | null;
+  private readonly corruptedOnRead: boolean;
+  private pendingSeedPersistence = false;
   constructor(storage: SkillRegistryStorage | null = browserStorage()) {
     this.storage = storage;
-    for (const record of readPersisted(storage))
+    const persisted = readPersisted(storage);
+    this.corruptedOnRead = persisted.corrupted;
+    for (const record of persisted.records)
       this.records.set(record.manifest.id, record);
   }
+  get persistenceWarning(): string {
+    return this.corruptedOnRead
+      ? "Skill 本地记录无法读取，已停止覆盖原数据；请先备份并修复本地记录后重新打开页面。"
+      : "";
+  }
   private persist(next: Map<string, SkillRecord>): boolean {
+    if (this.corruptedOnRead) return false;
     if (!writePersisted(this.storage, [...next.values()])) return false;
     this.records.clear();
     next.forEach((record, id) => this.records.set(id, record));
+    this.pendingSeedPersistence = false;
+    if (typeof window !== "undefined")
+      window.dispatchEvent(new Event(SKILLS_CHANGED_EVENT));
     return true;
   }
   registerManifest(value: unknown): SkillManifest {
@@ -460,6 +499,20 @@ export class SkillRegistry {
     next.set(record.manifest.id, record);
     if (!this.persist(next)) throw new Error("Skill 保存失败，未覆盖原记录。");
     return record;
+  }
+  /** Seed bundled records in memory; callers persist them from an effect. */
+  seedSkill(value: unknown): SkillRecord {
+    const incoming = parseSkillImport(value);
+    const current = this.records.get(incoming.manifest.id);
+    if (current) return current;
+    this.records.set(incoming.manifest.id, incoming);
+    this.pendingSeedPersistence = true;
+    return incoming;
+  }
+  persistPending(): void {
+    if (!this.pendingSeedPersistence) return;
+    const next = new Map(this.records);
+    if (!this.persist(next)) throw new Error("Skill 保存失败，原记录未改变。");
   }
   createSkill(input: SkillImportInput): SkillRecord {
     return this.importSkill(input);

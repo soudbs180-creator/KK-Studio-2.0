@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import type { SkillRegistry } from "../../features/skills/skillRegistry";
+import {
+  SKILLS_CHANGED_EVENT,
+  type SkillRegistry,
+} from "../../features/skills/skillRegistry";
 
 export default function SkillsSettings({
   registry,
@@ -10,8 +13,8 @@ export default function SkillsSettings({
   const [status, setStatus] = useState("");
   useEffect(() => {
     const sync = () => refresh((value) => value + 1);
-    window.addEventListener("kk:skills-changed", sync);
-    return () => window.removeEventListener("kk:skills-changed", sync);
+    window.addEventListener(SKILLS_CHANGED_EVENT, sync);
+    return () => window.removeEventListener(SKILLS_CHANGED_EVENT, sync);
   }, []);
   const records = registry.listRecords();
   return (
@@ -38,7 +41,6 @@ export default function SkillsSettings({
               );
               if (changed) {
                 setStatus("");
-                window.dispatchEvent(new Event("kk:skills-changed"));
               } else setStatus("保存失败，Skill 状态未改变。");
             }}
             disabled={!record.installed}
