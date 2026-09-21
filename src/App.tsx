@@ -19,7 +19,7 @@ import {
 import LibraryPage from "./components/LibraryPage";
 import CatalogPanel from "./components/CatalogPanel";
 import StartPage from "./components/StartPage";
-import SkillsPage from "./components/SkillsPage";
+import SkillsPage, { ensureTemplates } from "./components/SkillsPage";
 import {
   createSkillRegistry,
   applySkillInstructions,
@@ -158,8 +158,20 @@ export default function App() {
   const [chat, setChat] = useState(true);
   const [mobileChat, setMobileChat] = useState(false);
   const [assets, setAssets] = useState(initialAssets);
-  const [skillRegistry] = useState(() => createSkillRegistry());
+  const [skillRegistry] = useState(() => {
+    const registry = createSkillRegistry();
+    if (!registry.persistenceWarning) ensureTemplates(registry, false);
+    return registry;
+  });
   const [, refreshSkills] = useState(0);
+  useEffect(() => {
+    try {
+      if (!skillRegistry.persistenceWarning) ensureTemplates(skillRegistry);
+      skillRegistry.persistPending();
+    } catch {
+      // The Skill page will surface a storage error without blocking the shell.
+    }
+  }, [skillRegistry]);
   useEffect(() => {
     const syncSkills = () => refreshSkills((value) => value + 1);
     window.addEventListener(SKILLS_CHANGED_EVENT, syncSkills);

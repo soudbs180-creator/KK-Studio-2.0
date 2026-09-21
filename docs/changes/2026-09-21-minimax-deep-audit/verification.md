@@ -8,10 +8,10 @@ All checks below ran in `D:\kk-studio-next` on branch `codex/feat/minimax-deep-r
 - `node node_modules/eslint/bin/eslint.js src tests scripts eslint.config.mjs playwright.config.ts vite.config.ts --max-warnings 0` — PASS.
 - `node scripts/check-ui-standards.mjs` — PASS, 128 files / 0 violations.
 - `node node_modules/prettier/bin/prettier.cjs --check ...` — PASS.
-- `node --test tests/unit/*.test.ts` — PASS, 188 tests / 0 failures.
+- `node --test tests/unit/*.test.ts` — PASS, 189 tests / 0 failures.
 - Skill registry focused regression — PASS, metadata containing `api_key:` is rejected before localStorage persistence.
 - MCP registry focused regression — PASS, credential-like server labels are rejected before localStorage persistence.
-- `node node_modules/typescript/bin/tsc -b; node node_modules/vite/bin/vite.js build` — PASS. Vite emitted `dist/assets/index-ClDdFNVn.js` and `dist/assets/index-DMyyqiRR.css`; only the existing zod annotation and chunk-size warnings remained.
+- `node node_modules/typescript/bin/tsc -b; node node_modules/vite/bin/vite.js build` — PASS. Vite emitted `dist/assets/index-DRpxzMiH.js` and `dist/assets/index-DMyyqiRR.css`; only the existing zod annotation and chunk-size warnings remained.
 - `node scripts/check-governance.mjs` — PASS after writing the current task view.
 - `cargo check --manifest-path src-tauri/Cargo.toml` — PASS, with the repository's existing three dead-code warnings; this is a compile check only, not a Tauri release/runtime acceptance.
 
@@ -26,6 +26,7 @@ Playwright/Edge exercised the real page without triggering generation:
 3. `新建本地 Skill` opened one editor dialog. Pressing Escape closed it (`before=1`, `after=0`).
 4. Skill settings `停用` updated the shared registry event; returning to `开始创作` hid `镜头规划助手` from the Skill picker and showed `Skill 已停用`.
 5. Evidence screenshots are [connector-detail.png](../../evidence/minimax-deep-audit-2026-09-21/connector-detail.png) and [skills-after-escape.png](../../evidence/minimax-deep-audit-2026-09-21/skills-after-escape.png). Machine-readable route and result data are in [runtime.json](../../evidence/minimax-deep-audit-2026-09-21/runtime.json).
+6. The focused Playwright regression after the fresh build passed 10 tests: 8 catalog flows and 2 MCP flows.
 
 ## MiniMax audit evidence
 

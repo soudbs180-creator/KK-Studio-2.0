@@ -119,6 +119,15 @@ test("registry installs registered manifests and persists only installed IDs", (
   assert.deepEqual(restored.getInstalledIds(), []);
 });
 
+test("seedSkill adds bundled records without persisting during render setup", () => {
+  const storage = new MemoryStorage();
+  const registry = createSkillRegistry(storage);
+  const seeded = registry.seedSkill({ manifest, instructions: "内置文本" });
+  assert.equal(seeded.manifest.id, manifest.id);
+  assert.equal(registry.getRecord(manifest.id)?.instructions, "内置文本");
+  assert.equal(storage.getItem(SKILL_RECORDS_STORAGE_KEY), null);
+});
+
 test("malformed persisted IDs are reported and failed writes do not mutate memory", () => {
   const storage = new MemoryStorage();
   storage.values.set(

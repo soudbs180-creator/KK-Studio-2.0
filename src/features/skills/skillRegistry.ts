@@ -405,6 +405,7 @@ export class SkillRegistry {
   private readonly records = new Map<string, SkillRecord>();
   private readonly storage: SkillRegistryStorage | null;
   private readonly corruptedOnRead: boolean;
+  private pendingSeedPersistence = false;
   constructor(storage: SkillRegistryStorage | null = browserStorage()) {
     this.storage = storage;
     const persisted = readPersisted(storage);
@@ -422,6 +423,7 @@ export class SkillRegistry {
     if (!writePersisted(this.storage, [...next.values()])) return false;
     this.records.clear();
     next.forEach((record, id) => this.records.set(id, record));
+    this.pendingSeedPersistence = false;
     if (typeof window !== "undefined")
       window.dispatchEvent(new Event(SKILLS_CHANGED_EVENT));
     return true;
@@ -497,6 +499,20 @@ export class SkillRegistry {
     next.set(record.manifest.id, record);
     if (!this.persist(next)) throw new Error("Skill 保存失败，未覆盖原记录。");
     return record;
+  }
+  /** Seed bundled records in memory; callers persist them from an effect. */
+  seedSkill(value: unknown): SkillRecord {
+    const incoming = parseSkillImport(value);
+    const current = this.records.get(incoming.manifest.id);
+    if (current) return current;
+    this.records.set(incoming.manifest.id, incoming);
+    this.pendingSeedPersistence = true;
+    return incoming;
+  }
+  persistPending(): void {
+    if (!this.pendingSeedPersistence) return;
+    const next = new Map(this.records);
+    if (!this.persist(next)) throw new Error("Skill 保存失败，原记录未改变。");
   }
   createSkill(input: SkillImportInput): SkillRecord {
     return this.importSkill(input);

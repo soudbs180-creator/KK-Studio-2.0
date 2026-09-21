@@ -56,10 +56,12 @@ const OFFICIAL_SKILLS = [
 
 const MAX_IMPORT_BYTES = 2 * 1024 * 1024;
 
-function ensureTemplates(registry: SkillRegistry): void {
+export function ensureTemplates(registry: SkillRegistry, persist = true): void {
   for (const template of TEMPLATE_SKILLS) {
-    if (!registry.getRecord(template.manifest.id))
-      registry.importSkill(template);
+    if (!registry.getRecord(template.manifest.id)) {
+      if (persist) registry.importSkill(template);
+      else registry.seedSkill(template);
+    }
   }
 }
 
@@ -105,6 +107,7 @@ export default function SkillsPage({
         return;
       }
       ensureTemplates(registry);
+      registry.persistPending();
     } catch (error) {
       setStatus(
         error instanceof Error
