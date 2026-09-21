@@ -1,10 +1,10 @@
 # 当前进度
 
-## 2026-09-21 安全审计风险收口（IMPLEMENTED / 全量验证待最终 head）
+## 2026-09-21 安全审计风险收口（IMPLEMENTED / 1421 外部进程占用）
 
 - `TASK-AUDIT-SEC-001-CLOSEOUT` 在 `fix/TASK-AUDIT-SEC-001-boundaries` 完成三项剩余修复：Web Locks 长生命周期连接租约与崩溃元数据重建；Gateway 初始额度 provisioning 记录、额度漂移 fail closed 和并发策略更新；TaskHost 结果 URL 同源、HTTPS/loopback、DNS/IP pinning、取消窗口和 IPv6 边界。
-- 针对性验证：157/157 Node 单测、TypeScript、Gateway 重启/结算回归、Rust TaskHost 全部通过；closeout 五份变更记录见 `docs/changes/2026-09-21-security-audit-closeout/`。
-- 完整 lint、format、build、ui:check、browser preview 和 Tauri release 仍需在合并最新 `origin/main` 后运行；在这些证据完成前不标记 DONE。
+- 验证：178/178 Node 单测、TypeScript、lint、format、UI119/0、Rust63/63、fmt/check、production build、production preview 191/191 和隔离 Tauri WebView2 均通过；closeout 五份变更记录见 `docs/changes/2026-09-21-security-audit-closeout/`。
+- 固定 development 端口 1421 被另一工作树的 Vite 进程占用，未终止并未把该进程结果归给本分支；除此之外的最终 head 证据已记录。
 ## 2026-09-21 安全边界与异常任务状态审计（PARTIAL）
 
 - `TASK-AUDIT-SEC-001` 在独立 worktree `fix/TASK-AUDIT-SEC-001-boundaries` 完成一轮证据驱动审计。已修复：Provider 请求发出后取消/暂停的 unknown fencing、远程明文 HTTP API Key 外泄、Gateway 重启旧配置/ACL 静默保留、token collision 权限覆盖、TaskHost 无长度响应全量缓冲，以及 journal delete-first 丢失窗口。

@@ -1,9 +1,22 @@
 # Verification
 
-- Worktree: `D:/kk-studio-next/.worktrees/TASK-AUDIT-SEC-001`, branch `fix/TASK-AUDIT-SEC-001-boundaries`.
-- Targeted evidence completed:
-  - `node --test tests/unit/providerSubmission.test.ts tests/unit/generationServer.test.ts`: 21/21 passed.
+- Worktree: `D:/kk-studio-next/.worktrees/TASK-AUDIT-SEC-001`, branch `fix/TASK-AUDIT-SEC-001-boundaries`, final implementation head `4a3c0db`.
+- Base reconciliation: the branch includes the current `origin/main` governance rules at `3c4d012`; the root checkout and unrelated dirty work were not changed.
+- Focused evidence:
+  - `node --test tests/unit/*.test.ts`: 178/178 passed.
   - `node node_modules/typescript/bin/tsc --noEmit`: passed.
-  - `cargo test --manifest-path src-tauri/Cargo.toml --quiet task_host::tests`: 7/7 passed.
-- The full repository verification, production preview, and Tauri release matrix remain to be run on the final head. Until those checks complete, this package is `IMPLEMENTED / NOT VERIFIED` for full delivery.
-- Independent review must recheck the final head for Web Locks lifetime, account migration semantics, TaskHost DNS pinning, cancellation and IPv6 behavior.
+  - `cargo fmt --manifest-path src-tauri/Cargo.toml -- --check`: passed.
+  - `cargo check --manifest-path src-tauri/Cargo.toml`: passed.
+  - `cargo test --manifest-path src-tauri/Cargo.toml --quiet`: 63/63 passed.
+  - `node node_modules/eslint/bin/eslint.js src tests scripts *.config.ts --max-warnings 0`: passed.
+  - `node scripts/check-governance.mjs`: 33 tasks, 0 violations.
+  - `node node_modules/prettier/bin/prettier.cjs --check src tests scripts *.config.ts *.mjs *.json design/figma-plugin/*.js design/figma-plugin/*.json config/*.json`: passed.
+  - `node scripts/check-ui-standards.mjs`: 119 files, 0 violations.
+- Web production verification:
+  - `node node_modules/vite/bin/vite.js build`: passed; bundle `dist/assets/index-zNmLkSBt.js`.
+  - `node node_modules/@playwright/test/cli.js test`: 191/191 passed on Vite preview `http://127.0.0.1:1423/`; the updated cancellation regressions assert that an already-sent request becomes `unknown` and cannot be ordinarily retried.
+- Desktop verification:
+  - `node_modules/.bin/tauri.cmd build --no-bundle`: passed after a temporary PATH-only `npm.cmd` shim executed the existing `tsc -b && vite build` before-build command; release executable `src-tauri/target/release/kk-studio.exe` was rebuilt from the same source.
+  - `node scripts/audit/check-composer-runtime.mjs --desktop`: passed against an isolated data root and WebView2 profile. Runtime was `http://tauri.localhost/`, `production`, `src/main.tsx`, bundle `index-zNmLkSBt.js`, viewport 1920×1080, page errors 0.
+- Fixed-port development check: `1421` was already occupied by an unrelated Vite process rooted at `C:\Users\Administrator\.codex\worktrees\minimax-deep-replica\kk-studio-next`; it was left running, so this worktree does not claim a 1421 runtime result.
+- Independent AI pre-review found no P1/P2 in Gateway account provisioning, settlement, or rollback, and the native/web audit follow-ups were applied for the post-DNS cancellation window and bracketed IPv6 host handling. No paid Provider, cloud account, billing, or deployment readiness is claimed.
