@@ -9,7 +9,7 @@ All checks below ran in `D:\kk-studio-next` on branch `codex/feat/minimax-deep-r
 - `node scripts/check-ui-standards.mjs` — PASS, 128 files / 0 violations.
 - `node node_modules/prettier/bin/prettier.cjs --check ...` — PASS.
 - `node --test tests/unit/*.test.ts` — PASS, 186 tests / 0 failures.
-- `node node_modules/typescript/bin/tsc -b; node node_modules/vite/bin/vite.js build` — PASS. Vite emitted `dist/assets/index-BiZ99hFN.js` and `dist/assets/index-AXhXH-RD.css`; only the existing zod annotation and chunk-size warnings remained.
+- `node node_modules/typescript/bin/tsc -b; node node_modules/vite/bin/vite.js build` — PASS. Vite emitted `dist/assets/index-ZFAbYLae.js` and `dist/assets/index-DMyyqiRR.css`; only the existing zod annotation and chunk-size warnings remained.
 - `node scripts/check-governance.mjs` — PASS after writing the current task view.
 - `cargo check --manifest-path src-tauri/Cargo.toml` — PASS, with the repository's existing three dead-code warnings; this is a compile check only, not a Tauri release/runtime acceptance.
 
@@ -22,7 +22,8 @@ Playwright/Edge exercised the real page without triggering generation:
 1. Sidebar `Skill` → `连接器` → `添加连接器` opened one dialog. Pressing Escape closed it (`before=1`, `after=0`) and returned focus to `添加连接器`.
 2. `自定义连接器` opened MCP settings. Saving `http://remote.example.test/mcp` returned the visible HTTPS validation error `远程 MCP 必须使用 HTTPS；HTTP 仅允许本机地址。`; pressing Escape closed the settings overlay.
 3. `新建本地 Skill` opened one editor dialog. Pressing Escape closed it (`before=1`, `after=0`).
-4. Evidence screenshots are [connector-detail.png](../../evidence/minimax-deep-audit-2026-09-21/connector-detail.png) and [skills-after-escape.png](../../evidence/minimax-deep-audit-2026-09-21/skills-after-escape.png). Machine-readable route and result data are in [runtime.json](../../evidence/minimax-deep-audit-2026-09-21/runtime.json).
+4. Skill settings `停用` updated the shared registry event; returning to `开始创作` hid `镜头规划助手` from the Skill picker and showed `Skill 已停用`.
+5. Evidence screenshots are [connector-detail.png](../../evidence/minimax-deep-audit-2026-09-21/connector-detail.png) and [skills-after-escape.png](../../evidence/minimax-deep-audit-2026-09-21/skills-after-escape.png). Machine-readable route and result data are in [runtime.json](../../evidence/minimax-deep-audit-2026-09-21/runtime.json).
 
 ## MiniMax audit evidence
 

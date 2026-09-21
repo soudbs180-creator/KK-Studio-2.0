@@ -31,7 +31,7 @@ export default function StartComposer({
   onOpenPlugins: () => void;
   defaultModel?: string;
   skills?: SkillRecord[];
-  onApplySkill?: (record: SkillRecord) => void;
+  onApplySkill?: (record: SkillRecord) => string;
 }) {
   const [pendingSubmit, setPendingSubmit] = useState<CreationDraft | null>(
     null,
@@ -193,9 +193,9 @@ export default function StartComposer({
                   kind="skill"
                   skills={skills}
                   onApplySkill={(record) => {
-                    onApplySkill?.(record);
+                    const message = onApplySkill?.(record);
                     closeMenus();
-                    setStatus(`已将「${record.manifest.name}」加入草稿。`);
+                    setStatus(message ?? "当前草稿不可用，未应用 Skill。");
                   }}
                   onOpen={() => {
                     closeMenus();

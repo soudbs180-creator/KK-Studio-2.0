@@ -47,6 +47,21 @@ const TEMPLATE_SKILLS = [
   },
 ] as const;
 
+const OFFICIAL_SKILLS = [
+  ["3D 动画短片", "根据故事创意完成角色、场景、镜头规划与视频整合。", "11.1k"],
+  [
+    "品牌宣传短片生成器",
+    "基于品牌素材与推广目标，完成脚本、分镜和音画合成。",
+    "8.0k",
+  ],
+  [
+    "极简产品广告生成器",
+    "从产品图片和广告需求出发，输出可编辑的卖点表达。",
+    "7.8k",
+  ],
+  ["H3 提示词专家", "把参考素材整理成可控的多模态视频生成指令。", "7.0k"],
+] as const;
+
 const MAX_IMPORT_BYTES = 2 * 1024 * 1024;
 
 function ensureTemplates(registry: SkillRegistry): void {
@@ -70,7 +85,7 @@ function downloadSkill(record: SkillRecord, format: "json" | "markdown"): void {
 }
 
 export default function SkillsPage({
-  registry = createSkillRegistry(),
+  registry: providedRegistry,
   onApply,
   onOpenMcp,
 }: {
@@ -78,6 +93,8 @@ export default function SkillsPage({
   onApply?: (record: SkillRecord) => string | void;
   onOpenMcp?: () => void;
 }) {
+  const [localRegistry] = useState(createSkillRegistry);
+  const registry = providedRegistry ?? localRegistry;
   const [, refresh] = useState(0);
   const [tab, setTab] = useState<"catalog" | "mine">("catalog");
   const [view, setView] = useState<"skills" | "connectors">("skills");
@@ -91,8 +108,11 @@ export default function SkillsPage({
   const activeReader = useRef<FileReader | null>(null);
   useEffect(() => {
     try {
+      if (registry.persistenceWarning) {
+        setStatus(registry.persistenceWarning);
+        return;
+      }
       ensureTemplates(registry);
-      if (registry.persistenceWarning) setStatus(registry.persistenceWarning);
     } catch (error) {
       setStatus(
         error instanceof Error
@@ -186,20 +206,51 @@ export default function SkillsPage({
         onOpenMcp={onOpenMcp}
       />
       {view === "skills" ? (
-        <SkillCollection
-          records={visible}
-          category={category}
-          tab={tab}
-          registry={registry}
-          onCategory={setCategory}
-          onApply={onApply}
-          onEdit={(value) => {
-            setEditing(value);
-            setEditorOpen(true);
-          }}
-          onExport={(value) => downloadSkill(value, "markdown")}
-          onStatus={redraw}
-        />
+        <>
+          {tab === "catalog" && !query.trim() && (
+            <>
+              <h2 className="catalog-section-title">官方精选</h2>
+              <div className="catalog-card-grid">
+                {OFFICIAL_SKILLS.map(([name, description, downloads]) => (
+                  <button
+                    className="catalog-card"
+                    key={name}
+                    type="button"
+                    onClick={() => setStatus(`已选择Skill：${name}。`)}
+                  >
+                    <div className="catalog-card-image">
+                      <img
+                        src="/fixtures/demo/blue-hour.png"
+                        alt=""
+                        draggable={false}
+                      />
+                      <span>H3</span>
+                    </div>
+                    <div className="catalog-card-body">
+                      <strong>{name}</strong>
+                      <p>{description}</p>
+                      <small>KK Studio · ✓ · ↧ {downloads}</small>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+          <SkillCollection
+            records={visible}
+            category={category}
+            tab={tab}
+            registry={registry}
+            onCategory={setCategory}
+            onApply={onApply}
+            onEdit={(value) => {
+              setEditing(value);
+              setEditorOpen(true);
+            }}
+            onExport={(value) => downloadSkill(value, "markdown")}
+            onStatus={redraw}
+          />
+        </>
       ) : (
         <ConnectorCatalog
           query={query}
@@ -213,12 +264,10 @@ export default function SkillsPage({
           onClose={() => setEditorOpen(false)}
           onSave={(value) => {
             try {
-              const saved = editing
-                ? registry.updateSkill(editing.manifest.id, value)
-                : registry.createSkill(value);
+              if (editing) registry.updateSkill(editing.manifest.id, value);
+              else registry.createSkill(value);
               setEditorOpen(false);
               redraw("Skill 已保存到本地库。");
-              void saved;
             } catch (error) {
               setStatus(
                 error instanceof Error

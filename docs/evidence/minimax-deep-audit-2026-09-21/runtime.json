@@ -20,7 +20,7 @@
       {
         "flow": "Connector catalog -> Custom connector -> MCP settings -> reject remote HTTP",
         "result": {
-          "mcpError": "[ { \"code\": \"custom\", \"path\": [ \"endpoint\" ], \"message\": \"远程 MCP 必须使用 HTTPS；HTTP 仅允许本机地址。\" } ]",
+          "mcpError": "远程 MCP 必须使用 HTTPS；HTTP 仅允许本机地址。",
           "mcpSettingsVisibleAfterEscape": 0
         }
       },
@@ -29,6 +29,16 @@
         "result": {
           "editorBeforeEscape": 1,
           "editorAfterEscape": 0
+        }
+      },
+      {
+        "flow": "Skill settings -> Disable -> Start composer Skill picker",
+        "result": {
+          "disabledFeedback": [
+            "本地 Skill 已保存到当前浏览器；没有联网安装、官方下载量或自动 Agent 运行。",
+            "Skill 已停用。"
+          ],
+          "hiddenAfterReturn": true
         }
       }
     ],

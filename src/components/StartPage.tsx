@@ -57,7 +57,7 @@ export default function StartPage({
   saveState?: "saved" | "saving" | "error";
   onRetrySave?: () => void;
   skills?: SkillRecord[];
-  onApplySkill?: (record: SkillRecord) => void;
+  onApplySkill?: (record: SkillRecord) => string;
 }) {
   const [localDraft, setLocalDraft] = useState(emptyDraft);
   const draft = externalDraft ?? localDraft;

@@ -99,6 +99,7 @@ export type SkillRecord = z.infer<typeof skillRecordSchema>;
 
 export const SKILL_REGISTRY_STORAGE_KEY = "kk-studio-next:skills:v1";
 export const SKILL_RECORDS_STORAGE_KEY = "kk-studio-next:skills:records:v2";
+export const SKILLS_CHANGED_EVENT = "kk:skills-changed";
 export const MAX_SKILL_PROMPT_LENGTH = 4000;
 const persistedRegistrySchema = z
   .object({
@@ -148,6 +149,7 @@ function readPersisted(storage: SkillRegistryStorage | null): PersistedRead {
       );
       if (recordsParsed.success)
         return { records: recordsParsed.data.records, corrupted: false };
+      return { records: [], corrupted: true };
     }
     const raw = storage.getItem(SKILL_REGISTRY_STORAGE_KEY);
     if (!raw) return { records: [], corrupted: Boolean(recordsRaw) };
@@ -404,7 +406,7 @@ export class SkillRegistry {
   }
   get persistenceWarning(): string {
     return this.corruptedOnRead
-      ? "Skill 本地记录无法读取，已停止覆盖原数据；请导入有效文件或清理后重试。"
+      ? "Skill 本地记录无法读取，已停止覆盖原数据；请先备份并修复本地记录后重新打开页面。"
       : "";
   }
   private persist(next: Map<string, SkillRecord>): boolean {
@@ -412,6 +414,8 @@ export class SkillRegistry {
     if (!writePersisted(this.storage, [...next.values()])) return false;
     this.records.clear();
     next.forEach((record, id) => this.records.set(id, record));
+    if (typeof window !== "undefined")
+      window.dispatchEvent(new Event(SKILLS_CHANGED_EVENT));
     return true;
   }
   registerManifest(value: unknown): SkillManifest {

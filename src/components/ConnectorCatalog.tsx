@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import Modal from "./Modal";
 
 type Connector = {
   id: string;
@@ -90,18 +91,6 @@ export default function ConnectorCatalog({
   onStatus: (message: string) => void;
 }) {
   const [selected, setSelected] = useState<Connector | null>(null);
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
-  useEffect(() => {
-    if (!selected) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      event.preventDefault();
-      setSelected(null);
-      triggerRef.current?.focus({ preventScroll: true });
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [selected]);
   const visible = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     return normalized
@@ -131,10 +120,7 @@ export default function ConnectorCatalog({
               <button
                 type="button"
                 className="ui-button"
-                onClick={(event) => {
-                  triggerRef.current = event.currentTarget;
-                  setSelected(connector);
-                }}
+                onClick={() => setSelected(connector)}
               >
                 添加连接器
               </button>
@@ -149,11 +135,10 @@ export default function ConnectorCatalog({
         </div>
       )}
       {selected && (
-        <div
+        <Modal
           className="connector-detail"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`连接 ${selected.name}`}
+          title={`连接 ${selected.name}`}
+          onClose={() => setSelected(null)}
         >
           <div className="connector-detail-header">
             <div>
@@ -163,10 +148,7 @@ export default function ConnectorCatalog({
             <button
               type="button"
               className="ui-button"
-              onClick={() => {
-                setSelected(null);
-                triggerRef.current?.focus({ preventScroll: true });
-              }}
+              onClick={() => setSelected(null)}
             >
               关闭
             </button>
@@ -186,7 +168,6 @@ export default function ConnectorCatalog({
               className="primary-button"
               onClick={() => {
                 setSelected(null);
-                triggerRef.current?.focus({ preventScroll: true });
                 if (onOpenMcp) onOpenMcp();
                 else onStatus("请打开设置中的 MCP 页面添加受信任的连接器。");
               }}
@@ -202,7 +183,7 @@ export default function ConnectorCatalog({
               安装连接器（未接入）
             </button>
           </div>
-        </div>
+        </Modal>
       )}
     </>
   );

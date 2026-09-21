@@ -23,6 +23,7 @@ import SkillsPage from "./components/SkillsPage";
 import {
   createSkillRegistry,
   applySkillInstructions,
+  SKILLS_CHANGED_EVENT,
   type SkillRecord,
 } from "./features/skills/skillRegistry";
 import {
@@ -158,6 +159,12 @@ export default function App() {
   const [mobileChat, setMobileChat] = useState(false);
   const [assets, setAssets] = useState(initialAssets);
   const [skillRegistry] = useState(() => createSkillRegistry());
+  const [, refreshSkills] = useState(0);
+  useEffect(() => {
+    const syncSkills = () => refreshSkills((value) => value + 1);
+    window.addEventListener(SKILLS_CHANGED_EVENT, syncSkills);
+    return () => window.removeEventListener(SKILLS_CHANGED_EVENT, syncSkills);
+  }, []);
   const assetArchive = useAssetArchive(setAssets);
   const [subjects, setSubjects] = useState(initialSubjects);
   const persistence = useCreationStorage(

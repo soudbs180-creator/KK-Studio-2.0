@@ -9,7 +9,7 @@
 本轮以真实安装包 `C:\Users\Administrator\AppData\Local\Programs\MiniMax Design\current` 和真实应用操作证据为行为来源，完成以下可交付范围：
 
 - 审计 Project Library、开始创作、Skills、Connectors、ComfyUI、设置、文件/窗口/帮助菜单及其弹窗。
-- 复刻本地 Skill 的浏览、筛选、导入、创建、编辑、启用/禁用、卸载和应用到创作草稿。
+- 复刻本地 Skill 的浏览、筛选、JSON/`SKILL.md` 导入、创建、编辑、启用/禁用、卸载和应用到创作草稿；MiniMax zip 导入契约作为下一步明确边界记录。
 - 增加连接器目录，提供详情弹窗、关闭、Escape、焦点恢复，以及跳转 MCP 设置的可用路径。
 - 强化 MCP Streamable HTTP 配置的发现、分页、大小上限、连接失败清理、组件卸载清理和损坏持久化提示。
 - 记录 Web 开发运行时的同状态 DOM/行为证据和未验证边界。

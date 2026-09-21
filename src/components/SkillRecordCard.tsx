@@ -41,16 +41,8 @@ export default function SkillRecordCard({
             const message = onApply?.(record);
             if (message) onStatus(message);
           }}
-          disabled={
-            !record.installed ||
-            !record.enabled ||
-            record.instructions.length > 3600
-          }
-          title={
-            record.instructions.length > 3600
-              ? "Skill 指令过长，应用后可能超过图片任务的 4000 字限制。"
-              : undefined
-          }
+          disabled={!record.installed || !record.enabled || !onApply}
+          title={!onApply ? "当前没有可应用的草稿。" : undefined}
         >
           应用到草稿
         </button>

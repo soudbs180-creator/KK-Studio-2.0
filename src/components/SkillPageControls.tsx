@@ -71,6 +71,14 @@ export default function SkillPageControls({
               >
                 导入 JSON / SKILL.md
               </button>
+              <button
+                type="button"
+                className="ui-button"
+                disabled
+                title="云端 Skill 创建服务尚未接入"
+              >
+                通过 KK Studio 创建
+              </button>
             </>
           ) : (
             <button

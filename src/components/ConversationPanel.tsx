@@ -38,7 +38,7 @@ export default function ConversationPanel({
   onDraftChange?: (draft: CreationDraft) => void;
   voiceEnabled?: boolean;
   skills?: SkillRecord[];
-  onApplySkill?: (record: SkillRecord) => void;
+  onApplySkill?: (record: SkillRecord) => string;
 }) {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
@@ -229,9 +229,9 @@ export default function ConversationPanel({
           modeMenuOpen={modeMenuOpen}
           skills={skills}
           onApplySkill={(record) => {
-            onApplySkill?.(record);
+            const message = onApplySkill?.(record);
             closeMenus();
-            setStatus(`已将「${record.manifest.name}」加入对话草稿。`);
+            setStatus(message ?? "当前草稿不可用，未应用 Skill。");
           }}
           approvalMode={approvalMode}
           onToggleMode={() => toggleMenu("mode")}

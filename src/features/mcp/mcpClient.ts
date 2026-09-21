@@ -228,6 +228,10 @@ export class McpHttpClient {
         signal: timeout.signal,
       });
       const sessionId = response.headers.get("MCP-Session-Id") ?? undefined;
+      // Keep initialization headers even if body parsing fails, so connect's
+      // cleanup can terminate a session created by a malformed response.
+      if (payload.method === "initialize" && response.ok)
+        this.sessionId = sessionId;
       if (response.status === 202)
         return { sessionId, status: response.status };
       const body = await readResponseBody(response);
@@ -256,6 +260,7 @@ export class McpHttpClient {
     this.connected = false;
     this.tools = [];
     try {
+      signal?.throwIfAborted();
       const initializeId = jsonRpcId();
       const initialize = await this.post(
         {
@@ -286,7 +291,7 @@ export class McpHttpClient {
         { jsonrpc: "2.0", method: "notifications/initialized", params: {} },
         signal,
       );
-      if (initialized.status !== 202 && initialized.status >= 300)
+      if (initialized.status !== 202)
         throw new Error("MCP initialized 通知未被接受。");
 
       let cursor: string | undefined;
@@ -326,6 +331,7 @@ export class McpHttpClient {
       }
       if (cursor && cursors.size >= MAX_PAGES)
         throw new Error("MCP 工具分页超过 32 页限制。");
+      signal?.throwIfAborted();
       this.connected = true;
       return this.discoveredTools;
     } catch (error) {
@@ -335,14 +341,18 @@ export class McpHttpClient {
   }
 
   async disconnect(signal?: AbortSignal): Promise<void> {
-    if (this.sessionId) {
+    const sessionId = this.sessionId;
+    this.connected = false;
+    this.sessionId = undefined;
+    this.tools = [];
+    if (sessionId) {
       const timeout = timeoutSignal(DEFAULT_TIMEOUT_MS, signal);
       try {
         await fetch(this.server.endpoint, {
           method: "DELETE",
           headers: {
             Accept: "application/json",
-            "MCP-Session-Id": this.sessionId,
+            "MCP-Session-Id": sessionId,
             "MCP-Protocol-Version": MCP_PROTOCOL_VERSION,
           },
           credentials: "omit",
@@ -355,9 +365,6 @@ export class McpHttpClient {
         timeout.dispose();
       }
     }
-    this.connected = false;
-    this.sessionId = undefined;
-    this.tools = [];
   }
 
   /** Manual call is deliberately confirmation-bound and not wired to Agent. */
