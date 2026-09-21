@@ -3,7 +3,7 @@
 ## 2026-09-21 TASK-MAIN-CLOSE-002 当前恢复点
 
 - 从 `origin/main=3c4d012846e53095bd4f11343a1cd2ef61aa3bbd` 回读后，当前候选是 `bb96dadc08c12a2177481d2ae1e4dda605cc77d4`，位于 `codex/TASK-MAIN-CLOSE-002`；不要把候选直接推入或快进稳定 main。
-- 当前候选本地完整 verify 为 172 Node、197 browser、UI121/0、0 failure/flaky；Rust 61/61、fmt、client check 通过。真实运行日志为 `.tmp/verify-batched-final-2.log`，三模式 runtime 报告仍明确产品运行代码源为 8369185。
+- 生产代码候选 `bb96dadc08c12a2177481d2ae1e4dda605cc77d4` 的本地完整 verify 为 172 Node、197 browser、UI121/0、0 failure/flaky；Rust 61/61、fmt、client check 通过。固定证据为 `docs/evidence/2026-09-21-main-close-002/verify-run.json`，三模式 runtime 报告仍明确产品运行代码源为 8369185。
 - PR #8：<https://github.com/soudbs180-creator/KK-Studio-2.0/pull/8>。delivery 已成功，hosted verify 因 GitHub 付款/额度限制没有启动；恢复 Actions 后先重跑并回读 checks，再按 expected head 合并，最后 fetch 验证本地和云端 main。
 - `docs/evidence/browser-results.json` 是历史运行产物，不绑定当前候选；不要用它替代当前 `.tmp/verify-batched-final-2.log` 或重新生成的 hosted 证据。
 

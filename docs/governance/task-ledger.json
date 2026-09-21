@@ -1006,7 +1006,8 @@
       "docs/changes/2026-09-20-main-close-002/spec.md",
       "docs/changes/2026-09-20-main-close-002/plan.md",
       "docs/changes/2026-09-20-main-close-002/verification.md",
-      "docs/changes/2026-09-20-main-close-002/review.md"
+      "docs/changes/2026-09-20-main-close-002/review.md",
+      "docs/evidence/2026-09-21-main-close-002/verify-run.json"
     ],
     "verification": "整合候选 bb96dadc08c12a2177481d2ae1e4dda605cc77d4 已合入 origin/main 3c4d012846e53095bd4f11343a1cd2ef61aa3bbd 之后形成；当前候选本地 npm run verify 为 172 Node、197 browser、0 failure/flaky、UI121/0，Rust61/61、fmt、client check 通过；三模式 runtime 产品代码证据源为 8369185。PR #8 的 delivery 曾成功，但 hosted verify 因 GitHub 账号付款/支出额度限制未启动，任务保持 IN_PROGRESS，待恢复 Actions 后重跑 CI、合并并回读 main。",
     "verificationResult": "PARTIAL",

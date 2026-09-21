@@ -8,6 +8,6 @@
 - CI 失败复核：两次 hosted Windows verify 均在 `asset-performance.spec.ts:15` 的 `seedArchive` 首次 `page.evaluate` 处超时，后续素材测试能继续通过；另一次 663px UI 用例只在 1 秒动画 settle 窗口 flaky。按 fixture 数量和字节大小推算，单事务同时保留 125 个 2.35MB Blob、125 个约 3.13MB legacy data URL，可能形成约 685MB 级别的准备压力；该数值是理论推算，不是实测 heap 峰值。
 - 修复边界：将 fixture 按 8 项批次生成、哈希并提交 transaction，只在首项保留 legacy `preview`，返回 rows 只保留轻量 metadata，并为 transaction abort 加显式失败；保留 125 项原件、legacy 兼容、metadata-only 列表、0 次初始原件读取和详情 SHA 断言。动画 settle 窗口改为 5 秒，没有放宽业务断言。修复后定向 asset/design 10/10 通过；仍需 hosted CI 重新验证。
 - 远端门禁事实：PR #8 的 delivery 已成功；verify job 没有启动，GitHub check annotation 是账号付款失败或支出额度不足。该平台阻断保持 BLOCKED，不能称为远端 verify 通过。
-- 候选证据绑定：`bb96dadc08c12a2177481d2ae1e4dda605cc77d4` 在 2026-09-21 09:30（Asia/Shanghai）后的本地完整 verify 已由 `.tmp/verify-batched-final-2.log` 记录为 172 Node、197 browser、0 failure/flaky、UI121/0；此前 `42ec66a` 的 hosted timeout 仅是失败历史，不能冒充当前候选通过。
+- 候选证据绑定：生产代码候选 `bb96dadc08c12a2177481d2ae1e4dda605cc77d4` 在 2026-09-21 09:30（Asia/Shanghai）后的本地完整 verify 已由 `docs/evidence/2026-09-21-main-close-002/verify-run.json` 固定为 172 Node、197 browser、0 failure/flaky、UI121/0；原始日志留在本地临时目录并以 SHA-256 记录。此前 `42ec66a` 的 hosted timeout 仅是失败历史，不能冒充当前候选通过。
 - 治理并发：TASK-GOV-002 有活跃用户任务维护 PR #4，不能因其工作树干净就推断无人写入；本任务不修改该 PR 分支。合入本轮候选前重新 fetch 当前 main。
 - 根目录并发：另一活跃功能任务正编写 Skill/ComfyUI/MCP；其 root 未提交内容不纳入本轮提交、不移动或覆盖。
