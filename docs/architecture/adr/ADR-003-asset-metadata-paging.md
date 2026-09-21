@@ -13,7 +13,7 @@
 
 IndexedDB 数据库版本和原件 Blob 不变；新写入 metadata 去除 preview，旧带 preview 记录仍可读取。列表返回值不再承诺预览字段，调用方已同步。Rust 完整 list 校验保留，新增 list_page 只检查 metadata 与原件路径/大小边界，实际读取仍检查 SHA；列表不再证明每份原件字节有效。
 
-Web 读取在 bytes 之前绑定请求 ID、metadata ID、SHA 前缀、MIME 和大小，再检查完整 SHA。损坏、缺失、错身份和解码失败明确报错/重试，取消或切换不提交迟到 UI。原件无迁移或删除，回退对应提交可恢复旧读取路径；旧读取器可从 Blob 重建预览。
+Web 读取在 bytes 之前绑定请求 ID、metadata ID、SHA 前缀、MIME 和大小，再检查完整 SHA。损坏、缺失、错身份和解码失败明确报错/重试，取消或切换不提交迟到 UI。原件无迁移或删除；但新写入的 metadata 已去除 `preview`，不能只回退前端读取代码。回滚前必须保留能从 Blob 校验并重建预览的兼容读取层，或先完成 metadata 回填，否则旧读取器只返回不带预览的 metadata，详情、导出和重绘会失效。
 
 ## 证据和限制
 
