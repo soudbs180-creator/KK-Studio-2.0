@@ -330,3 +330,8 @@ TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点
 ## 2026-09-20 AI自主开发、分支和规则一致性（TASK-GOV-002）
 
 - 最新治理规则已合入本候选；TASK-GOV-002 仍由独立 owner 维护，远端保护 API403 继续记录为 BLOCKED，不由本任务代替其 PR/审批。
+
+## 2026-09-21 Governance closeout synchronization
+
+- `origin/main` now includes the governance closeout at `3c4d012`; TASK-GOV-002 remains PARTIAL because hosted branch protection is still blocked by the GitHub billing/API403 boundary. Its closeout package and current ledger entry were retained when preparing this candidate.
+- This candidate keeps the UI/asset work scoped to TASK-MAIN-CLOSE-002; it does not re-own the governance worktree or claim remote rules are active.

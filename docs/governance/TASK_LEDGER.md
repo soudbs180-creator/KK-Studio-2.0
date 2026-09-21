@@ -40,7 +40,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MAIN-CLOSE-002 | 未完成子任务汇总验收与主线同步 | IN_PROGRESS | TASK-UI-MAIN-001 | root |
 | TASK-UI-CLOSE-003 | 现行Figma页面缺口复核与交互收口 | DONE | TASK-UI-MAIN-001 | finish_figma_pages |
 | TASK-PERF-ASSETS-001 | 素材列表元数据和原件按需读取 | DONE | T3a | finish_asset_performance |
-| TASK-GOV-002 | 跨AI自主开发与分支质量门禁 | REVIEW | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
+| TASK-GOV-002 | 跨AI自主开发与分支质量门禁 | PARTIAL | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -460,9 +460,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 落实共同规则、代码文档一致性、Git/CI防线和真实保护边界
 - Scope: AI规则/SDLC/PR/Git防线/交付门禁/规则场景
 - Acceptance: 入口统一、中文自然语言转工程任务; 真实push拒绝回归与delivery门禁通过; 规则、模板、脚本入口和账本绑定一致; 独立review和实际规则验证证据; 产品代码、产品测试、既有证据和其他人的提交保持只读
-- Branch: `codex/TASK-GOV-002-ai-sdlc`
-- Worktree: `D:/kk-studio-next/.worktrees/TASK-GOV-002`
+- Branch: `codex/TASK-GOV-002-closeout`
+- Worktree: `D:/kk-studio-next/.worktrees/TASK-GOV-002-CLOSEOUT`
 - Modules: docs, scripts/governance, .github, .githooks, config, tests/unit/deliveryPolicy.test.ts, tests/unit/gitPushPolicy.test.ts, tests/evals
-- Verification: PARTIAL — 规则门禁31tasks/0、push9/9、delivery12/12、场景结构12/12、基线正反例2/2；f7425d6 hosted verify成功。最终diff无产品/既有测试/旧证据改动。PR4保持draft，main前进到a1d8629导致冲突，遵用户要求不再处理新上游；远端保护API403仍BLOCKED。当前不具备合并/发布条件。
-- Evidence: [docs/changes/2026-09-20-ai-sdlc/verification.md](../../docs/changes/2026-09-20-ai-sdlc/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json)
-- Updated: 2026-09-20
+- Verification: PARTIAL — PR #4 已 squash 合入 main，merge 92c1ef1；hosted delivery/verify、Rust fmt/test、client check、Tauri no-bundle build 全部成功；治理32tasks/0、push9/9、delivery12/12、AI场景12/12、基线正反例2/2。服务器 protection/rulesets API403仍BLOCKED，本地hook不能替代远端强制保护；产品代码、既有测试、旧证据和其他任务提交未由本任务写入。
+- Evidence: [docs/changes/2026-09-20-ai-sdlc/verification.md](../../docs/changes/2026-09-20-ai-sdlc/verification.md), [docs/changes/2026-09-21-ai-sdlc-closeout/verification.md](../../docs/changes/2026-09-21-ai-sdlc-closeout/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json)
+- Updated: 2026-09-21

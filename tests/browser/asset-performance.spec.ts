@@ -21,18 +21,34 @@ async function seedArchive(
       const base = new Uint8Array(decoded.length);
       for (let i = 0; i < decoded.length; i++) base[i] = decoded.charCodeAt(i);
       const rows = [];
-      for (let index = 0; index < count; index++) {
-        const bytes = new Uint8Array(base.length + (media ? 0 : 4));
-        bytes.set(base);
-        if (!media) new DataView(bytes.buffer).setUint32(base.length, index);
-        const hash = [
-          ...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),
-        ]
-          .map((b) => b.toString(16).padStart(2, "0"))
-          .join("");
-        rows.push({
-          blob: new Blob([bytes], { type: mime }),
-          metadata: {
+      const database = await new Promise<IDBDatabase>((resolve, reject) => {
+        const request = indexedDB.open("kk-studio-assets", 1);
+        request.onupgradeneeded = () =>
+          request.result.createObjectStore("blobs");
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+      // Keep the legacy preview compatibility case, but do not retain 125
+      // multi-megabyte data URLs or put all originals in one giant transaction.
+      // This keeps the fixture's 125 complete originals while making the
+      // browser's preparation path deterministic on hosted Windows runners.
+      const batchSize = 8;
+      for (let start = 0; start < count; start += batchSize) {
+        const batch = [];
+        for (
+          let index = start;
+          index < Math.min(start + batchSize, count);
+          index++
+        ) {
+          const bytes = new Uint8Array(base.length + (media ? 0 : 4));
+          bytes.set(base);
+          if (!media) new DataView(bytes.buffer).setUint32(base.length, index);
+          const hash = [
+            ...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),
+          ]
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
+          const metadata = {
             assetId: `asset-${hash.slice(0, 24)}`,
             sha256: hash,
             mime,
@@ -43,28 +59,33 @@ async function seedArchive(
               generatedAt: "2026-09-20T00:00:00.000Z",
               provider: "fixture",
             },
-            // Legacy records may contain full previews. The list must strip them.
-            preview: `data:image/png;base64,${original}`,
-          },
+            ...(index === 0
+              ? { preview: `data:image/png;base64,${original}` }
+              : {}),
+          };
+          rows.push(metadata);
+          batch.push({
+            blob: new Blob([bytes], { type: mime }),
+            metadata,
+          });
+        }
+        await new Promise<void>((resolve, reject) => {
+          const transaction = database.transaction("blobs", "readwrite");
+          for (const row of batch)
+            transaction.objectStore("blobs").put(row, row.metadata.assetId);
+          transaction.oncomplete = () => resolve();
+          transaction.onerror = () => reject(transaction.error);
+          transaction.onabort = () =>
+            reject(
+              transaction.error ??
+                new Error("asset fixture transaction aborted"),
+            );
         });
+        batch.length = 0;
       }
-      const database = await new Promise<IDBDatabase>((resolve, reject) => {
-        const request = indexedDB.open("kk-studio-assets", 1);
-        request.onupgradeneeded = () =>
-          request.result.createObjectStore("blobs");
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-      await new Promise<void>((resolve, reject) => {
-        const transaction = database.transaction("blobs", "readwrite");
-        for (const row of rows)
-          transaction.objectStore("blobs").put(row, row.metadata.assetId);
-        transaction.oncomplete = () => resolve();
-        transaction.onerror = () => reject(transaction.error);
-      });
       database.close();
       return rows
-        .map((row) => ({ ...row.metadata, preview: undefined }))
+        .map(({ preview: _preview, ...metadata }) => metadata)
         .sort((a, b) => a.assetId.localeCompare(b.assetId));
     },
     { original, count, validImage, media },

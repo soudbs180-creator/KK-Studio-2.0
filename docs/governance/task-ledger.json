@@ -1096,8 +1096,8 @@
       "TASK-KK2-MAIN-SYNC"
     ],
     "owner": "root",
-    "branch": "codex/TASK-GOV-002-ai-sdlc",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-GOV-002",
+    "branch": "codex/TASK-GOV-002-closeout",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-GOV-002-CLOSEOUT",
     "affectedModules": [
       "docs",
       "scripts/governance",
@@ -1108,13 +1108,14 @@
       "tests/unit/gitPushPolicy.test.ts",
       "tests/evals"
     ],
-    "status": "REVIEW",
+    "status": "PARTIAL",
     "evidence": [
       "docs/changes/2026-09-20-ai-sdlc/verification.md",
+      "docs/changes/2026-09-21-ai-sdlc-closeout/verification.md",
       "docs/evidence/ai-sdlc-2026-09-20/remote-audit.json"
     ],
-    "verification": "规则门禁31tasks/0、push9/9、delivery12/12、场景结构12/12、基线正反例2/2；f7425d6 hosted verify成功。最终diff无产品/既有测试/旧证据改动。PR4保持draft，main前进到a1d8629导致冲突，遵用户要求不再处理新上游；远端保护API403仍BLOCKED。当前不具备合并/发布条件。",
+    "verification": "PR #4 已 squash 合入 main，merge 92c1ef1；hosted delivery/verify、Rust fmt/test、client check、Tauri no-bundle build 全部成功；治理32tasks/0、push9/9、delivery12/12、AI场景12/12、基线正反例2/2。服务器 protection/rulesets API403仍BLOCKED，本地hook不能替代远端强制保护；产品代码、既有测试、旧证据和其他任务提交未由本任务写入。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-20"
+    "updated": "2026-09-21"
   }
 ]
