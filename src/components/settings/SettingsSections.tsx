@@ -7,6 +7,8 @@ import type { SettingsSection } from "./SettingsSectionData";
 import ConnectionSettings from "./ConnectionSettings";
 import ProjectPackageActions from "../../features/projects/ProjectPackageActions";
 import type { SaveState } from "../../features/creation/useCreationStorage";
+import type { SkillRegistry } from "../../features/skills/skillRegistry";
+import SkillsSettings from "./SkillsSettings";
 export { SETTINGS_SECTIONS } from "./SettingsSectionData";
 export type { SettingsSection } from "./SettingsSectionData";
 
@@ -17,6 +19,7 @@ interface SettingsSectionsProps {
   onFeedback: (message: string) => void;
   saveState: SaveState;
   revision: number;
+  registry: SkillRegistry;
 }
 
 export default function SettingsSections({
@@ -26,6 +29,7 @@ export default function SettingsSections({
   onFeedback,
   saveState,
   revision,
+  registry,
 }: SettingsSectionsProps) {
   const [confirmReset, setConfirmReset] = useState(false);
   function exportPreferences(): void {
@@ -48,7 +52,10 @@ export default function SettingsSections({
         {SETTINGS_SECTIONS.find((item) => item.id === section)?.label}
       </h2>
       <div className="settings-section-body">
-        <ConnectionSettings section={section} onFeedback={onFeedback} />
+        {section === "skills" && <SkillsSettings registry={registry} />}
+        {section !== "skills" && (
+          <ConnectionSettings section={section} onFeedback={onFeedback} />
+        )}
 
         {section === "storage" && (
           <>

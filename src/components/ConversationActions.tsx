@@ -2,6 +2,7 @@ import type { RefObject } from "react";
 import ConversationModelPicker from "./ConversationModelPicker";
 import type { CreationDraft } from "../features/creation/model";
 import VoiceInputButton from "./VoiceInputButton";
+import type { SkillRecord } from "../features/skills/skillRegistry";
 
 export default function ConversationActions({
   actionsRef,
@@ -30,6 +31,8 @@ export default function ConversationActions({
   onVoiceStatus,
   voiceEnabled,
   voiceSessionKey,
+  skills = [],
+  onApplySkill,
 }: {
   actionsRef: RefObject<HTMLDivElement>;
   fileInput: RefObject<HTMLInputElement>;
@@ -57,6 +60,8 @@ export default function ConversationActions({
   onVoiceStatus: (message: string) => void;
   voiceEnabled: boolean;
   voiceSessionKey: string;
+  skills?: SkillRecord[];
+  onApplySkill?: (record: SkillRecord) => void;
 }) {
   return (
     <div ref={actionsRef} data-node-id="407:29315">
@@ -121,7 +126,26 @@ export default function ConversationActions({
             role="menu"
             aria-label="选择 Skill"
           >
-            <p>当前项目还没有可用的本地 Skill。</p>
+            {skills.filter((record) => record.installed && record.enabled)
+              .length ? (
+              <>
+                <p>选择一个本地 Skill，把明确指令加入对话草稿：</p>
+                {skills
+                  .filter((record) => record.installed && record.enabled)
+                  .map((record) => (
+                    <button
+                      key={record.manifest.id}
+                      type="button"
+                      role="menuitem"
+                      onClick={() => onApplySkill?.(record)}
+                    >
+                      {record.manifest.name}
+                    </button>
+                  ))}
+              </>
+            ) : (
+              <p>当前项目还没有可用的本地 Skill。</p>
+            )}
             <button
               type="button"
               role="menuitem"

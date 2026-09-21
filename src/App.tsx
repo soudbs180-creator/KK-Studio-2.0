@@ -19,6 +19,11 @@ import {
 import LibraryPage from "./components/LibraryPage";
 import CatalogPanel from "./components/CatalogPanel";
 import StartPage from "./components/StartPage";
+import SkillsPage from "./components/SkillsPage";
+import {
+  createSkillRegistry,
+  type SkillRecord,
+} from "./features/skills/skillRegistry";
 import {
   createProject,
   emptyDraft,
@@ -112,6 +117,11 @@ import {
   DEFAULT_SETTINGS,
   type SettingsPreferences,
 } from "./domain/settings";
+import {
+  readLocalWorkflows,
+  writeLocalWorkflows,
+  type WorkflowRecord,
+} from "./features/comfyui/workflowRegistry";
 import "./styles/workspace.css";
 import "./styles/responsive.css";
 import "./styles/sidebar.css";
@@ -153,8 +163,12 @@ export default function App() {
   const [chat, setChat] = useState(true);
   const [mobileChat, setMobileChat] = useState(false);
   const [assets, setAssets] = useState(initialAssets);
+  const [skillRegistry] = useState(() => createSkillRegistry());
   const assetArchive = useAssetArchive(setAssets);
   const [subjects, setSubjects] = useState(initialSubjects);
+  const [localWorkflows, setLocalWorkflows] = useState<WorkflowRecord[]>(() =>
+    readLocalWorkflows(),
+  );
   const persistence = useCreationStorage(
     recoverInterruptedTasks,
     reconcileNativeTasks,
@@ -163,6 +177,23 @@ export default function App() {
   const saveState = persistence.state;
   const submitLock = useRef(false);
   const [providerVersion, setProviderVersion] = useState(0);
+  function saveWorkflow(workflow: WorkflowRecord): void {
+    setLocalWorkflows((current) => {
+      const next = [
+        workflow,
+        ...current.filter((item) => item.id !== workflow.id),
+      ];
+      writeLocalWorkflows(next);
+      return next;
+    });
+  }
+  function deleteWorkflow(workflow: WorkflowRecord): void {
+    setLocalWorkflows((current) => {
+      const next = current.filter((item) => item.id !== workflow.id);
+      writeLocalWorkflows(next);
+      return next;
+    });
+  }
   const taskControllers = useRef<Record<string, AbortController>>({});
   const nativeTaskRecords = useRef<Record<string, NativeTaskHostRecord>>({});
   const nativeCancelRequested = useRef(new Set<string>());
@@ -234,6 +265,48 @@ export default function App() {
       homeDraft: { ...draft, updatedAt: Date.now() },
     };
     commitCreation(next);
+  }
+  function applySkillToHome(record: SkillRecord): void {
+    const draft = creationRef.current.homeDraft;
+    const block = `[Skill: ${record.manifest.name}]\n${record.instructions}`;
+    updateHomeDraft({
+      ...draft,
+      prompt: draft.prompt ? `${draft.prompt}\n\n${block}` : block,
+      updatedAt: Date.now(),
+    });
+    const project = creationRef.current.projects.find(
+      (item) => item.id === creationRef.current.activeProjectId,
+    );
+    if (project)
+      updateProject(project.id, (current) => ({
+        ...current,
+        composerDraft: {
+          ...current.composerDraft,
+          prompt: current.composerDraft.prompt
+            ? `${current.composerDraft.prompt}\n\n${block}`
+            : block,
+          updatedAt: Date.now(),
+        },
+        updatedAt: Date.now(),
+      }));
+  }
+  function applySkillToProject(record: SkillRecord): void {
+    const project = creationRef.current.projects.find(
+      (item) => item.id === creationRef.current.activeProjectId,
+    );
+    if (!project) return;
+    const block = `[Skill: ${record.manifest.name}]\n${record.instructions}`;
+    updateProject(project.id, (current) => ({
+      ...current,
+      composerDraft: {
+        ...current.composerDraft,
+        prompt: current.composerDraft.prompt
+          ? `${current.composerDraft.prompt}\n\n${block}`
+          : block,
+        updatedAt: Date.now(),
+      },
+      updatedAt: Date.now(),
+    }));
   }
   function replaceCanvasItems(
     action: SetStateAction<CanvasCollectionItem[]>,
@@ -1603,6 +1676,8 @@ export default function App() {
               onOpenModel={() => open("settings/providers")}
               onOpenSkills={() => open("skills")}
               onOpenPlugins={() => open("settings/mcp")}
+              skills={skillRegistry.listRecords()}
+              onApplySkill={applySkillToHome}
               defaultModel={(() => {
                 void providerVersion;
                 try {
@@ -1746,6 +1821,8 @@ export default function App() {
                 onDeleteMessage={
                   activeProject ? handleDeleteMessage : undefined
                 }
+                skills={skillRegistry.listRecords()}
+                onApplySkill={applySkillToProject}
                 voiceEnabled={active === "workspace" && chat}
                 onClose={() => {
                   const focusAtClose = document.activeElement;
@@ -1766,12 +1843,26 @@ export default function App() {
               />
             </div>
           </div>
-          {["projects", "skills", "comfyui"].includes(active) && (
+          {active === "skills" && (
+            <SkillsPage registry={skillRegistry} onApply={applySkillToHome} />
+          )}
+          {["projects", "comfyui"].includes(active) && (
             <LibraryPage
               key={active}
-              view={active as "projects" | "skills" | "comfyui"}
+              view={active as "projects" | "comfyui"}
               onOpen={open}
               projects={creation.projects}
+              localWorkflows={localWorkflows}
+              onSaveWorkflow={saveWorkflow}
+              onDeleteWorkflow={deleteWorkflow}
+              onRunWorkflow={(workflow) => {
+                setModal("tasks");
+                window.dispatchEvent(
+                  new CustomEvent("kk:comfyui-workflow-requested", {
+                    detail: workflow.id,
+                  }),
+                );
+              }}
               onOpenProject={(id) => {
                 commitCreation({ ...creationRef.current, activeProjectId: id });
                 setActive("workspace");
@@ -1826,6 +1917,7 @@ export default function App() {
               initialSection={settingsSection}
               saveState={saveState}
               revision={creation.revision}
+              registry={skillRegistry}
               onClose={() => setModal("")}
             />
           ) : modal === "assets" ? (

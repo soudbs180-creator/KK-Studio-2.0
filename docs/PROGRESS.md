@@ -1,5 +1,7 @@
 # 当前进度
 
+
+
 ## 2026-09-21 安全审计风险收口（IMPLEMENTED / 1421 外部进程占用）
 
 - `TASK-AUDIT-SEC-001-CLOSEOUT` 在 `fix/TASK-AUDIT-SEC-001-boundaries` 完成三项剩余修复：Web Locks 长生命周期连接租约与崩溃元数据重建；Gateway 初始额度 provisioning 记录、额度漂移 fail closed 和并发策略更新；TaskHost 结果 URL 同源、HTTPS/loopback、DNS/IP pinning、取消窗口和 IPv6 边界。

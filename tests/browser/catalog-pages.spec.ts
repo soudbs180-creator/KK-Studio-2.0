@@ -190,16 +190,24 @@ test("Skill 与工作流卡片保持当前页面并反馈本地预览状态", as
     .getByRole("navigation", { name: "主导航" })
     .getByRole("button", { name: "Skill", exact: true })
     .click();
-  await page.getByRole("button", { name: /3D 动画短片/ }).click();
-  await expect(
-    page.getByText("已选择Skill：3D 动画短片。", { exact: false }),
-  ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Skill", exact: true }),
   ).toBeVisible();
+  await expect(page.getByText("镜头规划助手", { exact: true })).toBeVisible();
+  await page
+    .getByRole("button", { name: "应用到草稿", exact: true })
+    .first()
+    .click();
+  await page
+    .getByRole("navigation", { name: "主导航" })
+    .getByRole("button", { name: "开始创作", exact: true })
+    .click();
+  await expect(page.getByLabel("创作提示词")).toHaveValue(
+    /\[Skill: 镜头规划助手\]/,
+  );
   await expect(
-    page.getByRole("button", { name: "通过 KK Studio 创建", exact: true }),
-  ).toBeDisabled();
+    page.getByRole("heading", { name: "KK Studio", exact: true }),
+  ).toBeVisible();
 
   await page
     .getByRole("button", { name: "ComfyUI 工作流", exact: true })
@@ -212,9 +220,13 @@ test("Skill 与工作流卡片保持当前页面并反馈本地预览状态", as
   await expect(
     page.getByText("已选择工作流：H3 轻量版 · 文生视频。", { exact: false }),
   ).toBeVisible();
+  await page
+    .getByRole("button", { name: "导入/新建工作流", exact: true })
+    .click();
+  await page.getByRole("tab", { name: "我的工作流", exact: true }).click();
   await expect(
-    page.getByRole("button", { name: "导入/新建工作流", exact: true }),
-  ).toBeDisabled();
+    page.getByText("我的 ComfyUI 工作流", { exact: true }),
+  ).toBeVisible();
 });
 
 test("项目区支持筛选、排序和创建文件夹入口", async ({ page }) => {

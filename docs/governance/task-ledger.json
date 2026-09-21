@@ -1162,5 +1162,43 @@
     "verification": "最终 head 4a3c0db：178/178 Node、TypeScript、lint、format、UI119/0、Rust63/63、fmt/check、production build、production preview 191/191、Tauri no-bundle 与隔离 Tauri WebView2 均通过；固定 1421 被另一 worktree 占用，未终止且不归因于本分支。",
     "verificationResult": "PASS",
     "updated": "2026-09-21"
+  },
+  {
+    "id": "TASK-CAP-001",
+    "title": "本地 Skill/MCP/ComfyUI 能力补齐",
+    "goal": "复刻可安全落地的本地 Skill、MCP 工具发现与 ComfyUI 工作流交互，并保持未接入外部服务的边界可见",
+    "scope": "src/features/skills, src/features/mcp, src/features/comfyui, Settings, Catalog, Composer, browser/unit tests",
+    "acceptance": [
+      "本地 Skill 可安全导入、安装、编辑、启停、导出并应用到 Composer 草稿",
+      "MCP Streamable HTTP 可完成握手、分页工具发现、inputSchema 展示和显式确认调用",
+      "ComfyUI 工作流可本地创建、导入、导出、删除并显示真实运行边界",
+      "凭据、token、脚本执行、远程市场和未接入服务不被伪造为已完成"
+    ],
+    "dependencies": [
+      "TASK-GOV-001",
+      "T6"
+    ],
+    "owner": "root",
+    "branch": "feat/TASK-CAP-001-integrated",
+    "worktree": "D:/kk-studio-next/.worktrees/TASK-CAP-001-INTEGRATED",
+    "affectedModules": [
+      "src/features/skills",
+      "src/features/mcp",
+      "src/features/comfyui",
+      "src/components/settings",
+      "src/components/LibraryPage.tsx",
+      "src/App.tsx",
+      "tests/unit",
+      "tests/browser"
+    ],
+    "status": "PARTIAL",
+    "evidence": [
+      "docs/changes/2026-09-21-local-capabilities/intent.md",
+      "docs/changes/2026-09-21-local-capabilities/spec.md",
+      "docs/changes/2026-09-21-local-capabilities/verification.md"
+    ],
+    "verification": "最终 npm run verify 通过：187 Node、193 production browser、UI 127/0、lint/typecheck/format/build；MCP/Catalog 定向 9/9；client:check 与 client:build -- --no-bundle 通过并生成 release exe。MiniMax 仅完成安装包静态审计，桌面控制 RPC 不可用，1421 开发态、Tauri 窗口交互和真实 ComfyUI 提交待后续验收。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-09-21"
   }
 ]
