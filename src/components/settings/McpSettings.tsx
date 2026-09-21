@@ -15,7 +15,7 @@ export default function McpSettings({
 }: {
   onFeedback: (message: string) => void;
 }) {
-  const registry = useRef(new McpServerRegistry()).current;
+  const [registry] = useState(() => new McpServerRegistry());
   const clients = useRef(new Map<string, McpHttpClient>()).current;
   const connectionControllers = useRef(
     new Map<string, AbortController>(),

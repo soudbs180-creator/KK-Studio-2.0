@@ -11,7 +11,7 @@ All checks below ran in `D:\kk-studio-next` on branch `codex/feat/minimax-deep-r
 - `node --test tests/unit/*.test.ts` — PASS, 189 tests / 0 failures.
 - Skill registry focused regression — PASS, metadata containing `api_key:` is rejected before localStorage persistence.
 - MCP registry focused regression — PASS, credential-like server labels are rejected before localStorage persistence.
-- `node node_modules/typescript/bin/tsc -b; node node_modules/vite/bin/vite.js build` — PASS. Vite emitted `dist/assets/index-DRpxzMiH.js` and `dist/assets/index-DMyyqiRR.css`; only the existing zod annotation and chunk-size warnings remained.
+- `node node_modules/typescript/bin/tsc -b; node node_modules/vite/bin/vite.js build` — PASS. Vite emitted `dist/assets/index-BEX4nnRA.js` and `dist/assets/index-DMyyqiRR.css`; only the existing zod annotation and chunk-size warnings remained.
 - `node scripts/check-governance.mjs` — PASS after writing the current task view.
 - `cargo check --manifest-path src-tauri/Cargo.toml` — PASS, with the repository's existing three dead-code warnings; this is a compile check only, not a Tauri release/runtime acceptance.
 
