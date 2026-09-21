@@ -1018,7 +1018,7 @@
       "docs/changes/2026-09-21-security-audit-closeout/review.md"
     ],
     "verification": "针对性验证157/157 Node单测、TypeScript和Rust TaskHost 7/7通过；closeout已完成三项原PARTIAL风险的实现。完整lint、format、build、ui:check、browser preview、Tauri release与独立审查绑定最终head后执行。",
-    "verificationResult": "NOT_VERIFIED",,
+    "verificationResult": "NOT_VERIFIED",
 "id": "TASK-GOV-002",
     "title": "跨AI自主开发与分支质量门禁",
     "goal": "落实共同规则、代码文档一致性、Git/CI防线和真实保护边界",
