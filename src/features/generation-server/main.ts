@@ -35,6 +35,12 @@ const configSchema = z
           new Set(entries.map((entry) => entry.tokenEnv)).size ===
           entries.length,
         "principals.tokenEnv must be unique",
+      )
+      .refine(
+        (entries) =>
+          new Set(entries.map((entry) => entry.ownerId)).size ===
+          entries.length,
+        "principals.ownerId must be unique",
       ),
     connections: z.array(
       z

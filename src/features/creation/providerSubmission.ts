@@ -225,7 +225,15 @@ export async function reserveProviderSubmissionAsync(
       ...options,
       skipCapacity: true,
     });
-    if (activeLeaseIds.length >= connection.concurrencyLimit)
+    // A legacy record without lease IDs cannot be proven orphaned. Keep its
+    // occupied count conservatively; records with IDs are reconciled from live
+    // Web Locks and therefore can be safely reclaimed after a crash.
+    const legacyActiveJobs =
+      (connection.activeLeaseIds?.length ?? 0) === 0
+        ? (connection.activeJobs ?? 0)
+        : 0;
+    const occupied = Math.max(activeLeaseIds.length, legacyActiveJobs);
+    if (occupied >= connection.concurrencyLimit)
       throw new ProviderSubmissionError(
         "连接并发已满，请等待当前任务结束后重试。",
       );
@@ -256,7 +264,7 @@ export async function reserveProviderSubmissionAsync(
       // Reconcile orphaned legacy/crashed-tab metadata from the browser's live locks.
       updateProviderConnection(connection.id, (item) => ({
         ...item,
-        activeJobs: activeLeaseIds.length + 1,
+        activeJobs: occupied + 1,
         activeLeaseIds: [...activeLeaseIds, leaseId],
       }));
       const persisted = readProviderConnections().find(

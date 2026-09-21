@@ -88,10 +88,7 @@ test("审批阻断远程请求，部分成功矩阵单项重试回填且审阅�
   await expect(page.getByLabel("评论任务分配")).toHaveValue("reviewer");
 });
 
-test("任务暂停、恢复、取消和离线重试保留明确状态", async ({
-  page,
-  context,
-}) => {
+test("提交后暂停进入受理状态不明并保留已归档结果", async ({ page }) => {
   let finish: (() => void) | undefined;
   await page.route(endpoint, async (route) => {
     await new Promise<void>((resolve) => {
@@ -110,33 +107,15 @@ test("任务暂停、恢复、取消和离线重试保留明确状态", async ({
   await expect(page.locator(".project-task-running")).toBeVisible();
   await workbench(page);
   await page.getByRole("button", { name: "暂停", exact: true }).click();
-  await expect(
-    page.getByRole("button", { name: "恢复", exact: true }),
-  ).toBeVisible();
-  finish?.();
-  await context.setOffline(true);
-  await page.getByRole("button", { name: "恢复", exact: true }).click();
-  await expect(page.locator(".task-workbench-task-head")).toContainText("离线");
-  await context.setOffline(false);
-  await page.getByRole("button", { name: "重试剩余", exact: true }).click();
-  await page.getByRole("button", { name: "批准并提交" }).click();
-  await page.locator(".task-queue-item").last().click();
-  await page.getByRole("button", { name: "暂停", exact: true }).click();
-  await expect(
-    page.getByRole("button", { name: "恢复", exact: true }),
-  ).toBeVisible();
-  await expect(
-    page
-      .getByTestId("task-workbench")
-      .getByRole("button", { name: "取消", exact: true }),
-  ).toBeVisible();
-  await page
-    .getByTestId("task-workbench")
-    .getByRole("button", { name: "取消", exact: true })
-    .click();
   await expect(page.locator(".task-workbench-task-head")).toContainText(
-    "已取消",
+    "受理状态不明",
   );
+  await expect(
+    page.getByRole("button", { name: "恢复", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "重试剩余", exact: true }),
+  ).toHaveCount(0);
   finish?.();
 });
 
@@ -162,7 +141,7 @@ test("指定风格参考槽可上传并移除，展开按钮仍可点击", async
   ).toHaveCount(0);
 });
 
-test("16 项批次在归档 10 项后暂停，恢复只请求剩余 6 项", async ({ page }) => {
+test("16 项批次在归档 10 项后暂停，剩余受理状态进入未知", async ({ page }) => {
   const counts: number[] = [];
   let release: (() => void) | undefined;
   await page.route(endpoint, async (route) => {
@@ -188,14 +167,13 @@ test("16 项批次在归档 10 项后暂停，恢复只请求剩余 6 项", asyn
   await page.getByRole("tab", { name: "Generate" }).click();
   await expect(page.locator(".batch-cell.is-succeeded")).toHaveCount(10);
   await page.getByRole("button", { name: "暂停", exact: true }).click();
-  await expect(
-    page.getByRole("button", { name: "恢复", exact: true }),
-  ).toBeVisible();
+  await expect(page.locator(".task-workbench-task-head")).toContainText(
+    "受理状态不明",
+  );
   await expect(page.locator(".batch-cell.is-succeeded")).toHaveCount(10);
   release?.();
-  await page.getByRole("button", { name: "恢复", exact: true }).click();
-  await expect(page.locator(".batch-cell.is-succeeded")).toHaveCount(16);
-  expect(counts).toEqual([10, 6, 6]);
+  await expect(page.locator(".batch-cell.is-succeeded")).toHaveCount(10);
+  expect(counts).toEqual([10, 6]);
 });
 
 test("重复重试被锁定，重试任务再次重试后回填原始输出", async ({ page }) => {

@@ -258,9 +258,11 @@ test("provider image cancellation cannot publish a late success", async ({
     page.getByRole("button", { name: "取消图片生成" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "取消图片生成" }).click();
+  // A request that reached the Provider cannot be proven not to have been
+  // accepted after the client aborts it, so it is fenced as unknown.
   await expect
     .poll(async () => (await activeProject(page)).tasks.at(-1)?.status)
-    .toBe("cancelled");
+    .toBe("unknown");
   await release?.();
   await page.waitForTimeout(100);
   const project = await activeProject(page);

@@ -432,6 +432,7 @@ export default function App() {
           },
           { explicitRetry: explicitRetry || Boolean(task.retryOfTaskId) },
         );
+      if (controller.signal.aborted) throw new Error("任务已停止。");
       outputs = outputs.map((output) =>
         output.status === "succeeded"
           ? output

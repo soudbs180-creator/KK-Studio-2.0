@@ -223,7 +223,12 @@ test("运行中的图片任务可取消并停留在当前项目", async ({ page 
     .locator(".project-task-running")
     .getByRole("button", { name: "取消" })
     .click();
-  await expect(page.locator(".project-task-cancelled")).toContainText("已取消");
+  // Once the Provider request has started, aborting the browser fetch cannot
+  // prove that the Provider did not accept it. The task must be fenced as
+  // unknown instead of appearing safely retryable.
+  await expect(page.locator(".project-task-unknown")).toContainText(
+    "受理状态不明",
+  );
 });
 
 test("工作台未发送的输入和附件随项目保存，切换回来仍可继续", async ({
