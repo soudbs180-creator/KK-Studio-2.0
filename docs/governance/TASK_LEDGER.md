@@ -40,7 +40,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AUDIT-SEC-001 | 安全边界与异常任务状态审计 | REVIEW | TASK-GOV-001 | root |
 | TASK-GOV-002 | 跨AI自主开发与分支质量门禁 | PARTIAL | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 
-
 ## T0 — 可复现候选源码与主线整合
 
 - Goal: 可复现候选源码与主线整合
@@ -428,6 +427,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/App.tsx, src/domain/modelProvider.ts, src/domain/providerConnections.ts, src/features/creation/taskRecovery.ts, src/features/generation-server/repository.ts, src/features/generation-server/http.ts, src/features/generation-server/main.ts, src-tauri/src/task_host.rs, tests/unit
 - Verification: NOT_VERIFIED — 针对性验证157/157 Node单测、TypeScript和Rust TaskHost 7/7通过；closeout已完成三项原PARTIAL风险的实现。完整lint、format、build、ui:check、browser preview、Tauri release与独立审查绑定最终head后执行。
 - Evidence: [docs/changes/2026-09-21-security-audit/audit.md](../../docs/changes/2026-09-21-security-audit/audit.md), [docs/changes/2026-09-21-security-audit/verification.md](../../docs/changes/2026-09-21-security-audit/verification.md), [docs/changes/2026-09-21-security-audit-closeout/intent.md](../../docs/changes/2026-09-21-security-audit-closeout/intent.md), [docs/changes/2026-09-21-security-audit-closeout/spec.md](../../docs/changes/2026-09-21-security-audit-closeout/spec.md), [docs/changes/2026-09-21-security-audit-closeout/plan.md](../../docs/changes/2026-09-21-security-audit-closeout/plan.md), [docs/changes/2026-09-21-security-audit-closeout/verification.md](../../docs/changes/2026-09-21-security-audit-closeout/verification.md), [docs/changes/2026-09-21-security-audit-closeout/review.md](../../docs/changes/2026-09-21-security-audit-closeout/review.md)
+- Updated: 2026-09-21
+
 ## TASK-GOV-002 — 跨AI自主开发与分支质量门禁
 
 - Goal: 落实共同规则、代码文档一致性、Git/CI防线和真实保护边界
@@ -438,5 +439,4 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: docs, scripts/governance, .github, .githooks, config, tests/unit/deliveryPolicy.test.ts, tests/unit/gitPushPolicy.test.ts, tests/evals
 - Verification: PARTIAL — PR #4 已 squash 合入 main，merge 92c1ef1；hosted delivery/verify、Rust fmt/test、client check、Tauri no-bundle build 全部成功；治理32tasks/0、push9/9、delivery12/12、AI场景12/12、基线正反例2/2。服务器 protection/rulesets API403仍BLOCKED，本地hook不能替代远端强制保护；产品代码、既有测试、旧证据和其他任务提交未由本任务写入。
 - Evidence: [docs/changes/2026-09-20-ai-sdlc/verification.md](../../docs/changes/2026-09-20-ai-sdlc/verification.md), [docs/changes/2026-09-21-ai-sdlc-closeout/verification.md](../../docs/changes/2026-09-21-ai-sdlc-closeout/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json)
-
 - Updated: 2026-09-21
