@@ -77,7 +77,8 @@ import {
   readProviderConnections,
 } from "./features/creation/providerRegistry";
 import {
-  reserveProviderSubmission,
+  reserveProviderSubmissionAsync,
+  type ProviderSubmissionReservation,
   ProviderSubmissionError,
 } from "./features/creation/providerSubmission";
 import { mapWithConcurrency } from "./features/creation/generationQueue";
@@ -406,7 +407,7 @@ export default function App() {
         if (latest) replaceCanvasItems(latest.items);
       }
     };
-    let reservation: ReturnType<typeof reserveProviderSubmission> | undefined;
+    let reservation: ProviderSubmissionReservation | undefined;
     const nativeTaskHost = usesNativeTaskHost();
     try {
       if (!task.providerBaseUrl)
@@ -422,7 +423,7 @@ export default function App() {
       const promptHash = await hashPrompt(compiledPrompt);
       if (controller.signal.aborted) throw new Error("任务已停止。");
       if (!nativeTaskHost)
-        reservation = reserveProviderSubmission(
+        reservation = await reserveProviderSubmissionAsync(
           {
             id: task.providerConnectionId,
             baseUrl: task.providerBaseUrl,
@@ -909,7 +910,12 @@ export default function App() {
         });
       }
     } finally {
-      reservation?.release();
+      try {
+        await reservation?.release();
+      } catch {
+        // A failed release cannot silently submit another request: the live
+        // browser lock remains held until the task document terminates.
+      }
       if (taskControllers.current[taskId] === controller)
         delete taskControllers.current[taskId];
     }

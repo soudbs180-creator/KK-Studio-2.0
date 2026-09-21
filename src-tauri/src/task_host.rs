@@ -7,6 +7,7 @@ use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 use std::fs;
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr};
 use std::path::{Path, PathBuf};
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -25,6 +26,8 @@ const MAX_BASE_URL: usize = 2_048;
 const MAX_ATTACHMENT_NAME: usize = 200;
 const MAX_RESPONSE_BYTES: usize = 100 * 1024 * 1024;
 const MAX_OUTPUTS: usize = 10;
+const PROVIDER_CONNECT_TIMEOUT: Duration = Duration::from_secs(10);
+const PROVIDER_REQUEST_TIMEOUT: Duration = Duration::from_secs(120);
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -105,23 +108,15 @@ pub struct TaskHost {
     root: PathBuf,
     assets: Arc<AssetRepository>,
     jobs: Mutex<HashMap<String, JobControl>>,
-    client: Client,
 }
 
 impl TaskHost {
     pub fn new(root: PathBuf, assets: Arc<AssetRepository>) -> Result<Self, String> {
         io::directory(&root)?;
-        let client = Client::builder()
-            .connect_timeout(Duration::from_secs(10))
-            .timeout(Duration::from_secs(120))
-            .redirect(reqwest::redirect::Policy::none())
-            .build()
-            .map_err(|_| "io: 原生任务网络客户端不可用".to_string())?;
         let host = Self {
             root,
             assets,
             jobs: Mutex::new(HashMap::new()),
-            client,
         };
         host.recover_submitted()?;
         Ok(host)
@@ -406,6 +401,14 @@ impl TaskHost {
         if control.cancelled.load(Ordering::Acquire) {
             return Err(RunError::failed("cancelled", "任务在发送前已取消"));
         }
+        let provider_base = reqwest::Url::parse(&request.base_url)
+            .map_err(|_| RunError::failed("invalid_request", "供应商地址无效"))?;
+        let provider_client = pinned_download_client(&provider_base)
+            .await
+            .map_err(|message| RunError::failed("invalid_request", message))?;
+        if control.cancelled.load(Ordering::Acquire) {
+            return Err(RunError::failed("cancelled", "任务在发送前已取消"));
+        }
         let endpoint = if attachments.is_empty() {
             format!(
                 "{}/images/generations",
@@ -414,8 +417,7 @@ impl TaskHost {
         } else {
             format!("{}/images/edits", request.base_url.trim_end_matches('/'))
         };
-        let mut builder = self
-            .client
+        let mut builder = provider_client
             .post(&endpoint)
             .bearer_auth(&secret)
             .header("Idempotency-Key", &request.idempotency_key);
@@ -546,7 +548,7 @@ impl TaskHost {
                     }
                 }
             } else if let Some(url) = item.get("url").and_then(Value::as_str) {
-                download_result(&self.client, url)
+                download_result(&provider_base, url)
                     .await
                     .map_err(|e| RunError::unknown("provider_unavailable", e, ids.clone()))?
             } else {
@@ -659,27 +661,32 @@ fn class_for_status(status: StatusCode) -> &'static str {
 }
 
 async fn download_result(
-    client: &Client,
+    provider_base: &reqwest::Url,
     value: &str,
 ) -> Result<(Vec<u8>, &'static str), &'static str> {
-    download_result_with_limit(client, value, MAX_RESPONSE_BYTES).await
+    download_result_with_limit(provider_base, value, MAX_RESPONSE_BYTES).await
 }
 
 async fn download_result_with_limit(
-    client: &Client,
+    provider_base: &reqwest::Url,
     value: &str,
     max_bytes: usize,
 ) -> Result<(Vec<u8>, &'static str), &'static str> {
     let parsed = reqwest::Url::parse(value).map_err(|_| "供应商结果地址无效")?;
-    if !matches!(parsed.scheme(), "https" | "http")
+    if !same_origin(provider_base, &parsed)
+        || !matches!(parsed.scheme(), "https" | "http")
         || parsed.query().is_some()
         || parsed.fragment().is_some()
         || parsed.username() != ""
         || parsed.password().is_some()
     {
+        return Err("供应商结果来源不在允许范围");
+    }
+    if parsed.scheme() == "http" && !is_loopback_host(parsed.host_str().unwrap_or_default()) {
         return Err("供应商结果地址不安全");
     }
-    let response = client
+    let download_client = pinned_download_client(&parsed).await?;
+    let response = download_client
         .get(parsed)
         .send()
         .await
@@ -719,6 +726,125 @@ async fn download_result_with_limit(
     Ok((bytes, mime))
 }
 
+/// Return true when two URLs have the same network origin.  Result URLs are
+/// intentionally limited to the configured provider origin; provider-signed
+/// CDN URLs need an explicit provider configuration instead of widening this
+/// check at the IPC boundary.
+fn same_origin(left: &reqwest::Url, right: &reqwest::Url) -> bool {
+    left.scheme().eq_ignore_ascii_case(right.scheme())
+        && left
+            .host_str()
+            .zip(right.host_str())
+            .is_some_and(|(a, b)| a.eq_ignore_ascii_case(b))
+        && left.port_or_known_default() == right.port_or_known_default()
+}
+
+fn is_loopback_host(host: &str) -> bool {
+    normalized_host(host)
+        .parse::<IpAddr>()
+        .map(|address| address.is_loopback())
+        .unwrap_or_else(|_| normalized_host(host).eq_ignore_ascii_case("localhost"))
+}
+
+fn normalized_host(host: &str) -> &str {
+    host.trim_end_matches('.')
+        .strip_prefix('[')
+        .and_then(|value| value.strip_suffix(']'))
+        .unwrap_or(host.trim_end_matches('.'))
+}
+
+/// DNS pinning only accepts globally routable addresses for remote HTTPS
+/// origins.  This covers RFC1918, link-local, documentation, benchmark,
+/// multicast, carrier-grade NAT, and cloud metadata address ranges.
+fn is_public_ip(address: IpAddr) -> bool {
+    match address {
+        IpAddr::V4(value) => is_public_ipv4(value),
+        IpAddr::V6(value) => is_public_ipv6(value),
+    }
+}
+
+fn is_public_ipv4(value: Ipv4Addr) -> bool {
+    let [a, b, c, d] = value.octets();
+    let private_or_reserved = a == 0
+        || a == 10
+        || a == 127
+        || (a == 100 && (64..=127).contains(&b))
+        || (a == 169 && b == 254)
+        || (a == 172 && (16..=31).contains(&b))
+        || (a == 192 && b == 0 && c == 0)
+        || (a == 192 && b == 0 && c == 2)
+        || (a == 192 && b == 88 && c == 99)
+        || (a == 192 && b == 168)
+        || (a == 198 && b == 18)
+        || (a == 198 && b == 19)
+        || (a == 198 && b == 51 && c == 100)
+        || (a == 203 && b == 0 && c == 113)
+        || a >= 224;
+    !private_or_reserved && !(a == 169 && b == 254 && c == 169 && d == 254)
+}
+
+fn is_public_ipv6(value: Ipv6Addr) -> bool {
+    if let Some(mapped) = value.to_ipv4() {
+        return is_public_ipv4(mapped);
+    }
+    let segments = value.segments();
+    let documentation = segments[0] == 0x2001 && segments[1] == 0x0db8;
+    !value.is_loopback()
+        && !value.is_unspecified()
+        && !value.is_unique_local()
+        && !value.is_unicast_link_local()
+        && segments[0] & 0xff00 != 0xff00
+        && !documentation
+}
+
+/// Resolve a provider/result host once and force reqwest to connect to that
+/// address.  Redirects are disabled on the client, so a later response cannot
+/// escape the origin or bypass the pinned DNS answer.
+async fn pinned_download_client(url: &reqwest::Url) -> Result<Client, &'static str> {
+    let host = url.host_str().ok_or("供应商地址缺少主机名")?;
+    let lookup_host = normalized_host(host);
+    let port = url.port_or_known_default().ok_or("供应商地址缺少端口")?;
+    let local = is_loopback_host(host);
+    if url.scheme() == "http" && !local {
+        return Err("供应商结果地址不安全");
+    }
+    if url.scheme() != "https" && url.scheme() != "http" {
+        return Err("供应商地址协议不安全");
+    }
+    let addresses: Vec<SocketAddr> = if let Ok(address) = lookup_host.parse::<IpAddr>() {
+        vec![SocketAddr::new(address, port)]
+    } else {
+        tokio::net::lookup_host((lookup_host, port))
+            .await
+            .map_err(|_| "供应商地址解析失败")?
+            .collect()
+    };
+    if addresses.is_empty() {
+        return Err("供应商地址解析失败");
+    }
+    let mut selected = None;
+    for address in addresses {
+        let accepted = if local {
+            address.ip().is_loopback()
+        } else {
+            is_public_ip(address.ip())
+        };
+        if !accepted {
+            return Err("供应商地址解析到了受限网络");
+        }
+        selected.get_or_insert(address);
+    }
+    let target = selected.ok_or("供应商地址解析失败")?;
+    Client::builder()
+        .connect_timeout(PROVIDER_CONNECT_TIMEOUT)
+        .timeout(PROVIDER_REQUEST_TIMEOUT)
+        .redirect(reqwest::redirect::Policy::none())
+        .no_proxy()
+        .resolve(lookup_host, target)
+        .build()
+        .map_err(|_| "io: 原生任务网络客户端不可用")
+}
+
 fn append_bounded_chunk(
     bytes: &mut Vec<u8>,
     chunk: &[u8],
@@ -747,6 +873,19 @@ fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
         || url.fragment().is_some()
         || url.username() != ""
         || url.password().is_some()
+        || url.host_str().is_none()
+    {
+        return Err("invalid: baseUrl".into());
+    }
+    let host = url.host_str().unwrap_or_default();
+    if url.scheme() == "http" && !is_loopback_host(host) {
+        return Err("invalid: baseUrl".into());
+    }
+    if url.scheme() == "https"
+        && !is_loopback_host(host)
+        && normalized_host(host)
+            .parse::<IpAddr>()
+            .is_ok_and(|address| !is_public_ip(address))
     {
         return Err("invalid: baseUrl".into());
     }
@@ -915,6 +1054,44 @@ mod tests {
         r.base_url = "https://x.test".into();
         r.output_indices = vec![1, 1];
         assert!(validate_request(&r).is_err());
+        r.output_indices = vec![0];
+        r.base_url = "http://provider.test/v1".into();
+        assert!(validate_request(&r).is_err());
+        r.base_url = "http://127.0.0.1:1234/v1".into();
+        assert!(validate_request(&r).is_ok());
+        r.base_url = "http://[::1]:1234/v1".into();
+        assert!(validate_request(&r).is_ok());
+    }
+
+    #[test]
+    fn result_urls_are_limited_to_provider_origin() {
+        let provider = reqwest::Url::parse("https://provider.test/v1").unwrap();
+        assert!(same_origin(
+            &provider,
+            &reqwest::Url::parse("https://provider.test/results/1").unwrap()
+        ));
+        assert!(!same_origin(
+            &provider,
+            &reqwest::Url::parse("https://cdn.provider.test/results/1").unwrap()
+        ));
+        assert!(!same_origin(
+            &provider,
+            &reqwest::Url::parse("http://provider.test/results/1").unwrap()
+        ));
+    }
+
+    #[test]
+    fn dns_pinning_rejects_non_public_addresses() {
+        assert!(!is_public_ip("10.0.0.1".parse().unwrap()));
+        assert!(!is_public_ip("169.254.169.254".parse().unwrap()));
+        assert!(!is_public_ip("192.168.1.10".parse().unwrap()));
+        assert!(!is_public_ip("127.0.0.1".parse().unwrap()));
+        assert!(!is_public_ip("::1".parse().unwrap()));
+        assert!(!is_public_ip("fc00::1".parse().unwrap()));
+        assert!(is_public_ip("8.8.8.8".parse().unwrap()));
+        assert!(is_public_ip("2001:4860:4860::8888".parse().unwrap()));
+        assert!(is_loopback_host("[::1]"));
+        assert_eq!(normalized_host("[2001:db8::1]"), "2001:db8::1");
     }
     #[test]
     fn malformed_journal_fails_closed() {

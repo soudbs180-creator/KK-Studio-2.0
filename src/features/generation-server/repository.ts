@@ -69,12 +69,53 @@ export class GenerationRepository {
       limit > 256
     )
       throw new PlatformError("INVALID_ACCOUNT");
-    // Provision once. A process restart must never restore previously spent credit.
-    this.db
-      .prepare(
-        "INSERT OR IGNORE INTO credit_accounts(owner_id,balance,concurrency_limit) VALUES(?,?,?)",
-      )
-      .run(ownerId, balance, limit);
+    this.transaction(() => {
+      const existing = this.db
+        .prepare(
+          "SELECT balance, concurrency_limit FROM credit_accounts WHERE owner_id=?",
+        )
+        .get(ownerId) as
+        { balance: number; concurrency_limit: number } | undefined;
+      if (!existing) {
+        this.db
+          .prepare(
+            "INSERT INTO credit_accounts(owner_id,balance,concurrency_limit) VALUES(?,?,?)",
+          )
+          .run(ownerId, balance, limit);
+        this.db
+          .prepare("INSERT INTO credit_account_provisioning VALUES(?,?)")
+          .run(ownerId, balance);
+        return;
+      }
+      const provisioned = this.db
+        .prepare(
+          "SELECT initial_credits FROM credit_account_provisioning WHERE owner_id=?",
+        )
+        .get(ownerId) as { initial_credits: number } | undefined;
+      // Upgrade old accounts using balance + all settled debits, never the
+      // configured value. This detects config drift without replenishing spend.
+      const settled = this.db
+        .prepare(
+          `SELECT COALESCE(SUM(s.actual_units),0) AS spent
+          FROM credit_settlements s JOIN credit_reservations r ON r.id=s.reservation_id
+          WHERE r.owner_id=?`,
+        )
+        .get(ownerId) as { spent: number };
+      const initialCredits =
+        provisioned?.initial_credits ?? existing.balance + settled.spent;
+      if (!Number.isSafeInteger(initialCredits) || initialCredits !== balance)
+        throw new PlatformError("ACCOUNT_CONFIG_CONFLICT", 409);
+      if (!provisioned)
+        this.db
+          .prepare("INSERT INTO credit_account_provisioning VALUES(?,?)")
+          .run(ownerId, initialCredits);
+      if (existing.concurrency_limit !== limit)
+        this.db
+          .prepare(
+            "UPDATE credit_accounts SET concurrency_limit=? WHERE owner_id=?",
+          )
+          .run(limit, ownerId);
+    });
   }
   register(
     connection: ProviderConnection,

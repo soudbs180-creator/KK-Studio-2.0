@@ -29,6 +29,39 @@ function setup(path = ":memory:") {
   r.register(connection, { ownerId: "alice", unitPrice: 1, costLimit: 200 });
   return r;
 }
+
+test("account preserves an existing credit ledger while applying concurrency policy", () => {
+  const r = new GenerationRepository(":memory:");
+  try {
+    r.account("alice", 200, 2);
+    r.db
+      .prepare("UPDATE credit_accounts SET balance=? WHERE owner_id=?")
+      .run(173, "alice");
+    assert.throws(
+      () => r.account("alice", 201, 4),
+      (error: unknown) =>
+        error instanceof Error && error.message === "ACCOUNT_CONFIG_CONFLICT",
+    );
+    const unchanged = r.db
+      .prepare(
+        "SELECT balance, concurrency_limit FROM credit_accounts WHERE owner_id=?",
+      )
+      .get("alice") as { balance: number; concurrency_limit: number };
+    assert.equal(unchanged.balance, 173);
+    assert.equal(unchanged.concurrency_limit, 2);
+
+    r.account("alice", 200, 4);
+    const updated = r.db
+      .prepare(
+        "SELECT balance, concurrency_limit FROM credit_accounts WHERE owner_id=?",
+      )
+      .get("alice") as { balance: number; concurrency_limit: number };
+    assert.equal(updated.balance, 173);
+    assert.equal(updated.concurrency_limit, 4);
+  } finally {
+    r.close();
+  }
+});
 const input = (idempotencyKey = "one", requestedOutputs = 1) => ({
   connectionId: "byok",
   idempotencyKey,

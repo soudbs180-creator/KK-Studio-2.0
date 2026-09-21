@@ -21,3 +21,13 @@
 - **TaskHost Provider 结果 URL 来源限制（P1）**：`download_result` 仍允许 Provider 返回任意 `http(s)` URL（不跟随重定向但没有 origin allowlist/DNS pinning）。受攻击或恶意 Provider 可诱导桌面进程访问内网地址。下一步应按配置的 HTTPS allowlist、loopback 本地适配器和固定 DNS/IP 策略收口，不能把当前大小限制描述为 SSRF 已解决。
 
 这些未闭环项已写入 `task-ledger.json` 的 TASK-AUDIT-SEC-001，状态为 PARTIAL。
+
+## 勘误与收口（2026-09-21）
+
+原审计把以下三项列为未闭环；本次 closeout 已在同一隔离分支完成实现，原段落保留作为历史审计事实：
+
+1. Web 连接预留改为 Web Locks 协调。一个注册表锁串行化容量读取/写入，一个按连接的长生命周期 slot lock 持有实际提交期间的占用；关闭或崩溃会释放浏览器锁。下一次预留根据当前 held locks 重建 activeLeaseIds，清理旧版本孤儿元数据；不支持 Web Locks 的浏览器 fail closed。
+2. Gateway 新增 `credit_account_provisioning.initial_credits`。首次创建记录初始额度；旧数据库按当前余额加已结算用量回填。启动配置改变初始额度会返回 `ACCOUNT_CONFIG_CONFLICT`，不会覆盖已消费余额；额度一致时只更新并发策略。
+3. TaskHost 结果下载限制为配置 Provider 的同 origin，HTTPS 公网地址必须通过一次性 DNS 解析并 pin 到允许的公网 IP；loopback HTTP 仅限回环解析。重定向、凭据、query、fragment 和受限网络地址拒绝；DNS/client 构造完成后、发送前再次检查取消。
+
+针对性证据见 [closeout verification](../2026-09-21-security-audit-closeout/verification.md)。完整 verify、production preview 和 Tauri release 矩阵仍需绑定最终 head 后执行。
