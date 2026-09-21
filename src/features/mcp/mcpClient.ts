@@ -10,6 +10,16 @@ const DEFAULT_TIMEOUT_MS = 15_000;
 
 export const MCP_SERVERS_STORAGE_KEY = "kk-studio-next:mcp-servers:v1";
 
+const CREDENTIAL_PATTERNS = [
+  /(?:api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret|password)\s*[:=]/i,
+  /sk-[A-Za-z0-9_-]{12,}/,
+  /-----BEGIN [A-Z ]+ PRIVATE KEY-----/,
+  /(?:Bearer|Basic)\s+[A-Za-z0-9+/._-]{16,}/i,
+];
+function containsCredentialLikeText(value: string): boolean {
+  return CREDENTIAL_PATTERNS.some((pattern) => pattern.test(value));
+}
+
 function isLoopback(hostname: string): boolean {
   const host = hostname.toLowerCase().replace(/^\[|\]$/g, "");
   return host === "localhost" || host === "127.0.0.1" || host === "::1";
@@ -35,7 +45,15 @@ export const mcpServerSchema = z
       .min(1)
       .max(100)
       .regex(/^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/),
-    name: z.string().trim().min(1).max(120),
+    name: z
+      .string()
+      .trim()
+      .min(1)
+      .max(120)
+      .refine(
+        (value) => !containsCredentialLikeText(value),
+        "MCP 名称疑似包含密钥或凭据",
+      ),
     transport: z.literal("streamable_http"),
     endpoint: z.string().trim().min(1).max(2048),
     enabled: z.boolean().default(true),

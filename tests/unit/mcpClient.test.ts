@@ -69,6 +69,23 @@ test("server registry persists endpoint metadata without credentials or session 
   assert.deepEqual(new McpServerRegistry(storage).list(), [server]);
 });
 
+test("MCP server labels reject credential-like text before persistence", () => {
+  const storage = new MemoryStorage();
+  const registry = new McpServerRegistry(storage);
+  assert.equal(
+    mcpServerSchema.safeParse({
+      ...server,
+      name: "api_key: pasted-secret",
+    }).success,
+    false,
+  );
+  assert.throws(
+    () => registry.add({ ...server, name: "Bearer abcdefghijklmnop" }),
+    /MCP 名称疑似包含密钥或凭据/,
+  );
+  assert.equal(storage.getItem(MCP_SERVERS_STORAGE_KEY), null);
+});
+
 test("corrupted MCP persistence is reported and cannot be overwritten", () => {
   const registry = new McpServerRegistry(new CorruptedStorage());
   assert.match(registry.persistenceWarning, /无法读取/);
