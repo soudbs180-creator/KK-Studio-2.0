@@ -1,19 +1,21 @@
 {
   "stats": {
-    "startTime": "2026-09-20T16:12:27.708Z",
-    "duration": 50833.276,
+    "startTime": "2026-09-21T01:30:14+00:00",
+    "endTime": "2026-09-21T01:32:37+00:00",
+    "duration": 143000,
     "expected": 197,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
   },
   "errors": [],
-  "verification": "npm run verify (final candidate)",
+  "verification": "npm run verify (current candidate)",
   "nodeTests": 172,
   "uiFiles": 121,
   "sourceBranch": "codex/TASK-MAIN-CLOSE-002",
-  "sourceCommit": "e4fcf83",
-  "extraWorkingChange": "design-corrections screenshots now write test-results",
-  "finalHead": "e4fcf83",
-  "note": "三模式 runtime evidence generated from product candidate 8369185; subsequent commits merged governance/docs and formatted the audit script; final HEAD verify rerun at e4fcf83 with 172 Node tests and 197 browser tests."
+  "sourceCommit": "bb96dadc08c12a2177481d2ae1e4dda605cc77d4",
+  "finalHead": "bb96dadc08c12a2177481d2ae1e4dda605cc77d4",
+  "evidenceLog": ".tmp/verify-batched-final-2.log",
+  "runtimeSourceCommit": "8369185",
+  "note": "当前候选在 2026-09-21 09:30:14-09:32:37（Asia/Shanghai）本地完整 verify：172 Node、197 browser、UI121/0、0 failure/flaky；三模式 runtime 证据的产品运行代码源仍为 8369185。"
 }

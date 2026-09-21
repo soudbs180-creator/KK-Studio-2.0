@@ -427,7 +427,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-MAIN-CLOSE-002`
 - Worktree: `C:/Users/Administrator/.codex/worktrees/task-main-close-002/kk-studio-next`
 - Modules: tests/browser, docs/governance, docs/PROGRESS.md
-- Verification: PASS — 整合候选已完成 npm verify（151 Node、197 browser、0 failure/flaky、UI121/0）、Rust 61/61、client build；dev1421、preview1423、Tauri 三模式 runtime 与实际 bundle C6RT8Uju/EXE SHA 已通过。待 PR/CI、合入最新main后再关闭。
+- Verification: PARTIAL — 整合候选 bb96dadc08c12a2177481d2ae1e4dda605cc77d4 已合入 origin/main 3c4d012846e53095bd4f11343a1cd2ef61aa3bbd 之后形成；当前候选本地 npm run verify 为 172 Node、197 browser、0 failure/flaky、UI121/0，Rust61/61、fmt、client check 通过；三模式 runtime 产品代码证据源为 8369185。PR #8 的 delivery 曾成功，但 hosted verify 因 GitHub 账号付款/支出额度限制未启动，任务保持 IN_PROGRESS，待恢复 Actions 后重跑 CI、合并并回读 main。
 - Evidence: [docs/changes/2026-09-20-main-close-002/intent.md](../../docs/changes/2026-09-20-main-close-002/intent.md), [docs/changes/2026-09-20-main-close-002/spec.md](../../docs/changes/2026-09-20-main-close-002/spec.md), [docs/changes/2026-09-20-main-close-002/plan.md](../../docs/changes/2026-09-20-main-close-002/plan.md), [docs/changes/2026-09-20-main-close-002/verification.md](../../docs/changes/2026-09-20-main-close-002/verification.md), [docs/changes/2026-09-20-main-close-002/review.md](../../docs/changes/2026-09-20-main-close-002/review.md)
 - Updated: 2026-09-21
 
@@ -463,6 +463,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-GOV-002-closeout`
 - Worktree: `D:/kk-studio-next/.worktrees/TASK-GOV-002-CLOSEOUT`
 - Modules: docs, scripts/governance, .github, .githooks, config, tests/unit/deliveryPolicy.test.ts, tests/unit/gitPushPolicy.test.ts, tests/evals
-- Verification: PARTIAL — PR #4 已 squash 合入 main，merge 92c1ef1；hosted delivery/verify、Rust fmt/test、client check、Tauri no-bundle build 全部成功；治理32tasks/0、push9/9、delivery12/12、AI场景12/12、基线正反例2/2。服务器 protection/rulesets API403仍BLOCKED，本地hook不能替代远端强制保护；产品代码、既有测试、旧证据和其他任务提交未由本任务写入。
+- Verification: PARTIAL — PR #4 已 squash 合入 main；后续 PR #7 governance closeout merge 3c4d012；hosted delivery/verify、Rust fmt/test、client check、Tauri no-bundle build 全部成功；治理35tasks/0、push9/9、delivery12/12、AI场景12/12、基线正反例2/2。服务器 protection/rulesets API403仍BLOCKED，本地hook不能替代远端强制保护；产品代码、既有测试、旧证据和其他任务提交未由本任务写入。
 - Evidence: [docs/changes/2026-09-20-ai-sdlc/verification.md](../../docs/changes/2026-09-20-ai-sdlc/verification.md), [docs/changes/2026-09-21-ai-sdlc-closeout/verification.md](../../docs/changes/2026-09-21-ai-sdlc-closeout/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json)
 - Updated: 2026-09-21

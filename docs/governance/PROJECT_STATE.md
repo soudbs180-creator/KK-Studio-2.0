@@ -1,5 +1,11 @@
 # 当前项目状态
 
+## 2026-09-21 TASK-MAIN-CLOSE-002 当前候选
+
+- 当前整合候选为 `bb96dadc08c12a2177481d2ae1e4dda605cc77d4`，其基线是已回读的 `origin/main=3c4d012846e53095bd4f11343a1cd2ef61aa3bbd`（PR #7 governance closeout）。候选尚未合入稳定 main。
+- 当前候选本地完整 verify 由 2026-09-21 09:30:14（Asia/Shanghai）后的日志记录为 172 Node、197 browser、UI121/0、0 failure/flaky；Rust 61/61、fmt、client check 通过。三模式 runtime 产品代码证据仍绑定 8369185，后续仅有测试、治理和文档变更。
+- PR #8 的 delivery 曾成功，但 hosted verify 因 GitHub 账号付款失败或 spending limit 未启动；TASK-MAIN-CLOSE-002 保持 IN_PROGRESS。UI-004、PERF-001、T5、Astra 迁移和远端服务器保护仍按账本保持 PARTIAL/BLOCKED。
+
 ## 2026-09-21 TASK-GOV-002 合入后状态
 
 - 远端 `origin/main` 已回读为 `92c1ef17c42030ef6976e039efe4775c4bdc0939`（squash merge PR #4）；合并前最新基线为 `c3ff0871b3db674e0ab073f1445879d84fee3507`，规则分支 head 为 `19215945573ca97dd4427f36ac8e074a1378f9fb`。PR：[规则治理 PR #4](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/4)。
