@@ -8,8 +8,9 @@ All checks below ran in `D:\kk-studio-next` on branch `codex/feat/minimax-deep-r
 - `node node_modules/eslint/bin/eslint.js src tests scripts eslint.config.mjs playwright.config.ts vite.config.ts --max-warnings 0` — PASS.
 - `node scripts/check-ui-standards.mjs` — PASS, 128 files / 0 violations.
 - `node node_modules/prettier/bin/prettier.cjs --check ...` — PASS.
-- `node --test tests/unit/*.test.ts` — PASS, 186 tests / 0 failures.
-- `node node_modules/typescript/bin/tsc -b; node node_modules/vite/bin/vite.js build` — PASS. Vite emitted `dist/assets/index-ZFAbYLae.js` and `dist/assets/index-DMyyqiRR.css`; only the existing zod annotation and chunk-size warnings remained.
+- `node --test tests/unit/*.test.ts` — PASS, 187 tests / 0 failures.
+- Skill registry focused regression — PASS, metadata containing `api_key:` is rejected before localStorage persistence.
+- `node node_modules/typescript/bin/tsc -b; node node_modules/vite/bin/vite.js build` — PASS. Vite emitted `dist/assets/index-C6KVyf0k.js` and `dist/assets/index-DMyyqiRR.css`; only the existing zod annotation and chunk-size warnings remained.
 - `node scripts/check-governance.mjs` — PASS after writing the current task view.
 - `cargo check --manifest-path src-tauri/Cargo.toml` — PASS, with the repository's existing three dead-code warnings; this is a compile check only, not a Tauri release/runtime acceptance.
 

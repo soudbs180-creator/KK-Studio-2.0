@@ -48,18 +48,10 @@ const TEMPLATE_SKILLS = [
 ] as const;
 
 const OFFICIAL_SKILLS = [
-  ["3D 动画短片", "根据故事创意完成角色、场景、镜头规划与视频整合。", "11.1k"],
-  [
-    "品牌宣传短片生成器",
-    "基于品牌素材与推广目标，完成脚本、分镜和音画合成。",
-    "8.0k",
-  ],
-  [
-    "极简产品广告生成器",
-    "从产品图片和广告需求出发，输出可编辑的卖点表达。",
-    "7.8k",
-  ],
-  ["H3 提示词专家", "把参考素材整理成可控的多模态视频生成指令。", "7.0k"],
+  ["3D 动画短片", "根据故事创意完成角色、场景、镜头规划与视频整合。"],
+  ["品牌宣传短片生成器", "基于品牌素材与推广目标，完成脚本、分镜和音画合成。"],
+  ["极简产品广告生成器", "从产品图片和广告需求出发，输出可编辑的卖点表达。"],
+  ["H3 提示词专家", "把参考素材整理成可控的多模态视频生成指令。"],
 ] as const;
 
 const MAX_IMPORT_BYTES = 2 * 1024 * 1024;
@@ -209,9 +201,12 @@ export default function SkillsPage({
         <>
           {tab === "catalog" && !query.trim() && (
             <>
-              <h2 className="catalog-section-title">官方精选</h2>
+              <h2 className="catalog-section-title">精选示例</h2>
+              <p className="catalog-page-subtitle">
+                本地演示 Prototype；没有联网目录、官方安装或下载统计。
+              </p>
               <div className="catalog-card-grid">
-                {OFFICIAL_SKILLS.map(([name, description, downloads]) => (
+                {OFFICIAL_SKILLS.map(([name, description]) => (
                   <button
                     className="catalog-card"
                     key={name}
@@ -229,7 +224,7 @@ export default function SkillsPage({
                     <div className="catalog-card-body">
                       <strong>{name}</strong>
                       <p>{description}</p>
-                      <small>KK Studio · ✓ · ↧ {downloads}</small>
+                      <small>KK Studio 本地演示 · Prototype · 仅本地预览</small>
                     </div>
                   </button>
                 ))}

@@ -187,6 +187,27 @@ test("rejects malformed imports and secret-like content", () => {
   );
 });
 
+test("rejects secret-like Skill metadata before persistence", () => {
+  const storage = new MemoryStorage();
+  const registry = createSkillRegistry(storage);
+  assert.throws(
+    () =>
+      registry.importSkill({
+        manifest: {
+          id: "unsafe-metadata",
+          name: "安全名称",
+          version: "0.1.0",
+          description: "api_key: leaked-value",
+          author: "本地",
+          category: "测试",
+        },
+        instructions: "保留安全文本",
+      }),
+    /Skill 描述疑似包含密钥或凭据/,
+  );
+  assert.equal(storage.getItem(SKILL_RECORDS_STORAGE_KEY), null);
+});
+
 test("persists complete local records and does not silently overwrite on write failure", () => {
   const storage = new MemoryStorage();
   const registry = createSkillRegistry(storage);

@@ -35,16 +35,24 @@ const instructionsSchema = z
   .min(1, "Skill 指令不能为空")
   .max(12_000, "Skill 指令不能超过 12000 字符")
   .refine((value) => !containsSecret(value), "Skill 指令疑似包含密钥或凭据");
+function metadataSchema(label: string, max: number) {
+  return z
+    .string()
+    .trim()
+    .min(1)
+    .max(max)
+    .refine((value) => !containsSecret(value), `${label}疑似包含密钥或凭据`);
+}
 
 export const skillManifestSchema = z
   .object({
     schemaVersion: z.literal(1).default(1),
     id: skillIdSchema,
-    name: z.string().trim().min(1).max(120),
+    name: metadataSchema("Skill 名称", 120),
     version: skillVersionSchema,
-    description: z.string().trim().min(1).max(2_000),
-    author: z.string().trim().min(1).max(120),
-    category: z.string().trim().min(1).max(80),
+    description: metadataSchema("Skill 描述", 2_000),
+    author: metadataSchema("Skill 作者", 120),
+    category: metadataSchema("Skill 分类", 80),
     permissions: z.array(skillPermissionSchema).max(16).default([]),
     dependencies: z.array(skillIdSchema).max(16).default([]),
     source: z.enum(["bundled", "local", "catalog"]).default("local"),
