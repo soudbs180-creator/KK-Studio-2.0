@@ -4,9 +4,12 @@ KK Studio 是以无限画布为中心的多模态 Agent 工作台。当前唯一
 
 ## 开始开发
 
+所有 AI 先读 [AGENTS.md](AGENTS.md) 和 [AI_RULES.md](AI_RULES.md)。你可以直接用日常语言提出想法，AI 负责转成工程需求、实现、验证和独立复核，最终用简洁中文汇报。多端分支、PR 和发布见 [BRANCH-POLICY](docs/engineering/BRANCH-POLICY.md)。新任务从 fetch 后的 origin/main 创建隔离 worktree；下方路径是本机仓库示例，不表示可以在历史 dirty 根目录直接开发。
+
 ```powershell
 cd D:\kk-studio-next
 npm ci
+npm run git:guards
 npm run dev
 ```
 
@@ -47,7 +50,7 @@ docs/                     # 当前规范、架构、计划和验证证据
 
 代码仓库只放源码、设计导出资源、演示素材、schema、测试和脱敏文档。模型权重不进 Git，也不复制到仓库。
 
-桌面客户端的运行时根目录是 `%APPDATA%\kk-studio\`（由 Tauri `dirs::data_dir()` 决定），并按 `app/`、`providers/`、`profile/`、`memory/`、`projects/`、`conversations/`、`assets/`、`models/`、`comfyui/`、`cache/`、`backups/` 和 `logs/` 分区。API Key 只进 Windows Credential Manager；JSON、SQLite、浏览器 localStorage、URL 和日志都不得保存密钥。模型权重继续使用用户选定的 ComfyUI/模型目录，客户端只保存路径、类别、大小、mtime 和 hash 等索引信息。
+桌面客户端的运行时根目录是 `%APPDATA%\kk-studio\`（由 Tauri `dirs::data_dir()` 决定），并按 `app/`、`providers/`、`profile/`、`memory/`、`projects/`、`conversations/`、`assets/`、`models/`、`comfyui/`、`tasks/`、`cache/`、`backups/` 和 `logs/` 分区。API Key 只进 Windows Credential Manager；JSON、SQLite、浏览器 localStorage、URL 和日志都不得保存密钥。模型权重继续使用用户选定的 ComfyUI/模型目录，客户端只保存路径、类别、大小、mtime 和 hash 等索引信息。
 
 Web 的项目、任务、创作消息与素材使用 IndexedDB 本地持久化；localStorage 保存非敏感 UI 设置、供应商元数据和恢复副本。Desktop 创作快照与素材使用原生文件仓库。这些本地能力不代表云端同步；用户账号、记忆和云保存等未接真实服务的能力保持 Prototype 或禁用。准确存储键、恢复和失败保护边界见下方存储契约。
 

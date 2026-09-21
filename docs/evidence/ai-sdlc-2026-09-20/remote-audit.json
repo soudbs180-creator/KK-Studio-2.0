@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-09-20T07:15:43.186Z",
+  "repository": "soudbs180-creator/KK-Studio-2.0",
+  "readOnly": true,
+  "repo": {
+    "status": 200,
+    "private": true,
+    "defaultBranch": "main",
+    "ownerType": "User",
+    "permissions": {
+      "admin": true,
+      "maintain": true,
+      "push": true,
+      "triage": true,
+      "pull": true
+    },
+    "deleteBranchOnMerge": false
+  },
+  "branch": {
+    "status": 200,
+    "sha": "8aca3abdd6386b6d6cee7fd9836e27e5aec38eab",
+    "protected": false
+  },
+  "protection": {
+    "status": 403,
+    "message": "Upgrade to GitHub Pro or make this repository public to enable this feature."
+  },
+  "rulesets": {
+    "status": 403,
+    "message": "Upgrade to GitHub Pro or make this repository public to enable this feature."
+  },
+  "pulls": {
+    "status": 200,
+    "pulls": []
+  },
+  "runs": {
+    "status": 200,
+    "runs": [
+      {
+        "id": 35492697622,
+        "headSha": "8aca3abdd6386b6d6cee7fd9836e27e5aec38eab",
+        "status": "completed",
+        "conclusion": "failure",
+        "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35492697622"
+      },
+      {
+        "id": 35491239807,
+        "headSha": "08b5e53eb47b4ddfd6162862079d0e4947c3d330",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35491239807"
+      }
+    ]
+  }
+}

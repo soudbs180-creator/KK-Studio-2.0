@@ -1,5 +1,15 @@
 # 当前项目状态
 
+## 2026-09-21 TASK-GOV-002 合入后状态
+
+- 远端 `origin/main` 已回读为 `92c1ef17c42030ef6976e039efe4775c4bdc0939`（squash merge PR #4）；合并前最新基线为 `c3ff0871b3db674e0ab073f1445879d84fee3507`，规则分支 head 为 `19215945573ca97dd4427f36ac8e074a1378f9fb`。PR：[规则治理 PR #4](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/4)。
+- PR #4 的 delivery、repository verification、Rust fmt/test、client check 和 Tauri no-bundle build 全部成功；PR delivery 运行：[35520494220](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35520494220)。
+- 本次写入范围仍是共享 AI 规则、SDLC/分支流程、Git/CI/delivery 门禁、模板和规则场景；产品实现、产品测试、既有证据及其他任务提交只随最新主线回读，不作为本任务改动。
+- 远端仓库当前仍未启用 branch protection/rulesets（private 仓库接口返回 403），所以服务器强制保护仍为 EXT-GIT BLOCKED；本地 pre-push 只是补充防线。不能把本地 hook 描述成 GitHub 服务器保护。
+- 原规则分支和工作树只作为已合入历史保留证据，完成回读后清理；其他任务的分支、dirty worktree 和既有证据不在本次清理范围。
+
+## 以下为此前交付快照（保留历史，不覆盖上面当次核对）
+
 更新：2026-09-20。task-ledger.json 是任务状态源；完整产品尚未达到 Definition of Done。
 
 ## 当前主线
@@ -39,7 +49,6 @@ Figma现行可取得面板的设计上下文、DOM和同状态截图已核对。
 - TASK-ASTRA-001 在独立 docs 分支校正迁移计划并审计规则；原 checkout 和 main 不直接编辑。工作树由 Codex 原生工具登记，准确路径见 task-ledger.json。
 - 用户指定 https://github.com/soudbs180-creator/KK-Studio-2.0 为 2.0 远端。远端初始 main 是既有旧树，与本地 2.0 无共同基线；旧 soudbs180-creator/kk-studio 仍不作为目标。首次同步采用从云端 main 派生的替换分支和 PR，不直接推送 main；阶段 0 文档分支保留为历史审计，最终首发以 TASK-KK2-MAIN-SYNC 为准。
 - 计划与规则审计见 docs/changes/2026-09-20-gpt-6-astra/；Astra 尚未实现，T5/T6 等原任务状态保持。
-
 
 ## 2026-09-20 KK Studio 2.0 main 同步候选
 

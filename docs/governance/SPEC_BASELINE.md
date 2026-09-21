@@ -1,6 +1,7 @@
 # Specification baseline
 
 Updated: 2026-09-17
+Current policy reconciliation: 2026-09-20, TASK-GOV-002. Read root AI_RULES.md and engineering/SDLC, PROMPTING, BRANCH-POLICY, REVIEW, AI-EVALS alongside AGENTS. Tool-specific entrypoints route to these sources.
 
 These are pointers to the project's existing specifications. The governance index avoids
 creating a second copy of UI or storage rules.

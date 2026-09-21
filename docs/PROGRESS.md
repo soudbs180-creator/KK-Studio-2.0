@@ -1,5 +1,6 @@
 # 当前进度
 
+<<<<<<< HEAD
 ## 2026-09-21 安全审计风险收口（IMPLEMENTED / 全量验证待最终 head）
 
 - `TASK-AUDIT-SEC-001-CLOSEOUT` 在 `fix/TASK-AUDIT-SEC-001-boundaries` 完成三项剩余修复：Web Locks 长生命周期连接租约与崩溃元数据重建；Gateway 初始额度 provisioning 记录、额度漂移 fail closed 和并发策略更新；TaskHost 结果 URL 同源、HTTPS/loopback、DNS/IP pinning、取消窗口和 IPv6 边界。
@@ -10,13 +11,20 @@
 - `TASK-AUDIT-SEC-001` 在独立 worktree `fix/TASK-AUDIT-SEC-001-boundaries` 完成一轮证据驱动审计。已修复：Provider 请求发出后取消/暂停的 unknown fencing、远程明文 HTTP API Key 外泄、Gateway 重启旧配置/ACL 静默保留、token collision 权限覆盖、TaskHost 无长度响应全量缓冲，以及 journal delete-first 丢失窗口。
 - 验证：155/155 Node、TypeScript、lint、format、production build、Rust 61/61 与 fmt 通过。证据见 [security audit](changes/2026-09-21-security-audit/verification.md)。
 - 仍为 PARTIAL：Web 跨窗口 localStorage 租约竞态/崩溃孤儿槽、Gateway `initialCredits` 配置陈旧，以及 TaskHost Provider 结果 URL 的 origin allowlist/DNS pinning 尚未收口；不能把本轮修复描述为完整提交并发或 SSRF 防护。
+=======
+## 2026-09-21 AI 自主开发规则已合入主线
+
+- PR #4 已 squash 合入远端 `main`，合并提交为 `92c1ef17c42030ef6976e039efe4775c4bdc0939`；合并前基线 `c3ff0871b3db674e0ab073f1445879d84fee3507`、规则分支 head `19215945573ca97dd4427f36ac8e074a1378f9fb` 均已回读。
+- hosted delivery、repository verification、Rust fmt/test、client check 和 Tauri no-bundle build 全部通过；规则账本 32 tasks/0 violations。规则变更仍不包含产品代码、既有产品测试或旧证据。
+- GitHub protection/rulesets API 仍返回 403，远端强制保护未部署，保留 EXT-GIT BLOCKED；本地 hook、CI 和 ruleset JSON 是可复用的补充防线。
+- 本次治理分支/工作树在合并和回读后清理；其他任务的分支、dirty worktree 和历史证据不删除。
+>>>>>>> origin/main
 
 ## 2026-09-20 Astra 迁移计划与分支规则复核
 
 - TASK-ASTRA-001 从已验收的稳定 main 建立独立 task worktree，校正旧 checkout 初稿，复用已完成的 T3b/T4 与已集成的 T5，补齐项目包和 unknown 状态迁移验收。尚未实施 Astra 功能。
 - 已检查 AGENTS、CONTRIBUTING、governance、SDLC/评审、ADR、PR 模板和 CI；不直接写 main，不推送历史任务分支，不合并原 dirty 工作区。
 - 用户指定 https://github.com/soudbs180-creator/KK-Studio-2.0 为 2.0 远端；该仓库与本地历史不相干，阶段 0 文档分支 `docs/TASK-ASTRA-001-remote-manifest`（回读 `9edb528`）保留为历史审计；首次 2.0 树已通过 PR #1 合并。
-
 
 ## 2026-09-19 T5 原生 TaskHost 集成与未知受理保护（本地集成完成，运行态待收口）
 
@@ -37,7 +45,6 @@
 
 - 已接通 Desktop 设置→储存的导出、预检、独立目录恢复和打开副本入口；原生端完成严格 manifest/ZIP/schema/checksum/引用校验、隔离 staging、写后校验和新目标发布。Web 入口显示禁用原因。
 - 新增跨语言 checksum、非法包、七个写入阶段故障注入和 UI 异步/取消回归；修复原生 JSON 字段排序导致画布打开即误保存的问题。已在源码 379b302 完成 129 unit、156 browser、UI 117/0、50 Rust、fmt/check 和 release build；全新 WebView 的完整快照/原件恢复通过，T3b Desktop Windows 单元关闭。
-
 
 ## 2026-09-18 T3a 原生素材及引用最终验收
 
@@ -307,7 +314,6 @@
 Confirmed and repaired stylesheet import deduplication/cascade issues; preserved existing pages and interactions. Latest 404:28667 / 410:67357 / 410:59708 contexts were read through Figma MCP. Current Web process PID16112 serves D:/kk-studio-next on1421; its actual browser screenshots and measured panel/sidebar/composer geometry show source changes. Full browser suite96/96 without retries, unit20/20, typecheck/build/ui:check/format:check passed. Tauri release rebuilt2026-09-10 23:10:01 and freshness reports current.
 
 Not complete: original reported window provenance, native Tauri visual check, full same-content Figma and all auxiliary frame/state comparisons. Collapsed search retained by explicit user request. See docs/changes/2026-09-10-ui-runtime-diagnosis/verification.md and docs/evidence/ui-runtime-2026-09-10/live-browser.json. These current results supersede earlier pending validation notes, not the remaining visual acceptance boundaries.
-
 
 ## 2026-09-20 KK Studio 2.0 main 同步候选
 

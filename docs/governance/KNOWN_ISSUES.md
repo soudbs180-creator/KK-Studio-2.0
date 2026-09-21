@@ -2,8 +2,8 @@
 
 唯一状态归属是 [task-ledger.json](task-ledger.json)；[TASK_LEDGER.md](TASK_LEDGER.md) 为生成的人类可读视图。本文件只说明问题映射，不复制任务状态。
 
-- T3a/T3b：原生素材最终验收、完整项目包与跨环境恢复。
-- T4/T5：T4 统一入口已关闭；T5 已完成 durable intent、稳定幂等身份、unknown 受理保护、原生 TaskHost journal、Desktop IPC 接入和逐 slot 输出提交。仍缺隔离 Tauri/WebView 下的提交、取消、进程重启与恢复证据；TASK-PROV-001 已修复首页、对话、审批和重试的 Provider 提交门禁，并以浏览器回归覆盖实际 HTTP 阻断；真实付费 Provider/GPU/ComfyUI 仍由外部任务跟踪。
+- T3a/T3b 的 Desktop 原生素材、完整项目包与隔离恢复验收已完成；Web 项目包文件适配仍归 T9，不重复把已验收的 Desktop 范围列为未完成问题。
+- T4/T5：T4 统一入口已关闭；T5 已完成 durable intent、稳定幂等身份、unknown 受理保护、原生 TaskHost journal、Desktop IPC 接入和逐 slot 输出提交。仍缺隔离 Tauri/WebView 下的提交、取消、进程重启与恢复证据；另有 Desktop Provider gate blocker：原生提交未复用前端 reservation/assertCurrent，且 native failure 的结构化 health 字段未回写连接状态，详见 [Desktop Provider Gate Audit](../evidence/ai-sdlc-2026-09-20/desktop-provider-gap-audit.md)。TASK-PROV-001 已修复首页、对话、审批和重试的 Web Provider 提交门禁，并以浏览器回归覆盖实际 HTTP 阻断；真实付费 Provider/GPU/ComfyUI 仍由外部任务跟踪。
 - T6/T9：ComfyUI产品链未接通；Web存在Desktop专属入口。
 - UI-001–004：共享组件契约、窄屏composer裁切、动态文案、任务fixture首屏误读和全状态视觉验收。
 - PERF-001：原件全部转data URL与逐项读取，缺缩略图/分页；大型库IO和内存尚未验收。
