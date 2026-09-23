@@ -1699,7 +1699,11 @@
     "owner": "root",
     "branch": "unallocated",
     "worktree": "unallocated",
-    "affectedModules": ["src/features/plugins", "src-tauri/tauri.conf.json", "tests/browser"],
+    "affectedModules": [
+      "src/features/plugins",
+      "src-tauri/tauri.conf.json",
+      "tests/browser"
+    ],
     "status": "TODO",
     "evidence": ["docs/changes/2026-09-23-release-2-1-0/review.md"],
     "verification": "当前 Tauri CSP 拒绝 blob 模块，独立审查的原样 CSP 探针复现；修复和 fresh Desktop 交互尚未验证。",
@@ -1721,7 +1725,14 @@
     "owner": "root",
     "branch": "chore/TASK-CONSOLIDATE-200",
     "worktree": "D:/kk-studio/KK-Studio-2.0",
-    "affectedModules": ["src", "src-tauri", "tests", "scripts", "vendor", "docs"],
+    "affectedModules": [
+      "src",
+      "src-tauri",
+      "tests",
+      "scripts",
+      "vendor",
+      "docs"
+    ],
     "status": "REVIEW",
     "evidence": [
       "docs/changes/2026-09-20-main-close-002/verification.md",
@@ -1745,6 +1756,32 @@
       "docs/changes/2026-09-23-release-2-1-0/verification.md"
     ],
     "verification": "安全补审后本地 367 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；受审源码 15f1f27 已上传，首次远端 SHA 一致；Hosted CI、PR、安装包待验证。各历史变更包保留其原始验证时点。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-09-23"
+  },
+  {
+    "id": "TASK-AGENT-004",
+    "title": "Google Interactions 对话和生图",
+    "goal": "配置 Google API Key 后直接聊天、生图并归档到当前画布",
+    "scope": "Google Interactions adapter, conversation, credentials settings and assets",
+    "acceptance": [
+      "连续对话和图片生成经官方协议接线，图片归档当前画布",
+      "密钥只存系统凭据库或内存，项目切换与取消不污染状态",
+      "Web交互、故障回归、完整验证与独立审查；真实凭据验收单列"
+    ],
+    "dependencies": ["TASK-AGENT-003"],
+    "owner": "root",
+    "branch": "feat/TASK-AGENT-004-google",
+    "worktree": "C:/Users/Administrator/.codex/worktrees/google-interactions/KK-Studio-2.0",
+    "affectedModules": [
+      "src/features/agent",
+      "src/components",
+      "src/domain",
+      "src/App.tsx"
+    ],
+    "status": "IN_PROGRESS",
+    "evidence": ["docs/changes/2026-09-23-google-interactions/verification.md"],
+    "verification": "Local/fixture verification complete: 14/14 unit tests, typecheck, lint, governance, UI standards, build, Google browser spec and 7/7 Codex regression all pass. Real Google API key acceptance and desktop (Tauri) review pending.",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-23"
   }

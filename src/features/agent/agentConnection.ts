@@ -52,6 +52,12 @@ export interface AgentOpResult {
   tasks?: Array<{ taskId: string; nodeId: string; status: string }>;
 }
 export interface AgentBridge {
+  readGoogleConversation?():
+    import("../../domain/googleConversation.ts").GoogleConversation | undefined;
+  saveGoogleConversation?(
+    record: import("../../domain/googleConversation.ts").GoogleConversation,
+    projectId: string,
+  ): void;
   hasGeneratedImage?(id: string): boolean;
   importGeneratedImage?(input: {
     id: string;
@@ -59,6 +65,8 @@ export interface AgentBridge {
     projectId: string;
     signal: AbortSignal;
     sourceNodeId?: string;
+    provider?: "Google Gemini";
+    model?: string;
   }): Promise<void>;
   getSnapshot(): CanvasAgentSnapshot | null;
   applyOps(

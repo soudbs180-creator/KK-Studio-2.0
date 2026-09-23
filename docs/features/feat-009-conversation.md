@@ -43,3 +43,5 @@
 ## 本轮实施
 
 TASK-AGENT-003：图片附件、显式画布引用和视口/选择桥接；验收见 [本轮记录](../changes/2026-09-23-agent-attachments/verification.md)。
+
+TASK-AGENT-004: Google API Key 对话与生图实施中，真实服务待验证。

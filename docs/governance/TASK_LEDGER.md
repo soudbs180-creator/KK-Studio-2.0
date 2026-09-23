@@ -4,67 +4,68 @@ Generated from `task-ledger.json` by `npm run governance:write`; do not edit thi
 
 Historical DONE applies only to the linked verification scope. The full-project objective remains open until every applicable task and integration gate is verified.
 
-| ID | Title | Status | Dependencies | Owner |
-| --- | --- | --- | --- | --- |
-| T0 | 可复现候选源码与主线整合 | DONE | none | root |
-| TASK-GOV-001 | 治理源、ESLint、架构门禁和 CI | DONE | T0 | root |
-| TASK-PROV-001 | 冷却恢复与产品调度入口边界 | DONE | TASK-GOV-001 | root |
-| T1 | 读取保护、备份和 revision 冲突 | DONE | T0 | root |
-| T2 | 画布图持久化与稳定节点身份 | DONE | T0 | root |
-| T3a | 原生素材及引用最终验收 | DONE | T1, T2 | root |
-| T3b | 完整项目包导出导入与恢复 | DONE | T3a | root |
-| T4 | 统一实际图片生成入口及健康语义 | DONE | T3b, TASK-PROV-001 | root |
-| T5 | 持久本地 TaskHost 与未知受理恢复 | PARTIAL | T4 | root |
-| T6 | Desktop ComfyUI最小链实现 | PARTIAL | T5 | root |
-| EXT-PROVIDER | 真实 Provider/GPU 生成验收 | BLOCKED | T4 | root |
-| EXT-COMFY | 真实 ComfyUI/模型验收 | BLOCKED | T6 | root |
-| T7 | Desktop可用版本及安装恢复验收 | TODO | T3b, T4, T5, T6, EXT-PROVIDER, EXT-COMFY | root |
-| T8 | 成熟Core职责和平台能力边界 | TODO | T7 | root |
-| T9 | Web本地版及浏览器容量/离线能力 | TODO | T8 | root |
-| T10-PREP | VPS发布、备份回滚与部署配置准备 | TODO | T9 | root |
-| T10 | VPS staging和生产实机验收 | BLOCKED | T10-PREP | root |
-| T11 | 旧Web/Vercel切换与退役 | BLOCKED | T10 | root |
-| T12 | Mobile 2.0适配 | TODO | T11 | root |
-| UI-001 | UI tokens和共享组件契约 | PARTIAL | TASK-GOV-001, TASK-DS-001 | root |
-| UI-002 | 窄屏composer和动态文案溢出 | DONE | UI-001 | root |
-| UI-003 | 示例任务/账号与真实服务边界 | PARTIAL | UI-001 | root |
-| UI-004 | 逐页对齐、IA和最终视觉运行态 | PARTIAL | UI-002, UI-003, TASK-DS-001 | root |
-| PERF-001 | 原生素材缩略图/分页及内存IO | PARTIAL | T3a | root |
-| EXT-GIT | 远端PR与main保护规则 | BLOCKED | TASK-GOV-001, T0 | root |
-| TEST-PROV-001 | Provider真实入口浏览器回归 | DONE | TASK-GOV-001 | root |
-| TASK-ASTRA-001 | Astra 迁移计划与 Git 分支规则同步 | DONE | T0, TASK-GOV-001 | root |
-| TASK-KK2-MAIN-SYNC | KK Studio 2.0 本地与云端 main 树同步 | DONE | T0, TASK-GOV-001 | root |
-| TASK-UI-UNMERGED-001 | dirty checkout 未合并 UI 回归候选 | DONE | TASK-GOV-001 | root |
-| TASK-UI-MAIN-001 | 现行Figma页面校正与交互修复主线整合 | DONE | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
-| TASK-UI-DISMISS-002 | 窄屏侧栏关闭与大图重绘稳定性 | DONE | TASK-UI-MAIN-001 | root |
-| TASK-MAIN-CLOSE-002 | 未完成子任务汇总验收与主线同步 | IN_PROGRESS | TASK-UI-MAIN-001 | root |
-| TASK-UI-CLOSE-003 | 现行Figma页面缺口复核与交互收口 | DONE | TASK-UI-MAIN-001 | finish_figma_pages |
-| TASK-PERF-ASSETS-001 | 素材列表元数据和原件按需读取 | DONE | T3a | finish_asset_performance |
-| TASK-GOV-002 | 跨AI自主开发与分支质量门禁 | PARTIAL | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
-| TASK-AUDIT-SEC-001 | 安全边界与异常任务状态审计 | REVIEW | TASK-GOV-001 | root |
-| TASK-CAP-001 | 本地 Skill/MCP/ComfyUI 能力补齐 | PARTIAL | TASK-GOV-001, T6 | root |
-| TASK-MINIMAX-001 | MiniMax Design 交互审计与本地技能/MCP复刻 | PARTIAL | TASK-GOV-002 | root |
-| FEATURE-SYSTEM | 功能卡片体系、状态看板与后端化路线 | DONE | TASK-KK2-MAIN-SYNC | root |
-| BACKEND-IMAGE-PARAMS | 图片比例与清晰度真实透传供应商 | PARTIAL | none | root |
-| BACKEND-TEXT-NODE | 文本节点接入统一任务宿主 | PARTIAL | T5 | root |
-| BACKEND-MEDIA-001 | 视频与音频节点真实生成链 | TODO | T5 | root |
-| BACKEND-MCP-AUTO | MCP 工具自动调用编排 | TODO | TASK-CAP-001 | root |
-| BACKEND-PLATFORM | 平台账号/积分/云同步/记忆/代理后端 | TODO | T10-PREP, T10 | root |
-| BACKEND-ASTRA-001 | Astra 研究助手实现 | TODO | TASK-ASTRA-001 | root |
-| UI-SKILL-POPOVER-001 | 窄屏首页弹层遮挡修复与 Skill 空态断言更新 | DONE | TASK-CAP-001 | root |
-| TASK-RULES-003 | 修复功能状态与运行证据门禁 | DONE | none | root |
-| BACKEND-CONVERSATION | 对话面板文本多轮能力与实际状态收敛 | PARTIAL | none | root |
-| TASK-DS-001 | Design System校正与公共UI对齐 | PARTIAL | none | root |
-| TASK-DS-002 | Design System逐页迁移与桌面验收 | DONE | TASK-DS-001 | root |
-| TASK-UI-005 | 新增功能 UI 入口与能力展示对齐 | DONE | TASK-DS-002 | root |
-| TASK-UI-006 | 折叠与弹层交互、画布重叠和缩放背景修复 | DONE | TASK-UI-005 | root |
-| TASK-AGENT-001 | 默认 Codex 主 Agent 与 KK 生成任务接入 | PARTIAL | none | root |
-| TASK-AGENT-002 | 桌面本地 Agent 托管与其他登录软件适配 | PARTIAL | TASK-AGENT-001 | root |
-| TASK-UI-007 | 手机平板电脑三档尺寸与图标对齐 | DONE | TASK-UI-006, TASK-AGENT-001 | root |
-| TASK-UI-008 | 重新制定创作输入框规范并统一三档实现 | DONE | TASK-UI-007, TASK-AGENT-002 | root |
-| TASK-AGENT-003 | Agent 图片附件、画布引用与视口选择操作 | DONE | TASK-AGENT-001, TASK-AGENT-002 | root |
-| PLUGIN-DESKTOP-001 | 修复桌面画布插件的 CSP 加载路径 | TODO | none | root |
-| REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
+| ID                   | Title                                     | Status      | Dependencies                             | Owner                    |
+| -------------------- | ----------------------------------------- | ----------- | ---------------------------------------- | ------------------------ |
+| T0                   | 可复现候选源码与主线整合                  | DONE        | none                                     | root                     |
+| TASK-GOV-001         | 治理源、ESLint、架构门禁和 CI             | DONE        | T0                                       | root                     |
+| TASK-PROV-001        | 冷却恢复与产品调度入口边界                | DONE        | TASK-GOV-001                             | root                     |
+| T1                   | 读取保护、备份和 revision 冲突            | DONE        | T0                                       | root                     |
+| T2                   | 画布图持久化与稳定节点身份                | DONE        | T0                                       | root                     |
+| T3a                  | 原生素材及引用最终验收                    | DONE        | T1, T2                                   | root                     |
+| T3b                  | 完整项目包导出导入与恢复                  | DONE        | T3a                                      | root                     |
+| T4                   | 统一实际图片生成入口及健康语义            | DONE        | T3b, TASK-PROV-001                       | root                     |
+| T5                   | 持久本地 TaskHost 与未知受理恢复          | PARTIAL     | T4                                       | root                     |
+| T6                   | Desktop ComfyUI最小链实现                 | PARTIAL     | T5                                       | root                     |
+| EXT-PROVIDER         | 真实 Provider/GPU 生成验收                | BLOCKED     | T4                                       | root                     |
+| EXT-COMFY            | 真实 ComfyUI/模型验收                     | BLOCKED     | T6                                       | root                     |
+| T7                   | Desktop可用版本及安装恢复验收             | TODO        | T3b, T4, T5, T6, EXT-PROVIDER, EXT-COMFY | root                     |
+| T8                   | 成熟Core职责和平台能力边界                | TODO        | T7                                       | root                     |
+| T9                   | Web本地版及浏览器容量/离线能力            | TODO        | T8                                       | root                     |
+| T10-PREP             | VPS发布、备份回滚与部署配置准备           | TODO        | T9                                       | root                     |
+| T10                  | VPS staging和生产实机验收                 | BLOCKED     | T10-PREP                                 | root                     |
+| T11                  | 旧Web/Vercel切换与退役                    | BLOCKED     | T10                                      | root                     |
+| T12                  | Mobile 2.0适配                            | TODO        | T11                                      | root                     |
+| UI-001               | UI tokens和共享组件契约                   | PARTIAL     | TASK-GOV-001, TASK-DS-001                | root                     |
+| UI-002               | 窄屏composer和动态文案溢出                | DONE        | UI-001                                   | root                     |
+| UI-003               | 示例任务/账号与真实服务边界               | PARTIAL     | UI-001                                   | root                     |
+| UI-004               | 逐页对齐、IA和最终视觉运行态              | PARTIAL     | UI-002, UI-003, TASK-DS-001              | root                     |
+| PERF-001             | 原生素材缩略图/分页及内存IO               | PARTIAL     | T3a                                      | root                     |
+| EXT-GIT              | 远端PR与main保护规则                      | BLOCKED     | TASK-GOV-001, T0                         | root                     |
+| TEST-PROV-001        | Provider真实入口浏览器回归                | DONE        | TASK-GOV-001                             | root                     |
+| TASK-ASTRA-001       | Astra 迁移计划与 Git 分支规则同步         | DONE        | T0, TASK-GOV-001                         | root                     |
+| TASK-KK2-MAIN-SYNC   | KK Studio 2.0 本地与云端 main 树同步      | DONE        | T0, TASK-GOV-001                         | root                     |
+| TASK-UI-UNMERGED-001 | dirty checkout 未合并 UI 回归候选         | DONE        | TASK-GOV-001                             | root                     |
+| TASK-UI-MAIN-001     | 现行Figma页面校正与交互修复主线整合       | DONE        | TASK-GOV-001, TASK-KK2-MAIN-SYNC         | root                     |
+| TASK-UI-DISMISS-002  | 窄屏侧栏关闭与大图重绘稳定性              | DONE        | TASK-UI-MAIN-001                         | root                     |
+| TASK-MAIN-CLOSE-002  | 未完成子任务汇总验收与主线同步            | IN_PROGRESS | TASK-UI-MAIN-001                         | root                     |
+| TASK-UI-CLOSE-003    | 现行Figma页面缺口复核与交互收口           | DONE        | TASK-UI-MAIN-001                         | finish_figma_pages       |
+| TASK-PERF-ASSETS-001 | 素材列表元数据和原件按需读取              | DONE        | T3a                                      | finish_asset_performance |
+| TASK-GOV-002         | 跨AI自主开发与分支质量门禁                | PARTIAL     | TASK-GOV-001, TASK-KK2-MAIN-SYNC         | root                     |
+| TASK-AUDIT-SEC-001   | 安全边界与异常任务状态审计                | REVIEW      | TASK-GOV-001                             | root                     |
+| TASK-CAP-001         | 本地 Skill/MCP/ComfyUI 能力补齐           | PARTIAL     | TASK-GOV-001, T6                         | root                     |
+| TASK-MINIMAX-001     | MiniMax Design 交互审计与本地技能/MCP复刻 | PARTIAL     | TASK-GOV-002                             | root                     |
+| FEATURE-SYSTEM       | 功能卡片体系、状态看板与后端化路线        | DONE        | TASK-KK2-MAIN-SYNC                       | root                     |
+| BACKEND-IMAGE-PARAMS | 图片比例与清晰度真实透传供应商            | PARTIAL     | none                                     | root                     |
+| BACKEND-TEXT-NODE    | 文本节点接入统一任务宿主                  | PARTIAL     | T5                                       | root                     |
+| BACKEND-MEDIA-001    | 视频与音频节点真实生成链                  | TODO        | T5                                       | root                     |
+| BACKEND-MCP-AUTO     | MCP 工具自动调用编排                      | TODO        | TASK-CAP-001                             | root                     |
+| BACKEND-PLATFORM     | 平台账号/积分/云同步/记忆/代理后端        | TODO        | T10-PREP, T10                            | root                     |
+| BACKEND-ASTRA-001    | Astra 研究助手实现                        | TODO        | TASK-ASTRA-001                           | root                     |
+| UI-SKILL-POPOVER-001 | 窄屏首页弹层遮挡修复与 Skill 空态断言更新 | DONE        | TASK-CAP-001                             | root                     |
+| TASK-RULES-003       | 修复功能状态与运行证据门禁                | DONE        | none                                     | root                     |
+| BACKEND-CONVERSATION | 对话面板文本多轮能力与实际状态收敛        | PARTIAL     | none                                     | root                     |
+| TASK-DS-001          | Design System校正与公共UI对齐             | PARTIAL     | none                                     | root                     |
+| TASK-DS-002          | Design System逐页迁移与桌面验收           | DONE        | TASK-DS-001                              | root                     |
+| TASK-UI-005          | 新增功能 UI 入口与能力展示对齐            | DONE        | TASK-DS-002                              | root                     |
+| TASK-UI-006          | 折叠与弹层交互、画布重叠和缩放背景修复    | DONE        | TASK-UI-005                              | root                     |
+| TASK-AGENT-001       | 默认 Codex 主 Agent 与 KK 生成任务接入    | PARTIAL     | none                                     | root                     |
+| TASK-AGENT-002       | 桌面本地 Agent 托管与其他登录软件适配     | PARTIAL     | TASK-AGENT-001                           | root                     |
+| TASK-UI-007          | 手机平板电脑三档尺寸与图标对齐            | DONE        | TASK-UI-006, TASK-AGENT-001              | root                     |
+| TASK-UI-008          | 重新制定创作输入框规范并统一三档实现      | DONE        | TASK-UI-007, TASK-AGENT-002              | root                     |
+| TASK-AGENT-003       | Agent 图片附件、画布引用与视口选择操作    | DONE        | TASK-AGENT-001, TASK-AGENT-002           | root                     |
+| PLUGIN-DESKTOP-001   | 修复桌面画布插件的 CSP 加载路径           | TODO        | none                                     | root                     |
+| REL-2.1.0            | 2.1.0 本地集成与源码上传                  | REVIEW      | none                                     | root                     |
+| TASK-AGENT-004       | Google Interactions 对话和生图            | IN_PROGRESS | TASK-AGENT-003                           | root                     |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -777,4 +778,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src, src-tauri, tests, scripts, vendor, docs
 - Verification: PARTIAL — 安全补审后本地 367 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；受审源码 15f1f27 已上传，首次远端 SHA 一致；Hosted CI、PR、安装包待验证。各历史变更包保留其原始验证时点。
 - Evidence: [docs/changes/2026-09-20-main-close-002/verification.md](../../docs/changes/2026-09-20-main-close-002/verification.md), [docs/changes/2026-09-21-consolidate-200/verification.md](../../docs/changes/2026-09-21-consolidate-200/verification.md), [docs/changes/2026-09-21-feature-system/verification.md](../../docs/changes/2026-09-21-feature-system/verification.md), [docs/changes/2026-09-21-local-capabilities/verification.md](../../docs/changes/2026-09-21-local-capabilities/verification.md), [docs/changes/2026-09-21-minimax-deep-audit/verification.md](../../docs/changes/2026-09-21-minimax-deep-audit/verification.md), [docs/changes/2026-09-21-security-audit-closeout/verification.md](../../docs/changes/2026-09-21-security-audit-closeout/verification.md), [docs/changes/2026-09-21-security-audit/verification.md](../../docs/changes/2026-09-21-security-audit/verification.md), [docs/changes/2026-09-21-text-and-rule-audit/verification.md](../../docs/changes/2026-09-21-text-and-rule-audit/verification.md), [docs/changes/2026-09-22-agent-desktop/verification.md](../../docs/changes/2026-09-22-agent-desktop/verification.md), [docs/changes/2026-09-22-codex-default-agent/verification.md](../../docs/changes/2026-09-22-codex-default-agent/verification.md), [docs/changes/2026-09-22-design-system/verification.md](../../docs/changes/2026-09-22-design-system/verification.md), [docs/changes/2026-09-22-design-system-pages/verification.md](../../docs/changes/2026-09-22-design-system-pages/verification.md), [docs/changes/2026-09-22-port-infinite-canvas/verification.md](../../docs/changes/2026-09-22-port-infinite-canvas/verification.md), [docs/changes/2026-09-22-responsive-ui/verification.md](../../docs/changes/2026-09-22-responsive-ui/verification.md), [docs/changes/2026-09-22-ui-feature-parity/verification.md](../../docs/changes/2026-09-22-ui-feature-parity/verification.md), [docs/changes/2026-09-22-ui-interactions/verification.md](../../docs/changes/2026-09-22-ui-interactions/verification.md), [docs/changes/2026-09-23-agent-attachments/verification.md](../../docs/changes/2026-09-23-agent-attachments/verification.md), [docs/changes/2026-09-23-input-contract/verification.md](../../docs/changes/2026-09-23-input-contract/verification.md), [docs/changes/2026-09-23-release-2-1-0/verification.md](../../docs/changes/2026-09-23-release-2-1-0/verification.md)
+- Updated: 2026-09-23
+
+## TASK-AGENT-004 — Google Interactions 对话和生图
+
+- Goal: 配置 Google API Key 后直接聊天、生图并归档到当前画布
+- Scope: Google Interactions adapter, conversation, credentials settings and assets
+- Acceptance: 连续对话和图片生成经官方协议接线，图片归档当前画布; 密钥只存系统凭据库或内存，项目切换与取消不污染状态; Web交互、故障回归、完整验证与独立审查；真实凭据验收单列
+- Branch: `feat/TASK-AGENT-004-google`
+- Worktree: `C:/Users/Administrator/.codex/worktrees/google-interactions/KK-Studio-2.0`
+- Modules: src/features/agent, src/components, src/domain, src/App.tsx
+- Verification: PARTIAL — Local/fixture verification complete: 14/14 unit tests, typecheck, lint, governance, UI standards, build, Google browser spec and 7/7 Codex regression all pass. Real Google API key acceptance and desktop (Tauri) review pending.
+- Evidence: [docs/changes/2026-09-23-google-interactions/verification.md](../../docs/changes/2026-09-23-google-interactions/verification.md)
 - Updated: 2026-09-23

@@ -12,6 +12,9 @@ import type { CanvasCollectionItem } from "../domain/canvasItems";
 
 /** 本地 Agent 会话通道（画布旁对话面板与 canvas-agent 的桥）。 */
 export interface AgentConversationProps {
+  displayName?: string;
+  intro?: string;
+  hideUsage?: boolean;
   connectionRevision: number;
   conversation: AgentConversationState | null;
   preparing: boolean;
@@ -80,7 +83,7 @@ export default function AgentConversationMessages({
   }
   return (
     <div className="chat-agent-messages" aria-label="本地 Agent 会话">
-      {agent.connected && (
+      {agent.connected && !agent.hideUsage && (
         <AgentUsageStatus
           windows={agent.usage}
           error={agent.usageError}
@@ -91,10 +94,10 @@ export default function AgentConversationMessages({
         {sending
           ? "Agent 正在执行…"
           : connecting
-            ? "正在连接本地 Agent…"
+            ? `正在连接${agent.displayName ?? "本地 Agent"}…`
             : agent.connected
-              ? "Codex 主 Agent · 已连接"
-              : "Codex 主 Agent · 未连接"}
+              ? `${agent.displayName ?? "Codex 主 Agent"} · 已连接`
+              : `${agent.displayName ?? "Codex 主 Agent"} · 未连接`}
         {sending && (
           <button
             type="button"
@@ -125,9 +128,10 @@ export default function AgentConversationMessages({
       )}
       {messages.length === 0 && (
         <p className="chat-agent-empty">
-          {agent.connected
-            ? "输入任务，让 Codex 优化提示词、修改画布或调用已配置的图片生成。"
-            : "使用已登录的 Codex 账号，无需填写对话 API Key。"}
+          {agent.intro ??
+            (agent.connected
+              ? "输入任务，让 Codex 优化提示词、修改画布或调用已配置的图片生成。"
+              : "使用已登录的 Codex 账号，无需填写对话 API Key。")}
         </p>
       )}
       {agent.error && (
@@ -144,7 +148,11 @@ export default function AgentConversationMessages({
           disabled={connecting || sending}
           onClick={() => agent.onConnect()}
         >
-          {connecting ? "连接中…" : agent.connected ? "重新连接" : "连接 Codex"}
+          {connecting
+            ? "连接中…"
+            : agent.connected
+              ? "重新连接"
+              : `连接 ${agent.displayName ?? "Codex"}`}
         </button>
         <button
           type="button"
