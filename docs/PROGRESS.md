@@ -1,17 +1,135 @@
 # 当前进度
 
-## 2026-09-21 AI 自主开发规则已合入主线
+## 2026-09-23 KK Studio 2.1.0 源码分支已上传（REL-2.1.0，本地验证完成）
 
-- PR #4 已 squash 合入远端 `main`，合并提交为 `92c1ef17c42030ef6976e039efe4775c4bdc0939`；合并前基线 `c3ff0871b3db674e0ab073f1445879d84fee3507`、规则分支 head `19215945573ca97dd4427f36ac8e074a1378f9fb` 均已回读。
-- hosted delivery、repository verification、Rust fmt/test、client check 和 Tauri no-bundle build 全部通过；规则账本 32 tasks/0 violations。规则变更仍不包含产品代码、既有产品测试或旧证据。
-- GitHub protection/rulesets API 仍返回 403，远端强制保护未部署，保留 EXT-GIT BLOCKED；本地 hook、CI 和 ruleset JSON 是可复用的补充防线。
-- 本次治理分支/工作树在合并和回读后清理；其他任务的分支、dirty worktree 和历史证据不删除。
+统一 package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端版本为 2.1.0，新增 `VERSION` 与 `CHANGELOG.md`，并将当前已授权的功能与文档候选绑定到同一 Git 任务分支。用户数据存储 key、应用 identifier、历史 2.0.0 证据和恢复归档保持不变。安装包、代码签名、真实 Provider/ComfyUI、Hosted CI、PR 合并和正式 main tag 仍需单独门禁，不以本地源码上传代替。
+
+独立预检发现远程 HTTP 插件可被替换并在应用权限下运行；已在加载器阻止明文/凭据/片段 URL、所有远程自动重定向（含 HTTPS→HTTP→HTTPS 中间跳转），以及旧版明文缓存重启执行，并向用户提示信任边界。独立补审在受审源码 `15f1f27` 范围内未发现未关闭 P0/P1。另确认 Desktop CSP 阻止当前插件 `blob:` 模块，登记 PLUGIN-DESKTOP-001；Web 插件验证不代表桌面可用。
+
+验证与远端 SHA 见 `docs/changes/2026-09-23-release-2-1-0/verification.md` 和 `release.md`。
+
+## 2026-09-23 Agent 图片与画布控制（TASK-AGENT-003，DONE/PASS，未提交）
+
+已复用 infinite-canvas Agent 附件/localImage 与画布工具协议，接入 KK 本地原件、显式画布引用和真实控件。最多6张/单张8 MiB，导入失败阻止提交，Agent/API草稿按项目隔离；MCP支持单/多/空选择和视口移动缩放及恢复。保留 UI008 的 Design System 1.3 共享输入框。本轮未发送Agent草稿只在页面会话中保留，不承诺刷新恢复。
+
+原工程完整verify 363 Node/299 browser全过，UI159/0、57任务/29功能0违规；26文件独立dirty预检PASS，R1–R3关闭。新Tauri release的实际JS/CSS与dist一致，真实Codex识别两张原件且发送哈希一致，随包MCP与视口重开恢复通过。58个范围内文件回写时2,277个非本轮文件保持原样；最终生成证据恢复/保留情况见本轮evidence/preservation.json。未commit/push。
+
+旧Agent源码快照522输入重新比对，494未变、28为此前UI008或本轮有记录的差异；其中66个原生/Agent后端/打包输入零漂移。旧EXE和测试数字保留历史含义，新资源以本轮验证为准。TASK-AGENT-002、FEAT-009/012仍PARTIAL；参考图编辑、站内工具、TTS/视频、其他产品适配、通用MCP、付费Provider与正式发布继续按清单办理。当前清单与证据：docs/changes/2026-09-23-agent-attachments/remaining.md、verification.md。
+
+
+## 2026-09-23 创作输入框规则与实现（TASK-UI-008，DONE/PASS，未提交）
+
+Design System更新为1.3，先补输入结构、字体、图标与命中区、单一焦点和三档分行契约。首页/API/Agent共用ComposerTextarea与composer.css；文字自增长、附件/型号参数进入流布局，宽首页一排、手机首页和触屏对话按功能两排。修复首页发现区重叠、菜单遮住第二排按钮、短桌面发送不可达和菜单滚动回顶。
+
+原工程完整verify为356 Node/295 browser，UI159/0、56任务/29功能0违规；独立R1–R3和断点补审PASS。带现有已校验Agent资源的新Tauri，实际JS/CSS与Web/dist一致，32组首页/对话主题检查及原生交互通过。受审任务增量已回传，测试生成旧证据恢复，无关文件与并发任务保留。验证与三档截图：docs/changes/2026-09-23-input-contract/verification.md。
+
+真实手机/平板软键盘、用户视觉确认、在线Ardot写回以及真实Provider/其他Agent/云服务继续保留各自验收边界；本批不改变服务能力状态。原工程为当前运行来源，未commit/push。
+
+## 2026-09-23 三档响应式与图标对齐（TASK-UI-007，DONE/PASS，未提交）
+
+Design System更新为1.2，先纠正旧手机常驻轨道、平板窄条对话和桌面整页缩小规则。手机全宽/底部导航、平板72px轨道/400px对话、桌面291/70px轨道/470px对话已落实；图标居中、明确分行、设置与新增页面统一适配。修复短高侧栏重叠、隐藏焦点、跨断点嵌套菜单和短屏发送裁切，保留草稿与原有世界坐标。
+
+已保留并发TASK-AGENT-002回传，只同步UI增量。最新原工程356 Node/286 browser全通过，UI157/0、55任务/29功能0违规；独立R1–R3补审PASS。带Agent资源的新Tauri实际JS/CSS匹配dist，16组合与原生交互通过。相关命令、首次失败、缓存重建和遗留配置测试污染修复均如实记录在docs/changes/2026-09-22-responsive-ui/verification.md。
+
+手机/平板目前是浏览器适配证据，缺少移动Figma Frame、真实设备软键盘和用户视觉确认；在线Ardot回读、真实Provider/其他Agent/TaskHost/ComfyUI等继续按各自清单验收。原工程为最新运行来源，UI隔离worktree保留起始候选用于diff追溯。
+
+## 2026-09-22 Desktop Agent 托管与旧记录复核（TASK-AGENT-002，PARTIAL）
+
+Windows Agent 托管子项完成：设置支持随包启动/连接、健康状态、停止和退出回收；Node/Agent/Codex 不依赖全局 PATH 或开发源码。使用随机 loopback 端口、内存 Token、同数据目录单实例锁和 Windows Job Object。停止前原子关闭接单，正常停止等待旧进程退出；外部 Agent 不受影响。
+
+当前候选验证：356 Node、270 browser、78 Rust，Agent126通过/2个POSIX权限测试在Windows跳过，lint/typecheck/format/UI/build通过。真实Tauri的8项检查与空会话7项检查通过，含真实Codex回复、随包MCP读画布、同线程重启/二次启动恢复、正常/强退回收12个自有进程。干净目录npm ci、356单测和production build通过。独立增量预检PASS，无未关闭P1/P2；不是正式PR审批。2026-09-23已回传原工程，并保留后续TASK-UI-007并发改动；组合版本复核356 Node/286 browser通过，最新原工程EXE重新完成真实8项与空会话7项Agent检查。522个源码输入复测前后无变化，2,062个已登记非本轮文件按并行更新后的复测前字节保留；详见本轮evidence/integration.json。
+
+旧完成声明已按当前源码与产物核对：旧Agent源码清单与本轮起始树380/380相符；旧DS/UI截图和旧EXE只作为历史记录，新前端由当前Web回归与Tauri资源哈希重绑。无环境Token落盘、vendor源码被忽略导致干净交付缺失的问题已修复。未commit/push。
+
+TASK-AGENT-002整体保持PARTIAL：Proxy托管、Google/Antigravity/豆包/WorkBuddy适配、后台网页并发、非兼容API逐家验收、音视频、Agent附件/参考编辑和通用第三方MCP仍在清单。真实付费Provider、完整TaskHost恢复与正式发布未由本轮替代。当前清单与验证：docs/changes/2026-09-22-agent-desktop/remaining.md、verification.md。
+
+## 2026-09-22 默认 Codex 与统一模型入口（TASK-AGENT-001，PARTIAL）
+
+KK 对话已通过本机官方 Codex app-server 使用现有 ChatGPT 登录：真实回复、画布 MCP、刷新恢复、账号模型和额度、内置生图归档均有 Web 运行证据。新增 dev:agent 启动器、分级/全部模型菜单、按 API 连接身份刷新模型与声明尺寸；主 Agent 可复用本项目图片/文本任务。代码保留 KK 自有 UI 与 vendor 隔离，未提交/推送。
+
+完整验证、独立审查和使用方法见 docs/changes/2026-09-22-codex-default-agent/。首轮回归失败及修复一并记录；不用历史测试数字代替当前结果。Tauri 一键启停、Google/豆包/WorkBuddy 登录适配器、后台网页登录并发与非兼容协议列入 TASK-AGENT-002；真实付费 API 逐厂商和 Desktop 同态验收仍未完成。不要把可见菜单描述为这些适配器已可用。
+
+补充验收：连续两轮真实 Codex 共享线程且刷新无重复；模型末尾分辨率/质量作为参数映射精确型号 ID；顶部支持厂商/模型/尺寸/比例与有限拼写建议。原工程完整 verify 为 351 Node、266 browser 全通过，UI153/0、29功能/54任务0违规；独立重连竞态复核 PASS。原工程已回传并重跑真实连续对话/额度，开发入口1421正在运行，未验收Tauri本轮发布。
+
+## 2026-09-22 折叠、弹层与画布显示（TASK-UI-006，DONE/PASS，未提交）
+
+已修复12处有复现证据的UI缺陷：项目/生成/保存状态纳入HUD统一布局；20%点阵与网格保持可见；项目分组折叠保留会话状态，隐藏菜单正确清理；添加菜单、顶部菜单、任务列表与详情遵守重复点击/Escape/回焦；Modal拖出不误关；390px打开对话入口不再裁切。
+
+原工程完整verify通过327 Node/261 browser，0失败/0flaky/0skipped；UI144/0，lint/typecheck/format/build通过。独立23文件预检PASS；fresh Tauri release的实际JS/CSS与dist逐字节相符，16组合与原生开关/折叠/嵌套/拖出验证通过。只回传受审增量，保留其余dirty状态；测试生成的旧证据与schemas恢复到运行前字节。
+
+完整证据见 `docs/changes/2026-09-22-ui-interactions/verification.md`。在线Ardot、缺失页面Frame、用户视觉验收以及真实Provider/CLI/GPU/MCP、TaskHost恢复、ComfyUI/TTS/平台服务与正式发布继续保持各自任务状态。本批不升级这些能力。
+
+## 2026-09-22 新增功能 UI 接线（TASK-UI-005，DONE/PASS，未提交）
+
+本轮按用户要求优先检查 UI 与真实功能的对应关系，核对 29 项功能。已补图片/本地 Agent 双通道、首次会话准备与 warning/错误/审批状态、画布插件管理入口、提示词库浏览与应用、文本方式实际改写输入，以及音频演示和 Web/Desktop 平台说明。
+
+独立审查发现的真实 SSE/hello、warning、迟到审批、重连操作锁与并发会话准备问题已修正。会话准备采用独立受版本校验的接口，旧服务明确返回不支持；agent:build 安装受版本控制的局部集成，避免改动既有 threads/new 语义。最终独立复核PASS；原工程完整verify327 Node/241 browser、UI142/0通过。新Tauri实际资源校验、16组合与两次启动验证通过。TASK-UI-005已关闭；用户追加的折叠/弹窗/重叠/点阵缩放交互由下一任务继续。
+
+UI 范围及证据见 `docs/changes/2026-09-22-ui-feature-parity/verification.md`；剩余事项继续由 `docs/changes/2026-09-22-design-system/remaining.md` 与账本管理。真实 CLI/Provider、TTS/ComfyUI/WebDAV 完整产品链、在线 Ardot 和用户视觉验收未被本批替代。
+
+
+## 2026-09-22 Design System逐页迁移（TASK-DS-002，DONE/PASS，未提交）
+
+项目库、Skills、ComfyUI目录、Skill编辑器和设置分区已按1.1共享规范迁移，补浅色侧栏SVG辨识、长分类换行与清晰选中边界。保留既有Landing/Workspace几何和业务边界。独立预检发现的两项P2已修复并复核PASS；菜单End回归改为核对并发加载后的实际末项，不再假设SVG固定最后。
+
+原工程完整verify为309 Node/229 browser，0失败/0flaky；UI137/0、lint/typecheck/format/build通过。原工程新Tauri release实际JS/CSS字节校验、16种主题/强调色与两次启动复验通过，偏好和本地Skill记录保留。只回传本任务增量，未commit/push。
+
+TASK-DS-001/UI-001/UI-004保持PARTIAL，在线Ardot、缺失Frame与用户视觉验收继续保留；T5任务恢复/health、T6执行、真实服务与发布未被本次UI证据关闭。详见 `docs/changes/2026-09-22-design-system-pages/verification.md` 与 `docs/changes/2026-09-22-design-system/remaining.md`。下一优先项为T5完整进程恢复与health回写。
+
+## 2026-09-22 Design System校正（TASK-DS-001，未提交）
+
+已按用户7页PDF完成Design System审计与v1.1校正，现行颜色/基础组件规范统一为 `docs/DESIGN-SYSTEM.md`；保留旧页面几何。公共控件、状态配对和双主题8色偏好已接入现有v1存储。完整verify307 Node/219 browser通过，独立dirty-diff预检PASS；随后修复设置插件破图并定向复验。已仅回传本任务增量到当前工程，保留并发Agent/插件业务；回传后309 Node、13项相关浏览器、lint/typecheck/format/UI/build全部通过。
+
+TASK-DS-001、UI-001、UI-004保持PARTIAL：在线Ardot未写入，新样式Tauri运行与全页面视觉验收仍待完成。详细命令、文件指纹和当前工程回传结果见 `docs/changes/2026-09-22-design-system/verification.md`，剩余事项见同目录 `remaining.md`。未commit/push。
+
+
+## 2026-09-22 文本任务与规则审计（当前，未提交）
+
+- 唯一工程仍为 D:/kk-studio/KK-Studio-2.0，分支 chore/TASK-CONSOLIDATE-200，HEAD cf344ddcdf039c6e62aeb9c65106e2a2339c0bb4 + 未提交工作区。遵从用户要求，未 commit/push。
+- TASK-RULES-003 DONE/PASS：精确卡片状态、真正开放任务、REAL非空代码/测试/入口与DONE/PASS任务、分平台运行证据、仓库内路径与异常字段门禁已修复；README/TASK_LEDGER是生成视图，功能卡可维护。现有28功能、48任务，门禁0违规。
+- BACKEND-TEXT-NODE / FEAT-008 PARTIAL：Web SSE与原生TaskHost已实现；输入4,000字、输出32 KiB，完整终止才成功，未知受理不能普通重试。修复长文案保存、用户编辑被恢复覆盖、来源删除后迟到提交、原生并发占用重载泄漏及错误事件假成功。
+- 完整npm verify：227 Node、210 Playwright/Edge、0失败/0flaky；lint/typecheck/format/ui129/0/build通过。Rust74/74、fmt/check、Tauri no-bundle build通过。development1421、preview1423、Tauri release各有证据，Desktop加载index-C7-jQxHk.js。独立dirty-diff预检PASS，不能当正式PR审批。
+- 勘误：FEAT-003/005/009/026缺相应证据或旧能力描述不实，保持PARTIAL；旧“FEAT-003 REAL”和“多轮chat已接入前端”不能继续沿用。已登记BACKEND-CONVERSATION；视频/音频仍为演示。
+- 剩余：真实付费Provider、完整T5进程退出/恢复及原生health回写、ComfyUI/MCP/平台服务、Hosted CI/正式PR/发布未以fixture代替。证据与审查见[本轮verification](changes/2026-09-21-text-and-rule-audit/verification.md)及[review](changes/2026-09-21-text-and-rule-audit/review.md)。
+
+## 2026-09-21 功能登记体系建立与图片参数后端化样板（IMPLEMENTED，未提交）
+
+- 任务 FEATURE-SYSTEM：新增 `docs/features/` 功能体系——28 张功能卡（`feat-001~028`，固定五段结构）、机器可读权威 `features.registry.json`、脚本生成看板 `README.md`、卡片模板 `_feature-template.md`、演示后端化四波路线 `BACKEND-ROADMAP.md`；功能状态 REAL/PARTIAL/PROTOTYPE/PLANNED 与任务状态正交。门禁 `npm run features:check`（卡片章节、代码/测试路径、账本任务、非 REAL 挂开放任务、磁盘卡片登记、看板一致性）已并入 `lint`/`verify`。AGENTS.md、AI_RULES.md、SPEC_BASELINE.md 同步新功能流程与状态口径；账本新增 8 个任务（共 46）。
+- 附带修复 UI-SKILL-POPOVER-001：内置 Skill 合入后首页弹层在 ≤620px 遮挡创作提示词且一条浏览器断言仍按旧空态；已改为窄屏弹层在底栏下方展开并更新断言。
+- 任务 BACKEND-IMAGE-PARAMS（FEAT-003 PROTOTYPE→REAL 样板）：图片比例/清晰度经唯一纯函数 `src/domain/imageParameters.ts` 映射为真实像素尺寸，Web（`generateImages` JSON/multipart）与 Desktop（Tauri IPC → Rust `task_host.rs` JSON/multipart）两条请求链路均条件透传 `size`，自适应不传；Rust 增加尺寸形状校验；视频参数明确标注尚未接入。
+- 验证：`features:check` 28 功能 0 违规、`governance:check` 46 任务 0 违规、typecheck、lint（eslint+两门禁）、format、ui:check（129 文件 0 违规）、build 通过；Node 单测 212/212（新增图片参数 7、功能登记册 4）、Playwright/Edge 浏览器回归 200/200、Rust `--bin kk-studio` 65/65（含新增尺寸校验测试）。真实付费出图与 Tauri 实机 HTTP 仍属外部验收（EXT-PROVIDER/T5）。证据见 `docs/changes/2026-09-21-feature-system/`。全程未 commit/push。
+
+## 2026-09-21 MiniMax Design 深度交互审计与本地能力复刻（PARTIAL）
+
+- 只读操作了本机 MiniMax Design `current` 安装，覆盖项目库、开始创作、Skills、连接器、ComfyUI、设置、文件/窗口/帮助菜单及关键弹窗；未点击会员生成、未下载 40GB 工作流、未登录、未上传日志、未安装第三方连接器。
+- 候选分支 `codex/feat/minimax-deep-replica-root` 增加本地 Skill registry/UI：搜索、分类、导入 JSON/裸 `SKILL.md`、创建/编辑、启用/禁用、卸载、应用到创作草稿；应用壳首次打开即准备内置 Skill，补充 2MiB 文件上限、4,000 字指令上限、损坏持久化告警、Escape 与焦点恢复。MiniMax 的 zip 导入契约已审计，记录为下一步有界实现。
+- 增加连接器目录原型和 Blender 等目录项；详情、关闭、Escape、跳转 MCP 设置可操作，安装按钮保持 disabled 并写明 Prototype/未接入；MCP Streamable HTTP 增加分页、响应体上限、连接失败清理、组件卸载清理和损坏配置保护。
+- Web 开发运行时固定 `http://127.0.0.1:1421/` 完成同状态 DOM/交互证据；Tauri release、真实云端 provider、付费生成和真实第三方连接器仍未验证，任务账本为 `TASK-MINIMAX-001=PARTIAL`。详见 `docs/changes/2026-09-21-minimax-deep-audit/`。
+
+## 2026-09-21 安全审计风险收口（IMPLEMENTED / 1421 外部进程占用）
+
+- `TASK-AUDIT-SEC-001-CLOSEOUT` 在 `fix/TASK-AUDIT-SEC-001-boundaries` 完成三项剩余修复：Web Locks 长生命周期连接租约与崩溃元数据重建；Gateway 初始额度 provisioning 记录、额度漂移 fail closed 和并发策略更新；TaskHost 结果 URL 同源、HTTPS/loopback、DNS/IP pinning、取消窗口和 IPv6 边界。
+- 验证：178/178 Node 单测、TypeScript、lint、format、UI119/0、Rust63/63、fmt/check、production build、production preview 191/191 和隔离 Tauri WebView2 均通过；closeout 五份变更记录见 `docs/changes/2026-09-21-security-audit-closeout/`。
+- 固定 development 端口 1421 被另一工作树的 Vite 进程占用，未终止并未把该进程结果归给本分支；除此之外的最终 head 证据已记录。
+## 2026-09-21 安全边界与异常任务状态审计（PARTIAL）
+
+- `TASK-AUDIT-SEC-001` 在独立 worktree `fix/TASK-AUDIT-SEC-001-boundaries` 完成一轮证据驱动审计。已修复：Provider 请求发出后取消/暂停的 unknown fencing、远程明文 HTTP API Key 外泄、Gateway 重启旧配置/ACL 静默保留、token collision 权限覆盖、TaskHost 无长度响应全量缓冲，以及 journal delete-first 丢失窗口。
+- 验证：155/155 Node、TypeScript、lint、format、production build、Rust 61/61 与 fmt 通过。证据见 [security audit](changes/2026-09-21-security-audit/verification.md)。
+- 仍为 PARTIAL：Web 跨窗口 localStorage 租约竞态/崩溃孤儿槽、Gateway `initialCredits` 配置陈旧，以及 TaskHost Provider 结果 URL 的 origin allowlist/DNS pinning 尚未收口；不能把本轮修复描述为完整提交并发或 SSRF 防护。
+
+## 2026-09-21 未完成子任务汇总验收（整合候选）
+
+- TASK-MAIN-CLOSE-002 已在独立 worktree 汇入 Figma 收口、素材元数据分页/按需预览与动画回归稳定性修复。当前候选 `bb96dadc08c12a2177481d2ae1e4dda605cc77d4` 的本地完整 `npm run verify` 为 172 Node、197 browser、UI121/0、0 failure/flaky；Rust 61/61、fmt、Tauri client build 通过。
+- dev1421、preview1423、Tauri release 均用当前候选重新启动并通过同状态交互检查：四个工作台菜单切换不改变按钮矩形，Escape/外部点击关闭并恢复焦点，窄屏账号弹层关闭优先级通过。素材专项 7/7 验证 40 项元数据页、320px WebP、41 项 fixture 详情 SHA 和错误/重试边界。
+- 证据：`docs/changes/2026-09-20-main-close-002/`、`docs/evidence/2026-09-21-main-close-002/`。当前候选尚未合并；TASK-MAIN-CLOSE-002 等待最新 main 合并、PR/CI 和主线回读。
+- UI-004 保持 PARTIAL（Landing/部分页面缺少当前 Figma Frame）；PERF-001 保持 PARTIAL（永久缩略图、大快照和单件大图 IO/峰值未完成）。Astra 仍为迁移计划，不在本轮实施。
 
 ## 2026-09-20 Astra 迁移计划与分支规则复核
 
 - TASK-ASTRA-001 从已验收的稳定 main 建立独立 task worktree，校正旧 checkout 初稿，复用已完成的 T3b/T4 与已集成的 T5，补齐项目包和 unknown 状态迁移验收。尚未实施 Astra 功能。
 - 已检查 AGENTS、CONTRIBUTING、governance、SDLC/评审、ADR、PR 模板和 CI；不直接写 main，不推送历史任务分支，不合并原 dirty 工作区。
 - 用户指定 https://github.com/soudbs180-creator/KK-Studio-2.0 为 2.0 远端；该仓库与本地历史不相干，阶段 0 文档分支 `docs/TASK-ASTRA-001-remote-manifest`（回读 `9edb528`）保留为历史审计；首次 2.0 树已通过 PR #1 合并。
+
 
 ## 2026-09-19 T5 原生 TaskHost 集成与未知受理保护（本地集成完成，运行态待收口）
 
@@ -32,6 +150,7 @@
 
 - 已接通 Desktop 设置→储存的导出、预检、独立目录恢复和打开副本入口；原生端完成严格 manifest/ZIP/schema/checksum/引用校验、隔离 staging、写后校验和新目标发布。Web 入口显示禁用原因。
 - 新增跨语言 checksum、非法包、七个写入阶段故障注入和 UI 异步/取消回归；修复原生 JSON 字段排序导致画布打开即误保存的问题。已在源码 379b302 完成 129 unit、156 browser、UI 117/0、50 Rust、fmt/check 和 release build；全新 WebView 的完整快照/原件恢复通过，T3b Desktop Windows 单元关闭。
+
 
 ## 2026-09-18 T3a 原生素材及引用最终验收
 
@@ -302,6 +421,7 @@ Confirmed and repaired stylesheet import deduplication/cascade issues; preserved
 
 Not complete: original reported window provenance, native Tauri visual check, full same-content Figma and all auxiliary frame/state comparisons. Collapsed search retained by explicit user request. See docs/changes/2026-09-10-ui-runtime-diagnosis/verification.md and docs/evidence/ui-runtime-2026-09-10/live-browser.json. These current results supersede earlier pending validation notes, not the remaining visual acceptance boundaries.
 
+
 ## 2026-09-20 KK Studio 2.0 main 同步候选
 
 - 本地稳定 main 已在隔离 worktree 完成候选整理；原 checkout 仍保持 dirty/index 原样。
@@ -324,3 +444,11 @@ TASK-UI-MAIN-001 已完成并同步到目标仓库：PR #3（https://github.com/
 TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点击不关闭；同状态三环境专项与191项浏览器回归通过。详见 docs/changes/2026-09-20-ui-main-alignment/followup.md。稳定main提交以Git回读为准，上述旧SHA是阶段记录。UI-004设计来源缺口与PERF-001压力边界继续保留。
 
 - 补充云端大图重绘失败调查：优化归档/请求的逐字节转换，route提前捕获请求、点击后开始I/O预算。unknown用例的瞬时审批检查已改为等待异步审批；最终完整verify通过（浏览器191项、0失败/重试），unknown/音频定向10次通过，大图20倍CPU连续3次通过；新bundle index-Be6XJzPc.js已在dev/preview/隔离Desktop核对。PERF-001大规模素材库工作保持未完成。
+## 2026-09-20 AI自主开发、分支和规则一致性（TASK-GOV-002）
+
+- 最新治理规则已合入本候选；TASK-GOV-002 仍由独立 owner 维护，远端保护 API403 继续记录为 BLOCKED，不由本任务代替其 PR/审批。
+
+## 2026-09-21 Governance closeout synchronization
+
+- `origin/main` now includes the governance closeout at `3c4d012`; TASK-GOV-002 remains PARTIAL because hosted branch protection is still blocked by the GitHub billing/API403 boundary. Its closeout package and current ledger entry were retained when preparing this candidate.
+- This candidate keeps the UI/asset work scoped to TASK-MAIN-CLOSE-002; it does not re-own the governance worktree or claim remote rules are active.

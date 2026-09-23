@@ -1,0 +1,166 @@
+{
+  "rows": [
+    {
+      "label": "initial",
+      "rect": {
+        "x": 30,
+        "y": 65,
+        "width": 310,
+        "height": 217,
+        "top": 65,
+        "right": 340,
+        "bottom": 282,
+        "left": 30
+      },
+      "scrollTop": 0,
+      "scrollHeight": 400,
+      "clientHeight": 215,
+      "maxHeight": "217px",
+      "focus": "模型"
+    },
+    {
+      "label": "immediateScroll",
+      "rect": {
+        "x": 30,
+        "y": 65,
+        "width": 310,
+        "height": 217,
+        "top": 65,
+        "right": 340,
+        "bottom": 282,
+        "left": 30
+      },
+      "scrollTop": 100,
+      "scrollHeight": 400,
+      "clientHeight": 215,
+      "maxHeight": "217px",
+      "focus": "模型"
+    },
+    {
+      "label": "afterScrollListener",
+      "rect": {
+        "x": 30,
+        "y": 65,
+        "width": 310,
+        "height": 217,
+        "top": 65,
+        "right": 340,
+        "bottom": 282,
+        "left": 30
+      },
+      "scrollTop": 100,
+      "scrollHeight": 400,
+      "clientHeight": 215,
+      "maxHeight": "217px",
+      "focus": "模型"
+    },
+    {
+      "label": "afterWheel",
+      "rect": {
+        "x": 30,
+        "y": 65,
+        "width": 310,
+        "height": 217,
+        "top": 65,
+        "right": 340,
+        "bottom": 282,
+        "left": 30
+      },
+      "scrollTop": 100,
+      "scrollHeight": 400,
+      "clientHeight": 215,
+      "maxHeight": "217px",
+      "focus": "模型"
+    },
+    {
+      "clickTrial": "ok",
+      "lastHit": {
+        "rect": {
+          "x": 39,
+          "y": 241,
+          "width": 292,
+          "height": 32,
+          "top": 241,
+          "right": 331,
+          "bottom": 273,
+          "left": 39
+        },
+        "hit": true
+      }
+    },
+    {
+      "label": "afterClickTrial",
+      "rect": {
+        "x": 30,
+        "y": 65,
+        "width": 310,
+        "height": 217,
+        "top": 65,
+        "right": 340,
+        "bottom": 282,
+        "left": 30
+      },
+      "scrollTop": 185,
+      "scrollHeight": 400,
+      "clientHeight": 215,
+      "maxHeight": "217px",
+      "focus": "模型"
+    },
+    {
+      "label": "afterResize",
+      "rect": {
+        "x": 30,
+        "y": 65,
+        "width": 310,
+        "height": 237,
+        "top": 65,
+        "right": 340,
+        "bottom": 302,
+        "left": 30
+      },
+      "scrollTop": 165,
+      "scrollHeight": 400,
+      "clientHeight": 235,
+      "maxHeight": "237px",
+      "focus": "模型"
+    },
+    {
+      "label": "stableAfterResize",
+      "rect": {
+        "x": 30,
+        "y": 65,
+        "width": 310,
+        "height": 237,
+        "top": 65,
+        "right": 340,
+        "bottom": 302,
+        "left": 30
+      },
+      "scrollTop": 165,
+      "scrollHeight": 400,
+      "clientHeight": 235,
+      "maxHeight": "237px",
+      "focus": "模型"
+    },
+    {
+      "actualSettingsOpened": true
+    },
+    {
+      "searchFocus": true
+    },
+    {
+      "escapeFocus": true
+    }
+  ],
+  "errors": [],
+  "runtime": {
+    "mode": "production",
+    "scripts": [
+      "http://127.0.0.1:1423/assets/index-BVxVd-ts.js"
+    ],
+    "styles": [
+      "http://127.0.0.1:1423/assets/index-CSo3kggd.css",
+      null
+    ]
+  }
+}

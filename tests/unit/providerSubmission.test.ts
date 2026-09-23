@@ -5,6 +5,7 @@ import { setSessionApiKey } from "../../src/features/creation/providerCredential
 import {
   assertSubmissionConnection,
   reserveProviderSubmission,
+  reserveProviderSubmissionAsync,
 } from "../../src/features/creation/providerSubmission.ts";
 import {
   connectionFromModelProfile,
@@ -179,6 +180,113 @@ test("stale leases cannot release a connection re-added with the same id", () =>
   } finally {
     if (original) Object.defineProperty(globalThis, "window", original);
     else Reflect.deleteProperty(globalThis, "window");
+  }
+});
+
+test("coordinated reservations serialize browser windows and reclaim orphaned leases", async () => {
+  const originalWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
+  const originalNavigator = Object.getOwnPropertyDescriptor(
+    globalThis,
+    "navigator",
+  );
+  const storage = new Map<string, string>();
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      localStorage: {
+        getItem: (key: string) => storage.get(key) ?? null,
+        setItem: (key: string, value: string) => storage.set(key, value),
+      },
+    },
+  });
+  const tails = new Map<string, Promise<void>>();
+  const held = new Set<string>();
+  Object.defineProperty(globalThis, "navigator", {
+    configurable: true,
+    value: {
+      locks: {
+        request: async <T>(
+          name: string,
+          _options: { mode: "exclusive" },
+          callback: () => Promise<T>,
+        ) => {
+          const previous = tails.get(name) ?? Promise.resolve();
+          const run = previous.then(async () => {
+            held.add(name);
+            try {
+              return await callback();
+            } finally {
+              held.delete(name);
+            }
+          });
+          tails.set(
+            name,
+            run.then(
+              () => undefined,
+              () => undefined,
+            ),
+          );
+          return run;
+        },
+        query: async () => ({ held: [...held].map((name) => ({ name })) }),
+      },
+    },
+  });
+  try {
+    const connection = connectionFromModelProfile({
+      version: 1,
+      name: "coordinated",
+      baseUrl: "https://coordinated.example.test/v1",
+      model: "image-test",
+    });
+    const binding = {
+      id: connection.id,
+      baseUrl: connection.baseUrl,
+      credentialRef: connection.credentialRef,
+      referenceCount: 0,
+    };
+    writeProviderConnections([{ ...connection, concurrencyLimit: 1 }]);
+    const results = await Promise.allSettled([
+      reserveProviderSubmissionAsync(binding),
+      reserveProviderSubmissionAsync(binding),
+    ]);
+    assert.equal(
+      results.filter((item) => item.status === "fulfilled").length,
+      1,
+    );
+    assert.equal(
+      results.filter((item) => item.status === "rejected").length,
+      1,
+    );
+    const lease = results.find((item) => item.status === "fulfilled")!;
+    if (lease.status === "fulfilled") await lease.value.release();
+    assert.equal(readProviderConnections()[0].activeJobs, 0);
+
+    writeProviderConnections([
+      {
+        ...connection,
+        concurrencyLimit: 1,
+        activeJobs: 1,
+        activeLeaseIds: ["crashed-tab-lease"],
+      },
+    ]);
+    const recovered = await reserveProviderSubmissionAsync(binding);
+    assert.equal(readProviderConnections()[0].activeJobs, 1);
+    assert.equal(
+      readProviderConnections()[0].activeLeaseIds?.includes(
+        "crashed-tab-lease",
+      ),
+      false,
+    );
+    await recovered.release();
+    assert.equal(readProviderConnections()[0].activeJobs, 0);
+  } finally {
+    if (originalWindow)
+      Object.defineProperty(globalThis, "window", originalWindow);
+    else Reflect.deleteProperty(globalThis, "window");
+    if (originalNavigator)
+      Object.defineProperty(globalThis, "navigator", originalNavigator);
+    else Reflect.deleteProperty(globalThis, "navigator");
   }
 });
 

@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { openWorkspace, showCanvasNavigation } from "./helpers";
 
-test("账号菜单跨窄屏断点后仍优先关闭，键盘展开不让侧栏监听抢占", async ({
+test("手机断点隐藏账号时清除弹层，重新展开后保持顶层关闭顺序", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -13,6 +13,8 @@ test("账号菜单跨窄屏断点后仍优先关闭，键盘展开不让侧栏�
   await toggle.focus();
   await page.keyboard.press("Enter");
   await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await expect(page.locator(".account-popup")).toHaveCount(0);
+  await page.getByRole("button", { name: "个人信息", exact: true }).click();
   await expect(page.locator(".account-popup")).toBeVisible();
   await page
     .getByRole("button", { name: "创建项目文件夹", exact: true })

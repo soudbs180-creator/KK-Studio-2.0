@@ -11,12 +11,14 @@ import {
   type CreateProjectInput,
   type CreationProject,
   type CreationAttachment,
+  type CreationTask,
 } from "./model.ts";
 import {
   loadStoredAsset,
   type StoredGeneratedAsset,
 } from "./assetRepository.ts";
 import { hasApiKey } from "./providerCredentials.ts";
+import { catalogForConnection } from "../models/modelCatalog.ts";
 import {
   addProviderConnection,
   connectionFromModelProfile,
@@ -35,6 +37,28 @@ export class ImageTaskCommandError extends Error {
   }
 }
 
+/** Re-read after every await before sending; captured UI state is not authority. */
+export function assertLiveTextTask(
+  project: CreationProject | undefined,
+  expected: CreationTask,
+): void {
+  const task = project?.tasks.find((item) => item.id === expected.id);
+  if (
+    !task ||
+    !["queued", "running"].includes(task.status) ||
+    task.idempotencyKey !== expected.idempotencyKey ||
+    task.model !== expected.model ||
+    task.prompt !== expected.prompt ||
+    task.providerBaseUrl !== expected.providerBaseUrl ||
+    task.providerCredentialRef !== expected.providerCredentialRef ||
+    !task.sourceItemId ||
+    !project?.items.some((item) => item.id === task.sourceItemId)
+  )
+    throw new ImageTaskCommandError(
+      "文本任务或来源节点已变化，本次未提交；请从当前节点重新生成。",
+    );
+}
+
 export function validateImageTaskInput(input: CreateProjectInput): void {
   if (!input.prompt.trim())
     throw new ImageTaskCommandError("请先填写图片描述。");
@@ -50,11 +74,39 @@ export function validateImageTaskInput(input: CreateProjectInput): void {
     );
   if (!input.model.trim())
     throw new ImageTaskCommandError("请选择本次创作使用的模型。", true);
-  if (!modelSupportsKind(input.model, input.kind) || input.kind !== "image")
+  if (!supportsSelectedModel(input) || input.kind !== "image")
     throw new ImageTaskCommandError("当前模型不支持图片创作，请改用图片模型。");
   const count = input.outputCount ?? 1;
   if (!Number.isInteger(count) || count < 1 || count > 64)
     throw new ImageTaskCommandError("图片数量必须为 1 至 64 的整数。");
+}
+
+function supportsSelectedModel(input: CreateProjectInput): boolean {
+  const connection = readProviderConnections().find(
+    (item) => item.id === input.providerConnectionId,
+  );
+  const declaration =
+    connection &&
+    catalogForConnection(connection).find((model) => model.id === input.model);
+  return declaration && declaration.kind !== "unknown"
+    ? declaration.kind === input.kind
+    : modelSupportsKind(input.model, input.kind);
+}
+function withValidSize(
+  input: CreateProjectInput,
+  connection: ProviderConnection,
+): ProviderConnection {
+  if (
+    input.kind === "image" &&
+    input.imageSize &&
+    !catalogForConnection(connection)
+      .find((model) => model.id === input.model)
+      ?.sizes?.includes(input.imageSize)
+  )
+    throw new ImageTaskCommandError(
+      "当前模型未声明支持此尺寸，请重新选择尺寸或使用自适应。",
+    );
+  return connection;
 }
 
 /** Every entry uses this binding check; an existing project never swaps accounts. */
@@ -62,7 +114,59 @@ export async function prepareImageTask(
   input: CreateProjectInput,
   project?: CreationProject,
 ): Promise<ProviderConnection> {
-  validateImageTaskInput(input);
+  if (
+    !input.providerConnectionId &&
+    project?.composerDraft.providerConnectionId
+  )
+    input = {
+      ...input,
+      providerConnectionId: project.composerDraft.providerConnectionId,
+    };
+  if (input.kind === "text") {
+    if (!input.prompt.trim() || input.prompt.length > 4000)
+      throw new ImageTaskCommandError("请填写不超过 4000 字的文案描述。");
+    if (input.privacyMode && input.privacyMode !== "byok_local")
+      throw new ImageTaskCommandError(
+        "文案生成当前仅支持 BYOK 本地模式，草稿已保留。",
+      );
+    if (!supportsSelectedModel(input))
+      throw new ImageTaskCommandError(
+        "请在设置中配置文本模型连接，草稿已保留。",
+        true,
+      );
+    if (input.attachments.length || (input.outputCount ?? 1) !== 1)
+      throw new ImageTaskCommandError(
+        "文案生成仅支持单份纯文本，不接收图片附件。",
+      );
+  } else validateImageTaskInput(input);
+  if (input.providerConnectionId) {
+    const selected = readProviderConnections().find(
+      (item) => item.id === input.providerConnectionId,
+    );
+    if (
+      !selected ||
+      !catalogForConnection(selected).some((model) => model.id === input.model)
+    )
+      throw new ImageTaskCommandError(
+        "选择的供应商或模型已移除，请重新选择。",
+        true,
+      );
+    const binding = {
+      id: selected.id,
+      baseUrl: selected.baseUrl,
+      credentialRef: selected.credentialRef,
+      referenceCount: input.attachments.length,
+      kind: input.kind === "text" ? ("text" as const) : ("image" as const),
+      model: input.model,
+    };
+    assertSubmissionConnection(binding);
+    if (!(await hasApiKey(selected.baseUrl!, selected.credentialRef)))
+      throw new ImageTaskCommandError(
+        "选择的连接缺少密钥，请配置后重试。",
+        true,
+      );
+    return withValidSize(input, assertSubmissionConnection(binding));
+  }
   if (!project) {
     const profile = parseModelProvider(
       localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
@@ -87,7 +191,14 @@ export async function prepareImageTask(
         "请先配置模型连接；当前草稿已保留，配置后再次提交。",
         true,
       );
-    return selectSubmissionConnection(input.attachments.length);
+    return withValidSize(
+      input,
+      await selectSubmissionConnection(
+        input.attachments.length,
+        input.kind === "text" ? "text" : "image",
+        input.model,
+      ),
+    );
   }
   const binding = {
     id:
@@ -100,6 +211,8 @@ export async function prepareImageTask(
     baseUrl: project.providerBaseUrl,
     credentialRef: project.providerCredentialRef,
     referenceCount: input.attachments.length,
+    kind: input.kind === "text" ? ("text" as const) : ("image" as const),
+    model: input.model,
   };
   const connection = assertSubmissionConnection(binding);
   if (!(await hasApiKey(connection.baseUrl!, connection.credentialRef)))
@@ -107,7 +220,7 @@ export async function prepareImageTask(
       "原绑定连接缺少密钥，请配置后重试；当前草稿已保留。",
       true,
     );
-  return assertSubmissionConnection(binding);
+  return withValidSize(input, assertSubmissionConnection(binding));
 }
 
 export function appendImageTask(
@@ -129,7 +242,7 @@ export function appendImageTask(
       ...bound,
       prompt: input.prompt,
       model: input.model,
-      kind: "image",
+      kind: input.kind,
       attachments: input.attachments,
       composerDraft: {
         ...bound.composerDraft,
@@ -139,6 +252,7 @@ export function appendImageTask(
     }),
     sourceItemId,
     providerConnectionId: connection.id,
+    imageSize: input.imageSize,
   };
   return {
     task,
@@ -188,7 +302,8 @@ export async function canvasImageAttachments(
 ): Promise<CreationAttachment[]> {
   const incoming = project.canvas.edges
     .filter((edge) => edge.target === source.id && edge.kind !== "result")
-    .map((edge) => project.items.find((item) => item.id === edge.source));
+    .map((edge) => project.items.find((item) => item.id === edge.source))
+    .filter((item) => item?.kind !== "text");
   const sources =
     source.assetId || source.preview || source.result
       ? [source, ...incoming]

@@ -6,6 +6,7 @@ import {
   parseModelProvider,
   serializeModelProvider,
 } from "../../src/domain/modelProvider.ts";
+import { providerConnectionSchema } from "../../src/domain/providerConnections.ts";
 
 test("broken browser data recovers to usable defaults", () => {
   const result = parseSettings("{not valid json");
@@ -43,10 +44,63 @@ test("saved preferences restore user choices after reload", () => {
       version: 1,
       language: "zh-CN",
       theme: "system",
+      accent: "default",
       floatingLayout: false,
       removeWatermark: false,
     },
   });
+});
+
+test("old v1 settings gain a default accent without losing existing choices", () => {
+  const result = parseSettings(
+    JSON.stringify({
+      version: 1,
+      language: "zh-CN",
+      theme: "light",
+      floatingLayout: false,
+      removeWatermark: false,
+    }),
+  );
+  assert.equal(result.recovered, false);
+  assert.equal(result.preferences.accent, "default");
+  assert.equal(result.preferences.theme, "light");
+  assert.equal(result.preferences.floatingLayout, false);
+});
+
+test("all eight accent choices survive serialization and an invalid accent falls back locally", () => {
+  for (const accent of [
+    "default",
+    "blue",
+    "green",
+    "yellow",
+    "pink",
+    "orange",
+    "purple",
+    "white",
+  ] as const) {
+    const saved = serializeSettings({
+      version: 1,
+      language: "zh-CN",
+      theme: "system",
+      floatingLayout: false,
+      removeWatermark: false,
+      accent,
+    });
+    assert.equal(parseSettings(saved).preferences.accent, accent);
+  }
+  const invalid = parseSettings(
+    JSON.stringify({
+      version: 1,
+      language: "zh-CN",
+      theme: "light",
+      floatingLayout: false,
+      removeWatermark: true,
+      accent: "unknown-accent",
+    }),
+  );
+  assert.equal(invalid.preferences.accent, "default");
+  assert.equal(invalid.preferences.theme, "light");
+  assert.equal(invalid.preferences.floatingLayout, false);
 });
 
 test("unknown fields including secrets are excluded from exported preferences", () => {
@@ -85,7 +139,7 @@ test("first visit starts with defaults without reporting data damage", () => {
   assert.equal(parseSettings(null).preferences.language, "zh-CN");
 });
 
-test("model provider accepts HTTP API links and normalizes the models endpoint", () => {
+test("model provider accepts loopback HTTP links and normalizes the models endpoint", () => {
   const raw = serializeModelProvider({
     version: 1,
     name: "本地模型",
@@ -99,6 +153,38 @@ test("model provider accepts HTTP API links and normalizes the models endpoint",
     "http://127.0.0.1:11434/v1/models",
   );
   assert.equal(raw.includes("apiKey"), false);
+});
+
+test("model provider rejects remote HTTP links before an API key can be sent", () => {
+  const parsed = parseModelProvider(
+    JSON.stringify({
+      version: 1,
+      name: "远程明文服务",
+      baseUrl: "http://models.example.test/v1",
+      model: "image-test",
+    }),
+  );
+  assert.equal(parsed.recovered, true);
+  assert.equal(parsed.profile.baseUrl, "https://api.openai.com/v1");
+});
+
+test("provider connection records reject remote HTTP links", () => {
+  const parsed = providerConnectionSchema.safeParse({
+    id: "byok-remote",
+    provider: "Remote",
+    kind: "user_byok",
+    displayName: "Remote",
+    baseUrl: "http://models.example.test/v1",
+    credentialRef: "provider-key",
+    capabilities: {
+      modalities: ["image"],
+      operations: ["generate"],
+      async: false,
+    },
+    state: "active",
+    concurrencyLimit: 1,
+  });
+  assert.equal(parsed.success, false);
 });
 
 test("model provider rejects non-network protocols", () => {

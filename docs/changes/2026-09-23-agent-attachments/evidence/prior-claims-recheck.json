@@ -1,0 +1,179 @@
+{
+  "date": "2026-09-22T17:40:33.500Z",
+  "priorEvidenceDate": "2026-09-22T16:08:53.688Z",
+  "oldManifestFiles": 522,
+  "unchanged": 494,
+  "changed": [
+    {
+      "path": "src/App.tsx",
+      "prior": "5dc0be2d829a404dc1a7d0cfb0776d9e99757a4f22a91639fc6587764119b028",
+      "current": "86bc372dd1eb713120ff8dc7fc772678dd77b6ddfac937d2a0a34672b955d868",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "src/components/AgentComposer.tsx",
+      "prior": "426f2528d3dcfd8e23f85ab7063fc6b40d7455eae5d2cf8cab506b22a5a0106c",
+      "current": "bef28e8b114867c89d6fc1bd3e1e5297aa479b047267e2cf39d7e41916421bf7",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "src/components/AgentConversationMessages.tsx",
+      "prior": "8e12bc9155de19144f90e402756ed92862a133c3461d7812ed811b11790cffa0",
+      "current": "401a4e31179636c15be9ce6eebaff3cf27f825d7d88a2ca858506a24aa27a28c",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "src/components/Canvas.tsx",
+      "prior": "98db4ce4b70521777a70048b9b10624717c08fc31af6455349da3811b6fd82a3",
+      "current": "9de9ce54f88c0cf1bb16d3fd15db90fc1fff93604892dc100ff10f7c017859b2",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "src/components/ConversationActions.tsx",
+      "prior": "5e0177d14aa52c62fbcdba5fb8dd7911cf2d7b875397b1b1f79aeec9821e3e81",
+      "current": "9153d76848b83271e87e6aa0ea8222b25d095844570f998df59336764761fc20",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "src/components/ConversationComposer.tsx",
+      "prior": "c639173ebb76f2e14f2a57bd964917ee90cc431617346862c915ea82cd332861",
+      "current": "1d2aa8a5ba0eeb09310d67cbb324bbc10772ed18dbd6d44fd48d9c68a8eb1326",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "src/components/StartComposer.tsx",
+      "prior": "9008bf3fa492ed55163be13f6f190fd0bfa56046c8f76ca8ab6d8b0081f1c8ff",
+      "current": "ead9f299b0d26d8bcef46918ae1cf424b4cafcb47bea84cf3a4d67921d193479",
+      "scope": "pre-existing ROOT change before this task integration"
+    },
+    {
+      "path": "src/components/canvas/useCanvasControls.ts",
+      "prior": "52fa9b6f4ba4c8577202e7e9f9a2506a1c3f4624fc3c3af3cbfb0380737ff419",
+      "current": "40ddb6f7db986335567a80ce2f140ffe1004f413bb5290790cb82759b2f8e8aa",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "src/components/canvas/useCanvasPointer.ts",
+      "prior": "e29702cda6c37dad1d23f98f48971bb89e3c7fa0f64426aef8e7a80dd87dc683",
+      "current": "021fd6d53b7e9d33281edb96675f59993d711a6860857126540b03fcefcd6751",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "src/components/useComposerMenus.ts",
+      "prior": "836779e25a11518efcc77ec47060695b568a697c9359cf3ced8d03b9426558a8",
+      "current": "ae1dc527245bc285d70847f9c9d1878de2809bc1186175129947e3a2c7958d3f",
+      "scope": "pre-existing ROOT change before this task integration"
+    },
+    {
+      "path": "src/components/useConversationAttachments.ts",
+      "prior": "dcf226ce2cffba8898a792b9c96d08ad48921a5374b06b1ba3a7c3d62a03989a",
+      "current": "4ae0d30f6b63044ec79a4607ae654e1c76118205d0839b4e181ce27c37aeda07",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "src/features/agent/agentApi.ts",
+      "prior": "ddee616754e5f090e08c0f7f31e6fb2eb57f87dac7a288beb47e23e6bbe19701",
+      "current": "492c3c9d4200a2f9e037323eb207898df2fbcb4426434cb88170393b7e29ae8e",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "src/features/agent/agentConnection.ts",
+      "prior": "7c0c942aa4c85e7c9b04d37c3b2a9923e64cada3c2ed4ac2e8d909480ef48379",
+      "current": "1c384cc696d03c5ddccf923f7a7d9a10150d1fcdb551702185e39de2404a3771",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "src/features/agent/agentHost.ts",
+      "prior": "b2efe22f1418ca55004b45bf0f482e54adf3e264d0458cee1e0749d43da015f4",
+      "current": "7c9a5b633c41226528d56992ce53ab5434c0aea449454bd1da1981da6d9cf8c4",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "src/features/agent/agentTypes.ts",
+      "prior": "632b70911b2fd19431761f6595a45268e6118b2cff906dd384fda53e62348ce9",
+      "current": "a2bec2b059a174b88b8a3d2d2b2b0e6bca2a70bae18b5d1ea6ebcb6054a876f8",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "src/styles/catalog-pages.css",
+      "prior": "3f131ef64d8a3cd90a6d3494565fefa4da174fde641bede1b89fe06f5eb04588",
+      "current": "0f9f344ef84e17d7fd99db37ddb23aaa1cd5488266923265cb62911a4885601a",
+      "scope": "pre-existing ROOT change before this task integration"
+    },
+    {
+      "path": "src/styles/conversation-panel.css",
+      "prior": "cf20c02a55a431844dcc31c43252eecf5c311071853840a9bfd7b15624f18255",
+      "current": "a3c47ab79b04cdb8de688cb8076662d03109e1adf8a36de15d1478f56b30dacf",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "src/styles/model-picker.css",
+      "prior": "0fca302b97ccc675a697a22caa8f9eae0ba94fc4bc77077692ccb9924b7dc418",
+      "current": "e9b7132d25dfe364e185daeecbe99635f532a32a8ec6346005f8ac61005541b0",
+      "scope": "pre-existing ROOT change before this task integration"
+    },
+    {
+      "path": "src/styles/responsive-content.css",
+      "prior": "9b67f98f4ca8b840fa22f2c73ca2c3930fd6266ddeea7ead76dda8130e4974e9",
+      "current": "ce70dc56f5eebba3429a925170728eb3b49fdd444a9c38cfaaa58785e552fe24",
+      "scope": "pre-existing ROOT change before this task integration"
+    },
+    {
+      "path": "src/styles/workspace.css",
+      "prior": "bfd63f31d380564ed5e85f377198a7fde616a3a3b9b2bf76ce3a78e2ad5f463b",
+      "current": "803effb89c159bbd0aa419ac3dd52f50342e56d51f978e069b1393bf21afe06a",
+      "scope": "pre-existing ROOT change before this task integration"
+    },
+    {
+      "path": "tests/browser/agent.spec.ts",
+      "prior": "abbd795e9c7fd7f050e64f6107bc86ca3ab34bf0abfc2eed1597a3288a2ba5d7",
+      "current": "866f8bedba2184602e1f1ad7dd2b78129208aff6c1cf7aead5dd76ef471329f0",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "tests/browser/interaction-state.spec.ts",
+      "prior": "da00e790db1e1e73d346869f21dcf4b584e4feb7eb82ff73643afeba364e0fee",
+      "current": "75e5826ed6f1d84ac110d9f2ca4766fc25cd8801e709e66f7f6aa65558408da3",
+      "scope": "pre-existing ROOT change before this task integration"
+    },
+    {
+      "path": "tests/browser/model-picker.spec.ts",
+      "prior": "cc31e3d5776eefae3779d6e443b0455bfab69ca4cc0e3e57a3c6c030ed725bfe",
+      "current": "a07a0ac2e547c70fff78bc06724db36fca100294a797cc9d9cc7ead22fafc6c2",
+      "scope": "pre-existing ROOT change before this task integration"
+    },
+    {
+      "path": "tests/browser/runtime-ui.spec.ts",
+      "prior": "bf2ddac2f1f6346b17376841870f3f00ec877165c5ebffa121a94c39995f54e7",
+      "current": "4328dc7fefa453d77508fde54c528cd263032066060d06c9581821e6b9213677",
+      "scope": "pre-existing ROOT change before this task integration"
+    },
+    {
+      "path": "tests/browser/ui-feature-parity.spec.ts",
+      "prior": "55abde5a172027cea258d01220338bdab05d960b5b0021a65554a7e6026a4d56",
+      "current": "ebfe91048096409dd6ef39b2db5d6036b6e1024104b434d5a9a8743d20812064",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "tests/unit/agentApi.test.ts",
+      "prior": "49fd8c8162407e22afeea63f8106d856623883d1be262e3b0db680ff8fcf967e",
+      "current": "ea03eb6e199547e280db431b7f8a6b9007b4d2cfaee72f1b6c7db2e0be9fb6bc",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "tests/unit/agentConnection.test.ts",
+      "prior": "7a4fee0b0c175d8bf322ca70ef6233774db458bd09e13d6a236a5d17732c7378",
+      "current": "b3bcef98bf739a3fda02f3fca87ef1051de5d7c495b487468d41db322c286d50",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    },
+    {
+      "path": "tests/unit/agentHost.test.ts",
+      "prior": "6f0ff0c2ef0cc5e46d962845da907e025f5fa270f15b3807d6f7b9b23eaaba04",
+      "current": "eed08ae3317b2e312d0a8de6c02c2e7778c0553b7623836ca0aa40a281472736",
+      "scope": "TASK-AGENT-003 (may include UI008 reconciliation)"
+    }
+  ],
+  "desktopAgentInputs": 66,
+  "desktopAgentInputDrift": [],
+  "note": "Historical runtime hashes and test counts are stage-specific. Current ROOT verify and freshly built native vision/MCP evidence replace current-runtime claims; old full lifecycle tests are not described as rerun."
+}

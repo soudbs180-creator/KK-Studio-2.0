@@ -1,30 +1,27 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import SidebarDraftFolder from "./SidebarDraftFolder";
 import { useDismissible } from "./useDismissible";
 import SidebarProjectGroup from "./SidebarProjectGroup";
 import SidebarGroupHeading from "./SidebarGroupHeading";
 import AccountPopup from "./AccountPopup";
 import SidebarIcon from "./SidebarIcon";
+import SidebarNavigation from "./SidebarNavigation";
 import BrandLogo from "./BrandLogo";
-
-const ITEMS = [
-  { id: "landing", label: "开始创作", icon: "add" },
-  { id: "projects", label: "项目库", icon: "archive" },
-  { id: "skills", label: "Skill", icon: "skill" },
-  { id: "comfyui", label: "ComfyUI 工作流", icon: "workflow" },
-];
+import { useHiddenControlFocus } from "./useHiddenControlFocus";
 
 export default function Sidebar({
   active,
   onNavigate,
   collapsed,
   narrow,
+  phone = false,
   onCollapse,
 }: {
   active: string;
   onNavigate: (id: string) => void;
   collapsed: boolean;
   narrow: boolean;
+  phone?: boolean;
   onCollapse: () => void;
 }) {
   const [menu, setMenu] = useState<"account" | "projects" | null>(null);
@@ -45,20 +42,25 @@ export default function Sidebar({
   const accountPopup = useRef<HTMLDivElement>(null);
   const projectMenu = useRef<HTMLDivElement>(null);
   const projectFilterTrigger = useRef<HTMLButtonElement>(null);
+  const restoreHiddenFocus = useHiddenControlFocus(root, (previous) =>
+    previous.matches(".sidebar-search") && phone
+      ? document.querySelector<HTMLButtonElement>(".mobile-search")
+      : toggle.current,
+  );
   useLayoutEffect(() => {
-    const focused = document.activeElement;
-    if (
-      collapsed &&
-      focused instanceof HTMLElement &&
-      root.current?.contains(focused) &&
-      focused.getClientRects().length === 0
-    ) {
-      toggle.current?.focus({ preventScroll: true });
-    }
-  }, [collapsed]);
+    if (collapsed)
+      setMenu((current) => (phone || current === "projects" ? null : current));
+    if (collapsed) restoreHiddenFocus();
+  }, [collapsed, phone, restoreHiddenFocus]);
   function navigate(id: string): void {
     setMenu(null);
     onNavigate(id);
+    if (
+      narrow &&
+      !collapsed &&
+      ["landing", "projects", "skills", "comfyui", "workspace"].includes(id)
+    )
+      onCollapse();
   }
   useDismissible(
     menu !== null,
@@ -105,20 +107,11 @@ export default function Sidebar({
           <SidebarIcon name={collapsed ? "expand" : "toggle"} />
         </button>
       </div>
-      <nav className="primary-nav" aria-label="主导航">
-        {ITEMS.map(({ id, label, icon }) => (
-          <button
-            key={id}
-            aria-current={active === id ? "page" : undefined}
-            aria-label={label}
-            title={label}
-            onClick={() => navigate(id)}
-          >
-            <SidebarIcon name={icon} />
-            <span className="nav-label">{label}</span>
-          </button>
-        ))}
-      </nav>
+      <SidebarNavigation
+        active={active}
+        compactLabels={phone && collapsed}
+        onNavigate={navigate}
+      />
       <div className="project-groups">
         <div className="project-groups-header">
           <button
@@ -219,9 +212,8 @@ export default function Sidebar({
           )}
         </div>
         {(["项目", "未分组"] as const).map((name, i) => {
-          if (!((projectFilter === "all" && i === 0) || i === 1)) return null;
           return (
-            <section key={name}>
+            <section key={name} hidden={i === 0 && projectFilter !== "all"}>
               {i === 1 && (
                 <SidebarGroupHeading
                   expanded={groups[i]}
@@ -231,32 +223,28 @@ export default function Sidebar({
                   onOpenLibrary={() => navigate("projects")}
                 />
               )}
-              {groups[i] && (
-                <SidebarProjectGroup
-                  grouped={i === 0}
-                  selected={active === "workspace" && selectedProject === name}
-                  childSelected={
-                    active === "workspace" &&
-                    (selectedProject === null || selectedProject === name)
-                  }
-                  onNavigate={(id) => {
-                    setSelectedProject(name);
-                    navigate(id);
-                  }}
-                />
-              )}
+              <SidebarProjectGroup
+                visible={
+                  !collapsed &&
+                  groups[i] &&
+                  (i === 1 || projectFilter === "all")
+                }
+                grouped={i === 0}
+                selected={active === "workspace" && selectedProject === name}
+                childSelected={
+                  active === "workspace" &&
+                  (selectedProject === null || selectedProject === name)
+                }
+                onNavigate={(id) => {
+                  setSelectedProject(name);
+                  navigate(id);
+                }}
+              />
             </section>
           );
         })}
-        {folderCreated && projectFilter === "all" && (
-          <section className="project-folder-group">
-            <button className="group-heading" aria-expanded="true">
-              新建文件夹 <ChevronDown size={16} />
-            </button>
-            <small className="project-folder-empty">
-              文件夹已创建，可从项目库中添加项目
-            </small>
-          </section>
+        {folderCreated && (
+          <SidebarDraftFolder visible={projectFilter === "all"} />
         )}
       </div>
       {account && (

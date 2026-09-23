@@ -6,6 +6,25 @@ import type {
 
 const INTERRUPTIBLE_STATUSES = new Set(["queued", "running"]);
 
+/**
+ * Once an HTTP request has started, aborting the browser fetch cannot prove
+ * that the provider did not accept it. Keep this transition separate from
+ * pre-submit cancellation so callers cannot accidentally make an uncertain
+ * request retryable.
+ */
+export function abortedAfterProviderSubmission(options: {
+  durableSubmission: boolean;
+  providerRequestStarted: boolean;
+  nativeTaskHost: boolean;
+  aborted: boolean;
+}): boolean {
+  return (
+    options.durableSubmission &&
+    options.aborted &&
+    (options.providerRequestStarted || options.nativeTaskHost)
+  );
+}
+
 /** Ordinary retry is forbidden once a provider may have accepted the task. */
 export function canRetryTask(task: CreationTask): boolean {
   if (

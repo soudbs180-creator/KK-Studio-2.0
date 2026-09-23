@@ -18,6 +18,8 @@ import ProviderConnectionStatus from "./ProviderConnectionStatus";
 import ProviderConnectionList from "./ProviderConnectionList";
 import ProviderProfileFields from "./ProviderProfileFields";
 import ProviderSettingsActions from "./ProviderSettingsActions";
+import ProviderModelCatalog from "./ProviderModelCatalog";
+import { saveModelCatalog } from "../../features/models/modelCatalog";
 import {
   addProviderConnection,
   connectionFromModelProfile,
@@ -206,11 +208,16 @@ export default function ModelProviderSettings({
     try {
       const key =
         apiKey.trim() || (await loadApiKey(valid.baseUrl, credentialRef));
-      await checkModelProvider(valid.baseUrl, key, controller.signal);
+      const models = await checkModelProvider(
+        valid.baseUrl,
+        key,
+        controller.signal,
+      );
       if (requestRef.current !== controller) return;
+      saveModelCatalog(connectionFromModelProfile(valid), models);
       setConnection({
         kind: "success",
-        message: "连接成功，模型列表接口可以访问。",
+        message: `连接成功，已刷新 ${models.length} 个模型；这不代表全部生成能力已验证。`,
       });
     } catch (error) {
       if (requestRef.current !== controller) return;
@@ -268,6 +275,12 @@ export default function ModelProviderSettings({
         activeBaseUrl={profile.baseUrl}
         activeCredentialRef={credentialRef}
         onSelect={selectConnection}
+      />
+      <ProviderModelCatalog
+        profile={profile}
+        onSelect={(model) => update("model", model)}
+        onRefresh={() => void testConnection()}
+        loading={connection.kind === "loading"}
       />
       <ProviderSettingsActions
         saving={saving}

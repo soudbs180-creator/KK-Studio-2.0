@@ -37,6 +37,9 @@ export interface StoredGeneratedAsset {
   provenance: AssetProvenance;
 }
 
+/** Metadata returned by the asset index. The immutable original is loaded separately. */
+export type StoredAssetMetadata = Omit<StoredGeneratedAsset, "preview">;
+
 /** Client-facing route identity. The provider's temporary URL is never returned here. */
 export function authenticatedAssetRoute(
   assetId: string,
@@ -125,7 +128,11 @@ async function persistBlob(
           tags: [...new Set([...old.tags, ...metadata.tags])].slice(0, 20),
         });
       }
-      store.put({ blob, metadata }, id);
+      // Keep the IndexedDB index metadata-only. The original Blob remains the
+      // durable source and is converted to a preview only when requested.
+      const indexMetadata = { ...metadata } as Partial<StoredGeneratedAsset>;
+      delete indexMetadata.preview;
+      store.put({ blob, metadata: indexMetadata }, id);
     };
     transaction.oncomplete = () => resolve();
     transaction.onerror = () =>
@@ -146,11 +153,38 @@ export async function loadStoredAsset(
       .transaction(ASSET_STORE, "readonly")
       .objectStore(ASSET_STORE)
       .get(id);
-    request.onsuccess = () => {
-      db.close();
-      const value = request.result as
-        { metadata?: StoredGeneratedAsset } | undefined;
-      resolve(value?.metadata ?? null);
+    request.onsuccess = async () => {
+      try {
+        const value = request.result as
+          { blob?: Blob; metadata?: StoredAssetMetadata } | undefined;
+        if (!value?.blob || !value.metadata) {
+          resolve(null);
+          return;
+        }
+        if (
+          !/^asset-[a-f0-9]{24}$/.test(id) ||
+          value.metadata.assetId !== id ||
+          !/^[a-f0-9]{64}$/.test(value.metadata.sha256) ||
+          id !== `asset-${value.metadata.sha256.slice(0, 24)}` ||
+          !ALLOWED_MIME.test(value.metadata.mime)
+        )
+          throw new Error("素材原件身份与索引不一致，已保留原文件。");
+        if (value.blob.size === 0 || value.blob.size > MAX_ASSET_BYTES)
+          throw new Error("素材原件大小必须为 1 至 100 MiB。");
+        const bytes = new Uint8Array(await value.blob.arrayBuffer());
+        const sha256 = await digest(bytes);
+        if (sha256 !== value.metadata.sha256) {
+          throw new Error("素材原件 SHA-256 校验失败，已保留原文件。");
+        }
+        resolve({
+          ...value.metadata,
+          preview: bytesToDataUrl(bytes, value.metadata.mime),
+        });
+      } catch (error) {
+        reject(error);
+      } finally {
+        db.close();
+      }
     };
     request.onerror = () => {
       db.close();
@@ -298,39 +332,73 @@ export async function storeGeneratedAsset(options: {
 }
 
 /** Reads only the non-secret metadata needed to show archived results in Asset Library. */
-export async function listStoredAssets(): Promise<StoredGeneratedAsset[]> {
-  if (usesNativeAssets()) return listNativeAssets();
+export async function listStoredAssets(
+  options: {
+    offset?: number;
+    limit?: number;
+  } = {},
+): Promise<StoredAssetMetadata[]> {
+  const offset = options.offset ?? 0;
+  if (!Number.isSafeInteger(offset) || offset < 0)
+    throw new Error("素材分页位置无效。");
+  const requestedLimit = options.limit ?? 50;
+  if (!Number.isSafeInteger(requestedLimit) || requestedLimit < 1)
+    throw new Error("素材分页大小无效。");
+  const limit = Math.min(100, requestedLimit);
+  if (usesNativeAssets()) return listNativeAssets(offset, limit);
   if (typeof indexedDB === "undefined") return [];
   const db = await openAssetDatabase();
   return new Promise((resolve, reject) => {
+    const values: StoredAssetMetadata[] = [];
+    let advanced = false;
     const request = db
       .transaction(ASSET_STORE, "readonly")
       .objectStore(ASSET_STORE)
-      .getAll();
+      .openCursor();
     request.onsuccess = () => {
-      db.close();
-      const values = Array.isArray(request.result) ? request.result : [];
-      resolve(
-        values.flatMap((value) => {
-          const metadata = (value as { metadata?: unknown })?.metadata;
-          if (!metadata || typeof metadata !== "object") return [];
-          const parsed = assetProvenanceSchema.safeParse(
-            (metadata as { provenance?: unknown }).provenance,
-          );
-          if (!parsed.success) return [];
-          return [
-            {
-              ...(metadata as StoredGeneratedAsset),
-              provenance: parsed.data,
-              tags: Array.isArray((metadata as { tags?: unknown }).tags)
-                ? (metadata as { tags: unknown[] }).tags.filter(
-                    (tag): tag is string => typeof tag === "string",
-                  )
-                : ["AI生成"],
-            },
-          ];
-        }),
-      );
+      try {
+        const cursor = request.result;
+        if (!cursor || values.length >= limit) {
+          db.close();
+          resolve(values);
+          return;
+        }
+        if (!advanced && offset > 0) {
+          advanced = true;
+          cursor.advance(offset);
+          return;
+        }
+        const metadata = (cursor.value as { metadata?: StoredGeneratedAsset })
+          ?.metadata;
+        if (
+          !metadata ||
+          typeof metadata !== "object" ||
+          !/^asset-[a-f0-9]{24}$/.test(metadata.assetId) ||
+          !/^[a-f0-9]{64}$/.test(metadata.sha256) ||
+          metadata.assetId !== "asset-" + metadata.sha256.slice(0, 24) ||
+          !ALLOWED_MIME.test(metadata.mime)
+        )
+          throw new Error("素材索引无效，已保留原文件。");
+        const provenance = assetProvenanceSchema.parse(metadata.provenance);
+        const indexMetadata: Partial<StoredGeneratedAsset> = { ...metadata };
+        delete indexMetadata.preview;
+        values.push({
+          ...indexMetadata,
+          assetId: metadata.assetId,
+          sha256: metadata.sha256,
+          mime: metadata.mime,
+          provenance,
+          tags: Array.isArray(metadata.tags)
+            ? metadata.tags.filter(
+                (tag): tag is string => typeof tag === "string",
+              )
+            : ["AI生成"],
+        });
+        cursor.continue();
+      } catch (error) {
+        db.close();
+        reject(error);
+      }
     };
     request.onerror = () => {
       db.close();

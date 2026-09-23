@@ -5,7 +5,7 @@ import BrandLogo from "../BrandLogo";
 type Generation = Pick<
   ReturnType<typeof useLocalGeneration>,
   "phase" | "message" | "available" | "cancel"
-> & { mode?: "provider" };
+> & { mode?: "provider"; kind?: "image" | "text" };
 export function GenerationAction({
   generation,
   label,
@@ -22,7 +22,7 @@ export function GenerationAction({
       aria-label={
         loading
           ? generation.mode === "provider"
-            ? "取消图片生成"
+            ? `取消${label}生成`
             : "取消本地演示"
           : `生成${label}`
       }
@@ -30,7 +30,7 @@ export function GenerationAction({
       title={
         generation.mode === "provider"
           ? generation.available
-            ? "使用已配置连接生成并归档图片"
+            ? `使用已配置连接生成并保存${label}`
             : generation.message
           : loading
             ? "取消正在加载的本地演示"

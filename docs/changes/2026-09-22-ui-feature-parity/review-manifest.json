@@ -1,0 +1,192 @@
+[
+  {
+    "path": "package.json",
+    "baselineSha256": "fd76df2ba3caac8ceac405e1702da07fb0a1e6a5904bf50b580ba49741aefabf",
+    "sha256": "0a104e2b34df057a92706c591b49fd630dd91be7a1eb6d6016bafdcabb0178bf"
+  },
+  {
+    "path": "scripts/agent/install-idle-preparation.mjs",
+    "baselineSha256": null,
+    "sha256": "7bd26f54fb38511c607c0410f2310b4322ee025617a2a87e7f24e955fe7823a2"
+  },
+  {
+    "path": "scripts/agent/prepareIdleConversation.ts",
+    "baselineSha256": null,
+    "sha256": "e5acf05a1731e1e437cf2097b9d03dea168c3e0b393acf0302b90aca0f538bbe"
+  },
+  {
+    "path": "scripts/audit/check-ui-feature-parity-desktop.mjs",
+    "baselineSha256": null,
+    "sha256": "8743bc643f31b994c41afbe72354aa4b186a092a33ed8a5f6edb29a4414687a2"
+  },
+  {
+    "path": "src/App.tsx",
+    "baselineSha256": "a30fcafa848c58ea485d69dcca73a3b3e77e497e39e24ff3cf30c584052f5f64",
+    "sha256": "f43c5826151e9d6568f2a56f0c656c42c670eec0ac48f0f6d869630c098f786c"
+  },
+  {
+    "path": "src/components/AgentComposer.tsx",
+    "baselineSha256": null,
+    "sha256": "b7b6c493efcab8350ebd495750a9782119eaf72b32c68a10602ad32c753b277c"
+  },
+  {
+    "path": "src/components/AgentConversationMessages.tsx",
+    "baselineSha256": "242bdb06e3c0a7069e1eaf5a6924d715b413aa3cf28e019fd53001dbafae58ef",
+    "sha256": "03cf8caa0dbce160c9d10e4e041764fdcf3f77d89ef120acc368cd0e7c34b82d"
+  },
+  {
+    "path": "src/components/ComposerPluginSummary.tsx",
+    "baselineSha256": null,
+    "sha256": "d05fbf70ac766a4d678bef9770e94722b3fa9b0ffd57ef330e33e41ca52c8d74"
+  },
+  {
+    "path": "src/components/ConversationActions.tsx",
+    "baselineSha256": "a026c37600405c47a6c4382a42c7e1afb84ee55ef943aea3530dd6c45d318c7c",
+    "sha256": "f01551452724546bda7e17cf33c5b2dacb877ff4eab3099e47268ea7849a65c6"
+  },
+  {
+    "path": "src/components/ConversationChannelSelector.tsx",
+    "baselineSha256": null,
+    "sha256": "d8e91f37e5197fcd8a78792f37d6b9734b2f5e6bb7c073a2cf62436f248eebf6"
+  },
+  {
+    "path": "src/components/ConversationComposer.tsx",
+    "baselineSha256": "93b0f5e7980170ccd2b26907e06d351f0b6a3aa2fc00bee6fb1db0aaa9ef1600",
+    "sha256": "a21383a79a72a6a6b4533a3c082fed3b62e66e1507d64aa093a72a17bc1d702c"
+  },
+  {
+    "path": "src/components/ConversationPanel.tsx",
+    "baselineSha256": "615c95d41c239b91425279c803320367dca1e550bcf9ed374d6c54b729000597",
+    "sha256": "217b35b9ab8efad66032e5a290c7b1a94b489703cde6e13e813954814d263b13"
+  },
+  {
+    "path": "src/components/PromptLibraryPanel.tsx",
+    "baselineSha256": null,
+    "sha256": "cf17be2c7a9a3d0e49a7a71b5859865de3b926cecd702970d4f22dba22cc5ee0"
+  },
+  {
+    "path": "src/components/StartPage.tsx",
+    "baselineSha256": "d3042a13bff5f1369421c802065a6242103f55d2ee528200ab9f7200c968fca2",
+    "sha256": "bd8c51bb89ef3fc4767621f711f30b9530d5507cfceaedb410c9d21ca61ecc76"
+  },
+  {
+    "path": "src/components/StartResourcePopover.tsx",
+    "baselineSha256": "8b9a5d14c3f87b744d45f71dcf20dd8ade3631d400e20ae8e4f24b3cb787bd44",
+    "sha256": "cb38c3729833ae96a1e07bf7697a26bc265b1231eb5d8d2402f4fbef59239c6f"
+  },
+  {
+    "path": "src/components/TopBar.tsx",
+    "baselineSha256": "13ba6ee4abf2dc181fe793d8bfedaa09bfa06e9deaa86ed496e959584f6262f5",
+    "sha256": "4fd280ab0f511f77250058e38e7e089d4419c1e6823a211894dad5f946b8c816"
+  },
+  {
+    "path": "src/components/nodes/PromptCreationNode.tsx",
+    "baselineSha256": "ccf846c55b9fd73fffa3d5e661c0f4c7a8d82c6f4863c9d14b588563d41095fc",
+    "sha256": "1f28645b28a5b6b8b031a0cf3a76371f38ca9cf051b580268da641dd080df714"
+  },
+  {
+    "path": "src/components/settings/AgentConnectionSettings.tsx",
+    "baselineSha256": "71d141ceb1402b301fa785cd47f16b9f8afd3d40976474d57bff68622b3879b6",
+    "sha256": "abac4574f5d22c4eb6b3fa0bb00d99f79587d92d9256a6df2ff4a848e692ce13"
+  },
+  {
+    "path": "src/components/settings/ConnectionSettings.tsx",
+    "baselineSha256": "468503784597f1df0ec971dde3da477b0b0dabceb3e6835a203bc5051363fce0",
+    "sha256": "eeb94e56481759fafc410b97023cad166d4b95068d6e53715f8dcd58d94511d3"
+  },
+  {
+    "path": "src/components/settings/SettingsSections.tsx",
+    "baselineSha256": "c3a7a84ccae231cf787c0355c2dddcc5fb3f634af5308395996ea8f506114375",
+    "sha256": "a9a2d04b36a223eb7cf2a5fb808ec07456f992df617ceaf3afa21d218eb53913"
+  },
+  {
+    "path": "src/features/agent/agentApi.ts",
+    "baselineSha256": "4de576a1db9169cefd2d6462620a751bbd3cfe6eb5d7dd681ad34dd87196ce87",
+    "sha256": "0a4be08f48caaa14bddd9f124be7695f6da739b193b25b0638428c690c898cdd"
+  },
+  {
+    "path": "src/features/agent/agentConnection.ts",
+    "baselineSha256": "3c933ef548d75d2d26cde31dcd2a6e5e95d3d37dde26c180decf069698eee7e1",
+    "sha256": "3ce6fd9ee670faa7beea3d6d10c70b2c177c621dd1580a5f5dc4cda61136a8b8"
+  },
+  {
+    "path": "src/features/agent/agentEventStream.ts",
+    "baselineSha256": null,
+    "sha256": "fa7a0ef976593ea771ccc0f19762264761493a110eb5a9ba0af259754f744aba"
+  },
+  {
+    "path": "src/features/creation/providerCredentials.ts",
+    "baselineSha256": null,
+    "sha256": "431a36b49a1d2eca46728a2879f3b47eec9e741e6ae6b4d186f87a441f4bb9d5"
+  },
+  {
+    "path": "src/features/prompts/promptLibrary.ts",
+    "baselineSha256": "d5d6770294f1f7487cc2ba707e6f11105f4f72efc326063a7bc92ecba5e69c30",
+    "sha256": "11874eed168c80f4a74784ef24dccb2f887d677e2d00dbccfae6af14f602b88e"
+  },
+  {
+    "path": "src/runtime/appInfo.ts",
+    "baselineSha256": null,
+    "sha256": "77faa1cca4f03868ee8019ed76c845b5af6cb74e594ac2a9d6961a795416d076"
+  },
+  {
+    "path": "src/styles/feature-parity.css",
+    "baselineSha256": null,
+    "sha256": "fb7d13c9980f5ad416e1f534f4626b5defc48cea7493a4a12a173b07de0b432e"
+  },
+  {
+    "path": "src/styles/local-generation.css",
+    "baselineSha256": "12bc1f72eca5892375fd08c44a1102e6a1ed8ad682d127d2d1f64b942e1262c1",
+    "sha256": "8e0da4ed91c7a02d6a39caa2e17cf0497c33cd612299b18b3a1ed45f548cf36f"
+  },
+  {
+    "path": "tests/browser/catalog-pages.spec.ts",
+    "baselineSha256": "409c568050c877d5a6bdaf733d5a1b2bd9deaeed74490b7d39b618019e23d734",
+    "sha256": "95c26610ce1798b5fbe7010e938260efadcd09a4b5726e79182fa0f8a7bd1f95"
+  },
+  {
+    "path": "tests/browser/demo-results.spec.ts",
+    "baselineSha256": "3881e6ba89ea60ec2e0652304898c2f031b0292d73497f5f1eaf566d67140d56",
+    "sha256": "18e52aac01f45f7335d2f8a321c6662eec302f05c72e01bad50adfb71620ef2f"
+  },
+  {
+    "path": "tests/browser/interaction-state.spec.ts",
+    "baselineSha256": "68ce3986ab2906896c88454685096c0034c4d8ead43f9818db3bfecd585f37b8",
+    "sha256": "8440bce583d0d6e8e3cf4f5ebf88ba7fa87f04a2ddcdf9fef3b183ec28dc07f8"
+  },
+  {
+    "path": "tests/browser/ui-feature-parity.spec.ts",
+    "baselineSha256": null,
+    "sha256": "84f290e508895dd17a1e62d644cc693002ec4cabb555c72744e391b528b1e7ce"
+  },
+  {
+    "path": "tests/helpers/agentServer.ts",
+    "baselineSha256": null,
+    "sha256": "125ffdf9ca9d6632ad531c092f33c464a53536e799cb8ef4e44d62340651faf2"
+  },
+  {
+    "path": "tests/unit/agentApi.test.ts",
+    "baselineSha256": "394f8f684124307b1b265ae583a3d3c6d9c15960398f2f317bad354ef83df2f0",
+    "sha256": "da0969eda0529a4db335733c75d9bf401eaca30a32b5df24f4f9f289e94550dd"
+  },
+  {
+    "path": "tests/unit/agentConnection.test.ts",
+    "baselineSha256": "6c0bed643006bbfbb8279b34b7e319f9335b152f06e020150b0d16318ffccc3e",
+    "sha256": "8e74429d427b38bab0f1265e926d8a19e31eafe6288ad35432be3185200dfeba"
+  },
+  {
+    "path": "tests/unit/agentPreparation.test.ts",
+    "baselineSha256": null,
+    "sha256": "6724a7a9ce50427a8b6cf8283452a99826dc230d3cf835025de5ea876522eb1a"
+  },
+  {
+    "path": "tests/unit/agentProtocol.test.ts",
+    "baselineSha256": null,
+    "sha256": "dac12de6106115ac889ce435bc1983e7394c4b0ad4539ef6c28ea2ce80d220e5"
+  },
+  {
+    "path": "tests/unit/promptLibrary.test.ts",
+    "baselineSha256": "e344cd31ed7b5044afead3224deaa1700af4beeced63e6151206b651fdbe0d0d",
+    "sha256": "d4d28b644624c4290a29a3c5877674819c56e53db145409dc266ddad60fec33b"
+  }
+]

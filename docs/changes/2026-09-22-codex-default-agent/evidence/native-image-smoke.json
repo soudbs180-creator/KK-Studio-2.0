@@ -1,0 +1,15 @@
+{
+  "startedAt": "2026-09-22T12:25:17.252Z",
+  "passed": true,
+  "steps": [
+    {
+      "name": "usage",
+      "text": "Codex 额度 · 最低剩余 34%\n\n账号共享额度，包含其他 Codex 窗口的使用。\n\ncodex · 每周：剩余 34% · 2026/9/27 09:12:16 重置\n\n刷新额度"
+    },
+    {
+      "name": "native-image",
+      "count": 1
+    }
+  ],
+  "note": "Detailed executor account identifiers removed; screenshot and source image remain in local evidence."
+}

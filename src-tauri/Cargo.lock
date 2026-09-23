@@ -1845,11 +1845,12 @@ dependencies = [
 
 [[package]]
 name = "kk-studio"
-version = "2.0.0"
+version = "2.1.0"
 dependencies = [
  "anyhow",
  "base64 0.22.1",
  "dirs 5.0.1",
+ "dunce",
  "futures-util",
  "keyring",
  "reqwest 0.12.28",
@@ -1862,6 +1863,7 @@ dependencies = [
  "tauri-plugin-dialog",
  "tauri-plugin-shell",
  "tokio",
+ "windows-sys 0.61.2",
  "zeroize",
  "zip",
 ]

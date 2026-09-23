@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { X, Plus, Upload, ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import { X, ArrowLeft } from "lucide-react";
 import {
   filterAssets,
   type Asset,
@@ -7,11 +7,14 @@ import {
 } from "../../domain/assets";
 import "./assets.css";
 import CreateSubject from "./CreateSubject";
+import AssetCard from "./AssetCard";
 import useAssetImport from "./useAssetImport";
-import AssetProvenanceDetail from "./AssetProvenanceDetail";
+import AssetDetail from "./AssetDetail";
 import AssetFilterControls from "./AssetFilterControls";
 import useAssetCollections from "./useAssetCollections";
 import type { AssetArchiveState } from "../../features/creation/useAssetArchive";
+import useAssetDetail from "./useAssetDetail";
+import AssetActions from "./AssetActions";
 
 export interface AssetPanelProps {
   onClose: () => void;
@@ -45,7 +48,8 @@ export default function AssetPanel({
   const [view, setView] = useState<"grid" | "list">("grid");
   const [filter, setFilter] = useState(EMPTY_FILTER);
   const [selected, setSelected] = useState("canvas-0");
-  const [detail, setDetail] = useState<Asset | null>(null);
+  const { detail, detailLoading, detailError, openDetail, closeDetail } =
+    useAssetDetail();
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState("");
   const [sourceFilter, setSourceFilter] = useState("all");
@@ -65,13 +69,27 @@ export default function AssetPanel({
         : sourceFilter === "provider"
           ? asset.source === "provider"
           : sourceFilter === "upload"
-            ? Boolean(asset.src) && asset.source !== "provider"
-            : !asset.src),
+            ? asset.source === "upload"
+            : !asset.src && !asset.sha256),
   );
+  const searchingArchive =
+    tab === "canvas" &&
+    Boolean(
+      filter.query.trim() ||
+      filter.type !== "all" ||
+      filter.tag !== "all" ||
+      filter.days ||
+      sourceFilter !== "all",
+    ) &&
+    Boolean(archive?.hasMore);
+  useEffect(() => {
+    if (searchingArchive && !archive?.loading && !archive?.error)
+      archive?.loadMore();
+  }, [searchingArchive, archive?.loading, archive?.error, archive?.loadMore]);
   function switchTab(value: "canvas" | "assets"): void {
     setTab(value);
     setFilter(EMPTY_FILTER);
-    setDetail(null);
+    closeDetail(false);
     setSelected(
       value === "canvas" ? (assets[0]?.id ?? "") : (subjects[0]?.id ?? ""),
     );
@@ -167,7 +185,7 @@ export default function AssetPanel({
             aria-pressed={selected === asset.id}
             onClick={() => {
               setSelected(asset.id);
-              setDetail(asset);
+              void openDetail(asset);
             }}
           >
             <span className="file-square" />
@@ -177,61 +195,39 @@ export default function AssetPanel({
       </nav>
       <div className={`asset-content ${view}`}>
         {detail ? (
-          <div className="asset-detail">
-            <button className="text-button" onClick={() => setDetail(null)}>
-              <ArrowLeft size={14} /> 返回资产
-            </button>
-            <div className="asset-large-preview">
-              {detail.src ? (
-                <img src={detail.src} alt={detail.name} />
-              ) : (
-                <Icon name="asset-image" />
-              )}
-            </div>
-            <h3>{detail.name}</h3>
-            <AssetProvenanceDetail
-              asset={detail}
-              childIds={assets
-                .filter((asset) => asset.parentId === detail.id)
-                .map((asset) => asset.id)}
-              inCollection={collectionIds.has(detail.id)}
-              onToggleCollection={() => toggleCollection(detail.id)}
-            />
-          </div>
+          <AssetDetail
+            backIcon={<ArrowLeft size={14} />}
+            detail={detail}
+            assets={assets}
+            loading={detailLoading}
+            error={detailError}
+            onBack={() => closeDetail()}
+            onRetry={() => void openDetail(detail)}
+            inCollection={collectionIds.has(detail.id)}
+            onToggleCollection={() => toggleCollection(detail.id)}
+          />
         ) : items.length ? (
           items.map((asset) => (
-            <button
-              className="asset-card"
+            <AssetCard
               key={asset.id}
-              aria-label={`选择 ${asset.name}`}
-              aria-pressed={selected === asset.id}
-              onClick={() => setSelected(asset.id)}
-              onDoubleClick={() => setDetail(asset)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  setDetail(asset);
-                }
-              }}
-            >
-              <span className="asset-thumbnail">
-                {asset.isAiGenerated && (
-                  <span className="asset-ai-label">AI</span>
-                )}
-                {asset.src ? (
-                  <img src={asset.src} alt="" />
-                ) : (
-                  asset.type !== "subject" && <Icon name="asset-image" />
-                )}
-              </span>
-              <span className="asset-name">{asset.name}</span>
-            </button>
+              asset={asset}
+              selected={selected === asset.id}
+              onSelect={() => setSelected(asset.id)}
+              onOpen={() => void openDetail(asset)}
+              loadPreview={archive?.loadPreview}
+            />
           ))
         ) : (
           <div className="asset-empty">
             <Icon name="search" />
-            <h3>没有找到匹配的资产</h3>
-            <p>试试其他关键词，或清除筛选条件。</p>
+            <h3>
+              {searchingArchive ? "正在搜索本地素材库…" : "没有找到匹配的资产"}
+            </h3>
+            <p>
+              {searchingArchive
+                ? "正在读取其余素材信息。"
+                : "试试其他关键词，或清除筛选条件。"}
+            </p>
             <button
               className="primary-button"
               onClick={() => setFilter(EMPTY_FILTER)}
@@ -241,23 +237,25 @@ export default function AssetPanel({
           </div>
         )}
       </div>
+      {!detail && tab === "canvas" && archive?.hasMore && (
+        <button
+          className="text-button asset-load-more"
+          type="button"
+          disabled={archive.loading}
+          onClick={archive.loadMore}
+        >
+          {archive.loading ? "正在读取…" : "加载更多素材"}
+        </button>
+      )}
       {tab === "assets" && (
-        <div className="asset-bottom-actions">
-          <button
-            className="primary-button"
-            onClick={() => {
-              setCreating(true);
-              setMessage("");
-            }}
-          >
-            <Plus size={11} />
-            创建主体
-          </button>
-          <button disabled={busy} onClick={() => input.current?.click()}>
-            <Upload size={11} />
-            {busy ? "正在导入" : "导入资源包"}
-          </button>
-        </div>
+        <AssetActions
+          busy={busy}
+          onCreate={() => {
+            setCreating(true);
+            setMessage("");
+          }}
+          onImport={() => input.current?.click()}
+        />
       )}
       <input
         className="visually-hidden"

@@ -1,0 +1,2701 @@
+{
+  "timestamp": "2026-09-22T17:12:10.752Z",
+  "mode": "Tauri release",
+  "data": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-input-desktop-wpOvgj\\data",
+  "profile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-input-desktop-wpOvgj\\profile",
+  "matrix": [
+    {
+      "theme": "dark",
+      "accent": "default",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(170, 163, 255)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "blue",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(168, 203, 255)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "green",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(121, 205, 168)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "yellow",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(230, 185, 106)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "pink",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(245, 163, 195)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "orange",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(255, 192, 140)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "purple",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(197, 167, 255)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "white",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(219, 219, 219)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "default",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(89, 74, 204)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "blue",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(20, 88, 165)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "green",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(22, 100, 67)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "yellow",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(120, 81, 10)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "pink",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(161, 38, 89)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "orange",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(148, 66, 12)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "purple",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(101, 52, 176)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "white",
+      "kind": "start",
+      "geometry": [
+        {
+          "name": "添加参考素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 260,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "当前模式：自动",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开始创建项目",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(37, 37, 37)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "default",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(170, 163, 255)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "blue",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(168, 203, 255)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "green",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(121, 205, 168)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "yellow",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(230, 185, 106)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "pink",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(245, 163, 195)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "orange",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(255, 192, 140)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "purple",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(197, 167, 255)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "dark",
+      "accent": "white",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(133, 133, 133)",
+        "background": "rgb(31, 31, 31)",
+        "focus": "rgb(219, 219, 219)",
+        "text": "rgb(219, 219, 219)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "default",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(89, 74, 204)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "blue",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(20, 88, 165)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "green",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(22, 100, 67)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "yellow",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(120, 81, 10)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "pink",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(161, 38, 89)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "orange",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(148, 66, 12)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "purple",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(101, 52, 176)",
+        "text": "rgb(37, 37, 37)"
+      }
+    },
+    {
+      "theme": "light",
+      "accent": "white",
+      "kind": "chat",
+      "geometry": [
+        {
+          "name": "添加对话素材",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "模型",
+          "width": 110,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "Skill",
+          "width": 59.01041793823242,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "插件",
+          "width": 60,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "AI权限模式",
+          "width": 54,
+          "height": 32,
+          "icon": {
+            "width": 10,
+            "height": 6,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "开启语音输入",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 16,
+            "height": 16,
+            "centerOffsetY": 0
+          }
+        },
+        {
+          "name": "发送消息",
+          "width": 32,
+          "height": 32,
+          "icon": {
+            "width": 20,
+            "height": 20,
+            "centerOffsetY": 0
+          }
+        }
+      ],
+      "colors": {
+        "border": "rgb(119, 119, 119)",
+        "background": "rgb(233, 233, 233)",
+        "focus": "rgb(37, 37, 37)",
+        "text": "rgb(37, 37, 37)"
+      }
+    }
+  ],
+  "sections": [],
+  "launches": [
+    {
+      "pid": 30184,
+      "url": "http://tauri.localhost/",
+      "storageRoot": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-input-desktop-wpOvgj\\data",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "loaded": [
+        {
+          "asset": "/assets/index-DLeRvWsG.js",
+          "sha256": "754e32be48a8a119b0e4791fd15bdfdacf6a27595e865801135ad4316068005a",
+          "bytes": 782837
+        },
+        {
+          "asset": "/assets/index-CCZfPOS7.css",
+          "sha256": "196db94dfd36b94d8f6d3aa319b0a5f72fc7309b7763383c9dd85bfad0cb2ef0",
+          "bytes": 216092
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "exe": {
+    "path": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+    "sha256": "045ba6e3b257ae301c4fad1f835ec8e17b9633fe87fc7cd91ec3c721416a5ff9"
+  },
+  "flows": {
+    "agentApiDraftIsolation": true,
+    "attachmentFlowAndRemove": true,
+    "menuEscapeFocus": true,
+    "foldPreservesDraft": true,
+    "homeDiscoveryFlow": true
+  }
+}

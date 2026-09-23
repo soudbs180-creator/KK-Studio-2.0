@@ -4,6 +4,7 @@ import { cardVisualBounds } from "../../domain/canvasGraph";
 import type { Point, ViewTransform } from "../../domain/canvasViewport";
 import type { AddNodeOptions } from "./useCanvasNodeActions";
 import { toSurfacePoint } from "./canvasSurface";
+import { getPluginNodeDefinition } from "../../features/plugins/nodeRegistry";
 
 export interface AddMenuRequest {
   client: Point;
@@ -26,6 +27,15 @@ export function useCanvasAddMenu(
     setMenu(null);
   }
   function open(request: AddMenuRequest): void {
+    if (
+      menu &&
+      menu.trigger === request.trigger &&
+      !request.atPoint &&
+      !menu.atPoint
+    ) {
+      dismiss();
+      return;
+    }
     const canvas = container.current;
     if (!canvas) return;
     const point = toSurfacePoint(canvas, request.client);
@@ -55,6 +65,29 @@ export function useCanvasAddMenu(
     if (menu.parentId) connect(menu.parentId, id);
     setMenu(null);
   }
+  /** 从已激活插件中选择一个节点类型创建。 */
+  function choosePlugin(type: string): void {
+    if (!menu) return;
+    const definition = getPluginNodeDefinition(type);
+    const size = definition?.defaultSize ?? { width: 380, height: 300 };
+    const position = menu.world
+      ? { x: menu.world.x - size.width / 2, y: menu.world.y - size.height / 2 }
+      : undefined;
+    const id = add("text", {
+      parentId: menu.parentId,
+      position,
+      plugin: {
+        type,
+        width: size.width,
+        height: size.height,
+        metadata: definition?.defaultMetadata,
+      },
+      title: definition?.title,
+      description: definition?.description,
+    });
+    if (menu.parentId) connect(menu.parentId, id);
+    setMenu(null);
+  }
   function openAtPoint(
     event: MouseEvent<HTMLDivElement>,
     enabled: boolean,
@@ -73,5 +106,5 @@ export function useCanvasAddMenu(
       atPoint: true,
     });
   }
-  return { menu, open, dismiss, choose, openAtPoint };
+  return { menu, open, dismiss, choose, choosePlugin, openAtPoint };
 }

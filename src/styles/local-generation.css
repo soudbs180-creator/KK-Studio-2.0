@@ -51,22 +51,6 @@
   gap: 5px;
   align-items: center;
 }
-.prompt-presets button {
-  min-height: 26px;
-  padding: 4px 8px;
-  border: 1px solid var(--border-default);
-  border-radius: 8px;
-  color: var(--ui-muted);
-  background: var(--bg-card);
-  font-size: 10px;
-}
-.prompt-presets button:hover,
-.prompt-presets button.is-active,
-.prompt-presets button:focus-visible {
-  color: var(--ui-text);
-  border-color: var(--ui-selected);
-  background: var(--bg-card-hover);
-}
 .prompt-composer-label {
   position: absolute;
   left: 22px;

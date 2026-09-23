@@ -71,10 +71,28 @@ export default function CanvasNodeItem({
     onDemoResults: (results) => onDemoResults(item.id, results),
     onGenerationStart: (count) => onGenerationStart(item.id, count),
     model: item.model,
-    onModelChange: (model) =>
+    onModelChange: (model, selection) =>
       onItemsChange((current) =>
         current.map((entry) =>
-          entry.id === item.id ? { ...entry, model } : entry,
+          entry.id === item.id
+            ? {
+                ...entry,
+                model,
+                providerConnectionId: selection?.connectionId,
+                generationSource:
+                  selection?.source === "codex" ? "codex" : undefined,
+                parameters: entry.parameters
+                  ? {
+                      ...entry.parameters,
+                      imageSize: undefined,
+                      count:
+                        selection?.source === "codex"
+                          ? "1"
+                          : entry.parameters.count,
+                    }
+                  : undefined,
+              }
+            : entry,
         ),
       ),
     references,
@@ -108,6 +126,7 @@ export default function CanvasNodeItem({
           onFavorite={() => onToggleFavorite(item.id)}
           onDelete={() => onDelete(item.id)}
           editing={editing}
+          scale={controls.transform.scale}
         />
       </CanvasNodeFrame>
     </CanvasImageNodeContext.Provider>

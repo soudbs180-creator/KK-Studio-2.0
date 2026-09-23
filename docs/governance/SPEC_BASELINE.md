@@ -1,6 +1,6 @@
 # Specification baseline
 
-Updated: 2026-09-17
+Updated: 2026-09-22 (TASK-DS-001 design-system authority).
 Current policy reconciliation: 2026-09-20, TASK-GOV-002. Read root AI_RULES.md and engineering/SDLC, PROMPTING, BRANCH-POLICY, REVIEW, AI-EVALS alongside AGENTS. Tool-specific entrypoints route to these sources.
 
 These are pointers to the project's existing specifications. The governance index avoids
@@ -11,11 +11,12 @@ creating a second copy of UI or storage rules.
 Current code/runtime/test output proves what the implementation does; it does not override an approved specification. Compare source date, scope, user intent and acceptance evidence before deciding whether implementation or specification drifted. An unresolved conflict remains CONFLICT rather than a fabricated behavior decision.
 
 1. Current user intent and `AGENTS.md` for applicable operating constraints; nested rules apply within their declared module.
-2. Figma file `0nU0A7pq6eyjwfwm1TtWkO`, using current nodes `404:28667`, `410:67357`, and `410:59708` where applicable; historical `1:2` is not a replacement baseline.
+2. `docs/DESIGN-SYSTEM.md` owns colors, type tiers and basic components (user Ardot `728457371665311 / 0:1`, 2026-09-22 PDF, audited corrections). Existing Figma `0nU0A7pq6eyjwfwm1TtWkO` nodes `404:28667`, `410:67357`, `410:59708` retain page-layout/asset authority; historical palettes and `1:2` cannot override newer sources.
 3. Current source, tests and actual runtime evidence for implemented reality; historical verification covers only its recorded source and scope.
 4. `docs/architecture/ARCHITECTURE.md`, `DATA-STORAGE.md`, and `GENERATION-PLATFORM.md` for module and data boundaries.
 5. `docs/UI-ALIGNMENT.md`, `docs/UI-STANDARDS.md`, `docs/UI_SPEC.md`, and `docs/FRONTEND-SPEC.md` for UI and interaction behavior.
 6. A dated `docs/changes/<date>-<task>/spec.md` for task-specific acceptance criteria, with its `verification.md` as the evidence record.
+7. `docs/features/features.registry.json` is the machine-readable authority for how real each product feature is (REAL/PARTIAL/PROTOTYPE/PLANNED); `docs/features/feat-*.md` cards are the human entry, `docs/features/README.md` is a generated board, and `docs/features/BACKEND-ROADMAP.md` orders demo-to-backend work. Feature status is orthogonal to task status and never overrides items 1-6.
 
 ## Non-negotiable contracts
 
@@ -25,11 +26,14 @@ Current code/runtime/test output proves what the implementation does; it does no
 - Desktop, Web, and Mobile capabilities are explicit; a browser test of a shared 390px layout does not prove a native mobile application.
 - UI controls must have real behavior or a visible disabled reason and must preserve loading, error, cancellation, offline, focus, Escape, and stale-async protections where applicable.
 - Production claims require the relevant source build, runtime mode/entry, route/import chain, and same-state browser or desktop evidence.
+- A feature card marked REAL requires that same-form runtime evidence and at least one DONE/PASS ledger task and explicit platforms/runtimeEvidence records; PARTIAL/PROTOTYPE/PLANNED features must link an open ledger task, and every card must reference code/test paths that actually exist. Turning a local-demo seam into a real backend follows the waves in `docs/features/BACKEND-ROADMAP.md`; demo and real results must never be presented as the same state.
 
 ## Executable enforcement
 
 - TypeScript strict checking: `npm run typecheck`.
 - ESLint recommended JS/TypeScript rules and ledger/import-boundary checks: `npm run lint`.
+- Feature registry/card/board consistency: `npm run features:check` (regenerate with `npm run features:write`); already chained into `npm run lint`.
+- Ledger consistency: `npm run governance:check` (regenerate `TASK_LEDGER.md` with `npm run governance:write`).
 - Unit and browser regression: `npm run test` and `npm run test:ui`.
 - UI token/component guard: `npm run ui:check`.
 - Formatting: `npm run format:check`.

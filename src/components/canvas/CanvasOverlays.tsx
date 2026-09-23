@@ -43,6 +43,7 @@ export default function CanvasOverlays({
         <AddNodeMenu
           menu={addMenu.menu}
           onChoose={addMenu.choose}
+          onChoosePlugin={addMenu.choosePlugin}
           onDismiss={addMenu.dismiss}
         />
       )}

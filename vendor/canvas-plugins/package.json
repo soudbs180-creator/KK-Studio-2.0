@@ -1,0 +1,23 @@
+{
+  "name": "kk-studio-canvas-plugins",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "KK Studio 画布节点插件工作区（移植自 infinite-canvas plugins/canvas，MIT License）",
+  "workspaces": [
+    "sdk",
+    "html",
+    "markdown",
+    "sticky-note",
+    "svg"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.6.3"
+  }
+}

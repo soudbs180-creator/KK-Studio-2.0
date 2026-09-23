@@ -80,6 +80,19 @@ test("开始创作的 Skill 选项卡与 Skill 目录页保持职责分离", asy
   ).toBeVisible();
 });
 
+test("开始创作首次打开即可选择内置 Skill", async ({ page }) => {
+  await page.goto("/");
+  await page
+    .getByRole("region", { name: "开始创作" })
+    .getByRole("button", { name: "Skill", exact: true })
+    .click();
+  await expect(
+    page
+      .getByRole("menu", { name: "选择 Skill" })
+      .getByRole("menuitem", { name: "镜头规划助手", exact: true }),
+  ).toBeVisible();
+});
+
 test("开始创作页的插件入口打开设置分类而不是 Skill 页面", async ({ page }) => {
   await page.goto("/");
   await page
@@ -89,13 +102,13 @@ test("开始创作页的插件入口打开设置分类而不是 Skill 页面", a
   await page
     .getByRole("menu", { name: "选择插件" })
     .getByRole("menuitem", {
-      name: "管理插件连接",
+      name: "管理画布插件",
     })
     .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
-      name: "MCP",
+      name: "插件",
       exact: true,
     }),
   ).toHaveAttribute("aria-current", "page");
@@ -117,13 +130,13 @@ test("开始创作页的插件入口打开设置分类而不是 Skill 页面", a
   await page
     .getByRole("menu", { name: "选择插件" })
     .getByRole("menuitem", {
-      name: "管理插件连接",
+      name: "管理画布插件",
     })
     .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
-      name: "MCP",
+      name: "插件",
       exact: true,
     }),
   ).toHaveAttribute("aria-current", "page");
@@ -151,7 +164,7 @@ test("开始创作与工作台的模型入口都定位到模型供应商设置",
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
   await page.getByRole("button", { name: "模型", exact: true }).click();
-  await expect(page.getByRole("menu")).toContainText("kk-image-2");
+  await expect(page.getByRole("menu")).toContainText("默认 · Codex 主 Agent");
   await page
     .getByRole("menu")
     .getByRole("button", { name: /配置供应商/ })
@@ -190,16 +203,24 @@ test("Skill 与工作流卡片保持当前页面并反馈本地预览状态", as
     .getByRole("navigation", { name: "主导航" })
     .getByRole("button", { name: "Skill", exact: true })
     .click();
-  await page.getByRole("button", { name: /3D 动画短片/ }).click();
-  await expect(
-    page.getByText("已选择Skill：3D 动画短片。", { exact: false }),
-  ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Skill", exact: true }),
   ).toBeVisible();
+  await expect(page.getByText("镜头规划助手", { exact: true })).toBeVisible();
+  await page
+    .getByRole("button", { name: "应用到草稿", exact: true })
+    .first()
+    .click();
+  await page
+    .getByRole("navigation", { name: "主导航" })
+    .getByRole("button", { name: "开始创作", exact: true })
+    .click();
+  await expect(page.getByLabel("创作提示词")).toHaveValue(
+    /\[Skill: 镜头规划助手\]/,
+  );
   await expect(
-    page.getByRole("button", { name: "通过 KK Studio 创建", exact: true }),
-  ).toBeDisabled();
+    page.getByRole("heading", { name: "KK Studio", exact: true }),
+  ).toBeVisible();
 
   await page
     .getByRole("button", { name: "ComfyUI 工作流", exact: true })
@@ -212,9 +233,13 @@ test("Skill 与工作流卡片保持当前页面并反馈本地预览状态", as
   await expect(
     page.getByText("已选择工作流：H3 轻量版 · 文生视频。", { exact: false }),
   ).toBeVisible();
+  await page
+    .getByRole("button", { name: "导入/新建工作流", exact: true })
+    .click();
+  await page.getByRole("tab", { name: "我的工作流", exact: true }).click();
   await expect(
-    page.getByRole("button", { name: "导入/新建工作流", exact: true }),
-  ).toBeDisabled();
+    page.getByText("我的 ComfyUI 工作流", { exact: true }),
+  ).toBeVisible();
 });
 
 test("项目区支持筛选、排序和创建文件夹入口", async ({ page }) => {
@@ -225,7 +250,7 @@ test("项目区支持筛选、排序和创建文件夹入口", async ({ page }) 
   await expect(menu).toBeVisible();
   await menu.getByRole("menuitemradio", { name: "仅显示未分组" }).click();
   await expect(menu).toHaveCount(0);
-  await expect(sidebar.locator(".project-entry")).toHaveCount(1);
+  await expect(sidebar.locator(".project-entry:visible")).toHaveCount(1);
   await sidebar.getByRole("button", { name: "项目显示与排序" }).click();
   await sidebar
     .getByRole("menu", { name: "项目显示与排序" })

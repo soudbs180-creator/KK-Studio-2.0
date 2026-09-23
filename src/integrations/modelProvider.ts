@@ -1,10 +1,14 @@
 import { getModelsEndpoint, modelListSchema } from "../domain/modelProvider";
+import {
+  parseCatalogModels,
+  type CatalogModel,
+} from "../features/models/modelCatalog";
 
 export async function checkModelProvider(
   baseUrl: string,
   apiKey: string,
   signal: AbortSignal,
-): Promise<void> {
+): Promise<CatalogModel[]> {
   const response = await fetch(getModelsEndpoint(baseUrl), {
     method: "GET",
     headers: {
@@ -33,4 +37,5 @@ export async function checkModelProvider(
       "响应不符合 OpenAI 兼容模型列表格式，请检查 API 地址和接口协议。",
     );
   }
+  return parseCatalogModels(payload);
 }

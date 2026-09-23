@@ -1,16 +1,17 @@
-/* Supplemental semantic tokens: all new pages consume these, never per-page palettes. */
+/* Design System 1.1. Color owners: global.css; old component names are aliases.
+   Contract and source corrections: docs/DESIGN-SYSTEM.md. */
 :root {
-  --ui-composer-surface: #252525;
+  --ui-composer-surface: var(--bg-input);
   --ui-landing-shadow: 0 14.031px 21.047px rgb(0 0 0 / 25%);
-  --ui-node-menu-bg: #161618;
-  --ui-node-menu-border: #242426;
-  --ui-node-menu-icon-bg: #28282a;
-  --ui-node-menu-text: #fff;
-  --ui-node-menu-muted: #8e8e93;
-  --ui-node-menu-badge: #5c56e1;
+  --ui-node-menu-bg: var(--bg-surface);
+  --ui-node-menu-border: var(--border-subtle);
+  --ui-node-menu-icon-bg: var(--bg-soft);
+  --ui-node-menu-text: var(--text-primary);
+  --ui-node-menu-muted: var(--text-secondary);
+  --ui-node-menu-badge: var(--bg-accent);
   --ui-node-menu-shadow: 0 16px 20px #0008;
-  --ui-context-menu-bg: #18181b;
-  --ui-context-menu-hover: #262629;
+  --ui-context-menu-bg: var(--bg-surface);
+  --ui-context-menu-hover: var(--bg-elevated);
   --ui-context-menu-shadow: 0 12px 12px #00000080;
   --ui-text: var(--text-primary);
   --ui-muted: var(--text-secondary);
@@ -21,26 +22,24 @@
   --ui-sidebar-settings-icon: #d3d3d3;
   --ui-project-thumbnail: #d98a00;
   --sidebar-compact-width: 61px;
-  --ui-focus: #aaa3ff;
+  --ui-focus: var(--focus-ring);
   --ui-disabled-opacity: 0.45;
-  --ui-danger: #ef6d6d;
-  --ui-danger-surface: #402329;
-  --ui-success: #79cda8;
-  /* Figma 312:2436 account popup source colors. */
-  --ui-account-danger: #ff1e1e;
-  --ui-account-action-bg: #252525;
-  --ui-account-panel-bg: #0d0d0d;
-  --ui-account-icon: #d3d3d3;
-  --ui-account-subscription: #16a36a;
-  --ui-account-muted: #a6a6a6;
-  --ui-account-check: #898989;
-  --ui-warning: #e6b96a;
-  --ui-selected: #b2adff;
-  --ui-neutral-selected: #3c3c3c;
-  --text-strong: #dadada;
-  --text-on-accent: #fff;
-  --ui-control-off: #363636;
-  --ui-control-thumb-off: #ccc;
+  --ui-danger: var(--text-danger);
+  --ui-danger-surface: var(--bg-danger-soft);
+  --ui-success: var(--text-success);
+  --ui-account-danger: var(--text-danger);
+  --ui-account-action-bg: var(--bg-input);
+  --ui-account-panel-bg: var(--bg-surface);
+  --ui-account-icon: var(--text-primary);
+  --ui-account-subscription: var(--bg-success);
+  --ui-account-muted: var(--text-secondary);
+  --ui-account-check: var(--text-secondary);
+  --ui-warning: var(--text-warning);
+  --ui-selected: var(--text-accent);
+  --ui-neutral-selected: var(--neutral-selected);
+  --text-strong: var(--text-primary);
+  --ui-control-off: var(--bg-soft);
+  --ui-control-thumb-off: var(--text-secondary);
   --ui-connection: #3a3a40;
   --ui-task-selected: #252525;
   --ui-task-preview-surface: rgb(31 31 31 / 1%);
@@ -60,10 +59,12 @@
   --ui-font-body: 12px;
   --ui-font-label: 14px;
   --ui-font-title: 16px;
+  --ui-font-display: 24px;
   --ui-line-height-caption: 14px;
   --ui-line-height-body: 16px;
   --ui-line-height-label: 20px;
   --ui-line-height-title: 22px;
+  --ui-line-height-display: 30px;
   --ui-border-width: 1px;
   --ui-focus-width: 2px;
   --ui-focus-offset: 3px;
@@ -91,8 +92,11 @@
   --ui-control-w-toolbar-toggle: 20px;
   --ui-control-h-toolbar-help: 30px;
   --ui-toolbar-h: 50px;
-  --ui-control-h-compact: 30px;
+  --ui-control-h-compact: 32px;
   --ui-control-h-standard: 40px;
+  --ui-touch-target: 44px;
+  --ui-screen-body: 14px;
+  --ui-screen-line: 20px;
   --ui-gap-tight: 4px;
   --ui-gap-standard: 8px;
   --ui-gap-relaxed: 12px;
@@ -113,7 +117,7 @@
   --ui-composer-height: 170px;
   /* 404:28667 / 410:67357: controls use screen anchors, not node zoom. */
   --ui-workspace-task-inset: 30px;
-  --ui-workspace-toolbar-right-center: 1044px;
+  --ui-workspace-toolbar-right-center: calc(50vw + 84px);
   --ui-workspace-nav-right: 33px;
   --motion-sidebar: 300ms;
   --motion-sidebar-text-ease: cubic-bezier(0.5, 0, 0.5, 1);
@@ -132,18 +136,9 @@
   --ui-sidebar-settings-icon: var(--text-primary);
   --ui-shortcut-text: var(--text-secondary);
   --ui-tool-active: var(--text-primary);
-  --ui-text: #252525;
-  --ui-muted: #646464;
-  --ui-focus: #594bcb;
-  --ui-danger: #aa263b;
-  --ui-danger-surface: #fce7eb;
-  --ui-success: #216947;
-  --ui-warning: #8a590c;
-  --ui-selected: #594bcb;
-  --ui-neutral-selected: var(--bg-card-hover);
+  --ui-text: var(--text-primary);
+  --ui-muted: var(--text-secondary);
   --text-strong: var(--text-primary);
-  --ui-control-off: var(--border-default);
-  --ui-control-thumb-off: var(--bg-surface);
   --ui-task-selected: var(--bg-card-hover);
   --ui-task-preview-surface: rgb(238 238 238 / 1%);
   --ui-task-preview-text: var(--text-primary);
@@ -161,7 +156,8 @@
 .ui-icon svg {
   flex-shrink: 0;
 }
-.ui-button {
+.ui-button,
+.primary-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -174,6 +170,7 @@
   color: var(--ui-text);
   font-size: var(--ui-font-body);
   line-height: var(--ui-line-height-body);
+  font-weight: 500;
 }
 .ui-button:not(:disabled):not([aria-disabled="true"]):hover {
   background: var(--bg-card-hover);
@@ -191,4 +188,115 @@
 .ui-button:focus-visible {
   outline: var(--ui-focus-width) solid var(--ui-focus);
   outline-offset: var(--ui-focus-offset);
+}
+.primary-button,
+.ui-button.is-primary {
+  border-color: var(--border-accent);
+  background: var(--bg-accent);
+  color: var(--text-on-accent);
+}
+.primary-button:not(:disabled):not([aria-disabled="true"]):hover,
+.ui-button.is-primary:not(:disabled):not([aria-disabled="true"]):hover {
+  background: var(--bg-accent-hover);
+}
+.primary-button:not(:disabled):active,
+.ui-button.is-primary:not(:disabled):active,
+.primary-button[aria-pressed="true"],
+.ui-button.is-primary[aria-pressed="true"] {
+  background: var(--bg-accent-hover);
+  color: var(--text-on-accent);
+}
+.ui-button.is-danger-filled {
+  background: var(--bg-danger);
+  color: var(--text-on-danger);
+  border-color: var(--bg-danger);
+}
+.ui-button.is-danger-filled:not(:disabled):not([aria-disabled="true"]):hover,
+.ui-button.is-danger-filled:not(:disabled):not([aria-disabled="true"]):active {
+  background: var(--bg-danger-hover);
+}
+.ui-input {
+  width: 100%;
+  min-width: 0;
+  height: var(--ui-input-height);
+  padding: 0 var(--ui-space-3);
+  border: var(--ui-border-width) solid var(--border-control);
+  border-radius: var(--ui-radius-control);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: var(--ui-font-body);
+  line-height: var(--ui-line-height-body);
+}
+.ui-input::placeholder {
+  color: var(--text-tertiary);
+  opacity: 1;
+}
+textarea.ui-input {
+  height: auto;
+  padding-block: var(--ui-space-2);
+  resize: vertical;
+}
+.ui-icon-button,
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  min-width: 32px;
+  min-height: 32px;
+  padding: var(--ui-space-1);
+  border: var(--ui-border-width) solid var(--border-default);
+  border-radius: var(--ui-radius-control);
+  color: var(--text-secondary);
+}
+.ui-icon-button:not(:disabled):not([aria-disabled="true"]):hover,
+.icon-button:not(:disabled):not([aria-disabled="true"]):hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+.ui-badge,
+.ui-capsule {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  border-radius: var(--ui-radius-pill);
+  padding: var(--ui-space-1) var(--ui-space-2);
+  font-size: var(--ui-font-body);
+  line-height: var(--ui-line-height-body);
+  color: var(--text-primary);
+  background: var(--bg-soft);
+}
+.ui-capsule:not(:disabled):not([aria-disabled="true"]):hover {
+  border-color: var(--text-accent);
+}
+.ui-button[aria-disabled="true"],
+.primary-button[aria-disabled="true"] {
+  opacity: var(--ui-disabled-opacity);
+  cursor: not-allowed;
+}
+.ui-badge.is-accent,
+.ui-capsule[aria-pressed="true"] {
+  background: var(--bg-accent-soft);
+  color: var(--text-on-accent-soft);
+}
+.ui-badge.is-success {
+  background: var(--bg-success);
+  color: var(--text-on-success);
+}
+.ui-capsule {
+  min-height: 28px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  border: var(--ui-border-width) solid var(--border-default);
+}
+.ui-capsule[aria-pressed="true"] {
+  border-color: var(--text-accent);
+  box-shadow: inset 0 0 0 var(--ui-border-width) var(--text-accent);
+  font-weight: 600;
+}
+.ui-card {
+  background: var(--bg-card);
+  border: var(--ui-border-width) solid var(--border-subtle);
+  border-radius: var(--ui-radius-card);
+  padding: var(--ui-space-5);
+  box-shadow: var(--ui-shadow);
 }

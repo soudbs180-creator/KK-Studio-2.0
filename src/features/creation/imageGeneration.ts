@@ -9,6 +9,7 @@ import { getSessionApiKey, loadApiKey } from "./providerCredentials.ts";
 import { loadStoredAsset } from "./assetRepository.ts";
 import { resolveImageAttachments } from "./resolveAttachments.ts";
 import { ProviderSubmissionError } from "./providerSubmission.ts";
+import { readModelCatalogs } from "../models/modelCatalog.ts";
 
 export { getSessionApiKey, setSessionApiKey } from "./providerCredentials.ts";
 
@@ -178,6 +179,8 @@ async function requestImageChunk(options: {
   idempotencyKey?: string;
   apiKey: string;
   signal: AbortSignal;
+  /** Resolved provider size label such as "1024x1024"; omitted means provider default. */
+  size?: string;
 }): Promise<string[]> {
   const linked = linkAbortSignal(options.signal);
   let timedOut = false;
@@ -201,6 +204,7 @@ async function requestImageChunk(options: {
             form.set("model", options.model);
             form.set("prompt", options.prompt);
             form.set("n", String(options.count));
+            if (options.size) form.set("size", options.size);
             options.attachments.forEach((attachment, index) => {
               if (attachment.dataUrl)
                 form.append(
@@ -226,6 +230,7 @@ async function requestImageChunk(options: {
             model: options.model,
             prompt: options.prompt,
             n: options.count,
+            ...(options.size ? { size: options.size } : {}),
           }),
           credentials: "omit",
           redirect: "error",
@@ -282,6 +287,8 @@ export async function generateImages(options: {
   credentialRef?: string;
   count?: number;
   idempotencyKey?: string;
+  /** Resolved provider size label such as "1024x1024"; omitted means provider default. */
+  size?: string;
   onChunk?: (sources: string[], offset: number) => Promise<void>;
   beforeRequest?: () => void;
   onRequestStart?: () => void;
@@ -294,7 +301,17 @@ export async function generateImages(options: {
   const baseUrl = options.providerBaseUrl?.trim() || profile.baseUrl;
   const model = options.model.trim() || profile.model.trim();
   if (!model) throw new Error("尚未选择模型，请在输入栏选择本次创作模型。");
-  if (!modelSupportsKind(model, "image"))
+  if (
+    !modelSupportsKind(model, "image") &&
+    !readModelCatalogs().some(
+      (catalog) =>
+        catalog.baseUrl === baseUrl &&
+        catalog.credentialRef === options.credentialRef &&
+        catalog.models.some(
+          (item) => item.id === model && item.kind === "image",
+        ),
+    )
+  )
     throw new Error("当前模型不支持图片创作，请更换图片模型。");
   const sessionApiKey = await loadApiKey(baseUrl, options.credentialRef);
   if (!sessionApiKey.trim())
@@ -333,6 +350,7 @@ export async function generateImages(options: {
         count,
         apiKey: sessionApiKey,
         signal: options.signal,
+        size: options.size,
         idempotencyKey: options.idempotencyKey
           ? `${options.idempotencyKey}-part-${Math.floor(offset / perRequest) + 1}`
           : undefined,

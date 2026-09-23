@@ -5,6 +5,9 @@ const key = "kk-studio-next:provider-connections:v1";
 const pixel =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
 async function configure(page: Page) {
+  await page.addInitScript(() =>
+    localStorage.setItem("kk-chat-channel", "direct"),
+  );
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();

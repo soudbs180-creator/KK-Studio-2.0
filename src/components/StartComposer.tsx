@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import type { CreationDraft } from "../features/creation/model";
 import StartAttachmentList from "./StartAttachmentList";
+import ComposerTextarea from "./ComposerTextarea";
 import useConversationAttachments from "./useConversationAttachments";
 import StartResourcePopover from "./StartResourcePopover";
 import { StartApproval, StartModePicker } from "./StartComposerModes";
@@ -8,6 +9,7 @@ import VoiceInputButton from "./VoiceInputButton";
 import GenerationOptions from "./GenerationOptions";
 import GenerationPrivacyNotice from "./GenerationPrivacyNotice";
 import { useComposerMenus } from "./useComposerMenus";
+import type { SkillRecord } from "../features/skills/skillRegistry";
 
 export default function StartComposer({
   draft,
@@ -18,6 +20,8 @@ export default function StartComposer({
   onOpenSkills,
   onOpenPlugins,
   defaultModel = "",
+  skills = [],
+  onApplySkill,
 }: {
   draft: CreationDraft;
   onDraftChange: (draft: CreationDraft) => void;
@@ -27,6 +31,8 @@ export default function StartComposer({
   onOpenSkills: () => void;
   onOpenPlugins: () => void;
   defaultModel?: string;
+  skills?: SkillRecord[];
+  onApplySkill?: (record: SkillRecord) => string;
 }) {
   const [pendingSubmit, setPendingSubmit] = useState<CreationDraft | null>(
     null,
@@ -89,13 +95,13 @@ export default function StartComposer({
   return (
     <>
       <form
-        className="start-composer"
+        className="start-composer composer-surface"
         onSubmit={(event) => {
           event.preventDefault();
           submit();
         }}
       >
-        <textarea
+        <ComposerTextarea
           aria-label="创作提示词"
           value={draft.prompt}
           onChange={(event) => {
@@ -106,7 +112,15 @@ export default function StartComposer({
           rows={3}
           maxLength={4000}
         />
-        <div className="start-composer-footer" ref={pickerRef}>
+        <StartAttachmentList
+          attachments={draft.attachments}
+          onRemove={(id) =>
+            commit({
+              attachments: draft.attachments.filter((item) => item.id !== id),
+            })
+          }
+        />
+        <div className="start-composer-footer composer-toolbar" ref={pickerRef}>
           <div className="start-footer-left">
             <button
               type="button"
@@ -170,9 +184,8 @@ export default function StartComposer({
                 </div>
               )}
             </div>
-            <GenerationOptions draft={draft} onChange={commit} />
             <span className="start-composer-divider" aria-hidden="true" />
-            <div className="start-resource-picker">
+            <div className="start-resource-picker composer-skill">
               <button
                 type="button"
                 className="start-tool-button"
@@ -186,6 +199,12 @@ export default function StartComposer({
               {skillMenuOpen && (
                 <StartResourcePopover
                   kind="skill"
+                  skills={skills}
+                  onApplySkill={(record) => {
+                    const message = onApplySkill?.(record);
+                    closeMenus();
+                    setStatus(message ?? "当前草稿不可用，未应用 Skill。");
+                  }}
                   onOpen={() => {
                     closeMenus();
                     onOpenSkills();
@@ -194,7 +213,7 @@ export default function StartComposer({
               )}
             </div>
             <span className="start-composer-divider" aria-hidden="true" />
-            <div className="start-resource-picker">
+            <div className="start-resource-picker composer-plugin">
               <button
                 type="button"
                 className="start-tool-button"
@@ -243,6 +262,9 @@ export default function StartComposer({
             </button>
           </div>
         </div>
+        <div className="composer-options">
+          <GenerationOptions draft={draft} onChange={commit} />
+        </div>
       </form>
       <GenerationPrivacyNotice mode={draft.privacyMode} />
       {pendingSubmit && (
@@ -257,14 +279,6 @@ export default function StartComposer({
           }}
         />
       )}
-      <StartAttachmentList
-        attachments={draft.attachments}
-        onRemove={(id) =>
-          commit({
-            attachments: draft.attachments.filter((item) => item.id !== id),
-          })
-        }
-      />
     </>
   );
 }

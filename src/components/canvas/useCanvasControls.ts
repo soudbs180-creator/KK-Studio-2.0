@@ -271,6 +271,7 @@ export function useCanvasControls({
     setSelectedNode,
     transform,
     zoomCanvas,
+    setTransform,
     viewport,
   };
 }

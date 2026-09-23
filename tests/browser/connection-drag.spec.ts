@@ -131,7 +131,7 @@ test("加号区域磁吸，拖动只预览，释放后选类型才创建并连�
   await expect(menu).toBeVisible();
   await expect(page.getByTestId("connection-drag-preview")).toHaveCount(0);
   expect(await menu.boundingBox()).toMatchObject({ width: 296, height: 586 });
-  await expect(menu.getByRole("menuitem")).toHaveCount(8);
+  await expect(menu.getByRole("menuitem")).toHaveCount(12);
   await expect(
     menu.getByRole("menuitem", { name: "表格", exact: true }),
   ).toBeDisabled();
@@ -242,8 +242,9 @@ test("底栏、空白双击与下游共用菜单；窄屏和减弱动态可用",
       menu.getByRole("menuitem", { name: "图片", exact: true }),
     ).toBeFocused();
     await page.keyboard.press("End");
+    // Plugins activate asynchronously; End targets the current last enabled item.
     await expect(
-      menu.getByRole("menuitem", { name: "音频", exact: true }),
+      menu.locator('button[role="menuitem"]:enabled').last(),
     ).toBeFocused();
     await page.keyboard.press("Escape");
     await expect(

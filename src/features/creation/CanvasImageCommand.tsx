@@ -1,4 +1,12 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import { agentConnection } from "../agent/agentConnection";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import type { CreationTask } from "./model";
 
@@ -15,6 +23,8 @@ export const CanvasImageCommandContext = createContext<{
   tasks: CreationTask[];
   model: string;
   models: string[];
+  textModel?: string;
+  providerConnectionId?: string;
   disabledReason?: string;
 } | null>(null);
 export const CanvasImageNodeContext =
@@ -24,6 +34,15 @@ export const CanvasImageNodeContext =
 export function useCanvasImageGeneration() {
   const command = useContext(CanvasImageCommandContext);
   const item = useContext(CanvasImageNodeContext);
+  const agent = useSyncExternalStore(
+    agentConnection.subscribe,
+    agentConnection.getState,
+  );
+  const usesCodex = item?.generationSource === "codex";
+  const codexBusy =
+    usesCodex && agent.sending && agent.canvasNodeId === item?.id;
+  const isText = item?.kind === "text";
+  const label = isText ? "文案" : "图片";
   const [error, setError] = useState("");
   const [preparing, setPreparing] = useState(false);
   const request = useRef<AbortController | null>(null);
@@ -35,14 +54,17 @@ export function useCanvasImageGeneration() {
       request.current?.abort();
     };
   }, []);
-  const task = item
-    ? command?.tasks
-        .slice()
-        .reverse()
-        .find((task) => task.sourceItemId === item.id)
-    : undefined;
+  const task =
+    item && !usesCodex
+      ? command?.tasks
+          .slice()
+          .reverse()
+          .find((task) => task.sourceItemId === item.id)
+      : undefined;
   const loading =
-    preparing || task?.status === "queued" || task?.status === "running";
+    preparing ||
+    codexBusy ||
+    (!usesCodex && (task?.status === "queued" || task?.status === "running"));
   const phase:
     "idle" | "loading" | "success" | "error" | "cancelled" | "offline" = error
     ? "error"
@@ -59,19 +81,36 @@ export function useCanvasImageGeneration() {
               : "idle";
   const disabledReason =
     command?.disabledReason ??
-    (!command || !item ? "请先新建或打开项目，再提交图片生成。" : undefined);
+    (!command || !item
+      ? `请先新建或打开项目，再提交${label}生成。`
+      : undefined) ??
+    (isText && task?.status === "unknown"
+      ? "供应商受理状态不明，请先核对原任务，不能重复提交。"
+      : undefined) ??
+    (usesCodex && agent.status !== "connected"
+      ? "请先在对话面板连接 Codex。"
+      : undefined) ??
+    (isText && !usesCodex && !item?.providerConnectionId && !command?.textModel
+      ? "请先在设置中配置文本模型连接。"
+      : undefined);
   const message =
     error ||
+    (usesCodex ? agent.error : undefined) ||
     disabledReason ||
     (preparing
       ? "正在检查参考原件和模型连接，可取消。"
       : task?.error ||
         (loading
-          ? "图片任务处理中，可取消；成功结果将保存到本机。"
+          ? usesCodex
+            ? "Codex 正在执行；详情和权限请求见对话面板。"
+            : `${label}任务处理中，可取消；成功结果将保存到本机。`
           : task?.status === "succeeded"
-            ? `已归档 ${task.completedOutputs}/${task.requestedOutputs} 张图片。`
+            ? isText
+              ? "文案结果已保存到本机项目。"
+              : `已归档 ${task.completedOutputs}/${task.requestedOutputs} 张图片。`
             : ""));
   function cancel() {
+    if (codexBusy) void agentConnection.interrupt();
     request.current?.abort();
     if (task && loading) command?.cancel(task.id);
   }
@@ -93,7 +132,7 @@ export function useCanvasImageGeneration() {
       if (mounted.current && failure) setError(failure);
     } catch {
       if (mounted.current)
-        setError("无法提交图片任务，请重试；草稿和参考图已保留。");
+        setError(`无法提交${label}任务，请重试；草稿已保留。`);
     } finally {
       if (request.current === controller) request.current = null;
       if (mounted.current) setPreparing(false);
@@ -104,9 +143,12 @@ export function useCanvasImageGeneration() {
     message,
     run,
     cancel,
-    available: !disabledReason,
+    available: loading || !disabledReason,
     mode: "provider" as const,
-    model: item?.model ?? command?.model ?? "",
+    kind: isText ? ("text" as const) : ("image" as const),
+    draftText: task?.status === "running" ? task.outputs?.[0]?.text : undefined,
+    model: item?.model ?? (isText ? command?.textModel : command?.model) ?? "",
     models: command?.models ?? [],
+    usesCodex,
   };
 }

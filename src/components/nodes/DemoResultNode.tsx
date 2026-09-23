@@ -149,9 +149,7 @@ export default function DemoResultNode({
           <DemoMediaPreview
             result={{ ...result, title: item.title }}
             onClose={() => setOpen(false)}
-            onTextChange={(text) =>
-              onChange({ prompt: text, result: { ...result, text } })
-            }
+            onTextChange={(text) => onChange({ result: { ...result, text } })}
           />
         )}
       </article>

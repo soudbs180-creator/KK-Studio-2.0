@@ -32,10 +32,11 @@ export default function CanvasNodeFrame({
     !item.referenceOnly &&
     (item.kind === "image" || item.kind === "video"),
   );
-  const variant =
-    item.result ||
-    (item.generationStatus && item.generationIndex !== undefined) ||
-    ["audio", "text"].includes(item.kind)
+  const variant = item.plugin
+    ? "plugin"
+    : item.result ||
+        (item.generationStatus && item.generationIndex !== undefined) ||
+        ["audio", "text"].includes(item.kind)
       ? "result"
       : item.kind === "image"
         ? "image"
@@ -61,6 +62,12 @@ export default function CanvasNodeFrame({
       style={{
         left: controls.nodes[id]?.x ?? 0,
         top: controls.nodes[id]?.y ?? 0,
+        ...(item.plugin
+          ? {
+              width: item.plugin.width ?? 380,
+              height: item.plugin.height ?? 300,
+            }
+          : {}),
       }}
       onDragStart={(event) => event.preventDefault()}
       onPointerDown={(event) => controls.startNodeDrag(event, id)}

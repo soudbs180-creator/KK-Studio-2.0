@@ -20,6 +20,13 @@ export function cardVisualBounds(item: CanvasCollectionItem): {
   width: number;
   height: number;
 } {
+  if (item.plugin)
+    return {
+      x: 0,
+      y: 0,
+      width: item.plugin.width ?? 380,
+      height: item.plugin.height ?? 300,
+    };
   if (
     item.result ||
     (item.generationStatus && item.generationIndex !== undefined) ||
@@ -46,6 +53,14 @@ export function cardLayout(item: CanvasCollectionItem): {
     x: visual.x + visual.width,
     y: visual.y + visual.height / 2,
   };
+  if (item.plugin)
+    return {
+      width: visual.width,
+      height: visual.height,
+      left: 0,
+      collapsedHeight: visual.height,
+      anchor,
+    };
   if (item.referenceOnly)
     return {
       width: 590,

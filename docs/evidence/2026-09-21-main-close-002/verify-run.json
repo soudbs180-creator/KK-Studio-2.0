@@ -1,0 +1,24 @@
+{
+  "command": "npm run verify",
+  "sourceBranch": "codex/TASK-MAIN-CLOSE-002",
+  "sourceCommit": "bb96dadc08c12a2177481d2ae1e4dda605cc77d4",
+  "startedAt": "2026-09-21T01:30:14Z",
+  "finishedAt": "2026-09-21T01:32:37Z",
+  "timezone": "Asia/Shanghai",
+  "nodeTests": 172,
+  "browserTests": 197,
+  "browserFlaky": 0,
+  "uiFiles": 121,
+  "uiViolations": 0,
+  "status": "passed",
+  "supportingLog": {
+    "path": ".tmp/verify-batched-final-2.log",
+    "sha256": "ECD0A0770B17EADCD7E2BECF88A0ED404879AF48A1347ABD42444230B7E22C89",
+    "workspaceOnly": true
+  },
+  "productionBundle": {
+    "path": "dist/assets/index-C6RT8Uju.js",
+    "sha256": "DDEC39A5B4E5AA3E611D07A5E1D694EBEC8CFE98D8DC3CECFDA28626989B4A60"
+  },
+  "note": "原始日志位于本地临时目录，未作为生成物提交；本文件固定运行时间、候选SHA、计数与摘要哈希。"
+}

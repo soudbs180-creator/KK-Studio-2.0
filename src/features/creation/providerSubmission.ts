@@ -8,6 +8,7 @@ import {
   updateProviderConnection,
 } from "./providerRegistry.ts";
 import { hasApiKey } from "./providerCredentials.ts";
+import { catalogForConnection } from "../models/modelCatalog.ts";
 
 export class ProviderSubmissionError extends Error {}
 export interface SubmissionBinding {
@@ -15,12 +16,47 @@ export interface SubmissionBinding {
   baseUrl?: string;
   credentialRef?: string;
   referenceCount: number;
+  kind?: "image" | "text";
+  model?: string;
 }
 interface SubmissionOptions {
   explicitRetry?: boolean;
   ownSlot?: boolean;
+  skipCapacity?: boolean;
+}
+interface BrowserLockSnapshot {
+  held?: Array<{ name?: string | null }>;
+}
+interface BrowserLocks {
+  request<T>(
+    name: string,
+    options: { mode: "exclusive" },
+    callback: () => T | PromiseLike<T>,
+  ): Promise<T>;
+  query(): Promise<BrowserLockSnapshot>;
+}
+export interface ProviderSubmissionReservation {
+  connection: ProviderConnection;
+  assertCurrent: () => ProviderConnection;
+  healthUnchanged: () => boolean;
+  release: () => void | Promise<void>;
 }
 const endpoint = (value: string | undefined) => value?.replace(/\/$/, "");
+// All connections share one registry record, so its lease writes use one mutex.
+const REGISTRY_LOCK = "kk-studio:provider-registry-leases";
+const leasePrefix = (id: string) =>
+  `kk-studio:provider-slot:${encodeURIComponent(id)}:`;
+function locksOrThrow(): BrowserLocks {
+  if (
+    typeof navigator === "undefined" ||
+    !navigator.locks?.request ||
+    !navigator.locks?.query
+  )
+    throw new ProviderSubmissionError(
+      "当前浏览器不支持安全的连接租约协调，本次未提交；请更新浏览器后重试。",
+    );
+  return navigator.locks as unknown as BrowserLocks;
+}
 
 /** Local BYOK image endpoint only; other adapters retain their own contracts. */
 export function assertSubmissionConnection(
@@ -39,12 +75,16 @@ export function assertSubmissionConnection(
     !connection.baseUrl ||
     !connection.credentialRef
   )
-    throw new ProviderSubmissionError(
-      "此入口只支持已配置凭据的 BYOK 图片连接。",
-    );
+    throw new ProviderSubmissionError("此入口只支持已配置凭据的 BYOK 连接。");
+  const selectedModel = catalogForConnection(connection).find(
+    (model) => model.id === binding.model,
+  );
   if (
     endpoint(connection.baseUrl) !== endpoint(binding.baseUrl) ||
-    connection.credentialRef !== binding.credentialRef
+    connection.credentialRef !== binding.credentialRef ||
+    (binding.kind === "text" &&
+      connection.model !== binding.model &&
+      selectedModel?.kind !== "text")
   )
     throw new ProviderSubmissionError(
       "绑定连接的地址或凭据身份已变化，请重新确认连接后创建任务。",
@@ -68,12 +108,15 @@ export function assertSubmissionConnection(
     0,
     (connection.activeJobs ?? 0) - (options.ownSlot ? 1 : 0),
   );
-  if (activeJobs >= connection.concurrencyLimit)
+  if (!options.skipCapacity && activeJobs >= connection.concurrencyLimit)
     throw new ProviderSubmissionError(
       "连接并发已满，请等待当前任务结束后重试。",
     );
   if (
-    !connection.capabilities.modalities.includes("image") ||
+    !(selectedModel && selectedModel.kind !== "unknown"
+      ? selectedModel.kind === (binding.kind ?? "image")
+      : connection.capabilities.modalities.includes(binding.kind ?? "image")) ||
+    (binding.kind === "text" && binding.referenceCount !== 0) ||
     !connection.capabilities.operations.includes(
       binding.referenceCount ? "edit" : "generate",
     ) ||
@@ -81,7 +124,7 @@ export function assertSubmissionConnection(
       binding.referenceCount > connection.capabilities.maxReferences)
   )
     throw new ProviderSubmissionError(
-      "连接不支持本次图片操作或参考图数量，请选择支持的连接。",
+      "连接不支持本次操作、模型或参考图数量，请选择支持的连接。",
     );
   return connection;
 }
@@ -89,6 +132,8 @@ export function assertSubmissionConnection(
 /** Credentials can await a vault; always re-read the binding afterward. */
 export async function selectSubmissionConnection(
   referenceCount: number,
+  kind: "image" | "text" = "image",
+  model?: string,
 ): Promise<ProviderConnection> {
   const candidates = readProviderConnections().sort(
     (a, b) =>
@@ -102,6 +147,8 @@ export async function selectSubmissionConnection(
       baseUrl: candidate.baseUrl,
       credentialRef: candidate.credentialRef,
       referenceCount,
+      kind,
+      model,
     };
     try {
       assertSubmissionConnection(binding);
@@ -115,15 +162,14 @@ export async function selectSubmissionConnection(
   throw new ProviderSubmissionError(reason);
 }
 
-/** Synchronous local check-and-reserve; refusal never releases another task's slot. */
+/** Compatibility helper for non-UI callers; the UI uses the coordinated API below. */
 export function reserveProviderSubmission(
   binding: SubmissionBinding,
   options: SubmissionOptions = {},
-) {
+): ProviderSubmissionReservation {
   const connection = assertSubmissionConnection(binding, options);
   const leaseId =
-    globalThis.crypto?.randomUUID?.() ??
-    `lease-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    globalThis.crypto?.randomUUID?.() ?? `lease-${Date.now()}-${Math.random()}`;
   updateProviderConnection(connection.id, (item) => ({
     ...item,
     activeJobs: (item.activeJobs ?? 0) + 1,
@@ -137,11 +183,12 @@ export function reserveProviderSubmission(
       "无法保存连接占用状态，本次未提交，请检查浏览器存储权限。",
     );
   let released = false;
-  const assertOwned = () => {
-    const current = readProviderConnections().find(
-      (item) => item.id === connection.id,
-    );
-    if (!current?.activeLeaseIds?.includes(leaseId))
+  const assertCurrent = () => {
+    const current = assertSubmissionConnection(binding, {
+      ...options,
+      skipCapacity: true,
+    });
+    if (released || !current.activeLeaseIds?.includes(leaseId))
       throw new ProviderSubmissionError(
         "当前连接占用已失效，剩余输出未提交，请重新确认连接。",
       );
@@ -149,24 +196,19 @@ export function reserveProviderSubmission(
   };
   return {
     connection,
-    assertCurrent: () => {
-      assertOwned();
-      return assertSubmissionConnection(binding, {
-        ...options,
-        ownSlot: true,
-      });
-    },
+    assertCurrent,
     healthUnchanged: () => {
-      const current = readProviderConnections().find(
-        (item) => item.id === connection.id,
-      );
-      return (
-        current?.activeLeaseIds?.includes(leaseId) === true &&
-        current?.state === connection.state &&
-        current?.cooldownUntil === connection.cooldownUntil &&
-        current?.lastHealthCheckAt === connection.lastHealthCheckAt &&
-        current?.healthRevision === connection.healthRevision
-      );
+      try {
+        const current = assertCurrent();
+        return (
+          current.state === connection.state &&
+          current.cooldownUntil === connection.cooldownUntil &&
+          current.lastHealthCheckAt === connection.lastHealthCheckAt &&
+          current.healthRevision === connection.healthRevision
+        );
+      } catch {
+        return false;
+      }
     },
     release: () => {
       if (!released) {
@@ -175,4 +217,128 @@ export function reserveProviderSubmission(
       }
     },
   };
+}
+
+/** Holds a real browser lock until release or document termination, never a TTL. */
+export async function reserveProviderSubmissionAsync(
+  binding: SubmissionBinding,
+  options: SubmissionOptions = {},
+): Promise<ProviderSubmissionReservation> {
+  const locks = locksOrThrow();
+  return locks.request(REGISTRY_LOCK, { mode: "exclusive" }, async () => {
+    const initial = assertSubmissionConnection(binding, {
+      ...options,
+      skipCapacity: true,
+    });
+    const prefix = leasePrefix(initial.id);
+    const snapshot = await locks.query();
+    const activeLeaseIds = (snapshot.held ?? []).flatMap((lock) =>
+      lock.name?.startsWith(prefix) ? [lock.name.slice(prefix.length)] : [],
+    );
+    const connection = assertSubmissionConnection(binding, {
+      ...options,
+      skipCapacity: true,
+    });
+    // A legacy record without lease IDs cannot be proven orphaned. Keep its
+    // occupied count conservatively; records with IDs are reconciled from live
+    // Web Locks and therefore can be safely reclaimed after a crash.
+    const legacyActiveJobs =
+      (connection.activeLeaseIds?.length ?? 0) === 0
+        ? (connection.activeJobs ?? 0)
+        : 0;
+    const occupied = Math.max(activeLeaseIds.length, legacyActiveJobs);
+    if (occupied >= connection.concurrencyLimit)
+      throw new ProviderSubmissionError(
+        "连接并发已满，请等待当前任务结束后重试。",
+      );
+    const leaseId =
+      globalThis.crypto?.randomUUID?.() ??
+      `lease-${Date.now()}-${Math.random()}`;
+    let endHold!: () => void;
+    let acquired!: () => void;
+    let rejectAcquired!: (reason: unknown) => void;
+    const hold = new Promise<void>((resolve) => {
+      endHold = resolve;
+    });
+    const ready = new Promise<void>((resolve, reject) => {
+      acquired = resolve;
+      rejectAcquired = reject;
+    });
+    const finished = locks.request(
+      prefix + leaseId,
+      { mode: "exclusive" },
+      async () => {
+        acquired();
+        await hold;
+      },
+    );
+    void finished.catch(rejectAcquired);
+    await ready;
+    try {
+      // Reconcile orphaned legacy/crashed-tab metadata from the browser's live locks.
+      updateProviderConnection(connection.id, (item) => ({
+        ...item,
+        activeJobs: occupied + 1,
+        activeLeaseIds: [...activeLeaseIds, leaseId],
+      }));
+      const persisted = readProviderConnections().find(
+        (item) => item.id === connection.id,
+      );
+      if (!persisted?.activeLeaseIds?.includes(leaseId))
+        throw new ProviderSubmissionError(
+          "无法保存连接占用状态，本次未提交，请检查浏览器存储权限。",
+        );
+      assertSubmissionConnection(binding, { ...options, skipCapacity: true });
+    } catch (error) {
+      endHold();
+      await finished;
+      throw error;
+    }
+    let released = false;
+    let releasePromise: Promise<void> | undefined;
+    const assertCurrent = () => {
+      const current = assertSubmissionConnection(binding, {
+        ...options,
+        skipCapacity: true,
+      });
+      if (released || !current.activeLeaseIds?.includes(leaseId))
+        throw new ProviderSubmissionError(
+          "当前连接占用已失效，剩余输出未提交，请重新确认连接。",
+        );
+      return current;
+    };
+    return {
+      connection,
+      assertCurrent,
+      healthUnchanged: () => {
+        try {
+          const current = assertCurrent();
+          return (
+            current.state === connection.state &&
+            current.cooldownUntil === connection.cooldownUntil &&
+            current.lastHealthCheckAt === connection.lastHealthCheckAt &&
+            current.healthRevision === connection.healthRevision
+          );
+        } catch {
+          return false;
+        }
+      },
+      release: () => {
+        releasePromise ??= locks.request(
+          REGISTRY_LOCK,
+          { mode: "exclusive" },
+          async () => {
+            released = true;
+            try {
+              releaseProviderLease(connection.id, leaseId);
+            } finally {
+              endHold();
+              await finished;
+            }
+          },
+        );
+        return releasePromise;
+      },
+    };
+  });
 }

@@ -1,0 +1,67 @@
+/* 插件节点渲染层（vendor/canvas-plugins 接入） */
+.canvas-node.canvas-node-plugin {
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  background: var(--bg-card);
+  overflow: visible;
+}
+.canvas-node.canvas-node-plugin.is-selected {
+  box-shadow:
+    0 0 0 2px var(--bg-accent),
+    var(--ui-shadow);
+}
+.plugin-node {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--bg-card);
+}
+.plugin-node-missing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 100%;
+  padding: 16px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+.plugin-node-missing-hint {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+.plugin-node-toolbar {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 6;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  box-shadow: var(--ui-shadow);
+}
+.plugin-node-toolbar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+.plugin-node-toolbar button:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+.plugin-node-toolbar button[aria-pressed="true"] {
+  background: var(--bg-accent);
+  color: var(--text-on-accent);
+}

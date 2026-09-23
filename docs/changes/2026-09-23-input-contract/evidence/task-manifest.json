@@ -1,0 +1,130 @@
+{
+  "docs/DESIGN-SYSTEM.md": {
+    "before": "ad0d1e48c12d4bd2ba7610181d226230a5f4bcb20703b2fc38d35b29653e09f8",
+    "after": "001e769f8e4962b072afa5cdc4c00f3c85d597b805df68bdef0ac70f8bfd47ff"
+  },
+  "docs/PROGRESS.md": {
+    "before": "99454398a61060668e7a7276f195ae80929d68508fe1d283f66400389f0a7100",
+    "after": "8207ed6a46607ab182084b8b4baca158dbc1190125c50c03ad61fd027f9b72d0"
+  },
+  "docs/UI-ALIGNMENT.md": {
+    "before": "e46044ad96823730823cced113ace4a9cfedf679686f61f87daa27588589e559",
+    "after": "13e8e075e666f500d17291015c2a68d81aae3a4e3d508c03a9ed577b78ad2be3"
+  },
+  "docs/UI-STANDARDS.md": {
+    "before": "8fc2a5453cec219994ccd00bfc30b39c980d3c54c0a30bd468756a7fff543bf4",
+    "after": "ab601a6f6fbd98b7911491ce20ccf2cd7736f8bf8359cd9380b3c132030ddfed"
+  },
+  "docs/UI_SPEC.md": {
+    "before": "7ac74f835b1bbaeef6b435363cb946305168d71df0ea3cf8f31ed0263fb32db4",
+    "after": "12a9fadb04bb0ede2882a2263e630ded637c9e53f22b9081b87b3c272d76f599"
+  },
+  "docs/changes/2026-09-22-design-system/remaining.md": {
+    "before": "f5eab8d47db26b915823456dc964a604919d24c4278589d8c21c82419c062615",
+    "after": "7aeb917ef52567696fa2f0e0ac555c239765e23b7017f7f8cd34596f191621dc"
+  },
+  "docs/changes/2026-09-23-input-contract/intent.md": {
+    "before": null,
+    "after": "9056df03d38ea682cb79a8ee788704bf365df3233e184e28a5d89bfbec7c7eb0"
+  },
+  "docs/changes/2026-09-23-input-contract/plan.md": {
+    "before": null,
+    "after": "96dfa523c21db4be356de34cc57def19b9a806726f342a35cea2b9490ed92ec4"
+  },
+  "docs/changes/2026-09-23-input-contract/review.md": {
+    "before": null,
+    "after": "c1e1c627f4313899da148b837937fde41020fb6c3b085dee6c20f924b3dca51b"
+  },
+  "docs/changes/2026-09-23-input-contract/spec.md": {
+    "before": null,
+    "after": "23cb4ae95fdcc330df19e7dc7db9adc560b88f5b7e3391062967529b141aa167"
+  },
+  "docs/changes/2026-09-23-input-contract/verification.md": {
+    "before": null,
+    "after": "01a43bf8bd421083c5a966edc4974d6ed4235ba053792756695b18079ed41801"
+  },
+  "docs/governance/AI_HANDOFF.md": {
+    "before": "7ff99f8e4eb1d3b6b2bd85b0a5cea9e4d33db4ecfec9c035a1852c7ae2bb7bb4",
+    "after": "862aa4a71fdb2c1f297b6ef73b11f45f900dbae034f0014690558213010d949f"
+  },
+  "docs/governance/PROJECT_STATE.md": {
+    "before": "f72eb9830b6d303f65b4e2ee059ca41b127e5401ee81c25b906b73071a8b6712",
+    "after": "4da879fb396157e284d8ab14f39bae869798b75d420052d86957cab7b4657f58"
+  },
+  "docs/governance/TASK_LEDGER.md": {
+    "before": "b97f3f7d23c43ae1520aa8ea47f0600cd1683a8750b4572fda0ccad440e548b0",
+    "after": "50c92ae7479a91c9bf4f00117bfc0b1b15c0821400bcc472277a10fb625331cb"
+  },
+  "docs/governance/task-ledger.json": {
+    "before": "e193b81e9a13190148bb51c3dadbba01d7a0cbc52d04928b7dbe895272238ee2",
+    "after": "b8d8df746700adf38f543db84bad858d61c0f23514c42ddf1b58fa0f0b5e6038"
+  },
+  "scripts/audit/check-input-desktop.mjs": {
+    "before": null,
+    "after": "8aafe51efcfa5b2118c2f72f59511079308c45c7866a3ec70e276ead8890cd08"
+  },
+  "src/App.tsx": {
+    "before": "5dc0be2d829a404dc1a7d0cfb0776d9e99757a4f22a91639fc6587764119b028",
+    "after": "02d488ddf6b5d4f85b1b9838ae9f637c282ebc7f60a00b340e90d0b38d009613"
+  },
+  "src/components/ComposerTextarea.tsx": {
+    "before": null,
+    "after": "ecf43201ec7ed350e446b08f748be093d273a21bc181da80ba8c468228919fa7"
+  },
+  "src/components/ConversationActions.tsx": {
+    "before": "5e0177d14aa52c62fbcdba5fb8dd7911cf2d7b875397b1b1f79aeec9821e3e81",
+    "after": "fe5df1c56fd1cd4cb0d87ce40af5c7a9a8d9902d79c02f8b8dfe6d85b27d0869"
+  },
+  "src/components/ConversationComposer.tsx": {
+    "before": "c639173ebb76f2e14f2a57bd964917ee90cc431617346862c915ea82cd332861",
+    "after": "7c61a28823f93461570addc1cd6e224c24dce85dc33965e0559f3583a6e05982"
+  },
+  "src/components/StartComposer.tsx": {
+    "before": "9008bf3fa492ed55163be13f6f190fd0bfa56046c8f76ca8ab6d8b0081f1c8ff",
+    "after": "ead9f299b0d26d8bcef46918ae1cf424b4cafcb47bea84cf3a4d67921d193479"
+  },
+  "src/components/useComposerMenus.ts": {
+    "before": "836779e25a11518efcc77ec47060695b568a697c9359cf3ced8d03b9426558a8",
+    "after": "ae1dc527245bc285d70847f9c9d1878de2809bc1186175129947e3a2c7958d3f"
+  },
+  "src/styles/catalog-pages.css": {
+    "before": "3f131ef64d8a3cd90a6d3494565fefa4da174fde641bede1b89fe06f5eb04588",
+    "after": "0f9f344ef84e17d7fd99db37ddb23aaa1cd5488266923265cb62911a4885601a"
+  },
+  "src/styles/composer.css": {
+    "before": null,
+    "after": "5819fc856d6febdcdd4983da307fb0c4a3083f13a6ba2dbbfc8329ed8f63cd64"
+  },
+  "src/styles/conversation-panel.css": {
+    "before": "cf20c02a55a431844dcc31c43252eecf5c311071853840a9bfd7b15624f18255",
+    "after": "359ce96a4e14baefc12ce0f7701da7833dca0bd0cdb27779716b8224ac1171d0"
+  },
+  "src/styles/model-picker.css": {
+    "before": "0fca302b97ccc675a697a22caa8f9eae0ba94fc4bc77077692ccb9924b7dc418",
+    "after": "e9b7132d25dfe364e185daeecbe99635f532a32a8ec6346005f8ac61005541b0"
+  },
+  "src/styles/responsive-content.css": {
+    "before": "9b67f98f4ca8b840fa22f2c73ca2c3930fd6266ddeea7ead76dda8130e4974e9",
+    "after": "ce70dc56f5eebba3429a925170728eb3b49fdd444a9c38cfaaa58785e552fe24"
+  },
+  "src/styles/workspace.css": {
+    "before": "bfd63f31d380564ed5e85f377198a7fde616a3a3b9b2bf76ce3a78e2ad5f463b",
+    "after": "803effb89c159bbd0aa419ac3dd52f50342e56d51f978e069b1393bf21afe06a"
+  },
+  "tests/browser/input-contract.spec.ts": {
+    "before": null,
+    "after": "0ad75a2da95eb00dbbba9357175195797b1047a9e2711af0ae668dbf0810e474"
+  },
+  "tests/browser/interaction-state.spec.ts": {
+    "before": "da00e790db1e1e73d346869f21dcf4b584e4feb7eb82ff73643afeba364e0fee",
+    "after": "75e5826ed6f1d84ac110d9f2ca4766fc25cd8801e709e66f7f6aa65558408da3"
+  },
+  "tests/browser/model-picker.spec.ts": {
+    "before": "cc31e3d5776eefae3779d6e443b0455bfab69ca4cc0e3e57a3c6c030ed725bfe",
+    "after": "a07a0ac2e547c70fff78bc06724db36fca100294a797cc9d9cc7ead22fafc6c2"
+  },
+  "tests/browser/runtime-ui.spec.ts": {
+    "before": "bf2ddac2f1f6346b17376841870f3f00ec877165c5ebffa121a94c39995f54e7",
+    "after": "4328dc7fefa453d77508fde54c528cd263032066060d06c9581821e6b9213677"
+  }
+}

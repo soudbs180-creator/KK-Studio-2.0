@@ -25,7 +25,10 @@ export async function waitForConversationPanelSettled(
             );
           return !animation || animation.playState === "finished";
         }),
-      { timeout: 1000 },
+      // CI runners can start the compact conversation transition after the
+      // first layout frame. Give the real animation a bounded settling window
+      // instead of turning a scheduling delay into a flaky product failure.
+      { timeout: 5000 },
     )
     .toBe(true);
 }

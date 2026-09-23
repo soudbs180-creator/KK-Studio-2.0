@@ -1,12 +1,14 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDismissible } from "./useDismissible";
 
 export default function SidebarProjectEntry({
   grouped,
+  visible,
   selected,
   onNavigate,
 }: {
   grouped: boolean;
+  visible: boolean;
   selected: boolean;
   onNavigate: (id: string) => void;
 }) {
@@ -19,13 +21,24 @@ export default function SidebarProjectEntry({
   const root = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const menuTrigger = useRef<HTMLButtonElement>(null);
-  useDismissible(menuOpen, menuRef, () => setMenuOpen(false), menuTrigger);
+  useDismissible(
+    menuOpen && visible,
+    menuRef,
+    () => setMenuOpen(false),
+    menuTrigger,
+  );
+  useEffect(() => {
+    if (!visible) {
+      setMenuOpen(false);
+      setEditing(false);
+    }
+  }, [visible]);
   useLayoutEffect(() => {
-    if (menuOpen)
+    if (menuOpen && visible)
       root.current
         ?.querySelector<HTMLButtonElement>('[role="menuitem"]')
         ?.focus();
-  }, [menuOpen]);
+  }, [menuOpen, visible]);
   if (deleted)
     return (
       <button className="project-undo" onClick={() => setDeleted(false)}>

@@ -5,9 +5,13 @@ import type {
   CreationTaskOutput,
 } from "./model.ts";
 import { readNativeAsset, usesNativeAssets } from "./nativeAssetAdapter.ts";
+import { textTaskResult } from "./textTaskResult.ts";
+import { reconcileProjectCanvas } from "../../domain/projectCanvas.ts";
 
 /** The request crossing the Desktop TaskHost IPC boundary. It contains no API key. */
 export interface NativeTaskHostRequest {
+  kind?: "image" | "text";
+  concurrencyLimit?: number;
   taskId: string;
   idempotencyKey: string;
   baseUrl: string;
@@ -18,6 +22,8 @@ export interface NativeTaskHostRequest {
   attachments: Array<{ assetId: string; name: string }>;
   providerName?: string;
   promptHash?: string;
+  /** Resolved provider size label such as "1024x1024"; omitted means provider default. */
+  size?: string;
 }
 
 export type NativeTaskStatus = "submitted" | "succeeded" | "failed" | "unknown";
@@ -29,6 +35,7 @@ export interface NativeTaskHostOutput {
   index: number;
   status: NativeTaskOutputStatus;
   assetId?: string;
+  text?: string;
   error?: string;
 }
 
@@ -83,6 +90,12 @@ function normalizeRecord(
           ? output.status
           : ("pending" as const),
       assetId: typeof output.assetId === "string" ? output.assetId : undefined,
+      text:
+        "text" in output &&
+        typeof output.text === "string" &&
+        new TextEncoder().encode(output.text).length <= 32768
+          ? output.text
+          : undefined,
       error: typeof output.error === "string" ? output.error : undefined,
     }));
   return {
@@ -186,6 +199,7 @@ function taskStatus(record: NativeTaskHostRecord): CreationTask["status"] {
  */
 export async function reconcileNativeTasks(
   snapshot: CreationSnapshot,
+  onlyTaskIds?: readonly string[],
 ): Promise<CreationSnapshot> {
   if (!usesNativeTaskHost()) return snapshot;
   let records: NativeTaskHostRecord[];
@@ -237,6 +251,7 @@ export async function reconcileNativeTasks(
       const items = [...project.items];
       const tasks = await Promise.all(
         project.tasks.map(async (task) => {
+          if (onlyTaskIds && !onlyTaskIds.includes(task.id)) return task;
           const native =
             byTaskId.get(task.id) ?? byIdempotency.get(task.idempotencyKey);
           const mayHaveBeenSubmitted =
@@ -275,6 +290,7 @@ export async function reconcileNativeTasks(
                   provider: prior?.provider ?? task.providerName,
                   promptHash: prior?.promptHash,
                   assetId: output.assetId,
+                  text: output.text,
                   error: output.error,
                   createdAt: prior?.createdAt ?? task.createdAt,
                 } satisfies CreationTaskOutput;
@@ -290,6 +306,28 @@ export async function reconcileNativeTasks(
             (output) => output.status === "succeeded",
           );
           for (const output of succeeded) {
+            if (task.kind === "text") {
+              try {
+                const resultItem = textTaskResult(
+                  project.id,
+                  task,
+                  output.index,
+                  output.text ?? "",
+                );
+                const index = items.findIndex(
+                  (item) => item.id === resultItem.id,
+                );
+                // An existing result belongs to the user: its text/title may
+                // have been edited since the original provider journal entry.
+                if (index >= 0) continue;
+                items.push(resultItem);
+                projectChanged = changed = true;
+              } catch {
+                output.status = "unknown";
+                output.error = "原生文本结果缺失或无效，请先核对任务。";
+              }
+              continue;
+            }
             if (!output.assetId) continue;
             try {
               const asset = await readNativeAsset(output.assetId);
@@ -339,6 +377,9 @@ export async function reconcileNativeTasks(
             native.status === "unknown" ||
             outputs.some((output) => output.status === "unknown");
           const status = hasUnknown ? "unknown" : taskStatus(native);
+          const firstSucceeded = outputs.find(
+            (output) => output.status === "succeeded",
+          );
           const nextTask: CreationTask = {
             ...task,
             status,
@@ -353,10 +394,9 @@ export async function reconcileNativeTasks(
             completedOutputs: outputs.filter(
               (output) => output.status === "succeeded",
             ).length,
-            resultItemId:
-              succeeded.length > 0
-                ? `${project.id}-${task.id}-result-${succeeded[0].index + 1}`
-                : task.resultItemId,
+            resultItemId: firstSucceeded
+              ? `${project.id}-${task.id}-result-${firstSucceeded.index + 1}`
+              : task.resultItemId,
             error: hasUnknown
               ? (native.failure ??
                 "原生任务受理状态不明，请先核对供应商；不会自动重复提交。")
@@ -377,9 +417,35 @@ export async function reconcileNativeTasks(
           return nextTask;
         }),
       );
-      return projectChanged
-        ? { ...project, items, tasks, updatedAt: Date.now() }
-        : project;
+      if (!projectChanged) return project;
+      const canvas = reconcileProjectCanvas(project.canvas, items);
+      for (const task of tasks) {
+        if (
+          task.kind !== "text" ||
+          !task.sourceItemId ||
+          !items.some((item) => item.id === task.sourceItemId)
+        )
+          continue;
+        for (const output of task.outputs ?? []) {
+          if (output.status !== "succeeded") continue;
+          const target = `${project.id}-${task.id}-result-${output.index + 1}`;
+          if (
+            items.some((item) => item.id === target) &&
+            !canvas.edges.some(
+              (edge) =>
+                edge.source === task.sourceItemId && edge.target === target,
+            )
+          ) {
+            canvas.edges.push({
+              id: `result-${target}`,
+              source: task.sourceItemId,
+              target,
+              kind: "result",
+            });
+          }
+        }
+      }
+      return { ...project, items, tasks, canvas, updatedAt: Date.now() };
     }),
   );
   return changed

@@ -1,0 +1,1647 @@
+--- baseline/src/styles/ui-tokens.css
++++ candidate/src/styles/ui-tokens.css
+@@ -212,16 +212,42 @@
+ .ui-button.is-danger-filled:not(:disabled):not([aria-disabled="true"]):active {
+   background: var(--bg-danger-hover);
+ }
+-.ui-icon-button {
++.ui-input {
++  width: 100%;
++  min-width: 0;
++  height: var(--ui-input-height);
++  padding: 0 var(--ui-space-3);
++  border: var(--ui-border-width) solid var(--border-control);
++  border-radius: var(--ui-radius-control);
++  background: var(--bg-input);
++  color: var(--text-primary);
++  font-size: var(--ui-font-body);
++  line-height: var(--ui-line-height-body);
++}
++.ui-input::placeholder {
++  color: var(--text-tertiary);
++  opacity: 1;
++}
++textarea.ui-input {
++  height: auto;
++  padding-block: var(--ui-space-2);
++  resize: vertical;
++}
++.ui-icon-button,
++.icon-button {
+   display: inline-grid;
+   place-items: center;
+   min-width: 32px;
+   min-height: 32px;
+   padding: var(--ui-space-1);
++  border: var(--ui-border-width) solid var(--border-default);
+   border-radius: var(--ui-radius-control);
+-}
+-.ui-icon-button:not(:disabled):hover {
++  color: var(--text-secondary);
++}
++.ui-icon-button:not(:disabled):not([aria-disabled="true"]):hover,
++.icon-button:not(:disabled):not([aria-disabled="true"]):hover {
+   background: var(--bg-elevated);
++  color: var(--text-primary);
+ }
+ .ui-badge,
+ .ui-capsule {
+@@ -254,7 +280,15 @@
+ }
+ .ui-capsule {
+   min-height: 28px;
++  min-width: 0;
++  max-width: 100%;
++  overflow-wrap: anywhere;
+   border: var(--ui-border-width) solid var(--border-default);
++}
++.ui-capsule[aria-pressed="true"] {
++  border-color: var(--text-accent);
++  box-shadow: inset 0 0 0 var(--ui-border-width) var(--text-accent);
++  font-weight: 600;
+ }
+ .ui-card {
+   background: var(--bg-card);
+--- baseline/src/styles/catalog-pages.css
++++ candidate/src/styles/catalog-pages.css
+@@ -447,12 +447,18 @@
+ .start-tabs button[aria-selected="true"] {
+   border-bottom-width: 2.339px;
+ }
+-.start-tabs button,
+-.catalog-page-tabs button {
++.start-tabs button {
+   height: 40.924px;
+   padding: 0 0 16.37px;
+   color: var(--text-secondary);
+   font-size: 18.708px;
++}
++.catalog-page-tabs button {
++  min-height: var(--ui-button-height);
++  padding: var(--ui-space-1) 0;
++  color: var(--text-secondary);
++  font-size: var(--ui-font-label);
++  line-height: var(--ui-line-height-label);
+ }
+ .start-tabs button[aria-selected="true"],
+ .catalog-page-tabs button[aria-selected="true"] {
+@@ -467,8 +473,7 @@
+   margin: 0;
+   padding-top: 21.047px;
+ }
+-.start-chip-row button,
+-.catalog-categories button {
++.start-chip-row button {
+   height: 40.924px;
+   border: 0.78px solid var(--border-default);
+   border-radius: 999px;
+@@ -478,8 +483,7 @@
+ .start-chip-row button {
+   font-size: 15.201px;
+ }
+-.start-chip-row button.is-selected,
+-.catalog-categories button.is-selected {
++.start-chip-row button.is-selected {
+   background: var(--bg-card-hover);
+   color: var(--text-primary);
+   border-color: var(--text-tertiary);
+@@ -742,18 +746,25 @@
+   max-width: 1600px;
+   margin: 0 auto;
+ }
++.catalog-page-header > div {
++  min-width: 0;
++}
+ .catalog-page-header h1 {
+-  font-size: clamp(28px, 3vw, 40px);
+-  letter-spacing: -0.03em;
++  font-size: var(--ui-font-display);
++  line-height: var(--ui-line-height-display);
++  font-weight: 600;
+ }
+ .catalog-page-header p {
+-  margin-top: 10px;
+-  color: var(--text-secondary);
+-  font-size: 16px;
++  margin-top: var(--ui-space-2);
++  color: var(--text-secondary);
++  font-size: var(--ui-font-body);
++  line-height: var(--ui-line-height-body);
++  overflow-wrap: anywhere;
+ }
+ .catalog-page-actions {
+   display: flex;
+-  gap: 10px;
++  flex-wrap: wrap;
++  gap: var(--ui-space-2);
+   align-items: center;
+ }
+ .catalog-page-rule {
+@@ -776,7 +787,7 @@
+   width: min(560px, calc(100vw - 32px));
+   padding: 24px;
+   border: 1px solid var(--border-default);
+-  border-radius: 16px;
++  border-radius: var(--ui-radius-panel);
+   background: var(--bg-surface);
+   box-shadow: var(--ui-shadow);
+ }
+@@ -788,7 +799,8 @@
+   margin-bottom: 22px;
+ }
+ .catalog-tutorial-header h2 {
+-  font-size: 20px;
++  font-size: var(--ui-font-title);
++  line-height: var(--ui-line-height-title);
+   color: var(--text-primary);
+ }
+ .catalog-tutorial-header p {
+@@ -816,8 +828,8 @@
+ }
+ .catalog-tutorial-note {
+   margin: 20px 0;
+-  padding: 11px 12px;
+-  border-radius: 8px;
++  padding: var(--ui-space-3);
++  border-radius: var(--ui-radius-control);
+   background: var(--bg-card);
+   color: var(--text-secondary);
+   font-size: var(--ui-font-caption);
+@@ -834,17 +846,30 @@
+ .catalog-page-search {
+   display: flex;
+   align-items: center;
+-  gap: 9px;
++  gap: var(--ui-space-2);
+   width: min(320px, 100%);
+-  padding: 11px 14px;
+-  border: 1px solid var(--border-default);
+-  border-radius: 12px;
+-  background: var(--bg-card);
++  min-width: 0;
++  height: var(--ui-input-height);
++  padding: 0 var(--ui-space-3);
++  border: var(--ui-border-width) solid var(--border-control);
++  border-radius: var(--ui-radius-control);
++  background: var(--bg-input);
+   color: var(--text-secondary);
+ }
+ .catalog-page-search input {
+   width: 100%;
+-  font-size: 13px;
++  min-width: 0;
++  height: 100%;
++  color: var(--text-primary);
++  font-size: var(--ui-font-body);
++  line-height: var(--ui-line-height-body);
++}
++.catalog-page-search:focus-within {
++  outline: var(--ui-focus-width) solid var(--ui-focus);
++  outline-offset: var(--ui-focus-offset);
++}
++.catalog-page-search input:focus-visible {
++  outline: none;
+ }
+ .catalog-categories {
+   display: flex;
+@@ -853,15 +878,11 @@
+   max-width: 1600px;
+   margin: 0 auto 26px;
+ }
+-.catalog-categories button {
+-  border-radius: 8px;
+-  padding: 8px 13px;
+-  font-size: 13px;
+-}
+ .catalog-section-title {
+   max-width: 1600px;
+   margin: 15px auto 18px;
+-  font-size: 21px;
++  font-size: var(--ui-font-title);
++  line-height: var(--ui-line-height-title);
+ }
+ .catalog-card-grid {
+   display: grid;
+@@ -870,12 +891,15 @@
+   max-width: 1600px;
+   margin: 0 auto;
+ }
++.catalog-card-grid + .catalog-categories {
++  margin-top: var(--ui-space-5);
++}
+ .catalog-card {
+   overflow: hidden;
+   min-width: 0;
+   text-align: left;
+   border: 1px solid var(--border-subtle);
+-  border-radius: 16px;
++  border-radius: var(--ui-radius-card);
+   background: var(--bg-card);
+   transition:
+     border-color var(--motion-fast) var(--motion-ease),
+@@ -940,33 +964,47 @@
+ }
+ .catalog-card-body {
+   display: grid;
+-  gap: 9px;
+-  padding: 15px;
++  gap: var(--ui-space-2);
++  padding: var(--ui-space-5);
+ }
+ .catalog-card-body strong {
+   min-width: 0;
+   overflow-wrap: anywhere;
+-  font-size: 16px;
++  font-size: var(--ui-font-title);
++  line-height: var(--ui-line-height-title);
+   color: var(--text-primary);
+ }
+ .catalog-card-body p {
+-  min-height: 39px;
+-  color: var(--text-secondary);
+-  font-size: 13px;
+-  line-height: 1.5;
++  min-height: 32px;
++  min-width: 0;
++  overflow-wrap: anywhere;
++  color: var(--text-secondary);
++  font-size: var(--ui-font-body);
++  line-height: var(--ui-line-height-body);
+ }
+ .catalog-card-body small {
+   min-width: 0;
+   overflow-wrap: anywhere;
+   color: var(--text-tertiary);
+-  font-size: 11px;
++  font-size: var(--ui-font-caption);
++  line-height: var(--ui-line-height-caption);
++}
++.catalog-card > .catalog-page-actions {
++  padding: 0 var(--ui-space-5) var(--ui-space-5);
++}
++.catalog-card-image.workflow-image strong {
++  max-width: 100%;
++  padding-inline: var(--ui-space-3);
++  overflow-wrap: anywhere;
++  font-size: var(--ui-font-display);
++  line-height: var(--ui-line-height-display);
+ }
+ .connector-detail {
+   width: min(560px, calc(100vw - 32px));
+   padding: 24px;
+   border: 1px solid var(--border-subtle);
+-  border-radius: 18px;
+-  background: var(--bg-card);
++  border-radius: var(--ui-radius-panel);
++  background: var(--bg-surface);
+   box-shadow: var(--ui-landing-shadow);
+ }
+ .connector-detail-header {
+@@ -1031,9 +1069,10 @@
+   display: flex;
+   align-items: center;
+   gap: 16px;
+-  padding: 14px 18px;
++  min-width: 0;
++  padding: var(--ui-space-5);
+   border: 1px solid var(--border-subtle);
+-  border-radius: 14px;
++  border-radius: var(--ui-radius-card);
+   background: var(--bg-card);
+   color: var(--text-secondary);
+   text-align: left;
+@@ -1055,15 +1094,19 @@
+ }
+ .project-library-action > span {
+   display: grid;
+-  gap: 4px;
++  gap: var(--ui-space-1);
++  min-width: 0;
++  overflow-wrap: anywhere;
+ }
+ .project-library-action strong {
+   font-size: var(--ui-font-label);
+-  font-weight: 600;
++  line-height: var(--ui-line-height-label);
++  font-weight: 500;
+ }
+ .project-library-action small {
+   color: var(--text-tertiary);
+   font-size: var(--ui-font-caption);
++  line-height: var(--ui-line-height-caption);
+ }
+ .project-library-status {
+   margin: -16px 0 20px;
+@@ -1079,7 +1122,7 @@
+   margin-bottom: 24px;
+   padding: 24px 80px 24px 24px;
+   border: 1px solid var(--border-subtle);
+-  border-radius: 18px;
++  border-radius: var(--ui-radius-card);
+   background: linear-gradient(120deg, var(--bg-card), var(--bg-input));
+ }
+ .project-hero-tile {
+@@ -1106,10 +1149,11 @@
+ }
+ .project-library-card {
+   position: relative;
++  min-width: 0;
+   overflow: hidden;
+   text-align: left;
+   border: 1px solid var(--border-subtle);
+-  border-radius: 20px;
++  border-radius: var(--ui-radius-card);
+   background: var(--bg-card);
+ }
+ .project-library-preview {
+@@ -1139,6 +1183,7 @@
+ .project-library-card > span {
+   display: block;
+   margin: 14px 16px 0;
++  overflow-wrap: anywhere;
+ }
+ .project-library-card > span {
+   margin-top: 6px;
+@@ -1207,17 +1252,19 @@
+   background: linear-gradient(135deg, var(--bg-card-hover), var(--bg-input));
+ }
+ .workflow-card-preview strong {
+-  font-size: 22px;
++  font-size: var(--ui-font-display);
++  line-height: var(--ui-line-height-display);
+   letter-spacing: 0.03em;
+ }
+ .workflow-card-preview span,
+ .workflow-source-tag,
+ .skill-card-category {
+-  padding: 4px 8px;
+-  border-radius: 6px;
++  padding: var(--ui-space-1) var(--ui-space-2);
++  border-radius: var(--ui-radius-pill);
+   background: var(--bg-card);
+   color: var(--text-secondary);
+-  font-size: 11px;
++  font-size: var(--ui-font-caption);
++  line-height: var(--ui-line-height-caption);
+ }
+ .skill-card-title-row,
+ .workflow-card-title-row {
+@@ -1237,30 +1284,24 @@
+   gap: 8px;
+   flex-wrap: wrap;
+ }
+-.skill-card-actions .ui-button,
+-.skill-card-actions .primary-button,
+-.workflow-card-actions .ui-button,
+-.workflow-card-actions .primary-button {
+-  min-height: 30px;
+-  padding: 6px 10px;
+-  font-size: 12px;
+-}
+ .skill-card-actions .is-installed {
+   color: var(--ui-success);
+ }
+-.icon-button {
+-  display: inline-grid;
+-  place-items: center;
+-  width: 30px;
+-  height: 30px;
+-  border: 1px solid var(--border-default);
+-  border-radius: 8px;
+-  color: var(--text-secondary);
+-}
+-.icon-button:hover,
+-.icon-button:focus-visible {
+-  background: var(--bg-card-hover);
+-  color: var(--text-primary);
++.skill-editor label {
++  display: grid;
++  gap: var(--ui-space-1);
++  min-width: 0;
++  font-size: var(--ui-font-body);
++  line-height: var(--ui-line-height-body);
++}
++.skill-editor h2 {
++  font-size: var(--ui-font-title);
++  line-height: var(--ui-line-height-title);
++}
++.skill-editor p {
++  color: var(--text-secondary);
++  font-size: var(--ui-font-body);
++  line-height: var(--ui-line-height-body);
+ }
+ @media (max-width: 1100px) {
+   .catalog-page {
+@@ -1329,10 +1370,6 @@
+     align-items: stretch;
+     flex-direction: column;
+   }
+-  .catalog-page-header p {
+-    font-size: 13px;
+-    line-height: 1.5;
+-  }
+   .catalog-page-actions {
+     flex-wrap: wrap;
+   }
+--- baseline/src/styles/sidebar.css
++++ candidate/src/styles/sidebar.css
+@@ -9,6 +9,15 @@
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
++}
++/* These source SVGs use pale strokes on transparency. In the light
++   theme, inversion maps those strokes to the primary text color.
++   Two-tone add/search/settings assets retain their original contrast. */
++:root[data-theme="light"] .sidebar-icon-archive img,
++:root[data-theme="light"] .sidebar-icon-skill img,
++:root[data-theme="light"] .sidebar-icon-workflow img,
++:root[data-theme="light"] .sidebar [data-brand-logo] {
++  filter: invert(1);
+ }
+ /* Desktop expanded shell geometry comes directly from Figma 82:15737/82:15730.
+    Keep the hit boxes large enough for keyboard and pointer interaction while
+--- baseline/src/components/SkillEditor.tsx
++++ candidate/src/components/SkillEditor.tsx
+@@ -33,7 +33,7 @@
+   const [instructions, setInstructions] = useState(record?.instructions ?? "");
+   return (
+     <Modal
+-      className="catalog-tutorial"
++      className="catalog-tutorial skill-editor"
+       title="编辑本地 Skill"
+       onClose={onClose}
+     >
+@@ -45,6 +45,7 @@
+         <label>
+           ID
+           <input
++            className="ui-input"
+             value={id}
+             onChange={(event) => setId(event.target.value)}
+             disabled={Boolean(record)}
+@@ -53,6 +54,7 @@
+         <label>
+           名称
+           <input
++            className="ui-input"
+             value={name}
+             onChange={(event) => setName(event.target.value)}
+           />
+@@ -60,6 +62,7 @@
+         <label>
+           版本
+           <input
++            className="ui-input"
+             value={version}
+             onChange={(event) => setVersion(event.target.value)}
+           />
+@@ -67,6 +70,7 @@
+         <label>
+           描述
+           <input
++            className="ui-input"
+             value={description}
+             onChange={(event) => setDescription(event.target.value)}
+           />
+@@ -74,6 +78,7 @@
+         <label>
+           作者
+           <input
++            className="ui-input"
+             value={author}
+             onChange={(event) => setAuthor(event.target.value)}
+           />
+@@ -81,6 +86,7 @@
+         <label>
+           分类
+           <input
++            className="ui-input"
+             value={category}
+             onChange={(event) => setCategory(event.target.value)}
+           />
+@@ -88,6 +94,7 @@
+         <label>
+           指令文本
+           <textarea
++            className="ui-input"
+             value={instructions}
+             onChange={(event) => setInstructions(event.target.value)}
+             maxLength={12000}
+--- baseline/src/components/SkillCollection.tsx
++++ candidate/src/components/SkillCollection.tsx
+@@ -31,12 +31,13 @@
+   ];
+   return (
+     <>
+-      <div className="catalog-categories" role="list" aria-label="Skill分类">
++      <div className="catalog-categories" role="group" aria-label="Skill分类">
+         {categories.map((item) => (
+           <button
+             key={item}
+             type="button"
+-            className={category === item ? "is-selected" : ""}
++            className="ui-capsule"
++            aria-pressed={category === item}
+             onClick={() => onCategory(item)}
+           >
+             {item}
+--- baseline/src/components/CatalogPageBody.tsx
++++ candidate/src/components/CatalogPageBody.tsx
+@@ -148,7 +148,7 @@
+     }
+     return (
+       <>
+-        <div className="catalog-categories" role="list" aria-label="Skill分类">
++        <div className="catalog-categories" role="group" aria-label="Skill分类">
+           {[
+             "全部",
+             "精选",
+@@ -164,7 +164,8 @@
+           ].map((item) => (
+             <button
+               key={item}
+-              className={category === item ? "is-selected" : ""}
++              className="ui-capsule"
++              aria-pressed={category === item}
+               onClick={() => onCategory(item)}
+             >
+               {item}
+--- baseline/src/components/settings/settings.css
++++ candidate/src/components/settings/settings.css
+@@ -426,9 +426,9 @@
+   line-height: 20px;
+ }
+ .settings-mcp-add {
+-  padding: 16px;
++  padding: var(--ui-space-5);
+   border: 1px solid var(--settings-border);
+-  border-radius: 10px;
++  border-radius: var(--ui-radius-card);
+   background: var(--bg-card);
+ }
+ .settings-mcp-add .settings-field {
+@@ -451,9 +451,9 @@
+   flex-direction: column;
+   gap: 12px;
+   width: 100%;
+-  padding: 14px 16px;
++  padding: var(--ui-space-5);
+   border: 1px solid var(--settings-border);
+-  border-radius: 10px;
++  border-radius: var(--ui-radius-card);
+   background: var(--bg-card);
+ }
+ .settings-mcp-server > header {
+@@ -470,7 +470,8 @@
+ }
+ .settings-mcp-server-copy strong {
+   color: var(--settings-text);
+-  font-size: 13px;
++  font-size: var(--ui-font-label);
++  line-height: var(--ui-line-height-label);
+   font-weight: 600;
+ }
+ .settings-mcp-server-copy code {
+@@ -487,11 +488,8 @@
+ .settings-mcp-server-actions {
+   display: flex;
+   flex: 0 0 auto;
+-  gap: 7px;
+-}
+-.settings-mcp-server-actions .settings-action {
+-  min-height: 30px;
+-  padding: 5px 10px;
++  flex-wrap: wrap;
++  gap: var(--ui-space-2);
+ }
+ .settings-mcp-tools-toggle {
+   align-self: flex-start;
+@@ -500,7 +498,7 @@
+ }
+ .settings-mcp-tools {
+   display: grid;
+-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
++  grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+   gap: 8px;
+ }
+ .settings-mcp-tool {
+@@ -508,9 +506,9 @@
+   flex-direction: column;
+   gap: 5px;
+   min-width: 0;
+-  padding: 10px;
++  padding: var(--ui-space-3);
+   border: 1px solid var(--settings-border);
+-  border-radius: 8px;
++  border-radius: var(--ui-radius-panel);
+   background: var(--settings-bg);
+ }
+ .settings-mcp-tool strong {
+@@ -522,13 +520,14 @@
+   overflow-wrap: anywhere;
+   color: var(--text-accent);
+   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+-  font-size: 10px;
++  font-size: var(--ui-font-caption);
++  line-height: var(--ui-line-height-caption);
+ }
+ .settings-mcp-tool p {
+   margin: 0;
+   color: var(--settings-muted);
+-  font-size: 11px;
+-  line-height: 16px;
++  font-size: var(--ui-font-body);
++  line-height: var(--ui-line-height-body);
+ }
+ .settings-mcp-tool details {
+   color: var(--settings-muted);
+@@ -537,12 +536,13 @@
+ .settings-mcp-tool pre {
+   max-height: 160px;
+   margin: 6px 0 0;
+-  padding: 7px;
++  padding: var(--ui-space-2);
+   overflow: auto;
+-  border-radius: 5px;
++  border-radius: var(--ui-radius-control);
+   background: var(--bg-app);
+   color: var(--settings-text);
+-  font-size: 10px;
++  font-size: var(--ui-font-caption);
++  line-height: var(--ui-line-height-caption);
+   white-space: pre-wrap;
+   overflow-wrap: anywhere;
+ }
+@@ -555,13 +555,14 @@
+ .settings-mcp-tool-input textarea {
+   width: 100%;
+   min-height: 54px;
+-  padding: 7px;
+-  border: 1px solid var(--settings-border);
+-  border-radius: 6px;
++  min-width: 0;
++  padding: var(--ui-space-2) var(--ui-space-3);
++  border: var(--ui-border-width) solid var(--border-control);
++  border-radius: var(--ui-radius-control);
+   background: var(--bg-input);
+   color: var(--settings-text);
+   font:
+-    11px/1.4 ui-monospace,
++    var(--ui-font-body) / var(--ui-line-height-body) ui-monospace,
+     SFMono-Regular,
+     Consolas,
+     monospace;
+@@ -593,7 +594,7 @@
+   width: 100%;
+   overflow: hidden;
+   border: 1px solid var(--settings-border);
+-  border-radius: 10px;
++  border-radius: var(--ui-radius-card);
+   background: var(--settings-border);
+ }
+ .settings-detail-card > div,
+@@ -736,8 +737,8 @@
+   min-width: 0;
+   height: 32px;
+   padding: 0 10px;
+-  border: 1px solid var(--settings-border);
+-  border-radius: 8px;
++  border: var(--ui-border-width) solid var(--border-control);
++  border-radius: var(--ui-radius-control);
+   color: var(--settings-text);
+   background: var(--bg-input);
+   font-size: 12px;
+@@ -765,13 +766,6 @@
+   margin-top: 12px;
+ }
+ .settings-network-actions .settings-action {
+-  min-height: 30px;
+-  padding: 0 12px;
+-  border: 1px solid var(--settings-border);
+-  border-radius: 8px;
+-  color: var(--settings-text);
+-  background: var(--bg-card);
+-  font-size: 11px;
+   cursor: pointer;
+ }
+ .settings-network-actions .settings-action:disabled {
+@@ -780,13 +774,14 @@
+ }
+ .settings-memory-tools input,
+ .settings-memory-tools select {
+-  height: 34px;
+-  padding: 0 10px;
+-  border: 1px solid var(--settings-border);
+-  border-radius: 8px;
+-  background: var(--bg-card);
+-  color: var(--settings-text);
+-  font-size: 11px;
++  height: var(--ui-input-height);
++  padding: 0 var(--ui-space-3);
++  border: var(--ui-border-width) solid var(--border-control);
++  border-radius: var(--ui-radius-control);
++  background: var(--bg-input);
++  color: var(--settings-text);
++  font-size: var(--ui-font-body);
++  line-height: var(--ui-line-height-body);
+ }
+ .settings-memory-tools input {
+   flex: 1;
+@@ -825,7 +820,8 @@
+ }
+ .settings-action-group {
+   display: flex;
+-  gap: 10px;
++  flex-wrap: wrap;
++  gap: var(--ui-space-2);
+ }
+ .settings-version {
+   display: flex;
+@@ -838,17 +834,17 @@
+   align-items: center;
+   gap: 12px;
+   min-height: 64px;
+-  padding: 12px 14px;
++  padding: var(--ui-space-5);
+   border: 1px solid var(--settings-border);
+-  border-radius: 10px;
+-  background: color-mix(in srgb, var(--settings-selected) 42%, transparent);
++  border-radius: var(--ui-radius-card);
++  background: var(--bg-card);
+ }
+ .settings-version-icon {
+   width: 32px;
+   height: 32px;
+   display: grid;
+   place-items: center;
+-  border-radius: 9px;
++  border-radius: var(--ui-radius-control);
+   background: var(--bg-app);
+   color: var(--ui-selected);
+   font-size: 22px;
+@@ -869,11 +865,12 @@
+   font-size: 11px;
+ }
+ .settings-version-tag {
+-  padding: 3px 7px;
+-  border-radius: 999px;
++  padding: var(--ui-space-1) var(--ui-space-2);
++  border-radius: var(--ui-radius-pill);
+   background: var(--bg-card-hover);
+   color: var(--settings-muted);
+-  font-size: 10px;
++  font-size: var(--ui-font-caption);
++  line-height: var(--ui-line-height-caption);
+ }
+ .settings-version-current {
+   margin-left: auto;
+@@ -881,8 +878,6 @@
+ }
+ .settings-restart-button {
+   flex: 0 0 auto;
+-  min-height: 34px;
+-  padding-inline: 14px;
+ }
+ .settings-version-detail,
+ .settings-update-row {
+@@ -922,15 +917,15 @@
+   display: flex;
+   gap: 10px;
+   width: 100%;
+-  padding: 16px;
++  padding: var(--ui-space-5);
+   border: 1px solid var(--settings-border);
+-  border-radius: 10px;
+-  background: color-mix(in srgb, var(--settings-selected) 45%, transparent);
++  border-radius: var(--ui-radius-card);
++  background: var(--bg-card);
+ }
+ .provider-status strong {
+   display: block;
+-  font-size: 13px;
+-  line-height: 18px;
++  font-size: var(--ui-font-label);
++  line-height: var(--ui-line-height-label);
+ }
+ .provider-status p {
+   margin-top: 6px;
+@@ -947,9 +942,9 @@
+ }
+ .provider-connection-list {
+   width: 100%;
+-  padding: 14px;
++  padding: var(--ui-space-4);
+   border: 1px solid var(--settings-border);
+-  border-radius: 10px;
++  border-radius: var(--ui-radius-panel);
+   background: var(--bg-surface);
+ }
+ .provider-connection-list-heading {
+@@ -976,7 +971,7 @@
+   min-height: 44px;
+   padding: 8px 10px;
+   border: 1px solid var(--settings-border);
+-  border-radius: 8px;
++  border-radius: var(--ui-radius-control);
+   background: var(--bg-surface);
+   color: var(--settings-text);
+   text-align: left;
+--- baseline/src/components/settings/plugin-manager.css
++++ candidate/src/components/settings/plugin-manager.css
+@@ -5,12 +5,13 @@
+ }
+ .plugin-manager-row {
+   display: flex;
++  flex-wrap: wrap;
+   align-items: flex-start;
+   justify-content: space-between;
+   gap: 12px;
+-  padding: 12px;
++  padding: var(--ui-space-5);
+   border: 1px solid var(--settings-border);
+-  border-radius: 12px;
++  border-radius: var(--ui-radius-card);
+   background: var(--bg-card);
+ }
+ .plugin-manager-info {
+@@ -18,9 +19,11 @@
+   flex-direction: column;
+   gap: 4px;
+   min-width: 0;
++  overflow-wrap: anywhere;
+ }
+ .plugin-manager-info strong {
+-  font-size: 13px;
++  font-size: var(--ui-font-label);
++  line-height: var(--ui-line-height-label);
+   color: var(--settings-text);
+ }
+ .plugin-manager-info span {
+@@ -29,12 +32,13 @@
+ }
+ .plugin-manager-info p {
+   margin: 0;
+-  font-size: 11px;
+-  line-height: 17px;
++  font-size: var(--ui-font-body);
++  line-height: var(--ui-line-height-body);
+   color: var(--settings-muted);
+ }
+ .plugin-manager-actions {
+   display: flex;
++  flex-wrap: wrap;
+   align-items: center;
+   gap: 8px;
+   flex: 0 0 auto;
+--- baseline/tests/browser/design-system-pages.spec.ts
++++ candidate/tests/browser/design-system-pages.spec.ts
+@@ -0,0 +1,375 @@
++import { expect, test, type Page, type Locator } from "@playwright/test";
++import {
++  ACCENTS,
++  contrast,
++  cssRgb,
++  themeTokens,
++} from "../helpers/designSystem.ts";
++
++const pages = ["项目库", "Skill", "ComfyUI 工作流"];
++
++test("sidebar SVG marks remain distinguishable in both themes", async ({
++  page,
++}) => {
++  await page.goto("/");
++  for (const theme of ["dark", "light"]) {
++    await appearance(page, theme, "default");
++    for (const selector of [
++      ".sidebar-icon-archive img",
++      ".sidebar-icon-skill img",
++      ".sidebar-icon-workflow img",
++      ".sidebar .brand [data-brand-logo]",
++    ]) {
++      const pixels = await page.locator(selector).evaluate(async (element) => {
++        const img = element as HTMLImageElement;
++        await img.decode();
++        const canvas = document.createElement("canvas");
++        canvas.width = img.naturalWidth * 4;
++        canvas.height = img.naturalHeight * 4;
++        const ctx = canvas.getContext("2d")!;
++        ctx.filter = getComputedStyle(img).filter;
++        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
++        const rgba = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
++        const counts = new Map<string, number>();
++        for (let i = 0; i < rgba.length; i += 4) {
++          if (rgba[i + 3] < 128) continue;
++          const rgb = `rgb(${rgba[i]}, ${rgba[i + 1]}, ${rgba[i + 2]})`;
++          counts.set(rgb, (counts.get(rgb) ?? 0) + rgba[i + 3]);
++        }
++        return {
++          mark: [...counts].sort((a, b) => b[1] - a[1])[0]?.[0],
++          bg: getComputedStyle(img.closest(".sidebar")!).backgroundColor,
++        };
++      });
++      expect(pixels.mark).toBeTruthy();
++      expect
++        .soft(contrast(pixels.mark!, pixels.bg), `${theme} ${selector}`)
++        .toBeGreaterThanOrEqual(3);
++    }
++  }
++});
++
++async function navigate(page: Page, name: string) {
++  if (await page.locator(".sidebar.is-narrow.is-collapsed").count()) {
++    await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
++  }
++  await page
++    .locator(".sidebar")
++    .getByRole("button", { name, exact: true })
++    .click();
++  await expect(page.locator(".catalog-page")).toBeVisible();
++  // Narrow navigation is an overlay. Dismiss it through the public Escape
++  // interaction before operating the underlying page.
++  if (await page.locator(".sidebar.is-narrow:not(.is-collapsed)").count()) {
++    await page.keyboard.press("Escape");
++    await expect(page.locator(".sidebar")).toHaveClass(/is-collapsed/);
++  }
++}
++
++for (const width of [390, 1920]) {
++  test(`settings sections keep shared fields and reachable content at ${width}`, async ({
++    page,
++  }, info) => {
++    await page.setViewportSize({ width, height: width === 1920 ? 1080 : 844 });
++    await page.goto("/");
++    await page.emulateMedia({ reducedMotion: "reduce" });
++    const opener = page.getByRole("button", { name: "打开设置", exact: true });
++    await opener.click();
++    const dialog = page.getByRole("dialog", { name: "设置" });
++    for (const theme of ["dark", "light"]) {
++      await appearance(page, theme, "default");
++      for (const section of [
++        "账号管理",
++        "储存",
++        "网络",
++        "记忆",
++        "模型供应商",
++        "Skill",
++        "MCP",
++        "插件",
++        "Comfy UI",
++        "高级",
++        "软件更新",
++      ]) {
++        await dialog
++          .locator(".settings-nav")
++          .getByRole("button", { name: section, exact: true })
++          .click();
++        const content = dialog.locator(".settings-content");
++        await expect(content.locator("h2")).toHaveText(section);
++        expect(
++          await content.evaluate((el) => el.scrollWidth - el.clientWidth),
++          `${theme}/${section} horizontal overflow`,
++        ).toBeLessThanOrEqual(1);
++        const fieldErrors = await content
++          .locator('input:not([type="file"]):not([type="checkbox"]), select')
++          .evaluateAll((elements) =>
++            elements
++              .filter((el) => el.getClientRects().length)
++              .flatMap((el) => {
++                const css = getComputedStyle(el);
++                return css.height === "32px" && css.borderRadius === "10px"
++                  ? []
++                  : [
++                      {
++                        label:
++                          el.getAttribute("aria-label") ??
++                          el.closest("label")?.textContent,
++                        height: css.height,
++                        radius: css.borderRadius,
++                      },
++                    ];
++              }),
++          );
++        expect(fieldErrors, `${theme}/${section} shared fields`).toEqual([]);
++        if (section === "MCP") {
++          await expect(dialog.locator(".settings-mcp-add")).toHaveCSS(
++            "border-radius",
++            "28px",
++          );
++        }
++        if (section === "插件") {
++          await expect(dialog.locator(".plugin-manager-row").first()).toHaveCSS(
++            "border-radius",
++            "28px",
++          );
++          await page.screenshot({
++            path: info.outputPath(`settings-plugins-${theme}-${width}.png`),
++            animations: "disabled",
++          });
++        }
++      }
++    }
++    await page.keyboard.press("Escape");
++    await expect(dialog).toHaveCount(0);
++    await expect(opener).toBeFocused();
++  });
++}
++async function appearance(page: Page, theme: string, accent: string) {
++  await page.evaluate(
++    ({ theme, accent }) => {
++      document.documentElement.dataset.theme = theme;
++      document.documentElement.dataset.accent = accent;
++    },
++    { theme, accent },
++  );
++}
++async function colors(control: Locator) {
++  return control.evaluate((element) => {
++    const style = getComputedStyle(element);
++    let parent: Element | null = element;
++    let background = style.backgroundColor;
++    while (parent && /rgba\([^)]*,\s*0\)/.test(background)) {
++      parent = parent.parentElement;
++      if (parent) background = getComputedStyle(parent).backgroundColor;
++    }
++    return { text: style.color, background };
++  });
++}
++
++for (const theme of ["dark", "light"]) {
++  test(`${theme}: catalog contract reaches real pages and all accent consumers`, async ({
++    page,
++  }, info) => {
++    test.setTimeout(60000);
++    await page.goto("/");
++    await page.emulateMedia({ reducedMotion: "reduce" });
++    for (const name of pages) {
++      await navigate(page, name);
++      const section = page.locator(".catalog-page");
++      await expect.soft(section.locator("h1")).toHaveCSS("font-size", "24px");
++      await expect
++        .soft(section.locator(".catalog-page-search"))
++        .toHaveCSS("height", "32px");
++      await expect
++        .soft(section.locator(".catalog-page-search"))
++        .toHaveCSS("border-radius", "10px");
++      const cards = section.locator(
++        ".catalog-card, .project-library-card, .project-library-action",
++      );
++      expect(await cards.count()).toBeGreaterThan(0);
++      await expect.soft(cards.first()).toHaveCSS("border-radius", "28px");
++      for (const accent of ACCENTS) {
++        await page.mouse.move(0, 0);
++        await appearance(page, theme, accent);
++        const token = themeTokens(theme, accent);
++        const primary = section
++          .locator(".catalog-page-actions .primary-button")
++          .first();
++        await expect(primary).toHaveCSS(
++          "background-color",
++          cssRgb(token("--bg-accent")),
++        );
++        await expect(primary).toHaveCSS(
++          "color",
++          cssRgb(token("--text-on-accent")),
++        );
++        await primary.hover();
++        await expect(primary).toHaveCSS(
++          "background-color",
++          cssRgb(token("--bg-accent-hover")),
++        );
++        const painted = await colors(primary);
++        expect(
++          contrast(painted.text, painted.background),
++        ).toBeGreaterThanOrEqual(4.5);
++        const search = section.locator(".catalog-page-search input");
++        await search.focus();
++        const field = await colors(search);
++        expect(contrast(field.text, field.background)).toBeGreaterThanOrEqual(
++          4.5,
++        );
++        await expect(section.locator(".catalog-page-search")).toHaveCSS(
++          "background-color",
++          cssRgb(token("--bg-input")),
++        );
++        if (name === "Skill") {
++          const filter = section.locator(".catalog-categories button").first();
++          const selected = await filter.evaluate((el) => ({
++            border: getComputedStyle(el).borderColor,
++            shadow: getComputedStyle(el).boxShadow,
++          }));
++          expect(
++            contrast(selected.border, token("--bg-app")),
++            `${theme}/${accent} selected boundary`,
++          ).toBeGreaterThanOrEqual(3);
++          expect(selected.shadow).toContain("inset");
++        }
++      }
++      if (name === "Skill") {
++        const filter = section.locator(".catalog-categories button").first();
++        await expect.soft(filter).toHaveAttribute("aria-pressed", "true");
++        await expect.soft(filter).toHaveCSS("border-radius", "999px");
++        await expect
++          .soft(filter)
++          .toHaveCSS(
++            "background-color",
++            cssRgb(themeTokens(theme, "white")("--bg-accent-soft")),
++          );
++      }
++      await page.screenshot({
++        path: info.outputPath(`${theme}-${name}.png`),
++        animations: "disabled",
++      });
++    }
++  });
++}
++
++for (const width of [390, 768, 1920]) {
++  test(`catalog search and actions remain reachable at ${width}`, async ({
++    page,
++  }, info) => {
++    await page.setViewportSize({ width, height: width === 1920 ? 1080 : 844 });
++    await page.goto("/");
++    await page.emulateMedia({ reducedMotion: "reduce" });
++    for (const name of pages) {
++      await navigate(page, name);
++      const section = page.locator(".catalog-page");
++      const search = section.locator(".catalog-page-search input");
++      await search.fill("没有匹配的很长中文名称-with-a-long-identifier");
++      await search.fill("");
++      expect(
++        await section.evaluate((el) => el.scrollWidth - el.clientWidth),
++      ).toBeLessThanOrEqual(1);
++      for (const action of await section
++        .locator(".catalog-page-actions button")
++        .all()) {
++        const box = (await action.boundingBox())!;
++        expect(box.x).toBeGreaterThanOrEqual(0);
++        expect(box.x + box.width).toBeLessThanOrEqual(width + 1);
++      }
++      await page.screenshot({
++        path: info.outputPath(`${width}-${name}.png`),
++        animations: "disabled",
++      });
++    }
++  });
++}
++
++for (const width of [390, 1920]) {
++  test(`Skill editor fields, save, cancel and focus at ${width}`, async ({
++    page,
++  }, info) => {
++    await page.setViewportSize({ width, height: width === 1920 ? 1080 : 844 });
++    await page.goto("/");
++    await page.emulateMedia({ reducedMotion: "reduce" });
++    await navigate(page, "Skill");
++    const opener = page.getByRole("button", {
++      name: "新建本地 Skill",
++      exact: true,
++    });
++    await opener.click();
++    const dialog = page.getByRole("dialog", { name: "编辑本地 Skill" });
++    await expect.soft(dialog).toHaveCSS("border-radius", "20px");
++    for (const input of await dialog.locator("input").all()) {
++      await expect.soft(input).toHaveCSS("height", "32px");
++      await expect.soft(input).toHaveCSS("border-radius", "10px");
++    }
++    await dialog
++      .getByLabel("ID", { exact: true })
++      .fill(`design-system-${width}`);
++    await dialog
++      .getByLabel("名称", { exact: true })
++      .fill("设计系统测试：长中文名称与英文-identifier");
++    await dialog
++      .getByLabel("描述", { exact: true })
++      .fill("验证本地编辑和保存，不调用外部服务");
++    const longCategory = "W".repeat(80);
++    await dialog.getByLabel("分类", { exact: true }).fill(longCategory);
++    await dialog
++      .getByLabel("指令文本", { exact: true })
++      .fill("保留输入，检查焦点和取消行为。");
++    await dialog
++      .getByRole("button", { name: "保存 Skill", exact: true })
++      .scrollIntoViewIfNeeded();
++    expect(
++      await dialog.evaluate((el) => el.scrollWidth - el.clientWidth),
++    ).toBeLessThanOrEqual(1);
++    await page.screenshot({
++      path: info.outputPath(`skill-editor-${width}.png`),
++      animations: "disabled",
++    });
++    await dialog
++      .getByRole("button", { name: "保存 Skill", exact: true })
++      .click();
++    await expect(dialog).toHaveCount(0);
++    await expect(opener).toBeFocused();
++    await opener.click();
++    await dialog.getByLabel("名称", { exact: true }).fill("取消的草稿");
++    await dialog.getByRole("button", { name: "取消", exact: true }).click();
++    await expect(dialog).toHaveCount(0);
++    await expect(opener).toBeFocused();
++    await opener.click();
++    await page.keyboard.press("Escape");
++    await expect(dialog).toHaveCount(0);
++    await expect(opener).toBeFocused();
++    await page.reload();
++    await navigate(page, "Skill");
++    const category = page
++      .getByRole("group", { name: "Skill分类", exact: true })
++      .getByRole("button", { name: longCategory, exact: true });
++    await category.scrollIntoViewIfNeeded();
++    await expect(category).toBeVisible();
++    const categoryBox = (await category.boundingBox())!;
++    expect(categoryBox.x + categoryBox.width).toBeLessThanOrEqual(width + 1);
++    expect(
++      await page
++        .locator(".catalog-page")
++        .evaluate((el) => el.scrollWidth - el.clientWidth),
++    ).toBeLessThanOrEqual(1);
++    await category.click();
++    await expect(category).toHaveAttribute("aria-pressed", "true");
++    await page
++      .getByRole("group", { name: "Skill分类", exact: true })
++      .getByRole("button", { name: "全部", exact: true })
++      .click();
++    await expect(
++      page.locator(".catalog-card").filter({
++        hasText: "设计系统测试：长中文名称与英文-identifier",
++      }),
++    ).toBeVisible();
++    await expect(
++      page.locator(".catalog-card").filter({ hasText: "取消的草稿" }),
++    ).toHaveCount(0);
++  });
++}
+--- baseline/scripts/audit/check-design-system-desktop.mjs
++++ candidate/scripts/audit/check-design-system-desktop.mjs
+@@ -0,0 +1,332 @@
++import fs from "node:fs/promises";
++import path from "node:path";
++import os from "node:os";
++import { createHash } from "node:crypto";
++import { spawn, execFileSync } from "node:child_process";
++import { chromium, expect } from "@playwright/test";
++import {
++  ACCENTS,
++  contrast,
++  cssRgb,
++  themeTokens,
++} from "../../tests/helpers/designSystem.ts";
++
++// Own release process and isolated storage only. Never attach to a user's app.
++const repo = process.cwd();
++const evidence = path.join(
++  repo,
++  "docs/changes/2026-09-22-design-system-pages/evidence/desktop",
++);
++const exe = path.join(repo, "src-tauri/target/release/kk-studio.exe");
++const cdp = "http://127.0.0.1:9338";
++const temp = await fs.mkdtemp(path.join(os.tmpdir(), "kk-ds-desktop-"));
++const data = path.join(temp, "data");
++const profile = path.join(temp, "profile");
++const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
++const sha = (bytes) => createHash("sha256").update(bytes).digest("hex");
++const report = {
++  timestamp: new Date().toISOString(),
++  mode: "Tauri release",
++  data,
++  profile,
++  matrix: [],
++  sections: [],
++  launches: [],
++  errors: [],
++  passed: false,
++};
++let browser, app, page;
++await fs.mkdir(evidence, { recursive: true });
++
++async function cdpAvailable() {
++  return fetch(`${cdp}/json/version`, { signal: AbortSignal.timeout(1000) })
++    .then(() => true)
++    .catch(() => false);
++}
++async function closeOwnedApp() {
++  if (app && app.exitCode === null) {
++    execFileSync(
++      "powershell.exe",
++      [
++        "-NoProfile",
++        "-Command",
++        `(Get-Process -Id ${app.pid} -ErrorAction Stop).CloseMainWindow() | Out-Null`,
++      ],
++      { windowsHide: true },
++    );
++    await expect.poll(() => app.exitCode, { timeout: 10000 }).not.toBeNull();
++  }
++  await browser?.close();
++  browser = undefined;
++  page = undefined;
++  await expect.poll(cdpAvailable, { timeout: 10000 }).toBe(false);
++}
++async function launch() {
++  if (await cdpAvailable())
++    throw new Error("Audit CDP port 9338 is occupied; no process was launched");
++  app = spawn(exe, ["--data-dir", data], {
++    cwd: repo,
++    windowsHide: true,
++    stdio: "ignore",
++    env: {
++      ...process.env,
++      WEBVIEW2_USER_DATA_FOLDER: profile,
++      WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS:
++        "--remote-debugging-port=9338 --remote-debugging-address=127.0.0.1",
++    },
++  });
++  let launchError;
++  app.on("error", (error) => {
++    launchError = error;
++  });
++  for (let i = 0; i < 150; i++) {
++    if (launchError) throw launchError;
++    if (app.exitCode !== null)
++      throw new Error(`Owned desktop exited early: ${app.exitCode}`);
++    if (await cdpAvailable()) break;
++    await delay(100);
++  }
++  browser = await chromium.connectOverCDP(cdp);
++  await expect
++    .poll(
++      () => {
++        page = browser
++          .contexts()
++          .flatMap((context) => context.pages())
++          .find((item) => new URL(item.url()).hostname === "tauri.localhost");
++        return Boolean(page);
++      },
++      { timeout: 15000 },
++    )
++    .toBe(true);
++  page.on("pageerror", (error) => report.errors.push(error.message));
++  await page.waitForLoadState("domcontentloaded");
++  await expect(page.locator(".app")).toHaveAttribute(
++    "data-runtime-mode",
++    "production",
++  );
++  await page.emulateMedia({ reducedMotion: "reduce" });
++  const storageRoot = await page.evaluate(() =>
++    window.__TAURI_INTERNALS__.invoke("get_storage_root"),
++  );
++  expect(path.resolve(storageRoot).toLowerCase()).toBe(
++    path.resolve(data).toLowerCase(),
++  );
++  const assets = await page
++    .locator('script[type="module"][src], link[rel="stylesheet"][href]')
++    .evaluateAll((elements) =>
++      elements.map((el) => el.getAttribute("src") ?? el.getAttribute("href")),
++    );
++  const loaded = [];
++  for (const asset of assets) {
++    if (!asset.startsWith("/assets/")) continue;
++    const local = await fs.readFile(path.join(repo, "dist", asset.slice(1)));
++    const actual = await page.evaluate(async (url) => {
++      const response = await fetch(url);
++      if (!response.ok) throw new Error(`Asset fetch ${response.status}`);
++      return Array.from(new Uint8Array(await response.arrayBuffer()));
++    }, asset);
++    expect(sha(Buffer.from(actual))).toBe(sha(local));
++    loaded.push({ asset, sha256: sha(local), bytes: local.length });
++  }
++  expect(loaded.some((item) => item.asset.endsWith(".js"))).toBe(true);
++  expect(loaded.some((item) => item.asset.endsWith(".css"))).toBe(true);
++  report.launches.push({
++    pid: app.pid,
++    url: page.url(),
++    storageRoot,
++    viewport: await page.evaluate(() => ({
++      width: innerWidth,
++      height: innerHeight,
++    })),
++    loaded,
++  });
++}
++async function navigate(name) {
++  await page
++    .locator(".sidebar")
++    .getByRole("button", { name, exact: true })
++    .click();
++  await expect(page.locator(".catalog-page h1")).toBeVisible();
++}
++async function openSettings() {
++  await page.getByRole("button", { name: "打开设置", exact: true }).click();
++  return page.getByRole("dialog", { name: "设置" });
++}
++
++try {
++  report.exe = { path: exe, sha256: sha(await fs.readFile(exe)) };
++  await launch();
++  for (const theme of ["dark", "light"]) {
++    for (const accent of ACCENTS) {
++      const token = themeTokens(theme, accent);
++      const dialog = await openSettings();
++      await dialog.getByRole("button", { name: "通用", exact: true }).click();
++      await dialog.getByLabel("主题", { exact: true }).selectOption(theme);
++      await dialog.getByLabel("强调色", { exact: true }).selectOption(accent);
++      await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
++      await expect(page.locator("html")).toHaveAttribute("data-accent", accent);
++      await dialog
++        .getByRole("button", { name: "模型供应商", exact: true })
++        .click();
++      const primary = dialog.getByRole("button", {
++        name: "保存供应商",
++        exact: true,
++      });
++      await page.mouse.move(0, 0);
++      await expect(primary).toHaveCSS(
++        "background-color",
++        cssRgb(token("--bg-accent")),
++      );
++      await expect(primary).toHaveCSS(
++        "color",
++        cssRgb(token("--text-on-accent")),
++      );
++      await primary.hover();
++      await expect(primary).toHaveCSS(
++        "background-color",
++        cssRgb(token("--bg-accent-hover")),
++      );
++      const paint = await primary.evaluate((el) => ({
++        text: getComputedStyle(el).color,
++        bg: getComputedStyle(el).backgroundColor,
++      }));
++      expect(contrast(paint.text, paint.bg)).toBeGreaterThanOrEqual(4.5);
++      await page.keyboard.press("Escape");
++      await expect(
++        page.getByRole("button", { name: "打开设置", exact: true }),
++      ).toBeFocused();
++      for (const name of ["项目库", "Skill", "ComfyUI 工作流"]) {
++        await navigate(name);
++        const section = page.locator(".catalog-page");
++        await expect(section.locator("h1")).toHaveCSS("font-size", "24px");
++        await expect(section.locator(".catalog-page-search")).toHaveCSS(
++          "height",
++          "32px",
++        );
++        await expect(section.locator(".catalog-page-search")).toHaveCSS(
++          "background-color",
++          cssRgb(token("--bg-input")),
++        );
++        await expect(
++          section.locator(".catalog-card, .project-library-action").first(),
++        ).toHaveCSS("border-radius", "28px");
++        if (accent === "white")
++          await page.screenshot({
++            path: path.join(evidence, `${theme}-${name}.png`),
++            animations: "disabled",
++          });
++      }
++      report.matrix.push({
++        theme,
++        accent,
++        hoverContrast: contrast(paint.text, paint.bg),
++        catalogPages: 3,
++      });
++    }
++  }
++  const settings = await openSettings();
++  for (const section of [
++    "账号管理",
++    "储存",
++    "网络",
++    "记忆",
++    "模型供应商",
++    "Skill",
++    "MCP",
++    "插件",
++    "Comfy UI",
++    "高级",
++    "软件更新",
++  ]) {
++    await settings
++      .locator(".settings-nav")
++      .getByRole("button", { name: section, exact: true })
++      .click();
++    await expect(settings.locator(".settings-content h2")).toHaveText(section);
++    expect(
++      await settings
++        .locator(".settings-content")
++        .evaluate((el) => el.scrollWidth - el.clientWidth),
++    ).toBeLessThanOrEqual(1);
++    report.sections.push(section);
++  }
++  await page.keyboard.press("Escape");
++  await navigate("Skill");
++  await page
++    .getByRole("button", { name: "新建本地 Skill", exact: true })
++    .click();
++  const editor = page.getByRole("dialog", { name: "编辑本地 Skill" });
++  await expect(editor).toHaveCSS("border-radius", "20px");
++  await editor.getByLabel("ID", { exact: true }).fill("desktop-design-system");
++  await editor.getByLabel("名称", { exact: true }).fill("桌面设计系统验收");
++  await editor
++    .getByLabel("描述", { exact: true })
++    .fill("验证真实桌面重启后的本地记录");
++  await editor
++    .getByLabel("指令文本", { exact: true })
++    .fill("保留用户选择的主题、强调色和本地指令。");
++  await page.screenshot({
++    path: path.join(evidence, "skill-editor.png"),
++    animations: "disabled",
++  });
++  await editor.getByRole("button", { name: "保存 Skill", exact: true }).click();
++  await expect(
++    page.getByRole("button", { name: "新建本地 Skill", exact: true }),
++  ).toBeFocused();
++  const finalSettings = await openSettings();
++  await finalSettings.getByLabel("主题", { exact: true }).selectOption("light");
++  await finalSettings
++    .getByLabel("强调色", { exact: true })
++    .selectOption("green");
++  await page.keyboard.press("Escape");
++  await closeOwnedApp();
++  await launch();
++  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
++  await expect(page.locator("html")).toHaveAttribute("data-accent", "green");
++  await navigate("Skill");
++  await expect(
++    page.locator(".catalog-card").filter({ hasText: "桌面设计系统验收" }),
++  ).toBeVisible();
++  await page.screenshot({
++    path: path.join(evidence, "restarted-skill.png"),
++    animations: "disabled",
++  });
++  report.restart = {
++    theme: "light",
++    accent: "green",
++    skillPreserved: true,
++    sameDataAndProfile: true,
++  };
++  expect(report.errors).toEqual([]);
++  report.passed = true;
++} catch (error) {
++  report.failure = error.message;
++  process.exitCode = 1;
++} finally {
++  try {
++    await closeOwnedApp();
++  } catch (error) {
++    report.cleanupFailure = error.message;
++    report.passed = false;
++    process.exitCode = 1;
++  }
++  await fs.writeFile(
++    path.join(evidence, "runtime.json"),
++    JSON.stringify(report, null, 2),
++  );
++  console.log(
++    JSON.stringify(
++      {
++        passed: report.passed,
++        matrix: report.matrix.length,
++        launches: report.launches.length,
++        failure: report.failure,
++        cleanupFailure: report.cleanupFailure,
++        evidence,
++      },
++      null,
++      2,
++    ),
++  );
++}
+--- baseline/docs/DESIGN-SYSTEM.md
++++ candidate/docs/DESIGN-SYSTEM.md
+@@ -74,7 +74,7 @@
+ | --- | --- | --- |
+ | Button | `.ui-button`；主按钮 `.primary-button` 或 `.ui-button.is-primary` | h32、r10、12/16、500；default/hover/active/pressed/disabled/focus共享语义；真正提交才用主按钮 |
+ | Danger | `.ui-button.is-danger` / `.is-danger-filled` | 文字危险与填充危险分开；不受强调色影响 |
+-| Input | 原生input/textarea；设置 `.settings-field input` | 单行h32、r10、bg-input、必要边界；可访问label；placeholder不代替label；min-width0；业务多行保留 |
++| Input | 原生input/textarea + `.ui-input`；设置 `.settings-field input`；带图标搜索 `.catalog-page-search` | 单行h32、r10、bg-input、必要边界；可访问label；placeholder不代替label；min-width0；业务多行保留 |
+ | Select | 原生select；设置 `.settings-select` | compact32/standard40、r10；文字可读、键盘可选；原生弹出菜单由系统控制，不声称还原为自定义r12菜单 |
+ | Badge | `.ui-badge`；`.is-accent` / `.is-success` | 纯信息无点击角色；r999；状态配对前景；不能只靠颜色表达成功/错误 |
+ | Capsule | `.ui-capsule` | h28/32、r999；可切换时用button+aria-pressed；不把过滤器当主提交；长文本有完整可访问名称 |
+@@ -91,3 +91,5 @@
+ 固定链路：**用户Design System + 页面来源 → 语义Tokens → 共享组件 → 实际页面 → 浏览器验证**。新增颜色只能进入语义拥有者；新页面必须在两种主题和8色下检查相关状态。`tests/unit/designSystem.test.ts`直接读取实际CSS，验证配色/兼容；`tests/browser/design-system.spec.ts`核对真实页面最终计算样式、保存和键盘回归；原有 `ui:check` 阻止页面新字面量和未定义tokens。
+ 
+ 公共样式对齐不表示每个历史页面均完成逐像素验收。PDF无法证明交互、变量绑定或组件实例；在线设计源写入、Tauri运行及未覆盖页面分别留证。当前范围与状态见 [本次验证](changes/2026-09-22-design-system/verification.md)。
++
++2026-09-22逐页迁移：项目库、Skills、ComfyUI目录、Skill编辑器与设置分区继续消费以上契约；侧栏单色SVG在浅色主题将旧浅色前景映射为深色，保留原文件与命中区域。页面与真实Tauri证据见 [逐页迁移验证](changes/2026-09-22-design-system-pages/verification.md)。两色复合图标、Logo和页面来源几何不能被无差别全局滤镜处理。
+--- baseline/tests/browser/connection-drag.spec.ts
++++ candidate/tests/browser/connection-drag.spec.ts
+@@ -241,10 +241,15 @@
+     await expect(
+       menu.getByRole("menuitem", { name: "图片", exact: true }),
+     ).toBeFocused();
++    // Plugins activate concurrently. Wait for their menu entries, then check
++    // End against the rendered order rather than a network completion order.
++    for (const name of ["HTML", "Markdown", "SVG", "便利贴"]) {
++      await expect(
++        menu.getByRole("menuitem", { name, exact: true }),
++      ).toBeVisible();
++    }
+     await page.keyboard.press("End");
+-    await expect(
+-      menu.getByRole("menuitem", { name: "SVG", exact: true }),
+-    ).toBeFocused();
++    await expect(menu.getByRole("menuitem").last()).toBeFocused();
+     await page.keyboard.press("Escape");
+     await expect(
+       page.getByRole("button", { name: "添加资源", exact: true }),

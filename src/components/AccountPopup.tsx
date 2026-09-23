@@ -1,5 +1,6 @@
 import BrandLogo from "./BrandLogo";
 import type { RefObject } from "react";
+import { appVersion } from "../runtime/appInfo";
 
 export default function AccountPopup({
   onOpenSettings,
@@ -80,7 +81,7 @@ export default function AccountPopup({
       <div className="account-popup-row account-version-row">
         <div className="account-popup-row-label">
           <img src="/design/figma/account-update.svg" alt="" />
-          <span>版本更新 v2.0.00</span>
+          <span>版本更新 v{appVersion}</span>
         </div>
         <button
           type="button"

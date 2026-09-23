@@ -1,6 +1,7 @@
+import type { ModelSelection } from "../../features/models/modelSelection";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Heart, Square } from "lucide-react";
-import CreationParameters from "./CreationParameters";
+import { Heart } from "lucide-react";
+import CreationParameterControl from "./CreationParameterControl";
 import GenerationCount from "./GenerationCount";
 import {
   modelCapabilities,
@@ -33,7 +34,7 @@ interface CreationComposerProps {
   ) => void;
   prompt?: string;
   model?: string;
-  onModelChange?: (model: string) => void;
+  onModelChange?: (model: string, selection?: ModelSelection) => void;
   references?: CanvasReference[];
   referenceLimit?: number;
   onRemoveReference?: (connectionId: string) => void;
@@ -75,8 +76,7 @@ export default function CreationComposer({
       soundEnabled: false,
     }),
   );
-  const { ratio, quality, duration, count, soundEnabled } =
-    parameters ?? localParameters;
+  const { count, soundEnabled } = parameters ?? localParameters;
   function updateParameters(patch: Partial<CanvasParameters>): void {
     const next = { ...(parameters ?? localParameters), ...patch };
     setLocalParameters(next);
@@ -182,57 +182,24 @@ export default function CreationComposer({
           actualModels={video ? undefined : imageGeneration.models}
           open={menu === "model"}
           onToggle={() => setMenu(menu === "model" ? "" : "model")}
-          onChange={(value) => {
+          onChange={(value, selection) => {
             setModel(value);
-            onModelChange?.(value);
+            onModelChange?.(value, selection);
+            if (selection?.source === "codex")
+              updateParameters({ count: "1", imageSize: undefined });
             setMenu("");
           }}
           onConfigure={onConfigure}
         />
-        <div className="control-anchor" data-control="params">
-          <button
-            className={
-              "param-button " + (video ? "video-params" : "image-params")
-            }
-            aria-label={video ? "视频参数" : undefined}
-            title={
-              video
-                ? undefined
-                : "比例和清晰度仅保存为草稿；当前图片请求使用供应商默认参数"
-            }
-            aria-expanded={menu === "params"}
-            onClick={() => setMenu(menu === "params" ? "" : "params")}
-          >
-            {!video && (
-              <Square size={11} strokeWidth={1.5} aria-hidden="true" />
-            )}
-            {video ? (
-              <span className="video-param-summary">
-                <span>全能参考</span>
-                <i aria-hidden="true" />
-                <span>{ratio}</span>
-                <i aria-hidden="true" />
-                <span>{quality}</span>
-                <i aria-hidden="true" />
-                <img src="/design/figma/timer-start.png" alt="" />
-                <span>{duration}S</span>
-              </span>
-            ) : (
-              <span>{`${ratio} · ${quality} · 中`}</span>
-            )}
-          </button>
-          {menu === "params" && (
-            <CreationParameters
-              kind={kind}
-              ratio={ratio}
-              quality={quality}
-              duration={duration}
-              onRatio={(ratio) => updateParameters({ ratio })}
-              onQuality={(quality) => updateParameters({ quality })}
-              onDuration={(duration) => updateParameters({ duration })}
-            />
-          )}
-        </div>
+        <CreationParameterControl
+          kind={kind}
+          model={selectedModel}
+          parameters={parameters ?? localParameters}
+          open={menu === "params"}
+          onToggle={() => setMenu(menu === "params" ? "" : "params")}
+          onChange={updateParameters}
+          onModelChange={onModelChange}
+        />
         <span className="control-spacer" />
         <button
           className="param-button voice-button"
@@ -260,6 +227,7 @@ export default function CreationComposer({
           />
         </button>
         <GenerationCount
+          maxCount={imageGeneration.usesCodex ? 4 : 8}
           value={count}
           open={menu === "count"}
           onToggle={() => setMenu(menu === "count" ? "" : "count")}

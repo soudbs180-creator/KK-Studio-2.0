@@ -1,0 +1,56 @@
+{
+  "timestamp": "2026-09-22T06:56:36.425Z",
+  "cwd": "D:\\kk-studio\\KK-Studio-2.0",
+  "node": "v24.19.0",
+  "head": "cf344ddcdf039c6e62aeb9c65106e2a2339c0bb4",
+  "branch": "chore/TASK-CONSOLIDATE-200",
+  "workingTree": "uncommitted scoped changes on pre-existing dirty checkout; not a release commit",
+  "files": {
+    "src/App.tsx": "93c024086b9a4dffe0cc86afd09c91dc3b1bc494e9eb6a5bcf3e1cc434d37b1a",
+    "src/components/canvas/CanvasNodeContent.tsx": "2713dacf7087f9ca839fbe4fb5093905e9be5aaaa89eff43f6174a7b34283655",
+    "src/components/nodes/PromptCreationNode.tsx": "ccf846c55b9fd73fffa3d5e661c0f4c7a8d82c6f4863c9d14b588563d41095fc",
+    "src/components/nodes/GenerationAction.tsx": "8f16f18ed16c91e025ad92dda607957898591d58dc32b00920e0f96f8f1e2eba",
+    "src/components/nodes/DemoResultNode.tsx": "e54f98ba49da8cccec11e827d8d41a1fe5d8956ba4b193894216286ceb58af9b",
+    "src/components/nodes/DemoMediaPreview.tsx": "b692e6fcf414491b30ec4d0ddb15336fe914e95ef1c7278af8fdd136d1ff4c74",
+    "src/features/creation/model.ts": "1fc870b4441d27544ecfefc612c2d60d71dfd3cdfeab489239990e354e1f613a",
+    "src/features/creation/textGeneration.ts": "61e87abf33cdf8ef78e38dcab9fb50945ae43bd61a20771e8b1d85f808f7341c",
+    "src/features/creation/textTaskResult.ts": "4f78fcb6409730668cdc3585079a581f83ae98b1e619383d5c5dd08c080a18c7",
+    "src/features/creation/useNativeTextRecovery.ts": "cc26857925d1a69a9f696c28fa91f8e519974472a7938e53d27153fd826f0643",
+    "src/features/creation/nativeTaskHost.ts": "590404af67ba25a31598a247c99887c359089e29915bebf71bb5a9ce7bdbb425",
+    "src/features/creation/imageTaskCommand.ts": "7ee8bd3d7a71f3a9fd825d6081294a71f073e2abf73ba1d45df9868a6d65bcd5",
+    "src/features/creation/providerRegistry.ts": "2ad42d14f881eda411b8acd58293973e91f70d9f77c4f6a0fa169533d575f80a",
+    "src/features/creation/providerSubmission.ts": "21d547355dbe5c9c1f883e133ac9296696ff1af7a12b9a7afef0207ea211f5e3",
+    "src/features/creation/CanvasImageCommand.tsx": "25f605f36a55bd44e306d019e36f897dad7e722244c769fcc738ca586ae553f0",
+    "src-tauri/src/task_host.rs": "6b4354925fb67163c066783539b3bf6c888bb5bd22633bd1bc66e79e9783f9d9",
+    "src-tauri/src/task_host_text.rs": "ee4076fb91e3e711798a5c1bedc918f058d2639b0cc3bb64d771894fba238edf",
+    "scripts/features/registry.mjs": "547c3058abf76688be9545f5725db1c331a3756454b675de993ef9f2186f09bc",
+    "scripts/audit/check-text-runtime.mjs": "38c202751c1461c0fb440b4bb444f99330606a1464f8339b4b95e78b26f24213",
+    "tests/unit/featureRegistry.test.ts": "ec78b7eab59bb92c32a3cf39783cc944ff0aeb06fb45c92c62cbc51023c735fa",
+    "tests/unit/imageTaskCommand.test.ts": "48e09d9cdd6e23907deebf107f64a2e52f328a5a708e3414def0ee7008c5b0a9",
+    "tests/unit/nativeTaskHost.test.ts": "7e7fd83075007ca664e990a254af1b079ee897a41b12a3a62724f7d74e04943a",
+    "tests/unit/textGeneration.test.ts": "e9740892ff3c79df804f22ae3092988c6e69d70aacc25c066241888879110b97",
+    "tests/browser/text-generation.spec.ts": "a5a5277f135de344845279dfd1ace0ca8c7b85cf6f96448eadd16aecfb487ce9",
+    "tests/browser/demo-results.spec.ts": "3881e6ba89ea60ec2e0652304898c2f031b0292d73497f5f1eaf566d67140d56",
+    "AGENTS.md": "6bbe02eb9acd6abcdb44ce24092ed534f251354507edafccb353d0777502479e",
+    "AI_RULES.md": "be1d3febf73e0c03ddbfaf3e16372a46c07f99c6e53079eddd03340303d0d8fe",
+    "docs/features/features.registry.json": "8d731ab014a8272dc588c8adac34863649c1a18ebd0526344ed0d876a3159791",
+    "docs/governance/task-ledger.json": "296710399e7a5e8fb145bede828eac75eae25b3c13609970a9e876f218bdc021"
+  },
+  "artifacts": {
+    "dist/assets/index-C7-jQxHk.js": "15d3373d2ca0c38f7714f9c9b0955cd8beb8520d161952ce85f8fc846613aa8c",
+    "src-tauri/target/release/kk-studio.exe": "26965963d430907fdd1cf2d6576ff7d4c855b5c7b15290be099d065ea964bcaa"
+  },
+  "browser": {
+    "startTime": "2026-09-22T06:47:49.348Z",
+    "duration": 60542.555,
+    "expected": 210,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "evidenceRestore": {
+    "preserved": 679,
+    "replaced": 15,
+    "verifiedSameBytes": true
+  }
+}

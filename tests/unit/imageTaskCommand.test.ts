@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   appendImageTask,
+  assertLiveTextTask,
+  prepareImageTask,
   appendImageTaskResults,
   canvasImageAttachments,
   ImageTaskCommandError,
@@ -9,6 +11,7 @@ import {
 } from "../../src/features/creation/imageTaskCommand.ts";
 import {
   createProject,
+  createTask,
   type CreateProjectInput,
 } from "../../src/features/creation/model.ts";
 import type { CanvasCollectionItem } from "../../src/domain/canvasItems.ts";
@@ -26,6 +29,38 @@ const input: CreateProjectInput = {
 
 const pixelDataUrl =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
+
+test("text cannot submit a deleted source, cancelled task or changed identity", () => {
+  const project = createProject({
+    ...input,
+    kind: "text",
+    model: "gpt-text-test",
+  });
+  const task = { ...createTask(project), sourceItemId: project.items[0].id };
+  project.tasks = [task];
+  assert.doesNotThrow(() => assertLiveTextTask(project, task));
+  for (const current of [
+    undefined,
+    { ...project, items: [] },
+    { ...project, tasks: [] },
+    { ...project, tasks: [{ ...task, status: "cancelled" as const }] },
+    { ...project, tasks: [{ ...task, idempotencyKey: "another-submission" }] },
+  ])
+    assert.throws(() => assertLiveTextTask(current, task), /已变化/);
+});
+
+test("text input cannot exceed the durable snapshot prompt limit", async () => {
+  await assert.rejects(
+    () =>
+      prepareImageTask({
+        ...input,
+        kind: "text",
+        model: "gpt-text-test",
+        prompt: "x".repeat(4001),
+      }),
+    /4000/,
+  );
+});
 
 test("archived results connect to the originating node and tolerate a deleted source", () => {
   const project = createProject(input);
@@ -219,6 +254,35 @@ test("canvasImageAttachments reads each archived self or incoming asset once wit
   } finally {
     globalThis.fetch = originalFetch;
   }
+});
+
+test("画布文本提示词连线不被当作未归档图片附件", async () => {
+  const project = createProject(input);
+  const source = {
+    ...sourceItem("source", "unused"),
+    assetId: undefined,
+    preview: undefined,
+    result: undefined,
+  };
+  project.items = [
+    source,
+    {
+      id: "prompt",
+      kind: "text",
+      title: "提示词",
+      description: "",
+      prompt: "产品照片",
+    },
+  ];
+  project.canvas.edges = [
+    {
+      id: "text-reference",
+      source: "prompt",
+      target: source.id,
+      kind: "reference",
+    },
+  ];
+  assert.deepEqual(await canvasImageAttachments(project, source), []);
 });
 
 test("canvasImageAttachments fails closed for missing or invalid archived originals", async () => {

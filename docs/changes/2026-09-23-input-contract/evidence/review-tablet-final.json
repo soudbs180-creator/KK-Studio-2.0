@@ -1,0 +1,1768 @@
+{
+  "timestamp": "2026-09-22T17:07:27.193Z",
+  "url": "http://127.0.0.1:1423/",
+  "home": [
+    {
+      "viewport": {
+        "width": 767,
+        "height": 900
+      },
+      "form": {
+        "x": 25,
+        "y": 229,
+        "width": 717,
+        "height": 256,
+        "top": 229,
+        "right": 742,
+        "bottom": 485,
+        "left": 25
+      },
+      "toolbar": {
+        "x": 38,
+        "y": 322,
+        "width": 691,
+        "height": 96,
+        "top": 322,
+        "right": 729,
+        "bottom": 418,
+        "left": 38
+      },
+      "display": "grid",
+      "buttons": [
+        {
+          "name": "添加参考素材",
+          "rect": {
+            "x": 38,
+            "y": 374,
+            "width": 44,
+            "height": 44,
+            "top": 374,
+            "right": 82,
+            "bottom": 418,
+            "left": 38
+          },
+          "hit": true
+        },
+        {
+          "name": "模型",
+          "rect": {
+            "x": 38,
+            "y": 322,
+            "width": 555,
+            "height": 44,
+            "top": 322,
+            "right": 593,
+            "bottom": 366,
+            "left": 38
+          },
+          "hit": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 597,
+            "y": 322,
+            "width": 64,
+            "height": 44,
+            "top": 322,
+            "right": 661,
+            "bottom": 366,
+            "left": 597
+          },
+          "hit": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 665,
+            "y": 322,
+            "width": 64,
+            "height": 44,
+            "top": 322,
+            "right": 729,
+            "bottom": 366,
+            "left": 665
+          },
+          "hit": true
+        },
+        {
+          "name": "开启语音输入",
+          "rect": {
+            "x": 86,
+            "y": 374,
+            "width": 44,
+            "height": 44,
+            "top": 374,
+            "right": 130,
+            "bottom": 418,
+            "left": 86
+          },
+          "hit": true
+        },
+        {
+          "name": "当前模式：自动",
+          "rect": {
+            "x": 589,
+            "y": 374,
+            "width": 72,
+            "height": 44,
+            "top": 374,
+            "right": 661,
+            "bottom": 418,
+            "left": 589
+          },
+          "hit": true
+        },
+        {
+          "name": "开始创建项目",
+          "rect": {
+            "x": 685,
+            "y": 374,
+            "width": 44,
+            "height": 44,
+            "top": 374,
+            "right": 729,
+            "bottom": 418,
+            "left": 685
+          },
+          "hit": true
+        }
+      ],
+      "menus": [
+        {
+          "name": "模型",
+          "rect": {
+            "x": 38,
+            "y": 493,
+            "width": 190,
+            "height": 84,
+            "top": 493,
+            "right": 228,
+            "bottom": 577,
+            "left": 38
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 447,
+            "y": 493,
+            "width": 214,
+            "height": 165,
+            "top": 493,
+            "right": 661,
+            "bottom": 658,
+            "left": 447
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 515,
+            "y": 493,
+            "width": 214,
+            "height": 187,
+            "top": 493,
+            "right": 729,
+            "bottom": 680,
+            "left": 515
+          },
+          "covered": [],
+          "escapeFocus": true
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 900
+      },
+      "form": {
+        "x": 97,
+        "y": 245,
+        "width": 646,
+        "height": 204,
+        "top": 245,
+        "right": 743,
+        "bottom": 449,
+        "left": 97
+      },
+      "toolbar": {
+        "x": 110,
+        "y": 338,
+        "width": 620,
+        "height": 44,
+        "top": 338,
+        "right": 730,
+        "bottom": 382,
+        "left": 110
+      },
+      "display": "flex",
+      "buttons": [
+        {
+          "name": "添加参考素材",
+          "rect": {
+            "x": 110,
+            "y": 338,
+            "width": 44,
+            "height": 44,
+            "top": 338,
+            "right": 154,
+            "bottom": 382,
+            "left": 110
+          },
+          "hit": true
+        },
+        {
+          "name": "模型",
+          "rect": {
+            "x": 158,
+            "y": 338,
+            "width": 260,
+            "height": 44,
+            "top": 338,
+            "right": 418,
+            "bottom": 382,
+            "left": 158
+          },
+          "hit": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 422,
+            "y": 338,
+            "width": 59.015625,
+            "height": 44,
+            "top": 338,
+            "right": 481.015625,
+            "bottom": 382,
+            "left": 422
+          },
+          "hit": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 485.015625,
+            "y": 338,
+            "width": 60,
+            "height": 44,
+            "top": 338,
+            "right": 545.015625,
+            "bottom": 382,
+            "left": 485.015625
+          },
+          "hit": true
+        },
+        {
+          "name": "开启语音输入",
+          "rect": {
+            "x": 562,
+            "y": 338,
+            "width": 44,
+            "height": 44,
+            "top": 338,
+            "right": 606,
+            "bottom": 382,
+            "left": 562
+          },
+          "hit": true
+        },
+        {
+          "name": "当前模式：自动",
+          "rect": {
+            "x": 610,
+            "y": 338,
+            "width": 72,
+            "height": 44,
+            "top": 338,
+            "right": 682,
+            "bottom": 382,
+            "left": 610
+          },
+          "hit": true
+        },
+        {
+          "name": "开始创建项目",
+          "rect": {
+            "x": 686,
+            "y": 338,
+            "width": 44,
+            "height": 44,
+            "top": 338,
+            "right": 730,
+            "bottom": 382,
+            "left": 686
+          },
+          "hit": true
+        }
+      ],
+      "menus": [
+        {
+          "name": "模型",
+          "rect": {
+            "x": 158,
+            "y": 457,
+            "width": 190,
+            "height": 84,
+            "top": 457,
+            "right": 348,
+            "bottom": 541,
+            "left": 158
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 267.015625,
+            "y": 457,
+            "width": 214,
+            "height": 165,
+            "top": 457,
+            "right": 481.015625,
+            "bottom": 622,
+            "left": 267.015625
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 331.015625,
+            "y": 457,
+            "width": 214,
+            "height": 187,
+            "top": 457,
+            "right": 545.015625,
+            "bottom": 644,
+            "left": 331.015625
+          },
+          "covered": [],
+          "escapeFocus": true
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 834,
+        "height": 900
+      },
+      "form": {
+        "x": 97,
+        "y": 245,
+        "width": 712,
+        "height": 204,
+        "top": 245,
+        "right": 809,
+        "bottom": 449,
+        "left": 97
+      },
+      "toolbar": {
+        "x": 110,
+        "y": 338,
+        "width": 686,
+        "height": 44,
+        "top": 338,
+        "right": 796,
+        "bottom": 382,
+        "left": 110
+      },
+      "display": "flex",
+      "buttons": [
+        {
+          "name": "添加参考素材",
+          "rect": {
+            "x": 110,
+            "y": 338,
+            "width": 44,
+            "height": 44,
+            "top": 338,
+            "right": 154,
+            "bottom": 382,
+            "left": 110
+          },
+          "hit": true
+        },
+        {
+          "name": "模型",
+          "rect": {
+            "x": 158,
+            "y": 338,
+            "width": 260,
+            "height": 44,
+            "top": 338,
+            "right": 418,
+            "bottom": 382,
+            "left": 158
+          },
+          "hit": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 422,
+            "y": 338,
+            "width": 59.015625,
+            "height": 44,
+            "top": 338,
+            "right": 481.015625,
+            "bottom": 382,
+            "left": 422
+          },
+          "hit": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 485.015625,
+            "y": 338,
+            "width": 60,
+            "height": 44,
+            "top": 338,
+            "right": 545.015625,
+            "bottom": 382,
+            "left": 485.015625
+          },
+          "hit": true
+        },
+        {
+          "name": "开启语音输入",
+          "rect": {
+            "x": 628,
+            "y": 338,
+            "width": 44,
+            "height": 44,
+            "top": 338,
+            "right": 672,
+            "bottom": 382,
+            "left": 628
+          },
+          "hit": true
+        },
+        {
+          "name": "当前模式：自动",
+          "rect": {
+            "x": 676,
+            "y": 338,
+            "width": 72,
+            "height": 44,
+            "top": 338,
+            "right": 748,
+            "bottom": 382,
+            "left": 676
+          },
+          "hit": true
+        },
+        {
+          "name": "开始创建项目",
+          "rect": {
+            "x": 752,
+            "y": 338,
+            "width": 44,
+            "height": 44,
+            "top": 338,
+            "right": 796,
+            "bottom": 382,
+            "left": 752
+          },
+          "hit": true
+        }
+      ],
+      "menus": [
+        {
+          "name": "模型",
+          "rect": {
+            "x": 158,
+            "y": 457,
+            "width": 190,
+            "height": 84,
+            "top": 457,
+            "right": 348,
+            "bottom": 541,
+            "left": 158
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 267.015625,
+            "y": 457,
+            "width": 214,
+            "height": 165,
+            "top": 457,
+            "right": 481.015625,
+            "bottom": 622,
+            "left": 267.015625
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 331.015625,
+            "y": 457,
+            "width": 214,
+            "height": 187,
+            "top": 457,
+            "right": 545.015625,
+            "bottom": 644,
+            "left": 331.015625
+          },
+          "covered": [],
+          "escapeFocus": true
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 1200,
+        "height": 900
+      },
+      "form": {
+        "x": 276,
+        "y": 255,
+        "width": 720,
+        "height": 204,
+        "top": 255,
+        "right": 996,
+        "bottom": 459,
+        "left": 276
+      },
+      "toolbar": {
+        "x": 289,
+        "y": 348,
+        "width": 694,
+        "height": 44,
+        "top": 348,
+        "right": 983,
+        "bottom": 392,
+        "left": 289
+      },
+      "display": "flex",
+      "buttons": [
+        {
+          "name": "添加参考素材",
+          "rect": {
+            "x": 289,
+            "y": 348,
+            "width": 44,
+            "height": 44,
+            "top": 348,
+            "right": 333,
+            "bottom": 392,
+            "left": 289
+          },
+          "hit": true
+        },
+        {
+          "name": "模型",
+          "rect": {
+            "x": 337,
+            "y": 348,
+            "width": 260,
+            "height": 44,
+            "top": 348,
+            "right": 597,
+            "bottom": 392,
+            "left": 337
+          },
+          "hit": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 601,
+            "y": 348,
+            "width": 59.015625,
+            "height": 44,
+            "top": 348,
+            "right": 660.015625,
+            "bottom": 392,
+            "left": 601
+          },
+          "hit": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 664.015625,
+            "y": 348,
+            "width": 60,
+            "height": 44,
+            "top": 348,
+            "right": 724.015625,
+            "bottom": 392,
+            "left": 664.015625
+          },
+          "hit": true
+        },
+        {
+          "name": "开启语音输入",
+          "rect": {
+            "x": 815,
+            "y": 348,
+            "width": 44,
+            "height": 44,
+            "top": 348,
+            "right": 859,
+            "bottom": 392,
+            "left": 815
+          },
+          "hit": true
+        },
+        {
+          "name": "当前模式：自动",
+          "rect": {
+            "x": 863,
+            "y": 348,
+            "width": 72,
+            "height": 44,
+            "top": 348,
+            "right": 935,
+            "bottom": 392,
+            "left": 863
+          },
+          "hit": true
+        },
+        {
+          "name": "开始创建项目",
+          "rect": {
+            "x": 939,
+            "y": 348,
+            "width": 44,
+            "height": 44,
+            "top": 348,
+            "right": 983,
+            "bottom": 392,
+            "left": 939
+          },
+          "hit": true
+        }
+      ],
+      "menus": [
+        {
+          "name": "模型",
+          "rect": {
+            "x": 337,
+            "y": 467,
+            "width": 190,
+            "height": 84,
+            "top": 467,
+            "right": 527,
+            "bottom": 551,
+            "left": 337
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 601,
+            "y": 467,
+            "width": 214,
+            "height": 165,
+            "top": 467,
+            "right": 815,
+            "bottom": 632,
+            "left": 601
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 664.015625,
+            "y": 467,
+            "width": 214,
+            "height": 187,
+            "top": 467,
+            "right": 878.015625,
+            "bottom": 654,
+            "left": 664.015625
+          },
+          "covered": [],
+          "escapeFocus": true
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 1201,
+        "height": 900
+      },
+      "form": {
+        "x": 316,
+        "y": 312,
+        "width": 850,
+        "height": 168,
+        "top": 312,
+        "right": 1166,
+        "bottom": 480,
+        "left": 316
+      },
+      "toolbar": {
+        "x": 329,
+        "y": 393,
+        "width": 824,
+        "height": 32,
+        "top": 393,
+        "right": 1153,
+        "bottom": 425,
+        "left": 329
+      },
+      "display": "flex",
+      "buttons": [
+        {
+          "name": "添加参考素材",
+          "rect": {
+            "x": 329,
+            "y": 393,
+            "width": 32,
+            "height": 32,
+            "top": 393,
+            "right": 361,
+            "bottom": 425,
+            "left": 329
+          },
+          "hit": true
+        },
+        {
+          "name": "模型",
+          "rect": {
+            "x": 365,
+            "y": 393,
+            "width": 260,
+            "height": 32,
+            "top": 393,
+            "right": 625,
+            "bottom": 425,
+            "left": 365
+          },
+          "hit": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 629,
+            "y": 393,
+            "width": 59.015625,
+            "height": 32,
+            "top": 393,
+            "right": 688.015625,
+            "bottom": 425,
+            "left": 629
+          },
+          "hit": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 692.015625,
+            "y": 393,
+            "width": 60,
+            "height": 32,
+            "top": 393,
+            "right": 752.015625,
+            "bottom": 425,
+            "left": 692.015625
+          },
+          "hit": true
+        },
+        {
+          "name": "开启语音输入",
+          "rect": {
+            "x": 1027,
+            "y": 393,
+            "width": 32,
+            "height": 32,
+            "top": 393,
+            "right": 1059,
+            "bottom": 425,
+            "left": 1027
+          },
+          "hit": true
+        },
+        {
+          "name": "当前模式：自动",
+          "rect": {
+            "x": 1063,
+            "y": 393,
+            "width": 54,
+            "height": 32,
+            "top": 393,
+            "right": 1117,
+            "bottom": 425,
+            "left": 1063
+          },
+          "hit": true
+        },
+        {
+          "name": "开始创建项目",
+          "rect": {
+            "x": 1121,
+            "y": 393,
+            "width": 32,
+            "height": 32,
+            "top": 393,
+            "right": 1153,
+            "bottom": 425,
+            "left": 1121
+          },
+          "hit": true
+        }
+      ],
+      "menus": [
+        {
+          "name": "模型",
+          "rect": {
+            "x": 365,
+            "y": 488,
+            "width": 190,
+            "height": 84,
+            "top": 488,
+            "right": 555,
+            "bottom": 572,
+            "left": 365
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 629,
+            "y": 488,
+            "width": 214,
+            "height": 165,
+            "top": 488,
+            "right": 843,
+            "bottom": 653,
+            "left": 629
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 692.015625,
+            "y": 488,
+            "width": 214,
+            "height": 187,
+            "top": 488,
+            "right": 906.015625,
+            "bottom": 675,
+            "left": 692.015625
+          },
+          "covered": [],
+          "escapeFocus": true
+        }
+      ]
+    }
+  ],
+  "chat": [
+    {
+      "viewport": {
+        "width": 767,
+        "height": 900
+      },
+      "form": {
+        "x": 25,
+        "y": 581,
+        "width": 717,
+        "height": 202,
+        "top": 581,
+        "right": 742,
+        "bottom": 783,
+        "left": 25
+      },
+      "toolbar": {
+        "x": 38,
+        "y": 674,
+        "width": 691,
+        "height": 96,
+        "top": 674,
+        "right": 729,
+        "bottom": 770,
+        "left": 38
+      },
+      "display": "grid",
+      "buttons": [
+        {
+          "name": "添加对话素材",
+          "rect": {
+            "x": 38,
+            "y": 726,
+            "width": 44,
+            "height": 44,
+            "top": 726,
+            "right": 82,
+            "bottom": 770,
+            "left": 38
+          },
+          "hit": true
+        },
+        {
+          "name": "模型",
+          "rect": {
+            "x": 38,
+            "y": 674,
+            "width": 555,
+            "height": 44,
+            "top": 674,
+            "right": 593,
+            "bottom": 718,
+            "left": 38
+          },
+          "hit": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 597,
+            "y": 674,
+            "width": 64,
+            "height": 44,
+            "top": 674,
+            "right": 661,
+            "bottom": 718,
+            "left": 597
+          },
+          "hit": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 665,
+            "y": 674,
+            "width": 64,
+            "height": 44,
+            "top": 674,
+            "right": 729,
+            "bottom": 718,
+            "left": 665
+          },
+          "hit": true
+        },
+        {
+          "name": "AI权限模式",
+          "rect": {
+            "x": 589,
+            "y": 726,
+            "width": 72,
+            "height": 44,
+            "top": 726,
+            "right": 661,
+            "bottom": 770,
+            "left": 589
+          },
+          "hit": true
+        },
+        {
+          "name": "开启语音输入",
+          "rect": {
+            "x": 86,
+            "y": 726,
+            "width": 44,
+            "height": 44,
+            "top": 726,
+            "right": 130,
+            "bottom": 770,
+            "left": 86
+          },
+          "hit": true
+        },
+        {
+          "name": "发送消息",
+          "rect": {
+            "x": 685,
+            "y": 726,
+            "width": 44,
+            "height": 44,
+            "top": 726,
+            "right": 729,
+            "bottom": 770,
+            "left": 685
+          },
+          "hit": true
+        }
+      ],
+      "menus": [
+        {
+          "name": "模型",
+          "rect": {
+            "x": 38,
+            "y": 264,
+            "width": 310,
+            "height": 402,
+            "top": 264,
+            "right": 348,
+            "bottom": 666,
+            "left": 38
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 566,
+            "y": 534,
+            "width": 184,
+            "height": 132,
+            "top": 534,
+            "right": 750,
+            "bottom": 666,
+            "left": 566
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 566,
+            "y": 488,
+            "width": 184,
+            "height": 178,
+            "top": 488,
+            "right": 750,
+            "bottom": 666,
+            "left": 566
+          },
+          "covered": [],
+          "escapeFocus": true
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 900
+      },
+      "form": {
+        "x": 364,
+        "y": 632,
+        "width": 366,
+        "height": 202,
+        "top": 632,
+        "right": 730,
+        "bottom": 834,
+        "left": 364
+      },
+      "toolbar": {
+        "x": 377,
+        "y": 725,
+        "width": 340,
+        "height": 96,
+        "top": 725,
+        "right": 717,
+        "bottom": 821,
+        "left": 377
+      },
+      "display": "grid",
+      "buttons": [
+        {
+          "name": "添加对话素材",
+          "rect": {
+            "x": 377,
+            "y": 777,
+            "width": 44,
+            "height": 44,
+            "top": 777,
+            "right": 421,
+            "bottom": 821,
+            "left": 377
+          },
+          "hit": true
+        },
+        {
+          "name": "模型",
+          "rect": {
+            "x": 377,
+            "y": 725,
+            "width": 204,
+            "height": 44,
+            "top": 725,
+            "right": 581,
+            "bottom": 769,
+            "left": 377
+          },
+          "hit": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 585,
+            "y": 725,
+            "width": 64,
+            "height": 44,
+            "top": 725,
+            "right": 649,
+            "bottom": 769,
+            "left": 585
+          },
+          "hit": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 653,
+            "y": 725,
+            "width": 64,
+            "height": 44,
+            "top": 725,
+            "right": 717,
+            "bottom": 769,
+            "left": 653
+          },
+          "hit": true
+        },
+        {
+          "name": "AI权限模式",
+          "rect": {
+            "x": 577,
+            "y": 777,
+            "width": 72,
+            "height": 44,
+            "top": 777,
+            "right": 649,
+            "bottom": 821,
+            "left": 577
+          },
+          "hit": true
+        },
+        {
+          "name": "开启语音输入",
+          "rect": {
+            "x": 425,
+            "y": 777,
+            "width": 44,
+            "height": 44,
+            "top": 777,
+            "right": 469,
+            "bottom": 821,
+            "left": 425
+          },
+          "hit": true
+        },
+        {
+          "name": "发送消息",
+          "rect": {
+            "x": 673,
+            "y": 777,
+            "width": 44,
+            "height": 44,
+            "top": 777,
+            "right": 717,
+            "bottom": 821,
+            "left": 673
+          },
+          "hit": true
+        }
+      ],
+      "menus": [
+        {
+          "name": "模型",
+          "rect": {
+            "x": 377,
+            "y": 315,
+            "width": 310,
+            "height": 402,
+            "top": 315,
+            "right": 687,
+            "bottom": 717,
+            "left": 377
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 555,
+            "y": 585,
+            "width": 184,
+            "height": 132,
+            "top": 585,
+            "right": 739,
+            "bottom": 717,
+            "left": 555
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 555,
+            "y": 539,
+            "width": 184,
+            "height": 178,
+            "top": 539,
+            "right": 739,
+            "bottom": 717,
+            "left": 555
+          },
+          "covered": [],
+          "escapeFocus": true
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 834,
+        "height": 900
+      },
+      "form": {
+        "x": 430,
+        "y": 632,
+        "width": 366,
+        "height": 202,
+        "top": 632,
+        "right": 796,
+        "bottom": 834,
+        "left": 430
+      },
+      "toolbar": {
+        "x": 443,
+        "y": 725,
+        "width": 340,
+        "height": 96,
+        "top": 725,
+        "right": 783,
+        "bottom": 821,
+        "left": 443
+      },
+      "display": "grid",
+      "buttons": [
+        {
+          "name": "添加对话素材",
+          "rect": {
+            "x": 443,
+            "y": 777,
+            "width": 44,
+            "height": 44,
+            "top": 777,
+            "right": 487,
+            "bottom": 821,
+            "left": 443
+          },
+          "hit": true
+        },
+        {
+          "name": "模型",
+          "rect": {
+            "x": 443,
+            "y": 725,
+            "width": 204,
+            "height": 44,
+            "top": 725,
+            "right": 647,
+            "bottom": 769,
+            "left": 443
+          },
+          "hit": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 651,
+            "y": 725,
+            "width": 64,
+            "height": 44,
+            "top": 725,
+            "right": 715,
+            "bottom": 769,
+            "left": 651
+          },
+          "hit": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 719,
+            "y": 725,
+            "width": 64,
+            "height": 44,
+            "top": 725,
+            "right": 783,
+            "bottom": 769,
+            "left": 719
+          },
+          "hit": true
+        },
+        {
+          "name": "AI权限模式",
+          "rect": {
+            "x": 643,
+            "y": 777,
+            "width": 72,
+            "height": 44,
+            "top": 777,
+            "right": 715,
+            "bottom": 821,
+            "left": 643
+          },
+          "hit": true
+        },
+        {
+          "name": "开启语音输入",
+          "rect": {
+            "x": 491,
+            "y": 777,
+            "width": 44,
+            "height": 44,
+            "top": 777,
+            "right": 535,
+            "bottom": 821,
+            "left": 491
+          },
+          "hit": true
+        },
+        {
+          "name": "发送消息",
+          "rect": {
+            "x": 739,
+            "y": 777,
+            "width": 44,
+            "height": 44,
+            "top": 777,
+            "right": 783,
+            "bottom": 821,
+            "left": 739
+          },
+          "hit": true
+        }
+      ],
+      "menus": [
+        {
+          "name": "模型",
+          "rect": {
+            "x": 443,
+            "y": 315,
+            "width": 310,
+            "height": 402,
+            "top": 315,
+            "right": 753,
+            "bottom": 717,
+            "left": 443
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 621,
+            "y": 585,
+            "width": 184,
+            "height": 132,
+            "top": 585,
+            "right": 805,
+            "bottom": 717,
+            "left": 621
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 621,
+            "y": 539,
+            "width": 184,
+            "height": 178,
+            "top": 539,
+            "right": 805,
+            "bottom": 717,
+            "left": 621
+          },
+          "covered": [],
+          "escapeFocus": true
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 1200,
+        "height": 900
+      },
+      "form": {
+        "x": 796,
+        "y": 632,
+        "width": 366,
+        "height": 202,
+        "top": 632,
+        "right": 1162,
+        "bottom": 834,
+        "left": 796
+      },
+      "toolbar": {
+        "x": 809,
+        "y": 725,
+        "width": 340,
+        "height": 96,
+        "top": 725,
+        "right": 1149,
+        "bottom": 821,
+        "left": 809
+      },
+      "display": "grid",
+      "buttons": [
+        {
+          "name": "添加对话素材",
+          "rect": {
+            "x": 809,
+            "y": 777,
+            "width": 44,
+            "height": 44,
+            "top": 777,
+            "right": 853,
+            "bottom": 821,
+            "left": 809
+          },
+          "hit": true
+        },
+        {
+          "name": "模型",
+          "rect": {
+            "x": 809,
+            "y": 725,
+            "width": 204,
+            "height": 44,
+            "top": 725,
+            "right": 1013,
+            "bottom": 769,
+            "left": 809
+          },
+          "hit": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 1017,
+            "y": 725,
+            "width": 64,
+            "height": 44,
+            "top": 725,
+            "right": 1081,
+            "bottom": 769,
+            "left": 1017
+          },
+          "hit": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 1085,
+            "y": 725,
+            "width": 64,
+            "height": 44,
+            "top": 725,
+            "right": 1149,
+            "bottom": 769,
+            "left": 1085
+          },
+          "hit": true
+        },
+        {
+          "name": "AI权限模式",
+          "rect": {
+            "x": 1009,
+            "y": 777,
+            "width": 72,
+            "height": 44,
+            "top": 777,
+            "right": 1081,
+            "bottom": 821,
+            "left": 1009
+          },
+          "hit": true
+        },
+        {
+          "name": "开启语音输入",
+          "rect": {
+            "x": 857,
+            "y": 777,
+            "width": 44,
+            "height": 44,
+            "top": 777,
+            "right": 901,
+            "bottom": 821,
+            "left": 857
+          },
+          "hit": true
+        },
+        {
+          "name": "发送消息",
+          "rect": {
+            "x": 1105,
+            "y": 777,
+            "width": 44,
+            "height": 44,
+            "top": 777,
+            "right": 1149,
+            "bottom": 821,
+            "left": 1105
+          },
+          "hit": true
+        }
+      ],
+      "menus": [
+        {
+          "name": "模型",
+          "rect": {
+            "x": 809,
+            "y": 315,
+            "width": 310,
+            "height": 402,
+            "top": 315,
+            "right": 1119,
+            "bottom": 717,
+            "left": 809
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 987,
+            "y": 585,
+            "width": 184,
+            "height": 132,
+            "top": 585,
+            "right": 1171,
+            "bottom": 717,
+            "left": 987
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 987,
+            "y": 539,
+            "width": 184,
+            "height": 178,
+            "top": 539,
+            "right": 1171,
+            "bottom": 717,
+            "left": 987
+          },
+          "covered": [],
+          "escapeFocus": true
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 1201,
+        "height": 900
+      },
+      "form": {
+        "x": 729,
+        "y": 708,
+        "width": 431,
+        "height": 126,
+        "top": 708,
+        "right": 1160,
+        "bottom": 834,
+        "left": 729
+      },
+      "toolbar": {
+        "x": 742,
+        "y": 789,
+        "width": 405,
+        "height": 32,
+        "top": 789,
+        "right": 1147,
+        "bottom": 821,
+        "left": 742
+      },
+      "display": "flex",
+      "buttons": [
+        {
+          "name": "添加对话素材",
+          "rect": {
+            "x": 742,
+            "y": 789,
+            "width": 32,
+            "height": 32,
+            "top": 789,
+            "right": 774,
+            "bottom": 821,
+            "left": 742
+          },
+          "hit": true
+        },
+        {
+          "name": "模型",
+          "rect": {
+            "x": 778,
+            "y": 789,
+            "width": 110,
+            "height": 32,
+            "top": 789,
+            "right": 888,
+            "bottom": 821,
+            "left": 778
+          },
+          "hit": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 892,
+            "y": 789,
+            "width": 59.015625,
+            "height": 32,
+            "top": 789,
+            "right": 951.015625,
+            "bottom": 821,
+            "left": 892
+          },
+          "hit": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 955.015625,
+            "y": 789,
+            "width": 60,
+            "height": 32,
+            "top": 789,
+            "right": 1015.015625,
+            "bottom": 821,
+            "left": 955.015625
+          },
+          "hit": true
+        },
+        {
+          "name": "AI权限模式",
+          "rect": {
+            "x": 1057,
+            "y": 789,
+            "width": 54,
+            "height": 32,
+            "top": 789,
+            "right": 1111,
+            "bottom": 821,
+            "left": 1057
+          },
+          "hit": true
+        },
+        {
+          "name": "开启语音输入",
+          "rect": {
+            "x": 1021,
+            "y": 789,
+            "width": 32,
+            "height": 32,
+            "top": 789,
+            "right": 1053,
+            "bottom": 821,
+            "left": 1021
+          },
+          "hit": true
+        },
+        {
+          "name": "发送消息",
+          "rect": {
+            "x": 1115,
+            "y": 789,
+            "width": 32,
+            "height": 32,
+            "top": 789,
+            "right": 1147,
+            "bottom": 821,
+            "left": 1115
+          },
+          "hit": true
+        }
+      ],
+      "menus": [
+        {
+          "name": "模型",
+          "rect": {
+            "x": 778,
+            "y": 379,
+            "width": 310,
+            "height": 402,
+            "top": 379,
+            "right": 1088,
+            "bottom": 781,
+            "left": 778
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "Skill",
+          "rect": {
+            "x": 892,
+            "y": 649,
+            "width": 184,
+            "height": 132,
+            "top": 649,
+            "right": 1076,
+            "bottom": 781,
+            "left": 892
+          },
+          "covered": [],
+          "escapeFocus": true
+        },
+        {
+          "name": "插件",
+          "rect": {
+            "x": 955.015625,
+            "y": 603,
+            "width": 184,
+            "height": 178,
+            "top": 603,
+            "right": 1139.015625,
+            "bottom": 781,
+            "left": 955.015625
+          },
+          "covered": [],
+          "escapeFocus": true
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "runtime": {
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "assets": [
+      "/assets/index-DLeRvWsG.js",
+      "/assets/index-CCZfPOS7.css"
+    ]
+  },
+  "assets": [
+    {
+      "asset": "/assets/index-DLeRvWsG.js",
+      "sha256": "754e32be48a8a119b0e4791fd15bdfdacf6a27595e865801135ad4316068005a"
+    },
+    {
+      "asset": "/assets/index-CCZfPOS7.css",
+      "sha256": "196db94dfd36b94d8f6d3aa319b0a5f72fc7309b7763383c9dd85bfad0cb2ef0"
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,445 @@
+{
+  "date": "2026-09-22T16:14:06.496Z",
+  "baseHead": "cf344ddcdf039c6e62aeb9c65106e2a2339c0bb4",
+  "committed": false,
+  "pushed": false,
+  "files": [
+    {
+      "path": "docs/architecture/adr/ADR-004-desktop-agent-runtime.md",
+      "before": null,
+      "after": "e8d1bcb76301812b47c861dc0dfdfb8b3803575392ae4adf07c41c351cf8807f"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/evidence/desktop-agent-connected.png",
+      "before": null,
+      "after": "eaf6c2ff75e63000d91bcb1b34a675b3021f5727f4c3c8cda9d03e9f0a912ec3"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/evidence/desktop-agent-failure.png",
+      "before": null,
+      "after": "27ccd4b7ad6750381a567ae8302177a91fbd20a67c8d67205bc1cfb22a07ad95"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/evidence/desktop-empty-runtime.json",
+      "before": null,
+      "after": "54a7c3aacfdd8626ddd76442a87f95549f58cf74eac0a66be0fe659d0a3e4539"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/evidence/desktop-real-codex.png",
+      "before": null,
+      "after": "6c568a4da5e329db6a00616407eef18442d4e92949db9a81af1d5811797f30fc"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/evidence/desktop-runtime.json",
+      "before": null,
+      "after": "be1dff1f1b33ac76538a3c08c66ffccb75ad6feeb579d21a5f9eb47c2a03a945"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/evidence/runtime-manifest.json",
+      "before": null,
+      "after": "35f7565b9536b700e69d2b2cac9c39043ff6d3fa77d752f2dd7cf27b020bec78"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/evidence/source-manifest.json",
+      "before": null,
+      "after": "00f3713f06eebf070ceca41e620aa9701083f0a954cf6bd198b9223973322e9d"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/evidence/vendor-source-manifest.json",
+      "before": null,
+      "after": "ab7735e7e0a95b0ebaf2fc70ff20e0998906984cacbe1179ebed12ba9cf6ed2a"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/evidence/verification-logs.json",
+      "before": null,
+      "after": "ba25f73dea64139f5c2b9c49fb4927911d081ffffa3c9500bb0fba34887ebcae"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/intent.md",
+      "before": null,
+      "after": "e98842adf1c665fe4f505654e48f426530f3036256da3dbaa28ab6ad706e6ea3"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/plan.md",
+      "before": null,
+      "after": "87921d4f30cf51757e10f448b562b7539e21dbbb1d3e42a1187449b61e758c11"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/remaining.md",
+      "before": null,
+      "after": "b706d17fce0f857e0fd29f60d30f2c2bdfe8577625570ae1fc85eb3d2ec63451"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/review.md",
+      "before": null,
+      "after": "51e308c03161fecedf4c311896728010ec8e8d73598ff06ebed84f0a4d1d5ffb"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/spec.md",
+      "before": null,
+      "after": "855c37f38e0d47012cc4f589a351398b81b56148f8ce0386532913d2fc5b78f1"
+    },
+    {
+      "path": "docs/changes/2026-09-22-agent-desktop/verification.md",
+      "before": null,
+      "after": "c66f7387544bd3f26d2e9d40abcf0cbf0438901f18ca87cc833354cb90075657"
+    },
+    {
+      "path": "docs/changes/2026-09-22-codex-default-agent/remaining.md",
+      "before": "16bc90bb2ea58a11846b11709217df8a06fa08dbbe6cf0841a045324c21a2987",
+      "after": "a283b542cb847e4cc2b45c0262a5522f3b78db6527366f50f22ce299b8bc01c9"
+    },
+    {
+      "path": "docs/features/README.md",
+      "before": "77c0f4888db8f8362c89cb597755febda05d06d95539ebdc0781f261a38d6b45",
+      "after": "e5c739323a3026b31af3391903e75896a544faac0d07f49309767f77ed92f058"
+    },
+    {
+      "path": "docs/features/feat-009-conversation.md",
+      "before": "56aff43509a63a4e17574124d3e8e1bfbef429671154526a2d20754936c3903b",
+      "after": "07107b120054e5bee1357667561e27330d64ea8555c04bad827d60b5d42157c8"
+    },
+    {
+      "path": "docs/features/features.registry.json",
+      "before": "6a67d423e6a74ed69378c9b5846bb392babcd11af8d20d946f464470e9b21457",
+      "after": "0c76f088a2564533ec366cb4dcd7a53168107222fd9d30010c768756cc4093a9"
+    },
+    {
+      "path": "scripts/agent/INFINITE-CANVAS-LICENSE",
+      "before": null,
+      "after": "44e52203e61565877cc4685791343679f19c49f7b28288a2d0b9f7b9aced8009"
+    },
+    {
+      "path": "scripts/agent/desktop-entry.mjs",
+      "before": null,
+      "after": "29b447da4bd42399ea3c855817649f58c14698dd7444ef63e50e55c3088976bb"
+    },
+    {
+      "path": "scripts/agent/install-desktop-support.mjs",
+      "before": null,
+      "after": "284b9c90089f2ee4972718168d5550db452ee65754fa94e12820b052cf8c7778"
+    },
+    {
+      "path": "scripts/agent/install-idle-preparation.mjs",
+      "before": "7bd26f54fb38511c607c0410f2310b4322ee025617a2a87e7f24e955fe7823a2",
+      "after": "2853d8b3df153fda48a4d1b84601480dac1ba98a9d4d4b62337f2b6de83b3072"
+    },
+    {
+      "path": "scripts/agent/runtime-package.mjs",
+      "before": null,
+      "after": "308a41206fad97dc2fda9cb3ceaa701208a1f992a2036b98e04e9583b1ce56fa"
+    },
+    {
+      "path": "scripts/agent/runtimeDrain.ts",
+      "before": null,
+      "after": "7f3de91ffa50c6b24315ff67106e219c3b28fc350c9e172c22a9660d40e4b26d"
+    },
+    {
+      "path": "scripts/agent/standalone.mjs",
+      "before": null,
+      "after": "a296120917bd8b844b8b221be24b2c957ec68cd428c9b853d2786d2bceb8fee4"
+    },
+    {
+      "path": "scripts/audit/agent-native-checks.mjs",
+      "before": null,
+      "after": "379ce8c45e7991a96933a72ddf0cf91c495977cd3cbebc3ec3c3c5b2764a76cd"
+    },
+    {
+      "path": "scripts/audit/check-agent-desktop.mjs",
+      "before": null,
+      "after": "bd1fc3ee1bb52cfca353aca6d9174eb80d630818226ede143e58b0261d62130d"
+    },
+    {
+      "path": "src-tauri/src/agent_process.rs",
+      "before": null,
+      "after": "225cc7cadd714cd61b4f4e06596660d57b5b5519809741aa7366fbd3fc05ca5e"
+    },
+    {
+      "path": "src-tauri/src/agent_runtime.rs",
+      "before": null,
+      "after": "38a16a0796dba4112d006501f2c615ef7384d8d490f11e83eefca8a0fc3b48b3"
+    },
+    {
+      "path": "src-tauri/tauri.agent.conf.json",
+      "before": null,
+      "after": "78e8fe06601365be7a6168e4c03939397df0560d8bfab8ead904c759e1d087d4"
+    },
+    {
+      "path": "src/components/settings/AgentConnectionSettings.tsx",
+      "before": "136896d17f45f7db48c1fd41614dab4c56042b83ef240a20e89917aeea00e464",
+      "after": "db5d1d0e772654e2b64d9751115d3c1dcc07ddd2f620b8e7fe022a12b2f8e20a"
+    },
+    {
+      "path": "src/components/settings/DesktopAgentControl.tsx",
+      "before": null,
+      "after": "733438c41b83a5c854f2fc4345adf7b9619cf2a0b96add22a645ed20dba7b75c"
+    },
+    {
+      "path": "src/features/agent/agentConnection.ts",
+      "before": "07554b03237f5cdfb3962153611fe6b8ba39637cd7bb522630268fdec3036257",
+      "after": "7c0c942aa4c85e7c9b04d37c3b2a9923e64cada3c2ed4ac2e8d909480ef48379"
+    },
+    {
+      "path": "tests/browser/desktop-agent.spec.ts",
+      "before": null,
+      "after": "c4b5396ba019d2008b4de47a7e95c124d985fcabee1d8c66c0c746b61d22b071"
+    },
+    {
+      "path": "tests/unit/agentConnection.test.ts",
+      "before": "0b959903d3b9b45e0c2cadad9d9bdffb38f5eb8d451c4eb4663faaeca28f167d",
+      "after": "7a4fee0b0c175d8bf322ca70ef6233774db458bd09e13d6a236a5d17732c7378"
+    },
+    {
+      "path": "tests/unit/agentPackage.test.ts",
+      "before": null,
+      "after": "5dea99ec41ba4d29089132e9832754a4dfa011398b91ad9d8ef56531d264f37b"
+    },
+    {
+      "path": "tests/unit/agentRuntimeDrain.test.ts",
+      "before": null,
+      "after": "2af0508e5d24af283dc5bf8f1ba49ec87e7e78d2f4ae64bac0807fd5b3501c0c"
+    },
+    {
+      "path": "tests/unit/desktopAgentRuntime.test.ts",
+      "before": null,
+      "after": "e176d62a18fa5e3209a902848f9c8896d2fa6a61af209879ad40cceae69d9f92"
+    },
+    {
+      "path": "vendor/README.md",
+      "before": "92d570995ef7ad4366ca4e663ad4cea64b807edee615ff632abfa26ac869eea2",
+      "after": "6e1ef8340f90ff1ca76ada7491668557f6960ada39aa679dca662f516c240e0d"
+    },
+    {
+      "path": "vendor/canvas-agent/LICENSE",
+      "before": null,
+      "after": "44e52203e61565877cc4685791343679f19c49f7b28288a2d0b9f7b9aced8009"
+    },
+    {
+      "path": "vendor/canvas-agent/package-lock.json",
+      "before": "bf435114c14633eb011781f93aa893c3f06c557e17dd4ea21d6ce183e4c3d393",
+      "after": "5da6af686741a2db460393e5478a8d9da5f966649a26917e543138560ef747dd"
+    },
+    {
+      "path": "vendor/canvas-agent/package.json",
+      "before": "02b42ee8083cfea2045d6e8bba63170477fda9f22a75daacbb223b051f524cd2",
+      "after": "01b3129806c10998c6a9ed996f0797a2a5c9891f926b850aed44305a1418c8c9"
+    },
+    {
+      "path": "vendor/canvas-agent/src/agent/codex-client.test.ts",
+      "before": "63f09ad0c5fce2c77afb3d15f89c92e0da07c36619f472c768200cc7bdba3321",
+      "after": "4a3902d45a74c2ce04aa8f8e3ec6e6b6ba0893078af7bd72bbbd6868a3307f22"
+    },
+    {
+      "path": "vendor/canvas-agent/src/agent/codex-client.ts",
+      "before": "135e14291866462b95fe59b14afa0f0b32fdb65d35c5731d8d0475bb72f2bd00",
+      "after": "6543cc6e2f6925035a7973e2655fa7684d391d9f7cfaa8f04f99b34d03af6b18"
+    },
+    {
+      "path": "vendor/canvas-agent/src/agent/codex-protocol.ts",
+      "before": "616eceaf26206316f37467b12f92da37bf34e56a35eb01625caa93c41804dc01",
+      "after": "a48d26f17bb66e4c64e2cfdb72638e131f5e0ce48ae21eda9a538b6bc54c2523"
+    },
+    {
+      "path": "vendor/canvas-agent/src/config.ts",
+      "before": "f7a0ce9cab2d4fc6ef7433f83cc496b854415e632825cb72f14f23c3a265e01b",
+      "after": "8a4dd1dedeb59aba162b586ea3335fa9e5e9fc1757ed1037a8b2db0331742068"
+    },
+    {
+      "path": "vendor/canvas-agent/src/server/http.ts",
+      "before": "4a32d91cfd6e15a7c1a44b2d74dd469f26e5dba4ebec4002745691894c794838",
+      "after": "271aa5986389835e7cca4a43a776d9bc23e8f2cea34a5dab220969a29e2549a0"
+    },
+    {
+      "path": "vendor/canvas-agent/src/server/kk-runtime-drain.ts",
+      "before": null,
+      "after": "7f3de91ffa50c6b24315ff67106e219c3b28fc350c9e172c22a9660d40e4b26d"
+    },
+    {
+      "path": "vendor/canvas-agent/src/utils/logger.ts",
+      "before": "f46f795d290a3684855c1f379e59ad72c1d05dbe0744b8d246efd2b244a0fb60",
+      "after": "bb88e0ab2da746a3979e85df9e560ff0586ad57ef638ade0ba195d65f445912f"
+    },
+    {
+      "path": "vendor/canvas-plugins/LICENSE",
+      "before": null,
+      "after": "44e52203e61565877cc4685791343679f19c49f7b28288a2d0b9f7b9aced8009"
+    },
+    {
+      "path": "vendor/canvas-proxy/LICENSE",
+      "before": null,
+      "after": "44e52203e61565877cc4685791343679f19c49f7b28288a2d0b9f7b9aced8009"
+    },
+    {
+      "path": ".gitignore",
+      "before": "3e6bc9a126fac845b594ec95bcedb96e5de95254ce397589c3b9511c0fb2aa02",
+      "after": "2d18ae25eac0a56e4bed2adb56ec8b93e466e51819cdeceb4cd015dbd1e05843"
+    },
+    {
+      "path": "docs/PROGRESS.md",
+      "before": "bc3e7d4f0f6ada4e62de8d99790645db53dc7b32f31420a852df9a7e6bebf199",
+      "after": "ab3a107bfbb6b804f529067c0301e9a96a2fa9ee139b58ca1b9babfddeb0f3f9"
+    },
+    {
+      "path": "docs/governance/AI_HANDOFF.md",
+      "before": "a515f2a852189b9d79764867eb3b7a570eb77fc7bac92e36c3dba2166ba9bbd5",
+      "after": "c1565a5cbbb62be4a9dc853f89f6dcc9eb93410279d75195e45a0fa1ff743ffc"
+    },
+    {
+      "path": "docs/governance/PROJECT_STATE.md",
+      "before": "d58cfb3910f623656e73d8f2afed75b42f620143c5bfe3b7a32672fb8b11f567",
+      "after": "50d63eb2064431df2a8c13c4431c35efde01852ddccbe6fdebc7022bf1929a6b"
+    },
+    {
+      "path": "docs/governance/TASK_LEDGER.md",
+      "before": "d2727bdb105e1f967fe5f47730901abf3c011361182e5aa2025c03412016b53c",
+      "after": "35561376a73208c1b601b5cadb5ce9c2027982d69bea02cfad744c9e7f386774"
+    },
+    {
+      "path": "docs/governance/task-ledger.json",
+      "before": "4b12be8307948507dd7d643cde257747c44c2949e7c44c0509cf49b03ec3964a",
+      "after": "c9bb1213d64773d926b028e7ed26f2a8bc5d7f115d90b0d9bb9b57636f34704d"
+    },
+    {
+      "path": "package-lock.json",
+      "before": "59ae30bbf6e5e108213f98d654c3c7787bf9a4577a9b50907d29f171dfbab8fc",
+      "after": "de69c5673cea3e2ebf90275d94819d719bffba3ecd79be4b1dbaf6a62f450cc4"
+    },
+    {
+      "path": "package.json",
+      "before": "69a7634d52d2c33d1f3424377d647752d1f3c484d62381e2cc44218f06e1db62",
+      "after": "bf5dce4daab3c4171fb2ded5610e0f8e26b9252c9906782a492f5fbe2341f2a7"
+    },
+    {
+      "path": "src-tauri/Cargo.lock",
+      "before": "13762f919378416a6158d9302012c0cc815980fafb34a3f18aaa2a7002555d11",
+      "after": "2fb8ca20eb2eb1aec2d419c2bd4b7218cb45d33d214362a03f093de8e589d1a1"
+    },
+    {
+      "path": "src-tauri/Cargo.toml",
+      "before": "3172c05de1ba2c9bcee2059a55cf2fa8274f983578459148eedfb4973bf1fda0",
+      "after": "fbd15570b0fb0a9ec2f8c5e28bebc3371490ada54b0cb1e38fdfb797d88446fb"
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "before": "1702de4a2a4163048d8fb32d7b51b3c5fb825e26f4cb3f8b6344a3f03514d62c",
+      "after": "ba097dd00f3744d91c8c3060c8c10cae5c0ff08cf027fa42dfbd01c4dcc80842"
+    }
+  ],
+  "unrelatedChecked": 2062,
+  "unrelatedChanged": [],
+  "fullVerify": "PASS",
+  "backup": "D:\\kk-studio\\output\\remaining-verification-20260922\\before-integration",
+  "initialCopyDate": "2026-09-22T15:57:44.087Z",
+  "integrationScope": "64 original scoped files copied; concurrent responsive UI and shared task documents preserved. The files array records initial copy hashes, not hashes of subsequent shared-document updates.",
+  "originalVerify": {
+    "exitCode": 0,
+    "node": 356,
+    "browser": 270,
+    "logSha256": "8bd9674a71447567d4596ab4b1be8382da301153e12d03f2ed01d153bf833694"
+  },
+  "integratedVerify": {
+    "exitCode": 0,
+    "node": 356,
+    "browser": 286,
+    "rust": 78,
+    "governanceTasks": 55,
+    "features": 29,
+    "violations": 0,
+    "logSha256": "a403fe83ad7788d395922aec12f44fcee299645107881986fefc329e67e4b377",
+    "sourceManifest": "integrated-source-manifest.json",
+    "sourceFiles": 522,
+    "sourceDrift": []
+  },
+  "native": {
+    "exe": {
+      "path": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+      "sha256": "4b8f8a047b4a444935fe4a1245c8056afcdcbe99922d00c4608385c964aef63e"
+    },
+    "realChecks": 8,
+    "emptyChecks": 7,
+    "realReport": "integrated/desktop-runtime.json",
+    "emptyReport": "integrated/desktop-empty-runtime.json",
+    "runtimeFiles": 4269,
+    "runtimeDrift": [],
+    "runtimeManifestSha256": "35f7565b9536b700e69d2b2cac9c39043ff6d3fa77d752f2dd7cf27b020bec78"
+  },
+  "preservation": {
+    "initialCopyUnrelatedChanges": [],
+    "concurrentChangesAfterInitialCopy": [
+      "docs/DESIGN-SYSTEM.md",
+      "docs/changes/2026-09-21-text-and-rule-audit/text-preview.png",
+      "docs/changes/2026-09-22-codex-default-agent/model-parameters.png",
+      "docs/changes/2026-09-22-design-system/remaining.md",
+      "tests/browser/design-system-pages.spec.ts",
+      "docs/UI-ALIGNMENT.md",
+      "docs/UI-STANDARDS.md",
+      "docs/UI_SPEC.md",
+      "docs/evidence/catalog-1440.png",
+      "docs/evidence/catalog-390.png",
+      "docs/evidence/catalog-768.png",
+      "docs/evidence/navigation-1440.png",
+      "docs/evidence/navigation-1920.png",
+      "docs/evidence/navigation-390.png",
+      "docs/evidence/navigation-768.png",
+      "docs/evidence/user-comments-2026-09-08/marquee.png",
+      "docs/evidence/video-composer-desktop.png",
+      "src/App.tsx",
+      "src/components/Canvas.tsx",
+      "src/components/ConversationPanel.tsx",
+      "src/components/Sidebar.tsx",
+      "src/components/TopBar.tsx",
+      "src/components/canvas/useCanvasViewport.ts",
+      "src/components/useComposerMenus.ts",
+      "src/components/useDismissible.ts",
+      "src/components/useSidebarLayout.ts",
+      "src/styles/global.css",
+      "src/styles/responsive.css",
+      "src/styles/ui-tokens.css",
+      "tests/browser/canvas-layout.spec.ts",
+      "tests/browser/composer-fidelity.spec.ts",
+      "tests/browser/menu-boundaries.spec.ts",
+      "tests/browser/runtime-ui.spec.ts",
+      "tests/browser/sidebar.spec.ts"
+    ],
+    "concurrentSharedDocuments": [
+      "docs/PROGRESS.md",
+      "docs/governance/AI_HANDOFF.md",
+      "docs/governance/PROJECT_STATE.md",
+      "docs/governance/TASK_LEDGER.md",
+      "docs/governance/task-ledger.json"
+    ],
+    "finalUnrelatedChecked": 2062,
+    "finalUnrelatedChanged": [],
+    "restoredGenerated": [
+      "docs/changes/2026-09-21-text-and-rule-audit/text-preview.png",
+      "docs/changes/2026-09-22-codex-default-agent/model-parameters.png",
+      "docs/changes/2026-09-22-responsive-ui/evidence/verified/1024-canvas.png",
+      "docs/changes/2026-09-22-responsive-ui/evidence/verified/1024-landing.png",
+      "docs/changes/2026-09-22-responsive-ui/evidence/verified/1201-canvas.png",
+      "docs/changes/2026-09-22-responsive-ui/evidence/verified/1201-landing.png",
+      "docs/changes/2026-09-22-responsive-ui/evidence/verified/1280-canvas.png",
+      "docs/changes/2026-09-22-responsive-ui/evidence/verified/360-canvas.png",
+      "docs/changes/2026-09-22-responsive-ui/evidence/verified/390-canvas.png",
+      "docs/evidence/browser-results.json",
+      "docs/evidence/catalog-1440.png",
+      "docs/evidence/catalog-390.png",
+      "docs/evidence/catalog-768.png",
+      "docs/evidence/navigation-1440.png",
+      "docs/evidence/navigation-1920.png",
+      "docs/evidence/navigation-390.png",
+      "docs/evidence/navigation-768.png",
+      "docs/evidence/user-comments-2026-09-08/marquee.png",
+      "docs/evidence/video-composer-desktop.png"
+    ],
+    "archivedGenerated": "D:/kk-studio/output/remaining-verification-20260922/integrated-generated-after-final"
+  },
+  "headUnchanged": "cf344ddcdf039c6e62aeb9c65106e2a2339c0bb4",
+  "independentReview": {
+    "result": "PASS",
+    "scope": "Desktop Agent dirty-diff preflight; not formal PR approval",
+    "coreFiles": 18,
+    "coreManifestSha256": "8d7652fa419fb42ec5a0bc545c0e04458415dfd3939e3b733f86c5295bc527b7",
+    "portGate": "resolved",
+    "actionableP1P2": 0
+  }
+}

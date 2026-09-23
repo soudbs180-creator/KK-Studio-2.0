@@ -55,13 +55,15 @@ test("四视口保留搜索、账号和设置命中，窄屏展开可操作且Es
   ]) {
     await page.setViewportSize({ width, height });
     await openWorkspace(page);
-    if (width > 800)
+    if (width > 1200)
       await page
         .getByRole("button", { name: "收起侧边栏", exact: true })
         .click();
     const sidebar = page.locator(".sidebar");
     const toggle = sidebar.locator(".sidebar-toggle");
     await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    // Phone puts search/settings in the header and account in the drawer.
+    if (width < 768) await toggle.click();
     for (const name of ["搜索", "个人信息", "打开设置"]) {
       const button = sidebar.getByRole("button", { name, exact: true });
       const hit = await button.evaluate((el) => {
@@ -80,6 +82,7 @@ test("四视口保留搜索、账号和设置命中，窄屏展开可操作且Es
     await expect(sidebar.locator(".account-popup")).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(account).toBeFocused();
+    if (width < 768) await toggle.click();
     const settings = sidebar.getByRole("button", {
       name: "打开设置",
       exact: true,
@@ -111,7 +114,10 @@ test("四视口保留搜索、账号和设置命中，窄屏展开可操作且Es
     await expect(
       page.getByRole("heading", { name: "项目库", exact: true }),
     ).toBeVisible();
-    if (width <= 800) {
+    if (width <= 1200) {
+      // Navigation closes a compact drawer; Escape still closes an open one.
+      await expect(toggle).toHaveAttribute("aria-expanded", "false");
+      await toggle.click();
       await page.keyboard.press("Escape");
       await expect(toggle).toHaveAttribute("aria-expanded", "false");
       await expect(toggle).toBeFocused();
@@ -151,9 +157,7 @@ test("个人信息弹层提供可读的账户信息和可用的更新入口", as
   await expect(page.getByRole("heading", { name: "软件更新" })).toBeVisible();
 });
 
-test("侧栏快速反向切换和视口切换保留同一搜索控件，减弱动态无残留动画", async ({
-  page,
-}) => {
+test("侧栏快速切换后手机搜索承接焦点，减弱动态无残留动画", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const toggle = page.locator(".sidebar-toggle");
@@ -163,7 +167,9 @@ test("侧栏快速反向切换和视口切换保留同一搜索控件，减弱�
   const search = page.getByRole("button", { name: "搜索", exact: true });
   await search.focus();
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(search).toBeFocused();
+  await expect(
+    page.getByRole("button", { name: "搜索与收藏", exact: true }),
+  ).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("dialog", { name: "搜索与收藏" })).toBeVisible();
   await page.keyboard.press("Escape");
@@ -200,9 +206,9 @@ test("断点隐藏分组时恢复焦点，顶部菜单仍可展开窄屏侧栏",
   await page.locator(".project-link").first().focus();
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.locator(".sidebar-toggle")).toBeFocused();
-  await page.getByRole("button", { name: "窗口", exact: true }).click();
+  await page.getByRole("button", { name: "应用功能菜单", exact: true }).click();
   await page
-    .getByRole("button", { name: "展开 / 收起侧边栏", exact: true })
+    .getByRole("menuitem", { name: "展开 / 收起侧边栏", exact: true })
     .click();
   await expect(page.locator(".sidebar-toggle")).toHaveAttribute(
     "aria-expanded",
@@ -217,15 +223,19 @@ test("粗指针侧栏44px命中区不重叠，搜索、设置可触控", async (
   });
   const page = await context.newPage();
   await page.goto("/");
-  const controls = await page.locator(".sidebar").evaluate((el) => {
+  const controls = await page.evaluate(() => {
     const names = [
-      ".sidebar-search",
+      ".mobile-search",
       ".sidebar-toggle",
-      ".sidebar-account",
       ".sidebar-settings",
+      ".compact-app-trigger",
+      ...Array.from(
+        { length: 4 },
+        (_, index) => `.primary-nav button:nth-child(${index + 1})`,
+      ),
     ];
     return names.map((name) => {
-      const button = el.querySelector<HTMLElement>(name)!;
+      const button = document.querySelector<HTMLElement>(name)!;
       const rect = button.getBoundingClientRect();
       const pseudo = getComputedStyle(button, "::before");
       const width = Math.max(rect.width, parseFloat(pseudo.width) || 0);
@@ -249,7 +259,7 @@ test("粗指针侧栏44px命中区不重叠，搜索、设置可触控", async (
       ).toBe(false);
     }
   }
-  await page.getByRole("button", { name: "搜索", exact: true }).tap();
+  await page.getByRole("button", { name: "搜索与收藏", exact: true }).tap();
   await expect(page.getByRole("dialog", { name: "搜索与收藏" })).toBeVisible();
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "打开设置", exact: true }).tap();

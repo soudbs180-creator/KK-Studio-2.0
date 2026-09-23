@@ -10,10 +10,10 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   await expect(panel).toBeVisible();
   await expect(panel).toHaveCSS("width", "900px");
   await expect(panel).toHaveCSS("height", "696px");
-  await panel.screenshot({ path: "docs/evidence/assets-desktop.png" });
+  await panel.screenshot({ path: "test-results/runtime/assets-desktop.png" });
   await page.getByRole("textbox", { name: "搜索文件" }).fill("找不到");
   await expect(page.getByText("没有找到匹配的资产")).toBeVisible();
-  await panel.screenshot({ path: "docs/evidence/assets-empty.png" });
+  await panel.screenshot({ path: "test-results/runtime/assets-empty.png" });
   await page.getByRole("button", { name: "清除筛选", exact: true }).click();
   await expect(page.locator(".asset-card")).toHaveCount(9);
   await page.getByLabel("类型筛选").selectOption("video");
@@ -37,7 +37,7 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
       .locator(".asset-content")
       .evaluate((e) => e.scrollHeight > e.clientHeight),
   ).toBe(true);
-  await panel.screenshot({ path: "docs/evidence/assets-compact.png" });
+  await panel.screenshot({ path: "test-results/runtime/assets-compact.png" });
   await page.getByRole("tab", { name: "资产", exact: true }).click();
   await page.getByRole("button", { name: "创建主体", exact: true }).click();
   await page.getByPlaceholder("例如：品牌代言人").fill("测试角色");
@@ -59,7 +59,7 @@ test("设置主题保存重载、键盘关闭及导航", async ({ page }) => {
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await page
     .getByRole("dialog")
-    .screenshot({ path: "docs/evidence/settings-integrated.png" });
+    .screenshot({ path: "test-results/runtime/settings-integrated.png" });
   await page.getByLabel("主题", { exact: true }).selectOption("light");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.reload();
@@ -97,12 +97,10 @@ test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", 
   expect(saved).toContain("models.example.test");
   expect(saved).not.toContain("session-key");
   await page.getByRole("button", { name: "测试连接" }).click();
-  await expect(
-    page.getByText("连接成功，模型列表接口可以访问。"),
-  ).toBeVisible();
+  await expect(page.getByText(/连接成功，已刷新 0 个模型/)).toBeVisible();
   await page
     .getByRole("dialog", { name: "设置" })
-    .screenshot({ path: "docs/evidence/settings-model-provider.png" });
+    .screenshot({ path: "test-results/runtime/settings-model-provider.png" });
   await page.reload();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
@@ -151,7 +149,7 @@ test("本地导入成功与错误恢复，不伪造生成和回复", async ({ pa
       mimeType: "application/json",
       buffer: Buffer.from('{"version":99}'),
     });
-  await expect(page.getByRole("status")).toBeVisible();
+  await expect(page.locator(".asset-feedback")).toBeVisible();
   await page
     .locator("input[type=file]")
     .last()
@@ -190,6 +188,7 @@ test("本地导入成功与错误恢复，不伪造生成和回复", async ({ pa
     page.locator(".demo-result-node[data-source=demo][data-kind=image]"),
   ).toHaveCount(0);
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await page.getByLabel("执行方式").selectOption("direct");
   await page.getByLabel("对话内容").fill("你好");
   await page.getByRole("button", { name: "发送消息" }).click();
   await expect(page.getByLabel("API Key")).toBeVisible();
@@ -292,7 +291,7 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
     });
   await page
     .getByTestId("image-composer")
-    .screenshot({ path: "docs/evidence/image-composer-selected.png" });
+    .screenshot({ path: "test-results/runtime/image-composer-selected.png" });
   await videoPreviews.nth(0).click();
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   const imageNode = page.getByTestId("canvas-node-image");
@@ -404,12 +403,14 @@ test("画布新增卡片可拖动删除，喜欢内容同步到搜索", async ({
   const added = page.locator("[data-testid^='canvas-node-added-image-']");
   await expect(added).toHaveCount(1);
   await expect(page.getByTestId("image-composer")).toBeVisible();
-  await page.screenshot({ path: "docs/evidence/canvas-added-card.png" });
+  await page.screenshot({ path: "test-results/runtime/canvas-added-card.png" });
   await page.getByRole("button", { name: "喜欢当前卡片" }).click();
   await page.getByRole("button", { name: "搜索", exact: true }).click();
   await page.getByRole("tab", { name: "喜欢收藏" }).click();
   await expect(page.getByText("新图片卡片")).toBeVisible();
-  await page.screenshot({ path: "docs/evidence/collection-from-canvas.png" });
+  await page.screenshot({
+    path: "test-results/runtime/collection-from-canvas.png",
+  });
   await page.locator(".saved-like-card .saved-text").click();
   await expect(added).toBeVisible();
   const before = await added.boundingBox();
@@ -468,7 +469,9 @@ for (const [width, height] of [
   }) => {
     await page.setViewportSize({ width, height });
     await openWorkspace(page);
-    await page.screenshot({ path: `docs/evidence/workspace-${width}.png` });
+    await page.screenshot({
+      path: `test-results/runtime/workspace-${width}.png`,
+    });
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBe(width);
@@ -478,14 +481,16 @@ for (const [width, height] of [
     expect(box!.x + box!.width).toBeLessThanOrEqual(width);
     await page.getByRole("textbox", { name: "搜索文件" }).fill("冷风");
     await expect(page.locator(".asset-card").first()).toBeVisible();
-    await page.screenshot({ path: `docs/evidence/assets-${width}.png` });
+    await page.screenshot({ path: `test-results/runtime/assets-${width}.png` });
     await page.keyboard.press("Escape");
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     const dialog = page.getByRole("dialog");
     const bounds = await dialog.boundingBox();
     expect(bounds!.x).toBeGreaterThanOrEqual(0);
     expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width);
-    await page.screenshot({ path: `docs/evidence/settings-${width}.png` });
+    await page.screenshot({
+      path: `test-results/runtime/settings-${width}.png`,
+    });
   });
 }
 
@@ -493,6 +498,7 @@ test("未配置连接时工作台草稿在收起对话及页面切换后保留",
   await openWorkspace(page);
   await page.locator(".image-preview").click();
   await page.getByLabel("图片提示词").fill("保留我的草稿");
+  await page.getByLabel("执行方式").selectOption("direct");
   await page.getByLabel("对话内容").fill("保留我的消息");
   await page.getByRole("button", { name: "发送消息" }).click();
   await expect(page.getByLabel("API Key")).toBeVisible();

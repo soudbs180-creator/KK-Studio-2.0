@@ -1,0 +1,117 @@
+[
+  {
+    "path": "scripts/audit/check-ui-interactions-desktop.mjs",
+    "baselineSha256": null,
+    "sha256": "ee10c037d35ed6f40ac2ecc95b09faabd344efd402c67af7b25317bfdc0c75f3"
+  },
+  {
+    "path": "src/App.tsx",
+    "baselineSha256": "f43c5826151e9d6568f2a56f0c656c42c670eec0ac48f0f6d869630c098f786c",
+    "sha256": "8159c2d2f65bc86aba641135f859732b25442ee98edcce7aed1c6c057d75a776"
+  },
+  {
+    "path": "src/components/Canvas.tsx",
+    "baselineSha256": "9a70b86c30253f262a9343ad239063dbb9402f84ca1ec4350a1e7c2b9ae4b21c",
+    "sha256": "e7af0d387aaed002de8ed028a0ca207a3645b585c9cf88d33427fb681bf0ba2b"
+  },
+  {
+    "path": "src/components/Modal.tsx",
+    "baselineSha256": "5576cb13837b6867eb0ab5eb5bf7f971272c9b6982c206267b025281d8841744",
+    "sha256": "f96f350c6f977cb4121942c88d06f383519f9fede2617f1972b7c3e115035e53"
+  },
+  {
+    "path": "src/components/Sidebar.tsx",
+    "baselineSha256": "17f7c15464cec426acb9f8636e91a1b726f744039ebcae80a85c00aff1cc4927",
+    "sha256": "5caea75334a789cde52f15d1bed78286033a7638d3d3d14d942b5a37aea1e2b9"
+  },
+  {
+    "path": "src/components/SidebarDraftFolder.tsx",
+    "baselineSha256": null,
+    "sha256": "c032454b8ff8cbd906723d202333340e80d1c4a1daac2fbed64416100ea66ac8"
+  },
+  {
+    "path": "src/components/SidebarProjectEntry.tsx",
+    "baselineSha256": "16491424cf152c12c3c5ee64e6557735d7b8f8d0985faa3e13b8f0f27a32b7a5",
+    "sha256": "5508a11dd37ba24045c4cf9fb10dd47f34481cea139d950201901e7cef14fe7f"
+  },
+  {
+    "path": "src/components/SidebarProjectGroup.tsx",
+    "baselineSha256": "8a6aee420302f8d2f67f4a6d57c222f0ac92bbf492a12ea53b414fdcced727bd",
+    "sha256": "747c575551e894d331a8d51f6c25a3e56e94c46fcd2514fc75cfd6c02ae32616"
+  },
+  {
+    "path": "src/components/TopBar.tsx",
+    "baselineSha256": "4fd280ab0f511f77250058e38e7e089d4419c1e6823a211894dad5f946b8c816",
+    "sha256": "f1cf3c5c9efca58005bfa7544bb51516564e6b2af5208e8ecc5f27c61a84f4e0"
+  },
+  {
+    "path": "src/components/canvas/AddNodeMenu.tsx",
+    "baselineSha256": "c72a5c5e8b3e5cdbd199cf96318376ae52e3c3cda74aeb6df31adf33aba4ada4",
+    "sha256": "302fcc6d3ca30bf4169da19cc0b41d5cf9f09c13dfd0b4e0660e924d02159f4c"
+  },
+  {
+    "path": "src/components/canvas/CanvasHud.tsx",
+    "baselineSha256": "c21a6d41317186a190d0c28581c2bac7c4b946a705e372d54e71685e9ec0ec77",
+    "sha256": "da1552e096901f50691378c2f4d71b9e7d225f691a9f5725029d6c5e86db8b6b"
+  },
+  {
+    "path": "src/components/canvas/TaskDetail.tsx",
+    "baselineSha256": null,
+    "sha256": "d5c3427be5346fc3c9d0342158737c2b3712314411fc34deb8ec9e8e3b24789b"
+  },
+  {
+    "path": "src/components/canvas/TaskPanel.tsx",
+    "baselineSha256": "5c16e14984176fa1aac7fec699f8d34eba0e419889af20093241dcc4679b0477",
+    "sha256": "6a2649584ab73acd3710863dd554569b7387cf8d0eebce1040ce10f617f7a21f"
+  },
+  {
+    "path": "src/components/canvas/TaskPanelPopover.tsx",
+    "baselineSha256": "4e77a2b539923e66c4674e4c59d870631d1bf3f6bb8141dcb49c4377d88d8992",
+    "sha256": "27da667ab6fc96219bc05c24c9b8612203e8fe0a9c51bd515dff3be6f5b79b62"
+  },
+  {
+    "path": "src/components/canvas/useCanvasAddMenu.ts",
+    "baselineSha256": "88b6d60ee702b065754222ae73962384742c846a3e44efc41878bd8dfaf13654",
+    "sha256": "08fcf5779948ff4928df3a6437ecc67feef1e22106f40bce7bd8d150190b727a"
+  },
+  {
+    "path": "src/components/useDismissible.ts",
+    "baselineSha256": "5341fc6f8e4d9bf7708d162039e667193b061ebca0a62a504ee58fb55163c5f5",
+    "sha256": "79afa00c034df13224247441526271a4259db2e31f4ffa424f8cb0f77d5c3451"
+  },
+  {
+    "path": "src/domain/canvasViewport.ts",
+    "baselineSha256": "445bac2bdf2ccd8f9f6fc7204b2b6a21f3ff98ef378c55ef1eb2544053f9e2de",
+    "sha256": "cba5ce5f26ea69d4a7f3fd90e404072c89946ce0468ede799620628b1619dff7"
+  },
+  {
+    "path": "src/styles/canvas-hud.css",
+    "baselineSha256": "f0f52a5e635828144d251fea0ce33b6f62002fbb05cdaef2f233978eecb06725",
+    "sha256": "f899068c76a7913d9bcce329097e64610f58b73fd902a43328ea5100b1f85720"
+  },
+  {
+    "path": "src/styles/sidebar.css",
+    "baselineSha256": "6d493e1da86a77e892d8b520f36805f23e998ea7c6e2e971b2b1259f5c916e39",
+    "sha256": "99798fbfe5a544155ad1949ed00cb00e83f2e277e50c565c1bcb8c953fedc7ed"
+  },
+  {
+    "path": "tests/browser/catalog-pages.spec.ts",
+    "baselineSha256": "95c26610ce1798b5fbe7010e938260efadcd09a4b5726e79182fa0f8a7bd1f95",
+    "sha256": "f7663f4d0c5717913cacc6aaa20b3695ffb0c1ba47c653a3cb09e57eb36af1d2"
+  },
+  {
+    "path": "tests/browser/frame-accuracy.spec.ts",
+    "baselineSha256": "0ac2f3e3eca8b10fa4d00000b1cd9a8f699ad80f3f6060fa0b9ade9efe989d19",
+    "sha256": "f853cf429d6f1a4c91efbfcd218061f125e551d14b3eb498a5c8e60379324af4"
+  },
+  {
+    "path": "tests/browser/ui-interaction-matrix.spec.ts",
+    "baselineSha256": null,
+    "sha256": "34b7eb53c94f6c3a83ca7041bc1397cb0e55f23ced6f1b4582b851559d1bc466"
+  },
+  {
+    "path": "tests/browser/ui-interactions.spec.ts",
+    "baselineSha256": null,
+    "sha256": "741dadaccd4aace4c7a7afbf67ac7d8366d9be1a484719e327864f9383629733"
+  }
+]

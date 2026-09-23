@@ -11,6 +11,8 @@ import GeneralSettings from "./GeneralSettings";
 import SettingsSections, { SETTINGS_SECTIONS } from "./SettingsSections";
 import type { SettingsSection } from "./SettingsSections";
 import type { SaveState } from "../../features/creation/useCreationStorage";
+import type { SkillRegistry } from "../../features/skills/skillRegistry";
+import UiIcon from "../UiIcon";
 import "./settings.css";
 
 function readInitialSettings(): {
@@ -44,11 +46,13 @@ export default function SettingsPanel({
   initialSection = "general",
   saveState = "loading",
   revision = 0,
+  registry,
 }: {
   onClose: () => void;
   initialSection?: SettingsSection;
   saveState?: SaveState;
   revision?: number;
+  registry: SkillRegistry;
 }) {
   const [initial] = useState(readInitialSettings);
   const [preferences, setPreferences] = useState(initial.preferences);
@@ -108,13 +112,19 @@ export default function SettingsPanel({
                 setFeedback({ message: "", error: false });
               }}
             >
-              <img
-                className="settings-nav-icon"
-                src={`/design/figma/settings-nav-${item.id}.svg`}
-                alt=""
-                width="22"
-                height="22"
-              />
+              {item.id === "plugins" ? (
+                <span className="settings-nav-icon" aria-hidden="true">
+                  <UiIcon name="plug" size={22} />
+                </span>
+              ) : (
+                <img
+                  className="settings-nav-icon"
+                  src={`/design/figma/settings-nav-${item.id}.svg`}
+                  alt=""
+                  width="22"
+                  height="22"
+                />
+              )}
               <span>{item.label}</span>
             </button>
           ))}
@@ -137,6 +147,7 @@ export default function SettingsPanel({
             saveState={saveState}
             revision={revision}
             preferences={preferences}
+            registry={registry}
             onReset={() =>
               updatePreferences(
                 { ...DEFAULT_SETTINGS },

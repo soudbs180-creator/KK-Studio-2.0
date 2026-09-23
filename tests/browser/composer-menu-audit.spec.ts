@@ -135,7 +135,7 @@ test("工作台菜单内部获得焦点后 Escape 关闭并回到对应触发器
   const panel = page.locator(".conversation-panel");
   for (const trigger of workspaceTriggers(panel)) {
     await trigger.click();
-    const option = panel.getByRole("menu").locator("button").first();
+    const option = panel.getByRole("menu").locator("button:enabled").first();
     await option.focus();
     await expect(option).toBeFocused();
     await option.press("Escape");
@@ -164,6 +164,7 @@ async function useLongModel(page: Page): Promise<void> {
 test("长模型名不会挤出工作台动作区，模型菜单仍完整可操作", async ({ page }) => {
   await useLongModel(page);
   await openWorkspace(page);
+  await page.getByLabel("执行方式").selectOption("direct");
   await page.evaluate(() => document.fonts.ready);
   const panel = page.locator(".conversation-panel");
   const actions = panel.locator('[data-node-id="407:29315"]');

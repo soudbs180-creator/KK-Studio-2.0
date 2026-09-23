@@ -358,14 +358,26 @@ test("两个窗口并发保存时保留先提交的原件和冲突草稿", async
 
 test("画布参数不会在重开项目后回到默认值", async ({ page }) => {
   await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByLabel("API Base URL").fill("https://models.example.test/v1");
+  await page.getByLabel("默认模型").fill("image-test");
+  await page.getByRole("button", { name: "保存供应商", exact: true }).click();
+  await page.getByLabel("当前模型用途").selectOption("image");
+  await page.getByLabel("支持的图片尺寸").fill("1024x1024, 1536x1024");
+  await page
+    .getByRole("button", { name: "保存此模型能力", exact: true })
+    .click();
+  await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
   const node = page.locator('[data-node-id="image"]');
   await node.focus();
   await node.press("Enter");
-  await node.getByRole("button", { name: "1:1 · 1K · 中" }).click();
-  await node.getByRole("button", { name: "16:9", exact: true }).click();
-  await node.getByRole("button", { name: "2K", exact: true }).click();
+  await node.getByTitle("使用当前模型声明支持的尺寸").click();
+  await node
+    .getByRole("button", { name: "1536x1024 · 3:2", exact: true })
+    .click();
   await node.press("Escape");
   await expect(page.locator(".project-save-state")).toContainText("已保存");
   await page.reload();
@@ -377,7 +389,7 @@ test("画布参数不会在重开项目后回到默认值", async ({ page }) => 
   await node.focus();
   await node.press("Enter");
   await expect(
-    node.getByRole("button", { name: "16:9 · 2K · 中" }),
+    node.getByRole("button", { name: "1536x1024 · 3:2" }),
   ).toBeVisible();
 });
 

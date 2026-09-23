@@ -12,6 +12,7 @@ export default function Modal({
   className?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const backdropPress = useRef(false);
   useEffect(() => {
     const dialog = ref.current;
     const previous =
@@ -56,8 +57,23 @@ export default function Modal({
         e.stopPropagation();
         onClose();
       }}
+      onPointerDown={(event) => {
+        const box = event.currentTarget.getBoundingClientRect();
+        backdropPress.current =
+          event.button === 0 &&
+          event.target === event.currentTarget &&
+          (event.clientX < box.left ||
+            event.clientX > box.right ||
+            event.clientY < box.top ||
+            event.clientY > box.bottom);
+      }}
+      onPointerCancel={() => {
+        backdropPress.current = false;
+      }}
       onClick={(e) => {
-        if (e.target === e.currentTarget) {
+        const startedOnBackdrop = backdropPress.current;
+        backdropPress.current = false;
+        if (startedOnBackdrop && e.target === e.currentTarget) {
           const box = e.currentTarget.getBoundingClientRect();
           if (
             e.clientX < box.left ||

@@ -1,5 +1,8 @@
 import { invoke } from "@tauri-apps/api/core";
-import type { StoredGeneratedAsset } from "./assetRepository.ts";
+import type {
+  StoredAssetMetadata,
+  StoredGeneratedAsset,
+} from "./assetRepository.ts";
 
 export function usesNativeAssets(): boolean {
   return (
@@ -11,7 +14,7 @@ export function usesNativeAssets(): boolean {
   );
 }
 
-type AssetMetadata = Omit<StoredGeneratedAsset, "preview">;
+type AssetMetadata = StoredAssetMetadata;
 
 export async function storeNativeAsset(
   asset: StoredGeneratedAsset,
@@ -41,14 +44,11 @@ export async function readNativeAsset(
     : null;
 }
 
-export async function listNativeAssets(): Promise<StoredGeneratedAsset[]> {
-  const records = await invoke<AssetMetadata[]>("asset_list");
-  const assets: StoredGeneratedAsset[] = [];
-  // Avoid loading every original concurrently; the current UI expects in-memory data URLs.
-  for (const record of records) {
-    const asset = await readNativeAsset(record.assetId);
-    if (!asset) throw new Error("素材索引存在但原件缺失，请检查本地素材目录。");
-    assets.push(asset);
-  }
-  return assets;
+export async function listNativeAssets(
+  offset = 0,
+  limit = 50,
+): Promise<StoredAssetMetadata[]> {
+  // The native index is paged and metadata-only. Originals are read through
+  // readNativeAsset only for visible previews or operations that need bytes.
+  return invoke<AssetMetadata[]>("asset_list", { offset, limit });
 }

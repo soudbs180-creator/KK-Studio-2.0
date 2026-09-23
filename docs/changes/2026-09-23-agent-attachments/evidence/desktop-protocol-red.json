@@ -1,0 +1,29 @@
+{
+  "date": "2026-09-22T17:11:21.071Z",
+  "mode": "Tauri release",
+  "data": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-attachments-IoH5iJ\\data",
+  "checks": [
+    "native archive uploads and canvas reference drafts survive disconnected send"
+  ],
+  "errors": [
+    "Error: MCP tool failed: canvas_set_viewport"
+  ],
+  "passed": false,
+  "exe": {
+    "path": "C:\\Users\\Administrator\\.codex\\worktrees\\agent-attachments\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+    "sha256": "2f38ebc2533d418b0e28568b7e4d7c234cffecd36cf09492a932e7f7564f2696"
+  },
+  "externalAgentBefore": true,
+  "url": "http://tauri.localhost/",
+  "loaded": [
+    {
+      "path": "/assets/index-YQjzGGXY.js",
+      "sha256": "9d4e268c77660fa275c5e65d6cb217cca7e62b45d00b1f8019db75d522d26b78"
+    },
+    {
+      "path": "/assets/index-am417mm3.css",
+      "sha256": "844fc5b829f2c221689c3d532ab8996bd7b72180bfa36818cd56129aa4f56567"
+    }
+  ],
+  "externalAgentAfter": true
+}

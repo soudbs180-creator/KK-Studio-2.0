@@ -13,6 +13,10 @@ CREATE TABLE IF NOT EXISTS credit_accounts (
   owner_id TEXT PRIMARY KEY, balance INTEGER NOT NULL CHECK(balance>=0),
   disabled INTEGER NOT NULL DEFAULT 0, concurrency_limit INTEGER NOT NULL DEFAULT 4 CHECK(concurrency_limit>0)
 );
+CREATE TABLE IF NOT EXISTS credit_account_provisioning (
+  owner_id TEXT PRIMARY KEY REFERENCES credit_accounts(owner_id),
+  initial_credits INTEGER NOT NULL CHECK(initial_credits>=0)
+);
 CREATE TABLE IF NOT EXISTS gateway_connections (
   id TEXT PRIMARY KEY, owner_id TEXT, metadata_json TEXT NOT NULL,
   state TEXT NOT NULL DEFAULT 'active', cooldown_until INTEGER NOT NULL DEFAULT 0,

@@ -23,3 +23,21 @@ src-tauri/target/
 /*.lnk
 /*.lnk.before-ui-runtime-*.bak
 /start-kk-studio.bat.before-ui-runtime-*.bak
+
+# Latest local distribution artifacts; never include recovery/user data here.
+/releases/
+
+# Vendored source and lockfiles are delivery inputs; generated/runtime data are not.
+/vendor/*
+!/vendor/README.md
+!/vendor/canvas-agent/
+!/vendor/canvas-proxy/
+!/vendor/canvas-plugins/
+/vendor/**/.infinite-canvas/
+/vendor/**/logs/
+/vendor/**/sessions/
+/vendor/**/auth.json
+/public/plugins/
+
+# Generated desktop Agent resources; prepared with production dependencies only.
+/src-tauri/agent-runtime/

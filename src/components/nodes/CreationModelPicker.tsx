@@ -1,6 +1,9 @@
-import { modelCapabilities } from "../../domain/canvasItems";
+import { useContext } from "react";
 import BrandLogo from "../BrandLogo";
-
+import ModelPickerMenu from "../ModelPickerMenu";
+import { selectedModelLabel } from "../../features/models/modelPresentation";
+import { CanvasImageNodeContext } from "../../features/creation/CanvasImageCommand";
+import type { ModelSelection } from "../../features/models/modelSelection";
 export default function CreationModelPicker({
   kind,
   value,
@@ -8,71 +11,60 @@ export default function CreationModelPicker({
   onToggle,
   onChange,
   onConfigure,
-  referenceCount = 0,
-  actualModels,
 }: {
-  kind: "image" | "video";
+  kind: "image" | "video" | "text";
   value: string;
   open: boolean;
   onToggle: () => void;
-  onChange: (model: string) => void;
+  onChange: (model: string, selection?: ModelSelection) => void;
   onConfigure: () => void;
   referenceCount?: number;
   actualModels?: string[];
 }) {
-  const options = actualModels
-    ? [...new Set([value, ...actualModels].filter(Boolean))].map((id) => ({
-        id,
-        name: id,
-        maxReferences: Infinity,
-        label: "实际能力由已配置连接校验",
-      }))
-    : modelCapabilities(kind);
-  const selected = options.find(
-    (option) => option.id === value || option.name === value,
-  ) ?? { id: value, name: value || "配置模型" };
+  const item = useContext(CanvasImageNodeContext);
   return (
     <div className="control-anchor model-anchor" data-control="model">
       <button
+        type="button"
         className="model-button"
-        title={selected.name}
+        title={value}
+        aria-label="画布模型"
+        aria-haspopup="menu"
         aria-expanded={open}
         onClick={onToggle}
       >
         <span className="logo">
           <BrandLogo variant="model" />
         </span>
-        <span className="model-name">{selected.name}</span>
+        <span className="model-name">
+          {selectedModelLabel(
+            {
+              source: item?.generationSource === "codex" ? "codex" : "api",
+              model: value,
+              connectionId: item?.providerConnectionId,
+            },
+            value,
+          )}
+        </span>
       </button>
       {open && (
-        <div className="node-popover model-popover">
-          <small>
-            {actualModels
-              ? "已配置模型 · 生成能力待实际验证"
-              : "模型 · 界面预览，尚未连接"}
-          </small>
-          {options.map((option) => (
-            <button
-              key={option.id}
-              className="model-option"
-              aria-pressed={selected.id === option.id}
-              disabled={referenceCount > option.maxReferences}
-              title={
-                referenceCount > option.maxReferences
-                  ? `当前已连接 ${referenceCount} 张参考图，请先减少到 ${option.maxReferences} 张再切换`
-                  : `${option.name} · ${option.label}`
-              }
-              onClick={() => onChange(option.id)}
-            >
-              <BrandLogo variant="model" className="model-glyph" />
-              <span>
-                {option.name}
-                <small>{option.label}</small>
-              </span>
-            </button>
-          ))}
-          <button onClick={onConfigure}>配置模型供应商</button>
-        </div>
+        <ModelPickerMenu
+          scope={
+            kind === "text"
+              ? "canvas-text"
+              : kind === "image"
+                ? "canvas-image"
+                : "canvas-video"
+          }
+          kind={kind}
+          current={{
+            source: item?.generationSource === "codex" ? "codex" : "api",
+            model: value,
+            connectionId: item?.providerConnectionId,
+          }}
+          onSelect={(choice) => onChange(choice.model, choice)}
+          onConfigure={onConfigure}
+        />
       )}
     </div>
   );

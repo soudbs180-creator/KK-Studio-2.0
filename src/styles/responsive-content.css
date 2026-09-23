@@ -1,0 +1,355 @@
+/* DS 1.2: reading sizes and explicit control groups, shared by all pages. */
+.ui-icon {
+  position: relative;
+  vertical-align: middle;
+}
+.ui-icon > svg {
+  display: block;
+}
+.settings-nav-icon {
+  display: grid;
+  place-items: center;
+}
+.settings-nav-icon > .ui-icon {
+  width: 22px;
+  height: 22px;
+}
+.settings-close {
+  z-index: 5;
+}
+.settings-close img {
+  display: block;
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+}
+.conversation-panel > header strong {
+  min-width: 0;
+  max-width: calc(100% - 88px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.start-brand {
+  max-width: calc(100% - 48px);
+}
+@media (min-width: 1201px) and (max-width: 1600px) {
+  .start-hero {
+    margin-top: 56px;
+  }
+  .start-brand {
+    height: 210px;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .start-discovery {
+    width: calc(100% - 64px);
+    left: 32px;
+    transform: none;
+  }
+}
+@media (max-width: 1200px) {
+  .start-page {
+    padding: 24px;
+  }
+  .start-hero {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .start-brand {
+    max-width: 100%;
+    margin: 24px 0;
+  }
+  .start-brand p {
+    font-size: var(--ui-screen-body);
+    line-height: var(--ui-screen-line);
+  }
+  .start-discovery {
+    margin-top: 32px;
+  }
+  .start-inspiration-grid {
+    max-width: none;
+  }
+  .catalog-page {
+    padding: 28px 24px 40px;
+  }
+  .catalog-page h1 {
+    font-size: var(--ui-font-display);
+    line-height: var(--ui-line-height-display);
+  }
+  .catalog-page-actions button,
+  .catalog-page-toolbar button,
+  .catalog-page-search {
+    min-height: 40px;
+  }
+  .catalog-card-actions .ui-button,
+  .project-card-footer button {
+    min-height: 40px;
+  }
+  .catalog-page-actions,
+  .catalog-page-toolbar {
+    gap: 12px;
+  }
+  .catalog-page-header > div,
+  .catalog-page-toolbar > div {
+    min-width: 0;
+  }
+  .catalog-card-body p,
+  .catalog-page-header p {
+    font-size: var(--ui-screen-body);
+    line-height: var(--ui-screen-line);
+    overflow-wrap: anywhere;
+  }
+  .conversation-panel {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .conversation-panel > header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    flex: 0 0 44px;
+    gap: 8px;
+    margin: 0;
+  }
+  .conversation-panel > header strong {
+    flex: 1;
+    max-width: none;
+    margin: 0;
+    line-height: 22px;
+  }
+  .conversation-panel > header button,
+  .conversation-panel > header button:last-child {
+    position: static;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    flex: 0 0 44px;
+    margin: 0;
+  }
+  .conversation-panel > header button img,
+  .conversation-panel > header button:last-child img {
+    display: block;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+  .conversation-panel .conversation-messages {
+    min-height: 80px;
+    flex: 1 1 auto;
+  }
+  .conversation-panel .message-bubble {
+    font-size: var(--ui-screen-body);
+    line-height: var(--ui-screen-line);
+    padding: 16px;
+    overflow-wrap: anywhere;
+  }
+  .conversation-channel-selector {
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+  .conversation-channel-selector select {
+    min-height: 40px;
+    max-width: 100%;
+  }
+  .chat-agent-controls {
+    gap: 8px;
+  }
+  .chat-agent-controls button,
+  .chat-agent-controls select {
+    min-height: 40px;
+  }
+  .settings-panel {
+    --ui-input-height: 40px;
+    --ui-button-height: 40px;
+    width: min(920px, calc(100vw - 24px));
+    max-height: calc(100dvh - 24px);
+  }
+  .settings-close {
+    width: 44px;
+    height: 44px;
+  }
+  .settings-nav-item {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .settings-select,
+  .settings-field input {
+    min-height: 40px;
+  }
+  .settings-row {
+    gap: 16px;
+  }
+  .settings-row > :first-child {
+    min-width: 0;
+  }
+  .settings-row-control {
+    flex-shrink: 0;
+  }
+}
+@media (max-width: 767px) {
+  .settings-panel {
+    --ui-input-height: 44px;
+    --ui-button-height: 44px;
+  }
+  .settings-panel input:not([type="checkbox"]):not([type="file"]),
+  .settings-panel select {
+    min-height: 44px;
+  }
+  .start-page {
+    inset: 0 8px 8px;
+    padding: 24px 16px 32px;
+  }
+  .start-brand {
+    margin: 4px 0 24px;
+  }
+  .start-brand img {
+    width: 48px;
+    height: 48px;
+  }
+  .start-brand h1 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+  .start-prompt-library {
+    margin-top: 8px;
+    min-height: 40px;
+  }
+  .start-inspiration-card {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+  .start-inspiration-card img {
+    height: 100%;
+    object-fit: cover;
+  }
+  .start-chip-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 4px 0;
+    gap: 8px;
+  }
+  .start-chip-row button {
+    flex-shrink: 0;
+    min-height: 40px;
+  }
+  .catalog-page {
+    padding: 20px 16px 32px;
+  }
+  .catalog-page-header,
+  .catalog-page-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .catalog-page-search {
+    width: 100%;
+  }
+  .catalog-card-grid,
+  .project-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .catalog-page-actions {
+    flex-wrap: wrap;
+  }
+  .catalog-page-actions button {
+    flex: 1 1 auto;
+    white-space: nowrap;
+    min-height: 44px;
+  }
+  .modal {
+    max-width: calc(100vw - 16px);
+    max-height: calc(100dvh - 16px);
+  }
+  .settings-panel {
+    width: calc(100vw - 16px);
+    height: min(760px, calc(100dvh - 16px));
+    max-height: calc(100dvh - 16px);
+  }
+  .settings-sidebar {
+    height: 124px;
+  }
+  .settings-sidebar h1 {
+    top: 20px;
+    left: 20px;
+    font-size: var(--ui-font-title);
+  }
+  .settings-close {
+    right: 8px;
+    top: 8px;
+  }
+  .settings-nav {
+    top: 64px;
+    left: 12px;
+    right: 12px;
+    height: 52px;
+    padding: 0 0 8px;
+    gap: 4px;
+    overflow-y: hidden;
+  }
+  .settings-nav-item {
+    height: 44px;
+    min-height: 44px;
+    padding: 0 12px;
+  }
+  .settings-nav::after {
+    display: none;
+  }
+  .settings-content {
+    top: 140px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+  }
+  .settings-general-rows {
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .settings-row,
+  .settings-row:nth-child(3) {
+    min-height: 80px;
+  }
+  .settings-row p {
+    font-size: var(--ui-font-body);
+    line-height: 18px;
+  }
+  .settings-select {
+    min-height: 44px;
+    font-size: var(--ui-font-body);
+  }
+  .settings-row-control {
+    max-width: 46%;
+  }
+  .settings-row-control .settings-select {
+    max-width: 100%;
+  }
+  .prompt-library-panel {
+    padding: 16px;
+  }
+}
+@media (max-height: 600px) {
+  .workspace-content .conversation-panel {
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+@media (max-width: 1200px) and (max-height: 600px) {
+  .workspace.chat-mobile .conversation-panel {
+    gap: 8px;
+    padding: 8px;
+    top: 0;
+    bottom: 0;
+  }
+  .conversation-panel > .chat-agent-controls {
+    margin: 0;
+  }
+  .conversation-panel .conversation-messages {
+    min-height: 24px;
+  }
+  .conversation-panel > footer {
+    display: none;
+  }
+  .start-page {
+    padding-top: 16px;
+  }
+}

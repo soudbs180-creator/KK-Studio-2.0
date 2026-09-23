@@ -1,0 +1,13 @@
+{
+  "mode": "development",
+  "timestamp": "2026-09-22T06:48:35.028Z",
+  "checks": [
+    "SSE output saved; edited text survives reload; no image asset required",
+    "Web key remains session-only; cancellation is covered by production browser suite"
+  ],
+  "errors": [],
+  "url": "http://127.0.0.1:1421/",
+  "entry": "/src/main.tsx?t=1790059587125",
+  "requestCount": 1,
+  "passed": true
+}

@@ -1,6 +1,6 @@
 # KK Studio 数据与文件存储约定
 
-本文定义 KK Studio 客户端的文件边界。实现以 `D:\kk-studio-next` 为唯一工程来源；`D:\kk-studio` 是历史目录，不参与运行时读写。
+本文定义 KK Studio 客户端的文件边界。实现以 `D:/kk-studio/KK-Studio-2.0` 为唯一工程来源；`D:/kk-studio` 仅为父容器，用户数据不存放在代码仓库。
 
 ## 运行时数据根目录
 
@@ -80,7 +80,8 @@ kk-studio/
 - Desktop快照由`snapshotAssets.ts`在字段白名单内编码：homeDraft/project/composerDraft/task附件、图片preview与item.result.src；仅已存在且内容对应的归档替换为`kk-asset:<assetId>`。读取先验证快照再读原件恢复UI；缺原件、hash不符、引用身份冲突进入保护。独立poster、用户文字和demo相对路径不改写。
 - 旧内嵌媒体找不到native归档时保留原样，不自动从旧IDB、历史目录迁移。Desktop 现已支持独立的 .kkproject 导出/恢复；草稿 JSON 本身仍不能替代含原件的项目包。
 - 图片生成前`resolveAttachments.ts`恢复引用媒体；缺原件或引用身份冲突直接报错，禁止丢弃参考图后退化成文生图。素材库读取失败由`useAssetArchive.ts`显示错误/重试；不会把读取失败解释成真实空库。
-- 当前UI仍把原件加载成内存data URL，素材库逐个读原件，尚未实现缩略图、分页或懒加载；大型库的内存与IO优化继续留在后续任务。Web仍有内嵌预览及IDB Blob重复存储，不能用Desktop验收替代Web MUR验收。
+- 2026-09-21 更新：素材库列表使用元数据分页（IPC/共享接口最多100项，UI每页40项），可见卡片串行加载最长边320px的WebP预览，内存缓存最多24项。筛选/搜索会补读剩余元数据页；详情、重绘、项目包继续校验并读取完整原件。Native列表仍检查原件路径/类型/大小，hash在实际读取及全量完整性检查时验证。Web新记录只保存Blob与无preview元数据，兼容已有含preview记录。
+- 本轮125项约280MiB的回归证明有界读取和原件一致性；新生成会话/画布快照仍可保留完整预览，持久缩略图、同步大快照和更大容量验收继续由PERF-001跟踪。不能用Desktop验收替代Web MUR验收。
 
 代码与运行证据见 `docs/changes/2026-09-16-native-assets/verification.md`。T3b Desktop 项目包和全新 WebView 恢复已通过，见 docs/changes/2026-09-18-project-package/verification.md。
 
@@ -90,7 +91,7 @@ kk-studio/
 
 - `projects.sqlite3`：`projects(id, revision, checksum, payload, updated_at)`。
 - 项目 JSON v2：`schemaVersion=2`、`id/title/timestamps/revision/settings/nodes/connections/viewport/chatSessions/activeChatId`。
-- canonical `ProjectGraph`：`workspace/project/revision/checksum/nodes/connections/groups/layers/assets/providerTasks/chatSessions/extensions`，见历史归档 `D:\KK-Studio-legacy-archive-20260909\src\core\contracts\projectGraph.ts`。
+- canonical `ProjectGraph`：`workspace/project/revision/checksum/nodes/connections/groups/layers/assets/providerTasks/chatSessions/extensions`，见恢复归档中 legacy 的 `src/core/contracts/projectGraph.ts`；归档位置与恢复说明见本轮 consolidation change package。
 - `project-backups/` 和 `legacy-canvas-backups/`：只读恢复副本，保留来源和校验值。
 
 ## 密钥与用户信息

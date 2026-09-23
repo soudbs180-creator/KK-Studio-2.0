@@ -1,0 +1,58 @@
+{
+  "startedAt": "2026-09-22T12:22:43.553Z",
+  "mode": "Vite development",
+  "url": "http://127.0.0.1:1421",
+  "steps": [
+    {
+      "name": "connected",
+      "channel": "codex",
+      "runtime": {
+        "accent": "default",
+        "theme": "dark",
+        "floatingLayout": "true"
+      }
+    },
+    {
+      "name": "real-turn",
+      "assistant": [
+        "KK_CODEX_READY"
+      ]
+    },
+    {
+      "name": "mcp-canvas",
+      "node": "文案\n前端草稿\nAgent 接线验证\n\n在下方输入内容，开始创作\n\n提示词生成\n剧本生成\n策划案生成\n自己编写内容",
+      "assistant": [
+        "KK_CODEX_READY",
+        "我会先读取当前画布，再添加指定的文本节点。",
+        "已通过画布 MCP 添加并核实文本节点：\n\n- ID：`kk-agent-smoke`\n- 标题：Agent 接线验证\n- 正文：主Agent已通过MCP控制KK画布。"
+      ]
+    },
+    {
+      "name": "account-models",
+      "options": [
+        "GPT-6-AstraCodex · 已登录账号",
+        "GPT-5.6-SolCodex · 已登录账号",
+        "GPT-5.6-TerraCodex · 已登录账号",
+        "GPT-5.6-LunaCodex · 已登录账号",
+        "GPT-5.5Codex · 已登录账号"
+      ]
+    },
+    {
+      "name": "resume",
+      "messageCount": 3,
+      "oldCount": 3,
+      "persistedNode": 1,
+      "storedToken": null,
+      "pageErrors": []
+    },
+    {
+      "name": "usage",
+      "text": "Codex 额度 · 未知\n\n账号共享额度，包含其他 Codex 窗口的使用。\n\n刷新额度"
+    },
+    {
+      "name": "bridge-origin",
+      "crossSiteStatus": 403
+    }
+  ],
+  "passed": true
+}

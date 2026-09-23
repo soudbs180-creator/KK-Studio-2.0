@@ -1,6 +1,8 @@
 import { useState } from "react";
 import UiIcon from "./UiIcon";
 import type { CreationProject } from "../features/creation/model";
+import WorkflowCard from "./WorkflowCard";
+import type { WorkflowRecord } from "../features/comfyui/workflowRegistry";
 
 type Skill = readonly [string, string, string];
 type Workflow = readonly [string, string, string, string];
@@ -15,6 +17,11 @@ export default function CatalogPageBody({
   tab,
   onSelect,
   projects = [],
+  localWorkflows = [],
+  onOpenWorkflow,
+  onExportWorkflow,
+  onDeleteWorkflow,
+  onRunWorkflow,
 }: {
   view: "projects" | "skills" | "comfyui";
   search: string;
@@ -25,6 +32,11 @@ export default function CatalogPageBody({
   tab: string;
   onSelect: (label: string) => void;
   projects?: CreationProject[];
+  localWorkflows?: readonly WorkflowRecord[];
+  onOpenWorkflow?: (workflow: WorkflowRecord) => void;
+  onExportWorkflow?: (workflow: WorkflowRecord) => void;
+  onDeleteWorkflow?: (workflow: WorkflowRecord) => void;
+  onRunWorkflow?: (workflow: WorkflowRecord) => void;
 }) {
   const [folderCreated, setFolderCreated] = useState(false);
   if (view === "projects") {
@@ -136,7 +148,7 @@ export default function CatalogPageBody({
     }
     return (
       <>
-        <div className="catalog-categories" role="list" aria-label="Skill分类">
+        <div className="catalog-categories" role="group" aria-label="Skill分类">
           {[
             "全部",
             "精选",
@@ -152,7 +164,8 @@ export default function CatalogPageBody({
           ].map((item) => (
             <button
               key={item}
-              className={category === item ? "is-selected" : ""}
+              className="ui-capsule"
+              aria-pressed={category === item}
               onClick={() => onCategory(item)}
             >
               {item}
@@ -197,12 +210,36 @@ export default function CatalogPageBody({
     );
   }
   if (tab === "我的工作流") {
+    if (!localWorkflows.length)
+      return (
+        <div className="catalog-empty" role="status">
+          <span className="catalog-empty-mark" aria-hidden="true">
+            ⌁
+          </span>
+          <p>还没有本地工作流。点击“导入/新建工作流”创建第一个模板。</p>
+        </div>
+      );
     return (
-      <div className="catalog-empty" role="status">
-        <span className="catalog-empty-mark" aria-hidden="true">
-          ⌁
-        </span>
-        <p>还没有本地工作流。导入服务接入后，可在这里管理。</p>
+      <div
+        className="catalog-card-grid workflow-grid"
+        aria-label="我的本地工作流"
+      >
+        {localWorkflows
+          .filter((workflow) =>
+            `${workflow.name}${workflow.description}${workflow.tags.join(" ")}`
+              .toLowerCase()
+              .includes(search),
+          )
+          .map((workflow) => (
+            <WorkflowCard
+              key={workflow.id}
+              workflow={workflow}
+              onOpen={onOpenWorkflow ?? (() => undefined)}
+              onExport={onExportWorkflow ?? (() => undefined)}
+              onDelete={onDeleteWorkflow ?? (() => undefined)}
+              onRun={onRunWorkflow ?? (() => undefined)}
+            />
+          ))}
       </div>
     );
   }
