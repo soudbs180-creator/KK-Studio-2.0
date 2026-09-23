@@ -5,6 +5,15 @@
 Google API Key 通道已接入官方 Interactions：连续文字对话、图片结果归档画布、刷新后会话恢复；另接入用户自行启动的本地 Gemini CLI 桥，支持 Google 账号登录后的文字对话和会话续接。CLI 模式不提供图片生成，图片需使用 API Key 通道。设置页已修复密钥输入和两种登录方式切换，桥限定本机地址/可信 Origin、传入 CLI 的参数边界与取消后子进程回收；结果不确定时阻止自动重试。
 
 Web 生产预览与 fixture 浏览器流程、单元测试、Windows Rust `client:check` 已有本地证据；最终全量验证与交付状态见 [004 验证](changes/2026-09-23-google-interactions/verification.md)和 [005 验证](changes/2026-09-23-google-cli-login/verification.md)。本机没有 Google API Key 或已安装/登录的 Gemini CLI，因此未作真实 Google 请求，也未验证本轮 Tauri 桌面运行或获得最终独立补审。上述两任务保持 IN_PROGRESS/PARTIAL，不将 fixture 图片当作真实出图。
+## 2026-09-23 2.1.0 源码并线与远端规则回读
+
+- [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的 head `da811283` 在 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7`；旧 PR #8 的提交是 #9 候选的祖先，内容被吸收，PR #8 已关闭而未重复合并。[PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 再将规则与 Markdown 审计 squash 合入 `main@9f04bfce`；两次合并的文件树均与各自受审候选相同，本地根 `main` 已快进至后者。
+- 用户确认仓库公开；三套远端 ruleset 已 active，`main` 有效规则含 PR、必需检查、禁删除和非快进。#9、#11 合并后的 `main` 工作流均最终 success（#11：[35841965161](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35841965161)）。正式 2.1.0 tag、安装包、签名和用户发布验收未完成，Desktop 插件问题仍在 PLUGIN-DESKTOP-001。
+- TASK-RULES-004 从 #9 合并后的 main 仅承接原堆叠 PR #10 的四个任务提交，文件树与旧 head 一致。完整本地 verify 为 370 Node、300 browser 全通过，最终 `dfed074` 的独立 AI 复审和 hosted PR/push 检查均 PASS；#11 已合并，#10 已关联关闭而未重复合并。旧分支及其它 dirty worktree 保留；具体分支分类见[承接验证](changes/2026-09-23-rules-audit-main/verification.md)。
+
+## 2026-09-23 规则与 Markdown 审计（原堆叠 PR 阶段快照）
+
+在 2.1.0 候选 `da811283e55ce699e4c5425d92ad31ffba7513e3` 上核对了共同规则入口、账本、PR/CI、本地 Git 防线、现行 Markdown 链接与历史证据边界。现行文档中的设计来源、已知问题、版本交接、分支清理和交付文件数已按当前事实整理；现行 Markdown 相对文件链接加入本地 lint 检查。结构检查不能证明模型读懂规则，PR #9 的 hosted 检查仍因账号付款或 spending limit 在步骤前失败；main、tag、安装包及远端强制保护没有因此完成。具体差异、验证与独立复审见 `docs/changes/2026-09-23-rules-audit/`。
 
 ## 2026-09-23 KK Studio 2.1.0 源码分支已上传（REL-2.1.0，本地验证完成）
 

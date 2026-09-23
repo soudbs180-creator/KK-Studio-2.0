@@ -21,11 +21,12 @@ npm ci
 
 | 命令                                                     | 能证明什么                                                          |
 | -------------------------------------------------------- | ------------------------------------------------------------------- |
-| `npm run lint`                                           | ESLint 与已配置治理/架构检查；不是全部安全审查                      |
+| `npm run lint`                                           | ESLint、治理/架构、功能和现行 Markdown 文件链接检查；不是全部安全审查 |
 | `npm run typecheck`                                      | TypeScript 类型检查                                                 |
 | `npm test`                                               | 当前 Node 单测；fixture 与 live 分开                                |
 | `npm run ui:check`                                       | 静态 UI 规则；不是视觉/交互验收                                     |
-| `npm run format:check`                                   | package script 实际覆盖范围的格式；Markdown 另行检查                |
+| `npm run markdown:check`                                 | 现行 Markdown 相对文件目标；不检查外部网址或事实语义                 |
+| `npm run format:check`                                   | package script 实际覆盖范围的格式；Markdown 格式仍需定向检查         |
 | `npm run build`                                          | 当前 Web production 构建                                            |
 | `npm run test:ui`                                        | 构建后运行 Playwright production preview 回归                       |
 | `npm run client:check`                                   | Rust/Tauri 编译检查；不是原生运行验收                               |
@@ -58,7 +59,7 @@ npm ci
 
 给每条验收条件关联测试或证据；N/A 要说明适用性，失败要保留首次失败与修复后结果。明确已验证、本地 fixture、Prototype、部分完成和未验证边界；本地持久化不等于云端，静态 HTTP 200 不等于端到端业务成功。
 
-历史证据保留，追加新的运行结果或勘误。若现有测试工具会写入固定证据路径，运行前必须保护旧输出并在专门测试任务中改为独立结果目录；本规则任务不修改既有 reporter、截图、测试或历史证据。需要留档的结果应连同 SHA、命令、时间和结论复制到新的 `docs/evidence/<task-date>/`，不得自动改写已有日期目录，也不得修改旧次数/hash 制造成功。
+历史证据保留，追加新的运行结果或勘误。若现有测试工具会写入固定证据路径，运行前必须保护旧输出并在专门测试任务中改为独立结果目录；reporter、截图和测试本身如需修改，应在明确范围的任务中审查，不借文档整理改写历史证据。需要留档的结果应连同 SHA、命令、时间和结论复制到新的 `docs/evidence/<task-date>/`，不得自动改写已有日期目录，也不得修改旧次数/hash 制造成功。
 
 治理脚本的历史输出检查比较指定 `GOVERNANCE_BASE`（默认 `origin/main`）与当前文件：未改动的旧测试只保留缺口，发生改动的文件必须使用独立输出路径。基线引用不存在时先 fetch 正确基线，不能为修复基线读取错误去改产品测试。该检查不是完整证据保护系统；CI 中继承的报告文件也必须核对本次实际运行时间和结果，不能因 artifact 存在就认定它是新证据。
 

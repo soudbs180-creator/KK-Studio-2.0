@@ -5,12 +5,19 @@
 隔离分支 `feat/TASK-AGENT-004-google-closeout` 组合 Google Interactions API Key 对话/生图与 Gemini CLI Google 账号文字对话。API Key 图片可归档画布；CLI 登录只支持文字。Web fixture 与本地桥安全回归已通过；最终验证见 [004](../changes/2026-09-23-google-interactions/verification.md)、[005](../changes/2026-09-23-google-cli-login/verification.md)。真实 Google 凭据请求、CLI 账号续接、Tauri 同态和最终独立补审尚未完成；主线不因本候选改变。
 
 ## 2026-09-23 KK Studio 2.1.0 源码上传候选（REL-2.1.0）
+## 2026-09-23 KK Studio 2.1.0 源码并线与规则回读（REL-2.1.0）
 
-当前版本元数据已统一为 2.1.0；源码候选已在 `chore/TASK-CONSOLIDATE-200` 上提交并上传，首次远端 SHA 与受审源码 `15f1f27` 一致。`VERSION`、`CHANGELOG.md`、package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端共同记录 2.1.0；原有 `%APPDATA%/kk-studio`、存储 key、应用 identifier、历史 2.0.0 证据和恢复归档不变。安装包、签名、Hosted CI、PR/main 合并和不可变正式 tag 未在本地源码上传中虚构完成。
+当前版本元数据已统一为 2.1.0；源码候选先在 `chore/TASK-CONSOLIDATE-200` 上提交并上传，首次远端 SHA 与受审源码 `15f1f27` 一致。`VERSION`、`CHANGELOG.md`、package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端共同记录 2.1.0；原有 `%APPDATA%/kk-studio`、存储 key、应用 identifier、历史 2.0.0 证据和恢复归档不变。安装包、签名和正式 tag 仍未完成。
 
 独立预检发现远程 HTTP 插件执行风险，加载器已改为仅接收 HTTPS、拒绝远程自动重定向（含中间明文跳转）并停用旧版明文缓存；本地回归通过，独立补审确认受审源码范围内无未关闭 P0/P1。Desktop 插件因严格 CSP 阻止 `blob:` 模块而尚未验收，开放任务 PLUGIN-DESKTOP-001；本次源码上传不宣称桌面插件已可用。
 
 本轮真实提交、远端分支和检查结果以 `docs/changes/2026-09-23-release-2-1-0/{verification,release,review}.md` 以及 Git 回读为准。
+
+合并前回读（历史时点）：2.1.0 候选分支 head 为 `da811283e55ce699e4c5425d92ad31ffba7513e3`，`origin/main` 当时为 `3c4d012846e53095bd4f11343a1cd2ef61aa3bbd`。Hosted jobs 曾因 GitHub 账号付款或 spending limit 在执行步骤前失败；该失败不说明代码质量。
+
+当前回读：[PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的当前 head `da811283` 经 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7a180c641dbcc3d127d1106f05174df12`；合并提交的文件树与 PR 候选树一致。旧 [PR #8](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/8) 的 head 是该候选的祖先，内容随 #9 吸收，已关闭而未重复合并。合并后的 `main` 工作流 [35836597858](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35836597858) 最终 success；push 事件的 delivery 按工作流条件 skipped，verify 成功。
+
+用户确认仓库公开；三套远端 ruleset（all-branches safety、immutable version tags、stable PR gate）已 active，`main` 回读 `protected=true`，有效规则包括 PR、必需 `verify`/`delivery`、禁删除与非快进。管理员仍能修改配置；本地 hook 和静态文件不是服务器规则已生效的替代证据。`TASK-RULES-004` 由 [PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 经最终 head `dfed074` 的独立复审与 hosted PR/push 检查后 squash 合入 `main@9f04bfced49224e9cd523844a8e3c995119c7955`，合并树与候选树一致；旧堆叠 [PR #10](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/10) 已关联关闭而未重复合并。合并后 [main 工作流 35841965161](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35841965161) 最终 success（verify 成功，push 的 delivery 按条件 skipped）。远端分支逐项分类见[承接验证](../changes/2026-09-23-rules-audit-main/verification.md)；分支数量不能直接代表未合并功能，清理需核对 PR、最新提交和 dirty worktree。
 
 ## 2026-09-23 Agent 图片与画布控制（TASK-AGENT-003，DONE/PASS，未提交）
 
@@ -127,7 +134,7 @@ TASK-DS-001、UI-001、UI-004保持PARTIAL：在线Ardot未写入，新样式Tau
 - TASK-MAIN-CLOSE-002 候选已完成 151 Node、197 browser、UI121/0、Rust61/61、Tauri client build；开发1421、预览1423和隔离 Desktop runtime 均加载当前候选并通过菜单、素材分页、原件 SHA、焦点与窄屏关闭专项。候选仍在 PR 前，不能写成稳定 main。
 - UI-004 继续 PARTIAL：Landing 410:59708 无效，项目库/Skill/ComfyUI/部分设置没有独立当前 Frame。PERF-001 继续 PARTIAL：永久缩略图、大快照、单件大图瞬时内存和不可抢占 IO 仍待后续验收。
 
-## 当前主线
+## 历史快照（2026-09-20）：当时的主线
 
 - 稳定主线运行目录是 `D:/kk-studio-next` 的 `main`，跟踪目标仓库 `origin/main`。精确提交与tree用Git回读；旧 `.worktrees/TASK-INTEGRATION-001` 已改为 `codex/archive-local-main-20260920` 历史分支，不再作为当前main运行目录。
 - UI补充验证 bundle 为 `index-Be6XJzPc.js`，验证包含dev1421、preview1423和隔离Tauri release。根目录启动入口 `start-kk-studio.bat` 会检查源码新鲜度；每次main推进后重新构建并验证实际加载包。旧bundle/hash是历史证据，不能用于判断当前运行版本。

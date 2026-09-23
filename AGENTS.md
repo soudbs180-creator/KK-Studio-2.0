@@ -12,7 +12,7 @@
 - 本机唯一工程仓库是 `D:/kk-studio/KK-Studio-2.0`；`D:/kk-studio` 仅为容器目录。任务隔离使用本仓库登记的 worktree，每个 worktree 只承载一个 task branch。其他设备可使用自己的路径，但必须核对相同 Git remote、已推送 SHA 和仓库规则，不将本机绝对路径写成跨平台依赖。
 - `kk-studio-next` 和旧 archive/backup 已由 TASK-CONSOLIDATE-200 收敛；不要重新建立重复工程或从历史路径启动。当前融合分支和验证状态先读 `docs/governance/PROJECT_STATE.md`。
 - 历史源码、未提交候选、Git 和用户数据的恢复归档位于工程外 `D:/KK-Studio-recovery-20260921`。恢复必须到新目录并校验，不得自动覆盖当前用户数据。工程内 `releases/` 只放最新分享产物，禁止把恢复归档、凭据、node_modules 或编译缓存打入分享包。
-- 融合版本基线为 `2.0.0`；后续版本按 SemVer 从该基线递增。同步 package.json、package-lock.json、Cargo.toml/Cargo.lock、tauri.conf.json 和应用显示；保留原有存储 key/identifier，不能随目录或包名改动用户数据身份。
+- `2.0.0` 是历史融合基线；当前 `main` 源码版本为 `2.1.0`，正式安装包和 tag 另行验收。后续版本按 SemVer 递增。同步 package.json、package-lock.json、Cargo.toml/Cargo.lock、tauri.conf.json 和应用显示；保留原有存储 key/identifier，不能随目录或包名改动用户数据身份。
 
 ## 技术边界
 
@@ -35,10 +35,10 @@
 
 ## 文档与验证
 
-- 当前需求按 `docs/templates/` 创建 intent、spec、plan、verification，放入对应日期的 `docs/changes/<date>-<task>/`；旧整合记录是历史依据，不是后续任务的默认目录。
+- 当前需求按 `docs/templates/` 创建 intent、spec、plan、verification、review，放入对应日期的 `docs/changes/<date>-<task>/`；旧整合记录是历史依据，不是后续任务的默认目录。
 - 功能以 `docs/features/` 为唯一功能入口：每个功能一张 `feat-*.md` 卡片（用户入口、代码位置、测试证据、当前能力、差距与后端化），`features.registry.json` 是机器可读权威，`README.md` 看板由 `npm run features:write` 生成、禁止手改；新增功能先建卡并在账本建任务，再实现。演示功能后端化顺序见 `docs/features/BACKEND-ROADMAP.md`。功能状态（REAL/PARTIAL/PROTOTYPE/PLANNED）描述产品能力真实程度，与任务状态正交，REAL 必须有同态运行证据，非 REAL 必须挂开放任务（排除 DONE/OBSOLETE）。
 - 代码、数据契约或行为改变时同步 `docs/PROGRESS.md`。
-- 常用命令：`npm run typecheck`、`npm run test`、`npm run ui:check`、`npm run format:check`、`npm run build`、`npm run client:check`、`npm run features:check`、`npm run governance:check`；交付前执行 `npm run verify`（已含功能与账本门禁）。
+- 常用命令：`npm run typecheck`、`npm run test`、`npm run ui:check`、`npm run format:check`、`npm run build`、`npm run client:check`、`npm run features:check`、`npm run governance:check`、`npm run markdown:check`；交付前执行 `npm run verify`（已含功能、账本和现行 Markdown 链接门禁）。
 - 验证不足不得标为 `REAL`，按已有能力标为 `PARTIAL` 或 `PROTOTYPE`；不能把占位 UI、硬编码账号或本地 demo 描述为真实服务。
 
 ## UI 运行链路门禁

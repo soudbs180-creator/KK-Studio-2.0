@@ -3,6 +3,12 @@
 ## 2026-09-23 Google 接入候选（TASK-AGENT-004/005，PARTIAL）
 
 当前候选分支 `feat/TASK-AGENT-004-google-closeout` 位于隔离 worktree `C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0`，叠加 004 API Key Interactions 对话/生图与 005 Gemini CLI 账号文字对话。真实账号、桌面运行与最终独立审查未验收。继续时先读 [004 验证](../changes/2026-09-23-google-interactions/verification.md)、[005 验证](../changes/2026-09-23-google-cli-login/verification.md)和 [ADR-007](../architecture/adr/ADR-007-gemini-cli-bridge.md)，核对当前 Git/PR 与最新校验结果；不得把旧 fixture 结果称为真实 Google 出图。
+## 2026-09-23 当前恢复入口：2.1.0 主线与规则审计
+
+- 唯一工程为 `D:/kk-studio/KK-Studio-2.0`；先 fetch 并核对实际 HEAD、`git status`、worktree、账本和本文件，不从下方历史段落推断“当前”。2.1.0 源码先由 [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 合入 `b45c5bc7`，规则与 Markdown 审计再由 [PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 合入 `origin/main@9f04bfced49224e9cd523844a8e3c995119c7955`；本地根 `main` 已快进至同一 SHA。
+- PR #9 的当前候选 `verify`/`delivery` 已通过，合并后的 main 工作流 [35836597858](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35836597858) 最终 success（push 的 delivery 按条件 skipped，verify 成功）。三套远端 ruleset 已 active，main 有效规则含 PR/必需检查/禁删除和非快进；用户确认仓库公开。正式 tag、安装包、签名及用户发布验收未完成。
+- 旧 [PR #8](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/8) 已被 #9 吸收并关闭；旧堆叠 [PR #10](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/10) 的四个任务提交由 #11 从新 main 完整承接，#11 已合并，#10 已关联关闭。合并树、独立审查、当前 head 的 hosted PR/push 检查及合并后 [main 工作流](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35841965161) 均已核对成功；不要批量清理旧分支，逐项核对 PR/head 和 dirty worktree。
+- 最新任务状态以 [task-ledger.json](task-ledger.json) 为准；能力状态以 [功能登记](../features/features.registry.json) 为准。下方各日期段落是当时的验证快照，不覆盖此入口。
 
 ## 2026-09-23 Agent 图片与画布控制（TASK-AGENT-003，DONE/PASS，未提交）
 
