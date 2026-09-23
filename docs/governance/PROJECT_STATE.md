@@ -2,7 +2,9 @@
 
 ## 2026-09-23 KK Studio 2.1.0 源码上传候选（REL-2.1.0）
 
-当前版本元数据已统一为 2.1.0；源码候选正在 `chore/TASK-CONSOLIDATE-200` 上准备提交并推送。`VERSION`、`CHANGELOG.md`、package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端共同记录 2.1.0；原有 `%APPDATA%/kk-studio`、存储 key、应用 identifier、历史 2.0.0 证据和恢复归档不变。安装包、签名、Hosted CI、PR/main 合并和不可变正式 tag 未在本地源码上传中虚构完成。
+当前版本元数据已统一为 2.1.0；源码候选已在 `chore/TASK-CONSOLIDATE-200` 上提交，安全补审后准备推送。`VERSION`、`CHANGELOG.md`、package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端共同记录 2.1.0；原有 `%APPDATA%/kk-studio`、存储 key、应用 identifier、历史 2.0.0 证据和恢复归档不变。安装包、签名、Hosted CI、PR/main 合并和不可变正式 tag 未在本地源码上传中虚构完成。
+
+独立预检发现远程 HTTP 插件执行风险，加载器已改为仅接收 HTTPS、拒绝降级响应并停用旧版明文缓存；本地回归通过，最终 SHA 的补审待完成。Desktop 插件因严格 CSP 阻止 `blob:` 模块而尚未验收，开放任务 PLUGIN-DESKTOP-001；本次源码上传不宣称桌面插件已可用。
 
 本轮真实提交、远端分支和检查结果以 `docs/changes/2026-09-23-release-2-1-0/{verification,release,review}.md` 以及 Git 回读为准。
 

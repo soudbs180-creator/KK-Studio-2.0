@@ -63,6 +63,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-007 | 手机平板电脑三档尺寸与图标对齐 | DONE | TASK-UI-006, TASK-AGENT-001 | root |
 | TASK-UI-008 | 重新制定创作输入框规范并统一三档实现 | DONE | TASK-UI-007, TASK-AGENT-002 | root |
 | TASK-AGENT-003 | Agent 图片附件、画布引用与视口选择操作 | DONE | TASK-AGENT-001, TASK-AGENT-002 | root |
+| PLUGIN-DESKTOP-001 | 修复桌面画布插件的 CSP 加载路径 | TODO | none | root |
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
 
 ## T0 — 可复现候选源码与主线整合
@@ -754,6 +755,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Evidence: [docs/changes/2026-09-23-agent-attachments/verification.md](../../docs/changes/2026-09-23-agent-attachments/verification.md), [docs/changes/2026-09-23-agent-attachments/review.md](../../docs/changes/2026-09-23-agent-attachments/review.md), [docs/changes/2026-09-23-agent-attachments/remaining.md](../../docs/changes/2026-09-23-agent-attachments/remaining.md)
 - Updated: 2026-09-23
 
+## PLUGIN-DESKTOP-001 — 修复桌面画布插件的 CSP 加载路径
+
+- Goal: 让可信随包插件在保持严格 CSP 的前提下于 Tauri 桌面端加载并验证
+- Scope: 同源插件模块加载、桌面 CSP、fresh Tauri 插件交互验证
+- Acceptance: 随包插件从同源模块路径加载且不全局放宽脚本 CSP; fresh Tauri 中插件发现、添加、渲染和启停通过实际交互; 远程插件的权限与来源边界保持明确
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/plugins, src-tauri/tauri.conf.json, tests/browser
+- Verification: NOT_VERIFIED — 当前 Tauri CSP 拒绝 blob 模块，独立审查的原样 CSP 探针复现；修复和 fresh Desktop 交互尚未验证。
+- Evidence: [docs/changes/2026-09-23-release-2-1-0/review.md](../../docs/changes/2026-09-23-release-2-1-0/review.md)
+- Updated: 2026-09-23
+
 ## REL-2.1.0 — 2.1.0 本地集成与源码上传
 
 - Goal: 将当前已授权的工作区候选统一版本、完成本地检查并上传到可追溯的任务分支
@@ -762,6 +775,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `chore/TASK-CONSOLIDATE-200`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src, src-tauri, tests, scripts, vendor, docs
-- Verification: PARTIAL — 当前工作树本地 363 Node/299 browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理58/0、类型/格式/Web build 均通过；Git 远端、Hosted CI、PR、安装包待回读。各历史变更包保留其原始验证时点。
+- Verification: PARTIAL — 安全补审后本地 366 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；Git 远端、Hosted CI、PR、安装包待回读。各历史变更包保留其原始验证时点。
 - Evidence: [docs/changes/2026-09-20-main-close-002/verification.md](../../docs/changes/2026-09-20-main-close-002/verification.md), [docs/changes/2026-09-21-consolidate-200/verification.md](../../docs/changes/2026-09-21-consolidate-200/verification.md), [docs/changes/2026-09-21-feature-system/verification.md](../../docs/changes/2026-09-21-feature-system/verification.md), [docs/changes/2026-09-21-local-capabilities/verification.md](../../docs/changes/2026-09-21-local-capabilities/verification.md), [docs/changes/2026-09-21-minimax-deep-audit/verification.md](../../docs/changes/2026-09-21-minimax-deep-audit/verification.md), [docs/changes/2026-09-21-security-audit-closeout/verification.md](../../docs/changes/2026-09-21-security-audit-closeout/verification.md), [docs/changes/2026-09-21-security-audit/verification.md](../../docs/changes/2026-09-21-security-audit/verification.md), [docs/changes/2026-09-21-text-and-rule-audit/verification.md](../../docs/changes/2026-09-21-text-and-rule-audit/verification.md), [docs/changes/2026-09-22-agent-desktop/verification.md](../../docs/changes/2026-09-22-agent-desktop/verification.md), [docs/changes/2026-09-22-codex-default-agent/verification.md](../../docs/changes/2026-09-22-codex-default-agent/verification.md), [docs/changes/2026-09-22-design-system/verification.md](../../docs/changes/2026-09-22-design-system/verification.md), [docs/changes/2026-09-22-design-system-pages/verification.md](../../docs/changes/2026-09-22-design-system-pages/verification.md), [docs/changes/2026-09-22-port-infinite-canvas/verification.md](../../docs/changes/2026-09-22-port-infinite-canvas/verification.md), [docs/changes/2026-09-22-responsive-ui/verification.md](../../docs/changes/2026-09-22-responsive-ui/verification.md), [docs/changes/2026-09-22-ui-feature-parity/verification.md](../../docs/changes/2026-09-22-ui-feature-parity/verification.md), [docs/changes/2026-09-22-ui-interactions/verification.md](../../docs/changes/2026-09-22-ui-interactions/verification.md), [docs/changes/2026-09-23-agent-attachments/verification.md](../../docs/changes/2026-09-23-agent-attachments/verification.md), [docs/changes/2026-09-23-input-contract/verification.md](../../docs/changes/2026-09-23-input-contract/verification.md), [docs/changes/2026-09-23-release-2-1-0/verification.md](../../docs/changes/2026-09-23-release-2-1-0/verification.md)
 - Updated: 2026-09-23

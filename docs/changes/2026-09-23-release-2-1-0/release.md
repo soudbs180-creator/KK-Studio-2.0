@@ -5,15 +5,15 @@
 - 目标平台/环境：Windows 本地 Git checkout；目标远端 `origin` 的任务分支
 - 版本、main/source commit、tree SHA：版本 2.1.0；main 基线 `3c4d012846e53095bd4f11343a1cd2ef61aa3bbd`；source commit/tree SHA 以推送后的 Git ref/PR 回读为准，本文件不预知自身提交 SHA。
 - 构建机器/工具版本与时间：Windows PowerShell；本次不生成安装包，实际检查命令补录。
-- Web bundle / 安装包 / EXE / 部署包 hash：NOT GENERATED
-- CI / verification / 当前 SHA 独立 review：本地单测、浏览器、类型、lint、构建和 Rust check 已通过；当前 SHA 独立 review/Hosted CI 待完成。
+- Web bundle / 安装包 / EXE / 部署包 hash：本地 Web `dist/assets/index-D5LYFwOh.js` SHA-256 `85D6BD5FCCC8F048FFFAB32873BD8F07079287BFA495D514DBF0941D0A5CE73F`，未作为发布包提交；安装包、EXE、部署包 NOT GENERATED。
+- CI / verification / 当前 SHA 独立 review：本地单测、浏览器、类型、lint、构建和 Rust check 已通过；独立预检发现的 P1 明文插件风险已修复并本地回归，最终 SHA 补审/Hosted CI 待完成。
 - 用户验收和发布授权：用户明确授权源码上传和版本更新；正式产品验收/生产发布未发生。
 
 ## 发布前核对
 
 - 正确 remote、目标 main 与最新 PR/CI/ruleset 回读：remote 已确认；当前任务分支需 push；PR/CI/ruleset 待远端回读。
 - 来源无未整合任务，工作树与发布包可追溯：当前 dirty 候选包含多项此前未提交任务；本次提交绑定全部当前授权内容，历史 worktree 不清理。
-- 所有 merge/release blockers：main 直接推送禁止；无 `gh` CLI；安装包和真实桌面发布未验证。
+- 所有 merge/release blockers：main 直接推送禁止；安装包和真实桌面发布未验证；Desktop 插件 CSP 缺口登记 PLUGIN-DESKTOP-001，不能宣称插件桌面验收。
 - Desktop/Web/Mobile 的实际发布范围和 Prototype 能力：本次只上传源码和元数据；真实 Provider、ComfyUI、云端账号/计费继续保持现有 Prototype/PARTIAL 边界。
 - schema/兼容、升级、备份与恢复实证：存储 key、identifier 和 schema 版本不变；既有恢复归档保留。
 - 凭据/权限、资源与费用边界：不把凭据写入提交；只使用现有 Git 远端权限。
@@ -24,8 +24,8 @@
 | 步骤 | 命令/工具和目标 | 已有授权范围 | 实际结果/退出码 | 时间/证据 |
 | --- | --- | --- | --- | --- |
 | 1 | 更新版本源、文档和 change package | 用户已授权 | 已执行 | 2026-09-23 |
-| 2 | 本地 lint/typecheck/test/build/native 检查（按可执行命令） | “上传并且检查” | 363 Node、299 browser、78 Rust、Agent 126 passed/2 skipped、typecheck/lint/UI/build 通过；历史证据的行尾空白单独披露 | 2026-09-23 |
-| 3 | `git add -- <明确路径>`、审阅 staged diff、commit | 用户已授权 | 982 路径 staged；commit 待执行 | 2026-09-23 |
+| 2 | 本地 lint/typecheck/test/build/native 检查（按可执行命令） | “上传并且检查” | 366 Node、299 browser + plugin 定向2、78 Rust、Agent 126 passed/2 skipped、typecheck/lint/UI/build 通过；历史证据的行尾空白单独披露 | 2026-09-23 |
+| 3 | `git add -- <明确路径>`、审阅 staged diff、commit | 用户已授权 | `b3081c8` 源码候选和 `c3fbcb8` 交付补录已提交；安全补审增量待提交 | 2026-09-23 |
 | 4 | `git push -u origin chore/TASK-CONSOLIDATE-200` | 用户已授权 | 待执行 | 2026-09-23 |
 | 5 | `git ls-remote` 回读远端 SHA | 只读核验 | 待执行 | 2026-09-23 |
 | 6 | PR/CI/main merge/tag | 分支策略要求额外门禁 | NOT EXECUTED | 待远端工具和平台门禁 |

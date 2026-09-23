@@ -1686,6 +1686,27 @@
     "updated": "2026-09-23"
   },
   {
+    "id": "PLUGIN-DESKTOP-001",
+    "title": "修复桌面画布插件的 CSP 加载路径",
+    "goal": "让可信随包插件在保持严格 CSP 的前提下于 Tauri 桌面端加载并验证",
+    "scope": "同源插件模块加载、桌面 CSP、fresh Tauri 插件交互验证",
+    "acceptance": [
+      "随包插件从同源模块路径加载且不全局放宽脚本 CSP",
+      "fresh Tauri 中插件发现、添加、渲染和启停通过实际交互",
+      "远程插件的权限与来源边界保持明确"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": ["src/features/plugins", "src-tauri/tauri.conf.json", "tests/browser"],
+    "status": "TODO",
+    "evidence": ["docs/changes/2026-09-23-release-2-1-0/review.md"],
+    "verification": "当前 Tauri CSP 拒绝 blob 模块，独立审查的原样 CSP 探针复现；修复和 fresh Desktop 交互尚未验证。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-09-23"
+  },
+  {
     "id": "REL-2.1.0",
     "title": "2.1.0 本地集成与源码上传",
     "goal": "将当前已授权的工作区候选统一版本、完成本地检查并上传到可追溯的任务分支",
@@ -1723,7 +1744,7 @@
       "docs/changes/2026-09-23-input-contract/verification.md",
       "docs/changes/2026-09-23-release-2-1-0/verification.md"
     ],
-    "verification": "当前工作树本地 363 Node/299 browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理58/0、类型/格式/Web build 均通过；Git 远端、Hosted CI、PR、安装包待回读。各历史变更包保留其原始验证时点。",
+    "verification": "安全补审后本地 366 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；Git 远端、Hosted CI、PR、安装包待回读。各历史变更包保留其原始验证时点。",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-23"
   }

@@ -61,6 +61,23 @@ interface LoadedPluginState {
   disposers: Array<() => void>;
 }
 
+function assertSecureRemotePluginUrl(value: string): void {
+  let url: URL;
+  try {
+    url = new URL(value);
+  } catch {
+    throw new Error("仅支持不含凭据或片段的 HTTPS 插件地址");
+  }
+  if (
+    url.protocol !== "https:" ||
+    !url.hostname ||
+    url.username ||
+    url.password ||
+    url.hash
+  )
+    throw new Error("仅支持不含凭据或片段的 HTTPS 插件地址");
+}
+
 export function createPluginLoader(options: PluginLoaderOptions = {}) {
   const store = options.store ?? pluginStore;
   const fetcher =
@@ -116,10 +133,15 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
     return plugin;
   }
 
-  async function fetchPluginSource(url: string): Promise<string> {
+  async function fetchPluginSource(
+    url: string,
+    remote = false,
+  ): Promise<string> {
+    if (remote) assertSecureRemotePluginUrl(url);
     const response = await fetcher(url);
     if (!response.ok)
       throw new Error(`插件下载失败（HTTP ${response.status}）`);
+    if (remote && response.url) assertSecureRemotePluginUrl(response.url);
     return response.text();
   }
 
@@ -173,8 +195,10 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
     url: string,
     opts?: { official?: boolean; bustCache?: boolean },
   ): Promise<CanvasPlugin> {
+    assertSecureRemotePluginUrl(url);
     const source = await fetchPluginSource(
       opts?.bustCache ? withCacheBust(url) : url,
+      true,
     );
     const plugin = await evaluatePluginSource(source);
     deactivatePlugin(plugin.id);
@@ -204,6 +228,7 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
     record: InstalledPlugin,
     enabled: boolean,
   ): Promise<void> {
+    if (enabled && !record.local) assertSecureRemotePluginUrl(record.url);
     store.setEnabled(record.id, enabled);
     if (!enabled) {
       deactivatePlugin(record.id);
@@ -264,6 +289,15 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
     const enabled = store.getState().plugins.filter((record) => record.enabled);
     await Promise.all(
       enabled.map(async (record) => {
+        if (!record.local) {
+          try {
+            assertSecureRemotePluginUrl(record.url);
+          } catch {
+            store.setEnabled(record.id, false);
+            store.setError(`已停用不安全的旧版插件：${record.name}`);
+            return;
+          }
+        }
         try {
           const source = record.local
             ? await fetchPluginSource(withCacheBust(record.url))

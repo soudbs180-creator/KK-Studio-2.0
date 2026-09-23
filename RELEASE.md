@@ -16,4 +16,6 @@
 
 本次 2.1.0 候选包含 Agent 桌面运行时、附件/画布引用、文本/音频任务、UI/设计系统、插件/MCP 和输入交互增量。真实 Provider、ComfyUI 生成、Astra、云端账号/计费等仍按原账本保留实际边界；版本号不代表所有能力已生产验收。
 
+插件在 Web production preview 中经过验证，远程安装限可信 HTTPS 地址；Tauri Desktop 当前 CSP 阻止插件的 `blob:` 模块加载，桌面插件修复与实际交互验收列为 PLUGIN-DESKTOP-001。
+
 当前源码上传、验证和远端 PR 状态见 [verification](docs/changes/2026-09-23-release-2-1-0/verification.md)。本地源码不能冒充远端 main 已合并、GitHub CI 已通过或正式签名安装包。

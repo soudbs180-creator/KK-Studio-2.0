@@ -160,6 +160,71 @@ test("无效导出被拒绝", async () => {
   );
 });
 
+test("远程插件拒绝明文、凭据和片段地址，且不发起下载", async () => {
+  const { loader, calls } = loaderHarness();
+  for (const url of [
+    "http://cdn.example/sample.js",
+    "https://user:pass@cdn.example/sample.js",
+    "https://cdn.example/sample.js#hidden",
+  ]) {
+    await assert.rejects(() => loader.installFromUrl(url), /HTTPS 插件地址/);
+  }
+  assert.deepEqual(calls, []);
+});
+
+test("远程插件拒绝从 HTTPS 重定向到明文响应", async () => {
+  let imports = 0;
+  const loader = createPluginLoader({
+    store: createPluginStore(memoryStorage()),
+    runtime,
+    fetcher: (async () => ({
+      ok: true,
+      url: "http://cdn.example/plugin.js",
+      text: async () => "// plugin",
+    })) as typeof fetch,
+    importModule: async () => {
+      imports += 1;
+      return { default: samplePlugin() };
+    },
+  });
+  await assert.rejects(
+    () => loader.installFromUrl("https://cdn.example/plugin.js"),
+    /HTTPS 插件地址/,
+  );
+  assert.equal(imports, 0);
+});
+
+test("旧版明文插件缓存不会在启动或重新启用时执行", async () => {
+  const store = createPluginStore(memoryStorage());
+  store.upsert({
+    id: "legacy-http",
+    name: "旧版明文插件",
+    version: "1.0.0",
+    url: "http://cdn.example/plugin.js",
+    source: "// cached code",
+    enabled: true,
+  });
+  let imports = 0;
+  const loader = createPluginLoader({
+    store,
+    runtime,
+    fetcher: (async () => jsonResponse([])) as typeof fetch,
+    importModule: async () => {
+      imports += 1;
+      return { default: samplePlugin() };
+    },
+  });
+  await loader.ensurePluginsLoaded();
+  assert.equal(imports, 0);
+  assert.equal(store.getState().plugins[0].enabled, false);
+  await assert.rejects(
+    () => loader.setPluginEnabled(store.getState().plugins[0], true),
+    /HTTPS 插件地址/,
+  );
+  assert.equal(store.getState().plugins[0].enabled, false);
+  assert.equal(imports, 0);
+});
+
 test("deactivate 执行 setup/css 清理", async () => {
   loaderHarness();
   let setupRan = false;

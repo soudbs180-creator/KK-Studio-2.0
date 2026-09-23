@@ -22,8 +22,8 @@ export default function PluginManagerSettings({
       onFeedback("请输入插件 bundle 地址（ESM .js）。");
       return;
     }
-    if (!/^https?:\/\//i.test(target)) {
-      setError("仅支持 http(s) 插件地址");
+    if (!/^https:\/\//i.test(target)) {
+      setError("仅支持 HTTPS 插件地址");
       return;
     }
     const id = target.split("/").pop()?.split("?")[0] || "plugin";
@@ -128,6 +128,9 @@ export default function PluginManagerSettings({
         </div>
       ))}
       <h3 className="settings-detail-label">从 URL 安装</h3>
+      <p className="plugin-manager-trust-note">
+        远程插件会以应用权限运行。请仅安装你信任的 HTTPS 插件地址。
+      </p>
       <div className="plugin-manager-install">
         <input
           aria-label="插件地址"
@@ -150,9 +153,9 @@ export default function PluginManagerSettings({
           安装
         </button>
       </div>
-      {error && (
+      {(error || state.error) && (
         <p className="settings-network-error" role="alert">
-          {error}
+          {error || state.error}
         </p>
       )}
     </div>

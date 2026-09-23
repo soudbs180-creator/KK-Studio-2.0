@@ -462,7 +462,7 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-013-connectors.md",
-    "summary": "画布插件系统已接入：SDK 契约、节点注册表、启停 store、URL 安装/更新/卸载、节点渲染与添加菜单分组（html/markdown/sticky-note/svg 默认启用）；连接器目录页仍为硬编码清单，与插件系统未合并。",
+    "summary": "画布插件系统的 HTTPS URL 安装和内置节点在 Web preview 可用；Desktop CSP 阻止当前 blob 模块加载，待 PLUGIN-DESKTOP-001 修复。连接器目录页仍为硬编码清单，与插件系统未合并。",
     "entryPoints": ["技能页内连接器目录 ConnectorCatalog"],
     "code": [
       "src/components/ConnectorCatalog.tsx",
@@ -477,8 +477,8 @@
       "tests/browser/plugins.spec.ts",
       "tests/browser/ui-feature-parity.spec.ts"
     ],
-    "tasks": ["TASK-CAP-001", "TASK-MINIMAX-001", "TASK-UI-005"],
-    "updated": "2026-09-22",
+    "tasks": ["TASK-CAP-001", "TASK-MINIMAX-001", "TASK-UI-005", "PLUGIN-DESKTOP-001"],
+    "updated": "2026-09-23",
     "platforms": ["web", "desktop"]
   },
   {

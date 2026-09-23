@@ -29,3 +29,32 @@ test("插件分组：添加菜单列出内置插件，创建后按 plugin 变体
     /width: 320px/,
   );
 });
+
+test("插件管理拒绝明文地址并说明远程代码权限", async ({ page }, info) => {
+  let requests = 0;
+  await page.route("http://example.invalid/unsafe-plugin.js", (route) => {
+    requests += 1;
+    return route.abort();
+  });
+  await page.goto("/");
+  await page
+    .locator(".start-composer")
+    .getByRole("button", { name: "插件", exact: true })
+    .click();
+  await page.getByRole("menuitem", { name: "管理画布插件" }).click();
+  await expect(
+    page.getByText(
+      "远程插件会以应用权限运行。请仅安装你信任的 HTTPS 插件地址。",
+    ),
+  ).toBeVisible();
+  await page
+    .getByRole("textbox", { name: "插件地址" })
+    .fill("http://example.invalid/unsafe-plugin.js");
+  await page.getByRole("button", { name: "安装", exact: true }).click();
+  await expect(page.getByRole("alert")).toContainText("仅支持 HTTPS 插件地址");
+  expect(requests).toBe(0);
+  await page.screenshot({
+    path: info.outputPath("plugin-http-rejected.png"),
+    animations: "disabled",
+  });
+});

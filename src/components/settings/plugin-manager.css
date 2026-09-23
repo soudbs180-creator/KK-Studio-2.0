@@ -47,6 +47,12 @@
   display: flex;
   gap: 8px;
 }
+.plugin-manager-trust-note {
+  margin: 0;
+  color: var(--settings-muted);
+  font-size: var(--ui-font-body);
+  line-height: var(--ui-line-height-body);
+}
 .plugin-manager-install input {
   flex: 1 1 auto;
   min-width: 0;
