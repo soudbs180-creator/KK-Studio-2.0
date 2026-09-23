@@ -1,5 +1,15 @@
 # 当前进度
 
+## 2026-09-23 波次A 竞品对齐：Agent 编排与画布交付契约（分支已推送）
+
+- 按《KK-Studio-竞品对齐-项目规划》波次 A 落地领域层：对标竞品 MiniMax Design media-agent 的 Stage 状态机、canvas 交付契约与统一任务态。
+- 新增 `src/domain/stagePlan.ts`（doing/plan_review/blocked/result_review/done 五态 + CAS 乐观锁 + 非法迁移拦截 + 审批门推导 + 失败项 requeue + normalize 白名单 + zod）、`src/features/creation/taskState.ts`（9 态统一任务态契约/可重试/失败输出子集/成本估算）、`src/features/agent/orchestrator.ts`（编排器物化/审批决策/阻断/失败重试 + plan 工具面四工具，MCP 注册归 BACKEND-MCP-AUTO）。
+- 修改 `src/features/creation/model.ts`（CreationProject.stagePlans 可选字段，兼容旧快照）、`src/features/agent/agentCanvas.ts`（交付契约：无 node_id/未注册资产即拦截 + 当轮产物收集/摘要）、`src/features/agent/agentHost.ts`（可选注入 orchestrator）。
+- 验证：`npm run verify` 全绿——lint（eslint 0 + governance 66 任务 0 违规 + features 31 功能 0 违规 + markdown 83 文件 0 违规）、typecheck、399 Node 单测（新增 40 项）、ui:check（159 文件 0 违规）、format:check、300 浏览器测试；delivery:check 待本文件更新后复核。
+- 治理：功能卡 feat-030/031（PARTIAL）、registry +2、账本 +5（TASK-ORCH-001 IN_PROGRESS 唯一活动任务，TASK-ORCH-002/003 TODO，TASK-CANVAS-001/TASK-TASKSTATE-001 PARTIAL）、交付包五件套 `docs/changes/2026-09-23-agent-orchestration/`。
+- 分支 `feat/TASK-ORCH-001-agent-orchestration-closure` @ `D:/kk-studio/.worktrees/TASK-ORCH-001` 已推送 origin（commit 1863ea8，base origin/main @ 9f04bfc）。能力按 PARTIAL 标注，不冒充 REAL。
+- 后续：TaskWorkbench 阶段计划视图与审批交互（TASK-ORCH-002）、编排器驱动真实生成（TASK-ORCH-003）、plan 工具 MCP 注册（BACKEND-MCP-AUTO）、媒体真实链路（BACKEND-MEDIA-001）。
+
 ## 2026-09-23 2.1.0 源码并线与远端规则回读
 
 - [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的 head `da811283` 在 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7`；合并树与候选树相同，本地根 `main` 已快进至同一 SHA。旧 PR #8 的提交是 #9 候选的祖先，其内容被吸收，PR #8 已关闭而未重复合并。
