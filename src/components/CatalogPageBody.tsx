@@ -148,7 +148,7 @@ export default function CatalogPageBody({
     }
     return (
       <>
-        <div className="catalog-categories" role="list" aria-label="Skill分类">
+        <div className="catalog-categories" role="group" aria-label="Skill分类">
           {[
             "全部",
             "精选",
@@ -164,7 +164,8 @@ export default function CatalogPageBody({
           ].map((item) => (
             <button
               key={item}
-              className={category === item ? "is-selected" : ""}
+              className="ui-capsule"
+              aria-pressed={category === item}
               onClick={() => onCategory(item)}
             >
               {item}

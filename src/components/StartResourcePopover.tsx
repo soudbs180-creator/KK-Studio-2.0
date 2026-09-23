@@ -1,4 +1,5 @@
 import type { SkillRecord } from "../features/skills/skillRegistry";
+import ComposerPluginSummary from "./ComposerPluginSummary";
 
 export default function StartResourcePopover({
   kind,
@@ -21,7 +22,9 @@ export default function StartResourcePopover({
       role="menu"
       aria-label={skill ? "选择 Skill" : "选择插件"}
     >
-      {skill && availableSkills.length ? (
+      {!skill ? (
+        <ComposerPluginSummary />
+      ) : availableSkills.length ? (
         <div
           className="start-skill-options"
           role="group"
@@ -47,7 +50,7 @@ export default function StartResourcePopover({
         </p>
       )}
       <button type="button" role="menuitem" onClick={onOpen}>
-        {skill ? "浏览 Skill 目录" : "管理插件连接"}
+        {skill ? "浏览 Skill 目录" : "管理画布插件"}
       </button>
     </div>
   );

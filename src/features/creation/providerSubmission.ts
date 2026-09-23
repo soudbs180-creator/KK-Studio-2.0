@@ -8,6 +8,7 @@ import {
   updateProviderConnection,
 } from "./providerRegistry.ts";
 import { hasApiKey } from "./providerCredentials.ts";
+import { catalogForConnection } from "../models/modelCatalog.ts";
 
 export class ProviderSubmissionError extends Error {}
 export interface SubmissionBinding {
@@ -15,6 +16,8 @@ export interface SubmissionBinding {
   baseUrl?: string;
   credentialRef?: string;
   referenceCount: number;
+  kind?: "image" | "text";
+  model?: string;
 }
 interface SubmissionOptions {
   explicitRetry?: boolean;
@@ -72,12 +75,16 @@ export function assertSubmissionConnection(
     !connection.baseUrl ||
     !connection.credentialRef
   )
-    throw new ProviderSubmissionError(
-      "此入口只支持已配置凭据的 BYOK 图片连接。",
-    );
+    throw new ProviderSubmissionError("此入口只支持已配置凭据的 BYOK 连接。");
+  const selectedModel = catalogForConnection(connection).find(
+    (model) => model.id === binding.model,
+  );
   if (
     endpoint(connection.baseUrl) !== endpoint(binding.baseUrl) ||
-    connection.credentialRef !== binding.credentialRef
+    connection.credentialRef !== binding.credentialRef ||
+    (binding.kind === "text" &&
+      connection.model !== binding.model &&
+      selectedModel?.kind !== "text")
   )
     throw new ProviderSubmissionError(
       "绑定连接的地址或凭据身份已变化，请重新确认连接后创建任务。",
@@ -106,7 +113,10 @@ export function assertSubmissionConnection(
       "连接并发已满，请等待当前任务结束后重试。",
     );
   if (
-    !connection.capabilities.modalities.includes("image") ||
+    !(selectedModel && selectedModel.kind !== "unknown"
+      ? selectedModel.kind === (binding.kind ?? "image")
+      : connection.capabilities.modalities.includes(binding.kind ?? "image")) ||
+    (binding.kind === "text" && binding.referenceCount !== 0) ||
     !connection.capabilities.operations.includes(
       binding.referenceCount ? "edit" : "generate",
     ) ||
@@ -114,7 +124,7 @@ export function assertSubmissionConnection(
       binding.referenceCount > connection.capabilities.maxReferences)
   )
     throw new ProviderSubmissionError(
-      "连接不支持本次图片操作或参考图数量，请选择支持的连接。",
+      "连接不支持本次操作、模型或参考图数量，请选择支持的连接。",
     );
   return connection;
 }
@@ -122,6 +132,8 @@ export function assertSubmissionConnection(
 /** Credentials can await a vault; always re-read the binding afterward. */
 export async function selectSubmissionConnection(
   referenceCount: number,
+  kind: "image" | "text" = "image",
+  model?: string,
 ): Promise<ProviderConnection> {
   const candidates = readProviderConnections().sort(
     (a, b) =>
@@ -135,6 +147,8 @@ export async function selectSubmissionConnection(
       baseUrl: candidate.baseUrl,
       credentialRef: candidate.credentialRef,
       referenceCount,
+      kind,
+      model,
     };
     try {
       assertSubmissionConnection(binding);

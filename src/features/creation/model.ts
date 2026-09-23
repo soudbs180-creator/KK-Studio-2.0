@@ -36,6 +36,8 @@ export interface CreationTaskOutput {
   index: number;
   status: CreationOutputStatus;
   assetId?: string;
+  /** Bounded plain text; a running output is a draft until terminal success. */
+  text?: string;
   model: string;
   provider?: string;
   promptHash?: string;
@@ -96,6 +98,8 @@ export interface CreationTask {
   /** Provider routing is captured at submission time; it is not a secret. */
   providerBaseUrl?: string;
   providerName?: string;
+  /** Resolved provider size label (e.g. "1024x1024") captured at submission. */
+  imageSize?: string;
   /** Per-output state used by the Batch Matrix. */
   outputs?: CreationTaskOutput[];
   /** Estimate only; an actual amount is shown only when a provider reports it. */
@@ -107,6 +111,7 @@ export interface CreationTask {
 }
 
 export interface CreationProject {
+  agentGeneratedImageIds?: string[];
   canvas: ProjectCanvas;
   id: string;
   name: string;
@@ -138,6 +143,7 @@ export interface CreationSnapshot {
 }
 
 export interface CreationDraft {
+  providerConnectionId?: string;
   prompt: string;
   model: string;
   kind: CanvasItemKind;
@@ -149,6 +155,7 @@ export interface CreationDraft {
 }
 
 export interface CreateProjectInput {
+  providerConnectionId?: string;
   prompt: string;
   model: string;
   kind: CanvasItemKind;
@@ -158,6 +165,8 @@ export interface CreateProjectInput {
   providerCredentialRef?: string;
   privacyMode?: "local_only" | "byok_local" | "platform_backed";
   outputCount?: number;
+  /** Resolved provider size label (e.g. "1024x1024"); undefined sends no size. */
+  imageSize?: string;
 }
 
 export const CREATION_STORAGE_KEY = "kk-studio-next:creation:v1";
@@ -166,6 +175,12 @@ export function modelSupportsKind(
   model: string,
   kind: CanvasItemKind,
 ): boolean {
+  if (kind === "text")
+    return (
+      /\b(gpt|claude|llama|qwen|mistral|deepseek|gemini|chat|text|o[134])\b/i.test(
+        model.trim(),
+      ) && !/(image|dall[-_ ]?e|video|audio|tts|speech|embed)/i.test(model)
+    );
   if (kind !== "image") return false;
   const normalized = model.trim();
   if (!normalized) return false;
@@ -288,6 +303,10 @@ function normalizeDraft(value: unknown): CreationDraft {
     value && typeof value === "object" ? (value as Partial<CreationDraft>) : {};
   return {
     prompt: typeof candidate.prompt === "string" ? candidate.prompt : "",
+    providerConnectionId:
+      typeof candidate.providerConnectionId === "string"
+        ? candidate.providerConnectionId.slice(0, 120)
+        : undefined,
     model: typeof candidate.model === "string" ? candidate.model : "",
     kind:
       candidate.kind === "image" ||
@@ -389,9 +408,19 @@ function normalizeCanvasItem(
   const result = value.result;
   return {
     id: safeText(value.id, 160),
+    providerConnectionId:
+      typeof value.providerConnectionId === "string"
+        ? value.providerConnectionId.slice(0, 120)
+        : undefined,
+    generationSource: value.generationSource === "codex" ? "codex" : undefined,
     parameters: value.parameters
       ? {
           ratio: safeText(value.parameters.ratio, 30, "1:1"),
+          imageSize:
+            typeof value.parameters.imageSize === "string" &&
+            /^\d{2,5}x\d{2,5}$/.test(value.parameters.imageSize)
+              ? value.parameters.imageSize
+              : undefined,
           quality: safeText(value.parameters.quality, 30, "1K"),
           duration: safeText(value.parameters.duration, 10, "7"),
           count: safeText(value.parameters.count, 10, "8"),
@@ -458,7 +487,7 @@ function normalizeCanvasItem(
                 : undefined,
             text:
               typeof result.text === "string"
-                ? result.text.slice(0, 10000)
+                ? result.text.slice(0, 32768)
                 : undefined,
             description: result.description.slice(0, 500),
             source: result.source,
@@ -488,6 +517,13 @@ function normalizeProject(value: CreationProject): CreationProject {
     attachments,
     providerBaseUrl: safeBaseUrl(candidate.providerBaseUrl),
     providerName: safeText(candidate.providerName, 80) || undefined,
+    agentGeneratedImageIds: Array.isArray(candidate.agentGeneratedImageIds)
+      ? candidate.agentGeneratedImageIds
+          .filter(
+            (id): id is string => typeof id === "string" && id.length <= 250,
+          )
+          .slice(-5000)
+      : undefined,
     providerCredentialRef:
       typeof candidate.providerCredentialRef === "string" &&
       /^[A-Za-z0-9_-]{1,160}$/.test(candidate.providerCredentialRef)
@@ -608,6 +644,11 @@ function normalizeProject(value: CreationProject): CreationProject {
             : undefined,
         providerBaseUrl: safeBaseUrl(task.providerBaseUrl),
         providerName: safeText(task.providerName, 80) || undefined,
+        imageSize:
+          typeof task.imageSize === "string" &&
+          /^\d{2,5}x\d{2,5}$/.test(task.imageSize)
+            ? task.imageSize
+            : undefined,
         outputs: Array.isArray(task.outputs)
           ? task.outputs.flatMap((output) => {
               if (!output || typeof output !== "object") return [];
@@ -632,6 +673,11 @@ function normalizeProject(value: CreationProject): CreationProject {
                   assetId:
                     typeof value.assetId === "string"
                       ? value.assetId.slice(0, 160)
+                      : undefined,
+                  text:
+                    typeof value.text === "string" &&
+                    new TextEncoder().encode(value.text).length <= 32768
+                      ? value.text
                       : undefined,
                   model: safeText(value.model, 120, safeText(task.model, 120)),
                   provider:

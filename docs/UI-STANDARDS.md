@@ -1,6 +1,13 @@
 # UI 标准 · KK Studio 前端
 
-> 2026-09-07 用户追加授权：可复用的 UI 标准、校正细小偏差、统一颜色/图标、完成点击/弹层/右侧跟随加号/连线删除、以图片视频文案音频示范素材验证生成后的展示。仅前端，不接后端/API、不发布。
+## 2026-09-22 三档适配校正（现行）
+
+遵循 [Design System 1.3](DESIGN-SYSTEM.md)：手机<768、平板768–1200、电脑>1200。手机为全宽内容/底部导航与项目抽屉；平板默认72px轨道与400px对话覆盖层；电脑按真实视口排版，禁止把整页1920×1080等比缩小。1920px具名Frame保持原尺寸依据。图标槽居中、短标签不拆行、长标题省略、说明正文正常换行。
+
+以下历史章节中的61px手机常驻轨道、801–1200挤压对话、所有控件固定单行、按剩余聊天宽度缩小窄屏工作区、桌面letterbox或缩放整页均已被本条取代，不可用于新页面。三档共用状态并验证断点切换、dvh/安全区、菜单回焦和同态截图。详情见[本轮规格](changes/2026-09-22-responsive-ui/spec.md)。
+
+> 当前优先级：遵循 [Design System 1.3](DESIGN-SYSTEM.md)，其颜色和基础组件规则覆盖下面历史专项记录的冲突部分。
+> 2026-09-07 历史用户授权：可复用的 UI 标准、校正细小偏差、统一颜色/图标、完成点击/弹层/右侧跟随加号/连线删除、以图片视频文案音频示范素材验证生成后的展示。仅前端，不接后端/API、不发布。
 > 本文是新增页面与交互的统一检查表；组件与 CSS 令牌为实施入口。Figma 设计缓存来源见 `docs/reference/replan-2026-09-07/INDEX.md`；规范拆分见 `docs/superpowers/specs/2026-09-07-frontend-standards-design.md`。
 
 ## 0. 状态标注约定
@@ -8,54 +15,28 @@
 - 以下"原稿"指 Figma 设计缓存（`170:8490` 视频模块、`100:16335` 导航、`89:15928` 生成数量等已读取节点）；"工程补充"指本次授权的前端新增，未经 Figma 节点证据，**不得声称还原自未读取画板**。
 - 每个可见控件必须有真实行为，或禁用并明确原因；不伪造生成、保存、连通成功。后端未接入前，示范类操作必须显式标注"示范素材/演示处理中"。
 
-## 1. 颜色（语义令牌，禁止页面临时调色）
+## 1. 颜色与基础组件（2026-09-22替代旧规则）
 
-基础令牌 `src/styles/global.css` `:root`（dark 默认，`[data-theme="light"]` 覆盖）：
+唯一现行值表为 [Design System 1.3](DESIGN-SYSTEM.md)。旧版单独维护的色表已移除，避免双份标准再次漂移。读取 `global.css` 的双主题与8色变量，`ui-tokens.css` 的兼容别名和几何；页面禁用新颜色字面量。
 
-| 令牌                                | Dark                  | Light     | 用途                                     |
-| ----------------------------------- | --------------------- | --------- | ---------------------------------------- |
-| `--bg-app`                          | `#0a0a0a`             | `#ededed` | 应用底色                                 |
-| `--bg-surface`                      | `#161616`             | `#f7f7f7` | 画布/面板表面                            |
-| `--bg-card`                         | `#1a1a1a`             | `#eee`    | 卡片（对应原稿 `#1a1a1a` 导航/菜单底色） |
-| `--bg-card-hover`                   | `#202020`             | `#e5e5e5` | 卡片悬停                                 |
-| `--bg-input`                        | `#1f1f1f`             | `#eaeaea` | 输入框                                   |
-| `--bg-accent` / `--bg-accent-hover` | `#635bff` / `#756fff` | 同左      | 主强调                                   |
-| `--border-default`                  | `#3c3c3c`             | `#c4c4c4` | 默认边框（对应原稿 `#3c3c3c`）           |
-| `--border-subtle`                   | `#292929`             | `#dedede` | 次级边框                                 |
-| `--text-primary`                    | `#dbdbdb`             | `#252525` | 主文本（原稿正文为 `#dbdbdb`）           |
-| `--text-secondary`                  | `#858585`             | `#646464` | 次要文本                                 |
-| `--text-tertiary`                   | `#707070`             | `#777`    | 弱化文本/快捷键（对应原稿 `#707070`）    |
-| `--text-accent`                     | `#b2adff`             | `#594bcb` | 强调文本                                 |
-| `--text-danger`                     | `#ef6d6d`             | 同左      | 危险文本                                 |
-
-补充语义令牌 `src/styles/ui-tokens.css`（新增页面统一消费，禁用页内新调色）：
-
-| 令牌                                          | 含义                                                                                                      |
-| --------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `--ui-focus`                                  | 焦点描边 `#aaa3ff`（与 global 焦点一致）                                                                  |
-| `--ui-danger` / `--ui-danger-surface`         | 危险操作文字 / 危险悬停底                                                                                 |
-| `--ui-success` / `--ui-warning`               | 成功 / 警告                                                                                               |
-| `--ui-selected`                               | 选中态强调                                                                                                |
-| `--ui-neutral-selected`                       | 中性导航选中底色：深色为原稿设置页 `#3c3c3c`，浅色复用卡片悬停底                                          |
-| `--text-strong`                               | 设置页标题/控件文字：深色为 69:8087 的 `#dadada`，浅色复用主文本；不与视频来源的 `#dbdbdb` 混为同一原稿值 |
-| `--text-on-accent`                            | 强调底色上的白字与启用开关滑块                                                                            |
-| `--ui-control-off` / `--ui-control-thumb-off` | 关闭态开关轨道/滑块：深色取原稿 `#363636` / `#ccc`，浅色复用边框/表面                                     |
-| `--ui-connection`                             | 连线颜色（工程补充，默认 `#3a3a40`）                                                                      |
-| `--ui-radius-control` / `--ui-radius-card`    | 控件圆角 10px / 卡片圆角 28px                                                                             |
-| `--ui-shadow` / `--ui-space`                  | 阴影 / 间距基准 8px                                                                                       |
+- 背景层级独立：app / surface / card / input / elevated / soft / neutral-selected。
+- 文字与填充前景配对：accent + on-accent、accent-soft + on-accent-soft、status + on-status。on-accent不是恒定白色；状态色不跟随强调色。
+- 文字/占位/hover用未取整4.5:1阈值；必要图形/边界/焦点3:1；禁用与装饰例外。不能用全局brightness调色。
+- 通用Button/Input/Select为32px/r10，Select另有40px标准档；卡片bg-card/r28；菜单r12、模态面板r20、开关/徽标/胶囊r999。
+- 原稿只提供颜色块或静态截图不能证明变量绑定、组件实例和运行行为。完整勘误见 [本次审计](changes/2026-09-22-design-system/audit.md)。
 
 ## 2. 图标（来源两级，Figma 导出优先）
 
 - **Figma 导出资源**（权威，见 `public/design/figma/`）：`nav-arrange` `nav-background` `nav-chevron` `nav-lines` `nav-map` `mic` `mic-off` `timer-start` `video-label` `video-placeholder` `count-x` `generate-arrow` `search` `logo` 等；已缓存来源的 SVG 直接从原稿下载，禁止手绘替代。
 - **工程补充图标**：`src/components/UiIcon.tsx` 统一映射 Iconsax React **0.0.8** 固定版本、`variant="Linear"` 线性样式（add/delete/close/image/video/audio/text/undo/download/preview/copy/favorite/next/folder）。使用社区 React 包，npm 元数据声明 MIT，仓库为 https://github.com/rendinjast/iconsax-react；不等同于 iconsax.io 当前付费素材库授权。网站与包来源记录于 `docs/reference/frontend-standards-2026-09-07/`。
 - 规则：新图标先查 Figma 导出与 UiIcon 映射，缺失才补充 Iconsax 线性图标并在本文登记名称；不引入第二套图标库。
-- 设置页主题控件复用 69:8087 内 100:16413/100:16414 的原始导出：`settings-theme-dark.svg`（9×9）与 `settings-select-chevron.svg`（7×4）。深色选择显示月亮；其余选择保留原生 select 行为，不补画未读取状态的图标。
+- 设置主题与强调色保留原生select键盘行为，按Design System使用32px/r10。原月亮/7px箭头属于历史20px选择框资产；不再用该专项尺寸覆盖通用选择框。
 
 ## 3. 尺寸、字体、布局
 
-- 布局基准：`--sidebar-width: 287px`、`--conversation-width: 472px`、`--topbar-height: 40px`（`global.css`）。Figma 聊天内容组件为 431px 宽，外框为 472px。
-- 字体：Inter 400/500/700（@fontsource，本地打包），栈 `Inter, "Microsoft YaHei", "PingFang SC", sans-serif`；基准 13px。导航/菜单文字用 Inter Medium 500（原稿 100:16335 字重证据）。
-- 原稿几何（Figma `0nU0A7pq6eyjwfwm1TtWkO` 主画面 `1:2`）：比例按钮 75.38×31.11、功能组 196.23×31.11；工具菜单 90×50、帮助菜单 103×50；画布内框 1623×1025（x=287,y=45）。
+- 布局基准：`--sidebar-width: 291px`、`--conversation-width: 470px`、`--topbar-height: 40px`（`global.css`）。当前聊天外框470px，专项内容尺寸见UI_SPEC的最新Frame记录。
+- 字体：Inter 400/500/600/700（@fontsource，本地打包），栈 `Inter, "Microsoft YaHei", "PingFang SC", sans-serif`；基准 13px。导航/菜单文字用 Inter Medium 500（原稿 100:16335 字重证据）。
+- 历史原稿几何（仅追溯，现行尺寸见UI_SPEC；Figma `0nU0A7pq6eyjwfwm1TtWkO` 主画面 `1:2`）：比例按钮 75.38×31.11、功能组 196.23×31.11；工具菜单 90×50、帮助菜单 103×50；画布内框 1623×1025（x=287,y=45）。
 - 新增页面尺寸沿用原稿：设置 900×700（69:8087）、搜索/收藏 900×725（152:28350 / 156:28536）、资产 900×700（100:16574）与紧凑 364×700（130:17803）。
 
 ## 4. 动效（`src/styles/motion.css`）
@@ -127,7 +108,7 @@
 - 文字、图标和容器按同一组共享令牌分层：`--ui-font-caption`（11px）用于辅助信息和项目行，`--ui-font-body`（12px）用于正文和普通控件，`--ui-font-label`（14px）用于导航，`--ui-font-title`（16px）用于面板标题；禁止在单个页面重新定义同义字号。
 - 图标槽位使用 `--ui-icon-xs`（14px）、`--ui-icon-sm`（16px）、`--ui-icon-md`（20px）；侧栏图形槽使用 `--ui-icon-sidebar`（22px），导航组图标使用 `--ui-icon-nav`（10px）。普通紧凑控件使用 `--ui-control-h-compact`（30px），导航条使用 `--ui-control-h-nav`（26px），画布工具槽使用 `--ui-control-h-standard`（40px）。视觉图形可以小于槽位，但命中框和对齐基线不能跟随图形缩放漂移。
 - 间距只从 `--ui-gap-tight`（4px）、`--ui-gap-standard`（8px）、`--ui-gap-relaxed`（12px）选择。画布右上角缩放组、导航组和收起开关属于同一 `canvas-hud-right`，组间固定8px；会话标题按钮固定30×30并锚定到该基线，避免窗口缩放或聊天宽度变化造成跑偏。
-- 会话输入区始终保持单行，控件以 4px 间距和 30px 高度排列；自动/询问合并为一个模式按钮并通过弹出菜单选择。每个按钮保留可访问名称、实际动作或明确禁用原因。窄屏打开会话面板时，`useCanvasViewport`同步扣减面板宽度，工具栏与节点操作区必须保持在面板左侧。
+- 会话创作框按 `DESIGN-SYSTEM.md` 1.3：文字/附件/型号参数/操作栏进入正常流，输入自动增高至上限；电脑操作32px、触屏44px，图形20/16px。桌面一排、触屏按模型资源与发送动作分两排；单一外层文本焦点。自动/询问继续通过一个模式菜单选择，真实行为与可访问名称保留。窄屏对话覆盖时画布不接收交互，不能继续扣减画布至不可用宽度。
 - 复用检查以真实矩形为准：至少覆盖 1071×698、1440×900、1600×1047 和 1920×1080；检查导航等距、标题按钮尺寸、输入控件不溢出、工具栏与会话面板无交叠。证据写入 `docs/evidence/release-2026-09-09/ui-geometry.json` 及对应截图；`composer-fidelity.spec.ts` 同时断言标题图标 20px、输入区主图标 20px/辅助图标 16px，防止通用规则把局部图标意外压小。
 
 ## 10. 最新用途和复用契约（2026-09-08）

@@ -67,23 +67,28 @@ export default function CreationParameters({
       </div>
       <small>清晰度</small>
       {kind === "image" && (
-        <small>草稿参数 · 当前生成使用供应商默认比例与清晰度</small>
+        <small>
+          比例与清晰度会随本次生成发送；选“自适应”时使用供应商默认尺寸。
+        </small>
       )}
       {kind === "video" && (
-        <label className="video-duration">
-          时长
-          <select
-            aria-label="视频时长"
-            value={duration}
-            onChange={(e) => onDuration(e.target.value)}
-          >
-            {["5", "7", "10"].map((value) => (
-              <option key={value} value={value}>
-                {value} 秒
-              </option>
-            ))}
-          </select>
-        </label>
+        <>
+          <small>视频生成尚未接入，比例/清晰度/时长暂不发送。</small>
+          <label className="video-duration">
+            时长
+            <select
+              aria-label="视频时长"
+              value={duration}
+              onChange={(e) => onDuration(e.target.value)}
+            >
+              {["5", "7", "10"].map((value) => (
+                <option key={value} value={value}>
+                  {value} 秒
+                </option>
+              ))}
+            </select>
+          </label>
+        </>
       )}
     </div>
   );

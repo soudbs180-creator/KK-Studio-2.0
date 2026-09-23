@@ -1,9 +1,19 @@
-import { useEffect, useRef, useState, type SetStateAction } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type SetStateAction,
+} from "react";
+import { appVersion } from "./runtime/appInfo";
 import TopBar from "./components/TopBar";
 import Sidebar from "./components/Sidebar";
+import type { ModelSelection } from "./features/models/modelSelection";
 import { useSidebarLayout } from "./components/useSidebarLayout";
 import Canvas from "./components/Canvas";
 import ConversationPanel from "./components/ConversationPanel";
+import PromptLibraryPanel from "./components/PromptLibraryPanel";
 import Modal from "./components/Modal";
 import TaskExecutionApproval from "./components/TaskExecutionApproval";
 import {
@@ -35,6 +45,21 @@ import {
   type CreationTaskOutput,
   type CreateProjectInput,
 } from "./features/creation/model";
+import {
+  agentConnection,
+  readPermissionMode,
+  subscribeAgentPreferences,
+  type AgentBridge,
+} from "./features/agent/agentConnection.ts";
+
+import { pluginLoader } from "./features/plugins/pluginLoader.ts";
+import {
+  injectPluginCss,
+  setPluginRuntime,
+} from "./features/plugins/pluginRuntime.ts";
+import type { PluginAi } from "./features/plugins/pluginTypes.ts";
+import { createAgentHost } from "./features/agent/agentHost.ts";
+import type { AgentCanvasBinding } from "./components/canvas/useAgentCanvasView";
 
 function outputsForTask(task: CreationTask): CreationTaskOutput[] {
   return task.outputs?.length
@@ -62,6 +87,7 @@ import { readNativeAsset } from "./features/creation/nativeAssetAdapter";
 import {
   appendImageTask,
   appendImageTaskResults,
+  assertLiveTextTask,
   canvasImageAttachments,
   prepareImageTask,
   ImageTaskCommandError,
@@ -70,6 +96,9 @@ import {
   CanvasImageCommandContext,
   type CanvasImageRequest,
 } from "./features/creation/CanvasImageCommand";
+import { generateText } from "./features/creation/textGeneration";
+import { textTaskResult } from "./features/creation/textTaskResult";
+import { useNativeTextRecovery } from "./features/creation/useNativeTextRecovery";
 import { useCreationStorage } from "./features/creation/useCreationStorage";
 import { useAssetArchive } from "./features/creation/useAssetArchive";
 import CreationStorageNotice from "./components/CreationStorageNotice";
@@ -85,6 +114,7 @@ import {
 } from "./features/creation/providerRegistry";
 import {
   reserveProviderSubmissionAsync,
+  assertSubmissionConnection,
   type ProviderSubmissionReservation,
   ProviderSubmissionError,
 } from "./features/creation/providerSubmission";
@@ -125,38 +155,14 @@ import {
   type WorkflowRecord,
 } from "./features/comfyui/workflowRegistry";
 import "./styles/workspace.css";
-import "./styles/responsive.css";
 import "./styles/sidebar.css";
 import "./styles/account-popup.css";
 import "./styles/catalog-pages.css";
 // Keep Figma-scoped conversation geometry after the legacy workspace rules.
 import "./styles/conversation-panel.css";
+import "./styles/model-picker.css";
 import "./styles/design-surface.css";
 export default function App() {
-  useEffect(() => {
-    const updateDesignScale = (): void => {
-      if (window.innerWidth <= 1200) {
-        document.documentElement.style.removeProperty("--design-scale");
-        document.documentElement.style.removeProperty("--design-offset-y");
-        return;
-      }
-      const scale = Math.min(
-        window.innerWidth / 1920,
-        window.innerHeight / 1080,
-      );
-      document.documentElement.style.setProperty(
-        "--design-scale",
-        String(scale),
-      );
-      document.documentElement.style.setProperty(
-        "--design-offset-y",
-        `${Math.max(0, (window.innerHeight - 1080 * scale) / 2)}px`,
-      );
-    };
-    updateDesignScale();
-    window.addEventListener("resize", updateDesignScale);
-    return () => window.removeEventListener("resize", updateDesignScale);
-  }, []);
   const [active, setActive] = useState("landing");
   const [modal, setModal] = useState("");
   const [settingsSection, setSettingsSection] =
@@ -215,6 +221,12 @@ export default function App() {
     });
   }
   const taskControllers = useRef<Record<string, AbortController>>({});
+  useNativeTextRecovery(
+    creationRef,
+    taskControllers,
+    commitCreation,
+    saveState === "saved" || saveState === "saving",
+  );
   const nativeTaskRecords = useRef<Record<string, NativeTaskHostRecord>>({});
   const nativeCancelRequested = useRef(new Set<string>());
   const pausedTaskIds = useRef(new Set<string>());
@@ -228,6 +240,15 @@ export default function App() {
     ?.tasks.find((task) => task.id === pendingApproval?.taskId);
   const activeProject = creation.projects.find(
     (project) => project.id === creation.activeProjectId,
+  );
+
+  const agentPermission = useSyncExternalStore(
+    subscribeAgentPreferences,
+    readPermissionMode,
+  );
+  const agentState = useSyncExternalStore(
+    agentConnection.subscribe,
+    agentConnection.getState,
   );
   const activeProjectIdRef = useRef<string | null>(creation.activeProjectId);
   activeProjectIdRef.current = creation.activeProjectId;
@@ -354,6 +375,149 @@ export default function App() {
       ),
     );
   }
+
+  const agentSubmitRef = useRef<
+    (
+      node: CanvasCollectionItem,
+      prompt: string,
+      signal?: AbortSignal,
+    ) => Promise<{ taskId?: string; error?: string }>
+  >(async () => ({ error: "生成入口未就绪" }));
+  const agentViewRef = useRef<AgentCanvasBinding | null>(null);
+  const agentCanvasBridge = useMemo<AgentBridge>(
+    () =>
+      createAgentHost({
+        getView: () =>
+          agentViewRef.current?.projectId === activeProjectIdRef.current
+            ? agentViewRef.current.view
+            : null,
+        getProject: () =>
+          creationRef.current.projects.find(
+            (item) => item.id === activeProjectIdRef.current,
+          ),
+        commit: (project) => {
+          updateProject(project.id, () => project);
+          if (activeProjectIdRef.current === project.id)
+            replaceCanvasItems(project.items);
+        },
+        generate: (node, prompt, signal) =>
+          agentSubmitRef.current(node, prompt, signal),
+      }),
+    [],
+  );
+  agentSubmitRef.current = async (node, prompt, signal) => {
+    const project = creationRef.current.projects.find(
+      (item) => item.id === activeProjectIdRef.current,
+    );
+    const model =
+      node.model ||
+      (node.kind === "text"
+        ? readProviderConnections().find(
+            (connection) =>
+              connection.capabilities.modalities.includes("text") &&
+              (!project?.providerCredentialRef ||
+                connection.credentialRef === project.providerCredentialRef),
+          )?.model
+        : project?.model);
+    if (!model) return { error: "请先在设置中配置对应的生成模型。" };
+    let taskId: string | undefined;
+    const error = await submitImageCommand(
+      {
+        origin: "canvas",
+        input: {
+          sourceItemId: node.id,
+          prompt,
+          model,
+          count: 1,
+          signal: signal ?? new AbortController().signal,
+        },
+      },
+      (id) => {
+        taskId = id;
+      },
+    );
+    return { taskId, error };
+  };
+  useEffect(() => {
+    agentConnection.syncProject();
+  }, [creation.activeProjectId]);
+  useEffect(() => {
+    const timer = setTimeout(() => agentConnection.pushState(), 100);
+    return () => clearTimeout(timer);
+  }, [activeProject]);
+  const pluginAi: PluginAi = {
+    async generateImage(prompt, options) {
+      const project = creationRef.current.projects.find(
+        (item) => item.id === activeProjectIdRef.current,
+      );
+      if (!project) throw new Error("请先新建或打开项目后再使用插件生成。");
+      const message = await submitImageCommand({
+        origin: "plugin",
+        input: {
+          prompt,
+          model: options?.model ?? project.model,
+          kind: "image",
+          attachments: [],
+          privacyMode: project?.composerDraft.privacyMode,
+          outputCount: 1,
+        },
+      });
+      if (message) throw new Error(message);
+      return { images: [] };
+    },
+    async generateVideo(prompt, options) {
+      const project = creationRef.current.projects.find(
+        (item) => item.id === activeProjectIdRef.current,
+      );
+      if (!project) throw new Error("请先新建或打开项目后再使用插件生成。");
+      const message = await submitImageCommand({
+        origin: "plugin",
+        input: {
+          prompt,
+          model: options?.model ?? project.model,
+          kind: "video",
+          attachments: [],
+          privacyMode: project?.composerDraft.privacyMode,
+          outputCount: 1,
+        },
+      });
+      if (message) throw new Error(message);
+      return { url: "", mimeType: "video/mp4" };
+    },
+    generateText() {
+      return Promise.reject(new Error("插件文本生成请通过对话面板执行"));
+    },
+  };
+  useEffect(() => {
+    agentConnection.setBridge(agentCanvasBridge);
+    pluginLoader.setBridge(agentCanvasBridge);
+    return () => {
+      agentConnection.setBridge(null);
+      pluginLoader.setBridge(null);
+    };
+  }, [agentCanvasBridge]);
+  useEffect(() => {
+    if (
+      import.meta.env.VITE_KK_AGENT_PROXY === "1" &&
+      creation.activeProjectId
+    ) {
+      agentConnection.setCredentials("/kk-agent", "");
+      void agentConnection.connect();
+    }
+  }, [creation.activeProjectId]);
+  useEffect(() => {
+    setPluginRuntime({
+      React: React as typeof import("react"),
+      jsx: React.createElement,
+      Fragment: React.Fragment,
+      version: appVersion,
+      emit: pluginLoader.getBus().emit,
+      on: pluginLoader.getBus().on,
+      injectCSS: injectPluginCss,
+    });
+    pluginLoader.setAi(pluginAi);
+    void pluginLoader.ensurePluginsLoaded();
+  }, []);
   async function executeTask(
     projectId: string,
     taskId: string,
@@ -493,6 +657,15 @@ export default function App() {
     };
     let reservation: ProviderSubmissionReservation | undefined;
     const nativeTaskHost = usesNativeTaskHost();
+    const assertTextCurrent = () => {
+      if (task.kind === "text" && !navigator.onLine)
+        throw new Error("当前离线，未提交文本任务；草稿已保留。");
+      if (task.kind === "text")
+        assertLiveTextTask(
+          creationRef.current.projects.find((item) => item.id === projectId),
+          task,
+        );
+    };
     try {
       if (!task.providerBaseUrl)
         throw new Error("历史任务未记录供应商，请从当前输入重新提交。");
@@ -500,10 +673,13 @@ export default function App() {
         publish("succeeded");
         return;
       }
-      const compiledPrompt = compileDesignPrompt(task.prompt, {
-        referenceCount: task.attachments.length,
-        outputCount: task.requestedOutputs,
-      });
+      const compiledPrompt =
+        task.kind === "text"
+          ? task.prompt
+          : compileDesignPrompt(task.prompt, {
+              referenceCount: task.attachments.length,
+              outputCount: task.requestedOutputs,
+            });
       const promptHash = await hashPrompt(compiledPrompt);
       if (controller.signal.aborted) throw new Error("任务已停止。");
       if (!nativeTaskHost)
@@ -513,10 +689,13 @@ export default function App() {
             baseUrl: task.providerBaseUrl,
             credentialRef: task.providerCredentialRef,
             referenceCount: task.attachments.length,
+            kind: task.kind === "text" ? "text" : "image",
+            model: task.model,
           },
           { explicitRetry: explicitRetry || Boolean(task.retryOfTaskId) },
         );
       if (controller.signal.aborted) throw new Error("任务已停止。");
+      assertTextCurrent();
       outputs = outputs.map((output) =>
         output.status === "succeeded"
           ? output
@@ -530,6 +709,21 @@ export default function App() {
       await persistence.flush();
       if (nativeTaskHost) {
         if (controller.signal.aborted) throw new Error("任务已停止。");
+        assertTextCurrent();
+        const nativeConnection =
+          task.kind === "text"
+            ? assertSubmissionConnection(
+                {
+                  id: task.providerConnectionId,
+                  baseUrl: task.providerBaseUrl,
+                  credentialRef: task.providerCredentialRef,
+                  referenceCount: 0,
+                  kind: "text",
+                  model: task.model,
+                },
+                { skipCapacity: true },
+              )
+            : undefined;
         const attachments = task.attachments.map((attachment) => {
           if (!attachment.assetId)
             throw new Error(
@@ -538,6 +732,8 @@ export default function App() {
           return { assetId: attachment.assetId, name: attachment.name };
         });
         let nativeRecord = await submitNativeTask({
+          kind: task.kind === "text" ? "text" : undefined,
+          concurrencyLimit: nativeConnection?.concurrencyLimit,
           taskId: task.id,
           idempotencyKey: task.idempotencyKey,
           baseUrl: task.providerBaseUrl,
@@ -548,6 +744,7 @@ export default function App() {
           attachments,
           providerName: task.providerName,
           promptHash,
+          size: task.imageSize,
         });
         nativeTaskRecords.current[taskId] = nativeRecord;
         publish("running", undefined, "submitted");
@@ -575,7 +772,26 @@ export default function App() {
                 ? "running"
                 : nativeOutput.status;
             output.assetId = nativeOutput.assetId;
+            output.text = nativeOutput.text;
             output.error = nativeOutput.error;
+            if (task.kind === "text") {
+              if (nativeOutput.status === "succeeded") {
+                try {
+                  const item = textTaskResult(
+                    projectId,
+                    task,
+                    output.index,
+                    nativeOutput.text ?? "",
+                  );
+                  if (!createdItems.some((existing) => existing.id === item.id))
+                    createdItems.push(item);
+                } catch {
+                  output.status = "unknown";
+                  output.error = "原生文本结果缺失或无效，请先核对任务。";
+                }
+              }
+              continue;
+            }
             if (nativeOutput.status !== "succeeded" || !nativeOutput.assetId)
               continue;
             try {
@@ -725,6 +941,43 @@ export default function App() {
       publish("running", undefined, "submitted");
       await persistence.flush();
       durableSubmission = true;
+      if (task.kind === "text") {
+        const text = await generateText({
+          prompt: task.prompt,
+          model: task.model,
+          providerBaseUrl: task.providerBaseUrl,
+          credentialRef: task.providerCredentialRef,
+          idempotencyKey: task.idempotencyKey,
+          signal: controller.signal,
+          beforeRequest: () => {
+            assertTextCurrent();
+            reservation!.assertCurrent();
+          },
+          onRequestStart: () => {
+            providerRequestStarted = true;
+          },
+          onText: (value) => {
+            if (controller.signal.aborted) return;
+            outputs[0] = { ...outputs[0], text: value };
+            publish("running", undefined, "submitted");
+          },
+        });
+        if (controller.signal.aborted) throw new Error("任务已停止。");
+        createdItems.push(
+          textTaskResult(projectId, task, outputs[0].index, text),
+        );
+        outputs[0] = {
+          ...outputs[0],
+          status: "succeeded",
+          text,
+          error: undefined,
+        };
+        publish("succeeded", undefined, "terminal");
+        await persistence.flush();
+        if (task.providerConnectionId && reservation?.healthUnchanged())
+          markProviderConnectionHealthy(task.providerConnectionId);
+        return;
+      }
       const generated = await generateImages({
         prompt: compiledPrompt,
         model: task.model,
@@ -734,6 +987,7 @@ export default function App() {
         credentialRef: task.providerCredentialRef,
         count: pendingIndices.length,
         idempotencyKey: `${task.idempotencyKey}-remaining-${pendingIndices.join("-")}`,
+        size: task.imageSize,
         beforeRequest: () => reservation!.assertCurrent(),
         onRequestStart: () => {
           providerRequestStarted = true;
@@ -1017,6 +1271,19 @@ export default function App() {
       controller.abort("user");
       return;
     }
+    const recovered = creationRef.current.projects
+      .flatMap((project) => project.tasks)
+      .find(
+        (task) =>
+          task.id === taskId &&
+          task.kind === "text" &&
+          (task.submissionState === "submitted" ||
+            task.submissionState === "unknown"),
+      );
+    if (usesNativeTaskHost() && recovered) {
+      void cancelNativeTask(taskId).catch(() => undefined);
+      return;
+    }
     const project = creationRef.current.projects.find((item) =>
       item.tasks.some((task) => task.id === taskId && task.status === "queued"),
     );
@@ -1243,8 +1510,12 @@ export default function App() {
   }
   async function submitImageCommand(
     request:
-      | { origin: "home" | "chat"; input: CreateProjectInput }
+      | {
+          origin: "home" | "chat" | "agent" | "plugin";
+          input: CreateProjectInput;
+        }
       | { origin: "canvas"; input: CanvasImageRequest },
+    onAccepted?: (taskId: string) => void,
   ): Promise<string | undefined> {
     if (submitLock.current) return "正在提交图片任务，请稍候。";
     if (!["saved", "saving"].includes(persistence.state))
@@ -1290,16 +1561,43 @@ export default function App() {
       if (request.origin === "canvas") {
         sourceItemId = request.input.sourceItemId;
         const source = original!.items.find((item) => item.id === sourceItemId);
-        if (!source || source.kind !== "image")
-          return "来源图片节点已删除，当前未提交生成。";
+        if (!source || (source.kind !== "image" && source.kind !== "text"))
+          return "来源节点已删除或不支持，当前未提交生成。";
         sourceSignature = canvasSignature(original!, source.id);
+        if (source.generationSource === "codex") {
+          if (
+            original!.canvas.edges.some(
+              (edge) =>
+                edge.target === source.id &&
+                edge.kind !== "result" &&
+                original!.items.find((item) => item.id === edge.source)
+                  ?.kind !== "text",
+            ) ||
+            source.assetId
+          )
+            return "Codex 卡片入口暂不接收参考图片，请选择支持编辑的 API 连接。";
+          if (signal?.aborted) return "已取消提交";
+          return agentConnection.generateFromCanvas({
+            nodeId: source.id,
+            prompt: request.input.prompt,
+            model: request.input.model,
+            count: request.input.count,
+            kind: source.kind,
+          });
+        }
         input = {
           prompt: request.input.prompt,
           model: request.input.model,
-          kind: "image",
-          attachments: await canvasImageAttachments(original!, source),
+          providerConnectionId: source.providerConnectionId,
+          kind: source.kind,
+          attachments:
+            source.kind === "text"
+              ? []
+              : await canvasImageAttachments(original!, source),
           outputCount: request.input.count,
           privacyMode: original!.composerDraft.privacyMode,
+          imageSize:
+            source.kind === "text" ? undefined : source.parameters?.imageSize,
         };
       } else input = structuredClone(request.input);
       if (signal?.aborted) return "已取消提交，草稿和参考图已保留。";
@@ -1369,6 +1667,14 @@ export default function App() {
       // The queued task and its stable idempotency key must survive a crash
       // before any provider request is allowed to start.
       await persistence.flush();
+      if (
+        signal?.aborted ||
+        (projectId && activeProjectIdRef.current !== projectId)
+      ) {
+        cancelTask(appended.task.id);
+        return "已取消提交，任务未发送。";
+      }
+      onAccepted?.(appended.task.id);
       void executeTask(nextProject.id, appended.task.id, nextProject);
       return undefined;
     } catch (error) {
@@ -1398,6 +1704,7 @@ export default function App() {
       input: {
         prompt: message,
         model: project.model,
+        providerConnectionId: project.composerDraft.providerConnectionId,
         kind: project.kind,
         attachments: project.composerDraft.attachments,
         privacyMode: project.composerDraft.privacyMode,
@@ -1415,19 +1722,36 @@ export default function App() {
     }));
   }
 
-  function handleProjectModelChange(model: string): void {
+  function handleProjectModelChange(
+    model: string,
+    selection?: ModelSelection,
+  ): void {
     if (!activeProject) return;
     const updated = {
       ...activeProject,
       model,
+      kind:
+        selection?.kind === "text" || selection?.kind === "image"
+          ? selection.kind
+          : activeProject.kind,
       composerDraft: {
         ...activeProject.composerDraft,
         model,
+        providerConnectionId: selection?.connectionId,
         updatedAt: Date.now(),
       },
       items: activeProject.items.map((item) =>
         item.id === rootItemId(activeProject)
-          ? { ...item, model, description: `${model} · 待执行` }
+          ? {
+              ...item,
+              model,
+              providerConnectionId: selection?.connectionId,
+              generationSource: undefined,
+              parameters: item.parameters
+                ? { ...item.parameters, imageSize: undefined }
+                : undefined,
+              description: `${model} · 待执行`,
+            }
           : item,
       ),
       updatedAt: Date.now(),
@@ -1552,6 +1876,7 @@ export default function App() {
       // Browser storage can be denied; retain the default theme preferences.
     }
     const apply = () => {
+      document.documentElement.dataset.accent = preferences.accent;
       document.documentElement.dataset.theme =
         preferences.theme === "system"
           ? media.matches
@@ -1654,20 +1979,30 @@ export default function App() {
     <div
       className="app"
       data-design-surface="desktop"
+      data-responsive-surface={sidebar.surface}
       data-runtime-entry="src/main.tsx"
       data-runtime-mode={import.meta.env.MODE}
     >
       <TopBar
         onOpen={open}
         onToggleSidebar={sidebar.toggle}
-        onToggleChat={() => setChat(!chat)}
+        onToggleChat={() => {
+          if (sidebar.narrow) {
+            setChat(true);
+            setMobileChat((current) => !current);
+          } else setChat((current) => !current);
+        }}
       />
       <div className="app-body">
+        {sidebar.narrow && !sidebar.collapsed && (
+          <div className="sidebar-scrim" aria-hidden="true" />
+        )}
         <Sidebar
           active={active}
           onNavigate={open}
           collapsed={sidebar.collapsed}
           narrow={sidebar.narrow}
+          phone={sidebar.surface === "phone"}
           onCollapse={sidebar.toggle}
         />
         <main className={"workspace " + (mobileChat ? "chat-mobile" : "")}>
@@ -1686,7 +2021,8 @@ export default function App() {
               onDraftChange={updateHomeDraft}
               onOpenModel={() => open("settings/providers")}
               onOpenSkills={() => open("skills")}
-              onOpenPlugins={() => open("settings/mcp")}
+              onOpenPlugins={() => open("settings/plugins")}
+              onOpenPrompts={() => open("prompts")}
               skills={skillRegistry.listRecords()}
               onApplySkill={applySkillToHome}
               defaultModel={(() => {
@@ -1702,58 +2038,6 @@ export default function App() {
             />
           )}
           <div className="workspace-content" hidden={active !== "workspace"}>
-            {activeProject && (
-              <div className="project-task-status" aria-live="polite">
-                <strong>{activeProject.name}</strong>
-                {activeProject.tasks.slice(-1).map((task) => (
-                  <span key={task.id} className={`project-task-${task.status}`}>
-                    {task.status === "queued"
-                      ? "排队中"
-                      : task.status === "running"
-                        ? "正在生成"
-                        : task.status === "unknown"
-                          ? "受理状态不明 · 请核对供应商"
-                          : task.status === "partial"
-                            ? `部分完成（${task.completedOutputs}/${task.requestedOutputs}）`
-                            : task.status === "succeeded"
-                              ? "已完成"
-                              : task.status === "offline"
-                                ? "网络断开"
-                                : task.status === "cancelled"
-                                  ? "已取消"
-                                  : task.status === "interrupted"
-                                    ? "上次任务未完成"
-                                    : `失败：${task.error ?? "请重试"}`}
-                    {task.status === "running" && (
-                      <button type="button" onClick={() => cancelTask(task.id)}>
-                        取消
-                      </button>
-                    )}
-                    {(task.status === "partial" ||
-                      task.status === "failed" ||
-                      task.status === "offline" ||
-                      task.status === "cancelled" ||
-                      task.status === "interrupted") && (
-                      <button
-                        type="button"
-                        onClick={() => retryTask(activeProject.id, task.id)}
-                      >
-                        重试
-                      </button>
-                    )}
-                  </span>
-                ))}
-                <span className="project-save-state" aria-live="polite">
-                  {saveState === "loading"
-                    ? "读取中…"
-                    : saveState === "saving"
-                      ? "保存中…"
-                      : saveState === "saved"
-                        ? "已保存"
-                        : "未保存 · 请查看恢复提示"}
-                </span>
-              </div>
-            )}
             <CanvasImageCommandContext.Provider
               value={{
                 submit: (input) =>
@@ -1761,6 +2045,23 @@ export default function App() {
                 cancel: cancelTask,
                 tasks: activeProject?.tasks ?? [],
                 model: activeProject?.model ?? "",
+                providerConnectionId:
+                  activeProject?.composerDraft.providerConnectionId ??
+                  activeProject?.tasks.at(-1)?.providerConnectionId ??
+                  readProviderConnections().find(
+                    (connection) =>
+                      connection.baseUrl === activeProject?.providerBaseUrl &&
+                      connection.credentialRef ===
+                        activeProject?.providerCredentialRef,
+                  )?.id,
+                textModel:
+                  readProviderConnections().find(
+                    (connection) =>
+                      connection.capabilities.modalities.includes("text") &&
+                      (!activeProject?.providerCredentialRef ||
+                        connection.credentialRef ===
+                          activeProject.providerCredentialRef),
+                  )?.model ?? "",
                 models: [
                   ...new Set(
                     [
@@ -1777,8 +2078,77 @@ export default function App() {
               }}
             >
               <Canvas
+                projectStatus={
+                  activeProject && (
+                    <div className="project-task-status" aria-live="polite">
+                      <strong title={activeProject.name}>
+                        {activeProject.name}
+                      </strong>
+                      {activeProject.tasks.slice(-1).map((task) => (
+                        <span
+                          key={task.id}
+                          className={`project-task-${task.status}`}
+                        >
+                          {task.status === "queued"
+                            ? "排队中"
+                            : task.status === "running"
+                              ? "正在生成"
+                              : task.status === "unknown"
+                                ? "受理状态不明 · 请核对供应商"
+                                : task.status === "partial"
+                                  ? `部分完成（${task.completedOutputs}/${task.requestedOutputs}）`
+                                  : task.status === "succeeded"
+                                    ? "已完成"
+                                    : task.status === "offline"
+                                      ? "网络断开"
+                                      : task.status === "cancelled"
+                                        ? "已取消"
+                                        : task.status === "interrupted"
+                                          ? "上次任务未完成"
+                                          : `失败：${task.error ?? "请重试"}`}
+                          {task.status === "running" && (
+                            <button
+                              className="ui-button"
+                              type="button"
+                              onClick={() => cancelTask(task.id)}
+                            >
+                              取消
+                            </button>
+                          )}
+                          {(task.status === "partial" ||
+                            task.status === "failed" ||
+                            task.status === "offline" ||
+                            task.status === "cancelled" ||
+                            task.status === "interrupted") && (
+                            <button
+                              className="ui-button"
+                              type="button"
+                              onClick={() =>
+                                retryTask(activeProject.id, task.id)
+                              }
+                            >
+                              重试
+                            </button>
+                          )}
+                        </span>
+                      ))}
+                      <span className="project-save-state">
+                        {saveState === "loading"
+                          ? "读取中…"
+                          : saveState === "saving"
+                            ? "保存中…"
+                            : saveState === "saved"
+                              ? "已保存"
+                              : "未保存 · 请查看恢复提示"}
+                      </span>
+                    </div>
+                  )
+                }
                 key={`${activeProject?.id ?? "demo-canvas"}:${persistence.loadEpoch}`}
                 initialCanvas={activeProject?.canvas}
+                projectId={activeProject?.id}
+                agentViewRef={agentViewRef}
+                onAgentViewChange={() => agentConnection.pushState()}
                 onCanvasChange={
                   activeProject
                     ? (canvas) =>
@@ -1797,6 +2167,7 @@ export default function App() {
                   if (activeProject) retryTask(activeProject.id, taskId);
                 }}
                 chatOpen={chat}
+                covered={sidebar.narrow && mobileChat && chat}
                 onOpenChat={() => {
                   setChat(true);
                   setMobileChat(true);
@@ -1811,6 +2182,7 @@ export default function App() {
             </CanvasImageCommandContext.Provider>
             <div className={"chat-container " + (!chat ? "chat-hidden" : "")}>
               <ConversationPanel
+                overlay={sidebar.narrow && mobileChat && chat}
                 onOpen={open}
                 project={activeProject}
                 currentModel={activeProject?.model}
@@ -1835,6 +2207,47 @@ export default function App() {
                 skills={skillRegistry.listRecords()}
                 onApplySkill={applySkillToProject}
                 voiceEnabled={active === "workspace" && chat}
+                agent={
+                  activeProject
+                    ? {
+                        connected: agentState.status === "connected",
+                        connectionRevision: agentState.connectionRevision,
+                        conversation: agentState.conversation,
+                        preparing: agentState.preparing,
+                        connecting: agentState.status === "connecting",
+                        error: agentState.error,
+                        usage: agentState.usage,
+                        usageError: agentState.usageError,
+                        onRefreshUsage: () => {
+                          void agentConnection.refreshUsage();
+                        },
+                        models: agentState.models.map(
+                          (model) => model.model || model.id,
+                        ),
+                        onConnect: (fresh) => {
+                          void agentConnection.connect(fresh);
+                        },
+                        sending: agentState.sending,
+                        activity: agentState.activity,
+                        messages: agentState.messages,
+                        pendingApproval: agentState.pendingApproval,
+                        permissionMode: agentPermission,
+                        onPermissionModeChange: (mode) =>
+                          agentConnection.setPermissionMode(mode),
+                        canvasImages: activeProject.items.filter(
+                          (item) => item.kind === "image" && item.assetId,
+                        ),
+                        onSend: (message, attachments) =>
+                          // 不传 model：Codex 使用其账号默认模型（如 gpt-6-astra）。
+                          // 项目模型是本地生成链路的模型，与 Codex 账号支持的模型集不同，
+                          // 传过去会导致 ChatGPT 账号报 "model is not supported"。
+                          agentConnection.sendMessage(message, { attachments }),
+                        onInterrupt: () => agentConnection.interrupt(),
+                        onDecision: (decision) =>
+                          agentConnection.resolveApproval(decision),
+                      }
+                    : undefined
+                }
                 onClose={() => {
                   const focusAtClose = document.activeElement;
                   setChat(false);
@@ -1899,15 +2312,17 @@ export default function App() {
           title={
             ["search", "favorites", "likes"].includes(modal)
               ? "搜索与收藏"
-              : modal === "settings"
-                ? "设置"
-                : modal === "assets"
-                  ? "资产管理"
-                  : modal === "shortcuts"
-                    ? "快捷按键"
-                    : modal === "tasks"
-                      ? "任务列表"
-                      : "使用说明"
+              : modal === "prompts"
+                ? "提示词库"
+                : modal === "settings"
+                  ? "设置"
+                  : modal === "assets"
+                    ? "资产管理"
+                    : modal === "shortcuts"
+                      ? "快捷按键"
+                      : modal === "tasks"
+                        ? "任务列表"
+                        : "使用说明"
           }
           onClose={() => setModal("")}
         >
@@ -1924,6 +2339,38 @@ export default function App() {
               onToggleFavorite={toggleFavorite}
               onToggleLike={toggleLike}
               onRename={renameCanvasItem}
+            />
+          ) : modal === "prompts" ? (
+            <PromptLibraryPanel
+              target={
+                active === "workspace" && activeProject
+                  ? "图片对话草稿"
+                  : "首页草稿"
+              }
+              onClose={() => setModal("")}
+              onApply={(text) => {
+                const project =
+                  active === "workspace" ? activeProject : undefined;
+                const draft =
+                  project?.composerDraft ?? creationRef.current.homeDraft;
+                const prompt = [draft.prompt.trimEnd(), text]
+                  .filter(Boolean)
+                  .join("\n\n");
+                if (prompt.length > 4000)
+                  return "加入后超过 4,000 字符，请先精简草稿或选择更短的提示词。";
+                if (project)
+                  updateProject(project.id, (current) => ({
+                    ...current,
+                    composerDraft: {
+                      ...current.composerDraft,
+                      prompt,
+                      updatedAt: Date.now(),
+                    },
+                    updatedAt: Date.now(),
+                  }));
+                else
+                  updateHomeDraft({ ...draft, prompt, updatedAt: Date.now() });
+              }}
             />
           ) : modal === "shortcuts" ? (
             <ShortcutsPanel onClose={() => setModal("")} />
@@ -1983,3 +2430,9 @@ import "./styles/motion.css";
 
 import "./styles/catalog.css";
 import "./styles/task-workbench.css";
+
+import "./styles/feature-parity.css";
+// Screen layout is the final owner; imports in components execute earlier.
+import "./styles/responsive.css";
+import "./styles/responsive-content.css";
+import "./styles/composer.css";

@@ -7,6 +7,7 @@ export type SettingsSection =
   | "providers"
   | "skills"
   | "mcp"
+  | "plugins"
   | "comfy"
   | "advanced"
   | "updates";
@@ -24,7 +25,8 @@ export const SETTINGS_SECTIONS: {
   { id: "providers", label: "模型供应商", offset: 263 },
   { id: "skills", label: "Skill", offset: 318 },
   { id: "mcp", label: "MCP", offset: 373 },
-  { id: "comfy", label: "Comfy UI", offset: 424 },
-  { id: "advanced", label: "高级", offset: 476 },
-  { id: "updates", label: "软件更新", offset: 528 },
+  { id: "plugins", label: "插件", offset: 424 },
+  { id: "comfy", label: "Comfy UI", offset: 473 },
+  { id: "advanced", label: "高级", offset: 525 },
+  { id: "updates", label: "软件更新", offset: 577 },
 ];

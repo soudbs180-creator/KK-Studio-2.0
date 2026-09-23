@@ -87,6 +87,7 @@ test("图片和视频占位图共享统一视觉尺寸", async ({ page }) => {
 
 test("对话空态在消息区垂直居中，语音输入默认关闭且可用", async ({ page }) => {
   await openWorkspace(page);
+  await page.getByLabel("执行方式").selectOption("direct");
   const messages = page.locator(".conversation-messages");
   const empty = page.locator(".conversation-empty");
   const messagesBox = (await messages.boundingBox())!;
@@ -104,19 +105,19 @@ test("对话空态在消息区垂直居中，语音输入默认关闭且可用",
   await expect(voice).toBeEnabled();
   await expect(voice).toHaveAttribute("aria-pressed", "false");
   await expect(voice).toHaveCSS("opacity", "1");
-  // Latest Frame 404:28667: 22px voice slot inside a 24px action row.
-  await expect(voice).toHaveCSS("height", "22px");
+  // DS 1.3 separates the 32px desktop target from the 16px source glyph.
+  await expect(voice).toHaveCSS("height", "32px");
   await expect(voice.locator("img")).toHaveAttribute(
     "src",
     "/design/figma/mic-off.svg",
   );
   await expect(page.locator(".chat-composer textarea")).toHaveCSS(
     "font-size",
-    "10px",
+    "14px",
   );
   await expect(page.locator(".chat-composer textarea")).toHaveCSS(
     "line-height",
-    "12px",
+    "20px",
   );
   const mode = page.getByRole("button", { name: "AI权限模式" });
   await expect(mode).toHaveText("自动");
@@ -202,9 +203,7 @@ test("未分组项目显示置顶和更多设置，并可改名后恢复删除",
   ).toBeVisible();
 });
 
-test("文案卡在卡片内提供四种提示词动作，并把编辑用途标成优化", async ({
-  page,
-}) => {
+test("文案卡四种写作方式实际更新指令", async ({ page }) => {
   await openWorkspace(page);
   await page.getByRole("button", { name: "从图片创建卡片添加下游" }).click();
   await page.getByRole("menuitem", { name: "文本", exact: true }).click();
@@ -214,7 +213,9 @@ test("文案卡在卡片内提供四种提示词动作，并把编辑用途标�
   await page.keyboard.press("Enter");
   const card = node.locator(".prompt-creation");
   await expect(card.locator(".prompt-presets button")).toHaveCount(4);
-  await expect(card.getByText("提示词优化", { exact: true })).toBeVisible();
+  await expect(
+    card.getByText("写作指令可直接编辑", { exact: true }),
+  ).toBeVisible();
   await card.getByRole("button", { name: "剧本生成", exact: true }).click();
-  await expect(card).toContainText("剧本生成：请在下方输入区继续编辑。");
+  await expect(card.getByLabel("文案提示词")).toHaveValue(/请.*剧本/);
 });

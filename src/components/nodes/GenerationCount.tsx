@@ -4,6 +4,7 @@ import "../../styles/generation-count.css";
 const COUNTS = ["1", "2", "4", "6", "8"];
 
 interface GenerationCountProps {
+  maxCount?: number;
   value: string;
   open: boolean;
   onToggle: () => void;
@@ -15,8 +16,10 @@ export default function GenerationCount({
   open,
   onToggle,
   onChange,
+  maxCount = 8,
 }: GenerationCountProps) {
   const slider = useRef<HTMLInputElement>(null);
+  const counts = COUNTS.filter((count) => Number(count) <= maxCount);
   useEffect(() => {
     if (open) slider.current?.focus({ preventScroll: true });
   }, [open]);
@@ -45,15 +48,15 @@ export default function GenerationCount({
             ref={slider}
             type="range"
             min={0}
-            max={4}
+            max={counts.length - 1}
             step={1}
-            value={COUNTS.indexOf(value)}
+            value={Math.max(0, counts.indexOf(value))}
             aria-label="生成数量"
             aria-valuetext={value}
-            onChange={(event) => onChange(COUNTS[Number(event.target.value)])}
+            onChange={(event) => onChange(counts[Number(event.target.value)])}
           />
           <div className="count-stops">
-            {COUNTS.map((count) => (
+            {counts.map((count) => (
               <button
                 key={count}
                 aria-label={`生成 ${count} 个`}

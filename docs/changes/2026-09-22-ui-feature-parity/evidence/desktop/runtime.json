@@ -1,0 +1,151 @@
+{
+  "timestamp": "2026-09-22T13:04:48.241Z",
+  "mode": "Tauri release",
+  "data": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui-parity-desktop-7JRDUq\\data",
+  "profile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui-parity-desktop-7JRDUq\\profile",
+  "matrix": [
+    {
+      "theme": "dark",
+      "accent": "default",
+      "agentVisible": true
+    },
+    {
+      "theme": "dark",
+      "accent": "blue",
+      "agentVisible": true
+    },
+    {
+      "theme": "dark",
+      "accent": "green",
+      "agentVisible": true
+    },
+    {
+      "theme": "dark",
+      "accent": "yellow",
+      "agentVisible": true
+    },
+    {
+      "theme": "dark",
+      "accent": "pink",
+      "agentVisible": true
+    },
+    {
+      "theme": "dark",
+      "accent": "orange",
+      "agentVisible": true
+    },
+    {
+      "theme": "dark",
+      "accent": "purple",
+      "agentVisible": true
+    },
+    {
+      "theme": "dark",
+      "accent": "white",
+      "agentVisible": true
+    },
+    {
+      "theme": "light",
+      "accent": "default",
+      "agentVisible": true
+    },
+    {
+      "theme": "light",
+      "accent": "blue",
+      "agentVisible": true
+    },
+    {
+      "theme": "light",
+      "accent": "green",
+      "agentVisible": true
+    },
+    {
+      "theme": "light",
+      "accent": "yellow",
+      "agentVisible": true
+    },
+    {
+      "theme": "light",
+      "accent": "pink",
+      "agentVisible": true
+    },
+    {
+      "theme": "light",
+      "accent": "orange",
+      "agentVisible": true
+    },
+    {
+      "theme": "light",
+      "accent": "purple",
+      "agentVisible": true
+    },
+    {
+      "theme": "light",
+      "accent": "white",
+      "agentVisible": true
+    }
+  ],
+  "sections": [],
+  "launches": [
+    {
+      "pid": 3816,
+      "url": "http://tauri.localhost/",
+      "storageRoot": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui-parity-desktop-7JRDUq\\data",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "loaded": [
+        {
+          "asset": "/assets/index-fbRbLyGq.js",
+          "sha256": "179f4786e8107a8e830c62564ae1af6fdefe816cacd7fd65355785f7f00e29eb",
+          "bytes": 745378
+        },
+        {
+          "asset": "/assets/index-C-iCNdfc.css",
+          "sha256": "da3028acfa76801b507777d5683e3fc229d5cdce5af92847039f3b21405ddf2c",
+          "bytes": 202892
+        }
+      ]
+    },
+    {
+      "pid": 54096,
+      "url": "http://tauri.localhost/",
+      "storageRoot": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui-parity-desktop-7JRDUq\\data",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "loaded": [
+        {
+          "asset": "/assets/index-fbRbLyGq.js",
+          "sha256": "179f4786e8107a8e830c62564ae1af6fdefe816cacd7fd65355785f7f00e29eb",
+          "bytes": 745378
+        },
+        {
+          "asset": "/assets/index-C-iCNdfc.css",
+          "sha256": "da3028acfa76801b507777d5683e3fc229d5cdce5af92847039f3b21405ddf2c",
+          "bytes": 202892
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "exe": {
+    "path": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+    "sha256": "a592c1f961ff8d1d50b664179b114ce30eb9b150eb6ad51de533abc423060ef3"
+  },
+  "flows": {
+    "promptApplied": true,
+    "agentFixtureRequest": true,
+    "stopErrorAndRetry": true,
+    "tokenNotPersisted": true
+  },
+  "restart": {
+    "draftPreserved": true,
+    "promptCachePreserved": true,
+    "tokenCleared": true,
+    "agentDisconnected": true
+  }
+}

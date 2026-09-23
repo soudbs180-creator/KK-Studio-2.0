@@ -1,6 +1,9 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+#[cfg(windows)]
+mod agent_process;
+mod agent_runtime;
 mod asset_storage;
 mod creation_storage;
 mod project_package;
@@ -12,7 +15,7 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
-use tauri::{AppHandle, Emitter, State};
+use tauri::{AppHandle, Emitter, Manager, State};
 use zeroize::Zeroize;
 
 // ========== 配置结构 ==========
@@ -1090,6 +1093,14 @@ fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
+        .manage(agent_runtime::AgentRuntime::new(
+            paths
+                .tasks
+                .parent()
+                .expect("data root")
+                .join("app")
+                .join("agent"),
+        ))
         .manage(AppState {
             config: Mutex::new(config),
             config_path,
@@ -1100,6 +1111,9 @@ fn main() {
             restored_roots: Mutex::new(std::collections::HashSet::new()),
         })
         .invoke_handler(tauri::generate_handler![
+            agent_runtime::agent_runtime_start,
+            agent_runtime::agent_runtime_status,
+            agent_runtime::agent_runtime_stop,
             credential_set,
             credential_get,
             credential_delete,
@@ -1131,8 +1145,13 @@ fn main() {
             task_host_list,
             task_host_cancel,
         ])
-        .run(tauri::generate_context!())
-        .expect("error while running kk Studio application");
+        .build(tauri::generate_context!())
+        .expect("error while building kk Studio application")
+        .run(|app, event| {
+            if matches!(event, tauri::RunEvent::Exit) {
+                app.state::<agent_runtime::AgentRuntime>().shutdown();
+            }
+        });
 }
 
 #[cfg(test)]

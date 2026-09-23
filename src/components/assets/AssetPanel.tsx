@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { X, Plus, Upload, ArrowLeft } from "lucide-react";
+import { X, ArrowLeft } from "lucide-react";
 import {
   filterAssets,
   type Asset,
@@ -14,6 +14,7 @@ import AssetFilterControls from "./AssetFilterControls";
 import useAssetCollections from "./useAssetCollections";
 import type { AssetArchiveState } from "../../features/creation/useAssetArchive";
 import useAssetDetail from "./useAssetDetail";
+import AssetActions from "./AssetActions";
 
 export interface AssetPanelProps {
   onClose: () => void;
@@ -247,22 +248,14 @@ export default function AssetPanel({
         </button>
       )}
       {tab === "assets" && (
-        <div className="asset-bottom-actions">
-          <button
-            className="primary-button"
-            onClick={() => {
-              setCreating(true);
-              setMessage("");
-            }}
-          >
-            <Plus size={11} />
-            创建主体
-          </button>
-          <button disabled={busy} onClick={() => input.current?.click()}>
-            <Upload size={11} />
-            {busy ? "正在导入" : "导入资源包"}
-          </button>
-        </div>
+        <AssetActions
+          busy={busy}
+          onCreate={() => {
+            setCreating(true);
+            setMessage("");
+          }}
+          onImport={() => input.current?.click()}
+        />
       )}
       <input
         className="visually-hidden"

@@ -1,0 +1,50 @@
+{
+  "src/styles/ui-tokens.css": {
+    "baseline": "a145ed9b3e92865e71321127d7315b148eaa86fff2efbdb1bf5ea9a77946eaed",
+    "candidate": "f9a84a401146eb3e47a6508505fa3cfc7c8aa0343e716a77c3aaabce59e0df9e"
+  },
+  "src/styles/catalog-pages.css": {
+    "baseline": "ef2dcdadc197b813e00bbfc0f4a55ebc7c464f0c7b27be77014adcd51eb5586e",
+    "candidate": "3f131ef64d8a3cd90a6d3494565fefa4da174fde641bede1b89fe06f5eb04588"
+  },
+  "src/styles/sidebar.css": {
+    "baseline": "9bf026f9cc06d44de26c954adf25a6ef3051dcc21da938a6f1cd69592d61ca47",
+    "candidate": "6d493e1da86a77e892d8b520f36805f23e998ea7c6e2e971b2b1259f5c916e39"
+  },
+  "src/components/SkillEditor.tsx": {
+    "baseline": "9167bf2164f9b6393bc847fa18cead2959d7e0aedb17b999b6c8fdb5fe755118",
+    "candidate": "15cafdd020586e017b7bd265f30803c1bbc8b183ff583a12b83d2d232082e58a"
+  },
+  "src/components/SkillCollection.tsx": {
+    "baseline": "35ffa971349fd9c634df9d5ef5a00bc4ecb36b91c3c57148c8d36d1208ac3310",
+    "candidate": "6bcfb32fd1c5140ad73e371029417084922702d18a52ec1597da40b40c781536"
+  },
+  "src/components/CatalogPageBody.tsx": {
+    "baseline": "2261fdb8f1b14c48731f63e41b31c0ef825bea005319add6f791103d42f8806f",
+    "candidate": "7524ad2aeaa6853d72e15e6d216ab60e0c5a43e864c575091e2159b3e9a78d67"
+  },
+  "src/components/settings/settings.css": {
+    "baseline": "df5ed28737ee04b6b799bb22670ea349975579e9811857c377bdb8b3c519a789",
+    "candidate": "a282fc46d7e599921571a9f50e77e317d97505067db4cd8d6c5ca1b558a6ebc8"
+  },
+  "src/components/settings/plugin-manager.css": {
+    "baseline": "dc67a385fa8e837680346345e5438770f3f4b8d80e2534a56a3d0b10859d4556",
+    "candidate": "0a781af046068119417b14709820329bd008a4c51d89163a875527207cfbcc6b"
+  },
+  "tests/browser/design-system-pages.spec.ts": {
+    "baseline": null,
+    "candidate": "264bec9fea652fa3652365cbaa17c6c3d2e169e584bf3f11f786adfe530e69bd"
+  },
+  "scripts/audit/check-design-system-desktop.mjs": {
+    "baseline": null,
+    "candidate": "13102f0891ac8ead73dbe14ff38f79fcddc2ce99803b1ea00746cc49379f70d3"
+  },
+  "docs/DESIGN-SYSTEM.md": {
+    "baseline": "a73289255eb3bab614e28ae470b01ff71182ac8dc242453827af141597edba5e",
+    "candidate": "5a29b58af2e44fd2d9c14e3dad3d9415bdcb1ec445788dfd726dd9902648d949"
+  },
+  "tests/browser/connection-drag.spec.ts": {
+    "baseline": "e9d676f5eaa48ea6947950c409aecd9204ef8de165b6d7ef6dfc1fd8c102ede6",
+    "candidate": "a5d4549cb53e07f55df2d8c2debbd0c73f45777d66377677a2e92478b3995c58"
+  }
+}

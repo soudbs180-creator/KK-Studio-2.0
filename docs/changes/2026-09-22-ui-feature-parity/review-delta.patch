@@ -1,0 +1,4361 @@
+--- a/package.json
++++ b/package.json
+@@ -9,7 +9,7 @@
+     "proxy": "node vendor/canvas-proxy/index.js",
+     "proxy:test": "node --test tests/unit/proxyForward.test.ts",
+     "agent:install": "npm install --prefix vendor/canvas-agent",
+-    "agent:build": "tsc -p vendor/canvas-agent/tsconfig.json",
++    "agent:build": "node scripts/agent/install-idle-preparation.mjs && tsc -p vendor/canvas-agent/tsconfig.json",
+     "agent": "npm run agent:build && node vendor/canvas-agent/dist/index.js",
+     "agent:mcp": "npm run agent:build && node vendor/canvas-agent/dist/index.js mcp",
+     "test:agent": "npm run test --prefix vendor/canvas-agent",
+--- a/scripts/agent/install-idle-preparation.mjs
++++ b/scripts/agent/install-idle-preparation.mjs
+@@ -0,0 +1,64 @@
++import fs from "node:fs/promises";
++import path from "node:path";
++import { fileURLToPath } from "node:url";
++
++// The upstream service is locally vendored/ignored. Keep the bounded integration
++// in tracked source and apply it before agent:build; reject unexpected edits.
++const here = path.dirname(fileURLToPath(import.meta.url));
++const root = path.resolve(
++  process.argv[2] || path.join(here, "../../vendor/canvas-agent"),
++);
++const target = path.join(root, "src/server/http.ts");
++const helper = path.join(root, "src/server/kk-idle-conversation.ts");
++const source = await fs.readFile(target, "utf8");
++const template = await fs.readFile(
++  path.join(here, "prepareIdleConversation.ts"),
++  "utf8",
++);
++const existing = await fs.readFile(helper, "utf8").catch((error) => {
++  if (error.code !== "ENOENT") throw error;
++  return null;
++});
++if (existing !== null && existing !== template)
++  throw new Error(
++    "Agent idle-preparation helper has local edits; reconcile before building.",
++  );
++const eol = source.includes("\r\n") ? "\r\n" : "\n";
++const importLine =
++  'import { prepareIdleConversation } from "./kk-idle-conversation.js";';
++const anchor =
++  '    app.post("/agent/codex/threads/new", codexMutation(async (req, res) => {';
++const route =
++  `    // KK Studio: prepare only the expected empty session under the Codex mutation lock.
++    app.post("/agent/codex/conversation/prepare", codexMutation(async (req, res) => {
++        const result = await prepareIdleConversation(req.body, {
++            hasClient: (clientId) => session.hasClient(clientId),
++            conversation: () => session.conversationStateSnapshot,
++            begin: (clientId) => {
++                session.beginConversation({ sourceClientId: clientId });
++                setActiveThread("", { emptyThread: true, draftThread: true, sourceClientId: clientId }, true);
++            },
++            prepare: (clientId, mode) => prepareDraftThread(clientId, mode),
++        });
++        res.status(result.status).json(result.body);
++    }));
++`.replaceAll("\n", eol);
++let updated = source;
++if (source.includes('"/agent/codex/conversation/prepare"')) {
++  if (!source.includes(route) || !source.includes(importLine))
++    throw new Error(
++      "Agent preparation route differs from the reviewed integration.",
++    );
++} else {
++  if (
++    source.split(anchor).length !== 2 ||
++    !source.includes("function codexMutation(")
++  )
++    throw new Error(
++      "Unsupported Agent source: safe preparation anchor/lock missing.",
++    );
++  updated = `${importLine}${eol}${source.replace(anchor, route + anchor)}`;
++}
++await fs.writeFile(helper, template);
++if (updated !== source) await fs.writeFile(target, updated);
++console.log("Agent conditional idle preparation: installed and verified.");
+--- a/scripts/agent/prepareIdleConversation.ts
++++ b/scripts/agent/prepareIdleConversation.ts
+@@ -0,0 +1,61 @@
++/** KK Studio conditional initialization. Called inside the service mutation lock. */
++interface Conversation {
++  revision: number;
++  conversationId: string;
++  threadId: string;
++  status: string;
++}
++
++export async function prepareIdleConversation<C extends Conversation>(
++  input: unknown,
++  context: {
++    hasClient: (clientId: string) => boolean;
++    conversation: () => C;
++    begin: (clientId: string) => void;
++    prepare: (
++      clientId: string,
++      permissionMode: "request" | "automatic" | "full",
++    ) => Promise<unknown>;
++  },
++) {
++  const body = (input && typeof input === "object" ? input : {}) as Record<
++    string,
++    unknown
++  >;
++  const clientId = typeof body.clientId === "string" ? body.clientId : "";
++  const state = context.conversation();
++  if (!clientId || !context.hasClient(clientId)) {
++    return {
++      status: 409,
++      body: { ok: false, error: "发起准备的页面已断开，请重新连接。", state },
++    };
++  }
++  if (
++    state.status !== "idle" ||
++    state.threadId ||
++    body.expectedConversationId !== state.conversationId ||
++    body.expectedRevision !== state.revision
++  ) {
++    return {
++      status: 409,
++      body: {
++        ok: false,
++        code: "CONVERSATION_STALE",
++        error: "会话已变化，已保留现有会话。请核对后继续。",
++        state,
++      },
++    };
++  }
++  // No await between the authoritative check and begin. The caller holds the
++  // same mutation lock used by new/resume/turn, including through preparation.
++  context.begin(clientId);
++  const permission =
++    body.permissionMode === "automatic" || body.permissionMode === "full"
++      ? body.permissionMode
++      : "request";
++  await context.prepare(clientId, permission);
++  return {
++    status: 200,
++    body: { ok: true, conversation: context.conversation() },
++  };
++}
+--- a/scripts/audit/check-ui-feature-parity-desktop.mjs
++++ b/scripts/audit/check-ui-feature-parity-desktop.mjs
+@@ -0,0 +1,302 @@
++import fs from "node:fs/promises";
++import path from "node:path";
++import os from "node:os";
++import { createHash } from "node:crypto";
++import { spawn, execFileSync } from "node:child_process";
++import { chromium, expect } from "@playwright/test";
++import { ACCENTS } from "../../tests/helpers/designSystem.ts";
++import { startAgentServer } from "../../tests/helpers/agentServer.ts";
++
++// Own release process and isolated storage only. Never attach to a user's app.
++const repo = process.cwd();
++const evidence = path.join(
++  repo,
++  "docs/changes/2026-09-22-ui-feature-parity/evidence/desktop",
++);
++const exe = path.join(repo, "src-tauri/target/release/kk-studio.exe");
++const cdp = "http://127.0.0.1:9338";
++const temp = await fs.mkdtemp(path.join(os.tmpdir(), "kk-ui-parity-desktop-"));
++const data = path.join(temp, "data");
++const profile = path.join(temp, "profile");
++const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
++const sha = (bytes) => createHash("sha256").update(bytes).digest("hex");
++const report = {
++  timestamp: new Date().toISOString(),
++  mode: "Tauri release",
++  data,
++  profile,
++  matrix: [],
++  sections: [],
++  launches: [],
++  errors: [],
++  passed: false,
++};
++let browser, app, page;
++await fs.mkdir(evidence, { recursive: true });
++
++async function cdpAvailable() {
++  return fetch(`${cdp}/json/version`, { signal: AbortSignal.timeout(1000) })
++    .then(() => true)
++    .catch(() => false);
++}
++async function closeOwnedApp() {
++  if (app && app.exitCode === null) {
++    execFileSync(
++      "powershell.exe",
++      [
++        "-NoProfile",
++        "-Command",
++        `(Get-Process -Id ${app.pid} -ErrorAction Stop).CloseMainWindow() | Out-Null`,
++      ],
++      { windowsHide: true },
++    );
++    await expect.poll(() => app.exitCode, { timeout: 10000 }).not.toBeNull();
++  }
++  await browser?.close();
++  browser = undefined;
++  page = undefined;
++  await expect.poll(cdpAvailable, { timeout: 10000 }).toBe(false);
++}
++async function launch() {
++  if (await cdpAvailable())
++    throw new Error("Audit CDP port 9338 is occupied; no process was launched");
++  app = spawn(exe, ["--data-dir", data], {
++    cwd: repo,
++    windowsHide: true,
++    stdio: "ignore",
++    env: {
++      ...process.env,
++      WEBVIEW2_USER_DATA_FOLDER: profile,
++      WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS:
++        "--remote-debugging-port=9338 --remote-debugging-address=127.0.0.1",
++    },
++  });
++  let launchError;
++  app.on("error", (error) => {
++    launchError = error;
++  });
++  for (let i = 0; i < 150; i++) {
++    if (launchError) throw launchError;
++    if (app.exitCode !== null)
++      throw new Error(`Owned desktop exited early: ${app.exitCode}`);
++    if (await cdpAvailable()) break;
++    await delay(100);
++  }
++  browser = await chromium.connectOverCDP(cdp);
++  await expect
++    .poll(
++      () => {
++        page = browser
++          .contexts()
++          .flatMap((context) => context.pages())
++          .find((item) => new URL(item.url()).hostname === "tauri.localhost");
++        return Boolean(page);
++      },
++      { timeout: 15000 },
++    )
++    .toBe(true);
++  page.on("pageerror", (error) => report.errors.push(error.message));
++  await page.waitForLoadState("domcontentloaded");
++  await expect(page.locator(".app")).toHaveAttribute(
++    "data-runtime-mode",
++    "production",
++  );
++  await page.emulateMedia({ reducedMotion: "reduce" });
++  const storageRoot = await page.evaluate(() =>
++    window.__TAURI_INTERNALS__.invoke("get_storage_root"),
++  );
++  expect(path.resolve(storageRoot).toLowerCase()).toBe(
++    path.resolve(data).toLowerCase(),
++  );
++  const assets = await page
++    .locator('script[type="module"][src], link[rel="stylesheet"][href]')
++    .evaluateAll((elements) =>
++      elements.map((el) => el.getAttribute("src") ?? el.getAttribute("href")),
++    );
++  const loaded = [];
++  for (const asset of assets) {
++    if (!asset.startsWith("/assets/")) continue;
++    const local = await fs.readFile(path.join(repo, "dist", asset.slice(1)));
++    const actual = await page.evaluate(async (url) => {
++      const response = await fetch(url);
++      if (!response.ok) throw new Error(`Asset fetch ${response.status}`);
++      return Array.from(new Uint8Array(await response.arrayBuffer()));
++    }, asset);
++    expect(sha(Buffer.from(actual))).toBe(sha(local));
++    loaded.push({ asset, sha256: sha(local), bytes: local.length });
++  }
++  expect(loaded.some((item) => item.asset.endsWith(".js"))).toBe(true);
++  expect(loaded.some((item) => item.asset.endsWith(".css"))).toBe(true);
++  report.launches.push({
++    pid: app.pid,
++    url: page.url(),
++    storageRoot,
++    viewport: await page.evaluate(() => ({
++      width: innerWidth,
++      height: innerHeight,
++    })),
++    loaded,
++  });
++}
++async function navigate(name) {
++  await page
++    .locator(".sidebar")
++    .getByRole("button", { name, exact: true })
++    .click();
++  await expect(page.locator(".catalog-page h1")).toBeVisible();
++}
++async function openSettings() {
++  await page.getByRole("button", { name: "打开设置", exact: true }).click();
++  return page.getByRole("dialog", { name: "设置" });
++}
++
++const agentFixture = await startAgentServer();
++try {
++  report.exe = { path: exe, sha256: sha(await fs.readFile(exe)) };
++  await launch();
++  await expect(page.locator(".preview-label")).toHaveText("桌面版");
++  await page.route("https://raw.githubusercontent.com/**", (route) =>
++    route.fulfill({
++      json: [
++        { id: "desktop", title: "桌面提示词", prompt: "保留产品形状与光影" },
++      ],
++    }),
++  );
++  await page.getByLabel("创作提示词").fill("桌面草稿");
++  await page.getByRole("button", { name: "提示词库", exact: true }).click();
++  let library = page.getByRole("dialog", { name: "提示词库" });
++  await library.getByRole("button", { name: "加载来源" }).click();
++  await library
++    .getByRole("button", { name: "桌面提示词", exact: true })
++    .click();
++  await page.screenshot({
++    path: path.join(evidence, "prompt-library.png"),
++    animations: "disabled",
++  });
++  await library.getByRole("button", { name: "加入草稿" }).click();
++  await expect(page.getByLabel("创作提示词")).toHaveValue(
++    "桌面草稿\n\n保留产品形状与光影",
++  );
++  await navigate("项目库");
++  await page.getByRole("button", { name: "新建项目", exact: true }).click();
++  const panel = page.locator(".conversation-panel");
++  await panel.getByRole("button", { name: "本地 Agent", exact: true }).click();
++  await panel.getByRole("button", { name: "连接设置", exact: true }).click();
++  await page.getByLabel("Agent 地址").fill(agentFixture.url);
++  await page
++    .getByLabel("连接 Token", { exact: true })
++    .fill("desktop-fixture-token");
++  await page.getByRole("button", { name: "连接 Agent", exact: true }).click();
++  await expect(
++    page.getByRole("button", { name: "已连接", exact: true }),
++  ).toBeVisible();
++  await page.keyboard.press("Escape");
++  for (const theme of ["dark", "light"]) {
++    for (const accent of ACCENTS) {
++      const settings = await openSettings();
++      await settings.getByRole("button", { name: "通用", exact: true }).click();
++      await settings.getByLabel("主题", { exact: true }).selectOption(theme);
++      await settings.getByLabel("强调色", { exact: true }).selectOption(accent);
++      await page.keyboard.press("Escape");
++      await expect(
++        panel.getByLabel("Agent 权限", { exact: true }),
++      ).toBeVisible();
++      expect(
++        await panel.evaluate((el) => el.scrollWidth - el.clientWidth),
++      ).toBeLessThanOrEqual(1);
++      report.matrix.push({ theme, accent, agentVisible: true });
++    }
++    await page.screenshot({
++      path: path.join(evidence, `agent-${theme}.png`),
++      animations: "disabled",
++    });
++  }
++  await panel.getByLabel("Agent 指令").fill("读取当前画布");
++  await panel.getByRole("button", { name: "发送给 Agent" }).click();
++  await expect.poll(() => agentFixture.turns.length).toBe(1);
++  expect(agentFixture.turns[0]).toMatchObject({
++    messageText: "读取当前画布",
++    permissionMode: "request",
++    attachments: [],
++  });
++  await expect(
++    panel.getByRole("button", { name: "Agent 执行中…" }),
++  ).toBeDisabled();
++  agentFixture.failActions(true);
++  await panel.getByRole("button", { name: "停止", exact: true }).click();
++  await expect(panel.getByRole("alert")).toContainText("受控服务暂时不可用");
++  agentFixture.failActions(false);
++  await panel.getByRole("button", { name: "停止", exact: true }).click();
++  await expect(
++    panel.getByRole("button", { name: "发送给 Agent" }),
++  ).toBeVisible();
++  await expect
++    .poll(() => page.evaluate(() => localStorage.getItem("canvas-agent-token")))
++    .toBeNull();
++  await page.screenshot({
++    path: path.join(evidence, "agent-stopped.png"),
++    animations: "disabled",
++  });
++  report.flows = {
++    promptApplied: true,
++    agentFixtureRequest: true,
++    stopErrorAndRetry: true,
++    tokenNotPersisted: true,
++  };
++  await closeOwnedApp();
++  await launch();
++  await page.getByRole("button", { name: "开始创作", exact: true }).click();
++  await expect(page.getByLabel("创作提示词")).toHaveValue(
++    "桌面草稿\n\n保留产品形状与光影",
++  );
++  await page.getByRole("button", { name: "提示词库", exact: true }).click();
++  library = page.getByRole("dialog", { name: "提示词库" });
++  await expect(library.getByRole("status")).toContainText("本地缓存");
++  await page.keyboard.press("Escape");
++  const settings = await openSettings();
++  await settings.getByRole("button", { name: "网络", exact: true }).click();
++  await expect(settings.getByLabel("连接 Token", { exact: true })).toHaveValue(
++    "",
++  );
++  await expect(
++    settings.getByRole("button", { name: "连接 Agent", exact: true }),
++  ).toBeVisible();
++  report.restart = {
++    draftPreserved: true,
++    promptCachePreserved: true,
++    tokenCleared: true,
++    agentDisconnected: true,
++  };
++  expect(report.errors).toEqual([]);
++  report.passed = true;
++} catch (error) {
++  report.failure = error.message;
++  process.exitCode = 1;
++} finally {
++  await agentFixture.close();
++  try {
++    await closeOwnedApp();
++  } catch (error) {
++    report.cleanupFailure = error.message;
++    report.passed = false;
++    process.exitCode = 1;
++  }
++  await fs.writeFile(
++    path.join(evidence, "runtime.json"),
++    JSON.stringify(report, null, 2),
++  );
++  console.log(
++    JSON.stringify(
++      {
++        passed: report.passed,
++        matrix: report.matrix.length,
++        launches: report.launches.length,
++        failure: report.failure,
++        cleanupFailure: report.cleanupFailure,
++        evidence,
++      },
++      null,
++      2,
++    ),
++  );
++}
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -12,6 +12,7 @@
+ import Canvas from "./components/Canvas";
+ import ConversationPanel from "./components/ConversationPanel";
+ import Modal from "./components/Modal";
++import PromptLibraryPanel from "./components/PromptLibraryPanel";
+ import TaskExecutionApproval from "./components/TaskExecutionApproval";
+ import {
+   requiredApprovalGates,
+@@ -45,6 +46,7 @@
+ import {
+   agentConnection,
+   readPermissionMode,
++  subscribeAgentPreferences,
+   writePermissionMode,
+   type AgentBridge,
+ } from "./features/agent/agentConnection.ts";
+@@ -268,6 +270,10 @@
+     (project) => project.id === creation.activeProjectId,
+   );
+ 
++  const agentPermission = useSyncExternalStore(
++    subscribeAgentPreferences,
++    readPermissionMode,
++  );
+   const agentState = useSyncExternalStore(
+     agentConnection.subscribe,
+     agentConnection.getState,
+@@ -2011,7 +2017,8 @@
+               onDraftChange={updateHomeDraft}
+               onOpenModel={() => open("settings/providers")}
+               onOpenSkills={() => open("skills")}
+-              onOpenPlugins={() => open("settings/mcp")}
++              onOpenPlugins={() => open("settings/plugins")}
++              onOpenPrompts={() => open("prompts")}
+               skills={skillRegistry.listRecords()}
+               onApplySkill={applySkillToHome}
+               defaultModel={(() => {
+@@ -2169,15 +2176,19 @@
+                 onApplySkill={applySkillToProject}
+                 voiceEnabled={active === "workspace" && chat}
+                 agent={
+-                  agentState.status === "connected" && activeProject
++                  activeProject
+                     ? {
+-                        connected: true,
+-                        connecting: false,
++                        connected: agentState.status === "connected",
++                        connectionRevision: agentState.connectionRevision,
++                        connecting: agentState.status === "connecting",
++                        conversation: agentState.conversation,
++                        preparing: agentState.preparing,
++                        error: agentState.error,
+                         sending: agentState.sending,
+                         activity: agentState.activity,
+                         messages: agentState.messages,
+                         pendingApproval: agentState.pendingApproval,
+-                        permissionMode: readPermissionMode(),
++                        permissionMode: agentPermission,
+                         onPermissionModeChange: (mode) =>
+                           writePermissionMode(mode),
+                         onSend: (message) =>
+@@ -2186,6 +2197,7 @@
+                           // 传过去会导致 ChatGPT 账号报 "model is not supported"。
+                           agentConnection.sendMessage(message),
+                         onInterrupt: () => agentConnection.interrupt(),
++                        onPrepare: () => agentConnection.prepareConversation(),
+                         onDecision: (decision) =>
+                           agentConnection.resolveApproval(decision),
+                       }
+@@ -2255,15 +2267,17 @@
+           title={
+             ["search", "favorites", "likes"].includes(modal)
+               ? "搜索与收藏"
+-              : modal === "settings"
+-                ? "设置"
+-                : modal === "assets"
+-                  ? "资产管理"
+-                  : modal === "shortcuts"
+-                    ? "快捷按键"
+-                    : modal === "tasks"
+-                      ? "任务列表"
+-                      : "使用说明"
++              : modal === "prompts"
++                ? "提示词库"
++                : modal === "settings"
++                  ? "设置"
++                  : modal === "assets"
++                    ? "资产管理"
++                    : modal === "shortcuts"
++                      ? "快捷按键"
++                      : modal === "tasks"
++                        ? "任务列表"
++                        : "使用说明"
+           }
+           onClose={() => setModal("")}
+         >
+@@ -2280,6 +2294,38 @@
+               onToggleFavorite={toggleFavorite}
+               onToggleLike={toggleLike}
+               onRename={renameCanvasItem}
++            />
++          ) : modal === "prompts" ? (
++            <PromptLibraryPanel
++              target={
++                active === "workspace" && activeProject
++                  ? "图片对话草稿"
++                  : "首页草稿"
++              }
++              onClose={() => setModal("")}
++              onApply={(text) => {
++                const project =
++                  active === "workspace" ? activeProject : undefined;
++                const draft =
++                  project?.composerDraft ?? creationRef.current.homeDraft;
++                const prompt = [draft.prompt.trimEnd(), text]
++                  .filter(Boolean)
++                  .join("\n\n");
++                if (prompt.length > 4000)
++                  return "加入后超过 4,000 字符，请先精简草稿或选择更短的提示词。";
++                if (project)
++                  updateProject(project.id, (current) => ({
++                    ...current,
++                    composerDraft: {
++                      ...current.composerDraft,
++                      prompt,
++                      updatedAt: Date.now(),
++                    },
++                    updatedAt: Date.now(),
++                  }));
++                else
++                  updateHomeDraft({ ...draft, prompt, updatedAt: Date.now() });
++              }}
+             />
+           ) : modal === "shortcuts" ? (
+             <ShortcutsPanel onClose={() => setModal("")} />
+@@ -2339,3 +2385,5 @@
+ 
+ import "./styles/catalog.css";
+ import "./styles/task-workbench.css";
++
++import "./styles/feature-parity.css";
+--- a/src/components/AgentComposer.tsx
++++ b/src/components/AgentComposer.tsx
+@@ -0,0 +1,142 @@
++import { useEffect, useRef, useState } from "react";
++import type { AgentConversationProps } from "./AgentConversationMessages";
++import { readAgentModel } from "../features/agent/agentConnection";
++import VoiceInputButton from "./VoiceInputButton";
++
++export default function AgentComposer({
++  agent,
++  draftKey,
++  onConfigure,
++  voiceEnabled,
++}: {
++  agent: AgentConversationProps;
++  draftKey: string;
++  onConfigure: () => void;
++  voiceEnabled: boolean;
++}) {
++  const [drafts, setDrafts] = useState<Record<string, string>>({});
++  const [feedback, setFeedback] = useState("");
++  const [submitting, setSubmitting] = useState<number | null>(null);
++  const sendingRef = useRef<number | null>(null);
++  useEffect(() => {
++    sendingRef.current = null;
++    setSubmitting(null);
++    setFeedback("");
++  }, [agent.connectionRevision]);
++  const input = drafts[draftKey] ?? "";
++  const busy = submitting === agent.connectionRevision || agent.sending;
++  const preparing =
++    agent.preparing || agent.conversation?.status === "preparing";
++  const ready =
++    agent.connected &&
++    !agent.connecting &&
++    !preparing &&
++    (agent.conversation?.status === "ready" ||
++      agent.conversation?.status === "warning");
++  const update = (text: string) =>
++    setDrafts((current) => ({ ...current, [draftKey]: text }));
++  async function submit() {
++    const revision = agent.connectionRevision;
++    if (!ready || busy || sendingRef.current === revision || !input.trim())
++      return;
++    const key = draftKey;
++    const sent = input;
++    sendingRef.current = revision;
++    setSubmitting(revision);
++    setFeedback("");
++    try {
++      const result = await agent.onSend(sent.trim());
++      if (sendingRef.current !== revision) return;
++      if (result.ok) {
++        setDrafts((current) =>
++          current[key] === sent ? { ...current, [key]: "" } : current,
++        );
++      } else setFeedback(result.error ?? "发送失败，指令已保留。");
++    } catch {
++      if (sendingRef.current === revision)
++        setFeedback("发送失败，指令已保留，请检查连接。");
++    } finally {
++      if (sendingRef.current === revision) {
++        sendingRef.current = null;
++        setSubmitting(null);
++      }
++    }
++  }
++  return (
++    <form
++      className="agent-composer"
++      onSubmit={(e) => {
++        e.preventDefault();
++        void submit();
++      }}
++    >
++      <label htmlFor="agent-instruction">Agent 指令</label>
++      <textarea
++        className="ui-input"
++        id="agent-instruction"
++        value={input}
++        maxLength={7500}
++        onChange={(e) => update(e.target.value)}
++        placeholder="描述任务，让 Agent 读取并操作当前画布"
++      />
++      <div className="agent-composer-options">
++        <span className="ui-badge">
++          模型：{readAgentModel() || "本地服务默认"}
++        </span>
++        <label>
++          Agent 权限
++          <select
++            className="settings-select"
++            aria-label="Agent 权限"
++            value={agent.permissionMode}
++            disabled={busy || preparing}
++            onChange={(e) =>
++              agent.onPermissionModeChange(
++                e.target.value as AgentConversationProps["permissionMode"],
++              )
++            }
++          >
++            <option value="request">每次询问</option>
++            <option value="automatic">自动允许安全操作</option>
++            <option value="full">全部放行</option>
++          </select>
++        </label>
++      </div>
++      <p className="agent-composer-note">
++        发送文字指令；图片参考请在画布中提供。此处权限仅用于本地 Agent。
++      </p>
++      {feedback && (
++        <p className="agent-action-error" role="alert">
++          {feedback}
++        </p>
++      )}
++      <div className="agent-composer-actions">
++        <button className="ui-button" type="button" onClick={onConfigure}>
++          连接设置
++        </button>
++        <VoiceInputButton
++          value={input}
++          onChange={update}
++          onStatus={setFeedback}
++          enabled={voiceEnabled && !busy}
++          sessionKey={`agent-${draftKey}`}
++          maxLength={7500}
++        />
++        <button
++          className="ui-button is-primary"
++          type="submit"
++          disabled={!ready || busy || !input.trim()}
++          title={
++            !ready
++              ? "连接本地 Agent 并准备好会话后才能发送"
++              : busy
++                ? "等待当前任务结束或停止任务"
++                : undefined
++          }
++        >
++          {busy ? "Agent 执行中…" : "发送给 Agent"}
++        </button>
++      </div>
++    </form>
++  );
++}
+--- a/src/components/AgentConversationMessages.tsx
++++ b/src/components/AgentConversationMessages.tsx
+@@ -2,12 +2,18 @@
+   AgentApprovalDecision,
+   AgentChatItem,
+   AgentPermissionMode,
++  AgentConversationState,
+ } from "../features/agent/agentTypes.ts";
++import { useState } from "react";
+ 
+ /** 本地 Agent 会话通道（画布旁对话面板与 canvas-agent 的桥）。 */
+ export interface AgentConversationProps {
+   connected: boolean;
++  connectionRevision: number;
+   connecting: boolean;
++  conversation: AgentConversationState | null;
++  preparing: boolean;
++  error?: string | null;
+   sending: boolean;
+   activity: string;
+   messages: AgentChatItem[];
+@@ -21,6 +27,7 @@
+   onPermissionModeChange: (mode: AgentPermissionMode) => void;
+   onSend: (message: string) => Promise<{ ok: boolean; error?: string }>;
+   onInterrupt: () => Promise<{ ok: boolean; error?: string }>;
++  onPrepare: () => Promise<{ ok: boolean; error?: string }>;
+   onDecision: (
+     decision: AgentApprovalDecision,
+   ) => Promise<{ ok: boolean; error?: string }>;
+@@ -33,27 +40,101 @@
+   agent: AgentConversationProps;
+ }) {
+   const { messages, sending, connecting, pendingApproval } = agent;
++  const [busy, setBusy] = useState(false);
++  const [error, setError] = useState("");
++  const sessionStatus = agent.conversation?.status;
++  const preparing = agent.preparing || sessionStatus === "preparing";
++  const canPrepare =
++    agent.connected &&
++    sessionStatus === "idle" &&
++    !agent.conversation?.threadId &&
++    !sending &&
++    !preparing;
++  const warningTools = Object.entries(agent.conversation?.mcpStatuses ?? {})
++    .filter(
++      ([, tool]) => tool.status === "failed" || tool.status === "cancelled",
++    )
++    .map(([name]) => name);
++  async function act(action: () => Promise<{ ok: boolean; error?: string }>) {
++    if (busy) return;
++    setBusy(true);
++    setError("");
++    try {
++      const result = await action();
++      if (!result.ok) setError(result.error ?? "操作未成功，请重试。");
++    } catch {
++      setError("操作失败，请检查连接后重试。");
++    } finally {
++      setBusy(false);
++    }
++  }
+   return (
+     <div className="chat-agent-messages" aria-label="本地 Agent 会话">
+       <p className="chat-agent-banner" role="status">
+-        {sending
+-          ? "Agent 正在执行…"
+-          : connecting
+-            ? "正在连接本地 Agent…"
+-            : "本地 Agent 会话（可操作画布）"}
+-        {sending && (
++        {connecting
++          ? "正在连接本地 Agent…"
++          : !agent.connected
++            ? "Agent 尚未连接"
++            : sending
++              ? "Agent 正在执行…"
++              : preparing
++                ? "正在准备 Agent 会话…"
++                : sessionStatus === "warning"
++                  ? "Agent 可用，部分可选工具不可用"
++                  : sessionStatus === "ready"
++                    ? "本地 Agent 已就绪"
++                    : sessionStatus === "failed"
++                      ? "Agent 会话准备失败，请检查本地服务后重新连接"
++                      : "本地服务已连接，请准备 Agent 会话"}
++        {sending && agent.connected && (
+           <button
+             type="button"
+-            className="chat-agent-stop"
+-            onClick={() => void agent.onInterrupt()}
++            className="ui-button"
++            disabled={busy}
++            onClick={() => void act(agent.onInterrupt)}
+           >
+             停止
+           </button>
+         )}
+       </p>
++      {canPrepare && (
++        <button
++          className="ui-button is-primary"
++          type="button"
++          disabled={busy}
++          onClick={() => void act(agent.onPrepare)}
++        >
++          准备 Agent 会话
++        </button>
++      )}
++      {agent.connected && sessionStatus === "warning" && (
++        <p className="agent-composer-note" role="status">
++          可选工具暂不可用：{warningTools.join("、") || "请查看本地服务记录"}
++          。画布工具仍可使用。
++        </p>
++      )}
++      {agent.error && (
++        <p className="agent-action-error" role="alert">
++          {agent.error}
++        </p>
++      )}
++      {error && (
++        <p className="agent-action-error" role="alert">
++          {error}
++        </p>
++      )}
++      {agent.connected && agent.activity && (
++        <p className="agent-composer-note" role="status">
++          {agent.activity}
++        </p>
++      )}
+       {messages.length === 0 && (
+         <p className="chat-agent-empty">
+-          连接已就绪，输入指令让 Agent 读取并操作画布。
++          {agent.connected
++            ? sessionStatus === "idle"
++              ? "准备会话后即可发送指令。此操作使用当前 Agent 权限，不提交生成任务。"
++              : "输入指令让 Agent 读取并操作当前画布。"
++            : "请先在连接设置中启动并连接本地 Agent。图片创作仍可单独使用。"}
+         </p>
+       )}
+       {messages.map((item) => (
+@@ -76,12 +157,20 @@
+               ? " — " + pendingApproval.command
+               : ""}
+           </span>
+-          <button type="button" onClick={() => void agent.onDecision("accept")}>
++          {pendingApproval.reason && <p>{pendingApproval.reason}</p>}
++          <button
++            className="ui-button is-primary"
++            type="button"
++            disabled={busy || !agent.connected}
++            onClick={() => void act(() => agent.onDecision("accept"))}
++          >
+             允许
+           </button>
+           <button
+             type="button"
+-            onClick={() => void agent.onDecision("decline")}
++            className="ui-button"
++            disabled={busy || !agent.connected}
++            onClick={() => void act(() => agent.onDecision("decline"))}
+           >
+             拒绝
+           </button>
+--- a/src/components/ComposerPluginSummary.tsx
++++ b/src/components/ComposerPluginSummary.tsx
+@@ -0,0 +1,24 @@
++import { useSyncExternalStore } from "react";
++import { pluginStore } from "../features/plugins/pluginStore";
++
++export default function ComposerPluginSummary() {
++  const state = useSyncExternalStore(
++    pluginStore.subscribe,
++    pluginStore.getState,
++  );
++  const enabled = state.plugins.filter((plugin) => plugin.enabled);
++  return (
++    <div className="composer-plugin-summary">
++      <p>
++        {enabled.length
++          ? `已启用 ${enabled.length} 个画布插件`
++          : "当前没有启用的画布插件。"}
++      </p>
++      {enabled.length > 0 && (
++        <p>{enabled.map((plugin) => plugin.name).join(" · ")}</p>
++      )}
++      <p>在画布「添加节点 › 插件」中使用；此菜单不会把插件附加到生成请求。</p>
++      {state.error && <p role="alert">{state.error}</p>}
++    </div>
++  );
++}
+--- a/src/components/ConversationActions.tsx
++++ b/src/components/ConversationActions.tsx
+@@ -3,6 +3,7 @@
+ import type { CreationDraft } from "../features/creation/model";
+ import VoiceInputButton from "./VoiceInputButton";
+ import type { SkillRecord } from "../features/skills/skillRegistry";
++import ComposerPluginSummary from "./ComposerPluginSummary";
+ 
+ export default function ConversationActions({
+   actionsRef,
+@@ -185,7 +186,17 @@
+             role="menu"
+             aria-label="选择插件"
+           >
+-            <p>当前没有已连接的插件。</p>
++            <ComposerPluginSummary />
++            <button
++              type="button"
++              role="menuitem"
++              onClick={() => {
++                onTogglePlugin();
++                onOpen("settings/plugins");
++              }}
++            >
++              管理画布插件
++            </button>
+             <button
+               type="button"
+               role="menuitem"
+@@ -194,7 +205,7 @@
+                 onOpen("settings/mcp");
+               }}
+             >
+-              管理插件连接
++              管理 MCP 工具
+             </button>
+           </div>
+         )}
+@@ -232,8 +243,8 @@
+                 aria-checked={approvalMode === value}
+                 title={
+                   value === "auto"
+-                    ? "AI 可以连续执行，不在每一步询问"
+-                    : "AI 在执行前询问你的确认"
++                    ? "直接提交当前图片任务"
++                    : "提交图片任务前先确认"
+                 }
+                 onClick={() => onSelectMode(value)}
+               >
+--- a/src/components/ConversationChannelSelector.tsx
++++ b/src/components/ConversationChannelSelector.tsx
+@@ -0,0 +1,28 @@
++export default function ConversationChannelSelector({
++  agentActive,
++  onChange,
++}: {
++  agentActive: boolean;
++  onChange: (channel: "image" | "agent") => void;
++}) {
++  return (
++    <div className="conversation-channel" role="group" aria-label="对话通道">
++      <button
++        className="ui-capsule"
++        type="button"
++        aria-pressed={!agentActive}
++        onClick={() => onChange("image")}
++      >
++        图片创作
++      </button>
++      <button
++        className="ui-capsule"
++        type="button"
++        aria-pressed={agentActive}
++        onClick={() => onChange("agent")}
++      >
++        本地 Agent
++      </button>
++    </div>
++  );
++}
+--- a/src/components/ConversationComposer.tsx
++++ b/src/components/ConversationComposer.tsx
+@@ -130,8 +130,8 @@
+           closeMenus();
+           onStatus(
+             value === "auto"
+-              ? "已切换为自动模式，AI 可连续执行。"
+-              : "已切换为询问模式，每次执行前由你确认。",
++              ? "图片自动模式：直接提交当前任务；需要的成本与外传审批仍会保留。"
++              : "提交图片任务前先由你确认。",
+           );
+         }}
+         input={input}
+--- a/src/components/ConversationPanel.tsx
++++ b/src/components/ConversationPanel.tsx
+@@ -1,4 +1,4 @@
+-import { useEffect, useState } from "react";
++import { useEffect, useRef, useState } from "react";
+ import useConversationAttachments from "./useConversationAttachments";
+ import type {
+   CreationDraft,
+@@ -10,6 +10,8 @@
+   type AgentConversationProps,
+ } from "./AgentConversationMessages";
+ import ConversationComposer from "./ConversationComposer";
++import AgentComposer from "./AgentComposer";
++import ConversationChannelSelector from "./ConversationChannelSelector";
+ 
+ export default function ConversationPanel({
+   onClose,
+@@ -44,8 +46,15 @@
+   onApplySkill?: (record: SkillRecord) => string;
+   agent?: AgentConversationProps;
+ }) {
+-  const agentActive = Boolean(agent?.connected);
+-  const agentConnecting = Boolean(agent?.connecting);
++  const [channel, setChannel] = useState<"image" | "agent">(
++    agent?.connected ? "agent" : "image",
++  );
++  const wasConnected = useRef(Boolean(agent?.connected));
++  useEffect(() => {
++    if (agent?.connected && !wasConnected.current) setChannel("agent");
++    wasConnected.current = Boolean(agent?.connected);
++  }, [agent?.connected]);
++  const agentActive = channel === "agent";
+   const [input, setInput] = useState("");
+   const [messages, setMessages] = useState<string[]>([]);
+   const [status, setStatus] = useState("");
+@@ -92,24 +101,6 @@
+       setStatus("任务准备就绪，确认后才会提交给模型。");
+       return;
+     }
+-    if (agentActive && agent) {
+-      setSubmitting(true);
+-      try {
+-        const result = await agent.onSend(message);
+-        if (!result.ok) {
+-          setStatus(result.error ?? "发送失败，请检查本地 Agent 连接。");
+-          return;
+-        }
+-        setInput("");
+-        setPendingApproval(null);
+-        setStatus(agent.activity || "已发送给本地 Agent。");
+-      } catch {
+-        setStatus("发送失败，请检查本地 Agent 连接后重试。");
+-      } finally {
+-        setSubmitting(false);
+-      }
+-      return;
+-    }
+     setSubmitting(true);
+     try {
+       const result = onSend ? await onSend(message) : true;
+@@ -144,8 +135,12 @@
+           aria-label="对话记录"
+           onClick={() =>
+             setStatus(
+-              visibleMessages.length
+-                ? "本次会话共 " + visibleMessages.length + " 条消息。"
++              (agentActive ? agent?.messages.length : visibleMessages.length)
++                ? "当前通道共 " +
++                    (agentActive
++                      ? agent?.messages.length
++                      : visibleMessages.length) +
++                    " 条消息。"
+                 : "还没有对话，输入内容开始。",
+             )
+           }
+@@ -166,9 +161,22 @@
+           />
+         </button>
+       </header>
++      {agent && (
++        <ConversationChannelSelector
++          agentActive={agentActive}
++          onChange={(channel) => {
++            setChannel(channel);
++            if (channel === "agent") setPendingApproval(null);
++            setStatus("");
++          }}
++        />
++      )}
+       <div className="conversation-messages">
+         {agentActive && agent ? (
+-          <AgentConversationMessages agent={agent} />
++          <AgentConversationMessages
++            key={agent.connectionRevision}
++            agent={agent}
++          />
+         ) : (
+           <ConversationMessages
+             messages={visibleMessages}
+@@ -182,51 +190,73 @@
+           </p>
+         )}
+       </div>
+-      <ConversationComposer
+-        input={input}
+-        onInputChange={(value) => {
+-          setInput(value);
+-          updateDraft({ prompt: value });
+-        }}
+-        onSubmitMessage={submitMessage}
+-        disabled={submitting || agentConnecting}
+-        placeholder={
+-          agentActive
+-            ? "描述任务，Agent 会读取画布并执行操作"
+-            : "描述你想要生成的内容"
+-        }
+-        composerDraft={composerDraft}
+-        onRemoveAttachment={(id) =>
+-          updateDraft({
+-            attachments: (composerDraft?.attachments ?? []).filter(
+-              (item) => item.id !== id,
+-            ),
+-          })
+-        }
+-        fileInput={fileInput}
+-        onAddFiles={addFiles}
+-        readingFiles={readingFiles}
+-        onStatus={setStatus}
+-        currentModel={currentModel}
+-        modelOptions={modelOptions}
+-        onSelectModel={(option) => onModelChange?.(option)}
+-        onOpen={onOpen}
+-        skills={skills}
+-        onApplySkill={onApplySkill}
+-        approvalMode={approvalMode}
+-        onSelectMode={(value) => {
+-          setApprovalMode(value);
+-          updateDraft({ approvalMode: value });
+-        }}
+-        voiceEnabled={voiceEnabled && !submitting}
+-        onVoiceChange={(value) => {
+-          setInput(value);
+-          updateDraft({ prompt: value });
+-        }}
+-        onVoiceStatus={setStatus}
+-        voiceSessionKey={project?.id ?? "workspace-demo"}
+-      />
+-      {pendingApproval && (
++      <div hidden={agentActive}>
++        <div className="image-composer-tools">
++          <span>图片任务 · 使用项目模型</span>
++          <button
++            className="ui-button"
++            type="button"
++            onClick={() => onOpen("prompts")}
++          >
++            提示词库
++          </button>
++        </div>
++        <ConversationComposer
++          input={input}
++          onInputChange={(value) => {
++            setInput(value);
++            updateDraft({ prompt: value });
++          }}
++          onSubmitMessage={submitMessage}
++          disabled={submitting}
++          placeholder={
++            agentActive
++              ? "描述任务，Agent 会读取画布并执行操作"
++              : "描述你想要生成的内容"
++          }
++          composerDraft={composerDraft}
++          onRemoveAttachment={(id) =>
++            updateDraft({
++              attachments: (composerDraft?.attachments ?? []).filter(
++                (item) => item.id !== id,
++              ),
++            })
++          }
++          fileInput={fileInput}
++          onAddFiles={addFiles}
++          readingFiles={readingFiles}
++          onStatus={setStatus}
++          currentModel={currentModel}
++          modelOptions={modelOptions}
++          onSelectModel={(option) => onModelChange?.(option)}
++          onOpen={onOpen}
++          skills={skills}
++          onApplySkill={onApplySkill}
++          approvalMode={approvalMode}
++          onSelectMode={(value) => {
++            setApprovalMode(value);
++            updateDraft({ approvalMode: value });
++          }}
++          voiceEnabled={voiceEnabled && !submitting && !agentActive}
++          onVoiceChange={(value) => {
++            setInput(value);
++            updateDraft({ prompt: value });
++          }}
++          onVoiceStatus={setStatus}
++          voiceSessionKey={project?.id ?? "workspace-demo"}
++        />
++      </div>
++      {agent && (
++        <div hidden={!agentActive}>
++          <AgentComposer
++            agent={agent}
++            draftKey={project?.id ?? "workspace"}
++            onConfigure={() => onOpen("settings/network")}
++            voiceEnabled={voiceEnabled && agentActive}
++          />
++        </div>
++      )}
++      {pendingApproval && !agentActive && (
+         <div className="chat-approval" role="group" aria-label="确认执行任务">
+           <span>将使用当前项目模型执行这条任务。</span>
+           <button
+--- a/src/components/PromptLibraryPanel.tsx
++++ b/src/components/PromptLibraryPanel.tsx
+@@ -0,0 +1,243 @@
++import { useEffect, useRef, useState } from "react";
++import { promptLibrary, type Prompt } from "../features/prompts/promptLibrary";
++
++const PAGE_SIZE = 12;
++
++export default function PromptLibraryPanel({
++  onApply,
++  onClose,
++  target,
++}: {
++  onApply: (text: string) => string | undefined;
++  onClose: () => void;
++  target: string;
++}) {
++  const [sourceId, setSourceId] = useState(promptLibrary.sources[0].id);
++  const [items, setItems] = useState<Prompt[]>([]);
++  const [keyword, setKeyword] = useState("");
++  const [selected, setSelected] = useState<Prompt | null>(null);
++  const [page, setPage] = useState(0);
++  const [loading, setLoading] = useState(false);
++  const [status, setStatus] = useState(
++    "尚未加载来源，点击加载后访问所选公开目录。",
++  );
++  const [error, setError] = useState("");
++  const controller = useRef<AbortController | null>(null);
++  const revision = useRef(0);
++  const source = promptLibrary.sources.find((item) => item.id === sourceId)!;
++  useEffect(() => {
++    const run = ++revision.current;
++    controller.current?.abort();
++    setLoading(false);
++    setSelected(null);
++    setItems([]);
++    setPage(0);
++    setError("");
++    setStatus("尚未加载来源，点击加载后访问所选公开目录。");
++    void promptLibrary
++      .readCachedSource(sourceId)
++      .then((cached) => {
++        if (run !== revision.current) return;
++        setItems(cached);
++        if (cached.length)
++          setStatus(`显示本地缓存 · ${cached.length} 条；可重新加载获取更新。`);
++      })
++      .catch(() => {
++        if (run === revision.current)
++          setError("本地缓存无法读取，请重新加载来源。");
++      });
++    return () => {
++      revision.current++;
++      controller.current?.abort();
++    };
++  }, [sourceId]);
++  async function refresh() {
++    controller.current?.abort();
++    const abort = new AbortController();
++    controller.current = abort;
++    const run = ++revision.current;
++    setLoading(true);
++    setError("");
++    try {
++      const result = await promptLibrary.refreshSource(sourceId, {
++        signal: abort.signal,
++      });
++      const next = await promptLibrary.readCachedSource(sourceId);
++      if (run !== revision.current) return;
++      setItems(next);
++      setPage(0);
++      setSelected(null);
++      setStatus(`来源加载完成 · ${result.count} 条`);
++    } catch (cause) {
++      if (run !== revision.current) return;
++      if (abort.signal.aborted) setStatus("已取消加载，保留现有列表。");
++      else
++        setError(
++          `来源加载失败，${items.length ? "保留本地缓存。" : "可检查网络后重试。"} ${cause instanceof Error ? cause.message : "请稍后重试"}`,
++        );
++    } finally {
++      if (run === revision.current) setLoading(false);
++    }
++  }
++  const query = keyword.trim().toLowerCase();
++  const filtered = items.filter((item) =>
++    [item.title, item.prompt, ...item.tags]
++      .join(" ")
++      .toLowerCase()
++      .includes(query),
++  );
++  const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
++  const currentPage = Math.min(page, pages - 1);
++  return (
++    <section className="prompt-library-panel">
++      <header className="prompt-library-header">
++        <div>
++          <h2>提示词库</h2>
++          <p>选用公开提示词，加入{target}后继续编辑。</p>
++        </div>
++        <button
++          className="ui-icon-button"
++          type="button"
++          aria-label="关闭提示词库"
++          onClick={onClose}
++        >
++          ×
++        </button>
++      </header>
++      <div className="prompt-library-source">
++        <label>
++          提示词来源
++          <select
++            className="settings-select"
++            value={sourceId}
++            onChange={(e) => setSourceId(e.target.value)}
++          >
++            {promptLibrary.sources.map((item) => (
++              <option key={item.id} value={item.id}>
++                {item.name}
++              </option>
++            ))}
++          </select>
++        </label>
++        <button
++          className="ui-button"
++          type="button"
++          onClick={() =>
++            loading ? controller.current?.abort() : void refresh()
++          }
++        >
++          {loading ? "取消加载" : "加载来源"}
++        </button>
++        <a href={source.homepage} target="_blank" rel="noreferrer noopener">
++          来源主页 ↗
++        </a>
++      </div>
++      <p className="prompt-library-note">
++        加载时仅访问所选公开目录；不会发送你的草稿、项目或密钥。应用仅加入文字，不会自动生成或导入参考图。
++      </p>
++      <p role="status">{loading ? "正在加载来源…" : status}</p>
++      {error && (
++        <p className="prompt-library-error" role="alert">
++          {error}
++        </p>
++      )}
++      <label className="prompt-library-search">
++        搜索提示词
++        <input
++          className="ui-input"
++          type="search"
++          aria-label="搜索提示词"
++          value={keyword}
++          onChange={(e) => {
++            setKeyword(e.target.value);
++            setPage(0);
++          }}
++          placeholder="搜索标题、正文或标签"
++        />
++      </label>
++      <div className="prompt-library-content">
++        <div className="prompt-library-results">
++          <div
++            className="prompt-library-list"
++            aria-label="提示词列表"
++            aria-busy={loading}
++          >
++            {filtered
++              .slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE)
++              .map((item) => (
++                <button
++                  className="prompt-library-item"
++                  type="button"
++                  key={item.id}
++                  aria-pressed={selected?.id === item.id}
++                  aria-label={item.title}
++                  onClick={() => {
++                    setSelected(item);
++                    setError("");
++                  }}
++                >
++                  <strong>{item.title}</strong>
++                  <span>{item.tags.join(" · ") || source.name}</span>
++                </button>
++              ))}
++            {!filtered.length && (
++              <p>
++                {items.length
++                  ? "没有匹配的提示词，试试其他关键词。"
++                  : "暂无提示词，选择来源后加载。"}
++              </p>
++            )}
++          </div>
++          <div className="prompt-library-pagination">
++            <button
++              className="ui-button"
++              type="button"
++              disabled={currentPage === 0}
++              onClick={() => setPage((current) => current - 1)}
++            >
++              上一页
++            </button>
++            <span>
++              {currentPage + 1} / {pages} · {filtered.length} 条
++            </span>
++            <button
++              className="ui-button"
++              type="button"
++              disabled={currentPage + 1 === pages}
++              onClick={() => setPage((current) => current + 1)}
++            >
++              下一页
++            </button>
++          </div>
++        </div>
++        <article className="prompt-library-detail" aria-label="提示词预览">
++          {selected ? (
++            <>
++              <h3>{selected.title}</h3>
++              <p>{selected.prompt}</p>
++              <span>{selected.prompt.length} 字符</span>
++            </>
++          ) : (
++            <p>选择一条提示词，查看完整内容。</p>
++          )}
++        </article>
++      </div>
++      <footer>
++        <span>加入{target}，保留现有文字、模型和附件。</span>
++        <button
++          className="ui-button is-primary"
++          type="button"
++          disabled={!selected || loading}
++          onClick={() => {
++            if (!selected) return;
++            const issue = onApply(selected.prompt);
++            if (issue) setError(issue);
++            else onClose();
++          }}
++        >
++          加入草稿
++        </button>
++      </footer>
++    </section>
++  );
++}
+--- a/src/components/StartPage.tsx
++++ b/src/components/StartPage.tsx
+@@ -37,6 +37,7 @@
+   onOpenModel,
+   onOpenSkills,
+   onOpenPlugins,
++  onOpenPrompts,
+   defaultModel = "",
+   draft: externalDraft,
+   onDraftChange,
+@@ -51,6 +52,7 @@
+   onOpenModel: () => void;
+   onOpenSkills: () => void;
+   onOpenPlugins: () => void;
++  onOpenPrompts: () => void;
+   defaultModel?: string;
+   draft?: CreationDraft;
+   onDraftChange?: (draft: CreationDraft) => void;
+@@ -98,6 +100,13 @@
+           skills={skills}
+           onApplySkill={onApplySkill}
+         />
++        <button
++          className="ui-button start-prompt-library"
++          type="button"
++          onClick={onOpenPrompts}
++        >
++          提示词库
++        </button>
+         {status && (
+           <p className="start-status" role="status">
+             {status}
+--- a/src/components/StartResourcePopover.tsx
++++ b/src/components/StartResourcePopover.tsx
+@@ -1,4 +1,5 @@
+ import type { SkillRecord } from "../features/skills/skillRegistry";
++import ComposerPluginSummary from "./ComposerPluginSummary";
+ 
+ export default function StartResourcePopover({
+   kind,
+@@ -21,7 +22,9 @@
+       role="menu"
+       aria-label={skill ? "选择 Skill" : "选择插件"}
+     >
+-      {skill && availableSkills.length ? (
++      {!skill ? (
++        <ComposerPluginSummary />
++      ) : availableSkills.length ? (
+         <div
+           className="start-skill-options"
+           role="group"
+@@ -47,7 +50,7 @@
+         </p>
+       )}
+       <button type="button" role="menuitem" onClick={onOpen}>
+-        {skill ? "浏览 Skill 目录" : "管理插件连接"}
++        {skill ? "浏览 Skill 目录" : "管理画布插件"}
+       </button>
+     </div>
+   );
+--- a/src/components/TopBar.tsx
++++ b/src/components/TopBar.tsx
+@@ -1,5 +1,6 @@
+ import { useRef, useState } from "react";
+ import { useDismissible } from "./useDismissible";
++import { appPlatform } from "../runtime/appInfo";
+ export default function TopBar({
+   onOpen,
+   onToggleSidebar,
+@@ -17,6 +18,7 @@
+     文件: [
+       { text: "项目库", action: () => onOpen("projects") },
+       { text: "资产管理", action: () => onOpen("assets") },
++      { text: "提示词库", action: () => onOpen("prompts") },
+     ],
+     编辑: [{ text: "设置", action: () => onOpen("settings") }],
+     窗口: [
+@@ -66,7 +68,7 @@
+       >
+         <img src="/design/figma/search.svg" alt="" />
+       </button>
+-      <span className="preview-label">前端预览</span>
++      <span className="preview-label">{appPlatform()}</span>
+     </header>
+   );
+ }
+--- a/src/components/nodes/PromptCreationNode.tsx
++++ b/src/components/nodes/PromptCreationNode.tsx
+@@ -9,6 +9,25 @@
+ import { GenerationAction, GenerationStatus } from "./GenerationAction";
+ import { useCanvasImageGeneration } from "../../features/creation/CanvasImageCommand";
+ 
++const TEXT_MODES = [
++  {
++    value: "prompt",
++    label: "提示词生成",
++    instruction: "请根据以下主题编写可直接使用的生成提示词：",
++  },
++  {
++    value: "script",
++    label: "剧本生成",
++    instruction: "请根据以下主题编写包含场景、动作和对白的剧本：",
++  },
++  {
++    value: "plan",
++    label: "策划案生成",
++    instruction: "请根据以下主题编写包含目标、方案和执行步骤的策划案：",
++  },
++  { value: "custom", label: "自己编写内容", instruction: "" },
++] as const;
++
+ export default function PromptCreationNode({
+   item,
+   selected,
+@@ -17,9 +36,12 @@
+   onDemoResults,
+ }: NodeEditingProps & { item: CanvasCollectionItem }) {
+   const label = CANVAS_KIND_LABELS[item.kind];
+-  const [mode, setMode] = useState<"prompt" | "script" | "plan" | "custom">(
+-    "prompt",
+-  );
++  const mode =
++    TEXT_MODES.find(
++      (entry) =>
++        entry.instruction &&
++        (item.prompt ?? "").startsWith(entry.instruction + "\n\n"),
++    )?.value ?? "custom";
+   const [status, setStatus] = useState("");
+   const demoGeneration = useLocalGeneration(item.kind, onDemoResults);
+   const textGeneration = useCanvasImageGeneration();
+@@ -35,7 +57,9 @@
+             <UiIcon name={item.kind} />
+             {label}
+           </span>
+-          <span className="demo-badge">前端草稿</span>
++          <span className="demo-badge">
++            {item.kind === "audio" ? "本地演示" : "本地草稿"}
++          </span>
+         </header>
+         <h3>{item.title}</h3>
+         <div className="prompt-creation-placeholder">
+@@ -43,30 +67,52 @@
+           <p>
+             {item.kind === "text" && textGeneration.draftText
+               ? `正在生成：${textGeneration.draftText.slice(-240)}`
+-              : "在下方输入内容，开始创作"}
++              : item.kind === "audio"
++                ? "当前播放固定演示音频，语音生成尚未接入。"
++                : "在下方输入内容，开始创作"}
+           </p>
+         </div>
+-        <div className="prompt-presets" role="group" aria-label="文案创作方式">
+-          {[
+-            ["prompt", "提示词生成"],
+-            ["script", "剧本生成"],
+-            ["plan", "策划案生成"],
+-            ["custom", "自己编写内容"],
+-          ].map(([value, text]) => (
+-            <button
+-              key={value}
+-              type="button"
+-              className={mode === value ? "is-active" : ""}
+-              aria-pressed={mode === value}
+-              onClick={() => {
+-                setMode(value as typeof mode);
+-                setStatus(`${text}：请在下方输入区继续编辑。`);
+-              }}
+-            >
+-              {text}
+-            </button>
+-          ))}
+-        </div>
++        {item.kind === "text" && (
++          <div
++            className="prompt-presets"
++            role="group"
++            aria-label="文案创作方式"
++          >
++            {TEXT_MODES.map((entry) => (
++              <button
++                key={entry.value}
++                type="button"
++                className="ui-button"
++                aria-pressed={mode === entry.value}
++                onClick={() => {
++                  let content = item.prompt ?? "";
++                  const previous = TEXT_MODES.find(
++                    (mode) =>
++                      mode.instruction &&
++                      content.startsWith(mode.instruction + "\n\n"),
++                  );
++                  if (previous)
++                    content = content.slice(previous.instruction.length + 2);
++                  const prompt = entry.instruction
++                    ? `${entry.instruction}\n\n${content}`
++                    : content;
++                  if (prompt.length > 4000) {
++                    setStatus("加入指令后超过 4,000 字符，请先精简输入。");
++                    return;
++                  }
++                  onChange({ prompt });
++                  setStatus(
++                    entry.instruction
++                      ? "写作指令已加入输入，编辑后点击生成。"
++                      : "已切换为自由写作，保留你的内容。",
++                  );
++                }}
++              >
++                {entry.label}
++              </button>
++            ))}
++          </div>
++        )}
+       </article>
+       {selected && (
+         <div
+@@ -96,7 +142,11 @@
+             }}
+           />
+           <GenerationStatus generation={generation} />
+-          <span className="prompt-composer-label">提示词优化</span>
++          <span className="prompt-composer-label">
++            {item.kind === "text"
++              ? "写作指令可直接编辑"
++              : "音频演示 · 参数不改变固定素材"}
++          </span>
+           {status && (
+             <p className="prompt-tool-status" role="status">
+               {status}
+--- a/src/components/settings/AgentConnectionSettings.tsx
++++ b/src/components/settings/AgentConnectionSettings.tsx
+@@ -3,6 +3,7 @@
+ import {
+   readPermissionMode,
+   writePermissionMode,
++  subscribeAgentPreferences,
+ } from "../../features/agent/agentConnection.ts";
+ import type { AgentPermissionMode } from "../../features/agent/agentTypes.ts";
+ 
+@@ -27,8 +28,10 @@
+   );
+   const [endpoint, setEndpoint] = useState(state.endpoint);
+   const [token, setToken] = useState(state.token);
+-  const [permissionMode, setPermissionMode] =
+-    useState<AgentPermissionMode>(readPermissionMode);
++  const permissionMode = useSyncExternalStore(
++    subscribeAgentPreferences,
++    readPermissionMode,
++  );
+ 
+   useEffect(() => {
+     setEndpoint(state.endpoint);
+@@ -45,13 +48,17 @@
+           : "is-offline";
+ 
+   async function handleConnect() {
+-    agentConnection.setCredentials(endpoint, token);
++    if (endpoint.trim() !== state.endpoint || token.trim() !== state.token) {
++      agentConnection.setCredentials(endpoint, token);
++    }
+     await agentConnection.connect();
+     const next = agentConnection.getState();
+     onFeedback(
+       next.status === "connected"
+         ? "已连接本地 Agent，对话面板将切换到 Agent 会话。"
+-        : next.error || "连接失败，请确认已运行 npm run agent。",
++        : next.status === "connecting"
++          ? "正在等待本地 Agent 会话就绪。"
++          : next.error || "连接失败，请检查本地服务。",
+     );
+   }
+ 
+@@ -64,11 +71,19 @@
+         />
+         <h3>
+           本地 Agent（canvas-agent）
+-          <span className="settings-version-tag">已接入</span>
++          <span className="settings-version-tag">
++            {state.status === "connected"
++              ? "已连接"
++              : state.status === "connecting"
++                ? "连接中"
++                : state.status === "error"
++                  ? "连接异常"
++                  : "未连接"}
++          </span>
+         </h3>
+       </div>
+       <p>
+-        基于 vendor/canvas-agent。连接后对话面板切换为 Agent 会话，可让 Agent
++        连接本机运行的 Agent 服务后，可在对话面板选择「本地 Agent」，让 Agent
+         读取画布状态、修改节点并回执操作结果；权限请求在会话中确认。
+       </p>
+       <div className="settings-network-field">
+@@ -88,6 +103,8 @@
+         <label htmlFor="agent-token">连接 Token（可选）</label>
+         <input
+           id="agent-token"
++          type="password"
++          autoComplete="off"
+           aria-label="连接 Token"
+           value={token}
+           disabled={
+@@ -103,9 +120,9 @@
+           id="agent-permission"
+           aria-label="权限模式"
+           value={permissionMode}
++          disabled={state.sending}
+           onChange={(e) => {
+             const mode = e.target.value as AgentPermissionMode;
+-            setPermissionMode(mode);
+             writePermissionMode(mode);
+             onFeedback("权限模式已更新：" + PERMISSION_LABELS[mode] + "。");
+           }}
+@@ -119,6 +136,10 @@
+           )}
+         </select>
+       </div>
++      <p className="settings-network-activity">
++        连接 Token 仅供本次应用会话使用，重启后需重新输入。权限仅影响
++        Agent，不影响图片任务确认。
++      </p>
+       {state.status === "error" && state.error && (
+         <p className="settings-network-error" role="alert">
+           {state.error}
+@@ -150,10 +171,12 @@
+           disabled={state.status === "disconnected"}
+           onClick={() => {
+             agentConnection.disconnect();
+-            onFeedback("已断开本地 Agent，对话面板恢复图片生成会话。");
++            onFeedback(
++              "已断开本地 Agent。指令不会转交图片任务；断开连接不代表任务已停止。",
++            );
+           }}
+         >
+-          断开
++          {state.status === "connecting" ? "取消连接" : "断开"}
+         </button>
+       </div>
+       <p className="settings-network-code">
+--- a/src/components/settings/ConnectionSettings.tsx
++++ b/src/components/settings/ConnectionSettings.tsx
+@@ -1,3 +1,4 @@
++import { appVersion } from "../../runtime/appInfo";
+ import type { SettingsSection } from "./SettingsSectionData";
+ import ModelProviderSettings from "./ModelProviderSettings";
+ import McpSettings from "./McpSettings";
+@@ -14,7 +15,7 @@
+   network: {
+     title: "本地服务",
+     description:
+-      "本地转发代理与本地 Agent（MCP）已接入，见下方启动命令；模型 API 可在模型供应商中配置。",
++      "本地 Agent 需要启动服务后连接；转发代理为独立服务，尚未接入全局网络配置。",
+   },
+   memory: {
+     title: "暂无记忆",
+@@ -56,7 +57,9 @@
+             <span>更新检查尚未接入</span>
+           </div>
+           <span className="settings-version-tag">Prototype</span>
+-          <span className="settings-version-current">当前版本信息不可用</span>
++          <span className="settings-version-current">
++            当前版本 {appVersion}
++          </span>
+           <button
+             type="button"
+             className="settings-action settings-restart-button"
+@@ -138,8 +141,8 @@
+           <div>
+             <h3>本地转发代理</h3>
+             <p>
+-              已接入 · 基于 vendor/canvas-proxy。启动后把代理地址填入需要绕过
+-              CORS 的接口配置，请求按「代理地址 + 完整目标地址」转发。
++              需独立启动 · 应用尚未提供全局代理配置。此服务当前供支持
++              localProxyUrl 的接口调用，不会自动影响模型请求。
+             </p>
+             <p className="settings-network-code">
+               npm run proxy → http://127.0.0.1:23210
+@@ -153,8 +156,8 @@
+       <div className="settings-detail-stack">
+         <h3 className="settings-detail-label">画布插件</h3>
+         <p className="settings-network-activity">
+-          插件来自 vendor/canvas-plugins（SDK + 内置插件），随应用启动自动发现并
+-          按启停状态激活；安装/更新/卸载不影响内置节点类型。
++          在画布「添加节点 › 插件」中使用已启用插件。这里管理画布扩展；MCP
++          工具请在 MCP 设置中管理。
+         </p>
+         <PluginManagerSettings onFeedback={onFeedback} />
+       </div>
+--- a/src/components/settings/SettingsSections.tsx
++++ b/src/components/settings/SettingsSections.tsx
+@@ -1,3 +1,4 @@
++import { appPlatform } from "../../runtime/appInfo";
+ import { useState } from "react";
+ import { serializeSettings } from "../../domain/settings";
+ import type { SettingsPreferences } from "../../domain/settings";
+@@ -60,11 +61,11 @@
+         {section === "storage" && (
+           <>
+             <p className="settings-section-intro">
+-              在当前浏览器中保存主题、布局等非敏感偏好。
++              在当前设备保存主题、布局等非敏感偏好。
+             </p>
+             <div className="settings-info-row">
+               <span>偏好保存位置</span>
+-              <strong>当前浏览器</strong>
++              <strong>{appPlatform()} · 本机</strong>
+             </div>
+             <div className="settings-info-row">
+               <span>导出内容</span>
+@@ -87,11 +88,11 @@
+         {section === "advanced" && (
+           <>
+             <p className="settings-section-intro">
+-              管理当前浏览器的界面偏好。项目和资产不会受影响。
++              管理当前设备的界面偏好。项目和资产不会受影响。
+             </p>
+             <div className="settings-info-row">
+-              <span>应用阶段</span>
+-              <strong>前端原型</strong>
++              <span>运行平台</span>
++              <strong>{appPlatform()} · 本地优先</strong>
+             </div>
+             <button
+               type="button"
+--- a/src/features/agent/agentApi.ts
++++ b/src/features/agent/agentApi.ts
+@@ -11,6 +11,8 @@
+   CanvasAgentSnapshot,
+   AgentTurnInput,
+   AgentTurnResponse,
++  AgentConversationState,
++  AgentPermissionMode,
+ } from "./agentTypes.ts";
+ 
+ export class AgentApiError<T = unknown> extends Error {
+@@ -40,12 +42,14 @@
+   const endpoint = options.endpoint.trim().replace(/\/+$/, "");
+   const token = options.token.trim();
+ 
+-  function withToken(url: string) {
+-    return `${endpoint}${url}${url.includes("?") ? "&" : "?"}token=${encodeURIComponent(token)}`;
++  function requestUrl(url: string) {
++    return `${endpoint}${url}`;
+   }
+ 
+   async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
+-    const response = await fetchImpl(withToken(path), init);
++    const headers = new Headers(init?.headers);
++    headers.set("x-canvas-agent-token", token);
++    const response = await fetchImpl(requestUrl(path), { ...init, headers });
+     const data = (await response.json().catch(() => ({}))) as T & {
+       error?: string;
+       msg?: string;
+@@ -57,7 +61,10 @@
+   function jsonPost(body: unknown): RequestInit {
+     return {
+       method: "POST",
+-      headers: { "content-type": "application/json" },
++      headers: {
++        "content-type": "application/json",
++        "x-canvas-agent-token": token,
++      },
+       body: JSON.stringify(body),
+     };
+   }
+@@ -89,7 +96,7 @@
+     async postState(snapshot: CanvasAgentSnapshot | null): Promise<boolean> {
+       try {
+         const response = await fetchImpl(
+-          withToken(
++          requestUrl(
+             `/canvas/state?clientId=${encodeURIComponent(options.clientId)}`,
+           ),
+           jsonPost(
+@@ -104,15 +111,34 @@
+ 
+     /** POST /canvas/activate：向 Agent 注册当前页面客户端。 */
+     async activate(): Promise<void> {
++      await fetchJson(
++        `/canvas/activate?clientId=${encodeURIComponent(options.clientId)}`,
++        { method: "POST" },
++      );
++    },
++
++    /** 用户明确准备空会话；调用方必须避免覆盖既有会话。 */
++    async prepareConversation(
++      permissionMode: AgentPermissionMode,
++      conversation: AgentConversationState,
++    ): Promise<{ ok: boolean; conversation: AgentConversationState }> {
+       try {
+-        await fetchImpl(
+-          withToken(
+-            `/canvas/activate?clientId=${encodeURIComponent(options.clientId)}`,
+-          ),
+-          { method: "POST" },
++        return await fetchJson(
++          "/agent/codex/conversation/prepare",
++          jsonPost({
++            clientId: options.clientId,
++            permissionMode,
++            expectedConversationId: conversation.conversationId,
++            expectedRevision: conversation.revision,
++          }),
+         );
+-      } catch {
+-        // 激活失败不阻断连接，Agent 仍可对话。
++      } catch (error) {
++        if (error instanceof AgentApiError && error.status === 404)
++          throw new Error(
++            "当前 Agent 服务不支持安全准备会话，请更新并重新启动本地服务（npm run agent）。",
++            { cause: error },
++          );
++        throw error;
+       }
+     },
+ 
+--- a/src/features/agent/agentConnection.ts
++++ b/src/features/agent/agentConnection.ts
+@@ -1,7 +1,7 @@
+ /**
+  * 本地 Agent 连接 store（无第三方依赖的外部 store）。
+  *
+- * 生命周期：connect（discover → activate → 推送画布快照 → 建立 SSE）→
++ * 生命周期：connect（discover → SSE hello → activate → 推送画布快照）→
+  * 对话（POST /agent/codex/turn）→ SSE 事件驱动 UI →
+  * 画布工具请求（tool_call → 宿主应用操作 → /canvas/result 回执）。
+  *
+@@ -21,7 +21,8 @@
+   type CanvasAgentOp,
+   type CanvasAgentSnapshot,
+ } from "./agentTypes.ts";
+-import { createAgentApi, type AgentApi } from "./agentApi.ts";
++import { createAgentApi, AgentApiError, type AgentApi } from "./agentApi.ts";
++import { createAgentEventStream } from "./agentEventStream.ts";
+ import {
+   formatAgentActivity,
+   mergeAgentChatItem,
+@@ -47,10 +48,12 @@
+   activity: string;
+   error: string | null;
+   clientId: string;
++  connectionRevision: number;
+   conversation: AgentConversationState | null;
+   messages: AgentChatItem[];
+   pendingApproval: AgentApprovalRequest | null;
+   sending: boolean;
++  preparing: boolean;
+   lastConnectedAt: number | null;
+   protocolVersion?: number;
+ }
+@@ -93,6 +96,13 @@
+ const PERMISSION_MODE_KEY = "canvas-agent-permission-mode";
+ const MODEL_KEY = "canvas-agent-model";
+ const EFFORT_KEY = "canvas-agent-reasoning-effort";
++const preferenceListeners = new Set<() => void>();
++export function subscribeAgentPreferences(listener: () => void) {
++  preferenceListeners.add(listener);
++  return () => {
++    preferenceListeners.delete(listener);
++  };
++}
+ 
+ export function readPermissionMode(): AgentPermissionMode {
+   const value = safeStorage.getItem(PERMISSION_MODE_KEY);
+@@ -100,6 +110,7 @@
+ }
+ export function writePermissionMode(mode: AgentPermissionMode): void {
+   safeStorage.setItem(PERMISSION_MODE_KEY, mode);
++  preferenceListeners.forEach((listener) => listener());
+ }
+ export function readAgentModel(): string | undefined {
+   return safeStorage.getItem(MODEL_KEY) ?? undefined;
+@@ -120,17 +131,21 @@
+ export function createAgentConnection(options: AgentConnectionOptions = {}) {
+   const clientId = options.clientId ?? crypto.randomUUID();
+   const storage = options.storage ?? safeStorage;
++  // Connection tokens belong to this process only, never browser storage.
++  storage.removeItem("canvas-agent-token");
+   let state: AgentConnectionState = {
+     endpoint: storage.getItem("canvas-agent-url") ?? AGENT_DEFAULT_URL,
+-    token: storage.getItem("canvas-agent-token") ?? "",
++    token: "",
+     status: "disconnected",
+     activity: "",
+     error: null,
+     clientId,
++    connectionRevision: 0,
+     conversation: null,
+     messages: [],
+     pendingApproval: null,
+     sending: false,
++    preparing: false,
+     lastConnectedAt: null,
+   };
+   const listeners = new Set<() => void>();
+@@ -139,29 +154,28 @@
+   let bridge: AgentBridge | null = null;
+   let activeTurnThreadId = "";
+   let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
++  let connectionRevision = 0;
++  const approvals = new Map<string, AgentApprovalRequest>();
++
++  function refreshApproval() {
++    patch({ pendingApproval: approvals.values().next().value ?? null });
++  }
+ 
+   function emit() {
+     listeners.forEach((listener) => listener());
+   }
+   function patch(p: Partial<AgentConnectionState>) {
+-    state = { ...state, ...p };
++    state = { ...state, ...p, connectionRevision };
+     emit();
+   }
+ 
+   function persistEndpoint() {
+     storage.setItem("canvas-agent-url", state.endpoint);
+   }
+-  function persistToken() {
+-    if (state.token) storage.setItem("canvas-agent-token", state.token);
+-    else storage.removeItem("canvas-agent-token");
+-  }
+-
+   const eventSourceFactory =
+     options.eventSourceFactory ??
+     ((url: string) =>
+-      new EventSource(url, {
+-        withCredentials: false,
+-      }) as unknown as EventSourceLike);
++      createAgentEventStream(url, state.token, options.fetcher));
+ 
+   const getApi = (): AgentApi => {
+     if (!api) {
+@@ -190,22 +204,25 @@
+     switch (event.kind) {
+       case "conversation": {
+         const conversation = event.conversation;
++        if (
++          state.conversation &&
++          conversation.revision < state.conversation.revision
++        )
++          break;
++        activeTurnThreadId = conversation.threadId;
+         patch({
+           conversation,
+           sending: conversation.status === "running",
+-          activity:
+-            conversation.status === "running"
+-              ? "Codex 正在执行…"
+-              : conversation.status === "preparing"
+-                ? "正在准备对话…"
+-                : state.status === "connecting"
+-                  ? "对话就绪"
+-                  : state.activity,
+-          error: conversation.error || state.error,
++          activity: {
++            idle: "等待准备会话",
++            preparing: "正在准备对话…",
++            ready: "对话就绪",
++            warning: "对话可用，部分可选工具不可用",
++            running: "Codex 正在执行…",
++            failed: "会话准备失败",
++          }[conversation.status],
++          error: conversation.error || null,
+         });
+-        if (conversation.status === "ready" && state.status === "connecting") {
+-          patch({ status: "connected", lastConnectedAt: Date.now() });
+-        }
+         if (
+           conversation.sourceClientId &&
+           conversation.sourceClientId !== clientId
+@@ -230,7 +247,6 @@
+           if (existing) updateMessage(item.id, item);
+           else addMessage(item);
+         }
+-        patch({ sending: false });
+         break;
+       }
+       case "activity": {
+@@ -252,12 +268,12 @@
+         break;
+       }
+       case "approval":
+-        patch({ pendingApproval: event.approval });
++        approvals.set(event.approval.requestId, event.approval);
++        refreshApproval();
+         break;
+       case "approval_resolved":
+-        if (state.pendingApproval?.requestId === event.requestId) {
+-          patch({ pendingApproval: null });
+-        }
++        approvals.delete(event.requestId);
++        refreshApproval();
+         break;
+       case "tool_call":
+         void handleToolCall(event.requestId, event.name, event.input);
+@@ -267,7 +283,6 @@
+           patch({ activity: "正在准备 Codex…" });
+         if (event.type === "codex.prepare_failed") {
+           patch({
+-            status: "error",
+             error: event.error || "Codex 启动失败（请确认已安装 Codex CLI）",
+             activity: "Codex 启动失败",
+           });
+@@ -277,7 +292,14 @@
+         if (event.activeThreadId) activeTurnThreadId = event.activeThreadId;
+         break;
+       case "codex":
+-        patch({ sending: event.busy });
++        patch({
++          sending: event.busy,
++          activity: event.busy
++            ? "Agent 正在执行…"
++            : state.sending
++              ? "Agent 已结束当前执行"
++              : state.activity,
++        });
+         break;
+     }
+   }
+@@ -366,14 +388,86 @@
+ 
+   function eventSourceUrl(): string {
+     const endpoint = state.endpoint.trim().replace(/\/+$/, "");
+-    return `${endpoint}/events?clientId=${encodeURIComponent(clientId)}&token=${encodeURIComponent(state.token)}`;
+-  }
+-
+-  function openEventStream(): void {
++    return `${endpoint}/events?clientId=${encodeURIComponent(clientId)}`;
++  }
++
++  function openEventStream(revision: number, connectionApi: AgentApi): void {
+     closeEventStream();
+     const source = eventSourceFactory(eventSourceUrl());
+     eventSource = source;
++    let receivedHello = false;
++    const current = () =>
++      revision === connectionRevision && source === eventSource;
++    async function registerClient(payload: unknown) {
++      const hello = payload as {
++        ok?: boolean;
++        conversation?: AgentConversationState;
++        codex?: { busy?: boolean };
++        workspace?: { activeThreadId?: string };
++        pendingApprovals?: unknown[];
++      } | null;
++      if (
++        !hello?.ok ||
++        !hello.conversation ||
++        typeof hello.conversation.revision !== "number"
++      ) {
++        fail("本地 Agent 返回了无效的连接状态，请检查服务版本。");
++        return;
++      }
++      // The service registers this SSE client before sending hello. Activation
++      // and snapshots sent before that point are rejected or discarded.
++      patch({
++        conversation: null,
++        messages:
++          state.conversation?.conversationId ===
++          hello.conversation.conversationId
++            ? state.messages
++            : [],
++      });
++      handleEvent({ kind: "conversation", conversation: hello.conversation });
++      if (hello.workspace)
++        handleEvent({
++          kind: "workspace",
++          activeThreadId: hello.workspace.activeThreadId,
++        });
++      if (hello.codex)
++        handleEvent({ kind: "codex", busy: Boolean(hello.codex.busy) });
++      approvals.clear();
++      for (const approval of hello.pendingApprovals ?? []) {
++        const event = parseAgentSseEvent("codex_approval", approval);
++        if (event) handleEvent(event);
++      }
++      refreshApproval();
++      try {
++        await connectionApi.activate();
++        if (!current()) return;
++        if (!(await connectionApi.postState(bridge?.getSnapshot() ?? null)))
++          throw new Error("画布状态同步失败，请重新连接。");
++        if (!current()) return;
++        if (reconnectTimer) clearTimeout(reconnectTimer);
++        patch({
++          status: "connected",
++          lastConnectedAt: Date.now(),
++          activity: "已连接本地服务",
++        });
++      } catch (error) {
++        if (current())
++          fail(error instanceof Error ? error.message : "画布连接失败");
++      }
++    }
++    function fail(error: string) {
++      if (!current()) return;
++      connectionRevision++;
++      patch({
++        status: "error",
++        activity: "连接已断开",
++        error,
++        preparing: false,
++      });
++      closeEventStream();
++    }
+     source.onmessage = (event) => {
++      if (!current()) return;
+       let parsed: unknown;
+       try {
+         parsed =
+@@ -381,19 +475,27 @@
+       } catch {
+         return;
+       }
+-      const frame = parseAgentSsePayload(parsed);
++      const frame =
++        event.type && event.type !== "message"
++          ? { type: event.type, data: parsed }
++          : parseAgentSsePayload(parsed);
+       if (!frame) return;
++      if (frame.type === "hello") {
++        if (!receivedHello) {
++          receivedHello = true;
++          void registerClient(frame.data);
++        }
++        return;
++      }
+       const agentEvent = parseAgentSseEvent(frame.type, frame.data);
+       if (agentEvent) handleEvent(agentEvent);
+     };
+     source.onerror = () => {
+-      if (!state.sending) {
+-        patch({
+-          status: "error",
+-          activity: "连接已断开",
+-          error: "无法连接本地 Agent（请确认已运行 npm run agent）",
+-        });
+-      }
++      fail(
++        state.sending
++          ? "执行期间连接中断，请重新连接并核对任务结果后再发送。"
++          : "无法连接本地 Agent，请检查服务后重新连接。",
++      );
+     };
+   }
+ 
+@@ -410,13 +512,16 @@
+ 
+   async function connect(): Promise<void> {
+     if (state.status === "connecting") return;
++    const revision = ++connectionRevision;
++    closeEventStream();
++    if (reconnectTimer) clearTimeout(reconnectTimer);
+     patch({
+       status: "connecting",
+       activity: "正在连接本地 Agent…",
+       error: null,
++      preparing: false,
+     });
+     persistEndpoint();
+-    persistToken();
+     api = createAgentApi({
+       endpoint: state.endpoint,
+       token: state.token,
+@@ -425,6 +530,7 @@
+     });
+     try {
+       const config = await getApi().discover();
++      if (revision !== connectionRevision) return;
+       if (!config?.ok) {
+         patch({
+           status: "error",
+@@ -434,18 +540,22 @@
+         return;
+       }
+       patch({ protocolVersion: config.protocolVersion });
+-      await getApi().activate();
+-      const snapshot = bridge?.getSnapshot() ?? null;
+-      await getApi().postState(snapshot);
+-      openEventStream();
+-      // 若 SSE 长时间未到达 conversation 事件，回退为已连接。
++      openEventStream(revision, getApi());
++      // Discovery alone does not prove an authenticated, registered client.
+       if (reconnectTimer) clearTimeout(reconnectTimer);
+       reconnectTimer = setTimeout(() => {
+-        if (state.status === "connecting") {
+-          patch({ status: "connected", activity: "已连接（等待会话事件）" });
++        if (revision === connectionRevision && state.status === "connecting") {
++          patch({
++            status: "error",
++            activity: "会话尚未就绪",
++            error: "服务已响应，但会话未就绪。请检查本地服务后重试。",
++          });
++          connectionRevision++;
++          closeEventStream();
+         }
+       }, AGENT_CONNECT_TIMEOUT_MS);
+     } catch (error) {
++      if (revision !== connectionRevision) return;
+       patch({
+         status: "error",
+         activity: "连接失败",
+@@ -455,8 +565,11 @@
+   }
+ 
+   function disconnect(): void {
++    connectionRevision++;
+     closeEventStream();
+     if (reconnectTimer) clearTimeout(reconnectTimer);
++    activeTurnThreadId = "";
++    approvals.clear();
+     patch({
+       status: "disconnected",
+       activity: "",
+@@ -465,6 +578,7 @@
+       messages: [],
+       pendingApproval: null,
+       sending: false,
++      preparing: false,
+     });
+   }
+ 
+@@ -473,12 +587,17 @@
+     input?: { model?: string; effort?: AgentReasoningEffort | "" },
+   ): Promise<{ ok: boolean; error?: string }> {
+     const trimmed = text.trim();
++    const revision = connectionRevision;
+     if (!trimmed || state.status !== "connected") {
+       return { ok: false, error: "Agent 未连接" };
+     }
+     if (state.sending) return { ok: false, error: "Codex 正在运行，请稍候" };
+     const conversation = state.conversation;
+-    if (!conversation || !conversation.conversationId) {
++    if (
++      !conversation?.threadId ||
++      !["ready", "warning"].includes(conversation.status) ||
++      state.preparing
++    ) {
+       return { ok: false, error: "对话尚未就绪" };
+     }
+     const messageId = crypto.randomUUID();
+@@ -507,6 +626,11 @@
+         effort: input?.effort ?? readAgentEffort(),
+         attachments: [],
+       });
++      if (revision !== connectionRevision)
++        return {
++          ok: false,
++          error: "连接已变化，请核对 Agent 任务记录后再操作。",
++        };
+       if (response.threadId) activeTurnThreadId = response.threadId;
+       if (response.state)
+         handleEvent({ kind: "conversation", conversation: response.state });
+@@ -520,6 +644,11 @@
+       }
+       return { ok: true };
+     } catch (error) {
++      if (revision !== connectionRevision)
++        return {
++          ok: false,
++          error: "连接已变化，请核对 Agent 任务记录后再操作。",
++        };
+       const message = error instanceof Error ? error.message : "发送失败";
+       patch({
+         sending: false,
+@@ -533,9 +662,16 @@
+   async function interrupt(): Promise<{ ok: boolean; error?: string }> {
+     if (!api || state.status !== "connected")
+       return { ok: false, error: "Agent 未连接" };
++    const revision = connectionRevision;
+     try {
+       await getApi().interrupt(activeTurnThreadId || undefined);
+-      patch({ sending: false, activity: "已中断" });
++      if (revision !== connectionRevision)
++        return { ok: false, error: "连接已变化，请核对当前任务状态。" };
++      patch({
++        activity: state.sending
++          ? "已请求停止，等待任务结束确认。"
++          : "Agent 已结束当前执行",
++      });
+       return { ok: true };
+     } catch (error) {
+       return {
+@@ -549,10 +685,16 @@
+     decision: AgentApprovalDecision,
+   ): Promise<{ ok: boolean; error?: string }> {
+     const approval = state.pendingApproval;
+-    if (!api || !approval) return { ok: false, error: "没有待处理的权限请求" };
++    if (!api || !approval || state.status !== "connected")
++      return { ok: false, error: "没有已连接的待处理权限请求" };
++    const revision = connectionRevision;
+     try {
+       await getApi().resolveApproval(approval.requestId, decision);
+-      patch({ pendingApproval: null, activity: "已响应权限请求" });
++      if (revision !== connectionRevision)
++        return { ok: false, error: "连接已变化，请核对当前权限请求。" };
++      approvals.delete(approval.requestId);
++      refreshApproval();
++      if (!state.pendingApproval) patch({ activity: "已响应权限请求" });
+       return { ok: true };
+     } catch (error) {
+       return {
+@@ -562,6 +704,55 @@
+     }
+   }
+ 
++  async function prepareConversation(): Promise<{
++    ok: boolean;
++    error?: string;
++  }> {
++    if (
++      state.status !== "connected" ||
++      state.sending ||
++      state.preparing ||
++      state.conversation?.status !== "idle" ||
++      state.conversation.threadId
++    ) {
++      return {
++        ok: false,
++        error:
++          "只有尚未创建会话的本地服务可以在此准备；已有会话请核对服务状态。",
++      };
++    }
++    const revision = connectionRevision;
++    patch({ preparing: true, error: null, activity: "正在准备 Agent 会话…" });
++    try {
++      const result = await getApi().prepareConversation(
++        readPermissionMode(),
++        state.conversation,
++      );
++      if (revision !== connectionRevision)
++        return { ok: false, error: "连接已变化，请重新连接并核对会话状态。" };
++      if (!result.ok || !result.conversation)
++        throw new Error("会话准备未成功，请检查本地服务。");
++      handleEvent({ kind: "conversation", conversation: result.conversation });
++      return result.conversation.status === "failed"
++        ? { ok: false, error: result.conversation.error || "会话准备失败" }
++        : { ok: true };
++    } catch (error) {
++      const message = error instanceof Error ? error.message : "会话准备失败";
++      if (revision === connectionRevision) {
++        const serverState =
++          error instanceof AgentApiError
++            ? (error.response as { state?: AgentConversationState }).state
++            : undefined;
++        if (serverState)
++          handleEvent({ kind: "conversation", conversation: serverState });
++        patch({ error: message });
++      }
++      return { ok: false, error: message };
++    } finally {
++      if (revision === connectionRevision) patch({ preparing: false });
++    }
++  }
++
+   function setBridge(next: AgentBridge | null): void {
+     bridge = next;
+     // 已连接时推送一次快照，让桥接器变更立即生效。
+@@ -572,6 +763,7 @@
+   }
+ 
+   function setCredentials(endpoint: string, token: string): void {
++    disconnect();
+     api = null;
+     patch({
+       endpoint: endpoint.trim(),
+@@ -580,8 +772,7 @@
+       error: null,
+     });
+     storage.setItem("canvas-agent-url", endpoint.trim());
+-    if (token.trim()) storage.setItem("canvas-agent-token", token.trim());
+-    else storage.removeItem("canvas-agent-token");
++    storage.removeItem("canvas-agent-token");
+   }
+ 
+   return {
+@@ -593,6 +784,7 @@
+     connect,
+     disconnect,
+     sendMessage,
++    prepareConversation,
+     interrupt,
+     resolveApproval,
+     setBridge,
+--- a/src/features/agent/agentEventStream.ts
++++ b/src/features/agent/agentEventStream.ts
+@@ -0,0 +1,65 @@
++import type { EventSourceLike } from "./agentConnection.ts";
++
++/** Header-authenticated SSE. The local service already supports this header. */
++export function createAgentEventStream(
++  url: string,
++  token: string,
++  fetcher: typeof fetch = fetch,
++): EventSourceLike {
++  const controller = new AbortController();
++  const source: EventSourceLike = {
++    onmessage: null,
++    onerror: null,
++    close: () => controller.abort(),
++  };
++  async function read() {
++    try {
++      const response = await fetcher(url, {
++        headers: { "x-canvas-agent-token": token },
++        signal: controller.signal,
++      });
++      if (!response.ok || !response.body)
++        throw new Error("Agent event stream unavailable");
++      const reader = response.body.getReader();
++      const decoder = new TextDecoder();
++      let buffer = "";
++      try {
++        while (!controller.signal.aborted) {
++          const chunk = await reader.read();
++          if (chunk.done) throw new Error("Agent event stream closed");
++          buffer = (
++            buffer + decoder.decode(chunk.value, { stream: true })
++          ).replace(/\r\n/g, "\n");
++          let end: number;
++          while ((end = buffer.indexOf("\n\n")) !== -1) {
++            const frame = buffer.slice(0, end);
++            buffer = buffer.slice(end + 2);
++            const type =
++              frame
++                .split("\n")
++                .filter((line) => line.startsWith("event:"))
++                .at(-1)
++                ?.slice(6)
++                .trim() || "message";
++            const data = frame
++              .split("\n")
++              .filter((line) => line.startsWith("data:"))
++              .map((line) => line.slice(5).replace(/^ /, ""))
++              .join("\n");
++            if (data && !controller.signal.aborted)
++              source.onmessage?.({ type, data });
++          }
++          if (buffer.length > 1024 * 1024)
++            throw new Error("Agent event frame exceeds limit");
++        }
++      } finally {
++        await reader.cancel().catch(() => undefined);
++        reader.releaseLock();
++      }
++    } catch {
++      if (!controller.signal.aborted) source.onerror?.();
++    }
++  }
++  void read();
++  return source;
++}
+--- a/src/features/creation/providerCredentials.ts
++++ b/src/features/creation/providerCredentials.ts
+@@ -0,0 +1,114 @@
++import { invoke } from "@tauri-apps/api/core";
++
++const sessionApiKeys = new Map<string, string>();
++
++function isDesktop(): boolean {
++  return (
++    typeof window !== "undefined" &&
++    (window.location.protocol === "tauri:" ||
++      window.location.hostname === "tauri.localhost" ||
++      Boolean(
++        (window as Window & { __TAURI_INTERNALS__?: unknown })
++          .__TAURI_INTERNALS__,
++      ))
++  );
++}
++
++/** A non-secret, stable Windows Credential Manager account name. */
++export function credentialId(baseUrl: string, accountId = ""): string {
++  const canonical = canonicalBaseUrl(baseUrl);
++  const identity = accountId ? `${canonical}|${accountId.trim()}` : canonical;
++  let first = 2166136261;
++  let second = 2246822519;
++  for (const character of identity) {
++    first = Math.imul(first ^ character.charCodeAt(0), 16777619);
++    second = Math.imul(second ^ character.charCodeAt(0), 3266489917);
++  }
++  return `provider-${(first >>> 0).toString(16)}${(second >>> 0).toString(16)}`;
++}
++
++function canonicalBaseUrl(baseUrl: string): string {
++  try {
++    const url = new URL(baseUrl);
++    url.hash = "";
++    url.search = "";
++    // URL lowercases protocol/host while preserving a provider's path case.
++    // The same canonical value is used for the memory cache and credential ID.
++    url.pathname = url.pathname.replace(/\/{2,}/g, "/").replace(/\/$/, "");
++    return url.toString().replace(/\/$/, "");
++  } catch {
++    return baseUrl.trim().replace(/\/$/, "");
++  }
++}
++
++function keyFor(baseUrl: string, credentialRef?: string): string {
++  return credentialRef
++    ? `${canonicalBaseUrl(baseUrl)}|${credentialRef}`
++    : canonicalBaseUrl(baseUrl);
++}
++
++export function setSessionApiKey(
++  value: string,
++  baseUrl: string,
++  credentialRef?: string,
++): void {
++  const key = keyFor(baseUrl, credentialRef);
++  if (value.trim()) sessionApiKeys.set(key, value);
++  else sessionApiKeys.delete(key);
++}
++
++export function getSessionApiKey(
++  baseUrl: string,
++  credentialRef?: string,
++): string {
++  return sessionApiKeys.get(keyFor(baseUrl, credentialRef)) ?? "";
++}
++
++/** Reads a desktop credential into memory for one request session. */
++export async function loadApiKey(
++  baseUrl: string,
++  credentialRef?: string,
++): Promise<string> {
++  const cached = getSessionApiKey(baseUrl, credentialRef);
++  if (cached) return cached;
++  if (!isDesktop()) return "";
++  const value = await invoke<string | null>("credential_get", {
++    providerId: credentialRef ?? credentialId(baseUrl),
++  });
++  if (value) setSessionApiKey(value, baseUrl, credentialRef);
++  return value ?? "";
++}
++
++export async function hasApiKey(
++  baseUrl: string,
++  credentialRef?: string,
++): Promise<boolean> {
++  return Boolean(await loadApiKey(baseUrl, credentialRef));
++}
++
++export async function saveApiKey(
++  baseUrl: string,
++  value: string,
++  credentialRef?: string,
++): Promise<void> {
++  if (!value.trim()) return;
++  if (isDesktop()) {
++    await invoke("credential_set", {
++      providerId: credentialRef ?? credentialId(baseUrl),
++      secret: value,
++    });
++  }
++  setSessionApiKey(value, baseUrl, credentialRef);
++}
++
++export async function deleteApiKey(
++  baseUrl: string,
++  credentialRef?: string,
++): Promise<void> {
++  if (isDesktop()) {
++    await invoke("credential_delete", {
++      providerId: credentialRef ?? credentialId(baseUrl),
++    });
++  }
++  setSessionApiKey("", baseUrl, credentialRef);
++}
+--- a/src/features/prompts/promptLibrary.ts
++++ b/src/features/prompts/promptLibrary.ts
+@@ -170,7 +170,11 @@
+   ) => Promise<RawPrompt[]>;
+   fetchPrompts: (options?: PromptFetchOptions) => Promise<PromptListResponse>;
+   fetchSourcePrompts: (sourceId: string) => Promise<Prompt[]>;
+-  refreshSource: (sourceId: string) => Promise<PromptSourceRefreshResult>;
++  refreshSource: (
++    sourceId: string,
++    options?: { signal?: AbortSignal },
++  ) => Promise<PromptSourceRefreshResult>;
++  readCachedSource: (sourceId: string) => Promise<Prompt[]>;
+   refreshAllSources: () => Promise<PromptSourceRefreshSummary>;
+   refreshDueSources: (maxAgeMs: number) => Promise<PromptSourceRefreshSummary>;
+   statuses: () => Promise<Record<string, PromptSourceStatus>>;
+@@ -259,10 +263,15 @@
+ 
+   async function refreshSourceRecord(
+     source: PromptSource,
++    options?: { signal?: AbortSignal },
+   ): Promise<PromptSourceRefreshResult> {
+     const previous = await readSourceCache(source.id);
+     try {
+-      const items = withSourceMeta(source, await runSourceForLibrary(source));
++      const items = withSourceMeta(
++        source,
++        await runSourceForLibrary(source, options),
++      );
++      options?.signal?.throwIfAborted();
+       const lastSuccessAt = new Date().toISOString();
+       const entry: PromptSourceCacheEntry = {
+         sourceId: source.id,
+@@ -283,6 +292,7 @@
+         success: true,
+       };
+     } catch (error) {
++      if (options?.signal?.aborted) throw error;
+       const lastError = error instanceof Error ? error.message : String(error);
+       const entry: PromptSourceCacheEntry = {
+         sourceId: source.id,
+@@ -374,10 +384,13 @@
+ 
+   async function refreshSource(
+     sourceId: string,
++    options?: { signal?: AbortSignal },
+   ): Promise<PromptSourceRefreshResult> {
+     const source = sources.find((item) => item.id === sourceId);
+     if (!source) throw new Error(`提示词来源不存在：${sourceId}`);
+-    const result = await getOrStartRefresh(source);
++    const result = options?.signal
++      ? await refreshSourceRecord(source, options)
++      : await getOrStartRefresh(source);
+     if (!result.success) throw new Error(result.lastError);
+     return result;
+   }
+@@ -436,6 +449,15 @@
+     fetchPrompts,
+     fetchSourcePrompts,
+     refreshSource,
++    readCachedSource: async (sourceId: string) => {
++      const source = sources.find((item) => item.id === sourceId);
++      const entry = await readSourceCache(sourceId);
++      return source &&
++        entry?.signature === sourceSignature(source) &&
++        Array.isArray(entry.items)
++        ? withSourceMeta(source, parseJsonSource(entry.items, source))
++        : [];
++    },
+     refreshAllSources,
+     refreshDueSources,
+     statuses,
+--- a/src/runtime/appInfo.ts
++++ b/src/runtime/appInfo.ts
+@@ -0,0 +1,7 @@
++import { isTauri } from "@tauri-apps/api/core";
++import { version } from "../../package.json";
++
++export const appVersion = version;
++export function appPlatform() {
++  return isTauri() ? "桌面版" : "浏览器版";
++}
+--- a/src/styles/feature-parity.css
++++ b/src/styles/feature-parity.css
+@@ -0,0 +1,262 @@
++/* DS1.1 engineering supplement for newly connected feature controls. */
++.conversation-channel,
++.image-composer-tools,
++.agent-composer-actions,
++.agent-composer-options {
++  display: flex;
++  align-items: center;
++  gap: var(--ui-space-2);
++  flex-wrap: wrap;
++  min-width: 0;
++}
++.conversation-channel {
++  flex: 0 0 auto;
++}
++.conversation-panel > [hidden] {
++  display: none;
++}
++.image-composer-tools {
++  justify-content: space-between;
++  margin-bottom: var(--ui-space-2);
++  color: var(--text-secondary);
++  font-size: var(--ui-font-caption);
++}
++.agent-composer {
++  display: flex;
++  flex-direction: column;
++  gap: var(--ui-space-2);
++  border: var(--ui-border-width) solid var(--border-subtle);
++  background: var(--bg-card);
++  border-radius: var(--ui-radius-panel);
++  padding: var(--ui-space-3);
++  min-width: 0;
++  font-size: var(--ui-font-body);
++  line-height: var(--ui-line-height-body);
++}
++.agent-composer textarea.ui-input {
++  width: 100%;
++  height: 80px;
++  min-height: 64px;
++  resize: vertical;
++  max-height: 160px;
++}
++.agent-composer-options label {
++  display: flex;
++  flex-direction: column;
++  gap: var(--ui-space-1);
++  min-width: 0;
++}
++.agent-composer-options .settings-select {
++  max-width: 100%;
++}
++.agent-composer-note,
++.agent-composer-note p {
++  color: var(--text-secondary);
++  font-size: var(--ui-font-caption);
++  line-height: var(--ui-line-height-caption);
++}
++.agent-composer p {
++  margin: 0;
++}
++.agent-composer-actions {
++  justify-content: flex-end;
++}
++.agent-action-error {
++  color: var(--text-danger);
++  overflow-wrap: anywhere;
++}
++.conversation-panel .chat-agent-banner {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: var(--ui-space-2);
++  border-radius: var(--ui-radius-control);
++  font-size: var(--ui-font-caption);
++  line-height: var(--ui-line-height-body);
++}
++.conversation-panel .chat-agent-item {
++  border-radius: var(--ui-radius-control);
++}
++.conversation-panel .chat-agent-tool-tag {
++  font-size: var(--ui-font-caption);
++  line-height: var(--ui-line-height-caption);
++  border-radius: var(--ui-radius-pill);
++}
++.conversation-panel .chat-approval {
++  flex-wrap: wrap;
++  overflow-wrap: anywhere;
++}
++.chat-approval > span,
++.chat-approval > p {
++  flex: 1 1 100%;
++}
++.composer-plugin-summary {
++  min-width: 0;
++  overflow-wrap: anywhere;
++}
++.start-prompt-library {
++  margin-top: var(--ui-space-3);
++  align-self: flex-end;
++}
++.modal:has(.prompt-library-panel) {
++  width: min(960px, calc(100vw - 32px));
++  max-height: calc(100dvh - 32px);
++}
++.prompt-library-panel {
++  background: var(--bg-surface);
++  border-radius: var(--ui-radius-panel);
++  display: flex;
++  flex-direction: column;
++  min-width: 0;
++  max-height: calc(100dvh - 64px);
++  overflow-y: auto;
++  gap: var(--ui-space-3);
++  padding: var(--ui-space-5);
++  font-size: var(--ui-font-body);
++  line-height: var(--ui-line-height-body);
++  color: var(--text-primary);
++}
++.prompt-library-panel p {
++  margin: 0;
++  overflow-wrap: anywhere;
++}
++.prompt-library-header,
++.prompt-library-source,
++.prompt-library-pagination,
++.prompt-library-panel > footer {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: var(--ui-space-3);
++  flex-wrap: wrap;
++}
++.prompt-library-header {
++  flex-wrap: nowrap;
++  align-items: flex-start;
++}
++.prompt-library-header > div {
++  min-width: 0;
++}
++.prompt-library-header h2 {
++  font-size: var(--ui-font-title);
++  line-height: var(--ui-line-height-title);
++  margin: 0 0 var(--ui-space-2);
++}
++.prompt-library-header p,
++.prompt-library-note,
++.prompt-library-panel > footer > span {
++  color: var(--text-secondary);
++}
++.prompt-library-panel a {
++  color: var(--text-accent);
++}
++.prompt-library-source label {
++  display: flex;
++  flex: 1;
++  min-width: 0;
++  flex-direction: column;
++  gap: var(--ui-space-1);
++}
++.prompt-library-source select {
++  width: 100%;
++  min-width: 0;
++}
++.prompt-library-search {
++  display: flex;
++  flex-direction: column;
++  gap: var(--ui-space-1);
++}
++.prompt-library-search input {
++  width: 100%;
++}
++.prompt-library-error {
++  color: var(--text-danger);
++}
++.prompt-library-content {
++  display: grid;
++  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
++  gap: var(--ui-space-4);
++  min-height: 200px;
++}
++.prompt-library-results {
++  min-width: 0;
++  display: flex;
++  flex-direction: column;
++  gap: var(--ui-space-3);
++}
++.prompt-library-list {
++  display: flex;
++  flex-direction: column;
++  gap: var(--ui-space-2);
++  max-height: 300px;
++  overflow-y: auto;
++}
++.prompt-library-item {
++  display: flex;
++  flex-direction: column;
++  gap: var(--ui-space-1);
++  padding: var(--ui-space-3);
++  border: var(--ui-border-width) solid var(--border-control);
++  border-radius: var(--ui-radius-control);
++  background: var(--bg-input);
++  color: var(--text-primary);
++  text-align: left;
++  overflow-wrap: anywhere;
++  flex-shrink: 0;
++}
++.prompt-library-item span {
++  color: var(--text-secondary);
++}
++.prompt-library-item:hover {
++  background: var(--bg-elevated);
++}
++.prompt-library-item[aria-pressed="true"] {
++  border-color: var(--text-accent);
++  box-shadow: inset 0 0 0 var(--ui-border-width) var(--text-accent);
++}
++.prompt-library-detail {
++  border-radius: var(--ui-radius-card);
++  border: var(--ui-border-width) solid var(--border-subtle);
++  background: var(--bg-card);
++  padding: var(--ui-space-4);
++  max-height: 350px;
++  overflow-y: auto;
++  overflow-wrap: anywhere;
++}
++.prompt-library-detail h3 {
++  margin-top: 0;
++  font-size: var(--ui-font-label);
++  line-height: var(--ui-line-height-label);
++}
++.prompt-library-detail p {
++  white-space: pre-wrap;
++}
++.prompt-library-detail > span {
++  display: block;
++  margin-top: var(--ui-space-3);
++  color: var(--text-secondary);
++}
++.prompt-library-panel > footer {
++  border-top: var(--ui-border-width) solid var(--border-subtle);
++  padding-top: var(--ui-space-3);
++}
++@media (max-width: 600px) {
++  .prompt-library-panel {
++    padding: var(--ui-space-4);
++  }
++  .prompt-library-content {
++    grid-template-columns: minmax(0, 1fr);
++  }
++  .prompt-library-source label {
++    flex-basis: 100%;
++  }
++  .prompt-library-list {
++    max-height: 160px;
++  }
++  .prompt-library-detail {
++    max-height: 180px;
++  }
++  .prompt-library-pagination {
++    gap: var(--ui-space-1);
++  }
++}
+--- a/src/styles/local-generation.css
++++ b/src/styles/local-generation.css
+@@ -51,22 +51,6 @@
+   gap: 5px;
+   align-items: center;
+ }
+-.prompt-presets button {
+-  min-height: 26px;
+-  padding: 4px 8px;
+-  border: 1px solid var(--border-default);
+-  border-radius: 8px;
+-  color: var(--ui-muted);
+-  background: var(--bg-card);
+-  font-size: 10px;
+-}
+-.prompt-presets button:hover,
+-.prompt-presets button.is-active,
+-.prompt-presets button:focus-visible {
+-  color: var(--ui-text);
+-  border-color: var(--ui-selected);
+-  background: var(--bg-card-hover);
+-}
+ .prompt-composer-label {
+   position: absolute;
+   left: 22px;
+--- a/tests/browser/catalog-pages.spec.ts
++++ b/tests/browser/catalog-pages.spec.ts
+@@ -102,13 +102,13 @@
+   await page
+     .getByRole("menu", { name: "选择插件" })
+     .getByRole("menuitem", {
+-      name: "管理插件连接",
++      name: "管理画布插件",
+     })
+     .click();
+   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
+   await expect(
+     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
+-      name: "MCP",
++      name: "插件",
+       exact: true,
+     }),
+   ).toHaveAttribute("aria-current", "page");
+@@ -130,13 +130,13 @@
+   await page
+     .getByRole("menu", { name: "选择插件" })
+     .getByRole("menuitem", {
+-      name: "管理插件连接",
++      name: "管理画布插件",
+     })
+     .click();
+   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
+   await expect(
+     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
+-      name: "MCP",
++      name: "插件",
+       exact: true,
+     }),
+   ).toHaveAttribute("aria-current", "page");
+--- a/tests/browser/demo-results.spec.ts
++++ b/tests/browser/demo-results.spec.ts
+@@ -30,7 +30,7 @@
+       ),
+     ).toHaveCount(kind === "video" ? 8 : 1);
+     if (kind !== "video")
+-      await expect(source.getByText("前端草稿", { exact: true })).toBeVisible();
++      await expect(source.getByText("本地演示", { exact: true })).toBeVisible();
+   }
+ });
+ 
+--- a/tests/browser/interaction-state.spec.ts
++++ b/tests/browser/interaction-state.spec.ts
+@@ -202,9 +202,7 @@
+   ).toBeVisible();
+ });
+ 
+-test("文案卡在卡片内提供四种提示词动作，并把编辑用途标成优化", async ({
+-  page,
+-}) => {
++test("文案卡提供四种写作方式，并把指令加入可编辑输入", async ({ page }) => {
+   await openWorkspace(page);
+   await page.getByRole("button", { name: "从图片创建卡片添加下游" }).click();
+   await page.getByRole("menuitem", { name: "文本", exact: true }).click();
+@@ -214,7 +212,9 @@
+   await page.keyboard.press("Enter");
+   const card = node.locator(".prompt-creation");
+   await expect(card.locator(".prompt-presets button")).toHaveCount(4);
+-  await expect(card.getByText("提示词优化", { exact: true })).toBeVisible();
++  await expect(
++    card.getByText("写作指令可直接编辑", { exact: true }),
++  ).toBeVisible();
+   await card.getByRole("button", { name: "剧本生成", exact: true }).click();
+-  await expect(card).toContainText("剧本生成：请在下方输入区继续编辑。");
+-});
++  await expect(card.getByLabel("文案提示词")).toHaveValue(/请.*剧本/);
++});
+--- a/tests/browser/ui-feature-parity.spec.ts
++++ b/tests/browser/ui-feature-parity.spec.ts
+@@ -0,0 +1,447 @@
++import { expect, test } from "@playwright/test";
++import { openWorkspace } from "./helpers";
++import { showCanvasNavigation } from "./helpers";
++import { startAgentServer } from "../helpers/agentServer";
++import {
++  ACCENTS,
++  contrast,
++  cssRgb,
++  themeTokens,
++} from "../helpers/designSystem";
++
++test("text templates change visible input while audio exposes only its demo capability", async ({
++  page,
++}) => {
++  await openWorkspace(page);
++  await showCanvasNavigation(page);
++  await page.getByRole("button", { name: "添加资源", exact: true }).click();
++  await page.getByRole("menuitem", { name: "文本", exact: true }).click();
++  const textNode = page
++    .locator('.canvas-node[data-node-id^="added-text-"]')
++    .last();
++  await textNode.click();
++  await textNode.getByLabel("文案提示词").fill("保留的主题");
++  await textNode.getByRole("button", { name: "剧本生成", exact: true }).click();
++  await expect(textNode.getByLabel("文案提示词")).toHaveValue(
++    /请.*剧本[\s\S]*保留的主题/,
++  );
++  await textNode
++    .getByRole("button", { name: "策划案生成", exact: true })
++    .click();
++  await expect(textNode.getByLabel("文案提示词")).toHaveValue(
++    /请.*策划案[\s\S]*保留的主题/,
++  );
++  await expect(textNode.getByLabel("文案提示词")).not.toHaveValue(/剧本/);
++  await page.getByRole("button", { name: "添加资源", exact: true }).click();
++  await page.getByRole("menuitem", { name: "音频", exact: true }).click();
++  const audio = page
++    .locator('.canvas-node[data-node-id^="added-audio-"]')
++    .last();
++  await expect(audio.getByRole("group", { name: "文案创作方式" })).toHaveCount(
++    0,
++  );
++  await expect(audio).toContainText("本地演示");
++});
++
++test("Agent controls match the vendor protocol fixture, with error feedback and no fallback", async ({
++  page,
++}, info) => {
++  const server = await startAgentServer();
++  try {
++    await openWorkspace(page);
++    const panel = page.locator(".conversation-panel");
++    await panel
++      .getByRole("button", { name: "本地 Agent", exact: true })
++      .click();
++    await panel.getByRole("button", { name: "连接设置", exact: true }).click();
++    await page.getByLabel("Agent 地址").fill(server.url);
++    await page.getByLabel("连接 Token", { exact: true }).fill("fixture-token");
++    await expect(
++      page.getByLabel("连接 Token", { exact: true }),
++    ).toHaveAttribute("type", "password");
++    await page.getByRole("button", { name: "连接 Agent", exact: true }).click();
++    await expect(
++      page.getByRole("button", { name: "已连接", exact: true }),
++    ).toBeVisible();
++    await expect
++      .poll(() =>
++        page.evaluate(() => localStorage.getItem("canvas-agent-token")),
++      )
++      .toBeNull();
++    await page.keyboard.press("Escape");
++    for (const width of [390, 768, 1920]) {
++      await page.setViewportSize({ width, height: 900 });
++      if (!(await panel.isVisible()))
++        await page
++          .getByRole("button", { name: "打开对话", exact: true })
++          .click();
++      await expect(panel.getByLabel("Agent 指令")).toBeVisible();
++      expect(
++        await panel.evaluate((el) => el.scrollWidth - el.clientWidth),
++      ).toBeLessThanOrEqual(1);
++      await expect
++        .poll(async () => {
++          const box = await panel
++            .getByRole("button", { name: "发送给 Agent" })
++            .boundingBox();
++          return box ? box.x + box.width : Number.POSITIVE_INFINITY;
++        })
++        .toBeLessThanOrEqual(width);
++      const box = (await panel
++        .getByRole("button", { name: "发送给 Agent" })
++        .boundingBox())!;
++      expect(box.x).toBeGreaterThanOrEqual(0);
++      expect(box.x + box.width).toBeLessThanOrEqual(width);
++      expect(box.y + box.height).toBeLessThanOrEqual(900);
++      await page.screenshot({
++        path: info.outputPath(`agent-${width}.png`),
++        animations: "disabled",
++      });
++    }
++    await panel
++      .getByLabel("Agent 权限", { exact: true })
++      .selectOption("request");
++    await panel.getByLabel("Agent 指令").fill("读取画布");
++    await panel.getByRole("button", { name: "发送给 Agent" }).click();
++    await expect.poll(() => server.turns.length).toBe(1);
++    expect(server.turns[0]).toMatchObject({
++      messageText: "读取画布",
++      permissionMode: "request",
++      attachments: [],
++    });
++    expect(server.turns[0].model).toBeUndefined();
++    expect(server.authentication.length).toBeGreaterThan(3);
++    expect(
++      server.authentication.every(
++        (value) => !value.urlToken && value.headerPresent,
++      ),
++    ).toBe(true);
++    await expect(
++      panel.getByRole("button", { name: "Agent 执行中…" }),
++    ).toBeDisabled();
++    await expect(panel.getByLabel("Agent 指令")).toHaveValue("");
++    server.failActions(true);
++    await panel.getByRole("button", { name: "停止", exact: true }).click();
++    await expect(panel.getByRole("alert")).toContainText("受控服务暂时不可用");
++    server.emit("codex_approval", {
++      requestId: "r1",
++      method: "local_shell_execute",
++      command: "echo test",
++      reason: "审批演示",
++    });
++    await panel.getByRole("button", { name: "允许", exact: true }).click();
++    await expect(
++      panel.getByRole("group", { name: "确认 Agent 权限请求" }),
++    ).toBeVisible();
++    server.failActions(false);
++    await panel.getByRole("button", { name: "拒绝", exact: true }).click();
++    await expect
++      .poll(() => server.decisions.some((d) => d.decision === "decline"))
++      .toBe(true);
++    await expect(
++      panel.getByRole("group", { name: "确认 Agent 权限请求" }),
++    ).toHaveCount(0);
++    await page.screenshot({
++      path: info.outputPath("agent-running.png"),
++      animations: "disabled",
++    });
++    server.disconnect();
++    await expect(panel.getByRole("alert")).toContainText("核对任务结果");
++    await expect(
++      panel.getByRole("button", { name: "本地 Agent", exact: true }),
++    ).toHaveAttribute("aria-pressed", "true");
++    await expect(panel.getByLabel("添加对话素材")).toBeHidden();
++  } finally {
++    await server.close();
++  }
++});
++
++for (const status of ["idle", "warning"] as const) {
++  test(`Agent ${status} hello has an accurate usable entry`, async ({
++    page,
++  }, info) => {
++    const server = await startAgentServer(status);
++    try {
++      await openWorkspace(page);
++      const panel = page.locator(".conversation-panel");
++      await panel
++        .getByRole("button", { name: "本地 Agent", exact: true })
++        .click();
++      await panel
++        .getByRole("button", { name: "连接设置", exact: true })
++        .click();
++      await page.getByLabel("Agent 地址").fill(server.url);
++      await page
++        .getByLabel("连接 Token", { exact: true })
++        .fill("fixture-token");
++      await page
++        .getByRole("button", { name: "连接 Agent", exact: true })
++        .click();
++      await expect(
++        page.getByRole("button", { name: "已连接", exact: true }),
++      ).toBeVisible();
++      await page.keyboard.press("Escape");
++      await panel.getByLabel("Agent 指令").fill("读取画布");
++      expect(server.requests.includes("/agent/codex/threads/new")).toBe(false);
++      if (status === "idle") {
++        await expect(
++          panel.getByRole("button", { name: "发送给 Agent" }),
++        ).toBeDisabled();
++        await expect(panel).toContainText("本地服务已连接，请准备 Agent 会话");
++        await page.screenshot({
++          path: info.outputPath("agent-idle.png"),
++          animations: "disabled",
++        });
++        await panel
++          .getByRole("button", { name: "准备 Agent 会话", exact: true })
++          .click();
++        await expect(
++          panel.getByRole("button", { name: "准备 Agent 会话", exact: true }),
++        ).toHaveCount(0);
++      } else {
++        await expect(panel).toContainText("部分可选工具不可用");
++        await expect(panel).toContainText("optional");
++        await page.screenshot({
++          path: info.outputPath("agent-warning.png"),
++          animations: "disabled",
++        });
++      }
++      await expect(
++        panel.getByRole("button", { name: "发送给 Agent" }),
++      ).toBeEnabled();
++      await panel.getByRole("button", { name: "发送给 Agent" }).click();
++      await expect.poll(() => server.turns.length).toBe(1);
++      expect(
++        server.requests.filter(
++          (path) => path === "/agent/codex/conversation/prepare",
++        ).length,
++      ).toBe(status === "idle" ? 1 : 0);
++    } finally {
++      await server.close();
++    }
++  });
++}
++
++for (const action of ["interrupt", "turn"] as const) {
++  test(`a pending old ${action} cannot lock the reconnected Agent UI`, async ({
++    page,
++  }) => {
++    const server = await startAgentServer(
++      action === "interrupt" ? "running" : "ready",
++    );
++    let release!: () => void;
++    const pending = new Promise<void>((resolve) => {
++      release = resolve;
++    });
++    let intercepted = false;
++    await page.route(`**/agent/codex/${action}`, async (route) => {
++      intercepted = true;
++      await pending;
++      await route
++        .fulfill({ status: 503, json: { error: "旧请求已结束" } })
++        .catch(() => undefined);
++    });
++    try {
++      await openWorkspace(page);
++      const panel = page.locator(".conversation-panel");
++      await panel
++        .getByRole("button", { name: "本地 Agent", exact: true })
++        .click();
++      await panel
++        .getByRole("button", { name: "连接设置", exact: true })
++        .click();
++      await page.getByLabel("Agent 地址").fill(server.url);
++      await page
++        .getByLabel("连接 Token", { exact: true })
++        .fill("fixture-token");
++      await page
++        .getByRole("button", { name: "连接 Agent", exact: true })
++        .click();
++      await expect(
++        page.getByRole("button", { name: "已连接", exact: true }),
++      ).toBeVisible();
++      await page.keyboard.press("Escape");
++      await panel.getByLabel("Agent 指令").fill("保留的指令");
++      await panel
++        .getByRole("button", {
++          name: action === "interrupt" ? "停止" : "发送给 Agent",
++          exact: true,
++        })
++        .click();
++      await expect.poll(() => intercepted).toBe(true);
++      await panel
++        .getByRole("button", { name: "连接设置", exact: true })
++        .click();
++      await page.getByRole("button", { name: "断开", exact: true }).click();
++      await page
++        .getByRole("button", { name: "连接 Agent", exact: true })
++        .click();
++      await expect(
++        page.getByRole("button", { name: "已连接", exact: true }),
++      ).toBeVisible();
++      await page.keyboard.press("Escape");
++      server.emit("codex_approval", { requestId: "new", method: "shell" });
++      await expect(
++        panel.getByRole("button", { name: "允许", exact: true }),
++      ).toBeEnabled();
++      await expect(
++        panel.getByRole("button", {
++          name: action === "interrupt" ? "停止" : "发送给 Agent",
++          exact: true,
++        }),
++      ).toBeEnabled();
++      await expect(panel.getByLabel("Agent 指令")).toHaveValue("保留的指令");
++      release();
++      await expect(
++        panel.getByText("旧请求已结束", { exact: true }),
++      ).toHaveCount(0);
++    } finally {
++      release();
++      await server.close();
++    }
++  });
++}
++
++for (const width of [390, 768, 1920]) {
++  test(`prompt library handles themes, long text, errors and focus at ${width}`, async ({
++    page,
++  }, info) => {
++    await page.setViewportSize({ width, height: 900 });
++    let fail = false;
++    let delayed = false;
++    await page.route("https://raw.githubusercontent.com/**", async (route) => {
++      if (delayed) await new Promise((resolve) => setTimeout(resolve, 400));
++      if (fail) await route.fulfill({ status: 503, body: "offline" });
++      else
++        await route.fulfill({
++          json: Array.from({ length: 15 }, (_, i) => ({
++            id: String(i),
++            title: `产品 ${i} ${"W".repeat(80)}`,
++            prompt: i === 0 ? "长".repeat(4100) : "产品光影",
++            tags: ["产品"],
++          })),
++        });
++    });
++    await page.goto("/");
++    const opener = page.getByRole("button", { name: "提示词库", exact: true });
++    await opener.click();
++    const dialog = page.getByRole("dialog", { name: "提示词库" });
++    await dialog.getByRole("button", { name: "加载来源" }).click();
++    await expect(dialog.getByRole("status")).toContainText("15 条");
++    await dialog.locator(".prompt-library-item").first().click();
++    for (const theme of ["dark", "light"]) {
++      for (const accent of ACCENTS) {
++        await page.locator("html").evaluate(
++          (el, value) => {
++            el.setAttribute("data-theme", value.theme);
++            el.setAttribute("data-accent", value.accent);
++          },
++          { theme, accent },
++        );
++        expect(
++          await dialog.evaluate((el) => el.scrollWidth - el.clientWidth),
++        ).toBeLessThanOrEqual(1);
++        const token = themeTokens(theme, accent);
++        await expect(
++          dialog.getByRole("button", { name: "加入草稿" }),
++        ).toHaveCSS("background-color", cssRgb(token("--bg-accent")));
++        await expect(
++          dialog.getByRole("button", { name: "加入草稿" }),
++        ).toHaveCSS("color", cssRgb(token("--text-on-accent")));
++        const colors = await dialog
++          .getByRole("button", { name: "加入草稿" })
++          .evaluate((el) => {
++            const s = getComputedStyle(el);
++            return [s.color, s.backgroundColor];
++          });
++        expect(contrast(colors[0], colors[1])).toBeGreaterThanOrEqual(4.5);
++      }
++      await page.screenshot({
++        path: info.outputPath(`prompt-${width}-${theme}.png`),
++        animations: "disabled",
++      });
++    }
++    await dialog.getByRole("button", { name: "加入草稿" }).click();
++    await expect(dialog.getByRole("alert")).toContainText("4,000");
++    await dialog.getByRole("button", { name: "下一页" }).click();
++    await expect(dialog.locator(".prompt-library-item")).toHaveCount(3);
++    fail = true;
++    await dialog.getByRole("button", { name: "加载来源" }).click();
++    await expect(dialog.getByRole("alert")).toContainText("保留本地缓存");
++    fail = false;
++    delayed = true;
++    await dialog.getByRole("button", { name: "加载来源" }).click();
++    await dialog.getByRole("button", { name: "取消加载" }).click();
++    await expect(dialog.getByRole("status")).toContainText("已取消");
++    await page.keyboard.press("Escape");
++    await expect(opener).toBeFocused();
++    await opener.click();
++    await expect(dialog.getByRole("status")).toContainText("本地缓存");
++  });
++}
++
++test("plugin menu reflects installed canvas plugins and opens their manager", async ({
++  page,
++}) => {
++  await page.goto("/");
++  await page
++    .locator(".start-composer")
++    .getByRole("button", { name: "插件", exact: true })
++    .click();
++  const menu = page.getByRole("menu", { name: "选择插件" });
++  await expect(menu).toContainText("已启用 4 个画布插件");
++  await menu.getByRole("menuitem", { name: "管理画布插件" }).click();
++  await expect(page.getByRole("heading", { name: "已安装插件" })).toBeVisible();
++});
++
++test("prompt library searches, previews and appends text without submitting", async ({
++  page,
++}) => {
++  await page.route("https://raw.githubusercontent.com/**", (route) =>
++    route.fulfill({
++      json: [
++        {
++          id: "one",
++          title: "光影产品",
++          prompt: "柔和自然光，保留产品比例",
++          tags: ["产品"],
++        },
++        { id: "two", title: "城市", prompt: "雨夜城市" },
++      ],
++    }),
++  );
++  await page.goto("/");
++  await page.getByLabel("创作提示词").fill("现有草稿");
++  await page.getByRole("button", { name: "提示词库", exact: true }).click();
++  const dialog = page.getByRole("dialog", { name: "提示词库" });
++  await dialog.getByRole("button", { name: "加载来源" }).click();
++  await dialog.getByRole("searchbox", { name: "搜索提示词" }).fill("光影");
++  await dialog.getByRole("button", { name: "光影产品", exact: true }).click();
++  await dialog.getByRole("button", { name: "加入草稿" }).click();
++  await expect(dialog).not.toBeVisible();
++  await expect(page.getByLabel("创作提示词")).toHaveValue(
++    "现有草稿\n\n柔和自然光，保留产品比例",
++  );
++  await expect(page.locator(".start-composer")).toBeVisible();
++});
++
++test("disconnected Agent has its own draft and cannot submit to image creation", async ({
++  page,
++}) => {
++  await openWorkspace(page);
++  const panel = page.locator(".conversation-panel");
++  await panel.getByLabel("对话内容").fill("图片草稿");
++  await panel.getByRole("button", { name: "本地 Agent", exact: true }).click();
++  await expect(
++    panel.getByText("Agent 尚未连接", { exact: true }),
++  ).toBeVisible();
++  await expect(panel.getByLabel("添加对话素材")).toBeHidden();
++  await panel.getByLabel("Agent 指令").fill("读取当前画布");
++  await expect(
++    panel.getByRole("button", { name: "发送给 Agent" }),
++  ).toBeDisabled();
++  await panel.getByRole("button", { name: "图片创作", exact: true }).click();
++  await expect(panel.getByLabel("对话内容")).toHaveValue("图片草稿");
++  await panel.getByRole("button", { name: "本地 Agent", exact: true }).click();
++  await expect(panel.getByLabel("Agent 指令")).toHaveValue("读取当前画布");
++});
+--- a/tests/helpers/agentServer.ts
++++ b/tests/helpers/agentServer.ts
+@@ -0,0 +1,201 @@
++import { createServer, type ServerResponse } from "node:http";
++import type { AgentConversationState } from "../../src/features/agent/agentTypes.ts";
++import { prepareIdleConversation } from "../../scripts/agent/prepareIdleConversation.ts";
++
++/** Loopback protocol fixture; no CLI, account or paid Provider is invoked. */
++export async function startAgentServer(
++  initialStatus: AgentConversationState["status"] = "ready",
++  safePreparation = true,
++) {
++  const streams = new Set<ServerResponse>();
++  const clients = new Set<string>();
++  const requests: string[] = [];
++  const turns: Record<string, unknown>[] = [];
++  const decisions: Record<string, unknown>[] = [];
++  const authentication: { urlToken: boolean; headerPresent: boolean }[] = [];
++  let failAction = false;
++  let conversation: AgentConversationState = {
++    revision: 1,
++    conversationId: "fixture-conversation",
++    threadId: initialStatus === "idle" ? "" : "fixture-thread",
++    status: initialStatus,
++    mcpStatuses:
++      initialStatus === "warning"
++        ? {
++            "infinite-canvas": { status: "ready" },
++            optional: { status: "failed", error: "可选工具不可用" },
++          }
++        : {},
++  };
++  const emit = (type: string, data: unknown) => {
++    if (type === "conversation_changed")
++      conversation = data as AgentConversationState;
++    for (const stream of streams)
++      stream.write(`event: ${type}\ndata: ${JSON.stringify(data)}\n\n`);
++  };
++  const server = createServer(async (request, response) => {
++    response.setHeader("Access-Control-Allow-Origin", "*");
++    response.setHeader(
++      "Access-Control-Allow-Headers",
++      "content-type, authorization, x-canvas-agent-token",
++    );
++    response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
++    if (request.method === "OPTIONS") {
++      response.writeHead(204).end();
++      return;
++    }
++    const url = new URL(request.url!, "http://localhost");
++    requests.push(url.pathname);
++    if (url.pathname !== "/config")
++      authentication.push({
++        urlToken: url.searchParams.has("token"),
++        headerPresent: Boolean(request.headers["x-canvas-agent-token"]),
++      });
++    if (url.pathname === "/events") {
++      response.writeHead(200, {
++        "Content-Type": "text/event-stream",
++        "Cache-Control": "no-cache",
++      });
++      streams.add(response);
++      const clientId = url.searchParams.get("clientId") ?? "";
++      clients.add(clientId);
++      response.on("close", () => {
++        streams.delete(response);
++        clients.delete(clientId);
++      });
++      response.write(
++        `event: hello\ndata: ${JSON.stringify({ ok: true, protocolVersion: 6, clientId, conversation, workspace: { activeThreadId: conversation.threadId }, codex: { busy: conversation.status === "running" }, pendingApprovals: [] })}\n\n`,
++      );
++      return;
++    }
++    const chunks = [];
++    for await (const chunk of request) chunks.push(chunk);
++    const text = Buffer.concat(chunks).toString();
++    const body = text ? JSON.parse(text) : {};
++    response.setHeader("Content-Type", "application/json");
++    if (url.pathname === "/config") {
++      response.end(JSON.stringify({ ok: true, protocolVersion: 6 }));
++      return;
++    }
++    if (
++      ["/canvas/activate", "/canvas/state"].includes(url.pathname) &&
++      !clients.has(url.searchParams.get("clientId") ?? "")
++    ) {
++      response.writeHead(409).end(JSON.stringify({ error: "当前网页未连接" }));
++      return;
++    }
++    if (url.pathname === "/agent/codex/conversation/prepare") {
++      if (!safePreparation) {
++        response.writeHead(404).end(JSON.stringify({ error: "not found" }));
++        return;
++      }
++      // The same guarded handler is installed in vendor under codexMutation.
++      const result = await prepareIdleConversation(body, {
++        hasClient: (id) => clients.has(id),
++        conversation: () => conversation,
++        begin: () => {
++          conversation = {
++            ...conversation,
++            revision: conversation.revision + 1,
++            status: "preparing",
++          };
++          emit("conversation_changed", conversation);
++        },
++        prepare: async () => {
++          conversation = {
++            ...conversation,
++            revision: conversation.revision + 1,
++            status: "ready",
++            threadId: "fixture-thread",
++          };
++          emit("conversation_changed", conversation);
++        },
++      });
++      response.writeHead(result.status).end(JSON.stringify(result.body));
++      return;
++    }
++    if (url.pathname === "/agent/codex/threads/new") {
++      // Match upstream's unconditional replacement; the UI must never use this.
++      conversation = {
++        ...conversation,
++        revision: conversation.revision + 1,
++        threadId: "replacement-thread",
++        status: "ready",
++      };
++      emit("conversation_changed", conversation);
++      response.end(JSON.stringify({ ok: true, conversation }));
++      return;
++    }
++    if (url.pathname === "/agent/codex/turn") {
++      if (
++        !["ready", "warning"].includes(conversation.status) ||
++        !clients.has(body.clientId)
++      ) {
++        response.writeHead(409).end(JSON.stringify({ error: "会话尚未就绪" }));
++        return;
++      }
++      turns.push(body);
++      conversation = { ...conversation, status: "running" };
++      response.end(
++        JSON.stringify({
++          ok: true,
++          threadId: conversation.threadId,
++          state: { ...conversation, status: "running" },
++        }),
++      );
++      emit("chat_message", {
++        message: {
++          id: "user-echo",
++          role: "user",
++          text: body.messageText,
++          clientMessageId: body.messageId,
++        },
++      });
++      return;
++    }
++    if (
++      url.pathname === "/agent/codex/approval" ||
++      url.pathname === "/agent/codex/interrupt"
++    ) {
++      if (failAction) {
++        response
++          .writeHead(503)
++          .end(JSON.stringify({ error: "受控服务暂时不可用" }));
++        return;
++      }
++      decisions.push(body);
++      response.end(JSON.stringify({ ok: true }));
++      if (url.pathname === "/agent/codex/interrupt") {
++        conversation = { ...conversation, status: "ready" };
++        emit("codex_state", { busy: false });
++        emit("conversation_changed", conversation);
++      }
++      return;
++    }
++    response.end(JSON.stringify({ ok: true }));
++  });
++  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
++  const address = server.address();
++  if (!address || typeof address === "string")
++    throw new Error("No fixture port");
++  return {
++    url: `http://127.0.0.1:${address.port}`,
++    turns,
++    requests,
++    conversation: () => conversation,
++    decisions,
++    authentication,
++    emit,
++    failActions: (value: boolean) => {
++      failAction = value;
++    },
++    disconnect: () => {
++      for (const stream of streams) stream.end();
++    },
++    close: async () => {
++      for (const stream of streams) stream.end();
++      server.closeAllConnections();
++      await new Promise<void>((resolve) => server.close(() => resolve()));
++    },
++  };
++}
+--- a/tests/unit/agentApi.test.ts
++++ b/tests/unit/agentApi.test.ts
+@@ -40,10 +40,12 @@
+   viewport: { x: 0, y: 0, scale: 1 },
+ };
+ 
+-test("所有请求带 token 与 clientId", async () => {
++test("authenticated requests use the supported token header, never a URL token", async () => {
+   const urls: string[] = [];
+-  const fetchImpl = stubFetch(async (url) => {
++  const headers: Headers[] = [];
++  const fetchImpl = stubFetch(async (url, init) => {
+     urls.push(url);
++    headers.push(new Headers(init?.headers));
+     if (url.endsWith("/config")) return jsonResponse(200, { ok: true });
+     return jsonResponse(200, { ok: true });
+   });
+@@ -57,7 +59,8 @@
+   await api.postState(snapshot);
+   assert.ok(urls[0].includes("http://127.0.0.1:17371/config"));
+   assert.ok(urls[1].includes("/canvas/state"));
+-  assert.ok(urls[1].includes("token=abc"));
++  assert.equal(new URL(urls[1]).searchParams.has("token"), false);
++  assert.equal(headers[1].get("x-canvas-agent-token"), "abc");
+   assert.ok(urls[1].includes("clientId=client-1"));
+ });
+ 
+--- a/tests/unit/agentConnection.test.ts
++++ b/tests/unit/agentConnection.test.ts
+@@ -14,11 +14,11 @@
+  * EventSource 与 fetch 均为可注入实现。
+  */
+ interface FakeSource extends EventSourceLike {
+-  emit(event: { type: string; data: string }): void;
++  emit(event: { type: string; data: unknown }): void;
+   closed: boolean;
+ }
+ 
+-function createHarness() {
++function createHarness(helloOverrides: Record<string, unknown> = {}) {
+   const sources: FakeSource[] = [];
+   const eventSourceFactory = (_url: string) => {
+     const source: FakeSource = {
+@@ -26,13 +26,28 @@
+       onerror: null,
+       closed: false,
+       emit(event) {
+-        source.onmessage?.({ data: JSON.stringify(event) });
++        source.onmessage?.({
++          type: event.type,
++          data: JSON.stringify(event.data),
++        });
+       },
+       close() {
+         source.closed = true;
+       },
+     };
+     sources.push(source);
++    queueMicrotask(() =>
++      source.emit({
++        type: "hello",
++        data: {
++          ok: true,
++          conversation: readyConversation().data,
++          codex: { busy: false },
++          pendingApprovals: [],
++          ...helloOverrides,
++        },
++      }),
++    );
+     return source;
+   };
+   return { sources, eventSourceFactory };
+@@ -87,7 +102,7 @@
+   };
+ }
+ 
+-test("connect 成功：discover → activate → 推送快照 → SSE 就绪", async (t: TestContext) => {
++test("connect 成功：discover → SSE hello → activate → 推送快照", async (t: TestContext) => {
+   const harness = createHarness();
+   const posted: string[] = [];
+   const conn = createAgentConnection({
+@@ -109,6 +124,7 @@
+   t.after(() => conn.disconnect());
+ 
+   await conn.connect();
++  await new Promise((resolve) => setImmediate(resolve));
+   assert.ok(posted.some((url) => url.includes("/config")));
+   assert.ok(posted.some((url) => url.includes("/canvas/activate")));
+   assert.ok(posted.some((url) => url.includes("/canvas/state")));
+@@ -133,6 +149,7 @@
+   });
+   t.after(() => conn.disconnect());
+   await conn.connect();
++  await new Promise((resolve) => setImmediate(resolve));
+   assert.equal(conn.getState().status, "error");
+   assert.match(conn.getState().error ?? "", /npm run agent/);
+ });
+@@ -162,6 +179,7 @@
+   t.after(() => conn.disconnect());
+ 
+   await conn.connect();
++  await new Promise((resolve) => setImmediate(resolve));
+   harness.sources[0].emit(readyConversation());
+   const result = await conn.sendMessage("画一只猫");
+   assert.equal(result.ok, true);
+@@ -196,6 +214,7 @@
+   });
+   t.after(() => conn.disconnect());
+   await conn.connect();
++  await new Promise((resolve) => setImmediate(resolve));
+   harness.sources[0].emit(readyConversation());
+ 
+   harness.sources[0].emit({
+@@ -257,6 +276,7 @@
+   });
+   t.after(() => conn.disconnect());
+   await conn.connect();
++  await new Promise((resolve) => setImmediate(resolve));
+   harness.sources[0].emit(readyConversation());
+ 
+   harness.sources[0].emit({
+@@ -298,6 +318,7 @@
+   });
+   t.after(() => conn.disconnect());
+   await conn.connect();
++  await new Promise((resolve) => setImmediate(resolve));
+   harness.sources[0].emit(readyConversation());
+ 
+   harness.sources[0].emit({
+@@ -319,12 +340,154 @@
+   assert.equal(conn.getState().pendingApproval, null);
+ });
+ 
+-test("setCredentials 更新端点并持久化", () => {
++test("setCredentials only persists endpoint and removes legacy token", () => {
+   const storage = memoryStorage();
++  storage.setItem("canvas-agent-token", "legacy-token");
+   const conn = createAgentConnection({ clientId: "c", storage });
++  assert.equal(conn.getState().token, "");
+   conn.setCredentials("http://127.0.0.1:17381/", "tok-1");
+   assert.equal(conn.getState().endpoint, "http://127.0.0.1:17381/");
+   assert.equal(conn.getState().token, "tok-1");
+   assert.equal(storage.getItem("canvas-agent-url"), "http://127.0.0.1:17381/");
+-  assert.equal(storage.getItem("canvas-agent-token"), "tok-1");
+-});
++  assert.equal(storage.getItem("canvas-agent-token"), null);
++});
++
++test("user echo must not clear the running state and stream loss must surface", async (t) => {
++  const harness = createHarness();
++  const conn = createAgentConnection({
++    storage: memoryStorage(),
++    eventSourceFactory: harness.eventSourceFactory,
++    fetcher: (async () => jsonResponse(200, { ok: true })) as typeof fetch,
++  });
++  t.after(() => conn.disconnect());
++  await conn.connect();
++  await new Promise((resolve) => setImmediate(resolve));
++  harness.sources[0].emit(readyConversation());
++  harness.sources[0].emit(readyConversation({ status: "running" }));
++  harness.sources[0].emit({
++    type: "chat_message",
++    data: { message: { id: "u", role: "user", text: "hi" } },
++  });
++  assert.equal(conn.getState().sending, true);
++  harness.sources[0].onerror?.();
++  assert.equal(conn.getState().status, "error");
++  assert.match(conn.getState().error ?? "", /核对/);
++});
++
++test("disconnect while discovery is pending cannot reopen an event stream", async () => {
++  const harness = createHarness();
++  let complete!: (r: Response) => void;
++  const response = new Promise<Response>((resolve) => {
++    complete = resolve;
++  });
++  const conn = createAgentConnection({
++    storage: memoryStorage(),
++    eventSourceFactory: harness.eventSourceFactory,
++    fetcher: (async () => response) as typeof fetch,
++  });
++  const connecting = conn.connect();
++  conn.disconnect();
++  complete(jsonResponse(200, { ok: true }));
++  await connecting;
++  assert.equal(conn.getState().status, "disconnected");
++  assert.equal(harness.sources.length, 0);
++});
++
++test("interrupt acknowledgement waits for the event confirming execution ended", async (t) => {
++  const harness = createHarness();
++  const conn = createAgentConnection({
++    storage: memoryStorage(),
++    eventSourceFactory: harness.eventSourceFactory,
++    fetcher: (async () => jsonResponse(200, { ok: true })) as typeof fetch,
++  });
++  t.after(() => conn.disconnect());
++  await conn.connect();
++  await new Promise((resolve) => setImmediate(resolve));
++  harness.sources[0].emit(readyConversation({ status: "running" }));
++  await conn.interrupt();
++  assert.equal(conn.getState().sending, true);
++  harness.sources[0].emit({ type: "codex_state", data: { busy: false } });
++  assert.equal(conn.getState().sending, false);
++});
++
++test("hello restores running state and every pending approval without waiting for replay", async (t) => {
++  const harness = createHarness({
++    conversation: readyConversation({ status: "running" }).data,
++    codex: { busy: true },
++    pendingApprovals: [
++      { requestId: "one", method: "shell" },
++      { requestId: "two", method: "shell" },
++    ],
++  });
++  const conn = createAgentConnection({
++    storage: memoryStorage(),
++    eventSourceFactory: harness.eventSourceFactory,
++    fetcher: (async () => jsonResponse(200, { ok: true })) as typeof fetch,
++  });
++  t.after(() => conn.disconnect());
++  await conn.connect();
++  await new Promise((resolve) => setImmediate(resolve));
++  assert.equal(conn.getState().sending, true);
++  assert.equal(conn.getState().pendingApproval?.requestId, "one");
++  await conn.resolveApproval("accept");
++  assert.equal(conn.getState().pendingApproval?.requestId, "two");
++});
++
++for (const action of ["approval", "interrupt"] as const) {
++  test(`late ${action} acknowledgement cannot change a new connection`, async (t) => {
++    const harness = createHarness();
++    let finish!: (response: Response) => void;
++    const response = new Promise<Response>((resolve) => {
++      finish = resolve;
++    });
++    const conn = createAgentConnection({
++      storage: memoryStorage(),
++      eventSourceFactory: harness.eventSourceFactory,
++      fetcher: (async (url) =>
++        String(url).includes(`/agent/codex/${action}`)
++          ? response
++          : jsonResponse(200, { ok: true })) as typeof fetch,
++    });
++    t.after(() => conn.disconnect());
++    await conn.connect();
++    await new Promise((resolve) => setImmediate(resolve));
++    harness.sources[0].emit({
++      type: "codex_approval",
++      data: { requestId: "old", method: "shell" },
++    });
++    const pending =
++      action === "approval" ? conn.resolveApproval("accept") : conn.interrupt();
++    conn.disconnect();
++    await conn.connect();
++    await new Promise((resolve) => setImmediate(resolve));
++    harness.sources[1].emit(readyConversation({ status: "running" }));
++    harness.sources[1].emit({
++      type: "codex_approval",
++      data: { requestId: "new", method: "shell" },
++    });
++    const activity = conn.getState().activity;
++    finish(jsonResponse(200, { ok: true }));
++    assert.equal((await pending).ok, false);
++    assert.equal(conn.getState().pendingApproval?.requestId, "new");
++    assert.equal(conn.getState().activity, activity);
++    assert.equal(conn.getState().sending, true);
++  });
++}
++
++test("failed canvas activation never reports a usable connection", async (t) => {
++  const harness = createHarness();
++  const conn = createAgentConnection({
++    storage: memoryStorage(),
++    eventSourceFactory: harness.eventSourceFactory,
++    fetcher: (async (url) =>
++      String(url).includes("/canvas/activate")
++        ? jsonResponse(409, { error: "当前网页未连接" })
++        : jsonResponse(200, { ok: true })) as typeof fetch,
++  });
++  t.after(() => conn.disconnect());
++  await conn.connect();
++  await new Promise((resolve) => setImmediate(resolve));
++  assert.equal(conn.getState().status, "error");
++  assert.match(conn.getState().error ?? "", /当前网页未连接/);
++  assert.equal(harness.sources[0].closed, true);
++});
+--- a/tests/unit/agentPreparation.test.ts
++++ b/tests/unit/agentPreparation.test.ts
+@@ -0,0 +1,36 @@
++import assert from "node:assert/strict";
++import test from "node:test";
++import { prepareIdleConversation } from "../../scripts/agent/prepareIdleConversation.ts";
++
++for (const reason of [
++  "disconnected",
++  "stale",
++  "existing",
++  "preparing",
++] as const) {
++  test(`actual service preparation handler rejects ${reason} before any mutation`, async () => {
++    let mutations = 0;
++    const state = {
++      revision: reason === "stale" ? 2 : 1,
++      conversationId: "c",
++      threadId: reason === "existing" ? "t" : "",
++      status: reason === "preparing" ? "preparing" : "idle",
++    };
++    const result = await prepareIdleConversation(
++      { clientId: "client", expectedConversationId: "c", expectedRevision: 1 },
++      {
++        hasClient: () => reason !== "disconnected",
++        conversation: () => state,
++        begin: () => {
++          mutations++;
++        },
++        prepare: async () => {
++          mutations++;
++        },
++      },
++    );
++    assert.equal(result.status, 409);
++    assert.equal(mutations, 0);
++    assert.equal(result.body.state, state);
++  });
++}
+--- a/tests/unit/agentProtocol.test.ts
++++ b/tests/unit/agentProtocol.test.ts
+@@ -0,0 +1,130 @@
++import assert from "node:assert/strict";
++import test from "node:test";
++import { setTimeout as delay } from "node:timers/promises";
++import { createAgentConnection } from "../../src/features/agent/agentConnection.ts";
++import { startAgentServer } from "../helpers/agentServer.ts";
++
++async function connected(conn: ReturnType<typeof createAgentConnection>) {
++  await conn.connect();
++  for (let i = 0; i < 100 && conn.getState().status === "connecting"; i++)
++    await delay(10);
++  assert.equal(
++    conn.getState().status,
++    "connected",
++    conn.getState().error ?? "hello handshake did not finish",
++  );
++}
++
++test("conditional preparation preserves another window's newly prepared thread", async (t) => {
++  const server = await startAgentServer("idle");
++  let release!: () => void;
++  let requested!: () => void;
++  const held = new Promise<void>((resolve) => {
++    release = resolve;
++  });
++  const started = new Promise<void>((resolve) => {
++    requested = resolve;
++  });
++  const conn = createAgentConnection({
++    fetcher: (async (url, init) => {
++      if (String(url).endsWith("/conversation/prepare")) {
++        requested();
++        await held;
++      }
++      return fetch(url, init);
++    }) as typeof fetch,
++  });
++  t.after(async () => {
++    release();
++    conn.disconnect();
++    await server.close();
++  });
++  conn.setCredentials(server.url, "fixture-token");
++  await connected(conn);
++  const pending = conn.prepareConversation();
++  await started;
++  server.emit("conversation_changed", {
++    revision: 2,
++    conversationId: "other-conversation",
++    threadId: "other-thread",
++    status: "ready",
++    mcpStatuses: {},
++  });
++  release();
++  const result = await pending;
++  assert.equal(result.ok, false);
++  assert.match(result.error ?? "", /保留现有会话/);
++  assert.equal(server.conversation().threadId, "other-thread");
++  assert.equal(conn.getState().conversation?.threadId, "other-thread");
++  assert.equal(server.requests.includes("/agent/codex/threads/new"), false);
++});
++
++test("old services fail closed without falling back to unconditional thread replacement", async (t) => {
++  const server = await startAgentServer("idle", false);
++  const conn = createAgentConnection();
++  t.after(async () => {
++    conn.disconnect();
++    await server.close();
++  });
++  conn.setCredentials(server.url, "fixture-token");
++  await connected(conn);
++  const result = await conn.prepareConversation();
++  assert.equal(result.ok, false);
++  assert.match(result.error ?? "", /不支持安全准备/);
++  assert.equal(server.requests.includes("/agent/codex/threads/new"), false);
++  assert.equal(server.conversation().status, "idle");
++});
++
++for (const status of ["ready", "warning", "idle"] as const) {
++  test(`vendor named hello establishes ${status} without a conversation_changed replay`, async (t) => {
++    const server = await startAgentServer(status);
++    const conn = createAgentConnection();
++    t.after(async () => {
++      conn.disconnect();
++      await server.close();
++    });
++    conn.setCredentials(server.url, "fixture-token");
++    await connected(conn);
++    assert.equal(conn.getState().conversation?.status, status);
++    assert.ok(
++      server.requests.indexOf("/events") <
++        server.requests.indexOf("/canvas/activate"),
++    );
++    assert.ok(
++      server.requests.indexOf("/canvas/activate") <
++        server.requests.indexOf("/canvas/state"),
++    );
++    assert.equal(
++      server.requests.includes("/agent/codex/threads/new"),
++      false,
++      "connect must not reset a session",
++    );
++    if (status === "idle") {
++      assert.equal(
++        (await conn.sendMessage("blocked until prepared")).ok,
++        false,
++      );
++      assert.equal((await conn.prepareConversation()).ok, true);
++      assert.equal(conn.getState().conversation?.status, "ready");
++      assert.equal(
++        (await conn.prepareConversation()).ok,
++        false,
++        "cannot replace an existing session",
++      );
++    }
++    assert.equal((await conn.sendMessage("读取画布")).ok, true);
++    assert.equal(server.turns.length, 1);
++    server.emit("codex_approval", { requestId: "a", method: "shell" });
++    for (let i = 0; i < 100 && !conn.getState().pendingApproval; i++)
++      await delay(10);
++    assert.equal(conn.getState().pendingApproval?.requestId, "a");
++    assert.equal(
++      conn.getState().sending,
++      true,
++      "user echo is not turn completion",
++    );
++    assert.equal((await conn.interrupt()).ok, true);
++    for (let i = 0; i < 100 && conn.getState().sending; i++) await delay(10);
++    assert.equal(conn.getState().sending, false);
++  });
++}
+--- a/tests/unit/promptLibrary.test.ts
++++ b/tests/unit/promptLibrary.test.ts
+@@ -57,6 +57,49 @@
+   },
+ ];
+ 
++test("cached browsing never starts a network request and cancelled refresh preserves cache", async () => {
++  const cache = memoryCache();
++  let requests = 0;
++  const library = createPromptLibrary({
++    sources: [sampleSource],
++    cache,
++    fetcher: (async (_input, init) => {
++      requests++;
++      init?.signal?.throwIfAborted();
++      return jsonResponse(sampleItems);
++    }) as typeof fetch,
++  });
++  assert.deepEqual(await library.readCachedSource(sampleSource.id), []);
++  assert.equal(requests, 0);
++  await library.refreshSource(sampleSource.id);
++  const initial = await library.readCachedSource(sampleSource.id);
++  const controller = new AbortController();
++  controller.abort();
++  await assert.rejects(
++    library.refreshSource(sampleSource.id, { signal: controller.signal }),
++  );
++  assert.deepEqual(await library.readCachedSource(sampleSource.id), initial);
++  assert.equal((await library.statuses())[sampleSource.id].lastError, "");
++});
++
++test("malformed cache entries are normalized before rendering", async () => {
++  const cache = memoryCache();
++  const library = createPromptLibrary({
++    sources: [sampleSource],
++    cache,
++    fetcher: (async () => jsonResponse(sampleItems)) as typeof fetch,
++  });
++  await library.refreshSource(sampleSource.id);
++  const entry = cache.map.get(sampleSource.id)!;
++  entry.items = [
++    null,
++    { id: "restored", title: "Recovered", prompt: "safe" },
++  ] as unknown as typeof entry.items;
++  const recovered = await library.readCachedSource(sampleSource.id);
++  assert.equal(recovered.length, 1);
++  assert.deepEqual(recovered[0].tags, []);
++});
++
+ test("内置 7 个提示词来源且全部启用", () => {
+   assert.equal(DEFAULT_PROMPT_SOURCES.length, 7);
+   assert.ok(

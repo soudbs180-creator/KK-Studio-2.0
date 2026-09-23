@@ -1,0 +1,132 @@
+[
+  {
+    "path": "src/features/agent/agentTypes.ts",
+    "baseline": "632b70911b2fd19431761f6595a45268e6118b2cff906dd384fda53e62348ce9",
+    "candidate": "a2bec2b059a174b88b8a3d2d2b2b0e6bca2a70bae18b5d1ea6ebcb6054a876f8"
+  },
+  {
+    "path": "src/features/agent/agentApi.ts",
+    "baseline": "ddee616754e5f090e08c0f7f31e6fb2eb57f87dac7a288beb47e23e6bbe19701",
+    "candidate": "492c3c9d4200a2f9e037323eb207898df2fbcb4426434cb88170393b7e29ae8e"
+  },
+  {
+    "path": "src/components/ConversationComposer.tsx",
+    "baseline": "7c61a28823f93461570addc1cd6e224c24dce85dc33965e0559f3583a6e05982",
+    "candidate": "1d2aa8a5ba0eeb09310d67cbb324bbc10772ed18dbd6d44fd48d9c68a8eb1326"
+  },
+  {
+    "path": "src/components/ConversationActions.tsx",
+    "baseline": "fe5df1c56fd1cd4cb0d87ce40af5c7a9a8d9902d79c02f8b8dfe6d85b27d0869",
+    "candidate": "9153d76848b83271e87e6aa0ea8222b25d095844570f998df59336764761fc20"
+  },
+  {
+    "path": "src/components/readAttachmentBatch.ts",
+    "baseline": null,
+    "candidate": "04ef63a3b139d58fa99944d4654b64a5ccec3d4d6d689e232f868f848b5a94ac"
+  },
+  {
+    "path": "src/components/canvas/CanvasProps.ts",
+    "baseline": null,
+    "candidate": "e6e19fcfb60c6f87891c3cc710919315e9b419a560904398315205066d8ee592"
+  },
+  {
+    "path": "tests/unit/agentApi.test.ts",
+    "baseline": "49fd8c8162407e22afeea63f8106d856623883d1be262e3b0db680ff8fcf967e",
+    "candidate": "ea03eb6e199547e280db431b7f8a6b9007b4d2cfaee72f1b6c7db2e0be9fb6bc"
+  },
+  {
+    "path": "scripts/audit/check-agent-attachments-desktop.mjs",
+    "baseline": null,
+    "candidate": "a6a16c85f04223a94cabe4c5ade196004048e973ef777ce69bc435851270bf4a"
+  },
+  {
+    "path": "src/features/agent/agentAttachments.ts",
+    "baseline": null,
+    "candidate": "ccd6203fb527f8b08aa68ff32d69c490473f350b623a44860f632118d887a3ad"
+  },
+  {
+    "path": "src/features/agent/agentCanvasView.ts",
+    "baseline": null,
+    "candidate": "28b19489e7f597282c9bdc3d71bf5e59221560c90ec263196a4805cc705bcb9f"
+  },
+  {
+    "path": "src/features/agent/agentHost.ts",
+    "baseline": "b2efe22f1418ca55004b45bf0f482e54adf3e264d0458cee1e0749d43da015f4",
+    "candidate": "7c9a5b633c41226528d56992ce53ab5434c0aea449454bd1da1981da6d9cf8c4"
+  },
+  {
+    "path": "src/features/agent/agentConnection.ts",
+    "baseline": "7c0c942aa4c85e7c9b04d37c3b2a9923e64cada3c2ed4ac2e8d909480ef48379",
+    "candidate": "1c384cc696d03c5ddccf923f7a7d9a10150d1fcdb551702185e39de2404a3771"
+  },
+  {
+    "path": "src/components/AgentComposer.tsx",
+    "baseline": "426f2528d3dcfd8e23f85ab7063fc6b40d7455eae5d2cf8cab506b22a5a0106c",
+    "candidate": "bef28e8b114867c89d6fc1bd3e1e5297aa479b047267e2cf39d7e41916421bf7"
+  },
+  {
+    "path": "src/components/AgentConversationMessages.tsx",
+    "baseline": "8e12bc9155de19144f90e402756ed92862a133c3461d7812ed811b11790cffa0",
+    "candidate": "401a4e31179636c15be9ce6eebaff3cf27f825d7d88a2ca858506a24aa27a28c"
+  },
+  {
+    "path": "src/components/Canvas.tsx",
+    "baseline": "98db4ce4b70521777a70048b9b10624717c08fc31af6455349da3811b6fd82a3",
+    "candidate": "9de9ce54f88c0cf1bb16d3fd15db90fc1fff93604892dc100ff10f7c017859b2"
+  },
+  {
+    "path": "src/components/canvas/useAgentCanvasView.ts",
+    "baseline": null,
+    "candidate": "7755f037eff52133466ef5d9b37cb0d60bdc407948de56a0e5f06c18d4e85c89"
+  },
+  {
+    "path": "src/components/canvas/useCanvasControls.ts",
+    "baseline": "52fa9b6f4ba4c8577202e7e9f9a2506a1c3f4624fc3c3af3cbfb0380737ff419",
+    "candidate": "40ddb6f7db986335567a80ce2f140ffe1004f413bb5290790cb82759b2f8e8aa"
+  },
+  {
+    "path": "src/components/canvas/useCanvasPointer.ts",
+    "baseline": "e29702cda6c37dad1d23f98f48971bb89e3c7fa0f64426aef8e7a80dd87dc683",
+    "candidate": "021fd6d53b7e9d33281edb96675f59993d711a6860857126540b03fcefcd6751"
+  },
+  {
+    "path": "src/components/useConversationAttachments.ts",
+    "baseline": "dcf226ce2cffba8898a792b9c96d08ad48921a5374b06b1ba3a7c3d62a03989a",
+    "candidate": "4ae0d30f6b63044ec79a4607ae654e1c76118205d0839b4e181ce27c37aeda07"
+  },
+  {
+    "path": "src/App.tsx",
+    "baseline": "02d488ddf6b5d4f85b1b9838ae9f637c282ebc7f60a00b340e90d0b38d009613",
+    "candidate": "86bc372dd1eb713120ff8dc7fc772678dd77b6ddfac937d2a0a34672b955d868"
+  },
+  {
+    "path": "src/styles/conversation-panel.css",
+    "baseline": "359ce96a4e14baefc12ce0f7701da7833dca0bd0cdb27779716b8224ac1171d0",
+    "candidate": "a3c47ab79b04cdb8de688cb8076662d03109e1adf8a36de15d1478f56b30dacf"
+  },
+  {
+    "path": "tests/unit/agentAttachments.test.ts",
+    "baseline": null,
+    "candidate": "ef080862f12a9d4887f4b29649e658ac1aaf5461c227519b95c2ade5995be34b"
+  },
+  {
+    "path": "tests/unit/agentConnection.test.ts",
+    "baseline": "7a4fee0b0c175d8bf322ca70ef6233774db458bd09e13d6a236a5d17732c7378",
+    "candidate": "b3bcef98bf739a3fda02f3fca87ef1051de5d7c495b487468d41db322c286d50"
+  },
+  {
+    "path": "tests/unit/agentHost.test.ts",
+    "baseline": "6f0ff0c2ef0cc5e46d962845da907e025f5fa270f15b3807d6f7b9b23eaaba04",
+    "candidate": "eed08ae3317b2e312d0a8de6c02c2e7778c0553b7623836ca0aa40a281472736"
+  },
+  {
+    "path": "tests/browser/agent.spec.ts",
+    "baseline": "abbd795e9c7fd7f050e64f6107bc86ca3ab34bf0abfc2eed1597a3288a2ba5d7",
+    "candidate": "866f8bedba2184602e1f1ad7dd2b78129208aff6c1cf7aead5dd76ef471329f0"
+  },
+  {
+    "path": "tests/browser/ui-feature-parity.spec.ts",
+    "baseline": "55abde5a172027cea258d01220338bdab05d960b5b0021a65554a7e6026a4d56",
+    "candidate": "ebfe91048096409dd6ef39b2db5d6036b6e1024104b434d5a9a8743d20812064"
+  }
+]

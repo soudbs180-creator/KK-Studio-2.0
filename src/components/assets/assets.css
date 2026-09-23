@@ -312,22 +312,10 @@
   bottom: 37px;
   left: 35px;
   display: flex;
-  gap: 3px;
+  gap: var(--ui-space-2);
 }
 .asset-bottom-actions button {
   width: 115px;
-  height: 25px;
-  font-size: 10px;
-  border-radius: 6px;
-  background: var(--border-default);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-}
-.asset-bottom-actions .primary-button {
-  background: var(--text-primary);
-  color: var(--bg-surface);
 }
 .asset-feedback {
   position: absolute;

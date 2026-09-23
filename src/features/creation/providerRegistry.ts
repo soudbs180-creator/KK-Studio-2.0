@@ -7,6 +7,7 @@ import {
 import type { ModelProviderProfile } from "../../domain/modelProvider.ts";
 import { credentialId } from "./providerCredentials.ts";
 import { BROWSER_STORAGE_KEYS } from "../../runtime/storage-contract.ts";
+import { modelSupportsKind } from "./model.ts";
 
 export const PROVIDER_CONNECTIONS_STORAGE_KEY =
   BROWSER_STORAGE_KEYS.providerConnections;
@@ -260,7 +261,7 @@ export function connectionFromModelProfile(
     credentialRef,
     model: profile.model,
     capabilities: {
-      modalities: ["image"],
+      modalities: [modelSupportsKind(profile.model, "text") ? "text" : "image"],
       operations: ["generate", "edit", "inpaint", "outpaint", "batch"],
       maxReferences: 4,
       // OpenAI's official Images endpoint accepts at most n=10 (dall-e-3 is 1).

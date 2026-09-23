@@ -24,13 +24,12 @@ export function useCanvasViewport(
     const scale = canvas ? surfaceScale(canvas) : 1;
     const chatWidth = chat?.width ? chat.width / scale : 0;
     const availableWidth =
-      canvas && bounds && chat && chatWidth > 0
+      canvas && bounds && chat && chatWidth > 0 && window.innerWidth > 1200
         ? (chat.left - bounds.left) / scale - canvas.clientLeft - 16
         : canvasWidth;
     return {
-      // The compact chat drawer can be opened on a narrow viewport too. Keep
-      // the canvas controls inside the space that remains to its left instead
-      // of letting the drawer cover the toolbar and nodes.
+      // Compact chat overlays the content instead of compressing its viewport.
+      // Only a desktop dock reserves space; canvas zoom stays independent.
       width: Math.max(160, Math.min(canvasWidth, availableWidth)),
       height: bounds ? bounds.height / scale : (canvas?.clientHeight ?? 700),
     };

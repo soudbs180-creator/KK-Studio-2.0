@@ -7,19 +7,42 @@
   --bg-app: #0a0a0a;
   --bg-surface: #161616;
   --bg-card: #1a1a1a;
-  --bg-card-hover: #202020;
-  --bg-card-soft: #333333;
+  --bg-elevated: #202020;
+  --bg-soft: #333333;
+  --bg-card-hover: var(--bg-elevated);
+  --bg-card-soft: var(--bg-soft);
   --bg-input: #1f1f1f;
   --bg-accent: #635bff;
-  --bg-accent-hover: #756fff;
+  /* Design System 1.1: paired foregrounds are part of each accent. */
+  --bg-accent-hover: #5b52ed;
+  --bg-accent-soft: #b3adff;
+  --text-on-accent: #fff;
+  --text-on-accent-soft: #0a0a0a;
+  --accent-text-dark: #b2adff;
+  --accent-text-light: #594acc;
+  --accent-focus-dark: #aaa3ff;
+  --accent-focus-light: var(--accent-text-light);
   --border-default: #3c3c3c;
   --border-subtle: #292929;
-  --border-accent: #635bff;
+  --border-control: #858585;
+  --border-accent: var(--text-accent);
+  --neutral-selected: #2a2a2a;
   --text-primary: #dbdbdb;
-  --text-secondary: #858585;
-  --text-tertiary: #707070;
-  --text-accent: #b2adff;
-  --text-danger: #ef6d6d;
+  --text-secondary: #aaa;
+  --text-tertiary: #9e9e9e;
+  --text-accent: var(--accent-text-dark);
+  --focus-ring: var(--accent-focus-dark);
+  --text-danger: #f48181;
+  --text-success: #79cda8;
+  --text-warning: #e6b96a;
+  --bg-danger: #b4233c;
+  --bg-danger-hover: #941f34;
+  --bg-danger-soft: #402329;
+  --text-on-danger: #fff;
+  --bg-success: #79cda8;
+  --text-on-success: #0a0a0a;
+  --bg-warning: #e6b96a;
+  --text-on-warning: #0a0a0a;
   /* Latest Figma Runtime frames 404:28667 / 410:59708 use a 291px rail. */
   --sidebar-width: 291px;
   --conversation-width: 470px;
@@ -31,18 +54,94 @@
 }
 :root[data-theme="light"] {
   --bg-app: #ededed;
-  --bg-surface: #f7f7f7;
+  --bg-surface: #fff;
   --bg-card: #eee;
-  --bg-card-hover: #e5e5e5;
-  --bg-card-soft: #f7f7f7;
-  --bg-input: #eaeaea;
+  --bg-elevated: #ececec;
+  --bg-soft: #eaeaea;
+  --bg-input: #e9e9e9;
   --border-default: #c4c4c4;
   --border-subtle: #dedede;
   --text-primary: #252525;
-  --text-secondary: #646464;
-  --text-tertiary: #777;
-  --text-accent: #594bcb;
+  --border-control: #777;
+  --neutral-selected: #e0e0e0;
+  --text-secondary: #595959;
+  --text-tertiary: #636363;
+  --text-accent: var(--accent-text-light);
+  --focus-ring: var(--accent-focus-light);
+  --text-danger: #aa263b;
+  --text-success: #216947;
+  --text-warning: #805209;
+  --bg-danger-soft: #fce7eb;
+  --bg-success: #216947;
+  --text-on-success: #fff;
+  --bg-warning: #805209;
+  --text-on-warning: #fff;
   color-scheme: light;
+}
+/* Brand fills match the supplied PDF. Readable foregrounds, hover, soft and
+   theme-specific link/focus values are audited engineering corrections. */
+:root[data-accent="blue"] {
+  --bg-accent: #2f80ed;
+  --bg-accent-hover: #4993f2;
+  --bg-accent-soft: #a8cbff;
+  --text-on-accent: #0a0a0a;
+  --accent-text-dark: #a8cbff;
+  --accent-text-light: #1458a5;
+  --accent-focus-dark: var(--accent-text-dark);
+}
+:root[data-accent="green"] {
+  --bg-accent: #21a673;
+  --bg-accent-hover: #39b987;
+  --bg-accent-soft: #79cda8;
+  --text-on-accent: #0a0a0a;
+  --accent-text-dark: #79cda8;
+  --accent-text-light: #166443;
+  --accent-focus-dark: var(--accent-text-dark);
+}
+:root[data-accent="yellow"] {
+  --bg-accent: #e6b96a;
+  --bg-accent-hover: #f0c780;
+  --bg-accent-soft: #f5d9a9;
+  --text-on-accent: #0a0a0a;
+  --accent-text-dark: #e6b96a;
+  --accent-text-light: #78510a;
+  --accent-focus-dark: var(--accent-text-dark);
+}
+:root[data-accent="pink"] {
+  --bg-accent: #e86fa4;
+  --bg-accent-hover: #ef86b4;
+  --bg-accent-soft: #f5a3c3;
+  --text-on-accent: #0a0a0a;
+  --accent-text-dark: #f5a3c3;
+  --accent-text-light: #a12659;
+  --accent-focus-dark: var(--accent-text-dark);
+}
+:root[data-accent="orange"] {
+  --bg-accent: #ee8b3a;
+  --bg-accent-hover: #f5a05b;
+  --bg-accent-soft: #ffc08c;
+  --text-on-accent: #0a0a0a;
+  --accent-text-dark: #ffc08c;
+  --accent-text-light: #94420c;
+  --accent-focus-dark: var(--accent-text-dark);
+}
+:root[data-accent="purple"] {
+  --bg-accent: #8b5cf6;
+  --bg-accent-hover: #a17bf9;
+  --bg-accent-soft: #c5a7ff;
+  --text-on-accent: #0a0a0a;
+  --accent-text-dark: #c5a7ff;
+  --accent-text-light: #6534b0;
+  --accent-focus-dark: var(--accent-text-dark);
+}
+:root[data-accent="white"] {
+  --bg-accent: #fff;
+  --bg-accent-hover: #e6e6e6;
+  --bg-accent-soft: #dbdbdb;
+  --text-on-accent: #0a0a0a;
+  --accent-text-dark: #dbdbdb;
+  --accent-text-light: #252525;
+  --accent-focus-dark: var(--accent-text-dark);
 }
 * {
   box-sizing: border-box;
@@ -59,30 +158,12 @@ body,
   background: var(--bg-surface);
 }
 
-/* Stage 1 uses the Figma desktop frame as the browser design viewport.
-   Keep narrow/mobile breakpoints responsive until their dedicated frames are
-   implemented; desktop windows are letterboxed to the same 16:9 surface. */
-@media (min-width: 1201px) {
-  #root {
-    position: relative;
-    background: #000;
-  }
-
-  /* Render one fixed Figma coordinate space and scale the complete surface.
-     Keeping the app at 1920×1080 means every child retains its measured
-     Figma px geometry at 1280×720 and 1600×900 as well as at 1920×1080. */
-  #root > .app {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 1920px;
-    height: 1080px;
-    flex: 0 0 1920px;
-    transform: translate(-50%, -50%) scale(var(--design-scale));
-    transform-origin: center;
-    margin: 0;
-    overflow: hidden;
-  }
+/* DS 1.2: adapt layout to the viewport, never scale readable UI as a bitmap. */
+#root > .app {
+  width: 100%;
+  height: 100dvh;
+  min-width: 0;
+  overflow: hidden;
 }
 button,
 input,
@@ -99,9 +180,6 @@ button {
 button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
-}
-button:not(:disabled):hover {
-  filter: brightness(1.18);
 }
 button:focus-visible,
 input:focus-visible,
@@ -139,17 +217,6 @@ button[aria-pressed="true"] {
 .modal::backdrop {
   background: #0008;
   backdrop-filter: blur(3px);
-}
-.primary-button {
-  background: var(--text-primary);
-  color: var(--bg-surface);
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-size: 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
 }
 .text-button {
   display: inline-flex;

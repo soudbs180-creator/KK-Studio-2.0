@@ -1,0 +1,173 @@
+{
+  "timestamp": "2026-09-22T11:05:00.248Z",
+  "mode": "Tauri release",
+  "data": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ds-desktop-RtAMmI\\data",
+  "profile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ds-desktop-RtAMmI\\profile",
+  "matrix": [
+    {
+      "theme": "dark",
+      "accent": "default",
+      "hoverContrast": 5.419870157750013,
+      "catalogPages": 3
+    },
+    {
+      "theme": "dark",
+      "accent": "blue",
+      "hoverContrast": 6.353264411804287,
+      "catalogPages": 3
+    },
+    {
+      "theme": "dark",
+      "accent": "green",
+      "hoverContrast": 7.979039351457177,
+      "catalogPages": 3
+    },
+    {
+      "theme": "dark",
+      "accent": "yellow",
+      "hoverContrast": 12.431467921786503,
+      "catalogPages": 3
+    },
+    {
+      "theme": "dark",
+      "accent": "pink",
+      "hoverContrast": 8.239084020877591,
+      "catalogPages": 3
+    },
+    {
+      "theme": "dark",
+      "accent": "orange",
+      "hoverContrast": 9.486030715897838,
+      "catalogPages": 3
+    },
+    {
+      "theme": "dark",
+      "accent": "purple",
+      "hoverContrast": 6.332114100457043,
+      "catalogPages": 3
+    },
+    {
+      "theme": "dark",
+      "accent": "white",
+      "hoverContrast": 15.862989722542688,
+      "catalogPages": 3
+    },
+    {
+      "theme": "light",
+      "accent": "default",
+      "hoverContrast": 5.419870157750013,
+      "catalogPages": 3
+    },
+    {
+      "theme": "light",
+      "accent": "blue",
+      "hoverContrast": 6.353264411804287,
+      "catalogPages": 3
+    },
+    {
+      "theme": "light",
+      "accent": "green",
+      "hoverContrast": 7.979039351457177,
+      "catalogPages": 3
+    },
+    {
+      "theme": "light",
+      "accent": "yellow",
+      "hoverContrast": 12.431467921786503,
+      "catalogPages": 3
+    },
+    {
+      "theme": "light",
+      "accent": "pink",
+      "hoverContrast": 8.239084020877591,
+      "catalogPages": 3
+    },
+    {
+      "theme": "light",
+      "accent": "orange",
+      "hoverContrast": 9.486030715897838,
+      "catalogPages": 3
+    },
+    {
+      "theme": "light",
+      "accent": "purple",
+      "hoverContrast": 6.332114100457043,
+      "catalogPages": 3
+    },
+    {
+      "theme": "light",
+      "accent": "white",
+      "hoverContrast": 15.862989722542688,
+      "catalogPages": 3
+    }
+  ],
+  "sections": [
+    "账号管理",
+    "储存",
+    "网络",
+    "记忆",
+    "模型供应商",
+    "Skill",
+    "MCP",
+    "插件",
+    "Comfy UI",
+    "高级",
+    "软件更新"
+  ],
+  "launches": [
+    {
+      "pid": 14432,
+      "url": "http://tauri.localhost/",
+      "storageRoot": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ds-desktop-RtAMmI\\data",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "loaded": [
+        {
+          "asset": "/assets/index-D5lGm9uX.js",
+          "sha256": "4bb5fe96eb49b86d36380c32122f33824331ff66f79615e0205655c4602d57da",
+          "bytes": 721416
+        },
+        {
+          "asset": "/assets/index-eLFb_6dq.css",
+          "sha256": "0def58098ddfb77830e0ea672a1093874be773c2a2518bdb15e429484b63da5c",
+          "bytes": 197625
+        }
+      ]
+    },
+    {
+      "pid": 39092,
+      "url": "http://tauri.localhost/",
+      "storageRoot": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ds-desktop-RtAMmI\\data",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "loaded": [
+        {
+          "asset": "/assets/index-D5lGm9uX.js",
+          "sha256": "4bb5fe96eb49b86d36380c32122f33824331ff66f79615e0205655c4602d57da",
+          "bytes": 721416
+        },
+        {
+          "asset": "/assets/index-eLFb_6dq.css",
+          "sha256": "0def58098ddfb77830e0ea672a1093874be773c2a2518bdb15e429484b63da5c",
+          "bytes": 197625
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "exe": {
+    "path": "C:\\Users\\Administrator\\.codex\\worktrees\\design-system-pages\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+    "sha256": "bfaefa6db3761351995e477339741acdf13a3133c6a5ac58aa4ec0eded9e4c4a"
+  },
+  "restart": {
+    "theme": "light",
+    "accent": "green",
+    "skillPreserved": true,
+    "sameDataAndProfile": true
+  }
+}

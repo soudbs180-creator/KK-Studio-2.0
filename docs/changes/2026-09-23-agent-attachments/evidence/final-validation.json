@@ -1,0 +1,34 @@
+{
+  "date": "2026-09-22T17:44:43.239Z",
+  "rootVerify": {
+    "exitCode": 0,
+    "nodePassed": 363,
+    "browserPassed": 299,
+    "sha256": "f6736a759ebf6fc514a41da7b9431b0add1fb0161e58f08758ef57393b9191be"
+  },
+  "nativeBuild": {
+    "exitCode": 0,
+    "sha256": "0a98e1b0638d8fa81cc9978a16636a5ffcc99c162a984a361b6174448726e035"
+  },
+  "nativeAudit": {
+    "exitCode": 0,
+    "sha256": "173ddd60bab1de2da32cebc221e746d081166d424d4f0c2b1e847178e24e8c07"
+  },
+  "sourceManifestSha256": "a86ea3f085e1ad1271a03431998757fd451a453b26aab0cb093407e25c3a0b95",
+  "reviewedSourceFiles": 26,
+  "sourceDrift": [],
+  "committed": false,
+  "pushed": false,
+  "postDocumentationChecks": {
+    "lintExitCode": 0,
+    "formatExitCode": 0,
+    "tasks": 57,
+    "features": 29,
+    "violations": 0
+  },
+  "preservation": {
+    "checkedFiles": 2332,
+    "restoredGeneratedFiles": 44,
+    "stagedPreserved": true
+  }
+}

@@ -457,7 +457,7 @@
 }
 .comment-region-picker button.is-selected {
   background: var(--bg-accent);
-  color: var(--text-primary);
+  color: var(--text-on-accent);
 }
 .comment-card textarea {
   width: 100%;

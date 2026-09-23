@@ -1,0 +1,57 @@
+{
+  "date": "2026-09-22T16:10:13.577Z",
+  "mode": "Tauri release",
+  "data": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-desktop-nMwsa1\\data",
+  "launches": [
+    {
+      "pid": 692,
+      "url": "http://tauri.localhost/",
+      "loaded": [
+        {
+          "path": "/assets/index-DAcUlW9R.js",
+          "sha256": "782fc5ac7323100ea1ace490fea75c0a3d0d0927a4963ceca7f4057d698020d5"
+        },
+        {
+          "path": "/assets/index-D1bWxVd5.css",
+          "sha256": "4e3417ea972db495d85933d618bde2cc1cd8418ec01a898eef14f23ffcc57b22"
+        }
+      ]
+    },
+    {
+      "pid": 76964,
+      "url": "http://tauri.localhost/",
+      "loaded": [
+        {
+          "path": "/assets/index-DAcUlW9R.js",
+          "sha256": "782fc5ac7323100ea1ace490fea75c0a3d0d0927a4963ceca7f4057d698020d5"
+        },
+        {
+          "path": "/assets/index-D1bWxVd5.css",
+          "sha256": "4e3417ea972db495d85933d618bde2cc1cd8418ec01a898eef14f23ffcc57b22"
+        }
+      ]
+    }
+  ],
+  "checks": [
+    "packaged runtime start, authenticated connection, repeated start identity, no persisted token",
+    "packaged stdio MCP returned the actual KK canvas state",
+    "real Codex reply through desktop composer",
+    "stop/start uses a fresh process and preserves project thread identity",
+    "normal exit reclaimed 12 owned processes",
+    "normal window close reclaims owned service",
+    "forced exit reclaimed 12 owned processes",
+    "second app launch restores thread; forced owner exit reclaims service"
+  ],
+  "errors": [],
+  "passed": true,
+  "exe": {
+    "path": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+    "sha256": "4b8f8a047b4a444935fe4a1245c8056afcdcbe99922d00c4608385c964aef63e"
+  },
+  "externalAgentBefore": true,
+  "mcp": {
+    "tool": "canvas_get_state",
+    "nodes": 3
+  },
+  "externalAgentAfter": true
+}

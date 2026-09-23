@@ -1,11 +1,13 @@
 import type {
   CanvasCollectionItem,
   NodeEditingProps,
+  PluginItemPayload,
 } from "../../domain/canvasItems";
 import DemoResultNode from "../nodes/DemoResultNode";
 import ImageCreationNode from "../nodes/ImageCreationNode";
 import VideoNode from "../nodes/VideoNode";
 import PromptCreationNode from "../nodes/PromptCreationNode";
+import PluginNode from "../nodes/PluginNode";
 
 export default function CanvasNodeContent({
   item,
@@ -13,17 +15,28 @@ export default function CanvasNodeContent({
   onFavorite,
   onDelete,
   editing,
+  scale = 1,
 }: {
   item: CanvasCollectionItem;
   favorite: boolean;
   onFavorite: () => void;
   onDelete: () => void;
   editing: NodeEditingProps;
+  scale?: number;
 }) {
+  if (item.plugin)
+    return (
+      <PluginNode
+        item={item as CanvasCollectionItem & { plugin: PluginItemPayload }}
+        editing={editing}
+        scale={scale}
+      />
+    );
   if (
     item.result ||
     (item.generationStatus &&
-      (item.kind !== "image" || item.generationIndex !== undefined))
+      ((item.kind !== "image" && item.kind !== "text") ||
+        item.generationIndex !== undefined))
   )
     return (
       <DemoResultNode

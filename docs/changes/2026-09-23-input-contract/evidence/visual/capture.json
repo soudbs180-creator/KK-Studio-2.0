@@ -1,0 +1,30 @@
+{
+  "url": "http://127.0.0.1:1423",
+  "mode": "Vite preview",
+  "records": [
+    {
+      "width": 390,
+      "height": 844,
+      "resources": [
+        "/assets/index-DLeRvWsG.js",
+        "/assets/index-CCZfPOS7.css"
+      ]
+    },
+    {
+      "width": 834,
+      "height": 1112,
+      "resources": [
+        "/assets/index-DLeRvWsG.js",
+        "/assets/index-CCZfPOS7.css"
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "resources": [
+        "/assets/index-DLeRvWsG.js",
+        "/assets/index-CCZfPOS7.css"
+      ]
+    }
+  ]
+}

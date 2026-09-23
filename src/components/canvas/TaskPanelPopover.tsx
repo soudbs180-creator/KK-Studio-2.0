@@ -1,4 +1,5 @@
-import type { Dispatch, SetStateAction } from "react";
+import { useRef, type Dispatch, type SetStateAction } from "react";
+import TaskDetail from "./TaskDetail";
 import type {
   CreationTask,
   CreationTaskStatus,
@@ -62,6 +63,7 @@ export function TaskPanelPopover({
   onRetryTask?: (taskId: string) => void;
   onDismiss: () => void;
 }) {
+  const detailTrigger = useRef<HTMLButtonElement | null>(null);
   return (
     <section
       className="task-panel"
@@ -131,7 +133,10 @@ export function TaskPanelPopover({
                     : `查看演示任务 ${task.date}`
               }
               aria-expanded={selectedTask?.id === task.id}
-              onClick={() => setSelectedTask(task)}
+              onClick={(event) => {
+                detailTrigger.current = event.currentTarget;
+                setSelectedTask(selectedTask?.id === task.id ? null : task);
+              }}
               title={
                 task.task
                   ? `${task.statusLabel} · ${task.task.providerName ?? "连接未绑定"}`
@@ -170,88 +175,13 @@ export function TaskPanelPopover({
         </div>
       )}
       {selectedTask && (
-        <div className="task-detail" role="dialog" aria-label="任务详情">
-          <div className="task-detail-heading">
-            <span>任务详情</span>
-            <button
-              type="button"
-              aria-label="关闭任务详情"
-              onClick={() => setSelectedTask(null)}
-            >
-              <img
-                src="/design/figma/task-close.svg"
-                width={7}
-                height={7}
-                alt=""
-                draggable={false}
-              />
-            </button>
-          </div>
-          <div className="task-detail-body">
-            <img
-              src={selectedTask.image}
-              width={40}
-              height={39}
-              alt={selectedTask.task ? "任务结果预览" : "演示任务占位图"}
-              draggable={false}
-            />
-            <div>
-              <strong>
-                {selectedTask.task
-                  ? selectedTask.task.status === "queued" &&
-                    selectedTask.task.error?.includes("暂停")
-                    ? "已暂停"
-                    : selectedTask.task.status === "unknown"
-                      ? "受理状态不明 · 需核对供应商"
-                      : selectedTask.statusLabel
-                  : selectedTask.status === "running"
-                    ? "正在生成中"
-                    : "已完成 · 本地演示"}
-              </strong>
-              <span>
-                {selectedTask.task
-                  ? `${selectedTask.task.completedOutputs}/${selectedTask.task.requestedOutputs} 输出 · ${selectedTask.task.providerName ?? "连接未绑定"}`
-                  : `${selectedTask.date ?? "本次会话"}${selectedTask.duration ? ` · ${selectedTask.duration}` : ""}`}
-              </span>
-            </div>
-          </div>
-          {selectedTask.task &&
-            (selectedTask.task.status === "running" ||
-              selectedTask.task.status === "queued") &&
-            onCancelTask && (
-              <button
-                type="button"
-                className="task-detail-action"
-                onClick={() => onCancelTask(selectedTask.task!.id)}
-              >
-                取消任务
-              </button>
-            )}
-          {selectedTask.task &&
-            [
-              "failed",
-              "partial",
-              "cancelled",
-              "offline",
-              "interrupted",
-            ].includes(selectedTask.task.status) &&
-            onRetryTask && (
-              <button
-                type="button"
-                className="task-detail-action"
-                onClick={() => onRetryTask(selectedTask.task!.id)}
-              >
-                重试任务
-              </button>
-            )}
-          <p>
-            {selectedTask.task
-              ? selectedTask.task.status === "unknown"
-                ? "供应商可能已受理；已暂停普通重试，请先在供应商侧核对。"
-                : "任务来源、模型和结果仅来自当前本地快照。"
-              : "Prototype · 固定测试素材，不上传或保存到服务器。"}
-          </p>
-        </div>
+        <TaskDetail
+          selectedTask={selectedTask}
+          onCancelTask={onCancelTask}
+          onRetryTask={onRetryTask}
+          onClose={() => setSelectedTask(null)}
+          trigger={detailTrigger}
+        />
       )}
       {onOpenTasks && (
         <button

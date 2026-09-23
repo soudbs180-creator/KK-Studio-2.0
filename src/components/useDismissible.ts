@@ -1,13 +1,13 @@
-import { useEffect, useRef, type RefObject } from "react";
+import { useLayoutEffect, useRef, type RefObject } from "react";
 
 type DismissibleEntry = {
   ref: RefObject<HTMLElement>;
   dismiss: () => void;
-  trigger?: RefObject<HTMLButtonElement>;
+  trigger?: RefObject<HTMLElement>;
 };
 
-// The last mounted open entry is the topmost popover. A shared stack avoids
-// closing every open menu when several hooks listen on document simultaneously.
+// Nested popovers stay above their parent, including a parent that becomes an
+// overlay after a breakpoint change. Unrelated entries keep opening order.
 const openEntries: DismissibleEntry[] = [];
 
 function topmostDialog(): HTMLDialogElement | null {
@@ -31,7 +31,7 @@ function focusTrigger(entry: DismissibleEntry): void {
     entry.ref.current?.querySelector<HTMLButtonElement>(
       'button[aria-expanded="true"], button[aria-haspopup]',
     );
-  if (trigger?.isConnected && !trigger.disabled) {
+  if (trigger?.isConnected && !trigger.matches(":disabled")) {
     trigger.focus({ preventScroll: true });
   }
 }
@@ -40,18 +40,26 @@ export function useDismissible(
   open: boolean,
   ref: RefObject<HTMLElement>,
   dismiss: () => void,
-  trigger?: RefObject<HTMLButtonElement>,
+  trigger?: RefObject<HTMLElement>,
 ): void {
   const dismissRef = useRef(dismiss);
   dismissRef.current = dismiss;
-  useEffect(() => {
+  // Registration follows the same commit as visibility, including media-query
+  // transitions; rapid Escape must not see a stale child or a missing parent.
+  useLayoutEffect(() => {
     if (!open) return;
     const entry: DismissibleEntry = {
       ref,
       dismiss: () => dismissRef.current(),
       trigger,
     };
-    openEntries.push(entry);
+    const descendant = openEntries.findIndex((other) =>
+      [other.ref.current, other.trigger?.current].some(
+        (node) => node && ref.current?.contains(node),
+      ),
+    );
+    if (descendant < 0) openEntries.push(entry);
+    else openEntries.splice(descendant, 0, entry);
     const pointer = (event: PointerEvent): void => {
       if (
         openEntries[openEntries.length - 1] !== entry ||

@@ -44,10 +44,63 @@ test("saved preferences restore user choices after reload", () => {
       version: 1,
       language: "zh-CN",
       theme: "system",
+      accent: "default",
       floatingLayout: false,
       removeWatermark: false,
     },
   });
+});
+
+test("old v1 settings gain a default accent without losing existing choices", () => {
+  const result = parseSettings(
+    JSON.stringify({
+      version: 1,
+      language: "zh-CN",
+      theme: "light",
+      floatingLayout: false,
+      removeWatermark: false,
+    }),
+  );
+  assert.equal(result.recovered, false);
+  assert.equal(result.preferences.accent, "default");
+  assert.equal(result.preferences.theme, "light");
+  assert.equal(result.preferences.floatingLayout, false);
+});
+
+test("all eight accent choices survive serialization and an invalid accent falls back locally", () => {
+  for (const accent of [
+    "default",
+    "blue",
+    "green",
+    "yellow",
+    "pink",
+    "orange",
+    "purple",
+    "white",
+  ] as const) {
+    const saved = serializeSettings({
+      version: 1,
+      language: "zh-CN",
+      theme: "system",
+      floatingLayout: false,
+      removeWatermark: false,
+      accent,
+    });
+    assert.equal(parseSettings(saved).preferences.accent, accent);
+  }
+  const invalid = parseSettings(
+    JSON.stringify({
+      version: 1,
+      language: "zh-CN",
+      theme: "light",
+      floatingLayout: false,
+      removeWatermark: true,
+      accent: "unknown-accent",
+    }),
+  );
+  assert.equal(invalid.preferences.accent, "default");
+  assert.equal(invalid.preferences.theme, "light");
+  assert.equal(invalid.preferences.floatingLayout, false);
 });
 
 test("unknown fields including secrets are excluded from exported preferences", () => {

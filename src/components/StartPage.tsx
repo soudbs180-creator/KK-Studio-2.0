@@ -37,6 +37,7 @@ export default function StartPage({
   onOpenModel,
   onOpenSkills,
   onOpenPlugins,
+  onOpenPrompts,
   defaultModel = "",
   draft: externalDraft,
   onDraftChange,
@@ -51,6 +52,7 @@ export default function StartPage({
   onOpenModel: () => void;
   onOpenSkills: () => void;
   onOpenPlugins: () => void;
+  onOpenPrompts: () => void;
   defaultModel?: string;
   draft?: CreationDraft;
   onDraftChange?: (draft: CreationDraft) => void;
@@ -98,6 +100,13 @@ export default function StartPage({
           skills={skills}
           onApplySkill={onApplySkill}
         />
+        <button
+          className="ui-button start-prompt-library"
+          type="button"
+          onClick={onOpenPrompts}
+        >
+          提示词库
+        </button>
         {status && (
           <p className="start-status" role="status">
             {status}

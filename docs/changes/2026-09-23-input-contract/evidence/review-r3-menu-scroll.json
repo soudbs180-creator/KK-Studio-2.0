@@ -1,0 +1,111 @@
+{
+  "rows": [
+    {
+      "label": "initial",
+      "rect": {
+        "x": 30,
+        "y": 65,
+        "width": 310,
+        "height": 217,
+        "top": 65,
+        "right": 340,
+        "bottom": 282,
+        "left": 30
+      },
+      "scrollTop": 0,
+      "scrollHeight": 400,
+      "clientHeight": 215,
+      "maxHeight": "217px",
+      "focus": "模型"
+    },
+    {
+      "label": "immediateScroll",
+      "rect": {
+        "x": 30,
+        "y": 65,
+        "width": 310,
+        "height": 217,
+        "top": 65,
+        "right": 340,
+        "bottom": 282,
+        "left": 30
+      },
+      "scrollTop": 100,
+      "scrollHeight": 400,
+      "clientHeight": 215,
+      "maxHeight": "217px",
+      "focus": "模型"
+    },
+    {
+      "label": "afterScrollListener",
+      "rect": {
+        "x": 30,
+        "y": 65,
+        "width": 310,
+        "height": 217,
+        "top": 65,
+        "right": 340,
+        "bottom": 282,
+        "left": 30
+      },
+      "scrollTop": 0,
+      "scrollHeight": 400,
+      "clientHeight": 215,
+      "maxHeight": "217px",
+      "focus": "模型"
+    },
+    {
+      "label": "afterWheel",
+      "rect": {
+        "x": 30,
+        "y": 65,
+        "width": 310,
+        "height": 217,
+        "top": 65,
+        "right": 340,
+        "bottom": 282,
+        "left": 30
+      },
+      "scrollTop": 0,
+      "scrollHeight": 400,
+      "clientHeight": 215,
+      "maxHeight": "217px",
+      "focus": "模型"
+    },
+    {
+      "clickTrial": "ok",
+      "lastHit": {
+        "rect": {
+          "x": 39,
+          "y": 426,
+          "width": 292,
+          "height": 32,
+          "top": 426,
+          "right": 331,
+          "bottom": 458,
+          "left": 39
+        },
+        "hit": false
+      }
+    },
+    {
+      "label": "afterClickTrial",
+      "rect": {
+        "x": 30,
+        "y": 65,
+        "width": 310,
+        "height": 217,
+        "top": 65,
+        "right": 340,
+        "bottom": 282,
+        "left": 30
+      },
+      "scrollTop": 0,
+      "scrollHeight": 400,
+      "clientHeight": 215,
+      "maxHeight": "217px",
+      "focus": "模型"
+    }
+  ],
+  "errors": []
+}

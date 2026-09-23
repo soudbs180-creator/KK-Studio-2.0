@@ -1,3 +1,4 @@
+import { appPlatform } from "../../runtime/appInfo";
 import { useState } from "react";
 import { serializeSettings } from "../../domain/settings";
 import type { SettingsPreferences } from "../../domain/settings";
@@ -60,11 +61,11 @@ export default function SettingsSections({
         {section === "storage" && (
           <>
             <p className="settings-section-intro">
-              在当前浏览器中保存主题、布局等非敏感偏好。
+              在当前设备保存主题、布局等非敏感偏好。
             </p>
             <div className="settings-info-row">
               <span>偏好保存位置</span>
-              <strong>当前浏览器</strong>
+              <strong>{appPlatform()} · 本机</strong>
             </div>
             <div className="settings-info-row">
               <span>导出内容</span>
@@ -87,11 +88,11 @@ export default function SettingsSections({
         {section === "advanced" && (
           <>
             <p className="settings-section-intro">
-              管理当前浏览器的界面偏好。项目和资产不会受影响。
+              管理当前设备的界面偏好。项目和资产不会受影响。
             </p>
             <div className="settings-info-row">
-              <span>应用阶段</span>
-              <strong>前端原型</strong>
+              <span>运行平台</span>
+              <strong>{appPlatform()} · 本地优先</strong>
             </div>
             <button
               type="button"
@@ -102,7 +103,7 @@ export default function SettingsSections({
             </button>
             <div className="settings-reset-card">
               <h3>恢复默认偏好</h3>
-              <p>仅重置主题、浮岛布局和水印偏好，保留项目和资产。</p>
+              <p>仅重置主题、强调色、浮岛布局和水印偏好，保留项目和资产。</p>
               {confirmReset ? (
                 <div className="settings-action-group">
                   <button

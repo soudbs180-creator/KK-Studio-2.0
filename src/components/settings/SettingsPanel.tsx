@@ -12,6 +12,7 @@ import SettingsSections, { SETTINGS_SECTIONS } from "./SettingsSections";
 import type { SettingsSection } from "./SettingsSections";
 import type { SaveState } from "../../features/creation/useCreationStorage";
 import type { SkillRegistry } from "../../features/skills/skillRegistry";
+import UiIcon from "../UiIcon";
 import "./settings.css";
 
 function readInitialSettings(): {
@@ -111,13 +112,19 @@ export default function SettingsPanel({
                 setFeedback({ message: "", error: false });
               }}
             >
-              <img
-                className="settings-nav-icon"
-                src={`/design/figma/settings-nav-${item.id}.svg`}
-                alt=""
-                width="22"
-                height="22"
-              />
+              {item.id === "plugins" ? (
+                <span className="settings-nav-icon" aria-hidden="true">
+                  <UiIcon name="plug" size={22} />
+                </span>
+              ) : (
+                <img
+                  className="settings-nav-icon"
+                  src={`/design/figma/settings-nav-${item.id}.svg`}
+                  alt=""
+                  width="22"
+                  height="22"
+                />
+              )}
               <span>{item.label}</span>
             </button>
           ))}

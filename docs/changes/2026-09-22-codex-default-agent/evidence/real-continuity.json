@@ -1,0 +1,60 @@
+{
+  "startedAt": "2026-09-22T13:56:40.108Z",
+  "mode": "Vite development",
+  "sourceRoot": "D:\\kk-studio\\KK-Studio-2.0",
+  "url": "http://127.0.0.1:1421",
+  "turns": [
+    {
+      "threadId": "01a0c967-9608-7e82-8336-4f908fc5650d",
+      "conversationId": "a8b6bedc-c4f5-458f-a5ab-b0dd8276e638",
+      "expectedRevision": 26,
+      "model": "account default",
+      "message": "记住本次测试暗号 KK_CONTINUITY_472，只回复已记住，不调用任何工具。"
+    },
+    {
+      "threadId": "01a0c967-9608-7e82-8336-4f908fc5650d",
+      "conversationId": "a8b6bedc-c4f5-458f-a5ab-b0dd8276e638",
+      "expectedRevision": 28,
+      "model": "account default",
+      "message": "不调用任何工具。上一条的暗号是什么？只输出暗号。"
+    }
+  ],
+  "steps": [
+    {
+      "name": "two-real-turns",
+      "sameThread": true,
+      "reply": [
+        "已记住",
+        "KK_CONTINUITY_472"
+      ]
+    },
+    {
+      "name": "reload",
+      "messages": [
+        "已记住",
+        "KK_CONTINUITY_472"
+      ],
+      "storedToken": null,
+      "runtime": {
+        "accent": "default",
+        "theme": "dark",
+        "floatingLayout": "true"
+      }
+    },
+    {
+      "name": "usage",
+      "text": "Codex 额度 · 最低剩余 25%\n\n账号共享额度，包含其他 Codex 窗口的使用。\n\ncodex · 每周：剩余 25% · 2026/9/27 09:12:16 重置\n\n刷新额度",
+      "runtime": {
+        "designSurface": "desktop",
+        "runtimeEntry": "src/main.tsx",
+        "runtimeMode": "development"
+      },
+      "scripts": [
+        "/@vite/client",
+        "/src/main.tsx"
+      ]
+    }
+  ],
+  "pageErrors": [],
+  "passed": true
+}

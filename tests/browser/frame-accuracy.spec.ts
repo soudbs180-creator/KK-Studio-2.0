@@ -97,7 +97,7 @@ test("latest two Figma frames retain exact shell anchors through independent col
   await rect(page, ".conversation-panel", [1430, 61, 470, 998]);
   await rect(
     page,
-    ".project-groups > section:last-of-type > .project-entry",
+    ".project-groups > section:last-of-type > .project-group-content > .project-entry",
     [14, 511, 263, 29],
   );
   await rect(page, ".canvas-top-right", [1138.015625, 72, 280.984375, 31.109]);
@@ -201,7 +201,7 @@ test("project row source actions retain navigation, reasons and keyboard managem
   const row = page.locator(".project-entry").first();
   await rect(
     page,
-    ".project-groups > section:first-of-type > .project-entry > .project-pin",
+    ".project-groups > section:first-of-type > .project-group-content > .project-entry > .project-pin",
     [230, 413, 20, 21],
   );
   await expect(

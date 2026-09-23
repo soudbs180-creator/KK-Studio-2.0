@@ -77,6 +77,9 @@ export default function TaskPanel({
   const dismiss = useCallback(() => {
     setOpen(false);
     setSelectedTask(null);
+    ref.current
+      ?.querySelector<HTMLButtonElement>(".task-button")
+      ?.focus({ preventScroll: true });
   }, []);
   useDismissible(open, ref, dismiss);
   const displayTasks = tasks.length ? tasks.map(liveTaskCard) : PROTOTYPE_TASKS;

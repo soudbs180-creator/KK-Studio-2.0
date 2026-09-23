@@ -1,3 +1,5 @@
+import ComposerPluginSummary from "./ComposerPluginSummary";
+import type { ModelSelection } from "../features/models/modelSelection";
 import type { RefObject } from "react";
 import ConversationModelPicker from "./ConversationModelPicker";
 import type { CreationDraft } from "../features/creation/model";
@@ -10,8 +12,10 @@ export default function ConversationActions({
   onAddFiles,
   composerDraft,
   submitting,
+  attachmentDisabled,
   currentModel,
   modelOptions,
+  modelSelection,
   modelMenuOpen,
   onToggleModel,
   onSelectModel,
@@ -39,11 +43,13 @@ export default function ConversationActions({
   onAddFiles: (files: FileList | null) => void;
   composerDraft?: CreationDraft;
   submitting: boolean;
+  attachmentDisabled?: boolean;
   currentModel?: string;
   modelOptions: string[];
+  modelSelection?: ModelSelection;
   modelMenuOpen: boolean;
   onToggleModel: () => void;
-  onSelectModel: (model: string) => void;
+  onSelectModel: (model: string, selection?: ModelSelection) => void;
   onConfigureModel: () => void;
   onOpen: (id: string) => void;
   skillMenuOpen: boolean;
@@ -64,12 +70,12 @@ export default function ConversationActions({
   onApplySkill?: (record: SkillRecord) => void;
 }) {
   return (
-    <div ref={actionsRef} data-node-id="407:29315">
+    <div className="composer-toolbar" ref={actionsRef} data-node-id="407:29315">
       <button
         type="button"
         className="chat-attachment-trigger"
         aria-label="添加对话素材"
-        disabled={submitting || !composerDraft}
+        disabled={(attachmentDisabled ?? submitting) || !composerDraft}
         onClick={() => fileInput.current?.click()}
       >
         <img
@@ -94,6 +100,7 @@ export default function ConversationActions({
         <ConversationModelPicker
           currentModel={currentModel}
           options={modelOptions}
+          selection={modelSelection}
           open={modelMenuOpen}
           onToggle={onToggleModel}
           onSelect={onSelectModel}
@@ -185,7 +192,17 @@ export default function ConversationActions({
             role="menu"
             aria-label="选择插件"
           >
-            <p>当前没有已连接的插件。</p>
+            <ComposerPluginSummary />
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                onTogglePlugin();
+                onOpen("settings/plugins");
+              }}
+            >
+              管理画布插件
+            </button>
             <button
               type="button"
               role="menuitem"
@@ -194,7 +211,7 @@ export default function ConversationActions({
                 onOpen("settings/mcp");
               }}
             >
-              管理插件连接
+              管理 MCP 工具
             </button>
           </div>
         )}

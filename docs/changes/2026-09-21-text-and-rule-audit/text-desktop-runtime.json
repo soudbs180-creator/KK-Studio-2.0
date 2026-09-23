@@ -1,0 +1,16 @@
+{
+  "mode": "desktop",
+  "timestamp": "2026-09-22T06:47:23.516Z",
+  "checks": [
+    "native capacity=1; WebView reload reconnects without a second POST",
+    "SSE output saved; edited text survives reload; no image asset required",
+    "cancelled native stream stays unknown; no late result; next distinct task succeeds without leaked browser lease",
+    "offline native entry sends no request and retains draft"
+  ],
+  "errors": [],
+  "isolatedData": true,
+  "url": "http://tauri.localhost/",
+  "entry": "/assets/index-C7-jQxHk.js",
+  "requestCount": 3,
+  "passed": true
+}

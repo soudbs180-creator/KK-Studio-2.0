@@ -1,3 +1,4 @@
+import type { ModelSelection } from "./modelSelection.ts";
 export type CanvasItemKind = "image" | "video" | "audio" | "text";
 
 export const CANVAS_KIND_LABELS: Record<CanvasItemKind, string> = {
@@ -18,12 +19,26 @@ export interface DemoResult {
   source: "demo" | "provider";
 }
 
+/** 插件节点负载：宿主以 kind=text 承载，内容/尺寸在插件元数据中。 */
+export interface PluginItemPayload {
+  /** 插件节点类型，形如 "sticky-note:note"。 */
+  type: string;
+  version?: string;
+  width?: number;
+  height?: number;
+  /** 插件自有元数据（内容惯例写入 content）。 */
+  metadata?: Record<string, unknown> & { content?: string };
+}
+
 export interface CanvasCollectionItem {
+  providerConnectionId?: string;
+  generationSource?: "codex";
   parameters?: CanvasParameters;
   id: string;
   title: string;
   description: string;
   kind: CanvasItemKind;
+  plugin?: PluginItemPayload;
   prompt?: string;
   /** Selected model id; capability metadata is local until a provider reports it. */
   model?: string;
@@ -44,6 +59,7 @@ export interface CanvasCollectionItem {
 }
 
 export interface CanvasParameters {
+  imageSize?: string;
   ratio: string;
   quality: string;
   duration: string;
@@ -157,7 +173,7 @@ export interface NodeEditingProps {
     phase: "loading" | "success" | "error" | "cancelled" | "offline",
   ) => void;
   model?: string;
-  onModelChange?: (model: string) => void;
+  onModelChange?: (model: string, selection?: ModelSelection) => void;
   references?: CanvasReference[];
   referenceLimit?: number;
   onAddReferences?: (references: CanvasReference[]) => void;

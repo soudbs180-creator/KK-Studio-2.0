@@ -419,7 +419,10 @@ test("actual long model identifiers remain readable without covering canvas cont
   const params = await source.locator(".image-params").boundingBox();
   expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(params!.x);
   await button.click();
-  await expect(source.locator(".model-option")).toContainText(model);
+  await source.getByRole("button", { name: "切换全部模型" }).click();
+  await expect(
+    source.getByRole("menuitemradio", { name: model, exact: false }),
+  ).toContainText(model);
   await page.keyboard.press("Escape");
-  await expect(source.locator(".model-popover")).toHaveCount(0);
+  await expect(source.getByRole("menu", { name: "选择模型" })).toHaveCount(0);
 });

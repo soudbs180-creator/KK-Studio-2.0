@@ -20,9 +20,9 @@ test("菜单 Escape 先收起菜单，再次 Escape 收起编辑器并保留草�
   await openWorkspace(page);
   await page.locator(".image-preview").click();
   await page.getByLabel("图片提示词").fill("切换时保留内容");
-  await page.getByRole("button", { name: "kk-image-2", exact: true }).click();
+  await page.getByRole("button", { name: "画布模型", exact: true }).click();
   await page.keyboard.press("Escape");
-  await expect(page.locator(".node-popover")).toHaveCount(0);
+  await expect(page.getByRole("menu", { name: "选择模型" })).toHaveCount(0);
   await expect(page.getByTestId("image-composer")).toBeVisible();
   await page.getByLabel("图片提示词").focus();
   await page.keyboard.press("Escape");
@@ -31,35 +31,25 @@ test("菜单 Escape 先收起菜单，再次 Escape 收起编辑器并保留草�
   await expect(page.getByLabel("图片提示词")).toHaveValue("切换时保留内容");
   await page
     .getByTestId("image-composer")
-    .screenshot({ path: "docs/evidence/image-composer-refined.png" });
+    .screenshot({ path: "test-results/runtime/image-composer-refined.png" });
 });
 
-test("窄屏会话面板为画布工具栏留出空间，顶部和输入控件尺寸稳定", async ({
+test("平板会话覆盖时画布不接收交互，标题和输入控件尺寸稳定", async ({
   page,
 }) => {
   await openWorkspace(page);
   await page.setViewportSize({ width: 1071, height: 698 });
-  await page.getByRole("button", { name: "窗口", exact: true }).click();
-  await page
-    .getByRole("button", { name: "展开 / 收起对话", exact: true })
-    .click();
   await page.getByRole("button", { name: "打开对话", exact: true }).click();
   await expect(page.locator(".conversation-panel")).toBeVisible();
   await waitForConversationPanelSettled(page);
-  await expect
-    .poll(() =>
-      page.evaluate(() => {
-        const panel = document.querySelector<HTMLElement>(
-          ".conversation-panel",
-        )!;
-        const toolbar = document.querySelector<HTMLElement>(".canvas-toolbar")!;
-        return (
-          toolbar.getBoundingClientRect().right -
-          panel.getBoundingClientRect().left
-        );
-      }),
-    )
-    .toBeLessThan(-16);
+  await expect(page.locator(".canvas-toolbar")).toBeHidden();
+  await expect(page.getByTestId("infinite-canvas")).toHaveAttribute(
+    "inert",
+    "",
+  );
+  expect((await page.locator(".conversation-panel").boundingBox())!.width).toBe(
+    400,
+  );
   const headerButtons = await page
     .locator(".conversation-panel > header > button")
     .evaluateAll((buttons) =>
@@ -69,8 +59,8 @@ test("窄屏会话面板为画布工具栏留出空间，顶部和输入控件�
       }),
     );
   expect(headerButtons).toEqual([
-    { width: 30, height: 30 },
-    { width: 30, height: 30 },
+    { width: 44, height: 44 },
+    { width: 44, height: 44 },
   ]);
   const panelBox = await page.locator(".conversation-panel").boundingBox();
   const closeBox = await page
@@ -96,7 +86,7 @@ test("窄屏会话面板为画布工具栏留出空间，顶部和输入控件�
   );
   await expect(
     page.getByRole("button", { name: "模型", exact: true }),
-  ).toHaveCSS("height", "30px");
+  ).toHaveCSS("height", "44px");
   const headerIcons = await page
     .locator(
       ".conversation-panel > header > button img, .conversation-panel > header > button svg",

@@ -271,5 +271,6 @@ export function useCanvasPointer({
     movePointer,
     finishPointer,
     cancelGesture,
+    selectNodes: select,
   };
 }

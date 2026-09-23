@@ -10,6 +10,15 @@
   height: 100%;
   object-fit: contain;
 }
+/* These source SVGs use pale strokes on transparency. In the light
+   theme, inversion maps those strokes to the primary text color.
+   Two-tone add/search/settings assets retain their original contrast. */
+:root[data-theme="light"] .sidebar-icon-archive img,
+:root[data-theme="light"] .sidebar-icon-skill img,
+:root[data-theme="light"] .sidebar-icon-workflow img,
+:root[data-theme="light"] .sidebar [data-brand-logo] {
+  filter: invert(1);
+}
 /* Desktop expanded shell geometry comes directly from Figma 82:15737/82:15730.
    Keep the hit boxes large enough for keyboard and pointer interaction while
    centering each exported leaf at its source size. */
@@ -595,4 +604,8 @@
   to {
     opacity: 1;
   }
+}
+.project-group-content[hidden],
+.project-groups section[hidden] {
+  display: none;
 }

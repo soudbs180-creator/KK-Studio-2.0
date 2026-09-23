@@ -1,17 +1,21 @@
+import ModelPickerMenu from "./ModelPickerMenu";
+import { selectedModelLabel } from "../features/models/modelPresentation";
+import type { ModelSelection } from "../features/models/modelSelection";
 export default function ConversationModelPicker({
   currentModel,
-  options,
   open,
   onToggle,
   onSelect,
   onConfigure,
+  selection,
 }: {
   currentModel?: string;
   options: string[];
   open: boolean;
   onToggle: () => void;
-  onSelect: (model: string) => void;
+  onSelect: (model: string, selection?: ModelSelection) => void;
   onConfigure: () => void;
+  selection?: ModelSelection;
 }) {
   return (
     <>
@@ -30,36 +34,17 @@ export default function ConversationModelPicker({
           height="13.85"
           alt=""
         />
-        <span className="chat-model-name">{currentModel || "模型"}</span>
+        <span className="chat-model-name">
+          {selectedModelLabel(selection, currentModel)}
+        </span>
       </button>
       {open && (
-        <div className="chat-model-popover" role="menu">
-          {options.map((option) => (
-            <button
-              key={option}
-              type="button"
-              role="menuitemradio"
-              aria-checked={currentModel === option}
-              onClick={() => onSelect(option)}
-            >
-              {option}
-              {currentModel === option ? "（当前项目）" : ""}
-            </button>
-          ))}
-          {!options.length && currentModel && (
-            <button
-              type="button"
-              role="menuitemradio"
-              aria-checked="true"
-              onClick={() => onSelect(currentModel)}
-            >
-              {currentModel}（当前项目）
-            </button>
-          )}
-          <button type="button" onClick={onConfigure}>
-            配置供应商…
-          </button>
-        </div>
+        <ModelPickerMenu
+          scope="conversation"
+          current={selection}
+          onSelect={(choice) => onSelect(choice.model, choice)}
+          onConfigure={onConfigure}
+        />
       )}
     </>
   );

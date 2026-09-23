@@ -1,6 +1,9 @@
+import { appVersion } from "../../runtime/appInfo";
 import type { SettingsSection } from "./SettingsSectionData";
 import ModelProviderSettings from "./ModelProviderSettings";
 import McpSettings from "./McpSettings";
+import AgentConnectionSettings from "./AgentConnectionSettings";
+import PluginManagerSettings from "./PluginManagerSettings";
 
 const PENDING_SETTINGS: Partial<
   Record<SettingsSection, { title: string; description: string }>
@@ -10,9 +13,9 @@ const PENDING_SETTINGS: Partial<
     description: "当前无需登录即可使用工作台。账号登录与云端同步尚未开放。",
   },
   network: {
-    title: "使用浏览器网络",
+    title: "本地服务",
     description:
-      "当前网络由浏览器管理，应用内代理配置尚不可用。模型 API 可在模型供应商中配置。",
+      "本地 Agent 需要启动服务后连接；转发代理为独立服务，尚未接入全局网络配置。",
   },
   memory: {
     title: "暂无记忆",
@@ -54,7 +57,9 @@ export default function ConnectionSettings({
             <span>更新检查尚未接入</span>
           </div>
           <span className="settings-version-tag">Prototype</span>
-          <span className="settings-version-current">当前版本信息不可用</span>
+          <span className="settings-version-current">
+            当前版本 {appVersion}
+          </span>
           <button
             type="button"
             className="settings-action settings-restart-button"
@@ -130,26 +135,31 @@ export default function ConnectionSettings({
   if (section === "network")
     return (
       <div className="settings-detail-stack">
-        <h3 className="settings-detail-label">代理</h3>
+        <h3 className="settings-detail-label">本地服务</h3>
+        <AgentConnectionSettings onFeedback={onFeedback} />
         <div className="settings-network-row">
           <div>
-            <h3>连接方式</h3>
+            <h3>本地转发代理</h3>
             <p>
-              Prototype · 应用内代理尚未接入，当前连接使用运行环境的网络设置。
+              需独立启动 · 应用尚未提供全局代理配置。此服务当前供支持
+              localProxyUrl 的接口调用，不会自动影响模型请求。
+            </p>
+            <p className="settings-network-code">
+              npm run proxy → http://127.0.0.1:23210
             </p>
           </div>
-          <select
-            className="settings-select settings-network-select"
-            aria-label="连接方式"
-            defaultValue="system"
-            disabled
-            title="应用内代理尚未接入"
-          >
-            <option value="auto">自动</option>
-            <option value="none">不使用代理</option>
-            <option value="system">系统代理</option>
-          </select>
         </div>
+      </div>
+    );
+  if (section === "plugins")
+    return (
+      <div className="settings-detail-stack">
+        <h3 className="settings-detail-label">画布插件</h3>
+        <p className="settings-network-activity">
+          在画布「添加节点 › 插件」中使用已启用插件。这里管理画布扩展；MCP
+          工具请在 MCP 设置中管理。
+        </p>
+        <PluginManagerSettings onFeedback={onFeedback} />
       </div>
     );
   if (section === "memory")

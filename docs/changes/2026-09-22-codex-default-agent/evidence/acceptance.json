@@ -1,0 +1,42 @@
+{
+  "at": "2026-09-22T14:00:46.579Z",
+  "stage": "original-root-verified",
+  "sourceRoot": "D:/kk-studio/KK-Studio-2.0",
+  "head": "cf344ddcdf039c6e62aeb9c65106e2a2339c0bb4",
+  "uncommitted": true,
+  "rootGatePending": false,
+  "unit": {
+    "passed": 351,
+    "failed": 0
+  },
+  "browser": {
+    "startTime": "2026-09-22T13:56:03.025Z",
+    "duration": 79229.255,
+    "expected": 266,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "ui": {
+    "files": 153,
+    "violations": 0
+  },
+  "features": 29,
+  "tasks": 54,
+  "vendorTests": {
+    "passed": 125,
+    "skipped": 2,
+    "failed": 0
+  },
+  "realContinuity": true,
+  "bundles": [
+    {
+      "path": "dist/assets/index-DgWAVrvj.css",
+      "sha256": "4EED61967AC7AE794E4C659B00C8B86457EE19B50ACD51FAB9B69B7687431922"
+    },
+    {
+      "path": "dist/assets/index-DWVo4q30.js",
+      "sha256": "A85CA04FD80A5213F2F26DEC942848EBA2B7FB625FF6E796B2BFD8D4D1B07ADB"
+    }
+  ]
+}

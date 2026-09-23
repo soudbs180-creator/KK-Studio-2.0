@@ -1,0 +1,401 @@
+{
+  "backup": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui-interactions-root-preintegration-hj1r15ho",
+  "files": [
+    {
+      "path": "docs/PROGRESS.md",
+      "sha256": "e55bf82932a2f9f51f5e70518bb9250fb15ac30e604682214e2147e9c7540acd"
+    },
+    {
+      "path": "docs/UI_SPEC.md",
+      "sha256": "8f44c76e0ce9943a48c2f166fddb9826fcc9a532fa5eeac594acee66695bbdf8"
+    },
+    {
+      "path": "docs/changes/2026-09-22-design-system/remaining.md",
+      "sha256": "31a1cf2fd6e7b3ff7515d930f842ffcae3a43d277a7953b916646839afa262c3"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/audit.md",
+      "sha256": "ae5f50b0e3dd26cf637e0c18943bf21591c400245ff3e21aa069869d1f9365e4"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/concurrent-source.json",
+      "sha256": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/candidate-full-results.json",
+      "sha256": "12423503c1659b79a08bce5fedeefbf18e6ac0ccb37e81077937c43a5b5b5445"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/green/browser.log",
+      "sha256": "c077b720ffad452b1c8f34041a2f707c8bab0ed4c0cd935e767f50f5e163218d"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/green/dots-20.png",
+      "sha256": "68ad4ffb89eec307110c9522a2f1f3da3b3e102a6db9c44cc5e53daa51969b85"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/green/grid-20.png",
+      "sha256": "51f1a5fffce332a02f005f2c2df3daa8855c29fd17a563c2df4901b1cb183ea1"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/green/workspace-status.png",
+      "sha256": "7b1d8e952e7cb839a7fdcfb3a337ad43dbed4924045e99bb5869a439d2c7d22d"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/logs/candidate-verify.log",
+      "sha256": "e59237e727c4fa58d7d36f025f4f87b212410dc254a8fb89a06a466899e8e216"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/matrix-red/browser.log",
+      "sha256": "2f71a76bd0276ef5305f52017706ef93b3105ab630566e5a7069e09a31557099"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/matrix-red/chat-clipped.log",
+      "sha256": "78f8f645d1e95d407128285144143d61f0b1ce7d97326fd16dbc581b041a0884"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/matrix-red/focus-red.log",
+      "sha256": "e3a1538a9d62df8b4c402ff35110db1b6efd9746023e0f62abaa50be5f7910aa"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/matrix-red/full-regression.log",
+      "sha256": "0b670390947db53e1a4592dcf789fdc56718d4cd76f3c6a317fe8c47f19dd3e6"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/matrix-red/nested-red.log",
+      "sha256": "39618b3d0944fbd919116ecd0f1b59afc8289d62ed3501af703e89f2f07d7ff5"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/red/browser.log",
+      "sha256": "7a3c7c6402607743dc9d9abfb3b3649d2bf6a464ef1aaa75ffc6f4b4032352e7"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/red/dots-20.png",
+      "sha256": "74a0c6284b186de4b4197b0171d1b0650956af90d8aebda7f373c16c62681a23"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/red/grid-20.png",
+      "sha256": "9d87687522c1e6b98bfe9ebad160a11f0f0956a9cbf05871975aacd497b14a55"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/red/workspace-status.png",
+      "sha256": "10870315d8dd8077e9ed458e78e526ad84bb7bedc243eb4adebf4b4598f3b3d2"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/browser-results.json",
+      "sha256": "422ad4cef04c8628c6253e675b85933a3063ca0e75518d9cc822ec7e681a9085"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/browser.log",
+      "sha256": "067a3b671c7d91c45f8845560d14779c836eafd739e27ae7ada98e0cc94ff1a2"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/regression.log",
+      "sha256": "31cb84ea0dd0bebfab5c9bde0bca4cda5d97be8b982eb88e7e52df4c190b0e30"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-folded.png",
+      "sha256": "3fbe80d98460b32e21d77032bcf82806366dd81f2fa9ac53a7a745720bdffa59"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-open.png",
+      "sha256": "24f81b64e08a77834d55d9a76c6ae557f464ca9ae023e07ecef0fd68a927bd95"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-folded.png",
+      "sha256": "bc21e686497852d106de1327c63b3178d31738c6ac2a562d89066b8de1e68d77"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-open.png",
+      "sha256": "6844e88a3917be0bbfda1242b3d5b9d7c529d251ea06ff03f1331b7137fc11a1"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-folded.png",
+      "sha256": "0c6f33d1e1e68e09365d3755354579e1bd7c15635f0490008cc646f276ba6fef"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-open.png",
+      "sha256": "a9e8e531fa61795b736ffcd43164f6bb7438ca8341721253bc92a84daa1bdf34"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-folded.png",
+      "sha256": "388791e802007b795c4df6aa70a5fbad563287180a676414b69221d36fe670fb"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-open.png",
+      "sha256": "981889156ff0e5bb00a6945d054fc2211978ecb484c5613086491a4df65ee34c"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-folded.png",
+      "sha256": "e364865283b11d8c5a4573d4e0e08cd8625e4ea5b9a1c2d9ab4c5d8cfa745abf"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-open.png",
+      "sha256": "27fbb2ec500fb20b7af4fee198167372f63affbe091646c8614c4e0007fbd65f"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-folded.png",
+      "sha256": "298f224549ac9a34a6fba867d33238730d25a4d745f0826628c26242ae668c2c"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-open.png",
+      "sha256": "c9d61e69e9c3c3b21efb56165bc6d2ffe10a706b574d33eaa20795654c910eef"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/dark-folded.png",
+      "sha256": "b477facd11d090bce35f5259d504dd17d695f012eee0b1162befc97ca6a2bfb3"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/dark-open.png",
+      "sha256": "c15a46516c02f08295163c6d2e71f649a9348a0b651a21f8010a8fc813e767a2"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-folded.png",
+      "sha256": "e23b5c4fd56143a89cf5ed6ba563fac3c9d0beda2d3da28dd3c4adff7c5835f4"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-final/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-open.png",
+      "sha256": "17ab00bcf48591c0de80dc34155f33d769c75156b27ef27797530af54caaadd5"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/browser-results.json",
+      "sha256": "a80525540c3497e8fd87d7bc589190ebb3f3cd72718b2860d1451b8449c6fe07"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/browser.log",
+      "sha256": "a722e4c40c162cda0f49e08a3652c20354540f27dc34d490c8e888ce26634ae6"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-folded.png",
+      "sha256": "3fbe80d98460b32e21d77032bcf82806366dd81f2fa9ac53a7a745720bdffa59"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/dark-open.png",
+      "sha256": "24f81b64e08a77834d55d9a76c6ae557f464ca9ae023e07ecef0fd68a927bd95"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-folded.png",
+      "sha256": "bc21e686497852d106de1327c63b3178d31738c6ac2a562d89066b8de1e68d77"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--0f27b-bar-and-chat-folding-at-768/light-open.png",
+      "sha256": "6844e88a3917be0bbfda1242b3d5b9d7c529d251ea06ff03f1331b7137fc11a1"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-folded.png",
+      "sha256": "0c6f33d1e1e68e09365d3755354579e1bd7c15635f0490008cc646f276ba6fef"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/dark-open.png",
+      "sha256": "a9e8e531fa61795b736ffcd43164f6bb7438ca8341721253bc92a84daa1bdf34"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-folded.png",
+      "sha256": "388791e802007b795c4df6aa70a5fbad563287180a676414b69221d36fe670fb"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--1b981-ar-and-chat-folding-at-1920/light-open.png",
+      "sha256": "981889156ff0e5bb00a6945d054fc2211978ecb484c5613086491a4df65ee34c"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-folded.png",
+      "sha256": "e364865283b11d8c5a4573d4e0e08cd8625e4ea5b9a1c2d9ab4c5d8cfa745abf"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/dark-open.png",
+      "sha256": "27fbb2ec500fb20b7af4fee198167372f63affbe091646c8614c4e0007fbd65f"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-folded.png",
+      "sha256": "298f224549ac9a34a6fba867d33238730d25a4d745f0826628c26242ae668c2c"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--50521-ar-and-chat-folding-at-1280/light-open.png",
+      "sha256": "c9d61e69e9c3c3b21efb56165bc6d2ffe10a706b574d33eaa20795654c910eef"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/dark-folded.png",
+      "sha256": "1ed415a708199da3fec1cab239a8d5fa10c50a726a3ec0f7b35bc9ab0e39ba4e"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/dark-open.png",
+      "sha256": "c6e60461df49f02329a7592fbe60d96dcf3e9f6ce6f30dea56e5fb45657ac1ce"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-folded.png",
+      "sha256": "1fee7fcbb55cc9df9ae2626ee8e775dcb637f5cac0305efffc99bdd947a20b24"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interaction-matrix-HUD--df16b-bar-and-chat-folding-at-390/light-open.png",
+      "sha256": "3df0fae7c157bfba04bafa8a962b0dbc3797cd7dead6b690d49a3d5f73af64dd"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interactions-minimum-zo-3fc7a--separated-and-grid-visible/dots-20.png",
+      "sha256": "68ad4ffb89eec307110c9522a2f1f3da3b3e102a6db9c44cc5e53daa51969b85"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interactions-minimum-zo-3fc7a--separated-and-grid-visible/grid-20.png",
+      "sha256": "51f1a5fffce332a02f005f2c2df3daa8855c29fd17a563c2df4901b1cb183ea1"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/evidence/web-focused/ui-interactions-project-st-c9c2b-try-do-not-cover-each-other/workspace-status.png",
+      "sha256": "7b1d8e952e7cb839a7fdcfb3a337ad43dbed4924045e99bb5869a439d2c7d22d"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/intent.md",
+      "sha256": "219ed2f6e0f0dd14c3e2fb5314bdd6df5ea94c2bc35864ff0e0a4390c2a08fba"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/plan.md",
+      "sha256": "952840e8ad2bd00535483b9ed0604ea25a31dc20b37d9f817f002e3833919040"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/review-delta.patch",
+      "sha256": "7a2066ecb0fa7215288306d436513ead9e2037fe402147aef98475d4297785cb"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/review-manifest.json",
+      "sha256": "f9d3745736a7c100fcbc68e479980ffd6e98194b6e8fe604392b3460491b6174"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/review.md",
+      "sha256": "0155634732465e5849c2c7636826d48822ff734ed5445a973a41d21eeb74d4fc"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/spec.md",
+      "sha256": "9d2a85a5ba608a4b029670d77eaade1d7d93549e7c11931266fe28af22756203"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-interactions/verification.md",
+      "sha256": "6481f9116185ed60607bfe169e615f3d5b729b2da011e1ffe61e5d6779f8f56a"
+    },
+    {
+      "path": "docs/features/README.md",
+      "sha256": "62cb3161b7f8160e350fbdff95d0d84a1bfb97e6a975ade33f28f45f51e22763"
+    },
+    {
+      "path": "docs/features/feat-001-canvas-workbench.md",
+      "sha256": "9eaaa58253da50f60c140a5175a883fceff029af8dfe23e9f2cad4d580f586c0"
+    },
+    {
+      "path": "docs/features/feat-016-task-workbench.md",
+      "sha256": "89d648a6642af863fa7f34d3124af301f82787f391bd6487949efebb59175580"
+    },
+    {
+      "path": "docs/features/feat-023-navigation.md",
+      "sha256": "fd3fdf14afa1b99a302cf34994dd13a80f1fdff3c53cf0c7e67d0560ef26a0b0"
+    },
+    {
+      "path": "docs/features/features.registry.json",
+      "sha256": "66d8d2173d15ecb34ce0409624418ad464750c43044cc37695dfd8763f31e4b6"
+    },
+    {
+      "path": "docs/governance/AI_HANDOFF.md",
+      "sha256": "3d86e6618e36314331e0f88c1b5f9f8768e5968f140736adf00b5c99cbfde176"
+    },
+    {
+      "path": "docs/governance/PROJECT_STATE.md",
+      "sha256": "59272653f19ecae084e0294423d95710a7e42cd3d4d00c1aa8d2a6244748bf95"
+    },
+    {
+      "path": "docs/governance/TASK_LEDGER.md",
+      "sha256": "1dc987371e25bf44eb1992814b6de652958675f9076761eb9a43204ae959e4e1"
+    },
+    {
+      "path": "docs/governance/task-ledger.json",
+      "sha256": "f6f96fbb90a786be36a1a72773f11534f0f8531c6765e9f64e928ba7bf0f4edb"
+    },
+    {
+      "path": "scripts/audit/check-ui-interactions-desktop.mjs",
+      "sha256": "ee10c037d35ed6f40ac2ecc95b09faabd344efd402c67af7b25317bfdc0c75f3"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "8159c2d2f65bc86aba641135f859732b25442ee98edcce7aed1c6c057d75a776"
+    },
+    {
+      "path": "src/components/Canvas.tsx",
+      "sha256": "e7af0d387aaed002de8ed028a0ca207a3645b585c9cf88d33427fb681bf0ba2b"
+    },
+    {
+      "path": "src/components/Modal.tsx",
+      "sha256": "f96f350c6f977cb4121942c88d06f383519f9fede2617f1972b7c3e115035e53"
+    },
+    {
+      "path": "src/components/Sidebar.tsx",
+      "sha256": "5caea75334a789cde52f15d1bed78286033a7638d3d3d14d942b5a37aea1e2b9"
+    },
+    {
+      "path": "src/components/SidebarDraftFolder.tsx",
+      "sha256": "c032454b8ff8cbd906723d202333340e80d1c4a1daac2fbed64416100ea66ac8"
+    },
+    {
+      "path": "src/components/SidebarProjectEntry.tsx",
+      "sha256": "5508a11dd37ba24045c4cf9fb10dd47f34481cea139d950201901e7cef14fe7f"
+    },
+    {
+      "path": "src/components/SidebarProjectGroup.tsx",
+      "sha256": "747c575551e894d331a8d51f6c25a3e56e94c46fcd2514fc75cfd6c02ae32616"
+    },
+    {
+      "path": "src/components/TopBar.tsx",
+      "sha256": "f1cf3c5c9efca58005bfa7544bb51516564e6b2af5208e8ecc5f27c61a84f4e0"
+    },
+    {
+      "path": "src/components/canvas/AddNodeMenu.tsx",
+      "sha256": "302fcc6d3ca30bf4169da19cc0b41d5cf9f09c13dfd0b4e0660e924d02159f4c"
+    },
+    {
+      "path": "src/components/canvas/CanvasHud.tsx",
+      "sha256": "da1552e096901f50691378c2f4d71b9e7d225f691a9f5725029d6c5e86db8b6b"
+    },
+    {
+      "path": "src/components/canvas/TaskDetail.tsx",
+      "sha256": "d5c3427be5346fc3c9d0342158737c2b3712314411fc34deb8ec9e8e3b24789b"
+    },
+    {
+      "path": "src/components/canvas/TaskPanel.tsx",
+      "sha256": "6a2649584ab73acd3710863dd554569b7387cf8d0eebce1040ce10f617f7a21f"
+    },
+    {
+      "path": "src/components/canvas/TaskPanelPopover.tsx",
+      "sha256": "27da667ab6fc96219bc05c24c9b8612203e8fe0a9c51bd515dff3be6f5b79b62"
+    },
+    {
+      "path": "src/components/canvas/useCanvasAddMenu.ts",
+      "sha256": "08fcf5779948ff4928df3a6437ecc67feef1e22106f40bce7bd8d150190b727a"
+    },
+    {
+      "path": "src/components/useDismissible.ts",
+      "sha256": "79afa00c034df13224247441526271a4259db2e31f4ffa424f8cb0f77d5c3451"
+    },
+    {
+      "path": "src/domain/canvasViewport.ts",
+      "sha256": "cba5ce5f26ea69d4a7f3fd90e404072c89946ce0468ede799620628b1619dff7"
+    },
+    {
+      "path": "src/styles/canvas-hud.css",
+      "sha256": "f899068c76a7913d9bcce329097e64610f58b73fd902a43328ea5100b1f85720"
+    },
+    {
+      "path": "src/styles/sidebar.css",
+      "sha256": "99798fbfe5a544155ad1949ed00cb00e83f2e277e50c565c1bcb8c953fedc7ed"
+    },
+    {
+      "path": "tests/browser/catalog-pages.spec.ts",
+      "sha256": "f7663f4d0c5717913cacc6aaa20b3695ffb0c1ba47c653a3cb09e57eb36af1d2"
+    },
+    {
+      "path": "tests/browser/frame-accuracy.spec.ts",
+      "sha256": "f853cf429d6f1a4c91efbfcd218061f125e551d14b3eb498a5c8e60379324af4"
+    },
+    {
+      "path": "tests/browser/ui-interaction-matrix.spec.ts",
+      "sha256": "34b7eb53c94f6c3a83ca7041bc1397cb0e55f23ced6f1b4582b851559d1bc466"
+    },
+    {
+      "path": "tests/browser/ui-interactions.spec.ts",
+      "sha256": "741dadaccd4aace4c7a7afbf67ac7d8366d9be1a484719e327864f9383629733"
+    }
+  ]
+}

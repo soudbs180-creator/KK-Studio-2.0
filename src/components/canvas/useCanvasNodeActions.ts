@@ -31,6 +31,8 @@ export interface AddNodeOptions {
   generationStatus?: CanvasCollectionItem["generationStatus"];
   generationIndex?: number;
   select?: boolean;
+  /** 插件节点负载：提供后以 kind=text 承载插件节点。 */
+  plugin?: CanvasCollectionItem["plugin"];
 }
 interface Options {
   items: CanvasCollectionItem[];
@@ -68,11 +70,16 @@ export function useCanvasNodeActions({
     const item: CanvasCollectionItem = {
       id,
       kind,
-      title: options.title ?? `新${CANVAS_KIND_LABELS[kind]}卡片`,
+      plugin: options.plugin,
+      title:
+        options.title ??
+        (options.plugin
+          ? (options.plugin.type.split(":")[1] ?? options.plugin.type)
+          : `新${CANVAS_KIND_LABELS[kind]}卡片`),
       description:
         options.description ??
         options.result?.description ??
-        `${CANVAS_KIND_LABELS[kind]} · 待编辑`,
+        (options.plugin ? "插件节点" : `${CANVAS_KIND_LABELS[kind]} · 待编辑`),
       result: options.result,
       preview:
         options.preview ??

@@ -1,0 +1,256 @@
+{
+  "timestamp": "2026-09-22T16:11:21.120171+00:00",
+  "task": "TASK-UI-007",
+  "status": "DONE",
+  "verificationResult": "PASS",
+  "baseHead": "cf344ddcdf039c6e62aeb9c65106e2a2339c0bb4",
+  "committed": false,
+  "pushed": false,
+  "copiedFiles": 107,
+  "unrelatedChecked": 2091,
+  "unrelatedChangedByUiTask": [],
+  "concurrentEvidenceUpdates": [
+    "docs/changes/2026-09-21-text-and-rule-audit/text-preview.png",
+    "docs/changes/2026-09-22-codex-default-agent/model-parameters.png",
+    "docs/evidence/browser-results.json",
+    "docs/evidence/catalog-1440.png",
+    "docs/evidence/catalog-390.png",
+    "docs/evidence/catalog-768.png",
+    "docs/evidence/navigation-1440.png",
+    "docs/evidence/navigation-1920.png",
+    "docs/evidence/navigation-390.png",
+    "docs/evidence/navigation-768.png",
+    "docs/evidence/user-comments-2026-09-08/marquee.png",
+    "docs/evidence/video-composer-desktop.png"
+  ],
+  "preservationNote": "All 2091 unrelated files matched after restoring UI-test outputs; another preview PID64084 subsequently regenerated shared test screenshots. Those later outputs were retained, not overwritten. Snapshot counts refer to receipt time.",
+  "concurrentTaskPreserved": "TASK-AGENT-002 (latest root task plus sources, package/lock, Rust and docs retained)",
+  "sourceManifestSha256": "108fa681a48e230e3012c494034be2152cccb53daf6eb11b498a020a84456bd8",
+  "verification": {
+    "unitPassed": 356,
+    "browserPassed": 286,
+    "browserFailed": 0,
+    "flaky": 0,
+    "skipped": 0,
+    "uiFiles": 157,
+    "uiViolations": 0,
+    "nativeUiPassed": true,
+    "nativeThemeAccentCases": 16,
+    "sourcePreflight": "PASS"
+  },
+  "backup": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-responsive-baseline-ebnw94yv\\pre-integration",
+  "legacyAgentTestConfigRepair": {
+    "urlWasKnownSynthetic": true,
+    "standaloneDefaultPort": 17371,
+    "configBackupOutsideRepo": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-responsive-baseline-ebnw94yv\\legacy-agent-config-before-repair.json",
+    "originalCustomEndpoint": "UNKNOWN",
+    "normalKkDataUntouched": true
+  },
+  "files": [
+    {
+      "path": "docs/DESIGN-SYSTEM.md",
+      "before": "5a29b58af2e44fd2d9c14e3dad3d9415bdcb1ec445788dfd726dd9902648d949",
+      "after": "ad0d1e48c12d4bd2ba7610181d226230a5f4bcb20703b2fc38d35b29653e09f8"
+    },
+    {
+      "path": "docs/PROGRESS.md",
+      "before": "ab3a107bfbb6b804f529067c0301e9a96a2fa9ee139b58ca1b9babfddeb0f3f9",
+      "after": "3c66183ea7baa3a747d65904d8ef2d80b668619936f277bfb3c57834eb950308"
+    },
+    {
+      "path": "docs/UI-ALIGNMENT.md",
+      "before": "c493943081bab57b8560dd5a5e335d282dd99a651aaaefed2f85b375a8040632",
+      "after": "e46044ad96823730823cced113ace4a9cfedf679686f61f87daa27588589e559"
+    },
+    {
+      "path": "docs/UI-STANDARDS.md",
+      "before": "264232568cb46f52211b850851606263768e697f7cd07df11b077f35306f9b4e",
+      "after": "8fc2a5453cec219994ccd00bfc30b39c980d3c54c0a30bd468756a7fff543bf4"
+    },
+    {
+      "path": "docs/UI_SPEC.md",
+      "before": "8f44c76e0ce9943a48c2f166fddb9826fcc9a532fa5eeac594acee66695bbdf8",
+      "after": "7ac74f835b1bbaeef6b435363cb946305168d71df0ea3cf8f31ed0263fb32db4"
+    },
+    {
+      "path": "docs/changes/2026-09-22-design-system/remaining.md",
+      "before": "d15236659025e6ee6a0b4d5df12bc2d8b122fff3348db6b43399e8efd5354a30",
+      "after": "f5eab8d47db26b915823456dc964a604919d24c4278589d8c21c82419c062615"
+    },
+    {
+      "path": "docs/changes/2026-09-22-responsive-ui/audit.md",
+      "before": null,
+      "after": "7b3c41d14a8ae1c461e6fef5c9b652013d07545d54b5f5242ca96fdbc04f6a69"
+    },
+    {
+      "path": "docs/changes/2026-09-22-responsive-ui/intent.md",
+      "before": null,
+      "after": "686449bdf1cc0291f36dfb5d491d68565b336fb27da317118c5c6dd728136b29"
+    },
+    {
+      "path": "docs/changes/2026-09-22-responsive-ui/plan.md",
+      "before": null,
+      "after": "925b6957c4662e0609e2e811c9bc773db17011158143ed033d78674867441972"
+    },
+    {
+      "path": "docs/changes/2026-09-22-responsive-ui/review.md",
+      "before": null,
+      "after": "4712d22fb58a2b8610ad16911926aa210c95c2c7d75b58bce1bc9033c055146a"
+    },
+    {
+      "path": "docs/changes/2026-09-22-responsive-ui/spec.md",
+      "before": null,
+      "after": "925bd45104d6e02c7dc7f31e656f0cdaba94b226ec72fb8d5f294fcabc6dabb7"
+    },
+    {
+      "path": "docs/changes/2026-09-22-responsive-ui/verification.md",
+      "before": null,
+      "after": "f47e467c006c308472fcbf6151cdc42340fff1418da472bc36bfbb55a136675a"
+    },
+    {
+      "path": "docs/governance/AI_HANDOFF.md",
+      "before": "c1565a5cbbb62be4a9dc853f89f6dcc9eb93410279d75195e45a0fa1ff743ffc",
+      "after": "9b52314e423392cd567f68c79b7093106d6fdb9e4d2e1cb024b68aa624cda77e"
+    },
+    {
+      "path": "docs/governance/PROJECT_STATE.md",
+      "before": "50d63eb2064431df2a8c13c4431c35efde01852ddccbe6fdebc7022bf1929a6b",
+      "after": "59ad2f3e50c675fda119698ce8fc9d310e7db8d9d9a1635c9e1ad048c2a349b1"
+    },
+    {
+      "path": "docs/governance/TASK_LEDGER.md",
+      "before": "35561376a73208c1b601b5cadb5ce9c2027982d69bea02cfad744c9e7f386774",
+      "after": "b97f3f7d23c43ae1520aa8ea47f0600cd1683a8750b4572fda0ccad440e548b0"
+    },
+    {
+      "path": "docs/governance/task-ledger.json",
+      "before": "c9bb1213d64773d926b028e7ed26f2a8bc5d7f115d90b0d9bb9b57636f34704d",
+      "after": "e193b81e9a13190148bb51c3dadbba01d7a0cbc52d04928b7dbe895272238ee2"
+    },
+    {
+      "path": "scripts/audit/check-responsive-desktop.mjs",
+      "before": null,
+      "after": "af1fc6452b6ec0b558e7ee0edc36890ff0e0ea515cae6c6d29487edb5a0d2fe5"
+    },
+    {
+      "path": "src/App.tsx",
+      "before": "5dda2da01db77da7f2eb04778a0f84ee092f7635e1b65f87b7d5e547d2b930e8",
+      "after": "5dc0be2d829a404dc1a7d0cfb0776d9e99757a4f22a91639fc6587764119b028"
+    },
+    {
+      "path": "src/components/Canvas.tsx",
+      "before": "e7af0d387aaed002de8ed028a0ca207a3645b585c9cf88d33427fb681bf0ba2b",
+      "after": "98db4ce4b70521777a70048b9b10624717c08fc31af6455349da3811b6fd82a3"
+    },
+    {
+      "path": "src/components/CompactAppMenu.tsx",
+      "before": null,
+      "after": "142b744ad8671749ba5c7691d38da528789f8d26b3d1b74e9812540bc0d33824"
+    },
+    {
+      "path": "src/components/ConversationPanel.tsx",
+      "before": "3457d223f50023fcfa31e60dc33e1b684447c888993ce26706c53ac7599e74e8",
+      "after": "8508d2f2b914c1c7b9f56119f24503d0b365dd0b38c69791f67714a8dd22ff3d"
+    },
+    {
+      "path": "src/components/Sidebar.tsx",
+      "before": "5caea75334a789cde52f15d1bed78286033a7638d3d3d14d942b5a37aea1e2b9",
+      "after": "1711d0abdb303759fb1935b38e581432ef83534f540ae3826cf374439dbcc8f8"
+    },
+    {
+      "path": "src/components/SidebarNavigation.tsx",
+      "before": null,
+      "after": "c28def2642e50df43dd78f96292780e5773ffc1dddf91d5f3a99aeca606ae075"
+    },
+    {
+      "path": "src/components/TopBar.tsx",
+      "before": "f1cf3c5c9efca58005bfa7544bb51516564e6b2af5208e8ecc5f27c61a84f4e0",
+      "after": "e63eb1a49ce406afae17068240b68ca3437eac45b86d2509af5f81635801c6af"
+    },
+    {
+      "path": "src/components/canvas/useCanvasViewport.ts",
+      "before": "851b1667c09898dbea9aff4cc51273917518b7c8685484209bccba14d0f66faf",
+      "after": "1d11c7568b9aa6ce6ae6f0cb4e52c94a7daef76b8ab4bf04e58920d264bdc965"
+    },
+    {
+      "path": "src/components/useComposerMenus.ts",
+      "before": "574415ab0c6d4ed779cd0f8d2463bbbb03520ce1667ee46399398c2a219e0075",
+      "after": "836779e25a11518efcc77ec47060695b568a697c9359cf3ced8d03b9426558a8"
+    },
+    {
+      "path": "src/components/useConversationOverlay.ts",
+      "before": null,
+      "after": "eeea58ab6b65cf7698e66923d8e7771fd7ab5c70e23ba34c50e99687d3c68957"
+    },
+    {
+      "path": "src/components/useDismissible.ts",
+      "before": "79afa00c034df13224247441526271a4259db2e31f4ffa424f8cb0f77d5c3451",
+      "after": "ab8b77671abf50b2c984f51b0d8da00dfd76a8310169bcdc8026455d7aef77b4"
+    },
+    {
+      "path": "src/components/useHiddenControlFocus.ts",
+      "before": null,
+      "after": "43e0fae53559319fde3ab2f3d619c82e026b06b898d2f6b4240a7faf7f559652"
+    },
+    {
+      "path": "src/components/useSidebarLayout.ts",
+      "before": "e0b4acd06b8c4b3de39546e9f44db8a443d8996ac6804d17406866da90dd8a42",
+      "after": "954ef2f3bdacbdb0fb8c8e3ab98c80150da65fbec6d70f303e43cf563385266c"
+    },
+    {
+      "path": "src/styles/global.css",
+      "before": "1e49ff4152f708a7eb618370fdb9e191c00d13b79dcafbcb8957fa1d83098e5b",
+      "after": "7a947435ef82c1d34a2a2a14e7fbfe1f333f879ba75382c6b215809fb2b88df7"
+    },
+    {
+      "path": "src/styles/responsive-content.css",
+      "before": null,
+      "after": "9b67f98f4ca8b840fa22f2c73ca2c3930fd6266ddeea7ead76dda8130e4974e9"
+    },
+    {
+      "path": "src/styles/responsive.css",
+      "before": "d7815869084f642df26817c1bdc896a3fc3a4d28b5c20bfca3acb33c02dc34fb",
+      "after": "5c760f139c1057b72050378519e1f094ae27624caaa58def096b6103eba02a48"
+    },
+    {
+      "path": "src/styles/ui-tokens.css",
+      "before": "f9a84a401146eb3e47a6508505fa3cfc7c8aa0343e716a77c3aaabce59e0df9e",
+      "after": "ce831959e17ec7bdc7181ad3cbdff712c01cba166816f3a47162979c87c7d313"
+    },
+    {
+      "path": "tests/browser/canvas-layout.spec.ts",
+      "before": "c5f22426fc5ebd7200284506b37a24549038c0514eaa2c417d27b6237ecdb241",
+      "after": "fe7bef1e8f7431c9d1ce992ada24d5dbe3b9d7279ebf7cbc765ebb19fab82991"
+    },
+    {
+      "path": "tests/browser/composer-fidelity.spec.ts",
+      "before": "6b66f4bedf3a87e8e0dcc66682993e9c056d20defa43fb64b1fe63bd9f8ab5f2",
+      "after": "478758588722d5bcc3069ce900d8ecce5cc132aa9a4205c9802d184c205b1566"
+    },
+    {
+      "path": "tests/browser/design-system-pages.spec.ts",
+      "before": "264bec9fea652fa3652365cbaa17c6c3d2e169e584bf3f11f786adfe530e69bd",
+      "after": "14bd852895e775d199297416a7a6f7436bb6c1b67363d93db9f1dce131a40035"
+    },
+    {
+      "path": "tests/browser/menu-boundaries.spec.ts",
+      "before": "80d13b4feaab905b7d3eef827f9c4e04737f970fa1ee53b979bf89328c5c799d",
+      "after": "6b9fa5f8679d64cb2b34980c4efffc0091d935691534db973277c5667bbbbc1c"
+    },
+    {
+      "path": "tests/browser/responsive-layout.spec.ts",
+      "before": null,
+      "after": "1a9d481e154d3107c71e2a062df087754793e4bc8de1dff62e07c9e107e7d42d"
+    },
+    {
+      "path": "tests/browser/runtime-ui.spec.ts",
+      "before": "549e642df302dcb7a3612a6f1d2487d63c0b642b0d563d6a59d0851f8d3f0ed7",
+      "after": "bf2ddac2f1f6346b17376841870f3f00ec877165c5ebffa121a94c39995f54e7"
+    },
+    {
+      "path": "tests/browser/sidebar.spec.ts",
+      "before": "62b1b5d33a7fd349853202d18752ad77335c6eace1d28f76eeb45736cf9b3c79",
+      "after": "574cb2c9e91a3dc182f1ea114a7513aea8e948d1d9752a81366bede67002a88e"
+    }
+  ]
+}

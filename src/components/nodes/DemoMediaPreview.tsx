@@ -57,7 +57,7 @@ export default function DemoMediaPreview({
       <textarea
         aria-label="编辑文案"
         value={text}
-        maxLength={10000}
+        maxLength={32768}
         onChange={(event) => setText(event.target.value)}
       />
     );
@@ -130,6 +130,10 @@ export default function DemoMediaPreview({
             <button
               className="ui-button"
               onClick={() => {
+                if (new TextEncoder().encode(text).length > 32768) {
+                  setFeedback("文案超过 32 KiB 保存上限，请缩短内容后再保存。");
+                  return;
+                }
                 onTextChange(text);
                 setFeedback("文案已更新到当前卡片");
               }}

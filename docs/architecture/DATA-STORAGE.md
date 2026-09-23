@@ -1,6 +1,6 @@
 # KK Studio 数据与文件存储约定
 
-本文定义 KK Studio 客户端的文件边界。实现以 `D:\kk-studio-next` 为唯一工程来源；`D:\kk-studio` 是历史目录，不参与运行时读写。
+本文定义 KK Studio 客户端的文件边界。实现以 `D:/kk-studio/KK-Studio-2.0` 为唯一工程来源；`D:/kk-studio` 仅为父容器，用户数据不存放在代码仓库。
 
 ## 运行时数据根目录
 
@@ -91,7 +91,7 @@ kk-studio/
 
 - `projects.sqlite3`：`projects(id, revision, checksum, payload, updated_at)`。
 - 项目 JSON v2：`schemaVersion=2`、`id/title/timestamps/revision/settings/nodes/connections/viewport/chatSessions/activeChatId`。
-- canonical `ProjectGraph`：`workspace/project/revision/checksum/nodes/connections/groups/layers/assets/providerTasks/chatSessions/extensions`，见历史归档 `D:\KK-Studio-legacy-archive-20260909\src\core\contracts\projectGraph.ts`。
+- canonical `ProjectGraph`：`workspace/project/revision/checksum/nodes/connections/groups/layers/assets/providerTasks/chatSessions/extensions`，见恢复归档中 legacy 的 `src/core/contracts/projectGraph.ts`；归档位置与恢复说明见本轮 consolidation change package。
 - `project-backups/` 和 `legacy-canvas-backups/`：只读恢复副本，保留来源和校验值。
 
 ## 密钥与用户信息

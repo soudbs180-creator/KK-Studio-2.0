@@ -1,7 +1,9 @@
-# Windows 一键启动
+# Windows 启动与分享
 
-`src-tauri/target/release/kk-studio.exe` 是项目根目录和桌面“启动 KK Studio”快捷方式的直接目标，工作目录为 `D:\kk-studio-next`，图标为 `src-tauri/icons/icon.ico`。这样点击启动不会先打开命令行窗口。根目录的 `start-kk-studio.bat` 仍保留为手动启动入口，浏览器 tab 使用 `/design/figma/logo.svg`。
+唯一工程目录是 `D:/kk-studio/KK-Studio-2.0`。根目录 `start-kk-studio.bat` 从自身目录运行 `scripts/windows/desktop-release.mjs`，检查源码时间与 `src-tauri/target/release/kk-studio.exe`；缺失或过期时构建，成功后才启动。已有最新 release 时不会重新编译。
 
-批处理启动时优先直接运行已有 release；只有 release 缺失时才调用 `scripts/windows/desktop-release.mjs` 构建一次。源码变更后的 release 更新请手动执行 `npm run client:build`，避免每次点击启动都阻塞在 Rust 编译阶段。
+开发快捷方式的工作目录必须是当前仓库，目标为当前仓库的 `start-kk-studio.bat`，图标为 `src-tauri/icons/icon.ico`。旧的 `D:/kk-studio-next` 或 archive 路径不再有效。
 
-不要把快捷方式指向历史 `D:\kk-studio`，也不要复制旧 `assets/icons/kk-studio.ico`。图标和 Tauri bundle 必须来自当前工程的 `src-tauri/icons/`。
+普通使用者在桌面构建和安装验收完成后，解压 `releases/2.1.0/KK-Studio-2.1.0-windows-x64.zip` 直接运行 `kk-studio.exe`，无需 Node/Rust。Windows 需要已安装 Microsoft Edge WebView2 Runtime。用户数据仍写入 `%APPDATA%/kk-studio`，应用标识和凭据服务保持不变。
+
+`node_modules`、大规模 Rust 编译缓存和旧 runtime profile 不属于发布包。最终源码目录可保留一份开发依赖和一份最新 EXE；重建依赖用 `npm ci`，重建桌面用 `npm run client:build -- --no-bundle`。

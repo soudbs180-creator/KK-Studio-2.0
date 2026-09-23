@@ -245,7 +245,7 @@ test("相同内容重新导入保持 AI 来源，SHA-256 去重和本地集合�
     .getByTestId("asset-panel")
     .locator("input[type=file]")
     .setInputFiles("public/fixtures/demo/blue-hour.png");
-  await expect(page.getByRole("status")).toContainText("已导入 1 项");
+  await expect(page.locator(".asset-feedback")).toContainText("已导入 1 项");
   await page.getByLabel("来源筛选").selectOption("provider");
   await expect(page.locator(".asset-card")).toHaveCount(1);
   await page.locator(".asset-card").dblclick();

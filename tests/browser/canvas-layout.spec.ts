@@ -16,7 +16,7 @@ test("桌面底栏保持最新Frame锚点，窄屏适配且控件不互相覆盖
             .querySelector(".conversation-panel")
             ?.getBoundingClientRect();
           const usable =
-            chat && chat.width > 0
+            chat && chat.width > 0 && window.innerWidth > 1200
               ? Math.min(
                   canvas.clientWidth,
                   (chat.left - c.left) / surface - canvas.clientLeft - 16,
@@ -26,11 +26,11 @@ test("桌面底栏保持最新Frame锚点，窄屏适配且控件不互相覆盖
             document.querySelector<HTMLElement>(".canvas-toolbar")!;
           const t = toolbar.getBoundingClientRect();
           const app = document.querySelector(".app")!.getBoundingClientRect();
-          // Both current 1920px Frames place the toolbar center at x866,
-          // independent of either rail. Narrow screens use usable-area centering.
+          // DS1.2 retains x866 at 1920 and adapts its anchor to the real viewport.
+          // Compact overlays do not reserve horizontal canvas space.
           const expected =
             window.innerWidth > 1200
-              ? app.x + 866 * surface
+              ? app.x + app.width / 2 - 94
               : c.x + (canvas.clientLeft + usable / 2) * surface;
           return Math.abs(t.x + t.width / 2 - expected);
         }),
@@ -117,7 +117,7 @@ test("缩放和窄屏命中尺寸变化后，加号与删线按钮仍对齐连�
         });
       // The source gap is 8 logical px; desktop letterboxing scales its
       // visual size while the narrow surface retains the 8px contract.
-      const surface = width > 800 ? Math.min(width / 1920, 900 / 1080) : 1;
+      const surface = 1; // DS1.2 screen controls are never letterboxed/scaled.
       expect(positions.gap).toBeCloseTo(8 * surface, 1);
       expect(positions.y).toBeCloseTo(0, 1);
       expect(positions.dx).toBeCloseTo(0, 1);

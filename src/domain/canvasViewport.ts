@@ -15,6 +15,12 @@ export interface ViewportRect extends Point {
 export const MIN_SCALE = 0.2;
 export const MAX_SCALE = 4;
 
+/** Coarsen the visible lattice at low zoom instead of merging or hiding dots. */
+export function canvasPatternPitch(scale: number): number {
+  const pitch = 24 * scale;
+  return pitch * 2 ** Math.max(0, Math.ceil(Math.log2(12 / pitch)));
+}
+
 export function zoomAtPoint(
   current: ViewTransform,
   anchor: Point,

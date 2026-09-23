@@ -1,0 +1,525 @@
+{
+  "timestamp": "2026-09-22T13:53:43.644Z",
+  "mode": "Tauri release",
+  "data": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui-interactions-desktop-bc5hXV\\data",
+  "profile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui-interactions-desktop-bc5hXV\\profile",
+  "matrix": [
+    {
+      "theme": "dark",
+      "accent": "default",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 135.70831298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "accent": "blue",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 135.70831298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "accent": "green",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 125.33331298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "accent": "yellow",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 125.33331298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "accent": "pink",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 125.33331298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "accent": "orange",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 125.33331298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "accent": "purple",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 125.33331298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "accent": "white",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 125.33331298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "accent": "default",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 125.33331298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "accent": "blue",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 125.33331298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "accent": "green",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 125.33331298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "accent": "yellow",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 125.33331298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "accent": "pink",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 125.33331298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "accent": "orange",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 125.33331298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "accent": "purple",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 125.33331298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "accent": "white",
+      "task": {
+        "x": 320.66668701171875,
+        "y": 71.66667175292969,
+        "width": 93,
+        "height": 30
+      },
+      "status": {
+        "x": 320.66668701171875,
+        "y": 109.66667175292969,
+        "width": 125.33331298828125,
+        "height": 31.333328247070312
+      },
+      "patterns": [
+        {
+          "pattern": "dots",
+          "pitch": 19.2,
+          "image": "radial-gradient(circle, rgb(26, 26, 26) 2px, rgba(0, 0, 0, 0) 2px)",
+          "opacity": 0.2
+        },
+        {
+          "pattern": "grid",
+          "pitch": 19.2,
+          "image": "linear-gradient(color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, color(srgb 0.227451 0.227451 0.25098 / 0.2) 1px, rgba(0, 0, 0, 0) 1px)",
+          "opacity": 0.2
+        }
+      ]
+    }
+  ],
+  "sections": [],
+  "launches": [
+    {
+      "pid": 23864,
+      "url": "http://tauri.localhost/",
+      "storageRoot": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui-interactions-desktop-bc5hXV\\data",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "loaded": [
+        {
+          "asset": "/assets/index-DX_abTA0.js",
+          "sha256": "02352df2892edb98bbaec2a3d4b048967227920ce530da4313b72e670a66be21",
+          "bytes": 746761
+        },
+        {
+          "asset": "/assets/index-CUNz1LqG.css",
+          "sha256": "ed8a45e20a0398424cd2fdb5a864fa2f2f64bda0fc441498f7d9e2de5f9ca477",
+          "bytes": 203406
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "exe": {
+    "path": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+    "sha256": "79255d1ea054dd557837ded4bf66fb38078113ed166d1dde30915d394f0cb6be"
+  },
+  "flows": {
+    "popupToggleEscapeFocus": true,
+    "nestedTaskDismiss": true,
+    "projectFoldState": true,
+    "backdropDrag": true,
+    "conversationFold": true
+  }
+}

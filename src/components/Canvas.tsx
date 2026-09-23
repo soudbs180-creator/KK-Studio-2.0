@@ -1,14 +1,6 @@
 import CanvasHud from "./canvas/CanvasHud";
-import {
-  useEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import CanvasNavigation from "./canvas/CanvasNavigation";
-import { type CanvasCollectionItem } from "../domain/canvasItems";
 import { deleteConnection, restoreConnection } from "../domain/canvasGraph";
 import CanvasNodeLayer from "./canvas/CanvasNodeLayer";
 import { type CanvasContextMenuState } from "./canvas/CanvasContextMenu";
@@ -20,29 +12,17 @@ import { useCanvasControls } from "./canvas/useCanvasControls";
 import { surfaceScale } from "./canvas/canvasSurface";
 import CanvasOverlays from "./canvas/CanvasOverlays";
 import { useCanvasConnections } from "./canvas/useCanvasConnections";
-import type { CreationTask } from "../features/creation/model";
-import type { ProjectCanvas } from "../domain/projectCanvas";
 import { useCanvasPersistence } from "./canvas/useCanvasPersistence";
-
-interface CanvasProps {
-  initialCanvas?: ProjectCanvas;
-  onCanvasChange?: (canvas: ProjectCanvas) => void;
-  onOpen?: (view: string) => void;
-  chatOpen?: boolean;
-  onOpenChat: () => void;
-  onOpenTasks?: () => void;
-  tasks?: CreationTask[];
-  onCancelTask?: (taskId: string) => void;
-  onRetryTask?: (taskId: string) => void;
-  items: CanvasCollectionItem[];
-  onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>;
-  favoriteIds: Set<string>;
-  onToggleFavorite: (id: string) => void;
-  likedIds: Set<string>;
-  onToggleLike: (id: string) => void;
-}
+import { canvasPatternPitch } from "../domain/canvasViewport";
+import { useAgentCanvasView } from "./canvas/useAgentCanvasView";
+import type { CanvasProps } from "./canvas/CanvasProps";
 
 export default function Canvas({
+  projectId,
+  agentViewRef,
+  onAgentViewChange,
+  projectStatus,
+  covered = false,
   onOpen,
   chatOpen = true,
   onOpenChat,
@@ -77,6 +57,7 @@ export default function Canvas({
     onToggleFavorite,
     initialCanvas,
   });
+  useAgentCanvasView(controls, projectId, agentViewRef, onAgentViewChange);
   const {
     addNode,
     arrangeNodes,
@@ -118,6 +99,7 @@ export default function Canvas({
   return (
     <div
       ref={containerRef}
+      {...(covered ? { inert: "" } : {})}
       className={`canvas infinite-canvas ${chatOpen ? "has-chat" : ""} ${dragging === "pan" ? "is-panning" : ""} canvas-pattern-${backgroundPattern}`}
       data-testid="infinite-canvas"
       data-tool={controls.tool}
@@ -187,13 +169,13 @@ export default function Canvas({
         {
           "--canvas-usable-width": `${controls.viewport.width}px`,
           backgroundColor,
-          backgroundSize: `${24 * transform.scale}px ${24 * transform.scale}px`,
+          backgroundSize: `${canvasPatternPitch(transform.scale)}px ${canvasPatternPitch(transform.scale)}px`,
           "--canvas-pan-x": `${transform.x}px`,
           "--canvas-pan-y": `${transform.y}px`,
-          "--canvas-dot-cell": `${24 * transform.scale}px`,
+          "--canvas-dot-cell": `${canvasPatternPitch(transform.scale)}px`,
           "--canvas-pattern-opacity": Math.min(
             1,
-            Math.max(0, (transform.scale - 0.45) / 0.55),
+            Math.max(0.2, (transform.scale - 0.45) / 0.55),
           ),
         } as CSSProperties
       }
@@ -242,6 +224,7 @@ export default function Canvas({
         onDismissConnectionNotice={() => setConnectionNotice("")}
       />
       <CanvasHud
+        projectStatus={projectStatus}
         chatOpen={chatOpen}
         onChat={onOpenChat}
         onConfigure={() => onOpen?.("settings/providers")}

@@ -1861,81 +1861,6 @@
   padding: 10px 2px;
   line-height: 1.7;
 }
-.chat-composer {
-  height: 170px;
-  border-radius: 21px;
-  border: 1px solid var(--border-default);
-  background: var(--bg-input);
-  padding: 15px 12px 11px;
-  display: flex;
-  flex-direction: column;
-}
-.conversation-panel .chat-composer {
-  /* Figma input frame 71:15665 is flush with the chat frame. */
-  width: calc(100% + 32px);
-  margin-left: -16px;
-  margin-right: -16px;
-}
-.chat-composer textarea {
-  flex: 1;
-  resize: none;
-  width: 100%;
-  font-size: 12px;
-  line-height: 1.5;
-}
-.chat-composer > div {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  flex-wrap: nowrap;
-  min-width: 0;
-}
-.chat-composer button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  font-size: var(--ui-font-body);
-  border-radius: 20px;
-  background: var(--bg-card-hover);
-  color: var(--text-secondary);
-  height: var(--ui-control-h-compact);
-  min-width: 0;
-  padding: 0 6px;
-  white-space: nowrap;
-}
-.chat-composer > div > button:first-child {
-  width: 30px;
-  min-width: 30px;
-  padding: 0;
-}
-.chat-composer
-  > div
-  > button:not(:first-child):not(.chat-send):not([aria-label*="语音输入"])
-  img,
-.chat-composer
-  > div
-  > button:not(:first-child):not(.chat-send):not([aria-label*="语音输入"])
-  svg {
-  width: var(--ui-icon-sm);
-  height: var(--ui-icon-sm);
-  flex: 0 0 var(--ui-icon-sm);
-}
-.chat-composer > div > button:first-child svg {
-  width: var(--ui-icon-md);
-  height: var(--ui-icon-md);
-  flex-basis: var(--ui-icon-md);
-}
-.chat-mode-menu {
-  position: relative;
-  flex: 0 0 auto;
-}
-.chat-mode-trigger {
-  width: 46px;
-  min-width: 46px !important;
-  padding: 0 5px !important;
-  font-size: 11px !important;
-}
 .chat-mode-popover {
   position: absolute;
   z-index: 8;
@@ -1973,50 +1898,6 @@
   border: 1px solid var(--border-default);
   border-radius: 16px;
   background: var(--bg-card);
-}
-.chat-composer .chat-mode-toggle button {
-  height: 26px;
-  min-width: 38px;
-  padding: 0 7px;
-  border-radius: 12px;
-  background: transparent;
-  color: var(--text-tertiary);
-  font-size: 11px;
-}
-.chat-composer .chat-mode-toggle button:hover,
-.chat-composer .chat-mode-toggle button[aria-pressed="true"] {
-  background: var(--bg-card-hover);
-  color: var(--text-primary);
-}
-.chat-composer button[aria-label*="语音输入"] {
-  width: 30px;
-  min-width: 30px;
-  height: var(--ui-control-h-compact);
-  padding: 0;
-  justify-content: center;
-}
-.chat-composer button[aria-label*="语音输入"]:disabled {
-  color: var(--text-tertiary);
-  background: var(--bg-card-hover);
-  opacity: 1;
-}
-.chat-composer button[aria-label*="语音输入"] img {
-  display: block;
-  width: var(--ui-icon-sm);
-  height: var(--ui-icon-sm);
-}
-.chat-composer .chat-send {
-  color: var(--bg-surface);
-  background: var(--text-primary);
-  border-radius: 50%;
-  width: 30px;
-  min-width: 30px;
-  height: var(--ui-control-h-compact);
-  padding: 2px;
-}
-.chat-composer .chat-send svg {
-  width: var(--ui-icon-md);
-  height: var(--ui-icon-md);
 }
 .conversation-panel footer {
   text-align: center;
@@ -2146,17 +2027,6 @@
   }
   .canvas.has-chat {
     right: -1px;
-  }
-  .chat-composer > div {
-    gap: 4px;
-  }
-  .chat-composer
-    > div
-    > button:not(:first-child):not(.chat-send):not([aria-label*="语音输入"]) {
-    padding-left: 4px;
-    padding-right: 4px;
-    gap: 3px;
-    font-size: 11px;
   }
 }
 @media (max-width: 1200px) {

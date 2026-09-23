@@ -31,12 +31,13 @@ export default function SkillCollection({
   ];
   return (
     <>
-      <div className="catalog-categories" role="list" aria-label="Skill分类">
+      <div className="catalog-categories" role="group" aria-label="Skill分类">
         {categories.map((item) => (
           <button
             key={item}
             type="button"
-            className={category === item ? "is-selected" : ""}
+            className="ui-capsule"
+            aria-pressed={category === item}
             onClick={() => onCategory(item)}
           >
             {item}

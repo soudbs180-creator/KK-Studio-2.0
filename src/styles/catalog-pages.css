@@ -22,10 +22,9 @@
   border-radius: 20px;
 }
 .start-hero {
-  position: absolute;
-  /* Frame 56 has a 1px border; 112px content offset yields the Figma
-     absolute y=113 position from the outer frame edge. */
-  top: 112px;
+  position: relative;
+  /* Preserve the source's initial offset while dynamic inputs occupy flow. */
+  margin-top: 112px;
   left: 0;
   width: 100%;
   display: flex;
@@ -68,146 +67,6 @@
   color: var(--text-secondary);
   font-size: 18.708px;
   line-height: normal;
-}
-.start-composer {
-  width: 1052.344px;
-  height: 226.254px;
-  text-align: left;
-  padding: 0;
-  border: 1.754px solid var(--border-default);
-  border-radius: 35.078px;
-  background: var(--bg-input);
-  box-shadow: var(--ui-landing-shadow);
-}
-.start-composer textarea {
-  display: block;
-  width: 1006.742px;
-  height: 112.25px;
-  margin: 22.801px auto 0;
-  resize: none;
-  color: var(--text-primary);
-  font-size: 17.539px;
-  line-height: normal;
-}
-.start-composer textarea::placeholder {
-  color: var(--text-secondary);
-}
-.start-composer-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 1006.742px;
-  height: 42.094px;
-  margin: 22.801px auto 0;
-}
-.start-footer-left,
-.start-footer-right {
-  display: flex;
-  align-items: center;
-  gap: 8.77px;
-}
-.start-footer-left {
-  position: relative;
-}
-.start-footer-right {
-  gap: 15.785px;
-}
-.start-mode-picker {
-  position: relative;
-}
-.start-add-button,
-.start-submit-button {
-  width: 42.094px;
-  height: 42.094px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-}
-.start-add-button {
-  border: 0;
-  background: transparent;
-}
-.start-add-button img,
-.start-submit-button img,
-.start-mic-button img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.start-submit-button {
-  background: transparent;
-}
-.start-tool-button {
-  width: 101.727px;
-  height: 38.586px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7.016px;
-  padding: 0;
-  border-radius: 21.047px;
-  background: var(--ui-composer-surface);
-  color: var(--text-tertiary);
-  font-size: 19.293px;
-}
-.start-tool-button img {
-  width: 21.047px;
-  height: 21.047px;
-  object-fit: contain;
-}
-.start-tool-button:hover {
-  background: var(--ui-composer-surface);
-  color: var(--text-primary);
-}
-.start-model-picker {
-  position: relative;
-  min-width: 0;
-}
-.start-resource-picker {
-  position: relative;
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-}
-.start-model-picker .start-tool-button {
-  width: max-content;
-  min-width: 101.727px;
-  max-width: 260px;
-  white-space: nowrap;
-}
-.start-model-picker .start-tool-button span {
-  display: block;
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.start-count-picker {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ui-gap-tight);
-  height: 38.586px;
-  padding: 0 10px;
-  border-radius: 21.047px;
-  background: var(--ui-composer-surface);
-  color: var(--text-tertiary);
-  font-size: var(--ui-font-body);
-  white-space: nowrap;
-}
-.start-count-picker select {
-  min-width: 48px;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-.start-count-picker:focus-within {
-  outline: 2px solid var(--ui-focus);
-  outline-offset: 3px;
 }
 .start-model-popover {
   position: absolute;
@@ -260,6 +119,12 @@
   color: var(--text-secondary);
   font-size: 13px;
   line-height: 18px;
+}
+.start-skill-options {
+  /* Bound a growing local Skill library so the popover cannot cover the
+     composer textarea; the list itself scrolls. */
+  max-height: 150px;
+  overflow-y: auto;
 }
 .start-skill-popover button {
   width: 100%;
@@ -328,81 +193,8 @@
   cursor: pointer;
 }
 .start-approval button:first-of-type {
-  background: var(--ui-selected);
-}
-.start-attachment-row {
-  display: flex;
-  gap: 8px;
-  max-width: 1052px;
-  margin: 10px auto 0;
-  overflow-x: auto;
-}
-.start-attachment-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  max-width: 190px;
-  padding: 4px 7px 4px 4px;
-  border: 1px solid var(--border-default);
-  border-radius: 9px;
-  background: var(--bg-input);
-  color: var(--text-secondary);
-  font-size: 12px;
-}
-.start-attachment-chip img {
-  width: 24px;
-  height: 24px;
-  border-radius: 5px;
-  object-fit: cover;
-}
-.start-attachment-chip span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.start-attachment-chip button {
-  padding: 0 2px;
-  color: var(--text-tertiary);
-  font-size: 16px;
-}
-.start-composer-divider {
-  position: relative;
-  width: 0;
-  height: 28.062px;
-  flex: 0 0 0;
-}
-.start-composer-divider::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 1.754px;
-  background: var(--border-default);
-}
-.start-mic-button {
-  width: 38.586px;
-  height: 38.586px;
-  padding: 0;
-  flex: 0 0 auto;
-}
-.start-mic-button img {
-  width: 16px;
-  height: 16px;
-}
-.start-mode-button {
-  width: 92.957px;
-  height: 38.586px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3.508px;
-  border-radius: 35.078px;
-  background: var(--ui-composer-surface);
-  color: var(--text-secondary);
-  font-size: 19.293px;
-}
-.start-mode-button img {
-  width: 17.539px;
-  height: 10.523px;
+  background: var(--bg-accent-soft);
+  color: var(--text-on-accent-soft);
 }
 .start-status {
   margin-top: 12px;
@@ -418,13 +210,12 @@
   cursor: pointer;
 }
 .start-discovery {
-  position: absolute;
-  top: 655.9px;
+  position: relative;
   /* Figma 410:59708: Frame 56 x=291, initial page x=-80.23, and the
      1403.126px content column is centered inside the 1778.462px page. */
   left: 107.5px;
   width: 1403.126px;
-  margin: 0;
+  margin: 64px 0 40px;
 }
 .start-tabs,
 .catalog-page-tabs {
@@ -440,12 +231,18 @@
 .start-tabs button[aria-selected="true"] {
   border-bottom-width: 2.339px;
 }
-.start-tabs button,
-.catalog-page-tabs button {
+.start-tabs button {
   height: 40.924px;
   padding: 0 0 16.37px;
   color: var(--text-secondary);
   font-size: 18.708px;
+}
+.catalog-page-tabs button {
+  min-height: var(--ui-button-height);
+  padding: var(--ui-space-1) 0;
+  color: var(--text-secondary);
+  font-size: var(--ui-font-label);
+  line-height: var(--ui-line-height-label);
 }
 .start-tabs button[aria-selected="true"],
 .catalog-page-tabs button[aria-selected="true"] {
@@ -460,8 +257,7 @@
   margin: 0;
   padding-top: 21.047px;
 }
-.start-chip-row button,
-.catalog-categories button {
+.start-chip-row button {
   height: 40.924px;
   border: 0.78px solid var(--border-default);
   border-radius: 999px;
@@ -471,8 +267,7 @@
 .start-chip-row button {
   font-size: 15.201px;
 }
-.start-chip-row button.is-selected,
-.catalog-categories button.is-selected {
+.start-chip-row button.is-selected {
   background: var(--bg-card-hover);
   color: var(--text-primary);
   border-color: var(--text-tertiary);
@@ -573,43 +368,6 @@
   .start-brand p {
     font-size: 16px;
   }
-  .start-composer {
-    width: 100%;
-    height: auto;
-    min-height: 226px;
-    padding: 18px 18px 12px;
-    border-width: 1px;
-    border-radius: 24px;
-  }
-  .start-composer textarea {
-    width: 100%;
-    height: 112px;
-    margin: 0;
-    font-size: 15px;
-  }
-  .start-composer-footer {
-    width: 100%;
-    height: 42px;
-    margin-top: 22px;
-  }
-  .start-footer-left,
-  .start-footer-right {
-    gap: 8px;
-  }
-  .start-tool-button {
-    width: auto;
-    height: 38px;
-    padding: 0 10px;
-    font-size: 13px;
-  }
-  .start-tool-button img {
-    width: 18px;
-    height: 18px;
-  }
-  .start-mode-button {
-    width: 80px;
-    font-size: 13px;
-  }
   .start-discovery {
     position: static;
     width: auto;
@@ -660,62 +418,6 @@
 }
 
 @media (max-width: 900px) {
-  .start-composer {
-    min-height: 330px;
-  }
-
-  .start-composer-footer {
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    height: auto;
-    gap: 10px;
-  }
-
-  .start-footer-left,
-  .start-footer-right {
-    width: 100%;
-    min-width: 0;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .start-footer-left {
-    overflow: visible;
-  }
-
-  .start-footer-right {
-    justify-content: flex-end;
-  }
-
-  .start-model-picker {
-    flex: 1 1 150px;
-    min-width: 0;
-  }
-
-  .start-model-picker .start-tool-button {
-    width: 100%;
-    max-width: none;
-    justify-content: flex-start;
-  }
-
-  .start-count-picker {
-    flex: 1 1 150px;
-    min-width: 0;
-    max-width: 100%;
-    padding-inline: 6px;
-  }
-
-  .start-count-picker select {
-    min-width: 0;
-    max-width: 100%;
-    flex: 1;
-  }
-
-  .start-tool-button {
-    min-width: 0;
-    padding-inline: 8px;
-  }
   .start-skill-popover,
   .start-plugin-popover {
     left: auto;
@@ -735,18 +437,25 @@
   max-width: 1600px;
   margin: 0 auto;
 }
+.catalog-page-header > div {
+  min-width: 0;
+}
 .catalog-page-header h1 {
-  font-size: clamp(28px, 3vw, 40px);
-  letter-spacing: -0.03em;
+  font-size: var(--ui-font-display);
+  line-height: var(--ui-line-height-display);
+  font-weight: 600;
 }
 .catalog-page-header p {
-  margin-top: 10px;
+  margin-top: var(--ui-space-2);
   color: var(--text-secondary);
-  font-size: 16px;
+  font-size: var(--ui-font-body);
+  line-height: var(--ui-line-height-body);
+  overflow-wrap: anywhere;
 }
 .catalog-page-actions {
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
   align-items: center;
 }
 .catalog-page-rule {
@@ -769,7 +478,7 @@
   width: min(560px, calc(100vw - 32px));
   padding: 24px;
   border: 1px solid var(--border-default);
-  border-radius: 16px;
+  border-radius: var(--ui-radius-panel);
   background: var(--bg-surface);
   box-shadow: var(--ui-shadow);
 }
@@ -781,7 +490,8 @@
   margin-bottom: 22px;
 }
 .catalog-tutorial-header h2 {
-  font-size: 20px;
+  font-size: var(--ui-font-title);
+  line-height: var(--ui-line-height-title);
   color: var(--text-primary);
 }
 .catalog-tutorial-header p {
@@ -809,8 +519,8 @@
 }
 .catalog-tutorial-note {
   margin: 20px 0;
-  padding: 11px 12px;
-  border-radius: 8px;
+  padding: var(--ui-space-3);
+  border-radius: var(--ui-radius-control);
   background: var(--bg-card);
   color: var(--text-secondary);
   font-size: var(--ui-font-caption);
@@ -827,17 +537,30 @@
 .catalog-page-search {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: var(--ui-space-2);
   width: min(320px, 100%);
-  padding: 11px 14px;
-  border: 1px solid var(--border-default);
-  border-radius: 12px;
-  background: var(--bg-card);
+  min-width: 0;
+  height: var(--ui-input-height);
+  padding: 0 var(--ui-space-3);
+  border: var(--ui-border-width) solid var(--border-control);
+  border-radius: var(--ui-radius-control);
+  background: var(--bg-input);
   color: var(--text-secondary);
 }
 .catalog-page-search input {
   width: 100%;
-  font-size: 13px;
+  min-width: 0;
+  height: 100%;
+  color: var(--text-primary);
+  font-size: var(--ui-font-body);
+  line-height: var(--ui-line-height-body);
+}
+.catalog-page-search:focus-within {
+  outline: var(--ui-focus-width) solid var(--ui-focus);
+  outline-offset: var(--ui-focus-offset);
+}
+.catalog-page-search input:focus-visible {
+  outline: none;
 }
 .catalog-categories {
   display: flex;
@@ -846,15 +569,11 @@
   max-width: 1600px;
   margin: 0 auto 26px;
 }
-.catalog-categories button {
-  border-radius: 8px;
-  padding: 8px 13px;
-  font-size: 13px;
-}
 .catalog-section-title {
   max-width: 1600px;
   margin: 15px auto 18px;
-  font-size: 21px;
+  font-size: var(--ui-font-title);
+  line-height: var(--ui-line-height-title);
 }
 .catalog-card-grid {
   display: grid;
@@ -863,12 +582,15 @@
   max-width: 1600px;
   margin: 0 auto;
 }
+.catalog-card-grid + .catalog-categories {
+  margin-top: var(--ui-space-5);
+}
 .catalog-card {
   overflow: hidden;
   min-width: 0;
   text-align: left;
   border: 1px solid var(--border-subtle);
-  border-radius: 16px;
+  border-radius: var(--ui-radius-card);
   background: var(--bg-card);
   transition:
     border-color var(--motion-fast) var(--motion-ease),
@@ -933,33 +655,47 @@
 }
 .catalog-card-body {
   display: grid;
-  gap: 9px;
-  padding: 15px;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-5);
 }
 .catalog-card-body strong {
   min-width: 0;
   overflow-wrap: anywhere;
-  font-size: 16px;
+  font-size: var(--ui-font-title);
+  line-height: var(--ui-line-height-title);
   color: var(--text-primary);
 }
 .catalog-card-body p {
-  min-height: 39px;
+  min-height: 32px;
+  min-width: 0;
+  overflow-wrap: anywhere;
   color: var(--text-secondary);
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: var(--ui-font-body);
+  line-height: var(--ui-line-height-body);
 }
 .catalog-card-body small {
   min-width: 0;
   overflow-wrap: anywhere;
   color: var(--text-tertiary);
-  font-size: 11px;
+  font-size: var(--ui-font-caption);
+  line-height: var(--ui-line-height-caption);
+}
+.catalog-card > .catalog-page-actions {
+  padding: 0 var(--ui-space-5) var(--ui-space-5);
+}
+.catalog-card-image.workflow-image strong {
+  max-width: 100%;
+  padding-inline: var(--ui-space-3);
+  overflow-wrap: anywhere;
+  font-size: var(--ui-font-display);
+  line-height: var(--ui-line-height-display);
 }
 .connector-detail {
   width: min(560px, calc(100vw - 32px));
   padding: 24px;
   border: 1px solid var(--border-subtle);
-  border-radius: 18px;
-  background: var(--bg-card);
+  border-radius: var(--ui-radius-panel);
+  background: var(--bg-surface);
   box-shadow: var(--ui-landing-shadow);
 }
 .connector-detail-header {
@@ -1024,9 +760,10 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 14px 18px;
+  min-width: 0;
+  padding: var(--ui-space-5);
   border: 1px solid var(--border-subtle);
-  border-radius: 14px;
+  border-radius: var(--ui-radius-card);
   background: var(--bg-card);
   color: var(--text-secondary);
   text-align: left;
@@ -1048,15 +785,19 @@
 }
 .project-library-action > span {
   display: grid;
-  gap: 4px;
+  gap: var(--ui-space-1);
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .project-library-action strong {
   font-size: var(--ui-font-label);
-  font-weight: 600;
+  line-height: var(--ui-line-height-label);
+  font-weight: 500;
 }
 .project-library-action small {
   color: var(--text-tertiary);
   font-size: var(--ui-font-caption);
+  line-height: var(--ui-line-height-caption);
 }
 .project-library-status {
   margin: -16px 0 20px;
@@ -1072,7 +813,7 @@
   margin-bottom: 24px;
   padding: 24px 80px 24px 24px;
   border: 1px solid var(--border-subtle);
-  border-radius: 18px;
+  border-radius: var(--ui-radius-card);
   background: linear-gradient(120deg, var(--bg-card), var(--bg-input));
 }
 .project-hero-tile {
@@ -1099,10 +840,11 @@
 }
 .project-library-card {
   position: relative;
+  min-width: 0;
   overflow: hidden;
   text-align: left;
   border: 1px solid var(--border-subtle);
-  border-radius: 20px;
+  border-radius: var(--ui-radius-card);
   background: var(--bg-card);
 }
 .project-library-preview {
@@ -1132,6 +874,7 @@
 .project-library-card > span {
   display: block;
   margin: 14px 16px 0;
+  overflow-wrap: anywhere;
 }
 .project-library-card > span {
   margin-top: 6px;
@@ -1200,17 +943,19 @@
   background: linear-gradient(135deg, var(--bg-card-hover), var(--bg-input));
 }
 .workflow-card-preview strong {
-  font-size: 22px;
+  font-size: var(--ui-font-display);
+  line-height: var(--ui-line-height-display);
   letter-spacing: 0.03em;
 }
 .workflow-card-preview span,
 .workflow-source-tag,
 .skill-card-category {
-  padding: 4px 8px;
-  border-radius: 6px;
+  padding: var(--ui-space-1) var(--ui-space-2);
+  border-radius: var(--ui-radius-pill);
   background: var(--bg-card);
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: var(--ui-font-caption);
+  line-height: var(--ui-line-height-caption);
 }
 .skill-card-title-row,
 .workflow-card-title-row {
@@ -1230,30 +975,24 @@
   gap: 8px;
   flex-wrap: wrap;
 }
-.skill-card-actions .ui-button,
-.skill-card-actions .primary-button,
-.workflow-card-actions .ui-button,
-.workflow-card-actions .primary-button {
-  min-height: 30px;
-  padding: 6px 10px;
-  font-size: 12px;
-}
 .skill-card-actions .is-installed {
   color: var(--ui-success);
 }
-.icon-button {
-  display: inline-grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid var(--border-default);
-  border-radius: 8px;
-  color: var(--text-secondary);
+.skill-editor label {
+  display: grid;
+  gap: var(--ui-space-1);
+  min-width: 0;
+  font-size: var(--ui-font-body);
+  line-height: var(--ui-line-height-body);
 }
-.icon-button:hover,
-.icon-button:focus-visible {
-  background: var(--bg-card-hover);
-  color: var(--text-primary);
+.skill-editor h2 {
+  font-size: var(--ui-font-title);
+  line-height: var(--ui-line-height-title);
+}
+.skill-editor p {
+  color: var(--text-secondary);
+  font-size: var(--ui-font-body);
+  line-height: var(--ui-line-height-body);
 }
 @media (max-width: 1100px) {
   .catalog-page {
@@ -1285,14 +1024,22 @@
   .catalog-page {
     padding: 28px 18px 46px;
   }
+  /* The stacked footer leaves no room above the trigger rows: upward popovers
+     cover the textarea (blocking outside-click dismissal) while trigger-row
+     anchored downward popovers cover sibling triggers. Anchor every composer
+     popover to the whole footer so it opens beneath the controls instead. */
+  .start-skill-popover,
+  .start-plugin-popover,
+  .start-model-popover,
+  .start-mode-popover {
+    top: calc(100% + 10px);
+    bottom: auto;
+  }
   .start-brand {
     margin-top: 28px;
   }
   .start-brand p {
     font-size: 13px;
-  }
-  .start-composer {
-    border-radius: 18px;
   }
   .start-discovery {
     margin-top: 42px;
@@ -1301,10 +1048,6 @@
   .catalog-page-toolbar {
     align-items: stretch;
     flex-direction: column;
-  }
-  .catalog-page-header p {
-    font-size: 13px;
-    line-height: 1.5;
   }
   .catalog-page-actions {
     flex-wrap: wrap;

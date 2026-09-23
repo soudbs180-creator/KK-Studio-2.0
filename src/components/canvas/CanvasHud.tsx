@@ -5,6 +5,7 @@ import "../../styles/canvas-hud.css";
 
 /** Screen-space controls wrap together when the usable canvas becomes narrow. */
 export default function CanvasHud({
+  projectStatus,
   chatOpen,
   onChat,
   onConfigure,
@@ -14,6 +15,7 @@ export default function CanvasHud({
   onRetryTask,
   children,
 }: {
+  projectStatus?: ReactNode;
   chatOpen: boolean;
   onChat: () => void;
   onConfigure: () => void;
@@ -37,6 +39,7 @@ export default function CanvasHud({
           onCancelTask={onCancelTask}
           onRetryTask={onRetryTask}
         />
+        {projectStatus}
       </div>
       <div className="canvas-hud-right">
         {children}

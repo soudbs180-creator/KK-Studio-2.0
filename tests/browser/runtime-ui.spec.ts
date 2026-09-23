@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { waitForConversationPanelSettled } from "./helpers";
 
-const evidence = "docs/evidence/ui-runtime-2026-09-10";
+const evidence = "test-results/runtime/ui-runtime-2026-09-10";
 
 test("latest Figma shell is loaded by the real production page", async ({
   page,
@@ -42,7 +42,7 @@ test("latest Figma shell is loaded by the real production page", async ({
         ".conversation-panel",
         ".chat-composer",
         ".chat-composer textarea",
-        ".chat-composer > div",
+        ".chat-composer .composer-toolbar",
         ".canvas-toolbar",
       ].map((selector) => {
         const rect = document.querySelector(selector)!.getBoundingClientRect();
@@ -53,9 +53,6 @@ test("latest Figma shell is loaded by the real production page", async ({
   const figma: Record<string, number[]> = {
     ".workspace-content": [291, 45, 1619, 1025],
     ".conversation-panel": [1430, 61, 470, 998],
-    ".chat-composer": [1450, 844, 426, 170],
-    ".chat-composer textarea": [1463, 857, 400, 64],
-    ".chat-composer > div": [1463, 977, 400, 24],
     ".canvas-toolbar": [719, 998, 294, 50],
   };
   for (const [selector, expected] of Object.entries(figma))
@@ -64,10 +61,16 @@ test("latest Figma shell is loaded by the real production page", async ({
         1,
       ),
     );
-  await expect(page.locator(".chat-composer > div > button").nth(1)).toHaveCSS(
-    "height",
-    "22px",
-  );
+  // DS 1.3 replaces fixed Figma input height with a shared, growing form.
+  const form = boxes[".chat-composer"];
+  const input = boxes[".chat-composer textarea"];
+  const toolbar = boxes[".chat-composer .composer-toolbar"];
+  expect(input).toEqual([form[0] + 13, form[1] + 13, form[2] - 26, 60]);
+  expect(toolbar).toEqual([input[0], input[1] + input[3] + 8, input[2], 32]);
+  expect(form[3]).toBe(126);
+  await expect(
+    page.getByRole("button", { name: "开启语音输入", exact: true }),
+  ).toHaveCSS("height", "32px");
   await page.screenshot({
     path: evidence + "/after-workspace.png",
     animations: "disabled",
@@ -88,7 +91,7 @@ test("latest Figma shell is loaded by the real production page", async ({
   });
 });
 
-test("scaled desktop keeps the complete surface visible and input interactions work", async ({
+test("responsive desktop fills the viewport without scaling readable controls", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -98,13 +101,15 @@ test("scaled desktop keeps the complete surface visible and input interactions w
     .toBe(1440);
   const app = (await page.locator(".app").boundingBox())!;
   expect(app.x).toBe(0);
-  expect(app.y).toBeCloseTo(45, 0);
-  expect(app.height).toBe(810);
+  expect(app.y).toBe(0);
+  expect(app.height).toBe(900);
+  await expect(page.locator(".topbar strong")).toHaveCSS("font-size", "12px");
   await page
     .getByRole("button", { name: "项目库", exact: true })
     .first()
     .click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
+  await page.getByLabel("执行方式").selectOption("direct");
   const send = page.getByRole("button", { name: "发送消息", exact: true });
   await expect(send).toBeDisabled();
   await page.getByLabel("对话内容", { exact: true }).fill("本地 UI 验证草稿");

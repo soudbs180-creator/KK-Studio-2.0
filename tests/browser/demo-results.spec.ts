@@ -12,9 +12,8 @@ test("普通节点生成本地结果，不显示独立示范入口", async ({ pa
   for (const [kind, label] of [
     ["video", "视频"],
     ["audio", "音频"],
-    ["text", "文案"],
   ] as const) {
-    const menuLabel = kind === "text" ? "文本" : label;
+    const menuLabel = label;
     await page.getByRole("button", { name: "添加资源", exact: true }).click();
     await page.getByRole("menuitem", { name: menuLabel, exact: true }).click();
     const source = page
@@ -31,7 +30,7 @@ test("普通节点生成本地结果，不显示独立示范入口", async ({ pa
       ),
     ).toHaveCount(kind === "video" ? 8 : 1);
     if (kind !== "video")
-      await expect(source.getByText("前端草稿", { exact: true })).toBeVisible();
+      await expect(source.getByText("本地演示", { exact: true })).toBeVisible();
   }
 });
 

@@ -202,7 +202,7 @@
   padding: 0;
   border-radius: 10px;
   background: var(--ui-account-subscription);
-  color: var(--text-on-accent);
+  color: var(--text-on-success);
   font-size: 8px;
   font-weight: 400;
   line-height: 10px;

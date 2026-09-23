@@ -1,4 +1,7 @@
-import type { SettingsPreferences } from "../../domain/settings";
+import {
+  ACCENT_PRESETS,
+  type SettingsPreferences,
+} from "../../domain/settings";
 import { SettingRow, SettingsToggle } from "./SettingsControls";
 
 interface GeneralSettingsProps {
@@ -51,6 +54,29 @@ export default function GeneralSettings({
             <option value="dark">深色</option>
             <option value="light">浅色</option>
             <option value="system">跟随系统</option>
+          </select>
+        </SettingRow>
+        <SettingRow
+          id="accent"
+          title="强调色"
+          description="应用于按钮、链接、焦点和选中状态"
+        >
+          <select
+            className="settings-select"
+            aria-labelledby="accent-label"
+            aria-describedby="accent-description"
+            value={preferences.accent}
+            onChange={(event) =>
+              onChange({
+                accent: event.target.value as SettingsPreferences["accent"],
+              })
+            }
+          >
+            {ACCENT_PRESETS.map(({ id, label }) => (
+              <option key={id} value={id}>
+                {label}
+              </option>
+            ))}
           </select>
         </SettingRow>
         <SettingRow

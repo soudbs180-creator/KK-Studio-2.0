@@ -33,7 +33,7 @@ export default function SkillEditor({
   const [instructions, setInstructions] = useState(record?.instructions ?? "");
   return (
     <Modal
-      className="catalog-tutorial"
+      className="catalog-tutorial skill-editor"
       title="编辑本地 Skill"
       onClose={onClose}
     >
@@ -45,6 +45,7 @@ export default function SkillEditor({
         <label>
           ID
           <input
+            className="ui-input"
             value={id}
             onChange={(event) => setId(event.target.value)}
             disabled={Boolean(record)}
@@ -53,6 +54,7 @@ export default function SkillEditor({
         <label>
           名称
           <input
+            className="ui-input"
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
@@ -60,6 +62,7 @@ export default function SkillEditor({
         <label>
           版本
           <input
+            className="ui-input"
             value={version}
             onChange={(event) => setVersion(event.target.value)}
           />
@@ -67,6 +70,7 @@ export default function SkillEditor({
         <label>
           描述
           <input
+            className="ui-input"
             value={description}
             onChange={(event) => setDescription(event.target.value)}
           />
@@ -74,6 +78,7 @@ export default function SkillEditor({
         <label>
           作者
           <input
+            className="ui-input"
             value={author}
             onChange={(event) => setAuthor(event.target.value)}
           />
@@ -81,6 +86,7 @@ export default function SkillEditor({
         <label>
           分类
           <input
+            className="ui-input"
             value={category}
             onChange={(event) => setCategory(event.target.value)}
           />
@@ -88,6 +94,7 @@ export default function SkillEditor({
         <label>
           指令文本
           <textarea
+            className="ui-input"
             value={instructions}
             onChange={(event) => setInstructions(event.target.value)}
             maxLength={12000}

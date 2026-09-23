@@ -1,8 +1,9 @@
 import { z } from "zod";
+import { appVersion } from "../../runtime/appInfo.ts";
 
 const MCP_PROTOCOL_VERSION = "2025-11-25";
 const MCP_CLIENT_NAME = "kk-studio";
-const MCP_CLIENT_VERSION = "2.0.0";
+const MCP_CLIENT_VERSION = appVersion;
 const MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
 const MAX_TOOLS = 500;
 const MAX_PAGES = 32;

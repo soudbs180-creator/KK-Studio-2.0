@@ -1,0 +1,262 @@
+/* DS1.1 engineering supplement for newly connected feature controls. */
+.conversation-channel,
+.image-composer-tools,
+.agent-composer-actions,
+.agent-composer-options {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.conversation-channel {
+  flex: 0 0 auto;
+}
+.conversation-panel > [hidden] {
+  display: none;
+}
+.image-composer-tools {
+  justify-content: space-between;
+  margin-bottom: var(--ui-space-2);
+  color: var(--text-secondary);
+  font-size: var(--ui-font-caption);
+}
+.agent-composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  border: var(--ui-border-width) solid var(--border-subtle);
+  background: var(--bg-card);
+  border-radius: var(--ui-radius-panel);
+  padding: var(--ui-space-3);
+  min-width: 0;
+  font-size: var(--ui-font-body);
+  line-height: var(--ui-line-height-body);
+}
+.agent-composer textarea.ui-input {
+  width: 100%;
+  height: 80px;
+  min-height: 64px;
+  resize: vertical;
+  max-height: 160px;
+}
+.agent-composer-options label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+  min-width: 0;
+}
+.agent-composer-options .settings-select {
+  max-width: 100%;
+}
+.agent-composer-note,
+.agent-composer-note p {
+  color: var(--text-secondary);
+  font-size: var(--ui-font-caption);
+  line-height: var(--ui-line-height-caption);
+}
+.agent-composer p {
+  margin: 0;
+}
+.agent-composer-actions {
+  justify-content: flex-end;
+}
+.agent-action-error {
+  color: var(--text-danger);
+  overflow-wrap: anywhere;
+}
+.conversation-panel .chat-agent-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2);
+  border-radius: var(--ui-radius-control);
+  font-size: var(--ui-font-caption);
+  line-height: var(--ui-line-height-body);
+}
+.conversation-panel .chat-agent-item {
+  border-radius: var(--ui-radius-control);
+}
+.conversation-panel .chat-agent-tool-tag {
+  font-size: var(--ui-font-caption);
+  line-height: var(--ui-line-height-caption);
+  border-radius: var(--ui-radius-pill);
+}
+.conversation-panel .chat-approval {
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
+}
+.chat-approval > span,
+.chat-approval > p {
+  flex: 1 1 100%;
+}
+.composer-plugin-summary {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.start-prompt-library {
+  margin-top: var(--ui-space-3);
+  align-self: flex-end;
+}
+.modal:has(.prompt-library-panel) {
+  width: min(960px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+}
+.prompt-library-panel {
+  background: var(--bg-surface);
+  border-radius: var(--ui-radius-panel);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-height: calc(100dvh - 64px);
+  overflow-y: auto;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-5);
+  font-size: var(--ui-font-body);
+  line-height: var(--ui-line-height-body);
+  color: var(--text-primary);
+}
+.prompt-library-panel p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.prompt-library-header,
+.prompt-library-source,
+.prompt-library-pagination,
+.prompt-library-panel > footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  flex-wrap: wrap;
+}
+.prompt-library-header {
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+.prompt-library-header > div {
+  min-width: 0;
+}
+.prompt-library-header h2 {
+  font-size: var(--ui-font-title);
+  line-height: var(--ui-line-height-title);
+  margin: 0 0 var(--ui-space-2);
+}
+.prompt-library-header p,
+.prompt-library-note,
+.prompt-library-panel > footer > span {
+  color: var(--text-secondary);
+}
+.prompt-library-panel a {
+  color: var(--text-accent);
+}
+.prompt-library-source label {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+}
+.prompt-library-source select {
+  width: 100%;
+  min-width: 0;
+}
+.prompt-library-search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+}
+.prompt-library-search input {
+  width: 100%;
+}
+.prompt-library-error {
+  color: var(--text-danger);
+}
+.prompt-library-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--ui-space-4);
+  min-height: 200px;
+}
+.prompt-library-results {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+}
+.prompt-library-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  max-height: 300px;
+  overflow-y: auto;
+}
+.prompt-library-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+  padding: var(--ui-space-3);
+  border: var(--ui-border-width) solid var(--border-control);
+  border-radius: var(--ui-radius-control);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  text-align: left;
+  overflow-wrap: anywhere;
+  flex-shrink: 0;
+}
+.prompt-library-item span {
+  color: var(--text-secondary);
+}
+.prompt-library-item:hover {
+  background: var(--bg-elevated);
+}
+.prompt-library-item[aria-pressed="true"] {
+  border-color: var(--text-accent);
+  box-shadow: inset 0 0 0 var(--ui-border-width) var(--text-accent);
+}
+.prompt-library-detail {
+  border-radius: var(--ui-radius-card);
+  border: var(--ui-border-width) solid var(--border-subtle);
+  background: var(--bg-card);
+  padding: var(--ui-space-4);
+  max-height: 350px;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+}
+.prompt-library-detail h3 {
+  margin-top: 0;
+  font-size: var(--ui-font-label);
+  line-height: var(--ui-line-height-label);
+}
+.prompt-library-detail p {
+  white-space: pre-wrap;
+}
+.prompt-library-detail > span {
+  display: block;
+  margin-top: var(--ui-space-3);
+  color: var(--text-secondary);
+}
+.prompt-library-panel > footer {
+  border-top: var(--ui-border-width) solid var(--border-subtle);
+  padding-top: var(--ui-space-3);
+}
+@media (max-width: 600px) {
+  .prompt-library-panel {
+    padding: var(--ui-space-4);
+  }
+  .prompt-library-content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .prompt-library-source label {
+    flex-basis: 100%;
+  }
+  .prompt-library-list {
+    max-height: 160px;
+  }
+  .prompt-library-detail {
+    max-height: 180px;
+  }
+  .prompt-library-pagination {
+    gap: var(--ui-space-1);
+  }
+}

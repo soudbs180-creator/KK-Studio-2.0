@@ -1,7 +1,17 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
+import { useDismissible } from "../useDismissible";
 import type { CanvasItemKind } from "../../domain/canvasItems";
 import type { AddMenuState } from "./useCanvasAddMenu";
+import { pluginStore } from "../../features/plugins/pluginStore";
+import { listPluginNodeDefinitions } from "../../features/plugins/nodeRegistry";
 import "../../styles/node-menu.css";
 
 const ITEMS: {
@@ -39,13 +49,37 @@ const ITEMS: {
 export default function AddNodeMenu({
   menu,
   onChoose,
+  onChoosePlugin,
   onDismiss,
 }: {
   menu: AddMenuState;
   onChoose: (kind: CanvasItemKind) => void;
+  onChoosePlugin?: (type: string) => void;
   onDismiss: (restoreFocus?: boolean) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const trigger = useRef(menu.trigger);
+  trigger.current = menu.trigger;
+  useDismissible(
+    true,
+    ref,
+    () => onDismiss(),
+    menu.atPoint ? undefined : trigger,
+  );
+  const pluginState = useSyncExternalStore(
+    pluginStore.subscribe,
+    pluginStore.getState,
+  );
+  const enabledIds = new Set(
+    pluginState.plugins
+      .filter((record) => record.enabled)
+      .map((record) => record.id),
+  );
+  const pluginEntries = listPluginNodeDefinitions().filter(
+    (entry) =>
+      enabledIds.has(entry.pluginId) &&
+      entry.definition.showInCreateMenu !== false,
+  );
   const touch = useRef<{
     key: string;
     id: number;
@@ -71,16 +105,18 @@ export default function AddNodeMenu({
   }, [menu]);
   useEffect(() => {
     const outside = (event: Event): void => {
-      if (event.target instanceof Node && !ref.current?.contains(event.target))
+      if (
+        event.target instanceof Node &&
+        !ref.current?.contains(event.target) &&
+        (menu.atPoint || !menu.trigger.contains(event.target))
+      )
         onDismiss(false);
     };
-    document.addEventListener("pointerdown", outside, true);
     document.addEventListener("focusin", outside, true);
     return () => {
-      document.removeEventListener("pointerdown", outside, true);
       document.removeEventListener("focusin", outside, true);
     };
-  }, [onDismiss]);
+  }, [menu.trigger, menu.atPoint, onDismiss]);
   return createPortal(
     <div
       ref={ref}
@@ -93,10 +129,6 @@ export default function AddNodeMenu({
       onKeyDown={(event) => {
         if (event.nativeEvent.isComposing) return;
         event.stopPropagation();
-        if (event.key === "Escape") {
-          event.preventDefault();
-          onDismiss();
-        }
         if (event.key === "Tab") onDismiss();
         if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key))
           return;
@@ -207,6 +239,35 @@ export default function AddNodeMenu({
             )}
           </button>
         ))}
+        {pluginEntries.length > 0 && (
+          <>
+            <p className="add-node-title add-node-title-plugin">插件</p>
+            {pluginEntries.map(({ definition }) => (
+              <button
+                key={definition.type}
+                role="menuitem"
+                aria-label={definition.title}
+                aria-description={definition.description}
+                title={definition.description ?? definition.title}
+                onClick={() => {
+                  onChoosePlugin?.(definition.type);
+                }}
+              >
+                <span className="add-node-icon-box">
+                  <span className="add-node-icon plugin" aria-hidden="true">
+                    {definition.icon as ReactNode}
+                  </span>
+                </span>
+                <span className="add-node-label">{definition.title}</span>
+                {definition.description && (
+                  <span className="add-node-unavailable">
+                    {definition.description}
+                  </span>
+                )}
+              </button>
+            ))}
+          </>
+        )}
       </div>
     </div>,
     document.body,

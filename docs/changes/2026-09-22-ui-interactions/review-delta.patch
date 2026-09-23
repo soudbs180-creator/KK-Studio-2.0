@@ -1,0 +1,1666 @@
+--- a/scripts/audit/check-ui-interactions-desktop.mjs
++++ b/scripts/audit/check-ui-interactions-desktop.mjs
+@@ -0,0 +1,314 @@
++import fs from "node:fs/promises";
++import path from "node:path";
++import os from "node:os";
++import { createHash } from "node:crypto";
++import { spawn, execFileSync } from "node:child_process";
++import { chromium, expect } from "@playwright/test";
++import { ACCENTS } from "../../tests/helpers/designSystem.ts";
++
++// Own release process and isolated storage only. Never attach to a user's app.
++const repo = process.cwd();
++const evidence = path.join(
++  repo,
++  "docs/changes/2026-09-22-ui-interactions/evidence/desktop",
++);
++const exe = path.join(repo, "src-tauri/target/release/kk-studio.exe");
++const cdp = "http://127.0.0.1:9338";
++const temp = await fs.mkdtemp(
++  path.join(os.tmpdir(), "kk-ui-interactions-desktop-"),
++);
++const data = path.join(temp, "data");
++const profile = path.join(temp, "profile");
++const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
++const sha = (bytes) => createHash("sha256").update(bytes).digest("hex");
++const report = {
++  timestamp: new Date().toISOString(),
++  mode: "Tauri release",
++  data,
++  profile,
++  matrix: [],
++  sections: [],
++  launches: [],
++  errors: [],
++  passed: false,
++};
++let browser, app, page;
++await fs.mkdir(evidence, { recursive: true });
++
++async function cdpAvailable() {
++  return fetch(`${cdp}/json/version`, { signal: AbortSignal.timeout(1000) })
++    .then(() => true)
++    .catch(() => false);
++}
++async function closeOwnedApp() {
++  if (app && app.exitCode === null) {
++    execFileSync(
++      "powershell.exe",
++      [
++        "-NoProfile",
++        "-Command",
++        `(Get-Process -Id ${app.pid} -ErrorAction Stop).CloseMainWindow() | Out-Null`,
++      ],
++      { windowsHide: true },
++    );
++    await expect.poll(() => app.exitCode, { timeout: 10000 }).not.toBeNull();
++  }
++  await browser?.close();
++  browser = undefined;
++  page = undefined;
++  await expect.poll(cdpAvailable, { timeout: 10000 }).toBe(false);
++}
++async function launch() {
++  if (await cdpAvailable())
++    throw new Error("Audit CDP port 9338 is occupied; no process was launched");
++  app = spawn(exe, ["--data-dir", data], {
++    cwd: repo,
++    windowsHide: true,
++    stdio: "ignore",
++    env: {
++      ...process.env,
++      WEBVIEW2_USER_DATA_FOLDER: profile,
++      WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS:
++        "--remote-debugging-port=9338 --remote-debugging-address=127.0.0.1",
++    },
++  });
++  let launchError;
++  app.on("error", (error) => {
++    launchError = error;
++  });
++  for (let i = 0; i < 150; i++) {
++    if (launchError) throw launchError;
++    if (app.exitCode !== null)
++      throw new Error(`Owned desktop exited early: ${app.exitCode}`);
++    if (await cdpAvailable()) break;
++    await delay(100);
++  }
++  browser = await chromium.connectOverCDP(cdp);
++  await expect
++    .poll(
++      () => {
++        page = browser
++          .contexts()
++          .flatMap((context) => context.pages())
++          .find((item) => new URL(item.url()).hostname === "tauri.localhost");
++        return Boolean(page);
++      },
++      { timeout: 15000 },
++    )
++    .toBe(true);
++  page.on("pageerror", (error) => report.errors.push(error.message));
++  await page.waitForLoadState("domcontentloaded");
++  await expect(page.locator(".app")).toHaveAttribute(
++    "data-runtime-mode",
++    "production",
++  );
++  await page.emulateMedia({ reducedMotion: "reduce" });
++  const storageRoot = await page.evaluate(() =>
++    window.__TAURI_INTERNALS__.invoke("get_storage_root"),
++  );
++  expect(path.resolve(storageRoot).toLowerCase()).toBe(
++    path.resolve(data).toLowerCase(),
++  );
++  const assets = await page
++    .locator('script[type="module"][src], link[rel="stylesheet"][href]')
++    .evaluateAll((elements) =>
++      elements.map((el) => el.getAttribute("src") ?? el.getAttribute("href")),
++    );
++  const loaded = [];
++  for (const asset of assets) {
++    if (!asset.startsWith("/assets/")) continue;
++    const local = await fs.readFile(path.join(repo, "dist", asset.slice(1)));
++    const actual = await page.evaluate(async (url) => {
++      const response = await fetch(url);
++      if (!response.ok) throw new Error(`Asset fetch ${response.status}`);
++      return Array.from(new Uint8Array(await response.arrayBuffer()));
++    }, asset);
++    expect(sha(Buffer.from(actual))).toBe(sha(local));
++    loaded.push({ asset, sha256: sha(local), bytes: local.length });
++  }
++  expect(loaded.some((item) => item.asset.endsWith(".js"))).toBe(true);
++  expect(loaded.some((item) => item.asset.endsWith(".css"))).toBe(true);
++  report.launches.push({
++    pid: app.pid,
++    url: page.url(),
++    storageRoot,
++    viewport: await page.evaluate(() => ({
++      width: innerWidth,
++      height: innerHeight,
++    })),
++    loaded,
++  });
++}
++async function navigate(name) {
++  await page
++    .locator(".sidebar")
++    .getByRole("button", { name, exact: true })
++    .click();
++  await expect(page.locator(".catalog-page h1")).toBeVisible();
++}
++async function openSettings() {
++  await page.getByRole("button", { name: "打开设置", exact: true }).click();
++  return page.getByRole("dialog", { name: "设置" });
++}
++
++try {
++  report.exe = { path: exe, sha256: sha(await fs.readFile(exe)) };
++  await launch();
++  await navigate("项目库");
++  await page.getByRole("button", { name: "新建项目", exact: true }).click();
++  const canvas = page.getByTestId("infinite-canvas");
++  await expect(canvas).toBeVisible();
++  await canvas.focus();
++  for (let i = 0; i < 20; i++) await page.keyboard.press("Control+-");
++  await expect(
++    page.getByRole("button", { name: "画布缩放", exact: true }),
++  ).toHaveText("20%");
++  for (const theme of ["dark", "light"]) {
++    for (const accent of ACCENTS) {
++      const settings = await openSettings();
++      await settings.getByLabel("主题", { exact: true }).selectOption(theme);
++      await settings.getByLabel("强调色", { exact: true }).selectOption(accent);
++      await page.keyboard.press("Escape");
++      const a = await page.locator(".task-button").boundingBox();
++      const b = await page.locator(".project-task-status").boundingBox();
++      expect(b.y).toBeGreaterThanOrEqual(a.y + a.height);
++      const patterns = [];
++      for (const pattern of ["dots", "grid"]) {
++        if (
++          !(await canvas.getAttribute("class")).includes(
++            `canvas-pattern-${pattern}`,
++          )
++        ) {
++          await page
++            .getByRole("button", {
++              name: pattern === "dots" ? "切换为点状背景" : "切换为网格背景",
++              exact: true,
++            })
++            .click();
++        }
++        const paint = await canvas.evaluate((el) => {
++          const css = getComputedStyle(el);
++          return {
++            pitch: parseFloat(css.backgroundSize),
++            image: css.backgroundImage,
++            opacity: Number(css.getPropertyValue("--canvas-pattern-opacity")),
++          };
++        });
++        expect(paint.pitch).toBeGreaterThanOrEqual(12);
++        expect(paint.image).not.toBe("none");
++        expect(paint.opacity).toBeGreaterThan(0.1);
++        patterns.push({ pattern, ...paint });
++      }
++      report.matrix.push({ theme, accent, task: a, status: b, patterns });
++    }
++    await page.screenshot({
++      path: path.join(evidence, `workspace-${theme}-20.png`),
++      animations: "disabled",
++    });
++  }
++  for (const [label, selector] of [
++    ["打开任务列表", ".task-panel"],
++    ["添加资源", ".add-node-menu"],
++    ["选择画布工具", ".canvas-tool-menu"],
++    ["画布缩放", ".canvas-zoom-menu"],
++    ["小地图", ".canvas-minimap"],
++  ]) {
++    const trigger = page.getByRole("button", { name: label, exact: true });
++    await trigger.click();
++    await expect(page.locator(selector)).toBeVisible();
++    await trigger.click();
++    await expect(page.locator(selector)).toHaveCount(0);
++    await trigger.click();
++    await page.keyboard.press("Escape");
++    await expect(page.locator(selector)).toHaveCount(0);
++    await expect(trigger).toBeFocused();
++  }
++  const tasks = page.getByRole("button", { name: "打开任务列表", exact: true });
++  await tasks.click();
++  const card = page.getByRole("button", {
++    name: "查看演示任务 2026/9/5",
++    exact: true,
++  });
++  await card.click();
++  await page.keyboard.press("Escape");
++  await expect(
++    page.getByRole("dialog", { name: "任务详情", exact: true }),
++  ).toHaveCount(0);
++  await expect(card).toBeFocused();
++  await page.getByRole("button", { name: "关闭任务列表", exact: true }).click();
++  await expect(tasks).toBeFocused();
++  const row = page.locator(".sidebar .project-entry").first();
++  await row.locator(".project-link").click({ button: "right" });
++  await page.getByRole("menuitem", { name: "改名字", exact: true }).click();
++  await page.getByLabel("项目名称", { exact: true }).fill("桌面折叠保留名称");
++  await page.keyboard.press("Enter");
++  await page.locator(".project-groups-title").click();
++  await page.locator(".project-groups-title").click();
++  await expect(
++    page.getByRole("button", { name: "桌面折叠保留名称", exact: true }),
++  ).toBeVisible();
++  const settings = await openSettings();
++  const box = await settings.boundingBox();
++  await page.mouse.move(box.x + box.width / 2, box.y + 25);
++  await page.mouse.down();
++  await page.mouse.move(3, 3, { steps: 10 });
++  await page.mouse.up();
++  await expect(settings).toBeVisible();
++  await page.mouse.click(3, 3);
++  await expect(settings).toHaveCount(0);
++  await expect(
++    page.getByRole("button", { name: "打开设置", exact: true }),
++  ).toBeFocused();
++  await page.getByRole("button", { name: "收起对话", exact: true }).click();
++  await page.getByRole("button", { name: "打开对话", exact: true }).click();
++  await expect(page.locator(".conversation-panel")).toBeVisible();
++  report.flows = {
++    popupToggleEscapeFocus: true,
++    nestedTaskDismiss: true,
++    projectFoldState: true,
++    backdropDrag: true,
++    conversationFold: true,
++  };
++  await page.screenshot({
++    path: path.join(evidence, "workspace-final.png"),
++    animations: "disabled",
++  });
++  expect(report.errors).toEqual([]);
++  report.passed = true;
++} catch (error) {
++  report.failure = error.message;
++  if (page)
++    await page
++      .screenshot({
++        path: path.join(evidence, "failure.png"),
++        animations: "disabled",
++      })
++      .catch(() => {});
++  process.exitCode = 1;
++} finally {
++  try {
++    await closeOwnedApp();
++  } catch (error) {
++    report.cleanupFailure = error.message;
++    report.passed = false;
++    process.exitCode = 1;
++  }
++  await fs.writeFile(
++    path.join(evidence, "runtime.json"),
++    JSON.stringify(report, null, 2),
++  );
++  console.log(
++    JSON.stringify(
++      {
++        passed: report.passed,
++        matrix: report.matrix.length,
++        launches: report.launches.length,
++        failure: report.failure,
++        cleanupFailure: report.cleanupFailure,
++        evidence,
++      },
++      null,
++      2,
++    ),
++  );
++}
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -2034,58 +2034,6 @@
+             />
+           )}
+           <div className="workspace-content" hidden={active !== "workspace"}>
+-            {activeProject && (
+-              <div className="project-task-status" aria-live="polite">
+-                <strong>{activeProject.name}</strong>
+-                {activeProject.tasks.slice(-1).map((task) => (
+-                  <span key={task.id} className={`project-task-${task.status}`}>
+-                    {task.status === "queued"
+-                      ? "排队中"
+-                      : task.status === "running"
+-                        ? "正在生成"
+-                        : task.status === "unknown"
+-                          ? "受理状态不明 · 请核对供应商"
+-                          : task.status === "partial"
+-                            ? `部分完成（${task.completedOutputs}/${task.requestedOutputs}）`
+-                            : task.status === "succeeded"
+-                              ? "已完成"
+-                              : task.status === "offline"
+-                                ? "网络断开"
+-                                : task.status === "cancelled"
+-                                  ? "已取消"
+-                                  : task.status === "interrupted"
+-                                    ? "上次任务未完成"
+-                                    : `失败：${task.error ?? "请重试"}`}
+-                    {task.status === "running" && (
+-                      <button type="button" onClick={() => cancelTask(task.id)}>
+-                        取消
+-                      </button>
+-                    )}
+-                    {(task.status === "partial" ||
+-                      task.status === "failed" ||
+-                      task.status === "offline" ||
+-                      task.status === "cancelled" ||
+-                      task.status === "interrupted") && (
+-                      <button
+-                        type="button"
+-                        onClick={() => retryTask(activeProject.id, task.id)}
+-                      >
+-                        重试
+-                      </button>
+-                    )}
+-                  </span>
+-                ))}
+-                <span className="project-save-state" aria-live="polite">
+-                  {saveState === "loading"
+-                    ? "读取中…"
+-                    : saveState === "saving"
+-                      ? "保存中…"
+-                      : saveState === "saved"
+-                        ? "已保存"
+-                        : "未保存 · 请查看恢复提示"}
+-                </span>
+-              </div>
+-            )}
+             <CanvasImageCommandContext.Provider
+               value={{
+                 submit: (input) =>
+@@ -2117,6 +2065,72 @@
+               }}
+             >
+               <Canvas
++                projectStatus={
++                  activeProject && (
++                    <div className="project-task-status" aria-live="polite">
++                      <strong title={activeProject.name}>
++                        {activeProject.name}
++                      </strong>
++                      {activeProject.tasks.slice(-1).map((task) => (
++                        <span
++                          key={task.id}
++                          className={`project-task-${task.status}`}
++                        >
++                          {task.status === "queued"
++                            ? "排队中"
++                            : task.status === "running"
++                              ? "正在生成"
++                              : task.status === "unknown"
++                                ? "受理状态不明 · 请核对供应商"
++                                : task.status === "partial"
++                                  ? `部分完成（${task.completedOutputs}/${task.requestedOutputs}）`
++                                  : task.status === "succeeded"
++                                    ? "已完成"
++                                    : task.status === "offline"
++                                      ? "网络断开"
++                                      : task.status === "cancelled"
++                                        ? "已取消"
++                                        : task.status === "interrupted"
++                                          ? "上次任务未完成"
++                                          : `失败：${task.error ?? "请重试"}`}
++                          {task.status === "running" && (
++                            <button
++                              className="ui-button"
++                              type="button"
++                              onClick={() => cancelTask(task.id)}
++                            >
++                              取消
++                            </button>
++                          )}
++                          {(task.status === "partial" ||
++                            task.status === "failed" ||
++                            task.status === "offline" ||
++                            task.status === "cancelled" ||
++                            task.status === "interrupted") && (
++                            <button
++                              className="ui-button"
++                              type="button"
++                              onClick={() =>
++                                retryTask(activeProject.id, task.id)
++                              }
++                            >
++                              重试
++                            </button>
++                          )}
++                        </span>
++                      ))}
++                      <span className="project-save-state">
++                        {saveState === "loading"
++                          ? "读取中…"
++                          : saveState === "saving"
++                            ? "保存中…"
++                            : saveState === "saved"
++                              ? "已保存"
++                              : "未保存 · 请查看恢复提示"}
++                      </span>
++                    </div>
++                  )
++                }
+                 key={`${activeProject?.id ?? "demo-canvas"}:${persistence.loadEpoch}`}
+                 initialCanvas={activeProject?.canvas}
+                 onCanvasChange={
+--- a/src/components/Canvas.tsx
++++ b/src/components/Canvas.tsx
+@@ -6,6 +6,7 @@
+   type CSSProperties,
+   type Dispatch,
+   type SetStateAction,
++  type ReactNode,
+ } from "react";
+ import CanvasNavigation from "./canvas/CanvasNavigation";
+ import { type CanvasCollectionItem } from "../domain/canvasItems";
+@@ -23,8 +24,10 @@
+ import type { CreationTask } from "../features/creation/model";
+ import type { ProjectCanvas } from "../domain/projectCanvas";
+ import { useCanvasPersistence } from "./canvas/useCanvasPersistence";
++import { canvasPatternPitch } from "../domain/canvasViewport";
+ 
+ interface CanvasProps {
++  projectStatus?: ReactNode;
+   initialCanvas?: ProjectCanvas;
+   onCanvasChange?: (canvas: ProjectCanvas) => void;
+   onOpen?: (view: string) => void;
+@@ -43,6 +46,7 @@
+ }
+ 
+ export default function Canvas({
++  projectStatus,
+   onOpen,
+   chatOpen = true,
+   onOpenChat,
+@@ -187,13 +191,13 @@
+         {
+           "--canvas-usable-width": `${controls.viewport.width}px`,
+           backgroundColor,
+-          backgroundSize: `${24 * transform.scale}px ${24 * transform.scale}px`,
++          backgroundSize: `${canvasPatternPitch(transform.scale)}px ${canvasPatternPitch(transform.scale)}px`,
+           "--canvas-pan-x": `${transform.x}px`,
+           "--canvas-pan-y": `${transform.y}px`,
+-          "--canvas-dot-cell": `${24 * transform.scale}px`,
++          "--canvas-dot-cell": `${canvasPatternPitch(transform.scale)}px`,
+           "--canvas-pattern-opacity": Math.min(
+             1,
+-            Math.max(0, (transform.scale - 0.45) / 0.55),
++            Math.max(0.2, (transform.scale - 0.45) / 0.55),
+           ),
+         } as CSSProperties
+       }
+@@ -242,6 +246,7 @@
+         onDismissConnectionNotice={() => setConnectionNotice("")}
+       />
+       <CanvasHud
++        projectStatus={projectStatus}
+         chatOpen={chatOpen}
+         onChat={onOpenChat}
+         onConfigure={() => onOpen?.("settings/providers")}
+--- a/src/components/Modal.tsx
++++ b/src/components/Modal.tsx
+@@ -12,6 +12,7 @@
+   className?: string;
+ }) {
+   const ref = useRef<HTMLDialogElement>(null);
++  const backdropPress = useRef(false);
+   useEffect(() => {
+     const dialog = ref.current;
+     const previous =
+@@ -56,8 +57,23 @@
+         e.stopPropagation();
+         onClose();
+       }}
++      onPointerDown={(event) => {
++        const box = event.currentTarget.getBoundingClientRect();
++        backdropPress.current =
++          event.button === 0 &&
++          event.target === event.currentTarget &&
++          (event.clientX < box.left ||
++            event.clientX > box.right ||
++            event.clientY < box.top ||
++            event.clientY > box.bottom);
++      }}
++      onPointerCancel={() => {
++        backdropPress.current = false;
++      }}
+       onClick={(e) => {
+-        if (e.target === e.currentTarget) {
++        const startedOnBackdrop = backdropPress.current;
++        backdropPress.current = false;
++        if (startedOnBackdrop && e.target === e.currentTarget) {
+           const box = e.currentTarget.getBoundingClientRect();
+           if (
+             e.clientX < box.left ||
+--- a/src/components/Sidebar.tsx
++++ b/src/components/Sidebar.tsx
+@@ -1,5 +1,5 @@
+ import { useLayoutEffect, useRef, useState } from "react";
+-import { ChevronDown } from "lucide-react";
++import SidebarDraftFolder from "./SidebarDraftFolder";
+ import { useDismissible } from "./useDismissible";
+ import SidebarProjectGroup from "./SidebarProjectGroup";
+ import SidebarGroupHeading from "./SidebarGroupHeading";
+@@ -46,6 +46,8 @@
+   const projectMenu = useRef<HTMLDivElement>(null);
+   const projectFilterTrigger = useRef<HTMLButtonElement>(null);
+   useLayoutEffect(() => {
++    if (collapsed)
++      setMenu((current) => (current === "projects" ? null : current));
+     const focused = document.activeElement;
+     if (
+       collapsed &&
+@@ -219,9 +221,8 @@
+           )}
+         </div>
+         {(["项目", "未分组"] as const).map((name, i) => {
+-          if (!((projectFilter === "all" && i === 0) || i === 1)) return null;
+           return (
+-            <section key={name}>
++            <section key={name} hidden={i === 0 && projectFilter !== "all"}>
+               {i === 1 && (
+                 <SidebarGroupHeading
+                   expanded={groups[i]}
+@@ -231,32 +232,28 @@
+                   onOpenLibrary={() => navigate("projects")}
+                 />
+               )}
+-              {groups[i] && (
+-                <SidebarProjectGroup
+-                  grouped={i === 0}
+-                  selected={active === "workspace" && selectedProject === name}
+-                  childSelected={
+-                    active === "workspace" &&
+-                    (selectedProject === null || selectedProject === name)
+-                  }
+-                  onNavigate={(id) => {
+-                    setSelectedProject(name);
+-                    navigate(id);
+-                  }}
+-                />
+-              )}
++              <SidebarProjectGroup
++                visible={
++                  !collapsed &&
++                  groups[i] &&
++                  (i === 1 || projectFilter === "all")
++                }
++                grouped={i === 0}
++                selected={active === "workspace" && selectedProject === name}
++                childSelected={
++                  active === "workspace" &&
++                  (selectedProject === null || selectedProject === name)
++                }
++                onNavigate={(id) => {
++                  setSelectedProject(name);
++                  navigate(id);
++                }}
++              />
+             </section>
+           );
+         })}
+-        {folderCreated && projectFilter === "all" && (
+-          <section className="project-folder-group">
+-            <button className="group-heading" aria-expanded="true">
+-              新建文件夹 <ChevronDown size={16} />
+-            </button>
+-            <small className="project-folder-empty">
+-              文件夹已创建，可从项目库中添加项目
+-            </small>
+-          </section>
++        {folderCreated && (
++          <SidebarDraftFolder visible={projectFilter === "all"} />
+         )}
+       </div>
+       {account && (
+--- a/src/components/SidebarDraftFolder.tsx
++++ b/src/components/SidebarDraftFolder.tsx
+@@ -0,0 +1,26 @@
++import { useState } from "react";
++
++export default function SidebarDraftFolder({ visible }: { visible: boolean }) {
++  const [expanded, setExpanded] = useState(true);
++  return (
++    <section className="project-folder-group" hidden={!visible}>
++      <button
++        className="group-heading"
++        aria-expanded={expanded}
++        onClick={() => setExpanded((value) => !value)}
++      >
++        新建文件夹
++        <img
++          className="sidebar-heading-chevron"
++          src="/design/figma/project-chevron.svg"
++          alt=""
++        />
++      </button>
++      {expanded && (
++        <small className="project-folder-empty">
++          临时文件夹；项目归档与持久化尚未接入。
++        </small>
++      )}
++    </section>
++  );
++}
+--- a/src/components/SidebarProjectEntry.tsx
++++ b/src/components/SidebarProjectEntry.tsx
+@@ -1,12 +1,14 @@
+-import { useLayoutEffect, useRef, useState } from "react";
++import { useEffect, useLayoutEffect, useRef, useState } from "react";
+ import { useDismissible } from "./useDismissible";
+ 
+ export default function SidebarProjectEntry({
+   grouped,
++  visible,
+   selected,
+   onNavigate,
+ }: {
+   grouped: boolean;
++  visible: boolean;
+   selected: boolean;
+   onNavigate: (id: string) => void;
+ }) {
+@@ -19,13 +21,24 @@
+   const root = useRef<HTMLDivElement>(null);
+   const menuRef = useRef<HTMLDivElement>(null);
+   const menuTrigger = useRef<HTMLButtonElement>(null);
+-  useDismissible(menuOpen, menuRef, () => setMenuOpen(false), menuTrigger);
++  useDismissible(
++    menuOpen && visible,
++    menuRef,
++    () => setMenuOpen(false),
++    menuTrigger,
++  );
++  useEffect(() => {
++    if (!visible) {
++      setMenuOpen(false);
++      setEditing(false);
++    }
++  }, [visible]);
+   useLayoutEffect(() => {
+-    if (menuOpen)
++    if (menuOpen && visible)
+       root.current
+         ?.querySelector<HTMLButtonElement>('[role="menuitem"]')
+         ?.focus();
+-  }, [menuOpen]);
++  }, [menuOpen, visible]);
+   if (deleted)
+     return (
+       <button className="project-undo" onClick={() => setDeleted(false)}>
+--- a/src/components/SidebarProjectGroup.tsx
++++ b/src/components/SidebarProjectGroup.tsx
+@@ -2,18 +2,21 @@
+ 
+ export default function SidebarProjectGroup({
+   grouped,
++  visible,
+   selected,
+   childSelected,
+   onNavigate,
+ }: {
+   grouped: boolean;
++  visible: boolean;
+   selected: boolean;
+   childSelected: boolean;
+   onNavigate: (id: string) => void;
+ }) {
+   return (
+-    <>
++    <div className="project-group-content" hidden={!visible}>
+       <SidebarProjectEntry
++        visible={visible}
+         grouped={grouped}
+         selected={selected}
+         onNavigate={onNavigate}
+@@ -21,12 +24,13 @@
+       {grouped && (
+         <div className="project-nested-entry">
+           <SidebarProjectEntry
++            visible={visible}
+             grouped={false}
+             selected={childSelected}
+             onNavigate={onNavigate}
+           />
+         </div>
+       )}
+-    </>
++    </div>
+   );
+ }
+--- a/src/components/TopBar.tsx
++++ b/src/components/TopBar.tsx
+@@ -49,6 +49,7 @@
+                     key={item.text}
+                     onClick={() => {
+                       setMenu("");
++                      triggerRef.current?.focus({ preventScroll: true });
+                       item.action();
+                     }}
+                   >
+--- a/src/components/canvas/AddNodeMenu.tsx
++++ b/src/components/canvas/AddNodeMenu.tsx
+@@ -7,6 +7,7 @@
+   type ReactNode,
+ } from "react";
+ import { createPortal } from "react-dom";
++import { useDismissible } from "../useDismissible";
+ import type { CanvasItemKind } from "../../domain/canvasItems";
+ import type { AddMenuState } from "./useCanvasAddMenu";
+ import { pluginStore } from "../../features/plugins/pluginStore";
+@@ -57,6 +58,14 @@
+   onDismiss: (restoreFocus?: boolean) => void;
+ }) {
+   const ref = useRef<HTMLDivElement>(null);
++  const trigger = useRef(menu.trigger);
++  trigger.current = menu.trigger;
++  useDismissible(
++    true,
++    ref,
++    () => onDismiss(),
++    menu.atPoint ? undefined : trigger,
++  );
+   const pluginState = useSyncExternalStore(
+     pluginStore.subscribe,
+     pluginStore.getState,
+@@ -96,16 +105,18 @@
+   }, [menu]);
+   useEffect(() => {
+     const outside = (event: Event): void => {
+-      if (event.target instanceof Node && !ref.current?.contains(event.target))
++      if (
++        event.target instanceof Node &&
++        !ref.current?.contains(event.target) &&
++        (menu.atPoint || !menu.trigger.contains(event.target))
++      )
+         onDismiss(false);
+     };
+-    document.addEventListener("pointerdown", outside, true);
+     document.addEventListener("focusin", outside, true);
+     return () => {
+-      document.removeEventListener("pointerdown", outside, true);
+       document.removeEventListener("focusin", outside, true);
+     };
+-  }, [onDismiss]);
++  }, [menu.trigger, menu.atPoint, onDismiss]);
+   return createPortal(
+     <div
+       ref={ref}
+@@ -118,10 +129,6 @@
+       onKeyDown={(event) => {
+         if (event.nativeEvent.isComposing) return;
+         event.stopPropagation();
+-        if (event.key === "Escape") {
+-          event.preventDefault();
+-          onDismiss();
+-        }
+         if (event.key === "Tab") onDismiss();
+         if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key))
+           return;
+--- a/src/components/canvas/CanvasHud.tsx
++++ b/src/components/canvas/CanvasHud.tsx
+@@ -5,6 +5,7 @@
+ 
+ /** Screen-space controls wrap together when the usable canvas becomes narrow. */
+ export default function CanvasHud({
++  projectStatus,
+   chatOpen,
+   onChat,
+   onConfigure,
+@@ -14,6 +15,7 @@
+   onRetryTask,
+   children,
+ }: {
++  projectStatus?: ReactNode;
+   chatOpen: boolean;
+   onChat: () => void;
+   onConfigure: () => void;
+@@ -37,6 +39,7 @@
+           onCancelTask={onCancelTask}
+           onRetryTask={onRetryTask}
+         />
++        {projectStatus}
+       </div>
+       <div className="canvas-hud-right">
+         {children}
+--- a/src/components/canvas/TaskDetail.tsx
++++ b/src/components/canvas/TaskDetail.tsx
+@@ -0,0 +1,105 @@
++import { useEffect, useRef, type RefObject } from "react";
++import { useDismissible } from "../useDismissible";
++import type { PrototypeTask } from "./TaskPanelPopover";
++
++export default function TaskDetail({
++  selectedTask,
++  onCancelTask,
++  onRetryTask,
++  onClose,
++  trigger,
++}: {
++  selectedTask: PrototypeTask;
++  onCancelTask?: (taskId: string) => void;
++  onRetryTask?: (taskId: string) => void;
++  onClose: () => void;
++  trigger: RefObject<HTMLButtonElement>;
++}) {
++  const root = useRef<HTMLDivElement>(null);
++  function close() {
++    onClose();
++    trigger.current?.focus({ preventScroll: true });
++  }
++  useDismissible(true, root, close, trigger);
++  useEffect(() => {
++    root.current
++      ?.querySelector<HTMLButtonElement>("button")
++      ?.focus({ preventScroll: true });
++  }, [selectedTask.id]);
++  return (
++    <div ref={root} className="task-detail" role="dialog" aria-label="任务详情">
++      <div className="task-detail-heading">
++        <span>任务详情</span>
++        <button type="button" aria-label="关闭任务详情" onClick={close}>
++          <img
++            src="/design/figma/task-close.svg"
++            width={7}
++            height={7}
++            alt=""
++            draggable={false}
++          />
++        </button>
++      </div>
++      <div className="task-detail-body">
++        <img
++          src={selectedTask.image}
++          width={40}
++          height={39}
++          alt={selectedTask.task ? "任务结果预览" : "演示任务占位图"}
++          draggable={false}
++        />
++        <div>
++          <strong>
++            {selectedTask.task
++              ? selectedTask.task.status === "queued" &&
++                selectedTask.task.error?.includes("暂停")
++                ? "已暂停"
++                : selectedTask.task.status === "unknown"
++                  ? "受理状态不明 · 需核对供应商"
++                  : selectedTask.statusLabel
++              : selectedTask.status === "running"
++                ? "正在生成中"
++                : "已完成 · 本地演示"}
++          </strong>
++          <span>
++            {selectedTask.task
++              ? `${selectedTask.task.completedOutputs}/${selectedTask.task.requestedOutputs} 输出 · ${selectedTask.task.providerName ?? "连接未绑定"}`
++              : `${selectedTask.date ?? "本次会话"}${selectedTask.duration ? ` · ${selectedTask.duration}` : ""}`}
++          </span>
++        </div>
++      </div>
++      {selectedTask.task &&
++        (selectedTask.task.status === "running" ||
++          selectedTask.task.status === "queued") &&
++        onCancelTask && (
++          <button
++            type="button"
++            className="task-detail-action"
++            onClick={() => onCancelTask(selectedTask.task!.id)}
++          >
++            取消任务
++          </button>
++        )}
++      {selectedTask.task &&
++        ["failed", "partial", "cancelled", "offline", "interrupted"].includes(
++          selectedTask.task.status,
++        ) &&
++        onRetryTask && (
++          <button
++            type="button"
++            className="task-detail-action"
++            onClick={() => onRetryTask(selectedTask.task!.id)}
++          >
++            重试任务
++          </button>
++        )}
++      <p>
++        {selectedTask.task
++          ? selectedTask.task.status === "unknown"
++            ? "供应商可能已受理；已暂停普通重试，请先在供应商侧核对。"
++            : "任务来源、模型和结果仅来自当前本地快照。"
++          : "Prototype · 固定测试素材，不上传或保存到服务器。"}
++      </p>
++    </div>
++  );
++}
+--- a/src/components/canvas/TaskPanel.tsx
++++ b/src/components/canvas/TaskPanel.tsx
+@@ -77,6 +77,9 @@
+   const dismiss = useCallback(() => {
+     setOpen(false);
+     setSelectedTask(null);
++    ref.current
++      ?.querySelector<HTMLButtonElement>(".task-button")
++      ?.focus({ preventScroll: true });
+   }, []);
+   useDismissible(open, ref, dismiss);
+   const displayTasks = tasks.length ? tasks.map(liveTaskCard) : PROTOTYPE_TASKS;
+--- a/src/components/canvas/TaskPanelPopover.tsx
++++ b/src/components/canvas/TaskPanelPopover.tsx
+@@ -1,4 +1,5 @@
+-import type { Dispatch, SetStateAction } from "react";
++import { useRef, type Dispatch, type SetStateAction } from "react";
++import TaskDetail from "./TaskDetail";
+ import type {
+   CreationTask,
+   CreationTaskStatus,
+@@ -62,6 +63,7 @@
+   onRetryTask?: (taskId: string) => void;
+   onDismiss: () => void;
+ }) {
++  const detailTrigger = useRef<HTMLButtonElement | null>(null);
+   return (
+     <section
+       className="task-panel"
+@@ -131,7 +133,10 @@
+                     : `查看演示任务 ${task.date}`
+               }
+               aria-expanded={selectedTask?.id === task.id}
+-              onClick={() => setSelectedTask(task)}
++              onClick={(event) => {
++                detailTrigger.current = event.currentTarget;
++                setSelectedTask(selectedTask?.id === task.id ? null : task);
++              }}
+               title={
+                 task.task
+                   ? `${task.statusLabel} · ${task.task.providerName ?? "连接未绑定"}`
+@@ -170,88 +175,13 @@
+         </div>
+       )}
+       {selectedTask && (
+-        <div className="task-detail" role="dialog" aria-label="任务详情">
+-          <div className="task-detail-heading">
+-            <span>任务详情</span>
+-            <button
+-              type="button"
+-              aria-label="关闭任务详情"
+-              onClick={() => setSelectedTask(null)}
+-            >
+-              <img
+-                src="/design/figma/task-close.svg"
+-                width={7}
+-                height={7}
+-                alt=""
+-                draggable={false}
+-              />
+-            </button>
+-          </div>
+-          <div className="task-detail-body">
+-            <img
+-              src={selectedTask.image}
+-              width={40}
+-              height={39}
+-              alt={selectedTask.task ? "任务结果预览" : "演示任务占位图"}
+-              draggable={false}
+-            />
+-            <div>
+-              <strong>
+-                {selectedTask.task
+-                  ? selectedTask.task.status === "queued" &&
+-                    selectedTask.task.error?.includes("暂停")
+-                    ? "已暂停"
+-                    : selectedTask.task.status === "unknown"
+-                      ? "受理状态不明 · 需核对供应商"
+-                      : selectedTask.statusLabel
+-                  : selectedTask.status === "running"
+-                    ? "正在生成中"
+-                    : "已完成 · 本地演示"}
+-              </strong>
+-              <span>
+-                {selectedTask.task
+-                  ? `${selectedTask.task.completedOutputs}/${selectedTask.task.requestedOutputs} 输出 · ${selectedTask.task.providerName ?? "连接未绑定"}`
+-                  : `${selectedTask.date ?? "本次会话"}${selectedTask.duration ? ` · ${selectedTask.duration}` : ""}`}
+-              </span>
+-            </div>
+-          </div>
+-          {selectedTask.task &&
+-            (selectedTask.task.status === "running" ||
+-              selectedTask.task.status === "queued") &&
+-            onCancelTask && (
+-              <button
+-                type="button"
+-                className="task-detail-action"
+-                onClick={() => onCancelTask(selectedTask.task!.id)}
+-              >
+-                取消任务
+-              </button>
+-            )}
+-          {selectedTask.task &&
+-            [
+-              "failed",
+-              "partial",
+-              "cancelled",
+-              "offline",
+-              "interrupted",
+-            ].includes(selectedTask.task.status) &&
+-            onRetryTask && (
+-              <button
+-                type="button"
+-                className="task-detail-action"
+-                onClick={() => onRetryTask(selectedTask.task!.id)}
+-              >
+-                重试任务
+-              </button>
+-            )}
+-          <p>
+-            {selectedTask.task
+-              ? selectedTask.task.status === "unknown"
+-                ? "供应商可能已受理；已暂停普通重试，请先在供应商侧核对。"
+-                : "任务来源、模型和结果仅来自当前本地快照。"
+-              : "Prototype · 固定测试素材，不上传或保存到服务器。"}
+-          </p>
+-        </div>
++        <TaskDetail
++          selectedTask={selectedTask}
++          onCancelTask={onCancelTask}
++          onRetryTask={onRetryTask}
++          onClose={() => setSelectedTask(null)}
++          trigger={detailTrigger}
++        />
+       )}
+       {onOpenTasks && (
+         <button
+--- a/src/components/canvas/useCanvasAddMenu.ts
++++ b/src/components/canvas/useCanvasAddMenu.ts
+@@ -27,6 +27,15 @@
+     setMenu(null);
+   }
+   function open(request: AddMenuRequest): void {
++    if (
++      menu &&
++      menu.trigger === request.trigger &&
++      !request.atPoint &&
++      !menu.atPoint
++    ) {
++      dismiss();
++      return;
++    }
+     const canvas = container.current;
+     if (!canvas) return;
+     const point = toSurfacePoint(canvas, request.client);
+--- a/src/components/useDismissible.ts
++++ b/src/components/useDismissible.ts
+@@ -3,7 +3,7 @@
+ type DismissibleEntry = {
+   ref: RefObject<HTMLElement>;
+   dismiss: () => void;
+-  trigger?: RefObject<HTMLButtonElement>;
++  trigger?: RefObject<HTMLElement>;
+ };
+ 
+ // The last mounted open entry is the topmost popover. A shared stack avoids
+@@ -31,7 +31,7 @@
+     entry.ref.current?.querySelector<HTMLButtonElement>(
+       'button[aria-expanded="true"], button[aria-haspopup]',
+     );
+-  if (trigger?.isConnected && !trigger.disabled) {
++  if (trigger?.isConnected && !trigger.matches(":disabled")) {
+     trigger.focus({ preventScroll: true });
+   }
+ }
+@@ -40,7 +40,7 @@
+   open: boolean,
+   ref: RefObject<HTMLElement>,
+   dismiss: () => void,
+-  trigger?: RefObject<HTMLButtonElement>,
++  trigger?: RefObject<HTMLElement>,
+ ): void {
+   const dismissRef = useRef(dismiss);
+   dismissRef.current = dismiss;
+--- a/src/domain/canvasViewport.ts
++++ b/src/domain/canvasViewport.ts
+@@ -14,6 +14,12 @@
+ 
+ export const MIN_SCALE = 0.2;
+ export const MAX_SCALE = 4;
++
++/** Coarsen the visible lattice at low zoom instead of merging or hiding dots. */
++export function canvasPatternPitch(scale: number): number {
++  const pitch = 24 * scale;
++  return pitch * 2 ** Math.max(0, Math.ceil(Math.log2(12 / pitch)));
++}
+ 
+ export function zoomAtPoint(
+   current: ViewTransform,
+--- a/src/styles/canvas-hud.css
++++ b/src/styles/canvas-hud.css
+@@ -16,9 +16,29 @@
+ }
+ .canvas-hud-actions {
+   display: flex;
+-  align-items: center;
+-  gap: 14px;
+-  flex-shrink: 0;
++  flex-direction: column;
++  align-items: flex-start;
++  gap: 8px;
++  min-width: 0;
++  max-width: min(420px, 100%);
++  flex-shrink: 1;
++}
++.canvas-hud .project-task-status {
++  position: static;
++  max-width: 100%;
++  min-width: 0;
++  flex-wrap: wrap;
++  overflow-wrap: anywhere;
++  gap: 4px 8px;
++  font-size: var(--ui-font-body);
++}
++.canvas-hud .project-task-status strong {
++  min-width: 0;
++  max-width: 100%;
++}
++.canvas-hud .project-task-status > span {
++  min-width: 0;
++  max-width: 100%;
+ }
+ .canvas-hud-right {
+   display: flex;
+@@ -190,6 +210,12 @@
+   .canvas-hud-actions {
+     gap: 8px;
+   }
++  .canvas-hud-right {
++    max-width: 100%;
++    flex-shrink: 1;
++    flex-wrap: wrap;
++    justify-content: flex-end;
++  }
+   .canvas-hud .demo-library-trigger,
+   .canvas-hud .chat-reopen {
+     font-size: 11px;
+--- a/src/styles/sidebar.css
++++ b/src/styles/sidebar.css
+@@ -605,3 +605,7 @@
+     opacity: 1;
+   }
+ }
++.project-group-content[hidden],
++.project-groups section[hidden] {
++  display: none;
++}
+--- a/tests/browser/catalog-pages.spec.ts
++++ b/tests/browser/catalog-pages.spec.ts
+@@ -250,7 +250,7 @@
+   await expect(menu).toBeVisible();
+   await menu.getByRole("menuitemradio", { name: "仅显示未分组" }).click();
+   await expect(menu).toHaveCount(0);
+-  await expect(sidebar.locator(".project-entry")).toHaveCount(1);
++  await expect(sidebar.locator(".project-entry:visible")).toHaveCount(1);
+   await sidebar.getByRole("button", { name: "项目显示与排序" }).click();
+   await sidebar
+     .getByRole("menu", { name: "项目显示与排序" })
+--- a/tests/browser/frame-accuracy.spec.ts
++++ b/tests/browser/frame-accuracy.spec.ts
+@@ -97,7 +97,7 @@
+   await rect(page, ".conversation-panel", [1430, 61, 470, 998]);
+   await rect(
+     page,
+-    ".project-groups > section:last-of-type > .project-entry",
++    ".project-groups > section:last-of-type > .project-group-content > .project-entry",
+     [14, 511, 263, 29],
+   );
+   await rect(page, ".canvas-top-right", [1138.015625, 72, 280.984375, 31.109]);
+@@ -201,7 +201,7 @@
+   const row = page.locator(".project-entry").first();
+   await rect(
+     page,
+-    ".project-groups > section:first-of-type > .project-entry > .project-pin",
++    ".project-groups > section:first-of-type > .project-group-content > .project-entry > .project-pin",
+     [230, 413, 20, 21],
+   );
+   await expect(
+--- a/tests/browser/ui-interaction-matrix.spec.ts
++++ b/tests/browser/ui-interaction-matrix.spec.ts
+@@ -0,0 +1,226 @@
++import { expect, test, type Locator } from "@playwright/test";
++import { openWorkspace, showCanvasNavigation } from "./helpers";
++import { ACCENTS, contrast } from "../helpers/designSystem.ts";
++
++async function toggleCycle(trigger: Locator, popup: Locator) {
++  await trigger.click();
++  await expect(popup).toBeVisible();
++  await trigger.click();
++  await expect(popup).toBeHidden();
++  await trigger.click();
++  await expect(popup).toBeVisible();
++  await trigger.press("Escape");
++  await expect(popup).toBeHidden();
++  await expect(trigger).toBeFocused();
++}
++
++for (const width of [390, 768, 1280, 1920]) {
++  test(`canvas popovers toggle, dismiss and return focus at ${width}`, async ({
++    page,
++  }) => {
++    await page.setViewportSize({ width, height: width < 800 ? 844 : 1080 });
++    await openWorkspace(page);
++    await showCanvasNavigation(page);
++    for (const [label, selector] of [
++      ["打开任务列表", ".task-panel"],
++      ["添加资源", ".add-node-menu"],
++      ["选择画布工具", ".canvas-tool-menu"],
++      ["帮助与快捷键", ".canvas-help-menu"],
++      ["画布缩放", ".canvas-zoom-menu"],
++      ["小地图", ".canvas-minimap"],
++    ]) {
++      await toggleCycle(
++        page.getByRole("button", { name: label, exact: true }),
++        page.locator(selector),
++      );
++    }
++    await page.getByRole("button", { name: "添加资源", exact: true }).click();
++    await page
++      .getByRole("button", { name: "选择画布工具", exact: true })
++      .click();
++    await expect(page.locator(".add-node-menu")).toHaveCount(0);
++    await expect(page.locator(".canvas-tool-menu")).toBeVisible();
++    await page.getByRole("button", { name: "画布缩放", exact: true }).click();
++    await expect(page.locator(".canvas-tool-menu")).toHaveCount(0);
++    await page.keyboard.press("Escape");
++    const tasks = page.getByRole("button", {
++      name: "打开任务列表",
++      exact: true,
++    });
++    await tasks.click();
++    await page
++      .getByRole("button", { name: "关闭任务列表", exact: true })
++      .click();
++    await expect(tasks).toBeFocused();
++    const closeChat = page.getByRole("button", {
++      name: "收起对话",
++      exact: true,
++    });
++    if (await closeChat.isVisible()) await closeChat.click();
++    const openChat = page.getByRole("button", {
++      name: "打开对话",
++      exact: true,
++    });
++    const triggerBox = (await openChat.boundingBox())!;
++    const canvasBox = (await page
++      .getByTestId("infinite-canvas")
++      .boundingBox())!;
++    expect(triggerBox.x + triggerBox.width).toBeLessThanOrEqual(
++      canvasBox.x + canvasBox.width,
++    );
++    await openChat.click();
++    await expect(page.locator(".conversation-panel")).toBeVisible();
++    await closeChat.click();
++    await expect(openChat).toBeFocused();
++  });
++
++  test(`HUD stays separate through sidebar and chat folding at ${width}`, async ({
++    page,
++  }, info) => {
++    await page.setViewportSize({ width, height: width < 800 ? 844 : 1080 });
++    await page.emulateMedia({ reducedMotion: "reduce" });
++    await openWorkspace(page);
++    await showCanvasNavigation(page);
++    for (const folded of [false, true]) {
++      const sidebar = page.locator(".sidebar");
++      if (width > 800 && folded)
++        await page
++          .getByRole("button", { name: "收起侧边栏", exact: true })
++          .click();
++      for (const theme of ["dark", "light"]) {
++        await page
++          .getByRole("button", { name: "打开设置", exact: true })
++          .click();
++        const settings = page.getByRole("dialog", {
++          name: "设置",
++          exact: true,
++        });
++        await settings.getByLabel("主题", { exact: true }).selectOption(theme);
++        await settings
++          .getByLabel("强调色", { exact: true })
++          .selectOption(folded ? "orange" : "default");
++        await page.keyboard.press("Escape");
++        if (
++          width <= 800 &&
++          !(await sidebar.getAttribute("class"))?.includes("is-collapsed")
++        )
++          await page.keyboard.press("Escape");
++        // Synthetic long copy stresses layout only; it does not claim a real provider response.
++        await page.locator(".project-task-status strong").evaluate((el) => {
++          el.textContent = "包含很长名称的项目与生成进度状态".repeat(5);
++        });
++        const selectors = [
++          ".task-button",
++          ".project-task-status",
++          ".canvas-top-right",
++          ".canvas-toolbar",
++        ];
++        const boxes = await Promise.all(
++          selectors.map((selector) => page.locator(selector).boundingBox()),
++        );
++        for (let i = 0; i < boxes.length; i++) {
++          const a = boxes[i]!;
++          expect(a, selectors[i]).toBeTruthy();
++          expect(a.x, selectors[i]).toBeGreaterThanOrEqual(0);
++          expect(a.x + a.width, selectors[i]).toBeLessThanOrEqual(width + 1);
++          for (let j = i + 1; j < boxes.length; j++) {
++            const b = boxes[j]!;
++            const area =
++              Math.max(
++                0,
++                Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x),
++              ) *
++              Math.max(
++                0,
++                Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y),
++              );
++            expect(area, `${selectors[i]} overlaps ${selectors[j]}`).toBe(0);
++          }
++        }
++        const paint = await page
++          .locator(".project-task-status")
++          .evaluate((el) => ({
++            color: getComputedStyle(el).color,
++            bg: getComputedStyle(el).backgroundColor,
++          }));
++        expect(contrast(paint.color, paint.bg)).toBeGreaterThanOrEqual(4.5);
++        await page.screenshot({
++          path: info.outputPath(`${theme}-${folded ? "folded" : "open"}.png`),
++          animations: "disabled",
++        });
++      }
++    }
++  });
++}
++
++test("sidebar menus, app menus and prompt dialog keep closure and focus contracts", async ({
++  page,
++}) => {
++  await page.goto("/");
++  await toggleCycle(
++    page.getByRole("button", { name: "项目显示与排序", exact: true }),
++    page.getByRole("menu", { name: "项目显示与排序" }),
++  );
++  await toggleCycle(
++    page.getByRole("button", { name: "个人信息", exact: true }),
++    page.getByLabel("个人信息（本地 Prototype）"),
++  );
++  const menus = page.getByRole("navigation", { name: "应用菜单" });
++  for (const name of ["文件", "编辑", "窗口", "帮助"])
++    await toggleCycle(
++      menus.getByRole("button", { name, exact: true }),
++      menus.locator(".menu-popover"),
++    );
++  const trigger = menus.getByRole("button", { name: "文件", exact: true });
++  await trigger.click();
++  await menus.getByRole("button", { name: "提示词库", exact: true }).click();
++  await expect(menus.locator(".menu-popover")).toHaveCount(0);
++  await expect(
++    page.getByRole("dialog", { name: "提示词库", exact: true }),
++  ).toBeVisible();
++  await page.keyboard.press("Escape");
++  await expect(trigger).toBeFocused();
++});
++
++test("minimum-zoom patterns remain visible for both themes and all accents", async ({
++  page,
++}) => {
++  await openWorkspace(page);
++  await showCanvasNavigation(page);
++  const canvas = page.getByTestId("infinite-canvas");
++  await canvas.focus();
++  for (let i = 0; i < 20; i++) await page.keyboard.press("Control+-");
++  for (const theme of ["dark", "light"]) {
++    for (const accent of ACCENTS) {
++      await page.getByRole("button", { name: "打开设置", exact: true }).click();
++      const settings = page.getByRole("dialog", { name: "设置", exact: true });
++      await settings.getByLabel("主题", { exact: true }).selectOption(theme);
++      await settings.getByLabel("强调色", { exact: true }).selectOption(accent);
++      await page.keyboard.press("Escape");
++      for (const pattern of ["dots", "grid"]) {
++        if (
++          !(await canvas.getAttribute("class"))?.includes(
++            `canvas-pattern-${pattern}`,
++          )
++        )
++          await page
++            .getByRole("button", {
++              name: pattern === "dots" ? "切换为点状背景" : "切换为网格背景",
++              exact: true,
++            })
++            .click();
++        const paint = await canvas.evaluate((el) => {
++          const style = getComputedStyle(el);
++          return {
++            pitch: parseFloat(style.backgroundSize),
++            image: style.backgroundImage,
++            opacity: Number(style.getPropertyValue("--canvas-pattern-opacity")),
++          };
++        });
++        expect(paint.pitch).toBeGreaterThanOrEqual(12);
++        expect(paint.image).not.toBe("none");
++        expect(paint.opacity).toBeGreaterThan(0.1);
++      }
++    }
++  }
++});
+--- a/tests/browser/ui-interactions.spec.ts
++++ b/tests/browser/ui-interactions.spec.ts
+@@ -0,0 +1,207 @@
++import { expect, test } from "@playwright/test";
++import { openWorkspace, showCanvasNavigation } from "./helpers";
++
++test("project status and task entry do not cover each other", async ({
++  page,
++}, info) => {
++  await openWorkspace(page);
++  const status = page.locator(".project-task-status");
++  const tasks = page.locator(".task-button");
++  await expect(status).toBeVisible();
++  await expect(tasks).toBeVisible();
++  const a = (await status.boundingBox())!;
++  const b = (await tasks.boundingBox())!;
++  const overlap =
++    Math.max(0, Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x)) *
++    Math.max(0, Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y));
++  await page.screenshot({
++    path: info.outputPath("workspace-status.png"),
++    animations: "disabled",
++  });
++  expect(overlap, JSON.stringify({ status: a, tasks: b })).toBe(0);
++});
++
++test("minimum zoom keeps background dots separated and grid visible", async ({
++  page,
++}, info) => {
++  await openWorkspace(page);
++  await showCanvasNavigation(page);
++  const canvas = page.getByRole("region", { name: "无限画布" });
++  await canvas.focus();
++  for (let i = 0; i < 20; i++) await page.keyboard.press("Control+-");
++  await expect(
++    page.getByRole("button", { name: "画布缩放", exact: true }),
++  ).toHaveText("20%");
++  const pitch = await canvas.evaluate((el) =>
++    parseFloat(getComputedStyle(el).backgroundSize),
++  );
++  await page.screenshot({
++    path: info.outputPath("dots-20.png"),
++    animations: "disabled",
++  });
++  await page
++    .getByRole("button", { name: "切换为网格背景", exact: true })
++    .click();
++  const opacity = await canvas.evaluate((el) =>
++    Number(getComputedStyle(el).getPropertyValue("--canvas-pattern-opacity")),
++  );
++  await page.screenshot({
++    path: info.outputPath("grid-20.png"),
++    animations: "disabled",
++  });
++  expect(
++    pitch,
++    "small dots must not merge into a nearly solid field",
++  ).toBeGreaterThanOrEqual(12);
++  expect(opacity, "grid must not become fully transparent").toBeGreaterThan(
++    0.1,
++  );
++});
++
++test("collapsing a project group preserves edited row state", async ({
++  page,
++}) => {
++  await page.goto("/");
++  const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
++  const row = sidebar.locator(".project-entry").first();
++  await row.locator(".project-link").click({ button: "right" });
++  await sidebar.getByRole("menuitem", { name: "改名字", exact: true }).click();
++  await sidebar
++    .getByLabel("项目名称", { exact: true })
++    .fill("折叠后仍保留的名称");
++  await page.keyboard.press("Enter");
++  const toggle = sidebar.locator(".project-groups-title");
++  await toggle.click();
++  await expect(toggle).toHaveAttribute("aria-expanded", "false");
++  await expect(
++    sidebar.getByRole("button", { name: "折叠后仍保留的名称", exact: true }),
++  ).toBeHidden();
++  await toggle.click();
++  await expect(
++    sidebar.getByRole("button", { name: "折叠后仍保留的名称", exact: true }),
++  ).toBeVisible();
++});
++
++test("new project folder heading actually toggles its contents", async ({
++  page,
++}) => {
++  await page.goto("/");
++  await page
++    .getByRole("button", { name: "创建项目文件夹", exact: true })
++    .click();
++  const toggle = page.getByRole("button", { name: "新建文件夹", exact: true });
++  await expect(toggle).toHaveAttribute("aria-expanded", "true");
++  await toggle.click();
++  await expect(toggle).toHaveAttribute("aria-expanded", "false");
++  await expect(page.locator(".project-folder-empty")).toBeHidden();
++  await toggle.click();
++  await expect(page.locator(".project-folder-empty")).toBeVisible();
++});
++
++test("pressing the canvas add trigger again closes its menu", async ({
++  page,
++}) => {
++  await openWorkspace(page);
++  await showCanvasNavigation(page);
++  const trigger = page.getByRole("button", { name: "添加资源", exact: true });
++  await trigger.click();
++  await expect(trigger).toHaveAttribute("aria-expanded", "true");
++  await trigger.click();
++  await expect(trigger).toHaveAttribute("aria-expanded", "false");
++  await expect(page.locator(".add-node-menu")).toHaveCount(0);
++  await expect(trigger).toBeFocused();
++});
++
++test("dragging from inside a modal to its backdrop does not dismiss it", async ({
++  page,
++}) => {
++  await page.goto("/");
++  await page.getByRole("button", { name: "打开设置", exact: true }).click();
++  const modal = page.getByRole("dialog", { name: "设置", exact: true });
++  const box = (await modal.boundingBox())!;
++  await page.mouse.move(box.x + box.width / 2, box.y + 25);
++  await page.mouse.down();
++  await page.mouse.move(3, 3, { steps: 10 });
++  await page.mouse.up();
++  await expect(modal).toBeVisible();
++  await page.mouse.click(3, 3);
++  await expect(modal).toHaveCount(0);
++  await expect(
++    page.getByRole("button", { name: "打开设置", exact: true }),
++  ).toBeFocused();
++});
++
++test("task details close before their parent and restore the task card focus", async ({
++  page,
++}) => {
++  await openWorkspace(page);
++  await page.getByRole("button", { name: "打开任务列表", exact: true }).click();
++  const card = page.getByRole("button", {
++    name: "查看演示任务 2026/9/5",
++    exact: true,
++  });
++  await card.click();
++  await page.keyboard.press("Escape");
++  await expect(
++    page.getByRole("dialog", { name: "任务详情", exact: true }),
++  ).toHaveCount(0);
++  await expect(
++    page.getByRole("region", { name: "任务列表", exact: true }),
++  ).toBeVisible();
++  await expect(card).toBeFocused();
++  await card.click();
++  await page.getByRole("button", { name: "关闭任务详情", exact: true }).click();
++  await expect(card).toBeFocused();
++  await expect(
++    page.getByRole("dialog", { name: "任务详情", exact: true }),
++  ).toHaveCount(0);
++});
++
++test("a canvas-positioned add menu closes on another blank canvas click", async ({
++  page,
++}) => {
++  await openWorkspace(page);
++  await page.mouse.dblclick(580, 850);
++  await expect(page.locator(".add-node-menu")).toBeVisible();
++  await page.mouse.click(1000, 850);
++  await expect(page.locator(".add-node-menu")).toHaveCount(0);
++});
++
++test("responsive sidebar collapse clears hidden project menus without losing row state", async ({
++  page,
++}) => {
++  await page.goto("/");
++  await page
++    .getByRole("button", { name: "更多项目设置", exact: true })
++    .last()
++    .click();
++  await expect(
++    page.getByRole("menu", { name: "项目设置", exact: true }),
++  ).toBeVisible();
++  await page.setViewportSize({ width: 390, height: 844 });
++  await page.setViewportSize({ width: 1920, height: 1080 });
++  await expect(
++    page.getByRole("menu", { name: "项目设置", exact: true }),
++  ).toHaveCount(0);
++});
++
++test("canvas prompt expansion and conversation folding retain the draft and selected node", async ({
++  page,
++}) => {
++  await openWorkspace(page);
++  const node = page.getByTestId("canvas-node-image");
++  await node.focus();
++  await page.keyboard.press("Enter");
++  const prompt = page.getByLabel("图片提示词", { exact: true });
++  await prompt.fill("展开收起后仍保留的画布草稿");
++  const position = await node.getAttribute("style");
++  await page.getByRole("button", { name: "展开提示词", exact: true }).click();
++  await expect(
++    page.getByRole("button", { name: "收起提示词", exact: true }),
++  ).toHaveAttribute("aria-expanded", "true");
++  await page.getByRole("button", { name: "收起提示词", exact: true }).click();
++  await page.getByRole("button", { name: "收起对话", exact: true }).click();
++  await page.getByRole("button", { name: "打开对话", exact: true }).click();
++  await expect(prompt).toHaveValue("展开收起后仍保留的画布草稿");
++  await expect(node).toHaveAttribute("style", position!);
++});

@@ -1,0 +1,578 @@
+{
+  "homeMenu": {
+    "menu": {
+      "x": 38,
+      "y": 376,
+      "width": 190,
+      "height": 84,
+      "top": 376,
+      "right": 228,
+      "bottom": 460,
+      "left": 38
+    },
+    "controls": [
+      {
+        "name": "添加参考素材",
+        "rect": {
+          "x": 38,
+          "y": 374,
+          "width": 44,
+          "height": 44,
+          "top": 374,
+          "right": 82,
+          "bottom": 418,
+          "left": 38
+        },
+        "centerHit": false,
+        "hit": "<button type=\"button\" role=\"menuitemradio\" aria-checked=\"true\">kk-image-2</button>"
+      },
+      {
+        "name": "模型",
+        "rect": {
+          "x": 38,
+          "y": 322,
+          "width": 178,
+          "height": 44,
+          "top": 322,
+          "right": 216,
+          "bottom": 366,
+          "left": 38
+        },
+        "centerHit": true,
+        "hit": "<span>kk-image-2</span>"
+      },
+      {
+        "name": "Skill",
+        "rect": {
+          "x": 220,
+          "y": 322,
+          "width": 64,
+          "height": 44,
+          "top": 322,
+          "right": 284,
+          "bottom": 366,
+          "left": 220
+        },
+        "centerHit": true,
+        "hit": "<span>Skill</span>"
+      },
+      {
+        "name": "插件",
+        "rect": {
+          "x": 288,
+          "y": 322,
+          "width": 64,
+          "height": 44,
+          "top": 322,
+          "right": 352,
+          "bottom": 366,
+          "left": 288
+        },
+        "centerHit": true,
+        "hit": "<span>插件</span>"
+      },
+      {
+        "name": "开启语音输入",
+        "rect": {
+          "x": 86,
+          "y": 374,
+          "width": 44,
+          "height": 44,
+          "top": 374,
+          "right": 130,
+          "bottom": 418,
+          "left": 86
+        },
+        "centerHit": false,
+        "hit": "<button type=\"button\" role=\"menuitemradio\" aria-checked=\"true\">kk-image-2</button>"
+      },
+      {
+        "name": "当前模式：自动",
+        "rect": {
+          "x": 212,
+          "y": 374,
+          "width": 72,
+          "height": 44,
+          "top": 374,
+          "right": 284,
+          "bottom": 418,
+          "left": 212
+        },
+        "centerHit": true,
+        "hit": "<button type=\"button\" class=\"start-mode-button\" aria-label=\"当前模式：自动\" aria-haspopup=\"menu\" aria-expanded=\"false\">自动 <img src=\"/design/figma/composer-chevron.svg\""
+      },
+      {
+        "name": "开始创建项目",
+        "rect": {
+          "x": 308,
+          "y": 374,
+          "width": 44,
+          "height": 44,
+          "top": 374,
+          "right": 352,
+          "bottom": 418,
+          "left": 308
+        },
+        "centerHit": true,
+        "hit": "<img src=\"/design/figma/composer-send.svg\" alt=\"\">"
+      }
+    ]
+  },
+  "heights": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "panel": {
+        "x": 950,
+        "y": 61,
+        "width": 470,
+        "height": 818,
+        "top": 61,
+        "right": 1420,
+        "bottom": 879,
+        "left": 950
+      },
+      "scrollHeight": 816,
+      "clientHeight": 816,
+      "scrollTop": 0,
+      "overflowY": "visible",
+      "input": {
+        "x": 981,
+        "y": 454,
+        "width": 405,
+        "height": 160,
+        "top": 454,
+        "right": 1386,
+        "bottom": 614,
+        "left": 981
+      },
+      "form": {
+        "x": 968,
+        "y": 441,
+        "width": 431,
+        "height": 393,
+        "top": 441,
+        "right": 1399,
+        "bottom": 834,
+        "left": 968
+      },
+      "send": {
+        "x": 1354,
+        "y": 789,
+        "width": 32,
+        "height": 32,
+        "top": 789,
+        "right": 1386,
+        "bottom": 821,
+        "left": 1354
+      },
+      "hit": true,
+      "afterScroll": {
+        "send": {
+          "x": 1354,
+          "y": 789,
+          "width": 32,
+          "height": 32,
+          "top": 789,
+          "right": 1386,
+          "bottom": 821,
+          "left": 1354
+        },
+        "panelScrollTop": 0,
+        "hit": true
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 600
+      },
+      "panel": {
+        "x": 950,
+        "y": 61,
+        "width": 470,
+        "height": 518,
+        "top": 61,
+        "right": 1420,
+        "bottom": 579,
+        "left": 950
+      },
+      "scrollHeight": 516,
+      "clientHeight": 516,
+      "scrollTop": 0,
+      "overflowY": "visible",
+      "input": {
+        "x": 981,
+        "y": 234,
+        "width": 405,
+        "height": 80,
+        "top": 234,
+        "right": 1386,
+        "bottom": 314,
+        "left": 981
+      },
+      "form": {
+        "x": 968,
+        "y": 221,
+        "width": 431,
+        "height": 313,
+        "top": 221,
+        "right": 1399,
+        "bottom": 534,
+        "left": 968
+      },
+      "send": {
+        "x": 1354,
+        "y": 489,
+        "width": 32,
+        "height": 32,
+        "top": 489,
+        "right": 1386,
+        "bottom": 521,
+        "left": 1354
+      },
+      "hit": true,
+      "afterScroll": {
+        "send": {
+          "x": 1354,
+          "y": 489,
+          "width": 32,
+          "height": 32,
+          "top": 489,
+          "right": 1386,
+          "bottom": 521,
+          "left": 1354
+        },
+        "panelScrollTop": 0,
+        "hit": true
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 480
+      },
+      "panel": {
+        "x": 950,
+        "y": 61,
+        "width": 470,
+        "height": 398,
+        "top": 61,
+        "right": 1420,
+        "bottom": 459,
+        "left": 950
+      },
+      "scrollHeight": 477,
+      "clientHeight": 396,
+      "scrollTop": 0,
+      "overflowY": "visible",
+      "input": {
+        "x": 981,
+        "y": 211,
+        "width": 405,
+        "height": 80,
+        "top": 211,
+        "right": 1386,
+        "bottom": 291,
+        "left": 981
+      },
+      "form": {
+        "x": 968,
+        "y": 198,
+        "width": 431,
+        "height": 313,
+        "top": 198,
+        "right": 1399,
+        "bottom": 511,
+        "left": 968
+      },
+      "send": {
+        "x": 1354,
+        "y": 466,
+        "width": 32,
+        "height": 32,
+        "top": 466,
+        "right": 1386,
+        "bottom": 498,
+        "left": 1354
+      },
+      "hit": false,
+      "afterScroll": {
+        "send": {
+          "x": 1354,
+          "y": 448,
+          "width": 32,
+          "height": 32,
+          "top": 448,
+          "right": 1386,
+          "bottom": 480,
+          "left": 1354
+        },
+        "panelScrollTop": 0,
+        "hit": false
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 390
+      },
+      "panel": {
+        "x": 950,
+        "y": 43,
+        "width": 470,
+        "height": 308,
+        "top": 43,
+        "right": 1420,
+        "bottom": 351,
+        "left": 950
+      },
+      "scrollHeight": 477,
+      "clientHeight": 306,
+      "scrollTop": 0,
+      "overflowY": "visible",
+      "input": {
+        "x": 981,
+        "y": 193,
+        "width": 405,
+        "height": 80,
+        "top": 193,
+        "right": 1386,
+        "bottom": 273,
+        "left": 981
+      },
+      "form": {
+        "x": 968,
+        "y": 180,
+        "width": 431,
+        "height": 313,
+        "top": 180,
+        "right": 1399,
+        "bottom": 493,
+        "left": 968
+      },
+      "send": {
+        "x": 1354,
+        "y": 448,
+        "width": 32,
+        "height": 32,
+        "top": 448,
+        "right": 1386,
+        "bottom": 480,
+        "left": 1354
+      },
+      "hit": false,
+      "afterScroll": {
+        "send": {
+          "x": 1354,
+          "y": 275,
+          "width": 32,
+          "height": 32,
+          "top": 275,
+          "right": 1386,
+          "bottom": 307,
+          "left": 1354
+        },
+        "panelScrollTop": 0,
+        "hit": false
+      }
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 480
+      },
+      "panel": {
+        "x": 9,
+        "y": 57,
+        "width": 372,
+        "height": 350,
+        "top": 57,
+        "right": 381,
+        "bottom": 407,
+        "left": 9
+      },
+      "scrollHeight": 577,
+      "clientHeight": 350,
+      "scrollTop": 0,
+      "overflowY": "auto",
+      "input": {
+        "x": 30,
+        "y": 210,
+        "width": 330,
+        "height": 96,
+        "top": 210,
+        "right": 360,
+        "bottom": 306,
+        "left": 30
+      },
+      "form": {
+        "x": 17,
+        "y": 197,
+        "width": 356,
+        "height": 429,
+        "top": 197,
+        "right": 373,
+        "bottom": 626,
+        "left": 17
+      },
+      "send": {
+        "x": 316,
+        "y": 569,
+        "width": 44,
+        "height": 44,
+        "top": 569,
+        "right": 360,
+        "bottom": 613,
+        "left": 316
+      },
+      "hit": false,
+      "afterScroll": {
+        "send": {
+          "x": 316,
+          "y": 342,
+          "width": 44,
+          "height": 44,
+          "top": 342,
+          "right": 360,
+          "bottom": 386,
+          "left": 316
+        },
+        "panelScrollTop": 227,
+        "hit": true
+      }
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "panel": {
+        "x": 423,
+        "y": 57,
+        "width": 400,
+        "height": 320,
+        "top": 57,
+        "right": 823,
+        "bottom": 377,
+        "left": 423
+      },
+      "scrollHeight": 577,
+      "clientHeight": 318,
+      "scrollTop": 259,
+      "overflowY": "auto",
+      "input": {
+        "x": 445,
+        "y": -48,
+        "width": 356,
+        "height": 96,
+        "top": -48,
+        "right": 801,
+        "bottom": 48,
+        "left": 445
+      },
+      "form": {
+        "x": 432,
+        "y": -61,
+        "width": 382,
+        "height": 429,
+        "top": -61,
+        "right": 814,
+        "bottom": 368,
+        "left": 432
+      },
+      "send": {
+        "x": 757,
+        "y": 311,
+        "width": 44,
+        "height": 44,
+        "top": 311,
+        "right": 801,
+        "bottom": 355,
+        "left": 757
+      },
+      "hit": true,
+      "afterScroll": {
+        "send": {
+          "x": 757,
+          "y": 311,
+          "width": 44,
+          "height": 44,
+          "top": 311,
+          "right": 801,
+          "bottom": 355,
+          "left": 757
+        },
+        "panelScrollTop": 259,
+        "hit": true
+      }
+    },
+    {
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "panel": {
+        "x": 9,
+        "y": 57,
+        "width": 342,
+        "height": 510,
+        "top": 57,
+        "right": 351,
+        "bottom": 567,
+        "left": 9
+      },
+      "scrollHeight": 813,
+      "clientHeight": 510,
+      "scrollTop": 207,
+      "overflowY": "auto",
+      "input": {
+        "x": 38,
+        "y": 107,
+        "width": 284,
+        "height": 192,
+        "top": 107,
+        "right": 322,
+        "bottom": 299,
+        "left": 38
+      },
+      "form": {
+        "x": 25,
+        "y": 94,
+        "width": 310,
+        "height": 525,
+        "top": 94,
+        "right": 335,
+        "bottom": 619,
+        "left": 25
+      },
+      "send": {
+        "x": 278,
+        "y": 562,
+        "width": 44,
+        "height": 44,
+        "top": 562,
+        "right": 322,
+        "bottom": 606,
+        "left": 278
+      },
+      "hit": false,
+      "afterScroll": {
+        "send": {
+          "x": 278,
+          "y": 523,
+          "width": 44,
+          "height": 44,
+          "top": 523,
+          "right": 322,
+          "bottom": 567,
+          "left": 278
+        },
+        "panelScrollTop": 246,
+        "hit": true
+      }
+    }
+  ]
+}

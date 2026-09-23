@@ -1,13 +1,15 @@
-# KK Studio
+# KK Studio 2.1.0
 
-KK Studio 是以无限画布为中心的多模态 Agent 工作台。当前唯一有效工程目录是 `D:\kk-studio-next`；旧的 `D:\kk-studio` 已清理，不参与开发、构建或运行时写入。
+KK Studio 是以无限画布为中心的多模态 Agent 工作台。本机唯一工程目录为 `D:\kk-studio\KK-Studio-2.0`。2.0.0 是融合基线，当前版本为 2.1.0；当前能力和未完成项以治理账本为准。
+
+桌面 ZIP 和源码 ZIP 通过构建与验收后，将放入 `releases/2.1.0/` 供分享；当前仅准备源码候选。不要直接压缩整个开发目录：`.git` 是历史，`node_modules` 是开发依赖，`src-tauri/target` 是可生成产物，用户项目和恢复归档也不属于分享内容。分享包使用说明见 [RELEASE.md](RELEASE.md)。
 
 ## 开始开发
 
 所有 AI 先读 [AGENTS.md](AGENTS.md) 和 [AI_RULES.md](AI_RULES.md)。你可以直接用日常语言提出想法，AI 负责转成工程需求、实现、验证和独立复核，最终用简洁中文汇报。多端分支、PR 和发布见 [BRANCH-POLICY](docs/engineering/BRANCH-POLICY.md)。新任务从 fetch 后的 origin/main 创建隔离 worktree；下方路径是本机仓库示例，不表示可以在历史 dirty 根目录直接开发。
 
 ```powershell
-cd D:\kk-studio-next
+cd D:\kk-studio\KK-Studio-2.0
 npm ci
 npm run git:guards
 npm run dev

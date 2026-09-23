@@ -17,6 +17,7 @@ test("current Figma modal shells keep dimensions and settings content origin", a
   expect(await panel.locator(".settings-row h3").allTextContents()).toEqual([
     "语言",
     "主题",
+    "强调色",
     "浮岛布局",
     "去除水印",
     "系统托盘",
@@ -40,7 +41,7 @@ test("current Figma modal shells keep dimensions and settings content origin", a
   await expect(page.locator(".asset-empty")).toBeVisible();
 });
 
-test("unconnected account, proxy and memory controls do not advertise working services", async ({
+test("unconnected account and memory controls do not advertise working services", async ({
   page,
 }) => {
   await page.goto("/");
@@ -53,9 +54,12 @@ test("unconnected account, proxy and memory controls do not advertise working se
     page.getByRole("button", { name: "删除账号", exact: true }),
   ).toBeDisabled();
   await page.getByRole("button", { name: "网络", exact: true }).click();
-  await expect(page.getByLabel("连接方式")).toBeDisabled();
+  await expect(page.locator(".settings-content")).toContainText("本地转发代理");
   await expect(page.locator(".settings-content")).toContainText(
-    "应用内代理尚未接入",
+    "npm run proxy",
+  );
+  await expect(page.locator(".settings-content")).toContainText(
+    "npm run dev:agent",
   );
   await page.getByRole("button", { name: "记忆", exact: true }).click();
   await expect(

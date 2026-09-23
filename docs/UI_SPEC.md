@@ -1,10 +1,26 @@
 # KK Studio UI 运行与复用规范
 
+## 2026-09-23 输入框专项校正（现行）
+
+首页与API/Agent对话遵循 `DESIGN-SYSTEM.md` 1.3 创作输入框契约：共享textarea和几何拥有者，文本自增高且有上限，附件/参数进入正常流，只有外层文本焦点；三档统一图形20/16px及触屏44px目标。旧固定高度/56px间隙/绝对附件、全视口单行操作以及截图中的双层焦点不再作为实现要求。普通字段与画布节点仍分别遵循自身契约。变更证据见 `changes/2026-09-23-input-contract/`。
+
+## 2026-09-22 三档适配校正（现行）
+
+遵循 [Design System 1.3](DESIGN-SYSTEM.md)：手机<768、平板768–1200、电脑>1200。手机为全宽内容/底部导航与项目抽屉；平板默认72px轨道与400px对话覆盖层；电脑按真实视口排版，禁止把整页1920×1080等比缩小。1920px具名Frame保持原尺寸依据。图标槽居中、短标签不拆行、长标题省略、说明正文正常换行。
+
+以下历史章节中的61px手机常驻轨道、801–1200挤压对话、所有控件固定单行、按剩余聊天宽度缩小窄屏工作区、桌面letterbox或缩放整页均已被本条取代，不可用于新页面。三档共用状态并验证断点切换、dvh/安全区、菜单回焦和同态截图。详情见[本轮规格](changes/2026-09-22-responsive-ui/spec.md)。
+
+## 当前设计源
+
+2026-09-22起，颜色/基础组件遵循 [Design System 1.3](DESIGN-SYSTEM.md)；用户Ardot与PDF及校正记录优先。具体页面Figma继续提供布局/资产依据。本文后续日期章节为当时验收记录，不能用旧颜色、通用尺寸或测试数量覆盖新版标准。
+
 ## 完成标准
+
+2026-09-22交互补充（TASK-UI-006）：项目/生成/保存状态纳入CanvasHud流式布局，与任务入口和导航共同占用可用宽度；不能在同一角落分别absolute定位。20%–400%画布点阵/网格保持可见，低比例使用分级格距避免点阵融合；100%原始24px相位保留，颜色继续消费现有tokens。折叠保留业务与草稿状态、清除不可见弹层；同一触发器再次点击关闭。Escape只关闭最上层并回焦，菜单转弹窗使用稳定入口；Modal从内部拖到背景不得误关闭。详见[本批复现与验收](changes/2026-09-22-ui-interactions/audit.md)。
 
 UI 的实现链路固定为：
 
-`最新 Figma Frame → Design Tokens → Shared Components → Actual Source → Browser Verification`
+`用户 Design System + 页面来源 → Design Tokens → Shared Components → Actual Source → Browser Verification`
 
 “代码已修改”“测试已通过”或“Figma 已读取”都不是视觉完成的证据。完成记录必须能回答：浏览器访问的 URL 和端口、它是 development/preview/Tauri 哪种运行模式、当前 route、route 实际 import 的组件文件、源码是否进入当前运行产物，以及同状态浏览器的 DOM 矩形和截图是否变化。
 
@@ -18,7 +34,7 @@ UI 的实现链路固定为：
 
 ## 设计读取与对照
 
-每次视觉修改都要重新读取用户提供的 node-specific Figma Frame 的 design context；不可使用历史缓存或只凭截图估算。记录 frame 尺寸、层级、Auto Layout、padding、gap、尺寸、字体、行高、颜色、边框、圆角和状态。对照顺序是 Figma、当前源代码、当前浏览器实际效果，三者必须使用同一状态和视口。
+每次视觉修改读取用户本次指定的设计来源：Design System可使用带SHA和页码的完整PDF；页面几何/图层/变量仍需对应的在线节点上下文，PDF无法证明的属性明确标未知。记录 frame 尺寸、层级、Auto Layout、padding、gap、尺寸、字体、行高、颜色、边框、圆角和状态。对照顺序是 Figma、当前源代码、当前浏览器实际效果，三者必须使用同一状态和视口。
 
 同一部件有历史记录与最新 Frame 冲突时，以本次用户指定节点的最新读取为准，并在验证记录写明覆盖关系。2026-09-10 的范围是 `404:28667`（Workspace）、`410:67357`（Workspace 收纳）和 `410:59708`（Landing）；旧 `1:2` 与历史尺寸仍用于来源追溯，不能覆盖这些最新节点。
 
@@ -28,7 +44,7 @@ UI 的实现链路固定为：
 
 | 范围                    | 现有唯一入口与复用方式                                                                                        | 验证要求                                                                                                    |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| 颜色、边框              | `global.css` 语义背景/文字/边框与 `ui-tokens.css` 状态色、边框宽度                                            | 深色按 Figma；浅色作为工程补充单独标注                                                                      |
+| 颜色、边框              | `global.css` 语义背景/文字/边框与 `ui-tokens.css` 状态色、边框宽度                                            | 深浅均按Design System；可访问性修正逐项记录                                                                      |
 | 间距、字体、行高        | `ui-tokens.css` 的 gap、font、line-height 层级；特殊 Frame 数值保留来源                                       | 检查 computed style 和实际文字矩形，不仅检查 token 声明                                                     |
 | 圆角、控件高度、图标    | `ui-tokens.css` 尺寸层级、`UiIcon.tsx`、Figma 导出资产；工具栏复用 `ToolbarIcon.tsx`                          | 区分可见图形、图标槽位和命中区域                                                                            |
 | Panel、Sidebar、Toolbar | `ConversationPanel.tsx`、`Sidebar.tsx`、`CanvasToolbar.tsx`，布局复用 `useSidebarLayout`、`useCanvasViewport` | 展开/收起、窄屏及有无聊天面板使用同状态矩形验证                                                             |
@@ -41,7 +57,7 @@ UI 的实现链路固定为：
 
 ## 浏览器验证
 
-源码修改后重新启动实际项目，必要时清理 `node_modules/.vite`、`dist` 并重建，但不得删除用户数据或工作区修改。至少验证桌面和窄屏的布局、sidebar、toolbar、panel、间距、对齐、字体、图标、控件高度与状态交互，并保存同状态 DOM/截图。`pnpm run typecheck`、`pnpm run build` 和适用的 UI/screenshot tests 通过后，仍需报告任何尚未与 Figma 对齐的部分。
+源码修改后重新启动实际项目，必要时清理 `node_modules/.vite`、`dist` 并重建，但不得删除用户数据或工作区修改。至少验证桌面和窄屏的布局、sidebar、toolbar、panel、间距、对齐、字体、图标、控件高度与状态交互，并保存同状态 DOM/截图。`npm run typecheck`、`npm run build` 和适用的 UI/screenshot tests 通过后，仍需报告任何尚未与 Figma 对齐的部分。
 
 ## 2026-09-10 actual runtime and current design contract
 

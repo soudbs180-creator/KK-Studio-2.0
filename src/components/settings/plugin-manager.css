@@ -1,0 +1,60 @@
+.plugin-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.plugin-manager-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: var(--ui-space-5);
+  border: 1px solid var(--settings-border);
+  border-radius: var(--ui-radius-card);
+  background: var(--bg-card);
+}
+.plugin-manager-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.plugin-manager-info strong {
+  font-size: var(--ui-font-label);
+  line-height: var(--ui-line-height-label);
+  color: var(--settings-text);
+}
+.plugin-manager-info span {
+  font-size: 11px;
+  color: var(--settings-muted);
+}
+.plugin-manager-info p {
+  margin: 0;
+  font-size: var(--ui-font-body);
+  line-height: var(--ui-line-height-body);
+  color: var(--settings-muted);
+}
+.plugin-manager-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+.plugin-manager-install {
+  display: flex;
+  gap: 8px;
+}
+.plugin-manager-install input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 32px;
+  padding: 0 10px;
+  border: var(--ui-border-width) solid var(--border-control);
+  border-radius: var(--ui-radius-control);
+  background: var(--bg-input);
+  color: var(--settings-text);
+  font-size: 12px;
+}

@@ -1,0 +1,505 @@
+{
+  "backup": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui-parity-root-preintegration-umfuv_t5",
+  "files": [
+    {
+      "path": "docs/PROGRESS.md",
+      "sha256": "2ff553552872c986434cb2b2afc0959853678430c4cf29179aebacf5105633cd"
+    },
+    {
+      "path": "docs/changes/2026-09-22-design-system/remaining.md",
+      "sha256": "f03432659ee45fd0c5b984871ecb0f929604d01da233203055ec22fae6adbd39"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/audit.md",
+      "sha256": "b4df87bac5feca8e00112a239f328ab429475ff0e85d08795207bb4c818e22da"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/green/.last-run.json",
+      "sha256": "9524a488d6dbf6c5f46152f1624d5612c8cb8905f14eab39e33bf39c17029411"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/green/ui-feature-parity-disconne-f08d6-ot-submit-to-image-creation/error-context.md",
+      "sha256": "8e858a537ddc5731141507c0a857ed285187249994319032e8b4b8c13cf1ca62"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-agent-build.log",
+      "sha256": "9a4e3c27e2a22699229f38e26f64a4396b4b257af10ac3139a3126937c9b501d"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-browser-final.log",
+      "sha256": "6e3d8e6aa6a6e91f4b6f379205289baea75a244d3092c4f4b3320b51d97f47a2"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-build.log",
+      "sha256": "05a3f55712951b48b8617635fbc7245eed79ea5d8e05830bbd7b4de770fbbce8"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-cache-red.log",
+      "sha256": "425f942caaca1d49c2fee7a57fc82919d744733e3808cb5e9a8b7588b85a1799"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-format.log",
+      "sha256": "0835669552122ad3e7f60cf06f0d30e1b1dedbfe25e7e129b9c1232c0a65b414"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-green.log",
+      "sha256": "9ee675003986aa9121c1eda5e401ba389acfa1cadc18f90f8070c06e390a2288"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-node-red.log",
+      "sha256": "80a8bcd1aa4eedb18ac5a13385ee193558ccf7598af966a7d4eeba808ada3e9a"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-protocol-browser.log",
+      "sha256": "066a61fb7f0074190424dcc4297bc46fccee807b09d493962d2e74172cf53a14"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-protocol-final.log",
+      "sha256": "6b36f20380de9113afa0525527c3d967b79486f5a8eb65fe2b7231f509eb6211"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-protocol-green.log",
+      "sha256": "f70c3b15a862226f62e16f3696a534b1f19961cfc022cf1167867411ffecf610"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-protocol-lint.log",
+      "sha256": "929bacfc237265a371f15813302b26ff125eebb570c92c490f93af166cb68436"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-protocol-red.log",
+      "sha256": "2702883375feddf8a1bb2d5f3722b08dee9a351d43ba51c4e024774e0c4d6e2f"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-red.log",
+      "sha256": "4904d31411ba22d58c7aae25e38dbf4eb8c76fd5ed81662cef84b48fa20664e8"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-stop-red.log",
+      "sha256": "2215dd4129193fcb980e65aa9cceabb257fa7ead0bcc1691891774e9d552b9ad"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-target-browser.log",
+      "sha256": "dfc55067fe517a557728d3212670ff4cd6f639af18272f37569bf13a36a6becf"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-target-build.log",
+      "sha256": "a6f835f27251fdb287e1e883469555cc2fb664cceefe14489908053b4b9a2036"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-target-lint.log",
+      "sha256": "929bacfc237265a371f15813302b26ff125eebb570c92c490f93af166cb68436"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-target-unit.log",
+      "sha256": "7a6af142255c373a4e80e2ba9e9bcd7442701ac439af0335a126b3f3658d57d5"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-token-red.log",
+      "sha256": "8bb0dc261d7ef8e94a62405833a94384031e9b4c04be6851c5196e67612ad746"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-unit-green.log",
+      "sha256": "db58118924a496fd16209c2302b998607260b40918e30335cfeab6038bd2688b"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-unit-red.log",
+      "sha256": "3d9ce20f186df97a46541be728d2181a7d4be645da2629a438ab79327a364a01"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-verify-accepted.log",
+      "sha256": "e4d11c8ddec2bb0cdba18689a697a8de2ff27c89124be756605d2583e42364ff"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-verify-final.log",
+      "sha256": "04a497858a99f1b0961adec33947aa48d65087d07cc8e09df1c925c2d340f1bc"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-verify.log",
+      "sha256": "3800647fb795ed8309983a09af65efd16f82df667b29f2577696de4703b18152"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/logs/kk-ui-parity-web.log",
+      "sha256": "35aea2bf1652ee8ef8c16cbe3e12627d3410afdbf6fc8bec7cfb3f9b6a32f738"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/node-red/.last-run.json",
+      "sha256": "bbaed39484a866b519b1d44eb4b579216f6ac3fb99c52cee3bc22ebf4867c324"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/node-red/ui-feature-parity-text-tem-e72ba-es-only-its-demo-capability/error-context.md",
+      "sha256": "90e1dec85499f3c3bfa44c64c68c05abec1b9a3d39287077679fce96217ba1ad"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/red/.last-run.json",
+      "sha256": "03f1a03dcfa689d7ab481fb836b2391f99841eae3198410162fbf0a074742b57"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/red/ui-feature-parity-disconne-f08d6-ot-submit-to-image-creation/error-context.md",
+      "sha256": "8de65cb22508fc7ccecdd78ca1e65d4e34311476135bb6808265e4cba24200a2"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/red/ui-feature-parity-plugin-m-49311-ins-and-opens-their-manager/error-context.md",
+      "sha256": "6fe65a339cc87a659273856a2046fc67f9a5a1cc3135d1e2cc33ced517b9d86b"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/red/ui-feature-parity-prompt-l-68fe9-nds-text-without-submitting/error-context.md",
+      "sha256": "7e69924de110c14e338993c889d41d768a4d76bf6892b503a1f8595bc77395ab"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/.last-run.json",
+      "sha256": "4309b9a5b7ca02ba9767ffe875c443db0f401bed4061b7fda22103943ffd52a6"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-Agent-co-29452-or-feedback-and-no-fallback/error-context.md",
+      "sha256": "18573968fc226be58a87cbe5ee29104cdc5f93c51291c388dac18223ba602683"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-dark.png",
+      "sha256": "0755ffe76241e55dacf84c3f8cec4556989f42a689179c87c05746695fb8b94d"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-light.png",
+      "sha256": "ad2898271120eba852729ec093189258716c733b3145acf4379a292c833e722f"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-dark.png",
+      "sha256": "cc815b550480c4c358a3d852c24831cd38d3a18340367f27c62ce457f46f149b"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-light.png",
+      "sha256": "d246e8a9adbf4b02ddbfff2e5407ce99dc30d84306410e4b71b2cb9e794bcf05"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-dark.png",
+      "sha256": "c8a13d415398197ec15e21c3490125f0812487b425b0a5b80554f39839f7accc"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-final/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-light.png",
+      "sha256": "b50c379f64393a6ef7b8215b7fa08391f2cdea60a403b5d45d51f9db72a2bef8"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-full-results.json",
+      "sha256": "a59bc91c75cb27da411e7fa71042c5dbdb5d877b21147d0cde566e2612768950"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-1920.png",
+      "sha256": "8f2ca17699d8964b2130ef5f0108a427777b94df9556831ba76438666528fda0"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-390.png",
+      "sha256": "e65e12aaa96739644735b311c3c084d17ff6211a1e388fcd77c5366cdfdb31c4"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-768.png",
+      "sha256": "bbc64ad8bd5aa4eb776f3461e1e92026cfdfda6ddc014f48e53b273cc86f0c9d"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-idle.png",
+      "sha256": "bac8b76933ba71ad40f7397ab447936376ad67f6231afb89726f37d89218eb63"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-running.png",
+      "sha256": "712e321cade4745ef0ca69c9fda7b23d4efc21630c3b0b4603ab761f19c9b508"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/agent-warning.png",
+      "sha256": "63c3f6faf75c59ee2fe99790891d7e2afff124bbc7297015ed1c4428bca8964b"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-1920-dark.png",
+      "sha256": "c8a13d415398197ec15e21c3490125f0812487b425b0a5b80554f39839f7accc"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-1920-light.png",
+      "sha256": "b50c379f64393a6ef7b8215b7fa08391f2cdea60a403b5d45d51f9db72a2bef8"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-390-dark.png",
+      "sha256": "cc815b550480c4c358a3d852c24831cd38d3a18340367f27c62ce457f46f149b"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-390-light.png",
+      "sha256": "d246e8a9adbf4b02ddbfff2e5407ce99dc30d84306410e4b71b2cb9e794bcf05"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-768-dark.png",
+      "sha256": "0755ffe76241e55dacf84c3f8cec4556989f42a689179c87c05746695fb8b94d"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web-protocol/prompt-768-light.png",
+      "sha256": "ad2898271120eba852729ec093189258716c733b3145acf4379a292c833e722f"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/.last-run.json",
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-Agent-co-29452-or-feedback-and-no-fallback/agent-running.png",
+      "sha256": "c7f0938b48e7503ae4f8b8254d1bed08b5fb9dbd064e136541caa717a67ac9fe"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-dark.png",
+      "sha256": "5799ab069dabb82e77ed08f001a6ae81bce7e01556ebd9f05a32431fd22df86a"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-1e3bb-ext-errors-and-focus-at-768/prompt-768-light.png",
+      "sha256": "5799ab069dabb82e77ed08f001a6ae81bce7e01556ebd9f05a32431fd22df86a"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-dark.png",
+      "sha256": "8edb5b55fa81dee383aefa3b28b03fa5817febf0f2c0ac77b21feebcbd3709bd"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-7c029-ext-errors-and-focus-at-390/prompt-390-light.png",
+      "sha256": "8edb5b55fa81dee383aefa3b28b03fa5817febf0f2c0ac77b21feebcbd3709bd"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-dark.png",
+      "sha256": "30cc982cd0b23bdc3ea2bf7f7a66b40f787a5377de667a70f432c8850dfe88c6"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/evidence/web/ui-feature-parity-prompt-l-a5938-xt-errors-and-focus-at-1920/prompt-1920-light.png",
+      "sha256": "30cc982cd0b23bdc3ea2bf7f7a66b40f787a5377de667a70f432c8850dfe88c6"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/independent-review-final.md",
+      "sha256": "640d9260f3573f661ad8d9acc2d4db01b976131dc0d748f2bdac73b8b2c53e04"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/independent-review-initial.md",
+      "sha256": "b402ca2106b329aaf802f39dfab27f1076c3f4a18557b520a48ae4c560182c4b"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/independent-review-protocol.md",
+      "sha256": "2f76ddf448396fc87e0f05d310d8fb0de60c863af8ccc030ec487c8547aedf7f"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/intent.md",
+      "sha256": "749de4291f56c0cd2bb07a121b75100d19c678d2577588fc9ccad54a89b7d924"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/plan.md",
+      "sha256": "ac81a1b180fa80167cb56d4f5b4c6ebc6a2028d85c250f8ced18feebaea5a1c4"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/review-delta.patch",
+      "sha256": "59157932b3dbeab1a35161f682be6a7f7d20b4a8f84d1266ed6df11b60265afe"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/review-manifest.json",
+      "sha256": "539153322fb39780e660faf1ad6035c49b28ca9f2b4d071db4768975134804f9"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/review.md",
+      "sha256": "5475fcfffa5a55b8799301dcea227b963f62a5771c296cc767d50429eb6b7288"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/spec.md",
+      "sha256": "9b0ef9e9c14f2400f8ea16acb503a4819f2789857833e561f4388ce81fe6253f"
+    },
+    {
+      "path": "docs/changes/2026-09-22-ui-feature-parity/verification.md",
+      "sha256": "a67031ecfbba18b27d3e5503d456f5953b211e56a2ad8bf040292b70b0e6ca69"
+    },
+    {
+      "path": "docs/features/README.md",
+      "sha256": "d8915780f677ea9b29f3382e3fa493e681e273655e77dca165dadc4319c51a24"
+    },
+    {
+      "path": "docs/features/feat-007-audio-generation.md",
+      "sha256": "2778a85cab7e9f2841e575a991724811be8118129671b7e36226820c698c5203"
+    },
+    {
+      "path": "docs/features/feat-008-text-node.md",
+      "sha256": "5c0ee18e1b219d003c304e93e261190e822809e3501f85d18b0a270e3ff97973"
+    },
+    {
+      "path": "docs/features/feat-009-conversation.md",
+      "sha256": "5f99e80d3e09cc9e52035baad8d278b679c7ac60f5d16d15b2e8cf039e508074"
+    },
+    {
+      "path": "docs/features/feat-013-connectors.md",
+      "sha256": "cf370e67a58e4b194541628c1e1da3077b22e008642e6ee5ef986b2eb1220c92"
+    },
+    {
+      "path": "docs/features/feat-021-proxy.md",
+      "sha256": "e1399563cfb65572232de673cf4bd49cafe49d968ff4929af99d9df0218446b1"
+    },
+    {
+      "path": "docs/features/feat-022-settings.md",
+      "sha256": "da8d1e6390f222c51e12d79309cfa3fc515c40320544904e457275e8ddb9bf82"
+    },
+    {
+      "path": "docs/features/feat-029-prompt-library.md",
+      "sha256": "24720c4fd13d5cc1b5f2032b8f9af7f4e65995c2da87ab50a2bf894228510471"
+    },
+    {
+      "path": "docs/features/features.registry.json",
+      "sha256": "aa187aa65174ec82a6de75d0d0207e7ea2c898a9f57f533de6b758feebc39faa"
+    },
+    {
+      "path": "docs/governance/AI_HANDOFF.md",
+      "sha256": "0b1bda5d229e74d7ccab7d0aff82dda8431a02473b44152258a030c49fcc4f75"
+    },
+    {
+      "path": "docs/governance/PROJECT_STATE.md",
+      "sha256": "7a4d6a06ddd89212dd04a65356cb73a50ade4c1ad793440c1e1b3b12a4b081f4"
+    },
+    {
+      "path": "docs/governance/TASK_LEDGER.md",
+      "sha256": "ba8b65a725466a8973594b73c0766c219c0dfae7feda43a1dcbb825599126a0b"
+    },
+    {
+      "path": "docs/governance/task-ledger.json",
+      "sha256": "01c1392e1ebce4300254431c50de5495a991dc32f5a1414b4feace14e69bcdc2"
+    },
+    {
+      "path": "package.json",
+      "sha256": "0a104e2b34df057a92706c591b49fd630dd91be7a1eb6d6016bafdcabb0178bf"
+    },
+    {
+      "path": "scripts/agent/install-idle-preparation.mjs",
+      "sha256": "7bd26f54fb38511c607c0410f2310b4322ee025617a2a87e7f24e955fe7823a2"
+    },
+    {
+      "path": "scripts/agent/prepareIdleConversation.ts",
+      "sha256": "e5acf05a1731e1e437cf2097b9d03dea168c3e0b393acf0302b90aca0f538bbe"
+    },
+    {
+      "path": "scripts/audit/check-ui-feature-parity-desktop.mjs",
+      "sha256": "8743bc643f31b994c41afbe72354aa4b186a092a33ed8a5f6edb29a4414687a2"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "f43c5826151e9d6568f2a56f0c656c42c670eec0ac48f0f6d869630c098f786c"
+    },
+    {
+      "path": "src/components/AgentComposer.tsx",
+      "sha256": "b7b6c493efcab8350ebd495750a9782119eaf72b32c68a10602ad32c753b277c"
+    },
+    {
+      "path": "src/components/AgentConversationMessages.tsx",
+      "sha256": "03cf8caa0dbce160c9d10e4e041764fdcf3f77d89ef120acc368cd0e7c34b82d"
+    },
+    {
+      "path": "src/components/ComposerPluginSummary.tsx",
+      "sha256": "d05fbf70ac766a4d678bef9770e94722b3fa9b0ffd57ef330e33e41ca52c8d74"
+    },
+    {
+      "path": "src/components/ConversationActions.tsx",
+      "sha256": "f01551452724546bda7e17cf33c5b2dacb877ff4eab3099e47268ea7849a65c6"
+    },
+    {
+      "path": "src/components/ConversationComposer.tsx",
+      "sha256": "a21383a79a72a6a6b4533a3c082fed3b62e66e1507d64aa093a72a17bc1d702c"
+    },
+    {
+      "path": "src/components/ConversationPanel.tsx",
+      "sha256": "1fe5ccca2d52416550ea27a01153508eb66b10ab96e443f88305e7ad24fea7cf"
+    },
+    {
+      "path": "src/components/PromptLibraryPanel.tsx",
+      "sha256": "cf17be2c7a9a3d0e49a7a71b5859865de3b926cecd702970d4f22dba22cc5ee0"
+    },
+    {
+      "path": "src/components/StartPage.tsx",
+      "sha256": "bd8c51bb89ef3fc4767621f711f30b9530d5507cfceaedb410c9d21ca61ecc76"
+    },
+    {
+      "path": "src/components/StartResourcePopover.tsx",
+      "sha256": "cb38c3729833ae96a1e07bf7697a26bc265b1231eb5d8d2402f4fbef59239c6f"
+    },
+    {
+      "path": "src/components/TopBar.tsx",
+      "sha256": "4fd280ab0f511f77250058e38e7e089d4419c1e6823a211894dad5f946b8c816"
+    },
+    {
+      "path": "src/components/nodes/PromptCreationNode.tsx",
+      "sha256": "1f28645b28a5b6b8b031a0cf3a76371f38ca9cf051b580268da641dd080df714"
+    },
+    {
+      "path": "src/components/settings/AgentConnectionSettings.tsx",
+      "sha256": "abac4574f5d22c4eb6b3fa0bb00d99f79587d92d9256a6df2ff4a848e692ce13"
+    },
+    {
+      "path": "src/components/settings/ConnectionSettings.tsx",
+      "sha256": "eeb94e56481759fafc410b97023cad166d4b95068d6e53715f8dcd58d94511d3"
+    },
+    {
+      "path": "src/components/settings/SettingsSections.tsx",
+      "sha256": "a9a2d04b36a223eb7cf2a5fb808ec07456f992df617ceaf3afa21d218eb53913"
+    },
+    {
+      "path": "src/features/agent/agentApi.ts",
+      "sha256": "e7b0bdd537c26378262a76553624337641a35c7bf18a86b037284c513d7cff0c"
+    },
+    {
+      "path": "src/features/agent/agentConnection.ts",
+      "sha256": "3ce6fd9ee670faa7beea3d6d10c70b2c177c621dd1580a5f5dc4cda61136a8b8"
+    },
+    {
+      "path": "src/features/agent/agentEventStream.ts",
+      "sha256": "fa7a0ef976593ea771ccc0f19762264761493a110eb5a9ba0af259754f744aba"
+    },
+    {
+      "path": "src/features/creation/providerCredentials.ts",
+      "sha256": "431a36b49a1d2eca46728a2879f3b47eec9e741e6ae6b4d186f87a441f4bb9d5"
+    },
+    {
+      "path": "src/features/prompts/promptLibrary.ts",
+      "sha256": "11874eed168c80f4a74784ef24dccb2f887d677e2d00dbccfae6af14f602b88e"
+    },
+    {
+      "path": "src/runtime/appInfo.ts",
+      "sha256": "77faa1cca4f03868ee8019ed76c845b5af6cb74e594ac2a9d6961a795416d076"
+    },
+    {
+      "path": "src/styles/feature-parity.css",
+      "sha256": "fb7d13c9980f5ad416e1f534f4626b5defc48cea7493a4a12a173b07de0b432e"
+    },
+    {
+      "path": "src/styles/local-generation.css",
+      "sha256": "8e0da4ed91c7a02d6a39caa2e17cf0497c33cd612299b18b3a1ed45f548cf36f"
+    },
+    {
+      "path": "tests/browser/catalog-pages.spec.ts",
+      "sha256": "95c26610ce1798b5fbe7010e938260efadcd09a4b5726e79182fa0f8a7bd1f95"
+    },
+    {
+      "path": "tests/browser/demo-results.spec.ts",
+      "sha256": "18e52aac01f45f7335d2f8a321c6662eec302f05c72e01bad50adfb71620ef2f"
+    },
+    {
+      "path": "tests/browser/interaction-state.spec.ts",
+      "sha256": "8440bce583d0d6e8e3cf4f5ebf88ba7fa87f04a2ddcdf9fef3b183ec28dc07f8"
+    },
+    {
+      "path": "tests/browser/ui-feature-parity.spec.ts",
+      "sha256": "84f290e508895dd17a1e62d644cc693002ec4cabb555c72744e391b528b1e7ce"
+    },
+    {
+      "path": "tests/helpers/agentServer.ts",
+      "sha256": "125ffdf9ca9d6632ad531c092f33c464a53536e799cb8ef4e44d62340651faf2"
+    },
+    {
+      "path": "tests/unit/agentApi.test.ts",
+      "sha256": "da0969eda0529a4db335733c75d9bf401eaca30a32b5df24f4f9f289e94550dd"
+    },
+    {
+      "path": "tests/unit/agentConnection.test.ts",
+      "sha256": "8e74429d427b38bab0f1265e926d8a19e31eafe6288ad35432be3185200dfeba"
+    },
+    {
+      "path": "tests/unit/agentPreparation.test.ts",
+      "sha256": "6724a7a9ce50427a8b6cf8283452a99826dc230d3cf835025de5ea876522eb1a"
+    },
+    {
+      "path": "tests/unit/agentProtocol.test.ts",
+      "sha256": "dac12de6106115ac889ce435bc1983e7394c4b0ad4539ef6c28ea2ce80d220e5"
+    },
+    {
+      "path": "tests/unit/promptLibrary.test.ts",
+      "sha256": "d4d28b644624c4290a29a3c5877674819c56e53db145409dc266ddad60fec33b"
+    }
+  ]
+}

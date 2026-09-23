@@ -1,0 +1,57 @@
+{
+  "date": "2026-09-22T17:42:27.585Z",
+  "mode": "Tauri release",
+  "data": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-attachments-k0zAwL\\data",
+  "checks": [
+    "native archive uploads and canvas reference drafts survive disconnected send",
+    "packaged MCP applies multi/single/empty selection and viewport to real UI and snapshots",
+    "real Codex vision describes both selected originals; outbound bytes match local/native archives",
+    "viewport survives native reload"
+  ],
+  "errors": [],
+  "passed": true,
+  "exe": {
+    "path": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+    "sha256": "baeb95a434a3f9713241e66332213fb94fb52c4aa6037c2cdd530fde0d526879"
+  },
+  "externalAgentBefore": true,
+  "url": "http://tauri.localhost/",
+  "loaded": [
+    {
+      "path": "/assets/index-Cs6rrqdp.js",
+      "sha256": "74eb349380bdd43c7cd39af17f19097b98951cb26b9b68cd0f3d6f60e4fff047"
+    },
+    {
+      "path": "/assets/index-mFIdX-t1.css",
+      "sha256": "9a4bb8365f1fe793c5eaf72c7425fe68508eef02fe1cdcbce9af1b300cdad88a"
+    }
+  ],
+  "turn": {
+    "attachments": [
+      {
+        "name": "canvas-reference.png",
+        "width": 320,
+        "height": 180,
+        "sha256": "30ee8fcce6a3d5aaa56c1e6bcd321ffda77a1de9980874b5ea6ed9452d95857d"
+      },
+      {
+        "name": "local-reference.png",
+        "width": 320,
+        "height": 180,
+        "sha256": "20da32df34d54326e0eb9bbc8942a4fdb8dfcdb104532e85d9ad0103a66503f8"
+      }
+    ],
+    "canvasReferences": [
+      {
+        "nodeId": "image",
+        "label": "参考图片",
+        "title": "canvas-reference.png",
+        "kind": "image"
+      }
+    ]
+  },
+  "reply": [
+    "1. **第一张图（canvas-reference.png）**：背景为白色。左侧是一个绿色的实心三角形，尖角朝上、底边水平；右侧是一个橙色的实心长方形，横向摆放，宽度大于高度。\n\n2. **第二张图（local-reference.png）**：背景为白色。左侧是一个红色的实心正方形；右侧是一个蓝色的实心圆形。两个图形大致在同一水平线上，中间留有明显空白。"
+  ],
+  "externalAgentAfter": true
+}

@@ -65,133 +65,6 @@
   font-size: var(--ui-font-body);
   line-height: 15px;
 }
-.conversation-panel .chat-composer {
-  width: var(--ui-composer-width);
-  height: var(--ui-composer-height);
-  flex: 0 0 var(--ui-composer-height);
-  margin: 0 0 0 2px;
-  padding: 12px;
-  gap: 56px;
-  border: var(--ui-border-width) solid var(--border-default);
-  border-radius: var(--ui-radius-panel);
-  background: var(--bg-input);
-}
-.conversation-panel .chat-composer textarea {
-  width: 400px;
-  height: 64px;
-  flex: 0 0 64px;
-  margin: 0;
-  padding: 0;
-  font-size: 10px;
-  line-height: 12px;
-}
-.conversation-panel .chat-composer textarea::placeholder {
-  color: var(--text-secondary);
-  opacity: 1;
-}
-.conversation-panel .chat-composer > .chat-attachment-list {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  top: 76px;
-  width: auto;
-  height: 32px;
-  overflow: visible;
-  pointer-events: auto;
-}
-.conversation-panel .chat-attachment-list .start-attachment-row {
-  max-width: none;
-  margin: 0;
-}
-.conversation-panel .chat-composer > div {
-  position: relative;
-  width: 400px;
-  height: var(--ui-composer-action-size);
-  flex: 0 0 var(--ui-composer-action-size);
-  gap: 5px;
-  align-items: center;
-}
-.conversation-panel .chat-composer > div > button {
-  padding: 0;
-  height: var(--ui-composer-control-height);
-  border-radius: var(--ui-radius-menu);
-  background: var(--ui-composer-surface);
-  color: var(--text-tertiary);
-  font-size: var(--ui-font-caption);
-  line-height: 13px;
-}
-.conversation-panel .chat-composer > div > button.chat-attachment-trigger {
-  order: 1;
-  width: var(--ui-composer-action-size);
-  height: var(--ui-composer-action-size);
-  min-width: var(--ui-composer-action-size);
-  background: transparent;
-}
-.conversation-panel .chat-composer > div > button:first-child img,
-.conversation-panel .chat-composer .chat-send img {
-  display: block;
-  width: var(--ui-composer-action-size);
-  height: var(--ui-composer-action-size);
-}
-.conversation-panel
-  .chat-composer
-  > div
-  > button:not(:first-child):not(.chat-send):not([aria-label*="语音输入"]) {
-  width: 58px;
-  min-width: 58px;
-  gap: 4px;
-  padding: 0;
-}
-.conversation-panel
-  .chat-composer
-  > div
-  > button:not(:first-child):not(.chat-send):not([aria-label*="语音输入"])
-  img {
-  width: 12px;
-  height: 12px;
-  flex: 0 0 12px;
-  object-fit: contain;
-}
-.conversation-panel .chat-composer > div > .chat-model-picker-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-  order: 2;
-  width: max-content;
-  min-width: 58px;
-  max-width: 110px;
-  flex: 0 1 auto;
-  white-space: nowrap;
-}
-.chat-model-picker {
-  display: flex;
-  align-items: center;
-}
-.conversation-panel
-  .chat-composer
-  > div
-  > .chat-model-picker-wrap
-  > button.chat-model-picker {
-  width: 100%;
-  min-width: 58px;
-  height: var(--ui-composer-control-height);
-  gap: 4px;
-  padding: 0;
-  border-radius: var(--ui-radius-menu);
-  background: var(--ui-composer-surface);
-  color: var(--text-tertiary);
-  font-size: var(--ui-font-caption);
-  line-height: 13px;
-  white-space: nowrap;
-}
-.chat-model-name {
-  display: block;
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 .chat-model-popover {
   position: absolute;
   z-index: 40;
@@ -219,87 +92,6 @@
 .chat-model-popover button:hover {
   background: var(--ui-composer-surface);
   color: var(--text-primary);
-}
-.conversation-panel
-  .chat-composer
-  > div
-  > .chat-model-picker-wrap
-  > button.chat-model-picker
-  img {
-  width: 12.465px;
-  height: 13.849px;
-  flex-basis: 12.465px;
-}
-.conversation-panel .chat-composer > div > .chat-model-separator {
-  order: 3;
-}
-.conversation-panel .chat-composer > div > .chat-skill-separator {
-  order: 5;
-}
-.conversation-panel .chat-composer > div > .chat-resource-picker {
-  position: relative;
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-}
-.conversation-panel .chat-composer > div > .chat-skill-picker {
-  order: 4;
-}
-.conversation-panel .chat-composer > div > .chat-plugin-picker {
-  order: 6;
-}
-.conversation-panel .chat-composer > div > .chat-resource-picker > button {
-  width: 58px;
-  min-width: 58px;
-  height: var(--ui-composer-control-height);
-  gap: 4px;
-  padding: 0;
-  border-radius: var(--ui-radius-menu);
-  background: var(--ui-composer-surface);
-  color: var(--text-tertiary);
-  font-size: var(--ui-font-caption);
-  line-height: 13px;
-}
-.conversation-panel .chat-composer > div > .chat-resource-picker > button img {
-  width: 12px;
-  height: 12px;
-  flex: 0 0 12px;
-  object-fit: contain;
-}
-.conversation-panel .chat-footer-separator {
-  position: relative;
-  width: 0;
-  height: 16px;
-  flex: 0 0 0;
-}
-.conversation-panel .chat-footer-separator::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: var(--ui-border-width);
-  height: 16px;
-  background: var(--border-default);
-}
-.conversation-panel .chat-composer button[aria-label*="语音输入"] {
-  order: 7;
-  margin-left: auto;
-  width: 22px;
-  min-width: 22px;
-  height: 22px;
-  background: transparent;
-}
-.conversation-panel .chat-composer button[aria-label*="语音输入"] img {
-  width: 16px;
-  height: 16px;
-}
-.conversation-panel .chat-footer-separator-right {
-  order: 8;
-  margin-left: 4px;
-}
-.conversation-panel .chat-mode-menu {
-  order: 9;
-  margin-left: 4px;
 }
 
 .conversation-panel .chat-resource-popover {
@@ -334,29 +126,6 @@
 }
 .conversation-panel .chat-plugin-popover {
   left: 0;
-}
-.conversation-panel .chat-mode-trigger {
-  width: 53px;
-  min-width: 53px !important;
-  height: var(--ui-composer-control-height);
-  gap: 2px;
-  padding: 0 !important;
-  font-size: var(--ui-font-caption) !important;
-  line-height: 13px;
-  background: var(--ui-composer-surface);
-}
-.conversation-panel .chat-mode-chevron {
-  width: 10px;
-  height: 6px;
-  flex: 0 0 10px;
-}
-.conversation-panel .chat-composer .chat-send {
-  order: 10;
-  margin-left: 4px;
-  width: var(--ui-composer-action-size);
-  min-width: var(--ui-composer-action-size);
-  height: var(--ui-composer-action-size);
-  background: transparent;
 }
 .conversation-panel footer {
   height: 12px;
@@ -394,7 +163,115 @@
 }
 
 .chat-approval button:first-of-type {
-  background: var(--ui-selected);
+  background: var(--bg-accent-soft);
+  color: var(--text-on-accent-soft);
+}
+
+/* 本地 Agent 会话通道 */
+.chat-agent-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 2px 0 8px;
+}
+.chat-agent-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--ui-composer-surface);
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+.chat-agent-stop {
+  margin-left: auto;
+  border: 0;
+  border-radius: 5px;
+  padding: 3px 8px;
+  color: var(--text-strong);
+  background: var(--bg-input);
+  font-size: 11px;
+  cursor: pointer;
+}
+.chat-agent-empty {
+  margin: 4px 2px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.6;
+}
+.chat-agent-item {
+  display: flex;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--ui-composer-surface);
+  color: var(--text-strong);
+}
+.chat-agent-item.is-user {
+  background: var(--bg-accent-soft);
+  color: var(--text-on-accent-soft);
+}
+.chat-agent-item.is-tool,
+.chat-agent-item.is-system {
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+.chat-agent-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-button-gap);
+  align-items: center;
+  margin-block: var(--ui-space);
+  font-size: var(--ui-font-body);
+  color: var(--text-secondary);
+}
+.chat-agent-controls button,
+.chat-agent-controls select,
+.agent-reference-picker select {
+  max-width: 100%;
+  min-height: var(--ui-button-height);
+  border: 1px solid var(--border-default);
+  border-radius: var(--ui-radius-control);
+  padding: var(--ui-button-padding-block) var(--ui-space);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font: inherit;
+}
+.chat-agent-controls button:hover,
+.chat-agent-controls select:hover,
+.agent-reference-picker select:hover {
+  background: var(--bg-elevated);
+}
+.chat-agent-controls button:disabled,
+.chat-agent-controls select:disabled,
+.agent-reference-picker select:disabled {
+  opacity: var(--ui-disabled-opacity);
+}
+.chat-agent-controls button:focus-visible,
+.chat-agent-controls select:focus-visible,
+.agent-reference-picker select:focus-visible {
+  outline: var(--ui-focus-width) solid var(--ui-focus);
+  outline-offset: var(--ui-focus-offset);
+}
+.chat-agent-item.is-error {
+  color: var(--ui-danger);
+}
+.chat-agent-tool-tag {
+  flex: 0 0 auto;
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  padding: 0 4px;
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--text-secondary);
 }
 /* Narrow drawers use larger controls as an engineering supplement. */
 @media (max-width: 1200px) {
@@ -427,74 +304,6 @@
     width: 20px;
     height: 20px;
   }
-  .conversation-panel .chat-composer {
-    width: 100%;
-    margin: 0;
-    padding: 12px;
-    gap: 8px;
-  }
-  .conversation-panel .chat-composer textarea {
-    width: 100%;
-    height: auto;
-    flex: 1;
-    min-height: 32px;
-    font-size: 14px;
-    line-height: 20px;
-  }
-  .conversation-panel .chat-composer > div {
-    width: 100%;
-    height: auto;
-    min-height: 30px;
-    flex: 0 0 auto;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-  .conversation-panel .chat-composer > div > button,
-  .conversation-panel
-    .chat-composer
-    > div
-    > .chat-model-picker-wrap
-    > button.chat-model-picker,
-  .conversation-panel .chat-composer > div > .chat-resource-picker > button,
-  .conversation-panel .chat-composer > div > button:first-child,
-  .conversation-panel .chat-composer .chat-send,
-  .conversation-panel .chat-mode-trigger {
-    height: 30px;
-    font-size: 12px;
-  }
-  .conversation-panel .chat-footer-separator {
-    display: none;
-  }
-  .conversation-panel
-    .chat-composer
-    > div
-    > button:not(:first-child):not(.chat-send):not([aria-label*="语音输入"])
-    img,
-  .conversation-panel
-    .chat-composer
-    > div
-    > .chat-model-picker-wrap
-    > button.chat-model-picker
-    img,
-  .conversation-panel
-    .chat-composer
-    > div
-    > .chat-resource-picker
-    > button
-    img {
-    width: 16px;
-    height: 16px;
-    flex-basis: 16px;
-  }
-  .conversation-panel .chat-composer > div > button:first-child img,
-  .conversation-panel .chat-composer .chat-send img {
-    width: 20px;
-    height: 20px;
-  }
-  .conversation-panel .chat-mode-menu,
-  .conversation-panel .chat-composer .chat-send {
-    margin-left: 0;
-  }
 }
 
 /* At the intermediate desktop width, keep the fixed bottom toolbar clear of
@@ -507,4 +316,19 @@
     width: calc(50% - 160px);
     min-width: 0;
   }
+}
+.agent-reference-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2);
+  padding: 0 var(--ui-space-3) var(--ui-space-2);
+  color: var(--text-secondary);
+  font-size: var(--ui-font-caption);
+}
+
+.agent-reference-picker select {
+  min-width: 0;
+  max-width: 100%;
+  flex: 1 1 180px;
 }

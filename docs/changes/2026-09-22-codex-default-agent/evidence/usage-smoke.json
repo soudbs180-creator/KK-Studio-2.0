@@ -1,0 +1,14 @@
+{
+  "at": "2026-09-22T13:49:04.647Z",
+  "passed": true,
+  "text": "Codex 额度 · 最低剩余 26%\n\n账号共享额度，包含其他 Codex 窗口的使用。\n\ncodex · 每周：剩余 26% · 2026/9/27 09:12:16 重置\n\n刷新额度",
+  "runtime": {
+    "designSurface": "desktop",
+    "runtimeEntry": "src/main.tsx",
+    "runtimeMode": "development"
+  },
+  "scripts": [
+    "/@vite/client",
+    "/src/main.tsx?t=1790084753940"
+  ]
+}

@@ -41,16 +41,20 @@ test("首页权限模式询问可取消确认且输入仍保留", async ({ page 
   await expect(page.getByLabel("创作提示词")).toHaveValue(prompt);
 });
 
-test("输入栏 Skill 和插件先显示局部空态，再进入各自管理入口", async ({
+test("输入栏 Skill 弹层先列内置 Skill，再可进入 Skill 目录", async ({
   page,
 }) => {
+  // Contract since the local Skill registry: the app seeds built-in skills on
+  // first open, so the start composer offers them directly instead of an empty
+  // state. Catalog management still lives behind the browse entry.
   await page
     .getByRole("region", { name: "开始创作" })
     .getByRole("button", { name: "Skill", exact: true })
     .click();
-  await expect(page.getByRole("menu", { name: "选择 Skill" })).toContainText(
-    "没有可用",
-  );
+  const menu = page.getByRole("menu", { name: "选择 Skill" });
+  await expect(
+    menu.getByRole("menuitem", { name: "镜头规划助手", exact: true }),
+  ).toBeVisible();
   await page.getByRole("menuitem", { name: "浏览 Skill 目录" }).click();
   await expect(
     page.getByRole("heading", { name: "Skill", exact: true }),
@@ -90,6 +94,7 @@ test("工作台消息属于当前项目，刷新后项目库可重新打开", as
   // This exercises sequential edits and persistence. The workspace opens before
   // the first provider result is archived; a second task is rejected while busy.
   await expect(page.locator(".project-task-succeeded")).toHaveCount(1);
+  await page.getByLabel("执行方式").selectOption("direct");
   await page.getByLabel("对话内容").fill("第二次修改要求");
   await page.getByRole("button", { name: "发送消息" }).click();
   await page.getByRole("button", { name: "批准并提交" }).click();
@@ -239,6 +244,7 @@ test("工作台未发送的输入和附件随项目保存，切换回来仍可�
 }) => {
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
+  await page.getByLabel("执行方式").selectOption("direct");
   await page.getByLabel("对话内容").fill("先保存这段工作台草稿");
   await page
     .locator('.chat-composer input[type="file"]')

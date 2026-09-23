@@ -18,6 +18,8 @@ use tokio::sync::Notify;
 
 #[path = "asset_io.rs"]
 mod io;
+#[path = "task_host_text.rs"]
+mod text;
 
 const MAX_ID: usize = 160;
 const MAX_PROMPT: usize = 32_000;
@@ -52,6 +54,14 @@ pub struct TaskHostRequest {
     pub provider_name: Option<String>,
     #[serde(default)]
     pub prompt_hash: Option<String>,
+    /// Resolved provider size label such as "1024x1024"; None omits `size`.
+    #[serde(default)]
+    pub size: Option<String>,
+    /// Historical requests omitted kind and remain image requests.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kind: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub concurrency_limit: Option<usize>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -86,6 +96,8 @@ pub struct JobOutput {
     pub status: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub asset_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub text: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<String>,
 }
@@ -102,6 +114,7 @@ struct JournalRecord {
 struct JobControl {
     cancelled: Arc<AtomicBool>,
     wake: Arc<Notify>,
+    credential_ref: String,
 }
 
 pub struct TaskHost {
@@ -229,6 +242,22 @@ impl TaskHost {
             }
             return Ok(existing.record);
         }
+        // The native request survives a WebView reload, so its capacity must
+        // live with this jobs map, not with browser-lock metadata.
+        if request.kind.as_deref() == Some("text") {
+            let jobs = self
+                .jobs
+                .lock()
+                .map_err(|_| "io: 原生任务状态锁不可用".to_string())?;
+            if jobs
+                .values()
+                .filter(|job| job.credential_ref == request.credential_ref)
+                .count()
+                >= request.concurrency_limit.unwrap_or(1)
+            {
+                return Err("capacity: 原生连接并发已满，请等待当前任务结束".into());
+            }
+        }
         let record = JobRecord {
             task_id: request.task_id.clone(),
             idempotency_key: request.idempotency_key.clone(),
@@ -242,6 +271,7 @@ impl TaskHost {
                     index: *index,
                     status: "submitted".into(),
                     asset_id: None,
+                    text: None,
                     error: None,
                 })
                 .collect(),
@@ -256,6 +286,7 @@ impl TaskHost {
         let control = JobControl {
             cancelled: Arc::new(AtomicBool::new(false)),
             wake: Arc::new(Notify::new()),
+            credential_ref: request.credential_ref.clone(),
         };
         self.jobs
             .lock()
@@ -325,9 +356,17 @@ impl TaskHost {
         let result = self.perform(&request, &fingerprint, &control).await;
         let mut record = match self.read_one(&request.task_id) {
             Ok(Some(v)) => v,
-            _ => return,
+            _ => {
+                if let Ok(mut jobs) = self.jobs.lock() {
+                    jobs.remove(&request.task_id);
+                }
+                return;
+            }
         };
         if record.fingerprint != fingerprint {
+            if let Ok(mut jobs) = self.jobs.lock() {
+                jobs.remove(&request.task_id);
+            }
             return;
         }
         match result {
@@ -409,6 +448,11 @@ impl TaskHost {
         if control.cancelled.load(Ordering::Acquire) {
             return Err(RunError::failed("cancelled", "任务在发送前已取消"));
         }
+        if request.kind.as_deref() == Some("text") {
+            return self
+                .perform_text(request, fingerprint, control, provider_client, &secret)
+                .await;
+        }
         let endpoint = if attachments.is_empty() {
             format!(
                 "{}/images/generations",
@@ -423,7 +467,11 @@ impl TaskHost {
             .header("Idempotency-Key", &request.idempotency_key);
         let count = request.output_indices.len() as u32;
         let response = if attachments.is_empty() {
-            builder = builder.json(&json!({"model": request.model, "prompt": request.prompt, "n": count, "response_format": "b64_json"}));
+            let mut payload = json!({"model": request.model, "prompt": request.prompt, "n": count, "response_format": "b64_json"});
+            if let Some(size) = request.size.as_ref().filter(|value| !value.is_empty()) {
+                payload["size"] = json!(size);
+            }
+            builder = builder.json(&payload);
             builder
                 .send()
                 .await
@@ -433,6 +481,9 @@ impl TaskHost {
                 .text("model", request.model.clone())
                 .text("prompt", request.prompt.clone())
                 .text("n", count.to_string());
+            if let Some(size) = request.size.as_ref().filter(|value| !value.is_empty()) {
+                form = form.text("size", size.clone());
+            }
             for (attachment, asset) in attachments {
                 let bytes = match STANDARD.decode(&asset.data_base64) {
                     Ok(v) => v,
@@ -858,6 +909,22 @@ fn append_bounded_chunk(
 }
 
 fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
+    if value
+        .concurrency_limit
+        .is_some_and(|limit| !(1..=256).contains(&limit))
+    {
+        return Err("invalid: concurrencyLimit".into());
+    }
+    if !matches!(value.kind.as_deref(), None | Some("image" | "text")) {
+        return Err("invalid: kind".into());
+    }
+    if value.kind.as_deref() == Some("text")
+        && (value.output_indices.len() != 1
+            || !value.attachments.is_empty()
+            || value.size.is_some())
+    {
+        return Err("invalid: text request must have one output and no image parameters".into());
+    }
     validate_id(&value.task_id, "taskId")?;
     validate_id(&value.idempotency_key, "idempotencyKey")?;
     if value.prompt.is_empty() || value.prompt.chars().count() > MAX_PROMPT {
@@ -926,8 +993,28 @@ fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
             return Err("invalid: promptHash".into());
         }
     }
+    if let Some(size) = &value.size {
+        if !valid_image_size(size) {
+            return Err("invalid: size".into());
+        }
+    }
     Ok(())
 }
+/// Provider size labels are WIDTHxHEIGHT pixel dimensions resolved by the
+/// frontend; the host only verifies the shape before forwarding the value.
+fn valid_image_size(value: &str) -> bool {
+    let Some((width, height)) = value.split_once('x') else {
+        return false;
+    };
+    let in_range = |part: &str| -> bool {
+        match part.parse::<u32>() {
+            Ok(edge) => (256..=4096).contains(&edge),
+            Err(_) => false,
+        }
+    };
+    in_range(width) && in_range(height)
+}
+
 fn validate_id(value: &str, field: &str) -> Result<(), String> {
     if value.is_empty()
         || value.chars().count() > MAX_ID
@@ -941,6 +1028,16 @@ fn validate_id(value: &str, field: &str) -> Result<(), String> {
     }
 }
 fn validate_record(record: &JobRecord) -> Result<(), String> {
+    for output in &record.outputs {
+        if let Some(text) = &output.text {
+            if text.len() > text::MAX_TEXT_BYTES
+                || output.asset_id.is_some()
+                || (output.status == "succeeded" && text.trim().is_empty())
+            {
+                return Err("corrupt: 原生文本结果无效".into());
+            }
+        }
+    }
     validate_id(&record.task_id, "taskId")?;
     validate_id(&record.idempotency_key, "idempotencyKey")?;
     if !matches!(
@@ -958,7 +1055,13 @@ fn validate_record(record: &JobRecord) -> Result<(), String> {
     Ok(())
 }
 fn fingerprint(value: &TaskHostRequest) -> Result<String, String> {
-    let raw = serde_json::to_vec(value).map_err(|_| "invalid: request".to_string())?;
+    // Keep the exact serialization of legacy image identities; explicit image
+    // is equivalent to an omitted kind, while text gets a distinct fingerprint.
+    let mut normalized = value.clone();
+    if normalized.kind.as_deref() == Some("image") {
+        normalized.kind = None;
+    }
+    let raw = serde_json::to_vec(&normalized).map_err(|_| "invalid: request".to_string())?;
     Ok(format!("{:x}", Sha256::digest(raw)))
 }
 fn now_ms() -> u64 {
@@ -1032,7 +1135,69 @@ mod tests {
             attachments: vec![],
             provider_name: None,
             prompt_hash: None,
+            size: None,
+            kind: None,
+            concurrency_limit: None,
         }
+    }
+    #[test]
+    fn text_request_roundtrip_and_image_parameters_are_rejected() {
+        let mut value = serde_json::to_value(request("text-task")).unwrap();
+        value["kind"] = json!("text");
+        let text: TaskHostRequest = serde_json::from_value(value.clone()).unwrap();
+        assert_eq!(serde_json::to_value(&text).unwrap()["kind"], "text");
+        assert!(validate_request(&text).is_ok());
+        value["size"] = json!("1024x1024");
+        assert!(validate_request(&serde_json::from_value(value).unwrap()).is_err());
+    }
+
+    #[test]
+    fn text_output_roundtrip_preserves_generated_content() {
+        let output: JobOutput = serde_json::from_value(json!({
+            "index": 0, "status": "succeeded", "text": "真实文本输出"
+        }))
+        .unwrap();
+        assert_eq!(
+            serde_json::to_value(output).unwrap()["text"],
+            "真实文本输出"
+        );
+    }
+    #[test]
+    fn text_capacity_rejects_before_journaling_and_validates_limits() {
+        let root = root();
+        let assets = Arc::new(AssetRepository::new(root.join("assets")));
+        let host = Arc::new(TaskHost::new(root.join("jobs"), assets).unwrap());
+        let mut pending = request("native-capacity");
+        pending.kind = Some("text".into());
+        pending.concurrency_limit = Some(1);
+        host.jobs.lock().unwrap().insert(
+            "other".into(),
+            JobControl {
+                cancelled: Arc::new(AtomicBool::new(false)),
+                wake: Arc::new(Notify::new()),
+                credential_ref: pending.credential_ref.clone(),
+            },
+        );
+        let result = tauri::async_runtime::block_on(Arc::clone(&host).submit(pending.clone()));
+        assert!(result.unwrap_err().starts_with("capacity:"));
+        assert!(host.get(&pending.task_id).unwrap().is_none());
+        pending.concurrency_limit = Some(0);
+        assert!(validate_request(&pending).is_err());
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn omitted_text_fields_preserve_image_identity() {
+        let original = request("legacy-image");
+        let original_json = serde_json::to_value(&original).unwrap();
+        assert!(original_json.get("kind").is_none());
+        assert!(original_json.get("concurrencyLimit").is_none());
+        let mut explicit = original.clone();
+        explicit.kind = Some("image".into());
+        assert_eq!(
+            fingerprint(&original).unwrap(),
+            fingerprint(&explicit).unwrap()
+        );
     }
     fn root() -> PathBuf {
         let path = std::env::temp_dir().join(format!(
@@ -1061,6 +1226,21 @@ mod tests {
         assert!(validate_request(&r).is_ok());
         r.base_url = "http://[::1]:1234/v1".into();
         assert!(validate_request(&r).is_ok());
+    }
+
+    #[test]
+    fn image_size_validation_matches_pixel_shape() {
+        assert!(valid_image_size("1024x1024"));
+        assert!(valid_image_size("2048x1152"));
+        assert!(!valid_image_size("1024"));
+        assert!(!valid_image_size("100x1024"));
+        assert!(!valid_image_size("1024x99999"));
+        assert!(!valid_image_size("abcx1024"));
+        let mut r = request("size-ok");
+        r.size = Some("1024x1024".into());
+        assert!(validate_request(&r).is_ok());
+        r.size = Some("16x16".into());
+        assert!(validate_request(&r).is_err());
     }
 
     #[test]
@@ -1114,6 +1294,7 @@ mod tests {
                 index: 0,
                 status: "submitted".into(),
                 asset_id: None,
+                text: None,
                 error: None,
             }],
             failure: None,
@@ -1152,6 +1333,7 @@ mod tests {
                 index: 0,
                 status: "submitted".into(),
                 asset_id: None,
+                text: None,
                 error: None,
             }],
             failure: None,

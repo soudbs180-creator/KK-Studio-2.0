@@ -98,6 +98,21 @@
   margin-left: auto;
   color: var(--ui-node-menu-muted);
 }
+.add-node-title-plugin {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ui-node-menu-border);
+}
+.add-node-icon.plugin {
+  mask: none;
+  background: none;
+  width: 22px;
+  height: 22px;
+  font-size: 20px;
+  line-height: 22px;
+  text-align: center;
+  color: var(--ui-node-menu-text);
+}
 .add-node-badge {
   flex-shrink: 0;
   padding: 2px 8px;

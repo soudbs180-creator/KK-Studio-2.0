@@ -16,9 +16,29 @@
 }
 .canvas-hud-actions {
   display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  max-width: min(420px, 100%);
+  flex-shrink: 1;
+}
+.canvas-hud .project-task-status {
+  position: static;
+  max-width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
+  gap: 4px 8px;
+  font-size: var(--ui-font-body);
+}
+.canvas-hud .project-task-status strong {
+  min-width: 0;
+  max-width: 100%;
+}
+.canvas-hud .project-task-status > span {
+  min-width: 0;
+  max-width: 100%;
 }
 .canvas-hud-right {
   display: flex;
@@ -189,6 +209,12 @@
   }
   .canvas-hud-actions {
     gap: 8px;
+  }
+  .canvas-hud-right {
+    max-width: 100%;
+    flex-shrink: 1;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
   .canvas-hud .demo-library-trigger,
   .canvas-hud .chat-reopen {

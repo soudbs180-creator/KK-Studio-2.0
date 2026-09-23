@@ -102,13 +102,13 @@ test("开始创作页的插件入口打开设置分类而不是 Skill 页面", a
   await page
     .getByRole("menu", { name: "选择插件" })
     .getByRole("menuitem", {
-      name: "管理插件连接",
+      name: "管理画布插件",
     })
     .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
-      name: "MCP",
+      name: "插件",
       exact: true,
     }),
   ).toHaveAttribute("aria-current", "page");
@@ -130,13 +130,13 @@ test("开始创作页的插件入口打开设置分类而不是 Skill 页面", a
   await page
     .getByRole("menu", { name: "选择插件" })
     .getByRole("menuitem", {
-      name: "管理插件连接",
+      name: "管理画布插件",
     })
     .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
-      name: "MCP",
+      name: "插件",
       exact: true,
     }),
   ).toHaveAttribute("aria-current", "page");
@@ -164,7 +164,7 @@ test("开始创作与工作台的模型入口都定位到模型供应商设置",
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
   await page.getByRole("button", { name: "模型", exact: true }).click();
-  await expect(page.getByRole("menu")).toContainText("kk-image-2");
+  await expect(page.getByRole("menu")).toContainText("默认 · Codex 主 Agent");
   await page
     .getByRole("menu")
     .getByRole("button", { name: /配置供应商/ })
@@ -250,7 +250,7 @@ test("项目区支持筛选、排序和创建文件夹入口", async ({ page }) 
   await expect(menu).toBeVisible();
   await menu.getByRole("menuitemradio", { name: "仅显示未分组" }).click();
   await expect(menu).toHaveCount(0);
-  await expect(sidebar.locator(".project-entry")).toHaveCount(1);
+  await expect(sidebar.locator(".project-entry:visible")).toHaveCount(1);
   await sidebar.getByRole("button", { name: "项目显示与排序" }).click();
   await sidebar
     .getByRole("menu", { name: "项目显示与排序" })

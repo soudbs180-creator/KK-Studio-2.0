@@ -1,0 +1,77 @@
+[
+  {
+    "log": "verified-candidate.log",
+    "sha256": "a7fd3321cd58170caf91b24d4a0e37f91cdc5b961c7b4ed39af320b64f376605",
+    "result": "lint, typecheck, 356 unit, UI, format, build passed; browser start blocked by external port, replaced by verified-browser.log"
+  },
+  {
+    "log": "verified-browser.log",
+    "sha256": "cb2cb2d91abb5b57e9f77383f45b0ff5ce6ef4dea3659ad8b8de9fc3301d4359",
+    "result": "270 browser passed"
+  },
+  {
+    "log": "verified-rust.log",
+    "sha256": "58a93b46956fd933ce28c858301efd43c76a10fe045f2184d79f99828ed2998a",
+    "result": "78 Rust passed"
+  },
+  {
+    "log": "client-check.log",
+    "sha256": "d0f50180e556646da67f0f5aad78f697c5525fd7f669d97e56d2a9d4948ad954",
+    "result": "cargo check passed; 5 pre-existing dead-code warnings"
+  },
+  {
+    "log": "vendor-tests.log",
+    "sha256": "1cbdf8511baf8482a3b7bc855065b44d7accaacfd34d3709d3d7366ea05e428d",
+    "result": "126 passed; 2 POSIX-only permission tests skipped on Windows"
+  },
+  {
+    "log": "clean-final-install.log",
+    "sha256": "1bbe2aba3ae58e89263979097b2f84b3ed357c94389c013a8a92915d1a65c80d",
+    "result": "npm ci completed with fresh dependencies"
+  },
+  {
+    "log": "clean-final-unit.log",
+    "sha256": "628cc58a28c14c069d577bb4c3491c0da07830313334af3462e4fa8d9847e09f",
+    "result": "356 unit passed after adding isolated Git baseline metadata"
+  },
+  {
+    "log": "clean-final-build.log",
+    "sha256": "04ae4dd362522e1d290fdefaa70ce80f2907f076af35f3e452f7cf35de07163c",
+    "result": "production build passed"
+  },
+  {
+    "log": "desktop-acceptance.log",
+    "sha256": "7daefcf4338fe7fcdf05e7c4fcf28ed08cf6a82f8350acc5c6fc8fb7fc868931",
+    "result": "real Codex and lifecycle audit passed"
+  },
+  {
+    "log": "desktop-empty-acceptance.log",
+    "sha256": "8d4a53db63e230a2f296f339c8755cb274de3ed3e85289fef6586e529202d534",
+    "result": "empty thread lifecycle audit passed"
+  },
+  {
+    "log": "original-verify.log",
+    "sha256": "8bd9674a71447567d4596ab4b1be8382da301153e12d03f2ed01d153bf833694",
+    "result": "Original workspace before concurrent UI return: 356 Node and 270 browser passed; exit 0"
+  },
+  {
+    "log": "original-rust.log",
+    "sha256": "5ca9f12db00064f1c0d346a14308031bca3bcad580ee78c08ef198fe7f5c82da",
+    "result": "Original workspace: 78 Rust passed and cargo fmt check exit 0; Rust sources unchanged in the combined tree"
+  },
+  {
+    "log": "integrated-final-verify.log",
+    "sha256": "a403fe83ad7788d395922aec12f44fcee299645107881986fefc329e67e4b377",
+    "result": "Combined original workspace: 356 Node and 286 browser passed, lint/typecheck/format/UI/build and governance/features passed; exit 0"
+  },
+  {
+    "log": "integrated-desktop-real.log",
+    "sha256": "7daefcf4338fe7fcdf05e7c4fcf28ed08cf6a82f8350acc5c6fc8fb7fc868931",
+    "result": "Combined original release: 8 real Codex/MCP/lifecycle checks passed; exit 0"
+  },
+  {
+    "log": "integrated-desktop-empty.log",
+    "sha256": "8d4a53db63e230a2f296f339c8755cb274de3ed3e85289fef6586e529202d534",
+    "result": "Combined original release: 7 empty-thread/lifecycle checks passed; exit 0"
+  }
+]
