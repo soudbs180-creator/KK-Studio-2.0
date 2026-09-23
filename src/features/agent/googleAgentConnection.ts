@@ -21,12 +21,23 @@ import {
 } from "./googleInteractions.ts";
 import { getGoogleCredential } from "./googleAgentConfig.ts";
 import { executeGoogleTool, GOOGLE_CANVAS_TOOLS } from "./googleAgentTools.ts";
+import {
+  geminiCliChat,
+  geminiCliStatus,
+  GeminiCliError,
+  GEMINI_CLI_MODELS,
+  GEMINI_BRIDGE_DEFAULT_URL,
+  type GeminiCliChatResult,
+} from "./geminiCliAdapter.ts";
 
+export type GoogleLoginMode = "api-key" | "cli";
 export interface GoogleAgentSettings {
   mode: "text" | "image";
   model: string;
   aspectRatio: string;
   imageSize: string;
+  loginMode: GoogleLoginMode;
+  bridgeUrl: string;
 }
 export interface GoogleAgentState {
   status: "disconnected" | "connecting" | "connected";
@@ -46,6 +57,9 @@ type Options = {
   clientFactory?: typeof createGoogleInteractions;
   prepareAttachments?: typeof prepareAgentAttachments;
   timeoutMs?: number;
+  cliStatus?: typeof geminiCliStatus;
+  cliChat?: typeof geminiCliChat;
+  cliModels?: string[];
 };
 const UNCERTAIN =
   "上次 Google 请求结果未确认，已停止自动提交。请先在 Google AI Studio 检查记录，再明确新建会话，避免重复生成。";
@@ -63,6 +77,8 @@ export function createGoogleAgentConnection(options: Options = {}) {
       model: GOOGLE_TEXT_MODEL,
       aspectRatio: "1:1",
       imageSize: "2K",
+      loginMode: "api-key",
+      bridgeUrl: GEMINI_BRIDGE_DEFAULT_URL,
     },
     pendingApproval: null,
     permissionMode: "request",
@@ -130,6 +146,49 @@ export function createGoogleAgentConnection(options: Options = {}) {
     const version = epoch;
     patch({ status: "connecting", error: null });
     try {
+      if (state.settings.loginMode === "cli") {
+        const baseUrl = state.settings.bridgeUrl || GEMINI_BRIDGE_DEFAULT_URL;
+        const status = await (options.cliStatus ?? geminiCliStatus)({
+          baseUrl,
+        });
+        if (version !== epoch || projectId !== current()) return;
+        if (!status.installed) {
+          patch({
+            status: "disconnected",
+            error:
+              "未安装 Gemini CLI，请先在终端运行 npm install -g @google/gemini-cli。",
+            activity: "",
+          });
+          return;
+        }
+        if (!status.login) {
+          patch({
+            status: "disconnected",
+            error:
+              "Gemini CLI 未登录，请先在终端运行 gemini 并选择 Login with Google。",
+            activity: "",
+          });
+          return;
+        }
+        identity = `cli:${baseUrl}`;
+        restore();
+        if (fresh || !record || record.identity !== identity) {
+          save({
+            id: crypto.randomUUID(),
+            identity,
+            status: "ready",
+            messages: record?.messages ?? [],
+            archivedImageIds: record?.archivedImageIds ?? [],
+          });
+        }
+        patch({
+          status: "connected",
+          models: options.cliModels ?? GEMINI_CLI_MODELS,
+          error: null,
+          activity: "Gemini CLI 已连接（Google 账号登录，免 API Key）",
+        });
+        return;
+      }
       const credential = await (options.getCredential ?? getGoogleCredential)();
       if (version !== epoch) return;
       const client = (options.clientFactory ?? createGoogleInteractions)({
@@ -225,6 +284,59 @@ export function createGoogleAgentConnection(options: Options = {}) {
       hasResults = false;
     patch({ sending: true, error: null, activity: "正在准备 Google 请求…" });
     try {
+      if (state.settings.loginMode === "cli") {
+        if (attachments.length > 0)
+          throw new GeminiCliError(
+            "failed",
+            "Gemini CLI 通道暂不支持图片附件，请改用 API Key 登录方式。",
+          );
+        if (settings.mode !== "text")
+          throw new GeminiCliError(
+            "failed",
+            "Gemini CLI 通道暂不支持生图，请改用 API Key 登录方式。",
+          );
+        guard();
+        const baseUrl = settings.bridgeUrl || GEMINI_BRIDGE_DEFAULT_URL;
+        save({
+          ...record!,
+          status: "running",
+          messages: [
+            ...record!.messages.slice(-198),
+            { id: crypto.randomUUID(), role: "user", text: prompt },
+          ],
+        });
+        userAdded = true;
+        patch({ activity: "Gemini CLI 正在回复…" });
+        const cliResult: GeminiCliChatResult = await (
+          options.cliChat ?? geminiCliChat
+        )(
+          {
+            prompt,
+            resumeSessionId: record!.cliSessionId,
+            model: settings.model,
+          },
+          signal,
+          { baseUrl },
+        );
+        guard();
+        submitted = true;
+        hasResults = true;
+        save({
+          ...record!,
+          status: "ready",
+          cliSessionId: cliResult.sessionId ?? record!.cliSessionId,
+          messages: [
+            ...record!.messages.slice(-198),
+            {
+              id: crypto.randomUUID(),
+              role: "assistant",
+              text: cliResult.text,
+            },
+          ],
+        });
+        patch({ activity: "Gemini CLI 已完成", error: null });
+        return { ok: true };
+      }
       const credential = await (options.getCredential ?? getGoogleCredential)();
       guard();
       if (credential.identity !== identity)
@@ -358,11 +470,13 @@ export function createGoogleAgentConnection(options: Options = {}) {
         (hasResults || !(error instanceof GoogleApiError && error.rejected));
       const text = uncertain
         ? UNCERTAIN
-        : error instanceof GoogleApiError
+        : error instanceof GeminiCliError
           ? error.message
-          : signal.aborted
-            ? "请求已停止，尚未提交给 Google。"
-            : "Google 请求准备失败，请检查凭据、附件或本地存储。";
+          : error instanceof GoogleApiError
+            ? error.message
+            : signal.aborted
+              ? "请求已停止，尚未提交给 Google。"
+              : "Google 请求准备失败，请检查凭据、附件或本地存储。";
       if (version === epoch && current() === boundProject) {
         if (userAdded && record) {
           try {
@@ -415,6 +529,8 @@ export function createGoogleAgentConnection(options: Options = {}) {
     configure(next: Partial<GoogleAgentSettings>) {
       if (state.sending || state.status === "connecting") return;
       const settings = { ...state.settings, ...next };
+      if (settings.loginMode === "cli" && settings.mode === "image")
+        settings.mode = "text";
       if (next.mode && next.mode !== state.settings.mode && !next.model)
         settings.model =
           next.mode === "image" ? GOOGLE_IMAGE_MODEL : GOOGLE_TEXT_MODEL;

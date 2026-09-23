@@ -1,11 +1,51 @@
 import { credentialId, loadApiKey } from "../creation/providerCredentials.ts";
 import { readProviderConnections } from "../creation/providerRegistry.ts";
 import { GOOGLE_API_BASE } from "./googleInteractions.ts";
+import { GEMINI_BRIDGE_DEFAULT_URL } from "./geminiCliAdapter.ts";
 export const GOOGLE_CONNECTION_ID = "google-interactions";
 export const GOOGLE_CREDENTIAL_REF = credentialId(
   GOOGLE_API_BASE,
   GOOGLE_CONNECTION_ID,
 );
+export const GOOGLE_LOGIN_MODE_KEY = "kk-google-login-mode";
+export const GOOGLE_BRIDGE_URL_KEY = "kk-google-bridge-url";
+export function readGoogleCliPreference(): {
+  loginMode: "api-key" | "cli";
+  bridgeUrl: string;
+} {
+  try {
+    const mode = window.localStorage.getItem(GOOGLE_LOGIN_MODE_KEY);
+    const url = window.localStorage.getItem(GOOGLE_BRIDGE_URL_KEY);
+    return {
+      loginMode: mode === "cli" ? "cli" : "api-key",
+      bridgeUrl: url || GEMINI_BRIDGE_DEFAULT_URL,
+    };
+  } catch {
+    return {
+      loginMode: "api-key",
+      bridgeUrl: GEMINI_BRIDGE_DEFAULT_URL,
+    };
+  }
+}
+export function writeGoogleCliPreference(
+  loginMode: "api-key" | "cli",
+  bridgeUrl: string,
+): void {
+  try {
+    if (loginMode === "cli") {
+      window.localStorage.setItem(GOOGLE_LOGIN_MODE_KEY, "cli");
+      window.localStorage.setItem(
+        GOOGLE_BRIDGE_URL_KEY,
+        bridgeUrl.trim() || GEMINI_BRIDGE_DEFAULT_URL,
+      );
+    } else {
+      window.localStorage.removeItem(GOOGLE_LOGIN_MODE_KEY);
+      window.localStorage.removeItem(GOOGLE_BRIDGE_URL_KEY);
+    }
+  } catch {
+    /* 偏好保存失败不影响会话内连接。 */
+  }
+}
 export async function getGoogleCredential() {
   const connection = readProviderConnections().find(
     (item) => item.id === GOOGLE_CONNECTION_ID,

@@ -24,9 +24,16 @@ export default function GoogleAgentControls({
           }
         >
           <option value="text">对话</option>
-          <option value="image">生成图片</option>
+          <option value="image" disabled={settings.loginMode === "cli"}>
+            生成图片
+          </option>
         </select>
       </label>
+      {settings.loginMode === "cli" && (
+        <p className="google-agent-note">
+          Gemini CLI 通道仅支持对话；生图请改用 API Key 登录方式。
+        </p>
+      )}
       <label className="google-agent-model">
         模型
         <input

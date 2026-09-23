@@ -1,6 +1,7 @@
-import { useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { CreationProject } from "../features/creation/model";
 import { googleAgentConnection } from "../features/agent/googleAgentConnection";
+import { readGoogleCliPreference } from "../features/agent/googleAgentConfig";
 import AgentConversationMessages, {
   type AgentConversationProps,
 } from "./AgentConversationMessages";
@@ -30,12 +31,19 @@ export default function GoogleConversationPanel({
     googleAgentConnection.subscribe,
     googleAgentConnection.getState,
   );
+  useEffect(() => {
+    const preference = readGoogleCliPreference();
+    googleAgentConnection.configure(preference);
+  }, []);
+  const cli = state.settings.loginMode === "cli";
   const panelRef = useConversationOverlay(overlay ?? false, onClose);
   const fileRef = useRef<HTMLInputElement>(null);
   const [status, setStatus] = useState("");
   const agent: AgentConversationProps = {
     displayName: "Google Gemini",
-    intro: "使用已配置的 Google API Key 对话、理解参考图片或生成图片。",
+    intro: cli
+      ? "通过本机 Gemini CLI（Google 账号登录）免 API Key 对话。"
+      : "使用已配置的 Google API Key 对话、理解参考图片或生成图片。",
     hideUsage: true,
     connectionRevision: state.connectionRevision,
     conversation: null,
@@ -102,7 +110,11 @@ export default function GoogleConversationPanel({
             onInputChange={() => {}}
             onSubmitMessage={async () => {}}
             disabled={state.sending}
-            placeholder="和 Google 聊天，或切换到图片模式生成图片"
+            placeholder={
+              cli
+                ? "和 Google 聊天（Gemini CLI 通道，仅文字）"
+                : "和 Google 聊天，或切换到图片模式生成图片"
+            }
             fileInput={fileRef}
             onAddFiles={() => {}}
             onRemoveAttachment={() => {}}

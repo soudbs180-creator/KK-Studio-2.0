@@ -10,6 +10,7 @@ const schema = z.object({
   id: z.string().min(1).max(160),
   identity: z.string().max(250),
   previousInteractionId: z.string().max(4096).optional(),
+  cliSessionId: z.string().max(4096).optional(),
   status: z.enum(["ready", "running", "unknown"]),
   messages: z.array(message).max(200),
   archivedImageIds: z.array(z.string().max(160)).max(5000),

@@ -720,6 +720,20 @@
     opacity: 0.35;
   }
 }
+.settings-radio {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--settings-text);
+  font-size: 12px;
+}
+.settings-guide {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--settings-muted);
+  font-size: 11px;
+  line-height: 19px;
+}
 .settings-network-field {
   display: flex;
   align-items: center;

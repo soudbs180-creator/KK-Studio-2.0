@@ -15,8 +15,15 @@ import {
 import {
   GOOGLE_CONNECTION_ID,
   GOOGLE_CREDENTIAL_REF,
+  readGoogleCliPreference,
+  writeGoogleCliPreference,
 } from "../../features/agent/googleAgentConfig";
 import { googleAgentConnection } from "../../features/agent/googleAgentConnection";
+import {
+  geminiCliStatus,
+  GEMINI_BRIDGE_DEFAULT_URL,
+} from "../../features/agent/geminiCliAdapter";
+import { GoogleCliSetup, GoogleKeySetup } from "./GoogleLoginModePanels";
 
 export default function GoogleConnectionSettings({
   onFeedback,
@@ -25,6 +32,8 @@ export default function GoogleConnectionSettings({
 }) {
   const [key, setKey] = useState("");
   const [stored, setStored] = useState(false);
+  const [loginMode, setLoginMode] = useState<"api-key" | "cli">("api-key");
+  const [bridgeUrl, setBridgeUrl] = useState(GEMINI_BRIDGE_DEFAULT_URL);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
   const request = useRef<AbortController | null>(null);
@@ -36,6 +45,10 @@ export default function GoogleConnectionSettings({
   const disabled = busy || agent.sending || agent.status === "connecting";
   useEffect(() => {
     mounted.current = true;
+    const preference = readGoogleCliPreference();
+    setLoginMode(preference.loginMode);
+    setBridgeUrl(preference.bridgeUrl);
+    googleAgentConnection.configure(preference);
     void loadApiKey(GOOGLE_API_BASE, GOOGLE_CREDENTIAL_REF)
       .then((value) => {
         if (mounted.current) setStored(Boolean(value));
@@ -46,7 +59,30 @@ export default function GoogleConnectionSettings({
       request.current?.abort();
     };
   }, []);
-  async function save() {
+  function saveCliMode() {
+    if (disabled) return;
+    setBusy(true);
+    setStatus("");
+    try {
+      writeGoogleCliPreference(loginMode, bridgeUrl);
+      googleAgentConnection.configure({ loginMode, bridgeUrl });
+      googleAgentConnection.disconnect();
+      window.dispatchEvent(new Event("kk:model-provider-changed"));
+      if (mounted.current) {
+        setStatus(
+          loginMode === "cli"
+            ? "已切换为 Gemini CLI 登录方式；连接前请确认桥已启动且已登录。"
+            : "已切换为 API Key 登录方式；请填写 Key 并保存。",
+        );
+        onFeedback("Google 登录方式已更新。");
+      }
+    } catch {
+      if (mounted.current) setStatus("Google 配置保存失败，请检查本地存储。");
+    } finally {
+      if (mounted.current) setBusy(false);
+    }
+  }
+  async function saveKey() {
     if (disabled || !key.trim()) return;
     setBusy(true);
     setStatus("");
@@ -103,6 +139,38 @@ export default function GoogleConnectionSettings({
     const controller = new AbortController();
     request.current = controller;
     setBusy(true);
+    if (loginMode === "cli") {
+      setStatus("正在检测本机 Gemini CLI…");
+      try {
+        const result = await geminiCliStatus({
+          baseUrl: bridgeUrl.trim() || GEMINI_BRIDGE_DEFAULT_URL,
+        });
+        if (mounted.current) {
+          if (!result.installed)
+            setStatus(
+              "未安装 Gemini CLI。请先在终端运行 npm install -g @google/gemini-cli。",
+            );
+          else if (!result.login)
+            setStatus(
+              "Gemini CLI 已安装但未登录。请在终端运行 gemini，选择 Login with Google 完成登录。",
+            );
+          else
+            setStatus(
+              `Gemini CLI 已就绪（${result.version ?? "未知版本"}），可连接使用。`,
+            );
+        }
+      } catch {
+        if (mounted.current)
+          setStatus(
+            controller.signal.aborted
+              ? "检测已取消。"
+              : "无法连接 Gemini CLI 桥，请先运行 node scripts/gemini-bridge.mjs 启动本地桥。",
+          );
+      } finally {
+        if (mounted.current) setBusy(false);
+      }
+      return;
+    }
     setStatus("正在连接 Google…");
     try {
       const apiKey =
@@ -127,6 +195,7 @@ export default function GoogleConnectionSettings({
       if (mounted.current) setBusy(false);
     }
   }
+  const cli = loginMode === "cli";
   return (
     <section
       className="settings-network-row settings-agent-card"
@@ -135,46 +204,72 @@ export default function GoogleConnectionSettings({
       <h3>
         Google Gemini <span className="settings-version-tag">对话与生图</span>
       </h3>
-      <p>
-        填写 Google AI Studio API Key 后，在项目对话中选择 Google
-        Gemini。生成的图片会自动保存到当前画布。
-      </p>
-      <div className="settings-network-field">
-        <label htmlFor="google-key">Google 密钥</label>
-        <input
-          id="google-key"
-          type="password"
-          autoComplete="off"
-          value={key}
+      <fieldset className="settings-network-field">
+        <legend>登录方式</legend>
+        <label className="settings-radio">
+          <input
+            type="radio"
+            name="google-login-mode"
+            value="api-key"
+            checked={!cli}
+            disabled={disabled}
+            onChange={() => setLoginMode("api-key")}
+          />
+          密钥登录（对话与生图）
+        </label>
+        <label className="settings-radio">
+          <input
+            type="radio"
+            name="google-login-mode"
+            value="cli"
+            checked={cli}
+            disabled={disabled}
+            onChange={() => setLoginMode("cli")}
+          />
+          Gemini CLI 账号（Google 登录，免 Key，仅对话）
+        </label>
+      </fieldset>
+      {cli ? (
+        <GoogleCliSetup
+          bridgeUrl={bridgeUrl}
+          onChange={setBridgeUrl}
           disabled={disabled}
-          onChange={(event) => setKey(event.target.value)}
-          placeholder={
-            stored
-              ? "已配置；输入新 Key 可替换"
-              : "粘贴 Google AI Studio API Key"
-          }
         />
-      </div>
-      <p>
-        桌面版保存在系统凭据库；网页版仅保留在本次会话中。Google
-        可能保留连续对话记录，具体期限由其项目设置决定。
-      </p>
+      ) : (
+        <GoogleKeySetup
+          key={key}
+          onChange={setKey}
+          disabled={disabled}
+          stored={stored}
+        />
+      )}
       <div className="settings-network-actions">
+        {cli ? (
+          <button
+            type="button"
+            className="settings-action"
+            disabled={disabled}
+            onClick={() => void saveCliMode()}
+          >
+            保存登录方式
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="settings-action"
+            disabled={disabled || !key.trim()}
+            onClick={() => void saveKey()}
+          >
+            保存 Google
+          </button>
+        )}
         <button
           type="button"
           className="settings-action"
-          disabled={disabled || !key.trim()}
-          onClick={() => void save()}
-        >
-          保存 Google
-        </button>
-        <button
-          type="button"
-          className="settings-action"
-          disabled={disabled || (!key.trim() && !stored)}
+          disabled={disabled || (!cli && !key.trim() && !stored)}
           onClick={() => void check()}
         >
-          测试 Google 连接
+          {cli ? "检测 Gemini CLI" : "测试 Google 连接"}
         </button>
         {busy && request.current && (
           <button
@@ -182,16 +277,18 @@ export default function GoogleConnectionSettings({
             className="settings-action"
             onClick={() => request.current?.abort()}
           >
-            取消测试
+            取消检测
           </button>
         )}
-        <a
-          href="https://aistudio.google.com/apikey"
-          target="_blank"
-          rel="noreferrer"
-        >
-          获取 API Key
-        </a>
+        {!cli && (
+          <a
+            href="https://aistudio.google.com/apikey"
+            target="_blank"
+            rel="noreferrer"
+          >
+            获取 API Key
+          </a>
+        )}
       </div>
       {status && <p role="status">{status}</p>}
     </section>
