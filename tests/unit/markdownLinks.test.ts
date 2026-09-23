@@ -33,3 +33,33 @@ test("current Markdown links detect missing files without treating examples as l
     fs.rmSync(root, { recursive: true, force: true });
   }
 });
+
+test("balanced links and fence boundaries retain real targets", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "kk-markdown-syntax-"));
+  try {
+    fs.mkdirSync(path.join(root, "docs"));
+    fs.writeFileSync(path.join(root, "docs", "target(1).md"), "# Target\n");
+    fs.writeFileSync(
+      path.join(root, "docs", "index.md"),
+      [
+        "[valid](target(1).md)",
+        "[missing [nested] label](nested-lost.md)",
+        "[multi-line",
+        "label](multi-lost.md)",
+        "```md",
+        "```not-a-closing-fence",
+        "[code example](ignored.md)",
+        "```",
+        "[after fence](after-lost.md)",
+      ].join("\n"),
+    );
+    assert.deepEqual(checkMarkdownLinks(root, ["docs/index.md"]), [
+      "docs/index.md:2: missing link nested-lost.md",
+      "docs/index.md:3: missing link multi-lost.md",
+      "docs/index.md:9: missing link after-lost.md",
+    ]);
+  } finally {
+    assert.ok(root.startsWith(`${path.resolve(os.tmpdir())}${path.sep}`));
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});

@@ -1744,7 +1744,7 @@
       "docs/changes/2026-09-23-input-contract/verification.md",
       "docs/changes/2026-09-23-release-2-1-0/verification.md"
     ],
-    "verification": "安全补审后本地 367 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；受审源码 15f1f27 已上传，首次远端 SHA 一致；Hosted CI、PR、安装包待验证。各历史变更包保留其原始验证时点。",
+    "verification": "安全补审后本地 367 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；受审源码 15f1f27 已上传，首次远端 SHA 一致。后续候选 head da811283 已上传，PR #9 已创建但未合并，hosted verify/delivery 因账号付款或 spending limit 在步骤前失败；main、tag、安装包仍未完成。各历史变更包保留其原始验证时点。",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-23"
   },
@@ -1772,7 +1772,7 @@
       "docs/changes/2026-09-23-rules-audit/verification.md",
       "docs/changes/2026-09-23-rules-audit/review.md"
     ],
-    "verification": "本地完整 verify 通过：368 Node、300 browser、治理61/0、功能29/0、现行Markdown81/0、UI159/0、类型/格式/Web build通过；最终22个测试生成旧证据已恢复HEAD。独立复审与本任务PR待完成；上游PR #9 hosted jobs 因账户计费在步骤前失败，main合并仍受阻。",
+    "verification": "首轮独立复审发现Markdown解析误报/漏报，新增失败回归后修复；最终本地完整 verify 通过：369 Node、300 browser、治理61/0、功能29/0、现行Markdown81/0、UI159/0、类型/格式/Web build通过，最终一轮19个测试生成旧证据已恢复HEAD。新SHA独立补审与本任务PR待完成；上游PR #9 hosted jobs 因账户计费在步骤前失败，main合并仍受阻。",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-23"
   },
