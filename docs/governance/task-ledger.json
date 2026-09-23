@@ -671,7 +671,7 @@
     "worktree": "unallocated",
     "affectedModules": ["Git hosting"],
     "status": "DONE",
-    "verification": "2026-09-23 用户确认仓库公开；PR #9 当前 head 的 hosted verify/delivery 均成功，已 squash 合入 main@b45c5bc7，合并树与候选树一致。三个远端 ruleset 回读 active（23866923/23866924/23866925），main protected=true，有效规则含 PR、必需检查、禁止删除和非快进。管理员仍可修改规则；合并后 main 工作流另行回读。",
+    "verification": "2026-09-23 用户确认仓库公开；PR #9 当前 head 的 hosted verify/delivery 均成功，已 squash 合入 main@b45c5bc7，合并树与候选树一致；合并后 main 工作流 35836597858 success。三个远端 ruleset 回读 active（23866923/23866924/23866925），main protected=true，有效规则含 PR、必需检查、禁止删除和非快进。管理员仍可修改规则。",
     "updated": "2026-09-23",
     "verificationResult": "PASS",
     "evidence": [
@@ -1745,7 +1745,7 @@
       "docs/changes/2026-09-23-input-contract/verification.md",
       "docs/changes/2026-09-23-release-2-1-0/verification.md"
     ],
-    "verification": "安全补审后本地 367 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；受审源码 15f1f27 已上传，首次远端 SHA 一致。后续候选 head da811283 的 PR #9 当前 hosted verify/delivery 成功，已 squash 合入 main@b45c5bc7 且 tree 一致；合并后 main 工作流回读时尚在运行。正式 tag、安装包、签名和发布验收仍未完成。各历史变更包保留其原始验证时点。",
+    "verification": "安全补审后本地 367 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；受审源码 15f1f27 已上传，首次远端 SHA 一致。后续候选 head da811283 的 PR #9 当前 hosted verify/delivery 成功，已 squash 合入 main@b45c5bc7 且 tree 一致；合并后 main 工作流 35836597858 success。正式 tag、安装包、签名和发布验收仍未完成。各历史变更包保留其原始验证时点。",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-23"
   },
@@ -1778,7 +1778,7 @@
       "docs/changes/2026-09-23-rules-audit-main/verification.md",
       "docs/changes/2026-09-23-rules-audit-main/review.md"
     ],
-    "verification": "原堆叠 PR #10 的两轮失败审查及第三轮 d8e12c0 PASS 保留；原分支完整 verify 为 370 Node、300 browser。上游 PR #9 已合入 main@b45c5bc7；从该 main 仅 cherry-pick 本任务四个提交，新分支 tree 与原 PR #10 head 完全相同。状态文档与新交付包更新后，干净 npm ci 及完整 verify 再次通过：370 Node、300 browser、治理61/0、功能29/0、Markdown81/0、UI159/0、类型/格式/Web build 均通过；测试生成的旧证据已定向恢复。新 head 的独立复审和 hosted PR CI 仍待实际结果，旧账单阻断不再是当前门禁。",
+    "verification": "原堆叠 PR #10 两轮失败审查及第三轮 d8e12c0 PASS 保留；上游 PR #9 已合入 main@b45c5bc7。新分支从 main 只 cherry-pick 本任务四个提交，tree 与原 PR #10 head 完全相同。状态文档与新交付包更新后，干净 npm ci 及完整 verify 再次通过：370 Node、300 browser、治理61/0、功能29/0、Markdown81/0、UI159/0、类型/格式/Web build 均通过；旧生成证据定向恢复。e12d9dc 独立 AI 复审 PASS、delivery34/0；草稿 PR #11 指向 main，最终 head 的补审和 hosted CI 仍待结果。旧账单阻断不再是当前门禁。",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-23"
   },

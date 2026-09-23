@@ -10,9 +10,9 @@
 
 合并前回读（历史时点）：2.1.0 候选分支 head 为 `da811283e55ce699e4c5425d92ad31ffba7513e3`，`origin/main` 当时为 `3c4d012846e53095bd4f11343a1cd2ef61aa3bbd`。Hosted jobs 曾因 GitHub 账号付款或 spending limit 在执行步骤前失败；该失败不说明代码质量。
 
-当前回读：[PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的当前 head `da811283` 经 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7a180c641dbcc3d127d1106f05174df12`；合并提交的文件树与 PR 候选树一致。旧 [PR #8](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/8) 的 head 是该候选的祖先，内容随 #9 吸收，已关闭而未重复合并。合并后的 `main` 工作流 [35836597858](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35836597858) 回读时仍在运行，不能提前称为通过。
+当前回读：[PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的当前 head `da811283` 经 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7a180c641dbcc3d127d1106f05174df12`；合并提交的文件树与 PR 候选树一致。旧 [PR #8](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/8) 的 head 是该候选的祖先，内容随 #9 吸收，已关闭而未重复合并。合并后的 `main` 工作流 [35836597858](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35836597858) 最终 success；push 事件的 delivery 按工作流条件 skipped，verify 成功。
 
-用户确认仓库公开；三套远端 ruleset（all-branches safety、immutable version tags、stable PR gate）已 active，`main` 回读 `protected=true`，有效规则包括 PR、必需 `verify`/`delivery`、禁删除与非快进。管理员仍能修改配置；本地 hook 和静态文件不是服务器规则已生效的替代证据。`TASK-RULES-004` 已从 #9 的 squash 结果新建承接分支，原堆叠 [PR #10](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/10) 将在新 main PR 通过后关闭。分支数量不能直接代表未合并功能；清理需逐支核对 PR、最新提交和 dirty worktree。
+用户确认仓库公开；三套远端 ruleset（all-branches safety、immutable version tags、stable PR gate）已 active，`main` 回读 `protected=true`，有效规则包括 PR、必需 `verify`/`delivery`、禁删除与非快进。管理员仍能修改配置；本地 hook 和静态文件不是服务器规则已生效的替代证据。`TASK-RULES-004` 已从 #9 的 squash 结果新建承接分支，当前草稿 [PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 指向 main；原堆叠 [PR #10](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/10) 将在 #11 通过并合并后关闭。远端分支逐项分类见[承接验证](../changes/2026-09-23-rules-audit-main/verification.md)；分支数量不能直接代表未合并功能，清理需核对 PR、最新提交和 dirty worktree。
 
 ## 2026-09-23 Agent 图片与画布控制（TASK-AGENT-003，DONE/PASS，未提交）
 
