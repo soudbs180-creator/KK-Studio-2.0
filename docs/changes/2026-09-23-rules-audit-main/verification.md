@@ -41,10 +41,10 @@
 
 ## 待记录的新门禁
 
-| 命令/检查                                                                        | 结果         | 证据与限制                                         |
-| -------------------------------------------------------------------------------- | ------------ | -------------------------------------------------- |
-| `npm ci`、`npm run verify`、`npm run governance:check`、`npm run markdown:check` | PASS         | 上述日志；最后状态记录改动后再跑定向治理与链接检查 |
-| `npm run delivery:check`（精确 base/head/branch）                                | PASS         | e12d9dc，34 文件/0 违规；最终 head 须重跑          |
-| 独立 AI review                                                                   | e12d9dc PASS | 后续状态勘误需定向补审                             |
-| 新 main PR hosted verify/delivery                                                | IN PROGRESS  | 草稿 PR #11；以最终 head 的运行结果为准            |
-| 正式 2.1.0 tag/安装包/签名/用户发布验收                                          | NOT RUN      | 不属于规则承接 PR                                  |
+| 命令/检查                                                                        | 结果                           | 证据与限制                                         |
+| -------------------------------------------------------------------------------- | ------------------------------ | -------------------------------------------------- |
+| `npm ci`、`npm run verify`、`npm run governance:check`、`npm run markdown:check` | PASS                           | 上述日志；最后状态记录改动后再跑定向治理与链接检查 |
+| `npm run delivery:check`（精确 base/head/branch）                                | PASS                           | 889ec4d，34 文件/0 违规；最终 head 须重跑          |
+| 独立 AI review                                                                   | e12d9dc 与 889ec4d 增量均 PASS | 最后审查记录增量再定向核对                         |
+| 新 main PR hosted verify/delivery                                                | IN PROGRESS                    | 草稿 PR #11；以最终 head 的运行结果为准            |
+| 正式 2.1.0 tag/安装包/签名/用户发布验收                                          | NOT RUN                        | 不属于规则承接 PR                                  |
