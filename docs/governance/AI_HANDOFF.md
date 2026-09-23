@@ -2,9 +2,9 @@
 
 ## 2026-09-23 当前恢复入口：2.1.0 主线与规则审计
 
-- 唯一工程为 `D:/kk-studio/KK-Studio-2.0`；先 fetch 并核对实际 HEAD、`git status`、worktree、账本和本文件，不从下方历史段落推断“当前”。2.1.0 源码已由 [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 合入 `origin/main@b45c5bc7a180c641dbcc3d127d1106f05174df12`；本地根 `main` 已快进至同一 SHA。
+- 唯一工程为 `D:/kk-studio/KK-Studio-2.0`；先 fetch 并核对实际 HEAD、`git status`、worktree、账本和本文件，不从下方历史段落推断“当前”。2.1.0 源码先由 [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 合入 `b45c5bc7`，规则与 Markdown 审计再由 [PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 合入 `origin/main@9f04bfced49224e9cd523844a8e3c995119c7955`；本地根 `main` 已快进至同一 SHA。
 - PR #9 的当前候选 `verify`/`delivery` 已通过，合并后的 main 工作流 [35836597858](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35836597858) 最终 success（push 的 delivery 按条件 skipped，verify 成功）。三套远端 ruleset 已 active，main 有效规则含 PR/必需检查/禁删除和非快进；用户确认仓库公开。正式 tag、安装包、签名及用户发布验收未完成。
-- 旧 [PR #8](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/8) 已被 #9 吸收并关闭。`TASK-RULES-004` 的原堆叠 [PR #10](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/10) 仍为历史审查链；承接分支 `docs/TASK-RULES-004-main` 从最新 main 仅挑选本任务四个提交，tree 与原 #10 head 一致，当前草稿 [PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 指向 main。继续时按 [分支规则](../engineering/BRANCH-POLICY.md) 核对 #11 最终 SHA 的检查/复审，再关联并关闭旧堆叠 PR；不要清理任何 dirty worktree 或远端旧分支。
+- 旧 [PR #8](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/8) 已被 #9 吸收并关闭；旧堆叠 [PR #10](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/10) 的四个任务提交由 #11 从新 main 完整承接，#11 已合并，#10 已关联关闭。合并树、独立审查、当前 head 的 hosted PR/push 检查及合并后 [main 工作流](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35841965161) 均已核对成功；不要批量清理旧分支，逐项核对 PR/head 和 dirty worktree。
 - 最新任务状态以 [task-ledger.json](task-ledger.json) 为准；能力状态以 [功能登记](../features/features.registry.json) 为准。下方各日期段落是当时的验证快照，不覆盖此入口。
 
 ## 2026-09-23 Agent 图片与画布控制（TASK-AGENT-003，DONE/PASS，未提交）

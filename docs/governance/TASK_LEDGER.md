@@ -65,7 +65,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AGENT-003 | Agent 图片附件、画布引用与视口选择操作 | DONE | TASK-AGENT-001, TASK-AGENT-002 | root |
 | PLUGIN-DESKTOP-001 | 修复桌面画布插件的 CSP 加载路径 | TODO | none | root |
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
-| TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | REVIEW | REL-2.1.0 | root |
+| TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
 
 ## T0 — 可复现候选源码与主线整合
@@ -785,11 +785,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 核对规则文档与实际门禁及 2.1.0 候选状态，并让现行 Markdown 相对文件链接进入 lint
 - Scope: 共同规则入口、工程与治理文档、现行 Markdown 链接检查及任务交付记录
 - Acceptance: 当前设计、任务和发布状态的文档入口不与权威来源冲突; 依赖 PR 的分支同步与清理边界有明确可执行规则; 现行 Markdown 相对文件链接进入 lint 且有有效回归; 本地验证、独立复审和 hosted CI 限制分别如实记录
-- Branch: `docs/TASK-RULES-004-main`
-- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-RULES-004-main`
+- Branch: `docs/TASK-RULES-004-closeout`
+- Worktree: `D:/kk-studio/.worktrees/TASK-RULES-004-closeout`
 - Modules: AGENTS.md, README.md, docs, scripts/governance, tests/unit, package.json
-- Verification: PARTIAL — 原堆叠 PR #10 两轮失败审查及第三轮 d8e12c0 PASS 保留；上游 PR #9 已合入 main@b45c5bc7。新分支从 main 只 cherry-pick 本任务四个提交，tree 与原 PR #10 head 完全相同。状态文档与新交付包更新后，干净 npm ci 及完整 verify 再次通过：370 Node、300 browser、治理61/0、功能29/0、Markdown81/0、UI159/0、类型/格式/Web build 均通过；旧生成证据定向恢复。e12d9dc 独立 AI 复审和 889ec4d 状态增量补审均 PASS，delivery34/0；草稿 PR #11 指向 main，最终 head 的审查记录增量及 hosted CI 仍待结果。旧账单阻断不再是当前门禁。
-- Evidence: [docs/changes/2026-09-23-rules-audit/intent.md](../../docs/changes/2026-09-23-rules-audit/intent.md), [docs/changes/2026-09-23-rules-audit/spec.md](../../docs/changes/2026-09-23-rules-audit/spec.md), [docs/changes/2026-09-23-rules-audit/plan.md](../../docs/changes/2026-09-23-rules-audit/plan.md), [docs/changes/2026-09-23-rules-audit/verification.md](../../docs/changes/2026-09-23-rules-audit/verification.md), [docs/changes/2026-09-23-rules-audit/review.md](../../docs/changes/2026-09-23-rules-audit/review.md), [docs/changes/2026-09-23-rules-audit-main/intent.md](../../docs/changes/2026-09-23-rules-audit-main/intent.md), [docs/changes/2026-09-23-rules-audit-main/spec.md](../../docs/changes/2026-09-23-rules-audit-main/spec.md), [docs/changes/2026-09-23-rules-audit-main/plan.md](../../docs/changes/2026-09-23-rules-audit-main/plan.md), [docs/changes/2026-09-23-rules-audit-main/verification.md](../../docs/changes/2026-09-23-rules-audit-main/verification.md), [docs/changes/2026-09-23-rules-audit-main/review.md](../../docs/changes/2026-09-23-rules-audit-main/review.md)
+- Verification: PASS — 原堆叠 PR #10 两轮失败审查及第三轮 d8e12c0 PASS 保留；从 PR #9 后的 main 仅承接本任务四个提交，tree 与原 #10 head 相同。承接分支干净 npm ci 与完整 verify 通过：370 Node、300 browser、治理61/0、功能29/0、Markdown81/0、UI159/0、类型/格式/Web build；旧生成证据定向恢复。独立 AI 审查覆盖最终 dfed074，PR #11 当前 head 的 hosted verify/delivery 与 push verify 均成功，已 squash 合入 main@9f04bfce，合并树与候选树一致；旧 PR #10 已关联关闭未重复合并，本地根 main 已快进。合并后 main 工作流 35841965161 verify success；正式版本 tag、安装包和发布验收属于 REL-2.1.0，不由本任务关闭。
+- Evidence: [docs/changes/2026-09-23-rules-audit/intent.md](../../docs/changes/2026-09-23-rules-audit/intent.md), [docs/changes/2026-09-23-rules-audit/spec.md](../../docs/changes/2026-09-23-rules-audit/spec.md), [docs/changes/2026-09-23-rules-audit/plan.md](../../docs/changes/2026-09-23-rules-audit/plan.md), [docs/changes/2026-09-23-rules-audit/verification.md](../../docs/changes/2026-09-23-rules-audit/verification.md), [docs/changes/2026-09-23-rules-audit/review.md](../../docs/changes/2026-09-23-rules-audit/review.md), [docs/changes/2026-09-23-rules-audit-main/intent.md](../../docs/changes/2026-09-23-rules-audit-main/intent.md), [docs/changes/2026-09-23-rules-audit-main/spec.md](../../docs/changes/2026-09-23-rules-audit-main/spec.md), [docs/changes/2026-09-23-rules-audit-main/plan.md](../../docs/changes/2026-09-23-rules-audit-main/plan.md), [docs/changes/2026-09-23-rules-audit-main/verification.md](../../docs/changes/2026-09-23-rules-audit-main/verification.md), [docs/changes/2026-09-23-rules-audit-main/review.md](../../docs/changes/2026-09-23-rules-audit-main/review.md), [docs/changes/2026-09-23-rules-audit-closeout/intent.md](../../docs/changes/2026-09-23-rules-audit-closeout/intent.md), [docs/changes/2026-09-23-rules-audit-closeout/spec.md](../../docs/changes/2026-09-23-rules-audit-closeout/spec.md), [docs/changes/2026-09-23-rules-audit-closeout/plan.md](../../docs/changes/2026-09-23-rules-audit-closeout/plan.md), [docs/changes/2026-09-23-rules-audit-closeout/verification.md](../../docs/changes/2026-09-23-rules-audit-closeout/verification.md), [docs/changes/2026-09-23-rules-audit-closeout/review.md](../../docs/changes/2026-09-23-rules-audit-closeout/review.md)
 - Updated: 2026-09-23
 
 ## TASK-DOCS-HISTORY-001 — 历史 Markdown 链接与缺失日志勘误

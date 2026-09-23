@@ -2,9 +2,9 @@
 
 ## 2026-09-23 2.1.0 源码并线与远端规则回读
 
-- [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的 head `da811283` 在 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7`；合并树与候选树相同，本地根 `main` 已快进至同一 SHA。旧 PR #8 的提交是 #9 候选的祖先，其内容被吸收，PR #8 已关闭而未重复合并。
-- 用户确认仓库公开；三套远端 ruleset 已 active，`main` 有效规则含 PR、必需检查、禁删除和非快进。合并后 `main` 工作流最终 success。正式 2.1.0 tag、安装包、签名和用户发布验收未完成，Desktop 插件问题仍在 PLUGIN-DESKTOP-001。
-- TASK-RULES-004 的旧草稿 PR #10 堆叠在 #9 上；按 [分支规则](engineering/BRANCH-POLICY.md) 从当前 main 建 `docs/TASK-RULES-004-main`，仅承接四个任务提交，文件树与旧 head 一致。新工作树完整 verify 为 370 Node、300 browser 全通过；`e12d9dc` 的独立 AI 复审与 `889ec4d` 状态勘误补审均 PASS，当前草稿 PR #11 的最终 SHA 和 hosted 检查仍待完成。旧分支及其它 dirty worktree 保留。
+- [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的 head `da811283` 在 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7`；旧 PR #8 的提交是 #9 候选的祖先，内容被吸收，PR #8 已关闭而未重复合并。[PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 再将规则与 Markdown 审计 squash 合入 `main@9f04bfce`；两次合并的文件树均与各自受审候选相同，本地根 `main` 已快进至后者。
+- 用户确认仓库公开；三套远端 ruleset 已 active，`main` 有效规则含 PR、必需检查、禁删除和非快进。#9、#11 合并后的 `main` 工作流均最终 success（#11：[35841965161](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35841965161)）。正式 2.1.0 tag、安装包、签名和用户发布验收未完成，Desktop 插件问题仍在 PLUGIN-DESKTOP-001。
+- TASK-RULES-004 从 #9 合并后的 main 仅承接原堆叠 PR #10 的四个任务提交，文件树与旧 head 一致。完整本地 verify 为 370 Node、300 browser 全通过，最终 `dfed074` 的独立 AI 复审和 hosted PR/push 检查均 PASS；#11 已合并，#10 已关联关闭而未重复合并。旧分支及其它 dirty worktree 保留；具体分支分类见[承接验证](changes/2026-09-23-rules-audit-main/verification.md)。
 
 ## 2026-09-23 规则与 Markdown 审计（原堆叠 PR 阶段快照）
 
