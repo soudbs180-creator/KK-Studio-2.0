@@ -57,3 +57,4 @@
 ## 计划变更记录
 
 - 2026-09-23：创建计划。实现中修正：stageApprovalGateFor 由状态推导门（修复 result 门测试失败）；stageWorkItemCounts 补充 cancelled 计数；plan_patch_stage 工作项 kind 用类型守卫归一。均未改变产品意图或超出授权。
+- 2026-09-23 补充：竞品路线图审查发现 `taskState.ts` 重复定义的普通重试逻辑允许 `unknown`/已提交任务，并把 `unknown` 输出列为失败。追加失败先行测试，统一复用 `taskRecovery.canRetryTask`；`retryFailedOutputIndices` 改接任务状态且仅返回确定失败项。更新功能卡、账本与验证勘误，保留原始测试记录的历史含义。

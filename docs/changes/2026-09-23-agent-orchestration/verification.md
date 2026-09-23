@@ -43,3 +43,10 @@
 ## 验证结论
 
 领域层实现完成并通过全部门禁：新增 40 项 + 全量 399 项单测、typecheck、format:check、lint（eslint+governance+features+markdown）、ui:check、build、浏览器 300 项全部通过；治理登记完整。能力按 PARTIAL 标注（不冒充 REAL）。剩余未验证项仅限后续任务范围内的 UI 对接、真实媒体链路与运行证据。
+
+## 2026-09-23 补充勘误：未知受理与普通重试
+
+- 上述首次测试摘要把 `canRetryTask` 的 `unknown` 行为写成“需人工核对”，但候选 `taskState.ts` 实际对 `unknown/unknown` 返回 `true`，并把 `unknown` 输出选入失败集合。此处是旧测试按错误行为断言所遗漏的问题，不能把原始 PASS 当作该安全边界已通过。
+- 与既有 `taskRecovery.canRetryTask` 对照后，以相同输入复现差异：`unknown/unknown`、`failed/submitted` 在原有逻辑均拒绝普通重试，候选新函数均允许。应用 UI 仍调用原有函数，未观察到真实重复提交。
+- 先修改 `taskState.test.ts`，确认两项测试按预期失败；再删除第二套重试判定，使统一任务态复用 `taskRecovery.canRetryTask`，失败子项选择只接收整个任务并只返回 `failed` 输出。`unknown` 输出与受理不明任务均返回空集合。
+- 本次定向测试 `taskState.test.ts` + `taskRecovery.test.ts` 12/12 通过；全量 Node 单测 399/399、TypeScript `tsc --noEmit` 通过。代码无 UI 或原生运行路径改动，真实 Provider 回执丢失与重启恢复仍未实机验收。

@@ -6,7 +6,10 @@
  * 供编排器、UI 与未来云端厂商适配器共同消费，避免各模态各自实现一套状态逻辑。
  */
 
-import type { CreationTaskOutput, CreationTaskStatus } from "./model.ts";
+import type { CreationTask, CreationTaskStatus } from "./model.ts";
+import { canRetryTask } from "./taskRecovery.ts";
+
+export { canRetryTask };
 
 /** 统一任务态：与 CreationTaskStatus 对齐的 9 态，作为跨模态契约。 */
 export const unifiedTaskStatuses: readonly CreationTaskStatus[] = [
@@ -39,31 +42,16 @@ export function taskStateRank(status: CreationTaskStatus): number {
 }
 
 /**
- * 可重试判定：只有已终止且可安全重发的状态可重试。
- * unknown 必须人工核对后再重试（现有 unknown 受理语义）。
- */
-export function canRetryTask(
-  status: CreationTaskStatus,
-  submissionState?: "intent" | "submitted" | "unknown" | "terminal",
-): boolean {
-  if (status === "failed" || status === "partial") return true;
-  if (status === "unknown")
-    return submissionState === "unknown" || submissionState === undefined;
-  return false;
-}
-
-/**
  * 失败只重试失败输出：返回需要重发的输出 index 列表。
- * partial 任务只重发失败子项；succeeded/cancelled/waiting/running 不动。
+ * 先通过既有受理门禁，再从失败任务中选取确定失败的子项。
+ * unknown 输出不能当作失败重新提交。
  */
 export function retryFailedOutputIndices(
-  outputs: readonly CreationTaskOutput[] | undefined,
+  task: Pick<CreationTask, "status" | "submissionState" | "outputs">,
 ): number[] {
-  if (!Array.isArray(outputs) || !outputs.length) return [];
-  return outputs
-    .filter(
-      (output) => output.status === "failed" || output.status === "unknown",
-    )
+  if (!canRetryTask(task) || !Array.isArray(task.outputs)) return [];
+  return task.outputs
+    .filter((output) => output.status === "failed")
     .map((output) => output.index)
     .slice(0, 64);
 }

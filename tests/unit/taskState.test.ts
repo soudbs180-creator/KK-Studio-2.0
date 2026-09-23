@@ -33,28 +33,64 @@ test("unifiedTaskStatuses covers the full 9-state contract", () => {
   ]);
 });
 
-test("canRetryTask only allows terminated safe states", () => {
-  assert.equal(canRetryTask("failed"), true);
-  assert.equal(canRetryTask("partial"), true);
-  assert.equal(canRetryTask("unknown", "unknown"), true);
-  assert.equal(canRetryTask("queued"), false);
-  assert.equal(canRetryTask("running"), false);
-  assert.equal(canRetryTask("succeeded"), false);
-  assert.equal(canRetryTask("cancelled"), false);
-  assert.equal(canRetryTask("offline"), false);
-  assert.equal(canRetryTask("interrupted"), false);
+test("unified task helpers keep the existing provider acceptance boundary", () => {
+  assert.equal(
+    canRetryTask({ status: "failed", submissionState: "terminal" }),
+    true,
+  );
+  assert.equal(
+    canRetryTask({ status: "partial", submissionState: "terminal" }),
+    true,
+  );
+  assert.equal(
+    canRetryTask({ status: "unknown", submissionState: "unknown" }),
+    false,
+  );
+  assert.equal(
+    canRetryTask({ status: "failed", submissionState: "submitted" }),
+    false,
+  );
+  assert.equal(
+    canRetryTask({ status: "running", submissionState: "intent" }),
+    false,
+  );
 });
 
-test("retryFailedOutputIndices returns only failed/unknown outputs", () => {
+test("retryFailedOutputIndices excludes uncertain outputs and submissions", () => {
   const outputs = [
     output(0, "succeeded"),
     output(1, "failed"),
     output(2, "unknown"),
     output(3, "cancelled"),
   ];
-  assert.deepEqual(retryFailedOutputIndices(outputs), [1, 2]);
-  assert.deepEqual(retryFailedOutputIndices([]), []);
-  assert.deepEqual(retryFailedOutputIndices(undefined), []);
+  assert.deepEqual(
+    retryFailedOutputIndices({
+      status: "partial",
+      submissionState: "terminal",
+      outputs,
+    }),
+    [1],
+  );
+  assert.deepEqual(
+    retryFailedOutputIndices({
+      status: "unknown",
+      submissionState: "unknown",
+      outputs,
+    }),
+    [],
+  );
+  assert.deepEqual(
+    retryFailedOutputIndices({
+      status: "failed",
+      submissionState: "submitted",
+      outputs,
+    }),
+    [],
+  );
+  assert.deepEqual(
+    retryFailedOutputIndices({ status: "failed", outputs: [] }),
+    [],
+  );
 });
 
 test("estimateTaskCostUsd bounds inputs and returns finite estimates", () => {

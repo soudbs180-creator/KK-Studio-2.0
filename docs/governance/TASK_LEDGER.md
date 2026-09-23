@@ -860,11 +860,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## TASK-TASKSTATE-001 — 统一任务态契约定稿
 
 - Goal: 把 9 态任务模型、可重试判定、失败只重试失败输出、成本估算收口为可复用契约模块
-- Scope: src/features/creation/taskState.ts, tests/unit/taskState.test.ts
+- Scope: src/features/creation/taskState.ts, src/features/creation/taskRecovery.ts, tests/unit/taskState.test.ts
 - Acceptance: unifiedTaskStatuses 覆盖 9 态; canRetryTask/retryFailedOutputIndices 语义正确; estimateTaskCostUsd 边界与估算口径标注; UI 成本显示收口到 estimateTaskCostUsd（后续任务）
 - Branch: `unallocated`
 - Worktree: `unallocated`
-- Modules: src/features/creation/taskState.ts, src/features/creation/model.ts, tests/unit/taskState.test.ts
-- Verification: PARTIAL — 契约模块与单测完成；UI 硬编码示例单价未全部收口。
+- Modules: src/features/creation/taskState.ts, src/features/creation/taskRecovery.ts, src/features/creation/model.ts, tests/unit/taskState.test.ts
+- Verification: PARTIAL — 统一任务态复用既有普通重试门禁；unknown/已提交任务与 unknown 输出不进入失败子项重试，定向及全量 Node 单测通过。UI 硬编码示例单价未全部收口，真实 Provider 回执丢失仍需运行验收。
 - Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
 - Updated: 2026-09-23

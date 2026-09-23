@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-23 编排候选重试边界补充
+
+竞品规划复核发现 `TASK-ORCH-001` 候选中的新任务态辅助函数与现有恢复门禁冲突：原函数对 `unknown`/已提交任务禁止普通重试，新函数却允许并选入 `unknown` 输出。现已复用原有 `taskRecovery.canRetryTask`，失败子项仅选确定失败的输出；先失败后通过的定向测试 12/12、全量 Node 单测 399/399、TypeScript 检查通过。候选仍为 PARTIAL，UI/真实 Provider 与 Desktop 运行验收未因此完成；细节见 `docs/changes/2026-09-23-agent-orchestration/verification.md` 的补充勘误。
+
 ## 2026-09-23 波次A 竞品对齐：Agent 编排与画布交付契约（分支已推送）
 
 - 按《KK-Studio-竞品对齐-项目规划》波次 A 落地领域层：对标竞品 MiniMax Design media-agent 的 Stage 状态机、canvas 交付契约与统一任务态。
