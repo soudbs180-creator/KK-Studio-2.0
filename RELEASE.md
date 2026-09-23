@@ -4,7 +4,7 @@
 
 ## 最新分享产物
 
-生成后的产物应位于 `releases/2.1.0/`；本次源码上传前尚未生成安装包：
+生成后的产物应位于 `releases/2.1.0/`；2.1.0 源码已合入 `main`，安装包和正式分享产物仍未生成：
 
 - `KK-Studio-2.1.0-windows-x64.zip`：待通过桌面构建、安装和回滚验收后生成；解压运行 `kk-studio.exe`，需要 WebView2 Runtime。
 - `KK-Studio-2.1.0-source.zip`：待生成的当前完整已跟踪源码包；不包含 Git 元数据、node_modules、编译缓存、用户数据或恢复归档。
@@ -18,4 +18,4 @@
 
 插件在 Web production preview 中经过验证，远程安装限可信 HTTPS 地址；Tauri Desktop 当前 CSP 阻止插件的 `blob:` 模块加载，桌面插件修复与实际交互验收列为 PLUGIN-DESKTOP-001。
 
-当前源码上传、验证和远端 PR 状态见 [verification](docs/changes/2026-09-23-release-2-1-0/verification.md)。本地源码不能冒充远端 main 已合并、GitHub CI 已通过或正式签名安装包。
+源码上传的原始验证见 [verification](docs/changes/2026-09-23-release-2-1-0/verification.md)，合并后的状态见 [当前项目状态](docs/governance/PROJECT_STATE.md)。PR #9 的源码和检查已合入 `main`；这不等于已生成或签名正式安装包，也不等于所有产品能力已验收。

@@ -8,7 +8,7 @@
 - UI-001/003/004：Design System 1.3 的剩余组件覆盖、演示/真实服务边界，以及缺失 Figma Frame 的全状态视觉验收继续按账本跟踪。UI-002 的窄屏 composer 和动态文案修复已在其验收范围内 DONE/PASS；不再列为开放缺陷。
 - PERF-001：TASK-PERF-ASSETS-001 已完成有界元数据分页、按需预览及原件校验。永久缩略图、大快照、单件大图瞬时内存和不可抢占 IO 的完整性能验收仍未完成。
 - PLUGIN-DESKTOP-001：严格 Tauri CSP 阻止当前 `blob:` 插件模块，Web 插件可用不能代替 Desktop 验收；同源加载和原生交互尚待修复与验证。
-- REL-2.1.0 / EXT-GIT：2.1.0 源码候选已上传并开 [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9)，但 hosted `verify`/`delivery` 因 GitHub 账号付款或 spending limit 在步骤前失败；main、正式 tag 和安装包尚未完成。远端 rulesets/protection API 返回 403，服务器强制保护仍未验证生效。
+- REL-2.1.0 / EXT-GIT：2.1.0 源码经 [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 合入 `main`；PR 当前 head 的 hosted `verify`/`delivery` 已通过，合并后 `main` 的工作流仍须按实际完成结果回读。三套远端 ruleset 已 active，`main` 有效规则含 PR/必需检查/禁删除与非快进；正式 tag、安装包和发布验收仍未完成。
 - EXT-PROVIDER/EXT-COMFY/T10/T11：外部资源、真实验收与授权见账本对应条件。实现部分没有因为外部验收受阻而被错误整体标为BLOCKED。
 - T12：Mobile在当前MUR之后实施，仍属于长期目标；目标运行形态未知不等于已完成或过时。
 

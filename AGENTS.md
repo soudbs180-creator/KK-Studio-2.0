@@ -12,7 +12,7 @@
 - 本机唯一工程仓库是 `D:/kk-studio/KK-Studio-2.0`；`D:/kk-studio` 仅为容器目录。任务隔离使用本仓库登记的 worktree，每个 worktree 只承载一个 task branch。其他设备可使用自己的路径，但必须核对相同 Git remote、已推送 SHA 和仓库规则，不将本机绝对路径写成跨平台依赖。
 - `kk-studio-next` 和旧 archive/backup 已由 TASK-CONSOLIDATE-200 收敛；不要重新建立重复工程或从历史路径启动。当前融合分支和验证状态先读 `docs/governance/PROJECT_STATE.md`。
 - 历史源码、未提交候选、Git 和用户数据的恢复归档位于工程外 `D:/KK-Studio-recovery-20260921`。恢复必须到新目录并校验，不得自动覆盖当前用户数据。工程内 `releases/` 只放最新分享产物，禁止把恢复归档、凭据、node_modules 或编译缓存打入分享包。
-- 融合版本基线为 `2.0.0`；后续版本按 SemVer 从该基线递增。同步 package.json、package-lock.json、Cargo.toml/Cargo.lock、tauri.conf.json 和应用显示；保留原有存储 key/identifier，不能随目录或包名改动用户数据身份。
+- `2.0.0` 是历史融合基线；当前 `main` 源码版本为 `2.1.0`，正式安装包和 tag 另行验收。后续版本按 SemVer 递增。同步 package.json、package-lock.json、Cargo.toml/Cargo.lock、tauri.conf.json 和应用显示；保留原有存储 key/identifier，不能随目录或包名改动用户数据身份。
 
 ## 技术边界
 

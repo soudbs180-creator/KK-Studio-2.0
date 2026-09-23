@@ -57,7 +57,7 @@ PR 必须包含验收、风险/回滚、base/head SHA、影响平台及未完成
 - `npm run git:guards` 安装本仓库共有的 pre-push 防线，拒绝稳定线直推、非 fast-forward、已有 tag 更新及默认所有远端删除；不覆盖第三方 hook。它覆盖本机本仓库 worktree，不会传播到其他 clone，其他设备必须安装。它不能阻止本地 `git branch -D` 或管理员绕过，只是补充防护。
 - `npm run governance:check` 校验文档入口、账本和架构边界；`npm run markdown:check` 校验现行 Markdown 的相对文件链接；`npm run delivery:check -- --base <SHA>` 校验 PR 变更包；CI 跑完整 verify/Rust/desktop build。结构检查不能保证文档事实正确，也不能证明 AI 实际阅读。
 - `config/github-rulesets/` 是可审阅的服务器配置，不是自动生效目录。分支 all-refs safety 禁 force/deletion，main/release 要求 PR/current checks，v* 禁更新/删除。无 bypass actors；管理员仍可修改设置，AI 不得利用此能力绕过审核。
-- 真正远端强制需托管平台支持并成功写入、回读 active rules。private 免费套餐不可用时保留 EXT-GIT BLOCKED，不能默默改仓库公开或购买套餐，也不能把本地 hook 当服务端保护。
+- 真正远端强制需托管平台支持并成功写入、回读 active rules。用户已确认将此仓库公开；2026-09-23 回读三套 ruleset 为 active，`main` 的有效规则包含 PR、必需检查、禁止删除与非快进。管理员仍可修改配置，后续须定期回读；不能把本地 hook 当服务端保护。若将来改回不支持规则的套餐或可见性，应将 EXT-GIT 重新标为未验证或阻断。
 - 本次尚未配置自动合并、自动生产发布或付费 AI review 服务。功能不可用要明确记录，后续接入有预算的独立 reviewer 身份与受限凭据。
 
 参考：[GitHub 分支保护](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches)、[Rulesets API](https://docs.github.com/en/rest/repos/rules)、[PR reviews](https://docs.github.com/en/pull-requests/reference/pull-request-reviews)。

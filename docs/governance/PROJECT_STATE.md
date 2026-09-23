@@ -1,14 +1,18 @@
 # 当前项目状态
 
-## 2026-09-23 KK Studio 2.1.0 源码上传候选（REL-2.1.0）
+## 2026-09-23 KK Studio 2.1.0 源码并线与规则回读（REL-2.1.0）
 
-当前版本元数据已统一为 2.1.0；源码候选已在 `chore/TASK-CONSOLIDATE-200` 上提交并上传，首次远端 SHA 与受审源码 `15f1f27` 一致。`VERSION`、`CHANGELOG.md`、package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端共同记录 2.1.0；原有 `%APPDATA%/kk-studio`、存储 key、应用 identifier、历史 2.0.0 证据和恢复归档不变。安装包、签名、Hosted CI、PR/main 合并和不可变正式 tag 未在本地源码上传中虚构完成。
+当前版本元数据已统一为 2.1.0；源码候选先在 `chore/TASK-CONSOLIDATE-200` 上提交并上传，首次远端 SHA 与受审源码 `15f1f27` 一致。`VERSION`、`CHANGELOG.md`、package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端共同记录 2.1.0；原有 `%APPDATA%/kk-studio`、存储 key、应用 identifier、历史 2.0.0 证据和恢复归档不变。安装包、签名和正式 tag 仍未完成。
 
 独立预检发现远程 HTTP 插件执行风险，加载器已改为仅接收 HTTPS、拒绝远程自动重定向（含中间明文跳转）并停用旧版明文缓存；本地回归通过，独立补审确认受审源码范围内无未关闭 P0/P1。Desktop 插件因严格 CSP 阻止 `blob:` 模块而尚未验收，开放任务 PLUGIN-DESKTOP-001；本次源码上传不宣称桌面插件已可用。
 
 本轮真实提交、远端分支和检查结果以 `docs/changes/2026-09-23-release-2-1-0/{verification,release,review}.md` 以及 Git 回读为准。
 
-后续回读：2.1.0 候选分支 head 为 `da811283e55ce699e4c5425d92ad31ffba7513e3`，[PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 已创建但未合并；`origin/main` 仍为 `3c4d012846e53095bd4f11343a1cd2ef61aa3bbd`。Hosted `verify`/`delivery` 因 GitHub 账号付款或 spending limit 在执行步骤前失败，不等于代码检查通过或失败。规则审计 `TASK-RULES-004` 是依赖该 PR 的单独任务；本地和远端分支仍需逐项核对，不能因 UI 中分支数量多而直接合并或删除。
+合并前回读（历史时点）：2.1.0 候选分支 head 为 `da811283e55ce699e4c5425d92ad31ffba7513e3`，`origin/main` 当时为 `3c4d012846e53095bd4f11343a1cd2ef61aa3bbd`。Hosted jobs 曾因 GitHub 账号付款或 spending limit 在执行步骤前失败；该失败不说明代码质量。
+
+当前回读：[PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的当前 head `da811283` 经 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7a180c641dbcc3d127d1106f05174df12`；合并提交的文件树与 PR 候选树一致。旧 [PR #8](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/8) 的 head 是该候选的祖先，内容随 #9 吸收，已关闭而未重复合并。合并后的 `main` 工作流 [35836597858](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35836597858) 回读时仍在运行，不能提前称为通过。
+
+用户确认仓库公开；三套远端 ruleset（all-branches safety、immutable version tags、stable PR gate）已 active，`main` 回读 `protected=true`，有效规则包括 PR、必需 `verify`/`delivery`、禁删除与非快进。管理员仍能修改配置；本地 hook 和静态文件不是服务器规则已生效的替代证据。`TASK-RULES-004` 已从 #9 的 squash 结果新建承接分支，原堆叠 [PR #10](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/10) 将在新 main PR 通过后关闭。分支数量不能直接代表未合并功能；清理需逐支核对 PR、最新提交和 dirty worktree。
 
 ## 2026-09-23 Agent 图片与画布控制（TASK-AGENT-003，DONE/PASS，未提交）
 

@@ -2,7 +2,7 @@
 
 KK Studio 是以无限画布为中心的多模态 Agent 工作台。本机唯一工程目录为 `D:\kk-studio\KK-Studio-2.0`。2.0.0 是融合基线，当前版本为 2.1.0；当前能力和未完成项以治理账本为准。
 
-桌面 ZIP 和源码 ZIP 通过构建与验收后，将放入 `releases/2.1.0/` 供分享；当前仅准备源码候选。不要直接压缩整个开发目录：`.git` 是历史，`node_modules` 是开发依赖，`src-tauri/target` 是可生成产物，用户项目和恢复归档也不属于分享内容。分享包使用说明见 [RELEASE.md](RELEASE.md)。
+2.1.0 源码已通过 [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 合入 `main`。桌面 ZIP 和源码 ZIP 仍待构建与验收，通过后放入 `releases/2.1.0/` 供分享。不要直接压缩整个开发目录：`.git` 是历史，`node_modules` 是开发依赖，`src-tauri/target` 是可生成产物，用户项目和恢复归档也不属于分享内容。分享包使用说明见 [RELEASE.md](RELEASE.md)。
 
 ## 开始开发
 

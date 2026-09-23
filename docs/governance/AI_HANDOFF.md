@@ -1,10 +1,10 @@
 # AI handoff
 
-## 2026-09-23 当前恢复入口：2.1.0 候选与规则审计
+## 2026-09-23 当前恢复入口：2.1.0 主线与规则审计
 
-- 唯一工程为 `D:/kk-studio/KK-Studio-2.0`；先 fetch 并核对实际 HEAD、`git status`、worktree、账本和本文件，不从下方历史段落推断“当前”。稳定 `origin/main` 仍为 `3c4d012846e53095bd4f11343a1cd2ef61aa3bbd`（2.0.0），2.1.0 候选 `chore/TASK-CONSOLIDATE-200` 已上传至 `da811283e55ce699e4c5425d92ad31ffba7513e3`。
-- [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 尚未合入；GitHub `verify` 和 `delivery` 因账号付款或 spending limit 在运行步骤前失败，不能当作源码测试失败或门禁通过。远端 rulesets/protection 回读仍为 403。正式 main/tag/安装包未完成。
-- 本轮 `TASK-RULES-004` 在依赖 PR #9 的隔离分支整理规则入口和现行 Markdown，并检查可执行门禁；它不改变 2.1.0 产品源码。继续时按 [分支规则](../engineering/BRANCH-POLICY.md) 核对上游依赖、PR base、当前 SHA 和独立复审；不要清理任何 dirty worktree 或远端旧分支。
+- 唯一工程为 `D:/kk-studio/KK-Studio-2.0`；先 fetch 并核对实际 HEAD、`git status`、worktree、账本和本文件，不从下方历史段落推断“当前”。2.1.0 源码已由 [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 合入 `origin/main@b45c5bc7a180c641dbcc3d127d1106f05174df12`；本地根 `main` 已快进至同一 SHA。
+- PR #9 的当前候选 `verify`/`delivery` 已通过，合并后的 main 工作流仍须回读最终结果。三套远端 ruleset 已 active，main 有效规则含 PR/必需检查/禁删除和非快进；用户确认仓库公开。正式 tag、安装包、签名及用户发布验收未完成。
+- 旧 [PR #8](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/8) 已被 #9 吸收并关闭。`TASK-RULES-004` 的原堆叠 [PR #10](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/10) 仍为历史审查链；承接分支 `docs/TASK-RULES-004-main` 从最新 main 仅挑选本任务四个提交，tree 与原 #10 head 一致。继续时按 [分支规则](../engineering/BRANCH-POLICY.md) 完成新 main PR、当前 SHA 的检查/复审，再关联并关闭旧堆叠 PR；不要清理任何 dirty worktree 或远端旧分支。
 - 最新任务状态以 [task-ledger.json](task-ledger.json) 为准；能力状态以 [功能登记](../features/features.registry.json) 为准。下方各日期段落是当时的验证快照，不覆盖此入口。
 
 ## 2026-09-23 Agent 图片与画布控制（TASK-AGENT-003，DONE/PASS，未提交）
