@@ -65,6 +65,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AGENT-003 | Agent 图片附件、画布引用与视口选择操作 | DONE | TASK-AGENT-001, TASK-AGENT-002 | root |
 | PLUGIN-DESKTOP-001 | 修复桌面画布插件的 CSP 加载路径 | TODO | none | root |
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
+| TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | REVIEW | REL-2.1.0 | root |
+| TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -777,4 +779,28 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src, src-tauri, tests, scripts, vendor, docs
 - Verification: PARTIAL — 安全补审后本地 367 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；受审源码 15f1f27 已上传，首次远端 SHA 一致；Hosted CI、PR、安装包待验证。各历史变更包保留其原始验证时点。
 - Evidence: [docs/changes/2026-09-20-main-close-002/verification.md](../../docs/changes/2026-09-20-main-close-002/verification.md), [docs/changes/2026-09-21-consolidate-200/verification.md](../../docs/changes/2026-09-21-consolidate-200/verification.md), [docs/changes/2026-09-21-feature-system/verification.md](../../docs/changes/2026-09-21-feature-system/verification.md), [docs/changes/2026-09-21-local-capabilities/verification.md](../../docs/changes/2026-09-21-local-capabilities/verification.md), [docs/changes/2026-09-21-minimax-deep-audit/verification.md](../../docs/changes/2026-09-21-minimax-deep-audit/verification.md), [docs/changes/2026-09-21-security-audit-closeout/verification.md](../../docs/changes/2026-09-21-security-audit-closeout/verification.md), [docs/changes/2026-09-21-security-audit/verification.md](../../docs/changes/2026-09-21-security-audit/verification.md), [docs/changes/2026-09-21-text-and-rule-audit/verification.md](../../docs/changes/2026-09-21-text-and-rule-audit/verification.md), [docs/changes/2026-09-22-agent-desktop/verification.md](../../docs/changes/2026-09-22-agent-desktop/verification.md), [docs/changes/2026-09-22-codex-default-agent/verification.md](../../docs/changes/2026-09-22-codex-default-agent/verification.md), [docs/changes/2026-09-22-design-system/verification.md](../../docs/changes/2026-09-22-design-system/verification.md), [docs/changes/2026-09-22-design-system-pages/verification.md](../../docs/changes/2026-09-22-design-system-pages/verification.md), [docs/changes/2026-09-22-port-infinite-canvas/verification.md](../../docs/changes/2026-09-22-port-infinite-canvas/verification.md), [docs/changes/2026-09-22-responsive-ui/verification.md](../../docs/changes/2026-09-22-responsive-ui/verification.md), [docs/changes/2026-09-22-ui-feature-parity/verification.md](../../docs/changes/2026-09-22-ui-feature-parity/verification.md), [docs/changes/2026-09-22-ui-interactions/verification.md](../../docs/changes/2026-09-22-ui-interactions/verification.md), [docs/changes/2026-09-23-agent-attachments/verification.md](../../docs/changes/2026-09-23-agent-attachments/verification.md), [docs/changes/2026-09-23-input-contract/verification.md](../../docs/changes/2026-09-23-input-contract/verification.md), [docs/changes/2026-09-23-release-2-1-0/verification.md](../../docs/changes/2026-09-23-release-2-1-0/verification.md)
+- Updated: 2026-09-23
+
+## TASK-RULES-004 — 现行规则与 Markdown 一致性审计
+
+- Goal: 核对规则文档与实际门禁及 2.1.0 候选状态，并让现行 Markdown 相对文件链接进入 lint
+- Scope: 共同规则入口、工程与治理文档、现行 Markdown 链接检查及任务交付记录
+- Acceptance: 当前设计、任务和发布状态的文档入口不与权威来源冲突; 依赖 PR 的分支同步与清理边界有明确可执行规则; 现行 Markdown 相对文件链接进入 lint 且有有效回归; 本地验证、独立复审和 hosted CI 限制分别如实记录
+- Branch: `docs/TASK-RULES-004-md-audit`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-RULES-004-md-audit`
+- Modules: AGENTS.md, README.md, docs, scripts/governance, tests/unit, package.json
+- Verification: PARTIAL — 本地完整 verify 通过：368 Node、300 browser、治理61/0、功能29/0、现行Markdown81/0、UI159/0、类型/格式/Web build通过；最终22个测试生成旧证据已恢复HEAD。独立复审与本任务PR待完成；上游PR #9 hosted jobs 因账户计费在步骤前失败，main合并仍受阻。
+- Evidence: [docs/changes/2026-09-23-rules-audit/intent.md](../../docs/changes/2026-09-23-rules-audit/intent.md), [docs/changes/2026-09-23-rules-audit/spec.md](../../docs/changes/2026-09-23-rules-audit/spec.md), [docs/changes/2026-09-23-rules-audit/plan.md](../../docs/changes/2026-09-23-rules-audit/plan.md), [docs/changes/2026-09-23-rules-audit/verification.md](../../docs/changes/2026-09-23-rules-audit/verification.md), [docs/changes/2026-09-23-rules-audit/review.md](../../docs/changes/2026-09-23-rules-audit/review.md)
+- Updated: 2026-09-23
+
+## TASK-DOCS-HISTORY-001 — 历史 Markdown 链接与缺失日志勘误
+
+- Goal: 逐项核对历史快照的 37 处链接问题并在有原始证据时添加可追溯勘误
+- Scope: docs/archive、历史 docs/changes 和 docs/evidence 的链接及产物归属
+- Acceptance: 归档搬迁和旧代码行号链接提供可用入口且不篡改当时结论; 缺失日志明确标注来源和可恢复性，不补造证据; 修正后的历史页面定向检查并经独立审阅
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: docs/archive, docs/changes, docs/evidence
+- Verification: NOT_VERIFIED — 2026-09-23 扫描 365 个已跟踪 Markdown，历史范围共 37 处文件目标问题；原始日志来源和可恢复性待核对。
+- Evidence: [docs/governance/MARKDOWN_AUDIT.md](../../docs/governance/MARKDOWN_AUDIT.md)
 - Updated: 2026-09-23

@@ -1,6 +1,6 @@
 # Specification baseline
 
-Updated: 2026-09-22 (TASK-DS-001 design-system authority).
+Updated: 2026-09-23 (Design System 1.3 and TASK-RULES-004 rule audit).
 Current policy reconciliation: 2026-09-20, TASK-GOV-002. Read root AI_RULES.md and engineering/SDLC, PROMPTING, BRANCH-POLICY, REVIEW, AI-EVALS alongside AGENTS. Tool-specific entrypoints route to these sources.
 
 These are pointers to the project's existing specifications. The governance index avoids
@@ -34,6 +34,7 @@ Current code/runtime/test output proves what the implementation does; it does no
 - ESLint recommended JS/TypeScript rules and ledger/import-boundary checks: `npm run lint`.
 - Feature registry/card/board consistency: `npm run features:check` (regenerate with `npm run features:write`); already chained into `npm run lint`.
 - Ledger consistency: `npm run governance:check` (regenerate `TASK_LEDGER.md` with `npm run governance:write`).
+- Current Markdown relative file links: `npm run markdown:check` (included in `npm run lint`; historical snapshots and external URLs require separate review).
 - Unit and browser regression: `npm run test` and `npm run test:ui`.
 - UI token/component guard: `npm run ui:check`.
 - Formatting: `npm run format:check`.

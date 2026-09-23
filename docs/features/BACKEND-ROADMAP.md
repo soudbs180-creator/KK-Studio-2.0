@@ -55,7 +55,7 @@
 
 ## 推进规则（任何 AI 照做）
 
-- 领一个 Wave 1 任务：先建/更新 `docs/changes/<date>-<task>/` 的 intent/spec/plan，再改代码，最后 verification + 卡片状态 + 账本。
+- 领一个 Wave 1 任务：先建/更新 `docs/changes/<date>-<task>/` 的 intent/spec/plan，再改代码，最后补 verification/review、卡片状态和账本。
 - 任务分支命名 `<type>/<TASK-ID>-<desc>`；main 禁直推；未获授权不提交不推送（当前整合分支保持用户控制的提交节奏）。
 - 每完成一个模态，更新 `features.registry.json` 状态并 `npm run features:write`；门禁会拦截“标 REAL 但无对应平台运行证据或 DONE/PASS 任务”的造假。
 - 外部条件未具备时，本地可完成部分照做并标 PARTIAL + NOT VERIFIED，不得整体标 BLOCKED 后停摆。

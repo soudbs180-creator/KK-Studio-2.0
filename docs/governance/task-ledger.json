@@ -1747,5 +1747,54 @@
     "verification": "安全补审后本地 367 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；受审源码 15f1f27 已上传，首次远端 SHA 一致；Hosted CI、PR、安装包待验证。各历史变更包保留其原始验证时点。",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-23"
+  },
+  {
+    "id": "TASK-RULES-004",
+    "title": "现行规则与 Markdown 一致性审计",
+    "goal": "核对规则文档与实际门禁及 2.1.0 候选状态，并让现行 Markdown 相对文件链接进入 lint",
+    "scope": "共同规则入口、工程与治理文档、现行 Markdown 链接检查及任务交付记录",
+    "acceptance": [
+      "当前设计、任务和发布状态的文档入口不与权威来源冲突",
+      "依赖 PR 的分支同步与清理边界有明确可执行规则",
+      "现行 Markdown 相对文件链接进入 lint 且有有效回归",
+      "本地验证、独立复审和 hosted CI 限制分别如实记录"
+    ],
+    "dependencies": ["REL-2.1.0"],
+    "owner": "root",
+    "branch": "docs/TASK-RULES-004-md-audit",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-RULES-004-md-audit",
+    "affectedModules": ["AGENTS.md", "README.md", "docs", "scripts/governance", "tests/unit", "package.json"],
+    "status": "REVIEW",
+    "evidence": [
+      "docs/changes/2026-09-23-rules-audit/intent.md",
+      "docs/changes/2026-09-23-rules-audit/spec.md",
+      "docs/changes/2026-09-23-rules-audit/plan.md",
+      "docs/changes/2026-09-23-rules-audit/verification.md",
+      "docs/changes/2026-09-23-rules-audit/review.md"
+    ],
+    "verification": "本地完整 verify 通过：368 Node、300 browser、治理61/0、功能29/0、现行Markdown81/0、UI159/0、类型/格式/Web build通过；最终22个测试生成旧证据已恢复HEAD。独立复审与本任务PR待完成；上游PR #9 hosted jobs 因账户计费在步骤前失败，main合并仍受阻。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-09-23"
+  },
+  {
+    "id": "TASK-DOCS-HISTORY-001",
+    "title": "历史 Markdown 链接与缺失日志勘误",
+    "goal": "逐项核对历史快照的 37 处链接问题并在有原始证据时添加可追溯勘误",
+    "scope": "docs/archive、历史 docs/changes 和 docs/evidence 的链接及产物归属",
+    "acceptance": [
+      "归档搬迁和旧代码行号链接提供可用入口且不篡改当时结论",
+      "缺失日志明确标注来源和可恢复性，不补造证据",
+      "修正后的历史页面定向检查并经独立审阅"
+    ],
+    "dependencies": ["TASK-RULES-004"],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": ["docs/archive", "docs/changes", "docs/evidence"],
+    "status": "TODO",
+    "evidence": ["docs/governance/MARKDOWN_AUDIT.md"],
+    "verification": "2026-09-23 扫描 365 个已跟踪 Markdown，历史范围共 37 处文件目标问题；原始日志来源和可恢复性待核对。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-09-23"
   }
 ]

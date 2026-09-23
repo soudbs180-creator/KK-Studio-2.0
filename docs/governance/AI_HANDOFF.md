@@ -1,5 +1,12 @@
 # AI handoff
 
+## 2026-09-23 当前恢复入口：2.1.0 候选与规则审计
+
+- 唯一工程为 `D:/kk-studio/KK-Studio-2.0`；先 fetch 并核对实际 HEAD、`git status`、worktree、账本和本文件，不从下方历史段落推断“当前”。稳定 `origin/main` 仍为 `3c4d012846e53095bd4f11343a1cd2ef61aa3bbd`（2.0.0），2.1.0 候选 `chore/TASK-CONSOLIDATE-200` 已上传至 `da811283e55ce699e4c5425d92ad31ffba7513e3`。
+- [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 尚未合入；GitHub `verify` 和 `delivery` 因账号付款或 spending limit 在运行步骤前失败，不能当作源码测试失败或门禁通过。远端 rulesets/protection 回读仍为 403。正式 main/tag/安装包未完成。
+- 本轮 `TASK-RULES-004` 在依赖 PR #9 的隔离分支整理规则入口和现行 Markdown，并检查可执行门禁；它不改变 2.1.0 产品源码。继续时按 [分支规则](../engineering/BRANCH-POLICY.md) 核对上游依赖、PR base、当前 SHA 和独立复审；不要清理任何 dirty worktree 或远端旧分支。
+- 最新任务状态以 [task-ledger.json](task-ledger.json) 为准；能力状态以 [功能登记](../features/features.registry.json) 为准。下方各日期段落是当时的验证快照，不覆盖此入口。
+
 ## 2026-09-23 Agent 图片与画布控制（TASK-AGENT-003，DONE/PASS，未提交）
 
 已复用 infinite-canvas Agent 附件/localImage 与画布工具协议，接入 KK 本地原件、显式画布引用和真实控件。最多6张/单张8 MiB，导入失败阻止提交，Agent/API草稿按项目隔离；MCP支持单/多/空选择和视口移动缩放及恢复。保留 UI008 的 Design System 1.3 共享输入框。本轮未发送Agent草稿只在页面会话中保留，不承诺刷新恢复。
