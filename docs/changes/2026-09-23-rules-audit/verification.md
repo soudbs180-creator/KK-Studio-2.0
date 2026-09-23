@@ -5,7 +5,7 @@
 - 执行时间：2026-09-23，Asia/Shanghai
 - cwd / branch：`D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-RULES-004-md-audit` / `docs/TASK-RULES-004-md-audit`
 - Base：`da811283e55ce699e4c5425d92ad31ffba7513e3`；本地验证运行于提交前的任务 worktree，正式 review 在提交后绑定 head/tree。
-- 工具与日志：Windows PowerShell、Node v24.19.0；锁文件经 `npm ci` 安装。最终 verify 原始输出留在本机 `%TEMP%/kk-rules-verify-final-20260923-1403.log`，退出码 0；此文件未进入 Git。
+- 工具与日志：Windows PowerShell、Node v24.19.0；锁文件经 `npm ci` 安装。首轮完整 PASS 的输出留在本机 `%TEMP%/kk-rules-verify-final-20260923-1403.log`；独立审查修复后的最终 verify 原始输出留在 `%TEMP%/kk-rules-verify-reviewfix-20260923.log`，退出码 0；日志均未进入 Git。
 
 ## 规则与实际执行矩阵
 
@@ -22,16 +22,16 @@
 
 ## 实际检查
 
-| 检查                                                      | 结果                                                             | 范围                                                                                                                                     |
-| --------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| 基线 `npm ci` / `npm run lint` / 治理与 delivery 相关单测 | PASS                                                             | 隔离工作树从候选 SHA 开始，未改其他 worktree                                                                                             |
-| 首次 `npm run verify`                                     | FAIL 于 `format:check`                                           | 新增 `package.json` 脚本行未按 Prettier 格式化；前置 368 Node、治理/功能/链接/类型/UI 检查已通过，随后仅格式化该文件                     |
-| 最终 `npm run verify`                                     | PASS，退出码 0                                                   | 368 Node、300 browser、治理 61/0、功能 29/0、Markdown 81/0、UI 159/0、typecheck、format 与 Web build；无 Rust/原生运行变更或本轮原生验收 |
-| 新 `node --test tests/unit/markdownLinks.test.ts`         | PASS，1/1                                                        | 有效/缺失/越界/外部/代码例子与参考链接；最后增加越界样例后定向复跑                                                                       |
-| 历史证据保护                                              | PASS，最终 22 个跟踪中的自动生成文件恢复至本工作树起始 HEAD 字节 | `git diff -- docs/evidence docs/changes` 仅保留本任务新交付包，原有截图/报告未随提交改写                                                 |
-| GitHub PR #9 回读                                         | open、unmerged；head `da811283e55ce699e4c5425d92ad31ffba7513e3`  | 最新 `verify`/`delivery` jobs 均 completed/failure 且 0 steps，账单/spending limit 门禁仍阻断 main 合并                                  |
-| 本任务 `delivery:check` 与独立上下文 review               | 待提交后执行                                                     | 仅已提交的 head 可作为正式复审范围；本地 PASS 不替代 Hosted CI                                                                           |
+| 检查                                                      | 结果                                                                 | 范围                                                                                                                                            |
+| --------------------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| 基线 `npm ci` / `npm run lint` / 治理与 delivery 相关单测 | PASS                                                                 | 隔离工作树从候选 SHA 开始，未改其他 worktree                                                                                                    |
+| 首次 `npm run verify`                                     | FAIL 于 `format:check`                                               | 新增 `package.json` 脚本行未按 Prettier 格式化；前置 368 Node、治理/功能/链接/类型/UI 检查已通过，随后仅格式化该文件                            |
+| 最终 `npm run verify`                                     | PASS，退出码 0                                                       | 修复后 369 Node、300 browser、治理 61/0、功能 29/0、Markdown 81/0、UI 159/0、typecheck、format 与 Web build；无 Rust/原生运行变更或本轮原生验收 |
+| 新 `node --test tests/unit/markdownLinks.test.ts`         | PASS，2/2                                                            | 平衡括号、嵌套/跨行标签和围栏关闭误判先以新测试复现失败，再修复通过；原有效/缺失/越界/外部/代码例子与参考链接保持通过                           |
+| 历史证据保护                                              | PASS，最终一轮 19 个跟踪中的自动生成文件恢复至本工作树起始 HEAD 字节 | 前两轮分别恢复 21、22 个；`git diff -- docs/evidence docs/changes` 仅保留本任务交付包，原有截图/报告未随提交改写                                |
+| GitHub PR #9 回读                                         | open、unmerged；head `da811283e55ce699e4c5425d92ad31ffba7513e3`      | 最新 `verify`/`delivery` jobs 均 completed/failure 且 0 steps，账单/spending limit 门禁仍阻断 main 合并                                         |
+| 本任务 `delivery:check` 与独立上下文 review               | 待提交后执行                                                         | 仅已提交的 head 可作为正式复审范围；本地 PASS 不替代 Hosted CI                                                                                  |
 
 全库 365 个基线已跟踪 Markdown 的扫描发现 37 处历史链接目标问题：归档进度 16 处相对路径、旧 UI 审计 13 处 `:行号` 链接、旧验证/评审合计 8 处未入库日志。分类与可用替代路径见 [Markdown 审计索引](../../governance/MARKDOWN_AUDIT.md)；遗留处理进入 `TASK-DOCS-HISTORY-001`。它们不是现行规范入口；历史文档不为通过新门禁而重写，需使用时核对原始路径、行号和当时产物。
 
-结论：本次规则整理和本地门禁为 PASS；正式 PR 和上游 main 合并状态仍为 PARTIAL。静态检查能证明入口、链接、账本结构和一部分 Git 保护行为，不能证明每个 AI 实际读懂规则、所有文档事实正确或 GitHub 服务器保护已生效。
+首轮独立审查在提交 `6d550a6` 发现 R1/R2（Markdown 解析与围栏误判）两项验收阻断，已由 RED→GREEN 回归修复；REL-2.1.0 账本当前 PR 状态遗漏也已补录。新提交的独立补审仍需完成。结论：修复后的规则整理和本地门禁为 PASS；正式 PR 和上游 main 合并状态仍为 PARTIAL。静态检查能证明入口、链接、账本结构和一部分 Git 保护行为，不能证明每个 AI 实际读懂规则、所有文档事实正确或 GitHub 服务器保护已生效。
