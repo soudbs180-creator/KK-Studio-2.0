@@ -5,7 +5,22 @@ import {
   geminiCliStatus,
   GeminiCliError,
   GEMINI_BRIDGE_DEFAULT_URL,
+  normalizeGeminiBridgeUrl,
 } from "../../src/features/agent/geminiCliAdapter.ts";
+
+test("bridge URLs are restricted to explicit loopback HTTP ports", () => {
+  assert.equal(
+    normalizeGeminiBridgeUrl("http://127.0.0.1:1424/"),
+    "http://127.0.0.1:1424",
+  );
+  for (const value of [
+    "https://untrusted.example:1424",
+    "http://localhost.evil.example:1424",
+    "http://127.0.0.1:1424/other",
+    "http://127.0.0.1:1424/?token=secret",
+  ])
+    assert.throws(() => normalizeGeminiBridgeUrl(value), GeminiCliError);
+});
 
 test("status parses installed and logged in bridge response", async () => {
   const calls: string[] = [];

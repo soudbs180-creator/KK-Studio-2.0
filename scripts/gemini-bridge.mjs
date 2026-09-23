@@ -11,7 +11,7 @@
  */
 import { createServer } from "node:http";
 import { spawn } from "node:child_process";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { readFile } from "node:fs/promises";
 
 const DEFAULT_PORT = 1424;
@@ -52,14 +52,10 @@ function capture(child) {
   });
 }
 
-function quoteShellArg(value) {
-  return '"' + String(value).replace(/(["\\\r\n])/g, "\\$1") + '"';
-}
-
 /**
  * 定位 gemini 可执行。
  * win32: 优先经 `npm root -g` 找到 @google/gemini-cli 的 bin 入口,用 node 直接执行(无 shell,零注入);
- *        解析失败回退 cmd /c "gemini ..."(参数引号转义)。
+ *        定位失败明确报未安装,不把用户输入送入 cmd.exe。
  * 其他平台: 直接 spawn("gemini")。
  */
 async function resolveGeminiInvocation(ctx) {
@@ -68,13 +64,18 @@ async function resolveGeminiInvocation(ctx) {
       kind: "bin",
       command: "gemini",
       args: [],
-      viaShell: false,
-      shellArgs: () => [],
     };
   try {
+    const npmCli = join(
+      dirname(process.execPath),
+      "node_modules",
+      "npm",
+      "bin",
+      "npm-cli.js",
+    );
     const rootResult = await runOnce(
       ctx,
-      { command: "npm", args: [], viaShell: false, shellArgs: () => [] },
+      { command: process.execPath, args: [npmCli] },
       ["root", "-g"],
       { timeoutMs: 15000 },
     );
@@ -89,35 +90,25 @@ async function resolveGeminiInvocation(ctx) {
       kind: "node",
       command: process.execPath,
       args: [join(root, "@google", "gemini-cli", binPath)],
-      viaShell: false,
-      shellArgs: () => [],
     };
   } catch {
-    return {
-      kind: "shell",
-      command: process.env.ComSpec || "cmd.exe",
-      args: [],
-      viaShell: true,
-      shellArgs: (args) => [
-        "/d",
-        "/s",
-        "/c",
-        "gemini " + args.map(quoteShellArg).join(" "),
-      ],
-    };
+    return null;
   }
 }
 
 function runOnce(ctx, invocation, args, { timeoutMs = 30000, signal } = {}) {
-  const child = invocation.viaShell
-    ? ctx.spawn(invocation.command, invocation.shellArgs(args), {
-        windowsHide: true,
-        stdio: ["ignore", "pipe", "pipe"],
-      })
-    : ctx.spawn(invocation.command, [...invocation.args, ...args], {
-        windowsHide: true,
-        stdio: ["ignore", "pipe", "pipe"],
-      });
+  if (signal?.aborted)
+    return Promise.resolve({
+      ok: false,
+      code: "aborted",
+      message: "",
+      stdout: "",
+      stderr: "",
+    });
+  const child = ctx.spawn(invocation.command, [...invocation.args, ...args], {
+    windowsHide: true,
+    stdio: ["ignore", "pipe", "pipe"],
+  });
   const timer = setTimeout(() => {
     child.kill();
   }, timeoutMs);
@@ -138,12 +129,12 @@ function parseGeminiJson(text) {
   }
 }
 
-async function probeLogin(ctx, invocation) {
+async function probeLogin(ctx, invocation, signal) {
   const probe = await runOnce(
     ctx,
     invocation,
     ["-p", "ping", "--output-format", "json", "-m", "gemini-2.5-flash"],
-    { timeoutMs: PROBE_TIMEOUT_MS },
+    { timeoutMs: PROBE_TIMEOUT_MS, signal },
   );
   if (!probe.ok) return false;
   const parsed = parseGeminiJson(probe.stdout.trim());
@@ -168,13 +159,15 @@ export function createGeminiBridge(options = {}) {
   const getInvocation = () =>
     (invocationPromise ??= resolveGeminiInvocation(ctx));
 
-  async function handleStatus() {
+  async function handleStatus({ signal } = {}) {
     const invocation = await getInvocation();
+    if (!invocation) return { installed: false, login: false };
     const version = await runOnce(ctx, invocation, ["--version"], {
       timeoutMs: 15000,
+      signal,
     });
     if (version.code === "spawn") return { installed: false, login: false };
-    const login = await probeLogin(ctx, invocation);
+    const login = await probeLogin(ctx, invocation, signal);
     return {
       installed: true,
       version: version.ok ? version.stdout.trim().split(/\r?\n/)[0] : undefined,
@@ -182,8 +175,8 @@ export function createGeminiBridge(options = {}) {
     };
   }
 
-  async function handleChat(body) {
-    const prompt = typeof body.prompt === "string" ? body.prompt.trim() : "";
+  async function handleChat(body, { signal } = {}) {
+    const prompt = typeof body?.prompt === "string" ? body.prompt.trim() : "";
     if (!prompt || prompt.length > 30000)
       return {
         error: { code: "invalid", message: "prompt 缺失或超过 30000 字。" },
@@ -196,11 +189,28 @@ export function createGeminiBridge(options = {}) {
       typeof body.resumeSessionId === "string" && body.resumeSessionId.trim()
         ? body.resumeSessionId.trim()
         : undefined;
+    if (
+      (model && !/^[A-Za-z0-9][A-Za-z0-9._/-]{0,127}$/.test(model)) ||
+      (resumeSessionId &&
+        !/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(resumeSessionId))
+    )
+      return {
+        error: { code: "invalid", message: "model 或会话 ID 格式无效。" },
+      };
     const invocation = await getInvocation();
-    const args = ["-p", prompt, "--output-format", "json"];
-    if (model) args.push("-m", model);
-    if (resumeSessionId) args.push("--resume", resumeSessionId);
-    const result = await runOnce(ctx, invocation, args, { timeoutMs });
+    if (!invocation)
+      return {
+        error: {
+          code: "not-installed",
+          message: "未找到 Gemini CLI 的 Node 入口。",
+        },
+      };
+    const args = [`--prompt=${prompt}`, "--output-format=json"];
+    if (model) args.push(`--model=${model}`);
+    if (resumeSessionId) args.push(`--resume=${resumeSessionId}`);
+    const result = await runOnce(ctx, invocation, args, { timeoutMs, signal });
+    if (signal?.aborted)
+      return { error: { code: "cancelled", message: "请求已停止。" } };
     const parsed = parseGeminiJson(result.stdout.trim());
     if (!result.ok && !parsed) {
       const hint = LOGIN_HINTS.test(result.stderr + result.stdout)
@@ -241,6 +251,7 @@ export function createGeminiBridge(options = {}) {
     if (!text.trim())
       return { error: { code: "empty", message: "gemini 未返回文字内容。" } };
     const sessionId =
+      (typeof parsed.session_id === "string" && parsed.session_id) ||
       (typeof parsed.sessionId === "string" && parsed.sessionId) ||
       (typeof parsed.stats?.sessionId === "string" && parsed.stats.sessionId) ||
       (typeof parsed.response?.sessionId === "string" &&
@@ -252,19 +263,57 @@ export function createGeminiBridge(options = {}) {
   const server = createServer((req, res) => {
     const headers = {
       "content-type": "application/json; charset=utf-8",
-      "access-control-allow-origin": "*",
       "access-control-allow-methods": "GET, POST, OPTIONS",
       "access-control-allow-headers": "content-type",
       "cache-control": "no-store",
+      vary: "Origin",
     };
+    const origin = req.headers.origin;
+    const allowedOrigins = new Set([
+      "http://localhost:1421",
+      "http://127.0.0.1:1421",
+      "http://localhost:1423",
+      "http://127.0.0.1:1423",
+      "http://tauri.localhost",
+      "tauri://localhost",
+    ]);
+    if (origin && allowedOrigins.has(origin))
+      headers["access-control-allow-origin"] = origin;
+    const actualPort = server.address()?.port;
+    const allowedHosts = new Set([
+      `127.0.0.1:${actualPort}`,
+      `localhost:${actualPort}`,
+    ]);
     const send = (status, payload) => {
+      if (res.destroyed) return;
       res.writeHead(status, headers);
       res.end(JSON.stringify(payload));
     };
+    if (!allowedHosts.has(req.headers.host?.toLowerCase()))
+      return send(403, {
+        error: { code: "forbidden", message: "Host 不受信任。" },
+      });
+    if (origin && !allowedOrigins.has(origin))
+      return send(403, {
+        error: { code: "forbidden", message: "来源不受信任。" },
+      });
+    if (
+      !origin &&
+      (req.headers["sec-fetch-site"] || req.headers["sec-fetch-mode"])
+    )
+      return send(403, {
+        error: { code: "forbidden", message: "浏览器请求缺少可信来源。" },
+      });
+    const operation = new AbortController();
+    const cancel = () => {
+      if (!res.writableEnded) operation.abort();
+    };
+    req.on("aborted", cancel);
+    res.on("close", cancel);
     if (req.method === "OPTIONS") return send(204, {});
     const url = new URL(req.url ?? "/", "http://127.0.0.1");
     if (req.method === "GET" && url.pathname === "/status")
-      return handleStatus().then(
+      return handleStatus({ signal: operation.signal }).then(
         (payload) => send(200, payload),
         (error) =>
           send(500, {
@@ -272,6 +321,13 @@ export function createGeminiBridge(options = {}) {
           }),
       );
     if (req.method === "POST" && url.pathname === "/chat") {
+      if (
+        req.headers["content-type"]?.split(";", 1)[0].toLowerCase() !==
+        "application/json"
+      )
+        return send(415, {
+          error: { code: "invalid", message: "只接受 JSON 请求。" },
+        });
       let size = 0;
       const chunks = [];
       req.on("data", (chunk) => {
@@ -297,7 +353,7 @@ export function createGeminiBridge(options = {}) {
             error: { code: "invalid", message: "请求体不是合法 JSON。" },
           });
         }
-        return handleChat(body).then(
+        return handleChat(body, { signal: operation.signal }).then(
           (payload) => send(payload.error ? 400 : 200, payload),
           (error) =>
             send(500, {

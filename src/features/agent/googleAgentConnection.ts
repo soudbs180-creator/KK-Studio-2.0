@@ -150,6 +150,7 @@ export function createGoogleAgentConnection(options: Options = {}) {
         const baseUrl = state.settings.bridgeUrl || GEMINI_BRIDGE_DEFAULT_URL;
         const status = await (options.cliStatus ?? geminiCliStatus)({
           baseUrl,
+          signal: controller.signal,
         });
         if (version !== epoch || projectId !== current()) return;
         if (!status.installed) {
@@ -307,6 +308,7 @@ export function createGoogleAgentConnection(options: Options = {}) {
         });
         userAdded = true;
         patch({ activity: "Gemini CLI 正在回复…" });
+        submitted = true;
         const cliResult: GeminiCliChatResult = await (
           options.cliChat ?? geminiCliChat
         )(
@@ -319,7 +321,6 @@ export function createGoogleAgentConnection(options: Options = {}) {
           { baseUrl },
         );
         guard();
-        submitted = true;
         hasResults = true;
         save({
           ...record!,
@@ -467,7 +468,10 @@ export function createGoogleAgentConnection(options: Options = {}) {
     } catch (error) {
       const uncertain =
         submitted &&
-        (hasResults || !(error instanceof GoogleApiError && error.rejected));
+        (hasResults ||
+          (error instanceof GeminiCliError
+            ? error.code !== "not-logged-in" && error.code !== "not-installed"
+            : !(error instanceof GoogleApiError && error.rejected)));
       const text = uncertain
         ? UNCERTAIN
         : error instanceof GeminiCliError

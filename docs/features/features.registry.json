@@ -58,7 +58,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-002-image-generation.md",
-    "summary": "自带 API Key 的真实图片生成：浏览器提交门禁 + Desktop 原生 TaskHost（journal/幂等/取消/恢复），真实付费出图未验收。",
+    "summary": "BYOK 图片生成含既有任务宿主与 Google Interactions 生图入口；Google 真实请求和桌面同态尚未验收。",
     "entryPoints": ["图片节点生成按钮", "开始页/对话提交", "任务状态与重试"],
     "code": [
       "src/features/creation/imageGeneration.ts",
@@ -66,7 +66,10 @@
       "src/features/creation/providerSubmission.ts",
       "src/features/creation/nativeTaskHost.ts",
       "src/features/creation/taskRecovery.ts",
-      "src-tauri/src/task_host.rs"
+      "src-tauri/src/task_host.rs",
+      "src/features/agent/googleInteractions.ts",
+      "src/features/agent/googleAgentConnection.ts",
+      "src/components/GoogleAgentControls.tsx"
     ],
     "tests": [
       "tests/unit/providerSubmission.test.ts",
@@ -76,15 +79,21 @@
       "tests/unit/taskRecovery.test.ts",
       "tests/browser/provider-scheduling.spec.ts",
       "tests/browser/unified-image-command.spec.ts",
-      "tests/browser/creation-flow.spec.ts"
+      "tests/browser/creation-flow.spec.ts",
+      "tests/browser/google-agent.spec.ts",
+      "tests/unit/googleInteractions.test.ts"
     ],
-    "tasks": ["T5", "TASK-PROV-001", "EXT-PROVIDER", "TASK-AGENT-001"],
-    "updated": "2026-09-22",
+    "tasks": ["T5", "TASK-PROV-001", "EXT-PROVIDER", "TASK-AGENT-001", "TASK-AGENT-004"],
+    "updated": "2026-09-23",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
         "platform": "web",
         "path": "docs/changes/2026-09-22-codex-default-agent/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-23-google-interactions/verification.md"
       }
     ]
   },
@@ -269,7 +278,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-009-conversation.md",
-    "summary": "KK 默认 Codex 已接通 Web/Windows、Agent 本地图片和显式画布原件引用；其他登录适配、参考图编辑与后台网页仍待办。",
+    "summary": "KK 默认 Codex；Google API Key 对话/生图与 Gemini CLI 登录文字对话已完成本地接线，真实 Google/CLI 与桌面同态待验收。",
     "entryPoints": ["右侧对话面板 ConversationPanel", "开始页对话入口"],
     "code": [
       "src/components/ConversationPanel.tsx",
@@ -296,7 +305,13 @@
       "scripts/agent/desktop-entry.mjs",
       "scripts/agent/runtime-package.mjs",
       "src/components/AgentComposer.tsx",
-      "src/features/agent/agentAttachments.ts"
+      "src/features/agent/agentAttachments.ts",
+      "src/features/agent/googleInteractions.ts",
+      "src/features/agent/googleAgentConnection.ts",
+      "src/features/agent/geminiCliAdapter.ts",
+      "src/components/settings/GoogleConnectionSettings.tsx",
+      "src/components/GoogleConversationPanel.tsx",
+      "scripts/gemini-bridge.mjs"
     ],
     "tests": [
       "tests/browser/frontend.spec.ts",
@@ -321,7 +336,12 @@
       "tests/unit/agentRuntimeDrain.test.ts",
       "scripts/audit/check-agent-desktop.mjs",
       "tests/unit/agentAttachments.test.ts",
-      "scripts/audit/check-agent-attachments-desktop.mjs"
+      "scripts/audit/check-agent-attachments-desktop.mjs",
+      "tests/browser/google-agent.spec.ts",
+      "tests/browser/google-cli-agent.spec.ts",
+      "tests/unit/geminiBridge.test.ts",
+      "tests/unit/geminiCliAdapter.test.ts",
+      "tests/unit/googleAgentCli.test.ts"
     ],
     "tasks": [
       "T4",
@@ -351,6 +371,14 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-23-agent-attachments/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-23-google-interactions/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-23-google-cli-login/verification.md"
       }
     ]
   },

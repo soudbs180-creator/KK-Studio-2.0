@@ -22,3 +22,9 @@
 3. 启动桥：node scripts/gemini-bridge.mjs（默认 127.0.0.1:1424）
 4. KK 设置 → 模型供应商 → Google Gemini → Gemini CLI 账号 → 检测 Gemini CLI 显示已就绪 → 新建项目选 Google → 连接后对话
 5. 真实验证点：连续对话续接（--resume 的 sessionId 是否由真实 CLI 返回）、quota/未登录错误的真实文案、Tauri 桌面端偏好持久化。
+
+## 2026-09-23 组合候选补充验证与勘误
+
+前述 32 单测/247 浏览器为 `d05f263` 当时的历史结果，不代表最终候选。独立审查随后发现 Windows shell fallback、通配 CORS、官方 `session_id`、HTTP 取消、未知结果等阻断缺陷；修复后的组合分支 `feat/TASK-AGENT-004-google-closeout` 已通过定向桥/适配器/连接层测试和完整 `npm run verify`（单元 404/404、浏览器 302/302、治理 61/0、功能 29/0）。此校验在主线新增 Markdown 门禁合入之前执行；同步主线后会另行重验。
+
+本地桥真实 HTTP `GET /status` 在本机返回 `installed:false, login:false`，证明未安装状态反馈；没有真实 `gemini` 登录或对话。注入式子进程测试覆盖：官方 `session_id` 提取、以 `--yolo` 开头的提示词只作为 `--prompt` 值、非法 model/session 拒绝、恶意 Origin/Host 拒绝、取消杀死子进程。浏览器 fixture 覆盖设置、检测、连续 CLI 对话及图片模式禁用；不能代替真实 CLI 账号验收。Windows Cargo check 通过，但未在本轮 Tauri WebView 运行；最终独立补审仍未完成。

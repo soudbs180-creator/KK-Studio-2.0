@@ -102,7 +102,9 @@ for (const width of [390, 1920]) {
           `${theme}/${section} horizontal overflow`,
         ).toBeLessThanOrEqual(1);
         const fieldErrors = await content
-          .locator('input:not([type="file"]):not([type="checkbox"]), select')
+          .locator(
+            'input:not([type="file"]):not([type="checkbox"]):not([type="radio"]), select',
+          )
           .evaluateAll((elements) =>
             elements
               .filter((el) => el.getClientRects().length)
@@ -129,6 +131,20 @@ for (const width of [390, 1920]) {
               }),
           );
         expect(fieldErrors, `${theme}/${section} shared fields`).toEqual([]);
+        if (section === "模型供应商") {
+          const radioSizes = await content
+            .locator('input[type="radio"][name="google-login-mode"]')
+            .evaluateAll((elements) =>
+              elements.map((element) => {
+                const css = getComputedStyle(element);
+                return [css.width, css.height];
+              }),
+            );
+          expect(radioSizes).toEqual([
+            ["16px", "16px"],
+            ["16px", "16px"],
+          ]);
+        }
         if (section === "MCP") {
           await expect(dialog.locator(".settings-mcp-add")).toHaveCSS(
             "border-radius",

@@ -19,6 +19,7 @@ export function GoogleCliSetup({
         <li>登录：终端运行 gemini，选择 Login with Google</li>
         <li>启动桥：node scripts/gemini-bridge.mjs（默认端口 1424）</li>
       </ol>
+      <p>检测或连接会用一次简短请求确认登录态，可能消耗 Gemini CLI 额度。</p>
       <div className="settings-network-field">
         <label htmlFor="google-bridge-url">Gemini CLI 桥地址</label>
         <input
@@ -36,12 +37,12 @@ export function GoogleCliSetup({
 }
 
 export function GoogleKeySetup({
-  key,
+  apiKey,
   onChange,
   disabled,
   stored,
 }: {
-  key: string;
+  apiKey: string;
   onChange: (value: string) => void;
   disabled: boolean;
   stored: boolean;
@@ -58,7 +59,7 @@ export function GoogleKeySetup({
           id="google-key"
           type="password"
           autoComplete="off"
-          value={key}
+          value={apiKey}
           disabled={disabled}
           onChange={(event) => onChange(event.target.value)}
           placeholder={

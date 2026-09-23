@@ -36,8 +36,27 @@ export class GeminiCliError extends Error {
 }
 type BridgeError = { error?: { code?: string; message?: string } };
 
-function baseUrlOf(value: string): string {
-  return value.trim().replace(/\/+$/, "");
+export function normalizeGeminiBridgeUrl(value: string): string {
+  try {
+    const url = new URL(value.trim());
+    if (
+      url.protocol === "http:" &&
+      (url.hostname === "127.0.0.1" || url.hostname === "localhost") &&
+      url.port &&
+      !url.username &&
+      !url.password &&
+      url.pathname === "/" &&
+      !url.search &&
+      !url.hash
+    )
+      return url.origin;
+  } catch {
+    /* Invalid bridge URL is rejected below. */
+  }
+  throw new GeminiCliError(
+    "failed",
+    "Gemini CLI 桥地址必须是本机 HTTP 地址和明确端口。",
+  );
 }
 function errorCodeOf(code: string | undefined): GeminiCliErrorCode {
   switch (code) {
@@ -75,15 +94,20 @@ async function readJson(response: Response): Promise<unknown> {
 export async function geminiCliStatus(options?: {
   baseUrl?: string;
   fetcher?: typeof fetch;
+  signal?: AbortSignal;
 }): Promise<GeminiCliStatus> {
-  const baseUrl = baseUrlOf(options?.baseUrl ?? GEMINI_BRIDGE_DEFAULT_URL);
+  const baseUrl = normalizeGeminiBridgeUrl(
+    options?.baseUrl ?? GEMINI_BRIDGE_DEFAULT_URL,
+  );
   const fetcher = options?.fetcher ?? fetch;
   try {
     const response = await fetcher(baseUrl + "/status", {
       method: "GET",
       credentials: "omit",
       cache: "no-store",
-      signal: AbortSignal.timeout(20000),
+      signal: options?.signal
+        ? AbortSignal.any([options.signal, AbortSignal.timeout(20000)])
+        : AbortSignal.timeout(20000),
     });
     if (!response.ok)
       throw new GeminiCliError("failed", `桥返回 HTTP ${response.status}。`);
@@ -112,7 +136,9 @@ export async function geminiCliChat(
   signal: AbortSignal,
   options?: { baseUrl?: string; fetcher?: typeof fetch },
 ): Promise<GeminiCliChatResult> {
-  const baseUrl = baseUrlOf(options?.baseUrl ?? GEMINI_BRIDGE_DEFAULT_URL);
+  const baseUrl = normalizeGeminiBridgeUrl(
+    options?.baseUrl ?? GEMINI_BRIDGE_DEFAULT_URL,
+  );
   const fetcher = options?.fetcher ?? fetch;
   const prompt = input.prompt.trim();
   if (!prompt || prompt.length > 30000)

@@ -135,16 +135,21 @@ test("CLI send maps GeminiCliError messages", async () => {
   assert.ok(result.error?.includes("未登录"));
 });
 
-test("CLI send returns stopped message on timeout", async () => {
-  const { store } = cliHarness({
+test("CLI timeout after submission keeps the result unknown and blocks retry", async () => {
+  let calls = 0;
+  const { store, saved } = cliHarness({
     chat: async () => {
+      calls++;
       throw new GeminiCliError("timeout", "请求已停止。");
     },
   });
   await store.connect();
   const result = await store.sendMessage("hi");
   assert.equal(result.ok, false);
-  assert.ok(result.error?.includes("请求已停止"));
+  assert.ok(result.error?.includes("结果未确认"));
+  assert.equal(saved()?.status, "unknown");
+  assert.equal((await store.sendMessage("hi")).ok, false);
+  assert.equal(calls, 1);
 });
 
 test("CLI configure forces text mode", async () => {

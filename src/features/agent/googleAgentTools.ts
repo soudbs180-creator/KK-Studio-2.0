@@ -117,21 +117,19 @@ export async function executeGoogleTool(
     if (!snapshot) throw new Error("当前画布不可用");
     return {
       ...snapshot,
-      nodes: snapshot.nodes
-        .slice(0, 200)
-        .map((node) => ({
-          ...node,
-          metadata: {
-            text:
-              typeof node.metadata.text === "string"
-                ? node.metadata.text.slice(0, 30000)
-                : "",
-            prompt:
-              typeof node.metadata.prompt === "string"
-                ? node.metadata.prompt.slice(0, 4000)
-                : "",
-          },
-        })),
+      nodes: snapshot.nodes.slice(0, 200).map((node) => ({
+        ...node,
+        metadata: {
+          text:
+            typeof node.metadata.text === "string"
+              ? node.metadata.text.slice(0, 30000)
+              : "",
+          prompt:
+            typeof node.metadata.prompt === "string"
+              ? node.metadata.prompt.slice(0, 4000)
+              : "",
+        },
+      })),
     };
   }
   if (call.name !== "canvas_apply_ops")

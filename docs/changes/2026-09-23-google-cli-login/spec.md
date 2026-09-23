@@ -38,3 +38,12 @@
 - 单元: geminiCliAdapter(注入 fetcher 模拟桥响应/错误);桥 spawn 逻辑(注入 spawn 模拟 gemini 输出/ENOENT/超时);googleAgentConnection cli 分支(注入 adapter)。
 - 浏览器: mock 桥 HTTP;设置 cli 方式 → 连接 → 对话(连续会话带 --resume)→ 生图模式禁用。
 - 真实验收: 用户安装 `@google/gemini-cli`、`gemini` 登录、启动桥、KK 填桥地址后对话。
+
+## 2026-09-23 安全与协议补充
+
+- 本地桥只接受 `127.0.0.1` / `localhost` Host；跨源浏览器请求只允许 KK 的 1421 开发、1423 预览与 Tauri Origin。没有可信 Origin 的浏览器请求和非 JSON 对话请求均拒绝。
+- Windows CLI 定位使用 Node 运行随 Node 安装的 npm CLI，解析 npm 全局包入口；找不到即明确报告未安装。用户输入不进入 shell。
+- 浏览器取消/断开沿 HTTP 请求信号终止 CLI 子进程。发出对话请求后的超时、断流、取消标记为结果未知且不自动重试；明确未登录/未安装拒绝仍可重试。
+- 用户提示词、模型与会话 ID 用单个 `--name=value` 参数传入 CLI，模型与会话 ID 在桥内限制字符和长度；提示词即使以 `--yolo` 开头也只能成为 `--prompt` 的值。
+- 以官方 CLI JSON 的 `session_id` 为主解析字段，兼容已知旧字段。连接检测会执行一次 `ping`，可能消耗 Gemini CLI 额度。
+- 安全取舍与回退见 [ADR-007](../../architecture/adr/ADR-007-gemini-cli-bridge.md)。

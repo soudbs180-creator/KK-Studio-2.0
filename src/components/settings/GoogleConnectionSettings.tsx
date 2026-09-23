@@ -1,27 +1,20 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import {
-  loadApiKey,
-  saveApiKey,
-} from "../../features/creation/providerCredentials";
-import {
-  readProviderConnections,
-  writeProviderConnections,
-} from "../../features/creation/providerRegistry";
+import { loadApiKey } from "../../features/creation/providerCredentials";
 import {
   createGoogleInteractions,
   GOOGLE_API_BASE,
-  GOOGLE_IMAGE_MODEL,
 } from "../../features/agent/googleInteractions";
 import {
-  GOOGLE_CONNECTION_ID,
   GOOGLE_CREDENTIAL_REF,
   readGoogleCliPreference,
+  saveGoogleApiKeyConnection,
   writeGoogleCliPreference,
 } from "../../features/agent/googleAgentConfig";
 import { googleAgentConnection } from "../../features/agent/googleAgentConnection";
 import {
   geminiCliStatus,
   GEMINI_BRIDGE_DEFAULT_URL,
+  normalizeGeminiBridgeUrl,
 } from "../../features/agent/geminiCliAdapter";
 import { GoogleCliSetup, GoogleKeySetup } from "./GoogleLoginModePanels";
 
@@ -64,8 +57,9 @@ export default function GoogleConnectionSettings({
     setBusy(true);
     setStatus("");
     try {
-      writeGoogleCliPreference(loginMode, bridgeUrl);
-      googleAgentConnection.configure({ loginMode, bridgeUrl });
+      const normalizedUrl = normalizeGeminiBridgeUrl(bridgeUrl);
+      writeGoogleCliPreference(loginMode, normalizedUrl);
+      googleAgentConnection.configure({ loginMode, bridgeUrl: normalizedUrl });
       googleAgentConnection.disconnect();
       window.dispatchEvent(new Event("kk:model-provider-changed"));
       if (mounted.current) {
@@ -77,7 +71,8 @@ export default function GoogleConnectionSettings({
         onFeedback("Google 登录方式已更新。");
       }
     } catch {
-      if (mounted.current) setStatus("Google 配置保存失败，请检查本地存储。");
+      if (mounted.current)
+        setStatus("Gemini CLI 桥地址必须是本机 http://127.0.0.1 端口。");
     } finally {
       if (mounted.current) setBusy(false);
     }
@@ -87,37 +82,11 @@ export default function GoogleConnectionSettings({
     setBusy(true);
     setStatus("");
     try {
-      await saveApiKey(GOOGLE_API_BASE, key, GOOGLE_CREDENTIAL_REF);
-      const connections = readProviderConnections();
-      const previous = connections.find(
-        (item) => item.id === GOOGLE_CONNECTION_ID,
-      );
-      if (
-        !writeProviderConnections([
-          ...connections.filter((item) => item.id !== GOOGLE_CONNECTION_ID),
-          {
-            id: GOOGLE_CONNECTION_ID,
-            provider: "Gemini",
-            displayName: "Google Gemini",
-            kind: "user_byok",
-            baseUrl: GOOGLE_API_BASE,
-            credentialRef: GOOGLE_CREDENTIAL_REF,
-            model: GOOGLE_IMAGE_MODEL,
-            state: "active",
-            concurrencyLimit: 1,
-            healthRevision: (previous?.healthRevision ?? 0) + 1,
-            verificationStatus: "unverified",
-            capabilities: {
-              modalities: ["image"],
-              operations: ["generate", "edit"],
-              maxReferences: 6,
-              maxOutputs: 1,
-              async: false,
-            },
-          },
-        ])
-      )
-        throw new Error("metadata");
+      await saveGoogleApiKeyConnection(key);
+      googleAgentConnection.configure({
+        loginMode: "api-key",
+        bridgeUrl: GEMINI_BRIDGE_DEFAULT_URL,
+      });
       googleAgentConnection.disconnect();
       window.dispatchEvent(new Event("kk:model-provider-changed"));
       if (mounted.current) {
@@ -144,6 +113,7 @@ export default function GoogleConnectionSettings({
       try {
         const result = await geminiCliStatus({
           baseUrl: bridgeUrl.trim() || GEMINI_BRIDGE_DEFAULT_URL,
+          signal: controller.signal,
         });
         if (mounted.current) {
           if (!result.installed)
@@ -204,7 +174,7 @@ export default function GoogleConnectionSettings({
       <h3>
         Google Gemini <span className="settings-version-tag">对话与生图</span>
       </h3>
-      <fieldset className="settings-network-field">
+      <fieldset className="settings-login-modes">
         <legend>登录方式</legend>
         <label className="settings-radio">
           <input
@@ -237,7 +207,7 @@ export default function GoogleConnectionSettings({
         />
       ) : (
         <GoogleKeySetup
-          key={key}
+          apiKey={key}
           onChange={setKey}
           disabled={disabled}
           stored={stored}

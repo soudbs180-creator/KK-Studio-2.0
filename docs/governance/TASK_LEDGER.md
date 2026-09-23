@@ -786,10 +786,10 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 配置 Google API Key 后直接聊天、生图并归档到当前画布
 - Scope: Google Interactions adapter, conversation, credentials settings and assets
 - Acceptance: 连续对话和图片生成经官方协议接线，图片归档当前画布; 密钥只存系统凭据库或内存，项目切换与取消不污染状态; Web交互、故障回归、完整验证与独立审查；真实凭据验收单列
-- Branch: `feat/TASK-AGENT-004-google`
-- Worktree: `C:/Users/Administrator/.codex/worktrees/google-interactions/KK-Studio-2.0`
+- Branch: `feat/TASK-AGENT-004-google-closeout`
+- Worktree: `C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0`
 - Modules: src/features/agent, src/components, src/domain, src/App.tsx
-- Verification: PARTIAL — Local/fixture verification complete: 14/14 unit tests, typecheck, lint, governance, UI standards, build, Google browser spec and 7/7 Codex regression all pass. Real Google API key acceptance and desktop (Tauri) review pending.
+- Verification: PARTIAL — Combined closeout candidate: Google Interactions API Key dialogue/image/archive fixture browser flow and focused unit checks pass; full verify was green before final CLI argument hardening and will be rerun. Real Google API Key requests, desktop runtime and final independent review pending.
 - Evidence: [docs/changes/2026-09-23-google-interactions/verification.md](../../docs/changes/2026-09-23-google-interactions/verification.md)
 - Updated: 2026-09-23
 
@@ -801,6 +801,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-AGENT-005-google-cli-login`
 - Worktree: `C:/Users/Administrator/.codex/worktrees/google-cli-login/KK-Studio-2.0`
 - Modules: src/features/agent, src/components, src/domain, scripts
-- Verification: NOT_VERIFIED — Local verification complete: 32/32 unit, 247/247 browser, typecheck/lint/build/ui/governance green. Real gemini install/login/bridge acceptance pending user action.
+- Verification: PARTIAL — Original 005 branch is superseded for review by the combined 004 closeout candidate: local CLI bridge/adapter fixture tests, browser flow and security regression checks pass there. Full verify will be rerun after final argument hardening. Real Gemini CLI install/login/bridge, desktop runtime and final independent review pending.
 - Evidence: [docs/changes/2026-09-23-google-cli-login/verification.md](../../docs/changes/2026-09-23-google-cli-login/verification.md)
 - Updated: 2026-09-23

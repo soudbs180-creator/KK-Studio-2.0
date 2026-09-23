@@ -1771,8 +1771,8 @@
     ],
     "dependencies": ["TASK-AGENT-003"],
     "owner": "root",
-    "branch": "feat/TASK-AGENT-004-google",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/google-interactions/KK-Studio-2.0",
+    "branch": "feat/TASK-AGENT-004-google-closeout",
+    "worktree": "C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0",
     "affectedModules": [
       "src/features/agent",
       "src/components",
@@ -1781,7 +1781,7 @@
     ],
     "status": "IN_PROGRESS",
     "evidence": ["docs/changes/2026-09-23-google-interactions/verification.md"],
-    "verification": "Local/fixture verification complete: 14/14 unit tests, typecheck, lint, governance, UI standards, build, Google browser spec and 7/7 Codex regression all pass. Real Google API key acceptance and desktop (Tauri) review pending.",
+    "verification": "Combined closeout candidate: Google Interactions API Key dialogue/image/archive fixture browser flow and focused unit checks pass; full verify was green before final CLI argument hardening and will be rerun. Real Google API Key requests, desktop runtime and final independent review pending.",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-23"
   },
@@ -1808,8 +1808,8 @@
     ],
     "status": "IN_PROGRESS",
     "evidence": ["docs/changes/2026-09-23-google-cli-login/verification.md"],
-    "verification": "Local verification complete: 32/32 unit, 247/247 browser, typecheck/lint/build/ui/governance green. Real gemini install/login/bridge acceptance pending user action.",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "Original 005 branch is superseded for review by the combined 004 closeout candidate: local CLI bridge/adapter fixture tests, browser flow and security regression checks pass there. Full verify will be rerun after final argument hardening. Real Gemini CLI install/login/bridge, desktop runtime and final independent review pending.",
+    "verificationResult": "PARTIAL",
     "updated": "2026-09-23"
   }
 ]

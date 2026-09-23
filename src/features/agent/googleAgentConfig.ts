@@ -1,6 +1,13 @@
-import { credentialId, loadApiKey } from "../creation/providerCredentials.ts";
-import { readProviderConnections } from "../creation/providerRegistry.ts";
-import { GOOGLE_API_BASE } from "./googleInteractions.ts";
+import {
+  credentialId,
+  loadApiKey,
+  saveApiKey,
+} from "../creation/providerCredentials.ts";
+import {
+  readProviderConnections,
+  writeProviderConnections,
+} from "../creation/providerRegistry.ts";
+import { GOOGLE_API_BASE, GOOGLE_IMAGE_MODEL } from "./googleInteractions.ts";
 import { GEMINI_BRIDGE_DEFAULT_URL } from "./geminiCliAdapter.ts";
 export const GOOGLE_CONNECTION_ID = "google-interactions";
 export const GOOGLE_CREDENTIAL_REF = credentialId(
@@ -45,6 +52,40 @@ export function writeGoogleCliPreference(
   } catch {
     /* 偏好保存失败不影响会话内连接。 */
   }
+}
+export async function saveGoogleApiKeyConnection(
+  apiKey: string,
+): Promise<void> {
+  await saveApiKey(GOOGLE_API_BASE, apiKey, GOOGLE_CREDENTIAL_REF);
+  const connections = readProviderConnections();
+  const previous = connections.find((item) => item.id === GOOGLE_CONNECTION_ID);
+  if (
+    !writeProviderConnections([
+      ...connections.filter((item) => item.id !== GOOGLE_CONNECTION_ID),
+      {
+        id: GOOGLE_CONNECTION_ID,
+        provider: "Gemini",
+        displayName: "Google Gemini",
+        kind: "user_byok",
+        baseUrl: GOOGLE_API_BASE,
+        credentialRef: GOOGLE_CREDENTIAL_REF,
+        model: GOOGLE_IMAGE_MODEL,
+        state: "active",
+        concurrencyLimit: 1,
+        healthRevision: (previous?.healthRevision ?? 0) + 1,
+        verificationStatus: "unverified",
+        capabilities: {
+          modalities: ["image"],
+          operations: ["generate", "edit"],
+          maxReferences: 6,
+          maxOutputs: 1,
+          async: false,
+        },
+      },
+    ])
+  )
+    throw new Error("Google provider metadata could not be saved.");
+  writeGoogleCliPreference("api-key", GEMINI_BRIDGE_DEFAULT_URL);
 }
 export async function getGoogleCredential() {
   const connection = readProviderConnections().find(

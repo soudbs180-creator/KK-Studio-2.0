@@ -20,3 +20,7 @@
 - gemini headless JSON 是否含 sessionId 未最终确认:解析 response.sessionId / stats.sessionId 兼容,无则本轮不回填续接(单轮可用),真实验收后补。
 - Windows spawn .cmd shim: 解析 where gemini 的 cmd 提取 node 入口,失败回退 cmd /c(参数经引号转义)。
 - 桥手动启动是临时形态,桌面自动拉起留后续任务。
+
+## 2026-09-23 收尾勘误
+
+上述 `cmd /c` 回退、未确认 CLI 会话字段是早期计划，不再代表当前实现。安全复核后已删除 shell 回退，直接用 Node 定位 Windows npm 全局包；按官方 JSON `session_id` 续接，且将用户值固定为 `--name=value` 参数。最终变更与未完成的真实账号验收见 [spec](spec.md)、[review](review.md)、[verification](verification.md)。

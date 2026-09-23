@@ -15,3 +15,7 @@
 
 - 本地/fixture 全部检查通过（见 verification.md）；共享组件（ConversationPanel/Composer）浏览器回归 7/7 通过。
 - 待办：真实 Google API Key 验收、桌面（Tauri）运行时复核、独立 reviewer 终审。
+
+## 2026-09-23 组合分支补审
+
+Google CLI 通道叠加后，独立 reviewer 发现 Google Key 输入把值放在 React 保留的 `key` prop，且从 CLI 模式切回 Key 时没有持久化/运行时切换。当前候选已改用普通 `apiKey` prop，并在 Key 保存后同步模式；浏览器回归先保存 CLI，再切回 Key，检查输入值、会话与图片。补审其余 CLI 安全问题见 [TASK-AGENT-005 review](../2026-09-23-google-cli-login/review.md)。最终独立复核仍待完成。

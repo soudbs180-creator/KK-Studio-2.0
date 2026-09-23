@@ -30,3 +30,10 @@
 
 - 真实 API Key 连接与对话、真实图片生成与归档、真实连续对话续接、配额/错误状态展示。
 - 桌面（Tauri）边界：本验证基于 Web（Playwright）与本地 fixture；桌面运行时行为需在应用内用真实 Key 复核。
+
+## 2026-09-23 组合候选补充验证（004/005 合并收尾分支）
+
+- 当前候选 `feat/TASK-AGENT-004-google-closeout` 的 `npm run verify` 退出 0：治理 61/0、功能 29/0、单元测试 404/404、浏览器 302/302，lint、类型、UI 标准、格式和生产构建通过。该次校验在主线新增 Markdown 门禁合入之前执行；同步主线后会另行重验。
+- Web 运行方式为 `npm run test:ui` 所启动的 `vite preview --host 127.0.0.1 --port 1423 --strictPort`；浏览器地址 `http://127.0.0.1:1423/`，页面 route `/`，加载重新构建的 production `dist`。设置链路：`src/App.tsx` → `SettingsSections.tsx` → `ConnectionSettings.tsx` → `GoogleConnectionSettings.tsx`；对话链路：`src/App.tsx` → `ConversationPanel.tsx` → `GoogleConversationPanel.tsx` → `GoogleAgentControls.tsx`。浏览器测试分别验证 390px 与 1920px 设置控件可达、Google Key 输入/保存、CLI→Key 切换、两轮对话、图片卡归档和刷新恢复。界面截图见 [fixture 截图](evidence/google-image-fixture.png)；其中图片为 1×1 测试字节，不能证明真实出图。
+- Windows `npm run client:check`（Cargo check）退出 0，说明原生代码编译检查通过；没有启动本轮 Tauri WebView 或发布构建，故 Desktop 运行态仍记 NOT RUN。
+- 没有使用真实 Google API Key 发起 Interactions 请求；模型额度、实际图片、跨轮 `previous_interaction_id`、实际桌面凭据库仍需真实账号验收。独立审查最初发现 Key 输入与登录模式切换阻断问题且已修复；本轮最终补审因 reviewer 工作区额度耗尽未完成，不声称独立终审通过。
