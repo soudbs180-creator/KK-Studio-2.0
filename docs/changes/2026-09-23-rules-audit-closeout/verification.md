@@ -1,0 +1,27 @@
+# Verification：规则审计并线后的状态收口
+
+- Task ID：TASK-RULES-004
+- 记录状态：远端与 Git 回读、本地完整验证通过；本次文档 PR 的托管检查待执行。
+- 时间：2026-09-23，Asia/Shanghai
+- cwd / branch：`D:/kk-studio/.worktrees/TASK-RULES-004-closeout` / `docs/TASK-RULES-004-closeout`
+- Base：`9f04bfced49224e9cd523844a8e3c995119c7955`
+
+## 并线事实
+
+| 检查   | 回读结果                                                                                                                                                                                                                                                                                                                                                           | 边界                                                                                                                                                          |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| PR #11 | 最终 head `dfed07447486d4a7cdd86c5bb0d8db77ec5bfb37`；hosted PR [35839580717](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35839580717) 的 verify/delivery 均 success，push [35839575383](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35839575383) 的 verify success；合并前 rollup SUCCESS、mergeState CLEAN、未解决线程 0 | 独立 AI review PASS 另见[原记录](../2026-09-23-rules-audit-main/review.md)及 PR 描述；不是 GitHub 人类审批                                                    |
+| main   | #11 squash merge `9f04bfced49224e9cd523844a8e3c995119c7955`；main tree `3f9d8ed63b3c4098e9b2f10f4dc3ea8d70f44129` 与候选 head tree 相同；`VERSION` 为 2.1.0，本地根 main 已快进至同一 SHA 且工作区干净                                                                                                                                                             | 合并后 main [工作流 35841965161](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/35841965161) verify success；push 的 delivery 按条件 skipped |
+| PR #10 | 已 closed/unmerged；旧分支 head `5136096cb2c79ccd0c8c2aeac4ae3af9047d082a` 未删除，PR body 关联 #11                                                                                                                                                                                                                                                                | 不重复合并或改写旧审查                                                                                                                                        |
+
+旧 PR #11 的历史交付记录当时正确写着“尚待 hosted 检查”；本次以新包和现行状态文档补上事后结果，未修改原失败日志、截图或旧 change package。正式 tag、安装包、签名、Desktop 插件和用户发布验收仍未完成。
+
+## 本次更正的检查
+
+| 检查                                                 | 结果         | 证据/边界                                                                                                                                                                                                                                                                                                     |
+| ---------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm ci`、`npm run verify`                           | PASS         | 当前隔离工作树干净安装锁定依赖；完整 verify 退出码 0：370 Node、300 browser、治理 61/0、功能 29/0、Markdown 81/0、类型、UI、格式和 Web build 均通过。日志 `%TEMP%/kk-rules-closeout2-{npm-ci,verify}-20260923.log`；测试重写的 22 个旧 PNG 和 `docs/evidence/browser-results.json` 已在本隔离工作树定向恢复。 |
+| `npm run governance:check`、`npm run markdown:check` | PASS         | 最终文档和账本单独回读：治理 61/0、Markdown 81/0；`git diff --check` 无错误。                                                                                                                                                                                                                                 |
+| 精确 base/head/branch 的 `npm run delivery:check`    | NOT RUN      | 提交后执行                                                                                                                                                                                                                                                                                                    |
+| 独立 AI review                                       | NOT VERIFIED | 绑定本次提交 SHA                                                                                                                                                                                                                                                                                              |
+| 本次文档 PR hosted verify/delivery                   | NOT RUN      | 创建 PR 后以最终 head 回读                                                                                                                                                                                                                                                                                    |
