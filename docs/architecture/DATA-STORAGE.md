@@ -45,7 +45,7 @@ kk-studio/
 
 ## 当前代码中的实际形状
 
-当前 `kk-studio-next` 的浏览器端保存主题偏好、供应商元数据和创作快照恢复副本；完整创作快照在 Web 使用 IndexedDB，在 Tauri 使用 `projects/creation-v2.json` IPC 命令。浏览器端 API Key 只在当前会话内存中，Windows 桌面端通过 `com.kkstudio.provider` 凭据命令读写系统凭据库：
+当前 KK Studio 2.1.0 的浏览器端保存主题偏好、供应商元数据和创作快照恢复副本；完整创作快照在 Web 使用 IndexedDB，在 Tauri 使用 `projects/creation-v2.json` IPC 命令。历史 `kk-studio-next:*` 存储 key 继续保留以兼容已有数据。浏览器端 API Key 只在当前会话内存中，Windows 桌面端通过 `com.kkstudio.provider` 凭据命令读写系统凭据库：
 
 | Key                                | Schema                                      | 用途                                                 | 风险/边界                                                  |
 | ---------------------------------- | ------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |

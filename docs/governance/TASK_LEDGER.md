@@ -30,17 +30,17 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | UI-003 | 示例任务/账号与真实服务边界 | PARTIAL | UI-001 | root |
 | UI-004 | 逐页对齐、IA和最终视觉运行态 | PARTIAL | UI-002, UI-003, TASK-DS-001 | root |
 | PERF-001 | 原生素材缩略图/分页及内存IO | PARTIAL | T3a | root |
-| EXT-GIT | 远端PR与main保护规则 | BLOCKED | TASK-GOV-001, T0 | root |
+| EXT-GIT | 远端PR与main保护规则 | DONE | TASK-GOV-001, T0 | root |
 | TEST-PROV-001 | Provider真实入口浏览器回归 | DONE | TASK-GOV-001 | root |
 | TASK-ASTRA-001 | Astra 迁移计划与 Git 分支规则同步 | DONE | T0, TASK-GOV-001 | root |
 | TASK-KK2-MAIN-SYNC | KK Studio 2.0 本地与云端 main 树同步 | DONE | T0, TASK-GOV-001 | root |
 | TASK-UI-UNMERGED-001 | dirty checkout 未合并 UI 回归候选 | DONE | TASK-GOV-001 | root |
 | TASK-UI-MAIN-001 | 现行Figma页面校正与交互修复主线整合 | DONE | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 | TASK-UI-DISMISS-002 | 窄屏侧栏关闭与大图重绘稳定性 | DONE | TASK-UI-MAIN-001 | root |
-| TASK-MAIN-CLOSE-002 | 未完成子任务汇总验收与主线同步 | IN_PROGRESS | TASK-UI-MAIN-001 | root |
+| TASK-MAIN-CLOSE-002 | 未完成子任务汇总验收与主线同步 | DONE | TASK-UI-MAIN-001 | root |
 | TASK-UI-CLOSE-003 | 现行Figma页面缺口复核与交互收口 | DONE | TASK-UI-MAIN-001 | finish_figma_pages |
 | TASK-PERF-ASSETS-001 | 素材列表元数据和原件按需读取 | DONE | T3a | finish_asset_performance |
-| TASK-GOV-002 | 跨AI自主开发与分支质量门禁 | PARTIAL | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
+| TASK-GOV-002 | 跨AI自主开发与分支质量门禁 | DONE | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
 | TASK-AUDIT-SEC-001 | 安全边界与异常任务状态审计 | REVIEW | TASK-GOV-001 | root |
 | TASK-CAP-001 | 本地 Skill/MCP/ComfyUI 能力补齐 | PARTIAL | TASK-GOV-001, T6 | root |
 | TASK-MINIMAX-001 | MiniMax Design 交互审计与本地技能/MCP复刻 | PARTIAL | TASK-GOV-002 | root |
@@ -65,6 +65,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AGENT-003 | Agent 图片附件、画布引用与视口选择操作 | DONE | TASK-AGENT-001, TASK-AGENT-002 | root |
 | PLUGIN-DESKTOP-001 | 修复桌面画布插件的 CSP 加载路径 | TODO | none | root |
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
+| TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | REVIEW | REL-2.1.0 | root |
+| TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -366,10 +368,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: Git hosting
-- Verification: NOT_VERIFIED — NOT VERIFIED
-- Evidence: [docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md](../../docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md), [docs/changes/2026-09-20-gpt-6-astra/verification.md](../../docs/changes/2026-09-20-gpt-6-astra/verification.md)
-- External condition: 目标仓库 authenticated API 已确认 private、默认分支 main 与写权限；main protected=false，required checks 为空，rulesets/protection API 因当前 GitHub 计划返回 403。需完成最终候选 PR、CI、合并和 main tree 回读；托管保护能力仍未启用。
-- Updated: 2026-09-20
+- Verification: PASS — 2026-09-23 用户确认仓库公开；PR #9 当前 head 的 hosted verify/delivery 均成功，已 squash 合入 main@b45c5bc7，合并树与候选树一致；合并后 main 工作流 35836597858 success。三个远端 ruleset 回读 active（23866923/23866924/23866925），main protected=true，有效规则含 PR、必需检查、禁止删除和非快进。管理员仍可修改规则。
+- Evidence: [docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md](../../docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md), [docs/changes/2026-09-20-gpt-6-astra/verification.md](../../docs/changes/2026-09-20-gpt-6-astra/verification.md), [docs/changes/2026-09-23-rules-audit-main/verification.md](../../docs/changes/2026-09-23-rules-audit-main/verification.md)
+- Updated: 2026-09-23
 
 ## TEST-PROV-001 — Provider真实入口浏览器回归
 
@@ -451,9 +452,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-MAIN-CLOSE-002`
 - Worktree: `C:/Users/Administrator/.codex/worktrees/task-main-close-002/kk-studio-next`
 - Modules: tests/browser, docs/governance, docs/PROGRESS.md
-- Verification: PARTIAL — 整合候选 bb96dadc08c12a2177481d2ae1e4dda605cc77d4 已合入 origin/main 3c4d012846e53095bd4f11343a1cd2ef61aa3bbd 之后形成；当前候选本地 npm run verify 为 172 Node、197 browser、0 failure/flaky、UI121/0，Rust61/61、fmt、client check 通过；三模式 runtime 产品代码证据源为 8369185。PR #8 的 delivery 曾成功，但 hosted verify 因 GitHub 账号付款/支出额度限制未启动，任务保持 IN_PROGRESS，待恢复 Actions 后重跑 CI、合并并回读 main。
+- Verification: PASS — 历史候选 bb96dad 的本地 verify 为 172 Node、197 browser、UI121/0，Rust61/61、fmt、client check 通过；三模式 runtime 证据源为 8369185。PR #8 最终 head dac81ec 是 PR #9 head da811283 的祖先；PR #9 当前候选 hosted verify/delivery 成功并 squash 合入 main@b45c5bc7，完整树回读一致。PR #8 因内容被吸收已关闭而未重复合并；旧分支和历史证据保留。
 - Evidence: [docs/changes/2026-09-20-main-close-002/intent.md](../../docs/changes/2026-09-20-main-close-002/intent.md), [docs/changes/2026-09-20-main-close-002/spec.md](../../docs/changes/2026-09-20-main-close-002/spec.md), [docs/changes/2026-09-20-main-close-002/plan.md](../../docs/changes/2026-09-20-main-close-002/plan.md), [docs/changes/2026-09-20-main-close-002/verification.md](../../docs/changes/2026-09-20-main-close-002/verification.md), [docs/changes/2026-09-20-main-close-002/review.md](../../docs/changes/2026-09-20-main-close-002/review.md), [docs/evidence/2026-09-21-main-close-002/verify-run.json](../../docs/evidence/2026-09-21-main-close-002/verify-run.json)
-- Updated: 2026-09-21
+- Updated: 2026-09-23
 
 ## TASK-UI-CLOSE-003 — 现行Figma页面缺口复核与交互收口
 
@@ -487,9 +488,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-GOV-002-closeout`
 - Worktree: `D:/kk-studio-next/.worktrees/TASK-GOV-002-CLOSEOUT`
 - Modules: docs, scripts/governance, .github, .githooks, config, tests/unit/deliveryPolicy.test.ts, tests/unit/gitPushPolicy.test.ts, tests/evals
-- Verification: PARTIAL — PR #4 已 squash 合入 main；后续 PR #7 governance closeout merge 3c4d012；hosted delivery/verify、Rust fmt/test、client check、Tauri no-bundle build 全部成功；治理35tasks/0、push9/9、delivery12/12、AI场景12/12、基线正反例2/2。服务器 protection/rulesets API403仍BLOCKED，本地hook不能替代远端强制保护；产品代码、既有测试、旧证据和其他任务提交未由本任务写入。
-- Evidence: [docs/changes/2026-09-20-ai-sdlc/verification.md](../../docs/changes/2026-09-20-ai-sdlc/verification.md), [docs/changes/2026-09-21-ai-sdlc-closeout/verification.md](../../docs/changes/2026-09-21-ai-sdlc-closeout/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json)
-- Updated: 2026-09-21
+- Verification: PASS — PR #4、#7 已合入 main；当次 hosted delivery/verify、Rust fmt/test、client check、Tauri no-bundle build、治理35tasks/0、push9/9、delivery12/12、AI场景12/12、基线正反例2/2 均通过。先前 private 仓库的 ruleset API403 已由用户确认公开后解决；2026-09-23 三套 active ruleset 和 main 有效规则已回读，PR #9 当前 head 检查通过并合入 main。管理员仍可修改设置，模型实际读懂规则须另行演练；产品代码和旧证据不由本任务改写。
+- Evidence: [docs/changes/2026-09-20-ai-sdlc/verification.md](../../docs/changes/2026-09-20-ai-sdlc/verification.md), [docs/changes/2026-09-21-ai-sdlc-closeout/verification.md](../../docs/changes/2026-09-21-ai-sdlc-closeout/verification.md), [docs/evidence/ai-sdlc-2026-09-20/remote-audit.json](../../docs/evidence/ai-sdlc-2026-09-20/remote-audit.json), [docs/changes/2026-09-23-rules-audit-main/verification.md](../../docs/changes/2026-09-23-rules-audit-main/verification.md)
+- Updated: 2026-09-23
 
 ## TASK-AUDIT-SEC-001 — 安全边界与异常任务状态审计
 
@@ -775,6 +776,30 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `chore/TASK-CONSOLIDATE-200`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src, src-tauri, tests, scripts, vendor, docs
-- Verification: PARTIAL — 安全补审后本地 367 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；受审源码 15f1f27 已上传，首次远端 SHA 一致；Hosted CI、PR、安装包待验证。各历史变更包保留其原始验证时点。
+- Verification: PARTIAL — 安全补审后本地 367 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；受审源码 15f1f27 已上传，首次远端 SHA 一致。后续候选 head da811283 的 PR #9 当前 hosted verify/delivery 成功，已 squash 合入 main@b45c5bc7 且 tree 一致；合并后 main 工作流 35836597858 success。正式 tag、安装包、签名和发布验收仍未完成。各历史变更包保留其原始验证时点。
 - Evidence: [docs/changes/2026-09-20-main-close-002/verification.md](../../docs/changes/2026-09-20-main-close-002/verification.md), [docs/changes/2026-09-21-consolidate-200/verification.md](../../docs/changes/2026-09-21-consolidate-200/verification.md), [docs/changes/2026-09-21-feature-system/verification.md](../../docs/changes/2026-09-21-feature-system/verification.md), [docs/changes/2026-09-21-local-capabilities/verification.md](../../docs/changes/2026-09-21-local-capabilities/verification.md), [docs/changes/2026-09-21-minimax-deep-audit/verification.md](../../docs/changes/2026-09-21-minimax-deep-audit/verification.md), [docs/changes/2026-09-21-security-audit-closeout/verification.md](../../docs/changes/2026-09-21-security-audit-closeout/verification.md), [docs/changes/2026-09-21-security-audit/verification.md](../../docs/changes/2026-09-21-security-audit/verification.md), [docs/changes/2026-09-21-text-and-rule-audit/verification.md](../../docs/changes/2026-09-21-text-and-rule-audit/verification.md), [docs/changes/2026-09-22-agent-desktop/verification.md](../../docs/changes/2026-09-22-agent-desktop/verification.md), [docs/changes/2026-09-22-codex-default-agent/verification.md](../../docs/changes/2026-09-22-codex-default-agent/verification.md), [docs/changes/2026-09-22-design-system/verification.md](../../docs/changes/2026-09-22-design-system/verification.md), [docs/changes/2026-09-22-design-system-pages/verification.md](../../docs/changes/2026-09-22-design-system-pages/verification.md), [docs/changes/2026-09-22-port-infinite-canvas/verification.md](../../docs/changes/2026-09-22-port-infinite-canvas/verification.md), [docs/changes/2026-09-22-responsive-ui/verification.md](../../docs/changes/2026-09-22-responsive-ui/verification.md), [docs/changes/2026-09-22-ui-feature-parity/verification.md](../../docs/changes/2026-09-22-ui-feature-parity/verification.md), [docs/changes/2026-09-22-ui-interactions/verification.md](../../docs/changes/2026-09-22-ui-interactions/verification.md), [docs/changes/2026-09-23-agent-attachments/verification.md](../../docs/changes/2026-09-23-agent-attachments/verification.md), [docs/changes/2026-09-23-input-contract/verification.md](../../docs/changes/2026-09-23-input-contract/verification.md), [docs/changes/2026-09-23-release-2-1-0/verification.md](../../docs/changes/2026-09-23-release-2-1-0/verification.md)
+- Updated: 2026-09-23
+
+## TASK-RULES-004 — 现行规则与 Markdown 一致性审计
+
+- Goal: 核对规则文档与实际门禁及 2.1.0 候选状态，并让现行 Markdown 相对文件链接进入 lint
+- Scope: 共同规则入口、工程与治理文档、现行 Markdown 链接检查及任务交付记录
+- Acceptance: 当前设计、任务和发布状态的文档入口不与权威来源冲突; 依赖 PR 的分支同步与清理边界有明确可执行规则; 现行 Markdown 相对文件链接进入 lint 且有有效回归; 本地验证、独立复审和 hosted CI 限制分别如实记录
+- Branch: `docs/TASK-RULES-004-main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-RULES-004-main`
+- Modules: AGENTS.md, README.md, docs, scripts/governance, tests/unit, package.json
+- Verification: PARTIAL — 原堆叠 PR #10 两轮失败审查及第三轮 d8e12c0 PASS 保留；上游 PR #9 已合入 main@b45c5bc7。新分支从 main 只 cherry-pick 本任务四个提交，tree 与原 PR #10 head 完全相同。状态文档与新交付包更新后，干净 npm ci 及完整 verify 再次通过：370 Node、300 browser、治理61/0、功能29/0、Markdown81/0、UI159/0、类型/格式/Web build 均通过；旧生成证据定向恢复。e12d9dc 独立 AI 复审和 889ec4d 状态增量补审均 PASS，delivery34/0；草稿 PR #11 指向 main，最终 head 的审查记录增量及 hosted CI 仍待结果。旧账单阻断不再是当前门禁。
+- Evidence: [docs/changes/2026-09-23-rules-audit/intent.md](../../docs/changes/2026-09-23-rules-audit/intent.md), [docs/changes/2026-09-23-rules-audit/spec.md](../../docs/changes/2026-09-23-rules-audit/spec.md), [docs/changes/2026-09-23-rules-audit/plan.md](../../docs/changes/2026-09-23-rules-audit/plan.md), [docs/changes/2026-09-23-rules-audit/verification.md](../../docs/changes/2026-09-23-rules-audit/verification.md), [docs/changes/2026-09-23-rules-audit/review.md](../../docs/changes/2026-09-23-rules-audit/review.md), [docs/changes/2026-09-23-rules-audit-main/intent.md](../../docs/changes/2026-09-23-rules-audit-main/intent.md), [docs/changes/2026-09-23-rules-audit-main/spec.md](../../docs/changes/2026-09-23-rules-audit-main/spec.md), [docs/changes/2026-09-23-rules-audit-main/plan.md](../../docs/changes/2026-09-23-rules-audit-main/plan.md), [docs/changes/2026-09-23-rules-audit-main/verification.md](../../docs/changes/2026-09-23-rules-audit-main/verification.md), [docs/changes/2026-09-23-rules-audit-main/review.md](../../docs/changes/2026-09-23-rules-audit-main/review.md)
+- Updated: 2026-09-23
+
+## TASK-DOCS-HISTORY-001 — 历史 Markdown 链接与缺失日志勘误
+
+- Goal: 逐项核对历史快照的 37 处链接问题并在有原始证据时添加可追溯勘误
+- Scope: docs/archive、历史 docs/changes 和 docs/evidence 的链接及产物归属
+- Acceptance: 归档搬迁和旧代码行号链接提供可用入口且不篡改当时结论; 缺失日志明确标注来源和可恢复性，不补造证据; 修正后的历史页面定向检查并经独立审阅
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: docs/archive, docs/changes, docs/evidence
+- Verification: NOT_VERIFIED — 2026-09-23 扫描 365 个已跟踪 Markdown，历史范围共 37 处文件目标问题；原始日志来源和可恢复性待核对。
+- Evidence: [docs/governance/MARKDOWN_AUDIT.md](../../docs/governance/MARKDOWN_AUDIT.md)
 - Updated: 2026-09-23

@@ -670,14 +670,14 @@
     "branch": "unallocated",
     "worktree": "unallocated",
     "affectedModules": ["Git hosting"],
-    "status": "BLOCKED",
-    "verification": "NOT VERIFIED",
-    "updated": "2026-09-20",
-    "verificationResult": "NOT_VERIFIED",
-    "blocker": "目标仓库 authenticated API 已确认 private、默认分支 main 与写权限；main protected=false，required checks 为空，rulesets/protection API 因当前 GitHub 计划返回 403。需完成最终候选 PR、CI、合并和 main tree 回读；托管保护能力仍未启用。",
+    "status": "DONE",
+    "verification": "2026-09-23 用户确认仓库公开；PR #9 当前 head 的 hosted verify/delivery 均成功，已 squash 合入 main@b45c5bc7，合并树与候选树一致；合并后 main 工作流 35836597858 success。三个远端 ruleset 回读 active（23866923/23866924/23866925），main protected=true，有效规则含 PR、必需检查、禁止删除和非快进。管理员仍可修改规则。",
+    "updated": "2026-09-23",
+    "verificationResult": "PASS",
     "evidence": [
       "docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md",
-      "docs/changes/2026-09-20-gpt-6-astra/verification.md"
+      "docs/changes/2026-09-20-gpt-6-astra/verification.md",
+      "docs/changes/2026-09-23-rules-audit-main/verification.md"
     ]
   },
   {
@@ -873,7 +873,7 @@
     ],
     "dependencies": ["TASK-UI-MAIN-001"],
     "goal": "未完成子任务汇总验收与主线同步",
-    "status": "IN_PROGRESS",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-09-20-main-close-002/intent.md",
       "docs/changes/2026-09-20-main-close-002/spec.md",
@@ -882,9 +882,9 @@
       "docs/changes/2026-09-20-main-close-002/review.md",
       "docs/evidence/2026-09-21-main-close-002/verify-run.json"
     ],
-    "verification": "整合候选 bb96dadc08c12a2177481d2ae1e4dda605cc77d4 已合入 origin/main 3c4d012846e53095bd4f11343a1cd2ef61aa3bbd 之后形成；当前候选本地 npm run verify 为 172 Node、197 browser、0 failure/flaky、UI121/0，Rust61/61、fmt、client check 通过；三模式 runtime 产品代码证据源为 8369185。PR #8 的 delivery 曾成功，但 hosted verify 因 GitHub 账号付款/支出额度限制未启动，任务保持 IN_PROGRESS，待恢复 Actions 后重跑 CI、合并并回读 main。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-09-21"
+    "verification": "历史候选 bb96dad 的本地 verify 为 172 Node、197 browser、UI121/0，Rust61/61、fmt、client check 通过；三模式 runtime 证据源为 8369185。PR #8 最终 head dac81ec 是 PR #9 head da811283 的祖先；PR #9 当前候选 hosted verify/delivery 成功并 squash 合入 main@b45c5bc7，完整树回读一致。PR #8 因内容被吸收已关闭而未重复合并；旧分支和历史证据保留。",
+    "verificationResult": "PASS",
+    "updated": "2026-09-23"
   },
   {
     "id": "TASK-UI-CLOSE-003",
@@ -971,15 +971,16 @@
       "tests/unit/gitPushPolicy.test.ts",
       "tests/evals"
     ],
-    "status": "PARTIAL",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-09-20-ai-sdlc/verification.md",
       "docs/changes/2026-09-21-ai-sdlc-closeout/verification.md",
-      "docs/evidence/ai-sdlc-2026-09-20/remote-audit.json"
+      "docs/evidence/ai-sdlc-2026-09-20/remote-audit.json",
+      "docs/changes/2026-09-23-rules-audit-main/verification.md"
     ],
-    "verification": "PR #4 已 squash 合入 main；后续 PR #7 governance closeout merge 3c4d012；hosted delivery/verify、Rust fmt/test、client check、Tauri no-bundle build 全部成功；治理35tasks/0、push9/9、delivery12/12、AI场景12/12、基线正反例2/2。服务器 protection/rulesets API403仍BLOCKED，本地hook不能替代远端强制保护；产品代码、既有测试、旧证据和其他任务提交未由本任务写入。",
-    "verificationResult": "PARTIAL",
-    "updated": "2026-09-21"
+    "verification": "PR #4、#7 已合入 main；当次 hosted delivery/verify、Rust fmt/test、client check、Tauri no-bundle build、治理35tasks/0、push9/9、delivery12/12、AI场景12/12、基线正反例2/2 均通过。先前 private 仓库的 ruleset API403 已由用户确认公开后解决；2026-09-23 三套 active ruleset 和 main 有效规则已回读，PR #9 当前 head 检查通过并合入 main。管理员仍可修改设置，模型实际读懂规则须另行演练；产品代码和旧证据不由本任务改写。",
+    "verificationResult": "PASS",
+    "updated": "2026-09-23"
   },
   {
     "id": "TASK-AUDIT-SEC-001",
@@ -1744,8 +1745,62 @@
       "docs/changes/2026-09-23-input-contract/verification.md",
       "docs/changes/2026-09-23-release-2-1-0/verification.md"
     ],
-    "verification": "安全补审后本地 367 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；受审源码 15f1f27 已上传，首次远端 SHA 一致；Hosted CI、PR、安装包待验证。各历史变更包保留其原始验证时点。",
+    "verification": "安全补审后本地 367 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；受审源码 15f1f27 已上传，首次远端 SHA 一致。后续候选 head da811283 的 PR #9 当前 hosted verify/delivery 成功，已 squash 合入 main@b45c5bc7 且 tree 一致；合并后 main 工作流 35836597858 success。正式 tag、安装包、签名和发布验收仍未完成。各历史变更包保留其原始验证时点。",
     "verificationResult": "PARTIAL",
+    "updated": "2026-09-23"
+  },
+  {
+    "id": "TASK-RULES-004",
+    "title": "现行规则与 Markdown 一致性审计",
+    "goal": "核对规则文档与实际门禁及 2.1.0 候选状态，并让现行 Markdown 相对文件链接进入 lint",
+    "scope": "共同规则入口、工程与治理文档、现行 Markdown 链接检查及任务交付记录",
+    "acceptance": [
+      "当前设计、任务和发布状态的文档入口不与权威来源冲突",
+      "依赖 PR 的分支同步与清理边界有明确可执行规则",
+      "现行 Markdown 相对文件链接进入 lint 且有有效回归",
+      "本地验证、独立复审和 hosted CI 限制分别如实记录"
+    ],
+    "dependencies": ["REL-2.1.0"],
+    "owner": "root",
+    "branch": "docs/TASK-RULES-004-main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-RULES-004-main",
+    "affectedModules": ["AGENTS.md", "README.md", "docs", "scripts/governance", "tests/unit", "package.json"],
+    "status": "REVIEW",
+    "evidence": [
+      "docs/changes/2026-09-23-rules-audit/intent.md",
+      "docs/changes/2026-09-23-rules-audit/spec.md",
+      "docs/changes/2026-09-23-rules-audit/plan.md",
+      "docs/changes/2026-09-23-rules-audit/verification.md",
+      "docs/changes/2026-09-23-rules-audit/review.md",
+      "docs/changes/2026-09-23-rules-audit-main/intent.md",
+      "docs/changes/2026-09-23-rules-audit-main/spec.md",
+      "docs/changes/2026-09-23-rules-audit-main/plan.md",
+      "docs/changes/2026-09-23-rules-audit-main/verification.md",
+      "docs/changes/2026-09-23-rules-audit-main/review.md"
+    ],
+    "verification": "原堆叠 PR #10 两轮失败审查及第三轮 d8e12c0 PASS 保留；上游 PR #9 已合入 main@b45c5bc7。新分支从 main 只 cherry-pick 本任务四个提交，tree 与原 PR #10 head 完全相同。状态文档与新交付包更新后，干净 npm ci 及完整 verify 再次通过：370 Node、300 browser、治理61/0、功能29/0、Markdown81/0、UI159/0、类型/格式/Web build 均通过；旧生成证据定向恢复。e12d9dc 独立 AI 复审和 889ec4d 状态增量补审均 PASS，delivery34/0；草稿 PR #11 指向 main，最终 head 的审查记录增量及 hosted CI 仍待结果。旧账单阻断不再是当前门禁。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-09-23"
+  },
+  {
+    "id": "TASK-DOCS-HISTORY-001",
+    "title": "历史 Markdown 链接与缺失日志勘误",
+    "goal": "逐项核对历史快照的 37 处链接问题并在有原始证据时添加可追溯勘误",
+    "scope": "docs/archive、历史 docs/changes 和 docs/evidence 的链接及产物归属",
+    "acceptance": [
+      "归档搬迁和旧代码行号链接提供可用入口且不篡改当时结论",
+      "缺失日志明确标注来源和可恢复性，不补造证据",
+      "修正后的历史页面定向检查并经独立审阅"
+    ],
+    "dependencies": ["TASK-RULES-004"],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": ["docs/archive", "docs/changes", "docs/evidence"],
+    "status": "TODO",
+    "evidence": ["docs/governance/MARKDOWN_AUDIT.md"],
+    "verification": "2026-09-23 扫描 365 个已跟踪 Markdown，历史范围共 37 处文件目标问题；原始日志来源和可恢复性待核对。",
+    "verificationResult": "NOT_VERIFIED",
     "updated": "2026-09-23"
   }
 ]

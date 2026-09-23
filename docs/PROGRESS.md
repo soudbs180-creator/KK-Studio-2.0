@@ -1,5 +1,15 @@
 # 当前进度
 
+## 2026-09-23 2.1.0 源码并线与远端规则回读
+
+- [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的 head `da811283` 在 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7`；合并树与候选树相同，本地根 `main` 已快进至同一 SHA。旧 PR #8 的提交是 #9 候选的祖先，其内容被吸收，PR #8 已关闭而未重复合并。
+- 用户确认仓库公开；三套远端 ruleset 已 active，`main` 有效规则含 PR、必需检查、禁删除和非快进。合并后 `main` 工作流最终 success。正式 2.1.0 tag、安装包、签名和用户发布验收未完成，Desktop 插件问题仍在 PLUGIN-DESKTOP-001。
+- TASK-RULES-004 的旧草稿 PR #10 堆叠在 #9 上；按 [分支规则](engineering/BRANCH-POLICY.md) 从当前 main 建 `docs/TASK-RULES-004-main`，仅承接四个任务提交，文件树与旧 head 一致。新工作树完整 verify 为 370 Node、300 browser 全通过；`e12d9dc` 的独立 AI 复审与 `889ec4d` 状态勘误补审均 PASS，当前草稿 PR #11 的最终 SHA 和 hosted 检查仍待完成。旧分支及其它 dirty worktree 保留。
+
+## 2026-09-23 规则与 Markdown 审计（原堆叠 PR 阶段快照）
+
+在 2.1.0 候选 `da811283e55ce699e4c5425d92ad31ffba7513e3` 上核对了共同规则入口、账本、PR/CI、本地 Git 防线、现行 Markdown 链接与历史证据边界。现行文档中的设计来源、已知问题、版本交接、分支清理和交付文件数已按当前事实整理；现行 Markdown 相对文件链接加入本地 lint 检查。结构检查不能证明模型读懂规则，PR #9 的 hosted 检查仍因账号付款或 spending limit 在步骤前失败；main、tag、安装包及远端强制保护没有因此完成。具体差异、验证与独立复审见 `docs/changes/2026-09-23-rules-audit/`。
+
 ## 2026-09-23 KK Studio 2.1.0 源码分支已上传（REL-2.1.0，本地验证完成）
 
 统一 package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端版本为 2.1.0，新增 `VERSION` 与 `CHANGELOG.md`，并将当前已授权的功能与文档候选绑定到同一 Git 任务分支。用户数据存储 key、应用 identifier、历史 2.0.0 证据和恢复归档保持不变。安装包、代码签名、真实 Provider/ComfyUI、Hosted CI、PR 合并和正式 main tag 仍需单独门禁，不以本地源码上传代替。

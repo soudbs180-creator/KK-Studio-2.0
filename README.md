@@ -2,7 +2,7 @@
 
 KK Studio 是以无限画布为中心的多模态 Agent 工作台。本机唯一工程目录为 `D:\kk-studio\KK-Studio-2.0`。2.0.0 是融合基线，当前版本为 2.1.0；当前能力和未完成项以治理账本为准。
 
-桌面 ZIP 和源码 ZIP 通过构建与验收后，将放入 `releases/2.1.0/` 供分享；当前仅准备源码候选。不要直接压缩整个开发目录：`.git` 是历史，`node_modules` 是开发依赖，`src-tauri/target` 是可生成产物，用户项目和恢复归档也不属于分享内容。分享包使用说明见 [RELEASE.md](RELEASE.md)。
+2.1.0 源码已通过 [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 合入 `main`。桌面 ZIP 和源码 ZIP 仍待构建与验收，通过后放入 `releases/2.1.0/` 供分享。不要直接压缩整个开发目录：`.git` 是历史，`node_modules` 是开发依赖，`src-tauri/target` 是可生成产物，用户项目和恢复归档也不属于分享内容。分享包使用说明见 [RELEASE.md](RELEASE.md)。
 
 ## 开始开发
 
@@ -60,6 +60,6 @@ Web 的项目、任务、创作消息与素材使用 IndexedDB 本地持久化�
 
 ## 设计和交付依据
 
-Figma 是 UI 的唯一设计权威：[kk Figma 主画板](https://www.figma.com/design/0nU0A7pq6eyjwfwm1TtWkO/kk?node-id=404-28667)。Workspace 基线为 `404:28667`，收纳为 `410:67357`，Landing 为 `410:59708`；历史 `1:2` 不覆盖当前 Frame。仓库是代码、测试和交付文档的权威。各能力的实现与验收范围见治理账本；未接后端或未验收的能力必须标记 `Prototype / NOT VERIFIED`，不能把本地演示或构建通过描述成真实后端生成、账号服务或云端保存。
+颜色、字阶和基础组件以 [Design System 1.3](docs/DESIGN-SYSTEM.md) 为现行规范；页面布局和图标资产依据 [kk Figma 主画板](https://www.figma.com/design/0nU0A7pq6eyjwfwm1TtWkO/kk?node-id=404-28667)。Workspace 基线为 `404:28667`，收纳为 `410:67357`，Landing 为 `410:59708`；历史 `1:2` 不覆盖当前 Frame。仓库是代码、测试和交付文档的权威。各能力的实现与验收范围见治理账本；未接后端或未验收的能力必须标记 `Prototype / NOT VERIFIED`，不能把本地演示或构建通过描述成真实后端生成、账号服务或云端保存。
 
-工程文档从需求到验证按 AI-native SDLC 组织，入口见 [docs/README.md](docs/README.md)。每个功能交付单元包含 intent、spec、plan 和 verification；历史截图与旧账本保存在 `docs/archive/`，不作为当前实现的事实来源。
+工程文档从需求到验证按 AI-native SDLC 组织，入口见 [docs/README.md](docs/README.md)。每个 PR 的交付包包含 intent、spec、plan、verification 和 review；历史截图与旧账本保存在 `docs/archive/`，不作为当前实现的事实来源。
