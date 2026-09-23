@@ -18,15 +18,15 @@
 | 版本源文件精确搜索 | 2026-09-23 | 0 | PASS | 本文件/源码 | `VERSION`、package/npm lock、Cargo/Tauri、运行时显示均为 2.1.0；依赖与历史证据保留原值 |
 | `git diff --cached --check` | 2026-09-23 | 2 | FAIL（仅冻结证据） | 本轮终端输出 | 历史 `.patch` 和 `docs/changes/**/evidence/**` 的原始 CRLF/行尾空白被报告；不改写旧证据 |
 | `git diff --cached --check -- . ':(exclude,glob)docs/changes/**/evidence/**' ':(exclude,glob)docs/changes/**/*.patch'` | 2026-09-23 | 0 | PASS | 本轮终端输出 | 活跃代码、配置和当前交付文档无空白错误 |
-| `node --test tests/unit/*.test.ts`（`npm test` 等价入口） | 2026-09-23 | 0 | PASS | 本轮终端输出 | 最终 366/366；安全补审前为 363/363，新增插件 URL/重定向/旧缓存 3 项先 RED 后 GREEN |
+| `node --test tests/unit/*.test.ts`（`npm test` 等价入口） | 2026-09-23 | 0 | PASS | 本轮终端输出 | 最终 367/367；安全补审前为 363/363，新增插件 URL/重定向/旧缓存 4 项先 RED 后 GREEN |
 | `node node_modules/typescript/bin/tsc --noEmit` | 2026-09-23 | 0 | PASS | 本轮终端输出 | TypeScript strict 检查 |
 | ESLint + governance/features/UI/Prettier 门禁 | 2026-09-23 | 0 | PASS | 本轮终端输出 | ESLint、治理 59/0、功能29/0、UI159/0、格式全部通过 |
 | `node node_modules/typescript/bin/tsc -b` + Vite build | 2026-09-23 | 0 | PASS | `dist/`（本地生成） | Web production build；未将 dist 加入提交 |
 | `cargo fmt --check` + `cargo check` | 2026-09-23 | 0 | PASS | 本轮终端输出 | `kk-studio v2.1.0`；5 个已有 dead-code warning，不影响退出码 |
 | `cargo test --manifest-path src-tauri/Cargo.toml --bin kk-studio` | 2026-09-23 | 0 | PASS | 本轮终端输出 | 78/78 Rust 单测；5 个已有 dead-code warning |
 | `vendor/canvas-agent` 的 `tsx --test` 与 `tsc -p` 直接入口 | 2026-09-23 | 0 | PASS | 本轮终端输出 | 126 passed、2 个 Windows 权限测试 skipped；Agent TypeScript build 通过 |
-| `node node_modules/@playwright/test/cli.js test --reporter=line` | 2026-09-23 | 0 | PASS | `test-results/`（本地） | 新构建固定 `http://127.0.0.1:1423` production preview，299/299 |
-| `node node_modules/@playwright/test/cli.js test tests/browser/plugins.spec.ts --reporter=line` | 2026-09-23 | 0 | PASS | `test-results/plugins.../plugin-http-rejected.png`（本地） | 2/2；新增测试确认明文插件请求未发出、错误与权限提示可见；浏览器覆盖的 10 张历史截图已恢复原 SHA-256 |
+| `node node_modules/@playwright/test/cli.js test --reporter=line` | 2026-09-23 | 0 | PASS | `test-results/`（本地） | 首轮插件安全构建在 `http://127.0.0.1:1423` production preview 通过 299/299；此后仅改远程插件下载的重定向策略 |
+| `node node_modules/@playwright/test/cli.js test tests/browser/plugins.spec.ts --reporter=line` | 2026-09-23 | 0 | PASS | `test-results/plugins.../plugin-http-rejected.png`（本地） | 最终重定向修复构建 2/2；新增测试确认明文插件请求未发出、错误与权限提示可见；浏览器覆盖的 10 张历史截图已恢复原 SHA-256 |
 | staged 路径/secret/冲突标记审阅 | 2026-09-23 | 0 | PASS（范围内） | `review.md` | 982 条 staged 路径约 59.45 MiB，无禁止交付路径；仅命中 vendor 脱敏单测中的模拟密钥 |
 | `git push -u origin chore/TASK-CONSOLIDATE-200` | 2026-09-23 | 待补 | NOT RUN/IN PROGRESS | `release.md` | 仅任务分支；不直推 main |
 | `git ls-remote --heads origin` 回读 | 2026-09-23 | 待补 | NOT RUN | `release.md` | 远端结果需绑定提交 SHA |
@@ -37,15 +37,15 @@
 | --- | --- | --- | --- | --- | --- |
 | AC-1 | Web/Desktop | 运行时和配置为 2.1.0 | 版本源和应用运行时引用已统一；Web build、Rust check 通过 | 版本搜索、typecheck/单测/build | PASS |
 | AC-2 | Git | 源码候选可追溯到远端任务分支 | 待 push 回读 | `release.md` | NOT VERIFIED |
-| AC-3 | 本地 | 检查结果真实记录 | 单测366、浏览器全量299加定向2、UI159/0、治理59/0、功能29/0、build/Rust通过 | 本表 | PASS |
+| AC-3 | 本地 | 检查结果真实记录 | 单测367、浏览器全量299加定向2、UI159/0、治理59/0、功能29/0、build/Rust通过 | 本表 | PASS |
 | AC-4 | Web/Desktop | 用户数据身份不变 | 未改 storage key、identifier 或 schema version；历史证据恢复原哈希 | `review.md`、diff | PASS |
 
 ## UI / 运行态证据
 
 - 实际启动命令、cwd 与进程：在 `D:/kk-studio/KK-Studio-2.0` 构建后，Playwright `webServer` 启动 `node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 1423 --strictPort`；未启动 Tauri 进程。
-- URL/端口、运行模式：`http://127.0.0.1:1423/`，Vite production preview；299 项完整浏览器回归后新增 1 项插件安全 UI 用例，再定向跑插件 spec 2/2。
+- URL/端口、运行模式：`http://127.0.0.1:1423/`，Vite production preview；299 项完整浏览器回归后新增 1 项插件安全 UI 用例；最终重定向修复构建再定向跑插件 spec 2/2，未把该次定向测试写成全量重跑。
 - route → import → 页面/组件链：版本显示沿用 `App`、`AccountPopup`、`ConnectionSettings` 和 `runtime/appInfo`；定向源码检查记录在 `review.md`。
-- data-runtime-mode / data-runtime-entry / bundle hash：源码 `data-runtime-mode={import.meta.env.MODE}` 对应 production、`data-runtime-entry=src/main.tsx`；本地 `dist/assets/index-D5LYFwOh.js` SHA-256 为 `85D6BD5FCCC8F048FFFAB32873BD8F07079287BFA495D514DBF0941D0A5CE73F`，`dist` 未提交。
+- data-runtime-mode / data-runtime-entry / bundle hash：源码 `data-runtime-mode={import.meta.env.MODE}` 对应 production、`data-runtime-entry=src/main.tsx`；本地最终 `dist/assets/index-BbPXZEcM.js` SHA-256 为 `F76DEC0D77D4036E243FA72516ADE2C8E4F9071B6E4847A13C3CA03DB5A9C5BD`，`dist` 未提交。
 - Figma/截图/动态交互：插件管理拒绝明文 URL 和权限提示的页面测试截图在本地 `test-results`；未做本轮 Figma 几何对比。
 - 原生重启/恢复/安装：NOT RUN；安装包未生成。
 

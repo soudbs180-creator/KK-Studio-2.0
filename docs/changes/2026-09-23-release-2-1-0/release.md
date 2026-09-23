@@ -5,7 +5,7 @@
 - 目标平台/环境：Windows 本地 Git checkout；目标远端 `origin` 的任务分支
 - 版本、main/source commit、tree SHA：版本 2.1.0；main 基线 `3c4d012846e53095bd4f11343a1cd2ef61aa3bbd`；source commit/tree SHA 以推送后的 Git ref/PR 回读为准，本文件不预知自身提交 SHA。
 - 构建机器/工具版本与时间：Windows PowerShell；本次不生成安装包，实际检查命令补录。
-- Web bundle / 安装包 / EXE / 部署包 hash：本地 Web `dist/assets/index-D5LYFwOh.js` SHA-256 `85D6BD5FCCC8F048FFFAB32873BD8F07079287BFA495D514DBF0941D0A5CE73F`，未作为发布包提交；安装包、EXE、部署包 NOT GENERATED。
+- Web bundle / 安装包 / EXE / 部署包 hash：本地 Web `dist/assets/index-BbPXZEcM.js` SHA-256 `F76DEC0D77D4036E243FA72516ADE2C8E4F9071B6E4847A13C3CA03DB5A9C5BD`，未作为发布包提交；安装包、EXE、部署包 NOT GENERATED。
 - CI / verification / 当前 SHA 独立 review：本地单测、浏览器、类型、lint、构建和 Rust check 已通过；独立预检发现的 P1 明文插件风险已修复并本地回归，最终 SHA 补审/Hosted CI 待完成。
 - 用户验收和发布授权：用户明确授权源码上传和版本更新；正式产品验收/生产发布未发生。
 
@@ -24,8 +24,8 @@
 | 步骤 | 命令/工具和目标 | 已有授权范围 | 实际结果/退出码 | 时间/证据 |
 | --- | --- | --- | --- | --- |
 | 1 | 更新版本源、文档和 change package | 用户已授权 | 已执行 | 2026-09-23 |
-| 2 | 本地 lint/typecheck/test/build/native 检查（按可执行命令） | “上传并且检查” | 366 Node、299 browser + plugin 定向2、78 Rust、Agent 126 passed/2 skipped、typecheck/lint/UI/build 通过；历史证据的行尾空白单独披露 | 2026-09-23 |
-| 3 | `git add -- <明确路径>`、审阅 staged diff、commit | 用户已授权 | `b3081c8` 源码候选和 `c3fbcb8` 交付补录已提交；安全补审增量待提交 | 2026-09-23 |
+| 2 | 本地 lint/typecheck/test/build/native 检查（按可执行命令） | “上传并且检查” | 367 Node、299 browser + plugin 定向2、78 Rust、Agent 126 passed/2 skipped、typecheck/lint/UI/build 通过；历史证据的行尾空白单独披露 | 2026-09-23 |
+| 3 | `git add -- <明确路径>`、审阅 staged diff、commit | 用户已授权 | `b3081c8` 源码候选、`c3fbcb8` 交付补录和 `56468c3` 插件安全修复已提交；重定向边界补审增量待提交 | 2026-09-23 |
 | 4 | `git push -u origin chore/TASK-CONSOLIDATE-200` | 用户已授权 | 待执行 | 2026-09-23 |
 | 5 | `git ls-remote` 回读远端 SHA | 只读核验 | 待执行 | 2026-09-23 |
 | 6 | PR/CI/main merge/tag | 分支策略要求额外门禁 | NOT EXECUTED | 待远端工具和平台门禁 |

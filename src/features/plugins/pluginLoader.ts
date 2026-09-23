@@ -138,7 +138,9 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
     remote = false,
   ): Promise<string> {
     if (remote) assertSecureRemotePluginUrl(url);
-    const response = await fetcher(url);
+    const response = remote
+      ? await fetcher(url, { redirect: "error" })
+      : await fetcher(url);
     if (!response.ok)
       throw new Error(`插件下载失败（HTTP ${response.status}）`);
     if (remote && response.url) assertSecureRemotePluginUrl(response.url);

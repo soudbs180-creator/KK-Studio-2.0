@@ -194,6 +194,34 @@ test("远程插件拒绝从 HTTPS 重定向到明文响应", async () => {
   assert.equal(imports, 0);
 });
 
+test("远程插件禁止自动重定向，避免中途经过明文地址", async () => {
+  let imports = 0;
+  let redirectMode: RequestRedirect | undefined;
+  const loader = createPluginLoader({
+    store: createPluginStore(memoryStorage()),
+    runtime,
+    fetcher: (async (_input: RequestInfo | URL, init?: RequestInit) => {
+      redirectMode = init?.redirect;
+      if (init?.redirect === "error") throw new TypeError("redirect blocked");
+      return {
+        ok: true,
+        url: "https://cdn.example/plugin.js",
+        text: async () => "// source after an insecure intermediate hop",
+      };
+    }) as typeof fetch,
+    importModule: async () => {
+      imports += 1;
+      return { default: samplePlugin() };
+    },
+  });
+  await assert.rejects(
+    () => loader.installFromUrl("https://cdn.example/plugin.js"),
+    /redirect blocked/,
+  );
+  assert.equal(redirectMode, "error");
+  assert.equal(imports, 0);
+});
+
 test("旧版明文插件缓存不会在启动或重新启用时执行", async () => {
   const store = createPluginStore(memoryStorage());
   store.upsert({

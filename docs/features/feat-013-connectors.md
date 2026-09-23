@@ -22,7 +22,7 @@
 
 ## 测试与证据
 
-- `tests/unit/pluginLoader.test.ts`（10 项：安装/启停/卸载/本地发现/更新/无效导出/清理，以及远程地址、重定向和旧缓存拒绝）
+- `tests/unit/pluginLoader.test.ts`（11 项：安装/启停/卸载/本地发现/更新/无效导出/清理，以及远程地址、重定向和旧缓存拒绝）
 - `tests/browser/plugins.spec.ts`（添加菜单 → 创建 SVG 插件节点 → plugin 变体渲染）
 
 ## 当前能力

@@ -1744,7 +1744,7 @@
       "docs/changes/2026-09-23-input-contract/verification.md",
       "docs/changes/2026-09-23-release-2-1-0/verification.md"
     ],
-    "verification": "安全补审后本地 366 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；Git 远端、Hosted CI、PR、安装包待回读。各历史变更包保留其原始验证时点。",
+    "verification": "安全补审后本地 367 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；Git 远端、Hosted CI、PR、安装包待回读。各历史变更包保留其原始验证时点。",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-23"
   }

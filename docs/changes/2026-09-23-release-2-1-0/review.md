@@ -21,12 +21,12 @@
 | 凭据/秘密 | PASS（范围内） | 新增/修改版本文件未含真实凭据；仓库既有测试 fixture 的 secret-shaped 字符串仍仅作测试数据 |
 | 冲突标记 | PASS | 未发现行首 Git 冲突标记；Rust `==========` 为既有章节注释，文档中的示例为字面说明 |
 | 文档边界 | PASS | 明确源码上传、安装包未生成、PR/CI/main/tag 未完成 |
-| 测试 | PASS（本地） | 366 单测、299 production preview 浏览器及插件定向2项、UI159/0、治理59/0、功能29/0、格式/build/78 Rust 均通过 |
+| 测试 | PASS（本地） | 367 单测、299 production preview 浏览器及插件定向2项、UI159/0、治理59/0、功能29/0、格式/build/78 Rust 均通过 |
 
 ## 发现与处置
 
 - 当前工作树包含多项此前未提交的 Agent/UI/规则/文档候选；用户本轮明确要求上传，因此按发布流程整体提交，但不清理其他 worktree。
-- 独立 AI 预检在 `c3fbcb8` 发现 P1：HTTP 插件代码在应用权限下执行。加载器现限制 HTTPS、拒绝响应重定向降级和旧 HTTP 缓存执行，新增 3 项单测先失败再通过；设置界面显示插件权限提示。最终 SHA 仍需补审。
+- 独立 AI 预检在 `c3fbcb8` 发现 P1：HTTP 插件代码在应用权限下执行。加载器现限制 HTTPS、拒绝响应降级和旧 HTTP 缓存执行，新增 3 项单测先失败再通过；设置界面显示插件权限提示。补审 `56468c3` 又指出 HTTPS→HTTP→HTTPS 中间跳转无法从最终 URL 看出，已增补远程下载 `redirect: error`，第 4 项单测先失败再通过；最终 SHA 仍需复核。
 - 同一预检发现 P2：Desktop CSP 拒绝插件 `blob:` 模块；登记 PLUGIN-DESKTOP-001，FEAT-013 已将能力限定为 Web preview，正式桌面插件验收保持未完成。
 - `gh` CLI 不存在；本机 GitHub Desktop 可发布分支，PR/CI 状态以平台回读为准。
 - `releases/` 被 `.gitignore` 排除且当前不存在；不把安装包路径写成已生成事实。
