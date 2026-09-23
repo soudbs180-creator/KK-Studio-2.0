@@ -21,15 +21,15 @@
 ## 测试与证据
 
 - 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/agentCanvas.test.ts`
-- 浏览器回归：无（后续任务补 UI 交互回归）
+- 浏览器回归：既有浏览器回归 300/300 通过；Stage UI 交互尚未接入，专项回归由后续任务补充。
 - Rust 测试 / 实机验收：无
 - 变更与验证证据：`docs/changes/2026-09-23-agent-orchestration/verification.md`
 
 ## 当前能力
 
-- 已真实可用（PARTIAL 内已 REAL 子能力）：
+- 已实现的本地领域层能力（尚无端到端运行验收）：
   - Stage 状态机：doing / plan_review / blocked / result_review / done，CAS 推进（乐观锁），非法迁移与并发冲突拦截；
-  - 编排器：计划物化（幂等按 id）、审批决策（plan/result 两门）、异常阻断、解除阻断并只重试失败工作项、待审批汇总；
+  - 编排器：计划物化（同 id 同定义重放保留进度，不同定义拒绝覆盖；写前校验）、审批决策（plan/result 两门）、异常阻断、解除阻断并只重试失败工作项、待审批汇总；
   - MCP 风格工具面：plan_get_stage_status / plan_update_stage_state / plan_patch_stage / plan_replan（纯函数形态，供后续 MCP 注册）；
   - 交付契约：产物必须携带 node_id 且已注册素材资产，否则拦截；本轮产物按 result 连线收集与摘要。
 - 明确标注未接：
@@ -47,3 +47,4 @@
 ## 变更记录
 
 - 2026-09-23：创建卡片；新增 Stage 状态机、编排器、工具面与交付契约（TASK-ORCH-001 / TASK-CANVAS-001，见 `docs/changes/2026-09-23-agent-orchestration/`）。
+- 2026-09-24：独立预检发现同 id 重放清空进度、非法计划写入后重载丢失；修复为重放保留原状态、写前校验与结构化错误。修复 head 的独立复审待完成。

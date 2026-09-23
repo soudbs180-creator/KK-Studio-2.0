@@ -12,7 +12,7 @@
 - 主流程和相邻流程：Agent 规划生成任务 → 物化 StagePlan（plan_patch_stage）→ 阶段进入 plan_review → 人工/编排器审批（approve→doing / reject→blocked）→ 执行 → result_review → 审批通过 done；失败项在 blocked 解除时只重试 failed/partial。
 - 页面/route/组件或 API/命令入口：领域层纯函数（stagePlan.ts / orchestrator.ts）；UI 入口在 TASK-ORCH-002；Agent MCP 注册在 BACKEND-MCP-AUTO。
 - loading、success、error、cancel、offline、timeout：状态推进 CAS 失败返回明确错误（并发冲突不写入）；工具面错误统一 `{ ok: false, error }`。
-- 重试、幂等、stale async、unknown 受理与重启恢复（按需）：upsertPlan 按 id 幂等；CAS 防 stale 写入；计划随项目快照持久化（normalize 兼容旧数据）。
+- 重试、幂等、stale async、unknown 受理与重启恢复（按需）：同 id 同定义重放保留已有状态、revision 与素材；同 id 不同定义拒绝并要求新 id；CAS 防 stale 状态推进；写入前校验计划可被存储 normalize 接受。计划随项目快照持久化（normalize 兼容旧数据）。
 - 键盘/焦点/Escape/IME、长文案、响应式（UI 适用）：不适用（本 PR 无 UI 变更）。
 
 ## 架构、数据与权限
@@ -38,7 +38,7 @@
 - 初始化/安装：无。
 - 正常使用、取消/离线：状态机不依赖网络；离线仅影响生成（既有任务语义）。
 - 升级和旧 schema：stagePlans 可选字段 + normalize 白名单，旧快照读取后不丢数据。
-- 损坏/写失败/进程重启：normalize 丢弃损坏计划条目；CAS 失败不写入。
+- 损坏/写失败/进程重启：计划创建和工具输入在 commit 前完整校验，非法输入返回错误且不写入；旧快照中已损坏的计划由 normalize 丢弃；CAS 失败不写入。
 - 备份、还原、回滚：项目快照机制既有；本 PR 不新增。
 - 导出/卸载/退役及用户数据保留：不适用。
 - 各项不适用的原因：本 PR 为领域层增量，无安装/导出面。

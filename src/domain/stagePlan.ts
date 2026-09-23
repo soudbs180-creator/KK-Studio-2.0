@@ -47,7 +47,7 @@ export const stageWorkItemKindSchema = z.enum([
 export type StageWorkItemKind = z.infer<typeof stageWorkItemKindSchema>;
 
 export const stageWorkItemSchema = z.object({
-  id: z.string().max(160),
+  id: z.string().min(1).max(160),
   kind: stageWorkItemKindSchema,
   prompt: z.string().min(1).max(4000),
   /** 工作项依赖：本工作项开始前须成功完成的其它工作项 id。 */
@@ -85,9 +85,9 @@ export const stageSchema = z.object({
 export type Stage = z.infer<typeof stageSchema>;
 
 export const stagePlanSchema = z.object({
-  id: z.string().max(160),
-  title: z.string().max(120),
-  projectId: z.string().max(160),
+  id: z.string().min(1).max(160),
+  title: z.string().min(1).max(120),
+  projectId: z.string().min(1).max(160),
   createdBy: z.enum(["agent", "user"]),
   /** 每次推进递增，作为并发写入的乐观锁（UI/编排器侧校验）。 */
   revision: z.number().int().min(0),
@@ -123,20 +123,20 @@ export function createStagePlan(input: CreateStagePlanInput): StagePlan {
   if (!input.stages.length || input.stages.length > 32)
     throw new StagePlanError("Stage 计划必须包含 1–32 个阶段。");
   const stamp = now();
-  return {
+  const candidate = {
     id:
       input.id ??
       `plan-${stamp.toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
-    title: input.title.slice(0, 120),
+    title: input.title,
     projectId: input.projectId,
     createdBy: input.createdBy,
     revision: 0,
     stages: input.stages.map((stage, index) => ({
       index,
-      name: stage.name.slice(0, 120),
-      goal: stage.goal.slice(0, 400),
+      name: stage.name,
+      goal: stage.goal,
       status: "doing" as const,
-      workItems: stage.workItems.slice(0, 128),
+      workItems: stage.workItems,
       approvalGate: stage.approvalGate,
       createdAt: stamp,
       updatedAt: stamp,
@@ -144,6 +144,12 @@ export function createStagePlan(input: CreateStagePlanInput): StagePlan {
     createdAt: stamp,
     updatedAt: stamp,
   };
+  const result = stagePlanSchema.safeParse(candidate);
+  if (!result.success)
+    throw new StagePlanError(
+      `Stage 计划无效：${result.error.issues[0]?.path.join(".") || "plan"} ${result.error.issues[0]?.message || "校验失败"}`,
+    );
+  return result.data;
 }
 
 /**

@@ -11,6 +11,7 @@
  * 本模块不持有 Provider 凭据；所有生成仍走既有任务入口（imageTaskCommand 等）。
  */
 
+import { z } from "zod";
 import type { CreationProject } from "../creation/model.ts";
 import {
   StagePlanError,
@@ -18,12 +19,16 @@ import {
   createStagePlan,
   pendingStageApprovals,
   retryStageWorkItems,
+  stageApprovalGateSchema,
+  stagePlanSchema,
   stagePlanSummary,
+  stageSchema,
+  stageWorkItemKindSchema,
+  stageWorkItemSchema,
   type CreateStagePlanInput,
   type StageApprovalGate,
   type StagePlan,
   type StageStatus,
-  type StageWorkItemKind,
 } from "../../domain/stagePlan.ts";
 
 export interface StageOrchestratorOptions {
@@ -59,22 +64,60 @@ const STAGE_STATUSES: readonly StageStatus[] = [
   "done",
 ];
 
-const WORK_ITEM_KINDS: readonly StageWorkItemKind[] = [
-  "image",
-  "video",
-  "audio",
-  "text",
-  "merge",
-];
-
 function isStageStatus(value: unknown): value is StageStatus {
   return STAGE_STATUSES.includes(value as StageStatus);
 }
 
-function normalizeWorkItemKind(value: unknown): StageWorkItemKind {
-  return WORK_ITEM_KINDS.includes(value as StageWorkItemKind)
-    ? (value as StageWorkItemKind)
-    : "image";
+const planPatchInputSchema = z.object({
+  id: stagePlanSchema.shape.id.optional(),
+  title: stagePlanSchema.shape.title.min(1),
+  stages: z
+    .array(
+      z.object({
+        name: stageSchema.shape.name,
+        goal: stageSchema.shape.goal,
+        approvalGate: stageApprovalGateSchema.optional(),
+        workItems: z
+          .array(
+            z.object({
+              id: stageWorkItemSchema.shape.id,
+              kind: stageWorkItemKindSchema,
+              prompt: stageWorkItemSchema.shape.prompt,
+              dependencies: stageWorkItemSchema.shape.dependencies.default([]),
+              model: stageWorkItemSchema.shape.model,
+            }),
+          )
+          .max(128),
+      }),
+    )
+    .min(1)
+    .max(32),
+});
+
+function planDefinition(plan: StagePlan): string {
+  return JSON.stringify({
+    title: plan.title,
+    createdBy: plan.createdBy,
+    stages: plan.stages.map((stage) => ({
+      name: stage.name,
+      goal: stage.goal,
+      approvalGate: stage.approvalGate,
+      workItems: stage.workItems.map((item) => ({
+        id: item.id,
+        kind: item.kind,
+        prompt: item.prompt,
+        dependencies: item.dependencies,
+        model: item.model,
+        params: item.params
+          ? Object.fromEntries(
+              Object.entries(item.params).sort(([left], [right]) =>
+                left.localeCompare(right),
+              ),
+            )
+          : undefined,
+      })),
+    })),
+  });
 }
 
 function readPlan(project: CreationProject, planId: string): StagePlan {
@@ -90,10 +133,15 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
     return project;
   };
   const persist = (project: CreationProject, plan: StagePlan) => {
+    const result = stagePlanSchema.safeParse(plan);
+    if (!result.success) throw new StagePlanError("编排计划无效，未写入项目。");
+    if (result.data.projectId !== project.id)
+      throw new StagePlanError("编排计划与当前项目不匹配，未写入项目。");
+    readPlan(project, plan.id);
     options.commit({
       ...project,
       stagePlans: project.stagePlans?.map((item) =>
-        item.id === plan.id ? plan : item,
+        item.id === plan.id ? result.data : item,
       ),
       updatedAt: Date.now(),
     });
@@ -102,12 +150,18 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
   const upsertPlan = (input: CreateStagePlanInput): StagePlan => {
     const project = projectOrThrow();
     const plan = createStagePlan({ ...input, projectId: project.id });
+    const existing = project.stagePlans?.find((item) => item.id === plan.id);
+    if (existing) {
+      if (planDefinition(existing) === planDefinition(plan)) return existing;
+      throw new StagePlanError(
+        `编排计划 ${plan.id} 已存在且内容不同；请使用新 id 创建计划。`,
+      );
+    }
+    if ((project.stagePlans?.length ?? 0) >= 64)
+      throw new StagePlanError("编排计划已达 64 个上限，未写入项目。");
     options.commit({
       ...project,
-      stagePlans: [
-        ...(project.stagePlans ?? []).filter((item) => item.id !== plan.id),
-        plan,
-      ],
+      stagePlans: [...(project.stagePlans ?? []), plan],
       updatedAt: Date.now(),
     });
     return plan;
@@ -124,7 +178,7 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
   };
 
   return {
-    /** 物化或覆盖一个编排计划（同一项目下按 id 幂等）。 */
+    /** 物化计划；同 id 同定义重放保留已有进度，内容变更须使用新 id。 */
     upsertPlan,
     listPlans,
     getPlan,
@@ -217,7 +271,7 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
         })),
       );
     },
-    /** 内部持久化入口：被工具面与测试使用（按 id 覆盖计划并写回项目）。 */
+    /** 内部持久化入口：校验后按 id 写回现有计划。 */
     persistPlan(plan: StagePlan): StagePlan {
       const project = projectOrThrow();
       persist(project, plan);
@@ -290,55 +344,47 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
         {
           name: "plan_patch_stage",
           description:
-            "物化/更新编排计划（幂等，按 id 覆盖）。输入 { id?, title, stages: [{ name, goal, approvalGate?, workItems: [{ id, kind, prompt, dependencies?, model? }] }] }。",
+            "物化编排计划；同 id 同定义重放保留执行进度，修改请使用新 id。输入 { id?, title, stages: [{ name, goal, approvalGate?, workItems: [{ id, kind, prompt, dependencies?, model? }] }] }。",
           invoke(input) {
-            const title = String(input.title ?? "");
-            const stages = Array.isArray(input.stages) ? input.stages : [];
-            if (!title || !stages.length)
-              return { ok: false, error: "title 与 stages 必填。" };
-            const project = projectOrThrow();
-            const plan = upsertPlan({
-              id: typeof input.id === "string" ? input.id : undefined,
-              title,
-              projectId: project.id,
-              createdBy: "agent",
-              stages: stages.map((stage, index) => {
-                const source = stage as Record<string, unknown>;
-                const workItems = Array.isArray(source.workItems)
-                  ? source.workItems.map((item, itemIndex) => {
-                      const raw = item as Record<string, unknown>;
-                      return {
-                        id: String(raw.id ?? `workitem-${index}-${itemIndex}`),
-                        kind: normalizeWorkItemKind(raw.kind),
-                        prompt: String(raw.prompt ?? ""),
-                        dependencies: Array.isArray(raw.dependencies)
-                          ? raw.dependencies.map(String)
-                          : [],
-                        status: "queued" as const,
-                        model:
-                          typeof raw.model === "string" ? raw.model : undefined,
-                        createdAt: Date.now(),
-                        updatedAt: Date.now(),
-                      };
-                    })
-                  : [];
-                return {
-                  name: String(source.name ?? `阶段 ${index}`),
-                  goal: String(source.goal ?? ""),
-                  approvalGate:
-                    source.approvalGate === "result" ||
-                    source.approvalGate === "plan"
-                      ? (source.approvalGate as StageApprovalGate)
-                      : undefined,
-                  workItems,
-                };
-              }),
-            });
-            return {
-              ok: true,
-              planId: plan.id,
-              summary: stagePlanSummary(plan),
-            };
+            const parsed = planPatchInputSchema.safeParse(input);
+            if (!parsed.success) {
+              const issue = parsed.error.issues[0];
+              return {
+                ok: false,
+                error: `计划输入无效：${issue?.path.join(".") || "plan"} ${issue?.message || "校验失败"}`,
+              };
+            }
+            try {
+              const project = projectOrThrow();
+              const stamp = Date.now();
+              const plan = upsertPlan({
+                id: parsed.data.id,
+                title: parsed.data.title,
+                projectId: project.id,
+                createdBy: "agent",
+                stages: parsed.data.stages.map((stage) => ({
+                  name: stage.name,
+                  goal: stage.goal,
+                  approvalGate: stage.approvalGate,
+                  workItems: stage.workItems.map((item) => ({
+                    ...item,
+                    status: "queued" as const,
+                    createdAt: stamp,
+                    updatedAt: stamp,
+                  })),
+                })),
+              });
+              return {
+                ok: true,
+                planId: plan.id,
+                summary: stagePlanSummary(plan),
+              };
+            } catch (error) {
+              return {
+                ok: false,
+                error: error instanceof Error ? error.message : "计划写入失败",
+              };
+            }
           },
         },
         {

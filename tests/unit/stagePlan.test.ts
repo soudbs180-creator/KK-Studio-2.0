@@ -79,6 +79,25 @@ test("createStagePlan rejects empty or oversized stage lists", () => {
   );
 });
 
+test("createStagePlan rejects a plan that storage normalization would discard", () => {
+  assert.throws(
+    () =>
+      createStagePlan({
+        title: "无效工作项",
+        projectId: "project-1",
+        createdBy: "agent",
+        stages: [
+          {
+            name: "生成",
+            goal: "输出",
+            workItems: [workItem("w", { prompt: "" })],
+          },
+        ],
+      }),
+    /Stage 计划无效/,
+  );
+});
+
 test("casAdvanceStage advances doing to plan_review/result_review/blocked", () => {
   const plan = samplePlan();
   const reviewed = casAdvanceStage(plan, 0, "doing", "plan_review");

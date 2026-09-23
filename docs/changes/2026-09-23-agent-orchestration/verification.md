@@ -50,3 +50,11 @@
 - 与既有 `taskRecovery.canRetryTask` 对照后，以相同输入复现差异：`unknown/unknown`、`failed/submitted` 在原有逻辑均拒绝普通重试，候选新函数均允许。应用 UI 仍调用原有函数，未观察到真实重复提交。
 - 先修改 `taskState.test.ts`，确认两项测试按预期失败；再删除第二套重试判定，使统一任务态复用 `taskRecovery.canRetryTask`，失败子项选择只接收整个任务并只返回 `failed` 输出。`unknown` 输出与受理不明任务均返回空集合。
 - 本次定向测试 `taskState.test.ts` + `taskRecovery.test.ts` 12/12 通过；全量 Node 单测 399/399、TypeScript `tsc --noEmit` 通过。代码无 UI 或原生运行路径改动，真实 Provider 回执丢失与重启恢复仍未实机验收。
+
+## 2026-09-24 补充验证：计划重放与写入校验
+
+- 审查基线：`origin/main@76339c9f`；发现问题时的候选 head 为 `b5669f1d`。独立 reviewer 报告 ORCH-R1（同 id 重放丢进度）和 ORCH-R2（非法计划写入后被读取 normalize 丢弃），见 `review.md`。
+- 失败先行：新加的 `orchestrator.test.ts` 三项测试在旧实现下失败，分别复现重置 `done/revision/assetId`、缺 prompt 仍返回成功、计划工具重放重置状态。修复后 `orchestrator.test.ts` + `stagePlan.test.ts` 定向 25/25 通过。
+- 修复后：领域创建和编排器持久化写前按同一 `stagePlanSchema` 校验；工具输入在映射前校验，空 id、空/缺/超长 prompt、非法 kind、null 阶段/工作项与超量工作项均拒绝且不修改项目；有效计划可由 `normalizeStagePlan` 读取。同 id 同定义重放不写入，保留阶段、revision、素材引用；同 id 不同定义拒绝。新计划数量与读取上限统一为 64。
+- 当前本地代码检查：Node 单测 404/404、TypeScript `tsc --noEmit`、ESLint 0 错误、Prettier、Vite production build、浏览器回归 300/300 均通过；governance 66 任务、features 31 功能、Markdown 83 文件、UI 标准 159 文件均 0 违规。浏览器测试生成的已跟踪截图/JSON 仅还原本轮测试改动，不纳入 PR。此次数量是新增 5 项防回归测试后的候选结果，不替代上方 399/399 的历史运行记录。
+- 当前独立审查状态：独立 reviewer 对旧 head 给出两项问题，修复后因 reviewer 执行额度中断而未能绑定新 head 复验；最终独立审查仍为 **NOT VERIFIED**。本地逻辑验证不代表 UI、Desktop 原生重启或真实 Provider 验收。

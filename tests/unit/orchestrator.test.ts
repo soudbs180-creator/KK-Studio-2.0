@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createStageOrchestrator } from "../../src/features/agent/orchestrator.ts";
-import { StagePlanError } from "../../src/domain/stagePlan.ts";
+import {
+  StagePlanError,
+  normalizeStagePlan,
+} from "../../src/domain/stagePlan.ts";
 import {
   createProject,
   type CreationProject,
@@ -78,6 +81,170 @@ test("upsertPlan persists a plan into the project (idempotent by id)", () => {
   const again = orchestrator.upsertPlan(planInput("p"));
   assert.equal(again.id, "plan-test-1");
   assert.equal(read().stagePlans?.length, 1);
+});
+
+test("replaying an existing plan preserves completed stages and assets", () => {
+  const { orchestrator, read } = harness();
+  const plan = orchestrator.upsertPlan(planInput("p"));
+  orchestrator.requestStageApproval(plan.id, 0, "result");
+  const finished = orchestrator.completeStage(plan.id, 0);
+  const withAsset = {
+    ...finished,
+    stages: finished.stages.map((stage, index) =>
+      index === 0
+        ? {
+            ...stage,
+            workItems: stage.workItems.map((item) => ({
+              ...item,
+              status: "succeeded" as const,
+              assetId: "asset-1",
+            })),
+          }
+        : stage,
+    ),
+  };
+  orchestrator.persistPlan(withAsset);
+  const beforeReplay = read();
+
+  const replayed = orchestrator.upsertPlan(planInput("p"));
+  assert.deepEqual(replayed, withAsset);
+  assert.strictEqual(read(), beforeReplay);
+  assert.equal(replayed.revision, 2);
+  assert.equal(replayed.stages[0].status, "done");
+  assert.equal(replayed.stages[0].workItems[0].assetId, "asset-1");
+
+  assert.throws(
+    () => orchestrator.upsertPlan({ ...planInput("p"), title: "另一个计划" }),
+    /已存在/,
+  );
+  assert.strictEqual(read(), beforeReplay);
+});
+
+test("plan_patch_stage rejects invalid input without persisting a plan", () => {
+  const invalidStages: unknown[] = [
+    [
+      {
+        name: "缺少提示词",
+        goal: "检查",
+        workItems: [{ id: "w", kind: "text" }],
+      },
+    ],
+    [
+      {
+        name: "空提示词",
+        goal: "检查",
+        workItems: [{ id: "w", kind: "text", prompt: "" }],
+      },
+    ],
+    [null],
+    [{ name: "空工作项", goal: "检查", workItems: [null] }],
+    [
+      {
+        name: "无效类型",
+        goal: "检查",
+        workItems: [{ id: "w", kind: "unknown", prompt: "生成" }],
+      },
+    ],
+    [
+      {
+        name: "空工作项 id",
+        goal: "检查",
+        workItems: [{ id: "", kind: "text", prompt: "生成" }],
+      },
+    ],
+    [
+      {
+        name: "超长提示词",
+        goal: "检查",
+        workItems: [{ id: "w", kind: "text", prompt: "x".repeat(4001) }],
+      },
+    ],
+    [
+      {
+        name: "太多工作项",
+        goal: "检查",
+        workItems: Array.from({ length: 129 }, (_, index) => ({
+          id: `w-${index}`,
+          kind: "text",
+          prompt: "生成",
+        })),
+      },
+    ],
+  ];
+  for (const stages of invalidStages) {
+    const { orchestrator, read } = harness();
+    const before = read();
+    const result = orchestrator.planTools()[2].invoke({
+      id: "invalid-plan",
+      title: "无效计划",
+      stages,
+    });
+    assert.equal(result.ok, false, JSON.stringify(stages).slice(0, 80));
+    assert.strictEqual(read(), before);
+    assert.equal(read().stagePlans?.length ?? 0, 0);
+  }
+
+  const { orchestrator, read } = harness();
+  const before = read();
+  assert.equal(
+    orchestrator.planTools()[2].invoke({
+      id: "",
+      title: "空计划 id",
+      stages: [
+        {
+          name: "生成",
+          goal: "检查",
+          workItems: [{ id: "w", kind: "text", prompt: "生成" }],
+        },
+      ],
+    }).ok,
+    false,
+  );
+  assert.strictEqual(read(), before);
+});
+
+test("plan_patch_stage is durable and replay cannot reset progress", () => {
+  const { orchestrator, read } = harness();
+  const patch = orchestrator.planTools()[2];
+  const input = {
+    id: "durable-plan",
+    title: "有效计划",
+    stages: [
+      {
+        name: "生成",
+        goal: "一张图",
+        workItems: [{ id: "w", kind: "image", prompt: "蓝色球体" }],
+      },
+    ],
+  };
+  assert.equal(patch.invoke(input).ok, true);
+  const plan = orchestrator.getPlan(input.id)!;
+  assert.ok(normalizeStagePlan(plan));
+  orchestrator.requestStageApproval(plan.id, 0, "result");
+  orchestrator.completeStage(plan.id, 0);
+  const beforeReplay = read();
+
+  assert.equal(patch.invoke(input).ok, true);
+  assert.strictEqual(read(), beforeReplay);
+  assert.equal(orchestrator.getPlan(input.id)?.stages[0].status, "done");
+  assert.equal(orchestrator.getPlan(input.id)?.revision, 2);
+
+  assert.equal(patch.invoke({ ...input, title: "改写" }).ok, false);
+  assert.strictEqual(read(), beforeReplay);
+});
+
+test("upsertPlan refuses plans beyond the storage limit", () => {
+  const { orchestrator, read } = harness();
+  for (let index = 0; index < 64; index += 1) {
+    orchestrator.upsertPlan({ ...planInput("p"), id: `plan-${index}` });
+  }
+  const before = read();
+  assert.throws(
+    () => orchestrator.upsertPlan({ ...planInput("p"), id: "plan-64" }),
+    /64 个上限/,
+  );
+  assert.strictEqual(read(), before);
+  assert.equal(read().stagePlans?.length, 64);
 });
 
 test("requestStageApproval moves doing to plan_review with CAS", () => {

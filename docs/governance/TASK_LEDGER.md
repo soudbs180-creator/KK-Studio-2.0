@@ -817,9 +817,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-ORCH-001-agent-orchestration-closure`
 - Worktree: `D:/kk-studio/.worktrees/TASK-ORCH-001`
 - Modules: src/domain/stagePlan.ts, src/features/agent/orchestrator.ts, src/features/agent/agentHost.ts, src/features/creation/model.ts, tests/unit/stagePlan.test.ts, tests/unit/orchestrator.test.ts
-- Verification: PARTIAL — 领域层实现完成：typecheck 通过；新增 stagePlan/orchestrator/taskState/agentCanvas 单测 40 项全通过，全量 399 项单测通过。UI 对接与审批交互未完成（TASK-ORCH-002/003）。
+- Verification: PARTIAL — 领域层候选实现：全量 404 项单测、TypeScript/ESLint/Prettier/Vite 构建通过；同 id 重放保留进度、非法计划写前拒绝。修复 head 的独立复审未完成；UI 对接与审批交互仍属 TASK-ORCH-002/003。详见 verification.md 与 review.md。
 - Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
-- Updated: 2026-09-23
+- Updated: 2026-09-24
 
 ## TASK-ORCH-002 — TaskWorkbench 阶段计划视图与审批交互
 
