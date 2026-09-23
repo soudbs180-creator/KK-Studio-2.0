@@ -13,6 +13,7 @@ import {
   normalizeReviewComments,
   type ReviewComment,
 } from "../../domain/reviewWorkflow.ts";
+import { normalizeStagePlans, type StagePlan } from "../../domain/stagePlan.ts";
 
 export type CreationTaskStatus =
   | "queued"
@@ -125,6 +126,8 @@ export interface CreationProject {
   items: CanvasCollectionItem[];
   messages: CreationMessage[];
   tasks: CreationTask[];
+  /** Agent 编排计划（Stage 状态机），本地持久化；无编排时为空。 */
+  stagePlans?: StagePlan[];
   reviewComments?: ReviewComment[];
   favoriteIds: string[];
   likedIds: string[];
@@ -723,6 +726,9 @@ function normalizeProject(value: CreationProject): CreationProject {
             )
           : undefined,
       })),
+    stagePlans: normalizeStagePlans(
+      (candidate as unknown as Record<string, unknown>).stagePlans,
+    ),
     reviewComments: normalizeReviewComments(
       (candidate as unknown as Record<string, unknown>).reviewComments,
     ),

@@ -67,6 +67,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | REVIEW | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
+| TASK-ORCH-001 | Agent 编排领域状态机与编排器工具面 | IN_PROGRESS | TASK-AGENT-001 | root |
+| TASK-ORCH-002 | TaskWorkbench 阶段计划视图与审批交互 | TODO | TASK-ORCH-001 | root |
+| TASK-ORCH-003 | 编排器驱动生成执行与计划门禁 | TODO | TASK-ORCH-001, BACKEND-MEDIA-001 | root |
+| TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | TASK-ORCH-001 | root |
+| TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | TASK-AGENT-001 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -802,4 +807,64 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: docs/archive, docs/changes, docs/evidence
 - Verification: NOT_VERIFIED — 2026-09-23 扫描 365 个已跟踪 Markdown，历史范围共 37 处文件目标问题；原始日志来源和可恢复性待核对。
 - Evidence: [docs/governance/MARKDOWN_AUDIT.md](../../docs/governance/MARKDOWN_AUDIT.md)
+- Updated: 2026-09-23
+
+## TASK-ORCH-001 — Agent 编排领域状态机与编排器工具面
+
+- Goal: Stage 状态机（doing/plan_review/blocked/result_review/done）+ 编排器 CAS 推进 + plan 工具面，作为波次A闭环的领域基座
+- Scope: src/domain/stagePlan.ts, src/features/agent/orchestrator.ts, src/features/agent/agentHost.ts, src/features/creation/model.ts, tests
+- Acceptance: Stage 状态机合法/非法迁移与 CAS 并发冲突可测; 编排器物化计划、审批决策、阻断与失败重试只重试失败项; plan 工具面四个工具可调用并持久化; CreationProject.stagePlans 存储兼容不丢旧数据
+- Branch: `feat/TASK-ORCH-001-agent-orchestration-closure`
+- Worktree: `D:/kk-studio/.worktrees/TASK-ORCH-001`
+- Modules: src/domain/stagePlan.ts, src/features/agent/orchestrator.ts, src/features/agent/agentHost.ts, src/features/creation/model.ts, tests/unit/stagePlan.test.ts, tests/unit/orchestrator.test.ts
+- Verification: PARTIAL — 领域层实现完成：typecheck 通过；新增 stagePlan/orchestrator/taskState/agentCanvas 单测 40 项全通过，全量 399 项单测通过。UI 对接与审批交互未完成（TASK-ORCH-002/003）。
+- Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
+- Updated: 2026-09-23
+
+## TASK-ORCH-002 — TaskWorkbench 阶段计划视图与审批交互
+
+- Goal: 任务工作台展示 Stage 计划状态与 plan/result 审批门，审批按钮驱动编排器
+- Scope: src/components/TaskWorkbench.tsx, TaskWorkbenchContent.tsx, src/App.tsx（onStageDecision 回调链）
+- Acceptance: 工作台显示各阶段状态徽标与待审批门; plan/result 审批按钮调用编排器 decideStage; 浏览器回归覆盖展示与审批流
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/components/TaskWorkbench.tsx, src/components/TaskWorkbenchContent.tsx, src/App.tsx
+- Verification: NOT_VERIFIED — 未开工。
+- Evidence: NOT VERIFIED
+- Updated: 2026-09-23
+
+## TASK-ORCH-003 — 编排器驱动生成执行与计划门禁
+
+- Goal: plan 审批通过后编排器驱动工作项真实生成（图片/文本走统一任务态），失败只重试失败项
+- Scope: src/features/agent/orchestrator.ts, src/features/creation/imageTaskCommand.ts, agentHost.ts
+- Acceptance: 阶段工作项按依赖顺序提交真实生成任务; 失败项单独重试不重复整段; 计划状态与任务状态联动可观测
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/agent/orchestrator.ts, src/features/creation/imageTaskCommand.ts, src/features/agent/agentHost.ts
+- Verification: NOT_VERIFIED — 未开工。
+- Evidence: NOT VERIFIED
+- Updated: 2026-09-23
+
+## TASK-CANVAS-001 — 画布交付契约与当轮产物收集
+
+- Goal: 产物必须携带 node_id 且已注册素材资产，否则拦截；按 result 连线收集当轮产物与摘要
+- Scope: src/features/agent/agentCanvas.ts, agentHost.ts, tests/unit/agentCanvas.test.ts
+- Acceptance: assertCanvasDelivery 对无 node_id/无资产注册的交付抛契约错误; collectRecentOutputs 按 result 连线收集已归档产物; 摘要文本可读
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/agent/agentCanvas.ts, src/features/agent/agentHost.ts, tests/unit/agentCanvas.test.ts
+- Verification: PARTIAL — 契约纯函数与单测完成；宿主强制接入（所有生成路径统一走 assertCanvasDelivery）未全量覆盖。
+- Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
+- Updated: 2026-09-23
+
+## TASK-TASKSTATE-001 — 统一任务态契约定稿
+
+- Goal: 把 9 态任务模型、可重试判定、失败只重试失败输出、成本估算收口为可复用契约模块
+- Scope: src/features/creation/taskState.ts, tests/unit/taskState.test.ts
+- Acceptance: unifiedTaskStatuses 覆盖 9 态; canRetryTask/retryFailedOutputIndices 语义正确; estimateTaskCostUsd 边界与估算口径标注; UI 成本显示收口到 estimateTaskCostUsd（后续任务）
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/creation/taskState.ts, src/features/creation/model.ts, tests/unit/taskState.test.ts
+- Verification: PARTIAL — 契约模块与单测完成；UI 硬编码示例单价未全部收口。
+- Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
 - Updated: 2026-09-23
