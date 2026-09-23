@@ -766,7 +766,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-AGENT-004-google-closeout`
 - Worktree: `C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0`
 - Modules: src/features/agent, src/components, src/domain, src/App.tsx
-- Verification: PARTIAL — Combined closeout candidate: Google Interactions API Key dialogue/image/archive fixture browser flow and focused unit checks pass; full verify was green before final CLI argument hardening and will be rerun. Real Google API Key requests, desktop runtime and final independent review pending.
+- Verification: PARTIAL — Combined closeout candidate: API Key dialogue/image/archive fixture flow and CLI security regressions pass. After merging main and reinstalling dependencies, full verify passes (governance 63/0, browser 302/302, Markdown gate green); Windows Cargo check passes. Real Google API Key requests, desktop runtime and final independent review pending.
 - Evidence: [docs/changes/2026-09-23-google-interactions/verification.md](../../docs/changes/2026-09-23-google-interactions/verification.md)
 - Updated: 2026-09-23
 

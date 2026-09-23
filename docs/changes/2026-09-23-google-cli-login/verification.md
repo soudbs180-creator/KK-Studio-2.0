@@ -28,3 +28,5 @@
 前述 32 单测/247 浏览器为 `d05f263` 当时的历史结果，不代表最终候选。独立审查随后发现 Windows shell fallback、通配 CORS、官方 `session_id`、HTTP 取消、未知结果等阻断缺陷；修复后的组合分支 `feat/TASK-AGENT-004-google-closeout` 已通过定向桥/适配器/连接层测试和完整 `npm run verify`（单元 404/404、浏览器 302/302、治理 61/0、功能 29/0）。此校验在主线新增 Markdown 门禁合入之前执行；同步主线后会另行重验。
 
 本地桥真实 HTTP `GET /status` 在本机返回 `installed:false, login:false`，证明未安装状态反馈；没有真实 `gemini` 登录或对话。注入式子进程测试覆盖：官方 `session_id` 提取、以 `--yolo` 开头的提示词只作为 `--prompt` 值、非法 model/session 拒绝、恶意 Origin/Host 拒绝、取消杀死子进程。浏览器 fixture 覆盖设置、检测、连续 CLI 对话及图片模式禁用；不能代替真实 CLI 账号验收。Windows Cargo check 通过，但未在本轮 Tauri WebView 运行；最终独立补审仍未完成。
+
+**同步主线后复核（2026-09-24）**：合并主线的 Markdown 门禁并重新 `npm ci` 后，完整 `npm run verify` 再次退出 0（治理 63/0、功能 29/0、Markdown 检查、浏览器 302/302，以及单元测试、类型、UI、格式、生产构建均通过）；`npm run client:check` 退出 0。前文“另行重验”的待办已由本次完成，真实 CLI 登录与桌面运行仍未执行。详见 [004 的组合候选记录](../2026-09-23-google-interactions/verification.md)。
