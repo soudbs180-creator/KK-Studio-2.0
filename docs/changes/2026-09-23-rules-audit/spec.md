@@ -1,7 +1,7 @@
 # Spec：规则入口、分支依赖与 Markdown 检查
 
 - Task ID：TASK-RULES-004
-- 状态：IMPLEMENTED，待独立复审
+- 状态：IMPLEMENTED，第二轮审查问题已修复，待最终提交复审
 - 日期：2026-09-23
 - 来源：[intent](intent.md)、[任务账本](../../governance/task-ledger.json)
 - 规范基线：[AGENTS](../../../AGENTS.md)、[AI_RULES](../../../AI_RULES.md)、[分支规则](../../engineering/BRANCH-POLICY.md)、[设计系统](../../DESIGN-SYSTEM.md)
@@ -15,7 +15,7 @@
 
 ## 可执行检查
 
-`scripts/check-markdown.mjs` 枚举根规则入口、`docs/` 当前索引及 architecture/engineering/features/governance/templates 的直接 Markdown 文件（含 architecture/adr）。校验 Markdown 普通行中的相对文件目标、参考链接定义和路径是否留在仓库内；跳过围栏代码、行内代码、同页锚点、绝对路径和外部 URL。它检查文件目标是否存在，不检查锚点内容、外部 URL 可用性、历史 `docs/changes`/`docs/evidence`/`docs/archive` 或文档事实语义。历史快照仍需按用途人工核对，不因未纳入 lint 而视为正确。
+`scripts/check-markdown.mjs` 枚举根规则入口、`docs/` 当前索引及 architecture/engineering/features/governance/templates 的直接 Markdown 文件（含 architecture/adr）。使用 `remark-parse`、`remark-gfm` 与 `unified` 解析语法树，提取链接、图片和参考链接定义，再校验相对文件目标及其是否留在仓库内；代码块、行内代码和转义文字由解析器按 Markdown 语义排除。同页锚点、绝对路径和外部 URL 不检查。它检查文件目标是否存在，不检查锚点内容、外部 URL 可用性、历史 `docs/changes`/`docs/evidence`/`docs/archive` 或文档事实语义。历史快照仍需按用途人工核对，不因未纳入 lint 而视为正确。
 
 检查接入 `npm run markdown:check` 与 `npm run lint`，因此进入 `npm run verify` 和 hosted `verify` 的定义；是否实际执行以本地/远端结果为准。Markdown 整体 Prettier 格式不在 `format:check` 范围，修改文件另以差异和链接检查核对。
 

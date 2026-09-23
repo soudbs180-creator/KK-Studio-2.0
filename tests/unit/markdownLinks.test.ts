@@ -63,3 +63,40 @@ test("balanced links and fence boundaries retain real targets", () => {
     fs.rmSync(root, { recursive: true, force: true });
   }
 });
+
+test("nested images, escapes, and Markdown block boundaries are respected", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "kk-markdown-blocks-"));
+  try {
+    fs.mkdirSync(path.join(root, "docs"));
+    fs.writeFileSync(path.join(root, "docs", "target.md"), "# Target\n");
+    fs.writeFileSync(path.join(root, "docs", "target(1).md"), "# Target\n");
+    fs.writeFileSync(
+      path.join(root, "docs", "index.md"),
+      [
+        "[![diagram](missing.png)](target.md)",
+        String.raw`[valid](target\(1\).md)`,
+        String.raw`\[not a link](ignored.md)`,
+        "",
+        "    [indented code](ignored-too.md)",
+        "",
+        "`unmatched in this paragraph",
+        "",
+        "[missing](between.md)",
+        "",
+        "`unmatched in another paragraph",
+        "",
+        "| Name | Target |",
+        "| --- | --- |",
+        "| file | [missing](table.md) |",
+      ].join("\n"),
+    );
+    assert.deepEqual(checkMarkdownLinks(root, ["docs/index.md"]), [
+      "docs/index.md:1: missing link missing.png",
+      "docs/index.md:9: missing link between.md",
+      "docs/index.md:15: missing link table.md",
+    ]);
+  } finally {
+    assert.ok(root.startsWith(`${path.resolve(os.tmpdir())}${path.sep}`));
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
