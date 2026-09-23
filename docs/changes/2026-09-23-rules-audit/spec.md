@@ -1,7 +1,7 @@
 # Spec：规则入口、分支依赖与 Markdown 检查
 
 - Task ID：TASK-RULES-004
-- 状态：IMPLEMENTED，第二轮审查问题已修复，待最终提交复审
+- 状态：IMPLEMENTED；第三轮独立复审通过，Hosted CI 因账户计费阻断
 - 日期：2026-09-23
 - 来源：[intent](intent.md)、[任务账本](../../governance/task-ledger.json)
 - 规范基线：[AGENTS](../../../AGENTS.md)、[AI_RULES](../../../AI_RULES.md)、[分支规则](../../engineering/BRANCH-POLICY.md)、[设计系统](../../DESIGN-SYSTEM.md)

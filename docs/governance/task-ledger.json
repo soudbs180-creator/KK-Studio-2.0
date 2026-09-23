@@ -1772,7 +1772,7 @@
       "docs/changes/2026-09-23-rules-audit/verification.md",
       "docs/changes/2026-09-23-rules-audit/review.md"
     ],
-    "verification": "首轮独立复审发现Markdown解析误报/漏报，新增失败回归后修复；最终本地完整 verify 通过：369 Node、300 browser、治理61/0、功能29/0、现行Markdown81/0、UI159/0、类型/格式/Web build通过，最终一轮19个测试生成旧证据已恢复HEAD。新SHA独立补审与本任务PR待完成；上游PR #9 hosted jobs 因账户计费在步骤前失败，main合并仍受阻。",
+    "verification": "首轮/第二轮独立复审发现Markdown解析问题并先后以失败回归复现；第三轮针对d8e12c0独立复审PASS。锁文件干净npm ci及本轮完整verify通过：370 Node、300 browser、治理61/0、功能29/0、现行Markdown81/0、UI159/0、类型/格式/Web build通过；22个测试生成旧证据已恢复HEAD，delivery 28文件/0违规。草稿PR #10与上游PR #9的hosted jobs均因账户计费在步骤前失败，main合并仍受阻；历史快照与远端强制保护不在本轮PASS范围。",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-23"
   },
