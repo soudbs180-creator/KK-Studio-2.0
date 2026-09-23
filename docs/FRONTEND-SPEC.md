@@ -1,10 +1,12 @@
 # 前端重启设计约定
 
-## 当前入口 · 2026-09-22
+## 当前入口 · 2026-09-23
 
-后续UI的颜色、字阶和基础组件统一遵循 [Design System 1.1](DESIGN-SYSTEM.md)（用户Ardot `728457371665311 / 0:1` 及完整PDF，经逐项校正）。已有页面布局、图标资产及业务交互继续沿用本文件中仍适用的最新节点证据；旧调色、通用控件尺寸和“Figma唯一权威”表述仅是历史范围。工作链路与未验证项见 [UI_SPEC](UI_SPEC.md) 和 [本次验证](changes/2026-09-22-design-system/verification.md)。
+后续 UI 的颜色、字阶和基础组件统一遵循 [Design System 1.3](DESIGN-SYSTEM.md)（用户 Ardot `728457371665311 / 0:1` 及完整 PDF，经逐项校正）。已有页面布局、图标资产及业务交互继续沿用本文件中仍适用的最新节点证据；旧调色、通用控件尺寸和“Figma 唯一权威”表述仅是历史范围。工作链路与未验证项见 [UI_SPEC](UI_SPEC.md) 和 [设计系统验证](changes/2026-09-22-design-system/verification.md)。
 
 ## 历史需求与交互记录
+
+以下“当前”“最新”等用语只表示原记录形成时的状态；冲突时以上面的现行入口和 [PROJECT_STATE](governance/PROJECT_STATE.md) 为准。
 
 
 最新用户优先级：先准确还原 UI 与操作界面，再扩充其它功能。用户尚未认可当前布局和交互。2026-09-07 已确认最新锚点 `253:563` 是圆点，所属视频模块 `170:8490`、画板 `170:1029`，本文件后续历史坐标和菜单行为须对照实际父级/同状态设计。当前纠偏范围和验收顺序以 `docs/UI-ALIGNMENT.md` 与 `docs/superpowers/plans/2026-09-07-ui-motion-continuation.md` 为准，暂停外围功能扩展。

@@ -11,19 +11,21 @@
 | feat/fix/docs/chore/test/perf/refactor/hotfix/TASK-ID-slug | 兼容既有任务命名；不能在同一分支处理无关需求                     |
 | vMAJOR.MINOR.PATCH 或 -rc.N                                | 发布标签创建后不可更新或删除                                     |
 
-现有旧分支名可保留；禁止为命名整齐批量重命名/删除。没有删除授权时不清理分支；用户明确“验收并清理已合并分支”后，可将核对过的具体短期分支清理列入发布流程，无需反复确认，但稳定线和 tag 不在清理范围。
+现有旧分支名可保留；禁止为命名整齐批量重命名/删除。没有删除授权时不清理分支；用户明确“验收并清理已合并分支”后，可将核对过的具体短期分支列入待清理清单，无需反复确认授权，但稳定线和 tag 不在清理范围。当前 pre-push 默认拒绝所有远端 ref 删除，仓库尚无已审阅的远端清理流程；有授权也不能绕过 hook 执行删除。先完成单独的清理方案、核对和门禁，再按方案处理。
 
 本地分支也默认保留，禁止直接 `git branch -D` 丢弃未整合工作。本地清理必须核对对应 PR、当前 head、远端备份及 worktree 登记；仍被使用、有独有提交或未提交改动时不得删除。pre-push 不能拦截本地删除，依靠执行前规则、审查和备份约束，不能夸称 Git 原生不存在的本地删分支 hook 已生效。
 
 ## 开始、交接、拉取
 
-在实际工作目录运行 `git status --short --branch`、`git worktree list`、`git log -1 --oneline --decorate`、`git fetch origin`。记录 origin、base SHA、task ID、owner、影响模块、worktree 与本地未提交文件。提交前 `git add -- <明确文件>`，检查 staged diff；禁止广泛 stage 别人的变更。
+在实际工作目录运行 `git status --short --branch`、`git worktree list`、`git log -1 --oneline --decorate`、`git fetch origin`。先查账本中的未完成/已认领任务、open PR 和相近功能卡，再认领 task ID，登记 owner、依赖、影响模块、branch、worktree、origin/base SHA 与本地未提交文件；有重叠先确认单一写入者和交付边界，避免重复造轮。提交前 `git add -- <明确文件>`，检查 staged diff；禁止广泛 stage 别人的变更。
 
 每台机器 clone 后先读取 AGENTS/AI_RULES、执行 `npm ci`、`npm run git:guards`，再从当前 origin/main 建 task worktree。本机路径是实例，不是跨设备运行契约。同一个仓库登记多个 worktree 合法。独立任务可并行，修改同一文件/公共契约必须串行或分配唯一写入者；固定 1421/1423 的运行验证也串行，不偷停别的任务进程。
 
-交接记录已推送的分支和 SHA、base、实际改动、待审问题和验证证据。新设备 fetch 后核对 SHA/tree 和依赖，不能用旧截图认定当前版本。fetch 不会修改当前文件；`fetch --prune` 仅清理失效的远程跟踪引用，不能代替远程删除或证明分支已合并，默认不需要执行。
+依赖尚未合入 main 的任务可从已推送的上游 PR head 建临时堆叠分支。账本和 PR 写明上游 PR、base/head SHA 与依赖，把本 PR 的 base 指向上游任务分支，使 diff 只包含本任务；上游未通过门禁前不能把下游当作 main 可合并。上游以默认 squash 合入 main 后，原提交不在 main 的祖先链上；下游不能仅合并 main 或直接改 PR base 后声称 diff 已去重。应从最新 origin/main 建新的承接分支，只挑选本任务提交，逐项解决冲突、重跑受影响检查和 delivery check、按新 SHA 复审；新 PR 指向 main 并关闭/关联旧堆叠 PR，保留审查链和原分支。若上游实际采用保留祖先的合并方式，可验证 ancestry 与 diff 后更新原 PR base。共享分支仍禁止 rebase/force push。
 
-已推送或共享的任务分支不 rebase、不 amend 已发布提交；更新用新提交。PR 前将最新 origin/main merge 入任务分支，逐项解决冲突，不使用无差别 ours/theirs。无共同祖先时停止自动合并，使用已记录的迁移方案，不能重做首次 tree 替换。
+交接和每次准备推送前重新 fetch，核对上游 main/依赖 PR 是否前移、相关文件是否有并发改动，再记录已推送的分支和 SHA、base、已完成与未完成的功能、待审问题、冲突处置和验证证据；账本/功能卡/PR 描述随状态更新。时间差通过保留双方提交并在任务分支解决具体冲突处理，不能把整份文件简单覆盖成一方版本。新设备 fetch 后核对 SHA/tree 和依赖，不能用旧截图认定当前版本。fetch 不会修改当前文件；`fetch --prune` 仅清理失效的远程跟踪引用，不能代替远程删除或证明分支已合并，默认不需要执行。
+
+已推送或共享的任务分支不 rebase、不 amend 已发布提交；更新用新提交。普通 PR 前将最新 origin/main merge 入任务分支；堆叠 PR 在上游未合入时核对其最新 head，若前移则将上游分支 merge 入下游，逐项解决冲突，不使用无差别 ours/theirs。无共同祖先时停止自动合并，使用已记录的迁移方案，不能重做首次 tree 替换。
 
 ## PR 与审核
 
@@ -53,7 +55,7 @@ PR 必须包含验收、风险/回滚、base/head SHA、影响平台及未完成
 ## 执行层及限制
 
 - `npm run git:guards` 安装本仓库共有的 pre-push 防线，拒绝稳定线直推、非 fast-forward、已有 tag 更新及默认所有远端删除；不覆盖第三方 hook。它覆盖本机本仓库 worktree，不会传播到其他 clone，其他设备必须安装。它不能阻止本地 `git branch -D` 或管理员绕过，只是补充防护。
-- `npm run governance:check` 校验文档入口、账本和架构边界；`npm run delivery:check -- --base <SHA>` 校验 PR 变更包；CI 跑完整 verify/Rust/desktop build。
+- `npm run governance:check` 校验文档入口、账本和架构边界；`npm run markdown:check` 校验现行 Markdown 的相对文件链接；`npm run delivery:check -- --base <SHA>` 校验 PR 变更包；CI 跑完整 verify/Rust/desktop build。结构检查不能保证文档事实正确，也不能证明 AI 实际阅读。
 - `config/github-rulesets/` 是可审阅的服务器配置，不是自动生效目录。分支 all-refs safety 禁 force/deletion，main/release 要求 PR/current checks，v* 禁更新/删除。无 bypass actors；管理员仍可修改设置，AI 不得利用此能力绕过审核。
 - 真正远端强制需托管平台支持并成功写入、回读 active rules。private 免费套餐不可用时保留 EXT-GIT BLOCKED，不能默默改仓库公开或购买套餐，也不能把本地 hook 当服务端保护。
 - 本次尚未配置自动合并、自动生产发布或付费 AI review 服务。功能不可用要明确记录，后续接入有预算的独立 reviewer 身份与受限凭据。

@@ -8,6 +8,8 @@
 
 本轮真实提交、远端分支和检查结果以 `docs/changes/2026-09-23-release-2-1-0/{verification,release,review}.md` 以及 Git 回读为准。
 
+后续回读：2.1.0 候选分支 head 为 `da811283e55ce699e4c5425d92ad31ffba7513e3`，[PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 已创建但未合并；`origin/main` 仍为 `3c4d012846e53095bd4f11343a1cd2ef61aa3bbd`。Hosted `verify`/`delivery` 因 GitHub 账号付款或 spending limit 在执行步骤前失败，不等于代码检查通过或失败。规则审计 `TASK-RULES-004` 是依赖该 PR 的单独任务；本地和远端分支仍需逐项核对，不能因 UI 中分支数量多而直接合并或删除。
+
 ## 2026-09-23 Agent 图片与画布控制（TASK-AGENT-003，DONE/PASS，未提交）
 
 已复用 infinite-canvas Agent 附件/localImage 与画布工具协议，接入 KK 本地原件、显式画布引用和真实控件。最多6张/单张8 MiB，导入失败阻止提交，Agent/API草稿按项目隔离；MCP支持单/多/空选择和视口移动缩放及恢复。保留 UI008 的 Design System 1.3 共享输入框。本轮未发送Agent草稿只在页面会话中保留，不承诺刷新恢复。
@@ -123,7 +125,7 @@ TASK-DS-001、UI-001、UI-004保持PARTIAL：在线Ardot未写入，新样式Tau
 - TASK-MAIN-CLOSE-002 候选已完成 151 Node、197 browser、UI121/0、Rust61/61、Tauri client build；开发1421、预览1423和隔离 Desktop runtime 均加载当前候选并通过菜单、素材分页、原件 SHA、焦点与窄屏关闭专项。候选仍在 PR 前，不能写成稳定 main。
 - UI-004 继续 PARTIAL：Landing 410:59708 无效，项目库/Skill/ComfyUI/部分设置没有独立当前 Frame。PERF-001 继续 PARTIAL：永久缩略图、大快照、单件大图瞬时内存和不可抢占 IO 仍待后续验收。
 
-## 当前主线
+## 历史快照（2026-09-20）：当时的主线
 
 - 稳定主线运行目录是 `D:/kk-studio-next` 的 `main`，跟踪目标仓库 `origin/main`。精确提交与tree用Git回读；旧 `.worktrees/TASK-INTEGRATION-001` 已改为 `codex/archive-local-main-20260920` 历史分支，不再作为当前main运行目录。
 - UI补充验证 bundle 为 `index-Be6XJzPc.js`，验证包含dev1421、preview1423和隔离Tauri release。根目录启动入口 `start-kk-studio.bat` 会检查源码新鲜度；每次main推进后重新构建并验证实际加载包。旧bundle/hash是历史证据，不能用于判断当前运行版本。

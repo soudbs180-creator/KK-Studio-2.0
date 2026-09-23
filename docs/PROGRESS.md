@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-23 规则与 Markdown 审计（TASK-RULES-004，本地验证通过，待复审/PR）
+
+在 2.1.0 候选 `da811283e55ce699e4c5425d92ad31ffba7513e3` 上核对了共同规则入口、账本、PR/CI、本地 Git 防线、现行 Markdown 链接与历史证据边界。现行文档中的设计来源、已知问题、版本交接、分支清理和交付文件数已按当前事实整理；现行 Markdown 相对文件链接加入本地 lint 检查。结构检查不能证明模型读懂规则，PR #9 的 hosted 检查仍因账号付款或 spending limit 在步骤前失败；main、tag、安装包及远端强制保护没有因此完成。具体差异、验证与独立复审见 `docs/changes/2026-09-23-rules-audit/`。
+
 ## 2026-09-23 KK Studio 2.1.0 源码分支已上传（REL-2.1.0，本地验证完成）
 
 统一 package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端版本为 2.1.0，新增 `VERSION` 与 `CHANGELOG.md`，并将当前已授权的功能与文档候选绑定到同一 Git 任务分支。用户数据存储 key、应用 identifier、历史 2.0.0 证据和恢复归档保持不变。安装包、代码签名、真实 Provider/ComfyUI、Hosted CI、PR 合并和正式 main tag 仍需单独门禁，不以本地源码上传代替。

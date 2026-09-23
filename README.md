@@ -60,6 +60,6 @@ Web 的项目、任务、创作消息与素材使用 IndexedDB 本地持久化�
 
 ## 设计和交付依据
 
-Figma 是 UI 的唯一设计权威：[kk Figma 主画板](https://www.figma.com/design/0nU0A7pq6eyjwfwm1TtWkO/kk?node-id=404-28667)。Workspace 基线为 `404:28667`，收纳为 `410:67357`，Landing 为 `410:59708`；历史 `1:2` 不覆盖当前 Frame。仓库是代码、测试和交付文档的权威。各能力的实现与验收范围见治理账本；未接后端或未验收的能力必须标记 `Prototype / NOT VERIFIED`，不能把本地演示或构建通过描述成真实后端生成、账号服务或云端保存。
+颜色、字阶和基础组件以 [Design System 1.3](docs/DESIGN-SYSTEM.md) 为现行规范；页面布局和图标资产依据 [kk Figma 主画板](https://www.figma.com/design/0nU0A7pq6eyjwfwm1TtWkO/kk?node-id=404-28667)。Workspace 基线为 `404:28667`，收纳为 `410:67357`，Landing 为 `410:59708`；历史 `1:2` 不覆盖当前 Frame。仓库是代码、测试和交付文档的权威。各能力的实现与验收范围见治理账本；未接后端或未验收的能力必须标记 `Prototype / NOT VERIFIED`，不能把本地演示或构建通过描述成真实后端生成、账号服务或云端保存。
 
-工程文档从需求到验证按 AI-native SDLC 组织，入口见 [docs/README.md](docs/README.md)。每个功能交付单元包含 intent、spec、plan 和 verification；历史截图与旧账本保存在 `docs/archive/`，不作为当前实现的事实来源。
+工程文档从需求到验证按 AI-native SDLC 组织，入口见 [docs/README.md](docs/README.md)。每个 PR 的交付包包含 intent、spec、plan、verification 和 review；历史截图与旧账本保存在 `docs/archive/`，不作为当前实现的事实来源。

@@ -4,17 +4,18 @@
 
 `tests/evals/agent-contract.json` 是场景集，每项包含用户口语、预期行为、禁止行为。当前无付费模型 CI：这些不是已执行的多模型 benchmark。独立 reviewer 可以进行不调用外部 API 的规则演练；新 AI 工具必须在只读/临时仓库里逐项验证，记录工具/模型/规则 SHA、场景、结果、成本及失败，之后才给写入权限。不得用同一模型声称自己“理解了”代替反例和行为验证。
 
-本次自动检查覆盖共同入口、任务账本、import boundaries、PR artifact 包、Git push 的真实临时仓库拒绝行为；文档链接另行定向核对。本次没有新增产品存储契约测试。CI 不验证自然语言语义或人类授权真伪；不存在“静态全绿就证明 AI 永远守规”的结论。
+2026-09-20 的规则回归覆盖共同入口、任务账本、import boundaries、PR artifact 包与 Git push 的临时仓库拒绝行为；当次未新增产品存储契约测试。当前现行 Markdown 相对文件链接已接入 `npm run markdown:check`/`lint`。CI 不验证自然语言语义或人类授权真伪；不存在“静态全绿就证明 AI 永远守规”的结论。
 
 | 必须保持的控制                    | 执行层                                                    | 证据/缺口                          |
 | --------------------------------- | --------------------------------------------------------- | ---------------------------------- |
 | 普通语言转目标/验收、简洁中文总结 | AI_RULES + PROMPTING + 独立review + 场景集                | 语义判断，不能由文件存在检查证明   |
 | 所有工具指向共同规则              | 兼容入口 + governance:check                               | 新工具加载仍需实际确认             |
+| 现行 Markdown 相对文件链接        | markdown:check + lint                                      | 历史快照/外部网址/事实语义需另查  |
 | 跨端架构、状态机、无虚假服务成功  | 类型/schema、import check、unit/browser/native acceptance | 外部能力独立验收                   |
 | 禁主线直推/非FF/tag覆盖/默认删ref | pre-push + 真实临时repo测试                               | 可绕过，仅本机；远端另门禁         |
 | PR 交付链和状态闭环               | delivery:check + verify + ledger                          | 结构校验，不是审查质量证明         |
 | 当前SHA CI与独立审查              | hosted checks + review记录 + 用户验收                     | 无独立账号时不冒称GitHub人审       |
-| 远端强制PR/禁force和删除          | config/github-rulesets + 托管active回读                   | 本次API403，EXT-GIT BLOCKED        |
+| 远端强制PR/禁force和删除          | config/github-rulesets + 托管active回读                   | 最近回读API403，EXT-GIT BLOCKED    |
 | 发布及高影响动作                  | 具体验收版本/授权/runbook                                 | 不自动部署、不自动付费             |
 | 事故恢复与重复问题                | incident模板 + 回归测试/eval                              | 无生产监控部署时不能声称已自动运维 |
 
