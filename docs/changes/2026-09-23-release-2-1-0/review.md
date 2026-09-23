@@ -1,10 +1,10 @@
 # Review：KK Studio 2.1.0 版本元数据与源码上传
 
 - Task ID：REL-2.1.0
-- 状态：SELF-REVIEW + 独立预检；最终 SHA 补审待完成
+- 状态：SELF-REVIEW + 独立源码补审 PASS WITH FOLLOW-UPS
 - 审查类型：当前 agent 自审；另有独立 AI 上下文审查 `c3fbcb8`，不是平台第二账号审批。
 - Base SHA：`origin/main@3c4d012846e53095bd4f11343a1cd2ef61aa3bbd`
-- Head SHA：独立预检 `c3fbcb85bd207bfd11a6600a43e4b9f61d944ef0`；安全修复后的最终 SHA 以 Git/PR 回读为准。
+- Head SHA：独立预检 `c3fbcb85bd207bfd11a6600a43e4b9f61d944ef0`；最终受审源码 `15f1f2792ab9cc7d3202c9ff97b040b7e013254d` / tree `ae2bbbb79ad80783194268dae41882258571a6cf`。后续仅交付记录补录提交，以 Git ref 回读其 HEAD。
 - 规则：当前 checkout 的 `AGENTS.md`、`AI_RULES.md`、`docs/engineering/REVIEW.md`、`BRANCH-POLICY.md`。
 
 ## 需求价值
@@ -26,15 +26,15 @@
 ## 发现与处置
 
 - 当前工作树包含多项此前未提交的 Agent/UI/规则/文档候选；用户本轮明确要求上传，因此按发布流程整体提交，但不清理其他 worktree。
-- 独立 AI 预检在 `c3fbcb8` 发现 P1：HTTP 插件代码在应用权限下执行。加载器现限制 HTTPS、拒绝响应降级和旧 HTTP 缓存执行，新增 3 项单测先失败再通过；设置界面显示插件权限提示。补审 `56468c3` 又指出 HTTPS→HTTP→HTTPS 中间跳转无法从最终 URL 看出，已增补远程下载 `redirect: error`，第 4 项单测先失败再通过；最终 SHA 仍需复核。
+- 独立 AI 预检在 `c3fbcb8` 发现 P1：HTTP 插件代码在应用权限下执行。加载器现限制 HTTPS、拒绝响应降级和旧 HTTP 缓存执行，新增 3 项单测先失败再通过；设置界面显示插件权限提示。补审 `56468c3` 又指出 HTTPS→HTTP→HTTPS 中间跳转无法从最终 URL 看出，已增补远程下载 `redirect: error`，第 4 项单测先失败再通过。独立补审在 `15f1f27` 复核该路径，结论 PASS WITH FOLLOW-UPS，范围内无未关闭 P0/P1。
 - 同一预检发现 P2：Desktop CSP 拒绝插件 `blob:` 模块；登记 PLUGIN-DESKTOP-001，FEAT-013 已将能力限定为 Web preview，正式桌面插件验收保持未完成。
-- `gh` CLI 不存在；本机 GitHub Desktop 可发布分支，PR/CI 状态以平台回读为准。
+- `gh` CLI 不存在；GitHub Desktop 发布因其 PATH 缺少 `node` 被预推送钩子拦截，随后在本机终端保留钩子正常执行完成 push；PR/CI 状态以平台回读为准。
 - `releases/` 被 `.gitignore` 排除且当前不存在；不把安装包路径写成已生成事实。
 
 ## 结论
 
 - 需求价值：PASS。
 - 实现质量：本地候选 PASS；远端 SHA 回读后仍需平台独立 review/CI 才能作为正式发布结论。
-- P0/P1/release blocker：已确认的 P1 明文插件路径已修复并通过本地回归，最终 SHA 独立补审待完成；正式发布仍被 PR/CI/main、安装包、Desktop 插件和真实服务验收阻断。
-- 独立审查：初次独立审查完成并提出 P1/P2；修复后补审待完成，且不能替代平台 review。
-- 后续：补录 commit/tree/remote；若 push 成功提供远端分支；不要声称 v2.1.0 已合并或正式发布。
+- P0/P1/release blocker：已确认的 P1 明文插件路径已修复并经独立补审关闭；正式发布仍被 PR/CI/main、安装包、Desktop 插件和真实服务验收阻断。
+- 独立审查：初次独立审查提出 P1/P2；最终受审源码 `15f1f27` 范围内无未关闭 P0/P1，Desktop P2 保持开放。AI 补审不能替代平台 review。
+- 后续：远端源码分支已与首次推送 SHA 核对；不要声称 v2.1.0 已合并或正式发布。

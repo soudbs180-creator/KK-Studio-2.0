@@ -1,10 +1,10 @@
 # 当前进度
 
-## 2026-09-23 KK Studio 2.1.0 源码上传候选（REL-2.1.0，本地验证完成）
+## 2026-09-23 KK Studio 2.1.0 源码分支已上传（REL-2.1.0，本地验证完成）
 
 统一 package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端版本为 2.1.0，新增 `VERSION` 与 `CHANGELOG.md`，并将当前已授权的功能与文档候选绑定到同一 Git 任务分支。用户数据存储 key、应用 identifier、历史 2.0.0 证据和恢复归档保持不变。安装包、代码签名、真实 Provider/ComfyUI、Hosted CI、PR 合并和正式 main tag 仍需单独门禁，不以本地源码上传代替。
 
-独立预检发现远程 HTTP 插件可被替换并在应用权限下运行；已在加载器阻止明文/凭据/片段 URL、所有远程自动重定向（含 HTTPS→HTTP→HTTPS 中间跳转），以及旧版明文缓存重启执行，并向用户提示信任边界。另确认 Desktop CSP 阻止当前插件 `blob:` 模块，登记 PLUGIN-DESKTOP-001；Web 插件验证不代表桌面可用。
+独立预检发现远程 HTTP 插件可被替换并在应用权限下运行；已在加载器阻止明文/凭据/片段 URL、所有远程自动重定向（含 HTTPS→HTTP→HTTPS 中间跳转），以及旧版明文缓存重启执行，并向用户提示信任边界。独立补审在受审源码 `15f1f27` 范围内未发现未关闭 P0/P1。另确认 Desktop CSP 阻止当前插件 `blob:` 模块，登记 PLUGIN-DESKTOP-001；Web 插件验证不代表桌面可用。
 
 验证与远端 SHA 见 `docs/changes/2026-09-23-release-2-1-0/verification.md` 和 `release.md`。
 
