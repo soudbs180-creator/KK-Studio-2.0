@@ -1,5 +1,10 @@
 # AI handoff
 
+## 2026-09-24 当前恢复入口：CodeBuddy 受控委派
+
+- 当前工作树 `D:/kk-studio/.worktrees/TASK-AGENT-007-codebuddy-cli`，分支 `feat/TASK-AGENT-007-codebuddy-cli`，基于尚未合入的 `feat/TASK-MEMORY-001-local-memory`。先回读 Git 状态、[本轮验证](../changes/2026-09-24-codebuddy-delegation/verification.md)、[后续顺序](../changes/2026-09-24-codebuddy-delegation/remaining.md)，再看下方记忆历史。
+- Codex 仍主控；CodeBuddy CLI 只处理不超过 3000 字的独立短文本。设置路径/连通测试、真实 MCP、随包 MCP 与最终新 Desktop 内真实 Codex 工具调用和可见回复均已验收，脱敏事件见 `docs/changes/2026-09-24-codebuddy-delegation/evidence/desktop-codebuddy-runtime.json`。首次桌面尝试 120 秒超时，最终新包约 145 秒完成；前置推理延迟和自动路由仍待做。WorkBuddy OAuth、豆包、千问和素材站不是本任务已完成项。
+
 ## 2026-09-24 当前恢复入口：本地记忆复核
 
 - 当前分支 `feat/TASK-MEMORY-001-local-memory` 位于 `D:/kk-studio/.worktrees/TASK-MEMORY-001`；代码 SHA `8c31846` 已推送并获独立只读复核（无新确定性代码阻断），本段文档随后补记。main 保持 `76339c9`。先检查 `git status` 和本节，再看下方历史快照。

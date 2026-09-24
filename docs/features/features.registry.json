@@ -346,7 +346,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-009-conversation.md",
-    "summary": "KK 默认 Codex 已接通 Web/Windows、Agent 本地图片和显式画布原件引用；其他登录适配、参考图编辑与后台网页仍待办。",
+    "summary": "KK 默认 Codex 已接通 Web/Windows、Agent 本地图片和显式画布原件引用；CodeBuddy CLI 短文本委派已在新 Tauri 内完成真实 Codex/MCP/CLI 回执，WorkBuddy 原生登录、豆包、自动路由、参考图编辑与后台网页仍待办。",
     "entryPoints": [
       "右侧对话面板 ConversationPanel",
       "开始页对话入口"
@@ -360,6 +360,9 @@
       "src/components/AgentConversationMessages.tsx",
       "src/components/ConversationComposer.tsx",
       "src/components/settings/AgentConnectionSettings.tsx",
+      "src/components/settings/CodeBuddyConnectionSettings.tsx",
+      "vendor/canvas-agent/src/agent/codebuddy.ts",
+      "vendor/canvas-agent/src/server/mcp.ts",
       "src/features/agent/agentHost.ts",
       "src/features/agent/agentEventStream.ts",
       "src/features/agent/agentUsage.ts",
@@ -396,6 +399,9 @@
       "tests/unit/modelDiscovery.test.ts",
       "tests/unit/agentSession.test.ts",
       "tests/browser/desktop-agent.spec.ts",
+      "vendor/canvas-agent/src/agent/codebuddy.test.ts",
+      "vendor/canvas-agent/src/server/codebuddy-http.test.ts",
+      "vendor/canvas-agent/src/server/codebuddy-mcp.test.ts",
       "tests/unit/desktopAgentRuntime.test.ts",
       "tests/unit/agentPackage.test.ts",
       "tests/unit/agentRuntimeDrain.test.ts",
@@ -409,9 +415,10 @@
       "TASK-UI-005",
       "TASK-AGENT-001",
       "TASK-AGENT-002",
-      "TASK-AGENT-003"
+      "TASK-AGENT-003",
+      "TASK-AGENT-007"
     ],
-    "updated": "2026-09-23",
+    "updated": "2026-09-24",
     "platforms": [
       "web",
       "desktop"
@@ -432,6 +439,14 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-23-agent-attachments/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-24-codebuddy-delegation/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-09-24-codebuddy-delegation/verification.md"
       }
     ]
   },

@@ -39,7 +39,7 @@
 | FEAT-006 | 视频生成节点 | PROTOTYPE（仅演示/UI） | [卡片](feat-006-video-generation.md) | BACKEND-MEDIA-001, TASK-MINIMAX-001, EXT-PROVIDER |
 | FEAT-007 | 音频生成节点 | PARTIAL（部分可用） | [卡片](feat-007-audio-generation.md) | BACKEND-MEDIA-001, EXT-PROVIDER, TASK-UI-005 |
 | FEAT-008 | 文本创作节点 | PARTIAL（部分可用） | [卡片](feat-008-text-node.md) | BACKEND-TEXT-NODE, TASK-UI-005 |
-| FEAT-009 | 对话与模型聊天 | PARTIAL（部分可用） | [卡片](feat-009-conversation.md) | T4, BACKEND-CONVERSATION, TASK-UI-005, TASK-AGENT-001, TASK-AGENT-002, TASK-AGENT-003 |
+| FEAT-009 | 对话与模型聊天 | PARTIAL（部分可用） | [卡片](feat-009-conversation.md) | T4, BACKEND-CONVERSATION, TASK-UI-005, TASK-AGENT-001, TASK-AGENT-002, TASK-AGENT-003, TASK-AGENT-007 |
 | FEAT-010 | 语音输入 | PARTIAL（部分可用） | [卡片](feat-010-voice-input.md) | TASK-CAP-001 |
 | FEAT-029 | 提示词库 | PARTIAL（部分可用） | [卡片](feat-029-prompt-library.md) | TASK-UI-005, BACKEND-PLATFORM |
 

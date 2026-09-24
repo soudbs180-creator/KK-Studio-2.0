@@ -69,6 +69,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
 | TASK-MEMORY-001 | 本地长期记忆服务接入对话 | PARTIAL | none | root |
 | TASK-MEMORY-002 | 跨产品共享本地记忆（本机共享） | PARTIAL | TASK-MEMORY-001 | MainAgent |
+| TASK-AGENT-007 | Codex 通过本机 CodeBuddy CLI 受限委派短文本 | DONE | TASK-AGENT-001 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -828,4 +829,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/memory, src/components/settings/MemorySettingsSection.tsx, src-tauri/src/main.rs, src-tauri/src/storage_paths.rs, AGENTS.md, docs/MEMORY-CONTRACT.md, docs/architecture/DATA-STORAGE.md
 - Verification: NOT_VERIFIED — 旧自动化结果不证明跨应用打通。当前仅 KK Studio Codex 路径有实现；豆包/WorkBuddy 原生客户端与 Web FSA 真实目录授权尚未联调。
 - Evidence: [docs/MEMORY-CONTRACT.md](../../docs/MEMORY-CONTRACT.md), [docs/changes/2026-09-24-local-memory/intent.md](../../docs/changes/2026-09-24-local-memory/intent.md), [docs/changes/2026-09-24-local-memory/spec.md](../../docs/changes/2026-09-24-local-memory/spec.md), [docs/changes/2026-09-24-local-memory/verification.md](../../docs/changes/2026-09-24-local-memory/verification.md)
+- Updated: 2026-09-24
+
+## TASK-AGENT-007 — Codex 通过本机 CodeBuddy CLI 受限委派短文本
+
+- Goal: 在 KK Studio 主 Agent 保持 Codex 的前提下，让已登录 CodeBuddy CLI 处理有限短文本子任务并把真实结果返回 Codex
+- Scope: vendor/canvas-agent, src/features/agent/agentApi.ts, src/components/settings, docs/features/feat-009-conversation.md
+- Acceptance: 本地 Agent 设置可保存 CLI 绝对路径并明确区分已保存与真实可用; MCP 提供 codebuddy_consult；只发送本轮有限文本，不读取完整记忆或项目文件，不继承 KK 凭据; 禁用 CodeBuddy 工具和会话持久化，超时、取消、并发与错误均失败关闭; 本机已登录账号完成一轮真实 MCP 调用并返回结果; Web 与 Windows 随包运行态分别验证，不用 CLI 成功代替桌面交付
+- Branch: `feat/TASK-AGENT-007-codebuddy-cli`
+- Worktree: `D:/kk-studio/.worktrees/TASK-AGENT-007-codebuddy-cli`
+- Modules: vendor/canvas-agent/src/agent/codebuddy.ts, vendor/canvas-agent/src/server/http.ts, vendor/canvas-agent/src/server/mcp.ts, src/features/agent/agentApi.ts, src/components/settings/CodeBuddyConnectionSettings.tsx
+- Verification: PASS — 受限 CLI、真实 MCP、随包 MCP、Web 1920/390、最终新 Tauri UI 和 KK 内真实 Codex 工具调用与可见回复均通过；416 Node/310 browser、Agent 135 通过/2 Windows 跳过，最终 MSI/NSIS 构建成功。首次 120 秒超时、最终新包约 145 秒成功；WorkBuddy OAuth/豆包和自动路由不属于本子任务。
+- Evidence: [docs/changes/2026-09-24-codebuddy-delegation/intent.md](../../docs/changes/2026-09-24-codebuddy-delegation/intent.md), [docs/changes/2026-09-24-codebuddy-delegation/spec.md](../../docs/changes/2026-09-24-codebuddy-delegation/spec.md), [docs/changes/2026-09-24-codebuddy-delegation/plan.md](../../docs/changes/2026-09-24-codebuddy-delegation/plan.md), [docs/changes/2026-09-24-codebuddy-delegation/verification.md](../../docs/changes/2026-09-24-codebuddy-delegation/verification.md), [docs/changes/2026-09-24-codebuddy-delegation/review.md](../../docs/changes/2026-09-24-codebuddy-delegation/review.md), [docs/changes/2026-09-24-codebuddy-delegation/remaining.md](../../docs/changes/2026-09-24-codebuddy-delegation/remaining.md)
 - Updated: 2026-09-24

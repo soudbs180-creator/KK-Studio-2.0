@@ -750,6 +750,17 @@
   display: block;
   padding: 14px 0 4px;
 }
+.settings-codebuddy-card {
+  margin-top: 18px;
+  padding: 16px 0 6px;
+  border-top: 1px solid var(--settings-border);
+}
+.settings-codebuddy-card .settings-network-field label {
+  flex-basis: 118px;
+}
+.settings-codebuddy-card .settings-network-actions {
+  flex-wrap: wrap;
+}
 .settings-agent-status {
   display: flex;
   align-items: center;

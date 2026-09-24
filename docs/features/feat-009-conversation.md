@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：creation
-- 最近更新：2026-09-23
-- 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003
+- 最近更新：2026-09-24
+- 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-007
 
 ## 用户可见入口
 
@@ -25,6 +25,7 @@
 - KK 对话默认 Codex：命名 SSE、真实账号模型/额度、项目会话恢复、停止和权限请求已接通；API 来源需显式选择。
 - 已从 KK 输入取得真实回复、MCP 画布操作和内置生图结果。图片进入 KK 自有素材仓库；卡片来源按 thread/turn 元数据持久化。工具回执未知时阻止自动重试。
 - 分级/全部模型菜单、关闭记忆页、返回、页内置顶由 ModelPickerMenu 统一提供。Google/豆包/WorkBuddy 适配器保持禁用。
+- 设置 › 网络增加 CodeBuddy CLI 路径、保存和真实连通测试；Codex MCP 增加 `codebuddy_consult`，可受控委派有限短文本。本机已登录 CLI、随包 MCP 与新 Tauri 内 Codex 工具调用和可见回复通过；独立的 WorkBuddy 原生 OAuth、自动高效路由仍未实现，菜单中 WorkBuddy 仍禁用。见 [本轮验证](../changes/2026-09-24-codebuddy-delegation/verification.md)。
 - 新增文本节点（FEAT-008）是单次文本生成，不能作为本面板多轮文本聊天验收。
 
 - Windows 设置 › 网络：启动并连接/停止服务；缺资源或 Web 显示原因。随包执行器和实际资源哈希见 [本轮验证](../changes/2026-09-22-agent-desktop/verification.md)。
@@ -43,3 +44,5 @@
 ## 本轮实施
 
 TASK-AGENT-003：图片附件、显式画布引用和视口/选择桥接；验收见 [本轮记录](../changes/2026-09-23-agent-attachments/verification.md)。
+
+TASK-AGENT-007：CodeBuddy CLI 受控短文本委派；后续设计师全链路按 [剩余顺序](../changes/2026-09-24-codebuddy-delegation/remaining.md) 推进。

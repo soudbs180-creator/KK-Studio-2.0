@@ -1,5 +1,10 @@
 # 当前进度
 
+## 2026-09-24 CodeBuddy CLI 受控委派
+
+- Codex 主 Agent 现在有 `codebuddy_consult` MCP 短文本工具；本地设置可保存 CLI 绝对路径并执行真实连通测试。子进程固定禁用工具/会话持久化，限制文本、输出、时长与并发，不继承 KK Token/Provider Key。
+- 此机已登录 CodeBuddy CLI、真实 MCP、随包 MCP、新 Tauri UI 保存/测试及 KK 内 Codex 实际工具调用与可见回复均通过。完整 verify 为 416 Node、310 browser；Agent 135 通过/2 Windows 跳过，新 MSI/NSIS 在最终修补后重新构建。第一次桌面测试 120 秒超时，最终新包复测约 145 秒成功，其中工具本身约 8 秒；高效自动路由仍待做。WorkBuddy 原生 OAuth、豆包/千问及素材站未接入；FEAT-009 仍 PARTIAL，证据与路线见 [验证](changes/2026-09-24-codebuddy-delegation/verification.md)、[剩余顺序](changes/2026-09-24-codebuddy-delegation/remaining.md)。
+
 ## 2026-09-24 记忆候选复核与修补
 
 - 独立代码评审指出并发覆盖、提炼误收旧/未完成回复、损坏文件重复读取及旧 Web 数据未迁移；现已增加 Desktop 写锁和版本比较、Web IndexedDB 原子比较、冲突重试、按本次 `clientMessageId` 和完成阶段提炼、稳定错误回调、旧候选数据库迁移。Desktop 与 Web 没有共同写锁，Web 授权共享目录现只读，私有 IndexedDB 仍可写且可切回。

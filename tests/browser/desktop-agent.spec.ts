@@ -19,6 +19,69 @@ test("Web explains desktop ownership while preserving manual connections", async
   await expect(page.getByLabel("Agent 地址")).toBeEditable();
 });
 
+test("CodeBuddy delegation distinguishes disconnected, saved and verified states", async ({
+  page,
+}) => {
+  const agent = await startAgentServer("idle");
+  let cliPath = "";
+  let probeFails = true;
+  try {
+    await page.route(agent.url + "/agent/codebuddy/**", async (route) => {
+      const request = route.request();
+      if (request.url().endsWith("/probe")) {
+        await route.fulfill({
+          status: probeFails ? 502 : 200,
+          contentType: "application/json",
+          body: JSON.stringify(
+            probeFails
+              ? { ok: false, error: "CodeBuddy 未登录" }
+              : { ok: true, model: "hy4-preview", durationMs: 120 },
+          ),
+        });
+        probeFails = false;
+        return;
+      }
+      if (request.method() === "POST") cliPath = request.postDataJSON().cliPath;
+      await route.fulfill({
+        contentType: "application/json",
+        body: JSON.stringify({
+          ok: true,
+          configured: Boolean(cliPath),
+          cliPath,
+        }),
+      });
+    });
+    await page.goto("/");
+    await networkSettings(page);
+    const pathInput = page.getByRole("textbox", { name: "CodeBuddy CLI 路径" });
+    await expect(pathInput).toBeDisabled();
+    await page.getByLabel("Agent 地址").fill(agent.url);
+    await page.getByLabel("连接 Token", { exact: true }).fill("fixture-token");
+    await page.getByRole("button", { name: "连接 Agent", exact: true }).click();
+    await expect(
+      page.getByRole("button", { name: "已连接", exact: true }),
+    ).toBeVisible();
+    await pathInput.fill("C:/WorkBuddy/cli/bin/codebuddy");
+    await page.getByRole("button", { name: "保存 CodeBuddy 路径" }).click();
+    await expect(
+      page.getByRole("status", { name: "CodeBuddy 状态" }),
+    ).toContainText("已保存，尚未测试");
+    await page.getByRole("button", { name: "测试 CodeBuddy 连接" }).click();
+    await expect(
+      page.getByRole("alert", { name: "CodeBuddy 错误" }),
+    ).toContainText("未登录");
+    await page.getByRole("button", { name: "测试 CodeBuddy 连接" }).click();
+    await expect(
+      page.getByRole("status", { name: "CodeBuddy 状态" }),
+    ).toContainText("已验证");
+    await expect(
+      page.getByRole("status", { name: "CodeBuddy 状态" }),
+    ).toContainText("hy4-preview");
+  } finally {
+    await agent.close();
+  }
+});
+
 test("a desktop package without runtime shows its actual unavailable state", async ({
   page,
 }) => {

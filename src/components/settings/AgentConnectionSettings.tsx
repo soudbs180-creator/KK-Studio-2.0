@@ -7,6 +7,7 @@ import {
 } from "../../features/agent/agentConnection.ts";
 import type { AgentPermissionMode } from "../../features/agent/agentTypes.ts";
 import DesktopAgentControl from "./DesktopAgentControl.tsx";
+import CodeBuddyConnectionSettings from "./CodeBuddyConnectionSettings.tsx";
 
 const PERMISSION_LABELS: Record<AgentPermissionMode, string> = {
   request: "每次询问",
@@ -178,6 +179,7 @@ export default function AgentConnectionSettings({
       <p className="settings-network-code">
         本地开发可用 npm run dev:agent 一起启动 KK 与 Codex 连接服务。
       </p>
+      <CodeBuddyConnectionSettings onFeedback={onFeedback} />
     </div>
   );
 }

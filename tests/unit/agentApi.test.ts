@@ -153,3 +153,47 @@ test("resolveApproval / interrupt 发送正确端点", async () => {
   assert.ok(calls[1][0].includes("/agent/codex/interrupt"));
   assert.match(calls[1][1] ?? "", /"threadId":"thread-1"/);
 });
+
+test("CodeBuddy 设置与连通测试只走本地鉴权端点", async () => {
+  const calls: Array<{
+    url: string;
+    method: string;
+    token: string;
+    body: string;
+  }> = [];
+  const fetchImpl = stubFetch(async (url, init) => {
+    calls.push({
+      url,
+      method: init?.method || "GET",
+      token: new Headers(init?.headers).get("x-canvas-agent-token") || "",
+      body: String(init?.body || ""),
+    });
+    return jsonResponse(200, {
+      ok: true,
+      configured: true,
+      cliPath: "C:/WorkBuddy/codebuddy",
+    });
+  });
+  const api = createAgentApi({
+    endpoint: "http://127.0.0.1:17371",
+    token: "local-token",
+    clientId: "c",
+    fetcher: fetchImpl,
+  });
+  await api.codebuddyConfig();
+  await api.saveCodebuddyConfig("C:/WorkBuddy/codebuddy");
+  await api.probeCodebuddy();
+  assert.deepEqual(
+    calls.map((call) => [new URL(call.url).pathname, call.method]),
+    [
+      ["/agent/codebuddy/config", "GET"],
+      ["/agent/codebuddy/config", "POST"],
+      ["/agent/codebuddy/probe", "POST"],
+    ],
+  );
+  assert.ok(calls.every((call) => call.token === "local-token"));
+  assert.deepEqual(JSON.parse(calls[1].body), {
+    cliPath: "C:/WorkBuddy/codebuddy",
+  });
+  assert.equal(calls[2].body, "{}");
+});
