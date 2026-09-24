@@ -308,7 +308,7 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
         {
           name: "plan_update_stage_state",
           description:
-            "推进阶段状态（CAS）：doing→plan_review/result_review；plan_review→doing/blocked；result_review→done/doing；blocked→doing。输入 { planId, stageIndex, expectedStatus, nextStatus }。",
+            "Agent 只可报告阶段进入审批或阻断（CAS）：doing→plan_review/result_review/blocked。审批决策与解除阻断由宿主入口处理。输入 { planId, stageIndex, expectedStatus, nextStatus }。",
           invoke(input) {
             const planId = String(input.planId ?? "");
             const stageIndex = Number(input.stageIndex);
@@ -321,6 +321,16 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
                 ok: false,
                 error:
                   "expectedStatus/nextStatus 必须为 doing/plan_review/blocked/result_review/done。",
+              };
+            if (
+              expected !== "doing" ||
+              (next !== "plan_review" &&
+                next !== "result_review" &&
+                next !== "blocked")
+            )
+              return {
+                ok: false,
+                error: "Agent 不能审批或解除阻断；请使用宿主审批/重试入口。",
               };
             const plan = getPlan(planId);
             if (!plan) return { ok: false, error: `计划 ${planId} 不存在。` };

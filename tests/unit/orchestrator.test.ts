@@ -392,3 +392,77 @@ test("planTools expose the four plan tools with working invocations", () => {
     [],
   );
 });
+
+test("Agent plan tool cannot approve or unblock its own stages", () => {
+  const { orchestrator } = harness();
+  const plan = orchestrator.upsertPlan(planInput("p"));
+  const update = orchestrator.planTools()[1];
+
+  assert.equal(
+    update.invoke({
+      planId: plan.id,
+      stageIndex: 0,
+      expectedStatus: "doing",
+      nextStatus: "plan_review",
+    }).ok,
+    true,
+  );
+  assert.equal(
+    update.invoke({
+      planId: plan.id,
+      stageIndex: 0,
+      expectedStatus: "plan_review",
+      nextStatus: "doing",
+    }).ok,
+    false,
+  );
+  assert.equal(orchestrator.getPlan(plan.id)?.stages[0].status, "plan_review");
+  orchestrator.decideStage({
+    planId: plan.id,
+    stageIndex: 0,
+    gate: "plan",
+    decision: "approve",
+  });
+
+  assert.equal(
+    update.invoke({
+      planId: plan.id,
+      stageIndex: 0,
+      expectedStatus: "doing",
+      nextStatus: "result_review",
+    }).ok,
+    true,
+  );
+  assert.equal(
+    update.invoke({
+      planId: plan.id,
+      stageIndex: 0,
+      expectedStatus: "result_review",
+      nextStatus: "done",
+    }).ok,
+    false,
+  );
+  assert.equal(
+    orchestrator.getPlan(plan.id)?.stages[0].status,
+    "result_review",
+  );
+  orchestrator.decideStage({
+    planId: plan.id,
+    stageIndex: 0,
+    gate: "result",
+    decision: "approve",
+  });
+  assert.equal(orchestrator.getPlan(plan.id)?.stages[0].status, "done");
+
+  orchestrator.markStageBlocked(plan.id, 1);
+  assert.equal(
+    update.invoke({
+      planId: plan.id,
+      stageIndex: 1,
+      expectedStatus: "blocked",
+      nextStatus: "doing",
+    }).ok,
+    false,
+  );
+  assert.equal(orchestrator.getPlan(plan.id)?.stages[1].status, "blocked");
+});

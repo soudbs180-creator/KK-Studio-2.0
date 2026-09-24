@@ -52,3 +52,7 @@
 - ORCH-R1（P1，合并阻断）：同 id 重放 `upsertPlan` / `plan_patch_stage` 将已完成阶段、revision 和素材引用重置。修复为同 id 同定义直接返回现有计划，不写入；同 id 内容变化拒绝，须创建新计划。测试先复现失败，再验证已完成阶段、素材和 revision 保留。
 - ORCH-R2（P2，本任务存储契约阻断）：`plan_patch_stage` 接受缺少 prompt 的计划并返回成功，但读取时 `normalizeStagePlans` 丢弃整个计划；null 阶段/工作项还会直接抛异常。修复为工具输入和领域计划双层 schema 校验、写前拒绝且返回 `ok:false`，并限制计划数量与持久化上限一致。测试覆盖缺/空/超长 prompt、非法 kind、null 输入、超量工作项、有效计划往返。
 - 上述问题由原审查确认；修复后定向测试及完整本地检查见 `verification.md`。独立 reviewer 在复验前因执行额度中断，因此当前修复 head 的独立审查仍为 **NOT VERIFIED**，不得将原审查或实现者自检标为最终 PASS。
+
+## 2026-09-24 补充自查：审批工具权限边界
+
+- ORCH-R3（P1，合并阻断）：`plan_update_stage_state` 暴露给 Agent 的工具原可直接执行 `plan_review→doing`、`result_review→done` 与 `blocked→doing`，绕过宿主的人工决策/失败项重试入口。先新增失败测试复现，随后将工具限定为 `doing→plan_review/result_review/blocked`；`decideStage` 和 `retryStage` 仍由宿主调用。该发现和修复仅为实现者自查，最终独立复审仍为 **NOT VERIFIED**。

@@ -11,6 +11,7 @@
 
 - 主流程和相邻流程：Agent 规划生成任务 → 物化 StagePlan（plan_patch_stage）→ 阶段进入 plan_review → 人工/编排器审批（approve→doing / reject→blocked）→ 执行 → result_review → 审批通过 done；失败项在 blocked 解除时只重试 failed/partial。
 - 页面/route/组件或 API/命令入口：领域层纯函数（stagePlan.ts / orchestrator.ts）；UI 入口在 TASK-ORCH-002；Agent MCP 注册在 BACKEND-MCP-AUTO。
+- 审批权限边界：Agent 工具只能从 `doing` 报告进入 `plan_review`、`result_review` 或 `blocked`；人工审批与解除阻断由宿主的 `decideStage` / `retryStage` 入口处理，工具不能自行推进待审批状态。
 - loading、success、error、cancel、offline、timeout：状态推进 CAS 失败返回明确错误（并发冲突不写入）；工具面错误统一 `{ ok: false, error }`。
 - 重试、幂等、stale async、unknown 受理与重启恢复（按需）：同 id 同定义重放保留已有状态、revision 与素材；同 id 不同定义拒绝并要求新 id；CAS 防 stale 状态推进；写入前校验计划可被存储 normalize 接受。计划随项目快照持久化（normalize 兼容旧数据）。
 - 键盘/焦点/Escape/IME、长文案、响应式（UI 适用）：不适用（本 PR 无 UI 变更）。

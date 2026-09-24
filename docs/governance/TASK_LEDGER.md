@@ -817,7 +817,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-ORCH-001-agent-orchestration-closure`
 - Worktree: `D:/kk-studio/.worktrees/TASK-ORCH-001`
 - Modules: src/domain/stagePlan.ts, src/features/agent/orchestrator.ts, src/features/agent/agentHost.ts, src/features/creation/model.ts, tests/unit/stagePlan.test.ts, tests/unit/orchestrator.test.ts
-- Verification: PARTIAL — 领域层候选实现：全量 404 项单测、TypeScript/ESLint/Prettier/Vite 构建通过；同 id 重放保留进度、非法计划写前拒绝。修复 head 的独立复审未完成；UI 对接与审批交互仍属 TASK-ORCH-002/003。详见 verification.md 与 review.md。
+- Verification: PARTIAL — 领域层候选实现：同 id 重放保留进度、非法计划写前拒绝；Agent 工具不能自行审批或解除阻断。当前代码 405 Node、300 浏览器回归及类型/Lint/格式/构建/治理检查通过；最终独立复审、Desktop 和真实 Provider 未验证。UI 对接与审批交互仍属 TASK-ORCH-002/003。详见 verification.md 与 review.md。
 - Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
 - Updated: 2026-09-24
 

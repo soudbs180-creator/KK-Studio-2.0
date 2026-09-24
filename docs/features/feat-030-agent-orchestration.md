@@ -30,7 +30,7 @@
 - 已实现的本地领域层能力（尚无端到端运行验收）：
   - Stage 状态机：doing / plan_review / blocked / result_review / done，CAS 推进（乐观锁），非法迁移与并发冲突拦截；
   - 编排器：计划物化（同 id 同定义重放保留进度，不同定义拒绝覆盖；写前校验）、审批决策（plan/result 两门）、异常阻断、解除阻断并只重试失败工作项、待审批汇总；
-  - MCP 风格工具面：plan_get_stage_status / plan_update_stage_state / plan_patch_stage / plan_replan（纯函数形态，供后续 MCP 注册）；
+  - MCP 风格工具面：plan_get_stage_status / plan_update_stage_state / plan_patch_stage / plan_replan（纯函数形态，供后续 MCP 注册）；Agent 工具不能自行完成 plan/result 审批或解除阻断；
   - 交付契约：产物必须携带 node_id 且已注册素材资产，否则拦截；本轮产物按 result 连线收集与摘要。
 - 明确标注未接：
   - TaskWorkbench 阶段计划 UI（只读/审批交互）未接（TASK-ORCH-002/003）；
@@ -48,3 +48,4 @@
 
 - 2026-09-23：创建卡片；新增 Stage 状态机、编排器、工具面与交付契约（TASK-ORCH-001 / TASK-CANVAS-001，见 `docs/changes/2026-09-23-agent-orchestration/`）。
 - 2026-09-24：独立预检发现同 id 重放清空进度、非法计划写入后重载丢失；修复为重放保留原状态、写前校验与结构化错误。修复 head 的独立复审待完成。
+- 2026-09-24：实现者自查修复 Agent 工具绕过人工审批门的问题；新增越权路径回归测试，独立复审仍待完成。

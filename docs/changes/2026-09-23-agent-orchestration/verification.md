@@ -58,3 +58,9 @@
 - 修复后：领域创建和编排器持久化写前按同一 `stagePlanSchema` 校验；工具输入在映射前校验，空 id、空/缺/超长 prompt、非法 kind、null 阶段/工作项与超量工作项均拒绝且不修改项目；有效计划可由 `normalizeStagePlan` 读取。同 id 同定义重放不写入，保留阶段、revision、素材引用；同 id 不同定义拒绝。新计划数量与读取上限统一为 64。
 - 当前本地代码检查：Node 单测 404/404、TypeScript `tsc --noEmit`、ESLint 0 错误、Prettier、Vite production build、浏览器回归 300/300 均通过；governance 66 任务、features 31 功能、Markdown 83 文件、UI 标准 159 文件均 0 违规。浏览器测试生成的已跟踪截图/JSON 仅还原本轮测试改动，不纳入 PR。此次数量是新增 5 项防回归测试后的候选结果，不替代上方 399/399 的历史运行记录。
 - 当前独立审查状态：独立 reviewer 对旧 head 给出两项问题，修复后因 reviewer 执行额度中断而未能绑定新 head 复验；最终独立审查仍为 **NOT VERIFIED**。本地逻辑验证不代表 UI、Desktop 原生重启或真实 Provider 验收。
+
+## 2026-09-24 补充验证：Agent 不得自行审批
+
+- 实现者自查发现 Agent 可通过 `plan_update_stage_state` 把 `plan_review` 直接推进为 `doing`，绕开 `decideStage`。新增测试在旧实现下失败（工具返回 `ok:true`），修复后定向 `orchestrator.test.ts` 13/13 通过，覆盖计划审批、结果审批和解除阻断三条越权路径；宿主 `decideStage` 仍可合法完成审批。
+- 这条修复发生在上述 404/404 与 300/300 运行之后；以下为当前代码重新执行的结果，不沿用旧数字：`node --test tests/unit/*.test.ts` 405/405，`tsc --noEmit`、ESLint 0 warning、Prettier、Vite production build 均 PASS；治理 66 任务、功能 31 项、Markdown 83 文件、UI 标准 159 文件均 0 违规；Playwright/Edge（Vite preview）300/300 PASS。Vite 对第三方 zod 注释和大 chunk 给出非阻断告警。浏览器测试重写的既有截图和 JSON 仅还原本轮由测试产生的文件，未覆盖任务文档或源码。
+- 当前代码没有可见 UI 改动，浏览器回归只说明旧 Web 行为未明显回退；未做 Desktop release、真实 Provider 或人工审批端到端验收。最终独立复审仍为 **NOT VERIFIED**；提交后的 head SHA 需与本次文件树绑定并运行 delivery 检查。

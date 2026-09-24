@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-24 编排候选（TASK-ORCH-001）
+
+独立预检指出计划同 id 重放丢进度与非法计划写入后丢失；两项已在任务分支修复。实现者又确认 Agent 阶段工具可自行批准或解除阻断，现仅允许 `doing→plan_review/result_review/blocked`，宿主入口保留审批与重试。当前分支 405 Node 与 300 Web 浏览器回归通过，独立最终复审、Desktop 与真实 Provider 未验收；主线和正式发布状态不因此改变。以 [本轮验证](../changes/2026-09-23-agent-orchestration/verification.md)和账本 TASK-ORCH-001 为准。
+
 ## 2026-09-23 KK Studio 2.1.0 源码并线与规则回读（REL-2.1.0）
 
 当前版本元数据已统一为 2.1.0；源码候选先在 `chore/TASK-CONSOLIDATE-200` 上提交并上传，首次远端 SHA 与受审源码 `15f1f27` 一致。`VERSION`、`CHANGELOG.md`、package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端共同记录 2.1.0；原有 `%APPDATA%/kk-studio`、存储 key、应用 identifier、历史 2.0.0 证据和恢复归档不变。安装包、签名和正式 tag 仍未完成。
