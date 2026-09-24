@@ -3,13 +3,14 @@
 - 状态：PARTIAL
 - 领域：intelligence
 - 最近更新：2026-09-24
-- 关联任务：TASK-PROV-002（REVIEW，待合入）、TASK-PROV-003（REVIEW，待合入）
+- 关联任务：TASK-PROV-002（REVIEW，待合入）、TASK-PROV-003（REVIEW，待合入）、TASK-PROV-004（REVIEW，待合入）
 
 ## 用户可见入口
 
 - 本批为能力模块 + agent 侧接线 CLI，暂无 UI 入口；用户可观察效果由接线任务提供：Agent 配置生成（Codex/Claude）、设置页导入导出、模型上下文窗口选择、MCP 管理页 stdio 服务器。
 - Desktop / Web / Mobile 差异：逻辑层全平台可复用；MCP stdio 执行仅限 Node 侧（后续接线），浏览器保持 streamable_http。
 - Codex 落盘入口（当前）：`node vendor/canvas-agent/dist/index.js providers apply <config.json> [--catalog <id>] [--config-dir <dir>] [--dry-run]` / `providers check <config.json>`。
+- Claude 落盘入口（当前）：`node vendor/canvas-agent/dist/index.js providers apply-claude <config.json> [--config-dir <dir>] [--dry-run]`。
 
 ## 代码位置
 

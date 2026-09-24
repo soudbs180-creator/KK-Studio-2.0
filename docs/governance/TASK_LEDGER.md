@@ -69,6 +69,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
 | TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | REVIEW | none | root |
 | TASK-PROV-003 | Codex Provider 配置注入与 model catalog 落盘（agent 侧接线） | REVIEW | TASK-PROV-002 | root |
+| TASK-PROV-004 | Claude Code settings.json 落盘（agent 侧接线） | REVIEW | TASK-PROV-002, TASK-PROV-003 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -828,4 +829,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: vendor/canvas-agent/src/agent, vendor/canvas-agent/src/index.ts, vendor/canvas-agent/package.json, docs/changes, docs/governance, docs/features
 - Verification: NOT_VERIFIED — test:agent 142/142（含新模块全部用例）、根门禁全绿（typecheck/lint/test 394/ui:check/format/governance/features/markdown）、真实 CODEX_HOME 落盘与幂等验证、check 探测链路实测（401 被正确识别）；浏览器 test:ui 与独立 review 待推送后 CI 完成
 - Evidence: [docs/changes/2026-09-24-provider-wiring/intent.md](../../docs/changes/2026-09-24-provider-wiring/intent.md), [docs/changes/2026-09-24-provider-wiring/spec.md](../../docs/changes/2026-09-24-provider-wiring/spec.md), [docs/changes/2026-09-24-provider-wiring/plan.md](../../docs/changes/2026-09-24-provider-wiring/plan.md), [docs/changes/2026-09-24-provider-wiring/verification.md](../../docs/changes/2026-09-24-provider-wiring/verification.md), [docs/changes/2026-09-24-provider-wiring/remaining.md](../../docs/changes/2026-09-24-provider-wiring/remaining.md), [docs/changes/2026-09-24-provider-wiring/review.md](../../docs/changes/2026-09-24-provider-wiring/review.md)
+- Updated: 2026-09-24
+
+## TASK-PROV-004 — Claude Code settings.json 落盘（agent 侧接线）
+
+- Goal: 把 Provider 渲染产物落进 Claude Code 配置：settings.json 保守合并（只写 env.ANTHROPIC_BASE_URL 与顶层 model，用户设置逐字段保留、幂等）、providers apply-claude CLI；密钥不落盘（认证走宿主 env 注入或交互登录）
+- Scope: vendor/canvas-agent/src/agent/claude-provider-config.ts、provider-cli.ts apply-claude、package.json 测试清单、docs/changes/2026-09-24-claude-landing
+- Acceptance: 空文件/含用户设置/含受管键三类合并可预期且幂等; 非法 JSON 输入抛错不覆盖用户文件; 输出绝不含密钥形态文本，写盘权限 0600/0700; providers apply-claude 在本机真实目录可跑通; test:agent 与根门禁全绿
+- Branch: `feat/TASK-PROV-004-claude-landing`
+- Worktree: `D:/kk-studio/.worktrees/TASK-PROV-004-claude-landing`
+- Modules: vendor/canvas-agent/src/agent, vendor/canvas-agent/package.json, docs/changes, docs/governance, docs/features
+- Verification: NOT_VERIFIED — agent 套件 150/150（含 BOM 容忍/幂等/保留用户设置）；根门禁全绿（394 单测、lint 64-0/30-0/82-0、ui 159-0、format）；真实 CLAUDE_CONFIG_DIR apply/dry-run/幂等验证通过；BOM 两处缺口已修复；test:ui 与独立 review 待后续
+- Evidence: [docs/changes/2026-09-24-claude-landing/intent.md](../../docs/changes/2026-09-24-claude-landing/intent.md), [docs/changes/2026-09-24-claude-landing/spec.md](../../docs/changes/2026-09-24-claude-landing/spec.md), [docs/changes/2026-09-24-claude-landing/plan.md](../../docs/changes/2026-09-24-claude-landing/plan.md), [docs/changes/2026-09-24-claude-landing/verification.md](../../docs/changes/2026-09-24-claude-landing/verification.md), [docs/changes/2026-09-24-claude-landing/remaining.md](../../docs/changes/2026-09-24-claude-landing/remaining.md), [docs/changes/2026-09-24-claude-landing/review.md](../../docs/changes/2026-09-24-claude-landing/review.md)
 - Updated: 2026-09-24

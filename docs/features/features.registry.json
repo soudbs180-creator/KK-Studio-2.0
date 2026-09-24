@@ -937,7 +937,8 @@
   ],
   "tasks": [
     "TASK-PROV-002",
-    "TASK-PROV-003"
+    "TASK-PROV-003",
+    "TASK-PROV-004"
   ],
   "updated": "2026-09-24"
 }

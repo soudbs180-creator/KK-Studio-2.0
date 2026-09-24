@@ -1,17 +1,20 @@
 /**
- * `providers` CLI：把便携 Provider 配置应用到 Codex 或做连接体检。
+ * `providers` CLI：把便携 Provider 配置应用到 Codex / Claude Code 或做连接体检。
  *
  *   node dist/index.js providers apply <config.json> [--catalog <id>] [--config-dir <dir>] [--dry-run]
+ *   node dist/index.js providers apply-claude <config.json> [--config-dir <dir>] [--dry-run]
  *   node dist/index.js providers check <config.json>
  *
  * 密钥纪律：配置 JSON 内不接受密钥明文（assertNoSecrets 防线）；check 仅报告
  * 环境变量是否就绪并对 base_url 做尽力探测，绝不输出密钥本身。
  */
 import fs from "node:fs";
+import { applyClaudeProviderConfig } from "./claude-provider-config.js";
 import { applyCodexProviderConfig, envKeyFor, parseProviderConfig, providerKey, type ProviderConfigEntry } from "./codex-provider-config.js";
 
 function readProviderConfig(configFile: string): ProviderConfigEntry[] {
-    const raw = JSON.parse(fs.readFileSync(configFile, "utf8")) as unknown;
+    // Windows 编辑器常写 UTF-8 BOM；读取时剥除，避免 JSON.parse 拒绝。
+    const raw = JSON.parse(fs.readFileSync(configFile, "utf8").replace(/^\uFEFF/, "")) as unknown;
     return parseProviderConfig(raw);
 }
 
@@ -65,6 +68,25 @@ export function runApply(argv: string[]): number {
     return 0;
 }
 
+/** `providers apply-claude`：合并写 Claude Code settings.json（或 dry-run 预览）。 */
+export function runApplyClaude(argv: string[]): number {
+    const flags = parseApplyFlags(argv);
+    const connections = readProviderConfig(flags.configFile);
+    const result = applyClaudeProviderConfig(connections, {
+        configDir: flags.configDir,
+        dryRun: flags.dryRun,
+    });
+    const lines = [
+        result.dryRun ? "[dry-run] 未写盘" : "已写入 Claude 配置",
+        `config: ${result.configPath}`,
+        ...(result.model ? [`model: ${result.model}`] : []),
+        `providers: ${result.providers.join(", ")}`,
+        ...result.warnings.map((warning) => `warning: ${warning}`),
+    ];
+    printReport(lines);
+    return 0;
+}
+
 /** `providers check`：校验 + 环境变量就绪 + 尽力探测（不进入单测）。 */
 export async function runCheck(argv: string[]): Promise<number> {
     const positional = argv.filter((arg) => !arg.startsWith("-"));
@@ -107,12 +129,14 @@ export async function runProvidersCommand(argv: string[]): Promise<number> {
         printReport([
             "用法:",
             "  providers apply <config.json> [--catalog <id>] [--config-dir <dir>] [--dry-run]",
+            "  providers apply-claude <config.json> [--config-dir <dir>] [--dry-run]",
             "  providers check <config.json>",
         ]);
         return 2;
     }
     try {
         if (sub === "apply") return runApply(argv.slice(1));
+        if (sub === "apply-claude") return runApplyClaude(argv.slice(1));
         if (sub === "check") return await runCheck(argv.slice(1));
         printReport([`未知子命令: ${sub}`]);
         return 2;
