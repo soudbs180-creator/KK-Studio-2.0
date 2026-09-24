@@ -2,17 +2,20 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-09-26
-- 关联任务：TASK-PROV-002（REVIEW）
+- 最近更新：2026-09-27
+- 关联任务：TASK-PROV-002（已合入）、TASK-PROV-003（IN_PROGRESS）
 
 ## 用户可见入口
 
 - 本批为纯逻辑能力模块，暂无 UI/运行时入口；用户可观察效果由接线任务提供：Agent 配置生成（Codex/Claude）、设置页导入导出、模型上下文窗口选择、MCP 管理页 stdio 服务器。
 - Desktop / Web / Mobile 差异：逻辑层全平台可复用；MCP stdio 执行仅限 Node 侧（后续接线），浏览器保持 streamable_http。
 
+- Agent CLI 候选入口：`node vendor/canvas-agent/dist/index.js providers apply/check <config.json>`；仅在显式运行时写入指定的 Codex 配置目录。
+
 ## 代码位置
 
 - 前端：`src/features/providers/providerTargetRenderers.ts`、`src/features/providers/providerConfigIO.ts`、`src/features/models/modelCatalogWindow.ts`、`src/features/mcp/mcpConfig.ts`
+- Agent：`vendor/canvas-agent/src/agent/codex-provider-config.ts`、`provider-cli.ts`、`src/index.ts`
 - 桌面 Rust：无
 - 服务端：无（纯函数，供后续 Gateway/Agent 接线消费）
 - 数据/存储：本批无存储写入；便携导出格式 v1 定义于 providerConfigIO；MCP stdio 契约面向持久化 schema（storage 接入后置）
@@ -21,6 +24,7 @@
 
 - 单测：`tests/unit/providerTargetRenderers.test.ts`、`tests/unit/providerConfigIO.test.ts`、`tests/unit/modelCatalogWindow.test.ts`、`tests/unit/mcpConfig.test.ts`
 - 浏览器回归：无（本批无 UI）
+- Agent 单测：`vendor/canvas-agent/src/agent/codex-provider-config.test.ts`；当前主线回归待更新。
 - Rust 测试 / 实机验收：无
 - 变更与验证证据：`docs/changes/2026-09-24-provider-connectivity/{verification,remaining}.md`
 
@@ -31,7 +35,7 @@
   - 便携配置 v1 导出/导入/按 id 合并、cc-switch 风格 seed（name/baseUrl/model）导入适配。
   - `model[1M]/[200K]/[512k]/[1000000]` 后缀解析与剥离，生成 cc-switch 兼容 `model_catalog_json`。
   - MCP stdio 服务器持久化契约与命令白名单校验。
-- 明确标注：以上均未接线到 UI/Agent/落盘，未在真实 Codex/Claude 消费，属于 PARTIAL。
+- Agent 侧另有 Codex 配置合并、catalog 落盘与 apply/check CLI 候选；当前在修正与主线 Responses 契约的差异。App UI/HTTP 尚未接线，未在真实 Codex/Claude 会话中验收，故保持 PARTIAL。
 - 2026-09-26 复审修复：Codex 仅输出当前支持的 Responses 协议并把模型选择置于根级；Bash 环境导出不执行 URL 中的命令替换；stdio 配置解析拒绝凭据键/值；中文 seed 可生成不同 ID；catalog profile ID 不允许目录穿越。独立补审与最终 head 托管检查仍须完成。
 
 ## 差距与后端化
@@ -41,5 +45,7 @@
 - 外部依赖与阻断条件：Codex/Claude 版本字段兼容性需实跑确认；TASK-AGENT-006 在途完成后可复用其 config 接线。
 
 ## 变更记录
+
+- 2026-09-27：TASK-PROV-003 从旧堆叠分支承接到已合入 #16 的主线；修正配置契约并复验中，状态保持 PARTIAL。
 
 - 2026-09-24：创建卡片，状态 PARTIAL（TASK-PROV-002）。

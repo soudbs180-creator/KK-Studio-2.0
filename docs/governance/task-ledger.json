@@ -2845,5 +2845,44 @@
     "verification": "TASK-UI-010 确认项目库移除假卡，但侧栏 KK项目/KK工作流 仍为静态演示行；真实项目绑定与操作持久化尚未实现。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-09-24"
+  },
+  {
+    "id": "TASK-PROV-003",
+    "title": "Codex Provider 配置注入与 model catalog 落盘（agent 侧接线）",
+    "goal": "把 TASK-PROV-002 渲染产物落进 Codex 真实配置：config.toml 保守合并（只管理 kk_* 表与显式顶层键）、model-catalogs/<id>.json 落盘与相对指针、providers CLI（apply/check）；密钥只写 env_key",
+    "scope": "vendor/canvas-agent/src/agent/codex-provider-config.ts、provider-cli.ts、index.ts 分派、vendor/canvas-agent/package.json 测试清单、docs/changes/2026-09-24-provider-wiring",
+    "acceptance": [
+      "空文件/含注释/含自定义 provider/含历史 kk_* 表四类合并可预期且幂等",
+      "输出绝不含密钥形态文本，写盘权限 0600/0700",
+      "model[1M] 后缀进入 catalog 且无后缀不生成窗口字段",
+      "providers apply/check 在本机真实 CODEX_HOME 可跑通",
+      "test:agent 与根门禁全绿"
+    ],
+    "dependencies": [
+      "TASK-PROV-002"
+    ],
+    "owner": "root",
+    "branch": "feat/TASK-PROV-003-provider-wiring-main",
+    "worktree": "D:/kk-studio/.worktrees/TASK-PROV-003-provider-wiring",
+    "affectedModules": [
+      "vendor/canvas-agent/src/agent",
+      "vendor/canvas-agent/src/index.ts",
+      "vendor/canvas-agent/package.json",
+      "docs/changes",
+      "docs/governance",
+      "docs/features"
+    ],
+    "status": "IN_PROGRESS",
+    "evidence": [
+      "docs/changes/2026-09-24-provider-wiring/intent.md",
+      "docs/changes/2026-09-24-provider-wiring/spec.md",
+      "docs/changes/2026-09-24-provider-wiring/plan.md",
+      "docs/changes/2026-09-24-provider-wiring/verification.md",
+      "docs/changes/2026-09-24-provider-wiring/remaining.md",
+      "docs/changes/2026-09-24-provider-wiring/review.md"
+    ],
+    "verification": "从已合并的 TASK-PROV-002 承接到当前 main；旧分支的测试与落盘证据属于历史快照，Codex Responses 契约修正、当前主线回归和独立复审进行中。",
+    "updated": "2026-09-27",
+    "verificationResult": "NOT_VERIFIED"
   }
 ]

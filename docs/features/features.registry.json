@@ -558,7 +558,10 @@
       "TASK-MCP-REGISTRY-002"
     ],
     "updated": "2026-09-26",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -664,7 +667,11 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-015-projects.md",
     "summary": "Desktop 原生项目快照与项目包导入/导出/隔离恢复已验收；Web 项目包容量/离线适配（T9）及侧栏真实项目绑定仍未完成。",
-    "entryPoints": ["项目库本地项目", "侧栏演示分组", "项目包导入/导出 ProjectPackageActions"],
+    "entryPoints": [
+      "项目库本地项目",
+      "侧栏演示分组",
+      "项目包导入/导出 ProjectPackageActions"
+    ],
     "code": [
       "src/features/projects/projectPackage.ts",
       "src/features/projects/nativeProjectPackageAdapter.ts",
@@ -681,9 +688,18 @@
       "tests/browser/desktop-data-stability.spec.ts",
       "tests/browser/design-system-pages.spec.ts"
     ],
-    "tasks": ["T3a", "T3b", "T9", "TASK-DS-002", "TASK-PROJECT-SIDEBAR-001"],
+    "tasks": [
+      "T3a",
+      "T3b",
+      "T9",
+      "TASK-DS-002",
+      "TASK-PROJECT-SIDEBAR-001"
+    ],
     "updated": "2026-09-24",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -962,7 +978,11 @@
     "status": "PARTIAL",
     "card": "docs/features/feat-023-navigation.md",
     "summary": "侧栏导航、搜索/收藏入口、弹窗与窄屏菜单可用；静态演示项目行尚未绑定真实项目，多创作页/多画布分组未接入。",
-    "entryPoints": ["左侧栏 Sidebar", "搜索/收藏（Ctrl/⌘+K）", "项目分组"],
+    "entryPoints": [
+      "左侧栏 Sidebar",
+      "搜索/收藏（Ctrl/⌘+K）",
+      "项目分组"
+    ],
     "code": [
       "src/components/Sidebar.tsx",
       "src/components/SidebarProjectEntry.tsx",
@@ -977,9 +997,17 @@
       "tests/browser/ui-interactions.spec.ts",
       "tests/browser/ui-interaction-matrix.spec.ts"
     ],
-    "tasks": ["TASK-UI-DISMISS-002", "UI-004", "TASK-UI-006", "TASK-PROJECT-SIDEBAR-001"],
+    "tasks": [
+      "TASK-UI-DISMISS-002",
+      "UI-004",
+      "TASK-UI-006",
+      "TASK-PROJECT-SIDEBAR-001"
+    ],
     "updated": "2026-09-24",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -1227,18 +1255,22 @@
       "src/features/providers/providerTargetRenderers.ts",
       "src/features/providers/providerConfigIO.ts",
       "src/features/models/modelCatalogWindow.ts",
-      "src/features/mcp/mcpConfig.ts"
+      "src/features/mcp/mcpConfig.ts",
+      "vendor/canvas-agent/src/agent/codex-provider-config.ts",
+      "vendor/canvas-agent/src/agent/provider-cli.ts"
     ],
     "tests": [
       "tests/unit/providerTargetRenderers.test.ts",
       "tests/unit/providerConfigIO.test.ts",
       "tests/unit/modelCatalogWindow.test.ts",
-      "tests/unit/mcpConfig.test.ts"
+      "tests/unit/mcpConfig.test.ts",
+      "vendor/canvas-agent/src/agent/codex-provider-config.test.ts"
     ],
     "tasks": [
-      "TASK-PROV-002"
+      "TASK-PROV-002",
+      "TASK-PROV-003"
     ],
-    "updated": "2026-09-26"
+    "updated": "2026-09-30"
   },
   {
     "id": "FEAT-036",

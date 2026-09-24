@@ -89,6 +89,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROJECT-001 | 项目落地与分支收敛 | IN_PROGRESS | TASK-UI-GOV-003, TASK-CANVAS-KAWORKAI-001, TASK-LOCAL-SERVICE-001 | root |
 | TASK-UI-010 | 现行 UI 规则与真实操作回归 | IN_PROGRESS | TASK-UI-008, TASK-AGENT-003 | root |
 | TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | TODO | TASK-UI-010 | unallocated |
+| TASK-PROV-003 | Codex Provider 配置注入与 model catalog 落盘（agent 侧接线） | IN_PROGRESS | TASK-PROV-002 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -1089,3 +1090,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — TASK-UI-010 确认项目库移除假卡，但侧栏 KK项目/KK工作流 仍为静态演示行；真实项目绑定与操作持久化尚未实现。
 - Evidence: [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md), [docs/features/feat-015-projects.md](../../docs/features/feat-015-projects.md), [docs/features/feat-023-navigation.md](../../docs/features/feat-023-navigation.md)
 - Updated: 2026-09-24
+
+## TASK-PROV-003 — Codex Provider 配置注入与 model catalog 落盘（agent 侧接线）
+
+- Goal: 把 TASK-PROV-002 渲染产物落进 Codex 真实配置：config.toml 保守合并（只管理 kk_* 表与显式顶层键）、model-catalogs/<id>.json 落盘与相对指针、providers CLI（apply/check）；密钥只写 env_key
+- Scope: vendor/canvas-agent/src/agent/codex-provider-config.ts、provider-cli.ts、index.ts 分派、vendor/canvas-agent/package.json 测试清单、docs/changes/2026-09-24-provider-wiring
+- Acceptance: 空文件/含注释/含自定义 provider/含历史 kk_* 表四类合并可预期且幂等; 输出绝不含密钥形态文本，写盘权限 0600/0700; model[1M] 后缀进入 catalog 且无后缀不生成窗口字段; providers apply/check 在本机真实 CODEX_HOME 可跑通; test:agent 与根门禁全绿
+- Branch: `feat/TASK-PROV-003-provider-wiring-main`
+- Worktree: `D:/kk-studio/.worktrees/TASK-PROV-003-provider-wiring`
+- Modules: vendor/canvas-agent/src/agent, vendor/canvas-agent/src/index.ts, vendor/canvas-agent/package.json, docs/changes, docs/governance, docs/features
+- Verification: NOT_VERIFIED — 从已合并的 TASK-PROV-002 承接到当前 main；旧分支的测试与落盘证据属于历史快照，Codex Responses 契约修正、当前主线回归和独立复审进行中。
+- Evidence: [docs/changes/2026-09-24-provider-wiring/intent.md](../../docs/changes/2026-09-24-provider-wiring/intent.md), [docs/changes/2026-09-24-provider-wiring/spec.md](../../docs/changes/2026-09-24-provider-wiring/spec.md), [docs/changes/2026-09-24-provider-wiring/plan.md](../../docs/changes/2026-09-24-provider-wiring/plan.md), [docs/changes/2026-09-24-provider-wiring/verification.md](../../docs/changes/2026-09-24-provider-wiring/verification.md), [docs/changes/2026-09-24-provider-wiring/remaining.md](../../docs/changes/2026-09-24-provider-wiring/remaining.md), [docs/changes/2026-09-24-provider-wiring/review.md](../../docs/changes/2026-09-24-provider-wiring/review.md)
+- Updated: 2026-09-27
