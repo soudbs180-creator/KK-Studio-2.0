@@ -1,5 +1,11 @@
 # 当前进度
 
+## 2026-09-24 多供应商接入与多目标配置（TASK-PROV-002，REVIEW，待推送）
+
+按用户“接入足够多的”诉求，参考 CodexPlusPlus（AGPL，仅借鉴设计）与 cc-switch（MIT）落地 4 个纯逻辑模块：统一 Provider 多目标渲染（Codex `config.toml` / Claude `settings.json` / OpenAI 兼容 env）、便携配置导入导出 v1（密钥不落文件，credentialRef 不透明引用透传）、`model[1M]` 后缀解析与 cc-switch 兼容 model_catalog 生成、MCP stdio 配置契约与命令白名单（浏览器 streamable_http 不变）。功能卡 FEAT-030（PARTIAL）与账本 TASK-PROV-002 已登记。
+
+本地门禁全绿：typecheck、lint（eslint 0 / governance 62 任务 0 / features 30 功能 0 / markdown 82 文件 0）、394/394 单测（含新增 24）、ui:check 159 文件 0、format:check。浏览器 test:ui 与独立上下文 review 待推送后 CI/后续完成；渲染产物真实消费、catalog 指针落盘、MCP stdio 接线、导入导出 UI、聚合供应商与协议转换登记为 remaining 后续任务。详见 [验证](changes/2026-09-24-provider-connectivity/verification.md) 与 [遗留清单](changes/2026-09-24-provider-connectivity/remaining.md)。主 checkout 的 TASK-AGENT-006 未提交工作不受影响。
+
 ## 2026-09-23 2.1.0 源码并线与远端规则回读
 
 - [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的 head `da811283` 在 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7`；旧 PR #8 的提交是 #9 候选的祖先，内容被吸收，PR #8 已关闭而未重复合并。[PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 再将规则与 Markdown 审计 squash 合入 `main@9f04bfce`；两次合并的文件树均与各自受审候选相同，本地根 `main` 已快进至后者。

@@ -67,6 +67,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
+| TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | REVIEW | none | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -803,3 +804,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — 2026-09-23 扫描 365 个已跟踪 Markdown，历史范围共 37 处文件目标问题；原始日志来源和可恢复性待核对。
 - Evidence: [docs/governance/MARKDOWN_AUDIT.md](../../docs/governance/MARKDOWN_AUDIT.md)
 - Updated: 2026-09-23
+
+## TASK-PROV-002 — 多供应商接入与多目标配置（Provider Connectivity）
+
+- Goal: 让 KK Studio 接入足够多的供应商/工具/MCP：统一 Provider 多目标渲染、配置导入导出、模型上下文窗口 catalog、MCP stdio 配置契约
+- Scope: src/features/providers、src/features/models/modelCatalogWindow.ts、src/features/mcp/mcpConfig.ts、tests/unit、docs/changes/2026-09-24-provider-connectivity、docs/features(FEAT-030)
+- Acceptance: 一个 ProviderConnection 可渲染 Codex/Claude/OpenAI 三份目标配置且无密钥; 便携 v1 配置可 round-trip 导入导出，密钥不出现; model[1M] 后缀解析并生成 cc-switch 兼容 catalog; MCP stdio 契约仅接受白名单命令; typecheck/unit/lint/ui:check/format/governance/features/markdown 通过
+- Branch: `feat/TASK-PROV-002-provider-connectivity`
+- Worktree: `D:/kk-studio/.worktrees/TASK-PROV-002-provider-connectivity`
+- Modules: src/features/providers, src/features/models, src/features/mcp, tests/unit, docs/changes, docs/features, docs/governance
+- Verification: NOT_VERIFIED — 本地 lint/typecheck/394 单测/ui:check/format/governance/features/markdown 全绿；浏览器 test:ui 与独立上下文 review 待推送后 CI 完成
+- Evidence: [docs/changes/2026-09-24-provider-connectivity/intent.md](../../docs/changes/2026-09-24-provider-connectivity/intent.md), [docs/changes/2026-09-24-provider-connectivity/spec.md](../../docs/changes/2026-09-24-provider-connectivity/spec.md), [docs/changes/2026-09-24-provider-connectivity/plan.md](../../docs/changes/2026-09-24-provider-connectivity/plan.md), [docs/changes/2026-09-24-provider-connectivity/verification.md](../../docs/changes/2026-09-24-provider-connectivity/verification.md), [docs/changes/2026-09-24-provider-connectivity/remaining.md](../../docs/changes/2026-09-24-provider-connectivity/remaining.md)
+- Updated: 2026-09-24

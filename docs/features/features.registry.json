@@ -912,5 +912,32 @@
     "tasks": ["TASK-UI-005", "BACKEND-PLATFORM"],
     "updated": "2026-09-22",
     "platforms": ["web", "desktop"]
-  }
+  },
+{
+  "id": "FEAT-030",
+  "title": "多供应商接入与多目标配置",
+  "area": "intelligence",
+  "status": "PARTIAL",
+  "card": "docs/features/feat-030-provider-connectivity.md",
+  "summary": "统一 Provider 多目标渲染（Codex/Claude/OpenAI 兼容）、便携配置导入导出、模型上下文窗口 catalog、MCP stdio 配置契约——为接入更多供应商与工具打底。",
+  "entryPoints": [
+    "（本批无 UI 入口；接线任务提供设置页/Agent 配置入口）"
+  ],
+  "code": [
+    "src/features/providers/providerTargetRenderers.ts",
+    "src/features/providers/providerConfigIO.ts",
+    "src/features/models/modelCatalogWindow.ts",
+    "src/features/mcp/mcpConfig.ts"
+  ],
+  "tests": [
+    "tests/unit/providerTargetRenderers.test.ts",
+    "tests/unit/providerConfigIO.test.ts",
+    "tests/unit/modelCatalogWindow.test.ts",
+    "tests/unit/mcpConfig.test.ts"
+  ],
+  "tasks": [
+    "TASK-PROV-002"
+  ],
+  "updated": "2026-09-24"
+}
 ]

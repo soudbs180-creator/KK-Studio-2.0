@@ -1807,5 +1807,42 @@
     "verification": "2026-09-23 扫描 365 个已跟踪 Markdown，历史范围共 37 处文件目标问题；原始日志来源和可恢复性待核对。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-09-23"
-  }
+  },
+{
+  "id": "TASK-PROV-002",
+  "title": "多供应商接入与多目标配置（Provider Connectivity）",
+  "goal": "让 KK Studio 接入足够多的供应商/工具/MCP：统一 Provider 多目标渲染、配置导入导出、模型上下文窗口 catalog、MCP stdio 配置契约",
+  "scope": "src/features/providers、src/features/models/modelCatalogWindow.ts、src/features/mcp/mcpConfig.ts、tests/unit、docs/changes/2026-09-24-provider-connectivity、docs/features(FEAT-030)",
+  "acceptance": [
+    "一个 ProviderConnection 可渲染 Codex/Claude/OpenAI 三份目标配置且无密钥",
+    "便携 v1 配置可 round-trip 导入导出，密钥不出现",
+    "model[1M] 后缀解析并生成 cc-switch 兼容 catalog",
+    "MCP stdio 契约仅接受白名单命令",
+    "typecheck/unit/lint/ui:check/format/governance/features/markdown 通过"
+  ],
+  "dependencies": [],
+  "owner": "root",
+  "branch": "feat/TASK-PROV-002-provider-connectivity",
+  "worktree": "D:/kk-studio/.worktrees/TASK-PROV-002-provider-connectivity",
+  "affectedModules": [
+    "src/features/providers",
+    "src/features/models",
+    "src/features/mcp",
+    "tests/unit",
+    "docs/changes",
+    "docs/features",
+    "docs/governance"
+  ],
+  "status": "REVIEW",
+  "evidence": [
+    "docs/changes/2026-09-24-provider-connectivity/intent.md",
+    "docs/changes/2026-09-24-provider-connectivity/spec.md",
+    "docs/changes/2026-09-24-provider-connectivity/plan.md",
+    "docs/changes/2026-09-24-provider-connectivity/verification.md",
+    "docs/changes/2026-09-24-provider-connectivity/remaining.md"
+  ],
+  "verification": "本地 lint/typecheck/394 单测/ui:check/format/governance/features/markdown 全绿；浏览器 test:ui 与独立上下文 review 待推送后 CI 完成",
+  "updated": "2026-09-24",
+  "verificationResult": "NOT_VERIFIED"
+}
 ]
