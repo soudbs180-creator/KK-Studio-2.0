@@ -401,7 +401,10 @@
       "src/features/agent/geminiCliAdapter.ts",
       "src/components/settings/GoogleConnectionSettings.tsx",
       "src/components/GoogleConversationPanel.tsx",
-      "scripts/gemini-bridge.mjs"
+      "scripts/gemini-bridge.mjs",
+      "src/components/settings/CodeBuddyConnectionSettings.tsx",
+      "vendor/canvas-agent/src/agent/codebuddy.ts",
+      "vendor/canvas-agent/src/server/mcp.ts"
     ],
     "tests": [
       "tests/browser/frontend.spec.ts",
@@ -431,7 +434,10 @@
       "tests/browser/google-cli-agent.spec.ts",
       "tests/unit/geminiBridge.test.ts",
       "tests/unit/geminiCliAdapter.test.ts",
-      "tests/unit/googleAgentCli.test.ts"
+      "tests/unit/googleAgentCli.test.ts",
+      "vendor/canvas-agent/src/agent/codebuddy.test.ts",
+      "vendor/canvas-agent/src/server/codebuddy-http.test.ts",
+      "vendor/canvas-agent/src/server/codebuddy-mcp.test.ts"
     ],
     "tasks": [
       "T4",
@@ -441,7 +447,8 @@
       "TASK-AGENT-002",
       "TASK-AGENT-003",
       "TASK-AGENT-004",
-      "TASK-AGENT-005"
+      "TASK-AGENT-005",
+      "TASK-AGENT-007"
     ],
     "updated": "2026-09-30",
     "platforms": [

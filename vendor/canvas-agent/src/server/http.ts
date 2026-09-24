@@ -6,6 +6,7 @@ import path from "node:path";
 import express, { type NextFunction, type Request, type Response } from "express";
 
 import { runClaudeTurn } from "../agent/claude.js";
+import { runCodeBuddy, validateCodeBuddyCliPath } from "../agent/codebuddy.js";
 import { readCodexRateLimits } from "../agent/codex.js";
 import { archiveCodexThread, CodexSkillLookupError, configureCodexSkill, generateCodexSkillDraft, interruptCodexTurn, isRecoverableThreadError, listCodexModels, listCodexSkills, listCodexThreads, readCodexThread, resolveCodexApproval, resolveCodexSkill, resumeCodexThread, runCodexTurn, startCodexThread, summarizeCodexThread } from "../agent/codex.js";
 import type { CodexReasoningEffort, CodexSkillSelector } from "../agent/codex-protocol.js";
@@ -188,6 +189,33 @@ export function startHttpServer() {
         res.type(path.extname(filePath)).send(await readFile(filePath));
     }));
     app.post("/api/tools", route(async (req, res) => res.json({ ok: true, result: await session.callTool(req.body?.name, req.body?.input || {}) })));
+    app.get("/agent/codebuddy/config", (_req, res) => {
+        res.setHeader("Cache-Control", "no-store");
+        const cliPath = config.codebuddy?.cliPath || "";
+        res.json({ ok: true, configured: Boolean(cliPath), cliPath });
+    });
+    app.post("/agent/codebuddy/config", route(async (req, res) => {
+        const requested = req.body?.cliPath;
+        if (typeof requested !== "string") return void res.status(400).json({ ok: false, error: "CodeBuddy CLI 路径无效" });
+        try {
+            const cliPath = requested.trim() ? await validateCodeBuddyCliPath(requested) : "";
+            saveConfig({ ...config, ...(cliPath ? { codebuddy: { cliPath } } : { codebuddy: undefined }) });
+            if (cliPath) config.codebuddy = { cliPath };
+            else delete config.codebuddy;
+            res.setHeader("Cache-Control", "no-store");
+            res.json({ ok: true, configured: Boolean(cliPath), cliPath });
+        } catch (error) {
+            res.status(400).json({ ok: false, error: error instanceof Error ? error.message : "CodeBuddy CLI 路径无效" });
+        }
+    }));
+    app.post("/agent/codebuddy/probe", route(async (_req, res) => {
+        const cliPath = config.codebuddy?.cliPath;
+        if (!cliPath) return void res.status(409).json({ ok: false, error: "尚未配置 CodeBuddy CLI 路径" });
+        const result = await runCodeBuddy({ cliPath, prompt: "请只回复 CODEBUDDY_OK，不要调用工具。" });
+        if (result.text !== "CODEBUDDY_OK") return void res.status(502).json({ ok: false, error: "CodeBuddy 未返回预期测试结果" });
+        res.setHeader("Cache-Control", "no-store");
+        res.json({ ok: true, ...(result.model ? { model: result.model } : {}), durationMs: result.durationMs });
+    }));
     app.get("/agent/codex/workspace", (_req, res) => {
         const workspace = ensureSiteWorkspace(config);
         res.json({ ok: true, workspace, conversation: session.conversationStateSnapshot });

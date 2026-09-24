@@ -108,6 +108,12 @@ PR #14 的独立审查在旧 head 发现两项 P1：旧 revision 可覆盖已完
 隔离分支 `feat/TASK-AGENT-004-google-closeout` 组合 Google Interactions API Key 对话/生图与 Gemini CLI Google 账号文字对话。API Key 图片可归档画布；CLI 登录只支持文字。Web fixture 与本地桥安全回归已通过；最终验证见 [004](../changes/2026-09-23-google-interactions/verification.md)、[005](../changes/2026-09-23-google-cli-login/verification.md)。真实 Google 凭据请求、CLI 账号续接、Tauri 同态和最终独立补审尚未完成；主线不因本候选改变。
 
 ## 2026-09-23 KK Studio 2.1.0 源码上传候选（REL-2.1.0）
+## 2026-09-24 CodeBuddy CLI 受控委派候选（TASK-AGENT-007）
+
+- `feat/TASK-AGENT-007-codebuddy-cli` 从记忆候选分支创建，尚未合入 main。Codex 保持默认主 Agent；新增本地设置与 `codebuddy_consult` MCP 工具处理有限短文本。
+- 本机已登录 WorkBuddy 安装包内的 CodeBuddy CLI、KK MCP Server、随包 MCP 与最终新 Tauri 应用内 Codex 对话均返回真实结果；后者记录到已完成的 `codebuddy_consult` 工具事件并在 KK 对话显示回执。Web 设置状态测试使用本地 fixture。首次 120 秒桌面等待超时，最终新包约 145 秒完成，其中工具约 8 秒，主 Agent 前置推理延迟仍待优化。
+- 这不是 WorkBuddy 原生 OAuth 接入；豆包网页目前遇到地区限制，千问、花瓣和 Pinterest 尚无受支持的 KK 账号/资产适配器。FEAT-009、TASK-AGENT-002 与跨应用记忆保持 PARTIAL。具体证据与下一步见 [验证](../changes/2026-09-24-codebuddy-delegation/verification.md)、[剩余顺序](../changes/2026-09-24-codebuddy-delegation/remaining.md)。
+
 ## 2026-09-24 记忆候选复核勘误（以本节为当前事实）
 
 - `feat/TASK-MEMORY-001-local-memory` 已推送但仍未合入 main。FEAT-020 保持 PARTIAL，TASK-MEMORY-001/002 退回 PARTIAL / NOT_VERIFIED；下节旧验证仅代表当时自动化结果。
