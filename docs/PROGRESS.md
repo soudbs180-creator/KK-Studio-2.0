@@ -1,5 +1,11 @@
 # 当前进度
 
+## 2026-09-24 Codex Provider 配置注入与 catalog 落盘（TASK-PROV-003，REVIEW，待推送）
+
+把 TASK-PROV-002 渲染产物接入真实消费：agent 侧（vendor/canvas-agent）新增 `codex-provider-config.ts`——Codex `config.toml` 保守合并（只管理 `kk_*` 表与显式顶层键，幂等、保留用户配置）、`model-catalogs/<id>.json` 落盘与相对指针、`providers apply/check` CLI（密钥只写 env_key，绝不落盘）。根 `verify` 纳入 `test:agent`。
+
+验证：test:agent 142/142（测试抓出并修复 3 个缺陷：顶层键替换丢空格、幂等被破坏、表间空行不一致）；真实 CODEX_HOME 落盘与二次应用幂等（哈希一致）；check 探测链路实测（假密钥被真实端点以 401 拒绝）；根门禁全绿（typecheck / lint / 394 单测 / ui:check / format / governance 63 / features 30 / markdown 82）。HTTP 端点因与 TASK-AGENT-006 同文件冲突登记 remaining；Codex 真实消费对拍待装有 Codex 的机器。详见 [验证](changes/2026-09-24-provider-wiring/verification.md) 与 [遗留清单](changes/2026-09-24-provider-wiring/remaining.md)。
+
 ## 2026-09-24 多供应商接入与多目标配置（TASK-PROV-002，REVIEW，待推送）
 
 按用户“接入足够多的”诉求，参考 CodexPlusPlus（AGPL，仅借鉴设计）与 cc-switch（MIT）落地 4 个纯逻辑模块：统一 Provider 多目标渲染（Codex `config.toml` / Claude `settings.json` / OpenAI 兼容 env）、便携配置导入导出 v1（密钥不落文件，credentialRef 不透明引用透传）、`model[1M]` 后缀解析与 cc-switch 兼容 model_catalog 生成、MCP stdio 配置契约与命令白名单（浏览器 streamable_http 不变）。功能卡 FEAT-030（PARTIAL）与账本 TASK-PROV-002 已登记。
