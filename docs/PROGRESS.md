@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-24 编排计划重复工作项 ID 边界
+
+PR #14 的 `67ff18fb` 独立复审确认旧计划覆写与项目包漏同步两项 P1 已关闭，但发现重复工作项 ID 可让单项更新误改已成功项。候选已在 TS 与 Rust 项目包中拒绝计划内重复 ID；失败先行和 409 Node / 81 Rust / 300 浏览器本地回归见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。新 head 独立复审与 Hosted CI 仍待完成；当前 PR 不可合并。
+
 ## 2026-09-24 Agent 编排独立审查阻断修复
 
 独立审查在 PR #14 旧 head 发现：公开写入口可用旧计划覆盖已审批进度；Desktop 项目包拒绝 normalize 后新增的 `stagePlans` 字段，Web/Rust 包还遗漏计划工作项唯一引用的素材。当前候选已加入预期 revision 工作项更新、删除公开覆写入口、同步项目包 schema 与素材收集；407 Node、80 Rust 与 300 浏览器测试及类型/Lint/构建/治理通过。修复后新 head 的 Hosted CI、独立复审和 Desktop GUI 尚未验收，PR #14 仍不可合并；详细证据见 [验证记录](changes/2026-09-23-agent-orchestration/verification.md)。

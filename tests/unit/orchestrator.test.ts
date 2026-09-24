@@ -205,6 +205,29 @@ test("plan_patch_stage rejects invalid input without persisting a plan", () => {
   assert.strictEqual(read(), before);
 });
 
+test("plan_patch_stage rejects duplicate work item IDs without writing", () => {
+  const { orchestrator, read } = harness();
+  const before = read();
+  const result = orchestrator.planTools()[2].invoke({
+    id: "duplicate-plan",
+    title: "重复 ID",
+    stages: [
+      {
+        name: "规划",
+        goal: "先规划",
+        workItems: [{ id: "same", kind: "text", prompt: "规划" }],
+      },
+      {
+        name: "执行",
+        goal: "再生成",
+        workItems: [{ id: "same", kind: "image", prompt: "生成" }],
+      },
+    ],
+  });
+  assert.equal(result.ok, false);
+  assert.strictEqual(read(), before);
+});
+
 test("plan_patch_stage is durable and replay cannot reset progress", () => {
   const { orchestrator, read } = harness();
   const patch = orchestrator.planTools()[2];

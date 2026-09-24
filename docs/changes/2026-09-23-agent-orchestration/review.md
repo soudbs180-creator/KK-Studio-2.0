@@ -62,3 +62,9 @@
 - 独立审查绑定 `ae4bf7a9`，结论 **CHANGES REQUIRED**。ORCH-FINAL-R1（P1）：所有规范化项目均带 `stagePlans`，但 Rust 项目包白名单拒绝，且 Web/Rust 包引用收集遗漏计划工作项的 `assetId`。ORCH-FINAL-R2（P1）：公开 `persistPlan` 可用旧 revision 将 `done` 覆盖回 `doing`。审查未修改代码或批准 PR。
 - 实现者新增失败先行测试后修复：项目包两端校验和收集计划素材，Rust 导出/导入覆盖空计划与仅计划引用的原件；移除公开覆盖入口，工作项更新受 `expectedRevision` 与状态迁移约束。定向和完整验证见 `verification.md`。
 - 旧审查只证明旧 head 不可合并；当前修复后新 head 的独立审查仍为 **NOT VERIFIED**，Hosted CI 也须重新绑定新 SHA。PR #14 与 #15 的四个文档内容冲突尚待按顺序整合。
+
+## 2026-09-24 精确 head `67ff18fb` 复审与输入边界修复
+
+- 独立 reviewer 对 `67ff18fb7633beba5a86dfd1bb6be066880a2580` 的结论为 **CHANGES REQUIRED**：ORCH-FINAL-R1/R2 经 Node 38/38、Rust 项目包 17/17 定向复验已关闭；新增 ORCH-FINAL-R3（P2，当前验收阻断）由重复 `workItem.id` 触发。`find` 校验首项，`map` 更新全部同名项，最小输入把 `[queued, succeeded]` 改成 `[running, running]`，绕过终态保护。审查只读，不是 GitHub 人工 approval。
+- 实现者新增失败先行测试：领域创建和计划工具原接受跨阶段重复 id，Rust 原生包原可导出同阶段重复 id。修复为计划级唯一性校验，三条输入路径均拒绝且不写入；两端 schema 与项目包决定见 [ADR-006](../../architecture/adr/ADR-006-stage-plan-package-contract.md)。完整结果见 `verification.md`。
+- 此次修复仍在未提交候选中；新 head 的独立复审和 hosted CI **NOT VERIFIED**，不得沿用 `67ff18fb` 的结论当作通过。

@@ -98,6 +98,39 @@ test("createStagePlan rejects a plan that storage normalization would discard", 
   );
 });
 
+test("stage plans reject duplicate work item IDs across stages", () => {
+  assert.throws(
+    () =>
+      createStagePlan({
+        title: "重复工作项",
+        projectId: "project-1",
+        createdBy: "agent",
+        stages: [
+          { name: "规划", goal: "生成文本", workItems: [workItem("same")] },
+          { name: "执行", goal: "生成图片", workItems: [workItem("same")] },
+        ],
+      }),
+    /Stage 计划无效/,
+  );
+  const valid = samplePlan();
+  const duplicate = {
+    ...valid,
+    stages: valid.stages.map((stage, index) =>
+      index === 1
+        ? {
+            ...stage,
+            workItems: stage.workItems.map((item, workIndex) =>
+              workIndex === 0
+                ? { ...item, id: valid.stages[0].workItems[0].id }
+                : item,
+            ),
+          }
+        : stage,
+    ),
+  };
+  assert.equal(normalizeStagePlan(duplicate), null);
+});
+
 test("casAdvanceStage advances doing to plan_review/result_review/blocked", () => {
   const plan = samplePlan();
   const reviewed = casAdvanceStage(plan, 0, "doing", "plan_review");

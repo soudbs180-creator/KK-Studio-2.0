@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-24 编排候选重复 ID 复审
+
+独立 reviewer 对 PR #14 `67ff18fb` 关闭原两项 P1，但发现计划允许重复工作项 ID，受控更新会误改所有同名项。任务分支已用 TS/Rust 失败先行回归补计划级唯一性校验；当前 409 Node、81 Rust、300 浏览器与类型/Lint/构建通过。新 head 的 Hosted CI 和独立复审仍待核对；主线、正式发布与 PR #15 冲突状态未变。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)及[ADR-006](../architecture/adr/ADR-006-stage-plan-package-contract.md)。
+
 ## 2026-09-24 编排候选跨端补审
 
 PR #14 的独立审查在旧 head 发现两项 P1：旧 revision 可覆盖已完成计划，且 `stagePlans` 未同步 Desktop 项目包 schema/素材收集。任务分支已加入预期 revision 工作项写入和 Web/Rust 包契约回归；本地 407 Node、80 Rust、300 浏览器及静态/构建检查通过。修复后 head 的 Hosted CI、独立复审、Desktop GUI 与真实 Provider 仍待验证；PR #14 与 #15 的文档冲突待顺序整合。主线/发布状态未变，见 [验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。

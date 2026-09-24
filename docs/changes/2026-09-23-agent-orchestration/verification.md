@@ -71,3 +71,9 @@
 - 失败先行：`orchestrator.test.ts` 新用例在旧实现下因无受控更新入口失败；`projectPackage.test.ts` 新用例实际得到 `[]` 而非计划素材 id；Rust `exports_normalized_project_with_empty_stage_plans` 实际返回 `corrupt: 项目快照无效`。
 - 修复后定向 Node（orchestrator/projectPackage/stagePlan）38/38；全量 Node 407/407；Rust 全量 80/80（含空 `stagePlans` 导出与仅计划素材的导入往返）；TypeScript noEmit 与增量构建、ESLint、Prettier、Vite production build、治理 66/0、功能 31/0、Markdown 83/0、UI 标准 159/0 均通过。Rust 编译有五项既有 dead_code warning；Vite 有第三方注释及 chunk 提示，均非失败。
 - 当前代码的 Playwright/Edge 浏览器回归 300/300 通过；测试重写的 23 个既有截图仅恢复其本轮生成改动，未纳入 PR。当前 head 的 hosted CI 和独立复审需在提交后核对；未做 Desktop GUI/正式发布、真实 Provider 或人工审批端到端验收。
+
+## 2026-09-24 重复工作项 ID 复审修复
+
+- 绑定 `67ff18fb` 的独立复审关闭原 ORCH-FINAL-R1/R2，但发现 ORCH-FINAL-R3：重复工作项 id 可把已成功项和排队项一并更新为 running。复审实际最小输入得到 `[queued, succeeded] → [running, running]`，结论 CHANGES REQUIRED。
+- 失败先行：新增 Node 计划创建与 `plan_patch_stage` 测试在旧实现下分别未抛错/返回 `ok:true`；Rust `rejects_stage_plan_with_duplicate_work_item_ids_before_export` 原返回成功导出。补计划级唯一性校验后，Node 定向 29/29、Rust 新用例通过。
+- 当前候选的全量 Node 409/409、Rust 81/81、Playwright/Edge 300/300、TypeScript noEmit/增量构建、ESLint、Prettier、cargo fmt、Vite production build 均通过；治理 66/0、功能 31/0、Markdown 84/0、UI 标准 159/0。浏览器默认启动检查提示 1423 端口已用，但当时 HTTP 连接拒绝且无监听进程；由本任务启动同一 Vite preview 并使用临时 `reuseExistingServer` 测试配置完成 300/300，随后停止自有预览进程并移除临时配置。测试生成的 24 个已跟踪截图已恢复，不纳入提交。提交后的 delivery、Hosted CI 和独立复审仍待完成；Desktop GUI、真实 Provider 与发布未验证。

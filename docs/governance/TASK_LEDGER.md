@@ -813,11 +813,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: Stage 状态机（doing/plan_review/blocked/result_review/done）+ 编排器 CAS 推进 + plan 工具面，作为波次A闭环的领域基座
 - Scope: src/domain/stagePlan.ts, src/features/agent/orchestrator.ts, src/features/agent/agentHost.ts, src/features/creation/model.ts, src/features/projects/projectPackage.ts, src-tauri/src/project_package*.rs, tests
-- Acceptance: Stage 状态机合法/非法迁移与 CAS 并发冲突可测; 编排器物化计划、审批决策、阻断与失败重试只重试失败项; plan 工具面四个工具可调用并持久化; CreationProject.stagePlans 存储兼容不丢旧数据; 项目包导出导入保留空 stagePlans 和仅由计划工作项引用的素材; 工作项结果按预期 revision 写入，迟到结果不覆盖审批状态
+- Acceptance: Stage 状态机合法/非法迁移与 CAS 并发冲突可测; 编排器物化计划、审批决策、阻断与失败重试只重试失败项; plan 工具面四个工具可调用并持久化; CreationProject.stagePlans 存储兼容不丢旧数据; 项目包导出导入保留空 stagePlans 和仅由计划工作项引用的素材; 工作项结果按预期 revision 写入，迟到结果不覆盖审批状态; 工作项 id 在计划内唯一，重复 id 不得误推进已完成工作项
 - Branch: `feat/TASK-ORCH-001-agent-orchestration-closure`
 - Worktree: `D:/kk-studio/.worktrees/TASK-ORCH-001`
-- Modules: src/domain/stagePlan.ts, src/features/agent/orchestrator.ts, src/features/agent/agentHost.ts, src/features/creation/model.ts, src/features/projects/projectPackage.ts, src-tauri/src/project_package.rs, src-tauri/src/project_package_snapshot.rs, tests/unit/stagePlan.test.ts, tests/unit/orchestrator.test.ts
-- Verification: PARTIAL — 独立预审发现旧计划覆写与项目包字段/素材漏同步两项 P1，已补受控工作项 CAS、Web/Rust 项目包契约和往返回归。当前代码 407 Node、80 Rust、300 浏览器及类型/Lint/格式/构建/治理通过。新 head 的 hosted CI、独立复审、Desktop GUI 和真实 Provider 未验证。UI 对接仍属 TASK-ORCH-002/003。详见 verification.md 与 review.md。
+- Modules: src/domain/stagePlan.ts, src/features/agent/orchestrator.ts, src/features/agent/agentHost.ts, src/features/creation/model.ts, src/features/projects/projectPackage.ts, src-tauri/src/project_package.rs, src-tauri/src/project_package_snapshot.rs, docs/architecture/adr/ADR-006-stage-plan-package-contract.md, tests/unit/stagePlan.test.ts, tests/unit/orchestrator.test.ts
+- Verification: PARTIAL — 独立复审关闭旧计划覆写与项目包漏同步两项 P1，新发现重复工作项 id 误推进已成功项的 P2；已补计划级唯一性校验和 TS/Rust 回归。当前候选 409 Node、81 Rust、300 浏览器及类型/Lint/格式/构建/治理通过；新 head 的 hosted CI、独立复审、Desktop GUI 和真实 Provider 未验证。UI 对接仍属 TASK-ORCH-002/003。详见 verification.md 与 review.md。
 - Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
 - Updated: 2026-09-24
 

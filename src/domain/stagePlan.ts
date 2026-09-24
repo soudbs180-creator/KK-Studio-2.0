@@ -87,17 +87,33 @@ export const stageSchema = z.object({
 });
 export type Stage = z.infer<typeof stageSchema>;
 
-export const stagePlanSchema = z.object({
-  id: z.string().min(1).max(160),
-  title: z.string().min(1).max(120),
-  projectId: z.string().min(1).max(160),
-  createdBy: z.enum(["agent", "user"]),
-  /** 每次推进递增，作为并发写入的乐观锁（UI/编排器侧校验）。 */
-  revision: z.number().int().min(0),
-  stages: z.array(stageSchema).min(1).max(32),
-  createdAt: z.number(),
-  updatedAt: z.number(),
-});
+export const stagePlanSchema = z
+  .object({
+    id: z.string().min(1).max(160),
+    title: z.string().min(1).max(120),
+    projectId: z.string().min(1).max(160),
+    createdBy: z.enum(["agent", "user"]),
+    /** 每次推进递增，作为并发写入的乐观锁（UI/编排器侧校验）。 */
+    revision: z.number().int().min(0),
+    stages: z.array(stageSchema).min(1).max(32),
+    createdAt: z.number(),
+    updatedAt: z.number(),
+  })
+  .superRefine((plan, context) => {
+    const ids = new Set<string>();
+    plan.stages.forEach((stage, stageIndex) =>
+      stage.workItems.forEach((workItem, workIndex) => {
+        if (ids.has(workItem.id)) {
+          context.addIssue({
+            code: "custom",
+            path: ["stages", stageIndex, "workItems", workIndex, "id"],
+            message: "工作项 id 不得重复。",
+          });
+        }
+        ids.add(workItem.id);
+      }),
+    );
+  });
 export type StagePlan = z.infer<typeof stagePlanSchema>;
 
 export interface StageInput {

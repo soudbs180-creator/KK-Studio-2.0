@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-24 TASK-ORCH-001 重复 ID 修复候选
+
+PR #14 `67ff18fb` 独立复审已关闭原两项 P1，新发现重复工作项 ID 会使 `updateWorkItem` 误改已成功项。任务 worktree 已添加计划级 TS/Rust 唯一性校验及失败先行测试；当前 409 Node、81 Rust、300 浏览器与类型/Lint/构建通过。恢复时先核对 dirty/new head，再核对 Hosted CI、独立复审；未完成前不可合并。PR #15 的四处文档冲突待顺序整合，详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-24 TASK-ORCH-001 独立补审修复候选
 
 独立 reviewer 对 PR #14 旧 head `ae4bf7a9` 给出两项 P1：公开旧计划覆写，以及 Desktop/Web 项目包计划字段与素材引用漏同步。任务 worktree 已修复并跑 407 Node、80 Rust、300 浏览器与静态构建检查。下一步核对新 head 的 Hosted CI、独立复审和 PR #15 文档冲突，未完成前不可合并。详见 [验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。

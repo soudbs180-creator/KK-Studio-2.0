@@ -22,7 +22,7 @@
 - schema/API/事件/文件格式与兼容策略：StagePlan/Stage/StageWorkItem 为 zod 白名单 schema；`CreationProject.stagePlans` 为可选数组，normalizeStagePlans 过滤损坏条目，旧快照不受影响。
 - 数据归属、原件保留、校验和、并发/原子性：阶段计划随项目快照本地持久化；阶段推进校验当前状态，工作项写入校验 expectedRevision 且递增 revision；项目包导出/导入保留 stagePlans 和仅由工作项引用的素材原件。
 - 凭据与日志边界、最小权限、外部传输与费用：本 PR 无凭据接触、无外部传输；成本为本地估算口径（不接支付）。
-- 相关 ADR（无需时说明原因）：无需新增 ADR（本地领域扩展，无架构分叉）。
+- 相关 ADR（无需时说明原因）：原领域层设计无需新增 ADR；跨端项目包与计划 ID 契约补充见 [ADR-006](../../architecture/adr/ADR-006-stage-plan-package-contract.md)。
 
 ## 平台能力
 
@@ -68,3 +68,4 @@
 - `persistPlan` 不再作为可任意覆盖的公开入口。宿主 `updateWorkItem` 只在 `doing` 阶段按当前 revision 推进合法工作项状态，迟到结果或审批后的旧 revision 拒绝且不写入。
 - `CreationProject.stagePlans` 由 normalize 为旧项目补空数组，Desktop `.kkproject` schema 必须接受并验证该字段；Web 与 Rust 项目包均收集 `stagePlans[].stages[].workItems[].assetId`，防止只由计划引用的原件在导出时遗漏。
 - 上述补充只覆盖本地领域和项目包契约，尚未完成真实生成、Tauri GUI 和发布验收。
+- 计划内 `workItems[].id` 跨所有阶段唯一；重复 ID 在领域创建/归一化和 Rust 项目包预检中拒绝，不自动重命名或推进其它同名工作项。依据和兼容边界见 [ADR-006](../../architecture/adr/ADR-006-stage-plan-package-contract.md)。

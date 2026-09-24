@@ -190,6 +190,7 @@ fn stage_plans(project: &Value) -> Result<(), String> {
         if stages.is_empty() || stages.len() > 32 {
             return Err(invalid("stagePlans.stages"));
         }
+        let mut work_ids = HashSet::new();
         for stage in stages {
             shape(
                 stage,
@@ -260,6 +261,9 @@ fn stage_plans(project: &Value) -> Result<(), String> {
                     ],
                 )?;
                 text(work, "id", 1, 160)?;
+                if !work_ids.insert(work["id"].as_str().unwrap()) {
+                    return Err(invalid("stagePlans.workItems.id"));
+                }
                 text(work, "prompt", 1, 4000)?;
                 texts(work, &[("model", 120), ("error", 500)])?;
                 enumeration(work, "kind", &["image", "video", "audio", "text", "merge"])?;
