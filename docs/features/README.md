@@ -58,7 +58,7 @@
 | FEAT-017 | 账号与登录 | PROTOTYPE（仅演示/UI） | [卡片](feat-017-account.md) | BACKEND-PLATFORM, T10 |
 | FEAT-018 | 积分、订阅与平台额度 | PROTOTYPE（仅演示/UI） | [卡片](feat-018-credits.md) | BACKEND-PLATFORM, T10 |
 | FEAT-019 | 云端保存与多端同步 | PARTIAL（部分可用） | [卡片](feat-019-cloud-sync.md) | BACKEND-PLATFORM, T10, T9 |
-| FEAT-020 | 长期记忆服务 | PARTIAL（部分可用） | [卡片](feat-020-memory.md) | TASK-MEMORY-001, BACKEND-PLATFORM, T10 |
+| FEAT-020 | 长期记忆服务 | PARTIAL（部分可用） | [卡片](feat-020-memory.md) | TASK-MEMORY-001, TASK-MEMORY-002, BACKEND-PLATFORM, T10 |
 | FEAT-021 | 应用内代理 | PARTIAL（部分可用） | [卡片](feat-021-proxy.md) | BACKEND-PLATFORM, TASK-UI-005 |
 
 ## 系统与数据

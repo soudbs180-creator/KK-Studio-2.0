@@ -836,7 +836,7 @@
     "area": "platform",
     "status": "PARTIAL",
     "card": "docs/features/feat-020-memory.md",
-    "summary": "本地长期记忆（用户级）：规则采集+手动Codex提炼，IndexedDB/memory文件持久化，对话前注入[长期记忆]块；按本地身份键隔离，仅存本地不上云。",
+    "summary": "本地长期记忆（用户级，本机共享）：规则采集+手动Codex提炼，共享文件 ~/.kk-memory/memory.json（Web 授权目录/Desktop Tauri 命令），对话前注入[长期记忆]块；Codex/豆包/WorkBuddy 共享同一份，仅存本地不上云；换账号手动清空/重置。",
     "entryPoints": [
       "设置 › 连接 › 记忆"
     ],
@@ -857,6 +857,7 @@
     ],
     "tasks": [
       "TASK-MEMORY-001",
+      "TASK-MEMORY-002",
       "BACKEND-PLATFORM",
       "T10"
     ],

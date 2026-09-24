@@ -1,5 +1,5 @@
 /**
- * 记忆设置页 React hook：开关、列表、删除、清空、身份重置、手动 Codex 提炼。
+ * 记忆设置页 React hook：开关、列表、删除、清空、共享目录授权、手动 Codex 提炼。
  */
 import { useCallback, useEffect, useState } from "react";
 import { agentConnection } from "../agent/agentConnection.ts";
@@ -40,6 +40,8 @@ export function useMemory(onFeedback: (message: string) => void) {
     memoryService.isEnabled(),
   );
   const [store, setStore] = useState<MemoryStoreFile | null>(null);
+  const [mode, setMode] = useState<"shared" | "isolated">("shared");
+  const [storageStatus, setStorageStatus] = useState("");
   const [loading, setLoading] = useState(true);
   const [extracting, setExtracting] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -48,6 +50,8 @@ export function useMemory(onFeedback: (message: string) => void) {
   const refresh = useCallback(async () => {
     try {
       setStore(await memoryService.load());
+      setMode(await memoryService.storageMode());
+      setStorageStatus(await memoryService.storageStatus());
     } catch {
       setStore(null);
       onFeedback("读取本地记忆失败，请稍后重试。");
@@ -67,7 +71,7 @@ export function useMemory(onFeedback: (message: string) => void) {
       await refresh();
       onFeedback(
         next
-          ? "已开启记忆：对话会自动学习你的偏好，仅存本地、随账号隔离、不上云。"
+          ? "已开启记忆：对话会自动学习你的偏好，本机共享（Codex/豆包/WorkBuddy）、仅存本地、不上云。"
           : "已关闭记忆：停止自动学习与注入。",
       );
     },
@@ -92,7 +96,7 @@ export function useMemory(onFeedback: (message: string) => void) {
     setBusy(true);
     try {
       setStore(await memoryService.clearAll());
-      onFeedback("已清空当前账号的全部本地记忆。");
+      onFeedback("已清空本机共享记忆（Codex/豆包/WorkBuddy 均会同步清空）。");
     } catch {
       onFeedback("清空记忆失败，请重试。");
     } finally {
@@ -105,14 +109,31 @@ export function useMemory(onFeedback: (message: string) => void) {
     try {
       setStore(await memoryService.resetIdentity());
       onFeedback(
-        "已重置记忆身份：旧身份记忆已保留在本地文件（.previous），新对话从空记忆开始。",
+        "已重置共享记忆文件：旧文件保留（.previous），当前从空记忆开始。",
       );
     } catch {
-      onFeedback("重置记忆身份失败，请重试。");
+      onFeedback("重置记忆文件失败，请重试。");
     } finally {
       setBusy(false);
     }
   }, [onFeedback]);
+
+  const authorizeSharedDirectory = useCallback(async () => {
+    setBusy(true);
+    try {
+      const ok = await memoryService.authorizeSharedDirectory();
+      await refresh();
+      onFeedback(
+        ok
+          ? "已授权共享目录：记忆将与其他产品（Codex/WorkBuddy）共享同一份本地文件。"
+          : "未完成授权，记忆仍仅存本应用。",
+      );
+    } catch {
+      onFeedback("授权共享目录失败（浏览器可能不支持），记忆仍仅存本应用。");
+    } finally {
+      setBusy(false);
+    }
+  }, [onFeedback, refresh]);
 
   const extractWithCodex = useCallback(async () => {
     if (extracting || busy) return;
@@ -150,6 +171,8 @@ export function useMemory(onFeedback: (message: string) => void) {
   return {
     enabled,
     store,
+    mode,
+    storageStatus,
     loading,
     extracting,
     busy,
@@ -158,6 +181,7 @@ export function useMemory(onFeedback: (message: string) => void) {
     removeRecord,
     clearAll,
     resetIdentity,
+    authorizeSharedDirectory,
     extractWithCodex,
   };
 }

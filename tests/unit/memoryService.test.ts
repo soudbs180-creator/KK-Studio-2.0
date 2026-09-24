@@ -25,6 +25,7 @@ class FakeStorage implements MemoryStorage {
     records: [],
   };
   failures: Array<"read" | "write"> = [];
+  mode: "shared" | "isolated" = "shared";
 
   async read(): Promise<MemoryStoreFile> {
     if (this.failures.includes("read")) throw new Error("read failed");
@@ -38,6 +39,12 @@ class FakeStorage implements MemoryStorage {
   async resetIdentity(): Promise<MemoryStoreFile> {
     this.store = { version: MEMORY_STORE_VERSION, namespace: "", records: [] };
     return structuredClone(this.store);
+  }
+  async authorizeSharedDirectory(): Promise<boolean> {
+    return true;
+  }
+  async statusText(): Promise<string> {
+    return "fake-shared";
   }
 }
 
@@ -55,12 +62,12 @@ test("disabled by default and does not ingest when off", async () => {
   assert.equal(storage.store.records.length, 0);
 });
 
-test("ingestMessage creates namespace and record when enabled", async () => {
+test("ingestMessage stores record when enabled (shared, no namespace)", async () => {
   const { service, storage } = createService();
   service.setEnabled(true);
   await service.ingestMessage("以后请用日系插画风格", "user");
   assert.equal(storage.store.records.length, 1);
-  assert.ok(storage.store.namespace.length > 0);
+  assert.equal(storage.store.namespace ?? "", "");
   assert.equal(storage.store.records[0].content, "以后请用日系插画风格");
   assert.equal(storage.store.records[0].source, "auto_rule");
 });
@@ -133,14 +140,20 @@ test("deleteRecord removes one record", async () => {
   assert.equal(store.records.length, 0);
 });
 
-test("clearAll empties records but keeps namespace", async () => {
+test("clearAll empties records and keeps store shape", async () => {
   const { service, storage } = createService();
   service.setEnabled(true);
   await service.ingestMessage("以后请用日系插画风格", "user");
-  const namespace = storage.store.namespace;
   const store = await service.clearAll();
   assert.equal(store.records.length, 0);
-  assert.equal(store.namespace, namespace);
+  assert.equal(storage.store.records.length, 0);
+});
+
+test("storageMode and storageStatus expose sharing state", async () => {
+  const { service } = createService();
+  assert.equal(await service.storageMode(), "shared");
+  assert.equal(await service.storageStatus(), "fake-shared");
+  assert.equal(await service.authorizeSharedDirectory(), true);
 });
 
 test("resetIdentity returns empty store", async () => {

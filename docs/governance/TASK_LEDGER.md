@@ -68,6 +68,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
 | TASK-MEMORY-001 | 本地长期记忆服务接入对话 | DONE | none | root |
+| TASK-MEMORY-002 | 跨产品共享本地记忆（本机共享） | DONE | TASK-MEMORY-001 | MainAgent |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -815,4 +816,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/memory, src/features/agent/agentConnection.ts, src/components/settings/ConnectionSettings.tsx, src-tauri/src/storage_paths.rs, src-tauri/src/main.rs, docs/features/feat-020-memory.md
 - Verification: PASS — 全量验证通过：Node 402/402（记忆32例）、typecheck、lint（governance 62/0、features 29/0、markdown 0）、ui:check 160/0、format、Rust 82/82、Playwright 304/304；真实Codex会话记忆引用与Desktop打包运行态为外部人工验收项
 - Evidence: [docs/changes/2026-09-24-local-memory/intent.md](../../docs/changes/2026-09-24-local-memory/intent.md), [docs/changes/2026-09-24-local-memory/spec.md](../../docs/changes/2026-09-24-local-memory/spec.md), [docs/changes/2026-09-24-local-memory/plan.md](../../docs/changes/2026-09-24-local-memory/plan.md), [docs/changes/2026-09-24-local-memory/verification.md](../../docs/changes/2026-09-24-local-memory/verification.md), [docs/changes/2026-09-24-local-memory/review.md](../../docs/changes/2026-09-24-local-memory/review.md)
+- Updated: 2026-09-24
+
+## TASK-MEMORY-002 — 跨产品共享本地记忆（本机共享）
+
+- Goal: 跨产品共享本地记忆：Codex/豆包/WorkBuddy 读写同一份 ~/.kk-memory/memory.json（本机默认共享），Web 授权目录降级 IndexedDB，旧文件一次性种子迁移；记忆仍不上云，换账号手动清空
+- Scope: src/features/memory, src/components/settings/MemorySettingsSection.tsx, src-tauri main.rs/storage_paths.rs, docs/MEMORY-CONTRACT.md, AGENTS.md, docs/architecture/DATA-STORAGE.md, docs/features feat-020, docs/changes/2026-09-24-local-memory
+- Acceptance: 共享文件 ~/.kk-memory/memory.json 由 Codex/豆包/WorkBuddy 共用; Web 未授权时降级 IndexedDB 并明示; 旧隔离文件一次性种子迁移，不覆盖已有共享文件; 记忆仍不上云、不进同步/localStorage/日志/导出; 清空/重置对本机所有产品生效; Agent 遵循 docs/MEMORY-CONTRACT.md
+- Branch: `feat/TASK-MEMORY-001-local-memory`
+- Worktree: `D:\\kk-studio\\.worktrees\\TASK-MEMORY-001`
+- Modules: src/features/memory, src/components/settings/MemorySettingsSection.tsx, src-tauri/src/main.rs, src-tauri/src/storage_paths.rs, AGENTS.md, docs/MEMORY-CONTRACT.md, docs/architecture/DATA-STORAGE.md
+- Verification: PASS — 全量验证通过：Node 404/404（记忆34例）、typecheck、lint（governance 63/0、features 29/0、markdown 0）、ui:check 160/0、format、Rust 84/84、Playwright 303+1已知flaky无失败；豆包侧注入按 MEMORY-CONTRACT.md 由 Agent 遵循
+- Evidence: [docs/MEMORY-CONTRACT.md](../../docs/MEMORY-CONTRACT.md), [docs/changes/2026-09-24-local-memory/intent.md](../../docs/changes/2026-09-24-local-memory/intent.md), [docs/changes/2026-09-24-local-memory/spec.md](../../docs/changes/2026-09-24-local-memory/spec.md), [docs/changes/2026-09-24-local-memory/verification.md](../../docs/changes/2026-09-24-local-memory/verification.md)
 - Updated: 2026-09-24

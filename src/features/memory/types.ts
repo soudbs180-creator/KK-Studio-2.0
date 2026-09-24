@@ -1,10 +1,12 @@
 /**
  * 本地长期记忆（用户级）类型定义。
  *
- * 隐私约束（用户明确要求）：
- * - 记忆仅存本地（Web: IndexedDB；Desktop: memory/memory.json）；
- * - 按本地身份键（namespace）隔离，不同身份互不可见；
- * - 记忆内容绝不进入 WebDAV 同步、localStorage、日志或导出包。
+ * 共享语义（TASK-MEMORY-002，用户决策覆盖 TASK-MEMORY-001 的隔离语义）：
+ * - 记忆是本机共享的：Codex（KK Studio 桌面/Web）、豆包（Agent 环境）、
+ *   WorkBuddy 等本机产品读写同一份共享文件 `~/.kk-memory/memory.json`；
+ * - 不再按"记忆身份键"（namespace）隔离；换账号/换人时用户手动清空；
+ * - 隐私硬约束不变：记忆仅存本地，绝不进入 WebDAV 同步、localStorage、
+ *   日志或导出包（与密钥/账号同级的本地私有数据）。
  */
 
 export type MemoryType =
@@ -14,8 +16,6 @@ export type MemorySource = "auto_rule" | "manual_codex" | "manual_user";
 
 export interface MemoryRecord {
   id: string;
-  /** 本地记忆身份键：账号隔离边界。不同 namespace 的记忆互不可见。 */
-  namespace: string;
   /** 记忆内容（≤200 字）。 */
   content: string;
   memoryType: MemoryType;
@@ -32,7 +32,8 @@ export interface MemoryRecord {
 
 export interface MemoryStoreFile {
   version: 1;
-  namespace: string;
+  /** 兼容旧文件字段（隔离版遗留），共享模式恒为空字符串。 */
+  namespace?: string;
   records: MemoryRecord[];
 }
 

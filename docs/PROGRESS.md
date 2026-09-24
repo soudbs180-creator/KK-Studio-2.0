@@ -1,11 +1,12 @@
 # 当前进度
 
-## 2026-09-24 本地长期记忆接入对话（TASK-MEMORY-001）
+## 2026-09-24 本地长期记忆接入对话（TASK-MEMORY-001 + 002）
 
-- FEAT-020 由 PROTOTYPE 升级为 PARTIAL：真实用户级本地长期记忆落地（Web IndexedDB / Desktop `memory/memory.json`，Tauri 命令 memory_read/memory_write/memory_reset_identity，原子写）。
-- 能力：本地规则自动采集（用户/assistant 偏好、习惯、约束）→ 词法检索注入 `[长期记忆]` 块（发送前，执行器零修改）；设置 › 连接 › 记忆 真实 UI（开关、身份、列表/删除/清空、重置身份、手动 Codex 提炼）。
-- 硬约束落地：随"本地记忆身份"（namespace uuid）隔离、绝不上云（不进 WebDAV 同步/localStorage/日志/导出包）；默认关闭；真实账号 id 绑定依赖 FEAT-017。
-- 验证：Node 单测 402/402（记忆模块 32 例）、typecheck/lint/governance/features/ui:check/format 全过、Rust 82/82、浏览器测试见 change pack；文档在 docs/changes/2026-09-24-local-memory/。未 commit/push，待 PR。
+- FEAT-020 由 PROTOTYPE 升级为 PARTIAL：真实用户级本地长期记忆落地，**本机共享**（`~/.kk-memory/memory.json`，Tauri 命令 + Web File System Access 授权，旧隔离文件一次性种子迁移）。
+- 能力：本地规则自动采集（用户/assistant 偏好、习惯、约束）→ 词法检索注入 `[长期记忆]` 块（发送前，执行器零修改）；设置 › 连接 › 记忆 真实 UI（开关、共享状态、授权目录、列表/删除/清空、手动 Codex 提炼、重置共享文件）。
+- 跨产品打通：Codex（桌面/Web）、豆包（Doubao Work Agent）、WorkBuddy 共享同一份记忆（`docs/MEMORY-CONTRACT.md` 契约）；换账号手动清空/重置。
+- 硬约束落地：仅存本地、绝不上云（不进 WebDAV 同步/localStorage/日志/导出包）；默认关闭；真实账号 id 绑定依赖 FEAT-017。
+- 验证：Node 单测 404/404（记忆模块 34 例）、typecheck/lint/governance/features/ui:check/format 全过、Rust 84/84、Playwright 303+1 已知 flaky 无失败；文档在 docs/changes/2026-09-24-local-memory/。待 commit/push 与 PR。
 
 ## 2026-09-23 2.1.0 源码并线与远端规则回读
 

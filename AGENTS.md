@@ -25,7 +25,8 @@
 
 - 桌面数据根目录为 `%APPDATA%\\kk-studio`（跨平台规则见 `docs/architecture/DATA-STORAGE.md`）。模型权重留在用户选择的 ComfyUI 根目录，仓库只放适配器和索引契约。
 - API key、OAuth token 和代理凭据只进系统凭据库（service `com.kkstudio.provider`）或请求内存，禁止进入 localStorage、项目文件、导出包、URL 和日志。
-- Web 的项目/任务/消息和素材在 IndexedDB 本地持久化，localStorage 保存非敏感设置、provider 元数据与恢复副本；Desktop 创作快照及素材使用原生仓库。具体契约以 `docs/architecture/DATA-STORAGE.md` 为准。本地持久化不代表云端保存；账号、积分、记忆、云端保存或 Provider 生成未接真实服务时必须明确标为 Prototype 或禁用。
+- Web 的项目/任务/消息和素材在 IndexedDB 本地持久化，localStorage 保存非敏感设置、provider 元数据与恢复副本；Desktop 创作快照及素材使用原生仓库。具体契约以 `docs/architecture/DATA-STORAGE.md` 为准。本地持久化不代表云端保存；账号、积分、云端保存或 Provider 生成未接真实服务时必须明确标为 Prototype 或禁用。
+- 用户记忆是本机共享的（`~/.kk-memory/memory.json`）：Codex、豆包、WorkBuddy 等本机产品读写同一份；记忆绝不上云、不进同步/localStorage/日志/导出包。任何 Agent 遵循 `docs/MEMORY-CONTRACT.md` 的读取/写入/隐私规则。
 
 ## 设计与交互
 

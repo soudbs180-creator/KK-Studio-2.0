@@ -3,6 +3,8 @@ import test from "node:test";
 import {
   createMemoryStorage,
   normalizeStore,
+  KK_MEMORY_DIR_NAME,
+  KK_MEMORY_FILE_NAME,
 } from "../../src/features/memory/storage.ts";
 import { MEMORY_STORE_VERSION } from "../../src/features/memory/types.ts";
 
@@ -19,13 +21,14 @@ test("normalizeStore rejects unsupported version without fallback", () => {
   );
 });
 
-test("normalizeStore preserves valid records and coerces malformed fields", () => {
+test("normalizeStore preserves valid records and drops legacy namespace", () => {
   const store = normalizeStore({
     version: MEMORY_STORE_VERSION,
     namespace: "ns-test",
     records: [{ id: "a", content: "x" }] as never,
   });
-  assert.equal(store.namespace, "ns-test");
+  // 共享模式：旧隔离文件的 namespace 字段被忽略。
+  assert.equal(store.namespace, "");
   assert.equal(store.records.length, 1);
   const coerced = normalizeStore({
     version: MEMORY_STORE_VERSION,
@@ -36,9 +39,17 @@ test("normalizeStore preserves valid records and coerces malformed fields", () =
   assert.deepEqual(coerced.records, []);
 });
 
-test("createMemoryStorage exposes the storage contract", () => {
+test("shared file contract uses the cross-product names", () => {
+  assert.equal(KK_MEMORY_DIR_NAME, ".kk-memory");
+  assert.equal(KK_MEMORY_FILE_NAME, "memory.json");
+});
+
+test("createMemoryStorage exposes the shared storage contract", () => {
   const storage = createMemoryStorage();
   assert.equal(typeof storage.read, "function");
   assert.equal(typeof storage.write, "function");
   assert.equal(typeof storage.resetIdentity, "function");
+  assert.equal(typeof storage.authorizeSharedDirectory, "function");
+  assert.equal(typeof storage.statusText, "function");
+  assert.ok(storage.mode === "shared" || storage.mode === "isolated");
 });

@@ -703,12 +703,14 @@ fn delete_conversation(state: State<AppState>, id: String) -> Result<bool, Strin
     Ok(true)
 }
 
-// ========== 记忆管理命令（本地长期记忆，仅存本地） ==========
+// ========== 记忆管理命令（本地长期记忆，本机共享、仅存本地） ==========
+//
+// 共享契约（TASK-MEMORY-002）：所有产品（Codex 桌面/Web、豆包 Agent、
+// WorkBuddy）读写同一份共享文件 ~/.kk-memory/memory.json；绝不上云。
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 struct MemoryRecord {
     id: String,
-    namespace: String,
     content: String,
     #[serde(rename = "memoryType")]
     memory_type: String,
@@ -729,11 +731,34 @@ struct MemoryRecord {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 struct MemoryStore {
     version: u32,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
     namespace: String,
     records: Vec<MemoryRecord>,
 }
 
 const MEMORY_STORE_VERSION: u32 = 1;
+
+/// 本机共享记忆文件路径：~/.kk-memory/memory.json（跨产品约定）。
+fn shared_memory_path() -> PathBuf {
+    let home = std::env::var("USERPROFILE")
+        .or_else(|_| std::env::var("HOME"))
+        .unwrap_or_else(|_| ".".to_string());
+    PathBuf::from(home).join(".kk-memory").join("memory.json")
+}
+
+/// 首次启用共享文件时，把隔离版旧文件（app-data/memory/memory.json）作为种子迁移；
+/// 仅当共享文件不存在且旧文件存在时执行，避免覆盖任何已有共享记忆。
+fn seed_shared_memory(shared: &Path, legacy: &Path) {
+    if shared.exists() || !legacy.exists() {
+        return;
+    }
+    if let Some(parent) = shared.parent() {
+        if fs::create_dir_all(parent).is_err() {
+            return;
+        }
+    }
+    let _ = fs::copy(legacy, shared);
+}
 
 fn read_memory_file(path: &Path) -> Result<MemoryStore, String> {
     if !path.exists() {
@@ -1149,7 +1174,6 @@ mod memory_tests {
     fn sample_record() -> MemoryRecord {
         MemoryRecord {
             id: "r1".to_string(),
-            namespace: "ns-test".to_string(),
             content: "用户偏好日系插画风格".to_string(),
             memory_type: "user_preference".to_string(),
             confidence: 0.8,
@@ -1199,12 +1223,11 @@ mod memory_tests {
         let path = temp_memory_path("roundtrip");
         let store = MemoryStore {
             version: MEMORY_STORE_VERSION,
-            namespace: "ns-test".to_string(),
+            namespace: String::new(),
             records: vec![sample_record()],
         };
         write_memory_file(&path, &store).expect("write memory");
         let loaded = read_memory_file(&path).expect("read memory");
-        assert_eq!(loaded.namespace, "ns-test");
         assert_eq!(loaded.records.len(), 1);
         assert_eq!(loaded.records[0].content, "用户偏好日系插画风格");
         let dir = path.parent().expect("dir");
@@ -1216,6 +1239,49 @@ mod memory_tests {
             .collect();
         assert!(leftovers.is_empty(), "temp files left: {leftovers:?}");
         let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn legacy_memory_file_is_seeded_into_shared_path_once() {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock")
+            .as_nanos();
+        let dir = std::env::temp_dir().join(format!(
+            "kk-studio-memory-seed-{}-{nonce}",
+            std::process::id()
+        ));
+        fs::create_dir_all(&dir).expect("create seed test dir");
+        let shared = dir.join("memory.json");
+        let legacy = dir.join("legacy.json");
+        let store = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![sample_record()],
+        };
+        write_memory_file(&legacy, &store).expect("write legacy");
+        seed_shared_memory(&shared, &legacy);
+        let seeded = read_memory_file(&shared).expect("read seeded");
+        assert_eq!(seeded.records.len(), 1);
+        // 共享文件已存在时不再覆盖
+        let overwrite = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![],
+        };
+        write_memory_file(&shared, &overwrite).expect("write shared");
+        seed_shared_memory(&shared, &legacy);
+        let after = read_memory_file(&shared).expect("read after");
+        assert!(after.records.is_empty());
+        let _ = fs::remove_file(&legacy);
+        let _ = fs::remove_file(&shared);
+    }
+
+    #[test]
+    fn shared_memory_path_points_under_dot_kk_memory() {
+        let path = shared_memory_path();
+        assert!(path.to_string_lossy().ends_with(".kk-memory\\memory.json")
+            || path.to_string_lossy().ends_with(".kk-memory/memory.json"));
     }
 }
 
@@ -1270,7 +1336,9 @@ fn main() {
     let paths = storage_paths::AppPaths::initialize().expect("KK Studio 无法初始化用户数据目录");
     let config_path = paths.config;
     let conversations_path = paths.conversations;
-    let memory_path = paths.memory;
+    // 共享记忆：所有产品读写 ~/.kk-memory/memory.json；首次启用时迁移旧隔离版文件。
+    let memory_path = shared_memory_path();
+    seed_shared_memory(&memory_path, &paths.memory);
     let task_host = Arc::new(
         task_host::TaskHost::new(
             paths.tasks.join("native-host"),

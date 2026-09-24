@@ -70,14 +70,15 @@ kk-studio/
 
 账号目前没有真实 schema 或持久化：`AccountPopup` 和账号页仍是界面占位，任何 UID、积分和更新版本显示都不能当作服务数据。记忆已实现真实本地持久化（仅用户级），见下文"本地长期记忆"节。
 
-## 本地长期记忆（2026-09-24）
+## 本地长期记忆（2026-09-24，本机共享版）
 
-- 范围：仅用户级记忆（偏好/习惯/约束/画像），本地存储、随"本地记忆身份"隔离、绝不上云；与密钥/账号同级的本地私有数据处理。
-- Schema（`src/features/memory/types.ts`）：`MemoryStoreFile { version: 1; namespace: string; records: MemoryRecord[] }`；单条记录含 `content（≤200字）/memoryType/confidence/fingerprint（sha256 归一化内容）/source/createdAt/updatedAt/active`，上限 10000 条。
-- Web：IndexedDB `kk-studio-next / memory / store`，key="default"，值为 `MemoryStoreFile`；同一事务内校验 version，损坏拒绝读取保留原件。
-- Desktop：`memory/memory.json`（固定路径，与 `conversations/index.json` 同根）；Tauri 命令 `memory_read / memory_write / memory_reset_identity`；写入为临时文件 + rename 原子写；重置身份时旧文件重命名 `.previous-<ts>.json` 保留。
-- localStorage 只存 `kk.memory.settings`（`{enabled: boolean}`）；记忆内容与 namespace 绝不进 localStorage、WebDAV 同步（FEAT-019 scope 不含 memory）、日志（console 仅打印条数）、导出包/项目包。
-- 隔离边界：namespace 是"本地记忆身份"（uuid，首次开启时生成，设置页显示前 8 位，可显式重置）；执行器不暴露账号 id，真实账号 id 派生依赖 FEAT-017（见 feat-020-memory.md）。
+- 范围：仅用户级记忆（偏好/习惯/约束/画像），**本机共享**：Codex（KK Studio 桌面/Web）、豆包（Doubao Work Agent）、WorkBuddy 读写同一份共享文件 `~/.kk-memory/memory.json`（Windows `%USERPROFILE%\.kk-memory\memory.json`）；仅存本地、绝不上云；与密钥/账号同级的本地私有数据处理。
+- Schema（`src/features/memory/types.ts`）：`MemoryStoreFile { version: 1; namespace?: ""; records: MemoryRecord[] }`（namespace 为隔离版遗留字段，共享模式恒空）；单条记录含 `content（≤200字）/memoryType/confidence/fingerprint（sha256 归一化内容）/source/createdAt/updatedAt/active`，上限 10000 条。
+- Desktop：`~/.kk-memory/memory.json`（跨产品约定，`src-tauri` 内 `shared_memory_path()`）；Tauri 命令 `memory_read / memory_write / memory_reset_identity`；写入为临时文件 + rename 原子写；重置时旧文件重命名 `.previous-<ts>.json` 保留；首次启用把旧 `<app-data>/memory/memory.json` 一次性种子迁移（不覆盖已有共享文件）。
+- Web：优先 File System Access（用户授权共享目录后，handle 存 IndexedDB `kk-studio-next/memory-fs-handle` 持久复用）；不支持/未授权时降级 IndexedDB 私有存储（`kk-studio-next/memory/store`）并在 UI 明示"仅本应用"。
+- localStorage 只存 `kk.memory.settings`（`{enabled: boolean}`）；记忆内容与目录句柄之外的数据绝不进 localStorage、WebDAV 同步（FEAT-019 scope 不含 memory）、日志（console 仅打印条数）、导出包/项目包。
+- 跨产品契约：`docs/MEMORY-CONTRACT.md`（读取最多 3 条/总长 ≤400 字参考、低置信度跳过、与输入冲突以输入为准；写入仅稳定偏好、指纹去重、不编造；隐私同密钥级）。
+- 隔离边界：无身份键（用户决策"本机默认共享"）；换账号/换人时用户手动清空或重置；真实账号 id 派生依赖 FEAT-017（见 feat-020-memory.md）。
 - 采集：本地规则自动抽取（用户/assistant 消息）+ 手动"让 Codex 提炼"（解析 `记忆：` 行，消耗用户 Codex 账号额度，仅用户点击触发）。
 - 注入：发送对话前词法检索（最多 3 条、总长 ≤400 字、confidence ≥0.55、active），在 KK_INSTRUCTIONS 与"用户指令："之间插入 `[长期记忆]` 块；默认开关关闭，关闭时零采集零注入。
 

@@ -1,10 +1,10 @@
 # 当前项目状态
 
-## 2026-09-24 本地长期记忆接入对话（TASK-MEMORY-001，IN_PROGRESS→验证完成待合入）
+## 2026-09-24 本地长期记忆接入对话（TASK-MEMORY-001 + 002，验证完成待 PR）
 
-FEAT-020 从 PROTOTYPE 升级为 PARTIAL（真实用户级记忆落地）：学习 ai_group_chat 双层级记忆并简化——短期记忆沿用 Codex thread（不新增），长期记忆落地为"本地规则采集 + 词法检索注入 + 可选手动 Codex 提炼"，存储 Web=IndexedDB（`kk-studio-next/memory/store`）、Desktop=`memory/memory.json`（Tauri 命令 memory_read/memory_write/memory_reset_identity，原子写）。按用户硬约束：记忆随"本地记忆身份"（namespace uuid）隔离、绝不进 WebDAV 同步/localStorage/日志/导出包；真实账号 id 绑定依赖 FEAT-017，本期如实标注边界。默认开关关闭，开启后对话采集偏好并在发送前注入 `[长期记忆]` 块（执行器零修改）。
+FEAT-020 从 PROTOTYPE 升级为 PARTIAL（真实用户级记忆落地，本机共享版）：学习 ai_group_chat 双层级记忆并简化——短期记忆沿用 Codex thread（不新增），长期记忆落地为"本地规则采集 + 词法检索注入 + 可选手动 Codex 提炼"。用户拍板共享语义（TASK-MEMORY-002 覆盖 001 的隔离语义）：**本机默认共享 + 公共共享目录 `~/.kk-memory/memory.json` + 先打通 Codex 与豆包（WorkBuddy 预留契约）**。存储：Desktop 由 Tauri 命令读写共享文件（旧隔离文件一次性种子迁移），Web 优先 File System Access 授权目录、未授权降级 IndexedDB 并明示；Agent 契约见 docs/MEMORY-CONTRACT.md（豆包侧由 Doubao Work 环境中的 Agent 遵循）。硬约束不变：记忆仅存本地、绝不上云、不进同步/localStorage/日志/导出包；换账号手动清空/重置；真实账号 id 绑定依赖 FEAT-017。
 
-实现于独立 worktree `D:\kk-studio\.worktrees\TASK-MEMORY-001`（分支 feat/TASK-MEMORY-001-local-memory，base origin/main@76339c9），主 checkout 的并行分支与未提交改动未触碰。验证：Node 单测 402/402（记忆模块 32 例）、typecheck/lint/governance(62 tasks 0 违规)/features(29 0 违规)/ui:check(160 文件 0 违规)/format 全过、Rust cargo test 82/82（含 memory_tests）、浏览器测试结果见 change pack。文档：docs/changes/2026-09-24-local-memory/{intent,spec,plan,verification,review}.md、feat-020-memory.md（PARTIAL）、DATA-STORAGE.md（新增"本地长期记忆"节）。未 commit/push，待 PR 合入；真实 Codex 会话记忆引用与 Desktop 打包运行态为外部人工验收项。
+实现于独立 worktree `D:\kk-studio\.worktrees\TASK-MEMORY-001`（分支 feat/TASK-MEMORY-001-local-memory，base origin/main@76339c9），主 checkout 未触碰。验证：Node 单测 404/404（记忆模块 34 例）、typecheck/lint/governance(63 0 违规)/features(29 0 违规)/ui:check(160 0 违规)/format 全过、Rust cargo test 84/84（含共享路径与种子迁移）、Playwright 303+1 已知 flaky 无失败。文档：docs/changes/2026-09-24-local-memory/{intent,spec,plan,verification,review}.md、feat-020-memory.md（PARTIAL）、MEMORY-CONTRACT.md、DATA-STORAGE.md。未 commit/push（本次追加），待 PR 合入；真实 Codex 会话记忆引用、Web FSA 授权流、Desktop 打包运行态为外部人工验收项。
 
 ## 2026-09-23 KK Studio 2.1.0 源码并线与规则回读（REL-2.1.0）
 

@@ -1,8 +1,9 @@
 /**
- * 设置 › 连接 › 记忆：本地长期记忆管理。
+ * 设置 › 连接 › 记忆：本地长期记忆管理（本机共享）。
  *
- * 隐私说明（用户约束）：记忆仅存本地（IndexedDB / memory.json）、
- * 随账号隔离（本地身份键）、绝不上传云端；与密钥/账号同级的本地私有数据。
+ * 共享语义（TASK-MEMORY-002）：Codex（桌面/Web）、豆包（Agent 环境）、
+ * WorkBuddy 读写同一份共享文件 ~/.kk-memory/memory.json；仅存本地、绝不上云；
+ * 换账号/换人时用户手动清空。
  */
 import { useMemory } from "../../features/memory/useMemory.ts";
 import { MEMORY_CONTENT_MAX_LENGTH } from "../../features/memory/types.ts";
@@ -40,6 +41,8 @@ export default function MemorySettingsSection({
   const {
     enabled,
     store,
+    mode,
+    storageStatus,
     loading,
     extracting,
     busy,
@@ -48,11 +51,11 @@ export default function MemorySettingsSection({
     removeRecord,
     clearAll,
     resetIdentity,
+    authorizeSharedDirectory,
     extractWithCodex,
   } = useMemory(onFeedback);
 
   const records = store?.records ?? [];
-  const namespace = store?.namespace ? store.namespace.slice(0, 8) : "未创建";
 
   return (
     <div className="settings-detail-stack">
@@ -62,10 +65,10 @@ export default function MemorySettingsSection({
           <h3>自动学习偏好与习惯</h3>
           <p>
             开启后，对话会自动学习你的稳定偏好（如"以后请用日系插画风格"），
-            并在后续对话中供 Codex 参考。
+            并在后续对话中供 Codex、豆包、WorkBuddy 参考。
           </p>
           <p className="settings-network-activity">
-            隐私：记忆仅存本地（IndexedDB / memory.json），按当前账号身份隔离，
+            隐私：记忆仅存本机共享文件（~/.kk-memory/memory.json），本机各产品共享同一份，
             绝不上传云端，也不进入同步、日志或导出包。
           </p>
         </div>
@@ -73,7 +76,7 @@ export default function MemorySettingsSection({
           type="button"
           role="switch"
           aria-checked={enabled}
-          className={enabled ? "settings-toggle" : "settings-toggle"}
+          className="settings-toggle"
           aria-label="记忆服务开关"
           onClick={() => void toggle(!enabled)}
         >
@@ -83,11 +86,15 @@ export default function MemorySettingsSection({
 
       {enabled && (
         <>
-          <h3 className="settings-detail-label">记忆身份（账号隔离）</h3>
+          <h3 className="settings-detail-label">共享状态</h3>
           <div className="settings-detail-card">
             <div>
-              <span>当前记忆身份</span>
-              <strong>{namespace}</strong>
+              <span>存储模式</span>
+              <strong>
+                {mode === "shared"
+                  ? "本机共享文件"
+                  : "仅本应用（浏览器未授权）"}
+              </strong>
             </div>
             <div>
               <span>记忆条数</span>
@@ -96,19 +103,20 @@ export default function MemorySettingsSection({
           </div>
           <div className="settings-network-row">
             <div>
-              <h3>重置记忆身份</h3>
+              <h3>共享目录授权</h3>
               <p>
-                用于更换账号/设备时隔离：重置后从空记忆开始，旧身份记忆保留在本地文件
-                （.previous-*.json），不会自动删除。
+                {storageStatus}。桌面端自动读写共享文件；浏览器端需授权一次
+                （选择 ~/.kk-memory 目录）即可与 Codex/WorkBuddy
+                共享同一份记忆。
               </p>
             </div>
             <button
               type="button"
               className="settings-action secondary"
               disabled={busy}
-              onClick={() => void resetIdentity()}
+              onClick={() => void authorizeSharedDirectory()}
             >
-              重置身份
+              授权共享目录
             </button>
           </div>
 
@@ -118,7 +126,7 @@ export default function MemorySettingsSection({
               <h3>让 Codex 提炼记忆</h3>
               <p>
                 把当前对话中你的稳定偏好交给 Codex 整理成记忆（消耗 Codex
-                账号额度； 需要 Codex 已连接）。
+                账号额度；需要 Codex 已连接）。
               </p>
             </div>
             <button
@@ -182,6 +190,14 @@ export default function MemorySettingsSection({
                   onClick={() => void clearAll()}
                 >
                   清空全部记忆
+                </button>
+                <button
+                  type="button"
+                  className="settings-action secondary"
+                  disabled={busy}
+                  onClick={() => void resetIdentity()}
+                >
+                  重置共享文件
                 </button>
               </div>
             </>

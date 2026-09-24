@@ -81,15 +81,18 @@ export class MemoryService {
     return this.storage.read();
   }
 
-  private async ensureNamespace(
-    store: MemoryStoreFile,
-  ): Promise<MemoryStoreFile> {
-    if (store.namespace) {
-      return store;
-    }
-    const next = { ...store, namespace: crypto.randomUUID() };
-    await this.storage.write(next);
-    return next;
+  /** 当前存储模式与共享授权状态（供 UI 展示）。 */
+  async storageMode(): Promise<"shared" | "isolated"> {
+    return this.storage.mode;
+  }
+
+  async storageStatus(): Promise<string> {
+    return this.storage.statusText();
+  }
+
+  /** 请求授权共享目录（Web 端 File System Access；Desktop 恒成功）。 */
+  async authorizeSharedDirectory(): Promise<boolean> {
+    return this.storage.authorizeSharedDirectory();
   }
 
   /**
@@ -109,8 +112,7 @@ export class MemoryService {
       if (candidates.length === 0) {
         return;
       }
-      let store = await this.load();
-      store = await this.ensureNamespace(store);
+      const store = await this.load();
       const timestamp = this.now().toISOString();
       const existing = new Set(
         store.records.map((record) => record.fingerprint),
@@ -126,7 +128,6 @@ export class MemoryService {
         }
         const record: MemoryRecord = {
           id: crypto.randomUUID(),
-          namespace: store.namespace,
           content: candidate.content,
           memoryType: candidate.memoryType,
           confidence: candidate.confidence,
@@ -192,8 +193,7 @@ export class MemoryService {
     if (candidates.length === 0) {
       return 0;
     }
-    let store = await this.load();
-    store = await this.ensureNamespace(store);
+    const store = await this.load();
     const timestamp = this.now().toISOString();
     const existing = new Set(store.records.map((record) => record.fingerprint));
     const additions: MemoryRecord[] = [];
@@ -207,7 +207,6 @@ export class MemoryService {
       }
       additions.push({
         id: crypto.randomUUID(),
-        namespace: store.namespace,
         content: candidate.content,
         memoryType: inferTypeFromText(candidate.content),
         confidence: candidate.confidence,
@@ -241,7 +240,7 @@ export class MemoryService {
     return next;
   }
 
-  /** 清空当前身份的全部记忆。 */
+  /** 清空本机共享记忆的全部条目（保留文件结构）。 */
   async clearAll(): Promise<MemoryStoreFile> {
     const store = await this.load();
     const next = { ...store, records: [] };
@@ -249,7 +248,7 @@ export class MemoryService {
     return next;
   }
 
-  /** 重置记忆身份：生成新的身份键；旧文件由存储层保留（.previous-*.json）。 */
+  /** 重置共享记忆文件：重建空文件；旧文件由存储层保留（.previous-*.json）。 */
   async resetIdentity(): Promise<MemoryStoreFile> {
     return this.storage.resetIdentity();
   }

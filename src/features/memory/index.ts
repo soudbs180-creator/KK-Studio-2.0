@@ -1,7 +1,8 @@
 /**
  * 本地长期记忆（用户级）模块入口。
  *
- * 隐私约束：记忆仅存本地、按身份隔离、不上云；采集与注入默认关闭。
+ * 共享语义：本机共享（Codex/豆包/WorkBuddy 读同一份 ~/.kk-memory/memory.json），
+ * 仅存本地、不上云；采集与注入默认关闭。
  */
 import { MemoryService } from "./memoryService.ts";
 import { createMemoryStorage } from "./storage.ts";
@@ -19,7 +20,11 @@ export {
   formatInjectionBlock,
 } from "./injector.ts";
 export { MemoryService } from "./memoryService.ts";
-export { createMemoryStorage } from "./storage.ts";
+export {
+  createMemoryStorage,
+  KK_MEMORY_DIR_NAME,
+  KK_MEMORY_FILE_NAME,
+} from "./storage.ts";
 export type { MemoryStorage } from "./storage.ts";
 
 /** 全局记忆服务单例（开关默认关闭）。 */
