@@ -27,7 +27,7 @@
     "format:check": "prettier --check src tests scripts *.ts *.mjs *.json design/figma-plugin/*.js design/figma-plugin/*.json config/*.json",
     "ui:check": "node scripts/check-ui-standards.mjs",
     "lint": "eslint src tests scripts *.config.{ts,mjs} --max-warnings 0 && node scripts/check-governance.mjs && node scripts/check-features.mjs && node scripts/check-markdown.mjs",
-    "verify": "npm run lint && npm run typecheck && npm test && npm run ui:check && npm run format:check && npm run test:ui",
+    "verify": "npm run lint && npm run typecheck && npm test && npm run test:agent && npm run ui:check && npm run format:check && npm run test:ui",
     "tauri": "tauri",
     "client:dev": "tauri dev",
     "client:build": "tauri build",

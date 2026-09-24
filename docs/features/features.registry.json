@@ -936,7 +936,8 @@
     "tests/unit/mcpConfig.test.ts"
   ],
   "tasks": [
-    "TASK-PROV-002"
+    "TASK-PROV-002",
+    "TASK-PROV-003"
   ],
   "updated": "2026-09-24"
 }
