@@ -1,5 +1,8 @@
 # AI handoff
 
+## 2026-09-23 Google 接入候选（TASK-AGENT-004/005，PARTIAL）
+
+当前候选分支 `feat/TASK-AGENT-004-google-closeout` 位于隔离 worktree `C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0`，叠加 004 API Key Interactions 对话/生图与 005 Gemini CLI 账号文字对话。真实账号、桌面运行与最终独立审查未验收。继续时先读 [004 验证](../changes/2026-09-23-google-interactions/verification.md)、[005 验证](../changes/2026-09-23-google-cli-login/verification.md)和 [ADR-007](../architecture/adr/ADR-007-gemini-cli-bridge.md)，核对当前 Git/PR 与最新校验结果；不得把旧 fixture 结果称为真实 Google 出图。
 ## 2026-09-23 当前恢复入口：2.1.0 主线与规则审计
 
 - 唯一工程为 `D:/kk-studio/KK-Studio-2.0`；先 fetch 并核对实际 HEAD、`git status`、worktree、账本和本文件，不从下方历史段落推断“当前”。2.1.0 源码先由 [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 合入 `b45c5bc7`，规则与 Markdown 审计再由 [PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 合入 `origin/main@9f04bfced49224e9cd523844a8e3c995119c7955`；本地根 `main` 已快进至同一 SHA。

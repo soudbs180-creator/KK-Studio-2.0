@@ -332,3 +332,44 @@
   max-width: 100%;
   flex: 1 1 180px;
 }
+
+.google-agent-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-2) var(--ui-space-3);
+  flex-shrink: 0;
+}
+.google-agent-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+  color: var(--text-secondary);
+  font-size: var(--ui-font-caption);
+  min-width: 0;
+}
+.google-agent-controls .google-agent-model {
+  flex: 1 1 180px;
+}
+.google-agent-controls input,
+.google-agent-controls select {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 32px;
+  padding: var(--ui-space-1) var(--ui-space-2);
+  border: 1px solid var(--border-control);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font: inherit;
+}
+.google-agent-controls .google-agent-note {
+  flex-basis: 100%;
+  color: var(--text-secondary);
+  font-size: var(--ui-font-caption);
+  margin: 0;
+}
+.google-agent-controls input:focus-visible,
+.google-agent-controls select:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}

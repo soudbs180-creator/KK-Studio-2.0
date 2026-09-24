@@ -2,6 +2,10 @@ import type {
   CanvasCollectionItem,
   CanvasItemKind,
 } from "../../domain/canvasItems";
+import {
+  normalizeGoogleConversation,
+  type GoogleConversation,
+} from "../../domain/googleConversation.ts";
 import type { ApprovalGate } from "../../domain/agentWorkflow";
 import { isAssetReference } from "./snapshotAssets.ts";
 import {
@@ -111,6 +115,7 @@ export interface CreationTask {
 }
 
 export interface CreationProject {
+  googleConversation?: GoogleConversation;
   agentGeneratedImageIds?: string[];
   canvas: ProjectCanvas;
   id: string;
@@ -524,6 +529,9 @@ function normalizeProject(value: CreationProject): CreationProject {
           )
           .slice(-5000)
       : undefined,
+    googleConversation: normalizeGoogleConversation(
+      candidate.googleConversation,
+    ),
     providerCredentialRef:
       typeof candidate.providerCredentialRef === "string" &&
       /^[A-Za-z0-9_-]{1,160}$/.test(candidate.providerCredentialRef)

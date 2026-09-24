@@ -1,6 +1,7 @@
 import { appVersion } from "../../runtime/appInfo";
 import type { SettingsSection } from "./SettingsSectionData";
 import ModelProviderSettings from "./ModelProviderSettings";
+import GoogleConnectionSettings from "./GoogleConnectionSettings";
 import McpSettings from "./McpSettings";
 import AgentConnectionSettings from "./AgentConnectionSettings";
 import PluginManagerSettings from "./PluginManagerSettings";
@@ -43,7 +44,12 @@ export default function ConnectionSettings({
   onFeedback: (message: string) => void;
 }) {
   if (section === "providers")
-    return <ModelProviderSettings onFeedback={onFeedback} />;
+    return (
+      <>
+        <ModelProviderSettings onFeedback={onFeedback} />
+        <GoogleConnectionSettings onFeedback={onFeedback} />
+      </>
+    );
   if (section === "mcp") return <McpSettings onFeedback={onFeedback} />;
   if (section === "updates")
     return (

@@ -1,5 +1,10 @@
 # 当前进度
 
+## 2026-09-23 Google 对话、生图与账号登录候选（TASK-AGENT-004/005，PARTIAL）
+
+Google API Key 通道已接入官方 Interactions：连续文字对话、图片结果归档画布、刷新后会话恢复；另接入用户自行启动的本地 Gemini CLI 桥，支持 Google 账号登录后的文字对话和会话续接。CLI 模式不提供图片生成，图片需使用 API Key 通道。设置页已修复密钥输入和两种登录方式切换，桥限定本机地址/可信 Origin、传入 CLI 的参数边界与取消后子进程回收；结果不确定时阻止自动重试。
+
+Web 生产预览与 fixture 浏览器流程、单元测试、Windows Rust `client:check` 已有本地证据；最终全量验证与交付状态见 [004 验证](changes/2026-09-23-google-interactions/verification.md)和 [005 验证](changes/2026-09-23-google-cli-login/verification.md)。本机没有 Google API Key 或已安装/登录的 Gemini CLI，因此未作真实 Google 请求，也未验证本轮 Tauri 桌面运行或获得最终独立补审。上述两任务保持 IN_PROGRESS/PARTIAL，不将 fixture 图片当作真实出图。
 ## 2026-09-23 2.1.0 源码并线与远端规则回读
 
 - [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的 head `da811283` 在 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7`；旧 PR #8 的提交是 #9 候选的祖先，内容被吸收，PR #8 已关闭而未重复合并。[PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 再将规则与 Markdown 审计 squash 合入 `main@9f04bfce`；两次合并的文件树均与各自受审候选相同，本地根 `main` 已快进至后者。

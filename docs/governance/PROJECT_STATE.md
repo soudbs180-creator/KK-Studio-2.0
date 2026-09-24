@@ -1,5 +1,10 @@
 # 当前项目状态
 
+## 2026-09-23 Google 接入候选（TASK-AGENT-004/005，PARTIAL）
+
+隔离分支 `feat/TASK-AGENT-004-google-closeout` 组合 Google Interactions API Key 对话/生图与 Gemini CLI Google 账号文字对话。API Key 图片可归档画布；CLI 登录只支持文字。Web fixture 与本地桥安全回归已通过；最终验证见 [004](../changes/2026-09-23-google-interactions/verification.md)、[005](../changes/2026-09-23-google-cli-login/verification.md)。真实 Google 凭据请求、CLI 账号续接、Tauri 同态和最终独立补审尚未完成；主线不因本候选改变。
+
+## 2026-09-23 KK Studio 2.1.0 源码上传候选（REL-2.1.0）
 ## 2026-09-23 KK Studio 2.1.0 源码并线与规则回读（REL-2.1.0）
 
 当前版本元数据已统一为 2.1.0；源码候选先在 `chore/TASK-CONSOLIDATE-200` 上提交并上传，首次远端 SHA 与受审源码 `15f1f27` 一致。`VERSION`、`CHANGELOG.md`、package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端共同记录 2.1.0；原有 `%APPDATA%/kk-studio`、存储 key、应用 identifier、历史 2.0.0 证据和恢复归档不变。安装包、签名和正式 tag 仍未完成。

@@ -1807,5 +1807,66 @@
     "verification": "2026-09-23 扫描 365 个已跟踪 Markdown，历史范围共 37 处文件目标问题；原始日志来源和可恢复性待核对。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-09-23"
+  },
+  {
+    "id": "TASK-AGENT-004",
+    "title": "Google Interactions 对话和生图",
+    "goal": "配置 Google API Key 后直接聊天、生图并归档到当前画布",
+    "scope": "Google Interactions adapter, conversation, credentials settings and assets",
+    "acceptance": [
+      "连续对话和图片生成经官方协议接线，图片归档当前画布",
+      "密钥只存系统凭据库或内存，项目切换与取消不污染状态",
+      "Web交互、故障回归、完整验证与独立审查；真实凭据验收单列"
+    ],
+    "dependencies": [
+      "TASK-AGENT-003"
+    ],
+    "owner": "root",
+    "branch": "feat/TASK-AGENT-004-google-closeout",
+    "worktree": "C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0",
+    "affectedModules": [
+      "src/features/agent",
+      "src/components",
+      "src/domain",
+      "src/App.tsx"
+    ],
+    "status": "IN_PROGRESS",
+    "evidence": [
+      "docs/changes/2026-09-23-google-interactions/verification.md"
+    ],
+    "verification": "Combined closeout candidate: API Key dialogue/image/archive fixture flow and CLI security regressions pass. After merging main and reinstalling dependencies, full verify passes (governance 63/0, browser 302/302, Markdown gate green); Windows Cargo check passes. Real Google API Key requests, desktop runtime and final independent review pending.",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-09-23"
+  },
+  {
+    "id": "TASK-AGENT-005",
+    "title": "Gemini CLI 账号登录通道（免 API Key 对话）",
+    "goal": "登录 Google 账号后免 Key 在 KK 内对话，像 Codex 一样走本地服务",
+    "scope": "gemini bridge script, geminiCliAdapter, agent connection loginMode, settings UI",
+    "acceptance": [
+      "CLI 登录状态可检测并给出安装/登录指引",
+      "文字对话经本地桥接通且连续会话续接",
+      "cli 模式生图与附件被明确拒绝，凭据不入 KK",
+      "Web 交互、故障回归、完整验证与独立审查；真实 gemini 验收单列"
+    ],
+    "dependencies": [
+      "TASK-AGENT-004"
+    ],
+    "owner": "root",
+    "branch": "feat/TASK-AGENT-004-google-closeout",
+    "worktree": "C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0",
+    "affectedModules": [
+      "src/features/agent",
+      "src/components",
+      "src/domain",
+      "scripts"
+    ],
+    "status": "PARTIAL",
+    "evidence": [
+      "docs/changes/2026-09-23-google-cli-login/verification.md"
+    ],
+    "verification": "Superseded for review by combined 004 closeout candidate: local CLI bridge/adapter fixture tests, browser flow and security regression checks pass there. Full verify rerun green after main merge. Real Gemini CLI install/login/bridge, desktop runtime and final independent review pending.",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-09-23"
   }
 ]

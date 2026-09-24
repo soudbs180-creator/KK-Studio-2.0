@@ -22,6 +22,22 @@ export interface AgentHostOptions {
 /** MCP 请求通过 KK 领域和任务入口落地，不直接持有 Provider 凭据。 */
 export function createAgentHost(options: AgentHostOptions) {
   return {
+    readGoogleConversation() {
+      return options.getProject()?.googleConversation;
+    },
+    saveGoogleConversation(
+      record: import("../../domain/googleConversation.ts").GoogleConversation,
+      projectId: string,
+    ) {
+      const project = options.getProject();
+      if (!project || project.id !== projectId)
+        throw new Error("项目已切换，未保存旧会话。");
+      options.commit({
+        ...project,
+        googleConversation: record,
+        updatedAt: Date.now(),
+      });
+    },
     hasGeneratedImage(id: string) {
       const project = options.getProject();
       return Boolean(
@@ -35,6 +51,8 @@ export function createAgentHost(options: AgentHostOptions) {
       projectId: string;
       signal: AbortSignal;
       sourceNodeId?: string;
+      provider?: "Google Gemini";
+      model?: string;
     }): Promise<void> {
       const project = options.getProject();
       if (!project || project.id !== input.projectId || input.signal.aborted)
@@ -52,7 +70,8 @@ export function createAgentHost(options: AgentHostOptions) {
       });
       const asset = await storeGeneratedAsset({
         source,
-        provider: "Codex 内置生图",
+        provider: input.provider ?? "Codex 内置生图",
+        model: input.model,
         sourceJobId: input.id,
         signal: input.signal,
       });
@@ -62,16 +81,16 @@ export function createAgentHost(options: AgentHostOptions) {
       const item: CanvasCollectionItem = {
         id: input.id,
         kind: "image",
-        title: "Codex 生成图片",
-        description: "Codex 内置生图 · 已归档",
+        title: input.provider ? "Google 生成图片" : "Codex 生成图片",
+        description: `${input.provider ?? "Codex 内置生图"} · 已归档`,
         assetId: asset.assetId,
         preview: asset.preview,
         generationStatus: "ready",
         result: {
           id: input.id,
           kind: "image",
-          title: "Codex 生成图片",
-          description: "Codex 内置生图 · 已归档",
+          title: input.provider ? "Google 生成图片" : "Codex 生成图片",
+          description: `${input.provider ?? "Codex 内置生图"} · 已归档`,
           src: asset.preview,
           source: "provider",
         },

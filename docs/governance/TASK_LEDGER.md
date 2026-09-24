@@ -67,6 +67,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
+| TASK-AGENT-004 | Google Interactions 对话和生图 | IN_PROGRESS | TASK-AGENT-003 | root |
+| TASK-AGENT-005 | Gemini CLI 账号登录通道（免 API Key 对话） | PARTIAL | TASK-AGENT-004 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -802,4 +804,28 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: docs/archive, docs/changes, docs/evidence
 - Verification: NOT_VERIFIED — 2026-09-23 扫描 365 个已跟踪 Markdown，历史范围共 37 处文件目标问题；原始日志来源和可恢复性待核对。
 - Evidence: [docs/governance/MARKDOWN_AUDIT.md](../../docs/governance/MARKDOWN_AUDIT.md)
+- Updated: 2026-09-23
+
+## TASK-AGENT-004 — Google Interactions 对话和生图
+
+- Goal: 配置 Google API Key 后直接聊天、生图并归档到当前画布
+- Scope: Google Interactions adapter, conversation, credentials settings and assets
+- Acceptance: 连续对话和图片生成经官方协议接线，图片归档当前画布; 密钥只存系统凭据库或内存，项目切换与取消不污染状态; Web交互、故障回归、完整验证与独立审查；真实凭据验收单列
+- Branch: `feat/TASK-AGENT-004-google-closeout`
+- Worktree: `C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0`
+- Modules: src/features/agent, src/components, src/domain, src/App.tsx
+- Verification: PARTIAL — Combined closeout candidate: API Key dialogue/image/archive fixture flow and CLI security regressions pass. After merging main and reinstalling dependencies, full verify passes (governance 63/0, browser 302/302, Markdown gate green); Windows Cargo check passes. Real Google API Key requests, desktop runtime and final independent review pending.
+- Evidence: [docs/changes/2026-09-23-google-interactions/verification.md](../../docs/changes/2026-09-23-google-interactions/verification.md)
+- Updated: 2026-09-23
+
+## TASK-AGENT-005 — Gemini CLI 账号登录通道（免 API Key 对话）
+
+- Goal: 登录 Google 账号后免 Key 在 KK 内对话，像 Codex 一样走本地服务
+- Scope: gemini bridge script, geminiCliAdapter, agent connection loginMode, settings UI
+- Acceptance: CLI 登录状态可检测并给出安装/登录指引; 文字对话经本地桥接通且连续会话续接; cli 模式生图与附件被明确拒绝，凭据不入 KK; Web 交互、故障回归、完整验证与独立审查；真实 gemini 验收单列
+- Branch: `feat/TASK-AGENT-004-google-closeout`
+- Worktree: `C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0`
+- Modules: src/features/agent, src/components, src/domain, scripts
+- Verification: PARTIAL — Superseded for review by combined 004 closeout candidate: local CLI bridge/adapter fixture tests, browser flow and security regression checks pass there. Full verify rerun green after main merge. Real Gemini CLI install/login/bridge, desktop runtime and final independent review pending.
+- Evidence: [docs/changes/2026-09-23-google-cli-login/verification.md](../../docs/changes/2026-09-23-google-cli-login/verification.md)
 - Updated: 2026-09-23

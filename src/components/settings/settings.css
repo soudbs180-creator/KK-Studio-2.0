@@ -720,6 +720,53 @@
     opacity: 0.35;
   }
 }
+.settings-login-modes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  margin: 10px 0 0;
+  padding: 0;
+  border: 0;
+}
+.settings-login-modes legend {
+  padding: 0;
+  color: var(--settings-muted);
+  font-size: 11px;
+}
+.settings-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  color: var(--settings-text);
+  font-size: 12px;
+  cursor: pointer;
+}
+.settings-radio input[type="radio"] {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--focus-ring);
+}
+.settings-radio input[type="radio"]:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+@media (max-width: 720px) {
+  .settings-radio {
+    min-height: 44px;
+  }
+}
+.settings-guide {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--settings-muted);
+  font-size: 11px;
+  line-height: 19px;
+}
 .settings-network-field {
   display: flex;
   align-items: center;

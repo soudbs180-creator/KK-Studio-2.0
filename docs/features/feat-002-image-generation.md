@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：creation
 - 最近更新：2026-09-21
-- 关联任务：T5、TASK-PROV-001、EXT-PROVIDER、TASK-AGENT-001
+- 关联任务：T5、TASK-PROV-001、EXT-PROVIDER、TASK-AGENT-001、TASK-AGENT-004
 
 ## 用户可见入口
 
@@ -27,6 +27,7 @@
 
 - Web：真实 BYOK 提交、连接门禁、取消、错误分类、原件归档。
 - Desktop：原生 TaskHost 代码已接入（durable intent、journal、幂等身份、unknown 受理保护、逐 slot）。
+- Google Interactions：API Key 通道的图片结果可归档至当前画布；此项已有浏览器 fixture 验证，真实 Google 图片与 Tauri 仍待验收，见 [TASK-AGENT-004](../changes/2026-09-23-google-interactions/verification.md)。
 
 ## 差距与后端化
 
