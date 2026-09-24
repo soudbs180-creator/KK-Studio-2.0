@@ -1,6 +1,12 @@
 # 当前进度
 
-## 2026-09-24 本地长期记忆接入对话（TASK-MEMORY-001 + 002）
+## 2026-09-24 记忆候选复核与修补
+
+- FEAT-020 保持 PARTIAL，原先"Codex/豆包/WorkBuddy 已共享"和"绝不上云"表述已纠正：当前仅 KK Studio 的 Codex 对话使用记忆；完整文件不云同步，选中的片段会用于当前模型请求。
+- 修补了 Web IndexedDB 仓库冲突、损坏记录清空、Desktop 首写缺目录与备份失败后继续重置、模型回复自动入库等问题；真实系统目录授权和跨应用联调仍未验证。
+- 本轮 `npm run verify` 通过（408 Node、308 browser），Rust 88/88；Web 1920/390 截图与未完成项见 `docs/changes/2026-09-24-local-memory/verification.md` 的新增勘误。
+
+## 2026-09-24 本地长期记忆接入对话（TASK-MEMORY-001 + 002，历史候选）
 
 - FEAT-020 由 PROTOTYPE 升级为 PARTIAL：真实用户级本地长期记忆落地，**本机共享**（`~/.kk-memory/memory.json`，Tauri 命令 + Web File System Access 授权，旧隔离文件一次性种子迁移）。
 - 能力：本地规则自动采集（用户/assistant 偏好、习惯、约束）→ 词法检索注入 `[长期记忆]` 块（发送前，执行器零修改）；设置 › 连接 › 记忆 真实 UI（开关、共享状态、授权目录、列表/删除/清空、手动 Codex 提炼、重置共享文件）。

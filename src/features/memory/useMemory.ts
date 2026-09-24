@@ -40,8 +40,11 @@ export function useMemory(onFeedback: (message: string) => void) {
     memoryService.isEnabled(),
   );
   const [store, setStore] = useState<MemoryStoreFile | null>(null);
-  const [mode, setMode] = useState<"shared" | "isolated">("shared");
+  const [mode, setMode] = useState<"shared" | "isolated" | "locked">(
+    "isolated",
+  );
   const [storageStatus, setStorageStatus] = useState("");
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [extracting, setExtracting] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -49,12 +52,14 @@ export function useMemory(onFeedback: (message: string) => void) {
 
   const refresh = useCallback(async () => {
     try {
-      setStore(await memoryService.load());
       setMode(await memoryService.storageMode());
       setStorageStatus(await memoryService.storageStatus());
+      setStore(await memoryService.load());
+      setLoadError(null);
     } catch {
       setStore(null);
-      onFeedback("读取本地记忆失败，请稍后重试。");
+      setLoadError("本地记忆读取失败，原数据已保留。");
+      onFeedback("读取本地记忆失败。请检查共享目录授权或文件格式后重试。");
     } finally {
       setLoading(false);
     }
@@ -71,7 +76,7 @@ export function useMemory(onFeedback: (message: string) => void) {
       await refresh();
       onFeedback(
         next
-          ? "已开启记忆：对话会自动学习你的偏好，本机共享（Codex/豆包/WorkBuddy）、仅存本地、不上云。"
+          ? "已开启记忆：KK Studio 会记录你的稳定偏好，并向当前所选模型发送相关片段用于回答。"
           : "已关闭记忆：停止自动学习与注入。",
       );
     },
@@ -96,7 +101,9 @@ export function useMemory(onFeedback: (message: string) => void) {
     setBusy(true);
     try {
       setStore(await memoryService.clearAll());
-      onFeedback("已清空本机共享记忆（Codex/豆包/WorkBuddy 均会同步清空）。");
+      onFeedback(
+        "已清空当前存储的记忆；已接入共享文件的客户端重新读取后会看到变化。",
+      );
     } catch {
       onFeedback("清空记忆失败，请重试。");
     } finally {
@@ -108,9 +115,7 @@ export function useMemory(onFeedback: (message: string) => void) {
     setBusy(true);
     try {
       setStore(await memoryService.resetIdentity());
-      onFeedback(
-        "已重置共享记忆文件：旧文件保留（.previous），当前从空记忆开始。",
-      );
+      onFeedback("已重置当前记忆。桌面端旧文件保留为 .previous 备份。");
     } catch {
       onFeedback("重置记忆文件失败，请重试。");
     } finally {
@@ -125,7 +130,7 @@ export function useMemory(onFeedback: (message: string) => void) {
       await refresh();
       onFeedback(
         ok
-          ? "已授权共享目录：记忆将与其他产品（Codex/WorkBuddy）共享同一份本地文件。"
+          ? "已授权共享目录。其他应用完成记忆契约接入后可读取同一份本地文件。"
           : "未完成授权，记忆仍仅存本应用。",
       );
     } catch {
@@ -173,6 +178,7 @@ export function useMemory(onFeedback: (message: string) => void) {
     store,
     mode,
     storageStatus,
+    loadError,
     loading,
     extracting,
     busy,
@@ -183,5 +189,6 @@ export function useMemory(onFeedback: (message: string) => void) {
     resetIdentity,
     authorizeSharedDirectory,
     extractWithCodex,
+    refresh,
   };
 }

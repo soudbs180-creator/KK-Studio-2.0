@@ -45,13 +45,23 @@ test("does not extract when no trigger word present", () => {
   assert.equal(candidates.length, 0);
 });
 
-test("extracts assistant summary of user preference", () => {
+test("does not save credentials even when a memory trigger is present", () => {
+  assert.deepEqual(
+    extractMemoryCandidates("记住我的密码是 123456", "user"),
+    [],
+  );
+  assert.deepEqual(
+    extractMemoryCandidates("以后请用这个 API key: sk-example-secret", "user"),
+    [],
+  );
+});
+
+test("does not treat assistant summary as a user preference", () => {
   const candidates = extractMemoryCandidates(
     "已记住：你的偏好是日系插画风格，我会在后续生成中遵循。",
     "assistant",
   );
-  assert.equal(candidates.length, 1);
-  assert.equal(candidates[0].memoryType, "user_preference");
+  assert.equal(candidates.length, 0);
 });
 
 test("splits multiple sentences and filters too-short fragments", () => {

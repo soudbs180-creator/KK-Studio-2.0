@@ -680,6 +680,19 @@
   gap: 8px;
   width: 100%;
 }
+.settings-memory-section .settings-network-row > div {
+  min-width: 0;
+}
+.settings-memory-section .settings-network-row > .settings-action {
+  flex: 0 0 auto;
+  min-width: 126px;
+  white-space: nowrap;
+}
+@media (max-width: 720px) {
+  .settings-memory-section .settings-network-row {
+    flex-wrap: wrap;
+  }
+}
 .settings-memory-list {
   display: flex;
   flex-direction: column;

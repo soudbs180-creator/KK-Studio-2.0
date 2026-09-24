@@ -294,8 +294,6 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         )
           return;
         message(event.item);
-        if (event.item.role === "assistant" && event.item.text)
-          void memoryService.ingestMessage(event.item.text, "assistant");
         break;
       case "activity": {
         const text = formatAgentActivity(event.itemType, event.item);

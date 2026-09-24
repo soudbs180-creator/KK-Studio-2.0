@@ -738,6 +738,38 @@ struct MemoryStore {
 
 const MEMORY_STORE_VERSION: u32 = 1;
 
+fn validate_memory_store(store: &MemoryStore) -> Result<(), String> {
+    if store.records.len() > 10_000 {
+        return Err("记忆文件格式无效：条目超过上限（10000）".to_string());
+    }
+    for record in &store.records {
+        let valid = !record.id.trim().is_empty()
+            && !record.content.trim().is_empty()
+            && record.content.chars().count() <= 200
+            && matches!(
+                record.memory_type.as_str(),
+                "user_profile" | "user_preference" | "user_habit" | "user_constraint"
+            )
+            && record.confidence.is_finite()
+            && (0.0..=1.0).contains(&record.confidence)
+            && !record.fingerprint.trim().is_empty()
+            && matches!(
+                record.source.as_str(),
+                "auto_rule" | "manual_codex" | "manual_user"
+            )
+            && !record.created_at.trim().is_empty()
+            && !record.updated_at.trim().is_empty()
+            && record
+                .last_used_at
+                .as_ref()
+                .is_none_or(|value| !value.trim().is_empty());
+        if !valid {
+            return Err("记忆文件格式无效：包含损坏的条目，已保留原文件".to_string());
+        }
+    }
+    Ok(())
+}
+
 /// 本机共享记忆文件路径：~/.kk-memory/memory.json（跨产品约定）。
 fn shared_memory_path() -> PathBuf {
     let home = std::env::var("USERPROFILE")
@@ -768,8 +800,7 @@ fn read_memory_file(path: &Path) -> Result<MemoryStore, String> {
             records: Vec::new(),
         });
     }
-    let content =
-        fs::read_to_string(path).map_err(|error| format!("无法读取记忆文件：{error}"))?;
+    let content = fs::read_to_string(path).map_err(|error| format!("无法读取记忆文件：{error}"))?;
     let store: MemoryStore = serde_json::from_str(&content)
         .map_err(|error| format!("记忆文件格式无效，未覆盖原文件：{error}"))?;
     if store.version != MEMORY_STORE_VERSION {
@@ -778,27 +809,32 @@ fn read_memory_file(path: &Path) -> Result<MemoryStore, String> {
             store.version, MEMORY_STORE_VERSION
         ));
     }
+    validate_memory_store(&store)?;
     Ok(store)
 }
 
 fn write_memory_file(path: &Path, store: &MemoryStore) -> Result<(), String> {
+    validate_memory_store(store)?;
     let json = serde_json::to_string_pretty(store).map_err(|e| e.to_string())?;
     let parent = path
         .parent()
         .ok_or_else(|| "记忆文件路径无效".to_string())?;
+    fs::create_dir_all(parent).map_err(|e| format!("无法创建记忆目录：{e}"))?;
     let nonce = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .expect("system clock")
         .as_nanos();
-    let temp = parent.join(format!(
-        ".memory-{}-{nonce}.tmp",
-        std::process::id()
-    ));
+    let temp = parent.join(format!(".memory-{}-{nonce}.tmp", std::process::id()));
     fs::write(&temp, json).map_err(|e| format!("无法写入记忆文件：{e}"))?;
     fs::rename(&temp, path).map_err(|e| {
         let _ = fs::remove_file(&temp);
         format!("无法提交记忆文件：{e}")
     })
+}
+
+fn guarded_write_memory_file(path: &Path, store: &MemoryStore) -> Result<(), String> {
+    read_memory_file(path)?;
+    write_memory_file(path, store)
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -814,20 +850,16 @@ fn memory_write(state: State<AppState>, store: MemoryStore) -> Result<MemoryStor
     if store.records.len() > 10_000 {
         return Err("记忆条目超过上限（10000）".to_string());
     }
-    write_memory_file(&state.memory_path, &store)?;
+    guarded_write_memory_file(&state.memory_path, &store)?;
     Ok(store)
 }
 
-#[tauri::command(rename_all = "camelCase")]
-fn memory_reset_identity(state: State<AppState>) -> Result<MemoryStore, String> {
-    let path = &state.memory_path;
+fn reset_memory_file(path: &Path, previous: &Path) -> Result<MemoryStore, String> {
     if path.exists() {
-        let nonce = std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .expect("system clock")
-            .as_secs();
-        let previous = path.with_extension(format!("previous-{nonce}.json"));
-        let _ = fs::rename(path, &previous);
+        if previous.exists() {
+            return Err("记忆备份文件已存在，未修改原文件".to_string());
+        }
+        fs::rename(path, previous).map_err(|e| format!("无法备份现有记忆，未修改原文件：{e}"))?;
     }
     let store = MemoryStore {
         version: MEMORY_STORE_VERSION,
@@ -836,6 +868,17 @@ fn memory_reset_identity(state: State<AppState>) -> Result<MemoryStore, String> 
     };
     write_memory_file(path, &store)?;
     Ok(store)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn memory_reset_identity(state: State<AppState>) -> Result<MemoryStore, String> {
+    let path = &state.memory_path;
+    let nonce = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock")
+        .as_nanos();
+    let previous = path.with_extension(format!("previous-{nonce}.json"));
+    reset_memory_file(path, &previous)
 }
 
 // ========== 非流式聊天（保留作为后备） ==========
@@ -1219,6 +1262,32 @@ mod memory_tests {
     }
 
     #[test]
+    fn invalid_memory_record_is_rejected_without_overwrite() {
+        let path = temp_memory_path("invalid-record");
+        let raw = br#"{"version":1,"records":[{"id":"r1","content":"","memoryType":"user_preference","confidence":1.5,"fingerprint":"fp","source":"auto_rule","createdAt":"2026-09-24T00:00:00Z","updatedAt":"2026-09-24T00:00:00Z","active":true}]}"#;
+        fs::write(&path, raw).expect("write invalid fixture");
+        let error = read_memory_file(&path).expect_err("invalid record must be rejected");
+        assert!(error.contains("记忆文件格式无效"));
+        assert_eq!(fs::read(&path).expect("read original"), raw);
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn normal_memory_write_cannot_overwrite_a_corrupt_file() {
+        let path = temp_memory_path("guarded-write");
+        let raw = b"damaged memory file";
+        fs::write(&path, raw).expect("write damaged fixture");
+        let store = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![sample_record()],
+        };
+        assert!(guarded_write_memory_file(&path, &store).is_err());
+        assert_eq!(fs::read(&path).expect("read original"), raw);
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
     fn write_memory_file_roundtrips_and_leaves_no_temp() {
         let path = temp_memory_path("roundtrip");
         let store = MemoryStore {
@@ -1230,6 +1299,16 @@ mod memory_tests {
         let loaded = read_memory_file(&path).expect("read memory");
         assert_eq!(loaded.records.len(), 1);
         assert_eq!(loaded.records[0].content, "用户偏好日系插画风格");
+        let empty = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![],
+        };
+        write_memory_file(&path, &empty).expect("replace existing memory file");
+        assert!(read_memory_file(&path)
+            .expect("read replacement")
+            .records
+            .is_empty());
         let dir = path.parent().expect("dir");
         let leftovers: Vec<_> = fs::read_dir(dir)
             .expect("read dir")
@@ -1238,6 +1317,47 @@ mod memory_tests {
             .filter(|name| name.contains(".tmp"))
             .collect();
         assert!(leftovers.is_empty(), "temp files left: {leftovers:?}");
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn first_memory_write_creates_missing_parent_directory() {
+        let path = temp_memory_path("first-write")
+            .parent()
+            .expect("test dir")
+            .join("missing")
+            .join("memory.json");
+        let store = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![sample_record()],
+        };
+        write_memory_file(&path, &store).expect("first write creates directory");
+        assert_eq!(
+            read_memory_file(&path)
+                .expect("read first write")
+                .records
+                .len(),
+            1
+        );
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn failed_memory_backup_preserves_existing_file() {
+        let path = temp_memory_path("backup-failure");
+        let store = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![sample_record()],
+        };
+        write_memory_file(&path, &store).expect("write original");
+        let original = fs::read(&path).expect("read original");
+        let backup = path.with_extension("previous-test.json");
+        fs::create_dir(&backup).expect("create colliding backup directory");
+        assert!(reset_memory_file(&path, &backup).is_err());
+        assert_eq!(fs::read(&path).expect("read after failed reset"), original);
+        let _ = fs::remove_dir(&backup);
         let _ = fs::remove_file(&path);
     }
 
@@ -1280,8 +1400,10 @@ mod memory_tests {
     #[test]
     fn shared_memory_path_points_under_dot_kk_memory() {
         let path = shared_memory_path();
-        assert!(path.to_string_lossy().ends_with(".kk-memory\\memory.json")
-            || path.to_string_lossy().ends_with(".kk-memory/memory.json"));
+        assert!(
+            path.to_string_lossy().ends_with(".kk-memory\\memory.json")
+                || path.to_string_lossy().ends_with(".kk-memory/memory.json")
+        );
     }
 }
 

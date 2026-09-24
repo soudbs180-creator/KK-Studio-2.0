@@ -25,11 +25,18 @@ class FakeStorage implements MemoryStorage {
     records: [],
   };
   failures: Array<"read" | "write"> = [];
-  mode: "shared" | "isolated" = "shared";
+  readDelayMs = 0;
+  async mode(): Promise<"shared" | "isolated" | "locked"> {
+    return "shared";
+  }
 
   async read(): Promise<MemoryStoreFile> {
     if (this.failures.includes("read")) throw new Error("read failed");
-    return structuredClone(this.store);
+    const snapshot = structuredClone(this.store);
+    if (this.readDelayMs > 0) {
+      await new Promise((resolve) => setTimeout(resolve, this.readDelayMs));
+    }
+    return snapshot;
   }
   async write(store: MemoryStoreFile): Promise<MemoryStoreFile> {
     if (this.failures.includes("write")) throw new Error("write failed");
@@ -78,6 +85,20 @@ test("ingestMessage deduplicates identical content by fingerprint", async () => 
   await service.ingestMessage("以后请用日系插画风格", "user");
   await service.ingestMessage("以后请用日系插画风格！", "user");
   assert.equal(storage.store.records.length, 1);
+});
+
+test("parallel user messages preserve both memory records", async () => {
+  const { service, storage } = createService();
+  service.setEnabled(true);
+  storage.readDelayMs = 10;
+  await Promise.all([
+    service.ingestMessage("以后请用日系插画风格", "user"),
+    service.ingestMessage("以后请用暖色调", "user"),
+  ]);
+  assert.deepEqual(
+    storage.store.records.map((record) => record.content),
+    ["以后请用日系插画风格", "以后请用暖色调"],
+  );
 });
 
 test("ingestMessage failure is silent", async () => {

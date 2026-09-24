@@ -1,6 +1,12 @@
 # AI handoff
 
-## 2026-09-24 当前恢复入口：本地长期记忆（TASK-MEMORY-001 + 002，验证完成待 PR）
+## 2026-09-24 当前恢复入口：本地记忆复核
+
+- 当前分支 `feat/TASK-MEMORY-001-local-memory` 位于 `D:/kk-studio/.worktrees/TASK-MEMORY-001`，远端仍为 `55e93a1`；本轮修补待提交、验证与复审。main 保持 `76339c9`。先检查 `git status` 和本节，再看下方历史快照。
+- FEAT-020 与 TASK-MEMORY-001/002 均未达到真实跨应用验收；账本改为 PARTIAL / NOT_VERIFIED。当前自动采集/注入只在 KK Studio 的 Codex 对话中实现，豆包和 WorkBuddy 原生客户端尚未接入。Web FSA 真实授权、Desktop 打包运行态、真实模型引用仍待验证。
+- 本轮修补与证据见 `docs/superpowers/plans/2026-09-24-memory-closure.md`、`docs/changes/2026-09-24-local-memory/verification.md` 的勘误。`npm run verify` 现为 408 Node、308 browser 全通过；Rust 88/88。完整记忆文件仅存本机，选中的相关片段会随当前请求发送给模型推理。
+
+## 2026-09-24 历史恢复入口：本地长期记忆（TASK-MEMORY-001 + 002，旧候选）
 
 - 唯一工程为 `D:/kk-studio/KK-Studio-2.0`；本任务在独立 worktree `D:\kk-studio\.worktrees\TASK-MEMORY-001`（分支 `feat/TASK-MEMORY-001-local-memory`，base `origin/main@76339c9`，已 push，未开 PR）。**主 checkout 在 main@76339c9，禁止回写/触碰**。接手先看 `git status`、worktree 列表、task-ledger.json、features.registry.json 与本文件顶部，不从下方历史段落推断"当前"。
 - 功能：FEAT-020 长期记忆由 PROTOTYPE→PARTIAL（真实用户级本地记忆，**本机共享版**）。记忆模块 `src/features/memory/`、设置页 `MemorySettingsSection.tsx`、对话接入 `agentConnection.ts`（assistant 采集 + user 采集 + 发送前 `[长期记忆]` 注入，执行器零修改）、Tauri `memory_read/memory_write/memory_reset_identity`（共享路径 `~/.kk-memory/memory.json` + 旧文件种子迁移）。

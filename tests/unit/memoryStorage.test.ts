@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   createMemoryStorage,
   normalizeStore,
+  readFsaStore,
   KK_MEMORY_DIR_NAME,
   KK_MEMORY_FILE_NAME,
 } from "../../src/features/memory/storage.ts";
@@ -25,23 +26,70 @@ test("normalizeStore preserves valid records and drops legacy namespace", () => 
   const store = normalizeStore({
     version: MEMORY_STORE_VERSION,
     namespace: "ns-test",
-    records: [{ id: "a", content: "x" }] as never,
+    records: [
+      {
+        id: "a",
+        content: "用户偏好日系插画风格",
+        memoryType: "user_preference",
+        confidence: 0.8,
+        fingerprint: "fingerprint-a",
+        source: "auto_rule",
+        createdAt: "2026-09-24T00:00:00.000Z",
+        updatedAt: "2026-09-24T00:00:00.000Z",
+        active: true,
+      },
+    ],
   });
   // 共享模式：旧隔离文件的 namespace 字段被忽略。
   assert.equal(store.namespace, "");
   assert.equal(store.records.length, 1);
-  const coerced = normalizeStore({
-    version: MEMORY_STORE_VERSION,
-    namespace: 42 as never,
-    records: "bad" as never,
-  });
-  assert.equal(coerced.namespace, "");
-  assert.deepEqual(coerced.records, []);
+});
+
+test("normalizeStore rejects corrupt records without turning them into empty memory", () => {
+  assert.throws(
+    () =>
+      normalizeStore({
+        version: MEMORY_STORE_VERSION,
+        records: "bad" as never,
+      }),
+    /记忆文件格式无效/,
+  );
+  assert.throws(
+    () =>
+      normalizeStore({
+        version: MEMORY_STORE_VERSION,
+        records: [{ id: "a" }] as never,
+      }),
+    /记忆文件格式无效/,
+  );
 });
 
 test("shared file contract uses the cross-product names", () => {
   assert.equal(KK_MEMORY_DIR_NAME, ".kk-memory");
   assert.equal(KK_MEMORY_FILE_NAME, "memory.json");
+});
+
+test("an existing empty shared file is corruption, while a missing file is a fresh store", async () => {
+  const emptyFile = {
+    getFileHandle: async () => ({
+      getFile: async () => new File([""], "memory.json"),
+    }),
+  };
+  await assert.rejects(
+    () => readFsaStore(emptyFile as never),
+    /记忆文件格式无效/,
+  );
+
+  const missingFile = {
+    getFileHandle: async () => {
+      throw new DOMException("not found", "NotFoundError");
+    },
+  };
+  assert.deepEqual(await readFsaStore(missingFile as never), {
+    version: MEMORY_STORE_VERSION,
+    namespace: "",
+    records: [],
+  });
 });
 
 test("createMemoryStorage exposes the shared storage contract", () => {
@@ -51,5 +99,5 @@ test("createMemoryStorage exposes the shared storage contract", () => {
   assert.equal(typeof storage.resetIdentity, "function");
   assert.equal(typeof storage.authorizeSharedDirectory, "function");
   assert.equal(typeof storage.statusText, "function");
-  assert.ok(storage.mode === "shared" || storage.mode === "isolated");
+  assert.equal(typeof storage.mode, "function");
 });

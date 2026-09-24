@@ -1,6 +1,13 @@
 # 当前项目状态
 
-## 2026-09-24 本地长期记忆接入对话（TASK-MEMORY-001 + 002，验证完成待 PR）
+## 2026-09-24 记忆候选复核勘误（以本节为当前事实）
+
+- `feat/TASK-MEMORY-001-local-memory` 已推送但仍未合入 main。FEAT-020 保持 PARTIAL，TASK-MEMORY-001/002 退回 PARTIAL / NOT_VERIFIED；下节旧验证仅代表当时自动化结果。
+- 本轮复核发现并修补：Web 的记忆对象仓库与创作库共用 IndexedDB v1 导致共享句柄仓库无法创建，改为独立 `kk-studio-memory`；损坏记录不再静默归零；Desktop 首写会创建目录，重置备份失败不会覆盖原件；只从用户原话自动采集，常见凭据句子排除。
+- 当前自动记忆注入仅接在 KK Studio 的 Codex 对话路径。豆包、WorkBuddy 原生客户端和 Codex 独立桌面应用未接入共享文件；登录状态不等于已打通。完整文件不参与云同步，但开启记忆后，相关片段会发送给所选模型用于本轮推理。
+- Web 系统目录授权、真实 Codex 会话引用、Desktop 打包运行态、跨应用记忆读写仍待真实联调。已做的代码和测试不能代替这些验收。
+
+## 2026-09-24 本地长期记忆接入对话（TASK-MEMORY-001 + 002，历史候选验证）
 
 FEAT-020 从 PROTOTYPE 升级为 PARTIAL（真实用户级记忆落地，本机共享版）：学习 ai_group_chat 双层级记忆并简化——短期记忆沿用 Codex thread（不新增），长期记忆落地为"本地规则采集 + 词法检索注入 + 可选手动 Codex 提炼"。用户拍板共享语义（TASK-MEMORY-002 覆盖 001 的隔离语义）：**本机默认共享 + 公共共享目录 `~/.kk-memory/memory.json` + 先打通 Codex 与豆包（WorkBuddy 预留契约）**。存储：Desktop 由 Tauri 命令读写共享文件（旧隔离文件一次性种子迁移），Web 优先 File System Access 授权目录、未授权降级 IndexedDB 并明示；Agent 契约见 docs/MEMORY-CONTRACT.md（豆包侧由 Doubao Work 环境中的 Agent 遵循）。硬约束不变：记忆仅存本地、绝不上云、不进同步/localStorage/日志/导出包；换账号手动清空/重置；真实账号 id 绑定依赖 FEAT-017。
 

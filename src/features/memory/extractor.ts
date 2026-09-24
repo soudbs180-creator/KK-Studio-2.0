@@ -34,14 +34,6 @@ const USER_TRIGGERS = [
   "只用",
 ] as const;
 
-/** assistant 消息中的偏好结论触发词（仅当模型明确总结用户偏好时）。 */
-const ASSISTANT_TRIGGERS = [
-  "你的偏好",
-  "用户偏好",
-  "已记住",
-  "以后会",
-] as const;
-
 /** 低价值短句/寒暄：命中则不采集。 */
 const LOW_VALUE_PATTERNS = [
   "你好",
@@ -57,6 +49,13 @@ const LOW_VALUE_PATTERNS = [
   "拜拜",
 ] as const;
 
+const CREDENTIAL_PATTERN =
+  /密码|口令|密钥|令牌|验证码|私钥|api[\s_-]*key|access[\s_-]*token|refresh[\s_-]*token|client[\s_-]*secret|bearer\s+\S+|sk-[a-z0-9_-]+/i;
+
+export function containsSensitiveCredential(content: string): boolean {
+  return CREDENTIAL_PATTERN.test(content);
+}
+
 const CONSTRAINT_WORDS = [
   "不要",
   "别",
@@ -68,9 +67,7 @@ const CONSTRAINT_WORDS = [
 const HABIT_WORDS = ["每次", "习惯", "平时", "常用", "一直", "总是"] as const;
 const STRONG_WORDS = ["不要", "别", "务必", "记住", "记得", "以后"] as const;
 
-/** 弱触发词（assistant 结论等）基础置信度。 */
 const BASE_CONFIDENCE_USER = 0.7;
-const BASE_CONFIDENCE_ASSISTANT = 0.6;
 
 function splitSentences(text: string): string[] {
   return text
@@ -122,25 +119,23 @@ export function extractMemoryCandidates(
   message: string,
   role: MessageRole,
 ): MemoryCandidate[] {
-  if (!message || message.length < 4) {
+  // 模型回复可能推断或编造用户偏好；只有用户原话可自动入库。
+  if (role !== "user" || !message || message.length < 4) {
     return [];
   }
-  const triggers = role === "user" ? USER_TRIGGERS : ASSISTANT_TRIGGERS;
-  const base =
-    role === "user" ? BASE_CONFIDENCE_USER : BASE_CONFIDENCE_ASSISTANT;
   const candidates: MemoryCandidate[] = [];
   for (const sentence of splitSentences(message)) {
-    if (isLowValue(sentence)) {
+    if (isLowValue(sentence) || containsSensitiveCredential(sentence)) {
       continue;
     }
-    const hit = triggers.some((trigger) => sentence.includes(trigger));
+    const hit = USER_TRIGGERS.some((trigger) => sentence.includes(trigger));
     if (!hit) {
       continue;
     }
     candidates.push({
       content: sentence,
       memoryType: inferMemoryType(sentence),
-      confidence: inferConfidence(sentence, base),
+      confidence: inferConfidence(sentence, BASE_CONFIDENCE_USER),
     });
   }
   return candidates;

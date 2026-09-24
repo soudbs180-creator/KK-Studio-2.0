@@ -2,11 +2,13 @@
  * 设置 › 连接 › 记忆：本地长期记忆管理（本机共享）。
  *
  * 共享语义（TASK-MEMORY-002）：Codex（桌面/Web）、豆包（Agent 环境）、
- * WorkBuddy 读写同一份共享文件 ~/.kk-memory/memory.json；仅存本地、绝不上云；
+ * 共享文件契约位于 ~/.kk-memory/memory.json；豆包和 WorkBuddy 的原生客户端
+ * 尚未接入该契约，不能仅凭已登录状态宣称已共享。
  * 换账号/换人时用户手动清空。
  */
 import { useMemory } from "../../features/memory/useMemory.ts";
 import { MEMORY_CONTENT_MAX_LENGTH } from "../../features/memory/types.ts";
+import { isTauri } from "@tauri-apps/api/core";
 
 const TYPE_LABELS: Record<string, string> = {
   user_profile: "用户画像",
@@ -43,6 +45,7 @@ export default function MemorySettingsSection({
     store,
     mode,
     storageStatus,
+    loadError,
     loading,
     extracting,
     busy,
@@ -53,23 +56,25 @@ export default function MemorySettingsSection({
     resetIdentity,
     authorizeSharedDirectory,
     extractWithCodex,
+    refresh,
   } = useMemory(onFeedback);
 
   const records = store?.records ?? [];
 
   return (
-    <div className="settings-detail-stack">
+    <div className="settings-detail-stack settings-memory-section">
       <h3 className="settings-detail-label">记忆服务</h3>
       <div className="settings-network-row">
         <div>
           <h3>自动学习偏好与习惯</h3>
           <p>
             开启后，对话会自动学习你的稳定偏好（如"以后请用日系插画风格"），
-            并在后续对话中供 Codex、豆包、WorkBuddy 参考。
+            并在后续 KK Studio 的 Codex 对话中参考。豆包和 WorkBuddy
+            的接入仍在进行中。
           </p>
           <p className="settings-network-activity">
-            隐私：记忆仅存本机共享文件（~/.kk-memory/memory.json），本机各产品共享同一份，
-            绝不上传云端，也不进入同步、日志或导出包。
+            隐私：完整记忆文件仅存本机，不进入同步、日志或导出包。
+            开启后，相关记忆片段会随当前请求发送给所选模型用于回答。
           </p>
         </div>
         <button
@@ -93,7 +98,9 @@ export default function MemorySettingsSection({
               <strong>
                 {mode === "shared"
                   ? "本机共享文件"
-                  : "仅本应用（浏览器未授权）"}
+                  : mode === "locked"
+                    ? "共享目录需重新授权"
+                    : "仅本应用（浏览器未授权）"}
               </strong>
             </div>
             <div>
@@ -105,19 +112,21 @@ export default function MemorySettingsSection({
             <div>
               <h3>共享目录授权</h3>
               <p>
-                {storageStatus}。桌面端自动读写共享文件；浏览器端需授权一次
-                （选择 ~/.kk-memory 目录）即可与 Codex/WorkBuddy
-                共享同一份记忆。
+                {storageStatus}。桌面端使用
+                ~/.kk-memory；浏览器端需选择本机同一目录。
+                其他应用只有完成该契约接入后才能读取，不会因登录而自动共享。
               </p>
             </div>
-            <button
-              type="button"
-              className="settings-action secondary"
-              disabled={busy}
-              onClick={() => void authorizeSharedDirectory()}
-            >
-              授权共享目录
-            </button>
+            {!isTauri() && (
+              <button
+                type="button"
+                className="settings-action secondary"
+                disabled={busy}
+                onClick={() => void authorizeSharedDirectory()}
+              >
+                授权共享目录
+              </button>
+            )}
           </div>
 
           <h3 className="settings-detail-label">手动提炼</h3>
@@ -148,6 +157,18 @@ export default function MemorySettingsSection({
               <strong>读取中…</strong>
               <p>正在读取本地记忆。</p>
             </div>
+          ) : loadError ? (
+            <div className="settings-empty-state" role="alert">
+              <strong>{loadError}</strong>
+              <p>请检查共享目录授权或文件格式；当前未覆盖原数据。</p>
+              <button
+                type="button"
+                className="settings-action secondary"
+                onClick={() => void refresh()}
+              >
+                重新读取
+              </button>
+            </div>
           ) : records.length === 0 ? (
             <div className="settings-empty-state">
               <strong>暂无记忆</strong>
@@ -175,7 +196,10 @@ export default function MemorySettingsSection({
                       className="settings-memory-delete"
                       aria-label={`删除记忆：${record.content.slice(0, 20)}`}
                       disabled={busy}
-                      onClick={() => void removeRecord(record.id)}
+                      onClick={() => {
+                        if (window.confirm("确认删除这条记忆？"))
+                          void removeRecord(record.id);
+                      }}
                     >
                       删除
                     </button>
@@ -187,7 +211,14 @@ export default function MemorySettingsSection({
                   type="button"
                   className="settings-action secondary"
                   disabled={busy}
-                  onClick={() => void clearAll()}
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "确认清空全部记忆？此操作会影响已接入共享文件的客户端。",
+                      )
+                    )
+                      void clearAll();
+                  }}
                 >
                   清空全部记忆
                 </button>
@@ -195,7 +226,14 @@ export default function MemorySettingsSection({
                   type="button"
                   className="settings-action secondary"
                   disabled={busy}
-                  onClick={() => void resetIdentity()}
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "确认重置当前记忆？桌面端会保留旧文件备份，网页端暂不提供文件级备份。",
+                      )
+                    )
+                      void resetIdentity();
+                  }}
                 >
                   重置共享文件
                 </button>

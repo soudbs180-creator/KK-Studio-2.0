@@ -9,6 +9,7 @@
 import {
   extractMemoryCandidates,
   fingerprintFor,
+  containsSensitiveCredential,
   type MessageRole,
 } from "./extractor.ts";
 import { formatInjectionBlock, selectMemoryRecords } from "./injector.ts";
@@ -61,6 +62,7 @@ export class MemoryService {
   private readonly storage: MemoryStorage;
   private readonly settingsStorage: SettingsStorage;
   private readonly now: () => Date;
+  private mutationTail: Promise<void> = Promise.resolve();
 
   constructor(options: MemoryServiceOptions) {
     this.storage = options.storage;
@@ -77,13 +79,23 @@ export class MemoryService {
     this.settingsStorage.write({ enabled });
   }
 
+  private enqueueMutation<T>(operation: () => Promise<T>): Promise<T> {
+    const result = this.mutationTail.then(operation);
+    this.mutationTail = result.then(
+      () => undefined,
+      () => undefined,
+    );
+    return result;
+  }
+
   async load(): Promise<MemoryStoreFile> {
+    await this.mutationTail;
     return this.storage.read();
   }
 
   /** 当前存储模式与共享授权状态（供 UI 展示）。 */
-  async storageMode(): Promise<"shared" | "isolated"> {
-    return this.storage.mode;
+  async storageMode(): Promise<"shared" | "isolated" | "locked"> {
+    return this.storage.mode();
   }
 
   async storageStatus(): Promise<string> {
@@ -108,45 +120,46 @@ export class MemoryService {
       return;
     }
     try {
-      const candidates = extractMemoryCandidates(message, role);
-      if (candidates.length === 0) {
-        return;
-      }
-      const store = await this.load();
-      const timestamp = this.now().toISOString();
-      const existing = new Set(
-        store.records.map((record) => record.fingerprint),
-      );
-      const additions: MemoryRecord[] = [];
-      for (const candidate of candidates) {
-        if (additions.length + store.records.length >= MEMORY_RECORDS_MAX) {
-          break;
+      await this.enqueueMutation(async () => {
+        if (!this.isEnabled()) return;
+        const candidates = extractMemoryCandidates(message, role);
+        if (candidates.length === 0) return;
+        const store = await this.storage.read();
+        const timestamp = this.now().toISOString();
+        const existing = new Set(
+          store.records.map((record) => record.fingerprint),
+        );
+        const additions: MemoryRecord[] = [];
+        for (const candidate of candidates) {
+          if (additions.length + store.records.length >= MEMORY_RECORDS_MAX) {
+            break;
+          }
+          const fingerprint = await fingerprintFor(candidate.content);
+          if (existing.has(fingerprint)) {
+            continue;
+          }
+          const record: MemoryRecord = {
+            id: crypto.randomUUID(),
+            content: candidate.content,
+            memoryType: candidate.memoryType,
+            confidence: candidate.confidence,
+            fingerprint,
+            source: "auto_rule",
+            sourceThreadId,
+            createdAt: timestamp,
+            updatedAt: timestamp,
+            active: true,
+          };
+          additions.push(record);
+          existing.add(fingerprint);
         }
-        const fingerprint = await fingerprintFor(candidate.content);
-        if (existing.has(fingerprint)) {
-          continue;
+        if (additions.length === 0) {
+          return;
         }
-        const record: MemoryRecord = {
-          id: crypto.randomUUID(),
-          content: candidate.content,
-          memoryType: candidate.memoryType,
-          confidence: candidate.confidence,
-          fingerprint,
-          source: "auto_rule",
-          sourceThreadId,
-          createdAt: timestamp,
-          updatedAt: timestamp,
-          active: true,
-        };
-        additions.push(record);
-        existing.add(fingerprint);
-      }
-      if (additions.length === 0) {
-        return;
-      }
-      await this.storage.write({
-        ...store,
-        records: [...store.records, ...additions],
+        await this.storage.write({
+          ...store,
+          records: [...store.records, ...additions],
+        });
       });
     } catch {
       // 静默：记忆采集失败不影响对话。
@@ -186,71 +199,83 @@ export class MemoryService {
     const candidates: Array<{ content: string; confidence: number }> = [];
     for (const line of reply.split("\n")) {
       const match = /^记忆[:：]\s*(.+)$/.exec(line.trim());
-      if (match && match[1].trim().length >= 4) {
+      if (
+        match &&
+        match[1].trim().length >= 4 &&
+        !containsSensitiveCredential(match[1])
+      ) {
         candidates.push({ content: match[1].trim(), confidence: 0.85 });
       }
     }
     if (candidates.length === 0) {
       return 0;
     }
-    const store = await this.load();
-    const timestamp = this.now().toISOString();
-    const existing = new Set(store.records.map((record) => record.fingerprint));
-    const additions: MemoryRecord[] = [];
-    for (const candidate of candidates) {
-      if (additions.length + store.records.length >= MEMORY_RECORDS_MAX) {
-        break;
+    return this.enqueueMutation(async () => {
+      const store = await this.storage.read();
+      const timestamp = this.now().toISOString();
+      const existing = new Set(
+        store.records.map((record) => record.fingerprint),
+      );
+      const additions: MemoryRecord[] = [];
+      for (const candidate of candidates) {
+        if (additions.length + store.records.length >= MEMORY_RECORDS_MAX) {
+          break;
+        }
+        const fingerprint = await fingerprintFor(candidate.content);
+        if (existing.has(fingerprint)) {
+          continue;
+        }
+        additions.push({
+          id: crypto.randomUUID(),
+          content: candidate.content,
+          memoryType: inferTypeFromText(candidate.content),
+          confidence: candidate.confidence,
+          fingerprint,
+          source: "manual_codex",
+          sourceThreadId,
+          createdAt: timestamp,
+          updatedAt: timestamp,
+          active: true,
+        });
+        existing.add(fingerprint);
       }
-      const fingerprint = await fingerprintFor(candidate.content);
-      if (existing.has(fingerprint)) {
-        continue;
+      if (additions.length === 0) {
+        return 0;
       }
-      additions.push({
-        id: crypto.randomUUID(),
-        content: candidate.content,
-        memoryType: inferTypeFromText(candidate.content),
-        confidence: candidate.confidence,
-        fingerprint,
-        source: "manual_codex",
-        sourceThreadId,
-        createdAt: timestamp,
-        updatedAt: timestamp,
-        active: true,
+      await this.storage.write({
+        ...store,
+        records: [...store.records, ...additions],
       });
-      existing.add(fingerprint);
-    }
-    if (additions.length === 0) {
-      return 0;
-    }
-    await this.storage.write({
-      ...store,
-      records: [...store.records, ...additions],
+      return additions.length;
     });
-    return additions.length;
   }
 
   /** 删除单条记忆。 */
   async deleteRecord(id: string): Promise<MemoryStoreFile> {
-    const store = await this.load();
-    const next = {
-      ...store,
-      records: store.records.filter((record) => record.id !== id),
-    };
-    await this.storage.write(next);
-    return next;
+    return this.enqueueMutation(async () => {
+      const store = await this.storage.read();
+      const next = {
+        ...store,
+        records: store.records.filter((record) => record.id !== id),
+      };
+      await this.storage.write(next);
+      return next;
+    });
   }
 
   /** 清空本机共享记忆的全部条目（保留文件结构）。 */
   async clearAll(): Promise<MemoryStoreFile> {
-    const store = await this.load();
-    const next = { ...store, records: [] };
-    await this.storage.write(next);
-    return next;
+    return this.enqueueMutation(async () => {
+      const store = await this.storage.read();
+      const next = { ...store, records: [] };
+      await this.storage.write(next);
+      return next;
+    });
   }
 
   /** 重置共享记忆文件：重建空文件；旧文件由存储层保留（.previous-*.json）。 */
   async resetIdentity(): Promise<MemoryStoreFile> {
-    return this.storage.resetIdentity();
+    return this.enqueueMutation(() => this.storage.resetIdentity());
   }
 }
 

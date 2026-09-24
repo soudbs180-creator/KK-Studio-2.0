@@ -5,8 +5,8 @@
  * - 记忆是本机共享的：Codex（KK Studio 桌面/Web）、豆包（Agent 环境）、
  *   WorkBuddy 等本机产品读写同一份共享文件 `~/.kk-memory/memory.json`；
  * - 不再按"记忆身份键"（namespace）隔离；换账号/换人时用户手动清空；
- * - 隐私硬约束不变：记忆仅存本地，绝不进入 WebDAV 同步、localStorage、
- *   日志或导出包（与密钥/账号同级的本地私有数据）。
+ * - 记忆文件仅存本地，不进入 WebDAV 同步、localStorage、日志或导出包；
+ *   用户开启记忆后，选中的相关片段会发送给当前模型用于本轮推理。
  */
 
 export type MemoryType =

@@ -836,7 +836,7 @@
     "area": "platform",
     "status": "PARTIAL",
     "card": "docs/features/feat-020-memory.md",
-    "summary": "本地长期记忆（用户级，本机共享）：规则采集+手动Codex提炼，共享文件 ~/.kk-memory/memory.json（Web 授权目录/Desktop Tauri 命令），对话前注入[长期记忆]块；Codex/豆包/WorkBuddy 共享同一份，仅存本地不上云；换账号手动清空/重置。",
+    "summary": "本地长期记忆（用户级）：KK Studio 的 Codex 对话支持用户原话规则采集、手动提炼和相关记忆注入；Desktop 使用 ~/.kk-memory/memory.json，Web 授权后可选择同一目录。豆包和 WorkBuddy 原生客户端尚未接入；完整文件仅存本机，开启后相关片段随请求发送给模型。",
     "entryPoints": [
       "设置 › 连接 › 记忆"
     ],
