@@ -90,6 +90,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-010 | 现行 UI 规则与真实操作回归 | IN_PROGRESS | TASK-UI-008, TASK-AGENT-003 | root |
 | TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | TODO | TASK-UI-010 | unallocated |
 | TASK-PROV-003 | Codex Provider 配置注入与 model catalog 落盘（agent 侧接线） | IN_PROGRESS | TASK-PROV-002 | root |
+| TASK-PROV-004 | Claude Code settings.json 落盘（agent 侧接线） | REVIEW | TASK-PROV-002, TASK-PROV-003 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -1102,3 +1103,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — 从已合并的 TASK-PROV-002 承接到当前 main；旧分支的测试与落盘证据属于历史快照，Codex Responses 契约修正、当前主线回归和独立复审进行中。
 - Evidence: [docs/changes/2026-09-24-provider-wiring/intent.md](../../docs/changes/2026-09-24-provider-wiring/intent.md), [docs/changes/2026-09-24-provider-wiring/spec.md](../../docs/changes/2026-09-24-provider-wiring/spec.md), [docs/changes/2026-09-24-provider-wiring/plan.md](../../docs/changes/2026-09-24-provider-wiring/plan.md), [docs/changes/2026-09-24-provider-wiring/verification.md](../../docs/changes/2026-09-24-provider-wiring/verification.md), [docs/changes/2026-09-24-provider-wiring/remaining.md](../../docs/changes/2026-09-24-provider-wiring/remaining.md), [docs/changes/2026-09-24-provider-wiring/review.md](../../docs/changes/2026-09-24-provider-wiring/review.md)
 - Updated: 2026-09-27
+
+## TASK-PROV-004 — Claude Code settings.json 落盘（agent 侧接线）
+
+- Goal: 把 Provider 渲染产物落进 Claude Code 配置：settings.json 保守合并（只写 env.ANTHROPIC_BASE_URL 与顶层 model，用户设置逐字段保留、幂等）、providers apply-claude CLI；密钥不落盘（认证走宿主 env 注入或交互登录）
+- Scope: vendor/canvas-agent/src/agent/claude-provider-config.ts、provider-cli.ts apply-claude、package.json 测试清单、docs/changes/2026-09-24-claude-landing
+- Acceptance: 空文件/含用户设置/含受管键三类合并可预期且幂等; 非法 JSON 输入抛错不覆盖用户文件; 输出绝不含密钥形态文本，写盘权限 0600/0700; providers apply-claude 在本机真实目录可跑通; test:agent 与根门禁全绿
+- Branch: `feat/TASK-PROV-004-claude-landing`
+- Worktree: `D:/kk-studio/.worktrees/TASK-PROV-004-claude-landing`
+- Modules: vendor/canvas-agent/src/agent, vendor/canvas-agent/package.json, docs/changes, docs/governance, docs/features
+- Verification: NOT_VERIFIED — agent 套件 150/150（含 BOM 容忍/幂等/保留用户设置）；根门禁全绿（394 单测、lint 64-0/30-0/82-0、ui 159-0、format）；真实 CLAUDE_CONFIG_DIR apply/dry-run/幂等验证通过；BOM 两处缺口已修复；test:ui 与独立 review 待后续
+- Evidence: [docs/changes/2026-09-24-claude-landing/intent.md](../../docs/changes/2026-09-24-claude-landing/intent.md), [docs/changes/2026-09-24-claude-landing/spec.md](../../docs/changes/2026-09-24-claude-landing/spec.md), [docs/changes/2026-09-24-claude-landing/plan.md](../../docs/changes/2026-09-24-claude-landing/plan.md), [docs/changes/2026-09-24-claude-landing/verification.md](../../docs/changes/2026-09-24-claude-landing/verification.md), [docs/changes/2026-09-24-claude-landing/remaining.md](../../docs/changes/2026-09-24-claude-landing/remaining.md), [docs/changes/2026-09-24-claude-landing/review.md](../../docs/changes/2026-09-24-claude-landing/review.md)
+- Updated: 2026-09-24

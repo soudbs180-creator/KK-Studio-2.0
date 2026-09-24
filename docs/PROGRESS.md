@@ -1,6 +1,14 @@
 # 当前进度
 
 ## 2026-09-29 Kaworkai 无限画布研究与本地增强（TASK-CANVAS-KAWORKAI-001，PARTIAL）
+## 2026-09-24 Claude Code settings.json 落盘（TASK-PROV-004，REVIEW，待推送）
+
+接续 003，把 Provider 渲染产物落进 Claude Code：agent 侧新增 `claude-provider-config.ts`——`~/.claude/settings.json` 保守 JSON 合并（只写受管键 `env.ANTHROPIC_BASE_URL` 与顶层 `model`，permissions/hooks/其余 env 逐字段保留、幂等、非法 JSON 不覆盖、baseUrl 内嵌 userinfo 拒绝）、原子写盘 0600、密钥永不落盘（认证走宿主 env 注入 → claude.ts 子进程继承）；`providers apply-claude <json> [--config-dir <dir>] [--dry-run]` CLI。
+
+验证：test:agent 150/150（测试抓出并修复 2 处 Windows UTF-8 BOM 缺口：CLI 读配置、既有 settings.json 入口；另隔离单测目录避免与真实验证目录冲突）；真实 CLAUDE_CONFIG_DIR 验证通过——dry-run/apply、slug 剥离（`deepseek-v4-pro[1M]`→`deepseek-v4-pro`）、用户设置保留、真实文件幂等（哈希一致）；根门禁全绿（typecheck / lint 64-0、30-0、82-0 / 394 单测 / ui 159-0 / format）。HTTP 端点与宿主 env 注入仍依赖 TASK-AGENT-006 合入后接线（remaining）；Claude Code 真实消费对拍待装有该 CLI 的机器。详见 [验证](changes/2026-09-24-claude-landing/verification.md) 与 [遗留清单](changes/2026-09-24-claude-landing/remaining.md)。
+
+
+## 2026-09-24 Codex Provider 配置注入与 catalog 落盘（TASK-PROV-003，REVIEW，待推送）
 
 完成参考页只读审计与实现映射，未触发生成、上传、购买或积分消耗。KK 本地画布已接入会话快照历史、Ctrl/Cmd 撤销重做、动态右键菜单、持久化 16px 网格吸附和轻量图层搜索/定位面板，保持现有工具条与导航外框。11 项定向 Node 单测、TypeScript、Vite build、新增 2 项 Playwright 通过；既有空白新项目 fixture 使部分依赖默认节点的旧画布回归仍未通过，详见 `docs/changes/2026-09-29-kaworkai-canvas/verification.md`。
 
