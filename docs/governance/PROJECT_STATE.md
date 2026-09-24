@@ -4,7 +4,7 @@
 
 - `feat/TASK-MEMORY-001-local-memory` 已推送但仍未合入 main。FEAT-020 保持 PARTIAL，TASK-MEMORY-001/002 退回 PARTIAL / NOT_VERIFIED；下节旧验证仅代表当时自动化结果。
 - 本轮复核发现并修补：Web 的记忆对象仓库与创作库共用 IndexedDB v1 导致共享句柄仓库无法创建，改为独立 `kk-studio-memory`；损坏记录不再静默归零；Desktop 首写会创建目录，重置备份失败不会覆盖原件；只从用户原话自动采集，常见凭据句子排除。
-- 独立评审再发现多窗口覆盖、手动提炼取错 turn、损坏读取循环、旧候选 Web 数据未迁移，以及 Desktop/Web 写锁互不协调；当前分支增加 Desktop 文件锁、私有 IndexedDB 事务比较与重试，Web 授权共享文件收紧为只读，Codex 提炼绑定本次 `clientMessageId`。Desktop 重置改为先复制备份再写入。`npm run verify` 为 415 Node / 309 browser，Rust 91/91；新 SHA 的独立复审待完成。
+- 独立评审再发现多窗口覆盖、手动提炼取错 turn、损坏读取循环、旧候选 Web 数据未迁移，以及 Desktop/Web 写锁互不协调；当前分支增加 Desktop 文件锁、私有 IndexedDB 事务比较与重试，Web 授权共享文件收紧为只读，Codex 提炼绑定本次 `clientMessageId`。Desktop 重置改为先复制备份再写入。`npm run verify` 为 415 Node / 309 browser，Rust 91/91；独立只读复核绑定 `8c31846`，未发现新的确定性代码阻断项。真实运行门禁仍开放。
 - 当前自动记忆注入仅接在 KK Studio 的 Codex 对话路径。豆包、WorkBuddy 原生客户端和 Codex 独立桌面应用未接入共享文件；登录状态不等于已打通。完整文件不参与云同步，但开启记忆后，相关片段会发送给所选模型用于本轮推理。
 - Web 系统目录授权、真实 Codex 会话引用、Desktop 打包运行态、跨应用记忆读写仍待真实联调。已做的代码和测试不能代替这些验收。
 

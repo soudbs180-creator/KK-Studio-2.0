@@ -2,7 +2,7 @@
 
 ## 2026-09-24 当前恢复入口：本地记忆复核
 
-- 当前分支 `feat/TASK-MEMORY-001-local-memory` 位于 `D:/kk-studio/.worktrees/TASK-MEMORY-001`；`ce4bc98` 后的第二轮独立评审修补待提交与新 SHA 复审。main 保持 `76339c9`。先检查 `git status` 和本节，再看下方历史快照。
+- 当前分支 `feat/TASK-MEMORY-001-local-memory` 位于 `D:/kk-studio/.worktrees/TASK-MEMORY-001`；代码 SHA `8c31846` 已推送并获独立只读复核（无新确定性代码阻断），本段文档随后补记。main 保持 `76339c9`。先检查 `git status` 和本节，再看下方历史快照。
 - FEAT-020 与 TASK-MEMORY-001/002 均未达到真实跨应用验收；账本改为 PARTIAL / NOT_VERIFIED。当前自动采集/注入只在 KK Studio 的 Codex 对话中实现，豆包和 WorkBuddy 原生客户端尚未接入。Web FSA 真实授权、Desktop 打包运行态、真实模型引用仍待验证。
 - 本轮修补与证据见 `docs/superpowers/plans/2026-09-24-memory-closure.md`、`docs/changes/2026-09-24-local-memory/verification.md` 的勘误。当前 `npm run verify` 为 415 Node、309 browser，Rust 91/91。Desktop 与 Web 写锁不能互斥，Web 授权共享目录已改只读；手动提炼绑定本次 `clientMessageId`，Desktop 重置写入失败时保留 live 文件。真实 FSA 授权仍待验收。完整记忆文件仅存本机，选中的相关片段会随当前请求发送给模型推理。
 
