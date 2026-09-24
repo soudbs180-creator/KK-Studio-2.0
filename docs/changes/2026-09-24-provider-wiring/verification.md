@@ -1,7 +1,7 @@
 # TASK-PROV-003 verification — Codex Provider 配置注入与 model catalog 落盘
 
 - 日期：2026-09-24
-- 分支：feat/TASK-PROV-003-provider-wiring（堆叠于 42c3f26）
+- 分支：feat/TASK-PROV-003-provider-wiring（堆叠于 42c3f26）；head 9b630d1a8706fb39dbbd0269091caf2b80a6b8ba（已推送 origin/feat/TASK-PROV-003-provider-wiring）
 - 结论：本地全绿；浏览器 test:ui 与独立上下文 review 待推送后 CI/后续完成（与 TASK-PROV-002 相同边界）
 
 ## 单测（agent 套件 `npm run test:agent`）
