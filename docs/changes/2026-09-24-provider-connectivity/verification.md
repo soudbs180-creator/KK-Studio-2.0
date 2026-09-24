@@ -5,7 +5,7 @@
 - 执行时间与时区：2026-09-24 JST
 - Intent / Spec / Plan / AC：docs/changes/2026-09-24-provider-connectivity/{intent,spec,plan}.md
 - cwd / branch：D:/kk-studio/.worktrees/TASK-PROV-002-provider-connectivity / feat/TASK-PROV-002-provider-connectivity
-- 被验证 base SHA / head SHA / tree SHA：base origin/main 76339c9；head 见 Git 提交回读（本文件初版先于提交，SHA 在提交后回填）
+- 被验证 base SHA / head SHA / tree SHA：base origin/main 76339c9；head 17a821f5fa57b9e0be17fecb44431827876cb4be（本分支首个提交，已推送 origin/feat/TASK-PROV-002-provider-connectivity）
 - dirty 状态及 patch/文件指纹（有未提交内容时）：无（独立 worktree，主 checkout 的 TASK-AGENT-006 未提交改动与本任务无交集）
 - Node/npm/Rust/浏览器/OS/工具版本：Node v22.23.2（仓库 engines 要求 >=24，本环境低于要求，type stripping 默认可用）、npm 10.9.8、Windows；未运行 Rust（无 Rust 改动）
 - 规则版本或 commit：AGENTS.md/AI_RULES.md（main@76339c9）

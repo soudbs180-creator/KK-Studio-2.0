@@ -4,7 +4,7 @@
 - 时间与时区：2026-09-24 JST
 - Reviewer/context/工具或模型（已知时）：待独立上下文审阅（本记录由实现会话起草，不冒充独立审阅）
 - 独立于实现上下文：否；说明方式：同一会话实现并自检，独立 review 需在推送后由独立上下文执行
-- Base SHA / head SHA / 规则版本：base origin/main 76339c9；head 提交后回填；AGENTS.md/AI_RULES.md@76339c9
+- Base SHA / head SHA / 规则版本：base origin/main 76339c9；head 17a821f5fa57b9e0be17fecb44431827876cb4be；AGENTS.md/AI_RULES.md@76339c9
 - PR / branch / worktree：feat/TASK-PROV-002-provider-connectivity / D:/kk-studio/.worktrees/TASK-PROV-002-provider-connectivity
 - Intent / Spec / Plan / Verification：docs/changes/2026-09-24-provider-connectivity/{intent,spec,plan,verification}.md
 
