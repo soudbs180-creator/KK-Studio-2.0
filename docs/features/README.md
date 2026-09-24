@@ -13,7 +13,7 @@
 | PROTOTYPE | 只有 UI、本地 fixture 或固定演示素材，无真实后端；界面必须显式标注 Prototype |
 | PLANNED | 只有计划/设计，无实现或无 UI |
 
-当前共 **29** 个功能：REAL（真实可用）2、PARTIAL（部分可用）20、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）2。
+当前共 **30** 个功能：REAL（真实可用）2、PARTIAL（部分可用）21、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）2。
 
 ## 如何新增一个功能（任何 AI 照此执行）
 
@@ -50,6 +50,7 @@
 | FEAT-011 | 本地技能 Skills | PARTIAL（部分可用） | [卡片](feat-011-skills.md) | TASK-CAP-001, TASK-DS-002 |
 | FEAT-012 | MCP 客户端 | PARTIAL（部分可用） | [卡片](feat-012-mcp.md) | TASK-CAP-001, BACKEND-MCP-AUTO, TASK-AGENT-001, TASK-AGENT-003 |
 | FEAT-013 | 连接器目录 | PARTIAL（部分可用） | [卡片](feat-013-connectors.md) | TASK-CAP-001, TASK-MINIMAX-001, TASK-UI-005, PLUGIN-DESKTOP-001 |
+| FEAT-030 | 多供应商接入与多目标配置 | PARTIAL（部分可用） | [卡片](feat-030-provider-connectivity.md) | TASK-PROV-002 |
 
 ## 平台服务
 
