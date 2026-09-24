@@ -133,6 +133,7 @@ struct AppState {
     config: Mutex<AppConfig>,
     config_path: PathBuf,
     conversations_path: PathBuf,
+    memory_path: PathBuf,
     creation: Arc<creation_storage::SnapshotRepository>,
     assets: Arc<asset_storage::AssetRepository>,
     task_host: Arc<task_host::TaskHost>,
@@ -702,6 +703,116 @@ fn delete_conversation(state: State<AppState>, id: String) -> Result<bool, Strin
     Ok(true)
 }
 
+// ========== 记忆管理命令（本地长期记忆，仅存本地） ==========
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+struct MemoryRecord {
+    id: String,
+    namespace: String,
+    content: String,
+    #[serde(rename = "memoryType")]
+    memory_type: String,
+    confidence: f32,
+    fingerprint: String,
+    source: String,
+    #[serde(rename = "sourceThreadId", skip_serializing_if = "Option::is_none")]
+    source_thread_id: Option<String>,
+    #[serde(rename = "createdAt")]
+    created_at: String,
+    #[serde(rename = "updatedAt")]
+    updated_at: String,
+    #[serde(rename = "lastUsedAt", skip_serializing_if = "Option::is_none")]
+    last_used_at: Option<String>,
+    active: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+struct MemoryStore {
+    version: u32,
+    namespace: String,
+    records: Vec<MemoryRecord>,
+}
+
+const MEMORY_STORE_VERSION: u32 = 1;
+
+fn read_memory_file(path: &Path) -> Result<MemoryStore, String> {
+    if !path.exists() {
+        return Ok(MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: Vec::new(),
+        });
+    }
+    let content =
+        fs::read_to_string(path).map_err(|error| format!("无法读取记忆文件：{error}"))?;
+    let store: MemoryStore = serde_json::from_str(&content)
+        .map_err(|error| format!("记忆文件格式无效，未覆盖原文件：{error}"))?;
+    if store.version != MEMORY_STORE_VERSION {
+        return Err(format!(
+            "记忆文件版本不支持（{}/{}），已保留原文件",
+            store.version, MEMORY_STORE_VERSION
+        ));
+    }
+    Ok(store)
+}
+
+fn write_memory_file(path: &Path, store: &MemoryStore) -> Result<(), String> {
+    let json = serde_json::to_string_pretty(store).map_err(|e| e.to_string())?;
+    let parent = path
+        .parent()
+        .ok_or_else(|| "记忆文件路径无效".to_string())?;
+    let nonce = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock")
+        .as_nanos();
+    let temp = parent.join(format!(
+        ".memory-{}-{nonce}.tmp",
+        std::process::id()
+    ));
+    fs::write(&temp, json).map_err(|e| format!("无法写入记忆文件：{e}"))?;
+    fs::rename(&temp, path).map_err(|e| {
+        let _ = fs::remove_file(&temp);
+        format!("无法提交记忆文件：{e}")
+    })
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn memory_read(state: State<AppState>) -> Result<MemoryStore, String> {
+    read_memory_file(&state.memory_path)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn memory_write(state: State<AppState>, store: MemoryStore) -> Result<MemoryStore, String> {
+    if store.version != MEMORY_STORE_VERSION {
+        return Err(format!("不支持写入的记忆版本：{}", store.version));
+    }
+    if store.records.len() > 10_000 {
+        return Err("记忆条目超过上限（10000）".to_string());
+    }
+    write_memory_file(&state.memory_path, &store)?;
+    Ok(store)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn memory_reset_identity(state: State<AppState>) -> Result<MemoryStore, String> {
+    let path = &state.memory_path;
+    if path.exists() {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock")
+            .as_secs();
+        let previous = path.with_extension(format!("previous-{nonce}.json"));
+        let _ = fs::rename(path, &previous);
+    }
+    let store = MemoryStore {
+        version: MEMORY_STORE_VERSION,
+        namespace: String::new(),
+        records: Vec::new(),
+    };
+    write_memory_file(path, &store)?;
+    Ok(store)
+}
+
 // ========== 非流式聊天（保留作为后备） ==========
 
 #[tauri::command]
@@ -1018,6 +1129,96 @@ mod conversation_tests {
     }
 }
 
+#[cfg(test)]
+mod memory_tests {
+    use super::*;
+
+    fn temp_memory_path(label: &str) -> PathBuf {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock")
+            .as_nanos();
+        let dir = std::env::temp_dir().join(format!(
+            "kk-studio-memory-{label}-{}-{nonce}",
+            std::process::id()
+        ));
+        fs::create_dir_all(&dir).expect("create memory test dir");
+        dir.join("memory.json")
+    }
+
+    fn sample_record() -> MemoryRecord {
+        MemoryRecord {
+            id: "r1".to_string(),
+            namespace: "ns-test".to_string(),
+            content: "用户偏好日系插画风格".to_string(),
+            memory_type: "user_preference".to_string(),
+            confidence: 0.8,
+            fingerprint: "fp-1".to_string(),
+            source: "auto_rule".to_string(),
+            source_thread_id: None,
+            created_at: "2026-09-24T00:00:00.000Z".to_string(),
+            updated_at: "2026-09-24T00:00:00.000Z".to_string(),
+            last_used_at: None,
+            active: true,
+        }
+    }
+
+    #[test]
+    fn missing_memory_file_reads_as_empty_store() {
+        let path = temp_memory_path("missing");
+        let store = read_memory_file(&path).expect("missing file is empty store");
+        assert_eq!(store.version, MEMORY_STORE_VERSION);
+        assert!(store.records.is_empty());
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn malformed_memory_file_is_rejected_without_overwrite() {
+        let path = temp_memory_path("corrupt");
+        let raw = b"not-json";
+        fs::write(&path, raw).expect("write fixture");
+        let error = read_memory_file(&path).expect_err("corrupt file must be rejected");
+        assert!(error.contains("未覆盖原文件"));
+        assert_eq!(fs::read(&path).expect("read fixture"), raw);
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn unsupported_memory_version_is_rejected_without_overwrite() {
+        let path = temp_memory_path("version");
+        let raw = br#"{"version":99,"namespace":"ns","records":[]}"#;
+        fs::write(&path, raw).expect("write fixture");
+        let error = read_memory_file(&path).expect_err("unsupported version must be rejected");
+        assert!(error.contains("版本不支持"));
+        assert_eq!(fs::read(&path).expect("read fixture"), raw);
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn write_memory_file_roundtrips_and_leaves_no_temp() {
+        let path = temp_memory_path("roundtrip");
+        let store = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: "ns-test".to_string(),
+            records: vec![sample_record()],
+        };
+        write_memory_file(&path, &store).expect("write memory");
+        let loaded = read_memory_file(&path).expect("read memory");
+        assert_eq!(loaded.namespace, "ns-test");
+        assert_eq!(loaded.records.len(), 1);
+        assert_eq!(loaded.records[0].content, "用户偏好日系插画风格");
+        let dir = path.parent().expect("dir");
+        let leftovers: Vec<_> = fs::read_dir(dir)
+            .expect("read dir")
+            .filter_map(|entry| entry.ok())
+            .map(|entry| entry.file_name().to_string_lossy().into_owned())
+            .filter(|name| name.contains(".tmp"))
+            .collect();
+        assert!(leftovers.is_empty(), "temp files left: {leftovers:?}");
+        let _ = fs::remove_file(&path);
+    }
+}
+
 #[tauri::command]
 fn comfyui_scan_directory(root: String) -> Result<ComfyUIScanResult, String> {
     let trimmed = root.trim();
@@ -1069,6 +1270,7 @@ fn main() {
     let paths = storage_paths::AppPaths::initialize().expect("KK Studio 无法初始化用户数据目录");
     let config_path = paths.config;
     let conversations_path = paths.conversations;
+    let memory_path = paths.memory;
     let task_host = Arc::new(
         task_host::TaskHost::new(
             paths.tasks.join("native-host"),
@@ -1105,6 +1307,7 @@ fn main() {
             config: Mutex::new(config),
             config_path,
             conversations_path,
+            memory_path,
             creation: Arc::new(creation_storage::SnapshotRepository::new(paths.creation)),
             assets: Arc::new(asset_storage::AssetRepository::new(paths.assets)),
             task_host,
@@ -1133,6 +1336,9 @@ fn main() {
             list_conversations,
             save_conversation,
             delete_conversation,
+            memory_read,
+            memory_write,
+            memory_reset_identity,
             chat_completion,
             chat_completion_stream,
             comfyui_check_connection,

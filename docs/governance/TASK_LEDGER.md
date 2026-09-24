@@ -67,6 +67,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
+| TASK-MEMORY-001 | 本地长期记忆服务接入对话 | DONE | none | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -803,3 +804,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — 2026-09-23 扫描 365 个已跟踪 Markdown，历史范围共 37 处文件目标问题；原始日志来源和可恢复性待核对。
 - Evidence: [docs/governance/MARKDOWN_AUDIT.md](../../docs/governance/MARKDOWN_AUDIT.md)
 - Updated: 2026-09-23
+
+## TASK-MEMORY-001 — 本地长期记忆服务接入对话
+
+- Goal: 把 ai_group_chat 的本地长期记忆能力接入 KK Codex 对话：规则采集+手动Codex提炼、本地存储、对话前注入、设置页管理；账号隔离且不上云
+- Scope: src/features/memory, src/features/agent/agentConnection.ts, src/components/settings, src-tauri storage_paths/main, docs/features feat-020, docs/changes/2026-09-24-local-memory
+- Acceptance: 记忆仅本地存储（IndexedDB/memory.json）且按身份键隔离; 偏好消息规则采集并入库，后续对话注入[长期记忆]块; 设置页可开关/查看/删除/清空/手动提炼; 记忆不进WebDAV同步、localStorage、日志、导出包
+- Branch: `feat/TASK-MEMORY-001-local-memory`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MEMORY-001`
+- Modules: src/features/memory, src/features/agent/agentConnection.ts, src/components/settings/ConnectionSettings.tsx, src-tauri/src/storage_paths.rs, src-tauri/src/main.rs, docs/features/feat-020-memory.md
+- Verification: PASS — 全量验证通过：Node 402/402（记忆32例）、typecheck、lint（governance 62/0、features 29/0、markdown 0）、ui:check 160/0、format、Rust 82/82、Playwright 304/304；真实Codex会话记忆引用与Desktop打包运行态为外部人工验收项
+- Evidence: [docs/changes/2026-09-24-local-memory/intent.md](../../docs/changes/2026-09-24-local-memory/intent.md), [docs/changes/2026-09-24-local-memory/spec.md](../../docs/changes/2026-09-24-local-memory/spec.md), [docs/changes/2026-09-24-local-memory/plan.md](../../docs/changes/2026-09-24-local-memory/plan.md), [docs/changes/2026-09-24-local-memory/verification.md](../../docs/changes/2026-09-24-local-memory/verification.md), [docs/changes/2026-09-24-local-memory/review.md](../../docs/changes/2026-09-24-local-memory/review.md)
+- Updated: 2026-09-24

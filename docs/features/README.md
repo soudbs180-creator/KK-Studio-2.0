@@ -13,7 +13,7 @@
 | PROTOTYPE | 只有 UI、本地 fixture 或固定演示素材，无真实后端；界面必须显式标注 Prototype |
 | PLANNED | 只有计划/设计，无实现或无 UI |
 
-当前共 **29** 个功能：REAL（真实可用）2、PARTIAL（部分可用）20、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）2。
+当前共 **29** 个功能：REAL（真实可用）2、PARTIAL（部分可用）21、PROTOTYPE（仅演示/UI）4、PLANNED（仅计划）2。
 
 ## 如何新增一个功能（任何 AI 照此执行）
 
@@ -58,7 +58,7 @@
 | FEAT-017 | 账号与登录 | PROTOTYPE（仅演示/UI） | [卡片](feat-017-account.md) | BACKEND-PLATFORM, T10 |
 | FEAT-018 | 积分、订阅与平台额度 | PROTOTYPE（仅演示/UI） | [卡片](feat-018-credits.md) | BACKEND-PLATFORM, T10 |
 | FEAT-019 | 云端保存与多端同步 | PARTIAL（部分可用） | [卡片](feat-019-cloud-sync.md) | BACKEND-PLATFORM, T10, T9 |
-| FEAT-020 | 长期记忆服务 | PROTOTYPE（仅演示/UI） | [卡片](feat-020-memory.md) | BACKEND-PLATFORM, T10 |
+| FEAT-020 | 长期记忆服务 | PARTIAL（部分可用） | [卡片](feat-020-memory.md) | TASK-MEMORY-001, BACKEND-PLATFORM, T10 |
 | FEAT-021 | 应用内代理 | PARTIAL（部分可用） | [卡片](feat-021-proxy.md) | BACKEND-PLATFORM, TASK-UI-005 |
 
 ## 系统与数据

@@ -62,10 +62,18 @@ test("unconnected account and memory controls do not advertise working services"
     "npm run dev:agent",
   );
   await page.getByRole("button", { name: "记忆", exact: true }).click();
+  // 记忆是本地能力，开关不依赖 Codex 连接；未连接时仅"让 Codex 提炼"禁用。
+  await expect(page.locator(".settings-content")).toContainText("记忆服务");
+  const toggle = page.getByRole("switch", {
+    name: "记忆服务开关",
+    exact: true,
+  });
+  await expect(toggle).toHaveAttribute("aria-checked", "false");
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-checked", "true");
   await expect(
-    page.getByRole("button", { name: "＋ 新建", exact: true }),
+    page.getByRole("button", { name: "让 Codex 提炼记忆", exact: true }),
   ).toBeDisabled();
-  await expect(page.getByLabel("搜索描述或正文")).toBeDisabled();
 });
 
 test("task workbench action does not overlap the tabs and demo status is visible", async ({

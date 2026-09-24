@@ -4,6 +4,7 @@ import ModelProviderSettings from "./ModelProviderSettings";
 import McpSettings from "./McpSettings";
 import AgentConnectionSettings from "./AgentConnectionSettings";
 import PluginManagerSettings from "./PluginManagerSettings";
+import MemorySettingsSection from "./MemorySettingsSection";
 
 const PENDING_SETTINGS: Partial<
   Record<SettingsSection, { title: string; description: string }>
@@ -163,48 +164,7 @@ export default function ConnectionSettings({
       </div>
     );
   if (section === "memory")
-    return (
-      <div className="settings-detail-stack">
-        <div className="settings-memory-tools">
-          <input
-            aria-label="搜索描述或正文"
-            placeholder="搜索描述或正文..."
-            disabled
-            title="Prototype · 记忆服务尚未接入"
-          />
-          <select
-            aria-label="作用域"
-            defaultValue="all"
-            disabled
-            title="Prototype · 记忆服务尚未接入"
-          >
-            <option value="all">所有作用域</option>
-          </select>
-          <select
-            aria-label="类型"
-            defaultValue="all"
-            disabled
-            title="Prototype · 记忆服务尚未接入"
-          >
-            <option value="all">所有类型</option>
-          </select>
-        </div>
-        <button
-          type="button"
-          className="settings-action"
-          disabled
-          title="Prototype · 记忆服务尚未接入"
-        >
-          ＋ 新建
-        </button>
-        <div className="settings-empty-state">
-          <strong>暂无记忆</strong>
-          <p>
-            Prototype · 记忆服务尚未接入，当前不会创建、搜索或自动保存长期记忆。
-          </p>
-        </div>
-      </div>
-    );
+    return <MemorySettingsSection onFeedback={onFeedback} />;
   const pending = PENDING_SETTINGS[section];
   if (!pending) return null;
   return (

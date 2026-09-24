@@ -1,4 +1,5 @@
 /** Codex 会话、具名 SSE 与 KK 画布桥的应用级 store。 */
+import { memoryService } from "../memory/index.ts";
 import {
   AGENT_CONNECT_TIMEOUT_MS,
   AGENT_DEFAULT_URL,
@@ -293,6 +294,8 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         )
           return;
         message(event.item);
+        if (event.item.role === "assistant" && event.item.text)
+          void memoryService.ingestMessage(event.item.text, "assistant");
         break;
       case "activity": {
         const text = formatAgentActivity(event.itemType, event.item);
@@ -725,6 +728,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       threadId: conversation.threadId,
     });
     patch({ sending: true, error: null, activity: "发送中…" });
+    void memoryService.ingestMessage(text.trim(), "user");
     try {
       const attachments = await (
         options.prepareAttachments ?? prepareAgentAttachments
@@ -754,9 +758,13 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       await activeApi.postState(bridge?.getSnapshot() ?? null);
       if (version !== epoch || toolController.signal.aborted)
         throw new Error("发送已取消");
+      const memoryInjection = await memoryService.buildInjection(text.trim());
+      if (version !== epoch || toolController.signal.aborted)
+        throw new Error("发送已取消");
       const response = await activeApi.postTurn({
         prompt:
           KK_INSTRUCTIONS +
+          (memoryInjection ? "\n\n" + memoryInjection + "\n" : "") +
           "\n用户指令：\n" +
           text.trim() +
           (canvasReferences.length

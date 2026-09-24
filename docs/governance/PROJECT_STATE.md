@@ -1,5 +1,11 @@
 # 当前项目状态
 
+## 2026-09-24 本地长期记忆接入对话（TASK-MEMORY-001，IN_PROGRESS→验证完成待合入）
+
+FEAT-020 从 PROTOTYPE 升级为 PARTIAL（真实用户级记忆落地）：学习 ai_group_chat 双层级记忆并简化——短期记忆沿用 Codex thread（不新增），长期记忆落地为"本地规则采集 + 词法检索注入 + 可选手动 Codex 提炼"，存储 Web=IndexedDB（`kk-studio-next/memory/store`）、Desktop=`memory/memory.json`（Tauri 命令 memory_read/memory_write/memory_reset_identity，原子写）。按用户硬约束：记忆随"本地记忆身份"（namespace uuid）隔离、绝不进 WebDAV 同步/localStorage/日志/导出包；真实账号 id 绑定依赖 FEAT-017，本期如实标注边界。默认开关关闭，开启后对话采集偏好并在发送前注入 `[长期记忆]` 块（执行器零修改）。
+
+实现于独立 worktree `D:\kk-studio\.worktrees\TASK-MEMORY-001`（分支 feat/TASK-MEMORY-001-local-memory，base origin/main@76339c9），主 checkout 的并行分支与未提交改动未触碰。验证：Node 单测 402/402（记忆模块 32 例）、typecheck/lint/governance(62 tasks 0 违规)/features(29 0 违规)/ui:check(160 文件 0 违规)/format 全过、Rust cargo test 82/82（含 memory_tests）、浏览器测试结果见 change pack。文档：docs/changes/2026-09-24-local-memory/{intent,spec,plan,verification,review}.md、feat-020-memory.md（PARTIAL）、DATA-STORAGE.md（新增"本地长期记忆"节）。未 commit/push，待 PR 合入；真实 Codex 会话记忆引用与 Desktop 打包运行态为外部人工验收项。
+
 ## 2026-09-23 KK Studio 2.1.0 源码并线与规则回读（REL-2.1.0）
 
 当前版本元数据已统一为 2.1.0；源码候选先在 `chore/TASK-CONSOLIDATE-200` 上提交并上传，首次远端 SHA 与受审源码 `15f1f27` 一致。`VERSION`、`CHANGELOG.md`、package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端共同记录 2.1.0；原有 `%APPDATA%/kk-studio`、存储 key、应用 identifier、历史 2.0.0 证据和恢复归档不变。安装包、签名和正式 tag 仍未完成。

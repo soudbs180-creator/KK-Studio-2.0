@@ -680,6 +680,58 @@
   gap: 8px;
   width: 100%;
 }
+.settings-memory-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+.settings-memory-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--settings-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.settings-memory-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.settings-memory-content strong {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--settings-text);
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+.settings-memory-content span {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--settings-muted);
+}
+.settings-memory-delete {
+  flex-shrink: 0;
+  border: 1px solid var(--settings-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--settings-muted);
+  font-size: 12px;
+  line-height: 20px;
+  padding: 2px 10px;
+  cursor: pointer;
+}
+.settings-memory-delete:hover:not(:disabled) {
+  color: var(--ui-danger);
+  border-color: var(--ui-danger);
+}
+.settings-memory-delete:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
 /* 本地 Agent 连接卡片 */
 .settings-agent-card {
   display: block;

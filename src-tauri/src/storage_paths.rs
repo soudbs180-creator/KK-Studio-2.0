@@ -9,6 +9,7 @@ pub struct AppPaths {
     pub creation: PathBuf,
     pub assets: PathBuf,
     pub tasks: PathBuf,
+    pub memory: PathBuf,
 }
 
 const DATA_DIRECTORIES: [&str; 13] = [
@@ -52,6 +53,7 @@ impl AppPaths {
         let creation = root.join("projects").join("creation-v2.json");
         let assets = root.join("assets");
         let tasks = root.join("tasks");
+        let memory = root.join("memory").join("memory.json");
 
         Ok(Self {
             config,
@@ -59,6 +61,7 @@ impl AppPaths {
             creation,
             assets,
             tasks,
+            memory,
         })
     }
 }
@@ -147,8 +150,10 @@ mod tests {
         assert_eq!(paths.creation, root.path("projects/creation-v2.json"));
         assert_eq!(paths.assets, root.path("assets"));
         assert_eq!(paths.tasks, root.path("tasks"));
+        assert_eq!(paths.memory, root.path("memory/memory.json"));
         assert!(!paths.config.exists());
         assert!(!paths.conversations.exists());
+        assert!(!paths.memory.exists());
     }
 
     #[test]

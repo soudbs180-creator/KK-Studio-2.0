@@ -1,5 +1,12 @@
 # 当前进度
 
+## 2026-09-24 本地长期记忆接入对话（TASK-MEMORY-001）
+
+- FEAT-020 由 PROTOTYPE 升级为 PARTIAL：真实用户级本地长期记忆落地（Web IndexedDB / Desktop `memory/memory.json`，Tauri 命令 memory_read/memory_write/memory_reset_identity，原子写）。
+- 能力：本地规则自动采集（用户/assistant 偏好、习惯、约束）→ 词法检索注入 `[长期记忆]` 块（发送前，执行器零修改）；设置 › 连接 › 记忆 真实 UI（开关、身份、列表/删除/清空、重置身份、手动 Codex 提炼）。
+- 硬约束落地：随"本地记忆身份"（namespace uuid）隔离、绝不上云（不进 WebDAV 同步/localStorage/日志/导出包）；默认关闭；真实账号 id 绑定依赖 FEAT-017。
+- 验证：Node 单测 402/402（记忆模块 32 例）、typecheck/lint/governance/features/ui:check/format 全过、Rust 82/82、浏览器测试见 change pack；文档在 docs/changes/2026-09-24-local-memory/。未 commit/push，待 PR。
+
 ## 2026-09-23 2.1.0 源码并线与远端规则回读
 
 - [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的 head `da811283` 在 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7`；旧 PR #8 的提交是 #9 候选的祖先，内容被吸收，PR #8 已关闭而未重复合并。[PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 再将规则与 Markdown 审计 squash 合入 `main@9f04bfce`；两次合并的文件树均与各自受审候选相同，本地根 `main` 已快进至后者。

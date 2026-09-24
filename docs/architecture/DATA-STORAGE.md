@@ -14,7 +14,7 @@
 
 启动只创建规范目录并保留旧文件，旧数据不会自动迁移。创作快照使用下方安全仓库契约；聊天与配置文件仍按各自命令的现有边界写入，不能把创作仓库的保证推广到所有文件。
 
-客户端目标根目录形态（其中项目 SQLite、记忆等尚未全部接线，assets现为已接入的原生文件仓库）：
+客户端目标根目录形态（其中项目 SQLite 尚未全部接线；记忆已接线，见下文"本地长期记忆"节）：
 
 ```text
 kk-studio/
@@ -29,9 +29,8 @@ kk-studio/
 │  └─ <project-id>/revisions/…
 ├─ conversations/       # 会话消息
 │  └─ index.json        # 会话索引；正文后续按会话拆分
-├─ memory/              # 用户/品牌记忆；仅显式开启时写入
-│  ├─ user.json
-│  └─ brand/<brand-id>.json
+├─ memory/              # 用户记忆；仅显式开启时写入（version=1）
+│  └─ memory.json       # 含 namespace（本地记忆身份键）与 records
 ├─ assets/              # 已接线的原生素材仓库，不把原件写入 JSON
 │  ├─ records/<assetId>.json # version=1及非敏感metadata
 │  ├─ blobs/<sha256>    # 无扩展名的原始字节，内容寻址
@@ -69,7 +68,18 @@ kk-studio/
 
 `src-tauri/src/storage_paths.rs` 已将桌面端文件固定为 `providers/config.json`、`conversations/index.json` 和 `projects/creation-v2.json`，启动时只保留旧根目录文件作为只读迁移来源，不会自动解析、复制或删除它们。创作页通过 `read_creation_snapshot` / `write_creation_snapshot` 使用项目快照边界；设置元数据仍由 provider schema 管理。目录常量与浏览器 key 集中在 `src/runtime/storage-contract.ts`。
 
-账号/记忆当前没有真实 schema 或持久化：`AccountPopup` 和账号页只是界面占位，`ConnectionSettings` 的 memory 页只有空状态。任何 UID、积分和更新版本显示都不能当作服务数据。
+账号目前没有真实 schema 或持久化：`AccountPopup` 和账号页仍是界面占位，任何 UID、积分和更新版本显示都不能当作服务数据。记忆已实现真实本地持久化（仅用户级），见下文"本地长期记忆"节。
+
+## 本地长期记忆（2026-09-24）
+
+- 范围：仅用户级记忆（偏好/习惯/约束/画像），本地存储、随"本地记忆身份"隔离、绝不上云；与密钥/账号同级的本地私有数据处理。
+- Schema（`src/features/memory/types.ts`）：`MemoryStoreFile { version: 1; namespace: string; records: MemoryRecord[] }`；单条记录含 `content（≤200字）/memoryType/confidence/fingerprint（sha256 归一化内容）/source/createdAt/updatedAt/active`，上限 10000 条。
+- Web：IndexedDB `kk-studio-next / memory / store`，key="default"，值为 `MemoryStoreFile`；同一事务内校验 version，损坏拒绝读取保留原件。
+- Desktop：`memory/memory.json`（固定路径，与 `conversations/index.json` 同根）；Tauri 命令 `memory_read / memory_write / memory_reset_identity`；写入为临时文件 + rename 原子写；重置身份时旧文件重命名 `.previous-<ts>.json` 保留。
+- localStorage 只存 `kk.memory.settings`（`{enabled: boolean}`）；记忆内容与 namespace 绝不进 localStorage、WebDAV 同步（FEAT-019 scope 不含 memory）、日志（console 仅打印条数）、导出包/项目包。
+- 隔离边界：namespace 是"本地记忆身份"（uuid，首次开启时生成，设置页显示前 8 位，可显式重置）；执行器不暴露账号 id，真实账号 id 派生依赖 FEAT-017（见 feat-020-memory.md）。
+- 采集：本地规则自动抽取（用户/assistant 消息）+ 手动"让 Codex 提炼"（解析 `记忆：` 行，消耗用户 Codex 账号额度，仅用户点击触发）。
+- 注入：发送对话前词法检索（最多 3 条、总长 ≤400 字、confidence ≥0.55、active），在 KK_INSTRUCTIONS 与"用户指令："之间插入 `[长期记忆]` 块；默认开关关闭，关闭时零采集零注入。
 
 ## 原生素材仓库与项目引用（2026-09-16 T3a）
 
