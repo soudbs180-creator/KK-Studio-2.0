@@ -1,7 +1,7 @@
-# TASK-PROV-004 verification — Claude Code settings.json 落盘
+﻿# TASK-PROV-004 verification — Claude Code settings.json 落盘
 
 - 日期：2026-09-24
-- 分支：feat/TASK-PROV-004-claude-landing（堆叠于 2618344）；head 提交后回填
+- 分支：feat/TASK-PROV-004-claude-landing（堆叠于 2618344）；head 1c36d89
 - 结论：本地全绿；浏览器 test:ui 与独立上下文 review 待推送后 CI/后续完成（与 002/003 相同边界）
 
 ## 单测（agent 套件 `npm run test:agent`）
@@ -46,3 +46,4 @@
 - 浏览器 `npm run test:ui` 待 CI；独立上下文 review 未执行（review.md NOT VERIFIED）。
 - Claude Code 真实消费对拍（`settings.json` 的 `model` 字段与 `env.ANTHROPIC_BASE_URL` 被 CLI 识别）需装有 Claude Code 的机器。
 - 认证通道（宿主注入 ANTHROPIC_AUTH_TOKEN → agent 进程 env → claude.ts 子进程继承）在「app→agent 端点 + 宿主 env 注入」任务闭环。
+

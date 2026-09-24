@@ -1,7 +1,7 @@
-# TASK-PROV-004 review — 独立上下文评审记录
+﻿# TASK-PROV-004 review — 独立上下文评审记录
 
 - 日期：2026-09-24
-- 评审对象：feat/TASK-PROV-004-claude-landing（head 提交后回填）
+- 评审对象：feat/TASK-PROV-004-claude-landing（head 1c36d89）
 - 状态：**NOT VERIFIED（待独立上下文评审）**
 
 ## 已完成的自查清单（实现上下文内）
@@ -23,3 +23,4 @@
 ## 审阅规则声明
 
 同一 GitHub 身份不能批准自己的 PR；不伪造第二审阅人。独立上下文评审应在 PR 创建后由另一个会话/审阅者执行，结论回填本文件。
+
