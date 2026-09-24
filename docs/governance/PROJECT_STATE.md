@@ -2,7 +2,7 @@
 
 ## 2026-09-24 MCP 候选与竞品审计遗留
 
-`fix/TASK-MINIMAX-001-mcp-registry-limit` 修复 50 项持久化上限与写入不一致；当前仅为独立分支候选，不能据此认定主线已修复。`TASK-MCP-PROTO-001` 登记 2026-07-28 协议协商缺口，真实新版服务器仍未验证。MiniMax 安装目录版本元数据已只读核对，2026-09-21 的 UI 审计维持历史证据含义。以 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)和账本为准；与编排候选合并前需处理 `PROGRESS`、`PROJECT_STATE`、`AI_HANDOFF`、ledger 的同文件差异。
+`fix/TASK-MINIMAX-001-mcp-registry-limit` 修复 50 项持久化上限与写入不一致；当前仅为草稿 PR #15 候选，不能据此认定主线已修复。`TASK-MCP-PROTO-001` 登记 2026-07-28 协议协商缺口，真实新版服务器仍未验证。MiniMax 安装目录版本元数据已只读核对，2026-09-21 的 UI 审计维持历史证据含义。以 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)和账本为准；与编排 PR #14 的 merge-tree 显示 4 个文档内容冲突，按顺序合并前必须解决并重新生成治理视图。
 
 ## 2026-09-23 KK Studio 2.1.0 源码并线与规则回读（REL-2.1.0）
 

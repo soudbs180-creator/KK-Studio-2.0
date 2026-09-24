@@ -24,3 +24,8 @@
 本次仅更改本地元数据 registry 的写入边界，没有 UI 布局变更。浏览器回归只验证现有 Web fixture，不代表 Tauri release 或真实第三方 MCP。官方文档与当前代码支持新版兼容缺口的静态推断；真实 modern 协议服务器测试为 **NOT VERIFIED**，由 `TASK-MCP-PROTO-001` 跟进。安装目录只读回读 `version=43.7.0`、`sq.version=MiniMax Design 3.0.18`；历史 MiniMax 操作证据仍以 2026-09-21 记录为准，本轮未重新完成全流程运行审计。
 
 本地实现与相关回归通过；最终独立上下文 review、Hosted CI、PR 合并、Desktop release、真实第三方连接器与用户验收仍未完成。提交后补记 head SHA 和 delivery 检查。
+
+## 2026-09-24 提交与交叉分支检查
+
+- 初次提交 `2e93dc885053adb84b4d8ee8024b0e9c728f4b0e`；`delivery:check --base 76339c9f --head HEAD --branch fix/TASK-MINIMAX-001-mcp-registry-limit` 结果为 15 文件、0 违规，分支已推送并创建草稿 PR #15。此处结构 PASS 不代替独立审查或 hosted CI。
+- 与 PR #14 的 `ae4bf7a` 做本地 merge-tree，退出码 1；四个文档内容冲突见 `review.md`。两分支业务源码无重叠；合并前按顺序解决并重新验证。
