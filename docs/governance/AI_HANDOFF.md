@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-24 TASK-ORCH-001 独立补审修复候选
+
+独立 reviewer 对 PR #14 旧 head `ae4bf7a9` 给出两项 P1：公开旧计划覆写，以及 Desktop/Web 项目包计划字段与素材引用漏同步。任务 worktree 已修复并跑 407 Node、80 Rust、300 浏览器与静态构建检查。下一步核对新 head 的 Hosted CI、独立复审和 PR #15 文档冲突，未完成前不可合并。详见 [验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-24 TASK-ORCH-001 候选
 
 `D:/kk-studio/.worktrees/TASK-ORCH-001` 的编排修复已在本地重跑 405 Node 与 300 Web 浏览器测试；最终独立复审仍 NOT VERIFIED，不可据此合并或宣称 Desktop/Provider 验收。恢复时核对任务分支实际 head、`origin/main`、dirty 状态及 [验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。

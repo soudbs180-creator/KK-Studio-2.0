@@ -63,7 +63,10 @@ export const stageWorkItemSchema = z.object({
     .optional(),
   error: z.string().max(500).optional(),
   /** 成功产出的本地资产 id（素材注册完成证明）。 */
-  assetId: z.string().max(160).optional(),
+  assetId: z
+    .string()
+    .regex(/^asset-[0-9a-f]{24}$/)
+    .optional(),
   createdAt: z.number(),
   updatedAt: z.number(),
 });

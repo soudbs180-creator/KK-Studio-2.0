@@ -47,7 +47,7 @@
 ## 验证和交付
 
 - 定向回归：4 个新增/扩展测试文件 40 项通过；全量 399 项通过；typecheck 通过。
-- 完整验证与必要 Rust/native/live 检查：无 Rust 变更；Rust 检查在 PR 合并门禁（CI）执行。
+- 完整验证与必要 Rust/native/live 检查：原始领域层提交无 Rust 变更；当前跨端项目包修复要求本地 Rust 全量测试与 PR 合并门禁，Desktop GUI/真实 Provider 仍单独验收。
 - UI 的 Figma/DOM/截图、1421/1423/Tauri 证据（适用时）：本 PR 无 UI 变更，不适用；UI 任务 TASK-ORCH-002 补充。
 - 独立 reviewer 与当前 SHA 审查：PR review 阶段由独立上下文 AI 审查。
 - 文档、账本、PROJECT_STATE/HANDOFF/PROGRESS 更新：功能卡、registry、ledger 已更新；PROJECT_STATE 见 verification.md 关联更新。
@@ -60,3 +60,4 @@
 - 2026-09-23 补充：竞品路线图审查发现 `taskState.ts` 重复定义的普通重试逻辑允许 `unknown`/已提交任务，并把 `unknown` 输出列为失败。追加失败先行测试，统一复用 `taskRecovery.canRetryTask`；`retryFailedOutputIndices` 改接任务状态且仅返回确定失败项。更新功能卡、账本与验证勘误，保留原始测试记录的历史含义。
 - 2026-09-24 补充：独立预检发现同 id 重放重置已完成计划、非法工具输入先写成功后被存储校验丢弃。新增失败先行测试；领域创建和持久化在写前校验，计划工具输入使用 schema 解析并返回结构化错误；同 id 同定义重放保留当前状态，不同定义要求新 id。修复后重新运行受影响测试与交付门禁，独立复审仍待完成。
 - 2026-09-24 补充：实现者审计发现 Agent 工具可以直接完成 plan/result 审批并解除阻断；先失败测试后将工具可写迁移限制为 `doing` 发起审批/阻断，保留宿主 `decideStage`/`retryStage` 作为决策入口。更新工具描述与验收记录。
+- 2026-09-24 独立最终预审补充：PR #14 的 `stagePlans` 字段未同步原生项目包白名单，两端项目包也未收集阶段工作项素材；公开 `persistPlan` 可用旧快照覆盖完成状态。先新增 Node/Rust 失败回归，再同步 schema/素材遍历、移除公开覆盖入口并提供 revision 受控的工作项更新。修复后需完整本地回归、准确记录 Rust 检查和新 head 独立复审。PR #15 的文档冲突按先合并 #14、再整合 #15 的顺序处理。

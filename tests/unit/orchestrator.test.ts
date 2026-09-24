@@ -86,32 +86,34 @@ test("upsertPlan persists a plan into the project (idempotent by id)", () => {
 test("replaying an existing plan preserves completed stages and assets", () => {
   const { orchestrator, read } = harness();
   const plan = orchestrator.upsertPlan(planInput("p"));
+  const withAsset = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 0,
+    workItemId: "wi-0",
+    expectedRevision: plan.revision,
+    status: "running",
+  });
+  const succeeded = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 0,
+    workItemId: "wi-0",
+    expectedRevision: withAsset.revision,
+    status: "succeeded",
+    assetId: "asset-0123456789abcdef01234567",
+  });
   orchestrator.requestStageApproval(plan.id, 0, "result");
   const finished = orchestrator.completeStage(plan.id, 0);
-  const withAsset = {
-    ...finished,
-    stages: finished.stages.map((stage, index) =>
-      index === 0
-        ? {
-            ...stage,
-            workItems: stage.workItems.map((item) => ({
-              ...item,
-              status: "succeeded" as const,
-              assetId: "asset-1",
-            })),
-          }
-        : stage,
-    ),
-  };
-  orchestrator.persistPlan(withAsset);
   const beforeReplay = read();
 
   const replayed = orchestrator.upsertPlan(planInput("p"));
-  assert.deepEqual(replayed, withAsset);
+  assert.deepEqual(replayed, finished);
   assert.strictEqual(read(), beforeReplay);
-  assert.equal(replayed.revision, 2);
+  assert.equal(replayed.revision, succeeded.revision + 2);
   assert.equal(replayed.stages[0].status, "done");
-  assert.equal(replayed.stages[0].workItems[0].assetId, "asset-1");
+  assert.equal(
+    replayed.stages[0].workItems[0].assetId,
+    "asset-0123456789abcdef01234567",
+  );
 
   assert.throws(
     () => orchestrator.upsertPlan({ ...planInput("p"), title: "另一个计划" }),
@@ -316,34 +318,50 @@ test("result gate completes on approve and returns to doing on reject", () => {
 });
 
 test("markStageBlocked and retryStage requeue only failed work items", () => {
-  const { orchestrator, read } = harness();
+  const { orchestrator } = harness();
   const plan = orchestrator.upsertPlan(planInput("p"));
+  const running = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 1,
+    workItemId: "wi-1",
+    expectedRevision: plan.revision,
+    status: "running",
+  });
+  orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 1,
+    workItemId: "wi-1",
+    expectedRevision: running.revision,
+    status: "failed",
+    error: "timeout",
+  });
   const blocked = orchestrator.markStageBlocked(plan.id, 1);
   assert.equal(blocked.stages[1].status, "blocked");
-  const project = read();
-  const current = project.stagePlans![0];
-  const failedPlan = {
-    ...current,
-    stages: current.stages.map((stage) =>
-      stage.index === 1
-        ? {
-            ...stage,
-            workItems: [
-              {
-                ...stage.workItems[0],
-                status: "failed" as const,
-                error: "timeout",
-              },
-            ],
-          }
-        : stage,
-    ),
-  };
-  orchestrator.persistPlan(failedPlan);
   const retried = orchestrator.retryStage(plan.id, 1);
   assert.equal(retried.stages[1].status, "doing");
   assert.equal(retried.stages[1].workItems[0].status, "queued");
   assert.equal(retried.stages[1].workItems[0].error, undefined);
+});
+
+test("late work results cannot overwrite an approved plan", () => {
+  const { orchestrator, read } = harness();
+  const stale = orchestrator.upsertPlan(planInput("p"));
+  orchestrator.requestStageApproval(stale.id, 0, "result");
+  orchestrator.completeStage(stale.id, 0);
+  const before = read();
+  assert.throws(
+    () =>
+      orchestrator.updateWorkItem({
+        planId: stale.id,
+        stageIndex: 0,
+        workItemId: "wi-0",
+        expectedRevision: stale.revision,
+        status: "running",
+      }),
+    /revision|并发冲突/,
+  );
+  assert.strictEqual(read(), before);
+  assert.equal(orchestrator.getPlan(stale.id)?.stages[0].status, "done");
 });
 
 test("approvalSummary lists pending gates across plans", () => {

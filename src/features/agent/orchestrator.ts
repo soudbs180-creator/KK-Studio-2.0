@@ -29,6 +29,7 @@ import {
   type StageApprovalGate,
   type StagePlan,
   type StageStatus,
+  type StageWorkItemStatus,
 } from "../../domain/stagePlan.ts";
 
 export interface StageOrchestratorOptions {
@@ -42,6 +43,16 @@ export interface StageDecisionInput {
   /** 当前待审批门，与状态校验一致（plan / result）。 */
   gate: StageApprovalGate;
   decision: "approve" | "reject";
+}
+
+export interface StageWorkItemUpdateInput {
+  planId: string;
+  stageIndex: number;
+  workItemId: string;
+  expectedRevision: number;
+  status: Exclude<StageWorkItemStatus, "queued">;
+  assetId?: string;
+  error?: string;
 }
 
 export type PlanToolName =
@@ -137,7 +148,11 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
     if (!result.success) throw new StagePlanError("编排计划无效，未写入项目。");
     if (result.data.projectId !== project.id)
       throw new StagePlanError("编排计划与当前项目不匹配，未写入项目。");
-    readPlan(project, plan.id);
+    const current = readPlan(project, plan.id);
+    if (result.data.revision <= current.revision)
+      throw new StagePlanError(
+        "编排计划 revision 已变化（并发冲突，未写入）。",
+      );
     options.commit({
       ...project,
       stagePlans: project.stagePlans?.map((item) =>
@@ -170,7 +185,7 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
   const getPlan = (planId: string): StagePlan | null =>
     options.getProject()?.stagePlans?.find((item) => item.id === planId) ??
     null;
-  /** 内部持久化入口：被工具面与测试使用（按 id 覆盖计划并写回项目）。 */
+  /** 内部持久化入口：只供本模块的受控状态迁移使用。 */
   const persistPlan = (plan: StagePlan): StagePlan => {
     const project = projectOrThrow();
     persist(project, plan);
@@ -182,6 +197,64 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
     upsertPlan,
     listPlans,
     getPlan,
+    /** 工作项结果只允许在 doing 阶段按预期 revision 推进。 */
+    updateWorkItem(input: StageWorkItemUpdateInput): StagePlan {
+      const project = projectOrThrow();
+      const plan = readPlan(project, input.planId);
+      if (plan.revision !== input.expectedRevision)
+        throw new StagePlanError(
+          "编排计划 revision 已变化（并发冲突，未写入）。",
+        );
+      const stage = plan.stages.find((item) => item.index === input.stageIndex);
+      if (!stage) throw new StagePlanError(`阶段 ${input.stageIndex} 不存在。`);
+      if (stage.status !== "doing")
+        throw new StagePlanError("阶段不在 doing 状态，不能写入工作结果。");
+      const workItem = stage.workItems.find(
+        (item) => item.id === input.workItemId,
+      );
+      if (!workItem)
+        throw new StagePlanError(`工作项 ${input.workItemId} 不存在。`);
+      const allowed: Record<
+        StageWorkItemStatus,
+        readonly StageWorkItemStatus[]
+      > = {
+        queued: ["running", "cancelled"],
+        running: ["succeeded", "failed", "partial", "cancelled"],
+        partial: [],
+        succeeded: [],
+        failed: [],
+        cancelled: [],
+      };
+      if (!allowed[workItem.status].includes(input.status))
+        throw new StagePlanError("工作项状态迁移无效，未写入。");
+      const stamp = Date.now();
+      const next: StagePlan = {
+        ...plan,
+        revision: plan.revision + 1,
+        updatedAt: stamp,
+        stages: plan.stages.map((item) =>
+          item.index === input.stageIndex
+            ? {
+                ...item,
+                updatedAt: stamp,
+                workItems: item.workItems.map((work) =>
+                  work.id === input.workItemId
+                    ? {
+                        ...work,
+                        status: input.status,
+                        assetId: input.assetId ?? work.assetId,
+                        error: input.error,
+                        updatedAt: stamp,
+                      }
+                    : work,
+                ),
+              }
+            : item,
+        ),
+      };
+      persist(project, next);
+      return next;
+    },
     /** 进入审批等待：doing → plan_review / result_review（CAS）。 */
     requestStageApproval(
       planId: string,
@@ -270,12 +343,6 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
           gate: entry.gate,
         })),
       );
-    },
-    /** 内部持久化入口：校验后按 id 写回现有计划。 */
-    persistPlan(plan: StagePlan): StagePlan {
-      const project = projectOrThrow();
-      persist(project, plan);
-      return plan;
     },
     /** MCP 风格工具面：本 PR 提供纯函数与描述，注册到 Agent 服务在 BACKEND-MCP-AUTO。 */
     planTools(): PlanTool[] {

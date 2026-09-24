@@ -287,6 +287,15 @@ function collectProject(ids: Set<string>, project: CreationProject): void {
       }
     });
   });
+  project.stagePlans?.forEach((plan) =>
+    plan.stages.forEach((stage) =>
+      stage.workItems.forEach((workItem) => {
+        if (!workItem.assetId) return;
+        checkAssetId(workItem.assetId);
+        ids.add(workItem.assetId);
+      }),
+    ),
+  );
   project.items.forEach((item) => {
     for (const id of [item.assetId, item.parentAssetId]) {
       if (id) {

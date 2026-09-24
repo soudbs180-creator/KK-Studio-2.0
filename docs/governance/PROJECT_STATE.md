@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-24 编排候选跨端补审
+
+PR #14 的独立审查在旧 head 发现两项 P1：旧 revision 可覆盖已完成计划，且 `stagePlans` 未同步 Desktop 项目包 schema/素材收集。任务分支已加入预期 revision 工作项写入和 Web/Rust 包契约回归；本地 407 Node、80 Rust、300 浏览器及静态/构建检查通过。修复后 head 的 Hosted CI、独立复审、Desktop GUI 与真实 Provider 仍待验证；PR #14 与 #15 的文档冲突待顺序整合。主线/发布状态未变，见 [验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-24 编排候选（TASK-ORCH-001）
 
 独立预检指出计划同 id 重放丢进度与非法计划写入后丢失；两项已在任务分支修复。实现者又确认 Agent 阶段工具可自行批准或解除阻断，现仅允许 `doing→plan_review/result_review/blocked`，宿主入口保留审批与重试。当前分支 405 Node 与 300 Web 浏览器回归通过，独立最终复审、Desktop 与真实 Provider 未验收；主线和正式发布状态不因此改变。以 [本轮验证](../changes/2026-09-23-agent-orchestration/verification.md)和账本 TASK-ORCH-001 为准。

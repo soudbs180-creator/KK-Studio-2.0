@@ -149,6 +149,181 @@ fn attachments(value: &Value) -> Result<(), String> {
     Ok(())
 }
 
+fn stage_plans(project: &Value) -> Result<(), String> {
+    let plans = array(project, "stagePlans")?;
+    if plans.len() > 64 {
+        return Err(invalid("stagePlans"));
+    }
+    for plan in plans {
+        shape(
+            plan,
+            "stagePlans",
+            &[
+                "id",
+                "title",
+                "projectId",
+                "createdBy",
+                "revision",
+                "stages",
+                "createdAt",
+                "updatedAt",
+            ],
+            &[
+                "id",
+                "title",
+                "projectId",
+                "createdBy",
+                "revision",
+                "stages",
+                "createdAt",
+                "updatedAt",
+            ],
+        )?;
+        text(plan, "id", 1, 160)?;
+        text(plan, "title", 1, 120)?;
+        text(plan, "projectId", 1, 160)?;
+        enumeration(plan, "createdBy", &["agent", "user"])?;
+        number(plan, "revision", 0.0, MAX_SAFE_INTEGER, true)?;
+        finite(plan, "createdAt")?;
+        finite(plan, "updatedAt")?;
+        let stages = array(plan, "stages")?;
+        if stages.is_empty() || stages.len() > 32 {
+            return Err(invalid("stagePlans.stages"));
+        }
+        for stage in stages {
+            shape(
+                stage,
+                "stagePlans.stages",
+                &[
+                    "index",
+                    "name",
+                    "goal",
+                    "status",
+                    "workItems",
+                    "approvalGate",
+                    "resultSummary",
+                    "createdAt",
+                    "updatedAt",
+                ],
+                &[
+                    "index",
+                    "name",
+                    "goal",
+                    "status",
+                    "workItems",
+                    "createdAt",
+                    "updatedAt",
+                ],
+            )?;
+            number(stage, "index", 0.0, 64.0, true)?;
+            texts(
+                stage,
+                &[("name", 120), ("goal", 400), ("resultSummary", 500)],
+            )?;
+            enumeration(
+                stage,
+                "status",
+                &["doing", "plan_review", "blocked", "result_review", "done"],
+            )?;
+            enumeration(stage, "approvalGate", &["plan", "result"])?;
+            finite(stage, "createdAt")?;
+            finite(stage, "updatedAt")?;
+            let work_items = array(stage, "workItems")?;
+            if work_items.len() > 128 {
+                return Err(invalid("stagePlans.workItems"));
+            }
+            for work in work_items {
+                shape(
+                    work,
+                    "stagePlans.workItems",
+                    &[
+                        "id",
+                        "kind",
+                        "prompt",
+                        "dependencies",
+                        "status",
+                        "model",
+                        "params",
+                        "error",
+                        "assetId",
+                        "createdAt",
+                        "updatedAt",
+                    ],
+                    &[
+                        "id",
+                        "kind",
+                        "prompt",
+                        "dependencies",
+                        "status",
+                        "createdAt",
+                        "updatedAt",
+                    ],
+                )?;
+                text(work, "id", 1, 160)?;
+                text(work, "prompt", 1, 4000)?;
+                texts(work, &[("model", 120), ("error", 500)])?;
+                enumeration(work, "kind", &["image", "video", "audio", "text", "merge"])?;
+                enumeration(
+                    work,
+                    "status",
+                    &[
+                        "queued",
+                        "running",
+                        "partial",
+                        "succeeded",
+                        "failed",
+                        "cancelled",
+                    ],
+                )?;
+                finite(work, "createdAt")?;
+                finite(work, "updatedAt")?;
+                let dependencies = array(work, "dependencies")?;
+                if dependencies.len() > 64
+                    || dependencies.iter().any(|id| {
+                        !id.as_str()
+                            .is_some_and(|id| id.encode_utf16().count() <= 160)
+                    })
+                {
+                    return Err(invalid("stagePlans.dependencies"));
+                }
+                if let Some(params) = work.get("params") {
+                    let params = params
+                        .as_object()
+                        .ok_or_else(|| invalid("stagePlans.params"))?;
+                    for (key, value) in params {
+                        if key.encode_utf16().count() > 40 {
+                            return Err(invalid("stagePlans.params"));
+                        }
+                        match value {
+                            Value::String(text) if text.encode_utf16().count() <= 200 => {}
+                            Value::Number(number)
+                                if number
+                                    .as_f64()
+                                    .is_some_and(|number| number.is_finite() && number <= 1e9) => {}
+                            Value::Bool(_) => {}
+                            _ => return Err(invalid("stagePlans.params")),
+                        }
+                    }
+                }
+                if let Some(asset_id) = work.get("assetId") {
+                    let asset_id = asset_id
+                        .as_str()
+                        .ok_or_else(|| invalid("stagePlans.assetId"))?;
+                    if !asset_id.strip_prefix("asset-").is_some_and(|suffix| {
+                        suffix.len() == 24
+                            && suffix
+                                .bytes()
+                                .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+                    }) {
+                        return Err(invalid("stagePlans.assetId"));
+                    }
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
 fn draft(value: &Value) -> Result<(), String> {
     shape(
         value,
@@ -587,6 +762,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
                 "items",
                 "messages",
                 "tasks",
+                "stagePlans",
                 "reviewComments",
                 "favoriteIds",
                 "likedIds",
@@ -609,6 +785,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
         for entry in array(project, "tasks")? {
             task(entry)?;
         }
+        stage_plans(project)?;
         for message in array(project, "messages")? {
             shape(
                 message,

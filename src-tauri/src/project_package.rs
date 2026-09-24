@@ -266,6 +266,24 @@ fn collect_references(snapshot: &Value, ids: &mut BTreeSet<String>) -> Result<()
                 }
             }
         }
+        if let Some(plans) = project.get("stagePlans") {
+            for plan in plans
+                .as_array()
+                .ok_or_else(|| failure("corrupt", "阶段计划集合无效"))?
+            {
+                for stage in plan["stages"]
+                    .as_array()
+                    .ok_or_else(|| failure("corrupt", "阶段集合无效"))?
+                {
+                    for work in stage["workItems"]
+                        .as_array()
+                        .ok_or_else(|| failure("corrupt", "阶段工作项集合无效"))?
+                    {
+                        optional_id(work, "assetId", ids)?;
+                    }
+                }
+            }
+        }
         for item in project["items"]
             .as_array()
             .ok_or_else(|| failure("corrupt", "节点集合无效"))?
@@ -975,6 +993,55 @@ mod tests {
             restored.read().unwrap().snapshot.unwrap(),
             snapshot(&asset_id)
         );
+        let restored_assets = AssetRepository::new(target.join("assets"));
+        let record = restored_assets.read(&asset_id).unwrap().unwrap();
+        assert_eq!(STANDARD.decode(record.data_base64).unwrap(), original);
+        let _ = fs::remove_dir_all(source);
+    }
+
+    #[test]
+    fn exports_normalized_project_with_empty_stage_plans() {
+        let source = fixture_root();
+        let (snapshots, assets, _, _) = seed(&source);
+        let mut current = snapshots.read().unwrap().snapshot.unwrap();
+        current["revision"] = Value::from(2);
+        current["projects"][0]["stagePlans"] = json!([]);
+        snapshots.write(current, Some(1)).unwrap();
+        let package_path = source.join("empty-plans.kkproject");
+        export_package(&snapshots, &assets, &package_path).unwrap();
+        preflight_package(&package_path).unwrap();
+        let _ = fs::remove_dir_all(source);
+    }
+
+    #[test]
+    fn exports_and_restores_asset_referenced_only_by_stage_plan() {
+        let source = fixture_root();
+        let (snapshots, assets, asset_id, original) = seed(&source);
+        let mut current = snapshots.read().unwrap().snapshot.unwrap();
+        current["revision"] = Value::from(2);
+        current["projects"][0]["items"] = json!([]);
+        current["projects"][0]["tasks"] = json!([]);
+        current["projects"][0]["stagePlans"] = json!([{
+            "id": "plan-1", "title": "Stage asset", "projectId": "p1", "createdBy": "agent",
+            "revision": 0, "createdAt": 1, "updatedAt": 1,
+            "stages": [{
+                "index": 0, "name": "Generate", "goal": "Keep original", "status": "doing",
+                "createdAt": 1, "updatedAt": 1,
+                "workItems": [{
+                    "id": "work-1", "kind": "image", "prompt": "Blue sphere",
+                    "dependencies": [], "status": "succeeded", "assetId": asset_id,
+                    "createdAt": 1, "updatedAt": 1
+                }]
+            }]
+        }]);
+        snapshots.write(current.clone(), Some(1)).unwrap();
+        let package_path = source.join("stage-asset.kkproject");
+        let exported = export_package(&snapshots, &assets, &package_path).unwrap();
+        assert_eq!(exported.asset_ids, vec![asset_id.clone()]);
+        let target = source.join("restored-stage");
+        import_package(&package_path, &target).unwrap();
+        let restored = SnapshotRepository::new(target.join("projects").join("creation-v2.json"));
+        assert_eq!(restored.read().unwrap().snapshot.unwrap(), current);
         let restored_assets = AssetRepository::new(target.join("assets"));
         let record = restored_assets.read(&asset_id).unwrap().unwrap();
         assert_eq!(STANDARD.decode(record.data_base64).unwrap(), original);

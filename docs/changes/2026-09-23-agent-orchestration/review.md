@@ -33,7 +33,7 @@
 
 ## 未执行/未满足项
 
-- Rust 检查：无 Rust 变更，合并门禁执行。
+- Rust 检查：原始领域层提交无 Rust 变更；2026-09-24 跨端修复已修改 Rust 项目包，当前完整 Rust 测试 80/80 通过，详见补充验证。
 - 运行证据（runtimeEvidence）：无 UI 变更与真实媒体链路，不适用；由 TASK-ORCH-002 与 BACKEND-MEDIA-001 补充。
 - 独立上下文 AI 复核：PR 提交后执行。
 
@@ -56,3 +56,9 @@
 ## 2026-09-24 补充自查：审批工具权限边界
 
 - ORCH-R3（P1，合并阻断）：`plan_update_stage_state` 暴露给 Agent 的工具原可直接执行 `plan_review→doing`、`result_review→done` 与 `blocked→doing`，绕过宿主的人工决策/失败项重试入口。先新增失败测试复现，随后将工具限定为 `doing→plan_review/result_review/blocked`；`decideStage` 和 `retryStage` 仍由宿主调用。该发现和修复仅为实现者自查，最终独立复审仍为 **NOT VERIFIED**。
+
+## 2026-09-24 独立最终预审与修复
+
+- 独立审查绑定 `ae4bf7a9`，结论 **CHANGES REQUIRED**。ORCH-FINAL-R1（P1）：所有规范化项目均带 `stagePlans`，但 Rust 项目包白名单拒绝，且 Web/Rust 包引用收集遗漏计划工作项的 `assetId`。ORCH-FINAL-R2（P1）：公开 `persistPlan` 可用旧 revision 将 `done` 覆盖回 `doing`。审查未修改代码或批准 PR。
+- 实现者新增失败先行测试后修复：项目包两端校验和收集计划素材，Rust 导出/导入覆盖空计划与仅计划引用的原件；移除公开覆盖入口，工作项更新受 `expectedRevision` 与状态迁移约束。定向和完整验证见 `verification.md`。
+- 旧审查只证明旧 head 不可合并；当前修复后新 head 的独立审查仍为 **NOT VERIFIED**，Hosted CI 也须重新绑定新 SHA。PR #14 与 #15 的四个文档内容冲突尚待按顺序整合。

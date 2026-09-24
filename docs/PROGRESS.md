@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-24 Agent 编排独立审查阻断修复
+
+独立审查在 PR #14 旧 head 发现：公开写入口可用旧计划覆盖已审批进度；Desktop 项目包拒绝 normalize 后新增的 `stagePlans` 字段，Web/Rust 包还遗漏计划工作项唯一引用的素材。当前候选已加入预期 revision 工作项更新、删除公开覆写入口、同步项目包 schema 与素材收集；407 Node、80 Rust 与 300 浏览器测试及类型/Lint/构建/治理通过。修复后新 head 的 Hosted CI、独立复审和 Desktop GUI 尚未验收，PR #14 仍不可合并；详细证据见 [验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-24 Agent 阶段审批边界
 
 `TASK-ORCH-001` 候选新增失败先行测试，确认 Agent 的计划状态工具原可直接批准计划/结果并解除阻断。工具现只允许从执行中发起审批或阻断；宿主审批与重试入口保留决策权。当前代码重跑 405 Node、300 浏览器回归及类型/Lint/格式/构建/治理门禁均通过；最终独立复审、Desktop 与真实 Provider 未验收，候选继续保持 PARTIAL。

@@ -14,6 +14,7 @@ import {
   createTask,
   emptySnapshot,
 } from "../../src/features/creation/model.ts";
+import { createStagePlan } from "../../src/domain/stagePlan.ts";
 
 const sha256 =
   "039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81";
@@ -141,6 +142,58 @@ test("package creation collects graph, attachment and task output references", a
   assert.equal(
     input.manifest.snapshot.projects[0].items[0].preview,
     `kk-asset:${assetId}`,
+  );
+});
+
+test("package creation includes an asset referenced only by a stage work item", async () => {
+  const { asset } = fixture();
+  const project = createProject({
+    prompt: "stage-only asset",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  project.stagePlans = [
+    createStagePlan({
+      id: "plan-1",
+      title: "阶段素材",
+      projectId: project.id,
+      createdBy: "agent",
+      stages: [
+        {
+          name: "生成",
+          goal: "保留原件",
+          workItems: [
+            {
+              id: "work-1",
+              kind: "image",
+              prompt: "蓝色球体",
+              dependencies: [],
+              status: "succeeded",
+              assetId,
+              createdAt: 1,
+              updatedAt: 1,
+            },
+          ],
+        },
+      ],
+    }),
+  ];
+  const snapshot = {
+    ...emptySnapshot(),
+    activeProjectId: project.id,
+    projects: [project],
+  };
+  assert.deepEqual(collectReferencedAssetIds(snapshot), [assetId]);
+  const packageInput = await createProjectPackageManifest(
+    snapshot,
+    async (id) => (id === assetId ? asset : null),
+  );
+  assert.equal(packageInput.manifest.assets.length, 1);
+  assert.deepEqual(
+    (await preflightProjectPackage(packageInput)).snapshot.projects[0]
+      .stagePlans,
+    project.stagePlans,
   );
 });
 

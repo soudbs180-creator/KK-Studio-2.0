@@ -20,7 +20,7 @@
 
 - 模块职责和依赖方向：domain/stagePlan（无依赖）→ features/agent/orchestrator（依赖 domain/stagePlan + features/creation/model 类型）→ agentHost（注入 orchestrator）；agentCanvas 契约依赖 model 类型。
 - schema/API/事件/文件格式与兼容策略：StagePlan/Stage/StageWorkItem 为 zod 白名单 schema；`CreationProject.stagePlans` 为可选数组，normalizeStagePlans 过滤损坏条目，旧快照不受影响。
-- 数据归属、原件保留、校验和、并发/原子性：阶段计划随项目快照本地持久化；推进采用乐观锁（expectedStatus 校验），不覆盖他人写入。
+- 数据归属、原件保留、校验和、并发/原子性：阶段计划随项目快照本地持久化；阶段推进校验当前状态，工作项写入校验 expectedRevision 且递增 revision；项目包导出/导入保留 stagePlans 和仅由工作项引用的素材原件。
 - 凭据与日志边界、最小权限、外部传输与费用：本 PR 无凭据接触、无外部传输；成本为本地估算口径（不接支付）。
 - 相关 ADR（无需时说明原因）：无需新增 ADR（本地领域扩展，无架构分叉）。
 
@@ -40,9 +40,9 @@
 - 正常使用、取消/离线：状态机不依赖网络；离线仅影响生成（既有任务语义）。
 - 升级和旧 schema：stagePlans 可选字段 + normalize 白名单，旧快照读取后不丢数据。
 - 损坏/写失败/进程重启：计划创建和工具输入在 commit 前完整校验，非法输入返回错误且不写入；旧快照中已损坏的计划由 normalize 丢弃；CAS 失败不写入。
-- 备份、还原、回滚：项目快照机制既有；本 PR 不新增。
-- 导出/卸载/退役及用户数据保留：不适用。
-- 各项不适用的原因：本 PR 为领域层增量，无安装/导出面。
+- 备份、还原、回滚：项目快照机制既有；本 PR 同步了 Web/Rust 项目包契约，空计划字段和阶段素材均可完整往返。
+- 导出/卸载/退役及用户数据保留：项目包导出必须覆盖 stagePlans 的字段校验及素材引用；卸载/退役无新增行为。
+- 各项不适用的原因：本 PR 无安装行为。
 
 ## 验收映射
 
@@ -62,3 +62,9 @@
 - 规范冲突、外部依赖与阻断范围：无。
 - 与 intent 的差异及授权依据：无差异。
 - 明确未承诺的能力：UI 审批交互、真实生成驱动、MCP 注册、媒体真实链路。
+
+## 2026-09-24 独立审查后的跨端补充
+
+- `persistPlan` 不再作为可任意覆盖的公开入口。宿主 `updateWorkItem` 只在 `doing` 阶段按当前 revision 推进合法工作项状态，迟到结果或审批后的旧 revision 拒绝且不写入。
+- `CreationProject.stagePlans` 由 normalize 为旧项目补空数组，Desktop `.kkproject` schema 必须接受并验证该字段；Web 与 Rust 项目包均收集 `stagePlans[].stages[].workItems[].assetId`，防止只由计划引用的原件在导出时遗漏。
+- 上述补充只覆盖本地领域和项目包契约，尚未完成真实生成、Tauri GUI 和发布验收。

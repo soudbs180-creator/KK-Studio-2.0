@@ -64,3 +64,10 @@
 - 实现者自查发现 Agent 可通过 `plan_update_stage_state` 把 `plan_review` 直接推进为 `doing`，绕开 `decideStage`。新增测试在旧实现下失败（工具返回 `ok:true`），修复后定向 `orchestrator.test.ts` 13/13 通过，覆盖计划审批、结果审批和解除阻断三条越权路径；宿主 `decideStage` 仍可合法完成审批。
 - 这条修复发生在上述 404/404 与 300/300 运行之后；以下为当前代码重新执行的结果，不沿用旧数字：`node --test tests/unit/*.test.ts` 405/405，`tsc --noEmit`、ESLint 0 warning、Prettier、Vite production build 均 PASS；治理 66 任务、功能 31 项、Markdown 83 文件、UI 标准 159 文件均 0 违规；Playwright/Edge（Vite preview）300/300 PASS。Vite 对第三方 zod 注释和大 chunk 给出非阻断告警。浏览器测试重写的既有截图和 JSON 仅还原本轮由测试产生的文件，未覆盖任务文档或源码。
 - 当前代码没有可见 UI 改动，浏览器回归只说明旧 Web 行为未明显回退；未做 Desktop release、真实 Provider 或人工审批端到端验收。最终独立复审仍为 **NOT VERIFIED**；提交后的 head SHA 需与本次文件树绑定并运行 delivery 检查。
+
+## 2026-09-24 独立预审缺口修复：CAS 与项目包
+
+- 审查基线 `ae4bf7a9` 的两项 P1：公开 `persistPlan` 可把 rev2/done 回写成 rev0/doing；`stagePlans` 空字段使 Rust 项目包校验失败，Web/Rust 漏收仅由阶段工作项引用的素材。独立审查结论为 CHANGES REQUIRED，详见 `review.md`。
+- 失败先行：`orchestrator.test.ts` 新用例在旧实现下因无受控更新入口失败；`projectPackage.test.ts` 新用例实际得到 `[]` 而非计划素材 id；Rust `exports_normalized_project_with_empty_stage_plans` 实际返回 `corrupt: 项目快照无效`。
+- 修复后定向 Node（orchestrator/projectPackage/stagePlan）38/38；全量 Node 407/407；Rust 全量 80/80（含空 `stagePlans` 导出与仅计划素材的导入往返）；TypeScript noEmit 与增量构建、ESLint、Prettier、Vite production build、治理 66/0、功能 31/0、Markdown 83/0、UI 标准 159/0 均通过。Rust 编译有五项既有 dead_code warning；Vite 有第三方注释及 chunk 提示，均非失败。
+- 当前代码的 Playwright/Edge 浏览器回归 300/300 通过；测试重写的 23 个既有截图仅恢复其本轮生成改动，未纳入 PR。当前 head 的 hosted CI 和独立复审需在提交后核对；未做 Desktop GUI/正式发布、真实 Provider 或人工审批端到端验收。
