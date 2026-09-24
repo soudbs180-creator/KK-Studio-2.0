@@ -38,3 +38,11 @@
 - Web 运行方式为 `npm run test:ui` 所启动的 `vite preview --host 127.0.0.1 --port 1423 --strictPort`；浏览器地址 `http://127.0.0.1:1423/`，页面 route `/`，加载重新构建的 production `dist`。设置链路：`src/App.tsx` → `SettingsSections.tsx` → `ConnectionSettings.tsx` → `GoogleConnectionSettings.tsx`；对话链路：`src/App.tsx` → `ConversationPanel.tsx` → `GoogleConversationPanel.tsx` → `GoogleAgentControls.tsx`。浏览器测试分别验证 390px 与 1920px 设置控件可达、Google Key 输入/保存、CLI→Key 切换、两轮对话、图片卡归档和刷新恢复。界面截图见 [fixture 截图](evidence/google-image-fixture.png)；其中图片为 1×1 测试字节，不能证明真实出图。
 - Windows `npm run client:check`（Cargo check）退出 0，说明原生代码编译检查通过；没有启动本轮 Tauri WebView 或发布构建，故 Desktop 运行态仍记 NOT RUN。
 - 没有使用真实 Google API Key 发起 Interactions 请求；模型额度、实际图片、跨轮 `previous_interaction_id`、实际桌面凭据库仍需真实账号验收。独立审查最初发现 Key 输入与登录模式切换阻断问题且已修复；本轮最终补审因 reviewer 工作区额度耗尽未完成，不声称独立终审通过。
+
+## 2026-09-24 PR #13 边界回归修复
+
+独立上下文审查以 `76339c9` 为 base、`756e11a` 为 head，复现两条持久化缺陷：CLI 200001 字符回复以及 API 200000 字符回复追加图片归档说明，原实现均会报告成功，却写入无法重新加载的会话。另发现已保存 Key 无法从 CLI 模式直接切回。修复前新增的两项单元回归及浏览器切换断言均按预期失败；修复后写入前校验完整会话，超限结果保留有效历史并标记 `unknown`，阻止重复提交；设置页允许验证并复用已保存 Key。
+
+- 定向单元 `googleAgent.test.ts` 与 `googleAgentCli.test.ts`：14/14 通过；`tsc -b`、定向 ESLint、Vite production build 通过。
+- `google-agent.spec.ts` 浏览器 fixture：1/1 通过，覆盖 Key → CLI → 已保存 Key 切回、继续连接/对话/生图与恢复；使用 Edge、`vite preview`、`http://127.0.0.1:1423/`，页面 route `/`，组件链路同上。该 fixture 不能证明真实账号能力。
+- 本地全量单元首次运行受复用依赖目录缺少 `remark-gfm` 及桌面 Agent 辅助程序影响；完整 CI 及独立上下文对修复后 head 的复审仍是合并门禁。真实 Google 与 Tauri 项目验收状态不变。

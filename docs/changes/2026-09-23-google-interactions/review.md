@@ -19,3 +19,7 @@
 ## 2026-09-23 组合分支补审
 
 Google CLI 通道叠加后，独立 reviewer 发现 Google Key 输入把值放在 React 保留的 `key` prop，且从 CLI 模式切回 Key 时没有持久化/运行时切换。当前候选已改用普通 `apiKey` prop，并在 Key 保存后同步模式；浏览器回归先保存 CLI，再切回 Key，检查输入值、会话与图片。补审其余 CLI 安全问题见 [TASK-AGENT-005 review](../2026-09-23-google-cli-login/review.md)。最终独立复核仍待完成。
+
+## PR #13 独立审查勘误与待补审
+
+独立 reviewer 对 base `76339c9`、head `756e11a` 给出 `CHANGES REQUIRED`：P1 为超限回复导致 Google 会话无法恢复；P2 为已保存 Key 从 CLI 切回时按钮禁用。实施者在隔离分支补上会话写入前 schema 校验及已存 Key 复用，并用失败先行的单元/浏览器回归验证。上述旧 head 的审查不能自动算作修复后 head 的通过结论；需在最终候选完成 CI 与独立补审后才可并入 main。真实服务及桌面验收仍单列为 PARTIAL/NOT RUN。

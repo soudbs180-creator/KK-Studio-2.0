@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createGoogleAgentConnection } from "../../src/features/agent/googleAgentConnection.ts";
-import type { GoogleConversation } from "../../src/domain/googleConversation.ts";
+import {
+  normalizeGoogleConversation,
+  type GoogleConversation,
+} from "../../src/domain/googleConversation.ts";
 import type { AgentBridge } from "../../src/features/agent/agentConnection.ts";
 import { GeminiCliError } from "../../src/features/agent/geminiCliAdapter.ts";
 
@@ -149,6 +152,25 @@ test("CLI timeout after submission keeps the result unknown and blocks retry", a
   assert.ok(result.error?.includes("结果未确认"));
   assert.equal(saved()?.status, "unknown");
   assert.equal((await store.sendMessage("hi")).ok, false);
+  assert.equal(calls, 1);
+});
+
+test("CLI oversized reply keeps a recoverable unknown conversation", async () => {
+  let calls = 0;
+  const { store, saved } = cliHarness({
+    chat: async () => {
+      calls++;
+      return { text: "x".repeat(200001), sessionId: "cli-oversized" };
+    },
+  });
+  await store.connect();
+  assert.equal((await store.sendMessage("keep this turn")).ok, false);
+  assert.equal(saved()?.status, "unknown");
+  const restored = normalizeGoogleConversation(saved());
+  assert.equal(restored?.status, "unknown");
+  assert.equal(restored?.messages.at(-1)?.text, "keep this turn");
+  assert.equal(restored?.cliSessionId, undefined);
+  assert.equal((await store.sendMessage("do not retry")).ok, false);
   assert.equal(calls, 1);
 });
 

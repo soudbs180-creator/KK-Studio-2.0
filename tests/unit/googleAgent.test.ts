@@ -92,6 +92,27 @@ test("Google conversation continues the previous interaction, persists no creden
   );
 });
 
+test("image archive note cannot corrupt a maximum-length Google reply", async () => {
+  let calls = 0;
+  const h = harness(async () => {
+    calls++;
+    return {
+      ...completed("remote-max", "x".repeat(200000)),
+      images: [new Blob(["image"], { type: "image/png" })],
+    };
+  });
+  await h.store.connect();
+  assert.equal((await h.store.sendMessage("draw")).ok, false);
+  assert.equal(h.saved()?.status, "unknown");
+  const restored = normalizeGoogleConversation(h.saved());
+  assert.equal(restored?.status, "unknown");
+  assert.equal(restored?.messages.at(-1)?.text, "draw");
+  assert.equal(restored?.previousInteractionId, "remote-max");
+  assert.equal(restored?.archivedImageIds.length, 1);
+  assert.equal((await h.store.sendMessage("do not retry")).ok, false);
+  assert.equal(calls, 1);
+});
+
 test("unknown acceptance is persisted and never automatically reissued", async () => {
   let calls = 0;
   const h = harness(async () => {

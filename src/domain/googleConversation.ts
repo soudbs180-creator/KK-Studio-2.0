@@ -17,6 +17,13 @@ const schema = z.object({
 });
 export type GoogleConversation = z.infer<typeof schema>;
 
+/** Validate the complete record before writing it; TypeScript types cannot bound remote replies. */
+export function isPersistableGoogleConversation(
+  value: unknown,
+): value is GoogleConversation {
+  return schema.safeParse(value).success;
+}
+
 /** Whitelist persisted fields; an interrupted request must not become retryable on reload. */
 export function normalizeGoogleConversation(
   value: unknown,

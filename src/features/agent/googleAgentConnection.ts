@@ -1,4 +1,5 @@
 import {
+  isPersistableGoogleConversation,
   type GoogleConversation,
   normalizeGoogleConversation,
 } from "../../domain/googleConversation.ts";
@@ -102,6 +103,8 @@ export function createGoogleAgentConnection(options: Options = {}) {
   function save(next: GoogleConversation) {
     if (!bridge?.saveGoogleConversation || current() !== projectId)
       throw new Error("当前项目不可保存 Google 会话。");
+    if (!isPersistableGoogleConversation(next))
+      throw new Error("Google 会话超出本地保存限制，未写入不完整记录。");
     bridge.saveGoogleConversation(next, projectId);
     record = next;
     patch({ messages: next.messages, uncertain: next.status === "unknown" });

@@ -68,6 +68,20 @@ test("Google key configuration, dialogue continuity, image archive and restored 
       exact: true,
     }),
   ).toBeVisible();
+  await page.getByRole("radio", { name: /Gemini CLI 账号/ }).check();
+  await page.getByRole("button", { name: "保存登录方式", exact: true }).click();
+  expect(
+    await page.evaluate(() => localStorage.getItem("kk-google-login-mode")),
+  ).toBe("cli");
+  await page.getByRole("radio", { name: /密钥登录/ }).check();
+  await expect(page.getByLabel("Google 密钥", { exact: true })).toHaveValue("");
+  await expect(
+    page.getByRole("button", { name: "保存 Google", exact: true }),
+  ).toBeEnabled();
+  await page.getByRole("button", { name: "保存 Google", exact: true }).click();
+  expect(
+    await page.evaluate(() => localStorage.getItem("kk-google-login-mode")),
+  ).toBeNull();
   await page
     .getByRole("button", { name: "测试 Google 连接", exact: true })
     .click();

@@ -6,6 +6,7 @@ import {
 } from "../../features/agent/googleInteractions";
 import {
   GOOGLE_CREDENTIAL_REF,
+  getGoogleCredential,
   readGoogleCliPreference,
   saveGoogleApiKeyConnection,
   writeGoogleCliPreference,
@@ -78,11 +79,15 @@ export default function GoogleConnectionSettings({
     }
   }
   async function saveKey() {
-    if (disabled || !key.trim()) return;
+    if (disabled || (!key.trim() && !stored)) return;
     setBusy(true);
     setStatus("");
     try {
-      await saveGoogleApiKeyConnection(key);
+      if (key.trim()) await saveGoogleApiKeyConnection(key);
+      else {
+        await getGoogleCredential();
+        writeGoogleCliPreference("api-key", GEMINI_BRIDGE_DEFAULT_URL);
+      }
       googleAgentConnection.configure({
         loginMode: "api-key",
         bridgeUrl: GEMINI_BRIDGE_DEFAULT_URL,
@@ -227,7 +232,7 @@ export default function GoogleConnectionSettings({
           <button
             type="button"
             className="settings-action"
-            disabled={disabled || !key.trim()}
+            disabled={disabled || (!key.trim() && !stored)}
             onClick={() => void saveKey()}
           >
             保存 Google
