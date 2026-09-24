@@ -44,6 +44,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AUDIT-SEC-001 | 安全边界与异常任务状态审计 | REVIEW | TASK-GOV-001 | root |
 | TASK-CAP-001 | 本地 Skill/MCP/ComfyUI 能力补齐 | PARTIAL | TASK-GOV-001, T6 | root |
 | TASK-MINIMAX-001 | MiniMax Design 交互审计与本地技能/MCP复刻 | PARTIAL | TASK-GOV-002 | root |
+| TASK-MCP-PROTO-001 | MCP 2026 协议协商与旧版兼容 | TODO | TASK-CAP-001 | root |
 | FEATURE-SYSTEM | 功能卡片体系、状态看板与后端化路线 | DONE | TASK-KK2-MAIN-SYNC | root |
 | BACKEND-IMAGE-PARAMS | 图片比例与清晰度真实透传供应商 | PARTIAL | none | root |
 | BACKEND-TEXT-NODE | 文本节点接入统一任务宿主 | PARTIAL | T5 | root |
@@ -521,12 +522,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 依据真实 MiniMax Design 操作证据，补齐 KK Studio 的技能库、连接器目录和 MCP 发现交互
 - Scope: MiniMax Design skills/connectors/MCP/ComfyUI interaction audit; KK Studio skill registry, composer integration, connector prototype, MCP lifecycle
 - Acceptance: 真实检查 MiniMax 的技能、连接器、菜单、设置和 ComfyUI 入口，并记录付费生成不执行的边界; KK Studio 技能库支持本地 Skill 的查看、导入、创建、编辑、启用/禁用、卸载和应用到草稿; 连接器目录提供真实可操作的详情、Escape/焦点恢复和明确 Prototype 安装边界; MCP Streamable HTTP 配置覆盖发现、分页、连接失败清理、卸载清理、持久化损坏提示和大小上限; Web 开发运行时完成同状态浏览器证据，未验证范围明确记录，不把本地原型描述为云端/付费能力
-- Branch: `codex/feat/minimax-deep-replica-root`
-- Worktree: `D:/kk-studio-next`
+- Branch: `fix/TASK-MINIMAX-001-mcp-registry-limit`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MINIMAX-001-mcp-registry-limit`
 - Modules: src/components/SkillsPage.tsx, src/components/SkillEditor.tsx, src/components/ConnectorCatalog.tsx, src/components/settings/McpSettings.tsx, src/features/skills/skillRegistry.ts, src/features/mcp/mcpClient.ts, tests/unit, docs/changes/2026-09-21-minimax-deep-audit
-- Verification: PARTIAL — MiniMax 本地应用的技能、连接器、设置/MCP、ComfyUI 和菜单流程已完成只读审计；KK Studio Web 1421 已验证 Skill/Connector/MCP 的点击、Escape、焦点恢复和 HTTPS/HTTP 校验。完整生成、付费提交、桌面 Tauri release 和真实第三方连接器安装仍未验证，保持 PARTIAL。
-- Evidence: [docs/changes/2026-09-21-minimax-deep-audit/verification.md](../../docs/changes/2026-09-21-minimax-deep-audit/verification.md), [docs/evidence/minimax-deep-audit-2026-09-21/runtime.json](../../docs/evidence/minimax-deep-audit-2026-09-21/runtime.json)
-- Updated: 2026-09-21
+- Verification: PARTIAL — 2026-09-21 历史 MiniMax 只读审计和 KK Web Skill/Connector/MCP 验证仍按原证据解释；当前修复 MCP 配置超过 50 项会造成下次读取整表失败的问题。新工作树补齐构建前置后本地 371 Node、300 Web 浏览器回归及静态检查通过。完整生成、付费提交、桌面 Tauri release、真实第三方连接器安装、现代协议及独立复审仍未验证，保持 PARTIAL。旧分支 codex/feat/minimax-deep-replica-root 与 D:/kk-studio-next 仅为历史证据位置。
+- Evidence: [docs/changes/2026-09-21-minimax-deep-audit/verification.md](../../docs/changes/2026-09-21-minimax-deep-audit/verification.md), [docs/evidence/minimax-deep-audit-2026-09-21/runtime.json](../../docs/evidence/minimax-deep-audit-2026-09-21/runtime.json), [docs/changes/2026-09-24-mcp-registry-limit/verification.md](../../docs/changes/2026-09-24-mcp-registry-limit/verification.md)
+- Updated: 2026-09-24
+
+## TASK-MCP-PROTO-001 — MCP 2026 协议协商与旧版兼容
+
+- Goal: 让手动 MCP 客户端在安全边界内兼容 2026-07-28 modern 与 2025-11-25 legacy 服务器，并用真实端点验收
+- Scope: src/features/mcp/mcpClient.ts, tests/unit/mcpClient.test.ts, tests/browser/mcp-settings.spec.ts, Desktop/Web 连接验收
+- Acceptance: 实现 server/discover 与旧版 initialize 的明确协商及安全回退，拒绝把鉴权或服务故障误判为旧版; 保持 HTTPS/loopback、凭据不持久化、超时取消、大小和分页限制; 用现代与旧版测试服务器覆盖发现、失败、重连与恢复；真实第三方服务器完成 Web 和 Desktop 验收
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/mcp/mcpClient.ts, src/components/settings/McpSettings.tsx, tests/unit/mcpClient.test.ts, tests/browser/mcp-settings.spec.ts
+- Verification: NOT_VERIFIED — NOT VERIFIED：当前客户端固定 2025-11-25 initialize；官方 2026-07-28 文档定义 server/discover。尚未运行现代协议真实服务器，兼容失败为静态推断。
+- Evidence: [docs/changes/2026-09-24-mcp-registry-limit/spec.md](../../docs/changes/2026-09-24-mcp-registry-limit/spec.md), [docs/features/feat-012-mcp.md](../../docs/features/feat-012-mcp.md)
+- Updated: 2026-09-24
 
 ## FEATURE-SYSTEM — 功能卡片体系、状态看板与后端化路线
 

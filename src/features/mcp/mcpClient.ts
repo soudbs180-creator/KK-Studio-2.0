@@ -7,6 +7,7 @@ const MCP_CLIENT_VERSION = appVersion;
 const MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
 const MAX_TOOLS = 500;
 const MAX_PAGES = 32;
+const MAX_SAVED_SERVERS = 50;
 const DEFAULT_TIMEOUT_MS = 15_000;
 
 export const MCP_SERVERS_STORAGE_KEY = "kk-studio-next:mcp-servers:v1";
@@ -426,7 +427,7 @@ function defaultStorage(): McpServerStorage | null {
   }
 }
 
-const persistedServersSchema = z.array(mcpServerSchema).max(50);
+const persistedServersSchema = z.array(mcpServerSchema).max(MAX_SAVED_SERVERS);
 
 /** Metadata registry; session IDs, discovered tools and secrets are memory-only. */
 export class McpServerRegistry {
@@ -482,10 +483,10 @@ export class McpServerRegistry {
     if (this.corruptedOnRead) throw new Error(this.persistenceWarning);
     const server = mcpServerSchema.parse(value);
     const previous = this.servers;
-    this.servers = [
-      ...previous.filter((item) => item.id !== server.id),
-      server,
-    ];
+    const next = [...previous.filter((item) => item.id !== server.id), server];
+    if (next.length > MAX_SAVED_SERVERS)
+      throw new Error(`MCP 服务器最多保存 ${MAX_SAVED_SERVERS} 个。`);
+    this.servers = next;
     if (!this.write()) {
       this.servers = previous;
       throw new Error("无法保存 MCP 服务器设置。");

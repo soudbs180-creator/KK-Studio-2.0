@@ -1073,8 +1073,8 @@
     ],
     "dependencies": ["TASK-GOV-002"],
     "owner": "root",
-    "branch": "codex/feat/minimax-deep-replica-root",
-    "worktree": "D:/kk-studio-next",
+    "branch": "fix/TASK-MINIMAX-001-mcp-registry-limit",
+    "worktree": "D:/kk-studio/.worktrees/TASK-MINIMAX-001-mcp-registry-limit",
     "affectedModules": [
       "src/components/SkillsPage.tsx",
       "src/components/SkillEditor.tsx",
@@ -1088,11 +1088,41 @@
     "status": "PARTIAL",
     "evidence": [
       "docs/changes/2026-09-21-minimax-deep-audit/verification.md",
-      "docs/evidence/minimax-deep-audit-2026-09-21/runtime.json"
+      "docs/evidence/minimax-deep-audit-2026-09-21/runtime.json",
+      "docs/changes/2026-09-24-mcp-registry-limit/verification.md"
     ],
-    "verification": "MiniMax 本地应用的技能、连接器、设置/MCP、ComfyUI 和菜单流程已完成只读审计；KK Studio Web 1421 已验证 Skill/Connector/MCP 的点击、Escape、焦点恢复和 HTTPS/HTTP 校验。完整生成、付费提交、桌面 Tauri release 和真实第三方连接器安装仍未验证，保持 PARTIAL。",
+    "verification": "2026-09-21 历史 MiniMax 只读审计和 KK Web Skill/Connector/MCP 验证仍按原证据解释；当前修复 MCP 配置超过 50 项会造成下次读取整表失败的问题。新工作树补齐构建前置后本地 371 Node、300 Web 浏览器回归及静态检查通过。完整生成、付费提交、桌面 Tauri release、真实第三方连接器安装、现代协议及独立复审仍未验证，保持 PARTIAL。旧分支 codex/feat/minimax-deep-replica-root 与 D:/kk-studio-next 仅为历史证据位置。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-21"
+    "updated": "2026-09-24"
+  },
+  {
+    "id": "TASK-MCP-PROTO-001",
+    "title": "MCP 2026 协议协商与旧版兼容",
+    "goal": "让手动 MCP 客户端在安全边界内兼容 2026-07-28 modern 与 2025-11-25 legacy 服务器，并用真实端点验收",
+    "scope": "src/features/mcp/mcpClient.ts, tests/unit/mcpClient.test.ts, tests/browser/mcp-settings.spec.ts, Desktop/Web 连接验收",
+    "acceptance": [
+      "实现 server/discover 与旧版 initialize 的明确协商及安全回退，拒绝把鉴权或服务故障误判为旧版",
+      "保持 HTTPS/loopback、凭据不持久化、超时取消、大小和分页限制",
+      "用现代与旧版测试服务器覆盖发现、失败、重连与恢复；真实第三方服务器完成 Web 和 Desktop 验收"
+    ],
+    "dependencies": ["TASK-CAP-001"],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/features/mcp/mcpClient.ts",
+      "src/components/settings/McpSettings.tsx",
+      "tests/unit/mcpClient.test.ts",
+      "tests/browser/mcp-settings.spec.ts"
+    ],
+    "status": "TODO",
+    "evidence": [
+      "docs/changes/2026-09-24-mcp-registry-limit/spec.md",
+      "docs/features/feat-012-mcp.md"
+    ],
+    "verification": "NOT VERIFIED：当前客户端固定 2025-11-25 initialize；官方 2026-07-28 文档定义 server/discover。尚未运行现代协议真实服务器，兼容失败为静态推断。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-09-24"
   },
   {
     "id": "FEATURE-SYSTEM",

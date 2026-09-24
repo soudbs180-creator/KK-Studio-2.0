@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-24 竞品对标后的 MCP 配置一致性
+
+`TASK-MINIMAX-001` 分支修复手动 MCP 服务器列表第 51 项可写、重启后整表被判损坏的问题：写入前使用与读取相同的 50 项上限，同 id 更新仍可进行。补齐新工作树的 Agent/插件构建前置后，371 Node 与 300 Web 浏览器回归、类型/Lint/格式/构建/治理检查通过；初次环境失败及恢复见 [本轮验证](changes/2026-09-24-mcp-registry-limit/verification.md)。对照当前 MCP 官方协议说明又发现客户端仅固定 2025-11-25，2026-07-28 modern 协商缺口已列 `TASK-MCP-PROTO-001`。历史 MiniMax UI 审计仅保持原时点含义；真实第三方服务器、Tauri release 和付费能力未在本轮验收。
+
 ## 2026-09-23 2.1.0 源码并线与远端规则回读
 
 - [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的 head `da811283` 在 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7`；旧 PR #8 的提交是 #9 候选的祖先，内容被吸收，PR #8 已关闭而未重复合并。[PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 再将规则与 Markdown 审计 squash 合入 `main@9f04bfce`；两次合并的文件树均与各自受审候选相同，本地根 `main` 已快进至后者。

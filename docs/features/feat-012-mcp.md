@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-09-23
-- 关联任务：TASK-CAP-001、BACKEND-MCP-AUTO、TASK-AGENT-001、TASK-AGENT-003
+- 最近更新：2026-09-24
+- 关联任务：TASK-CAP-001、BACKEND-MCP-AUTO、TASK-AGENT-001、TASK-AGENT-003、TASK-MINIMAX-001、TASK-MCP-PROTO-001
 
 ## 用户可见入口
 
@@ -27,6 +27,7 @@
 
 - “自动调用”仍为 Prototype：需要工具选择/授权/调用编排、与技能和对话的集成、错误与取消状态。
 - 未用真实第三方 MCP 服务器做桌面 release 验收（TASK-CAP-001 缺口）。
+- 当前客户端固定 `2025-11-25` 的 `initialize`/session 流程；[MCP 官方协议版本说明](https://ts.sdk.modelcontextprotocol.io/v2/protocol-versions)列出的 `2026-07-28` modern 流程使用 `server/discover`。新版专用服务器兼容性尚未实测，按静态契约推断当前不支持；由 TASK-MCP-PROTO-001 跟进，不把“手动真实连接”泛化成全部 MCP 版本。
 
 ## 变更记录
 
@@ -41,3 +42,7 @@ KK 画布 MCP 的自动编排已由默认 Codex 接通：读取快照、增删�
 ## 本轮实施
 
 TASK-AGENT-003：图片附件、显式画布引用和视口/选择桥接；验收见 [本轮记录](../changes/2026-09-23-agent-attachments/verification.md)。
+
+## 2026-09-24 配置上限修复
+
+原 registry 写入允许第 51 个服务器，但读取 schema 最多接受 50 个，重启后会误判整份配置损坏。现写前按同一上限拒绝第 51 个，同时允许同 id 更新，原数据不变；证据见 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)。功能状态仍 PARTIAL。

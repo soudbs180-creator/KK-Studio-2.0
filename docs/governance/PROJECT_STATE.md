@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-24 MCP 候选与竞品审计遗留
+
+`fix/TASK-MINIMAX-001-mcp-registry-limit` 修复 50 项持久化上限与写入不一致；当前仅为独立分支候选，不能据此认定主线已修复。`TASK-MCP-PROTO-001` 登记 2026-07-28 协议协商缺口，真实新版服务器仍未验证。MiniMax 安装目录版本元数据已只读核对，2026-09-21 的 UI 审计维持历史证据含义。以 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)和账本为准；与编排候选合并前需处理 `PROGRESS`、`PROJECT_STATE`、`AI_HANDOFF`、ledger 的同文件差异。
+
 ## 2026-09-23 KK Studio 2.1.0 源码并线与规则回读（REL-2.1.0）
 
 当前版本元数据已统一为 2.1.0；源码候选先在 `chore/TASK-CONSOLIDATE-200` 上提交并上传，首次远端 SHA 与受审源码 `15f1f27` 一致。`VERSION`、`CHANGELOG.md`、package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端共同记录 2.1.0；原有 `%APPDATA%/kk-studio`、存储 key、应用 identifier、历史 2.0.0 证据和恢复归档不变。安装包、签名和正式 tag 仍未完成。
