@@ -708,7 +708,7 @@ fn delete_conversation(state: State<AppState>, id: String) -> Result<bool, Strin
 // 共享契约（TASK-MEMORY-002）：所有产品（Codex 桌面/Web、豆包 Agent、
 // WorkBuddy）读写同一份共享文件 ~/.kk-memory/memory.json；绝不上云。
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 struct MemoryRecord {
     id: String,
     content: String,
@@ -728,7 +728,7 @@ struct MemoryRecord {
     active: bool,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 struct MemoryStore {
     version: u32,
     #[serde(default, skip_serializing_if = "String::is_empty")]
@@ -832,9 +832,37 @@ fn write_memory_file(path: &Path, store: &MemoryStore) -> Result<(), String> {
     })
 }
 
-fn guarded_write_memory_file(path: &Path, store: &MemoryStore) -> Result<(), String> {
-    read_memory_file(path)?;
-    write_memory_file(path, store)
+fn with_memory_file_lock<T>(
+    path: &Path,
+    action: impl FnOnce() -> Result<T, String>,
+) -> Result<T, String> {
+    let parent = path
+        .parent()
+        .ok_or_else(|| "记忆文件路径无效".to_string())?;
+    fs::create_dir_all(parent).map_err(|error| format!("无法创建记忆目录：{error}"))?;
+    let lock_file = fs::OpenOptions::new()
+        .create(true)
+        .write(true)
+        .open(path.with_extension("json.lock"))
+        .map_err(|error| format!("无法打开记忆写入锁：{error}"))?;
+    lock_file
+        .lock()
+        .map_err(|error| format!("无法锁定记忆文件：{error}"))?;
+    action()
+}
+
+fn guarded_write_memory_file(
+    path: &Path,
+    store: &MemoryStore,
+    expected: &MemoryStore,
+) -> Result<(), String> {
+    with_memory_file_lock(path, || {
+        let current = read_memory_file(path)?;
+        if current != *expected {
+            return Err("MEMORY_CONFLICT：共享记忆已被其他窗口修改".to_string());
+        }
+        write_memory_file(path, store)
+    })
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -843,18 +871,26 @@ fn memory_read(state: State<AppState>) -> Result<MemoryStore, String> {
 }
 
 #[tauri::command(rename_all = "camelCase")]
-fn memory_write(state: State<AppState>, store: MemoryStore) -> Result<MemoryStore, String> {
+fn memory_write(
+    state: State<AppState>,
+    store: MemoryStore,
+    expected: MemoryStore,
+) -> Result<MemoryStore, String> {
     if store.version != MEMORY_STORE_VERSION {
         return Err(format!("不支持写入的记忆版本：{}", store.version));
     }
     if store.records.len() > 10_000 {
         return Err("记忆条目超过上限（10000）".to_string());
     }
-    guarded_write_memory_file(&state.memory_path, &store)?;
+    guarded_write_memory_file(&state.memory_path, &store, &expected)?;
     Ok(store)
 }
 
 fn reset_memory_file(path: &Path, previous: &Path) -> Result<MemoryStore, String> {
+    with_memory_file_lock(path, || reset_memory_file_locked(path, previous))
+}
+
+fn reset_memory_file_locked(path: &Path, previous: &Path) -> Result<MemoryStore, String> {
     if path.exists() {
         if previous.exists() {
             return Err("记忆备份文件已存在，未修改原文件".to_string());
@@ -1282,7 +1318,7 @@ mod memory_tests {
             namespace: String::new(),
             records: vec![sample_record()],
         };
-        assert!(guarded_write_memory_file(&path, &store).is_err());
+        assert!(guarded_write_memory_file(&path, &store, &store).is_err());
         assert_eq!(fs::read(&path).expect("read original"), raw);
         let _ = fs::remove_file(&path);
     }
@@ -1317,6 +1353,60 @@ mod memory_tests {
             .filter(|name| name.contains(".tmp"))
             .collect();
         assert!(leftovers.is_empty(), "temp files left: {leftovers:?}");
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn stale_memory_write_is_rejected_without_losing_the_first_update() {
+        let path = temp_memory_path("stale-write");
+        let empty = read_memory_file(&path).expect("initial store");
+        let first = MemoryStore {
+            records: vec![sample_record()],
+            ..empty.clone()
+        };
+        guarded_write_memory_file(&path, &first, &empty).expect("first write");
+        let mut second_record = sample_record();
+        second_record.id = "r2".to_string();
+        let stale = MemoryStore {
+            records: vec![second_record],
+            ..empty.clone()
+        };
+        let error = guarded_write_memory_file(&path, &stale, &empty)
+            .expect_err("stale write must be rejected");
+        assert!(error.contains("MEMORY_CONFLICT"));
+        assert_eq!(read_memory_file(&path).expect("read first write"), first);
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn concurrent_memory_writes_allow_only_one_stale_snapshot() {
+        let path = temp_memory_path("concurrent-write");
+        let expected = read_memory_file(&path).expect("initial store");
+        let mut second_record = sample_record();
+        second_record.id = "r2".to_string();
+        let first = MemoryStore {
+            records: vec![sample_record()],
+            ..expected.clone()
+        };
+        let second = MemoryStore {
+            records: vec![second_record],
+            ..expected.clone()
+        };
+        let first_path = path.clone();
+        let first_expected = expected.clone();
+        let first_write = std::thread::spawn(move || {
+            guarded_write_memory_file(&first_path, &first, &first_expected)
+        });
+        let second_path = path.clone();
+        let second_write = std::thread::spawn(move || {
+            guarded_write_memory_file(&second_path, &second, &expected)
+        });
+        let results = [first_write.join().unwrap(), second_write.join().unwrap()];
+        assert_eq!(results.iter().filter(|result| result.is_ok()).count(), 1);
+        assert_eq!(
+            read_memory_file(&path).expect("winning store").records.len(),
+            1
+        );
         let _ = fs::remove_file(&path);
     }
 

@@ -2,9 +2,9 @@
 
 ## 2026-09-24 当前恢复入口：本地记忆复核
 
-- 当前分支 `feat/TASK-MEMORY-001-local-memory` 位于 `D:/kk-studio/.worktrees/TASK-MEMORY-001`，远端仍为 `55e93a1`；本轮修补待提交、验证与复审。main 保持 `76339c9`。先检查 `git status` 和本节，再看下方历史快照。
+- 当前分支 `feat/TASK-MEMORY-001-local-memory` 位于 `D:/kk-studio/.worktrees/TASK-MEMORY-001`；`09b02c8` 后的独立评审修补待提交与新 SHA 复审。main 保持 `76339c9`。先检查 `git status` 和本节，再看下方历史快照。
 - FEAT-020 与 TASK-MEMORY-001/002 均未达到真实跨应用验收；账本改为 PARTIAL / NOT_VERIFIED。当前自动采集/注入只在 KK Studio 的 Codex 对话中实现，豆包和 WorkBuddy 原生客户端尚未接入。Web FSA 真实授权、Desktop 打包运行态、真实模型引用仍待验证。
-- 本轮修补与证据见 `docs/superpowers/plans/2026-09-24-memory-closure.md`、`docs/changes/2026-09-24-local-memory/verification.md` 的勘误。`npm run verify` 现为 408 Node、308 browser 全通过；Rust 88/88。完整记忆文件仅存本机，选中的相关片段会随当前请求发送给模型推理。
+- 本轮修补与证据见 `docs/superpowers/plans/2026-09-24-memory-closure.md`、`docs/changes/2026-09-24-local-memory/verification.md` 的勘误。`npm run verify` 现为 413 Node、309 browser 全通过；Rust 90/90。独立评审提出的并发写、旧/半截回复、错误重试循环、旧 Web 数据迁移和超长行问题已有针对性修补；Web 与 Desktop 同时写共享文件仍未真实验证。完整记忆文件仅存本机，选中的相关片段会随当前请求发送给模型推理。
 
 ## 2026-09-24 历史恢复入口：本地长期记忆（TASK-MEMORY-001 + 002，旧候选）
 

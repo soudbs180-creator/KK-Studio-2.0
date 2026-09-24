@@ -140,6 +140,22 @@ test("损坏的本地记忆显示读取错误，不伪装为空列表", async ({
     });
     db.close();
   });
+  await page.evaluate(() => {
+    const originalOpen = indexedDB.open.bind(indexedDB);
+    let opens = 0;
+    Object.defineProperty(indexedDB, "open", {
+      configurable: true,
+      value: (name: string, version?: number) => {
+        if (name === "kk-studio-memory") opens += 1;
+        return version === undefined
+          ? originalOpen(name)
+          : originalOpen(name, version);
+      },
+    });
+    (
+      window as typeof window & { memoryDbOpenCount?: () => number }
+    ).memoryDbOpenCount = () => opens;
+  });
 
   const dialog = await openMemorySection(page);
   await dialog.getByRole("switch", { name: "记忆服务开关" }).click();
@@ -147,6 +163,68 @@ test("损坏的本地记忆显示读取错误，不伪装为空列表", async ({
     dialog.getByText("本地记忆读取失败，原数据已保留。"),
   ).toBeVisible();
   await expect(dialog.getByText("暂无记忆", { exact: true })).toHaveCount(0);
+  await page.waitForTimeout(300);
+  const before = await page.evaluate(
+    () =>
+      (
+        window as typeof window & { memoryDbOpenCount?: () => number }
+      ).memoryDbOpenCount?.() ?? -1,
+  );
+  await page.waitForTimeout(900);
+  const after = await page.evaluate(
+    () =>
+      (
+        window as typeof window & { memoryDbOpenCount?: () => number }
+      ).memoryDbOpenCount?.() ?? -1,
+  );
+  expect(after).toBe(before);
+});
+
+test("旧候选数据库中的记忆迁移到独立数据库", async ({ page }) => {
+  // Seed the origin before the app opens its creation database.
+  await page.goto("/design/figma/settings-close.svg");
+  await page.evaluate(async () => {
+    const request = indexedDB.open("kk-studio-next", 1);
+    request.onupgradeneeded = () => {
+      request.result.createObjectStore("creation");
+      request.result.createObjectStore("memory");
+    };
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction("memory", "readwrite");
+      tx.objectStore("memory").put(
+        {
+          version: 1,
+          namespace: "",
+          records: [
+            {
+              id: "legacy-memory",
+              content: "以后请用日系插画风格",
+              memoryType: "user_preference",
+              confidence: 0.9,
+              fingerprint: "legacy-fingerprint",
+              source: "manual_user",
+              createdAt: "2026-09-24T00:00:00.000Z",
+              updatedAt: "2026-09-24T00:00:00.000Z",
+              active: true,
+            },
+          ],
+        },
+        "default",
+      );
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+    db.close();
+  });
+  const dialog = await openMemorySection(page);
+  await dialog.getByRole("switch", { name: "记忆服务开关" }).click();
+  await expect(
+    dialog.getByText("以后请用日系插画风格", { exact: true }),
+  ).toBeVisible();
 });
 
 test("清空共享记忆前需要确认，取消时原记录仍在", async ({ page }) => {

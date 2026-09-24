@@ -853,6 +853,7 @@
       "tests/unit/memoryInjector.test.ts",
       "tests/unit/memoryStorage.test.ts",
       "tests/unit/memoryService.test.ts",
+      "tests/unit/memoryReply.test.ts",
       "tests/browser/memory-settings.spec.ts"
     ],
     "tasks": [

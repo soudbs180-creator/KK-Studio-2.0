@@ -2,6 +2,8 @@
 
 ## 2026-09-24 记忆候选复核与修补
 
+- 独立代码评审指出并发覆盖、提炼误收旧/未完成回复、损坏文件重复读取及旧 Web 数据未迁移；现已增加 Desktop 写锁和版本比较、Web IndexedDB 原子比较及共享目录独占写流、冲突重试、按本轮 turnId 和完成阶段提炼、稳定错误回调、旧候选数据库迁移。跨浏览器进程与 Desktop 同时写共享目录仍待实机验证。
+- 修补后 `npm run verify` 通过（413 Node、309 browser），Rust 90/90；独立复审的新 SHA 仍待完成。旧验证数字见下方历史记录。
 - FEAT-020 保持 PARTIAL，原先"Codex/豆包/WorkBuddy 已共享"和"绝不上云"表述已纠正：当前仅 KK Studio 的 Codex 对话使用记忆；完整文件不云同步，选中的片段会用于当前模型请求。
 - 修补了 Web IndexedDB 仓库冲突、损坏记录清空、Desktop 首写缺目录与备份失败后继续重置、模型回复自动入库等问题；真实系统目录授权和跨应用联调仍未验证。
 - 本轮 `npm run verify` 通过（408 Node、308 browser），Rust 88/88；Web 1920/390 截图与未完成项见 `docs/changes/2026-09-24-local-memory/verification.md` 的新增勘误。

@@ -13,13 +13,14 @@ import {
   type MessageRole,
 } from "./extractor.ts";
 import { formatInjectionBlock, selectMemoryRecords } from "./injector.ts";
-import type { MemoryStorage } from "./storage.ts";
+import { MemoryConflictError, type MemoryStorage } from "./storage.ts";
 import {
   DEFAULT_MEMORY_SETTINGS,
   type MemoryRecord,
   type MemorySettings,
   type MemorySource,
   type MemoryStoreFile,
+  MEMORY_CONTENT_MAX_LENGTH,
   MEMORY_RECORDS_MAX,
 } from "./types.ts";
 
@@ -80,7 +81,18 @@ export class MemoryService {
   }
 
   private enqueueMutation<T>(operation: () => Promise<T>): Promise<T> {
-    const result = this.mutationTail.then(operation);
+    const result = this.mutationTail.then(async () => {
+      for (let attempt = 0; attempt < 4; attempt += 1) {
+        try {
+          return await operation();
+        } catch (error) {
+          if (!(error instanceof MemoryConflictError) || attempt === 3) {
+            throw error;
+          }
+        }
+      }
+      throw new MemoryConflictError();
+    });
     this.mutationTail = result.then(
       () => undefined,
       () => undefined,
@@ -108,7 +120,7 @@ export class MemoryService {
   }
 
   /**
-   * 采集一条消息中的记忆候选（用户/assistant 消息）。
+   * 采集一条用户消息中的记忆候选；assistant 消息不会自动入库。
    * 失败静默：绝不让记忆采集影响对话。
    */
   async ingestMessage(
@@ -156,10 +168,13 @@ export class MemoryService {
         if (additions.length === 0) {
           return;
         }
-        await this.storage.write({
-          ...store,
-          records: [...store.records, ...additions],
-        });
+        await this.storage.write(
+          {
+            ...store,
+            records: [...store.records, ...additions],
+          },
+          store,
+        );
       });
     } catch {
       // 静默：记忆采集失败不影响对话。
@@ -202,6 +217,7 @@ export class MemoryService {
       if (
         match &&
         match[1].trim().length >= 4 &&
+        match[1].trim().length <= MEMORY_CONTENT_MAX_LENGTH &&
         !containsSensitiveCredential(match[1])
       ) {
         candidates.push({ content: match[1].trim(), confidence: 0.85 });
@@ -242,10 +258,13 @@ export class MemoryService {
       if (additions.length === 0) {
         return 0;
       }
-      await this.storage.write({
-        ...store,
-        records: [...store.records, ...additions],
-      });
+      await this.storage.write(
+        {
+          ...store,
+          records: [...store.records, ...additions],
+        },
+        store,
+      );
       return additions.length;
     });
   }
@@ -258,7 +277,7 @@ export class MemoryService {
         ...store,
         records: store.records.filter((record) => record.id !== id),
       };
-      await this.storage.write(next);
+      await this.storage.write(next, store);
       return next;
     });
   }
@@ -268,7 +287,7 @@ export class MemoryService {
     return this.enqueueMutation(async () => {
       const store = await this.storage.read();
       const next = { ...store, records: [] };
-      await this.storage.write(next);
+      await this.storage.write(next, store);
       return next;
     });
   }

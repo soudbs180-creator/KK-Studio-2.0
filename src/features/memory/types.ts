@@ -2,8 +2,8 @@
  * 本地长期记忆（用户级）类型定义。
  *
  * 共享语义（TASK-MEMORY-002，用户决策覆盖 TASK-MEMORY-001 的隔离语义）：
- * - 记忆是本机共享的：Codex（KK Studio 桌面/Web）、豆包（Agent 环境）、
- *   WorkBuddy 等本机产品读写同一份共享文件 `~/.kk-memory/memory.json`；
+ * - 记忆文件按本机共享契约位于 `~/.kk-memory/memory.json`。当前仅 KK Studio
+ *   Codex 通道接入；豆包和 WorkBuddy 原生客户端尚未实现同文件读写；
  * - 不再按"记忆身份键"（namespace）隔离；换账号/换人时用户手动清空；
  * - 记忆文件仅存本地，不进入 WebDAV 同步、localStorage、日志或导出包；
  *   用户开启记忆后，选中的相关片段会发送给当前模型用于本轮推理。

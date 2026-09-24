@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { MemoryService } from "../../src/features/memory/memoryService.ts";
-import type { MemoryStorage } from "../../src/features/memory/storage.ts";
+import {
+  MemoryConflictError,
+  type MemoryStorage,
+} from "../../src/features/memory/storage.ts";
 import {
   type MemorySettings,
   type MemoryStoreFile,
@@ -38,8 +41,14 @@ class FakeStorage implements MemoryStorage {
     }
     return snapshot;
   }
-  async write(store: MemoryStoreFile): Promise<MemoryStoreFile> {
+  async write(
+    store: MemoryStoreFile,
+    expected: MemoryStoreFile,
+  ): Promise<MemoryStoreFile> {
     if (this.failures.includes("write")) throw new Error("write failed");
+    if (JSON.stringify(this.store) !== JSON.stringify(expected)) {
+      throw new MemoryConflictError();
+    }
     this.store = structuredClone(store);
     return structuredClone(store);
   }
@@ -101,6 +110,23 @@ test("parallel user messages preserve both memory records", async () => {
   );
 });
 
+test("two service instances retry a stale write and preserve both records", async () => {
+  const storage = new FakeStorage();
+  const settings = new FakeSettings();
+  settings.enabled = true;
+  const first = new MemoryService({ storage, settings });
+  const second = new MemoryService({ storage, settings });
+  storage.readDelayMs = 10;
+  await Promise.all([
+    first.ingestMessage("以后请用日系插画风格", "user"),
+    second.ingestMessage("以后请用暖色调", "user"),
+  ]);
+  assert.deepEqual(
+    new Set(storage.store.records.map((record) => record.content)),
+    new Set(["以后请用日系插画风格", "以后请用暖色调"]),
+  );
+});
+
 test("ingestMessage failure is silent", async () => {
   const { service, storage } = createService();
   service.setEnabled(true);
@@ -150,6 +176,16 @@ test("saveCodexExtraction ignores malformed lines", async () => {
   service.setEnabled(true);
   const added = await service.saveCodexExtraction("没有标记的行\n记忆：好的");
   assert.equal(added, 0);
+});
+
+test("saveCodexExtraction skips oversized lines without losing valid ones", async () => {
+  const { service, storage } = createService();
+  service.setEnabled(true);
+  const added = await service.saveCodexExtraction(
+    `记忆：${"长".repeat(201)}\n记忆：用户偏好日系插画风格`,
+  );
+  assert.equal(added, 1);
+  assert.equal(storage.store.records[0].content, "用户偏好日系插画风格");
 });
 
 test("deleteRecord removes one record", async () => {

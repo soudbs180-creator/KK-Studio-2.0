@@ -11,7 +11,7 @@
 
 ## 代码位置
 
-- `src/features/memory/`：types/extractor/injector/storage/memoryService/useMemory。
+- `src/features/memory/`：types/extractor/injector/storage/memoryService/reply/useMemory。
 - `src/components/settings/ConnectionSettings.tsx`、`src/components/settings/MemorySettingsSection.tsx`。
 - `src/features/agent/agentConnection.ts`：sendMessage 注入 [长期记忆] 块。
 - `src-tauri/src/storage_paths.rs`、`src-tauri/src/main.rs`：memory_read/memory_write/memory_reset_identity 命令（共享路径 + 旧文件种子迁移）。
@@ -19,7 +19,7 @@
 
 ## 测试与证据
 
-- 单测：tests/unit/memoryExtractor.test.ts、memoryInjector.test.ts、memoryStorage.test.ts、memoryService.test.ts。
+- 单测：tests/unit/memoryExtractor.test.ts、memoryInjector.test.ts、memoryStorage.test.ts、memoryService.test.ts、memoryReply.test.ts。
 - 浏览器：tests/browser/memory-settings.spec.ts（开关、共享状态、空态、损坏数据、清空确认、390 px 可达性与存储库初始化）；提炼/注入由单测覆盖，真实会话仍待联调。
 - 本轮验证：docs/changes/2026-09-24-local-memory/verification.md。
 
@@ -37,6 +37,7 @@
 - 多模型群聊编排不属于本功能范围（ai_group_chat 仅吸收记忆能力）。
 - 豆包、WorkBuddy 原生对话及 Codex 独立桌面应用不会因登录或本仓库存在记忆文件而自动获得记忆；需要各自受支持的适配器和真实联调。
 - Web 系统目录授权、Desktop 打包运行态、真实 Codex 对话记忆引用仍需真实环境验证；Web 当前重置尚无文件级备份。
+- Desktop 写锁、Web 独占写流及版本冲突重试已有回归；Web 与 Desktop 同时写共享目录仍未经过真实联调，外部客户端需先实现同一并发契约。
 
 ## 变更记录
 

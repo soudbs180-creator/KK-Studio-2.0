@@ -2,8 +2,8 @@
  * 记忆存储层：共享文件 + 平台适配。
  *
  * 共享语义（TASK-MEMORY-002）：
- * - 所有产品（Codex 桌面/Web、豆包 Agent、WorkBuddy）读写同一份共享文件
- *   `~/.kk-memory/memory.json`，本机共享文件不参与云端同步；
+ * - 共享文件契约位于 `~/.kk-memory/memory.json`；当前只由 KK Studio
+ *   Codex 通道接入，其他产品仍需单独实现和验证；
  * - Desktop：Tauri 命令 memory_read/memory_write/memory_reset_identity
  *   （Rust 侧指向共享路径，原子写、损坏拒绝覆盖）；
  * - Web：优先 File System Access（用户授权一次共享目录后持久读写）；
@@ -22,6 +22,7 @@ import {
 // Creation snapshots use kk-studio-next at schema version 1. Memory needs two
 // stores, so it owns a separate database instead of upgrading creation data.
 const DB_NAME = "kk-studio-memory";
+const LEGACY_DB_NAME = "kk-studio-next";
 const DB_STORE = "memory";
 const DB_KEY = "default";
 const FS_HANDLE_DB_STORE = "memory-fs-handle";
@@ -33,7 +34,10 @@ export const KK_MEMORY_FILE_NAME = "memory.json";
 
 export interface MemoryStorage {
   read(): Promise<MemoryStoreFile>;
-  write(store: MemoryStoreFile): Promise<MemoryStoreFile>;
+  write(
+    store: MemoryStoreFile,
+    expected: MemoryStoreFile,
+  ): Promise<MemoryStoreFile>;
   resetIdentity(): Promise<MemoryStoreFile>;
   /** locked=共享目录曾授权但权限已失效，暂停读写以免分叉。 */
   mode(): Promise<"shared" | "isolated" | "locked">;
@@ -41,6 +45,17 @@ export interface MemoryStorage {
   authorizeSharedDirectory(): Promise<boolean>;
   /** Web 端：共享授权状态描述（供 UI 展示）。 */
   statusText(): Promise<string>;
+}
+
+export class MemoryConflictError extends Error {
+  constructor() {
+    super("MEMORY_CONFLICT：共享记忆已被其他窗口修改，请重试");
+    this.name = "MemoryConflictError";
+  }
+}
+
+function sameStore(first: MemoryStoreFile, second: MemoryStoreFile): boolean {
+  return JSON.stringify(first) === JSON.stringify(second);
 }
 
 function emptyStore(): MemoryStoreFile {
@@ -160,15 +175,87 @@ async function idbPut(
 async function idbRead(): Promise<MemoryStoreFile> {
   const value = await idbGet(DB_STORE, DB_KEY);
   if (value === undefined) {
+    const legacy = await readLegacyStore();
+    if (legacy) {
+      try {
+        await idbWrite(legacy, emptyStore());
+        return legacy;
+      } catch (error) {
+        if (error instanceof MemoryConflictError) return idbRead();
+        throw error;
+      }
+    }
     return emptyStore();
   }
   return normalizeStore(value as Partial<MemoryStoreFile>);
 }
 
-async function idbWrite(store: MemoryStoreFile): Promise<MemoryStoreFile> {
-  await idbRead();
+/** Read the earlier candidate DB without creating it or changing creation data. */
+async function readLegacyStore(): Promise<MemoryStoreFile | null> {
+  if (typeof indexedDB.databases !== "function") return null;
+  const databases = await indexedDB.databases();
+  if (!databases.some((item) => item.name === LEGACY_DB_NAME)) return null;
+  const db = await new Promise<IDBDatabase | null>((resolve, reject) => {
+    const request = indexedDB.open(LEGACY_DB_NAME);
+    request.onupgradeneeded = () => request.transaction?.abort();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () =>
+      request.error?.name === "AbortError"
+        ? resolve(null)
+        : reject(new Error("无法读取旧版记忆数据库"));
+  });
+  if (!db) return null;
+  try {
+    if (!db.objectStoreNames.contains(DB_STORE)) return null;
+    const raw = await new Promise<unknown>((resolve, reject) => {
+      const request = db
+        .transaction(DB_STORE, "readonly")
+        .objectStore(DB_STORE)
+        .get(DB_KEY);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(new Error("无法读取旧版记忆"));
+    });
+    return raw === undefined
+      ? null
+      : normalizeStore(raw as Partial<MemoryStoreFile>);
+  } finally {
+    db.close();
+  }
+}
+
+async function idbWrite(
+  store: MemoryStoreFile,
+  expected: MemoryStoreFile,
+): Promise<MemoryStoreFile> {
   const valid = normalizeStore(store);
-  await idbPut(DB_STORE, DB_KEY, valid);
+  const db = await openIndexedDb();
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(DB_STORE, "readwrite");
+      const objectStore = tx.objectStore(DB_STORE);
+      const request = objectStore.get(DB_KEY);
+      request.onsuccess = () => {
+        try {
+          const current =
+            request.result === undefined
+              ? emptyStore()
+              : normalizeStore(request.result as Partial<MemoryStoreFile>);
+          if (!sameStore(current, normalizeStore(expected))) {
+            throw new MemoryConflictError();
+          }
+          objectStore.put(valid, DB_KEY);
+        } catch (error) {
+          reject(error);
+          tx.abort();
+        }
+      };
+      request.onerror = () => reject(new Error("无法读取本地记忆"));
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(new Error("无法写入本地记忆"));
+    });
+  } finally {
+    db.close();
+  }
   return valid;
 }
 
@@ -177,11 +264,14 @@ async function idbWrite(store: MemoryStoreFile): Promise<MemoryStoreFile> {
 interface FileSystemWritableFileStreamLoose {
   write(data: string): Promise<void>;
   close(): Promise<void>;
+  abort?(): Promise<void>;
 }
 
 interface FileSystemFileHandleLoose {
   getFile(): Promise<File>;
-  createWritable(): Promise<FileSystemWritableFileStreamLoose>;
+  createWritable(options?: {
+    mode: "exclusive";
+  }): Promise<FileSystemWritableFileStreamLoose>;
 }
 
 interface FileSystemDirectoryHandleLoose {
@@ -229,19 +319,41 @@ export async function readFsaStore(
 async function writeFsaStore(
   handle: FileSystemDirectoryHandleLoose,
   store: MemoryStoreFile,
+  expected: MemoryStoreFile,
 ): Promise<MemoryStoreFile> {
-  await readFsaStore(handle);
-  const valid = normalizeStore(store);
-  const fileHandle = await handle.getFileHandle(KK_MEMORY_FILE_NAME, {
-    create: true,
-  });
-  const writable = await fileHandle.createWritable();
-  try {
-    await writable.write(JSON.stringify(valid, null, 2));
-  } finally {
-    await writable.close();
+  if (!navigator.locks) {
+    throw new Error("浏览器不支持安全的共享记忆写入");
   }
-  return valid;
+  return navigator.locks.request("kk-studio-memory-file", async () => {
+    const current = await readFsaStore(handle);
+    if (!sameStore(current, normalizeStore(expected))) {
+      throw new MemoryConflictError();
+    }
+    const valid = normalizeStore(store);
+    const fileHandle = await handle.getFileHandle(KK_MEMORY_FILE_NAME, {
+      create: true,
+    });
+    let writable: FileSystemWritableFileStreamLoose;
+    try {
+      writable = await fileHandle.createWritable({ mode: "exclusive" });
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.name === "NoModificationAllowedError"
+      ) {
+        throw new MemoryConflictError();
+      }
+      throw error;
+    }
+    try {
+      await writable.write(JSON.stringify(valid, null, 2));
+      await writable.close();
+    } catch (error) {
+      await writable.abort?.().catch(() => undefined);
+      throw error;
+    }
+    return valid;
+  });
 }
 
 async function storedDirHandle(): Promise<FileSystemDirectoryHandleLoose | null> {
@@ -290,7 +402,16 @@ async function usableSharedHandle(): Promise<FileSystemDirectoryHandleLoose | nu
 const desktopStorage: MemoryStorage = {
   mode: async () => "shared",
   read: () => invoke<MemoryStoreFile>("memory_read"),
-  write: (store) => invoke<MemoryStoreFile>("memory_write", { store }),
+  write: async (store, expected) => {
+    try {
+      return await invoke<MemoryStoreFile>("memory_write", { store, expected });
+    } catch (error) {
+      if (String(error).includes("MEMORY_CONFLICT")) {
+        throw new MemoryConflictError();
+      }
+      throw error;
+    }
+  },
   resetIdentity: () => invoke<MemoryStoreFile>("memory_reset_identity"),
   authorizeSharedDirectory: async () => true,
   statusText: async () => KK_MEMORY_DIR_NAME,
@@ -303,7 +424,7 @@ function createWebStorage(): MemoryStorage {
     write: idbWrite,
     resetIdentity: async () => {
       const fresh = emptyStore();
-      await idbWrite(fresh);
+      await idbWrite(fresh, await idbRead());
       return fresh;
     },
     authorizeSharedDirectory: async () => {
@@ -341,15 +462,15 @@ function createWebStorage(): MemoryStorage {
       }
       return readFsaStore(handle);
     },
-    write: async (store) => {
+    write: async (store, expected) => {
       const handle = await storedDirHandle();
       if (!handle) {
-        return isolated.write(store);
+        return isolated.write(store, expected);
       }
       if (!(await hasPermission(handle))) {
         throw new Error("共享目录授权已失效，请重新授权后写入记忆");
       }
-      return writeFsaStore(handle, store);
+      return writeFsaStore(handle, store, expected);
     },
     resetIdentity: async () => {
       const fresh = emptyStore();
@@ -358,7 +479,7 @@ function createWebStorage(): MemoryStorage {
         if (!(await hasPermission(handle))) {
           throw new Error("共享目录授权已失效，请重新授权后重置记忆");
         }
-        await writeFsaStore(handle, fresh);
+        await writeFsaStore(handle, fresh, await readFsaStore(handle));
         return fresh;
       }
       return isolated.resetIdentity();
@@ -386,6 +507,7 @@ function createWebStorage(): MemoryStorage {
             ...remote,
             records: [...remote.records, ...additions],
           }),
+          remote,
         );
       }
       await persistDirHandle(handle);

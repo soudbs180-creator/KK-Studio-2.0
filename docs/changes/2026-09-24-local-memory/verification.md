@@ -3,17 +3,17 @@
 ## 2026-09-24 复核勘误（以本节和后续新证据为准）
 
 - 旧 `PASS` 是先前候选的自动化快照，不能证明跨应用记忆、真实模型引用或系统目录授权。尤其原测试将 malformed `records` 当空数组接受，未覆盖 Web 数据库与创作仓库版本冲突。
-- 当前分支修补范围：独立 `kk-studio-memory` 数据库与双对象仓库、损坏记录拒绝读取、Desktop 首写建目录及备份失败保护、用户原话采集与常见凭据过滤、界面和契约文案纠正。
+- 当前分支修补范围：独立 `kk-studio-memory` 数据库与双对象仓库、旧候选数据库迁移、损坏记录拒绝读取、Desktop 首写建目录及备份失败保护、共享写入冲突检测与重试、提炼回复完成判定、用户原话采集与常见凭据过滤、界面和契约文案纠正。
 - 本轮红绿测试：`memoryStorage.test.ts` 损坏记录先失败后通过；Rust malformed record、首次写入、备份冲突先失败后通过；浏览器真实 IndexedDB 双仓库初始化通过。无头浏览器对模拟的系统目录句柄发生会话关闭，不能把 FSA 授权流程记为通过。
 - 最终自动化结果见下方；桌面运行态与独立评审仍未完成。旧表格保留为历史。
 
 ### 本轮最终自动化与界面证据
 
 - 基线 `origin/main@76339c9`，复核前分支 `55e93a1`；本轮修补在该分支后续提交。Windows 11、Node 24.19.0。
-- `npm run verify`：退出码 0；lint / governance（63 tasks、0 violations）/ features（29、0）/ Markdown（82、0）/ typecheck / UI 标准（160、0）/ format / build 均通过；Node 单测 **408/408**，Playwright **308/308**（Vite production preview）。完整日志在本机 `D:/kk-studio/.tmp/memory-verify-20260924-final.log`，不提交生成日志。
-- `cargo test --manifest-path src-tauri/Cargo.toml`：**88/88**，包括首次写入、重复替换、损坏记录拒绝、损坏文件写保护和失败备份保护。
+- `npm run verify`：退出码 0；lint / governance（63 tasks、0 violations）/ features（29、0）/ Markdown（82、0）/ typecheck / UI 标准（160、0）/ format / build 均通过；Node 单测 **413/413**，Playwright **309/309**（Vite production preview）。完整日志在本机 `D:/kk-studio/.tmp/memory-verify-20260924-reviewfix.log`，不提交生成日志。
+- `cargo test --manifest-path src-tauri/Cargo.toml`：**90/90**，包括首次写入、重复替换、损坏文件写保护、失败备份保护、过期版本写入拒绝和并发写入互斥。
 - 实际页面：`npm run test:ui` 从新构建 `dist` 启动 `http://127.0.0.1:1423/`，route `/`，`src/main.tsx → App.tsx → SettingsPanel.tsx → SettingsSections.tsx → ConnectionSettings.tsx → MemorySettingsSection.tsx`。浏览器 DOM 验证了开关、共享状态、错误态、清空确认和 390 px 可达性。截图：[启用态](evidence/memory-enabled-web.png)、[列表空态](evidence/memory-list-web.png)、[390 px](evidence/memory-enabled-390.png)。这是 Web 预览证据，不代表 Tauri release。
-- 未验证：用户真实 Codex 对话中的记忆引用、系统目录 File System Access 用户授权、Desktop 打包运行、豆包/WorkBuddy 原生客户端共享、跨进程同时写入。完整文件只在本机存储；选中片段进入当前模型请求。
+- 未验证：用户真实 Codex 对话中的记忆引用、系统目录 File System Access 用户授权、Desktop 打包运行、豆包/WorkBuddy 原生客户端共享、Web 与 Desktop 同时写同一目录。完整文件只在本机存储；选中片段进入当前模型请求。
 
 - Task ID：TASK-MEMORY-001 / TASK-MEMORY-002
 - 状态：PASS
