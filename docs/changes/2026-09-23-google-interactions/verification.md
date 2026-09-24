@@ -45,4 +45,4 @@
 
 - 定向单元 `googleAgent.test.ts` 与 `googleAgentCli.test.ts`：14/14 通过；`tsc -b`、定向 ESLint、Vite production build 通过。
 - `google-agent.spec.ts` 浏览器 fixture：1/1 通过，覆盖 Key → CLI → 已保存 Key 切回、继续连接/对话/生图与恢复；使用 Edge、`vite preview`、`http://127.0.0.1:1423/`，页面 route `/`，组件链路同上。该 fixture 不能证明真实账号能力。
-- 本地全量单元首次运行受复用依赖目录缺少 `remark-gfm` 及桌面 Agent 辅助程序影响；完整 CI 及独立上下文对修复后 head 的复审仍是合并门禁。真实 Google 与 Tauri 项目验收状态不变。
+- 首次复用依赖目录缺少 `remark-gfm` 及桌面 Agent 辅助程序，不能据此判断产品回归。随后在提交 `c9c2aab` 的独立验证工作区执行全新 `npm ci` 与完整 `npm run verify`，退出 0：治理 63/0、功能 29/0、Markdown 83/0、单元测试、类型、lint、格式、UI 标准与生产构建通过，Edge 浏览器 302/302 通过。合流后的远端当前 CI 与独立上下文对最终 head 的复审仍是合并门禁；真实 Google 与 Tauri 项目验收状态不变。
