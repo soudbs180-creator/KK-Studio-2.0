@@ -106,7 +106,7 @@ export class MemoryService {
   }
 
   /** 当前存储模式与共享授权状态（供 UI 展示）。 */
-  async storageMode(): Promise<"shared" | "isolated" | "locked"> {
+  async storageMode(): ReturnType<MemoryStorage["mode"]> {
     return this.storage.mode();
   }
 
@@ -117,6 +117,10 @@ export class MemoryService {
   /** 请求授权共享目录（Web 端 File System Access；Desktop 恒成功）。 */
   async authorizeSharedDirectory(): Promise<boolean> {
     return this.storage.authorizeSharedDirectory();
+  }
+
+  async leaveSharedDirectory(): Promise<void> {
+    await this.storage.leaveSharedDirectory();
   }
 
   /**
@@ -136,6 +140,9 @@ export class MemoryService {
         if (!this.isEnabled()) return;
         const candidates = extractMemoryCandidates(message, role);
         if (candidates.length === 0) return;
+        // The browser may read the Desktop file, but cannot coordinate writes
+        // with Desktop. Its private store remains writable after leaving this view.
+        if ((await this.storage.mode()) === "shared-readonly") return;
         const store = await this.storage.read();
         const timestamp = this.now().toISOString();
         const existing = new Set(

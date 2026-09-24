@@ -6,8 +6,8 @@
  *   Codex 通道接入，其他产品仍需单独实现和验证；
  * - Desktop：Tauri 命令 memory_read/memory_write/memory_reset_identity
  *   （Rust 侧指向共享路径，原子写、损坏拒绝覆盖）；
- * - Web：优先 File System Access（用户授权一次共享目录后持久读写）；
- *   浏览器不支持/未授权时降级为 IndexedDB 私有存储（不参与共享，UI 明示）；
+ * - Web：File System Access 授权后只读共享文件；浏览器写入与 Desktop
+ *   尚无共同互斥协议。未授权时使用 IndexedDB 私有存储（UI 明示）；
  * - localStorage 只允许存设置开关（kk.memory.settings），记忆内容绝不进 localStorage。
  */
 import { invoke, isTauri } from "@tauri-apps/api/core";
@@ -40,9 +40,11 @@ export interface MemoryStorage {
   ): Promise<MemoryStoreFile>;
   resetIdentity(): Promise<MemoryStoreFile>;
   /** locked=共享目录曾授权但权限已失效，暂停读写以免分叉。 */
-  mode(): Promise<"shared" | "isolated" | "locked">;
+  mode(): Promise<"shared" | "shared-readonly" | "isolated" | "locked">;
   /** Web 端：请求用户授权共享目录；Desktop 恒为 true。 */
   authorizeSharedDirectory(): Promise<boolean>;
+  /** Web 端：退出只读共享视图，恢复浏览器私有记忆。 */
+  leaveSharedDirectory(): Promise<void>;
   /** Web 端：共享授权状态描述（供 UI 展示）。 */
   statusText(): Promise<string>;
 }
@@ -172,6 +174,20 @@ async function idbPut(
   }
 }
 
+async function idbDelete(storeName: string, key: string): Promise<void> {
+  const db = await openIndexedDb();
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(storeName, "readwrite");
+      tx.objectStore(storeName).delete(key);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(new Error("无法更新本地记忆授权"));
+    });
+  } finally {
+    db.close();
+  }
+}
+
 async function idbRead(): Promise<MemoryStoreFile> {
   const value = await idbGet(DB_STORE, DB_KEY);
   if (value === undefined) {
@@ -192,11 +208,9 @@ async function idbRead(): Promise<MemoryStoreFile> {
 
 /** Read the earlier candidate DB without creating it or changing creation data. */
 async function readLegacyStore(): Promise<MemoryStoreFile | null> {
-  if (typeof indexedDB.databases !== "function") return null;
-  const databases = await indexedDB.databases();
-  if (!databases.some((item) => item.name === LEGACY_DB_NAME)) return null;
   const db = await new Promise<IDBDatabase | null>((resolve, reject) => {
     const request = indexedDB.open(LEGACY_DB_NAME);
+    // A missing old DB triggers upgrade; abort before creating a new one.
     request.onupgradeneeded = () => request.transaction?.abort();
     request.onsuccess = () => resolve(request.result);
     request.onerror = () =>
@@ -261,17 +275,8 @@ async function idbWrite(
 
 // ========== Web 共享通道：File System Access（用户授权目录） ==========
 
-interface FileSystemWritableFileStreamLoose {
-  write(data: string): Promise<void>;
-  close(): Promise<void>;
-  abort?(): Promise<void>;
-}
-
 interface FileSystemFileHandleLoose {
   getFile(): Promise<File>;
-  createWritable(options?: {
-    mode: "exclusive";
-  }): Promise<FileSystemWritableFileStreamLoose>;
 }
 
 interface FileSystemDirectoryHandleLoose {
@@ -316,46 +321,6 @@ export async function readFsaStore(
   return normalizeStore(JSON.parse(text) as Partial<MemoryStoreFile>);
 }
 
-async function writeFsaStore(
-  handle: FileSystemDirectoryHandleLoose,
-  store: MemoryStoreFile,
-  expected: MemoryStoreFile,
-): Promise<MemoryStoreFile> {
-  if (!navigator.locks) {
-    throw new Error("浏览器不支持安全的共享记忆写入");
-  }
-  return navigator.locks.request("kk-studio-memory-file", async () => {
-    const current = await readFsaStore(handle);
-    if (!sameStore(current, normalizeStore(expected))) {
-      throw new MemoryConflictError();
-    }
-    const valid = normalizeStore(store);
-    const fileHandle = await handle.getFileHandle(KK_MEMORY_FILE_NAME, {
-      create: true,
-    });
-    let writable: FileSystemWritableFileStreamLoose;
-    try {
-      writable = await fileHandle.createWritable({ mode: "exclusive" });
-    } catch (error) {
-      if (
-        error instanceof Error &&
-        error.name === "NoModificationAllowedError"
-      ) {
-        throw new MemoryConflictError();
-      }
-      throw error;
-    }
-    try {
-      await writable.write(JSON.stringify(valid, null, 2));
-      await writable.close();
-    } catch (error) {
-      await writable.abort?.().catch(() => undefined);
-      throw error;
-    }
-    return valid;
-  });
-}
-
 async function storedDirHandle(): Promise<FileSystemDirectoryHandleLoose | null> {
   const raw = await idbGet(FS_HANDLE_DB_STORE, FS_HANDLE_KEY);
   return (raw as FileSystemDirectoryHandleLoose) ?? null;
@@ -373,7 +338,7 @@ async function hasPermission(
   if (typeof handle.queryPermission !== "function") {
     return false;
   }
-  return (await handle.queryPermission({ mode: "readwrite" })) === "granted";
+  return (await handle.queryPermission({ mode: "read" })) === "granted";
 }
 
 async function requestPermission(
@@ -382,10 +347,10 @@ async function requestPermission(
   if (typeof handle.requestPermission !== "function") {
     return false;
   }
-  return (await handle.requestPermission({ mode: "readwrite" })) === "granted";
+  return (await handle.requestPermission({ mode: "read" })) === "granted";
 }
 
-/** 当前授权共享目录句柄（已持久化 + 有读写权限），否则 null。 */
+/** 当前授权共享目录句柄（已持久化 + 有读取权限），否则 null。 */
 async function usableSharedHandle(): Promise<FileSystemDirectoryHandleLoose | null> {
   const handle = await storedDirHandle();
   if (!handle) {
@@ -414,12 +379,12 @@ const desktopStorage: MemoryStorage = {
   },
   resetIdentity: () => invoke<MemoryStoreFile>("memory_reset_identity"),
   authorizeSharedDirectory: async () => true,
+  leaveSharedDirectory: async () => undefined,
   statusText: async () => KK_MEMORY_DIR_NAME,
 };
 
 function createWebStorage(): MemoryStorage {
-  const isolated: MemoryStorage = {
-    mode: async () => "isolated",
+  const isolated: Pick<MemoryStorage, "read" | "write" | "resetIdentity"> = {
     read: idbRead,
     write: idbWrite,
     resetIdentity: async () => {
@@ -427,30 +392,12 @@ function createWebStorage(): MemoryStorage {
       await idbWrite(fresh, await idbRead());
       return fresh;
     },
-    authorizeSharedDirectory: async () => {
-      // 用户手势：选择共享目录（.kk-memory/）
-      const handle = await showDirectoryPicker();
-      if (handle.name !== KK_MEMORY_DIR_NAME) {
-        throw new Error(`请选择 ${KK_MEMORY_DIR_NAME} 目录`);
-      }
-      if (!(await requestPermission(handle))) {
-        return false;
-      }
-      await persistDirHandle(handle);
-      return true;
-    },
-    statusText: async () => {
-      const handle = await usableSharedHandle();
-      return handle
-        ? `已授权共享目录（${KK_MEMORY_DIR_NAME}）`
-        : "未授权共享目录，记忆仅存本应用";
-    },
   };
   const shared: MemoryStorage = {
     mode: async () => {
       const handle = await storedDirHandle();
       if (!handle) return "isolated";
-      return (await hasPermission(handle)) ? "shared" : "locked";
+      return (await hasPermission(handle)) ? "shared-readonly" : "locked";
     },
     read: async () => {
       const handle = await storedDirHandle();
@@ -467,20 +414,12 @@ function createWebStorage(): MemoryStorage {
       if (!handle) {
         return isolated.write(store, expected);
       }
-      if (!(await hasPermission(handle))) {
-        throw new Error("共享目录授权已失效，请重新授权后写入记忆");
-      }
-      return writeFsaStore(handle, store, expected);
+      throw new Error("浏览器共享目录只读，请在桌面端修改记忆");
     },
     resetIdentity: async () => {
-      const fresh = emptyStore();
       const handle = await storedDirHandle();
       if (handle) {
-        if (!(await hasPermission(handle))) {
-          throw new Error("共享目录授权已失效，请重新授权后重置记忆");
-        }
-        await writeFsaStore(handle, fresh, await readFsaStore(handle));
-        return fresh;
+        throw new Error("浏览器共享目录只读，请在桌面端重置记忆");
       }
       return isolated.resetIdentity();
     },
@@ -492,30 +431,15 @@ function createWebStorage(): MemoryStorage {
       if (!(await requestPermission(handle))) {
         return false;
       }
-      const local = await idbRead();
-      const remote = await readFsaStore(handle);
-      const fingerprints = new Set(
-        remote.records.map((record) => record.fingerprint),
-      );
-      const additions = local.records.filter(
-        (record) => !fingerprints.has(record.fingerprint),
-      );
-      if (additions.length > 0) {
-        await writeFsaStore(
-          handle,
-          normalizeStore({
-            ...remote,
-            records: [...remote.records, ...additions],
-          }),
-          remote,
-        );
-      }
+      // Validate before switching view. Private IndexedDB records remain intact.
+      await readFsaStore(handle);
       await persistDirHandle(handle);
       return true;
     },
+    leaveSharedDirectory: () => idbDelete(FS_HANDLE_DB_STORE, FS_HANDLE_KEY),
     statusText: async () => {
       const handle = await usableSharedHandle();
-      if (handle) return `已授权共享目录（${KK_MEMORY_DIR_NAME}）`;
+      if (handle) return `已授权共享目录（${KK_MEMORY_DIR_NAME}，只读）`;
       return (await storedDirHandle())
         ? "共享目录授权已失效，记忆读写已暂停，请重新授权"
         : "未授权共享目录，记忆仅存本应用";

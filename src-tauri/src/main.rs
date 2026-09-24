@@ -891,18 +891,29 @@ fn reset_memory_file(path: &Path, previous: &Path) -> Result<MemoryStore, String
 }
 
 fn reset_memory_file_locked(path: &Path, previous: &Path) -> Result<MemoryStore, String> {
+    reset_memory_file_with_writer(path, previous, write_memory_file)
+}
+
+fn reset_memory_file_with_writer(
+    path: &Path,
+    previous: &Path,
+    writer: impl FnOnce(&Path, &MemoryStore) -> Result<(), String>,
+) -> Result<MemoryStore, String> {
     if path.exists() {
         if previous.exists() {
             return Err("记忆备份文件已存在，未修改原文件".to_string());
         }
-        fs::rename(path, previous).map_err(|e| format!("无法备份现有记忆，未修改原文件：{e}"))?;
+        fs::copy(path, previous).map_err(|e| {
+            let _ = fs::remove_file(previous);
+            format!("无法备份现有记忆，未修改原文件：{e}")
+        })?;
     }
     let store = MemoryStore {
         version: MEMORY_STORE_VERSION,
         namespace: String::new(),
         records: Vec::new(),
     };
-    write_memory_file(path, &store)?;
+    writer(path, &store)?;
     Ok(store)
 }
 
@@ -1448,6 +1459,27 @@ mod memory_tests {
         assert!(reset_memory_file(&path, &backup).is_err());
         assert_eq!(fs::read(&path).expect("read after failed reset"), original);
         let _ = fs::remove_dir(&backup);
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn failed_memory_reset_write_keeps_live_file_and_backup() {
+        let path = temp_memory_path("reset-write-failure");
+        let store = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![sample_record()],
+        };
+        write_memory_file(&path, &store).expect("write original");
+        let original = fs::read(&path).expect("read original");
+        let backup = path.with_extension("previous-test.json");
+        let result = reset_memory_file_with_writer(&path, &backup, |_, _| {
+            Err("simulated write failure".to_string())
+        });
+        assert!(result.is_err());
+        assert_eq!(fs::read(&path).expect("read live after failure"), original);
+        assert_eq!(fs::read(&backup).expect("read backup after failure"), original);
+        let _ = fs::remove_file(&backup);
         let _ = fs::remove_file(&path);
     }
 

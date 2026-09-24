@@ -34,7 +34,7 @@ test("开启记忆后显示共享状态、提炼入口与空态", async ({ page 
   await expect(toggle).toHaveAttribute("aria-checked", "true");
   await expect(dialog.getByText("共享状态", { exact: true })).toBeVisible();
   const authorize = dialog.getByRole("button", {
-    name: "授权共享目录",
+    name: "授权只读共享目录",
     exact: true,
   });
   await expect(authorize).toBeVisible();
@@ -105,7 +105,7 @@ test("记忆初始化建立独立数据库与两个对象仓库", async ({ page 
   const dialog = await openMemorySection(page);
   await dialog.getByRole("switch", { name: "记忆服务开关" }).click();
   await expect(dialog.getByText("共享状态", { exact: true })).toBeVisible();
-  await expect(dialog.getByText("仅本应用（浏览器未授权）")).toBeVisible();
+  await expect(dialog.getByText("仅本应用（浏览器私有）")).toBeVisible();
 
   const stores = await page.evaluate(async () => {
     const request = indexedDB.open("kk-studio-memory");
@@ -219,6 +219,12 @@ test("旧候选数据库中的记忆迁移到独立数据库", async ({ page }) 
       tx.onerror = () => reject(tx.error);
     });
     db.close();
+  });
+  await page.addInitScript(() => {
+    Object.defineProperty(indexedDB, "databases", {
+      configurable: true,
+      value: undefined,
+    });
   });
   const dialog = await openMemorySection(page);
   await dialog.getByRole("switch", { name: "记忆服务开关" }).click();

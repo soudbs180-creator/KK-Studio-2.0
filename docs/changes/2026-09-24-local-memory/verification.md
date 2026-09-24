@@ -1,5 +1,12 @@
 # Verification：本地长期记忆服务接入对话（TASK-MEMORY-001 + TASK-MEMORY-002 共享版）
 
+## 2026-09-24 第二轮安全修补与验证（当前）
+
+- 独立复核发现 Web Locks/文件独占流与 Desktop `.json.lock` 不互斥；Web 授权共享文件已改只读，浏览器私有 IndexedDB 保持可写并可切回。模拟 FSA 句柄使无头 Chromium 会话关闭，故真实系统目录授权仍未验收，不能称 Web 共享视图已跑通。
+- Desktop 重置先复制备份再原子写入，失败时 live 文件仍可读。手动 Codex 提炼绑定本次 `clientMessageId`、thread 与完成阶段，且内部提炼指令不参加自动学习或记忆注入。旧候选数据库迁移在 `indexedDB.databases` 不可用时仍有浏览器回归。
+- `npm run verify`：退出码 0；lint / governance（63 tasks、0 violations）/ features（29、0）/ Markdown（82、0）/ typecheck / UI 标准（160、0）/ format / build 通过；Node **415/415**，Playwright **309/309**（production preview）。本机日志 `D:/kk-studio/.tmp/memory-verify-20260924-readonly.log`。
+- `cargo test --manifest-path src-tauri/Cargo.toml`：**91/91**，含重置写入失败保留 live 文件与备份。页面路径和截图仍见下节；新截图对应只读共享文案。完整桌面 release、真实 Codex 对话引用、豆包/WorkBuddy 接入未验证，本任务保持 PARTIAL / NOT_VERIFIED。
+
 ## 2026-09-24 复核勘误（以本节和后续新证据为准）
 
 - 旧 `PASS` 是先前候选的自动化快照，不能证明跨应用记忆、真实模型引用或系统目录授权。尤其原测试将 malformed `records` 当空数组接受，未覆盖 Web 数据库与创作仓库版本冲突。

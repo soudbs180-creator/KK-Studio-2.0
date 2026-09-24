@@ -690,8 +690,10 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       effort?: AgentReasoningEffort | "";
       canvasSource?: { nodeId: string; kind: "image" | "text" };
       attachments?: AgentDraftAttachment[];
+      /** Internal turns such as memory extraction must not learn from themselves. */
+      memoryMode?: "normal" | "none";
     },
-  ): Promise<{ ok: boolean; error?: string }> {
+  ): Promise<{ ok: boolean; error?: string; messageId?: string }> {
     if (toolReceiptError) return { ok: false, error: toolReceiptError };
     if (!text.trim() || state.status !== "connected" || !api)
       return { ok: false, error: "请先连接 Codex 主 Agent。" };
@@ -726,7 +728,8 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       threadId: conversation.threadId,
     });
     patch({ sending: true, error: null, activity: "发送中…" });
-    void memoryService.ingestMessage(text.trim(), "user");
+    if (input?.memoryMode !== "none")
+      void memoryService.ingestMessage(text.trim(), "user");
     try {
       const attachments = await (
         options.prepareAttachments ?? prepareAgentAttachments
@@ -756,7 +759,10 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       await activeApi.postState(bridge?.getSnapshot() ?? null);
       if (version !== epoch || toolController.signal.aborted)
         throw new Error("发送已取消");
-      const memoryInjection = await memoryService.buildInjection(text.trim());
+      const memoryInjection =
+        input?.memoryMode === "none"
+          ? ""
+          : await memoryService.buildInjection(text.trim());
       if (version !== epoch || toolController.signal.aborted)
         throw new Error("发送已取消");
       const response = await activeApi.postTurn({
@@ -794,7 +800,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         await activeApi.interrupt(conversation.threadId);
       if (response.state)
         handle({ kind: "conversation", conversation: response.state });
-      return { ok: true };
+      return { ok: true, messageId };
     } catch (error) {
       if (version === epoch) {
         if (

@@ -11,7 +11,7 @@ const EXTRACT_INSTRUCTION =
   "请从本次对话中提炼关于用户稳定偏好的 3~5 条事实，每行一条，以「记忆：」开头，不要输出其他内容。";
 
 function waitForAssistantReply(
-  beforeIds: ReadonlySet<string>,
+  clientMessageId: string,
   threadId: string,
   timeoutMs = 120_000,
 ): Promise<string | null> {
@@ -21,7 +21,7 @@ function waitForAssistantReply(
       const state = agentConnection.getState();
       const reply = completedAssistantReply(
         state.messages,
-        beforeIds,
+        clientMessageId,
         threadId,
         state.sending,
         state.conversation?.status,
@@ -46,9 +46,9 @@ export function useMemory(onFeedback: (message: string) => void) {
     memoryService.isEnabled(),
   );
   const [store, setStore] = useState<MemoryStoreFile | null>(null);
-  const [mode, setMode] = useState<"shared" | "isolated" | "locked">(
-    "isolated",
-  );
+  const [mode, setMode] = useState<
+    "shared" | "shared-readonly" | "isolated" | "locked"
+  >("isolated");
   const [storageStatus, setStorageStatus] = useState("");
   const [loadError, setLoadError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -84,7 +84,9 @@ export function useMemory(onFeedback: (message: string) => void) {
       await refresh();
       onFeedback(
         next
-          ? "已开启记忆：KK Studio 会记录你的稳定偏好，并向当前所选模型发送相关片段用于回答。"
+          ? (await memoryService.storageMode()) === "shared-readonly"
+            ? "已开启记忆：可读取共享文件并向所选模型发送相关片段；浏览器共享目录只读，自动学习需在桌面端完成。"
+            : "已开启记忆：KK Studio 会记录你的稳定偏好，并向当前所选模型发送相关片段用于回答。"
           : "已关闭记忆：停止自动学习与注入。",
       );
     },
@@ -138,11 +140,24 @@ export function useMemory(onFeedback: (message: string) => void) {
       await refresh();
       onFeedback(
         ok
-          ? "已授权共享目录。其他应用完成记忆契约接入后可读取同一份本地文件。"
+          ? "已授权只读共享目录。浏览器私有记忆仍保留，退出共享视图后可继续编辑。"
           : "未完成授权，记忆仍仅存本应用。",
       );
     } catch {
       onFeedback("授权共享目录失败（浏览器可能不支持），记忆仍仅存本应用。");
+    } finally {
+      setBusy(false);
+    }
+  }, [onFeedback, refresh]);
+
+  const leaveSharedDirectory = useCallback(async () => {
+    setBusy(true);
+    try {
+      await memoryService.leaveSharedDirectory();
+      await refresh();
+      onFeedback("已切回浏览器私有记忆，可继续自动学习和编辑。");
+    } catch {
+      onFeedback("退出共享视图失败，请重试。");
     } finally {
       setBusy(false);
     }
@@ -162,18 +177,27 @@ export function useMemory(onFeedback: (message: string) => void) {
         onFeedback("Codex 对话尚未就绪，请稍后重试。");
         return;
       }
-      const beforeIds = new Set(beforeState.messages.map((item) => item.id));
-      const result = await agentConnection.sendMessage(EXTRACT_INSTRUCTION);
+      if ((await memoryService.storageMode()) === "shared-readonly") {
+        onFeedback("浏览器共享目录只读，请在桌面端提炼记忆。");
+        return;
+      }
+      const result = await agentConnection.sendMessage(EXTRACT_INSTRUCTION, {
+        memoryMode: "none",
+      });
       if (!result.ok) {
         onFeedback(result.error ?? "Codex 提炼失败，请重试。");
         return;
       }
-      const reply = await waitForAssistantReply(beforeIds, threadId);
+      if (!result.messageId) {
+        onFeedback("无法识别本次 Codex 提炼请求，请重试。");
+        return;
+      }
+      const reply = await waitForAssistantReply(result.messageId, threadId);
       if (!reply) {
         onFeedback("Codex 未返回可提炼的内容，请稍后重试。");
         return;
       }
-      const added = await memoryService.saveCodexExtraction(reply);
+      const added = await memoryService.saveCodexExtraction(reply, threadId);
       await refresh();
       onFeedback(
         added > 0
@@ -202,6 +226,7 @@ export function useMemory(onFeedback: (message: string) => void) {
     clearAll,
     resetIdentity,
     authorizeSharedDirectory,
+    leaveSharedDirectory,
     extractWithCodex,
     refresh,
   };

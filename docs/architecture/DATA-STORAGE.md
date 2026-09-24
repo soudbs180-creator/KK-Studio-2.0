@@ -74,8 +74,8 @@ kk-studio/
 
 - 范围：仅用户级记忆（偏好/习惯/约束/画像）。KK Studio 的 Desktop 读写 `~/.kk-memory/memory.json`（Windows `%USERPROFILE%\.kk-memory\memory.json`）；Web 经用户授权可选择同一目录。豆包和 WorkBuddy 原生客户端尚未接入，登录状态不等于共享记忆生效。
 - Schema（`src/features/memory/types.ts`）：`MemoryStoreFile { version: 1; namespace?: ""; records: MemoryRecord[] }`（namespace 为隔离版遗留字段，共享模式恒空）；单条记录含 `content（≤200字）/memoryType/confidence/fingerprint（sha256 归一化内容）/source/createdAt/updatedAt/active`，上限 10000 条。
-- Desktop：`~/.kk-memory/memory.json`（跨产品约定，`src-tauri` 内 `shared_memory_path()`）；Tauri 命令 `memory_read / memory_write / memory_reset_identity`；写入为临时文件 + rename 原子写；重置时旧文件重命名 `.previous-<ts>.json` 保留；首次启用把旧 `<app-data>/memory/memory.json` 一次性种子迁移（不覆盖已有共享文件）。
-- Web：优先 File System Access（用户授权 `.kk-memory` 目录后，handle 存独立 IndexedDB `kk-studio-memory/memory-fs-handle`）；未授权时使用 `kk-studio-memory/memory/default` 私有存储并明示"仅本应用"。授权失效时暂停共享记忆读写，不回退写入私有存储造成分叉。
+- Desktop：`~/.kk-memory/memory.json`（跨产品约定，`src-tauri` 内 `shared_memory_path()`）；Tauri 命令 `memory_read / memory_write / memory_reset_identity`；写入为临时文件 + rename 原子写；重置时先复制旧文件为 `.previous-<ts>.json`，再写入新文件；首次启用把旧 `<app-data>/memory/memory.json` 一次性种子迁移（不覆盖已有共享文件）。
+- Web：File System Access 授权 `.kk-memory` 目录后只读共享文件（handle 存独立 IndexedDB `kk-studio-memory/memory-fs-handle`）；未授权时使用 `kk-studio-memory/memory/default` 私有可写存储并明示。授权失效时暂停共享记忆读取，可重新授权或切回私有记忆；私有内容不自动合并。
 - localStorage 只存 `kk.memory.settings`（`{enabled: boolean}`）；记忆内容与目录句柄之外的数据绝不进 localStorage、WebDAV 同步（FEAT-019 scope 不含 memory）、日志（console 仅打印条数）、导出包/项目包。
 - 跨产品契约：`docs/MEMORY-CONTRACT.md`（读取最多 3 条/总长 ≤400 字参考、低置信度跳过、与输入冲突以输入为准；写入仅稳定偏好、指纹去重、不编造；隐私同密钥级）。
 - 隔离边界：无身份键（用户决策"本机默认共享"）；换账号/换人时用户手动清空或重置；真实账号 id 派生依赖 FEAT-017（见 feat-020-memory.md）。

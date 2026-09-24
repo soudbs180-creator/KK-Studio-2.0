@@ -98,6 +98,7 @@ test("createMemoryStorage exposes the shared storage contract", () => {
   assert.equal(typeof storage.write, "function");
   assert.equal(typeof storage.resetIdentity, "function");
   assert.equal(typeof storage.authorizeSharedDirectory, "function");
+  assert.equal(typeof storage.leaveSharedDirectory, "function");
   assert.equal(typeof storage.statusText, "function");
   assert.equal(typeof storage.mode, "function");
 });

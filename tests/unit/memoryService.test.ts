@@ -29,8 +29,9 @@ class FakeStorage implements MemoryStorage {
   };
   failures: Array<"read" | "write"> = [];
   readDelayMs = 0;
-  async mode(): Promise<"shared" | "isolated" | "locked"> {
-    return "shared";
+  modeValue: Awaited<ReturnType<MemoryStorage["mode"]>> = "shared";
+  async mode(): ReturnType<MemoryStorage["mode"]> {
+    return this.modeValue;
   }
 
   async read(): Promise<MemoryStoreFile> {
@@ -59,6 +60,9 @@ class FakeStorage implements MemoryStorage {
   async authorizeSharedDirectory(): Promise<boolean> {
     return true;
   }
+  async leaveSharedDirectory(): Promise<void> {
+    this.modeValue = "isolated";
+  }
   async statusText(): Promise<string> {
     return "fake-shared";
   }
@@ -86,6 +90,16 @@ test("ingestMessage stores record when enabled (shared, no namespace)", async ()
   assert.equal(storage.store.namespace ?? "", "");
   assert.equal(storage.store.records[0].content, "以后请用日系插画风格");
   assert.equal(storage.store.records[0].source, "auto_rule");
+});
+
+test("browser shared read-only mode does not auto-write", async () => {
+  const { service, storage } = createService();
+  service.setEnabled(true);
+  storage.modeValue = "shared-readonly";
+  await service.ingestMessage("以后请用日系插画风格", "user");
+  assert.equal(storage.store.records.length, 0);
+  await service.leaveSharedDirectory();
+  assert.equal(await service.storageMode(), "isolated");
 });
 
 test("ingestMessage deduplicates identical content by fingerprint", async () => {
