@@ -1,0 +1,312 @@
+/* ============================================================================
+ * KK-Studio-2.0 · Design Tokens  v2.0
+ * ----------------------------------------------------------------------------
+ * 三层架构：Tier 1 原始层 → Tier 2 语义层 → Tier 3 组件层
+ * 规则：高层只能引用低层，禁止反向引用；业务代码只允许消费 Tier 2 / Tier 3。
+ *
+ * 权威来源：Ardot 画布「Design System 设计系统」(fileId 728457371665311)
+ * 配套文档：docs/DESIGN_TOKENS.md
+ * 改 token 请回画布改变量后重新导出，勿在此手写覆盖。
+ *
+ * 用法：<html data-theme="dark|light" data-accent="default" data-density="comfortable">
+ * ========================================================================== */
+
+:root {
+  /* ==========================================================================
+     Tier 1 · 原始层 PRIMITIVE — 纯数值，无语义。禁止业务代码直接消费。
+     ========================================================================== */
+
+  /* --- 1.1 中性色阶 --- */
+  --kk-dark-1: #161616;
+  --kk-dark-2: #1a1a1a;
+  --kk-dark-4: #202020;
+  --kk-dark-6: #292929;
+  --kk-dark-7: #333333;
+  --kk-dark-8: #3c3c3c;
+  --kk-gold: #d98a00;
+
+  /* --- 1.2 字族 / 字重 / 字距 --- */
+  --kk-font-sans:
+    "Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --kk-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --kk-weight-regular: 400;
+  --kk-weight-medium: 500;
+  --kk-weight-semibold: 600;
+  --kk-weight-bold: 700;
+  /* 大字号收紧，小号标签/全文大写放宽 */
+  --kk-tracking-tighter: -0.4px;
+  --kk-tracking-tight: -0.2px;
+  --kk-tracking-normal: 0px;
+  --kk-tracking-wide: 0.4px;
+
+  /* --- 1.3 间距：组件内专用（4px 基准） --- */
+  --kk-space-hair: 2px; /* 仅图标微调 / 内描边留白 */
+  --kk-space-1: 4px;
+  --kk-space-2: 8px;
+  --kk-space-3: 12px;
+  --kk-space-4: 16px;
+  --kk-space-5: 24px;
+  --kk-space-6: 40px;
+
+  /* --- 1.4 圆角数值轴（9 档） --- */
+  --kk-radius-0: 0;
+  --kk-radius-xs: 4px; /* checkbox / badge / tooltip / progress */
+  --kk-radius-sm: 8px; /* chip / tag / 小控件 */
+  --kk-radius-control: 10px; /* 品牌特征：输入、按钮、胶囊外框 */
+  --kk-radius-menu: 12px; /* 下拉、二级菜单 */
+  --kk-radius-lg: 16px; /* 嵌套补偿档 */
+  --kk-radius-panel: 20px; /* 侧栏、面板、弹窗内容 */
+  --kk-radius-card: 28px; /* 卡片、大容器 */
+  --kk-radius-full: 999px; /* 药丸、头像圈 */
+
+  /* ==========================================================================
+     Tier 2 · 语义层 SEMANTIC — 主消费层。主题/密度切换只改这一层。
+     ========================================================================== */
+
+  /* --- 2.1 颜色：Dark（默认） --- */
+  --kk-bg-app: #0a0a0a;
+  --kk-bg-card: #1a1a1a;
+  --kk-bg-elevated: #202020;
+  --kk-bg-soft: #333333;
+  --kk-bg-surface: #161616;
+  --kk-border-default: #3c3c3c;
+  --kk-border-subtle: #292929;
+  --kk-bg-input: #1f1f1f;
+  --kk-neutral-selected: #2a2a2a;
+  --kk-text-primary: #dbdbdb;
+  --kk-text-secondary: #858585;
+  --kk-text-tertiary: #707070;
+  --kk-text-accent: #b2adff;
+  --kk-text-danger: #ef6d6d;
+  --kk-danger: #ef6d6d;
+  --kk-success: #79cda8;
+  --kk-warning: #e6b96a;
+  --kk-focus-ring: #aaa3ff;
+  --kk-shadow-color: rgba(0, 0, 0, 0.5);
+  --kk-shadow-color-strong: rgba(0, 0, 0, 0.7);
+  --kk-overlay: rgba(10, 10, 10, 0.72);
+
+  /* --- 2.2 边框 --- */
+  --kk-border-none: 0;
+  --kk-border-width: 1px;
+  --kk-border-width-focus: 2px;
+
+  /* --- 2.3 层级 z-index（7 档，禁止 9999 之类魔法值） --- */
+  --kk-z-base: 0;
+  --kk-z-sticky: 10;
+  --kk-z-sticky-header: 20;
+  --kk-z-dropdown: 100;
+  --kk-z-overlay: 200;
+  --kk-z-modal: 300;
+  --kk-z-popover: 400;
+  --kk-z-toast: 500;
+
+  /* --- 2.4 阴影 / 浮起层级 --- */
+  --kk-elevation-0: none;
+  --kk-elevation-1: 0 1px 2px var(--kk-shadow-color);
+  --kk-elevation-2: 0 4px 12px var(--kk-shadow-color);
+  --kk-elevation-3: 0 12px 32px var(--kk-shadow-color-strong);
+
+  /* --- 2.5 容器 / 布局节奏（页面级，区别于组件内间距） --- */
+  --kk-layout-gutter-sm: 20px; /* 卡片之间 */
+  --kk-layout-gutter-md: 32px; /* 区块之间 */
+  --kk-layout-gutter-lg: 48px; /* 大分区之间 */
+  --kk-layout-gutter-xl: 64px; /* 页面级分割 */
+  --kk-container-max-width: 1440px;
+  --kk-container-pad: 40px; /* desktop，响应式见文末 */
+  --kk-sidebar-width: 200px;
+  --kk-panel-width: 264px;
+  --kk-toolbar-height: 50px;
+  --kk-topbar-height: 56px;
+
+  /* --- 2.6 控件档位 size tier --- */
+  --kk-control-h-sm: 28px;
+  --kk-control-h-md: 32px;
+  --kk-control-h-lg: 40px;
+  --kk-control-h-xl: 44px;
+  --kk-control-px-sm: 12px;
+  --kk-control-px-md: 12px;
+  --kk-control-px-lg: 16px;
+  --kk-control-px-xl: 20px;
+  --kk-control-gap-sm: 4px;
+  --kk-control-gap-md: 8px;
+  --kk-control-gap-lg: 8px;
+  --kk-control-gap-xl: 8px;
+  --kk-control-font-sm: 12px;
+  --kk-control-font-md: 13px;
+  --kk-control-font-lg: 14px;
+  --kk-control-font-xl: 14px;
+  --kk-control-icon-sm: 14px;
+  --kk-control-icon-md: 16px;
+  --kk-control-icon-lg: 16px;
+  --kk-control-icon-xl: 20px;
+
+  /* --- 2.7 强调色：Default --- */
+  --kk-accent: #635bff;
+  --kk-accent-hover: #756fff;
+  --kk-accent-soft: #b3adff;
+  --kk-on-accent: #ffffff;
+
+  /* ==========================================================================
+     Tier 3 · 组件层 COMPONENT — 组件唯一取值入口，不许自己拼原始值
+     ========================================================================== */
+
+  /* Button（standard = lg 档 / compact = md 档） */
+  --kk-button-h: var(--kk-control-h-lg);
+  --kk-button-px: var(--kk-control-px-lg);
+  --kk-button-gap: var(--kk-control-gap-lg);
+  --kk-button-font: var(--kk-control-font-lg);
+  --kk-button-icon: var(--kk-control-icon-lg);
+  --kk-button-radius: var(--kk-radius-control);
+  --kk-button-compact-h: var(--kk-control-h-md);
+  --kk-button-compact-px: var(--kk-control-px-md);
+  --kk-button-compact-font: var(--kk-control-font-md);
+  --kk-button-compact-icon: var(--kk-control-icon-md);
+
+  /* Input */
+  --kk-input-h: var(--kk-control-h-md);
+  --kk-input-px: var(--kk-control-px-md);
+  --kk-input-gap: var(--kk-control-gap-md);
+  --kk-input-font: var(--kk-control-font-md);
+  --kk-input-icon: var(--kk-control-icon-md);
+  --kk-input-radius: var(--kk-radius-control);
+
+  /* Select */
+  --kk-select-h: var(--kk-control-h-lg);
+  --kk-select-px: var(--kk-control-px-lg);
+  --kk-select-font: var(--kk-control-font-lg);
+  --kk-select-icon: var(--kk-control-icon-lg);
+  --kk-select-radius: var(--kk-radius-control);
+  --kk-select-menu-radius: var(--kk-radius-menu);
+
+  /* IconButton */
+  --kk-icon-button-h: var(--kk-control-h-md);
+  --kk-icon-button-lg: var(--kk-control-h-lg);
+  --kk-icon-button-xl: var(--kk-control-h-xl);
+  --kk-icon-button-radius: var(--kk-radius-control);
+
+  /* 非控件档位成员，独立契约 */
+  --kk-menu-item-h: 36px;
+  --kk-badge-h: 20px;
+  --kk-capsule-h: 28px;
+  --kk-capsule-lg-h: 32px;
+  --kk-menu-indent: 16px; /* 二级菜单固定缩进 */
+
+  /* Card / Panel / Toolbar */
+  --kk-card-pad: var(--kk-space-4);
+  --kk-card-radius: var(--kk-radius-card);
+  --kk-panel-radius: var(--kk-radius-panel);
+  --kk-toolbar-h: var(--kk-toolbar-height);
+}
+
+/* ============================================================================
+ * 主题切换：Light
+ * ========================================================================== */
+[data-theme="light"] {
+  --kk-bg-app: #ededed;
+  --kk-bg-card: #eeeeee;
+  --kk-bg-elevated: #ececec;
+  --kk-bg-soft: #eaeaea;
+  --kk-bg-surface: #ffffff;
+  --kk-border-default: #c4c4c4;
+  --kk-border-subtle: #dedede;
+  --kk-bg-input: #e9e9e9;
+  --kk-neutral-selected: #e0e0e0;
+  --kk-text-primary: #252525;
+  --kk-text-secondary: #646464;
+  --kk-text-tertiary: #777777;
+  --kk-text-accent: #594acc;
+  --kk-text-danger: #aa263b;
+  --kk-danger: #aa263b;
+  --kk-success: #216947;
+  --kk-warning: #8a590c;
+  --kk-focus-ring: #594acc;
+  --kk-shadow-color: rgba(0, 0, 0, 0.12);
+  --kk-shadow-color-strong: rgba(0, 0, 0, 0.2);
+  --kk-overlay: rgba(237, 237, 237, 0.72);
+}
+
+/* ============================================================================
+ * 强调色切换：8 种预留模式
+ * ========================================================================== */
+[data-accent="blue"] {
+  --kk-accent: #2f80ed;
+  --kk-accent-hover: #4d9aff;
+  --kk-accent-soft: #8cc2ff;
+  --kk-on-accent: #ffffff;
+}
+[data-accent="green"] {
+  --kk-accent: #21a673;
+  --kk-accent-hover: #2fbe86;
+  --kk-accent-soft: #7fd6b2;
+  --kk-on-accent: #ffffff;
+}
+[data-accent="yellow"] {
+  --kk-accent: #e6b96a;
+  --kk-accent-hover: #f0c97e;
+  --kk-accent-soft: #f3d9a8;
+  --kk-on-accent: #1a1a1a;
+}
+[data-accent="pink"] {
+  --kk-accent: #e86fa4;
+  --kk-accent-hover: #f08bb8;
+  --kk-accent-soft: #f4b7d2;
+  --kk-on-accent: #ffffff;
+}
+[data-accent="orange"] {
+  --kk-accent: #ee8b3a;
+  --kk-accent-hover: #f5a05e;
+  --kk-accent-soft: #f8c294;
+  --kk-on-accent: #ffffff;
+}
+[data-accent="purple"] {
+  --kk-accent: #8b5cf6;
+  --kk-accent-hover: #a78bfa;
+  --kk-accent-soft: #cfc0fe;
+  --kk-on-accent: #ffffff;
+}
+[data-accent="white"] {
+  --kk-accent: #ffffff;
+  --kk-accent-hover: #e8e8e8;
+  --kk-accent-soft: #dbdbdb;
+  --kk-on-accent: #0a0a0a;
+}
+
+/* ============================================================================
+ * 密度切换：compact（数据后台等密集场景）
+ * 只改 Tier 2 的控件档位与布局节奏 → 组件层自动继承，变密度不变风格
+ * ========================================================================== */
+[data-density="compact"] {
+  --kk-control-h-sm: 24px;
+  --kk-control-h-md: 28px;
+  --kk-control-h-lg: 32px;
+  --kk-control-h-xl: 36px;
+  --kk-control-px-sm: 8px;
+  --kk-control-px-md: 8px;
+  --kk-control-px-lg: 12px;
+  --kk-control-px-xl: 12px;
+  --kk-layout-gutter-sm: 16px;
+  --kk-layout-gutter-md: 24px;
+  --kk-layout-gutter-lg: 32px;
+  --kk-layout-gutter-xl: 48px;
+  --kk-card-pad: var(--kk-space-3);
+}
+
+/* ============================================================================
+ * 响应式容器间距（只改 Tier 2 的 --kk-container-pad）
+ * ========================================================================== */
+@media (max-width: 767px) {
+  :root {
+    --kk-container-pad: 16px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1199px) {
+  :root {
+    --kk-container-pad: 24px;
+  }
+}
+@media (min-width: 1200px) {
+  :root {
+    --kk-container-pad: 40px;
+  }
+}

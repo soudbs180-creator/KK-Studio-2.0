@@ -1,0 +1,456 @@
+{
+  "$schema": "kk/ui-archetypes/v1",
+  "version": "1.0",
+  "source_doc": "docs/UI_ARCHETYPES.md",
+  "token_dependency": {
+    "css": "src/styles/tokens.css",
+    "fallback": "src/styles/ui-tokens.css",
+    "note": "所有 var() 均写成 var(--kk-*, <fallback>) 形式，未接入 tokens.css 时仍可工作"
+  },
+  "page_shell": {
+    "topbar_height": 40,
+    "sidebar_width": 291,
+    "sidebar_compact_width": 61,
+    "content_padding": { "xl": 40, "lg": 24, "sm": 16 },
+    "section_gap": 32,
+    "title": { "size": 24, "line": 32, "weight": 600, "color": "text-primary" },
+    "subtitle": {
+      "size": 13,
+      "line": 20,
+      "color": "text-tertiary",
+      "gap_after_title": 8
+    },
+    "toolbar": {
+      "height": 32,
+      "layout": "filter_left / view-sort_right",
+      "inner_gap": 8,
+      "allowed_components": [
+        "input.md",
+        "select.md",
+        "capsule.sm",
+        "iconButton.md"
+      ]
+    },
+    "background": "bg-app",
+    "card_background": "bg-card"
+  },
+  "archetypes": [
+    {
+      "id": "A1",
+      "name": "Gallery 画廊网格",
+      "when": "主对象是位图/视频，且需要批量扫视挑选",
+      "signals": [
+        "media_thumbnail_primary",
+        "count_gt_12",
+        "batch_select_needed"
+      ],
+      "grid": {
+        "template": "repeat(auto-fill, minmax(180px, 1fr))",
+        "breakpoints": {
+          "900": "repeat(auto-fill, minmax(140px, 1fr))",
+          "600": "repeat(auto-fill, minmax(110px, 1fr))"
+        },
+        "gap": 12
+      },
+      "card": {
+        "padding": 4,
+        "radius": 12,
+        "thumb_radius": 8,
+        "thumb_ratio": "1/1",
+        "thumb_fit": "cover",
+        "thumb_bg": "bg-input"
+      },
+      "text": {
+        "meta": {
+          "size": 11,
+          "line": 14,
+          "color": "text-tertiary",
+          "max_lines": 2
+        }
+      },
+      "badge": {
+        "size": 20,
+        "inset": 6,
+        "style": "accent-soft bg + text-on-accent-soft"
+      },
+      "selection": {
+        "mode": "outline",
+        "border": 1,
+        "color": "accent",
+        "inset_ring": 1,
+        "forbid": "background_change"
+      },
+      "interaction": [
+        "single_click_select",
+        "cmd_multi_select",
+        "shift_range_select",
+        "hover_action_iconbutton_28",
+        "dblclick_lightbox",
+        "arrow_key_nav"
+      ],
+      "motion": {
+        "hover_thumb_scale": 1.02,
+        "hover_ms": 140,
+        "enter": "surface-enter 220ms"
+      },
+      "lightbox": {
+        "bg": "bg-overlay",
+        "close": "iconButton.md top-right",
+        "nav": "iconButton 40 left-right",
+        "footer": "filename + action bar"
+      }
+    },
+    {
+      "id": "A2",
+      "name": "CardGrid 卡片网格",
+      "default": true,
+      "when": "条目带标题+描述+状态，需阅读比较；匹配不上其他类型时用此项",
+      "signals": ["fields_gte_3", "has_description", "not_single_media"],
+      "grid": {
+        "template": "repeat(auto-fill, minmax(240px, 1fr))",
+        "breakpoints": {
+          "900": "repeat(auto-fill, minmax(200px, 1fr))",
+          "600": "1fr"
+        },
+        "gap": 16
+      },
+      "card": {
+        "padding": 12,
+        "radius": 12,
+        "bg": "bg-card",
+        "border": "1px border-subtle",
+        "inner_gap": 8,
+        "hover_bg": "bg-elevated",
+        "hover_border": "border-default"
+      },
+      "text": {
+        "header": {
+          "icon": 20,
+          "gap": 8,
+          "title": { "size": 14, "line": 22, "weight": 600 }
+        },
+        "description": {
+          "size": 12,
+          "line": 16,
+          "color": "text-secondary",
+          "max_lines": 2
+        },
+        "footer_meta": { "size": 11, "line": 14, "color": "text-tertiary" }
+      },
+      "status_badge": { "size": 24, "position": "header_right" },
+      "footer_action": {
+        "component": "button.sm",
+        "height": 28,
+        "align": "right",
+        "gap": 8
+      },
+      "interaction": [
+        "whole_card_clickable_opens_detail",
+        "inner_button_stops_propagation",
+        "tab_reachable",
+        "enter_opens"
+      ],
+      "motion": { "hover_ms": 140, "enter": "surface-enter 220ms" },
+      "selection": { "mode": "outline", "forbid": "background_change" }
+    },
+    {
+      "id": "A3",
+      "name": "ListTable 列表/表格",
+      "when": "字段规整需排序，或条目 > 50 需快速扫描",
+      "signals": ["fields_gte_3", "sortable", "dense"],
+      "row": {
+        "height": 32,
+        "height_compact": 28,
+        "header_height": 32,
+        "column_gap": 16,
+        "icon_slot": 24
+      },
+      "header": {
+        "size": 11,
+        "line": 14,
+        "color": "text-tertiary",
+        "weight": 400,
+        "sticky": true
+      },
+      "state": {
+        "hover": "bg-elevated",
+        "selected": "accent-soft + left 2px accent bar"
+      },
+      "numeric": { "align": "right", "font_variant_numeric": "tabular-nums" },
+      "sort": { "cycle": ["asc", "desc", "none"], "icon": 14 },
+      "row_action": { "position": "row-end", "visibility": "always" },
+      "placeholder": { "min_rows": 3, "reason": "避免切换视图时布局跳动" }
+    },
+    {
+      "id": "A4",
+      "name": "Detail 详情",
+      "when": "单个对象的完整信息",
+      "variants": {
+        "panel": {
+          "width": 264,
+          "width_wide": 470,
+          "hero": { "ratio": "16/9", "radius": 8 },
+          "meta_table": {
+            "label_width": 80,
+            "label": { "size": 11, "line": 14, "color": "text-tertiary" },
+            "value": { "size": 13, "line": 20, "color": "text-primary" },
+            "row_height": 28
+          },
+          "section_gap": 16,
+          "section_title": {
+            "size": 12,
+            "line": 16,
+            "weight": 600,
+            "color": "text-tertiary"
+          },
+          "action_bar": {
+            "position": "bottom_fixed",
+            "primary": "button.lg 40 full-width",
+            "secondary": "button.md 32",
+            "gap": 8
+          },
+          "motion": "slide-in-right 220ms (conversation-panel-enter)"
+        },
+        "page": {
+          "max_width": 720,
+          "or": "left-main right-aside 2:1",
+          "section_gap": 32,
+          "section_title": { "size": 16, "line": 24 }
+        }
+      },
+      "interaction": [
+        "back_top_left",
+        "inline_edit",
+        "destructive_action_bottom_danger"
+      ]
+    },
+    {
+      "id": "A5",
+      "name": "Timeline 时间线",
+      "when": "条目有明确先后顺序/过程，用户关心走到哪一步",
+      "signals": ["ordered", "process_or_history"],
+      "layout": {
+        "axis": "vertical",
+        "line_width": 2,
+        "line_color": "border-subtle",
+        "icon_slot": 20,
+        "content_indent": 32,
+        "step_gap": 16
+      },
+      "node": { "dot": 8, "dot_stroke": 2 },
+      "step_card": { "radius": 8, "padding": 12 },
+      "status_color": {
+        "done": "success",
+        "active": "accent",
+        "failed": "danger",
+        "pending": "tertiary"
+      },
+      "text": {
+        "title": { "size": 13, "line": 20, "weight": 600 },
+        "desc": { "size": 12, "line": 16, "color": "text-secondary" },
+        "time": { "size": 11, "color": "text-tertiary", "align": "right" }
+      },
+      "interaction": [
+        "long_content_collapsed_by_default",
+        "click_expand",
+        "active_step_scroll_into_view"
+      ],
+      "motion": {
+        "enter": "surface-enter 220ms",
+        "active_pulse": "1.6s ease-in-out infinite"
+      }
+    },
+    {
+      "id": "A6",
+      "name": "Board 看板",
+      "when": "存在枚举状态字段，主要操作是跨状态流转",
+      "signals": ["enum_status_field", "cross_status_transition"],
+      "column": {
+        "width": 264,
+        "gap": 16,
+        "header": { "size": 14, "line": 22, "weight": 600, "count_badge": 20 },
+        "collapsible": true,
+        "inner_scroll_threshold": 20,
+        "header_sticky": true
+      },
+      "card": { "radius": 8, "padding": 12, "gap": 8 },
+      "drag": { "opacity": 0.6, "placeholder": "dashed 1px, radius 8" },
+      "motion": { "drag_ms": 140, "drop_ms": 220 }
+    },
+    {
+      "id": "A7",
+      "name": "Compare 对比",
+      "when": "同一对象的多个版本/方案并置比较",
+      "signals": ["same_object_variants"],
+      "variants": {
+        "side_by_side": {
+          "columns": "2-4 equal",
+          "gap": 16,
+          "label_bar": "chip.sm 28",
+          "sync_scroll": true,
+          "sync_zoom": true
+        },
+        "slider": {
+          "divider_width": 2,
+          "divider_color": "accent",
+          "handle": "32x32 radius 999",
+          "keyboard_step": "1% / shift 10%"
+        }
+      },
+      "annotation": {
+        "version_badge": { "size": 20, "position": "top-left" },
+        "action": {
+          "component": "button.sm",
+          "height": 28,
+          "position": "bottom-right"
+        }
+      }
+    },
+    {
+      "id": "A8",
+      "name": "Stats 指标面板",
+      "when": "主体是聚合数值/趋势而非对象列表",
+      "signals": ["aggregated_numbers", "trend"],
+      "grid": {
+        "template": "repeat(auto-fill, minmax(200px, 1fr))",
+        "gap": 16
+      },
+      "card": { "padding": 16, "radius": 12, "bg": "bg-card" },
+      "text": {
+        "value": {
+          "size": 32,
+          "line": 40,
+          "weight": 600,
+          "font_variant_numeric": "tabular-nums"
+        },
+        "label": {
+          "size": 11,
+          "line": 14,
+          "color": "text-tertiary",
+          "position": "above_value"
+        },
+        "delta": {
+          "size": 12,
+          "line": 16,
+          "up": "success",
+          "down": "danger",
+          "exception_market": "涨红跌绿"
+        }
+      },
+      "chart": {
+        "palette": "accent sequence",
+        "max_colors": 6,
+        "grid_line": "border-subtle",
+        "forbid": "new chart library palette"
+      },
+      "constraint": {
+        "max_height_ratio": 0.25,
+        "note": "作为概览条时不超过内容区 1/4"
+      }
+    },
+    {
+      "id": "A9",
+      "name": "Canvas 节点画布",
+      "when": "对象之间有空间关系或连线依赖（既有特例，不得滥用）",
+      "signals": ["spatial_relation", "connections"],
+      "params": {
+        "node_radius": 12,
+        "connection_width": 2,
+        "selection_ring": "2px accent",
+        "grid_dot": 1,
+        "floating_toolbar": { "padding": 4, "radius": 12, "inner_button": 28 }
+      }
+    }
+  ],
+  "states": {
+    "empty": {
+      "min_height": 240,
+      "align": "center",
+      "icon": 48,
+      "desc": { "size": 13, "line": 20, "color": "text-secondary" },
+      "action": "button.lg 40",
+      "forbid": "仅写暂无数据"
+    },
+    "loading": {
+      "style": "skeleton",
+      "radius_rule": "复用目标元素圆角",
+      "pulse_ms": 1600,
+      "list_min_rows": 3,
+      "spinner_scope": "button_only"
+    },
+    "error": {
+      "container": { "radius": 8, "padding": 12, "border": "danger" },
+      "action": "button.md 32 retry",
+      "scope": "inline unless page-level"
+    },
+    "partial_unavailable": { "mode": "disabled + tooltip reason" }
+  },
+  "routing": {
+    "note": "按顺序命中即停；2-5 为强特征，优先于 6-7 的载体特征",
+    "rules": [
+      { "order": 1, "if": "spatial_relation || connections", "then": "A9" },
+      { "order": 2, "if": "same_object_variants", "then": "A7" },
+      { "order": 3, "if": "aggregated_numbers || trend", "then": "A8" },
+      { "order": 4, "if": "ordered && (process || history)", "then": "A5" },
+      {
+        "order": 5,
+        "if": "enum_status_field && cross_status_transition",
+        "then": "A6"
+      },
+      {
+        "order": 6,
+        "if": "media_thumbnail_primary && (batch_select || count_gt_12)",
+        "then": "A1"
+      },
+      {
+        "order": 7,
+        "if": "fields_gte_3 && sortable || count_gt_50",
+        "then": "A3"
+      },
+      { "order": 8, "if": "single_object_full_info", "then": "A4" },
+      { "order": 9, "if": "*", "then": "A2" }
+    ]
+  },
+  "allowed_combinations": [
+    {
+      "combo": ["A1|A2", "A4.panel"],
+      "note": "工作展示标准形态：左网格右详情，详情随选中更新"
+    },
+    {
+      "combo": ["A1|A2", "A3"],
+      "note": "同一数据集的网格/列表视图切换，共用筛选与选中态"
+    },
+    {
+      "combo": ["A8", "*"],
+      "note": "指标面板作顶部概览条，高度不超过内容区 1/4"
+    }
+  ],
+  "forbidden_combinations": [
+    "同一页面并列两种网格类型 (A1 + A2)",
+    "A5 / A6 与网格并列（时序与空间心智模型冲突）",
+    "同一数据集三态以上呈现",
+    "为单一功能引入新的栅格列数或 gap 值"
+  ],
+  "global_params": {
+    "grid_gap_allowed": [12, 16],
+    "card_padding_allowed": [4, 12, 16],
+    "radius_allowed": [0, 2, 4, 6, 8, 10, 12, 16, 20, 28, 999],
+    "font_size_allowed": [11, 12, 13, 14, 16, 20, 24, 32, 48],
+    "radius_padding_pairs": {
+      "12": [4, 12],
+      "28": [24],
+      "8": [8, 12],
+      "10": [12]
+    },
+    "motion": {
+      "micro_ms": 140,
+      "panel_ms": 220,
+      "ease": "cubic-bezier(0.22, 1, 0.36, 1)",
+      "toolbar_300ms_back": "仅限画布工具栏，禁止推广"
+    },
+    "a11y": {
+      "focus_ring": "2px / offset 3px",
+      "reduced_motion": "全局关闭动效"
+    }
+  }
+}

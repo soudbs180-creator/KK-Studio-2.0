@@ -1,3 +1,4 @@
+import { ConversationResizeHandle } from "./ResizeHandle";
 import type { ModelSelection } from "../features/models/modelSelection";
 import { useEffect, useState } from "react";
 import { useConversationOverlay } from "./useConversationOverlay";
@@ -6,11 +7,9 @@ import type {
   CreationDraft,
   CreationProject,
 } from "../features/creation/model";
-import ConversationMessages from "./ConversationMessages";
+import ConversationMessageFeed from "./ConversationMessageFeed";
 import type { SkillRecord } from "../features/skills/skillRegistry";
-import AgentConversationMessages, {
-  type AgentConversationProps,
-} from "./AgentConversationMessages";
+import type { AgentConversationProps } from "./AgentConversationMessages";
 import ConversationChannelSelector from "./ConversationChannelSelector";
 import AgentComposer from "./AgentComposer";
 import ConversationTaskApproval from "./ConversationTaskApproval";
@@ -57,7 +56,7 @@ export default function ConversationPanel({
   onApplySkill?: (record: SkillRecord) => string;
   agent?: AgentConversationProps;
 }) {
-  const panelRef = useConversationOverlay(overlay, onClose);
+  const panelRef = useConversationOverlay(overlay);
   const [channel, setChannel] = useState(() =>
     safeStorage.getItem("kk-chat-channel") === "direct" ? "direct" : "codex",
   );
@@ -143,8 +142,11 @@ export default function ConversationPanel({
       data-node-id="407:29265"
       data-overlay={overlay}
     >
+      <ConversationResizeHandle />
       <ConversationHeader
-        title={project?.name ?? "新建对话"}
+        title={
+          project?.name && project.name !== "未命名项目" ? project.name : "聊天"
+        }
         messageCount={
           agentActive ? (agent?.messages.length ?? 0) : visibleMessages.length
         }
@@ -161,25 +163,15 @@ export default function ConversationPanel({
           }}
         />
       )}
-      <div className="conversation-messages">
-        {agentActive && agent ? (
-          <AgentConversationMessages
-            agent={agent}
-            onConfigure={() => onOpen("settings/network")}
-          />
-        ) : (
-          <ConversationMessages
-            messages={visibleMessages}
-            onDelete={deleteMessage}
-            onStatus={setStatus}
-          />
-        )}
-        {status && (
-          <p className="chat-status" role="status">
-            {status}
-          </p>
-        )}
-      </div>
+      <ConversationMessageFeed
+        agent={agent}
+        agentActive={agentActive}
+        messages={visibleMessages}
+        onDelete={deleteMessage}
+        onStatus={setStatus}
+        onConfigure={() => onOpen("settings/partners")}
+        status={status}
+      />
       <AgentComposer
         agent={agent}
         draftKey={project?.id ?? "workspace"}

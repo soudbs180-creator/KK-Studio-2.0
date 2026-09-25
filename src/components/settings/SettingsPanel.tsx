@@ -8,8 +8,11 @@ import {
 } from "../../domain/settings";
 import type { SettingsPreferences } from "../../domain/settings";
 import GeneralSettings from "./GeneralSettings";
-import SettingsSections, { SETTINGS_SECTIONS } from "./SettingsSections";
-import type { SettingsSection } from "./SettingsSections";
+import SettingsSections from "./SettingsSections";
+import type { SettingsSection } from "./SettingsSectionData";
+import { SETTINGS_NAV_GROUPS } from "./SettingsSectionData";
+import type { SettingsSectionItem } from "./SettingsSectionData";
+import type { ExtensionsTab } from "./ExtensionsSettings";
 import type { SaveState } from "../../features/creation/useCreationStorage";
 import type { SkillRegistry } from "../../features/skills/skillRegistry";
 import UiIcon from "../UiIcon";
@@ -44,12 +47,14 @@ function readInitialSettings(): {
 export default function SettingsPanel({
   onClose,
   initialSection = "general",
+  initialExtensionsTab,
   saveState = "loading",
   revision = 0,
   registry,
 }: {
   onClose: () => void;
   initialSection?: SettingsSection;
+  initialExtensionsTab?: ExtensionsTab;
   saveState?: SaveState;
   revision?: number;
   registry: SkillRegistry;
@@ -57,6 +62,9 @@ export default function SettingsPanel({
   const [initial] = useState(readInitialSettings);
   const [preferences, setPreferences] = useState(initial.preferences);
   const [section, setSection] = useState<SettingsSection>(initialSection);
+  const [extensionsTab, setExtensionsTab] = useState<ExtensionsTab | undefined>(
+    initialSection === "extensions" ? initialExtensionsTab : undefined,
+  );
   const [feedback, setFeedback] = useState({
     message: initial.message,
     error: initial.error,
@@ -101,32 +109,38 @@ export default function SettingsPanel({
       <aside className="settings-sidebar">
         <h1 id="settings-dialog-title">设置</h1>
         <nav className="settings-nav" aria-label="设置分类">
-          {SETTINGS_SECTIONS.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              className={`settings-nav-item${section === item.id ? " is-active" : ""}`}
-              aria-current={section === item.id ? "page" : undefined}
-              onClick={() => {
-                setSection(item.id);
-                setFeedback({ message: "", error: false });
-              }}
-            >
-              {item.id === "plugins" ? (
-                <span className="settings-nav-icon" aria-hidden="true">
-                  <UiIcon name="plug" size={22} />
-                </span>
-              ) : (
-                <img
-                  className="settings-nav-icon"
-                  src={`/design/figma/settings-nav-${item.id}.svg`}
-                  alt=""
-                  width="22"
-                  height="22"
-                />
-              )}
-              <span>{item.label}</span>
-            </button>
+          {SETTINGS_NAV_GROUPS.map((group) => (
+            <div key={group.label} className="settings-nav-group">
+              <div className="settings-nav-group-label">{group.label}</div>
+              {group.items.map((item: SettingsSectionItem) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={`settings-nav-item${section === item.id ? " is-active" : ""}`}
+                  aria-current={section === item.id ? "page" : undefined}
+                  onClick={() => {
+                    setSection(item.id);
+                    if (item.id !== "extensions") setExtensionsTab(undefined);
+                    setFeedback({ message: "", error: false });
+                  }}
+                >
+                  {item.id === "extensions" ? (
+                    <span className="settings-nav-icon" aria-hidden="true">
+                      <UiIcon name="plug" size={22} />
+                    </span>
+                  ) : (
+                    <img
+                      className="settings-nav-icon"
+                      src={`/design/figma/settings-nav-${item.id}.svg`}
+                      alt=""
+                      width="22"
+                      height="22"
+                    />
+                  )}
+                  <span>{item.label}</span>
+                </button>
+              ))}
+            </div>
           ))}
         </nav>
       </aside>
@@ -148,6 +162,7 @@ export default function SettingsPanel({
             revision={revision}
             preferences={preferences}
             registry={registry}
+            extensionsTab={extensionsTab}
             onReset={() =>
               updatePreferences(
                 { ...DEFAULT_SETTINGS },

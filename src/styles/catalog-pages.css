@@ -578,7 +578,7 @@
 .catalog-card-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px;
+  gap: var(--ui-space-4);
   max-width: 1600px;
   margin: 0 auto;
 }
@@ -590,7 +590,8 @@
   min-width: 0;
   text-align: left;
   border: 1px solid var(--border-subtle);
-  border-radius: var(--ui-radius-card);
+  /* A2 CardGrid uses the standard card shape; large hero cards keep r28. */
+  border-radius: var(--ui-radius-menu);
   background: var(--bg-card);
   transition:
     border-color var(--motion-fast) var(--motion-ease),
@@ -656,13 +657,13 @@
 .catalog-card-body {
   display: grid;
   gap: var(--ui-space-2);
-  padding: var(--ui-space-5);
+  padding: var(--ui-space-3);
 }
 .catalog-card-body strong {
   min-width: 0;
   overflow-wrap: anywhere;
-  font-size: var(--ui-font-title);
-  line-height: var(--ui-line-height-title);
+  font-size: var(--ui-font-label);
+  line-height: var(--ui-line-height-label);
   color: var(--text-primary);
 }
 .catalog-card-body p {
@@ -681,7 +682,7 @@
   line-height: var(--ui-line-height-caption);
 }
 .catalog-card > .catalog-page-actions {
-  padding: 0 var(--ui-space-5) var(--ui-space-5);
+  padding: 0 var(--ui-space-3) var(--ui-space-3);
 }
 .catalog-card-image.workflow-image strong {
   max-width: 100%;
@@ -752,7 +753,7 @@
 .project-library-actions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: var(--ui-space-4);
   margin-bottom: 28px;
 }
 .project-library-action {
@@ -761,9 +762,9 @@
   align-items: center;
   gap: 16px;
   min-width: 0;
-  padding: var(--ui-space-5);
+  padding: var(--ui-space-3);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--ui-radius-card);
+  border-radius: var(--ui-radius-menu);
   background: var(--bg-card);
   color: var(--text-secondary);
   text-align: left;
@@ -836,7 +837,7 @@
 .project-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px;
+  gap: var(--ui-space-4);
 }
 .project-library-card {
   position: relative;
@@ -844,7 +845,7 @@
   overflow: hidden;
   text-align: left;
   border: 1px solid var(--border-subtle);
-  border-radius: var(--ui-radius-card);
+  border-radius: var(--ui-radius-menu);
   background: var(--bg-card);
 }
 .project-library-preview {

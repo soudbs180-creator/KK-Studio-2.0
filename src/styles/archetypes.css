@@ -1,0 +1,823 @@
+/* ==========================================================================
+   KK Studio UI Archetypes v1.0
+   规范来源: docs/UI_ARCHETYPES.md
+   机器可读: src/styles/archetypes.json
+   依赖: global.css (颜色真源) + tokens.css (--kk-* 三层，未接入时用括号内回退值)
+   用法: 新增功能先按 docs/UI_ARCHETYPES.md §3 决策树确定类型，再套用对应类名。
+         禁止在本文件之外为同类容器重新定义栅格、gap、内边距或圆角。
+   ========================================================================== */
+
+/* ---------- 0. 通用页面外壳 ---------------------------------------------- */
+
+.kk-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: var(--kk-container-pad, 24px);
+  gap: var(--kk-section-gap, 32px);
+  background: var(--bg-app);
+  color: var(--text-primary);
+}
+
+.kk-page-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-2, 8px);
+  min-width: 0;
+}
+
+.kk-page-title {
+  font-size: var(--kk-font-title-lg, 24px);
+  line-height: var(--kk-lh-title-lg, 32px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.kk-page-sub {
+  font-size: var(--kk-font-body, 13px);
+  line-height: var(--kk-lh-body, 20px);
+  color: var(--text-tertiary);
+}
+
+/* 工具行：筛选在左，视图/排序在右 */
+.kk-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kk-space-2, 8px);
+  min-height: var(--kk-control-h-md, 32px);
+  flex-wrap: wrap;
+}
+
+.kk-toolbar > .kk-toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-2, 8px);
+  min-width: 0;
+}
+
+/* ---------- 1. 选中态（全类型统一：描边，不靠背景色） -------------------- */
+
+.kk-selectable {
+  position: relative;
+  outline: none;
+}
+
+.kk-selectable[aria-selected="true"],
+.kk-selectable[aria-pressed="true"] {
+  border-color: var(--border-accent, var(--bg-accent));
+  box-shadow: inset 0 0 0 1px var(--border-accent, var(--bg-accent));
+}
+
+.kk-selectable:focus-visible {
+  outline: var(--ui-focus-width, 2px) solid var(--focus-ring, var(--bg-accent));
+  outline-offset: var(--ui-focus-offset, 3px);
+}
+
+/* ---------- A1 Gallery 画廊网格 ------------------------------------------ */
+
+.kk-gallery {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(var(--kk-gallery-col-min, 180px), 1fr)
+  );
+  gap: var(--kk-gallery-gap, 12px);
+  align-content: start;
+}
+
+@media (max-width: 900px) {
+  .kk-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .kk-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  }
+}
+
+.kk-gallery-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-1, 4px);
+  padding: var(--kk-space-1, 4px);
+  border: 1px solid transparent;
+  border-radius: var(--kk-radius-menu, 12px);
+  background: transparent;
+  text-align: left;
+  min-width: 0;
+}
+
+.kk-gallery-card:hover {
+  background: var(--bg-card-hover);
+}
+
+.kk-gallery-thumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  border-radius: var(--kk-radius-control-sm, 8px); /* 12 - 4 = 8 */
+  background: var(--bg-input);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.kk-gallery-thumb img,
+.kk-gallery-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale var(--motion-fast, 140ms) var(--motion-ease, ease);
+}
+
+.kk-gallery-card:hover .kk-gallery-thumb img {
+  scale: 1.02;
+}
+
+.kk-gallery-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  height: var(--kk-badge-h, 20px);
+  padding: 0 var(--kk-space-1, 4px);
+  border-radius: var(--ui-radius-pill, 999px);
+  background: var(--bg-accent-soft, var(--bg-accent));
+  color: var(--text-on-accent-soft, var(--text-primary));
+  font-size: var(--kk-font-micro, 11px);
+  line-height: var(--kk-lh-micro, 14px);
+}
+
+.kk-gallery-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 1;
+  display: flex;
+  gap: var(--kk-space-1, 4px);
+  opacity: 0;
+  transition: opacity var(--motion-fast, 140ms) var(--motion-ease, ease);
+}
+
+.kk-gallery-card:hover .kk-gallery-actions,
+.kk-gallery-card:focus-within .kk-gallery-actions {
+  opacity: 1;
+}
+
+.kk-gallery-meta {
+  font-size: var(--kk-font-micro, 11px);
+  line-height: var(--kk-lh-micro, 14px);
+  color: var(--text-tertiary);
+  padding: 0 var(--kk-space-1, 4px);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- A2 CardGrid 卡片网格（默认类型） ------------------------------ */
+
+.kk-cardgrid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(var(--kk-cardgrid-col-min, 240px), 1fr)
+  );
+  gap: var(--kk-cardgrid-gap, 16px);
+  align-content: start;
+}
+
+@media (max-width: 900px) {
+  .kk-cardgrid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .kk-cardgrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kk-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-2, 8px);
+  padding: var(--kk-space-3, 12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--kk-radius-menu, 12px);
+  background: var(--bg-card);
+  min-width: 0;
+  text-align: left;
+  transition:
+    background-color var(--motion-fast, 140ms) var(--motion-ease, ease),
+    border-color var(--motion-fast, 140ms) var(--motion-ease, ease);
+}
+
+.kk-card:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-default);
+}
+
+.kk-card-head {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-2, 8px);
+  min-width: 0;
+}
+
+.kk-card-head .kk-card-icon {
+  flex: 0 0 auto;
+  width: var(--kk-icon-lg, 20px);
+  height: var(--kk-icon-lg, 20px);
+  display: grid;
+  place-items: center;
+}
+
+.kk-card-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--kk-font-body-lg, 14px);
+  line-height: var(--kk-lh-body-lg, 22px);
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kk-card-desc {
+  font-size: var(--kk-font-caption, 12px);
+  line-height: var(--kk-lh-caption, 16px);
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.kk-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kk-space-2, 8px);
+  min-width: 0;
+}
+
+.kk-card-foot .kk-card-meta {
+  font-size: var(--kk-font-micro, 11px);
+  line-height: var(--kk-lh-micro, 14px);
+  color: var(--text-tertiary);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- A3 ListTable 列表/表格 --------------------------------------- */
+
+.kk-table {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(var(--kk-row-h, 32px) * 3); /* 空/加载时防跳动 */
+}
+
+.kk-row {
+  display: grid;
+  grid-template-columns: var(--kk-cols, 1fr);
+  align-items: center;
+  gap: var(--kk-space-4, 16px);
+  min-height: var(--kk-row-h, 32px);
+  padding: 0 var(--kk-space-2, 8px);
+  border-radius: var(--kk-radius-control-sm, 8px);
+}
+
+.kk-table[data-density="compact"] {
+  --kk-row-h: 28px;
+}
+
+.kk-row:not(.kk-row-head):hover {
+  background: var(--bg-elevated);
+}
+
+.kk-row-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: var(--kk-control-h-md, 32px);
+  background: var(--bg-app);
+  font-size: var(--kk-font-micro, 11px);
+  line-height: var(--kk-lh-micro, 14px);
+  font-weight: 400;
+  color: var(--text-tertiary);
+}
+
+.kk-row[aria-selected="true"] {
+  background: var(--bg-accent-soft, var(--bg-elevated));
+  box-shadow: inset 2px 0 0 0 var(--bg-accent);
+}
+
+.kk-cell {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--kk-font-body, 13px);
+  line-height: var(--kk-lh-body, 20px);
+}
+
+/* 图标槽固定宽度：无图标时留空槽，文字左缘不位移 */
+.kk-cell-icon {
+  flex: 0 0 auto;
+  width: var(--kk-icon-slot, 24px);
+  display: grid;
+  place-items: center;
+}
+
+.kk-cell-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.kk-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--kk-space-1, 4px);
+}
+
+.kk-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kk-space-1, 4px);
+  cursor: pointer;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+}
+
+/* ---------- A4 Detail 详情 ----------------------------------------------- */
+
+.kk-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-4, 16px);
+  width: var(--kk-detail-w, 264px);
+  min-width: 0;
+}
+
+.kk-detail[data-wide="true"] {
+  --kk-detail-w: 470px;
+}
+
+.kk-detail-hero {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border-radius: var(--kk-radius-control-sm, 8px);
+  background: var(--bg-input);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.kk-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-1, 4px);
+}
+
+.kk-meta-row {
+  display: grid;
+  grid-template-columns: var(--kk-meta-label-w, 80px) minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--kk-space-2, 8px);
+  min-height: 28px;
+}
+
+.kk-meta-label {
+  font-size: var(--kk-font-micro, 11px);
+  line-height: var(--kk-lh-micro, 14px);
+  color: var(--text-tertiary);
+}
+
+.kk-meta-value {
+  font-size: var(--kk-font-body, 13px);
+  line-height: var(--kk-lh-body, 20px);
+  color: var(--text-primary);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.kk-detail-section-title {
+  font-size: var(--kk-font-caption, 12px);
+  line-height: var(--kk-lh-caption, 16px);
+  font-weight: 600;
+  color: var(--text-tertiary);
+}
+
+.kk-actionbar {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-2, 8px);
+  padding-top: var(--kk-space-2, 8px);
+}
+
+.kk-actionbar > .kk-actionbar-primary {
+  flex: 1 1 auto;
+}
+
+/* 整页式详情 */
+.kk-detail-page {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-section-gap, 32px);
+}
+
+.kk-detail-page .kk-detail-section-title {
+  font-size: var(--kk-font-title-sm, 16px);
+  line-height: var(--kk-lh-title-sm, 24px);
+  color: var(--text-primary);
+}
+
+/* ---------- A5 Timeline 时间线 ------------------------------------------- */
+
+.kk-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-4, 16px);
+  position: relative;
+}
+
+.kk-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--kk-icon-lg, 20px) minmax(0, 1fr);
+  gap: var(--kk-space-3, 12px);
+  align-items: start;
+}
+
+/* 轴线：连接相邻节点 */
+.kk-step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--kk-icon-lg, 20px) / 2 - 1px);
+  top: calc(var(--kk-icon-lg, 20px));
+  bottom: calc(var(--kk-space-4, 16px) * -1);
+  width: 2px;
+  background: var(--border-subtle);
+}
+
+.kk-step-dot {
+  width: 8px;
+  height: 8px;
+  margin: 6px auto 0;
+  border-radius: var(--ui-radius-pill, 999px);
+  border: 2px solid var(--bg-app);
+  background: var(--text-tertiary);
+  box-sizing: content-box;
+}
+
+.kk-step[data-status="done"] .kk-step-dot {
+  background: var(--text-success, var(--bg-success));
+}
+.kk-step[data-status="active"] .kk-step-dot {
+  background: var(--bg-accent);
+  animation: kk-pulse 1.6s ease-in-out infinite;
+}
+.kk-step[data-status="failed"] .kk-step-dot {
+  background: var(--text-danger, var(--bg-danger));
+}
+
+@keyframes kk-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.kk-step-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-1, 4px);
+  min-width: 0;
+}
+
+.kk-step-card {
+  padding: var(--kk-space-3, 12px);
+  border-radius: var(--kk-radius-control-sm, 8px);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+}
+
+.kk-step-title {
+  font-size: var(--kk-font-body, 13px);
+  line-height: var(--kk-lh-body, 20px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.kk-step-desc {
+  font-size: var(--kk-font-caption, 12px);
+  line-height: var(--kk-lh-caption, 16px);
+  color: var(--text-secondary);
+}
+
+.kk-step-time {
+  font-size: var(--kk-font-micro, 11px);
+  line-height: var(--kk-lh-micro, 14px);
+  color: var(--text-tertiary);
+}
+
+/* ---------- A6 Board 看板 ------------------------------------------------- */
+
+.kk-board {
+  display: flex;
+  gap: var(--kk-space-4, 16px);
+  overflow-x: auto;
+  align-items: flex-start;
+  padding-bottom: var(--kk-space-2, 8px);
+}
+
+.kk-board-col {
+  flex: 0 0 var(--kk-board-col-w, 264px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-2, 8px);
+  max-height: 100%;
+}
+
+.kk-board-col-head {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-2, 8px);
+  min-height: var(--kk-control-h-md, 32px);
+  font-size: var(--kk-font-body-lg, 14px);
+  line-height: var(--kk-lh-body-lg, 22px);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.kk-board-col-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-2, 8px);
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.kk-board-card {
+  padding: var(--kk-space-3, 12px);
+  border-radius: var(--kk-radius-control-sm, 8px);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+}
+
+.kk-board-card[data-dragging="true"] {
+  opacity: 0.6;
+}
+
+.kk-board-dropzone {
+  border: 1px dashed var(--border-default);
+  border-radius: var(--kk-radius-control-sm, 8px);
+}
+
+/* ---------- A7 Compare 对比 ---------------------------------------------- */
+
+.kk-compare {
+  display: grid;
+  grid-template-columns: repeat(var(--kk-compare-cols, 2), minmax(0, 1fr));
+  gap: var(--kk-space-4, 16px);
+}
+
+.kk-compare-pane {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-2, 8px);
+  min-width: 0;
+}
+
+.kk-compare-label {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  height: var(--kk-control-h-sm, 28px);
+  padding: 0 var(--kk-space-3, 12px);
+  border-radius: var(--ui-radius-pill, 999px);
+  border: 1px solid var(--border-default);
+  background: var(--bg-card);
+  font-size: var(--kk-font-caption, 12px);
+  line-height: var(--kk-lh-caption, 16px);
+}
+
+.kk-compare-stage {
+  position: relative;
+  border-radius: var(--kk-radius-menu, 12px);
+  overflow: hidden;
+  background: var(--bg-input);
+}
+
+.kk-compare-pane .kk-compare-badge {
+  position: absolute;
+  top: var(--kk-space-2, 8px);
+  left: var(--kk-space-2, 8px);
+}
+
+.kk-compare-pane .kk-compare-action {
+  position: absolute;
+  right: var(--kk-space-2, 8px);
+  bottom: var(--kk-space-2, 8px);
+}
+
+/* 滑块形态 */
+.kk-compare-slider {
+  position: relative;
+  border-radius: var(--kk-radius-menu, 12px);
+  overflow: hidden;
+  background: var(--bg-input);
+  touch-action: none;
+}
+
+.kk-compare-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--bg-accent);
+  transform: translateX(-1px);
+}
+
+.kk-compare-handle {
+  position: absolute;
+  top: 50%;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  border-radius: var(--ui-radius-pill, 999px);
+  background: var(--bg-accent);
+  color: var(--text-on-accent);
+  display: grid;
+  place-items: center;
+}
+
+/* ---------- A8 Stats 指标面板 -------------------------------------------- */
+
+.kk-stats {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(var(--kk-stat-col-min, 200px), 1fr)
+  );
+  gap: var(--kk-space-4, 16px);
+}
+
+.kk-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-1, 4px);
+  padding: var(--kk-space-4, 16px);
+  border-radius: var(--kk-radius-menu, 12px);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  min-width: 0;
+}
+
+.kk-stat-label {
+  font-size: var(--kk-font-micro, 11px);
+  line-height: var(--kk-lh-micro, 14px);
+  color: var(--text-tertiary);
+}
+
+.kk-stat-value {
+  font-size: var(--kk-font-display, 32px);
+  line-height: var(--kk-lh-display, 40px);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.kk-stat-delta {
+  font-size: var(--kk-font-caption, 12px);
+  line-height: var(--kk-lh-caption, 16px);
+  color: var(--text-secondary);
+}
+
+.kk-stat-delta[data-dir="up"] {
+  color: var(--text-success, var(--text-secondary));
+}
+.kk-stat-delta[data-dir="down"] {
+  color: var(--text-danger, var(--text-secondary));
+}
+/* 行情/金融场景例外：涨红跌绿 */
+.kk-stat-delta[data-market="true"][data-dir="up"] {
+  color: var(--text-danger, var(--text-secondary));
+}
+.kk-stat-delta[data-market="true"][data-dir="down"] {
+  color: var(--text-success, var(--text-secondary));
+}
+
+/* ---------- 2.10 三态（每个类型必须实现） -------------------------------- */
+
+.kk-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--kk-space-3, 12px);
+  min-height: var(--kk-empty-min-h, 240px);
+  padding: var(--kk-space-6, 40px);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.kk-empty-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  color: var(--text-tertiary);
+}
+
+.kk-empty-desc {
+  font-size: var(--kk-font-body, 13px);
+  line-height: var(--kk-lh-body, 20px);
+  color: var(--text-secondary);
+  max-width: 320px;
+}
+
+.kk-skeleton {
+  background: var(--bg-card-hover);
+  border-radius: var(--kk-skeleton-radius, 8px);
+  animation: kk-skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes kk-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.kk-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kk-space-3, 12px);
+  padding: var(--kk-space-3, 12px);
+  border: 1px solid var(--bg-danger, var(--border-default));
+  border-radius: var(--kk-radius-control-sm, 8px);
+  background: var(--bg-danger-soft, transparent);
+  font-size: var(--kk-font-caption, 12px);
+  line-height: var(--kk-lh-caption, 16px);
+  color: var(--text-primary);
+}
+
+/* ---------- 通用徽标 / 芯片（跨类型复用） -------------------------------- */
+
+.kk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kk-space-1, 4px);
+  height: var(--kk-badge-h, 24px);
+  padding: 0 var(--kk-space-2, 8px);
+  border-radius: var(--ui-radius-pill, 999px);
+  background: var(--bg-soft);
+  color: var(--text-primary);
+  font-size: var(--kk-font-micro, 11px);
+  line-height: var(--kk-lh-micro, 14px);
+  white-space: nowrap;
+}
+
+.kk-badge[data-size="sm"] {
+  --kk-badge-h: 20px;
+  padding: 0 var(--kk-space-1, 4px);
+}
+
+.kk-badge[data-tone="accent"] {
+  background: var(--bg-accent-soft, var(--bg-accent));
+  color: var(--text-on-accent-soft, var(--text-primary));
+}
+.kk-badge[data-tone="success"] {
+  background: var(--bg-success);
+  color: var(--text-on-success, var(--text-primary));
+}
+.kk-badge[data-tone="danger"] {
+  background: var(--bg-danger-soft, var(--bg-danger));
+  color: var(--text-danger, var(--text-primary));
+}

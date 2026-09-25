@@ -26,6 +26,21 @@ import {
   themeTokens,
 } from "../helpers/designSystem";
 
+async function openPromptLibrary(page: import("@playwright/test").Page) {
+  if (page.viewportSize()!.width < 768) {
+    const trigger = page.getByRole("button", { name: "应用功能菜单" });
+    await trigger.click();
+    await page.getByRole("menuitem", { name: "提示词库" }).click();
+    return trigger;
+  }
+  const trigger = page
+    .getByRole("navigation", { name: "应用菜单" })
+    .getByRole("button", { name: "文件", exact: true });
+  await trigger.click();
+  await page.getByRole("button", { name: "提示词库" }).click();
+  return trigger;
+}
+
 test("text templates change visible input while audio exposes only its demo capability", async ({
   page,
 }) => {
@@ -326,8 +341,7 @@ for (const width of [390, 768, 1920]) {
         });
     });
     await page.goto("/");
-    const opener = page.getByRole("button", { name: "提示词库", exact: true });
-    await opener.click();
+    const opener = await openPromptLibrary(page);
     const dialog = page.getByRole("dialog", { name: "提示词库" });
     await dialog.getByRole("button", { name: "加载来源" }).click();
     await expect(dialog.getByRole("status")).toContainText("15 条");
@@ -378,7 +392,7 @@ for (const width of [390, 768, 1920]) {
     await expect(dialog.getByRole("status")).toContainText("已取消");
     await page.keyboard.press("Escape");
     await expect(opener).toBeFocused();
-    await opener.click();
+    await openPromptLibrary(page);
     await expect(dialog.getByRole("status")).toContainText("本地缓存");
   });
 }
@@ -387,13 +401,9 @@ test("plugin menu reflects installed canvas plugins and opens their manager", as
   page,
 }) => {
   await page.goto("/");
-  await page
-    .locator(".start-composer")
-    .getByRole("button", { name: "插件", exact: true })
-    .click();
-  const menu = page.getByRole("menu", { name: "选择插件" });
-  await expect(menu).toContainText("已启用 4 个画布插件");
-  await menu.getByRole("menuitem", { name: "管理画布插件" }).click();
+  await page.getByRole("button", { name: "添加素材与生成设置" }).click();
+  const menu = page.getByRole("dialog", { name: "添加素材与生成设置" });
+  await menu.getByRole("button", { name: "插件（MCP）" }).click();
   await expect(page.getByRole("heading", { name: "已安装插件" })).toBeVisible();
 });
 
@@ -415,7 +425,7 @@ test("prompt library searches, previews and appends text without submitting", as
   );
   await page.goto("/");
   await page.getByLabel("创作提示词").fill("现有草稿");
-  await page.getByRole("button", { name: "提示词库", exact: true }).click();
+  await openPromptLibrary(page);
   const dialog = page.getByRole("dialog", { name: "提示词库" });
   await dialog.getByRole("button", { name: "加载来源" }).click();
   await dialog.getByRole("searchbox", { name: "搜索提示词" }).fill("光影");

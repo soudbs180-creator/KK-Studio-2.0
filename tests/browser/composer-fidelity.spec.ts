@@ -67,7 +67,7 @@ test("平板会话覆盖时画布不接收交互，标题和输入控件尺寸�
     .getByRole("button", { name: "收起对话", exact: true })
     .boundingBox();
   expect(closeBox!.x + closeBox!.width).toBeCloseTo(
-    panelBox!.x + panelBox!.width - 17,
+    panelBox!.x + panelBox!.width - 7,
     1,
   );
   const composer = page.locator(".chat-composer > div");

@@ -359,7 +359,7 @@ test("两个窗口并发保存时保留先提交的原件和冲突草稿", async
 test("画布参数不会在重开项目后回到默认值", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
   await page.getByLabel("API Base URL").fill("https://models.example.test/v1");
   await page.getByLabel("默认模型").fill("image-test");
   await page.getByRole("button", { name: "保存供应商", exact: true }).click();
@@ -371,7 +371,10 @@ test("画布参数不会在重开项目后回到默认值", async ({ page }) => 
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
-  const node = page.locator('[data-node-id="image"]');
+  await expect(page.locator(".canvas-node")).toHaveCount(0);
+  await page.getByRole("button", { name: "添加资源", exact: true }).click();
+  await page.getByRole("menuitem", { name: "图片", exact: true }).click();
+  const node = page.locator("[data-testid^='canvas-node-added-image-']");
   await node.focus();
   await node.press("Enter");
   await node.getByTitle("使用当前模型声明支持的尺寸").click();
@@ -397,10 +400,18 @@ test("画布位置与新增身份在保存重开后保持", async ({ page }) => 
   await page.goto("/");
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
-  const node = page.locator('[data-node-id="image"]');
+  await expect(page.locator(".canvas-node")).toHaveCount(0);
+  await page.getByRole("button", { name: "添加资源", exact: true }).click();
+  await page.getByRole("menuitem", { name: "图片", exact: true }).click();
+  const node = page
+    .locator("[data-testid^='canvas-node-added-image-']")
+    .first();
+  const initialLeft = parseFloat(
+    await node.evaluate((element) => getComputedStyle(element).left),
+  );
   await node.focus();
   for (let index = 0; index < 8; index++) await node.press("ArrowRight");
-  await expect(node).toHaveCSS("left", "146px");
+  await expect(node).toHaveCSS("left", `${initialLeft + 64}px`);
   await page.getByRole("button", { name: "添加资源", exact: true }).click();
   await page.getByRole("menuitem", { name: "图片", exact: true }).click();
   await expect(page.locator(".project-save-state")).toContainText("已保存");
@@ -410,7 +421,7 @@ test("画布位置与新增身份在保存重开后保持", async ({ page }) => 
     .getByRole("button", { name: /未命名项目/ })
     .last()
     .click();
-  await expect(node).toHaveCSS("left", "146px");
+  await expect(node).toHaveCSS("left", `${initialLeft + 64}px`);
   await page.getByRole("button", { name: "添加资源", exact: true }).click();
   await page.getByRole("menuitem", { name: "图片", exact: true }).click();
   const ids = await page

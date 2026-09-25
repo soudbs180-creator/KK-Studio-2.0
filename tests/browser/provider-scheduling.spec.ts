@@ -10,7 +10,7 @@ async function configure(page: Page) {
   );
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
   await page.getByLabel("API Base URL").fill("https://models.example.test/v1");
   await page.getByLabel("API Key").fill("fixture-key");
   await page.getByLabel("默认模型").fill("image-test");
@@ -40,6 +40,7 @@ async function connections(page: Page) {
   );
 }
 async function submit(page: Page) {
+  await page.getByRole("button", { name: "添加素材与生成设置" }).click();
   await page.getByLabel("生成数量").selectOption("1");
   await page.getByLabel("创作提示词").fill("保留这份测试草稿");
   await page.getByRole("button", { name: "开始创建项目" }).click();

@@ -194,9 +194,9 @@
     position: relative;
   }
   .canvas-hud .chat-reopen.only-narrow {
-    position: absolute;
-    right: 0;
-    top: 38px;
+    position: relative;
+    right: auto;
+    top: auto;
     transition: none;
   }
 }
@@ -263,8 +263,10 @@
   }
   .canvas.has-chat .canvas-hud-right {
     /* The navigation capsule remains usable while chat is open. Keep its
-       right edge 11px before the 470px conversation rail. */
-    margin-right: calc(var(--conversation-width) - 12px);
+       right edge clear of the current conversation rail, including resizes. */
+    margin-right: calc(
+      var(--conversation-width-user, var(--conversation-width)) - 12px
+    );
   }
   .canvas .canvas-toolbar {
     left: calc(100% - var(--ui-workspace-toolbar-right-center));

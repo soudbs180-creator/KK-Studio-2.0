@@ -6,6 +6,7 @@ import SidebarGroupHeading from "./SidebarGroupHeading";
 import AccountPopup from "./AccountPopup";
 import SidebarIcon from "./SidebarIcon";
 import SidebarNavigation from "./SidebarNavigation";
+import { SidebarResizeHandle } from "./ResizeHandle";
 import BrandLogo from "./BrandLogo";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
 
@@ -58,7 +59,14 @@ export default function Sidebar({
     if (
       narrow &&
       !collapsed &&
-      ["landing", "projects", "skills", "comfyui", "workspace"].includes(id)
+      [
+        "landing",
+        "projects",
+        "skills",
+        "comfyui",
+        "workspace",
+        "chat",
+      ].includes(id)
     )
       onCollapse();
   }
@@ -111,6 +119,7 @@ export default function Sidebar({
         active={active}
         compactLabels={phone && collapsed}
         onNavigate={navigate}
+        phone={phone}
       />
       <div className="project-groups">
         <div className="project-groups-header">
@@ -279,6 +288,7 @@ export default function Sidebar({
           <SidebarIcon name="settings" />
         </button>
       </div>
+      {!collapsed && !narrow && <SidebarResizeHandle />}
     </aside>
   );
 }

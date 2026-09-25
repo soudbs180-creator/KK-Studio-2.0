@@ -103,7 +103,7 @@ test("模型测试拒绝 HTML 假成功并可从 HTTP 错误恢复", async ({ pa
   });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
   await page.getByLabel("API Base URL").fill("https://models.example.test/v1");
   await page.getByRole("button", { name: "测试连接", exact: true }).click();
   await expect(page.locator(".provider-status")).toHaveClass(/is-error/);
@@ -134,7 +134,7 @@ test("取消、编辑配置与离线状态不会留下过期的连接成功提�
   });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
   await page.getByLabel("API Base URL").fill("https://models.example.test/v1");
   const request = page.waitForRequest("https://models.example.test/v1/models");
   await page.getByRole("button", { name: "测试连接", exact: true }).click();
@@ -171,7 +171,7 @@ test("配置入口定位到对应设置分类，菜单支持 Escape", async ({ p
     .getByRole("button", { name: "关闭任务列表" })
     .click();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
   await expect(page.getByLabel("API Base URL")).toBeVisible();
   await page.keyboard.press("Escape");
   await page

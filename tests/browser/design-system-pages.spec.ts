@@ -83,10 +83,8 @@ for (const width of [390, 1920]) {
         "储存",
         "网络",
         "记忆",
-        "模型供应商",
-        "Skill",
-        "MCP",
-        "插件",
+        "模型接入",
+        "插件·技能·伙伴",
         "Comfy UI",
         "高级",
         "软件更新",
@@ -129,13 +127,16 @@ for (const width of [390, 1920]) {
               }),
           );
         expect(fieldErrors, `${theme}/${section} shared fields`).toEqual([]);
-        if (section === "MCP") {
+        if (section === "插件·技能·伙伴") {
           await expect(dialog.locator(".settings-mcp-add")).toHaveCSS(
             "border-radius",
             "28px",
           );
-        }
-        if (section === "插件") {
+          await dialog.getByRole("tab", { name: /技能/ }).click();
+          await expect(dialog.getByRole("tabpanel")).toContainText("Skill");
+          await dialog.getByRole("tab", { name: /伙伴/ }).click();
+          await expect(dialog.getByRole("tabpanel")).toContainText("Agent");
+          await dialog.getByRole("tab", { name: /插件/ }).click();
           await expect(dialog.locator(".plugin-manager-row").first()).toHaveCSS(
             "border-radius",
             "28px",
@@ -195,7 +196,7 @@ for (const theme of ["dark", "light"]) {
         ".catalog-card, .project-library-card, .project-library-action",
       );
       expect(await cards.count()).toBeGreaterThan(0);
-      await expect.soft(cards.first()).toHaveCSS("border-radius", "28px");
+      await expect.soft(cards.first()).toHaveCSS("border-radius", "12px");
       for (const accent of ACCENTS) {
         await page.mouse.move(0, 0);
         await appearance(page, theme, accent);

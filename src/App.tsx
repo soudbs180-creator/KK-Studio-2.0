@@ -22,6 +22,7 @@ import {
 } from "./domain/agentWorkflow";
 import AssetPanel from "./components/assets/AssetPanel";
 import SettingsPanel from "./components/settings/SettingsPanel";
+import type { ExtensionsTab } from "./components/settings/ExtensionsSettings";
 import {
   SETTINGS_SECTIONS,
   type SettingsSection,
@@ -167,6 +168,7 @@ export default function App() {
   const [modal, setModal] = useState("");
   const [settingsSection, setSettingsSection] =
     useState<SettingsSection>("general");
+  const [settingsTab, setSettingsTab] = useState<ExtensionsTab | undefined>();
   const sidebar = useSidebarLayout();
   const [chat, setChat] = useState(true);
   const [mobileChat, setMobileChat] = useState(false);
@@ -1831,11 +1833,8 @@ export default function App() {
     const nextProject: CreationProject = {
       ...blank,
       name: "未命名项目",
-      canvas: createProjectCanvas(BASE_CANVAS_ITEMS),
-      items: BASE_CANVAS_ITEMS.map((item) => ({
-        ...item,
-        model: item.kind === "image" ? blank.model : item.model,
-      })),
+      canvas: createProjectCanvas([]),
+      items: [],
       messages: [],
       tasks: [],
       favoriteIds: [],
@@ -1904,15 +1903,47 @@ export default function App() {
       handleNewBlankProject();
       return;
     }
+    if (view === "chat") {
+      if (active === "workspace" && chat && (!sidebar.narrow || mobileChat)) {
+        setChat(false);
+        setMobileChat(false);
+        return;
+      }
+      if (
+        !creationRef.current.projects.some(
+          (project) => project.id === activeProjectIdRef.current,
+        )
+      ) {
+        handleNewBlankProject();
+      } else {
+        setActive("workspace");
+      }
+      setChat(true);
+      setMobileChat(sidebar.narrow);
+      setModal("");
+      return;
+    }
     if (["search", "favorites", "likes"].includes(view)) {
       setModal(view);
       return;
     }
     if (view === "settings" || view.startsWith("settings/")) {
+      const target = view.split("/")[1];
+      const extensionTab: ExtensionsTab | undefined =
+        target === "skills"
+          ? "skills"
+          : target === "plugins" || target === "mcp"
+            ? "plugins"
+            : target === "partners"
+              ? "partners"
+              : undefined;
       setSettingsSection(
-        SETTINGS_SECTIONS.find((item) => item.id === view.split("/")[1])?.id ??
-          "general",
+        extensionTab
+          ? "extensions"
+          : (SETTINGS_SECTIONS.find((item) => item.id === target)?.id ??
+              "general"),
       );
+      setSettingsTab(extensionTab);
       setModal("settings");
       return;
     }
@@ -1986,19 +2017,21 @@ export default function App() {
       <TopBar
         onOpen={open}
         onToggleSidebar={sidebar.toggle}
-        onToggleChat={() => {
-          if (sidebar.narrow) {
-            setChat(true);
-            setMobileChat((current) => !current);
-          } else setChat((current) => !current);
-        }}
+        onToggleChat={() => open("chat")}
       />
       <div className="app-body">
         {sidebar.narrow && !sidebar.collapsed && (
           <div className="sidebar-scrim" aria-hidden="true" />
         )}
         <Sidebar
-          active={active}
+          active={
+            sidebar.surface === "phone" &&
+            active === "workspace" &&
+            mobileChat &&
+            chat
+              ? "chat"
+              : active
+          }
           onNavigate={open}
           collapsed={sidebar.collapsed}
           narrow={sidebar.narrow}
@@ -2022,7 +2055,7 @@ export default function App() {
               onOpenModel={() => open("settings/providers")}
               onOpenSkills={() => open("skills")}
               onOpenPlugins={() => open("settings/plugins")}
-              onOpenPrompts={() => open("prompts")}
+              onOpenPartners={() => open("settings/partners")}
               skills={skillRegistry.listRecords()}
               onApplySkill={applySkillToHome}
               defaultModel={(() => {
@@ -2376,7 +2409,9 @@ export default function App() {
             <ShortcutsPanel onClose={() => setModal("")} />
           ) : modal === "settings" ? (
             <SettingsPanel
+              key={`${settingsSection}:${settingsTab ?? ""}`}
               initialSection={settingsSection}
+              initialExtensionsTab={settingsTab}
               saveState={saveState}
               revision={creation.revision}
               registry={skillRegistry}

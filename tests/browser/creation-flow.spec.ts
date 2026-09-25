@@ -194,6 +194,7 @@ test("批量数量会随请求发送并归档多个 provider 结果", async ({ p
   await page.getByLabel("默认模型").fill("image-test");
   await page.getByRole("button", { name: "保存供应商" }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await page.getByRole("button", { name: "添加素材与生成设置" }).click();
   await page.getByLabel("生成数量").selectOption("4");
   await page.getByLabel("创作提示词").fill("批量结果归档测试");
   await page.getByRole("button", { name: "开始创建项目" }).click();

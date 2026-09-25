@@ -19,6 +19,7 @@ async function configure(page: Page) {
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
 }
 async function submit(page: Page, count = "4") {
+  await page.getByRole("button", { name: "添加素材与生成设置" }).click();
   await page.getByLabel("生成数量").selectOption(count);
   await page.getByLabel("创作提示词").fill("带有磨砂材质的白色风扇");
   await page.getByRole("button", { name: "开始创建项目" }).click();
@@ -123,6 +124,8 @@ test("指定风格参考槽可上传并移除，展开按钮仍可点击", async
   await page.goto("/");
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
+  await page.getByRole("button", { name: "添加资源", exact: true }).click();
+  await page.getByRole("menuitem", { name: "图片", exact: true }).click();
   await page.locator(".image-preview").click();
   const chooser = page.waitForEvent("filechooser");
   await page.getByRole("button", { name: "添加风格参考图" }).click();

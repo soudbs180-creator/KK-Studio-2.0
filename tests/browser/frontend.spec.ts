@@ -85,7 +85,7 @@ test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", 
   });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
   await page.getByLabel("供应商名称").fill("测试供应商");
   await page.getByLabel("API Base URL").fill("https://models.example.test/v1");
   await page.getByLabel("API Key").fill("session-key");
@@ -103,7 +103,7 @@ test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", 
     .screenshot({ path: "test-results/runtime/settings-model-provider.png" });
   await page.reload();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
   await expect(page.getByLabel("API Base URL")).toHaveValue(
     "https://models.example.test/v1",
   );
@@ -113,7 +113,7 @@ test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", 
 test("模型供应商可以登记多个非敏感连接并切换当前配置", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
   const save = async (name: string, baseUrl: string, model: string) => {
     await page.getByLabel("供应商名称").fill(name);
     await page.getByLabel("API Base URL").fill(baseUrl);
@@ -181,7 +181,7 @@ test("本地导入成功与错误恢复，不伪造生成和回复", async ({ pa
   await page.getByRole("button", { name: "生成图片", exact: true }).click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "模型供应商", exact: true }),
+    page.getByRole("button", { name: "模型接入", exact: true }),
   ).toBeVisible();
   await expect(page.getByLabel("图片提示词")).toHaveValue("一个白色风扇");
   await expect(

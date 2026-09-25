@@ -1,3 +1,4 @@
+import { isTauri } from "@tauri-apps/api/core";
 import type { ModelProviderProfile } from "../../domain/modelProvider";
 import ProviderApiKeyField from "./ProviderApiKeyField";
 
@@ -40,6 +41,11 @@ export default function ProviderProfileFields({
         hasStoredKey={hasStoredKey}
         onChange={onApiKeyChange}
       />
+      <p className="settings-field-help">
+        {isTauri()
+          ? "密钥保存在系统凭据库；留空可保留已保存的密钥。"
+          : "网页密钥仅保留在当前会话内，不会写入浏览器存储；留空可保留本次会话的密钥。"}
+      </p>
       <label className="settings-field">
         <span>默认模型</span>
         <input
@@ -51,7 +57,7 @@ export default function ProviderProfileFields({
       </label>
       <p className="settings-field-help">
         支持 OpenAI 兼容
-        API。同一地址使用不同名称可登记独立连接。桌面密钥保存在系统凭据库，网页仅保留在当前会话内；连接测试不代表已验证图片或视频生成。
+        API。同一地址使用不同名称可登记独立连接；连接测试不代表已验证图片或视频生成。
       </p>
     </>
   );

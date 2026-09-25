@@ -62,7 +62,7 @@ test("phone menus leave all composer actions reachable", async ({ page }) => {
   await page.goto("/");
   const form = page.locator(".start-composer");
   await form.locator("textarea").fill("菜单切换保持草稿");
-  for (const name of ["模型", "Skill", "插件", /^当前模式：/]) {
+  for (const name of ["添加素材与生成设置", "模型", "Skill", /^当前模式：/]) {
     const trigger = form.getByRole("button", { name, exact: true });
     await trigger.click();
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
@@ -71,7 +71,9 @@ test("phone menus leave all composer actions reachable", async ({ page }) => {
       .evaluateAll((buttons) =>
         buttons
           .filter(
-            (el) => !el.closest('[role="menu"]') && el.getClientRects().length,
+            (el) =>
+              !el.closest('[role="menu"], [role="dialog"]') &&
+              el.getClientRects().length,
           )
           .map((el) => {
             const box = el.getBoundingClientRect();
