@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-09-25T06:28:20.103Z",
+  "timestamp": "2026-09-25T12:56:04.374Z",
   "url": "http://127.0.0.1:1423/",
   "mode": "Vite production preview",
   "entryChain": "index.html → src/main.tsx → src/App.tsx → StartPage/Canvas/ConversationPanel/CatalogPanel",
   "loadedAssets": [
     {
-      "asset": "/assets/index-CmgfS2Xx.js",
-      "sha256": "531808c4dee1388932863ffa16a02915bf719f793db04577b7cb91703af8e099",
-      "bytes": 818555
+      "asset": "/assets/index-C6vgcEAa.js",
+      "sha256": "40a1cc3af407c66ad9267fbe64e07cba45c07471bb8e5391ddda1c41871b66eb",
+      "bytes": 819447
     },
     {
-      "asset": "/assets/index-BO3A5Kmp.css",
-      "sha256": "2170b344e39270062e9347f1b6252f2da9b9792591a0ff035558d086ee21f656",
-      "bytes": 226969
+      "asset": "/assets/index-kT3qdYgC.css",
+      "sha256": "0995b2c75f9fc7dda359331d541defa06c7394efc7b04b0f19cd1047ae37ad9f",
+      "bytes": 226996
     }
   ],
   "pageErrors": [],

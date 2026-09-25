@@ -32,7 +32,7 @@
 .conversation-panel > header button {
   position: absolute;
   top: 0;
-  left: 365px;
+  right: 41px;
   width: 20px;
   height: 20px;
   padding: 0;

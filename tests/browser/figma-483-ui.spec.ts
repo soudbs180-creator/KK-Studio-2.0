@@ -80,6 +80,34 @@ test("首页模型弹层选择真实 API 图片模型并保存连接身份", asy
     .getByRole("menu", { name: "选择模型" })
     .getByRole("menuitemradio", { name: /image-test.*星河 API/ });
   await expect(choice).toBeVisible();
+  const menu = page.getByRole("menu", { name: "选择模型" });
+  const options = menu.getByRole("menuitemradio");
+  expect(await options.count()).toBeGreaterThan(1);
+  await options.first().focus();
+  await options.first().press("End");
+  await expect(options.last()).toBeFocused();
+  await options.last().press("Home");
+  await expect(options.first()).toBeFocused();
+  await options.first().press("ArrowDown");
+  await expect(options.nth(1)).toBeFocused();
+  await options.nth(1).press("ArrowUp");
+  await expect(options.first()).toBeFocused();
+  const search = menu.getByRole("searchbox", { name: "搜索模型" });
+  await search.fill("image");
+  await search.press("ArrowLeft");
+  await expect(search).toBeFocused();
+  expect(
+    await search.evaluate(
+      (input) => (input as HTMLInputElement).selectionStart,
+    ),
+  ).toBe(4);
+  await search.press("Home");
+  expect(
+    await search.evaluate(
+      (input) => (input as HTMLInputElement).selectionStart,
+    ),
+  ).toBe(0);
+  await search.clear();
   await choice.click();
   await page.reload();
   await page.getByRole("button", { name: "模型", exact: true }).click();

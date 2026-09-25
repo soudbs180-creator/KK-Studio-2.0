@@ -1,30 +1,30 @@
 {
-  "timestamp": "2026-09-25T06:27:57.093Z",
+  "timestamp": "2026-09-25T12:56:04.019Z",
   "mode": "Tauri release",
   "exe": "D:\\kk-studio\\.worktrees\\TASK-UI-010-ui-regression\\src-tauri\\target\\release\\kk-studio.exe",
-  "isolatedData": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui010-desktop-hHL0F6\\data",
-  "isolatedProfile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui010-desktop-hHL0F6\\profile",
+  "isolatedData": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui010-desktop-eLGPSp\\data",
+  "isolatedProfile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui010-desktop-eLGPSp\\profile",
   "loadedAssets": [
     {
-      "asset": "/assets/index-CmgfS2Xx.js",
-      "sha256": "531808c4dee1388932863ffa16a02915bf719f793db04577b7cb91703af8e099",
-      "bytes": 818555
+      "asset": "/assets/index-C6vgcEAa.js",
+      "sha256": "40a1cc3af407c66ad9267fbe64e07cba45c07471bb8e5391ddda1c41871b66eb",
+      "bytes": 819447
     },
     {
-      "asset": "/assets/index-BO3A5Kmp.css",
-      "sha256": "2170b344e39270062e9347f1b6252f2da9b9792591a0ff035558d086ee21f656",
-      "bytes": 226969
+      "asset": "/assets/index-kT3qdYgC.css",
+      "sha256": "0995b2c75f9fc7dda359331d541defa06c7394efc7b04b0f19cd1047ae37ad9f",
+      "bytes": 226996
     }
   ],
   "pageErrors": [],
   "passed": true,
-  "exeSha256": "b7cb8c16f3be3f5fe966634b84cb60a15c1a4c658500b640e6f189829f2abed3",
+  "exeSha256": "3caa4b18a520a2e7044de6a7930a94dddd04c556915f07519eb87daf020597a3",
   "url": "http://tauri.localhost/",
   "runtime": {
     "entry": "src/main.tsx",
     "mode": "production"
   },
-  "storageRoot": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui010-desktop-hHL0F6\\data",
+  "storageRoot": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui010-desktop-eLGPSp\\data",
   "settings": {
     "width": 920,
     "height": 700,

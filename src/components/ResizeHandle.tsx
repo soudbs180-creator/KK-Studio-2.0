@@ -16,18 +16,21 @@ export default function ResizeHandle({
   cssVar,
   min,
   max,
+  defaultWidth,
   growDir,
   label,
 }: {
   cssVar: string;
   min: number;
   max: number;
+  defaultWidth: number;
   growDir: "left" | "right";
   label: string;
 }) {
   const state = useRef<{ startX: number; startWidth: number } | null>(null);
   const handle = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(min);
+  const [reachableMax, setReachableMax] = useState(max);
 
   const allowedMax = useCallback(() => {
     const other = document.querySelector<HTMLElement>(
@@ -42,9 +45,11 @@ export default function ResizeHandle({
 
   const applyWidth = useCallback(
     (requested: number) => {
-      const next = Math.round(Math.min(allowedMax(), Math.max(min, requested)));
+      const currentMax = allowedMax();
+      const next = Math.round(Math.min(currentMax, Math.max(min, requested)));
       document.documentElement.style.setProperty(cssVar, `${next}px`);
       setWidth(next);
+      setReachableMax(currentMax);
     },
     [allowedMax, cssVar, min],
   );
@@ -85,6 +90,7 @@ export default function ResizeHandle({
 
   useEffect(() => {
     const onResize = () => {
+      setReachableMax(allowedMax());
       const stored = parseFloat(
         document.documentElement.style.getPropertyValue(cssVar),
       );
@@ -96,12 +102,19 @@ export default function ResizeHandle({
           ),
         );
     };
+    const other = document.querySelector<HTMLElement>(
+      growDir === "right" ? ".conversation-panel" : ".sidebar",
+    );
+    const observer = new ResizeObserver(onResize);
+    if (other) observer.observe(other);
     window.addEventListener("resize", onResize);
+    onResize();
     return () => {
+      observer.disconnect();
       window.removeEventListener("resize", onResize);
       document.body.style.cursor = "";
     };
-  }, [applyWidth, cssVar]);
+  }, [allowedMax, applyWidth, cssVar, growDir]);
 
   return (
     <div
@@ -111,8 +124,10 @@ export default function ResizeHandle({
       aria-label={label}
       aria-orientation="vertical"
       aria-valuemin={min}
-      aria-valuemax={max}
+      aria-valuemax={reachableMax}
       aria-valuenow={width}
+      aria-keyshortcuts="Shift+Home"
+      title="按 Shift+Home 恢复默认宽度"
       tabIndex={0}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -123,7 +138,8 @@ export default function ResizeHandle({
           return;
         event.preventDefault();
         event.stopPropagation();
-        if (event.key === "Home") applyWidth(min);
+        if (event.key === "Home" && event.shiftKey) applyWidth(defaultWidth);
+        else if (event.key === "Home") applyWidth(min);
         else if (event.key === "End") applyWidth(allowedMax());
         else {
           const direction = event.key === "ArrowRight" ? 1 : -1;
@@ -142,6 +158,7 @@ export function SidebarResizeHandle() {
       cssVar="--sidebar-width-user"
       min={220}
       max={480}
+      defaultWidth={291}
       growDir="right"
       label="调整侧栏宽度"
     />
@@ -154,6 +171,7 @@ export function ConversationResizeHandle() {
       cssVar="--conversation-width-user"
       min={470}
       max={760}
+      defaultWidth={470}
       growDir="left"
       label="调整对话面板宽度"
     />

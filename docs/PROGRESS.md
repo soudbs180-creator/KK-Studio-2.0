@@ -2,7 +2,7 @@
 
 ## 2026-09-24 现行 UI 与真实操作回归（TASK-UI-010，进行中）
 
-在独立 `fix/TASK-UI-010-ui-regression` worktree 中承接新 `UI_INDEX / UI_RULES / UI_ARCHETYPES / DESIGN_TOKENS`，核对 Figma 四节点和六条浏览器批注，修复首页创作输入、搜索底部选线、持久对话、画布 HUD、设置与窄屏入口。资产管理按 A1 画廊修复 6px 文件名、22px 筛选和旧网格；提示词库按 A2+A4 调整卡片与空态。1440/390 共 42 个页面状态截图；完整 `npm run verify` 通过 370 Node、317 browser，Web production preview 与隔离数据的 fresh Tauri release 加载同一 JS/CSS，页面错误 0。实现提交 `6f57e02` 已推送，建立[草稿 PR #19](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/19)。新建项目与项目库保持真实空态。侧栏静态演示项目另列 `TASK-PROJECT-SIDEBAR-001`；新增 token 导出与已验证 291/40 外壳及颜色仍冲突，在线 Ardot 未回读，独立 reviewer 因 workspace 额度耗尽未完成复核，用户当前 1421/旧桌面入口整合尚未完成。WorkBuddy/豆包真实接管、共享记忆与模型调度不由 UI 验收升级。证据见 [本轮 verification](changes/2026-09-24-ui-regression/verification.md) 和 [架构核对](changes/2026-09-24-ui-regression/architecture-audit.md)。
+在独立 `fix/TASK-UI-010-ui-regression` worktree 中承接新 `UI_INDEX / UI_RULES / UI_ARCHETYPES / DESIGN_TOKENS`，核对 Figma 四节点和六条浏览器批注，修复首页创作输入、搜索底部选线、持久对话、画布 HUD、设置与窄屏入口。资产管理按 A1 画廊修复 6px 文件名、22px 筛选和旧网格；提示词库按 A2+A4 调整卡片与空态。独立 reviewer 对[草稿 PR #19](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/19) 初审未发现 P0/P1，提出五项 P2；本地已修对话头部随面板移动、侧栏真实调整及默认恢复、可达宽度语义、模型菜单键盘路径和旧资源证据，待修复提交复审。1440/390 共 42 个页面状态已重新截图；完整 `npm run verify` 通过 370 Node、319 browser，Web production preview 与隔离数据的 fresh Tauri release 加载同一 JS/CSS，页面错误 0。新建项目与项目库保持真实空态。侧栏静态演示项目另列 `TASK-PROJECT-SIDEBAR-001`；新增 token 导出与已验证 291/40 外壳及颜色仍冲突，在线 Ardot 未回读，用户当前 1421/旧桌面入口整合尚未完成。WorkBuddy/豆包真实接管、共享记忆与模型调度不由 UI 验收升级。证据见 [本轮 verification](changes/2026-09-24-ui-regression/verification.md) 和 [架构核对](changes/2026-09-24-ui-regression/architecture-audit.md)。
 
 ## 2026-09-23 2.1.0 源码并线与远端规则回读
 

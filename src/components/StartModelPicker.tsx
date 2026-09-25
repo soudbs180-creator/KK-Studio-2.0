@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type KeyboardEvent } from "react";
 import type { CreationDraft } from "../features/creation/model";
 import { readProviderConnections } from "../features/creation/providerRegistry";
 import { catalogForConnection } from "../features/models/modelCatalog";
@@ -70,6 +70,30 @@ export default function StartModelPicker({
     `${choice.model} ${choice.detail}`.toLocaleLowerCase().includes(needle),
   );
   const visible = matches.slice(0, 100);
+  function onMenuKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+    const target = event.target as HTMLElement;
+    if (target.closest("input, textarea, [contenteditable='true']")) return;
+    const items = Array.from(
+      event.currentTarget.querySelectorAll<HTMLButtonElement>(
+        '[role="menuitemradio"]:not(:disabled)',
+      ),
+    );
+    const current = target.closest<HTMLButtonElement>('[role="menuitemradio"]');
+    const index = current ? items.indexOf(current) : -1;
+    if (index < 0 || !items.length) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const next =
+      event.key === "Home"
+        ? 0
+        : event.key === "End"
+          ? items.length - 1
+          : (index + (event.key === "ArrowDown" ? 1 : -1) + items.length) %
+            items.length;
+    items[next]?.focus();
+    items[next]?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }
   return (
     <div className="start-model-picker">
       <button
@@ -85,7 +109,12 @@ export default function StartModelPicker({
         <span>{draft.model || defaultModel ? model : "模型"}</span>
       </button>
       {open && (
-        <div className="start-model-popover" role="menu" aria-label="选择模型">
+        <div
+          className="start-model-popover"
+          role="menu"
+          aria-label="选择模型"
+          onKeyDown={onMenuKeyDown}
+        >
           <div className="start-model-menu-top">
             <strong>模型</strong>
             <input

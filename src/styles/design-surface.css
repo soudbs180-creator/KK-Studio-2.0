@@ -18,7 +18,7 @@
   }
 
   .app[data-design-surface="desktop"] .sidebar {
-    width: var(--sidebar-width);
+    width: var(--sidebar-width-user, var(--sidebar-width));
   }
 
   .app[data-design-surface="desktop"] .sidebar.is-collapsed {
