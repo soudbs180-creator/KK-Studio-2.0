@@ -179,9 +179,12 @@ test("侧栏收起后展开入口回到品牌位并隐藏兔子标志", async ({
   expect(toggleBox!.y).toBeLessThan(brand!.y + brand!.height + 12);
 });
 
-test("未分组项目显示置顶和更多设置，并可改名后恢复删除", async ({ page }) => {
+test("真实未分组项目可改名，删除需要确认", async ({ page }) => {
   await page.goto("/");
-  const project = page.locator(".project-entry").nth(1);
+  await page.getByRole("button", { name: "创建未分组项目" }).click();
+  const project = page.locator(".project-entry").first();
+  await project.getByRole("textbox", { name: "项目名称" }).fill("初始项目");
+  await project.getByRole("textbox", { name: "项目名称" }).press("Enter");
   await expect(project.getByRole("button", { name: "置顶项目" })).toBeVisible();
   await project.getByRole("button", { name: "更多项目设置" }).click();
   const menu = page.getByRole("menu", { name: "项目设置" });
@@ -191,10 +194,9 @@ test("未分组项目显示置顶和更多设置，并可改名后恢复删除",
   await project.getByRole("textbox", { name: "项目名称" }).press("Enter");
   await expect(project.getByRole("button", { name: /新项目/ })).toBeVisible();
   await project.getByRole("button", { name: "更多项目设置" }).click();
+  page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("menuitem", { name: "删除项目" }).click();
-  await expect(
-    page.getByRole("button", { name: "恢复未分组项目" }),
-  ).toBeVisible();
+  await expect(page.locator(".project-entry")).toHaveCount(0);
 });
 
 test("文案卡四种写作方式实际更新指令", async ({ page }) => {

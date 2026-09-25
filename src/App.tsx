@@ -39,6 +39,7 @@ import {
 } from "./features/skills/skillRegistry";
 import {
   createProject,
+  projectHasUnsettledTasks,
   emptyDraft,
   type CreationDraft,
   type CreationProject,
@@ -1820,7 +1821,7 @@ export default function App() {
       window.dispatchEvent(new CustomEvent("kk:focus-node", { detail: id })),
     );
   }
-  function handleNewBlankProject(): void {
+  function handleNewBlankProject(): string {
     const profile = parseModelProvider(
       localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
     ).profile;
@@ -1847,6 +1848,44 @@ export default function App() {
     });
     replaceCanvasItems(nextProject.items);
     setActive("workspace");
+    return nextProject.id;
+  }
+  function openSavedProject(id: string): void {
+    if (!creationRef.current.projects.some((project) => project.id === id))
+      return;
+    commitCreation({ ...creationRef.current, activeProjectId: id });
+    setActive("workspace");
+    setModal("");
+  }
+  function renameSavedProject(id: string, title: string): void {
+    if (persistence.state !== "saved" && persistence.state !== "saving") return;
+    const name = title.trim().slice(0, 120);
+    if (!name) return;
+    updateProject(id, (project) => ({
+      ...project,
+      name,
+      updatedAt: Date.now(),
+    }));
+  }
+  function deleteSavedProject(id: string): void {
+    if (persistence.state !== "saved" && persistence.state !== "saving") return;
+    const project = creationRef.current.projects.find((item) => item.id === id);
+    if (!project) return;
+    if (projectHasUnsettledTasks(project)) return;
+    if (
+      !window.confirm(
+        `确定删除项目「${project.name}」？此操作会从本地项目库移除该项目。`,
+      )
+    )
+      return;
+    const current = creationRef.current;
+    commitCreation({
+      ...current,
+      projects: current.projects.filter((item) => item.id !== id),
+      activeProjectId:
+        current.activeProjectId === id ? null : current.activeProjectId,
+    });
+    if (current.activeProjectId === id) setActive("projects");
   }
   useEffect(() => {
     const shortcut = (event: KeyboardEvent): void => {
@@ -2037,6 +2076,13 @@ export default function App() {
           narrow={sidebar.narrow}
           phone={sidebar.surface === "phone"}
           onCollapse={sidebar.toggle}
+          projects={creation.projects}
+          activeProjectId={creation.activeProjectId}
+          canEditProjects={saveState === "saved" || saveState === "saving"}
+          onCreateProject={handleNewBlankProject}
+          onOpenProject={openSavedProject}
+          onRenameProject={renameSavedProject}
+          onDeleteProject={deleteSavedProject}
         />
         <main className={"workspace " + (mobileChat ? "chat-mobile" : "")}>
           <CreationStorageNotice
@@ -2324,10 +2370,7 @@ export default function App() {
                   }),
                 );
               }}
-              onOpenProject={(id) => {
-                commitCreation({ ...creationRef.current, activeProjectId: id });
-                setActive("workspace");
-              }}
+              onOpenProject={openSavedProject}
             />
           )}
         </main>
@@ -2368,6 +2411,8 @@ export default function App() {
               likedIds={likedIds}
               onClose={() => setModal("")}
               onOpen={open}
+              projects={creation.projects}
+              onOpenProject={openSavedProject}
               onLocate={locate}
               onToggleFavorite={toggleFavorite}
               onToggleLike={toggleLike}

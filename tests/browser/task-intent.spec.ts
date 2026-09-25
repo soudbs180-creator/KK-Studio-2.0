@@ -190,7 +190,10 @@ async function seed(page: Page, value: StoredTask): Promise<void> {
 
 async function openSeededProject(page: Page): Promise<void> {
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: /T5 durable intent/ }).click();
+  await page
+    .locator(".project-library-card")
+    .filter({ hasText: "T5 durable intent" })
+    .click();
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
   await page.getByRole("button", { name: "打开任务列表" }).click();
   await page.getByRole("button", { name: "打开任务工作台" }).click();

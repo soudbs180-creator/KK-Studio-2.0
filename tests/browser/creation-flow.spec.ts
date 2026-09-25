@@ -104,7 +104,9 @@ test("工作台消息属于当前项目，刷新后项目库可重新打开", as
   await page
     .getByRole("button", { name: "项目库", description: "项目库" })
     .click();
-  const card = page.getByRole("button", { name: /项目隔离检查/ });
+  const card = page
+    .locator(".project-library-card")
+    .filter({ hasText: "项目隔离检查" });
   await expect(card).toBeVisible();
   await card.click();
   await expect(page.locator(".workspace-content:not([hidden])")).toBeVisible();
@@ -254,7 +256,10 @@ test("工作台未发送的输入和附件随项目保存，切换回来仍可�
   await expect(page.getByLabel("对话内容")).toHaveValue("先保存这段工作台草稿");
   await page.reload();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: /未命名项目/ }).click();
+  await page
+    .locator(".project-library-card")
+    .filter({ hasText: "未命名项目" })
+    .click();
   await expect(page.getByLabel("对话内容")).toHaveValue("先保存这段工作台草稿");
   await expect(page.getByLabel("已添加的参考素材")).toBeVisible();
 });

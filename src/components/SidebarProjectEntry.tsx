@@ -1,61 +1,111 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDismissible } from "./useDismissible";
+import {
+  SIDEBAR_PROJECT_DRAG_TYPE,
+  SIDEBAR_PROJECT_TITLE_TYPE,
+  type SidebarProjectVisual,
+} from "../features/projects/sidebarProjectModel";
 
+/**
+ * 侧栏项目行（未分组项目、文件夹二级项目通用）。
+ *
+ * - 行右侧两个按钮：置顶、更多设置（改名字 / 移动到项目组 / 删除）；
+ * - "移动到项目组"打开子面板：列出项目文件夹，或新建以项目命名的文件夹；
+ * - 未分组项目行可拖拽（拖到文件夹或"项目"区空白处收纳）。
+ */
 export default function SidebarProjectEntry({
-  grouped,
   visible,
   selected,
   onNavigate,
+  defaultTitle,
+  autoEdit = false,
+  draggable = false,
+  dragId,
+  onDragStart,
+  moveTargets = [],
+  onMoveToFolder,
+  onMoveNewFolder,
+  onRename,
+  onDelete,
+  deleteDisabledReason,
+  pinned = false,
+  onTogglePin,
+  canEditProject = true,
+  visual,
 }: {
-  grouped: boolean;
   visible: boolean;
   selected: boolean;
   onNavigate: (id: string) => void;
+  defaultTitle?: string;
+  autoEdit?: boolean;
+  draggable?: boolean;
+  dragId?: string;
+  onDragStart?: (id: string) => void;
+  moveTargets?: { id: string; title: string }[];
+  onMoveToFolder?: (folderId: string) => void;
+  onMoveNewFolder?: () => void;
+  onRename?: (title: string) => void;
+  onDelete?: () => void;
+  deleteDisabledReason?: string;
+  pinned?: boolean;
+  onTogglePin?: () => void;
+  canEditProject?: boolean;
+  visual?: SidebarProjectVisual;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [title, setTitle] = useState(grouped ? "KK项目" : "KK工作流");
-  const [editing, setEditing] = useState(false);
-  const [pinned, setPinned] = useState(false);
-  const [deleted, setDeleted] = useState(false);
-  const [moved, setMoved] = useState(false);
+  const [moveMenuOpen, setMoveMenuOpen] = useState(false);
+  const [title, setTitle] = useState(defaultTitle ?? "未命名项目");
+  const [editing, setEditing] = useState(autoEdit);
   const root = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const menuTrigger = useRef<HTMLButtonElement>(null);
   useDismissible(
     menuOpen && visible,
     menuRef,
-    () => setMenuOpen(false),
+    () => {
+      setMenuOpen(false);
+      setMoveMenuOpen(false);
+    },
     menuTrigger,
   );
   useEffect(() => {
     if (!visible) {
       setMenuOpen(false);
+      setMoveMenuOpen(false);
       setEditing(false);
     }
   }, [visible]);
+  useEffect(() => {
+    if (!editing) setTitle(defaultTitle ?? "未命名项目");
+  }, [defaultTitle, editing]);
   useLayoutEffect(() => {
     if (menuOpen && visible)
       root.current
         ?.querySelector<HTMLButtonElement>('[role="menuitem"]')
         ?.focus();
   }, [menuOpen, visible]);
-  if (deleted)
-    return (
-      <button className="project-undo" onClick={() => setDeleted(false)}>
-        恢复未分组项目
-      </button>
-    );
-  const menuLabel = grouped ? "项目组设置" : "项目设置";
-  const menuButtonLabel = grouped ? "项目组设置" : "更多项目设置";
+  function closeMenus(): void {
+    setMenuOpen(false);
+    setMoveMenuOpen(false);
+  }
+  function commitTitle(): void {
+    const next = title.trim();
+    if (next) onRename?.(next);
+    setEditing(false);
+  }
   return (
     <div
       ref={root}
       className={`project-entry ${pinned ? "is-pinned" : ""}`}
-      onContextMenu={
-        grouped
+      hidden={!visible}
+      draggable={draggable && !editing && !menuOpen}
+      onDragStart={
+        draggable && dragId
           ? (event) => {
-              event.preventDefault();
-              setMenuOpen(true);
+              event.dataTransfer.setData(SIDEBAR_PROJECT_DRAG_TYPE, dragId);
+              event.dataTransfer.setData(SIDEBAR_PROJECT_TITLE_TYPE, title);
+              event.dataTransfer.effectAllowed = "move";
+              onDragStart?.(dragId);
             }
           : undefined
       }
@@ -67,90 +117,81 @@ export default function SidebarProjectEntry({
           aria-label="项目名称"
           autoFocus
           onChange={(event) => setTitle(event.target.value)}
-          onBlur={() => setEditing(false)}
+          onBlur={commitTitle}
           onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === "Escape")
+            if (event.key === "Enter") commitTitle();
+            if (event.key === "Escape") {
+              setTitle(defaultTitle ?? "未命名项目");
               setEditing(false);
+            }
           }}
         />
       ) : (
         <button
-          ref={grouped ? menuTrigger : undefined}
           className={`project-link ${selected ? "is-selected" : ""}`}
           aria-current={selected ? "page" : undefined}
           onClick={() => {
-            setMenuOpen(false);
+            closeMenus();
             onNavigate("workspace");
           }}
-          title={
-            grouped ? "打开项目工作台；右键或 Shift+F10 管理项目" : undefined
-          }
-          aria-keyshortcuts={grouped ? "Shift+F10" : undefined}
-          onKeyDown={
-            grouped
-              ? (event) => {
-                  if (event.shiftKey && event.key === "F10") {
-                    event.preventDefault();
-                    setMenuOpen(true);
-                  }
-                }
-              : undefined
-          }
         >
-          <span className={grouped ? "project-folder" : "project-yellow"}>
-            {grouped && (
-              <img
-                src="/design/figma/project-folder-glyph.svg"
-                width="13"
-                height="11"
-                alt=""
-              />
-            )}
-          </span>
+          {visual ? (
+            <span
+              className={`project-thumb project-thumb-${visual.kind}`}
+              style={
+                visual.kind !== "image"
+                  ? { background: visual.color }
+                  : undefined
+              }
+            >
+              {visual.kind === "image" && (
+                <img
+                  className="project-thumb-image-src"
+                  src={visual.src}
+                  alt=""
+                />
+              )}
+              {visual.kind === "chat" && (
+                <img
+                  className="project-thumb-chat-icon"
+                  src="/design/figma/project-chat-glyph.svg"
+                  alt=""
+                />
+              )}
+            </span>
+          ) : (
+            <span className="project-yellow" />
+          )}
           <span>{title}</span>
         </button>
       )}
       <button
         className="project-pin"
-        aria-label={
-          grouped
-            ? `打开 ${title} 工作台`
-            : pinned
-              ? "取消置顶项目"
-              : "置顶项目"
-        }
-        aria-pressed={grouped ? undefined : pinned}
-        title={grouped ? "打开项目工作台" : pinned ? "取消置顶" : "置顶"}
-        onClick={() =>
-          grouped ? onNavigate("workspace") : setPinned((value) => !value)
-        }
+        aria-label={pinned ? "取消置顶项目" : "置顶项目"}
+        aria-pressed={pinned}
+        title={pinned ? "取消会话置顶" : "会话内置顶，刷新恢复原顺序"}
+        onClick={onTogglePin}
       >
         <img
           className="project-action-container"
-          src={
-            grouped
-              ? "/design/figma/project-open-container.svg"
-              : "/design/figma/project-pin-container.svg"
-          }
+          src="/design/figma/project-pin-container.svg"
           alt=""
         />
       </button>
       <button
-        ref={grouped ? undefined : menuTrigger}
+        ref={menuTrigger}
         className="project-more"
-        aria-label={grouped ? "添加创作页面" : menuButtonLabel}
-        aria-expanded={grouped ? undefined : menuOpen}
-        disabled={grouped}
-        title={grouped ? "多创作页尚未接入（Prototype）" : "更多项目设置"}
-        onClick={() => setMenuOpen((value) => !value)}
+        aria-label="更多项目设置"
+        aria-expanded={menuOpen}
+        title="更多项目设置"
+        onClick={() => {
+          setMenuOpen((value) => !value);
+          setMoveMenuOpen(false);
+        }}
       >
         <img
           className="project-action-container"
-          src={
-            grouped
-              ? "/design/figma/project-add-container.svg"
-              : "/design/figma/project-more-container.svg"
-          }
+          src="/design/figma/project-more-container.svg"
           alt=""
         />
       </button>
@@ -159,7 +200,7 @@ export default function SidebarProjectEntry({
           ref={menuRef}
           className="project-menu"
           role="menu"
-          aria-label={menuLabel}
+          aria-label="项目设置"
           onKeyDown={(event) => {
             if (
               event.nativeEvent.isComposing ||
@@ -187,51 +228,66 @@ export default function SidebarProjectEntry({
             items[next]?.focus();
           }}
         >
-          {grouped && (
-            <button
-              role="menuitem"
-              onClick={() => {
-                setPinned((value) => !value);
-                setMenuOpen(false);
-                menuTrigger.current?.focus();
-              }}
-            >
-              {pinned ? "取消置顶项目" : "置顶项目"}
-            </button>
-          )}
           <button
             role="menuitem"
+            disabled={!canEditProject}
+            title={!canEditProject ? "项目存储尚未就绪" : undefined}
             onClick={() => {
               setEditing(true);
-              setMenuOpen(false);
+              closeMenus();
             }}
           >
             改名字
           </button>
           <button
             role="menuitem"
-            onClick={() => {
-              setMoved(true);
-              setMenuOpen(false);
-            }}
+            aria-haspopup="menu"
+            aria-expanded={moveMenuOpen}
+            onClick={() => setMoveMenuOpen((value) => !value)}
           >
-            {grouped ? "从项目组移出" : "移动到项目组"}
+            移动到项目组
           </button>
           <button
             role="menuitem"
+            disabled={Boolean(deleteDisabledReason) || !onDelete}
+            title={deleteDisabledReason}
             onClick={() => {
-              setDeleted(true);
-              setMenuOpen(false);
+              onDelete?.();
+              closeMenus();
             }}
           >
-            {grouped ? "关闭项目" : "删除项目"}
+            删除项目
           </button>
+          {moveMenuOpen && (
+            <div
+              className="project-menu project-menu-sub"
+              role="menu"
+              aria-label="移动到项目组"
+            >
+              {moveTargets.map((target) => (
+                <button
+                  key={target.id}
+                  role="menuitem"
+                  onClick={() => {
+                    onMoveToFolder?.(target.id);
+                    closeMenus();
+                  }}
+                >
+                  {target.title}
+                </button>
+              ))}
+              <button
+                role="menuitem"
+                onClick={() => {
+                  onMoveNewFolder?.();
+                  closeMenus();
+                }}
+              >
+                新建项目文件夹
+              </button>
+            </div>
+          )}
         </div>
-      )}
-      {moved && (
-        <small className="project-moved-status">
-          {grouped ? "已标记为移出项目组" : "已标记为待移动"}
-        </small>
       )}
     </div>
   );

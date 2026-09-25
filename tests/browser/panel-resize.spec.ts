@@ -54,9 +54,11 @@ test("对话宽度的无障碍最大值等于键盘可达宽度", async ({ page 
   await handle.press("End");
   const reachableMax = Number(await handle.getAttribute("aria-valuemax"));
   expect(reachableMax).toBeLessThan(760);
-  expect(
-    Math.abs((await panel.boundingBox())!.width - reachableMax),
-  ).toBeLessThanOrEqual(2);
+  await expect
+    .poll(async () =>
+      Math.abs((await panel.boundingBox())!.width - reachableMax),
+    )
+    .toBeLessThanOrEqual(2);
   await handle.press("Home");
   const sidebarHandle = page.getByRole("separator", {
     name: "调整侧栏宽度",
@@ -68,12 +70,14 @@ test("对话宽度的无障碍最大值等于键盘可达宽度", async ({ page 
     .toBeLessThan(reachableMax);
   await handle.focus();
   await handle.press("End");
-  expect(
-    Math.abs(
-      (await panel.boundingBox())!.width -
-        Number(await handle.getAttribute("aria-valuemax")),
-    ),
-  ).toBeLessThanOrEqual(2);
+  await expect
+    .poll(async () =>
+      Math.abs(
+        (await panel.boundingBox())!.width -
+          Number(await handle.getAttribute("aria-valuemax")),
+      ),
+    )
+    .toBeLessThanOrEqual(2);
 });
 
 test("侧栏宽度可用键盘恢复设计默认值", async ({ page }) => {

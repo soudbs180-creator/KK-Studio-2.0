@@ -68,7 +68,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
 | TASK-UI-010 | 现行 UI 规则与真实操作回归 | IN_PROGRESS | TASK-UI-008, TASK-AGENT-003 | root |
-| TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | TODO | TASK-UI-010 | unallocated |
+| TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | IN_PROGRESS | TASK-UI-010 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -821,11 +821,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## TASK-PROJECT-SIDEBAR-001 — 侧栏项目列表与真实项目数据统一
 
 - Goal: 让侧栏项目和分组反映同一份 CreationSnapshot 中已保存的项目，消除静态演示行冒充项目管理的状态
-- Scope: SidebarProjectEntry、SidebarProjectGroup、项目快照和项目操作
+- Scope: SidebarProjectEntry、SidebarProjectGroups、项目快照、项目操作和会话文件夹
 - Acceptance: 侧栏项目列表从真实已保存项目生成，空库时没有伪造项目，打开后与项目库指向同一项目; 分组、重命名、置顶、移动、删除按现有项目存储能力持久化；暂不可用的动作明确禁用并说明原因; Web 与 fresh Tauri 在创建、重启、删除后核对侧栏及项目库一致，键盘和窄屏入口可用
-- Branch: `unallocated`
-- Worktree: `unallocated`
-- Modules: src/components/SidebarProjectEntry.tsx, src/components/SidebarProjectGroup.tsx, src/features/creation, tests/browser, docs
-- Verification: NOT_VERIFIED — TASK-UI-010 确认项目库移除假卡，但侧栏 KK项目/KK工作流 仍为静态演示行；真实项目绑定与操作持久化尚未实现。
-- Evidence: [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md), [docs/features/feat-015-projects.md](../../docs/features/feat-015-projects.md), [docs/features/feat-023-navigation.md](../../docs/features/feat-023-navigation.md)
-- Updated: 2026-09-24
+- Branch: `feat/TASK-UI-009-ui010-integration`
+- Worktree: `D:/kk-studio/.worktrees/TASK-UI-009-integration`
+- Modules: src/components/SidebarProjectEntry.tsx, src/components/SidebarProjectGroups.tsx, src/features/creation, src/features/projects/sidebarProjectModel.ts, tests/browser, docs
+- Verification: PARTIAL — 候选侧栏与搜索已由真实 CreationSnapshot 项目生成，项目创建/打开/改名/删除接入 App；文件夹、拖拽与置顶仍是会话态。定向浏览器回归在隔离 worktree 验证中；完整 Web/Desktop、独立复核和用户验收尚未完成，因此持久分组验收项仍开放。
+- Evidence: [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md), [docs/changes/2026-09-25-sidebar-real-projects/intent.md](../../docs/changes/2026-09-25-sidebar-real-projects/intent.md), [docs/changes/2026-09-25-sidebar-real-projects/spec.md](../../docs/changes/2026-09-25-sidebar-real-projects/spec.md), [docs/changes/2026-09-25-sidebar-real-projects/plan.md](../../docs/changes/2026-09-25-sidebar-real-projects/plan.md), [docs/changes/2026-09-25-sidebar-real-projects/verification.md](../../docs/changes/2026-09-25-sidebar-real-projects/verification.md), [docs/changes/2026-09-25-sidebar-real-projects/review.md](../../docs/changes/2026-09-25-sidebar-real-projects/review.md), [docs/features/feat-015-projects.md](../../docs/features/feat-015-projects.md), [docs/features/feat-023-navigation.md](../../docs/features/feat-023-navigation.md)
+- Updated: 2026-09-25

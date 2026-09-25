@@ -134,6 +134,13 @@ export interface CreationProject {
   updatedAt: number;
 }
 
+/** Do not remove a project while its provider submission may still be active. */
+export function projectHasUnsettledTasks(project: CreationProject): boolean {
+  return project.tasks.some((task) =>
+    ["queued", "running", "unknown"].includes(task.status),
+  );
+}
+
 export interface CreationSnapshot {
   version: 2;
   revision: number;

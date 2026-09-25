@@ -1,5 +1,13 @@
 import { expect, test, type Page } from "@playwright/test";
 import { openWorkspace } from "./helpers";
+import { arrangeSidebarFolder } from "./sidebar-fixture";
+
+async function openArrangedWorkspace(page: Page) {
+  const sidebar = await arrangeSidebarFolder(page);
+  await sidebar.getByRole("button", { name: "Agent 验证项目" }).click();
+  await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
+  await sidebar.locator(".folder-heading-toggle").click();
+}
 
 async function rect(page: Page, selector: string, expected: number[]) {
   await expect
@@ -77,6 +85,12 @@ async function sampleSidebarMotion(page: Page) {
           const r = el.getBoundingClientRect();
           return [r.width, r.height];
         }),
+        folders: [...document.querySelectorAll(".folder-heading-row")].map(
+          (el) => {
+            const r = el.getBoundingClientRect();
+            return [r.width, r.height];
+          },
+        ),
         brand: Number(
           getComputedStyle(document.querySelector(".brand strong")!).opacity,
         ),
@@ -90,7 +104,7 @@ async function sampleSidebarMotion(page: Page) {
 test("latest two Figma frames retain exact shell anchors through independent collapse", async ({
   page,
 }) => {
-  await openWorkspace(page);
+  await openArrangedWorkspace(page);
   await rect(page, ".workspace-content", [291, 45, 1619, 1025]);
   await rect(page, ".task-button", [321, 72, 93, 30]);
   await rect(page, ".canvas-toolbar", [719, 998, 294, 50]);
@@ -154,7 +168,7 @@ test("closing chat cannot steal focus already moved to a canvas card", async ({
 test("sidebar motion keeps the task attached to the frame and toolbar stationary", async ({
   page,
 }) => {
-  await openWorkspace(page);
+  await openArrangedWorkspace(page);
   await freezeSidebarMotion(page);
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
   const samples = await sampleSidebarMotion(page);
@@ -176,11 +190,12 @@ test("sidebar motion keeps the task attached to the frame and toolbar stationary
     true,
   );
   for (const frame of opening) {
+    // 文件夹二级子项目行 231px（比文件夹行 263px 短，层级缩进）；未分组行 263px
     expect(frame.rows).toEqual([
-      [263, 29],
       [231, 29],
       [263, 29],
     ]);
+    expect(frame.folders).toEqual([[263, 29]]);
     if (frame.width < 170) expect(frame.brand).toBe(0);
   }
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -194,41 +209,59 @@ test("sidebar motion keeps the task attached to the frame and toolbar stationary
   ).toBe(0);
 });
 
-test("project row source actions retain navigation, reasons and keyboard management", async ({
-  page,
-}) => {
-  await openWorkspace(page);
-  const row = page.locator(".project-entry").first();
+test("项目文件夹行保留打开、设置与键盘菜单管理", async ({ page }) => {
+  await openArrangedWorkspace(page);
+  const group = page.locator(".project-folder-group").first();
+  const toggle = group.locator(".folder-heading-toggle");
   await rect(
     page,
-    ".project-groups > section:first-of-type > .project-group-content > .project-entry > .project-pin",
+    ".project-groups > section:first-of-type > .project-folder-group > .folder-heading-row > .folder-heading-toggle",
+    [14, 409, 263, 29],
+  );
+  await rect(
+    page,
+    ".project-groups > section:first-of-type > .project-folder-group > .folder-heading-row > .project-pin",
     [230, 413, 20, 21],
   );
-  await expect(
-    row.getByRole("button", { name: "添加创作页面", exact: true }),
-  ).toBeDisabled();
-  await expect(
-    row.getByRole("button", { name: "添加创作页面", exact: true }),
-  ).toHaveAttribute("title", /Prototype/);
-  const link = row.locator(".project-link");
-  await link.focus();
+  await rect(
+    page,
+    ".project-groups > section:first-of-type > .project-folder-group > .folder-heading-row > .project-more",
+    [252, 413, 20, 21],
+  );
+  // 第二层级子项目行：231px（比文件夹行 263px 短），右缘对齐文件夹行右缘，
+  // 右侧图标列位与文件夹行一致（文件夹行比项目长）。
+  await rect(
+    page,
+    ".project-groups > section:first-of-type > .project-folder-group > .project-nested-entry > .project-entry",
+    [46, 443, 231, 29],
+  );
+  const open = group.getByRole("button", {
+    name: "打开 KK项目 工作台",
+    exact: true,
+  });
+  await open.click();
+  await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await toggle.focus();
   await page.keyboard.press("Shift+F10");
   await expect(
-    row.getByRole("menu", { name: "项目组设置", exact: true }),
+    group.getByRole("menu", { name: "项目组设置", exact: true }),
   ).toBeVisible();
   await expect(
-    row.getByRole("menuitem", { name: "置顶项目", exact: true }),
+    group.getByRole("menuitem", { name: "置顶文件夹", exact: true }),
   ).toBeFocused();
   await page.keyboard.press("ArrowDown");
   await expect(
-    row.getByRole("menuitem", { name: "改名字", exact: true }),
+    group.getByRole("menuitem", { name: "改名字", exact: true }),
   ).toBeFocused();
   await page.keyboard.press("End");
   await expect(
-    row.getByRole("menuitem", { name: "关闭项目", exact: true }),
+    group.getByRole("menuitem", { name: "删除项目组", exact: true }),
   ).toBeFocused();
   await page.keyboard.press("Escape");
-  await expect(link).toBeFocused();
+  await expect(
+    group.getByRole("button", { name: "KK项目 设置", exact: true }),
+  ).toBeFocused();
   await page
     .getByRole("button", { name: "打开未分组项目库", exact: true })
     .click();

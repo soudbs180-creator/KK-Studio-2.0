@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
+import { seedSidebarFixture } from "./sidebar-fixture";
 
 async function openWorkspace(page: Page): Promise<void> {
   await page.goto("/");
@@ -202,7 +203,7 @@ test("窄屏侧栏在搜索弹窗内保持展开，关闭后外部点击收起",
 });
 
 test("断点隐藏分组时恢复焦点，顶部菜单仍可展开窄屏侧栏", async ({ page }) => {
-  await page.goto("/");
+  await seedSidebarFixture(page);
   await page.locator(".project-link").first().focus();
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.locator(".sidebar-toggle")).toBeFocused();
