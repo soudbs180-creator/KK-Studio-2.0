@@ -4,7 +4,7 @@
   top: 15px;
   bottom: 10px;
   right: 9px;
-  width: var(--conversation-width);
+  width: var(--conversation-width-user, var(--conversation-width));
   padding: 16px 20px 16px 17px;
   gap: var(--ui-space-4);
   border-radius: var(--ui-radius-panel);
@@ -17,7 +17,7 @@
 }
 .conversation-panel > header {
   position: relative;
-  width: var(--ui-composer-width);
+  width: calc(100% - 7px);
   height: 24px;
   flex: 0 0 24px;
   margin-left: 2.5px;
@@ -40,11 +40,17 @@
 }
 .conversation-panel > header button:last-child {
   position: absolute;
-  left: 408px;
+  left: auto;
+  right: -2.5px;
   top: 1px;
   margin: 0;
   width: 18px;
   height: 18px;
+}
+@media (min-width: 768px) and (max-width: 1200px) {
+  .conversation-panel > header button:last-child {
+    transform: translate(10px, -10px);
+  }
 }
 .conversation-panel > header button img {
   width: 20px;

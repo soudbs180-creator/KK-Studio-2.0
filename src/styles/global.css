@@ -254,3 +254,59 @@ button[aria-pressed="true"] {
     animation: none !important;
   }
 }
+
+/* Edge drag handles for resizing sidebar and conversation panel. */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  cursor: col-resize;
+  z-index: 50;
+  touch-action: none;
+}
+.sidebar .resize-handle {
+  left: 100%;
+  transform: translateX(-50%);
+}
+.conversation-panel .resize-handle {
+  right: 100%;
+  transform: translateX(50%);
+}
+.conversation-panel > .resize-handle {
+  position: absolute;
+  z-index: 50;
+}
+.resize-handle:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+.resize-handle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 56px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--text-accent) 30%,
+    var(--text-accent) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.resize-handle:hover::after,
+.resize-handle.is-dragging::after,
+.resize-handle:focus-visible::after {
+  opacity: 1;
+}
+@media (max-width: 1200px) {
+  .resize-handle {
+    display: none;
+  }
+}

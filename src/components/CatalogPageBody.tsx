@@ -50,6 +50,9 @@ export default function CatalogPageBody({
         </div>
       );
     }
+    const visibleProjects = projects.filter((project) =>
+      `${project.name}${project.prompt}`.toLowerCase().includes(search),
+    );
     return (
       <div className="project-library-content">
         <div className="project-library-actions" aria-label="项目资源操作">
@@ -85,51 +88,36 @@ export default function CatalogPageBody({
           </p>
         )}
         <div className="project-grid">
-          {projects
-            .filter((project) =>
-              `${project.name}${project.prompt}`.toLowerCase().includes(search),
-            )
-            .map((project) => (
-              <button
-                className="project-library-card"
-                key={project.id}
-                onClick={() => onSelect(project.id)}
-              >
-                <div className="project-library-preview">
-                  <span className="catalog-folder-mark">▱</span>
-                </div>
-                <strong>{project.name}</strong>
-                <span>
-                  {new Date(project.updatedAt).toLocaleDateString("zh-CN")} ·
-                  本地项目 · {project.items.length} 个画布节点
-                </span>
-                <span className="catalog-card-arrow" aria-hidden="true">
-                  ↗
-                </span>
-              </button>
-            ))}
-          {!projects.length && (search === "kk" || !search) ? (
+          {visibleProjects.map((project) => (
             <button
               className="project-library-card"
-              onClick={() => onSelect("项目 kk")}
+              key={project.id}
+              onClick={() => onSelect(project.id)}
             >
               <div className="project-library-preview">
                 <span className="catalog-folder-mark">▱</span>
               </div>
-              <strong>kk</strong>
-              <span>2026.9.5 · 本地项目 · 3 个画布节点</span>
+              <strong>{project.name}</strong>
+              <span>
+                {new Date(project.updatedAt).toLocaleDateString("zh-CN")} ·
+                本地项目 · {project.items.length} 个画布节点
+              </span>
               <span className="catalog-card-arrow" aria-hidden="true">
                 ↗
               </span>
             </button>
-          ) : null}
+          ))}
         </div>
-        {!projects.length && search && search !== "kk" && (
+        {!visibleProjects.length && (
           <div className="catalog-empty" role="status">
             <span className="catalog-empty-mark" aria-hidden="true">
               ⌕
             </span>
-            <p>没有找到匹配的项目</p>
+            <p>
+              {search
+                ? "没有找到匹配的项目"
+                : "还没有本地项目，点击“新建项目”开始创作。"}
+            </p>
           </div>
         )}
       </div>

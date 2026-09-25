@@ -525,8 +525,8 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-015-projects.md",
-    "summary": "Desktop 原生项目快照与项目包导入/导出/隔离恢复已验收；Web 项目包容量/离线适配（T9）未完成。",
-    "entryPoints": ["侧栏项目列表", "项目包导入/导出 ProjectPackageActions"],
+    "summary": "Desktop 原生项目快照与项目包导入/导出/隔离恢复已验收；Web 项目包容量/离线适配（T9）及侧栏真实项目绑定仍未完成。",
+    "entryPoints": ["项目库本地项目", "侧栏演示分组", "项目包导入/导出 ProjectPackageActions"],
     "code": [
       "src/features/projects/projectPackage.ts",
       "src/features/projects/nativeProjectPackageAdapter.ts",
@@ -543,8 +543,8 @@
       "tests/browser/desktop-data-stability.spec.ts",
       "tests/browser/design-system-pages.spec.ts"
     ],
-    "tasks": ["T3a", "T3b", "T9", "TASK-DS-002"],
-    "updated": "2026-09-22",
+    "tasks": ["T3a", "T3b", "T9", "TASK-DS-002", "TASK-PROJECT-SIDEBAR-001"],
+    "updated": "2026-09-24",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -762,7 +762,7 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-023-navigation.md",
-    "summary": "侧栏导航、搜索/收藏入口、弹窗与窄屏菜单真实可用；多创作页/多画布分组标注 Prototype 未接入。",
+    "summary": "侧栏导航、搜索/收藏入口、弹窗与窄屏菜单可用；静态演示项目行尚未绑定真实项目，多创作页/多画布分组未接入。",
     "entryPoints": ["左侧栏 Sidebar", "搜索/收藏（Ctrl/⌘+K）", "项目分组"],
     "code": [
       "src/components/Sidebar.tsx",
@@ -778,8 +778,8 @@
       "tests/browser/ui-interactions.spec.ts",
       "tests/browser/ui-interaction-matrix.spec.ts"
     ],
-    "tasks": ["TASK-UI-DISMISS-002", "UI-004", "TASK-UI-006"],
-    "updated": "2026-09-22",
+    "tasks": ["TASK-UI-DISMISS-002", "UI-004", "TASK-UI-006", "TASK-PROJECT-SIDEBAR-001"],
+    "updated": "2026-09-24",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {

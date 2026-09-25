@@ -22,7 +22,7 @@ async function openWorkspace(page: Page): Promise<void> {
 async function configure(page: Page, model = "image-test"): Promise<void> {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
   await page.getByLabel("API Base URL").fill("https://models.example.test/v1");
   await page.getByLabel("API Key").fill("fixture-key");
   await page.getByLabel("默认模型").fill(model);
@@ -30,8 +30,12 @@ async function configure(page: Page, model = "image-test"): Promise<void> {
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
 }
 
-async function selectImageNode(page: Page, index = 0) {
-  const node = page.locator(".canvas-node-image").nth(index);
+async function selectImageNode(page: Page) {
+  // A new project is intentionally empty; create the source through the UI.
+  await expect(page.locator(".canvas-node-image")).toHaveCount(0);
+  await page.getByRole("button", { name: "添加资源", exact: true }).click();
+  await page.getByRole("menuitem", { name: "图片", exact: true }).click();
+  const node = page.locator(".canvas-node-image").first();
   await node.click();
   await expect(node.getByLabel("图片提示词")).toBeVisible();
   return node;
@@ -356,7 +360,7 @@ test("unconfigured canvas generation opens provider settings and keeps the promp
   await source.getByRole("button", { name: "生成图片", exact: true }).click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "模型供应商", exact: true }),
+    page.getByRole("button", { name: "模型接入", exact: true }),
   ).toBeVisible();
   await expect(source.getByLabel("图片提示词")).toHaveValue(prompt);
 });

@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-24 现行 UI 与真实操作回归（TASK-UI-010，进行中）
+
+在独立 `fix/TASK-UI-010-ui-regression` worktree 中承接新 `UI_INDEX / UI_RULES / UI_ARCHETYPES / DESIGN_TOKENS`，核对 Figma 四节点和六条浏览器批注，修复首页创作输入、搜索底部选线、持久对话、画布 HUD、设置与窄屏入口。资产管理按 A1 画廊修复 6px 文件名、22px 筛选和旧网格；提示词库按 A2+A4 调整卡片与空态。1440/390 共 42 个页面状态截图；完整 `npm run verify` 通过 370 Node、317 browser，Web production preview 与隔离数据的 fresh Tauri release 加载同一 JS/CSS，页面错误 0。新建项目与项目库保持真实空态。侧栏静态演示项目另列 `TASK-PROJECT-SIDEBAR-001`；新增 token 导出与已验证 291/40 外壳及颜色仍冲突，在线 Ardot 未回读，独立复核、PR 和用户当前 1421/旧桌面入口整合尚未完成。WorkBuddy/豆包真实接管、共享记忆与模型调度不由 UI 验收升级。证据见 [本轮 verification](changes/2026-09-24-ui-regression/verification.md) 和 [架构核对](changes/2026-09-24-ui-regression/architecture-audit.md)。
+
 ## 2026-09-23 2.1.0 源码并线与远端规则回读
 
 - [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的 head `da811283` 在 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7`；旧 PR #8 的提交是 #9 候选的祖先，内容被吸收，PR #8 已关闭而未重复合并。[PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 再将规则与 Markdown 审计 squash 合入 `main@9f04bfce`；两次合并的文件树均与各自受审候选相同，本地根 `main` 已快进至后者。

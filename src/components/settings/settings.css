@@ -40,23 +40,40 @@
   bottom: 22px;
   display: flex;
   flex-direction: column;
-  gap: 13px;
+  gap: 10px;
   overflow-y: auto;
+}
+/* Sidebar grouping (设置 / 功能 / 数据与安全 / 系统). */
+.settings-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.settings-nav-group + .settings-nav-group {
+  margin-top: 18px;
+}
+.settings-nav-group-label {
+  padding: 0 12px;
+  font-size: var(--ui-font-caption);
+  line-height: 1.4;
+  color: var(--text-tertiary);
 }
 .settings-nav-item {
   flex: 0 0 40px;
   display: flex;
   align-items: center;
+  align-self: flex-start;
   gap: 8px;
-  width: 263px;
+  max-width: 100%;
   height: 40px;
-  padding: 0 10px;
+  padding: 0 12px;
   border-radius: 10px;
   color: var(--settings-muted);
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
   text-align: left;
+  white-space: nowrap;
 }
 .settings-nav-item.is-active {
   background: var(--settings-selected);
@@ -280,6 +297,89 @@
   font-size: 14px;
   line-height: 22px;
   color: var(--settings-muted);
+}
+.settings-page-description {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 20px;
+}
+/* 插件（MCP）· 技能（Skill）· 伙伴（智能体）页内分段切换 */
+.settings-extensions {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+.settings-ext-tabs {
+  display: inline-flex;
+  align-self: flex-start;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--settings-border);
+  border-radius: 10px;
+  background: var(--bg-input);
+}
+.settings-ext-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 7px;
+  color: var(--settings-muted);
+  font-size: 13px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+@media (max-width: 767px) {
+  .settings-ext-tabs {
+    max-width: 100%;
+  }
+  .settings-ext-tab {
+    height: 44px;
+    padding: 0 12px;
+  }
+  .settings-ext-tab-hint {
+    display: none;
+  }
+}
+.settings-ext-tab.is-active {
+  background: var(--settings-selected);
+  color: var(--settings-text);
+}
+.settings-ext-tab:hover:not(.is-active) {
+  color: var(--settings-text);
+}
+.settings-ext-tab-hint {
+  color: var(--text-tertiary);
+  font-size: 11px;
+}
+.settings-ext-tab.is-active .settings-ext-tab-hint {
+  color: var(--settings-muted);
+}
+/* API Key 显示/隐藏 */
+.settings-key-input {
+  position: relative;
+  display: block;
+}
+.settings-key-input input {
+  padding-right: 40px;
+}
+.settings-key-eye {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  transform: translateY(-50%);
+  border-radius: var(--ui-radius-control);
+  color: var(--settings-muted);
+}
+.settings-key-eye:hover {
+  color: var(--settings-text);
+  background: var(--settings-selected);
 }
 .settings-connection-note {
   display: flex;
@@ -1042,43 +1142,67 @@
     max-height: calc(100dvh - 24px);
   }
   .settings-sidebar {
-    position: relative;
-    width: 100%;
-    height: 142px;
-    border-bottom: 1px solid var(--settings-border);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 78px;
+    border-bottom: 0;
+    border-top: 1px solid var(--settings-border);
+    background: var(--bg-card);
+    z-index: 3;
   }
   .settings-sidebar h1 {
-    top: 22px;
-    left: 24px;
+    display: none;
   }
   .settings-nav {
-    top: 62px;
-    left: 16px;
-    right: 16px;
-    bottom: auto;
+    top: 10px;
+    left: 8px;
+    right: 8px;
+    bottom: 10px;
     width: auto;
-    height: 64px;
+    height: auto;
     display: flex;
     flex-direction: row;
+    align-items: stretch;
     gap: 6px;
     overflow-x: auto;
-    padding: 4px 2px 10px;
+    padding: 2px;
+  }
+  .settings-nav-group {
+    flex-direction: row;
+    gap: 6px;
+    align-items: stretch;
+  }
+  .settings-nav-group + .settings-nav-group {
+    margin-top: 0;
+    padding-left: 8px;
+    border-left: 1px solid var(--settings-border);
+  }
+  .settings-nav-group-label {
+    display: none;
   }
   .settings-nav-item {
     position: relative;
     inset: auto;
     width: auto;
     min-width: max-content;
-    height: 40px;
+    height: 56px;
     padding: 0 10px;
     flex: 0 0 auto;
-    font-size: 12px;
+    font-size: 11px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+  }
+  .settings-nav-item .settings-nav-icon {
+    margin: 0 auto;
   }
   .settings-content {
-    top: 165px;
-    left: 24px;
-    right: 24px;
-    bottom: 24px;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    bottom: 96px;
   }
   .settings-close {
     top: 21px;

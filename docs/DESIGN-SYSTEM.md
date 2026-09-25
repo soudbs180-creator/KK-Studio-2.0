@@ -1,8 +1,15 @@
 # KK Design System · 1.3
 
+> **本文范围（防止重复定义）**
+> 本文只负责 **颜色主题 + 基础组件用法 + 三档响应式 + 创作输入框契约**。
+> **字阶、间距、圆角、控件档位、层级 / z-index 的数值统一在 [`DESIGN_TOKENS.md`](./DESIGN_TOKENS.md)**，
+> 本文不再复制这些表——两份数值必然漂移。
+> 交互与零件规则见 [`UI_RULES.md`](./UI_RULES.md)，页面类型见 [`UI_ARCHETYPES.md`](./UI_ARCHETYPES.md)。
+> 索引入口 [`UI_INDEX.md`](./UI_INDEX.md)。本文与 `DESIGN_TOKENS.md` 冲突时，按 `UI_INDEX.md` §2 裁决。
+
 2026-09-22 校正版。**后续新增 UI 与现有 UI 的微调统一遵循本文件。**设计来源为用户的 [Ardot Design System](https://ardot.tencent.com/file/728457371665311?from=workbuddy&node_id=0%3A1) 及同名7页PDF；本次可读取快照的 SHA-256 为 `4e2030d9fc9db536a9ea3d4729d51f137b6b9ad07d9b9d159d14066e5b0a4e6a`。原文件保留，校正依据见 [逐页审计](changes/2026-09-22-design-system/audit.md)。在线 Ardot 同步须单独回读验证。
 
-颜色、字体层级和基础组件以本文件为准；具体页面布局、品牌资产与专项尺寸继续使用已确认的 Figma 节点。旧 UI Markdown 中与本文件冲突的调色/通用控件规则已失效，历史运行证据保留当时含义。文档定义应有行为，源码和当前运行证据证明实现情况，不能反过来用“代码已有”证明设计正确。
+颜色与基础组件以本文件为准；字阶与专项尺寸见 [`DESIGN_TOKENS.md`](./DESIGN_TOKENS.md)，具体页面布局与品牌资产继续使用已确认的 Figma 节点。旧 UI Markdown 中与本文件冲突的调色/通用控件规则已失效，历史运行证据保留当时含义。文档定义应有行为，源码和当前运行证据证明实现情况，不能反过来用“代码已有”证明设计正确。
 
 ## 颜色与主题
 
@@ -52,21 +59,20 @@
 
 状态填充另外配对：Danger `#B4233C` / hover `#941F34` 配白字；Success Dark `#79CDA8` 配深字，Light `#216947` 配白字；Warning Dark `#E6B96A` 配深字，Light `#805209` 配白字。使用 `bg-{status}` + `text-on-{status}`，不得搭配随品牌切换的on-accent。轻危险操作使用danger文字与danger-soft；删除等最终确认可用独立danger-filled。
 
-## 字体、间距与圆角
+## 字体、间距与圆角（数值统一收口）
 
-通用字阶为 **5级**，字体 Inter 400/500/600/700，中文回退 Microsoft YaHei / PingFang SC。根字号13px是既有页面基准，单独说明，不计入5级。小于11px或小数尺寸仅保留已有、具名页面证据，不扩散到新组件。
+> 本节的完整取值表已移出本文，**只在此登记"语义归属"**，避免两份数值漂移。
 
-| 层级 | 字号/行高 | 字重 | 用途 |
-| --- | --- | --- | --- |
-| caption | 11/14 | 400 | 辅助、时间 |
-| body | 12/16 | 400；按钮500 | 正文、列表、按钮 |
-| label | 14/20 | 500 | 分组、强调 |
-| title | 16/22 | 600 | 面板、卡片标题 |
-| display | 24/30 | 600 | 空态、展示标题 |
+**字阶**：9 档 + 绑定规则 → [`DESIGN_TOKENS.md`](./DESIGN_TOKENS.md) §3、[`UI_RULES.md`](./UI_RULES.md) §2.3。
+仅保留本文件的补充约束：根字号 13px 是既有页面基准；**小于 11px 或小数尺寸仅保留已有、具名页面证据，不扩散到新组件**。
+字体族回退见 [`DESIGN_TOKENS.md`](./DESIGN_TOKENS.md) §3。
 
-间距6档：4/8/12/16/24/40px，对应 `--ui-space-1…6`。按钮内距6/10px和图文gap6px是原控件专项值，不声称所有数值都必须为4倍数。
+**间距**：双标尺 + 成对关系 → [`DESIGN_TOKENS.md`](./DESIGN_TOKENS.md) §5。
+> 旧 6 档（4/8/12/16/24/40）已被双标尺取代，按钮内距 6/10px 与图文 gap 6px 是原控件专项值，不要求所有数值都为 4 的倍数。
 
-圆角5档：control10、menu12、panel20、card28、pill999。输入/普通按钮用control；菜单/Popover用menu；Modal内容面板用panel；卡片用card；开关/胶囊/徽标用pill。不能把所有弹窗套成菜单12，也不能因为卡片使用28而修改所有画布节点几何。
+**圆角**：9 档 + 嵌套公式 → [`DESIGN_TOKENS.md`](./DESIGN_TOKENS.md) §6。
+语义归属（哪类元素用哪档）见 [`UI_RULES.md`](./UI_RULES.md) §4.1。
+> 不能把所有弹窗套成同一个圆角；也不能因为卡片使用 card 档就修改所有画布节点几何。
 
 ## 基础组件用法
 
@@ -84,11 +90,15 @@
 | Modal | `Modal.tsx` / `useDismissible.ts` | 原生dialog、header/body/footer、面板r20、可见关闭图标；Esc只关闭顶层并回焦；外部点击沿用可取消契约，不能丢失进行中操作 |
 | Toolbar | `CanvasToolbar` + `ToolbarIcon` | 外高50，内部专项31/40；狭窄窗口可操作且不遮挡；保持真实行为和来源几何 |
 
-复用现有真实组件与行为，禁止因样式统一另造一套业务状态。未接服务保持 Prototype 或禁用原因；loading/error/cancel/offline、IME、Escape、焦点恢复、草稿和迟到响应防护继续遵循 [运行规范](UI_SPEC.md) 及 [交互规范](FRONTEND-SPEC.md)。[WAI-ARIA组件模式](https://www.w3.org/WAI/ARIA/apg/patterns/)用于语义和键盘检查。
+复用现有真实组件与行为，禁止因样式统一另造一套业务状态。未接服务保持 Prototype 或禁用原因；loading/error/cancel/offline、IME、Escape、焦点恢复、草稿和迟到响应防护继续遵循 [运行验证](UI_SPEC.md) 及 [交互契约](UI_RULES.md#14-交互行为契约控件级)。[WAI-ARIA组件模式](https://www.w3.org/WAI/ARIA/apg/patterns/)用于语义和键盘检查。
+> 组件尺寸/圆角/间距的完整契约在 [`UI_RULES.md`](./UI_RULES.md) §7，本文只列"契约红线"。
 
 ## 三档尺寸、图标与换行（1.2，2026-09-22）
 
 颜色/主题仍为1.1校正值。以下替代旧文档将桌面专项尺寸直接用于所有窄屏的规则。手机和平板为工程适配，Figma桌面资产与几何继续复用；不得声称存在未读取的移动端Frame。
+
+> 本节各档的**具体字号/控件高/图形尺寸**取值以 [`DESIGN_TOKENS.md`](./DESIGN_TOKENS.md) 为准；
+> 图标"图形 / 槽位 / 命中区"三层规则见 [`UI_RULES.md`](./UI_RULES.md) §6.2。
 
 | 档位 | 视口宽度 | 壳层 | 屏幕控件 |
 | --- | --- | --- | --- |

@@ -1,6 +1,83 @@
 import { expect, test } from "@playwright/test";
 import { openWorkspace } from "./helpers";
 
+test("窄屏设置分类的同组入口保持在底部导航内", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const nav = page.getByRole("navigation", { name: "设置分类" });
+  const general = (await nav
+    .getByRole("button", { name: "通用", exact: true })
+    .boundingBox())!;
+  const account = (await nav
+    .getByRole("button", { name: "账号管理", exact: true })
+    .boundingBox())!;
+  const bar = (await nav.boundingBox())!;
+  expect(Math.abs(general.y - account.y)).toBeLessThanOrEqual(2);
+  expect(account.y).toBeGreaterThanOrEqual(bar.y);
+  expect(account.y + account.height).toBeLessThanOrEqual(
+    bar.y + bar.height + 1,
+  );
+});
+
+test("插件、技能、伙伴标签可用方向键切换并显示对应内容", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("button", { name: "插件·技能·伙伴", exact: true })
+    .click();
+  const tabs = page.getByRole("tablist", { name: "插件、技能与伙伴" });
+  const skills = tabs.getByRole("tab", { name: /技能/ });
+  const partners = tabs.getByRole("tab", { name: /伙伴/ });
+  await skills.click();
+  await skills.press("ArrowRight");
+  await expect(partners).toBeFocused();
+  await expect(partners).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tabpanel")).toContainText("Agent");
+});
+
+test("手机扩展标签保持单行和触屏命中区", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await page
+    .getByRole("button", { name: "插件·技能·伙伴", exact: true })
+    .click();
+  const tabs = page.getByRole("tablist", { name: "插件、技能与伙伴" });
+  const bounds = (await tabs.boundingBox())!;
+  for (const tab of await tabs.getByRole("tab").all()) {
+    const box = (await tab.boundingBox())!;
+    expect(box.height).toBeGreaterThanOrEqual(44);
+    expect(box.x).toBeGreaterThanOrEqual(bounds.x);
+    expect(box.x + box.width).toBeLessThanOrEqual(bounds.x + bounds.width + 1);
+    await expect(tab).toHaveCSS("white-space", "nowrap");
+  }
+});
+
+test("首页伙伴和插件管理入口到达对应设置标签", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "添加素材与生成设置" }).click();
+  await page
+    .getByRole("dialog", { name: "添加素材与生成设置" })
+    .getByRole("button", { name: "伙伴（智能体）" })
+    .click();
+  await expect(page.getByRole("tab", { name: /伙伴/ })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  await page.getByRole("button", { name: "关闭设置" }).click();
+  await page.getByRole("button", { name: "添加素材与生成设置" }).click();
+  await page
+    .getByRole("dialog", { name: "添加素材与生成设置" })
+    .getByRole("button", { name: "插件（MCP）" })
+    .click();
+  await expect(page.getByRole("tab", { name: /插件/ })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+});
+
 for (const viewport of [
   { width: 779, height: 643 },
   { width: 390, height: 844 },

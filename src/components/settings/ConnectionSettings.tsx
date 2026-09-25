@@ -1,9 +1,6 @@
 import { appVersion } from "../../runtime/appInfo";
 import type { SettingsSection } from "./SettingsSectionData";
 import ModelProviderSettings from "./ModelProviderSettings";
-import McpSettings from "./McpSettings";
-import AgentConnectionSettings from "./AgentConnectionSettings";
-import PluginManagerSettings from "./PluginManagerSettings";
 
 const PENDING_SETTINGS: Partial<
   Record<SettingsSection, { title: string; description: string }>
@@ -14,20 +11,11 @@ const PENDING_SETTINGS: Partial<
   },
   network: {
     title: "本地服务",
-    description:
-      "本地 Agent 需要启动服务后连接；转发代理为独立服务，尚未接入全局网络配置。",
+    description: "转发代理为独立服务，尚未接入全局网络配置。",
   },
   memory: {
     title: "暂无记忆",
     description: "对话记忆功能尚未开放，当前不会自动提取或保存对话记忆。",
-  },
-  skills: {
-    title: "暂无已安装的 Skill",
-    description: "Skill 导入和运行功能尚未开放。",
-  },
-  mcp: {
-    title: "暂无 MCP 服务器",
-    description: "MCP 连接功能尚未开放，当前不会连接或调用外部工具。",
   },
   comfy: {
     title: "未连接 ComfyUI",
@@ -44,7 +32,6 @@ export default function ConnectionSettings({
 }) {
   if (section === "providers")
     return <ModelProviderSettings onFeedback={onFeedback} />;
-  if (section === "mcp") return <McpSettings onFeedback={onFeedback} />;
   if (section === "updates")
     return (
       <div className="settings-version">
@@ -136,7 +123,6 @@ export default function ConnectionSettings({
     return (
       <div className="settings-detail-stack">
         <h3 className="settings-detail-label">本地服务</h3>
-        <AgentConnectionSettings onFeedback={onFeedback} />
         <div className="settings-network-row">
           <div>
             <h3>本地转发代理</h3>
@@ -149,17 +135,9 @@ export default function ConnectionSettings({
             </p>
           </div>
         </div>
-      </div>
-    );
-  if (section === "plugins")
-    return (
-      <div className="settings-detail-stack">
-        <h3 className="settings-detail-label">画布插件</h3>
-        <p className="settings-network-activity">
-          在画布「添加节点 › 插件」中使用已启用插件。这里管理画布扩展；MCP
-          工具请在 MCP 设置中管理。
+        <p className="settings-section-intro">
+          需要连接本地 Agent 时，请到「插件·技能·伙伴」的伙伴（智能体）页配置。
         </p>
-        <PluginManagerSettings onFeedback={onFeedback} />
       </div>
     );
   if (section === "memory")

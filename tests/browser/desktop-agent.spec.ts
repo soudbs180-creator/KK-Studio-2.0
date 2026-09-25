@@ -3,7 +3,11 @@ import { startAgentServer } from "../helpers/agentServer";
 
 async function networkSettings(page: Page) {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "网络", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("button", { name: "插件·技能·伙伴", exact: true })
+    .click();
+  await page.getByRole("tab", { name: /伙伴/ }).click();
   return page.getByRole("region", { name: "桌面 Agent 服务" });
 }
 

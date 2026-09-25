@@ -17,6 +17,21 @@ function walk(directory) {
 const sourceFiles = walk(path.join(root, "src")).filter((file) =>
   /\.(css|tsx)$/.test(file),
 );
+// The imported global theme owns runtime colors. The copied Ardot token
+// candidate defines its own palette but has not been validated or connected;
+// fail if an application source starts importing it before reconciliation.
+const tokenCandidate = "src/styles/tokens.css";
+for (const file of sourceFiles) {
+  const name = path.relative(root, file).replaceAll("\\", "/");
+  if (name === tokenCandidate) continue;
+  const content = fs.readFileSync(file, "utf8");
+  if (
+    /(?:\bimport|@import)[^;\n]*["'](?:[^"'\n]*\/)?tokens\.css["']/.test(
+      content,
+    )
+  )
+    issues.push(`${name}: 未核实的 tokens.css 候选不得进入运行态`);
+}
 const declaredTokens = new Set(
   sourceFiles.flatMap((file) =>
     [
@@ -66,7 +81,11 @@ for (const file of sourceFiles) {
     ([value, count]) => count > (allowed.colors[value] ?? 0),
   );
   if (
-    !["src/styles/global.css", "src/styles/ui-tokens.css"].includes(name) &&
+    ![
+      "src/styles/global.css",
+      "src/styles/ui-tokens.css",
+      tokenCandidate,
+    ].includes(name) &&
     addedColors.length > 0
   )
     issues.push(

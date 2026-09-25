@@ -67,6 +67,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
+| TASK-UI-010 | 现行 UI 规则与真实操作回归 | IN_PROGRESS | TASK-UI-008, TASK-AGENT-003 | root |
+| TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | TODO | TASK-UI-010 | unallocated |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -803,3 +805,27 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — 2026-09-23 扫描 365 个已跟踪 Markdown，历史范围共 37 处文件目标问题；原始日志来源和可恢复性待核对。
 - Evidence: [docs/governance/MARKDOWN_AUDIT.md](../../docs/governance/MARKDOWN_AUDIT.md)
 - Updated: 2026-09-23
+
+## TASK-UI-010 — 现行 UI 规则与真实操作回归
+
+- Goal: 核对并修复新界面的设计系统、窄屏、入口路由和关键交互偏差，分别验证 Web 与 Desktop 产物
+- Scope: 首页、画布、对话、设置、资产、提示词、目录、浏览器回归与运行身份
+- Acceptance: 首页插件、Skill、伙伴与模型入口到达对应内容，键盘和焦点可用; 390/768/1920 的主要控件可读、可触达，面板调整与菜单运行正常; 新建项目和 Agent 测试 fixture 的状态边界清楚，完整 verify 通过; Web preview 与 fresh Desktop release 各自有实际运行证据，原工程并行改动保留; Figma 四节点与新 UI 页面类型经过规则和运行审计；未裁决的 token 冲突明确记录
+- Branch: `fix/TASK-UI-010-ui-regression`
+- Worktree: `D:/kk-studio/.worktrees/TASK-UI-010-ui-regression`
+- Modules: src/components, src/styles, tests/browser, docs
+- Verification: PARTIAL — 独立 worktree 完整 verify 通过：370 Node、317 Edge browser，治理/功能/Markdown/UI/类型/格式/构建均通过；1440/390 共 42 态截图；production Web 与隔离 Tauri release 原生运行且 JS/CSS 与 dist 同哈希。候选 token 与现行外壳冲突、在线 Ardot 未回读；独立复审及 PR/根工程整合仍待完成，旧快捷方式不代表当前 UI。
+- Evidence: [docs/changes/2026-09-24-ui-regression/intent.md](../../docs/changes/2026-09-24-ui-regression/intent.md), [docs/changes/2026-09-24-ui-regression/spec.md](../../docs/changes/2026-09-24-ui-regression/spec.md), [docs/changes/2026-09-24-ui-regression/plan.md](../../docs/changes/2026-09-24-ui-regression/plan.md), [docs/changes/2026-09-24-ui-regression/verification.md](../../docs/changes/2026-09-24-ui-regression/verification.md), [docs/changes/2026-09-24-ui-regression/architecture-audit.md](../../docs/changes/2026-09-24-ui-regression/architecture-audit.md), [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md)
+- Updated: 2026-09-25
+
+## TASK-PROJECT-SIDEBAR-001 — 侧栏项目列表与真实项目数据统一
+
+- Goal: 让侧栏项目和分组反映同一份 CreationSnapshot 中已保存的项目，消除静态演示行冒充项目管理的状态
+- Scope: SidebarProjectEntry、SidebarProjectGroup、项目快照和项目操作
+- Acceptance: 侧栏项目列表从真实已保存项目生成，空库时没有伪造项目，打开后与项目库指向同一项目; 分组、重命名、置顶、移动、删除按现有项目存储能力持久化；暂不可用的动作明确禁用并说明原因; Web 与 fresh Tauri 在创建、重启、删除后核对侧栏及项目库一致，键盘和窄屏入口可用
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/components/SidebarProjectEntry.tsx, src/components/SidebarProjectGroup.tsx, src/features/creation, tests/browser, docs
+- Verification: NOT_VERIFIED — TASK-UI-010 确认项目库移除假卡，但侧栏 KK项目/KK工作流 仍为静态演示行；真实项目绑定与操作持久化尚未实现。
+- Evidence: [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md), [docs/features/feat-015-projects.md](../../docs/features/feat-015-projects.md), [docs/features/feat-023-navigation.md](../../docs/features/feat-023-navigation.md)
+- Updated: 2026-09-24

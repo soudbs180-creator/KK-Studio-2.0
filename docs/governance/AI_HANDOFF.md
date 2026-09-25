@@ -1,5 +1,11 @@
 # AI handoff
 
+## 2026-09-24 当前 UI 候选恢复入口（TASK-UI-010）
+
+- 根工程 `D:/kk-studio/KK-Studio-2.0` 有并行未提交改动；本任务只在 `D:/kk-studio/.worktrees/TASK-UI-010-ui-regression` 的 `fix/TASK-UI-010-ui-regression` 分支写入。接手先核对这两个工作区的 HEAD/status，勿将 1421 根开发页或旧桌面 EXE 当作候选结果。
+- 本轮变更与 Web/原生运行证据在 [change package](../changes/2026-09-24-ui-regression/verification.md)，42 态页面核对在 [architecture audit](../changes/2026-09-24-ui-regression/architecture-audit.md)。Web preview 固定 1423；隔离 `--data-dir` 的新 Tauri release 为 `src-tauri/target/release/kk-studio.exe`，原生加载的 JS/CSS 与当前 dist 哈希一致。完整 `npm run verify` 已通过 370 Node、317 browser；独立 review 和 PR 尚未完成。候选 `tokens.css` 未接线，291/40 外壳与 200/56 导出冲突未裁决，在线 Ardot 未回读。侧栏演示项目行须跟进 `TASK-PROJECT-SIDEBAR-001`。
+- 能力边界：WorkBuddy、豆包、真实外部账号、共享记忆及自动模型调配保持现有开放任务；这轮只收敛可见 UI 与运行态，不更改功能真实程度。
+
 ## 2026-09-23 当前恢复入口：2.1.0 主线与规则审计
 
 - 唯一工程为 `D:/kk-studio/KK-Studio-2.0`；先 fetch 并核对实际 HEAD、`git status`、worktree、账本和本文件，不从下方历史段落推断“当前”。2.1.0 源码先由 [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 合入 `b45c5bc7`，规则与 Markdown 审计再由 [PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 合入 `origin/main@9f04bfced49224e9cd523844a8e3c995119c7955`；本地根 `main` 已快进至同一 SHA。

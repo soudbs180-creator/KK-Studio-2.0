@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { promptLibrary, type Prompt } from "../features/prompts/promptLibrary";
+import UiIcon from "./UiIcon";
 
 const PAGE_SIZE = 12;
 
@@ -119,15 +120,17 @@ export default function PromptLibraryPanel({
             ))}
           </select>
         </label>
-        <button
-          className="ui-button"
-          type="button"
-          onClick={() =>
-            loading ? controller.current?.abort() : void refresh()
-          }
-        >
-          {loading ? "取消加载" : "加载来源"}
-        </button>
+        {items.length > 0 && (
+          <button
+            className="ui-button"
+            type="button"
+            onClick={() =>
+              loading ? controller.current?.abort() : void refresh()
+            }
+          >
+            {loading ? "取消加载" : "加载来源"}
+          </button>
+        )}
         <a href={source.homepage} target="_blank" rel="noreferrer noopener">
           来源主页 ↗
         </a>
@@ -155,7 +158,9 @@ export default function PromptLibraryPanel({
           placeholder="搜索标题、正文或标签"
         />
       </label>
-      <div className="prompt-library-content">
+      <div
+        className={`prompt-library-content${filtered.length ? "" : " is-empty"}`}
+      >
         <div className="prompt-library-results">
           <div
             className="prompt-library-list"
@@ -176,51 +181,84 @@ export default function PromptLibraryPanel({
                     setError("");
                   }}
                 >
-                  <strong>{item.title}</strong>
-                  <span>{item.tags.join(" · ") || source.name}</span>
+                  <span className="prompt-library-item-heading">
+                    <UiIcon name="text" size={20} />
+                    <strong>{item.title}</strong>
+                  </span>
+                  <span className="prompt-library-item-description">
+                    {item.description || item.preview || item.prompt}
+                  </span>
+                  <span className="prompt-library-item-meta">
+                    {item.tags.join(" · ") || source.name}
+                  </span>
                 </button>
               ))}
             {!filtered.length && (
-              <p>
-                {items.length
-                  ? "没有匹配的提示词，试试其他关键词。"
-                  : "暂无提示词，选择来源后加载。"}
-              </p>
+              <div className="prompt-library-empty">
+                <UiIcon name="text" size={48} />
+                <h3>{items.length ? "没有匹配的提示词" : "还没有提示词"}</h3>
+                <p>
+                  {items.length
+                    ? "试试其他关键词，或清除搜索内容。"
+                    : "选择来源并加载后，即可浏览和使用提示词。"}
+                </p>
+                <button
+                  className="ui-button is-primary"
+                  type="button"
+                  onClick={() =>
+                    items.length
+                      ? setKeyword("")
+                      : loading
+                        ? controller.current?.abort()
+                        : void refresh()
+                  }
+                >
+                  {items.length
+                    ? "清除搜索"
+                    : loading
+                      ? "取消加载"
+                      : "加载来源"}
+                </button>
+              </div>
             )}
           </div>
-          <div className="prompt-library-pagination">
-            <button
-              className="ui-button"
-              type="button"
-              disabled={currentPage === 0}
-              onClick={() => setPage((current) => current - 1)}
-            >
-              上一页
-            </button>
-            <span>
-              {currentPage + 1} / {pages} · {filtered.length} 条
-            </span>
-            <button
-              className="ui-button"
-              type="button"
-              disabled={currentPage + 1 === pages}
-              onClick={() => setPage((current) => current + 1)}
-            >
-              下一页
-            </button>
-          </div>
-        </div>
-        <article className="prompt-library-detail" aria-label="提示词预览">
-          {selected ? (
-            <>
-              <h3>{selected.title}</h3>
-              <p>{selected.prompt}</p>
-              <span>{selected.prompt.length} 字符</span>
-            </>
-          ) : (
-            <p>选择一条提示词，查看完整内容。</p>
+          {filtered.length > 0 && (
+            <div className="prompt-library-pagination">
+              <button
+                className="ui-button"
+                type="button"
+                disabled={currentPage === 0}
+                onClick={() => setPage((current) => current - 1)}
+              >
+                上一页
+              </button>
+              <span>
+                {currentPage + 1} / {pages} · {filtered.length} 条
+              </span>
+              <button
+                className="ui-button"
+                type="button"
+                disabled={currentPage + 1 === pages}
+                onClick={() => setPage((current) => current + 1)}
+              >
+                下一页
+              </button>
+            </div>
           )}
-        </article>
+        </div>
+        {filtered.length > 0 && (
+          <article className="prompt-library-detail" aria-label="提示词预览">
+            {selected ? (
+              <>
+                <h3>{selected.title}</h3>
+                <p>{selected.prompt}</p>
+                <span>{selected.prompt.length} 字符</span>
+              </>
+            ) : (
+              <p>选择一条提示词，查看完整内容。</p>
+            )}
+          </article>
+        )}
       </div>
       <footer>
         <span>加入{target}，保留现有文字、模型和附件。</span>

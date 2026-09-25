@@ -18,6 +18,9 @@ import {
   Link1,
   Export,
   FolderAdd,
+  Cpu,
+  Eye,
+  EyeSlash,
 } from "iconsax-react";
 
 const ICONS = {
@@ -40,6 +43,9 @@ const ICONS = {
   plug: Link1,
   upload: Export,
   folderAdd: FolderAdd,
+  agent: Cpu,
+  eye: Eye,
+  eyeOff: EyeSlash,
 };
 export type UiIconName = keyof typeof ICONS;
 

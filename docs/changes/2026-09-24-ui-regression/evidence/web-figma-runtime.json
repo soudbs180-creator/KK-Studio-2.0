@@ -1,0 +1,102 @@
+{
+  "timestamp": "2026-09-25T06:28:20.103Z",
+  "url": "http://127.0.0.1:1423/",
+  "mode": "Vite production preview",
+  "entryChain": "index.html → src/main.tsx → src/App.tsx → StartPage/Canvas/ConversationPanel/CatalogPanel",
+  "loadedAssets": [
+    {
+      "asset": "/assets/index-CmgfS2Xx.js",
+      "sha256": "531808c4dee1388932863ffa16a02915bf719f793db04577b7cb91703af8e099",
+      "bytes": 818555
+    },
+    {
+      "asset": "/assets/index-BO3A5Kmp.css",
+      "sha256": "2170b344e39270062e9347f1b6252f2da9b9792591a0ff035558d086ee21f656",
+      "bytes": 226969
+    }
+  ],
+  "pageErrors": [],
+  "passed": true,
+  "runtime": {
+    "mode": "production",
+    "entry": "src/main.tsx"
+  },
+  "home": {
+    "box": {
+      "x": 117,
+      "y": 245,
+      "width": 652,
+      "height": 170
+    },
+    "radius": "20px"
+  },
+  "homeModelMenu": {
+    "x": 176,
+    "y": 56,
+    "width": 227,
+    "height": 294
+  },
+  "homeModelMenuTall": {
+    "x": 503.5,
+    "y": 490,
+    "width": 227,
+    "height": 318
+  },
+  "search": {
+    "selected": "true",
+    "indicator": {
+      "x": 458,
+      "y": 190,
+      "width": 116,
+      "height": 3
+    }
+  },
+  "canvas": {
+    "toolbar": {
+      "x": 327,
+      "y": 637,
+      "width": 288,
+      "height": 50
+    },
+    "task": {
+      "x": 88,
+      "y": 72,
+      "width": 93,
+      "height": 44
+    },
+    "zoom": {
+      "x": 489.1875,
+      "y": 72,
+      "width": 76,
+      "height": 44
+    },
+    "arrange": {
+      "x": 578.1875,
+      "y": 74,
+      "width": 58.328125,
+      "height": 40
+    },
+    "opener": {
+      "x": 810,
+      "y": 72,
+      "width": 44,
+      "height": 44
+    }
+  },
+  "chat": {
+    "close": {
+      "x": 810,
+      "y": 72,
+      "width": 44,
+      "height": 44
+    }
+  },
+  "phone": {
+    "composer": {
+      "x": 25,
+      "y": 229,
+      "width": 306,
+      "height": 202
+    }
+  }
+}
