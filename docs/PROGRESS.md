@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-25 真实项目侧栏整合（TASK-PROJECT-SIDEBAR-001，进行中）
+
+在独立 `feat/TASK-UI-009-ui010-integration` 工作树，以 UI-010 已验证候选为基线承接旧 UI-009 的项目文件夹设计，同时让侧栏与搜索读取同一份真实 `CreationSnapshot`。空项目库不再显示固定演示行；创建、打开、改名和确认删除接入 App 项目操作；拖放、文件夹与置顶明确为会话态。原 UI-009 工作树未改动，1423 的 UI-010 预览保持原样。完整 `npm run verify` 已通过 370 Node、337 Edge browser；390/768/1440/1920 响应式核对无整页溢出，1424 production preview 与隔离数据的 fresh Tauri release 加载同一 JS/CSS，原生新建→改名→刷新→打开真实项目通过。独立复核和 PR 待完成；持久文件夹仍是开放验收项。证据与边界见 [本轮验证](changes/2026-09-25-sidebar-real-projects/verification.md)。
+
 ## 2026-09-24 现行 UI 与真实操作回归（TASK-UI-010，进行中）
 
 在独立 `fix/TASK-UI-010-ui-regression` worktree 中承接新 `UI_INDEX / UI_RULES / UI_ARCHETYPES / DESIGN_TOKENS`，核对 Figma 四节点和六条浏览器批注，修复首页创作输入、搜索底部选线、持久对话、画布 HUD、设置与窄屏入口。资产管理按 A1 画廊修复 6px 文件名、22px 筛选和旧网格；提示词库按 A2+A4 调整卡片与空态。独立 reviewer 对[草稿 PR #19](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/19) 初审未发现 P0/P1，提出五项 P2；修复提交 `3db7b69` 已推送，复审确认五项均关闭、无新增 P0/P1/P2，代码审查 PASS。1440/390 共 42 个页面状态已重新截图；完整 `npm run verify` 通过 370 Node、319 browser，Web production preview 与隔离数据的 fresh Tauri release 加载同一 JS/CSS，页面错误 0。新建项目与项目库保持真实空态。侧栏静态演示项目另列 `TASK-PROJECT-SIDEBAR-001`；新增 token 导出与已验证 291/40 外壳及颜色仍冲突，在线 Ardot 未回读，用户当前 1421/旧桌面入口整合尚未完成。WorkBuddy/豆包真实接管、共享记忆与模型调度不由 UI 验收升级。证据见 [本轮 verification](changes/2026-09-24-ui-regression/verification.md) 和 [架构核对](changes/2026-09-24-ui-regression/architecture-audit.md)。

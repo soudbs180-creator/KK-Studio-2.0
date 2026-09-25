@@ -73,20 +73,20 @@ test("工具菜单切换到资产弹窗后不在背景残留", async ({ page }) 
   await expect(page.locator(".canvas-tool-menu")).toHaveCount(0);
 });
 
-test("侧栏项目右键菜单在打开同一项目时关闭", async ({ page }) => {
+test("侧栏项目文件夹右键菜单在点击行收起时关闭", async ({ page }) => {
   await page.goto("/");
-  const project = page
-    .locator(".project-entry .project-link")
-    .filter({ hasText: "KK项目" });
-  await project.click({ button: "right" });
+  await page.getByRole("button", { name: "创建项目文件夹" }).click();
+  const toggle = page.locator(".folder-heading-toggle").first();
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await toggle.click({ button: "right" });
   await expect(
     page.getByRole("menu", { name: "项目组设置", exact: true }),
   ).toBeVisible();
-  await project.click();
+  await toggle.click();
   await expect(
     page.getByRole("menu", { name: "项目组设置", exact: true }),
   ).toHaveCount(0);
-  await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
 });
 
 test("画布导航菜单在切换背景和连线时关闭且操作仍生效", async ({ page }) => {

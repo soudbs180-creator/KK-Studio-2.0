@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { openWorkspace, showCanvasNavigation } from "./helpers";
+import { seedSidebarFixture } from "./sidebar-fixture";
 
 test("project status and task entry do not cover each other", async ({
   page,
@@ -58,25 +59,27 @@ test("minimum zoom keeps background dots separated and grid visible", async ({
   );
 });
 
-test("collapsing a project group preserves edited row state", async ({
+test("collapsing a project group preserves edited folder name", async ({
   page,
 }) => {
   await page.goto("/");
   const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
-  const row = sidebar.locator(".project-entry").first();
-  await row.locator(".project-link").click({ button: "right" });
-  await sidebar.getByRole("menuitem", { name: "改名字", exact: true }).click();
-  await sidebar
-    .getByLabel("项目名称", { exact: true })
+  await sidebar.getByRole("button", { name: "创建项目文件夹" }).click();
+  const group = sidebar.locator(".project-folder-group").first();
+  const toggle = group.locator(".folder-heading-toggle");
+  await toggle.click({ button: "right" });
+  await group.getByRole("menuitem", { name: "改名字", exact: true }).click();
+  await group
+    .getByLabel("项目文件夹名称", { exact: true })
     .fill("折叠后仍保留的名称");
   await page.keyboard.press("Enter");
-  const toggle = sidebar.locator(".project-groups-title");
-  await toggle.click();
-  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  const title = sidebar.locator(".project-groups-title");
+  await title.click();
+  await expect(title).toHaveAttribute("aria-expanded", "false");
   await expect(
     sidebar.getByRole("button", { name: "折叠后仍保留的名称", exact: true }),
   ).toBeHidden();
-  await toggle.click();
+  await title.click();
   await expect(
     sidebar.getByRole("button", { name: "折叠后仍保留的名称", exact: true }),
   ).toBeVisible();
@@ -170,7 +173,7 @@ test("a canvas-positioned add menu closes on another blank canvas click", async 
 test("responsive sidebar collapse clears hidden project menus without losing row state", async ({
   page,
 }) => {
-  await page.goto("/");
+  await seedSidebarFixture(page);
   await page
     .getByRole("button", { name: "更多项目设置", exact: true })
     .last()
@@ -179,6 +182,11 @@ test("responsive sidebar collapse clears hidden project menus without losing row
     page.getByRole("menu", { name: "项目设置", exact: true }),
   ).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
+  // Wait for the narrow state to render before simulating the return to desktop.
+  await expect(page.locator(".sidebar")).toHaveClass(/is-collapsed/);
+  await expect(
+    page.getByRole("menu", { name: "项目设置", exact: true }),
+  ).toHaveCount(0);
   await page.setViewportSize({ width: 1920, height: 1080 });
   await expect(
     page.getByRole("menu", { name: "项目设置", exact: true }),

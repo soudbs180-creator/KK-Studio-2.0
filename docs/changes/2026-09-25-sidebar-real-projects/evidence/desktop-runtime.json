@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-09-25T16:34:29.189Z",
+  "mode": "Tauri release",
+  "exe": "D:\\kk-studio\\.worktrees\\TASK-UI-009-integration\\src-tauri\\target\\release\\kk-studio.exe",
+  "isolatedData": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui009-integration-desktop-9qSNI8\\data",
+  "isolatedProfile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui009-integration-desktop-9qSNI8\\profile",
+  "loadedAssets": [
+    {
+      "asset": "/assets/index-DRgkYMRT.js",
+      "sha256": "d9ffe653831195282ed09e251ba31f65f6cbab81f7f5fed3db4ce7ec1b206183",
+      "bytes": 831497
+    },
+    {
+      "asset": "/assets/index-CxFneC7m.css",
+      "sha256": "812361afa9943d356df744c94a0ae977cf20e12170de9dfbc34722d250c0e1ab",
+      "bytes": 228724
+    }
+  ],
+  "pageErrors": [],
+  "passed": true,
+  "exeSha256": "116ab639efee19ae2393188df73cd03de9611026ce366587f883264c3667d236",
+  "url": "http://tauri.localhost/",
+  "runtime": {
+    "entry": "src/main.tsx",
+    "mode": "production"
+  },
+  "storageRoot": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-ui009-integration-desktop-9qSNI8\\data",
+  "settings": {
+    "width": 920,
+    "height": 700,
+    "titleOffsetX": 363.66668701171875,
+    "titleOffsetY": 37.66667175292969
+  }
+}

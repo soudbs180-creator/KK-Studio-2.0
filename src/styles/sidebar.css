@@ -201,7 +201,7 @@
 .sidebar-heading-chevron {
   width: 9.5px;
   height: 5.5px;
-  transition: transform var(--motion-fast) var(--motion-ease);
+  /* 折叠/展开瞬时翻转，避免旋转中间态出现斜向（歪）箭头 */
 }
 [aria-expanded="false"] > .sidebar-heading-chevron {
   transform: rotate(-90deg);
@@ -442,7 +442,8 @@
     text-overflow: ellipsis;
   }
   .sidebar .project-folder,
-  .sidebar .project-yellow {
+  .sidebar .project-yellow,
+  .sidebar .project-thumb {
     flex-shrink: 0;
   }
   /* Engineering transition: reveal the brand once the moving toggle has
@@ -608,4 +609,90 @@
 .project-group-content[hidden],
 .project-groups section[hidden] {
   display: none;
+}
+
+/* TASK-UI-009：项目文件夹行与拖拽收纳（会话内 Prototype）。
+   文件夹行沿用 project-link 的行高/圆角/底色语义 tokens；
+   拖拽悬停以 focus-ring 虚线描边 + bg-elevated 提示可投放。 */
+.sidebar .project-folder-group {
+  margin-top: 5px;
+}
+.sidebar .project-folder-group.is-pinned .folder-heading-toggle,
+.sidebar .project-entry.is-pinned .project-link {
+  background: var(--ui-sidebar-control);
+}
+.sidebar .folder-heading-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  width: 263px;
+  border-radius: 9px;
+}
+.sidebar .folder-heading-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 29px;
+  padding: 2px;
+  background: var(--bg-card);
+  border-radius: 9px;
+  color: var(--ui-sidebar-settings-icon);
+  font-size: var(--ui-font-caption);
+  font-weight: 400;
+  line-height: 17px;
+  text-align: left;
+}
+.sidebar .folder-heading-toggle .project-folder,
+.sidebar .folder-heading-toggle .sidebar-heading-chevron {
+  flex-shrink: 0;
+}
+.sidebar .folder-heading-toggle .folder-heading-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sidebar .folder-heading-toggle .project-title-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 24px;
+}
+.sidebar .folder-heading-toggle .sidebar-heading-chevron {
+  margin-left: 2px;
+}
+.sidebar .folder-heading-row .project-pin,
+.sidebar .folder-heading-row .project-more {
+  /* 与普通项目行图标同一绝对定位规则（right:27/right:5 相对行容器），
+     保证文件夹行、文件夹内子项目行、未分组行的右侧图标列位一致。 */
+  position: absolute;
+  translate: none;
+  top: 4px;
+  width: 20px;
+  height: 21px;
+}
+.sidebar .folder-heading-row.is-drag-target {
+  background: var(--bg-elevated);
+  outline: 1px dashed var(--focus-ring);
+  outline-offset: 1px;
+}
+.sidebar .project-groups section.is-drag-target {
+  background: var(--bg-elevated);
+  outline: 1px dashed var(--focus-ring);
+  outline-offset: 1px;
+  border-radius: 9px;
+}
+.sidebar .project-nested-entry {
+  /* 第二层级子项目行：比文件夹行（263px）短，右缘与文件夹行右缘对齐，
+     左侧缩进体现层级；右侧图标列位因此与文件夹行一致。 */
+  width: 231px;
+  margin: 5px 0 0 auto;
+}
+.sidebar .project-menu-sub {
+  top: 0;
+  left: auto;
+  right: calc(100% + 4px);
+  z-index: 31;
 }

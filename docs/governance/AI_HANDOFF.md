@@ -1,5 +1,10 @@
 # AI handoff
 
+## 2026-09-25 侧栏真实项目整合恢复入口
+
+- 当前候选 `D:/kk-studio/.worktrees/TASK-UI-009-integration` / `feat/TASK-UI-009-ui010-integration` 基于 UI-010 已提交的 `98c567f`；根工程、旧 UI-009 dirty 工作树与 1423 UI-010 preview 不要覆盖。
+- 候选侧栏和搜索使用真实 `CreationSnapshot` 项目；文件夹、拖放、置顶仍是会话 Prototype。完整 verify 370 Node/337 Edge browser、四档响应式与 fresh Tauri 真实项目恢复均通过；独立复核和 PR 待完成。1424 是本候选 production preview，1423 仍是 UI-010。以 [新验证记录](../changes/2026-09-25-sidebar-real-projects/verification.md) 和 Git 当前状态为准，不继承历史“307 浏览器通过”的结论。
+
 ## 2026-09-24 当前 UI 候选恢复入口（TASK-UI-010）
 
 - 根工程 `D:/kk-studio/KK-Studio-2.0` 有并行未提交改动；本任务只在 `D:/kk-studio/.worktrees/TASK-UI-010-ui-regression` 的 `fix/TASK-UI-010-ui-regression` 分支写入。接手先核对这两个工作区的 HEAD/status，勿将 1421 根开发页或旧桌面 EXE 当作候选结果。

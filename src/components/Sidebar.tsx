@@ -1,14 +1,13 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import SidebarDraftFolder from "./SidebarDraftFolder";
 import { useDismissible } from "./useDismissible";
-import SidebarProjectGroup from "./SidebarProjectGroup";
-import SidebarGroupHeading from "./SidebarGroupHeading";
+import SidebarProjectGroups from "./SidebarProjectGroups";
 import AccountPopup from "./AccountPopup";
 import SidebarIcon from "./SidebarIcon";
 import SidebarNavigation from "./SidebarNavigation";
 import { SidebarResizeHandle } from "./ResizeHandle";
 import BrandLogo from "./BrandLogo";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
+import type { CreationProject } from "../features/creation/model";
 
 export default function Sidebar({
   active,
@@ -17,6 +16,13 @@ export default function Sidebar({
   narrow,
   phone = false,
   onCollapse,
+  projects,
+  activeProjectId,
+  canEditProjects,
+  onCreateProject,
+  onOpenProject,
+  onRenameProject,
+  onDeleteProject,
 }: {
   active: string;
   onNavigate: (id: string) => void;
@@ -24,19 +30,17 @@ export default function Sidebar({
   narrow: boolean;
   phone?: boolean;
   onCollapse: () => void;
+  projects: CreationProject[];
+  activeProjectId: string | null;
+  canEditProjects: boolean;
+  onCreateProject: () => string;
+  onOpenProject: (id: string) => void;
+  onRenameProject: (id: string, title: string) => void;
+  onDeleteProject: (id: string) => void;
 }) {
   const [menu, setMenu] = useState<"account" | "projects" | null>(null);
   const account = menu === "account";
   const projectMenuOpen = menu === "projects";
-  const [groups, setGroups] = useState([true, true]);
-  const [projectFilter, setProjectFilter] = useState<"all" | "ungrouped">(
-    "all",
-  );
-  const [sortMode, setSortMode] = useState<"manual" | "recent" | "priority">(
-    "manual",
-  );
-  const [folderCreated, setFolderCreated] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const root = useRef<HTMLElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
   const accountTrigger = useRef<HTMLButtonElement>(null);
@@ -121,141 +125,26 @@ export default function Sidebar({
         onNavigate={navigate}
         phone={phone}
       />
-      <div className="project-groups">
-        <div className="project-groups-header">
-          <button
-            type="button"
-            className="project-groups-title"
-            aria-expanded={groups[0]}
-            onClick={() =>
-              setGroups(
-                groups.map((value, index) => (index === 0 ? !value : value)),
-              )
-            }
-          >
-            项目{" "}
-            <img
-              className="sidebar-heading-chevron"
-              src="/design/figma/project-chevron.svg"
-              alt=""
-            />
-          </button>
-          <div className="project-groups-actions">
-            <button
-              type="button"
-              ref={projectFilterTrigger}
-              className="project-groups-action"
-              aria-label="项目显示与排序"
-              aria-expanded={projectMenuOpen}
-              title="项目显示与排序"
-              onClick={() => setMenu(projectMenuOpen ? null : "projects")}
-            >
-              <img
-                className="sidebar-action-glyph sidebar-action-ellipsis"
-                src="/design/figma/project-ellipsis-glyph.svg"
-                alt=""
-              />
-            </button>
-            <button
-              type="button"
-              className="project-groups-action"
-              aria-label="创建项目文件夹"
-              title="创建项目文件夹"
-              onClick={() => {
-                setFolderCreated(true);
-                setProjectFilter("all");
-              }}
-            >
-              <img
-                className="sidebar-action-glyph sidebar-action-plus"
-                src="/design/figma/project-plus-glyph.svg"
-                alt=""
-              />
-            </button>
-          </div>
-          {projectMenuOpen && (
-            <div
-              ref={projectMenu}
-              className="project-groups-menu"
-              role="menu"
-              aria-label="项目显示与排序"
-            >
-              <div className="project-menu-section-label">显示范围</div>
-              {(["all", "ungrouped"] as const).map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  role="menuitemradio"
-                  aria-checked={projectFilter === value}
-                  onClick={() => {
-                    setProjectFilter(value);
-                    setMenu(null);
-                  }}
-                >
-                  {value === "all" ? "显示全部项目" : "仅显示未分组"}
-                </button>
-              ))}
-              <div className="project-menu-section-label">排序方式</div>
-              {(["manual", "recent", "priority"] as const).map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  role="menuitemradio"
-                  aria-checked={sortMode === value}
-                  title={
-                    value === "priority" ? "需输入和未读任务优先" : undefined
-                  }
-                  onClick={() => {
-                    setSortMode(value);
-                    setMenu(null);
-                  }}
-                >
-                  {value === "manual"
-                    ? "手动排序"
-                    : value === "recent"
-                      ? "最近打开"
-                      : "优先级"}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-        {(["项目", "未分组"] as const).map((name, i) => {
-          return (
-            <section key={name} hidden={i === 0 && projectFilter !== "all"}>
-              {i === 1 && (
-                <SidebarGroupHeading
-                  expanded={groups[i]}
-                  onToggle={() =>
-                    setGroups(groups.map((v, index) => (i === index ? !v : v)))
-                  }
-                  onOpenLibrary={() => navigate("projects")}
-                />
-              )}
-              <SidebarProjectGroup
-                visible={
-                  !collapsed &&
-                  groups[i] &&
-                  (i === 1 || projectFilter === "all")
-                }
-                grouped={i === 0}
-                selected={active === "workspace" && selectedProject === name}
-                childSelected={
-                  active === "workspace" &&
-                  (selectedProject === null || selectedProject === name)
-                }
-                onNavigate={(id) => {
-                  setSelectedProject(name);
-                  navigate(id);
-                }}
-              />
-            </section>
-          );
-        })}
-        {folderCreated && (
-          <SidebarDraftFolder visible={projectFilter === "all"} />
-        )}
-      </div>
+      <SidebarProjectGroups
+        collapsed={collapsed}
+        projects={projects}
+        activeProjectId={activeProjectId}
+        canEditProjects={canEditProjects}
+        projectMenuOpen={projectMenuOpen}
+        menuRef={projectMenu}
+        filterTriggerRef={projectFilterTrigger}
+        onToggleProjectMenu={() => setMenu(projectMenuOpen ? null : "projects")}
+        onCloseMenu={() => setMenu(null)}
+        onNavigate={navigate}
+        onCreateProject={onCreateProject}
+        onOpenProject={(id) => {
+          setMenu(null);
+          onOpenProject(id);
+          if (narrow && !collapsed) onCollapse();
+        }}
+        onRenameProject={onRenameProject}
+        onDeleteProject={onDeleteProject}
+      />
       {account && (
         <AccountPopup
           popupRef={accountPopup}
