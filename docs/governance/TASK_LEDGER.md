@@ -814,7 +814,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-UI-010-ui-regression`
 - Worktree: `D:/kk-studio/.worktrees/TASK-UI-010-ui-regression`
 - Modules: src/components, src/styles, tests/browser, docs
-- Verification: PARTIAL — 独立 worktree 完整 verify 通过：370 Node、317 Edge browser，治理/功能/Markdown/UI/类型/格式/构建均通过；1440/390 共 42 态截图；production Web 与隔离 Tauri release 原生运行且 JS/CSS 与 dist 同哈希。候选 token 与现行外壳冲突、在线 Ardot 未回读；独立复审及 PR/根工程整合仍待完成，旧快捷方式不代表当前 UI。
+- Verification: PARTIAL — 独立 worktree 完整 verify 通过：370 Node、317 Edge browser，治理/功能/Markdown/UI/类型/格式/构建均通过；1440/390 共 42 态截图；production Web 与隔离 Tauri release 原生运行且 JS/CSS 与 dist 同哈希。实现 6f57e02 已推送并建立草稿 PR #19。候选 token 与现行外壳冲突、在线 Ardot 未回读；独立 reviewer 因 workspace 额度耗尽未完成复审，根工程整合待完成，旧快捷方式不代表当前 UI。
 - Evidence: [docs/changes/2026-09-24-ui-regression/intent.md](../../docs/changes/2026-09-24-ui-regression/intent.md), [docs/changes/2026-09-24-ui-regression/spec.md](../../docs/changes/2026-09-24-ui-regression/spec.md), [docs/changes/2026-09-24-ui-regression/plan.md](../../docs/changes/2026-09-24-ui-regression/plan.md), [docs/changes/2026-09-24-ui-regression/verification.md](../../docs/changes/2026-09-24-ui-regression/verification.md), [docs/changes/2026-09-24-ui-regression/architecture-audit.md](../../docs/changes/2026-09-24-ui-regression/architecture-audit.md), [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md)
 - Updated: 2026-09-25
 

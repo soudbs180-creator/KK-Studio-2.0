@@ -6,7 +6,7 @@
 - Intent / Spec / Plan：本目录同名文件
 - cwd / branch：`D:/kk-studio/.worktrees/TASK-UI-010-ui-regression`；`fix/TASK-UI-010-ui-regression`
 - base SHA：`76339c9f5cd1a1b2affea6b4c3d247de7188da18`
-- 当前 head：待最终提交；本文件记录 dirty worktree 定向结果，不能当正式提交验收。
+- 已验证实现 SHA：`6f57e025aa7f7f5d70e2b585cba45c70f56dd1ad`；已推送 `origin/fix/TASK-UI-010-ui-regression` 并创建[草稿 PR #19](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/19)。
 - 环境：Windows、Node 24.21.0、Playwright Edge、Vite production preview 1423。
 
 ## 实际检查
@@ -25,7 +25,7 @@
 | 图片生成/取消/限流定向 | PASS | 8/8；先在空白画布真实添加图片节点 |
 | 项目库空态与手机扩展标签 | PASS | 原假项目卡移除；390px 三标签单行、44px 命中 |
 | Figma `483:695/753/588/1042` 与六处浏览器批注 | PASS | 四节点已读取，几何与交互写入 Design System/UI 规则；首页、模型、搜索、画布与对话定向回归通过 |
-| 完整 `npm run verify` | PASS | 370/370 Node、317/317 Edge browser；治理/功能登记/Markdown/UI/类型/格式/构建均通过。日志：`evidence/verify-architecture-final.log` |
+| 完整 `npm run verify` | PASS | 实现 SHA 前最后一轮 370/370 Node、317/317 Edge browser；治理/功能登记/Markdown/UI/类型/格式/构建均通过。日志：`evidence/verify-architecture-final.log` |
 | 42 态页面采集 | PASS | `evidence/capture-architecture.mjs`；1440/390 各 21 态，详见 `architecture-audit.md`，整页水平溢出均为 0 |
 | `npm run client:build:agent -- --no-bundle` | PASS | fresh Tauri release，含 Agent runtime；构建日志 `evidence/build-desktop-architecture.log` 与新 EXE SHA-256 见 `evidence/desktop-runtime.json` |
 | `node docs/changes/2026-09-24-ui-regression/evidence/check-desktop.mjs` | PASS | 隔离原生数据与 WebView profile；原生窗口、空项目、设置、伙伴、Figma 首页尺寸、显式对话开关与 bundle SHA 验证 |
@@ -46,5 +46,5 @@
 ## 待关闭项
 
 - 侧栏 `KK项目 / KK工作流` 仍为静态演示行，未绑定真实项目快照；跟进 `TASK-PROJECT-SIDEBAR-001`。本轮项目库空态与新建空白项目已按真实数据验证。
-- 独立 AI review、PR 与原根工程/正式安装包整合仍待门禁；此 worktree 的 EXE 不是用户当前桌面快捷方式运行的文件。
+- 草稿 PR 已建立；独立 AI review 因 reviewer workspace 额度耗尽未能执行，hosted CI/用户产品验收及原根工程/正式安装包整合仍待门禁；此 worktree 的 EXE 不是用户当前桌面快捷方式运行的文件。
 - 用户视觉验收与发布状态未发生。
