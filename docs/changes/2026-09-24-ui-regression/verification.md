@@ -1,7 +1,7 @@
 # Verification：现行 UI 规则与真实操作回归
 
 - Task ID：TASK-UI-010
-- 记录状态：复核修复后的本地验证 PASS；独立复审与交付待完成
+- 记录状态：复核修复后的本地验证与独立代码审查 PASS；hosted CI 和产品验收待完成
 - 时间：2026-09-25，Asia/Shanghai
 - Intent / Spec / Plan：本目录同名文件
 - cwd / branch：`D:/kk-studio/.worktrees/TASK-UI-010-ui-regression`；`fix/TASK-UI-010-ui-regression`
@@ -47,5 +47,5 @@
 ## 待关闭项
 
 - 侧栏 `KK项目 / KK工作流` 仍为静态演示行，未绑定真实项目快照；跟进 `TASK-PROJECT-SIDEBAR-001`。本轮项目库空态与新建空白项目已按真实数据验证。
-- 草稿 PR 已建立；独立 AI reviewer 重试后完成初审，发现五项 P2（对话头部位置、宽度语义与恢复、模型菜单键盘、旧资源证据），本轮已修正并本地复验，仍待对修复提交复审。Hosted CI、用户产品验收及原根工程/正式安装包整合仍待门禁；此 worktree 的 EXE 不是用户当前桌面快捷方式运行的文件。
+- 草稿 PR 已建立；独立 AI reviewer 初审发现五项 P2（对话头部位置、宽度语义与恢复、模型菜单键盘、旧资源证据），复审 `3db7b69` 确认全部关闭且无新增 P0/P1/P2。Hosted CI、用户产品验收及原根工程/正式安装包整合仍待门禁；此 worktree 的 EXE 不是用户当前桌面快捷方式运行的文件。
 - 用户视觉验收与发布状态未发生。

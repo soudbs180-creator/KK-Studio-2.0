@@ -2,7 +2,7 @@
 
 ## 2026-09-24 UI 回归候选（TASK-UI-010）
 
-`fix/TASK-UI-010-ui-regression` 是独立于 dirty 根工程的候选分支；已建立[草稿 PR #19](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/19)，记录见 [验证](../changes/2026-09-24-ui-regression/verification.md)与[架构核对](../changes/2026-09-24-ui-regression/architecture-audit.md)。已承接新 UI 规范并落实 Figma 四节点、六处批注与首页/画布/对话/设置修复；资产管理 A1、提示词库 A2+A4 和目录 A2 几何得到定向回归。无项目时的假卡已移除，真实新项目保持空白。独立 reviewer 初审未发现 P0/P1，五项 P2 已在本地修复，待提交后复审；1440/390 共 42 个页面状态重新截图，完整 verify 通过 370 Node、319 browser，Web production preview 与隔离数据的 fresh Tauri release 加载同一 JS/CSS。候选 `tokens.css` 的外壳与颜色值仍与现行 Figma/运行态冲突，在线 Ardot 未回读，不宣称全站 token 迁移完成。原工程/正式入口整合也未完成。侧栏静态演示项目另列 `TASK-PROJECT-SIDEBAR-001`；旧快捷方式和旧 EXE 不代表这批 UI。WorkBuddy、豆包、共享记忆、素材账号和模型调度仍由开放任务跟踪。
+`fix/TASK-UI-010-ui-regression` 是独立于 dirty 根工程的候选分支；已建立[草稿 PR #19](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/19)，记录见 [验证](../changes/2026-09-24-ui-regression/verification.md)与[架构核对](../changes/2026-09-24-ui-regression/architecture-audit.md)。已承接新 UI 规范并落实 Figma 四节点、六处批注与首页/画布/对话/设置修复；资产管理 A1、提示词库 A2+A4 和目录 A2 几何得到定向回归。无项目时的假卡已移除，真实新项目保持空白。独立 reviewer 对已推送 `3db7b69` 复审确认五项 P2 关闭、无新增 P0/P1/P2，代码审查 PASS；1440/390 共 42 个页面状态重新截图，完整 verify 通过 370 Node、319 browser，Web production preview 与隔离数据的 fresh Tauri release 加载同一 JS/CSS。候选 `tokens.css` 的外壳与颜色值仍与现行 Figma/运行态冲突，在线 Ardot 未回读，不宣称全站 token 迁移完成。原工程/正式入口整合也未完成。侧栏静态演示项目另列 `TASK-PROJECT-SIDEBAR-001`；旧快捷方式和旧 EXE 不代表这批 UI。WorkBuddy、豆包、共享记忆、素材账号和模型调度仍由开放任务跟踪。
 
 ## 2026-09-23 KK Studio 2.1.0 源码并线与规则回读（REL-2.1.0）
 

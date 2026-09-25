@@ -2,9 +2,9 @@
 
 - Task ID：TASK-UI-010
 - 时间：2026-09-25，Asia/Shanghai
-- Reviewer：实现者自检；独立上下文 reviewer 对 base→`0e0343ec46318797c56519805963c66aa0c09714` 完成初审，复核修复待二次审查
+- Reviewer：实现者自检；独立上下文 reviewer 初审 `0e0343ec46318797c56519805963c66aa0c09714`，复审 `3db7b6906239fcbedb9d53ce050fa165302683ff`
 - Base SHA：`76339c9f5cd1a1b2affea6b4c3d247de7188da18`
-- 实现 SHA：`6f57e025aa7f7f5d70e2b585cba45c70f56dd1ad`；文档补记提交不改变产品代码
+- 首轮实现 SHA：`6f57e025aa7f7f5d70e2b585cba45c70f56dd1ad`；独立复审修复 SHA：`3db7b6906239fcbedb9d53ce050fa165302683ff`
 - PR / branch：[草稿 PR #19](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/19)；`fix/TASK-UI-010-ui-regression`
 - Intent / Spec / Plan / Verification：本目录同名文件
 
@@ -13,7 +13,7 @@
 - 核对设计系统、源组件、候选 diff、设置与创作输入的浏览器行为。
 - 对旧测试假设逐项核对实际项目数据和交互；不以静态文本替代运行验证。
 - 实现者检查 base→实现 SHA 的关键组件、对话状态、目录选线、面板拖动及测试变更；`git diff --check` 无错误，未发现新增验收阻断问题。
-- 独立 AI reviewer 首次因 workspace 额度耗尽未启动；重试后按 base/head 和实际 diff 完成初审，未发现 P0/P1，提出五项 P2。实现者已逐项修正并运行定向与完整验证；修复提交尚待 reviewer 再审，本文件不提前标记整体 PASS。
+- 独立 AI reviewer 首次因 workspace 额度耗尽未启动；重试后按 base/head 和实际 diff 完成初审，未发现 P0/P1，提出五项 P2。实现者逐项修正并运行定向与完整验证；reviewer 对已推送的 `3db7b69` 复审确认 R6–R10 关闭、没有新增 P0/P1/P2，代码层审查 PASS。
 
 ## Findings
 
@@ -35,14 +35,14 @@
 | 门禁 | 结果 |
 | --- | --- |
 | Self-review | PASS（实现者自检，不能替代独立审查） |
-| 独立 AI review | 初审完成，R6–R10 修复待提交后复审 |
-| 完整 CI / 本地 verify | 修复后本地 PASS：370 Node、319 Edge browser；PR #19 新 head 的 hosted CI 待核对 |
+| 独立 AI review | PASS：base→`3db7b69` 复审关闭五项 P2，无新增 P0/P1/P2 |
+| 完整 CI / 本地 verify | 修复后本地 PASS：370 Node、319 Edge browser；PR #19 最新 head 的 hosted CI 待核对 |
 | Web 运行截图 | PASS（当前 worktree） |
 | Desktop release 实机 | PASS（隔离数据、bundle 同态；非正式安装包） |
 | 用户视觉/产品验收 | NOT VERIFIED |
-| 推送/PR | 首轮实现已推送，PR #19 为草稿；复核修复待推送 |
+| 推送/PR | PASS：复核修复已推送，PR #19 为草稿 |
 | 合并/发布 | NOT RUN |
 
 ## 结论
 
-独立初审的五项 P2 已在本地修复并验证；待提交后复审、hosted CI 和用户产品验收，不请求合并，也不将本任务标记为 DONE。
+独立复审确认代码层 PASS；hosted CI、用户产品验收和正式入口整合仍待完成，因此不请求合并，也不将本任务标记为 DONE。

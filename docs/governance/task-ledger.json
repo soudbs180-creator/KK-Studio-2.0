@@ -1834,7 +1834,7 @@
       "docs/changes/2026-09-24-ui-regression/architecture-audit.md",
       "docs/changes/2026-09-24-ui-regression/review.md"
     ],
-    "verification": "复核修复后独立 worktree 完整 verify 通过：370 Node、319 Edge browser，治理/功能/Markdown/UI/类型/格式/构建均通过；1440/390 共 42 态重新截图；production Web 与隔离 Tauri release 原生运行且 JS/CSS 与 dist 同哈希。草稿 PR #19 的独立初审未发现 P0/P1，五项 P2 已在本地修正并待提交后复审。候选 token 与现行外壳冲突、在线 Ardot 未回读；根工程整合待完成，旧快捷方式不代表当前 UI。",
+    "verification": "复核修复后独立 worktree 完整 verify 通过：370 Node、319 Edge browser，治理/功能/Markdown/UI/类型/格式/构建均通过；1440/390 共 42 态重新截图；production Web 与隔离 Tauri release 原生运行且 JS/CSS 与 dist 同哈希。草稿 PR #19 的独立 reviewer 对已推送 3db7b69 复审确认五项 P2 关闭、没有新增 P0/P1/P2，代码审查 PASS。候选 token 与现行外壳冲突、在线 Ardot 未回读；根工程整合待完成，旧快捷方式不代表当前 UI。",
     "verificationResult": "PARTIAL",
     "updated": "2026-09-25"
   },
