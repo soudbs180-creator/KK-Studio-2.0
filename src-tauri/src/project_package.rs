@@ -1026,6 +1026,7 @@ mod tests {
             "revision": 0, "createdAt": 1, "updatedAt": 1,
             "stages": [{
                 "index": 0, "name": "Generate", "goal": "Keep original", "status": "doing",
+                "approvalGate": "plan", "planApprovedAt": 1,
                 "createdAt": 1, "updatedAt": 1,
                 "workItems": [{
                     "id": "work-1", "kind": "image", "prompt": "Blue sphere",
@@ -1080,8 +1081,16 @@ mod tests {
     }
 
     #[test]
-    fn rejects_stage_plan_with_duplicate_stage_or_plan_ids_before_export() {
-        for variant in ["stage-index", "plan-id"] {
+    fn rejects_stage_plan_with_invalid_identity_or_dependencies_before_export() {
+        for variant in [
+            "stage-index",
+            "plan-id",
+            "foreign-project",
+            "missing-dependency",
+            "cyclic-dependency",
+            "queued-done",
+            "unapproved-work",
+        ] {
             let source = fixture_root();
             let (snapshots, assets, _, _) = seed(&source);
             let mut current = snapshots.read().unwrap().snapshot.unwrap();
@@ -1097,8 +1106,35 @@ mod tests {
             let plans = if variant == "stage-index" {
                 plan["stages"][1]["index"] = json!(0.0);
                 json!([plan])
-            } else {
+            } else if variant == "plan-id" {
                 json!([plan.clone(), plan])
+            } else if variant == "foreign-project" {
+                plan["projectId"] = Value::from("another-project");
+                json!([plan])
+            } else if variant == "missing-dependency" {
+                plan["stages"][0]["workItems"] = json!([{
+                    "id":"a", "kind":"text", "prompt":"First", "dependencies":["missing"],
+                    "status":"queued", "createdAt":1, "updatedAt":1
+                }]);
+                json!([plan])
+            } else if variant == "cyclic-dependency" {
+                plan["stages"][0]["workItems"] = json!([
+                    {"id":"a", "kind":"text", "prompt":"First", "dependencies":["b"], "status":"queued", "createdAt":1, "updatedAt":1},
+                    {"id":"b", "kind":"text", "prompt":"Second", "dependencies":["a"], "status":"queued", "createdAt":1, "updatedAt":1}
+                ]);
+                json!([plan])
+            } else {
+                plan["stages"][0]["workItems"] = json!([{
+                    "id":"a", "kind":"text", "prompt":"First", "dependencies":[],
+                    "status": if variant == "queued-done" { "queued" } else { "running" },
+                    "createdAt":1, "updatedAt":1
+                }]);
+                if variant == "queued-done" {
+                    plan["stages"][0]["status"] = Value::from("done");
+                } else {
+                    plan["stages"][0]["approvalGate"] = Value::from("plan");
+                }
+                json!([plan])
             };
             current["projects"][0]["stagePlans"] = plans;
             snapshots.write(current, Some(1)).unwrap();

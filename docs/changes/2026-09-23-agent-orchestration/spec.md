@@ -70,3 +70,11 @@
 - 上述补充只覆盖本地领域和项目包契约，尚未完成真实生成、Tauri GUI 和发布验收。
 - 计划内 `workItems[].id` 跨所有阶段唯一；重复 ID 在领域创建/归一化和 Rust 项目包预检中拒绝，不自动重命名或推进其它同名工作项。依据和兼容边界见 [ADR-006](../../architecture/adr/ADR-006-stage-plan-package-contract.md)。
 - 同一计划内 `stages[].index` 必须唯一，同一项目内 `stagePlans[].id` 必须唯一；Web 读取隔离重复计划 ID，项目包导出/导入拒绝会丢失或误改计划的重复身份，原件不自动重命名。
+
+## 2026-09-26 独立复审后的执行门禁
+
+- 声明 `approvalGate: plan` 的阶段在宿主批准前不能运行工作项或提交结果；批准记录为可持久化的 `planApprovedAt`，Agent 工具无权写入。`plan_review` 必须匹配计划审批声明。
+- 阶段进入 `result_review` 或 `done` 前，所有工作项必须 `succeeded`；项目包导入也拒绝未执行却标完成的状态。空工作项阶段可按现有状态机走结果审批。
+- 工作项依赖必须存在、非自身且无环；排队项开始运行时，所有直接依赖均已成功。Web 归一化和 Rust 项目包预检执行同一约束。
+- Agent 阶段工具及宿主审批、阻断和重试入口均携带 `expectedRevision`；同一状态绕回后，旧请求不得再次推进。状态查询和待审批摘要提供当前 revision。
+- `stagePlans[].projectId` 必须等于所在项目的 ID；Web 读取隔离异常项，Web/Rust 项目包预检拒绝有损导出与导入。

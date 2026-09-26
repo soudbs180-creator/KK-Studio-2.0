@@ -84,3 +84,10 @@
 - 失败先行：TS 归一化原接受重复阶段索引并保留两个同 ID 计划（2 项失败）；Rust 原生包原接受重复阶段索引/计划 ID 并成功导出（1 项失败）。修复后 Web 项目包测试确认两种情况都返回 `corrupt` 而非静默丢计划。
 - 当前工作树完整本地检查：Node 412/412、Rust 82/82、Playwright/Edge 300/300；TypeScript noEmit/增量构建、ESLint、Prettier、cargo fmt、Vite production build 全部通过；治理 66/0、功能 31/0、Markdown 84/0、UI 标准 159/0。浏览器测试改写的 21 张已跟踪截图和 Rust 测试生成的 2 份 schema 已恢复，不纳入候选。
 - 新 head 提交后的 `delivery:check`、Hosted CI 与独立审查仍须重新绑定准确 SHA；Desktop GUI/正式发布和真实 Provider 未验证。
+
+## 2026-09-26 独立复审阻断修复回归
+
+- 独立 reviewer 对 `36a341952e46bbf2f31eff1d9984d0c5189767dc` 的结论为 CHANGES REQUIRED：计划门可绕过、排队工作项可标完成、阶段工具同状态 ABA、依赖图未执行四项 P1，以及包内计划归属不一致一项 P2。reviewer 只读动态复现了 ABA 和缺失依赖运行；其结论不等于修复后 PASS。
+- 失败先行：新增 49 项定向 Node 运行中 6 项失败，分别复现审批绕过、未执行完成、Agent 阶段 ABA、前置未完成仍运行、Web 包接受外项目计划、缺失/自依赖/循环；Rust 项目包扩展测试在旧实现成功导出异常计划而失败。另补宿主审批 ABA 失败测试、状态不可能组合的归一化与 Rust 包拒绝测试。
+- 修复后本地：Node **420/420**、Rust **82/82**、Playwright/Edge **300/300**；TypeScript noEmit/增量构建、ESLint 0 错误、Prettier、cargo fmt、Vite production build 通过。浏览器测试改写的 22 张已跟踪截图已恢复，不在候选内。Rust 仍有五项既有 dead_code warning，Vite 仍有第三方 zod 注释及大 chunk 提示，均非失败。
+- 重新验证的门禁覆盖：计划批准标记随 Web/Rust 包往返；未批准/未成功/异常依赖/跨项目计划均不可成为有效可写入候选；Agent 工具与宿主审批携预期 revision，旧请求不写入。新提交后的 delivery、Hosted CI 和独立补审仍 **NOT VERIFIED**；Desktop GUI、真实 Provider、正式发布和用户产品验收不在本地验证结论内。

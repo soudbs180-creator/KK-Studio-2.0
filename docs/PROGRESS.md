@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-26 编排审批、依赖与并发边界修复
+
+独立复审对 PR #14 的 `36a3419` 提出计划审批可绕过、未运行工作项可标完成、阶段工具 ABA、依赖图未执行四项 P1，以及项目包跨项目计划一项 P2，结论 CHANGES REQUIRED。任务分支已补审批标记、成功/依赖门禁、阶段及宿主审批预期 revision、跨端计划归属与图校验；本地 420 Node、82 Rust、300 浏览器及静态/构建检查通过。新 head 的 Hosted CI、独立复审与用户产品验收仍待完成，PR #14 不可合并；PR #15 的四处治理文档冲突待 #14 之后顺序处理。详见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-26 编排候选身份唯一性补查
 
 PR #14 的旧 head `c7abc45` 已通过 Hosted `verify`/`delivery`；后续自查又发现重复阶段索引和项目内重复计划 ID 可使按身份更新误触多个对象。任务分支已用失败先行测试补 TS/Rust 校验，Web 项目包拒绝有损导出；本地 412 Node、82 Rust、300 浏览器及静态/构建检查通过。新 head 的 Hosted CI 和独立复审待完成，PR 仍不可合并；PR #15 的四处文档冲突继续按顺序处理。见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。

@@ -74,3 +74,10 @@
 - `c7abc45` 已通过 Hosted CI `verify`/`delivery`，但独立新 head 复审任务因执行额度耗尽而中断，不能视为 PASS。
 - 实现者随后发现阶段 `index` 与项目内计划 `id` 可由外部数据重复注入；阶段推进和计划写入按这些身份查找后批量映射，可能影响多个对象。TS 计划 schema 现在拒绝重复阶段索引，项目读取仅保留同 ID 的首个有效计划；Web 包无损校验及 Rust 包预检拒绝异常导出/导入。失败先行与完整本地测试见 `verification.md`。
 - 此次自查及修复不是独立复审。新提交 SHA 的独立 review 与 Hosted CI 均须重新完成；PR #14 保持不可合并。
+
+## 2026-09-26 `36a3419` 独立复审与处理
+
+- 独立只读 reviewer 绑定 `origin/main@76339c9f` 到 `36a341952e46bbf2f31eff1d9984d0c5189767dc`，结论 **CHANGES REQUIRED**，未修改代码或提交 GitHub approval。
+- P1：`approvalGate: plan` 未批准可执行或直接请求结果审批；全部工作项仍排队也可标记 `done`；阶段状态绕回后旧 Agent 请求仍能以相同 `expectedStatus` 推进；依赖缺失/自引用/循环可创建，前置项未成功仍能运行后续项。reviewer 动态复现了 ABA 与缺失依赖运行。
+- P2：Web/Rust 项目包可接受 `stagePlans[].projectId` 与所在项目不一致，导入后编排器拒绝状态更新；reviewer 以静态调用链指出。
+- 实现者新增失败先行测试后处理：计划批准标记及执行/完成门禁、Agent 工具与宿主阶段入口的 revision 校验、依赖图及运行检查、Web/Rust 项目包归属与状态校验。原先演示错误完成路径的测试已改为真实审批/工作项成功流程；范围内本地验证见 `verification.md`。独立 reviewer 的旧结论仍是 CHANGES REQUIRED，新 head 必须补审。

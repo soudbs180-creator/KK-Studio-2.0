@@ -3,7 +3,7 @@
 //! `normalizeCreationSnapshot` without truncation, replacement or removal.
 
 use serde_json::Value;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 const MAX_SAFE_INTEGER: f64 = 9_007_199_254_740_991.0;
 const MEDIA_LIMIT: usize = 16 * 1024 * 1024;
@@ -186,6 +186,9 @@ fn stage_plans(project: &Value) -> Result<(), String> {
         }
         text(plan, "title", 1, 120)?;
         text(plan, "projectId", 1, 160)?;
+        if plan["projectId"] != project["id"] {
+            return Err(invalid("stagePlans.projectId"));
+        }
         enumeration(plan, "createdBy", &["agent", "user"])?;
         number(plan, "revision", 0.0, MAX_SAFE_INTEGER, true)?;
         finite(plan, "createdAt")?;
@@ -196,6 +199,7 @@ fn stage_plans(project: &Value) -> Result<(), String> {
         }
         let mut stage_indexes = HashSet::new();
         let mut work_ids = HashSet::new();
+        let mut dependencies_by_work: HashMap<&str, Vec<&str>> = HashMap::new();
         for stage in stages {
             shape(
                 stage,
@@ -207,6 +211,7 @@ fn stage_plans(project: &Value) -> Result<(), String> {
                     "status",
                     "workItems",
                     "approvalGate",
+                    "planApprovedAt",
                     "resultSummary",
                     "createdAt",
                     "updatedAt",
@@ -235,6 +240,7 @@ fn stage_plans(project: &Value) -> Result<(), String> {
                 &["doing", "plan_review", "blocked", "result_review", "done"],
             )?;
             enumeration(stage, "approvalGate", &["plan", "result"])?;
+            number(stage, "planApprovedAt", 0.0, MAX_SAFE_INTEGER, true)?;
             finite(stage, "createdAt")?;
             finite(stage, "updatedAt")?;
             let work_items = array(stage, "workItems")?;
@@ -298,6 +304,10 @@ fn stage_plans(project: &Value) -> Result<(), String> {
                 {
                     return Err(invalid("stagePlans.dependencies"));
                 }
+                dependencies_by_work.insert(
+                    work["id"].as_str().unwrap(),
+                    dependencies.iter().map(|id| id.as_str().unwrap()).collect(),
+                );
                 if let Some(params) = work.get("params") {
                     let params = params
                         .as_object()
@@ -331,6 +341,51 @@ fn stage_plans(project: &Value) -> Result<(), String> {
                     }
                 }
             }
+            let status = stage["status"].as_str().unwrap();
+            let gate = stage.get("approvalGate").and_then(Value::as_str);
+            let approved = stage.get("planApprovedAt").is_some();
+            if (approved && gate != Some("plan"))
+                || (status == "plan_review" && (gate != Some("plan") || approved))
+                || (gate == Some("plan")
+                    && !approved
+                    && work_items.iter().any(|work| work["status"] != "queued"))
+                || (matches!(status, "result_review" | "done")
+                    && ((gate == Some("plan") && !approved)
+                        || work_items.iter().any(|work| work["status"] != "succeeded")))
+            {
+                return Err(invalid("stagePlans.stages.status"));
+            }
+        }
+        let mut indegree = HashMap::new();
+        let mut dependents: HashMap<&str, Vec<&str>> = HashMap::new();
+        for (id, dependencies) in &dependencies_by_work {
+            indegree.insert(*id, dependencies.len());
+            for dependency in dependencies {
+                if *id == *dependency || !work_ids.contains(*dependency) {
+                    return Err(invalid("stagePlans.dependencies"));
+                }
+                dependents.entry(*dependency).or_default().push(*id);
+            }
+        }
+        let mut ready: Vec<&str> = indegree
+            .iter()
+            .filter_map(|(id, count)| (*count == 0).then_some(*id))
+            .collect();
+        let mut visited = 0;
+        while let Some(id) = ready.pop() {
+            visited += 1;
+            if let Some(followers) = dependents.get(id) {
+                for follower in followers {
+                    let count = indegree.get_mut(follower).unwrap();
+                    *count -= 1;
+                    if *count == 0 {
+                        ready.push(follower);
+                    }
+                }
+            }
+        }
+        if visited != work_ids.len() {
+            return Err(invalid("stagePlans.dependencies"));
         }
     }
     Ok(())

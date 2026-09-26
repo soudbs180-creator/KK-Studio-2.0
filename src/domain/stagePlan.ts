@@ -80,6 +80,8 @@ export const stageSchema = z.object({
   workItems: z.array(stageWorkItemSchema).max(128),
   /** 仅当该阶段需要人工审批时声明；审批门在状态中体现（plan_review / result_review）。 */
   approvalGate: stageApprovalGateSchema.optional(),
+  /** 计划审批由宿主通过后记录；缺失表示尚未批准。 */
+  planApprovedAt: z.number().int().min(0).optional(),
   /** 阶段完成时给用户/Agent 的产物摘要（≤200 字）。 */
   resultSummary: z.string().max(500).optional(),
   createdAt: z.number(),
@@ -102,7 +104,44 @@ export const stagePlanSchema = z
   .superRefine((plan, context) => {
     const stageIndexes = new Set<number>();
     const ids = new Set<string>();
+    const workItems = plan.stages.flatMap((stage) => stage.workItems);
     plan.stages.forEach((stage, stageIndex) => {
+      if (stage.planApprovedAt !== undefined && stage.approvalGate !== "plan")
+        context.addIssue({
+          code: "custom",
+          path: ["stages", stageIndex, "planApprovedAt"],
+          message: "只有计划审批阶段可记录计划批准时间。",
+        });
+      if (
+        stage.status === "plan_review" &&
+        (stage.approvalGate !== "plan" || stage.planApprovedAt !== undefined)
+      )
+        context.addIssue({
+          code: "custom",
+          path: ["stages", stageIndex, "status"],
+          message: "计划审批状态与阶段声明不一致。",
+        });
+      if (
+        stage.approvalGate === "plan" &&
+        stage.planApprovedAt === undefined &&
+        stage.workItems.some((item) => item.status !== "queued")
+      )
+        context.addIssue({
+          code: "custom",
+          path: ["stages", stageIndex, "workItems"],
+          message: "计划审批前不能执行工作项。",
+        });
+      if (
+        (stage.status === "result_review" || stage.status === "done") &&
+        ((stage.approvalGate === "plan" &&
+          stage.planApprovedAt === undefined) ||
+          stage.workItems.some((item) => item.status !== "succeeded"))
+      )
+        context.addIssue({
+          code: "custom",
+          path: ["stages", stageIndex, "status"],
+          message: "阶段完成前须通过计划审批并完成全部工作项。",
+        });
       if (stageIndexes.has(stage.index)) {
         context.addIssue({
           code: "custom",
@@ -122,6 +161,53 @@ export const stagePlanSchema = z
         ids.add(workItem.id);
       });
     });
+    if (ids.size !== workItems.length) return;
+    const indegree = new Map(workItems.map((item) => [item.id, 0]));
+    const dependents = new Map(
+      workItems.map((item) => [item.id, [] as string[]]),
+    );
+    plan.stages.forEach((stage, stageIndex) =>
+      stage.workItems.forEach((item, workIndex) =>
+        item.dependencies.forEach((dependency, dependencyIndex) => {
+          if (!ids.has(dependency) || dependency === item.id) {
+            context.addIssue({
+              code: "custom",
+              path: [
+                "stages",
+                stageIndex,
+                "workItems",
+                workIndex,
+                "dependencies",
+                dependencyIndex,
+              ],
+              message: "工作项依赖必须指向其它已存在的工作项。",
+            });
+            return;
+          }
+          indegree.set(item.id, indegree.get(item.id)! + 1);
+          dependents.get(dependency)!.push(item.id);
+        }),
+      ),
+    );
+    const ready = [...indegree]
+      .filter(([, count]) => count === 0)
+      .map(([id]) => id);
+    let visited = 0;
+    while (ready.length) {
+      const id = ready.pop()!;
+      visited += 1;
+      for (const dependent of dependents.get(id)!) {
+        const count = indegree.get(dependent)! - 1;
+        indegree.set(dependent, count);
+        if (count === 0) ready.push(dependent);
+      }
+    }
+    if (visited !== workItems.length)
+      context.addIssue({
+        code: "custom",
+        path: ["stages"],
+        message: "工作项依赖不能形成循环。",
+      });
   });
 export type StagePlan = z.infer<typeof stagePlanSchema>;
 
@@ -210,13 +296,35 @@ export function casAdvanceStage(
   };
   if (!allowed[stage.status].includes(nextStatus))
     throw new StagePlanError(`不允许从 ${stage.status} 迁移到 ${nextStatus}。`);
+  if (stage.status === "doing" && nextStatus === "plan_review") {
+    if (stage.approvalGate !== "plan" || stage.planApprovedAt !== undefined)
+      throw new StagePlanError("此阶段不需要或已通过计划审批。");
+  }
+  if (
+    (stage.status === "doing" && nextStatus === "result_review") ||
+    (stage.status === "result_review" && nextStatus === "done")
+  ) {
+    if (stage.approvalGate === "plan" && stage.planApprovedAt === undefined)
+      throw new StagePlanError("计划审批尚未通过，不能提交结果。");
+    if (stage.workItems.some((item) => item.status !== "succeeded"))
+      throw new StagePlanError("工作项尚未全部成功，不能完成阶段。");
+  }
+  const stamp = now();
   return {
     ...plan,
     revision: plan.revision + 1,
-    updatedAt: now(),
+    updatedAt: stamp,
     stages: plan.stages.map((item) =>
       item.index === stageIndex
-        ? { ...item, status: nextStatus, updatedAt: now() }
+        ? {
+            ...item,
+            status: nextStatus,
+            planApprovedAt:
+              stage.status === "plan_review" && nextStatus === "doing"
+                ? stamp
+                : item.planApprovedAt,
+            updatedAt: stamp,
+          }
         : item,
     ),
   };

@@ -813,11 +813,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: Stage 状态机（doing/plan_review/blocked/result_review/done）+ 编排器 CAS 推进 + plan 工具面，作为波次A闭环的领域基座
 - Scope: src/domain/stagePlan.ts, src/features/agent/orchestrator.ts, src/features/agent/agentHost.ts, src/features/creation/model.ts, src/features/projects/projectPackage.ts, src-tauri/src/project_package*.rs, tests
-- Acceptance: Stage 状态机合法/非法迁移与 CAS 并发冲突可测; 编排器物化计划、审批决策、阻断与失败重试只重试失败项; plan 工具面四个工具可调用并持久化; CreationProject.stagePlans 存储兼容不丢旧数据; 项目包导出导入保留空 stagePlans 和仅由计划工作项引用的素材; 工作项结果按预期 revision 写入，迟到结果不覆盖审批状态; 工作项 id 在计划内唯一，重复 id 不得误推进已完成工作项; 阶段 index 与项目内计划 id 唯一，异常项目包不得静默丢失或误改计划
+- Acceptance: Stage 状态机合法/非法迁移与 CAS 并发冲突可测; 编排器物化计划、审批决策、阻断与失败重试只重试失败项; plan 工具面四个工具可调用并持久化; CreationProject.stagePlans 存储兼容不丢旧数据; 项目包导出导入保留空 stagePlans 和仅由计划工作项引用的素材; 工作项结果按预期 revision 写入，迟到结果不覆盖审批状态; 工作项 id 在计划内唯一，重复 id 不得误推进已完成工作项; 阶段 index 与项目内计划 id 唯一，异常项目包不得静默丢失或误改计划; 计划审批前不得执行工作项，全部工作项成功后才能请求结果审批或完成阶段; Agent 工具和宿主审批均按预期 revision 拒绝迟到请求，依赖工作项必须先成功且依赖图有效; Web 与 Rust 项目包拒绝归属其他项目的阶段计划
 - Branch: `feat/TASK-ORCH-001-agent-orchestration-closure`
 - Worktree: `D:/kk-studio/.worktrees/TASK-ORCH-001`
 - Modules: src/domain/stagePlan.ts, src/features/agent/orchestrator.ts, src/features/agent/agentHost.ts, src/features/creation/model.ts, src/features/projects/projectPackage.ts, src-tauri/src/project_package.rs, src-tauri/src/project_package_snapshot.rs, docs/architecture/adr/ADR-006-stage-plan-package-contract.md, tests/unit/stagePlan.test.ts, tests/unit/orchestrator.test.ts
-- Verification: PARTIAL — 独立复审关闭旧计划覆写与项目包漏同步两项 P1；重复工作项 id、阶段 index 与项目内计划 id 均已补跨端唯一性回归。旧 head c7abc45 Hosted verify/delivery 成功；当前候选 412 Node、82 Rust、300 浏览器及类型/Lint/格式/构建/治理通过。新 head 的 hosted CI、独立复审、Desktop GUI 和真实 Provider 未验证。UI 对接仍属 TASK-ORCH-002/003。详见 verification.md 与 review.md。
+- Verification: PARTIAL — 独立复审对 36a3419 提出审批门、排队项完成、ABA、依赖图四项 P1 与跨项目计划一项 P2，结论 CHANGES REQUIRED。当前候选已补失败先行回归和修复，本地 420 Node、82 Rust、300 浏览器及类型/Lint/格式/构建通过；新 head 的 hosted CI、独立复审、Desktop GUI 和真实 Provider 未验证。UI 对接仍属 TASK-ORCH-002/003。详见 verification.md 与 review.md。
 - Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
 - Updated: 2026-09-26
 

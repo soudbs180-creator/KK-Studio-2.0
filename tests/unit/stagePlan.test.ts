@@ -54,6 +54,25 @@ function samplePlan(): StagePlan {
   });
 }
 
+function readyForResult(plan: StagePlan, stageIndex: number): StagePlan {
+  return {
+    ...plan,
+    stages: plan.stages.map((stage) =>
+      stage.index === stageIndex
+        ? {
+            ...stage,
+            planApprovedAt:
+              stage.approvalGate === "plan" ? Date.now() : stage.planApprovedAt,
+            workItems: stage.workItems.map((item) => ({
+              ...item,
+              status: "succeeded" as const,
+            })),
+          }
+        : stage,
+    ),
+  };
+}
+
 test("createStagePlan assigns indexes, doing status and revision 0", () => {
   const plan = samplePlan();
   assert.equal(plan.revision, 0);
@@ -148,6 +167,44 @@ test("stage plan collection keeps only the first duplicate plan ID", () => {
   assert.deepEqual(normalizeStagePlans([valid, duplicate]), [valid]);
 });
 
+test("stage plans reject missing, self-referential and cyclic dependencies", () => {
+  for (const workItems of [
+    [workItem("a", { dependencies: ["missing"] })],
+    [workItem("a", { dependencies: ["a"] })],
+    [
+      workItem("a", { dependencies: ["b"] }),
+      workItem("b", { dependencies: ["a"] }),
+    ],
+  ]) {
+    assert.throws(
+      () =>
+        createStagePlan({
+          title: "非法依赖",
+          projectId: "project-1",
+          createdBy: "agent",
+          stages: [{ name: "执行", goal: "执行", workItems }],
+        }),
+      /Stage 计划无效/,
+    );
+  }
+});
+
+test("normalization rejects impossible approval and completion states", () => {
+  const valid = samplePlan();
+  const first = valid.stages[0];
+  for (const stage of [
+    { ...first, status: "result_review" },
+    { ...first, status: "done", planApprovedAt: Date.now() },
+    { ...first, workItems: [{ ...first.workItems[0], status: "running" }] },
+    { ...first, approvalGate: undefined, status: "plan_review" },
+  ]) {
+    assert.equal(
+      normalizeStagePlan({ ...valid, stages: [stage, valid.stages[1]] }),
+      null,
+    );
+  }
+});
+
 test("casAdvanceStage advances doing to plan_review/result_review/blocked", () => {
   const plan = samplePlan();
   const reviewed = casAdvanceStage(plan, 0, "doing", "plan_review");
@@ -174,7 +231,12 @@ test("casAdvanceStage rejects unknown stage and illegal transitions", () => {
   assert.throws(() => casAdvanceStage(plan, 9, "doing", "done"), /不存在/);
   const done = casAdvanceStage(plan, 0, "doing", "plan_review");
   const approved = casAdvanceStage(done, 0, "plan_review", "doing");
-  const finished = casAdvanceStage(approved, 0, "doing", "result_review");
+  const finished = casAdvanceStage(
+    readyForResult(approved, 0),
+    0,
+    "doing",
+    "result_review",
+  );
   const terminal = casAdvanceStage(finished, 0, "result_review", "done");
   assert.throws(
     () => casAdvanceStage(terminal, 0, "done", "doing"),
@@ -186,7 +248,12 @@ test("stageApprovalGateFor maps status to gate and null otherwise", () => {
   const plan = samplePlan();
   const reviewing = casAdvanceStage(plan, 0, "doing", "plan_review");
   assert.equal(stageApprovalGateFor(reviewing.stages[0]), "plan");
-  const done = casAdvanceStage(plan, 0, "doing", "result_review");
+  const done = casAdvanceStage(
+    readyForResult(plan, 0),
+    0,
+    "doing",
+    "result_review",
+  );
   assert.equal(stageApprovalGateFor(done.stages[0]), "result");
   assert.equal(stageApprovalGateFor(plan.stages[0]), null);
 });
@@ -212,7 +279,12 @@ test("stagePlanProgress counts done/blocked/inFlight/pending", () => {
   const progressed = casAdvanceStage(plan, 0, "doing", "plan_review");
   assert.equal(stagePlanProgress(progressed).pendingApprovals, 1);
   const withDone = casAdvanceStage(progressed, 0, "plan_review", "doing");
-  const terminal = casAdvanceStage(withDone, 0, "doing", "result_review");
+  const terminal = casAdvanceStage(
+    readyForResult(withDone, 0),
+    0,
+    "doing",
+    "result_review",
+  );
   const finished = casAdvanceStage(terminal, 0, "result_review", "done");
   assert.deepEqual(stagePlanProgress(finished).done, 1);
 });

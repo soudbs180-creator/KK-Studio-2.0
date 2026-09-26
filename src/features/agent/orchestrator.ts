@@ -40,6 +40,7 @@ export interface StageOrchestratorOptions {
 export interface StageDecisionInput {
   planId: string;
   stageIndex: number;
+  expectedRevision: number;
   /** 当前待审批门，与状态校验一致（plan / result）。 */
   gate: StageApprovalGate;
   decision: "approve" | "reject";
@@ -137,6 +138,15 @@ function readPlan(project: CreationProject, planId: string): StagePlan {
   return plan;
 }
 
+function assertRevision(plan: StagePlan, expectedRevision: number): void {
+  if (
+    !Number.isSafeInteger(expectedRevision) ||
+    expectedRevision < 0 ||
+    plan.revision !== expectedRevision
+  )
+    throw new StagePlanError("编排计划 revision 已变化（并发冲突，未写入）。");
+}
+
 export function createStageOrchestrator(options: StageOrchestratorOptions) {
   const projectOrThrow = () => {
     const project = options.getProject();
@@ -201,14 +211,13 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
     updateWorkItem(input: StageWorkItemUpdateInput): StagePlan {
       const project = projectOrThrow();
       const plan = readPlan(project, input.planId);
-      if (plan.revision !== input.expectedRevision)
-        throw new StagePlanError(
-          "编排计划 revision 已变化（并发冲突，未写入）。",
-        );
+      assertRevision(plan, input.expectedRevision);
       const stage = plan.stages.find((item) => item.index === input.stageIndex);
       if (!stage) throw new StagePlanError(`阶段 ${input.stageIndex} 不存在。`);
       if (stage.status !== "doing")
         throw new StagePlanError("阶段不在 doing 状态，不能写入工作结果。");
+      if (stage.approvalGate === "plan" && stage.planApprovedAt === undefined)
+        throw new StagePlanError("计划审批尚未通过，不能执行工作项。");
       const workItem = stage.workItems.find(
         (item) => item.id === input.workItemId,
       );
@@ -227,6 +236,17 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
       };
       if (!allowed[workItem.status].includes(input.status))
         throw new StagePlanError("工作项状态迁移无效，未写入。");
+      if (input.status === "running") {
+        for (const dependency of workItem.dependencies) {
+          const prerequisite = plan.stages
+            .flatMap((item) => item.workItems)
+            .find((item) => item.id === dependency);
+          if (prerequisite?.status !== "succeeded")
+            throw new StagePlanError(
+              `工作项依赖 ${dependency} 尚未成功，不能开始执行。`,
+            );
+        }
+      }
       const stamp = Date.now();
       const next: StagePlan = {
         ...plan,
@@ -260,9 +280,11 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
       planId: string,
       stageIndex: number,
       gate: StageApprovalGate,
+      expectedRevision: number,
     ): StagePlan {
       const project = projectOrThrow();
       const plan = readPlan(project, planId);
+      assertRevision(plan, expectedRevision);
       const expected: "plan_review" | "result_review" =
         gate === "plan" ? "plan_review" : "result_review";
       const next = casAdvanceStage(plan, stageIndex, "doing", expected);
@@ -277,6 +299,7 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
     decideStage(input: StageDecisionInput): StagePlan {
       const project = projectOrThrow();
       const plan = readPlan(project, input.planId);
+      assertRevision(plan, input.expectedRevision);
       const waiting: "plan_review" | "result_review" =
         input.gate === "plan" ? "plan_review" : "result_review";
       const pending = pendingStageApprovals(plan).some(
@@ -304,26 +327,41 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
       return next;
     },
     /** 执行中异常阻断：doing → blocked（编排器调用，非审批拒绝）。 */
-    markStageBlocked(planId: string, stageIndex: number): StagePlan {
+    markStageBlocked(
+      planId: string,
+      stageIndex: number,
+      expectedRevision: number,
+    ): StagePlan {
       const project = projectOrThrow();
       const plan = readPlan(project, planId);
+      assertRevision(plan, expectedRevision);
       const next = casAdvanceStage(plan, stageIndex, "doing", "blocked");
       persist(project, next);
       return next;
     },
     /** 解除阻断并只重试失败工作项：blocked → doing（CAS），失败项 requeue。 */
-    retryStage(planId: string, stageIndex: number): StagePlan {
+    retryStage(
+      planId: string,
+      stageIndex: number,
+      expectedRevision: number,
+    ): StagePlan {
       const project = projectOrThrow();
       const plan = readPlan(project, planId);
+      assertRevision(plan, expectedRevision);
       const requeued = retryStageWorkItems(plan, stageIndex);
       const next = casAdvanceStage(requeued, stageIndex, "blocked", "doing");
       persist(project, next);
       return next;
     },
     /** 结果审批通过收尾：result_review → done。 */
-    completeStage(planId: string, stageIndex: number): StagePlan {
+    completeStage(
+      planId: string,
+      stageIndex: number,
+      expectedRevision: number,
+    ): StagePlan {
       const project = projectOrThrow();
       const plan = readPlan(project, planId);
+      assertRevision(plan, expectedRevision);
       const next = casAdvanceStage(plan, stageIndex, "result_review", "done");
       persist(project, next);
       return next;
@@ -333,6 +371,7 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
       planId: string;
       stageIndex: number;
       gate: StageApprovalGate;
+      revision: number;
     }> {
       const project = options.getProject();
       if (!project?.stagePlans?.length) return [];
@@ -341,6 +380,7 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
           planId: plan.id,
           stageIndex: entry.stageIndex,
           gate: entry.gate,
+          revision: plan.revision,
         })),
       );
     },
@@ -363,6 +403,7 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
             return {
               ok: true,
               planId,
+              revision: plan.revision,
               summary: stagePlanSummary(plan),
               stages: plan.stages.map((stage) => ({
                 index: stage.index,
@@ -375,11 +416,12 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
         {
           name: "plan_update_stage_state",
           description:
-            "Agent 只可报告阶段进入审批或阻断（CAS）：doing→plan_review/result_review/blocked。审批决策与解除阻断由宿主入口处理。输入 { planId, stageIndex, expectedStatus, nextStatus }。",
+            "Agent 只可报告阶段进入审批或阻断（CAS）：doing→plan_review/result_review/blocked。审批决策与解除阻断由宿主入口处理。输入 { planId, stageIndex, expectedRevision, expectedStatus, nextStatus }。",
           invoke(input) {
             const planId = String(input.planId ?? "");
             const stageIndex = Number(input.stageIndex);
             const expected = input.expectedStatus;
+            const expectedRevision = input.expectedRevision;
             const next = input.nextStatus;
             if (!planId || !Number.isInteger(stageIndex))
               return { ok: false, error: "planId 与 stageIndex 必填。" };
@@ -389,6 +431,12 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
                 error:
                   "expectedStatus/nextStatus 必须为 doing/plan_review/blocked/result_review/done。",
               };
+            if (
+              typeof expectedRevision !== "number" ||
+              !Number.isSafeInteger(expectedRevision) ||
+              expectedRevision < 0
+            )
+              return { ok: false, error: "expectedRevision 必须为非负整数。" };
             if (
               expected !== "doing" ||
               (next !== "plan_review" &&
@@ -401,6 +449,11 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
               };
             const plan = getPlan(planId);
             if (!plan) return { ok: false, error: `计划 ${planId} 不存在。` };
+            if (plan.revision !== expectedRevision)
+              return {
+                ok: false,
+                error: "编排计划 revision 已变化（并发冲突，未推进）。",
+              };
             try {
               const updated = casAdvanceStage(plan, stageIndex, expected, next);
               persistPlan(updated);
@@ -454,6 +507,7 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
               return {
                 ok: true,
                 planId: plan.id,
+                revision: plan.revision,
                 summary: stagePlanSummary(plan),
               };
             } catch (error) {

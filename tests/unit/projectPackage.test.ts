@@ -179,6 +179,8 @@ test("package creation includes an asset referenced only by a stage work item", 
       ],
     }),
   ];
+  project.stagePlans[0].stages[0].approvalGate = "plan";
+  project.stagePlans[0].stages[0].planApprovedAt = 1;
   const snapshot = {
     ...emptySnapshot(),
     activeProjectId: project.id,
@@ -229,6 +231,25 @@ test("Web package export rejects duplicate stage indexes and plan IDs", async ()
       (error: unknown) => (error as { code?: string }).code === "corrupt",
     );
   }
+});
+
+test("Web package export rejects a plan owned by another project", async () => {
+  const { snapshot, asset } = fixture();
+  snapshot.projects[0].stagePlans = [
+    createStagePlan({
+      id: "foreign-plan",
+      title: "错误归属",
+      projectId: "another-project",
+      createdBy: "agent",
+      stages: [{ name: "执行", goal: "执行", workItems: [] }],
+    }),
+  ];
+  await assert.rejects(
+    createProjectPackageManifest(snapshot, async (id) =>
+      id === assetId ? asset : null,
+    ),
+    (error: unknown) => (error as { code?: string }).code === "corrupt",
+  );
 });
 
 test("valid package preflight verifies checksum, references and original bytes", async () => {

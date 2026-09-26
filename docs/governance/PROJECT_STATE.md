@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-26 编排审批与依赖边界候选
+
+PR #14 的 `36a3419` 独立复审为 CHANGES REQUIRED：四项 P1 涉及计划审批、完成门禁、ABA 与依赖图，一项 P2 涉及跨项目计划。任务分支已补跨端校验与回归，本地 420 Node、82 Rust、300 浏览器及静态/构建通过。新 head 的 Hosted CI、独立复审和用户产品验收仍未完成；主线、正式发布及 PR #15 draft 状态未变，四处治理文档冲突待 #14 集成后处理。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-26 编排候选补查
 
 PR #14 旧 head `c7abc45` 的 Hosted `verify`/`delivery` 已通过；自查随后复现阶段索引和计划 ID 重复导致的身份歧义，已在任务分支补 TS/Rust 拒绝与 Web 包无损回归。本地 412 Node、82 Rust、300 浏览器通过。新提交的 Hosted CI、独立复审及用户产品验收未完成，主线与正式发布未变。PR #15 保持 draft，四处治理文档冲突在 #14 集成后处理。详见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。

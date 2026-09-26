@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-26 TASK-ORCH-001 审批与依赖修复候选
+
+独立 reviewer 对 PR #14 `36a3419` 给出四项 P1（计划审批、未运行完成、ABA、依赖）及一项 P2（跨项目计划），结论 CHANGES REQUIRED。任务 worktree 已补校验及失败先行回归，本地 420 Node、82 Rust、300 浏览器与静态/构建通过。恢复时核对新 head、Hosted CI、独立复审及 dirty 状态；PR #14 未验收前不可合并，PR #15 四处文档冲突须顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-26 TASK-ORCH-001 身份唯一性候选
 
 PR #14 旧 head `c7abc45` Hosted CI 已通过，独立复审任务因执行额度耗尽未完成。之后在任务 worktree 复现并修复重复阶段索引/计划 ID 的跨端边界；本地 412 Node、82 Rust、300 浏览器及静态/构建通过。恢复时核对新的 branch head、Hosted CI、独立复审与 dirty 状态；PR #14 未验收前不能合并，#15 四处文档冲突须后续顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
