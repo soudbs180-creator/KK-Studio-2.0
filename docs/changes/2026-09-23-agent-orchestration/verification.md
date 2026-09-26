@@ -102,3 +102,9 @@
 
 - 独立 reviewer 对 `abb2bb8e75ca816ba8f4049e660ed63bfb23c09b` 给出 CHANGES REQUIRED：更改 plan-gated 阶段提示词后旧 `planApprovedAt` 仍放行（P1），原计划同 ID 重放因 prompt 被覆盖而报不同定义（P2）。reviewer 实际复现新提示词可直接运行、再次申请计划审批被拒绝、原定义重放失败。
 - 当前候选改用可选 `reworkPrompt` 表示实际返工提示词，原始 `prompt` 保持定义；有效提示词变化时整阶段和传递下游排队，清除旧批准并进入 `plan_review`。定向 Node **35/35**、全量 Node **422/422**、Rust **82/82**、Playwright/Edge **300/300**（一项焦点用例首跑失败、重试通过，随后以 `--retries=0` 单独重跑通过）、TypeScript noEmit/增量构建、ESLint、Prettier、cargo fmt、Vite production build 通过；治理 66/0、功能 31/0、Markdown 84/0、UI 标准 159/0。Web/Rust 项目包往返测试包含 `reworkPrompt`。浏览器生成的 22 张已跟踪截图已恢复，不纳入候选。新 SHA delivery/Hosted CI 与独立补审仍待完成。
+
+## 2026-09-26 `9ddfcb5` 托管及独立复审结果
+
+- 精确源码 SHA `9ddfcb5bbb9ee1e9f484d022104c4dfc600df526` 的 [Hosted quality run 36218263291](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36218263291) 中 `verify` 与 `delivery` 均为 success。`verify` 包含仓库验证、Rust 格式/测试、客户端检查及 Tauri 无安装包构建；本地 `delivery:check` 为 30 文件、0 项结构违规。
+- 独立只读 reviewer 对同一源码 SHA 给出 **PASS**：针对返工改提示词重新计划审批、同 ID 原定义重放、Web/Rust 包往返和此前阻断项复核，定向 Node 53/53、Rust 项目包 19/19、TypeScript 类型检查通过；未发现未关闭的 P1/P2。该结论不代表用户产品验收、Desktop GUI/正式安装包或真实 Provider 已完成。
+- 仅为补录上述证据而产生的后续文档提交，须另行检查精确 head 的交付与托管状态；PR #14 仍保持未合并，PR #15 文档冲突在 #14 集成后处理。

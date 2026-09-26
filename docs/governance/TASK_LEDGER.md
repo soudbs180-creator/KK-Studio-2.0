@@ -817,7 +817,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-ORCH-001-agent-orchestration-closure`
 - Worktree: `D:/kk-studio/.worktrees/TASK-ORCH-001`
 - Modules: src/domain/stagePlan.ts, src/features/agent/orchestrator.ts, src/features/agent/agentHost.ts, src/features/creation/model.ts, src/features/projects/projectPackage.ts, src-tauri/src/project_package.rs, src-tauri/src/project_package_snapshot.rs, docs/architecture/adr/ADR-006-stage-plan-package-contract.md, tests/unit/stagePlan.test.ts, tests/unit/orchestrator.test.ts
-- Verification: PARTIAL — 独立复审对 abb2bb8 确认返工路径打通，但发现已批准提示词变更绕过计划审批 P1 与原定义重放失败 P2，结论 CHANGES REQUIRED。当前候选分离原 prompt/reworkPrompt，并要求重审；本地 422 Node、82 Rust、300 浏览器及静态/构建通过。新 head hosted CI、独立复审、Desktop GUI 和真实 Provider 待验证。UI 对接仍属 TASK-ORCH-002/003。详见 verification.md 与 review.md。
+- Verification: PARTIAL — 源码 head 9ddfcb5 独立只读复审 PASS，未发现未关闭 P1/P2；Hosted run 36218263291 verify/delivery 成功。本地 422 Node、82 Rust、300 浏览器及静态/构建通过。当前补录证据的文档 head 待再验；Desktop GUI、真实 Provider 和用户产品验收未完成。UI 对接仍属 TASK-ORCH-002/003。详见 verification.md 与 review.md。
 - Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
 - Updated: 2026-09-26
 

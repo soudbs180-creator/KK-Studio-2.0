@@ -91,3 +91,7 @@
 
 - 独立 reviewer 对 `abb2bb8e75ca816ba8f4049e660ed63bfb23c09b` 确认拒绝结果后的返工路径已打通，但结论 **CHANGES REQUIRED**：修改已批准计划的 prompt 后沿用 `planApprovedAt`，新工作可直接运行，宿主再请求计划审批反而报已批准（P1）；修改原 prompt 后同 ID 原定义重放失败（P2）。reviewer 以单阶段流程实际复现，未改文件。
 - 候选新增独立的可选 `reworkPrompt` 运行字段，原始 prompt 留作幂等定义；改变 plan-gated 阶段的有效提示词时清除审批标记、整阶段及下游排队并重新进入计划审批。Web/Rust 项目包往返覆盖新字段。新 head 须再做独立复审及 Hosted CI。
+
+## 2026-09-26 `9ddfcb5` 独立复审结论
+
+- 独立只读 reviewer 对 `9ddfcb5bbb9ee1e9f484d022104c4dfc600df526` 给出 **PASS**：计划门返工提示词更改后必须重批；同 ID 原计划重放保留当前返工状态；Web/Rust 项目包保留 `reworkPrompt`；此前结果拒绝死路、下游失效与审批/身份/依赖保护未见回归。定向 Node 53/53、Rust 项目包 19/19、TypeScript 检查通过。该结论只覆盖所审源码，不等于用户产品验收或后续文档提交的 Hosted CI。

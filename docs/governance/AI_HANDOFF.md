@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-26 TASK-ORCH-001 技术门禁恢复点
+
+PR #14 源码 `9ddfcb5` 独立只读复审 PASS，[Hosted run 36218263291](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36218263291) `verify`/`delivery` 成功；本地 422 Node、82 Rust、300 浏览器通过。恢复时核对补录文档后的准确 head、CI 与 dirty 状态，再看用户产品验收；未经验收不合并。PR #15 四处文档冲突在 #14 后顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-26 TASK-ORCH-001 返工重审候选
 
 独立 reviewer 对 PR #14 `abb2bb8` 给出 CHANGES REQUIRED：返工提示词变更沿用旧计划批准（P1）、原计划同 ID 重放失败（P2）。任务 worktree 已分离原 prompt / 可选 `reworkPrompt` 并在有效提示词变更时重开计划审批，Web/Rust 包测试已覆盖；本地 422 Node、82 Rust、300 浏览器及静态/构建通过。恢复时核对新 head、Hosted CI、独立复审及 dirty 状态；PR #14 未验收不可合并，PR #15 四处治理文档冲突待顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
