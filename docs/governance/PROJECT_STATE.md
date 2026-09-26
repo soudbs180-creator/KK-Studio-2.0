@@ -1,5 +1,37 @@
 # 当前项目状态
 
+## 2026-09-26 编排技术门禁通过、产品验收未完成
+
+PR #14 源码 `9ddfcb5` 独立只读复审 PASS，未发现未关闭 P1/P2；[Hosted run 36218263291](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36218263291) 的 `verify`/`delivery` 均成功，本地 422 Node、82 Rust、300 浏览器通过。补录证据的文档提交仍需精确 head 检查；用户产品验收、Desktop GUI/正式安装包、真实 Provider 未完成，主线与发布不变。PR #15 保持 draft，四处治理文档冲突待 #14 集成后处理。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 返工计划重新审批候选
+
+PR #14 的 `abb2bb8` 独立复审发现返工修改已批准提示词可绕过计划门（P1）且破坏原计划同 ID 重放（P2），结论 CHANGES REQUIRED。任务分支已用独立 `reworkPrompt` 保留原定义并在提示词变化时清除旧批准、重新进入计划审批；Web/Rust 包回归已补。本地 422 Node、82 Rust、300 浏览器及静态/构建通过，新 head 托管/独立复审待完成；主线、发布及 PR #15 draft 不变。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 编排结果返工候选
+
+PR #14 的 `5fff9de` 独立复审关闭前五项问题，但发现结果拒绝后成功工作项无法返工，结论 CHANGES REQUIRED。任务分支已补宿主返工选择、下游依赖失效及旧素材清除；本地 422 Node、82 Rust、300 浏览器及静态/构建通过。当前候选的交付、新 SHA Hosted CI、独立复审和用户产品验收仍待完成，主线/正式发布不变；PR #15 仍为 draft，文档冲突需在 #14 集成后处理。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 编排审批与依赖边界候选
+
+PR #14 的 `36a3419` 独立复审为 CHANGES REQUIRED：四项 P1 涉及计划审批、完成门禁、ABA 与依赖图，一项 P2 涉及跨项目计划。任务分支已补跨端校验与回归，本地 420 Node、82 Rust、300 浏览器及静态/构建通过。新 head 的 Hosted CI、独立复审和用户产品验收仍未完成；主线、正式发布及 PR #15 draft 状态未变，四处治理文档冲突待 #14 集成后处理。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 编排候选补查
+
+PR #14 旧 head `c7abc45` 的 Hosted `verify`/`delivery` 已通过；自查随后复现阶段索引和计划 ID 重复导致的身份歧义，已在任务分支补 TS/Rust 拒绝与 Web 包无损回归。本地 412 Node、82 Rust、300 浏览器通过。新提交的 Hosted CI、独立复审及用户产品验收未完成，主线与正式发布未变。PR #15 保持 draft，四处治理文档冲突在 #14 集成后处理。详见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-24 编排候选重复 ID 复审
+
+独立 reviewer 对 PR #14 `67ff18fb` 关闭原两项 P1，但发现计划允许重复工作项 ID，受控更新会误改所有同名项。任务分支已用 TS/Rust 失败先行回归补计划级唯一性校验；当前 409 Node、81 Rust、300 浏览器与类型/Lint/构建通过。新 head 的 Hosted CI 和独立复审仍待核对；主线、正式发布与 PR #15 冲突状态未变。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)及[ADR-006](../architecture/adr/ADR-006-stage-plan-package-contract.md)。
+
+## 2026-09-24 编排候选跨端补审
+
+PR #14 的独立审查在旧 head 发现两项 P1：旧 revision 可覆盖已完成计划，且 `stagePlans` 未同步 Desktop 项目包 schema/素材收集。任务分支已加入预期 revision 工作项写入和 Web/Rust 包契约回归；本地 407 Node、80 Rust、300 浏览器及静态/构建检查通过。修复后 head 的 Hosted CI、独立复审、Desktop GUI 与真实 Provider 仍待验证；PR #14 与 #15 的文档冲突待顺序整合。主线/发布状态未变，见 [验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-24 编排候选（TASK-ORCH-001）
+
+独立预检指出计划同 id 重放丢进度与非法计划写入后丢失；两项已在任务分支修复。实现者又确认 Agent 阶段工具可自行批准或解除阻断，现仅允许 `doing→plan_review/result_review/blocked`，宿主入口保留审批与重试。当前分支 405 Node 与 300 Web 浏览器回归通过，独立最终复审、Desktop 与真实 Provider 未验收；主线和正式发布状态不因此改变。以 [本轮验证](../changes/2026-09-23-agent-orchestration/verification.md)和账本 TASK-ORCH-001 为准。
+
 ## 2026-09-23 KK Studio 2.1.0 源码并线与规则回读（REL-2.1.0）
 
 当前版本元数据已统一为 2.1.0；源码候选先在 `chore/TASK-CONSOLIDATE-200` 上提交并上传，首次远端 SHA 与受审源码 `15f1f27` 一致。`VERSION`、`CHANGELOG.md`、package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端共同记录 2.1.0；原有 `%APPDATA%/kk-studio`、存储 key、应用 identifier、历史 2.0.0 证据和恢复归档不变。安装包、签名和正式 tag 仍未完成。

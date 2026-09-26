@@ -1,5 +1,55 @@
 # 当前进度
 
+## 2026-09-26 编排候选技术门禁结果
+
+PR #14 源码 `9ddfcb5` 已通过独立只读复审（未发现未关闭 P1/P2）及 [Hosted run 36218263291](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36218263291) 的 `verify`/`delivery`；本地 422 Node、82 Rust、300 浏览器和交付结构检查也通过。当前补录审查证据的文档提交需再核对精确 head；用户产品验收、Desktop GUI/正式安装包及真实 Provider 未完成，PR 仍未合并。PR #15 四处治理文档冲突待 #14 集成后顺序处理。详见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 返工提示词重新审批候选
+
+PR #14 的 `abb2bb8` 独立复审确认结果返工可执行，又发现改动已批准提示词后沿用旧批准状态的 P1，以及原提示词覆盖使同 ID 重放失败的 P2，结论 CHANGES REQUIRED。任务分支已将返工提示词独立保存为 `reworkPrompt`，改变有效提示词时整阶段与下游重新排队并返回计划审批；Web/Rust 包往返已加回归。本地 422 Node、82 Rust、300 浏览器及静态/构建检查通过，新 head 独立复审/Hosted CI 待完成。见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 结果拒绝返工闭环候选
+
+独立复审对 PR #14 的 `5fff9de` 确认先前五项阻断已关闭，又发现结果审批拒绝后成功工作项无法修改的既有 P1，结论 CHANGES REQUIRED。任务分支已补宿主指定返工项及新 prompt 的路径，传递下游依赖和旧素材引用一并失效；失败先行测试现通过，本地 422 Node、82 Rust、300 浏览器及静态/构建检查通过。交付门禁、新 head 独立复审和 Hosted CI 待完成，PR #14 仍不可合并。见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 编排审批、依赖与并发边界修复
+
+独立复审对 PR #14 的 `36a3419` 提出计划审批可绕过、未运行工作项可标完成、阶段工具 ABA、依赖图未执行四项 P1，以及项目包跨项目计划一项 P2，结论 CHANGES REQUIRED。任务分支已补审批标记、成功/依赖门禁、阶段及宿主审批预期 revision、跨端计划归属与图校验；本地 420 Node、82 Rust、300 浏览器及静态/构建检查通过。新 head 的 Hosted CI、独立复审与用户产品验收仍待完成，PR #14 不可合并；PR #15 的四处治理文档冲突待 #14 之后顺序处理。详见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 编排候选身份唯一性补查
+
+PR #14 的旧 head `c7abc45` 已通过 Hosted `verify`/`delivery`；后续自查又发现重复阶段索引和项目内重复计划 ID 可使按身份更新误触多个对象。任务分支已用失败先行测试补 TS/Rust 校验，Web 项目包拒绝有损导出；本地 412 Node、82 Rust、300 浏览器及静态/构建检查通过。新 head 的 Hosted CI 和独立复审待完成，PR 仍不可合并；PR #15 的四处文档冲突继续按顺序处理。见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-24 编排计划重复工作项 ID 边界
+
+PR #14 的 `67ff18fb` 独立复审确认旧计划覆写与项目包漏同步两项 P1 已关闭，但发现重复工作项 ID 可让单项更新误改已成功项。候选已在 TS 与 Rust 项目包中拒绝计划内重复 ID；失败先行和 409 Node / 81 Rust / 300 浏览器本地回归见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。新 head 独立复审与 Hosted CI 仍待完成；当前 PR 不可合并。
+
+## 2026-09-24 Agent 编排独立审查阻断修复
+
+独立审查在 PR #14 旧 head 发现：公开写入口可用旧计划覆盖已审批进度；Desktop 项目包拒绝 normalize 后新增的 `stagePlans` 字段，Web/Rust 包还遗漏计划工作项唯一引用的素材。当前候选已加入预期 revision 工作项更新、删除公开覆写入口、同步项目包 schema 与素材收集；407 Node、80 Rust 与 300 浏览器测试及类型/Lint/构建/治理通过。修复后新 head 的 Hosted CI、独立复审和 Desktop GUI 尚未验收，PR #14 仍不可合并；详细证据见 [验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-24 Agent 阶段审批边界
+
+`TASK-ORCH-001` 候选新增失败先行测试，确认 Agent 的计划状态工具原可直接批准计划/结果并解除阻断。工具现只允许从执行中发起审批或阻断；宿主审批与重试入口保留决策权。当前代码重跑 405 Node、300 浏览器回归及类型/Lint/格式/构建/治理门禁均通过；最终独立复审、Desktop 与真实 Provider 未验收，候选继续保持 PARTIAL。
+
+## 2026-09-24 编排计划持久化边界修正
+
+独立预检在 `TASK-ORCH-001` 候选发现两项问题：同 id 计划重放会清空已完成阶段与素材引用；不完整的 `plan_patch_stage` 输入会先报成功、重载时再丢失。现已改为同定义重放保留进度、不同定义拒绝覆盖，并在写入前校验输入与存储 schema。定向测试先失败后通过，完整本地检查与未完成的独立复审状态见 `docs/changes/2026-09-23-agent-orchestration/verification.md`、`review.md`。领域能力仍为 PARTIAL，不代表 UI、真实 Provider 或发布验收。
+
+## 2026-09-23 编排候选重试边界补充
+
+竞品规划复核发现 `TASK-ORCH-001` 候选中的新任务态辅助函数与现有恢复门禁冲突：原函数对 `unknown`/已提交任务禁止普通重试，新函数却允许并选入 `unknown` 输出。现已复用原有 `taskRecovery.canRetryTask`，失败子项仅选确定失败的输出；先失败后通过的定向测试 12/12、全量 Node 单测 399/399、TypeScript 检查通过。候选仍为 PARTIAL，UI/真实 Provider 与 Desktop 运行验收未因此完成；细节见 `docs/changes/2026-09-23-agent-orchestration/verification.md` 的补充勘误。
+
+## 2026-09-23 波次A 竞品对齐：Agent 编排与画布交付契约（分支已推送）
+
+- 按《KK-Studio-竞品对齐-项目规划》波次 A 落地领域层：对标竞品 MiniMax Design media-agent 的 Stage 状态机、canvas 交付契约与统一任务态。
+- 新增 `src/domain/stagePlan.ts`（doing/plan_review/blocked/result_review/done 五态 + CAS 乐观锁 + 非法迁移拦截 + 审批门推导 + 失败项 requeue + normalize 白名单 + zod）、`src/features/creation/taskState.ts`（9 态统一任务态契约/可重试/失败输出子集/成本估算）、`src/features/agent/orchestrator.ts`（编排器物化/审批决策/阻断/失败重试 + plan 工具面四工具，MCP 注册归 BACKEND-MCP-AUTO）。
+- 修改 `src/features/creation/model.ts`（CreationProject.stagePlans 可选字段，兼容旧快照）、`src/features/agent/agentCanvas.ts`（交付契约：无 node_id/未注册资产即拦截 + 当轮产物收集/摘要）、`src/features/agent/agentHost.ts`（可选注入 orchestrator）。
+- 验证：`npm run verify` 全绿——lint（eslint 0 + governance 66 任务 0 违规 + features 31 功能 0 违规 + markdown 83 文件 0 违规）、typecheck、399 Node 单测（新增 40 项）、ui:check（159 文件 0 违规）、format:check、300 浏览器测试；delivery:check 待本文件更新后复核。
+- 治理：功能卡 feat-030/031（PARTIAL）、registry +2、账本 +5（TASK-ORCH-001 IN_PROGRESS 唯一活动任务，TASK-ORCH-002/003 TODO，TASK-CANVAS-001/TASK-TASKSTATE-001 PARTIAL）、交付包五件套 `docs/changes/2026-09-23-agent-orchestration/`。
+- 分支 `feat/TASK-ORCH-001-agent-orchestration-closure` @ `D:/kk-studio/.worktrees/TASK-ORCH-001` 已推送 origin（commit 1863ea8，base origin/main @ 9f04bfc）。能力按 PARTIAL 标注，不冒充 REAL。
+- 后续：TaskWorkbench 阶段计划视图与审批交互（TASK-ORCH-002）、编排器驱动真实生成（TASK-ORCH-003）、plan 工具 MCP 注册（BACKEND-MCP-AUTO）、媒体真实链路（BACKEND-MEDIA-001）。
+
 ## 2026-09-23 2.1.0 源码并线与远端规则回读
 
 - [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的 head `da811283` 在 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7`；旧 PR #8 的提交是 #9 候选的祖先，内容被吸收，PR #8 已关闭而未重复合并。[PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 再将规则与 Markdown 审计 squash 合入 `main@9f04bfce`；两次合并的文件树均与各自受审候选相同，本地根 `main` 已快进至后者。

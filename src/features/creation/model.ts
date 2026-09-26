@@ -13,6 +13,7 @@ import {
   normalizeReviewComments,
   type ReviewComment,
 } from "../../domain/reviewWorkflow.ts";
+import { normalizeStagePlans, type StagePlan } from "../../domain/stagePlan.ts";
 
 export type CreationTaskStatus =
   | "queued"
@@ -125,6 +126,8 @@ export interface CreationProject {
   items: CanvasCollectionItem[];
   messages: CreationMessage[];
   tasks: CreationTask[];
+  /** Agent 编排计划（Stage 状态机），本地持久化；无编排时为空。 */
+  stagePlans?: StagePlan[];
   reviewComments?: ReviewComment[];
   favoriteIds: string[];
   likedIds: string[];
@@ -498,6 +501,7 @@ function normalizeCanvasItem(
 
 function normalizeProject(value: CreationProject): CreationProject {
   const candidate = value as unknown as Record<string, unknown>;
+  const projectId = safeText(candidate.id, 160);
   const items = Array.isArray(candidate.items)
     ? candidate.items.filter(isCanvasItem).map(normalizeCanvasItem)
     : [];
@@ -509,7 +513,7 @@ function normalizeProject(value: CreationProject): CreationProject {
   ) as Array<Record<string, unknown>>;
   return {
     canvas: readProjectCanvas(candidate.canvas, items),
-    id: safeText(candidate.id, 160),
+    id: projectId,
     name: safeText(candidate.name, 120, "未命名项目"),
     prompt: safeText(candidate.prompt, 4000),
     model: safeText(candidate.model, 120),
@@ -723,6 +727,9 @@ function normalizeProject(value: CreationProject): CreationProject {
             )
           : undefined,
       })),
+    stagePlans: normalizeStagePlans(
+      (candidate as unknown as Record<string, unknown>).stagePlans,
+    ).filter((plan) => plan.projectId === projectId),
     reviewComments: normalizeReviewComments(
       (candidate as unknown as Record<string, unknown>).reviewComments,
     ),

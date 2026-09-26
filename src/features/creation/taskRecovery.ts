@@ -26,7 +26,9 @@ export function abortedAfterProviderSubmission(options: {
 }
 
 /** Ordinary retry is forbidden once a provider may have accepted the task. */
-export function canRetryTask(task: CreationTask): boolean {
+export function canRetryTask(
+  task: Pick<CreationTask, "status" | "submissionState">,
+): boolean {
   if (
     task.status === "unknown" ||
     task.submissionState === "unknown" ||

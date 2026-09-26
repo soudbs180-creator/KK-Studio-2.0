@@ -3,7 +3,7 @@
 //! `normalizeCreationSnapshot` without truncation, replacement or removal.
 
 use serde_json::Value;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 const MAX_SAFE_INTEGER: f64 = 9_007_199_254_740_991.0;
 const MEDIA_LIMIT: usize = 16 * 1024 * 1024;
@@ -144,6 +144,250 @@ fn attachments(value: &Value) -> Result<(), String> {
             {
                 return Err(invalid("attachments.dataUrl"));
             }
+        }
+    }
+    Ok(())
+}
+
+fn stage_plans(project: &Value) -> Result<(), String> {
+    let plans = array(project, "stagePlans")?;
+    if plans.len() > 64 {
+        return Err(invalid("stagePlans"));
+    }
+    let mut plan_ids = HashSet::new();
+    for plan in plans {
+        shape(
+            plan,
+            "stagePlans",
+            &[
+                "id",
+                "title",
+                "projectId",
+                "createdBy",
+                "revision",
+                "stages",
+                "createdAt",
+                "updatedAt",
+            ],
+            &[
+                "id",
+                "title",
+                "projectId",
+                "createdBy",
+                "revision",
+                "stages",
+                "createdAt",
+                "updatedAt",
+            ],
+        )?;
+        text(plan, "id", 1, 160)?;
+        if !plan_ids.insert(plan["id"].as_str().unwrap()) {
+            return Err(invalid("stagePlans.id"));
+        }
+        text(plan, "title", 1, 120)?;
+        text(plan, "projectId", 1, 160)?;
+        if plan["projectId"] != project["id"] {
+            return Err(invalid("stagePlans.projectId"));
+        }
+        enumeration(plan, "createdBy", &["agent", "user"])?;
+        number(plan, "revision", 0.0, MAX_SAFE_INTEGER, true)?;
+        finite(plan, "createdAt")?;
+        finite(plan, "updatedAt")?;
+        let stages = array(plan, "stages")?;
+        if stages.is_empty() || stages.len() > 32 {
+            return Err(invalid("stagePlans.stages"));
+        }
+        let mut stage_indexes = HashSet::new();
+        let mut work_ids = HashSet::new();
+        let mut dependencies_by_work: HashMap<&str, Vec<&str>> = HashMap::new();
+        for stage in stages {
+            shape(
+                stage,
+                "stagePlans.stages",
+                &[
+                    "index",
+                    "name",
+                    "goal",
+                    "status",
+                    "workItems",
+                    "approvalGate",
+                    "planApprovedAt",
+                    "resultSummary",
+                    "createdAt",
+                    "updatedAt",
+                ],
+                &[
+                    "index",
+                    "name",
+                    "goal",
+                    "status",
+                    "workItems",
+                    "createdAt",
+                    "updatedAt",
+                ],
+            )?;
+            number(stage, "index", 0.0, 64.0, true)?;
+            if !stage_indexes.insert(stage["index"].as_f64().unwrap() as u64) {
+                return Err(invalid("stagePlans.stages.index"));
+            }
+            texts(
+                stage,
+                &[("name", 120), ("goal", 400), ("resultSummary", 500)],
+            )?;
+            enumeration(
+                stage,
+                "status",
+                &["doing", "plan_review", "blocked", "result_review", "done"],
+            )?;
+            enumeration(stage, "approvalGate", &["plan", "result"])?;
+            number(stage, "planApprovedAt", 0.0, MAX_SAFE_INTEGER, true)?;
+            finite(stage, "createdAt")?;
+            finite(stage, "updatedAt")?;
+            let work_items = array(stage, "workItems")?;
+            if work_items.len() > 128 {
+                return Err(invalid("stagePlans.workItems"));
+            }
+            for work in work_items {
+                shape(
+                    work,
+                    "stagePlans.workItems",
+                    &[
+                        "id",
+                        "kind",
+                        "prompt",
+                        "reworkPrompt",
+                        "dependencies",
+                        "status",
+                        "model",
+                        "params",
+                        "error",
+                        "assetId",
+                        "createdAt",
+                        "updatedAt",
+                    ],
+                    &[
+                        "id",
+                        "kind",
+                        "prompt",
+                        "dependencies",
+                        "status",
+                        "createdAt",
+                        "updatedAt",
+                    ],
+                )?;
+                text(work, "id", 1, 160)?;
+                if !work_ids.insert(work["id"].as_str().unwrap()) {
+                    return Err(invalid("stagePlans.workItems.id"));
+                }
+                text(work, "prompt", 1, 4000)?;
+                text(work, "reworkPrompt", 1, 4000)?;
+                texts(work, &[("model", 120), ("error", 500)])?;
+                enumeration(work, "kind", &["image", "video", "audio", "text", "merge"])?;
+                enumeration(
+                    work,
+                    "status",
+                    &[
+                        "queued",
+                        "running",
+                        "partial",
+                        "succeeded",
+                        "failed",
+                        "cancelled",
+                    ],
+                )?;
+                finite(work, "createdAt")?;
+                finite(work, "updatedAt")?;
+                let dependencies = array(work, "dependencies")?;
+                if dependencies.len() > 64
+                    || dependencies.iter().any(|id| {
+                        !id.as_str()
+                            .is_some_and(|id| id.encode_utf16().count() <= 160)
+                    })
+                {
+                    return Err(invalid("stagePlans.dependencies"));
+                }
+                dependencies_by_work.insert(
+                    work["id"].as_str().unwrap(),
+                    dependencies.iter().map(|id| id.as_str().unwrap()).collect(),
+                );
+                if let Some(params) = work.get("params") {
+                    let params = params
+                        .as_object()
+                        .ok_or_else(|| invalid("stagePlans.params"))?;
+                    for (key, value) in params {
+                        if key.encode_utf16().count() > 40 {
+                            return Err(invalid("stagePlans.params"));
+                        }
+                        match value {
+                            Value::String(text) if text.encode_utf16().count() <= 200 => {}
+                            Value::Number(number)
+                                if number
+                                    .as_f64()
+                                    .is_some_and(|number| number.is_finite() && number <= 1e9) => {}
+                            Value::Bool(_) => {}
+                            _ => return Err(invalid("stagePlans.params")),
+                        }
+                    }
+                }
+                if let Some(asset_id) = work.get("assetId") {
+                    let asset_id = asset_id
+                        .as_str()
+                        .ok_or_else(|| invalid("stagePlans.assetId"))?;
+                    if !asset_id.strip_prefix("asset-").is_some_and(|suffix| {
+                        suffix.len() == 24
+                            && suffix
+                                .bytes()
+                                .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+                    }) {
+                        return Err(invalid("stagePlans.assetId"));
+                    }
+                }
+            }
+            let status = stage["status"].as_str().unwrap();
+            let gate = stage.get("approvalGate").and_then(Value::as_str);
+            let approved = stage.get("planApprovedAt").is_some();
+            if (approved && gate != Some("plan"))
+                || (status == "plan_review" && (gate != Some("plan") || approved))
+                || (gate == Some("plan")
+                    && !approved
+                    && work_items.iter().any(|work| work["status"] != "queued"))
+                || (matches!(status, "result_review" | "done")
+                    && ((gate == Some("plan") && !approved)
+                        || work_items.iter().any(|work| work["status"] != "succeeded")))
+            {
+                return Err(invalid("stagePlans.stages.status"));
+            }
+        }
+        let mut indegree = HashMap::new();
+        let mut dependents: HashMap<&str, Vec<&str>> = HashMap::new();
+        for (id, dependencies) in &dependencies_by_work {
+            indegree.insert(*id, dependencies.len());
+            for dependency in dependencies {
+                if *id == *dependency || !work_ids.contains(*dependency) {
+                    return Err(invalid("stagePlans.dependencies"));
+                }
+                dependents.entry(*dependency).or_default().push(*id);
+            }
+        }
+        let mut ready: Vec<&str> = indegree
+            .iter()
+            .filter_map(|(id, count)| (*count == 0).then_some(*id))
+            .collect();
+        let mut visited = 0;
+        while let Some(id) = ready.pop() {
+            visited += 1;
+            if let Some(followers) = dependents.get(id) {
+                for follower in followers {
+                    let count = indegree.get_mut(follower).unwrap();
+                    *count -= 1;
+                    if *count == 0 {
+                        ready.push(follower);
+                    }
+                }
+            }
+        }
+        if visited != work_ids.len() {
+            return Err(invalid("stagePlans.dependencies"));
         }
     }
     Ok(())
@@ -587,6 +831,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
                 "items",
                 "messages",
                 "tasks",
+                "stagePlans",
                 "reviewComments",
                 "favoriteIds",
                 "likedIds",
@@ -609,6 +854,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
         for entry in array(project, "tasks")? {
             task(entry)?;
         }
+        stage_plans(project)?;
         for message in array(project, "messages")? {
             shape(
                 message,
