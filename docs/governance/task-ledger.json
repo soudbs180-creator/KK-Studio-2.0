@@ -2047,7 +2047,8 @@
       "计划审批前不得执行工作项，全部工作项成功后才能请求结果审批或完成阶段",
       "Agent 工具和宿主审批均按预期 revision 拒绝迟到请求，依赖工作项必须先成功且依赖图有效",
       "Web 与 Rust 项目包拒绝归属其他项目的阶段计划",
-      "结果审批拒绝后可指定返工项与新 prompt，并使下游产物、旧素材引用和审批失效"
+      "结果审批拒绝后可指定返工项与新 prompt，并使下游产物、旧素材引用和审批失效",
+      "返工提示词变更不覆盖原计划定义，须清除旧计划批准并重新审批；Web/Rust 项目包保留返工提示词"
     ],
     "dependencies": [
       "TASK-AGENT-001"
@@ -2071,7 +2072,7 @@
     "evidence": [
       "docs/changes/2026-09-23-agent-orchestration/verification.md"
     ],
-    "verification": "独立复审对 5fff9de 确认前五项问题关闭，又发现结果拒绝后成功项无法返工的 P1，结论 CHANGES REQUIRED。当前候选已补宿主返工与下游失效回归，本地 422 Node、82 Rust、300 浏览器及静态/构建通过；交付、新 head hosted CI、独立复审、Desktop GUI 和真实 Provider 待验证。UI 对接仍属 TASK-ORCH-002/003。详见 verification.md 与 review.md。",
+    "verification": "独立复审对 abb2bb8 确认返工路径打通，但发现已批准提示词变更绕过计划审批 P1 与原定义重放失败 P2，结论 CHANGES REQUIRED。当前候选分离原 prompt/reworkPrompt，并要求重审；本地 422 Node、82 Rust、300 浏览器及静态/构建通过。新 head hosted CI、独立复审、Desktop GUI 和真实 Provider 待验证。UI 对接仍属 TASK-ORCH-002/003。详见 verification.md 与 review.md。",
     "updated": "2026-09-26",
     "verificationResult": "PARTIAL"
   },

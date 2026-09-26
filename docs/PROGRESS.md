@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-26 返工提示词重新审批候选
+
+PR #14 的 `abb2bb8` 独立复审确认结果返工可执行，又发现改动已批准提示词后沿用旧批准状态的 P1，以及原提示词覆盖使同 ID 重放失败的 P2，结论 CHANGES REQUIRED。任务分支已将返工提示词独立保存为 `reworkPrompt`，改变有效提示词时整阶段与下游重新排队并返回计划审批；Web/Rust 包往返已加回归。本地 422 Node、82 Rust、300 浏览器及静态/构建检查通过，新 head 独立复审/Hosted CI 待完成。见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-26 结果拒绝返工闭环候选
 
 独立复审对 PR #14 的 `5fff9de` 确认先前五项阻断已关闭，又发现结果审批拒绝后成功工作项无法修改的既有 P1，结论 CHANGES REQUIRED。任务分支已补宿主指定返工项及新 prompt 的路径，传递下游依赖和旧素材引用一并失效；失败先行测试现通过，本地 422 Node、82 Rust、300 浏览器及静态/构建检查通过。交付门禁、新 head 独立复审和 Hosted CI 待完成，PR #14 仍不可合并。见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。

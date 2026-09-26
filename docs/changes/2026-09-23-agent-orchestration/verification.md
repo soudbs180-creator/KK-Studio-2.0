@@ -97,3 +97,8 @@
 - 独立 reviewer 对 `5fff9dec935fc325b875db7d0f660c95d1fd2f8a` 的结论仍为 CHANGES REQUIRED：此前五项问题关闭，但结果审批拒绝后所有工作项仍成功且无法重跑，是现存流程 P1。其最小复现同时验证工作项更新和同 ID 重物化均无法修改产物。
 - 新增单项返工端到端定向测试，旧实现实际得到 `succeeded` 而非预期 `queued`；修复后验证新 prompt、旧素材引用清除、旧 revision 拒绝、新产物和第二次结果审批。另验证跨阶段成功依赖及已完成阶段失效、前置重做前不得运行下游、非法返工选择无写入。
 - 当前本地 Node **422/422**、Rust **82/82**、Playwright/Edge **300/300**（首跑 298 直接通过、2 重试通过；这 2 项随后以 `--retries=0` 独立重跑 2/2）、TypeScript noEmit/增量构建、ESLint、Prettier、cargo fmt、Vite production build 均通过；治理 66/0、功能 31/0、Markdown 84/0、UI 标准 159/0。浏览器测试改写的已跟踪截图在核对后恢复，不纳入候选。新 SHA Hosted CI/独立补审仍待完成；旧 SHA 的托管结果不替代当前候选。
+
+## 2026-09-26 返工提示词计划重审回归
+
+- 独立 reviewer 对 `abb2bb8e75ca816ba8f4049e660ed63bfb23c09b` 给出 CHANGES REQUIRED：更改 plan-gated 阶段提示词后旧 `planApprovedAt` 仍放行（P1），原计划同 ID 重放因 prompt 被覆盖而报不同定义（P2）。reviewer 实际复现新提示词可直接运行、再次申请计划审批被拒绝、原定义重放失败。
+- 当前候选改用可选 `reworkPrompt` 表示实际返工提示词，原始 `prompt` 保持定义；有效提示词变化时整阶段和传递下游排队，清除旧批准并进入 `plan_review`。定向 Node **35/35**、全量 Node **422/422**、Rust **82/82**、Playwright/Edge **300/300**（一项焦点用例首跑失败、重试通过，随后以 `--retries=0` 单独重跑通过）、TypeScript noEmit/增量构建、ESLint、Prettier、cargo fmt、Vite production build 通过；治理 66/0、功能 31/0、Markdown 84/0、UI 标准 159/0。Web/Rust 项目包往返测试包含 `reworkPrompt`。浏览器生成的 22 张已跟踪截图已恢复，不纳入候选。新 SHA delivery/Hosted CI 与独立补审仍待完成。

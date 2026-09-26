@@ -255,6 +255,7 @@ fn stage_plans(project: &Value) -> Result<(), String> {
                         "id",
                         "kind",
                         "prompt",
+                        "reworkPrompt",
                         "dependencies",
                         "status",
                         "model",
@@ -279,6 +280,7 @@ fn stage_plans(project: &Value) -> Result<(), String> {
                     return Err(invalid("stagePlans.workItems.id"));
                 }
                 text(work, "prompt", 1, 4000)?;
+                text(work, "reworkPrompt", 1, 4000)?;
                 texts(work, &[("model", 120), ("error", 500)])?;
                 enumeration(work, "kind", &["image", "video", "audio", "text", "merge"])?;
                 enumeration(

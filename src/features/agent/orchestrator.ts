@@ -163,6 +163,7 @@ function reworkRejectedResults(
     throw new StagePlanError("结果拒绝时必须指定至少一个返工工作项。");
   const selected = new Set<string>();
   const revisedPrompts = new Map<string, string>();
+  let requiresPlanReapproval = false;
   for (const selection of selections) {
     if (
       typeof selection?.id !== "string" ||
@@ -174,9 +175,17 @@ function reworkRejectedResults(
     if (selection.prompt !== undefined) {
       if (!stageWorkItemSchema.shape.prompt.safeParse(selection.prompt).success)
         throw new StagePlanError("返工工作项 prompt 无效。");
+      const work = stage.workItems.find((item) => item.id === selection.id)!;
+      if (
+        stage.approvalGate === "plan" &&
+        selection.prompt !== (work.reworkPrompt ?? work.prompt)
+      )
+        requiresPlanReapproval = true;
       revisedPrompts.set(selection.id, selection.prompt);
     }
   }
+  if (requiresPlanReapproval)
+    for (const work of stage.workItems) selected.add(work.id);
   const affected = new Set(selected);
   const allItems = plan.stages.flatMap((item) => item.workItems);
   const pending = [...selected];
@@ -199,16 +208,26 @@ function reworkRejectedResults(
       return {
         ...item,
         status:
-          item.status === "done" || item.status === "result_review"
-            ? ("doing" as const)
-            : item.status,
+          item.index === stageIndex && requiresPlanReapproval
+            ? ("plan_review" as const)
+            : item.status === "done" || item.status === "result_review"
+              ? ("doing" as const)
+              : item.status,
+        planApprovedAt:
+          item.index === stageIndex && requiresPlanReapproval
+            ? undefined
+            : item.planApprovedAt,
         resultSummary: undefined,
         updatedAt: stamp,
         workItems: item.workItems.map((work) =>
           affected.has(work.id)
             ? {
                 ...work,
-                prompt: revisedPrompts.get(work.id) ?? work.prompt,
+                reworkPrompt: revisedPrompts.has(work.id)
+                  ? revisedPrompts.get(work.id) === work.prompt
+                    ? undefined
+                    : revisedPrompts.get(work.id)
+                  : work.reworkPrompt,
                 status: "queued" as const,
                 assetId: undefined,
                 error: undefined,

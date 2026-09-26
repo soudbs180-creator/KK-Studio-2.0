@@ -1029,7 +1029,7 @@ mod tests {
                 "approvalGate": "plan", "planApprovedAt": 1,
                 "createdAt": 1, "updatedAt": 1,
                 "workItems": [{
-                    "id": "work-1", "kind": "image", "prompt": "Blue sphere",
+                    "id": "work-1", "kind": "image", "prompt": "Blue sphere", "reworkPrompt": "Blue glass sphere",
                     "dependencies": [], "status": "succeeded", "assetId": asset_id,
                     "createdAt": 1, "updatedAt": 1
                 }]

@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-26 返工计划重新审批候选
+
+PR #14 的 `abb2bb8` 独立复审发现返工修改已批准提示词可绕过计划门（P1）且破坏原计划同 ID 重放（P2），结论 CHANGES REQUIRED。任务分支已用独立 `reworkPrompt` 保留原定义并在提示词变化时清除旧批准、重新进入计划审批；Web/Rust 包回归已补。本地 422 Node、82 Rust、300 浏览器及静态/构建通过，新 head 托管/独立复审待完成；主线、发布及 PR #15 draft 不变。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-26 编排结果返工候选
 
 PR #14 的 `5fff9de` 独立复审关闭前五项问题，但发现结果拒绝后成功工作项无法返工，结论 CHANGES REQUIRED。任务分支已补宿主返工选择、下游依赖失效及旧素材清除；本地 422 Node、82 Rust、300 浏览器及静态/构建通过。当前候选的交付、新 SHA Hosted CI、独立复审和用户产品验收仍待完成，主线/正式发布不变；PR #15 仍为 draft，文档冲突需在 #14 集成后处理。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。

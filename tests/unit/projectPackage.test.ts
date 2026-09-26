@@ -181,6 +181,7 @@ test("package creation includes an asset referenced only by a stage work item", 
   ];
   project.stagePlans[0].stages[0].approvalGate = "plan";
   project.stagePlans[0].stages[0].planApprovedAt = 1;
+  project.stagePlans[0].stages[0].workItems[0].reworkPrompt = "蓝色玻璃球体";
   const snapshot = {
     ...emptySnapshot(),
     activeProjectId: project.id,

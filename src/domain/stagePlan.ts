@@ -50,6 +50,8 @@ export const stageWorkItemSchema = z.object({
   id: z.string().min(1).max(160),
   kind: stageWorkItemKindSchema,
   prompt: z.string().min(1).max(4000),
+  /** 宿主结果返工时给出的执行提示词；原始 prompt 保持不变以支持同 ID 重放。 */
+  reworkPrompt: z.string().min(1).max(4000).optional(),
   /** 工作项依赖：本工作项开始前须成功完成的其它工作项 id。 */
   dependencies: z.array(z.string().max(160)).max(64),
   status: stageWorkItemStatusSchema,

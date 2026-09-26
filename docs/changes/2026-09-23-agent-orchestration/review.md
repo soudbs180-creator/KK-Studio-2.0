@@ -86,3 +86,8 @@
 
 - 独立只读 reviewer 对 `5fff9dec935fc325b875db7d0f660c95d1fd2f8a` 确认前述五项问题已关闭，但结论仍为 **CHANGES REQUIRED**：新发现一项既有 P1，结果拒绝后阶段回到 `doing`，所有工作项却仍为终态 `succeeded`，无法重新生成或修改同 ID 计划。reviewer 用单项完整审批流程复现。
 - 实现者新增失败先行测试后补宿主控制的返工项选择、prompt 修订与下游依赖失效；清除旧素材引用并重新打开受影响的结果审批。原本成功项不开放普通覆盖。修复后新 head 须重新绑定独立复审及 Hosted CI。
+
+## 2026-09-26 `abb2bb8` 独立复审与返工审批边界
+
+- 独立 reviewer 对 `abb2bb8e75ca816ba8f4049e660ed63bfb23c09b` 确认拒绝结果后的返工路径已打通，但结论 **CHANGES REQUIRED**：修改已批准计划的 prompt 后沿用 `planApprovedAt`，新工作可直接运行，宿主再请求计划审批反而报已批准（P1）；修改原 prompt 后同 ID 原定义重放失败（P2）。reviewer 以单阶段流程实际复现，未改文件。
+- 候选新增独立的可选 `reworkPrompt` 运行字段，原始 prompt 留作幂等定义；改变 plan-gated 阶段的有效提示词时清除审批标记、整阶段及下游排队并重新进入计划审批。Web/Rust 项目包往返覆盖新字段。新 head 须再做独立复审及 Hosted CI。

@@ -204,10 +204,13 @@ test("result rejection requeues selected work for revised output and a second re
     expectedRevision: firstReview.revision,
     reworkItems: [{ id: "wi-0", prompt: "按反馈修改分镜" }],
   });
-  assert.equal(rejected.stages[0].status, "doing");
+  assert.equal(rejected.stages[0].status, "plan_review");
   assert.equal(rejected.stages[0].workItems[0].status, "queued");
-  assert.equal(rejected.stages[0].workItems[0].prompt, "按反馈修改分镜");
+  assert.equal(rejected.stages[0].workItems[0].prompt, "写分镜");
+  assert.equal(rejected.stages[0].workItems[0].reworkPrompt, "按反馈修改分镜");
+  assert.equal(rejected.stages[0].planApprovedAt, undefined);
   assert.equal(rejected.stages[0].workItems[0].assetId, undefined);
+  assert.deepEqual(orchestrator.upsertPlan(planInput("p")), rejected);
   assert.throws(
     () =>
       orchestrator.updateWorkItem({
@@ -219,11 +222,29 @@ test("result rejection requeues selected work for revised output and a second re
       }),
     /revision|并发冲突/,
   );
+  assert.throws(
+    () =>
+      orchestrator.updateWorkItem({
+        planId: plan.id,
+        stageIndex: 0,
+        workItemId: "wi-0",
+        expectedRevision: rejected.revision,
+        status: "running",
+      }),
+    /doing|审批/,
+  );
+  const reapproved = orchestrator.decideStage({
+    planId: plan.id,
+    stageIndex: 0,
+    gate: "plan",
+    decision: "approve",
+    expectedRevision: rejected.revision,
+  });
   const rerun = orchestrator.updateWorkItem({
     planId: plan.id,
     stageIndex: 0,
     workItemId: "wi-0",
-    expectedRevision: rejected.revision,
+    expectedRevision: reapproved.revision,
     status: "running",
   });
   const revised = orchestrator.updateWorkItem({
@@ -325,6 +346,8 @@ test("reworking an upstream result invalidates succeeded downstream work and rev
   assert.equal(rejected.stages[1].status, "doing");
   assert.equal(rejected.stages[1].workItems[0].status, "queued");
   assert.equal(rejected.stages[1].workItems[0].assetId, undefined);
+  assert.equal(rejected.stages[0].status, "doing");
+  assert.ok(rejected.stages[0].planApprovedAt);
   assert.throws(
     () =>
       orchestrator.updateWorkItem({

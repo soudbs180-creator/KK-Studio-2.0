@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-26 TASK-ORCH-001 返工重审候选
+
+独立 reviewer 对 PR #14 `abb2bb8` 给出 CHANGES REQUIRED：返工提示词变更沿用旧计划批准（P1）、原计划同 ID 重放失败（P2）。任务 worktree 已分离原 prompt / 可选 `reworkPrompt` 并在有效提示词变更时重开计划审批，Web/Rust 包测试已覆盖；本地 422 Node、82 Rust、300 浏览器及静态/构建通过。恢复时核对新 head、Hosted CI、独立复审及 dirty 状态；PR #14 未验收不可合并，PR #15 四处治理文档冲突待顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-26 TASK-ORCH-001 结果返工候选
 
 独立 reviewer 对 PR #14 `5fff9de` 确认旧五项问题关闭，但提出结果审批拒绝后成功工作项不可重做的 P1，结论 CHANGES REQUIRED。任务 worktree 已补宿主返工和跨阶段下游失效，当前本地 422 Node、82 Rust、300 浏览器及静态/构建通过；恢复时先核对交付、新 head、Hosted CI、独立复审和 dirty 状态。PR #14 未验收不可合并，PR #15 的四处文档冲突须顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
