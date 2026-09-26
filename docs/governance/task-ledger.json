@@ -1276,6 +1276,57 @@
     "updated": "2026-09-24"
   },
   {
+    "id": "TASK-MCP-REGISTRY-001",
+    "title": "MCP 多标签页配置写入不丢失",
+    "goal": "多个 Web 标签页同时修改 MCP 服务器列表时保留每次已确认的改动",
+    "scope": "McpServerRegistry 多实例持久化、跨标签页同步和冲突反馈",
+    "acceptance": [
+      "两个 registry 实例从同一 49 项快照各新增一项，不静默覆盖先写者",
+      "跨标签页删除与同 id 更新有明确冲突语义，并以自动测试覆盖",
+      "保持 50 项上限、凭据不落盘和现有存储 key"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/features/mcp/mcpClient.ts",
+      "src/components/settings/McpSettings.tsx",
+      "tests/unit/mcpClient.test.ts"
+    ],
+    "status": "TODO",
+    "evidence": ["docs/changes/2026-09-24-mcp-registry-limit/review.md"],
+    "verification": "独立审查在基线复现：两个实例各基于 49 项新增时，后写者覆盖先写者；修复及跨标签页验收未执行。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-09-26"
+  },
+  {
+    "id": "TASK-MCP-REGISTRY-002",
+    "title": "旧版超限 MCP 配置无损恢复",
+    "goal": "让旧版本已存的 51 项 MCP 配置可被用户识别和恢复，避免列表空白时丢失原件",
+    "scope": "MCP 本地配置损坏提示、原件导出和显式恢复流程",
+    "acceptance": [
+      "已有 51 项存储字节在查看、导出和恢复前保持不变",
+      "界面说明超限原因并提供可用的导出或显式修复路径",
+      "51 项与其他损坏 JSON 的回归测试分别覆盖，且不放宽正常写入的 50 项上限"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/features/mcp/mcpClient.ts",
+      "src/components/settings/McpSettings.tsx",
+      "tests/unit/mcpClient.test.ts",
+      "tests/browser/mcp-settings.spec.ts"
+    ],
+    "status": "TODO",
+    "evidence": ["docs/changes/2026-09-24-mcp-registry-limit/review.md"],
+    "verification": "独立审查在基线复现：旧版 51 项存储仍在但当前界面列表为 0，registry 拒绝后续增删；恢复流程未实现。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-09-26"
+  },
+  {
     "id": "FEATURE-SYSTEM",
     "title": "功能卡片体系、状态看板与后端化路线",
     "goal": "每个功能有唯一可定位的功能卡片，状态经 registry 门禁与账本打通，并给出演示功能后端化分批路线",

@@ -49,7 +49,7 @@
 | ID | 功能 | 状态 | 卡片 | 关联任务 |
 | --- | --- | --- | --- | --- |
 | FEAT-011 | 本地技能 Skills | PARTIAL（部分可用） | [卡片](feat-011-skills.md) | TASK-CAP-001, TASK-DS-002 |
-| FEAT-012 | MCP 客户端 | PARTIAL（部分可用） | [卡片](feat-012-mcp.md) | TASK-CAP-001, BACKEND-MCP-AUTO, TASK-AGENT-001, TASK-AGENT-003, TASK-MINIMAX-001, TASK-MCP-PROTO-001 |
+| FEAT-012 | MCP 客户端 | PARTIAL（部分可用） | [卡片](feat-012-mcp.md) | TASK-CAP-001, BACKEND-MCP-AUTO, TASK-AGENT-001, TASK-AGENT-003, TASK-MINIMAX-001, TASK-MCP-PROTO-001, TASK-MCP-REGISTRY-001, TASK-MCP-REGISTRY-002 |
 | FEAT-013 | 连接器目录 | PARTIAL（部分可用） | [卡片](feat-013-connectors.md) | TASK-CAP-001, TASK-MINIMAX-001, TASK-UI-005, PLUGIN-DESKTOP-001 |
 | FEAT-030 | Agent 编排与画布交付契约 | PARTIAL（部分可用） | [卡片](feat-030-agent-orchestration.md) | TASK-ORCH-001, TASK-ORCH-002, TASK-ORCH-003, TASK-CANVAS-001 |
 

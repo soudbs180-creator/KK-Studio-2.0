@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-09-24
-- 关联任务：TASK-CAP-001、BACKEND-MCP-AUTO、TASK-AGENT-001、TASK-AGENT-003、TASK-MINIMAX-001、TASK-MCP-PROTO-001
+- 最近更新：2026-09-26
+- 关联任务：TASK-CAP-001、BACKEND-MCP-AUTO、TASK-AGENT-001、TASK-AGENT-003、TASK-MINIMAX-001、TASK-MCP-PROTO-001、TASK-MCP-REGISTRY-001、TASK-MCP-REGISTRY-002
 
 ## 用户可见入口
 
@@ -46,3 +46,5 @@ TASK-AGENT-003：图片附件、显式画布引用和视口/选择桥接；验�
 ## 2026-09-24 配置上限修复
 
 原 registry 写入允许第 51 个服务器，但读取 schema 最多接受 50 个，重启后会误判整份配置损坏。现写前按同一上限拒绝第 51 个，同时允许同 id 更新，原数据不变；证据见 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)。功能状态仍 PARTIAL。
+
+2026-09-26 独立审查另复现两个基线问题：多标签页基于旧快照写入会互相覆盖（TASK-MCP-REGISTRY-001）；旧版已写出 51 项时界面显示空列表且无恢复入口（TASK-MCP-REGISTRY-002）。这两项未由本次预防性写入修复关闭。

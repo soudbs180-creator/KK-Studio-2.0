@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-26 MCP 限额审查恢复点
+
+PR #15 已吸收 `main@f626438`，本地完整验证通过；独立只读审查对业务源码 `3ab2578` 为 PASS WITH FOLLOW-UPS，两个基线 P2 已登记为 `TASK-MCP-REGISTRY-001/002`。恢复时先回读 PR #15 最终 head、Hosted `verify`/`delivery`、工作树及主线 SHA；不能把独立代码审查等同于真实第三方 MCP 或 Desktop release 验收。根工作区的 UI 改动仍保留。
+
 ## 2026-09-26 当前恢复入口：PR #14 已并线，PR #15 待新 head 验收
 
 远端 main@f626438 已包含 PR #14 领域层；根工作区的未提交 UI 工作仍需保护。fix/TASK-MINIMAX-001-mcp-registry-limit 已合入新 main 并解决文档冲突；恢复时回读该分支的提交、CI、独立审查与工作树，不把尚在审查的 MCP 修复算作主线。

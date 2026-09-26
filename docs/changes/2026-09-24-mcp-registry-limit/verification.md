@@ -36,3 +36,7 @@
 - 四处冲突位于 `docs/PROGRESS.md`、`docs/features/features.registry.json`、`docs/governance/AI_HANDOFF.md`、`docs/governance/PROJECT_STATE.md`；保留双方历史记录，功能登记合并两任务引用，随后重新生成两个看板。`features:check` 为 31/0、`governance:check` 为 67/0、`markdown:check` 为 84/0。
 - Node 24.21.0 在该合并工作树执行 `npm run verify`，退出码 0：423/423 Node 与 300/300 Edge 浏览器用例通过，类型、lint、UI 规则、格式与构建同在该命令中通过。浏览器测试改写的 20 个历史截图/JSON 已按测试前状态恢复，未纳入候选。
 - 合并提交后的精确 head、交付检查、Hosted CI 和独立上下文复审仍须完成；PR #15 保持草稿，不把本地通过写成最终可合并。
+
+## 2026-09-26 独立复审与托管运行补记
+
+分支合并提交 `3ab2578` 的 MCP 业务源码经独立上下文只读审查为 PASS WITH FOLLOW-UPS，未发现本次验收阻断；两个基线 P2 已在 review.md 和任务账本登记。`main@f626438` 的 [Hosted `verify` 成功](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36242579809)。截至 2026-09-26 13:05 UTC，[PR 事件运行](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36243040425)的 `delivery` 已成功，`verify` 仍在运行；同 head 的 [push 事件运行](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36243038427) `verify` 失败。实现者通过认证的 [失败 job 日志](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36243038427/job/108407025213)定位到 `desktopRelease.test.ts` Windows 子进程 10 秒超时；只读 reviewer 未获日志访问权限，未独立核验该归因。该测试在其他运行中通过，尚未证明是产品逻辑缺陷；最终候选需 Hosted 检查重新成功，不能以本地或旧 head 代替。

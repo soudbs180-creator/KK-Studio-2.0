@@ -45,6 +45,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-CAP-001 | 本地 Skill/MCP/ComfyUI 能力补齐 | PARTIAL | TASK-GOV-001, T6 | root |
 | TASK-MINIMAX-001 | MiniMax Design 交互审计与本地技能/MCP复刻 | PARTIAL | TASK-GOV-002 | root |
 | TASK-MCP-PROTO-001 | MCP 2026 协议协商与旧版兼容 | TODO | TASK-CAP-001 | root |
+| TASK-MCP-REGISTRY-001 | MCP 多标签页配置写入不丢失 | TODO | none | root |
+| TASK-MCP-REGISTRY-002 | 旧版超限 MCP 配置无损恢复 | TODO | none | root |
 | FEATURE-SYSTEM | 功能卡片体系、状态看板与后端化路线 | DONE | TASK-KK2-MAIN-SYNC | root |
 | BACKEND-IMAGE-PARAMS | 图片比例与清晰度真实透传供应商 | PARTIAL | none | root |
 | BACKEND-TEXT-NODE | 文本节点接入统一任务宿主 | PARTIAL | T5 | root |
@@ -545,6 +547,30 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — NOT VERIFIED：当前客户端固定 2025-11-25 initialize；官方 2026-07-28 文档定义 server/discover。尚未运行现代协议真实服务器，兼容失败为静态推断。
 - Evidence: [docs/changes/2026-09-24-mcp-registry-limit/spec.md](../../docs/changes/2026-09-24-mcp-registry-limit/spec.md), [docs/features/feat-012-mcp.md](../../docs/features/feat-012-mcp.md)
 - Updated: 2026-09-24
+
+## TASK-MCP-REGISTRY-001 — MCP 多标签页配置写入不丢失
+
+- Goal: 多个 Web 标签页同时修改 MCP 服务器列表时保留每次已确认的改动
+- Scope: McpServerRegistry 多实例持久化、跨标签页同步和冲突反馈
+- Acceptance: 两个 registry 实例从同一 49 项快照各新增一项，不静默覆盖先写者; 跨标签页删除与同 id 更新有明确冲突语义，并以自动测试覆盖; 保持 50 项上限、凭据不落盘和现有存储 key
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/mcp/mcpClient.ts, src/components/settings/McpSettings.tsx, tests/unit/mcpClient.test.ts
+- Verification: NOT_VERIFIED — 独立审查在基线复现：两个实例各基于 49 项新增时，后写者覆盖先写者；修复及跨标签页验收未执行。
+- Evidence: [docs/changes/2026-09-24-mcp-registry-limit/review.md](../../docs/changes/2026-09-24-mcp-registry-limit/review.md)
+- Updated: 2026-09-26
+
+## TASK-MCP-REGISTRY-002 — 旧版超限 MCP 配置无损恢复
+
+- Goal: 让旧版本已存的 51 项 MCP 配置可被用户识别和恢复，避免列表空白时丢失原件
+- Scope: MCP 本地配置损坏提示、原件导出和显式恢复流程
+- Acceptance: 已有 51 项存储字节在查看、导出和恢复前保持不变; 界面说明超限原因并提供可用的导出或显式修复路径; 51 项与其他损坏 JSON 的回归测试分别覆盖，且不放宽正常写入的 50 项上限
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/mcp/mcpClient.ts, src/components/settings/McpSettings.tsx, tests/unit/mcpClient.test.ts, tests/browser/mcp-settings.spec.ts
+- Verification: NOT_VERIFIED — 独立审查在基线复现：旧版 51 项存储仍在但当前界面列表为 0，registry 拒绝后续增删；恢复流程未实现。
+- Evidence: [docs/changes/2026-09-24-mcp-registry-limit/review.md](../../docs/changes/2026-09-24-mcp-registry-limit/review.md)
+- Updated: 2026-09-26
 
 ## FEATURE-SYSTEM — 功能卡片体系、状态看板与后端化路线
 

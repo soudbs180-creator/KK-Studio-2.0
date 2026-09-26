@@ -540,9 +540,11 @@
       "TASK-AGENT-001",
       "TASK-AGENT-003",
       "TASK-MINIMAX-001",
-      "TASK-MCP-PROTO-001"
+      "TASK-MCP-PROTO-001",
+      "TASK-MCP-REGISTRY-001",
+      "TASK-MCP-REGISTRY-002"
     ],
-    "updated": "2026-09-24",
+    "updated": "2026-09-26",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
