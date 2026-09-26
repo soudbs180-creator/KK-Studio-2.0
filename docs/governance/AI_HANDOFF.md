@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-26 TASK-ORCH-001 身份唯一性候选
+
+PR #14 旧 head `c7abc45` Hosted CI 已通过，独立复审任务因执行额度耗尽未完成。之后在任务 worktree 复现并修复重复阶段索引/计划 ID 的跨端边界；本地 412 Node、82 Rust、300 浏览器及静态/构建通过。恢复时核对新的 branch head、Hosted CI、独立复审与 dirty 状态；PR #14 未验收前不能合并，#15 四处文档冲突须后续顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-24 TASK-ORCH-001 重复 ID 修复候选
 
 PR #14 `67ff18fb` 独立复审已关闭原两项 P1，新发现重复工作项 ID 会使 `updateWorkItem` 误改已成功项。任务 worktree 已添加计划级 TS/Rust 唯一性校验及失败先行测试；当前 409 Node、81 Rust、300 浏览器与类型/Lint/构建通过。恢复时先核对 dirty/new head，再核对 Hosted CI、独立复审；未完成前不可合并。PR #15 的四处文档冲突待顺序整合，详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。

@@ -154,6 +154,7 @@ fn stage_plans(project: &Value) -> Result<(), String> {
     if plans.len() > 64 {
         return Err(invalid("stagePlans"));
     }
+    let mut plan_ids = HashSet::new();
     for plan in plans {
         shape(
             plan,
@@ -180,6 +181,9 @@ fn stage_plans(project: &Value) -> Result<(), String> {
             ],
         )?;
         text(plan, "id", 1, 160)?;
+        if !plan_ids.insert(plan["id"].as_str().unwrap()) {
+            return Err(invalid("stagePlans.id"));
+        }
         text(plan, "title", 1, 120)?;
         text(plan, "projectId", 1, 160)?;
         enumeration(plan, "createdBy", &["agent", "user"])?;
@@ -190,6 +194,7 @@ fn stage_plans(project: &Value) -> Result<(), String> {
         if stages.is_empty() || stages.len() > 32 {
             return Err(invalid("stagePlans.stages"));
         }
+        let mut stage_indexes = HashSet::new();
         let mut work_ids = HashSet::new();
         for stage in stages {
             shape(
@@ -217,6 +222,9 @@ fn stage_plans(project: &Value) -> Result<(), String> {
                 ],
             )?;
             number(stage, "index", 0.0, 64.0, true)?;
+            if !stage_indexes.insert(stage["index"].as_f64().unwrap() as u64) {
+                return Err(invalid("stagePlans.stages.index"));
+            }
             texts(
                 stage,
                 &[("name", 120), ("goal", 400), ("resultSummary", 500)],

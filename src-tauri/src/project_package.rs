@@ -1080,6 +1080,38 @@ mod tests {
     }
 
     #[test]
+    fn rejects_stage_plan_with_duplicate_stage_or_plan_ids_before_export() {
+        for variant in ["stage-index", "plan-id"] {
+            let source = fixture_root();
+            let (snapshots, assets, _, _) = seed(&source);
+            let mut current = snapshots.read().unwrap().snapshot.unwrap();
+            current["revision"] = Value::from(2);
+            let mut plan = json!({
+                "id": "plan-duplicate", "title": "Duplicate", "projectId": "p1", "createdBy": "agent",
+                "revision": 0, "createdAt": 1, "updatedAt": 1,
+                "stages": [
+                    {"index": 0, "name": "Plan", "goal": "First", "status": "doing", "workItems": [], "createdAt": 1, "updatedAt": 1},
+                    {"index": 1, "name": "Build", "goal": "Second", "status": "done", "workItems": [], "createdAt": 1, "updatedAt": 1}
+                ]
+            });
+            let plans = if variant == "stage-index" {
+                plan["stages"][1]["index"] = json!(0.0);
+                json!([plan])
+            } else {
+                json!([plan.clone(), plan])
+            };
+            current["projects"][0]["stagePlans"] = plans;
+            snapshots.write(current, Some(1)).unwrap();
+            let package_path = source.join(format!("duplicate-{variant}.kkproject"));
+            assert!(export_package(&snapshots, &assets, &package_path)
+                .unwrap_err()
+                .starts_with("corrupt:"));
+            assert!(!package_path.exists());
+            let _ = fs::remove_dir_all(source);
+        }
+    }
+
+    #[test]
     fn occupied_target_is_rejected_without_touching_source() {
         let source = fixture_root();
         let (snapshots, assets, _asset_id, _original) = seed(&source);

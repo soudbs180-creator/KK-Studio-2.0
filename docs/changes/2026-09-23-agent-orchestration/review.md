@@ -68,3 +68,9 @@
 - 独立 reviewer 对 `67ff18fb7633beba5a86dfd1bb6be066880a2580` 的结论为 **CHANGES REQUIRED**：ORCH-FINAL-R1/R2 经 Node 38/38、Rust 项目包 17/17 定向复验已关闭；新增 ORCH-FINAL-R3（P2，当前验收阻断）由重复 `workItem.id` 触发。`find` 校验首项，`map` 更新全部同名项，最小输入把 `[queued, succeeded]` 改成 `[running, running]`，绕过终态保护。审查只读，不是 GitHub 人工 approval。
 - 实现者新增失败先行测试：领域创建和计划工具原接受跨阶段重复 id，Rust 原生包原可导出同阶段重复 id。修复为计划级唯一性校验，三条输入路径均拒绝且不写入；两端 schema 与项目包决定见 [ADR-006](../../architecture/adr/ADR-006-stage-plan-package-contract.md)。完整结果见 `verification.md`。
 - 此次修复仍在未提交候选中；新 head 的独立复审和 hosted CI **NOT VERIFIED**，不得沿用 `67ff18fb` 的结论当作通过。
+
+## 2026-09-26 身份唯一性自查
+
+- `c7abc45` 已通过 Hosted CI `verify`/`delivery`，但独立新 head 复审任务因执行额度耗尽而中断，不能视为 PASS。
+- 实现者随后发现阶段 `index` 与项目内计划 `id` 可由外部数据重复注入；阶段推进和计划写入按这些身份查找后批量映射，可能影响多个对象。TS 计划 schema 现在拒绝重复阶段索引，项目读取仅保留同 ID 的首个有效计划；Web 包无损校验及 Rust 包预检拒绝异常导出/导入。失败先行与完整本地测试见 `verification.md`。
+- 此次自查及修复不是独立复审。新提交 SHA 的独立 review 与 Hosted CI 均须重新完成；PR #14 保持不可合并。

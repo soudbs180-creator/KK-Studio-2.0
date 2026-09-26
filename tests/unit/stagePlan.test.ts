@@ -131,6 +131,23 @@ test("stage plans reject duplicate work item IDs across stages", () => {
   assert.equal(normalizeStagePlan(duplicate), null);
 });
 
+test("stage plan normalization rejects duplicate stage indexes", () => {
+  const valid = samplePlan();
+  const duplicate = {
+    ...valid,
+    stages: valid.stages.map((stage, index) =>
+      index === 1 ? { ...stage, index: valid.stages[0].index } : stage,
+    ),
+  };
+  assert.equal(normalizeStagePlan(duplicate), null);
+});
+
+test("stage plan collection keeps only the first duplicate plan ID", () => {
+  const valid = samplePlan();
+  const duplicate = { ...valid, title: "second copy" };
+  assert.deepEqual(normalizeStagePlans([valid, duplicate]), [valid]);
+});
+
 test("casAdvanceStage advances doing to plan_review/result_review/blocked", () => {
   const plan = samplePlan();
   const reviewed = casAdvanceStage(plan, 0, "doing", "plan_review");

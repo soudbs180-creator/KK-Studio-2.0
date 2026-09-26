@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-26 编排候选补查
+
+PR #14 旧 head `c7abc45` 的 Hosted `verify`/`delivery` 已通过；自查随后复现阶段索引和计划 ID 重复导致的身份歧义，已在任务分支补 TS/Rust 拒绝与 Web 包无损回归。本地 412 Node、82 Rust、300 浏览器通过。新提交的 Hosted CI、独立复审及用户产品验收未完成，主线与正式发布未变。PR #15 保持 draft，四处治理文档冲突在 #14 集成后处理。详见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-24 编排候选重复 ID 复审
 
 独立 reviewer 对 PR #14 `67ff18fb` 关闭原两项 P1，但发现计划允许重复工作项 ID，受控更新会误改所有同名项。任务分支已用 TS/Rust 失败先行回归补计划级唯一性校验；当前 409 Node、81 Rust、300 浏览器与类型/Lint/构建通过。新 head 的 Hosted CI 和独立复审仍待核对；主线、正式发布与 PR #15 冲突状态未变。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)及[ADR-006](../architecture/adr/ADR-006-stage-plan-package-contract.md)。

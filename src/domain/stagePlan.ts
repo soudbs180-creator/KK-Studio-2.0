@@ -100,8 +100,17 @@ export const stagePlanSchema = z
     updatedAt: z.number(),
   })
   .superRefine((plan, context) => {
+    const stageIndexes = new Set<number>();
     const ids = new Set<string>();
-    plan.stages.forEach((stage, stageIndex) =>
+    plan.stages.forEach((stage, stageIndex) => {
+      if (stageIndexes.has(stage.index)) {
+        context.addIssue({
+          code: "custom",
+          path: ["stages", stageIndex, "index"],
+          message: "阶段 index 不得重复。",
+        });
+      }
+      stageIndexes.add(stage.index);
       stage.workItems.forEach((workItem, workIndex) => {
         if (ids.has(workItem.id)) {
           context.addIssue({
@@ -111,8 +120,8 @@ export const stagePlanSchema = z
           });
         }
         ids.add(workItem.id);
-      }),
-    );
+      });
+    });
   });
 export type StagePlan = z.infer<typeof stagePlanSchema>;
 
@@ -336,10 +345,13 @@ export function normalizeStagePlan(value: unknown): StagePlan | null {
 }
 
 export function normalizeStagePlans(value: unknown): StagePlan[] {
+  const ids = new Set<string>();
   return Array.isArray(value)
     ? value.slice(0, 64).flatMap((entry) => {
         const plan = normalizeStagePlan(entry);
-        return plan ? [plan] : [];
+        if (!plan || ids.has(plan.id)) return [];
+        ids.add(plan.id);
+        return [plan];
       })
     : [];
 }

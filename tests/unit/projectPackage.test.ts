@@ -197,6 +197,40 @@ test("package creation includes an asset referenced only by a stage work item", 
   );
 });
 
+test("Web package export rejects duplicate stage indexes and plan IDs", async () => {
+  const { snapshot, asset } = fixture();
+  const plan = createStagePlan({
+    id: "plan-1",
+    title: "计划",
+    projectId: snapshot.projects[0].id,
+    createdBy: "agent",
+    stages: [
+      { name: "规划", goal: "先规划", workItems: [] },
+      { name: "执行", goal: "再执行", workItems: [] },
+    ],
+  });
+  const project = snapshot.projects[0];
+  for (const plans of [
+    [
+      {
+        ...plan,
+        stages: plan.stages.map((stage, index) =>
+          index === 1 ? { ...stage, index: 0 } : stage,
+        ),
+      },
+    ],
+    [plan, { ...plan, title: "重复计划" }],
+  ]) {
+    project.stagePlans = plans;
+    await assert.rejects(
+      createProjectPackageManifest(snapshot, async (id) =>
+        id === assetId ? asset : null,
+      ),
+      (error: unknown) => (error as { code?: string }).code === "corrupt",
+    );
+  }
+});
+
 test("valid package preflight verifies checksum, references and original bytes", async () => {
   const { input } = await validPackage();
   const checked = await preflightProjectPackage(input);

@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-26 编排候选身份唯一性补查
+
+PR #14 的旧 head `c7abc45` 已通过 Hosted `verify`/`delivery`；后续自查又发现重复阶段索引和项目内重复计划 ID 可使按身份更新误触多个对象。任务分支已用失败先行测试补 TS/Rust 校验，Web 项目包拒绝有损导出；本地 412 Node、82 Rust、300 浏览器及静态/构建检查通过。新 head 的 Hosted CI 和独立复审待完成，PR 仍不可合并；PR #15 的四处文档冲突继续按顺序处理。见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-24 编排计划重复工作项 ID 边界
 
 PR #14 的 `67ff18fb` 独立复审确认旧计划覆写与项目包漏同步两项 P1 已关闭，但发现重复工作项 ID 可让单项更新误改已成功项。候选已在 TS 与 Rust 项目包中拒绝计划内重复 ID；失败先行和 409 Node / 81 Rust / 300 浏览器本地回归见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。新 head 独立复审与 Hosted CI 仍待完成；当前 PR 不可合并。

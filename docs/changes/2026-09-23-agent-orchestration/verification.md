@@ -77,3 +77,10 @@
 - 绑定 `67ff18fb` 的独立复审关闭原 ORCH-FINAL-R1/R2，但发现 ORCH-FINAL-R3：重复工作项 id 可把已成功项和排队项一并更新为 running。复审实际最小输入得到 `[queued, succeeded] → [running, running]`，结论 CHANGES REQUIRED。
 - 失败先行：新增 Node 计划创建与 `plan_patch_stage` 测试在旧实现下分别未抛错/返回 `ok:true`；Rust `rejects_stage_plan_with_duplicate_work_item_ids_before_export` 原返回成功导出。补计划级唯一性校验后，Node 定向 29/29、Rust 新用例通过。
 - 当前候选的全量 Node 409/409、Rust 81/81、Playwright/Edge 300/300、TypeScript noEmit/增量构建、ESLint、Prettier、cargo fmt、Vite production build 均通过；治理 66/0、功能 31/0、Markdown 84/0、UI 标准 159/0。浏览器默认启动检查提示 1423 端口已用，但当时 HTTP 连接拒绝且无监听进程；由本任务启动同一 Vite preview 并使用临时 `reuseExistingServer` 测试配置完成 300/300，随后停止自有预览进程并移除临时配置。测试生成的 24 个已跟踪截图已恢复，不纳入提交。提交后的 delivery、Hosted CI 和独立复审仍待完成；Desktop GUI、真实 Provider 与发布未验证。
+
+## 2026-09-26 阶段和计划身份唯一性回归
+
+- 旧 head `c7abc45` 的 Hosted quality run `35945896838` 对该 SHA 的 `verify` 与 `delivery` 均成功；它不验证下面的新改动。独立复审因 reviewer 执行额度耗尽，仍为 **NOT VERIFIED**。
+- 失败先行：TS 归一化原接受重复阶段索引并保留两个同 ID 计划（2 项失败）；Rust 原生包原接受重复阶段索引/计划 ID 并成功导出（1 项失败）。修复后 Web 项目包测试确认两种情况都返回 `corrupt` 而非静默丢计划。
+- 当前工作树完整本地检查：Node 412/412、Rust 82/82、Playwright/Edge 300/300；TypeScript noEmit/增量构建、ESLint、Prettier、cargo fmt、Vite production build 全部通过；治理 66/0、功能 31/0、Markdown 84/0、UI 标准 159/0。浏览器测试改写的 21 张已跟踪截图和 Rust 测试生成的 2 份 schema 已恢复，不纳入候选。
+- 新 head 提交后的 `delivery:check`、Hosted CI 与独立审查仍须重新绑定准确 SHA；Desktop GUI/正式发布和真实 Provider 未验证。

@@ -2,7 +2,7 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-09-23
+- 最近更新：2026-09-26
 - 关联任务：TASK-ORCH-001, TASK-ORCH-002, TASK-ORCH-003, TASK-CANVAS-001
 
 ## 用户可见入口
@@ -22,7 +22,7 @@
 
 - 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/agentCanvas.test.ts`
 - 浏览器回归：既有浏览器回归 300/300 通过；Stage UI 交互尚未接入，专项回归由后续任务补充。
-- Rust 测试 / 实机验收：项目包导出/导入回归 80/80 Rust 全量通过；Desktop GUI 与正式发布未验收。
+- Rust 测试 / 实机验收：项目包导出/导入及重复身份拒绝回归，当前 82/82 Rust 全量通过；Desktop GUI 与正式发布未验收。
 - 变更与验证证据：`docs/changes/2026-09-23-agent-orchestration/verification.md`
 
 ## 当前能力

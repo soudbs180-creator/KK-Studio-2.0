@@ -69,3 +69,4 @@
 - `CreationProject.stagePlans` 由 normalize 为旧项目补空数组，Desktop `.kkproject` schema 必须接受并验证该字段；Web 与 Rust 项目包均收集 `stagePlans[].stages[].workItems[].assetId`，防止只由计划引用的原件在导出时遗漏。
 - 上述补充只覆盖本地领域和项目包契约，尚未完成真实生成、Tauri GUI 和发布验收。
 - 计划内 `workItems[].id` 跨所有阶段唯一；重复 ID 在领域创建/归一化和 Rust 项目包预检中拒绝，不自动重命名或推进其它同名工作项。依据和兼容边界见 [ADR-006](../../architecture/adr/ADR-006-stage-plan-package-contract.md)。
+- 同一计划内 `stages[].index` 必须唯一，同一项目内 `stagePlans[].id` 必须唯一；Web 读取隔离重复计划 ID，项目包导出/导入拒绝会丢失或误改计划的重复身份，原件不自动重命名。
