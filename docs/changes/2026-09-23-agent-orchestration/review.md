@@ -81,3 +81,8 @@
 - P1：`approvalGate: plan` 未批准可执行或直接请求结果审批；全部工作项仍排队也可标记 `done`；阶段状态绕回后旧 Agent 请求仍能以相同 `expectedStatus` 推进；依赖缺失/自引用/循环可创建，前置项未成功仍能运行后续项。reviewer 动态复现了 ABA 与缺失依赖运行。
 - P2：Web/Rust 项目包可接受 `stagePlans[].projectId` 与所在项目不一致，导入后编排器拒绝状态更新；reviewer 以静态调用链指出。
 - 实现者新增失败先行测试后处理：计划批准标记及执行/完成门禁、Agent 工具与宿主阶段入口的 revision 校验、依赖图及运行检查、Web/Rust 项目包归属与状态校验。原先演示错误完成路径的测试已改为真实审批/工作项成功流程；范围内本地验证见 `verification.md`。独立 reviewer 的旧结论仍是 CHANGES REQUIRED，新 head 必须补审。
+
+## 2026-09-26 `5fff9de` 独立复审与结果返工修复
+
+- 独立只读 reviewer 对 `5fff9dec935fc325b875db7d0f660c95d1fd2f8a` 确认前述五项问题已关闭，但结论仍为 **CHANGES REQUIRED**：新发现一项既有 P1，结果拒绝后阶段回到 `doing`，所有工作项却仍为终态 `succeeded`，无法重新生成或修改同 ID 计划。reviewer 用单项完整审批流程复现。
+- 实现者新增失败先行测试后补宿主控制的返工项选择、prompt 修订与下游依赖失效；清除旧素材引用并重新打开受影响的结果审批。原本成功项不开放普通覆盖。修复后新 head 须重新绑定独立复审及 Hosted CI。

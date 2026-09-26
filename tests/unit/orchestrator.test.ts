@@ -151,6 +151,193 @@ test("replaying an existing plan preserves completed stages and assets", () => {
   assert.strictEqual(read(), beforeReplay);
 });
 
+test("result rejection requeues selected work for revised output and a second review", () => {
+  const { orchestrator } = harness();
+  const plan = orchestrator.upsertPlan(planInput("p"));
+  orchestrator.requestStageApproval(plan.id, 0, "plan", plan.revision);
+  const approved = orchestrator.decideStage({
+    planId: plan.id,
+    expectedRevision: currentRevision(orchestrator, plan.id),
+    stageIndex: 0,
+    gate: "plan",
+    decision: "approve",
+  });
+  const running = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 0,
+    workItemId: "wi-0",
+    expectedRevision: approved.revision,
+    status: "running",
+  });
+  const succeeded = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 0,
+    workItemId: "wi-0",
+    expectedRevision: running.revision,
+    status: "succeeded",
+    assetId: "asset-0123456789abcdef01234567",
+  });
+  const firstReview = orchestrator.requestStageApproval(
+    plan.id,
+    0,
+    "result",
+    succeeded.revision,
+  );
+  assert.throws(
+    () =>
+      orchestrator.decideStage({
+        planId: plan.id,
+        stageIndex: 0,
+        gate: "result",
+        decision: "reject",
+        expectedRevision: firstReview.revision,
+        reworkItems: [{ id: "missing" }],
+      }),
+    /返工工作项/,
+  );
+  assert.equal(currentRevision(orchestrator, plan.id), firstReview.revision);
+  const rejected = orchestrator.decideStage({
+    planId: plan.id,
+    stageIndex: 0,
+    gate: "result",
+    decision: "reject",
+    expectedRevision: firstReview.revision,
+    reworkItems: [{ id: "wi-0", prompt: "按反馈修改分镜" }],
+  });
+  assert.equal(rejected.stages[0].status, "doing");
+  assert.equal(rejected.stages[0].workItems[0].status, "queued");
+  assert.equal(rejected.stages[0].workItems[0].prompt, "按反馈修改分镜");
+  assert.equal(rejected.stages[0].workItems[0].assetId, undefined);
+  assert.throws(
+    () =>
+      orchestrator.updateWorkItem({
+        planId: plan.id,
+        stageIndex: 0,
+        workItemId: "wi-0",
+        expectedRevision: firstReview.revision,
+        status: "running",
+      }),
+    /revision|并发冲突/,
+  );
+  const rerun = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 0,
+    workItemId: "wi-0",
+    expectedRevision: rejected.revision,
+    status: "running",
+  });
+  const revised = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 0,
+    workItemId: "wi-0",
+    expectedRevision: rerun.revision,
+    status: "succeeded",
+    assetId: "asset-abcdef0123456789abcdef01",
+  });
+  const secondReview = orchestrator.requestStageApproval(
+    plan.id,
+    0,
+    "result",
+    revised.revision,
+  );
+  const finished = orchestrator.decideStage({
+    planId: plan.id,
+    stageIndex: 0,
+    gate: "result",
+    decision: "approve",
+    expectedRevision: secondReview.revision,
+  });
+  assert.equal(finished.stages[0].status, "done");
+  assert.equal(
+    finished.stages[0].workItems[0].assetId,
+    "asset-abcdef0123456789abcdef01",
+  );
+});
+
+test("reworking an upstream result invalidates succeeded downstream work and review", () => {
+  const { orchestrator } = harness();
+  const plan = orchestrator.upsertPlan(planInput("p"));
+  orchestrator.requestStageApproval(plan.id, 0, "plan", plan.revision);
+  const approved = orchestrator.decideStage({
+    planId: plan.id,
+    stageIndex: 0,
+    gate: "plan",
+    decision: "approve",
+    expectedRevision: currentRevision(orchestrator, plan.id),
+  });
+  const firstRunning = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 0,
+    workItemId: "wi-0",
+    expectedRevision: approved.revision,
+    status: "running",
+  });
+  const firstDone = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 0,
+    workItemId: "wi-0",
+    expectedRevision: firstRunning.revision,
+    status: "succeeded",
+    assetId: "asset-0123456789abcdef01234567",
+  });
+  const downstreamRunning = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 1,
+    workItemId: "wi-1",
+    expectedRevision: firstDone.revision,
+    status: "running",
+  });
+  const downstreamDone = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 1,
+    workItemId: "wi-1",
+    expectedRevision: downstreamRunning.revision,
+    status: "succeeded",
+    assetId: "asset-abcdef0123456789abcdef01",
+  });
+  const downstreamReview = orchestrator.requestStageApproval(
+    plan.id,
+    1,
+    "result",
+    downstreamDone.revision,
+  );
+  const downstreamApproved = orchestrator.decideStage({
+    planId: plan.id,
+    stageIndex: 1,
+    gate: "result",
+    decision: "approve",
+    expectedRevision: downstreamReview.revision,
+  });
+  const firstReview = orchestrator.requestStageApproval(
+    plan.id,
+    0,
+    "result",
+    downstreamApproved.revision,
+  );
+  const rejected = orchestrator.decideStage({
+    planId: plan.id,
+    stageIndex: 0,
+    gate: "result",
+    decision: "reject",
+    expectedRevision: firstReview.revision,
+    reworkItems: [{ id: "wi-0" }],
+  });
+  assert.equal(rejected.stages[1].status, "doing");
+  assert.equal(rejected.stages[1].workItems[0].status, "queued");
+  assert.equal(rejected.stages[1].workItems[0].assetId, undefined);
+  assert.throws(
+    () =>
+      orchestrator.updateWorkItem({
+        planId: plan.id,
+        stageIndex: 1,
+        workItemId: "wi-1",
+        expectedRevision: rejected.revision,
+        status: "running",
+      }),
+    /依赖.*尚未成功/,
+  );
+});
+
 test("plan_patch_stage rejects invalid input without persisting a plan", () => {
   const invalidStages: unknown[] = [
     [

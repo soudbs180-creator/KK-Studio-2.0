@@ -44,6 +44,8 @@ export interface StageDecisionInput {
   /** 当前待审批门，与状态校验一致（plan / result）。 */
   gate: StageApprovalGate;
   decision: "approve" | "reject";
+  /** 结果拒绝时需返工的工作项；省略表示本阶段全部。可同时给出修改后的 prompt。 */
+  reworkItems?: Array<{ id: string; prompt?: string }>;
 }
 
 export interface StageWorkItemUpdateInput {
@@ -145,6 +147,78 @@ function assertRevision(plan: StagePlan, expectedRevision: number): void {
     plan.revision !== expectedRevision
   )
     throw new StagePlanError("编排计划 revision 已变化（并发冲突，未写入）。");
+}
+
+/** 结果被拒后，使选中项及其所有下游依赖失效，避免复用旧素材或旧审批。 */
+function reworkRejectedResults(
+  plan: StagePlan,
+  stageIndex: number,
+  requested: StageDecisionInput["reworkItems"],
+): StagePlan {
+  const stage = plan.stages.find((item) => item.index === stageIndex);
+  if (!stage) throw new StagePlanError(`阶段 ${stageIndex} 不存在。`);
+  const selections: NonNullable<StageDecisionInput["reworkItems"]> =
+    requested ?? stage.workItems.map((item) => ({ id: item.id }));
+  if (stage.workItems.length && !selections.length)
+    throw new StagePlanError("结果拒绝时必须指定至少一个返工工作项。");
+  const selected = new Set<string>();
+  const revisedPrompts = new Map<string, string>();
+  for (const selection of selections) {
+    if (
+      typeof selection?.id !== "string" ||
+      !stage.workItems.some((item) => item.id === selection.id) ||
+      selected.has(selection.id)
+    )
+      throw new StagePlanError("返工工作项必须在当前阶段且不能重复。");
+    selected.add(selection.id);
+    if (selection.prompt !== undefined) {
+      if (!stageWorkItemSchema.shape.prompt.safeParse(selection.prompt).success)
+        throw new StagePlanError("返工工作项 prompt 无效。");
+      revisedPrompts.set(selection.id, selection.prompt);
+    }
+  }
+  const affected = new Set(selected);
+  const allItems = plan.stages.flatMap((item) => item.workItems);
+  const pending = [...selected];
+  while (pending.length) {
+    const parent = pending.pop()!;
+    for (const item of allItems) {
+      if (!affected.has(item.id) && item.dependencies.includes(parent)) {
+        affected.add(item.id);
+        pending.push(item.id);
+      }
+    }
+  }
+  const stamp = Date.now();
+  return {
+    ...plan,
+    updatedAt: stamp,
+    stages: plan.stages.map((item) => {
+      const invalidated = item.workItems.some((work) => affected.has(work.id));
+      if (!invalidated && item.index !== stageIndex) return item;
+      return {
+        ...item,
+        status:
+          item.status === "done" || item.status === "result_review"
+            ? ("doing" as const)
+            : item.status,
+        resultSummary: undefined,
+        updatedAt: stamp,
+        workItems: item.workItems.map((work) =>
+          affected.has(work.id)
+            ? {
+                ...work,
+                prompt: revisedPrompts.get(work.id) ?? work.prompt,
+                status: "queued" as const,
+                assetId: undefined,
+                error: undefined,
+                updatedAt: stamp,
+              }
+            : work,
+        ),
+      };
+    }),
+  };
 }
 
 export function createStageOrchestrator(options: StageOrchestratorOptions) {
@@ -311,7 +385,7 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
         throw new StagePlanError(
           `阶段 ${input.stageIndex} 不在 ${waiting} 状态，无法审批。`,
         );
-      const next = casAdvanceStage(
+      const advanced = casAdvanceStage(
         plan,
         input.stageIndex,
         waiting,
@@ -323,6 +397,10 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
             ? "blocked"
             : "doing",
       );
+      const next =
+        input.gate === "result" && input.decision === "reject"
+          ? reworkRejectedResults(advanced, input.stageIndex, input.reworkItems)
+          : advanced;
       persist(project, next);
       return next;
     },

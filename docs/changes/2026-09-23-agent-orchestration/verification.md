@@ -91,3 +91,9 @@
 - 失败先行：新增 49 项定向 Node 运行中 6 项失败，分别复现审批绕过、未执行完成、Agent 阶段 ABA、前置未完成仍运行、Web 包接受外项目计划、缺失/自依赖/循环；Rust 项目包扩展测试在旧实现成功导出异常计划而失败。另补宿主审批 ABA 失败测试、状态不可能组合的归一化与 Rust 包拒绝测试。
 - 修复后本地：Node **420/420**、Rust **82/82**、Playwright/Edge **300/300**；TypeScript noEmit/增量构建、ESLint 0 错误、Prettier、cargo fmt、Vite production build 通过。浏览器测试改写的 22 张已跟踪截图已恢复，不在候选内。Rust 仍有五项既有 dead_code warning，Vite 仍有第三方 zod 注释及大 chunk 提示，均非失败。
 - 重新验证的门禁覆盖：计划批准标记随 Web/Rust 包往返；未批准/未成功/异常依赖/跨项目计划均不可成为有效可写入候选；Agent 工具与宿主审批携预期 revision，旧请求不写入。新提交后的 delivery、Hosted CI 和独立补审仍 **NOT VERIFIED**；Desktop GUI、真实 Provider、正式发布和用户产品验收不在本地验证结论内。
+
+## 2026-09-26 结果拒绝返工回归
+
+- 独立 reviewer 对 `5fff9dec935fc325b875db7d0f660c95d1fd2f8a` 的结论仍为 CHANGES REQUIRED：此前五项问题关闭，但结果审批拒绝后所有工作项仍成功且无法重跑，是现存流程 P1。其最小复现同时验证工作项更新和同 ID 重物化均无法修改产物。
+- 新增单项返工端到端定向测试，旧实现实际得到 `succeeded` 而非预期 `queued`；修复后验证新 prompt、旧素材引用清除、旧 revision 拒绝、新产物和第二次结果审批。另验证跨阶段成功依赖及已完成阶段失效、前置重做前不得运行下游、非法返工选择无写入。
+- 当前本地 Node **422/422**、Rust **82/82**、Playwright/Edge **300/300**（首跑 298 直接通过、2 重试通过；这 2 项随后以 `--retries=0` 独立重跑 2/2）、TypeScript noEmit/增量构建、ESLint、Prettier、cargo fmt、Vite production build 均通过；治理 66/0、功能 31/0、Markdown 84/0、UI 标准 159/0。浏览器测试改写的已跟踪截图在核对后恢复，不纳入候选。新 SHA Hosted CI/独立补审仍待完成；旧 SHA 的托管结果不替代当前候选。

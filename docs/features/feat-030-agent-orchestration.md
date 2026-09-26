@@ -20,7 +20,7 @@
 
 ## 测试与证据
 
-- 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/agentCanvas.test.ts`；当前全量 Node 420/420 通过。
+- 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/agentCanvas.test.ts`；当前全量 Node 422/422 通过。
 - 浏览器回归：既有浏览器回归 300/300 通过；Stage UI 交互尚未接入，专项回归由后续任务补充。
 - Rust 测试 / 实机验收：项目包导出/导入及重复身份拒绝回归，当前 82/82 Rust 全量通过；Desktop GUI 与正式发布未验收。
 - 变更与验证证据：`docs/changes/2026-09-23-agent-orchestration/verification.md`
@@ -30,6 +30,7 @@
 - 已实现的本地领域层能力（尚无端到端运行验收）：
   - Stage 状态机：doing / plan_review / blocked / result_review / done，CAS 推进（乐观锁），非法迁移与并发冲突拦截；计划审批前不得执行，全部工作项成功后才能请求结果审批或完成；
   - 编排器：计划物化（同 id 同定义重放保留进度，不同定义拒绝覆盖；写前校验）、审批决策（plan/result 两门）、异常阻断、解除阻断并只重试失败工作项、待审批汇总；
+  - 结果审批拒绝由宿主指定返工项及可选新 prompt（省略时整个阶段返工）；关联下游工作项与旧素材引用失效，受影响的结果审批需重新进行；
   - 工作项写入：按预期 revision 与合法状态迁移更新，审批后的迟到结果不得覆盖计划；依赖项须先成功，缺失、自依赖或环形依赖被拒绝；Web/Rust 项目包保留空计划字段与只由计划引用的素材原件，拒绝跨项目计划；
   - 计划工作项 ID 在所有阶段内唯一；重复 ID 在创建和项目包预检时拒绝，防止按 ID 更新误推进其它工作项。
   - MCP 风格工具面：plan_get_stage_status / plan_update_stage_state / plan_patch_stage / plan_replan（纯函数形态，供后续 MCP 注册）；Agent 工具不能自行完成 plan/result 审批或解除阻断，阶段操作与宿主审批均须携预期 revision；
@@ -47,6 +48,8 @@
 - 外部依赖与阻断条件：无外部密钥依赖；媒体真实链路依赖供应商 Key（EXT-PROVIDER）。
 
 ## 变更记录
+
+- 2026-09-26：`5fff9de` 独立复审关闭前五项问题，但发现结果拒绝后成功项不能返工的 P1；当前候选补宿主返工选择与跨阶段依赖失效，新 head 仍待独立复审与 Hosted CI。
 
 - 2026-09-26：`36a3419` 独立复审发现审批门、未运行完成、ABA、依赖图及跨项目计划问题；当前候选已补跨端校验和回归，本地验证通过，新 head 仍待独立复审与 Hosted CI。
 
