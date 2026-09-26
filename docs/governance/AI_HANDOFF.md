@@ -1,5 +1,13 @@
 # AI handoff
 
+## 2026-09-26 MCP 限额审查恢复点
+
+PR #15 已吸收 `main@f626438`，本地完整验证通过；独立只读审查对业务源码 `3ab2578` 为 PASS WITH FOLLOW-UPS，两个基线 P2 已登记为 `TASK-MCP-REGISTRY-001/002`。恢复时先回读 PR #15 最终 head、Hosted `verify`/`delivery`、工作树及主线 SHA；不能把独立代码审查等同于真实第三方 MCP 或 Desktop release 验收。根工作区的 UI 改动仍保留。
+
+## 2026-09-26 当前恢复入口：PR #14 已并线，PR #15 待新 head 验收
+
+远端 main@f626438 已包含 PR #14 领域层；根工作区的未提交 UI 工作仍需保护。fix/TASK-MINIMAX-001-mcp-registry-limit 已合入新 main 并解决文档冲突；恢复时回读该分支的提交、CI、独立审查与工作树，不把尚在审查的 MCP 修复算作主线。
+
 ## 2026-09-26 TASK-ORCH-001 技术门禁恢复点
 
 PR #14 源码 `9ddfcb5` 独立只读复审 PASS，[Hosted run 36218263291](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36218263291) `verify`/`delivery` 成功；本地 422 Node、82 Rust、300 浏览器通过。恢复时核对补录文档后的准确 head、CI 与 dirty 状态，再看用户产品验收；未经验收不合并。PR #15 四处文档冲突在 #14 后顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
@@ -31,6 +39,9 @@ PR #14 `67ff18fb` 独立复审已关闭原两项 P1，新发现重复工作项 I
 ## 2026-09-24 TASK-ORCH-001 候选
 
 `D:/kk-studio/.worktrees/TASK-ORCH-001` 的编排修复已在本地重跑 405 Node 与 300 Web 浏览器测试；最终独立复审仍 NOT VERIFIED，不可据此合并或宣称 Desktop/Provider 验收。恢复时核对任务分支实际 head、`origin/main`、dirty 状态及 [验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+## 2026-09-24 MCP 配置上限候选
+
+`D:/kk-studio/.worktrees/TASK-MINIMAX-001-mcp-registry-limit` 在 `origin/main@76339c9f` 上处理第 51 个 MCP 服务器配置的数据丢失缺陷；恢复时核对实际 head、dirty 状态及 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)。`TASK-MCP-PROTO-001` 是另一个未开始的协议协商任务。编排候选在另一 worktree，两个分支的治理文档有重叠，禁止未解决冲突直接合并。
 
 ## 2026-09-23 当前恢复入口：2.1.0 主线与规则审计
 

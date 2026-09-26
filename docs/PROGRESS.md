@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-26 编排领域层已并入主线，MCP 上限修复仍在审查
+
+PR #14 已经在远端 main@f626438 squash 合入，合并树与受审 PR 源码树一致；阶段 UI、真实生成与 Desktop GUI 仍未收口。PR #15 已在其任务分支合入当前主线并解决治理文档冲突；MCP 第 51 项写入边界修复仍待新提交的独立复审和 Hosted CI，不能提前写成主线能力。
+
 ## 2026-09-26 编排候选技术门禁结果
 
 PR #14 源码 `9ddfcb5` 已通过独立只读复审（未发现未关闭 P1/P2）及 [Hosted run 36218263291](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36218263291) 的 `verify`/`delivery`；本地 422 Node、82 Rust、300 浏览器和交付结构检查也通过。当前补录审查证据的文档提交需再核对精确 head；用户产品验收、Desktop GUI/正式安装包及真实 Provider 未完成，PR 仍未合并。PR #15 四处治理文档冲突待 #14 集成后顺序处理。详见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
@@ -49,6 +53,9 @@ PR #14 的 `67ff18fb` 独立复审确认旧计划覆写与项目包漏同步两�
 - 治理：功能卡 feat-030/031（PARTIAL）、registry +2、账本 +5（TASK-ORCH-001 IN_PROGRESS 唯一活动任务，TASK-ORCH-002/003 TODO，TASK-CANVAS-001/TASK-TASKSTATE-001 PARTIAL）、交付包五件套 `docs/changes/2026-09-23-agent-orchestration/`。
 - 分支 `feat/TASK-ORCH-001-agent-orchestration-closure` @ `D:/kk-studio/.worktrees/TASK-ORCH-001` 已推送 origin（commit 1863ea8，base origin/main @ 9f04bfc）。能力按 PARTIAL 标注，不冒充 REAL。
 - 后续：TaskWorkbench 阶段计划视图与审批交互（TASK-ORCH-002）、编排器驱动真实生成（TASK-ORCH-003）、plan 工具 MCP 注册（BACKEND-MCP-AUTO）、媒体真实链路（BACKEND-MEDIA-001）。
+## 2026-09-24 竞品对标后的 MCP 配置一致性
+
+`TASK-MINIMAX-001` 分支修复手动 MCP 服务器列表第 51 项可写、重启后整表被判损坏的问题：写入前使用与读取相同的 50 项上限，同 id 更新仍可进行。补齐新工作树的 Agent/插件构建前置后，371 Node 与 300 Web 浏览器回归、类型/Lint/格式/构建/治理检查通过；初次环境失败及恢复见 [本轮验证](changes/2026-09-24-mcp-registry-limit/verification.md)。对照当前 MCP 官方协议说明又发现客户端仅固定 2025-11-25，2026-07-28 modern 协商缺口已列 `TASK-MCP-PROTO-001`。历史 MiniMax UI 审计仅保持原时点含义；真实第三方服务器、Tauri release 和付费能力未在本轮验收。
 
 ## 2026-09-23 2.1.0 源码并线与远端规则回读
 

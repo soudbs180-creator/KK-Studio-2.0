@@ -1,5 +1,13 @@
 # 当前项目状态
 
+## 2026-09-26 MCP 限额候选独立审查通过，托管检查待收口
+
+PR #15 的 MCP 限额修复已在 `origin/main@f626438` 上解决治理冲突。本地完整 `verify` 通过；独立只读复审对业务源码 `3ab2578` 给出 PASS WITH FOLLOW-UPS，无新增阻断。多标签页覆盖和旧版 51 项无损恢复是基线 P2，分别登记 `TASK-MCP-REGISTRY-001/002`，当前均未修复。最终候选的 Hosted `verify`/`delivery` 与合并后主线结果仍须回读；主线不因此宣称 MCP 真实服务或桌面安装包验收完成。
+
+## 2026-09-26 PR #14 已合入，PR #15 技术验收中
+
+远端 main@f626438 已通过受保护 PR squash 合入编排领域层，功能卡仍为 PARTIAL；阶段 UI、真实媒体执行、MCP 注册与 Desktop GUI 未因此完成。MCP 配置上限修复位于 PR #15 分支，已吸收新主线并处理文档冲突，尚需新 head 独立复审与 Hosted CI。根工作区的未提交 UI 改动仍保留，不能以其证明 main 状态。
+
 ## 2026-09-26 编排技术门禁通过、产品验收未完成
 
 PR #14 源码 `9ddfcb5` 独立只读复审 PASS，未发现未关闭 P1/P2；[Hosted run 36218263291](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36218263291) 的 `verify`/`delivery` 均成功，本地 422 Node、82 Rust、300 浏览器通过。补录证据的文档提交仍需精确 head 检查；用户产品验收、Desktop GUI/正式安装包、真实 Provider 未完成，主线与发布不变。PR #15 保持 draft，四处治理文档冲突待 #14 集成后处理。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
@@ -31,6 +39,9 @@ PR #14 的独立审查在旧 head 发现两项 P1：旧 revision 可覆盖已完
 ## 2026-09-24 编排候选（TASK-ORCH-001）
 
 独立预检指出计划同 id 重放丢进度与非法计划写入后丢失；两项已在任务分支修复。实现者又确认 Agent 阶段工具可自行批准或解除阻断，现仅允许 `doing→plan_review/result_review/blocked`，宿主入口保留审批与重试。当前分支 405 Node 与 300 Web 浏览器回归通过，独立最终复审、Desktop 与真实 Provider 未验收；主线和正式发布状态不因此改变。以 [本轮验证](../changes/2026-09-23-agent-orchestration/verification.md)和账本 TASK-ORCH-001 为准。
+## 2026-09-24 MCP 候选与竞品审计遗留
+
+`fix/TASK-MINIMAX-001-mcp-registry-limit` 修复 50 项持久化上限与写入不一致；当前仅为草稿 PR #15 候选，不能据此认定主线已修复。`TASK-MCP-PROTO-001` 登记 2026-07-28 协议协商缺口，真实新版服务器仍未验证。MiniMax 安装目录版本元数据已只读核对，2026-09-21 的 UI 审计维持历史证据含义。以 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)和账本为准；与编排 PR #14 的 merge-tree 显示 4 个文档内容冲突，按顺序合并前必须解决并重新生成治理视图。
 
 ## 2026-09-23 KK Studio 2.1.0 源码并线与规则回读（REL-2.1.0）
 
