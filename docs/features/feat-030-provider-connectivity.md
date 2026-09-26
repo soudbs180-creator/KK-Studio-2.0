@@ -2,7 +2,7 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-09-24
+- 最近更新：2026-09-26
 - 关联任务：TASK-PROV-002（IN_PROGRESS）
 
 ## 用户可见入口
@@ -32,6 +32,7 @@
   - `model[1M]/[200K]/[512k]/[1000000]` 后缀解析与剥离，生成 cc-switch 兼容 `model_catalog_json`。
   - MCP stdio 服务器持久化契约与命令白名单校验。
 - 明确标注：以上均未接线到 UI/Agent/落盘，未在真实 Codex/Claude 消费，属于 PARTIAL。
+- 2026-09-26 复审修复：Codex 仅输出当前支持的 Responses 协议并把模型选择置于根级；Bash 环境导出不执行 URL 中的命令替换；stdio 配置解析拒绝凭据键/值；中文 seed 可生成不同 ID；catalog profile ID 不允许目录穿越。独立补审与最终 head 托管检查仍须完成。
 
 ## 差距与后端化
 

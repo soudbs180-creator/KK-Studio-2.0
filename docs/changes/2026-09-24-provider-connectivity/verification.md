@@ -59,3 +59,7 @@
 ## 追加勘误（无则留空）
 
 - 初版 2 个单测失败已修复并记录于上表（z.record().max 不可用 → refine；SHELL_METACHARACTERS 误含反斜杠 → 移除并加注释）。
+
+## 2026-09-26 复审修复过程
+
+独立审查旧 head `42c3f26` 为 CHANGES REQUIRED，具体六项见 review.md。四个模块的新增测试总数由 24 提至 31；对 Codex 协议/表作用域、Bash URL 命令替换、配置键碰撞、stdio 凭据、中文 seed 丢失、profile 目录穿越及 TOML 换行逐项观察到原代码 FAIL，再做最小修复，当前定向 31/31、`npm run typecheck` 通过。额外在本机 Git Bash 以包含 `$(printf injected)'suffix` 的值执行生成脚本，实际环境变量保持原字面值，子进程退出 0。此阶段尚未接入最新主线，也未完成完整 `verify`、最终 head 独立补审或 Hosted CI；不能以旧 head 的检查代替。

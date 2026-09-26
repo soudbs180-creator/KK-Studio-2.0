@@ -9,7 +9,10 @@ import {
   providerConnectionSchema,
   type ProviderConnection,
 } from "../../domain/providerConnections.ts";
-import { assertNoSecrets } from "./providerTargetRenderers.ts";
+import {
+  assertNoSecrets,
+  connectionFingerprint,
+} from "./providerTargetRenderers.ts";
 
 export const providerConfigSchema = z
   .object({
@@ -65,7 +68,11 @@ export function mergeProviderConnections(
   const byId = new Map(
     existing.map((connection) => [connection.id, connection]),
   );
+  const incomingIds = new Set<string>();
   for (const connection of incoming) {
+    if (incomingIds.has(connection.id))
+      throw new Error(`导入配置包含重复连接 id：${connection.id}`);
+    incomingIds.add(connection.id);
     if (!byId.has(connection.id) || mode === "replace")
       byId.set(connection.id, connection);
   }
@@ -82,12 +89,14 @@ export interface SeedProfile {
 export function buildSeedConnection(profile: SeedProfile): ProviderConnection {
   const name = profile.name.trim();
   if (!name) throw new Error("seed 名称不能为空");
+  const asciiId = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
   const id =
-    name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "")
-      .slice(0, 60) || "provider";
+    asciiId ||
+    `provider-${connectionFingerprint(`${name}\0${profile.baseUrl}`)}`;
   const connection: ProviderConnection = {
     id,
     provider: name.slice(0, 80),

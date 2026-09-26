@@ -24,14 +24,22 @@ export function assertNoSecrets(value: unknown, label: string): void {
 }
 
 /** 连接 id → 配置内稳定键（小写字母数字与下划线，带 kk_ 前缀）。 */
+export function connectionFingerprint(value: string): string {
+  let hash = 0xcbf29ce484222325n;
+  for (const byte of new TextEncoder().encode(value)) {
+    hash = BigInt.asUintN(64, (hash ^ BigInt(byte)) * 0x100000001b3n);
+  }
+  return hash.toString(16).padStart(16, "0");
+}
+
 export function providerKey(connectionId: string): string {
   const key = connectionId
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "_")
     .replace(/^_+|_+$/g, "")
-    .slice(0, 48);
+    .slice(0, 32);
   if (!key) throw new Error("连接 id 无法生成配置键");
-  return `kk_${key}`;
+  return `kk_${key}_${connectionFingerprint(connectionId)}`;
 }
 
 /** 凭据引用 → 接线层约定使用的环境变量名（值由宿主从系统凭据库注入）。 */
@@ -40,11 +48,13 @@ export function envKeyFor(connectionId: string, suffix: string): string {
     .toUpperCase()
     .replace(/[^A-Z0-9]+/g, "_")
     .replace(/^_+|_+$/g, "")
-    .slice(0, 32);
-  return `KK_STUDIO_${stem}_${suffix}`;
+    .slice(0, 24);
+  if (!stem || !/^[A-Z][A-Z0-9_]*$/.test(suffix))
+    throw new Error("连接 id 或环境变量后缀无效");
+  return `KK_STUDIO_${stem}_${connectionFingerprint(connectionId).toUpperCase()}_${suffix}`;
 }
 
-export const wireApiSchema = z.enum(["chat", "responses"]);
+export const wireApiSchema = z.literal("responses");
 export type WireApi = z.infer<typeof wireApiSchema>;
 
 export const codexProviderBlockSchema = z.object({
@@ -88,7 +98,7 @@ export function renderCodexTarget(
     providerKey: providerKey(connection.id),
     name: connection.displayName || connection.provider,
     baseUrl,
-    wireApi: options.wireApi ?? "chat",
+    wireApi: options.wireApi ?? "responses",
   };
   if (connection.credentialRef)
     block.envKey = envKeyFor(connection.id, "API_KEY");
@@ -171,22 +181,22 @@ export function renderAllTargets(
 }
 
 function tomlQuote(value: string): string {
-  return `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"`;
+  return JSON.stringify(value);
 }
 
 /** Codex config.toml provider 块（wire_api 需与目标 Codex 版本对拍）。 */
 export function serializeCodexToml(block: CodexProviderBlock): string {
   const lines: string[] = [];
+  if (block.model) {
+    lines.push(`model_provider = ${tomlQuote(block.providerKey)}`);
+    lines.push(`model = ${tomlQuote(block.model)}`);
+    lines.push("");
+  }
   lines.push(`[model_providers.${block.providerKey}]`);
   lines.push(`name = ${tomlQuote(block.name)}`);
   lines.push(`base_url = ${tomlQuote(block.baseUrl)}`);
   if (block.envKey) lines.push(`env_key = ${tomlQuote(block.envKey)}`);
   lines.push(`wire_api = ${tomlQuote(block.wireApi)}`);
-  if (block.model) {
-    lines.push("");
-    lines.push(`model_provider = ${tomlQuote(block.providerKey)}`);
-    lines.push(`model = ${tomlQuote(block.model)}`);
-  }
   return lines.join("\n");
 }
 
@@ -201,8 +211,10 @@ export function serializeClaudeSettings(block: ClaudeEnvBlock): string {
 
 /** OpenAI 兼容环境变量注入脚本（bash 形态，供接线层使用）。 */
 export function serializeOpenAiEnv(block: OpenAiEnvBlock): string {
-  const lines = Object.entries(block.env).map(
-    ([key, value]) => `export ${key}=${JSON.stringify(value)}`,
-  );
+  const lines = Object.entries(block.env).map(([key, value]) => {
+    if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(key))
+      throw new Error("环境变量名称无效");
+    return `export ${key}='${value.replaceAll("'", "'\\''")}'`;
+  });
   return lines.join("\n");
 }

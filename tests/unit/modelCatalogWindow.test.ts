@@ -65,3 +65,8 @@ test("renderModelCatalogJson：相对路径指针与 JSON payload", () => {
   assert.equal(parsed.length, 1);
   assert.equal(parsed[0].slug, "deepseek-v4-pro");
 });
+
+test("catalog profile id 不得逸出 model-catalogs 目录", () => {
+  for (const profileId of ["../../outside", "a/b", "..\\outside", ".."])
+    assert.throws(() => renderModelCatalogJson(profileId, []));
+});

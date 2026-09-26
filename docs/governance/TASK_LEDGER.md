@@ -813,6 +813,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-PROV-002-provider-connectivity`
 - Worktree: `D:/kk-studio/.worktrees/TASK-PROV-002-provider-connectivity`
 - Modules: src/features/providers, src/features/models, src/features/mcp, tests/unit, docs/changes, docs/features, docs/governance
-- Verification: NOT_VERIFIED — 本地 lint/typecheck/394 单测/ui:check/format/governance/features/markdown 全绿；浏览器 test:ui 与独立上下文 review 待推送后 CI 完成
+- Verification: NOT_VERIFIED — 2026-09-26 独立只读复审旧 head 42c3f26 为 CHANGES REQUIRED（4 P1、2 P2）；六项均在任务 worktree 以失败先行测试修复，定向 31/31 与 typecheck 通过。完整 verify、新 head 独立补审、Hosted CI、真实 Codex/Claude 消费仍待完成。
 - Evidence: [docs/changes/2026-09-24-provider-connectivity/intent.md](../../docs/changes/2026-09-24-provider-connectivity/intent.md), [docs/changes/2026-09-24-provider-connectivity/spec.md](../../docs/changes/2026-09-24-provider-connectivity/spec.md), [docs/changes/2026-09-24-provider-connectivity/plan.md](../../docs/changes/2026-09-24-provider-connectivity/plan.md), [docs/changes/2026-09-24-provider-connectivity/verification.md](../../docs/changes/2026-09-24-provider-connectivity/verification.md), [docs/changes/2026-09-24-provider-connectivity/remaining.md](../../docs/changes/2026-09-24-provider-connectivity/remaining.md)
-- Updated: 2026-09-24
+- Updated: 2026-09-26

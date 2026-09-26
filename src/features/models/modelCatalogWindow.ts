@@ -73,6 +73,8 @@ export function renderModelCatalogJson(
   profileId: string,
   inputs: CatalogModelInput[],
 ): { path: string; json: string } {
+  if (!/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(profileId))
+    throw new Error("catalog profile id 必须是安全文件名");
   const entries = buildModelCatalog(inputs);
   return {
     path: `model-catalogs/${profileId}.json`,

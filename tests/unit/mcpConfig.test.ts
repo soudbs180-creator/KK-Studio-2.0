@@ -54,14 +54,28 @@ test("stdio schema：合法配置通过，空参数/非法命令拒绝", () => {
   );
 });
 test("stdio env：疑似密钥值被拒绝写入本地配置", () => {
-  const problems = validateStdioEnv(
+  const withToken = {
+    transport: "stdio" as const,
+    command: "npx",
+    env: { TOKEN: "sk-abcdef1234567890" },
+  };
+  assert.equal(validateStdioEnv(withToken).length, 1);
+  assert.throws(() => mcpStdioServerSchema.parse(withToken));
+  assert.throws(() => mcpServerConfigV2Schema.parse(withToken));
+  assert.throws(() =>
     mcpStdioServerSchema.parse({
       transport: "stdio",
       command: "npx",
-      env: { TOKEN: "sk-abcdef1234567890" },
+      env: { API_KEY: "plainsecret" },
     }),
   );
-  assert.equal(problems.length, 1);
+  assert.throws(() =>
+    mcpStdioServerSchema.parse({
+      transport: "stdio",
+      command: "npx",
+      env: { apiKey: "plainsecret" },
+    }),
+  );
   assert.equal(
     validateStdioEnv(
       mcpStdioServerSchema.parse({

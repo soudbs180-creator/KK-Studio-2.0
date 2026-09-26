@@ -62,3 +62,17 @@
 ## 计划变更记录
 
 - 无（首版）。
+
+## 2026-09-26 独立复审修复计划
+
+当前候选 `42c3f26` 的只读独立审查发现四项 P1、两项 P2；原 24 项单测没有覆盖这些输入。继续沿用本任务分支和交付包，以下每项都先补能在现有代码上失败的真实输出测试，再做最小实现、定向复验。Codex 格式以[当前官方配置参考](https://learn.chatgpt.com/docs/config-file/config-reference)为准：`wire_api` 仅 `responses`，模型选择是根级键，provider 表须放在用户级配置中。
+
+| 顺序 | 失败测试和行为 | 最小修复文件 | 复验 |
+| --- | --- | --- | --- |
+| 1 | `$(...)` 和单引号进入 Bash 环境导出时不触发命令替换；Codex 只输出 `responses` 且根级模型选择正确；不同连接 ID 不共用目标配置键 | `tests/unit/providerTargetRenderers.test.ts` → `src/features/providers/providerTargetRenderers.ts` | 定向 Node 测试、官方配置字段对照 |
+| 2 | stdio schema 和 v2 union 都拒绝 `TOKEN=sk-...`、`API_KEY=plainsecret`，普通 `REGION` 保持可用 | `tests/unit/mcpConfig.test.ts` → `src/features/mcp/mcpConfig.ts` | 定向 Node 测试 |
+| 3 | “阿里”和“腾讯” seed 经合并后同时存在且 ID 稳定；同 ID 的不同输入不得静默丢失 | `tests/unit/providerConfigIO.test.ts` → `src/features/providers/providerConfigIO.ts` | 定向 Node 测试 |
+| 4 | `../../outside` 等 profile ID 不产生越界相对路径 | `tests/unit/modelCatalogWindow.test.ts` → `src/features/models/modelCatalogWindow.ts` | 定向 Node 测试 |
+| 5 | 更新 spec/review/verification、任务账本和功能卡的准确状态；接入合并后的最新 main，解决治理视图冲突 | 本交付包、ledger/registry/生成视图 | governance/features/markdown、完整 `verify`、delivery、独立补审、精确 head Hosted CI |
+
+所有修复保持纯逻辑层，不在本 PR 接线真实工具、执行 shell、写用户配置或提升 FEAT-030 的 PARTIAL 状态。主 checkout 的未提交 UI 文件不参与本轮修改。

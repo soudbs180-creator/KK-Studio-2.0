@@ -107,3 +107,33 @@ test("seed 导入：cc-switch 风格 name/baseUrl/model → user_byok 连接", (
     }),
   );
 });
+
+test("中文 seed 生成稳定且不同的连接 id，合并不会静默丢项", () => {
+  const ali = buildSeedConnection({
+    name: "阿里",
+    baseUrl: "https://ali.example.com/v1",
+  });
+  const tencent = buildSeedConnection({
+    name: "腾讯",
+    baseUrl: "https://tencent.example.com/v1",
+  });
+  assert.notEqual(ali.id, tencent.id);
+  assert.equal(
+    ali.id,
+    buildSeedConnection({ name: "阿里", baseUrl: "https://ali.example.com/v1" })
+      .id,
+  );
+  assert.deepEqual(
+    mergeProviderConnections([], [ali, tencent]).map((item) => item.provider),
+    ["阿里", "腾讯"],
+  );
+});
+
+test("导入两个相同 id 时显式拒绝碰撞", () => {
+  assert.throws(() =>
+    mergeProviderConnections(
+      [],
+      [CONNECTION, { ...CONNECTION, provider: "另一个供应商" }],
+    ),
+  );
+});

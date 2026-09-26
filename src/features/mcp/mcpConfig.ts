@@ -20,6 +20,27 @@ const STDIO_BARE_COMMANDS = new Set([
 /** 反斜杠是 Windows 路径分隔符，不纳入元字符；直接 spawn 不经 shell。 */
 const SHELL_METACHARACTERS = /[|;&$<>`"'\n\r\0]/;
 
+const CREDENTIAL_KEY =
+  /api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret|password|secret|authorization|token(?:_|$)/i;
+const CREDENTIAL_PATTERNS = [
+  /(?:api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret|password)\s*[:=]/i,
+  /sk-[A-Za-z0-9_-]{12,}/,
+  /-----BEGIN [A-Z ]+ PRIVATE KEY-----/,
+  /(?:Bearer|Basic)\s+[A-Za-z0-9+/._-]{16,}/i,
+];
+
+function stdioEnvProblems(env: Record<string, string>): string[] {
+  const problems: string[] = [];
+  for (const [key, value] of Object.entries(env)) {
+    if (
+      CREDENTIAL_KEY.test(key) ||
+      CREDENTIAL_PATTERNS.some((p) => p.test(value))
+    )
+      problems.push(`env.${key} 疑似包含密钥，禁止写入本地配置`);
+  }
+  return problems;
+}
+
 /** 命令必须命中白名单裸名，或是无 shell 元字符的绝对文件路径。 */
 export function isAllowedStdioCommand(command: string): boolean {
   const value = command.trim();
@@ -49,30 +70,18 @@ export const mcpStdioServerSchema = z
     env: z
       .record(z.string().regex(/^[A-Za-z_][A-Za-z0-9_]*$/), z.string().max(200))
       .refine((value) => Object.keys(value).length <= 16, "env 最多 16 项")
+      .refine(
+        (value) => stdioEnvProblems(value).length === 0,
+        "env 不得包含凭据",
+      )
       .optional(),
   })
   .strict();
 export type McpStdioServerConfig = z.infer<typeof mcpStdioServerSchema>;
 
-const CREDENTIAL_PATTERNS = [
-  /(?:api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret|password)\s*[:=]/i,
-  /sk-[A-Za-z0-9_-]{12,}/,
-  /-----BEGIN [A-Z ]+ PRIVATE KEY-----/,
-  /(?:Bearer|Basic)\s+[A-Za-z0-9+/._-]{16,}/i,
-];
-
-function containsCredentialLikeText(value: string): boolean {
-  return CREDENTIAL_PATTERNS.some((pattern) => pattern.test(value));
-}
-
 /** stdio env 校验：拒绝任何疑似密钥/凭据的值落入本地配置。 */
 export function validateStdioEnv(config: McpStdioServerConfig): string[] {
-  const problems: string[] = [];
-  for (const [key, value] of Object.entries(config.env ?? {})) {
-    if (containsCredentialLikeText(value))
-      problems.push(`env.${key} 疑似包含密钥，禁止写入本地配置`);
-  }
-  return problems;
+  return stdioEnvProblems(config.env ?? {});
 }
 
 /** v2 持久化契约：streamable_http（现状）或 stdio（新增）。 */

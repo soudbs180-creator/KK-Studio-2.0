@@ -23,11 +23,12 @@
   - `src/features/models/modelCatalogWindow.ts`：后缀解析 + catalog JSON 生成；依赖 zod，不依赖 modelCatalog.ts 现有存储（保持独立、可复用）。
   - `src/features/mcp/mcpConfig.ts`：stdio server 持久化契约 + 命令白名单；浏览器 transport 不变。
 - schema/API/事件/文件格式与兼容策略：
+  - Codex 配置按[当前官方参考](https://learn.chatgpt.com/docs/config-file/config-reference)：provider 的 `wire_api` 仅为 `responses`，选中模型的 `model`/`model_provider` 位于根级；provider 配置需由后续接线写入用户级配置，项目级 `.codex/config.toml` 会忽略它。纯渲染层不写配置文件。
   - 便携格式 `kk-provider-config-v1`：顶层 `version:1`、`connections:[ProviderConnection]`（其中 credentialRef 保留占位；若源含 credentialRef 则原样携带引用 id，密钥绝不进入文件）、`exportedAt`、`source`。
   - catalog 字段：`slug`、`display_name`、`context_window`、`max_context_window`、`auto_compact_token_limit:null`，与 cc-switch/CodexPlusPlus 兼容；解析输入 `model[1M]`（K/k=1000、M/m=1_000_000、纯数字原值）。
-  - MCP stdio：`{ transport:"stdio", command, args?, env? }`，command 必须命中白名单（绝对路径或白名单裸名），args 数量/长度受限，禁止 shell 元字符与空参数拼接；`streamable_http` 契约不变。
+  - MCP stdio：`{ transport:"stdio", command, args?, env? }`，command 必须命中白名单（绝对路径或白名单裸名），args 数量/长度受限；持久化 schema 在解析时拒绝疑似凭据的 env 键和值，密钥待运行时由系统凭据库注入；`streamable_http` 契约不变。
 - 数据归属、原件保留、校验和、并发/原子性：纯函数无状态；导入合并按 id 幂等；无文件写入。
-- 凭据与日志边界、最小权限、外部传输与费用：任何输出不得含密钥明文；渲染器/导出器把 credentialRef 作为不透明引用透传；不发起网络请求。
+- 凭据与日志边界、最小权限、外部传输与费用：任何输出不得含密钥明文；渲染器/导出器把 credentialRef 作为不透明引用透传；Bash 环境导出值采用单引号转义，避免 URL 中的 `$()` 被执行；不发起网络请求。
 - 相关 ADR（无需时说明原因）：纯逻辑模块不改变存储/部署/权限，不新增 ADR；后续接线涉及凭据注入时按需补 ADR。
 
 ## 平台能力

@@ -4,7 +4,7 @@
 
 ## 接线与消费（后续任务候选）
 
-1. **渲染产物真实消费**：Codex `config.toml` provider 块 / Claude `settings.json` / OpenAI 环境变量的写入与注入；渲染字段与目标工具版本对拍（Codex wire_api、Claude ANTHROPIC_BASE_URL 兼容性）。
+1. **渲染产物真实消费**：Codex 用户级 `config.toml` provider 块 / Claude `settings.json` / OpenAI 环境变量的写入与注入；与目标工具版本对拍（Codex 当前仅 `wire_api=responses`，项目级 `.codex/config.toml` 忽略 provider 字段；Claude `ANTHROPIC_BASE_URL` 仍待对拍）。
 2. **model_catalog_json 指针落盘**：按 CodexPlusPlus spec 思路，把 `renderModelCatalogJson` 产物写入 `model-catalogs/<profile>.json` 并注入 `model_catalog_json` 相对路径指针；保留用户手写指针不覆盖；无后缀 no-op。
 3. **MCP stdio 执行接线**：`mcpConfig.ts` 契约接入 Node 侧（canvas-agent/网关）：按白名单 spawn、env 密钥从系统凭据库解析、`mcpServerConfigV2` 持久化（新存储 key，不破坏 `kk-studio-next:mcp-servers:v1`）；连接级 MCP 挂载。
 4. **配置导入导出 UI**：设置页导入/导出便携 v1 文件与 cc-switch 风格 seed；凭据走系统凭据库（service `com.kkstudio.provider`），文件永不落密钥。
