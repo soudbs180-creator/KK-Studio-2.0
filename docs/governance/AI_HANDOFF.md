@@ -1,5 +1,40 @@
 # AI handoff
 
+## 2026-09-26 当前恢复入口：PR #14 已并线，PR #15 待新 head 验收
+
+远端 main@f626438 已包含 PR #14 领域层；根工作区的未提交 UI 工作仍需保护。fix/TASK-MINIMAX-001-mcp-registry-limit 已合入新 main 并解决文档冲突；恢复时回读该分支的提交、CI、独立审查与工作树，不把尚在审查的 MCP 修复算作主线。
+
+## 2026-09-26 TASK-ORCH-001 技术门禁恢复点
+
+PR #14 源码 `9ddfcb5` 独立只读复审 PASS，[Hosted run 36218263291](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36218263291) `verify`/`delivery` 成功；本地 422 Node、82 Rust、300 浏览器通过。恢复时核对补录文档后的准确 head、CI 与 dirty 状态，再看用户产品验收；未经验收不合并。PR #15 四处文档冲突在 #14 后顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 TASK-ORCH-001 返工重审候选
+
+独立 reviewer 对 PR #14 `abb2bb8` 给出 CHANGES REQUIRED：返工提示词变更沿用旧计划批准（P1）、原计划同 ID 重放失败（P2）。任务 worktree 已分离原 prompt / 可选 `reworkPrompt` 并在有效提示词变更时重开计划审批，Web/Rust 包测试已覆盖；本地 422 Node、82 Rust、300 浏览器及静态/构建通过。恢复时核对新 head、Hosted CI、独立复审及 dirty 状态；PR #14 未验收不可合并，PR #15 四处治理文档冲突待顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 TASK-ORCH-001 结果返工候选
+
+独立 reviewer 对 PR #14 `5fff9de` 确认旧五项问题关闭，但提出结果审批拒绝后成功工作项不可重做的 P1，结论 CHANGES REQUIRED。任务 worktree 已补宿主返工和跨阶段下游失效，当前本地 422 Node、82 Rust、300 浏览器及静态/构建通过；恢复时先核对交付、新 head、Hosted CI、独立复审和 dirty 状态。PR #14 未验收不可合并，PR #15 的四处文档冲突须顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 TASK-ORCH-001 审批与依赖修复候选
+
+独立 reviewer 对 PR #14 `36a3419` 给出四项 P1（计划审批、未运行完成、ABA、依赖）及一项 P2（跨项目计划），结论 CHANGES REQUIRED。任务 worktree 已补校验及失败先行回归，本地 420 Node、82 Rust、300 浏览器与静态/构建通过。恢复时核对新 head、Hosted CI、独立复审及 dirty 状态；PR #14 未验收前不可合并，PR #15 四处文档冲突须顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 TASK-ORCH-001 身份唯一性候选
+
+PR #14 旧 head `c7abc45` Hosted CI 已通过，独立复审任务因执行额度耗尽未完成。之后在任务 worktree 复现并修复重复阶段索引/计划 ID 的跨端边界；本地 412 Node、82 Rust、300 浏览器及静态/构建通过。恢复时核对新的 branch head、Hosted CI、独立复审与 dirty 状态；PR #14 未验收前不能合并，#15 四处文档冲突须后续顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-24 TASK-ORCH-001 重复 ID 修复候选
+
+PR #14 `67ff18fb` 独立复审已关闭原两项 P1，新发现重复工作项 ID 会使 `updateWorkItem` 误改已成功项。任务 worktree 已添加计划级 TS/Rust 唯一性校验及失败先行测试；当前 409 Node、81 Rust、300 浏览器与类型/Lint/构建通过。恢复时先核对 dirty/new head，再核对 Hosted CI、独立复审；未完成前不可合并。PR #15 的四处文档冲突待顺序整合，详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-24 TASK-ORCH-001 独立补审修复候选
+
+独立 reviewer 对 PR #14 旧 head `ae4bf7a9` 给出两项 P1：公开旧计划覆写，以及 Desktop/Web 项目包计划字段与素材引用漏同步。任务 worktree 已修复并跑 407 Node、80 Rust、300 浏览器与静态构建检查。下一步核对新 head 的 Hosted CI、独立复审和 PR #15 文档冲突，未完成前不可合并。详见 [验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-24 TASK-ORCH-001 候选
+
+`D:/kk-studio/.worktrees/TASK-ORCH-001` 的编排修复已在本地重跑 405 Node 与 300 Web 浏览器测试；最终独立复审仍 NOT VERIFIED，不可据此合并或宣称 Desktop/Provider 验收。恢复时核对任务分支实际 head、`origin/main`、dirty 状态及 [验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
 ## 2026-09-24 MCP 配置上限候选
 
 `D:/kk-studio/.worktrees/TASK-MINIMAX-001-mcp-registry-limit` 在 `origin/main@76339c9f` 上处理第 51 个 MCP 服务器配置的数据丢失缺陷；恢复时核对实际 head、dirty 状态及 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)。`TASK-MCP-PROTO-001` 是另一个未开始的协议协商任务。编排候选在另一 worktree，两个分支的治理文档有重叠，禁止未解决冲突直接合并。

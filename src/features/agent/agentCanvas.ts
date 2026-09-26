@@ -11,6 +11,7 @@ import { cardLayout } from "../../domain/canvasGraph.ts";
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import type { Point } from "../../domain/canvasViewport.ts";
 import type { ProjectCanvas } from "../../domain/projectCanvas.ts";
+import type { CreationProject } from "../creation/model.ts";
 import type {
   CanvasAgentOp,
   CanvasAgentSnapshot,
@@ -383,4 +384,78 @@ export function summarizeAgentOps(ops?: CanvasAgentOp[]): string {
   return Object.entries(counts)
     .map(([type, count]) => `${labels[type] ?? type} ${count}`)
     .join("，");
+}
+
+/**
+ * 交付契约：Agent 声称完成的产物必须携带可回填的 node_id 且节点已注册资产。
+ * 违反契约即抛错（宿主拦截并回显原因），防止"口头完成、画布无物"。
+ * 对标竞品 canvas-discipline 契约（无 node_id 不算交付完成）。
+ */
+export class CanvasDeliveryContractError extends Error {}
+
+export function assertCanvasDelivery(input: {
+  nodeId?: string;
+  project: CreationProject;
+  label?: string;
+}): void {
+  const label = input.label ?? "Agent 产物";
+  if (!input.nodeId)
+    throw new CanvasDeliveryContractError(
+      `${label} 未携带 node_id，未登记到画布；本次交付不成立。`,
+    );
+  const item = input.project.items.find((entry) => entry.id === input.nodeId);
+  if (!item)
+    throw new CanvasDeliveryContractError(
+      `${label} 指向的画布节点 ${input.nodeId} 不存在。`,
+    );
+  const registered =
+    Boolean(item.assetId) ||
+    (item.result?.source === "provider" && Boolean(item.result.src));
+  if (!registered)
+    throw new CanvasDeliveryContractError(
+      `${label} 节点 ${input.nodeId} 尚未注册素材资产，交付不成立。`,
+    );
+}
+
+/**
+ * 本轮产物集合：按 result 连线收集生成结果节点（素材注册完成证明）。
+ * 画布暂无"分组"模型，以 result 连线 + 集合摘要作为当轮产物分组的等价物
+ * （对标 canvas_group_recent_outputs 的语义）。
+ */
+export function collectRecentOutputs(
+  project: CreationProject,
+  sourceNodeId?: string,
+): CanvasCollectionItem[] {
+  const resultIds = new Set<string>();
+  for (const edge of project.canvas.edges) {
+    if (edge.kind !== "result") continue;
+    if (sourceNodeId && edge.source !== sourceNodeId) continue;
+    resultIds.add(edge.target);
+  }
+  return project.items.filter(
+    (item) =>
+      resultIds.has(item.id) &&
+      (Boolean(item.assetId) ||
+        (item.result?.source === "provider" && Boolean(item.result.src))),
+  );
+}
+
+/** 本轮产物摘要（≤120 字），供 Agent 活动行与交付校验提示。 */
+export function summarizeRecentOutputs(
+  project: CreationProject,
+  sourceNodeId?: string,
+): string {
+  const outputs = collectRecentOutputs(project, sourceNodeId);
+  if (!outputs.length) return "本轮尚无已归档产物";
+  const kinds = outputs.reduce<Record<string, number>>((acc, item) => {
+    acc[item.kind] = (acc[item.kind] || 0) + 1;
+    return acc;
+  }, {});
+  const parts = Object.entries(kinds).map(
+    ([kind, count]) => `${kind} ${count}`,
+  );
+  return `本轮产物：${parts.join("，")}（${outputs
+    .slice(0, 6)
+    .map((item) => item.id.slice(-8))
+    .join("、")}${outputs.length > 6 ? "…" : ""}）`;
 }

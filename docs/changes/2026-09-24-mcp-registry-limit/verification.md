@@ -29,3 +29,10 @@
 
 - 初次提交 `2e93dc885053adb84b4d8ee8024b0e9c728f4b0e`；`delivery:check --base 76339c9f --head HEAD --branch fix/TASK-MINIMAX-001-mcp-registry-limit` 结果为 15 文件、0 违规，分支已推送并创建草稿 PR #15。此处结构 PASS 不代替独立审查或 hosted CI。
 - 与 PR #14 的 `ae4bf7a` 做本地 merge-tree，退出码 1；四个文档内容冲突见 `review.md`。两分支业务源码无重叠；合并前按顺序解决并重新验证。
+
+## 2026-09-26 主线并线验证
+
+- 基线为合入 PR #14 后的 `origin/main@f626438514cd3ea99535a13c87d2df4c6cae976e`；本任务原 head 为 `5d9e51515f2e37ae1eb33b912264a4c53f4e945f`。任务分支通过普通 merge 吸收新主线，不改写历史或原 MCP 源码补丁。
+- 四处冲突位于 `docs/PROGRESS.md`、`docs/features/features.registry.json`、`docs/governance/AI_HANDOFF.md`、`docs/governance/PROJECT_STATE.md`；保留双方历史记录，功能登记合并两任务引用，随后重新生成两个看板。`features:check` 为 31/0、`governance:check` 为 67/0、`markdown:check` 为 84/0。
+- Node 24.21.0 在该合并工作树执行 `npm run verify`，退出码 0：423/423 Node 与 300/300 Edge 浏览器用例通过，类型、lint、UI 规则、格式与构建同在该命令中通过。浏览器测试改写的 20 个历史截图/JSON 已按测试前状态恢复，未纳入候选。
+- 合并提交后的精确 head、交付检查、Hosted CI 和独立上下文复审仍须完成；PR #15 保持草稿，不把本地通过写成最终可合并。

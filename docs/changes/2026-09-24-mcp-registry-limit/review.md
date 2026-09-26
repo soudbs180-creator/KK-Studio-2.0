@@ -15,3 +15,8 @@
 ## 与编排 PR 的冲突核对
 
 2026-09-24 回读 `origin/main@76339c9f`、编排 PR #14 的 `ae4bf7a` 与本分支 `2e93dc8`：两个任务共改 7 个治理/进度文件，没有业务源码重叠。`git merge-tree --write-tree` 退出码 1，确认 `PROGRESS.md`、`features.registry.json`、`AI_HANDOFF.md`、`PROJECT_STATE.md` 四处内容冲突；`features/README.md` 与账本可自动合并，但生成视图仍须重新生成并检查。这是合并顺序问题，不代表现有主线或单分支构建失败。两 PR 不可未经冲突处理直接连续合并；当前 PR 保持草稿与独立复审待办。
+
+## 2026-09-26 与已合并编排主线的冲突处理
+
+- `origin/main@f626438` 已包含 PR #14。此分支通过普通 merge 接入它；MCP 业务源码与编排业务源码无重叠，四处治理文档冲突已保留两边历史和任务登记，并重新生成看板。
+- 当前合并工作树的 423 Node、300 Edge 浏览器及 `verify` 全链通过。新 head 的独立上下文审查与 Hosted CI 仍为 NOT VERIFIED，不能用原分支的自检和旧 SHA 的 CI 替代。
