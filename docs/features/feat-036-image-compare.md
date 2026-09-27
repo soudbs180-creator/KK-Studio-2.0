@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：canvas
 - 最近更新：2026-09-27
-- 关联任务：TASK-COMPARE-001（IN_PROGRESS）
+- 关联任务：TASK-COMPARE-001（REVIEW）
 
 ## 用户可见入口
 
@@ -25,7 +25,7 @@
 
 ## 当前能力
 
-- Web production preview 已通过 1440px、1220px、390px 的真实浏览器操作：加入/移除图片、并排缩放滚动、滑块键盘与触屏、错误重试和删除后剔除。截图与 DOM 证据见本轮验证记录。
+- Web production preview 已通过 1440px、1220px、390px 的浏览器操作：加入/移除图片、并排缩放滚动、滑块键盘与仿真触摸拖动、错误重试和删除后剔除。390px 还量测了主要对比按钮至少 44px 的屏幕命中高度。截图与 DOM 证据见本轮验证记录。
 - Tauri release 在独立数据根目录与 WebView profile 中完成了两张本地图片、并排对比、滑块键盘及 Escape 的原生 GUI 操作；JS/CSS 与本轮 Web 产物哈希一致。
 - 选择仅在当前画布会话内保留；刷新或切换项目后清空。比较过程不修改素材或调用生成服务。
 

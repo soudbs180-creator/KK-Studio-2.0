@@ -13,5 +13,6 @@
 
 ## 尚待独立和托管门禁
 
-- 独立上下文 review：NOT VERIFIED；须绑定本次提交的 base/head SHA，检查实际 diff，不能把上述自审算作独立结论。
+- 独立上下文 dirty diff 预审：发现手机端入口随画布缩小至 24.9px、弹窗按钮仅 32px、触屏证据表述超出原用例、功能卡与账本状态不一致。已修正入口逆缩放和 44px 控件，并增加 `hasTouch` + CDP 拖动与 `boundingBox` 断言，功能卡状态同步为 REVIEW。此预审未绑定最终 SHA，不作为最终独立结论。
+- 最终提交 SHA 的独立上下文 review：NOT VERIFIED；须绑定 base/head 检查实际 diff。
 - Hosted PR `verify`/`delivery`：NOT RUN；用户产品验收：NOT RECORDED；主线集成/正式发布：NOT DONE。

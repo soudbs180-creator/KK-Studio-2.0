@@ -1,11 +1,13 @@
 .image-preview > .compare-image-button {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 0;
+  right: 0;
   z-index: 3;
   min-height: 32px;
   background: var(--bg-surface);
   border: 1px solid var(--border-default);
+  transform: scale(calc(1 / var(--canvas-scale, 1))) translate(-12px, 12px);
+  transform-origin: top right;
 }
 
 .image-compare-selection {
@@ -346,6 +348,11 @@
   }
 
   .image-compare-selection-actions .ui-button {
+    min-height: 44px;
+  }
+
+  .image-compare-chip,
+  .image-compare-dialog .ui-button {
     min-height: 44px;
   }
 

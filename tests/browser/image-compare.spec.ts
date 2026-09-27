@@ -148,39 +148,85 @@ test("two canvas images open a comparison and the slider supports keyboard steps
 });
 
 test("narrow canvas keeps the comparison controls reachable and slider draggable", async ({
-  page,
+  browser,
 }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await openWorkspace(page);
-  await showCanvasNavigation(page);
-  const first = page.getByTestId("canvas-node-image");
-  await uploadImage(page, first);
-  await page.getByRole("button", { name: "小地图" }).click();
-  await page.getByRole("button", { name: "定位 blue-hour.png" }).click();
-  await first.getByRole("button", { name: /加入对比/ }).click();
-  const second = await addSecondImage(page);
-  await second.getByRole("button", { name: /加入对比/ }).click();
-  const selection = page.getByRole("region", { name: "图片对比选择" });
-  await expect(
-    selection.getByRole("button", { name: "打开对比" }),
-  ).toBeVisible();
-  await selection.getByRole("button", { name: "打开对比" }).click();
-  const dialog = page.getByRole("dialog", { name: "图片对比" });
-  await expect(dialog).toBeVisible();
-  const box = (await dialog.boundingBox())!;
-  expect(box.x).toBeGreaterThanOrEqual(0);
-  expect(box.x + box.width).toBeLessThanOrEqual(390);
-  await dialog.getByRole("button", { name: "滑块" }).click();
-  const slider = dialog.getByRole("slider", { name: "对比位置" });
-  const track = (await slider.boundingBox())!;
-  await page.mouse.click(
-    track.x + track.width * 0.75,
-    track.y + track.height / 2,
-  );
-  await expect
-    .poll(async () => Number(await slider.inputValue()))
-    .toBeGreaterThan(60);
-  await page.screenshot({
-    path: "docs/changes/2026-09-27-canvas-image-compare/evidence/compare-390.png",
+  const context = await browser.newContext({
+    baseURL: "http://127.0.0.1:1423",
+    viewport: { width: 390, height: 844 },
+    hasTouch: true,
   });
+  try {
+    const page = await context.newPage();
+    await openWorkspace(page);
+    await showCanvasNavigation(page);
+    const first = page.getByTestId("canvas-node-image");
+    await uploadImage(page, first);
+    await page.getByRole("button", { name: "小地图" }).click();
+    await page.getByRole("button", { name: "定位 blue-hour.png" }).click();
+    const firstCompare = first.getByRole("button", { name: /加入对比/ });
+    expect((await firstCompare.boundingBox())!.height).toBeGreaterThanOrEqual(
+      44,
+    );
+    await firstCompare.click();
+    const second = await addSecondImage(page);
+    await second.getByRole("button", { name: /加入对比/ }).click();
+    const selection = page.getByRole("region", { name: "图片对比选择" });
+    await expect(
+      selection.getByRole("button", { name: "打开对比" }),
+    ).toBeVisible();
+    expect(
+      (await selection.locator(".image-compare-chip").first().boundingBox())!
+        .height,
+    ).toBeGreaterThanOrEqual(44);
+    expect(
+      (await selection.getByRole("button", { name: "打开对比" }).boundingBox())!
+        .height,
+    ).toBeGreaterThanOrEqual(44);
+    await selection.getByRole("button", { name: "打开对比" }).click();
+    const dialog = page.getByRole("dialog", { name: "图片对比" });
+    await expect(dialog).toBeVisible();
+    for (const label of ["关闭图片对比", "并排", "滑块", "缩小", "放大"]) {
+      expect(
+        (await dialog.getByRole("button", { name: label }).boundingBox())!
+          .height,
+      ).toBeGreaterThanOrEqual(44);
+    }
+    const box = (await dialog.boundingBox())!;
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(390);
+    await dialog.getByRole("button", { name: "滑块" }).click();
+    const slider = dialog.getByRole("slider", { name: "对比位置" });
+    const track = (await slider.boundingBox())!;
+    const y = track.y + track.height / 2;
+    const startX = track.x + track.width * 0.25;
+    const endX = track.x + track.width * 0.75;
+    expect(await page.evaluate(() => navigator.maxTouchPoints)).toBeGreaterThan(
+      0,
+    );
+    await page.touchscreen.tap(startX, y);
+    await expect
+      .poll(async () => Number(await slider.inputValue()))
+      .toBeLessThan(40);
+    const cdp = await context.newCDPSession(page);
+    await cdp.send("Input.dispatchTouchEvent", {
+      type: "touchStart",
+      touchPoints: [{ x: startX, y }],
+    });
+    await cdp.send("Input.dispatchTouchEvent", {
+      type: "touchMove",
+      touchPoints: [{ x: endX, y }],
+    });
+    await cdp.send("Input.dispatchTouchEvent", {
+      type: "touchEnd",
+      touchPoints: [],
+    });
+    await expect
+      .poll(async () => Number(await slider.inputValue()))
+      .toBeGreaterThan(60);
+    await page.screenshot({
+      path: "docs/changes/2026-09-27-canvas-image-compare/evidence/compare-390.png",
+    });
+  } finally {
+    await context.close();
+  }
 });
