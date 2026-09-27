@@ -1,5 +1,27 @@
 # 当前进度
 
+## 2026-09-27 Provider #16 源码独立补审通过
+
+PR #16 修复后源码 `1f81322` 独立只读补审 PASS，先前中文 id 渲染、同名 seed 碰撞和功能卡状态问题均关闭；本地完整 `verify` 为 456 Node、300 浏览器，delivery 22 文件/0 违规。补录审查结论后的最终 head 托管检查尚未完成，真实 Codex/Claude 消费与 UI 接线保持后续任务。
+
+## 2026-09-27 Provider #16 复审整改候选
+
+独立 reviewer 对 PR #16 的 `39369c9` 给出 CHANGES REQUIRED：合法中文连接 id 的三目标渲染被静默跳过，同名不同地址 ASCII seed 撞 id，功能卡任务状态滞后。任务分支已按失败先行测试修复，Node 24 本地完整 `verify` 为 456 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0。修复后精确 head 的独立补审与 Hosted 检查待完成，真实配置消费仍属后续接线。
+
+## 2026-09-27 PR #16 最新主线本地验证完成
+
+PR #14 与 #15 已合入 `main@2683d852`，该提交的 Hosted 主线工作流 [36245503714](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36245503714) 成功。PR #16 已与此主线合并并解决功能编号冲突：编排保留 FEAT-030，Provider Connectivity 改为 FEAT-032；本地完整 `verify` 为 454 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0。新 head 独立复审与 Hosted `verify`/`delivery` 仍待完成，真实第三方配置消费未验收。
+
+## 2026-09-26 Provider Connectivity 审查整改与主线同步
+
+PR #16 原 head 的独立审查提出 4 项 P1、2 项 P2。任务分支已按失败先行测试修复：Shell 引号、MCP 凭据过滤、Codex Responses TOML 结构、中文供应商默认 ID、Provider 键冲突、catalog 文件名边界。与 main 合并时发现 FEAT-030 已用于编排，故本功能改为 FEAT-032 并保留双方账本。完整主线验证、新 head 独立复审和 Hosted CI 仍待完成；真实 Provider/Claude 消费未验收。
+
+## 2026-09-24 多供应商接入与多目标配置（TASK-PROV-002，REVIEW，待推送）
+
+按用户“接入足够多的”诉求，参考 CodexPlusPlus（AGPL，仅借鉴设计）与 cc-switch（MIT）落地 4 个纯逻辑模块：统一 Provider 多目标渲染（Codex `config.toml` / Claude `settings.json` / OpenAI 兼容 env）、便携配置导入导出 v1（密钥不落文件，credentialRef 不透明引用透传）、`model[1M]` 后缀解析与 cc-switch 兼容 model_catalog 生成、MCP stdio 配置契约与命令白名单（浏览器 streamable_http 不变）。功能卡 FEAT-032（PARTIAL）与账本 TASK-PROV-002 已登记。
+
+本地门禁全绿：typecheck、lint（eslint 0 / governance 62 任务 0 / features 30 功能 0 / markdown 82 文件 0）、394/394 单测（含新增 24）、ui:check 159 文件 0、format:check。浏览器 test:ui 与独立上下文 review 待推送后 CI/后续完成；渲染产物真实消费、catalog 指针落盘、MCP stdio 接线、导入导出 UI、聚合供应商与协议转换登记为 remaining 后续任务。详见 [验证](changes/2026-09-24-provider-connectivity/verification.md) 与 [遗留清单](changes/2026-09-24-provider-connectivity/remaining.md)。主 checkout 的 TASK-AGENT-006 未提交工作不受影响。
+
 ## 2026-09-26 编排领域层已并入主线，MCP 上限修复仍在审查
 
 PR #14 已经在远端 main@f626438 squash 合入，合并树与受审 PR 源码树一致；阶段 UI、真实生成与 Desktop GUI 仍未收口。PR #15 已在其任务分支合入当前主线并解决治理文档冲突；MCP 第 51 项写入边界修复仍待新提交的独立复审和 Hosted CI，不能提前写成主线能力。

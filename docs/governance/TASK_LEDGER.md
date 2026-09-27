@@ -75,6 +75,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-ORCH-003 | 编排器驱动生成执行与计划门禁 | TODO | TASK-ORCH-001, BACKEND-MEDIA-001 | root |
 | TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | TASK-ORCH-001 | root |
 | TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | TASK-AGENT-001 | root |
+| TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | REVIEW | none | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -907,3 +908,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — 统一任务态复用既有普通重试门禁；unknown/已提交任务与 unknown 输出不进入失败子项重试，定向及全量 Node 单测通过。UI 硬编码示例单价未全部收口，真实 Provider 回执丢失仍需运行验收。
 - Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
 - Updated: 2026-09-23
+
+## TASK-PROV-002 — 多供应商接入与多目标配置（Provider Connectivity）
+
+- Goal: 让 KK Studio 接入足够多的供应商/工具/MCP：统一 Provider 多目标渲染、配置导入导出、模型上下文窗口 catalog、MCP stdio 配置契约
+- Scope: src/features/providers、src/features/models/modelCatalogWindow.ts、src/features/mcp/mcpConfig.ts、tests/unit、docs/changes/2026-09-24-provider-connectivity、docs/features(FEAT-032)
+- Acceptance: 一个 ProviderConnection 可渲染 Codex/Claude/OpenAI 三份目标配置且无密钥; 便携 v1 配置可 round-trip 导入导出，密钥不出现; model[1M] 后缀解析并生成 cc-switch 兼容 catalog; MCP stdio 契约仅接受白名单命令; typecheck/unit/lint/ui:check/format/governance/features/markdown 通过
+- Branch: `feat/TASK-PROV-002-provider-connectivity`
+- Worktree: `D:/kk-studio/.worktrees/TASK-PROV-002-provider-connectivity`
+- Modules: src/features/providers, src/features/models, src/features/mcp, tests/unit, docs/changes, docs/features, docs/governance
+- Verification: NOT_VERIFIED — 旧 head 42c3f26 的 4 P1/2 P2 与合并 head 39369c9 的新增 P1/P2/P3 均已按失败先行测试整改。源码 1f81322 独立只读补审 PASS；本地完整 verify 通过：456 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0；delivery 22/0。最终文档 head Hosted CI、真实 Codex/Claude 消费仍待完成。
+- Evidence: [docs/changes/2026-09-24-provider-connectivity/intent.md](../../docs/changes/2026-09-24-provider-connectivity/intent.md), [docs/changes/2026-09-24-provider-connectivity/spec.md](../../docs/changes/2026-09-24-provider-connectivity/spec.md), [docs/changes/2026-09-24-provider-connectivity/plan.md](../../docs/changes/2026-09-24-provider-connectivity/plan.md), [docs/changes/2026-09-24-provider-connectivity/verification.md](../../docs/changes/2026-09-24-provider-connectivity/verification.md), [docs/changes/2026-09-24-provider-connectivity/remaining.md](../../docs/changes/2026-09-24-provider-connectivity/remaining.md)
+- Updated: 2026-09-26
