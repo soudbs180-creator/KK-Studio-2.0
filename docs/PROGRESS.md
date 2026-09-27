@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-27 Provider #16 源码独立补审通过
+
+PR #16 修复后源码 `1f81322` 独立只读补审 PASS，先前中文 id 渲染、同名 seed 碰撞和功能卡状态问题均关闭；本地完整 `verify` 为 456 Node、300 浏览器，delivery 22 文件/0 违规。补录审查结论后的最终 head 托管检查尚未完成，真实 Codex/Claude 消费与 UI 接线保持后续任务。
+
 ## 2026-09-27 Provider #16 复审整改候选
 
 独立 reviewer 对 PR #16 的 `39369c9` 给出 CHANGES REQUIRED：合法中文连接 id 的三目标渲染被静默跳过，同名不同地址 ASCII seed 撞 id，功能卡任务状态滞后。任务分支已按失败先行测试修复，Node 24 本地完整 `verify` 为 456 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0。修复后精确 head 的独立补审与 Hosted 检查待完成，真实配置消费仍属后续接线。

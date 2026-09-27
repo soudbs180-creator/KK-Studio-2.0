@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-27 Provider #16 独立补审 PASS 恢复点
+
+PR #16 源码 `1f81322` 独立只读补审 PASS，之前 P1/P2/P3 均关闭；本地完整 `verify` 和 delivery 通过。补录审查的文档提交仍需精确 head Hosted 检查；PR 未合并，真实第三方配置消费仍待接线验收。根目录 UI 未提交改动继续保持隔离。
+
 ## 2026-09-27 Provider #16 复审整改恢复点
 
 独立 reviewer 对 `39369c9` 给出 CHANGES REQUIRED（中文 id 渲染静默失败 P1、同名不同地址 seed 撞 id P2、功能卡状态 P3）。任务 worktree 已用失败先行测试修复，完整本地 `verify` 为 456 Node、300 浏览器及治理/功能/Markdown 零违规；修复后新 head 的独立补审、Hosted 检查、真实 Codex/Claude 消费仍待完成。恢复时先回读 PR #16 当前 SHA、工作树与 `main`，不要拿旧 head CI 代替。

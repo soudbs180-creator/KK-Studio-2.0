@@ -73,3 +73,5 @@
 ## 2026-09-27 独立复审后输入边界回归
 
 对合并 head `39369c9` 的独立复审结论为 CHANGES REQUIRED（新 P1/P2/P3，详见 review.md）。先加入中文连接 id 与同名不同地址 ASCII seed 的测试，定向 18/22 通过、4 项失败；修复目标键 fallback、多目标错误传播、seed 地址指纹与功能卡状态后，定向 22/22 通过。修复后的 Node 24.20.0 完整 `npm run verify` 退出码 0：456/456 Node、300/300 浏览器、治理 70/0、功能 32/0、Markdown 85/0，并通过 TypeScript、ESLint、UI 标准、格式与 Web build。浏览器生成的 19 个历史截图/JSON 文件已定向恢复。新 head 的独立补审和 Hosted 检查仍待完成，不能沿用 `39369c9` 的结果作为新候选结论。
+
+修复后源码 `1f813229a1c4fcb80fc11ec116ceab0e8c137359` 的独立只读补审为 PASS（详见 review.md）；本地 delivery 22 文件/0 违规。当前补录审查结果的文档提交尚未经过精确 head 托管检查，真实第三方消费也仍属后续接线。

@@ -53,3 +53,7 @@
 独立只读 reviewer 对 `origin/main@2683d852..39369c9` 给出 **CHANGES REQUIRED**：原 4 P1、2 P2 关闭，但合法中文 `connection.id` 的三目标渲染被 `catch` 静默吞掉（新 P1），同名 ASCII seed 不同地址仍撞 id（新 P2），FEAT-032 卡片关联任务状态滞后（P3）。该结论针对 `39369c9`，不因该 head 的本地或 Hosted 检查改变。
 
 实现者已为两个行为补失败先行测试，旧代码 18/22、四项失败；随后用非 ASCII id 的指纹键、显式异常传播和包含地址指纹的 seed id 修复，定向 22/22 通过，并将功能卡状态改为 REVIEW。修复后完整本地 `verify` 为 456 Node、300 浏览器，治理 70/0、功能 32/0、Markdown 85/0。此段仍非修复后 head 的独立补审；精确 head Hosted CI 与真实第三方消费须分别记录。
+
+## 2026-09-27 修复后精确 head 独立补审
+
+独立只读 reviewer 对 `origin/main@2683d852fcbaba64d0bfff422650fff7f5d8ca9b..1f813229a1c4fcb80fc11ec116ceab0e8c137359` 给出 **PASS**，未发现新的 P0–P2 阻断。中文 `connection.id` 的 Codex/Claude/OpenAI 三目标均能生成，异常不再被吞；同名不同地址 ASCII seed 的 id 不同且合并保留两项；FEAT-032 卡片与账本均为 REVIEW，FEAT-030/031/032 并存。审阅者实际运行定向 33/33、TypeScript、治理 70/0、功能 32/0、Markdown 85/0、`git diff --check`，未独立重跑全量 `verify`。这项审查覆盖上述源码 head；补录本节的文档提交需再做只读检查，Hosted CI 与真实 Codex/Claude 消费各自另验。

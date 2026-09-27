@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-27 Provider #16 源码复审通过，托管门禁待完成
+
+独立只读 reviewer 对 Provider #16 源码 `1f81322` 给出 PASS，无未关闭 P0–P2；本地 `verify` 456 Node/300 浏览器与 delivery 22/0 通过。审查证据补录后仍须回读最终 head 的 PR/push Hosted 检查，未合并前不算主线能力；功能卡 FEAT-032 为 PARTIAL，真实 Codex/Claude 消费未验收。
+
 ## 2026-09-27 PR #16 输入边界审查整改
 
 Provider #16 的 `39369c9` 独立复审为 CHANGES REQUIRED；合法中文连接 id 的多目标渲染、同名不同地址 seed 和功能卡状态已经在任务分支修正。新候选本地完整 `verify` 为 456 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0；新 head 独立补审和 Hosted 检查待完成，尚未进入主线。真实供应商接线与 UI 仍为 PARTIAL。
