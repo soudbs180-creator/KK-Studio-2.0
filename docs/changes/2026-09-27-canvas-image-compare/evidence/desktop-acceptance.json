@@ -1,0 +1,17 @@
+{
+  "runtime": {
+    "url": "http://tauri.localhost/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://tauri.localhost/assets/index-D7BhC6vf.js"
+    ],
+    "styles": [
+      "http://tauri.localhost/assets/index-BpENrrtk.css"
+    ]
+  },
+  "dataRoot": "D:\\kk-studio\\.worktrees\\canvas-compare\\src-tauri\\target\\image-compare-acceptance\\1790511829809\\data",
+  "executableSha256": "f0f8d5650986c1384a0f87f0b4328bc556e2ec9a1ca79baff58af85898ec7a97",
+  "errors": [],
+  "comparison": "PASS"
+}

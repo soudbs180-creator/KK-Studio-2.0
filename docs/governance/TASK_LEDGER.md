@@ -76,6 +76,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | TASK-ORCH-001 | root |
 | TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | TASK-AGENT-001 | root |
 | TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | REVIEW | none | root |
+| TASK-COMPARE-001 | 画布图片对比操作 | REVIEW | none | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -920,3 +921,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — 旧 head 42c3f26 的 4 P1/2 P2 与合并 head 39369c9 的新增 P1/P2/P3 均已按失败先行测试整改。源码 1f81322 独立只读补审 PASS；本地完整 verify 通过：456 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0；delivery 22/0。最终文档 head Hosted CI、真实 Codex/Claude 消费仍待完成。
 - Evidence: [docs/changes/2026-09-24-provider-connectivity/intent.md](../../docs/changes/2026-09-24-provider-connectivity/intent.md), [docs/changes/2026-09-24-provider-connectivity/spec.md](../../docs/changes/2026-09-24-provider-connectivity/spec.md), [docs/changes/2026-09-24-provider-connectivity/plan.md](../../docs/changes/2026-09-24-provider-connectivity/plan.md), [docs/changes/2026-09-24-provider-connectivity/verification.md](../../docs/changes/2026-09-24-provider-connectivity/verification.md), [docs/changes/2026-09-24-provider-connectivity/remaining.md](../../docs/changes/2026-09-24-provider-connectivity/remaining.md)
 - Updated: 2026-09-26
+
+## TASK-COMPARE-001 — 画布图片对比操作
+
+- Goal: 从已加载图片卡片选择 2–4 张并排比较，两张时可滑块对比，保持键盘、窄屏和失效图片状态可用
+- Scope: src/features/compare、Canvas/图片节点入口、样式、测试与本轮交付包
+- Acceptance: 只有可读图片进入对比，最多四张，删除或失效后自动剔除; 2–4 张可并排查看并同步缩放/滚动，2 张可用滑块按键盘和触屏比较; 390px 和宽屏真实浏览器操作可用，现有画布交互不回归; 项目相关门禁通过，Web/Desktop 未验收项如实记录
+- Branch: `codex/TASK-COMPARE-001-canvas-compare`
+- Worktree: `D:/kk-studio/.worktrees/canvas-compare`
+- Modules: src/features/compare, src/components/Canvas.tsx, src/components/nodes, src/styles/canvas-compare.css, tests/unit/imageCompare.test.ts, tests/browser/image-compare.spec.ts, tests/desktop/image-compare.mjs, docs/features, docs/governance
+- Verification: NOT_VERIFIED — 候选完整 npm run verify 通过（302 浏览器）；Tauri client:check/build 与隔离数据目录 release GUI 对比操作通过。独立 review、Hosted CI、用户产品验收与主线集成待完成。
+- Evidence: [docs/changes/2026-09-27-canvas-image-compare/intent.md](../../docs/changes/2026-09-27-canvas-image-compare/intent.md), [docs/changes/2026-09-27-canvas-image-compare/spec.md](../../docs/changes/2026-09-27-canvas-image-compare/spec.md), [docs/changes/2026-09-27-canvas-image-compare/plan.md](../../docs/changes/2026-09-27-canvas-image-compare/plan.md), [docs/changes/2026-09-27-canvas-image-compare/verification.md](../../docs/changes/2026-09-27-canvas-image-compare/verification.md), [docs/changes/2026-09-27-canvas-image-compare/review.md](../../docs/changes/2026-09-27-canvas-image-compare/review.md)
+- Updated: 2026-09-27

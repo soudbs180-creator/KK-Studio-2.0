@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-27 图片对比候选恢复点
+
+从 `D:/kk-studio/.worktrees/canvas-compare` 的 `codex/TASK-COMPARE-001-canvas-compare` 恢复；基线 `origin/main@a89792a`，先核对最新远端/main、当前分支 SHA、dirty 状态与任务账本。FEAT-036 的 Web 全量 `verify`（302 浏览器）、Tauri build 和隔离 release GUI 已通过，截图与运行身份见[本轮验证](../changes/2026-09-27-canvas-image-compare/verification.md)。独立最终审查、Hosted PR 检查和用户产品验收未完成；不把候选当成主线或发布版本。根 checkout 的未提交 UI 改动不得混入本任务。
+
 ## 2026-09-27 Provider #16 独立补审 PASS 恢复点
 
 PR #16 源码 `1f81322` 独立只读补审 PASS，之前 P1/P2/P3 均关闭；本地完整 `verify` 和 delivery 通过。补录审查的文档提交仍需精确 head Hosted 检查；PR 未合并，真实第三方配置消费仍待接线验收。根目录 UI 未提交改动继续保持隔离。

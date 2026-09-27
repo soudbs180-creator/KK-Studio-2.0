@@ -1248,5 +1248,46 @@
       "TASK-PROV-002"
     ],
     "updated": "2026-09-26"
+  },
+  {
+    "id": "FEAT-036",
+    "title": "画布图片对比",
+    "area": "canvas",
+    "status": "PARTIAL",
+    "card": "docs/features/feat-036-image-compare.md",
+    "summary": "从画布图片卡片选择 2–4 张并排查看；两张可切换滑块，选择仅在当前会话内保留。Web preview 与 Desktop release 候选均已实测，尚待产品验收和主线集成。",
+    "entryPoints": [
+      "图片卡片加入对比",
+      "画布对比选择条"
+    ],
+    "code": [
+      "src/features/compare/imageCompare.ts",
+      "src/features/compare/ImageCompareProvider.tsx",
+      "src/features/compare/ImageCompareDialog.tsx",
+      "src/components/Canvas.tsx"
+    ],
+    "tests": [
+      "tests/unit/imageCompare.test.ts",
+      "tests/browser/image-compare.spec.ts",
+      "tests/desktop/image-compare.mjs"
+    ],
+    "tasks": [
+      "TASK-COMPARE-001"
+    ],
+    "updated": "2026-09-27",
+    "platforms": [
+      "web",
+      "desktop"
+    ],
+    "runtimeEvidence": [
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-27-canvas-image-compare/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-09-27-canvas-image-compare/verification.md"
+      }
+    ]
   }
 ]

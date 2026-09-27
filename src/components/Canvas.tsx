@@ -16,6 +16,8 @@ import { useCanvasPersistence } from "./canvas/useCanvasPersistence";
 import { canvasPatternPitch } from "../domain/canvasViewport";
 import { useAgentCanvasView } from "./canvas/useAgentCanvasView";
 import type { CanvasProps } from "./canvas/CanvasProps";
+import ImageCompareProvider from "../features/compare/ImageCompareProvider";
+import ImageCompareControls from "../features/compare/ImageCompareControls";
 
 export default function Canvas({
   projectId,
@@ -97,179 +99,187 @@ export default function Canvas({
   }, [locateNode]);
 
   return (
-    <div
-      ref={containerRef}
-      {...(covered ? { inert: "" } : {})}
-      className={`canvas infinite-canvas ${chatOpen ? "has-chat" : ""} ${dragging === "pan" ? "is-panning" : ""} canvas-pattern-${backgroundPattern}`}
-      data-testid="infinite-canvas"
-      data-tool={controls.tool}
-      data-space-pan={controls.spaceHeld}
-      onContextMenu={(event) => {
-        const editable =
-          event.target instanceof Element &&
-          event.target.closest("input,textarea,[contenteditable=true]");
-        if (editable) return;
-        event.preventDefault();
-        if (
-          event.target instanceof Element &&
-          event.target.closest(
-            "[data-canvas-node],button,.canvas-hud,.canvas-toolbar,.connection",
-          )
-        ) {
-          rightGesture.current = null;
-          return;
-        }
-        if (rightGesture.current?.moved) {
-          rightGesture.current = null;
-          return;
-        }
-        rightGesture.current = null;
-        setContextMenu({
-          client: { x: event.clientX, y: event.clientY },
-          trigger: event.currentTarget,
-        });
-      }}
-      role="region"
-      aria-label="无限画布"
-      tabIndex={0}
-      onKeyDownCapture={controls.handleViewKeyDown}
-      onPointerDown={(event) => {
-        if (event.button === 2)
-          rightGesture.current = {
-            x: event.clientX,
-            y: event.clientY,
-            moved: false,
-          };
-        else if (rightGesture.current) rightGesture.current = null;
-        startCanvasPan(event);
-      }}
-      onDoubleClick={(event) => {
-        addMenu.openAtPoint(
-          event,
-          controls.tool === "select" && !controls.spaceHeld,
-        );
-      }}
-      onPointerMove={(event) => {
-        const right = rightGesture.current;
-        if (
-          right &&
-          (event.buttons & 2) !== 0 &&
-          Math.hypot(event.clientX - right.x, event.clientY - right.y) > 4
-        )
-          right.moved = true;
-        movePointer(event);
-      }}
-      onPointerUp={(event) => {
-        finishPointer(event);
-      }}
-      onPointerCancel={finishPointer}
-      onLostPointerCapture={finishPointer}
-      onWheel={zoomCanvas}
-      style={
-        {
-          "--canvas-usable-width": `${controls.viewport.width}px`,
-          backgroundColor,
-          backgroundSize: `${canvasPatternPitch(transform.scale)}px ${canvasPatternPitch(transform.scale)}px`,
-          "--canvas-pan-x": `${transform.x}px`,
-          "--canvas-pan-y": `${transform.y}px`,
-          "--canvas-dot-cell": `${canvasPatternPitch(transform.scale)}px`,
-          "--canvas-pattern-opacity": Math.min(
-            1,
-            Math.max(0.2, (transform.scale - 0.45) / 0.55),
-          ),
-        } as CSSProperties
-      }
-    >
-      <CanvasNodeLayer
-        controls={controls}
-        items={items}
-        onItemsChange={onItemsChange}
-        favoriteIds={favoriteIds}
-        onToggleFavorite={onToggleFavorite}
-        likedIds={likedIds}
-        onToggleLike={onToggleLike}
-        onConfigure={() => onOpen?.("settings/providers")}
-        addMenu={addMenu}
-        edges={edges}
-        showConnections={showConnections}
-        onConnect={connect}
-        onConnectionNotice={setConnectionNotice}
-        onDeleteConnection={(id) => {
-          setRemovedEdge(edges.find((edge) => edge.id === id) ?? null);
-          setEdges((current) => deleteConnection(current, id));
-          containerRef.current?.focus({ preventScroll: true });
-        }}
-      />
-
-      <CanvasOverlays
-        marquee={controls.marquee}
-        addMenu={addMenu}
-        contextMenu={contextMenu}
-        onDismissContextMenu={(restoreFocus = true) => {
-          if (restoreFocus) contextMenu?.trigger.focus({ preventScroll: true });
-          setContextMenu(null);
-        }}
-        onAddContextNode={(point, trigger) => {
-          setContextMenu(null);
-          addMenu.open({ client: point, trigger, atPoint: true });
-        }}
-        removedEdge={removedEdge}
-        onUndoConnection={() => {
-          if (!removedEdge) return;
-          setEdges((current) => restoreConnection(current, removedEdge, items));
-          setRemovedEdge(null);
-        }}
-        onDismissConnection={() => setRemovedEdge(null)}
-        connectionNotice={connectionNotice}
-        onDismissConnectionNotice={() => setConnectionNotice("")}
-      />
-      <CanvasHud
-        projectStatus={projectStatus}
-        chatOpen={chatOpen}
-        onChat={onOpenChat}
-        onConfigure={() => onOpen?.("settings/providers")}
-        onOpenTasks={onOpenTasks}
-        tasks={tasks}
-        onCancelTask={onCancelTask}
-        onRetryTask={onRetryTask}
-      >
-        <CanvasNavigation
-          transform={transform}
-          nodes={nodes}
-          items={items}
-          onZoom={controls.setZoom}
-          onChangeZoom={controls.changeZoom}
-          onFit={controls.fitView}
-          showConnections={showConnections}
-          onToggleConnections={() => setShowConnections((visible) => !visible)}
-          backgroundColor={backgroundColor ?? "#0a0a0a"}
-          onBackgroundColor={setBackgroundColor}
-          backgroundPattern={backgroundPattern}
-          onToggleBackgroundPattern={() =>
-            setBackgroundPattern((pattern) =>
-              pattern === "dots" ? "grid" : "dots",
+    <ImageCompareProvider key={projectId} items={items} active={!covered}>
+      <div
+        ref={containerRef}
+        {...(covered ? { inert: "" } : {})}
+        className={`canvas infinite-canvas ${chatOpen ? "has-chat" : ""} ${dragging === "pan" ? "is-panning" : ""} canvas-pattern-${backgroundPattern}`}
+        data-testid="infinite-canvas"
+        data-tool={controls.tool}
+        data-space-pan={controls.spaceHeld}
+        onContextMenu={(event) => {
+          const editable =
+            event.target instanceof Element &&
+            event.target.closest("input,textarea,[contenteditable=true]");
+          if (editable) return;
+          event.preventDefault();
+          if (
+            event.target instanceof Element &&
+            event.target.closest(
+              "[data-canvas-node],button,dialog,.canvas-hud,.canvas-toolbar,.connection",
             )
+          ) {
+            rightGesture.current = null;
+            return;
           }
-          onArrange={arrangeNodes}
-          onLocate={locateNode}
-        />
-      </CanvasHud>
-      <CanvasToolbar
-        tool={controls.tool}
-        onToolChange={controls.setTool}
-        onOpen={(view) => onOpen?.(view)}
-        addOpen={Boolean(addMenu.menu && !addMenu.menu.parentId)}
-        onAdd={(trigger) => {
-          const box = trigger.getBoundingClientRect();
-          const scale = surfaceScale(
-            trigger.closest<HTMLElement>(".canvas") ?? trigger,
-          );
-          addMenu.open({
-            client: { x: box.x, y: box.y - 592 * scale },
-            trigger,
+          if (rightGesture.current?.moved) {
+            rightGesture.current = null;
+            return;
+          }
+          rightGesture.current = null;
+          setContextMenu({
+            client: { x: event.clientX, y: event.clientY },
+            trigger: event.currentTarget,
           });
         }}
-      />
-    </div>
+        role="region"
+        aria-label="无限画布"
+        tabIndex={0}
+        onKeyDownCapture={controls.handleViewKeyDown}
+        onPointerDown={(event) => {
+          if (event.button === 2)
+            rightGesture.current = {
+              x: event.clientX,
+              y: event.clientY,
+              moved: false,
+            };
+          else if (rightGesture.current) rightGesture.current = null;
+          startCanvasPan(event);
+        }}
+        onDoubleClick={(event) => {
+          addMenu.openAtPoint(
+            event,
+            controls.tool === "select" && !controls.spaceHeld,
+          );
+        }}
+        onPointerMove={(event) => {
+          const right = rightGesture.current;
+          if (
+            right &&
+            (event.buttons & 2) !== 0 &&
+            Math.hypot(event.clientX - right.x, event.clientY - right.y) > 4
+          )
+            right.moved = true;
+          movePointer(event);
+        }}
+        onPointerUp={(event) => {
+          finishPointer(event);
+        }}
+        onPointerCancel={finishPointer}
+        onLostPointerCapture={finishPointer}
+        onWheel={zoomCanvas}
+        style={
+          {
+            "--canvas-usable-width": `${controls.viewport.width}px`,
+            backgroundColor,
+            backgroundSize: `${canvasPatternPitch(transform.scale)}px ${canvasPatternPitch(transform.scale)}px`,
+            "--canvas-pan-x": `${transform.x}px`,
+            "--canvas-pan-y": `${transform.y}px`,
+            "--canvas-dot-cell": `${canvasPatternPitch(transform.scale)}px`,
+            "--canvas-pattern-opacity": Math.min(
+              1,
+              Math.max(0.2, (transform.scale - 0.45) / 0.55),
+            ),
+          } as CSSProperties
+        }
+      >
+        <CanvasNodeLayer
+          controls={controls}
+          items={items}
+          onItemsChange={onItemsChange}
+          favoriteIds={favoriteIds}
+          onToggleFavorite={onToggleFavorite}
+          likedIds={likedIds}
+          onToggleLike={onToggleLike}
+          onConfigure={() => onOpen?.("settings/providers")}
+          addMenu={addMenu}
+          edges={edges}
+          showConnections={showConnections}
+          onConnect={connect}
+          onConnectionNotice={setConnectionNotice}
+          onDeleteConnection={(id) => {
+            setRemovedEdge(edges.find((edge) => edge.id === id) ?? null);
+            setEdges((current) => deleteConnection(current, id));
+            containerRef.current?.focus({ preventScroll: true });
+          }}
+        />
+        <ImageCompareControls />
+
+        <CanvasOverlays
+          marquee={controls.marquee}
+          addMenu={addMenu}
+          contextMenu={contextMenu}
+          onDismissContextMenu={(restoreFocus = true) => {
+            if (restoreFocus)
+              contextMenu?.trigger.focus({ preventScroll: true });
+            setContextMenu(null);
+          }}
+          onAddContextNode={(point, trigger) => {
+            setContextMenu(null);
+            addMenu.open({ client: point, trigger, atPoint: true });
+          }}
+          removedEdge={removedEdge}
+          onUndoConnection={() => {
+            if (!removedEdge) return;
+            setEdges((current) =>
+              restoreConnection(current, removedEdge, items),
+            );
+            setRemovedEdge(null);
+          }}
+          onDismissConnection={() => setRemovedEdge(null)}
+          connectionNotice={connectionNotice}
+          onDismissConnectionNotice={() => setConnectionNotice("")}
+        />
+        <CanvasHud
+          projectStatus={projectStatus}
+          chatOpen={chatOpen}
+          onChat={onOpenChat}
+          onConfigure={() => onOpen?.("settings/providers")}
+          onOpenTasks={onOpenTasks}
+          tasks={tasks}
+          onCancelTask={onCancelTask}
+          onRetryTask={onRetryTask}
+        >
+          <CanvasNavigation
+            transform={transform}
+            nodes={nodes}
+            items={items}
+            onZoom={controls.setZoom}
+            onChangeZoom={controls.changeZoom}
+            onFit={controls.fitView}
+            showConnections={showConnections}
+            onToggleConnections={() =>
+              setShowConnections((visible) => !visible)
+            }
+            backgroundColor={backgroundColor ?? "#0a0a0a"}
+            onBackgroundColor={setBackgroundColor}
+            backgroundPattern={backgroundPattern}
+            onToggleBackgroundPattern={() =>
+              setBackgroundPattern((pattern) =>
+                pattern === "dots" ? "grid" : "dots",
+              )
+            }
+            onArrange={arrangeNodes}
+            onLocate={locateNode}
+          />
+        </CanvasHud>
+        <CanvasToolbar
+          tool={controls.tool}
+          onToolChange={controls.setTool}
+          onOpen={(view) => onOpen?.(view)}
+          addOpen={Boolean(addMenu.menu && !addMenu.menu.parentId)}
+          onAdd={(trigger) => {
+            const box = trigger.getBoundingClientRect();
+            const scale = surfaceScale(
+              trigger.closest<HTMLElement>(".canvas") ?? trigger,
+            );
+            addMenu.open({
+              client: { x: box.x, y: box.y - 592 * scale },
+              trigger,
+            });
+          }}
+        />
+      </div>
+    </ImageCompareProvider>
   );
 }

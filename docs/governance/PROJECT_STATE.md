@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-27 画布图片对比候选待审
+
+TASK-COMPARE-001 在独立 worktree `codex/TASK-COMPARE-001-canvas-compare` 实现 FEAT-036。Web preview 的 1440/1220/390px 操作、完整 `verify`（302 浏览器）以及隔离数据根目录的 Tauri release GUI 已通过；实际 production JS/CSS 同源。独立审查、PR Hosted 门禁、用户产品验收和主线集成仍待完成，主线与正式发布状态不因此改变。根 checkout 未提交 UI 改动保持隔离。证据见[验证记录](../changes/2026-09-27-canvas-image-compare/verification.md)。
+
 ## 2026-09-27 Provider #16 源码复审通过，托管门禁待完成
 
 独立只读 reviewer 对 Provider #16 源码 `1f81322` 给出 PASS，无未关闭 P0–P2；本地 `verify` 456 Node/300 浏览器与 delivery 22/0 通过。审查证据补录后仍须回读最终 head 的 PR/push Hosted 检查，未合并前不算主线能力；功能卡 FEAT-032 为 PARTIAL，真实 Codex/Claude 消费未验收。

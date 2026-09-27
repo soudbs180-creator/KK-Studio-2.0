@@ -11,6 +11,7 @@ import DemoMediaPreview from "./DemoMediaPreview";
 import DemoRunButton from "./DemoRunButton";
 import CreationComposer from "./CreationComposer";
 import { readReferenceImages } from "./referenceUpload";
+import CompareImageButton from "../../features/compare/CompareImageButton";
 
 export default function DemoResultNode({
   item,
@@ -125,6 +126,7 @@ export default function DemoResultNode({
           </>
         )}
         <footer>
+          <CompareImageButton item={item} />
           <button
             className="ui-button"
             aria-label={

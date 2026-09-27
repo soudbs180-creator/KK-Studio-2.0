@@ -13,7 +13,7 @@
 | PROTOTYPE | 只有 UI、本地 fixture 或固定演示素材，无真实后端；界面必须显式标注 Prototype |
 | PLANNED | 只有计划/设计，无实现或无 UI |
 
-当前共 **32** 个功能：REAL（真实可用）2、PARTIAL（部分可用）23、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）2。
+当前共 **33** 个功能：REAL（真实可用）2、PARTIAL（部分可用）24、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）2。
 
 ## 如何新增一个功能（任何 AI 照此执行）
 
@@ -27,6 +27,7 @@
 | ID | 功能 | 状态 | 卡片 | 关联任务 |
 | --- | --- | --- | --- | --- |
 | FEAT-001 | 创作画布（节点/连线/编辑） | REAL（真实可用） | [卡片](feat-001-canvas-workbench.md) | T2, UI-004, TASK-UI-006 |
+| FEAT-036 | 画布图片对比 | PARTIAL（部分可用） | [卡片](feat-036-image-compare.md) | TASK-COMPARE-001 |
 
 ## 创作生成
 
