@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：intelligence
 - 最近更新：2026-09-26
-- 关联任务：TASK-PROV-002（IN_PROGRESS）
+- 关联任务：TASK-PROV-002（REVIEW）
 
 ## 用户可见入口
 

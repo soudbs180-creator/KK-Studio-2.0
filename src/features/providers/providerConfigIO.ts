@@ -94,9 +94,7 @@ export function buildSeedConnection(profile: SeedProfile): ProviderConnection {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 60);
-  const id =
-    asciiId ||
-    `provider-${connectionFingerprint(`${name}\0${profile.baseUrl}`)}`;
+  const id = `${asciiId || "provider"}-${connectionFingerprint(`${name}\0${profile.baseUrl}`)}`;
   const connection: ProviderConnection = {
     id,
     provider: name.slice(0, 80),

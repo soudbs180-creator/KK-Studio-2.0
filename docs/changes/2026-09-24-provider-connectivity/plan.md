@@ -76,3 +76,7 @@
 | 5 | 更新 spec/review/verification、任务账本和功能卡的准确状态；接入合并后的最新 main，解决治理视图冲突 | 本交付包、ledger/registry/生成视图 | governance/features/markdown、完整 `verify`、delivery、独立补审、精确 head Hosted CI |
 
 所有修复保持纯逻辑层，不在本 PR 接线真实工具、执行 shell、写用户配置或提升 FEAT-032 的 PARTIAL 状态。主 checkout 的未提交 UI 文件不参与本轮修改。
+
+## 2026-09-27 合并后独立复审修复计划
+
+当前 PR head `39369c9` 的独立只读复审发现合法中文连接 id 在多目标渲染时被静默跳过（P1）、同名 ASCII seed 不同地址生成相同 id（P2）及功能卡任务状态滞后（P3）。先为两个行为补失败测试，再让无 ASCII 片段的 id 使用可读占位与原 id 指纹；多目标渲染只对缺少 `baseUrl` 返回空，其余异常向调用方暴露；所有 seed id 包含名称和地址指纹。功能卡同步账本状态。随后跑完整 `verify`、delivery、独立补审和精确 head Hosted 检查。

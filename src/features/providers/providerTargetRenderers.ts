@@ -33,25 +33,25 @@ export function connectionFingerprint(value: string): string {
 }
 
 export function providerKey(connectionId: string): string {
+  if (!connectionId) throw new Error("连接 id 不能为空");
   const key = connectionId
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "_")
     .replace(/^_+|_+$/g, "")
     .slice(0, 32);
-  if (!key) throw new Error("连接 id 无法生成配置键");
-  return `kk_${key}_${connectionFingerprint(connectionId)}`;
+  return `kk_${key || "provider"}_${connectionFingerprint(connectionId)}`;
 }
 
 /** 凭据引用 → 接线层约定使用的环境变量名（值由宿主从系统凭据库注入）。 */
 export function envKeyFor(connectionId: string, suffix: string): string {
+  if (!connectionId) throw new Error("连接 id 不能为空");
   const stem = connectionId
     .toUpperCase()
     .replace(/[^A-Z0-9]+/g, "_")
     .replace(/^_+|_+$/g, "")
     .slice(0, 24);
-  if (!stem || !/^[A-Z][A-Z0-9_]*$/.test(suffix))
-    throw new Error("连接 id 或环境变量后缀无效");
-  return `KK_STUDIO_${stem}_${connectionFingerprint(connectionId).toUpperCase()}_${suffix}`;
+  if (!/^[A-Z][A-Z0-9_]*$/.test(suffix)) throw new Error("环境变量后缀无效");
+  return `KK_STUDIO_${stem || "PROVIDER"}_${connectionFingerprint(connectionId).toUpperCase()}_${suffix}`;
 }
 
 export const wireApiSchema = z.literal("responses");
@@ -147,36 +147,25 @@ export function renderAllTargets(
   connection: ProviderConnection,
   options: { wireApi?: WireApi; assumeAnthropicProtocol?: boolean } = {},
 ): TargetRender[] {
+  if (!connection.baseUrl) return [];
   const renders: TargetRender[] = [];
-  try {
-    renders.push({
-      target: "codex",
-      ok: true,
-      value: renderCodexTarget(connection, options),
-    });
-  } catch {
-    // 缺少 baseUrl 时跳过，不虚构配置。
-  }
+  renders.push({
+    target: "codex",
+    ok: true,
+    value: renderCodexTarget(connection, options),
+  });
   if (options.assumeAnthropicProtocol) {
-    try {
-      renders.push({
-        target: "claude",
-        ok: true,
-        value: renderClaudeTarget(connection, options),
-      });
-    } catch {
-      // 缺少 baseUrl 时跳过。
-    }
-  }
-  try {
     renders.push({
-      target: "openai-env",
+      target: "claude",
       ok: true,
-      value: renderOpenAiEnvTarget(connection),
+      value: renderClaudeTarget(connection, options),
     });
-  } catch {
-    // 缺少 baseUrl 时跳过。
   }
+  renders.push({
+    target: "openai-env",
+    ok: true,
+    value: renderOpenAiEnvTarget(connection),
+  });
   return renders;
 }
 

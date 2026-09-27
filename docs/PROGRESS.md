@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-27 Provider #16 复审整改候选
+
+独立 reviewer 对 PR #16 的 `39369c9` 给出 CHANGES REQUIRED：合法中文连接 id 的三目标渲染被静默跳过，同名不同地址 ASCII seed 撞 id，功能卡任务状态滞后。任务分支已按失败先行测试修复，Node 24 本地完整 `verify` 为 456 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0。修复后精确 head 的独立补审与 Hosted 检查待完成，真实配置消费仍属后续接线。
+
 ## 2026-09-27 PR #16 最新主线本地验证完成
 
 PR #14 与 #15 已合入 `main@2683d852`，该提交的 Hosted 主线工作流 [36245503714](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36245503714) 成功。PR #16 已与此主线合并并解决功能编号冲突：编排保留 FEAT-030，Provider Connectivity 改为 FEAT-032；本地完整 `verify` 为 454 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0。新 head 独立复审与 Hosted `verify`/`delivery` 仍待完成，真实第三方配置消费未验收。

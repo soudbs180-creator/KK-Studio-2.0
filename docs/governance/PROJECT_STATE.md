@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-27 PR #16 输入边界审查整改
+
+Provider #16 的 `39369c9` 独立复审为 CHANGES REQUIRED；合法中文连接 id 的多目标渲染、同名不同地址 seed 和功能卡状态已经在任务分支修正。新候选本地完整 `verify` 为 456 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0；新 head 独立补审和 Hosted 检查待完成，尚未进入主线。真实供应商接线与 UI 仍为 PARTIAL。
+
 ## 2026-09-27 主线至 PR #15，Provider #16 待最终门禁
 
 远端 `main@2683d852` 包含 PR #14 编排领域层和 PR #15 MCP 50 项写入保护，主线 Hosted 工作流 36245503714 成功。Provider #16 已与主线合并并解决 FEAT-030 冲突（Provider 使用 FEAT-032），本地完整 `verify` 通过：454 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0。独立复审与当前 head Hosted `verify`/`delivery` 未完成，不视为主线；真实供应商接线仍为 PARTIAL。根目录 UI 改动和 UI 分支保持隔离。

@@ -101,8 +101,27 @@ test("assertNoSecrets：拒绝密钥形态文本", () => {
 });
 test("providerKey / envKeyFor：清洗非法字符并截断", () => {
   assert.match(providerKey("My Provider!!"), /^kk_my_provider_[a-f0-9]{16}$/);
-  assert.throws(() => providerKey("!!!"));
+  assert.match(providerKey("!!!"), /^kk_provider_[a-f0-9]{16}$/);
   assert.match(envKeyFor("a b", "KEY"), /^KK_STUDIO_A_B_[A-F0-9]{16}_KEY$/);
+});
+
+test("合法中文连接 id 生成三种目标配置，异常输入不被静默跳过", () => {
+  const localized = { ...CONNECTION, id: "阿里" };
+  assert.match(providerKey(localized.id), /^kk_provider_[a-f0-9]{16}$/);
+  assert.match(
+    envKeyFor(localized.id, "API_KEY"),
+    /^KK_STUDIO_PROVIDER_[A-F0-9]{16}_API_KEY$/,
+  );
+  assert.deepEqual(
+    renderAllTargets(localized, { assumeAnthropicProtocol: true }).map(
+      (item) => item.target,
+    ),
+    ["codex", "claude", "openai-env"],
+  );
+  assert.deepEqual(renderAllTargets({ ...localized, baseUrl: undefined }), []);
+  assert.throws(() =>
+    renderAllTargets({ ...localized, displayName: "x".repeat(81) }),
+  );
 });
 
 test("Codex 输出使用当前受支持协议，并把模型选择放在 provider 表之外", () => {

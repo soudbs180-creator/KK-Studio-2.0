@@ -25,6 +25,7 @@
 - schema/API/事件/文件格式与兼容策略：
   - Codex 配置按[当前官方参考](https://learn.chatgpt.com/docs/config-file/config-reference)：provider 的 `wire_api` 仅为 `responses`，选中模型的 `model`/`model_provider` 位于根级；provider 配置需由后续接线写入用户级配置，项目级 `.codex/config.toml` 会忽略它。纯渲染层不写配置文件。
   - 便携格式 `kk-provider-config-v1`：顶层 `version:1`、`connections:[ProviderConnection]`（其中 credentialRef 保留占位；若源含 credentialRef 则原样携带引用 id，密钥绝不进入文件）、`exportedAt`、`source`。
+  - cc-switch 风格 seed 的连接 id 由可读名称片段与名称/地址指纹组成；同名不同地址必须可同时导入。目标配置键对合法非 ASCII id 使用固定可读占位加原 id 指纹。`renderAllTargets` 仅在缺少 `baseUrl` 时返回空，其他渲染错误向调用方报告。
   - catalog 字段：`slug`、`display_name`、`context_window`、`max_context_window`、`auto_compact_token_limit:null`，与 cc-switch/CodexPlusPlus 兼容；解析输入 `model[1M]`（K/k=1000、M/m=1_000_000、纯数字原值）。
   - MCP stdio：`{ transport:"stdio", command, args?, env? }`，command 必须命中白名单（绝对路径或白名单裸名），args 数量/长度受限；持久化 schema 在解析时拒绝疑似凭据的 env 键和值，密钥待运行时由系统凭据库注入；`streamable_http` 契约不变。
 - 数据归属、原件保留、校验和、并发/原子性：纯函数无状态；导入合并按 id 幂等；无文件写入。

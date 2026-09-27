@@ -92,7 +92,7 @@ test("seed 导入：cc-switch 风格 name/baseUrl/model → user_byok 连接", (
     model: "claude-sonnet-4",
   });
   assert.equal(seed.kind, "user_byok");
-  assert.equal(seed.id, "my-relay");
+  assert.match(seed.id, /^my-relay-[a-f0-9]{16}$/);
   assert.equal(seed.provider, "My Relay");
   assert.equal(seed.model, "claude-sonnet-4");
   assert.equal(seed.state, "active");
@@ -127,6 +127,26 @@ test("中文 seed 生成稳定且不同的连接 id，合并不会静默丢项",
     mergeProviderConnections([], [ali, tencent]).map((item) => item.provider),
     ["阿里", "腾讯"],
   );
+});
+
+test("同名 ASCII seed 的不同地址生成不同 id 并可同时导入", () => {
+  const first = buildSeedConnection({
+    name: "OpenAI",
+    baseUrl: "https://one.example.com/v1",
+  });
+  const second = buildSeedConnection({
+    name: "OpenAI",
+    baseUrl: "https://two.example.com/v1",
+  });
+  assert.notEqual(first.id, second.id);
+  assert.equal(
+    first.id,
+    buildSeedConnection({
+      name: "OpenAI",
+      baseUrl: "https://one.example.com/v1",
+    }).id,
+  );
+  assert.equal(mergeProviderConnections([], [first, second]).length, 2);
 });
 
 test("导入两个相同 id 时显式拒绝碰撞", () => {

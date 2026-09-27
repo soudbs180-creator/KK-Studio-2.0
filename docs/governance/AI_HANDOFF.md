@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-27 Provider #16 复审整改恢复点
+
+独立 reviewer 对 `39369c9` 给出 CHANGES REQUIRED（中文 id 渲染静默失败 P1、同名不同地址 seed 撞 id P2、功能卡状态 P3）。任务 worktree 已用失败先行测试修复，完整本地 `verify` 为 456 Node、300 浏览器及治理/功能/Markdown 零违规；修复后新 head 的独立补审、Hosted 检查、真实 Codex/Claude 消费仍待完成。恢复时先回读 PR #16 当前 SHA、工作树与 `main`，不要拿旧 head CI 代替。
+
 ## 2026-09-27 Provider Connectivity 恢复点
 
 远端 `main@2683d852` 已合入 PR #14/#15，主线 Hosted 工作流 36245503714 成功。PR #16 的任务 worktree 在主线合并后通过完整本地 `verify`（454 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0），Provider 功能编号调整为 FEAT-032，FEAT-030 留给编排。旧 head 独立审查的 4 P1、2 P2 已有失败先行修复；新 head 独立复审、PR/push Hosted 检查和真实 Codex/Claude 消费仍待完成。根工作区 75 项未提交 UI 改动不要混入本分支。

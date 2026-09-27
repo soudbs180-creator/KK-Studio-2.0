@@ -69,3 +69,7 @@
 - 合并基线：`main@2683d852`；PR #14 编排与 PR #15 MCP 修复均进入本任务分支。解决五处治理文档冲突时发现 `FEAT-030` 已归编排使用，因此本功能改为 `FEAT-032`，两边功能卡及任务记录都保留。
 - 在合并后的工作树使用 Node 24.20.0 运行 `npm run verify`，退出码 0：ESLint、治理 70/0、功能 32/0、Markdown 85/0、TypeScript、454/454 Node 单测、UI 标准检查、Prettier、Web build、300/300 Playwright 浏览器用例均通过。完整日志保存在本次执行环境的任务工作目录；浏览器生成的 22 个历史截图/JSON 文件已定向恢复，未混入候选。
 - 该结果证明当前源码与最新主线的本地门禁通过；合并提交精确 SHA 的独立审查、PR/push Hosted `verify`/`delivery` 及真实 Codex/Claude 配置消费仍待完成。旧 head 的 hosted 结果不替代这些门禁。
+
+## 2026-09-27 独立复审后输入边界回归
+
+对合并 head `39369c9` 的独立复审结论为 CHANGES REQUIRED（新 P1/P2/P3，详见 review.md）。先加入中文连接 id 与同名不同地址 ASCII seed 的测试，定向 18/22 通过、4 项失败；修复目标键 fallback、多目标错误传播、seed 地址指纹与功能卡状态后，定向 22/22 通过。修复后的 Node 24.20.0 完整 `npm run verify` 退出码 0：456/456 Node、300/300 浏览器、治理 70/0、功能 32/0、Markdown 85/0，并通过 TypeScript、ESLint、UI 标准、格式与 Web build。浏览器生成的 19 个历史截图/JSON 文件已定向恢复。新 head 的独立补审和 Hosted 检查仍待完成，不能沿用 `39369c9` 的结果作为新候选结论。

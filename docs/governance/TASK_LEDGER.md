@@ -917,6 +917,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-PROV-002-provider-connectivity`
 - Worktree: `D:/kk-studio/.worktrees/TASK-PROV-002-provider-connectivity`
 - Modules: src/features/providers, src/features/models, src/features/mcp, tests/unit, docs/changes, docs/features, docs/governance
-- Verification: NOT_VERIFIED — 2026-09-26 独立只读复审旧 head 42c3f26 为 CHANGES REQUIRED（4 P1、2 P2）；六项已按失败先行测试修复。合入 main@2683d852 后本地完整 verify 通过：454 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0。新 head 独立复审、Hosted CI、真实 Codex/Claude 消费仍待完成。
+- Verification: NOT_VERIFIED — 旧 head 42c3f26 独立复审四项 P1、两项 P2 已修复；合并 head 39369c9 的新增 P1/P2/P3 又按失败先行测试整改。新候选本地完整 verify 通过：456 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0。精确 head 独立补审、Hosted CI、真实 Codex/Claude 消费仍待完成。
 - Evidence: [docs/changes/2026-09-24-provider-connectivity/intent.md](../../docs/changes/2026-09-24-provider-connectivity/intent.md), [docs/changes/2026-09-24-provider-connectivity/spec.md](../../docs/changes/2026-09-24-provider-connectivity/spec.md), [docs/changes/2026-09-24-provider-connectivity/plan.md](../../docs/changes/2026-09-24-provider-connectivity/plan.md), [docs/changes/2026-09-24-provider-connectivity/verification.md](../../docs/changes/2026-09-24-provider-connectivity/verification.md), [docs/changes/2026-09-24-provider-connectivity/remaining.md](../../docs/changes/2026-09-24-provider-connectivity/remaining.md)
 - Updated: 2026-09-26
