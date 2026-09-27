@@ -24,7 +24,7 @@
 | ---- | --------- | ---------- | ---- | ---- |
 | 1 | docs/changes/2026-09-24-provider-connectivity/{intent,spec,plan}.md | 任务文档包 | 无 | markdown:check |
 | 2 | docs/governance/task-ledger.json | 登记 TASK-PROV-002（IN_PROGRESS，branch/worktree 实值） | 步骤1 | governance:check |
-| 3 | docs/features/feat-030-provider-connectivity.md + features.registry.json | 功能卡 + FEAT-030 登记（PARTIAL，关联 TASK-PROV-002） | 步骤2 | features:check |
+| 3 | docs/features/feat-032-provider-connectivity.md + features.registry.json | 功能卡 + FEAT-032 登记（PARTIAL，关联 TASK-PROV-002） | 步骤2 | features:check |
 | 4 | src/features/providers/providerTargetRenderers.ts | Codex/Claude/OpenAI 三目标渲染（纯函数+zod 输出） | 无 | 单测+typecheck |
 | 5 | src/features/providers/providerConfigIO.ts | 便携 v1 导出/导入/合并/seed 适配 | 步骤4 的 domain 复用 | 单测+typecheck |
 | 6 | src/features/models/modelCatalogWindow.ts | 后缀解析 + catalog JSON 生成 | 无 | 单测+typecheck |
@@ -75,4 +75,4 @@
 | 4 | `../../outside` 等 profile ID 不产生越界相对路径 | `tests/unit/modelCatalogWindow.test.ts` → `src/features/models/modelCatalogWindow.ts` | 定向 Node 测试 |
 | 5 | 更新 spec/review/verification、任务账本和功能卡的准确状态；接入合并后的最新 main，解决治理视图冲突 | 本交付包、ledger/registry/生成视图 | governance/features/markdown、完整 `verify`、delivery、独立补审、精确 head Hosted CI |
 
-所有修复保持纯逻辑层，不在本 PR 接线真实工具、执行 shell、写用户配置或提升 FEAT-030 的 PARTIAL 状态。主 checkout 的未提交 UI 文件不参与本轮修改。
+所有修复保持纯逻辑层，不在本 PR 接线真实工具、执行 shell、写用户配置或提升 FEAT-032 的 PARTIAL 状态。主 checkout 的未提交 UI 文件不参与本轮修改。

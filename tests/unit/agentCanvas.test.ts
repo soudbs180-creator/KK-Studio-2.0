@@ -2,13 +2,21 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   applyAgentOpsToItems,
+  assertCanvasDelivery,
   buildAgentSnapshot,
+  CanvasDeliveryContractError,
+  collectRecentOutputs,
   itemKindToAgentNodeType,
   summarizeAgentOps,
+  summarizeRecentOutputs,
 } from "../../src/features/agent/agentCanvas.ts";
 import type { CanvasCollectionItem } from "../../src/domain/canvasItems.ts";
-import { createProjectCanvas } from "../../src/domain/projectCanvas.ts";
+import {
+  createProjectCanvas,
+  reconcileProjectCanvas,
+} from "../../src/domain/projectCanvas.ts";
 import type { CanvasAgentOp } from "../../src/features/agent/agentTypes.ts";
+import type { CreationProject } from "../../src/features/creation/model.ts";
 
 /**
  * Agent 画布桥：本项目卡片模型 ↔ Agent 快照/操作翻译。
@@ -202,4 +210,121 @@ test("summarizeAgentOps 输出中文摘要", () => {
 test("itemKindToAgentNodeType 双向映射一致", () => {
   assert.equal(itemKindToAgentNodeType("image"), "image");
   assert.equal(itemKindToAgentNodeType("audio"), "audio");
+});
+
+function deliveryProject(): CreationProject {
+  const items: CanvasCollectionItem[] = [
+    {
+      id: "source-1",
+      title: "生成源节点",
+      description: "来源",
+      kind: "image",
+    },
+    {
+      id: "result-1",
+      title: "归档产物",
+      description: "已归档",
+      kind: "image",
+      assetId: "asset-1",
+      result: {
+        id: "result-1",
+        kind: "image",
+        title: "归档产物",
+        description: "已归档",
+        src: "kk-asset:asset-1",
+        source: "provider",
+      },
+    },
+  ];
+  const canvas = reconcileProjectCanvas(createProjectCanvas(items), items);
+  return {
+    id: "proj-delivery",
+    name: "交付契约测试",
+    kind: "image",
+    prompt: "test",
+    model: "test",
+    attachments: [],
+    items,
+    canvas: {
+      ...canvas,
+      edges: [
+        ...canvas.edges,
+        {
+          id: "result-edge",
+          source: "source-1",
+          target: "result-1",
+          kind: "result",
+        },
+      ],
+    },
+    messages: [],
+    tasks: [],
+    favoriteIds: [],
+    likedIds: [],
+    composerDraft: {
+      prompt: "",
+      model: "",
+      kind: "image",
+      attachments: [],
+      approvalMode: "auto",
+      privacyMode: "byok_local",
+      outputCount: 1,
+      updatedAt: 0,
+    },
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
+}
+
+test("assertCanvasDelivery 拒绝无 node_id / 无资产注册的交付", () => {
+  const project = deliveryProject();
+  assert.throws(
+    () => assertCanvasDelivery({ nodeId: undefined, project }),
+    CanvasDeliveryContractError,
+  );
+  assert.match(
+    (() => {
+      try {
+        assertCanvasDelivery({ nodeId: undefined, project });
+        return "";
+      } catch (error) {
+        return error instanceof Error ? error.message : "";
+      }
+    })(),
+    /未携带 node_id/,
+  );
+  assert.throws(
+    () => assertCanvasDelivery({ nodeId: "ghost", project }),
+    /不存在/,
+  );
+  assert.throws(
+    () => assertCanvasDelivery({ nodeId: "source-1", project }),
+    /尚未注册素材资产/,
+  );
+  assert.doesNotThrow(() =>
+    assertCanvasDelivery({ nodeId: "result-1", project }),
+  );
+});
+
+test("collectRecentOutputs 按 result 连线收集已归档产物", () => {
+  const project = deliveryProject();
+  const outputs = collectRecentOutputs(project);
+  assert.deepEqual(
+    outputs.map((item) => item.id),
+    ["result-1"],
+  );
+  assert.deepEqual(collectRecentOutputs(project, "source-1").length, 1);
+  assert.deepEqual(collectRecentOutputs(project, "other-source").length, 0);
+});
+
+test("summarizeRecentOutputs 输出当轮产物摘要", () => {
+  const project = deliveryProject();
+  const summary = summarizeRecentOutputs(project);
+  assert.match(summary, /本轮产物：image 1/);
+  const empty = summarizeRecentOutputs({
+    ...project,
+    items: [],
+    canvas: { ...project.canvas, edges: [] },
+  });
+  assert.match(empty, /本轮尚无已归档产物/);
 });

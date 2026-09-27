@@ -1,4 +1,4 @@
-# 多供应商接入与多目标配置（FEAT-030）
+# 多供应商接入与多目标配置（FEAT-032）
 
 - 状态：PARTIAL
 - 领域：intelligence

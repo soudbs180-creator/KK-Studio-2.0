@@ -63,3 +63,9 @@
 ## 2026-09-26 复审修复过程
 
 独立审查旧 head `42c3f26` 为 CHANGES REQUIRED，具体六项见 review.md。四个模块的新增测试总数由 24 提至 31；对 Codex 协议/表作用域、Bash URL 命令替换、配置键碰撞、stdio 凭据、中文 seed 丢失、profile 目录穿越及 TOML 换行逐项观察到原代码 FAIL，再做最小修复，当前定向 31/31、`npm run typecheck` 通过。额外在本机 Git Bash 以包含 `$(printf injected)'suffix` 的值执行生成脚本，实际环境变量保持原字面值，子进程退出 0。此阶段尚未接入最新主线，也未完成完整 `verify`、最终 head 独立补审或 Hosted CI；不能以旧 head 的检查代替。
+
+## 2026-09-26 最新主线并线与完整验证
+
+- 合并基线：`main@2683d852`；PR #14 编排与 PR #15 MCP 修复均进入本任务分支。解决五处治理文档冲突时发现 `FEAT-030` 已归编排使用，因此本功能改为 `FEAT-032`，两边功能卡及任务记录都保留。
+- 在合并后的工作树使用 Node 24.20.0 运行 `npm run verify`，退出码 0：ESLint、治理 70/0、功能 32/0、Markdown 85/0、TypeScript、454/454 Node 单测、UI 标准检查、Prettier、Web build、300/300 Playwright 浏览器用例均通过。完整日志保存在本次执行环境的任务工作目录；浏览器生成的 22 个历史截图/JSON 文件已定向恢复，未混入候选。
+- 该结果证明当前源码与最新主线的本地门禁通过；合并提交精确 SHA 的独立审查、PR/push Hosted `verify`/`delivery` 及真实 Codex/Claude 配置消费仍待完成。旧 head 的 hosted 结果不替代这些门禁。
