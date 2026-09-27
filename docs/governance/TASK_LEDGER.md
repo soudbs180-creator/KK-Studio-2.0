@@ -44,6 +44,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AUDIT-SEC-001 | 安全边界与异常任务状态审计 | REVIEW | TASK-GOV-001 | root |
 | TASK-CAP-001 | 本地 Skill/MCP/ComfyUI 能力补齐 | PARTIAL | TASK-GOV-001, T6 | root |
 | TASK-MINIMAX-001 | MiniMax Design 交互审计与本地技能/MCP复刻 | PARTIAL | TASK-GOV-002 | root |
+| TASK-MCP-PROTO-001 | MCP 2026 协议协商与旧版兼容 | TODO | TASK-CAP-001 | root |
+| TASK-MCP-REGISTRY-001 | MCP 多标签页配置写入不丢失 | TODO | none | root |
+| TASK-MCP-REGISTRY-002 | 旧版超限 MCP 配置无损恢复 | TODO | none | root |
 | FEATURE-SYSTEM | 功能卡片体系、状态看板与后端化路线 | DONE | TASK-KK2-MAIN-SYNC | root |
 | BACKEND-IMAGE-PARAMS | 图片比例与清晰度真实透传供应商 | PARTIAL | none | root |
 | BACKEND-TEXT-NODE | 文本节点接入统一任务宿主 | PARTIAL | T5 | root |
@@ -67,6 +70,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
+| TASK-ORCH-001 | Agent 编排领域状态机与编排器工具面 | IN_PROGRESS | TASK-AGENT-001 | root |
+| TASK-ORCH-002 | TaskWorkbench 阶段计划视图与审批交互 | TODO | TASK-ORCH-001 | root |
+| TASK-ORCH-003 | 编排器驱动生成执行与计划门禁 | TODO | TASK-ORCH-001, BACKEND-MEDIA-001 | root |
+| TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | TASK-ORCH-001 | root |
+| TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | TASK-AGENT-001 | root |
+| TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | REVIEW | none | root |
 | TASK-UI-010 | 现行 UI 规则与真实操作回归 | IN_PROGRESS | TASK-UI-008, TASK-AGENT-003 | root |
 | TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | TODO | TASK-UI-010 | unallocated |
 
@@ -523,12 +532,48 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 依据真实 MiniMax Design 操作证据，补齐 KK Studio 的技能库、连接器目录和 MCP 发现交互
 - Scope: MiniMax Design skills/connectors/MCP/ComfyUI interaction audit; KK Studio skill registry, composer integration, connector prototype, MCP lifecycle
 - Acceptance: 真实检查 MiniMax 的技能、连接器、菜单、设置和 ComfyUI 入口，并记录付费生成不执行的边界; KK Studio 技能库支持本地 Skill 的查看、导入、创建、编辑、启用/禁用、卸载和应用到草稿; 连接器目录提供真实可操作的详情、Escape/焦点恢复和明确 Prototype 安装边界; MCP Streamable HTTP 配置覆盖发现、分页、连接失败清理、卸载清理、持久化损坏提示和大小上限; Web 开发运行时完成同状态浏览器证据，未验证范围明确记录，不把本地原型描述为云端/付费能力
-- Branch: `codex/feat/minimax-deep-replica-root`
-- Worktree: `D:/kk-studio-next`
+- Branch: `fix/TASK-MINIMAX-001-mcp-registry-limit`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MINIMAX-001-mcp-registry-limit`
 - Modules: src/components/SkillsPage.tsx, src/components/SkillEditor.tsx, src/components/ConnectorCatalog.tsx, src/components/settings/McpSettings.tsx, src/features/skills/skillRegistry.ts, src/features/mcp/mcpClient.ts, tests/unit, docs/changes/2026-09-21-minimax-deep-audit
-- Verification: PARTIAL — MiniMax 本地应用的技能、连接器、设置/MCP、ComfyUI 和菜单流程已完成只读审计；KK Studio Web 1421 已验证 Skill/Connector/MCP 的点击、Escape、焦点恢复和 HTTPS/HTTP 校验。完整生成、付费提交、桌面 Tauri release 和真实第三方连接器安装仍未验证，保持 PARTIAL。
-- Evidence: [docs/changes/2026-09-21-minimax-deep-audit/verification.md](../../docs/changes/2026-09-21-minimax-deep-audit/verification.md), [docs/evidence/minimax-deep-audit-2026-09-21/runtime.json](../../docs/evidence/minimax-deep-audit-2026-09-21/runtime.json)
-- Updated: 2026-09-21
+- Verification: PARTIAL — 2026-09-21 历史 MiniMax 只读审计和 KK Web Skill/Connector/MCP 验证仍按原证据解释；当前修复 MCP 配置超过 50 项会造成下次读取整表失败的问题。新工作树补齐构建前置后本地 371 Node、300 Web 浏览器回归及静态检查通过。完整生成、付费提交、桌面 Tauri release、真实第三方连接器安装、现代协议及独立复审仍未验证，保持 PARTIAL。旧分支 codex/feat/minimax-deep-replica-root 与 D:/kk-studio-next 仅为历史证据位置。
+- Evidence: [docs/changes/2026-09-21-minimax-deep-audit/verification.md](../../docs/changes/2026-09-21-minimax-deep-audit/verification.md), [docs/evidence/minimax-deep-audit-2026-09-21/runtime.json](../../docs/evidence/minimax-deep-audit-2026-09-21/runtime.json), [docs/changes/2026-09-24-mcp-registry-limit/verification.md](../../docs/changes/2026-09-24-mcp-registry-limit/verification.md)
+- Updated: 2026-09-24
+
+## TASK-MCP-PROTO-001 — MCP 2026 协议协商与旧版兼容
+
+- Goal: 让手动 MCP 客户端在安全边界内兼容 2026-07-28 modern 与 2025-11-25 legacy 服务器，并用真实端点验收
+- Scope: src/features/mcp/mcpClient.ts, tests/unit/mcpClient.test.ts, tests/browser/mcp-settings.spec.ts, Desktop/Web 连接验收
+- Acceptance: 实现 server/discover 与旧版 initialize 的明确协商及安全回退，拒绝把鉴权或服务故障误判为旧版; 保持 HTTPS/loopback、凭据不持久化、超时取消、大小和分页限制; 用现代与旧版测试服务器覆盖发现、失败、重连与恢复；真实第三方服务器完成 Web 和 Desktop 验收
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/mcp/mcpClient.ts, src/components/settings/McpSettings.tsx, tests/unit/mcpClient.test.ts, tests/browser/mcp-settings.spec.ts
+- Verification: NOT_VERIFIED — NOT VERIFIED：当前客户端固定 2025-11-25 initialize；官方 2026-07-28 文档定义 server/discover。尚未运行现代协议真实服务器，兼容失败为静态推断。
+- Evidence: [docs/changes/2026-09-24-mcp-registry-limit/spec.md](../../docs/changes/2026-09-24-mcp-registry-limit/spec.md), [docs/features/feat-012-mcp.md](../../docs/features/feat-012-mcp.md)
+- Updated: 2026-09-24
+
+## TASK-MCP-REGISTRY-001 — MCP 多标签页配置写入不丢失
+
+- Goal: 多个 Web 标签页同时修改 MCP 服务器列表时保留每次已确认的改动
+- Scope: McpServerRegistry 多实例持久化、跨标签页同步和冲突反馈
+- Acceptance: 两个 registry 实例从同一 49 项快照各新增一项，不静默覆盖先写者; 跨标签页删除与同 id 更新有明确冲突语义，并以自动测试覆盖; 保持 50 项上限、凭据不落盘和现有存储 key
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/mcp/mcpClient.ts, src/components/settings/McpSettings.tsx, tests/unit/mcpClient.test.ts
+- Verification: NOT_VERIFIED — 独立审查在基线复现：两个实例各基于 49 项新增时，后写者覆盖先写者；修复及跨标签页验收未执行。
+- Evidence: [docs/changes/2026-09-24-mcp-registry-limit/review.md](../../docs/changes/2026-09-24-mcp-registry-limit/review.md)
+- Updated: 2026-09-26
+
+## TASK-MCP-REGISTRY-002 — 旧版超限 MCP 配置无损恢复
+
+- Goal: 让旧版本已存的 51 项 MCP 配置可被用户识别和恢复，避免列表空白时丢失原件
+- Scope: MCP 本地配置损坏提示、原件导出和显式恢复流程
+- Acceptance: 已有 51 项存储字节在查看、导出和恢复前保持不变; 界面说明超限原因并提供可用的导出或显式修复路径; 51 项与其他损坏 JSON 的回归测试分别覆盖，且不放宽正常写入的 50 项上限
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/mcp/mcpClient.ts, src/components/settings/McpSettings.tsx, tests/unit/mcpClient.test.ts, tests/browser/mcp-settings.spec.ts
+- Verification: NOT_VERIFIED — 独立审查在基线复现：旧版 51 项存储仍在但当前界面列表为 0，registry 拒绝后续增删；恢复流程未实现。
+- Evidence: [docs/changes/2026-09-24-mcp-registry-limit/review.md](../../docs/changes/2026-09-24-mcp-registry-limit/review.md)
+- Updated: 2026-09-26
 
 ## FEATURE-SYSTEM — 功能卡片体系、状态看板与后端化路线
 
@@ -805,6 +850,78 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — 2026-09-23 扫描 365 个已跟踪 Markdown，历史范围共 37 处文件目标问题；原始日志来源和可恢复性待核对。
 - Evidence: [docs/governance/MARKDOWN_AUDIT.md](../../docs/governance/MARKDOWN_AUDIT.md)
 - Updated: 2026-09-23
+
+## TASK-ORCH-001 — Agent 编排领域状态机与编排器工具面
+
+- Goal: Stage 状态机（doing/plan_review/blocked/result_review/done）+ 编排器 CAS 推进 + plan 工具面，作为波次A闭环的领域基座
+- Scope: src/domain/stagePlan.ts, src/features/agent/orchestrator.ts, src/features/agent/agentHost.ts, src/features/creation/model.ts, src/features/projects/projectPackage.ts, src-tauri/src/project_package*.rs, tests
+- Acceptance: Stage 状态机合法/非法迁移与 CAS 并发冲突可测; 编排器物化计划、审批决策、阻断与失败重试只重试失败项; plan 工具面四个工具可调用并持久化; CreationProject.stagePlans 存储兼容不丢旧数据; 项目包导出导入保留空 stagePlans 和仅由计划工作项引用的素材; 工作项结果按预期 revision 写入，迟到结果不覆盖审批状态; 工作项 id 在计划内唯一，重复 id 不得误推进已完成工作项; 阶段 index 与项目内计划 id 唯一，异常项目包不得静默丢失或误改计划; 计划审批前不得执行工作项，全部工作项成功后才能请求结果审批或完成阶段; Agent 工具和宿主审批均按预期 revision 拒绝迟到请求，依赖工作项必须先成功且依赖图有效; Web 与 Rust 项目包拒绝归属其他项目的阶段计划; 结果审批拒绝后可指定返工项与新 prompt，并使下游产物、旧素材引用和审批失效; 返工提示词变更不覆盖原计划定义，须清除旧计划批准并重新审批；Web/Rust 项目包保留返工提示词
+- Branch: `feat/TASK-ORCH-001-agent-orchestration-closure`
+- Worktree: `D:/kk-studio/.worktrees/TASK-ORCH-001`
+- Modules: src/domain/stagePlan.ts, src/features/agent/orchestrator.ts, src/features/agent/agentHost.ts, src/features/creation/model.ts, src/features/projects/projectPackage.ts, src-tauri/src/project_package.rs, src-tauri/src/project_package_snapshot.rs, docs/architecture/adr/ADR-006-stage-plan-package-contract.md, tests/unit/stagePlan.test.ts, tests/unit/orchestrator.test.ts
+- Verification: PARTIAL — 源码 head 9ddfcb5 独立只读复审 PASS，未发现未关闭 P1/P2；Hosted run 36218263291 verify/delivery 成功。本地 422 Node、82 Rust、300 浏览器及静态/构建通过。当前补录证据的文档 head 待再验；Desktop GUI、真实 Provider 和用户产品验收未完成。UI 对接仍属 TASK-ORCH-002/003。详见 verification.md 与 review.md。
+- Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
+- Updated: 2026-09-26
+
+## TASK-ORCH-002 — TaskWorkbench 阶段计划视图与审批交互
+
+- Goal: 任务工作台展示 Stage 计划状态与 plan/result 审批门，审批按钮驱动编排器
+- Scope: src/components/TaskWorkbench.tsx, TaskWorkbenchContent.tsx, src/App.tsx（onStageDecision 回调链）
+- Acceptance: 工作台显示各阶段状态徽标与待审批门; plan/result 审批按钮调用编排器 decideStage; 浏览器回归覆盖展示与审批流
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/components/TaskWorkbench.tsx, src/components/TaskWorkbenchContent.tsx, src/App.tsx
+- Verification: NOT_VERIFIED — 未开工。
+- Evidence: NOT VERIFIED
+- Updated: 2026-09-23
+
+## TASK-ORCH-003 — 编排器驱动生成执行与计划门禁
+
+- Goal: plan 审批通过后编排器驱动工作项真实生成（图片/文本走统一任务态），失败只重试失败项
+- Scope: src/features/agent/orchestrator.ts, src/features/creation/imageTaskCommand.ts, agentHost.ts
+- Acceptance: 阶段工作项按依赖顺序提交真实生成任务; 失败项单独重试不重复整段; 计划状态与任务状态联动可观测
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/agent/orchestrator.ts, src/features/creation/imageTaskCommand.ts, src/features/agent/agentHost.ts
+- Verification: NOT_VERIFIED — 未开工。
+- Evidence: NOT VERIFIED
+- Updated: 2026-09-23
+
+## TASK-CANVAS-001 — 画布交付契约与当轮产物收集
+
+- Goal: 产物必须携带 node_id 且已注册素材资产，否则拦截；按 result 连线收集当轮产物与摘要
+- Scope: src/features/agent/agentCanvas.ts, agentHost.ts, tests/unit/agentCanvas.test.ts
+- Acceptance: assertCanvasDelivery 对无 node_id/无资产注册的交付抛契约错误; collectRecentOutputs 按 result 连线收集已归档产物; 摘要文本可读
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/agent/agentCanvas.ts, src/features/agent/agentHost.ts, tests/unit/agentCanvas.test.ts
+- Verification: PARTIAL — 契约纯函数与单测完成；宿主强制接入（所有生成路径统一走 assertCanvasDelivery）未全量覆盖。
+- Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
+- Updated: 2026-09-23
+
+## TASK-TASKSTATE-001 — 统一任务态契约定稿
+
+- Goal: 把 9 态任务模型、可重试判定、失败只重试失败输出、成本估算收口为可复用契约模块
+- Scope: src/features/creation/taskState.ts, src/features/creation/taskRecovery.ts, tests/unit/taskState.test.ts
+- Acceptance: unifiedTaskStatuses 覆盖 9 态; canRetryTask/retryFailedOutputIndices 语义正确; estimateTaskCostUsd 边界与估算口径标注; UI 成本显示收口到 estimateTaskCostUsd（后续任务）
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/creation/taskState.ts, src/features/creation/taskRecovery.ts, src/features/creation/model.ts, tests/unit/taskState.test.ts
+- Verification: PARTIAL — 统一任务态复用既有普通重试门禁；unknown/已提交任务与 unknown 输出不进入失败子项重试，定向及全量 Node 单测通过。UI 硬编码示例单价未全部收口，真实 Provider 回执丢失仍需运行验收。
+- Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
+- Updated: 2026-09-23
+
+## TASK-PROV-002 — 多供应商接入与多目标配置（Provider Connectivity）
+
+- Goal: 让 KK Studio 接入足够多的供应商/工具/MCP：统一 Provider 多目标渲染、配置导入导出、模型上下文窗口 catalog、MCP stdio 配置契约
+- Scope: src/features/providers、src/features/models/modelCatalogWindow.ts、src/features/mcp/mcpConfig.ts、tests/unit、docs/changes/2026-09-24-provider-connectivity、docs/features(FEAT-032)
+- Acceptance: 一个 ProviderConnection 可渲染 Codex/Claude/OpenAI 三份目标配置且无密钥; 便携 v1 配置可 round-trip 导入导出，密钥不出现; model[1M] 后缀解析并生成 cc-switch 兼容 catalog; MCP stdio 契约仅接受白名单命令; typecheck/unit/lint/ui:check/format/governance/features/markdown 通过
+- Branch: `feat/TASK-PROV-002-provider-connectivity`
+- Worktree: `D:/kk-studio/.worktrees/TASK-PROV-002-provider-connectivity`
+- Modules: src/features/providers, src/features/models, src/features/mcp, tests/unit, docs/changes, docs/features, docs/governance
+- Verification: NOT_VERIFIED — 旧 head 42c3f26 的 4 P1/2 P2 与合并 head 39369c9 的新增 P1/P2/P3 均已按失败先行测试整改。源码 1f81322 独立只读补审 PASS；本地完整 verify 通过：456 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0；delivery 22/0。最终文档 head Hosted CI、真实 Codex/Claude 消费仍待完成。
+- Evidence: [docs/changes/2026-09-24-provider-connectivity/intent.md](../../docs/changes/2026-09-24-provider-connectivity/intent.md), [docs/changes/2026-09-24-provider-connectivity/spec.md](../../docs/changes/2026-09-24-provider-connectivity/spec.md), [docs/changes/2026-09-24-provider-connectivity/plan.md](../../docs/changes/2026-09-24-provider-connectivity/plan.md), [docs/changes/2026-09-24-provider-connectivity/verification.md](../../docs/changes/2026-09-24-provider-connectivity/verification.md), [docs/changes/2026-09-24-provider-connectivity/remaining.md](../../docs/changes/2026-09-24-provider-connectivity/remaining.md)
+- Updated: 2026-09-26
 
 ## TASK-UI-010 — 现行 UI 规则与真实操作回归
 

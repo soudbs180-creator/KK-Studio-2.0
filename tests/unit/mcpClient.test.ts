@@ -69,6 +69,22 @@ test("server registry persists endpoint metadata without credentials or session 
   assert.deepEqual(new McpServerRegistry(storage).list(), [server]);
 });
 
+test("server registry never writes more servers than it can read back", () => {
+  const storage = new MemoryStorage();
+  const registry = new McpServerRegistry(storage);
+  for (let index = 0; index < 50; index += 1)
+    registry.add({ ...server, id: `local-${index}` });
+  const before = storage.getItem(MCP_SERVERS_STORAGE_KEY);
+
+  assert.throws(() => registry.add({ ...server, id: "local-50" }), /50/);
+  assert.equal(storage.getItem(MCP_SERVERS_STORAGE_KEY), before);
+  assert.equal(registry.list().length, 50);
+  assert.equal(new McpServerRegistry(storage).list().length, 50);
+
+  registry.add({ ...server, id: "local-0", name: "更新现有服务器" });
+  assert.equal(new McpServerRegistry(storage).list().length, 50);
+});
+
 test("MCP server labels reject credential-like text before persistence", () => {
   const storage = new MemoryStorage();
   const registry = new McpServerRegistry(storage);

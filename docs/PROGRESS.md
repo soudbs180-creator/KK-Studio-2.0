@@ -1,8 +1,91 @@
 # 当前进度
 
+## 2026-09-27 UI #19 与最新主线同步候选
+
+远端 `main@a89792ad` 已顺序合入 PR #14/#15/#16；#19 的独立工作树以普通 merge 承接该提交。六处冲突均为进度、功能登记与任务账本，按任务 ID 保留双方记录，治理检查为 72 项/0 违规，功能检查为 32 项/0 违规。运行 UI 保持已验证的 291px 侧栏与 40px 顶栏；未接线的 `tokens.css/json` 仍有 200px/56px 冲突，不能把它算作统一 token 已完成。两项浏览器偶发失败经复现定位为侧栏宽度动画中的断言和图片请求到达 Provider 前的取消，测试改为等待对应真实状态，定向重复 32/32 无重试通过。完整门禁、当前 head 的独立复审与 Hosted CI 仍需以最终提交核对；PR #20 及根工程未提交 UI 工作继续独立保留。
+
 ## 2026-09-24 现行 UI 与真实操作回归（TASK-UI-010，进行中）
 
 在独立 `fix/TASK-UI-010-ui-regression` worktree 中承接新 `UI_INDEX / UI_RULES / UI_ARCHETYPES / DESIGN_TOKENS`，核对 Figma 四节点和六条浏览器批注，修复首页创作输入、搜索底部选线、持久对话、画布 HUD、设置与窄屏入口。资产管理按 A1 画廊修复 6px 文件名、22px 筛选和旧网格；提示词库按 A2+A4 调整卡片与空态。独立 reviewer 对[草稿 PR #19](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/19) 初审未发现 P0/P1，提出五项 P2；修复提交 `3db7b69` 已推送，复审确认五项均关闭、无新增 P0/P1/P2，代码审查 PASS。1440/390 共 42 个页面状态已重新截图；完整 `npm run verify` 通过 370 Node、319 browser，Web production preview 与隔离数据的 fresh Tauri release 加载同一 JS/CSS，页面错误 0。新建项目与项目库保持真实空态。侧栏静态演示项目另列 `TASK-PROJECT-SIDEBAR-001`；新增 token 导出与已验证 291/40 外壳及颜色仍冲突，在线 Ardot 未回读，用户当前 1421/旧桌面入口整合尚未完成。WorkBuddy/豆包真实接管、共享记忆与模型调度不由 UI 验收升级。证据见 [本轮 verification](changes/2026-09-24-ui-regression/verification.md) 和 [架构核对](changes/2026-09-24-ui-regression/architecture-audit.md)。
+
+## 2026-09-27 Provider #16 源码独立补审通过
+
+PR #16 修复后源码 `1f81322` 独立只读补审 PASS，先前中文 id 渲染、同名 seed 碰撞和功能卡状态问题均关闭；本地完整 `verify` 为 456 Node、300 浏览器，delivery 22 文件/0 违规。补录审查结论后的最终 head 托管检查尚未完成，真实 Codex/Claude 消费与 UI 接线保持后续任务。
+
+## 2026-09-27 Provider #16 复审整改候选
+
+独立 reviewer 对 PR #16 的 `39369c9` 给出 CHANGES REQUIRED：合法中文连接 id 的三目标渲染被静默跳过，同名不同地址 ASCII seed 撞 id，功能卡任务状态滞后。任务分支已按失败先行测试修复，Node 24 本地完整 `verify` 为 456 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0。修复后精确 head 的独立补审与 Hosted 检查待完成，真实配置消费仍属后续接线。
+
+## 2026-09-27 PR #16 最新主线本地验证完成
+
+PR #14 与 #15 已合入 `main@2683d852`，该提交的 Hosted 主线工作流 [36245503714](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36245503714) 成功。PR #16 已与此主线合并并解决功能编号冲突：编排保留 FEAT-030，Provider Connectivity 改为 FEAT-032；本地完整 `verify` 为 454 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0。新 head 独立复审与 Hosted `verify`/`delivery` 仍待完成，真实第三方配置消费未验收。
+
+## 2026-09-26 Provider Connectivity 审查整改与主线同步
+
+PR #16 原 head 的独立审查提出 4 项 P1、2 项 P2。任务分支已按失败先行测试修复：Shell 引号、MCP 凭据过滤、Codex Responses TOML 结构、中文供应商默认 ID、Provider 键冲突、catalog 文件名边界。与 main 合并时发现 FEAT-030 已用于编排，故本功能改为 FEAT-032 并保留双方账本。完整主线验证、新 head 独立复审和 Hosted CI 仍待完成；真实 Provider/Claude 消费未验收。
+
+## 2026-09-24 多供应商接入与多目标配置（TASK-PROV-002，REVIEW，待推送）
+
+按用户“接入足够多的”诉求，参考 CodexPlusPlus（AGPL，仅借鉴设计）与 cc-switch（MIT）落地 4 个纯逻辑模块：统一 Provider 多目标渲染（Codex `config.toml` / Claude `settings.json` / OpenAI 兼容 env）、便携配置导入导出 v1（密钥不落文件，credentialRef 不透明引用透传）、`model[1M]` 后缀解析与 cc-switch 兼容 model_catalog 生成、MCP stdio 配置契约与命令白名单（浏览器 streamable_http 不变）。功能卡 FEAT-032（PARTIAL）与账本 TASK-PROV-002 已登记。
+
+本地门禁全绿：typecheck、lint（eslint 0 / governance 62 任务 0 / features 30 功能 0 / markdown 82 文件 0）、394/394 单测（含新增 24）、ui:check 159 文件 0、format:check。浏览器 test:ui 与独立上下文 review 待推送后 CI/后续完成；渲染产物真实消费、catalog 指针落盘、MCP stdio 接线、导入导出 UI、聚合供应商与协议转换登记为 remaining 后续任务。详见 [验证](changes/2026-09-24-provider-connectivity/verification.md) 与 [遗留清单](changes/2026-09-24-provider-connectivity/remaining.md)。主 checkout 的 TASK-AGENT-006 未提交工作不受影响。
+
+## 2026-09-26 编排领域层已并入主线，MCP 上限修复仍在审查
+
+PR #14 已经在远端 main@f626438 squash 合入，合并树与受审 PR 源码树一致；阶段 UI、真实生成与 Desktop GUI 仍未收口。PR #15 已在其任务分支合入当前主线并解决治理文档冲突；MCP 第 51 项写入边界修复仍待新提交的独立复审和 Hosted CI，不能提前写成主线能力。
+
+## 2026-09-26 编排候选技术门禁结果
+
+PR #14 源码 `9ddfcb5` 已通过独立只读复审（未发现未关闭 P1/P2）及 [Hosted run 36218263291](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36218263291) 的 `verify`/`delivery`；本地 422 Node、82 Rust、300 浏览器和交付结构检查也通过。当前补录审查证据的文档提交需再核对精确 head；用户产品验收、Desktop GUI/正式安装包及真实 Provider 未完成，PR 仍未合并。PR #15 四处治理文档冲突待 #14 集成后顺序处理。详见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 返工提示词重新审批候选
+
+PR #14 的 `abb2bb8` 独立复审确认结果返工可执行，又发现改动已批准提示词后沿用旧批准状态的 P1，以及原提示词覆盖使同 ID 重放失败的 P2，结论 CHANGES REQUIRED。任务分支已将返工提示词独立保存为 `reworkPrompt`，改变有效提示词时整阶段与下游重新排队并返回计划审批；Web/Rust 包往返已加回归。本地 422 Node、82 Rust、300 浏览器及静态/构建检查通过，新 head 独立复审/Hosted CI 待完成。见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 结果拒绝返工闭环候选
+
+独立复审对 PR #14 的 `5fff9de` 确认先前五项阻断已关闭，又发现结果审批拒绝后成功工作项无法修改的既有 P1，结论 CHANGES REQUIRED。任务分支已补宿主指定返工项及新 prompt 的路径，传递下游依赖和旧素材引用一并失效；失败先行测试现通过，本地 422 Node、82 Rust、300 浏览器及静态/构建检查通过。交付门禁、新 head 独立复审和 Hosted CI 待完成，PR #14 仍不可合并。见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 编排审批、依赖与并发边界修复
+
+独立复审对 PR #14 的 `36a3419` 提出计划审批可绕过、未运行工作项可标完成、阶段工具 ABA、依赖图未执行四项 P1，以及项目包跨项目计划一项 P2，结论 CHANGES REQUIRED。任务分支已补审批标记、成功/依赖门禁、阶段及宿主审批预期 revision、跨端计划归属与图校验；本地 420 Node、82 Rust、300 浏览器及静态/构建检查通过。新 head 的 Hosted CI、独立复审与用户产品验收仍待完成，PR #14 不可合并；PR #15 的四处治理文档冲突待 #14 之后顺序处理。详见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 编排候选身份唯一性补查
+
+PR #14 的旧 head `c7abc45` 已通过 Hosted `verify`/`delivery`；后续自查又发现重复阶段索引和项目内重复计划 ID 可使按身份更新误触多个对象。任务分支已用失败先行测试补 TS/Rust 校验，Web 项目包拒绝有损导出；本地 412 Node、82 Rust、300 浏览器及静态/构建检查通过。新 head 的 Hosted CI 和独立复审待完成，PR 仍不可合并；PR #15 的四处文档冲突继续按顺序处理。见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-24 编排计划重复工作项 ID 边界
+
+PR #14 的 `67ff18fb` 独立复审确认旧计划覆写与项目包漏同步两项 P1 已关闭，但发现重复工作项 ID 可让单项更新误改已成功项。候选已在 TS 与 Rust 项目包中拒绝计划内重复 ID；失败先行和 409 Node / 81 Rust / 300 浏览器本地回归见[验证记录](changes/2026-09-23-agent-orchestration/verification.md)。新 head 独立复审与 Hosted CI 仍待完成；当前 PR 不可合并。
+
+## 2026-09-24 Agent 编排独立审查阻断修复
+
+独立审查在 PR #14 旧 head 发现：公开写入口可用旧计划覆盖已审批进度；Desktop 项目包拒绝 normalize 后新增的 `stagePlans` 字段，Web/Rust 包还遗漏计划工作项唯一引用的素材。当前候选已加入预期 revision 工作项更新、删除公开覆写入口、同步项目包 schema 与素材收集；407 Node、80 Rust 与 300 浏览器测试及类型/Lint/构建/治理通过。修复后新 head 的 Hosted CI、独立复审和 Desktop GUI 尚未验收，PR #14 仍不可合并；详细证据见 [验证记录](changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-24 Agent 阶段审批边界
+
+`TASK-ORCH-001` 候选新增失败先行测试，确认 Agent 的计划状态工具原可直接批准计划/结果并解除阻断。工具现只允许从执行中发起审批或阻断；宿主审批与重试入口保留决策权。当前代码重跑 405 Node、300 浏览器回归及类型/Lint/格式/构建/治理门禁均通过；最终独立复审、Desktop 与真实 Provider 未验收，候选继续保持 PARTIAL。
+
+## 2026-09-24 编排计划持久化边界修正
+
+独立预检在 `TASK-ORCH-001` 候选发现两项问题：同 id 计划重放会清空已完成阶段与素材引用；不完整的 `plan_patch_stage` 输入会先报成功、重载时再丢失。现已改为同定义重放保留进度、不同定义拒绝覆盖，并在写入前校验输入与存储 schema。定向测试先失败后通过，完整本地检查与未完成的独立复审状态见 `docs/changes/2026-09-23-agent-orchestration/verification.md`、`review.md`。领域能力仍为 PARTIAL，不代表 UI、真实 Provider 或发布验收。
+
+## 2026-09-23 编排候选重试边界补充
+
+竞品规划复核发现 `TASK-ORCH-001` 候选中的新任务态辅助函数与现有恢复门禁冲突：原函数对 `unknown`/已提交任务禁止普通重试，新函数却允许并选入 `unknown` 输出。现已复用原有 `taskRecovery.canRetryTask`，失败子项仅选确定失败的输出；先失败后通过的定向测试 12/12、全量 Node 单测 399/399、TypeScript 检查通过。候选仍为 PARTIAL，UI/真实 Provider 与 Desktop 运行验收未因此完成；细节见 `docs/changes/2026-09-23-agent-orchestration/verification.md` 的补充勘误。
+
+## 2026-09-23 波次A 竞品对齐：Agent 编排与画布交付契约（分支已推送）
+
+- 按《KK-Studio-竞品对齐-项目规划》波次 A 落地领域层：对标竞品 MiniMax Design media-agent 的 Stage 状态机、canvas 交付契约与统一任务态。
+- 新增 `src/domain/stagePlan.ts`（doing/plan_review/blocked/result_review/done 五态 + CAS 乐观锁 + 非法迁移拦截 + 审批门推导 + 失败项 requeue + normalize 白名单 + zod）、`src/features/creation/taskState.ts`（9 态统一任务态契约/可重试/失败输出子集/成本估算）、`src/features/agent/orchestrator.ts`（编排器物化/审批决策/阻断/失败重试 + plan 工具面四工具，MCP 注册归 BACKEND-MCP-AUTO）。
+- 修改 `src/features/creation/model.ts`（CreationProject.stagePlans 可选字段，兼容旧快照）、`src/features/agent/agentCanvas.ts`（交付契约：无 node_id/未注册资产即拦截 + 当轮产物收集/摘要）、`src/features/agent/agentHost.ts`（可选注入 orchestrator）。
+- 验证：`npm run verify` 全绿——lint（eslint 0 + governance 66 任务 0 违规 + features 31 功能 0 违规 + markdown 83 文件 0 违规）、typecheck、399 Node 单测（新增 40 项）、ui:check（159 文件 0 违规）、format:check、300 浏览器测试；delivery:check 待本文件更新后复核。
+- 治理：功能卡 feat-030/031（PARTIAL）、registry +2、账本 +5（TASK-ORCH-001 IN_PROGRESS 唯一活动任务，TASK-ORCH-002/003 TODO，TASK-CANVAS-001/TASK-TASKSTATE-001 PARTIAL）、交付包五件套 `docs/changes/2026-09-23-agent-orchestration/`。
+- 分支 `feat/TASK-ORCH-001-agent-orchestration-closure` @ `D:/kk-studio/.worktrees/TASK-ORCH-001` 已推送 origin（commit 1863ea8，base origin/main @ 9f04bfc）。能力按 PARTIAL 标注，不冒充 REAL。
+- 后续：TaskWorkbench 阶段计划视图与审批交互（TASK-ORCH-002）、编排器驱动真实生成（TASK-ORCH-003）、plan 工具 MCP 注册（BACKEND-MCP-AUTO）、媒体真实链路（BACKEND-MEDIA-001）。
+## 2026-09-24 竞品对标后的 MCP 配置一致性
+
+`TASK-MINIMAX-001` 分支修复手动 MCP 服务器列表第 51 项可写、重启后整表被判损坏的问题：写入前使用与读取相同的 50 项上限，同 id 更新仍可进行。补齐新工作树的 Agent/插件构建前置后，371 Node 与 300 Web 浏览器回归、类型/Lint/格式/构建/治理检查通过；初次环境失败及恢复见 [本轮验证](changes/2026-09-24-mcp-registry-limit/verification.md)。对照当前 MCP 官方协议说明又发现客户端仅固定 2025-11-25，2026-07-28 modern 协商缺口已列 `TASK-MCP-PROTO-001`。历史 MiniMax UI 审计仅保持原时点含义；真实第三方服务器、Tauri release 和付费能力未在本轮验收。
 
 ## 2026-09-23 2.1.0 源码并线与远端规则回读
 

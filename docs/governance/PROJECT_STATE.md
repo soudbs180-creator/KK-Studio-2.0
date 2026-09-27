@@ -1,8 +1,67 @@
 # 当前项目状态
 
+## 2026-09-27 主线及 UI 候选
+
+远端 `main@a89792ad` 已经合入 PR #14 Agent 编排领域层、#15 MCP 50 项写入保护和 #16 Provider Connectivity 配置契约；三者不代表真实生成、第三方配置消费或发布已验收。UI PR #19 的任务工作树已承接该主线，治理/功能登记分别为 72/32 且零违规；当前仍是待最终门禁和独立复审的候选。运行态维持 291px/40px 外壳，未引入的 token 导出 200px/56px 尚待统一。根工程约 75 项未提交 UI 文件、堆叠 PR #20 和 Provider #17/#18 均未因这次同步进入主线。
+
 ## 2026-09-24 UI 回归候选（TASK-UI-010）
 
 `fix/TASK-UI-010-ui-regression` 是独立于 dirty 根工程的候选分支；已建立[草稿 PR #19](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/19)，记录见 [验证](../changes/2026-09-24-ui-regression/verification.md)与[架构核对](../changes/2026-09-24-ui-regression/architecture-audit.md)。已承接新 UI 规范并落实 Figma 四节点、六处批注与首页/画布/对话/设置修复；资产管理 A1、提示词库 A2+A4 和目录 A2 几何得到定向回归。无项目时的假卡已移除，真实新项目保持空白。独立 reviewer 对已推送 `3db7b69` 复审确认五项 P2 关闭、无新增 P0/P1/P2，代码审查 PASS；1440/390 共 42 个页面状态重新截图，完整 verify 通过 370 Node、319 browser，Web production preview 与隔离数据的 fresh Tauri release 加载同一 JS/CSS。候选 `tokens.css` 的外壳与颜色值仍与现行 Figma/运行态冲突，在线 Ardot 未回读，不宣称全站 token 迁移完成。原工程/正式入口整合也未完成。侧栏静态演示项目另列 `TASK-PROJECT-SIDEBAR-001`；旧快捷方式和旧 EXE 不代表这批 UI。WorkBuddy、豆包、共享记忆、素材账号和模型调度仍由开放任务跟踪。
+
+## 2026-09-27 Provider #16 源码复审通过，托管门禁待完成
+
+独立只读 reviewer 对 Provider #16 源码 `1f81322` 给出 PASS，无未关闭 P0–P2；本地 `verify` 456 Node/300 浏览器与 delivery 22/0 通过。审查证据补录后仍须回读最终 head 的 PR/push Hosted 检查，未合并前不算主线能力；功能卡 FEAT-032 为 PARTIAL，真实 Codex/Claude 消费未验收。
+
+## 2026-09-27 PR #16 输入边界审查整改
+
+Provider #16 的 `39369c9` 独立复审为 CHANGES REQUIRED；合法中文连接 id 的多目标渲染、同名不同地址 seed 和功能卡状态已经在任务分支修正。新候选本地完整 `verify` 为 456 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0；新 head 独立补审和 Hosted 检查待完成，尚未进入主线。真实供应商接线与 UI 仍为 PARTIAL。
+
+## 2026-09-27 主线至 PR #15，Provider #16 待最终门禁
+
+远端 `main@2683d852` 包含 PR #14 编排领域层和 PR #15 MCP 50 项写入保护，主线 Hosted 工作流 36245503714 成功。Provider #16 已与主线合并并解决 FEAT-030 冲突（Provider 使用 FEAT-032），本地完整 `verify` 通过：454 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0。独立复审与当前 head Hosted `verify`/`delivery` 未完成，不视为主线；真实供应商接线仍为 PARTIAL。根目录 UI 改动和 UI 分支保持隔离。
+
+## 2026-09-26 MCP 限额候选独立审查通过，托管检查待收口
+
+PR #15 的 MCP 限额修复已在 `origin/main@f626438` 上解决治理冲突。本地完整 `verify` 通过；独立只读复审对业务源码 `3ab2578` 给出 PASS WITH FOLLOW-UPS，无新增阻断。多标签页覆盖和旧版 51 项无损恢复是基线 P2，分别登记 `TASK-MCP-REGISTRY-001/002`，当前均未修复。最终候选的 Hosted `verify`/`delivery` 与合并后主线结果仍须回读；主线不因此宣称 MCP 真实服务或桌面安装包验收完成。
+
+## 2026-09-26 PR #14 已合入，PR #15 技术验收中
+
+远端 main@f626438 已通过受保护 PR squash 合入编排领域层，功能卡仍为 PARTIAL；阶段 UI、真实媒体执行、MCP 注册与 Desktop GUI 未因此完成。MCP 配置上限修复位于 PR #15 分支，已吸收新主线并处理文档冲突，尚需新 head 独立复审与 Hosted CI。根工作区的未提交 UI 改动仍保留，不能以其证明 main 状态。
+
+## 2026-09-26 编排技术门禁通过、产品验收未完成
+
+PR #14 源码 `9ddfcb5` 独立只读复审 PASS，未发现未关闭 P1/P2；[Hosted run 36218263291](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36218263291) 的 `verify`/`delivery` 均成功，本地 422 Node、82 Rust、300 浏览器通过。补录证据的文档提交仍需精确 head 检查；用户产品验收、Desktop GUI/正式安装包、真实 Provider 未完成，主线与发布不变。PR #15 保持 draft，四处治理文档冲突待 #14 集成后处理。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 返工计划重新审批候选
+
+PR #14 的 `abb2bb8` 独立复审发现返工修改已批准提示词可绕过计划门（P1）且破坏原计划同 ID 重放（P2），结论 CHANGES REQUIRED。任务分支已用独立 `reworkPrompt` 保留原定义并在提示词变化时清除旧批准、重新进入计划审批；Web/Rust 包回归已补。本地 422 Node、82 Rust、300 浏览器及静态/构建通过，新 head 托管/独立复审待完成；主线、发布及 PR #15 draft 不变。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 编排结果返工候选
+
+PR #14 的 `5fff9de` 独立复审关闭前五项问题，但发现结果拒绝后成功工作项无法返工，结论 CHANGES REQUIRED。任务分支已补宿主返工选择、下游依赖失效及旧素材清除；本地 422 Node、82 Rust、300 浏览器及静态/构建通过。当前候选的交付、新 SHA Hosted CI、独立复审和用户产品验收仍待完成，主线/正式发布不变；PR #15 仍为 draft，文档冲突需在 #14 集成后处理。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 编排审批与依赖边界候选
+
+PR #14 的 `36a3419` 独立复审为 CHANGES REQUIRED：四项 P1 涉及计划审批、完成门禁、ABA 与依赖图，一项 P2 涉及跨项目计划。任务分支已补跨端校验与回归，本地 420 Node、82 Rust、300 浏览器及静态/构建通过。新 head 的 Hosted CI、独立复审和用户产品验收仍未完成；主线、正式发布及 PR #15 draft 状态未变，四处治理文档冲突待 #14 集成后处理。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 编排候选补查
+
+PR #14 旧 head `c7abc45` 的 Hosted `verify`/`delivery` 已通过；自查随后复现阶段索引和计划 ID 重复导致的身份歧义，已在任务分支补 TS/Rust 拒绝与 Web 包无损回归。本地 412 Node、82 Rust、300 浏览器通过。新提交的 Hosted CI、独立复审及用户产品验收未完成，主线与正式发布未变。PR #15 保持 draft，四处治理文档冲突在 #14 集成后处理。详见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-24 编排候选重复 ID 复审
+
+独立 reviewer 对 PR #14 `67ff18fb` 关闭原两项 P1，但发现计划允许重复工作项 ID，受控更新会误改所有同名项。任务分支已用 TS/Rust 失败先行回归补计划级唯一性校验；当前 409 Node、81 Rust、300 浏览器与类型/Lint/构建通过。新 head 的 Hosted CI 和独立复审仍待核对；主线、正式发布与 PR #15 冲突状态未变。见[验证记录](../changes/2026-09-23-agent-orchestration/verification.md)及[ADR-006](../architecture/adr/ADR-006-stage-plan-package-contract.md)。
+
+## 2026-09-24 编排候选跨端补审
+
+PR #14 的独立审查在旧 head 发现两项 P1：旧 revision 可覆盖已完成计划，且 `stagePlans` 未同步 Desktop 项目包 schema/素材收集。任务分支已加入预期 revision 工作项写入和 Web/Rust 包契约回归；本地 407 Node、80 Rust、300 浏览器及静态/构建检查通过。修复后 head 的 Hosted CI、独立复审、Desktop GUI 与真实 Provider 仍待验证；PR #14 与 #15 的文档冲突待顺序整合。主线/发布状态未变，见 [验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-24 编排候选（TASK-ORCH-001）
+
+独立预检指出计划同 id 重放丢进度与非法计划写入后丢失；两项已在任务分支修复。实现者又确认 Agent 阶段工具可自行批准或解除阻断，现仅允许 `doing→plan_review/result_review/blocked`，宿主入口保留审批与重试。当前分支 405 Node 与 300 Web 浏览器回归通过，独立最终复审、Desktop 与真实 Provider 未验收；主线和正式发布状态不因此改变。以 [本轮验证](../changes/2026-09-23-agent-orchestration/verification.md)和账本 TASK-ORCH-001 为准。
+## 2026-09-24 MCP 候选与竞品审计遗留
+
+`fix/TASK-MINIMAX-001-mcp-registry-limit` 修复 50 项持久化上限与写入不一致；当前仅为草稿 PR #15 候选，不能据此认定主线已修复。`TASK-MCP-PROTO-001` 登记 2026-07-28 协议协商缺口，真实新版服务器仍未验证。MiniMax 安装目录版本元数据已只读核对，2026-09-21 的 UI 审计维持历史证据含义。以 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)和账本为准；与编排 PR #14 的 merge-tree 显示 4 个文档内容冲突，按顺序合并前必须解决并重新生成治理视图。
 
 ## 2026-09-23 KK Studio 2.1.0 源码并线与规则回读（REL-2.1.0）
 

@@ -1,10 +1,71 @@
 # AI handoff
 
+## 2026-09-27 UI #19 主线同步恢复点
+
+- 远端 `main@a89792ad` 包含 PR #14/#15/#16；本任务 worktree `D:/kk-studio/.worktrees/TASK-UI-010-ui-regression` 正在将 #19 合入该主线，根目录 dirty UI 不参与。六处治理文档冲突已按任务/功能 ID 合并，72 个任务、32 个功能，检查零违规。
+- 两处浏览器偶发失败已定位为侧栏过渡期间断言与图片请求未到 Provider 前取消，定向用例各重复 16 次无重试通过。完整 `verify`、delivery、最终 head 独立审查及 Hosted 检查须在提交后回读，不用旧 `3db7b69` 的结果代替。
+- 未接线的 `tokens.css/json` 仍与运行 UI 的 291px 侧栏、40px 顶栏冲突；PR #20 堆叠在 #19 上且有独立未提交修正。真实媒体、第三方配置消费及正式 Desktop 发布仍为开放工作。
+
 ## 2026-09-24 当前 UI 候选恢复入口（TASK-UI-010）
 
 - 根工程 `D:/kk-studio/KK-Studio-2.0` 有并行未提交改动；本任务只在 `D:/kk-studio/.worktrees/TASK-UI-010-ui-regression` 的 `fix/TASK-UI-010-ui-regression` 分支写入。接手先核对这两个工作区的 HEAD/status，勿将 1421 根开发页或旧桌面 EXE 当作候选结果。
 - 本轮变更与 Web/原生运行证据在 [change package](../changes/2026-09-24-ui-regression/verification.md)，42 态页面核对在 [architecture audit](../changes/2026-09-24-ui-regression/architecture-audit.md)。Web preview 固定 1423；隔离 `--data-dir` 的新 Tauri release 为 `src-tauri/target/release/kk-studio.exe`，原生加载的 JS/CSS 与当前 dist 哈希一致。复核修复后完整 `npm run verify` 已通过 370 Node、319 browser；[草稿 PR #19](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/19) 的独立 reviewer 对 `3db7b69` 复审确认五项 P2 关闭、没有新增 P0/P1/P2，代码审查 PASS。候选 `tokens.css` 未接线，291/40 外壳与 200/56 导出冲突未裁决，在线 Ardot 未回读。侧栏演示项目行须跟进 `TASK-PROJECT-SIDEBAR-001`。
 - 能力边界：WorkBuddy、豆包、真实外部账号、共享记忆及自动模型调配保持现有开放任务；这轮只收敛可见 UI 与运行态，不更改功能真实程度。
+
+## 2026-09-27 Provider #16 独立补审 PASS 恢复点
+
+PR #16 源码 `1f81322` 独立只读补审 PASS，之前 P1/P2/P3 均关闭；本地完整 `verify` 和 delivery 通过。补录审查的文档提交仍需精确 head Hosted 检查；PR 未合并，真实第三方配置消费仍待接线验收。根目录 UI 未提交改动继续保持隔离。
+
+## 2026-09-27 Provider #16 复审整改恢复点
+
+独立 reviewer 对 `39369c9` 给出 CHANGES REQUIRED（中文 id 渲染静默失败 P1、同名不同地址 seed 撞 id P2、功能卡状态 P3）。任务 worktree 已用失败先行测试修复，完整本地 `verify` 为 456 Node、300 浏览器及治理/功能/Markdown 零违规；修复后新 head 的独立补审、Hosted 检查、真实 Codex/Claude 消费仍待完成。恢复时先回读 PR #16 当前 SHA、工作树与 `main`，不要拿旧 head CI 代替。
+
+## 2026-09-27 Provider Connectivity 恢复点
+
+远端 `main@2683d852` 已合入 PR #14/#15，主线 Hosted 工作流 36245503714 成功。PR #16 的任务 worktree 在主线合并后通过完整本地 `verify`（454 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0），Provider 功能编号调整为 FEAT-032，FEAT-030 留给编排。旧 head 独立审查的 4 P1、2 P2 已有失败先行修复；新 head 独立复审、PR/push Hosted 检查和真实 Codex/Claude 消费仍待完成。根工作区 75 项未提交 UI 改动不要混入本分支。
+
+## 2026-09-26 MCP 限额审查恢复点
+
+PR #15 已吸收 `main@f626438`，本地完整验证通过；独立只读审查对业务源码 `3ab2578` 为 PASS WITH FOLLOW-UPS，两个基线 P2 已登记为 `TASK-MCP-REGISTRY-001/002`。恢复时先回读 PR #15 最终 head、Hosted `verify`/`delivery`、工作树及主线 SHA；不能把独立代码审查等同于真实第三方 MCP 或 Desktop release 验收。根工作区的 UI 改动仍保留。
+
+## 2026-09-26 当前恢复入口：PR #14 已并线，PR #15 待新 head 验收
+
+远端 main@f626438 已包含 PR #14 领域层；根工作区的未提交 UI 工作仍需保护。fix/TASK-MINIMAX-001-mcp-registry-limit 已合入新 main 并解决文档冲突；恢复时回读该分支的提交、CI、独立审查与工作树，不把尚在审查的 MCP 修复算作主线。
+
+## 2026-09-26 TASK-ORCH-001 技术门禁恢复点
+
+PR #14 源码 `9ddfcb5` 独立只读复审 PASS，[Hosted run 36218263291](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36218263291) `verify`/`delivery` 成功；本地 422 Node、82 Rust、300 浏览器通过。恢复时核对补录文档后的准确 head、CI 与 dirty 状态，再看用户产品验收；未经验收不合并。PR #15 四处文档冲突在 #14 后顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 TASK-ORCH-001 返工重审候选
+
+独立 reviewer 对 PR #14 `abb2bb8` 给出 CHANGES REQUIRED：返工提示词变更沿用旧计划批准（P1）、原计划同 ID 重放失败（P2）。任务 worktree 已分离原 prompt / 可选 `reworkPrompt` 并在有效提示词变更时重开计划审批，Web/Rust 包测试已覆盖；本地 422 Node、82 Rust、300 浏览器及静态/构建通过。恢复时核对新 head、Hosted CI、独立复审及 dirty 状态；PR #14 未验收不可合并，PR #15 四处治理文档冲突待顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 TASK-ORCH-001 结果返工候选
+
+独立 reviewer 对 PR #14 `5fff9de` 确认旧五项问题关闭，但提出结果审批拒绝后成功工作项不可重做的 P1，结论 CHANGES REQUIRED。任务 worktree 已补宿主返工和跨阶段下游失效，当前本地 422 Node、82 Rust、300 浏览器及静态/构建通过；恢复时先核对交付、新 head、Hosted CI、独立复审和 dirty 状态。PR #14 未验收不可合并，PR #15 的四处文档冲突须顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 TASK-ORCH-001 审批与依赖修复候选
+
+独立 reviewer 对 PR #14 `36a3419` 给出四项 P1（计划审批、未运行完成、ABA、依赖）及一项 P2（跨项目计划），结论 CHANGES REQUIRED。任务 worktree 已补校验及失败先行回归，本地 420 Node、82 Rust、300 浏览器与静态/构建通过。恢复时核对新 head、Hosted CI、独立复审及 dirty 状态；PR #14 未验收前不可合并，PR #15 四处文档冲突须顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-26 TASK-ORCH-001 身份唯一性候选
+
+PR #14 旧 head `c7abc45` Hosted CI 已通过，独立复审任务因执行额度耗尽未完成。之后在任务 worktree 复现并修复重复阶段索引/计划 ID 的跨端边界；本地 412 Node、82 Rust、300 浏览器及静态/构建通过。恢复时核对新的 branch head、Hosted CI、独立复审与 dirty 状态；PR #14 未验收前不能合并，#15 四处文档冲突须后续顺序整合。详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-24 TASK-ORCH-001 重复 ID 修复候选
+
+PR #14 `67ff18fb` 独立复审已关闭原两项 P1，新发现重复工作项 ID 会使 `updateWorkItem` 误改已成功项。任务 worktree 已添加计划级 TS/Rust 唯一性校验及失败先行测试；当前 409 Node、81 Rust、300 浏览器与类型/Lint/构建通过。恢复时先核对 dirty/new head，再核对 Hosted CI、独立复审；未完成前不可合并。PR #15 的四处文档冲突待顺序整合，详见[验证](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-24 TASK-ORCH-001 独立补审修复候选
+
+独立 reviewer 对 PR #14 旧 head `ae4bf7a9` 给出两项 P1：公开旧计划覆写，以及 Desktop/Web 项目包计划字段与素材引用漏同步。任务 worktree 已修复并跑 407 Node、80 Rust、300 浏览器与静态构建检查。下一步核对新 head 的 Hosted CI、独立复审和 PR #15 文档冲突，未完成前不可合并。详见 [验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
+## 2026-09-24 TASK-ORCH-001 候选
+
+`D:/kk-studio/.worktrees/TASK-ORCH-001` 的编排修复已在本地重跑 405 Node 与 300 Web 浏览器测试；最终独立复审仍 NOT VERIFIED，不可据此合并或宣称 Desktop/Provider 验收。恢复时核对任务分支实际 head、`origin/main`、dirty 状态及 [验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+## 2026-09-24 MCP 配置上限候选
+
+`D:/kk-studio/.worktrees/TASK-MINIMAX-001-mcp-registry-limit` 在 `origin/main@76339c9f` 上处理第 51 个 MCP 服务器配置的数据丢失缺陷；恢复时核对实际 head、dirty 状态及 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)。`TASK-MCP-PROTO-001` 是另一个未开始的协议协商任务。编排候选在另一 worktree，两个分支的治理文档有重叠，禁止未解决冲突直接合并。
 
 ## 2026-09-23 当前恢复入口：2.1.0 主线与规则审计
 

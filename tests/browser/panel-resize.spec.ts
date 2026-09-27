@@ -66,14 +66,28 @@ test("对话宽度的无障碍最大值等于键盘可达宽度", async ({ page 
   await expect
     .poll(async () => Number(await handle.getAttribute("aria-valuemax")))
     .toBeLessThan(reachableMax);
+  // Sidebar resizing is animated. Wait for its actual width to reach the
+  // keyboard-selected value before measuring the other panel's limit.
+  const sidebar = page.locator(".sidebar");
+  await expect
+    .poll(async () =>
+      sidebar.evaluate((element) =>
+        element
+          .getAnimations()
+          .every((animation) => animation.playState === "finished"),
+      ),
+    )
+    .toBe(true);
   await handle.focus();
   await handle.press("End");
-  expect(
-    Math.abs(
-      (await panel.boundingBox())!.width -
-        Number(await handle.getAttribute("aria-valuemax")),
-    ),
-  ).toBeLessThanOrEqual(2);
+  await expect
+    .poll(async () =>
+      Math.abs(
+        (await panel.boundingBox())!.width -
+          Number(await handle.getAttribute("aria-valuemax")),
+      ),
+    )
+    .toBeLessThanOrEqual(2);
 });
 
 test("侧栏宽度可用键盘恢复设计默认值", async ({ page }) => {

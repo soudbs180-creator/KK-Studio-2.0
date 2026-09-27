@@ -7,6 +7,8 @@ import type { CanvasAgentOp } from "./agentTypes.ts";
 import { storeGeneratedAsset } from "../creation/assetRepository.ts";
 import { appendImageTaskResults } from "../creation/imageTaskCommand.ts";
 import type { AgentCanvasView } from "./agentCanvasView.ts";
+import type { PlanTool, StageOrchestrator } from "./orchestrator.ts";
+import type { StagePlan } from "../../domain/stagePlan.ts";
 
 export interface AgentHostOptions {
   getView?(): AgentCanvasView | null;
@@ -17,6 +19,8 @@ export interface AgentHostOptions {
     prompt: string,
     signal?: AbortSignal,
   ): Promise<{ taskId?: string; error?: string }>;
+  /** Stage 编排器：存在时宿主暴露 plan 工具面（A1）。 */
+  orchestrator?: StageOrchestrator;
 }
 
 /** MCP 请求通过 KK 领域和任务入口落地，不直接持有 Provider 凭据。 */
@@ -28,6 +32,14 @@ export function createAgentHost(options: AgentHostOptions) {
         project?.agentGeneratedImageIds?.includes(id) ||
         project?.items.some((item) => item.id === id),
       );
+    },
+    /** 当前项目的编排计划（只读权威来源，供 UI/Agent 状态条）。 */
+    stagePlans(): StagePlan[] {
+      return options.getProject()?.stagePlans ?? [];
+    },
+    /** Stage 编排器工具面（A1）；未注入编排器时返回空（不提供计划能力）。 */
+    planTools(): PlanTool[] {
+      return options.orchestrator ? options.orchestrator.planTools() : [];
     },
     async importGeneratedImage(input: {
       id: string;

@@ -261,6 +261,9 @@ test("provider image cancellation cannot publish a late success", async ({
   await expect(
     page.getByRole("button", { name: "取消图片生成" }),
   ).toBeVisible();
+  // This case covers an in-flight Provider request. Without waiting for the
+  // route, cancellation can legitimately finish before submission.
+  await expect.poll(() => Boolean(release)).toBe(true);
   await page.getByRole("button", { name: "取消图片生成" }).click();
   // A request that reached the Provider cannot be proven not to have been
   // accepted after the client aborts it, so it is fenced as unknown.
