@@ -50,6 +50,13 @@
 - 草稿 PR 已建立；独立 AI reviewer 初审发现五项 P2（对话头部位置、宽度语义与恢复、模型菜单键盘、旧资源证据），复审 `3db7b69` 确认全部关闭且无新增 P0/P1/P2。Hosted CI、用户产品验收及原根工程/正式安装包整合仍待门禁；此 worktree 的 EXE 不是用户当前桌面快捷方式运行的文件。
 - 用户视觉验收与发布状态未发生。
 
+## 2026-09-27 首页模型菜单缺陷补验
+
+- 独立只读补查发现：空配置时菜单仍列出可点击的 `kk-image-2`，选择后 `providerConnectionId` 为空。它违反本任务 spec 的真实 BYOK 图片模型清单。新增 `figma-483-ui.spec.ts` 空配置断言在旧实现稳定失败（预期 0 行，实际 1 行，两次均复现）。
+- 修复仅移除 `StartModelPicker` 的未绑定静态选项；已保存的图片连接仍按连接 ID 列出，禁用/隔离状态沿用原门禁。已配置用例增加第二连接，保持方向键/Home/End 的多项真实检验；旧测试中对静态模型的预期改为真实空态。
+- 本次候选：`tsc -b`、Vite production build、ESLint、Prettier、治理 72/0、功能 32/0、Markdown 89/0、UI 167/0、Node 456/456、Edge production preview 320/320，`git diff --check` 通过。预览由 Playwright 在 `http://127.0.0.1:1423/` 启动，页面链仍为 `index.html → main.tsx → App → StartPage → StartComposer → StartModelPicker`。
+- 旧 Desktop release 与 42 态截图仍代表此前提交；此补丁后的 fresh Desktop、最终 head 独立复审、Hosted CI、用户视觉验收和 token 冲突裁决均未完成。不能由 Web 回归推定正式安装版已更新。
+
 ## 2026-09-27 最新主线集成补验
 
 - #19 任务工作树合入 `origin/main@a89792ad`（主线已含 #14/#15/#16），六处冲突均限于进度、功能登记与任务账本；按功能/任务 ID 保留双方内容，未以整文件覆盖。`docs/features/README.md` 自动合并，业务源码无冲突。

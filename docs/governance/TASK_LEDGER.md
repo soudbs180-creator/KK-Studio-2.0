@@ -931,9 +931,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-UI-010-ui-regression`
 - Worktree: `D:/kk-studio/.worktrees/TASK-UI-010-ui-regression`
 - Modules: src/components, src/styles, tests/browser, docs
-- Verification: PARTIAL — 复核修复后独立 worktree 完整 verify 通过：370 Node、319 Edge browser，治理/功能/Markdown/UI/类型/格式/构建均通过；1440/390 共 42 态重新截图；production Web 与隔离 Tauri release 原生运行且 JS/CSS 与 dist 同哈希。草稿 PR #19 的独立 reviewer 对已推送 3db7b69 复审确认五项 P2 关闭、没有新增 P0/P1/P2，代码审查 PASS。候选 token 与现行外壳冲突、在线 Ardot 未回读；根工程整合待完成，旧快捷方式不代表当前 UI。
+- Verification: PARTIAL — 旧源码 3db7b69 的独立复审 PASS 和 42 态 Web/隔离 Tauri 截图保留历史含义。与 main@a89792a 合并后本地 456 Node/319 Edge 通过；当前独立补审发现无连接时静态模型可选（R11），已先失败复现并在候选修复，现 456 Node/320 Edge、治理 72/0、功能 32/0、Markdown 89/0、UI 167/0 通过。最终提交的独立复审、Hosted 检查和 fresh Desktop 尚未完成；token 与现行外壳冲突、在线 Ardot 未回读，根工程及正式入口未整合。
 - Evidence: [docs/changes/2026-09-24-ui-regression/intent.md](../../docs/changes/2026-09-24-ui-regression/intent.md), [docs/changes/2026-09-24-ui-regression/spec.md](../../docs/changes/2026-09-24-ui-regression/spec.md), [docs/changes/2026-09-24-ui-regression/plan.md](../../docs/changes/2026-09-24-ui-regression/plan.md), [docs/changes/2026-09-24-ui-regression/verification.md](../../docs/changes/2026-09-24-ui-regression/verification.md), [docs/changes/2026-09-24-ui-regression/architecture-audit.md](../../docs/changes/2026-09-24-ui-regression/architecture-audit.md), [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md)
-- Updated: 2026-09-25
+- Updated: 2026-09-27
 
 ## TASK-PROJECT-SIDEBAR-001 — 侧栏项目列表与真实项目数据统一
 

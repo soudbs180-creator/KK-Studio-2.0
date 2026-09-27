@@ -125,7 +125,9 @@ test("首页加号添加图片并支持删除，模型入口是本次创作选�
   await page.getByRole("button", { name: "移除素材 blue-hour.png" }).click();
   await expect(page.getByLabel("已添加的参考素材")).toHaveCount(0);
   await page.getByRole("button", { name: "模型", exact: true }).click();
-  await expect(page.getByRole("menu")).toContainText("kk-image-2");
+  await expect(page.getByRole("menu", { name: "选择模型" })).toContainText(
+    "没有匹配的图片模型",
+  );
 });
 
 test("配置连接后图片任务使用 provider 响应回填结果节点", async ({ page }) => {

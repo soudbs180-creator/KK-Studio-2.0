@@ -3,6 +3,17 @@ import { openSeededProject } from "./helpers";
 
 test.use({ reducedMotion: "reduce" });
 
+test("首页没有图片连接时模型菜单只提供配置入口", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "模型", exact: true }).click();
+  const menu = page.getByRole("menu", { name: "选择模型" });
+  await expect(menu.getByRole("menuitemradio")).toHaveCount(0);
+  await expect(menu).toContainText("没有匹配的图片模型");
+  await expect(
+    menu.getByRole("button", { name: /配置供应商与模型/ }),
+  ).toBeVisible();
+});
+
 test("Figma 483 首页输入保持紧凑尺寸，额外能力仍可访问", async ({ page }) => {
   await page.goto("/");
   const composer = page.locator(".start-composer");
@@ -73,6 +84,13 @@ test("首页模型弹层选择真实 API 图片模型并保存连接身份", asy
   await page.getByLabel("API Base URL").fill("https://models.example.test/v1");
   await page.getByLabel("API Key").fill("fixture-key");
   await page.getByLabel("默认模型").fill("image-test");
+  await page.getByRole("button", { name: "保存供应商" }).click();
+  await page.getByLabel("供应商名称", { exact: true }).fill("星河 API B");
+  await page
+    .getByLabel("API Base URL")
+    .fill("https://models-b.example.test/v1");
+  await page.getByLabel("API Key").fill("fixture-key-b");
+  await page.getByLabel("默认模型").fill("image-second");
   await page.getByRole("button", { name: "保存供应商" }).click();
   await page.getByRole("button", { name: "关闭设置" }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();

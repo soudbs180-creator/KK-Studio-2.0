@@ -11,23 +11,8 @@ interface StartModelChoice {
   disabled?: string;
 }
 
-function modelChoices(draft: CreationDraft, defaultModel: string) {
-  const unbound = [
-    ...new Set(
-      [
-        defaultModel,
-        draft.providerConnectionId ? "" : draft.model,
-        "kk-image-2",
-      ]
-        .map((value) => value.trim())
-        .filter(Boolean),
-    ),
-  ].map((model): StartModelChoice => ({
-    key: `default:${model}`,
-    model,
-    detail: model === defaultModel ? "默认供应商配置" : "需配置可用连接",
-  }));
-  const connected = readProviderConnections()
+function modelChoices(): StartModelChoice[] {
+  return readProviderConnections()
     .filter((connection) => connection.kind === "user_byok")
     .flatMap((connection) =>
       catalogForConnection(connection)
@@ -44,7 +29,6 @@ function modelChoices(draft: CreationDraft, defaultModel: string) {
               : undefined,
         })),
     );
-  return [...unbound, ...connected];
 }
 
 export default function StartModelPicker({
@@ -66,7 +50,7 @@ export default function StartModelPicker({
 }) {
   const [query, setQuery] = useState("");
   const needle = query.trim().toLocaleLowerCase();
-  const matches = modelChoices(draft, defaultModel).filter((choice) =>
+  const matches = modelChoices().filter((choice) =>
     `${choice.model} ${choice.detail}`.toLocaleLowerCase().includes(needle),
   );
   const visible = matches.slice(0, 100);
