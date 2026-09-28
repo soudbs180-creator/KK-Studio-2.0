@@ -81,6 +81,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-VERSION-001 | 桌面/Web/Mobile 独立版本源与自动递增 | DONE | none | root |
 | TASK-LOCAL-SERVICE-001 | Web 本机伴随服务与既有浏览器数据迁移 | TODO | TASK-VERSION-001, BACKEND-PLATFORM | root |
 | TASK-CLOSEOUT-2026-09-28 | 合并后版本与 VPS 状态收口 | DONE | TASK-VERSION-001, T10-PREP | root |
+| TASK-POSTMERGE-MIGRATION-2026-09-28 | 主线合并后迁移操作单收口 | REVIEW | T10-PREP, T10, T11 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -984,4 +985,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: docs/governance, docs/PROGRESS.md, docs/changes
 - Verification: PASS — PR #23/#24 与合并后 main 的 Hosted 门禁、tree 回读和状态文档同步均完成；本收口 PR #25 精确 head 981a24b 的独立复审、delivery、deploy-linux、verify 也通过；本机 VPS、离机备份、Web 本机服务、真实登录和 Mobile 仍未验收。
 - Evidence: [docs/changes/2026-09-28-closeout/intent.md](../../docs/changes/2026-09-28-closeout/intent.md), [docs/changes/2026-09-28-closeout/spec.md](../../docs/changes/2026-09-28-closeout/spec.md), [docs/changes/2026-09-28-closeout/plan.md](../../docs/changes/2026-09-28-closeout/plan.md), [docs/changes/2026-09-28-closeout/verification.md](../../docs/changes/2026-09-28-closeout/verification.md), [docs/changes/2026-09-28-closeout/review.md](../../docs/changes/2026-09-28-closeout/review.md)
+- Updated: 2026-09-28
+
+## TASK-POSTMERGE-MIGRATION-2026-09-28 — 主线合并后迁移操作单收口
+
+- Goal: 同步迁移操作单的主线事实并保留 VPS 未验收边界
+- Scope: deploy/MIGRATION.md, docs/PROGRESS.md, docs/changes
+- Acceptance: 迁移操作单记录 main@096d6c3、tree 和合并后 Hosted 门禁; 不把 GitHub CI 或控制面板解释成 VPS 上传/恢复证明; PROGRESS、迁移操作单、账本与 change package 一致
+- Branch: `docs/TASK-POSTMERGE-2026-09-28`
+- Worktree: `D:/kk-studio/.worktrees/platform-versioning`
+- Modules: deploy/MIGRATION.md, docs/PROGRESS.md, docs/changes
+- Verification: PARTIAL — 本地文档/治理检查待本次 PR 完成；main@096d6c3 的 tree 与合并后 verify/deploy-linux 已回读通过；VPS、备份、恢复、DNS/TLS 和生产写入仍未验收。
+- Evidence: [docs/changes/2026-09-28-postmerge-migration/intent.md](../../docs/changes/2026-09-28-postmerge-migration/intent.md), [docs/changes/2026-09-28-postmerge-migration/spec.md](../../docs/changes/2026-09-28-postmerge-migration/spec.md), [docs/changes/2026-09-28-postmerge-migration/plan.md](../../docs/changes/2026-09-28-postmerge-migration/plan.md), [docs/changes/2026-09-28-postmerge-migration/verification.md](../../docs/changes/2026-09-28-postmerge-migration/verification.md), [docs/changes/2026-09-28-postmerge-migration/review.md](../../docs/changes/2026-09-28-postmerge-migration/review.md), [deploy/MIGRATION.md](../../deploy/MIGRATION.md)
 - Updated: 2026-09-28
