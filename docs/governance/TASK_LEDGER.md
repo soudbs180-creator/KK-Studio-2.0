@@ -992,7 +992,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 同步迁移操作单的主线事实并保留 VPS 未验收边界
 - Scope: deploy/MIGRATION.md, docs/PROGRESS.md, docs/changes
 - Acceptance: 迁移操作单记录 main@be46ad6、tree 和合并后 Hosted 门禁; 不把 GitHub CI 或控制面板解释成 VPS 上传/恢复证明; PROGRESS、迁移操作单、账本与 change package 一致
-- Branch: `docs/TASK-POSTMERGE-2026-09-28`
+- Branch: `docs/TASK-POSTMERGE-FINAL-2026-09-28`
 - Worktree: `D:/kk-studio/.worktrees/platform-versioning`
 - Modules: deploy/MIGRATION.md, docs/PROGRESS.md, docs/changes
 - Verification: PASS — 本地文档/治理检查 PASS（治理 76/0、Markdown 90/0、delivery 9 文件/0 违规）；PR #26 精确 head d2485db 的独立复审、delivery、deploy-linux、verify 与合并后 main@be46ad6 的 verify/deploy-linux 均通过；VPS、备份、恢复、DNS/TLS 和生产写入仍未验收。

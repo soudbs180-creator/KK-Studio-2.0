@@ -2495,7 +2495,7 @@
     ],
     "dependencies": ["T10-PREP", "T10", "T11"],
     "owner": "root",
-    "branch": "docs/TASK-POSTMERGE-2026-09-28",
+    "branch": "docs/TASK-POSTMERGE-FINAL-2026-09-28",
     "worktree": "D:/kk-studio/.worktrees/platform-versioning",
     "affectedModules": ["deploy/MIGRATION.md", "docs/PROGRESS.md", "docs/changes"],
     "status": "DONE",
