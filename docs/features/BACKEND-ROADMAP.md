@@ -1,13 +1,15 @@
 # 本地演示后端化路线图
 
 - 状态：现行
-- 最近更新：2026-09-21
+- 最近更新：2026-09-28
 - 关联任务：BACKEND-IMAGE-PARAMS（透传已实现，双端验收未完成）、BACKEND-TEXT-NODE、BACKEND-MEDIA-001、T6、BACKEND-MCP-AUTO、T8、BACKEND-PLATFORM、T9、T10、T12、BACKEND-ASTRA-001
 - 功能状态看板：[`README.md`](README.md)；任务权威：[`../governance/task-ledger.json`](../governance/task-ledger.json)
 
 ## 目标
 
 把所有“UI 已显示但只有本地演示”的能力，逐波次接入真实后端，达到 REAL。原则：
+
+平台交付顺序为 Desktop → Web → Mobile。Desktop 必须可免登录离线使用，也可选择登录；Web/Mobile 的目标为登录后使用。个人项目/素材以设备本地为目标，Web 由安装在本机的伴随服务持久化，账号不默认开启云同步。当前 Web IndexedDB、演示账号和无 Mobile 包仍是现状；`TASK-LOCAL-SERVICE-001`、`BACKEND-PLATFORM`、`T12` 分别跟踪差距。
 
 1. **先打通链路，再接付费服务**：不依赖外部 Key/服务器的先做；需要 Key 的，代码链路先就绪、用户填 Key 即可用；需要部署的平台服务放最后。
 2. **复用，不新建第二套**：所有模态统一走 FEAT-002 的任务宿主、连接门禁、journal、幂等、取消、素材归档；不得为视频/音频另起队列。
@@ -37,6 +39,7 @@
 | FEAT-021 应用内代理 | BACKEND-PLATFORM（桌面部分） | reqwest 代理配置、loopback 例外、凭据安全、连通性校验 |
 | FEAT-015 Web 项目包 / FEAT-019 本地容量 | T9 | Web 容量/离线/跨 origin 项目包，收掉 Web 上的 Desktop 专属失效入口 |
 | FEAT-026 安装包 | T7 | Desktop 安装、恢复、回滚实机验收 |
+| FEAT-037 Web 本机伴随服务 | TASK-LOCAL-SERVICE-001 | 本机服务、安全连接、既有 IndexedDB 无损导入、备份与恢复；Web 登录依赖另见 BACKEND-PLATFORM |
 
 ### Wave 3 — 平台服务（需要服务器/部署/外部授权）
 

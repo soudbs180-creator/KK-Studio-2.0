@@ -24,7 +24,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | T10-PREP | VPS发布、备份回滚与部署配置准备 | TODO | T9 | root |
 | T10 | VPS staging和生产实机验收 | BLOCKED | T10-PREP | root |
 | T11 | 旧Web/Vercel切换与退役 | BLOCKED | T10 | root |
-| T12 | Mobile 2.0适配 | TODO | T11 | root |
+| T12 | Mobile 独立形态与手机适配 | TODO | T11 | root |
 | UI-001 | UI tokens和共享组件契约 | PARTIAL | TASK-GOV-001, TASK-DS-001 | root |
 | UI-002 | 窄屏composer和动态文案溢出 | DONE | UI-001 | root |
 | UI-003 | 示例任务/账号与真实服务边界 | PARTIAL | UI-001 | root |
@@ -78,6 +78,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | REVIEW | none | root |
 | TASK-COMPARE-001 | 画布图片对比操作 | REVIEW | none | root |
 | TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | REVIEW | TASK-COMPARE-001 | root |
+| TASK-VERSION-001 | 桌面/Web/Mobile 独立版本源与自动递增 | REVIEW | none | root |
+| TASK-LOCAL-SERVICE-001 | Web 本机伴随服务与既有浏览器数据迁移 | TODO | TASK-VERSION-001, BACKEND-PLATFORM | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -299,17 +301,17 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - External condition: 需外部旧部署权限、切换授权与回滚窗口
 - Updated: 2026-09-17
 
-## T12 — Mobile 2.0适配
+## T12 — Mobile 独立形态与手机适配
 
-- Goal: Mobile 2.0适配
+- Goal: 在 Web 核心能力基础上交付独立 Mobile 版本，按手机资源与交互裁剪
 - Scope: Mobile, Shared Core
-- Acceptance: 保留移动交互; 正式目标runtime明确; 共享新契约/本地恢复; 真机验收
+- Acceptance: 明确独立 Mobile runtime 与 Web 核心能力子集; 手机交互优化，登录后使用，个人数据设备本地持久化; Mobile 版本独立递增并对应可安装产物; 真机验收
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: Mobile, Shared Core
-- Verification: NOT_VERIFIED — 当前MUR不含；全项目范围仍保留TODO，形态需产品决定
+- Verification: NOT_VERIFIED — 当前只有响应式 Web；用户已确定功能顺序和登录/本地数据目标，独立 runtime 与真机验收未实现。
 - Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md)
-- Updated: 2026-09-17
+- Updated: 2026-09-28
 
 ## UI-001 — UI tokens和共享组件契约
 
@@ -643,7 +645,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/features/generation-server, src/components/AccountPopup.tsx, src/components/settings/ConnectionSettings.tsx, deploy
-- Verification: NOT_VERIFIED — NOT VERIFIED：依赖 VPS/域名/身份与计费等外部部署条件（T10）；Gateway 内额度逻辑已先在单测覆盖。
+- Verification: NOT_VERIFIED — NOT VERIFIED：Desktop 必须保留免登录入口并可选登录，Web/Mobile 目标需登录；账号不默认云存个人数据。身份服务与 VPS/域名等外部部署条件未完成，Gateway 额度逻辑仅在单测覆盖。
 - Evidence: [docs/features/feat-017-account.md](../../docs/features/feat-017-account.md), [docs/features/feat-018-credits.md](../../docs/features/feat-018-credits.md), [docs/features/feat-019-cloud-sync.md](../../docs/features/feat-019-cloud-sync.md), [docs/features/feat-020-memory.md](../../docs/features/feat-020-memory.md), [docs/features/feat-021-proxy.md](../../docs/features/feat-021-proxy.md)
 - Updated: 2026-09-21
 
@@ -945,4 +947,28 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/styles/canvas-compare.css, tests/browser/image-compare.spec.ts, docs/changes/2026-09-28-compare-ci-fix, docs/governance
 - Verification: PARTIAL — 主线 run 36369533105 的 43.999992px 失败已定位；保持原断言后，定向 browser 2/2、完整 verify 459 Node/302 browser、client:check/build 与隔离 release GUI 通过。当前 PR/合并后主线 CI 与独立复审待完成。
 - Evidence: [docs/changes/2026-09-28-compare-ci-fix/intent.md](../../docs/changes/2026-09-28-compare-ci-fix/intent.md), [docs/changes/2026-09-28-compare-ci-fix/spec.md](../../docs/changes/2026-09-28-compare-ci-fix/spec.md), [docs/changes/2026-09-28-compare-ci-fix/plan.md](../../docs/changes/2026-09-28-compare-ci-fix/plan.md), [docs/changes/2026-09-28-compare-ci-fix/verification.md](../../docs/changes/2026-09-28-compare-ci-fix/verification.md), [docs/changes/2026-09-28-compare-ci-fix/review.md](../../docs/changes/2026-09-28-compare-ci-fix/review.md)
+- Updated: 2026-09-28
+
+## TASK-VERSION-001 — 桌面/Web/Mobile 独立版本源与自动递增
+
+- Goal: 让任务作者按受影响平台自动递增版本，三端从 2.1.1 起独立管理
+- Scope: config/platform-versions.json、包元数据、运行态显示、版本命令与工程规则
+- Acceptance: 桌面/Web 运行态与包元数据各自显示 2.1.1；Mobile 规划元数据不冒充已发布; 桌面、Web、Mobile 可独立递增；2.1.9 补丁递增到 2.1.10; 版本一致性进入 verify，非法输入不写半套版本; 产品登录/本地存储目标和现状差距记录为开放任务
+- Branch: `codex/TASK-VERSION-001-platform-versions`
+- Worktree: `D:/kk-studio/.worktrees/platform-versioning`
+- Modules: config/platform-versions.json, scripts/platform-versions.mjs, src/runtime/appInfo.ts, package.json, src-tauri, docs/engineering/VERSIONING.md
+- Verification: PARTIAL — 版本脚本与配置已实现；本地 463 Node/302 浏览器全量、Web 版本专项、Desktop check/build 与隔离 release GUI 已通过。新增浏览器专项后的最终 verify、PR/主线 CI 与独立复审待完成。账号/本地伴随服务/Mobile 仍为开放任务。
+- Evidence: [docs/changes/2026-09-28-platform-versioning/intent.md](../../docs/changes/2026-09-28-platform-versioning/intent.md), [docs/changes/2026-09-28-platform-versioning/spec.md](../../docs/changes/2026-09-28-platform-versioning/spec.md), [docs/changes/2026-09-28-platform-versioning/plan.md](../../docs/changes/2026-09-28-platform-versioning/plan.md), [docs/changes/2026-09-28-platform-versioning/verification.md](../../docs/changes/2026-09-28-platform-versioning/verification.md), [docs/changes/2026-09-28-platform-versioning/review.md](../../docs/changes/2026-09-28-platform-versioning/review.md)
+- Updated: 2026-09-28
+
+## TASK-LOCAL-SERVICE-001 — Web 本机伴随服务与既有浏览器数据迁移
+
+- Goal: 让网页登录后的个人项目和素材由用户设备本机服务保存，并安全导入既有 IndexedDB 数据
+- Scope: 本机服务、Web 存储适配器、安装/连接、既有项目与素材导入、备份恢复
+- Acceptance: Web 在有服务时从本机服务读写个人项目与素材，浏览器数据不作为最终持久源; 服务不可用、认证失效、冲突、断电/重启有明确状态和恢复路径; 既有 IndexedDB 项目与素材只读预检、无损导入与失败回滚; 跨浏览器实例及备份恢复的运行态验收
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/runtime, src/features/creation, local companion service, docs/architecture/DATA-STORAGE.md
+- Verification: NOT_VERIFIED — NOT VERIFIED：本机伴随服务、账号接线与浏览器既有数据导入尚未实现；现有 Web 仍使用 IndexedDB。
+- Evidence: [docs/changes/2026-09-28-platform-versioning/spec.md](../../docs/changes/2026-09-28-platform-versioning/spec.md), [docs/architecture/adr/ADR-008-platform-versions-and-local-first.md](../../docs/architecture/adr/ADR-008-platform-versions-and-local-first.md), [docs/features/feat-037-web-local-service.md](../../docs/features/feat-037-web-local-service.md)
 - Updated: 2026-09-28

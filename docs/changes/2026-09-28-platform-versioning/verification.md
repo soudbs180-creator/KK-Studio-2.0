@@ -1,0 +1,22 @@
+# Verification：三端独立版本
+
+- Task ID：TASK-VERSION-001
+- 状态：本地 Web/Desktop 验证 PASS；PR/主线 CI 与独立复审待完成
+- Base：`origin/main@065bcbf`；最终 head 以 PR 回读为准。
+
+## 基线
+
+Node 24.21.0；基线在版本改动前为 `npm ci --no-audit --no-fund`、`npm run lint`、`npm run typecheck` 退出码 0，`npm test` 459/459 通过；当前分支再验证已纳入新增测试。版本改动前源码统一显示 2.1.0。
+
+## 本轮结果
+
+| 检查 | 结果 | 边界 |
+| --- | --- | --- |
+| `node --test tests/unit/platformVersions.test.ts` | 4/4 PASS | patch 9→10、三端独立 bump、跨文件一致性和非法输入先拒绝 |
+| `npm run version:check` / `npm run lint` | PASS | 三端 `2.1.1`，桌面 Cargo/Tauri、Web package/lock 一致；治理 74/0、功能 34/0、Markdown 89/0 |
+| `npm run verify` | PASS，退出码 0 | 463/463 Node、303/303 Edge 浏览器、UI/format/typecheck/build；包含新增版本浏览器专项 |
+| `node node_modules/@playwright/test/cli.js test tests/browser/platform-version.spec.ts` | 1/1 PASS | Web production preview 的账号弹窗与更新页均显示 Web `2.1.1`，仍标注更新服务未接入 |
+| `npm run client:check` / `npm run client:build` | PASS | Tauri release 可执行文件与 MSI/NSIS 构建为 `2.1.1`；未安装/发布 |
+| `node tests/desktop/platform-version.mjs` | PASS | 隔离数据根与 WebView2 profile 的真实 Tauri release GUI，账号弹窗和更新页显示 Desktop `2.1.1`，无页面异常；[运行身份与 exe SHA-256](desktop-runtime.json) |
+
+当前 `desktop=web=mobile=2.1.1` 只是版本起点；Mobile 没有运行产物，`config/platform-versions.json` 仅为规划元数据。用户选择的 Web 本机伴随服务、真实登录、既有 IndexedDB 数据迁移和正式发布均未实现，不属于上述通过结论。PR/主线 Hosted CI 和独立复审仍须另行核对。

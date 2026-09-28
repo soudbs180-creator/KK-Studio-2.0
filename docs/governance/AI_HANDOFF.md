@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-28 三端版本与本机服务目标恢复点
+
+版本任务 worktree `D:/kk-studio/.worktrees/platform-versioning`、分支 `codex/TASK-VERSION-001-platform-versions`；从最新 `origin/main` 核对 base/head 后继续。`config/platform-versions.json` 是三端版本源，新增 `npm run version:bump -- --platform desktop,web` 与 `npm run version:check`，每项后续任务作者按实际产物自动递增。Web 本机伴随服务、真实登录和 Mobile 包均未实现，切勿将 IndexedDB 或响应式布局冒充目标能力。原根 checkout dirty 不可覆盖；验证与 PR 状态见[本轮记录](../changes/2026-09-28-platform-versioning/verification.md)。
+
 ## 2026-09-28 图片对比合并后主线 CI 回归
 
 PR #21 已合入 `main@7bc7c67`，tree 与受审 `bcda41a` 一致。最新 push run `36369533105` 失败于 390px 对比按钮实测 `43.999992px < 44px`，其余浏览器 301/302 通过。TASK-COMPARE-002 在 `fix/TASK-COMPARE-002-touch-target` 的独立 worktree 以 45px 最小高度修复；需完整 `verify`、Desktop GUI、当前 head 独立复审和新主线 push CI。旧根 checkout dirty，禁止覆盖。

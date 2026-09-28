@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-28 三端独立版本与本地数据目标
+
+TASK-VERSION-001 在独立分支建立 `config/platform-versions.json`：Desktop、Web 与尚未发布的 Mobile 规划版本均从 `2.1.1` 起，桌面包、Web 包和运行态分别取对应版本；`version:bump`/`version:check` 用于任务作者自动选择受影响平台并校验一致性。账号和存储仍按现状运行：Desktop 可本地使用，Web 数据仍在 IndexedDB，登录仅演示；后续目标为 Web 安装本机伴随服务、Web/Mobile 登录和设备本地数据，见[版本规则](engineering/VERSIONING.md)与[ADR-008](architecture/adr/ADR-008-platform-versions-and-local-first.md)。本任务完整检查、运行态、PR 与主线集成结果以[本轮验证](changes/2026-09-28-platform-versioning/verification.md)为准；不能把源码版本当作已发布产品。
+
 ## 2026-09-28 对比操作合并后回归修复
 
 PR #21 的 `bcda41a` 已经通过独立复审与 Hosted 门禁，squash 合入 `main@7bc7c67` 且树相同。合并后 push CI `36369533105` 发现 390px 对比弹窗按钮高度 `43.999992px`，严格 44px 断言失败（301/302 浏览器通过）；TASK-COMPARE-002 保留该断言并给窄屏控件 1px 余量，重新验证中。用户最终产品视觉验收与正式发布未发生。

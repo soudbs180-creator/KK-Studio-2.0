@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-28 三端版本任务与产品目标
+
+TASK-VERSION-001 在独立分支实现桌面、Web、Mobile 独立版本源与递增命令；本轮源码目标均为 `2.1.1`。正式安装、Web 上线与 Mobile 包未由版本号证明。用户确认交付优先 Desktop → Web → Mobile；Web 未来由用户设备上的本机伴随服务保存个人数据，Desktop 免登录/可选登录，Web/Mobile 需登录。当前 Web IndexedDB、演示账号、无 Mobile 包仍是事实；`TASK-LOCAL-SERVICE-001`、`BACKEND-PLATFORM`、`T12` 保持开放。详细交接见[版本验证](../changes/2026-09-28-platform-versioning/verification.md)。原根 checkout 的未提交文件仍保持隔离。
+
 ## 2026-09-28 图片对比已合并，主线窄屏回归修复中
 
 [PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 的最终 head `bcda41a` 经独立复审和 Hosted `verify`/`delivery` 后 squash 合入 `main@7bc7c67`，合并树与候选树相同。合并后的 [push run 36369533105](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36369533105) 仅 390px 对比按钮 44px 子像素断言失败（实测 43.999992px；浏览器 301/302），TASK-COMPARE-002 在独立分支修复；不能称最新主线 CI 已通过。原根 checkout 的未提交改动保持原样，用户最终视觉验收未记录。

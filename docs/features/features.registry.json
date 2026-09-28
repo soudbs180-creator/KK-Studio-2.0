@@ -1290,5 +1290,22 @@
         "path": "docs/changes/2026-09-28-compare-ci-fix/verification.md"
       }
     ]
+  },
+  {
+    "id": "FEAT-037",
+    "title": "Web 本机伴随服务",
+    "area": "platform",
+    "status": "PLANNED",
+    "card": "docs/features/feat-037-web-local-service.md",
+    "summary": "用户安装在本机的服务作为 Web 个人项目与素材目标持久层；当前 Web 仍以 IndexedDB 保存，服务和迁移尚未实现。",
+    "entryPoints": [
+      "无（未实现）"
+    ],
+    "code": [],
+    "tests": [],
+    "tasks": [
+      "TASK-LOCAL-SERVICE-001"
+    ],
+    "updated": "2026-09-28"
   }
 ]
