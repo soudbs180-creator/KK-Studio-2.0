@@ -930,6 +930,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-COMPARE-001-canvas-compare`
 - Worktree: `D:/kk-studio/.worktrees/canvas-compare`
 - Modules: src/features/compare, src/components/Canvas.tsx, src/components/nodes, src/styles/canvas-compare.css, tests/unit/imageCompare.test.ts, tests/browser/image-compare.spec.ts, tests/desktop/image-compare.mjs, docs/features, docs/governance
-- Verification: NOT_VERIFIED — 候选完整 npm run verify 通过（302 浏览器）；Tauri client:check/build 与隔离数据目录 release GUI 对比操作通过。独立 review、Hosted CI、用户产品验收与主线集成待完成。
+- Verification: NOT_VERIFIED — 完整 npm run verify 通过（302 浏览器）；Tauri client:check/build 与隔离数据目录 release GUI 对比操作通过。源码 f8d5165 独立审查 PASS；草稿 PR #21 的首个 Hosted delivery 成功，最终 head 的 verify、用户产品验收与主线集成待完成。
 - Evidence: [docs/changes/2026-09-27-canvas-image-compare/intent.md](../../docs/changes/2026-09-27-canvas-image-compare/intent.md), [docs/changes/2026-09-27-canvas-image-compare/spec.md](../../docs/changes/2026-09-27-canvas-image-compare/spec.md), [docs/changes/2026-09-27-canvas-image-compare/plan.md](../../docs/changes/2026-09-27-canvas-image-compare/plan.md), [docs/changes/2026-09-27-canvas-image-compare/verification.md](../../docs/changes/2026-09-27-canvas-image-compare/verification.md), [docs/changes/2026-09-27-canvas-image-compare/review.md](../../docs/changes/2026-09-27-canvas-image-compare/review.md)
-- Updated: 2026-09-27
+- Updated: 2026-09-28

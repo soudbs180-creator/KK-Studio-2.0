@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-28 画布图片对比草稿 PR #21
+
+TASK-COMPARE-001 源码 `f8d5165` 独立只读复审 PASS，Web preview 完整 `verify`（302 浏览器）与 Tauri release GUI 重验通过。草稿 [PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 已创建，首个 head 的 Hosted `delivery` 成功；本次记录补录后的最终 head `verify` 和复审、用户产品验收及主线集成仍待完成。FEAT-036 保持 PARTIAL；原 checkout 的未提交改动仍隔离。
+
 ## 2026-09-27 画布图片对比候选待审
 
 TASK-COMPARE-001 在独立 worktree `codex/TASK-COMPARE-001-canvas-compare` 实现 FEAT-036。Web preview 的 1440/1220/390px 操作、完整 `verify`（302 浏览器）以及隔离数据根目录的 Tauri release GUI 已通过；实际 production JS/CSS 同源。独立审查、PR Hosted 门禁、用户产品验收和主线集成仍待完成，主线与正式发布状态不因此改变。根 checkout 未提交 UI 改动保持隔离。证据见[验证记录](../changes/2026-09-27-canvas-image-compare/verification.md)。

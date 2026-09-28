@@ -43,3 +43,8 @@
 ## 交付边界
 
 本记录是当前 task worktree 候选证据。最终提交 SHA 的独立 review、PR Hosted `verify`/`delivery`、用户产品验收和主线集成另记于 `review.md`；不得把本地通过当作这些门禁通过。
+
+## 2026-09-28 提交与托管补录
+
+- 本地 Web/Desktop 验证的源码与样式已提交为 `f8d51656ec3999f7d4c09ae49eeb3b92a09b607b`；`npm run delivery:check -- --base a89792ad8f8d1354418cf70289ff4bd650706272 --branch codex/TASK-COMPARE-001-canvas-compare` 为 32 文件、0 违规，`git diff --cached --check` 通过。
+- 草稿 [PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 已创建；head `f8d5165` 的 Hosted `delivery` 成功，`verify` 在补录时仍运行中。补录文档后会产生新 SHA，不能用旧 head 结果替代最终门禁。
