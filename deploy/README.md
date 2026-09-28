@@ -13,7 +13,8 @@ node deploy/release.mjs package --dist dist --release 2026.09.19-local
 ```
 
 `package` creates a tar archive plus `manifest.json` and `manifest.sha256` in
-`.tmp/deploy`. Sensitive-looking files (`.env`, private keys, credentials,
+`.tmp/deploy`. It also writes `<archive>.sha256` for checking the complete
+archive after copying it to off-host storage. Sensitive-looking files (`.env`, private keys, credentials,
 secrets, and `id_rsa`) are rejected before packaging. The archive contains the
 static `dist` tree and the two verification files; no source checkout, npm
 cache, or runtime data is included.
@@ -35,6 +36,13 @@ swaps `current` to the new release. It retains the prior `current` target as
 external directory. The current link is only changed after extraction and
 verification succeed.
 
+For recovery from an off-host package, use `deploy --archive <path-to-tar.gz>`
+with its sibling `<path-to-tar.gz>.sha256` and the matching `--release`. This
+mode checks the saved archive locally and uploads those exact bytes and the
+sidecar. The remote command checks the complete archive before activation;
+it does not rebuild from `dist`. Activation and rollback share the release
+root's `.release.lock` so their pointer checks and swaps are serialized.
+
 The health check is intentionally static:
 
 ```powershell
@@ -45,3 +53,8 @@ It checks that the URL returns a successful HTML response. It does not claim
 provider readiness, API health, authentication, DNS ownership, TLS issuance,
 backup restoration, or production readiness. Those require a separately
 authorized staging runbook and real credentials.
+
+For a move to another VPS, including an expiry of the current one, use the
+[migration and recovery runbook](MIGRATION.md). `remote-rollback.sh` switches
+only this static release root to a named, verified earlier release; it does not
+restore PostgreSQL, Gateway data, browser IndexedDB, DNS, or TLS.
