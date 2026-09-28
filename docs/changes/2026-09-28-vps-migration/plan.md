@@ -13,7 +13,7 @@
 ## 顺序
 
 1. 测试先行：整包 hash sidecar 及 Linux symlink 文件系统的成功/拒绝回滚；记录 Windows symlink 权限限制。
-2. 在现有静态打包器写整包 hash；增加仅静态 root 的指定版本回滚脚本，不改现行远端激活与业务服务。
+2. 在现有静态打包器写整包 hash；让 `deploy --archive` 使用已校验的离机包并在远端重验；增加仅静态 root 的指定版本回滚脚本，与激活脚本共用发布锁，不改业务服务。
 3. 编写可复用离机备份、隔离恢复、切换与回切操作单；依据旧 VPS 审计与当前 SSH 结果保留 UNKNOWN。
 4. 更新 ledger、PROGRESS、PROJECT_STATE、AI_HANDOFF、ADR；运行定向测试、全量 `verify`、Linux Hosted CI、独立 review。
 5. 经 PR 合并后核对 main SHA/tree/push CI。只有取得目标主机与授权后，单独执行 T10 的实机演练。

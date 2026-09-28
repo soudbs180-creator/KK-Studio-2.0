@@ -19,7 +19,7 @@
 
 | ID | 可观察结果 | 技术证据 |
 | --- | --- | --- |
-| AC-1 | 新机拿到离机静态包能校验完整性 | tar.gz hash sidecar、包内文件清单与测试 |
+| AC-1 | 新机使用同一份离机静态包完成校验与发布 | tar.gz hash sidecar、本机/远端整包校验、包内文件清单及恢复包输入测试 |
 | AC-2 | 某一静态版本出问题可指向上一已校验版本 | 远端回滚脚本在隔离 release 根验证目标、预期 current 与文件 hash；失败不动 current |
 | AC-3 | 到期搬迁步骤和数据缺口明确 | `deploy/MIGRATION.md` 覆盖 Git、旧 PostgreSQL/对象、可选 Gateway SQLite/对象、浏览器 origin、域名/TLS、隔离恢复与回切 |
 | AC-4 | 当前状态不虚报 | GitHub main SHA 回读、历史 VPS 与本轮登录尝试分开记录；T10-PREP/T10 状态准确 |

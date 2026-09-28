@@ -7,6 +7,7 @@ import path from "node:path";
 import test from "node:test";
 import {
   buildManifest,
+  deploy,
   packageRelease,
   quotePosix,
 } from "../../deploy/release.mjs";
@@ -56,6 +57,61 @@ test("packaging emits archive and verification sidecars", async () => {
     `${createHash("sha256")
       .update(await readFile(result.archivePath))
       .digest("hex")}  ${path.basename(result.archivePath)}\n`,
+  );
+});
+
+test("deploying a recovered archive uses its verified bytes without dist", async () => {
+  const { dist, out } = await fixture();
+  const packaged = await packageRelease({ dist, out, release: "test-release" });
+  const result = await deploy({
+    archive: packaged.archivePath,
+    host: "staging.example.invalid",
+    user: "deploy",
+    path: "/srv/kk-studio-next",
+    release: "test-release",
+    dryRun: true,
+  });
+  assert.equal(result.archivePath, packaged.archivePath);
+  assert.equal(result.archiveHashPath, packaged.archiveHashPath);
+  assert.ok(
+    result.commands.some((command) => command.includes(".tar.gz.sha256")),
+  );
+  assert.ok(
+    result.commands.some((command) => command.includes("sha256sum -c")),
+  );
+});
+
+test("recovered archive with a damaged byte is refused before upload", async () => {
+  const { dist, out } = await fixture();
+  const packaged = await packageRelease({ dist, out, release: "test-release" });
+  await writeFile(packaged.archivePath, "damaged archive");
+  await assert.rejects(
+    () =>
+      deploy({
+        archive: packaged.archivePath,
+        host: "staging.example.invalid",
+        user: "deploy",
+        path: "/srv/kk-studio-next",
+        release: "test-release",
+        dryRun: true,
+      }),
+    /archive SHA-256 mismatch/,
+  );
+});
+
+test("deploy refuses ambiguous archive and dist inputs", async () => {
+  await assert.rejects(
+    () =>
+      deploy({
+        archive: "saved.tar.gz",
+        dist: "dist",
+        host: "staging.example.invalid",
+        user: "deploy",
+        path: "/srv/kk-studio-next",
+        release: "test-release",
+        dryRun: true,
+      }),
+    /either --archive or --dist/,
   );
 });
 

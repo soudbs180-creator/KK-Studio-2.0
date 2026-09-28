@@ -7,6 +7,7 @@ import {
   cp,
   copyFile,
   mkdir,
+  readFile,
   readdir,
   rm,
   stat,
@@ -53,7 +54,7 @@ function usage() {
 Commands:
   manifest  --dist <dist> --out <directory> --release <id>
   package   --dist <dist> --out <directory> --release <id>
-  deploy    --dist <dist> --host <host> --user <user> --path <remote-root> --release <id> [--apply]
+  deploy    (--dist <dist> | --archive <tar.gz>) --host <host> --user <user> --path <remote-root> --release <id> [--apply]
 
 The default is dry-run. Only deploy --apply uses ssh/scp. This package contains
 the browser static prototype only; it never starts a provider or generation gateway.
@@ -181,6 +182,30 @@ async function packageRelease(args) {
   return { ...files, archivePath, archiveHashPath, manifest };
 }
 
+async function verifiedArchive(archiveArgument, release) {
+  const archivePath = path.resolve(archiveArgument);
+  const archiveName = `kk-studio-web-${release}.tar.gz`;
+  if (path.basename(archivePath) !== archiveName) {
+    fail(`archive name must be ${archiveName}`);
+  }
+  const archiveHashPath = `${archivePath}.sha256`;
+  const hashLine = await readFile(archiveHashPath, "utf8").catch(() =>
+    fail(`archive SHA-256 sidecar is missing: ${archiveHashPath}`),
+  );
+  const match = /^([a-f0-9]{64})  ([^\r\n]+)\r?\n?$/.exec(hashLine);
+  if (!match || match[2] !== archiveName) {
+    fail("archive SHA-256 sidecar has an invalid name or format");
+  }
+  if ((await sha256(archivePath)) !== match[1]) {
+    fail("archive SHA-256 mismatch");
+  }
+  return {
+    archivePath,
+    archiveHashPath,
+    manifest: { release, files: null },
+  };
+}
+
 function remoteCommand(root, release, archiveName) {
   const activateScript = path.posix.join(
     root,
@@ -190,6 +215,7 @@ function remoteCommand(root, release, archiveName) {
   return [
     "set -eu",
     `test -f ${quotePosix(activateScript)}`,
+    `(cd ${quotePosix(path.posix.join(root, "incoming"))} && sha256sum -c ${quotePosix(`${archiveName}.sha256`)})`,
     `sh ${quotePosix(activateScript)} ${quotePosix(root)} ${quotePosix(release)} ${quotePosix(path.posix.join(root, "incoming", archiveName))}`,
   ].join("\n");
 }
@@ -200,13 +226,18 @@ function formatCommand(executable, argv) {
 
 async function deploy(args) {
   const release = requireReleaseId(args.release);
+  if (args.archive && args.dist) {
+    fail("deploy accepts either --archive or --dist, not both");
+  }
   const host = args.host;
   const user = args.user;
   const root = args.path;
   if (!host || !user || !root) {
     fail("deploy requires --host, --user, and --path");
   }
-  const packaged = await packageRelease(args);
+  const packaged = args.archive
+    ? await verifiedArchive(args.archive, release)
+    : await packageRelease(args);
   const archiveName = path.basename(packaged.archivePath);
   const remote = `${user}@${host}`;
   const remoteRoot = root.replaceAll("\\", "/").replace(/\/$/, "");
@@ -219,6 +250,7 @@ async function deploy(args) {
       `mkdir -p ${quotePosix(path.posix.join(remoteRoot, "incoming"))} ${quotePosix(path.posix.join(remoteRoot, "releases"))}`,
     ]),
     formatCommand("scp", [packaged.archivePath, remoteIncoming]),
+    formatCommand("scp", [packaged.archiveHashPath, remoteIncoming]),
     formatCommand("scp", [
       scriptPath,
       `${remote}:${path.posix.join(remoteRoot, "incoming", `activate-${release}.sh`)}`,
@@ -240,6 +272,7 @@ async function deploy(args) {
       ],
     ],
     ["scp", [packaged.archivePath, `${remote}:${remoteIncomingPath}/`]],
+    ["scp", [packaged.archiveHashPath, `${remote}:${remoteIncomingPath}/`]],
     [
       "scp",
       [
@@ -295,7 +328,7 @@ async function main(argv) {
         release: result.manifest.release,
         archive: result.archivePath,
         archiveHash: result.archiveHashPath,
-        files: result.manifest.files.length,
+        files: result.manifest.files?.length ?? null,
         dryRun: result.dryRun ?? false,
         commands: result.commands,
       },
@@ -315,4 +348,4 @@ if (
   });
 }
 
-export { buildManifest, packageRelease, parseArgs, quotePosix };
+export { buildManifest, deploy, packageRelease, parseArgs, quotePosix };

@@ -36,6 +36,13 @@ swaps `current` to the new release. It retains the prior `current` target as
 external directory. The current link is only changed after extraction and
 verification succeed.
 
+For recovery from an off-host package, use `deploy --archive <path-to-tar.gz>`
+with its sibling `<path-to-tar.gz>.sha256` and the matching `--release`. This
+mode checks the saved archive locally and uploads those exact bytes and the
+sidecar. The remote command checks the complete archive before activation;
+it does not rebuild from `dist`. Activation and rollback share the release
+root's `.release.lock` so their pointer checks and swaps are serialized.
+
 The health check is intentionally static:
 
 ```powershell

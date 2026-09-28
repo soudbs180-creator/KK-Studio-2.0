@@ -33,14 +33,14 @@
 3. 对历史 PostgreSQL，由有权的本机数据库角色在受限目录执行 `pg_dump -Fc -f <离机中转目录>/legacy.dump <数据库名>`；检查命令退出码、文件 hash 和 `pg_restore --list`，随后**恢复到全新隔离测试库**并验证表/资产关联。不得把密码写进命令、日志或 Git；不在现有生产库上运行 `pg_restore --clean`。操作细节按实际角色/版本核实。[PostgreSQL 17 pg_dump](https://www.postgresql.org/docs/17/app-pgdump.html)
 4. 与数据库一致地备份旧上传/对象文件、服务配置清单、Nginx vhost、证书续期配置和非明文的 secret 引用。文件与 DB 快照必须来自同一受控写入窗口或有应用一致性证明；记录大小、数量、SHA-256、权限与离机副本。`pg_dump` 单独不能覆盖上传文件。
 5. 若未来 Gateway 真正在 VPS 运行，SQLite WAL 数据库应使用 SQLite 在线备份 API 或 `VACUUM INTO` 取得一致数据库快照，并在受控写入窗口备份私有对象目录；恢复到隔离目录后运行完整性和资产引用检查。直接复制正在写入的单个 `.db` 文件不构成一致备份。[SQLite 在线备份](https://www.sqlite.org/backup.html)
-6. Web 的项目和素材属于浏览器当前 origin 的 IndexedDB。更换 origin 不会把这份数据随 VPS 自动搬走；须在旧 origin 可用时通过经 T9 验收的项目包导出/导入并逐个回读。T9 尚未完成，所以旧 Web 切换不能提前宣称无损。
+6. **现有实现**的 Web 项目和素材仍属于浏览器当前 origin 的 IndexedDB；用户的新目标是登录后的网页连接本机伴随服务保存个人数据，该能力尚未实现。更换 origin 或切换到伴随服务都不会自动搬走现有数据；须在旧 origin 可用时通过经 T9 验收的项目包导出/导入并逐个回读。T9 尚未完成，所以旧 Web 切换不能提前宣称无损。
 
 离机备份应有访问控制和加密，至少一份不依赖旧 VPS 的副本；仅 hash 或存在文件不等于还原成功。记录实际完成时间、容量和恢复耗时，不预设 RTO。
 
 ## 2. 新 VPS staging 恢复与发布
 
 1. 核对 SSH 主机指纹和授权用户，建立单独 next 发布根；检查磁盘/内存/端口、Nginx/证书管理、日志轮转与访问权限。旧机保持服务可用。不要在新机暴露 PostgreSQL/Gateway 内部端口；以外网探测核实。
-2. 将静态包和 sidecar 传到新机，先用 `sha256sum -c` 验证整包。`deploy/release.mjs deploy` 默认 dry-run，审查打印的远端命令、目标路径和版本后，在授权的 staging 目标使用 `--apply`；激活脚本再次按 manifest 核验每个静态文件并原子切换 `current`。
+2. 从离机位置取回**同一个**静态 tar.gz 及同名 `.tar.gz.sha256`，用 `node deploy/release.mjs deploy --archive <离机恢复的tar.gz绝对路径> --release <包对应版本> --host <已核实主机> --user <部署用户> --path <next发布根>` 做 dry-run。该模式先在本机核对整包 hash，再上传同一份 tar 与 sidecar；远端再次执行 `sha256sum -c`，激活脚本按包内 manifest 核验每个静态文件。检查打印出的目标和命令后，仅在授权的 staging 目标追加 `--apply`。不得在这一步改用 `--dist` 重新打包并声称已恢复离机包。
 3. 给 staging 独立 vhost 指向 `<next发布根>/current`，SPA 入口按 Nginx `try_files` 规则回落到 `/index.html`；先执行 `nginx -t`，再按实际环境加载。不要把旧站 vhost/后台或未受控的旧 API 代理到新入口。[Nginx try_files](https://nginx.org/en/docs/http/ngx_http_core_module.html#try_files)
 4. 将数据库/对象恢复到**新的隔离目录或数据库**，用受控 secret 注入新服务，逐项检查进程身份、权限、内部端口、健康、鉴权、真实项目/任务/资产、重启恢复、日志与资源限制。静态 `deploy/health-check.mjs` 只证明 HTML，不能代替这些检查。
 5. 做一次同版本及上一版本回滚演练，记录命令、耗时、hash 和新旧端可访问性。若 schema 不兼容，先恢复隔离数据副本并验证迁移/回退策略；静态指针回滚不会回滚数据库。
@@ -59,7 +59,7 @@ ssh deploy@staging.example.invalid \
 
 将示例域名及 `current-id`、`previous-id` 替换为本次发布清单中的真实值，先在 staging 演练。若 `previous` 是目录而不是 symlink、目标包受损或当前版本不符，脚本拒绝切换；不要为通过检查而手工删除现有目录。
 
-脚本仅接受当前 `current` 指针确实为预期版本、目标位于本根的实际目录且 SHA 清单通过时切换；它不删除版本或数据，也不更改 DNS。若旧机已到期，新机从离机包和 Git SHA 重建，先恢复隔离数据并复测，再切换域名；没有离机业务数据和域名控制时，无法靠 `git pull` 恢复服务。
+激活与回滚共用发布根的 `.release.lock`，串行完成预期版本检查与指针切换；回滚仅接受当前 `current` 指针确实为预期版本、目标位于本根的实际目录且 SHA 清单通过时切换。它不删除版本或数据，也不更改 DNS。若旧机已到期，新机从离机包和 Git SHA 重建，先恢复隔离数据并复测，再切换域名；没有离机业务数据和域名控制时，无法靠 `git pull` 恢复服务。
 
 ## 尚未完成的外部验收
 

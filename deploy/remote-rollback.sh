@@ -7,10 +7,14 @@ EXPECTED=${2:?expected current release is required}
 TARGET=${3:?target release is required}
 
 case "$ROOT" in
-  /*) ROOT=${ROOT%/} ;;
+  /*) ;;
   *) echo "root must be absolute" >&2; exit 2 ;;
 esac
-if [ -z "$ROOT" ]; then
+ROOT=$(cd -P "$ROOT" && pwd -P) || {
+  echo "root does not exist" >&2
+  exit 2
+}
+if [ "$ROOT" = / ]; then
   echo "root must not be /" >&2
   exit 2
 fi
@@ -27,6 +31,13 @@ fi
 CURRENT="$ROOT/current"
 PREVIOUS="$ROOT/previous"
 BASE="$ROOT/releases/$TARGET"
+LOCK="$ROOT/.release.lock"
+if [ -L "$LOCK" ]; then
+  echo "release lock is a symlink; refusing rollback" >&2
+  exit 3
+fi
+exec 9>>"$LOCK"
+flock -x 9
 if [ ! -L "$CURRENT" ] || [ "$(readlink "$CURRENT")" != "releases/$EXPECTED" ]; then
   echo "current release changed; refusing rollback" >&2
   exit 3
@@ -53,7 +64,7 @@ fi
 trap 'rm -f "$next_current" "$next_previous"' 0
 trap 'exit 1' 1 2 3 15
 ln -s "releases/$TARGET" "$next_current"
-mv -Tf "$next_current" "$CURRENT"
 ln -s "releases/$EXPECTED" "$next_previous"
 mv -Tf "$next_previous" "$PREVIOUS"
+mv -Tf "$next_current" "$CURRENT"
 echo "rolled back $EXPECTED to $TARGET"

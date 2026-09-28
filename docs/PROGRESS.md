@@ -2,7 +2,7 @@
 
 ## 2026-09-28 VPS 搬迁准备（T10-PREP）
 
-在独立 `codex/T10-PREP-vps-migration` 分支为现有静态发布包增加整包 SHA-256 sidecar 和指定版本回滚脚本，编写[搬迁与恢复操作单](../deploy/MIGRATION.md)，区分 Git/静态包、旧 PostgreSQL/上传文件、未来 Gateway SQLite/对象及浏览器 IndexedDB。本地 `npm test` 为 466 项（463 通过、3 项 Linux symlink 测试因 Windows 权限跳过），部署单测、lint/typecheck/format/governance/features/Markdown 与 shell 语法通过；Linux 实际回滚、全量 `verify`、当前 VPS 备份恢复与新机部署尚未验收。历史 VPS 地址本轮 SSH 认证失败，不能据旧审计说 2.0 已上传；T10-PREP 保持 PARTIAL、T10 BLOCKED。主线对比 UI CI 回归由 TASK-COMPARE-002 独立修复。
+在独立 `codex/T10-PREP-vps-migration` 分支为静态包增加整包 SHA-256、已校验离机包恢复输入和指定版本回滚；激活/回滚共用发布锁，详见[搬迁与恢复操作单](../deploy/MIGRATION.md)。独立预审在初次提交发现四项回滚/恢复问题，修复候选本地 `npm test` 为 471 项（466 通过、5 项 Linux 符号链接测试因 Windows 权限跳过），lint/typecheck/format/governance/features/Markdown 与 shell 语法通过；初次提交的 Linux job PASS，修复候选的 Linux/完整 `verify`、当前 VPS 备份恢复与新机部署待验收。旧 VPS SSH 认证失败，用户浏览器控制页接口超时，不能据历史审计说 2.0 已上传；T10-PREP 保持 PARTIAL、T10 BLOCKED。现有 Web 数据仍在浏览器 IndexedDB，用户新目标为本机伴随服务，尚未实现。
 
 ## 2026-09-28 画布图片对比独立复审与草稿 PR
 

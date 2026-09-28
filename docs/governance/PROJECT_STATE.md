@@ -2,7 +2,7 @@
 
 ## 2026-09-28 VPS 搬迁准备与当前核验边界
 
-T10-PREP 分支新增静态归档整包 hash、受校验的版本回滚脚本和[离机备份/隔离恢复操作单](../../deploy/MIGRATION.md)；Windows 本地 Node 466 项中 463 通过、3 项 Linux symlink 测试跳过。2026-09-16 旧 VPS 审计不能代表今天；本轮历史地址 HTTP 301，但 SSH 认证失败，2.0 是否上传、服务器 Git SHA/数据备份均 UNKNOWN。正式域名、主机权限和数据恢复演练未落实，T10-PREP PARTIAL、T10 BLOCKED。GitHub `main@7bc7c67` 已合并图片对比，合并后 CI 子像素回归由 TASK-COMPARE-002 独立修复。
+T10-PREP 分支新增静态归档整包 hash、指定离机包恢复模式、共享发布锁的版本回滚和[离机备份/隔离恢复操作单](../../deploy/MIGRATION.md)；独立预审的四项阻断问题已有修复候选。Windows 本地 Node 471 项中 466 通过、5 项 Linux 符号链接测试跳过；初次提交 Linux job PASS，修复候选的 Linux/full verify 待验。2026-09-16 旧 VPS 审计不能代表今天；本轮历史地址 HTTP 301、SSH 认证失败，用户已登录的浏览器控制页接口超时，2.0 是否上传、服务器 Git SHA/数据备份均 UNKNOWN。正式域名、主机权限和数据恢复演练未落实，T10-PREP PARTIAL、T10 BLOCKED。现有 Web IndexedDB 与用户要求的本机伴随服务有差距。GitHub `main@7bc7c67` 已合并图片对比，子像素 CI 回归由 TASK-COMPARE-002 独立修复。
 
 ## 2026-09-28 画布图片对比草稿 PR #21
 

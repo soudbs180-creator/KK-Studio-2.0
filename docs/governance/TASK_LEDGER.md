@@ -268,7 +268,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/T10-PREP-vps-migration`
 - Worktree: `D:/kk-studio/.worktrees/canvas-compare`
 - Modules: deploy, tests/deploy, .github/workflows/quality.yml, docs/architecture/adr
-- Verification: PARTIAL — 静态包整包 hash 与指定版本回滚脚本已实现；本地 npm test 466 项中 463 通过、3 项 Linux symlink 测试因 Windows 权限跳过，lint/typecheck/format/治理/功能/Markdown 通过。Linux CI、完整 verify、真实 VPS 离机备份/恢复演练仍待完成；部署配置、权限和资源限制需实际主机盘点。
+- Verification: PARTIAL — 静态包整包 hash、指定离机包恢复与共享锁版本回滚已形成修复候选；本地 npm test 471 项中 466 通过、5 项 Linux 符号链接测试因 Windows 权限跳过，lint/typecheck/format/治理/功能/Markdown 通过。初次 b597dc7 Linux job PASS，但独立预审四项问题已修复待新 head Linux CI/复审；完整 verify、真实 VPS 离机备份/恢复演练仍待完成；部署配置、权限和资源限制需实际主机盘点。
 - Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md), [docs/changes/2026-09-28-vps-migration/intent.md](../../docs/changes/2026-09-28-vps-migration/intent.md), [docs/changes/2026-09-28-vps-migration/spec.md](../../docs/changes/2026-09-28-vps-migration/spec.md), [docs/changes/2026-09-28-vps-migration/plan.md](../../docs/changes/2026-09-28-vps-migration/plan.md), [docs/changes/2026-09-28-vps-migration/verification.md](../../docs/changes/2026-09-28-vps-migration/verification.md), [docs/changes/2026-09-28-vps-migration/review.md](../../docs/changes/2026-09-28-vps-migration/review.md), [deploy/MIGRATION.md](../../deploy/MIGRATION.md)
 - Updated: 2026-09-28
 

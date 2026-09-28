@@ -2,7 +2,7 @@
 
 ## 2026-09-28 VPS 搬迁准备恢复点
 
-`codex/T10-PREP-vps-migration` 基于 `origin/main@7bc7c67`，位于 `D:/kk-studio/.worktrees/canvas-compare`；新增 `deploy/MIGRATION.md`、静态包整包 hash 和 `remote-rollback.sh`，并给 Hosted 增加 Linux deploy 测试。Windows 本地 `npm test` 466 项中 463 通过、3 项 Linux symlink 测试因权限跳过；完整 verify/当前 head PR 与 Linux 结果待核实。原根 checkout dirty 不碰。旧 VPS 当前无 SSH 认证，历史地址 HTTP 301 不能证明版本/数据；需用户提供现行主机/用户/发布根/域名后只读盘点，继而安排离机备份和隔离恢复。TASK-COMPARE-002 在另一工作树修复主线 390px CI 回归，待它合入后将最新 main 合并到 T10-PREP 分支重测。
+`codex/T10-PREP-vps-migration` 基于 `origin/main@7bc7c67`，位于 `D:/kk-studio/.worktrees/canvas-compare`；初次提交 `b597dc7` 的独立预审发现四项回滚/恢复阻断问题，修复候选已加入指定离机包输入、远端整包重验、激活/回滚共享锁和真正的 stale/故障注入测试。Windows 本地 `npm test` 471 项中 466 通过、5 项 Linux 符号链接测试因权限跳过；初次 Linux job PASS 不代表修复候选，完整 verify/新 head CI/独立复审待核实。原根 checkout dirty 不碰。旧 VPS 当前无 SSH 认证，用户浏览器控制页接口超时，HTTP 301 不证明版本/数据；需当前主机访问、离机备份和隔离恢复才能确认搬迁。TASK-COMPARE-002 在另一工作树修复主线 390px CI 回归，待它合入后将最新 main 合并到 T10-PREP 分支重测。用户新目标是 Web 本机伴随服务存储，现有 IndexedDB 仍是待迁移实现。
 
 ## 2026-09-28 图片对比 PR #21 恢复点
 
