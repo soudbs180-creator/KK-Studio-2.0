@@ -96,7 +96,7 @@ export function useCanvasAddMenu(
     if (
       event.target instanceof Element &&
       event.target.closest(
-        "[data-canvas-node],button,input,textarea,.canvas-hud,.canvas-toolbar,.connection",
+        "[data-canvas-node],button,input,textarea,dialog,.canvas-hud,.canvas-toolbar,.connection",
       )
     )
       return;

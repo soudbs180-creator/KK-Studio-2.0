@@ -17,15 +17,23 @@ export function useCanvasViewport(
   const measure = useCallback((): CanvasViewport => {
     const canvas = containerRef.current;
     const bounds = canvas?.getBoundingClientRect();
-    const chat = containerRef.current?.parentElement
-      ?.querySelector(".conversation-panel")
-      ?.getBoundingClientRect();
+    const chatElement =
+      containerRef.current?.parentElement?.querySelector<HTMLElement>(
+        ".conversation-panel",
+      );
+    const chat = chatElement?.getBoundingClientRect();
     const canvasWidth = canvas?.clientWidth ?? 1000;
     const scale = canvas ? surfaceScale(canvas) : 1;
     const chatWidth = chat?.width ? chat.width / scale : 0;
     const availableWidth =
-      canvas && bounds && chat && chatWidth > 0 && window.innerWidth > 1200
-        ? (chat.left - bounds.left) / scale - canvas.clientLeft - 16
+      canvas &&
+      bounds &&
+      chatElement &&
+      chatWidth > 0 &&
+      window.innerWidth > 1200
+        ? // offsetLeft is stable while the conversation panel slides in. Its
+          // animated DOMRect would leave the canvas controls under the panel.
+          chatElement.offsetLeft - canvas.offsetLeft - canvas.clientLeft - 16
         : canvasWidth;
     return {
       // Compact chat overlays the content instead of compressing its viewport.

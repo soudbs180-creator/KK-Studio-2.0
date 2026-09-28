@@ -2436,3 +2436,4 @@ import "./styles/feature-parity.css";
 import "./styles/responsive.css";
 import "./styles/responsive-content.css";
 import "./styles/composer.css";
+import "./styles/canvas-compare.css";

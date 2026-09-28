@@ -1,5 +1,13 @@
 # 当前进度
 
+## 2026-09-28 画布图片对比独立复审与草稿 PR
+
+TASK-COMPARE-001 的源码 `f8d5165` 已经独立只读上下文复审 PASS，预审发现的 390px 命中区、触摸证据与功能卡状态问题均关闭。草稿 [PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 已建立，首个 head 的 Hosted `delivery` 通过；本次文档补录后的最终 head `verify` 与复审、用户产品验收和主线集成仍待完成。Web 完整 `verify` 为 302/302 浏览器，Tauri release GUI 在隔离数据目录重验通过，详见[本轮验证](changes/2026-09-27-canvas-image-compare/verification.md)。FEAT-036 保持 PARTIAL。
+
+## 2026-09-27 画布图片对比候选（TASK-COMPARE-001）
+
+独立 worktree `codex/TASK-COMPARE-001-canvas-compare` 已实现图片卡片加入/移除对比、2–4 张并排与两张滑块、同步缩放滚动及错误重试。`npm run verify` 通过（302 条浏览器）；Tauri `client:check`、`client:build` 和隔离数据目录的 release GUI 对比操作均通过。1440/1220/390px Web 与桌面截图、运行元数据见[本轮验证](changes/2026-09-27-canvas-image-compare/verification.md)。独立最终审查、PR Hosted 检查、用户产品验收与主线集成待完成；FEAT-036 保持 PARTIAL。
+
 ## 2026-09-27 Provider #16 源码独立补审通过
 
 PR #16 修复后源码 `1f81322` 独立只读补审 PASS，先前中文 id 渲染、同名 seed 碰撞和功能卡状态问题均关闭；本地完整 `verify` 为 456 Node、300 浏览器，delivery 22 文件/0 违规。补录审查结论后的最终 head 托管检查尚未完成，真实 Codex/Claude 消费与 UI 接线保持后续任务。
