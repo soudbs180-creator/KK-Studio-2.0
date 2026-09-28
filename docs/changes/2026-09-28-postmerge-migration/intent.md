@@ -1,7 +1,7 @@
 # Intent：主线合并后迁移操作单收口
 
 - Task ID：TASK-POSTMERGE-MIGRATION-2026-09-28
-- 状态：REVIEW；主线证据已回读，本次文档 PR 门禁待完成
+- 状态：PASS；主线证据、独立复审与 Hosted 门禁均已回读
 - 日期：2026-09-28
 - 范围：更新迁移操作单和进度记录到 `main@096d6c3`，保留 VPS 实机、备份和恢复的未知边界；不改产品代码、不执行生产部署。
 - 关联：[规范](spec.md)、[计划](plan.md)、[验证](verification.md)、[审查](review.md)。

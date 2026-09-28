@@ -2489,7 +2489,7 @@
     "goal": "同步迁移操作单的主线事实并保留 VPS 未验收边界",
     "scope": "deploy/MIGRATION.md, docs/PROGRESS.md, docs/changes",
     "acceptance": [
-      "迁移操作单记录 main@096d6c3、tree 和合并后 Hosted 门禁",
+      "迁移操作单记录 main@be46ad6、tree 和合并后 Hosted 门禁",
       "不把 GitHub CI 或控制面板解释成 VPS 上传/恢复证明",
       "PROGRESS、迁移操作单、账本与 change package 一致"
     ],
@@ -2498,17 +2498,22 @@
     "branch": "docs/TASK-POSTMERGE-2026-09-28",
     "worktree": "D:/kk-studio/.worktrees/platform-versioning",
     "affectedModules": ["deploy/MIGRATION.md", "docs/PROGRESS.md", "docs/changes"],
-    "status": "REVIEW",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-09-28-postmerge-migration/intent.md",
       "docs/changes/2026-09-28-postmerge-migration/spec.md",
       "docs/changes/2026-09-28-postmerge-migration/plan.md",
       "docs/changes/2026-09-28-postmerge-migration/verification.md",
       "docs/changes/2026-09-28-postmerge-migration/review.md",
-      "deploy/MIGRATION.md"
+      "deploy/MIGRATION.md",
+      "docs/changes/2026-09-28-postmerge-migration-final/intent.md",
+      "docs/changes/2026-09-28-postmerge-migration-final/spec.md",
+      "docs/changes/2026-09-28-postmerge-migration-final/plan.md",
+      "docs/changes/2026-09-28-postmerge-migration-final/verification.md",
+      "docs/changes/2026-09-28-postmerge-migration-final/review.md"
     ],
-    "verification": "本地文档/治理检查 PASS（治理 76/0、Markdown 90/0、delivery 9 文件/0 违规）；本次 PR 的独立复审与 Hosted 门禁待完成；main@096d6c3 的 tree 与合并后 verify/deploy-linux 已回读通过；VPS、备份、恢复、DNS/TLS 和生产写入仍未验收。",
+    "verification": "本地文档/治理检查 PASS（治理 76/0、Markdown 90/0、delivery 9 文件/0 违规）；PR #26 精确 head d2485db 的独立复审、delivery、deploy-linux、verify 与合并后 main@be46ad6 的 verify/deploy-linux 均通过；VPS、备份、恢复、DNS/TLS 和生产写入仍未验收。",
     "updated": "2026-09-28",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PASS"
   }
 ]
