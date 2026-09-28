@@ -164,6 +164,12 @@ async function packageRelease(args) {
   const files = await writeManifestFiles(dist, out, release, manifest);
   const archivePath = path.join(out, `kk-studio-web-${release}.tar.gz`);
   tarArchive(files.releaseDirectory, archivePath);
+  const archiveHashPath = `${archivePath}.sha256`;
+  await writeFile(
+    archiveHashPath,
+    `${await sha256(archivePath)}  ${path.basename(archivePath)}\n`,
+    "utf8",
+  );
   await copyFile(
     files.manifestPath,
     path.join(out, `kk-studio-web-${release}.manifest.json`),
@@ -172,7 +178,7 @@ async function packageRelease(args) {
     files.hashesPath,
     path.join(out, `kk-studio-web-${release}.manifest.sha256`),
   );
-  return { ...files, archivePath, manifest };
+  return { ...files, archivePath, archiveHashPath, manifest };
 }
 
 function remoteCommand(root, release, archiveName) {
@@ -288,6 +294,7 @@ async function main(argv) {
       {
         release: result.manifest.release,
         archive: result.archivePath,
+        archiveHash: result.archiveHashPath,
         files: result.manifest.files.length,
         dryRun: result.dryRun ?? false,
         commands: result.commands,

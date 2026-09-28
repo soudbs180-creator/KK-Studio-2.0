@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-28 VPS 搬迁准备与当前核验边界
+
+T10-PREP 分支新增静态归档整包 hash、受校验的版本回滚脚本和[离机备份/隔离恢复操作单](../../deploy/MIGRATION.md)；Windows 本地 Node 466 项中 463 通过、3 项 Linux symlink 测试跳过。2026-09-16 旧 VPS 审计不能代表今天；本轮历史地址 HTTP 301，但 SSH 认证失败，2.0 是否上传、服务器 Git SHA/数据备份均 UNKNOWN。正式域名、主机权限和数据恢复演练未落实，T10-PREP PARTIAL、T10 BLOCKED。GitHub `main@7bc7c67` 已合并图片对比，合并后 CI 子像素回归由 TASK-COMPARE-002 独立修复。
+
 ## 2026-09-28 画布图片对比草稿 PR #21
 
 TASK-COMPARE-001 源码 `f8d5165` 独立只读复审 PASS，Web preview 完整 `verify`（302 浏览器）与 Tauri release GUI 重验通过。草稿 [PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 已创建，首个 head 的 Hosted `delivery` 成功；本次记录补录后的最终 head `verify` 和复审、用户产品验收及主线集成仍待完成。FEAT-036 保持 PARTIAL；原 checkout 的未提交改动仍隔离。

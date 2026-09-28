@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-28 VPS 搬迁准备（T10-PREP）
+
+在独立 `codex/T10-PREP-vps-migration` 分支为现有静态发布包增加整包 SHA-256 sidecar 和指定版本回滚脚本，编写[搬迁与恢复操作单](../deploy/MIGRATION.md)，区分 Git/静态包、旧 PostgreSQL/上传文件、未来 Gateway SQLite/对象及浏览器 IndexedDB。本地 `npm test` 为 466 项（463 通过、3 项 Linux symlink 测试因 Windows 权限跳过），部署单测、lint/typecheck/format/governance/features/Markdown 与 shell 语法通过；Linux 实际回滚、全量 `verify`、当前 VPS 备份恢复与新机部署尚未验收。历史 VPS 地址本轮 SSH 认证失败，不能据旧审计说 2.0 已上传；T10-PREP 保持 PARTIAL、T10 BLOCKED。主线对比 UI CI 回归由 TASK-COMPARE-002 独立修复。
+
 ## 2026-09-28 画布图片对比独立复审与草稿 PR
 
 TASK-COMPARE-001 的源码 `f8d5165` 已经独立只读上下文复审 PASS，预审发现的 390px 命中区、触摸证据与功能卡状态问题均关闭。草稿 [PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 已建立，首个 head 的 Hosted `delivery` 通过；本次文档补录后的最终 head `verify` 与复审、用户产品验收和主线集成仍待完成。Web 完整 `verify` 为 302/302 浏览器，Tauri release GUI 在隔离数据目录重验通过，详见[本轮验证](changes/2026-09-27-canvas-image-compare/verification.md)。FEAT-036 保持 PARTIAL。

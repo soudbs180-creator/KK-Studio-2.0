@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { mkdtemp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -38,6 +39,7 @@ test("packaging emits archive and verification sidecars", async () => {
   const { dist, out } = await fixture();
   const result = await packageRelease({ dist, out, release: "test-release" });
   const hashes = await readFile(result.hashesPath, "utf8");
+  const archiveHash = await readFile(result.archiveHashPath, "utf8");
   const archiveEntries = execFileSync(
     process.platform === "win32" ? "tar.exe" : "tar",
     ["-tzf", result.archivePath],
@@ -49,6 +51,12 @@ test("packaging emits archive and verification sidecars", async () => {
   assert.match(archiveEntries, /manifest\.sha256/);
   assert.match(hashes, /^[a-f0-9]{64}  assets\/app\.js/m);
   assert.match(hashes, /^[a-f0-9]{64}  index\.html/m);
+  assert.equal(
+    archiveHash,
+    `${createHash("sha256")
+      .update(await readFile(result.archivePath))
+      .digest("hex")}  ${path.basename(result.archivePath)}\n`,
+  );
 });
 
 test("shell quoting prevents remote path injection", () => {

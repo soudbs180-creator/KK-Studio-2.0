@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-28 VPS 搬迁准备恢复点
+
+`codex/T10-PREP-vps-migration` 基于 `origin/main@7bc7c67`，位于 `D:/kk-studio/.worktrees/canvas-compare`；新增 `deploy/MIGRATION.md`、静态包整包 hash 和 `remote-rollback.sh`，并给 Hosted 增加 Linux deploy 测试。Windows 本地 `npm test` 466 项中 463 通过、3 项 Linux symlink 测试因权限跳过；完整 verify/当前 head PR 与 Linux 结果待核实。原根 checkout dirty 不碰。旧 VPS 当前无 SSH 认证，历史地址 HTTP 301 不能证明版本/数据；需用户提供现行主机/用户/发布根/域名后只读盘点，继而安排离机备份和隔离恢复。TASK-COMPARE-002 在另一工作树修复主线 390px CI 回归，待它合入后将最新 main 合并到 T10-PREP 分支重测。
+
 ## 2026-09-28 图片对比 PR #21 恢复点
 
 从 `D:/kk-studio/.worktrees/canvas-compare` 继续，先核对 `origin/main`、任务分支实际 head、草稿 [PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 与当前 Hosted 检查。源码 `f8d5165` 独立只读复审 PASS，Web `verify` 302/302 浏览器、Tauri release GUI 与本地 delivery 通过；本次文档补录的新 head 需再审/再查 Hosted。FEAT-036 / TASK-COMPARE-001 保持 PARTIAL / REVIEW，用户产品验收、主线集成及发布未完成。证据见[验证](../changes/2026-09-27-canvas-image-compare/verification.md)和[审查](../changes/2026-09-27-canvas-image-compare/review.md)。根 checkout 的未提交 UI 改动不要混入。
