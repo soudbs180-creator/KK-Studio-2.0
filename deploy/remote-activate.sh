@@ -6,6 +6,7 @@ set -eu
 ROOT=${1:?remote root is required}
 RELEASE=${2:?release id is required}
 ARCHIVE=${3:?archive path is required}
+EXPECTED_SHA=${4:?expected archive SHA-256 is required}
 
 case "$ROOT" in
   /*) ;;
@@ -23,6 +24,13 @@ fi
 case "$RELEASE" in
   ''|*[!A-Za-z0-9._-]*) echo "invalid release id" >&2; exit 2 ;;
 esac
+case "$EXPECTED_SHA" in
+  *[!a-f0-9]*|'') echo "invalid archive SHA-256" >&2; exit 2 ;;
+esac
+if [ "${#EXPECTED_SHA}" -ne 64 ]; then
+  echo "invalid archive SHA-256" >&2
+  exit 2
+fi
 
 BASE="$ROOT/releases/$RELEASE"
 TEMP="$ROOT/releases/.incoming-$RELEASE-$$"
@@ -47,6 +55,11 @@ fi
 
 if [ -e "$BASE" ] || [ -L "$BASE" ]; then
   echo "release already exists: $RELEASE" >&2
+  exit 3
+fi
+actual_sha=$(sha256sum "$ARCHIVE" | cut -d ' ' -f 1)
+if [ "$actual_sha" != "$EXPECTED_SHA" ]; then
+  echo "archive SHA-256 changed before activation" >&2
   exit 3
 fi
 mkdir -p "$ROOT/releases" "$ROOT/incoming" "$TEMP"

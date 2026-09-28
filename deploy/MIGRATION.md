@@ -40,7 +40,7 @@
 ## 2. 新 VPS staging 恢复与发布
 
 1. 核对 SSH 主机指纹和授权用户，建立单独 next 发布根；检查磁盘/内存/端口、Nginx/证书管理、日志轮转与访问权限。旧机保持服务可用。不要在新机暴露 PostgreSQL/Gateway 内部端口；以外网探测核实。
-2. 从离机位置取回**同一个**静态 tar.gz 及同名 `.tar.gz.sha256`，用 `node deploy/release.mjs deploy --archive <离机恢复的tar.gz绝对路径> --release <包对应版本> --host <已核实主机> --user <部署用户> --path <next发布根>` 做 dry-run。该模式先在本机核对整包 hash，再上传同一份 tar 与 sidecar；远端再次执行 `sha256sum -c`，激活脚本按包内 manifest 核验每个静态文件。检查打印出的目标和命令后，仅在授权的 staging 目标追加 `--apply`。不得在这一步改用 `--dist` 重新打包并声称已恢复离机包。
+2. 从离机位置取回**同一个**静态 tar.gz 及同名 `.tar.gz.sha256`，用 `node deploy/release.mjs deploy --archive <离机恢复的tar.gz绝对路径> --release <包对应版本> --host <已核实主机> --user <部署用户> --path <next发布根>` 做 dry-run。该模式先在本机核对整包 hash，每次部署用独立私有 staging 目录上传同一份 tar 与 sidecar；远端先执行 `sha256sum -c`，激活脚本在发布锁内再对照本机预检 SHA-256 并按包内 manifest 核验每个静态文件。检查打印出的目标和命令后，仅在授权的 staging 目标追加 `--apply`。不得在这一步改用 `--dist` 重新打包并声称已恢复离机包。
 3. 给 staging 独立 vhost 指向 `<next发布根>/current`，SPA 入口按 Nginx `try_files` 规则回落到 `/index.html`；先执行 `nginx -t`，再按实际环境加载。不要把旧站 vhost/后台或未受控的旧 API 代理到新入口。[Nginx try_files](https://nginx.org/en/docs/http/ngx_http_core_module.html#try_files)
 4. 将数据库/对象恢复到**新的隔离目录或数据库**，用受控 secret 注入新服务，逐项检查进程身份、权限、内部端口、健康、鉴权、真实项目/任务/资产、重启恢复、日志与资源限制。静态 `deploy/health-check.mjs` 只证明 HTML，不能代替这些检查。
 5. 做一次同版本及上一版本回滚演练，记录命令、耗时、hash 和新旧端可访问性。若 schema 不兼容，先恢复隔离数据副本并验证迁移/回退策略；静态指针回滚不会回滚数据库。

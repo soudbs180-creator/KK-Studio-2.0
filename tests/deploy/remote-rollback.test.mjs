@@ -39,6 +39,12 @@ function rollback(root, expected, target, env = process.env) {
   });
 }
 
+async function archiveDigest(archivePath) {
+  return createHash("sha256")
+    .update(await readFile(archivePath))
+    .digest("hex");
+}
+
 async function fixture() {
   const root = await mkdtemp(path.join(tmpdir(), "kk-rollback-test-"));
   for (const release of ["release-a", "release-b"]) {
@@ -142,6 +148,7 @@ test(
     const activateRun = run(activateScript, [
       "release-c",
       path.join(root, "missing.tar.gz"),
+      "0".repeat(64),
     ]);
     try {
       await delay(250);
@@ -220,6 +227,7 @@ test(
         out: path.join(root, "out"),
         release: "release-c",
       });
+      const digest = await archiveDigest(packaged.archivePath);
       await rm(path.join(root, "previous"));
       if (kind === "file")
         await writeFile(path.join(root, "previous"), "keep this file\n");
@@ -236,6 +244,7 @@ test(
           root,
           "release-c",
           packaged.archivePath,
+          digest,
         ]),
       );
       assert.equal(
@@ -264,6 +273,7 @@ test(
       out: path.join(root, "out"),
       release: "release-c",
     });
+    const digest = await archiveDigest(packaged.archivePath);
     const external = path.join(root, "external-releases");
     await rename(path.join(root, "releases"), external);
     await symlink(external, path.join(root, "releases"));
@@ -274,6 +284,7 @@ test(
         root,
         "release-c",
         packaged.archivePath,
+        digest,
       ]),
     );
     assert.equal(
@@ -281,5 +292,51 @@ test(
       "releases/release-b",
     );
     assert.equal(existsSync(path.join(external, "release-c")), false);
+  },
+);
+
+test(
+  "activation binds the archive digest under the release lock",
+  { skip: !shellAvailable },
+  async () => {
+    const root = await fixture();
+    const dist = path.join(root, "dist");
+    await mkdir(dist);
+    await writeFile(path.join(dist, "index.html"), "<html>new</html>\n");
+    const packaged = await packageRelease({
+      dist,
+      out: path.join(root, "out"),
+      release: "release-c",
+    });
+    assert.throws(() =>
+      execFileSync(shell, [
+        activateScript,
+        root,
+        "release-c",
+        packaged.archivePath,
+        "0".repeat(64),
+      ]),
+    );
+    assert.equal(
+      await readlink(path.join(root, "current")),
+      "releases/release-b",
+    );
+    const digest = await archiveDigest(packaged.archivePath);
+    assert.match(
+      execFileSync(
+        shell,
+        [activateScript, root, "release-c", packaged.archivePath, digest],
+        { encoding: "utf8" },
+      ),
+      /activated release-c/,
+    );
+    assert.equal(
+      await readlink(path.join(root, "current")),
+      "releases/release-c",
+    );
+    assert.equal(
+      await readlink(path.join(root, "previous")),
+      "releases/release-b",
+    );
   },
 );

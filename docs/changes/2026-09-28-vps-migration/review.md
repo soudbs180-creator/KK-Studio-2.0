@@ -21,13 +21,17 @@
 
 本轮追加文件/目录拒绝、`releases` 符号链接拒绝和 CLI 上传前路径校验的失败先行测试，并在脚本锁内预检查及原子更新 `previous`、远端 staging 命令检查实体目录。最终结果以新 head Linux CI 和独立复审为准。
 
+## 第三轮独立复审（base `065bcbf`，head `4612fc0`）
+
+复审确认上轮三项已关闭，又发现 P1：同 release ID 的并发 `deploy --archive --apply` 原先共用 staging 文件名；A 可能校验并激活 B 后仍报告 A 成功。该 head 结论 CHANGES REQUIRED。当前修复候选每次部署建立随机私有 staging 目录，命令绑定本地预检 hash，激活脚本在共享发布锁内复验整包字节；测试使用同 ID 但不同 tar 字节，覆盖目录分离与 hash 绑定，并补 Linux 激活正确/错误 hash 的文件系统测试。新 head 仍须独立复审和 Hosted Linux 运行。
+
 ## 当前门禁
 
 | 门禁 | 状态 |
 | --- | --- |
-| 本地定向与完整检查 | 第二轮完整 `verify` PASS：302/302 浏览器；7 项 Linux 文件系统用例在 Windows 跳过 |
+| 本地定向与完整检查 | 第三轮完整 `verify` PASS：302/302 浏览器；8 项 Linux 文件系统用例在 Windows 跳过 |
 | Linux 文件系统回滚测试 | 初次 `b597dc7` 与修复候选 `b7702fe` deploy-linux PASS；第二轮 head 待新 run |
-| 独立 AI review | `5b2b872` CHANGES REQUIRED；第二轮修复 head 待复审 |
+| 独立 AI review | `4612fc0` CHANGES REQUIRED；第三轮修复 head 待复审 |
 | GitHub PR/current CI | NOT RUN |
 | VPS 恢复演练 | NOT VERIFIED，缺主机信息和离机备份 |
 | 用户生产发布授权 | 没有实际发布动作 |

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { createHash } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { createReadStream } from "node:fs";
 import {
@@ -166,9 +166,10 @@ async function packageRelease(args) {
   const archivePath = path.join(out, `kk-studio-web-${release}.tar.gz`);
   tarArchive(files.releaseDirectory, archivePath);
   const archiveHashPath = `${archivePath}.sha256`;
+  const archiveSha256 = await sha256(archivePath);
   await writeFile(
     archiveHashPath,
-    `${await sha256(archivePath)}  ${path.basename(archivePath)}\n`,
+    `${archiveSha256}  ${path.basename(archivePath)}\n`,
     "utf8",
   );
   await copyFile(
@@ -179,7 +180,7 @@ async function packageRelease(args) {
     files.hashesPath,
     path.join(out, `kk-studio-web-${release}.manifest.sha256`),
   );
-  return { ...files, archivePath, archiveHashPath, manifest };
+  return { ...files, archivePath, archiveHashPath, archiveSha256, manifest };
 }
 
 async function verifiedArchive(archiveArgument, release) {
@@ -202,21 +203,18 @@ async function verifiedArchive(archiveArgument, release) {
   return {
     archivePath,
     archiveHashPath,
+    archiveSha256: match[1],
     manifest: { release, files: null },
   };
 }
 
-function remoteCommand(root, release, archiveName) {
-  const activateScript = path.posix.join(
-    root,
-    "incoming",
-    `activate-${release}.sh`,
-  );
+function remoteCommand(root, release, archiveName, stage, expectedSha256) {
+  const activateScript = path.posix.join(stage, `activate-${release}.sh`);
   return [
     "set -eu",
     `test -f ${quotePosix(activateScript)}`,
-    `(cd ${quotePosix(path.posix.join(root, "incoming"))} && sha256sum -c ${quotePosix(`${archiveName}.sha256`)})`,
-    `sh ${quotePosix(activateScript)} ${quotePosix(root)} ${quotePosix(release)} ${quotePosix(path.posix.join(root, "incoming", archiveName))}`,
+    `(cd ${quotePosix(stage)} && sha256sum -c ${quotePosix(`${archiveName}.sha256`)})`,
+    `sh ${quotePosix(activateScript)} ${quotePosix(root)} ${quotePosix(release)} ${quotePosix(path.posix.join(stage, archiveName))} ${quotePosix(expectedSha256)}`,
   ].join("\n");
 }
 
@@ -234,7 +232,7 @@ function requireRemoteRoot(value) {
   return value;
 }
 
-function remotePrepareCommand(root) {
+function remotePrepareCommand(root, stage) {
   const incoming = path.posix.join(root, "incoming");
   const releases = path.posix.join(root, "releases");
   return [
@@ -245,6 +243,7 @@ function remotePrepareCommand(root) {
     `test ! -L ${quotePosix(releases)}`,
     `mkdir -p ${quotePosix(incoming)} ${quotePosix(releases)}`,
     `test -d ${quotePosix(incoming)} && test -d ${quotePosix(releases)}`,
+    `mkdir -m 700 ${quotePosix(stage)}`,
   ].join("\n");
 }
 
@@ -268,34 +267,44 @@ async function deploy(args) {
     : await packageRelease(args);
   const archiveName = path.basename(packaged.archivePath);
   const remote = `${user}@${host}`;
-  const remoteIncomingPath = path.posix.join(remoteRoot, "incoming");
-  const remoteIncoming = `${remote}:${remoteIncomingPath}/`;
+  const stage = path.posix.join(
+    remoteRoot,
+    "incoming",
+    `${release}-${randomBytes(12).toString("hex")}`,
+  );
+  const remoteIncoming = `${remote}:${stage}/`;
   const scriptPath = path.join(SCRIPT_DIR, "remote-activate.sh");
   const commands = [
-    formatCommand("ssh", [remote, remotePrepareCommand(remoteRoot)]),
+    formatCommand("ssh", [remote, remotePrepareCommand(remoteRoot, stage)]),
     formatCommand("scp", [packaged.archivePath, remoteIncoming]),
     formatCommand("scp", [packaged.archiveHashPath, remoteIncoming]),
     formatCommand("scp", [
       scriptPath,
-      `${remote}:${path.posix.join(remoteRoot, "incoming", `activate-${release}.sh`)}`,
+      `${remote}:${path.posix.join(stage, `activate-${release}.sh`)}`,
     ]),
     formatCommand("ssh", [
       remote,
-      remoteCommand(remoteRoot, release, archiveName),
+      remoteCommand(
+        remoteRoot,
+        release,
+        archiveName,
+        stage,
+        packaged.archiveSha256,
+      ),
     ]),
   ];
   if (args.dryRun) {
     return { ...packaged, dryRun: true, commands };
   }
   const operations = [
-    ["ssh", [remote, remotePrepareCommand(remoteRoot)]],
-    ["scp", [packaged.archivePath, `${remote}:${remoteIncomingPath}/`]],
-    ["scp", [packaged.archiveHashPath, `${remote}:${remoteIncomingPath}/`]],
+    ["ssh", [remote, remotePrepareCommand(remoteRoot, stage)]],
+    ["scp", [packaged.archivePath, remoteIncoming]],
+    ["scp", [packaged.archiveHashPath, remoteIncoming]],
     [
       "scp",
       [
         scriptPath,
-        `${remote}:${path.posix.join(remoteRoot, "incoming", `activate-${release}.sh`)}`,
+        `${remote}:${path.posix.join(stage, `activate-${release}.sh`)}`,
       ],
     ],
   ];
@@ -309,7 +318,16 @@ async function deploy(args) {
   }
   const result = spawnSync(
     "ssh",
-    [remote, remoteCommand(remoteRoot, release, archiveName)],
+    [
+      remote,
+      remoteCommand(
+        remoteRoot,
+        release,
+        archiveName,
+        stage,
+        packaged.archiveSha256,
+      ),
+    ],
     {
       stdio: "inherit",
       shell: false,

@@ -149,6 +149,51 @@ test("deploy preflights staging directories against symlinks", async () => {
   assert.match(result.commands[0], /test ! -L .*releases/);
 });
 
+test("same release deployments use distinct staging and bind the archive digest", async () => {
+  const firstFiles = await fixture();
+  const secondFiles = await fixture();
+  await writeFile(
+    path.join(secondFiles.dist, "index.html"),
+    "<html>different bytes</html>\n",
+  );
+  const firstPackage = await packageRelease({
+    dist: firstFiles.dist,
+    out: firstFiles.out,
+    release: "test-release",
+  });
+  const secondPackage = await packageRelease({
+    dist: secondFiles.dist,
+    out: secondFiles.out,
+    release: "test-release",
+  });
+  const options = {
+    host: "staging.example.invalid",
+    user: "deploy",
+    path: "/srv/kk-studio-next",
+    release: "test-release",
+    dryRun: true,
+  };
+  const first = await deploy({ ...options, archive: firstPackage.archivePath });
+  const second = await deploy({
+    ...options,
+    archive: secondPackage.archivePath,
+  });
+  const stagedPath = /incoming\/test-release-[a-f0-9]{24}/;
+  const firstStage = first.commands[1].match(stagedPath)?.[0];
+  const secondStage = second.commands[1].match(stagedPath)?.[0];
+  assert.ok(firstStage);
+  assert.ok(secondStage);
+  assert.notEqual(firstStage, secondStage);
+  assert.match(first.commands[0], /mkdir -m 700/);
+  assert.ok(
+    first.commands.slice(1, 5).every((command) => command.includes(firstStage)),
+  );
+  assert.notEqual(firstPackage.archiveSha256, secondPackage.archiveSha256);
+  assert.ok(first.commands[4].includes(firstPackage.archiveSha256));
+  assert.ok(second.commands[4].includes(secondPackage.archiveSha256));
+  assert.ok(!first.commands[4].includes(secondPackage.archiveSha256));
+});
+
 test("shell quoting prevents remote path injection", () => {
   assert.equal(
     quotePosix("/srv/a path/it's-safe"),
