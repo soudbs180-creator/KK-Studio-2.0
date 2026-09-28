@@ -6,7 +6,7 @@
 
 ## 版本契约
 
-`config/platform-versions.json` 是三端版本源，字段 `desktop`、`web`、`mobile` 均为无前导零的 `MAJOR.MINOR.PATCH`。本次都设为 2.1.1；`2.1.10` 的末位是十，不增加第四段。桌面包元数据（Cargo.toml、Cargo.lock 中本包、tauri.conf.json）等于 desktop；package.json/lock 根版本等于 web；UI 在 Tauri 取 desktop、Web 取 web。Mobile 尚无可发布二进制，只有规划版本，不把响应式 Web 叫 Mobile 包。
+`config/platform-versions.json` 是三端版本源，字段 `desktop`、`web`、`mobile` 均为无前导零的 `MAJOR.MINOR.PATCH`。本次都设为 2.1.1；`2.1.10` 的末位是十，不增加第四段。桌面包元数据（Cargo.toml、Cargo.lock 中本包、tauri.conf.json）等于 desktop；package.json/lock 根版本与根 `VERSION` 兼容元数据等于 web；UI 在 Tauri 取 desktop、Web 取 web。根 `VERSION` 是 Web/仓库兼容字段，不代表独立桌面或 Mobile 版本。Mobile 尚无可发布二进制，只有规划版本，不把响应式 Web 叫 Mobile 包。
 
 `version:bump -- --platform <desktop|web|mobile[,..]> [--kind patch|minor|major]` 只改变指定端。默认 patch +1；minor/major 按 SemVer 把较低位归零。脚本更新对应包元数据，`version:check` 在 CI 检查格式与跨文件一致性。共享代码若改变两个运行产物，任务作者应给两个端都 bump；仅文档/测试/部署准备不 bump。用户无需逐次提供数字；发布标签与真实上线只在通过各端验收后创建。
 

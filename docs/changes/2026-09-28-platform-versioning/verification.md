@@ -13,7 +13,7 @@ Node 24.21.0；基线在版本改动前为 `npm ci --no-audit --no-fund`、`npm 
 | 检查 | 结果 | 边界 |
 | --- | --- | --- |
 | `node --test tests/unit/platformVersions.test.ts` | 4/4 PASS | patch 9→10、三端独立 bump、跨文件一致性和非法输入先拒绝 |
-| `npm run version:check` / `npm run lint` | PASS | 三端 `2.1.1`，桌面 Cargo/Tauri、Web package/lock 一致；治理 74/0、功能 34/0、Markdown 89/0 |
+| `npm run version:check` / `npm run lint` | PASS | 三端 `2.1.1`，桌面 Cargo/Tauri、Web package/lock/根 `VERSION` 一致；治理 74/0、功能 34/0、Markdown 89/0 |
 | `npm run verify` | PASS，退出码 0 | 463/463 Node、303/303 Edge 浏览器、UI/format/typecheck/build；包含新增版本浏览器专项 |
 | `node node_modules/@playwright/test/cli.js test tests/browser/platform-version.spec.ts` | 1/1 PASS | Web production preview 的账号弹窗与更新页均显示 Web `2.1.1`，仍标注更新服务未接入 |
 | `npm run client:check` / `npm run client:build` | PASS | Tauri release 可执行文件与 MSI/NSIS 构建为 `2.1.1`；未安装/发布 |

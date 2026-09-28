@@ -24,6 +24,7 @@ function versionInRustFile(source, fileKind) {
 function inputs(projectRoot) {
   const paths = {
     versions: "config/platform-versions.json",
+    legacyVersion: "VERSION",
     package: "package.json",
     lock: "package-lock.json",
     cargo: "src-tauri/Cargo.toml",
@@ -40,6 +41,7 @@ function inputs(projectRoot) {
     paths,
     texts,
     versions: JSON.parse(texts.versions),
+    legacyVersion: texts.legacyVersion.trim(),
     package: JSON.parse(texts.package),
     lock: JSON.parse(texts.lock),
     tauri: JSON.parse(texts.tauri),
@@ -60,6 +62,7 @@ function errorsFor(data) {
   const expectedWeb = data.versions.web;
   const expectedDesktop = data.versions.desktop;
   for (const [file, actual, expected] of [
+    ["VERSION (Web compatibility)", data.legacyVersion, expectedWeb],
     ["package.json", data.package.version, expectedWeb],
     ["package-lock.json", data.lock.version, expectedWeb],
     [
@@ -118,9 +121,11 @@ export function bumpVersions(projectRoot, selectedPlatforms, kind = "patch") {
     JSON.stringify(data.versions, null, 2) + "\n",
   );
   if (selectedPlatforms.includes("web")) {
+    data.legacyVersion = `${data.versions.web}\n`;
     data.package.version = data.versions.web;
     data.lock.version = data.versions.web;
     data.lock.packages[""].version = data.versions.web;
+    updates.set(data.paths.legacyVersion, data.legacyVersion);
     updates.set(
       data.paths.package,
       JSON.stringify(data.package, null, 2) + "\n",

@@ -27,6 +27,7 @@ function fixture() {
       2,
     ) + "\n",
   );
+  writeFileSync(join(root, "VERSION"), "2.1.9\n");
   writeFileSync(join(root, "package.json"), '{"version":"2.1.9"}\n');
   writeFileSync(
     join(root, "package-lock.json"),
@@ -84,6 +85,7 @@ test("desktop bump updates only desktop metadata and leaves Web and Mobile untou
       JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version,
       "2.1.9",
     );
+    assert.equal(readFileSync(join(root, "VERSION"), "utf8"), "2.1.9\n");
     assert.equal(checkVersions(root).length, 0);
   } finally {
     rmSync(root, { recursive: true, force: true });
@@ -109,6 +111,7 @@ test("Web and Mobile can advance independently without changing dependency versi
     assert.equal(lock.version, "2.1.10");
     assert.equal(lock.packages[""].version, "2.1.10");
     assert.equal(lock.packages["node_modules/example"].version, "7.2.1");
+    assert.equal(readFileSync(join(root, "VERSION"), "utf8"), "2.1.10\n");
     assert.equal(checkVersions(root).length, 0);
   } finally {
     rmSync(root, { recursive: true, force: true });
