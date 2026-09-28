@@ -19,8 +19,8 @@
 
 | 门禁 | 状态 |
 | --- | --- |
-| 本地定向与完整检查 | 修复候选定向 deploy 7/7 PASS；完整需在最新 main 后重跑 |
-| Linux 文件系统回滚测试 | 初次 `b597dc7` [deploy-linux](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36371936477) PASS；修复候选待新 run |
+| 本地定向与完整检查 | 最新 main 后完整 `verify` PASS：471 Node（466 通过/5 Windows 跳过）、302/302 浏览器 |
+| Linux 文件系统回滚测试 | 初次 `b597dc7` 与修复候选 `b7702fe` deploy-linux PASS；最终 head 待新 run |
 | 独立 AI review | `b597dc7` CHANGES REQUIRED；新 head 待复审 |
 | GitHub PR/current CI | NOT RUN |
 | VPS 恢复演练 | NOT VERIFIED，缺主机信息和离机备份 |

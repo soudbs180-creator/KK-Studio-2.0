@@ -1,10 +1,10 @@
 # Verification：VPS 搬迁准备
 
 - Task ID：T10-PREP
-- 记录状态：IN PROGRESS
+- 记录状态：本地 full verify PASS；当前 PR/head Hosted 与独立复审待核实
 - 时间：2026-09-28（Asia/Shanghai）
 - branch / cwd：`codex/T10-PREP-vps-migration` / `D:/kk-studio/.worktrees/canvas-compare`
-- base：`origin/main@7bc7c67`；最终 head 以 PR 回读为准。
+- 初始 base：`origin/main@7bc7c67`；已合入 `origin/main@065bcbf`，最终 head 以 PR 回读为准。
 
 ## 当前实证
 
@@ -13,12 +13,13 @@
 | GitHub PR #21 与 main tree | PASS | PR head `bcda41a` 已 squash 合入 `main@7bc7c67`，树同为 `da094854`；合并后 CI 失败由 TASK-COMPARE-002 处理 |
 | `ssh -o BatchMode=yes -o StrictHostKeyChecking=yes ...` 历史地址 | 认证失败 | 主机可达，当前机器只有 known_hosts、无可用登录 key；不能回读 VPS 文件或版本 |
 | 历史地址 HTTP HEAD | 301 | 只说明地址回应，不说明站点版本、归属或 2.0 已上传 |
-| `npm test` | 初次 `b597dc7`：466 项，463 通过、0 失败、3 跳过 | 修复候选增加恢复包/竞态/失败测试；Windows 无创建 symlink 权限，新 head 的完整结果待重跑 |
+| `npm test` | 最新 main 后 471 项，466 通过、0 失败、5 跳过 | Windows 无创建 symlink 权限，5 项真实文件系统测试交给 Hosted Linux |
 | `node --test tests/deploy/*.test.mjs` | 修复候选 12 项，7 通过、0 失败、5 跳过 | Windows 只能运行打包侧；5 项回滚/锁测试须 Hosted Linux 证明 |
-| `b597dc7` Hosted `deploy-linux` | [PASS](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36371936477) | 独立预审发现四项覆盖与行为问题，不能当成修复候选的通过 |
+| `b597dc7` / `b7702fe` Hosted `deploy-linux` | 初次 [PASS](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36371936477)；修复候选 `b7702fe` PASS | 最终 root 别名补丁及 main merge 的 head 仍需 Linux CI |
 | `npm run lint` / `npm run typecheck` / `npm run format:check` | PASS | 治理 71/0、功能 33/0、Markdown 87/0；Prettier 所有受管文件通过 |
 | `sh -n deploy/remote-rollback.sh` / `sh -n deploy/remote-activate.sh` / `git diff --check` | PASS | Git Bash shell 语法与 patch 检查，不是 Linux 运行证明 |
-| `npm run verify` | 待运行 | 需与最新主线合并后重跑 |
+| `npm run verify` | PASS，退出码 0 | 471 Node：466 通过/5 Windows 跳过；302/302 Edge 浏览器；UI/format/typecheck/build、治理 72/0、功能 33/0、Markdown 87/0 |
+| 本地真实 tar 与 `deploy --archive` dry-run | PASS，退出码 0 | 137 个静态文件；同一 `main-065bcbf-migration-drill` 包与 sidecar 被本机验 hash，打印的远端命令含侧车上传及远端 `sha256sum -c`；未连接 VPS |
 
 ## 验收覆盖
 

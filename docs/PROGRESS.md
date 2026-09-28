@@ -2,7 +2,11 @@
 
 ## 2026-09-28 VPS 搬迁准备（T10-PREP）
 
-在独立 `codex/T10-PREP-vps-migration` 分支为静态包增加整包 SHA-256、已校验离机包恢复输入和指定版本回滚；激活/回滚共用发布锁，详见[搬迁与恢复操作单](../deploy/MIGRATION.md)。独立预审在初次提交发现四项回滚/恢复问题，修复候选本地 `npm test` 为 471 项（466 通过、5 项 Linux 符号链接测试因 Windows 权限跳过），lint/typecheck/format/governance/features/Markdown 与 shell 语法通过；初次提交的 Linux job PASS，修复候选的 Linux/完整 `verify`、当前 VPS 备份恢复与新机部署待验收。旧 VPS SSH 认证失败，用户浏览器控制页接口超时，不能据历史审计说 2.0 已上传；T10-PREP 保持 PARTIAL、T10 BLOCKED。现有 Web 数据仍在浏览器 IndexedDB，用户新目标为本机伴随服务，尚未实现。
+在独立 `codex/T10-PREP-vps-migration` 分支为静态包增加整包 SHA-256、已校验离机包恢复输入和指定版本回滚；激活/回滚共用发布锁，详见[搬迁与恢复操作单](../deploy/MIGRATION.md)。独立预审在初次提交发现四项回滚/恢复问题；修复候选吸收最新主线后本地完整 `verify` PASS：471 项 Node 中 466 通过、5 项 Linux 符号链接测试因 Windows 权限跳过，302/302 浏览器；修复候选 Linux job 已通过，最终 head CI/复审及当前 VPS 备份恢复、新机部署待验收。旧 VPS SSH 认证失败，用户浏览器控制页接口超时，不能据历史审计说 2.0 已上传；T10-PREP 保持 PARTIAL、T10 BLOCKED。现有 Web 数据仍在浏览器 IndexedDB，用户新目标为本机伴随服务，尚未实现。
+
+## 2026-09-28 对比操作合并后回归修复
+
+PR #21 的 `bcda41a` 经复审与 Hosted 门禁合入 `main@7bc7c67`。合并后 push CI `36369533105` 发现 390px 对比按钮实测 `43.999992px < 44px`；TASK-COMPARE-002 保留断言并给窄屏控件 1px 余量。[PR #22](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/22) 当前 head `a6629ab` 的 Hosted verify/delivery 与独立复审通过，squash 合入 `main@065bcbf`，树相同；主线 push CI 尚在运行。用户最终产品视觉验收与正式发布未发生。
 
 ## 2026-09-28 画布图片对比独立复审与草稿 PR
 

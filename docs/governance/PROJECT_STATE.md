@@ -2,7 +2,11 @@
 
 ## 2026-09-28 VPS 搬迁准备与当前核验边界
 
-T10-PREP 分支新增静态归档整包 hash、指定离机包恢复模式、共享发布锁的版本回滚和[离机备份/隔离恢复操作单](../../deploy/MIGRATION.md)；独立预审的四项阻断问题已有修复候选。Windows 本地 Node 471 项中 466 通过、5 项 Linux 符号链接测试跳过；初次提交 Linux job PASS，修复候选的 Linux/full verify 待验。2026-09-16 旧 VPS 审计不能代表今天；本轮历史地址 HTTP 301、SSH 认证失败，用户已登录的浏览器控制页接口超时，2.0 是否上传、服务器 Git SHA/数据备份均 UNKNOWN。正式域名、主机权限和数据恢复演练未落实，T10-PREP PARTIAL、T10 BLOCKED。现有 Web IndexedDB 与用户要求的本机伴随服务有差距。GitHub `main@7bc7c67` 已合并图片对比，子像素 CI 回归由 TASK-COMPARE-002 独立修复。
+T10-PREP 分支新增静态归档整包 hash、指定离机包恢复模式、共享发布锁的版本回滚和[离机备份/隔离恢复操作单](../../deploy/MIGRATION.md)；独立预审的四项阻断问题已有修复候选。吸收 `main@065bcbf` 后本地完整 verify PASS（471 Node：466 通过/5 Windows 跳过，302/302 浏览器）；修复候选 Linux job PASS，最终 head CI 与独立复审待验。2026-09-16 旧 VPS 审计不能代表今天；本轮历史地址 HTTP 301、SSH 认证失败，用户已登录的浏览器控制页接口超时，2.0 是否上传、服务器 Git SHA/数据备份均 UNKNOWN。正式域名、主机权限和数据恢复演练未落实，T10-PREP PARTIAL、T10 BLOCKED。现有 Web IndexedDB 与用户要求的本机伴随服务有差距。
+
+## 2026-09-28 图片对比已合并，主线回归修复待 postmerge CI
+
+[PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 合入 `main@7bc7c67`，但 [push run 36369533105](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36369533105) 发现 390px 对比按钮子像素失败。[PR #22](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/22) 的当前 head `a6629ab` 经独立复审和 Hosted `verify`/`delivery` 后合入 `main@065bcbf`，合并树与候选树相同；新主线 push CI 待完成，不能提前称其通过。原根 checkout 未提交改动保持原样，用户最终视觉验收未记录。
 
 ## 2026-09-28 画布图片对比草稿 PR #21
 
