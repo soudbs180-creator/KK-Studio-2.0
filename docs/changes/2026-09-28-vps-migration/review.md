@@ -3,7 +3,7 @@
 - Task ID：T10-PREP
 - Base：`origin/main@7bc7c67`
 - Branch：`codex/T10-PREP-vps-migration`
-- 状态：`b597dc7` 独立预审 CHANGES REQUIRED；修复候选待 Linux CI 与最终复审
+- 状态：`5b2b872` 精确 head 独立复审 CHANGES REQUIRED；第二轮修复待 Linux CI 与复审
 
 ## Self-review
 
@@ -15,13 +15,19 @@
 
 作者修复候选把 current 切换放到末步、两个脚本共用 `.release.lock`、给 `deploy --archive` 增加本地和远端整包验证，并改为真正触发 stale-current 的断言及故障注入/并发测试。修复候选尚需 Hosted Linux 运行和新 head 独立复审；未提前标 PASS。
 
+## 第二轮独立复审（base `065bcbf`，head `5b2b872`）
+
+复审确认 R1–R4 的代码修复存在，又发现三处新边界：P1 激活时 `previous` 若为普通文件会被覆盖、若为实体目录会导致 `current` 切换后无法回滚；P1 `releases` 父目录若为符号链接会使激活/回滚落到发布根之外；P2 CLI 接受 `/tmp/..` 这类根别名，先向 `/incoming` 上传，再由激活脚本拒绝。结论 CHANGES REQUIRED，不能使用该 head 合并。
+
+本轮追加文件/目录拒绝、`releases` 符号链接拒绝和 CLI 上传前路径校验的失败先行测试，并在脚本锁内预检查及原子更新 `previous`、远端 staging 命令检查实体目录。最终结果以新 head Linux CI 和独立复审为准。
+
 ## 当前门禁
 
 | 门禁 | 状态 |
 | --- | --- |
-| 本地定向与完整检查 | 最新 main 后完整 `verify` PASS：471 Node（466 通过/5 Windows 跳过）、302/302 浏览器 |
-| Linux 文件系统回滚测试 | 初次 `b597dc7` 与修复候选 `b7702fe` deploy-linux PASS；最终 head 待新 run |
-| 独立 AI review | `b597dc7` CHANGES REQUIRED；新 head 待复审 |
+| 本地定向与完整检查 | 第二轮完整 `verify` PASS：302/302 浏览器；7 项 Linux 文件系统用例在 Windows 跳过 |
+| Linux 文件系统回滚测试 | 初次 `b597dc7` 与修复候选 `b7702fe` deploy-linux PASS；第二轮 head 待新 run |
+| 独立 AI review | `5b2b872` CHANGES REQUIRED；第二轮修复 head 待复审 |
 | GitHub PR/current CI | NOT RUN |
 | VPS 恢复演练 | NOT VERIFIED，缺主机信息和离机备份 |
 | 用户生产发布授权 | 没有实际发布动作 |

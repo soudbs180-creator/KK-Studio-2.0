@@ -36,6 +36,15 @@ fi
 exec 9>>"$LOCK"
 flock -x 9
 
+if [ -L "$ROOT/releases" ] || [ -L "$ROOT/incoming" ]; then
+  echo "release directories must not be symlinks" >&2
+  exit 3
+fi
+if [ -e "$PREVIOUS" ] && [ ! -L "$PREVIOUS" ]; then
+  echo "previous is not a symlink; refusing activation" >&2
+  exit 3
+fi
+
 if [ -e "$BASE" ] || [ -L "$BASE" ]; then
   echo "release already exists: $RELEASE" >&2
   exit 3
@@ -50,14 +59,23 @@ mv "$TEMP" "$BASE"
 
 if [ -L "$CURRENT" ]; then
   old_target=$(readlink "$CURRENT")
-  if [ -n "$old_target" ]; then
-    ln -sfn "$old_target" "$PREVIOUS"
-  fi
 elif [ -e "$CURRENT" ]; then
   echo "current exists but is not a symlink; refusing to replace it" >&2
   exit 4
 fi
 next_link="$ROOT/.current.$$"
+next_previous="$ROOT/.previous-activate-$$"
+if [ -e "$next_link" ] || [ -L "$next_link" ] ||
+   [ -e "$next_previous" ] || [ -L "$next_previous" ]; then
+  echo "temporary release path already exists" >&2
+  exit 4
+fi
+trap 'rm -f "$next_link" "$next_previous"' 0
+trap 'exit 1' 1 2 3 15
 ln -s "releases/$RELEASE" "$next_link"
+if [ -n "${old_target:-}" ]; then
+  ln -s "$old_target" "$next_previous"
+  mv -Tf "$next_previous" "$PREVIOUS"
+fi
 mv -Tf "$next_link" "$CURRENT"
 echo "activated $RELEASE"

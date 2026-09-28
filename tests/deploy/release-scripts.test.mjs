@@ -115,6 +115,40 @@ test("deploy refuses ambiguous archive and dist inputs", async () => {
   );
 });
 
+test("deploy rejects root aliases before staging an archive", async () => {
+  const { dist, out } = await fixture();
+  const packaged = await packageRelease({ dist, out, release: "test-release" });
+  for (const remotePath of ["/", "//", "/tmp/..", "/srv/./app"]) {
+    await assert.rejects(
+      () =>
+        deploy({
+          archive: packaged.archivePath,
+          host: "staging.example.invalid",
+          user: "deploy",
+          path: remotePath,
+          release: "test-release",
+          dryRun: true,
+        }),
+      /remote root/i,
+    );
+  }
+});
+
+test("deploy preflights staging directories against symlinks", async () => {
+  const { dist, out } = await fixture();
+  const packaged = await packageRelease({ dist, out, release: "test-release" });
+  const result = await deploy({
+    archive: packaged.archivePath,
+    host: "staging.example.invalid",
+    user: "deploy",
+    path: "/srv/kk-studio-next",
+    release: "test-release",
+    dryRun: true,
+  });
+  assert.match(result.commands[0], /test ! -L .*incoming/);
+  assert.match(result.commands[0], /test ! -L .*releases/);
+});
+
 test("shell quoting prevents remote path injection", () => {
   assert.equal(
     quotePosix("/srv/a path/it's-safe"),

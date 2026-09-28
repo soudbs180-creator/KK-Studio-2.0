@@ -38,6 +38,10 @@ if [ -L "$LOCK" ]; then
 fi
 exec 9>>"$LOCK"
 flock -x 9
+if [ ! -d "$ROOT/releases" ] || [ -L "$ROOT/releases" ]; then
+  echo "releases is missing or is a symlink; refusing rollback" >&2
+  exit 3
+fi
 if [ ! -L "$CURRENT" ] || [ "$(readlink "$CURRENT")" != "releases/$EXPECTED" ]; then
   echo "current release changed; refusing rollback" >&2
   exit 3

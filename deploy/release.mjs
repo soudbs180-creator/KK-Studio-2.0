@@ -220,6 +220,34 @@ function remoteCommand(root, release, archiveName) {
   ].join("\n");
 }
 
+function requireRemoteRoot(value) {
+  if (
+    typeof value !== "string" ||
+    !value.startsWith("/") ||
+    value.startsWith("//") ||
+    value === "/" ||
+    path.posix.normalize(value) !== value ||
+    /[\u0000-\u001f]/.test(value)
+  ) {
+    fail("remote root must be a non-root absolute POSIX path without aliases");
+  }
+  return value;
+}
+
+function remotePrepareCommand(root) {
+  const incoming = path.posix.join(root, "incoming");
+  const releases = path.posix.join(root, "releases");
+  return [
+    "set -eu",
+    `test -d ${quotePosix(root)}`,
+    `test ! -L ${quotePosix(root)}`,
+    `test ! -L ${quotePosix(incoming)}`,
+    `test ! -L ${quotePosix(releases)}`,
+    `mkdir -p ${quotePosix(incoming)} ${quotePosix(releases)}`,
+    `test -d ${quotePosix(incoming)} && test -d ${quotePosix(releases)}`,
+  ].join("\n");
+}
+
 function formatCommand(executable, argv) {
   return [executable, ...argv].map(quotePosix).join(" ");
 }
@@ -231,24 +259,20 @@ async function deploy(args) {
   }
   const host = args.host;
   const user = args.user;
-  const root = args.path;
-  if (!host || !user || !root) {
+  if (!host || !user || !args.path) {
     fail("deploy requires --host, --user, and --path");
   }
+  const remoteRoot = requireRemoteRoot(args.path);
   const packaged = args.archive
     ? await verifiedArchive(args.archive, release)
     : await packageRelease(args);
   const archiveName = path.basename(packaged.archivePath);
   const remote = `${user}@${host}`;
-  const remoteRoot = root.replaceAll("\\", "/").replace(/\/$/, "");
   const remoteIncomingPath = path.posix.join(remoteRoot, "incoming");
   const remoteIncoming = `${remote}:${remoteIncomingPath}/`;
   const scriptPath = path.join(SCRIPT_DIR, "remote-activate.sh");
   const commands = [
-    formatCommand("ssh", [
-      remote,
-      `mkdir -p ${quotePosix(path.posix.join(remoteRoot, "incoming"))} ${quotePosix(path.posix.join(remoteRoot, "releases"))}`,
-    ]),
+    formatCommand("ssh", [remote, remotePrepareCommand(remoteRoot)]),
     formatCommand("scp", [packaged.archivePath, remoteIncoming]),
     formatCommand("scp", [packaged.archiveHashPath, remoteIncoming]),
     formatCommand("scp", [
@@ -264,13 +288,7 @@ async function deploy(args) {
     return { ...packaged, dryRun: true, commands };
   }
   const operations = [
-    [
-      "ssh",
-      [
-        remote,
-        `mkdir -p ${quotePosix(path.posix.join(remoteRoot, "incoming"))} ${quotePosix(path.posix.join(remoteRoot, "releases"))}`,
-      ],
-    ],
+    ["ssh", [remote, remotePrepareCommand(remoteRoot)]],
     ["scp", [packaged.archivePath, `${remote}:${remoteIncomingPath}/`]],
     ["scp", [packaged.archiveHashPath, `${remote}:${remoteIncomingPath}/`]],
     [

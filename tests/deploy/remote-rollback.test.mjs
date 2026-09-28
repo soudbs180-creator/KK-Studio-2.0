@@ -7,6 +7,8 @@ import {
   chmod,
   mkdtemp,
   mkdir,
+  rename,
+  rm,
   readFile,
   readlink,
   symlink,
@@ -17,6 +19,7 @@ import path from "node:path";
 import test from "node:test";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
+import { packageRelease } from "../../deploy/release.mjs";
 
 const script = fileURLToPath(
   new URL("../../deploy/remote-rollback.sh", import.meta.url),
@@ -200,5 +203,83 @@ test(
       await readlink(path.join(root, "current")),
       "releases/release-b",
     );
+  },
+);
+
+test(
+  "activation preserves current and unrelated previous files or directories",
+  { skip: !shellAvailable },
+  async () => {
+    for (const kind of ["file", "directory"]) {
+      const root = await fixture();
+      const dist = path.join(root, "dist");
+      await mkdir(dist);
+      await writeFile(path.join(dist, "index.html"), "<html>new</html>\n");
+      const packaged = await packageRelease({
+        dist,
+        out: path.join(root, "out"),
+        release: "release-c",
+      });
+      await rm(path.join(root, "previous"));
+      if (kind === "file")
+        await writeFile(path.join(root, "previous"), "keep this file\n");
+      else {
+        await mkdir(path.join(root, "previous"));
+        await writeFile(
+          path.join(root, "previous", "keep.txt"),
+          "keep this directory\n",
+        );
+      }
+      assert.throws(() =>
+        execFileSync(shell, [
+          activateScript,
+          root,
+          "release-c",
+          packaged.archivePath,
+        ]),
+      );
+      assert.equal(
+        await readlink(path.join(root, "current")),
+        "releases/release-b",
+      );
+      const preserved =
+        kind === "file"
+          ? path.join(root, "previous")
+          : path.join(root, "previous", "keep.txt");
+      assert.match(await readFile(preserved, "utf8"), /keep this/);
+    }
+  },
+);
+
+test(
+  "activation and rollback reject a releases directory symlink",
+  { skip: !shellAvailable },
+  async () => {
+    const root = await fixture();
+    const dist = path.join(root, "dist");
+    await mkdir(dist);
+    await writeFile(path.join(dist, "index.html"), "<html>new</html>\n");
+    const packaged = await packageRelease({
+      dist,
+      out: path.join(root, "out"),
+      release: "release-c",
+    });
+    const external = path.join(root, "external-releases");
+    await rename(path.join(root, "releases"), external);
+    await symlink(external, path.join(root, "releases"));
+    assert.throws(() => rollback(root, "release-b", "release-a"));
+    assert.throws(() =>
+      execFileSync(shell, [
+        activateScript,
+        root,
+        "release-c",
+        packaged.archivePath,
+      ]),
+    );
+    assert.equal(
+      await readlink(path.join(root, "current")),
+      "releases/release-b",
+    );
+    assert.equal(existsSync(path.join(external, "release-c")), false);
   },
 );
