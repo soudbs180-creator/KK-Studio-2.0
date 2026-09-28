@@ -190,6 +190,7 @@ test(
   async () => {
     const root = await fixture();
     assert.throws(() => rollback(root, "release-b", "../release-a"));
+    assert.throws(() => rollback("//", "release-b", "release-a"));
     await symlink(
       path.join(root, "releases", "release-a"),
       path.join(root, "releases", "escape"),

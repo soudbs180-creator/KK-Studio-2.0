@@ -15,7 +15,7 @@ ROOT=$(cd -P "$ROOT" && pwd -P) || {
   echo "root does not exist" >&2
   exit 2
 }
-if [ "$ROOT" = / ]; then
+if [ "$ROOT" = / ] || [ "$ROOT" = // ]; then
   echo "root must not be /" >&2
   exit 2
 fi
