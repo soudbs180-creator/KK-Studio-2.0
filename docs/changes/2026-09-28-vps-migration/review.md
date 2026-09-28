@@ -25,13 +25,17 @@
 
 复审确认上轮三项已关闭，又发现 P1：同 release ID 的并发 `deploy --archive --apply` 原先共用 staging 文件名；A 可能校验并激活 B 后仍报告 A 成功。该 head 结论 CHANGES REQUIRED。当前修复候选每次部署建立随机私有 staging 目录，命令绑定本地预检 hash，激活脚本在共享发布锁内复验整包字节；测试使用同 ID 但不同 tar 字节，覆盖目录分离与 hash 绑定，并补 Linux 激活正确/错误 hash 的文件系统测试。新 head 仍须独立复审和 Hosted Linux 运行。
 
+## 第四轮独立复审（base `065bcbf`，head `67c5ace`）
+
+复审确认远端不同包串包已关闭，又指出 P1：`deploy --dist` 在同一 checkout 中并发处理同 release 时共用本地 `.tmp/deploy` 输出，能互相删除/覆盖；P2：唯一远端 staging 无清理策略，可能耗尽小型 VPS 磁盘。失败先行的双 `dist` 并发测试实际复现 `ENOENT`，现已将每次本地打包输出隔离；成功激活后只清本次远端 tar、sidecar、脚本和空目录，失败留存且在操作单规定核对后清理。新 head 仍须独立复审和 Hosted Linux 运行。
+
 ## 当前门禁
 
 | 门禁 | 状态 |
 | --- | --- |
-| 本地定向与完整检查 | 第三轮完整 `verify` PASS：302/302 浏览器；8 项 Linux 文件系统用例在 Windows 跳过 |
+| 本地定向与完整检查 | 第四轮完整 `verify` PASS：302/302 浏览器；8 项 Linux 文件系统用例在 Windows 跳过 |
 | Linux 文件系统回滚测试 | 初次 `b597dc7` 与修复候选 `b7702fe` deploy-linux PASS；第二轮 head 待新 run |
-| 独立 AI review | `4612fc0` CHANGES REQUIRED；第三轮修复 head 待复审 |
+| 独立 AI review | `67c5ace` CHANGES REQUIRED；第四轮修复 head 待复审 |
 | GitHub PR/current CI | NOT RUN |
 | VPS 恢复演练 | NOT VERIFIED，缺主机信息和离机备份 |
 | 用户生产发布授权 | 没有实际发布动作 |

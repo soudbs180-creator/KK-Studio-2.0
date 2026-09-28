@@ -1,7 +1,7 @@
 # Verification：VPS 搬迁准备
 
 - Task ID：T10-PREP
-- 记录状态：第三轮并发 staging 修复完整本地 verify PASS；Hosted Linux 与独立复审待核实
+- 记录状态：第四轮完整本地 verify PASS；Hosted Linux 与独立复审待核实
 - 时间：2026-09-28（Asia/Shanghai）
 - branch / cwd：`codex/T10-PREP-vps-migration` / `D:/kk-studio/.worktrees/canvas-compare`
 - 初始 base：`origin/main@7bc7c67`；已合入 `origin/main@065bcbf`，最终 head 以 PR 回读为准。
@@ -24,6 +24,8 @@
 | 第二轮 `npm run verify` | PASS，退出码 0 | 302/302 Edge 浏览器；Node 定向增量已入全量测试，7 项 Linux 文件系统用例在 Windows 跳过；lint/typecheck/format/build 全通过 |
 | 第三轮并发部署定向测试 | Windows 10 通过、8 Linux 文件系统用例跳过 | 同 ID 不同字节归档的独立 staging/hash 命令通过；锁内真实文件校验须由新 head Linux CI 证明 |
 | 第三轮 `npm run verify` | PASS，退出码 0 | 302/302 Edge 浏览器；Node 全部执行完毕，8 项 Linux 文件系统用例在 Windows 跳过；lint/typecheck/format/build 全通过 |
+| 第四轮本地并发打包定向测试 | Windows 11 通过、8 Linux 文件系统用例跳过 | 同 ID 双 dist 先复现 `ENOENT`，隔离输出后各自 tar/hash 一致；成功清理命令范围由 JS 测试检查，真实 Linux 行为待 Hosted 验证 |
+| 第四轮 `npm run verify` | PASS，退出码 0 | 302/302 Edge 浏览器；Node 全部执行完毕，8 项 Linux 文件系统用例在 Windows 跳过；lint/typecheck/format/build 全通过 |
 
 ## 验收覆盖
 

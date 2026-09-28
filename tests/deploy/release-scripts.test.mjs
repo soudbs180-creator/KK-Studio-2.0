@@ -192,6 +192,39 @@ test("same release deployments use distinct staging and bind the archive digest"
   assert.ok(first.commands[4].includes(firstPackage.archiveSha256));
   assert.ok(second.commands[4].includes(secondPackage.archiveSha256));
   assert.ok(!first.commands[4].includes(secondPackage.archiveSha256));
+  assert.match(first.commands[4], /rmdir -- .*incoming\/test-release-/);
+});
+
+test("concurrent dist deployments keep independent local archives", async () => {
+  const firstFiles = await fixture();
+  const secondFiles = await fixture();
+  await writeFile(
+    path.join(secondFiles.dist, "index.html"),
+    "<html>second build</html>\n",
+  );
+  const options = {
+    out: firstFiles.out,
+    host: "staging.example.invalid",
+    user: "deploy",
+    path: "/srv/kk-studio-next",
+    release: "test-release",
+    dryRun: true,
+  };
+  const [first, second] = await Promise.all([
+    deploy({ ...options, dist: firstFiles.dist }),
+    deploy({ ...options, dist: secondFiles.dist }),
+  ]);
+  assert.notEqual(first.archivePath, second.archivePath);
+  assert.notEqual(first.archiveSha256, second.archiveSha256);
+  for (const deployed of [first, second]) {
+    assert.equal(
+      createHash("sha256")
+        .update(await readFile(deployed.archivePath))
+        .digest("hex"),
+      deployed.archiveSha256,
+    );
+    assert.ok(deployed.commands[4].includes(deployed.archiveSha256));
+  }
 });
 
 test("shell quoting prevents remote path injection", () => {

@@ -210,11 +210,14 @@ async function verifiedArchive(archiveArgument, release) {
 
 function remoteCommand(root, release, archiveName, stage, expectedSha256) {
   const activateScript = path.posix.join(stage, `activate-${release}.sh`);
+  const archive = path.posix.join(stage, archiveName);
+  const sidecar = `${archive}.sha256`;
   return [
     "set -eu",
     `test -f ${quotePosix(activateScript)}`,
     `(cd ${quotePosix(stage)} && sha256sum -c ${quotePosix(`${archiveName}.sha256`)})`,
-    `sh ${quotePosix(activateScript)} ${quotePosix(root)} ${quotePosix(release)} ${quotePosix(path.posix.join(stage, archiveName))} ${quotePosix(expectedSha256)}`,
+    `sh ${quotePosix(activateScript)} ${quotePosix(root)} ${quotePosix(release)} ${quotePosix(archive)} ${quotePosix(expectedSha256)}`,
+    `if ! { rm -f -- ${quotePosix(archive)} ${quotePosix(sidecar)} ${quotePosix(activateScript)} && rmdir -- ${quotePosix(stage)}; }; then echo 'activated, but staging cleanup failed' >&2; fi`,
   ].join("\n");
 }
 
@@ -262,15 +265,22 @@ async function deploy(args) {
     fail("deploy requires --host, --user, and --path");
   }
   const remoteRoot = requireRemoteRoot(args.path);
+  const invocationId = randomBytes(12).toString("hex");
   const packaged = args.archive
     ? await verifiedArchive(args.archive, release)
-    : await packageRelease(args);
+    : await packageRelease({
+        ...args,
+        out: path.join(
+          path.resolve(args.out ?? DEFAULT_OUTPUT),
+          `.deploy-${release}-${invocationId}`,
+        ),
+      });
   const archiveName = path.basename(packaged.archivePath);
   const remote = `${user}@${host}`;
   const stage = path.posix.join(
     remoteRoot,
     "incoming",
-    `${release}-${randomBytes(12).toString("hex")}`,
+    `${release}-${invocationId}`,
   );
   const remoteIncoming = `${remote}:${stage}/`;
   const scriptPath = path.join(SCRIPT_DIR, "remote-activate.sh");
