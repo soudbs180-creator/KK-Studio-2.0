@@ -995,6 +995,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `docs/TASK-POSTMERGE-2026-09-28`
 - Worktree: `D:/kk-studio/.worktrees/platform-versioning`
 - Modules: deploy/MIGRATION.md, docs/PROGRESS.md, docs/changes
-- Verification: PARTIAL — 本地文档/治理检查待本次 PR 完成；main@096d6c3 的 tree 与合并后 verify/deploy-linux 已回读通过；VPS、备份、恢复、DNS/TLS 和生产写入仍未验收。
+- Verification: PARTIAL — 本地文档/治理检查 PASS（治理 76/0、Markdown 90/0、delivery 9 文件/0 违规）；本次 PR 的独立复审与 Hosted 门禁待完成；main@096d6c3 的 tree 与合并后 verify/deploy-linux 已回读通过；VPS、备份、恢复、DNS/TLS 和生产写入仍未验收。
 - Evidence: [docs/changes/2026-09-28-postmerge-migration/intent.md](../../docs/changes/2026-09-28-postmerge-migration/intent.md), [docs/changes/2026-09-28-postmerge-migration/spec.md](../../docs/changes/2026-09-28-postmerge-migration/spec.md), [docs/changes/2026-09-28-postmerge-migration/plan.md](../../docs/changes/2026-09-28-postmerge-migration/plan.md), [docs/changes/2026-09-28-postmerge-migration/verification.md](../../docs/changes/2026-09-28-postmerge-migration/verification.md), [docs/changes/2026-09-28-postmerge-migration/review.md](../../docs/changes/2026-09-28-postmerge-migration/review.md), [deploy/MIGRATION.md](../../deploy/MIGRATION.md)
 - Updated: 2026-09-28

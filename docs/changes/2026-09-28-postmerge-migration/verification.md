@@ -12,8 +12,8 @@
 | --- | --- | --- |
 | `main` SHA/tree | PASS | `096d6c3` / `05456be9`；与 PR #25 受审 tree 一致 |
 | 合并后 Hosted | PASS | `verify` 与 `deploy-linux` 成功；`delivery` 按 push 事件跳过 |
-| `npm run lint` | 待本次 PR | 预计治理 75/0、功能 34/0、Markdown 90/0 |
-| `npm run delivery:check` | 待本次 PR | 需使用本分支完整 base/head SHA |
+| `npm run lint` | PASS | 治理 76/0、功能 34/0、Markdown 90/0 |
+| `npm run delivery:check` | PASS | 9 files，0 violations；base `096d6c3`，head `bd3ffe5` |
 
 ## 边界
 
