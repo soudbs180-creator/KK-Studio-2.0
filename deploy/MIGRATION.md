@@ -6,7 +6,7 @@
 
 | 对象 | 证据与状态 |
 | --- | --- |
-| GitHub 源码 | 当前远端为 `origin/main@096d6c3`，tree `05456be9`；PR #23/#24/#25 的交付门禁与合并后主线 `verify`/`deploy-linux` 均已成功。根 checkout 仍有未提交改动，不能把它当远端内容。 |
+| GitHub 源码 | 当前远端为 `origin/main@be46ad6`，tree `d16329fb`；PR #23/#24/#25/#26 的交付门禁与合并后主线 `verify`/`deploy-linux` 均已成功。根 checkout 仍有未提交改动，不能把它当远端内容。 |
 | 旧 VPS | [2026-09-16 只读审计](../docs/changes/2026-09-16-launch-readiness-audit/verification.md) 当时发现旧 1.4.5、PostgreSQL、API 和 Web/Admin；不是当前状态或 2.0 上传证明。本轮历史地址 HTTP 有响应，SSH 使用本机已知凭据被拒。 |
 | 新 2.0 Web | 仓库有静态打包、hash 清单、SSH dry-run、不可变版本目录与 `current`/`previous` 指针；没有本轮 VPS 上传或线上同态验收。 |
 | 服务端与浏览器数据 | Git 不含 PostgreSQL、Gateway SQLite/对象文件、机密、证书或用户浏览器 IndexedDB。没有离机备份与还原实证。 |
@@ -28,7 +28,7 @@
 
 ## 1. 在旧机仍可访问时形成离机恢复包
 
-1. 在干净的 `origin/main` 检出使用 Node 24 执行 `npm ci`、`npm run verify`、`npm run build`，记录通过的 SHA。构建必须与打包版本一致；当前已核对的基线是 `main@096d6c3`，若重新构建其他 SHA，必须重新记录对应门禁结果。
+1. 在干净的 `origin/main` 检出使用 Node 24 执行 `npm ci`、`npm run verify`、`npm run build`，记录通过的 SHA。构建必须与打包版本一致；当前已核对的基线是 `main@be46ad6`，若重新构建其他 SHA，必须重新记录对应门禁结果。
 2. 执行 `node deploy/release.mjs package --dist dist --release <已验收SHA或版本>`。保留 `.tmp/deploy/kk-studio-web-<release>.tar.gz`、同名 `.tar.gz.sha256` 和 manifest sidecars。复制到**不在旧 VPS 上**的受控备份位置；在 Linux 目标目录用 `sha256sum -c kk-studio-web-<release>.tar.gz.sha256` 校验整包。源码可另作 GitHub mirror 备份；Git 仓库并不替代业务数据备份。
 3. 对历史 PostgreSQL，由有权的本机数据库角色在受限目录执行 `pg_dump -Fc -f <离机中转目录>/legacy.dump <数据库名>`；检查命令退出码、文件 hash 和 `pg_restore --list`，随后**恢复到全新隔离测试库**并验证表/资产关联。不得把密码写进命令、日志或 Git；不在现有生产库上运行 `pg_restore --clean`。操作细节按实际角色/版本核实。[PostgreSQL 17 pg_dump](https://www.postgresql.org/docs/17/app-pgdump.html)
 4. 与数据库一致地备份旧上传/对象文件、服务配置清单、Nginx vhost、证书续期配置和非明文的 secret 引用。文件与 DB 快照必须来自同一受控写入窗口或有应用一致性证明；记录大小、数量、SHA-256、权限与离机副本。`pg_dump` 单独不能覆盖上传文件。

@@ -1,9 +1,9 @@
 # Plan：主线合并后迁移操作单收口
 
 - Task ID：TASK-POSTMERGE-MIGRATION-2026-09-28
-- 状态：IN PROGRESS
+- 状态：COMPLETE
 - Owner / branch / worktree：root / `docs/TASK-POSTMERGE-2026-09-28` / `D:/kk-studio/.worktrees/platform-versioning`
-- Base：`origin/main@096d6c342c3a5001067bcd75bc8e122f2e8f513d`
+- Base：`origin/main@be46ad6287a781d30418636c8e85e0e069797f44`
 
 1. 回读 `main@096d6c3` 的 tree 与合并后 Hosted 门禁。
 2. 修正 `deploy/MIGRATION.md` 和 `docs/PROGRESS.md` 的主线事实。

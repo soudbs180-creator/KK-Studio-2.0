@@ -81,7 +81,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-VERSION-001 | 桌面/Web/Mobile 独立版本源与自动递增 | DONE | none | root |
 | TASK-LOCAL-SERVICE-001 | Web 本机伴随服务与既有浏览器数据迁移 | TODO | TASK-VERSION-001, BACKEND-PLATFORM | root |
 | TASK-CLOSEOUT-2026-09-28 | 合并后版本与 VPS 状态收口 | DONE | TASK-VERSION-001, T10-PREP | root |
-| TASK-POSTMERGE-MIGRATION-2026-09-28 | 主线合并后迁移操作单收口 | REVIEW | T10-PREP, T10, T11 | root |
+| TASK-POSTMERGE-MIGRATION-2026-09-28 | 主线合并后迁移操作单收口 | DONE | T10-PREP, T10, T11 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -991,10 +991,10 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 同步迁移操作单的主线事实并保留 VPS 未验收边界
 - Scope: deploy/MIGRATION.md, docs/PROGRESS.md, docs/changes
-- Acceptance: 迁移操作单记录 main@096d6c3、tree 和合并后 Hosted 门禁; 不把 GitHub CI 或控制面板解释成 VPS 上传/恢复证明; PROGRESS、迁移操作单、账本与 change package 一致
-- Branch: `docs/TASK-POSTMERGE-2026-09-28`
+- Acceptance: 迁移操作单记录 main@be46ad6、tree 和合并后 Hosted 门禁; 不把 GitHub CI 或控制面板解释成 VPS 上传/恢复证明; PROGRESS、迁移操作单、账本与 change package 一致
+- Branch: `docs/TASK-POSTMERGE-FINAL-2026-09-28`
 - Worktree: `D:/kk-studio/.worktrees/platform-versioning`
 - Modules: deploy/MIGRATION.md, docs/PROGRESS.md, docs/changes
-- Verification: PARTIAL — 本地文档/治理检查 PASS（治理 76/0、Markdown 90/0、delivery 9 文件/0 违规）；本次 PR 的独立复审与 Hosted 门禁待完成；main@096d6c3 的 tree 与合并后 verify/deploy-linux 已回读通过；VPS、备份、恢复、DNS/TLS 和生产写入仍未验收。
-- Evidence: [docs/changes/2026-09-28-postmerge-migration/intent.md](../../docs/changes/2026-09-28-postmerge-migration/intent.md), [docs/changes/2026-09-28-postmerge-migration/spec.md](../../docs/changes/2026-09-28-postmerge-migration/spec.md), [docs/changes/2026-09-28-postmerge-migration/plan.md](../../docs/changes/2026-09-28-postmerge-migration/plan.md), [docs/changes/2026-09-28-postmerge-migration/verification.md](../../docs/changes/2026-09-28-postmerge-migration/verification.md), [docs/changes/2026-09-28-postmerge-migration/review.md](../../docs/changes/2026-09-28-postmerge-migration/review.md), [deploy/MIGRATION.md](../../deploy/MIGRATION.md)
+- Verification: PASS — 本地文档/治理检查 PASS（治理 76/0、Markdown 90/0、delivery 9 文件/0 违规）；PR #26 精确 head d2485db 的独立复审、delivery、deploy-linux、verify 与合并后 main@be46ad6 的 verify/deploy-linux 均通过；VPS、备份、恢复、DNS/TLS 和生产写入仍未验收。
+- Evidence: [docs/changes/2026-09-28-postmerge-migration/intent.md](../../docs/changes/2026-09-28-postmerge-migration/intent.md), [docs/changes/2026-09-28-postmerge-migration/spec.md](../../docs/changes/2026-09-28-postmerge-migration/spec.md), [docs/changes/2026-09-28-postmerge-migration/plan.md](../../docs/changes/2026-09-28-postmerge-migration/plan.md), [docs/changes/2026-09-28-postmerge-migration/verification.md](../../docs/changes/2026-09-28-postmerge-migration/verification.md), [docs/changes/2026-09-28-postmerge-migration/review.md](../../docs/changes/2026-09-28-postmerge-migration/review.md), [deploy/MIGRATION.md](../../deploy/MIGRATION.md), [docs/changes/2026-09-28-postmerge-migration-final/intent.md](../../docs/changes/2026-09-28-postmerge-migration-final/intent.md), [docs/changes/2026-09-28-postmerge-migration-final/spec.md](../../docs/changes/2026-09-28-postmerge-migration-final/spec.md), [docs/changes/2026-09-28-postmerge-migration-final/plan.md](../../docs/changes/2026-09-28-postmerge-migration-final/plan.md), [docs/changes/2026-09-28-postmerge-migration-final/verification.md](../../docs/changes/2026-09-28-postmerge-migration-final/verification.md), [docs/changes/2026-09-28-postmerge-migration-final/review.md](../../docs/changes/2026-09-28-postmerge-migration-final/review.md)
 - Updated: 2026-09-28
