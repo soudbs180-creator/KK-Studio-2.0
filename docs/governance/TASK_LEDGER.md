@@ -77,6 +77,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | TASK-AGENT-001 | root |
 | TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | REVIEW | none | root |
 | TASK-COMPARE-001 | 画布图片对比操作 | REVIEW | none | root |
+| TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | REVIEW | TASK-COMPARE-001 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -930,6 +931,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-COMPARE-001-canvas-compare`
 - Worktree: `D:/kk-studio/.worktrees/canvas-compare`
 - Modules: src/features/compare, src/components/Canvas.tsx, src/components/nodes, src/styles/canvas-compare.css, tests/unit/imageCompare.test.ts, tests/browser/image-compare.spec.ts, tests/desktop/image-compare.mjs, docs/features, docs/governance
-- Verification: NOT_VERIFIED — 完整 npm run verify 通过（302 浏览器）；Tauri client:check/build 与隔离数据目录 release GUI 对比操作通过。源码 f8d5165 独立审查 PASS；草稿 PR #21 的首个 Hosted delivery 成功，最终 head 的 verify、用户产品验收与主线集成待完成。
+- Verification: NOT_VERIFIED — PR #21 最终 head bcda41a 的 Hosted verify/delivery、独立源码复审及本地 Web/Desktop 交互核验通过，已 squash 合入 main@7bc7c67 且 tree 一致。合并后 push CI 的 390px 按钮高度测得 43.999992px 而失败，由 TASK-COMPARE-002 修复；用户最终视觉验收仍待完成。
 - Evidence: [docs/changes/2026-09-27-canvas-image-compare/intent.md](../../docs/changes/2026-09-27-canvas-image-compare/intent.md), [docs/changes/2026-09-27-canvas-image-compare/spec.md](../../docs/changes/2026-09-27-canvas-image-compare/spec.md), [docs/changes/2026-09-27-canvas-image-compare/plan.md](../../docs/changes/2026-09-27-canvas-image-compare/plan.md), [docs/changes/2026-09-27-canvas-image-compare/verification.md](../../docs/changes/2026-09-27-canvas-image-compare/verification.md), [docs/changes/2026-09-27-canvas-image-compare/review.md](../../docs/changes/2026-09-27-canvas-image-compare/review.md)
+- Updated: 2026-09-28
+
+## TASK-COMPARE-002 — 对比控件窄屏命中区主线回归
+
+- Goal: 修复 PR #21 合并后 Windows 主线 CI 的 390px 对比按钮子像素高度失败，恢复可交付主线
+- Scope: src/styles/canvas-compare.css、对比浏览器和 Desktop 验收、交付记录
+- Acceptance: 保留原 >=44px 浏览器断言并通过 390px 实测; 完整 verify 与 Desktop release GUI 不回归; 当前 PR 与合并后主线 CI 通过
+- Branch: `fix/TASK-COMPARE-002-touch-target`
+- Worktree: `D:/kk-studio/.worktrees/compare-ci-fix`
+- Modules: src/styles/canvas-compare.css, tests/browser/image-compare.spec.ts, docs/changes/2026-09-28-compare-ci-fix, docs/governance
+- Verification: PARTIAL — 主线 run 36369533105 的 43.999992px 失败已定位；保持原断言后，定向 browser 2/2、完整 verify 459 Node/302 browser、client:check/build 与隔离 release GUI 通过。当前 PR/合并后主线 CI 与独立复审待完成。
+- Evidence: [docs/changes/2026-09-28-compare-ci-fix/intent.md](../../docs/changes/2026-09-28-compare-ci-fix/intent.md), [docs/changes/2026-09-28-compare-ci-fix/spec.md](../../docs/changes/2026-09-28-compare-ci-fix/spec.md), [docs/changes/2026-09-28-compare-ci-fix/plan.md](../../docs/changes/2026-09-28-compare-ci-fix/plan.md), [docs/changes/2026-09-28-compare-ci-fix/verification.md](../../docs/changes/2026-09-28-compare-ci-fix/verification.md), [docs/changes/2026-09-28-compare-ci-fix/review.md](../../docs/changes/2026-09-28-compare-ci-fix/review.md)
 - Updated: 2026-09-28
