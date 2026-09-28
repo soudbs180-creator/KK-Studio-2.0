@@ -328,7 +328,7 @@
 
 @media (max-width: 767px) {
   .image-preview > .compare-image-button {
-    min-height: 44px;
+    min-height: 45px;
   }
 
   .image-compare-selection {
@@ -348,12 +348,12 @@
   }
 
   .image-compare-selection-actions .ui-button {
-    min-height: 44px;
+    min-height: 45px;
   }
 
   .image-compare-chip,
   .image-compare-dialog .ui-button {
-    min-height: 44px;
+    min-height: 45px;
   }
 
   .modal.image-compare-dialog {

@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-28 对比操作合并后回归修复
+
+PR #21 的 `bcda41a` 已经通过独立复审与 Hosted 门禁，squash 合入 `main@7bc7c67` 且树相同。合并后 push CI `36369533105` 发现 390px 对比弹窗按钮高度 `43.999992px`，严格 44px 断言失败（301/302 浏览器通过）；TASK-COMPARE-002 保留该断言并给窄屏控件 1px 余量，重新验证中。用户最终产品视觉验收与正式发布未发生。
+
 ## 2026-09-28 画布图片对比独立复审与草稿 PR
 
 TASK-COMPARE-001 的源码 `f8d5165` 已经独立只读上下文复审 PASS，预审发现的 390px 命中区、触摸证据与功能卡状态问题均关闭。草稿 [PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 已建立，首个 head 的 Hosted `delivery` 通过；本次文档补录后的最终 head `verify` 与复审、用户产品验收和主线集成仍待完成。Web 完整 `verify` 为 302/302 浏览器，Tauri release GUI 在隔离数据目录重验通过，详见[本轮验证](changes/2026-09-27-canvas-image-compare/verification.md)。FEAT-036 保持 PARTIAL。

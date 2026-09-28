@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-28 图片对比已合并，主线窄屏回归修复中
+
+[PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 的最终 head `bcda41a` 经独立复审和 Hosted `verify`/`delivery` 后 squash 合入 `main@7bc7c67`，合并树与候选树相同。合并后的 [push run 36369533105](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36369533105) 仅 390px 对比按钮 44px 子像素断言失败（实测 43.999992px；浏览器 301/302），TASK-COMPARE-002 在独立分支修复；不能称最新主线 CI 已通过。原根 checkout 的未提交改动保持原样，用户最终视觉验收未记录。
+
 ## 2026-09-28 画布图片对比草稿 PR #21
 
 TASK-COMPARE-001 源码 `f8d5165` 独立只读复审 PASS，Web preview 完整 `verify`（302 浏览器）与 Tauri release GUI 重验通过。草稿 [PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 已创建，首个 head 的 Hosted `delivery` 成功；本次记录补录后的最终 head `verify` 和复审、用户产品验收及主线集成仍待完成。FEAT-036 保持 PARTIAL；原 checkout 的未提交改动仍隔离。

@@ -3,7 +3,7 @@
 - 状态：PARTIAL
 - 领域：canvas
 - 最近更新：2026-09-27
-- 关联任务：TASK-COMPARE-001（REVIEW）
+- 关联任务：TASK-COMPARE-001（REVIEW）、TASK-COMPARE-002（REVIEW）
 
 ## 用户可见入口
 
@@ -31,5 +31,5 @@
 
 ## 差距与后端化
 
-- 源码 `f8d5165` 已由独立上下文审查通过；草稿 PR #21 的最终 head 托管门禁、用户产品确认与主线集成尚未完成，保持 PARTIAL 与 TASK-COMPARE-001 开放。
+- PR #21 最终 head `bcda41a` 的独立复审与托管门禁通过，已合入 `main@7bc7c67`。合并后 Windows 主线 CI 发现 390px 按钮高度子像素失败（43.999992px），由 TASK-COMPARE-002 修复；用户最终视觉确认仍未记录，因此保持 PARTIAL。
 - 此功能本身不需要新后端。真实模型生成、自动质量评分与云端分享在本轮范围外，不能由此推断可用。

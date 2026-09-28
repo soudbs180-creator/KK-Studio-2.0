@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-28 图片对比合并后主线 CI 回归
+
+PR #21 已合入 `main@7bc7c67`，tree 与受审 `bcda41a` 一致。最新 push run `36369533105` 失败于 390px 对比按钮实测 `43.999992px < 44px`，其余浏览器 301/302 通过。TASK-COMPARE-002 在 `fix/TASK-COMPARE-002-touch-target` 的独立 worktree 以 45px 最小高度修复；需完整 `verify`、Desktop GUI、当前 head 独立复审和新主线 push CI。旧根 checkout dirty，禁止覆盖。
+
 ## 2026-09-28 图片对比 PR #21 恢复点
 
 从 `D:/kk-studio/.worktrees/canvas-compare` 继续，先核对 `origin/main`、任务分支实际 head、草稿 [PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 与当前 Hosted 检查。源码 `f8d5165` 独立只读复审 PASS，Web `verify` 302/302 浏览器、Tauri release GUI 与本地 delivery 通过；本次文档补录的新 head 需再审/再查 Hosted。FEAT-036 / TASK-COMPARE-001 保持 PARTIAL / REVIEW，用户产品验收、主线集成及发布未完成。证据见[验证](../changes/2026-09-27-canvas-image-compare/verification.md)和[审查](../changes/2026-09-27-canvas-image-compare/review.md)。根 checkout 的未提交 UI 改动不要混入。

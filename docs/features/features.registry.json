@@ -1255,7 +1255,7 @@
     "area": "canvas",
     "status": "PARTIAL",
     "card": "docs/features/feat-036-image-compare.md",
-    "summary": "从画布图片卡片选择 2–4 张并排查看；两张可切换滑块，选择仅在当前会话内保留。Web preview 与 Desktop release 候选均已实测，尚待产品验收和主线集成。",
+      "summary": "从画布图片卡片选择 2–4 张并排查看；两张可切换滑块，选择仅在当前会话内保留。PR #21 已进入主线；合并后 390px 命中区 CI 回归和用户最终视觉验收仍待收口。",
     "entryPoints": [
       "图片卡片加入对比",
       "画布对比选择条"
@@ -1272,7 +1272,8 @@
       "tests/desktop/image-compare.mjs"
     ],
     "tasks": [
-      "TASK-COMPARE-001"
+        "TASK-COMPARE-001",
+        "TASK-COMPARE-002"
     ],
     "updated": "2026-09-27",
     "platforms": [
