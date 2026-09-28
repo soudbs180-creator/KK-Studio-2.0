@@ -1,10 +1,10 @@
 # Verification：VPS 搬迁准备
 
 - Task ID：T10-PREP
-- 记录状态：第四轮完整本地 verify PASS；源码 head 独立复审与 Linux CI PASS，最终 Hosted verify 待核实
+- 记录状态：准备产物、独立复审、PR #23 与主线 CI PASS；VPS 实机仍未核验
 - 时间：2026-09-28（Asia/Shanghai）
 - branch / cwd：`codex/T10-PREP-vps-migration` / `D:/kk-studio/.worktrees/canvas-compare`
-- 初始 base：`origin/main@7bc7c67`；已合入 `origin/main@065bcbf`，最终 head 以 PR 回读为准。
+- 初始 base：`origin/main@7bc7c67`；受审 head `abe1e99` 已 squash 合入 `main@45fdc14`。
 
 ## 当前实证
 
@@ -26,7 +26,8 @@
 | 第三轮 `npm run verify` | PASS，退出码 0 | 302/302 Edge 浏览器；Node 全部执行完毕，8 项 Linux 文件系统用例在 Windows 跳过；lint/typecheck/format/build 全通过 |
 | 第四轮本地并发打包定向测试 | Windows 11 通过、8 Linux 文件系统用例跳过 | 同 ID 双 dist 先复现 `ENOENT`，隔离输出后各自 tar/hash 一致；成功清理命令范围由 JS 测试检查，真实 Linux 行为待 Hosted 验证 |
 | 第四轮 `npm run verify` | PASS，退出码 0 | 302/302 Edge 浏览器；Node 全部执行完毕，8 项 Linux 文件系统用例在 Windows 跳过；lint/typecheck/format/build 全通过 |
-| `9437cbf` 独立复审与 Hosted Linux | PASS | 独立只读 reviewer 未发现剩余 P0–P3；Linux 部署测试通过。完整 Hosted `verify` 和本次补记后的最终 head 仍须回读 |
+| PR #23 精确 head `abe1e99` | PASS | delivery、deploy-linux、verify 与独立复审均成功 |
+| 合并后 `main@45fdc14` | PASS | deploy-linux 与 verify 成功；合并树与受审树一致 |
 
 ## 验收覆盖
 
@@ -37,4 +38,4 @@
 
 ## 结论
 
-可审阅的迁移准备正在完成；T10-PREP 保持 PARTIAL，T10 保持 BLOCKED。不能声称 VPS 已上传 Git 或具备可保证时长的恢复能力。用户提供当前 SSH 主机/用户、部署根与域名后，可继续只读核验并安排外部演练。
+可审阅的迁移准备已合入主线；T10-PREP 保持 PARTIAL，T10 保持 BLOCKED。不能声称 VPS 已上传 Git 或具备可保证时长的恢复能力。用户提供当前 SSH 主机/用户、部署根与域名后，可继续只读核验并安排外部演练。

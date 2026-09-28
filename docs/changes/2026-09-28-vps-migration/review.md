@@ -3,7 +3,7 @@
 - Task ID：T10-PREP
 - Base：`origin/main@7bc7c67`
 - Branch：`codex/T10-PREP-vps-migration`
-- 状态：源码 head `9437cbf` 独立复审 PASS；记录补充后的最终 head 仍须核对 Hosted CI
+- 状态：精确 head `abe1e99` 独立复审与 Hosted 门禁 PASS；PR #23 已合入 `main@45fdc14`
 
 ## Self-review
 
@@ -29,17 +29,17 @@
 
 复审确认远端不同包串包已关闭，又指出 P1：`deploy --dist` 在同一 checkout 中并发处理同 release 时共用本地 `.tmp/deploy` 输出，能互相删除/覆盖；P2：唯一远端 staging 无清理策略，可能耗尽小型 VPS 磁盘。失败先行的双 `dist` 并发测试实际复现 `ENOENT`，现已将每次本地打包输出隔离；成功激活后只清本次远端 tar、sidecar、脚本和空目录，失败留存且在操作单规定核对后清理。新 head 仍须独立复审和 Hosted Linux 运行。
 
-第四轮修复的精确源码 head `9437cbf` 已由独立只读 reviewer 给出 PASS，无剩余 P0–P3；其 [Hosted Linux 部署测试](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36378248085) 通过。完整 Hosted `verify` 及本次记录补充后的最终 head 仍须回读，不能把 Linux 测试替代全量门禁。VPS 实机状态与离机备份依旧 UNKNOWN。
+第四轮修复的精确源码 head `9437cbf` 已由独立只读 reviewer 给出 PASS，无剩余 P0–P3；最终提交 `abe1e99` 的 PR delivery、deploy-linux、verify 与主线合并后 CI 均 PASS。VPS 实机状态与离机备份依旧 UNKNOWN。
 
 ## 当前门禁
 
 | 门禁 | 状态 |
 | --- | --- |
 | 本地定向与完整检查 | 第四轮完整 `verify` PASS：302/302 浏览器；8 项 Linux 文件系统用例在 Windows 跳过 |
-| Linux 文件系统回滚测试 | `9437cbf` 的 deploy-linux PASS；记录补充后的最终 head 待核对 |
-| 独立 AI review | `9437cbf` PASS，无剩余 P0–P3；记录补充后须核对 diff |
-| GitHub PR/current CI | 源码 head 的 delivery/Linux PASS、verify 运行中；最终 head 待回读 |
+| Linux 文件系统回滚测试 | `abe1e99` 的 deploy-linux PASS |
+| 独立 AI review | `9437cbf`/`abe1e99` PASS，无剩余 P0–P3 |
+| GitHub PR/current CI | PR #23 delivery/deploy-linux/verify PASS；main@45fdc14 postmerge deploy-linux/verify PASS |
 | VPS 恢复演练 | NOT VERIFIED，缺主机信息和离机备份 |
 | 用户生产发布授权 | 没有实际发布动作 |
 
-独立审查、托管 CI 和外部演练完成后追加真实结果；本次 PR 只交付准备产物。
+独立审查与托管 CI 已完成并记录；本次只交付准备产物，未执行 VPS 生产写入或恢复演练。

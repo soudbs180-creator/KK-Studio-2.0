@@ -78,8 +78,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | REVIEW | none | root |
 | TASK-COMPARE-001 | 画布图片对比操作 | REVIEW | none | root |
 | TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | REVIEW | TASK-COMPARE-001 | root |
-| TASK-VERSION-001 | 桌面/Web/Mobile 独立版本源与自动递增 | REVIEW | none | root |
+| TASK-VERSION-001 | 桌面/Web/Mobile 独立版本源与自动递增 | DONE | none | root |
 | TASK-LOCAL-SERVICE-001 | Web 本机伴随服务与既有浏览器数据迁移 | TODO | TASK-VERSION-001, BACKEND-PLATFORM | root |
+| TASK-CLOSEOUT-2026-09-28 | 合并后版本与 VPS 状态收口 | DONE | TASK-VERSION-001, T10-PREP | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -271,7 +272,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/T10-PREP-vps-migration`
 - Worktree: `D:/kk-studio/.worktrees/canvas-compare`
 - Modules: deploy, tests/deploy, .github/workflows/quality.yml, docs/architecture/adr
-- Verification: PARTIAL — 静态包整包 hash、指定离机包恢复与共享锁版本回滚已形成修复候选；吸收 main@065bcbf 后本地完整 verify PASS：471 Node 中 466 通过、5 项 Linux 符号链接测试因 Windows 权限跳过，302/302 浏览器。b7702fe Linux job PASS；独立预审四项问题已修复待最终 head Linux CI/复审；真实 VPS 离机备份/恢复演练未完成，部署配置、权限和资源限制需实际主机盘点。
+- Verification: PARTIAL — 静态包整包 hash、指定离机包恢复与共享锁版本回滚已形成主线准备产物；PR #23 精确 head abe1e99 的 delivery、deploy-linux、verify 与独立复审均 PASS，并已合入 main@45fdc14，合并后 deploy-linux/verify 也 PASS。真实 VPS 离机备份/恢复演练未完成，部署配置、权限和资源限制需实际主机盘点。
 - Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md), [docs/changes/2026-09-28-vps-migration/intent.md](../../docs/changes/2026-09-28-vps-migration/intent.md), [docs/changes/2026-09-28-vps-migration/spec.md](../../docs/changes/2026-09-28-vps-migration/spec.md), [docs/changes/2026-09-28-vps-migration/plan.md](../../docs/changes/2026-09-28-vps-migration/plan.md), [docs/changes/2026-09-28-vps-migration/verification.md](../../docs/changes/2026-09-28-vps-migration/verification.md), [docs/changes/2026-09-28-vps-migration/review.md](../../docs/changes/2026-09-28-vps-migration/review.md), [deploy/MIGRATION.md](../../deploy/MIGRATION.md)
 - Updated: 2026-09-28
 
@@ -957,7 +958,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-VERSION-001-platform-versions`
 - Worktree: `D:/kk-studio/.worktrees/platform-versioning`
 - Modules: config/platform-versions.json, scripts/platform-versions.mjs, src/runtime/appInfo.ts, package.json, src-tauri, docs/engineering/VERSIONING.md
-- Verification: PARTIAL — 版本脚本与配置已实现；本地 463 Node/302 浏览器全量、Web 版本专项、Desktop check/build 与隔离 release GUI 已通过。新增浏览器专项后的最终 verify、PR/主线 CI 与独立复审待完成。账号/本地伴随服务/Mobile 仍为开放任务。
+- Verification: PASS — 版本脚本与配置已实现；最终树本地 482 项 Node（474 通过、8 项 Windows 跳过 Linux 文件系统用例）、303 浏览器、Web 版本专项、Desktop check/build 与隔离 release GUI 通过。精确 head 9d55857 的独立复审、PR delivery/deploy-linux/verify、main@799efc5 合并及 postmerge verify/deploy-linux 均通过，合并树一致。账号/本地伴随服务/Mobile 仍为开放任务。
 - Evidence: [docs/changes/2026-09-28-platform-versioning/intent.md](../../docs/changes/2026-09-28-platform-versioning/intent.md), [docs/changes/2026-09-28-platform-versioning/spec.md](../../docs/changes/2026-09-28-platform-versioning/spec.md), [docs/changes/2026-09-28-platform-versioning/plan.md](../../docs/changes/2026-09-28-platform-versioning/plan.md), [docs/changes/2026-09-28-platform-versioning/verification.md](../../docs/changes/2026-09-28-platform-versioning/verification.md), [docs/changes/2026-09-28-platform-versioning/review.md](../../docs/changes/2026-09-28-platform-versioning/review.md)
 - Updated: 2026-09-28
 
@@ -971,4 +972,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/runtime, src/features/creation, local companion service, docs/architecture/DATA-STORAGE.md
 - Verification: NOT_VERIFIED — NOT VERIFIED：本机伴随服务、账号接线与浏览器既有数据导入尚未实现；现有 Web 仍使用 IndexedDB。
 - Evidence: [docs/changes/2026-09-28-platform-versioning/spec.md](../../docs/changes/2026-09-28-platform-versioning/spec.md), [docs/architecture/adr/ADR-008-platform-versions-and-local-first.md](../../docs/architecture/adr/ADR-008-platform-versions-and-local-first.md), [docs/features/feat-037-web-local-service.md](../../docs/features/feat-037-web-local-service.md)
+- Updated: 2026-09-28
+
+## TASK-CLOSEOUT-2026-09-28 — 合并后版本与 VPS 状态收口
+
+- Goal: 记录 PR/主线门禁、同步账本和交接文档
+- Scope: docs/governance, docs/PROGRESS.md, docs/changes
+- Acceptance: PR #23/#24 精确 head、merge SHA、tree 与 Hosted 结果可回读; 版本任务 DONE/PASS，T10-PREP PARTIAL，T10 BLOCKED; PROJECT_STATE、AI_HANDOFF、PROGRESS、TASK_LEDGER 与 change package 一致
+- Branch: `docs/TASK-CLOSEOUT-2026-09-28`
+- Worktree: `D:/kk-studio/.worktrees/platform-versioning`
+- Modules: docs/governance, docs/PROGRESS.md, docs/changes
+- Verification: PASS — PR #23/#24 与合并后 main 的 Hosted 门禁、tree 回读和状态文档同步均完成；本机 VPS、离机备份、Web 本机服务、真实登录和 Mobile 仍未验收。
+- Evidence: [docs/changes/2026-09-28-closeout/intent.md](../../docs/changes/2026-09-28-closeout/intent.md), [docs/changes/2026-09-28-closeout/spec.md](../../docs/changes/2026-09-28-closeout/spec.md), [docs/changes/2026-09-28-closeout/plan.md](../../docs/changes/2026-09-28-closeout/plan.md), [docs/changes/2026-09-28-closeout/verification.md](../../docs/changes/2026-09-28-closeout/verification.md), [docs/changes/2026-09-28-closeout/review.md](../../docs/changes/2026-09-28-closeout/review.md)
 - Updated: 2026-09-28
