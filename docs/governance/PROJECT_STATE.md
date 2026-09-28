@@ -2,6 +2,12 @@
 
 ## 2026-09-28 VPS 搬迁准备与当前核验边界
 
+## 2026-09-28 三端版本任务与产品目标
+
+TASK-VERSION-001 在独立分支实现桌面、Web、Mobile 独立版本源与递增命令；本轮源码目标均为 `2.1.1`。正式安装、Web 上线与 Mobile 包未由版本号证明。用户确认交付优先 Desktop → Web → Mobile；Web 未来由用户设备上的本机伴随服务保存个人数据，Desktop 免登录/可选登录，Web/Mobile 需登录。当前 Web IndexedDB、演示账号、无 Mobile 包仍是事实；`TASK-LOCAL-SERVICE-001`、`BACKEND-PLATFORM`、`T12` 保持开放。详细交接见[版本验证](../changes/2026-09-28-platform-versioning/verification.md)。原根 checkout 的未提交文件仍保持隔离。
+
+## 2026-09-28 图片对比已合并，主线窄屏回归修复中
+
 T10-PREP 分支新增静态归档整包 hash、指定离机包恢复模式、共享发布锁的版本回滚和[离机备份/隔离恢复操作单](../../deploy/MIGRATION.md)；独立预审的四项阻断问题已有修复候选。吸收 `main@065bcbf` 后本地完整 verify PASS（471 Node：466 通过/5 Windows 跳过，302/302 浏览器）；修复候选 Linux job PASS，最终 head CI 与独立复审待验。2026-09-16 旧 VPS 审计不能代表今天；本轮历史地址 HTTP 301、SSH 认证失败，用户已登录的浏览器控制页接口超时，2.0 是否上传、服务器 Git SHA/数据备份均 UNKNOWN。正式域名、主机权限和数据恢复演练未落实，T10-PREP PARTIAL、T10 BLOCKED。现有 Web IndexedDB 与用户要求的本机伴随服务有差距。
 
 ## 2026-09-28 图片对比已合并，主线回归修复待 postmerge CI

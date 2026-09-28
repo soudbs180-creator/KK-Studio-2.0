@@ -45,7 +45,13 @@ kk-studio/
 
 ## 当前代码中的实际形状
 
-当前 KK Studio 2.1.0 的浏览器端保存主题偏好、供应商元数据和创作快照恢复副本；完整创作快照在 Web 使用 IndexedDB，在 Tauri 使用 `projects/creation-v2.json` IPC 命令。历史 `kk-studio-next:*` 存储 key 继续保留以兼容已有数据。浏览器端 API Key 只在当前会话内存中，Windows 桌面端通过 `com.kkstudio.provider` 凭据命令读写系统凭据库：
+当前 KK Studio 2.1.1 源码的浏览器端保存主题偏好、供应商元数据和创作快照恢复副本；完整创作快照在 Web 使用 IndexedDB，在 Tauri 使用 `projects/creation-v2.json` IPC 命令。历史 `kk-studio-next:*` 存储 key 继续保留以兼容已有数据。浏览器端 API Key 只在当前会话内存中，Windows 桌面端通过 `com.kkstudio.provider` 凭据命令读写系统凭据库：
+
+## 已确认的后续目标（尚未实现）
+
+用户指定 Desktop 优先，Web 随后，Mobile 再按手机能力裁剪。Desktop 允许离线免登录或选择登录；Web/Mobile 目标为登录后使用。个人项目和素材应在用户设备本地：Web 需要安装本机伴随服务，由服务持久化而不是把浏览器 IndexedDB 作为最终数据根；Mobile 采用设备本地持久层。账号只用于身份及可选服务，不能据此宣称数据云同步。
+
+切换 Web 持久源之前须实现本机服务通信/权限边界、稳定数据目录、无损导入既有 IndexedDB 项目与素材、备份/恢复及断线提示。当前 IndexedDB、localStorage 与演示账号仍照现状工作，不会因本次版本号变化被自动搬迁；对应任务为 `TASK-LOCAL-SERVICE-001` 和 `BACKEND-PLATFORM`。Mobile 仍由 T12 验收，不把响应式网页或 `config/platform-versions.json` 中的规划版本称为已发布 App。
 
 | Key                                | Schema                                      | 用途                                                 | 风险/边界                                                  |
 | ---------------------------------- | ------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
