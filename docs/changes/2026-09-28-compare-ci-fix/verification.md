@@ -1,7 +1,7 @@
 # Verification：对比命中区子像素修复
 
 - Task ID：TASK-COMPARE-002
-- 记录状态：本地 FINAL；托管 CI 待回读
+- 记录状态：本地 FINAL；`8049ef1` 托管 CI PASS；最终文档提交待 CI
 - 执行时间：2026-09-28（Asia/Shanghai）
 - base：`origin/main@7bc7c67`
 - branch / cwd：`fix/TASK-COMPARE-002-touch-target` / `D:/kk-studio/.worktrees/compare-ci-fix`
@@ -19,7 +19,7 @@
 | `npm run verify` | PASS，退出码 0 | 459/459 Node、302/302 Edge 浏览器；治理 72/0、功能 33/0、Markdown 86/0、类型、UI、格式、build |
 | `npm run client:check` / `npm run client:build` | PASS，退出码 0 | Tauri release exe 与 MSI/NSIS 重建；构建有 5 条现有未使用函数警告 |
 | `node tests/desktop/image-compare.mjs` | PASS，退出码 0 | 独立 `--data-dir` 和 WebView2 profile，真实 release GUI；无 page errors |
-| 当前 PR `verify`/`delivery` | 待运行 | 当前 head |
+| 当前 PR `verify`/`delivery` | [run 36371629097](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36371629097) 在 `8049ef1` 均 PASS | 最终文档补记 head 须重跑 |
 | 合并后主线 push CI | 待运行 | 当前 main |
 
 首次尝试 `npm run test:ui -- --grep "narrow canvas keeps the comparison"` 因 PowerShell 参数传递得到 `No tests found`（退出码 1）；随后以具体文件路径运行 2/2 通过，未改变用例或放宽断言。
