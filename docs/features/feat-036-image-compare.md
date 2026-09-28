@@ -2,7 +2,7 @@
 
 - 状态：PARTIAL
 - 领域：canvas
-- 最近更新：2026-09-27
+- 最近更新：2026-09-28
 - 关联任务：TASK-COMPARE-001（REVIEW）、TASK-COMPARE-002（REVIEW）
 
 ## 用户可见入口
@@ -21,7 +21,8 @@
 - 单测：`tests/unit/imageCompare.test.ts`
 - 浏览器：`tests/browser/image-compare.spec.ts`
 - 桌面：`tests/desktop/image-compare.mjs`
-- 本轮交付记录：`docs/changes/2026-09-27-canvas-image-compare/verification.md`
+- 初次交付记录：`docs/changes/2026-09-27-canvas-image-compare/verification.md`
+- 合并后回归与当前运行证据：`docs/changes/2026-09-28-compare-ci-fix/verification.md`
 
 ## 当前能力
 
