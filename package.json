@@ -22,7 +22,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/unit/*.test.ts",
+    "test": "node --test tests/unit/*.test.ts tests/deploy/*.test.mjs",
     "test:ui": "npm run build && node node_modules/@playwright/test/cli.js test",
     "format:check": "prettier --check src tests scripts *.ts *.mjs *.json design/figma-plugin/*.js design/figma-plugin/*.json config/*.json",
     "ui:check": "node scripts/check-ui-standards.mjs",

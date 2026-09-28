@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
-import { createHash } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { createReadStream } from "node:fs";
 import {
   cp,
   copyFile,
   mkdir,
+  readFile,
   readdir,
   rm,
   stat,
@@ -53,7 +54,7 @@ function usage() {
 Commands:
   manifest  --dist <dist> --out <directory> --release <id>
   package   --dist <dist> --out <directory> --release <id>
-  deploy    --dist <dist> --host <host> --user <user> --path <remote-root> --release <id> [--apply]
+  deploy    (--dist <dist> | --archive <tar.gz>) --host <host> --user <user> --path <remote-root> --release <id> [--apply]
 
 The default is dry-run. Only deploy --apply uses ssh/scp. This package contains
 the browser static prototype only; it never starts a provider or generation gateway.
@@ -164,6 +165,13 @@ async function packageRelease(args) {
   const files = await writeManifestFiles(dist, out, release, manifest);
   const archivePath = path.join(out, `kk-studio-web-${release}.tar.gz`);
   tarArchive(files.releaseDirectory, archivePath);
+  const archiveHashPath = `${archivePath}.sha256`;
+  const archiveSha256 = await sha256(archivePath);
+  await writeFile(
+    archiveHashPath,
+    `${archiveSha256}  ${path.basename(archivePath)}\n`,
+    "utf8",
+  );
   await copyFile(
     files.manifestPath,
     path.join(out, `kk-studio-web-${release}.manifest.json`),
@@ -172,19 +180,73 @@ async function packageRelease(args) {
     files.hashesPath,
     path.join(out, `kk-studio-web-${release}.manifest.sha256`),
   );
-  return { ...files, archivePath, manifest };
+  return { ...files, archivePath, archiveHashPath, archiveSha256, manifest };
 }
 
-function remoteCommand(root, release, archiveName) {
-  const activateScript = path.posix.join(
-    root,
-    "incoming",
-    `activate-${release}.sh`,
+async function verifiedArchive(archiveArgument, release) {
+  const archivePath = path.resolve(archiveArgument);
+  const archiveName = `kk-studio-web-${release}.tar.gz`;
+  if (path.basename(archivePath) !== archiveName) {
+    fail(`archive name must be ${archiveName}`);
+  }
+  const archiveHashPath = `${archivePath}.sha256`;
+  const hashLine = await readFile(archiveHashPath, "utf8").catch(() =>
+    fail(`archive SHA-256 sidecar is missing: ${archiveHashPath}`),
   );
+  const match = /^([a-f0-9]{64})  ([^\r\n]+)\r?\n?$/.exec(hashLine);
+  if (!match || match[2] !== archiveName) {
+    fail("archive SHA-256 sidecar has an invalid name or format");
+  }
+  if ((await sha256(archivePath)) !== match[1]) {
+    fail("archive SHA-256 mismatch");
+  }
+  return {
+    archivePath,
+    archiveHashPath,
+    archiveSha256: match[1],
+    manifest: { release, files: null },
+  };
+}
+
+function remoteCommand(root, release, archiveName, stage, expectedSha256) {
+  const activateScript = path.posix.join(stage, `activate-${release}.sh`);
+  const archive = path.posix.join(stage, archiveName);
+  const sidecar = `${archive}.sha256`;
   return [
     "set -eu",
     `test -f ${quotePosix(activateScript)}`,
-    `sh ${quotePosix(activateScript)} ${quotePosix(root)} ${quotePosix(release)} ${quotePosix(path.posix.join(root, "incoming", archiveName))}`,
+    `(cd ${quotePosix(stage)} && sha256sum -c ${quotePosix(`${archiveName}.sha256`)})`,
+    `sh ${quotePosix(activateScript)} ${quotePosix(root)} ${quotePosix(release)} ${quotePosix(archive)} ${quotePosix(expectedSha256)}`,
+    `if ! { rm -f -- ${quotePosix(archive)} ${quotePosix(sidecar)} ${quotePosix(activateScript)} && rmdir -- ${quotePosix(stage)}; }; then echo 'activated, but staging cleanup failed' >&2; fi`,
+  ].join("\n");
+}
+
+function requireRemoteRoot(value) {
+  if (
+    typeof value !== "string" ||
+    !value.startsWith("/") ||
+    value.startsWith("//") ||
+    value === "/" ||
+    path.posix.normalize(value) !== value ||
+    /[\u0000-\u001f]/.test(value)
+  ) {
+    fail("remote root must be a non-root absolute POSIX path without aliases");
+  }
+  return value;
+}
+
+function remotePrepareCommand(root, stage) {
+  const incoming = path.posix.join(root, "incoming");
+  const releases = path.posix.join(root, "releases");
+  return [
+    "set -eu",
+    `test -d ${quotePosix(root)}`,
+    `test ! -L ${quotePosix(root)}`,
+    `test ! -L ${quotePosix(incoming)}`,
+    `test ! -L ${quotePosix(releases)}`,
+    `mkdir -p ${quotePosix(incoming)} ${quotePosix(releases)}`,
+    `test -d ${quotePosix(incoming)} && test -d ${quotePosix(releases)}`,
+    `mkdir -m 700 ${quotePosix(stage)}`,
   ].join("\n");
 }
 
@@ -194,51 +256,65 @@ function formatCommand(executable, argv) {
 
 async function deploy(args) {
   const release = requireReleaseId(args.release);
+  if (args.archive && args.dist) {
+    fail("deploy accepts either --archive or --dist, not both");
+  }
   const host = args.host;
   const user = args.user;
-  const root = args.path;
-  if (!host || !user || !root) {
+  if (!host || !user || !args.path) {
     fail("deploy requires --host, --user, and --path");
   }
-  const packaged = await packageRelease(args);
+  const remoteRoot = requireRemoteRoot(args.path);
+  const invocationId = randomBytes(12).toString("hex");
+  const packaged = args.archive
+    ? await verifiedArchive(args.archive, release)
+    : await packageRelease({
+        ...args,
+        out: path.join(
+          path.resolve(args.out ?? DEFAULT_OUTPUT),
+          `.deploy-${release}-${invocationId}`,
+        ),
+      });
   const archiveName = path.basename(packaged.archivePath);
   const remote = `${user}@${host}`;
-  const remoteRoot = root.replaceAll("\\", "/").replace(/\/$/, "");
-  const remoteIncomingPath = path.posix.join(remoteRoot, "incoming");
-  const remoteIncoming = `${remote}:${remoteIncomingPath}/`;
+  const stage = path.posix.join(
+    remoteRoot,
+    "incoming",
+    `${release}-${invocationId}`,
+  );
+  const remoteIncoming = `${remote}:${stage}/`;
   const scriptPath = path.join(SCRIPT_DIR, "remote-activate.sh");
   const commands = [
-    formatCommand("ssh", [
-      remote,
-      `mkdir -p ${quotePosix(path.posix.join(remoteRoot, "incoming"))} ${quotePosix(path.posix.join(remoteRoot, "releases"))}`,
-    ]),
+    formatCommand("ssh", [remote, remotePrepareCommand(remoteRoot, stage)]),
     formatCommand("scp", [packaged.archivePath, remoteIncoming]),
+    formatCommand("scp", [packaged.archiveHashPath, remoteIncoming]),
     formatCommand("scp", [
       scriptPath,
-      `${remote}:${path.posix.join(remoteRoot, "incoming", `activate-${release}.sh`)}`,
+      `${remote}:${path.posix.join(stage, `activate-${release}.sh`)}`,
     ]),
     formatCommand("ssh", [
       remote,
-      remoteCommand(remoteRoot, release, archiveName),
+      remoteCommand(
+        remoteRoot,
+        release,
+        archiveName,
+        stage,
+        packaged.archiveSha256,
+      ),
     ]),
   ];
   if (args.dryRun) {
     return { ...packaged, dryRun: true, commands };
   }
   const operations = [
-    [
-      "ssh",
-      [
-        remote,
-        `mkdir -p ${quotePosix(path.posix.join(remoteRoot, "incoming"))} ${quotePosix(path.posix.join(remoteRoot, "releases"))}`,
-      ],
-    ],
-    ["scp", [packaged.archivePath, `${remote}:${remoteIncomingPath}/`]],
+    ["ssh", [remote, remotePrepareCommand(remoteRoot, stage)]],
+    ["scp", [packaged.archivePath, remoteIncoming]],
+    ["scp", [packaged.archiveHashPath, remoteIncoming]],
     [
       "scp",
       [
         scriptPath,
-        `${remote}:${path.posix.join(remoteRoot, "incoming", `activate-${release}.sh`)}`,
+        `${remote}:${path.posix.join(stage, `activate-${release}.sh`)}`,
       ],
     ],
   ];
@@ -252,7 +328,16 @@ async function deploy(args) {
   }
   const result = spawnSync(
     "ssh",
-    [remote, remoteCommand(remoteRoot, release, archiveName)],
+    [
+      remote,
+      remoteCommand(
+        remoteRoot,
+        release,
+        archiveName,
+        stage,
+        packaged.archiveSha256,
+      ),
+    ],
     {
       stdio: "inherit",
       shell: false,
@@ -288,7 +373,8 @@ async function main(argv) {
       {
         release: result.manifest.release,
         archive: result.archivePath,
-        files: result.manifest.files.length,
+        archiveHash: result.archiveHashPath,
+        files: result.manifest.files?.length ?? null,
         dryRun: result.dryRun ?? false,
         commands: result.commands,
       },
@@ -308,4 +394,4 @@ if (
   });
 }
 
-export { buildManifest, packageRelease, parseArgs, quotePosix };
+export { buildManifest, deploy, packageRelease, parseArgs, quotePosix };

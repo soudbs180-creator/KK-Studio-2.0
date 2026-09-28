@@ -21,7 +21,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | T7 | Desktop可用版本及安装恢复验收 | TODO | T3b, T4, T5, T6, EXT-PROVIDER, EXT-COMFY | root |
 | T8 | 成熟Core职责和平台能力边界 | TODO | T7 | root |
 | T9 | Web本地版及浏览器容量/离线能力 | TODO | T8 | root |
-| T10-PREP | VPS发布、备份回滚与部署配置准备 | TODO | T9 | root |
+| T10-PREP | VPS发布、备份回滚与部署配置准备 | PARTIAL | T9 | root |
 | T10 | VPS staging和生产实机验收 | BLOCKED | T10-PREP | root |
 | T11 | 旧Web/Vercel切换与退役 | BLOCKED | T10 | root |
 | T12 | Mobile 2.0适配 | TODO | T11 | root |
@@ -264,14 +264,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## T10-PREP — VPS发布、备份回滚与部署配置准备
 
 - Goal: VPS发布、备份回滚与部署配置准备
-- Scope: deploy, scripts/release
+- Scope: deploy、tests/deploy、quality Linux job、搬迁与恢复文档
 - Acceptance: 独立next服务不覆盖旧站; 部署配置/health/权限/资源限制; 备份还原及回滚runbook可审阅
-- Branch: `unallocated`
-- Worktree: `unallocated`
-- Modules: deploy, scripts/release
-- Verification: NOT_VERIFIED — NOT VERIFIED
-- Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md)
-- Updated: 2026-09-17
+- Branch: `codex/T10-PREP-vps-migration`
+- Worktree: `D:/kk-studio/.worktrees/canvas-compare`
+- Modules: deploy, tests/deploy, .github/workflows/quality.yml, docs/architecture/adr
+- Verification: PARTIAL — 静态包整包 hash、指定离机包恢复与共享锁版本回滚已形成修复候选；吸收 main@065bcbf 后本地完整 verify PASS：471 Node 中 466 通过、5 项 Linux 符号链接测试因 Windows 权限跳过，302/302 浏览器。b7702fe Linux job PASS；独立预审四项问题已修复待最终 head Linux CI/复审；真实 VPS 离机备份/恢复演练未完成，部署配置、权限和资源限制需实际主机盘点。
+- Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md), [docs/changes/2026-09-28-vps-migration/intent.md](../../docs/changes/2026-09-28-vps-migration/intent.md), [docs/changes/2026-09-28-vps-migration/spec.md](../../docs/changes/2026-09-28-vps-migration/spec.md), [docs/changes/2026-09-28-vps-migration/plan.md](../../docs/changes/2026-09-28-vps-migration/plan.md), [docs/changes/2026-09-28-vps-migration/verification.md](../../docs/changes/2026-09-28-vps-migration/verification.md), [docs/changes/2026-09-28-vps-migration/review.md](../../docs/changes/2026-09-28-vps-migration/review.md), [deploy/MIGRATION.md](../../deploy/MIGRATION.md)
+- Updated: 2026-09-28
 
 ## T10 — VPS staging和生产实机验收
 
