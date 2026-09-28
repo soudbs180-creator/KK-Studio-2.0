@@ -1,7 +1,7 @@
 # Intent：合并后状态收口
 
 - Task ID：TASK-CLOSEOUT-2026-09-28
-- 状态：IMPLEMENTED，待本次文档 PR 门禁
+- 状态：IMPLEMENTED；本次文档 PR 独立复审与 Hosted 门禁 PASS，待合并后主线回读
 - 日期：2026-09-28
 - 授权范围：回读 PR #23/#24、主线 SHA/tree、Hosted CI，并同步现行账本、项目状态和交接文档；不改产品代码、历史证据或用户原工作区。
 - 关联：[规范](spec.md)、[计划](plan.md)、[验证](verification.md)、[审查](review.md)。

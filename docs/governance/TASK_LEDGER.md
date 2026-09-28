@@ -80,7 +80,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | REVIEW | TASK-COMPARE-001 | root |
 | TASK-VERSION-001 | 桌面/Web/Mobile 独立版本源与自动递增 | DONE | none | root |
 | TASK-LOCAL-SERVICE-001 | Web 本机伴随服务与既有浏览器数据迁移 | TODO | TASK-VERSION-001, BACKEND-PLATFORM | root |
-| TASK-CLOSEOUT-2026-09-28 | 合并后版本与 VPS 状态收口 | REVIEW | TASK-VERSION-001, T10-PREP | root |
+| TASK-CLOSEOUT-2026-09-28 | 合并后版本与 VPS 状态收口 | DONE | TASK-VERSION-001, T10-PREP | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -982,6 +982,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `docs/TASK-CLOSEOUT-2026-09-28`
 - Worktree: `D:/kk-studio/.worktrees/platform-versioning`
 - Modules: docs/governance, docs/PROGRESS.md, docs/changes
-- Verification: PARTIAL — PR #23/#24 与合并后 main 的 Hosted 门禁、tree 回读和状态文档同步均完成；本机 VPS、离机备份、Web 本机服务、真实登录和 Mobile 仍未验收。
+- Verification: PASS — PR #23/#24 与合并后 main 的 Hosted 门禁、tree 回读和状态文档同步均完成；本收口 PR #25 精确 head 981a24b 的独立复审、delivery、deploy-linux、verify 也通过；本机 VPS、离机备份、Web 本机服务、真实登录和 Mobile 仍未验收。
 - Evidence: [docs/changes/2026-09-28-closeout/intent.md](../../docs/changes/2026-09-28-closeout/intent.md), [docs/changes/2026-09-28-closeout/spec.md](../../docs/changes/2026-09-28-closeout/spec.md), [docs/changes/2026-09-28-closeout/plan.md](../../docs/changes/2026-09-28-closeout/plan.md), [docs/changes/2026-09-28-closeout/verification.md](../../docs/changes/2026-09-28-closeout/verification.md), [docs/changes/2026-09-28-closeout/review.md](../../docs/changes/2026-09-28-closeout/review.md)
 - Updated: 2026-09-28

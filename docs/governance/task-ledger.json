@@ -2471,7 +2471,7 @@
     "branch": "docs/TASK-CLOSEOUT-2026-09-28",
     "worktree": "D:/kk-studio/.worktrees/platform-versioning",
     "affectedModules": ["docs/governance", "docs/PROGRESS.md", "docs/changes"],
-    "status": "REVIEW",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-09-28-closeout/intent.md",
       "docs/changes/2026-09-28-closeout/spec.md",
@@ -2479,8 +2479,8 @@
       "docs/changes/2026-09-28-closeout/verification.md",
       "docs/changes/2026-09-28-closeout/review.md"
     ],
-    "verification": "PR #23/#24 与合并后 main 的 Hosted 门禁、tree 回读和状态文档同步均完成；本机 VPS、离机备份、Web 本机服务、真实登录和 Mobile 仍未验收。",
+    "verification": "PR #23/#24 与合并后 main 的 Hosted 门禁、tree 回读和状态文档同步均完成；本收口 PR #25 精确 head 981a24b 的独立复审、delivery、deploy-linux、verify 也通过；本机 VPS、离机备份、Web 本机服务、真实登录和 Mobile 仍未验收。",
     "updated": "2026-09-28",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PASS"
   }
 ]

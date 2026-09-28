@@ -1,7 +1,7 @@
 # Plan：合并后状态收口
 
 - Task ID：TASK-CLOSEOUT-2026-09-28
-- 状态：IN PROGRESS
+- 状态：READY TO MERGE；本次文档 PR 独立复审与 Hosted 门禁已通过
 - Owner / branch / worktree：root / `docs/TASK-CLOSEOUT-2026-09-28` / `D:/kk-studio/.worktrees/platform-versioning`
 - Base：`origin/main@799efc50b298c8bba664901a764ebdafeabfeb89`
 

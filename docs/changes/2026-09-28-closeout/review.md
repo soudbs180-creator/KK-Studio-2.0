@@ -1,9 +1,10 @@
 # Review：合并后状态收口
 
 - Task ID：TASK-CLOSEOUT-2026-09-28
-- 状态：NOT VERIFIED；待本次文档变更的独立复审
+- 状态：PASS；exact head 独立复审与 Hosted 门禁通过，待主线合并回读
 - Base：`origin/main@799efc50b298c8bba664901a764ebdafeabfeb89`
 - Branch：`docs/TASK-CLOSEOUT-2026-09-28`
+- Head：`981a24bb12ff0776b429161cb8f0c757f680c9f6`
 
 ## Review 范围
 
@@ -11,7 +12,7 @@
 
 | 门禁 | 当前结果 | 后续 |
 | --- | --- | --- |
-| Self-review | PASS：仅状态/交接/账本文档和本五文件包，未改产品代码或生成证据 | 独立复审绑定最终提交 |
-| 独立 AI review | NOT VERIFIED | 提交后按 exact head 回读 |
-| Hosted CI | NOT RUN | PR 当前 head 检查 |
+| Self-review | PASS：仅状态/交接/账本文档和本五文件包，未改产品代码或生成证据 | 已绑定 exact head `981a24b` |
+| 独立 AI review | PASS | exact head `981a24b`，状态冲突已消除 |
+| Hosted CI | PASS | delivery、deploy-linux、verify 均成功 |
 | 正式 VPS 发布 | 未发生 | T10/T11 继续 BLOCKED |
