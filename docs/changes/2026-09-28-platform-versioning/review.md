@@ -3,7 +3,7 @@
 - Task ID：TASK-VERSION-001
 - Base：`origin/main@065bcbf`
 - Branch：`codex/TASK-VERSION-001-platform-versions`
-- 状态：本地自审与 Web/Desktop 运行态 PASS；独立复审、PR Hosted CI 与主线集成待执行
+- 状态：独立复审、PR Hosted CI 与主线合并 PASS；产品目标仍有开放任务
 
 ## Self-review
 
@@ -13,7 +13,8 @@
 
 | 门禁 | 状态 |
 | --- | --- |
-| 本地/运行态验证 | Web 专项 1/1、Desktop release GUI、最终完整 verify 463 Node/303 浏览器 PASS |
-| 独立 AI review | NOT VERIFIED |
-| 当前 PR Hosted CI | NOT RUN |
+| 本地/运行态验证 | Web 专项 1/1、Desktop release GUI、最终完整 verify 482 Node（8 项 Windows 跳过）/303 浏览器 PASS |
+| 独立 AI review | PASS；精确 head `9d55857`，tree 与复审候选一致 |
+| 当前 PR Hosted CI | PASS；delivery、deploy-linux、verify 均成功 |
+| 主线合并与 postmerge CI | PASS；PR #24 squash `main@799efc5`，verify/deploy-linux 成功且 tree 一致 |
 | 用户产品验收/正式发布 | NOT RECORDED |

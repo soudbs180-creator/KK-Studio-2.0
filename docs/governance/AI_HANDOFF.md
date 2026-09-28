@@ -2,15 +2,15 @@
 
 ## 2026-09-28 VPS 搬迁准备恢复点
 
-`codex/T10-PREP-vps-migration` 已吸收 `origin/main@065bcbf`，位于 `D:/kk-studio/.worktrees/canvas-compare`；初次提交 `b597dc7` 的独立预审发现四项回滚/恢复阻断问题，修复候选已加入指定离机包输入、远端整包重验、激活/回滚共享锁和真正的 stale/故障注入测试。最新 main 上本地完整 verify PASS（471 Node：466 通过/5 Windows 跳过，302/302 浏览器），修复候选 Linux job PASS，最终 head PR CI/独立复审待核实。原根 checkout dirty 不碰。旧 VPS 当前无 SSH 认证，用户浏览器控制页接口超时，HTTP 301 不证明版本/数据；需当前主机访问、离机备份和隔离恢复才能确认搬迁。用户新目标是 Web 本机伴随服务存储，现有 IndexedDB 仍是待迁移实现。
+`codex/T10-PREP-vps-migration` 的精确 head `abe1e99` 已由独立复审与 PR delivery/deploy-linux/verify 通过，并 squash 合入 `main@45fdc14`；合并后主线 deploy-linux/verify 也成功。原根 checkout dirty 不碰。旧 VPS 当前无 SSH 认证，用户浏览器控制页接口超时，HTTP 301 不证明版本/数据；需当前主机访问、离机备份和隔离恢复才能确认搬迁。用户新目标是 Web 本机伴随服务存储，现有 IndexedDB 仍是待迁移实现。
 
 ## 2026-09-28 三端版本与本机服务目标恢复点
 
-版本任务 worktree `D:/kk-studio/.worktrees/platform-versioning`、分支 `codex/TASK-VERSION-001-platform-versions`；从最新 `origin/main` 核对 base/head 后继续。`config/platform-versions.json` 是三端版本源，新增 `npm run version:bump -- --platform desktop,web` 与 `npm run version:check`，每项后续任务作者按实际产物自动递增。Web 本机伴随服务、真实登录和 Mobile 包均未实现，切勿将 IndexedDB 或响应式布局冒充目标能力。原根 checkout dirty 不可覆盖；验证与 PR 状态见[本轮记录](../changes/2026-09-28-platform-versioning/verification.md)。
+版本任务精确 head `9d55857` 已合入 `main@799efc5`；`config/platform-versions.json` 是三端版本源，新增 `npm run version:bump -- --platform desktop,web` 与 `npm run version:check`，每项后续任务作者按实际产物自动递增。PR/主线门禁与独立复审均 PASS，合并树一致。Web 本机伴随服务、真实登录和 Mobile 包均未实现，切勿将 IndexedDB 或响应式布局冒充目标能力。原根 checkout dirty 不可覆盖；验证见[本轮记录](../changes/2026-09-28-platform-versioning/verification.md)。
 
 ## 2026-09-28 图片对比合并后主线 CI 回归
 
-PR #21 已合入 `main@7bc7c67`，原 push run `36369533105` 因 390px 对比按钮实测 `43.999992px < 44px` 失败。[PR #22](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/22) 以 45px 最小高度修复并完成 Web/Desktop GUI、本地与 Hosted 验证及独立复审，现合入 `main@065bcbf`；新主线 push CI 待回读。旧根 checkout dirty，禁止覆盖。
+PR #21 已合入 `main@7bc7c67`，原 push run `36369533105` 因 390px 对比按钮实测 `43.999992px < 44px` 失败。[PR #22](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/22) 以 45px 最小高度修复并完成 Web/Desktop GUI、本地与 Hosted 验证及独立复审，现合入 `main@065bcbf`；合并后主线 verify 通过。旧根 checkout dirty，禁止覆盖。
 
 ## 2026-09-28 图片对比 PR #21 恢复点
 
