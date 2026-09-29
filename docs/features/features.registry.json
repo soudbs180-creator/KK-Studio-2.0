@@ -567,7 +567,7 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-013-connectors.md",
-    "summary": "画布插件系统的 HTTPS URL 安装和内置节点在 Web preview 可用；Desktop CSP 阻止当前 blob 模块加载，待 PLUGIN-DESKTOP-001 修复。连接器目录页仍为硬编码清单，与插件系统未合并。",
+    "summary": "画布插件系统的 HTTPS URL 安装和内置节点在 Web preview 可用；随包插件现通过同源模块路径在 fresh Tauri Desktop 验证发现、添加、渲染和启停，严格 CSP 未放宽。远程代码仍保持 HTTPS/重定向边界，连接器目录页与插件系统尚未合并。",
     "entryPoints": [
       "技能页内连接器目录 ConnectorCatalog"
     ],
@@ -590,7 +590,7 @@
       "TASK-UI-005",
       "PLUGIN-DESKTOP-001"
     ],
-    "updated": "2026-09-23",
+    "updated": "2026-09-29",
     "platforms": [
       "web",
       "desktop"

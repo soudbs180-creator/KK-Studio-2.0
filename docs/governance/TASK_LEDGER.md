@@ -66,7 +66,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-007 | 手机平板电脑三档尺寸与图标对齐 | DONE | TASK-UI-006, TASK-AGENT-001 | root |
 | TASK-UI-008 | 重新制定创作输入框规范并统一三档实现 | DONE | TASK-UI-007, TASK-AGENT-002 | root |
 | TASK-AGENT-003 | Agent 图片附件、画布引用与视口选择操作 | DONE | TASK-AGENT-001, TASK-AGENT-002 | root |
-| PLUGIN-DESKTOP-001 | 修复桌面画布插件的 CSP 加载路径 | TODO | none | root |
+| PLUGIN-DESKTOP-001 | 修复桌面画布插件的 CSP 加载路径 | REVIEW | none | root |
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
@@ -812,12 +812,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 让可信随包插件在保持严格 CSP 的前提下于 Tauri 桌面端加载并验证
 - Scope: 同源插件模块加载、桌面 CSP、fresh Tauri 插件交互验证
 - Acceptance: 随包插件从同源模块路径加载且不全局放宽脚本 CSP; fresh Tauri 中插件发现、添加、渲染和启停通过实际交互; 远程插件的权限与来源边界保持明确
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `fix/PLUGIN-DESKTOP-001-csp`
+- Worktree: `D:/kk-studio/.worktrees/platform-versioning`
 - Modules: src/features/plugins, src-tauri/tauri.conf.json, tests/browser
-- Verification: NOT_VERIFIED — 当前 Tauri CSP 拒绝 blob 模块，独立审查的原样 CSP 探针复现；修复和 fresh Desktop 交互尚未验证。
-- Evidence: [docs/changes/2026-09-23-release-2-1-0/review.md](../../docs/changes/2026-09-23-release-2-1-0/review.md)
-- Updated: 2026-09-23
+- Verification: PASS — 12 项插件单测、TypeScript、Web build、Tauri client build 通过；fresh Tauri 隔离运行完成随包插件发现、添加、渲染、停用和恢复，资源走 tauri.localhost/plugins/*.js 同源 URL，严格 CSP 未放宽，页面错误为空。独立只读 review 对代码 head 91396c6 给出 PASS、无 P0–P3 findings；PR/CI 待推送后回读。
+- Evidence: [docs/changes/2026-09-29-plugin-desktop-csp/intent.md](../../docs/changes/2026-09-29-plugin-desktop-csp/intent.md), [docs/changes/2026-09-29-plugin-desktop-csp/spec.md](../../docs/changes/2026-09-29-plugin-desktop-csp/spec.md), [docs/changes/2026-09-29-plugin-desktop-csp/plan.md](../../docs/changes/2026-09-29-plugin-desktop-csp/plan.md), [docs/changes/2026-09-29-plugin-desktop-csp/verification.md](../../docs/changes/2026-09-29-plugin-desktop-csp/verification.md), [docs/changes/2026-09-29-plugin-desktop-csp/review.md](../../docs/changes/2026-09-29-plugin-desktop-csp/review.md), [docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-runtime.json](../../docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-runtime.json), [docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-plugin-csp.png](../../docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-plugin-csp.png)
+- Updated: 2026-09-29
 
 ## REL-2.1.0 — 2.1.0 本地集成与源码上传
 
