@@ -815,7 +815,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/PLUGIN-DESKTOP-001-csp`
 - Worktree: `D:/kk-studio/.worktrees/platform-versioning`
 - Modules: src/features/plugins, src-tauri/tauri.conf.json, tests/browser
-- Verification: PASS — 12 项插件单测、TypeScript、Web build、Tauri client build 通过；fresh Tauri 隔离运行完成随包插件发现、添加、渲染、停用和恢复，资源走 tauri.localhost/plugins/*.js 同源 URL，严格 CSP 未放宽，页面错误为空。独立 review 与 PR/CI 待当前 head 固定后收口。
+- Verification: PASS — 12 项插件单测、TypeScript、Web build、Tauri client build 通过；fresh Tauri 隔离运行完成随包插件发现、添加、渲染、停用和恢复，资源走 tauri.localhost/plugins/*.js 同源 URL，严格 CSP 未放宽，页面错误为空。独立只读 review 对代码 head 91396c6 给出 PASS、无 P0–P3 findings；PR/CI 待推送后回读。
 - Evidence: [docs/changes/2026-09-29-plugin-desktop-csp/intent.md](../../docs/changes/2026-09-29-plugin-desktop-csp/intent.md), [docs/changes/2026-09-29-plugin-desktop-csp/spec.md](../../docs/changes/2026-09-29-plugin-desktop-csp/spec.md), [docs/changes/2026-09-29-plugin-desktop-csp/plan.md](../../docs/changes/2026-09-29-plugin-desktop-csp/plan.md), [docs/changes/2026-09-29-plugin-desktop-csp/verification.md](../../docs/changes/2026-09-29-plugin-desktop-csp/verification.md), [docs/changes/2026-09-29-plugin-desktop-csp/review.md](../../docs/changes/2026-09-29-plugin-desktop-csp/review.md), [docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-runtime.json](../../docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-runtime.json), [docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-plugin-csp.png](../../docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-plugin-csp.png)
 - Updated: 2026-09-29
 
