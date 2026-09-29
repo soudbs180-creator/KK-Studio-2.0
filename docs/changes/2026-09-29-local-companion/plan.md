@@ -5,7 +5,7 @@
 - 日期：2026-09-29
 - Intent / Spec / ADR：`intent.md`、`spec.md`、`docs/architecture/adr/ADR-008-platform-versions-and-local-first.md`
 - Owner / branch / worktree：root / `feat/TASK-LOCAL-SERVICE-001-companion` / `D:/kk-studio/.worktrees/platform-versioning`
-- Base / HEAD SHA 与远端目标：base `origin/main@49f20c85c48b1d9f939c1b423dc542b419e18260`；实现提交 `599c99b`, `46ed2ee`, `4f81d7c`, `0619154`, `bd22aa8`, `84008ab`, `346c2c0`, `c103efb`, `2d61a4c`, `8637acd`；当前候选 head `8637acd4f6704cf953e833ed2f8ae34c2679b6ee`，目标 `origin/main`。
+- Base / HEAD SHA 与远端目标：base `origin/main@49f20c85c48b1d9f939c1b423dc542b419e18260`；实现提交 `599c99b`, `46ed2ee`, `4f81d7c`, `0619154`, `bd22aa8`, `84008ab`, `346c2c0`, `c103efb`, `2d61a4c`, `8637acd`, `6d0346e`, `082d1c4`；当前候选 head `082d1c4684b31c9ea1d37f7b2a7f1e7d99d91917`，目标 `origin/main`。
 - Git dirty/index 状态、并行任务与文件归属：实现 worktree 与根 checkout 隔离；根 checkout 的 UI/evidence dirty 改动未触碰；本任务文件仅由本分支串行维护。
 
 ## 开工证据
@@ -46,7 +46,7 @@
 ## 验证和交付
 
 - 定向回归：资产服务优先缺失 `size` 的问题已修复；真实浏览器暴露的 detached fetch 误报离线已修复；迁移/资产/服务测试通过。
-- 完整验证：最终记录见 `verification.md`；本地 full unit 518/510/8，integration、typecheck、UI、Prettier、Vite build 和 production smoke 通过。
+- 完整验证：最终记录见 `verification.md`；本地 full unit 522/514/8，integration、typecheck、UI、Prettier、Vite build、三个 browser specs 和 production smoke 通过。
 - UI 运行态证据：Playwright preview `127.0.0.1:1423`，设置 → 储存；1920px 配对/备份/断开与 390px 离线状态通过。真实临时服务和 fresh browser context 由 smoke 启动。
 - 独立 reviewer 与当前 SHA 审查：由 `review.md` 记录；新 head 生成后旧结论失效，必须绑定最终 PR head。
 - 文档、账本、PROJECT_STATE/HANDOFF/PROGRESS 更新：FEAT-037、registry、DATA-STORAGE、PROGRESS、PROJECT_STATE、task-ledger 与生成 TASK_LEDGER 同步。
@@ -56,3 +56,5 @@
 ## 计划变更记录
 
 - 2026-09-29：Task 4 发现 Web 浏览器保存的 detached fetch 会同步抛 `Illegal invocation`，改为客户端 wrapper 后重新跑真实迁移；资产服务上传 metadata 补 `size` 并加回归测试。验收范围扩大到连接/备份/断线/重启 smoke，不改变产品意图。
+- 2026-09-29：独立复审前置回报的服务引用完整性、服务快照 URI 编解码、备份原子恢复、离线断开、严格 provenance、冲突详情、迁移报告 session/TTL、会话哈希、分页内存和重复素材来源问题在 `6d0346e` 收口；Web 按实际受影响平台自动从 `2.1.1` bump 为 `2.1.2`，Desktop/Mobile 保持 `2.1.1`。
+- 2026-09-29：`082d1c4` 收口来源 URL/manifest `createdAt`/备份路径边界、服务重启后 stale cookie 检查及恢复前主快照校验；重建 production bundle 后连接/备份/断开浏览器验收 2/2 通过。

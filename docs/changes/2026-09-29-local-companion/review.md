@@ -2,9 +2,9 @@
 
 - Task ID：`TASK-LOCAL-SERVICE-001`
 - 时间与时区：2026-09-29 / Asia/Shanghai
-- Reviewer/context/工具或模型：独立只读 reviewer 已派发，结论待回读；本文件先记录 self-review 和门禁，不伪造独立结论。
+- Reviewer/context/工具或模型：独立只读 reviewer 已按最终实现 head `082d1c4` 重新派发，结论待回读；本文件先记录 self-review 和门禁，不伪造独立结论。
 - 独立于实现上下文：是，reviewer 只收到精确 base/head、规范路径和检查重点，没有本会话历史。
-- Base SHA / head SHA / 规则版本：base `49f20c85c48b1d9f939c1b423dc542b419e18260`；候选 head `8637acd4f6704cf953e833ed2f8ae34c2679b6ee`；`AGENTS.md`、`AI_RULES.md` 和 `docs/engineering/REVIEW.md`。
+- Base SHA / head SHA / 规则版本：base `49f20c85c48b1d9f939c1b423dc542b419e18260`；候选 head `082d1c4684b31c9ea1d37f7b2a7f1e7d99d91917`；`AGENTS.md`、`AI_RULES.md` 和 `docs/engineering/REVIEW.md`。
 - PR / branch / worktree：PR 待创建 / `feat/TASK-LOCAL-SERVICE-001-companion` / `D:/kk-studio/.worktrees/platform-versioning`
 - Intent / Spec / Plan / Verification：本目录对应文件。
 
@@ -23,15 +23,20 @@
 | SELF-2 | P1 | Task4 | 已关闭 | `assetRepository.ts`，`assetStorage.test.ts` | 素材 metadata 缺 `size`，服务严格 schema 拒绝 | root：补真实 byteLength 和服务路径回归 | CLOSED/PASS |
 | SELF-3 | P2 | Task4 | 已关闭 | `store.ts` migration publish | 仅检查已引用素材可能让未引用资产静默丢失 | root：发布前要求 manifest 中每个素材均已上传 | CLOSED/PASS，`2d61a4c` |
 | SELF-4 | P2 | Task5 | 已关闭 | PR #30 Hosted verify lint output | 连接组件禁用注释引用未安装规则，服务/测试有未使用项和显式 any | root：移除无效注释和未使用项，JSON helper 改为泛型 | CLOSED/PASS，`8637acd` |
+| SELF-5 | P1 | Task1/3 | 已关闭 | `store.ts`/`storage.ts` snapshot asset boundary | 服务端可接受 `kk-asset:` 缺失引用；Web 服务分支未 encode/hydrate | root：写入前校验所有引用资产，Web load hydrate、persist encode；新增缺失资产回归 | CLOSED/PASS，`6d0346e` |
+| SELF-6 | P1 | Task5 | 已关闭 | `store.ts` backup restore | 逐文件发布失败会留下半恢复状态 | root：restore staging 回读 hash、发布失败逐目标回滚；新增故障注入回归 | CLOSED/PASS，`6d0346e` |
+| SELF-7 | P1 | Task3 | 已关闭 | `client.ts` disconnect | 服务离线时断开不清除本机连接元数据 | root：finally 清理连接，设置页回到未连接并提示恢复路径 | CLOSED/PASS，`6d0346e` |
+| SELF-8 | P2 | Task1/2/5 | 已关闭 | protocol/session/server/store | provenance 过宽、origin 可缺失、冲突无 currentRevision、报告未绑定会话、会话明文 Map、重复素材丢来源、列表读全 blob | root：严格 schema/敏感字段、来源必需、冲突详情、session/TTL、hash key、来源合并、metadata-only 分页 | CLOSED/PASS，`6d0346e` |
+| SELF-9 | P2 | Task1/2/5 | 已关闭 | `manifest.ts`/`server.ts`/`client.ts`/`store.ts` | 来源 URL、清单时间、恢复路径和重启 stale cookie 边界仍可放宽 | root：严格 pathname/origin、ISO `createdAt`、受限恢复路径、认证探针；新增单测 | CLOSED/PASS，`082d1c4` |
 | FOLLOW-1 | P3 | follow-up | 不阻断本机功能 | `migration.ts` / store | 上传中断时可能留下未引用素材，旧 IDB 和已发布快照不受影响 | 后续 GC 任务，保留不误删 | OPEN |
 
 ## 适用门禁
 
 | 门禁 | 真实结果 | 证据与 SHA/时间 | 未满足的影响 |
 | --- | --- | --- | --- |
-| Self-review | PASS，已关闭四项实现/门禁缺口 | `verification.md`、实现 head `8637acd` | 不替代独立复审 |
-| 独立 AI review | NOT RUN | 最终 head 待审 | merge 前必需 |
-| CI / 定向回归 | 本地 PASS；Hosted NOT RUN | 518 unit、3 browser、integration/smoke、type/UI/format/build | Hosted 失败不得合并 |
+| Self-review | PASS，已关闭实现/门禁缺口 | `verification.md`、实现 head `082d1c4` | 不替代独立复审 |
+| 独立 AI review | IN PROGRESS | 最终实现 head `082d1c4` 已重新派发 | merge 前必需 |
+| CI / 定向回归 | 本地 PASS；Hosted NOT RUN | 522 unit、3 browser、integration/smoke、type/UI/format/build | Hosted 失败不得合并 |
 | GitHub 实际审批数量/身份 | UNKNOWN | PR/ruleset 待回读 | 不能虚构审批 |
 | 用户 UI/交互/产品验收 | 自动化 Web 交互 PASS；用户手动验收未记录 | 1920/390px browser specs | 不称用户最终视觉验收 |
 | 推送/合并/发布授权 | 用户已授权合并/远端同步；尚未执行 | 当前会话用户请求 | 未发生前不能称已同步 |
