@@ -34,22 +34,44 @@ test("菜单 Escape 先收起菜单，再次 Escape 收起编辑器并保留草�
     .screenshot({ path: "test-results/runtime/image-composer-refined.png" });
 });
 
-test("平板会话覆盖时画布不接收交互，标题和输入控件尺寸稳定", async ({
-  page,
-}) => {
+test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳定", async ({ page }) => {
   await openWorkspace(page);
   await page.setViewportSize({ width: 1071, height: 698 });
   await page.getByRole("button", { name: "打开对话", exact: true }).click();
   await expect(page.locator(".conversation-panel")).toBeVisible();
   await waitForConversationPanelSettled(page);
-  await expect(page.locator(".canvas-toolbar")).toBeHidden();
-  await expect(page.getByTestId("infinite-canvas")).toHaveAttribute(
+  await expect(page.locator(".canvas-toolbar")).toBeVisible();
+  await expect(page.getByTestId("infinite-canvas")).not.toHaveAttribute(
     "inert",
-    "",
   );
   expect((await page.locator(".conversation-panel").boundingBox())!.width).toBe(
     400,
   );
+  const split = await page.evaluate(() => {
+    const rect = (selector: string) => {
+      const box = document
+        .querySelector<HTMLElement>(selector)!
+        .getBoundingClientRect();
+      return {
+        left: box.left,
+        right: box.right,
+        top: box.top,
+        height: box.height,
+      };
+    };
+    return {
+      canvas: rect(".canvas"),
+      navigation: rect(".canvas-top-right"),
+      toolbar: rect(".canvas-toolbar"),
+      sidebarToggle: rect(".sidebar-toggle"),
+      panel: rect(".conversation-panel"),
+    };
+  });
+  expect(split.navigation.right).toBeLessThanOrEqual(split.panel.left - 8);
+  expect(split.toolbar.right).toBeLessThanOrEqual(split.panel.left - 8);
+  expect(split.canvas.right).toBeCloseTo(split.panel.left, 0);
+  expect(split.sidebarToggle.height).toBe(44);
+  expect(split.sidebarToggle.top).toBe(split.navigation.top);
   const headerButtons = await page
     .locator(".conversation-panel > header > button")
     .evaluateAll((buttons) =>

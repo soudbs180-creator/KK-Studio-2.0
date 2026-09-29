@@ -1,0 +1,143 @@
+/* Figma governance page templates. Geometry is token driven and shared. */
+.kk-page-template {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--kk-space-4);
+}
+
+.kk-page-template-list,
+.kk-table {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--kk-space-2);
+}
+
+.kk-page-template-grid,
+.kk-cardgrid {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--kk-space-4);
+  align-content: start;
+}
+
+.kk-page-template-detail,
+.kk-detail {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--kk-space-4);
+}
+
+.kk-page-template-timeline,
+.kk-timeline {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--kk-space-4);
+}
+
+.kk-page-template-gallery,
+.kk-gallery {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--kk-space-3);
+  align-content: start;
+}
+
+.kk-page-template-card,
+.kk-card,
+.kk-gallery-card {
+  min-width: 0;
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-control);
+  background: var(--kk-bg-card);
+}
+
+.kk-page-template-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-2);
+  padding: var(--kk-space-3);
+  text-align: left;
+}
+
+.kk-gallery-card {
+  padding: var(--kk-space-1);
+  background: transparent;
+}
+
+.kk-template-empty,
+.kk-template-loading,
+.kk-template-error {
+  min-height: 240px;
+  padding: var(--kk-space-6);
+  border-radius: var(--kk-radius-control);
+}
+
+.kk-template-empty,
+.kk-template-loading {
+  display: grid;
+  place-items: center;
+  color: var(--kk-text-secondary);
+}
+
+.kk-template-error {
+  border: var(--kk-border-width) solid var(--kk-danger);
+  background: var(--kk-bg-card);
+  color: var(--kk-text-primary);
+}
+
+/* Catalog pages consume the same grid template; responsive changes only the
+   minimum column size, never a second ad-hoc spacing or radius system. */
+.page-template-shell[data-template="grid"] .catalog-card-grid,
+.page-template-shell[data-template="grid"] .project-grid {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--kk-space-4);
+}
+
+.page-template-shell[data-template="grid"] .catalog-card,
+.page-template-shell[data-template="grid"] .project-library-card {
+  border-radius: var(--kk-radius-control);
+}
+
+.page-template-shell[data-template="grid"] .catalog-card-body {
+  padding: var(--kk-space-3);
+}
+
+.page-template-shell[data-template="grid"] .project-library-card > strong,
+.page-template-shell[data-template="grid"] .project-library-card > span {
+  margin-inline: var(--kk-space-3);
+}
+
+@media (max-width: 900px) {
+  .kk-page-template-grid,
+  .kk-cardgrid,
+  .page-template-shell[data-template="grid"] .catalog-card-grid,
+  .page-template-shell[data-template="grid"] .project-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  .kk-page-template-gallery,
+  .kk-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .kk-page-template-grid,
+  .kk-cardgrid,
+  .page-template-shell[data-template="grid"] .catalog-card-grid,
+  .page-template-shell[data-template="grid"] .project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kk-page-template-gallery,
+  .kk-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  }
+}
+

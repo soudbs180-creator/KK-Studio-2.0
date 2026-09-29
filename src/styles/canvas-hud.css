@@ -173,11 +173,15 @@
   .canvas-hud .canvas-top-right {
     order: 2;
   }
-  /* The narrow conversation layout owns the full canvas. The side-by-side
-     navigation placement below is reserved for the measured desktop frame. */
+}
+@media (max-width: 959px) {
+  /* The compact conversation layout owns the full canvas below the split
+     breakpoint. */
   .workspace.chat-mobile .canvas-top-right {
     display: none;
   }
+}
+@media (max-width: 1200px) {
   .canvas-hud-right {
     gap: 8px;
   }

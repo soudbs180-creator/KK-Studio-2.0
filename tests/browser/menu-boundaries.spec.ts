@@ -1,28 +1,23 @@
 import { expect, test } from "@playwright/test";
 import { openWorkspace, showCanvasNavigation } from "./helpers";
 
-test("手机断点隐藏账号时清除弹层，重新展开后保持顶层关闭顺序", async ({
-  page,
-}) => {
+test("手机断点清除账号弹层并保留固定顶栏操作", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await page.getByRole("button", { name: "个人信息", exact: true }).click();
+  await expect(page.locator(".account-popup")).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
-  const toggle = page.locator(".sidebar-toggle");
-  await expect(toggle).toHaveAttribute("aria-expanded", "false");
-  await toggle.focus();
-  await page.keyboard.press("Enter");
-  await expect(toggle).toHaveAttribute("aria-expanded", "true");
   await expect(page.locator(".account-popup")).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "切换项目", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "搜索与收藏", exact: true }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "个人信息", exact: true }).click();
   await expect(page.locator(".account-popup")).toBeVisible();
-  await page
-    .getByRole("button", { name: "创建项目文件夹", exact: true })
-    .click();
+  await page.keyboard.press("Escape");
   await expect(page.locator(".account-popup")).toHaveCount(0);
-  await expect(toggle).toHaveAttribute("aria-expanded", "true");
-  await page.mouse.click(375, 470);
-  await expect(toggle).toHaveAttribute("aria-expanded", "false");
 });
 
 test("侧栏菜单在同一侧栏中的其他操作开始时关闭", async ({ page }) => {

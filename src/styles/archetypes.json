@@ -1,0 +1,73 @@
+{
+  "$schema": "kk/page-templates/v2",
+  "version": "2.0",
+  "source": "Figma governance page 04 · page types",
+  "runtime": "src/domain/pageTemplates.ts",
+  "templates": [
+    {
+      "id": "list",
+      "label": "列表",
+      "layout": ["page-shell", "toolbar", "list-table"],
+      "components": ["search", "filter", "sortable-header", "list-row", "row-actions"],
+      "interaction": ["sort-cycle", "row-select", "keyboard-navigation", "row-actions-always-visible"],
+      "visual": {"gap": "--kk-space-4", "padding": "--kk-space-2", "radius": "--kk-radius-control", "text": "--kk-font-body"},
+      "states": ["empty", "loading", "error"]
+    },
+    {
+      "id": "grid",
+      "label": "卡片网格",
+      "defaultFor": ["work-display", "project", "skill", "workflow"],
+      "layout": ["page-shell", "toolbar", "responsive-card-grid"],
+      "components": ["search", "filter", "card", "status-badge", "card-action"],
+      "interaction": ["card-open-detail", "card-selection", "keyboard-open", "inner-action-stop-propagation"],
+      "visual": {"gap": "--kk-space-4", "padding": "--kk-space-3", "radius": "--kk-radius-control", "text": "--kk-font-body"},
+      "states": ["empty", "loading", "error"]
+    },
+    {
+      "id": "detail",
+      "label": "详情",
+      "layout": ["page-shell", "detail-hero", "metadata", "action-bar"],
+      "components": ["back", "hero", "metadata-list", "inline-edit", "action-bar"],
+      "interaction": ["back", "inline-edit", "primary-action", "danger-action-at-end"],
+      "visual": {"gap": "--kk-space-4", "padding": "--kk-space-4", "radius": "--kk-radius-panel", "text": "--kk-font-body"},
+      "states": ["empty", "loading", "error"],
+      "nestedIn": ["grid", "gallery"]
+    },
+    {
+      "id": "timeline",
+      "label": "时间线",
+      "layout": ["page-shell", "timeline-axis", "timeline-step-list"],
+      "components": ["axis", "step", "step-status", "step-expander", "timestamp"],
+      "interaction": ["expand-step", "scroll-to-active", "keyboard-expand"],
+      "visual": {"gap": "--kk-space-4", "padding": "--kk-space-3", "radius": "--kk-radius-control", "text": "--kk-font-body"},
+      "states": ["empty", "loading", "error"]
+    },
+    {
+      "id": "gallery",
+      "label": "画廊",
+      "layout": ["page-shell", "toolbar", "media-grid", "lightbox"],
+      "components": ["media-thumb", "source-badge", "selection-ring", "hover-actions", "lightbox"],
+      "interaction": ["single-select", "multi-select", "range-select", "open-lightbox", "arrow-key-navigation"],
+      "visual": {"gap": "--kk-space-3", "padding": "--kk-space-1", "radius": "--kk-radius-sm", "text": "--kk-font-caption"},
+      "states": ["empty", "loading", "error"]
+    }
+  ],
+  "routing": [
+    {"if": "workDisplay", "then": "grid"},
+    {"if": "ordered && (process || history)", "then": "timeline"},
+    {"if": "singleObject", "then": "detail"},
+    {"if": "sortable || count > 50", "then": "list"},
+    {"if": "media && (batchSelect || count > 12)", "then": "gallery"},
+    {"if": "*", "then": "grid"}
+  ],
+  "composition": {
+    "onePrimary": true,
+    "allowedNested": {"grid": ["detail"], "gallery": ["detail"]},
+    "forbiddenPeerMix": ["list", "grid", "timeline", "gallery"]
+  },
+  "states": {
+    "empty": {"minHeight": "240px", "requiresAction": true},
+    "loading": {"preserveTargetGeometry": true, "spinnerScope": "button-only"},
+    "error": {"requiresCauseImpactNextStep": true, "retryHeight": "32px"}
+  }
+}

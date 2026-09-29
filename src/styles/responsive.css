@@ -1,6 +1,8 @@
 /* DS 1.2 screen-space layout. App imports this after all domain styles. */
 .compact-app-menu,
-.sidebar-scrim {
+.sidebar-scrim,
+.mobile-project-switch,
+.mobile-settings {
   display: none;
 }
 @media (max-width: 1200px) {
@@ -53,10 +55,10 @@
     margin: 0;
   }
   .sidebar.is-collapsed .sidebar-toggle {
-    top: 16px;
+    top: 24px;
     left: 14px;
     width: 44px;
-    height: 40px;
+    height: 44px;
   }
   .sidebar.is-collapsed .sidebar-search,
   .sidebar.is-collapsed .sidebar-settings,
@@ -95,7 +97,7 @@
   .sidebar.is-narrow:not(.is-collapsed) .sidebar-toggle,
   .sidebar.is-narrow:not(.is-collapsed) .sidebar-search {
     width: 40px;
-    height: 40px;
+    height: 44px;
     flex-shrink: 0;
   }
   .sidebar-scrim {
@@ -116,11 +118,6 @@
     min-width: 0;
     padding: 16px;
     z-index: 30;
-  }
-  .workspace.chat-mobile .canvas-hud,
-  .workspace.chat-mobile .canvas-toolbar {
-    visibility: hidden;
-    pointer-events: none;
   }
   .canvas-hud {
     top: 16px;
@@ -235,6 +232,13 @@
     align-content: start;
   }
 }
+@media (max-width: 959px) {
+  .workspace.chat-mobile .canvas-hud,
+  .workspace.chat-mobile .canvas-toolbar {
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
 @media (max-width: 767px) {
   .sidebar,
   .sidebar.is-narrow:not(.is-collapsed) {
@@ -256,8 +260,7 @@
     z-index: 41;
   }
   .app .topbar > strong {
-    font-size: var(--ui-font-title);
-    white-space: nowrap;
+    display: none;
   }
   .topbar > nav,
   .topbar .preview-label {
@@ -265,7 +268,10 @@
   }
   .topbar .mobile-search {
     display: grid;
-    margin: 0 44px 0 auto;
+    position: fixed;
+    top: calc(6px + env(safe-area-inset-top, 0px));
+    right: 108px;
+    margin: 0;
     width: 44px;
     height: 44px;
     flex: 0 0 44px;
@@ -275,8 +281,42 @@
     height: 20px;
     display: block;
   }
-  .compact-app-menu {
+  .topbar .mobile-project-switch {
+    position: fixed;
+    top: calc(6px + env(safe-area-inset-top, 0px));
+    right: 8px;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--ui-radius-control);
+    z-index: 43;
+  }
+  .topbar .mobile-settings {
+    position: fixed;
+    top: calc(6px + env(safe-area-inset-top, 0px));
+    right: 58px;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--ui-radius-control);
+    z-index: 43;
+  }
+  .topbar .mobile-project-switch img {
     display: block;
+    width: 22px;
+    height: 20px;
+    object-fit: contain;
+  }
+  .topbar .mobile-settings img {
+    display: block;
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+  }
+  .compact-app-menu {
+    display: none;
   }
   .compact-app-trigger {
     width: 44px;
@@ -412,6 +452,37 @@
     z-index: 42;
     display: grid;
     place-items: center;
+  }
+  .sidebar.is-collapsed .sidebar-toggle {
+    display: none;
+  }
+  .sidebar.is-collapsed .sidebar-account {
+    position: fixed;
+    top: calc(6px + env(safe-area-inset-top, 0px));
+    left: 8px;
+    bottom: auto;
+    width: 44px;
+    height: 44px;
+    margin: 0;
+    display: grid;
+    place-items: center;
+    z-index: 43;
+  }
+  .sidebar.is-collapsed .sidebar-account .logo {
+    display: grid;
+    place-items: center;
+  }
+  .sidebar.is-collapsed .sidebar-account .logo img {
+    width: 30px;
+    height: 30px;
+  }
+  .sidebar.is-collapsed .account-popup {
+    position: fixed;
+    top: calc(var(--topbar-height) + 8px);
+    left: 8px;
+    bottom: auto;
+    width: min(260px, calc(100vw - 16px));
+    z-index: 50;
   }
   .sidebar .account-row .sidebar-settings,
   .sidebar.is-collapsed .sidebar-settings {
@@ -577,5 +648,31 @@
     width: min(300px, calc(100vw - 48px));
     height: auto;
     min-height: 240px;
+  }
+}
+
+/* Mobile header owns account-adjacent settings. The bottom rail keeps only
+   primary navigation so two settings buttons never compete for focus. */
+@media (max-width: 767px) {
+  .sidebar.is-collapsed .sidebar-settings {
+    display: none;
+  }
+}
+
+/* At tablet widths the sidebar is still a fixed left rail. Opening it grows
+   the rail toward the right and moves the workspace with its new edge, which
+   matches the 70px/291px shell states in the supplied Workspace frames. The
+   phone layout below 768px keeps its overlay drawer behavior. */
+@media (min-width: 768px) and (max-width: 1200px) {
+  .sidebar.is-narrow:not(.is-collapsed) {
+    width: var(--sidebar-width);
+  }
+
+  .sidebar.is-narrow:not(.is-collapsed) + .workspace {
+    margin-left: var(--sidebar-width);
+  }
+
+  .sidebar-scrim {
+    display: none;
   }
 }

@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-28 TASK-UI-CANVAS-001 当前恢复入口
+
+当前根工作区 `D:/kk-studio/KK-Studio-2.0` 仍为 dirty `main`，未提交。画布会话布局修复已完成：平板 960–1200px 使用右侧 400px rail，侧栏固定宽度只由 toggle 切换；目标回归与 build/typecheck 通过。恢复时先读 [verification](../changes/2026-09-28-canvas-chat-layout/verification.md)、账本和 `git status`；不要把 `connector-video1` 空白 fixture 超时、Figma reauth 或 Tauri/native 未运行误报为本轮布局失败。若继续改 CSS/DOM，重跑 AC-1–AC-4 并重新生成 `dist`/截图。
+
 ## 2026-09-27 Provider #16 独立补审 PASS 恢复点
 
 PR #16 源码 `1f81322` 独立只读补审 PASS，之前 P1/P2/P3 均关闭；本地完整 `verify` 和 delivery 通过。补录审查的文档提交仍需精确 head Hosted 检查；PR 未合并，真实第三方配置消费仍待接线验收。根目录 UI 未提交改动继续保持隔离。

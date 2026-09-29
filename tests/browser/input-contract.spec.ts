@@ -12,7 +12,14 @@ async function assertFlow(form: Locator) {
   const actions = await form
     .locator("[data-node-id='407:29315'], .start-composer-footer")
     .boundingBox();
-  expect(attachments!.y).toBeGreaterThanOrEqual(input!.y + input!.height + 7);
+  const attachmentGap = (await form.getAttribute("class"))?.includes(
+    "chat-composer",
+  )
+    ? 0
+    : 7;
+  expect(attachments!.y).toBeGreaterThanOrEqual(
+    input!.y + input!.height + attachmentGap,
+  );
   expect(actions!.y).toBeGreaterThanOrEqual(
     attachments!.y + attachments!.height + 7,
   );
@@ -62,7 +69,7 @@ test("phone menus leave all composer actions reachable", async ({ page }) => {
   await page.goto("/");
   const form = page.locator(".start-composer");
   await form.locator("textarea").fill("菜单切换保持草稿");
-  for (const name of ["模型", "Skill", "插件", /^当前模式：/]) {
+  for (const name of ["模型", "Skill", /^当前模式：/]) {
     const trigger = form.getByRole("button", { name, exact: true });
     await trigger.click();
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
@@ -119,7 +126,7 @@ for (const [width, height] of [
   [834, 1112],
   [1440, 900],
 ]) {
-  test(`composer text grows and has one focus boundary at ${width}`, async ({
+  test(`composer keeps the Figma fixed text region and one focus boundary at ${width}`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height });
@@ -146,18 +153,27 @@ for (const [width, height] of [
       await expect(input).toHaveCSS("outline-style", "none");
       await expect(form).toHaveCSS("outline-width", "2px");
       const initial = (await input.boundingBox())!.height;
-      if (kind === "start" && width >= 768)
-        expect(
-          (await form.locator(".composer-toolbar").boundingBox())!.height,
-        ).toBe(width <= 1200 ? 44 : 32);
+      expect(
+        (await form.locator(".composer-toolbar").boundingBox())!.height,
+      ).toBe(24);
       await input.fill(
         Array.from({ length: 6 }, (_, i) => `第 ${i + 1} 行输入`).join("\n"),
       );
-      expect((await input.boundingBox())!.height).toBeGreaterThan(initial + 30);
+      if (kind === "start") {
+        await expect
+          .poll(async () => (await input.boundingBox())!.height)
+          .toBeGreaterThan(initial + 30);
+      } else {
+        expect((await input.boundingBox())!.height).toBe(initial);
+      }
       await input.fill("连续的中文输入与长内容\n".repeat(25));
-      expect((await input.boundingBox())!.height).toBeLessThanOrEqual(
-        width <= 1200 ? 192 : 160,
-      );
+      if (kind === "start") {
+        await expect
+          .poll(async () => (await input.boundingBox())!.height)
+          .toBeLessThanOrEqual(width <= 1200 ? 192 : 160);
+      } else {
+        expect((await input.boundingBox())!.height).toBe(initial);
+      }
       expect(
         await input.evaluate((el) => el.scrollHeight > el.clientHeight),
       ).toBe(true);

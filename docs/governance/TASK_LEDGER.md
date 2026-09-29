@@ -76,6 +76,10 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | TASK-ORCH-001 | root |
 | TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | TASK-AGENT-001 | root |
 | TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | REVIEW | none | root |
+| TASK-UI-CANVAS-001 | 画布会话分栏与固定侧栏交互修复 | DONE | TASK-UI-007 | root |
+| TASK-UI-HOME-002 | 首页与对话输入区剩余设计反馈收口 | PARTIAL | TASK-UI-CANVAS-001 | root |
+| TASK-UI-GOV-003 | 新版 Figma 四页治理基线与 UI 模板收口 | PARTIAL | TASK-UI-HOME-002 | root |
+| TASK-CANVAS-KAWORKAI-001 | Kaworkai 无限画布交互研究与本地画布增强 | PARTIAL | none | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -920,3 +924,51 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — 旧 head 42c3f26 的 4 P1/2 P2 与合并 head 39369c9 的新增 P1/P2/P3 均已按失败先行测试整改。源码 1f81322 独立只读补审 PASS；本地完整 verify 通过：456 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0；delivery 22/0。最终文档 head Hosted CI、真实 Codex/Claude 消费仍待完成。
 - Evidence: [docs/changes/2026-09-24-provider-connectivity/intent.md](../../docs/changes/2026-09-24-provider-connectivity/intent.md), [docs/changes/2026-09-24-provider-connectivity/spec.md](../../docs/changes/2026-09-24-provider-connectivity/spec.md), [docs/changes/2026-09-24-provider-connectivity/plan.md](../../docs/changes/2026-09-24-provider-connectivity/plan.md), [docs/changes/2026-09-24-provider-connectivity/verification.md](../../docs/changes/2026-09-24-provider-connectivity/verification.md), [docs/changes/2026-09-24-provider-connectivity/remaining.md](../../docs/changes/2026-09-24-provider-connectivity/remaining.md)
 - Updated: 2026-09-26
+
+## TASK-UI-CANVAS-001 — 画布会话分栏与固定侧栏交互修复
+
+- Goal: 让平板会话展开后保留可用画布控件，并让侧栏只通过开关切换固定宽度
+- Scope: App canvas coverage, Sidebar toggle, Canvas HUD/navigation/toolbar, ConversationPanel responsive layout, browser regression
+- Acceptance: 960–1200px 会话 rail 保持 400px 以内并将画布控件左移; 顶部导航、任务入口和底部工具在分栏状态可见、可操作且保留间距; 侧栏展开为固定 304px、收起为 72px 且不显示 ResizeHandle; <960px 继续使用覆盖式会话和 inert 画布; 定向 typecheck/build/Playwright 与截图证据完成
+- Branch: `main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: src/App.tsx, src/components/Sidebar.tsx, src/styles/canvas-hud.css, src/styles/conversation-panel.css, src/styles/responsive-content.css, src/styles/responsive.css, tests/browser/composer-fidelity.spec.ts, tests/browser/sidebar.spec.ts
+- Verification: PASS — 目标 Web 定向回归通过：composer 2、sidebar 2、responsive-layout 3、desktop toolbar 1，Node 456、typecheck/build/diff check 通过；完整 canvas-layout 的 connector-video1 fixture 失败与本轮布局改动无关，Tauri/Figma/真实设备仍未验证。
+- Evidence: [docs/changes/2026-09-28-canvas-chat-layout/intent.md](../../docs/changes/2026-09-28-canvas-chat-layout/intent.md), [docs/changes/2026-09-28-canvas-chat-layout/spec.md](../../docs/changes/2026-09-28-canvas-chat-layout/spec.md), [docs/changes/2026-09-28-canvas-chat-layout/plan.md](../../docs/changes/2026-09-28-canvas-chat-layout/plan.md), [docs/changes/2026-09-28-canvas-chat-layout/verification.md](../../docs/changes/2026-09-28-canvas-chat-layout/verification.md), [docs/changes/2026-09-28-canvas-chat-layout/review.md](../../docs/changes/2026-09-28-canvas-chat-layout/review.md), [docs/changes/2026-09-28-canvas-chat-layout/evidence/after-tablet-chat-final.png](../../docs/changes/2026-09-28-canvas-chat-layout/evidence/after-tablet-chat-final.png)
+- Updated: 2026-09-28
+
+## TASK-UI-HOME-002 — 首页与对话输入区剩余设计反馈收口
+
+- Goal: 按已授权 Figma 节点收口首页、对话、设置、侧栏与画布，移除重复提示词库入口并复核页面交互
+- Scope: StartComposer/StartPage/ConversationPanel geometry, prompt-library entry, settings bottom rail, mobile topbar, sidebar and canvas shell regression
+- Acceptance: 首页不再渲染提示词库快捷按钮，文件/应用功能菜单仍可打开提示词库; 首页空态 652×170/299×170 且动作顺序与 Figma 一致; 407:29265 对话输入的模型/Skill/插件及右侧动作保持可操作; 设置分类位于底部横向滑块，侧栏收起、画布工具条和对话入口保持可操作; 桌面与平板侧栏收起为 70px、展开为 291px 并推动工作区；收起图标为左小右大空心，展开图标填充左小框; typecheck/build 与本任务定向 Playwright 通过，已知 fixture 限制单独记录
+- Branch: `main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: src/App.tsx, src/components/StartPage.tsx, src/components/StartComposer.tsx, src/styles/composer.css, src/styles/feature-parity.css, src/styles/responsive-content.css, src/components/SidebarIcon.tsx, src/styles/responsive.css, public/design/figma/sidebar-expand.svg, public/design/figma/sidebar-collapse.svg, tests/browser/input-contract.spec.ts, tests/browser/ui-feature-parity.spec.ts, tests/browser/sidebar.spec.ts
+- Verification: PARTIAL — 目标定向回归通过：typecheck/build、input-contract 9、composer-menu 7、frame 3、settings 3、sidebar 9、ui-feature-parity 4、ui-interaction-matrix 1，以及最新 sidebar/frame 定向 4 项；1920 与 1099 视口核对 70px→291px 工作区推动和图标状态；canvas 图片 fixture 等待 image-preview/连接卡片超时，保留为未验证项；Figma 节点 483:695、483:753、407:29265、399:27506、404:28667 与 410:67357 已重新授权读取。
+- Evidence: [docs/changes/2026-09-29-home-composer-fidelity/intent.md](../../docs/changes/2026-09-29-home-composer-fidelity/intent.md), [docs/changes/2026-09-29-home-composer-fidelity/spec.md](../../docs/changes/2026-09-29-home-composer-fidelity/spec.md), [docs/changes/2026-09-29-home-composer-fidelity/plan.md](../../docs/changes/2026-09-29-home-composer-fidelity/plan.md), [docs/changes/2026-09-29-home-composer-fidelity/verification.md](../../docs/changes/2026-09-29-home-composer-fidelity/verification.md), [docs/changes/2026-09-29-home-composer-fidelity/review.md](../../docs/changes/2026-09-29-home-composer-fidelity/review.md), [docs/changes/2026-09-29-home-composer-fidelity/evidence/home-390.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/home-390.png), [docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1099.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1099.png), [docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1920.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1920.png), [docs/changes/2026-09-29-home-composer-fidelity/evidence/sidebar-collapsed-1099.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/sidebar-collapsed-1099.png), [docs/changes/2026-09-29-home-composer-fidelity/evidence/sidebar-expanded-1099.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/sidebar-expanded-1099.png)
+- Updated: 2026-09-29
+
+## TASK-UI-GOV-003 — 新版 Figma 四页治理基线与 UI 模板收口
+
+- Goal: 按新版四份治理页面统一业务状态、UI token、共享组件和五种页面模板
+- Scope: uiGovernance state gates, tokens, shared controls, page templates, home/chat/settings/sidebar layout, governance docs
+- Acceptance: 四个新版 Figma 治理页面是唯一设计与业务基线; 首页、画布、对话提交路径使用同一状态谓词并阻断未接入服务; token、按钮、图标和文字规则只有一个运行时来源; 页面模板运行时只提供 list/grid/detail/timeline/gallery，工作展示默认 grid; 390、1099、1920 视口的首页、对话、设置和侧栏几何有浏览器证据; 问题矩阵、可复用 UI 规范和模板配置已写入现行文档
+- Branch: `main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: src/domain/uiGovernance.ts, src/domain/pageTemplates.ts, src/styles/tokens.css, src/styles/ui-governance.css, src/styles/page-templates.css, src/components/ConversationPanel.tsx, src/components/ConversationComposerRegion.tsx, src/components/SettingsPanel.tsx, src/components/Sidebar.tsx, tests/browser/figma-governance-layout.spec.ts, docs/UI_INDEX.md, docs/UI_RULES.md, docs/UI_ARCHETYPES.md
+- Verification: PARTIAL — 全量单元 467/467、typecheck、Vite build、UI 标准 170 个文件 0 项违规、Governance 74 个任务 0 项违规、Markdown 89 个活动文件 0 项违规、Features 32 个功能 0 项违规；新版治理与页面模板 Playwright 5/5、Agent 交互 3/3 已通过。旧版交互用例仍有引用旧导航/入口的断言，与新版四页基线冲突；真实外部服务、积分回执和生产桌面打包待产品确认与独立环境验证。
+- Evidence: [docs/changes/2026-09-29-figma-ui-governance/spec.md](../../docs/changes/2026-09-29-figma-ui-governance/spec.md), [docs/changes/2026-09-29-figma-ui-governance/verification.md](../../docs/changes/2026-09-29-figma-ui-governance/verification.md)
+- Updated: 2026-09-29
+
+## TASK-CANVAS-KAWORKAI-001 — Kaworkai 无限画布交互研究与本地画布增强
+
+- Goal: 只读研究参考无限画布的逻辑与交互，并把不依赖远程生成或积分的历史、吸附和图层定位基础能力并入 KK Studio
+- Scope: docs/changes/2026-09-29-kaworkai-canvas, src/components/Canvas.tsx, src/components/canvas, src/domain/canvasHistory.ts, src/domain/canvasPreferences.ts, tests/browser/canvas-history-layers.spec.ts, tests/unit/canvasHistory.test.ts, tests/unit/canvasPreferences.test.ts
+- Acceptance: 参考页面只读审计完成且不触发生成、上传、购买或积分消耗; 画布快照支持 Ctrl/Cmd+Z、Shift+Z/Ctrl+Y 与动态右键撤销/重做; 网格吸附偏好可持久化，拖动按 16px 网格并支持 Ctrl/Cmd 临时绕过; 图层面板支持搜索、类型标识、选中和定位，不伪造本地不存在的分组模型; 定向单测、typecheck、build 与新增浏览器验收通过
+- Branch: `main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: src/components/Canvas.tsx, src/components/canvas, src/domain/canvasHistory.ts, src/domain/canvasPreferences.ts, docs/features/feat-001-canvas-workbench.md, docs/features/features.registry.json, docs/governance/task-ledger.json
+- Verification: PARTIAL — 静态源码审计、11 项定向 Node 单测、TypeScript 检查、Vite build、新增 2 项 Playwright（含键盘/右键历史、吸附持久化、图层搜索定位）通过；现有空白新项目 fixture 导致部分依赖默认节点的旧画布回归未通过，Desktop 原生窗口与参考站点远程能力未验证。
+- Evidence: [docs/changes/2026-09-29-kaworkai-canvas/intent.md](../../docs/changes/2026-09-29-kaworkai-canvas/intent.md), [docs/changes/2026-09-29-kaworkai-canvas/spec.md](../../docs/changes/2026-09-29-kaworkai-canvas/spec.md), [docs/changes/2026-09-29-kaworkai-canvas/plan.md](../../docs/changes/2026-09-29-kaworkai-canvas/plan.md), [docs/changes/2026-09-29-kaworkai-canvas/research.md](../../docs/changes/2026-09-29-kaworkai-canvas/research.md), [docs/changes/2026-09-29-kaworkai-canvas/verification.md](../../docs/changes/2026-09-29-kaworkai-canvas/verification.md), [docs/changes/2026-09-29-kaworkai-canvas/evidence/layers-panel.png](../../docs/changes/2026-09-29-kaworkai-canvas/evidence/layers-panel.png)
+- Updated: 2026-09-29

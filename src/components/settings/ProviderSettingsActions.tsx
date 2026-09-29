@@ -23,7 +23,7 @@ export default function ProviderSettingsActions({
         onClick={onSave}
         disabled={saving}
       >
-        保存供应商
+        保存
       </button>
       {hasKey && (
         <button

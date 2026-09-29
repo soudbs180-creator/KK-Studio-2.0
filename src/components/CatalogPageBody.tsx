@@ -3,12 +3,14 @@ import UiIcon from "./UiIcon";
 import type { CreationProject } from "../features/creation/model";
 import WorkflowCard from "./WorkflowCard";
 import type { WorkflowRecord } from "../features/comfyui/workflowRegistry";
+import type { PageTemplateKey } from "../domain/pageTemplates";
 
 type Skill = readonly [string, string, string];
 type Workflow = readonly [string, string, string, string];
 
 export default function CatalogPageBody({
   view,
+  template,
   search,
   skills,
   workflows,
@@ -24,6 +26,7 @@ export default function CatalogPageBody({
   onRunWorkflow,
 }: {
   view: "projects" | "skills" | "comfyui";
+  template: PageTemplateKey;
   search: string;
   skills: readonly Skill[];
   workflows: readonly Workflow[];
@@ -42,7 +45,7 @@ export default function CatalogPageBody({
   if (view === "projects") {
     if (tab === "共享项目") {
       return (
-        <div className="catalog-empty" role="status">
+        <div className="catalog-empty" data-template-body={template} role="status">
           <span className="catalog-empty-mark" aria-hidden="true">
             ⌁
           </span>
@@ -51,7 +54,7 @@ export default function CatalogPageBody({
       );
     }
     return (
-      <div className="project-library-content">
+      <div className="project-library-content" data-template-body={template}>
         <div className="project-library-actions" aria-label="项目资源操作">
           <button
             type="button"
@@ -125,7 +128,7 @@ export default function CatalogPageBody({
           ) : null}
         </div>
         {!projects.length && search && search !== "kk" && (
-          <div className="catalog-empty" role="status">
+          <div className="catalog-empty" data-template-body={template} role="status">
             <span className="catalog-empty-mark" aria-hidden="true">
               ⌕
             </span>
@@ -138,7 +141,7 @@ export default function CatalogPageBody({
   if (view === "skills") {
     if (tab === "我的 Skill") {
       return (
-        <div className="catalog-empty" role="status">
+        <div className="catalog-empty" data-template-body={template} role="status">
           <span className="catalog-empty-mark" aria-hidden="true">
             ⌁
           </span>
@@ -147,7 +150,7 @@ export default function CatalogPageBody({
       );
     }
     return (
-      <>
+      <div className="page-template-body" data-template-body={template}>
         <div className="catalog-categories" role="group" aria-label="Skill分类">
           {[
             "全部",
@@ -199,20 +202,20 @@ export default function CatalogPageBody({
           ))}
         </div>
         {!skills.length && (
-          <div className="catalog-empty">
+          <div className="catalog-empty" data-template-body={template}>
             <span className="catalog-empty-mark" aria-hidden="true">
               ⌕
             </span>
             <p>没有找到匹配的 Skill</p>
           </div>
         )}
-      </>
+      </div>
     );
   }
   if (tab === "我的工作流") {
     if (!localWorkflows.length)
       return (
-        <div className="catalog-empty" role="status">
+        <div className="catalog-empty" data-template-body={template} role="status">
           <span className="catalog-empty-mark" aria-hidden="true">
             ⌁
           </span>
@@ -222,6 +225,7 @@ export default function CatalogPageBody({
     return (
       <div
         className="catalog-card-grid workflow-grid"
+        data-template-body={template}
         aria-label="我的本地工作流"
       >
         {localWorkflows
@@ -244,7 +248,7 @@ export default function CatalogPageBody({
     );
   }
   return (
-    <>
+    <div className="page-template-body" data-template-body={template}>
       <h2 className="catalog-section-title">精选工作流</h2>
       <div className="catalog-card-grid workflow-grid">
         {workflows.map(([title, description, tag, source], index) => (
@@ -271,13 +275,13 @@ export default function CatalogPageBody({
         ))}
       </div>
       {!workflows.length && (
-        <div className="catalog-empty">
+        <div className="catalog-empty" data-template-body={template}>
           <span className="catalog-empty-mark" aria-hidden="true">
             ⌕
           </span>
           <p>没有找到匹配的工作流</p>
         </div>
       )}
-    </>
+    </div>
   );
 }

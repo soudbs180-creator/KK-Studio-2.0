@@ -158,10 +158,6 @@ test("sidebar menus, app menus and prompt dialog keep closure and focus contract
 }) => {
   await page.goto("/");
   await toggleCycle(
-    page.getByRole("button", { name: "项目显示与排序", exact: true }),
-    page.getByRole("menu", { name: "项目显示与排序" }),
-  );
-  await toggleCycle(
     page.getByRole("button", { name: "个人信息", exact: true }),
     page.getByLabel("个人信息（本地 Prototype）"),
   );

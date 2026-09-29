@@ -5,7 +5,7 @@
     "area": "canvas",
     "status": "REAL",
     "card": "docs/features/feat-001-canvas-workbench.md",
-    "summary": "可视化创作工作区：图片/视频/音频/文本节点、连线、框选、小地图、右键菜单、撤销与本地持久化。",
+    "summary": "可视化创作工作区：图片/视频/音频/文本节点、连线、框选、小地图、动态右键撤销/重做、网格吸附和图层定位。",
     "entryPoints": [
       "工作区主界面 Canvas",
       "AddNodeMenu 添加节点",
@@ -16,7 +16,12 @@
       "src/components/canvas",
       "src/domain/canvasGraph.ts",
       "src/domain/canvasItems.ts",
-      "src/domain/projectCanvas.ts"
+      "src/domain/projectCanvas.ts",
+      "src/domain/canvasHistory.ts",
+      "src/domain/canvasPreferences.ts",
+      "src/components/canvas/CanvasLayersPanel.tsx",
+      "src/components/canvas/useCanvasHistory.ts",
+      "src/components/canvas/useCanvasPreferences.ts"
     ],
     "tests": [
       "tests/browser/canvas-actions.spec.ts",
@@ -25,17 +30,21 @@
       "tests/browser/canvas-pointer.spec.ts",
       "tests/browser/connection-drag.spec.ts",
       "tests/browser/context-menu.spec.ts",
+      "tests/browser/canvas-history-layers.spec.ts",
       "tests/unit/canvasGraph.test.ts",
       "tests/unit/projectCanvas.test.ts",
+      "tests/unit/canvasHistory.test.ts",
+      "tests/unit/canvasPreferences.test.ts",
       "tests/browser/ui-interactions.spec.ts",
       "tests/browser/ui-interaction-matrix.spec.ts"
     ],
     "tasks": [
       "T2",
       "UI-004",
-      "TASK-UI-006"
+      "TASK-UI-006",
+      "TASK-CANVAS-KAWORKAI-001"
     ],
-    "updated": "2026-09-22",
+    "updated": "2026-09-29",
     "platforms": [
       "web",
       "desktop"
@@ -56,6 +65,10 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-22-ui-interactions/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-29-kaworkai-canvas/verification.md"
       }
     ]
   },

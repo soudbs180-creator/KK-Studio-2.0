@@ -18,6 +18,9 @@ KK Studio 的文档按用途分层，当前工程的事实以代码、Figma 和�
 - `reference/`：Figma、截图和外部参考的索引。
 - `archive/`：整合前进度和历史材料，只读保存，不作为当前状态。
 - `governance/`：项目级当前状态、规范索引、任务账本、已知问题和 AI 交接；不重复 feature change evidence。
-- `UI-ALIGNMENT.md`、`UI-STANDARDS.md`：当前 UI 还原与交互验收规则。
+- [`UI_INDEX.md`](UI_INDEX.md)：**UI 规范唯一入口**（现行文件分层、冲突裁决、新增功能改病例）。具体分工见该文件的索引表：
+  [`UI_RULES.md`](UI_RULES.md) 零件与交互规则 · [`UI_ARCHETYPES.md`](UI_ARCHETYPES.md) 页面类型 ·
+  [`DESIGN_TOKENS.md`](DESIGN_TOKENS.md) 数值 · [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) 颜色与基础组件 ·
+  [`UI_SPEC.md`](UI_SPEC.md) 运行与验证。`UI-STANDARDS.md` / `UI-ALIGNMENT.md` 已合并，历史正文在 `archive/ui-history/`。
 
 任务状态权威是 [`task-ledger.json`](governance/task-ledger.json)，当前项目事实入口是 [`PROJECT_STATE.md`](governance/PROJECT_STATE.md)。[`PROGRESS.md`](PROGRESS.md) 保存迭代记录；新功能在合并前同步这三类各自适用的信息，不能用旧进度摘要覆盖账本当前状态。

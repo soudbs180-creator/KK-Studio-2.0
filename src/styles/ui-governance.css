@@ -1,0 +1,159 @@
+/*
+ * Figma governance primitives.
+ * Components may compose these classes, but must not redefine their geometry.
+ */
+.kk-text-caption {
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+  font-weight: var(--kk-font-weight-caption);
+}
+
+.kk-text-body {
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+  font-weight: var(--kk-font-weight-body);
+}
+
+.kk-text-body-strong {
+  font-size: var(--kk-font-body-strong);
+  line-height: var(--kk-line-body-strong);
+  font-weight: var(--kk-font-weight-body-strong);
+}
+
+.kk-text-subtitle {
+  font-size: var(--kk-font-subtitle);
+  line-height: var(--kk-line-subtitle);
+  font-weight: var(--kk-font-weight-subtitle);
+}
+
+.kk-text-title {
+  font-size: var(--kk-font-title);
+  line-height: var(--kk-line-title);
+  font-weight: var(--kk-font-weight-title);
+}
+
+.kk-text-display {
+  font-size: var(--kk-font-display);
+  line-height: var(--kk-line-display);
+  font-weight: var(--kk-font-weight-display);
+}
+
+.kk-button {
+  display: inline-flex;
+  min-inline-size: 0;
+  min-block-size: var(--kk-button-h-standard);
+  align-items: center;
+  justify-content: center;
+  gap: var(--kk-button-gap);
+  padding: 0 var(--kk-control-px-md);
+  border: var(--kk-border-width) solid var(--kk-border-default);
+  border-radius: var(--kk-radius-control);
+  background: var(--kk-bg-card);
+  color: var(--kk-text-primary);
+  font: var(--kk-font-weight-body-strong) var(--kk-font-body) / var(--kk-line-body) var(--kk-font-sans);
+  white-space: nowrap;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.kk-button--primary {
+  min-block-size: var(--kk-button-h-primary);
+  border-color: var(--kk-accent);
+  background: var(--kk-accent);
+  color: var(--kk-on-accent);
+}
+
+.kk-button--secondary {
+  background: var(--kk-bg-elevated);
+}
+
+.kk-button--tertiary {
+  border-color: transparent;
+  background: transparent;
+}
+
+.kk-button--danger {
+  border-color: var(--kk-danger);
+  color: var(--kk-text-danger);
+}
+
+.kk-button:not(:disabled):not([aria-disabled="true"]):hover {
+  border-color: var(--kk-text-accent);
+  background: var(--kk-bg-elevated);
+}
+
+.kk-button--primary:not(:disabled):not([aria-disabled="true"]):hover {
+  border-color: var(--kk-accent-hover);
+  background: var(--kk-accent-hover);
+}
+
+.kk-button:not(:disabled):not([aria-disabled="true"]):active,
+.kk-button[aria-pressed="true"] {
+  background: var(--kk-neutral-selected);
+}
+
+.kk-button--primary:not(:disabled):not([aria-disabled="true"]):active {
+  background: var(--kk-accent-hover);
+}
+
+.kk-button:focus-visible {
+  outline: var(--kk-border-width-focus) solid var(--kk-focus-ring);
+  outline-offset: var(--kk-space-1);
+}
+
+.kk-button:disabled,
+.kk-button[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: var(--ui-disabled-opacity);
+}
+
+.kk-icon-slot {
+  display: inline-grid;
+  flex: 0 0 auto;
+  place-items: center;
+  line-height: 0;
+}
+
+.kk-icon-slot[data-size="sm"] {
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
+}
+
+.kk-icon-slot[data-size="md"] {
+  width: var(--kk-icon-glyph-md);
+  height: var(--kk-icon-glyph-md);
+}
+
+.kk-icon-slot[data-size="lg"] {
+  width: var(--kk-icon-glyph-lg);
+  height: var(--kk-icon-glyph-lg);
+}
+
+.kk-icon-hit {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--kk-hit-key);
+  min-height: var(--kk-hit-key);
+}
+
+.kk-icon-hit[data-hit-size="min"] {
+  min-width: var(--kk-hit-min);
+  min-height: var(--kk-hit-min);
+}
+
+.kk-icon-hit[data-hit-size="primary"] {
+  min-width: var(--kk-hit-primary);
+  min-height: var(--kk-hit-primary);
+}
+
+.kk-truncate-single {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kk-truncate-multiline {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}

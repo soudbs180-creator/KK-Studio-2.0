@@ -45,7 +45,9 @@ export default function Sidebar({
   const restoreHiddenFocus = useHiddenControlFocus(root, (previous) =>
     previous.matches(".sidebar-search") && phone
       ? document.querySelector<HTMLButtonElement>(".mobile-search")
-      : toggle.current,
+      : phone
+        ? (accountTrigger.current ?? toggle.current)
+        : toggle.current,
   );
   useLayoutEffect(() => {
     if (collapsed)
@@ -58,7 +60,14 @@ export default function Sidebar({
     if (
       narrow &&
       !collapsed &&
-      ["landing", "projects", "skills", "comfyui", "workspace"].includes(id)
+      [
+        "landing",
+        "projects",
+        "skills",
+        "comfyui",
+        "workspace",
+        "chat",
+      ].includes(id)
     )
       onCollapse();
   }
@@ -111,6 +120,7 @@ export default function Sidebar({
         active={active}
         compactLabels={phone && collapsed}
         onNavigate={navigate}
+        phone={phone}
       />
       <div className="project-groups">
         <div className="project-groups-header">

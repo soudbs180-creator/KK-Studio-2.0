@@ -49,54 +49,54 @@
   --ui-cut-surface: #f4f4f5;
   /* Figma node 1:5 (无限画布底) is solid #0a0a0a. */
   --ui-canvas-bg: #0a0a0a;
-  --ui-radius-control: 10px;
-  --ui-radius-card: 28px;
+  --ui-radius-control: var(--kk-radius-control);
+  --ui-radius-card: var(--kk-radius-card);
   --ui-shadow: 0 8px 24px #0004;
   --ui-space: 8px;
   /* Reusable type, icon, and control tiers. Components consume these tiers
      instead of inventing a new size for each page or viewport. */
-  --ui-font-caption: 11px;
-  --ui-font-body: 12px;
-  --ui-font-label: 14px;
-  --ui-font-title: 16px;
-  --ui-font-display: 24px;
-  --ui-line-height-caption: 14px;
-  --ui-line-height-body: 16px;
-  --ui-line-height-label: 20px;
-  --ui-line-height-title: 22px;
-  --ui-line-height-display: 30px;
+  --ui-font-caption: var(--kk-font-caption);
+  --ui-font-body: var(--kk-font-body);
+  --ui-font-label: var(--kk-font-body-strong);
+  --ui-font-title: var(--kk-font-subtitle);
+  --ui-font-display: var(--kk-font-display);
+  --ui-line-height-caption: var(--kk-line-caption);
+  --ui-line-height-body: var(--kk-line-body);
+  --ui-line-height-label: var(--kk-line-body-strong);
+  --ui-line-height-title: var(--kk-line-subtitle);
+  --ui-line-height-display: var(--kk-line-display);
   --ui-border-width: 1px;
   --ui-focus-width: 2px;
   --ui-focus-offset: 3px;
   /* Existing generic button geometry; source-specific controls retain their
      measured Figma tiers rather than being stretched to this default. */
-  --ui-button-height: 32px;
-  --ui-button-gap: 6px;
-  --ui-button-padding-block: 6px;
-  --ui-button-padding-inline: 10px;
+  --ui-button-height: var(--kk-button-h-standard);
+  --ui-button-gap: var(--kk-space-2);
+  --ui-button-padding-block: var(--kk-space-2);
+  --ui-button-padding-inline: var(--kk-space-3);
   --ui-control-active: var(--ui-neutral-selected);
-  --ui-icon-xs: 14px;
-  --ui-icon-sm: 16px;
-  --ui-icon-md: 20px;
+  --ui-icon-xs: var(--kk-icon-glyph-sm);
+  --ui-icon-sm: var(--kk-icon-glyph-sm);
+  --ui-icon-md: var(--kk-icon-glyph-md);
   /* Source-aligned slots used by the shell controls. The slot stays stable
      while the leaf asset can keep its own aspect ratio. */
   --ui-icon-sidebar: 26px;
   /* Complete clipped brand frames: 399:27833, 21:119316, 21:104347. */
   --ui-logo-hero: 63.141px;
   --ui-logo-account: 30px;
-  --ui-logo-credit: 11px;
-  --ui-icon-nav: 10px;
-  --ui-icon-toolbar: 20px;
-  --ui-control-h-nav: 31px;
+  --ui-logo-credit: var(--kk-font-caption);
+  --ui-icon-nav: var(--kk-icon-glyph-sm);
+  --ui-icon-toolbar: var(--kk-icon-glyph-md);
+  --ui-control-h-nav: var(--kk-button-h-standard);
   --ui-control-h-toolbar: 40px;
   --ui-control-w-toolbar-toggle: 20px;
-  --ui-control-h-toolbar-help: 30px;
+  --ui-control-h-toolbar-help: var(--kk-button-h-standard);
   --ui-toolbar-h: 50px;
-  --ui-control-h-compact: 32px;
-  --ui-control-h-standard: 40px;
-  --ui-touch-target: 44px;
-  --ui-screen-body: 14px;
-  --ui-screen-line: 20px;
+  --ui-control-h-compact: var(--kk-button-h-standard);
+  --ui-control-h-standard: var(--kk-button-h-primary);
+  --ui-touch-target: var(--kk-hit-primary);
+  --ui-screen-body: var(--kk-font-body);
+  --ui-screen-line: var(--kk-line-body);
   --ui-gap-tight: 4px;
   --ui-gap-standard: 8px;
   --ui-gap-relaxed: 12px;
@@ -107,17 +107,17 @@
   --ui-space-4: 16px;
   --ui-space-5: 24px;
   --ui-space-6: 40px;
-  --ui-radius-panel: 20px;
-  --ui-radius-menu: 12px;
+  --ui-radius-panel: var(--kk-radius-panel);
+  --ui-radius-menu: var(--kk-radius-menu);
   --ui-radius-pill: 999px;
   --ui-input-height: var(--ui-button-height);
-  --ui-composer-control-height: 22px;
-  --ui-composer-action-size: 24px;
+  --ui-composer-control-height: var(--kk-hit-min);
+  --ui-composer-action-size: var(--kk-hit-min);
   --ui-composer-width: 426px;
   --ui-composer-height: 170px;
   /* 404:28667 / 410:67357: controls use screen anchors, not node zoom. */
   --ui-workspace-task-inset: 30px;
-  --ui-workspace-toolbar-right-center: calc(50vw + 84px);
+  --ui-workspace-toolbar-right-center: calc(50vw + 109px);
   --ui-workspace-nav-right: 33px;
   --motion-sidebar: 300ms;
   --motion-sidebar-text-ease: cubic-bezier(0.5, 0, 0.5, 1);

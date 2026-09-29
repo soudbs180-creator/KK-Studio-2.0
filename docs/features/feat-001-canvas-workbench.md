@@ -2,8 +2,8 @@
 
 - 状态：REAL
 - 领域：canvas
-- 最近更新：2026-09-22
-- 关联任务：T2、UI-004、TASK-UI-006
+- 最近更新：2026-09-29
+- 关联任务：T2、UI-004、TASK-UI-006、TASK-CANVAS-KAWORKAI-001
 
 ## 用户可见入口
 
@@ -20,13 +20,14 @@
 
 ## 测试与证据
 
-- 浏览器：`tests/browser/canvas-actions/layout/navigation/pointer.spec.ts`、`connection-drag`、`context-menu`、`interaction-regressions`、`ui-motion`
-- 单测：`tests/unit/canvasGraph.test.ts`、`projectCanvas.test.ts`
-- 证据：`docs/changes/2026-09-20-ui-main-alignment/`、`docs/evidence/2026-09-21-main-close-002/`
+- 浏览器：`tests/browser/canvas-actions/layout/navigation/pointer.spec.ts`、`connection-drag`、`context-menu`、`canvas-history-layers.spec.ts`、`interaction-regressions`、`ui-motion`
+- 单测：`tests/unit/canvasGraph.test.ts`、`projectCanvas.test.ts`、`canvasHistory.test.ts`、`canvasPreferences.test.ts`
+- 证据：`docs/changes/2026-09-20-ui-main-alignment/`、`docs/evidence/2026-09-21-main-close-002/`、`docs/changes/2026-09-29-kaworkai-canvas/`
 
 ## 当前能力
 
-- 节点增删改、结果边/参考边、框选多选、小地图、右键操作、撤销与本地持久化均为真实能力。
+- 节点增删改、结果边/参考边、框选多选、小地图、右键操作、会话内快照撤销/重做与本地持久化均为真实能力。
+- 右键画布菜单会按历史状态动态启用撤销/重做，并提供网格吸附和轻量图层管理入口；吸附偏好写入浏览器本地存储，图层面板支持搜索、类型标识、选中和定位。
 - 图片节点接真实生成链（FEAT-002/003）。
 
 ## 差距与后端化
@@ -39,3 +40,5 @@
 - 2026-09-21：随功能体系建立创建卡片，状态 REAL。
 
 - 2026-09-22：TASK-UI-006修复折叠、HUD背景与弹层生命周期；关联 `tests/browser/ui-interactions.spec.ts`、`ui-interaction-matrix.spec.ts`，验收见 `docs/changes/2026-09-22-ui-interactions/verification.md`。不升级外部服务或分组持久化能力状态。
+
+- 2026-09-29：TASK-CANVAS-KAWORKAI-001 完成参考画布只读审计，并把快照历史、键盘/右键撤销重做、可持久化网格吸附和无分组图层定位并入本地画布；竞品 AI 工具、积分、云端 board 和分组折叠仍未接入。

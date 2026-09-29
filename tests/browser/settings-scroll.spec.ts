@@ -45,6 +45,26 @@ for (const viewport of [
   });
 }
 
+test("手机设置分类固定在底部横向滑块", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "设置" });
+  const panel = dialog.locator(".settings-panel");
+  const sidebar = dialog.locator(".settings-sidebar");
+  const nav = dialog.locator(".settings-nav");
+  const panelBox = (await panel.boundingBox())!;
+  const sidebarBox = (await sidebar.boundingBox())!;
+  expect(
+    Math.abs(sidebarBox.y + sidebarBox.height - (panelBox.y + panelBox.height)),
+  ).toBeLessThanOrEqual(2);
+  expect(await nav.evaluate((el) => el.scrollWidth)).toBeGreaterThan(
+    await nav.evaluate((el) => el.clientWidth),
+  );
+  await nav.getByRole("button", { name: "软件更新", exact: true }).click();
+  await expect(dialog.locator(".settings-content h2")).toHaveText("软件更新");
+});
+
 test("资产列表隐藏滚动条后仍可滚动，浮岛设置作用于整个工作区", async ({
   page,
 }) => {

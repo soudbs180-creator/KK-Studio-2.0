@@ -29,7 +29,8 @@
 
 ## 设计与交互
 
-- 颜色、字体层级和基础组件以 `docs/DESIGN-SYSTEM.md` 为唯一现行规范（用户 Ardot `728457371665311 / 0:1`、2026-09-22 PDF 及逐项校正）。所有后续 UI 必须消费这一系统。旧 Figma 文件 `0nU0A7pq6eyjwfwm1TtWkO` 继续提供页面布局与图标资产依据：Workspace `404:28667`、收纳 `410:67357`、Landing `410:59708`；其旧调色/通用组件规则不能覆盖新 Design System，历史 `1:2` 不覆盖最新 Frame。实现前读取 DESIGN-SYSTEM、UI-ALIGNMENT、UI-STANDARDS 与 UI_SPEC。
+- **UI 规范唯一入口是 [`docs/UI_INDEX.md`](docs/UI_INDEX.md)**。任何 UI 改动先读索引，再读该主题的唯一承载文件，不要在多份规范里各取一份。分工：`UI_RULES.md`（零件/交互规则）· `UI_ARCHETYPES.md`（页面类型）· `DESIGN_TOKENS.md`（数值）· `DESIGN-SYSTEM.md`（颜色与基础组件）· `UI_SPEC.md`（运行与验证）。旧 `UI-STANDARDS.md` / `UI-ALIGNMENT.md` 已合并，仅作历史溯源，不再更新。
+- 颜色、字体层级和基础组件以 `docs/DESIGN-SYSTEM.md` 为唯一现行规范（用户 Ardot `728457371665311 / 0:1`、2026-09-22 PDF 及逐项校正）。所有后续 UI 必须消费这一系统。旧 Figma 文件 `0nU0A7pq6eyjwfwm1TtWkO` 继续提供页面布局与图标资产依据：Workspace `404:28667`、收纳 `410:67357`、Landing `410:59708`；其旧调色/通用组件规则不能覆盖新 Design System，历史 `1:2` 不覆盖最新 Frame。**其历史几何/字号/间距只在 `archive/ui-history/` 溯源，落地时换算到 `DESIGN_TOKENS.md` 的档位，禁止直接引用原稿数值。**
 - 每个可见控件必须有真实行为，或显示禁用原因；异步操作必须覆盖 loading、success、error、cancel 和离线状态。
 - 视觉验收必须有相同状态的浏览器截图/DOM 证据；构建通过不等于 Figma 一致。
 

@@ -184,7 +184,7 @@ export const BASE_CANVAS_ITEMS: CanvasCollectionItem[] = [
   {
     id: "image",
     title: "图片创建卡片",
-    description: "kk Image 2 · 1:1 · 1k",
+    description: "kk Image 2 · 1:1 · 1K",
     kind: "image",
   },
   {

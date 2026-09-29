@@ -1,13 +1,14 @@
 import { useMemo, useState } from "react";
-import { Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import CatalogPageBody from "./CatalogPageBody";
 import type { CreationProject } from "../features/creation/model";
 import CatalogTutorial from "./CatalogTutorial";
 import {
-  createStarterWorkflow,
   type WorkflowRecord,
 } from "../features/comfyui/workflowRegistry";
-import WorkflowImportButton, { downloadWorkflow } from "./WorkflowImportButton";
+import { downloadWorkflow } from "./WorkflowImportButton";
+import { selectPageTemplate } from "../domain/pageTemplates";
+import CatalogPageHeader from "./CatalogPageHeader";
 
 type CatalogView = "projects" | "skills" | "comfyui";
 const SKILLS = [
@@ -137,6 +138,7 @@ export default function LibraryPage({
   const [tutorialOpen, setTutorialOpen] = useState(false);
   const [status, setStatus] = useState("");
   const meta = pageMeta(view);
+  const template = selectPageTemplate({ workDisplay: true });
   const search = query.trim().toLowerCase();
   const skills = useMemo(
     () =>
@@ -160,49 +162,24 @@ export default function LibraryPage({
         : ["精选工作流", "我的工作流"];
   return (
     <section
-      className={`catalog-page catalog-page-${view}`}
+      className={`catalog-page catalog-page-${view} page-template-shell page-template-${template}`}
+      data-template={template}
       aria-label={meta.title}
     >
-      <header className="catalog-page-header">
-        <div>
-          <h1>{meta.title}</h1>
-          <p>{meta.subtitle}</p>
-        </div>
-        <div className="catalog-page-actions">
-          <button
-            className="primary-button"
-            disabled={view === "skills"}
-            title={
-              view === "projects"
-                ? undefined
-                : view === "skills"
-                  ? "Skill 本地管理由目录卡片提供"
-                  : "在本地创建一个可编辑的 ComfyUI API 工作流"
-            }
-            onClick={() => {
-              if (view === "projects") onOpen("new-project");
-              if (view === "comfyui") onSaveWorkflow?.(createStarterWorkflow());
-            }}
-          >
-            <Plus size={17} /> {meta.primary}
-          </button>
-          {view === "comfyui" ? (
-            <WorkflowImportButton
-              onImported={(workflow, nodeCount) => {
-                onSaveWorkflow?.(workflow);
-                setStatus(
-                  `已导入 ${nodeCount} 个节点；请在“我的工作流”中检查后再运行。`,
-                );
-              }}
-              onError={setStatus}
-            />
-          ) : (
-            <button className="ui-button" onClick={() => setTutorialOpen(true)}>
-              {meta.secondary}
-            </button>
-          )}
-        </div>
-      </header>
+      <CatalogPageHeader
+        view={view}
+        meta={meta}
+        onOpen={onOpen}
+        onSaveWorkflow={onSaveWorkflow}
+        onImport={(workflow, nodeCount) => {
+          onSaveWorkflow?.(workflow);
+          setStatus(
+            `已导入 ${nodeCount} 个节点；请在“我的工作流”中检查后再运行。`,
+          );
+        }}
+        onError={setStatus}
+        onOpenTutorial={() => setTutorialOpen(true)}
+      />
       {view !== "projects" && (
         <p className="catalog-page-status" role="status">
           {view === "skills"
@@ -246,6 +223,7 @@ export default function LibraryPage({
       </div>
       <CatalogPageBody
         view={view}
+        template={template}
         search={search}
         skills={skills}
         workflows={workflows}

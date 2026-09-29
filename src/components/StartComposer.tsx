@@ -6,10 +6,13 @@ import useConversationAttachments from "./useConversationAttachments";
 import StartResourcePopover from "./StartResourcePopover";
 import { StartApproval, StartModePicker } from "./StartComposerModes";
 import VoiceInputButton from "./VoiceInputButton";
-import GenerationOptions from "./GenerationOptions";
-import GenerationPrivacyNotice from "./GenerationPrivacyNotice";
 import { useComposerMenus } from "./useComposerMenus";
 import type { SkillRecord } from "../features/skills/skillRegistry";
+import {
+  canSubmitGeneration,
+  getDisabledReason,
+  getGenerationUiState,
+} from "../domain/uiGovernance";
 
 export default function StartComposer({
   draft,
@@ -18,8 +21,8 @@ export default function StartComposer({
   onSubmit,
   onOpenModel,
   onOpenSkills,
-  onOpenPlugins,
   defaultModel = "",
+  modelConfigured = false,
   skills = [],
   onApplySkill,
 }: {
@@ -29,8 +32,8 @@ export default function StartComposer({
   onSubmit: (input: CreationDraft) => void;
   onOpenModel: () => void;
   onOpenSkills: () => void;
-  onOpenPlugins: () => void;
   defaultModel?: string;
+  modelConfigured?: boolean;
   skills?: SkillRecord[];
   onApplySkill?: (record: SkillRecord) => string;
 }) {
@@ -41,17 +44,14 @@ export default function StartComposer({
   const {
     modelMenuOpen,
     skillMenuOpen,
-    pluginMenuOpen,
     modeMenuOpen,
     toggleMenu,
     openMenu,
     closeMenus,
   } = useComposerMenus(pickerRef);
-  const model = draft.model || defaultModel || "kk-image-2";
+  const model = draft.model || defaultModel;
   const modelOptions = [
-    ...new Set(
-      [defaultModel.trim(), draft.model.trim(), "kk-image-2"].filter(Boolean),
-    ),
+    ...new Set([defaultModel.trim(), draft.model.trim()].filter(Boolean)),
   ];
   function commit(patch: Partial<CreationDraft>): void {
     onDraftChange({ ...draft, ...patch, updatedAt: Date.now() });
@@ -63,6 +63,16 @@ export default function StartComposer({
       onDraftChange({ ...draft, attachments, updatedAt: Date.now() }),
     onStatus: setStatus,
   });
+  const uiState = getGenerationUiState({
+    prompt: draft.prompt,
+    inputValid: !readingFiles,
+    modelConfigured,
+    quotaAvailable: true,
+    online: typeof navigator === "undefined" ? true : navigator.onLine,
+    serviceConfigured: modelConfigured,
+  });
+  const submitDisabled = !canSubmitGeneration(uiState);
+  const disabledReason = getDisabledReason(uiState);
   function submit(): void {
     if (readingFiles) {
       setStatus("正在读取参考素材，请稍候再提交。");
@@ -106,9 +116,13 @@ export default function StartComposer({
           value={draft.prompt}
           onChange={(event) => {
             commit({ prompt: event.target.value });
-            setStatus("");
+            setStatus(
+              event.target.value.trim() && disabledReason
+                ? disabledReason
+                : "",
+            );
           }}
-          placeholder="描述你要生成的内容，或查看创作指南"
+          placeholder="描述你想要生成的内容"
           rows={3}
           maxLength={4000}
         />
@@ -152,10 +166,15 @@ export default function StartComposer({
                 onClick={() => toggleMenu("model")}
               >
                 <img src="/design/figma/composer-package.svg" alt="" />
-                <span>{model || "模型"}</span>
+                <span>模型</span>
               </button>
               {modelMenuOpen && (
                 <div className="start-model-popover" role="menu">
+                  {modelOptions.length === 0 && (
+                    <div className="start-model-empty" role="menuitem">
+                      尚未配置模型
+                    </div>
+                  )}
                   {modelOptions.map((option) => (
                     <button
                       key={option}
@@ -184,13 +203,17 @@ export default function StartComposer({
                 </div>
               )}
             </div>
-            <span className="start-composer-divider" aria-hidden="true" />
-            <div className="start-resource-picker composer-skill">
+            <span
+              className="start-composer-divider start-model-divider"
+              aria-hidden="true"
+            />
+            <div className="start-resource-picker composer-ext composer-ext-skill">
               <button
                 type="button"
                 className="start-tool-button"
                 aria-haspopup="menu"
                 aria-expanded={skillMenuOpen}
+                title="技能（Skill）"
                 onClick={() => toggleMenu("skill")}
               >
                 <img src="/design/figma/composer-puzzle.svg" alt="" />
@@ -203,7 +226,7 @@ export default function StartComposer({
                   onApplySkill={(record) => {
                     const message = onApplySkill?.(record);
                     closeMenus();
-                    setStatus(message ?? "当前草稿不可用，未应用 Skill。");
+                    setStatus(message ?? "当前草稿不可用，未应用技能。");
                   }}
                   onOpen={() => {
                     closeMenus();
@@ -212,28 +235,10 @@ export default function StartComposer({
                 />
               )}
             </div>
-            <span className="start-composer-divider" aria-hidden="true" />
-            <div className="start-resource-picker composer-plugin">
-              <button
-                type="button"
-                className="start-tool-button"
-                aria-haspopup="menu"
-                aria-expanded={pluginMenuOpen}
-                onClick={() => toggleMenu("plugin")}
-              >
-                <img src="/design/figma/composer-unplug.svg" alt="" />
-                <span>插件</span>
-              </button>
-              {pluginMenuOpen && (
-                <StartResourcePopover
-                  kind="plugin"
-                  onOpen={() => {
-                    closeMenus();
-                    onOpenPlugins();
-                  }}
-                />
-              )}
-            </div>
+            <span
+              className="start-composer-divider start-skill-divider"
+              aria-hidden="true"
+            />
           </div>
           <div className="start-footer-right">
             <VoiceInputButton
@@ -257,16 +262,25 @@ export default function StartComposer({
               type="submit"
               className="start-submit-button"
               aria-label="开始创建项目"
+              aria-describedby={disabledReason ? "start-submit-reason" : undefined}
+              disabled={submitDisabled}
+              title={disabledReason}
             >
               <img src="/design/figma/composer-send.svg" alt="" />
             </button>
           </div>
         </div>
-        <div className="composer-options">
-          <GenerationOptions draft={draft} onChange={commit} />
-        </div>
       </form>
-      <GenerationPrivacyNotice mode={draft.privacyMode} />
+      {draft.prompt.trim() && disabledReason && (
+        <div className="start-composer-feedback" role="status">
+          <span id="start-submit-reason">{disabledReason}</span>
+          {uiState === "service-unconfigured" && (
+            <button type="button" onClick={onOpenModel}>
+              前往模型设置
+            </button>
+          )}
+        </div>
+      )}
       {pendingSubmit && (
         <StartApproval
           onConfirm={() => {

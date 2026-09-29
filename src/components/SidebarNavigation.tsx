@@ -1,14 +1,31 @@
 import SidebarIcon from "./SidebarIcon";
 
-const ITEMS = [
+type NavItem = {
+  id: string;
+  label: string;
+  compact: string;
+  icon: string;
+  phoneOnly?: boolean;
+  desktopOnly?: boolean;
+};
+
+const ITEMS: NavItem[] = [
   { id: "landing", label: "开始创作", compact: "创作", icon: "add" },
+  {
+    id: "chat",
+    label: "对话",
+    compact: "对话",
+    icon: "chat",
+    phoneOnly: true,
+  },
   { id: "projects", label: "项目库", compact: "项目", icon: "archive" },
-  { id: "skills", label: "Skill", compact: "Skill", icon: "skill" },
+  { id: "skills", label: "技能", compact: "技能", icon: "skill" },
   {
     id: "comfyui",
     label: "ComfyUI 工作流",
     compact: "工作流",
     icon: "workflow",
+    desktopOnly: true,
   },
 ];
 
@@ -17,14 +34,19 @@ export default function SidebarNavigation({
   active,
   compactLabels,
   onNavigate,
+  phone = false,
 }: {
   active: string;
   compactLabels: boolean;
   onNavigate: (id: string) => void;
+  phone?: boolean;
 }) {
+  const items = ITEMS.filter((item) =>
+    phone ? !item.desktopOnly : !item.phoneOnly,
+  );
   return (
     <nav className="primary-nav" aria-label="主导航">
-      {ITEMS.map(({ id, label, compact, icon }) => (
+      {items.map(({ id, label, compact, icon }) => (
         <button
           key={id}
           aria-current={active === id ? "page" : undefined}

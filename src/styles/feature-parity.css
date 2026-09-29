@@ -94,10 +94,6 @@
   min-width: 0;
   overflow-wrap: anywhere;
 }
-.start-prompt-library {
-  margin-top: var(--ui-space-3);
-  align-self: flex-end;
-}
 .modal:has(.prompt-library-panel) {
   width: min(960px, calc(100vw - 32px));
   max-height: calc(100dvh - 32px);

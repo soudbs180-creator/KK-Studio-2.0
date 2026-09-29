@@ -36,9 +36,8 @@ export default function StartPage({
   onCreateProject,
   onOpenModel,
   onOpenSkills,
-  onOpenPlugins,
-  onOpenPrompts,
   defaultModel = "",
+  modelConfigured = false,
   draft: externalDraft,
   onDraftChange,
   saveState = "saved",
@@ -51,9 +50,8 @@ export default function StartPage({
   ) => string | undefined | Promise<string | undefined>;
   onOpenModel: () => void;
   onOpenSkills: () => void;
-  onOpenPlugins: () => void;
-  onOpenPrompts: () => void;
   defaultModel?: string;
+  modelConfigured?: boolean;
   draft?: CreationDraft;
   onDraftChange?: (draft: CreationDraft) => void;
   saveState?: "saved" | "saving" | "error";
@@ -95,18 +93,11 @@ export default function StartPage({
           onSubmit={create}
           onOpenModel={onOpenModel}
           onOpenSkills={onOpenSkills}
-          onOpenPlugins={onOpenPlugins}
           defaultModel={defaultModel}
+          modelConfigured={modelConfigured}
           skills={skills}
           onApplySkill={onApplySkill}
         />
-        <button
-          className="ui-button start-prompt-library"
-          type="button"
-          onClick={onOpenPrompts}
-        >
-          提示词库
-        </button>
         {status && (
           <p className="start-status" role="status">
             {status}
@@ -139,7 +130,7 @@ export default function StartPage({
             aria-selected={activeTab === "skill"}
             onClick={() => setActiveTab("skill")}
           >
-            Skill
+            技能
           </button>
         </div>
         {activeTab === "inspiration" && (
@@ -170,11 +161,11 @@ export default function StartPage({
         {activeTab === "skill" ? (
           <div className="start-skill-callout">
             <div>
-              <strong>从精选 Skill 开始</strong>
+              <strong>从精选技能开始</strong>
               <p>把成熟的分镜、广告和提示词流程加入你的项目。</p>
             </div>
             <button type="button" className="ui-button" onClick={onOpenSkills}>
-              浏览 Skill ›
+              浏览技能 ›
             </button>
           </div>
         ) : (

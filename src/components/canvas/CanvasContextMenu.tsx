@@ -7,9 +7,10 @@ export interface CanvasContextMenuState {
   trigger: HTMLElement;
 }
 
-type MenuAction = "upload" | "add" | "undo" | "redo" | "paste";
+type MenuAction =
+  "upload" | "add" | "undo" | "redo" | "paste" | "layers" | "snap";
 
-const ITEMS: Array<{
+const BASE_ITEMS: Array<{
   action: MenuAction;
   label: string;
   shortcut?: string;
@@ -29,16 +30,12 @@ const ITEMS: Array<{
     action: "undo",
     label: "撤销",
     shortcut: "Ctrl + z",
-    disabled: true,
-    reason: "暂无可撤销的画布操作",
     nodeId: "172:373",
   },
   {
     action: "redo",
     label: "重做",
     shortcut: "Ctrl + Shift + z",
-    disabled: true,
-    reason: "暂无可重做的画布操作",
     nodeId: "172:376",
   },
   {
@@ -49,16 +46,32 @@ const ITEMS: Array<{
     reason: "剪贴板粘贴尚未接入",
     nodeId: "172:380",
   },
+  { action: "layers", label: "图层管理", shortcut: "L", nodeId: "172:382" },
+  { action: "snap", label: "网格吸附", shortcut: "G", nodeId: "172:384" },
 ];
 
 export default function CanvasContextMenu({
   menu,
   onAddNode,
   onDismiss,
+  canUndo,
+  canRedo,
+  onUndo,
+  onRedo,
+  onToggleLayers,
+  snapEnabled,
+  onToggleSnap,
 }: {
   menu: CanvasContextMenuState;
   onAddNode: (point: { x: number; y: number }, trigger: HTMLElement) => void;
   onDismiss: (restoreFocus?: boolean) => void;
+  canUndo: boolean;
+  canRedo: boolean;
+  onUndo: () => void;
+  onRedo: () => void;
+  onToggleLayers: () => void;
+  snapEnabled: boolean;
+  onToggleSnap: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 16, y: 16 });
@@ -94,6 +107,22 @@ export default function CanvasContextMenu({
       document.removeEventListener("focusin", outside, true);
     };
   }, [onDismiss]);
+
+  const items = BASE_ITEMS.map((item) => {
+    if (item.action === "undo")
+      return {
+        ...item,
+        disabled: !canUndo,
+        reason: canUndo ? undefined : "暂无可撤销的画布操作",
+      };
+    if (item.action === "redo")
+      return {
+        ...item,
+        disabled: !canRedo,
+        reason: canRedo ? undefined : "暂无可重做的画布操作",
+      };
+    return item;
+  });
 
   return createPortal(
     <div
@@ -139,7 +168,7 @@ export default function CanvasContextMenu({
         buttons[next]?.focus({ preventScroll: true });
       }}
     >
-      {ITEMS.map((item, index) => (
+      {items.map((item, index) => (
         <div
           key={item.action}
           className={
@@ -151,15 +180,22 @@ export default function CanvasContextMenu({
           ) : null}
           <button
             type="button"
-            role="menuitem"
             className="canvas-context-item"
             data-node-id={item.nodeId}
             disabled={item.disabled}
+            role={item.action === "snap" ? "menuitemcheckbox" : "menuitem"}
+            aria-checked={item.action === "snap" ? snapEnabled : undefined}
             aria-label={item.label}
             aria-description={item.reason}
             title={item.reason}
             onClick={() => {
               if (item.action === "add") onAddNode(menu.client, menu.trigger);
+              if (item.action === "undo") onUndo();
+              if (item.action === "redo") onRedo();
+              if (item.action === "layers") onToggleLayers();
+              if (item.action === "snap") onToggleSnap();
+              if (item.action !== "upload" && item.action !== "paste")
+                onDismiss();
             }}
           >
             <span>{item.label}</span>

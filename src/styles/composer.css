@@ -312,57 +312,61 @@
   .start-composer {
     max-width: 100%;
   }
-  .composer-toolbar {
+  /* Two-row grid is only for the conversation composer (chat-composer).
+     StartComposer follows Figma 483:753 and keeps one compact action row. */
+  .chat-composer > .composer-toolbar {
     display: grid;
     grid-template-columns: 44px 44px minmax(0, 1fr) 64px 64px;
     gap: var(--ui-space-1);
     row-gap: var(--ui-space-2);
   }
-  .composer-toolbar :is(.start-model-picker, .chat-model-picker-wrap) {
+  .chat-composer > .composer-toolbar :is(.start-model-picker, .chat-model-picker-wrap) {
     grid-area: 1 / 1 / 2 / 4;
     min-width: 0;
     max-width: none;
   }
-  .composer-toolbar :is(.composer-skill, .chat-skill-picker) {
+  .chat-composer > .composer-toolbar :is(.composer-skill, .chat-skill-picker) {
     grid-area: 1 / 4;
   }
-  .composer-toolbar :is(.composer-plugin, .chat-plugin-picker) {
+  .chat-composer > .composer-toolbar :is(.composer-plugin, .chat-plugin-picker) {
     grid-area: 1 / 5;
   }
-  .composer-toolbar
+  .chat-composer > .composer-toolbar
     :is(.start-resource-picker, .chat-resource-picker)
     > button {
     width: 100%;
   }
-  .composer-toolbar :is(.start-add-button, .chat-attachment-trigger) {
+  .chat-composer > .composer-toolbar :is(.start-add-button, .chat-attachment-trigger) {
     grid-area: 2 / 1;
   }
-  .composer-toolbar [data-voice-state] {
+  .chat-composer > .composer-toolbar [data-voice-state] {
     grid-area: 2 / 2;
     margin-left: 0;
   }
-  .composer-toolbar :is(.start-mode-picker, .chat-mode-menu) {
+  .chat-composer > .composer-toolbar :is(.start-mode-picker, .chat-mode-menu) {
     grid-area: 2 / 3 / 3 / 5;
     justify-self: end;
   }
-  .composer-toolbar :is(.start-mode-button, .chat-mode-trigger) {
+  .chat-composer > .composer-toolbar :is(.start-mode-button, .chat-mode-trigger) {
     min-width: 72px;
   }
-  .composer-toolbar :is(.start-submit-button, .chat-send) {
+  .chat-composer > .composer-toolbar :is(.start-submit-button, .chat-send) {
     grid-area: 2 / 5;
     justify-self: end;
   }
-}
-@media (min-width: 768px) and (max-width: 1200px) {
-  /* A wide home surface has room for one row; the narrow chat rail does not. */
-  .start-composer .composer-toolbar {
+  /* Keep StartComposer as one row across all breakpoints. */
+  .start-composer .start-composer-footer {
     display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
   }
-  .start-composer .start-model-picker {
-    min-width: 80px;
-    max-width: 260px;
+  .start-composer .start-footer-left,
+  .start-composer .start-footer-right {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
   }
-  .start-composer [data-voice-state] {
+  .start-composer .start-footer-right {
     margin-left: auto;
   }
 }
@@ -370,5 +374,650 @@
   .composer-surface {
     --composer-min-lines: 2;
     --composer-max-lines: 4;
+  }
+}
+
+/* Integrated 插件 / 技能 / 伙伴 segmented group. */
+.composer-ext-group {
+  order: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0;
+  border-radius: var(--ui-radius-pill);
+  background: var(--bg-elevated);
+  flex: 0 0 auto;
+}
+.composer-ext-group .composer-ext {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.composer-ext-group .composer-ext > button {
+  gap: 4px;
+  padding: 0 10px;
+  background: transparent;
+}
+.composer-ext-group .composer-ext > button > img {
+  width: 14px;
+  height: 14px;
+}
+@media (max-width: 1200px) {
+  /* The touch/tablet home input follows Figma 483:753. Keep the
+     underlying draft fields, but leave those controls to the project/task
+     surfaces where they can be changed without crowding the home action row. */
+  .start-composer .composer-ext-plugin,
+  .start-composer .composer-ext-partner,
+  .start-composer .composer-options {
+    display: none;
+  }
+  .start-composer .start-model-picker > button > span {
+    font-size: 0;
+  }
+  .start-composer .start-model-picker > button > span::before {
+    content: "模型";
+    font-size: var(--ui-font-body);
+  }
+  .start-composer .start-model-picker > button {
+    gap: 3px;
+    padding: 0 4px;
+  }
+  .start-composer .start-model-picker > button > img {
+    flex-basis: 13px;
+    width: 13px;
+    height: 14px;
+  }
+  .composer-toolbar .composer-ext-group {
+    grid-area: 1 / 4 / 2 / 6;
+  }
+  .composer-toolbar .composer-ext-group .composer-ext > button {
+    width: 100%;
+    padding: 0 6px;
+  }
+}
+
+@media (max-width: 767px) {
+  /* At phone width the Figma home component is one compact action row. */
+  .start-composer .composer-toolbar {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+  .start-composer .start-footer-left,
+  .start-composer .start-footer-right {
+    display: contents;
+  }
+  .start-composer .start-add-button {
+    order: 1;
+  }
+  .start-composer .start-model-picker {
+    order: 2;
+    flex: 0 0 58px;
+    width: 58px;
+    min-width: 58px;
+    max-width: 58px;
+  }
+  .start-composer .composer-ext-group {
+    order: 3;
+    flex: 0 0 auto;
+    gap: 4px;
+    padding: 0;
+    background: transparent;
+  }
+  .start-composer .composer-ext-skill {
+    flex: 0 0 58px;
+    width: 58px;
+  }
+  .start-composer .composer-ext-skill > button {
+    width: 58px;
+    padding: 0 6px;
+  }
+  .start-composer [data-voice-state] {
+    order: 4;
+    flex: 0 0 32px;
+    width: 32px;
+    min-width: 32px;
+    margin-left: auto;
+  }
+  .start-composer .start-mode-picker {
+    order: 5;
+    flex: 0 0 53px;
+    width: 53px;
+    max-width: 53px;
+  }
+  .start-composer .start-mode-button {
+    width: 53px;
+    min-width: 0;
+  }
+  .start-composer .start-submit-button {
+    order: 6;
+    flex: 0 0 24px;
+    width: 24px;
+    min-width: 24px;
+  }
+  .start-composer .start-composer-divider {
+    display: none;
+  }
+}
+
+/*
+ * Current Figma composer contracts (483:695 / 483:753 / 407:29265).
+ * Keep the engineering hit targets compact and let the visible controls share
+ * one 24px baseline. The home surface deliberately has no plugin, partner,
+ * generation-count, or privacy controls; those belong to project surfaces.
+ */
+.start-composer {
+  --composer-target: 24px;
+  box-sizing: border-box;
+  width: 652px;
+  min-height: 170px;
+  height: auto;
+  max-width: calc(100% - 32px);
+  margin-inline: auto;
+  padding: 13px 13px 11px 12px;
+  gap: 0;
+  border: 1px solid var(--border-default);
+  border-radius: 20px;
+  background: var(--bg-input);
+}
+
+.start-composer > .composer-textarea {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: 400px;
+  height: 64px;
+  min-height: 64px;
+  max-height: calc(var(--composer-line) * var(--composer-max-lines));
+}
+
+/* Attachments are an optional second state; preserve the Figma 170px empty
+   state while allowing the real file chips to push the footer down. */
+.start-composer:has(.start-attachment-row) {
+  height: auto;
+}
+.start-composer .start-attachment-row {
+  margin-top: 7px;
+}
+
+.start-composer .start-composer-footer {
+  display: flex;
+  align-items: center;
+  width: 625px;
+  max-width: none;
+  height: 24px;
+  min-height: 24px;
+  margin-top: 56px;
+  gap: 0;
+}
+
+.start-composer .start-footer-left,
+.start-composer .start-footer-right {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  min-height: 24px;
+  gap: 0;
+}
+
+.start-composer .start-footer-left {
+  flex: 0 0 157px;
+  width: 157px;
+}
+
+.start-composer .start-footer-right {
+  flex: 0 0 126px;
+  width: 126px;
+  margin-left: auto;
+}
+
+.start-composer .start-add-button {
+  order: initial;
+  flex: 0 0 24px;
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 12px;
+}
+
+.start-composer .start-add-button > img,
+.start-composer .start-submit-button > img {
+  width: 24px;
+  height: 24px;
+}
+
+.start-composer .start-model-picker,
+.start-composer .composer-ext-skill {
+  flex: 0 0 58px;
+  width: 58px;
+  min-width: 58px;
+  max-width: 58px;
+  height: var(--kk-control-h-sm);
+}
+
+.start-composer .start-model-picker {
+  order: initial;
+  margin-left: 4px;
+}
+
+.start-composer .composer-ext-skill {
+  order: initial;
+  margin: 0;
+}
+
+.start-composer .start-model-picker > button,
+.start-composer .composer-ext-skill > button {
+  box-sizing: border-box;
+  width: 58px;
+  min-width: 58px;
+  height: var(--kk-control-h-sm);
+  min-height: var(--kk-control-h-sm);
+  padding: 0 5px;
+  gap: 4px;
+  border-radius: var(--kk-radius-control);
+  background: var(--ui-task-selected);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+
+.start-composer .start-model-picker > button {
+  justify-content: flex-start;
+}
+
+.start-composer .start-model-picker > button > img,
+.start-composer .composer-ext-skill > button > img {
+  flex: 0 0 13px;
+  width: 13px;
+  height: 14px;
+}
+
+.start-composer .start-model-picker > button > span {
+  overflow: visible;
+  font-size: var(--kk-font-caption);
+  text-overflow: clip;
+}
+
+.start-composer .start-model-picker > button > span::before {
+  display: none;
+  content: none;
+}
+
+.start-composer .start-composer-divider {
+  display: block;
+  flex: 0 0 1px;
+  width: 1px;
+  height: 16px;
+  margin: 0 3px 0 4px;
+  border-left: 1px solid var(--border-default);
+}
+
+.start-composer .start-footer-right [data-voice-state] {
+  order: initial;
+  flex: 0 0 var(--kk-control-h-sm);
+  width: var(--kk-control-h-sm);
+  min-width: var(--kk-control-h-sm);
+  height: var(--kk-control-h-sm);
+  min-height: var(--kk-control-h-sm);
+  margin-left: 0;
+  border-radius: 50%;
+}
+
+.start-composer .start-footer-right .start-composer-divider {
+  margin: 0 8px 0 9px;
+}
+
+.start-composer .start-footer-right [data-voice-state] > img {
+  width: 18px;
+  height: 18px;
+}
+
+.start-composer .start-mode-picker {
+  order: initial;
+  flex: 0 0 53px;
+  width: 53px;
+  max-width: 53px;
+  min-width: 53px;
+  height: var(--kk-control-h-sm);
+}
+
+.start-composer .start-mode-button {
+  width: 53px;
+  min-width: 53px;
+  height: var(--kk-control-h-sm);
+  min-height: var(--kk-control-h-sm);
+  padding: 0 4px;
+  border-radius: var(--kk-radius-control);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+
+.start-composer .start-mode-button > img {
+  width: 8px;
+  height: 5px;
+}
+
+.start-composer .start-submit-button {
+  order: initial;
+  flex: 0 0 24px;
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
+  margin-left: 9px;
+  border-radius: 12px;
+}
+
+.start-composer .start-composer-divider + .start-footer-right {
+  margin-left: auto;
+}
+
+/* The conversation frame has a separate 426x170 Figma contract. */
+.conversation-panel .chat-composer {
+  box-sizing: border-box;
+  width: 426px;
+  max-width: 100%;
+  height: 170px;
+  min-height: 170px;
+  margin-left: 2px;
+  padding: 12px;
+  gap: 0;
+  border: 1px solid var(--border-default);
+  border-radius: 20px;
+  background: var(--bg-input);
+}
+
+.conversation-panel .chat-composer > .composer-textarea {
+  flex: 0 0 64px;
+  width: 100%;
+  height: 64px;
+  min-height: 64px;
+  max-height: 64px;
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+}
+
+.conversation-panel .chat-composer > .composer-toolbar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 24px;
+  min-height: 24px;
+  margin-top: 56px;
+  gap: 0;
+}
+
+.conversation-panel .chat-composer .chat-attachment-trigger,
+.conversation-panel .chat-composer .chat-send {
+  flex: 0 0 24px;
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
+  border-radius: 12px;
+}
+
+.conversation-panel .chat-composer .chat-attachment-trigger {
+  order: 1;
+}
+
+.conversation-panel .chat-composer .chat-model-picker-wrap {
+  order: 2;
+  flex: 0 0 58px;
+  width: 58px;
+  min-width: 58px;
+  max-width: 58px;
+  height: var(--kk-control-h-sm);
+  margin-left: 5px;
+}
+
+.conversation-panel .chat-composer .chat-model-picker {
+  width: 58px;
+  min-width: 58px;
+  height: var(--kk-control-h-sm);
+  min-height: var(--kk-control-h-sm);
+  padding: 0 5px;
+  gap: 4px;
+  border-radius: var(--kk-radius-control);
+  background: var(--ui-task-selected);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+  justify-content: flex-start;
+}
+
+.conversation-panel .chat-composer .chat-model-picker > img,
+.conversation-panel .chat-composer .chat-skill-trigger > img,
+.conversation-panel .chat-composer .chat-plugin-trigger > img {
+  flex: 0 0 13px;
+  width: 13px;
+  height: 14px;
+}
+
+.conversation-panel .chat-composer .chat-model-name {
+  overflow: hidden;
+  font-size: var(--kk-font-caption);
+  text-overflow: ellipsis;
+}
+
+.conversation-panel .chat-composer .chat-model-separator,
+.conversation-panel .chat-composer .chat-skill-separator,
+.conversation-panel .chat-composer .chat-footer-separator-right {
+  display: block;
+  flex: 0 0 1px;
+  width: 1px;
+  height: 16px;
+  margin: 0 8px 0 9px;
+  border-left: 1px solid var(--border-default);
+}
+
+.conversation-panel .chat-composer .chat-model-separator {
+  order: 3;
+  margin: 0 4px 0 5px;
+}
+
+.conversation-panel .chat-composer .chat-skill-picker,
+.conversation-panel .chat-composer .chat-plugin-picker {
+  height: var(--kk-control-h-sm);
+}
+
+.conversation-panel .chat-composer .chat-skill-picker {
+  order: 4;
+  flex: 0 0 58px;
+  width: 58px;
+  min-width: 58px;
+}
+
+.conversation-panel .chat-composer .chat-plugin-picker {
+  order: 6;
+  flex: 0 0 58px;
+  width: 58px;
+  min-width: 58px;
+}
+
+.conversation-panel .chat-composer .chat-skill-trigger,
+.conversation-panel .chat-composer .chat-plugin-trigger {
+  box-sizing: border-box;
+  width: 58px;
+  min-width: 58px;
+  height: var(--kk-control-h-sm);
+  min-height: var(--kk-control-h-sm);
+  padding: 0 5px;
+  gap: 4px;
+  border-radius: var(--kk-radius-control);
+  background: var(--ui-task-selected);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+
+.conversation-panel .chat-composer .chat-skill-separator {
+  order: 5;
+  margin: 0 4px 0 5px;
+}
+
+.conversation-panel .chat-composer [data-voice-state] {
+  order: 7;
+  flex: 0 0 var(--kk-control-h-sm);
+  width: var(--kk-control-h-sm);
+  min-width: var(--kk-control-h-sm);
+  height: var(--kk-control-h-sm);
+  min-height: var(--kk-control-h-sm);
+  margin-left: auto;
+  border-radius: 50%;
+}
+
+.conversation-panel .chat-composer [data-voice-state] > img {
+  width: 18px;
+  height: 18px;
+}
+
+.conversation-panel .chat-composer .chat-footer-separator-right {
+  order: 8;
+}
+
+.conversation-panel .chat-composer .chat-mode-menu {
+  order: 9;
+  flex: 0 0 53px;
+  width: 53px;
+  min-width: 53px;
+  height: var(--kk-control-h-sm);
+}
+
+.conversation-panel .chat-composer .chat-mode-trigger {
+  width: 53px;
+  min-width: 53px;
+  height: var(--kk-control-h-sm);
+  min-height: var(--kk-control-h-sm);
+  padding: 0 4px;
+  border-radius: var(--kk-radius-control);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+
+.conversation-panel .chat-composer .chat-send {
+  order: 10;
+  margin-left: 9px;
+}
+
+@media (max-width: 767px) {
+  .start-composer {
+    width: 299px;
+    max-width: calc(100% - 24px);
+    padding: 12px 13px 12px;
+  }
+
+  .start-composer .start-composer-footer {
+    width: 292px;
+    max-width: none;
+  }
+
+  .start-composer .start-footer-left {
+    flex-basis: 160px;
+    width: 160px;
+  }
+
+  .start-composer > .composer-textarea {
+    width: 271px;
+    min-height: 64px;
+    max-height: calc(var(--composer-line) * var(--composer-max-lines));
+  }
+
+  .start-composer .start-footer-right {
+    margin-left: 0;
+  }
+
+  .start-composer .start-footer-right .start-composer-divider {
+    margin: 0 3px 0 4px;
+  }
+
+  .start-composer .start-submit-button {
+    margin-left: 4px;
+  }
+
+  .conversation-panel .chat-composer {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  /* The phone chat surface keeps every action inside its 314px inner row.
+     The desktop 58px resource controls are reduced only at this breakpoint;
+     labels remain readable while the send target stays inside the panel. */
+  .conversation-panel .chat-composer .chat-model-picker-wrap,
+  .conversation-panel .chat-composer .chat-skill-picker,
+  .conversation-panel .chat-composer .chat-plugin-picker {
+    flex-basis: 48px;
+    width: 48px;
+    min-width: 48px;
+    max-width: 48px;
+  }
+
+  .conversation-panel .chat-composer .chat-model-picker,
+  .conversation-panel .chat-composer .chat-skill-trigger,
+  .conversation-panel .chat-composer .chat-plugin-trigger {
+    width: 48px;
+    min-width: 48px;
+    padding-inline: 3px;
+    gap: 2px;
+  }
+
+  .conversation-panel .chat-composer .chat-model-separator,
+  .conversation-panel .chat-composer .chat-skill-separator {
+    margin-inline: 2px;
+  }
+
+  .conversation-panel .chat-composer .chat-footer-separator-right {
+    margin-inline: 3px;
+  }
+
+  .conversation-panel .chat-composer .chat-mode-menu,
+  .conversation-panel .chat-composer .chat-mode-trigger {
+    flex-basis: 44px;
+    width: 44px;
+    min-width: 44px;
+  }
+
+  .conversation-panel .chat-composer .chat-send {
+    margin-left: 4px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1200px) {
+  /* The compact conversation rail has the same inner width as phone after
+     the tablet split. Reuse the compact resource controls so its toolbar
+     cannot create horizontal overflow at 768–1200px. */
+  .conversation-panel .chat-composer .chat-model-picker-wrap,
+  .conversation-panel .chat-composer .chat-skill-picker,
+  .conversation-panel .chat-composer .chat-plugin-picker {
+    flex-basis: 48px;
+    width: 48px;
+    min-width: 48px;
+    max-width: 48px;
+  }
+
+  .conversation-panel .chat-composer .chat-model-picker,
+  .conversation-panel .chat-composer .chat-skill-trigger,
+  .conversation-panel .chat-composer .chat-plugin-trigger {
+    width: 48px;
+    min-width: 48px;
+    padding-inline: 3px;
+    gap: 2px;
+  }
+
+  .conversation-panel .chat-composer .chat-model-separator,
+  .conversation-panel .chat-composer .chat-skill-separator {
+    margin-inline: 2px;
+  }
+
+  .conversation-panel .chat-composer .chat-footer-separator-right {
+    margin-inline: 3px;
+  }
+
+  .conversation-panel .chat-composer .chat-mode-menu,
+  .conversation-panel .chat-composer .chat-mode-trigger {
+    flex-basis: 44px;
+    width: 44px;
+    min-width: 44px;
+  }
+
+  .conversation-panel .chat-composer .chat-send {
+    margin-left: 4px;
   }
 }

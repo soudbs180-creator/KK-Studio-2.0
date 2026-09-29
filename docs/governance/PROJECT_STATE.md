@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-28 画布会话分栏修复已完成，外部视觉门禁待验收
+
+`TASK-UI-CANVAS-001` 已在当前 dirty Web 工作区完成：960–1200px 会话 rail 预留画布空间，HUD/navigation/toolbar 保持可见并左移；侧栏展开固定 304px、收起 72px，移除宽度拖拽。Vite 1421/1423 的 targeted Playwright、typecheck、build 与截图证据通过。该记录不代表 Tauri/native、真实移动硬件、Figma 新读取或用户最终视觉验收；`canvas-layout` 的 `connector-video1` fixture 超时已按既有失败记录。实现和边界见 [change package](../changes/2026-09-28-canvas-chat-layout/verification.md) 与账本 `TASK-UI-CANVAS-001`。
+
 ## 2026-09-27 Provider #16 源码复审通过，托管门禁待完成
 
 独立只读 reviewer 对 Provider #16 源码 `1f81322` 给出 PASS，无未关闭 P0–P2；本地 `verify` 456 Node/300 浏览器与 delivery 22/0 通过。审查证据补录后仍须回读最终 head 的 PR/push Hosted 检查，未合并前不算主线能力；功能卡 FEAT-032 为 PARTIAL，真实 Codex/Claude 消费未验收。

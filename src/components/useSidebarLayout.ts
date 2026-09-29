@@ -17,7 +17,9 @@ export function useSidebarLayout(): {
   surface: ResponsiveSurface;
   toggle: () => void;
 } {
-  const [desktopCollapsed, setDesktopCollapsed] = useState(false);
+  // The desktop workspace opens in the compact rail state used by the Figma
+  // frame. Expanding remains a real fixed rail toggle rather than an overlay.
+  const [desktopCollapsed, setDesktopCollapsed] = useState(true);
   const [mobileExpanded, setMobileExpanded] = useState(false);
   const [surface, setSurface] = useState(currentSurface);
   useEffect(() => {

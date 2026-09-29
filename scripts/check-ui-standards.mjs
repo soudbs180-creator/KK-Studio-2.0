@@ -66,7 +66,11 @@ for (const file of sourceFiles) {
     ([value, count]) => count > (allowed.colors[value] ?? 0),
   );
   if (
-    !["src/styles/global.css", "src/styles/ui-tokens.css"].includes(name) &&
+    ![
+      "src/styles/global.css",
+      "src/styles/ui-tokens.css",
+      "src/styles/tokens.css",
+    ].includes(name) &&
     addedColors.length > 0
   )
     issues.push(

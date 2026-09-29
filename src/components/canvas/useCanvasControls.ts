@@ -12,6 +12,7 @@ import { useCanvasNodeActions } from "./useCanvasNodeActions";
 import { useCanvasView } from "./useCanvasView";
 import { useCanvasViewport } from "./useCanvasViewport";
 import { toSurfacePoint } from "./canvasSurface";
+import { useCanvasPreferences } from "./useCanvasPreferences";
 import type {
   KeyboardEvent as ReactKeyboardEvent,
   WheelEvent as ReactWheelEvent,
@@ -47,6 +48,7 @@ export function useCanvasControls({
   onToggleFavorite,
   initialCanvas,
 }: CanvasControlsOptions) {
+  const canvasPreferences = useCanvasPreferences();
   const [transform, setTransform] = useState<ViewTransform>(
     () => initialCanvas?.viewport ?? INITIAL_TRANSFORM,
   );
@@ -171,6 +173,7 @@ export function useCanvasControls({
     setTransform,
     selectedNode,
     setSelectedNode,
+    snapEnabled: canvasPreferences.preferences.snapEnabled,
   });
 
   const zoomCanvas = useCallback(
@@ -262,10 +265,12 @@ export function useCanvasControls({
     ...view,
     setComposerExtraHeight,
     ...actions,
+    ...canvasPreferences,
     containerRef,
     ...pointer,
     moveNodeWithKeyboard,
     nodes,
+    setNodes,
     resetCanvas,
     selectedNode,
     setSelectedNode,

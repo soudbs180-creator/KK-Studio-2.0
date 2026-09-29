@@ -14,7 +14,7 @@ Current code/runtime/test output proves what the implementation does; it does no
 2. `docs/DESIGN-SYSTEM.md` owns colors, type tiers and basic components (user Ardot `728457371665311 / 0:1`, 2026-09-22 PDF, audited corrections). Existing Figma `0nU0A7pq6eyjwfwm1TtWkO` nodes `404:28667`, `410:67357`, `410:59708` retain page-layout/asset authority; historical palettes and `1:2` cannot override newer sources.
 3. Current source, tests and actual runtime evidence for implemented reality; historical verification covers only its recorded source and scope.
 4. `docs/architecture/ARCHITECTURE.md`, `DATA-STORAGE.md`, and `GENERATION-PLATFORM.md` for module and data boundaries.
-5. `docs/UI-ALIGNMENT.md`, `docs/UI-STANDARDS.md`, `docs/UI_SPEC.md`, and `docs/FRONTEND-SPEC.md` for UI and interaction behavior.
+5. `docs/UI_INDEX.md` is the single UI entry: `UI_RULES.md` (parts/interaction rules), `UI_ARCHETYPES.md` (page types), `DESIGN_TOKENS.md` (values), `DESIGN-SYSTEM.md` (color and basic components), `UI_SPEC.md` (runtime and verification), `FRONTEND-SPEC.md` (engineering constraints). Historical UI records live in `docs/archive/ui-history/` and are read-only.
 6. A dated `docs/changes/<date>-<task>/spec.md` for task-specific acceptance criteria, with its `verification.md` as the evidence record.
 7. `docs/features/features.registry.json` is the machine-readable authority for how real each product feature is (REAL/PARTIAL/PROTOTYPE/PLANNED); `docs/features/feat-*.md` cards are the human entry, `docs/features/README.md` is a generated board, and `docs/features/BACKEND-ROADMAP.md` orders demo-to-backend work. Feature status is orthogonal to task status and never overrides items 1-6.
 

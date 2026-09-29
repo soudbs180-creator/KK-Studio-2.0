@@ -1,5 +1,17 @@
 # 当前进度
 
+## 2026-09-29 Kaworkai 无限画布研究与本地增强（TASK-CANVAS-KAWORKAI-001，PARTIAL）
+
+完成参考页只读审计与实现映射，未触发生成、上传、购买或积分消耗。KK 本地画布已接入会话快照历史、Ctrl/Cmd 撤销重做、动态右键菜单、持久化 16px 网格吸附和轻量图层搜索/定位面板，保持现有工具条与导航外框。11 项定向 Node 单测、TypeScript、Vite build、新增 2 项 Playwright 通过；既有空白新项目 fixture 使部分依赖默认节点的旧画布回归仍未通过，详见 `docs/changes/2026-09-29-kaworkai-canvas/verification.md`。
+
+## 2026-09-29 首页与对话输入区（TASK-UI-HOME-002，PARTIAL）
+
+按已重新授权的 Figma `483:695`/`483:753`/`407:29265`/`399:27506`/`404:28667`/`410:67357` 收口首页、对话、设置、侧栏和画布：移除首页“提示词库”快捷按钮，文件/应用菜单入口保留；首页空态为 652×170/299×170，文本区为 400×64/271×64；设置分类移到底部横向滑块，桌面/平板侧栏默认 70px 收起，展开为 291px 并推动工作区，开关图标为左小右大且展开态填充左侧小框，画布工具条固定 244×50，移动顶栏保留左侧用户和右侧搜索/设置/项目。typecheck/build、input-contract 9、composer-menu 7、frame 3、settings 3、sidebar 9、应用菜单 1 通过；canvas 图片 fixture 仍缺少 image-preview/连接卡片，已记录为后续核查项。详见 `docs/changes/2026-09-29-home-composer-fidelity/`。
+
+## 2026-09-28 画布会话分栏与固定侧栏（TASK-UI-CANVAS-001，DONE/PASS with follow-ups）
+
+按浏览器评论修复平板 workspace：960–1200px 打开会话时保留右侧 400px rail，画布导航和底部工具随可用区域左移；顶部控制与收起侧栏开关统一 44px 高度。侧栏展开移除 ResizeHandle，按 Workspace Figma 帧固定 291px 并推动工作区向右，收起保持 72px；低于 960px 继续使用覆盖式会话。侧栏开关使用左小右大的图标，展开态填充左侧小框。`typecheck`、`build`、定向 Playwright 和截图证据需在本轮改动后重跑。详见 `docs/changes/2026-09-28-canvas-chat-layout/`。
+
 ## 2026-09-27 Provider #16 源码独立补审通过
 
 PR #16 修复后源码 `1f81322` 独立只读补审 PASS，先前中文 id 渲染、同名 seed 碰撞和功能卡状态问题均关闭；本地完整 `verify` 为 456 Node、300 浏览器，delivery 22 文件/0 违规。补录审查结论后的最终 head 托管检查尚未完成，真实 Codex/Claude 消费与 UI 接线保持后续任务。

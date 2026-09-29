@@ -169,7 +169,10 @@ test("长模型名不会挤出工作台动作区，模型菜单仍完整可操�
   const panel = page.locator(".conversation-panel");
   const actions = panel.locator('[data-node-id="407:29315"]');
   const model = panel.getByRole("button", { name: "模型", exact: true });
-  await expect(model.locator(".chat-model-name")).toHaveText(longModel);
+  // The Figma composer keeps the compact visible label; the configured model
+  // remains available through the button title and the menu.
+  await expect(model.locator(".chat-model-name")).toHaveText("模型");
+  await expect(model).toHaveAttribute("title", longModel);
   const area = await actions.boundingBox();
   const controls = await controlRects(actions);
   expect(area).not.toBeNull();
@@ -209,7 +212,6 @@ for (const width of [390, 768, 900]) {
     const triggers = [
       footer.getByRole("button", { name: "模型", exact: true }),
       footer.getByRole("button", { name: "Skill", exact: true }),
-      footer.getByRole("button", { name: "插件", exact: true }),
       footer.getByRole("button", { name: /^当前模式：/ }),
     ];
     for (const trigger of triggers) {

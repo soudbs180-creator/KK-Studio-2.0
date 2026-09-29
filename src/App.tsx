@@ -120,6 +120,10 @@ import {
 } from "./features/creation/providerSubmission";
 import { mapWithConcurrency } from "./features/creation/generationQueue";
 import { compileDesignPrompt } from "./features/creation/promptCompiler";
+import {
+  getDisabledReason,
+  getGenerationUiState,
+} from "./domain/uiGovernance";
 
 import {
   abortedAfterProviderSubmission,
@@ -168,6 +172,9 @@ export default function App() {
   const [settingsSection, setSettingsSection] =
     useState<SettingsSection>("general");
   const sidebar = useSidebarLayout();
+  const chatCoversCanvas =
+    sidebar.surface === "phone" ||
+    (sidebar.surface === "tablet" && window.innerWidth < 960);
   const [chat, setChat] = useState(true);
   const [mobileChat, setMobileChat] = useState(false);
   const [assets, setAssets] = useState(initialAssets);
@@ -203,6 +210,24 @@ export default function App() {
   const saveState = persistence.state;
   const submitLock = useRef(false);
   const [providerVersion, setProviderVersion] = useState(0);
+  const homeModelConfig = useMemo(() => {
+    void providerVersion;
+    try {
+      const profile = parseModelProvider(
+        localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
+      ).profile;
+      const connection = readProviderConnections().find(
+        (item) =>
+          Boolean(item.model?.trim()) &&
+          item.state !== "disabled" &&
+          item.capabilities.modalities.includes("image"),
+      );
+      const model = profile.model.trim() || connection?.model?.trim() || "";
+      return { model, configured: Boolean(model) };
+    } catch {
+      return { model: "", configured: false };
+    }
+  }, [providerVersion]);
   function saveWorkflow(workflow: WorkflowRecord): void {
     setLocalWorkflows((current) => {
       const next = [
@@ -1526,12 +1551,29 @@ export default function App() {
       (project) => project.id === projectId,
     );
     if (request.origin !== "home" && !original) return "请先新建或打开项目。";
-    if (
-      original?.tasks.some(
-        (task) => task.status === "queued" || task.status === "running",
-      )
-    )
-      return "当前项目还有进行中的任务，请等待完成或取消后提交。";
+    const activeTask = original?.tasks.find(
+      (task) => task.status === "queued" || task.status === "running",
+    );
+    const requestModel =
+      request.origin === "canvas" ? request.input.model : request.input.model;
+    const uiState = getGenerationUiState({
+      prompt: request.input.prompt,
+      inputValid: Boolean(request.input.prompt.trim()),
+      modelConfigured:
+        request.origin === "agent" || homeModelConfig.configured,
+      quotaAvailable: true,
+      online: typeof navigator === "undefined" ? true : navigator.onLine,
+      serviceConfigured:
+        request.origin === "agent" ||
+        (homeModelConfig.configured && Boolean(requestModel.trim())),
+      taskStatus: activeTask
+        ? activeTask.status === "queued"
+          ? "queued"
+          : "running"
+        : undefined,
+    });
+    if (uiState !== "ready" && request.origin !== "agent")
+      return getDisabledReason(uiState) ?? "当前任务暂不可提交。";
     const signal =
       request.origin === "canvas" ? request.input.signal : undefined;
     const draftAtStart = creationRef.current.homeDraft;
@@ -1831,11 +1873,8 @@ export default function App() {
     const nextProject: CreationProject = {
       ...blank,
       name: "未命名项目",
-      canvas: createProjectCanvas(BASE_CANVAS_ITEMS),
-      items: BASE_CANVAS_ITEMS.map((item) => ({
-        ...item,
-        model: item.kind === "image" ? blank.model : item.model,
-      })),
+      canvas: createProjectCanvas([]),
+      items: [],
       messages: [],
       tasks: [],
       favoriteIds: [],
@@ -1904,13 +1943,29 @@ export default function App() {
       handleNewBlankProject();
       return;
     }
+    if (view === "chat") {
+      setActive("workspace");
+      setChat(true);
+      if (sidebar.surface === "phone" || sidebar.narrow) setMobileChat(true);
+      else setMobileChat(false);
+      setModal("");
+      return;
+    }
     if (["search", "favorites", "likes"].includes(view)) {
       setModal(view);
       return;
     }
     if (view === "settings" || view.startsWith("settings/")) {
+      const requestedSection = view.split("/")[1];
+      const sectionAlias: Record<string, SettingsSection> = {
+        plugins: "mcp",
+        extensions: "mcp",
+        partners: "partners",
+        skills: "skill",
+      };
       setSettingsSection(
-        SETTINGS_SECTIONS.find((item) => item.id === view.split("/")[1])?.id ??
+        sectionAlias[requestedSection] ??
+          SETTINGS_SECTIONS.find((item) => item.id === requestedSection)?.id ??
           "general",
       );
       setModal("settings");
@@ -1928,6 +1983,10 @@ export default function App() {
         "search",
       ].includes(view)
     ) {
+      if (
+        ["landing", "workspace", "projects", "skills", "comfyui"].includes(view)
+      )
+        setMobileChat(false);
       setActive(view);
       setModal("");
     } else setModal(view);
@@ -1998,7 +2057,11 @@ export default function App() {
           <div className="sidebar-scrim" aria-hidden="true" />
         )}
         <Sidebar
-          active={active}
+          active={
+            active === "workspace" && mobileChat && sidebar.narrow
+              ? "chat"
+              : active
+          }
           onNavigate={open}
           collapsed={sidebar.collapsed}
           narrow={sidebar.narrow}
@@ -2021,20 +2084,10 @@ export default function App() {
               onDraftChange={updateHomeDraft}
               onOpenModel={() => open("settings/providers")}
               onOpenSkills={() => open("skills")}
-              onOpenPlugins={() => open("settings/plugins")}
-              onOpenPrompts={() => open("prompts")}
+              modelConfigured={homeModelConfig.configured}
               skills={skillRegistry.listRecords()}
               onApplySkill={applySkillToHome}
-              defaultModel={(() => {
-                void providerVersion;
-                try {
-                  return parseModelProvider(
-                    localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
-                  ).profile.model;
-                } catch {
-                  return "";
-                }
-              })()}
+              defaultModel={homeModelConfig.model}
             />
           )}
           <div className="workspace-content" hidden={active !== "workspace"}>
@@ -2167,7 +2220,7 @@ export default function App() {
                   if (activeProject) retryTask(activeProject.id, taskId);
                 }}
                 chatOpen={chat}
-                covered={sidebar.narrow && mobileChat && chat}
+                covered={chatCoversCanvas && mobileChat && chat}
                 onOpenChat={() => {
                   setChat(true);
                   setMobileChat(true);
@@ -2190,13 +2243,13 @@ export default function App() {
                   ...new Set(
                     [
                       activeProject?.model,
-                      "kk-image-2",
                       parseModelProvider(
                         localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
                       ).profile.model,
                     ].filter((model): model is string => Boolean(model)),
                   ),
                 ]}
+                modelConfigured={homeModelConfig.configured}
                 onModelChange={handleProjectModelChange}
                 composerDraft={activeProject?.composerDraft}
                 onDraftChange={handleProjectDraftChange}
@@ -2436,3 +2489,4 @@ import "./styles/feature-parity.css";
 import "./styles/responsive.css";
 import "./styles/responsive-content.css";
 import "./styles/composer.css";
+import "./styles/page-templates.css";

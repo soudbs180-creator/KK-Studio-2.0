@@ -1,72 +1,110 @@
-/* 143:26947 and 143:27012: source-size tool and help menus. */
+/* Floating menus above the bottom canvas dock. */
 .canvas-tool-menu,
-.canvas-help-menu {
+.canvas-help-menu,
+.canvas-save-menu {
   position: absolute;
-  bottom: 51px;
-  width: 90px;
-  height: 50px;
-  min-height: 50px;
+  bottom: 58px;
   padding: 6px;
   display: grid;
   gap: 4px;
   background: var(--bg-card);
   border: 1px solid var(--border-default);
-  border-radius: 8px;
+  border-radius: var(--ui-radius-menu);
+  box-shadow: 0 10px 28px var(--kk-shadow-color-strong);
+  z-index: 5;
 }
 .canvas-tool-menu {
-  left: 50px;
+  left: 48px;
+  width: 196px;
+}
+.canvas-save-menu {
+  left: 120px;
+  width: 176px;
 }
 .canvas-help-menu {
   right: 0;
-  width: 103px;
+  width: 168px;
 }
 .canvas-tool-menu > button,
+.canvas-save-menu > button,
 .canvas-help-menu > button {
-  position: relative;
-  height: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   width: 100%;
-  border-radius: 4px;
-  font-size: 8px;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: var(--ui-radius-control);
+  font-size: var(--ui-font-label);
   font-weight: 500;
-  line-height: 14px;
+  line-height: 1;
   color: var(--text-primary);
+  text-align: left;
 }
 .canvas-tool-menu > button[aria-checked="true"],
 .canvas-tool-menu > button:hover,
+.canvas-save-menu > button:hover,
 .canvas-help-menu > button:hover {
   background: var(--ui-neutral-selected);
 }
-.canvas-tool-menu img,
-.canvas-help-menu img {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  left: 31px;
-  top: 4px;
+.canvas-tool-menu .tool-menu-check,
+.canvas-tool-menu .tool-menu-icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  position: static;
 }
-.canvas-tool-menu .tool-menu-check {
-  width: 8px;
-  height: 6px;
-  left: 12px;
-  top: 6px;
+.canvas-tool-menu .tool-menu-label {
+  flex: 1;
+  position: static;
 }
-.canvas-tool-menu button > span {
-  position: absolute;
-  right: 11px;
+.canvas-tool-menu .tool-menu-kbd {
+  position: static;
+  color: var(--text-tertiary);
+  font-size: 12px;
 }
-.canvas-help-menu img {
-  left: 13px;
+.canvas-help-menu > button > img {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  position: static;
 }
 .canvas-help-menu button > span {
-  position: absolute;
-  left: 26px;
+  flex: 1;
+  position: static;
 }
 .canvas-help-menu .help-menu-next {
-  left: auto;
-  right: 9px;
-  width: 4px;
-  height: 8px;
-  top: 5px;
+  width: 8px;
+  height: 12px;
+  flex: none;
+  position: static;
+}
+.canvas-save-like-dot,
+.canvas-save-star-dot {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border-radius: 50%;
+}
+.canvas-save-like-dot {
+  background: linear-gradient(135deg, var(--kk-like-start), var(--kk-like-end));
+}
+.canvas-save-star-dot {
+  background: linear-gradient(135deg, var(--kk-star-start), var(--kk-star-end));
+}
+/* Merged likes/favorites button: dashed fused glyph. */
+.canvas-toolbar > .toolbar-save {
+  flex-basis: 40px;
+  display: grid;
+  place-items: center;
+  color: var(--text-tertiary);
+}
+.canvas-toolbar > .toolbar-save:hover {
+  color: var(--text-primary);
+}
+.canvas-toolbar > .toolbar-save .toolbar-icon-favorite {
+  width: 24px;
+  height: 24px;
 }
 .tool-hand-current {
   width: 18px;
@@ -103,10 +141,11 @@
   background: none;
 }
 
-/* Figma toolbar/Default (4:52098): preserve the 294x50 source geometry.
+/* Figma toolbar/Default (410:74830): preserve the 244x50 source geometry.
    This component stylesheet intentionally owns the final overrides so shared
    workspace layout rules cannot introduce a one-pixel drift or reorder gap. */
 .canvas-toolbar {
+  width: 244px !important;
   padding: 4px !important;
 }
 .canvas-toolbar > .toolbar-current-tool + .toolbar-toggle {
@@ -156,35 +195,4 @@
 .infinite-canvas.is-panning,
 .infinite-canvas.is-panning .canvas-node {
   cursor: grabbing;
-}
-/* Preserve source visuals for a mouse; touch menus need larger distinct targets. */
-@media (pointer: coarse) {
-  .canvas-tool-menu,
-  .canvas-help-menu {
-    width: 140px;
-    height: auto;
-    padding: 6px;
-    gap: 4px;
-  }
-  .canvas-tool-menu > button,
-  .canvas-help-menu > button {
-    height: 44px;
-    line-height: 44px;
-    font-size: 13px;
-  }
-  .canvas-tool-menu img,
-  .canvas-help-menu img {
-    top: 15px;
-    width: 14px;
-    height: 14px;
-  }
-  .canvas-tool-menu .tool-menu-check {
-    top: 20px;
-  }
-  .canvas-help-menu button > span {
-    left: 26px;
-  }
-  .canvas-help-menu .help-menu-next {
-    top: 19px;
-  }
 }

@@ -91,10 +91,13 @@ test("latest two Figma frames retain exact shell anchors through independent col
   page,
 }) => {
   await openWorkspace(page);
+  await rect(page, ".workspace-content", [70, 45, 1840, 1025]);
+  await rect(page, ".task-button", [100, 72, 93, 30]);
+  await rect(page, ".canvas-toolbar", [719, 998, 244, 50]);
+  await rect(page, ".conversation-panel", [1430, 61, 470, 998]);
+  await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
   await rect(page, ".workspace-content", [291, 45, 1619, 1025]);
   await rect(page, ".task-button", [321, 72, 93, 30]);
-  await rect(page, ".canvas-toolbar", [719, 998, 294, 50]);
-  await rect(page, ".conversation-panel", [1430, 61, 470, 998]);
   await rect(
     page,
     ".project-groups > section:last-of-type > .project-group-content > .project-entry",
@@ -120,7 +123,7 @@ test("latest two Figma frames retain exact shell anchors through independent col
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
   await rect(page, ".workspace-content", [70, 45, 1840, 1025]);
   await rect(page, ".task-button", [100, 72, 93, 30]);
-  await rect(page, ".canvas-toolbar", [719, 998, 294, 50]);
+  await rect(page, ".canvas-toolbar", [719, 998, 244, 50]);
   await rect(page, ".sidebar-search", [22, 942, 26, 26]);
   await rect(page, ".sidebar-settings", [22, 982, 26, 26]);
   await rect(page, ".sidebar-account", [22, 1022, 26, 26]);
@@ -129,7 +132,7 @@ test("latest two Figma frames retain exact shell anchors through independent col
     "收纳后保留这段草稿",
   );
   await expect(page.locator(".sidebar")).toHaveClass(/is-collapsed/);
-  await rect(page, ".canvas-toolbar", [719, 998, 294, 50]);
+  await rect(page, ".canvas-toolbar", [719, 998, 244, 50]);
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
   await rect(page, ".task-button", [321, 72, 93, 30]);
 });
@@ -155,6 +158,7 @@ test("sidebar motion keeps the task attached to the frame and toolbar stationary
   page,
 }) => {
   await openWorkspace(page);
+  await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
   await freezeSidebarMotion(page);
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
   const samples = await sampleSidebarMotion(page);
@@ -198,6 +202,7 @@ test("project row source actions retain navigation, reasons and keyboard managem
   page,
 }) => {
   await openWorkspace(page);
+  await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
   const row = page.locator(".project-entry").first();
   await rect(
     page,
