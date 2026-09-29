@@ -380,12 +380,12 @@ export class CompanionStore {
     preflight: MigrationPreflightResult,
     expectedRevision: number | null,
   ): void {
-    for (const assetId of preflight.referencedAssetIds) {
-      if (!this.readAsset(assetId))
+    for (const asset of preflight.assets) {
+      if (!this.readAsset(asset.assetId))
         throw new CompanionProtocolError(
           "IMPORT_ROLLBACK",
           422,
-          "迁移素材尚未完整上传。",
+          "迁移清单中的素材尚未完整上传。",
         );
     }
     this.writeSnapshot(preflight.snapshot, expectedRevision);
