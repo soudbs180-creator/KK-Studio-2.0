@@ -5,6 +5,8 @@ import {
   readNativeAsset,
   listNativeAssets,
 } from "./nativeAssetAdapter.ts";
+import { CompanionClient } from "../local-service/client.ts";
+import { readCompanionConnection } from "../local-service/connection.ts";
 
 export const assetProvenanceSchema = z.object({
   provider: z.string().max(80).optional(),
@@ -55,6 +57,16 @@ const ASSET_STORE = "blobs";
 const MAX_ASSET_BYTES = 100 * 1024 * 1024;
 const ALLOWED_MIME =
   /^(image\/(png|jpeg|webp|gif)|video\/(mp4|webm)|audio\/(mpeg|wav|ogg))$/i;
+
+function companionEnabled(): boolean {
+  return !usesNativeAssets() && Boolean(readCompanionConnection()?.enabled);
+}
+
+function serviceProvenance(value: unknown): AssetProvenance {
+  return assetProvenanceSchema.parse(
+    value ?? { generatedAt: new Date().toISOString() },
+  );
+}
 
 function openAssetDatabase(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -146,6 +158,20 @@ export async function loadStoredAsset(
   id: string,
 ): Promise<StoredGeneratedAsset | null> {
   if (usesNativeAssets()) return readNativeAsset(id);
+  if (companionEnabled()) {
+    const remote = await new CompanionClient().loadCompanionAsset(id);
+    const sha256 = await digest(remote.bytes);
+    if (
+      sha256 !== remote.metadata.sha256 ||
+      remote.metadata.assetId !== id.toLowerCase()
+    )
+      throw new Error("本机素材原件校验失败，已保留项目引用。");
+    return {
+      ...remote.metadata,
+      provenance: serviceProvenance(remote.metadata.provenance),
+      preview: bytesToDataUrl(remote.bytes, remote.metadata.mime),
+    };
+  }
   if (typeof indexedDB === "undefined") return null;
   const db = await openAssetDatabase();
   return new Promise((resolve, reject) => {
@@ -327,6 +353,16 @@ export async function storeGeneratedAsset(options: {
   };
   if (options.signal?.aborted) throw new Error("素材归档已取消。");
   if (usesNativeAssets()) return storeNativeAsset(stored);
+  if (companionEnabled()) {
+    const metadata = { ...stored } as Record<string, unknown>;
+    delete metadata.preview;
+    metadata.size = bytes.byteLength;
+    await new CompanionClient().putCompanionAsset(
+      metadata as StoredAssetMetadata & { size: number },
+      bytes,
+    );
+    return stored;
+  }
   await persistBlob(stored.assetId, blob, stored);
   return stored;
 }
@@ -346,6 +382,16 @@ export async function listStoredAssets(
     throw new Error("素材分页大小无效。");
   const limit = Math.min(100, requestedLimit);
   if (usesNativeAssets()) return listNativeAssets(offset, limit);
+  if (companionEnabled()) {
+    const records = await new CompanionClient().listCompanionAssets(
+      offset,
+      limit,
+    );
+    return records.map((metadata) => ({
+      ...metadata,
+      provenance: serviceProvenance(metadata.provenance),
+    }));
+  }
   if (typeof indexedDB === "undefined") return [];
   const db = await openAssetDatabase();
   return new Promise((resolve, reject) => {

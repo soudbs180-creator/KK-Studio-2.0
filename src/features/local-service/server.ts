@@ -6,6 +6,7 @@ import {
 } from "node:http";
 import { z } from "zod";
 import {
+  backupRestoreSchema,
   assetMetadataSchema,
   CompanionProtocolError,
   COMPANION_PROTOCOL_VERSION,
@@ -13,12 +14,15 @@ import {
   isAllowedCompanionOrigin,
   MAX_COMPANION_ASSET_BYTES,
   MAX_COMPANION_BODY_BYTES,
+  migrationImportSchema,
+  migrationPreflightSchema,
   pairRequestSchema,
   snapshotPutSchema,
   type CompanionAssetMetadata,
 } from "./protocol.ts";
 import { CompanionSessionManager, sessionFromCookie } from "./session.ts";
-import { CompanionStore } from "./store.ts";
+import { CompanionStore, type MigrationPreflightResult } from "./store.ts";
+import { randomUUID } from "node:crypto";
 
 export interface CompanionServerOptions {
   store: CompanionStore;
@@ -115,6 +119,10 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
     options.pairingCode,
     options.sessionTtlMs,
   );
+  const migrationReports = new Map<
+    string,
+    { report: MigrationPreflightResult; createdAt: number }
+  >();
   const server = createServer((req, res) => {
     void (async () => {
       try {
@@ -135,9 +143,9 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
           return;
         }
         const url = new URL(req.url ?? "/", "http://127.0.0.1");
-        if (url.search)
-          throw new CompanionProtocolError("INVALID_REQUEST", 400);
         const path = url.pathname;
+        if (url.search && path !== "/v1/assets")
+          throw new CompanionProtocolError("INVALID_REQUEST", 400);
 
         if (path === "/health" && req.method === "GET") {
           json(
@@ -197,6 +205,13 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
           return;
         }
 
+        if (path === "/v1/assets" && req.method === "GET") {
+          const offset = Number(url.searchParams.get("offset") ?? 0);
+          const limit = Number(url.searchParams.get("limit") ?? 50);
+          json(res, 200, { assets: options.store.listAssets(offset, limit) });
+          return;
+        }
+
         const id = assetPath(path);
         if (id && req.method === "GET") {
           const stored = options.store.readAsset(id);
@@ -208,6 +223,9 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
             "Cache-Control": "private, no-store",
             "X-Content-Type-Options": "nosniff",
             "Content-Disposition": "inline",
+            "X-KK-Asset-Metadata": Buffer.from(
+              JSON.stringify(stored.metadata),
+            ).toString("base64url"),
           });
           res.end(Buffer.from(stored.bytes));
           return;
@@ -236,9 +254,89 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
           return;
         }
 
+        if (path === "/v1/migration/preflight" && req.method === "POST") {
+          const request = migrationPreflightSchema.parse(
+            parseJson(await readBody(req, maxBodyBytes)),
+          );
+          const report = options.store.preflightImport(
+            request.snapshot,
+            request.assets,
+            request.manifestSha256,
+          );
+          const reportId = randomUUID();
+          migrationReports.set(reportId, {
+            report,
+            createdAt: Date.now(),
+          });
+          json(res, 200, {
+            status: "ready",
+            reportId,
+            manifestSha256: report.manifestSha256,
+            snapshotRevision: report.snapshot.revision,
+            assetCount: report.assets.length,
+            assetBytes: report.assets.reduce(
+              (sum, asset) => sum + asset.size,
+              0,
+            ),
+          });
+          return;
+        }
+
+        if (path === "/v1/migration/import" && req.method === "POST") {
+          const request = migrationImportSchema.parse(
+            parseJson(await readBody(req, maxBodyBytes)),
+          );
+          const saved = migrationReports.get(request.reportId);
+          if (!saved || Date.now() - saved.createdAt > 15 * 60 * 1000)
+            throw new CompanionProtocolError(
+              "IMPORT_ROLLBACK",
+              409,
+              "迁移预检已过期，请重新预检。",
+            );
+          if (saved.report.manifestSha256 !== request.manifestSha256)
+            throw new CompanionProtocolError(
+              "IMPORT_ROLLBACK",
+              409,
+              "迁移清单与预检报告不一致。",
+            );
+          const report = options.store.preflightImport(
+            request.snapshot,
+            saved.report.assets,
+            request.manifestSha256,
+          );
+          options.store.publishImportedSnapshot(
+            report,
+            request.expectedRevision,
+          );
+          migrationReports.delete(request.reportId);
+          json(res, 200, {
+            status: "imported",
+            revision: report.snapshot.revision,
+          });
+          return;
+        }
+
         if (path === "/v1/backups/export" && req.method === "POST") {
           const backup = options.store.createBackup();
-          json(res, 200, { manifest: backup.manifest });
+          json(res, 200, {
+            status: "created",
+            backupId: backup.directory.split(/[\\/]/).pop(),
+            manifest: backup.manifest,
+          });
+          return;
+        }
+
+        if (path === "/v1/backups" && req.method === "GET") {
+          json(res, 200, { backups: options.store.listBackups() });
+          return;
+        }
+
+        if (path === "/v1/backups/restore" && req.method === "POST") {
+          const request = backupRestoreSchema.parse(
+            parseJson(await readBody(req, 4096)),
+          );
+          const restored = options.store.restoreBackup(request.backupId);
+          json(res, 200, { status: "restored", ...restored });
           return;
         }
 

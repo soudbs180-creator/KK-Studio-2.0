@@ -13,19 +13,27 @@ import {
   writeFileSync,
 } from "node:fs";
 import { randomUUID } from "node:crypto";
-import { join, resolve } from "node:path";
+import { join, resolve, sep } from "node:path";
 import type { CreationSnapshot } from "../creation/model.ts";
 import { decodeSnapshot } from "../creation/snapshotCodec.ts";
 import {
   assetMetadataSchema,
+  backupManifestSchema,
   CompanionProtocolError,
   MAX_COMPANION_ASSET_BYTES,
+  migrationPreflightSchema,
   rejectCompanionSecrets,
   snapshotPutSchema,
   type CompanionBackupManifest,
   type CompanionAssetMetadata,
 } from "./protocol.ts";
-import { canonicalJson, createManifest, sha256Bytes } from "./manifest.ts";
+import {
+  canonicalJson,
+  createManifest,
+  sha256Bytes,
+  sha256Json,
+  verifyManifestHash,
+} from "./manifest.ts";
 
 export type SnapshotReadResult = {
   status: "missing" | "loaded" | "recovered";
@@ -48,6 +56,18 @@ export type CompanionBackup = {
   manifest: CompanionBackupManifest;
 };
 
+export type CompanionBackupSummary = {
+  id: string;
+  manifest: CompanionBackupManifest;
+};
+
+export type MigrationPreflightResult = {
+  snapshot: CreationSnapshot;
+  assets: CompanionAssetMetadata[];
+  manifestSha256: string;
+  referencedAssetIds: string[];
+};
+
 function writeAtomic(path: string, bytes: Uint8Array | string): void {
   mkdirSync(join(path, ".."), { recursive: true });
   const temp = `${path}.tmp-${randomUUID()}`;
@@ -67,6 +87,47 @@ function asBytes(value: Uint8Array | Buffer): Uint8Array {
 
 function invalidAsset(message: string): CompanionProtocolError {
   return new CompanionProtocolError("INVALID_ASSET", 422, message);
+}
+
+function collectAssetIds(value: unknown, ids = new Set<string>()): Set<string> {
+  if (Array.isArray(value)) {
+    value.forEach((entry) => collectAssetIds(entry, ids));
+    return ids;
+  }
+  if (!value || typeof value !== "object") return ids;
+  for (const [key, child] of Object.entries(value)) {
+    if (
+      (key === "assetId" || key === "parentAssetId") &&
+      typeof child === "string"
+    ) {
+      if (!/^asset-[a-f0-9]{24}$/i.test(child))
+        throw new CompanionProtocolError(
+          "IMPORT_ROLLBACK",
+          422,
+          "项目引用的素材标识无效。",
+        );
+      ids.add(child.toLowerCase());
+    } else if (
+      ["dataUrl", "preview", "src", "poster"].includes(key) &&
+      typeof child === "string" &&
+      child.startsWith("kk-asset:")
+    ) {
+      const id = child.slice("kk-asset:".length);
+      if (!/^asset-[a-f0-9]{24}$/i.test(id))
+        throw new CompanionProtocolError(
+          "IMPORT_ROLLBACK",
+          422,
+          "项目引用的素材路径无效。",
+        );
+      ids.add(id.toLowerCase());
+    }
+    collectAssetIds(child, ids);
+  }
+  return ids;
+}
+
+function safeBackupId(id: string): boolean {
+  return /^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(id) && id.length <= 180;
 }
 
 export class CompanionStore {
@@ -235,6 +296,101 @@ export class CompanionStore {
     return merged;
   }
 
+  listAssets(offset = 0, limit = 100): CompanionAssetMetadata[] {
+    if (!Number.isSafeInteger(offset) || offset < 0)
+      throw new CompanionProtocolError(
+        "INVALID_REQUEST",
+        400,
+        "素材分页位置无效。",
+      );
+    if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100)
+      throw new CompanionProtocolError(
+        "INVALID_REQUEST",
+        400,
+        "素材分页大小无效。",
+      );
+    return readdirSync(this.assetRecordsRoot)
+      .filter((name) => /^asset-[a-f0-9]{24}\.json$/i.test(name))
+      .sort()
+      .slice(offset, offset + limit)
+      .map((name) => {
+        const value = this.readAsset(name.slice(0, -5));
+        if (!value)
+          throw new CompanionProtocolError("CORRUPT", 500, "素材索引无效。");
+        return value.metadata;
+      });
+  }
+
+  preflightImport(
+    snapshot: unknown,
+    assets: unknown,
+    manifestSha256: string,
+  ): MigrationPreflightResult {
+    try {
+      rejectCompanionSecrets(snapshot);
+      rejectCompanionSecrets(assets);
+      const parsed = migrationPreflightSchema.parse({
+        snapshot,
+        assets,
+        manifestSha256,
+      });
+      const decoded = decodeSnapshot(parsed.snapshot);
+      const metadata = parsed.assets.map((entry) =>
+        assetMetadataSchema.parse(entry),
+      );
+      const unique = new Set(metadata.map((entry) => entry.assetId));
+      if (unique.size !== metadata.length)
+        throw new CompanionProtocolError(
+          "IMPORT_ROLLBACK",
+          422,
+          "迁移清单包含重复素材。",
+        );
+      const computed = sha256Json({ snapshot: decoded, assets: metadata });
+      if (computed !== manifestSha256.toLowerCase())
+        throw new CompanionProtocolError(
+          "IMPORT_ROLLBACK",
+          422,
+          "迁移清单校验和不匹配。",
+        );
+      const referencedAssetIds = [...collectAssetIds(decoded)];
+      const available = new Set(metadata.map((entry) => entry.assetId));
+      if (referencedAssetIds.some((id) => !available.has(id)))
+        throw new CompanionProtocolError(
+          "IMPORT_ROLLBACK",
+          422,
+          "迁移缺少项目引用的素材。",
+        );
+      return {
+        snapshot: decoded,
+        assets: metadata,
+        manifestSha256: computed,
+        referencedAssetIds,
+      };
+    } catch (error) {
+      if (error instanceof CompanionProtocolError) throw error;
+      throw new CompanionProtocolError(
+        "IMPORT_ROLLBACK",
+        422,
+        "迁移预检失败。",
+      );
+    }
+  }
+
+  publishImportedSnapshot(
+    preflight: MigrationPreflightResult,
+    expectedRevision: number | null,
+  ): void {
+    for (const assetId of preflight.referencedAssetIds) {
+      if (!this.readAsset(assetId))
+        throw new CompanionProtocolError(
+          "IMPORT_ROLLBACK",
+          422,
+          "迁移素材尚未完整上传。",
+        );
+    }
+    this.writeSnapshot(preflight.snapshot, expectedRevision);
+  }
+
   readAsset(assetId: string): StoredAsset | null {
     const parsedId = assetId.toLowerCase();
     if (!/^asset-[a-f0-9]{24}$/.test(parsedId))
@@ -280,7 +436,13 @@ export class CompanionStore {
     const entries: Array<{ path: string; bytes: Uint8Array }> = [
       {
         path: "projects/creation-v2.json",
-        bytes: asBytes(readFileSync(this.snapshotPath)),
+        bytes: asBytes(
+          readFileSync(
+            this.validSnapshotFile(this.snapshotPath)
+              ? this.snapshotPath
+              : this.backupPath,
+          ),
+        ),
       },
     ];
     for (const name of readdirSync(this.assetRecordsRoot)) {
@@ -310,6 +472,117 @@ export class CompanionStore {
     }
     writeAtomic(join(directory, "manifest.json"), canonicalJson(manifest));
     return { directory, manifest };
+  }
+
+  listBackups(): CompanionBackupSummary[] {
+    return readdirSync(this.backupsRoot)
+      .filter((id) => safeBackupId(id))
+      .sort()
+      .flatMap((id) => {
+        const directory = join(this.backupsRoot, id);
+        const path = join(directory, "manifest.json");
+        if (!existsSync(path)) return [];
+        try {
+          const manifest = backupManifestSchema.parse(
+            JSON.parse(readFileSync(path, "utf8")),
+          );
+          return verifyManifestHash(manifest) ? [{ id, manifest }] : [];
+        } catch {
+          return [];
+        }
+      });
+  }
+
+  restoreBackup(backupId: string): { id: string; revision: number } {
+    if (!safeBackupId(backupId))
+      throw new CompanionProtocolError(
+        "INVALID_REQUEST",
+        400,
+        "备份标识无效。",
+      );
+    const directory = resolve(this.backupsRoot, backupId);
+    if (!directory.startsWith(`${this.backupsRoot}${sep}`))
+      throw new CompanionProtocolError(
+        "INVALID_REQUEST",
+        400,
+        "备份路径无效。",
+      );
+    const manifestPath = join(directory, "manifest.json");
+    if (!existsSync(manifestPath))
+      throw new CompanionProtocolError("NOT_FOUND", 404, "备份不存在。");
+    let manifest: CompanionBackupManifest;
+    try {
+      manifest = backupManifestSchema.parse(
+        JSON.parse(readFileSync(manifestPath, "utf8")),
+      );
+    } catch {
+      throw new CompanionProtocolError("CORRUPT", 422, "备份清单无效。");
+    }
+    if (!verifyManifestHash(manifest))
+      throw new CompanionProtocolError("CORRUPT", 422, "备份清单校验和无效。");
+    const entries = new Map<string, Uint8Array>();
+    for (const entry of manifest.files) {
+      const path = resolve(directory, entry.path);
+      if (!path.startsWith(`${directory}${sep}`) || !existsSync(path))
+        throw new CompanionProtocolError("CORRUPT", 422, "备份文件缺失。");
+      const bytes = asBytes(readFileSync(path));
+      if (
+        bytes.byteLength !== entry.size ||
+        sha256Bytes(bytes) !== entry.sha256
+      )
+        throw new CompanionProtocolError("CORRUPT", 422, "备份文件校验失败。");
+      entries.set(entry.path, bytes);
+    }
+    const snapshotBytes = entries.get("projects/creation-v2.json");
+    if (!snapshotBytes)
+      throw new CompanionProtocolError("CORRUPT", 422, "备份缺少项目快照。");
+    let snapshot: CreationSnapshot;
+    try {
+      snapshot = decodeSnapshot(
+        JSON.parse(new TextDecoder().decode(snapshotBytes)),
+      );
+    } catch {
+      throw new CompanionProtocolError("CORRUPT", 422, "备份项目快照无效。");
+    }
+    const records = new Map<string, CompanionAssetMetadata>();
+    for (const [path, bytes] of entries) {
+      const record = /^assets\/records\/(asset-[a-f0-9]{24})\.json$/i.exec(
+        path,
+      );
+      if (!record) continue;
+      try {
+        records.set(
+          record[1].toLowerCase(),
+          assetMetadataSchema.parse(
+            JSON.parse(new TextDecoder().decode(bytes)),
+          ),
+        );
+      } catch {
+        throw new CompanionProtocolError("CORRUPT", 422, "备份素材索引无效。");
+      }
+    }
+    for (const metadata of records.values()) {
+      const blob = entries.get(`assets/blobs/${metadata.sha256}`);
+      if (
+        !blob ||
+        blob.byteLength !== metadata.size ||
+        sha256Bytes(blob) !== metadata.sha256
+      )
+        throw new CompanionProtocolError(
+          "CORRUPT",
+          422,
+          "备份素材原件不完整。",
+        );
+    }
+    const current = this.readSnapshot();
+    if (current.snapshot && this.validSnapshotFile(this.snapshotPath))
+      copyFileSync(this.snapshotPath, this.backupPath);
+    for (const [path, bytes] of entries) {
+      if (path === "projects/creation-v2.json") continue;
+      writeAtomic(join(this.root, path), bytes);
+    }
+    writeAtomic(this.snapshotPath, canonicalJson(snapshot));
+    return { id: backupId, revision: snapshot.revision };
   }
 
   private validSnapshotFile(path: string): boolean {

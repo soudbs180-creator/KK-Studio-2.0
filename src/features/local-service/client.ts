@@ -1,8 +1,13 @@
 import { z } from "zod";
 import {
+  assetMetadataSchema,
+  backupManifestSchema,
   COMPANION_PROTOCOL_VERSION,
   healthResponseSchema,
+  migrationImportSchema,
+  migrationPreflightSchema,
   type CompanionErrorCode,
+  type CompanionAssetMetadata,
 } from "./protocol.ts";
 import {
   clearCompanionConnection,
@@ -47,6 +52,26 @@ export interface CompanionSnapshotResponse {
   status: "missing" | "loaded" | "recovered";
   snapshot: unknown | null;
   revision: number | null;
+}
+
+export interface CompanionAssetResponse {
+  metadata: CompanionAssetMetadata;
+  bytes: Uint8Array;
+}
+
+export interface CompanionMigrationReceipt {
+  status: "ready" | "imported";
+  reportId?: string;
+  manifestSha256: string;
+  snapshotRevision: number;
+  assetCount?: number;
+  assetBytes?: number;
+  revision?: number;
+}
+
+export interface CompanionBackupSummary {
+  id: string;
+  manifest: unknown;
 }
 
 export interface CompanionClientOptions {
@@ -105,7 +130,8 @@ export class CompanionClient {
   private readonly storage?: Storage;
 
   constructor(options: CompanionClientOptions = {}) {
-    this.requestFetch = options.fetch ?? fetch;
+    const fetcher = options.fetch ?? globalThis.fetch;
+    this.requestFetch = (...args) => fetcher(...args);
     this.storage = options.storage;
   }
 
@@ -120,6 +146,14 @@ export class CompanionClient {
     path: string,
     init: RequestInit = {},
   ): Promise<{ response: Response; body: unknown }> {
+    const response = await this.rawRequest(path, init);
+    return { response, body: await readJson(response) };
+  }
+
+  private async rawRequest(
+    path: string,
+    init: RequestInit = {},
+  ): Promise<Response> {
     const connection = this.connection();
     let response: Response;
     try {
@@ -134,8 +168,8 @@ export class CompanionClient {
         "本机服务未运行或暂时不可访问。",
       );
     }
-    const body = await readJson(response);
     if (!response.ok) {
+      const body = await readJson(response);
       const candidate =
         body && typeof body === "object" && "error" in body
           ? (body as { error?: unknown }).error
@@ -164,7 +198,7 @@ export class CompanionClient {
           : errorCodeForStatus(response.status);
       throw new CompanionClientError(code, response.status);
     }
-    return { response, body };
+    return response;
   }
 
   async pairCompanion(
@@ -315,6 +349,259 @@ export class CompanionClient {
       );
     return { revision: parsed.data.revision };
   }
+
+  async putCompanionAsset(
+    metadata: CompanionAssetMetadata,
+    bytes: Uint8Array,
+  ): Promise<CompanionAssetMetadata> {
+    const parsed = assetMetadataSchema.parse(metadata);
+    const encodedMetadata = toBase64Url(
+      new TextEncoder().encode(JSON.stringify(parsed)),
+    );
+    const result = await this.request(`/v1/assets/${parsed.assetId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/octet-stream",
+        "X-KK-Asset-Metadata": encodedMetadata,
+      },
+      body: bytes as unknown as BodyInit,
+    });
+    const body =
+      result.body &&
+      typeof result.body === "object" &&
+      "metadata" in result.body
+        ? (result.body as { metadata?: unknown }).metadata
+        : undefined;
+    const saved = assetMetadataSchema.safeParse(body);
+    if (!saved.success)
+      throw new CompanionClientError(
+        "INVALID_ASSET",
+        result.response.status,
+        "本机素材保存响应无效。",
+      );
+    return saved.data;
+  }
+
+  async loadCompanionAsset(assetId: string): Promise<CompanionAssetResponse> {
+    if (!/^asset-[a-f0-9]{24}$/i.test(assetId))
+      throw new CompanionClientError("INVALID_ASSET", 422, "素材标识无效。");
+    const response = await this.rawRequest(`/v1/assets/${assetId}`);
+    const rawMetadata = response.headers.get("x-kk-asset-metadata");
+    if (!rawMetadata)
+      throw new CompanionClientError(
+        "INVALID_ASSET",
+        response.status,
+        "本机素材元数据缺失。",
+      );
+    let metadata: CompanionAssetMetadata;
+    try {
+      metadata = assetMetadataSchema.parse(
+        JSON.parse(new TextDecoder().decode(fromBase64Url(rawMetadata))),
+      );
+    } catch {
+      throw new CompanionClientError(
+        "INVALID_ASSET",
+        response.status,
+        "本机素材元数据无效。",
+      );
+    }
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    if (
+      metadata.assetId !== assetId.toLowerCase() ||
+      metadata.size !== bytes.byteLength
+    )
+      throw new CompanionClientError(
+        "INVALID_ASSET",
+        response.status,
+        "本机素材大小或身份不一致。",
+      );
+    if ((await digestHex(bytes)) !== metadata.sha256.toLowerCase())
+      throw new CompanionClientError(
+        "INVALID_ASSET",
+        response.status,
+        "本机素材 SHA-256 校验失败。",
+      );
+    return { metadata, bytes };
+  }
+
+  async listCompanionAssets(
+    offset = 0,
+    limit = 50,
+  ): Promise<CompanionAssetMetadata[]> {
+    const result = await this.request(
+      `/v1/assets?offset=${offset}&limit=${limit}`,
+    );
+    const assets =
+      result.body && typeof result.body === "object" && "assets" in result.body
+        ? (result.body as { assets?: unknown }).assets
+        : undefined;
+    const parsed = z.array(assetMetadataSchema).safeParse(assets);
+    if (!parsed.success)
+      throw new CompanionClientError(
+        "INVALID_ASSET",
+        result.response.status,
+        "本机素材索引无效。",
+      );
+    return parsed.data;
+  }
+
+  async preflightCompanionMigration(input: {
+    snapshot: unknown;
+    assets: CompanionAssetMetadata[];
+    manifestSha256: string;
+  }): Promise<CompanionMigrationReceipt> {
+    const request = migrationPreflightSchema.parse(input);
+    const result = await this.request("/v1/migration/preflight", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    });
+    const parsed = z
+      .object({
+        status: z.literal("ready"),
+        reportId: z.string().uuid(),
+        manifestSha256: z.string().regex(/^[a-f0-9]{64}$/i),
+        snapshotRevision: z.number().int().nonnegative(),
+        assetCount: z.number().int().nonnegative(),
+        assetBytes: z.number().int().nonnegative(),
+      })
+      .safeParse(result.body);
+    if (!parsed.success)
+      throw new CompanionClientError(
+        "IMPORT_ROLLBACK",
+        result.response.status,
+        "本机迁移预检响应无效。",
+      );
+    return parsed.data;
+  }
+
+  async importCompanionMigration(input: {
+    reportId: string;
+    manifestSha256: string;
+    expectedRevision: number | null;
+    snapshot: CreationSnapshot;
+  }): Promise<CompanionMigrationReceipt> {
+    const request = migrationImportSchema.parse(input);
+    const result = await this.request("/v1/migration/import", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    });
+    const parsed = z
+      .object({
+        status: z.literal("imported"),
+        revision: z.number().int().nonnegative(),
+      })
+      .safeParse(result.body);
+    if (!parsed.success)
+      throw new CompanionClientError(
+        "IMPORT_ROLLBACK",
+        result.response.status,
+        "本机迁移响应无效。",
+      );
+    return {
+      status: "imported",
+      manifestSha256: request.manifestSha256,
+      snapshotRevision: request.snapshot.revision,
+      revision: parsed.data.revision,
+    };
+  }
+
+  async exportCompanionBackup(): Promise<{
+    backupId: string;
+    manifest: unknown;
+  }> {
+    const result = await this.request("/v1/backups/export", { method: "POST" });
+    const parsed = z
+      .object({
+        status: z.literal("created"),
+        backupId: z.string().min(1),
+        manifest: backupManifestSchema,
+      })
+      .safeParse(result.body);
+    if (!parsed.success)
+      throw new CompanionClientError(
+        "IO",
+        result.response.status,
+        "本机备份响应无效。",
+      );
+    return { backupId: parsed.data.backupId, manifest: parsed.data.manifest };
+  }
+
+  async listCompanionBackups(): Promise<CompanionBackupSummary[]> {
+    const result = await this.request("/v1/backups");
+    const parsed = z
+      .object({
+        backups: z.array(
+          z.object({ id: z.string(), manifest: backupManifestSchema }),
+        ),
+      })
+      .safeParse(result.body);
+    if (!parsed.success)
+      throw new CompanionClientError(
+        "IO",
+        result.response.status,
+        "本机备份列表无效。",
+      );
+    return parsed.data.backups;
+  }
+
+  async restoreCompanionBackup(
+    backupId: string,
+  ): Promise<{ id: string; revision: number }> {
+    const result = await this.request("/v1/backups/restore", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ backupId }),
+    });
+    const parsed = z
+      .object({
+        status: z.literal("restored"),
+        id: z.string(),
+        revision: z.number().int().nonnegative(),
+      })
+      .safeParse(result.body);
+    if (!parsed.success)
+      throw new CompanionClientError(
+        "IO",
+        result.response.status,
+        "本机恢复响应无效。",
+      );
+    return { id: parsed.data.id, revision: parsed.data.revision };
+  }
+}
+
+function toBase64Url(bytes: Uint8Array): string {
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary)
+    .replaceAll("+", "-")
+    .replaceAll("/", "_")
+    .replace(/=+$/, "");
+}
+
+function fromBase64Url(value: string): Uint8Array {
+  const padded =
+    value.replaceAll("-", "+").replaceAll("_", "/") +
+    "===".slice((value.length + 3) % 4);
+  const binary = atob(padded);
+  return Uint8Array.from(binary, (char) => char.charCodeAt(0));
+}
+
+async function digestHex(bytes: Uint8Array): Promise<string> {
+  if (typeof crypto === "undefined" || !crypto.subtle)
+    throw new CompanionClientError(
+      "INVALID_ASSET",
+      0,
+      "当前环境不支持素材校验。",
+    );
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new Uint8Array(bytes).buffer as ArrayBuffer,
+  );
+  return Array.from(new Uint8Array(digest), (value) =>
+    value.toString(16).padStart(2, "0"),
+  ).join("");
 }
 
 export function companionConnectionState(

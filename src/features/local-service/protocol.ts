@@ -50,7 +50,7 @@ export const pairRequestSchema = z
   })
   .strict();
 
-const snapshotEnvelopeSchema = z
+export const snapshotEnvelopeSchema = z
   .object({
     version: z.literal(2),
     revision: z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER),
@@ -143,6 +143,31 @@ export const migrationPreflightSchema = z
     snapshot: snapshotEnvelopeSchema,
     assets: z.array(assetMetadataSchema).max(20_000),
     manifestSha256: sha256Schema,
+  })
+  .strict();
+export type MigrationPreflight = z.infer<typeof migrationPreflightSchema>;
+
+export const migrationImportSchema = z
+  .object({
+    reportId: z.string().uuid(),
+    manifestSha256: sha256Schema,
+    expectedRevision: z
+      .number()
+      .int()
+      .nonnegative()
+      .max(Number.MAX_SAFE_INTEGER)
+      .nullable(),
+    snapshot: snapshotEnvelopeSchema,
+  })
+  .strict();
+
+export const backupRestoreSchema = z
+  .object({
+    backupId: z
+      .string()
+      .min(1)
+      .max(180)
+      .regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/),
   })
   .strict();
 

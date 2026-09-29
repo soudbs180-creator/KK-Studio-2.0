@@ -5,6 +5,7 @@ import {
   type CompanionConnectionState,
 } from "../../features/local-service/client.ts";
 import { readCompanionConnection } from "../../features/local-service/connection.ts";
+import CompanionMigrationActions from "./CompanionMigrationActions.tsx";
 
 const DEFAULT_ENDPOINT = "http://127.0.0.1:4319";
 const STATE_LABELS: Record<CompanionConnectionState, string> = {
@@ -44,8 +45,8 @@ export default function CompanionSettings({
   }
 
   useEffect(() => {
-    if (state === "checking") void check();
-    // The initial state is the only automatic check. Button actions call check explicitly.
+    void check();
+    // The initial state is checked once. Button actions call check explicitly.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -166,8 +167,11 @@ export default function CompanionSettings({
       {state === "connected" && (
         <p className="settings-network-activity" role="status">
           连接正常。原有 IndexedDB
-          数据不会被自动删除；迁移和备份将在下一步提供。
+          数据不会被自动删除；可在下方手动迁移或恢复备份。
         </p>
+      )}
+      {state === "connected" && (
+        <CompanionMigrationActions client={client} onFeedback={onFeedback} />
       )}
     </div>
   );

@@ -4,6 +4,8 @@ import { once } from "node:events";
 import { emptySnapshot } from "../../src/features/creation/model.ts";
 import { CompanionStore } from "../../src/features/local-service/store.ts";
 import { createCompanionServer } from "../../src/features/local-service/server.ts";
+import { decodeSnapshot } from "../../src/features/creation/snapshotCodec.ts";
+import { sha256Json } from "../../src/features/local-service/manifest.ts";
 import test from "node:test";
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -180,6 +182,15 @@ test("asset PUT and GET keep the content-addressed identity", async () => {
     });
     assert.equal(get.status, 200);
     assert.equal(get.headers.get("content-type"), "image/png");
+    assert.deepEqual(
+      JSON.parse(
+        Buffer.from(
+          get.headers.get("x-kk-asset-metadata")!,
+          "base64url",
+        ).toString(),
+      ),
+      metadata,
+    );
     assert.deepEqual(new Uint8Array(await get.arrayBuffer()), bytes);
   } finally {
     await app.close();
@@ -208,6 +219,137 @@ test("body limits reject oversized requests before store mutation", async () => 
       headers: { Origin: origin, Cookie: cookie },
     });
     assert.equal((await jsonResponse(loaded)).status, "missing");
+  } finally {
+    await app.close();
+  }
+});
+
+test("migration preflight stages assets before publishing one checked snapshot", async () => {
+  const app = await runningServer();
+  try {
+    const cookie = await pair(app.base);
+    const snapshot = emptySnapshot();
+    const bytes = new Uint8Array([4, 5, 6]);
+    const digest = createHash("sha256").update(bytes).digest("hex");
+    const metadata = {
+      assetId: `asset-${digest.slice(0, 24)}`,
+      sha256: digest,
+      mime: "image/png",
+      size: bytes.byteLength,
+      tags: ["迁移"],
+    };
+    snapshot.homeDraft.attachments = [
+      {
+        id: "migration-attachment",
+        assetId: metadata.assetId,
+        name: "migrated.png",
+        mime: metadata.mime,
+        size: bytes.byteLength,
+        dataUrl: `kk-asset:${metadata.assetId}`,
+      },
+    ];
+    const manifestSha256 = sha256Json({
+      snapshot: decodeSnapshot(snapshot),
+      assets: [metadata],
+    });
+    const preflight = await fetch(`${app.base}/v1/migration/preflight`, {
+      method: "POST",
+      headers: {
+        Origin: origin,
+        Cookie: cookie,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ snapshot, assets: [metadata], manifestSha256 }),
+    });
+    assert.equal(preflight.status, 200);
+    const receipt = await jsonResponse(preflight);
+    assert.equal(receipt.status, "ready");
+    const put = await fetch(`${app.base}/v1/assets/${metadata.assetId}`, {
+      method: "PUT",
+      headers: {
+        Origin: origin,
+        Cookie: cookie,
+        "Content-Type": "application/octet-stream",
+        "X-KK-Asset-Metadata": Buffer.from(JSON.stringify(metadata)).toString(
+          "base64url",
+        ),
+      },
+      body: bytes,
+    });
+    assert.equal(put.status, 201);
+    const imported = await fetch(`${app.base}/v1/migration/import`, {
+      method: "POST",
+      headers: {
+        Origin: origin,
+        Cookie: cookie,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        reportId: receipt.reportId,
+        manifestSha256,
+        expectedRevision: null,
+        snapshot,
+      }),
+    });
+    assert.equal(imported.status, 200);
+    const loaded = await fetch(`${app.base}/v1/snapshot`, {
+      headers: { Origin: origin, Cookie: cookie },
+    });
+    const loadedBody = await jsonResponse(loaded);
+    assert.equal(loadedBody.status, "loaded");
+    assert.equal(
+      loadedBody.snapshot.homeDraft.attachments[0].assetId,
+      metadata.assetId,
+    );
+  } finally {
+    await app.close();
+  }
+});
+
+test("backup export, listing, and restore keep the service snapshot recoverable", async () => {
+  const app = await runningServer();
+  try {
+    const cookie = await pair(app.base);
+    const initial = emptySnapshot();
+    const write = (snapshot: typeof initial, expectedRevision: number | null) =>
+      fetch(`${app.base}/v1/snapshot`, {
+        method: "PUT",
+        headers: {
+          Origin: origin,
+          Cookie: cookie,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ snapshot, expectedRevision }),
+      });
+    assert.equal((await write(initial, null)).status, 200);
+    const exported = await fetch(`${app.base}/v1/backups/export`, {
+      method: "POST",
+      headers: { Origin: origin, Cookie: cookie },
+    });
+    assert.equal(exported.status, 200);
+    const backup = await jsonResponse(exported);
+    assert.equal(backup.status, "created");
+    const listed = await fetch(`${app.base}/v1/backups`, {
+      headers: { Origin: origin, Cookie: cookie },
+    });
+    assert.equal((await jsonResponse(listed)).backups.length, 1);
+    const next = { ...initial, revision: 1 };
+    assert.equal((await write(next, 0)).status, 200);
+    const restored = await fetch(`${app.base}/v1/backups/restore`, {
+      method: "POST",
+      headers: {
+        Origin: origin,
+        Cookie: cookie,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ backupId: backup.backupId }),
+    });
+    assert.equal(restored.status, 200);
+    assert.equal((await jsonResponse(restored)).revision, 0);
+    const loaded = await fetch(`${app.base}/v1/snapshot`, {
+      headers: { Origin: origin, Cookie: cookie },
+    });
+    assert.equal((await jsonResponse(loaded)).revision, 0);
   } finally {
     await app.close();
   }

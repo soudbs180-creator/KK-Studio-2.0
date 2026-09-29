@@ -199,3 +199,53 @@ test("disconnect revokes the session and clears the connection metadata", async 
   assert.deepEqual(methods, ["POST", "DELETE"]);
   assert.equal(readCompanionConnection(storage), null);
 });
+
+test("asset adapter sends encoded metadata and verifies the response identity", async () => {
+  const storage = new MemoryStorage();
+  const bytes = new Uint8Array([1, 2, 3]);
+  const sha256 =
+    "039058c6f2c0cb492c533b0a4d14ef77cc0f78abccced5287d84a1a2011cfb81";
+  const metadata = {
+    assetId: `asset-${sha256.slice(0, 24)}`,
+    sha256,
+    mime: "image/png",
+    size: bytes.byteLength,
+    tags: ["迁移"],
+  };
+  const client = new CompanionClient({
+    storage,
+    fetch: async (input, init) => {
+      if (String(input).endsWith("/v1/pair"))
+        return response({ protocolVersion: 1, deviceId: "device-a" });
+      if (init?.method === "PUT") {
+        const header = String(
+          (init.headers as Record<string, string>)["X-KK-Asset-Metadata"],
+        );
+        assert.deepEqual(
+          JSON.parse(
+            Buffer.from(
+              header.replaceAll("-", "+").replaceAll("_", "/"),
+              "base64",
+            ).toString(),
+          ),
+          metadata,
+        );
+        return response({ metadata }, 201);
+      }
+      return new Response(bytes, {
+        status: 200,
+        headers: {
+          "X-KK-Asset-Metadata": Buffer.from(JSON.stringify(metadata)).toString(
+            "base64url",
+          ),
+          "Content-Type": "image/png",
+        },
+      });
+    },
+  });
+  await client.pairCompanion("http://127.0.0.1:4319", "12345678");
+  assert.deepEqual(await client.putCompanionAsset(metadata, bytes), metadata);
+  const loaded = await client.loadCompanionAsset(metadata.assetId);
+  assert.deepEqual(loaded.metadata, metadata);
+  assert.deepEqual(loaded.bytes, bytes);
+});
