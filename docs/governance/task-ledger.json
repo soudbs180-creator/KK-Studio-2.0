@@ -1986,7 +1986,7 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "fix/PLUGIN-DESKTOP-001-csp",
+    "branch": "docs/PLUGIN-DESKTOP-001-closeout",
     "worktree": "D:/kk-studio/.worktrees/platform-versioning",
     "affectedModules": [
       "src/features/plugins",

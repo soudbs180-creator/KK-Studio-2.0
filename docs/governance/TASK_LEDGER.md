@@ -812,7 +812,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 让可信随包插件在保持严格 CSP 的前提下于 Tauri 桌面端加载并验证
 - Scope: 同源插件模块加载、桌面 CSP、fresh Tauri 插件交互验证
 - Acceptance: 随包插件从同源模块路径加载且不全局放宽脚本 CSP; fresh Tauri 中插件发现、添加、渲染和启停通过实际交互; 远程插件的权限与来源边界保持明确
-- Branch: `fix/PLUGIN-DESKTOP-001-csp`
+- Branch: `docs/PLUGIN-DESKTOP-001-closeout`
 - Worktree: `D:/kk-studio/.worktrees/platform-versioning`
 - Modules: src/features/plugins, src-tauri/tauri.conf.json, tests/browser
 - Verification: PASS — 12 项插件单测、TypeScript、Web build、Tauri client build 通过；fresh Tauri 隔离运行完成随包插件发现、添加、渲染、停用和恢复，资源走 tauri.localhost/plugins/*.js 同源 URL，严格 CSP 未放宽，页面错误为空。独立只读 review 对代码 head 91396c6 给出 PASS、无 P0–P3 findings；PR #28 Hosted verify/delivery/deploy-linux 与 push verify 均成功，已 squash 合入 main@e27e209。
