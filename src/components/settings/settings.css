@@ -281,6 +281,63 @@
   line-height: 22px;
   color: var(--settings-muted);
 }
+.settings-companion-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  padding: 18px;
+  border: 1px solid var(--settings-border);
+  border-radius: var(--ui-radius-card);
+  background: var(--bg-card);
+}
+.settings-companion-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.settings-companion-heading h3 {
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 600;
+}
+.settings-companion-heading p {
+  max-width: 560px;
+  margin-top: 6px;
+  color: var(--settings-muted);
+  font-size: 12px;
+  line-height: 20px;
+}
+.settings-companion-status {
+  flex: 0 0 auto;
+  min-height: 28px;
+  padding: 4px 9px;
+  border: 1px solid var(--settings-border);
+  border-radius: 999px;
+  color: var(--settings-muted);
+  font-size: 12px;
+  line-height: 18px;
+}
+.settings-companion-status.is-connected {
+  color: var(--ui-success);
+  border-color: color-mix(
+    in srgb,
+    var(--ui-success) 50%,
+    var(--settings-border)
+  );
+}
+.settings-companion-status.is-offline,
+.settings-companion-status.is-error,
+.settings-companion-status.is-unauthenticated,
+.settings-companion-status.is-migration-required {
+  color: var(--ui-warning);
+  border-color: color-mix(
+    in srgb,
+    var(--ui-warning) 50%,
+    var(--settings-border)
+  );
+}
 .settings-connection-note {
   display: flex;
   gap: 10px;
