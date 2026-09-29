@@ -159,6 +159,7 @@ export const backupManifestSchema = z
   .object({
     protocolVersion: z.literal(COMPANION_PROTOCOL_VERSION),
     snapshotRevision: z.number().int().nonnegative(),
+    createdAt: z.string().datetime(),
     files: z
       .array(
         z

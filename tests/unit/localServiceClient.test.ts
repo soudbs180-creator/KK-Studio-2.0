@@ -104,10 +104,13 @@ test("service checks distinguish offline, unauthenticated, and protocol incompat
   const storage = new MemoryStorage();
   const client = new CompanionClient({
     storage,
-    fetch: async (input) =>
-      String(input).endsWith("/v1/pair")
-        ? response({ protocolVersion: 1, deviceId: "device-a" })
-        : response(health),
+    fetch: async (input) => {
+      if (String(input).endsWith("/v1/pair"))
+        return response({ protocolVersion: 1, deviceId: "device-a" });
+      if (String(input).endsWith("/v1/snapshot"))
+        return response({ status: "missing", snapshot: null, revision: null });
+      return response(health);
+    },
   });
   await client.pairCompanion("http://127.0.0.1:4319", "12345678");
   assert.equal((await client.checkCompanion()).state, "connected");
@@ -129,6 +132,15 @@ test("service checks distinguish offline, unauthenticated, and protocol incompat
   const unauthenticatedResult = await unauthenticated.checkCompanion();
   assert.equal(unauthenticatedResult.state, "unauthenticated");
   assert.equal(unauthenticatedResult.error?.code, "UNAUTHENTICATED");
+
+  const staleSession = new CompanionClient({
+    storage,
+    fetch: async (input) =>
+      String(input).endsWith("/health")
+        ? response(health)
+        : response({ error: "UNAUTHENTICATED" }, 401),
+  });
+  assert.equal((await staleSession.checkCompanion()).state, "unauthenticated");
 
   const incompatible = new CompanionClient({
     storage,

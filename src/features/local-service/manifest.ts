@@ -34,6 +34,7 @@ export function sha256Json(value: unknown): string {
 export function createManifest(
   snapshotRevision: number,
   entries: Array<{ path: string; bytes: Uint8Array }>,
+  createdAt = new Date().toISOString(),
 ): CompanionBackupManifest {
   const files = [...entries]
     .sort((a, b) => a.path.localeCompare(b.path))
@@ -45,6 +46,7 @@ export function createManifest(
   const unsigned = {
     protocolVersion: COMPANION_PROTOCOL_VERSION,
     snapshotRevision,
+    createdAt,
     files,
   };
   return backupManifestSchema.parse({

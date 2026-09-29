@@ -272,6 +272,9 @@ export class CompanionClient {
         );
         return { state: stateForError(error), connection, error };
       }
+      // Health is intentionally public. Probe an authenticated route so a
+      // restarted service cannot be reported as connected with a stale cookie.
+      await this.loadCompanionSnapshot();
       const next = {
         ...connection,
         deviceId: health.data.deviceId,

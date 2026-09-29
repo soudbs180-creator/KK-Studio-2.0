@@ -148,6 +148,14 @@ function safeBackupId(id: string): boolean {
   return /^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(id) && id.length <= 180;
 }
 
+function isRestorableBackupPath(path: string): boolean {
+  return (
+    path === "projects/creation-v2.json" ||
+    /^assets\/records\/asset-[a-f0-9]{24}\.json$/i.test(path) ||
+    /^assets\/blobs\/[a-f0-9]{64}$/i.test(path)
+  );
+}
+
 export class CompanionStore {
   readonly root: string;
   readonly snapshotPath: string;
@@ -608,6 +616,12 @@ export class CompanionStore {
           422,
           "备份清单包含重复文件。",
         );
+      if (!isRestorableBackupPath(entry.path))
+        throw new CompanionProtocolError(
+          "CORRUPT",
+          422,
+          "备份文件路径不受支持。",
+        );
       const path = resolve(directory, entry.path);
       if (!path.startsWith(`${directory}${sep}`) || !existsSync(path))
         throw new CompanionProtocolError("CORRUPT", 422, "备份文件缺失。");
@@ -718,8 +732,10 @@ export class CompanionStore {
       }
       capture(this.snapshotPath);
       capture(this.backupPath);
-      const current = this.readSnapshot();
-      if (current.snapshot && this.validSnapshotFile(this.snapshotPath))
+      const current = this.validSnapshotFile(this.snapshotPath)
+        ? this.readSnapshotFile(this.snapshotPath)
+        : null;
+      if (current)
         writeAtomic(this.backupPath, asBytes(readFileSync(this.snapshotPath)));
       try {
         for (const [path, bytes] of entries) {

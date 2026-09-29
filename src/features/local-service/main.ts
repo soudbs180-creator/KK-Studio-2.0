@@ -52,7 +52,7 @@ function deviceId(root: string): string {
   return id;
 }
 
-function originsFromEnvironment(): string[] {
+export function originsFromEnvironment(): string[] {
   const raw = process.env.KK_STUDIO_COMPANION_ORIGINS;
   if (!raw) return ["http://127.0.0.1:1421", "http://127.0.0.1:1423"];
   return raw
@@ -63,7 +63,12 @@ function originsFromEnvironment(): string[] {
         const url = new URL(value);
         return (
           (url.protocol === "http:" || url.protocol === "https:") &&
-          !url.pathname
+          url.pathname === "/" &&
+          !url.search &&
+          !url.hash &&
+          !url.username &&
+          !url.password &&
+          url.origin === value
         );
       } catch {
         return false;
