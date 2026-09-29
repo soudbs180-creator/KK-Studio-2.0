@@ -46,10 +46,12 @@ function createDefaultBus(): PluginEventBus {
 
 export interface PluginLoaderOptions {
   fetcher?: typeof fetch;
-  /** 测试注入：替代 blob URL import()。 */
+  /** 测试注入：替代源码求值的 blob URL import()。 */
   importModule?: (
     source: string,
   ) => Promise<{ default?: unknown; plugin?: unknown }>;
+  /** 测试注入：替代随包同源模块的直接 import()。 */
+  importUrl?: (url: string) => Promise<{ default?: unknown; plugin?: unknown }>;
   storage?: PluginStorage;
   store?: PluginStore;
   runtime?: PluginRuntime;
@@ -94,6 +96,21 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
     generateText: () => Promise.reject(new Error("插件生成能力未接线")),
   };
 
+  function isBundledPluginUrl(value: string): boolean {
+    let url: URL;
+    try {
+      const base =
+        typeof location === "undefined"
+          ? "http://kk-studio.local/"
+          : location.href;
+      url = new URL(value, base);
+    } catch {
+      return false;
+    }
+    if (!url.pathname.startsWith("/plugins/")) return false;
+    return typeof location === "undefined" || url.origin === location.origin;
+  }
+
   async function importModule(
     source: string,
   ): Promise<{ default?: unknown; plugin?: unknown }> {
@@ -110,6 +127,16 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
     }
   }
 
+  async function importBundledModule(
+    url: string,
+  ): Promise<{ default?: unknown; plugin?: unknown }> {
+    if (options.importUrl) return options.importUrl(url);
+    return (await import(/* @vite-ignore */ url)) as {
+      default?: unknown;
+      plugin?: unknown;
+    };
+  }
+
   function assertPlugin(value: unknown): asserts value is CanvasPlugin {
     const candidate = value as Partial<CanvasPlugin> | null;
     if (!candidate || typeof candidate !== "object")
@@ -122,8 +149,17 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
       throw new Error("插件导出无效：缺少 id 或 nodes");
   }
 
-  async function evaluatePluginSource(source: string): Promise<CanvasPlugin> {
-    const mod = await importModule(source);
+  async function evaluatePluginSource(
+    source: string,
+    moduleUrl?: string,
+  ): Promise<CanvasPlugin> {
+    const useBundledModule =
+      Boolean(moduleUrl) &&
+      isBundledPluginUrl(moduleUrl ?? "") &&
+      (Boolean(options.importUrl) || !options.importModule);
+    const mod = useBundledModule
+      ? await importBundledModule(moduleUrl as string)
+      : await importModule(source);
     const exported = mod.default ?? mod.plugin;
     const plugin =
       typeof exported === "function"
@@ -236,10 +272,11 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
       deactivatePlugin(record.id);
       return;
     }
-    const source = record.local
-      ? await fetchPluginSource(withCacheBust(record.url))
+    const moduleUrl = record.local ? withCacheBust(record.url) : undefined;
+    const source = moduleUrl
+      ? await fetchPluginSource(moduleUrl)
       : record.source;
-    const plugin = await evaluatePluginSource(source);
+    const plugin = await evaluatePluginSource(source, moduleUrl);
     activatePlugin(plugin);
   }
 
@@ -262,8 +299,9 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
     await Promise.all(
       urls.map(async (url: string) => {
         try {
-          const source = await fetchPluginSource(withCacheBust(url));
-          const plugin = await evaluatePluginSource(source);
+          const moduleUrl = withCacheBust(url);
+          const source = await fetchPluginSource(moduleUrl);
+          const plugin = await evaluatePluginSource(source, moduleUrl);
           const existing = records.find((item) => item.id === plugin.id);
           store.upsert({
             id: plugin.id,
@@ -301,10 +339,13 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
           }
         }
         try {
-          const source = record.local
-            ? await fetchPluginSource(withCacheBust(record.url))
+          const moduleUrl = record.local
+            ? withCacheBust(record.url)
+            : undefined;
+          const source = moduleUrl
+            ? await fetchPluginSource(moduleUrl)
             : record.source;
-          activatePlugin(await evaluatePluginSource(source));
+          activatePlugin(await evaluatePluginSource(source, moduleUrl));
         } catch (error) {
           console.error(`[plugins] 加载失败：${record.id}`, error);
         }

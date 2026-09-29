@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-29 Desktop 随包插件 CSP 收口（PLUGIN-DESKTOP-001）
+
+修复插件加载器的桌面路径：随包 `/plugins/*.js` 现在通过同源 ESM URL 直接导入，不再依赖被 Tauri 严格 `script-src 'self'` 拒绝的 `blob:`；远程插件仍保持 HTTPS、无凭据/片段和禁止自动重定向。12 项插件单测、TypeScript、Web build、Tauri client build 通过；fresh Tauri release 在隔离数据目录实际完成插件发现、SVG 节点添加/渲染、停用、恢复，资源记录为 `http://tauri.localhost/plugins/*.js?t=...`，页面错误为空，证据见[本轮验证](changes/2026-09-29-plugin-desktop-csp/verification.md)。连接器目录统一入口、远程 Desktop 插件和真实服务仍保持后续任务。
+
 ## 2026-09-28 VPS 搬迁准备（T10-PREP）
 
 在独立 `codex/T10-PREP-vps-migration` 分支为静态包增加整包 SHA-256、已校验离机包恢复输入和指定版本回滚；激活/回滚共用发布锁，详见[搬迁与恢复操作单](../deploy/MIGRATION.md)。PR #23 精确 head `abe1e99` 经独立复审、delivery、deploy-linux、verify 后 squash 合入 `main@45fdc14`；PR #25/#26 的文档收口已合入 `main@be46ad6`，合并后主线 `verify`/`deploy-linux` 也通过。旧 VPS SSH 认证失败，用户浏览器控制页接口超时，不能据历史审计说 2.0 已上传；T10-PREP 保持 PARTIAL、T10 BLOCKED。现有 Web 数据仍在浏览器 IndexedDB，用户新目标为本机伴随服务，尚未实现。
