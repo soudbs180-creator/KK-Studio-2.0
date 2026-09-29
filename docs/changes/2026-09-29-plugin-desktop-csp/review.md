@@ -2,10 +2,10 @@
 
 - Task ID：PLUGIN-DESKTOP-001
 - 时间与时区：2026-09-29，Asia/Shanghai
-- 结论：**PASS**（独立只读源码复审无 P0–P3 findings；Hosted PR/CI 尚未执行）
+- 结论：**PASS**（独立只读源码复审无 P0–P3 findings；Hosted PR/CI 与主线合并已通过）
 - 独立 reviewer/context：`/root/plugin_csp_review_fallback`；只读检查，未修改工作树
 - Base SHA / head SHA / tree SHA：`5cdf8dc081b8b2e521c715d639927ca763427092` → `91396c60b899b3b103aac60289a1d41cf3678cb3` / `a6061e47c2a9a54481c50721a9bd01f16ed4c7d0`
-- PR / branch / worktree：待创建 / `fix/PLUGIN-DESKTOP-001-csp` / `D:/kk-studio/.worktrees/platform-versioning`
+- PR / branch / worktree：[PR #28](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/28) / `fix/PLUGIN-DESKTOP-001-csp` / `D:/kk-studio/.worktrees/platform-versioning`
 - Intent / Spec / Plan / Verification：本目录四份文件
 
 ## 评审范围和方式
@@ -26,12 +26,12 @@
 | --- | --- | --- | --- |
 | Self-review | PASS | `91396c60b899b3b103aac60289a1d41cf3678cb3`；最终 diff、`git diff --check`、本地门禁 | 无本地阻断 |
 | 独立 AI review | PASS | `/root/plugin_csp_review_fallback`；同一 head；12/12 定向单测；2026-09-29 | 未重新运行 Tauri release，沿用已提交动态证据 |
-| CI / 定向回归 | 本地 PASS；Hosted 待执行 | `npm run verify`：483 tests，475 pass，8 skipped；UI 164/0；Playwright 303 passed；`cargo check` PASS | 未推送前不能代表远端门禁通过 |
+| CI / 定向回归 | 本地与 Hosted PASS | 本地 `npm run verify`：483 tests，475 pass，8 skipped；UI 164/0；Playwright 303 passed；Hosted PR #28 `verify`、`delivery`、`deploy-linux` 与 push `verify` 均 success | 无；Hosted 未重复运行 Tauri release 交互脚本 |
 | 用户 UI/交互/产品验收 | 未发生 | fresh Tauri 是实现验收，不是用户最终验收 | 仍需用户确认产品体验 |
-| 推送/合并/发布授权 | 用户已在本任务中要求合并同步；待 PR/CI | 当前分支尚未创建 PR | 不能把本地分支称为已合并 |
+| 推送/合并/发布授权 | 已完成 | 用户已在本任务中要求合并同步；PR #28 squash 合入 `main@e27e209` | 用户最终产品验收仍未发生 |
 
 ## 结论
 
 - 实现与本地验收：PASS。
 - 独立源码复审：PASS，无 P0–P3 findings。
-- Hosted PR/CI、主线合并和用户最终产品验收仍是后续门禁；VPS、真实 Provider、远程 Desktop 插件执行不在本任务已验证范围。
+- Hosted PR/CI 与主线合并已完成；用户最终产品验收仍未发生。VPS、真实 Provider、远程 Desktop 插件执行不在本任务已验证范围。

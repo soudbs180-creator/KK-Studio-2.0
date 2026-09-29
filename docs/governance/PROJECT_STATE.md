@@ -2,7 +2,7 @@
 
 ## 2026-09-29 Desktop 插件同源加载已验证
 
-PLUGIN-DESKTOP-001 在独立分支完成随包插件的同源 ESM 加载：Tauri 严格 `script-src 'self' 'wasm-unsafe-eval'` 保持不变，fresh release 以隔离数据根目录通过插件发现、添加、渲染、停用和恢复，资源 URL 为 `tauri.localhost/plugins/*.js?t=...` 且无 page error。远程插件仍受 HTTPS/重定向规则约束，不宣称 Desktop 远程执行；连接器目录合并、真实 Provider/账号和 VPS 状态不受本轮改变。以 `docs/changes/2026-09-29-plugin-desktop-csp/` 为准。
+PLUGIN-DESKTOP-001 已由 PR #28 squash 合入 `main@e27e209`：随包插件从同源 ESM URL 加载，Tauri 严格 `script-src 'self' 'wasm-unsafe-eval'` 保持不变；fresh release 以隔离数据根目录通过插件发现、添加、渲染、停用和恢复，资源 URL 为 `tauri.localhost/plugins/*.js?t=...` 且无 page error。远程插件仍受 HTTPS/重定向规则约束，不宣称 Desktop 远程执行；连接器目录合并、真实 Provider/账号和 VPS 状态不受本轮改变。以 `docs/changes/2026-09-29-plugin-desktop-csp/` 为准。
 
 ## 2026-09-28 VPS 搬迁准备与当前核验边界
 
