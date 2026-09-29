@@ -5,7 +5,7 @@
 - 执行时间与时区：2026-09-29 / Asia/Shanghai
 - Intent / Spec / Plan / AC：本目录 `intent.md`、`spec.md`、`plan.md`；AC-1…AC-5
 - cwd / branch：`D:/kk-studio/.worktrees/platform-versioning` / `feat/TASK-LOCAL-SERVICE-001-companion`
-- 被验证 base SHA / head SHA / tree SHA：base `49f20c8`；实现 head 当前 `346c2c0`，Task5 文档/测试提交后更新；tree 以最终 Git 回读为准。
+- 被验证 base SHA / head SHA / tree SHA：base `49f20c85c48b1d9f939c1b423dc542b419e18260`；head `2d61a4c91316b81a61f800c6792f8dd69bc89ba0`；tree `54cafa481b3a27d9ef9f2c600114698df86300c6`。
 - dirty 状态及 patch/文件指纹：验证期间仅有本任务文档、Task5 浏览器/smoke 和生成治理视图待提交；根 checkout 的无关 dirty 文件未纳入。
 - Node/npm/Rust/浏览器/OS/工具版本：Node `24.19.0`、Windows PowerShell、Vite `7.3.6`、Playwright `1.63.0`、TypeScript `5.6.x`；浏览器验收使用 Playwright configured Edge/Chromium channel。
 - 规则版本或 commit：仓库 `AGENTS.md`、`AI_RULES.md` 与现行 governance scripts。
@@ -19,6 +19,10 @@
 | `node --test tests/unit/localServiceClient.test.ts tests/unit/localServiceMigration.test.ts tests/unit/localServiceServer.test.ts tests/unit/localServiceStore.test.ts tests/unit/assetStorage.test.ts` | 2026-09-29 | 0 | PASS | terminal log | 服务、迁移、资产边界定向回归 |
 | `node node_modules/typescript/bin/tsc --noEmit` | 2026-09-29 | 0 | PASS | terminal log | TypeScript 类型检查 |
 | `node scripts/check-ui-standards.mjs` | 2026-09-29 | 0 | PASS | terminal log | 166 个文件，0 项违规 |
+| `node scripts/check-governance.mjs` | 2026-09-29 | 0 | PASS | terminal log | 76 tasks，0 violations；含本机服务 server-only import guard |
+| `node scripts/check-features.mjs` | 2026-09-29 | 0 | PASS | terminal log | 34 features，0 violations；FEAT-037 registry/card/test paths一致 |
+| `node scripts/check-markdown.mjs` | 2026-09-29 | 0 | PASS | terminal log | 90 active files，0 link violations |
+| `node scripts/platform-versions.mjs check` | 2026-09-29 | 0 | PASS | terminal log | 三端版本源一致 |
 | `node node_modules/prettier/bin/prettier.cjs --check ...` | 2026-09-29 | 0 | PASS | terminal log | 当前源码/测试/脚本/JSON |
 | `node node_modules/vite/bin/vite.js build` | 2026-09-29 | 0 | PASS | `dist/`（构建产物，不入库） | Rollup 依赖注释和大 chunk 仅为 warning |
 | `node node_modules/@playwright/test/cli.js test tests/browser/local-service-migration.spec.ts --workers=1 --retries=0` | 2026-09-29 | 0 | PASS | browser test output | 真实临时服务；旧 IndexedDB revision 保持 |

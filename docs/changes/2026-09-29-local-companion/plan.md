@@ -5,7 +5,7 @@
 - 日期：2026-09-29
 - Intent / Spec / ADR：`intent.md`、`spec.md`、`docs/architecture/adr/ADR-008-platform-versions-and-local-first.md`
 - Owner / branch / worktree：root / `feat/TASK-LOCAL-SERVICE-001-companion` / `D:/kk-studio/.worktrees/platform-versioning`
-- Base / HEAD SHA 与远端目标：base `origin/main@49f20c8`；实现提交 `599c99b`, `46ed2ee`, `4f81d7c`, `0619154`, `bd22aa8`, `84008ab`, `346c2c0`；文档/Task5 及最终 PR head 以 Git 回读为准；目标 `origin/main`。
+- Base / HEAD SHA 与远端目标：base `origin/main@49f20c85c48b1d9f939c1b423dc542b419e18260`；实现提交 `599c99b`, `46ed2ee`, `4f81d7c`, `0619154`, `bd22aa8`, `84008ab`, `346c2c0`, `c103efb`, `2d61a4c`；当前候选 head `2d61a4c91316b81a61f800c6792f8dd69bc89ba0`，目标 `origin/main`。
 - Git dirty/index 状态、并行任务与文件归属：实现 worktree 与根 checkout 隔离；根 checkout 的 UI/evidence dirty 改动未触碰；本任务文件仅由本分支串行维护。
 
 ## 开工证据
