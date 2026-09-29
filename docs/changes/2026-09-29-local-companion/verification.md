@@ -1,7 +1,7 @@
 # Verification：Web 本机伴随服务与既有浏览器数据迁移
 
 - Task ID：`TASK-LOCAL-SERVICE-001`
-- 记录状态：IN PROGRESS（本地实现门禁已通过，等待最终 review/PR/主线回读）
+- 记录状态：IN PROGRESS（本地与独立 review 已通过，等待 Hosted quality/merge/main 回读）
 - 执行时间与时区：2026-09-29 / Asia/Shanghai
 - Intent / Spec / Plan / AC：本目录 `intent.md`、`spec.md`、`plan.md`；AC-1…AC-5
 - cwd / branch：`D:/kk-studio/.worktrees/platform-versioning` / `feat/TASK-LOCAL-SERVICE-001-companion`
@@ -58,15 +58,15 @@
 - 本地 fixture 验证范围：单测使用临时目录和注入 fetch/IndexedDB；浏览器验收启动真实 Node loopback 服务并使用真实 cookie/CORS/文件读写。
 - live Provider/ComfyUI/GPU/账号/账单/部署验收及凭据授权来源：NOT RUN；本轮不需要真实 Provider/账号，VPS 上传/SSH/Git/data recovery UNKNOWN。
 - live eval：NOT RUN。
-- 远端 PR/CI/ruleset 回读与时间：待推送分支、PR #30 后追加；本地通过不等于 Hosted 门禁通过。
+- 远端 PR/CI/ruleset 回读与时间：PR #30 已存在，当前 head `733c70f0c2db55b7ec74bc6543e8d99b31a77d0e`，quality run `36549624397` IN_PROGRESS；本地通过不等于 Hosted 门禁通过。
 - 未验证事项：BACKEND-PLATFORM 登录、服务安装器/自动更新、Mobile 原生持久化、VPS 生产上传和恢复演练。
 
 ## 结论和后续
 
 - 实现：PARTIAL（本机服务和迁移链实现，账号/安装器/Mobile/VPS 不在本轮）。
-- 验证：PARTIAL → 本地实现验证 PASS，待独立 review/Hosted/merge/postmerge。
+- 验证：PARTIAL → 本地实现验证 PASS，独立 review PASS WITH FOLLOW-UPS，待 Hosted/merge/postmerge。
 - 产品能力：Web 本机服务为 PARTIAL；Desktop 原生能力未改变；Mobile/账号为未接入。
-- 独立 review 记录与审查 SHA：reviewer 已按实现 head `082d1c4` 重新派发；旧 head review 不自动适用于新提交。
+- 独立 review 记录与审查 SHA：reviewer 对实现 head `082d1c4` PASS WITH FOLLOW-UPS；无 P0/P1，FOLLOW-2–4 记录于 `review.md`。
 - 用户产品验收和发布授权：用户授权继续工程工作；本轮有自动化交互验收，无用户手动视觉验收记录；未发生 VPS/生产发布。
 - 未关闭风险与账本 ID：`BACKEND-PLATFORM`、`T12`、`T10/T11`；导入中断后的未引用服务素材需后续 GC；安装器与更新策略需另项。
 - 新 SHA 或配置变化后需要的复验：任何源码/治理冲突解决后重新执行 full unit、typecheck、UI/format/build、三个 browser specs、production smoke 和 delivery check。
@@ -75,4 +75,5 @@
 
 - 2026-09-29：真实浏览器首轮发现 detached `fetch` 会让界面误判服务离线；客户端改为 wrapper 后迁移和连接验收重新通过。资产服务首轮发现缺少 `size`，补字段并新增 `assetStorage` 服务路径回归。
 - 2026-09-29：PR #30 首次 Hosted verify 报告 4 项新增 ESLint 错误（未安装 react-hooks 禁用注释、未使用 import/type、测试 helper 显式 any）；提交 `8637acd` 删除无效注释/未使用项并改为泛型 JSON helper，本地 ESLint、定向单测和类型检查通过，等待新 head Hosted 重跑。
-- 2026-09-29：独立复审前置发现服务快照可接受缺失资产、网页服务快照未做 URI 编解码、备份恢复非原子、离线断开不清理连接、provenance/重复素材边界、冲突响应和会话绑定缺口；`6d0346e` 已补齐引用校验、encode/hydrate、暂存回滚、严格 schema/敏感字段、冲突 currentRevision、报告 TTL/session、哈希会话、元数据分页和来源保留，并将 Web 版本自动 bump 至 `2.1.2`。`082d1c4` 又收紧来源 URL、manifest 时间、恢复路径、stale cookie 检查和恢复前主快照校验；上述结论待独立 reviewer 对该 head 复核。
+- 2026-09-29：独立复审前置发现服务快照可接受缺失资产、网页服务快照未做 URI 编解码、备份恢复非原子、离线断开不清理连接、provenance/重复素材边界、冲突响应和会话绑定缺口；`6d0346e` 已补齐引用校验、encode/hydrate、暂存回滚、严格 schema/敏感字段、冲突 currentRevision、报告 TTL/session、哈希会话、元数据分页和来源保留，并将 Web 版本自动 bump 至 `2.1.2`。`082d1c4` 又收紧来源 URL、manifest 时间、恢复路径、stale cookie 检查和恢复前主快照校验。
+- 2026-09-29：独立 reviewer 已对 `082d1c4` 重建 `dist` 并复跑 3 个 local-service browser specs（3/3），结论 PASS WITH FOLLOW-UPS；未知快照版本、轻量认证探针、备份保留上限为后续 P2。

@@ -58,3 +58,4 @@
 - 2026-09-29：Task 4 发现 Web 浏览器保存的 detached fetch 会同步抛 `Illegal invocation`，改为客户端 wrapper 后重新跑真实迁移；资产服务上传 metadata 补 `size` 并加回归测试。验收范围扩大到连接/备份/断线/重启 smoke，不改变产品意图。
 - 2026-09-29：独立复审前置回报的服务引用完整性、服务快照 URI 编解码、备份原子恢复、离线断开、严格 provenance、冲突详情、迁移报告 session/TTL、会话哈希、分页内存和重复素材来源问题在 `6d0346e` 收口；Web 按实际受影响平台自动从 `2.1.1` bump 为 `2.1.2`，Desktop/Mobile 保持 `2.1.1`。
 - 2026-09-29：`082d1c4` 收口来源 URL/manifest `createdAt`/备份路径边界、服务重启后 stale cookie 检查及恢复前主快照校验；重建 production bundle 后连接/备份/断开浏览器验收 2/2 通过。
+- 2026-09-29：独立 reviewer 复核 `082d1c4` 为 PASS WITH FOLLOW-UPS，无 P0/P1；未知快照版本提示、轻量认证探针、备份保留上限登记为后续 P2，不阻断本次合并。
