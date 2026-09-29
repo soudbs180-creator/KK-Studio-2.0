@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-29 Web 本机伴随服务已实现基础链路，保持 PARTIAL
+
+`TASK-LOCAL-SERVICE-001` 在独立 worktree `D:/kk-studio/.worktrees/platform-versioning` 的实现 head `346c2c0` 已完成 loopback 本机服务、HttpOnly 配对会话、项目快照/素材服务优先读写、旧 IndexedDB 只读预检与用户确认导入、校验备份/恢复，以及设置页连接/离线/断开反馈。真实临时服务的迁移浏览器验收通过；浏览器连接验收覆盖 1920px 与 390px，生产 smoke 覆盖 Web bundle 无 Node 服务入口、fresh browser context 和服务重启恢复。Task 当前按 `PARTIAL` 记录：真实账号登录与 BACKEND-PLATFORM、服务安装器/自动更新、Mobile 原生持久层（T12）和 VPS 生产部署仍未完成。本机伴随服务连接证据不能证明 VPS 已上传或 Git 已在 VPS 同步。
+
 ## 2026-09-29 Desktop 插件同源加载已验证
 
 PLUGIN-DESKTOP-001 已由 PR #28 squash 合入 `main@e27e209`：随包插件从同源 ESM URL 加载，Tauri 严格 `script-src 'self' 'wasm-unsafe-eval'` 保持不变；fresh release 以隔离数据根目录通过插件发现、添加、渲染、停用和恢复，资源 URL 为 `tauri.localhost/plugins/*.js?t=...` 且无 page error。远程插件仍受 HTTPS/重定向规则约束，不宣称 Desktop 远程执行；连接器目录合并、真实 Provider/账号和 VPS 状态不受本轮改变。以 `docs/changes/2026-09-29-plugin-desktop-csp/` 为准。

@@ -1295,17 +1295,36 @@
     "id": "FEAT-037",
     "title": "Web 本机伴随服务",
     "area": "platform",
-    "status": "PLANNED",
+    "status": "PARTIAL",
     "card": "docs/features/feat-037-web-local-service.md",
-    "summary": "用户安装在本机的服务作为 Web 个人项目与素材目标持久层；当前 Web 仍以 IndexedDB 保存，服务和迁移尚未实现。",
+    "summary": "本机 loopback 服务已提供 Web 项目/素材服务优先读写、旧 IndexedDB 用户触发迁移和备份恢复；账号绑定、安装器与 Mobile 仍未完成。",
     "entryPoints": [
-      "无（未实现）"
+      "设置 → 储存 → 网页本机伴随服务"
     ],
-    "code": [],
-    "tests": [],
+    "code": [
+      "src/features/local-service/main.ts",
+      "src/features/local-service/server.ts",
+      "src/features/local-service/store.ts",
+      "src/features/local-service/client.ts",
+      "src/features/local-service/migration.ts",
+      "src/features/creation/storage.ts",
+      "src/features/creation/assetRepository.ts",
+      "src/components/settings/CompanionSettings.tsx"
+    ],
+    "tests": [
+      "tests/unit/localServiceClient.test.ts",
+      "tests/unit/localServiceMigration.test.ts",
+      "tests/unit/localServiceProtocol.test.ts",
+      "tests/unit/localServiceServer.test.ts",
+      "tests/unit/localServiceStore.test.ts",
+      "tests/unit/assetStorage.test.ts",
+      "tests/browser/local-service-migration.spec.ts",
+      "tests/browser/local-service-connection.spec.ts",
+      "tests/local-service/production-smoke.mjs"
+    ],
     "tasks": [
       "TASK-LOCAL-SERVICE-001"
     ],
-    "updated": "2026-09-28"
+    "updated": "2026-09-29"
   }
 ]

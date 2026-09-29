@@ -4,6 +4,7 @@ export const BROWSER_STORAGE_KEYS = {
   modelProvider: "kk-studio-next:model-provider:v1",
   providerConnections: "kk-studio-next:provider-connections:v1",
   assetCollections: "kk-studio-next:asset-collections:v1",
+  companion: "kk-studio-next:companion:v1",
 } as const;
 
 /** Relative to the desktop application data root; never relative to the repo. */

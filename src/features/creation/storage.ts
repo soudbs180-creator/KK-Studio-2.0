@@ -2,6 +2,11 @@ import { invoke } from "@tauri-apps/api/core";
 import { loadStoredAsset } from "./assetRepository";
 import { encodeSnapshotAssets, hydrateSnapshotAssets } from "./snapshotAssets";
 import {
+  CompanionClient,
+  CompanionClientError,
+} from "../local-service/client.ts";
+import { readCompanionConnection } from "../local-service/connection.ts";
+import {
   CREATION_STORAGE_KEY,
   emptySnapshot,
   type CreationSnapshot,
@@ -18,6 +23,7 @@ const RECORD = "snapshot";
 const JOURNAL = `${CREATION_STORAGE_KEY}:pending`;
 let expectedRevision: number | null = null;
 let writable = false;
+let companionClient: CompanionClient | null = null;
 export interface SnapshotLoad {
   snapshot: CreationSnapshot;
   recovered: boolean;
@@ -32,6 +38,38 @@ function isDesktop(): boolean {
         .__TAURI_INTERNALS__,
     )
   );
+}
+function isCompanionEnabled(): boolean {
+  return !isDesktop() && Boolean(readCompanionConnection()?.enabled);
+}
+function getCompanionClient(): CompanionClient {
+  return (companionClient ??= new CompanionClient());
+}
+function companionStorageError(error: unknown): SnapshotStorageError {
+  if (error instanceof CompanionClientError) {
+    if (error.code === "CONFLICT")
+      return new SnapshotStorageError(
+        "conflict",
+        "本机服务中的项目已被其他窗口更新。",
+      );
+    if (error.code === "PROTOCOL_UNSUPPORTED")
+      return new SnapshotStorageError(
+        "unsupported",
+        "本机服务协议版本不兼容，请更新客户端或本机服务。",
+      );
+    if (error.code === "INVALID_SNAPSHOT")
+      return new SnapshotStorageError(
+        "corrupt",
+        "本机服务中的项目快照格式无效，原件已保留。",
+      );
+    return new SnapshotStorageError(
+      "io",
+      "无法连接本机伴随服务，请启动服务后重试；原项目仍保留。",
+    );
+  }
+  return error instanceof SnapshotStorageError
+    ? error
+    : new SnapshotStorageError("io", "无法访问本机伴随服务，原项目仍保留。");
 }
 function openDatabase(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -131,6 +169,25 @@ export async function loadCreationSnapshot(
       durableRevision: expectedRevision,
     };
   }
+  if (isCompanionEnabled()) {
+    try {
+      const loaded = await getCompanionClient().loadCompanionSnapshot();
+      const snapshot =
+        loaded.status === "missing" && loaded.snapshot === null
+          ? emptySnapshot()
+          : decodeSnapshot(loaded.snapshot);
+      const hydrated = await hydrateSnapshotAssets(snapshot, loadStoredAsset);
+      expectedRevision = loaded.revision;
+      writable = true;
+      return {
+        snapshot: hydrated,
+        recovered: loaded.status === "recovered",
+        durableRevision: expectedRevision,
+      };
+    } catch (error) {
+      throw companionStorageError(error);
+    }
+  }
   const raw = window.localStorage.getItem(CREATION_STORAGE_KEY);
   const local = raw === null ? null : parseSnapshot(raw);
   const indexedValue = await readIndexed();
@@ -211,17 +268,30 @@ export async function persistCreationSnapshotAsync(
       "corrupt",
       "项目尚未读取成功，禁止覆盖原件。",
     );
-  const persisted = isDesktop()
-    ? await encodeSnapshotAssets(snapshot, loadStoredAsset)
-    : snapshot;
+  const persisted =
+    isDesktop() || isCompanionEnabled()
+      ? await encodeSnapshotAssets(snapshot, loadStoredAsset)
+      : snapshot;
   decodeSnapshot(persisted);
   if (isDesktop())
     await invoke("write_creation_snapshot", {
       snapshot: persisted,
       expectedRevision,
     });
-  else await writeIndexed(snapshot);
-  expectedRevision = snapshot.revision;
+  else if (isCompanionEnabled()) {
+    try {
+      const result = await getCompanionClient().persistCompanionSnapshot(
+        persisted,
+        expectedRevision,
+      );
+      expectedRevision = result.revision;
+    } catch (error) {
+      throw companionStorageError(error);
+    }
+  } else {
+    await writeIndexed(snapshot);
+    expectedRevision = snapshot.revision;
+  }
   if (isDesktop()) return;
   try {
     const raw = window.sessionStorage.getItem(JOURNAL);

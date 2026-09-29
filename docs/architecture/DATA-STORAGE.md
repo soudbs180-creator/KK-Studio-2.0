@@ -47,11 +47,36 @@ kk-studio/
 
 当前 KK Studio 2.1.1 源码的浏览器端保存主题偏好、供应商元数据和创作快照恢复副本；完整创作快照在 Web 使用 IndexedDB，在 Tauri 使用 `projects/creation-v2.json` IPC 命令。历史 `kk-studio-next:*` 存储 key 继续保留以兼容已有数据。浏览器端 API Key 只在当前会话内存中，Windows 桌面端通过 `com.kkstudio.provider` 凭据命令读写系统凭据库：
 
-## 已确认的后续目标（尚未实现）
+## Web 本机伴随服务（2026-09-29，当前为 PARTIAL）
+
+Web 现在可以在设置 → 储存中显式连接本机伴随服务。服务由 `npm run local-service` 启动，默认只监听 `127.0.0.1:4319`；可通过 `KK_STUDIO_COMPANION_DATA` 指定数据根目录，未指定时使用用户本机的应用数据目录。服务不监听 LAN 或公共网卡。
+
+本机服务数据根目录形态为：
+
+```text
+companion/
+├─ app/companion.json             # deviceId；不保存配对码或会话
+├─ projects/creation-v2.json     # 当前 Web 创作快照
+├─ projects/creation-v2.json.bak # 上一个有效快照
+├─ assets/records/<assetId>.json # 非敏感素材元数据
+├─ assets/blobs/<sha256>         # 内容寻址原件
+├─ backups/<timestamp-id>/        # 快照、记录、原件和 manifest
+└─ staging/<operation-id>/       # 校验后再发布的暂存内容
+```
+
+浏览器只在 `kk-studio-next:companion:v1` 保存 loopback endpoint、deviceId、协议版本和显式启用开关。配对码只提交给 `/v1/pair` 一次；服务会话通过 `HttpOnly; SameSite=Strict` 的 `kk_companion_session` cookie 发送，cookie、配对码、Provider credential 和 bearer token 不进入 localStorage、URL 或日志。
+
+连接成功且开关启用后，`storage.ts` 和 `assetRepository.ts` 先调用本机服务；服务离线、认证失效、协议不兼容或 revision 冲突会返回失败状态，不静默回退并显示已保存。关闭服务连接后，浏览器继续使用既有 IndexedDB 契约。Web 本机服务目前没有替代 Desktop 的 Tauri 原生仓库，也不提供云端同步。
+
+既有 IndexedDB (`kk-studio-next/creation/snapshot` 与 `kk-studio-assets/blobs`) 由用户在设置中触发只读预检。预检会解码快照、检查 `kk-asset:<assetId>` 引用、素材 MIME/大小/完整 SHA-256 和 canonical manifest；导入按素材上传后以快照 revision CAS 发布。成功和失败都不删除旧数据库；中断时已上传但未引用的原件由后续垃圾回收任务处理。服务备份包含快照、素材记录和原件，manifest 及逐文件 SHA-256 校验通过后才能恢复。
+
+当前证据覆盖临时数据根目录下的真实 Node loopback 服务、fresh Playwright browser context、迁移/备份/断线/重启和 Web bundle 边界。安装器/自动更新、跨平台服务打包、真实账号登录、Mobile 原生持久层和 VPS 部署仍未验收，不能从本机 smoke 推断这些能力已完成。
+
+## 仍未实现的后续目标
 
 用户指定 Desktop 优先，Web 随后，Mobile 再按手机能力裁剪。Desktop 允许离线免登录或选择登录；Web/Mobile 目标为登录后使用。个人项目和素材应在用户设备本地：Web 需要安装本机伴随服务，由服务持久化而不是把浏览器 IndexedDB 作为最终数据根；Mobile 采用设备本地持久层。账号只用于身份及可选服务，不能据此宣称数据云同步。
 
-切换 Web 持久源之前须实现本机服务通信/权限边界、稳定数据目录、无损导入既有 IndexedDB 项目与素材、备份/恢复及断线提示。当前 IndexedDB、localStorage 与演示账号仍照现状工作，不会因本次版本号变化被自动搬迁；对应任务为 `TASK-LOCAL-SERVICE-001` 和 `BACKEND-PLATFORM`。Mobile 仍由 T12 验收，不把响应式网页或 `config/platform-versions.json` 中的规划版本称为已发布 App。
+本机服务已经建立通信/权限边界、稳定数据目录、用户触发的无损导入、备份/恢复及断线提示；安装器、自动更新、真实账号绑定和云端能力仍未接线。当前 IndexedDB、localStorage 与演示账号仍照现状工作，不会自动搬迁；对应未完成任务为 `BACKEND-PLATFORM` 和本任务的安装/发布补充项。Mobile 仍由 T12 验收，不把响应式网页或 `config/platform-versions.json` 中的规划版本称为已发布 App。
 
 | Key                                | Schema                                      | 用途                                                 | 风险/边界                                                  |
 | ---------------------------------- | ------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |

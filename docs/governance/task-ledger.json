@@ -2449,23 +2449,30 @@
       "BACKEND-PLATFORM"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "feat/TASK-LOCAL-SERVICE-001-companion",
+    "worktree": "D:/kk-studio/.worktrees/platform-versioning",
     "affectedModules": [
       "src/runtime",
       "src/features/creation",
       "local companion service",
-      "docs/architecture/DATA-STORAGE.md"
+      "docs/architecture/DATA-STORAGE.md",
+      "src/components/settings",
+      "tests/browser",
+      "tests/local-service"
     ],
-    "status": "TODO",
+    "status": "PARTIAL",
     "evidence": [
-      "docs/changes/2026-09-28-platform-versioning/spec.md",
+      "docs/changes/2026-09-29-local-companion/intent.md",
+      "docs/changes/2026-09-29-local-companion/spec.md",
+      "docs/changes/2026-09-29-local-companion/plan.md",
+      "docs/changes/2026-09-29-local-companion/verification.md",
+      "docs/changes/2026-09-29-local-companion/review.md",
       "docs/architecture/adr/ADR-008-platform-versions-and-local-first.md",
       "docs/features/feat-037-web-local-service.md"
     ],
-    "verification": "NOT VERIFIED：本机伴随服务、账号接线与浏览器既有数据导入尚未实现；现有 Web 仍使用 IndexedDB。",
-    "updated": "2026-09-28",
-    "verificationResult": "NOT_VERIFIED"
+    "verification": "本机 loopback 服务、HttpOnly 配对、项目/素材服务优先读写、旧 IndexedDB 只读迁移、备份恢复、连接/断线 UI 与 production smoke 已通过本地和真实临时服务验收；真实账号登录、安装/更新、Mobile 和 VPS 生产部署仍未完成，因此产品任务保持 PARTIAL。",
+    "updated": "2026-09-29",
+    "verificationResult": "PARTIAL"
   },
   {
     "id": "TASK-CLOSEOUT-2026-09-28",
