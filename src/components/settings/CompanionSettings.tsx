@@ -47,7 +47,6 @@ export default function CompanionSettings({
   useEffect(() => {
     void check();
     // The initial state is checked once. Button actions call check explicitly.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function pair(): Promise<void> {

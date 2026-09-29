@@ -10,7 +10,6 @@ import test from "node:test";
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { Server } from "node:http";
 
 const origin = "http://127.0.0.1:1421";
 const bytes = new Uint8Array([1, 2, 3]);
@@ -47,8 +46,10 @@ async function runningServer(maxBodyBytes = 120 * 1024 * 1024) {
   };
 }
 
-async function jsonResponse(response: Response): Promise<any> {
-  return response.json();
+async function jsonResponse<T = Record<string, unknown>>(
+  response: Response,
+): Promise<T> {
+  return (await response.json()) as T;
 }
 
 async function pair(base: string): Promise<string> {
@@ -295,7 +296,10 @@ test("migration preflight stages assets before publishing one checked snapshot",
     const loaded = await fetch(`${app.base}/v1/snapshot`, {
       headers: { Origin: origin, Cookie: cookie },
     });
-    const loadedBody = await jsonResponse(loaded);
+    const loadedBody = await jsonResponse<{
+      status: string;
+      snapshot: { homeDraft: { attachments: Array<{ assetId: string }> } };
+    }>(loaded);
     assert.equal(loadedBody.status, "loaded");
     assert.equal(
       loadedBody.snapshot.homeDraft.attachments[0].assetId,
@@ -327,12 +331,15 @@ test("backup export, listing, and restore keep the service snapshot recoverable"
       headers: { Origin: origin, Cookie: cookie },
     });
     assert.equal(exported.status, 200);
-    const backup = await jsonResponse(exported);
+    const backup = await jsonResponse<{ status: string; backupId: string }>(
+      exported,
+    );
     assert.equal(backup.status, "created");
     const listed = await fetch(`${app.base}/v1/backups`, {
       headers: { Origin: origin, Cookie: cookie },
     });
-    assert.equal((await jsonResponse(listed)).backups.length, 1);
+    const listedBody = await jsonResponse<{ backups: unknown[] }>(listed);
+    assert.equal(listedBody.backups.length, 1);
     const next = { ...initial, revision: 1 };
     assert.equal((await write(next, 0)).status, 200);
     const restored = await fetch(`${app.base}/v1/backups/restore`, {
