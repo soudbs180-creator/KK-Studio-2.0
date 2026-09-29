@@ -84,8 +84,11 @@ export default function CompanionSettings({
       setDetail("");
       onFeedback("本机伴随服务已断开；网页将恢复使用浏览器本地存储。");
     } catch (error) {
-      setState("offline");
+      setState("unconfigured");
       setDetail(error instanceof Error ? error.message : "断开失败。");
+      onFeedback(
+        "本机服务未响应，网页已在本机禁用连接；项目可恢复使用浏览器本地存储。",
+      );
     } finally {
       setBusy(false);
     }

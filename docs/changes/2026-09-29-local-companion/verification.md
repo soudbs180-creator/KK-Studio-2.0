@@ -5,7 +5,7 @@
 - 执行时间与时区：2026-09-29 / Asia/Shanghai
 - Intent / Spec / Plan / AC：本目录 `intent.md`、`spec.md`、`plan.md`；AC-1…AC-5
 - cwd / branch：`D:/kk-studio/.worktrees/platform-versioning` / `feat/TASK-LOCAL-SERVICE-001-companion`
-- 被验证 base SHA / head SHA / tree SHA：base `49f20c85c48b1d9f939c1b423dc542b419e18260`；head `2d61a4c91316b81a61f800c6792f8dd69bc89ba0`；tree `54cafa481b3a27d9ef9f2c600114698df86300c6`。
+- 被验证 base SHA / head SHA / tree SHA：base `49f20c85c48b1d9f939c1b423dc542b419e18260`；当前实现 head `8637acd4f6704cf953e833ed2f8ae34c2679b6ee`，docs-only binding head will be recorded after this update；tree `d71389a57f71949a220ecb8791ad9e4279bfcb42` before the docs-only update。
 - dirty 状态及 patch/文件指纹：验证期间仅有本任务文档、Task5 浏览器/smoke 和生成治理视图待提交；根 checkout 的无关 dirty 文件未纳入。
 - Node/npm/Rust/浏览器/OS/工具版本：Node `24.19.0`、Windows PowerShell、Vite `7.3.6`、Playwright `1.63.0`、TypeScript `5.6.x`；浏览器验收使用 Playwright configured Edge/Chromium channel。
 - 规则版本或 commit：仓库 `AGENTS.md`、`AI_RULES.md` 与现行 governance scripts。
@@ -18,6 +18,7 @@
 | `node tests/local-service/http-integration.mjs` | 2026-09-29 | 0 | PASS | terminal log | 临时服务重启、备份恢复；非真实用户目录 |
 | `node --test tests/unit/localServiceClient.test.ts tests/unit/localServiceMigration.test.ts tests/unit/localServiceServer.test.ts tests/unit/localServiceStore.test.ts tests/unit/assetStorage.test.ts` | 2026-09-29 | 0 | PASS | terminal log | 服务、迁移、资产边界定向回归 |
 | `node node_modules/typescript/bin/tsc --noEmit` | 2026-09-29 | 0 | PASS | terminal log | TypeScript 类型检查 |
+| `node node_modules/eslint/bin/eslint.js src tests scripts vite.config.ts playwright.config.ts --max-warnings 0` | 2026-09-29 | 0 | PASS | terminal log | Hosted verify 首轮暴露的 4 项 lint 已修复并本地重跑 |
 | `node scripts/check-ui-standards.mjs` | 2026-09-29 | 0 | PASS | terminal log | 166 个文件，0 项违规 |
 | `node scripts/check-governance.mjs` | 2026-09-29 | 0 | PASS | terminal log | 76 tasks，0 violations；含本机服务 server-only import guard |
 | `node scripts/check-features.mjs` | 2026-09-29 | 0 | PASS | terminal log | 34 features，0 violations；FEAT-037 registry/card/test paths一致 |
@@ -72,3 +73,4 @@
 ## 追加勘误
 
 - 2026-09-29：真实浏览器首轮发现 detached `fetch` 会让界面误判服务离线；客户端改为 wrapper 后迁移和连接验收重新通过。资产服务首轮发现缺少 `size`，补字段并新增 `assetStorage` 服务路径回归。
+- 2026-09-29：PR #30 首次 Hosted verify 报告 4 项新增 ESLint 错误（未安装 react-hooks 禁用注释、未使用 import/type、测试 helper 显式 any）；提交 `8637acd` 删除无效注释/未使用项并改为泛型 JSON helper，本地 ESLint、定向单测和类型检查通过，等待新 head Hosted 重跑。

@@ -176,10 +176,11 @@ export async function loadCreationSnapshot(
         loaded.status === "missing" && loaded.snapshot === null
           ? emptySnapshot()
           : decodeSnapshot(loaded.snapshot);
+      const hydrated = await hydrateSnapshotAssets(snapshot, loadStoredAsset);
       expectedRevision = loaded.revision;
       writable = true;
       return {
-        snapshot,
+        snapshot: hydrated,
         recovered: loaded.status === "recovered",
         durableRevision: expectedRevision,
       };
@@ -267,9 +268,10 @@ export async function persistCreationSnapshotAsync(
       "corrupt",
       "项目尚未读取成功，禁止覆盖原件。",
     );
-  const persisted = isDesktop()
-    ? await encodeSnapshotAssets(snapshot, loadStoredAsset)
-    : snapshot;
+  const persisted =
+    isDesktop() || isCompanionEnabled()
+      ? await encodeSnapshotAssets(snapshot, loadStoredAsset)
+      : snapshot;
   decodeSnapshot(persisted);
   if (isDesktop())
     await invoke("write_creation_snapshot", {
@@ -279,7 +281,7 @@ export async function persistCreationSnapshotAsync(
   else if (isCompanionEnabled()) {
     try {
       const result = await getCompanionClient().persistCompanionSnapshot(
-        snapshot,
+        persisted,
         expectedRevision,
       );
       expectedRevision = result.revision;

@@ -41,24 +41,28 @@ export class CompanionSessionManager {
       throw new CompanionProtocolError("PAIRING_INVALID", 401, "配对码无效。");
     this.pairingUsed = true;
     const session = randomBytes(32).toString("base64url");
-    this.sessions.set(session, Date.now() + this.ttlMs);
+    this.sessions.set(sessionKey(session), Date.now() + this.ttlMs);
     return session;
   }
 
   authenticate(session: string | undefined): boolean {
     if (!session || !/^[A-Za-z0-9_-]{40,80}$/.test(session)) return false;
-    const expiresAt = this.sessions.get(session);
+    const expiresAt = this.sessions.get(sessionKey(session));
     if (!expiresAt) return false;
     if (expiresAt <= Date.now()) {
-      this.sessions.delete(session);
+      this.sessions.delete(sessionKey(session));
       return false;
     }
     return true;
   }
 
   revoke(session: string | undefined): void {
-    if (session) this.sessions.delete(session);
+    if (session) this.sessions.delete(sessionKey(session));
   }
+}
+
+function sessionKey(session: string): string {
+  return createHash("sha256").update(session, "utf8").digest("hex");
 }
 
 export function sessionFromCookie(

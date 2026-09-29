@@ -4,7 +4,7 @@
 - 时间与时区：2026-09-29 / Asia/Shanghai
 - Reviewer/context/工具或模型：独立只读 reviewer 已派发，结论待回读；本文件先记录 self-review 和门禁，不伪造独立结论。
 - 独立于实现上下文：是，reviewer 只收到精确 base/head、规范路径和检查重点，没有本会话历史。
-- Base SHA / head SHA / 规则版本：base `49f20c85c48b1d9f939c1b423dc542b419e18260`；候选 head `2d61a4c91316b81a61f800c6792f8dd69bc89ba0`；`AGENTS.md`、`AI_RULES.md` 和 `docs/engineering/REVIEW.md`。
+- Base SHA / head SHA / 规则版本：base `49f20c85c48b1d9f939c1b423dc542b419e18260`；候选 head `8637acd4f6704cf953e833ed2f8ae34c2679b6ee`；`AGENTS.md`、`AI_RULES.md` 和 `docs/engineering/REVIEW.md`。
 - PR / branch / worktree：PR 待创建 / `feat/TASK-LOCAL-SERVICE-001-companion` / `D:/kk-studio/.worktrees/platform-versioning`
 - Intent / Spec / Plan / Verification：本目录对应文件。
 
@@ -22,13 +22,14 @@
 | SELF-1 | P1 | Task4 | 已关闭 | `client.ts`，真实浏览器迁移初次运行 | detached browser `fetch` 导致误判离线 | root：包装调用保持浏览器 this，迁移/连接 Playwright 重跑 | CLOSED/PASS |
 | SELF-2 | P1 | Task4 | 已关闭 | `assetRepository.ts`，`assetStorage.test.ts` | 素材 metadata 缺 `size`，服务严格 schema 拒绝 | root：补真实 byteLength 和服务路径回归 | CLOSED/PASS |
 | SELF-3 | P2 | Task4 | 已关闭 | `store.ts` migration publish | 仅检查已引用素材可能让未引用资产静默丢失 | root：发布前要求 manifest 中每个素材均已上传 | CLOSED/PASS，`2d61a4c` |
+| SELF-4 | P2 | Task5 | 已关闭 | PR #30 Hosted verify lint output | 连接组件禁用注释引用未安装规则，服务/测试有未使用项和显式 any | root：移除无效注释和未使用项，JSON helper 改为泛型 | CLOSED/PASS，`8637acd` |
 | FOLLOW-1 | P3 | follow-up | 不阻断本机功能 | `migration.ts` / store | 上传中断时可能留下未引用素材，旧 IDB 和已发布快照不受影响 | 后续 GC 任务，保留不误删 | OPEN |
 
 ## 适用门禁
 
 | 门禁 | 真实结果 | 证据与 SHA/时间 | 未满足的影响 |
 | --- | --- | --- | --- |
-| Self-review | PASS，已关闭三项实现缺口 | `verification.md`、实现 head `2d61a4c` | 不替代独立复审 |
+| Self-review | PASS，已关闭四项实现/门禁缺口 | `verification.md`、实现 head `8637acd` | 不替代独立复审 |
 | 独立 AI review | NOT RUN | 最终 head 待审 | merge 前必需 |
 | CI / 定向回归 | 本地 PASS；Hosted NOT RUN | 518 unit、3 browser、integration/smoke、type/UI/format/build | Hosted 失败不得合并 |
 | GitHub 实际审批数量/身份 | UNKNOWN | PR/ruleset 待回读 | 不能虚构审批 |

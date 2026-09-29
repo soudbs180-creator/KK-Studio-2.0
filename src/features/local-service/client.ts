@@ -305,18 +305,18 @@ export class CompanionClient {
           response.status,
         );
     } catch (error) {
-      if (error instanceof CompanionClientError && error.status === 401) {
-        clearCompanionConnection(this.storage);
-        return;
-      }
+      if (error instanceof CompanionClientError && error.status === 401) return;
       if (error instanceof CompanionClientError) throw error;
       throw new CompanionClientError(
         "SERVICE_UNAVAILABLE",
         0,
         "本机服务未运行或暂时不可访问。",
       );
+    } finally {
+      // A local disconnect is a recovery action even when the service is offline.
+      // Clearing the endpoint lets the web app fall back to its browser archive.
+      clearCompanionConnection(this.storage);
     }
-    clearCompanionConnection(this.storage);
   }
 
   async loadCompanionSnapshot(): Promise<CompanionSnapshotResponse> {

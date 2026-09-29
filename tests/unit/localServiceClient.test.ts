@@ -200,6 +200,22 @@ test("disconnect revokes the session and clears the connection metadata", async 
   assert.equal(readCompanionConnection(storage), null);
 });
 
+test("disconnect clears local metadata when the service is already offline", async () => {
+  const storage = new MemoryStorage();
+  const client = new CompanionClient({
+    storage,
+    fetch: async (input) =>
+      String(input).endsWith("/v1/pair")
+        ? response({ protocolVersion: 1, deviceId: "device-a" })
+        : (() => {
+            throw new TypeError("fetch failed");
+          })(),
+  });
+  await client.pairCompanion("http://127.0.0.1:4319", "12345678");
+  await assert.rejects(() => client.disconnectCompanion(), /本机服务未运行/);
+  assert.equal(readCompanionConnection(storage), null);
+});
+
 test("asset adapter sends encoded metadata and verifies the response identity", async () => {
   const storage = new MemoryStorage();
   const bytes = new Uint8Array([1, 2, 3]);

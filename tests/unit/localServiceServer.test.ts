@@ -154,7 +154,10 @@ test("snapshot writes use expected revision and stale clients get 409", async ()
       }),
     });
     assert.equal(stale.status, 409);
-    assert.deepEqual(await jsonResponse(stale), { error: "CONFLICT" });
+    assert.deepEqual(await jsonResponse(stale), {
+      error: "CONFLICT",
+      currentRevision: 0,
+    });
   } finally {
     await app.close();
   }

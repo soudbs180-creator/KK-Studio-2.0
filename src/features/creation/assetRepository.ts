@@ -63,9 +63,17 @@ function companionEnabled(): boolean {
 }
 
 function serviceProvenance(value: unknown): AssetProvenance {
-  return assetProvenanceSchema.parse(
-    value ?? { generatedAt: new Date().toISOString() },
-  );
+  const candidate =
+    value && typeof value === "object"
+      ? { ...(value as Record<string, unknown>) }
+      : {};
+  return assetProvenanceSchema.parse({
+    ...candidate,
+    generatedAt:
+      typeof candidate.generatedAt === "string"
+        ? candidate.generatedAt
+        : new Date().toISOString(),
+  });
 }
 
 function openAssetDatabase(): Promise<IDBDatabase> {

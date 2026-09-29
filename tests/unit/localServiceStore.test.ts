@@ -1,5 +1,12 @@
 import assert from "node:assert/strict";
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -56,6 +63,39 @@ test("store recovers the previous valid snapshot from its backup", () => {
   assert.equal(recovered.status, "recovered");
   assert.equal(recovered.revision, 0);
   assert.equal(recovered.snapshot?.revision, 0);
+});
+
+test("snapshot writes reject missing asset references and accept hydrated service assets", () => {
+  const store = new CompanionStore(root());
+  const initial = emptySnapshot();
+  const referenced = {
+    ...initial,
+    homeDraft: {
+      ...initial.homeDraft,
+      attachments: [
+        {
+          id: "attachment-1",
+          assetId: metadata.assetId,
+          name: "image.png",
+          mime: metadata.mime,
+          size: metadata.size,
+          dataUrl: `kk-asset:${metadata.assetId}`,
+        },
+      ],
+    },
+  };
+  assert.throws(
+    () => store.writeSnapshot(referenced, null),
+    (error: unknown) =>
+      error instanceof CompanionProtocolError &&
+      error.code === "INVALID_SNAPSHOT",
+  );
+  store.publishStagedAsset(store.stageAsset(metadata, bytes).stageId);
+  store.writeSnapshot(referenced, null);
+  assert.equal(
+    store.readSnapshot().snapshot?.homeDraft.attachments[0]?.dataUrl,
+    `kk-asset:${metadata.assetId}`,
+  );
 });
 
 test("store refuses to create an empty project when both snapshot copies are corrupt", () => {
@@ -122,4 +162,26 @@ test("backup contains a verified manifest for the snapshot and assets", () => {
   assert.ok(
     existsSync(join(backup.directory, "assets", "blobs", metadata.sha256)),
   );
+});
+
+test("backup restore rolls back earlier files when a later publish fails", () => {
+  const store = new CompanionStore(root());
+  store.writeSnapshot(emptySnapshot(), null);
+  store.publishStagedAsset(store.stageAsset(metadata, bytes).stageId);
+  const backup = store.createBackup();
+  const recordPath = join(store.assetRecordsRoot, `${metadata.assetId}.json`);
+  const record = readFileSync(recordPath);
+  rmSync(recordPath);
+  mkdirSync(recordPath);
+  assert.throws(
+    () => store.restoreBackup(backup.directory.split(/[\\/]/).pop()!),
+    (error: unknown) =>
+      error instanceof CompanionProtocolError && error.code === "IO",
+  );
+  assert.deepEqual(
+    new Uint8Array(readFileSync(join(store.assetBlobsRoot, metadata.sha256))),
+    bytes,
+  );
+  rmSync(recordPath, { recursive: true, force: true });
+  writeFileSync(recordPath, record);
 });

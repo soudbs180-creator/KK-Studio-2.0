@@ -88,7 +88,7 @@ test("origins are exact allowlist matches", () => {
     isAllowedCompanionOrigin("http://localhost:1421", allowed),
     false,
   );
-  assert.equal(isAllowedCompanionOrigin(undefined, allowed), true);
+  assert.equal(isAllowedCompanionOrigin(undefined, allowed), false);
   assert.equal(
     isAllowedCompanionOrigin("http://127.0.0.1:1421/", allowed),
     false,
@@ -105,6 +105,18 @@ test("secret-like fields are rejected before persistence", () => {
   );
   assert.throws(() => rejectCompanionSecrets({ apiKey: "sk-secret" }));
   assert.throws(() => rejectCompanionSecrets({ nested: { token: "secret" } }));
+  assert.throws(() =>
+    rejectCompanionSecrets({ provenance: { providerSecret: "x" } }),
+  );
+  assert.throws(() =>
+    assetMetadataSchema.parse({
+      assetId,
+      sha256,
+      mime: "image/png",
+      size: 3,
+      provenance: { providerSecret: "x" },
+    }),
+  );
 });
 
 test("backup manifests are strict and content-addressed", () => {

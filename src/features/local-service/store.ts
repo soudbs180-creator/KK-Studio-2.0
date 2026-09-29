@@ -1,8 +1,8 @@
 import {
   closeSync,
-  copyFileSync,
   existsSync,
   fsyncSync,
+  lstatSync,
   mkdirSync,
   openSync,
   readFileSync,
@@ -77,7 +77,12 @@ function writeAtomic(path: string, bytes: Uint8Array | string): void {
   } finally {
     closeSync(fd);
   }
-  renameSync(temp, path);
+  try {
+    renameSync(temp, path);
+  } catch (error) {
+    rmSync(temp, { force: true });
+    throw error;
+  }
 }
 
 function asBytes(value: Uint8Array | Buffer): Uint8Array {
@@ -123,6 +128,20 @@ function collectAssetIds(value: unknown, ids = new Set<string>()): Set<string> {
     collectAssetIds(child, ids);
   }
   return ids;
+}
+
+function snapshotAssetIds(snapshot: CreationSnapshot): string[] {
+  try {
+    return [...collectAssetIds(snapshot)];
+  } catch (error) {
+    if (error instanceof CompanionProtocolError)
+      throw new CompanionProtocolError(
+        "INVALID_SNAPSHOT",
+        422,
+        "项目引用的素材标识无效。",
+      );
+    throw error;
+  }
 }
 
 function safeBackupId(id: string): boolean {
@@ -201,6 +220,14 @@ export class CompanionStore {
         "项目快照无效。",
       );
     }
+    for (const assetId of snapshotAssetIds(parsed)) {
+      if (!this.readAsset(assetId))
+        throw new CompanionProtocolError(
+          "INVALID_SNAPSHOT",
+          422,
+          "项目引用的素材尚未归档。",
+        );
+    }
     const current = this.readSnapshot();
     if (current.revision !== expectedRevision)
       throw new CompanionProtocolError("CONFLICT", 409, "项目版本已变化。");
@@ -208,7 +235,7 @@ export class CompanionStore {
       throw new CompanionProtocolError("CONFLICT", 409, "项目版本必须递增。");
 
     if (current.revision !== null && this.validSnapshotFile(this.snapshotPath))
-      copyFileSync(this.snapshotPath, this.backupPath);
+      writeAtomic(this.backupPath, asBytes(readFileSync(this.snapshotPath)));
     writeAtomic(this.snapshotPath, canonicalJson(parsed));
   }
 
@@ -260,7 +287,7 @@ export class CompanionStore {
     }
     if (
       metadata.size !== bytes.byteLength ||
-      sha256Bytes(bytes) !== metadata.sha256
+      sha256Bytes(bytes) !== metadata.sha256.toLowerCase()
     )
       throw invalidAsset("素材暂存批次校验失败。");
 
@@ -281,9 +308,45 @@ export class CompanionStore {
         const old = assetMetadataSchema.parse(
           JSON.parse(readFileSync(targetRecord, "utf8")),
         );
+        const canonical = old.isAiGenerated !== false ? old : metadata;
+        const oldProvenance = {
+          ...(old.provenance ?? {}),
+          generatedAt: old.provenance?.generatedAt ?? new Date().toISOString(),
+        };
+        const newProvenance = {
+          ...(metadata.provenance ?? {}),
+          generatedAt:
+            metadata.provenance?.generatedAt ?? new Date().toISOString(),
+        };
+        const origins = [
+          ...(old.origins ?? [
+            {
+              sourceJobId: old.sourceJobId,
+              promptHash: old.promptHash,
+              parentId: old.parentId,
+              provenance: oldProvenance,
+            },
+          ]),
+          {
+            sourceJobId: metadata.sourceJobId,
+            promptHash: metadata.promptHash,
+            parentId: metadata.parentId,
+            provenance: newProvenance,
+          },
+        ]
+          .filter(
+            (entry, index, all) =>
+              all.findIndex(
+                (candidate) =>
+                  candidate.sourceJobId === entry.sourceJobId &&
+                  candidate.promptHash === entry.promptHash,
+              ) === index,
+          )
+          .slice(-200);
         merged = {
-          ...old,
           ...metadata,
+          ...canonical,
+          origins,
           tags: [...new Set([...old.tags, ...metadata.tags])].slice(0, 20),
         };
       } catch {
@@ -313,10 +376,16 @@ export class CompanionStore {
       .sort()
       .slice(offset, offset + limit)
       .map((name) => {
-        const value = this.readAsset(name.slice(0, -5));
-        if (!value)
+        try {
+          const metadata = assetMetadataSchema.parse(
+            JSON.parse(readFileSync(join(this.assetRecordsRoot, name), "utf8")),
+          );
+          if (metadata.assetId !== name.slice(0, -5).toLowerCase())
+            throw new Error("asset id mismatch");
+          return metadata;
+        } catch {
           throw new CompanionProtocolError("CORRUPT", 500, "素材索引无效。");
-        return value.metadata;
+        }
       });
   }
 
@@ -432,6 +501,14 @@ export class CompanionStore {
         409,
         "没有可备份的项目。",
       );
+    for (const assetId of snapshotAssetIds(snapshot.snapshot)) {
+      if (!this.readAsset(assetId))
+        throw new CompanionProtocolError(
+          "CORRUPT",
+          500,
+          "项目引用的素材缺失。",
+        );
+    }
     const entries: Array<{ path: string; bytes: Uint8Array }> = [
       {
         path: "projects/creation-v2.json",
@@ -446,6 +523,10 @@ export class CompanionStore {
     ];
     for (const name of readdirSync(this.assetRecordsRoot)) {
       if (!name.endsWith(".json")) continue;
+      const assetId = name.slice(0, -5).toLowerCase();
+      const stored = this.readAsset(assetId);
+      if (!stored)
+        throw new CompanionProtocolError("CORRUPT", 500, "素材索引无效。");
       entries.push({
         path: `assets/records/${name}`,
         bytes: asBytes(readFileSync(join(this.assetRecordsRoot, name))),
@@ -521,6 +602,12 @@ export class CompanionStore {
       throw new CompanionProtocolError("CORRUPT", 422, "备份清单校验和无效。");
     const entries = new Map<string, Uint8Array>();
     for (const entry of manifest.files) {
+      if (entries.has(entry.path))
+        throw new CompanionProtocolError(
+          "CORRUPT",
+          422,
+          "备份清单包含重复文件。",
+        );
       const path = resolve(directory, entry.path);
       if (!path.startsWith(`${directory}${sep}`) || !existsSync(path))
         throw new CompanionProtocolError("CORRUPT", 422, "备份文件缺失。");
@@ -550,12 +637,14 @@ export class CompanionStore {
       );
       if (!record) continue;
       try {
-        records.set(
-          record[1].toLowerCase(),
-          assetMetadataSchema.parse(
-            JSON.parse(new TextDecoder().decode(bytes)),
-          ),
+        const assetId = record[1].toLowerCase();
+        const metadata = assetMetadataSchema.parse(
+          JSON.parse(new TextDecoder().decode(bytes)),
         );
+        if (metadata.assetId !== assetId)
+          throw new Error("record asset id mismatch");
+        if (records.has(assetId)) throw new Error("duplicate asset record");
+        records.set(assetId, metadata);
       } catch {
         throw new CompanionProtocolError("CORRUPT", 422, "备份素材索引无效。");
       }
@@ -573,15 +662,86 @@ export class CompanionStore {
           "备份素材原件不完整。",
         );
     }
-    const current = this.readSnapshot();
-    if (current.snapshot && this.validSnapshotFile(this.snapshotPath))
-      copyFileSync(this.snapshotPath, this.backupPath);
-    for (const [path, bytes] of entries) {
-      if (path === "projects/creation-v2.json") continue;
-      writeAtomic(join(this.root, path), bytes);
+    for (const assetId of snapshotAssetIds(snapshot)) {
+      if (!records.has(assetId))
+        throw new CompanionProtocolError(
+          "CORRUPT",
+          422,
+          "备份缺少项目引用的素材索引。",
+        );
     }
-    writeAtomic(this.snapshotPath, canonicalJson(snapshot));
-    return { id: backupId, revision: snapshot.revision };
+
+    const restoreStage = join(this.stagingRoot, `restore-${randomUUID()}`);
+    const originals = new Map<
+      string,
+      | { kind: "missing" }
+      | { kind: "file"; bytes: Uint8Array }
+      | { kind: "other" }
+    >();
+    const capture = (path: string): void => {
+      if (!existsSync(path)) {
+        originals.set(path, { kind: "missing" });
+        return;
+      }
+      try {
+        const stat = lstatSync(path);
+        originals.set(
+          path,
+          stat.isFile()
+            ? { kind: "file", bytes: asBytes(readFileSync(path)) }
+            : { kind: "other" },
+        );
+      } catch {
+        originals.set(path, { kind: "other" });
+      }
+    };
+    const rollback = (): void => {
+      for (const [path, original] of originals) {
+        if (original.kind === "missing")
+          rmSync(path, { recursive: true, force: true });
+        else if (original.kind === "file") writeAtomic(path, original.bytes);
+      }
+    };
+
+    try {
+      mkdirSync(restoreStage, { recursive: true });
+      for (const [path, bytes] of entries) {
+        const stagedPath = join(restoreStage, path);
+        writeAtomic(stagedPath, bytes);
+        const staged = asBytes(readFileSync(stagedPath));
+        if (
+          staged.byteLength !== bytes.byteLength ||
+          sha256Bytes(staged) !== sha256Bytes(bytes)
+        )
+          throw new CompanionProtocolError("IO", 500, "备份暂存校验失败。");
+        capture(join(this.root, path));
+      }
+      capture(this.snapshotPath);
+      capture(this.backupPath);
+      const current = this.readSnapshot();
+      if (current.snapshot && this.validSnapshotFile(this.snapshotPath))
+        writeAtomic(this.backupPath, asBytes(readFileSync(this.snapshotPath)));
+      try {
+        for (const [path, bytes] of entries) {
+          if (path === "projects/creation-v2.json") continue;
+          writeAtomic(join(this.root, path), bytes);
+        }
+        writeAtomic(this.snapshotPath, canonicalJson(snapshot));
+      } catch (error) {
+        try {
+          rollback();
+        } catch {
+          // Preserve the original failure while leaving diagnostics in the log.
+        }
+        throw error;
+      }
+      return { id: backupId, revision: snapshot.revision };
+    } catch (error) {
+      if (error instanceof CompanionProtocolError) throw error;
+      throw new CompanionProtocolError("IO", 500, "备份恢复失败。");
+    } finally {
+      rmSync(restoreStage, { recursive: true, force: true });
+    }
   }
 
   private validSnapshotFile(path: string): boolean {

@@ -75,7 +75,10 @@ export type SnapshotPut = z.infer<typeof snapshotPutSchema>;
 
 const supportedMime =
   /^(?:image\/(?:png|jpeg|webp|gif)|video\/(?:mp4|webm)|audio\/(?:mpeg|wav|ogg))$/i;
-const sha256Schema = z.string().regex(/^[a-f0-9]{64}$/i);
+const sha256Schema = z
+  .string()
+  .regex(/^[a-f0-9]{64}$/i)
+  .transform((value) => value.toLowerCase());
 const assetIdSchema = z
   .string()
   .regex(/^asset-[a-f0-9]{24}$/i)
@@ -93,7 +96,41 @@ export const assetMetadataSchema = z
     parentId: assetIdSchema.optional(),
     isAiGenerated: z.boolean().optional(),
     source: z.enum(["provider", "upload"]).optional(),
-    provenance: z.record(z.string(), z.unknown()).optional(),
+    provenance: z
+      .object({
+        provider: z.string().max(80).optional(),
+        model: z.string().max(120).optional(),
+        providerRequestId: z.string().max(200).optional(),
+        connectionId: z.string().max(160).optional(),
+        c2paPresent: z.boolean().optional(),
+        synthIdSignal: z.boolean().optional(),
+        generatedAt: z.string().datetime().optional(),
+      })
+      .strict()
+      .optional(),
+    origins: z
+      .array(
+        z
+          .object({
+            sourceJobId: z.string().max(200).optional(),
+            promptHash: sha256Schema.optional(),
+            parentId: assetIdSchema.optional(),
+            provenance: z
+              .object({
+                provider: z.string().max(80).optional(),
+                model: z.string().max(120).optional(),
+                providerRequestId: z.string().max(200).optional(),
+                connectionId: z.string().max(160).optional(),
+                c2paPresent: z.boolean().optional(),
+                synthIdSignal: z.boolean().optional(),
+                generatedAt: z.string().datetime(),
+              })
+              .strict(),
+          })
+          .strict(),
+      )
+      .max(200)
+      .optional(),
   })
   .strict()
   .superRefine((value, context) => {
@@ -184,11 +221,9 @@ export function isAllowedCompanionOrigin(
   origin: string | undefined,
   allowedOrigins: readonly string[],
 ): boolean {
-  return origin === undefined || allowedOrigins.includes(origin);
+  return origin !== undefined && allowedOrigins.includes(origin);
 }
 
-const secretKey =
-  /(?:^|_)(?:api[_-]?key|refresh[_-]?token|access[_-]?token|authorization|password|secret|credentials?|session|token)$/i;
 const secretValue =
   /Bearer\s+\S+|sk-[A-Za-z0-9_-]{16,}|AIza[A-Za-z0-9_-]{20,}|https?:\/\/[^\s/@]+:[^\s/@]+@|[?&](?:key|api_key|access_token|token|secret)=/i;
 
@@ -215,7 +250,20 @@ export function rejectCompanionSecrets(value: unknown): void {
     }
     if (!item || typeof item !== "object") return;
     for (const [key, entry] of Object.entries(item)) {
-      if (secretKey.test(key))
+      const normalizedKey = key.replace(/[^a-z0-9]/gi, "").toLowerCase();
+      const secretField =
+        normalizedKey.endsWith("apikey") ||
+        normalizedKey.endsWith("refreshtoken") ||
+        normalizedKey.endsWith("accesstoken") ||
+        normalizedKey.endsWith("authorization") ||
+        normalizedKey.endsWith("password") ||
+        normalizedKey.endsWith("secret") ||
+        normalizedKey.endsWith("credentials") ||
+        normalizedKey.endsWith("privatekey") ||
+        normalizedKey === "session" ||
+        normalizedKey.endsWith("sessiontoken") ||
+        normalizedKey === "token";
+      if (secretField)
         throw new CompanionProtocolError(
           "INVALID_REQUEST",
           400,

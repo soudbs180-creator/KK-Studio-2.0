@@ -85,7 +85,7 @@ function parseAssetMetadataHeader(raw: string): unknown {
 
 function errorResponse(error: unknown): {
   status: number;
-  body: { error: string };
+  body: { error: string; currentRevision?: number | null };
 } {
   if (error instanceof CompanionProtocolError)
     return { status: error.status, body: { error: error.code } };
@@ -121,8 +121,20 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
   );
   const migrationReports = new Map<
     string,
-    { report: MigrationPreflightResult; createdAt: number }
+    { report: MigrationPreflightResult; createdAt: number; sessionKey: string }
   >();
+  const migrationTtlMs = 15 * 60 * 1000;
+  const pruneMigrationReports = (): void => {
+    const now = Date.now();
+    for (const [id, saved] of migrationReports) {
+      if (now - saved.createdAt > migrationTtlMs) migrationReports.delete(id);
+    }
+    while (migrationReports.size > 64) {
+      const oldest = migrationReports.keys().next().value;
+      if (typeof oldest !== "string") break;
+      migrationReports.delete(oldest);
+    }
+  };
   const server = createServer((req, res) => {
     void (async () => {
       try {
@@ -194,10 +206,24 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
           const request = snapshotPutSchema.parse(
             parseJson(await readBody(req, maxBodyBytes)),
           );
-          options.store.writeSnapshot(
-            request.snapshot,
-            request.expectedRevision,
-          );
+          try {
+            options.store.writeSnapshot(
+              request.snapshot,
+              request.expectedRevision,
+            );
+          } catch (error) {
+            if (
+              error instanceof CompanionProtocolError &&
+              error.code === "CONFLICT"
+            ) {
+              json(res, 409, {
+                error: "CONFLICT",
+                currentRevision: options.store.readSnapshot().revision,
+              });
+              return;
+            }
+            throw error;
+          }
           json(res, 200, {
             status: "saved",
             revision: request.snapshot.revision,
@@ -255,6 +281,7 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
         }
 
         if (path === "/v1/migration/preflight" && req.method === "POST") {
+          pruneMigrationReports();
           const request = migrationPreflightSchema.parse(
             parseJson(await readBody(req, maxBodyBytes)),
           );
@@ -267,7 +294,9 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
           migrationReports.set(reportId, {
             report,
             createdAt: Date.now(),
+            sessionKey: session ?? "",
           });
+          pruneMigrationReports();
           json(res, 200, {
             status: "ready",
             reportId,
@@ -283,11 +312,12 @@ export function createCompanionServer(options: CompanionServerOptions): Server {
         }
 
         if (path === "/v1/migration/import" && req.method === "POST") {
+          pruneMigrationReports();
           const request = migrationImportSchema.parse(
             parseJson(await readBody(req, maxBodyBytes)),
           );
           const saved = migrationReports.get(request.reportId);
-          if (!saved || Date.now() - saved.createdAt > 15 * 60 * 1000)
+          if (!saved || saved.sessionKey !== (session ?? ""))
             throw new CompanionProtocolError(
               "IMPORT_ROLLBACK",
               409,
