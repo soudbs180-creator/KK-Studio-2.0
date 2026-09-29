@@ -66,7 +66,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-007 | 手机平板电脑三档尺寸与图标对齐 | DONE | TASK-UI-006, TASK-AGENT-001 | root |
 | TASK-UI-008 | 重新制定创作输入框规范并统一三档实现 | DONE | TASK-UI-007, TASK-AGENT-002 | root |
 | TASK-AGENT-003 | Agent 图片附件、画布引用与视口选择操作 | DONE | TASK-AGENT-001, TASK-AGENT-002 | root |
-| PLUGIN-DESKTOP-001 | 修复桌面画布插件的 CSP 加载路径 | REVIEW | none | root |
+| PLUGIN-DESKTOP-001 | 修复桌面画布插件的 CSP 加载路径 | DONE | none | root |
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
@@ -815,7 +815,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/PLUGIN-DESKTOP-001-csp`
 - Worktree: `D:/kk-studio/.worktrees/platform-versioning`
 - Modules: src/features/plugins, src-tauri/tauri.conf.json, tests/browser
-- Verification: PASS — 12 项插件单测、TypeScript、Web build、Tauri client build 通过；fresh Tauri 隔离运行完成随包插件发现、添加、渲染、停用和恢复，资源走 tauri.localhost/plugins/*.js 同源 URL，严格 CSP 未放宽，页面错误为空。独立只读 review 对代码 head 91396c6 给出 PASS、无 P0–P3 findings；PR/CI 待推送后回读。
+- Verification: PASS — 12 项插件单测、TypeScript、Web build、Tauri client build 通过；fresh Tauri 隔离运行完成随包插件发现、添加、渲染、停用和恢复，资源走 tauri.localhost/plugins/*.js 同源 URL，严格 CSP 未放宽，页面错误为空。独立只读 review 对代码 head 91396c6 给出 PASS、无 P0–P3 findings；PR #28 Hosted verify/delivery/deploy-linux 与 push verify 均成功，已 squash 合入 main@e27e209。
 - Evidence: [docs/changes/2026-09-29-plugin-desktop-csp/intent.md](../../docs/changes/2026-09-29-plugin-desktop-csp/intent.md), [docs/changes/2026-09-29-plugin-desktop-csp/spec.md](../../docs/changes/2026-09-29-plugin-desktop-csp/spec.md), [docs/changes/2026-09-29-plugin-desktop-csp/plan.md](../../docs/changes/2026-09-29-plugin-desktop-csp/plan.md), [docs/changes/2026-09-29-plugin-desktop-csp/verification.md](../../docs/changes/2026-09-29-plugin-desktop-csp/verification.md), [docs/changes/2026-09-29-plugin-desktop-csp/review.md](../../docs/changes/2026-09-29-plugin-desktop-csp/review.md), [docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-runtime.json](../../docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-runtime.json), [docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-plugin-csp.png](../../docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-plugin-csp.png)
 - Updated: 2026-09-29
 

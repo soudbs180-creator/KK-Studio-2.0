@@ -1,11 +1,11 @@
 # Verification：修复桌面画布插件的 CSP 加载路径
 
 - Task ID：PLUGIN-DESKTOP-001
-- 记录状态：本地完整验证与独立源码复审通过；PR/Hosted CI 待执行
+- 记录状态：本地完整验证、独立源码复审、PR/Hosted CI 与主线合并均通过
 - 执行时间与时区：2026-09-29，Asia/Shanghai
 - Intent / Spec / Plan / AC：本目录 `intent.md`、`spec.md`、`plan.md`；AC-1～AC-3
 - cwd / branch：`D:/kk-studio/.worktrees/platform-versioning` / `fix/PLUGIN-DESKTOP-001-csp`
-- 被验证 base SHA / head SHA / tree SHA：base `5cdf8dc081b8b2e521c715d639927ca763427092`；head `91396c60b899b3b103aac60289a1d41cf3678cb3`；tree `a6061e47c2a9a54481c50721a9bd01f16ed4c7d0`
+- 被验证 base SHA / head SHA / tree SHA：代码 base `5cdf8dc081b8b2e521c715d639927ca763427092`；代码 head `91396c60b899b3b103aac60289a1d41cf3678cb3`；代码 tree `a6061e47c2a9a54481c50721a9bd01f16ed4c7d0`；PR #28 squash main `e27e209fcd971ba1aaf1e131b39eda49e1009682`；main tree `3cf86dbd22c3dd575db6a130f027774f4a91bce2`
 - dirty 状态及 patch/文件指纹：提交前后均已核对；提交 `91396c6` 后工作树 clean；桌面验收使用本分支 fresh build 和隔离数据目录。
 - Node/npm/Rust/浏览器/OS/工具版本：Node 24.19、Windows、Cargo/Tauri、Playwright。
 - 规则版本或 commit：当前分支 `AGENTS.md`、`AI_RULES.md` 与仓库工程规范。
@@ -51,7 +51,7 @@
 
 - 本地 fixture：随包 HTML/Markdown/Sticky/SVG 插件；不调用 Provider。
 - live Provider/ComfyUI/账号/账单/部署：NOT RUN，不是本任务依赖。
-- 远端 PR/CI/ruleset：待推送后回读。
+- 远端 PR/CI/ruleset：PR #28 的 Hosted `verify`、`delivery`、`deploy-linux` 与 push `verify` 均 success；已合入 `main@e27e209`。
 - 未验证事项：VPS、远程插件 Desktop 支持、用户最终产品验收。
 
 ## 结论和后续
@@ -59,6 +59,6 @@
 - 实现：完成候选
 - 本地验证：PASS；独立源码复审：PASS（无 P0–P3 findings）
 - 产品能力：随包 Desktop 插件真实可用并有 fresh Tauri 证据；远程插件仍保持既有边界
-- PR/Hosted CI/主线合并：待执行
+- PR/Hosted CI/主线合并：已完成（PR #28 → `main@e27e209`）
 - 用户产品验收：未发生
 - 未关闭风险：连接器目录统一入口、远程 Desktop 插件和真实服务仍为后续任务；VPS 状态仍需外部 SSH/控制台核验。
