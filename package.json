@@ -8,6 +8,7 @@
     "gateway": "node src/features/generation-server/main.ts",
     "local-service": "node src/features/local-service/main.ts",
     "local-service:test": "node tests/local-service/http-integration.mjs",
+    "local-service:smoke": "node tests/local-service/production-smoke.mjs",
     "test:gateway": "node --test tests/unit/generationServer*.test.ts",
     "proxy": "node vendor/canvas-proxy/index.js",
     "proxy:test": "node --test tests/unit/proxyForward.test.ts",

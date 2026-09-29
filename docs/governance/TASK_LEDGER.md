@@ -79,7 +79,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-COMPARE-001 | 画布图片对比操作 | REVIEW | none | root |
 | TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | REVIEW | TASK-COMPARE-001 | root |
 | TASK-VERSION-001 | 桌面/Web/Mobile 独立版本源与自动递增 | DONE | none | root |
-| TASK-LOCAL-SERVICE-001 | Web 本机伴随服务与既有浏览器数据迁移 | TODO | TASK-VERSION-001, BACKEND-PLATFORM | root |
+| TASK-LOCAL-SERVICE-001 | Web 本机伴随服务与既有浏览器数据迁移 | PARTIAL | TASK-VERSION-001, BACKEND-PLATFORM | root |
 | TASK-CLOSEOUT-2026-09-28 | 合并后版本与 VPS 状态收口 | DONE | TASK-VERSION-001, T10-PREP | root |
 | TASK-POSTMERGE-MIGRATION-2026-09-28 | 主线合并后迁移操作单收口 | DONE | T10-PREP, T10, T11 | root |
 
@@ -968,12 +968,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 让网页登录后的个人项目和素材由用户设备本机服务保存，并安全导入既有 IndexedDB 数据
 - Scope: 本机服务、Web 存储适配器、安装/连接、既有项目与素材导入、备份恢复
 - Acceptance: Web 在有服务时从本机服务读写个人项目与素材，浏览器数据不作为最终持久源; 服务不可用、认证失效、冲突、断电/重启有明确状态和恢复路径; 既有 IndexedDB 项目与素材只读预检、无损导入与失败回滚; 跨浏览器实例及备份恢复的运行态验收
-- Branch: `unallocated`
-- Worktree: `unallocated`
-- Modules: src/runtime, src/features/creation, local companion service, docs/architecture/DATA-STORAGE.md
-- Verification: NOT_VERIFIED — NOT VERIFIED：本机伴随服务、账号接线与浏览器既有数据导入尚未实现；现有 Web 仍使用 IndexedDB。
-- Evidence: [docs/changes/2026-09-28-platform-versioning/spec.md](../../docs/changes/2026-09-28-platform-versioning/spec.md), [docs/architecture/adr/ADR-008-platform-versions-and-local-first.md](../../docs/architecture/adr/ADR-008-platform-versions-and-local-first.md), [docs/features/feat-037-web-local-service.md](../../docs/features/feat-037-web-local-service.md)
-- Updated: 2026-09-28
+- Branch: `feat/TASK-LOCAL-SERVICE-001-companion`
+- Worktree: `D:/kk-studio/.worktrees/platform-versioning`
+- Modules: src/runtime, src/features/creation, local companion service, docs/architecture/DATA-STORAGE.md, src/components/settings, tests/browser, tests/local-service
+- Verification: PARTIAL — 本机 loopback 服务、HttpOnly 配对、项目/素材服务优先读写、旧 IndexedDB 只读迁移、备份恢复、连接/断线 UI 与 production smoke 已通过本地和真实临时服务验收；真实账号登录、安装/更新、Mobile 和 VPS 生产部署仍未完成，因此产品任务保持 PARTIAL。
+- Evidence: [docs/changes/2026-09-29-local-companion/intent.md](../../docs/changes/2026-09-29-local-companion/intent.md), [docs/changes/2026-09-29-local-companion/spec.md](../../docs/changes/2026-09-29-local-companion/spec.md), [docs/changes/2026-09-29-local-companion/plan.md](../../docs/changes/2026-09-29-local-companion/plan.md), [docs/changes/2026-09-29-local-companion/verification.md](../../docs/changes/2026-09-29-local-companion/verification.md), [docs/changes/2026-09-29-local-companion/review.md](../../docs/changes/2026-09-29-local-companion/review.md), [docs/architecture/adr/ADR-008-platform-versions-and-local-first.md](../../docs/architecture/adr/ADR-008-platform-versions-and-local-first.md), [docs/features/feat-037-web-local-service.md](../../docs/features/feat-037-web-local-service.md)
+- Updated: 2026-09-29
 
 ## TASK-CLOSEOUT-2026-09-28 — 合并后版本与 VPS 状态收口
 

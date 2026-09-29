@@ -1,5 +1,11 @@
 # 当前进度
 
+## 2026-09-29 Web 本机伴随服务与浏览器数据迁移（TASK-LOCAL-SERVICE-001）
+
+在 `feat/TASK-LOCAL-SERVICE-001-companion` 独立 worktree 完成本机 loopback 服务和 Web 适配：服务默认绑定 `127.0.0.1:4319`，一次性配对码换取 HttpOnly session cookie；快照使用 revision CAS、临时文件和 `.bak` 恢复，素材使用内容寻址记录/原件、MIME/大小/完整 SHA-256 校验。设置 → 储存提供连接检查、断开、旧 IndexedDB 只读预检/确认导入、备份和最近备份恢复；服务启用后 `storage.ts` 与 `assetRepository.ts` 服务优先，离线/认证/冲突不静默回退。旧 IndexedDB 成功或失败均保留。
+
+验证：`tests/unit/localService*.test.ts`、`tests/unit/assetStorage.test.ts`，真实临时服务迁移浏览器验收（1/1），连接/备份/断线验收（2/2），`tests/local-service/http-integration.mjs`，`tests/local-service/production-smoke.mjs` 均通过；类型检查、UI 标准、Prettier、Vite production build 通过。Web bundle smoke 未发现 `node:fs`、`node:http`、`node:crypto`、配对码或服务数据根常量。功能卡 FEAT-037 与本任务保持 PARTIAL：账号登录、服务安装/更新、Mobile、VPS 生产写入仍未验证。
+
 ## 2026-09-29 Desktop 随包插件 CSP 收口（PLUGIN-DESKTOP-001）
 
 修复插件加载器的桌面路径：随包 `/plugins/*.js` 现在通过同源 ESM URL 直接导入，不再依赖被 Tauri 严格 `script-src 'self'` 拒绝的 `blob:`；远程插件仍保持 HTTPS、无凭据/片段和禁止自动重定向。12 项插件单测、TypeScript、Web build、Tauri client build 通过；fresh Tauri release 在隔离数据目录实际完成插件发现、SVG 节点添加/渲染、停用、恢复，资源记录为 `http://tauri.localhost/plugins/*.js?t=...`，页面错误为空，证据见[本轮验证](changes/2026-09-29-plugin-desktop-csp/verification.md)；独立只读 review 已 PASS、无 P0–P3 findings，PR #28 的 Hosted verify/delivery/deploy-linux 与 push verify 均成功，已 squash 合入 main@e27e209。连接器目录统一入口、远程 Desktop 插件和真实服务仍保持后续任务。
