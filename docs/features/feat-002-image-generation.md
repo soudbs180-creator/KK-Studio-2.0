@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：creation
-- 最近更新：2026-09-21
-- 关联任务：T5、TASK-PROV-001、EXT-PROVIDER、TASK-AGENT-001、TASK-AGENT-004
+- 最近更新：2026-10-01
+- 关联任务：T5、TASK-PROV-001、EXT-PROVIDER、TASK-AGENT-001、TASK-AGENT-004、TASK-AGENT-008
 
 ## 用户可见入口
 
@@ -24,6 +24,8 @@
 - 证据：`docs/changes/2026-09-20-ai-sdlc/`、`docs/evidence/ai-sdlc-2026-09-20/desktop-provider-gap-audit.md`
 
 ## 当前能力
+
+- Codex 内置生图：KK 新账号真实生成 PNG；本轮修复事件超限和并发归档标记，生产 Tauri 自动归档/续聊/重连/重启原件一致、节点/标记唯一，见 [TASK-AGENT-008](../changes/2026-10-01-agent-image-transport/verification.md)。本卡保持 PARTIAL，不扩大为所有 Provider 验收。
 
 - Web：真实 BYOK 提交、连接门禁、取消、错误分类、原件归档。
 - Desktop：原生 TaskHost 代码已接入（durable intent、journal、幂等身份、unknown 受理保护、逐 slot）。

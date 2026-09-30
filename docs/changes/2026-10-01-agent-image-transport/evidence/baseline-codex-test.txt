@@ -1,0 +1,50 @@
+2026-10-01 05:51:23 WARN Interrupting active Codex turn threadId='thread-1' turnId='turn-1'
+2026-10-01 05:51:23 WARN Interrupting active Codex turn threadId='draft-thread' turnId='draft-turn'
+✔ 工作空间接受 Windows 包路径的原生规范形式，拒绝其他目录 (1.3026ms)
+✔ 新建持久会话使用锁定版本支持的 legacy 历史模式 (1.0494ms)
+✔ 审批只在 app-server 确认 resolved 后清除 (0.9432ms)
+✔ 中断请求只作用于当前运行线程 (1.3966ms)
+✔ Skill 列表与启用配置使用 app-server 原生协议 (0.2739ms)
+✔ 并发强制刷新同一工作空间时只扫描一次 Skill (0.2344ms)
+✔ 显式 Skill 同时使用文本标记和结构化输入传给 turn/start (5.6399ms)
+✔ 显式 Skill 不重复已有的文本标记 (1.2093ms)
+✔ skills/changed 作为站点级事件单独广播 (0.1622ms)
+✔ MCP 启动状态区分空对话预热与正常 turn 运行 (2.0355ms)
+✔ 静默 Skill 草稿 turn 只返回结构化结果，不广播也不写历史 (1.0225ms)
+✔ 静默线程创建期间只隐藏响应返回的线程 (0.2809ms)
+✔ 静默 Skill 草稿不吞掉全局 Skill 变更通知 (0.1493ms)
+✔ 静默 Skill 草稿自动拒绝未携带线程 ID 的权限请求 (0.1407ms)
+✔ app-server 退出时清理尚未确认的静默线程 (0.4958ms)
+✔ app-server 在草稿运行中退出后不再等待线程取消订阅 (1.0549ms)
+✔ 画布 Skill 草稿源保留流程信息并移除媒体、本地路径、凭据和临时任务字段 (1.8756ms)
+✔ 画布 Skill 草稿源保留普通中文斜杠文本和斜杠命令 (0.3003ms)
+✔ 画布 Skill 草稿源匿名化任意字符串中的已知节点 ID (0.2087ms)
+✔ 画布 Skill 草稿源匿名化 metadata 对象键中的已知节点 ID (0.2081ms)
+✔ 画布 Skill 草稿源为截断节点保留完整快照范围内的安全引用 (15.8971ms)
+✔ 画布 Skill 草稿源限制总长度并优先保留选中流程 (104.5078ms)
+✔ Skill 草稿拒绝普通外部 URL，避免对话内容泄露媒体地址 (0.3692ms)
+✔ Skill 草稿允许普通动作名称，但拒绝任意本地绝对路径 (0.3809ms)
+✔ turn/started 早于 turn/start 响应时保持完整事件归属 (0.3296ms)
+✔ turn/start 响应早于通知时 onTurn 仍只调用一次 (1.4408ms)
+✔ turn/started 通知缺失时使用 turn/start 响应回调 (0.4406ms)
+✔ onTurn 按 threadId 和 turnId 去重 (0.7109ms)
+✔ 稀疏的命令完成通知会保留开始通知中的命令内容 (0.3836ms)
+✔ 稀疏的 plan 完成通知会保留流式正文 (0.1401ms)
+✔ reasoning 完成通知缺少 summary 时保留流式摘要 (0.1792ms)
+✔ 流式更新只发送当前增量而不重复传输累计正文 (117.899ms)
+✔ 新版协作工具完成通知会归一化并写入补充历史 (0.2671ms)
+✔ 并行条目按开始顺序保存而不是完成顺序 (0.1772ms)
+✔ turn 完成通知会保存本轮输入与终态 turn (0.5264ms)
+✔ turn 完成状态会等待补充历史落盘后再广播 (0.2568ms)
+✔ app-server 失效时清除不能跨进程复用的 turn 状态 (0.1001ms)
+✔ app-server 在 turn 完成通知前退出时保存失败终态 (0.4305ms)
+✔ turn/started 已到达但 turn/start 尚未响应时退出仍保存失败终态 (0.23ms)
+✔ app-server 退出时等待失败历史落盘后再结束 turn (0.3423ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1565.7026

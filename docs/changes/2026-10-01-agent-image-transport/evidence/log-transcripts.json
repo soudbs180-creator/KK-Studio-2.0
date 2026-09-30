@@ -1,0 +1,70 @@
+{
+  "normalization": "CRLF→LF、行尾空格及多余EOF空行；命令/失败/断言/退出结果保留。原始 .log 留在工程外 .tmp，不覆盖。",
+  "files": [
+    {
+      "name": "baseline-codex-test.txt",
+      "originalSha256": "ea7dfc272eb842a3b022c9a9a824bcfcb9dcb17275d77ecd4290b256e94d5535",
+      "transcriptSha256": "568b016978f83177884abdb12fcaacd7789b9811e11c2d4fe4e2013b7949e97a"
+    },
+    {
+      "name": "baseline-lint.txt",
+      "originalSha256": "85dc81b4b98780ee505e84622a2670123f5bac6eeb0d37d617e66d3ae0691dd5",
+      "transcriptSha256": "1091cf9d3cea9e1981d627fba8a2e097d4834bc9116c3b6eb15131b81c2963c7"
+    },
+    {
+      "name": "baseline-typecheck.txt",
+      "originalSha256": "1488573fe5a3887f02dcbfe1d0b7c953052e7a36c3f8581f47570240656ea722",
+      "transcriptSha256": "b73ccacb814741ad56c39832411cd13fcf13f6183cb558fa3df5c9ed8133c61e"
+    },
+    {
+      "name": "client-check.txt",
+      "originalSha256": "b0b6d5d4cc6931e01351d4d6763c549c3ef1d225ac65deddf50d2c620aac41aa",
+      "transcriptSha256": "f30ff893fbeb889f86bfbc9dd56813fcccaabf0345d2f22de4a5eed711b3f97a"
+    },
+    {
+      "name": "green-agent.txt",
+      "originalSha256": "2a3da8b4cad0f29ea92997a169398667bba7ee24443f99471a62d0a828a542e1",
+      "transcriptSha256": "5298c5df5a4f229a5ff896b283b3b626e1ffa944ed8bbd001ddb396ca7744639"
+    },
+    {
+      "name": "green-stream.txt",
+      "originalSha256": "a1080c16a6014afa6d9c26c03b8f1c6a150fdc8752af711c7492a46b096c0983",
+      "transcriptSha256": "202e864649c427151d786638df6c204bd91e79a5a7547a05eaa6692036e43816"
+    },
+    {
+      "name": "import-green.txt",
+      "originalSha256": "d5d34725edeeae25f2320205a596e215ce2d13c29dbf1a724d62293498861530",
+      "transcriptSha256": "a2166b7ba85db6a425f71c8a94c6c32f6c3fe61e7d1c75d7a07323b1a1124a68"
+    },
+    {
+      "name": "import-red.txt",
+      "originalSha256": "ee368dae9af7d48650271b039b8a5b58fc7797669505fbbbc2879c774780adb8",
+      "transcriptSha256": "13b4b20cb5fe90bf91e2d0d5e7e03cf08448e2e9983bb33ea7e6644583fa5aac"
+    },
+    {
+      "name": "native-build.txt",
+      "originalSha256": "8c8b77ef150c9038054e2a623fe161ece1e37607a7d9b84442332cd52a6252f4",
+      "transcriptSha256": "b119ea1a95c743851bfc5af3285091121d90b820d0acdb461005360b530ed6ae"
+    },
+    {
+      "name": "red.txt",
+      "originalSha256": "bc195692a1b5d82751492b28aae17dbe05d2b1eb4d8d27d2bf8efed280325509",
+      "transcriptSha256": "3bdef81c9eaae1a436594ece2a6d01b5870dd04e5171640bda2cc95410e24fd1"
+    },
+    {
+      "name": "rust-fmt.txt",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "transcriptSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "rust-test.txt",
+      "originalSha256": "4fdfe4d10e6087a0fed80e995e2ece428276a89316930ddbd1ce9c55d3699270",
+      "transcriptSha256": "c15551ebec2165aae2e4945e370610da87b9dc5c5585daa88659171f65d91e66"
+    },
+    {
+      "name": "verify.txt",
+      "originalSha256": "5386c1b32a30dbda619836b77dcbd10c8cb464e25763b3ad5a2c7e60474685a6",
+      "transcriptSha256": "53623a8964a069eab9f7f549c57f5236b6abfaa7e805c56af9c7d6808a3fef4a"
+    }
+  ]
+}

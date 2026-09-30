@@ -23,6 +23,89 @@ function harness() {
   return { host, calls, getProject: () => project };
 }
 
+test("同时到达的生图归档只提交一次，后续重放不会重复标记", async (t) => {
+  const globals = ["window", "FileReader"] as const;
+  const previous = globals.map((key) =>
+    Object.getOwnPropertyDescriptor(globalThis, key),
+  );
+  t.after(() =>
+    globals.forEach((key, index) => {
+      const descriptor = previous[index];
+      if (descriptor) Object.defineProperty(globalThis, key, descriptor);
+      else Reflect.deleteProperty(globalThis, key);
+    }),
+  );
+  let release!: () => void;
+  const pending = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let bothArrived!: () => void;
+  const arrived = new Promise<void>((resolve) => {
+    bothArrived = resolve;
+  });
+  let writes = 0;
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      __TAURI_INTERNALS__: {
+        invoke: async (command: string, args: { metadata: unknown }) => {
+          assert.equal(command, "asset_store");
+          if (++writes === 2) bothArrived();
+          await pending;
+          return args.metadata;
+        },
+      },
+    },
+  });
+  Object.defineProperty(globalThis, "FileReader", {
+    configurable: true,
+    value: class {
+      result = "";
+      onload?: () => void;
+      readAsDataURL(blob: Blob) {
+        void blob.arrayBuffer().then((bytes) => {
+          this.result = `data:${blob.type};base64,${Buffer.from(bytes).toString("base64")}`;
+          this.onload?.();
+        });
+      }
+    },
+  });
+  let project = createProject({
+    kind: "image",
+    prompt: "test",
+    model: "",
+    attachments: [],
+  });
+  let commits = 0;
+  const host = createAgentHost({
+    getProject: () => project,
+    commit: (next) => {
+      project = next;
+      commits++;
+    },
+    generate: async () => ({ taskId: "unused" }),
+  });
+  const input = {
+    id: "codex-image-1",
+    blob: new Blob([new Uint8Array([1, 2, 3])], { type: "image/png" }),
+    projectId: project.id,
+    signal: new AbortController().signal,
+  };
+  const imports = [
+    host.importGeneratedImage(input),
+    host.importGeneratedImage(input),
+  ];
+  await arrived;
+  release();
+  await Promise.all(imports);
+  assert.equal(commits, 1);
+  assert.equal(project.items.filter((item) => item.id === input.id).length, 1);
+  assert.deepEqual(project.agentGeneratedImageIds, [input.id]);
+  await host.importGeneratedImage(input);
+  assert.equal(writes, 2);
+  assert.equal(commits, 1);
+});
+
 test("视口与多选由真实宿主执行并反映在下一次快照", async () => {
   const { getProject } = harness();
   const ids = getProject().items.map((item) => item.id);

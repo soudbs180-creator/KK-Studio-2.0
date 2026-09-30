@@ -1,0 +1,80 @@
+{
+  "activeProjectId": "project-muonpx01-8zy4f5r7",
+  "homeDraft": {
+    "approvalMode": "auto",
+    "attachments": [],
+    "kind": "image",
+    "model": "",
+    "outputCount": 1,
+    "privacyMode": "byok_local",
+    "prompt": "",
+    "updatedAt": 0
+  },
+  "projects": [
+    {
+      "agentGeneratedImageIds": [
+        "codex-01a0f45c-c176-7f70-96bc-72f0a27304ca-exec-81ba1693-62fa-429b-be87-ab0291ce3d8e"
+      ],
+      "attachments": [],
+      "canvas": {
+        "edges": [],
+        "positions": {
+          "codex-01a0f45c-c176-7f70-96bc-72f0a27304ca-exec-81ba1693-62fa-429b-be87-ab0291ce3d8e": {
+            "x": 187,
+            "y": 107
+          }
+        },
+        "version": 1,
+        "viewport": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "composerDraft": {
+        "approvalMode": "auto",
+        "attachments": [],
+        "kind": "image",
+        "model": "kk-image-2",
+        "outputCount": 1,
+        "privacyMode": "byok_local",
+        "prompt": "",
+        "updatedAt": 1790806108753
+      },
+      "createdAt": 1790806108753,
+      "favoriteIds": [],
+      "id": "project-muonpx01-8zy4f5r7",
+      "items": [
+        {
+          "assetId": "asset-86307db43bb5aea73f2f3b54",
+          "description": "Codex 内置生图 · 已归档",
+          "generationStatus": "ready",
+          "id": "codex-01a0f45c-c176-7f70-96bc-72f0a27304ca-exec-81ba1693-62fa-429b-be87-ab0291ce3d8e",
+          "kind": "image",
+          "preview": "kk-asset:asset-86307db43bb5aea73f2f3b54",
+          "result": {
+            "description": "Codex 内置生图 · 已归档",
+            "id": "codex-01a0f45c-c176-7f70-96bc-72f0a27304ca-exec-81ba1693-62fa-429b-be87-ab0291ce3d8e",
+            "kind": "image",
+            "source": "provider",
+            "src": "kk-asset:asset-86307db43bb5aea73f2f3b54",
+            "title": "Codex 生成图片"
+          },
+          "title": "Codex 生成图片"
+        }
+      ],
+      "kind": "image",
+      "likedIds": [],
+      "messages": [],
+      "model": "kk-image-2",
+      "name": "未命名项目",
+      "prompt": "",
+      "reviewComments": [],
+      "stagePlans": [],
+      "tasks": [],
+      "updatedAt": 1790806205664
+    }
+  ],
+  "revision": 6,
+  "version": 2
+}

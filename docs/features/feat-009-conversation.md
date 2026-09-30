@@ -2,12 +2,14 @@
 
 - 状态：PARTIAL
 - 领域：creation
-- 最近更新：2026-09-23
-- 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-004、TASK-AGENT-005
-- 最近更新：2026-09-24
-- 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-007
+- 最近更新：2026-10-01
+- 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-004、TASK-AGENT-005、TASK-AGENT-008
+- 最近更新：2026-10-01
+- 关联任务：T4、BACKEND-CONVERSATION、TASK-AGENT-001、TASK-AGENT-002、TASK-AGENT-003、TASK-AGENT-007、TASK-AGENT-008
 
 ## 用户可见入口
+
+- 2026-10-01 短提示词审计：普通输入与模型固定规则分开保存；短句 57 字符对应实际请求 809 字符，无重复历史拼接。显式 Skill 会把 instructions 加入输入，开启记忆才附相关片段；本次不改变这些选择。Codex 生图传输修复与生产验收见 [TASK-AGENT-008](../changes/2026-10-01-agent-image-transport/verification.md)，状态仍为 PARTIAL。
 
 - 工作区右侧 ConversationPanel：项目创作消息、模型选择、图片附件和语音输入。
 

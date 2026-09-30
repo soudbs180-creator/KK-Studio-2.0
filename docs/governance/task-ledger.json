@@ -3188,5 +3188,40 @@
     "verification": "本机AC1–4已验收：NSIS、四次4279文件、启动/Agent/重装/修复/卸载再装保留项目、已有注册/进程保护通过；8项定向、无retry160项、完整verify631root/169Agent/377browser（原skip保留）、Rust97/clientcheck、独立技术/运行证据审查至2cf5249通过。",
     "verificationResult": "PASS",
     "updated": "2026-09-30"
+  },
+  {
+    "id": "TASK-AGENT-008",
+    "title": "Codex 原生生图事件传输与短提示词审计",
+    "goal": "KK 控制 Codex 真正生图并归档，解释长提示词来源",
+    "scope": "Codex 生图事件元数据、并发归档提交前幂等、真实生产恢复和短提示词审计",
+    "acceptance": [
+      "3 MiB 生图 result 不进入 SSE 或补充历史，大小保护保持",
+      "真实 KK Tauri 生图完成后连接保持且原件进入画布",
+      "重启/重连唯一恢复与短句请求/聊天显示审计",
+      "相关完整验证、独立精确 SHA review、PR 门禁"
+    ],
+    "dependencies": [
+      "TASK-AGENT-001"
+    ],
+    "owner": "root",
+    "branch": "codex/TASK-AGENT-008-image-transport",
+    "worktree": "D:/kk-studio/.worktrees/TASK-AGENT-008-image-transport",
+    "affectedModules": [
+      "vendor/canvas-agent/src/agent/codex-client.ts",
+      "vendor/canvas-agent/src/agent/codex-client.test.ts",
+      "config/platform-versions.json",
+      "docs/governance",
+      "src/features/agent/agentHost.ts",
+      "tests/unit/agentHost.test.ts"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-10-01-agent-image-transport/intent.md",
+      "docs/changes/2026-10-01-agent-image-transport/spec.md",
+      "docs/changes/2026-10-01-agent-image-transport/verification.md"
+    ],
+    "verification": "本机AC-1–3 DONE：两组RED→GREEN，verify632root/172Agent/377browser（原平台skip保留）、Rust97/fmt/clientcheck；真实Tauri生图/续聊/重连/重启hash一致、节点/标记唯一。实现head3c63f1e独立审查PASS（43/9/6定向复验），P3文档意见已修正。PR#33终稿head独立补审、托管CI与推广以实际PR/收据为准；豆包/Web真实账号/其他Provider/Mobile/正式发布未验收。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-01"
   }
 ]
