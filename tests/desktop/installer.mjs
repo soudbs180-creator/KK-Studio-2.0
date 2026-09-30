@@ -42,7 +42,8 @@ const dataRoot = path.join(isolated, "data");
 const profile = path.join(isolated, "profile");
 const output =
   process.env.KK_DESKTOP_AUDIT_OUTPUT ??
-  path.join(root, "test-results/desktop/installer", path.basename(isolated));
+  // Playwright clears test-results before browser runs; keep native evidence.
+  path.join(root, ".tmp/installer-audits", path.basename(isolated));
 await fs.mkdir(output, { recursive: true });
 const cdp = "http://127.0.0.1:9358";
 const report = {
