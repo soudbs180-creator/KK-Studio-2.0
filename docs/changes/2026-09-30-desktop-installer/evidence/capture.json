@@ -1,0 +1,204 @@
+{
+  "capturedAt": "2026-09-30T15:16:29.458Z",
+  "note": "Stored command logs normalize CRLF, trailing spaces and final blank lines only; raw logs and their SHA256 remain outside the repository. Stored text hashes refer to LF repository bytes; Git checkouts may use CRLF. Historical failure results are preserved. Same-frame test ran the patch subsequently committed as 6e33345. Latest native audit ran source e593249 against unchanged artifact receipt 0fba927; initial native files were removed by Playwright and are not reconstructed.",
+  "manifest": [
+    {
+      "file": "npm-ci.log",
+      "sourceCommit": "bd3bc66889b2856e273c2117191a74fdebd6f791",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-npm-ci.log",
+      "rawSha256": "d02d7499c9059df86c43b95d9f585800c19ffb180dbf473eb053239944a7fcda",
+      "storedSha256": "c73323099d6aeec083a5c15778f4ff302e5d8707606ba4bbb392cc43617f8301",
+      "rawCompletedAt": "2026-09-30T13:36:16.152Z"
+    },
+    {
+      "file": "baseline-lint.log",
+      "sourceCommit": "bd3bc66889b2856e273c2117191a74fdebd6f791",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-baseline-lint.log",
+      "rawSha256": "1e289cc743a175effc9f37261a81cbf21ac5dca59c7d0abdc874c9b2afbbcb16",
+      "storedSha256": "e49a5385afb425861b2a59472a95fb6f3d066734ebd6e142053bb46cebf3a1c4",
+      "rawCompletedAt": "2026-09-30T13:37:27.299Z"
+    },
+    {
+      "file": "baseline-tests.log",
+      "sourceCommit": "bd3bc66889b2856e273c2117191a74fdebd6f791",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-baseline-tests.log",
+      "rawSha256": "33e4f830a760c7ec7f4fce02170c24c5809aa1aa5d24cdb234d878f31201492c",
+      "storedSha256": "6ef2b23151940d3d3df7973e5b093aac595c6493d211e9cb7e7e2e502f65cfd4",
+      "rawCompletedAt": "2026-09-30T13:37:32.635Z"
+    },
+    {
+      "file": "installer-guards.log",
+      "sourceCommit": "0fba927d85b3c0edb0b3260073e09f66c9c32f19",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-guards.log",
+      "rawSha256": "6d0e73289cf89d0c5dec6d906967e6761d2d2497e30009089a9e62f5001a6c45",
+      "storedSha256": "074005e0ff532987208df907de2ab03bbdc2fafb2c2f5f4c432be9b92a48039d",
+      "rawCompletedAt": "2026-09-30T14:21:06.739Z"
+    },
+    {
+      "file": "installer-build.log",
+      "sourceCommit": "61b0c855c570fb83a8e469d8c9b04b294151c0f2",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-installer-build-bound.log",
+      "rawSha256": "bfc0e5512f33739e135f37acd1952bb5695a113980ca265599565e0ad6a13a74",
+      "storedSha256": "2d4619c41292a7592be1745620eeedda5ce3d33de710f2e3a678601f9c02cc04",
+      "rawCompletedAt": "2026-09-30T14:22:22.843Z"
+    },
+    {
+      "file": "native-installer.log",
+      "sourceCommit": "0fba927d85b3c0edb0b3260073e09f66c9c32f19",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-native-installer.log",
+      "rawSha256": "509af754ca58ccd44a97edaff2b7d4ef8e10b5dfea28a4010291ff6d37770ebb",
+      "storedSha256": "3a15f61d979f05d3cee91026eb06a7d7281d1237d094db542b454ff94f9d4e25",
+      "rawCompletedAt": "2026-09-30T14:25:57.611Z"
+    },
+    {
+      "file": "native-installer-final.log",
+      "sourceCommit": "e593249ba2c8ee4b4d9f411c3601116af9139df5",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-native-installer-final.log",
+      "rawSha256": "bd63e6840f695f09d5d2ff7d98ed4fe91ae9cd47a857e1f389a6432105523da8",
+      "storedSha256": "1abe7ecec57805a5cf4955f8afdd1e183e1aa148d723308433f71b1f7fc032f9",
+      "rawCompletedAt": "2026-09-30T14:50:58.156Z"
+    },
+    {
+      "file": "initial-verify.log",
+      "sourceCommit": "df0e8b0559ad677c757106aefbbd80007b8063de",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-verify.log",
+      "rawSha256": "1b8fdd991dffa2a1d5fb4eca53ff8d8992e21fac0c4f455659fcb7031a16d2d3",
+      "storedSha256": "0102b5bb35f9a86d0a5a39f2b851e0e98e32caf79befa5050416ee607eeed765",
+      "rawCompletedAt": "2026-09-30T13:57:05.758Z"
+    },
+    {
+      "file": "settings-prior-failures.log",
+      "sourceCommit": "0fba927d85b3c0edb0b3260073e09f66c9c32f19",
+      "exitCode": 1,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-settings-recheck.log",
+      "rawSha256": "404cdd0c80790c91194591dec71d583169742d8950ef3f85d8b3a6aae4baa88f",
+      "storedSha256": "3c0f05d58d36760c4f95967ec177c93d95496a1beaeeb5519560ee5356e11764",
+      "rawCompletedAt": "2026-09-30T13:58:32.104Z"
+    },
+    {
+      "file": "settings-same-frame.log",
+      "sourceCommit": "6e33345e65b3a6e25c9be95295835e94a2038530",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-settings-same-frame.log",
+      "rawSha256": "3f0ed3afab3cba9a823299099adbef5e23f40450d129c59db9f1c004208f9369",
+      "storedSha256": "35e18f969745a9785e936cc25c5ece6386725009c984282554ebcf58f165722b",
+      "rawCompletedAt": "2026-09-30T14:44:04.434Z"
+    },
+    {
+      "file": "settings-visibility.log",
+      "sourceCommit": "2cf5249ec6b93e901cc2147e0e1ea3914b067bc7",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-settings-visibility.log",
+      "rawSha256": "f2e0e7b4ef8fcf54a18196c959da0afba210eb172d29f82c6de7cd085f587a3c",
+      "storedSha256": "a9218f3561f7840590f103696cd98dddd50424eee96c397772aed121a09bb068",
+      "rawCompletedAt": "2026-09-30T15:08:31.333Z"
+    },
+    {
+      "file": "final-verify.log",
+      "sourceCommit": "8ece4c70f0e3e6598537ded6777516dcf32c06c3",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-verify-final.log",
+      "rawSha256": "763ec3e30b67848d217e8c78882861d7c38265be278babe1a3362613a047caa8",
+      "storedSha256": "fc2e2cd62b41fd4b3bb3176ec28b9eb8d9c2a02853514de2dfdf60c04cb8d514",
+      "rawCompletedAt": "2026-09-30T14:57:06.987Z"
+    },
+    {
+      "file": "rust-format.log",
+      "sourceCommit": "8ece4c70f0e3e6598537ded6777516dcf32c06c3",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-rust-format.log",
+      "rawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "storedSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "rawCompletedAt": "2026-09-30T14:56:07.249Z"
+    },
+    {
+      "file": "rust-tests.log",
+      "sourceCommit": "8ece4c70f0e3e6598537ded6777516dcf32c06c3",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-rust-tests.log",
+      "rawSha256": "ac9c92dce28ea5122003fc7430ee1809b6d80792d9745daf96100dbd46b6eec9",
+      "storedSha256": "c1ffc65aa2c685c3432714b5059bbc9d889d60fd746d8eaee2bf40f16c3b8730",
+      "rawCompletedAt": "2026-09-30T14:57:13.709Z"
+    },
+    {
+      "file": "client-check.log",
+      "sourceCommit": "8ece4c70f0e3e6598537ded6777516dcf32c06c3",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-client-check.log",
+      "rawSha256": "70a4d1d071b0db8bec1b695a9e5abeb2dbdbf79766177131bacc20ea14d110ea",
+      "storedSha256": "df3ece9a415d3ec51335cf08a92b018736d061982848f3213d0e77d8c97b1adc",
+      "rawCompletedAt": "2026-09-30T14:57:41.358Z"
+    },
+    {
+      "file": "candidate-verify.log",
+      "sourceCommit": "2cf5249ec6b93e901cc2147e0e1ea3914b067bc7",
+      "exitCode": 0,
+      "rawSource": "D:\\kk-studio\\.tmp\\t7-verify-visibility.log",
+      "rawSha256": "9dd39f30718a29523ec402b4ae1b3f674ca965daa4f3e9cb08e379634310fa4c",
+      "storedSha256": "f3324850c403b0d3fdc0fe1addb4a1e5058fddaf21c9b00c050a7575f1b42596",
+      "rawCompletedAt": "2026-09-30T15:12:49.476Z"
+    },
+    {
+      "file": "installer-runtime.json",
+      "source": "D:/kk-studio/.tmp/t7-installer-final/runtime.json",
+      "sha256": "3156dc73d31e48e6e8e77eedc9e0e733b4f0fccc5d748ab79b2fbef055fd5e23",
+      "bytes": 6971
+    },
+    {
+      "file": "installer-receipt.json",
+      "source": "releases/installer-guarded/installer-receipt.json",
+      "sha256": "49c951609d912396ca0a3cb8e5aa985f091e06b9dea70530eec569b2a60730fc",
+      "bytes": 871174
+    },
+    {
+      "file": "SHA256SUMS.txt",
+      "source": "releases/installer-guarded/SHA256SUMS.txt",
+      "sha256": "8347e183bfe28f93d5211b779f257d2ff04f72e23a5cc20121eb3db93b2e469c",
+      "bytes": 96
+    },
+    {
+      "file": "installed.png",
+      "source": "D:/kk-studio/.tmp/t7-installer-final/installed.png",
+      "sha256": "3fccdf5c0e723b6b2371229c57a381aef3391ae96249d5c13099e9a10babe9c4",
+      "bytes": 565002
+    },
+    {
+      "file": "reinstalled.png",
+      "source": "D:/kk-studio/.tmp/t7-installer-final/reinstalled.png",
+      "sha256": "3fccdf5c0e723b6b2371229c57a381aef3391ae96249d5c13099e9a10babe9c4",
+      "bytes": 565002
+    },
+    {
+      "file": "repaired.png",
+      "source": "D:/kk-studio/.tmp/t7-installer-final/repaired.png",
+      "sha256": "3fccdf5c0e723b6b2371229c57a381aef3391ae96249d5c13099e9a10babe9c4",
+      "bytes": 565002
+    },
+    {
+      "file": "restored-after-uninstall.png",
+      "source": "D:/kk-studio/.tmp/t7-installer-final/restored-after-uninstall.png",
+      "sha256": "3fccdf5c0e723b6b2371229c57a381aef3391ae96249d5c13099e9a10babe9c4",
+      "bytes": 565002
+    },
+    {
+      "file": "settings-controlled-geometry.json",
+      "rawSha256": "1f5667b12e6aad30ebc6fa058b992246ad5ab6eca91147b1dd01f9aadcec77a1"
+    },
+    {
+      "file": "settings-low-load-geometry.json",
+      "rawSha256": "eaa0fe3375081a81b89a511c89371f53fb652beb1bda920ab4f3e30c87509a47"
+    },
+    {
+      "file": "hosted-rulesets.json",
+      "rawSha256": "4c1803fa6e9a7e14b88f4bc1a5768d1f1e131b04af55ef757c32f67d9c061c9b"
+    }
+  ]
+}

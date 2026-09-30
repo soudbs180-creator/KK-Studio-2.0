@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-09-30 安装器后续任务
+
+任务基线 main/origin/main 为 bd3bc66；上轮PR#31的portable交付保留。TASK-DESKTOP-INSTALLER-001 的本机AC1–4已DONE：NSIS/收据、四次4279文件、启动/Agent、重装/修复/卸载再装项目保留通过。独立技术/运行证据补审至2cf5249 PASS、五项finding关闭；同帧/可见性测试无retry160/160，完整verify377browser/631root/169Agent通过（原skip保留）、Rust97/clientcheck通过。最终文档精确head补审、PR/CI/合并推广以实际PR与交付收据为准，不能从此基线描述猜测已合并。T7/FEAT-026仍PARTIAL：干净系统、真实断网、低版本回滚、签名和真实服务未验收。进度见[本轮验证](../changes/2026-09-30-desktop-installer/verification.md)。
+
 ## 2026-09-30 当前集成版本
 
 - 集成工作在 root 的 codex/TASK-PROJECT-001-landing-integration，基线 origin/main@1e95a13；唯一稳定线为 origin/main，实际推广与最终 SHA 以集成 PR 为准。其它登记 worktree/分支保留。

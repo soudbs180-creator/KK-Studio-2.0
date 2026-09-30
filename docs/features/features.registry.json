@@ -1174,29 +1174,45 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-026-launcher.md",
-    "summary": "提供 Windows 启动/验证脚本与桌面发布脚本；安装、恢复、回滚的实机验收（T7）尚未进行。",
+    "summary": "Windows启动/portable发布与完整Agent/离线WebView2 NSIS已通过本机隔离安装、重装、损坏修复、卸载再装保留项目；干净系统、低版回滚、签名与正式发布仍待T7。",
     "entryPoints": [
       "start-kk-studio.bat",
       "verify-kk-studio.cmd",
       "启动 KK Studio.lnk",
-      "scripts/windows/desktop-release.mjs"
+      "scripts/windows/desktop-release.mjs",
+      "npm run client:installer"
     ],
     "code": [
       "start-kk-studio.bat",
       "verify-kk-studio.cmd",
       "scripts/windows/desktop-release.mjs",
-      "docs/engineering/LAUNCHER.md"
+      "docs/engineering/LAUNCHER.md",
+      "src-tauri/tauri.installer.conf.json",
+      "scripts/windows/installer-inputs.mjs",
+      "scripts/windows/installer-receipt.mjs",
+      "tests/desktop/installer.mjs",
+      "docs/engineering/WINDOWS-INSTALLER.md"
     ],
     "tests": [
       "tests/unit/desktopRelease.test.ts",
-      "tests/deploy/release-scripts.test.mjs"
+      "tests/deploy/release-scripts.test.mjs",
+      "tests/unit/installerReceipt.test.ts",
+      "tests/unit/installerGuards.test.ts",
+      "tests/desktop/installer.mjs"
     ],
     "tasks": [
-      "T7"
+      "T7",
+      "TASK-DESKTOP-INSTALLER-001"
     ],
-    "updated": "2026-09-22",
+    "updated": "2026-09-30",
     "platforms": [
       "desktop"
+    ],
+    "runtimeEvidence": [
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-09-30-desktop-installer/verification.md"
+      }
     ]
   },
   {

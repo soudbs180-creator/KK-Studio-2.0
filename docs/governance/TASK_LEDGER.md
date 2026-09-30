@@ -18,7 +18,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | T6 | Desktop ComfyUI最小链实现 | PARTIAL | T5 | root |
 | EXT-PROVIDER | 真实 Provider/GPU 生成验收 | BLOCKED | T4 | root |
 | EXT-COMFY | 真实 ComfyUI/模型验收 | BLOCKED | T6 | root |
-| T7 | Desktop可用版本及安装恢复验收 | TODO | T3b, T4, T5, T6, EXT-PROVIDER, EXT-COMFY | root |
+| T7 | Desktop可用版本及安装恢复验收 | PARTIAL | T3b, T4, T5, T6, EXT-PROVIDER, EXT-COMFY | root |
 | T8 | 成熟Core职责和平台能力边界 | TODO | T7 | root |
 | T9 | Web本地版及浏览器容量/离线能力 | TODO | T8 | root |
 | T10-PREP | VPS发布、备份回滚与部署配置准备 | PARTIAL | T9 | root |
@@ -96,6 +96,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MEMORY-001 | 本地长期记忆服务接入对话 | PARTIAL | none | root |
 | TASK-MEMORY-002 | 跨产品共享本地记忆（本机共享） | PARTIAL | TASK-MEMORY-001 | MainAgent |
 | TASK-AGENT-007 | Codex 通过本机 CodeBuddy CLI 受限委派短文本 | DONE | TASK-AGENT-001 | root |
+| TASK-DESKTOP-INSTALLER-001 | Windows NSIS 安装器及隔离恢复验收 | DONE | none | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -251,9 +252,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: release, tests/native
-- Verification: NOT_VERIFIED — NOT VERIFIED
-- Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md)
-- Updated: 2026-09-17
+- Verification: PARTIAL — portable Desktop2.1.2 与 NSIS 本机隔离安装/启动/Agent/4279文件、重装、损坏修复、卸载再装项目保留通过；干净 Windows/真实断网/低版本回滚/签名及真实服务依赖仍未验收。
+- Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md), [docs/changes/2026-09-30-desktop-installer/verification.md](../../docs/changes/2026-09-30-desktop-installer/verification.md)
+- Updated: 2026-09-30
 
 ## T8 — 成熟Core职责和平台能力边界
 
@@ -1180,3 +1181,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — 受限 CLI、真实 MCP、随包 MCP、Web 1920/390、最终新 Tauri UI 和 KK 内真实 Codex 工具调用与可见回复均通过；416 Node/310 browser、Agent 135 通过/2 Windows 跳过，最终 MSI/NSIS 构建成功。首次 120 秒超时、最终新包约 145 秒成功；WorkBuddy OAuth/豆包和自动路由不属于本子任务。
 - Evidence: [docs/changes/2026-09-24-codebuddy-delegation/intent.md](../../docs/changes/2026-09-24-codebuddy-delegation/intent.md), [docs/changes/2026-09-24-codebuddy-delegation/spec.md](../../docs/changes/2026-09-24-codebuddy-delegation/spec.md), [docs/changes/2026-09-24-codebuddy-delegation/plan.md](../../docs/changes/2026-09-24-codebuddy-delegation/plan.md), [docs/changes/2026-09-24-codebuddy-delegation/verification.md](../../docs/changes/2026-09-24-codebuddy-delegation/verification.md), [docs/changes/2026-09-24-codebuddy-delegation/review.md](../../docs/changes/2026-09-24-codebuddy-delegation/review.md), [docs/changes/2026-09-24-codebuddy-delegation/remaining.md](../../docs/changes/2026-09-24-codebuddy-delegation/remaining.md)
 - Updated: 2026-09-24
+
+## TASK-DESKTOP-INSTALLER-001 — Windows NSIS 安装器及隔离恢复验收
+
+- Goal: 完整 Agent/离线 WebView2 入包，真实隔离安装、修复、卸载再装保留项目
+- Scope: Desktop installer configuration, receipts and isolated acceptance
+- Acceptance: NSIS currentUser 安装器可复现且保持数据身份; 安装器/EXE/Agent 逐文件校验，损坏与越界失败; 当前 Windows 隔离安装/Agent/重装/修复/卸载再装成功且项目保留; 不覆盖已有安装，不将当前主机当作干净系统/签名/低版本回滚
+- Branch: `codex/T7-desktop-installer`
+- Worktree: `D:/kk-studio/.worktrees/T7-desktop-installer`
+- Modules: src-tauri/tauri.installer.conf.json, scripts/windows/installer-receipt.mjs, tests/desktop/installer.mjs, tests/unit/installerReceipt.test.ts, docs, scripts/windows/installer-inputs.mjs, tests/desktop/installer-state.ps1, tests/desktop/installer-cleanup.ps1, tests/unit/installerGuards.test.ts, tests/browser/settings-scroll.spec.ts
+- Verification: PASS — 本机AC1–4已验收：NSIS、四次4279文件、启动/Agent/重装/修复/卸载再装保留项目、已有注册/进程保护通过；8项定向、无retry160项、完整verify631root/169Agent/377browser（原skip保留）、Rust97/clientcheck、独立技术/运行证据审查至2cf5249通过。
+- Evidence: [docs/changes/2026-09-30-desktop-installer/verification.md](../../docs/changes/2026-09-30-desktop-installer/verification.md), [docs/changes/2026-09-30-desktop-installer/evidence/installer-runtime.json](../../docs/changes/2026-09-30-desktop-installer/evidence/installer-runtime.json), [docs/changes/2026-09-30-desktop-installer/evidence/candidate-verify.log](../../docs/changes/2026-09-30-desktop-installer/evidence/candidate-verify.log)
+- Updated: 2026-09-30

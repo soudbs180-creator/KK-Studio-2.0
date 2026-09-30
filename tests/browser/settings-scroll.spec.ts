@@ -6,13 +6,28 @@ test("窄屏设置分类的同组入口保持在底部导航内", async ({ page 
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const nav = page.getByRole("navigation", { name: "设置分类" });
-  const general = (await nav
-    .getByRole("button", { name: "通用", exact: true })
-    .boundingBox())!;
-  const account = (await nav
-    .getByRole("button", { name: "账号管理", exact: true })
-    .boundingBox())!;
-  const bar = (await nav.boundingBox())!;
+  await expect(nav).toBeVisible();
+  await expect(
+    nav.getByRole("button", { name: "通用", exact: true }),
+  ).toBeVisible();
+  await expect(
+    nav.getByRole("button", { name: "账号管理", exact: true }),
+  ).toBeVisible();
+  // The opening animation moves all three together; compare one frame.
+  const { general, account, bar } = await nav.evaluate((el) => {
+    const box = (label: string) => {
+      const button = [...el.querySelectorAll("button")].find(
+        (button) => button.textContent?.trim() === label,
+      );
+      if (!button) throw new Error(`Missing settings category: ${label}`);
+      return button.getBoundingClientRect().toJSON();
+    };
+    return {
+      general: box("通用"),
+      account: box("账号管理"),
+      bar: el.getBoundingClientRect().toJSON(),
+    };
+  });
   expect(Math.abs(general.y - account.y)).toBeLessThanOrEqual(2);
   expect(account.y).toBeGreaterThanOrEqual(bar.y);
   expect(account.y + account.height).toBeLessThanOrEqual(
@@ -127,11 +142,19 @@ test("手机设置分类固定在底部横向滑块", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
-  const panel = dialog.locator(".settings-panel");
-  const sidebar = dialog.locator(".settings-sidebar");
   const nav = dialog.locator(".settings-nav");
-  const panelBox = (await panel.boundingBox())!;
-  const sidebarBox = (await sidebar.boundingBox())!;
+  await expect(dialog.locator(".settings-panel")).toBeVisible();
+  await expect(dialog.locator(".settings-sidebar")).toBeVisible();
+  const { panelBox, sidebarBox } = await dialog.evaluate((el) => ({
+    panelBox: el
+      .querySelector(".settings-panel")!
+      .getBoundingClientRect()
+      .toJSON(),
+    sidebarBox: el
+      .querySelector(".settings-sidebar")!
+      .getBoundingClientRect()
+      .toJSON(),
+  }));
   expect(
     Math.abs(sidebarBox.y + sidebarBox.height - (panelBox.y + panelBox.height)),
   ).toBeLessThanOrEqual(2);
