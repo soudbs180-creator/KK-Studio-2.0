@@ -8,6 +8,7 @@ import {
   verifyInstaller,
   verifyInstalledFiles,
   assertInstallerFresh,
+  nsisExecutableIdentity,
 } from "../../scripts/windows/installer-receipt.mjs";
 
 test("installer verification rejects corrupted bytes before execution", async (t) => {
@@ -21,6 +22,22 @@ test("installer verification rejects corrupted bytes before execution", async (t
   assert.equal(await verifyInstaller(receipt, root), file);
   await fs.writeFile(file, "corrupt installer bytes");
   await assert.rejects(verifyInstaller(receipt, root), /verification failed/);
+});
+
+test("installed executable identity accounts for Tauri NSIS bundle marker and rejects ambiguous inputs", () => {
+  const original = Buffer.from("prefix__TAURI_BUNDLE_TYPE_VAR_UNKsuffix");
+  const unchanged = Buffer.from(original);
+  const identity = nsisExecutableIdentity(original);
+  assert.equal(identity.size, original.length);
+  assert.deepEqual(original, unchanged, "Source executable must not be edited");
+  assert.throws(
+    () => nsisExecutableIdentity(Buffer.from("missing marker")),
+    /one Tauri bundle marker/,
+  );
+  assert.throws(
+    () => nsisExecutableIdentity(Buffer.concat([original, original])),
+    /one Tauri bundle marker/,
+  );
 });
 
 test("receipt freshness rejects newer installer configuration and runtime inputs", async (t) => {

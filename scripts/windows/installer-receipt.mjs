@@ -79,6 +79,49 @@ export async function assertInstallerFresh(installer, inputs) {
   }
 }
 
+// Tauri 2.11 patches this unique bundle marker before NSIS compression and
+// restores the original executable afterwards. Its final mtime and hash are
+// therefore not the installed binary's identity. Bind both before bundling.
+export function nsisExecutableIdentity(bytes) {
+  const original = Buffer.from("__TAURI_BUNDLE_TYPE_VAR_UNK");
+  const index = bytes.indexOf(original);
+  if (index < 0 || bytes.indexOf(original, index + 1) >= 0) {
+    throw new Error("Expected one Tauri bundle marker; review the toolchain");
+  }
+  const patched = Buffer.from(bytes);
+  patched.set(Buffer.from("__TAURI_BUNDLE_TYPE_VAR_NSS"), index);
+  return {
+    size: patched.length,
+    sha256: createHash("sha256").update(patched).digest("hex"),
+  };
+}
+
+export async function recordInstallerInputs(root) {
+  if (inspectDesktopRelease(root).needsBuild)
+    throw new Error("Desktop build is stale");
+  const release = path.join(root, "src-tauri/target/release");
+  const exe = path.join(release, "kk-studio.exe");
+  const inputs = {
+    createdAt: new Date().toISOString(),
+    buildCommit: execFileSync("git", ["rev-parse", "HEAD"], {
+      cwd: root,
+      encoding: "utf8",
+    }).trim(),
+    executable: await fileIdentity(exe),
+    bundledExecutable: nsisExecutableIdentity(await fs.readFile(exe)),
+    installerConfig: await fileIdentity(
+      path.join(root, "src-tauri/tauri.installer.conf.json"),
+    ),
+    runtimeManifest: await fileIdentity(
+      path.join(root, "src-tauri/agent-runtime/runtime-manifest.json"),
+    ),
+  };
+  await fs.writeFile(
+    path.join(release, "installer-inputs.json"),
+    JSON.stringify(inputs, null, 2) + "\n",
+  );
+}
+
 export async function writeInstallerReceipt({ root, installer, output }) {
   if (process.platform !== "win32" || process.arch !== "x64") {
     throw new Error("Installer receipts require Windows x64");
@@ -111,8 +154,28 @@ export async function writeInstallerReceipt({ root, installer, output }) {
     { installedFiles: runtimeManifest.files },
     runtimeRoot,
   );
+  const inputSnapshotPath = path.join(
+    root,
+    "src-tauri/target/release/installer-inputs.json",
+  );
+  const inputSnapshot = JSON.parse(
+    await fs.readFile(inputSnapshotPath, "utf8"),
+  );
+  await checkIdentity(exe, inputSnapshot.executable);
+  await checkIdentity(
+    path.join(root, "src-tauri/tauri.installer.conf.json"),
+    inputSnapshot.installerConfig,
+  );
+  await checkIdentity(runtimeManifestPath, inputSnapshot.runtimeManifest);
+  if (
+    nsisExecutableIdentity(await fs.readFile(exe)).sha256 !==
+    inputSnapshot.bundledExecutable.sha256
+  )
+    throw new Error(
+      "Bundled executable identity does not match input snapshot",
+    );
   await assertInstallerFresh(installer, [
-    exe,
+    inputSnapshotPath,
     path.join(root, "src-tauri/tauri.installer.conf.json"),
     runtimeManifestPath,
     ...runtimeManifest.files.map((file) =>
@@ -120,7 +183,7 @@ export async function writeInstallerReceipt({ root, installer, output }) {
     ),
   ]);
   const installedFiles = [
-    { path: "kk-studio.exe", ...(await fileIdentity(exe)) },
+    { path: "kk-studio.exe", ...inputSnapshot.bundledExecutable },
     {
       path: "agent-runtime/runtime-manifest.json",
       ...(await fileIdentity(runtimeManifestPath)),
@@ -136,6 +199,7 @@ export async function writeInstallerReceipt({ root, installer, output }) {
     createdAt: new Date().toISOString(),
     commit: git("rev-parse", "HEAD"),
     sourceTree: git("rev-parse", "HEAD^{tree}"),
+    buildInputs: inputSnapshot,
     versions,
     platform: "windows-x64",
     installer: { path: installerName, ...(await fileIdentity(installer)) },
