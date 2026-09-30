@@ -20,7 +20,9 @@
 | 独立审查 | PASS（技术/运行证据） | base→2cf5249，INST-001–005 关闭；最后文档提交另绑定精确 SHA 补审 |
 | Hosted CI / PR / main 推广 | 独立交付门禁 | 此记录提交时尚未发生；实际精确 head/CI/merged 结果保存在 PR 与交付收据 |
 
-实际收据 commit `0fba927d85b3c0edb0b3260073e09f66c9c32f19`；beforeBundle 构建输入 commit `61b0c855c570fb83a8e469d8c9b04b294151c0f2`。两者仅新增保护测试，产品源码相同。后续采样/证据目录/文档提交也不改变应用产物。安装器大小 343671471 bytes，SHA256 `7103126d23c070c39bf1d5ce8ef897b8c277dda88838c1ee769bb0e24325d635`；安装后 EXE SHA256 `0d782457aa115e664bf55aca50a7d0865c92e5fba5d84d5dfff582b6fabeb5a3`。Authenticode 实际检测 `NotSigned`。
+实际收据 commit `0fba927d85b3c0edb0b3260073e09f66c9c32f19`；beforeBundle 构建输入 commit `61b0c855c570fb83a8e469d8c9b04b294151c0f2`。两者仅新增保护测试，产品源码相同。后续采样/证据目录/文档提交也不改变应用产物。安装器大小 343681213 bytes，SHA256 `7103126d23c070c39bf1d5ce8ef897b8c277dda88838c1ee769bb0e24325d635`；安装后 EXE SHA256 `0d782457aa115e664bf55aca50a7d0865c92e5fba5d84d5dfff582b6fabeb5a3`。Authenticode 实际检测 `NotSigned`。
+
+交付复制复核勘误：早期文字记录误写343671471 bytes，现按真实收据/文件修正为343681213。原始收据、实际安装校验与installer hash从未改变，复制后的安装器再次通过size/hash核对。旧错误保留在Git历史，不覆盖原始证据。
 
 Tauri 2.11 在 NSIS 入包前将唯一 bundle marker 从 UNK 改为 NSS，打包后恢复源码目录 EXE。首次收据发现 mtime 较新而拒绝，未忽略失败。现以 beforeBundle 记录原 EXE、预期 NSS EXE、配置/manifest hash，并在收据时再次核对；未知/重复 marker 拒绝，实际安装后再次逐文件验证。详见[官方处理源码](https://raw.githubusercontent.com/tauri-apps/tauri/dev/crates/tauri-bundler/src/bundle.rs)。
 
