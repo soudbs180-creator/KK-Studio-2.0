@@ -2,7 +2,7 @@
 
 ## 2026-10-01 KK Codex 原生生图回传/归档验收
 
-TASK-AGENT-008 修复 Base64 生图完成事件超限与并发导入重复归档标记，3 MiB/并发两组回归均先失败后通过，保护限制保持。全新隔离 Tauri release 真实生图1,768,873bytes、自动归档/续聊/重连/重启hash一致，节点/标记均唯一；完整verify632root/172Agent/377browser和Rust97/fmt/clientcheck PASS，原平台skip保留。Desktop2.1.3/Web2.1.4；精确head独立审查与托管推广待完成。57/16字符短句对应809/768请求、附加规则恒752；上轮可见长文是 root 验收说明。豆包仍在区域限制登录页，自动回画布尚未接入，详见[本轮验证](changes/2026-10-01-agent-image-transport/verification.md)。
+TASK-AGENT-008 本机AC-1–3 DONE：Base64事件/并发归档两组RED→GREEN，保护保留；新生产Tauri真实生图1,768,873bytes、自动归档/续聊/重连/重启hash一致、节点/标记唯一，verify632root/172Agent/377browser和Rust97/fmt/clientcheck PASS，原平台skip保留。Desktop2.1.3/Web2.1.4；实现head3c63f1e独立审查PASS，P3文档修正已完成，PR #33最终文档head补审/CI/推广以实际收据为准，不提前写合并。57/16→809/768，附加恒752，上轮长文是root验收说明。豆包区域限制登录与CLI自动回画布仍开放，详见[验证](changes/2026-10-01-agent-image-transport/verification.md)。
 
 ## 2026-09-30 Desktop NSIS 与隔离恢复验收
 

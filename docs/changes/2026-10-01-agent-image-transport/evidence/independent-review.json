@@ -1,0 +1,20 @@
+{
+  "base": "709e51d5c30c9c9216a888c22592e7870df8901e",
+  "head": "3c63f1ed655345132f299f3963ad81b8b0f90b78",
+  "reviewer": "/root/installer_review",
+  "context": "独立于实现，只读规则、真实diff、规范与证据；未修改文件",
+  "reviewedAt": "2026-10-01 06:38 Asia/Shanghai",
+  "result": "PASS",
+  "commands": [
+    { "command": "node --test tests/unit/agentHost.test.ts tests/unit/agentEventStream.test.ts", "exit": 0, "pass": 9 },
+    { "command": "tsx --test src/agent/codex-client.test.ts", "exit": 0, "pass": 43 },
+    { "command": "独立内存fixture：取消、切项目、归档失败、不同/相同身份反序并发", "exit": 0, "pass": 6 },
+    { "command": "check-delivery.mjs --base 709e51d5c30c9c9216a888c22592e7870df8901e --branch codex/TASK-AGENT-008-image-transport", "exit": 0, "files": 49, "violations": 0 },
+    { "command": "governance/features/markdown/version/diff --check", "exit": 0 }
+  ],
+  "evidence": "13份原始/提交日志哈希及格式标准化吻合；源码/EXE/bundle/实际isolated project与owned blob/补充历史/重启快照一致，1768873bytes，SHA25686307db43bb5aea73f2f3b543b36366e8dafa3d8766c54a92a3978bfc687b7b6；节点/标记唯一，57/16→809/768，无result。",
+  "findings": [
+    { "id": "AGIMG-DOC-001", "priority": "P3", "blocker": false, "owner": "root", "finding": "spec平台表待验收、verification当前dirty描述过期", "resolution": "按采证/已提交状态区分，终稿纠正；新head补审另记" }
+  ],
+  "limitations": ["托管CI和主线推广另验", "豆包/Web真实账号/其他Provider/Mobile/正式发布不由本审查证明", "辅助审查脚本两次设置误解失败已保留，修正断言后6/6通过，产品/证据未改", "新增head必须另行补审"]
+}

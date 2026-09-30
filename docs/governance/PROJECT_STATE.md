@@ -2,7 +2,7 @@
 
 ## 2026-10-01 Codex 生图回传与提示词检查
 
-TASK-AGENT-008 在独立 codex/TASK-AGENT-008-image-transport worktree 实施，基线 main/origin/main@709e51d（安装器 PR #32 已合入）。修复原生 Base64 生图事件超限与并发归档重复标记，两组回归先失败后通过；本 worktree Tauri 真实生图/续聊/重连/重启原件 hash 一致、节点/标记唯一，AC-1–3 PASS，精确 head review/PR 待完成，见[本轮验证](../changes/2026-10-01-agent-image-transport/verification.md)。完整 verify 632root/172Agent/377browser与Rust97通过，原平台skip保留。两条短句57/16对应请求809/768，附加规则恒752字符且无历史重复；先前可见长文由 root 手写。本分支版本 Desktop 2.1.3 / Web 2.1.4 / Mobile 规划 2.1.1。豆包最新仍受区域限制登录页阻挡、CLI 输出自动回画布未接入，其他 Provider 未因此完成。
+TASK-AGENT-008 本机AC-1–3 DONE，基线 main@709e51d（安装器 PR #32 已合入）。修复 Base64 生图事件超限与并发归档重复标记；两组RED→GREEN及新生产Tauri真实生图/续聊/重连/重启hash一致、节点/标记唯一，verify632root/172Agent/377browser和Rust97通过、原平台skip保留。实现head3c63f1e独立只读审查PASS，P3过期文档已修正；PR #33最终文档head补审/CI/主线推广以实际PR与交付收据为准，不从本机完成推断已合并。见[验证](../changes/2026-10-01-agent-image-transport/verification.md)。57/16短句对应809/768请求，附加恒752且无历史重复；先前长文由root手写。本轮源码Desktop2.1.3/Web2.1.4/Mobile规划2.1.1。豆包仍在区域限制登录页、CLI自动回画布未接入，其他Provider未因此完成。
 
 ## 2026-09-30 安装器后续任务
 

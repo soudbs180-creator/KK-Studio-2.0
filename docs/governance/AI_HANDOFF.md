@@ -2,7 +2,7 @@
 
 ## 2026-10-01 Codex 生图回传恢复点
 
-先核对 TASK-AGENT-008 的实际 branch/head 和[计划](../changes/2026-10-01-agent-image-transport/plan.md)/[验证](../changes/2026-10-01-agent-image-transport/verification.md)。基线 main@709e51d；native result 去二进制与归档提交前幂等重检均 RED→GREEN，2 MiB 保护保持。run5 新生产 Tauri 生图/续聊/重连/重启原件 hash 一致、节点/标记唯一 PASS；verify632root/172Agent/377browser、Rust97 PASS。精确 SHA review/托管 PR 尚待完成，不能从本地证据猜测推广。run3 超限与 run4 重复标记历史不覆盖；run5 审计脚本两次设置错误另记并真实复验。重启需先开项目并按入口启动 Agent 服务，本次未改自动启动行为。豆包最新仍在区域限制登录页、输出自动回画布未接入，不并行使用其 profile。57/16短句对应809/768请求、附加752恒定。
+先核对PR #33真实merged状态、最新origin/main和最终文档head审查/CI；本机TASK-AGENT-008 AC-1–3 DONE不能替代推广收据。[计划](../changes/2026-10-01-agent-image-transport/plan.md)/[验证](../changes/2026-10-01-agent-image-transport/verification.md)保留main@709e51d基线、实现3c63f1e独立PASS与P3文档修正。native result去二进制和提交前幂等均RED→GREEN，2 MiB保护保留；run5真实生图/续聊/重连/重启hash一致且节点/标记唯一，verify632root/172Agent/377browser和Rust97 PASS。run3/run4失败历史及run5脚本设置错误不覆盖。重启先开项目并按入口启动服务，本次未改自动启动。豆包区域限制登录和CLI自动回画布仍未完成，不并行使用其profile。57/16→809/768，附加752恒定。
 
 ## 2026-09-30 安装器恢复入口
 

@@ -3214,13 +3214,13 @@
       "src/features/agent/agentHost.ts",
       "tests/unit/agentHost.test.ts"
     ],
-    "status": "REVIEW",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-10-01-agent-image-transport/intent.md",
       "docs/changes/2026-10-01-agent-image-transport/spec.md",
       "docs/changes/2026-10-01-agent-image-transport/verification.md"
     ],
-    "verification": "两组 RED→GREEN；verify 632 root/172 Agent/377 browser，原平台 skip 保留，Rust97/fmt/clientcheck；独立本 worktree Tauri 真实生图/续聊/重连/重启原件 hash 一致、节点/归档标记唯一。独立精确 SHA review 与 PR 门禁待完成；豆包登录/归档仍未验收。",
+    "verification": "本机AC-1–3 DONE：两组RED→GREEN，verify632root/172Agent/377browser（原平台skip保留）、Rust97/fmt/clientcheck；真实Tauri生图/续聊/重连/重启hash一致、节点/标记唯一。实现head3c63f1e独立审查PASS（43/9/6定向复验），P3文档意见已修正。PR#33终稿head独立补审、托管CI与推广以实际PR/收据为准；豆包/Web真实账号/其他Provider/Mobile/正式发布未验收。",
     "verificationResult": "PASS",
     "updated": "2026-10-01"
   }

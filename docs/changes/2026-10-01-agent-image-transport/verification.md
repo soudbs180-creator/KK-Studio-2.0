@@ -1,9 +1,9 @@
 # Verification：KK Codex 生图回传与短提示词
 
-- Task ID：TASK-AGENT-008；记录状态：本地 FINAL，精确 head review/托管门禁待完成
+- Task ID：TASK-AGENT-008；记录状态：本地 FINAL，实现 head 独立 review PASS；最终文档 head/托管门禁另核
 - 日期/时区：2026-10-01 Asia/Shanghai；日志内部 UTC 保留。
 - [Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md) / [Review](review.md)
-- Base：709e51d5c30c9c9216a888c22592e7870df8901e；当前 task worktree dirty，正式 head 待提交。
+- Base：709e51d5c30c9c9216a888c22592e7870df8901e；采证时 task worktree dirty（指纹见收据），随后实现提交为 3c63f1ed655345132f299f3963ad81b8b0f90b78、clean，并经独立精确 SHA 复核。终稿文档提交的 review/CI/推广以 PR #33 和交付收据为准，不将采证状态写成当前状态。
 - Node 24.19 / npm 11 / Windows x64 / Edge WebView2；规则基线同 base。
 
 ## 实际验证
@@ -20,7 +20,8 @@
 | cargo fmt / test / check | 0/0/0 | PASS | Rust97/97；[收据](evidence/checks.json) |
 | client:build:agent -- --no-bundle | 0 | PASS | 本 worktree 独立生产资源/EXE；[日志](evidence/native-build.txt) |
 | Tauri 真实生图/续聊/重连/恢复 | 0 | PASS | 原件 1,768,873 bytes，唯一节点/标记、短聊天恢复；[运行收据](evidence/native-summary.json) |
-| 独立 review / PR CI / 主线 | — | NOT RUN | 待精确 head |
+| 独立实现 head review | 0 | PASS | 3c63f1ed655345132f299f3963ad81b8b0f90b78；43 Codex /9 host+SSE /6边界fixture，交付/治理/版本/指纹均通过；[审查收据](evidence/independent-review.json) |
+| PR CI / 最终文档 head review / 主线 | — | PENDING | [PR #33](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/33) 实际门禁，不预写成功 |
 
 ## 修复前真实复现和提示词
 
@@ -43,3 +44,5 @@
 ## 当前结论
 
 本地实现与 AC-1–3 PASS，独立精确 SHA 审查和托管推广另记实际结果；没有提前声称合并。豆包最新 doctor 仍 COMPOSER_NOT_FOUND / doubao-region-ban、hasEditor=false，Cookie 存在不证明登录有效，见[当前状态](evidence/doubao-status.json)。旧额度失败保留，新账号 Codex 成功不代替豆包验收，豆包 CLI 输出自动回画布尚未接入。Mobile、签名、正式安装/发布和其他 Provider 未验证，功能卡仍 PARTIAL。
+
+独立审查实现 head 3c63f1e 为 PASS，无 P0/P1/P2 或合并阻断；P3 AGIMG-DOC-001 指出 spec 的待验收和 verification 的当前 dirty 表述过期，本次终稿已据真实运行证据纠正。审查辅助 fixture 曾因误解素材记录包装和种子节点退出1，修正审查断言后6/6复验，通过范围/限制见 review；没有修改产品或运行证据。新增文档 head 仍需独立补审及托管检查，最终以 PR 精确 head 回读为准。
