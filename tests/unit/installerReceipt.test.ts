@@ -7,6 +7,7 @@ import {
   fileIdentity,
   verifyInstaller,
   verifyInstalledFiles,
+  assertInstallerFresh,
 } from "../../scripts/windows/installer-receipt.mjs";
 
 test("installer verification rejects corrupted bytes before execution", async (t) => {
@@ -20,6 +21,32 @@ test("installer verification rejects corrupted bytes before execution", async (t
   assert.equal(await verifyInstaller(receipt, root), file);
   await fs.writeFile(file, "corrupt installer bytes");
   await assert.rejects(verifyInstaller(receipt, root), /verification failed/);
+});
+
+test("receipt freshness rejects newer installer configuration and runtime inputs", async (t) => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "kk-installer-fresh-"));
+  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  const installer = path.join(root, "setup.exe");
+  const inputs = [
+    "kk-studio.exe",
+    "tauri.installer.conf.json",
+    "runtime-manifest.json",
+    "node.exe",
+  ].map((name) => path.join(root, name));
+  for (const file of [installer, ...inputs]) {
+    await fs.writeFile(file, "synthetic input");
+    await fs.utimes(file, 10, 10);
+  }
+  await fs.utimes(installer, 20, 20);
+  await assertInstallerFresh(installer, inputs);
+  for (const input of inputs) {
+    await fs.utimes(input, 30, 30);
+    await assert.rejects(
+      assertInstallerFresh(installer, inputs),
+      /older than input/,
+    );
+    await fs.utimes(input, 10, 10);
+  }
 });
 
 test("installed runtime verifies executable and each resource; missing or corrupt files fail", async (t) => {

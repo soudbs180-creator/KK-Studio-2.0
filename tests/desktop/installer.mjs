@@ -35,7 +35,7 @@ const state = () =>
   );
 assert.deepEqual(state(), [], "An existing installation must not be changed");
 const isolated = await fs.mkdtemp(
-  path.join(os.tmpdir(), "kk-installer-audit-"),
+  path.join(os.tmpdir(), "kk-installer-audit space-"),
 );
 const installDirectory = path.join(isolated, "app");
 const dataRoot = path.join(isolated, "data");
@@ -68,6 +68,8 @@ function ownedLocation(value) {
 async function run(filename, args) {
   const child = spawn(filename, args, {
     windowsHide: true,
+    windowsVerbatimArguments: true,
+    argv0: `"${filename}"`,
     stdio: "ignore",
     // Fail network dependency attempts without changing the user's network.
     env: {
@@ -85,7 +87,14 @@ async function run(filename, args) {
   });
 }
 async function install() {
-  for (const entry of state()) ownedLocation(entry.location);
+  for (const entry of state()) {
+    assert.notEqual(
+      entry.kind,
+      "process",
+      "A running portable application must not be terminated",
+    );
+    ownedLocation(entry.location);
+  }
   // /D must be last. /NS avoids touching desktop and Start Menu shortcuts.
   await run(installer, ["/S", "/NS", `/D=${installDirectory}`]);
   installed = true;
@@ -95,6 +104,7 @@ async function install() {
     "Uninstall registration missing",
   );
   for (const entry of entries) {
+    assert.notEqual(entry.kind, "process");
     ownedLocation(entry.location);
     assert.equal(entry.hive, "CurrentUser");
     if (entry.kind === "uninstall")
@@ -109,15 +119,30 @@ async function install() {
 async function uninstall() {
   const entries = state();
   assert(entries.length > 0, "Owned uninstall registration missing");
-  for (const entry of entries) ownedLocation(entry.location);
+  for (const entry of entries) {
+    assert.notEqual(
+      entry.kind,
+      "process",
+      "A running portable application must not be terminated",
+    );
+    ownedLocation(entry.location);
+  }
   await run(path.join(installDirectory, "uninstall.exe"), ["/S"]);
-  await expect.poll(state, { timeout: 30000 }).toEqual([]);
+  await expect
+    .poll(() => state().filter((entry) => entry.kind === "uninstall"), {
+      timeout: 30000,
+    })
+    .toEqual([]);
   await expect
     .poll(() =>
       fs.stat(path.join(installDirectory, "kk-studio.exe")).catch(() => null),
     )
     .toBeNull();
   installed = false;
+  for (const entry of state()) {
+    assert.equal(entry.kind, "settings");
+    ownedLocation(entry.location);
+  }
   report.checks.push({ action: "uninstall", registrationRemoved: true });
 }
 const available = () =>
@@ -153,7 +178,7 @@ async function launch(label) {
   }));
   assert.equal(
     path.resolve(identity.root).toLowerCase(),
-    dataRoot.toLowerCase(),
+    (await fs.realpath(dataRoot)).toLowerCase(),
   );
   report.launches.push({
     label,
@@ -190,6 +215,28 @@ async function expectProject() {
 }
 
 try {
+  const damaged = path.join(isolated, "damaged-setup.exe");
+  await fs.copyFile(installer, damaged);
+  const handle = await fs.open(damaged, "r+");
+  try {
+    await handle.write(Buffer.from("DAMAGED"), 0, 7, 256);
+  } finally {
+    await handle.close();
+  }
+  await assert.rejects(
+    verifyInstaller(
+      {
+        ...receipt,
+        installer: { ...receipt.installer, path: "damaged-setup.exe" },
+      },
+      isolated,
+    ),
+    /verification failed/,
+  );
+  report.checks.push({
+    action: "damaged-package",
+    refusedBeforeExecution: true,
+  });
   await install();
   await launch("installed");
   const expand = page.getByRole("button", { name: "展开侧边栏", exact: true });
@@ -256,12 +303,37 @@ try {
   if (installed)
     await uninstall().catch((error) => {
       report.cleanupError = String(error);
+      report.passed = false;
     });
+  if (!installed) {
+    try {
+      execFileSync(
+        "powershell.exe",
+        [
+          "-NoProfile",
+          "-File",
+          path.join(root, "tests/desktop/installer-cleanup.ps1"),
+          "-InstallDirectory",
+          installDirectory,
+        ],
+        { windowsHide: true },
+      );
+      assert.deepEqual(
+        state(),
+        [],
+        "Audit registry must return to its initial state",
+      );
+    } catch (error) {
+      report.cleanupError = String(error);
+      report.passed = false;
+    }
+  }
   await fs.writeFile(
     path.join(output, "runtime.json"),
     JSON.stringify(report, null, 2) + "\n",
   );
 }
+assert.equal(report.passed, true, report.cleanupError);
 console.log(
   JSON.stringify({ passed: report.passed, checks: report.checks, output }),
 );

@@ -5,17 +5,25 @@ foreach ($hive in @([Microsoft.Win32.RegistryHive]::CurrentUser, [Microsoft.Win3
   foreach ($view in @([Microsoft.Win32.RegistryView]::Registry32, [Microsoft.Win32.RegistryView]::Registry64)) {
     $registry = [Microsoft.Win32.RegistryKey]::OpenBaseKey($hive, $view)
     try {
-      $key = $registry.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\Uninstall\$ProductName")
-      if ($null -ne $key) {
+      $uninstall = $registry.OpenSubKey('Software\Microsoft\Windows\CurrentVersion\Uninstall')
+      if ($null -ne $uninstall) {
         try {
-          $entries += [PSCustomObject]@{
-            kind = 'uninstall'
-            hive = $hive.ToString()
-            view = $view.ToString()
-            location = $key.GetValue('InstallLocation')
-            version = $key.GetValue('DisplayVersion')
+          foreach ($keyName in $uninstall.GetSubKeyNames()) {
+            $key = $uninstall.OpenSubKey($keyName)
+            if ($null -eq $key) { continue }
+            try {
+              if ($keyName -eq $ProductName -or $key.GetValue('DisplayName') -eq $ProductName) {
+                $entries += [PSCustomObject]@{
+                  kind = 'uninstall'
+                  hive = $hive.ToString()
+                  view = $view.ToString()
+                  location = $key.GetValue('InstallLocation')
+                  version = $key.GetValue('DisplayVersion')
+                }
+              }
+            } finally { $key.Dispose() }
           }
-        } finally { $key.Dispose() }
+        } finally { $uninstall.Dispose() }
       }
       $settingsKey = $registry.OpenSubKey("Software\kkstudio\$ProductName")
       if ($null -ne $settingsKey) {
@@ -30,5 +38,8 @@ foreach ($hive in @([Microsoft.Win32.RegistryHive]::CurrentUser, [Microsoft.Win3
       }
     } finally { $registry.Dispose() }
   }
+}
+foreach ($process in @(Get-Process -Name 'kk-studio' -ErrorAction SilentlyContinue)) {
+  $entries += [PSCustomObject]@{kind = 'process'; pid = $process.Id}
 }
 ConvertTo-Json -InputObject @($entries) -Compress

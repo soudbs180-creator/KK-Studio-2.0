@@ -70,6 +70,15 @@ export async function verifyInstalledFiles(receipt, installDirectory) {
   return receipt.installedFiles.length;
 }
 
+export async function assertInstallerFresh(installer, inputs) {
+  const installerTime = (await fs.stat(installer)).mtimeMs;
+  for (const input of inputs) {
+    if ((await fs.stat(input)).mtimeMs > installerTime) {
+      throw new Error(`Installer is older than input: ${path.basename(input)}`);
+    }
+  }
+}
+
 export async function writeInstallerReceipt({ root, installer, output }) {
   if (process.platform !== "win32" || process.arch !== "x64") {
     throw new Error("Installer receipts require Windows x64");
@@ -90,9 +99,6 @@ export async function writeInstallerReceipt({ root, installer, output }) {
     );
   }
   const exe = path.join(root, "src-tauri/target/release/kk-studio.exe");
-  if ((await fs.stat(installer)).mtimeMs < (await fs.stat(exe)).mtimeMs) {
-    throw new Error("Installer is older than the desktop executable");
-  }
   const runtimeRoot = path.join(root, "src-tauri/agent-runtime");
   const runtimeManifestPath = path.join(runtimeRoot, "runtime-manifest.json");
   const runtimeManifest = JSON.parse(
@@ -105,6 +111,14 @@ export async function writeInstallerReceipt({ root, installer, output }) {
     { installedFiles: runtimeManifest.files },
     runtimeRoot,
   );
+  await assertInstallerFresh(installer, [
+    exe,
+    path.join(root, "src-tauri/tauri.installer.conf.json"),
+    runtimeManifestPath,
+    ...runtimeManifest.files.map((file) =>
+      containedFile(runtimeRoot, file.path),
+    ),
+  ]);
   const installedFiles = [
     { path: "kk-studio.exe", ...(await fileIdentity(exe)) },
     {
