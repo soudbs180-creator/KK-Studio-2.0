@@ -133,6 +133,8 @@ struct AppState {
     config: Mutex<AppConfig>,
     config_path: PathBuf,
     conversations_path: PathBuf,
+    memory_path: PathBuf,
+    legacy_memory_path: Option<PathBuf>,
     creation: Arc<creation_storage::SnapshotRepository>,
     assets: Arc<asset_storage::AssetRepository>,
     task_host: Arc<task_host::TaskHost>,
@@ -702,6 +704,257 @@ fn delete_conversation(state: State<AppState>, id: String) -> Result<bool, Strin
     Ok(true)
 }
 
+// ========== 记忆管理命令（本地长期记忆，本机共享、仅存本地） ==========
+//
+// 共享契约（TASK-MEMORY-002）：所有产品（Codex 桌面/Web、豆包 Agent、
+// WorkBuddy）读写同一份共享文件 ~/.kk-memory/memory.json；绝不上云。
+
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+struct MemoryRecord {
+    id: String,
+    content: String,
+    #[serde(rename = "memoryType")]
+    memory_type: String,
+    confidence: f32,
+    fingerprint: String,
+    source: String,
+    #[serde(rename = "sourceThreadId", skip_serializing_if = "Option::is_none")]
+    source_thread_id: Option<String>,
+    #[serde(rename = "createdAt")]
+    created_at: String,
+    #[serde(rename = "updatedAt")]
+    updated_at: String,
+    #[serde(rename = "lastUsedAt", skip_serializing_if = "Option::is_none")]
+    last_used_at: Option<String>,
+    active: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+struct MemoryStore {
+    version: u32,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    namespace: String,
+    records: Vec<MemoryRecord>,
+}
+
+const MEMORY_STORE_VERSION: u32 = 1;
+
+fn validate_memory_store(store: &MemoryStore) -> Result<(), String> {
+    if store.records.len() > 10_000 {
+        return Err("记忆文件格式无效：条目超过上限（10000）".to_string());
+    }
+    for record in &store.records {
+        let valid = !record.id.trim().is_empty()
+            && !record.content.trim().is_empty()
+            && record.content.chars().count() <= 200
+            && matches!(
+                record.memory_type.as_str(),
+                "user_profile" | "user_preference" | "user_habit" | "user_constraint"
+            )
+            && record.confidence.is_finite()
+            && (0.0..=1.0).contains(&record.confidence)
+            && !record.fingerprint.trim().is_empty()
+            && matches!(
+                record.source.as_str(),
+                "auto_rule" | "manual_codex" | "manual_user"
+            )
+            && !record.created_at.trim().is_empty()
+            && !record.updated_at.trim().is_empty()
+            && record
+                .last_used_at
+                .as_ref()
+                .is_none_or(|value| !value.trim().is_empty());
+        if !valid {
+            return Err("记忆文件格式无效：包含损坏的条目，已保留原文件".to_string());
+        }
+    }
+    Ok(())
+}
+
+/// 本机共享记忆文件路径：~/.kk-memory/memory.json（跨产品约定）。
+fn shared_memory_path() -> PathBuf {
+    dirs::home_dir()
+        .expect("无法确定本机记忆目录")
+        .join(".kk-memory")
+        .join("memory.json")
+}
+
+fn memory_paths(legacy: PathBuf, isolated: bool) -> (PathBuf, Option<PathBuf>) {
+    if isolated {
+        (legacy, None)
+    } else {
+        (shared_memory_path(), Some(legacy))
+    }
+}
+
+/// 首次启用共享文件时，把隔离版旧文件（app-data/memory/memory.json）作为种子迁移；
+/// 仅当共享文件不存在且旧文件存在时执行，避免覆盖任何已有共享记忆。
+fn seed_shared_memory(shared: &Path, legacy: &Path) -> Result<(), String> {
+    if shared.exists() || !legacy.exists() {
+        return Ok(());
+    }
+    with_memory_file_lock(shared, || {
+        if shared.exists() {
+            return Ok(());
+        }
+        let store = read_memory_file(legacy)?;
+        write_memory_file(shared, &store)
+    })
+}
+
+fn read_memory_file(path: &Path) -> Result<MemoryStore, String> {
+    if !path.exists() {
+        return Ok(MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: Vec::new(),
+        });
+    }
+    let content = fs::read_to_string(path).map_err(|error| format!("无法读取记忆文件：{error}"))?;
+    let store: MemoryStore = serde_json::from_str(&content)
+        .map_err(|error| format!("记忆文件格式无效，未覆盖原文件：{error}"))?;
+    if store.version != MEMORY_STORE_VERSION {
+        return Err(format!(
+            "记忆文件版本不支持（{}/{}），已保留原文件",
+            store.version, MEMORY_STORE_VERSION
+        ));
+    }
+    validate_memory_store(&store)?;
+    Ok(store)
+}
+
+fn write_memory_file(path: &Path, store: &MemoryStore) -> Result<(), String> {
+    validate_memory_store(store)?;
+    let json = serde_json::to_string_pretty(store).map_err(|e| e.to_string())?;
+    let parent = path
+        .parent()
+        .ok_or_else(|| "记忆文件路径无效".to_string())?;
+    fs::create_dir_all(parent).map_err(|e| format!("无法创建记忆目录：{e}"))?;
+    let nonce = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock")
+        .as_nanos();
+    let temp = parent.join(format!(".memory-{}-{nonce}.tmp", std::process::id()));
+    fs::write(&temp, json).map_err(|e| format!("无法写入记忆文件：{e}"))?;
+    fs::rename(&temp, path).map_err(|e| {
+        let _ = fs::remove_file(&temp);
+        format!("无法提交记忆文件：{e}")
+    })
+}
+
+fn with_memory_file_lock<T>(
+    path: &Path,
+    action: impl FnOnce() -> Result<T, String>,
+) -> Result<T, String> {
+    let parent = path
+        .parent()
+        .ok_or_else(|| "记忆文件路径无效".to_string())?;
+    fs::create_dir_all(parent).map_err(|error| format!("无法创建记忆目录：{error}"))?;
+    let lock_file = fs::OpenOptions::new()
+        .create(true)
+        .write(true)
+        .open(path.with_extension("json.lock"))
+        .map_err(|error| format!("无法打开记忆写入锁：{error}"))?;
+    lock_file
+        .lock()
+        .map_err(|error| format!("无法锁定记忆文件：{error}"))?;
+    action()
+}
+
+fn guarded_write_memory_file(
+    path: &Path,
+    store: &MemoryStore,
+    expected: &MemoryStore,
+) -> Result<(), String> {
+    with_memory_file_lock(path, || {
+        let current = read_memory_file(path)?;
+        if current != *expected {
+            return Err("MEMORY_CONFLICT：共享记忆已被其他窗口修改".to_string());
+        }
+        write_memory_file(path, store)
+    })
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn memory_read(state: State<AppState>) -> Result<MemoryStore, String> {
+    if let Some(legacy) = &state.legacy_memory_path {
+        seed_shared_memory(&state.memory_path, legacy)?;
+    }
+    read_memory_file(&state.memory_path)
+}
+
+#[derive(Serialize)]
+struct MemoryStorageInfo {
+    shared: bool,
+    path: String,
+}
+
+#[tauri::command]
+fn memory_storage_info(state: State<AppState>) -> MemoryStorageInfo {
+    MemoryStorageInfo {
+        shared: state.legacy_memory_path.is_some(),
+        path: state.memory_path.to_string_lossy().into_owned(),
+    }
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn memory_write(
+    state: State<AppState>,
+    store: MemoryStore,
+    expected: MemoryStore,
+) -> Result<MemoryStore, String> {
+    if store.version != MEMORY_STORE_VERSION {
+        return Err(format!("不支持写入的记忆版本：{}", store.version));
+    }
+    if store.records.len() > 10_000 {
+        return Err("记忆条目超过上限（10000）".to_string());
+    }
+    guarded_write_memory_file(&state.memory_path, &store, &expected)?;
+    Ok(store)
+}
+
+fn reset_memory_file(path: &Path, previous: &Path) -> Result<MemoryStore, String> {
+    with_memory_file_lock(path, || reset_memory_file_locked(path, previous))
+}
+
+fn reset_memory_file_locked(path: &Path, previous: &Path) -> Result<MemoryStore, String> {
+    reset_memory_file_with_writer(path, previous, write_memory_file)
+}
+
+fn reset_memory_file_with_writer(
+    path: &Path,
+    previous: &Path,
+    writer: impl FnOnce(&Path, &MemoryStore) -> Result<(), String>,
+) -> Result<MemoryStore, String> {
+    if path.exists() {
+        if previous.exists() {
+            return Err("记忆备份文件已存在，未修改原文件".to_string());
+        }
+        fs::copy(path, previous).map_err(|e| {
+            let _ = fs::remove_file(previous);
+            format!("无法备份现有记忆，未修改原文件：{e}")
+        })?;
+    }
+    let store = MemoryStore {
+        version: MEMORY_STORE_VERSION,
+        namespace: String::new(),
+        records: Vec::new(),
+    };
+    writer(path, &store)?;
+    Ok(store)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn memory_reset_identity(state: State<AppState>) -> Result<MemoryStore, String> {
+    let path = &state.memory_path;
+    let nonce = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock")
+        .as_nanos();
+    let previous = path.with_extension(format!("previous-{nonce}.json"));
+    reset_memory_file(path, &previous)
+}
+
 // ========== 非流式聊天（保留作为后备） ==========
 
 #[tauri::command]
@@ -1018,6 +1271,325 @@ mod conversation_tests {
     }
 }
 
+#[cfg(test)]
+mod memory_tests {
+    use super::*;
+
+    fn temp_memory_path(label: &str) -> PathBuf {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock")
+            .as_nanos();
+        let dir = std::env::temp_dir().join(format!(
+            "kk-studio-memory-{label}-{}-{nonce}",
+            std::process::id()
+        ));
+        fs::create_dir_all(&dir).expect("create memory test dir");
+        dir.join("memory.json")
+    }
+
+    fn sample_record() -> MemoryRecord {
+        MemoryRecord {
+            id: "r1".to_string(),
+            content: "用户偏好日系插画风格".to_string(),
+            memory_type: "user_preference".to_string(),
+            confidence: 0.8,
+            fingerprint: "fp-1".to_string(),
+            source: "auto_rule".to_string(),
+            source_thread_id: None,
+            created_at: "2026-09-24T00:00:00.000Z".to_string(),
+            updated_at: "2026-09-24T00:00:00.000Z".to_string(),
+            last_used_at: None,
+            active: true,
+        }
+    }
+
+    #[test]
+    fn missing_memory_file_reads_as_empty_store() {
+        let path = temp_memory_path("missing");
+        let store = read_memory_file(&path).expect("missing file is empty store");
+        assert_eq!(store.version, MEMORY_STORE_VERSION);
+        assert!(store.records.is_empty());
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn malformed_memory_file_is_rejected_without_overwrite() {
+        let path = temp_memory_path("corrupt");
+        let raw = b"not-json";
+        fs::write(&path, raw).expect("write fixture");
+        let error = read_memory_file(&path).expect_err("corrupt file must be rejected");
+        assert!(error.contains("未覆盖原文件"));
+        assert_eq!(fs::read(&path).expect("read fixture"), raw);
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn unsupported_memory_version_is_rejected_without_overwrite() {
+        let path = temp_memory_path("version");
+        let raw = br#"{"version":99,"namespace":"ns","records":[]}"#;
+        fs::write(&path, raw).expect("write fixture");
+        let error = read_memory_file(&path).expect_err("unsupported version must be rejected");
+        assert!(error.contains("版本不支持"));
+        assert_eq!(fs::read(&path).expect("read fixture"), raw);
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn invalid_memory_record_is_rejected_without_overwrite() {
+        let path = temp_memory_path("invalid-record");
+        let raw = br#"{"version":1,"records":[{"id":"r1","content":"","memoryType":"user_preference","confidence":1.5,"fingerprint":"fp","source":"auto_rule","createdAt":"2026-09-24T00:00:00Z","updatedAt":"2026-09-24T00:00:00Z","active":true}]}"#;
+        fs::write(&path, raw).expect("write invalid fixture");
+        let error = read_memory_file(&path).expect_err("invalid record must be rejected");
+        assert!(error.contains("记忆文件格式无效"));
+        assert_eq!(fs::read(&path).expect("read original"), raw);
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn normal_memory_write_cannot_overwrite_a_corrupt_file() {
+        let path = temp_memory_path("guarded-write");
+        let raw = b"damaged memory file";
+        fs::write(&path, raw).expect("write damaged fixture");
+        let store = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![sample_record()],
+        };
+        assert!(guarded_write_memory_file(&path, &store, &store).is_err());
+        assert_eq!(fs::read(&path).expect("read original"), raw);
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn write_memory_file_roundtrips_and_leaves_no_temp() {
+        let path = temp_memory_path("roundtrip");
+        let store = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![sample_record()],
+        };
+        write_memory_file(&path, &store).expect("write memory");
+        let loaded = read_memory_file(&path).expect("read memory");
+        assert_eq!(loaded.records.len(), 1);
+        assert_eq!(loaded.records[0].content, "用户偏好日系插画风格");
+        let empty = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![],
+        };
+        write_memory_file(&path, &empty).expect("replace existing memory file");
+        assert!(read_memory_file(&path)
+            .expect("read replacement")
+            .records
+            .is_empty());
+        let dir = path.parent().expect("dir");
+        let leftovers: Vec<_> = fs::read_dir(dir)
+            .expect("read dir")
+            .filter_map(|entry| entry.ok())
+            .map(|entry| entry.file_name().to_string_lossy().into_owned())
+            .filter(|name| name.contains(".tmp"))
+            .collect();
+        assert!(leftovers.is_empty(), "temp files left: {leftovers:?}");
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn stale_memory_write_is_rejected_without_losing_the_first_update() {
+        let path = temp_memory_path("stale-write");
+        let empty = read_memory_file(&path).expect("initial store");
+        let first = MemoryStore {
+            records: vec![sample_record()],
+            ..empty.clone()
+        };
+        guarded_write_memory_file(&path, &first, &empty).expect("first write");
+        let mut second_record = sample_record();
+        second_record.id = "r2".to_string();
+        let stale = MemoryStore {
+            records: vec![second_record],
+            ..empty.clone()
+        };
+        let error = guarded_write_memory_file(&path, &stale, &empty)
+            .expect_err("stale write must be rejected");
+        assert!(error.contains("MEMORY_CONFLICT"));
+        assert_eq!(read_memory_file(&path).expect("read first write"), first);
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn concurrent_memory_writes_allow_only_one_stale_snapshot() {
+        let path = temp_memory_path("concurrent-write");
+        let expected = read_memory_file(&path).expect("initial store");
+        let mut second_record = sample_record();
+        second_record.id = "r2".to_string();
+        let first = MemoryStore {
+            records: vec![sample_record()],
+            ..expected.clone()
+        };
+        let second = MemoryStore {
+            records: vec![second_record],
+            ..expected.clone()
+        };
+        let first_path = path.clone();
+        let first_expected = expected.clone();
+        let first_write = std::thread::spawn(move || {
+            guarded_write_memory_file(&first_path, &first, &first_expected)
+        });
+        let second_path = path.clone();
+        let second_write =
+            std::thread::spawn(move || guarded_write_memory_file(&second_path, &second, &expected));
+        let results = [first_write.join().unwrap(), second_write.join().unwrap()];
+        assert_eq!(results.iter().filter(|result| result.is_ok()).count(), 1);
+        assert_eq!(
+            read_memory_file(&path)
+                .expect("winning store")
+                .records
+                .len(),
+            1
+        );
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn first_memory_write_creates_missing_parent_directory() {
+        let path = temp_memory_path("first-write")
+            .parent()
+            .expect("test dir")
+            .join("missing")
+            .join("memory.json");
+        let store = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![sample_record()],
+        };
+        write_memory_file(&path, &store).expect("first write creates directory");
+        assert_eq!(
+            read_memory_file(&path)
+                .expect("read first write")
+                .records
+                .len(),
+            1
+        );
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn failed_memory_backup_preserves_existing_file() {
+        let path = temp_memory_path("backup-failure");
+        let store = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![sample_record()],
+        };
+        write_memory_file(&path, &store).expect("write original");
+        let original = fs::read(&path).expect("read original");
+        let backup = path.with_extension("previous-test.json");
+        fs::create_dir(&backup).expect("create colliding backup directory");
+        assert!(reset_memory_file(&path, &backup).is_err());
+        assert_eq!(fs::read(&path).expect("read after failed reset"), original);
+        let _ = fs::remove_dir(&backup);
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn failed_memory_reset_write_keeps_live_file_and_backup() {
+        let path = temp_memory_path("reset-write-failure");
+        let store = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![sample_record()],
+        };
+        write_memory_file(&path, &store).expect("write original");
+        let original = fs::read(&path).expect("read original");
+        let backup = path.with_extension("previous-test.json");
+        let result = reset_memory_file_with_writer(&path, &backup, |_, _| {
+            Err("simulated write failure".to_string())
+        });
+        assert!(result.is_err());
+        assert_eq!(fs::read(&path).expect("read live after failure"), original);
+        assert_eq!(
+            fs::read(&backup).expect("read backup after failure"),
+            original
+        );
+        let _ = fs::remove_file(&backup);
+        let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn malformed_legacy_memory_is_not_promoted_to_shared_file() {
+        let shared = temp_memory_path("malformed-seed");
+        let legacy = shared.with_extension("legacy.json");
+        fs::write(&legacy, b"not-json").expect("write malformed legacy");
+        assert!(seed_shared_memory(&shared, &legacy).is_err());
+        assert!(
+            !shared.exists(),
+            "malformed memory must not become the shared file"
+        );
+        assert_eq!(
+            fs::read(&legacy).expect("read preserved legacy"),
+            b"not-json"
+        );
+        let _ = fs::remove_file(&legacy);
+    }
+
+    #[test]
+    fn legacy_memory_file_is_seeded_into_shared_path_once() {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock")
+            .as_nanos();
+        let dir = std::env::temp_dir().join(format!(
+            "kk-studio-memory-seed-{}-{nonce}",
+            std::process::id()
+        ));
+        fs::create_dir_all(&dir).expect("create seed test dir");
+        let shared = dir.join("memory.json");
+        let legacy = dir.join("legacy.json");
+        let store = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![sample_record()],
+        };
+        write_memory_file(&legacy, &store).expect("write legacy");
+        seed_shared_memory(&shared, &legacy).expect("seed valid memory");
+        let seeded = read_memory_file(&shared).expect("read seeded");
+        assert_eq!(seeded.records.len(), 1);
+        // 共享文件已存在时不再覆盖
+        let overwrite = MemoryStore {
+            version: MEMORY_STORE_VERSION,
+            namespace: String::new(),
+            records: vec![],
+        };
+        write_memory_file(&shared, &overwrite).expect("write shared");
+        seed_shared_memory(&shared, &legacy).expect("preserve shared memory");
+        let after = read_memory_file(&shared).expect("read after");
+        assert!(after.records.is_empty());
+        let _ = fs::remove_file(&legacy);
+        let _ = fs::remove_file(&shared);
+    }
+
+    #[test]
+    fn isolated_data_root_keeps_memory_local_and_never_selects_legacy_migration() {
+        let isolated = temp_memory_path("isolated");
+        let (selected, legacy) = memory_paths(isolated.clone(), true);
+        assert_eq!(selected, isolated);
+        assert!(legacy.is_none());
+        assert!(
+            !selected.exists(),
+            "selecting paths must not create memory files"
+        );
+    }
+
+    #[test]
+    fn shared_memory_path_points_under_dot_kk_memory() {
+        let path = shared_memory_path();
+        assert!(
+            path.to_string_lossy().ends_with(".kk-memory\\memory.json")
+                || path.to_string_lossy().ends_with(".kk-memory/memory.json")
+        );
+    }
+}
+
 #[tauri::command]
 fn comfyui_scan_directory(root: String) -> Result<ComfyUIScanResult, String> {
     let trimmed = root.trim();
@@ -1067,8 +1639,10 @@ fn task_host_cancel(
 
 fn main() {
     let paths = storage_paths::AppPaths::initialize().expect("KK Studio 无法初始化用户数据目录");
+    let (memory_path, legacy_memory_path) = memory_paths(paths.memory.clone(), paths.isolated);
     let config_path = paths.config;
     let conversations_path = paths.conversations;
+    // Legacy memory is validated and migrated only when enabled memory is first read.
     let task_host = Arc::new(
         task_host::TaskHost::new(
             paths.tasks.join("native-host"),
@@ -1105,12 +1679,15 @@ fn main() {
             config: Mutex::new(config),
             config_path,
             conversations_path,
+            memory_path,
+            legacy_memory_path,
             creation: Arc::new(creation_storage::SnapshotRepository::new(paths.creation)),
             assets: Arc::new(asset_storage::AssetRepository::new(paths.assets)),
             task_host,
             restored_roots: Mutex::new(std::collections::HashSet::new()),
         })
         .invoke_handler(tauri::generate_handler![
+            memory_storage_info,
             agent_runtime::agent_runtime_start,
             agent_runtime::agent_runtime_status,
             agent_runtime::agent_runtime_stop,
@@ -1133,6 +1710,9 @@ fn main() {
             list_conversations,
             save_conversation,
             delete_conversation,
+            memory_read,
+            memory_write,
+            memory_reset_identity,
             chat_completion,
             chat_completion_stream,
             comfyui_check_connection,

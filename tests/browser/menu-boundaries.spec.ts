@@ -1,32 +1,30 @@
 import { expect, test } from "@playwright/test";
+import { expandSidebar } from "./helpers";
 import { openWorkspace, showCanvasNavigation } from "./helpers";
 
-test("手机断点隐藏账号时清除弹层，重新展开后保持顶层关闭顺序", async ({
-  page,
-}) => {
+test("手机断点清除账号弹层并保留固定顶栏操作", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await page.getByRole("button", { name: "个人信息", exact: true }).click();
-  await page.setViewportSize({ width: 390, height: 844 });
-  const toggle = page.locator(".sidebar-toggle");
-  await expect(toggle).toHaveAttribute("aria-expanded", "false");
-  await toggle.focus();
-  await page.keyboard.press("Enter");
-  await expect(toggle).toHaveAttribute("aria-expanded", "true");
-  await expect(page.locator(".account-popup")).toHaveCount(0);
+  await expandSidebar(page);
   await page.getByRole("button", { name: "个人信息", exact: true }).click();
   await expect(page.locator(".account-popup")).toBeVisible();
-  await page
-    .getByRole("button", { name: "创建项目文件夹", exact: true })
-    .click();
+  await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.locator(".account-popup")).toHaveCount(0);
-  await expect(toggle).toHaveAttribute("aria-expanded", "true");
-  await page.mouse.click(375, 470);
-  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await expect(
+    page.getByRole("button", { name: "切换项目", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "搜索与收藏", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "个人信息", exact: true }).click();
+  await expect(page.locator(".account-popup")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".account-popup")).toHaveCount(0);
 });
 
 test("侧栏菜单在同一侧栏中的其他操作开始时关闭", async ({ page }) => {
   await page.goto("/");
+  await expandSidebar(page);
   const sort = page.getByRole("button", {
     name: "项目显示与排序",
     exact: true,
@@ -61,32 +59,33 @@ test("工具菜单切换到资产弹窗后不在背景残留", async ({ page }) 
   await openWorkspace(page);
   await page.getByRole("button", { name: "选择画布工具", exact: true }).click();
   await expect(page.getByRole("menu", { name: "画布工具选择" })).toBeVisible();
-  await page.getByRole("button", { name: "资产管理", exact: true }).click();
+  await page.getByRole("button", { name: "资源管理", exact: true }).click();
   await expect(page.getByRole("dialog", { name: "资产管理" })).toBeVisible();
   await expect(
     page.getByRole("menu", { name: "画布工具选择", includeHidden: true }),
   ).toHaveCount(0);
   await page.keyboard.press("Escape");
   await expect(
-    page.getByRole("button", { name: "资产管理", exact: true }),
+    page.getByRole("button", { name: "资源管理", exact: true }),
   ).toBeFocused();
   await expect(page.locator(".canvas-tool-menu")).toHaveCount(0);
 });
 
-test("侧栏项目右键菜单在打开同一项目时关闭", async ({ page }) => {
+test("侧栏项目文件夹右键菜单在点击行收起时关闭", async ({ page }) => {
   await page.goto("/");
-  const project = page
-    .locator(".project-entry .project-link")
-    .filter({ hasText: "KK项目" });
-  await project.click({ button: "right" });
+  await expandSidebar(page);
+  await page.getByRole("button", { name: "创建项目文件夹" }).click();
+  const toggle = page.locator(".folder-heading-toggle").first();
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await toggle.click({ button: "right" });
   await expect(
     page.getByRole("menu", { name: "项目组设置", exact: true }),
   ).toBeVisible();
-  await project.click();
+  await toggle.click();
   await expect(
     page.getByRole("menu", { name: "项目组设置", exact: true }),
   ).toHaveCount(0);
-  await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
 });
 
 test("画布导航菜单在切换背景和连线时关闭且操作仍生效", async ({ page }) => {

@@ -22,7 +22,11 @@ export default function TopBar({
       : matchMedia("(max-width: 767px)").matches
         ? (headerRef.current?.querySelector<HTMLButtonElement>(
             ".compact-app-trigger",
-          ) ?? null)
+          ) ??
+          headerRef.current?.querySelector<HTMLButtonElement>(
+            ".mobile-search",
+          ) ??
+          null)
         : (navRef.current?.querySelector<HTMLButtonElement>("button") ?? null),
   );
   useEffect(() => {
@@ -89,6 +93,22 @@ export default function TopBar({
         onClick={() => onOpen("search")}
       >
         <img src="/design/figma/search.svg" alt="" />
+      </button>
+      <button
+        className="mobile-project-switch"
+        aria-label="切换项目"
+        title="切换项目"
+        onClick={() => onOpen("projects")}
+      >
+        <img src="/design/figma/sidebar-archive.svg" alt="" />
+      </button>
+      <button
+        className="mobile-settings"
+        aria-label="打开设置"
+        title="打开设置"
+        onClick={() => onOpen("settings")}
+      >
+        <img src="/design/figma/sidebar-settings-container.svg" alt="" />
       </button>
       <span className="preview-label">{appPlatform()}</span>
       <CompactAppMenu entries={entries} />

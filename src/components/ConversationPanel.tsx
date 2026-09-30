@@ -1,33 +1,33 @@
-import type { ModelSelection } from "../features/models/modelSelection";
+import { ConversationResizeHandle } from "./ResizeHandle";
 import { useEffect, useState } from "react";
 import { useConversationOverlay } from "./useConversationOverlay";
 import useConversationAttachments from "./useConversationAttachments";
-import type {
-  CreationDraft,
-  CreationProject,
-} from "../features/creation/model";
-import ConversationMessages from "./ConversationMessages";
-import type { SkillRecord } from "../features/skills/skillRegistry";
-import AgentConversationMessages, {
-  type AgentConversationProps,
-} from "./AgentConversationMessages";
+import type { CreationDraft } from "../features/creation/model";
+import type { ConversationPanelProps } from "./ConversationPanel.types";
+import ConversationMessageFeed from "./ConversationMessageFeed";
 import ConversationChannelSelector from "./ConversationChannelSelector";
-import AgentComposer from "./AgentComposer";
 import ConversationTaskApproval from "./ConversationTaskApproval";
 import ConversationHeader from "./ConversationHeader";
-import ConversationComposer from "./ConversationComposer";
+import ConversationComposerRegion from "./ConversationComposerRegion";
+import GoogleConversationPanel from "./GoogleConversationPanel";
+import useConversationSubmit from "./useConversationSubmit";
 import {
   readAgentModel,
   writeAgentModel,
   safeStorage,
 } from "../features/agent/agentConnection";
-
+import {
+  canSubmitGeneration,
+  getDisabledReason,
+  getGenerationUiState,
+} from "../domain/uiGovernance";
 export default function ConversationPanel({
   overlay = false,
   onClose,
   onOpen,
   project,
   currentModel,
+  modelConfigured = false,
   onModelChange,
   composerDraft,
   onDraftChange,
@@ -38,28 +38,12 @@ export default function ConversationPanel({
   skills = [],
   onApplySkill,
   agent,
-}: {
-  overlay?: boolean;
-  onClose: () => void;
-  onOpen: (id: string) => void;
-  project?: CreationProject;
-  currentModel?: string;
-  onModelChange?: (model: string, selection?: ModelSelection) => void;
-  modelOptions?: string[];
-  onSend?: (
-    message: string,
-  ) => boolean | string | void | Promise<boolean | string>;
-  onDeleteMessage?: (messageId: string) => void;
-  composerDraft?: CreationDraft;
-  onDraftChange?: (draft: CreationDraft) => void;
-  voiceEnabled?: boolean;
-  skills?: SkillRecord[];
-  onApplySkill?: (record: SkillRecord) => string;
-  agent?: AgentConversationProps;
-}) {
-  const panelRef = useConversationOverlay(overlay, onClose);
+}: ConversationPanelProps) {
+  const panelRef = useConversationOverlay(overlay);
   const [channel, setChannel] = useState(() =>
-    safeStorage.getItem("kk-chat-channel") === "direct" ? "direct" : "codex",
+    ["direct", "google"].includes(safeStorage.getItem("kk-chat-channel") ?? "")
+      ? safeStorage.getItem("kk-chat-channel")!
+      : "codex",
   );
   const [agentModel, setAgentModel] = useState(readAgentModel);
   const agentActive = Boolean(agent && channel === "codex");
@@ -103,39 +87,40 @@ export default function ConversationPanel({
     onChange: (attachments) => updateDraft({ attachments }),
     onStatus: setStatus,
   });
-  async function submitMessage(message: string): Promise<void> {
-    if (submitting) return;
-    if (!agentActive && approvalMode === "ask" && pendingApproval !== message) {
-      setPendingApproval(message);
-      setStatus("任务准备就绪，确认后才会提交给模型。");
-      return;
-    }
-    setSubmitting(true);
-    try {
-      const result = onSend ? await onSend(message) : true;
-      if (result === false || typeof result === "string") {
-        setStatus(
-          typeof result === "string"
-            ? result
-            : "当前任务仍在执行，或尚未配置模型连接。",
-        );
-        return;
-      }
-      if (!onSend) setMessages((current) => [...current, message]);
-      setInput("");
-      setPendingApproval(null);
-      updateDraft({ prompt: "" });
-      setStatus(
-        onSend
-          ? "任务已提交，状态会显示在画布顶部。"
-          : "内容已记录。连接模型供应商后，即可获取 AI 回复。",
-      );
-    } catch {
-      setStatus("提交失败，请检查模型连接后重试。");
-    } finally {
-      setSubmitting(false);
-    }
-  }
+  const directState = getGenerationUiState({
+    prompt: input,
+    inputValid: !readingFiles,
+    modelConfigured,
+    quotaAvailable: true,
+    online: typeof navigator === "undefined" ? true : navigator.onLine,
+    serviceConfigured: modelConfigured,
+  });
+  const directDisabledReason = getDisabledReason(directState);
+  const submitMessage = useConversationSubmit({
+    submitting,
+    setSubmitting,
+    agentActive,
+    approvalMode,
+    pendingApproval,
+    setPendingApproval,
+    setStatus,
+    onSend,
+    onDraftChange,
+    composerDraft,
+    setInput,
+    setMessages,
+  });
+  if (channel === "google" && project)
+    return (
+      <GoogleConversationPanel
+        project={project}
+        onClose={onClose}
+        onOpen={onOpen}
+        onChannelChange={setChannel}
+        overlay={overlay}
+        codexBusy={Boolean(agent?.sending || agent?.connecting)}
+      />
+    );
   return (
     <aside
       ref={panelRef}
@@ -143,8 +128,13 @@ export default function ConversationPanel({
       data-node-id="407:29265"
       data-overlay={overlay}
     >
+      <ConversationResizeHandle />
       <ConversationHeader
-        title={project?.name ?? "新建对话"}
+        title={
+          project?.name && project.name !== "未命名项目"
+            ? project.name
+            : "KK Studio"
+        }
         messageCount={
           agentActive ? (agent?.messages.length ?? 0) : visibleMessages.length
         }
@@ -161,126 +151,116 @@ export default function ConversationPanel({
           }}
         />
       )}
-      <div className="conversation-messages">
-        {agentActive && agent ? (
-          <AgentConversationMessages
-            agent={agent}
-            onConfigure={() => onOpen("settings/network")}
-          />
-        ) : (
-          <ConversationMessages
-            messages={visibleMessages}
-            onDelete={deleteMessage}
-            onStatus={setStatus}
-          />
-        )}
-        {status && (
-          <p className="chat-status" role="status">
-            {status}
-          </p>
-        )}
-      </div>
-      <AgentComposer
+      <ConversationMessageFeed
+        agent={agent}
+        agentActive={agentActive}
+        messages={visibleMessages}
+        onDelete={deleteMessage}
+        onStatus={setStatus}
+        onConfigure={() => onOpen("settings/partners")}
+        onConfigureDirect={
+          directState === "service-unconfigured"
+            ? () => onOpen("settings/providers")
+            : undefined
+        }
+        status={
+          status ||
+          (!agentActive && input.trim() ? (directDisabledReason ?? "") : "")
+        }
+      />
+      <ConversationComposerRegion
         agent={agent}
         draftKey={project?.id ?? "workspace"}
-        active={agentActive}
-        composer={
-          <ConversationComposer
-            input={input}
-            onInputChange={(value) => {
-              setInput(value);
-              updateDraft({ prompt: value });
-            }}
-            onSubmitMessage={submitMessage}
-            disabled={
-              submitting ||
-              (agentActive && (agentConnecting || Boolean(agent?.sending)))
-            }
-            placeholder={
-              agentActive
-                ? "描述任务，Agent 会读取画布并执行操作"
-                : "描述你想要生成的内容"
-            }
-            composerDraft={composerDraft}
-            onRemoveAttachment={(id) =>
-              updateDraft({
-                attachments: (composerDraft?.attachments ?? []).filter(
-                  (item) => item.id !== id,
-                ),
-              })
-            }
-            fileInput={fileInput}
-            onAddFiles={addFiles}
-            readingFiles={readingFiles}
-            onStatus={setStatus}
-            currentModel={
-              agentActive ? agentModel || "Codex 账号默认" : currentModel
-            }
-            modelOptions={
-              agentActive
-                ? ["Codex 账号默认", ...(agent?.models ?? [])]
-                : modelOptions
-            }
-            modelSelection={
-              agentActive
-                ? {
-                    source: agentModel ? "codex" : "default",
-                    model: agentModel ?? "",
-                  }
-                : {
-                    source: "api",
-                    model: currentModel ?? "",
-                    connectionId: project?.composerDraft.providerConnectionId,
-                  }
-            }
-            onSelectModel={(option, selection) => {
-              const codex = selection
-                ? selection.source !== "api"
-                : agentActive;
-              setChannel(codex ? "codex" : "direct");
-              safeStorage.setItem(
-                "kk-chat-channel",
-                codex ? "codex" : "direct",
-              );
-              if (codex) {
-                const model =
-                  selection?.source === "default" || option === "Codex 账号默认"
-                    ? undefined
-                    : option;
-                setAgentModel(model);
-                writeAgentModel(model);
-              } else onModelChange?.(option, selection);
-            }}
-            onOpen={onOpen}
-            skills={skills}
-            onApplySkill={onApplySkill}
-            approvalMode={
-              agentActive
-                ? agent?.permissionMode === "request"
-                  ? "ask"
-                  : "auto"
-                : approvalMode
-            }
-            onSelectMode={(value) => {
-              if (agentActive) {
-                agent?.onPermissionModeChange(
-                  value === "ask" ? "request" : "automatic",
-                );
-                setApprovalMode(value);
-                return;
-              }
-              setApprovalMode(value);
-              updateDraft({ approvalMode: value });
-            }}
-            voiceEnabled={voiceEnabled && !submitting}
-            onVoiceChange={(value) => {
-              setInput(value);
-              updateDraft({ prompt: value });
-            }}
-            onVoiceStatus={setStatus}
-            voiceSessionKey={project?.id ?? "workspace-demo"}
-          />
+        agentActive={agentActive}
+        agentConnecting={agentConnecting}
+        agentModel={agentModel}
+        input={input}
+        onInputChange={(value) => {
+          setInput(value);
+          updateDraft({ prompt: value });
+        }}
+        onSubmitMessage={submitMessage}
+        disabled={
+          submitting ||
+          (agentActive && (agentConnecting || Boolean(agent?.sending)))
         }
+        submitDisabled={
+          submitting ||
+          (!agentActive &&
+            (!canSubmitGeneration(directState) || readingFiles > 0))
+        }
+        placeholder={
+          agentActive
+            ? "描述任务，Agent 会读取画布并执行操作"
+            : "描述你想要生成的内容"
+        }
+        composerDraft={composerDraft}
+        onRemoveAttachment={(id) =>
+          updateDraft({
+            attachments: (composerDraft?.attachments ?? []).filter(
+              (item) => item.id !== id,
+            ),
+          })
+        }
+        fileInput={fileInput}
+        onAddFiles={addFiles}
+        readingFiles={readingFiles}
+        onStatus={setStatus}
+        currentModel={currentModel}
+        modelOptions={modelOptions}
+        modelSelection={
+          agentActive
+            ? {
+                source: agentModel ? "codex" : "default",
+                model: agentModel ?? "",
+              }
+            : {
+                source: "api",
+                model: currentModel ?? "",
+                connectionId: project?.composerDraft.providerConnectionId,
+              }
+        }
+        onSelectModel={(option, selection) => {
+          const codex = selection ? selection.source !== "api" : agentActive;
+          setChannel(codex ? "codex" : "direct");
+          safeStorage.setItem("kk-chat-channel", codex ? "codex" : "direct");
+          if (codex) {
+            const model =
+              selection?.source === "default" || option === "Codex 账号默认"
+                ? undefined
+                : option;
+            setAgentModel(model);
+            writeAgentModel(model);
+          } else onModelChange?.(option, selection);
+        }}
+        onOpen={onOpen}
+        skills={skills}
+        onApplySkill={onApplySkill}
+        approvalMode={
+          agentActive
+            ? agent?.permissionMode === "request"
+              ? "ask"
+              : "auto"
+            : approvalMode
+        }
+        onSelectMode={(value) => {
+          if (agentActive) {
+            agent?.onPermissionModeChange(
+              value === "ask" ? "request" : "automatic",
+            );
+            setApprovalMode(value);
+            return;
+          }
+          setApprovalMode(value);
+          updateDraft({ approvalMode: value });
+        }}
+        voiceEnabled={voiceEnabled && !submitting}
+        onVoiceChange={(value) => {
+          setInput(value);
+          updateDraft({ prompt: value });
+        }}
+        onVoiceStatus={setStatus}
+        voiceSessionKey={project?.id ?? "workspace-demo"}
       />
       {!agentActive && pendingApproval && (
         <ConversationTaskApproval
@@ -291,7 +271,7 @@ export default function ConversationPanel({
           }}
         />
       )}
-      <footer>请确保授权，合法使用</footer>
+      <footer>请确保不侵权，合法使用</footer>
     </aside>
   );
 }

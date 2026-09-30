@@ -26,6 +26,8 @@ export const CanvasImageCommandContext = createContext<{
   textModel?: string;
   providerConnectionId?: string;
   disabledReason?: string;
+  imageConfigured?: boolean;
+  configure?: () => void;
 } | null>(null);
 export const CanvasImageNodeContext =
   createContext<CanvasCollectionItem | null>(null);
@@ -90,9 +92,17 @@ export function useCanvasImageGeneration() {
     (usesCodex && agent.status !== "connected"
       ? "请先在对话面板连接 Codex。"
       : undefined) ??
+    (!isText && !usesCodex && !command?.imageConfigured
+      ? "请先在设置中配置图片模型连接；当前草稿已保留。"
+      : undefined) ??
     (isText && !usesCodex && !item?.providerConnectionId && !command?.textModel
       ? "请先在设置中配置文本模型连接。"
       : undefined);
+  const needsConfiguration =
+    !usesCodex &&
+    (isText
+      ? !item?.providerConnectionId && !command?.textModel
+      : !command?.imageConfigured);
   const message =
     error ||
     (usesCodex ? agent.error : undefined) ||
@@ -150,5 +160,7 @@ export function useCanvasImageGeneration() {
     model: item?.model ?? (isText ? command?.textModel : command?.model) ?? "",
     models: command?.models ?? [],
     usesCodex,
+    configure:
+      needsConfiguration && command?.configure ? command.configure : undefined,
   };
 }

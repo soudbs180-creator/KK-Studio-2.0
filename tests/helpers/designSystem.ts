@@ -52,7 +52,7 @@ export function contrast(a: string, b: string): number {
 
 // Read the shipped token owners, not a duplicate palette maintained by tests.
 export function themeTokens(theme: string, accent: string) {
-  const css = ["global.css", "ui-tokens.css"]
+  const css = ["tokens.css", "global.css", "ui-tokens.css"]
     .map((file) =>
       readFileSync(
         new URL(`../../src/styles/${file}`, import.meta.url),
@@ -61,13 +61,22 @@ export function themeTokens(theme: string, accent: string) {
     )
     .join("\n");
   const tokens: Record<string, string> = {};
-  for (const [, selector, body] of css.matchAll(/(:root[^{}]*)\{([^{}]*)\}/g)) {
-    const themeMatch = selector.match(/\[data-theme="([^"]+)"\]/);
-    const accentMatch = selector.match(/\[data-accent="([^"]+)"\]/);
-    if (themeMatch && themeMatch[1] !== theme) continue;
-    if (accentMatch && accentMatch[1] !== accent) continue;
-    for (const [, name, value] of body.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g))
-      tokens[name] = value.trim();
+  for (const [, selector, body] of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    for (const branch of selector.split(",")) {
+      const scoped = branch.trim();
+      if (
+        !scoped.includes(":root") &&
+        !scoped.includes("[data-theme") &&
+        !scoped.includes("[data-accent")
+      )
+        continue;
+      const themeMatch = scoped.match(/\[data-theme="([^"]+)"\]/);
+      const accentMatch = scoped.match(/\[data-accent="([^"]+)"\]/);
+      if (themeMatch && themeMatch[1] !== theme) continue;
+      if (accentMatch && accentMatch[1] !== accent) continue;
+      for (const [, name, value] of body.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g))
+        tokens[name] = value.trim();
+    }
   }
   function resolve(name: string, seen = new Set<string>()): string {
     if (!tokens[name]) throw new Error(`Missing design token ${name}`);

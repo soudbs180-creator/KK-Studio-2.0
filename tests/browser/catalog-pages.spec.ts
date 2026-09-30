@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { expandSidebar } from "./helpers";
 
 test("开始创作首页、目录页和项目行操作保持真实状态", async ({ page }) => {
   await page.goto("/");
@@ -11,6 +12,10 @@ test("开始创作首页、目录页和项目行操作保持真实状态", async
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "项目库", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".project-library-card")).toHaveCount(0);
+  await expect(
+    page.getByText("还没有本地项目", { exact: false }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "新建项目", exact: true }),
@@ -32,7 +37,7 @@ test("开始创作首页、目录页和项目行操作保持真实状态", async
   );
   await page
     .getByRole("navigation", { name: "主导航" })
-    .getByRole("button", { name: "Skill", exact: true })
+    .getByRole("button", { name: "技能", exact: true })
     .click();
   await expect(
     page.getByRole("heading", { name: "Skill", exact: true }),
@@ -44,37 +49,44 @@ test("开始创作首页、目录页和项目行操作保持真实状态", async
     page.getByRole("heading", { name: "ComfyUI 工作流", exact: true }),
   ).toBeVisible();
 
-  const grouped = page.locator(".project-entry").first();
-  await grouped.locator(".project-link").click({ button: "right" });
-  await grouped.getByRole("menuitem", { name: "置顶项目" }).click();
-  await expect(grouped).toHaveClass(/is-pinned/);
-  await grouped.locator(".project-link").click({ button: "right" });
+  await expandSidebar(page);
+  await page.getByRole("button", { name: "创建项目文件夹" }).click();
+  const group = page.locator(".project-folder-group").first();
+  const toggle = group.locator(".folder-heading-toggle");
+  await toggle.click({ button: "right" });
+  await group.getByRole("menuitem", { name: "置顶文件夹" }).click();
+  await expect(group).toHaveClass(/is-pinned/);
+  await toggle.click({ button: "right" });
   await expect(
-    grouped.getByRole("menuitem", { name: "取消置顶项目" }),
+    group.getByRole("menuitem", { name: "取消置顶文件夹" }),
   ).toBeVisible();
-  await expect(grouped.getByRole("menu", { name: "项目组设置" })).toBeVisible();
-  await grouped.getByRole("menuitem", { name: "改名字" }).click();
+  await expect(group.getByRole("menu", { name: "项目组设置" })).toBeVisible();
+  await group.getByRole("menuitem", { name: "改名字" }).click();
   await expect(
-    grouped.getByRole("textbox", { name: "项目名称" }),
+    group.getByRole("textbox", { name: "项目文件夹名称" }),
   ).toBeVisible();
 
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
+  await expect(page.locator(".canvas-node")).toHaveCount(0);
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await expect(page.locator(".project-library-card")).toHaveCount(1);
+  await expect(page.locator(".project-library-card")).toContainText(
+    "0 个画布节点",
+  );
 });
 
 test("开始创作的 Skill 选项卡与 Skill 目录页保持职责分离", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("tab", { name: "Skill", exact: true }).click();
+  await page.getByRole("tab", { name: "技能", exact: true }).click();
   await expect(page.getByRole("region", { name: "开始创作" })).toBeVisible();
-  await expect(
-    page.getByText("从精选 Skill 开始", { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByText("从精选技能开始", { exact: true })).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Skill", exact: true }),
   ).toHaveCount(0);
 
-  await page.getByRole("button", { name: "浏览 Skill ›", exact: true }).click();
+  await page.getByRole("button", { name: "浏览技能 ›", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Skill", exact: true }),
   ).toBeVisible();
@@ -95,23 +107,22 @@ test("开始创作首次打开即可选择内置 Skill", async ({ page }) => {
 
 test("开始创作页的插件入口打开设置分类而不是 Skill 页面", async ({ page }) => {
   await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
-    .getByRole("region", { name: "开始创作" })
-    .getByRole("button", { name: "插件", exact: true })
-    .click();
-  await page
-    .getByRole("menu", { name: "选择插件" })
-    .getByRole("menuitem", {
-      name: "管理画布插件",
-    })
+    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("button", { name: "MCP", exact: true })
     .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
-      name: "插件",
+      name: "MCP",
       exact: true,
     }),
   ).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("tab", { name: /插件/ })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
   await expect(
     page.getByRole("heading", { name: "Skill", exact: true }),
   ).toHaveCount(0);
@@ -136,10 +147,14 @@ test("开始创作页的插件入口打开设置分类而不是 Skill 页面", a
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
-      name: "插件",
+      name: "MCP",
       exact: true,
     }),
   ).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("tab", { name: /插件/ })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
 });
 
 test("开始创作与工作台的模型入口都定位到模型供应商设置", async ({ page }) => {
@@ -179,7 +194,7 @@ test("开始创作与工作台的模型入口都定位到模型供应商设置",
 
 test("Skill 与 ComfyUI 页面状态说明不覆盖副标题", async ({ page }) => {
   await page.goto("/");
-  for (const name of ["Skill", "ComfyUI 工作流"]) {
+  for (const name of ["技能", "ComfyUI 工作流"]) {
     await page
       .getByRole("navigation", { name: "主导航" })
       .getByRole("button", { name, exact: true })
@@ -201,7 +216,7 @@ test("Skill 与工作流卡片保持当前页面并反馈本地预览状态", as
   await page.goto("/");
   await page
     .getByRole("navigation", { name: "主导航" })
-    .getByRole("button", { name: "Skill", exact: true })
+    .getByRole("button", { name: "技能", exact: true })
     .click();
   await expect(
     page.getByRole("heading", { name: "Skill", exact: true }),
@@ -244,7 +259,11 @@ test("Skill 与工作流卡片保持当前页面并反馈本地预览状态", as
 
 test("项目区支持筛选、排序和创建文件夹入口", async ({ page }) => {
   await page.goto("/");
+  await expandSidebar(page);
   const sidebar = page.locator(".sidebar");
+  await sidebar.getByRole("button", { name: "创建未分组项目" }).click();
+  await sidebar.getByRole("textbox", { name: "项目名称" }).fill("过滤项目");
+  await sidebar.getByRole("textbox", { name: "项目名称" }).press("Enter");
   await sidebar.getByRole("button", { name: "项目显示与排序" }).click();
   const menu = sidebar.getByRole("menu", { name: "项目显示与排序" });
   await expect(menu).toBeVisible();
@@ -254,13 +273,13 @@ test("项目区支持筛选、排序和创建文件夹入口", async ({ page }) 
   await sidebar.getByRole("button", { name: "项目显示与排序" }).click();
   await sidebar
     .getByRole("menu", { name: "项目显示与排序" })
-    .getByRole("menuitemradio", { name: "优先级" })
+    .getByRole("menuitemradio", { name: "任务状态优先" })
     .click();
   await sidebar.getByRole("button", { name: "项目显示与排序" }).click();
   await expect(
     sidebar
       .getByRole("menu", { name: "项目显示与排序" })
-      .getByRole("menuitemradio", { name: "优先级" }),
+      .getByRole("menuitemradio", { name: "任务状态优先" }),
   ).toHaveAttribute("aria-checked", "true");
   await sidebar.getByRole("button", { name: "项目显示与排序" }).click();
   await sidebar.getByRole("button", { name: "创建项目文件夹" }).click();

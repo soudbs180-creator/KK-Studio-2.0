@@ -1,0 +1,8 @@
+/*
+ * Compatibility entry point.
+ *
+ * Runtime page selection now lives in src/domain/pageTemplates.ts and the
+ * five shared implementations live in page-templates.css. This file remains
+ * so older imports do not fail; it intentionally defines no second geometry
+ * source.
+ */

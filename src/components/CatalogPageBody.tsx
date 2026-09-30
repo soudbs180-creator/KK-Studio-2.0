@@ -1,14 +1,15 @@
-import { useState } from "react";
 import UiIcon from "./UiIcon";
 import type { CreationProject } from "../features/creation/model";
 import WorkflowCard from "./WorkflowCard";
 import type { WorkflowRecord } from "../features/comfyui/workflowRegistry";
+import type { PageTemplateKey } from "../domain/pageTemplates";
 
 type Skill = readonly [string, string, string];
 type Workflow = readonly [string, string, string, string];
 
 export default function CatalogPageBody({
   view,
+  template,
   search,
   skills,
   workflows,
@@ -24,6 +25,7 @@ export default function CatalogPageBody({
   onRunWorkflow,
 }: {
   view: "projects" | "skills" | "comfyui";
+  template: PageTemplateKey;
   search: string;
   skills: readonly Skill[];
   workflows: readonly Workflow[];
@@ -38,11 +40,14 @@ export default function CatalogPageBody({
   onDeleteWorkflow?: (workflow: WorkflowRecord) => void;
   onRunWorkflow?: (workflow: WorkflowRecord) => void;
 }) {
-  const [folderCreated, setFolderCreated] = useState(false);
   if (view === "projects") {
     if (tab === "共享项目") {
       return (
-        <div className="catalog-empty" role="status">
+        <div
+          className="catalog-empty"
+          data-template-body={template}
+          role="status"
+        >
           <span className="catalog-empty-mark" aria-hidden="true">
             ⌁
           </span>
@@ -50,14 +55,18 @@ export default function CatalogPageBody({
         </div>
       );
     }
+    const visibleProjects = projects.filter((project) =>
+      `${project.name}${project.prompt}`.toLowerCase().includes(search),
+    );
     return (
-      <div className="project-library-content">
+      <div className="project-library-content" data-template-body={template}>
         <div className="project-library-actions" aria-label="项目资源操作">
           <button
             type="button"
             className="project-library-action"
             aria-label="新建文件夹"
-            onClick={() => setFolderCreated(true)}
+            disabled
+            title="请在侧栏创建会话文件夹；项目库文件夹持久化尚未接入"
           >
             <UiIcon name="folderAdd" size={20} />
             <span>
@@ -79,57 +88,37 @@ export default function CatalogPageBody({
             </span>
           </button>
         </div>
-        {folderCreated && (
-          <p className="project-library-status" role="status">
-            已创建新文件夹，可在项目组中整理项目。
-          </p>
-        )}
         <div className="project-grid">
-          {projects
-            .filter((project) =>
-              `${project.name}${project.prompt}`.toLowerCase().includes(search),
-            )
-            .map((project) => (
-              <button
-                className="project-library-card"
-                key={project.id}
-                onClick={() => onSelect(project.id)}
-              >
-                <div className="project-library-preview">
-                  <span className="catalog-folder-mark">▱</span>
-                </div>
-                <strong>{project.name}</strong>
-                <span>
-                  {new Date(project.updatedAt).toLocaleDateString("zh-CN")} ·
-                  本地项目 · {project.items.length} 个画布节点
-                </span>
-                <span className="catalog-card-arrow" aria-hidden="true">
-                  ↗
-                </span>
-              </button>
-            ))}
-          {!projects.length && (search === "kk" || !search) ? (
+          {visibleProjects.map((project) => (
             <button
               className="project-library-card"
-              onClick={() => onSelect("项目 kk")}
+              key={project.id}
+              onClick={() => onSelect(project.id)}
             >
               <div className="project-library-preview">
                 <span className="catalog-folder-mark">▱</span>
               </div>
-              <strong>kk</strong>
-              <span>2026.9.5 · 本地项目 · 3 个画布节点</span>
+              <strong>{project.name}</strong>
+              <span>
+                {new Date(project.updatedAt).toLocaleDateString("zh-CN")} ·
+                本地项目 · {project.items.length} 个画布节点
+              </span>
               <span className="catalog-card-arrow" aria-hidden="true">
                 ↗
               </span>
             </button>
-          ) : null}
+          ))}
         </div>
-        {!projects.length && search && search !== "kk" && (
+        {!visibleProjects.length && (
           <div className="catalog-empty" role="status">
             <span className="catalog-empty-mark" aria-hidden="true">
               ⌕
             </span>
-            <p>没有找到匹配的项目</p>
+            <p>
+              {search
+                ? "没有找到匹配的项目"
+                : "还没有本地项目，点击“新建项目”开始创作。"}
+            </p>
           </div>
         )}
       </div>
@@ -138,7 +127,11 @@ export default function CatalogPageBody({
   if (view === "skills") {
     if (tab === "我的 Skill") {
       return (
-        <div className="catalog-empty" role="status">
+        <div
+          className="catalog-empty"
+          data-template-body={template}
+          role="status"
+        >
           <span className="catalog-empty-mark" aria-hidden="true">
             ⌁
           </span>
@@ -147,7 +140,7 @@ export default function CatalogPageBody({
       );
     }
     return (
-      <>
+      <div className="page-template-body" data-template-body={template}>
         <div className="catalog-categories" role="group" aria-label="Skill分类">
           {[
             "全部",
@@ -199,20 +192,24 @@ export default function CatalogPageBody({
           ))}
         </div>
         {!skills.length && (
-          <div className="catalog-empty">
+          <div className="catalog-empty" data-template-body={template}>
             <span className="catalog-empty-mark" aria-hidden="true">
               ⌕
             </span>
             <p>没有找到匹配的 Skill</p>
           </div>
         )}
-      </>
+      </div>
     );
   }
   if (tab === "我的工作流") {
     if (!localWorkflows.length)
       return (
-        <div className="catalog-empty" role="status">
+        <div
+          className="catalog-empty"
+          data-template-body={template}
+          role="status"
+        >
           <span className="catalog-empty-mark" aria-hidden="true">
             ⌁
           </span>
@@ -222,6 +219,7 @@ export default function CatalogPageBody({
     return (
       <div
         className="catalog-card-grid workflow-grid"
+        data-template-body={template}
         aria-label="我的本地工作流"
       >
         {localWorkflows
@@ -244,7 +242,7 @@ export default function CatalogPageBody({
     );
   }
   return (
-    <>
+    <div className="page-template-body" data-template-body={template}>
       <h2 className="catalog-section-title">精选工作流</h2>
       <div className="catalog-card-grid workflow-grid">
         {workflows.map(([title, description, tag, source], index) => (
@@ -271,13 +269,13 @@ export default function CatalogPageBody({
         ))}
       </div>
       {!workflows.length && (
-        <div className="catalog-empty">
+        <div className="catalog-empty" data-template-body={template}>
           <span className="catalog-empty-mark" aria-hidden="true">
             ⌕
           </span>
           <p>没有找到匹配的工作流</p>
         </div>
       )}
-    </>
+    </div>
   );
 }

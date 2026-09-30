@@ -10,10 +10,12 @@ export default function ConversationMessages({
   messages,
   onDelete,
   onStatus,
+  onConfigure,
 }: {
   messages: ConversationMessageView[];
   onDelete?: (messageId: string) => void;
   onStatus: (status: string) => void;
+  onConfigure?: () => void;
 }) {
   if (!messages.length)
     return (
@@ -23,6 +25,13 @@ export default function ConversationMessages({
         </span>
         <h3>从一个想法开始</h3>
         <p>描述你的创意，将灵感连接到画布。</p>
+        {onConfigure && (
+          <div className="chat-agent-controls">
+            <button type="button" onClick={onConfigure}>
+              前往模型设置
+            </button>
+          </div>
+        )}
       </div>
     );
   return messages.map((message) => (

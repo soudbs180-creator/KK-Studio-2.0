@@ -1,0 +1,32 @@
+{
+  "runtime": "Tauri release",
+  "url": "http://tauri.localhost/",
+  "mode": "production",
+  "entry": "src/main.tsx",
+  "resources": [
+    "http://tauri.localhost/plugins/index.json",
+    "http://tauri.localhost/plugins/markdown.js?t=1790749654265",
+    "http://tauri.localhost/plugins/html.js?t=1790749654265",
+    "http://tauri.localhost/plugins/sticky-note.js?t=1790749654265",
+    "http://tauri.localhost/plugins/svg.js?t=1790749654265",
+    "http://tauri.localhost/plugins/markdown.js?t=1790749654265",
+    "http://tauri.localhost/plugins/html.js?t=1790749654265",
+    "http://tauri.localhost/plugins/sticky-note.js?t=1790749654265",
+    "http://tauri.localhost/plugins/svg.js?t=1790749654265",
+    "http://tauri.localhost/plugins/markdown.js?t=1790749654284",
+    "http://tauri.localhost/plugins/svg.js?t=1790749654284",
+    "http://tauri.localhost/plugins/html.js?t=1790749654284",
+    "http://tauri.localhost/plugins/sticky-note.js?t=1790749654284",
+    "http://tauri.localhost/plugins/markdown.js?t=1790749654284",
+    "http://tauri.localhost/plugins/svg.js?t=1790749654284",
+    "http://tauri.localhost/plugins/html.js?t=1790749654284",
+    "http://tauri.localhost/plugins/sticky-note.js?t=1790749654284",
+    "http://tauri.localhost/plugins/svg.js?t=1790749654841",
+    "http://tauri.localhost/plugins/svg.js?t=1790749654841"
+  ],
+  "dataRoot": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\plugin-csp-acceptance\\1790749653810\\data",
+  "profile": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\plugin-csp-acceptance\\1790749653810\\webview-profile",
+  "errors": [],
+  "csp": "script-src 'self' 'wasm-unsafe-eval'",
+  "plugin": "discover-add-render-disable-enable"
+}

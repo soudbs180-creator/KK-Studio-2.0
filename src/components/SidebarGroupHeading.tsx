@@ -2,10 +2,14 @@ export default function SidebarGroupHeading({
   expanded,
   onToggle,
   onOpenLibrary,
+  onCreateProject,
+  canCreateProject = true,
 }: {
   expanded: boolean;
   onToggle: () => void;
   onOpenLibrary: () => void;
+  onCreateProject: () => void;
+  canCreateProject?: boolean;
 }) {
   return (
     <div className="group-heading-row">
@@ -36,9 +40,10 @@ export default function SidebarGroupHeading({
         </button>
         <button
           className="project-groups-action"
-          aria-label="创建创作页"
-          disabled
-          title="多创作页尚未接入（Prototype）"
+          aria-label="创建未分组项目"
+          disabled={!canCreateProject}
+          title={canCreateProject ? "创建本地项目" : "项目存储尚未就绪"}
+          onClick={onCreateProject}
         >
           <img
             src="/design/figma/project-add-container.svg"

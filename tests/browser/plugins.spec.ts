@@ -37,11 +37,11 @@ test("插件管理拒绝明文地址并说明远程代码权限", async ({ page 
     return route.abort();
   });
   await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
-    .locator(".start-composer")
-    .getByRole("button", { name: "插件", exact: true })
+    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("button", { name: "MCP", exact: true })
     .click();
-  await page.getByRole("menuitem", { name: "管理画布插件" }).click();
   await expect(
     page.getByText(
       "远程插件会以应用权限运行。请仅安装你信任的 HTTPS 插件地址。",

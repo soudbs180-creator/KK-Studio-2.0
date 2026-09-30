@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import {
   CANVAS_KIND_LABELS,
@@ -7,6 +7,7 @@ import {
 import UiIcon from "./UiIcon";
 import type { Asset } from "../domain/assets";
 import SavedPane from "./SavedPane";
+import type { CreationProject } from "../features/creation/model";
 
 interface CatalogPanelProps {
   initialTab: string;
@@ -16,6 +17,8 @@ interface CatalogPanelProps {
   likedIds: Set<string>;
   onClose: () => void;
   onOpen: (view: string) => void;
+  projects: CreationProject[];
+  onOpenProject: (id: string) => void;
   onLocate: (id: string) => void;
   onToggleFavorite: (id: string) => void;
   onToggleLike: (id: string) => void;
@@ -30,6 +33,8 @@ export default function CatalogPanel({
   favoriteIds,
   likedIds,
   onOpen,
+  projects,
+  onOpenProject,
   onLocate,
   onToggleFavorite,
   onToggleLike,
@@ -40,6 +45,26 @@ export default function CatalogPanel({
   const [type, setType] = useState("all");
   const input = useRef<HTMLInputElement>(null);
   const results = useRef<HTMLDivElement>(null);
+  const tabs = useRef<HTMLDivElement>(null);
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+  useLayoutEffect(() => {
+    const list = tabs.current;
+    const active = list?.querySelector<HTMLButtonElement>(
+      '[role="tab"][aria-selected="true"]',
+    );
+    if (!list || !active) return;
+    const place = () =>
+      setIndicator({ left: active.offsetLeft, width: active.offsetWidth });
+    place();
+    active.scrollIntoView({ block: "nearest", inline: "nearest" });
+    const observer = new ResizeObserver(place);
+    observer.observe(list);
+    for (const button of list.querySelectorAll<HTMLButtonElement>(
+      '[role="tab"]',
+    ))
+      observer.observe(button);
+    return () => observer.disconnect();
+  }, [tab]);
   const needle = query.trim().toLocaleLowerCase();
   const filtered = items.filter(
     (item) =>
@@ -51,6 +76,13 @@ export default function CatalogPanel({
   const assetResults = assets.filter((item) =>
     item.name.toLocaleLowerCase().includes(needle),
   );
+  const projectResults = projects.filter((project) =>
+    `${project.name} ${project.prompt}`.toLocaleLowerCase().includes(needle),
+  );
+  const resultCount =
+    (["全部", "创作页", "类型"].includes(tab) ? filtered.length : 0) +
+    (["全部", "项目"].includes(tab) ? projectResults.length : 0) +
+    (["全部", "文件资产"].includes(tab) ? assetResults.length : 0);
   return (
     <section
       className="catalog-panel"
@@ -97,7 +129,12 @@ export default function CatalogPanel({
           </button>
         )}
       </label>
-      <div className="catalog-tabs" role="tablist" aria-label="搜索分类">
+      <div
+        ref={tabs}
+        className="catalog-tabs"
+        role="tablist"
+        aria-label="搜索分类"
+      >
         {TABS.map((name, index) => (
           <button
             key={name}
@@ -128,6 +165,11 @@ export default function CatalogPanel({
             {name}
           </button>
         ))}
+        <span
+          className="catalog-tab-indicator"
+          style={{ left: indicator.left, width: indicator.width }}
+          aria-hidden="true"
+        />
       </div>
       <div
         ref={results}
@@ -199,18 +241,20 @@ export default function CatalogPanel({
                   <small>{CANVAS_KIND_LABELS[item.kind]}</small>
                 </button>
               ))}
-            {["全部", "项目"].includes(tab) && "kk工作流".includes(needle) && (
-              <button
-                className="catalog-result"
-                onClick={() => onOpen("workspace")}
-              >
-                <span>
-                  <strong>KK工作流</strong>
-                  <small>当前会话 · 创作画布</small>
-                </span>
-                <small>项目</small>
-              </button>
-            )}
+            {["全部", "项目"].includes(tab) &&
+              projectResults.map((project) => (
+                <button
+                  key={project.id}
+                  className="catalog-result"
+                  onClick={() => onOpenProject(project.id)}
+                >
+                  <span>
+                    <strong>{project.name}</strong>
+                    <small>本地项目 · {project.items.length} 个画布节点</small>
+                  </span>
+                  <small>项目</small>
+                </button>
+              ))}
             {["全部", "文件资产"].includes(tab) &&
               assetResults.map((item) => (
                 <button
@@ -225,9 +269,11 @@ export default function CatalogPanel({
                   <small>文件资产</small>
                 </button>
               ))}
-            <p className="catalog-no-results">
-              没有找到匹配的内容，试试其它关键词或分类。
-            </p>
+            {resultCount === 0 && (
+              <p className="catalog-no-results">
+                没有找到匹配的内容，试试其它关键词或分类。
+              </p>
+            )}
           </div>
         )}
       </div>

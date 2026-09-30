@@ -70,7 +70,7 @@ test("two canvas images open a comparison and the slider supports keyboard steps
     );
   });
   await page.screenshot({
-    path: "docs/changes/2026-09-27-canvas-image-compare/evidence/compare-1440.png",
+    path: "test-results/changes/2026-09-27-canvas-image-compare/evidence/compare-1440.png",
   });
   await dialog.getByRole("button", { name: "放大" }).click();
   await expect(dialog.getByText("125%")).toBeVisible();
@@ -224,7 +224,7 @@ test("narrow canvas keeps the comparison controls reachable and slider draggable
       .poll(async () => Number(await slider.inputValue()))
       .toBeGreaterThan(60);
     await page.screenshot({
-      path: "docs/changes/2026-09-27-canvas-image-compare/evidence/compare-390.png",
+      path: "test-results/changes/2026-09-27-canvas-image-compare/evidence/compare-390.png",
     });
   } finally {
     await context.close();

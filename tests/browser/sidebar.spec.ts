@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
+import { seedSidebarFixture } from "./sidebar-fixture";
 
 async function openWorkspace(page: Page): Promise<void> {
   await page.goto("/");
@@ -12,8 +13,10 @@ test("最新70px收起侧栏、38×48导航与保留的搜索入口，搜索关�
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
   const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
+  await expect(
+    page.getByRole("button", { name: "展开侧边栏", exact: true }),
+  ).toHaveAttribute("aria-expanded", "false");
   await expect(sidebar).toHaveCSS("width", "70px");
   expect(await sidebar.boundingBox()).toMatchObject({ x: 0, width: 70 });
   const rows = await sidebar.locator(".primary-nav button").all();
@@ -44,7 +47,32 @@ test("最新70px收起侧栏、38×48导航与保留的搜索入口，搜索关�
   await expect(search).toBeFocused();
 });
 
-test("四视口保留搜索、账号和设置命中，窄屏展开可操作且Escape回焦", async ({
+test("平板侧栏展开向右扩展并推动工作区，只由开关切换", async ({ page }) => {
+  await page.setViewportSize({ width: 1067, height: 912 });
+  await page.goto("/");
+  const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
+  const toggle = page.getByRole("button", { name: "展开侧边栏", exact: true });
+  await toggle.click();
+  await expect(sidebar).toHaveCSS("width", "291px");
+  await expect(page.locator(".workspace")).toHaveCSS("margin-left", "291px");
+  await expect(sidebar.locator(".sidebar-toggle img")).toHaveAttribute(
+    "src",
+    "/design/figma/sidebar-collapse.svg",
+  );
+  await expect(sidebar.locator(".resize-handle")).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "收起侧边栏", exact: true }),
+  ).toHaveCSS("height", "44px");
+  await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
+  await expect(sidebar).toHaveCSS("width", "72px");
+  await expect(page.locator(".workspace")).toHaveCSS("margin-left", "0px");
+  await expect(sidebar.locator(".sidebar-toggle img")).toHaveAttribute(
+    "src",
+    "/design/figma/sidebar-expand.svg",
+  );
+});
+
+test("四视口保留搜索、账号和设置命中，手机端使用固定顶栏操作", async ({
   page,
 }) => {
   for (const [width, height] of [
@@ -55,24 +83,44 @@ test("四视口保留搜索、账号和设置命中，窄屏展开可操作且Es
   ]) {
     await page.setViewportSize({ width, height });
     await openWorkspace(page);
-    if (width > 1200)
+    const sidebar = page.locator(".sidebar");
+    if (
+      width > 1200 &&
+      (await sidebar
+        .locator(".sidebar-toggle")
+        .getAttribute("aria-expanded")) === "true"
+    )
       await page
         .getByRole("button", { name: "收起侧边栏", exact: true })
         .click();
-    const sidebar = page.locator(".sidebar");
     const toggle = sidebar.locator(".sidebar-toggle");
-    await expect(toggle).toHaveAttribute("aria-expanded", "false");
-    // Phone puts search/settings in the header and account in the drawer.
-    if (width < 768) await toggle.click();
-    for (const name of ["搜索", "个人信息", "打开设置"]) {
-      const button = sidebar.getByRole("button", { name, exact: true });
+    if (width < 768) {
+      await expect(toggle).toHaveCSS("display", "none");
+    } else {
+      await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    }
+    const search =
+      width < 768
+        ? page.getByRole("button", { name: "搜索与收藏", exact: true })
+        : sidebar.getByRole("button", { name: "搜索", exact: true });
+    const settings =
+      width < 768
+        ? page.locator(".mobile-settings")
+        : sidebar.getByRole("button", { name: "打开设置", exact: true });
+    for (const button of [
+      search,
+      sidebar.getByRole("button", { name: "个人信息", exact: true }),
+      settings,
+    ]) {
       const hit = await button.evaluate((el) => {
         const b = el.getBoundingClientRect();
         return el.contains(
           document.elementFromPoint(b.x + b.width / 2, b.y + b.height / 2),
         );
       });
-      expect(hit, `${width} ${name}`).toBe(true);
+      expect(hit, `${width} ${await button.getAttribute("aria-label")}`).toBe(
+        true,
+      );
     }
     const account = sidebar.getByRole("button", {
       name: "个人信息",
@@ -82,11 +130,6 @@ test("四视口保留搜索、账号和设置命中，窄屏展开可操作且Es
     await expect(sidebar.locator(".account-popup")).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(account).toBeFocused();
-    if (width < 768) await toggle.click();
-    const settings = sidebar.getByRole("button", {
-      name: "打开设置",
-      exact: true,
-    });
     const settingsBounds = (await settings.boundingBox())!;
     if (width > 800) expect(settingsBounds.x).toBeLessThan(61);
     const toolbarBounds = (await page
@@ -107,14 +150,16 @@ test("四视口保留搜索、账号和设置命中，窄屏展开可操作且Es
     await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(settings).toBeFocused();
-    await toggle.click();
-    await expect(toggle).toHaveAttribute("aria-expanded", "true");
-    await expect(sidebar.locator(".nav-label").first()).toBeVisible();
+    if (width >= 768) {
+      await toggle.click();
+      await expect(toggle).toHaveAttribute("aria-expanded", "true");
+      await expect(sidebar.locator(".nav-label").first()).toBeVisible();
+    }
     await sidebar.getByRole("button", { name: "项目库", exact: true }).click();
     await expect(
       page.getByRole("heading", { name: "项目库", exact: true }),
     ).toBeVisible();
-    if (width <= 1200) {
+    if (width <= 1200 && width >= 768) {
       // Navigation closes a compact drawer; Escape still closes an open one.
       await expect(toggle).toHaveAttribute("aria-expanded", "false");
       await toggle.click();
@@ -161,7 +206,7 @@ test("侧栏快速切换后手机搜索承接焦点，减弱动态无残留动�
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const toggle = page.locator(".sidebar-toggle");
-  for (let i = 0; i < 5; i++) await toggle.click();
+  for (let i = 0; i < 4; i++) await toggle.click();
   await expect(toggle).toBeFocused();
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
   const search = page.getByRole("button", { name: "搜索", exact: true });
@@ -173,7 +218,9 @@ test("侧栏快速切换后手机搜索承接焦点，减弱动态无残留动�
   await page.keyboard.press("Enter");
   await expect(page.getByRole("dialog", { name: "搜索与收藏" })).toBeVisible();
   await page.keyboard.press("Escape");
-  await toggle.click();
+  await expect(
+    page.getByRole("button", { name: "搜索与收藏", exact: true }),
+  ).toBeFocused();
   expect(
     await page
       .locator(".sidebar")
@@ -183,37 +230,78 @@ test("侧栏快速切换后手机搜索承接焦点，减弱动态无残留动�
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
 });
 
-test("窄屏侧栏在搜索弹窗内保持展开，关闭后外部点击收起", async ({ page }) => {
+test("手机端搜索弹窗不依赖侧栏展开", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   const toggle = page.locator(".sidebar-toggle");
-  await toggle.click();
-  const search = page.getByRole("button", { name: "搜索", exact: true });
+  await expect(toggle).toHaveCSS("display", "none");
+  const search = page.getByRole("button", { name: "搜索与收藏", exact: true });
   await search.click();
   await page
     .getByRole("dialog", { name: "搜索与收藏" })
     .getByLabel("搜索内容")
     .fill("测试");
-  await expect(toggle).toHaveAttribute("aria-expanded", "true");
   await page.keyboard.press("Escape");
   await expect(search).toBeFocused();
   await page.mouse.click(375, 470);
-  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await expect(page.getByRole("dialog", { name: "搜索与收藏" })).toHaveCount(0);
 });
 
-test("断点隐藏分组时恢复焦点，顶部菜单仍可展开窄屏侧栏", async ({ page }) => {
+test("手机对话入口建立独立项目，未连接时保留草稿并提供配置入口", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "项目库", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "对话", exact: true }).click();
+  await expect(page.locator(".workspace-content")).toBeVisible();
+  await expect(page.locator(".conversation-panel")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "对话", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  await expect(page.locator(".project-save-state")).toContainText("已保存");
+  const input = page.getByLabel("对话内容", { exact: true });
+  await input.fill("手机端聊天入口测试");
+  await expect(
+    page.getByText("Codex 主 Agent · 未连接", { exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "发送消息", exact: true }).click();
+  await expect(page.getByRole("alert")).toContainText("连接 Codex");
+  await expect(input).toHaveValue("手机端聊天入口测试");
+  await page.getByRole("button", { name: "连接设置", exact: true }).click();
+  await expect(
+    page.getByRole("dialog", { name: "设置", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await expect(input).toHaveValue("手机端聊天入口测试");
+  await page.getByLabel("执行方式").selectOption("direct");
+  await input.fill("未配置 API 的草稿");
+  await expect(
+    page.getByRole("button", { name: "发送消息", exact: true }),
+  ).toBeDisabled();
+  await expect(page.locator(".chat-status")).toContainText("配置模型服务");
+  await page.getByRole("button", { name: "前往模型设置", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "模型供应商", exact: true }),
+  ).toBeVisible();
+});
+
+test("断点隐藏分组时恢复到用户，手机端保留顶栏操作", async ({ page }) => {
+  await seedSidebarFixture(page);
   await page.locator(".project-link").first().focus();
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(page.locator(".sidebar-toggle")).toBeFocused();
-  await page.getByRole("button", { name: "应用功能菜单", exact: true }).click();
-  await page
-    .getByRole("menuitem", { name: "展开 / 收起侧边栏", exact: true })
-    .click();
-  await expect(page.locator(".sidebar-toggle")).toHaveAttribute(
-    "aria-expanded",
-    "true",
-  );
+  await expect(
+    page.getByRole("button", { name: "个人信息", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "搜索与收藏", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "切换项目", exact: true }),
+  ).toBeVisible();
 });
 
 test("粗指针侧栏44px命中区不重叠，搜索、设置可触控", async ({ browser }) => {
@@ -226,9 +314,9 @@ test("粗指针侧栏44px命中区不重叠，搜索、设置可触控", async (
   const controls = await page.evaluate(() => {
     const names = [
       ".mobile-search",
-      ".sidebar-toggle",
-      ".sidebar-settings",
-      ".compact-app-trigger",
+      ".mobile-project-switch",
+      ".sidebar-account",
+      ".mobile-settings",
       ...Array.from(
         { length: 4 },
         (_, index) => `.primary-nav button:nth-child(${index + 1})`,

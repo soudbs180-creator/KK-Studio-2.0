@@ -1,4 +1,5 @@
 /** Codex 会话、具名 SSE 与 KK 画布桥的应用级 store。 */
+import { memoryService } from "../memory/index.ts";
 import {
   AGENT_CONNECT_TIMEOUT_MS,
   AGENT_DEFAULT_URL,
@@ -52,6 +53,12 @@ export interface AgentOpResult {
   tasks?: Array<{ taskId: string; nodeId: string; status: string }>;
 }
 export interface AgentBridge {
+  readGoogleConversation?():
+    import("../../domain/googleConversation.ts").GoogleConversation | undefined;
+  saveGoogleConversation?(
+    record: import("../../domain/googleConversation.ts").GoogleConversation,
+    projectId: string,
+  ): void;
   hasGeneratedImage?(id: string): boolean;
   importGeneratedImage?(input: {
     id: string;
@@ -59,6 +66,8 @@ export interface AgentBridge {
     projectId: string;
     signal: AbortSignal;
     sourceNodeId?: string;
+    provider?: "Google Gemini";
+    model?: string;
   }): Promise<void>;
   getSnapshot(): CanvasAgentSnapshot | null;
   applyOps(
@@ -689,8 +698,10 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       effort?: AgentReasoningEffort | "";
       canvasSource?: { nodeId: string; kind: "image" | "text" };
       attachments?: AgentDraftAttachment[];
+      /** Internal turns such as memory extraction must not learn from themselves. */
+      memoryMode?: "normal" | "none";
     },
-  ): Promise<{ ok: boolean; error?: string }> {
+  ): Promise<{ ok: boolean; error?: string; messageId?: string }> {
     if (toolReceiptError) return { ok: false, error: toolReceiptError };
     if (!text.trim() || state.status !== "connected" || !api)
       return { ok: false, error: "请先连接 Codex 主 Agent。" };
@@ -725,6 +736,8 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       threadId: conversation.threadId,
     });
     patch({ sending: true, error: null, activity: "发送中…" });
+    if (input?.memoryMode !== "none")
+      void memoryService.ingestMessage(text.trim(), "user");
     try {
       const attachments = await (
         options.prepareAttachments ?? prepareAgentAttachments
@@ -754,9 +767,16 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       await activeApi.postState(bridge?.getSnapshot() ?? null);
       if (version !== epoch || toolController.signal.aborted)
         throw new Error("发送已取消");
+      const memoryInjection =
+        input?.memoryMode === "none"
+          ? ""
+          : await memoryService.buildInjection(text.trim());
+      if (version !== epoch || toolController.signal.aborted)
+        throw new Error("发送已取消");
       const response = await activeApi.postTurn({
         prompt:
           KK_INSTRUCTIONS +
+          (memoryInjection ? "\n\n" + memoryInjection + "\n" : "") +
           "\n用户指令：\n" +
           text.trim() +
           (canvasReferences.length
@@ -788,7 +808,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         await activeApi.interrupt(conversation.threadId);
       if (response.state)
         handle({ kind: "conversation", conversation: response.state });
-      return { ok: true };
+      return { ok: true, messageId };
     } catch (error) {
       if (version === epoch) {
         if (

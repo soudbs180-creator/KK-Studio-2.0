@@ -2,6 +2,10 @@ import type {
   CanvasCollectionItem,
   CanvasItemKind,
 } from "../../domain/canvasItems";
+import {
+  normalizeGoogleConversation,
+  type GoogleConversation,
+} from "../../domain/googleConversation.ts";
 import type { ApprovalGate } from "../../domain/agentWorkflow";
 import { isAssetReference } from "./snapshotAssets.ts";
 import {
@@ -112,6 +116,7 @@ export interface CreationTask {
 }
 
 export interface CreationProject {
+  googleConversation?: GoogleConversation;
   agentGeneratedImageIds?: string[];
   canvas: ProjectCanvas;
   id: string;
@@ -135,6 +140,19 @@ export interface CreationProject {
   composerDraft: CreationDraft;
   createdAt: number;
   updatedAt: number;
+}
+
+/** Do not remove a project while its provider submission may still be active. */
+export function projectHasUnsettledTasks(project: CreationProject): boolean {
+  return project.tasks.some(
+    (task) =>
+      ["queued", "running", "unknown"].includes(task.status) ||
+      task.submissionState === "submitted" ||
+      task.submissionState === "unknown" ||
+      task.outputs?.some((output) =>
+        ["waiting", "running", "unknown"].includes(output.status),
+      ),
+  );
 }
 
 export interface CreationSnapshot {
@@ -528,6 +546,9 @@ function normalizeProject(value: CreationProject): CreationProject {
           )
           .slice(-5000)
       : undefined,
+    googleConversation: normalizeGoogleConversation(
+      candidate.googleConversation,
+    ),
     providerCredentialRef:
       typeof candidate.providerCredentialRef === "string" &&
       /^[A-Za-z0-9_-]{1,160}$/.test(candidate.providerCredentialRef)

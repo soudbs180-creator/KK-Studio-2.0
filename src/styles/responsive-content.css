@@ -190,12 +190,13 @@
 }
 @media (max-width: 767px) {
   .settings-panel {
-    --ui-input-height: 44px;
-    --ui-button-height: 44px;
+    --ui-input-height: var(--kk-control-h-lg);
+    --ui-button-height: var(--kk-control-h-lg);
   }
-  .settings-panel input:not([type="checkbox"]):not([type="file"]),
+  .settings-panel
+    input:not([type="checkbox"]):not([type="file"]):not([type="radio"]),
   .settings-panel select {
-    min-height: 44px;
+    min-height: var(--kk-control-h-lg);
   }
   .start-page {
     inset: 0 8px 8px;
@@ -211,10 +212,6 @@
   .start-brand h1 {
     font-size: 28px;
     line-height: 36px;
-  }
-  .start-prompt-library {
-    margin-top: 8px;
-    min-height: 40px;
   }
   .start-inspiration-card {
     grid-template-columns: 96px minmax(0, 1fr);
@@ -266,39 +263,44 @@
     max-height: calc(100dvh - 16px);
   }
   .settings-sidebar {
-    height: 124px;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: 84px;
+    border-top: 1px solid var(--settings-border);
   }
   .settings-sidebar h1 {
-    top: 20px;
-    left: 20px;
-    font-size: var(--ui-font-title);
+    display: none;
   }
   .settings-close {
     right: 8px;
     top: 8px;
   }
   .settings-nav {
-    top: 64px;
-    left: 12px;
-    right: 12px;
-    height: 52px;
-    padding: 0 0 8px;
-    gap: 4px;
+    top: 10px;
+    left: 8px;
+    right: 8px;
+    bottom: 10px;
+    height: auto;
+    padding: 2px;
+    gap: 6px;
+    overflow-x: auto;
     overflow-y: hidden;
   }
   .settings-nav-item {
-    height: 44px;
-    min-height: 44px;
-    padding: 0 12px;
+    height: 56px;
+    min-height: 56px;
+    padding: 0 10px;
   }
   .settings-nav::after {
     display: none;
   }
   .settings-content {
-    top: 140px;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    bottom: 100px;
   }
   .settings-general-rows {
     gap: 16px;
@@ -313,7 +315,7 @@
     line-height: 18px;
   }
   .settings-select {
-    min-height: 44px;
+    min-height: var(--kk-control-h-lg);
     font-size: var(--ui-font-body);
   }
   .settings-row-control {
@@ -322,8 +324,33 @@
   .settings-row-control .settings-select {
     max-width: 100%;
   }
+  .settings-feedback {
+    bottom: 92px;
+  }
   .prompt-library-panel {
     padding: 16px;
+  }
+}
+@media (max-width: 800px) {
+  .settings-sidebar {
+    top: auto;
+    right: 0;
+    bottom: -1px;
+    width: auto;
+    height: 84px;
+  }
+  .settings-sidebar h1 {
+    display: none;
+  }
+  .settings-nav-group {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .settings-nav-group + .settings-nav-group {
+    margin-top: 0;
+    padding-left: 8px;
+    border-left: 1px solid var(--settings-border);
   }
 }
 @media (max-height: 600px) {
@@ -351,5 +378,28 @@
   }
   .start-page {
     padding-top: 16px;
+  }
+}
+
+/* Tablet chat uses a real split surface: the conversation rail reserves its
+   width, while the canvas HUD and bottom tools stay usable in the remaining
+   area. Phones keep the full-surface overlay above. */
+@media (min-width: 960px) and (max-width: 1200px) {
+  .workspace.chat-mobile .workspace-content {
+    --chat-rail-width: min(400px, calc(100% - 16px));
+  }
+  .workspace.chat-mobile .conversation-panel {
+    width: var(--chat-rail-width);
+  }
+  .workspace.chat-mobile .canvas.has-chat {
+    right: calc(var(--chat-rail-width) + 8px);
+  }
+  .workspace.chat-mobile .canvas-hud,
+  .workspace.chat-mobile .canvas-toolbar {
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .workspace.chat-mobile .canvas.has-chat .canvas-top-right {
+    display: flex;
   }
 }

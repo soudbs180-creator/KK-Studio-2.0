@@ -1,23 +1,28 @@
 /* App.tsx loads this once, after workspace.css.
    Fresh source: 404:28667 > 407:29265, 410:67357 > 410:74720. */
 .workspace-content .conversation-panel {
+  box-sizing: border-box;
   top: 15px;
   bottom: 10px;
   right: 9px;
-  width: var(--conversation-width);
+  width: var(--conversation-width-user, var(--conversation-width));
   padding: 16px 20px 16px 17px;
   gap: var(--ui-space-4);
   border-radius: var(--ui-radius-panel);
   background: var(--bg-surface);
   backdrop-filter: none;
+  overflow-x: hidden;
 }
 .conversation-panel::before,
 .workspace-content:has(.canvas-pattern-grid) .conversation-panel::before {
   display: none;
 }
+.workspace-content .conversation-panel > * {
+  min-width: 0;
+}
 .conversation-panel > header {
   position: relative;
-  width: var(--ui-composer-width);
+  width: calc(100% - 7px);
   height: 24px;
   flex: 0 0 24px;
   margin-left: 2.5px;
@@ -32,7 +37,7 @@
 .conversation-panel > header button {
   position: absolute;
   top: 0;
-  left: 365px;
+  right: 41px;
   width: 20px;
   height: 20px;
   padding: 0;
@@ -40,11 +45,21 @@
 }
 .conversation-panel > header button:last-child {
   position: absolute;
-  left: 408px;
+  left: auto;
+  right: -2.5px;
   top: 1px;
   margin: 0;
   width: 18px;
   height: 18px;
+}
+@media (min-width: 768px) and (max-width: 1200px) {
+  /* Match the canvas reopen anchor across the panel border and 8px inset. */
+  .conversation-panel > header button:last-child {
+    transform: translate(
+      calc(var(--kk-space-2) + var(--kk-border-width)),
+      calc(-1 * (var(--kk-space-2) + var(--kk-border-width)))
+    );
+  }
 }
 .conversation-panel > header button img {
   width: 20px;
@@ -110,42 +125,42 @@
 .conversation-panel .chat-resource-popover p {
   margin: 0 0 6px;
   color: var(--text-secondary);
-  font-size: 11px;
-  line-height: 15px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 
 .conversation-panel .chat-resource-popover button {
   width: 100%;
-  min-height: 26px;
+  min-height: var(--kk-control-h-md);
   border: 0;
   border-radius: 5px;
   color: var(--text-strong);
   background: var(--bg-input);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   cursor: pointer;
 }
 .conversation-panel .chat-plugin-popover {
   left: 0;
 }
 .conversation-panel footer {
-  height: 12px;
-  flex: 0 0 12px;
+  height: var(--kk-line-caption);
+  flex: 0 0 var(--kk-line-caption);
   padding: 0;
-  font-size: 10px;
-  line-height: 12px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 
 .chat-approval {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 28px;
+  min-height: var(--kk-control-h-md);
   margin: 6px 0 0;
   padding: 6px 8px;
   border: 1px solid var(--border-default);
   border-radius: 8px;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
 }
 
 .chat-approval span {
@@ -158,7 +173,7 @@
   padding: 4px 8px;
   color: var(--text-strong);
   background: var(--ui-composer-surface);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   cursor: pointer;
 }
 
@@ -184,7 +199,7 @@
   border-radius: 8px;
   background: var(--ui-composer-surface);
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
 }
 .chat-agent-stop {
   margin-left: auto;
@@ -193,13 +208,13 @@
   padding: 3px 8px;
   color: var(--text-strong);
   background: var(--bg-input);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   cursor: pointer;
 }
 .chat-agent-empty {
   margin: 4px 2px;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   line-height: 1.6;
 }
 .chat-agent-item {
@@ -222,7 +237,7 @@
 .chat-agent-item.is-system {
   background: transparent;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
 }
 .chat-agent-controls {
   display: flex;
@@ -269,8 +284,8 @@
   border: 1px solid var(--border-default);
   border-radius: 4px;
   padding: 0 4px;
-  font-size: 10px;
-  line-height: 16px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
   color: var(--text-secondary);
 }
 /* Narrow drawers use larger controls as an engineering supplement. */
@@ -281,11 +296,6 @@
     right: 23px;
     width: min(360px, calc(100% - 34px));
     padding: 16px;
-  }
-  .workspace.chat-mobile .canvas.has-chat .canvas-top-right {
-    /* Once the narrow rail is shown, the navigation is behind it and must
-       not intercept the rail's close button. */
-    display: none;
   }
   .conversation-panel > header {
     width: 100%;
@@ -306,15 +316,47 @@
   }
 }
 
+@media (max-width: 767px) {
+  .workspace.chat-mobile .canvas.has-chat .canvas-top-right {
+    /* The phone conversation is a full-surface overlay. */
+    display: none;
+  }
+}
+
 /* At the intermediate desktop width, keep the fixed bottom toolbar clear of
    the conversation rail. The toolbar is centered 20px left of the shell
    midpoint, so its right edge plus a 16px gutter starts the rail. */
 @media (min-width: 801px) and (max-width: 1200px) {
   .workspace.chat-mobile .conversation-panel {
+    box-sizing: border-box;
     left: calc(50% + 160px);
     right: 0;
     width: calc(50% - 160px);
     min-width: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 800px) {
+  .workspace.chat-mobile .conversation-panel {
+    box-sizing: border-box;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1200px) {
+  /* Keep the compact rail's 400px outer frame without counting a separate
+     border box in horizontal overflow measurements. The inset stroke keeps
+     the same visible edge while preserving the approved geometry. */
+  .workspace-content .conversation-panel {
+    border: 0;
+    box-shadow: inset 0 0 0 1px var(--border-default);
+    overflow: clip;
+  }
+
+  /* The resize affordance is intentionally unavailable in the compact rail.
+     Its negative edge hit area otherwise contributes two pixels to the
+     panel's scrollable width at the 768px split. */
+  .workspace-content .conversation-panel > .resize-handle {
+    display: none;
   }
 }
 .agent-reference-picker {
@@ -331,4 +373,45 @@
   min-width: 0;
   max-width: 100%;
   flex: 1 1 180px;
+}
+
+.google-agent-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-2) var(--ui-space-3);
+  flex-shrink: 0;
+}
+.google-agent-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+  color: var(--text-secondary);
+  font-size: var(--ui-font-caption);
+  min-width: 0;
+}
+.google-agent-controls .google-agent-model {
+  flex: 1 1 180px;
+}
+.google-agent-controls input,
+.google-agent-controls select {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 32px;
+  padding: var(--ui-space-1) var(--ui-space-2);
+  border: 1px solid var(--border-control);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font: inherit;
+}
+.google-agent-controls .google-agent-note {
+  flex-basis: 100%;
+  color: var(--text-secondary);
+  font-size: var(--ui-font-caption);
+  margin: 0;
+}
+.google-agent-controls input:focus-visible,
+.google-agent-controls select:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
 }

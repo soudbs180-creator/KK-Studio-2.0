@@ -1,4 +1,7 @@
 .local-generation-status {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-2);
   position: absolute;
   top: calc(100% + 12px);
   left: 0;
@@ -9,8 +12,22 @@
   border-radius: var(--ui-radius-control);
   background: var(--bg-card);
   color: var(--ui-muted);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   line-height: 1.5;
+}
+.local-generation-status button {
+  flex: 0 0 auto;
+  min-height: var(--kk-control-h-md);
+  padding: var(--kk-space-1) var(--kk-space-2);
+  border-radius: var(--kk-radius-control);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font: inherit;
+  cursor: pointer;
+}
+.redraw-modal .local-generation-status {
+  position: static;
+  margin-top: var(--kk-space-2);
 }
 .local-generation-status[data-phase="error"],
 .local-generation-status[data-phase="offline"] {

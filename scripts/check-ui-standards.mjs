@@ -17,6 +17,15 @@ function walk(directory) {
 const sourceFiles = walk(path.join(root, "src")).filter((file) =>
   /\.(css|tsx)$/.test(file),
 );
+// The current four-page Figma contract uses tokens.css as its runtime source.
+// Keep the source connected; the closed sizing axes are checked by token tests.
+const tokenCandidate = "src/styles/tokens.css";
+if (
+  !fs
+    .readFileSync(path.join(root, "src/main.tsx"), "utf8")
+    .includes('"./styles/tokens.css"')
+)
+  issues.push("src/main.tsx: 必须加载现行 Figma 语义 tokens.css");
 const declaredTokens = new Set(
   sourceFiles.flatMap((file) =>
     [
@@ -66,7 +75,11 @@ for (const file of sourceFiles) {
     ([value, count]) => count > (allowed.colors[value] ?? 0),
   );
   if (
-    !["src/styles/global.css", "src/styles/ui-tokens.css"].includes(name) &&
+    ![
+      "src/styles/global.css",
+      "src/styles/ui-tokens.css",
+      tokenCandidate,
+    ].includes(name) &&
     addedColors.length > 0
   )
     issues.push(

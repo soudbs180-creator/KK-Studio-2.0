@@ -1,0 +1,5 @@
+{
+  "sourceSha256": "6aa6875b7601085480e8885cff7b9407dde1faaea71611fcd6505ff6a122f3bf",
+  "displaySha256": "406e8573b66b5fb61c771d267980c805c9281e026c1d5b5a884295444a8fce75",
+  "processing": "Remove trailing spaces in the Git display copy only; original failure output is retained unchanged outside the repository."
+}

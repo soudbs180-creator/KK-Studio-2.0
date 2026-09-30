@@ -148,7 +148,10 @@
   height: 82px;
 }
 .creation-composer.expanded:has(.reference-slots) textarea {
-  height: 175px;
+  top: 110px;
+  /* Anchor to the controls throughout the shell's expansion animation. */
+  bottom: calc(var(--kk-space-3) + 19px + 35px);
+  height: auto;
 }
 .reference-slot-grid {
   display: grid;
@@ -157,7 +160,7 @@
 }
 .reference-slot {
   min-width: 0;
-  height: 45px;
+  height: 56px;
   padding: 4px;
   display: grid;
   grid-template-rows: 11px 1fr;
@@ -172,7 +175,7 @@
 .reference-slot-label {
   overflow: hidden;
   color: var(--ui-muted);
-  font-size: 8px;
+  font-size: var(--kk-font-caption);
   line-height: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -207,7 +210,7 @@
 }
 .reference-slot-add {
   width: 100%;
-  height: 22px;
+  height: var(--kk-control-h-sm);
   display: grid;
   place-items: center;
   border: 1px dashed var(--border-default);
@@ -228,7 +231,7 @@
 .reference-slots-footer .reference-add {
   position: static;
   width: auto;
-  height: 18px;
+  height: var(--kk-control-h-sm);
   min-height: 18px;
   padding: 0 6px;
   display: inline-flex;
@@ -236,10 +239,10 @@
   gap: 3px;
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
-  font-size: 8px;
+  font-size: var(--kk-font-caption);
 }
 .reference-slots-footer .reference-limit {
-  font-size: 8px;
+  font-size: var(--kk-font-caption);
 }
 .reference-add.reference-count-0 {
   left: 22px;

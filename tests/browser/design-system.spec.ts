@@ -71,7 +71,7 @@ for (const theme of ["dark", "light"]) {
         .getByRole("button", { name: "模型供应商", exact: true })
         .click();
       const save = dialog.getByRole("button", {
-        name: "保存供应商",
+        name: "保存",
         exact: true,
       });
       await page.mouse.move(0, 0);
@@ -81,7 +81,7 @@ for (const theme of ["dark", "light"]) {
       );
       const normal = await paint(save);
       expect(contrast(normal.color, normal.bg)).toBeGreaterThanOrEqual(4.5);
-      expect(normal.radius).toBe("10px");
+      expect(normal.radius).toBe("8px");
       expect(normal.height).toBe("32px");
       expect(normal.filter).toBe("none");
       await save.hover();
@@ -108,7 +108,7 @@ for (const theme of ["dark", "light"]) {
         (el) => getComputedStyle(el, "::placeholder").color,
       );
       expect(contrast(placeholder, fieldPaint.bg)).toBeGreaterThanOrEqual(4.5);
-      expect(fieldPaint.radius).toBe("10px");
+      expect(fieldPaint.radius).toBe("8px");
       expect(fieldPaint.height).toBe("32px");
       // Compare the shipped stylesheet with computed state, including alias resolution.
       const resolved = await page.evaluate(() =>
@@ -207,7 +207,7 @@ for (const theme of ["dark", "light"]) {
     page,
   }, testInfo) => {
     await openWorkspace(page);
-    await page.getByRole("button", { name: "资产管理", exact: true }).click();
+    await page.getByRole("button", { name: "资源管理", exact: true }).click();
     await page.getByRole("tab", { name: "资产", exact: true }).click();
     const create = page.getByRole("button", { name: "创建主体", exact: true });
     for (const accent of ACCENTS) {
@@ -248,7 +248,7 @@ for (const theme of ["dark", "light"]) {
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     await page
       .getByRole("dialog", { name: "设置" })
-      .getByRole("button", { name: "插件", exact: true })
+      .getByRole("button", { name: "MCP", exact: true })
       .click();
     const uninstall = page
       .getByRole("button", { name: "卸载", exact: true })

@@ -128,10 +128,10 @@ async function configure(page: Page): Promise<void> {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
-  await page.getByLabel("API Base URL").fill("https://models.example.test/v1");
+  await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key").fill("fixture-key");
-  await page.getByLabel("默认模型").fill("image-test");
-  await page.getByRole("button", { name: "保存供应商" }).click();
+  await page.getByLabel("模型名称").fill("image-test");
+  await page.getByRole("button", { name: "保存", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
 }
 
@@ -139,7 +139,6 @@ async function submitHome(
   page: Page,
   { approve = true }: { approve?: boolean } = {},
 ): Promise<void> {
-  await page.getByLabel("生成数量").selectOption("1");
   await page.getByLabel("创作提示词").fill("T5 durable intent fixture");
   await page.getByRole("button", { name: "开始创建项目" }).click();
   // The approval is rendered only after the durable intent write completes.
@@ -189,7 +188,10 @@ async function seed(page: Page, value: StoredTask): Promise<void> {
 
 async function openSeededProject(page: Page): Promise<void> {
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: /T5 durable intent/ }).click();
+  await page
+    .locator(".project-library-card")
+    .filter({ hasText: "T5 durable intent" })
+    .click();
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
   await page.getByRole("button", { name: "打开任务列表" }).click();
   await page.getByRole("button", { name: "打开任务工作台" }).click();

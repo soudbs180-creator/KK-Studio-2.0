@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { waitForConversationPanelSettled } from "./helpers";
+import { expandSidebar, waitForConversationPanelSettled } from "./helpers";
 
 const evidence = "test-results/runtime/ui-runtime-2026-09-10";
 
@@ -16,6 +16,8 @@ test("latest Figma shell is loaded by the real production page", async ({
     "data-runtime-mode",
     "production",
   );
+  await expect(page.locator(".sidebar")).toHaveCSS("width", "70px");
+  await expandSidebar(page);
   await expect(page.locator(".sidebar")).toHaveCSS("width", "291px");
   await expect(page.locator(".sidebar")).toHaveCSS(
     "background-color",
@@ -53,7 +55,7 @@ test("latest Figma shell is loaded by the real production page", async ({
   const figma: Record<string, number[]> = {
     ".workspace-content": [291, 45, 1619, 1025],
     ".conversation-panel": [1430, 61, 470, 998],
-    ".canvas-toolbar": [719, 998, 294, 50],
+    ".canvas-toolbar": [719, 998, 244, 50],
   };
   for (const [selector, expected] of Object.entries(figma))
     expected.forEach((value, index) =>
@@ -61,16 +63,16 @@ test("latest Figma shell is loaded by the real production page", async ({
         1,
       ),
     );
-  // DS 1.3 replaces fixed Figma input height with a shared, growing form.
+  // The current composer keeps the registered 170px shell and 64px input.
   const form = boxes[".chat-composer"];
   const input = boxes[".chat-composer textarea"];
   const toolbar = boxes[".chat-composer .composer-toolbar"];
-  expect(input).toEqual([form[0] + 13, form[1] + 13, form[2] - 26, 60]);
-  expect(toolbar).toEqual([input[0], input[1] + input[3] + 8, input[2], 32]);
-  expect(form[3]).toBe(126);
+  expect(input).toEqual([form[0] + 13, form[1] + 13, form[2] - 26, 64]);
+  expect(toolbar).toEqual([input[0], form[1] + form[3] - 37, input[2], 24]);
+  expect(form[3]).toBe(170);
   await expect(
     page.getByRole("button", { name: "开启语音输入", exact: true }),
-  ).toHaveCSS("height", "32px");
+  ).toHaveCSS("height", "24px");
   await page.screenshot({
     path: evidence + "/after-workspace.png",
     animations: "disabled",
@@ -113,8 +115,8 @@ test("responsive desktop fills the viewport without scaling readable controls", 
   const send = page.getByRole("button", { name: "发送消息", exact: true });
   await expect(send).toBeDisabled();
   await page.getByLabel("对话内容", { exact: true }).fill("本地 UI 验证草稿");
-  await expect(send).toBeEnabled();
-  await send.click();
+  await expect(send).toBeDisabled();
+  await page.getByRole("button", { name: "前往模型设置", exact: true }).click();
   await expect(page.getByLabel("API Key")).toBeVisible();
   await expect(page.getByLabel("对话内容")).toHaveValue("本地 UI 验证草稿");
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();

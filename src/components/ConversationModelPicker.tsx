@@ -1,5 +1,4 @@
 import ModelPickerMenu from "./ModelPickerMenu";
-import { selectedModelLabel } from "../features/models/modelPresentation";
 import type { ModelSelection } from "../features/models/modelSelection";
 export default function ConversationModelPicker({
   currentModel,
@@ -34,9 +33,7 @@ export default function ConversationModelPicker({
           height="13.85"
           alt=""
         />
-        <span className="chat-model-name">
-          {selectedModelLabel(selection, currentModel)}
-        </span>
+        <span className="chat-model-name">模型</span>
       </button>
       {open && (
         <ModelPickerMenu

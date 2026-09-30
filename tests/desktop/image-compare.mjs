@@ -7,10 +7,7 @@ import { chromium, expect } from "@playwright/test";
 
 const root = process.cwd();
 const executable = path.join(root, "src-tauri/target/release/kk-studio.exe");
-const evidence = path.join(
-  root,
-  "docs/changes/2026-09-27-canvas-image-compare/evidence",
-);
+const evidence = path.join(root, "test-results/desktop/image-compare");
 const isolated = path.join(
   root,
   "src-tauri/target/image-compare-acceptance",
@@ -67,14 +64,16 @@ try {
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
+  await page.getByRole("button", { name: "添加资源", exact: true }).click();
+  await page.getByRole("menuitem", { name: "图片", exact: true }).click();
   const fixture = path.join(root, "public/fixtures/demo/blue-hour.png");
-  const first = page.getByTestId("canvas-node-image");
+  const first = page.getByTestId(/^canvas-node-added-image-/).first();
   await first.locator('input[type="file"]').first().setInputFiles(fixture);
   await expect(first.locator(".uploaded-image")).toBeVisible();
   await first.getByRole("button", { name: /加入对比/ }).click();
   await page.getByRole("button", { name: "添加资源" }).click();
   await page.getByRole("menuitem", { name: "图片", exact: true }).click();
-  const second = page.getByTestId(/^canvas-node-added-image-/).first();
+  const second = page.getByTestId(/^canvas-node-added-image-/).last();
   await second.locator('input[type="file"]').first().setInputFiles(fixture);
   await expect(second.locator(".uploaded-image")).toBeVisible();
   await second.getByRole("button", { name: /加入对比/ }).click();

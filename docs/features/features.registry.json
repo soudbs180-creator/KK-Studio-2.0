@@ -5,7 +5,7 @@
     "area": "canvas",
     "status": "REAL",
     "card": "docs/features/feat-001-canvas-workbench.md",
-    "summary": "可视化创作工作区：图片/视频/音频/文本节点、连线、框选、小地图、右键菜单、撤销与本地持久化。",
+    "summary": "可视化创作工作区：图片/视频/音频/文本节点、连线、框选、小地图、动态右键撤销/重做、网格吸附和图层定位。",
     "entryPoints": [
       "工作区主界面 Canvas",
       "AddNodeMenu 添加节点",
@@ -16,7 +16,12 @@
       "src/components/canvas",
       "src/domain/canvasGraph.ts",
       "src/domain/canvasItems.ts",
-      "src/domain/projectCanvas.ts"
+      "src/domain/projectCanvas.ts",
+      "src/domain/canvasHistory.ts",
+      "src/domain/canvasPreferences.ts",
+      "src/components/canvas/CanvasLayersPanel.tsx",
+      "src/components/canvas/useCanvasHistory.ts",
+      "src/components/canvas/useCanvasPreferences.ts"
     ],
     "tests": [
       "tests/browser/canvas-actions.spec.ts",
@@ -25,17 +30,22 @@
       "tests/browser/canvas-pointer.spec.ts",
       "tests/browser/connection-drag.spec.ts",
       "tests/browser/context-menu.spec.ts",
+      "tests/browser/canvas-history-layers.spec.ts",
       "tests/unit/canvasGraph.test.ts",
       "tests/unit/projectCanvas.test.ts",
+      "tests/unit/canvasHistory.test.ts",
+      "tests/unit/canvasPreferences.test.ts",
       "tests/browser/ui-interactions.spec.ts",
-      "tests/browser/ui-interaction-matrix.spec.ts"
+      "tests/browser/ui-interaction-matrix.spec.ts",
+      "tests/desktop/project-landing.mjs"
     ],
     "tasks": [
       "T2",
       "UI-004",
-      "TASK-UI-006"
+      "TASK-UI-006",
+      "TASK-CANVAS-KAWORKAI-001"
     ],
-    "updated": "2026-09-22",
+    "updated": "2026-09-30",
     "platforms": [
       "web",
       "desktop"
@@ -56,6 +66,18 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-22-ui-interactions/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-29-kaworkai-canvas/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-29-project-landing/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-09-29-project-landing/verification.md"
       }
     ]
   },
@@ -77,7 +99,10 @@
       "src/features/creation/providerSubmission.ts",
       "src/features/creation/nativeTaskHost.ts",
       "src/features/creation/taskRecovery.ts",
-      "src-tauri/src/task_host.rs"
+      "src-tauri/src/task_host.rs",
+      "src/features/agent/googleInteractions.ts",
+      "src/features/agent/googleAgentConnection.ts",
+      "src/components/GoogleAgentControls.tsx"
     ],
     "tests": [
       "tests/unit/providerSubmission.test.ts",
@@ -87,15 +112,18 @@
       "tests/unit/taskRecovery.test.ts",
       "tests/browser/provider-scheduling.spec.ts",
       "tests/browser/unified-image-command.spec.ts",
-      "tests/browser/creation-flow.spec.ts"
+      "tests/browser/creation-flow.spec.ts",
+      "tests/browser/google-agent.spec.ts",
+      "tests/unit/googleInteractions.test.ts"
     ],
     "tasks": [
       "T5",
       "TASK-PROV-001",
       "EXT-PROVIDER",
-      "TASK-AGENT-001"
+      "TASK-AGENT-001",
+      "TASK-AGENT-004"
     ],
-    "updated": "2026-09-22",
+    "updated": "2026-09-30",
     "platforms": [
       "web",
       "desktop"
@@ -376,7 +404,16 @@
       "scripts/agent/desktop-entry.mjs",
       "scripts/agent/runtime-package.mjs",
       "src/components/AgentComposer.tsx",
-      "src/features/agent/agentAttachments.ts"
+      "src/features/agent/agentAttachments.ts",
+      "src/features/agent/googleInteractions.ts",
+      "src/features/agent/googleAgentConnection.ts",
+      "src/features/agent/geminiCliAdapter.ts",
+      "src/components/settings/GoogleConnectionSettings.tsx",
+      "src/components/GoogleConversationPanel.tsx",
+      "scripts/gemini-bridge.mjs",
+      "src/components/settings/CodeBuddyConnectionSettings.tsx",
+      "vendor/canvas-agent/src/agent/codebuddy.ts",
+      "vendor/canvas-agent/src/server/mcp.ts"
     ],
     "tests": [
       "tests/browser/frontend.spec.ts",
@@ -401,7 +438,15 @@
       "tests/unit/agentRuntimeDrain.test.ts",
       "scripts/audit/check-agent-desktop.mjs",
       "tests/unit/agentAttachments.test.ts",
-      "scripts/audit/check-agent-attachments-desktop.mjs"
+      "scripts/audit/check-agent-attachments-desktop.mjs",
+      "tests/browser/google-agent.spec.ts",
+      "tests/browser/google-cli-agent.spec.ts",
+      "tests/unit/geminiBridge.test.ts",
+      "tests/unit/geminiCliAdapter.test.ts",
+      "tests/unit/googleAgentCli.test.ts",
+      "vendor/canvas-agent/src/agent/codebuddy.test.ts",
+      "vendor/canvas-agent/src/server/codebuddy-http.test.ts",
+      "vendor/canvas-agent/src/server/codebuddy-mcp.test.ts"
     ],
     "tasks": [
       "T4",
@@ -409,9 +454,12 @@
       "TASK-UI-005",
       "TASK-AGENT-001",
       "TASK-AGENT-002",
-      "TASK-AGENT-003"
+      "TASK-AGENT-003",
+      "TASK-AGENT-004",
+      "TASK-AGENT-005",
+      "TASK-AGENT-007"
     ],
-    "updated": "2026-09-23",
+    "updated": "2026-09-30",
     "platforms": [
       "web",
       "desktop"
@@ -545,7 +593,10 @@
       "TASK-MCP-REGISTRY-002"
     ],
     "updated": "2026-09-26",
-    "platforms": ["web", "desktop"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
     "runtimeEvidence": [
       {
         "platform": "web",
@@ -650,10 +701,11 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-015-projects.md",
-    "summary": "Desktop 原生项目快照与项目包导入/导出/隔离恢复已验收；Web 项目包容量/离线适配（T9）未完成。",
+    "summary": "原生项目快照/项目包与侧栏真实项目创建、打开、改名、确认删除可用；文件夹/置顶为明示会话态，持久分组与 Web 容量/离线仍未完成。",
     "entryPoints": [
-      "侧栏项目列表",
-      "项目包导入/导出 ProjectPackageActions"
+      "项目库与侧栏真实本地项目",
+      "侧栏会话文件夹/置顶",
+      "项目包导入/导出"
     ],
     "code": [
       "src/features/projects/projectPackage.ts",
@@ -669,15 +721,17 @@
       "tests/unit/snapshotCodec.test.ts",
       "tests/browser/project-package.spec.ts",
       "tests/browser/desktop-data-stability.spec.ts",
-      "tests/browser/design-system-pages.spec.ts"
+      "tests/browser/design-system-pages.spec.ts",
+      "tests/desktop/project-landing.mjs"
     ],
     "tasks": [
       "T3a",
       "T3b",
       "T9",
-      "TASK-DS-002"
+      "TASK-DS-002",
+      "TASK-PROJECT-SIDEBAR-001"
     ],
-    "updated": "2026-09-22",
+    "updated": "2026-09-30",
     "platforms": [
       "web",
       "desktop"
@@ -690,6 +744,14 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-22-design-system-pages/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-29-project-landing/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-09-29-project-landing/verification.md"
       }
     ]
   },
@@ -835,24 +897,57 @@
     "id": "FEAT-020",
     "title": "长期记忆服务",
     "area": "platform",
-    "status": "PROTOTYPE",
+    "status": "PARTIAL",
     "card": "docs/features/feat-020-memory.md",
-    "summary": "设置中的记忆开关全部标注“尚未接入”，当前不会创建、检索或自动保存长期记忆。",
+    "summary": "KK 本地记忆开关、规则采集和相关片段注入已有实现；Desktop 默认共享，--data-dir 隔离且迁移只在开启后执行。真实 Codex 和跨应用联调待完成。",
     "entryPoints": [
-      "设置 › 连接 › 记忆"
+      "设置 › 记忆"
     ],
     "code": [
-      "src/components/settings/ConnectionSettings.tsx"
+      "src/features/memory",
+      "src/components/settings/ConnectionSettings.tsx",
+      "src/components/settings/MemorySettingsSection.tsx",
+      "src/features/agent/agentConnection.ts",
+      "src-tauri/src/storage_paths.rs",
+      "src-tauri/src/main.rs"
     ],
-    "tests": [],
+    "tests": [
+      "tests/unit/memoryExtractor.test.ts",
+      "tests/unit/memoryInjector.test.ts",
+      "tests/unit/memoryStorage.test.ts",
+      "tests/unit/memoryService.test.ts",
+      "tests/unit/memoryReply.test.ts",
+      "tests/browser/memory-settings.spec.ts",
+      "tests/desktop/project-landing.mjs"
+    ],
     "tasks": [
+      "TASK-MEMORY-001",
+      "TASK-MEMORY-002",
       "BACKEND-PLATFORM",
       "T10"
     ],
-    "updated": "2026-09-21",
+    "updated": "2026-09-30",
     "platforms": [
       "web",
       "desktop"
+    ],
+    "runtimeEvidence": [
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-24-local-memory/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-09-24-local-memory/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-29-project-landing/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-09-29-project-landing/verification.md"
+      }
     ]
   },
   {
@@ -959,7 +1054,7 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-023-navigation.md",
-    "summary": "侧栏导航、搜索/收藏入口、弹窗与窄屏菜单真实可用；多创作页/多画布分组标注 Prototype 未接入。",
+    "summary": "真实快照驱动项目列表与搜索，固定宽度侧栏、应用菜单和窄屏导航可用；文件夹/置顶为会话态，多创作页/持久分组未接入。",
     "entryPoints": [
       "左侧栏 Sidebar",
       "搜索/收藏（Ctrl/⌘+K）",
@@ -977,14 +1072,16 @@
       "tests/browser/menu-boundaries.spec.ts",
       "tests/browser/catalog-pages.spec.ts",
       "tests/browser/ui-interactions.spec.ts",
-      "tests/browser/ui-interaction-matrix.spec.ts"
+      "tests/browser/ui-interaction-matrix.spec.ts",
+      "tests/desktop/project-landing.mjs"
     ],
     "tasks": [
       "TASK-UI-DISMISS-002",
       "UI-004",
-      "TASK-UI-006"
+      "TASK-UI-006",
+      "TASK-PROJECT-SIDEBAR-001"
     ],
-    "updated": "2026-09-22",
+    "updated": "2026-09-30",
     "platforms": [
       "web",
       "desktop"
@@ -997,6 +1094,14 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-22-ui-interactions/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-29-project-landing/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-09-29-project-landing/verification.md"
       }
     ]
   },
@@ -1230,24 +1335,30 @@
     "card": "docs/features/feat-032-provider-connectivity.md",
     "summary": "统一 Provider 多目标渲染（Codex/Claude/OpenAI 兼容）、便携配置导入导出、模型上下文窗口 catalog、MCP stdio 配置契约——为接入更多供应商与工具打底。",
     "entryPoints": [
-      "（本批无 UI 入口；接线任务提供设置页/Agent 配置入口）"
+      "Agent providers apply/check/apply-claude CLI（App 设置 UI 尚未接入）"
     ],
     "code": [
       "src/features/providers/providerTargetRenderers.ts",
       "src/features/providers/providerConfigIO.ts",
       "src/features/models/modelCatalogWindow.ts",
-      "src/features/mcp/mcpConfig.ts"
+      "src/features/mcp/mcpConfig.ts",
+      "vendor/canvas-agent/src/agent/codex-provider-config.ts",
+      "vendor/canvas-agent/src/agent/provider-cli.ts"
     ],
     "tests": [
       "tests/unit/providerTargetRenderers.test.ts",
       "tests/unit/providerConfigIO.test.ts",
       "tests/unit/modelCatalogWindow.test.ts",
-      "tests/unit/mcpConfig.test.ts"
+      "tests/unit/mcpConfig.test.ts",
+      "vendor/canvas-agent/src/agent/codex-provider-config.test.ts",
+      "vendor/canvas-agent/src/agent/provider-cli.test.ts"
     ],
     "tasks": [
-      "TASK-PROV-002"
+      "TASK-PROV-002",
+      "TASK-PROV-003",
+      "TASK-PROV-004"
     ],
-    "updated": "2026-09-26"
+    "updated": "2026-09-30"
   },
   {
     "id": "FEAT-036",
@@ -1255,7 +1366,7 @@
     "area": "canvas",
     "status": "PARTIAL",
     "card": "docs/features/feat-036-image-compare.md",
-    "summary": "从画布图片卡片选择 2–4 张并排查看；两张可切换滑块，选择仅在当前会话内保留。PR #21 已进入主线；合并后 390px 命中区 CI 回归和用户最终视觉验收仍待收口。",
+    "summary": "画布2–4张并排和两图滑块可用，当前窄屏/production Web/fresh Tauri 复验通过；选择会话态，用户最终视觉确认由UI-004保留。",
     "entryPoints": [
       "图片卡片加入对比",
       "画布对比选择条"
@@ -1273,9 +1384,10 @@
     ],
     "tasks": [
       "TASK-COMPARE-001",
-      "TASK-COMPARE-002"
+      "TASK-COMPARE-002",
+      "UI-004"
     ],
-    "updated": "2026-09-28",
+    "updated": "2026-09-30",
     "platforms": [
       "web",
       "desktop"
@@ -1288,6 +1400,14 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-28-compare-ci-fix/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-29-project-landing/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-09-29-project-landing/verification.md"
       }
     ]
   },

@@ -5,7 +5,7 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await openWorkspace(page);
-  await page.getByRole("button", { name: "资产管理", exact: true }).click();
+  await page.getByRole("button", { name: "资源管理", exact: true }).click();
   const panel = page.getByTestId("asset-panel");
   await expect(panel).toBeVisible();
   await expect(panel).toHaveCSS("width", "900px");
@@ -48,7 +48,7 @@ test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(
-    page.getByRole("button", { name: "资产管理", exact: true }),
+    page.getByRole("button", { name: "资源管理", exact: true }),
   ).toBeFocused();
   expect(errors).toEqual([]);
 });
@@ -72,7 +72,10 @@ test("设置主题保存重载、键盘关闭及导航", async ({ page }) => {
   ).toBeFocused();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await expect(page.getByRole("heading", { name: "项目库" })).toBeVisible();
-  await page.getByRole("button", { name: "Skill", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "主导航" })
+    .getByRole("button", { name: "技能", exact: true })
+    .click();
   await expect(
     page.getByRole("heading", { name: "Skill", exact: true }),
   ).toBeVisible();
@@ -86,11 +89,11 @@ test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", 
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
-  await page.getByLabel("供应商名称").fill("测试供应商");
-  await page.getByLabel("API Base URL").fill("https://models.example.test/v1");
+  await page.getByLabel("提供商").fill("测试供应商");
+  await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key").fill("session-key");
-  await page.getByLabel("默认模型").fill("image-model-v2");
-  await page.getByRole("button", { name: "保存供应商" }).click();
+  await page.getByLabel("模型名称").fill("image-model-v2");
+  await page.getByRole("button", { name: "保存", exact: true }).click();
   const saved = await page.evaluate(() =>
     localStorage.getItem("kk-studio-next:model-provider:v1"),
   );
@@ -104,7 +107,7 @@ test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", 
   await page.reload();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
-  await expect(page.getByLabel("API Base URL")).toHaveValue(
+  await expect(page.getByLabel("接口地址")).toHaveValue(
     "https://models.example.test/v1",
   );
   await expect(page.getByLabel("API Key")).toHaveValue("");
@@ -115,20 +118,20 @@ test("模型供应商可以登记多个非敏感连接并切换当前配置", as
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
   const save = async (name: string, baseUrl: string, model: string) => {
-    await page.getByLabel("供应商名称").fill(name);
-    await page.getByLabel("API Base URL").fill(baseUrl);
-    await page.getByLabel("默认模型").fill(model);
-    await page.getByRole("button", { name: "保存供应商" }).click();
+    await page.getByLabel("提供商").fill(name);
+    await page.getByLabel("接口地址").fill(baseUrl);
+    await page.getByLabel("模型名称").fill(model);
+    await page.getByRole("button", { name: "保存", exact: true }).click();
   };
   await save("连接一", "https://one.example.test/v1", "image-one");
   await save("连接二", "https://two.example.test/v1", "image-two");
   const list = page.getByRole("region", { name: "已登记连接" });
   await expect(list).toContainText("2 个");
   await list.getByRole("listitem").first().click();
-  await expect(page.getByLabel("API Base URL")).toHaveValue(
+  await expect(page.getByLabel("接口地址")).toHaveValue(
     "https://one.example.test/v1",
   );
-  await expect(page.getByLabel("默认模型")).toHaveValue("image-one");
+  await expect(page.getByLabel("模型名称")).toHaveValue("image-one");
   const metadata = await page.evaluate(() =>
     localStorage.getItem("kk-studio-next:provider-connections:v1"),
   );
@@ -139,7 +142,7 @@ test("模型供应商可以登记多个非敏感连接并切换当前配置", as
 
 test("本地导入成功与错误恢复，不伪造生成和回复", async ({ page }) => {
   await openWorkspace(page);
-  await page.getByRole("button", { name: "资产管理", exact: true }).click();
+  await page.getByRole("button", { name: "资源管理", exact: true }).click();
   await page.getByRole("tab", { name: "资产", exact: true }).click();
   await page
     .locator("input[type=file]")
@@ -178,7 +181,13 @@ test("本地导入成功与错误恢复，不伪造生成和回复", async ({ pa
   await page.getByRole("button", { name: "生成数量", exact: true }).click();
   await page.keyboard.press("Home");
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "生成图片", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "生成图片", exact: true }),
+  ).toBeDisabled();
+  await page
+    .getByTestId("image-composer")
+    .getByRole("button", { name: "前往模型设置", exact: true })
+    .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("button", { name: "模型供应商", exact: true }),
@@ -190,7 +199,11 @@ test("本地导入成功与错误恢复，不伪造生成和回复", async ({ pa
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByLabel("执行方式").selectOption("direct");
   await page.getByLabel("对话内容").fill("你好");
-  await page.getByRole("button", { name: "发送消息" }).click();
+  await expect(page.getByRole("button", { name: "发送消息" })).toBeDisabled();
+  await page
+    .locator(".conversation-panel")
+    .getByRole("button", { name: "前往模型设置", exact: true })
+    .click();
   await expect(page.getByLabel("API Key")).toBeVisible();
   await expect(page.getByLabel("对话内容")).toHaveValue("你好");
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
@@ -252,7 +265,7 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
     height: 208,
   });
   const toolbarBounds = await page.locator(".canvas-toolbar").boundingBox();
-  expect(toolbarBounds).toEqual({ x: 719, y: 998, width: 294, height: 50 });
+  expect(toolbarBounds).toEqual({ x: 719, y: 998, width: 244, height: 50 });
   await expect(page.locator(".canvas-top-right")).toBeVisible();
   expect(await page.locator(".canvas-top-right").boundingBox()).toEqual({
     x: 1138.015625,
@@ -301,18 +314,19 @@ test("无限画布隐藏滚动条，卡片拖动时连接线跟随", async ({ pa
   await page.keyboard.press("Escape");
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   const favoriteButton = page.getByRole("button", {
-    name: "打开喜欢与收藏",
+    name: "喜欢与收藏",
     exact: true,
   });
   await expect(favoriteButton).toBeEnabled();
   await favoriteButton.click();
+  await page.getByRole("menuitem", { name: "我的收藏", exact: true }).click();
   await expect(page.locator(".catalog-panel")).toBeVisible();
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "选择画布工具", exact: true }).click();
   await page
-    .getByRole("menuitemradio", { name: "选择工具", exact: true })
+    .getByRole("menuitemradio", { name: "移动工具", exact: true })
     .click();
-  await expect(page.locator(".canvas-toolbar")).toHaveCSS("width", "294px");
+  await expect(page.locator(".canvas-toolbar")).toHaveCSS("width", "244px");
   await videoPreviews.nth(0).click();
   await expect(page.getByTestId("image-composer")).toHaveCount(0);
   expect(
@@ -475,7 +489,7 @@ for (const [width, height] of [
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBe(width);
-    await page.getByRole("button", { name: "资产管理", exact: true }).click();
+    await page.getByRole("button", { name: "资源管理", exact: true }).click();
     const box = await page.getByTestId("asset-panel").boundingBox();
     expect(box!.x).toBeGreaterThanOrEqual(0);
     expect(box!.x + box!.width).toBeLessThanOrEqual(width);
@@ -500,7 +514,11 @@ test("未配置连接时工作台草稿在收起对话及页面切换后保留",
   await page.getByLabel("图片提示词").fill("保留我的草稿");
   await page.getByLabel("执行方式").selectOption("direct");
   await page.getByLabel("对话内容").fill("保留我的消息");
-  await page.getByRole("button", { name: "发送消息" }).click();
+  await expect(page.getByRole("button", { name: "发送消息" })).toBeDisabled();
+  await page
+    .locator(".conversation-panel")
+    .getByRole("button", { name: "前往模型设置", exact: true })
+    .click();
   await expect(page.getByLabel("API Key")).toBeVisible();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "收起对话", exact: true }).click();
@@ -524,7 +542,7 @@ test("窗口缩小后对话可重新展开", async ({ page }) => {
 
 test("创建主体的 Escape 与焦点仅作用于当前弹窗", async ({ page }) => {
   await openWorkspace(page);
-  await page.getByRole("button", { name: "资产管理", exact: true }).click();
+  await page.getByRole("button", { name: "资源管理", exact: true }).click();
   await page.getByRole("tab", { name: "资产", exact: true }).click();
   const createButton = page.getByRole("button", {
     name: "创建主体",

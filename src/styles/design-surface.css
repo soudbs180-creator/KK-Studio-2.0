@@ -14,7 +14,7 @@
   }
 
   .app[data-design-surface="desktop"] .conversation-panel {
-    width: var(--conversation-width);
+    width: var(--conversation-width-user, var(--conversation-width));
   }
 
   .app[data-design-surface="desktop"] .sidebar {

@@ -17,6 +17,13 @@ interface CanvasOverlaysProps {
     point: { x: number; y: number },
     trigger: HTMLElement,
   ) => void;
+  canUndo: boolean;
+  canRedo: boolean;
+  onUndo: () => void;
+  onRedo: () => void;
+  onToggleLayers: () => void;
+  snapEnabled: boolean;
+  onToggleSnap: () => void;
   removedEdge: CanvasConnection | null;
   onUndoConnection: () => void;
   onDismissConnection: () => void;
@@ -30,6 +37,13 @@ export default function CanvasOverlays({
   contextMenu,
   onDismissContextMenu,
   onAddContextNode,
+  canUndo,
+  canRedo,
+  onUndo,
+  onRedo,
+  onToggleLayers,
+  snapEnabled,
+  onToggleSnap,
   removedEdge,
   onUndoConnection,
   onDismissConnection,
@@ -52,6 +66,13 @@ export default function CanvasOverlays({
           menu={contextMenu}
           onDismiss={onDismissContextMenu}
           onAddNode={onAddContextNode}
+          canUndo={canUndo}
+          canRedo={canRedo}
+          onUndo={onUndo}
+          onRedo={onRedo}
+          onToggleLayers={onToggleLayers}
+          snapEnabled={snapEnabled}
+          onToggleSnap={onToggleSnap}
         />
       )}
       {removedEdge && (

@@ -7,6 +7,7 @@ import React, {
   type SetStateAction,
 } from "react";
 import { appVersion } from "./runtime/appInfo";
+import { confirmAction } from "./runtime/confirmAction";
 import TopBar from "./components/TopBar";
 import Sidebar from "./components/Sidebar";
 import type { ModelSelection } from "./features/models/modelSelection";
@@ -38,6 +39,7 @@ import {
 } from "./features/skills/skillRegistry";
 import {
   createProject,
+  projectHasUnsettledTasks,
   emptyDraft,
   type CreationDraft,
   type CreationProject,
@@ -51,6 +53,7 @@ import {
   subscribeAgentPreferences,
   type AgentBridge,
 } from "./features/agent/agentConnection.ts";
+import { googleAgentConnection } from "./features/agent/googleAgentConnection.ts";
 
 import { pluginLoader } from "./features/plugins/pluginLoader.ts";
 import {
@@ -120,6 +123,7 @@ import {
 } from "./features/creation/providerSubmission";
 import { mapWithConcurrency } from "./features/creation/generationQueue";
 import { compileDesignPrompt } from "./features/creation/promptCompiler";
+import { getDisabledReason, getGenerationUiState } from "./domain/uiGovernance";
 
 import {
   abortedAfterProviderSubmission,
@@ -168,6 +172,9 @@ export default function App() {
   const [settingsSection, setSettingsSection] =
     useState<SettingsSection>("general");
   const sidebar = useSidebarLayout();
+  const chatCoversCanvas =
+    sidebar.surface === "phone" ||
+    (sidebar.surface === "tablet" && window.innerWidth < 960);
   const [chat, setChat] = useState(true);
   const [mobileChat, setMobileChat] = useState(false);
   const [assets, setAssets] = useState(initialAssets);
@@ -201,8 +208,28 @@ export default function App() {
   );
   const { creation, creationRef, commitCreation } = persistence;
   const saveState = persistence.state;
+  const saveStateRef = useRef(saveState);
+  saveStateRef.current = saveState;
   const submitLock = useRef(false);
   const [providerVersion, setProviderVersion] = useState(0);
+  const homeModelConfig = useMemo(() => {
+    void providerVersion;
+    try {
+      const profile = parseModelProvider(
+        localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
+      ).profile;
+      const connection = readProviderConnections().find(
+        (item) =>
+          Boolean(item.model?.trim()) &&
+          item.state !== "disabled" &&
+          item.capabilities.modalities.includes("image"),
+      );
+      const model = profile.model.trim() || connection?.model?.trim() || "";
+      return { model, configured: Boolean(model) };
+    } catch {
+      return { model: "", configured: false };
+    }
+  }, [providerVersion]);
   function saveWorkflow(workflow: WorkflowRecord): void {
     setLocalWorkflows((current) => {
       const next = [
@@ -440,6 +467,7 @@ export default function App() {
   };
   useEffect(() => {
     agentConnection.syncProject();
+    googleAgentConnection.syncProject();
   }, [creation.activeProjectId]);
   useEffect(() => {
     const timer = setTimeout(() => agentConnection.pushState(), 100);
@@ -490,9 +518,11 @@ export default function App() {
   };
   useEffect(() => {
     agentConnection.setBridge(agentCanvasBridge);
+    googleAgentConnection.setBridge(agentCanvasBridge);
     pluginLoader.setBridge(agentCanvasBridge);
     return () => {
       agentConnection.setBridge(null);
+      googleAgentConnection.setBridge(null);
       pluginLoader.setBridge(null);
     };
   }, [agentCanvasBridge]);
@@ -1526,12 +1556,28 @@ export default function App() {
       (project) => project.id === projectId,
     );
     if (request.origin !== "home" && !original) return "请先新建或打开项目。";
-    if (
-      original?.tasks.some(
-        (task) => task.status === "queued" || task.status === "running",
-      )
-    )
-      return "当前项目还有进行中的任务，请等待完成或取消后提交。";
+    const activeTask = original?.tasks.find(
+      (task) => task.status === "queued" || task.status === "running",
+    );
+    const requestModel =
+      request.origin === "canvas" ? request.input.model : request.input.model;
+    const uiState = getGenerationUiState({
+      prompt: request.input.prompt,
+      inputValid: Boolean(request.input.prompt.trim()),
+      modelConfigured: request.origin === "agent" || homeModelConfig.configured,
+      quotaAvailable: true,
+      online: typeof navigator === "undefined" ? true : navigator.onLine,
+      serviceConfigured:
+        request.origin === "agent" ||
+        (homeModelConfig.configured && Boolean(requestModel.trim())),
+      taskStatus: activeTask
+        ? activeTask.status === "queued"
+          ? "queued"
+          : "running"
+        : undefined,
+    });
+    if (uiState !== "ready" && request.origin !== "agent")
+      return getDisabledReason(uiState) ?? "当前任务暂不可提交。";
     const signal =
       request.origin === "canvas" ? request.input.signal : undefined;
     const draftAtStart = creationRef.current.homeDraft;
@@ -1818,7 +1864,7 @@ export default function App() {
       window.dispatchEvent(new CustomEvent("kk:focus-node", { detail: id })),
     );
   }
-  function handleNewBlankProject(): void {
+  function handleNewBlankProject(): string {
     const profile = parseModelProvider(
       localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
     ).profile;
@@ -1831,11 +1877,8 @@ export default function App() {
     const nextProject: CreationProject = {
       ...blank,
       name: "未命名项目",
-      canvas: createProjectCanvas(BASE_CANVAS_ITEMS),
-      items: BASE_CANVAS_ITEMS.map((item) => ({
-        ...item,
-        model: item.kind === "image" ? blank.model : item.model,
-      })),
+      canvas: createProjectCanvas([]),
+      items: [],
       messages: [],
       tasks: [],
       favoriteIds: [],
@@ -1848,6 +1891,51 @@ export default function App() {
     });
     replaceCanvasItems(nextProject.items);
     setActive("workspace");
+    return nextProject.id;
+  }
+  function openSavedProject(id: string): void {
+    if (!creationRef.current.projects.some((project) => project.id === id))
+      return;
+    commitCreation({ ...creationRef.current, activeProjectId: id });
+    setActive("workspace");
+    setModal("");
+  }
+  function renameSavedProject(id: string, title: string): void {
+    if (persistence.state !== "saved" && persistence.state !== "saving") return;
+    const name = title.trim().slice(0, 120);
+    if (!name) return;
+    updateProject(id, (project) => ({
+      ...project,
+      name,
+      updatedAt: Date.now(),
+    }));
+  }
+  async function deleteSavedProject(id: string): Promise<void> {
+    if (persistence.state !== "saved" && persistence.state !== "saving") return;
+    const project = creationRef.current.projects.find((item) => item.id === id);
+    if (!project) return;
+    if (projectHasUnsettledTasks(project)) return;
+    if (
+      !(await confirmAction(
+        `确定删除项目「${project.name}」？此操作会从本地项目库移除该项目。`,
+      ))
+    )
+      return;
+    const current = creationRef.current;
+    const confirmedProject = current.projects.find((item) => item.id === id);
+    if (
+      !confirmedProject ||
+      projectHasUnsettledTasks(confirmedProject) ||
+      (saveStateRef.current !== "saved" && saveStateRef.current !== "saving")
+    )
+      return;
+    commitCreation({
+      ...current,
+      projects: current.projects.filter((item) => item.id !== id),
+      activeProjectId:
+        current.activeProjectId === id ? null : current.activeProjectId,
+    });
+    if (current.activeProjectId === id) setActive("projects");
   }
   useEffect(() => {
     const shortcut = (event: KeyboardEvent): void => {
@@ -1904,13 +1992,41 @@ export default function App() {
       handleNewBlankProject();
       return;
     }
+    if (view === "chat") {
+      if (active === "workspace" && chat && (!sidebar.narrow || mobileChat)) {
+        setChat(false);
+        setMobileChat(false);
+        return;
+      }
+      if (
+        !creationRef.current.projects.some(
+          (project) => project.id === activeProjectIdRef.current,
+        )
+      ) {
+        handleNewBlankProject();
+      } else {
+        setActive("workspace");
+      }
+      setChat(true);
+      setMobileChat(sidebar.narrow);
+      setModal("");
+      return;
+    }
     if (["search", "favorites", "likes"].includes(view)) {
       setModal(view);
       return;
     }
     if (view === "settings" || view.startsWith("settings/")) {
+      const requestedSection = view.split("/")[1];
+      const sectionAlias: Record<string, SettingsSection> = {
+        plugins: "mcp",
+        extensions: "mcp",
+        partners: "partners",
+        skills: "skill",
+      };
       setSettingsSection(
-        SETTINGS_SECTIONS.find((item) => item.id === view.split("/")[1])?.id ??
+        sectionAlias[requestedSection] ??
+          SETTINGS_SECTIONS.find((item) => item.id === requestedSection)?.id ??
           "general",
       );
       setModal("settings");
@@ -1928,6 +2044,10 @@ export default function App() {
         "search",
       ].includes(view)
     ) {
+      if (
+        ["landing", "workspace", "projects", "skills", "comfyui"].includes(view)
+      )
+        setMobileChat(false);
       setActive(view);
       setModal("");
     } else setModal(view);
@@ -1986,24 +2106,33 @@ export default function App() {
       <TopBar
         onOpen={open}
         onToggleSidebar={sidebar.toggle}
-        onToggleChat={() => {
-          if (sidebar.narrow) {
-            setChat(true);
-            setMobileChat((current) => !current);
-          } else setChat((current) => !current);
-        }}
+        onToggleChat={() => open("chat")}
       />
       <div className="app-body">
         {sidebar.narrow && !sidebar.collapsed && (
           <div className="sidebar-scrim" aria-hidden="true" />
         )}
         <Sidebar
-          active={active}
+          active={
+            sidebar.surface === "phone" &&
+            active === "workspace" &&
+            mobileChat &&
+            chat
+              ? "chat"
+              : active
+          }
           onNavigate={open}
           collapsed={sidebar.collapsed}
           narrow={sidebar.narrow}
           phone={sidebar.surface === "phone"}
           onCollapse={sidebar.toggle}
+          projects={creation.projects}
+          activeProjectId={creation.activeProjectId}
+          canEditProjects={saveState === "saved" || saveState === "saving"}
+          onCreateProject={handleNewBlankProject}
+          onOpenProject={openSavedProject}
+          onRenameProject={renameSavedProject}
+          onDeleteProject={deleteSavedProject}
         />
         <main className={"workspace " + (mobileChat ? "chat-mobile" : "")}>
           <CreationStorageNotice
@@ -2021,20 +2150,10 @@ export default function App() {
               onDraftChange={updateHomeDraft}
               onOpenModel={() => open("settings/providers")}
               onOpenSkills={() => open("skills")}
-              onOpenPlugins={() => open("settings/plugins")}
-              onOpenPrompts={() => open("prompts")}
+              modelConfigured={homeModelConfig.configured}
               skills={skillRegistry.listRecords()}
               onApplySkill={applySkillToHome}
-              defaultModel={(() => {
-                void providerVersion;
-                try {
-                  return parseModelProvider(
-                    localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
-                  ).profile.model;
-                } catch {
-                  return "";
-                }
-              })()}
+              defaultModel={homeModelConfig.model}
             />
           )}
           <div className="workspace-content" hidden={active !== "workspace"}>
@@ -2075,6 +2194,8 @@ export default function App() {
                 disabledReason: activeProject
                   ? undefined
                   : "请先新建或打开项目，再提交图片生成。",
+                imageConfigured: homeModelConfig.configured,
+                configure: () => open("settings/providers"),
               }}
             >
               <Canvas
@@ -2167,7 +2288,7 @@ export default function App() {
                   if (activeProject) retryTask(activeProject.id, taskId);
                 }}
                 chatOpen={chat}
-                covered={sidebar.narrow && mobileChat && chat}
+                covered={chatCoversCanvas && mobileChat && chat}
                 onOpenChat={() => {
                   setChat(true);
                   setMobileChat(true);
@@ -2190,13 +2311,13 @@ export default function App() {
                   ...new Set(
                     [
                       activeProject?.model,
-                      "kk-image-2",
                       parseModelProvider(
                         localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
                       ).profile.model,
                     ].filter((model): model is string => Boolean(model)),
                   ),
                 ]}
+                modelConfigured={homeModelConfig.configured}
                 onModelChange={handleProjectModelChange}
                 composerDraft={activeProject?.composerDraft}
                 onDraftChange={handleProjectDraftChange}
@@ -2291,10 +2412,7 @@ export default function App() {
                   }),
                 );
               }}
-              onOpenProject={(id) => {
-                commitCreation({ ...creationRef.current, activeProjectId: id });
-                setActive("workspace");
-              }}
+              onOpenProject={openSavedProject}
             />
           )}
         </main>
@@ -2335,6 +2453,8 @@ export default function App() {
               likedIds={likedIds}
               onClose={() => setModal("")}
               onOpen={open}
+              projects={creation.projects}
+              onOpenProject={openSavedProject}
               onLocate={locate}
               onToggleFavorite={toggleFavorite}
               onToggleLike={toggleLike}
@@ -2376,6 +2496,7 @@ export default function App() {
             <ShortcutsPanel onClose={() => setModal("")} />
           ) : modal === "settings" ? (
             <SettingsPanel
+              key={settingsSection}
               initialSection={settingsSection}
               saveState={saveState}
               revision={creation.revision}
@@ -2436,4 +2557,5 @@ import "./styles/feature-parity.css";
 import "./styles/responsive.css";
 import "./styles/responsive-content.css";
 import "./styles/composer.css";
+import "./styles/page-templates.css";
 import "./styles/canvas-compare.css";

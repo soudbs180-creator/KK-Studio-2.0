@@ -16,6 +16,120 @@ async function stored(page: Page) {
   );
 }
 
+test("原生连续保存更新 CAS，删除等待异步确认且取消保留项目", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const state = {
+      saved: null as CreationSnapshot | null,
+      pending: null as null | ((result: string) => void),
+      confirmations: 0,
+    };
+    Object.assign(window, {
+      nativeAcceptance: state,
+      __TAURI_INTERNALS__: {
+        invoke: async (
+          command: string,
+          args: {
+            snapshot?: CreationSnapshot;
+            expectedRevision?: number | null;
+          },
+        ) => {
+          if (command === "read_creation_snapshot")
+            return {
+              status: state.saved ? "loaded" : "missing",
+              snapshot: state.saved,
+            };
+          if (command === "write_creation_snapshot") {
+            if (args.expectedRevision !== (state.saved?.revision ?? null))
+              throw new Error("conflict: stale native revision");
+            state.saved = args.snapshot!;
+            return;
+          }
+          if (command === "plugin:dialog|message") {
+            state.confirmations++;
+            return new Promise<string>((resolve) => {
+              state.pending = resolve;
+            });
+          }
+          if (command === "credential_get") return null;
+          throw new Error(`Unexpected IPC: ${command}`);
+        },
+      },
+      // The Rust plugin replaces the browser API with an async implementation.
+      confirm: () => {
+        throw new Error(
+          "Do not use the plugin's legacy window.confirm override",
+        );
+      },
+    });
+  });
+  type NativeWindow = Window & {
+    nativeAcceptance: {
+      saved: CreationSnapshot | null;
+      pending: ((result: string) => void) | null;
+      confirmations: number;
+    };
+  };
+  const saved = () =>
+    page.evaluate(
+      () => (window as unknown as NativeWindow).nativeAcceptance.saved,
+    );
+  await page.goto("/");
+  const prompt = page.getByLabel("创作提示词");
+  await prompt.fill("原生第一次保存");
+  await expect
+    .poll(async () => (await saved())?.homeDraft.prompt)
+    .toBe("原生第一次保存");
+  await prompt.fill("原生第二次保存");
+  await expect
+    .poll(async () => (await saved())?.homeDraft.prompt)
+    .toBe("原生第二次保存");
+  await expect(page.getByRole("alert")).toHaveCount(0);
+  await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
+  await page
+    .getByRole("button", { name: "创建未分组项目", exact: true })
+    .click();
+  const input = page.getByRole("textbox", { name: "项目名称", exact: true });
+  await input.fill("确认保护项目");
+  await input.press("Enter");
+  await expect
+    .poll(async () => (await saved())?.projects[0]?.name)
+    .toBe("确认保护项目");
+  const entry = page
+    .locator(".sidebar .project-entry")
+    .filter({ hasText: "确认保护项目" });
+  const remove = async () => {
+    await entry.getByRole("button", { name: "更多项目设置" }).click();
+    await entry
+      .getByRole("menuitem", { name: "删除项目", exact: true })
+      .click();
+    await expect
+      .poll(() =>
+        page.evaluate(() =>
+          Boolean((window as unknown as NativeWindow).nativeAcceptance.pending),
+        ),
+      )
+      .toBe(true);
+    await expect(entry).toHaveCount(1);
+    expect((await saved())?.projects).toHaveLength(1);
+  };
+  const respond = (result: string) =>
+    page.evaluate((answer) => {
+      const state = (window as unknown as NativeWindow).nativeAcceptance;
+      state.pending!(answer);
+      state.pending = null;
+    }, result);
+  await remove();
+  await respond("取消");
+  await expect(entry).toHaveCount(1);
+  await remove();
+  await respond("确认");
+  await expect(entry).toHaveCount(0);
+  await expect.poll(async () => (await saved())?.projects.length).toBe(0);
+  await expect(page.getByRole("alert")).toHaveCount(0);
+});
+
 test("读取失败后的重试和编辑不会写入空项目", async ({ page }) => {
   await page.addInitScript(() => {
     const state = { reads: 0, writes: [] as unknown[] };
@@ -193,13 +307,15 @@ test("重新读取同一项目后搜索与改名使用新原件", async ({ page 
   });
   await page.goto("/");
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: /同一项目/ }).click();
+  await page
+    .locator(".project-library-card")
+    .filter({ hasText: "同一项目" })
+    .click();
   await expect(page.getByRole("alert")).toContainText("读取保护");
   await page.getByRole("button", { name: "重新读取", exact: true }).click();
   await expect(page.getByTestId("canvas-node-added-text-remote")).toBeVisible();
-  await page
-    .getByRole("button", { name: "打开喜欢与收藏", exact: true })
-    .click();
+  await page.getByRole("button", { name: "喜欢与收藏", exact: true }).click();
+  await page.getByRole("menuitem", { name: "我喜欢的", exact: true }).click();
   const likes = page.locator(".saved-likes");
   await expect(likes).toContainText("远端新名称");
   await likes.getByRole("button", { name: "编辑", exact: true }).click();
@@ -257,7 +373,10 @@ test("A/B 项目的连线、视口和位置在切换及刷新后保持隔离", a
   });
   await page.goto("/");
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: /项目 A/ }).click();
+  await page
+    .locator(".project-library-card")
+    .filter({ hasText: "项目 A" })
+    .click();
   const node = page.locator('[data-node-id="image"]');
   await node.focus();
   await node.press("ArrowRight");
@@ -279,7 +398,10 @@ test("A/B 项目的连线、视口和位置在切换及刷新后保持隔离", a
   expect(a.edges).toEqual([]);
   expect(a.viewport.scale).toBeLessThan(1);
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: /项目 B/ }).click();
+  await page
+    .locator(".project-library-card")
+    .filter({ hasText: "项目 B" })
+    .click();
   await expect(node).toHaveCSS("left", "82px");
   await expect(edge).toHaveCount(1);
   await node.focus();
@@ -287,7 +409,10 @@ test("A/B 项目的连线、视口和位置在切换及刷新后保持隔离", a
   await expect(page.locator(".project-save-state")).toContainText("已保存");
   await page.reload();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: /项目 A/ }).click();
+  await page
+    .locator(".project-library-card")
+    .filter({ hasText: "项目 A" })
+    .click();
   await expect(node).toHaveCSS("left", "90px");
   await expect(edge).toHaveCount(0);
   const transform = await page
@@ -360,9 +485,9 @@ test("画布参数不会在重开项目后回到默认值", async ({ page }) => 
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
-  await page.getByLabel("API Base URL").fill("https://models.example.test/v1");
-  await page.getByLabel("默认模型").fill("image-test");
-  await page.getByRole("button", { name: "保存供应商", exact: true }).click();
+  await page.getByLabel("接口地址").fill("https://models.example.test/v1");
+  await page.getByLabel("模型名称").fill("image-test");
+  await page.getByRole("button", { name: "保存", exact: true }).click();
   await page.getByLabel("当前模型用途").selectOption("image");
   await page.getByLabel("支持的图片尺寸").fill("1024x1024, 1536x1024");
   await page
@@ -371,7 +496,10 @@ test("画布参数不会在重开项目后回到默认值", async ({ page }) => 
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
-  const node = page.locator('[data-node-id="image"]');
+  await expect(page.locator(".canvas-node")).toHaveCount(0);
+  await page.getByRole("button", { name: "添加资源", exact: true }).click();
+  await page.getByRole("menuitem", { name: "图片", exact: true }).click();
+  const node = page.locator("[data-testid^='canvas-node-added-image-']");
   await node.focus();
   await node.press("Enter");
   await node.getByTitle("使用当前模型声明支持的尺寸").click();
@@ -383,8 +511,8 @@ test("画布参数不会在重开项目后回到默认值", async ({ page }) => 
   await page.reload();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page
-    .getByRole("button", { name: /未命名项目/ })
-    .last()
+    .locator(".project-library-card")
+    .filter({ hasText: "未命名项目" })
     .click();
   await node.focus();
   await node.press("Enter");
@@ -397,20 +525,28 @@ test("画布位置与新增身份在保存重开后保持", async ({ page }) => 
   await page.goto("/");
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
-  const node = page.locator('[data-node-id="image"]');
+  await expect(page.locator(".canvas-node")).toHaveCount(0);
+  await page.getByRole("button", { name: "添加资源", exact: true }).click();
+  await page.getByRole("menuitem", { name: "图片", exact: true }).click();
+  const node = page
+    .locator("[data-testid^='canvas-node-added-image-']")
+    .first();
+  const initialLeft = parseFloat(
+    await node.evaluate((element) => getComputedStyle(element).left),
+  );
   await node.focus();
   for (let index = 0; index < 8; index++) await node.press("ArrowRight");
-  await expect(node).toHaveCSS("left", "146px");
+  await expect(node).toHaveCSS("left", `${initialLeft + 64}px`);
   await page.getByRole("button", { name: "添加资源", exact: true }).click();
   await page.getByRole("menuitem", { name: "图片", exact: true }).click();
   await expect(page.locator(".project-save-state")).toContainText("已保存");
   await page.reload();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page
-    .getByRole("button", { name: /未命名项目/ })
-    .last()
+    .locator(".project-library-card")
+    .filter({ hasText: "未命名项目" })
     .click();
-  await expect(node).toHaveCSS("left", "146px");
+  await expect(node).toHaveCSS("left", `${initialLeft + 64}px`);
   await page.getByRole("button", { name: "添加资源", exact: true }).click();
   await page.getByRole("menuitem", { name: "图片", exact: true }).click();
   const ids = await page

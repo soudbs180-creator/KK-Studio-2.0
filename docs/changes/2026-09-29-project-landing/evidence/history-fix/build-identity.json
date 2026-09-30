@@ -1,0 +1,50 @@
+{
+  "time": "2026-09-30T06:36:20.998Z",
+  "versions": {
+    "schemaVersion": 1,
+    "desktop": "2.1.2",
+    "web": "2.1.3",
+    "mobile": "2.1.1"
+  },
+  "files": [
+    {
+      "path": "src-tauri/target/release/kk-studio.exe",
+      "sha256": "fda10f06689d0d993fa6b3d856d808b88ee8947185abbe8d88f9bb8677fc19a7",
+      "size": 19483136
+    },
+    {
+      "path": "src-tauri/agent-runtime/runtime-manifest.json",
+      "sha256": "42e20b6a8a22574b8a5f99192198d5c5575332e528b0dce8776d974c3e0ff818",
+      "size": 809622
+    },
+    {
+      "path": "dist/assets/index-Dajq2fwF.css",
+      "sha256": "315e74abc31a372ae27ca3733606d8f68cca91fa856847486430b2b1ebb5e557",
+      "size": 272001
+    },
+    {
+      "path": "dist/assets/index-DBl3l-J0.js",
+      "sha256": "a2f2ffda4fdfbd63b3c775ac4933051c1a07b34e68e15a4a7a1b51ace24af57c",
+      "size": 940283
+    },
+    {
+      "path": "config/platform-versions.json",
+      "sha256": "fb66e17ac7c841e4e40a049bdba625c89e95f69f3630f07e2e6d9c5751099235",
+      "size": 86
+    },
+    {
+      "path": "docs/engineering/REVIEW.md",
+      "sha256": "469968b635ad30fa3059a70c42f88885bda6fa80b63f1da17fb20364433e5f05",
+      "size": 7352
+    }
+  ],
+  "browser": {
+    "startTime": "2026-09-30T06:33:27.141Z",
+    "duration": 70288.321,
+    "expected": 377,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "runtimeVerifiedFiles": 4277
+}

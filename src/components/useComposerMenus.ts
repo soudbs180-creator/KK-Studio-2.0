@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState, type RefObject } from "react";
 import { useDismissible } from "./useDismissible";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
 
-type ComposerMenu = "model" | "skill" | "plugin" | "mode";
+type ComposerMenu = "add" | "model" | "skill" | "plugin" | "mode";
 
 /** One open menu per composer; share modal, IME and focus rules with other menus. */
 export function useComposerMenus(boundary: RefObject<HTMLElement>) {
@@ -16,10 +16,12 @@ export function useComposerMenus(boundary: RefObject<HTMLElement>) {
   useLayoutEffect(() => {
     trigger.current =
       boundary.current?.querySelector<HTMLButtonElement>(
-        'button[aria-haspopup="menu"][aria-expanded="true"]',
+        'button[aria-haspopup][aria-expanded="true"]',
       ) ?? null;
     anchor.current = trigger.current?.parentElement ?? null;
-    const popover = anchor.current?.querySelector<HTMLElement>('[role="menu"]');
+    const popover = anchor.current?.querySelector<HTMLElement>(
+      '[role="menu"], [role="dialog"]',
+    );
     if (!popover) return;
     const place = () => {
       const panel = boundary.current?.closest(
@@ -89,6 +91,7 @@ export function useComposerMenus(boundary: RefObject<HTMLElement>) {
   useDismissible(menu !== null, anchor, () => setMenu(null), trigger);
 
   return {
+    addMenuOpen: menu === "add",
     modelMenuOpen: menu === "model",
     skillMenuOpen: menu === "skill",
     pluginMenuOpen: menu === "plugin",

@@ -14,7 +14,7 @@
 
 启动只创建规范目录并保留旧文件，旧数据不会自动迁移。创作快照使用下方安全仓库契约；聊天与配置文件仍按各自命令的现有边界写入，不能把创作仓库的保证推广到所有文件。
 
-客户端目标根目录形态（其中项目 SQLite、记忆等尚未全部接线，assets现为已接入的原生文件仓库）：
+客户端目标根目录形态（其中项目 SQLite 尚未全部接线；记忆已接线，见下文"本地长期记忆"节）：
 
 ```text
 kk-studio/
@@ -29,9 +29,8 @@ kk-studio/
 │  └─ <project-id>/revisions/…
 ├─ conversations/       # 会话消息
 │  └─ index.json        # 会话索引；正文后续按会话拆分
-├─ memory/              # 用户/品牌记忆；仅显式开启时写入
-│  ├─ user.json
-│  └─ brand/<brand-id>.json
+├─ memory/              # 旧隔离版记忆的迁移源，不再作为主存储
+│  └─ memory.json       # 首次迁移时只作种子，不覆盖已有共享文件
 ├─ assets/              # 已接线的原生素材仓库，不把原件写入 JSON
 │  ├─ records/<assetId>.json # version=1及非敏感metadata
 │  ├─ blobs/<sha256>    # 无扩展名的原始字节，内容寻址
@@ -100,7 +99,19 @@ companion/
 
 `src-tauri/src/storage_paths.rs` 已将桌面端文件固定为 `providers/config.json`、`conversations/index.json` 和 `projects/creation-v2.json`，启动时只保留旧根目录文件作为只读迁移来源，不会自动解析、复制或删除它们。创作页通过 `read_creation_snapshot` / `write_creation_snapshot` 使用项目快照边界；设置元数据仍由 provider schema 管理。目录常量与浏览器 key 集中在 `src/runtime/storage-contract.ts`。
 
-账号/记忆当前没有真实 schema 或持久化：`AccountPopup` 和账号页只是界面占位，`ConnectionSettings` 的 memory 页只有空状态。任何 UID、积分和更新版本显示都不能当作服务数据。
+账号目前没有真实 schema 或持久化：`AccountPopup` 和账号页仍是界面占位，任何 UID、积分和更新版本显示都不能当作服务数据。记忆已实现真实本地持久化（仅用户级），见下文"本地长期记忆"节。
+
+## 本地长期记忆（2026-09-24，本机共享版）
+
+- 范围：仅用户级记忆（偏好/习惯/约束/画像）。KK Studio 的 Desktop 读写 `~/.kk-memory/memory.json`（Windows `%USERPROFILE%\.kk-memory\memory.json`）；Web 经用户授权可选择同一目录。豆包和 WorkBuddy 原生客户端尚未接入，登录状态不等于共享记忆生效。
+- Schema（`src/features/memory/types.ts`）：`MemoryStoreFile { version: 1; namespace?: ""; records: MemoryRecord[] }`（namespace 为隔离版遗留字段，共享模式恒空）；单条记录含 `content（≤200字）/memoryType/confidence/fingerprint（sha256 归一化内容）/source/createdAt/updatedAt/active`，上限 10000 条。
+- Desktop：`~/.kk-memory/memory.json`（跨产品约定，`src-tauri` 内 `shared_memory_path()`）；Tauri 命令 `memory_read / memory_write / memory_reset_identity`；写入为临时文件 + rename 原子写；重置时先复制旧文件为 `.previous-<ts>.json`，再写入新文件；首次启用把旧 `<app-data>/memory/memory.json` 一次性种子迁移（不覆盖已有共享文件）。
+- Web：File System Access 授权 `.kk-memory` 目录后只读共享文件（handle 存独立 IndexedDB `kk-studio-memory/memory-fs-handle`）；未授权时使用 `kk-studio-memory/memory/default` 私有可写存储并明示。授权失效时暂停共享记忆读取，可重新授权或切回私有记忆；私有内容不自动合并。
+- localStorage 只存 `kk.memory.settings`（`{enabled: boolean}`）；记忆内容与目录句柄之外的数据绝不进 localStorage、WebDAV 同步（FEAT-019 scope 不含 memory）、日志（console 仅打印条数）、导出包/项目包。
+- 跨产品契约：`docs/MEMORY-CONTRACT.md`（读取最多 3 条/总长 ≤400 字参考、低置信度跳过、与输入冲突以输入为准；写入仅稳定偏好、指纹去重、不编造；隐私同密钥级）。
+- 隔离边界：无身份键（用户决策"本机默认共享"）；换账号/换人时用户手动清空或重置；真实账号 id 派生依赖 FEAT-017（见 feat-020-memory.md）。
+- 采集：仅从用户原话本地规则抽取，排除常见凭据句子；模型回复不自动成为用户偏好。手动"让 Codex 提炼"需用户点击（解析 `记忆：` 行，消耗其 Codex 额度）。
+- 注入：发送对话前词法检索（最多 3 条、总长 ≤400 字、confidence ≥0.55、active），在 KK_INSTRUCTIONS 与"用户指令："之间插入 `[长期记忆]` 块；默认开关关闭，关闭时零采集零注入。完整文件不参加云同步，但开启后选中的片段会随当前请求发送给所选模型用于推理。
 
 ## 原生素材仓库与项目引用（2026-09-16 T3a）
 

@@ -34,6 +34,7 @@
 ### Task 1: 协议、文件仓库与迁移 manifest
 
 **Files:**
+
 - Create: `src/features/local-service/protocol.ts`
 - Create: `src/features/local-service/store.ts`
 - Create: `src/features/local-service/manifest.ts`
@@ -43,6 +44,7 @@
 - Modify: `src/features/creation/snapshotCodec.ts` only if a pure shared validator export is needed
 
 **Interfaces:**
+
 - Consumes: `CreationSnapshot`, `StoredGeneratedAsset`, `decodeSnapshot`, existing asset ID/MIME limits.
 - Produces: `serviceProtocolVersion`, Zod request/response schemas, `CompanionStore`, `writeSnapshot(expectedRevision)`, `readSnapshot()`, `stageAsset()`, `preflightImport()`, `publishImport()`, `createBackup()`, `restoreBackup()`, and canonical manifest hashing.
 
@@ -59,6 +61,7 @@
 ### Task 2: Loopback HTTP service and pairing session
 
 **Files:**
+
 - Create: `src/features/local-service/server.ts`
 - Create: `src/features/local-service/main.ts`
 - Create: `src/features/local-service/session.ts`
@@ -67,6 +70,7 @@
 - Modify: `package.json` (`local-service`, `local-service:test` scripts)
 
 **Interfaces:**
+
 - Consumes: Task 1 protocol and `CompanionStore`.
 - Produces: `createCompanionServer(options)`, `startCompanionService(options)`, `GET /health`, pairing/session routes, snapshot/assets/migration/backup routes, and normalized HTTP error responses.
 
@@ -82,6 +86,7 @@
 ### Task 3: Web connection and creation snapshot adapter
 
 **Files:**
+
 - Create: `src/features/local-service/client.ts`
 - Create: `src/features/local-service/connection.ts`
 - Create: `tests/unit/localServiceClient.test.ts`
@@ -90,6 +95,7 @@
 - Modify: `src/components/settings/SettingsSections.tsx` or the existing settings subsection selected by current component structure
 
 **Interfaces:**
+
 - Consumes: Task 1 protocol and Task 2 HTTP routes; existing `loadCreationSnapshot`, `persistCreationSnapshotAsync`, `SnapshotStorageError`.
 - Produces: `readCompanionConnection()`, `pairCompanion()`, `checkCompanion()`, `disconnectCompanion()`, `companionConnectionState`, `loadCompanionSnapshot()`, and `persistCompanionSnapshot()`.
 
@@ -104,6 +110,7 @@
 ### Task 4: Asset adapter, IndexedDB migration, backup and restore
 
 **Files:**
+
 - Create: `src/features/local-service/migration.ts`
 - Create: `tests/unit/localServiceMigration.test.ts`
 - Create: `tests/browser/local-service-migration.spec.ts`
@@ -112,6 +119,7 @@
 - Modify: `src/features/creation/storage.ts` to expose the user-triggered migration flow
 
 **Interfaces:**
+
 - Consumes: Task 1 manifest/store, Task 2 migration/asset routes, Task 3 connection/client state, current IndexedDB stores `kk-studio-next / creation / snapshot` and `kk-studio-assets / blobs`.
 - Produces: `preflightIndexedData()`, `importIndexedData()`, `exportCompanionBackup()`, `restoreCompanionBackup()`, and service-aware `storeGeneratedAsset`, `loadStoredAsset`, `listStoredAssets`.
 
@@ -127,6 +135,7 @@
 ### Task 5: Settings UX and production verification
 
 **Files:**
+
 - Modify: `src/components/settings/SettingsSections.tsx` and the selected settings component/styles
 - Create: `tests/browser/local-service-connection.spec.ts`
 - Create: `tests/local-service/production-smoke.mjs`
@@ -138,6 +147,7 @@
 - Modify: generated `docs/governance/TASK_LEDGER.md` via governance writer
 
 **Interfaces:**
+
 - Consumes: Tasks 2–4 public client/service interfaces.
 - Produces: accessible connect/migrate/backup status UI and reproducible Web + service runtime evidence.
 
@@ -152,6 +162,7 @@
 ### Task 6: Review, merge and closeout
 
 **Files:**
+
 - Create: `docs/changes/2026-09-29-local-companion/intent.md`
 - Create: `docs/changes/2026-09-29-local-companion/spec.md`
 - Create: `docs/changes/2026-09-29-local-companion/plan.md`
@@ -160,6 +171,7 @@
 - Modify: `docs/governance/task-ledger.json`, generated `TASK_LEDGER.md`, `PROGRESS.md`, `PROJECT_STATE.md`
 
 **Interfaces:**
+
 - Consumes: all verified implementation commits and Hosted CI output.
 - Produces: five-file change package, independent review record, PR, merge SHA/tree, post-merge `verify`/`deploy-linux`, and an accurate ledger status.
 
@@ -169,4 +181,3 @@
 - [ ] **Step 4: Read back the exact PR head, checks, merge SHA and tree; squash merge only after all required checks pass.**
 - [ ] **Step 5: Fetch `origin/main`, run post-merge `verify`/`deploy-linux`, and compare the merged tree with the recorded head.**
 - [ ] **Step 6: Record VPS status separately:** Git remote sync may be verified from the merge SHA, but RackNerd upload/SSH/data recovery remain UNKNOWN unless a working server connection produces evidence.
-

@@ -21,7 +21,16 @@ type Gesture = {
   selection: Set<string>;
   nodeId?: string;
   additive: boolean;
+  snap: boolean;
 };
+export const CANVAS_SNAP_GRID = 16;
+
+function snapPoint(point: Point): Point {
+  return {
+    x: Math.round(point.x / CANVAS_SNAP_GRID) * CANVAS_SNAP_GRID,
+    y: Math.round(point.y / CANVAS_SNAP_GRID) * CANVAS_SNAP_GRID,
+  };
+}
 export function isInteractiveTarget(target: EventTarget | null): boolean {
   return (
     target instanceof Element &&
@@ -41,6 +50,7 @@ export function useCanvasPointer({
   setTransform,
   selectedNode,
   setSelectedNode,
+  snapEnabled,
 }: {
   containerRef: RefObject<HTMLDivElement>;
   nodes: Record<string, Point>;
@@ -49,6 +59,7 @@ export function useCanvasPointer({
   setTransform: Dispatch<SetStateAction<ViewTransform>>;
   selectedNode: string | null;
   setSelectedNode: Dispatch<SetStateAction<string | null>>;
+  snapEnabled: boolean;
 }) {
   const [tool, setTool] = useState<CanvasTool>("select");
   const [spaceHeld, setSpaceHeld] = useState(false);
@@ -143,6 +154,7 @@ export function useCanvasPointer({
       selection: new Set(selection),
       nodeId,
       additive: event.shiftKey,
+      snap: snapEnabled && !event.ctrlKey && !event.metaKey,
     };
     setDragging(kind);
     (kind === "node" ? event.currentTarget : containerRef.current)?.focus({
@@ -188,13 +200,13 @@ export function useCanvasPointer({
         ...Object.fromEntries(
           [...ids]
             .filter((id) => drag.nodes[id])
-            .map((id) => [
-              id,
-              {
+            .map((id) => {
+              const position = {
                 x: drag.nodes[id].x + logicalDx / drag.transform.scale,
                 y: drag.nodes[id].y + logicalDy / drag.transform.scale,
-              },
-            ]),
+              };
+              return [id, drag.snap ? snapPoint(position) : position];
+            }),
         ),
       }));
       return;

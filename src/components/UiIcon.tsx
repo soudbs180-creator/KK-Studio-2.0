@@ -18,7 +18,11 @@ import {
   Link1,
   Export,
   FolderAdd,
+  Cpu,
+  Eye,
+  EyeSlash,
 } from "iconsax-react";
+import { getUiIconSizeName, normalizeUiIconSize } from "./uiIconSizing";
 
 const ICONS = {
   add: Add,
@@ -40,21 +44,29 @@ const ICONS = {
   plug: Link1,
   upload: Export,
   folderAdd: FolderAdd,
+  agent: Cpu,
+  eye: Eye,
+  eyeOff: EyeSlash,
 };
 export type UiIconName = keyof typeof ICONS;
 
 /** Shared supplemental icon set. Source Figma exports remain authoritative. */
 export default function UiIcon({
   name,
-  size = 18,
+  size = 20,
 }: {
   name: UiIconName;
   size?: number;
 }) {
   const Icon = ICONS[name];
+  const normalizedSize = normalizeUiIconSize(size);
   return (
-    <span className="ui-icon" aria-hidden="true">
-      <Icon variant="Linear" color="currentColor" size={size} />
+    <span
+      className="ui-icon kk-icon-slot"
+      data-size={getUiIconSizeName(normalizedSize)}
+      aria-hidden="true"
+    >
+      <Icon variant="Linear" color="currentColor" size={normalizedSize} />
     </span>
   );
 }

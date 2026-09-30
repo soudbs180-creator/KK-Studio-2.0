@@ -1,0 +1,18 @@
+{
+  "runtime": {
+    "url": "http://127.0.0.1:1423/",
+    "script": "/assets/index-m11Fo8_D.js",
+    "entry": "src/main.tsx",
+    "mode": "production",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "settings": {
+    "width": 920,
+    "height": 700,
+    "titleOffsetX": 364,
+    "titleOffsetY": 38
+  }
+}

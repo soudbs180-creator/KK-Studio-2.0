@@ -1,9 +1,8 @@
 import CanvasHud from "./canvas/CanvasHud";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, type CSSProperties } from "react";
 import CanvasNavigation from "./canvas/CanvasNavigation";
 import { deleteConnection, restoreConnection } from "../domain/canvasGraph";
 import CanvasNodeLayer from "./canvas/CanvasNodeLayer";
-import { type CanvasContextMenuState } from "./canvas/CanvasContextMenu";
 import { useCanvasAddMenu } from "./canvas/useCanvasAddMenu";
 import "../styles/demo-results.css";
 import "../styles/canvas-actions.css";
@@ -11,11 +10,15 @@ import CanvasToolbar from "./canvas/CanvasToolbar";
 import { useCanvasControls } from "./canvas/useCanvasControls";
 import { surfaceScale } from "./canvas/canvasSurface";
 import CanvasOverlays from "./canvas/CanvasOverlays";
+import CanvasLayersPanel from "./canvas/CanvasLayersPanel";
 import { useCanvasConnections } from "./canvas/useCanvasConnections";
 import { useCanvasPersistence } from "./canvas/useCanvasPersistence";
+import { useCanvasWorkbenchState } from "./canvas/useCanvasWorkbenchState";
+import { useCanvasContextMenu } from "./canvas/useCanvasContextMenu";
 import { canvasPatternPitch } from "../domain/canvasViewport";
 import { useAgentCanvasView } from "./canvas/useAgentCanvasView";
 import type { CanvasProps } from "./canvas/CanvasProps";
+import "../styles/canvas-layers.css";
 import ImageCompareProvider from "../features/compare/ImageCompareProvider";
 import ImageCompareControls from "../features/compare/ImageCompareControls";
 
@@ -41,17 +44,8 @@ export default function Canvas({
   initialCanvas,
   onCanvasChange,
 }: CanvasProps) {
-  const [showConnections, setShowConnections] = useState(true);
-  const [backgroundColor, setBackgroundColor] = useState<string | undefined>();
-  const [backgroundPattern, setBackgroundPattern] = useState<"dots" | "grid">(
-    "dots",
-  );
-  const [contextMenu, setContextMenu] = useState<CanvasContextMenuState | null>(
-    null,
-  );
-  const rightGesture = useRef<{ x: number; y: number; moved: boolean } | null>(
-    null,
-  );
+  const { contextMenu, setContextMenu, rightGesture, handleContextMenu } =
+    useCanvasContextMenu();
   const controls = useCanvasControls({
     items,
     onItemsChange,
@@ -69,6 +63,7 @@ export default function Canvas({
     finishPointer,
     movePointer,
     nodes,
+    preferences,
     startCanvasPan,
     transform,
     zoomCanvas,
@@ -82,6 +77,13 @@ export default function Canvas({
     connectionNotice,
     setConnectionNotice,
   } = useCanvasConnections(items, onItemsChange, initialCanvas?.edges);
+  const { history, layersOpen, setLayersOpen } = useCanvasWorkbenchState({
+    controls,
+    items,
+    onItemsChange,
+    edges,
+    setEdges,
+  });
   useCanvasPersistence(
     initialCanvas,
     nodes,
@@ -103,39 +105,18 @@ export default function Canvas({
       <div
         ref={containerRef}
         {...(covered ? { inert: "" } : {})}
-        className={`canvas infinite-canvas ${chatOpen ? "has-chat" : ""} ${dragging === "pan" ? "is-panning" : ""} canvas-pattern-${backgroundPattern}`}
+        className={`canvas infinite-canvas ${chatOpen ? "has-chat" : ""} ${dragging === "pan" ? "is-panning" : ""} canvas-pattern-${preferences.backgroundPattern}`}
         data-testid="infinite-canvas"
         data-tool={controls.tool}
         data-space-pan={controls.spaceHeld}
-        onContextMenu={(event) => {
-          const editable =
-            event.target instanceof Element &&
-            event.target.closest("input,textarea,[contenteditable=true]");
-          if (editable) return;
-          event.preventDefault();
-          if (
-            event.target instanceof Element &&
-            event.target.closest(
-              "[data-canvas-node],button,dialog,.canvas-hud,.canvas-toolbar,.connection",
-            )
-          ) {
-            rightGesture.current = null;
-            return;
-          }
-          if (rightGesture.current?.moved) {
-            rightGesture.current = null;
-            return;
-          }
-          rightGesture.current = null;
-          setContextMenu({
-            client: { x: event.clientX, y: event.clientY },
-            trigger: event.currentTarget,
-          });
-        }}
+        onContextMenu={handleContextMenu}
         role="region"
         aria-label="无限画布"
         tabIndex={0}
-        onKeyDownCapture={controls.handleViewKeyDown}
+        onKeyDownCapture={(event) => {
+          if (history.handleKeyDown(event)) return;
+          controls.handleViewKeyDown(event);
+        }}
         onPointerDown={(event) => {
           if (event.button === 2)
             rightGesture.current = {
@@ -171,7 +152,7 @@ export default function Canvas({
         style={
           {
             "--canvas-usable-width": `${controls.viewport.width}px`,
-            backgroundColor,
+            backgroundColor: preferences.backgroundColor,
             backgroundSize: `${canvasPatternPitch(transform.scale)}px ${canvasPatternPitch(transform.scale)}px`,
             "--canvas-pan-x": `${transform.x}px`,
             "--canvas-pan-y": `${transform.y}px`,
@@ -194,7 +175,7 @@ export default function Canvas({
           onConfigure={() => onOpen?.("settings/providers")}
           addMenu={addMenu}
           edges={edges}
-          showConnections={showConnections}
+          showConnections={preferences.showConnections}
           onConnect={connect}
           onConnectionNotice={setConnectionNotice}
           onDeleteConnection={(id) => {
@@ -204,6 +185,16 @@ export default function Canvas({
           }}
         />
         <ImageCompareControls />
+
+        {layersOpen && (
+          <CanvasLayersPanel
+            items={items}
+            selectedNode={controls.selectedNode}
+            onSelect={controls.setSelectedNode}
+            onLocate={locateNode}
+            onClose={() => setLayersOpen(false)}
+          />
+        )}
 
         <CanvasOverlays
           marquee={controls.marquee}
@@ -218,6 +209,13 @@ export default function Canvas({
             setContextMenu(null);
             addMenu.open({ client: point, trigger, atPoint: true });
           }}
+          canUndo={history.canUndo}
+          canRedo={history.canRedo}
+          onUndo={history.undo}
+          onRedo={history.redo}
+          onToggleLayers={() => setLayersOpen(true)}
+          snapEnabled={preferences.snapEnabled}
+          onToggleSnap={() => controls.setSnapEnabled(!preferences.snapEnabled)}
           removedEdge={removedEdge}
           onUndoConnection={() => {
             if (!removedEdge) return;
@@ -247,16 +245,16 @@ export default function Canvas({
             onZoom={controls.setZoom}
             onChangeZoom={controls.changeZoom}
             onFit={controls.fitView}
-            showConnections={showConnections}
+            showConnections={preferences.showConnections}
             onToggleConnections={() =>
-              setShowConnections((visible) => !visible)
+              controls.setShowConnections(!preferences.showConnections)
             }
-            backgroundColor={backgroundColor ?? "#0a0a0a"}
-            onBackgroundColor={setBackgroundColor}
-            backgroundPattern={backgroundPattern}
+            backgroundColor={preferences.backgroundColor}
+            onBackgroundColor={controls.setBackgroundColor}
+            backgroundPattern={preferences.backgroundPattern}
             onToggleBackgroundPattern={() =>
-              setBackgroundPattern((pattern) =>
-                pattern === "dots" ? "grid" : "dots",
+              controls.setBackgroundPattern(
+                preferences.backgroundPattern === "dots" ? "grid" : "dots",
               )
             }
             onArrange={arrangeNodes}

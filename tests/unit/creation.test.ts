@@ -1,8 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  createProject,
+  createTask,
   modelSupportsKind,
   normalizeCreationSnapshot,
+  projectHasUnsettledTasks,
 } from "../../src/features/creation/model.ts";
 import { credentialId } from "../../src/features/creation/providerCredentials.ts";
 import {
@@ -104,6 +107,58 @@ test("unknown submissions normalize conservatively and retain the stable identit
   assert.equal(task?.submissionState, "unknown");
   assert.equal(task?.submittedAt, 42);
   assert.equal(task?.idempotencyKey, "stable-job-key");
+});
+
+test("project deletion protects uncertain provider submissions and outputs after status changes", () => {
+  const project = createProject({
+    prompt: "测试",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  const task = createTask(project);
+  assert.equal(
+    projectHasUnsettledTasks({
+      ...project,
+      tasks: [{ ...task, status: "failed", submissionState: "unknown" }],
+    }),
+    true,
+  );
+  assert.equal(
+    projectHasUnsettledTasks({
+      ...project,
+      tasks: [{ ...task, status: "failed", submissionState: "submitted" }],
+    }),
+    true,
+  );
+  assert.equal(
+    projectHasUnsettledTasks({
+      ...project,
+      tasks: [
+        {
+          ...task,
+          status: "partial",
+          submissionState: "terminal",
+          outputs: [{ ...task.outputs![0], status: "unknown" }],
+        },
+      ],
+    }),
+    true,
+  );
+  assert.equal(
+    projectHasUnsettledTasks({
+      ...project,
+      tasks: [
+        {
+          ...task,
+          status: "succeeded",
+          submissionState: "terminal",
+          outputs: [{ ...task.outputs![0], status: "succeeded" }],
+        },
+      ],
+    }),
+    false,
+  );
 });
 
 test("image capability rejects common text models and accepts image variants", () => {

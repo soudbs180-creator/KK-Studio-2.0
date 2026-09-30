@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
-import { openWorkspace } from "./helpers";
+import { openSeededProject } from "./helpers";
 
 test.use({ reducedMotion: "reduce" });
 
@@ -14,7 +14,7 @@ type ControlRect = {
 async function controlRects(container: Locator): Promise<ControlRect[]> {
   return container.locator("button, select").evaluateAll((controls) =>
     controls
-      .filter((control) => !control.closest('[role="menu"]'))
+      .filter((control) => !control.closest('[role="menu"], [role="dialog"]'))
       .map((control) => {
         const { x, y, width, height } = control.getBoundingClientRect();
         return {
@@ -91,7 +91,7 @@ function workspaceTriggers(panel: Locator): Locator[] {
 test("工作台四种菜单互斥且打开、切换、关闭都不移动动作控件", async ({
   page,
 }) => {
-  await openWorkspace(page);
+  await openSeededProject(page);
   await page.evaluate(() => document.fonts.ready);
   const panel = page.locator(".conversation-panel");
   const actions = panel.locator('[data-node-id="407:29315"]');
@@ -111,7 +111,7 @@ test("工作台四种菜单互斥且打开、切换、关闭都不移动动作�
 });
 
 test("工作台菜单在 HUD 和工具栏指针事件被截断时仍关闭", async ({ page }) => {
-  await openWorkspace(page);
+  await openSeededProject(page);
   const panel = page.locator(".conversation-panel");
   const model = panel.getByRole("button", { name: "模型", exact: true });
 
@@ -131,7 +131,7 @@ test("工作台菜单在 HUD 和工具栏指针事件被截断时仍关闭", asy
 test("工作台菜单内部获得焦点后 Escape 关闭并回到对应触发器", async ({
   page,
 }) => {
-  await openWorkspace(page);
+  await openSeededProject(page);
   const panel = page.locator(".conversation-panel");
   for (const trigger of workspaceTriggers(panel)) {
     await trigger.click();
@@ -163,13 +163,16 @@ async function useLongModel(page: Page): Promise<void> {
 
 test("长模型名不会挤出工作台动作区，模型菜单仍完整可操作", async ({ page }) => {
   await useLongModel(page);
-  await openWorkspace(page);
+  await openSeededProject(page);
   await page.getByLabel("执行方式").selectOption("direct");
   await page.evaluate(() => document.fonts.ready);
   const panel = page.locator(".conversation-panel");
   const actions = panel.locator('[data-node-id="407:29315"]');
   const model = panel.getByRole("button", { name: "模型", exact: true });
-  await expect(model.locator(".chat-model-name")).toHaveText(longModel);
+  // The Figma composer keeps the compact visible label; the configured model
+  // remains available through the button title and the menu.
+  await expect(model.locator(".chat-model-name")).toHaveText("模型");
+  await expect(model).toHaveAttribute("title", longModel);
   const area = await actions.boundingBox();
   const controls = await controlRects(actions);
   expect(area).not.toBeNull();
@@ -193,7 +196,7 @@ test("长模型名不会挤出工作台动作区，模型菜单仍完整可操�
 });
 
 for (const width of [390, 768, 900]) {
-  test(`首页 ${width}px 所有控件和四种弹层可见、可命中且关闭回焦`, async ({
+  test(`首页 ${width}px 主控件和三种弹层可见、可命中且关闭回焦`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1024 });
@@ -209,12 +212,11 @@ for (const width of [390, 768, 900]) {
     const triggers = [
       footer.getByRole("button", { name: "模型", exact: true }),
       footer.getByRole("button", { name: "Skill", exact: true }),
-      footer.getByRole("button", { name: "插件", exact: true }),
       footer.getByRole("button", { name: /^当前模式：/ }),
     ];
     for (const trigger of triggers) {
       await trigger.click();
-      const menu = footer.getByRole("menu");
+      const menu = footer.locator('[role="menu"], [role="dialog"]');
       await expectMenuUsable(page, menu);
       await expectStableControls(footer, baseline);
       const option = menu.locator("button").first();
@@ -225,9 +227,13 @@ for (const width of [390, 768, 900]) {
     }
     await triggers[0].click();
     await triggers[1].click();
-    await expect(footer.getByRole("menu")).toHaveCount(1);
+    await expect(footer.locator('[role="menu"], [role="dialog"]')).toHaveCount(
+      1,
+    );
     await expect(triggers[0]).toHaveAttribute("aria-expanded", "false");
     await page.getByLabel("创作提示词").click();
-    await expect(footer.getByRole("menu")).toHaveCount(0);
+    await expect(footer.locator('[role="menu"], [role="dialog"]')).toHaveCount(
+      0,
+    );
   });
 }

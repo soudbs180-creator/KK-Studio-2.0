@@ -48,7 +48,7 @@
   --conversation-width: 470px;
   --topbar-height: 40px;
   font-family: Inter, "Microsoft YaHei", "PingFang SC", sans-serif;
-  font-size: 13px;
+  font-size: var(--kk-font-body);
   color: var(--text-primary);
   color-scheme: dark;
 }
@@ -142,6 +142,82 @@
   --accent-text-dark: #dbdbdb;
   --accent-text-light: #252525;
   --accent-focus-dark: var(--accent-text-dark);
+}
+
+/* Figma governance source of truth. Legacy semantic names remain aliases so
+   existing components share the same values while they are migrated. */
+:root {
+  --bg-app: var(--kk-bg-app);
+  --bg-surface: var(--kk-bg-surface);
+  --bg-card: var(--kk-bg-card);
+  --bg-elevated: var(--kk-bg-elevated);
+  --bg-soft: var(--kk-bg-soft);
+  --bg-card-hover: var(--kk-bg-elevated);
+  --bg-card-soft: var(--kk-bg-soft);
+  --bg-input: var(--kk-bg-input);
+  --bg-accent: var(--kk-accent);
+  --bg-accent-hover: var(--kk-accent-hover);
+  --bg-accent-soft: var(--kk-accent-soft);
+  --text-on-accent: var(--kk-on-accent);
+  --accent-text-dark: var(--kk-text-accent);
+  --accent-text-light: var(--kk-text-accent);
+  --accent-focus-dark: var(--kk-focus-ring);
+  --accent-focus-light: var(--kk-focus-ring);
+  --border-default: var(--kk-border-default);
+  --border-subtle: var(--kk-border-subtle);
+  --border-control: var(--kk-border-control);
+  --border-accent: var(--kk-text-accent);
+  --neutral-selected: var(--kk-neutral-selected);
+  --text-primary: var(--kk-text-primary);
+  --text-secondary: var(--kk-text-secondary);
+  --text-tertiary: var(--kk-text-tertiary);
+  --text-accent: var(--kk-text-accent);
+  --focus-ring: var(--kk-focus-ring);
+  --text-danger: var(--kk-text-danger);
+  --text-success: var(--kk-success);
+  --text-warning: var(--kk-warning);
+  --bg-danger: var(--kk-danger);
+  --bg-success: var(--kk-success);
+  --bg-warning: var(--kk-warning);
+  --sidebar-width: var(--kk-sidebar-width);
+  --topbar-height: var(--kk-topbar-height);
+}
+:root[data-theme="light"],
+:root[data-accent] {
+  --bg-app: var(--kk-bg-app);
+  --bg-surface: var(--kk-bg-surface);
+  --bg-card: var(--kk-bg-card);
+  --bg-elevated: var(--kk-bg-elevated);
+  --bg-soft: var(--kk-bg-soft);
+  --bg-card-hover: var(--kk-bg-elevated);
+  --bg-card-soft: var(--kk-bg-soft);
+  --bg-input: var(--kk-bg-input);
+  --bg-accent: var(--kk-accent);
+  --bg-accent-hover: var(--kk-accent-hover);
+  --bg-accent-soft: var(--kk-accent-soft);
+  --text-on-accent: var(--kk-on-accent);
+  --accent-text-dark: var(--kk-text-accent);
+  --accent-text-light: var(--kk-text-accent);
+  --accent-focus-dark: var(--kk-focus-ring);
+  --accent-focus-light: var(--kk-focus-ring);
+  --border-default: var(--kk-border-default);
+  --border-subtle: var(--kk-border-subtle);
+  --border-control: var(--kk-border-control);
+  --border-accent: var(--kk-text-accent);
+  --neutral-selected: var(--kk-neutral-selected);
+  --text-primary: var(--kk-text-primary);
+  --text-secondary: var(--kk-text-secondary);
+  --text-tertiary: var(--kk-text-tertiary);
+  --text-accent: var(--kk-text-accent);
+  --focus-ring: var(--kk-focus-ring);
+  --text-danger: var(--kk-text-danger);
+  --text-success: var(--kk-success);
+  --text-warning: var(--kk-warning);
+  --bg-danger: var(--kk-danger);
+  --bg-success: var(--kk-success);
+  --bg-warning: var(--kk-warning);
+  --sidebar-width: var(--kk-sidebar-width);
+  --topbar-height: var(--kk-topbar-height);
 }
 * {
   box-sizing: border-box;
@@ -252,5 +328,112 @@ button[aria-pressed="true"] {
     scroll-behavior: auto !important;
     transition: none !important;
     animation: none !important;
+  }
+}
+
+/* Edge drag handles for resizing sidebar and conversation panel. */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  cursor: col-resize;
+  z-index: 50;
+  touch-action: none;
+}
+.sidebar .resize-handle {
+  left: 100%;
+  transform: translateX(-50%);
+}
+.conversation-panel .resize-handle {
+  right: 100%;
+  transform: translateX(50%);
+}
+.resize-handle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 56px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--text-accent) 30%,
+    var(--text-accent) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.resize-handle:hover::after,
+.resize-handle.is-dragging::after {
+  opacity: 1;
+}
+/* Compact reference row inside the card creation composer (replaces slot pills). */
+.composer-refs {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.composer-ref-add {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1.5px dashed var(--border-default);
+  border-radius: var(--ui-radius-control);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.composer-ref-add:hover {
+  border-color: var(--text-accent);
+  color: var(--text-accent);
+}
+.composer-ref-thumb {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--ui-radius-control);
+  overflow: hidden;
+}
+.composer-ref-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.composer-ref-thumb button {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.conversation-panel > .resize-handle {
+  position: absolute;
+  z-index: 50;
+}
+.resize-handle:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+.resize-handle:focus-visible::after {
+  opacity: 1;
+}
+@media (max-width: 1200px) {
+  .resize-handle {
+    display: none;
   }
 }

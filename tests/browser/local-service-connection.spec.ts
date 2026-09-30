@@ -15,7 +15,11 @@ async function startService(): Promise<RunningService> {
   const child = spawn(
     process.execPath,
     ["src/features/local-service/main.ts", root],
-    { cwd: process.cwd(), stdio: ["ignore", "pipe", "pipe"] },
+    {
+      cwd: process.cwd(),
+      env: { ...process.env, KK_STUDIO_COMPANION_PORT: "0" },
+      stdio: ["ignore", "pipe", "pipe"],
+    },
   );
   return new Promise((resolve, reject) => {
     let output = "";

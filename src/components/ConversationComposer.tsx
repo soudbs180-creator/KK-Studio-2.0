@@ -1,4 +1,4 @@
-import { useRef, type RefObject } from "react";
+import { useRef, type RefObject, type ReactNode } from "react";
 import StartAttachmentList from "./StartAttachmentList";
 import ComposerTextarea from "./ComposerTextarea";
 import ConversationActions from "./ConversationActions";
@@ -23,6 +23,7 @@ export default function ConversationComposer({
   readingFiles,
   onStatus,
   currentModel,
+  modelControl,
   modelOptions = [],
   modelSelection,
   onSelectModel,
@@ -50,6 +51,7 @@ export default function ConversationComposer({
   readingFiles: number;
   onStatus: (status: string) => void;
   currentModel?: string;
+  modelControl?: ReactNode;
   modelOptions?: string[];
   modelSelection?: ModelSelection;
   onSelectModel: (model: string, selection?: ModelSelection) => void;
@@ -111,6 +113,7 @@ export default function ConversationComposer({
         submitting={submitDisabled ?? disabled}
         attachmentDisabled={attachmentDisabled}
         currentModel={currentModel}
+        modelControl={modelControl}
         modelOptions={modelOptions}
         modelSelection={modelSelection}
         modelMenuOpen={modelMenuOpen}

@@ -1,6 +1,83 @@
 import { expect, test } from "@playwright/test";
 import { openWorkspace } from "./helpers";
 
+test("窄屏设置分类的同组入口保持在底部导航内", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const nav = page.getByRole("navigation", { name: "设置分类" });
+  const general = (await nav
+    .getByRole("button", { name: "通用", exact: true })
+    .boundingBox())!;
+  const account = (await nav
+    .getByRole("button", { name: "账号管理", exact: true })
+    .boundingBox())!;
+  const bar = (await nav.boundingBox())!;
+  expect(Math.abs(general.y - account.y)).toBeLessThanOrEqual(2);
+  expect(account.y).toBeGreaterThanOrEqual(bar.y);
+  expect(account.y + account.height).toBeLessThanOrEqual(
+    bar.y + bar.height + 1,
+  );
+});
+
+test("插件、技能、伙伴标签可用方向键切换并显示对应内容", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("button", { name: "MCP", exact: true })
+    .click();
+  const tabs = page.getByRole("tablist", { name: "插件、技能与伙伴" });
+  const skills = tabs.getByRole("tab", { name: /技能/ });
+  const partners = tabs.getByRole("tab", { name: /伙伴/ });
+  await skills.click();
+  await skills.press("ArrowRight");
+  await expect(partners).toBeFocused();
+  await expect(partners).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tabpanel")).toContainText("Agent");
+});
+
+test("手机扩展标签保持单行和触屏命中区", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await page.getByRole("button", { name: "MCP", exact: true }).click();
+  const tabs = page.getByRole("tablist", { name: "插件、技能与伙伴" });
+  const bounds = (await tabs.boundingBox())!;
+  for (const tab of await tabs.getByRole("tab").all()) {
+    const box = (await tab.boundingBox())!;
+    expect(box.height).toBe(40);
+    expect(box.x).toBeGreaterThanOrEqual(bounds.x);
+    expect(box.x + box.width).toBeLessThanOrEqual(bounds.x + bounds.width + 1);
+    await expect(tab).toHaveCSS("white-space", "nowrap");
+  }
+});
+
+test("首页伙伴和插件管理入口到达对应设置标签", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("button", { name: "MCP", exact: true })
+    .click();
+  await page.getByRole("tab", { name: /伙伴/ }).click();
+  await expect(page.getByRole("tab", { name: /伙伴/ })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  await page.getByRole("button", { name: "关闭设置" }).click();
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("button", { name: "MCP", exact: true })
+    .click();
+  await page.getByRole("tab", { name: /插件/ }).click();
+  await expect(page.getByRole("tab", { name: /插件/ })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+});
+
 for (const viewport of [
   { width: 779, height: 643 },
   { width: 390, height: 844 },
@@ -45,11 +122,31 @@ for (const viewport of [
   });
 }
 
+test("手机设置分类固定在底部横向滑块", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "设置" });
+  const panel = dialog.locator(".settings-panel");
+  const sidebar = dialog.locator(".settings-sidebar");
+  const nav = dialog.locator(".settings-nav");
+  const panelBox = (await panel.boundingBox())!;
+  const sidebarBox = (await sidebar.boundingBox())!;
+  expect(
+    Math.abs(sidebarBox.y + sidebarBox.height - (panelBox.y + panelBox.height)),
+  ).toBeLessThanOrEqual(2);
+  expect(await nav.evaluate((el) => el.scrollWidth)).toBeGreaterThan(
+    await nav.evaluate((el) => el.clientWidth),
+  );
+  await nav.getByRole("button", { name: "软件更新", exact: true }).click();
+  await expect(dialog.locator(".settings-content h2")).toHaveText("软件更新");
+});
+
 test("资产列表隐藏滚动条后仍可滚动，浮岛设置作用于整个工作区", async ({
   page,
 }) => {
   await openWorkspace(page);
-  await page.getByRole("button", { name: "资产管理", exact: true }).click();
+  await page.getByRole("button", { name: "资源管理", exact: true }).click();
   await page.getByRole("button", { name: "收起资产管理" }).click();
   const assets = page.locator(".asset-content");
   await expect(assets).toHaveCSS("scrollbar-width", "none");

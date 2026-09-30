@@ -9,7 +9,7 @@ import ConnectionSettings from "./ConnectionSettings";
 import ProjectPackageActions from "../../features/projects/ProjectPackageActions";
 import type { SaveState } from "../../features/creation/useCreationStorage";
 import type { SkillRegistry } from "../../features/skills/skillRegistry";
-import SkillsSettings from "./SkillsSettings";
+import ExtensionsSettings, { type ExtensionsTab } from "./ExtensionsSettings";
 import CompanionSettings from "./CompanionSettings";
 export { SETTINGS_SECTIONS } from "./SettingsSectionData";
 export type { SettingsSection } from "./SettingsSectionData";
@@ -22,6 +22,7 @@ interface SettingsSectionsProps {
   saveState: SaveState;
   revision: number;
   registry: SkillRegistry;
+  extensionsTab?: ExtensionsTab;
 }
 
 export default function SettingsSections({
@@ -32,6 +33,7 @@ export default function SettingsSections({
   saveState,
   revision,
   registry,
+  extensionsTab,
 }: SettingsSectionsProps) {
   const [confirmReset, setConfirmReset] = useState(false);
   function exportPreferences(): void {
@@ -48,14 +50,36 @@ export default function SettingsSections({
     onFeedback("已导出非敏感偏好；文件不包含账号、密钥、项目或资产。");
   }
 
+  const active = SETTINGS_SECTIONS.find((item) => item.id === section);
+  const extensionsSection =
+    section === "extensions" || section === "skill" || section === "mcp";
+  const defaultExtensionTab =
+    extensionsTab ??
+    (section === "skill"
+      ? "skills"
+      : section === "mcp"
+        ? "plugins"
+        : undefined);
+
   return (
     <>
       <h2 className="settings-page-title" id="settings-section-title">
-        {SETTINGS_SECTIONS.find((item) => item.id === section)?.label}
+        {active?.label}
       </h2>
+      {active?.description && (
+        <p className="settings-section-intro settings-page-description">
+          {active.description}
+        </p>
+      )}
       <div className="settings-section-body">
-        {section === "skills" && <SkillsSettings registry={registry} />}
-        {section !== "skills" && (
+        {extensionsSection && (
+          <ExtensionsSettings
+            registry={registry}
+            onFeedback={onFeedback}
+            defaultTab={defaultExtensionTab}
+          />
+        )}
+        {!extensionsSection && (
           <ConnectionSettings section={section} onFeedback={onFeedback} />
         )}
 

@@ -89,6 +89,20 @@ export function createAgentApi(options: AgentApiClientOptions) {
         false,
       ),
     discover: () => request<AgentConfigResponse>("/config", undefined, false),
+    codebuddyConfig: () =>
+      request<{ ok: true; configured: boolean; cliPath: string }>(
+        "/agent/codebuddy/config",
+      ),
+    saveCodebuddyConfig: (cliPath: string) =>
+      request<{ ok: true; configured: boolean; cliPath: string }>(
+        "/agent/codebuddy/config",
+        { cliPath },
+      ),
+    probeCodebuddy: () =>
+      request<{ ok: true; model?: string; durationMs: number }>(
+        "/agent/codebuddy/probe",
+        {},
+      ),
     async postState(snapshot: CanvasAgentSnapshot | null): Promise<boolean> {
       await request(
         "/canvas/state" + clientQuery,

@@ -1,11 +1,12 @@
 import { expect, test, type Page } from "@playwright/test";
-import { openWorkspace, showCanvasNavigation } from "./helpers";
+import { expandSidebar, openWorkspace, showCanvasNavigation } from "./helpers";
 
 test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
 });
 
-const evidence = "docs/changes/2026-09-22-responsive-ui/evidence/verified";
+const evidence =
+  "test-results/changes/2026-09-22-responsive-ui/evidence/verified";
 async function expectInside(page: Page, selector: string) {
   const boxes = await page.locator(selector).evaluateAll((elements) =>
     elements
@@ -87,13 +88,17 @@ for (const [width, height] of [
     await page.screenshot({ path: `${evidence}/${width}-landing.png` });
     for (const [name, heading] of [
       ["项目库", "项目库"],
-      ["Skill", "Skill"],
+      ["技能", "Skill"],
       ["ComfyUI 工作流", "ComfyUI 工作流"],
     ]) {
+      if (width < 768 && name === "ComfyUI 工作流")
+        await page.setViewportSize({ width: 834, height });
       await page
         .getByRole("navigation", { name: "主导航" })
         .getByRole("button", { name, exact: true })
         .click();
+      if (width < 768 && name === "ComfyUI 工作流")
+        await page.setViewportSize({ width, height });
       await expect(
         page.getByRole("heading", { name: heading, exact: true }),
       ).toBeVisible();
@@ -132,12 +137,14 @@ for (const [width, height] of [
       ".conversation-panel button, .conversation-panel select, .conversation-panel textarea",
     );
     await page.screenshot({ path: `${evidence}/${width}-chat.png` });
-    if (width <= 1200) {
+    if (width < 960) {
       await expect(page.getByTestId("infinite-canvas")).toHaveAttribute(
         "inert",
         "",
       );
       await page.keyboard.press("Escape");
+      await expect(page.locator(".conversation-panel")).toBeVisible();
+      await page.getByRole("button", { name: "收起对话", exact: true }).click();
       await expect(page.locator(".conversation-panel")).toBeHidden();
       await expect(
         page.getByRole("button", { name: "打开对话", exact: true }),
@@ -153,6 +160,7 @@ test("crossing phone, tablet and desktop preserves drafts and clears invisible m
   await page.goto("/");
   const draft = page.locator(".start-composer textarea");
   await draft.fill("横竖屏和断点切换不丢失");
+  await expandSidebar(page);
   await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
   for (const width of [1201, 1200, 834, 768, 767, 390, 844, 390, 1440]) {
     await page.setViewportSize({ width, height: width === 844 ? 390 : 900 });
@@ -193,6 +201,7 @@ test("crossing phone, tablet and desktop preserves drafts and clears invisible m
   await draft.focus();
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(draft).toBeFocused();
+  await page.setViewportSize({ width: 834, height: 1112 });
   await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
   await expect(page.locator(".sidebar")).not.toHaveClass(/is-collapsed/);
   await page.keyboard.press("Escape");
@@ -264,6 +273,8 @@ for (const [width, height] of [
     expect((await page.locator(".topbar").boundingBox())!.y).toBe(0);
     await page.screenshot({ path: `${evidence}/${width}x${height}-chat.png` });
     await page.keyboard.press("Escape");
+    await expect(panel).toBeVisible();
+    await panel.getByRole("button", { name: "收起对话" }).click();
     await expect(panel).toBeHidden();
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     const dialog = page.getByRole("dialog", { name: "设置", exact: true });
@@ -328,6 +339,8 @@ test("resizing conversation keeps its visible editor focused and hands hidden fo
   await expect(model).toBeFocused();
   await expect(page.locator(".conversation-panel")).toBeVisible();
   await page.keyboard.press("Escape");
+  await expect(page.locator(".conversation-panel")).toBeVisible();
+  await page.getByRole("button", { name: "收起对话" }).click();
   await expect(page.locator(".conversation-panel")).toBeHidden();
   await expect(opener).toBeFocused();
   // A desktop-only panel that becomes hidden must not keep an invisible menu.
@@ -343,7 +356,7 @@ test("resizing conversation keeps its visible editor focused and hands hidden fo
   await expect(opener).toBeFocused();
 });
 
-test("rapid Escape after a breakpoint closes each composer menu before its conversation", async ({
+test("rapid Escape after a breakpoint closes menus while conversation remains open", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -362,6 +375,8 @@ test("rapid Escape after a breakpoint closes each composer menu before its conve
     await page.keyboard.press("Escape");
     await expect(menu).toHaveAttribute("aria-expanded", "false");
     await page.keyboard.press("Escape");
+    await expect(panel).toBeVisible();
+    await panel.getByRole("button", { name: "收起对话" }).click();
     await expect(panel).toBeHidden();
     await expect(opener).toBeFocused();
   }

@@ -4,7 +4,7 @@ import type { CanvasTool } from "./useCanvasPointer";
 import { useDismissible } from "../useDismissible";
 import "../../styles/canvas-tools.css";
 
-type Popup = "tool" | "help";
+type Popup = "tool" | "help" | "save";
 export default function CanvasToolbar({
   onOpen,
   onAdd,
@@ -76,6 +76,7 @@ export default function CanvasToolbar({
         aria-label="添加资源"
         aria-haspopup="menu"
         aria-expanded={addOpen}
+        title="添加资源"
         onClick={(event) => {
           setPopup(null);
           onAdd(event.currentTarget);
@@ -92,8 +93,8 @@ export default function CanvasToolbar({
       </span>
       <button
         className="toolbar-current-tool"
-        aria-label={tool === "hand" ? "当前工具：抓手" : "当前工具：选择"}
-        title={tool === "hand" ? "抓手 H" : "选择 V"}
+        aria-label="选择画布工具"
+        title={tool === "hand" ? "小手工具（按住空格拖拽）" : "移动工具"}
         aria-haspopup="menu"
         aria-expanded={popup === "tool"}
         onClick={(event) => toggle("tool", event.currentTarget)}
@@ -104,22 +105,16 @@ export default function CanvasToolbar({
           <span className="tool-hand-current" aria-hidden="true" />
         )}
       </button>
-      <button
-        className="toolbar-toggle"
-        aria-label="选择画布工具"
-        aria-haspopup="menu"
-        aria-expanded={popup === "tool"}
-        onClick={(event) => toggle("tool", event.currentTarget)}
-      >
-        <ToolbarIcon name="collapse" />
-      </button>
       {popup === "tool" && (
         <div className="canvas-tool-menu" role="menu" aria-label="画布工具选择">
           {(["select", "hand"] as const).map((value) => (
             <button
               key={value}
               role="menuitemradio"
-              aria-label={value === "select" ? "选择工具" : "抓手工具"}
+              aria-label={value === "select" ? "移动工具" : "小手工具"}
+              title={
+                value === "select" ? "移动（V）" : "小手工具（H，按住空格拖拽）"
+              }
               aria-checked={tool === value}
               onClick={() => {
                 onToolChange(value);
@@ -145,14 +140,20 @@ export default function CanvasToolbar({
                 }
                 alt=""
               />
-              <span>{value === "select" ? "V" : "H"}</span>
+              <span className="tool-menu-label">
+                {value === "select" ? "移动" : "小手工具"}
+              </span>
+              <span className="tool-menu-kbd">
+                {value === "select" ? "V" : "H"}
+              </span>
             </button>
           ))}
         </div>
       )}
       <button
         className="toolbar-assets"
-        aria-label="资产管理"
+        aria-label="资源管理"
+        title="资源管理（资产项目）"
         onClick={() => {
           setPopup(null);
           onOpen("assets");
@@ -161,27 +162,39 @@ export default function CanvasToolbar({
         <ToolbarIcon name="assets" />
       </button>
       <button
-        className="toolbar-favorite"
-        aria-label="打开喜欢与收藏"
+        className="toolbar-save"
+        aria-label="喜欢与收藏"
         title="喜欢与收藏"
-        onClick={() => {
-          setPopup(null);
-          onOpen("favorites");
-        }}
+        aria-haspopup="menu"
+        aria-expanded={popup === "save"}
+        onClick={(event) => toggle("save", event.currentTarget)}
       >
         <ToolbarIcon name="favorite" />
       </button>
-      <span
-        className="toolbar-favorite-toggle"
-        aria-hidden="true"
-        data-testid="toolbar-favorite-toggle"
-      >
-        <img
-          src="/design/figma/toolbar-collapse.svg"
-          alt=""
-          draggable={false}
-        />
-      </span>
+      {popup === "save" && (
+        <div className="canvas-save-menu" role="menu" aria-label="喜欢与收藏">
+          <button
+            role="menuitem"
+            onClick={() => {
+              close();
+              onOpen("likes");
+            }}
+          >
+            <span className="canvas-save-like-dot" aria-hidden="true" />
+            <span>我喜欢的</span>
+          </button>
+          <button
+            role="menuitem"
+            onClick={() => {
+              close();
+              onOpen("favorites");
+            }}
+          >
+            <span className="canvas-save-star-dot" aria-hidden="true" />
+            <span>我的收藏</span>
+          </button>
+        </div>
+      )}
       <span
         className="toolbar-divider toolbar-divider-right"
         aria-hidden="true"
@@ -195,6 +208,7 @@ export default function CanvasToolbar({
       <button
         className="toolbar-help"
         aria-label="帮助与快捷键"
+        title="帮助与快捷键"
         aria-haspopup="menu"
         aria-expanded={popup === "help"}
         onClick={(event) => toggle("help", event.currentTarget)}

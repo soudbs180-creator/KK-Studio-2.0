@@ -130,18 +130,21 @@ export default function ModelPickerMenu({
               ?.displayName ?? "供应商已移除");
   return (
     <div className="kk-model-menu" role="menu" aria-label="选择模型">
-      <input
-        type="search"
-        className="kk-model-search ui-input"
-        aria-label="搜索模型、厂商或参数"
-        placeholder="搜索模型、厂商、4K、16:9…"
-        maxLength={120}
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-        onKeyDown={(event) => {
-          if (event.key !== "Escape") event.stopPropagation();
-        }}
-      />
+      <div className="kk-model-menu-top">
+        <strong>模型</strong>
+        <input
+          type="search"
+          className="kk-model-search ui-input"
+          aria-label="搜索模型、厂商或参数"
+          placeholder="搜索模型…"
+          maxLength={120}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key !== "Escape") event.stopPropagation();
+          }}
+        />
+      </div>
       <div className="kk-model-menu-head">
         <button
           type="button"

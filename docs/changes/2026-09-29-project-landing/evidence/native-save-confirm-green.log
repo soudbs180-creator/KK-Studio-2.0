@@ -1,0 +1,47 @@
+[WebServer] (node:47116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 32 tests using 4 workers
+
+(node:7668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:53380) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:74400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:60408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  2 tests\browser\memory-settings.spec.ts:14:1 › 记忆分区渲染标题、共享隐私说明与默认关闭的开关 (927ms)
+  ok  4 tests\browser\sidebar-real-projects.spec.ts:58:1 › 空项目库的侧栏和搜索没有固定演示项目 (908ms)
+  ok  1 tests\browser\mcp-settings.spec.ts:3:1 › MCP 设置保存 endpoint，完成真实握手并展示 tools/list 返回的 inputSchema (1.4s)
+  ok  5 tests\browser\memory-settings.spec.ts:33:1 › 开启记忆后显示共享状态、提炼入口与空态 (972ms)
+  ok  7 tests\browser\mcp-settings.spec.ts:117:1 › MCP 设置拒绝不安全的远程 HTTP endpoint (707ms)
+  ok  8 tests\browser\memory-settings.spec.ts:67:1 › 关闭记忆后回到初始态并停止展示启用内容 (732ms)
+  ok  3 tests\browser\desktop-data-stability.spec.ts:19:1 › 原生连续保存更新 CAS，删除等待异步确认且取消保留项目 (2.8s)
+  ok  6 tests\browser\sidebar-real-projects.spec.ts:68:1 › 侧栏按真实项目 ID 打开，改名和删除与项目库及刷新一致 (2.2s)
+  ok  9 tests\browser\memory-settings.spec.ts:80:1 › 记忆分区不产生横向溢出 (647ms)
+  ok 10 tests\browser\desktop-data-stability.spec.ts:133:1 › 读取失败后的重试和编辑不会写入空项目 (490ms)
+  ok 13 tests\browser\desktop-data-stability.spec.ts:184:1 › 写入失败重试成功后清除过期错误并保留内容 (600ms)
+  ok 12 tests\browser\memory-settings.spec.ts:90:1 › 390 宽度下记忆设置仍可滚动访问按钮和列表 (870ms)
+  ok 11 tests\browser\sidebar-real-projects.spec.ts:120:1 › 项目和文件夹改名按 Escape 取消，原项目名称刷新后不变 (1.2s)
+  ok 14 tests\browser\desktop-data-stability.spec.ts:224:1 › 同 revision 的不同草稿不能被误标为已保存 (740ms)
+  ok 15 tests\browser\memory-settings.spec.ts:110:1 › 记忆初始化建立独立数据库与两个对象仓库 (661ms)
+  ok 16 tests\browser\sidebar-real-projects.spec.ts:158:1 › 搜索项目分类只列出实际保存的项目并打开所选 ID (1.1s)
+  ok 19 tests\browser\sidebar-real-projects.spec.ts:178:1 › 项目库未接入的持久文件夹入口明确禁用 (311ms)
+  ok 17 tests\browser\desktop-data-stability.spec.ts:250:1 › 重新读取同一项目后搜索与改名使用新原件 (1.4s)
+  ok 20 tests\browser\sidebar-real-projects.spec.ts:187:1 › 状态不明的任务保留项目，删除入口说明禁用原因 (694ms)
+  ok 18 tests\browser\memory-settings.spec.ts:129:1 › 损坏的本地记忆显示读取错误，不伪装为空列表 (2.0s)
+  ok 22 tests\browser\sidebar-real-projects.spec.ts:201:1 › 失败状态仍有未知受理记录时不允许删除真实项目 (878ms)
+  ok 21 tests\browser\desktop-data-stability.spec.ts:342:1 › A/B 项目的连线、视口和位置在切换及刷新后保持隔离 (1.2s)
+  ok 23 tests\browser\memory-settings.spec.ts:189:1 › 旧候选数据库中的记忆迁移到独立数据库 (721ms)
+  ok 24 tests\browser\sidebar-real-projects.spec.ts:238:1 › 取消新项目改名后经过文件夹收纳和删除不会重新抢焦点 (952ms)
+  ok 26 tests\browser\memory-settings.spec.ts:242:1 › 清空共享记忆前需要确认，取消时原记录仍在 (838ms)
+  ok 27 tests\browser\sidebar-real-projects.spec.ts:264:1 › 折叠分组后创建项目或文件夹仍立即显示新条目 (704ms)
+  ok 25 tests\browser\desktop-data-stability.spec.ts:435:1 › 两个窗口并发保存时保留先提交的原件和冲突草稿 (1.7s)
+  ok 28 tests\browser\sidebar-real-projects.spec.ts:288:1 › 移动到折叠的项目组后目标文件夹自动显示 (870ms)
+  ok 30 tests\browser\sidebar-real-projects.spec.ts:309:1 › 会话置顶实际改变项目和文件夹顺序，刷新恢复原顺序 (984ms)
+  ok 29 tests\browser\desktop-data-stability.spec.ts:484:1 › 画布参数不会在重开项目后回到默认值 (2.0s)
+  ok 31 tests\browser\sidebar-real-projects.spec.ts:338:1 › 删除会话文件夹会把真实项目还给未分组，恢复后重新收纳 (949ms)
+  ok 32 tests\browser\desktop-data-stability.spec.ts:524:1 › 画布位置与新增身份在保存重开后保持 (1.1s)
+
+  32 passed (13.8s)

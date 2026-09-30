@@ -23,15 +23,19 @@ async function configure(page: Page, model = "image-test"): Promise<void> {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
-  await page.getByLabel("API Base URL").fill("https://models.example.test/v1");
+  await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key").fill("fixture-key");
-  await page.getByLabel("默认模型").fill(model);
-  await page.getByRole("button", { name: "保存供应商" }).click();
+  await page.getByLabel("模型名称").fill(model);
+  await page.getByRole("button", { name: "保存", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
 }
 
-async function selectImageNode(page: Page, index = 0) {
-  const node = page.locator(".canvas-node-image").nth(index);
+async function selectImageNode(page: Page) {
+  // A new project is intentionally empty; create the source through the UI.
+  await expect(page.locator(".canvas-node-image")).toHaveCount(0);
+  await page.getByRole("button", { name: "添加资源", exact: true }).click();
+  await page.getByRole("menuitem", { name: "图片", exact: true }).click();
+  const node = page.locator(".canvas-node-image").first();
   await node.click();
   await expect(node.getByLabel("图片提示词")).toBeVisible();
   return node;
@@ -184,7 +188,7 @@ test("active project canvas uses the provider command for a non-root source and 
       await resultComposer.getByRole("button", { name: "展开提示词" }).click();
     const geometry = await resultComposer.evaluate((element) => {
       const refs = element
-        .querySelector(".reference-slots")!
+        .querySelector(".reference-slots, .composer-refs")!
         .getBoundingClientRect();
       const input = element.querySelector("textarea")!.getBoundingClientRect();
       const controls = element
@@ -257,6 +261,9 @@ test("provider image cancellation cannot publish a late success", async ({
   await expect(
     page.getByRole("button", { name: "取消图片生成" }),
   ).toBeVisible();
+  // This case covers an in-flight Provider request. Without waiting for the
+  // route, cancellation can legitimately finish before submission.
+  await expect.poll(() => Boolean(release)).toBe(true);
   await page.getByRole("button", { name: "取消图片生成" }).click();
   // A request that reached the Provider cannot be proven not to have been
   // accepted after the client aborts it, so it is fenced as unknown.
@@ -353,7 +360,12 @@ test("unconfigured canvas generation opens provider settings and keeps the promp
   const prompt = "未配置时仍保留这段提示词";
   await source.getByLabel("图片提示词").fill(prompt);
   await chooseOneOutput(source);
-  await source.getByRole("button", { name: "生成图片", exact: true }).click();
+  await expect(
+    source.getByRole("button", { name: "生成图片", exact: true }),
+  ).toBeDisabled();
+  await source
+    .getByRole("button", { name: "前往模型设置", exact: true })
+    .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("button", { name: "模型供应商", exact: true }),

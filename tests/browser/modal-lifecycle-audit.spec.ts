@@ -1,10 +1,11 @@
 import { test, expect } from "@playwright/test";
-import { openWorkspace } from "./helpers";
+import { expandSidebar, openWorkspace } from "./helpers";
 
 test("Modal 关闭按钮、Escape 和遮罩点击均关闭并回焦触发按钮", async ({
   page,
 }) => {
   await page.goto("/");
+  await expandSidebar(page);
   const trigger = page.getByRole("button", { name: "打开设置", exact: true });
 
   await trigger.click();
@@ -32,7 +33,7 @@ test("嵌套 Modal 的 Escape 只关闭最内层并保持父层，第二次才�
 }) => {
   await openWorkspace(page);
   const assetTrigger = page.getByRole("button", {
-    name: "资产管理",
+    name: "资源管理",
     exact: true,
   });
   await assetTrigger.click();
@@ -63,6 +64,7 @@ test("侧栏菜单互斥，IME 合成不误关闭，打开设置会收起来源�
   page,
 }) => {
   await page.goto("/");
+  await expandSidebar(page);
   const projectMenuTrigger = page.getByRole("button", {
     name: "项目显示与排序",
     exact: true,

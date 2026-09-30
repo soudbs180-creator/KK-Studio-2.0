@@ -1,9 +1,8 @@
 import { appVersion } from "../../runtime/appInfo";
 import type { SettingsSection } from "./SettingsSectionData";
 import ModelProviderSettings from "./ModelProviderSettings";
-import McpSettings from "./McpSettings";
-import AgentConnectionSettings from "./AgentConnectionSettings";
-import PluginManagerSettings from "./PluginManagerSettings";
+import GoogleConnectionSettings from "./GoogleConnectionSettings";
+import MemorySettingsSection from "./MemorySettingsSection";
 
 const PENDING_SETTINGS: Partial<
   Record<SettingsSection, { title: string; description: string }>
@@ -14,20 +13,11 @@ const PENDING_SETTINGS: Partial<
   },
   network: {
     title: "本地服务",
-    description:
-      "本地 Agent 需要启动服务后连接；转发代理为独立服务，尚未接入全局网络配置。",
+    description: "转发代理为独立服务，尚未接入全局网络配置。",
   },
   memory: {
     title: "暂无记忆",
     description: "对话记忆功能尚未开放，当前不会自动提取或保存对话记忆。",
-  },
-  skills: {
-    title: "暂无已安装的 Skill",
-    description: "Skill 导入和运行功能尚未开放。",
-  },
-  mcp: {
-    title: "暂无 MCP 服务器",
-    description: "MCP 连接功能尚未开放，当前不会连接或调用外部工具。",
   },
   comfy: {
     title: "未连接 ComfyUI",
@@ -43,8 +33,12 @@ export default function ConnectionSettings({
   onFeedback: (message: string) => void;
 }) {
   if (section === "providers")
-    return <ModelProviderSettings onFeedback={onFeedback} />;
-  if (section === "mcp") return <McpSettings onFeedback={onFeedback} />;
+    return (
+      <>
+        <ModelProviderSettings onFeedback={onFeedback} />
+        <GoogleConnectionSettings onFeedback={onFeedback} />
+      </>
+    );
   if (section === "updates")
     return (
       <div className="settings-version">
@@ -136,7 +130,6 @@ export default function ConnectionSettings({
     return (
       <div className="settings-detail-stack">
         <h3 className="settings-detail-label">本地服务</h3>
-        <AgentConnectionSettings onFeedback={onFeedback} />
         <div className="settings-network-row">
           <div>
             <h3>本地转发代理</h3>
@@ -149,62 +142,13 @@ export default function ConnectionSettings({
             </p>
           </div>
         </div>
-      </div>
-    );
-  if (section === "plugins")
-    return (
-      <div className="settings-detail-stack">
-        <h3 className="settings-detail-label">画布插件</h3>
-        <p className="settings-network-activity">
-          在画布「添加节点 › 插件」中使用已启用插件。这里管理画布扩展；MCP
-          工具请在 MCP 设置中管理。
+        <p className="settings-section-intro">
+          需要连接本地 Agent 时，请到「插件·技能·伙伴」的伙伴（智能体）页配置。
         </p>
-        <PluginManagerSettings onFeedback={onFeedback} />
       </div>
     );
   if (section === "memory")
-    return (
-      <div className="settings-detail-stack">
-        <div className="settings-memory-tools">
-          <input
-            aria-label="搜索描述或正文"
-            placeholder="搜索描述或正文..."
-            disabled
-            title="Prototype · 记忆服务尚未接入"
-          />
-          <select
-            aria-label="作用域"
-            defaultValue="all"
-            disabled
-            title="Prototype · 记忆服务尚未接入"
-          >
-            <option value="all">所有作用域</option>
-          </select>
-          <select
-            aria-label="类型"
-            defaultValue="all"
-            disabled
-            title="Prototype · 记忆服务尚未接入"
-          >
-            <option value="all">所有类型</option>
-          </select>
-        </div>
-        <button
-          type="button"
-          className="settings-action"
-          disabled
-          title="Prototype · 记忆服务尚未接入"
-        >
-          ＋ 新建
-        </button>
-        <div className="settings-empty-state">
-          <strong>暂无记忆</strong>
-          <p>
-            Prototype · 记忆服务尚未接入，当前不会创建、搜索或自动保存长期记忆。
-          </p>
-        </div>
-      </div>
-    );
+    return <MemorySettingsSection onFeedback={onFeedback} />;
   const pending = PENDING_SETTINGS[section];
   if (!pending) return null;
   return (

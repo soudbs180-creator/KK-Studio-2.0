@@ -1,0 +1,23 @@
+{
+  "startedAt": "2026-09-24T10:40:15.010Z",
+  "completedAt": "2026-09-24T10:42:39.784Z",
+  "runtime": "Tauri release",
+  "url": "http://tauri.localhost/",
+  "packageNode": "v24.20.0",
+  "uiProbe": "verified",
+  "codexTurnCompleted": true,
+  "tool": {
+    "server": "infinite-canvas",
+    "name": "codebuddy_consult",
+    "status": "completed",
+    "durationMs": 8161,
+    "argumentKeys": [
+      "prompt"
+    ],
+    "promptLength": 42,
+    "promptContainsSentinel": true,
+    "resultContainsSentinel": true,
+    "error": null
+  },
+  "visibleReplyContainsSentinel": true
+}
