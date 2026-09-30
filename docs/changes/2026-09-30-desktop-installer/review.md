@@ -3,8 +3,8 @@
 - Task ID：TASK-DESKTOP-INSTALLER-001。
 - [Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Verification](verification.md)。
 - Base：bd3bc66889b2856e273c2117191a74fdebd6f791。
-- Self-review：实现/安全边界已核对；最终 verify 待完成。
-- 独立 review：base→`0fba927d85b3c0edb0b3260073e09f66c9c32f19` 的源码与实际产物 PASS；后续采样/证据目录/文档提交仍需绑定新精确 SHA 补审。
+- Self-review：PASS（AC1–4 本机范围），完整 verify 无flaky、Rust/格式/client check、运行与证据边界通过。
+- 独立 review：base→`2cf5249ec6b93e901cc2147e0e1ea3914b067bc7` 的技术/实际运行证据 PASS；最后文档提交仍需绑定新精确 SHA 补审，记录于 PR/交付收据。
 - 实际 GitHub 审批、用户产品验收和正式发布：尚未发生。
 
 审查重点：完整 Agent 入包、收据路径/字节校验、真实用户安装保护、测试卸载范围、项目保留、准确区分当前主机与干净系统、历史证据与新 SHA。遵循 REVIEW.md 由独立上下文读取实际 diff。
@@ -22,3 +22,7 @@
 INST-004 的初始 MSI /S 自动升级推断已撤回：NSIS silent 模式不执行相关页面 callback。实际保留问题是枚举遗漏与“不得覆盖已有安装”的验收边界，不用已撤回推断作为事实。
 
 复审 `61b0c85`、补审 `0fba927` 关闭源码 findings；实机收据复核确认 setup hash、四次 4279 文件、四次启动 EXE 身份一致、隔离快照确实保留项目、主机注册/进程为空，结论 PASS 限于本机安装器范围。最终 head 的补审、CI 与实际合并证据必须另行记录，不能改写早期 SHA。
+
+增量复审 `8ece4c70f0e3e6598537ded6777516dcf32c06c3` PASS：同帧采样依据与原限制、原5fail日志及10次诊断hash、真实重跑原生report/收据/PNG、日志raw/stored身份、完整verify与Rust结果独立核对。补审 `2cf5249ec6b93e901cc2147e0e1ea3914b067bc7` PASS：新增9行可见性断言保留hidden-control失败能力；独立读取160/160日志，raw SHA256 `f2e0e7b4ef8fcf54a18196c959da0afba210eb172d29f82c6de7cd085f587a3c`，无新增finding。最后结果/账本文档提交另补审，不伪造自引用SHA。
+
+2026-09-30 托管只读核对：active rulesets 23866923/23866925 强制稳定线PR、verify/delivery与评论解决，拒绝force/删除，无bypass actors；required approving review count=0、CODEOWNERS approval未强制。GitHub审批与独立AI审查分别记录，作者不approve自己。候选安装器NotSigned，正式发布验收不在本机子任务DONE范围。

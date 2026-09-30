@@ -100,4 +100,3 @@ Recorded pre-bundle executable, runtime and installer configuration.
      Running makensis to produce D:\kk-studio\.worktrees\T7-desktop-installer\src-tauri\target\release\bundle\nsis\KK Studio_2.1.2_x64-setup.exe
     Finished 1 bundle at:
         D:\kk-studio\.worktrees\T7-desktop-installer\src-tauri\target\release\bundle\nsis\KK Studio_2.1.2_x64-setup.exe
-

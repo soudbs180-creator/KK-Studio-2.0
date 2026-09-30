@@ -2,7 +2,7 @@
 
 ## 2026-09-30 Desktop NSIS 与隔离恢复验收
 
-TASK-DESKTOP-INSTALLER-001 提供 currentUser Windows x64 安装器，完整 Agent 和 WebView2 offlineInstaller 入包，保持 Desktop2.1.2/Web2.1.3/Mobile规划2.1.1 及数据身份。真实含空格隔离路径完成四次安装各4279文件核对、Tauri启动/Agent、项目保存/同版重装/损坏修复/卸载再装保留；损坏setup与已有注册/portable进程拒绝保护已覆盖，独立审查关闭五项finding。既有设置几何测试修正为同帧采样，原断言保留，无重试160/160通过。原生证据输出移到独立目录，避免browser清理。最终verify/新head补审/托管PR门禁进行中，详见[本轮验证](changes/2026-09-30-desktop-installer/verification.md)。T7及FEAT-026仍PARTIAL：干净系统、无WebView2首装、真实断网、低版本回滚、签名/正式发布与真实服务未验收；原portable交付保留。
+TASK-DESKTOP-INSTALLER-001 在本机AC1–4范围DONE：currentUser Windows x64 安装器含完整Agent与WebView2 offlineInstaller，版本/数据身份保持现行。含空格隔离路径四次安装各4279文件、Tauri启动/Agent、项目保存/重装/损坏修复/卸载再装保留全部通过；损坏setup与已有注册/portable进程拒绝保护覆盖，独立审查关闭五项finding。设置几何改为同帧采样，原限制和可见性断言保留，无retry160/160；完整verify根631/639、Agent169/171（其余原平台skip）、browser377/377无flaky，Rust97/97及clientcheck通过。原生证据独立保存并真实重跑。最终文档head补审、托管PR/CI与推广以实际PR/交付收据为准，详见[本轮验证](changes/2026-09-30-desktop-installer/verification.md)。T7/FEAT-026仍PARTIAL：干净系统、无WebView2首装、真实断网、低版本回滚、签名/正式发布与真实服务未验收；原portable交付保留。
 
 ## 2026-09-30 项目落地集成版本
 

@@ -3179,12 +3179,14 @@
       "tests/unit/installerGuards.test.ts",
       "tests/browser/settings-scroll.spec.ts"
     ],
-    "status": "REVIEW",
+    "status": "DONE",
     "evidence": [
-      "docs/changes/2026-09-30-desktop-installer/verification.md"
+      "docs/changes/2026-09-30-desktop-installer/verification.md",
+      "docs/changes/2026-09-30-desktop-installer/evidence/installer-runtime.json",
+      "docs/changes/2026-09-30-desktop-installer/evidence/candidate-verify.log"
     ],
-    "verification": "NSIS构建、本机安装恢复及四次4279文件通过；8项定向保护/收据、设置同帧采样无retry160/160通过，原失败保留；最终verify/补审/PR/CI待完成。",
-    "verificationResult": "PARTIAL",
+    "verification": "本机AC1–4已验收：NSIS、四次4279文件、启动/Agent/重装/修复/卸载再装保留项目、已有注册/进程保护通过；8项定向、无retry160项、完整verify631root/169Agent/377browser（原skip保留）、Rust97/clientcheck、独立技术/运行证据审查至2cf5249通过。",
+    "verificationResult": "PASS",
     "updated": "2026-09-30"
   }
 ]

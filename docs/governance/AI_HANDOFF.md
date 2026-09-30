@@ -2,7 +2,7 @@
 
 ## 2026-09-30 安装器恢复入口
 
-从 D:/kk-studio/.worktrees/T7-desktop-installer 的 codex/T7-desktop-installer 继续，基线 origin/main@bd3bc66。先读[本轮计划](../changes/2026-09-30-desktop-installer/plan.md)与[验证](../changes/2026-09-30-desktop-installer/verification.md)及 Git status。NSIS 343671471 bytes/hash7103126d…d635；receipt commit0fba927/build commit61b0c85，真实安装/Agent/四次4279文件、重装/损坏修复/卸载再装保留项目通过，8项保护/收据定向通过。已有设置采样修正后无retry160/160；最终verify/新head独立补审/PR/CI尚待完成。原生报告必须放独立 .tmp/installer-audits 或工作区外目录，不能被browser清理；最新证据保存本轮evidence。真实安装保护拒绝已有注册/portable进程，不卸载用户应用。正式签名/干净系统/真实断网/低版本回滚未验收，不将父任务T7或FEAT-026标REAL/DONE。
+先fetch并核对实际origin/main、TASK-DESKTOP-INSTALLER-001的PR与交付收据，不从旧基线猜测合并状态。本机AC1–4已DONE，独立技术/运行证据审查至2cf5249 PASS、完整verify631root/169Agent/377browser无flaky、Rust97/clientcheck通过；最后文档精确head/托管门禁单独绑定。计划/证据在[本轮计划](../changes/2026-09-30-desktop-installer/plan.md)和[验证](../changes/2026-09-30-desktop-installer/verification.md)。安装器343671471bytes/hash7103126d…d635，receipt0fba927/build61b0c85；原生报告必须放独立.tmp目录并保存本轮evidence，不能被browser清理。保留已有portable与数据，不卸载用户应用；T7/FEAT-026的干净系统/真实断网/低版本回滚/签名/真实服务仍开放。后续本地顺序仍按上轮remaining中的阶段编排UI、侧栏持久化等推进。
 
 ## 2026-09-30 恢复入口
 

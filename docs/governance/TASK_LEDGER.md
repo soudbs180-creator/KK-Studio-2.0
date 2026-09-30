@@ -96,7 +96,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MEMORY-001 | 本地长期记忆服务接入对话 | PARTIAL | none | root |
 | TASK-MEMORY-002 | 跨产品共享本地记忆（本机共享） | PARTIAL | TASK-MEMORY-001 | MainAgent |
 | TASK-AGENT-007 | Codex 通过本机 CodeBuddy CLI 受限委派短文本 | DONE | TASK-AGENT-001 | root |
-| TASK-DESKTOP-INSTALLER-001 | Windows NSIS 安装器及隔离恢复验收 | REVIEW | none | root |
+| TASK-DESKTOP-INSTALLER-001 | Windows NSIS 安装器及隔离恢复验收 | DONE | none | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -1190,6 +1190,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/T7-desktop-installer`
 - Worktree: `D:/kk-studio/.worktrees/T7-desktop-installer`
 - Modules: src-tauri/tauri.installer.conf.json, scripts/windows/installer-receipt.mjs, tests/desktop/installer.mjs, tests/unit/installerReceipt.test.ts, docs, scripts/windows/installer-inputs.mjs, tests/desktop/installer-state.ps1, tests/desktop/installer-cleanup.ps1, tests/unit/installerGuards.test.ts, tests/browser/settings-scroll.spec.ts
-- Verification: PARTIAL — NSIS构建、本机安装恢复及四次4279文件通过；8项定向保护/收据、设置同帧采样无retry160/160通过，原失败保留；最终verify/补审/PR/CI待完成。
-- Evidence: [docs/changes/2026-09-30-desktop-installer/verification.md](../../docs/changes/2026-09-30-desktop-installer/verification.md)
+- Verification: PASS — 本机AC1–4已验收：NSIS、四次4279文件、启动/Agent/重装/修复/卸载再装保留项目、已有注册/进程保护通过；8项定向、无retry160项、完整verify631root/169Agent/377browser（原skip保留）、Rust97/clientcheck、独立技术/运行证据审查至2cf5249通过。
+- Evidence: [docs/changes/2026-09-30-desktop-installer/verification.md](../../docs/changes/2026-09-30-desktop-installer/verification.md), [docs/changes/2026-09-30-desktop-installer/evidence/installer-runtime.json](../../docs/changes/2026-09-30-desktop-installer/evidence/installer-runtime.json), [docs/changes/2026-09-30-desktop-installer/evidence/candidate-verify.log](../../docs/changes/2026-09-30-desktop-installer/evidence/candidate-verify.log)
 - Updated: 2026-09-30
