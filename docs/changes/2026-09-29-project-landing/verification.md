@@ -7,7 +7,26 @@
 - 本地证据绑定当前 source/bundle 与 executable hash；最终 review/head、托管 check、merge/tree 与产物收据以本集成 PR 的最终记录为准。更改 head 必须补审，不能替换旧 review 的 SHA。
 - [全量审计](audit.md)、[未完成项](remaining.md)、[技术裁定](plan.md)。没有用 fixture 证明付费 Provider、GPU、账号、Mobile 包或 VPS 生产状态。
 
-## 验证结果
+## 独立审查返修后的当前结果
+
+原候选 `d7ee51c` 的 CHANGES REQUIRED 报告及其旧产物/371项证据保持不变；本轮结果另存 [history-fix 产物身份](evidence/history-fix/build-identity.json)，新正式 head 由最终 PR/review 收据绑定。
+
+| 检查 | 实际命令/范围 | 结果 |
+| --- | --- | --- |
+| 完整门禁 | `npm run verify` | PASS：根623/631（8平台跳过）、Agent169/171（2平台跳过）、浏览器377/377，0fail/0flaky/0skip；lint/version/typecheck/UI/format/build、治理90/0及功能34/0均通过；[日志](evidence/history-fix/verify.log)、[浏览器结果](evidence/history-fix/browser-results.json) |
+| 画布返修 | history/pointer/connection-drag/canvas-actions；workers=2、retries=0 | 24/24 PASS；新增6项修复前全部失败，含90帧单次拖动、之前历史、相连删除三轮恢复/重做、取消保留redo |
+| 启动新鲜度 | `node --test tests/unit/desktopRelease.test.ts` | 12/12 PASS；新增7项修复前失败；当前实际exe检查reason=current；过期重建采用含Agent的命令 |
+| Desktop 重建 | `npm run client:build:agent -- --no-bundle` | PASS；重新生成Agent runtime、Web dist和嵌入前端的exe；5个Rust dead_code warning保留 |
+| 真实 Desktop | project-landing/image-compare/plugin-csp/platform-version | 全部PASS；3视口/3启动、原生取消与确认/连续保存/隔离记忆、90帧撤销/取消redo/相连删除恢复、图片比较、随包插件与版本；[原生报告](evidence/history-fix/desktop/runtime.json) |
+| 不变的Rust源码 | 前一候选 cargo fmt / 97项Rust / client:check | 原通过证据保留；此次只改前端历史、启动脚本和测试/文档；最终托管verify仍重新执行Rust/类型/客户端构建 |
+
+当前exe SHA-256 **`fda10f06689d0d993fa6b3d856d808b88ee8947185abbe8d88f9bb8677fc19a7`**；Web/嵌入均为 `index-DBl3l-J0.js`（`a2f2ffda4fdfbd63b3c775ac4933051c1a07b34e68e15a4a7a1b51ace24af57c`），CSS `index-Dajq2fwF.css`（`315e74abc31a372ae27ca3733606d8f68cca91fa856847486430b2b1ebb5e557`）。Agent manifest仍为`42e20b6a8a22574b8a5f99192198d5c5575332e528b0dce8776d974c3e0ff818`，4277个生产文件逐一校验hash/size。合并后再次刷新主线产物及分享包，最终身份写入收据。
+
+当前代表截图：[Desktop390](evidence/history-fix/desktop/home-390.png)、[Desktop1920](evidence/history-fix/desktop/home-1920.png)、[图层](evidence/history-fix/desktop/canvas-layers.png)；Web同状态位于本目录evidence/history-fix/web。再次查看移动与桌面截图，当前CSS与前候选一致，未发现遮挡/重叠；最终用户视觉偏好仍未代填。
+
+保留RED/初修/完整GREEN日志，真实Desktop初次扩展测试使用的固定右键坐标碰到已平移的节点，因此测试改为在实际DOM寻找空白命中点；未放宽菜单/数据断言。delivery初检19项结构违规已经补录文件和绑定导入包，提交后必须真实重跑；正式独立复审、精确head托管verify/delivery及main推广仍是合并门禁。
+
+## 第一候选验证（d7ee51c，保留历史）
 
 | 检查 | 实际命令 | 结果 |
 | --- | --- | --- |
@@ -35,7 +54,7 @@ Windows 根测试与 Agent 的 POSIX 专属跳过分别为 8 和 2；沿用平�
 
 样式链：main.tsx 的 tokens/global/ui-tokens → App.tsx 统一导入的页面 CSS → 模块最终规则；当前加载身份、DOM/几何和运行报告分别记录于本轮 evidence。不能将组件代码 diff 代替浏览器生效证据。
 
-## 当前产物身份
+## 第一候选产物身份（d7ee51c，保留历史）
 
 - Desktop executable SHA-256：`a233cbd9ac568bcab27b42e4d282e7e83681de0eea575f2fb7c367cadfb58072`。
 - 当前嵌入与 preview：`assets/index-y2ZQ96lR.js`、`assets/index-Dajq2fwF.css`；完整字节 hash 见 evidence/build-identity.json。

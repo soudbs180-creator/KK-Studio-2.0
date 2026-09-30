@@ -13,6 +13,7 @@ import {
   maxReferenceCount,
   type CanvasCollectionItem,
 } from "../../domain/canvasItems";
+import { reconcileCanvasConnections } from "../../domain/canvasConnections";
 
 export function useCanvasConnections(
   items: CanvasCollectionItem[],
@@ -165,32 +166,12 @@ export function useCanvasConnections(
   }
 
   useEffect(() => {
-    const ids = new Set(items.map((item) => item.id));
     setEdges((current) => {
-      const next: CanvasConnection[] = [];
-      for (const edge of current) {
-        if (!ids.has(edge.source) || !ids.has(edge.target)) continue;
-        // Edges created in the same event as addNode are intentionally queued
-        // before the new item appears. Revalidate them here once both cards
-        // exist; otherwise a video could bypass the image-only reference rule
-        // by creating a new image target from the add menu.
-        if (edge.kind === "result") {
-          next.push(edge);
-          continue;
-        }
-        const target = items.find((item) => item.id === edge.target);
-        const source = items.find((item) => item.id === edge.source);
-        if (!target || target.referenceOnly) continue;
-        const limited = target.kind === "image" || target.kind === "video";
-        if (limited && source?.kind !== "image") continue;
-        const incoming = next.filter(
-          (candidate) =>
-            candidate.target === edge.target && candidate.kind !== "result",
-        ).length;
-        if (!limited || incoming < maxReferenceCount(target)) next.push(edge);
-      }
+      // addNode/connect may be batched before the next items render. Use the
+      // same normalization as history so the cleanup is not a second edit.
+      const next = reconcileCanvasConnections(items, current);
       edgesRef.current = next;
-      return next.length === current.length ? current : next;
+      return next;
     });
   }, [items]);
 

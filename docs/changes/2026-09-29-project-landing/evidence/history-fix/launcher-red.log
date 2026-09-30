@@ -1,0 +1,169 @@
+✔ stale desktop release is rebuilt before it can launch (9.3517ms)
+✔ failed desktop rebuild cannot launch the previous release (2.62ms)
+✔ a build that leaves the executable stale cannot launch it (2.5991ms)
+✔ current desktop release launches without another rebuild (2.2025ms)
+✖ desktop launch detects a newer runtime input: vendor/canvas-agent/src/index.ts (4.0221ms)
+✖ desktop launch detects a newer runtime input: vendor/canvas-agent/agent-instructions.md (2.9126ms)
+✖ desktop launch detects a newer runtime input: scripts/agent/desktop-entry.mjs (2.6663ms)
+✖ desktop launch detects a newer runtime input: config/platform-versions.json (2.7101ms)
+✖ desktop launch detects a newer runtime input: src-tauri/build.rs (2.3881ms)
+✖ desktop launch detects a newer runtime input: src-tauri/tauri.agent.conf.json (2.5103ms)
+✖ desktop launch detects a newer runtime input: src-tauri/capabilities/default.json (2.3829ms)
+✔ Windows entry checks freshness even when an executable already exists (689.4914ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 5
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 804.9155
+
+✖ failing tests:
+
+test at tests\unit\desktopRelease.test.ts:111:3
+✖ desktop launch detects a newer runtime input: vendor/canvas-agent/src/index.ts (4.0221ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  'current' !== 'stale'
+
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/tests/unit/desktopRelease.test.ts:119:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'current',
+    expected: 'stale',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\desktopRelease.test.ts:111:3
+✖ desktop launch detects a newer runtime input: vendor/canvas-agent/agent-instructions.md (2.9126ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  'current' !== 'stale'
+
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/tests/unit/desktopRelease.test.ts:119:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'current',
+    expected: 'stale',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\desktopRelease.test.ts:111:3
+✖ desktop launch detects a newer runtime input: scripts/agent/desktop-entry.mjs (2.6663ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  'current' !== 'stale'
+
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/tests/unit/desktopRelease.test.ts:119:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'current',
+    expected: 'stale',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\desktopRelease.test.ts:111:3
+✖ desktop launch detects a newer runtime input: config/platform-versions.json (2.7101ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  'current' !== 'stale'
+
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/tests/unit/desktopRelease.test.ts:119:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'current',
+    expected: 'stale',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\desktopRelease.test.ts:111:3
+✖ desktop launch detects a newer runtime input: src-tauri/build.rs (2.3881ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  'current' !== 'stale'
+
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/tests/unit/desktopRelease.test.ts:119:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'current',
+    expected: 'stale',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\desktopRelease.test.ts:111:3
+✖ desktop launch detects a newer runtime input: src-tauri/tauri.agent.conf.json (2.5103ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  'current' !== 'stale'
+
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/tests/unit/desktopRelease.test.ts:119:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'current',
+    expected: 'stale',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\desktopRelease.test.ts:111:3
+✖ desktop launch detects a newer runtime input: src-tauri/capabilities/default.json (2.3829ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  'current' !== 'stale'
+
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/tests/unit/desktopRelease.test.ts:119:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'current',
+    expected: 'stale',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

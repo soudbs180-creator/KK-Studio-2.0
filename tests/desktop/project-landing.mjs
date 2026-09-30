@@ -7,13 +7,17 @@ import path from "node:path";
 import { chromium, expect } from "@playwright/test";
 
 const root = process.cwd();
-const executable = path.join(root, "src-tauri/target/release/kk-studio.exe");
+const executable =
+  process.env.KK_DESKTOP_AUDIT_EXECUTABLE ??
+  path.join(root, "src-tauri/target/release/kk-studio.exe");
 const isolated = await fs.mkdtemp(
   path.join(os.tmpdir(), "kk-project-landing-"),
 );
 const dataRoot = path.join(isolated, "data");
 const profile = path.join(isolated, "profile");
-const output = path.join(root, "test-results/desktop/project-landing");
+const output =
+  process.env.KK_DESKTOP_AUDIT_OUTPUT ??
+  path.join(root, "test-results/desktop/project-landing");
 const cdp = "http://127.0.0.1:9345";
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const sharedPath = path.join(os.homedir(), ".kk-memory/memory.json");
@@ -223,11 +227,78 @@ try {
   await expect(page.getByTestId(/^canvas-node-added-image-/)).toHaveCount(0);
   await page.keyboard.press("Control+Y");
   await expect(page.getByTestId(/^canvas-node-added-image-/)).toHaveCount(1);
-  const box = await canvas.boundingBox();
-  await page.mouse.click(box.x + 40, box.y + 430, { button: "right" });
+  const image = page.getByTestId(/^canvas-node-added-image-/).first();
+  const initialPosition = await image.getAttribute("style");
+  await image.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(image).not.toHaveAttribute("style", initialPosition);
+  const beforeDrag = await image.getAttribute("style");
+  const preview = await image.locator(".image-preview").boundingBox();
+  await page.mouse.move(preview.x + 100, preview.y + 100);
+  await page.mouse.down();
+  await page.mouse.move(preview.x + 190, preview.y + 145, { steps: 90 });
+  await page.mouse.up();
+  await expect(image).not.toHaveAttribute("style", beforeDrag);
+  await canvas.focus();
+  await page.keyboard.press("Control+Z");
+  await expect(image).toHaveAttribute("style", beforeDrag);
+  await page.keyboard.press("Control+Z");
+  await expect(image).toHaveAttribute("style", initialPosition);
+  await page.mouse.move(preview.x + 100, preview.y + 100);
+  await page.mouse.down();
+  await page.mouse.move(preview.x + 145, preview.y + 125, { steps: 12 });
+  await page.keyboard.press("Escape");
+  await page.mouse.up();
+  await expect(image).toHaveAttribute("style", initialPosition);
+  await canvas.focus();
+  await page.keyboard.press("Control+Y");
+  await expect(image).toHaveAttribute("style", beforeDrag);
+  await image.locator(".node-add-follow").click();
+  await page.getByRole("menuitem", { name: "视频", exact: true }).click();
+  const downstream = page.getByTestId(/^canvas-node-added-video-/).first();
+  const connection = page.getByTestId(/^connector-added-video-/).first();
+  await expect(connection).toHaveCount(1);
+  await downstream.focus();
+  await page.keyboard.press("Delete");
+  await expect(downstream).toHaveCount(0);
+  await expect(connection).toHaveCount(0);
+  await canvas.focus();
+  await page.keyboard.press("Control+Z");
+  await expect(downstream).toHaveCount(1);
+  await expect(connection).toHaveCount(1);
+  await page.keyboard.press("Control+Y");
+  await expect(downstream).toHaveCount(0);
+  await expect(connection).toHaveCount(0);
+  report.checks.push({
+    canvasHistory: {
+      dragSamples: 90,
+      singleUndoRestoresStart: true,
+      cancelRetainsRedo: true,
+      connectedDeletionUndoRedo: true,
+    },
+  });
+  // The restored downstream node may have panned the view to expose its
+  // editor. Locate actual empty canvas rather than right-clicking a card.
+  const blank = await canvas.evaluate((element) => {
+    const box = element.getBoundingClientRect();
+    for (let y = box.top + 80; y < box.bottom - 120; y += 32) {
+      for (let x = box.left + 32; x < box.right - 100; x += 32) {
+        const hit = document.elementFromPoint(x, y);
+        if (
+          hit?.closest(".infinite-canvas") &&
+          !hit.closest(
+            "[data-canvas-node],button,input,textarea,svg,.canvas-toolbar,.canvas-hud,.canvas-navigation,.conversation-panel",
+          )
+        )
+          return { x, y };
+      }
+    }
+    throw new Error("No blank canvas point for context menu");
+  });
+  await page.mouse.click(blank.x, blank.y, { button: "right" });
   let menu = page.getByRole("menu", { name: "画布菜单" });
   await menu.getByRole("menuitemcheckbox", { name: "网格吸附" }).click();
-  await page.mouse.click(box.x + 40, box.y + 430, { button: "right" });
+  await page.mouse.click(blank.x, blank.y, { button: "right" });
   menu = page.getByRole("menu", { name: "画布菜单" });
   await menu.getByRole("menuitem", { name: "图层管理" }).click();
   const layers = page.getByRole("region", { name: "画布图层" });

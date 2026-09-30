@@ -88,3 +88,113 @@ test("画布菜单可以切换吸附并打开图层搜索定位", async ({ page 
     page.getByTestId(/^canvas-node-added-image-/).first(),
   ).toBeVisible();
 });
+
+test("删除带连线节点后一次撤销恢复节点和连线，重做后仍能继续编辑", async ({
+  page,
+}) => {
+  await openWorkspace(page);
+  const canvas = page.getByTestId("infinite-canvas");
+  await page
+    .getByRole("button", { name: "从图片创建卡片添加下游", exact: true })
+    .click();
+  await page.getByRole("menuitem", { name: "视频", exact: true }).click();
+  const node = page.getByTestId(/^canvas-node-added-video-/).first();
+  const edge = page.getByTestId(/^connector-added-video-/).first();
+  await expect(node).toBeVisible();
+  await expect(edge).toHaveCount(1);
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await node.focus();
+    await page.keyboard.press("Delete");
+    await expect(node).toHaveCount(0);
+    await expect(edge).toHaveCount(0);
+    await canvas.focus();
+    await page.keyboard.press("Control+Z");
+    await expect(node).toHaveCount(1);
+    await expect(edge).toHaveCount(1);
+    await page.keyboard.press("Control+Y");
+    await expect(node).toHaveCount(0);
+    await expect(edge).toHaveCount(0);
+    await page.keyboard.press("Control+Z");
+    await expect(node).toHaveCount(1);
+    await expect(edge).toHaveCount(1);
+  }
+  const before = await node.getAttribute("style");
+  await node.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(node).not.toHaveAttribute("style", before!);
+  await canvas.focus();
+  await page.keyboard.press("Control+Z");
+  await expect(node).toHaveAttribute("style", before!);
+  await expect(edge).toHaveCount(1);
+});
+
+test("超过80帧的连续拖动只撤销一次且保留拖动前的编辑历史", async ({ page }) => {
+  await openWorkspace(page);
+  const canvas = page.getByTestId("infinite-canvas");
+  const node = page.getByTestId("canvas-node-image");
+  const initial = await node.getAttribute("style");
+  await node.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(node).not.toHaveAttribute("style", initial!);
+  const beforeDrag = (await node.getAttribute("style"))!;
+  const preview = (await node.locator(".image-preview").boundingBox())!;
+  await page.mouse.move(preview.x + 180, preview.y + 180);
+  await page.mouse.down();
+  await page.mouse.move(preview.x + 360, preview.y + 270, { steps: 90 });
+  await page.mouse.up();
+  await expect(node).not.toHaveAttribute("style", beforeDrag);
+  const afterDrag = (await node.getAttribute("style"))!;
+  await canvas.focus();
+  await page.keyboard.press("Control+Z");
+  await expect(node).toHaveAttribute("style", beforeDrag);
+  await page.keyboard.press("Control+Z");
+  await expect(node).toHaveAttribute("style", initial!);
+  await page.keyboard.press("Control+Y");
+  await expect(node).toHaveAttribute("style", beforeDrag);
+  await page.keyboard.press("Control+Y");
+  await expect(node).toHaveAttribute("style", afterDrag);
+});
+
+for (const cancellation of [
+  "Escape",
+  "pointercancel",
+  "blur",
+  "pan",
+] as const) {
+  test(`${cancellation}取消手势恢复起点且不清空已有重做`, async ({ page }) => {
+    await openWorkspace(page);
+    const canvas = page.getByTestId("infinite-canvas");
+    const node = page.getByTestId("canvas-node-image");
+    const stage = page.getByTestId("canvas-stage");
+    const initialNode = (await node.getAttribute("style"))!;
+    const initialStage = (await stage.getAttribute("style"))!;
+    await node.focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(node).not.toHaveAttribute("style", initialNode);
+    const nextNode = (await node.getAttribute("style"))!;
+    await canvas.focus();
+    await page.keyboard.press("Control+Z");
+    await expect(node).toHaveAttribute("style", initialNode);
+    const preview = (await node.locator(".image-preview").boundingBox())!;
+    const button = cancellation === "pan" ? "middle" : "left";
+    await page.mouse.move(preview.x + 180, preview.y + 180);
+    await page.mouse.down({ button });
+    await page.mouse.move(preview.x + 280, preview.y + 240, { steps: 12 });
+    if (cancellation === "pan")
+      await expect(stage).not.toHaveAttribute("style", initialStage);
+    else await expect(node).not.toHaveAttribute("style", initialNode);
+    if (cancellation === "pointercancel")
+      await canvas.dispatchEvent("pointercancel", { pointerId: 1 });
+    else if (cancellation === "blur")
+      await page.evaluate(() => window.dispatchEvent(new Event("blur")));
+    else await page.keyboard.press("Escape");
+    await page.mouse.up({ button });
+    await expect(node).toHaveAttribute("style", initialNode);
+    await expect(stage).toHaveAttribute("style", initialStage);
+    await canvas.focus();
+    await page.keyboard.press("Control+Y");
+    await expect(node).toHaveAttribute("style", nextNode);
+    await page.keyboard.press("Control+Z");
+    await expect(node).toHaveAttribute("style", initialNode);
+  });
+}

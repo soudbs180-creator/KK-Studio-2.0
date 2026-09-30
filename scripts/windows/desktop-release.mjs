@@ -20,10 +20,21 @@ const RELEASE_INPUTS = [
   "tsconfig.app.json",
   "tsconfig.node.json",
   "vite.config.ts",
+  path.join("config", "platform-versions.json"),
+  path.join("vendor", "canvas-agent", "src"),
+  path.join("vendor", "canvas-agent", "agent-instructions.md"),
+  path.join("vendor", "canvas-agent", "package.json"),
+  path.join("vendor", "canvas-agent", "package-lock.json"),
+  path.join("vendor", "canvas-agent", "tsconfig.json"),
+  path.join("scripts", "agent"),
   path.join("src-tauri", "src"),
+  path.join("src-tauri", "build.rs"),
+  path.join("src-tauri", "capabilities"),
+  path.join("src-tauri", "icons"),
   path.join("src-tauri", "Cargo.toml"),
   path.join("src-tauri", "Cargo.lock"),
   path.join("src-tauri", "tauri.conf.json"),
+  path.join("src-tauri", "tauri.agent.conf.json"),
 ];
 
 function findNewestFile(candidatePath, current) {
@@ -119,7 +130,7 @@ function resolveNpmCliPath() {
 function buildDesktopRelease(projectRoot) {
   const result = spawnSync(
     process.execPath,
-    [resolveNpmCliPath(), "run", "tauri", "build", "--", "--no-bundle"],
+    [resolveNpmCliPath(), "run", "client:build:agent", "--", "--no-bundle"],
     { cwd: projectRoot, stdio: "inherit" },
   );
   if (result.error) throw result.error;

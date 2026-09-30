@@ -7,6 +7,7 @@
 - 现行 UI 来源：四页 Figma + UI_INDEX + tokens.css；侧栏固定 70（平板72）/291，低于960会话 overlay，960–1200 rail。旧304/44等记录是历史。
 - 原生连续保存 CAS、取消/确认删除、项目重启恢复、隔离记忆、图片比较和随包插件已在当前 release 复验。真实外部调用、Installer/Mobile/VPS没有由本轮测试证明。
 - [全量审计](../changes/2026-09-29-project-landing/audit.md) · [验证](../changes/2026-09-29-project-landing/verification.md) · [剩余落地](../changes/2026-09-29-project-landing/remaining.md)。
+- 独立审查发现并修复画布删除/拖动/取消历史问题；最新Tauri窗口复验通过，提交后仍须补精确HEAD独立复审和CI。启动入口已补Agent及平台配置的新鲜度检查，避免只更新源码而继续启动旧运行时。
 
 ## 历史记录（以下不是当前工作区事实）
 

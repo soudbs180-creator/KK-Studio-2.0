@@ -4,6 +4,8 @@
 
 已收敛两组竞品本地能力与 UI/Google/记忆/CodeBuddy/Provider 候选，保留 main 的图片比较、本机服务、插件与版本契约。修复真实项目连续原生保存、异步确认、输入区重叠、未配置反馈、项目删除保护与隔离记忆。当前 Web 2.1.3、Desktop 2.1.2；Mobile 2.1.1 为规划版本。源码集成、同状态生产 UI 与桌面重启证据见 [验证](changes/2026-09-29-project-landing/verification.md)、[全量审计](changes/2026-09-29-project-landing/audit.md) 和 [未完成项](changes/2026-09-29-project-landing/remaining.md)。主线推广结果以该集成 PR 的精确 HEAD 审查/检查/merged 记录为准。
 
+本轮独立审查后追加修复：相连节点删除的撤销循环、90帧拖动的历史粒度与Escape取消；24项定向画布回归和最新Tauri真实窗口复验通过。启动脚本新增Agent/平台/Tauri配置的新鲜度输入并使用含Agent的重建命令，七项先失败后通过。旧候选证据保留，新结果使用本轮 evidence/history-fix；最终精确SHA审查、托管门禁及主线推广以集成PR收据为准。
+
 ## 以下为历史迭代记录
 
 历史记录中的分支、端口、尺寸、版本及待验收描述仅代表当时状态；当前事实以上述入口为准。

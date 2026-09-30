@@ -29,6 +29,7 @@ export function useCanvasWorkbenchState({
     setEdges,
     setViewport: controls.setTransform,
     setSelectedNode: controls.setSelectedNode,
+    gestureActive: controls.dragging === "node" || controls.dragging === "pan",
   });
   return { layersOpen, setLayersOpen, history };
 }

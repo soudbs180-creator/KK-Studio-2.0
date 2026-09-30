@@ -13,6 +13,15 @@
 
 本地验证详见 [verification](verification.md)。head 改变时必须补审并重新满足托管门禁，不能把旧 review 的 SHA 修改成新 SHA。
 
+## 第一轮独立审查与修复（2026-09-30）
+
+- Base `1e95a13d3490a39b35ce39e9df0ab55a09dc13f7` / head `d7ee51c4ba2387731af1a1bad364b977be31e01f`；fresh-context reviewer 通过实际 hooks 在隔离 Chromium 中复现，结论 CHANGES REQUIRED。原报告完整保留在 [独立报告](evidence/independent-review-d7ee51c.md)。
+- LANDING-R1（P2，画布验收阻断）：相连节点删除时，history 保存了节点已删、旧边仍在的过渡快照；撤销后连线清理再次入栈，无法恢复节点。修复为 history 与连线协调使用相同的有效图规则，并用现有 ProjectCanvas 协调完整位置。
+- LANDING-R2（P2，画布验收阻断）：连续移动逐帧入栈，一次长拖动丢失起点和更早编辑。修复为 node/pan 手势的可见状态只预览，结束才入栈；取消恢复起点且保留 redo。新回归同时复现并修复节点焦点处 Escape 提前消费事件、未取消拖动的问题。
+- 修复前新增 6 项真实 UI 回归全部失败；初修 23/24 通过、Escape 仍失败；完整修复后 24/24 通过，均 retries=0，保留每轮日志。测试覆盖相连节点三轮删除/撤销/重做、90 帧拖动及之前历史、Escape/pointercancel/blur/平移取消与 redo。
+- delivery 初检有 19 项结构违规：缺失交付入口和导入包未绑定当前集成任务。现补录缺失文件并把 13 个导入包绑定 TASK-PROJECT-001；原 branch、原时间和原 SHA 保留，不改门禁。正式结果须在提交后的真实 HEAD 上重跑。
+- 最终新 SHA 的完整检查、Desktop 实际运行与独立复审/CI 仍按下述托管流程完成。旧 371 项通过及旧 exe 身份保留为原候选证据，不能代表修复后产物。
+
 ## 托管规则与用户授权
 
 - 2026-09-30 实际回读 main 规则：必须 PR、严格 verify/delivery、评论解决；required approvals=0，无 bypass，禁止删除与非快进。独立 AI review 不能称作第二个人类审批，作者不会自行 approve。

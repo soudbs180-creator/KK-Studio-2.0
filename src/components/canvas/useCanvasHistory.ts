@@ -6,6 +6,8 @@ import type {
 } from "react";
 import type { CanvasConnection } from "../../domain/canvasGraph";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
+import { reconcileCanvasConnections } from "../../domain/canvasConnections";
+import { reconcileProjectCanvas } from "../../domain/projectCanvas";
 import {
   canvasHistoryFingerprint,
   cloneCanvasHistorySnapshot,
@@ -28,6 +30,7 @@ interface CanvasHistoryOptions {
   setEdges: Dispatch<SetStateAction<CanvasConnection[]>>;
   setViewport: Dispatch<SetStateAction<ViewTransform>>;
   setSelectedNode?: Dispatch<SetStateAction<string | null>>;
+  gestureActive?: boolean;
   limit?: number;
 }
 
@@ -37,7 +40,16 @@ function snapshotOf(
   edges: CanvasConnection[],
   viewport: ViewTransform,
 ): CanvasHistorySnapshot {
-  return { items, positions, edges, viewport };
+  const canvas = reconcileProjectCanvas(
+    {
+      version: 1,
+      positions,
+      edges: reconcileCanvasConnections(items, edges),
+      viewport,
+    },
+    items,
+  );
+  return { items, positions: canvas.positions, edges: canvas.edges, viewport };
 }
 
 function isCanvasEditableTarget(target: EventTarget | null): boolean {
@@ -61,6 +73,7 @@ export function useCanvasHistory({
   setEdges,
   setViewport,
   setSelectedNode,
+  gestureActive = false,
   limit = 80,
 }: CanvasHistoryOptions) {
   const [, setRevision] = useState(0);
@@ -89,12 +102,15 @@ export function useCanvasHistory({
       }
       return;
     }
+    // Pointer renders are previews. A completed gesture commits once; cancel
+    // restores its starting snapshot, preserving both the past and the redo.
+    if (gestureActive) return;
     if (canvasHistoryFingerprint(present) === fingerprint) return;
     const history = historyRef.current ?? createCanvasHistory(present, limit);
     historyRef.current = commitCanvasHistory(history, snapshot);
     presentRef.current = cloneCanvasHistorySnapshot(snapshot);
     setRevision((value) => value + 1);
-  }, [limit, snapshot]);
+  }, [gestureActive, limit, snapshot]);
 
   const apply = useCallback(
     (next: CanvasHistorySnapshot): void => {
@@ -113,22 +129,24 @@ export function useCanvasHistory({
   );
 
   const undo = useCallback((): void => {
+    if (gestureActive) return;
     const history = historyRef.current;
     if (!history || history.past.length === 0) return;
     const next = undoCanvasHistory(history);
     historyRef.current = next;
     apply(next.present);
     setRevision((value) => value + 1);
-  }, [apply]);
+  }, [apply, gestureActive]);
 
   const redo = useCallback((): void => {
+    if (gestureActive) return;
     const history = historyRef.current;
     if (!history || history.future.length === 0) return;
     const next = redoCanvasHistory(history);
     historyRef.current = next;
     apply(next.present);
     setRevision((value) => value + 1);
-  }, [apply]);
+  }, [apply, gestureActive]);
 
   const handleKeyDown = useCallback(
     (event: ReactKeyboardEvent<HTMLElement>): boolean => {
@@ -152,8 +170,8 @@ export function useCanvasHistory({
   );
 
   return {
-    canUndo: Boolean(historyRef.current?.past.length),
-    canRedo: Boolean(historyRef.current?.future.length),
+    canUndo: !gestureActive && Boolean(historyRef.current?.past.length),
+    canRedo: !gestureActive && Boolean(historyRef.current?.future.length),
     undo,
     redo,
     handleKeyDown,

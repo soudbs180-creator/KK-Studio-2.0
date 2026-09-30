@@ -204,7 +204,8 @@ export function useCanvasControls({
     (event: ReactKeyboardEvent<HTMLDivElement>, nodeId: CanvasNodeId): void => {
       if (event.key === "Escape" && !event.nativeEvent.isComposing) {
         event.preventDefault();
-        setSelectedNode(null);
+        if (pointer.dragRef.current) pointer.cancelGesture();
+        else setSelectedNode(null);
         event.currentTarget.focus({ preventScroll: true });
         return;
       }

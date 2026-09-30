@@ -99,6 +99,28 @@ test("current desktop release launches without another rebuild", (t) => {
   assert.equal(result.rebuilt, false);
 });
 
+for (const input of [
+  "vendor/canvas-agent/src/index.ts",
+  "vendor/canvas-agent/agent-instructions.md",
+  "scripts/agent/desktop-entry.mjs",
+  "config/platform-versions.json",
+  "src-tauri/build.rs",
+  "src-tauri/tauri.agent.conf.json",
+  "src-tauri/capabilities/default.json",
+]) {
+  test(`desktop launch detects a newer runtime input: ${input}`, (t) => {
+    const { root, executable } = fixture(t);
+    fs.utimesSync(executable, new Date(3000), new Date(3000));
+    const changed = path.join(root, input);
+    fs.mkdirSync(path.dirname(changed), { recursive: true });
+    fs.writeFileSync(changed, "newer runtime input");
+    fs.utimesSync(changed, new Date(4000), new Date(4000));
+    const release = inspectDesktopRelease(root);
+    assert.equal(release.reason, "stale");
+    assert.equal(release.newestInputPath, changed);
+  });
+}
+
 test(
   "Windows entry checks freshness even when an executable already exists",
   {

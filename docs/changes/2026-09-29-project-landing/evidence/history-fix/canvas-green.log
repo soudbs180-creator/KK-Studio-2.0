@@ -1,0 +1,39 @@
+[WebServer] (node:52208) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 24 tests using 2 workers
+
+
+(node:36576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+
+[1/24] tests\browser\canvas-actions.spec.ts:4:1 › 图片连续拖动不被浏览器原生图片拖放截断，加号始终跟随
+[2/24] tests\browser\canvas-history-layers.spec.ts:12:1 › 画布右键撤销和重做会恢复新增节点
+[3/24] tests\browser\canvas-history-layers.spec.ts:48:1 › 画布菜单可以切换吸附并打开图层搜索定位
+[4/24] tests\browser\canvas-actions.spec.ts:52:1 › 右侧添加按钮随节点移动，下游卡片和连接可用，删除可撤销
+[5/24] tests\browser\canvas-history-layers.spec.ts:92:1 › 删除带连线节点后一次撤销恢复节点和连线，重做后仍能继续编辑
+[6/24] tests\browser\canvas-actions.spec.ts:80:1 › 下游菜单 Escape 回焦且不改动卡片，连线删除不删除节点
+[7/24] tests\browser\canvas-history-layers.spec.ts:131:1 › 超过80帧的连续拖动只撤销一次且保留拖动前的编辑历史
+[8/24] tests\browser\canvas-actions.spec.ts:111:1 › 鼠标能从连线移动到删除按钮，键盘新增后可继续微调节点
+[9/24] tests\browser\canvas-pointer.spec.ts:4:1 › 左键框选可见卡片，不平移画布；空白点击清空选择
+[10/24] tests\browser\canvas-history-layers.spec.ts:164:3 › Escape取消手势恢复起点且不清空已有重做
+[11/24] tests\browser\canvas-pointer.spec.ts:38:3 › middle拖动卡片和平移空白都只移动视图，保留选择
+[12/24] tests\browser\canvas-history-layers.spec.ts:164:3 › pointercancel取消手势恢复起点且不清空已有重做
+[13/24] tests\browser\canvas-pointer.spec.ts:38:3 › right拖动卡片和平移空白都只移动视图，保留选择
+[14/24] tests\browser\canvas-history-layers.spec.ts:164:3 › blur取消手势恢复起点且不清空已有重做
+[15/24] tests\browser\canvas-pointer.spec.ts:63:1 › Shift追加多选可一起拖动；Escape取消拖动恢复位置
+[16/24] tests\browser\canvas-history-layers.spec.ts:164:3 › pan取消手势恢复起点且不清空已有重做
+[17/24] tests\browser\canvas-pointer.spec.ts:107:1 › 提示词输入中的H、V和空格不会切换工具或移动画布
+[18/24] tests\browser\connection-drag.spec.ts:63:1 › 不同缩放下图片和两张视频连接均落在可见侧边正中
+[19/24] tests\browser\connection-drag.spec.ts:97:1 › 加号区域磁吸，拖动只预览，释放后选类型才创建并连线
+[20/24] tests\browser\connection-drag.spec.ts:167:1 › 新增节点同事件连线仍遵守参考图能力限制
+[21/24] tests\browser\connection-drag.spec.ts:183:1 › 拖出取消和无效区域释放无残留，键盘随后仍能打开菜单
+[22/24] tests\browser\connection-drag.spec.ts:210:1 › 底栏、空白双击与下游共用菜单；窄屏和减弱动态可用
+[23/24] tests\browser\connection-drag.spec.ts:256:1 › 平移缩放后按释放点创建文本，结果连线居中并保留原草稿
+[24/24] tests\browser\connection-drag.spec.ts:315:1 › 触屏加号可拖出释放，菜单保持44px以上行高并可点选
+  24 passed (25.0s)
