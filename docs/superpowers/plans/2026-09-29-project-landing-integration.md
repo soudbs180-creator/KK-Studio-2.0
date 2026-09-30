@@ -38,7 +38,7 @@
 
 **Files:** `src/App.tsx`, `src/components/{StartComposer,ConversationPanel,Canvas,SettingsPanel}.tsx`, `src/styles/*.css`
 
-- [x] Verify route → import → loaded bundle for home, chat, settings and canvas on port 1421.
+- [x] Verify route → import → loaded production bundle for home, chat, settings and canvas on fixed preview port 1423 and the freshly built Tauri release; development 1421 remained occupied by another task.
 - [x] Remove regressions introduced by fixed gaps, stale duplicate controls, or inaccessible disabled actions.
 - [x] Keep current local model/service gating and meaningful empty/error/offline feedback.
 - [x] Carry UI-010 and real project sidebar fixes forward without replacing the newer four-page Figma rules with historical layout rules.

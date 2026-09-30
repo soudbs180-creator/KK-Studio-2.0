@@ -2740,7 +2740,7 @@
       "docs/features/features.registry.json",
       "docs/governance/task-ledger.json"
     ],
-    "status": "REGRESSION",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-09-29-kaworkai-canvas/intent.md",
       "docs/changes/2026-09-29-kaworkai-canvas/spec.md",
@@ -2751,9 +2751,10 @@
       "docs/changes/2026-09-29-project-landing/verification.md",
       "docs/changes/2026-09-29-project-landing/audit.md",
       "docs/changes/2026-09-29-project-landing/review.md",
-      "docs/changes/2026-09-29-project-landing/evidence/history-fix/desktop/runtime.json"
+      "docs/changes/2026-09-29-project-landing/evidence/history-fix/desktop/runtime.json",
+      "docs/changes/2026-09-29-project-landing/evidence/independent-review-9656011.md"
     ],
-    "verification": "独立审查先复现删除相连节点撤销循环、连续拖动逐帧入栈；新增6项真实UI全部先失败，修复后24项相关回归通过。最新Tauri实际窗口验证90帧单次撤销、之前编辑、取消redo及相连节点删除恢复/重做；新SHA独立复审与CI待集成PR完成。",
+    "verification": "本地画布历史、吸附和图层验收完成。R1/R2先由真实UI复现失败，返修后24项相关回归、完整Web377/377及最新Tauri窗口通过；9656011独立复审从实际pointer/hooks链复验三轮相连删除/恢复、90帧单次撤销、取消redo与异步节点/边协调并关闭两项阻断。最终文档HEAD补审、Hosted及主线推广由集成PR/交付收据承载。远程竞品服务未纳入验收。",
     "updated": "2026-09-30",
     "verificationResult": "PASS"
   },
@@ -2785,7 +2786,7 @@
       "docs/governance",
       "docs/PROGRESS.md"
     ],
-    "status": "REVIEW",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-09-29-project-landing/intent.md",
       "docs/changes/2026-09-29-project-landing/spec.md",
@@ -2806,9 +2807,10 @@
       "docs/changes/2026-09-29-home-composer-fidelity/verification.md",
       "docs/changes/2026-09-29-kaworkai-canvas/verification.md",
       "docs/changes/2026-09-29-project-landing/review.md",
-      "docs/changes/2026-09-29-project-landing/evidence/history-fix/desktop/runtime.json"
+      "docs/changes/2026-09-29-project-landing/evidence/history-fix/desktop/runtime.json",
+      "docs/changes/2026-09-29-project-landing/evidence/independent-review-9656011.md"
     ],
-    "verification": "集成承接13个历史包并保留原branch/时间。d7ee51c独立审查的LANDING-R1/R2已经真实UI RED→GREEN修复，24项画布、12项启动新鲜度、最新Desktop及compare/plugin/version通过；新SHA完整门禁、独立复审与主线推广以集成PR/最终收据为准。",
+    "verification": "本地可运行候选范围完成：承接13个历史包，完整Web377/377、根623/631、Agent169/171（其余原平台skip）、Rust97/97与最新Desktop/compare/plugin/version通过。9656011独立复审关闭R1/R2并通过39项单测、delivery618/0；来源PR17/18已勘误。最终文档HEAD补审、托管门禁、实际main推广与分享包验证以集成PR/最终收据为准；本条DONE不代表外部服务、Installer、Mobile或生产发布完成。",
     "updated": "2026-09-30",
     "verificationResult": "PASS"
   },

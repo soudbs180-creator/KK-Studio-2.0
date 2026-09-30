@@ -3,7 +3,7 @@
 ## 覆盖与结论
 
 - FACT：逐项读取 90 项任务的目标/验收/证据、34 张功能映射、现行规则及 22 个登记 worktree；不将历史 DONE 当成当前外部服务证明。
-- 当前任务状态：{"DONE":45,"PARTIAL":25,"BLOCKED":4,"TODO":14,"REGRESSION":1,"REVIEW":1}；功能状态：{"REAL":2,"PARTIAL":26,"PROTOTYPE":4,"PLANNED":2}。下表是提交时快照，集成 PR 的合并/检查记录承载最终推广结果。
+- 当前任务状态：{"DONE":47,"PARTIAL":25,"BLOCKED":4,"TODO":14}；功能状态：{"REAL":2,"PARTIAL":26,"PROTOTYPE":4,"PLANNED":2}。DONE 覆盖已验证的本地候选范围；下表是提交时快照，集成 PR 的合并/检查记录承载最终推广结果。
 - 当前 root 集成分支基于 origin/main@1e95a13；snapshot 065b45d 保留原候选，a02b7b5 合入主线。其它 dirty checkout 保留；69 张被旧测试覆盖的历史截图已先保存到工程外，再按各自 HEAD 恢复，新截图只放本轮 evidence。
 - FACT：旧演示节点 fixture 与已更名设置入口造成大量误报；同时发现真实几何、禁用反馈、删除保护、原生 CAS/异步确认和记忆隔离缺陷并修复。故障与新证据见 [verification](verification.md)，真实未完成项见 [remaining](remaining.md)。
 
@@ -14,10 +14,10 @@
 | UI-010 / PR #19 (33ac5b3) | 929771c | 四页 Figma 规则覆盖旧尺寸；用户最终视觉验收仍开放 |
 | Sidebar / PR #20 (76be5c3) | deb9e73 + 当前取消/删除/CAS 回归 | 文件夹/置顶当前会话态 |
 | Google / PR #13 (13671d7) | 57093c3 | 真实凭据与 CLI 登录未验收 |
-| Memory / PR #17 (0a88916) | 0dfba3d + 隔离/锁/迁移修复 | 跨应用和真实 Codex 未联调 |
-| CodeBuddy / PR #18 (c9ebd90) | 186f7da + HTTP 取消/CLI 安全修复 | 限定短文本 CLI 委派；不冒充 GUI 自动化 |
-| Codex config (a913dae) | 5267ef8 | 目标 CLI 消费与设置 UI 待完成 |
-| Claude config (dbeee9d) | 7f71878/59b189e | 目标 CLI 消费与设置 UI 待完成 |
+| Memory / 本地来源分支 (0a88916) | 0dfba3d + 隔离/锁/迁移修复 | 跨应用和真实 Codex 未联调 |
+| CodeBuddy / 本地来源分支 (c9ebd90) | 186f7da + HTTP 取消/CLI 安全修复 | 限定短文本 CLI 委派；不冒充 GUI 自动化 |
+| Codex config / PR #17 (2618344)、较新主线来源 a913dae | 5267ef8；PR head 的两行历史审查 SHA 补录保留原含义，相关配置/CLI 源码与较新来源一致 | 目标 CLI 消费与设置 UI 待完成 |
+| Claude config / PR #18 (dbeee9d) | 7f71878/59b189e | 目标 CLI 消费与设置 UI 待完成 |
 | MiniMax (381383d)、Provider #16、ORCH (08b5ae1) | 已在 main；当前回归承接 | 本地目录/配置/领域契约；付费服务与执行 UI 未完成 |
 | 图片比较 #21/#22、本机服务、平台版本、插件 #28 | main@1e95a13 + a02b7b5 | 各平台剩余项按功能卡保留 |
 | 原首页/Figma/Kaworkai dirty 候选 | 065b45d + 本轮 UI/原生运行证据 | 落地本地画布历史/吸附/图层；远程竞品能力未复制 |
@@ -106,8 +106,8 @@
 | TASK-UI-CANVAS-001 | DONE | 画布会话分栏与固定侧栏交互修复 | PASS |
 | TASK-UI-HOME-002 | DONE | 首页与对话输入区剩余设计反馈收口 | PASS |
 | TASK-UI-GOV-003 | DONE | 新版 Figma 四页治理基线与 UI 模板收口 | PASS |
-| TASK-CANVAS-KAWORKAI-001 | REGRESSION | Kaworkai 无限画布交互研究与本地画布增强 | PASS |
-| TASK-PROJECT-001 | REVIEW | 项目落地与分支收敛 | PASS |
+| TASK-CANVAS-KAWORKAI-001 | DONE | Kaworkai 无限画布交互研究与本地画布增强 | PASS |
+| TASK-PROJECT-001 | DONE | 项目落地与分支收敛 | PASS |
 | TASK-UI-010 | DONE | 现行 UI 规则与真实操作回归 | PASS |
 | TASK-PROJECT-SIDEBAR-001 | PARTIAL | 侧栏项目列表与真实项目数据统一 | PARTIAL |
 | TASK-PROV-003 | PARTIAL | Codex Provider 配置注入与 model catalog 落盘（agent 侧接线） | PARTIAL |

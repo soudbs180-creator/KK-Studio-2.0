@@ -22,6 +22,14 @@
 - delivery 初检有 19 项结构违规：缺失交付入口和导入包未绑定当前集成任务。现补录缺失文件并把 13 个导入包绑定 TASK-PROJECT-001；原 branch、原时间和原 SHA 保留，不改门禁。正式结果须在提交后的真实 HEAD 上重跑。
 - 最终新 SHA 的完整检查、Desktop 实际运行与独立复审/CI 仍按下述托管流程完成。旧 371 项通过及旧 exe 身份保留为原候选证据，不能代表修复后产物。
 
+## 返修后独立复审与来源勘误（2026-09-30）
+
+- Base `1e95a13d3490a39b35ce39e9df0ab55a09dc13f7` / head `9656011267d7a51c954bf18c42088a477e492b75`；完整原报告保留在 [返修复审](evidence/independent-review-9656011.md)，不改写旧 SHA。
+- 结论 PASS WITH FOLLOW-UPS。LANDING-R1/R2 已由 reviewer 使用真实 Controls → Workbench → History 和 Chromium pointer 独立复验关闭；39 项相关单测、提交后 delivery 618 文件 / 0 违规通过。
+- LANDING-R3（P3，来源勘误）：PR #17 实际为 Codex 配置（2618344），PR #18 为 Claude 配置（dbeee9d）；Memory/CodeBuddy 是本地来源分支。已按远端 PR 元数据和 Git 源码比较更正 [audit](audit.md)，本次文档新提交需精确 HEAD 补审关闭。
+- ledger 的两个 DONE 只表示已验证的本地候选范围；全量结果为根 623/631（8 原平台 skip）、Agent 169/171（2 原平台 skip）、browser 377/377，最新实际 Desktop 及 compare/plugin/version 通过。Installer/Mobile/真实外部服务仍保留开放任务。
+- 此次文档提交不修改产品、测试、CI 或远端规则；最终新 HEAD 审查、托管 verify/delivery、实际 merged/main 和分享包启动身份记录在集成 PR 与交付收据中，不能把候选检查当成主线推广完成。
+
 ## 托管规则与用户授权
 
 - 2026-09-30 实际回读 main 规则：必须 PR、严格 verify/delivery、评论解决；required approvals=0，无 bypass，禁止删除与非快进。独立 AI review 不能称作第二个人类审批，作者不会自行 approve。
