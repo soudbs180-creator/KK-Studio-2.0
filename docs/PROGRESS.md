@@ -155,6 +155,22 @@ PR #14 的 `67ff18fb` 独立复审确认旧计划覆写与项目包漏同步两�
 Google API Key 通道已接入官方 Interactions：连续文字对话、图片结果归档画布、刷新后会话恢复；另接入用户自行启动的本地 Gemini CLI 桥，支持 Google 账号登录后的文字对话和会话续接。CLI 模式不提供图片生成，图片需使用 API Key 通道。设置页已修复密钥输入和两种登录方式切换，桥限定本机地址/可信 Origin、传入 CLI 的参数边界与取消后子进程回收；结果不确定时阻止自动重试。
 
 Web 生产预览与 fixture 浏览器流程、单元测试、Windows Rust `client:check` 已有本地证据；最终全量验证与交付状态见 [004 验证](changes/2026-09-23-google-interactions/verification.md)和 [005 验证](changes/2026-09-23-google-cli-login/verification.md)。本机没有 Google API Key 或已安装/登录的 Gemini CLI，因此未作真实 Google 请求，也未验证本轮 Tauri 桌面运行或获得最终独立补审。上述两任务保持 IN_PROGRESS/PARTIAL，不将 fixture 图片当作真实出图。
+## 2026-09-24 记忆候选复核与修补
+
+- 独立代码评审指出并发覆盖、提炼误收旧/未完成回复、损坏文件重复读取及旧 Web 数据未迁移；现已增加 Desktop 写锁和版本比较、Web IndexedDB 原子比较、冲突重试、按本次 `clientMessageId` 和完成阶段提炼、稳定错误回调、旧候选数据库迁移。Desktop 与 Web 没有共同写锁，Web 授权共享目录现只读，私有 IndexedDB 仍可写且可切回。
+- Desktop 重置改为先复制备份、再原子写入；写入失败时原文件仍可读。完整 `npm run verify` 通过（415 Node、309 browser），Rust 91/91；真实 FSA、Desktop release 与模型引用仍待验收。旧验证数字见下方历史记录。
+- FEAT-020 保持 PARTIAL，原先"Codex/豆包/WorkBuddy 已共享"和"绝不上云"表述已纠正：当前仅 KK Studio 的 Codex 对话使用记忆；完整文件不云同步，选中的片段会用于当前模型请求。
+- 修补了 Web IndexedDB 仓库冲突、损坏记录清空、Desktop 首写缺目录与备份失败后继续重置、模型回复自动入库等问题；真实系统目录授权和跨应用联调仍未验证。
+- 本轮 `npm run verify` 通过（408 Node、308 browser），Rust 88/88；Web 1920/390 截图与未完成项见 `docs/changes/2026-09-24-local-memory/verification.md` 的新增勘误。
+
+## 2026-09-24 本地长期记忆接入对话（TASK-MEMORY-001 + 002，历史候选）
+
+- FEAT-020 由 PROTOTYPE 升级为 PARTIAL：真实用户级本地长期记忆落地，**本机共享**（`~/.kk-memory/memory.json`，Tauri 命令 + Web File System Access 授权，旧隔离文件一次性种子迁移）。
+- 能力：本地规则自动采集（用户/assistant 偏好、习惯、约束）→ 词法检索注入 `[长期记忆]` 块（发送前，执行器零修改）；设置 › 连接 › 记忆 真实 UI（开关、共享状态、授权目录、列表/删除/清空、手动 Codex 提炼、重置共享文件）。
+- 跨产品打通：Codex（桌面/Web）、豆包（Doubao Work Agent）、WorkBuddy 共享同一份记忆（`docs/MEMORY-CONTRACT.md` 契约）；换账号手动清空/重置。
+- 硬约束落地：仅存本地、绝不上云（不进 WebDAV 同步/localStorage/日志/导出包）；默认关闭；真实账号 id 绑定依赖 FEAT-017。
+- 验证：Node 单测 404/404（记忆模块 34 例）、typecheck/lint/governance/features/ui:check/format 全过、Rust 84/84、Playwright 303+1 已知 flaky 无失败；文档在 docs/changes/2026-09-24-local-memory/。待 commit/push 与 PR。
+
 ## 2026-09-23 2.1.0 源码并线与远端规则回读
 
 - [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 的 head `da811283` 在 hosted `verify`/`delivery` 通过后 squash 合入 `main@b45c5bc7`；旧 PR #8 的提交是 #9 候选的祖先，内容被吸收，PR #8 已关闭而未重复合并。[PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 再将规则与 Markdown 审计 squash 合入 `main@9f04bfce`；两次合并的文件树均与各自受审候选相同，本地根 `main` 已快进至后者。

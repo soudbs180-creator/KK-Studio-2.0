@@ -101,6 +101,22 @@ PR #14 `67ff18fb` 独立复审已关闭原两项 P1，新发现重复工作项 I
 ## 2026-09-23 Google 接入候选（TASK-AGENT-004/005，PARTIAL）
 
 当前候选分支 `feat/TASK-AGENT-004-google-closeout` 位于隔离 worktree `C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0`，叠加 004 API Key Interactions 对话/生图与 005 Gemini CLI 账号文字对话。真实账号、桌面运行与最终独立审查未验收。继续时先读 [004 验证](../changes/2026-09-23-google-interactions/verification.md)、[005 验证](../changes/2026-09-23-google-cli-login/verification.md)和 [ADR-007](../architecture/adr/ADR-007-gemini-cli-bridge.md)，核对当前 Git/PR 与最新校验结果；不得把旧 fixture 结果称为真实 Google 出图。
+## 2026-09-24 当前恢复入口：本地记忆复核
+
+- 当前分支 `feat/TASK-MEMORY-001-local-memory` 位于 `D:/kk-studio/.worktrees/TASK-MEMORY-001`；代码 SHA `8c31846` 已推送并获独立只读复核（无新确定性代码阻断），本段文档随后补记。main 保持 `76339c9`。先检查 `git status` 和本节，再看下方历史快照。
+- FEAT-020 与 TASK-MEMORY-001/002 均未达到真实跨应用验收；账本改为 PARTIAL / NOT_VERIFIED。当前自动采集/注入只在 KK Studio 的 Codex 对话中实现，豆包和 WorkBuddy 原生客户端尚未接入。Web FSA 真实授权、Desktop 打包运行态、真实模型引用仍待验证。
+- 本轮修补与证据见 `docs/superpowers/plans/2026-09-24-memory-closure.md`、`docs/changes/2026-09-24-local-memory/verification.md` 的勘误。当前 `npm run verify` 为 415 Node、309 browser，Rust 91/91。Desktop 与 Web 写锁不能互斥，Web 授权共享目录已改只读；手动提炼绑定本次 `clientMessageId`，Desktop 重置写入失败时保留 live 文件。真实 FSA 授权仍待验收。完整记忆文件仅存本机，选中的相关片段会随当前请求发送给模型推理。
+
+## 2026-09-24 历史恢复入口：本地长期记忆（TASK-MEMORY-001 + 002，旧候选）
+
+- 唯一工程为 `D:/kk-studio/KK-Studio-2.0`；本任务在独立 worktree `D:\kk-studio\.worktrees\TASK-MEMORY-001`（分支 `feat/TASK-MEMORY-001-local-memory`，base `origin/main@76339c9`，已 push，未开 PR）。**主 checkout 在 main@76339c9，禁止回写/触碰**。接手先看 `git status`、worktree 列表、task-ledger.json、features.registry.json 与本文件顶部，不从下方历史段落推断"当前"。
+- 功能：FEAT-020 长期记忆由 PROTOTYPE→PARTIAL（真实用户级本地记忆，**本机共享版**）。记忆模块 `src/features/memory/`、设置页 `MemorySettingsSection.tsx`、对话接入 `agentConnection.ts`（assistant 采集 + user 采集 + 发送前 `[长期记忆]` 注入，执行器零修改）、Tauri `memory_read/memory_write/memory_reset_identity`（共享路径 `~/.kk-memory/memory.json` + 旧文件种子迁移）。
+- 共享语义（TASK-MEMORY-002，用户拍板覆盖 001 隔离语义）：本机默认共享（无身份键），Codex/豆包/WorkBuddy 读写同一共享文件；Web 优先 File System Access 授权目录、未授权降级 IndexedDB 并明示；换账号/换人时用户手动清空或重置；**Agent 契约 `docs/MEMORY-CONTRACT.md`（豆包侧=Doubao Work 环境中的 Agent 按契约读取/写入）**。
+- 隐私硬边界（用户约束，务必保持）：记忆仅本地（共享文件/降级 IndexedDB）；**绝不进 WebDAV 同步（FEAT-019）、localStorage（仅 `kk.memory.settings` 布尔）、日志、导出包**；真实账号 id 绑定依赖 FEAT-017（边界已如实标注）。
+- 验证现状：Node 单测 404/404（记忆 34 例）、typecheck、lint（eslint/governance 63·0/features 29·0/markdown 82·0）、ui:check 160·0、format、Rust cargo test 84/84（含共享路径/种子迁移）全过；Playwright 303+1 已知 flaky 无失败；change pack `docs/changes/2026-09-24-local-memory/{intent,spec,plan,verification,review}.md`；账本 TASK-MEMORY-001/002 均 DONE/PASS。
+- 待办（若继续）：worktree 内已改未提交（共享版追加提交）；commit 后（分支已 push）在 GitHub 开 PR（PR body 需含 spec/验收/风险/base-head SHA）；真实 Codex 会话记忆引用、Web FSA 授权流、Desktop 打包运行态为外部人工验收项。
+- 记忆模块 ESM 约束（改动时注意）：单测直接跑 TS，内部 import 必须带 `.ts` 扩展名，纯类型必须 `type` 修饰；`cargo check` 前需先 `npm run build` 生成 dist。
+
 ## 2026-09-23 当前恢复入口：2.1.0 主线与规则审计
 
 - 唯一工程为 `D:/kk-studio/KK-Studio-2.0`；先 fetch 并核对实际 HEAD、`git status`、worktree、账本和本文件，不从下方历史段落推断“当前”。2.1.0 源码先由 [PR #9](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/9) 合入 `b45c5bc7`，规则与 Markdown 审计再由 [PR #11](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/11) 合入 `origin/main@9f04bfced49224e9cd523844a8e3c995119c7955`；本地根 `main` 已快进至同一 SHA。

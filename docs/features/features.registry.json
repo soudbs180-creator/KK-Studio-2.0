@@ -872,24 +872,48 @@
     "id": "FEAT-020",
     "title": "长期记忆服务",
     "area": "platform",
-    "status": "PROTOTYPE",
+    "status": "PARTIAL",
     "card": "docs/features/feat-020-memory.md",
-    "summary": "设置中的记忆开关全部标注“尚未接入”，当前不会创建、检索或自动保存长期记忆。",
+    "summary": "本地长期记忆（用户级）：KK Studio 的 Codex 对话支持用户原话规则采集、手动提炼和相关记忆注入；Desktop 使用 ~/.kk-memory/memory.json，Web 授权后可选择同一目录。豆包和 WorkBuddy 原生客户端尚未接入；完整文件仅存本机，开启后相关片段随请求发送给模型。",
     "entryPoints": [
       "设置 › 连接 › 记忆"
     ],
     "code": [
-      "src/components/settings/ConnectionSettings.tsx"
+      "src/features/memory",
+      "src/components/settings/ConnectionSettings.tsx",
+      "src/components/settings/MemorySettingsSection.tsx",
+      "src/features/agent/agentConnection.ts",
+      "src-tauri/src/storage_paths.rs",
+      "src-tauri/src/main.rs"
     ],
-    "tests": [],
+    "tests": [
+      "tests/unit/memoryExtractor.test.ts",
+      "tests/unit/memoryInjector.test.ts",
+      "tests/unit/memoryStorage.test.ts",
+      "tests/unit/memoryService.test.ts",
+      "tests/unit/memoryReply.test.ts",
+      "tests/browser/memory-settings.spec.ts"
+    ],
     "tasks": [
+      "TASK-MEMORY-001",
+      "TASK-MEMORY-002",
       "BACKEND-PLATFORM",
       "T10"
     ],
-    "updated": "2026-09-21",
+    "updated": "2026-09-24",
     "platforms": [
       "web",
       "desktop"
+    ],
+    "runtimeEvidence": [
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-24-local-memory/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-09-24-local-memory/verification.md"
+      }
     ]
   },
   {

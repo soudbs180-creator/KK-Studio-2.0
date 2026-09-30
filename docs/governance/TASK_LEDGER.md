@@ -93,6 +93,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-004 | Claude Code settings.json 落盘（agent 侧接线） | REVIEW | TASK-PROV-002, TASK-PROV-003 | root |
 | TASK-AGENT-004 | Google Interactions 对话和生图 | IN_PROGRESS | TASK-AGENT-003 | root |
 | TASK-AGENT-005 | Gemini CLI 账号登录通道（免 API Key 对话） | PARTIAL | TASK-AGENT-004 | root |
+| TASK-MEMORY-001 | 本地长期记忆服务接入对话 | PARTIAL | none | root |
+| TASK-MEMORY-002 | 跨产品共享本地记忆（本机共享） | PARTIAL | TASK-MEMORY-001 | MainAgent |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -1141,3 +1143,27 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — Superseded for review by combined 004 closeout candidate: local CLI bridge/adapter fixture tests, browser flow and security regression checks pass there. Full verify rerun green after main merge. Real Gemini CLI install/login/bridge, desktop runtime and final independent review pending.
 - Evidence: [docs/changes/2026-09-23-google-cli-login/verification.md](../../docs/changes/2026-09-23-google-cli-login/verification.md)
 - Updated: 2026-09-23
+
+## TASK-MEMORY-001 — 本地长期记忆服务接入对话
+
+- Goal: 把本地长期记忆接入 KK Studio 的 Codex 对话：用户原话规则采集、手动 Codex 提炼、本地存储、对话前注入和设置页管理；完整文件不参加云同步
+- Scope: src/features/memory, src/features/agent/agentConnection.ts, src/components/settings, src-tauri storage_paths/main, docs/features feat-020, docs/changes/2026-09-24-local-memory
+- Acceptance: 记忆存储于本机（Web IndexedDB 或授权文件、Desktop 共享文件），换人使用时手动清空; 偏好消息规则采集并入库，后续对话注入[长期记忆]块; 设置页可开关/查看/删除/清空/手动提炼; 记忆不进WebDAV同步、localStorage、日志、导出包
+- Branch: `feat/TASK-MEMORY-001-local-memory`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MEMORY-001`
+- Modules: src/features/memory, src/features/agent/agentConnection.ts, src/components/settings/ConnectionSettings.tsx, src-tauri/src/storage_paths.rs, src-tauri/src/main.rs, docs/features/feat-020-memory.md
+- Verification: NOT_VERIFIED — 旧自动化结果见 2026-09-24-local-memory/verification.md；后续复核发现 Web 数据库冲突、损坏记录清空及 Desktop 首写风险并已在本分支修补。真实 Codex 会话与 Desktop 打包运行态仍未验证。
+- Evidence: [docs/changes/2026-09-24-local-memory/intent.md](../../docs/changes/2026-09-24-local-memory/intent.md), [docs/changes/2026-09-24-local-memory/spec.md](../../docs/changes/2026-09-24-local-memory/spec.md), [docs/changes/2026-09-24-local-memory/plan.md](../../docs/changes/2026-09-24-local-memory/plan.md), [docs/changes/2026-09-24-local-memory/verification.md](../../docs/changes/2026-09-24-local-memory/verification.md), [docs/changes/2026-09-24-local-memory/review.md](../../docs/changes/2026-09-24-local-memory/review.md)
+- Updated: 2026-09-24
+
+## TASK-MEMORY-002 — 跨产品共享本地记忆（本机共享）
+
+- Goal: 跨产品共享本地记忆：Codex/豆包/WorkBuddy 读写同一份 ~/.kk-memory/memory.json（本机默认共享），Web 授权目录降级 IndexedDB，旧文件一次性种子迁移；记忆仍不上云，换账号手动清空
+- Scope: src/features/memory, src/components/settings/MemorySettingsSection.tsx, src-tauri main.rs/storage_paths.rs, docs/MEMORY-CONTRACT.md, AGENTS.md, docs/architecture/DATA-STORAGE.md, docs/features feat-020, docs/changes/2026-09-24-local-memory
+- Acceptance: 共享文件 ~/.kk-memory/memory.json 在 KK Studio 中可安全读写；豆包和 WorkBuddy 需完成受支持的适配器并真实联调; Web 未授权时降级 IndexedDB 并明示; 旧隔离文件一次性种子迁移，不覆盖已有共享文件; 完整记忆文件不进同步/localStorage/日志/导出；开启后选中片段用于模型推理; 清空/重置对读取同一文件的已接入客户端生效; Agent 遵循 docs/MEMORY-CONTRACT.md
+- Branch: `feat/TASK-MEMORY-001-local-memory`
+- Worktree: `D:\\kk-studio\\.worktrees\\TASK-MEMORY-001`
+- Modules: src/features/memory, src/components/settings/MemorySettingsSection.tsx, src-tauri/src/main.rs, src-tauri/src/storage_paths.rs, AGENTS.md, docs/MEMORY-CONTRACT.md, docs/architecture/DATA-STORAGE.md
+- Verification: NOT_VERIFIED — 旧自动化结果不证明跨应用打通。当前仅 KK Studio Codex 路径有实现；豆包/WorkBuddy 原生客户端与 Web FSA 真实目录授权尚未联调。
+- Evidence: [docs/MEMORY-CONTRACT.md](../../docs/MEMORY-CONTRACT.md), [docs/changes/2026-09-24-local-memory/intent.md](../../docs/changes/2026-09-24-local-memory/intent.md), [docs/changes/2026-09-24-local-memory/spec.md](../../docs/changes/2026-09-24-local-memory/spec.md), [docs/changes/2026-09-24-local-memory/verification.md](../../docs/changes/2026-09-24-local-memory/verification.md)
+- Updated: 2026-09-24

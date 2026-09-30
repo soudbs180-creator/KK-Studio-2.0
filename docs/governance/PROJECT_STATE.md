@@ -108,6 +108,20 @@ PR #14 的独立审查在旧 head 发现两项 P1：旧 revision 可覆盖已完
 隔离分支 `feat/TASK-AGENT-004-google-closeout` 组合 Google Interactions API Key 对话/生图与 Gemini CLI Google 账号文字对话。API Key 图片可归档画布；CLI 登录只支持文字。Web fixture 与本地桥安全回归已通过；最终验证见 [004](../changes/2026-09-23-google-interactions/verification.md)、[005](../changes/2026-09-23-google-cli-login/verification.md)。真实 Google 凭据请求、CLI 账号续接、Tauri 同态和最终独立补审尚未完成；主线不因本候选改变。
 
 ## 2026-09-23 KK Studio 2.1.0 源码上传候选（REL-2.1.0）
+## 2026-09-24 记忆候选复核勘误（以本节为当前事实）
+
+- `feat/TASK-MEMORY-001-local-memory` 已推送但仍未合入 main。FEAT-020 保持 PARTIAL，TASK-MEMORY-001/002 退回 PARTIAL / NOT_VERIFIED；下节旧验证仅代表当时自动化结果。
+- 本轮复核发现并修补：Web 的记忆对象仓库与创作库共用 IndexedDB v1 导致共享句柄仓库无法创建，改为独立 `kk-studio-memory`；损坏记录不再静默归零；Desktop 首写会创建目录，重置备份失败不会覆盖原件；只从用户原话自动采集，常见凭据句子排除。
+- 独立评审再发现多窗口覆盖、手动提炼取错 turn、损坏读取循环、旧候选 Web 数据未迁移，以及 Desktop/Web 写锁互不协调；当前分支增加 Desktop 文件锁、私有 IndexedDB 事务比较与重试，Web 授权共享文件收紧为只读，Codex 提炼绑定本次 `clientMessageId`。Desktop 重置改为先复制备份再写入。`npm run verify` 为 415 Node / 309 browser，Rust 91/91；独立只读复核绑定 `8c31846`，未发现新的确定性代码阻断项。真实运行门禁仍开放。
+- 当前自动记忆注入仅接在 KK Studio 的 Codex 对话路径。豆包、WorkBuddy 原生客户端和 Codex 独立桌面应用未接入共享文件；登录状态不等于已打通。完整文件不参与云同步，但开启记忆后，相关片段会发送给所选模型用于本轮推理。
+- Web 系统目录授权、真实 Codex 会话引用、Desktop 打包运行态、跨应用记忆读写仍待真实联调。已做的代码和测试不能代替这些验收。
+
+## 2026-09-24 本地长期记忆接入对话（TASK-MEMORY-001 + 002，历史候选验证）
+
+FEAT-020 从 PROTOTYPE 升级为 PARTIAL（真实用户级记忆落地，本机共享版）：学习 ai_group_chat 双层级记忆并简化——短期记忆沿用 Codex thread（不新增），长期记忆落地为"本地规则采集 + 词法检索注入 + 可选手动 Codex 提炼"。用户拍板共享语义（TASK-MEMORY-002 覆盖 001 的隔离语义）：**本机默认共享 + 公共共享目录 `~/.kk-memory/memory.json` + 先打通 Codex 与豆包（WorkBuddy 预留契约）**。存储：Desktop 由 Tauri 命令读写共享文件（旧隔离文件一次性种子迁移），Web 优先 File System Access 授权目录、未授权降级 IndexedDB 并明示；Agent 契约见 docs/MEMORY-CONTRACT.md（豆包侧由 Doubao Work 环境中的 Agent 遵循）。硬约束不变：记忆仅存本地、绝不上云、不进同步/localStorage/日志/导出包；换账号手动清空/重置；真实账号 id 绑定依赖 FEAT-017。
+
+实现于独立 worktree `D:\kk-studio\.worktrees\TASK-MEMORY-001`（分支 feat/TASK-MEMORY-001-local-memory，base origin/main@76339c9），主 checkout 未触碰。验证：Node 单测 404/404（记忆模块 34 例）、typecheck/lint/governance(63 0 违规)/features(29 0 违规)/ui:check(160 0 违规)/format 全过、Rust cargo test 84/84（含共享路径与种子迁移）、Playwright 303+1 已知 flaky 无失败。文档：docs/changes/2026-09-24-local-memory/{intent,spec,plan,verification,review}.md、feat-020-memory.md（PARTIAL）、MEMORY-CONTRACT.md、DATA-STORAGE.md。未 commit/push（本次追加），待 PR 合入；真实 Codex 会话记忆引用、Web FSA 授权流、Desktop 打包运行态为外部人工验收项。
+
 ## 2026-09-23 KK Studio 2.1.0 源码并线与规则回读（REL-2.1.0）
 
 当前版本元数据已统一为 2.1.0；源码候选先在 `chore/TASK-CONSOLIDATE-200` 上提交并上传，首次远端 SHA 与受审源码 `15f1f27` 一致。`VERSION`、`CHANGELOG.md`、package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端共同记录 2.1.0；原有 `%APPDATA%/kk-studio`、存储 key、应用 identifier、历史 2.0.0 证据和恢复归档不变。安装包、签名和正式 tag 仍未完成。
