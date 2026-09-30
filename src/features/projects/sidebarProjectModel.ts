@@ -64,6 +64,34 @@ export function sortSidebarProjects(
   });
 }
 
+/** 将会话文件夹的成员更新为当前快照中的项目，并应用项目与文件夹置顶。 */
+export function resolveSidebarFolders(
+  folders: SidebarFolderItem[],
+  itemsById: ReadonlyMap<string, SidebarProjectItem>,
+  projects: CreationProject[],
+  pinnedProjectIds: Set<string>,
+  pinnedFolderIds: Set<string>,
+  sortMode: SidebarSortMode,
+): SidebarFolderItem[] {
+  return folders
+    .map((folder) => ({
+      ...folder,
+      children: sortSidebarProjects(
+        folder.children.flatMap((child) => {
+          const item = itemsById.get(child.id);
+          return item ? [item] : [];
+        }),
+        projects,
+        pinnedProjectIds,
+        sortMode,
+      ),
+    }))
+    .sort(
+      (a, b) =>
+        Number(pinnedFolderIds.has(b.id)) - Number(pinnedFolderIds.has(a.id)),
+    );
+}
+
 /** 删除文件夹恢复时，不抢回已被移动到其他有效文件夹的项目。 */
 export function restoreSidebarFolder(
   folders: SidebarFolderItem[],

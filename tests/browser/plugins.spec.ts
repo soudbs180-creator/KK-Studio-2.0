@@ -37,13 +37,10 @@ test("插件管理拒绝明文地址并说明远程代码权限", async ({ page 
     return route.abort();
   });
   await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
-    .locator(".start-composer")
-    .getByRole("button", { name: "添加素材与生成设置" })
-    .click();
-  await page
-    .getByRole("dialog", { name: "添加素材与生成设置" })
-    .getByRole("button", { name: "插件（MCP）" })
+    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("button", { name: "MCP", exact: true })
     .click();
   await expect(
     page.getByText(

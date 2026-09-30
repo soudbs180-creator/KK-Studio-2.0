@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：canvas
-- 最近更新：2026-09-28
-- 关联任务：TASK-COMPARE-001（REVIEW）、TASK-COMPARE-002（REVIEW）
+- 最近更新：2026-09-30
+- 关联任务：TASK-COMPARE-001/002（DONE）、UI-004（PARTIAL，用户最终视觉确认）
 
 ## 用户可见入口
 
@@ -23,6 +23,7 @@
 - 桌面：`tests/desktop/image-compare.mjs`
 - 初次交付记录：`docs/changes/2026-09-27-canvas-image-compare/verification.md`
 - 合并后回归与当前运行证据：`docs/changes/2026-09-28-compare-ci-fix/verification.md`
+- 当前集成版本 Web 与 fresh Tauri 复验：[落地验证](../changes/2026-09-29-project-landing/verification.md)。
 
 ## 当前能力
 
@@ -32,5 +33,5 @@
 
 ## 差距与后端化
 
-- PR #21 最终 head `bcda41a` 的独立复审与托管门禁通过，已合入 `main@7bc7c67`。合并后 Windows 主线 CI 发现 390px 按钮高度子像素失败（43.999992px），由 TASK-COMPARE-002 修复；用户最终视觉确认仍未记录，因此保持 PARTIAL。
+- PR #21/#22 已合入主线；390px 子像素失败由 TASK-COMPARE-002 修复，当前完整浏览器与 fresh Tauri 图片比较再次通过。用户最终视觉确认仍属 UI-004，未记录，因此保持 PARTIAL。
 - 此功能本身不需要新后端。真实模型生成、自动质量评分与云端分享在本轮范围外，不能由此推断可用。

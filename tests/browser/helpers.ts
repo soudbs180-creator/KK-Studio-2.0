@@ -15,6 +15,28 @@ export async function openWorkspace(page: Page): Promise<void> {
   await openSeededProject(page);
 }
 
+/** Exercise project controls in the expanded rail; the current home defaults compact. */
+export async function expandSidebar(page: Page): Promise<void> {
+  const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
+  const expand = sidebar.getByRole("button", {
+    name: "展开侧边栏",
+    exact: true,
+  });
+  if (await expand.isVisible()) await expand.click();
+  await expect(sidebar).not.toHaveClass(/is-collapsed/);
+}
+
+export async function openSettingsSection(
+  page: Page,
+  name: string,
+): Promise<void> {
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("button", { name, exact: true })
+    .click();
+}
+
 /** Give Agent tests a real project containing the canonical demo graph. */
 export async function openSeededProject(page: Page): Promise<void> {
   await page.goto("/");
@@ -53,6 +75,7 @@ export async function openSeededProject(page: Page): Promise<void> {
     value: JSON.stringify(snapshot),
   });
   await page.reload();
+  if ((page.viewportSize()?.width ?? 1920) >= 768) await expandSidebar(page);
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page
     .locator(".project-library-card")

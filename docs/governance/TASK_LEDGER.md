@@ -41,7 +41,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-CLOSE-003 | 现行Figma页面缺口复核与交互收口 | DONE | TASK-UI-MAIN-001 | finish_figma_pages |
 | TASK-PERF-ASSETS-001 | 素材列表元数据和原件按需读取 | DONE | T3a | finish_asset_performance |
 | TASK-GOV-002 | 跨AI自主开发与分支质量门禁 | DONE | TASK-GOV-001, TASK-KK2-MAIN-SYNC | root |
-| TASK-AUDIT-SEC-001 | 安全边界与异常任务状态审计 | REVIEW | TASK-GOV-001 | root |
+| TASK-AUDIT-SEC-001 | 安全边界与异常任务状态审计 | DONE | TASK-GOV-001 | root |
 | TASK-CAP-001 | 本地 Skill/MCP/ComfyUI 能力补齐 | PARTIAL | TASK-GOV-001, T6 | root |
 | TASK-MINIMAX-001 | MiniMax Design 交互审计与本地技能/MCP复刻 | PARTIAL | TASK-GOV-002 | root |
 | TASK-MCP-PROTO-001 | MCP 2026 协议协商与旧版兼容 | TODO | TASK-CAP-001 | root |
@@ -67,31 +67,31 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-008 | 重新制定创作输入框规范并统一三档实现 | DONE | TASK-UI-007, TASK-AGENT-002 | root |
 | TASK-AGENT-003 | Agent 图片附件、画布引用与视口选择操作 | DONE | TASK-AGENT-001, TASK-AGENT-002 | root |
 | PLUGIN-DESKTOP-001 | 修复桌面画布插件的 CSP 加载路径 | DONE | none | root |
-| REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
+| REL-2.1.0 | 2.1.0 本地集成与源码上传 | DONE | none | root |
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
-| TASK-ORCH-001 | Agent 编排领域状态机与编排器工具面 | IN_PROGRESS | TASK-AGENT-001 | root |
+| TASK-ORCH-001 | Agent 编排领域状态机与编排器工具面 | DONE | TASK-AGENT-001 | root |
 | TASK-ORCH-002 | TaskWorkbench 阶段计划视图与审批交互 | TODO | TASK-ORCH-001 | root |
 | TASK-ORCH-003 | 编排器驱动生成执行与计划门禁 | TODO | TASK-ORCH-001, BACKEND-MEDIA-001 | root |
 | TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | TASK-ORCH-001 | root |
 | TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | TASK-AGENT-001 | root |
-| TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | REVIEW | none | root |
-| TASK-COMPARE-001 | 画布图片对比操作 | REVIEW | none | root |
-| TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | REVIEW | TASK-COMPARE-001 | root |
+| TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | DONE | none | root |
+| TASK-COMPARE-001 | 画布图片对比操作 | DONE | none | root |
+| TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | DONE | TASK-COMPARE-001 | root |
 | TASK-VERSION-001 | 桌面/Web/Mobile 独立版本源与自动递增 | DONE | none | root |
 | TASK-LOCAL-SERVICE-001 | Web 本机伴随服务与既有浏览器数据迁移 | PARTIAL | TASK-VERSION-001, BACKEND-PLATFORM | root |
 | TASK-CLOSEOUT-2026-09-28 | 合并后版本与 VPS 状态收口 | DONE | TASK-VERSION-001, T10-PREP | root |
 | TASK-POSTMERGE-MIGRATION-2026-09-28 | 主线合并后迁移操作单收口 | DONE | T10-PREP, T10, T11 | root |
 | TASK-UI-CANVAS-001 | 画布会话分栏与固定侧栏交互修复 | DONE | TASK-UI-007 | root |
-| TASK-UI-HOME-002 | 首页与对话输入区剩余设计反馈收口 | PARTIAL | TASK-UI-CANVAS-001 | root |
-| TASK-UI-GOV-003 | 新版 Figma 四页治理基线与 UI 模板收口 | PARTIAL | TASK-UI-HOME-002 | root |
-| TASK-CANVAS-KAWORKAI-001 | Kaworkai 无限画布交互研究与本地画布增强 | PARTIAL | none | root |
-| TASK-PROJECT-001 | 项目落地与分支收敛 | IN_PROGRESS | TASK-UI-GOV-003, TASK-CANVAS-KAWORKAI-001, TASK-LOCAL-SERVICE-001 | root |
-| TASK-UI-010 | 现行 UI 规则与真实操作回归 | IN_PROGRESS | TASK-UI-008, TASK-AGENT-003 | root |
-| TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | TODO | TASK-UI-010 | unallocated |
-| TASK-PROV-003 | Codex Provider 配置注入与 model catalog 落盘（agent 侧接线） | IN_PROGRESS | TASK-PROV-002 | root |
-| TASK-PROV-004 | Claude Code settings.json 落盘（agent 侧接线） | REVIEW | TASK-PROV-002, TASK-PROV-003 | root |
-| TASK-AGENT-004 | Google Interactions 对话和生图 | IN_PROGRESS | TASK-AGENT-003 | root |
+| TASK-UI-HOME-002 | 首页与对话输入区剩余设计反馈收口 | DONE | TASK-UI-CANVAS-001 | root |
+| TASK-UI-GOV-003 | 新版 Figma 四页治理基线与 UI 模板收口 | DONE | TASK-UI-HOME-002 | root |
+| TASK-CANVAS-KAWORKAI-001 | Kaworkai 无限画布交互研究与本地画布增强 | DONE | none | root |
+| TASK-PROJECT-001 | 项目落地与分支收敛 | REVIEW | TASK-UI-GOV-003, TASK-CANVAS-KAWORKAI-001, TASK-LOCAL-SERVICE-001 | root |
+| TASK-UI-010 | 现行 UI 规则与真实操作回归 | DONE | TASK-UI-008, TASK-AGENT-003 | root |
+| TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | PARTIAL | TASK-UI-010 | root |
+| TASK-PROV-003 | Codex Provider 配置注入与 model catalog 落盘（agent 侧接线） | PARTIAL | TASK-PROV-002 | root |
+| TASK-PROV-004 | Claude Code settings.json 落盘（agent 侧接线） | PARTIAL | TASK-PROV-002, TASK-PROV-003 | root |
+| TASK-AGENT-004 | Google Interactions 对话和生图 | PARTIAL | TASK-AGENT-003 | root |
 | TASK-AGENT-005 | Gemini CLI 账号登录通道（免 API Key 对话） | PARTIAL | TASK-AGENT-004 | root |
 | TASK-MEMORY-001 | 本地长期记忆服务接入对话 | PARTIAL | none | root |
 | TASK-MEMORY-002 | 跨产品共享本地记忆（本机共享） | PARTIAL | TASK-MEMORY-001 | MainAgent |
@@ -529,9 +529,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-AUDIT-SEC-001-boundaries`
 - Worktree: `D:/kk-studio-next/.worktrees/TASK-AUDIT-SEC-001`
 - Modules: src/App.tsx, src/domain/modelProvider.ts, src/domain/providerConnections.ts, src/features/creation/taskRecovery.ts, src/features/generation-server/repository.ts, src/features/generation-server/http.ts, src/features/generation-server/main.ts, src-tauri/src/task_host.rs, tests/unit
-- Verification: PASS — 最终 head 4a3c0db：178/178 Node、TypeScript、lint、format、UI119/0、Rust63/63、fmt/check、production build、production preview 191/191、Tauri no-bundle 与隔离 Tauri WebView2 均通过；固定 1421 被另一 worktree 占用，未终止且不归因于本分支。
-- Evidence: [docs/changes/2026-09-21-security-audit/audit.md](../../docs/changes/2026-09-21-security-audit/audit.md), [docs/changes/2026-09-21-security-audit/verification.md](../../docs/changes/2026-09-21-security-audit/verification.md), [docs/changes/2026-09-21-security-audit-closeout/intent.md](../../docs/changes/2026-09-21-security-audit-closeout/intent.md), [docs/changes/2026-09-21-security-audit-closeout/spec.md](../../docs/changes/2026-09-21-security-audit-closeout/spec.md), [docs/changes/2026-09-21-security-audit-closeout/plan.md](../../docs/changes/2026-09-21-security-audit-closeout/plan.md), [docs/changes/2026-09-21-security-audit-closeout/verification.md](../../docs/changes/2026-09-21-security-audit-closeout/verification.md), [docs/changes/2026-09-21-security-audit-closeout/review.md](../../docs/changes/2026-09-21-security-audit-closeout/review.md)
-- Updated: 2026-09-21
+- Verification: PASS — 历史安全 closeout 已随主线集成；当前完整 Web/Agent/Rust 回归再次通过。真实付费受理恢复仍归 T5/EXT-PROVIDER。
+- Evidence: [docs/changes/2026-09-21-security-audit/audit.md](../../docs/changes/2026-09-21-security-audit/audit.md), [docs/changes/2026-09-21-security-audit/verification.md](../../docs/changes/2026-09-21-security-audit/verification.md), [docs/changes/2026-09-21-security-audit-closeout/intent.md](../../docs/changes/2026-09-21-security-audit-closeout/intent.md), [docs/changes/2026-09-21-security-audit-closeout/spec.md](../../docs/changes/2026-09-21-security-audit-closeout/spec.md), [docs/changes/2026-09-21-security-audit-closeout/plan.md](../../docs/changes/2026-09-21-security-audit-closeout/plan.md), [docs/changes/2026-09-21-security-audit-closeout/verification.md](../../docs/changes/2026-09-21-security-audit-closeout/verification.md), [docs/changes/2026-09-21-security-audit-closeout/review.md](../../docs/changes/2026-09-21-security-audit-closeout/review.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-CAP-001 — 本地 Skill/MCP/ComfyUI 能力补齐
 
@@ -841,9 +841,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `chore/TASK-CONSOLIDATE-200`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src, src-tauri, tests, scripts, vendor, docs
-- Verification: PARTIAL — 安全补审后本地 367 Node、299 项完整 browser 加 2 项定向 plugin browser、78 Rust、Agent 126 通过/2 跳过、UI159/0、功能29/0、治理59/0、类型/格式/Web build 均通过；受审源码 15f1f27 已上传，首次远端 SHA 一致。后续候选 head da811283 的 PR #9 当前 hosted verify/delivery 成功，已 squash 合入 main@b45c5bc7 且 tree 一致；合并后 main 工作流 35836597858 success。正式 tag、安装包、签名和发布验收仍未完成。各历史变更包保留其原始验证时点。
-- Evidence: [docs/changes/2026-09-20-main-close-002/verification.md](../../docs/changes/2026-09-20-main-close-002/verification.md), [docs/changes/2026-09-21-consolidate-200/verification.md](../../docs/changes/2026-09-21-consolidate-200/verification.md), [docs/changes/2026-09-21-feature-system/verification.md](../../docs/changes/2026-09-21-feature-system/verification.md), [docs/changes/2026-09-21-local-capabilities/verification.md](../../docs/changes/2026-09-21-local-capabilities/verification.md), [docs/changes/2026-09-21-minimax-deep-audit/verification.md](../../docs/changes/2026-09-21-minimax-deep-audit/verification.md), [docs/changes/2026-09-21-security-audit-closeout/verification.md](../../docs/changes/2026-09-21-security-audit-closeout/verification.md), [docs/changes/2026-09-21-security-audit/verification.md](../../docs/changes/2026-09-21-security-audit/verification.md), [docs/changes/2026-09-21-text-and-rule-audit/verification.md](../../docs/changes/2026-09-21-text-and-rule-audit/verification.md), [docs/changes/2026-09-22-agent-desktop/verification.md](../../docs/changes/2026-09-22-agent-desktop/verification.md), [docs/changes/2026-09-22-codex-default-agent/verification.md](../../docs/changes/2026-09-22-codex-default-agent/verification.md), [docs/changes/2026-09-22-design-system/verification.md](../../docs/changes/2026-09-22-design-system/verification.md), [docs/changes/2026-09-22-design-system-pages/verification.md](../../docs/changes/2026-09-22-design-system-pages/verification.md), [docs/changes/2026-09-22-port-infinite-canvas/verification.md](../../docs/changes/2026-09-22-port-infinite-canvas/verification.md), [docs/changes/2026-09-22-responsive-ui/verification.md](../../docs/changes/2026-09-22-responsive-ui/verification.md), [docs/changes/2026-09-22-ui-feature-parity/verification.md](../../docs/changes/2026-09-22-ui-feature-parity/verification.md), [docs/changes/2026-09-22-ui-interactions/verification.md](../../docs/changes/2026-09-22-ui-interactions/verification.md), [docs/changes/2026-09-23-agent-attachments/verification.md](../../docs/changes/2026-09-23-agent-attachments/verification.md), [docs/changes/2026-09-23-input-contract/verification.md](../../docs/changes/2026-09-23-input-contract/verification.md), [docs/changes/2026-09-23-release-2-1-0/verification.md](../../docs/changes/2026-09-23-release-2-1-0/verification.md)
-- Updated: 2026-09-23
+- Verification: PASS — 历史 2.1.0 源码上传与 PR #9/main@b45c5bc7、合并后 CI 已完成；正式安装包/签名/tag 未完成，归 T7。当前三端版本另见版本源。
+- Evidence: [docs/changes/2026-09-20-main-close-002/verification.md](../../docs/changes/2026-09-20-main-close-002/verification.md), [docs/changes/2026-09-21-consolidate-200/verification.md](../../docs/changes/2026-09-21-consolidate-200/verification.md), [docs/changes/2026-09-21-feature-system/verification.md](../../docs/changes/2026-09-21-feature-system/verification.md), [docs/changes/2026-09-21-local-capabilities/verification.md](../../docs/changes/2026-09-21-local-capabilities/verification.md), [docs/changes/2026-09-21-minimax-deep-audit/verification.md](../../docs/changes/2026-09-21-minimax-deep-audit/verification.md), [docs/changes/2026-09-21-security-audit-closeout/verification.md](../../docs/changes/2026-09-21-security-audit-closeout/verification.md), [docs/changes/2026-09-21-security-audit/verification.md](../../docs/changes/2026-09-21-security-audit/verification.md), [docs/changes/2026-09-21-text-and-rule-audit/verification.md](../../docs/changes/2026-09-21-text-and-rule-audit/verification.md), [docs/changes/2026-09-22-agent-desktop/verification.md](../../docs/changes/2026-09-22-agent-desktop/verification.md), [docs/changes/2026-09-22-codex-default-agent/verification.md](../../docs/changes/2026-09-22-codex-default-agent/verification.md), [docs/changes/2026-09-22-design-system/verification.md](../../docs/changes/2026-09-22-design-system/verification.md), [docs/changes/2026-09-22-design-system-pages/verification.md](../../docs/changes/2026-09-22-design-system-pages/verification.md), [docs/changes/2026-09-22-port-infinite-canvas/verification.md](../../docs/changes/2026-09-22-port-infinite-canvas/verification.md), [docs/changes/2026-09-22-responsive-ui/verification.md](../../docs/changes/2026-09-22-responsive-ui/verification.md), [docs/changes/2026-09-22-ui-feature-parity/verification.md](../../docs/changes/2026-09-22-ui-feature-parity/verification.md), [docs/changes/2026-09-22-ui-interactions/verification.md](../../docs/changes/2026-09-22-ui-interactions/verification.md), [docs/changes/2026-09-23-agent-attachments/verification.md](../../docs/changes/2026-09-23-agent-attachments/verification.md), [docs/changes/2026-09-23-input-contract/verification.md](../../docs/changes/2026-09-23-input-contract/verification.md), [docs/changes/2026-09-23-release-2-1-0/verification.md](../../docs/changes/2026-09-23-release-2-1-0/verification.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-RULES-004 — 现行规则与 Markdown 一致性审计
 
@@ -877,9 +877,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-ORCH-001-agent-orchestration-closure`
 - Worktree: `D:/kk-studio/.worktrees/TASK-ORCH-001`
 - Modules: src/domain/stagePlan.ts, src/features/agent/orchestrator.ts, src/features/agent/agentHost.ts, src/features/creation/model.ts, src/features/projects/projectPackage.ts, src-tauri/src/project_package.rs, src-tauri/src/project_package_snapshot.rs, docs/architecture/adr/ADR-006-stage-plan-package-contract.md, tests/unit/stagePlan.test.ts, tests/unit/orchestrator.test.ts
-- Verification: PARTIAL — 源码 head 9ddfcb5 独立只读复审 PASS，未发现未关闭 P1/P2；Hosted run 36218263291 verify/delivery 成功。本地 422 Node、82 Rust、300 浏览器及静态/构建通过。当前补录证据的文档 head 待再验；Desktop GUI、真实 Provider 和用户产品验收未完成。UI 对接仍属 TASK-ORCH-002/003。详见 verification.md 与 review.md。
-- Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
-- Updated: 2026-09-26
+- Verification: PASS — 主线已含 08b5ae1 的阶段领域状态机、CAS、审批与项目包契约；当前单元与 Rust 回归通过。阶段计划 UI/真实生成仍属 TASK-ORCH-002/003，未被升级。
+- Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-ORCH-002 — TaskWorkbench 阶段计划视图与审批交互
 
@@ -937,9 +937,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-PROV-002-provider-connectivity`
 - Worktree: `D:/kk-studio/.worktrees/TASK-PROV-002-provider-connectivity`
 - Modules: src/features/providers, src/features/models, src/features/mcp, tests/unit, docs/changes, docs/features, docs/governance
-- Verification: NOT_VERIFIED — 旧 head 42c3f26 的 4 P1/2 P2 与合并 head 39369c9 的新增 P1/P2/P3 均已按失败先行测试整改。源码 1f81322 独立只读补审 PASS；本地完整 verify 通过：456 Node、300 浏览器、治理 70/0、功能 32/0、Markdown 85/0；delivery 22/0。最终文档 head Hosted CI、真实 Codex/Claude 消费仍待完成。
-- Evidence: [docs/changes/2026-09-24-provider-connectivity/intent.md](../../docs/changes/2026-09-24-provider-connectivity/intent.md), [docs/changes/2026-09-24-provider-connectivity/spec.md](../../docs/changes/2026-09-24-provider-connectivity/spec.md), [docs/changes/2026-09-24-provider-connectivity/plan.md](../../docs/changes/2026-09-24-provider-connectivity/plan.md), [docs/changes/2026-09-24-provider-connectivity/verification.md](../../docs/changes/2026-09-24-provider-connectivity/verification.md), [docs/changes/2026-09-24-provider-connectivity/remaining.md](../../docs/changes/2026-09-24-provider-connectivity/remaining.md)
-- Updated: 2026-09-26
+- Verification: PASS — PR #16 已合入的无密钥多目标渲染、导入导出、模型 catalog 和 stdio 校验契约在当前完整回归通过。真实目标 CLI 消费仍属 003/004。
+- Evidence: [docs/changes/2026-09-24-provider-connectivity/intent.md](../../docs/changes/2026-09-24-provider-connectivity/intent.md), [docs/changes/2026-09-24-provider-connectivity/spec.md](../../docs/changes/2026-09-24-provider-connectivity/spec.md), [docs/changes/2026-09-24-provider-connectivity/plan.md](../../docs/changes/2026-09-24-provider-connectivity/plan.md), [docs/changes/2026-09-24-provider-connectivity/verification.md](../../docs/changes/2026-09-24-provider-connectivity/verification.md), [docs/changes/2026-09-24-provider-connectivity/remaining.md](../../docs/changes/2026-09-24-provider-connectivity/remaining.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-COMPARE-001 — 画布图片对比操作
 
@@ -949,9 +949,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-COMPARE-001-canvas-compare`
 - Worktree: `D:/kk-studio/.worktrees/canvas-compare`
 - Modules: src/features/compare, src/components/Canvas.tsx, src/components/nodes, src/styles/canvas-compare.css, tests/unit/imageCompare.test.ts, tests/browser/image-compare.spec.ts, tests/desktop/image-compare.mjs, docs/features, docs/governance
-- Verification: NOT_VERIFIED — PR #21 最终 head bcda41a 的 Hosted verify/delivery、独立源码复审及本地 Web/Desktop 交互核验通过，已 squash 合入 main@7bc7c67 且 tree 一致。合并后 push CI 的 390px 按钮高度测得 43.999992px 而失败，由 TASK-COMPARE-002 修复；用户最终视觉验收仍待完成。
-- Evidence: [docs/changes/2026-09-27-canvas-image-compare/intent.md](../../docs/changes/2026-09-27-canvas-image-compare/intent.md), [docs/changes/2026-09-27-canvas-image-compare/spec.md](../../docs/changes/2026-09-27-canvas-image-compare/spec.md), [docs/changes/2026-09-27-canvas-image-compare/plan.md](../../docs/changes/2026-09-27-canvas-image-compare/plan.md), [docs/changes/2026-09-27-canvas-image-compare/verification.md](../../docs/changes/2026-09-27-canvas-image-compare/verification.md), [docs/changes/2026-09-27-canvas-image-compare/review.md](../../docs/changes/2026-09-27-canvas-image-compare/review.md)
-- Updated: 2026-09-28
+- Verification: PASS — PR #21 已合入；当前生产 preview 与 fresh Tauri release 两图/滑块/键盘/Escape 实测通过，无 page error。
+- Evidence: [docs/changes/2026-09-27-canvas-image-compare/intent.md](../../docs/changes/2026-09-27-canvas-image-compare/intent.md), [docs/changes/2026-09-27-canvas-image-compare/spec.md](../../docs/changes/2026-09-27-canvas-image-compare/spec.md), [docs/changes/2026-09-27-canvas-image-compare/plan.md](../../docs/changes/2026-09-27-canvas-image-compare/plan.md), [docs/changes/2026-09-27-canvas-image-compare/verification.md](../../docs/changes/2026-09-27-canvas-image-compare/verification.md), [docs/changes/2026-09-27-canvas-image-compare/review.md](../../docs/changes/2026-09-27-canvas-image-compare/review.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-COMPARE-002 — 对比控件窄屏命中区主线回归
 
@@ -961,9 +961,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-COMPARE-002-touch-target`
 - Worktree: `D:/kk-studio/.worktrees/compare-ci-fix`
 - Modules: src/styles/canvas-compare.css, tests/browser/image-compare.spec.ts, docs/changes/2026-09-28-compare-ci-fix, docs/governance
-- Verification: PARTIAL — 主线 run 36369533105 的 43.999992px 失败已定位；保持原断言后，定向 browser 2/2、完整 verify 459 Node/302 browser、client:check/build 与隔离 release GUI 通过。当前 PR/合并后主线 CI 与独立复审待完成。
-- Evidence: [docs/changes/2026-09-28-compare-ci-fix/intent.md](../../docs/changes/2026-09-28-compare-ci-fix/intent.md), [docs/changes/2026-09-28-compare-ci-fix/spec.md](../../docs/changes/2026-09-28-compare-ci-fix/spec.md), [docs/changes/2026-09-28-compare-ci-fix/plan.md](../../docs/changes/2026-09-28-compare-ci-fix/plan.md), [docs/changes/2026-09-28-compare-ci-fix/verification.md](../../docs/changes/2026-09-28-compare-ci-fix/verification.md), [docs/changes/2026-09-28-compare-ci-fix/review.md](../../docs/changes/2026-09-28-compare-ci-fix/review.md)
-- Updated: 2026-09-28
+- Verification: PASS — PR #22 与合并后主线检查已有历史成功记录；当前 390px 命中区与完整浏览器、fresh Desktop 图片比较复验通过，原断言未放宽。
+- Evidence: [docs/changes/2026-09-28-compare-ci-fix/intent.md](../../docs/changes/2026-09-28-compare-ci-fix/intent.md), [docs/changes/2026-09-28-compare-ci-fix/spec.md](../../docs/changes/2026-09-28-compare-ci-fix/spec.md), [docs/changes/2026-09-28-compare-ci-fix/plan.md](../../docs/changes/2026-09-28-compare-ci-fix/plan.md), [docs/changes/2026-09-28-compare-ci-fix/verification.md](../../docs/changes/2026-09-28-compare-ci-fix/verification.md), [docs/changes/2026-09-28-compare-ci-fix/review.md](../../docs/changes/2026-09-28-compare-ci-fix/review.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-VERSION-001 — 桌面/Web/Mobile 独立版本源与自动递增
 
@@ -1033,9 +1033,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `main`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/App.tsx, src/components/StartPage.tsx, src/components/StartComposer.tsx, src/styles/composer.css, src/styles/feature-parity.css, src/styles/responsive-content.css, src/components/SidebarIcon.tsx, src/styles/responsive.css, public/design/figma/sidebar-expand.svg, public/design/figma/sidebar-collapse.svg, tests/browser/input-contract.spec.ts, tests/browser/ui-feature-parity.spec.ts, tests/browser/sidebar.spec.ts
-- Verification: PARTIAL — 目标定向回归通过：typecheck/build、input-contract 9、composer-menu 7、frame 3、settings 3、sidebar 9、ui-feature-parity 4、ui-interaction-matrix 1，以及最新 sidebar/frame 定向 4 项；1920 与 1099 视口核对 70px→291px 工作区推动和图标状态；canvas 图片 fixture 等待 image-preview/连接卡片超时，保留为未验证项；Figma 节点 483:695、483:753、407:29265、399:27506、404:28667 与 410:67357 已重新授权读取。
-- Evidence: [docs/changes/2026-09-29-home-composer-fidelity/intent.md](../../docs/changes/2026-09-29-home-composer-fidelity/intent.md), [docs/changes/2026-09-29-home-composer-fidelity/spec.md](../../docs/changes/2026-09-29-home-composer-fidelity/spec.md), [docs/changes/2026-09-29-home-composer-fidelity/plan.md](../../docs/changes/2026-09-29-home-composer-fidelity/plan.md), [docs/changes/2026-09-29-home-composer-fidelity/verification.md](../../docs/changes/2026-09-29-home-composer-fidelity/verification.md), [docs/changes/2026-09-29-home-composer-fidelity/review.md](../../docs/changes/2026-09-29-home-composer-fidelity/review.md), [docs/changes/2026-09-29-home-composer-fidelity/evidence/home-390.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/home-390.png), [docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1099.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1099.png), [docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1920.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1920.png), [docs/changes/2026-09-29-home-composer-fidelity/evidence/sidebar-collapsed-1099.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/sidebar-collapsed-1099.png), [docs/changes/2026-09-29-home-composer-fidelity/evidence/sidebar-expanded-1099.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/sidebar-expanded-1099.png)
-- Updated: 2026-09-29
+- Verification: PASS — 按当前四页 Figma 保留 652×170/299×170、六个 24px 动作、70(平板72)/291 侧栏、设置滑块和可达应用菜单；当前 production Web 与 fresh Desktop 分别取证。
+- Evidence: [docs/changes/2026-09-29-home-composer-fidelity/intent.md](../../docs/changes/2026-09-29-home-composer-fidelity/intent.md), [docs/changes/2026-09-29-home-composer-fidelity/spec.md](../../docs/changes/2026-09-29-home-composer-fidelity/spec.md), [docs/changes/2026-09-29-home-composer-fidelity/plan.md](../../docs/changes/2026-09-29-home-composer-fidelity/plan.md), [docs/changes/2026-09-29-home-composer-fidelity/verification.md](../../docs/changes/2026-09-29-home-composer-fidelity/verification.md), [docs/changes/2026-09-29-home-composer-fidelity/review.md](../../docs/changes/2026-09-29-home-composer-fidelity/review.md), [docs/changes/2026-09-29-home-composer-fidelity/evidence/home-390.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/home-390.png), [docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1099.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1099.png), [docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1920.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/home-1920.png), [docs/changes/2026-09-29-home-composer-fidelity/evidence/sidebar-collapsed-1099.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/sidebar-collapsed-1099.png), [docs/changes/2026-09-29-home-composer-fidelity/evidence/sidebar-expanded-1099.png](../../docs/changes/2026-09-29-home-composer-fidelity/evidence/sidebar-expanded-1099.png), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-UI-GOV-003 — 新版 Figma 四页治理基线与 UI 模板收口
 
@@ -1045,9 +1045,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `main`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/domain/uiGovernance.ts, src/domain/pageTemplates.ts, src/styles/tokens.css, src/styles/ui-governance.css, src/styles/page-templates.css, src/components/ConversationPanel.tsx, src/components/ConversationComposerRegion.tsx, src/components/SettingsPanel.tsx, src/components/Sidebar.tsx, tests/browser/figma-governance-layout.spec.ts, docs/UI_INDEX.md, docs/UI_RULES.md, docs/UI_ARCHETYPES.md
-- Verification: PARTIAL — 全量单元 467/467、typecheck、Vite build、UI 标准 170 个文件 0 项违规、Governance 74 个任务 0 项违规、Markdown 89 个活动文件 0 项违规、Features 32 个功能 0 项违规；新版治理与页面模板 Playwright 5/5、Agent 交互 3/3 已通过。旧版交互用例仍有引用旧导航/入口的断言，与新版四页基线冲突；真实外部服务、积分回执和生产桌面打包待产品确认与独立环境验证。
-- Evidence: [docs/changes/2026-09-29-figma-ui-governance/spec.md](../../docs/changes/2026-09-29-figma-ui-governance/spec.md), [docs/changes/2026-09-29-figma-ui-governance/verification.md](../../docs/changes/2026-09-29-figma-ui-governance/verification.md)
-- Updated: 2026-09-29
+- Verification: PASS — Figma 四页、tokens.css、模板与状态门禁完成当前基线收口，完整自动化与受影响真实桌面验证通过；全历史页面迁移仍属 UI-001/UI-004。
+- Evidence: [docs/changes/2026-09-29-figma-ui-governance/spec.md](../../docs/changes/2026-09-29-figma-ui-governance/spec.md), [docs/changes/2026-09-29-figma-ui-governance/verification.md](../../docs/changes/2026-09-29-figma-ui-governance/verification.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-CANVAS-KAWORKAI-001 — Kaworkai 无限画布交互研究与本地画布增强
 
@@ -1057,9 +1057,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `main`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/components/Canvas.tsx, src/components/canvas, src/domain/canvasHistory.ts, src/domain/canvasPreferences.ts, docs/features/feat-001-canvas-workbench.md, docs/features/features.registry.json, docs/governance/task-ledger.json
-- Verification: PARTIAL — 静态源码审计、11 项定向 Node 单测、TypeScript 检查、Vite build、新增 2 项 Playwright（含键盘/右键历史、吸附持久化、图层搜索定位）通过；现有空白新项目 fixture 导致部分依赖默认节点的旧画布回归未通过，Desktop 原生窗口与参考站点远程能力未验证。
-- Evidence: [docs/changes/2026-09-29-kaworkai-canvas/intent.md](../../docs/changes/2026-09-29-kaworkai-canvas/intent.md), [docs/changes/2026-09-29-kaworkai-canvas/spec.md](../../docs/changes/2026-09-29-kaworkai-canvas/spec.md), [docs/changes/2026-09-29-kaworkai-canvas/plan.md](../../docs/changes/2026-09-29-kaworkai-canvas/plan.md), [docs/changes/2026-09-29-kaworkai-canvas/research.md](../../docs/changes/2026-09-29-kaworkai-canvas/research.md), [docs/changes/2026-09-29-kaworkai-canvas/verification.md](../../docs/changes/2026-09-29-kaworkai-canvas/verification.md), [docs/changes/2026-09-29-kaworkai-canvas/evidence/layers-panel.png](../../docs/changes/2026-09-29-kaworkai-canvas/evidence/layers-panel.png)
-- Updated: 2026-09-29
+- Verification: PASS — 本地项目画布撤销/重做、16px 吸附偏好与图层定位已经由完整浏览器和原生重启实测；竞品 AI/云端 board/分组仍没有接入。
+- Evidence: [docs/changes/2026-09-29-kaworkai-canvas/intent.md](../../docs/changes/2026-09-29-kaworkai-canvas/intent.md), [docs/changes/2026-09-29-kaworkai-canvas/spec.md](../../docs/changes/2026-09-29-kaworkai-canvas/spec.md), [docs/changes/2026-09-29-kaworkai-canvas/plan.md](../../docs/changes/2026-09-29-kaworkai-canvas/plan.md), [docs/changes/2026-09-29-kaworkai-canvas/research.md](../../docs/changes/2026-09-29-kaworkai-canvas/research.md), [docs/changes/2026-09-29-kaworkai-canvas/verification.md](../../docs/changes/2026-09-29-kaworkai-canvas/verification.md), [docs/changes/2026-09-29-kaworkai-canvas/evidence/layers-panel.png](../../docs/changes/2026-09-29-kaworkai-canvas/evidence/layers-panel.png), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-PROJECT-001 — 项目落地与分支收敛
 
@@ -1067,11 +1067,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Scope: Git integration, home/chat/settings/canvas UI, Kaworkai local canvas primitives, branch and evidence convergence
 - Acceptance: 候选分支包含最新 origin/main 且版本、锁文件、功能卡和治理视图一致; 首页、对话、设置、侧栏和画布在当前源码 bundle 上完成 390/1099/1920 回归; 竞品研究只落地本地可验证的画布历史、吸附和图层定位，不伪造远程 AI/积分/协作; 验证不足的外部服务、Desktop、移动硬件和生产部署继续保持 PARTIAL/BLOCKED
 - Branch: `codex/TASK-PROJECT-001-landing-integration`
-- Worktree: `D:/kk-studio/.worktrees/TASK-PROJECT-001`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: Git, src/App.tsx, src/components, src/styles, src/domain, docs/governance, docs/PROGRESS.md
-- Verification: NOT_VERIFIED — 已保存原 dirty UI/画布候选并开始合并 origin/main@1e95a13；最终 bundle、浏览器回归和合并后文档待完成。
-- Evidence: [docs/changes/2026-09-29-project-landing/intent.md](../../docs/changes/2026-09-29-project-landing/intent.md), [docs/changes/2026-09-29-project-landing/spec.md](../../docs/changes/2026-09-29-project-landing/spec.md), [docs/superpowers/plans/2026-09-29-project-landing-integration.md](../../docs/superpowers/plans/2026-09-29-project-landing-integration.md)
-- Updated: 2026-09-29
+- Verification: PASS — 当前集成树包含 origin/main@1e95a13 与已承接实现；完整 Web/Agent/Rust、实际桌面运行与版本已复验。提交时等待精确 HEAD 独立审查/托管门禁和主线推广，以当前集成 PR 的最终记录为准。
+- Evidence: [docs/changes/2026-09-29-project-landing/intent.md](../../docs/changes/2026-09-29-project-landing/intent.md), [docs/changes/2026-09-29-project-landing/spec.md](../../docs/changes/2026-09-29-project-landing/spec.md), [docs/superpowers/plans/2026-09-29-project-landing-integration.md](../../docs/superpowers/plans/2026-09-29-project-landing-integration.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-UI-010 — 现行 UI 规则与真实操作回归
 
@@ -1081,21 +1081,21 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-UI-010-ui-regression`
 - Worktree: `D:/kk-studio/.worktrees/TASK-UI-010-ui-regression`
 - Modules: src/components, src/styles, tests/browser, docs
-- Verification: PARTIAL — 旧源码 3db7b69 的独立复审 PASS 和 42 态 Web/隔离 Tauri 截图保留历史含义。与 main@a89792a 合并后本地 456 Node/319 Edge 通过；当前独立补审发现无连接时静态模型可选（R11），已先失败复现并在候选修复，现 456 Node/320 Edge、治理 72/0、功能 32/0、Markdown 89/0、UI 167/0 通过。最终提交的独立复审、Hosted 检查和 fresh Desktop 尚未完成；token 与现行外壳冲突、在线 Ardot 未回读，根工程及正式入口未整合。
-- Evidence: [docs/changes/2026-09-24-ui-regression/intent.md](../../docs/changes/2026-09-24-ui-regression/intent.md), [docs/changes/2026-09-24-ui-regression/spec.md](../../docs/changes/2026-09-24-ui-regression/spec.md), [docs/changes/2026-09-24-ui-regression/plan.md](../../docs/changes/2026-09-24-ui-regression/plan.md), [docs/changes/2026-09-24-ui-regression/verification.md](../../docs/changes/2026-09-24-ui-regression/verification.md), [docs/changes/2026-09-24-ui-regression/architecture-audit.md](../../docs/changes/2026-09-24-ui-regression/architecture-audit.md), [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md)
-- Updated: 2026-09-27
+- Verification: PASS — 承接 33ac5b3 并按最新四页规则裁决旧 token 冲突；真实入口、禁用反馈、焦点/短高/窄屏、当前 production Web 与 fresh Desktop 复验通过。用户最终视觉验收归 UI-004。
+- Evidence: [docs/changes/2026-09-24-ui-regression/intent.md](../../docs/changes/2026-09-24-ui-regression/intent.md), [docs/changes/2026-09-24-ui-regression/spec.md](../../docs/changes/2026-09-24-ui-regression/spec.md), [docs/changes/2026-09-24-ui-regression/plan.md](../../docs/changes/2026-09-24-ui-regression/plan.md), [docs/changes/2026-09-24-ui-regression/verification.md](../../docs/changes/2026-09-24-ui-regression/verification.md), [docs/changes/2026-09-24-ui-regression/architecture-audit.md](../../docs/changes/2026-09-24-ui-regression/architecture-audit.md), [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-PROJECT-SIDEBAR-001 — 侧栏项目列表与真实项目数据统一
 
 - Goal: 让侧栏项目和分组反映同一份 CreationSnapshot 中已保存的项目，消除静态演示行冒充项目管理的状态
 - Scope: SidebarProjectEntry、SidebarProjectGroup、项目快照和项目操作
 - Acceptance: 侧栏项目列表从真实已保存项目生成，空库时没有伪造项目，打开后与项目库指向同一项目; 分组、重命名、置顶、移动、删除按现有项目存储能力持久化；暂不可用的动作明确禁用并说明原因; Web 与 fresh Tauri 在创建、重启、删除后核对侧栏及项目库一致，键盘和窄屏入口可用
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `codex/TASK-PROJECT-001-landing-integration`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/components/SidebarProjectEntry.tsx, src/components/SidebarProjectGroup.tsx, src/features/creation, tests/browser, docs
-- Verification: NOT_VERIFIED — TASK-UI-010 确认项目库移除假卡，但侧栏 KK项目/KK工作流 仍为静态演示行；真实项目绑定与操作持久化尚未实现。
-- Evidence: [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md), [docs/features/feat-015-projects.md](../../docs/features/feat-015-projects.md), [docs/features/feat-023-navigation.md](../../docs/features/feat-023-navigation.md)
-- Updated: 2026-09-24
+- Verification: PARTIAL — 真实项目的创建/打开/改名/确认删除与项目库统一；Web 刷新及 fresh Tauri 重启通过。修复原生连续保存 CAS 和异步确认。文件夹/置顶仍是明示会话态，持久快照/项目包迁移未完成。
+- Evidence: [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md), [docs/features/feat-015-projects.md](../../docs/features/feat-015-projects.md), [docs/features/feat-023-navigation.md](../../docs/features/feat-023-navigation.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-PROV-003 — Codex Provider 配置注入与 model catalog 落盘（agent 侧接线）
 
@@ -1105,9 +1105,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-PROV-003-provider-wiring-main`
 - Worktree: `D:/kk-studio/.worktrees/TASK-PROV-003-provider-wiring`
 - Modules: vendor/canvas-agent/src/agent, vendor/canvas-agent/src/index.ts, vendor/canvas-agent/package.json, docs/changes, docs/governance, docs/features
-- Verification: NOT_VERIFIED — 从已合并的 TASK-PROV-002 承接到当前 main；旧分支的测试与落盘证据属于历史快照，Codex Responses 契约修正、当前主线回归和独立复审进行中。
-- Evidence: [docs/changes/2026-09-24-provider-wiring/intent.md](../../docs/changes/2026-09-24-provider-wiring/intent.md), [docs/changes/2026-09-24-provider-wiring/spec.md](../../docs/changes/2026-09-24-provider-wiring/spec.md), [docs/changes/2026-09-24-provider-wiring/plan.md](../../docs/changes/2026-09-24-provider-wiring/plan.md), [docs/changes/2026-09-24-provider-wiring/verification.md](../../docs/changes/2026-09-24-provider-wiring/verification.md), [docs/changes/2026-09-24-provider-wiring/remaining.md](../../docs/changes/2026-09-24-provider-wiring/remaining.md), [docs/changes/2026-09-24-provider-wiring/review.md](../../docs/changes/2026-09-24-provider-wiring/review.md)
-- Updated: 2026-09-27
+- Verification: PARTIAL — Codex Responses/TOML/catalog 指针和 CLI apply/check 已接入集成树；稳定 ID、非法 URL/目录穿越/参数不完整/幂等回归通过。真实 CODEX_HOME 消费对拍与 App UI 尚未完成。
+- Evidence: [docs/changes/2026-09-24-provider-wiring/intent.md](../../docs/changes/2026-09-24-provider-wiring/intent.md), [docs/changes/2026-09-24-provider-wiring/spec.md](../../docs/changes/2026-09-24-provider-wiring/spec.md), [docs/changes/2026-09-24-provider-wiring/plan.md](../../docs/changes/2026-09-24-provider-wiring/plan.md), [docs/changes/2026-09-24-provider-wiring/verification.md](../../docs/changes/2026-09-24-provider-wiring/verification.md), [docs/changes/2026-09-24-provider-wiring/remaining.md](../../docs/changes/2026-09-24-provider-wiring/remaining.md), [docs/changes/2026-09-24-provider-wiring/review.md](../../docs/changes/2026-09-24-provider-wiring/review.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-PROV-004 — Claude Code settings.json 落盘（agent 侧接线）
 
@@ -1117,9 +1117,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-PROV-004-claude-landing`
 - Worktree: `D:/kk-studio/.worktrees/TASK-PROV-004-claude-landing`
 - Modules: vendor/canvas-agent/src/agent, vendor/canvas-agent/package.json, docs/changes, docs/governance, docs/features
-- Verification: NOT_VERIFIED — agent 套件 150/150（含 BOM 容忍/幂等/保留用户设置）；根门禁全绿（394 单测、lint 64-0/30-0/82-0、ui 159-0、format）；真实 CLAUDE_CONFIG_DIR apply/dry-run/幂等验证通过；BOM 两处缺口已修复；test:ui 与独立 review 待后续
-- Evidence: [docs/changes/2026-09-24-claude-landing/intent.md](../../docs/changes/2026-09-24-claude-landing/intent.md), [docs/changes/2026-09-24-claude-landing/spec.md](../../docs/changes/2026-09-24-claude-landing/spec.md), [docs/changes/2026-09-24-claude-landing/plan.md](../../docs/changes/2026-09-24-claude-landing/plan.md), [docs/changes/2026-09-24-claude-landing/verification.md](../../docs/changes/2026-09-24-claude-landing/verification.md), [docs/changes/2026-09-24-claude-landing/remaining.md](../../docs/changes/2026-09-24-claude-landing/remaining.md), [docs/changes/2026-09-24-claude-landing/review.md](../../docs/changes/2026-09-24-claude-landing/review.md)
-- Updated: 2026-09-24
+- Verification: PARTIAL — Claude settings.json 保守合并和 apply-claude 已进入集成树，当前 Agent 回归通过；旧真实目录 dry-run/apply/幂等证据保留。真实 Claude CLI 消费和设置入口未完成。
+- Evidence: [docs/changes/2026-09-24-claude-landing/intent.md](../../docs/changes/2026-09-24-claude-landing/intent.md), [docs/changes/2026-09-24-claude-landing/spec.md](../../docs/changes/2026-09-24-claude-landing/spec.md), [docs/changes/2026-09-24-claude-landing/plan.md](../../docs/changes/2026-09-24-claude-landing/plan.md), [docs/changes/2026-09-24-claude-landing/verification.md](../../docs/changes/2026-09-24-claude-landing/verification.md), [docs/changes/2026-09-24-claude-landing/remaining.md](../../docs/changes/2026-09-24-claude-landing/remaining.md), [docs/changes/2026-09-24-claude-landing/review.md](../../docs/changes/2026-09-24-claude-landing/review.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-AGENT-004 — Google Interactions 对话和生图
 
@@ -1129,9 +1129,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-AGENT-004-google-closeout`
 - Worktree: `C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0`
 - Modules: src/features/agent, src/components, src/domain, src/App.tsx
-- Verification: PARTIAL — Combined closeout candidate: API Key dialogue/image/archive fixture flow and CLI security regressions pass. After merging main and reinstalling dependencies, full verify passes (governance 63/0, browser 302/302, Markdown gate green); Windows Cargo check passes. Real Google API Key requests, desktop runtime and final independent review pending.
-- Evidence: [docs/changes/2026-09-23-google-interactions/verification.md](../../docs/changes/2026-09-23-google-interactions/verification.md)
-- Updated: 2026-09-23
+- Verification: PARTIAL — 13671d7 的 Google/CLI 接线已承接，当前连续对话/图片归档/取消与项目切换 fixture 回归通过。真实 Google 凭据、CLI 登录和完整原生生成未验收。
+- Evidence: [docs/changes/2026-09-23-google-interactions/verification.md](../../docs/changes/2026-09-23-google-interactions/verification.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-AGENT-005 — Gemini CLI 账号登录通道（免 API Key 对话）
 
@@ -1153,9 +1153,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-MEMORY-001-local-memory`
 - Worktree: `D:/kk-studio/.worktrees/TASK-MEMORY-001`
 - Modules: src/features/memory, src/features/agent/agentConnection.ts, src/components/settings/ConnectionSettings.tsx, src-tauri/src/storage_paths.rs, src-tauri/src/main.rs, docs/features/feat-020-memory.md
-- Verification: NOT_VERIFIED — 旧自动化结果见 2026-09-24-local-memory/verification.md；后续复核发现 Web 数据库冲突、损坏记录清空及 Desktop 首写风险并已在本分支修补。真实 Codex 会话与 Desktop 打包运行态仍未验证。
-- Evidence: [docs/changes/2026-09-24-local-memory/intent.md](../../docs/changes/2026-09-24-local-memory/intent.md), [docs/changes/2026-09-24-local-memory/spec.md](../../docs/changes/2026-09-24-local-memory/spec.md), [docs/changes/2026-09-24-local-memory/plan.md](../../docs/changes/2026-09-24-local-memory/plan.md), [docs/changes/2026-09-24-local-memory/verification.md](../../docs/changes/2026-09-24-local-memory/verification.md), [docs/changes/2026-09-24-local-memory/review.md](../../docs/changes/2026-09-24-local-memory/review.md)
-- Updated: 2026-09-24
+- Verification: PARTIAL — 当前 Web 记忆开关/存储/注入单测与 fresh Desktop 私有读写、重启保留及取消/确认删除通过；关闭时不创建记忆文件。真实 Codex 提炼/引用待联调。
+- Evidence: [docs/changes/2026-09-24-local-memory/intent.md](../../docs/changes/2026-09-24-local-memory/intent.md), [docs/changes/2026-09-24-local-memory/spec.md](../../docs/changes/2026-09-24-local-memory/spec.md), [docs/changes/2026-09-24-local-memory/plan.md](../../docs/changes/2026-09-24-local-memory/plan.md), [docs/changes/2026-09-24-local-memory/verification.md](../../docs/changes/2026-09-24-local-memory/verification.md), [docs/changes/2026-09-24-local-memory/review.md](../../docs/changes/2026-09-24-local-memory/review.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-MEMORY-002 — 跨产品共享本地记忆（本机共享）
 
@@ -1165,9 +1165,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `feat/TASK-MEMORY-001-local-memory`
 - Worktree: `D:\\kk-studio\\.worktrees\\TASK-MEMORY-001`
 - Modules: src/features/memory, src/components/settings/MemorySettingsSection.tsx, src-tauri/src/main.rs, src-tauri/src/storage_paths.rs, AGENTS.md, docs/MEMORY-CONTRACT.md, docs/architecture/DATA-STORAGE.md
-- Verification: NOT_VERIFIED — 旧自动化结果不证明跨应用打通。当前仅 KK Studio Codex 路径有实现；豆包/WorkBuddy 原生客户端与 Web FSA 真实目录授权尚未联调。
-- Evidence: [docs/MEMORY-CONTRACT.md](../../docs/MEMORY-CONTRACT.md), [docs/changes/2026-09-24-local-memory/intent.md](../../docs/changes/2026-09-24-local-memory/intent.md), [docs/changes/2026-09-24-local-memory/spec.md](../../docs/changes/2026-09-24-local-memory/spec.md), [docs/changes/2026-09-24-local-memory/verification.md](../../docs/changes/2026-09-24-local-memory/verification.md)
-- Updated: 2026-09-24
+- Verification: PARTIAL — 默认共享契约保留；--data-dir 隔离记忆，启动不迁移，损坏旧文件/锁/备份失败保持原件；fresh Desktop 验证共享文件 hash 未变。豆包/WorkBuddy 与 Web 目录授权仍未联调。
+- Evidence: [docs/MEMORY-CONTRACT.md](../../docs/MEMORY-CONTRACT.md), [docs/changes/2026-09-24-local-memory/intent.md](../../docs/changes/2026-09-24-local-memory/intent.md), [docs/changes/2026-09-24-local-memory/spec.md](../../docs/changes/2026-09-24-local-memory/spec.md), [docs/changes/2026-09-24-local-memory/verification.md](../../docs/changes/2026-09-24-local-memory/verification.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
+- Updated: 2026-09-30
 
 ## TASK-AGENT-007 — Codex 通过本机 CodeBuddy CLI 受限委派短文本
 

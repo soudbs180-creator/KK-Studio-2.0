@@ -190,13 +190,13 @@
 }
 @media (max-width: 767px) {
   .settings-panel {
-    --ui-input-height: 44px;
-    --ui-button-height: 44px;
+    --ui-input-height: var(--kk-control-h-lg);
+    --ui-button-height: var(--kk-control-h-lg);
   }
   .settings-panel
     input:not([type="checkbox"]):not([type="file"]):not([type="radio"]),
   .settings-panel select {
-    min-height: 44px;
+    min-height: var(--kk-control-h-lg);
   }
   .start-page {
     inset: 0 8px 8px;
@@ -315,7 +315,7 @@
     line-height: 18px;
   }
   .settings-select {
-    min-height: 44px;
+    min-height: var(--kk-control-h-lg);
     font-size: var(--ui-font-body);
   }
   .settings-row-control {

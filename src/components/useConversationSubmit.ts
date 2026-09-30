@@ -1,6 +1,10 @@
 import type { Dispatch, SetStateAction } from "react";
 import type { CreationDraft } from "../features/creation/model";
 
+export type ConversationSend = (
+  message: string,
+) => boolean | string | void | Promise<boolean | string>;
+
 export default function useConversationSubmit(options: {
   submitting: boolean;
   setSubmitting: (value: boolean) => void;
@@ -9,9 +13,7 @@ export default function useConversationSubmit(options: {
   pendingApproval: string | null;
   setPendingApproval: (value: string | null) => void;
   setStatus: (value: string) => void;
-  onSend?: (
-    message: string,
-  ) => boolean | string | void | Promise<boolean | string>;
+  onSend?: ConversationSend;
   onDraftChange?: (draft: CreationDraft) => void;
   composerDraft?: CreationDraft;
   setInput: (value: string) => void;

@@ -5,7 +5,7 @@ test.use({ reducedMotion: "reduce" });
 test("A2 目录卡在桌面和手机共用页面类型几何", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
-  for (const name of ["Skill", "ComfyUI 工作流"]) {
+  for (const name of ["技能", "ComfyUI 工作流"]) {
     await page
       .locator(".sidebar")
       .getByRole("button", { name, exact: true })
@@ -13,13 +13,13 @@ test("A2 目录卡在桌面和手机共用页面类型几何", async ({ page }) 
     const grid = page.locator(".catalog-card-grid").first();
     const card = grid.locator(".catalog-card").first();
     await expect(grid).toHaveCSS("column-gap", "16px");
-    await expect(card).toHaveCSS("border-radius", "12px");
+    await expect(card).toHaveCSS("border-radius", "20px");
     await expect(card.locator(".catalog-card-body")).toHaveCSS(
       "padding",
       "12px",
     );
     await page.setViewportSize({ width: 390, height: 844 });
-    await expect(card).toHaveCSS("border-radius", "12px");
+    await expect(card).toHaveCSS("border-radius", "20px");
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth - innerWidth,
@@ -36,7 +36,7 @@ test("搜索面板采用面板、输入与列表各自的圆角档位", async ({
   await expect(panel).toHaveCSS("border-radius", "20px");
   await expect(panel.locator(".catalog-search")).toHaveCSS(
     "border-radius",
-    "10px",
+    "8px",
   );
   await expect(panel.locator(".catalog-tabs button").first()).toHaveCSS(
     "height",
@@ -50,7 +50,7 @@ test("搜索面板采用面板、输入与列表各自的圆角档位", async ({
   await expect(panel).toHaveCSS("border-radius", "20px");
   await expect(panel.locator(".catalog-search")).toHaveCSS(
     "border-radius",
-    "10px",
+    "8px",
   );
 });
 
@@ -74,20 +74,20 @@ test("A1 资产画廊在桌面和手机使用可读的卡片与控件档位", as
       "column-gap",
       "12px",
     );
-    await expect(card).toHaveCSS("border-radius", "12px");
+    await expect(card).toHaveCSS("border-radius", "20px");
     await expect(card).toHaveCSS("padding", "4px");
     await expect(card.locator(".asset-thumbnail")).toHaveCSS(
       "border-radius",
       "8px",
     );
-    await expect(card.locator(".asset-name")).toHaveCSS("font-size", "11px");
+    await expect(card.locator(".asset-name")).toHaveCSS("font-size", "12px");
     await expect(panel.locator(".asset-search-row")).toHaveCSS(
       "height",
       "32px",
     );
     await expect(panel.locator(".asset-filters select").first()).toHaveCSS(
       "height",
-      "28px",
+      "32px",
     );
     const filters = await panel.locator(".asset-filters").boundingBox();
     const content = await panel.locator(".asset-content").boundingBox();
@@ -163,11 +163,11 @@ test("A2 提示词卡与 A4 预览使用目录卡档位", async ({ page }) => {
   await dialog.getByRole("button", { name: "加载来源" }).click();
   const card = dialog.locator(".prompt-library-item").first();
   await expect(card).toBeVisible();
-  await expect(card).toHaveCSS("border-radius", "12px");
+  await expect(card).toHaveCSS("border-radius", "20px");
   await expect(card).toHaveCSS("padding", "12px");
   await expect(card.locator(".prompt-library-item-description")).toHaveCSS(
     "font-size",
-    "12px",
+    "14px",
   );
   await card.click();
   await expect(dialog.locator(".prompt-library-detail")).toBeVisible();

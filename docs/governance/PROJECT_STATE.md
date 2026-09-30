@@ -1,5 +1,16 @@
 # 当前项目状态
 
+## 2026-09-30 当前集成版本
+
+- 集成工作在 root 的 codex/TASK-PROJECT-001-landing-integration，基线 origin/main@1e95a13；唯一稳定线为 origin/main，实际推广与最终 SHA 以集成 PR 为准。其它登记 worktree/分支保留。
+- 当前版本：Desktop 2.1.2 / Web 2.1.3 / Mobile 规划 2.1.1；新 production bundle 与 Tauri release 分别取证，没有使用其它任务占用的 Vite 1421。
+- 现行 UI 来源：四页 Figma + UI_INDEX + tokens.css；侧栏固定 70（平板72）/291，低于960会话 overlay，960–1200 rail。旧304/44等记录是历史。
+- 原生连续保存 CAS、取消/确认删除、项目重启恢复、隔离记忆、图片比较和随包插件已在当前 release 复验。真实外部调用、Installer/Mobile/VPS没有由本轮测试证明。
+- [全量审计](../changes/2026-09-29-project-landing/audit.md) · [验证](../changes/2026-09-29-project-landing/verification.md) · [剩余落地](../changes/2026-09-29-project-landing/remaining.md)。
+
+## 历史记录（以下不是当前工作区事实）
+
+
 ## 2026-09-28 画布会话分栏修复已完成，外部视觉门禁待验收
 
 `TASK-UI-CANVAS-001` 已在当前 dirty Web 工作区完成：960–1200px 会话 rail 预留画布空间，HUD/navigation/toolbar 保持可见并左移；侧栏展开固定 304px、收起 72px，移除宽度拖拽。Vite 1421/1423 的 targeted Playwright、typecheck、build 与截图证据通过。该记录不代表 Tauri/native、真实移动硬件、Figma 新读取或用户最终视觉验收；`canvas-layout` 的 `connector-video1` fixture 超时已按既有失败记录。实现和边界见 [change package](../changes/2026-09-28-canvas-chat-layout/verification.md) 与账本 `TASK-UI-CANVAS-001`。

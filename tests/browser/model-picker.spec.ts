@@ -35,12 +35,12 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
   );
   await openSeededProject(page);
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page.getByLabel("供应商名称", { exact: true }).fill("星河 API");
-  await page.getByLabel("API Base URL").fill("https://variants.example/v1");
+  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByLabel("提供商", { exact: true }).fill("星河 API");
+  await page.getByLabel("接口地址").fill("https://variants.example/v1");
   await page.getByLabel("API Key").fill("fixture-key");
-  await page.getByLabel("默认模型").fill("aurora-1-2k-low");
-  await page.getByRole("button", { name: "保存供应商", exact: true }).click();
+  await page.getByLabel("模型名称").fill("aurora-1-2k-low");
+  await page.getByRole("button", { name: "保存", exact: true }).click();
   await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
   await expect(page.getByLabel("已发现的模型")).toContainText(
     "aurora-1-4k-high",
@@ -62,7 +62,7 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
   await menu.getByRole("menuitemradio", { name: /aurora-1/ }).click();
   await expect(
     page.getByRole("button", { name: "模型", exact: true }),
-  ).toHaveText("aurora-1");
+  ).toHaveAttribute("title", "aurora-1-4k-high");
   const panel = page.locator(".conversation-panel");
   await expect(panel.getByLabel("型号参数")).toHaveValue("aurora-1-4k-high");
   await panel.getByLabel("型号参数").selectOption("aurora-1-2k-high");
@@ -124,7 +124,7 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
       }),
     ).toBe(true);
     await page.screenshot({
-      path: `docs/changes/2026-09-23-input-contract/evidence/${width}-${height}-variants.png`,
+      path: `test-results/changes/2026-09-23-input-contract/evidence/${width}-${height}-variants.png`,
     });
   }
   while (await composer.locator(".start-attachment-chip button").count())
@@ -189,13 +189,13 @@ test("分级菜单保留页面、返回、全部和置顶；同名模型使用�
     .getByRole("button", { name: /配置供应商/ })
     .click();
   for (const name of ["A", "B"]) {
-    await page.getByLabel("供应商名称", { exact: true }).fill(name);
+    await page.getByLabel("提供商", { exact: true }).fill(name);
     await page
-      .getByLabel("API Base URL")
+      .getByLabel("接口地址")
       .fill(`https://${name.toLowerCase()}.example/v1`);
     await page.getByLabel("API Key").fill("fixture-" + name);
-    await page.getByLabel("默认模型").fill("image-same");
-    await page.getByRole("button", { name: "保存供应商", exact: true }).click();
+    await page.getByLabel("模型名称").fill("image-same");
+    await page.getByRole("button", { name: "保存", exact: true }).click();
     await page
       .getByRole("button", { name: "刷新模型列表", exact: true })
       .click();
@@ -266,6 +266,6 @@ test("分级菜单保留页面、返回、全部和置顶；同名模型使用�
     .getByRole("button", { name: "1536x1024 · 3:2", exact: true })
     .click();
   await page.screenshot({
-    path: "docs/changes/2026-09-22-codex-default-agent/model-parameters.png",
+    path: "test-results/changes/2026-09-22-codex-default-agent/model-parameters.png",
   });
 });

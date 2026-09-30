@@ -101,7 +101,7 @@
 
 .page-template-shell[data-template="grid"] .catalog-card,
 .page-template-shell[data-template="grid"] .project-library-card {
-  border-radius: var(--kk-radius-control);
+  border-radius: var(--kk-radius-card);
 }
 
 .page-template-shell[data-template="grid"] .catalog-card-body {

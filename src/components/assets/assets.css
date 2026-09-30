@@ -126,12 +126,12 @@
 }
 .asset-filters select {
   width: 72px;
-  height: 28px;
-  border-radius: var(--ui-radius-pill);
+  height: var(--kk-control-h-md);
+  border-radius: var(--kk-radius-control);
   border: 0;
   background: var(--bg-card-hover);
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   padding: 0 8px;
 }
 .asset-file-nav {
@@ -183,7 +183,7 @@
   min-width: 0;
   align-self: start;
   border: 1px solid transparent;
-  border-radius: 12px;
+  border-radius: var(--kk-radius-card);
   display: flex;
   flex-direction: column;
   overflow: hidden;

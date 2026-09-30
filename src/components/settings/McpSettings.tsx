@@ -7,6 +7,7 @@ import {
 } from "../../features/mcp/mcpClient";
 import McpServerCard from "./McpServerCard";
 import { z } from "zod";
+import { confirmAction } from "../../runtime/confirmAction";
 
 type ConnectionState = "disconnected" | "connecting" | "connected" | "error";
 
@@ -156,7 +157,9 @@ export default function McpSettings({
     arguments_: Record<string, unknown>,
   ): Promise<unknown> {
     if (
-      !window.confirm(`确认向 ${server.name} 发送工具 ${tool.name} 的参数吗？`)
+      !(await confirmAction(
+        `确认向 ${server.name} 发送工具 ${tool.name} 的参数吗？`,
+      ))
     )
       throw new Error("工具调用已取消。");
     const client = clients.get(server.id);

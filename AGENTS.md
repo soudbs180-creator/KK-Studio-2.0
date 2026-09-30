@@ -11,7 +11,7 @@
 
 - 本机唯一工程仓库是 `D:/kk-studio/KK-Studio-2.0`；`D:/kk-studio` 仅为容器目录。任务隔离使用本仓库登记的 worktree，每个 worktree 只承载一个 task branch。其他设备可使用自己的路径，但必须核对相同 Git remote、已推送 SHA 和仓库规则，不将本机绝对路径写成跨平台依赖。
 - `kk-studio-next` 和旧 archive/backup 已由 TASK-CONSOLIDATE-200 收敛；不要重新建立重复工程或从历史路径启动。当前融合分支和验证状态先读 `docs/governance/PROJECT_STATE.md`。
-- 历史源码、未提交候选、Git 和用户数据的恢复归档位于工程外 `D:/KK-Studio-recovery-20260921`。恢复必须到新目录并校验，不得自动覆盖当前用户数据。工程内 `releases/` 只放最新分享产物，禁止把恢复归档、凭据、node_modules 或编译缓存打入分享包。
+- 历史源码、未提交候选、Git 和用户数据的恢复归档位于工程外 `D:/KK-Studio-recovery-20260921`。恢复必须到新目录并校验，不得自动覆盖当前用户数据。工程内 `releases/` 只放最新分享产物，禁止把恢复归档、凭据、开发 node_modules 或编译缓存打入分享包；Agent 生产运行时仅按已审阅 `runtime-manifest.json` 白名单包含其运行依赖。
 - `2.0.0` 是历史融合基线；三端版本以 `config/platform-versions.json` 为源，本轮桌面/Web 源码及 Mobile 规划版本均从 `2.1.1` 开始，正式安装包、Mobile 包和 tag 另行验收。按[版本管理规则](docs/engineering/VERSIONING.md)由任务作者自动选择受影响平台并递增版本，运行 `npm run version:check`；不要让用户逐次指定数字。保留原有存储 key/identifier，不能随目录或包名改动用户数据身份。
 
 ## 技术边界
@@ -31,7 +31,7 @@
 ## 设计与交互
 
 - **UI 规范唯一入口是 [`docs/UI_INDEX.md`](docs/UI_INDEX.md)**。任何 UI 改动先读索引，再读该主题的唯一承载文件，不要在多份规范里各取一份。分工：`UI_RULES.md`（零件/交互规则）· `UI_ARCHETYPES.md`（页面类型）· `DESIGN_TOKENS.md`（数值）· `DESIGN-SYSTEM.md`（颜色与基础组件）· `UI_SPEC.md`（运行与验证）。旧 `UI-STANDARDS.md` / `UI-ALIGNMENT.md` 已合并，仅作历史溯源，不再更新。
-- 颜色、字体层级和基础组件以 `docs/DESIGN-SYSTEM.md` 为唯一现行规范（用户 Ardot `728457371665311 / 0:1`、2026-09-22 PDF 及逐项校正）。所有后续 UI 必须消费这一系统。旧 Figma 文件 `0nU0A7pq6eyjwfwm1TtWkO` 继续提供页面布局与图标资产依据：Workspace `404:28667`、收纳 `410:67357`、Landing `410:59708`；其旧调色/通用组件规则不能覆盖新 Design System，历史 `1:2` 不覆盖最新 Frame。**其历史几何/字号/间距只在 `archive/ui-history/` 溯源，落地时换算到 `DESIGN_TOKENS.md` 的档位，禁止直接引用原稿数值。**
+- 现行设计以 `docs/UI_INDEX.md` 指定的 Figma 四页 `505:13071/13430/13731/14180` 为最高基线，数值以 `src/styles/tokens.css` 为唯一运行时源；`DESIGN_TOKENS.md` 是索引，`DESIGN-SYSTEM.md` 承载主题和基础组件用法。Ardot 2026-09-22 PDF、旧页面 Frame 与 `tokens.json` 保留历史含义，不能覆盖新版规则；外壳几何必须注册，通用控件采用 24/32/40 高度、16/20/24 图标和不小于 12px 的文字。
 - 每个可见控件必须有真实行为，或显示禁用原因；异步操作必须覆盖 loading、success、error、cancel 和离线状态。
 - 视觉验收必须有相同状态的浏览器截图/DOM 证据；构建通过不等于 Figma 一致。
 

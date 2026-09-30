@@ -1,5 +1,16 @@
 # AI handoff
 
+## 2026-09-30 恢复入口
+
+先 fetch 并核对 origin/main 与集成 PR 的真实 merged 状态、head/merge/tree；不要从旧 dirty main 或旧 worktree 直接启动。读 [本轮验证](../changes/2026-09-29-project-landing/verification.md)、[审计](../changes/2026-09-29-project-landing/audit.md)、[剩余项](../changes/2026-09-29-project-landing/remaining.md) 与机器账本。版本源是 config/platform-versions.json。
+
+复现使用当前 production preview 1423 或 fresh Tauri release；1421 被其它进程占用时不自动切换 development 端口。浏览器测试输出到 test-results，当前证据复制到本轮 evidence，禁止覆盖历史截图。Native audit 使用 --data-dir 与独立 WebView profile，完整记忆文件不写日志。
+
+若修改 head，重新独立审查、托管 verify/delivery、构建实际 bundle/客户端并绑定产物 hash。真实凭据/付费生成、安装器/签名、Mobile/VPS 与用户最终视觉验收仍需各自完成。
+
+## 以下为历史恢复记录
+
+
 ## 2026-09-28 TASK-UI-CANVAS-001 当前恢复入口
 
 当前根工作区 `D:/kk-studio/KK-Studio-2.0` 仍为 dirty `main`，未提交。画布会话布局修复已完成：平板 960–1200px 使用右侧 400px rail，侧栏固定宽度只由 toggle 切换；目标回归与 build/typecheck 通过。恢复时先读 [verification](../changes/2026-09-28-canvas-chat-layout/verification.md)、账本和 `git status`；不要把 `connector-video1` 空白 fixture 超时、Figma reauth 或 Tauri/native 未运行误报为本轮布局失败。若继续改 CSS/DOM，重跑 AC-1–AC-4 并重新生成 `dist`/截图。

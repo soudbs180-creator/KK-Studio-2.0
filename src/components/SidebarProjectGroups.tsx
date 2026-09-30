@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { RefObject } from "react";
 import type { CreationProject } from "../features/creation/model";
 import { projectHasUnsettledTasks } from "../features/creation/model";
 import {
   createSidebarId,
+  resolveSidebarFolders,
   restoreSidebarFolder,
   sidebarProjectItem,
   sortSidebarProjects,
@@ -61,6 +62,12 @@ export default function SidebarProjectGroups({
   );
   const [newProjectId, setNewProjectId] = useState<string | null>(null);
   const items = useMemo(() => projects.map(sidebarProjectItem), [projects]);
+  useEffect(() => {
+    // Newly created rows consume auto-edit once; remounting after grouping must
+    // not reopen the editor after Escape or a folder move.
+    if (newProjectId && items.some((item) => item.id === newProjectId))
+      setNewProjectId(null);
+  }, [items, newProjectId]);
   const itemById = useMemo(
     () => new Map(items.map((item) => [item.id, item])),
     [items],
@@ -77,23 +84,14 @@ export default function SidebarProjectGroups({
     pinnedProjectIds,
     sortMode,
   );
-  const visibleFolders = folders
-    .map((folder) => ({
-      ...folder,
-      children: sortSidebarProjects(
-        folder.children.flatMap((child) => {
-          const item = itemById.get(child.id);
-          return item ? [item] : [];
-        }),
-        projects,
-        pinnedProjectIds,
-        sortMode,
-      ),
-    }))
-    .sort(
-      (a, b) =>
-        Number(pinnedFolderIds.has(b.id)) - Number(pinnedFolderIds.has(a.id)),
-    );
+  const visibleFolders = resolveSidebarFolders(
+    folders,
+    itemById,
+    projects,
+    pinnedProjectIds,
+    pinnedFolderIds,
+    sortMode,
+  );
 
   function toggleProjectPin(id: string): void {
     setPinnedProjectIds((current) => {
@@ -128,8 +126,12 @@ export default function SidebarProjectGroups({
     if (child) onOpenProject(child.id);
     else onNavigate("projects");
   }
-  function createFolder(): void {
+  function revealFolders(): void {
     setProjectFilter("all");
+    setGroups((current) => [true, current[1]]);
+  }
+  function createFolder(): void {
+    revealFolders();
     setFolders((current) => [
       ...current,
       {
@@ -145,6 +147,7 @@ export default function SidebarProjectGroups({
   }
   function createUngroupedProject(): void {
     if (!canEditProjects) return;
+    setGroups((current) => [current[0], true]);
     setNewProjectId(onCreateProject());
   }
   function toggleFolder(id: string): void {
@@ -164,6 +167,7 @@ export default function SidebarProjectGroups({
     );
   }
   function deleteFolder(id: string): void {
+    setGroups((current) => [current[0], true]);
     setFolders((current) =>
       current.map((folder) =>
         folder.id === id ? { ...folder, deleted: true } : folder,
@@ -183,6 +187,7 @@ export default function SidebarProjectGroups({
   function dropToSection(projectId: string): void {
     const item = fromId(projectId);
     if (!item || groupedIds.has(projectId)) return;
+    revealFolders();
     setFolders((current) => [
       ...current,
       {
@@ -199,6 +204,7 @@ export default function SidebarProjectGroups({
   function moveProjectToFolder(projectId: string, folderId: string): void {
     const item = fromId(projectId);
     if (!item) return;
+    revealFolders();
     setFolders((current) =>
       current.map((folder) => ({
         ...folder,
@@ -216,6 +222,7 @@ export default function SidebarProjectGroups({
   function createFolderForProject(projectId: string): void {
     const item = fromId(projectId);
     if (!item) return;
+    revealFolders();
     setFolders((current) => [
       ...current.map((folder) => ({
         ...folder,

@@ -9,7 +9,7 @@ const root = process.cwd();
 const executable = path.join(root, "src-tauri/target/release/kk-studio.exe");
 const evidence = path.join(
   root,
-  "docs/changes/2026-09-28-platform-versioning/desktop-runtime.json",
+  "test-results/desktop/platform-version/desktop-runtime.json",
 );
 const isolated = path.join(
   root,
@@ -25,6 +25,7 @@ const port = 9343;
 
 await mkdir(dataRoot, { recursive: true });
 await mkdir(profile, { recursive: true });
+await mkdir(path.dirname(evidence), { recursive: true });
 const child = spawn(executable, ["--data-dir", dataRoot], {
   cwd: root,
   windowsHide: true,

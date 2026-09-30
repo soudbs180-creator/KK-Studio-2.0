@@ -512,8 +512,8 @@
 /*
  * Current Figma composer contracts (483:695 / 483:753 / 407:29265).
  * Keep the engineering hit targets compact and let the visible controls share
- * one 24px baseline. The home surface deliberately has no plugin, partner,
- * generation-count, or privacy controls; those belong to project surfaces.
+ * one 24px baseline. Batch and data mode live inside the model menu;
+ * plugins and partners remain accessible through settings.
  */
 .start-composer {
   --composer-target: 24px;
@@ -647,14 +647,39 @@
 }
 
 .start-composer .start-model-picker > button > span {
-  overflow: visible;
+  min-width: 0;
+  overflow: hidden;
   font-size: var(--kk-font-caption);
-  text-overflow: clip;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .start-composer .start-model-picker > button > span::before {
   display: none;
   content: none;
+}
+
+.start-model-options {
+  display: grid;
+  gap: var(--kk-space-2);
+  padding: var(--kk-space-3);
+  border-top: var(--kk-border-width) solid var(--border-default);
+}
+.start-model-options .start-count-picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kk-space-3);
+}
+.start-model-options select {
+  min-width: 0;
+  height: var(--kk-control-h-md);
+  padding-inline: var(--kk-control-px-sm);
+  border: var(--kk-border-width) solid var(--border-control);
+  border-radius: var(--kk-radius-control);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: var(--kk-font-caption);
 }
 
 .start-composer .start-composer-divider {
@@ -749,6 +774,17 @@
   max-height: 64px;
   font-size: var(--kk-font-body);
   line-height: var(--kk-line-body);
+}
+
+.conversation-panel
+  .chat-composer:has(.start-attachment-row, .kk-model-variants) {
+  gap: var(--kk-space-2);
+}
+
+.conversation-panel
+  .chat-composer:has(.start-attachment-row, .kk-model-variants)
+  > .composer-toolbar {
+  margin-top: auto;
 }
 
 .conversation-panel .chat-composer > .composer-toolbar {

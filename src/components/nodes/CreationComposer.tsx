@@ -151,30 +151,39 @@ export default function CreationComposer({
           alt=""
         />
       </button>
-      <div className="composer-refs">
-        {references.map((ref, i) => (
-          <span className="composer-ref-thumb" key={ref.id ?? i}>
-            {ref.preview ? <img src={ref.preview} alt="" /> : null}
-            {ref.id && onRemoveReference && (
-              <button
-                type="button"
-                aria-label="移除参考图"
-                onClick={() => onRemoveReference(ref.id!)}
-              >
-                ×
-              </button>
-            )}
-          </span>
-        ))}
-        <button
-          className="composer-ref-add"
-          type="button"
-          aria-label="添加参考图片"
-          onClick={() => onReference()}
-        >
-          <UiIcon name="add" size={16} />
-        </button>
-      </div>
+      {expanded ? (
+        <ReferenceStrip
+          references={references}
+          limit={referenceLimit}
+          onAdd={onReference}
+          onRemove={onRemoveReference}
+        />
+      ) : (
+        <div className="composer-refs">
+          {references.map((ref, i) => (
+            <span className="composer-ref-thumb" key={ref.id ?? i}>
+              {ref.preview ? <img src={ref.preview} alt="" /> : null}
+              {ref.id && onRemoveReference && (
+                <button
+                  type="button"
+                  aria-label="移除参考图"
+                  onClick={() => onRemoveReference(ref.id!)}
+                >
+                  ×
+                </button>
+              )}
+            </span>
+          ))}
+          <button
+            className="composer-ref-add"
+            type="button"
+            aria-label="添加参考图片"
+            onClick={() => onReference()}
+          >
+            <UiIcon name="add" size={16} />
+          </button>
+        </div>
+      )}
       <textarea
         aria-label={`${label}提示词`}
         maxLength={video ? 7500 : 4000}

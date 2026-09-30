@@ -33,6 +33,7 @@ export default function ConversationMessageFeed({
           messages={messages}
           onDelete={onDelete}
           onStatus={onStatus}
+          onConfigure={onConfigureDirect}
         />
       )}
       {status && (
@@ -40,7 +41,7 @@ export default function ConversationMessageFeed({
           {status}
         </p>
       )}
-      {!agentActive && onConfigureDirect && (
+      {!agentActive && messages.length > 0 && onConfigureDirect && (
         <div className="chat-agent-controls">
           <button type="button" onClick={onConfigureDirect}>
             前往模型设置

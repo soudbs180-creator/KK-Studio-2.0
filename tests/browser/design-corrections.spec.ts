@@ -4,11 +4,12 @@ import { openWorkspace, waitForConversationPanelSettled } from "./helpers";
 test("底栏心形无需选择节点，直接打开喜欢与收藏搜索", async ({ page }) => {
   await openWorkspace(page);
   const library = page.getByRole("button", {
-    name: "打开喜欢与收藏",
+    name: "喜欢与收藏",
     exact: true,
   });
   await expect(library).toBeEnabled();
   await library.click();
+  await page.getByRole("menuitem", { name: "我喜欢的", exact: true }).click();
   await expect(page.locator(".catalog-panel")).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(library).toBeFocused();
@@ -22,7 +23,7 @@ test("底栏选择菜单切换抓手，拖拽移动视图而不改节点坐标",
   });
   await toggle.click();
   await page
-    .getByRole("menuitemradio", { name: "抓手工具", exact: true })
+    .getByRole("menuitemradio", { name: "小手工具", exact: true })
     .click();
   await expect(toggle).toBeFocused();
   const canvas = page.getByTestId("infinite-canvas");
@@ -76,8 +77,8 @@ test("工具与帮助菜单保持可读尺寸、快捷键三栏及窄屏可用",
   await page.getByRole("button", { name: "选择画布工具", exact: true }).click();
   const tools = page.getByRole("menu", { name: "画布工具选择", exact: true });
   const toolsBox = await tools.boundingBox();
-  expect(toolsBox!.width).toBe(90);
-  expect(toolsBox!.height).toBe(50);
+  expect(toolsBox!.width).toBe(196);
+  expect(toolsBox!.height).toBe(98);
   await tools.screenshot({
     path: "test-results/design-corrections/tool-menu.png",
   });
@@ -85,8 +86,8 @@ test("工具与帮助菜单保持可读尺寸、快捷键三栏及窄屏可用",
   await page.getByRole("button", { name: "帮助与快捷键", exact: true }).click();
   const help = page.getByRole("menu", { name: "帮助与快捷键", exact: true });
   const helpBox = await help.boundingBox();
-  expect(helpBox!.width).toBe(103);
-  expect(helpBox!.height).toBe(50);
+  expect(helpBox!.width).toBe(168);
+  expect(helpBox!.height).toBe(98);
   await help.screenshot({
     path: "test-results/design-corrections/help-menu.png",
   });

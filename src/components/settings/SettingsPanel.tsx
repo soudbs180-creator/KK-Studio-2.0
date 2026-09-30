@@ -8,7 +8,7 @@ import {
 } from "../../domain/settings";
 import type { SettingsPreferences } from "../../domain/settings";
 import GeneralSettings from "./GeneralSettings";
-import SettingsSections, { SETTINGS_SECTIONS } from "./SettingsSections";
+import SettingsSections from "./SettingsSections";
 import type { SettingsSection } from "./SettingsSectionData";
 import { SETTINGS_NAV_GROUPS } from "./SettingsSectionData";
 import type { SettingsSectionItem } from "./SettingsSectionData";

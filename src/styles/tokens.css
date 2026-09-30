@@ -4,9 +4,9 @@
  * 三层架构：Tier 1 原始层 → Tier 2 语义层 → Tier 3 组件层
  * 规则：高层只能引用低层，禁止反向引用；业务代码只允许消费 Tier 2 / Tier 3。
  *
- * 权威来源：Ardot 画布「Design System 设计系统」(fileId 728457371665311)
+ * 现行来源：Figma 四页治理基线（见 docs/UI_INDEX.md）；Ardot 是历史颜色来源。
  * 配套文档：docs/DESIGN_TOKENS.md
- * 改 token 请回画布改变量后重新导出，勿在此手写覆盖。
+ * 变更需记录设计裁决并验证实际运行；历史 tokens.json 不覆盖当前 CSS。
  *
  * 用法：<html data-theme="dark|light" data-accent="default" data-density="comfortable">
  * ========================================================================== */

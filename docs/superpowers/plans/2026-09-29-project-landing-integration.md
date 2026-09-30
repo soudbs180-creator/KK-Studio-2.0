@@ -15,7 +15,7 @@
 - 基线是 fetch 后的 `origin/main`，不重写远端历史。
 - 不删除或覆盖当前用户改动；scratch/生成缓存移出候选或保持忽略。
 - UI 必须消费现行 `tokens.css`/Design System；真实服务缺失时保持 PARTIAL/BLOCKED。
-- Web 与 Desktop 的能力状态不能混用；浏览器截图必须来自当前源码 bundle 和固定端口 1421。
+- Web 与 Desktop 的能力状态不能混用；development固定1421，production preview沿用仓库固定1423，截图必须来自当前源码bundle并记录模式。
 
 ## Review Focus
 
@@ -29,35 +29,35 @@
 
 **Files:** Git history, `docs/changes/2026-09-29-project-landing/*`
 
-- [ ] Create the task branch from the dirty workspace and record the baseline checks.
-- [ ] Commit a clearly marked candidate snapshot, excluding scratch output and credentials.
-- [ ] Merge `origin/main`; resolve conflicts in the source branch, retaining the newest storage/provider contracts.
-- [ ] Inspect branch heads and classify already-merged, stale, WIP and blocked branches. Carry the task commits of open PRs into this integration branch, verify the combined tree, and retain PARTIAL for external acceptance gaps.
+- [x] Create the task branch from the dirty workspace and record the baseline checks.
+- [x] Commit a clearly marked candidate snapshot, excluding scratch output and credentials.
+- [x] Merge `origin/main`; resolve conflicts in the source branch, retaining the newest storage/provider contracts.
+- [x] Inspect branch heads and classify already-merged, stale, WIP and blocked branches. Carry the task commits of open PRs into this integration branch, verify the combined tree, and retain PARTIAL for external acceptance gaps.
 
 ### Task 2: Restore the actual UI path
 
 **Files:** `src/App.tsx`, `src/components/{StartComposer,ConversationPanel,Canvas,SettingsPanel}.tsx`, `src/styles/*.css`
 
-- [ ] Verify route → import → loaded bundle for home, chat, settings and canvas on port 1421.
-- [ ] Remove regressions introduced by fixed gaps, stale duplicate controls, or inaccessible disabled actions.
-- [ ] Keep current local model/service gating and meaningful empty/error/offline feedback.
-- [ ] Carry UI-010 and real project sidebar fixes forward without replacing the newer four-page Figma rules with historical layout rules.
-- [ ] Run focused Playwright geometry and interaction checks at 390, 1099 and 1920.
+- [x] Verify route → import → loaded bundle for home, chat, settings and canvas on port 1421.
+- [x] Remove regressions introduced by fixed gaps, stale duplicate controls, or inaccessible disabled actions.
+- [x] Keep current local model/service gating and meaningful empty/error/offline feedback.
+- [x] Carry UI-010 and real project sidebar fixes forward without replacing the newer four-page Figma rules with historical layout rules.
+- [x] Run focused Playwright geometry and interaction checks at 390, 1099 and 1920.
 
 ### Task 3: Land local competitor-derived canvas capabilities
 
 **Files:** `src/components/canvas/*`, `src/domain/canvasHistory.ts`, `src/domain/canvasPreferences.ts`, `tests/*canvas*`, feature/governance docs
 
-- [ ] Verify undo/redo, snap preference and layers panel against real project nodes and mainline Canvas state.
-- [ ] Fix any stale fixture assumptions or state races without adding fake remote groups or paid actions.
-- [ ] Record remaining Desktop/reference-site limits as PARTIAL with direct evidence.
+- [x] Verify undo/redo, snap preference and layers panel against real project nodes and mainline Canvas state.
+- [x] Fix any stale fixture assumptions or state races without adding fake remote groups or paid actions.
+- [x] Record remaining Desktop/reference-site limits as PARTIAL with direct evidence.
 
 ### Task 4: Full verification and delivery state
 
 **Files:** `docs/PROGRESS.md`, `docs/governance/{PROJECT_STATE,TASK_LEDGER,task-ledger}.md/json`, affected feature cards, verification/review docs
 
-- [ ] Run typecheck, unit, lint/governance/features/markdown, UI check, format, build, and affected browser tests.
-- [ ] Rebuild actual Vite production bundle and verify preview/desktop-facing entry paths.
+- [x] Run typecheck, unit, lint/governance/features/markdown, UI check, format, build, and affected browser tests.
+- [x] Rebuild actual Vite production bundle and verify preview/desktop-facing entry paths.
 - [ ] Bind the final evidence to the final head and update only statuses proven by that evidence.
-- [ ] Finish with a local merge/PR decision after the merged tree is green; leave unresolved external gates explicit.
+- [x] Finish with a local merge/PR decision after the merged tree is green; leave unresolved external gates explicit.
 - [ ] Merge the integration PR after exact-head independent review and hosted checks; fetch and fast-forward local main, then verify the merged tree and current Web/Desktop artifacts.

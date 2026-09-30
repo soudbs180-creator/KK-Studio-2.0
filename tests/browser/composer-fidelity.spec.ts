@@ -37,6 +37,9 @@ test("菜单 Escape 先收起菜单，再次 Escape 收起编辑器并保留草�
 test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳定", async ({ page }) => {
   await openWorkspace(page);
   await page.setViewportSize({ width: 1071, height: 698 });
+  const reopenBox = await page
+    .getByRole("button", { name: "打开对话", exact: true })
+    .boundingBox();
   await page.getByRole("button", { name: "打开对话", exact: true }).click();
   await expect(page.locator(".conversation-panel")).toBeVisible();
   await waitForConversationPanelSettled(page);
@@ -88,9 +91,10 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
   const closeBox = await page
     .getByRole("button", { name: "收起对话", exact: true })
     .boundingBox();
-  expect(closeBox!.x + closeBox!.width).toBeCloseTo(
-    panelBox!.x + panelBox!.width - 16,
-    1,
+  expect(closeBox!.x).toBeCloseTo(reopenBox!.x, 1);
+  expect(closeBox!.y).toBeCloseTo(reopenBox!.y, 1);
+  expect(closeBox!.x + closeBox!.width).toBeLessThan(
+    panelBox!.x + panelBox!.width,
   );
   const composer = page.locator(".chat-composer > div");
   const composerBox = await composer.boundingBox();

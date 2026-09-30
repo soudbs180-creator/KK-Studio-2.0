@@ -290,7 +290,7 @@ test("手机对话入口建立独立项目，未连接时保留草稿并提供�
 });
 
 test("断点隐藏分组时恢复到用户，手机端保留顶栏操作", async ({ page }) => {
-  await page.goto("/");
+  await seedSidebarFixture(page);
   await page.locator(".project-link").first().focus();
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(

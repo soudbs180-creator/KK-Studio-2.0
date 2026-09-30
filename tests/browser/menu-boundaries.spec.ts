@@ -1,9 +1,11 @@
 import { expect, test } from "@playwright/test";
+import { expandSidebar } from "./helpers";
 import { openWorkspace, showCanvasNavigation } from "./helpers";
 
 test("手机断点清除账号弹层并保留固定顶栏操作", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
+  await expandSidebar(page);
   await page.getByRole("button", { name: "个人信息", exact: true }).click();
   await expect(page.locator(".account-popup")).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
@@ -22,6 +24,7 @@ test("手机断点清除账号弹层并保留固定顶栏操作", async ({ page 
 
 test("侧栏菜单在同一侧栏中的其他操作开始时关闭", async ({ page }) => {
   await page.goto("/");
+  await expandSidebar(page);
   const sort = page.getByRole("button", {
     name: "项目显示与排序",
     exact: true,
@@ -56,20 +59,21 @@ test("工具菜单切换到资产弹窗后不在背景残留", async ({ page }) 
   await openWorkspace(page);
   await page.getByRole("button", { name: "选择画布工具", exact: true }).click();
   await expect(page.getByRole("menu", { name: "画布工具选择" })).toBeVisible();
-  await page.getByRole("button", { name: "资产管理", exact: true }).click();
+  await page.getByRole("button", { name: "资源管理", exact: true }).click();
   await expect(page.getByRole("dialog", { name: "资产管理" })).toBeVisible();
   await expect(
     page.getByRole("menu", { name: "画布工具选择", includeHidden: true }),
   ).toHaveCount(0);
   await page.keyboard.press("Escape");
   await expect(
-    page.getByRole("button", { name: "资产管理", exact: true }),
+    page.getByRole("button", { name: "资源管理", exact: true }),
   ).toBeFocused();
   await expect(page.locator(".canvas-tool-menu")).toHaveCount(0);
 });
 
 test("侧栏项目文件夹右键菜单在点击行收起时关闭", async ({ page }) => {
   await page.goto("/");
+  await expandSidebar(page);
   await page.getByRole("button", { name: "创建项目文件夹" }).click();
   const toggle = page.locator(".folder-heading-toggle").first();
   await expect(toggle).toHaveAttribute("aria-expanded", "true");

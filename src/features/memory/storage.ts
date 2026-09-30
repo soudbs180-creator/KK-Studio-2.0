@@ -365,7 +365,10 @@ async function usableSharedHandle(): Promise<FileSystemDirectoryHandleLoose | nu
 // ========== 组合存储 ==========
 
 const desktopStorage: MemoryStorage = {
-  mode: async () => "shared",
+  mode: async () =>
+    (await invoke<{ shared: boolean }>("memory_storage_info")).shared
+      ? "shared"
+      : "isolated",
   read: () => invoke<MemoryStoreFile>("memory_read"),
   write: async (store, expected) => {
     try {
@@ -380,7 +383,8 @@ const desktopStorage: MemoryStorage = {
   resetIdentity: () => invoke<MemoryStoreFile>("memory_reset_identity"),
   authorizeSharedDirectory: async () => true,
   leaveSharedDirectory: async () => undefined,
-  statusText: async () => KK_MEMORY_DIR_NAME,
+  statusText: async () =>
+    (await invoke<{ path: string }>("memory_storage_info")).path,
 };
 
 function createWebStorage(): MemoryStorage {

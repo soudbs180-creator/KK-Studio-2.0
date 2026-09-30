@@ -53,8 +53,12 @@
   height: 18px;
 }
 @media (min-width: 768px) and (max-width: 1200px) {
+  /* Match the canvas reopen anchor across the panel border and 8px inset. */
   .conversation-panel > header button:last-child {
-    transform: translate(10px, -10px);
+    transform: translate(
+      calc(var(--kk-space-2) + var(--kk-border-width)),
+      calc(-1 * (var(--kk-space-2) + var(--kk-border-width)))
+    );
   }
 }
 .conversation-panel > header button img {

@@ -590,8 +590,7 @@
   min-width: 0;
   text-align: left;
   border: 1px solid var(--border-subtle);
-  /* A2 CardGrid uses the standard card shape; large hero cards keep r28. */
-  border-radius: var(--ui-radius-menu);
+  border-radius: var(--kk-radius-card);
   background: var(--bg-card);
   transition:
     border-color var(--motion-fast) var(--motion-ease),
@@ -764,7 +763,7 @@
   min-width: 0;
   padding: var(--ui-space-3);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--ui-radius-menu);
+  border-radius: var(--kk-radius-card);
   background: var(--bg-card);
   color: var(--text-secondary);
   text-align: left;

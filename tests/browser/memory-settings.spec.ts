@@ -22,6 +22,12 @@ test("记忆分区渲染标题、共享隐私说明与默认关闭的开关", as
   await expect(toggle).toHaveAttribute("aria-checked", "false");
   // 默认关闭：不显示共享状态/列表等启用态内容。
   await expect(dialog.getByText("共享状态", { exact: true })).toHaveCount(0);
+  expect(
+    (await page.evaluate(() => indexedDB.databases())).some(
+      (database) => database.name === "kk-studio-memory",
+    ),
+    "opening disabled memory settings must not read or create memory storage",
+  ).toBe(false);
 });
 
 test("开启记忆后显示共享状态、提炼入口与空态", async ({ page }) => {
@@ -48,13 +54,13 @@ test("开启记忆后显示共享状态、提炼入口与空态", async ({ page 
   await expect(extract).toBeDisabled();
   await page.locator(".settings-feedback button").click();
   await page.screenshot({
-    path: "docs/changes/2026-09-24-local-memory/evidence/memory-enabled-web.png",
+    path: "test-results/changes/2026-09-24-local-memory/evidence/memory-enabled-web.png",
   });
   await dialog.locator(".settings-content").evaluate((element) => {
     element.scrollTop = element.scrollHeight;
   });
   await page.screenshot({
-    path: "docs/changes/2026-09-24-local-memory/evidence/memory-list-web.png",
+    path: "test-results/changes/2026-09-24-local-memory/evidence/memory-list-web.png",
   });
 });
 
@@ -97,7 +103,7 @@ test("390 宽度下记忆设置仍可滚动访问按钮和列表", async ({ page
   await expect(dialog.getByText("暂无记忆", { exact: true })).toBeVisible();
   await page.locator(".settings-feedback button").click();
   await page.screenshot({
-    path: "docs/changes/2026-09-24-local-memory/evidence/memory-enabled-390.png",
+    path: "test-results/changes/2026-09-24-local-memory/evidence/memory-enabled-390.png",
   });
 });
 

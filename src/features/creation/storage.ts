@@ -273,12 +273,13 @@ export async function persistCreationSnapshotAsync(
       ? await encodeSnapshotAssets(snapshot, loadStoredAsset)
       : snapshot;
   decodeSnapshot(persisted);
-  if (isDesktop())
+  if (isDesktop()) {
     await invoke("write_creation_snapshot", {
       snapshot: persisted,
       expectedRevision,
     });
-  else if (isCompanionEnabled()) {
+    expectedRevision = persisted.revision;
+  } else if (isCompanionEnabled()) {
     try {
       const result = await getCompanionClient().persistCompanionSnapshot(
         persisted,

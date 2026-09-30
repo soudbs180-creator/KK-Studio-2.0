@@ -63,7 +63,11 @@ test("desktop settings keeps the approved frame and mobile settings uses a botto
   await page.locator(".mobile-settings").click();
   await page.locator(".settings-panel").evaluate(async (panel) => {
     const dialog = panel.closest("dialog")!;
-    await Promise.all(dialog.getAnimations({ subtree: true }).map((animation) => animation.finished));
+    await Promise.all(
+      dialog
+        .getAnimations({ subtree: true })
+        .map((animation) => animation.finished),
+    );
   });
   const mobileSettings = await rect(page, ".settings-panel");
   const mobileRail = await rect(page, ".settings-sidebar");

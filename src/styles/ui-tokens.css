@@ -72,7 +72,7 @@
      measured Figma tiers rather than being stretched to this default. */
   --ui-button-height: var(--kk-button-h-standard);
   --ui-button-gap: var(--kk-space-2);
-  --ui-button-padding-block: var(--kk-space-2);
+  --ui-button-padding-block: var(--kk-space-1);
   --ui-button-padding-inline: var(--kk-space-3);
   --ui-control-active: var(--ui-neutral-selected);
   --ui-icon-xs: var(--kk-icon-glyph-sm);

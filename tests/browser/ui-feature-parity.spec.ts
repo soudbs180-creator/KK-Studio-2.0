@@ -409,9 +409,11 @@ test("plugin menu reflects installed canvas plugins and opens their manager", as
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "添加素材与生成设置" }).click();
-  const menu = page.getByRole("dialog", { name: "添加素材与生成设置" });
-  await menu.getByRole("button", { name: "插件（MCP）" }).click();
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("button", { name: "MCP", exact: true })
+    .click();
   await expect(page.getByRole("heading", { name: "已安装插件" })).toBeVisible();
 });
 

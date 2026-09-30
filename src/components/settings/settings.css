@@ -188,7 +188,7 @@
   width: 80px;
   max-width: 100%;
   min-width: 0;
-  height: 20px;
+  height: var(--kk-control-h-md);
   padding: 0 var(--ui-space-2);
   border: var(--ui-border-width) solid var(--border-control);
   border-radius: var(--ui-radius-control);
@@ -336,7 +336,7 @@
     max-width: 100%;
   }
   .settings-ext-tab {
-    height: 44px;
+    height: var(--kk-control-h-lg);
     padding: 0 12px;
   }
   .settings-ext-tab-hint {
@@ -1435,8 +1435,8 @@
     font-size: 13px;
   }
   .settings-select {
-    height: 26px;
-    font-size: 11px;
+    height: var(--kk-control-h-lg);
+    font-size: var(--kk-font-caption);
   }
   .settings-row-control {
     padding-top: 10px;

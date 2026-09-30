@@ -159,19 +159,6 @@ export default function ResizeHandle({
   );
 }
 
-export function SidebarResizeHandle() {
-  return (
-    <ResizeHandle
-      cssVar="--sidebar-width-user"
-      min={220}
-      max={480}
-      defaultWidth={291}
-      growDir="right"
-      label="调整侧栏宽度"
-    />
-  );
-}
-
 export function ConversationResizeHandle() {
   return (
     <ResizeHandle

@@ -6,7 +6,7 @@ import {
   themeTokens,
 } from "../helpers/designSystem.ts";
 
-const pages = ["项目库", "Skill", "ComfyUI 工作流"];
+const pages = ["项目库", "技能", "ComfyUI 工作流"];
 
 test("sidebar SVG marks remain distinguishable in both themes", async ({
   page,
@@ -50,13 +50,18 @@ test("sidebar SVG marks remain distinguishable in both themes", async ({
 });
 
 async function navigate(page: Page, name: string) {
-  if (await page.locator(".sidebar.is-narrow.is-collapsed").count()) {
-    await page.getByRole("button", { name: "展开侧边栏", exact: true }).click();
-  }
+  const viewport = page.viewportSize()!;
+  if (viewport.width < 768 && name === "ComfyUI 工作流")
+    await page.setViewportSize({ ...viewport, width: 834 });
   await page
     .locator(".sidebar")
-    .getByRole("button", { name, exact: true })
+    .getByRole("button", {
+      name,
+      exact: true,
+    })
     .click();
+  if (viewport.width < 768 && name === "ComfyUI 工作流")
+    await page.setViewportSize(viewport);
   await expect(page.locator(".catalog-page")).toBeVisible();
   // Narrow navigation is an overlay. Dismiss it through the public Escape
   // interaction before operating the underlying page.
@@ -83,8 +88,8 @@ for (const width of [390, 1920]) {
         "储存",
         "网络",
         "记忆",
-        "模型接入",
-        "插件·技能·伙伴",
+        "模型供应商",
+        "MCP",
         "Comfy UI",
         "高级",
         "软件更新",
@@ -108,14 +113,9 @@ for (const width of [390, 1920]) {
               .filter((el) => el.getClientRects().length)
               .flatMap((el) => {
                 const css = getComputedStyle(el);
-                const expectedHeight =
-                  innerWidth < 768
-                    ? "44px"
-                    : innerWidth <= 1200
-                      ? "40px"
-                      : "32px";
+                const expectedHeight = innerWidth <= 1200 ? "40px" : "32px";
                 return css.height === expectedHeight &&
-                  css.borderRadius === "10px"
+                  css.borderRadius === "8px"
                   ? []
                   : [
                       {
@@ -146,7 +146,7 @@ for (const width of [390, 1920]) {
         if (section === "MCP") {
           await expect(dialog.locator(".settings-mcp-add")).toHaveCSS(
             "border-radius",
-            "28px",
+            "20px",
           );
           await dialog.getByRole("tab", { name: /技能/ }).click();
           await expect(dialog.getByRole("tabpanel")).toContainText("Skill");
@@ -155,7 +155,7 @@ for (const width of [390, 1920]) {
           await dialog.getByRole("tab", { name: /插件/ }).click();
           await expect(dialog.locator(".plugin-manager-row").first()).toHaveCSS(
             "border-radius",
-            "28px",
+            "20px",
           );
           await page.screenshot({
             path: info.outputPath(`settings-plugins-${theme}-${width}.png`),
@@ -197,22 +197,24 @@ for (const theme of ["dark", "light"]) {
   }, info) => {
     test.setTimeout(60000);
     await page.goto("/");
+    await navigate(page, "项目库");
+    await page.getByRole("button", { name: "新建项目", exact: true }).click();
     await page.emulateMedia({ reducedMotion: "reduce" });
     for (const name of pages) {
       await navigate(page, name);
       const section = page.locator(".catalog-page");
-      await expect.soft(section.locator("h1")).toHaveCSS("font-size", "24px");
+      await expect.soft(section.locator("h1")).toHaveCSS("font-size", "26px");
       await expect
         .soft(section.locator(".catalog-page-search"))
         .toHaveCSS("height", "32px");
       await expect
         .soft(section.locator(".catalog-page-search"))
-        .toHaveCSS("border-radius", "10px");
+        .toHaveCSS("border-radius", "8px");
       const cards = section.locator(
         ".catalog-card, .project-library-card, .project-library-action",
       );
       expect(await cards.count()).toBeGreaterThan(0);
-      await expect.soft(cards.first()).toHaveCSS("border-radius", "12px");
+      await expect.soft(cards.first()).toHaveCSS("border-radius", "20px");
       for (const accent of ACCENTS) {
         await page.mouse.move(0, 0);
         await appearance(page, theme, accent);
@@ -247,7 +249,7 @@ for (const theme of ["dark", "light"]) {
           "background-color",
           cssRgb(token("--bg-input")),
         );
-        if (name === "Skill") {
+        if (name === "技能") {
           const filter = section.locator(".catalog-categories button").first();
           const selected = await filter.evaluate((el) => ({
             border: getComputedStyle(el).borderColor,
@@ -260,7 +262,7 @@ for (const theme of ["dark", "light"]) {
           expect(selected.shadow).toContain("inset");
         }
       }
-      if (name === "Skill") {
+      if (name === "技能") {
         const filter = section.locator(".catalog-categories button").first();
         await expect.soft(filter).toHaveAttribute("aria-pressed", "true");
         await expect.soft(filter).toHaveCSS("border-radius", "999px");
@@ -317,7 +319,7 @@ for (const width of [390, 1920]) {
     await page.setViewportSize({ width, height: width === 1920 ? 1080 : 844 });
     await page.goto("/");
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await navigate(page, "Skill");
+    await navigate(page, "技能");
     const opener = page.getByRole("button", {
       name: "新建本地 Skill",
       exact: true,
@@ -327,7 +329,7 @@ for (const width of [390, 1920]) {
     await expect.soft(dialog).toHaveCSS("border-radius", "20px");
     for (const input of await dialog.locator("input").all()) {
       await expect.soft(input).toHaveCSS("height", "32px");
-      await expect.soft(input).toHaveCSS("border-radius", "10px");
+      await expect.soft(input).toHaveCSS("border-radius", "8px");
     }
     await dialog
       .getByLabel("ID", { exact: true })
@@ -368,7 +370,7 @@ for (const width of [390, 1920]) {
     await expect(dialog).toHaveCount(0);
     await expect(opener).toBeFocused();
     await page.reload();
-    await navigate(page, "Skill");
+    await navigate(page, "技能");
     const category = page
       .getByRole("group", { name: "Skill分类", exact: true })
       .getByRole("button", { name: longCategory, exact: true });

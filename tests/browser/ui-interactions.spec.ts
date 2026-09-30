@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { openWorkspace, showCanvasNavigation } from "./helpers";
+import { expandSidebar, openWorkspace, showCanvasNavigation } from "./helpers";
 import { seedSidebarFixture } from "./sidebar-fixture";
 
 test("project status and task entry do not cover each other", async ({
@@ -63,6 +63,7 @@ test("collapsing a project group preserves edited folder name", async ({
   page,
 }) => {
   await page.goto("/");
+  await expandSidebar(page);
   const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
   await sidebar.getByRole("button", { name: "创建项目文件夹" }).click();
   const group = sidebar.locator(".project-folder-group").first();
@@ -89,6 +90,7 @@ test("new project folder heading actually toggles its contents", async ({
   page,
 }) => {
   await page.goto("/");
+  await expandSidebar(page);
   await page
     .getByRole("button", { name: "创建项目文件夹", exact: true })
     .click();

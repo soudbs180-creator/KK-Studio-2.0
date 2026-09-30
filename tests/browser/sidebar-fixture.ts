@@ -6,6 +6,7 @@ import {
 } from "../../src/features/creation/model";
 import { BASE_CANVAS_ITEMS } from "../../src/domain/canvasItems";
 import { createProjectCanvas } from "../../src/domain/projectCanvas";
+import { expandSidebar } from "./helpers";
 
 /** Explicit saved project data for geometry and grouping tests. */
 export async function seedSidebarFixture(page: Page, textFirst = false) {
@@ -61,6 +62,7 @@ export async function seedSidebarFixture(page: Page, textFirst = false) {
     }),
   });
   await page.reload();
+  await expandSidebar(page);
   const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
   await expect(sidebar.locator(".project-entry")).toHaveCount(2);
   return sidebar;

@@ -1,0 +1,110 @@
+{
+  "timestamp": "2026-09-30T05:39:09.988Z",
+  "mode": "Tauri release",
+  "checks": [
+    {
+      "viewport": 390,
+      "home": {
+        "width": 299,
+        "height": 170,
+        "overflow": 0,
+        "actions": [
+          24,
+          24,
+          24,
+          24,
+          24,
+          24
+        ]
+      }
+    },
+    {
+      "viewport": 1099,
+      "home": {
+        "width": 652,
+        "height": 170,
+        "overflow": 0,
+        "actions": [
+          24,
+          24,
+          24,
+          24,
+          24,
+          24
+        ]
+      }
+    },
+    {
+      "viewport": 1920,
+      "home": {
+        "width": 652,
+        "height": 170,
+        "overflow": 0,
+        "actions": [
+          24,
+          24,
+          24,
+          24,
+          24,
+          24
+        ]
+      }
+    },
+    {
+      "memoryOffDoesNotRead": true,
+      "isolatedMemoryRetention": true,
+      "sharedMemoryUnchanged": true,
+      "nativeProjectRestartDelete": true,
+      "nativeConfirmationCancelAndAccept": true,
+      "nativeMemoryConfirmationCancelAndAccept": true,
+      "canvasHistorySnapLayers": true
+    }
+  ],
+  "launches": [
+    {
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-y2ZQ96lR.js"
+      ],
+      "styles": [
+        "http://tauri.localhost/assets/index-Dajq2fwF.css"
+      ],
+      "root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-project-landing-QBrFad\\data",
+      "memory": {
+        "shared": false,
+        "path": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-project-landing-QBrFad\\data\\memory\\memory.json"
+      }
+    },
+    {
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-y2ZQ96lR.js"
+      ],
+      "styles": [
+        "http://tauri.localhost/assets/index-Dajq2fwF.css"
+      ],
+      "root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-project-landing-QBrFad\\data",
+      "memory": {
+        "shared": false,
+        "path": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-project-landing-QBrFad\\data\\memory\\memory.json"
+      }
+    },
+    {
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-y2ZQ96lR.js"
+      ],
+      "styles": [
+        "http://tauri.localhost/assets/index-Dajq2fwF.css"
+      ],
+      "root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-project-landing-QBrFad\\data",
+      "memory": {
+        "shared": false,
+        "path": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-project-landing-QBrFad\\data\\memory\\memory.json"
+      }
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "executableSha256": "a233cbd9ac568bcab27b42e4d282e7e83681de0eea575f2fb7c367cadfb58072"
+}

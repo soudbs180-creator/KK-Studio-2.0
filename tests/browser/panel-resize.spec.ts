@@ -60,16 +60,10 @@ test("对话宽度的无障碍最大值等于键盘可达宽度", async ({ page 
     )
     .toBeLessThanOrEqual(2);
   await handle.press("Home");
-  const sidebarHandle = page.getByRole("separator", {
-    name: "调整侧栏宽度",
-  });
-  await sidebarHandle.focus();
-  await sidebarHandle.press("End");
+  await page.getByRole("button", { name: "收起侧边栏", exact: true }).click();
   await expect
     .poll(async () => Number(await handle.getAttribute("aria-valuemax")))
-    .toBeLessThan(reachableMax);
-  // Sidebar resizing is animated. Wait for its actual width to reach the
-  // keyboard-selected value before measuring the other panel's limit.
+    .toBeGreaterThan(reachableMax);
   const sidebar = page.locator(".sidebar");
   await expect
     .poll(async () =>
@@ -92,15 +86,21 @@ test("对话宽度的无障碍最大值等于键盘可达宽度", async ({ page 
     .toBeLessThanOrEqual(2);
 });
 
-test("侧栏宽度可用键盘恢复设计默认值", async ({ page }) => {
+test("侧栏只使用固定展开与收起宽度，键盘切换保持焦点", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await openWorkspace(page);
   const sidebar = page.locator(".sidebar");
-  const handle = page.getByRole("separator", { name: "调整侧栏宽度" });
-  await handle.focus();
-  await handle.press("Home");
-  await expect.poll(async () => (await sidebar.boundingBox())!.width).toBe(220);
-  await handle.press("Shift+Home");
+  await expect(
+    page.getByRole("separator", { name: "调整侧栏宽度" }),
+  ).toHaveCount(0);
   await expect.poll(async () => (await sidebar.boundingBox())!.width).toBe(291);
-  await expect(handle).toHaveAttribute("aria-keyshortcuts", "Shift+Home");
+  const toggle = sidebar.locator(".sidebar-toggle");
+  await toggle.focus();
+  await toggle.press("Enter");
+  await expect.poll(async () => (await sidebar.boundingBox())!.width).toBe(70);
+  await expect(toggle).toBeFocused();
+  await expect(toggle).toHaveAttribute("aria-label", "展开侧边栏");
+  await toggle.press("Enter");
+  await expect.poll(async () => (await sidebar.boundingBox())!.width).toBe(291);
+  await expect(toggle).toBeFocused();
 });

@@ -196,7 +196,7 @@ test("长模型名不会挤出工作台动作区，模型菜单仍完整可操�
 });
 
 for (const width of [390, 768, 900]) {
-  test(`首页 ${width}px 主控件和四种弹层可见、可命中且关闭回焦`, async ({
+  test(`首页 ${width}px 主控件和三种弹层可见、可命中且关闭回焦`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1024 });
@@ -210,7 +210,6 @@ for (const width of [390, 768, 900]) {
     }
     const baseline = await controlRects(footer);
     const triggers = [
-      footer.getByRole("button", { name: "添加素材与生成设置" }),
       footer.getByRole("button", { name: "模型", exact: true }),
       footer.getByRole("button", { name: "Skill", exact: true }),
       footer.getByRole("button", { name: /^当前模式：/ }),

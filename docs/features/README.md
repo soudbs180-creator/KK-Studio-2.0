@@ -27,7 +27,7 @@
 | ID | 功能 | 状态 | 卡片 | 关联任务 |
 | --- | --- | --- | --- | --- |
 | FEAT-001 | 创作画布（节点/连线/编辑） | REAL（真实可用） | [卡片](feat-001-canvas-workbench.md) | T2, UI-004, TASK-UI-006, TASK-CANVAS-KAWORKAI-001 |
-| FEAT-036 | 画布图片对比 | PARTIAL（部分可用） | [卡片](feat-036-image-compare.md) | TASK-COMPARE-001, TASK-COMPARE-002 |
+| FEAT-036 | 画布图片对比 | PARTIAL（部分可用） | [卡片](feat-036-image-compare.md) | TASK-COMPARE-001, TASK-COMPARE-002, UI-004 |
 
 ## 创作生成
 

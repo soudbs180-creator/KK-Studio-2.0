@@ -1,7 +1,7 @@
 import { expect, test, type Locator } from "@playwright/test";
 import { openWorkspace } from "./helpers";
 
-const evidence = "docs/changes/2026-09-23-input-contract/evidence";
+const evidence = "test-results/changes/2026-09-23-input-contract/evidence";
 const png = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==",
   "base64",

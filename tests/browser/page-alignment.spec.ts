@@ -28,7 +28,7 @@ test("current Figma modal shells keep dimensions and settings content origin", a
   await page.getByRole("button", { name: "搜索", exact: true }).click();
   await expect(page.locator(".catalog-panel")).toHaveCSS("height", "696px");
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "资产管理", exact: true }).click();
+  await page.getByRole("button", { name: "资源管理", exact: true }).click();
   await expect(page.locator(".asset-panel")).toHaveCSS("height", "696px");
   await page.getByRole("button", { name: "收起资产管理", exact: true }).click();
   await expect(page.locator(".asset-panel")).toHaveCSS("width", "305px");
@@ -58,9 +58,7 @@ test("unconnected account and memory controls do not advertise working services"
   await expect(page.locator(".settings-content")).toContainText(
     "npm run proxy",
   );
-  await page
-    .getByRole("button", { name: "插件·技能·伙伴", exact: true })
-    .click();
+  await page.getByRole("button", { name: "MCP", exact: true }).click();
   await page.getByRole("tab", { name: /伙伴/ }).click();
   await expect(page.locator(".settings-content")).toContainText(
     "npm run dev:agent",

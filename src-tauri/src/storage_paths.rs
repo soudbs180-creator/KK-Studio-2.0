@@ -10,6 +10,7 @@ pub struct AppPaths {
     pub assets: PathBuf,
     pub tasks: PathBuf,
     pub memory: PathBuf,
+    pub isolated: bool,
 }
 
 const DATA_DIRECTORIES: [&str; 13] = [
@@ -31,7 +32,9 @@ const DATA_DIRECTORIES: [&str; 13] = [
 impl AppPaths {
     pub fn initialize() -> Result<Self, String> {
         if let Some(root) = explicit_data_root(std::env::args_os().skip(1))? {
-            return Self::initialize_at(&root);
+            let mut paths = Self::initialize_at(&root)?;
+            paths.isolated = true;
+            return Ok(paths);
         }
         let root = dirs::data_dir()
             .ok_or_else(|| "无法确定用户应用数据目录".to_string())?
@@ -62,6 +65,7 @@ impl AppPaths {
             assets,
             tasks,
             memory,
+            isolated: false,
         })
     }
 }

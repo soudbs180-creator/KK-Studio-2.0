@@ -98,7 +98,7 @@
   border-radius: 5px;
 }
 .sidebar {
-  width: var(--sidebar-width-user, var(--sidebar-width));
+  width: var(--sidebar-width);
   flex-shrink: 0;
   position: relative;
   display: flex;

@@ -134,6 +134,7 @@ struct AppState {
     config_path: PathBuf,
     conversations_path: PathBuf,
     memory_path: PathBuf,
+    legacy_memory_path: Option<PathBuf>,
     creation: Arc<creation_storage::SnapshotRepository>,
     assets: Arc<asset_storage::AssetRepository>,
     task_host: Arc<task_host::TaskHost>,
@@ -772,24 +773,33 @@ fn validate_memory_store(store: &MemoryStore) -> Result<(), String> {
 
 /// 本机共享记忆文件路径：~/.kk-memory/memory.json（跨产品约定）。
 fn shared_memory_path() -> PathBuf {
-    let home = std::env::var("USERPROFILE")
-        .or_else(|_| std::env::var("HOME"))
-        .unwrap_or_else(|_| ".".to_string());
-    PathBuf::from(home).join(".kk-memory").join("memory.json")
+    dirs::home_dir()
+        .expect("无法确定本机记忆目录")
+        .join(".kk-memory")
+        .join("memory.json")
+}
+
+fn memory_paths(legacy: PathBuf, isolated: bool) -> (PathBuf, Option<PathBuf>) {
+    if isolated {
+        (legacy, None)
+    } else {
+        (shared_memory_path(), Some(legacy))
+    }
 }
 
 /// 首次启用共享文件时，把隔离版旧文件（app-data/memory/memory.json）作为种子迁移；
 /// 仅当共享文件不存在且旧文件存在时执行，避免覆盖任何已有共享记忆。
-fn seed_shared_memory(shared: &Path, legacy: &Path) {
+fn seed_shared_memory(shared: &Path, legacy: &Path) -> Result<(), String> {
     if shared.exists() || !legacy.exists() {
-        return;
+        return Ok(());
     }
-    if let Some(parent) = shared.parent() {
-        if fs::create_dir_all(parent).is_err() {
-            return;
+    with_memory_file_lock(shared, || {
+        if shared.exists() {
+            return Ok(());
         }
-    }
-    let _ = fs::copy(legacy, shared);
+        let store = read_memory_file(legacy)?;
+        write_memory_file(shared, &store)
+    })
 }
 
 fn read_memory_file(path: &Path) -> Result<MemoryStore, String> {
@@ -867,7 +877,24 @@ fn guarded_write_memory_file(
 
 #[tauri::command(rename_all = "camelCase")]
 fn memory_read(state: State<AppState>) -> Result<MemoryStore, String> {
+    if let Some(legacy) = &state.legacy_memory_path {
+        seed_shared_memory(&state.memory_path, legacy)?;
+    }
     read_memory_file(&state.memory_path)
+}
+
+#[derive(Serialize)]
+struct MemoryStorageInfo {
+    shared: bool,
+    path: String,
+}
+
+#[tauri::command]
+fn memory_storage_info(state: State<AppState>) -> MemoryStorageInfo {
+    MemoryStorageInfo {
+        shared: state.legacy_memory_path.is_some(),
+        path: state.memory_path.to_string_lossy().into_owned(),
+    }
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -1409,13 +1436,15 @@ mod memory_tests {
             guarded_write_memory_file(&first_path, &first, &first_expected)
         });
         let second_path = path.clone();
-        let second_write = std::thread::spawn(move || {
-            guarded_write_memory_file(&second_path, &second, &expected)
-        });
+        let second_write =
+            std::thread::spawn(move || guarded_write_memory_file(&second_path, &second, &expected));
         let results = [first_write.join().unwrap(), second_write.join().unwrap()];
         assert_eq!(results.iter().filter(|result| result.is_ok()).count(), 1);
         assert_eq!(
-            read_memory_file(&path).expect("winning store").records.len(),
+            read_memory_file(&path)
+                .expect("winning store")
+                .records
+                .len(),
             1
         );
         let _ = fs::remove_file(&path);
@@ -1478,9 +1507,29 @@ mod memory_tests {
         });
         assert!(result.is_err());
         assert_eq!(fs::read(&path).expect("read live after failure"), original);
-        assert_eq!(fs::read(&backup).expect("read backup after failure"), original);
+        assert_eq!(
+            fs::read(&backup).expect("read backup after failure"),
+            original
+        );
         let _ = fs::remove_file(&backup);
         let _ = fs::remove_file(&path);
+    }
+
+    #[test]
+    fn malformed_legacy_memory_is_not_promoted_to_shared_file() {
+        let shared = temp_memory_path("malformed-seed");
+        let legacy = shared.with_extension("legacy.json");
+        fs::write(&legacy, b"not-json").expect("write malformed legacy");
+        assert!(seed_shared_memory(&shared, &legacy).is_err());
+        assert!(
+            !shared.exists(),
+            "malformed memory must not become the shared file"
+        );
+        assert_eq!(
+            fs::read(&legacy).expect("read preserved legacy"),
+            b"not-json"
+        );
+        let _ = fs::remove_file(&legacy);
     }
 
     #[test]
@@ -1502,7 +1551,7 @@ mod memory_tests {
             records: vec![sample_record()],
         };
         write_memory_file(&legacy, &store).expect("write legacy");
-        seed_shared_memory(&shared, &legacy);
+        seed_shared_memory(&shared, &legacy).expect("seed valid memory");
         let seeded = read_memory_file(&shared).expect("read seeded");
         assert_eq!(seeded.records.len(), 1);
         // 共享文件已存在时不再覆盖
@@ -1512,11 +1561,23 @@ mod memory_tests {
             records: vec![],
         };
         write_memory_file(&shared, &overwrite).expect("write shared");
-        seed_shared_memory(&shared, &legacy);
+        seed_shared_memory(&shared, &legacy).expect("preserve shared memory");
         let after = read_memory_file(&shared).expect("read after");
         assert!(after.records.is_empty());
         let _ = fs::remove_file(&legacy);
         let _ = fs::remove_file(&shared);
+    }
+
+    #[test]
+    fn isolated_data_root_keeps_memory_local_and_never_selects_legacy_migration() {
+        let isolated = temp_memory_path("isolated");
+        let (selected, legacy) = memory_paths(isolated.clone(), true);
+        assert_eq!(selected, isolated);
+        assert!(legacy.is_none());
+        assert!(
+            !selected.exists(),
+            "selecting paths must not create memory files"
+        );
     }
 
     #[test]
@@ -1578,11 +1639,10 @@ fn task_host_cancel(
 
 fn main() {
     let paths = storage_paths::AppPaths::initialize().expect("KK Studio 无法初始化用户数据目录");
+    let (memory_path, legacy_memory_path) = memory_paths(paths.memory.clone(), paths.isolated);
     let config_path = paths.config;
     let conversations_path = paths.conversations;
-    // 共享记忆：所有产品读写 ~/.kk-memory/memory.json；首次启用时迁移旧隔离版文件。
-    let memory_path = shared_memory_path();
-    seed_shared_memory(&memory_path, &paths.memory);
+    // Legacy memory is validated and migrated only when enabled memory is first read.
     let task_host = Arc::new(
         task_host::TaskHost::new(
             paths.tasks.join("native-host"),
@@ -1620,12 +1680,14 @@ fn main() {
             config_path,
             conversations_path,
             memory_path,
+            legacy_memory_path,
             creation: Arc::new(creation_storage::SnapshotRepository::new(paths.creation)),
             assets: Arc::new(asset_storage::AssetRepository::new(paths.assets)),
             task_host,
             restored_roots: Mutex::new(std::collections::HashSet::new()),
         })
         .invoke_handler(tauri::generate_handler![
+            memory_storage_info,
             agent_runtime::agent_runtime_start,
             agent_runtime::agent_runtime_status,
             agent_runtime::agent_runtime_stop,

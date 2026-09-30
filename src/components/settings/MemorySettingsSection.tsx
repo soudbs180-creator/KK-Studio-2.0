@@ -9,6 +9,7 @@
 import { useMemory } from "../../features/memory/useMemory.ts";
 import { MEMORY_CONTENT_MAX_LENGTH } from "../../features/memory/types.ts";
 import { isTauri } from "@tauri-apps/api/core";
+import { confirmAction } from "../../runtime/confirmAction";
 
 const TYPE_LABELS: Record<string, string> = {
   user_profile: "用户画像",
@@ -110,7 +111,9 @@ export default function MemorySettingsSection({
                     ? "本机共享文件（浏览器只读）"
                     : mode === "locked"
                       ? "共享目录需重新授权"
-                      : "仅本应用（浏览器私有）"}
+                      : isTauri()
+                        ? "仅当前数据目录"
+                        : "仅本应用（浏览器私有）"}
               </strong>
             </div>
             <div>
@@ -122,8 +125,8 @@ export default function MemorySettingsSection({
             <div>
               <h3>共享目录授权</h3>
               <p>
-                {storageStatus}。桌面端使用
-                ~/.kk-memory；浏览器端选择同一目录后可只读参考。
+                {storageStatus}。桌面端默认使用
+                ~/.kk-memory；指定隔离数据目录时仅使用该目录。浏览器端选择共享目录后可只读参考。
                 浏览器私有记忆会保留，不会自动合并到共享文件。
                 其他应用只有完成该契约接入后才能读取，不会因登录而自动共享。
               </p>
@@ -223,8 +226,8 @@ export default function MemorySettingsSection({
                       className="settings-memory-delete"
                       aria-label={`删除记忆：${record.content.slice(0, 20)}`}
                       disabled={busy || cannotEdit}
-                      onClick={() => {
-                        if (window.confirm("确认删除这条记忆？"))
+                      onClick={async () => {
+                        if (await confirmAction("确认删除这条记忆？"))
                           void removeRecord(record.id);
                       }}
                     >
@@ -238,9 +241,9 @@ export default function MemorySettingsSection({
                   type="button"
                   className="settings-action secondary"
                   disabled={busy || cannotEdit}
-                  onClick={() => {
+                  onClick={async () => {
                     if (
-                      window.confirm(
+                      await confirmAction(
                         "确认清空全部记忆？此操作会影响已接入共享文件的客户端。",
                       )
                     )
@@ -253,9 +256,9 @@ export default function MemorySettingsSection({
                   type="button"
                   className="settings-action secondary"
                   disabled={busy || cannotEdit}
-                  onClick={() => {
+                  onClick={async () => {
                     if (
-                      window.confirm(
+                      await confirmAction(
                         "确认重置当前记忆？桌面端会保留旧文件备份；浏览器私有记忆没有文件级备份。",
                       )
                     )

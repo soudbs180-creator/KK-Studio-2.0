@@ -22,11 +22,11 @@ async function openWorkspace(page: Page): Promise<void> {
 async function configure(page: Page, model = "image-test"): Promise<void> {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型接入", exact: true }).click();
-  await page.getByLabel("API Base URL").fill("https://models.example.test/v1");
+  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key").fill("fixture-key");
-  await page.getByLabel("默认模型").fill(model);
-  await page.getByRole("button", { name: "保存供应商" }).click();
+  await page.getByLabel("模型名称").fill(model);
+  await page.getByRole("button", { name: "保存", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
 }
 
@@ -188,7 +188,7 @@ test("active project canvas uses the provider command for a non-root source and 
       await resultComposer.getByRole("button", { name: "展开提示词" }).click();
     const geometry = await resultComposer.evaluate((element) => {
       const refs = element
-        .querySelector(".reference-slots")!
+        .querySelector(".reference-slots, .composer-refs")!
         .getBoundingClientRect();
       const input = element.querySelector("textarea")!.getBoundingClientRect();
       const controls = element
@@ -360,10 +360,15 @@ test("unconfigured canvas generation opens provider settings and keeps the promp
   const prompt = "未配置时仍保留这段提示词";
   await source.getByLabel("图片提示词").fill(prompt);
   await chooseOneOutput(source);
-  await source.getByRole("button", { name: "生成图片", exact: true }).click();
+  await expect(
+    source.getByRole("button", { name: "生成图片", exact: true }),
+  ).toBeDisabled();
+  await source
+    .getByRole("button", { name: "前往模型设置", exact: true })
+    .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "模型接入", exact: true }),
+    page.getByRole("button", { name: "模型供应商", exact: true }),
   ).toBeVisible();
   await expect(source.getByLabel("图片提示词")).toHaveValue(prompt);
 });

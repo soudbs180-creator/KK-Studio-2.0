@@ -144,8 +144,14 @@ export interface CreationProject {
 
 /** Do not remove a project while its provider submission may still be active. */
 export function projectHasUnsettledTasks(project: CreationProject): boolean {
-  return project.tasks.some((task) =>
-    ["queued", "running", "unknown"].includes(task.status),
+  return project.tasks.some(
+    (task) =>
+      ["queued", "running", "unknown"].includes(task.status) ||
+      task.submissionState === "submitted" ||
+      task.submissionState === "unknown" ||
+      task.outputs?.some((output) =>
+        ["waiting", "running", "unknown"].includes(output.status),
+      ),
   );
 }
 

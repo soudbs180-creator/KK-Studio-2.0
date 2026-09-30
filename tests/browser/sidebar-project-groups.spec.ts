@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
 import { arrangeSidebarFolder } from "./sidebar-fixture";
+import { expandSidebar } from "./helpers";
 
 /**
  * TASK-UI-009 侧栏项目分组与文件夹收纳交互增强（会话内 Prototype）。
@@ -15,6 +16,7 @@ import { arrangeSidebarFolder } from "./sidebar-fixture";
  */
 async function openSidebar(page: Page): Promise<Page> {
   await page.goto("/");
+  await expandSidebar(page);
   const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
   await expect(sidebar).toBeVisible();
   return sidebar;

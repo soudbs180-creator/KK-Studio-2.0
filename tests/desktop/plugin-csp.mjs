@@ -6,10 +6,7 @@ import { chromium, expect } from "@playwright/test";
 
 const root = process.cwd();
 const executable = path.join(root, "src-tauri/target/release/kk-studio.exe");
-const evidenceDir = path.join(
-  root,
-  "docs/changes/2026-09-29-plugin-desktop-csp/evidence",
-);
+const evidenceDir = path.join(root, "test-results/desktop/plugin-csp");
 const isolated = path.join(
   root,
   "src-tauri/target/plugin-csp-acceptance",
@@ -79,7 +76,10 @@ try {
 
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const settings = page.getByRole("dialog", { name: "设置" });
-  await settings.getByRole("button", { name: "插件", exact: true }).click();
+  await settings
+    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("button", { name: "MCP", exact: true })
+    .click();
   const pluginRow = settings
     .locator(".plugin-manager-row")
     .filter({ hasText: "SVG" })
@@ -96,7 +96,8 @@ try {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const settingsAgain = page.getByRole("dialog", { name: "设置" });
   await settingsAgain
-    .getByRole("button", { name: "插件", exact: true })
+    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("button", { name: "MCP", exact: true })
     .click();
   await settingsAgain
     .locator(".plugin-manager-row")

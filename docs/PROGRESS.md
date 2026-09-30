@@ -1,5 +1,14 @@
 # 当前进度
 
+## 2026-09-30 项目落地集成版本
+
+已收敛两组竞品本地能力与 UI/Google/记忆/CodeBuddy/Provider 候选，保留 main 的图片比较、本机服务、插件与版本契约。修复真实项目连续原生保存、异步确认、输入区重叠、未配置反馈、项目删除保护与隔离记忆。当前 Web 2.1.3、Desktop 2.1.2；Mobile 2.1.1 为规划版本。源码集成、同状态生产 UI 与桌面重启证据见 [验证](changes/2026-09-29-project-landing/verification.md)、[全量审计](changes/2026-09-29-project-landing/audit.md) 和 [未完成项](changes/2026-09-29-project-landing/remaining.md)。主线推广结果以该集成 PR 的精确 HEAD 审查/检查/merged 记录为准。
+
+## 以下为历史迭代记录
+
+历史记录中的分支、端口、尺寸、版本及待验收描述仅代表当时状态；当前事实以上述入口为准。
+
+
 ## 2026-09-29 Kaworkai 无限画布研究与本地增强（TASK-CANVAS-KAWORKAI-001，PARTIAL）
 ## 2026-09-24 Claude Code settings.json 落盘（TASK-PROV-004，REVIEW，待推送）
 

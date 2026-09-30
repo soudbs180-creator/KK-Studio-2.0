@@ -7,6 +7,7 @@ import React, {
   type SetStateAction,
 } from "react";
 import { appVersion } from "./runtime/appInfo";
+import { confirmAction } from "./runtime/confirmAction";
 import TopBar from "./components/TopBar";
 import Sidebar from "./components/Sidebar";
 import type { ModelSelection } from "./features/models/modelSelection";
@@ -207,6 +208,8 @@ export default function App() {
   );
   const { creation, creationRef, commitCreation } = persistence;
   const saveState = persistence.state;
+  const saveStateRef = useRef(saveState);
+  saveStateRef.current = saveState;
   const submitLock = useRef(false);
   const [providerVersion, setProviderVersion] = useState(0);
   const homeModelConfig = useMemo(() => {
@@ -1907,18 +1910,25 @@ export default function App() {
       updatedAt: Date.now(),
     }));
   }
-  function deleteSavedProject(id: string): void {
+  async function deleteSavedProject(id: string): Promise<void> {
     if (persistence.state !== "saved" && persistence.state !== "saving") return;
     const project = creationRef.current.projects.find((item) => item.id === id);
     if (!project) return;
     if (projectHasUnsettledTasks(project)) return;
     if (
-      !window.confirm(
+      !(await confirmAction(
         `确定删除项目「${project.name}」？此操作会从本地项目库移除该项目。`,
-      )
+      ))
     )
       return;
     const current = creationRef.current;
+    const confirmedProject = current.projects.find((item) => item.id === id);
+    if (
+      !confirmedProject ||
+      projectHasUnsettledTasks(confirmedProject) ||
+      (saveStateRef.current !== "saved" && saveStateRef.current !== "saving")
+    )
+      return;
     commitCreation({
       ...current,
       projects: current.projects.filter((item) => item.id !== id),
@@ -2184,6 +2194,8 @@ export default function App() {
                 disabledReason: activeProject
                   ? undefined
                   : "请先新建或打开项目，再提交图片生成。",
+                imageConfigured: homeModelConfig.configured,
+                configure: () => open("settings/providers"),
               }}
             >
               <Canvas

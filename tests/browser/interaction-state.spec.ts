@@ -1,5 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { openSeededProject, showCanvasNavigation } from "./helpers";
+import {
+  expandSidebar,
+  openSeededProject,
+  showCanvasNavigation,
+} from "./helpers";
 
 const openWorkspace = openSeededProject;
 
@@ -99,8 +103,8 @@ test("对话空态在消息区垂直居中，语音输入默认关闭且可用",
   await expect(voice).toBeEnabled();
   await expect(voice).toHaveAttribute("aria-pressed", "false");
   await expect(voice).toHaveCSS("opacity", "1");
-  // DS 1.3 separates the 32px desktop target from the 16px source glyph.
-  await expect(voice).toHaveCSS("height", "32px");
+  // The current compact composer uses the registered 24px control tier.
+  await expect(voice).toHaveCSS("height", "24px");
   await expect(voice.locator("img")).toHaveAttribute(
     "src",
     "/design/figma/mic-off.svg",
@@ -147,28 +151,31 @@ test("画布工具栏分隔线保持竖向居中", async ({ page }) => {
   }
 });
 
-test("画布工具栏菜单沿用Figma原稿尺寸", async ({ page }) => {
+test("画布工具栏菜单使用可读的控件与菜单尺寸", async ({ page }) => {
   await openWorkspace(page);
   const toolbar = page.getByRole("toolbar", { name: "画布工具" });
-  await toolbar.locator(".toolbar-toggle").click();
+  await toolbar
+    .getByRole("button", { name: "选择画布工具", exact: true })
+    .click();
   const toolMenu = toolbar.locator(".canvas-tool-menu");
   await expect(toolMenu).toBeVisible();
   expect((await toolMenu.boundingBox())!).toMatchObject({
-    width: 90,
-    height: 50,
+    width: 196,
+    height: 98,
   });
   await page.keyboard.press("Escape");
   await toolbar.locator(".toolbar-help").click();
   const helpMenu = toolbar.locator(".canvas-help-menu");
   await expect(helpMenu).toBeVisible();
   expect((await helpMenu.boundingBox())!).toMatchObject({
-    width: 103,
-    height: 50,
+    width: 168,
+    height: 98,
   });
 });
 
 test("侧栏收起后展开入口回到品牌位并隐藏兔子标志", async ({ page }) => {
   await page.goto("/");
+  await expandSidebar(page);
   await page.getByRole("button", { name: "收起侧边栏" }).click();
   const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });
   await expect(sidebar.locator(".brand .logo")).toBeHidden();
@@ -181,6 +188,7 @@ test("侧栏收起后展开入口回到品牌位并隐藏兔子标志", async ({
 
 test("真实未分组项目可改名，删除需要确认", async ({ page }) => {
   await page.goto("/");
+  await expandSidebar(page);
   await page.getByRole("button", { name: "创建未分组项目" }).click();
   const project = page.locator(".project-entry").first();
   await project.getByRole("textbox", { name: "项目名称" }).fill("初始项目");

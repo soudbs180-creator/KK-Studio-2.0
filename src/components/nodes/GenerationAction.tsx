@@ -5,7 +5,7 @@ import BrandLogo from "../BrandLogo";
 type Generation = Pick<
   ReturnType<typeof useLocalGeneration>,
   "phase" | "message" | "available" | "cancel"
-> & { mode?: "provider"; kind?: "image" | "text" };
+> & { mode?: "provider"; kind?: "image" | "text"; configure?: () => void };
 export function GenerationAction({
   generation,
   label,
@@ -68,6 +68,11 @@ export function GenerationStatus({ generation }: { generation: Generation }) {
       role="status"
     >
       {generation.message}
+      {generation.configure && (
+        <button type="button" onClick={generation.configure}>
+          前往模型设置
+        </button>
+      )}
     </div>
   );
 }

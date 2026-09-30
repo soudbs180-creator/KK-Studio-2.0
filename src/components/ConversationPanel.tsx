@@ -1,15 +1,10 @@
 import { ConversationResizeHandle } from "./ResizeHandle";
-import type { ModelSelection } from "../features/models/modelSelection";
 import { useEffect, useState } from "react";
 import { useConversationOverlay } from "./useConversationOverlay";
 import useConversationAttachments from "./useConversationAttachments";
-import type {
-  CreationDraft,
-  CreationProject,
-} from "../features/creation/model";
+import type { CreationDraft } from "../features/creation/model";
+import type { ConversationPanelProps } from "./ConversationPanel.types";
 import ConversationMessageFeed from "./ConversationMessageFeed";
-import type { SkillRecord } from "../features/skills/skillRegistry";
-import type { AgentConversationProps } from "./AgentConversationMessages";
 import ConversationChannelSelector from "./ConversationChannelSelector";
 import ConversationTaskApproval from "./ConversationTaskApproval";
 import ConversationHeader from "./ConversationHeader";
@@ -43,26 +38,7 @@ export default function ConversationPanel({
   skills = [],
   onApplySkill,
   agent,
-}: {
-  overlay?: boolean;
-  onClose: () => void;
-  onOpen: (id: string) => void;
-  project?: CreationProject;
-  currentModel?: string;
-  modelConfigured?: boolean;
-  onModelChange?: (model: string, selection?: ModelSelection) => void;
-  modelOptions?: string[];
-  onSend?: (
-    message: string,
-  ) => boolean | string | void | Promise<boolean | string>;
-  onDeleteMessage?: (messageId: string) => void;
-  composerDraft?: CreationDraft;
-  onDraftChange?: (draft: CreationDraft) => void;
-  voiceEnabled?: boolean;
-  skills?: SkillRecord[];
-  onApplySkill?: (record: SkillRecord) => string;
-  agent?: AgentConversationProps;
-}) {
+}: ConversationPanelProps) {
   const panelRef = useConversationOverlay(overlay);
   const [channel, setChannel] = useState(() =>
     ["direct", "google"].includes(safeStorage.getItem("kk-chat-channel") ?? "")
@@ -119,7 +95,6 @@ export default function ConversationPanel({
     online: typeof navigator === "undefined" ? true : navigator.onLine,
     serviceConfigured: modelConfigured,
   });
-  const directSubmitDisabled = !canSubmitGeneration(directState);
   const directDisabledReason = getDisabledReason(directState);
   const submitMessage = useConversationSubmit({
     submitting,
@@ -211,7 +186,8 @@ export default function ConversationPanel({
         }
         submitDisabled={
           submitting ||
-          (!agentActive && (directSubmitDisabled || readingFiles > 0))
+          (!agentActive &&
+            (!canSubmitGeneration(directState) || readingFiles > 0))
         }
         placeholder={
           agentActive

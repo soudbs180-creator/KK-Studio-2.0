@@ -2,6 +2,7 @@ import { useState, type KeyboardEvent } from "react";
 import type { CreationDraft } from "../features/creation/model";
 import { readProviderConnections } from "../features/creation/providerRegistry";
 import { catalogForConnection } from "../features/models/modelCatalog";
+import GenerationOptions from "./GenerationOptions";
 
 interface StartModelChoice {
   key: string;
@@ -39,6 +40,7 @@ export default function StartModelPicker({
   onToggle,
   onSelect,
   onConfigure,
+  onOptionsChange,
 }: {
   draft: CreationDraft;
   defaultModel: string;
@@ -47,6 +49,7 @@ export default function StartModelPicker({
   onToggle: () => void;
   onSelect: (choice: Pick<StartModelChoice, "model" | "connectionId">) => void;
   onConfigure: () => void;
+  onOptionsChange: (patch: Partial<CreationDraft>) => void;
 }) {
   const [query, setQuery] = useState("");
   const needle = query.trim().toLocaleLowerCase();
@@ -138,6 +141,10 @@ export default function StartModelPicker({
               <p>只显示前 100 项，请搜索模型或供应商。</p>
             )}
           </div>
+          <section className="start-model-options" aria-label="生成设置">
+            <strong>生成设置</strong>
+            <GenerationOptions draft={draft} onChange={onOptionsChange} />
+          </section>
           <button
             type="button"
             className="start-model-configure"

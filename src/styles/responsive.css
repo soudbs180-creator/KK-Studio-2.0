@@ -320,11 +320,14 @@
     object-fit: contain;
   }
   .compact-app-menu {
-    display: none;
+    display: block;
+    position: fixed;
+    top: calc(6px + env(safe-area-inset-top, 0px));
+    right: 158px;
   }
   .compact-app-trigger {
-    width: 44px;
-    height: 44px;
+    width: var(--kk-control-h-lg);
+    height: var(--kk-control-h-lg);
     display: grid;
     place-items: center;
     border-radius: var(--ui-radius-control);

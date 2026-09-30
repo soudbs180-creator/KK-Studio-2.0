@@ -57,6 +57,12 @@ export function useMemory(onFeedback: (message: string) => void) {
   const codexConnected = agentConnection.getState().status === "connected";
 
   const refresh = useCallback(async () => {
+    if (!memoryService.isEnabled()) {
+      setStore(null);
+      setLoadError(null);
+      setLoading(false);
+      return;
+    }
     try {
       setMode(await memoryService.storageMode());
       setStorageStatus(await memoryService.storageStatus());

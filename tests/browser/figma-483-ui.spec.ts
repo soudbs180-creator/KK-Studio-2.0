@@ -21,33 +21,32 @@ test("Figma 483 首页输入保持紧凑尺寸，额外能力仍可访问", asyn
   expect(desktop.width).toBe(652);
   expect(desktop.height).toBeGreaterThanOrEqual(170);
   await expect(page.locator(".start-prompt-library")).toHaveCount(0);
-  await composer.getByRole("button", { name: "开始创建项目" }).click();
+  await expect(
+    composer.getByRole("button", { name: "开始创建项目" }),
+  ).toBeDisabled();
   await expect(page.getByText("先写下一句创意，再开始创建项目。")).toHaveCount(
     0,
   );
+  await page.getByLabel("创作提示词").focus();
   await expect(page.getByLabel("创作提示词")).toBeFocused();
-  const add = composer.getByRole("button", { name: "添加素材与生成设置" });
-  await add.click();
-  const options = composer.getByRole("dialog", {
-    name: "添加素材与生成设置",
-  });
+  const chooser = page.waitForEvent("filechooser");
+  await composer.getByRole("button", { name: "添加参考素材" }).click();
+  expect((await chooser).isMultiple()).toBe(true);
+  const model = composer.getByRole("button", { name: "模型", exact: true });
+  await model.click();
+  const options = composer.getByRole("region", { name: "生成设置" });
   await expect(options.getByLabel("生成数量")).toBeVisible();
   await expect(options.getByLabel("隐私模式")).toBeVisible();
-  await expect(
-    options.getByRole("button", { name: "插件（MCP）" }),
-  ).toBeVisible();
-  await expect(
-    options.getByRole("button", { name: "伙伴（智能体）" }),
-  ).toBeVisible();
   await options.getByLabel("生成数量").selectOption("4");
-  await add.click();
+  await expect(options.getByLabel("生成数量")).toHaveValue("4");
+  await model.click();
   expect((await composer.boundingBox())!.height).toBe(desktop.height);
   await page.setViewportSize({ width: 390, height: 844 });
   await expect
     .poll(async () => (await composer.boundingBox())?.width)
-    .toBe(306);
+    .toBe(299);
   const phone = (await composer.boundingBox())!;
-  expect(phone.width).toBe(306);
+  expect(phone.width).toBe(299);
   expect(phone.height).toBeGreaterThanOrEqual(170);
   const row = await composer
     .locator(".start-composer-footer")
@@ -70,7 +69,7 @@ test("Figma 483 首页输入保持紧凑尺寸，额外能力仍可访问", asyn
   expect(row.slice(3).map((item) => item.x)).toEqual(
     [...row.slice(3).map((item) => item.x)].sort((a, b) => a - b),
   );
-  for (const control of row) expect(control.height).toBeGreaterThanOrEqual(44);
+  for (const control of row) expect(control.height).toBe(24);
 });
 
 test("首页模型弹层选择真实 API 图片模型并保存连接身份", async ({ page }) => {
@@ -80,18 +79,16 @@ test("首页模型弹层选择真实 API 图片模型并保存连接身份", asy
     .getByRole("menu", { name: "选择模型" })
     .getByRole("button", { name: /配置供应商与模型/ })
     .click();
-  await page.getByLabel("供应商名称", { exact: true }).fill("星河 API");
-  await page.getByLabel("API Base URL").fill("https://models.example.test/v1");
+  await page.getByLabel("提供商", { exact: true }).fill("星河 API");
+  await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key").fill("fixture-key");
-  await page.getByLabel("默认模型").fill("image-test");
-  await page.getByRole("button", { name: "保存供应商" }).click();
-  await page.getByLabel("供应商名称", { exact: true }).fill("星河 API B");
-  await page
-    .getByLabel("API Base URL")
-    .fill("https://models-b.example.test/v1");
+  await page.getByLabel("模型名称").fill("image-test");
+  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByLabel("提供商", { exact: true }).fill("星河 API B");
+  await page.getByLabel("接口地址").fill("https://models-b.example.test/v1");
   await page.getByLabel("API Key").fill("fixture-key-b");
-  await page.getByLabel("默认模型").fill("image-second");
-  await page.getByRole("button", { name: "保存供应商" }).click();
+  await page.getByLabel("模型名称").fill("image-second");
+  await page.getByRole("button", { name: "保存", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置" }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const choice = page
@@ -169,10 +166,10 @@ test("Figma 483 画布输入与模型菜单采用独立尺寸", async ({ page })
   await page.locator(".image-preview").click();
   const composer = page.getByTestId("image-composer");
   await page.screenshot({
-    path: "docs/changes/2026-09-24-ui-regression/evidence/web-canvas-composer-1440.png",
+    path: "test-results/changes/2026-09-24-ui-regression/evidence/web-canvas-composer-1440.png",
   });
   await composer.screenshot({
-    path: "docs/changes/2026-09-24-ui-regression/evidence/web-canvas-composer-component.png",
+    path: "test-results/changes/2026-09-24-ui-regression/evidence/web-canvas-composer-component.png",
   });
   const frame = (await composer.boundingBox())!;
   expect(frame.width).toBe(590);
@@ -190,10 +187,10 @@ test("Figma 483 画布输入与模型菜单采用独立尺寸", async ({ page })
   expect(box.width).toBe(227);
   expect(box.height).toBe(318);
   await page.screenshot({
-    path: "docs/changes/2026-09-24-ui-regression/evidence/web-canvas-composer-model-1440.png",
+    path: "test-results/changes/2026-09-24-ui-regression/evidence/web-canvas-composer-model-1440.png",
   });
   await menu.screenshot({
-    path: "docs/changes/2026-09-24-ui-regression/evidence/web-canvas-model-menu-component.png",
+    path: "test-results/changes/2026-09-24-ui-regression/evidence/web-canvas-model-menu-component.png",
   });
   const title = (await menu
     .locator(".kk-model-menu-top > strong")

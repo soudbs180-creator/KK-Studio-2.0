@@ -105,7 +105,7 @@ for (const [width, height] of [
     const expectedMinWidth = width <= 800 ? 148 : 196.227 * desktopScale;
     expect(menuBox!.width).toBeGreaterThanOrEqual(expectedMinWidth - 1);
     const firstItem = menu.getByRole("menuitem").first();
-    await expect(firstItem).toHaveCSS("font-size", "12px");
+    await expect(firstItem).toHaveCSS("font-size", "14px");
     const itemBox = await firstItem.boundingBox();
     const expectedItemHeight = width <= 800 ? 28 : 30 * desktopScale;
     expect(itemBox!.height).toBeGreaterThanOrEqual(expectedItemHeight - 1);
@@ -115,7 +115,7 @@ for (const [width, height] of [
       expect(box!.x + box!.width).toBeLessThanOrEqual(width);
     }
     await page.screenshot({
-      path: `docs/evidence/navigation-${width}.png`,
+      path: `test-results/evidence/navigation-${width}.png`,
       animations: "disabled",
     });
     await page.keyboard.press("Escape");

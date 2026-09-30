@@ -32,10 +32,16 @@ test("图片上传预览和重绘未配置时保留草稿并打开供应商设�
   ).toBeVisible();
   const redrawPrompt = "保留主体，替换为蓝调夜景";
   await page.getByLabel("重绘指令").fill(redrawPrompt);
-  await page.getByRole("button", { name: "开始重绘", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "开始重绘", exact: true }),
+  ).toBeDisabled();
+  await page
+    .getByRole("dialog", { name: "重绘参考图片" })
+    .getByRole("button", { name: "前往模型设置", exact: true })
+    .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "模型接入", exact: true }),
+    page.getByRole("button", { name: "模型供应商", exact: true }),
   ).toBeVisible();
   await expect(page.getByLabel("重绘指令")).toHaveValue(redrawPrompt);
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
@@ -51,9 +57,14 @@ test("图片上传预览和重绘未配置时保留草稿并打开供应商设�
     .click();
   await page.keyboard.press("Home");
   await page.keyboard.press("Escape");
-  await expect(generator.locator(".local-generation-status")).toHaveCount(0);
+  await expect(generator.locator(".local-generation-status")).toContainText(
+    "配置图片模型",
+  );
+  await expect(
+    generator.getByRole("button", { name: "生成图片", exact: true }),
+  ).toBeDisabled();
   await generator
-    .getByRole("button", { name: "生成图片", exact: true })
+    .getByRole("button", { name: "前往模型设置", exact: true })
     .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(generator.getByLabel("图片提示词")).toHaveValue(

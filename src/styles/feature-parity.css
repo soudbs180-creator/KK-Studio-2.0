@@ -223,7 +223,7 @@
   gap: var(--ui-space-2);
   padding: var(--ui-space-3);
   border: var(--ui-border-width) solid var(--border-subtle);
-  border-radius: 12px;
+  border-radius: var(--kk-radius-card);
   background: var(--bg-card);
   color: var(--text-primary);
   text-align: left;

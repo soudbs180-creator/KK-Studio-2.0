@@ -211,7 +211,18 @@ export function startHttpServer() {
     app.post("/agent/codebuddy/probe", route(async (_req, res) => {
         const cliPath = config.codebuddy?.cliPath;
         if (!cliPath) return void res.status(409).json({ ok: false, error: "尚未配置 CodeBuddy CLI 路径" });
-        const result = await runCodeBuddy({ cliPath, prompt: "请只回复 CODEBUDDY_OK，不要调用工具。" });
+        const controller = new AbortController();
+        const onClose = () => {
+            if (!res.writableEnded) controller.abort();
+        };
+        res.once("close", onClose);
+        let result;
+        try {
+            result = await runCodeBuddy({ cliPath, prompt: "请只回复 CODEBUDDY_OK，不要调用工具。", signal: controller.signal });
+        } finally {
+            res.off("close", onClose);
+        }
+        if (controller.signal.aborted) return;
         if (result.text !== "CODEBUDDY_OK") return void res.status(502).json({ ok: false, error: "CodeBuddy 未返回预期测试结果" });
         res.setHeader("Cache-Control", "no-store");
         res.json({ ok: true, ...(result.model ? { model: result.model } : {}), durationMs: result.durationMs });

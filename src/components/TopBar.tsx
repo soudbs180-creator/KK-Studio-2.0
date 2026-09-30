@@ -21,7 +21,7 @@ export default function TopBar({
       ? document.querySelector<HTMLButtonElement>(".sidebar-search")
       : matchMedia("(max-width: 767px)").matches
         ? (headerRef.current?.querySelector<HTMLButtonElement>(
-            ".mobile-project-switch",
+            ".compact-app-trigger",
           ) ??
           headerRef.current?.querySelector<HTMLButtonElement>(
             ".mobile-search",

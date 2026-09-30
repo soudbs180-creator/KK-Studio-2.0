@@ -72,6 +72,10 @@ export default function StartComposer({
   const submitDisabled = !canSubmitGeneration(uiState);
   const disabledReason = getDisabledReason(uiState);
   function submit(): void {
+    if (submitDisabled) {
+      setStatus(disabledReason ?? "当前无法提交，请检查创作设置。");
+      return;
+    }
     if (readingFiles) {
       setStatus("正在读取参考素材，请稍候再提交。");
       return;
@@ -155,6 +159,7 @@ export default function StartComposer({
               draft={draft}
               model={model}
               defaultModel={defaultModel}
+              onOptionsChange={commit}
               open={modelMenuOpen}
               onToggle={() => toggleMenu("model")}
               onSelect={(choice) => {
