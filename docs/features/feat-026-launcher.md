@@ -2,7 +2,7 @@
 
 - 状态：PARTIAL
 - 领域：system
-- 最近更新：2026-09-21
+- 最近更新：2026-09-30
 - 关联任务：T7
 
 ## 用户可见入口
@@ -13,12 +13,14 @@
 
 - 启动脚本：仓库根 `start-kk-studio.bat`、`verify-kk-studio.cmd`
 - 桌面发布：`scripts/windows/desktop-release.mjs`
+- 安装器：`src-tauri/tauri.installer.conf.json`、`scripts/windows/installer-receipt.mjs`
 - 文档：`docs/engineering/LAUNCHER.md`
 - 分享产物目录：`releases/`（只放最新分享产物，禁止打入 node_modules/凭据/编译缓存/恢复归档）
 
 ## 测试与证据
 
 - 单测：`tests/unit/desktopRelease.test.ts`、`tests/deploy/release-scripts.test.mjs`
+- 安装校验与实机脚本：`tests/unit/installerReceipt.test.ts`、`tests/desktop/installer.mjs`；证据见[本轮验证](../changes/2026-09-30-desktop-installer/verification.md)。
 
 ## 当前能力
 
@@ -26,7 +28,7 @@
 
 ## 差距与后端化
 
-- T7：Desktop 安装、恢复、回滚的实机验收未做；未产出验收过的安装包。
+- T7：干净 Windows/无 WebView2 首装、低版本回滚、签名与完整发布仍未验收。当前 NSIS 构建与隔离验收进度见本轮验证；不将 portable ZIP 或当前主机替代完整安装故事。
 
 ## 变更记录
 

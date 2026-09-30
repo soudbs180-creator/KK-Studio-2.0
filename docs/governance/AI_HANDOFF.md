@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-09-30 安装器恢复入口
+
+从 D:/kk-studio/.worktrees/T7-desktop-installer 的 codex/T7-desktop-installer 继续，基线 origin/main@bd3bc66。先读[本轮计划](../changes/2026-09-30-desktop-installer/plan.md)与[验证](../changes/2026-09-30-desktop-installer/verification.md)及 Git status。完整 NSIS 已初次构建，收据要求干净 source/当前 EXE；真实安装测试拒绝已有 KK Studio 注册，只作用于随机临时安装目录。正式签名/干净系统/低版本回滚未验收，不将父任务 T7 标 DONE。首个 build 日志在工作区外 .tmp/t7-installer-build.log；最终证据应保存到本轮 evidence。
+
 ## 2026-09-30 恢复入口
 
 先 fetch 并核对 origin/main 与集成 PR 的真实 merged 状态、head/merge/tree；不要从旧 dirty main 或旧 worktree 直接启动。读 [本轮验证](../changes/2026-09-29-project-landing/verification.md)、[审计](../changes/2026-09-29-project-landing/audit.md)、[剩余项](../changes/2026-09-29-project-landing/remaining.md) 与机器账本。版本源是 config/platform-versions.json。
