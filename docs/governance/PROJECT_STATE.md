@@ -103,6 +103,11 @@ PR #14 的独立审查在旧 head 发现两项 P1：旧 revision 可覆盖已完
 
 `fix/TASK-MINIMAX-001-mcp-registry-limit` 修复 50 项持久化上限与写入不一致；当前仅为草稿 PR #15 候选，不能据此认定主线已修复。`TASK-MCP-PROTO-001` 登记 2026-07-28 协议协商缺口，真实新版服务器仍未验证。MiniMax 安装目录版本元数据已只读核对，2026-09-21 的 UI 审计维持历史证据含义。以 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)和账本为准；与编排 PR #14 的 merge-tree 显示 4 个文档内容冲突，按顺序合并前必须解决并重新生成治理视图。
 
+## 2026-09-23 Google 接入候选（TASK-AGENT-004/005，PARTIAL）
+
+隔离分支 `feat/TASK-AGENT-004-google-closeout` 组合 Google Interactions API Key 对话/生图与 Gemini CLI Google 账号文字对话。API Key 图片可归档画布；CLI 登录只支持文字。Web fixture 与本地桥安全回归已通过；最终验证见 [004](../changes/2026-09-23-google-interactions/verification.md)、[005](../changes/2026-09-23-google-cli-login/verification.md)。真实 Google 凭据请求、CLI 账号续接、Tauri 同态和最终独立补审尚未完成；主线不因本候选改变。
+
+## 2026-09-23 KK Studio 2.1.0 源码上传候选（REL-2.1.0）
 ## 2026-09-23 KK Studio 2.1.0 源码并线与规则回读（REL-2.1.0）
 
 当前版本元数据已统一为 2.1.0；源码候选先在 `chore/TASK-CONSOLIDATE-200` 上提交并上传，首次远端 SHA 与受审源码 `15f1f27` 一致。`VERSION`、`CHANGELOG.md`、package/npm lock、Tauri/Cargo、应用显示、插件运行时和 MCP 客户端共同记录 2.1.0；原有 `%APPDATA%/kk-studio`、存储 key、应用 identifier、历史 2.0.0 证据和恢复归档不变。安装包、签名和正式 tag 仍未完成。

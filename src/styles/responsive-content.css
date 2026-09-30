@@ -193,7 +193,8 @@
     --ui-input-height: 44px;
     --ui-button-height: 44px;
   }
-  .settings-panel input:not([type="checkbox"]):not([type="file"]),
+  .settings-panel
+    input:not([type="checkbox"]):not([type="file"]):not([type="radio"]),
   .settings-panel select {
     min-height: 44px;
   }

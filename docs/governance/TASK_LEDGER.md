@@ -91,6 +91,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | TODO | TASK-UI-010 | unallocated |
 | TASK-PROV-003 | Codex Provider 配置注入与 model catalog 落盘（agent 侧接线） | IN_PROGRESS | TASK-PROV-002 | root |
 | TASK-PROV-004 | Claude Code settings.json 落盘（agent 侧接线） | REVIEW | TASK-PROV-002, TASK-PROV-003 | root |
+| TASK-AGENT-004 | Google Interactions 对话和生图 | IN_PROGRESS | TASK-AGENT-003 | root |
+| TASK-AGENT-005 | Gemini CLI 账号登录通道（免 API Key 对话） | PARTIAL | TASK-AGENT-004 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -1115,3 +1117,27 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — agent 套件 150/150（含 BOM 容忍/幂等/保留用户设置）；根门禁全绿（394 单测、lint 64-0/30-0/82-0、ui 159-0、format）；真实 CLAUDE_CONFIG_DIR apply/dry-run/幂等验证通过；BOM 两处缺口已修复；test:ui 与独立 review 待后续
 - Evidence: [docs/changes/2026-09-24-claude-landing/intent.md](../../docs/changes/2026-09-24-claude-landing/intent.md), [docs/changes/2026-09-24-claude-landing/spec.md](../../docs/changes/2026-09-24-claude-landing/spec.md), [docs/changes/2026-09-24-claude-landing/plan.md](../../docs/changes/2026-09-24-claude-landing/plan.md), [docs/changes/2026-09-24-claude-landing/verification.md](../../docs/changes/2026-09-24-claude-landing/verification.md), [docs/changes/2026-09-24-claude-landing/remaining.md](../../docs/changes/2026-09-24-claude-landing/remaining.md), [docs/changes/2026-09-24-claude-landing/review.md](../../docs/changes/2026-09-24-claude-landing/review.md)
 - Updated: 2026-09-24
+
+## TASK-AGENT-004 — Google Interactions 对话和生图
+
+- Goal: 配置 Google API Key 后直接聊天、生图并归档到当前画布
+- Scope: Google Interactions adapter, conversation, credentials settings and assets
+- Acceptance: 连续对话和图片生成经官方协议接线，图片归档当前画布; 密钥只存系统凭据库或内存，项目切换与取消不污染状态; Web交互、故障回归、完整验证与独立审查；真实凭据验收单列
+- Branch: `feat/TASK-AGENT-004-google-closeout`
+- Worktree: `C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0`
+- Modules: src/features/agent, src/components, src/domain, src/App.tsx
+- Verification: PARTIAL — Combined closeout candidate: API Key dialogue/image/archive fixture flow and CLI security regressions pass. After merging main and reinstalling dependencies, full verify passes (governance 63/0, browser 302/302, Markdown gate green); Windows Cargo check passes. Real Google API Key requests, desktop runtime and final independent review pending.
+- Evidence: [docs/changes/2026-09-23-google-interactions/verification.md](../../docs/changes/2026-09-23-google-interactions/verification.md)
+- Updated: 2026-09-23
+
+## TASK-AGENT-005 — Gemini CLI 账号登录通道（免 API Key 对话）
+
+- Goal: 登录 Google 账号后免 Key 在 KK 内对话，像 Codex 一样走本地服务
+- Scope: gemini bridge script, geminiCliAdapter, agent connection loginMode, settings UI
+- Acceptance: CLI 登录状态可检测并给出安装/登录指引; 文字对话经本地桥接通且连续会话续接; cli 模式生图与附件被明确拒绝，凭据不入 KK; Web 交互、故障回归、完整验证与独立审查；真实 gemini 验收单列
+- Branch: `feat/TASK-AGENT-004-google-closeout`
+- Worktree: `C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0`
+- Modules: src/features/agent, src/components, src/domain, scripts
+- Verification: PARTIAL — Superseded for review by combined 004 closeout candidate: local CLI bridge/adapter fixture tests, browser flow and security regression checks pass there. Full verify rerun green after main merge. Real Gemini CLI install/login/bridge, desktop runtime and final independent review pending.
+- Evidence: [docs/changes/2026-09-23-google-cli-login/verification.md](../../docs/changes/2026-09-23-google-cli-login/verification.md)
+- Updated: 2026-09-23

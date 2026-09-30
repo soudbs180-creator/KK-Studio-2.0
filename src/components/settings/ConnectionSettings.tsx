@@ -1,6 +1,7 @@
 import { appVersion } from "../../runtime/appInfo";
 import type { SettingsSection } from "./SettingsSectionData";
 import ModelProviderSettings from "./ModelProviderSettings";
+import GoogleConnectionSettings from "./GoogleConnectionSettings";
 
 const PENDING_SETTINGS: Partial<
   Record<SettingsSection, { title: string; description: string }>
@@ -31,7 +32,12 @@ export default function ConnectionSettings({
   onFeedback: (message: string) => void;
 }) {
   if (section === "providers")
-    return <ModelProviderSettings onFeedback={onFeedback} />;
+    return (
+      <>
+        <ModelProviderSettings onFeedback={onFeedback} />
+        <GoogleConnectionSettings onFeedback={onFeedback} />
+      </>
+    );
   if (section === "updates")
     return (
       <div className="settings-version">

@@ -52,6 +52,7 @@ import {
   subscribeAgentPreferences,
   type AgentBridge,
 } from "./features/agent/agentConnection.ts";
+import { googleAgentConnection } from "./features/agent/googleAgentConnection.ts";
 
 import { pluginLoader } from "./features/plugins/pluginLoader.ts";
 import {
@@ -463,6 +464,7 @@ export default function App() {
   };
   useEffect(() => {
     agentConnection.syncProject();
+    googleAgentConnection.syncProject();
   }, [creation.activeProjectId]);
   useEffect(() => {
     const timer = setTimeout(() => agentConnection.pushState(), 100);
@@ -513,9 +515,11 @@ export default function App() {
   };
   useEffect(() => {
     agentConnection.setBridge(agentCanvasBridge);
+    googleAgentConnection.setBridge(agentCanvasBridge);
     pluginLoader.setBridge(agentCanvasBridge);
     return () => {
       agentConnection.setBridge(null);
+      googleAgentConnection.setBridge(null);
       pluginLoader.setBridge(null);
     };
   }, [agentCanvasBridge]);

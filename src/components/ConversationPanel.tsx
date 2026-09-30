@@ -14,6 +14,8 @@ import ConversationChannelSelector from "./ConversationChannelSelector";
 import ConversationTaskApproval from "./ConversationTaskApproval";
 import ConversationHeader from "./ConversationHeader";
 import ConversationComposerRegion from "./ConversationComposerRegion";
+import GoogleConversationPanel from "./GoogleConversationPanel";
+import useConversationSubmit from "./useConversationSubmit";
 import {
   readAgentModel,
   writeAgentModel,
@@ -63,7 +65,9 @@ export default function ConversationPanel({
 }) {
   const panelRef = useConversationOverlay(overlay);
   const [channel, setChannel] = useState(() =>
-    safeStorage.getItem("kk-chat-channel") === "direct" ? "direct" : "codex",
+    ["direct", "google"].includes(safeStorage.getItem("kk-chat-channel") ?? "")
+      ? safeStorage.getItem("kk-chat-channel")!
+      : "codex",
   );
   const [agentModel, setAgentModel] = useState(readAgentModel);
   const agentActive = Boolean(agent && channel === "codex");
@@ -117,39 +121,31 @@ export default function ConversationPanel({
   });
   const directSubmitDisabled = !canSubmitGeneration(directState);
   const directDisabledReason = getDisabledReason(directState);
-  async function submitMessage(message: string): Promise<void> {
-    if (submitting) return;
-    if (!agentActive && approvalMode === "ask" && pendingApproval !== message) {
-      setPendingApproval(message);
-      setStatus("任务准备就绪，确认后才会提交给模型。");
-      return;
-    }
-    setSubmitting(true);
-    try {
-      const result = onSend ? await onSend(message) : true;
-      if (result === false || typeof result === "string") {
-        setStatus(
-          typeof result === "string"
-            ? result
-            : "当前任务仍在执行，或尚未配置模型连接。",
-        );
-        return;
-      }
-      if (!onSend) setMessages((current) => [...current, message]);
-      setInput("");
-      setPendingApproval(null);
-      updateDraft({ prompt: "" });
-      setStatus(
-        onSend
-          ? "任务已提交，状态会显示在画布顶部。"
-          : "内容已记录。连接模型供应商后，即可获取 AI 回复。",
-      );
-    } catch {
-      setStatus("提交失败，请检查模型连接后重试。");
-    } finally {
-      setSubmitting(false);
-    }
-  }
+  const submitMessage = useConversationSubmit({
+    submitting,
+    setSubmitting,
+    agentActive,
+    approvalMode,
+    pendingApproval,
+    setPendingApproval,
+    setStatus,
+    onSend,
+    onDraftChange,
+    composerDraft,
+    setInput,
+    setMessages,
+  });
+  if (channel === "google" && project)
+    return (
+      <GoogleConversationPanel
+        project={project}
+        onClose={onClose}
+        onOpen={onOpen}
+        onChannelChange={setChannel}
+        overlay={overlay}
+        codexBusy={Boolean(agent?.sending || agent?.connecting)}
+      />
+    );
   return (
     <aside
       ref={panelRef}

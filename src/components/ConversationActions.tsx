@@ -1,6 +1,6 @@
 import ComposerPluginSummary from "./ComposerPluginSummary";
 import type { ModelSelection } from "../features/models/modelSelection";
-import type { RefObject } from "react";
+import type { RefObject, ReactNode } from "react";
 import ConversationModelPicker from "./ConversationModelPicker";
 import type { CreationDraft } from "../features/creation/model";
 import VoiceInputButton from "./VoiceInputButton";
@@ -14,6 +14,7 @@ export default function ConversationActions({
   submitting,
   attachmentDisabled,
   currentModel,
+  modelControl,
   modelOptions,
   modelSelection,
   modelMenuOpen,
@@ -45,6 +46,7 @@ export default function ConversationActions({
   submitting: boolean;
   attachmentDisabled?: boolean;
   currentModel?: string;
+  modelControl?: ReactNode;
   modelOptions: string[];
   modelSelection?: ModelSelection;
   modelMenuOpen: boolean;
@@ -97,15 +99,17 @@ export default function ConversationActions({
         }}
       />
       <div className="chat-model-picker-wrap">
-        <ConversationModelPicker
-          currentModel={currentModel}
-          options={modelOptions}
-          selection={modelSelection}
-          open={modelMenuOpen}
-          onToggle={onToggleModel}
-          onSelect={onSelectModel}
-          onConfigure={onConfigureModel}
-        />
+        {modelControl ?? (
+          <ConversationModelPicker
+            currentModel={currentModel}
+            options={modelOptions}
+            selection={modelSelection}
+            open={modelMenuOpen}
+            onToggle={onToggleModel}
+            onSelect={onSelectModel}
+            onConfigure={onConfigureModel}
+          />
+        )}
       </div>
       <span
         className="chat-footer-separator chat-model-separator"

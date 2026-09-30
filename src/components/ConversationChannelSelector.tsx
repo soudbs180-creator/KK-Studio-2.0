@@ -23,6 +23,7 @@ export default function ConversationChannelSelector({
           }}
         >
           <option value="codex">Codex 主 Agent（默认）</option>
+          <option value="google">Google Gemini · 对话与生图</option>
           <option value="direct">直接生成 · 项目 API</option>
         </select>
       </label>

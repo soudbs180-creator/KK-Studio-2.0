@@ -90,7 +90,10 @@
       "src/features/creation/providerSubmission.ts",
       "src/features/creation/nativeTaskHost.ts",
       "src/features/creation/taskRecovery.ts",
-      "src-tauri/src/task_host.rs"
+      "src-tauri/src/task_host.rs",
+      "src/features/agent/googleInteractions.ts",
+      "src/features/agent/googleAgentConnection.ts",
+      "src/components/GoogleAgentControls.tsx"
     ],
     "tests": [
       "tests/unit/providerSubmission.test.ts",
@@ -100,15 +103,18 @@
       "tests/unit/taskRecovery.test.ts",
       "tests/browser/provider-scheduling.spec.ts",
       "tests/browser/unified-image-command.spec.ts",
-      "tests/browser/creation-flow.spec.ts"
+      "tests/browser/creation-flow.spec.ts",
+      "tests/browser/google-agent.spec.ts",
+      "tests/unit/googleInteractions.test.ts"
     ],
     "tasks": [
       "T5",
       "TASK-PROV-001",
       "EXT-PROVIDER",
-      "TASK-AGENT-001"
+      "TASK-AGENT-001",
+      "TASK-AGENT-004"
     ],
-    "updated": "2026-09-22",
+    "updated": "2026-09-30",
     "platforms": [
       "web",
       "desktop"
@@ -389,7 +395,13 @@
       "scripts/agent/desktop-entry.mjs",
       "scripts/agent/runtime-package.mjs",
       "src/components/AgentComposer.tsx",
-      "src/features/agent/agentAttachments.ts"
+      "src/features/agent/agentAttachments.ts",
+      "src/features/agent/googleInteractions.ts",
+      "src/features/agent/googleAgentConnection.ts",
+      "src/features/agent/geminiCliAdapter.ts",
+      "src/components/settings/GoogleConnectionSettings.tsx",
+      "src/components/GoogleConversationPanel.tsx",
+      "scripts/gemini-bridge.mjs"
     ],
     "tests": [
       "tests/browser/frontend.spec.ts",
@@ -414,7 +426,12 @@
       "tests/unit/agentRuntimeDrain.test.ts",
       "scripts/audit/check-agent-desktop.mjs",
       "tests/unit/agentAttachments.test.ts",
-      "scripts/audit/check-agent-attachments-desktop.mjs"
+      "scripts/audit/check-agent-attachments-desktop.mjs",
+      "tests/browser/google-agent.spec.ts",
+      "tests/browser/google-cli-agent.spec.ts",
+      "tests/unit/geminiBridge.test.ts",
+      "tests/unit/geminiCliAdapter.test.ts",
+      "tests/unit/googleAgentCli.test.ts"
     ],
     "tasks": [
       "T4",
@@ -422,9 +439,11 @@
       "TASK-UI-005",
       "TASK-AGENT-001",
       "TASK-AGENT-002",
-      "TASK-AGENT-003"
+      "TASK-AGENT-003",
+      "TASK-AGENT-004",
+      "TASK-AGENT-005"
     ],
-    "updated": "2026-09-23",
+    "updated": "2026-09-30",
     "platforms": [
       "web",
       "desktop"
