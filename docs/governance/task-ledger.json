@@ -412,7 +412,7 @@
       "docs/changes/2026-09-16-launch-readiness-audit/plan.md",
       "docs/changes/2026-09-30-desktop-installer/verification.md"
     ],
-    "verification": "主线 portable Desktop2.1.2 已真实运行；TASK-DESKTOP-INSTALLER-001 正推进安装器。干净 Windows/完整回滚/签名及真实服务依赖仍未验收。",
+    "verification": "portable Desktop2.1.2 与 NSIS 本机隔离安装/启动/Agent/4279文件、重装、损坏修复、卸载再装项目保留通过；干净 Windows/真实断网/低版本回滚/签名及真实服务依赖仍未验收。",
     "updated": "2026-09-30",
     "verificationResult": "PARTIAL"
   },
@@ -3172,14 +3172,19 @@
       "scripts/windows/installer-receipt.mjs",
       "tests/desktop/installer.mjs",
       "tests/unit/installerReceipt.test.ts",
-      "docs"
+      "docs",
+      "scripts/windows/installer-inputs.mjs",
+      "tests/desktop/installer-state.ps1",
+      "tests/desktop/installer-cleanup.ps1",
+      "tests/unit/installerGuards.test.ts",
+      "tests/browser/settings-scroll.spec.ts"
     ],
-    "status": "IN_PROGRESS",
+    "status": "REVIEW",
     "evidence": [
       "docs/changes/2026-09-30-desktop-installer/verification.md"
     ],
-    "verification": "基线 lint/typecheck 与桌面启动12/12、收据定向4/4通过；NSIS构建及原生验收进行中。",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "NSIS构建、本机安装恢复及四次4279文件通过；8项定向保护/收据、设置同帧采样无retry160/160通过，原失败保留；最终verify/补审/PR/CI待完成。",
+    "verificationResult": "PARTIAL",
     "updated": "2026-09-30"
   }
 ]

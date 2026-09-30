@@ -1,0 +1,206 @@
+{
+  "timestamp": "2026-09-30T14:41:57.920Z",
+  "method": "controlled four-frame delay between sequential rectangles; same callback compares both buttons",
+  "samples": [
+    {
+      "controlledFrameGap": 4,
+      "sequentialDifference": 4.70184326171875,
+      "atomic": {
+        "difference": 0,
+        "modalTranslate": "0px 0.773466px",
+        "animations": [
+          {
+            "name": "surface-enter",
+            "state": "running",
+            "time": 83.31000000895
+          },
+          {
+            "name": "backdrop-enter",
+            "state": "running",
+            "time": 83.31000000895
+          }
+        ]
+      }
+    },
+    {
+      "controlledFrameGap": 4,
+      "sequentialDifference": 4.70452880859375,
+      "atomic": {
+        "difference": 0,
+        "modalTranslate": "0px 0.773037px",
+        "animations": [
+          {
+            "name": "surface-enter",
+            "state": "running",
+            "time": 83.32699999562465
+          },
+          {
+            "name": "backdrop-enter",
+            "state": "running",
+            "time": 83.32699999562465
+          }
+        ]
+      }
+    },
+    {
+      "controlledFrameGap": 4,
+      "sequentialDifference": 4.69769287109375,
+      "atomic": {
+        "difference": 0,
+        "modalTranslate": "0px 0.773517px",
+        "animations": [
+          {
+            "name": "surface-enter",
+            "state": "running",
+            "time": 83.30799998161382
+          },
+          {
+            "name": "backdrop-enter",
+            "state": "running",
+            "time": 83.30799998161382
+          }
+        ]
+      }
+    },
+    {
+      "controlledFrameGap": 4,
+      "sequentialDifference": 4.7115478515625,
+      "atomic": {
+        "difference": 0,
+        "modalTranslate": "0px 0.771548px",
+        "animations": [
+          {
+            "name": "surface-enter",
+            "state": "running",
+            "time": 83.38599999337457
+          },
+          {
+            "name": "backdrop-enter",
+            "state": "running",
+            "time": 83.38599999337457
+          }
+        ]
+      }
+    },
+    {
+      "controlledFrameGap": 4,
+      "sequentialDifference": 4.70361328125,
+      "atomic": {
+        "difference": 0,
+        "modalTranslate": "0px 0.773896px",
+        "animations": [
+          {
+            "name": "surface-enter",
+            "state": "running",
+            "time": 83.29300001240337
+          },
+          {
+            "name": "backdrop-enter",
+            "state": "running",
+            "time": 83.29300001240337
+          }
+        ]
+      }
+    },
+    {
+      "controlledFrameGap": 4,
+      "sequentialDifference": 4.6910400390625,
+      "atomic": {
+        "difference": 0,
+        "modalTranslate": "0px 0.774098px",
+        "animations": [
+          {
+            "name": "surface-enter",
+            "state": "running",
+            "time": 83.28499999688937
+          },
+          {
+            "name": "backdrop-enter",
+            "state": "running",
+            "time": 83.28499999688937
+          }
+        ]
+      }
+    },
+    {
+      "controlledFrameGap": 4,
+      "sequentialDifference": 4.70098876953125,
+      "atomic": {
+        "difference": 0,
+        "modalTranslate": "0px 0.773289px",
+        "animations": [
+          {
+            "name": "surface-enter",
+            "state": "running",
+            "time": 83.31700001102871
+          },
+          {
+            "name": "backdrop-enter",
+            "state": "running",
+            "time": 83.31700001102871
+          }
+        ]
+      }
+    },
+    {
+      "controlledFrameGap": 4,
+      "sequentialDifference": 4.702392578125,
+      "atomic": {
+        "difference": 0,
+        "modalTranslate": "0px 0.772557px",
+        "animations": [
+          {
+            "name": "surface-enter",
+            "state": "running",
+            "time": 83.34600000912323
+          },
+          {
+            "name": "backdrop-enter",
+            "state": "running",
+            "time": 83.34600000912323
+          }
+        ]
+      }
+    },
+    {
+      "controlledFrameGap": 4,
+      "sequentialDifference": 4.703125,
+      "atomic": {
+        "difference": 0,
+        "modalTranslate": "0px 0.772708px",
+        "animations": [
+          {
+            "name": "surface-enter",
+            "state": "running",
+            "time": 83.33999998820946
+          },
+          {
+            "name": "backdrop-enter",
+            "state": "running",
+            "time": 83.33999998820946
+          }
+        ]
+      }
+    },
+    {
+      "controlledFrameGap": 4,
+      "sequentialDifference": 4.7064208984375,
+      "atomic": {
+        "difference": 0,
+        "modalTranslate": "0px 0.771422px",
+        "animations": [
+          {
+            "name": "surface-enter",
+            "state": "running",
+            "time": 83.39100000970068
+          },
+          {
+            "name": "backdrop-enter",
+            "state": "running",
+            "time": 83.39100000970068
+          }
+        ]
+      }
+    }
+  ]
+}

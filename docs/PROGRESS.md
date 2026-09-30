@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-09-30 Desktop NSIS 与隔离恢复验收
+
+TASK-DESKTOP-INSTALLER-001 提供 currentUser Windows x64 安装器，完整 Agent 和 WebView2 offlineInstaller 入包，保持 Desktop2.1.2/Web2.1.3/Mobile规划2.1.1 及数据身份。真实含空格隔离路径完成四次安装各4279文件核对、Tauri启动/Agent、项目保存/同版重装/损坏修复/卸载再装保留；损坏setup与已有注册/portable进程拒绝保护已覆盖，独立审查关闭五项finding。既有设置几何测试修正为同帧采样，原断言保留，无重试160/160通过。原生证据输出移到独立目录，避免browser清理。最终verify/新head补审/托管PR门禁进行中，详见[本轮验证](changes/2026-09-30-desktop-installer/verification.md)。T7及FEAT-026仍PARTIAL：干净系统、无WebView2首装、真实断网、低版本回滚、签名/正式发布与真实服务未验收；原portable交付保留。
+
 ## 2026-09-30 项目落地集成版本
 
 已收敛两组竞品本地能力与 UI/Google/记忆/CodeBuddy/Provider 候选，保留 main 的图片比较、本机服务、插件与版本契约。修复真实项目连续原生保存、异步确认、输入区重叠、未配置反馈、项目删除保护与隔离记忆。当前 Web 2.1.3、Desktop 2.1.2；Mobile 2.1.1 为规划版本。源码集成、同状态生产 UI 与桌面重启证据见 [验证](changes/2026-09-29-project-landing/verification.md)、[全量审计](changes/2026-09-29-project-landing/audit.md) 和 [未完成项](changes/2026-09-29-project-landing/remaining.md)。主线推广结果以该集成 PR 的精确 HEAD 审查/检查/merged 记录为准。

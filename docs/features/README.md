@@ -76,7 +76,7 @@
 | FEAT-022 | 设置中心 | PARTIAL（部分可用） | [卡片](feat-022-settings.md) | TASK-PROV-001, UI-004, TASK-DS-001, TASK-DS-002, TASK-UI-005, TASK-AGENT-001 |
 | FEAT-023 | 导航、侧栏与多创作页 | PARTIAL（部分可用） | [卡片](feat-023-navigation.md) | TASK-UI-DISMISS-002, UI-004, TASK-UI-006, TASK-PROJECT-SIDEBAR-001 |
 | FEAT-025 | 本地演示素材管线（待替换 seam） | PROTOTYPE（仅演示/UI） | [卡片](feat-025-demo-media.md) | UI-003, BACKEND-MEDIA-001, BACKEND-TEXT-NODE |
-| FEAT-026 | Windows 启动器与分享包 | PARTIAL（部分可用） | [卡片](feat-026-launcher.md) | T7 |
+| FEAT-026 | Windows 启动器与分享包 | PARTIAL（部分可用） | [卡片](feat-026-launcher.md) | T7, TASK-DESKTOP-INSTALLER-001 |
 
 ## 后端服务
 

@@ -96,7 +96,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MEMORY-001 | 本地长期记忆服务接入对话 | PARTIAL | none | root |
 | TASK-MEMORY-002 | 跨产品共享本地记忆（本机共享） | PARTIAL | TASK-MEMORY-001 | MainAgent |
 | TASK-AGENT-007 | Codex 通过本机 CodeBuddy CLI 受限委派短文本 | DONE | TASK-AGENT-001 | root |
-| TASK-DESKTOP-INSTALLER-001 | Windows NSIS 安装器及隔离恢复验收 | IN_PROGRESS | none | root |
+| TASK-DESKTOP-INSTALLER-001 | Windows NSIS 安装器及隔离恢复验收 | REVIEW | none | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -252,7 +252,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: release, tests/native
-- Verification: PARTIAL — 主线 portable Desktop2.1.2 已真实运行；TASK-DESKTOP-INSTALLER-001 正推进安装器。干净 Windows/完整回滚/签名及真实服务依赖仍未验收。
+- Verification: PARTIAL — portable Desktop2.1.2 与 NSIS 本机隔离安装/启动/Agent/4279文件、重装、损坏修复、卸载再装项目保留通过；干净 Windows/真实断网/低版本回滚/签名及真实服务依赖仍未验收。
 - Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md), [docs/changes/2026-09-30-desktop-installer/verification.md](../../docs/changes/2026-09-30-desktop-installer/verification.md)
 - Updated: 2026-09-30
 
@@ -1189,7 +1189,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Acceptance: NSIS currentUser 安装器可复现且保持数据身份; 安装器/EXE/Agent 逐文件校验，损坏与越界失败; 当前 Windows 隔离安装/Agent/重装/修复/卸载再装成功且项目保留; 不覆盖已有安装，不将当前主机当作干净系统/签名/低版本回滚
 - Branch: `codex/T7-desktop-installer`
 - Worktree: `D:/kk-studio/.worktrees/T7-desktop-installer`
-- Modules: src-tauri/tauri.installer.conf.json, scripts/windows/installer-receipt.mjs, tests/desktop/installer.mjs, tests/unit/installerReceipt.test.ts, docs
-- Verification: NOT_VERIFIED — 基线 lint/typecheck 与桌面启动12/12、收据定向4/4通过；NSIS构建及原生验收进行中。
+- Modules: src-tauri/tauri.installer.conf.json, scripts/windows/installer-receipt.mjs, tests/desktop/installer.mjs, tests/unit/installerReceipt.test.ts, docs, scripts/windows/installer-inputs.mjs, tests/desktop/installer-state.ps1, tests/desktop/installer-cleanup.ps1, tests/unit/installerGuards.test.ts, tests/browser/settings-scroll.spec.ts
+- Verification: PARTIAL — NSIS构建、本机安装恢复及四次4279文件通过；8项定向保护/收据、设置同帧采样无retry160/160通过，原失败保留；最终verify/补审/PR/CI待完成。
 - Evidence: [docs/changes/2026-09-30-desktop-installer/verification.md](../../docs/changes/2026-09-30-desktop-installer/verification.md)
 - Updated: 2026-09-30

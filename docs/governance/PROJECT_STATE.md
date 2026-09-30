@@ -2,7 +2,7 @@
 
 ## 2026-09-30 安装器后续任务
 
-fetch 后 main 与 origin/main 均为 bd3bc66；上轮 PR #31 的 portable Desktop2.1.2/Web2.1.3 交付收据仍保留。TASK-DESKTOP-INSTALLER-001 在独立 codex/T7-desktop-installer worktree 推进完整 Agent/离线 WebView2 NSIS、文件收据与隔离安装恢复；原 main 未写入。已完成首个安装器构建和定向文件校验，真实安装/全量验证/独立审查尚待完成。T7 保持 PARTIAL，干净系统、低版本回滚、签名和真实服务未验收。进度见[本轮验证](../changes/2026-09-30-desktop-installer/verification.md)。
+fetch 后 main 与 origin/main 均为 bd3bc66；上轮 PR #31 的 portable Desktop2.1.2/Web2.1.3 交付收据仍保留。TASK-DESKTOP-INSTALLER-001 在独立 codex/T7-desktop-installer worktree 已完成完整 Agent/离线 WebView2 NSIS、收据和真实隔离恢复：四次安装各4279文件、启动/Agent、重装/修复/卸载再装项目保留通过。独立早期审查关闭五项finding，已有设置测试的分帧采样改为同帧后无重试160/160通过；最终verify/新head补审/托管PR门禁进行中。原 main 未写入。T7 保持 PARTIAL，干净系统、真实断网、低版本回滚、签名和真实服务未验收。进度见[本轮验证](../changes/2026-09-30-desktop-installer/verification.md)。
 
 ## 2026-09-30 当前集成版本
 

@@ -2,7 +2,7 @@
 
 ## 2026-09-30 安装器恢复入口
 
-从 D:/kk-studio/.worktrees/T7-desktop-installer 的 codex/T7-desktop-installer 继续，基线 origin/main@bd3bc66。先读[本轮计划](../changes/2026-09-30-desktop-installer/plan.md)与[验证](../changes/2026-09-30-desktop-installer/verification.md)及 Git status。完整 NSIS 已初次构建，收据要求干净 source/当前 EXE；真实安装测试拒绝已有 KK Studio 注册，只作用于随机临时安装目录。正式签名/干净系统/低版本回滚未验收，不将父任务 T7 标 DONE。首个 build 日志在工作区外 .tmp/t7-installer-build.log；最终证据应保存到本轮 evidence。
+从 D:/kk-studio/.worktrees/T7-desktop-installer 的 codex/T7-desktop-installer 继续，基线 origin/main@bd3bc66。先读[本轮计划](../changes/2026-09-30-desktop-installer/plan.md)与[验证](../changes/2026-09-30-desktop-installer/verification.md)及 Git status。NSIS 343671471 bytes/hash7103126d…d635；receipt commit0fba927/build commit61b0c85，真实安装/Agent/四次4279文件、重装/损坏修复/卸载再装保留项目通过，8项保护/收据定向通过。已有设置采样修正后无retry160/160；最终verify/新head独立补审/PR/CI尚待完成。原生报告必须放独立 .tmp/installer-audits 或工作区外目录，不能被browser清理；最新证据保存本轮evidence。真实安装保护拒绝已有注册/portable进程，不卸载用户应用。正式签名/干净系统/真实断网/低版本回滚未验收，不将父任务T7或FEAT-026标REAL/DONE。
 
 ## 2026-09-30 恢复入口
 

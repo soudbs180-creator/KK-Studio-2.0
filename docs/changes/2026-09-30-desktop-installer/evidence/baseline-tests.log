@@ -1,0 +1,20 @@
+✔ stale desktop release is rebuilt before it can launch (22.7365ms)
+✔ failed desktop rebuild cannot launch the previous release (2.6422ms)
+✔ a build that leaves the executable stale cannot launch it (2.7164ms)
+✔ current desktop release launches without another rebuild (2.2062ms)
+✔ desktop launch detects a newer runtime input: vendor/canvas-agent/src/index.ts (3.7958ms)
+✔ desktop launch detects a newer runtime input: vendor/canvas-agent/agent-instructions.md (3.365ms)
+✔ desktop launch detects a newer runtime input: scripts/agent/desktop-entry.mjs (2.7543ms)
+✔ desktop launch detects a newer runtime input: config/platform-versions.json (2.8846ms)
+✔ desktop launch detects a newer runtime input: src-tauri/build.rs (2.4237ms)
+✔ desktop launch detects a newer runtime input: src-tauri/tauri.agent.conf.json (2.456ms)
+✔ desktop launch detects a newer runtime input: src-tauri/capabilities/default.json (3.1318ms)
+✔ Windows entry checks freshness even when an executable already exists (744.2504ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 874.4752

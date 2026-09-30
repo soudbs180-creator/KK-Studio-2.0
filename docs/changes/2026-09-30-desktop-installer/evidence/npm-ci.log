@@ -1,0 +1,57 @@
+
+> kk-studio@2.1.3 postinstall
+> npm run agent:install && npm run agent:build && npm run plugins:install && npm run plugins:build
+
+
+> kk-studio@2.1.3 agent:install
+> npm ci --prefix vendor/canvas-agent --ignore-scripts --no-audit --no-fund
+
+
+added 151 packages in 3s
+
+> kk-studio@2.1.3 agent:build
+> node scripts/agent/install-idle-preparation.mjs && node scripts/agent/install-desktop-support.mjs && tsc -p vendor/canvas-agent/tsconfig.json
+
+Agent conditional idle preparation: installed and verified.
+Agent desktop configuration, ephemeral port and memory credentials verified.
+
+> kk-studio@2.1.3 plugins:install
+> npm ci --prefix vendor/canvas-plugins --ignore-scripts --no-audit --no-fund
+
+
+added 16 packages in 513ms
+
+> kk-studio@2.1.3 plugins:build
+> npm --prefix vendor/canvas-plugins run build --workspaces --if-present
+
+
+> canvas-plugin-html@1.2.0 build
+> node build.mjs
+
+[html] synced → public/plugins/html.js
+[html] built → dist/html.js
+
+> canvas-plugin-markdown@1.1.0 build
+> node build.mjs
+
+[markdown] synced → public/plugins/markdown.js
+[markdown] built → dist/markdown.js
+
+> canvas-plugin-sticky-note@1.1.0 build
+> node build.mjs
+
+[sticky-note] synced → public/plugins/sticky-note.js
+[sticky-note] built → dist/sticky-note.js
+
+> canvas-plugin-svg@1.1.0 build
+> node build.mjs
+
+[svg] synced → public/plugins/svg.js
+[svg] built → dist/svg.js
+
+added 244 packages, and audited 245 packages in 13s
+
+103 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities

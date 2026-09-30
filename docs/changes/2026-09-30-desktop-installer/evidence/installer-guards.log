@@ -1,0 +1,16 @@
+✔ installer preflight finds an MSI registered under a GUID (674.0554ms)
+✔ installer preflight refuses a running portable before executing any installer (983.9014ms)
+✔ installer verification rejects corrupted bytes before execution (6.6863ms)
+✔ installed executable identity accounts for Tauri NSIS bundle marker and rejects ambiguous inputs (0.5582ms)
+✔ receipt freshness rejects newer installer configuration and runtime inputs (6.7897ms)
+✔ installed runtime verifies executable and each resource; missing or corrupt files fail (6.5062ms)
+✔ receipt paths cannot read outside the selected installation directory (0.2825ms)
+✔ installer config includes the Agent and offline WebView2 without changing data identity (1.2537ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1737.6373
