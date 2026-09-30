@@ -25,9 +25,7 @@ export default function ResizeHandle({
     (event: React.PointerEvent<HTMLDivElement>) => {
       event.preventDefault();
       const el = document.documentElement;
-      const current = parseFloat(
-        getComputedStyle(el).getPropertyValue(cssVar),
-      );
+      const current = parseFloat(getComputedStyle(el).getPropertyValue(cssVar));
       state.current = { startX: event.clientX, startWidth: current || min };
       event.currentTarget.setPointerCapture(event.pointerId);
       event.currentTarget.classList.add("is-dragging");
@@ -42,22 +40,25 @@ export default function ResizeHandle({
       const dx = event.clientX - state.current.startX;
       const next = Math.min(
         max,
-        Math.max(min, state.current.startWidth + (growDir === "right" ? dx : -dx)),
+        Math.max(
+          min,
+          state.current.startWidth + (growDir === "right" ? dx : -dx),
+        ),
       );
-      document.documentElement.style.setProperty(cssVar, `${Math.round(next)}px`);
+      document.documentElement.style.setProperty(
+        cssVar,
+        `${Math.round(next)}px`,
+      );
     },
     [cssVar, min, max, growDir],
   );
 
-  const end = useCallback(
-    (event: React.PointerEvent<HTMLDivElement>) => {
-      if (!state.current) return;
-      state.current = null;
-      event.currentTarget.classList.remove("is-dragging");
-      document.body.style.cursor = "";
-    },
-    [],
-  );
+  const end = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    if (!state.current) return;
+    state.current = null;
+    event.currentTarget.classList.remove("is-dragging");
+    document.body.style.cursor = "";
+  }, []);
 
   useEffect(() => {
     return () => {

@@ -4,6 +4,14 @@ import ts from "typescript";
 
 export function checkImportBoundaries(file, content, root = process.cwd()) {
   const relative = file.replaceAll("\\", "/");
+  const localServiceServerFiles = new Set([
+    "src/features/local-service/main.ts",
+    "src/features/local-service/manifest.ts",
+    "src/features/local-service/server.ts",
+    "src/features/local-service/session.ts",
+    "src/features/local-service/store.ts",
+  ]);
+  const serverOnly = localServiceServerFiles.has(relative);
   const source = ts.createSourceFile(
     file,
     content,
@@ -49,8 +57,10 @@ export function checkImportBoundaries(file, content, root = process.cwd()) {
         issues.push(`${relative}: domain cannot depend on ${specifier}`);
       if (
         !within(relative, "src/features/generation-server") &&
+        !serverOnly &&
         (isBuiltin(specifier) ||
-          within(resolved, "src/features/generation-server"))
+          within(resolved, "src/features/generation-server") ||
+          localServiceServerFiles.has(resolved))
       )
         issues.push(
           `${relative}: browser/shared source cannot import server-only ${specifier}`,

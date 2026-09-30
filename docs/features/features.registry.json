@@ -580,7 +580,7 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-013-connectors.md",
-    "summary": "画布插件系统的 HTTPS URL 安装和内置节点在 Web preview 可用；Desktop CSP 阻止当前 blob 模块加载，待 PLUGIN-DESKTOP-001 修复。连接器目录页仍为硬编码清单，与插件系统未合并。",
+    "summary": "画布插件系统的 HTTPS URL 安装和内置节点在 Web preview 可用；随包插件现通过同源模块路径在 fresh Tauri Desktop 验证发现、添加、渲染和启停，严格 CSP 未放宽。远程代码仍保持 HTTPS/重定向边界，连接器目录页与插件系统尚未合并。",
     "entryPoints": [
       "技能页内连接器目录 ConnectorCatalog"
     ],
@@ -603,7 +603,7 @@
       "TASK-UI-005",
       "PLUGIN-DESKTOP-001"
     ],
-    "updated": "2026-09-23",
+    "updated": "2026-09-29",
     "platforms": [
       "web",
       "desktop"
@@ -1261,5 +1261,83 @@
       "TASK-PROV-002"
     ],
     "updated": "2026-09-26"
+  },
+  {
+    "id": "FEAT-036",
+    "title": "画布图片对比",
+    "area": "canvas",
+    "status": "PARTIAL",
+    "card": "docs/features/feat-036-image-compare.md",
+    "summary": "从画布图片卡片选择 2–4 张并排查看；两张可切换滑块，选择仅在当前会话内保留。PR #21 已进入主线；合并后 390px 命中区 CI 回归和用户最终视觉验收仍待收口。",
+    "entryPoints": [
+      "图片卡片加入对比",
+      "画布对比选择条"
+    ],
+    "code": [
+      "src/features/compare/imageCompare.ts",
+      "src/features/compare/ImageCompareProvider.tsx",
+      "src/features/compare/ImageCompareDialog.tsx",
+      "src/components/Canvas.tsx"
+    ],
+    "tests": [
+      "tests/unit/imageCompare.test.ts",
+      "tests/browser/image-compare.spec.ts",
+      "tests/desktop/image-compare.mjs"
+    ],
+    "tasks": [
+      "TASK-COMPARE-001",
+      "TASK-COMPARE-002"
+    ],
+    "updated": "2026-09-28",
+    "platforms": [
+      "web",
+      "desktop"
+    ],
+    "runtimeEvidence": [
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-09-28-compare-ci-fix/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-09-28-compare-ci-fix/verification.md"
+      }
+    ]
+  },
+  {
+    "id": "FEAT-037",
+    "title": "Web 本机伴随服务",
+    "area": "platform",
+    "status": "PARTIAL",
+    "card": "docs/features/feat-037-web-local-service.md",
+    "summary": "本机 loopback 服务已提供 Web 项目/素材服务优先读写、旧 IndexedDB 用户触发迁移和备份恢复；账号绑定、安装器与 Mobile 仍未完成。",
+    "entryPoints": [
+      "设置 → 储存 → 网页本机伴随服务"
+    ],
+    "code": [
+      "src/features/local-service/main.ts",
+      "src/features/local-service/server.ts",
+      "src/features/local-service/store.ts",
+      "src/features/local-service/client.ts",
+      "src/features/local-service/migration.ts",
+      "src/features/creation/storage.ts",
+      "src/features/creation/assetRepository.ts",
+      "src/components/settings/CompanionSettings.tsx"
+    ],
+    "tests": [
+      "tests/unit/localServiceClient.test.ts",
+      "tests/unit/localServiceMigration.test.ts",
+      "tests/unit/localServiceProtocol.test.ts",
+      "tests/unit/localServiceServer.test.ts",
+      "tests/unit/localServiceStore.test.ts",
+      "tests/unit/assetStorage.test.ts",
+      "tests/browser/local-service-migration.spec.ts",
+      "tests/browser/local-service-connection.spec.ts",
+      "tests/local-service/production-smoke.mjs"
+    ],
+    "tasks": [
+      "TASK-LOCAL-SERVICE-001"
+    ],
+    "updated": "2026-09-29"
   }
 ]

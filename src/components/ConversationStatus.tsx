@@ -6,4 +6,3 @@ export default function ConversationStatus({ message }: { message: string }) {
     </p>
   );
 }
-

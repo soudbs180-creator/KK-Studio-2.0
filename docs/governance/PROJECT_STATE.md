@@ -4,6 +4,40 @@
 
 `TASK-UI-CANVAS-001` 已在当前 dirty Web 工作区完成：960–1200px 会话 rail 预留画布空间，HUD/navigation/toolbar 保持可见并左移；侧栏展开固定 304px、收起 72px，移除宽度拖拽。Vite 1421/1423 的 targeted Playwright、typecheck、build 与截图证据通过。该记录不代表 Tauri/native、真实移动硬件、Figma 新读取或用户最终视觉验收；`canvas-layout` 的 `connector-video1` fixture 超时已按既有失败记录。实现和边界见 [change package](../changes/2026-09-28-canvas-chat-layout/verification.md) 与账本 `TASK-UI-CANVAS-001`。
 
+## 2026-09-29 项目落地候选正在收敛
+
+当前任务分支已保存 UI/Figma/Kaworkai 候选并吸收 `origin/main@1e95a13`。主线新增的图片对比、本机伴随服务、平台版本和 Desktop 插件修复进入候选；UI 视觉与旧 fixture 需要在合并后的实际 bundle 重新验证。
+
+## 2026-09-29 Web 本机伴随服务已实现基础链路，保持 PARTIAL
+
+`TASK-LOCAL-SERVICE-001` 在独立 worktree `D:/kk-studio/.worktrees/platform-versioning` 的实现 head `346c2c0` 已完成 loopback 本机服务、HttpOnly 配对会话、项目快照/素材服务优先读写、旧 IndexedDB 只读预检与用户确认导入、校验备份/恢复，以及设置页连接/离线/断开反馈。真实临时服务的迁移浏览器验收通过；浏览器连接验收覆盖 1920px 与 390px，生产 smoke 覆盖 Web bundle 无 Node 服务入口、fresh browser context 和服务重启恢复。Task 当前按 `PARTIAL` 记录：真实账号登录与 BACKEND-PLATFORM、服务安装器/自动更新、Mobile 原生持久层（T12）和 VPS 生产部署仍未完成。本机伴随服务连接证据不能证明 VPS 已上传或 Git 已在 VPS 同步。
+
+## 2026-09-29 Desktop 插件同源加载已验证
+
+PLUGIN-DESKTOP-001 已由 PR #28 squash 合入 `main@e27e209`：随包插件从同源 ESM URL 加载，Tauri 严格 `script-src 'self' 'wasm-unsafe-eval'` 保持不变；fresh release 以隔离数据根目录通过插件发现、添加、渲染、停用和恢复，资源 URL 为 `tauri.localhost/plugins/*.js?t=...` 且无 page error。远程插件仍受 HTTPS/重定向规则约束，不宣称 Desktop 远程执行；连接器目录合并、真实 Provider/账号和 VPS 状态不受本轮改变。以 `docs/changes/2026-09-29-plugin-desktop-csp/` 为准。
+
+## 2026-09-28 VPS 搬迁准备与当前核验边界
+
+## 2026-09-28 三端版本任务与产品目标
+
+TASK-VERSION-001 在独立分支实现桌面、Web、Mobile 独立版本源与递增命令；精确 head `9d55857` 经独立复审、PR/主线 Hosted 门禁后 squash 合入 `main@799efc5`，合并树一致。本轮源码目标均为 `2.1.1`，正式安装、Web 上线与 Mobile 包未由版本号证明。用户确认交付优先 Desktop → Web → Mobile；Web 未来由用户设备上的本机伴随服务保存个人数据，Desktop 免登录/可选登录，Web/Mobile 需登录。当前 Web IndexedDB、演示账号、无 Mobile 包仍是事实；`TASK-LOCAL-SERVICE-001`、`BACKEND-PLATFORM`、`T12` 保持开放。详细交接见[版本验证](../changes/2026-09-28-platform-versioning/verification.md)。原根 checkout 的未提交文件仍保持隔离。
+
+## 2026-09-28 图片对比已合并，主线窄屏回归修复中
+
+T10-PREP 分支新增静态归档整包 hash、指定离机包恢复模式、共享发布锁的版本回滚和[离机备份/隔离恢复操作单](../../deploy/MIGRATION.md)；PR #23 精确 head `abe1e99` 经独立复审、Hosted 门禁后合入 `main@45fdc14`，合并后 CI 通过。2026-09-16 旧 VPS 审计不能代表今天；本轮历史地址 HTTP 301、SSH 认证失败，用户已登录的浏览器控制页接口超时，2.0 是否上传、服务器 Git SHA/数据备份均 UNKNOWN。正式域名、主机权限和数据恢复演练未落实，T10-PREP PARTIAL、T10 BLOCKED。现有 Web IndexedDB 与用户要求的本机伴随服务有差距。
+
+## 2026-09-28 图片对比已合并，主线回归修复待 postmerge CI
+
+[PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 合入 `main@7bc7c67`，但 [push run 36369533105](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36369533105) 发现 390px 对比按钮子像素失败。[PR #22](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/22) 的当前 head `a6629ab` 经独立复审和 Hosted `verify`/`delivery` 后合入 `main@065bcbf`，合并树与候选树相同；合并后主线 verify 已通过。原根 checkout 未提交改动保持原样，用户最终视觉验收未记录。
+
+## 2026-09-28 画布图片对比草稿 PR #21
+
+TASK-COMPARE-001 源码 `f8d5165` 独立只读复审 PASS，Web preview 完整 `verify`（302 浏览器）与 Tauri release GUI 重验通过。草稿 [PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 已创建，首个 head 的 Hosted `delivery` 成功；本次记录补录后的最终 head `verify` 和复审、用户产品验收及主线集成仍待完成。FEAT-036 保持 PARTIAL；原 checkout 的未提交改动仍隔离。
+
+## 2026-09-27 画布图片对比候选待审
+
+TASK-COMPARE-001 在独立 worktree `codex/TASK-COMPARE-001-canvas-compare` 实现 FEAT-036。Web preview 的 1440/1220/390px 操作、完整 `verify`（302 浏览器）以及隔离数据根目录的 Tauri release GUI 已通过；实际 production JS/CSS 同源。独立审查、PR Hosted 门禁、用户产品验收和主线集成仍待完成，主线与正式发布状态不因此改变。根 checkout 未提交 UI 改动保持隔离。证据见[验证记录](../changes/2026-09-27-canvas-image-compare/verification.md)。
+
 ## 2026-09-27 Provider #16 源码复审通过，托管门禁待完成
 
 独立只读 reviewer 对 Provider #16 源码 `1f81322` 给出 PASS，无未关闭 P0–P2；本地 `verify` 456 Node/300 浏览器与 delivery 22/0 通过。审查证据补录后仍须回读最终 head 的 PR/push Hosted 检查，未合并前不算主线能力；功能卡 FEAT-032 为 PARTIAL，真实 Codex/Claude 消费未验收。
@@ -81,7 +115,6 @@ PR #14 的独立审查在旧 head 发现两项 P1：旧 revision 可覆盖已完
 
 旧Agent源码快照522输入重新比对，494未变、28为此前UI008或本轮有记录的差异；其中66个原生/Agent后端/打包输入零漂移。旧EXE和测试数字保留历史含义，新资源以本轮验证为准。TASK-AGENT-002、FEAT-009/012仍PARTIAL；参考图编辑、站内工具、TTS/视频、其他产品适配、通用MCP、付费Provider与正式发布继续按清单办理。当前清单与证据：docs/changes/2026-09-23-agent-attachments/remaining.md、verification.md。
 
-
 ## 2026-09-23 创作输入框规则与实现（TASK-UI-008，DONE/PASS，未提交）
 
 Design System更新为1.3，先补输入结构、字体、图标与命中区、单一焦点和三档分行契约。首页/API/Agent共用ComposerTextarea与composer.css；文字自增长、附件/型号参数进入流布局，宽首页一排、手机首页和触屏对话按功能两排。修复首页发现区重叠、菜单遮住第二排按钮、短桌面发送不可达和菜单滚动回顶。
@@ -132,7 +165,6 @@ KK 对话已通过本机官方 Codex app-server 使用现有 ChatGPT 登录：�
 
 UI 范围及证据见 `docs/changes/2026-09-22-ui-feature-parity/verification.md`；剩余事项继续由 `docs/changes/2026-09-22-design-system/remaining.md` 与账本管理。真实 CLI/Provider、TTS/ComfyUI/WebDAV 完整产品链、在线 Ardot 和用户视觉验收未被本批替代。
 
-
 ## 2026-09-22 Design System逐页迁移（TASK-DS-002，DONE/PASS，未提交）
 
 项目库、Skills、ComfyUI目录、Skill编辑器和设置分区已按1.1共享规范迁移，补浅色侧栏SVG辨识、长分类换行与清晰选中边界。保留既有Landing/Workspace几何和业务边界。独立预检发现的两项P2已修复并复核PASS；菜单End回归改为核对并发加载后的实际末项，不再假设SVG固定最后。
@@ -146,7 +178,6 @@ TASK-DS-001/UI-001/UI-004保持PARTIAL，在线Ardot、缺失Frame与用户视�
 已按用户7页PDF完成Design System审计与v1.1校正，现行颜色/基础组件规范统一为 `docs/DESIGN-SYSTEM.md`；保留旧页面几何。公共控件、状态配对和双主题8色偏好已接入现有v1存储。完整verify307 Node/219 browser通过，独立dirty-diff预检PASS；随后修复设置插件破图并定向复验。已仅回传本任务增量到当前工程，保留并发Agent/插件业务；回传后309 Node、13项相关浏览器、lint/typecheck/format/UI/build全部通过。
 
 TASK-DS-001、UI-001、UI-004保持PARTIAL：在线Ardot未写入，新样式Tauri运行与全页面视觉验收仍待完成。详细命令、文件指纹和当前工程回传结果见 `docs/changes/2026-09-22-design-system/verification.md`，剩余事项见同目录 `remaining.md`。未commit/push。
-
 
 ## 2026-09-22 文本任务与规则审计（当前，未提交）
 
@@ -233,7 +264,6 @@ Figma现行可取得面板的设计上下文、DOM和同状态截图已核对。
 - 首发树只包含本地 2.0 当前已跟踪目录；云端旧 monorepo 当前目录已删除，旧历史仍可追溯。
 - PR 记录：https://github.com/soudbs180-creator/KK-Studio-2.0/pull/1。合并后已回读 main SHA/tree SHA。
 
-
 ## 2026-09-20 UI 主线整合
 
 TASK-UI-MAIN-001 从 origin/main@8aca3ab 出发，三方整合27项原目录交互修复并保留主线T3b/T4/T5；现行 Figma 的设置、搜索、资产展开/收纳及任务入口偏差已修正。34种页面状态已用实际导航捕获；原目录尚未切换前不能把候选描述成原目录最新版。准确命令、运行矩阵和同步状态见 [verification](../changes/2026-09-20-ui-main-alignment/verification.md)。UI-004 保持 PARTIAL：当前唯一Figma页面中没有Landing410:59708及部分独立页面稿。治理候选TASK-GOV-002保持独立，未夹带合入。
@@ -244,7 +274,6 @@ TASK-UI-MAIN-001 从 origin/main@8aca3ab 出发，三方整合27项原目录交�
 - PR #3 已 squash 合并；双 CI 的完整 verify、Rust、Tauri client check/build 均通过。
 - 原 dirty checkout 的 409 项、原 index 和额外根目录快捷方式已保存在 `.tmp/root-before-main-20260920/`，不进入远端；`master` 与旧本地 main 作为历史引用保留。
 - UI-004 仍是 PARTIAL：Landing 与若干独立页面没有当前 Figma 基准，不能宣称所有页面已完成逐页 Figma 验收。
-
 
 ## 窄屏关闭优先级补充
 

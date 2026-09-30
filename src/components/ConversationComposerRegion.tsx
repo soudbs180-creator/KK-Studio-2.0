@@ -88,8 +88,14 @@ export default function ConversationComposerRegion({
           onAddFiles={onAddFiles}
           readingFiles={readingFiles}
           onStatus={onStatus}
-          currentModel={agentActive ? agentModel || "Codex 账号默认" : currentModel}
-          modelOptions={agentActive ? ["Codex 账号默认", ...(agent?.models ?? [])] : modelOptions}
+          currentModel={
+            agentActive ? agentModel || "Codex 账号默认" : currentModel
+          }
+          modelOptions={
+            agentActive
+              ? ["Codex 账号默认", ...(agent?.models ?? [])]
+              : modelOptions
+          }
           modelSelection={modelSelection}
           onSelectModel={onSelectModel}
           onOpen={onOpen}
@@ -106,4 +112,3 @@ export default function ConversationComposerRegion({
     />
   );
 }
-

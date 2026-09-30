@@ -137,6 +137,32 @@ test("ensurePluginsLoaded：rehydrate → 发现本地插件 → 只激活启用
   assert.ok(calls.some((url) => url.includes("t=")));
 });
 
+test("随包插件从同源模块 URL 直接导入，不生成 blob 模块", async () => {
+  const store = createPluginStore(memoryStorage());
+  const moduleUrls: string[] = [];
+  const loader = createPluginLoader({
+    store,
+    runtime,
+    fetcher: (async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.endsWith("index.json"))
+        return jsonResponse(["/plugins/sample.js"]);
+      return new Response("export default {}", { status: 200 });
+    }) as typeof fetch,
+    importUrl: async (url) => {
+      moduleUrls.push(url);
+      return { default: () => samplePlugin() };
+    },
+  });
+
+  await loader.ensurePluginsLoaded();
+  assert.ok(moduleUrls.length >= 2, "发现与激活都应走同源模块导入");
+  assert.ok(moduleUrls.every((url) => url.startsWith("/plugins/sample.js?t=")));
+  assert.ok(moduleUrls.every((url) => !url.startsWith("blob:")));
+  assert.ok(loader.isLoaded("sample"));
+  loader.uninstallPlugin("sample");
+});
+
 test("update：带缓存戳重新拉取并替换版本", async () => {
   const { store, loader, calls } = loaderHarness();
   await loader.installFromUrl("https://cdn.example/sample.js");

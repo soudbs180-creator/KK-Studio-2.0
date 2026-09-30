@@ -115,10 +115,18 @@
   font-size: var(--ui-font-label);
   font-weight: 600;
 }
-.canvas-layer-kind-image { color: var(--ui-selected); }
-.canvas-layer-kind-video { color: var(--text-accent); }
-.canvas-layer-kind-audio { color: var(--ui-warning); }
-.canvas-layer-kind-text { color: var(--ui-success); }
+.canvas-layer-kind-image {
+  color: var(--ui-selected);
+}
+.canvas-layer-kind-video {
+  color: var(--text-accent);
+}
+.canvas-layer-kind-audio {
+  color: var(--ui-warning);
+}
+.canvas-layer-kind-text {
+  color: var(--ui-success);
+}
 .canvas-layer-copy {
   display: grid;
   min-width: 0;

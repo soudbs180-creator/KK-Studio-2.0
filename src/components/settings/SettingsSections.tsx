@@ -9,9 +9,8 @@ import ConnectionSettings from "./ConnectionSettings";
 import ProjectPackageActions from "../../features/projects/ProjectPackageActions";
 import type { SaveState } from "../../features/creation/useCreationStorage";
 import type { SkillRegistry } from "../../features/skills/skillRegistry";
-import ExtensionsSettings, {
-  type ExtensionsTab,
-} from "./ExtensionsSettings";
+import ExtensionsSettings, { type ExtensionsTab } from "./ExtensionsSettings";
+import CompanionSettings from "./CompanionSettings";
 export { SETTINGS_SECTIONS } from "./SettingsSectionData";
 export type { SettingsSection } from "./SettingsSectionData";
 
@@ -52,9 +51,15 @@ export default function SettingsSections({
   }
 
   const active = SETTINGS_SECTIONS.find((item) => item.id === section);
-  const extensionsSection = section === "extensions" || section === "skill" || section === "mcp";
+  const extensionsSection =
+    section === "extensions" || section === "skill" || section === "mcp";
   const defaultExtensionTab =
-    extensionsTab ?? (section === "skill" ? "skills" : section === "mcp" ? "plugins" : undefined);
+    extensionsTab ??
+    (section === "skill"
+      ? "skills"
+      : section === "mcp"
+        ? "plugins"
+        : undefined);
 
   return (
     <>
@@ -83,6 +88,7 @@ export default function SettingsSections({
             <p className="settings-section-intro">
               在当前设备保存主题、布局等非敏感偏好。
             </p>
+            <CompanionSettings onFeedback={onFeedback} />
             <div className="settings-info-row">
               <span>偏好保存位置</span>
               <strong>{appPlatform()} · 本机</strong>

@@ -53,7 +53,8 @@ export default function ProviderProfileFields({
         />
       </label>
       <p className="settings-field-help">
-        支持 OpenAI 兼容 API。同一地址使用不同名称可登记独立连接；连接测试不代表已验证图片或视频生成。
+        支持 OpenAI 兼容
+        API。同一地址使用不同名称可登记独立连接；连接测试不代表已验证图片或视频生成。
       </p>
     </>
   );

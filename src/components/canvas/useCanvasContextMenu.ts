@@ -17,7 +17,7 @@ export function useCanvasContextMenu() {
     if (
       event.target instanceof Element &&
       event.target.closest(
-        "[data-canvas-node],button,.canvas-hud,.canvas-toolbar,.connection",
+        "[data-canvas-node],button,dialog,.canvas-hud,.canvas-toolbar,.connection",
       )
     ) {
       rightGesture.current = null;

@@ -3,9 +3,7 @@ import { Search } from "lucide-react";
 import CatalogPageBody from "./CatalogPageBody";
 import type { CreationProject } from "../features/creation/model";
 import CatalogTutorial from "./CatalogTutorial";
-import {
-  type WorkflowRecord,
-} from "../features/comfyui/workflowRegistry";
+import { type WorkflowRecord } from "../features/comfyui/workflowRegistry";
 import { downloadWorkflow } from "./WorkflowImportButton";
 import { selectPageTemplate } from "../domain/pageTemplates";
 import CatalogPageHeader from "./CatalogPageHeader";

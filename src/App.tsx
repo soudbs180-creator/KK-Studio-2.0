@@ -120,10 +120,7 @@ import {
 } from "./features/creation/providerSubmission";
 import { mapWithConcurrency } from "./features/creation/generationQueue";
 import { compileDesignPrompt } from "./features/creation/promptCompiler";
-import {
-  getDisabledReason,
-  getGenerationUiState,
-} from "./domain/uiGovernance";
+import { getDisabledReason, getGenerationUiState } from "./domain/uiGovernance";
 
 import {
   abortedAfterProviderSubmission,
@@ -1559,8 +1556,7 @@ export default function App() {
     const uiState = getGenerationUiState({
       prompt: request.input.prompt,
       inputValid: Boolean(request.input.prompt.trim()),
-      modelConfigured:
-        request.origin === "agent" || homeModelConfig.configured,
+      modelConfigured: request.origin === "agent" || homeModelConfig.configured,
       quotaAvailable: true,
       online: typeof navigator === "undefined" ? true : navigator.onLine,
       serviceConfigured:
@@ -1873,8 +1869,11 @@ export default function App() {
     const nextProject: CreationProject = {
       ...blank,
       name: "未命名项目",
-      canvas: createProjectCanvas([]),
-      items: [],
+        canvas: createProjectCanvas(BASE_CANVAS_ITEMS),
+        items: BASE_CANVAS_ITEMS.map((item) => ({
+          ...item,
+          model: item.kind === "image" ? blank.model : item.model,
+        })),
       messages: [],
       tasks: [],
       favoriteIds: [],
@@ -1944,6 +1943,8 @@ export default function App() {
       return;
     }
     if (view === "chat") {
+      if (!creationRef.current.projects.some((project) => project.id === activeProjectIdRef.current))
+        handleNewBlankProject();
       setActive("workspace");
       setChat(true);
       if (sidebar.surface === "phone" || sidebar.narrow) setMobileChat(true);
@@ -2490,3 +2491,4 @@ import "./styles/responsive.css";
 import "./styles/responsive-content.css";
 import "./styles/composer.css";
 import "./styles/page-templates.css";
+import "./styles/canvas-compare.css";

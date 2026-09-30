@@ -10,7 +10,13 @@ import {
 } from "../../src/domain/pageTemplates.ts";
 
 test("the runtime registry exposes exactly the five Figma page templates", () => {
-  assert.deepEqual(PAGE_TEMPLATE_KEYS, ["list", "grid", "detail", "timeline", "gallery"]);
+  assert.deepEqual(PAGE_TEMPLATE_KEYS, [
+    "list",
+    "grid",
+    "detail",
+    "timeline",
+    "gallery",
+  ]);
   for (const key of PAGE_TEMPLATE_KEYS) {
     const definition = PAGE_TEMPLATES[key];
     assert.equal(definition.id, key);
@@ -30,7 +36,8 @@ test("work display resolves to grid and selection is deterministic", () => {
     [{ media: true, batchSelect: true }, "gallery"],
     [{ fields: 3 }, "grid"],
   ];
-  for (const [profile, expected] of cases) assert.equal(selectPageTemplate(profile), expected);
+  for (const [profile, expected] of cases)
+    assert.equal(selectPageTemplate(profile), expected);
 });
 
 test("mixed pages have one primary template and only detail may be nested", () => {
@@ -40,4 +47,3 @@ test("mixed pages have one primary template and only detail may be nested", () =
   assert.equal(canComposePageTemplates("timeline", ["detail"]), false);
   assert.equal(canComposePageTemplates("detail", ["detail"]), false);
 });
-

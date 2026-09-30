@@ -50,9 +50,13 @@
   border-radius: var(--kk-radius-control);
   background: var(--kk-bg-card);
   color: var(--kk-text-primary);
-  font: var(--kk-font-weight-body-strong) var(--kk-font-body) / var(--kk-line-body) var(--kk-font-sans);
+  font: var(--kk-font-weight-body-strong) var(--kk-font-body) /
+    var(--kk-line-body) var(--kk-font-sans);
   white-space: nowrap;
-  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
 }
 
 .kk-button--primary {

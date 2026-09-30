@@ -112,7 +112,9 @@ export default function CanvasToolbar({
               key={value}
               role="menuitemradio"
               aria-label={value === "select" ? "移动工具" : "小手工具"}
-              title={value === "select" ? "移动（V）" : "小手工具（H，按住空格拖拽）"}
+              title={
+                value === "select" ? "移动（V）" : "小手工具（H，按住空格拖拽）"
+              }
               aria-checked={tool === value}
               onClick={() => {
                 onToolChange(value);

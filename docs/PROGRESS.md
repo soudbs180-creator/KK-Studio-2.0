@@ -12,6 +12,40 @@
 
 按浏览器评论修复平板 workspace：960–1200px 打开会话时保留右侧 400px rail，画布导航和底部工具随可用区域左移；顶部控制与收起侧栏开关统一 44px 高度。侧栏展开移除 ResizeHandle，按 Workspace Figma 帧固定 291px 并推动工作区向右，收起保持 72px；低于 960px 继续使用覆盖式会话。侧栏开关使用左小右大的图标，展开态填充左侧小框。`typecheck`、`build`、定向 Playwright 和截图证据需在本轮改动后重跑。详见 `docs/changes/2026-09-28-canvas-chat-layout/`。
 
+## 2026-09-29 项目落地与分支收敛（TASK-PROJECT-001，IN_PROGRESS）
+
+已保存当前 UI/画布候选并开始吸收最新 `origin/main`。合并后的 image compare、本机伴随服务和平台版本能力以主线实现为准；首页/对话/设置/画布将在当前源码 bundle 上重新验收，未验证或外部受限项保持 PARTIAL/BLOCKED。
+
+## 2026-09-29 Web 本机伴随服务与浏览器数据迁移（TASK-LOCAL-SERVICE-001）
+
+在 `feat/TASK-LOCAL-SERVICE-001-companion` 独立 worktree 完成本机 loopback 服务和 Web 适配：服务默认绑定 `127.0.0.1:4319`，一次性配对码换取 HttpOnly session cookie；快照使用 revision CAS、临时文件和 `.bak` 恢复，素材使用内容寻址记录/原件、MIME/大小/完整 SHA-256 校验。设置 → 储存提供连接检查、断开、旧 IndexedDB 只读预检/确认导入、备份和最近备份恢复；服务启用后 `storage.ts` 与 `assetRepository.ts` 服务优先，离线/认证/冲突不静默回退。旧 IndexedDB 成功或失败均保留。
+
+验证：`tests/unit/localService*.test.ts`、`tests/unit/assetStorage.test.ts`，真实临时服务迁移浏览器验收（1/1），连接/备份/断线验收（2/2），`tests/local-service/http-integration.mjs`，`tests/local-service/production-smoke.mjs` 均通过；类型检查、UI 标准、Prettier、Vite production build 通过。Web bundle smoke 未发现 `node:fs`、`node:http`、`node:crypto`、配对码或服务数据根常量。功能卡 FEAT-037 与本任务保持 PARTIAL：账号登录、服务安装/更新、Mobile、VPS 生产写入仍未验证。
+
+## 2026-09-29 Desktop 随包插件 CSP 收口（PLUGIN-DESKTOP-001）
+
+修复插件加载器的桌面路径：随包 `/plugins/*.js` 现在通过同源 ESM URL 直接导入，不再依赖被 Tauri 严格 `script-src 'self'` 拒绝的 `blob:`；远程插件仍保持 HTTPS、无凭据/片段和禁止自动重定向。12 项插件单测、TypeScript、Web build、Tauri client build 通过；fresh Tauri release 在隔离数据目录实际完成插件发现、SVG 节点添加/渲染、停用、恢复，资源记录为 `http://tauri.localhost/plugins/*.js?t=...`，页面错误为空，证据见[本轮验证](changes/2026-09-29-plugin-desktop-csp/verification.md)；独立只读 review 已 PASS、无 P0–P3 findings，PR #28 的 Hosted verify/delivery/deploy-linux 与 push verify 均成功，已 squash 合入 main@e27e209。连接器目录统一入口、远程 Desktop 插件和真实服务仍保持后续任务。
+
+## 2026-09-28 VPS 搬迁准备（T10-PREP）
+
+在独立 `codex/T10-PREP-vps-migration` 分支为静态包增加整包 SHA-256、已校验离机包恢复输入和指定版本回滚；激活/回滚共用发布锁，详见[搬迁与恢复操作单](../deploy/MIGRATION.md)。PR #23 精确 head `abe1e99` 经独立复审、delivery、deploy-linux、verify 后 squash 合入 `main@45fdc14`；PR #25/#26 的文档收口已合入 `main@be46ad6`，合并后主线 `verify`/`deploy-linux` 也通过。旧 VPS SSH 认证失败，用户浏览器控制页接口超时，不能据历史审计说 2.0 已上传；T10-PREP 保持 PARTIAL、T10 BLOCKED。现有 Web 数据仍在浏览器 IndexedDB，用户新目标为本机伴随服务，尚未实现。
+
+## 2026-09-28 三端独立版本与本地数据目标
+
+TASK-VERSION-001 在独立分支建立 `config/platform-versions.json`：Desktop、Web 与尚未发布的 Mobile 规划版本均从 `2.1.1` 起，桌面包、Web 包和运行态分别取对应版本；`version:bump`/`version:check` 用于任务作者自动选择受影响平台并校验一致性。精确 head `9d55857` 已经独立复审、PR/主线 Hosted 门禁通过并 squash 合入 `main@799efc5`，合并树一致。账号和存储仍按现状运行：Desktop 可本地使用，Web 数据仍在 IndexedDB，登录仅演示；后续目标为 Web 安装本机伴随服务、Web/Mobile 登录和设备本地数据，见[版本规则](engineering/VERSIONING.md)与[ADR-008](architecture/adr/ADR-008-platform-versions-and-local-first.md)。不能把源码版本当作已发布产品。
+
+## 2026-09-28 对比操作合并后回归修复
+
+PR #21 的 `bcda41a` 经复审与 Hosted 门禁合入 `main@7bc7c67`。合并后 push CI `36369533105` 发现 390px 对比按钮实测 `43.999992px < 44px`；TASK-COMPARE-002 保留断言并给窄屏控件 1px 余量。[PR #22](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/22) 当前 head `a6629ab` 的 Hosted verify/delivery 与独立复审通过，squash 合入 `main@065bcbf`，树相同；合并后主线 verify 通过。用户最终产品视觉验收与正式发布未发生。
+
+## 2026-09-28 画布图片对比独立复审与草稿 PR
+
+TASK-COMPARE-001 的源码 `f8d5165` 已经独立只读上下文复审 PASS，预审发现的 390px 命中区、触摸证据与功能卡状态问题均关闭。草稿 [PR #21](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/21) 已建立，首个 head 的 Hosted `delivery` 通过；本次文档补录后的最终 head `verify` 与复审、用户产品验收和主线集成仍待完成。Web 完整 `verify` 为 302/302 浏览器，Tauri release GUI 在隔离数据目录重验通过，详见[本轮验证](changes/2026-09-27-canvas-image-compare/verification.md)。FEAT-036 保持 PARTIAL。
+
+## 2026-09-27 画布图片对比候选（TASK-COMPARE-001）
+
+独立 worktree `codex/TASK-COMPARE-001-canvas-compare` 已实现图片卡片加入/移除对比、2–4 张并排与两张滑块、同步缩放滚动及错误重试。`npm run verify` 通过（302 条浏览器）；Tauri `client:check`、`client:build` 和隔离数据目录的 release GUI 对比操作均通过。1440/1220/390px Web 与桌面截图、运行元数据见[本轮验证](changes/2026-09-27-canvas-image-compare/verification.md)。独立最终审查、PR Hosted 检查、用户产品验收与主线集成待完成；FEAT-036 保持 PARTIAL。
+
 ## 2026-09-27 Provider #16 源码独立补审通过
 
 PR #16 修复后源码 `1f81322` 独立只读补审 PASS，先前中文 id 渲染、同名 seed 碰撞和功能卡状态问题均关闭；本地完整 `verify` 为 456 Node、300 浏览器，delivery 22 文件/0 违规。补录审查结论后的最终 head 托管检查尚未完成，真实 Codex/Claude 消费与 UI 接线保持后续任务。
@@ -117,7 +151,6 @@ PR #14 的 `67ff18fb` 独立复审确认旧计划覆写与项目包漏同步两�
 
 旧Agent源码快照522输入重新比对，494未变、28为此前UI008或本轮有记录的差异；其中66个原生/Agent后端/打包输入零漂移。旧EXE和测试数字保留历史含义，新资源以本轮验证为准。TASK-AGENT-002、FEAT-009/012仍PARTIAL；参考图编辑、站内工具、TTS/视频、其他产品适配、通用MCP、付费Provider与正式发布继续按清单办理。当前清单与证据：docs/changes/2026-09-23-agent-attachments/remaining.md、verification.md。
 
-
 ## 2026-09-23 创作输入框规则与实现（TASK-UI-008，DONE/PASS，未提交）
 
 Design System更新为1.3，先补输入结构、字体、图标与命中区、单一焦点和三档分行契约。首页/API/Agent共用ComposerTextarea与composer.css；文字自增长、附件/型号参数进入流布局，宽首页一排、手机首页和触屏对话按功能两排。修复首页发现区重叠、菜单遮住第二排按钮、短桌面发送不可达和菜单滚动回顶。
@@ -168,7 +201,6 @@ KK 对话已通过本机官方 Codex app-server 使用现有 ChatGPT 登录：�
 
 UI 范围及证据见 `docs/changes/2026-09-22-ui-feature-parity/verification.md`；剩余事项继续由 `docs/changes/2026-09-22-design-system/remaining.md` 与账本管理。真实 CLI/Provider、TTS/ComfyUI/WebDAV 完整产品链、在线 Ardot 和用户视觉验收未被本批替代。
 
-
 ## 2026-09-22 Design System逐页迁移（TASK-DS-002，DONE/PASS，未提交）
 
 项目库、Skills、ComfyUI目录、Skill编辑器和设置分区已按1.1共享规范迁移，补浅色侧栏SVG辨识、长分类换行与清晰选中边界。保留既有Landing/Workspace几何和业务边界。独立预检发现的两项P2已修复并复核PASS；菜单End回归改为核对并发加载后的实际末项，不再假设SVG固定最后。
@@ -182,7 +214,6 @@ TASK-DS-001/UI-001/UI-004保持PARTIAL，在线Ardot、缺失Frame与用户视�
 已按用户7页PDF完成Design System审计与v1.1校正，现行颜色/基础组件规范统一为 `docs/DESIGN-SYSTEM.md`；保留旧页面几何。公共控件、状态配对和双主题8色偏好已接入现有v1存储。完整verify307 Node/219 browser通过，独立dirty-diff预检PASS；随后修复设置插件破图并定向复验。已仅回传本任务增量到当前工程，保留并发Agent/插件业务；回传后309 Node、13项相关浏览器、lint/typecheck/format/UI/build全部通过。
 
 TASK-DS-001、UI-001、UI-004保持PARTIAL：在线Ardot未写入，新样式Tauri运行与全页面视觉验收仍待完成。详细命令、文件指纹和当前工程回传结果见 `docs/changes/2026-09-22-design-system/verification.md`，剩余事项见同目录 `remaining.md`。未commit/push。
-
 
 ## 2026-09-22 文本任务与规则审计（当前，未提交）
 
@@ -231,7 +262,6 @@ TASK-DS-001、UI-001、UI-004保持PARTIAL：在线Ardot未写入，新样式Tau
 - 已检查 AGENTS、CONTRIBUTING、governance、SDLC/评审、ADR、PR 模板和 CI；不直接写 main，不推送历史任务分支，不合并原 dirty 工作区。
 - 用户指定 https://github.com/soudbs180-creator/KK-Studio-2.0 为 2.0 远端；该仓库与本地历史不相干，阶段 0 文档分支 `docs/TASK-ASTRA-001-remote-manifest`（回读 `9edb528`）保留为历史审计；首次 2.0 树已通过 PR #1 合并。
 
-
 ## 2026-09-19 T5 原生 TaskHost 集成与未知受理保护（本地集成完成，运行态待收口）
 
 - 创建任务会先将 `intent` 写入 Web IndexedDB 或 Desktop 快照，再进入供应商请求；提交前写入失败时不会发出 Provider 请求。请求开始后保留稳定的任务/幂等身份，重启恢复会区分尚未提交的 `interrupted` 与受理状态不明的 `unknown`。
@@ -251,7 +281,6 @@ TASK-DS-001、UI-001、UI-004保持PARTIAL：在线Ardot未写入，新样式Tau
 
 - 已接通 Desktop 设置→储存的导出、预检、独立目录恢复和打开副本入口；原生端完成严格 manifest/ZIP/schema/checksum/引用校验、隔离 staging、写后校验和新目标发布。Web 入口显示禁用原因。
 - 新增跨语言 checksum、非法包、七个写入阶段故障注入和 UI 异步/取消回归；修复原生 JSON 字段排序导致画布打开即误保存的问题。已在源码 379b302 完成 129 unit、156 browser、UI 117/0、50 Rust、fmt/check 和 release build；全新 WebView 的完整快照/原件恢复通过，T3b Desktop Windows 单元关闭。
-
 
 ## 2026-09-18 T3a 原生素材及引用最终验收
 
@@ -522,14 +551,12 @@ Confirmed and repaired stylesheet import deduplication/cascade issues; preserved
 
 Not complete: original reported window provenance, native Tauri visual check, full same-content Figma and all auxiliary frame/state comparisons. Collapsed search retained by explicit user request. See docs/changes/2026-09-10-ui-runtime-diagnosis/verification.md and docs/evidence/ui-runtime-2026-09-10/live-browser.json. These current results supersede earlier pending validation notes, not the remaining visual acceptance boundaries.
 
-
 ## 2026-09-20 KK Studio 2.0 main 同步候选
 
 - 本地稳定 main 已在隔离 worktree 完成候选整理；原 checkout 仍保持 dirty/index 原样。
 - PR #1 已将 chore/TASK-KK2-MAIN-SYNC squash 合并到目标云端 main；合并后回读确认远端 main tree 与本地稳定 main 相同。
 - 首发树只包含当前本地 2.0 已跟踪目录；云端旧 monorepo 当前目录已删除，旧历史仍可追溯。
 - PR 记录：https://github.com/soudbs180-creator/KK-Studio-2.0/pull/1。合并后已回读 main SHA/tree SHA。
-
 
 ## 2026-09-20 UI 主线整合
 
@@ -538,7 +565,6 @@ TASK-UI-MAIN-001 从 origin/main@8aca3ab 出发，三方整合27项原目录交�
 ## 2026-09-20 UI 主线整合收口
 
 TASK-UI-MAIN-001 已完成并同步到目标仓库：PR #3（https://github.com/soudbs180-creator/KK-Studio-2.0/pull/3）通过双 CI 后 squash 合并，远端与本地 `main` 均回读为 `fb57529c719924330ec0154f5374df8f5d508e00`。本地根目录已从 `master` 切换到跟踪 `origin/main`，原 `master`、旧本地 `main` 和原工作文件均保留在归档位置；原目录 409 项已逐项 SHA-256 核对，未上传未审阅内容。现行 Figma 可取得的页面已完成同状态 DOM/截图验收；缺失 Landing 等独立 Figma 稿件仍由 UI-004 标为 PARTIAL。
-
 
 ## 窄屏关闭优先级补充
 

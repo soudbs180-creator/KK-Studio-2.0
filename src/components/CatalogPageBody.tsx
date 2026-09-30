@@ -45,7 +45,11 @@ export default function CatalogPageBody({
   if (view === "projects") {
     if (tab === "共享项目") {
       return (
-        <div className="catalog-empty" data-template-body={template} role="status">
+        <div
+          className="catalog-empty"
+          data-template-body={template}
+          role="status"
+        >
           <span className="catalog-empty-mark" aria-hidden="true">
             ⌁
           </span>
@@ -128,7 +132,11 @@ export default function CatalogPageBody({
           ) : null}
         </div>
         {!projects.length && search && search !== "kk" && (
-          <div className="catalog-empty" data-template-body={template} role="status">
+          <div
+            className="catalog-empty"
+            data-template-body={template}
+            role="status"
+          >
             <span className="catalog-empty-mark" aria-hidden="true">
               ⌕
             </span>
@@ -141,7 +149,11 @@ export default function CatalogPageBody({
   if (view === "skills") {
     if (tab === "我的 Skill") {
       return (
-        <div className="catalog-empty" data-template-body={template} role="status">
+        <div
+          className="catalog-empty"
+          data-template-body={template}
+          role="status"
+        >
           <span className="catalog-empty-mark" aria-hidden="true">
             ⌁
           </span>
@@ -215,7 +227,11 @@ export default function CatalogPageBody({
   if (tab === "我的工作流") {
     if (!localWorkflows.length)
       return (
-        <div className="catalog-empty" data-template-body={template} role="status">
+        <div
+          className="catalog-empty"
+          data-template-body={template}
+          role="status"
+        >
           <span className="catalog-empty-mark" aria-hidden="true">
             ⌁
           </span>

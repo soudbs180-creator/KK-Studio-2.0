@@ -21,10 +21,10 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | T7 | Desktop可用版本及安装恢复验收 | TODO | T3b, T4, T5, T6, EXT-PROVIDER, EXT-COMFY | root |
 | T8 | 成熟Core职责和平台能力边界 | TODO | T7 | root |
 | T9 | Web本地版及浏览器容量/离线能力 | TODO | T8 | root |
-| T10-PREP | VPS发布、备份回滚与部署配置准备 | TODO | T9 | root |
+| T10-PREP | VPS发布、备份回滚与部署配置准备 | PARTIAL | T9 | root |
 | T10 | VPS staging和生产实机验收 | BLOCKED | T10-PREP | root |
 | T11 | 旧Web/Vercel切换与退役 | BLOCKED | T10 | root |
-| T12 | Mobile 2.0适配 | TODO | T11 | root |
+| T12 | Mobile 独立形态与手机适配 | TODO | T11 | root |
 | UI-001 | UI tokens和共享组件契约 | PARTIAL | TASK-GOV-001, TASK-DS-001 | root |
 | UI-002 | 窄屏composer和动态文案溢出 | DONE | UI-001 | root |
 | UI-003 | 示例任务/账号与真实服务边界 | PARTIAL | UI-001 | root |
@@ -66,7 +66,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-007 | 手机平板电脑三档尺寸与图标对齐 | DONE | TASK-UI-006, TASK-AGENT-001 | root |
 | TASK-UI-008 | 重新制定创作输入框规范并统一三档实现 | DONE | TASK-UI-007, TASK-AGENT-002 | root |
 | TASK-AGENT-003 | Agent 图片附件、画布引用与视口选择操作 | DONE | TASK-AGENT-001, TASK-AGENT-002 | root |
-| PLUGIN-DESKTOP-001 | 修复桌面画布插件的 CSP 加载路径 | TODO | none | root |
+| PLUGIN-DESKTOP-001 | 修复桌面画布插件的 CSP 加载路径 | DONE | none | root |
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | REVIEW | none | root |
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
@@ -76,10 +76,17 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | TASK-ORCH-001 | root |
 | TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | TASK-AGENT-001 | root |
 | TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | REVIEW | none | root |
+| TASK-COMPARE-001 | 画布图片对比操作 | REVIEW | none | root |
+| TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | REVIEW | TASK-COMPARE-001 | root |
+| TASK-VERSION-001 | 桌面/Web/Mobile 独立版本源与自动递增 | DONE | none | root |
+| TASK-LOCAL-SERVICE-001 | Web 本机伴随服务与既有浏览器数据迁移 | PARTIAL | TASK-VERSION-001, BACKEND-PLATFORM | root |
+| TASK-CLOSEOUT-2026-09-28 | 合并后版本与 VPS 状态收口 | DONE | TASK-VERSION-001, T10-PREP | root |
+| TASK-POSTMERGE-MIGRATION-2026-09-28 | 主线合并后迁移操作单收口 | DONE | T10-PREP, T10, T11 | root |
 | TASK-UI-CANVAS-001 | 画布会话分栏与固定侧栏交互修复 | DONE | TASK-UI-007 | root |
 | TASK-UI-HOME-002 | 首页与对话输入区剩余设计反馈收口 | PARTIAL | TASK-UI-CANVAS-001 | root |
 | TASK-UI-GOV-003 | 新版 Figma 四页治理基线与 UI 模板收口 | PARTIAL | TASK-UI-HOME-002 | root |
 | TASK-CANVAS-KAWORKAI-001 | Kaworkai 无限画布交互研究与本地画布增强 | PARTIAL | none | root |
+| TASK-PROJECT-001 | 项目落地与分支收敛 | IN_PROGRESS | TASK-UI-GOV-003, TASK-CANVAS-KAWORKAI-001, TASK-LOCAL-SERVICE-001 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -266,14 +273,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## T10-PREP — VPS发布、备份回滚与部署配置准备
 
 - Goal: VPS发布、备份回滚与部署配置准备
-- Scope: deploy, scripts/release
+- Scope: deploy、tests/deploy、quality Linux job、搬迁与恢复文档
 - Acceptance: 独立next服务不覆盖旧站; 部署配置/health/权限/资源限制; 备份还原及回滚runbook可审阅
-- Branch: `unallocated`
-- Worktree: `unallocated`
-- Modules: deploy, scripts/release
-- Verification: NOT_VERIFIED — NOT VERIFIED
-- Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md)
-- Updated: 2026-09-17
+- Branch: `codex/T10-PREP-vps-migration`
+- Worktree: `D:/kk-studio/.worktrees/canvas-compare`
+- Modules: deploy, tests/deploy, .github/workflows/quality.yml, docs/architecture/adr
+- Verification: PARTIAL — 静态包整包 hash、指定离机包恢复与共享锁版本回滚已形成主线准备产物；PR #23 精确 head abe1e99 的 delivery、deploy-linux、verify 与独立复审均 PASS，并已合入 main@45fdc14，合并后 deploy-linux/verify 也 PASS。真实 VPS 离机备份/恢复演练未完成，部署配置、权限和资源限制需实际主机盘点。
+- Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md), [docs/changes/2026-09-28-vps-migration/intent.md](../../docs/changes/2026-09-28-vps-migration/intent.md), [docs/changes/2026-09-28-vps-migration/spec.md](../../docs/changes/2026-09-28-vps-migration/spec.md), [docs/changes/2026-09-28-vps-migration/plan.md](../../docs/changes/2026-09-28-vps-migration/plan.md), [docs/changes/2026-09-28-vps-migration/verification.md](../../docs/changes/2026-09-28-vps-migration/verification.md), [docs/changes/2026-09-28-vps-migration/review.md](../../docs/changes/2026-09-28-vps-migration/review.md), [deploy/MIGRATION.md](../../deploy/MIGRATION.md)
+- Updated: 2026-09-28
 
 ## T10 — VPS staging和生产实机验收
 
@@ -301,17 +308,17 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - External condition: 需外部旧部署权限、切换授权与回滚窗口
 - Updated: 2026-09-17
 
-## T12 — Mobile 2.0适配
+## T12 — Mobile 独立形态与手机适配
 
-- Goal: Mobile 2.0适配
+- Goal: 在 Web 核心能力基础上交付独立 Mobile 版本，按手机资源与交互裁剪
 - Scope: Mobile, Shared Core
-- Acceptance: 保留移动交互; 正式目标runtime明确; 共享新契约/本地恢复; 真机验收
+- Acceptance: 明确独立 Mobile runtime 与 Web 核心能力子集; 手机交互优化，登录后使用，个人数据设备本地持久化; Mobile 版本独立递增并对应可安装产物; 真机验收
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: Mobile, Shared Core
-- Verification: NOT_VERIFIED — 当前MUR不含；全项目范围仍保留TODO，形态需产品决定
+- Verification: NOT_VERIFIED — 当前只有响应式 Web；用户已确定功能顺序和登录/本地数据目标，独立 runtime 与真机验收未实现。
 - Evidence: [docs/changes/2026-09-16-launch-readiness-audit/plan.md](../../docs/changes/2026-09-16-launch-readiness-audit/plan.md)
-- Updated: 2026-09-17
+- Updated: 2026-09-28
 
 ## UI-001 — UI tokens和共享组件契约
 
@@ -645,7 +652,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/features/generation-server, src/components/AccountPopup.tsx, src/components/settings/ConnectionSettings.tsx, deploy
-- Verification: NOT_VERIFIED — NOT VERIFIED：依赖 VPS/域名/身份与计费等外部部署条件（T10）；Gateway 内额度逻辑已先在单测覆盖。
+- Verification: NOT_VERIFIED — NOT VERIFIED：Desktop 必须保留免登录入口并可选登录，Web/Mobile 目标需登录；账号不默认云存个人数据。身份服务与 VPS/域名等外部部署条件未完成，Gateway 额度逻辑仅在单测覆盖。
 - Evidence: [docs/features/feat-017-account.md](../../docs/features/feat-017-account.md), [docs/features/feat-018-credits.md](../../docs/features/feat-018-credits.md), [docs/features/feat-019-cloud-sync.md](../../docs/features/feat-019-cloud-sync.md), [docs/features/feat-020-memory.md](../../docs/features/feat-020-memory.md), [docs/features/feat-021-proxy.md](../../docs/features/feat-021-proxy.md)
 - Updated: 2026-09-21
 
@@ -810,12 +817,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 让可信随包插件在保持严格 CSP 的前提下于 Tauri 桌面端加载并验证
 - Scope: 同源插件模块加载、桌面 CSP、fresh Tauri 插件交互验证
 - Acceptance: 随包插件从同源模块路径加载且不全局放宽脚本 CSP; fresh Tauri 中插件发现、添加、渲染和启停通过实际交互; 远程插件的权限与来源边界保持明确
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `docs/PLUGIN-DESKTOP-001-closeout`
+- Worktree: `D:/kk-studio/.worktrees/platform-versioning`
 - Modules: src/features/plugins, src-tauri/tauri.conf.json, tests/browser
-- Verification: NOT_VERIFIED — 当前 Tauri CSP 拒绝 blob 模块，独立审查的原样 CSP 探针复现；修复和 fresh Desktop 交互尚未验证。
-- Evidence: [docs/changes/2026-09-23-release-2-1-0/review.md](../../docs/changes/2026-09-23-release-2-1-0/review.md)
-- Updated: 2026-09-23
+- Verification: PASS — 12 项插件单测、TypeScript、Web build、Tauri client build 通过；fresh Tauri 隔离运行完成随包插件发现、添加、渲染、停用和恢复，资源走 tauri.localhost/plugins/*.js 同源 URL，严格 CSP 未放宽，页面错误为空。独立只读 review 对代码 head 91396c6 给出 PASS、无 P0–P3 findings；PR #28 Hosted verify/delivery/deploy-linux 与 push verify 均成功，已 squash 合入 main@e27e209。
+- Evidence: [docs/changes/2026-09-29-plugin-desktop-csp/intent.md](../../docs/changes/2026-09-29-plugin-desktop-csp/intent.md), [docs/changes/2026-09-29-plugin-desktop-csp/spec.md](../../docs/changes/2026-09-29-plugin-desktop-csp/spec.md), [docs/changes/2026-09-29-plugin-desktop-csp/plan.md](../../docs/changes/2026-09-29-plugin-desktop-csp/plan.md), [docs/changes/2026-09-29-plugin-desktop-csp/verification.md](../../docs/changes/2026-09-29-plugin-desktop-csp/verification.md), [docs/changes/2026-09-29-plugin-desktop-csp/review.md](../../docs/changes/2026-09-29-plugin-desktop-csp/review.md), [docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-runtime.json](../../docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-runtime.json), [docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-plugin-csp.png](../../docs/changes/2026-09-29-plugin-desktop-csp/evidence/desktop-plugin-csp.png), [docs/changes/2026-09-29-plugin-desktop-closeout/intent.md](../../docs/changes/2026-09-29-plugin-desktop-closeout/intent.md), [docs/changes/2026-09-29-plugin-desktop-closeout/spec.md](../../docs/changes/2026-09-29-plugin-desktop-closeout/spec.md), [docs/changes/2026-09-29-plugin-desktop-closeout/plan.md](../../docs/changes/2026-09-29-plugin-desktop-closeout/plan.md), [docs/changes/2026-09-29-plugin-desktop-closeout/verification.md](../../docs/changes/2026-09-29-plugin-desktop-closeout/verification.md), [docs/changes/2026-09-29-plugin-desktop-closeout/review.md](../../docs/changes/2026-09-29-plugin-desktop-closeout/review.md)
+- Updated: 2026-09-29
 
 ## REL-2.1.0 — 2.1.0 本地集成与源码上传
 
@@ -925,6 +932,78 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Evidence: [docs/changes/2026-09-24-provider-connectivity/intent.md](../../docs/changes/2026-09-24-provider-connectivity/intent.md), [docs/changes/2026-09-24-provider-connectivity/spec.md](../../docs/changes/2026-09-24-provider-connectivity/spec.md), [docs/changes/2026-09-24-provider-connectivity/plan.md](../../docs/changes/2026-09-24-provider-connectivity/plan.md), [docs/changes/2026-09-24-provider-connectivity/verification.md](../../docs/changes/2026-09-24-provider-connectivity/verification.md), [docs/changes/2026-09-24-provider-connectivity/remaining.md](../../docs/changes/2026-09-24-provider-connectivity/remaining.md)
 - Updated: 2026-09-26
 
+## TASK-COMPARE-001 — 画布图片对比操作
+
+- Goal: 从已加载图片卡片选择 2–4 张并排比较，两张时可滑块对比，保持键盘、窄屏和失效图片状态可用
+- Scope: src/features/compare、Canvas/图片节点入口、样式、测试与本轮交付包
+- Acceptance: 只有可读图片进入对比，最多四张，删除或失效后自动剔除; 2–4 张可并排查看并同步缩放/滚动，2 张可用滑块按键盘和触屏比较; 390px 和宽屏真实浏览器操作可用，现有画布交互不回归; 项目相关门禁通过，Web/Desktop 未验收项如实记录
+- Branch: `codex/TASK-COMPARE-001-canvas-compare`
+- Worktree: `D:/kk-studio/.worktrees/canvas-compare`
+- Modules: src/features/compare, src/components/Canvas.tsx, src/components/nodes, src/styles/canvas-compare.css, tests/unit/imageCompare.test.ts, tests/browser/image-compare.spec.ts, tests/desktop/image-compare.mjs, docs/features, docs/governance
+- Verification: NOT_VERIFIED — PR #21 最终 head bcda41a 的 Hosted verify/delivery、独立源码复审及本地 Web/Desktop 交互核验通过，已 squash 合入 main@7bc7c67 且 tree 一致。合并后 push CI 的 390px 按钮高度测得 43.999992px 而失败，由 TASK-COMPARE-002 修复；用户最终视觉验收仍待完成。
+- Evidence: [docs/changes/2026-09-27-canvas-image-compare/intent.md](../../docs/changes/2026-09-27-canvas-image-compare/intent.md), [docs/changes/2026-09-27-canvas-image-compare/spec.md](../../docs/changes/2026-09-27-canvas-image-compare/spec.md), [docs/changes/2026-09-27-canvas-image-compare/plan.md](../../docs/changes/2026-09-27-canvas-image-compare/plan.md), [docs/changes/2026-09-27-canvas-image-compare/verification.md](../../docs/changes/2026-09-27-canvas-image-compare/verification.md), [docs/changes/2026-09-27-canvas-image-compare/review.md](../../docs/changes/2026-09-27-canvas-image-compare/review.md)
+- Updated: 2026-09-28
+
+## TASK-COMPARE-002 — 对比控件窄屏命中区主线回归
+
+- Goal: 修复 PR #21 合并后 Windows 主线 CI 的 390px 对比按钮子像素高度失败，恢复可交付主线
+- Scope: src/styles/canvas-compare.css、对比浏览器和 Desktop 验收、交付记录
+- Acceptance: 保留原 >=44px 浏览器断言并通过 390px 实测; 完整 verify 与 Desktop release GUI 不回归; 当前 PR 与合并后主线 CI 通过
+- Branch: `fix/TASK-COMPARE-002-touch-target`
+- Worktree: `D:/kk-studio/.worktrees/compare-ci-fix`
+- Modules: src/styles/canvas-compare.css, tests/browser/image-compare.spec.ts, docs/changes/2026-09-28-compare-ci-fix, docs/governance
+- Verification: PARTIAL — 主线 run 36369533105 的 43.999992px 失败已定位；保持原断言后，定向 browser 2/2、完整 verify 459 Node/302 browser、client:check/build 与隔离 release GUI 通过。当前 PR/合并后主线 CI 与独立复审待完成。
+- Evidence: [docs/changes/2026-09-28-compare-ci-fix/intent.md](../../docs/changes/2026-09-28-compare-ci-fix/intent.md), [docs/changes/2026-09-28-compare-ci-fix/spec.md](../../docs/changes/2026-09-28-compare-ci-fix/spec.md), [docs/changes/2026-09-28-compare-ci-fix/plan.md](../../docs/changes/2026-09-28-compare-ci-fix/plan.md), [docs/changes/2026-09-28-compare-ci-fix/verification.md](../../docs/changes/2026-09-28-compare-ci-fix/verification.md), [docs/changes/2026-09-28-compare-ci-fix/review.md](../../docs/changes/2026-09-28-compare-ci-fix/review.md)
+- Updated: 2026-09-28
+
+## TASK-VERSION-001 — 桌面/Web/Mobile 独立版本源与自动递增
+
+- Goal: 让任务作者按受影响平台自动递增版本，三端从 2.1.1 起独立管理
+- Scope: config/platform-versions.json、包元数据、运行态显示、版本命令与工程规则
+- Acceptance: 桌面/Web 运行态与包元数据各自显示 2.1.1；Mobile 规划元数据不冒充已发布; 桌面、Web、Mobile 可独立递增；2.1.9 补丁递增到 2.1.10; 版本一致性进入 verify，非法输入不写半套版本; 产品登录/本地存储目标和现状差距记录为开放任务
+- Branch: `codex/TASK-VERSION-001-platform-versions`
+- Worktree: `D:/kk-studio/.worktrees/platform-versioning`
+- Modules: config/platform-versions.json, scripts/platform-versions.mjs, src/runtime/appInfo.ts, package.json, src-tauri, docs/engineering/VERSIONING.md
+- Verification: PASS — 版本脚本与配置已实现；最终树本地 482 项 Node（474 通过、8 项 Windows 跳过 Linux 文件系统用例）、303 浏览器、Web 版本专项、Desktop check/build 与隔离 release GUI 通过。精确 head 9d55857 的独立复审、PR delivery/deploy-linux/verify、main@799efc5 合并及 postmerge verify/deploy-linux 均通过，合并树一致。账号/本地伴随服务/Mobile 仍为开放任务。
+- Evidence: [docs/changes/2026-09-28-platform-versioning/intent.md](../../docs/changes/2026-09-28-platform-versioning/intent.md), [docs/changes/2026-09-28-platform-versioning/spec.md](../../docs/changes/2026-09-28-platform-versioning/spec.md), [docs/changes/2026-09-28-platform-versioning/plan.md](../../docs/changes/2026-09-28-platform-versioning/plan.md), [docs/changes/2026-09-28-platform-versioning/verification.md](../../docs/changes/2026-09-28-platform-versioning/verification.md), [docs/changes/2026-09-28-platform-versioning/review.md](../../docs/changes/2026-09-28-platform-versioning/review.md)
+- Updated: 2026-09-28
+
+## TASK-LOCAL-SERVICE-001 — Web 本机伴随服务与既有浏览器数据迁移
+
+- Goal: 让网页登录后的个人项目和素材由用户设备本机服务保存，并安全导入既有 IndexedDB 数据
+- Scope: 本机服务、Web 存储适配器、安装/连接、既有项目与素材导入、备份恢复
+- Acceptance: Web 在有服务时从本机服务读写个人项目与素材，浏览器数据不作为最终持久源; 服务不可用、认证失效、冲突、断电/重启有明确状态和恢复路径; 既有 IndexedDB 项目与素材只读预检、无损导入与失败回滚; 跨浏览器实例及备份恢复的运行态验收
+- Branch: `feat/TASK-LOCAL-SERVICE-001-companion`
+- Worktree: `D:/kk-studio/.worktrees/platform-versioning`
+- Modules: src/runtime, src/features/creation, local companion service, docs/architecture/DATA-STORAGE.md, src/components/settings, tests/browser, tests/local-service
+- Verification: PARTIAL — 本机 loopback 服务、HttpOnly 配对、项目/素材服务优先读写、旧 IndexedDB 只读迁移、备份恢复、连接/断线 UI 与 production smoke 已通过本地和真实临时服务验收；真实账号登录、安装/更新、Mobile 和 VPS 生产部署仍未完成，因此产品任务保持 PARTIAL。
+- Evidence: [docs/changes/2026-09-29-local-companion/intent.md](../../docs/changes/2026-09-29-local-companion/intent.md), [docs/changes/2026-09-29-local-companion/spec.md](../../docs/changes/2026-09-29-local-companion/spec.md), [docs/changes/2026-09-29-local-companion/plan.md](../../docs/changes/2026-09-29-local-companion/plan.md), [docs/changes/2026-09-29-local-companion/verification.md](../../docs/changes/2026-09-29-local-companion/verification.md), [docs/changes/2026-09-29-local-companion/review.md](../../docs/changes/2026-09-29-local-companion/review.md), [docs/architecture/adr/ADR-008-platform-versions-and-local-first.md](../../docs/architecture/adr/ADR-008-platform-versions-and-local-first.md), [docs/features/feat-037-web-local-service.md](../../docs/features/feat-037-web-local-service.md)
+- Updated: 2026-09-29
+
+## TASK-CLOSEOUT-2026-09-28 — 合并后版本与 VPS 状态收口
+
+- Goal: 记录 PR/主线门禁、同步账本和交接文档
+- Scope: docs/governance, docs/PROGRESS.md, docs/changes
+- Acceptance: PR #23/#24 精确 head、merge SHA、tree 与 Hosted 结果可回读; 版本任务 DONE/PASS，T10-PREP PARTIAL，T10 BLOCKED; PROJECT_STATE、AI_HANDOFF、PROGRESS、TASK_LEDGER 与 change package 一致
+- Branch: `docs/TASK-CLOSEOUT-2026-09-28`
+- Worktree: `D:/kk-studio/.worktrees/platform-versioning`
+- Modules: docs/governance, docs/PROGRESS.md, docs/changes
+- Verification: PASS — PR #23/#24 与合并后 main 的 Hosted 门禁、tree 回读和状态文档同步均完成；本收口 PR #25 精确 head 981a24b 的独立复审、delivery、deploy-linux、verify 也通过；本机 VPS、离机备份、Web 本机服务、真实登录和 Mobile 仍未验收。
+- Evidence: [docs/changes/2026-09-28-closeout/intent.md](../../docs/changes/2026-09-28-closeout/intent.md), [docs/changes/2026-09-28-closeout/spec.md](../../docs/changes/2026-09-28-closeout/spec.md), [docs/changes/2026-09-28-closeout/plan.md](../../docs/changes/2026-09-28-closeout/plan.md), [docs/changes/2026-09-28-closeout/verification.md](../../docs/changes/2026-09-28-closeout/verification.md), [docs/changes/2026-09-28-closeout/review.md](../../docs/changes/2026-09-28-closeout/review.md)
+- Updated: 2026-09-28
+
+## TASK-POSTMERGE-MIGRATION-2026-09-28 — 主线合并后迁移操作单收口
+
+- Goal: 同步迁移操作单的主线事实并保留 VPS 未验收边界
+- Scope: deploy/MIGRATION.md, docs/PROGRESS.md, docs/changes
+- Acceptance: 迁移操作单记录 main@be46ad6、tree 和合并后 Hosted 门禁; 不把 GitHub CI 或控制面板解释成 VPS 上传/恢复证明; PROGRESS、迁移操作单、账本与 change package 一致
+- Branch: `docs/TASK-POSTMERGE-FINAL-2026-09-28`
+- Worktree: `D:/kk-studio/.worktrees/platform-versioning`
+- Modules: deploy/MIGRATION.md, docs/PROGRESS.md, docs/changes
+- Verification: PASS — 本地文档/治理检查 PASS（治理 76/0、Markdown 90/0、delivery 9 文件/0 违规）；PR #26 精确 head d2485db 的独立复审、delivery、deploy-linux、verify 与合并后 main@be46ad6 的 verify/deploy-linux 均通过；VPS、备份、恢复、DNS/TLS 和生产写入仍未验收。
+- Evidence: [docs/changes/2026-09-28-postmerge-migration/intent.md](../../docs/changes/2026-09-28-postmerge-migration/intent.md), [docs/changes/2026-09-28-postmerge-migration/spec.md](../../docs/changes/2026-09-28-postmerge-migration/spec.md), [docs/changes/2026-09-28-postmerge-migration/plan.md](../../docs/changes/2026-09-28-postmerge-migration/plan.md), [docs/changes/2026-09-28-postmerge-migration/verification.md](../../docs/changes/2026-09-28-postmerge-migration/verification.md), [docs/changes/2026-09-28-postmerge-migration/review.md](../../docs/changes/2026-09-28-postmerge-migration/review.md), [deploy/MIGRATION.md](../../deploy/MIGRATION.md), [docs/changes/2026-09-28-postmerge-migration-final/intent.md](../../docs/changes/2026-09-28-postmerge-migration-final/intent.md), [docs/changes/2026-09-28-postmerge-migration-final/spec.md](../../docs/changes/2026-09-28-postmerge-migration-final/spec.md), [docs/changes/2026-09-28-postmerge-migration-final/plan.md](../../docs/changes/2026-09-28-postmerge-migration-final/plan.md), [docs/changes/2026-09-28-postmerge-migration-final/verification.md](../../docs/changes/2026-09-28-postmerge-migration-final/verification.md), [docs/changes/2026-09-28-postmerge-migration-final/review.md](../../docs/changes/2026-09-28-postmerge-migration-final/review.md)
+- Updated: 2026-09-28
+
 ## TASK-UI-CANVAS-001 — 画布会话分栏与固定侧栏交互修复
 
 - Goal: 让平板会话展开后保留可用画布控件，并让侧栏只通过开关切换固定宽度
@@ -971,4 +1050,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/Canvas.tsx, src/components/canvas, src/domain/canvasHistory.ts, src/domain/canvasPreferences.ts, docs/features/feat-001-canvas-workbench.md, docs/features/features.registry.json, docs/governance/task-ledger.json
 - Verification: PARTIAL — 静态源码审计、11 项定向 Node 单测、TypeScript 检查、Vite build、新增 2 项 Playwright（含键盘/右键历史、吸附持久化、图层搜索定位）通过；现有空白新项目 fixture 导致部分依赖默认节点的旧画布回归未通过，Desktop 原生窗口与参考站点远程能力未验证。
 - Evidence: [docs/changes/2026-09-29-kaworkai-canvas/intent.md](../../docs/changes/2026-09-29-kaworkai-canvas/intent.md), [docs/changes/2026-09-29-kaworkai-canvas/spec.md](../../docs/changes/2026-09-29-kaworkai-canvas/spec.md), [docs/changes/2026-09-29-kaworkai-canvas/plan.md](../../docs/changes/2026-09-29-kaworkai-canvas/plan.md), [docs/changes/2026-09-29-kaworkai-canvas/research.md](../../docs/changes/2026-09-29-kaworkai-canvas/research.md), [docs/changes/2026-09-29-kaworkai-canvas/verification.md](../../docs/changes/2026-09-29-kaworkai-canvas/verification.md), [docs/changes/2026-09-29-kaworkai-canvas/evidence/layers-panel.png](../../docs/changes/2026-09-29-kaworkai-canvas/evidence/layers-panel.png)
+- Updated: 2026-09-29
+
+## TASK-PROJECT-001 — 项目落地与分支收敛
+
+- Goal: 将竞品研究对应的本地能力、UI 候选和最新主线收敛为可运行候选
+- Scope: Git integration, home/chat/settings/canvas UI, Kaworkai local canvas primitives, branch and evidence convergence
+- Acceptance: 候选分支包含最新 origin/main 且版本、锁文件、功能卡和治理视图一致; 首页、对话、设置、侧栏和画布在当前源码 bundle 上完成 390/1099/1920 回归; 竞品研究只落地本地可验证的画布历史、吸附和图层定位，不伪造远程 AI/积分/协作; 验证不足的外部服务、Desktop、移动硬件和生产部署继续保持 PARTIAL/BLOCKED
+- Branch: `codex/TASK-PROJECT-001-landing-integration`
+- Worktree: `D:/kk-studio/.worktrees/TASK-PROJECT-001`
+- Modules: Git, src/App.tsx, src/components, src/styles, src/domain, docs/governance, docs/PROGRESS.md
+- Verification: NOT_VERIFIED — 已保存原 dirty UI/画布候选并开始合并 origin/main@1e95a13；最终 bundle、浏览器回归和合并后文档待完成。
+- Evidence: [docs/changes/2026-09-29-project-landing/intent.md](../../docs/changes/2026-09-29-project-landing/intent.md), [docs/changes/2026-09-29-project-landing/spec.md](../../docs/changes/2026-09-29-project-landing/spec.md), [docs/superpowers/plans/2026-09-29-project-landing-integration.md](../../docs/superpowers/plans/2026-09-29-project-landing-integration.md)
 - Updated: 2026-09-29

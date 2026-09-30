@@ -11,4 +11,3 @@ test("UiIcon normalizes glyphs to the three Figma size tiers", () => {
   assert.equal(normalizeUiIconSize(23), 24);
   assert.equal(normalizeUiIconSize(32), 24);
 });
-

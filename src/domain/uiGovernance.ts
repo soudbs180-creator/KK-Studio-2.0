@@ -20,11 +20,7 @@ export type GenerationUiState =
   | "service-unconfigured";
 
 export type GenerationTaskStatus =
-  | "queued"
-  | "running"
-  | "succeeded"
-  | "failed"
-  | "cancelled";
+  "queued" | "running" | "succeeded" | "failed" | "cancelled";
 
 export interface GenerationContext {
   prompt: string;
@@ -122,11 +118,12 @@ export function getAllowedActions(
   return ACTIONS[state];
 }
 
-export function getDisabledReason(state: GenerationUiState): string | undefined {
+export function getDisabledReason(
+  state: GenerationUiState,
+): string | undefined {
   return DISABLED_REASONS[state];
 }
 
 export function canSubmitGeneration(state: GenerationUiState): boolean {
   return state === "ready";
 }
-

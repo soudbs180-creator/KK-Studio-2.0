@@ -1,0 +1,15 @@
+{
+  "runtime": {
+    "url": "http://tauri.localhost/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://tauri.localhost/assets/index-B4alcbkW.js"
+    ]
+  },
+  "dataRoot": "D:\\kk-studio\\.worktrees\\platform-versioning\\src-tauri\\target\\platform-version-acceptance\\1790569848337\\data",
+  "profile": "D:\\kk-studio\\.worktrees\\platform-versioning\\src-tauri\\target\\platform-version-acceptance\\1790569848337\\webview-profile",
+  "version": "2.1.1",
+  "executableSha256": "542d129f86326242b5cb359fcbf973309434faf1d8aaa1eb33c358c3cec4f604",
+  "errors": []
+}

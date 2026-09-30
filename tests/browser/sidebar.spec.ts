@@ -85,8 +85,9 @@ test("四视口保留搜索、账号和设置命中，手机端使用固定顶�
     const sidebar = page.locator(".sidebar");
     if (
       width > 1200 &&
-      (await sidebar.locator(".sidebar-toggle").getAttribute("aria-expanded")) ===
-        "true"
+      (await sidebar
+        .locator(".sidebar-toggle")
+        .getAttribute("aria-expanded")) === "true"
     )
       await page
         .getByRole("button", { name: "收起侧边栏", exact: true })
@@ -101,10 +102,14 @@ test("四视口保留搜索、账号和设置命中，手机端使用固定顶�
       width < 768
         ? page.getByRole("button", { name: "搜索与收藏", exact: true })
         : sidebar.getByRole("button", { name: "搜索", exact: true });
+    const settings =
+      width < 768
+        ? page.locator(".mobile-settings")
+        : sidebar.getByRole("button", { name: "打开设置", exact: true });
     for (const button of [
       search,
       sidebar.getByRole("button", { name: "个人信息", exact: true }),
-      sidebar.getByRole("button", { name: "打开设置", exact: true }),
+      settings,
     ]) {
       const hit = await button.evaluate((el) => {
         const b = el.getBoundingClientRect();
@@ -124,10 +129,6 @@ test("四视口保留搜索、账号和设置命中，手机端使用固定顶�
     await expect(sidebar.locator(".account-popup")).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(account).toBeFocused();
-    const settings = sidebar.getByRole("button", {
-      name: "打开设置",
-      exact: true,
-    });
     const settingsBounds = (await settings.boundingBox())!;
     if (width > 800) expect(settingsBounds.x).toBeLessThan(61);
     const toolbarBounds = (await page
@@ -245,7 +246,9 @@ test("手机端搜索弹窗不依赖侧栏展开", async ({ page }) => {
   await expect(page.getByRole("dialog", { name: "搜索与收藏" })).toHaveCount(0);
 });
 
-test("手机导航从项目库进入可用的对话界面", async ({ page }) => {
+test("手机对话入口建立独立项目，未连接时保留草稿并提供配置入口", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await page.getByRole("button", { name: "项目库", exact: true }).click();
@@ -258,11 +261,30 @@ test("手机导航从项目库进入可用的对话界面", async ({ page }) => 
   await expect(
     page.getByRole("button", { name: "对话", exact: true }),
   ).toHaveAttribute("aria-current", "page");
+  await expect(page.locator(".project-save-state")).toContainText("已保存");
   const input = page.getByLabel("对话内容", { exact: true });
   await input.fill("手机端聊天入口测试");
-  await page.getByRole("button", { name: "发送消息", exact: true }).click();
   await expect(
-    page.getByText("手机端聊天入口测试", { exact: true }),
+    page.getByText("Codex 主 Agent · 未连接", { exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "发送消息", exact: true }).click();
+  await expect(page.getByRole("alert")).toContainText("连接 Codex");
+  await expect(input).toHaveValue("手机端聊天入口测试");
+  await page.getByRole("button", { name: "连接设置", exact: true }).click();
+  await expect(
+    page.getByRole("dialog", { name: "设置", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await expect(input).toHaveValue("手机端聊天入口测试");
+  await page.getByLabel("执行方式").selectOption("direct");
+  await input.fill("未配置 API 的草稿");
+  await expect(
+    page.getByRole("button", { name: "发送消息", exact: true }),
+  ).toBeDisabled();
+  await expect(page.locator(".chat-status")).toContainText("配置模型服务");
+  await page.getByRole("button", { name: "前往模型设置", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "模型供应商", exact: true }),
   ).toBeVisible();
 });
 
@@ -293,7 +315,7 @@ test("粗指针侧栏44px命中区不重叠，搜索、设置可触控", async (
       ".mobile-search",
       ".mobile-project-switch",
       ".sidebar-account",
-      ".sidebar-settings",
+      ".mobile-settings",
       ...Array.from(
         { length: 4 },
         (_, index) => `.primary-nav button:nth-child(${index + 1})`,

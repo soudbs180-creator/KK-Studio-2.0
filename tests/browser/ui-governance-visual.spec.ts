@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-test("Figma governance primitives keep one rendered geometry contract", async ({ page }) => {
+test("Figma governance primitives keep one rendered geometry contract", async ({
+  page,
+}) => {
   await page.goto("/");
 
   const geometry = await page.evaluate(() => {
@@ -13,7 +15,9 @@ test("Figma governance primitives keep one rendered geometry contract", async ({
       <span class="kk-icon-slot" data-size="lg"></span>
     `;
     document.body.append(host);
-    const [secondary, primary, sm, md, lg] = Array.from(host.children) as HTMLElement[];
+    const [secondary, primary, sm, md, lg] = Array.from(
+      host.children,
+    ) as HTMLElement[];
     const css = (element: Element) => getComputedStyle(element);
     return {
       secondaryHeight: css(secondary).height,
@@ -34,4 +38,3 @@ test("Figma governance primitives keep one rendered geometry contract", async ({
     iconSizes: ["16px", "20px", "24px"],
   });
 });
-

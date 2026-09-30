@@ -9,6 +9,7 @@ import type {
 import DemoMediaPreview from "./DemoMediaPreview";
 import ImageRedrawDialog from "./ImageRedrawDialog";
 import { readReferenceImages } from "./referenceUpload";
+import CompareImageButton from "../../features/compare/CompareImageButton";
 
 export default function ImageCreationNode({
   item,
@@ -157,6 +158,7 @@ export default function ImageCreationNode({
                 重绘
               </button>
             </div>
+            <CompareImageButton item={item} />
           </>
         ) : (
           <img

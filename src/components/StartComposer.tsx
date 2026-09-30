@@ -117,9 +117,7 @@ export default function StartComposer({
           onChange={(event) => {
             commit({ prompt: event.target.value });
             setStatus(
-              event.target.value.trim() && disabledReason
-                ? disabledReason
-                : "",
+              event.target.value.trim() && disabledReason ? disabledReason : "",
             );
           }}
           placeholder="描述你想要生成的内容"
@@ -262,7 +260,9 @@ export default function StartComposer({
               type="submit"
               className="start-submit-button"
               aria-label="开始创建项目"
-              aria-describedby={disabledReason ? "start-submit-reason" : undefined}
+              aria-describedby={
+                disabledReason ? "start-submit-reason" : undefined
+              }
               disabled={submitDisabled}
               title={disabledReason}
             >

@@ -12,7 +12,7 @@
 - 本机唯一工程仓库是 `D:/kk-studio/KK-Studio-2.0`；`D:/kk-studio` 仅为容器目录。任务隔离使用本仓库登记的 worktree，每个 worktree 只承载一个 task branch。其他设备可使用自己的路径，但必须核对相同 Git remote、已推送 SHA 和仓库规则，不将本机绝对路径写成跨平台依赖。
 - `kk-studio-next` 和旧 archive/backup 已由 TASK-CONSOLIDATE-200 收敛；不要重新建立重复工程或从历史路径启动。当前融合分支和验证状态先读 `docs/governance/PROJECT_STATE.md`。
 - 历史源码、未提交候选、Git 和用户数据的恢复归档位于工程外 `D:/KK-Studio-recovery-20260921`。恢复必须到新目录并校验，不得自动覆盖当前用户数据。工程内 `releases/` 只放最新分享产物，禁止把恢复归档、凭据、node_modules 或编译缓存打入分享包。
-- `2.0.0` 是历史融合基线；当前 `main` 源码版本为 `2.1.0`，正式安装包和 tag 另行验收。后续版本按 SemVer 递增。同步 package.json、package-lock.json、Cargo.toml/Cargo.lock、tauri.conf.json 和应用显示；保留原有存储 key/identifier，不能随目录或包名改动用户数据身份。
+- `2.0.0` 是历史融合基线；三端版本以 `config/platform-versions.json` 为源，本轮桌面/Web 源码及 Mobile 规划版本均从 `2.1.1` 开始，正式安装包、Mobile 包和 tag 另行验收。按[版本管理规则](docs/engineering/VERSIONING.md)由任务作者自动选择受影响平台并递增版本，运行 `npm run version:check`；不要让用户逐次指定数字。保留原有存储 key/identifier，不能随目录或包名改动用户数据身份。
 
 ## 技术边界
 
@@ -25,7 +25,7 @@
 
 - 桌面数据根目录为 `%APPDATA%\\kk-studio`（跨平台规则见 `docs/architecture/DATA-STORAGE.md`）。模型权重留在用户选择的 ComfyUI 根目录，仓库只放适配器和索引契约。
 - API key、OAuth token 和代理凭据只进系统凭据库（service `com.kkstudio.provider`）或请求内存，禁止进入 localStorage、项目文件、导出包、URL 和日志。
-- Web 的项目/任务/消息和素材在 IndexedDB 本地持久化，localStorage 保存非敏感设置、provider 元数据与恢复副本；Desktop 创作快照及素材使用原生仓库。具体契约以 `docs/architecture/DATA-STORAGE.md` 为准。本地持久化不代表云端保存；账号、积分、记忆、云端保存或 Provider 生成未接真实服务时必须明确标为 Prototype 或禁用。
+- 当前 Web 的项目/任务/消息和素材仍在 IndexedDB 本地持久化，localStorage 保存非敏感设置、provider 元数据与恢复副本；Desktop 创作快照及素材使用原生仓库。目标 Web 数据落在用户设备上安装的本机伴随服务，浏览器承担 UI；Desktop 可免登录或选择登录，Web/Mobile 需登录，Mobile 本地持久化。具体现状与目标以 `docs/architecture/DATA-STORAGE.md` 为准。本地持久化不代表云端保存；账号、积分、记忆、云端保存或 Provider 生成未接真实服务时必须明确标为 Prototype 或禁用。
 
 ## 设计与交互
 

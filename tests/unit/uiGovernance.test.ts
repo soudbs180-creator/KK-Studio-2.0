@@ -40,14 +40,19 @@ test("does not allow submit when model or service is unconfigured", () => {
   const serviceMissing = { ...base, serviceConfigured: false };
 
   assert.equal(getGenerationUiState(modelMissing), "service-unconfigured");
-  assert.equal(getAllowedActions("service-unconfigured").includes("submit"), false);
+  assert.equal(
+    getAllowedActions("service-unconfigured").includes("submit"),
+    false,
+  );
   assert.match(getDisabledReason("service-unconfigured") ?? "", /设置/);
   assert.equal(getGenerationUiState(serviceMissing), "service-unconfigured");
 });
 
 test("running and queued tasks keep view/cancel but reject duplicate submit", () => {
   for (const taskStatus of ["queued", "running"] as const) {
-    const current = getAllowedActions(taskStatus === "queued" ? "queued" : "running");
+    const current = getAllowedActions(
+      taskStatus === "queued" ? "queued" : "running",
+    );
     assert.equal(current.includes("view-task"), true);
     assert.equal(current.includes("cancel"), true);
     assert.equal(current.includes("submit"), false);
@@ -55,8 +60,11 @@ test("running and queued tasks keep view/cancel but reject duplicate submit", ()
 });
 
 test("failure and cancellation preserve recovery actions", () => {
-  assert.deepEqual(getAllowedActions("failure"), ["retry", "view-reason", "feedback"]);
+  assert.deepEqual(getAllowedActions("failure"), [
+    "retry",
+    "view-reason",
+    "feedback",
+  ]);
   assert.deepEqual(getAllowedActions("cancelled"), ["resubmit", "view-record"]);
   assert.match(getDisabledReason("failure") ?? "", /空结果/);
 });
-

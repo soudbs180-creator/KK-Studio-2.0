@@ -49,9 +49,23 @@ export const PAGE_TEMPLATES: Readonly<
     id: "list",
     label: "列表",
     purpose: "字段规整、需要排序或快速扫描的大量条目。",
-    layout: { structure: ["page-shell", "toolbar", "list-table"], density: "compact" },
-    components: ["search", "filter", "sortable-header", "list-row", "row-actions"],
-    interactions: ["sort-cycle", "row-select", "keyboard-navigation", "row-actions-always-visible"],
+    layout: {
+      structure: ["page-shell", "toolbar", "list-table"],
+      density: "compact",
+    },
+    components: [
+      "search",
+      "filter",
+      "sortable-header",
+      "list-row",
+      "row-actions",
+    ],
+    interactions: [
+      "sort-cycle",
+      "row-select",
+      "keyboard-navigation",
+      "row-actions-always-visible",
+    ],
     visual: {
       gapToken: "--kk-space-4",
       paddingToken: "--kk-space-2",
@@ -66,9 +80,17 @@ export const PAGE_TEMPLATES: Readonly<
     id: "grid",
     label: "卡片网格",
     purpose: "带标题、描述和状态的工作、项目、Skill、模板展示。",
-    layout: { structure: ["page-shell", "toolbar", "responsive-card-grid"], density: "comfortable" },
+    layout: {
+      structure: ["page-shell", "toolbar", "responsive-card-grid"],
+      density: "comfortable",
+    },
     components: ["search", "filter", "card", "status-badge", "card-action"],
-    interactions: ["card-open-detail", "card-selection", "keyboard-open", "inner-action-stop-propagation"],
+    interactions: [
+      "card-open-detail",
+      "card-selection",
+      "keyboard-open",
+      "inner-action-stop-propagation",
+    ],
     visual: {
       gapToken: "--kk-space-4",
       paddingToken: "--kk-space-3",
@@ -83,9 +105,17 @@ export const PAGE_TEMPLATES: Readonly<
     id: "detail",
     label: "详情",
     purpose: "单个项目、任务、资产或工作结果的完整信息。",
-    layout: { structure: ["page-shell", "detail-hero", "metadata", "action-bar"], density: "comfortable" },
+    layout: {
+      structure: ["page-shell", "detail-hero", "metadata", "action-bar"],
+      density: "comfortable",
+    },
     components: ["back", "hero", "metadata-list", "inline-edit", "action-bar"],
-    interactions: ["back", "inline-edit", "primary-action", "danger-action-at-end"],
+    interactions: [
+      "back",
+      "inline-edit",
+      "primary-action",
+      "danger-action-at-end",
+    ],
     visual: {
       gapToken: "--kk-space-4",
       paddingToken: "--kk-space-4",
@@ -100,7 +130,10 @@ export const PAGE_TEMPLATES: Readonly<
     id: "timeline",
     label: "时间线",
     purpose: "任务执行、版本记录或审批流程等有明确先后关系的内容。",
-    layout: { structure: ["page-shell", "timeline-axis", "timeline-step-list"], density: "comfortable" },
+    layout: {
+      structure: ["page-shell", "timeline-axis", "timeline-step-list"],
+      density: "comfortable",
+    },
     components: ["axis", "step", "step-status", "step-expander", "timestamp"],
     interactions: ["expand-step", "scroll-to-active", "keyboard-expand"],
     visual: {
@@ -117,9 +150,24 @@ export const PAGE_TEMPLATES: Readonly<
     id: "gallery",
     label: "画廊",
     purpose: "图片或视频成果的批量扫视、挑选和预览。",
-    layout: { structure: ["page-shell", "toolbar", "media-grid", "lightbox"], density: "comfortable" },
-    components: ["media-thumb", "source-badge", "selection-ring", "hover-actions", "lightbox"],
-    interactions: ["single-select", "multi-select", "range-select", "open-lightbox", "arrow-key-navigation"],
+    layout: {
+      structure: ["page-shell", "toolbar", "media-grid", "lightbox"],
+      density: "comfortable",
+    },
+    components: [
+      "media-thumb",
+      "source-badge",
+      "selection-ring",
+      "hover-actions",
+      "lightbox",
+    ],
+    interactions: [
+      "single-select",
+      "multi-select",
+      "range-select",
+      "open-lightbox",
+      "arrow-key-navigation",
+    ],
     visual: {
       gapToken: "--kk-space-3",
       paddingToken: "--kk-space-1",
@@ -138,10 +186,12 @@ export function getPageTemplate(key: PageTemplateKey): PageTemplateDefinition {
 
 export function selectPageTemplate(profile: ContentProfile): PageTemplateKey {
   if (profile.workDisplay) return "grid";
-  if (profile.ordered && (profile.process || profile.history)) return "timeline";
+  if (profile.ordered && (profile.process || profile.history))
+    return "timeline";
   if (profile.singleObject) return "detail";
   if (profile.sortable || (profile.count ?? 0) > 50) return "list";
-  if (profile.media && (profile.batchSelect || (profile.count ?? 0) > 12)) return "gallery";
+  if (profile.media && (profile.batchSelect || (profile.count ?? 0) > 12))
+    return "gallery";
   return "grid";
 }
 
@@ -154,4 +204,3 @@ export function canComposePageTemplates(
   if (primary !== "grid" && primary !== "gallery") return false;
   return nested.every((key) => key === "detail");
 }
-

@@ -89,7 +89,7 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
     .getByRole("button", { name: "收起对话", exact: true })
     .boundingBox();
   expect(closeBox!.x + closeBox!.width).toBeCloseTo(
-    panelBox!.x + panelBox!.width - 17,
+    panelBox!.x + panelBox!.width - 16,
     1,
   );
   const composer = page.locator(".chat-composer > div");
@@ -108,7 +108,7 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
   );
   await expect(
     page.getByRole("button", { name: "模型", exact: true }),
-  ).toHaveCSS("height", "44px");
+  ).toHaveCSS("height", "24px");
   const headerIcons = await page
     .locator(
       ".conversation-panel > header > button img, .conversation-panel > header > button svg",
@@ -138,7 +138,7 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
     { width: 16, height: 16 },
     { width: 16, height: 16 },
     { width: 16, height: 16 },
-    { width: 16, height: 16 },
+    { width: 20, height: 20 },
     { width: 20, height: 20 },
   ]);
 });

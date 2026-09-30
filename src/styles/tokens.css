@@ -18,28 +18,29 @@
 
   /* --- 1.1 中性色阶 --- */
   --kk-dark-1: #161616;
-  --kk-dark-2: #1A1A1A;
+  --kk-dark-2: #1a1a1a;
   --kk-dark-4: #202020;
   --kk-dark-6: #292929;
   --kk-dark-7: #333333;
-  --kk-dark-8: #3C3C3C;
-  --kk-gold:   #D98A00;
+  --kk-dark-8: #3c3c3c;
+  --kk-gold: #d98a00;
 
   /* --- 1.2 字族 / 字重 / 字距 --- */
-  --kk-font-sans: "Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --kk-font-sans:
+    "Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
   --kk-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --kk-weight-regular:  400;
-  --kk-weight-medium:   500;
+  --kk-weight-regular: 400;
+  --kk-weight-medium: 500;
   --kk-weight-semibold: 600;
-  --kk-weight-bold:     700;
+  --kk-weight-bold: 700;
   /* 大字号收紧，小号标签/全文大写放宽 */
   --kk-tracking-tighter: -0.4px;
-  --kk-tracking-tight:   -0.2px;
-  --kk-tracking-normal:    0px;
-  --kk-tracking-wide:      0.4px;
+  --kk-tracking-tight: -0.2px;
+  --kk-tracking-normal: 0px;
+  --kk-tracking-wide: 0.4px;
 
   /* --- 1.3 间距：组件内专用（4px 基准） --- */
-  --kk-space-hair: 2px;   /* 仅图标微调 / 内描边留白 */
+  --kk-space-hair: 2px; /* 仅图标微调 / 内描边留白 */
   --kk-space-1: 4px;
   --kk-space-2: 8px;
   --kk-space-3: 12px;
@@ -48,15 +49,15 @@
   --kk-space-6: 40px;
 
   /* --- 1.4 圆角数值轴（Figma 治理页：4 / 8 / 10 / Full；容器档另行注册） --- */
-  --kk-radius-0:        0;
-  --kk-radius-xs:       4px;   /* checkbox / badge / tooltip / progress */
-  --kk-radius-sm:       8px;   /* button / chip / tag / 小控件 */
-  --kk-radius-control:  8px;   /* 所有标准按钮、输入和控件 */
-  --kk-radius-menu:    10px;   /* 下拉、二级菜单 */
-  --kk-radius-lg:      16px;   /* 仅注册过的嵌套容器 */
-  --kk-radius-panel:   20px;   /* shell / panel exception */
-  --kk-radius-card:    20px;   /* card shell exception */
-  --kk-radius-full:   999px;   /* 药丸、头像圈 */
+  --kk-radius-0: 0;
+  --kk-radius-xs: 4px; /* checkbox / badge / tooltip / progress */
+  --kk-radius-sm: 8px; /* button / chip / tag / 小控件 */
+  --kk-radius-control: 8px; /* 所有标准按钮、输入和控件 */
+  --kk-radius-menu: 10px; /* 下拉、二级菜单 */
+  --kk-radius-lg: 16px; /* 仅注册过的嵌套容器 */
+  --kk-radius-panel: 20px; /* shell / panel exception */
+  --kk-radius-card: 20px; /* card shell exception */
+  --kk-radius-full: 999px; /* 药丸、头像圈 */
 
   /* --- 1.5 字体角色（Figma 治理页） --- */
   --kk-font-caption: 12px;
@@ -83,47 +84,47 @@
      ========================================================================== */
 
   /* --- 2.1 颜色：Dark（默认） --- */
-  --kk-bg-app:           #0A0A0A;
-  --kk-bg-card:          #1A1A1A;
-  --kk-bg-elevated:      #202020;
-  --kk-bg-soft:          #333333;
-  --kk-bg-surface:       #161616;
-  --kk-border-default:   #3C3C3C;
-  --kk-border-control:   #858585;
-  --kk-border-subtle:    #292929;
-  --kk-bg-input:         #1F1F1F;
-  --kk-neutral-selected: #2A2A2A;
-  --kk-text-primary:     #DBDBDB;
-  --kk-text-secondary:   #A0A0A0;
-  --kk-text-tertiary:    #9E9E9E;
-  --kk-text-accent:      #B2ADFF;
-  --kk-text-danger:      #FF8585;
-  --kk-danger:           #B4233C;
-  --kk-success:          #79CDA8;
-  --kk-warning:          #E6B96A;
-  --kk-focus-ring:       #AAA3FF;
-  --kk-shadow-color:        rgba(0, 0, 0, 0.5);
+  --kk-bg-app: #0a0a0a;
+  --kk-bg-card: #1a1a1a;
+  --kk-bg-elevated: #202020;
+  --kk-bg-soft: #333333;
+  --kk-bg-surface: #161616;
+  --kk-border-default: #3c3c3c;
+  --kk-border-control: #858585;
+  --kk-border-subtle: #292929;
+  --kk-bg-input: #1f1f1f;
+  --kk-neutral-selected: #2a2a2a;
+  --kk-text-primary: #dbdbdb;
+  --kk-text-secondary: #a0a0a0;
+  --kk-text-tertiary: #9e9e9e;
+  --kk-text-accent: #b2adff;
+  --kk-text-danger: #ff8585;
+  --kk-danger: #b4233c;
+  --kk-success: #79cda8;
+  --kk-warning: #e6b96a;
+  --kk-focus-ring: #aaa3ff;
+  --kk-shadow-color: rgba(0, 0, 0, 0.5);
   --kk-shadow-color-strong: rgba(0, 0, 0, 0.7);
-  --kk-overlay:             rgba(10, 10, 10, 0.72);
-  --kk-like-start:          #EF6D6D;
-  --kk-like-end:            #D94063;
-  --kk-star-start:          #E6B96A;
-  --kk-star-end:            #EE8B3A;
+  --kk-overlay: rgba(10, 10, 10, 0.72);
+  --kk-like-start: #ef6d6d;
+  --kk-like-end: #d94063;
+  --kk-star-start: #e6b96a;
+  --kk-star-end: #ee8b3a;
 
   /* --- 2.2 边框 --- */
-  --kk-border-none:        0;
-  --kk-border-width:       1px;
+  --kk-border-none: 0;
+  --kk-border-width: 1px;
   --kk-border-width-focus: 2px;
 
   /* --- 2.3 层级 z-index（7 档，禁止 9999 之类魔法值） --- */
-  --kk-z-base:          0;
-  --kk-z-sticky:        10;
+  --kk-z-base: 0;
+  --kk-z-sticky: 10;
   --kk-z-sticky-header: 20;
-  --kk-z-dropdown:      100;
-  --kk-z-overlay:       200;
-  --kk-z-modal:         300;
-  --kk-z-popover:       400;
-  --kk-z-toast:         500;
+  --kk-z-dropdown: 100;
+  --kk-z-overlay: 200;
+  --kk-z-modal: 300;
+  --kk-z-popover: 400;
+  --kk-z-toast: 500;
 
   /* --- 2.4 阴影 / 浮起层级 --- */
   --kk-elevation-0: none;
@@ -132,28 +133,38 @@
   --kk-elevation-3: 0 12px 32px var(--kk-shadow-color-strong);
 
   /* --- 2.5 容器 / 布局节奏（页面级，区别于组件内间距） --- */
-  --kk-layout-gutter-sm: 20px;   /* 卡片之间 */
-  --kk-layout-gutter-md: 32px;   /* 区块之间 */
-  --kk-layout-gutter-lg: 48px;   /* 大分区之间 */
-  --kk-layout-gutter-xl: 64px;   /* 页面级分割 */
+  --kk-layout-gutter-sm: 20px; /* 卡片之间 */
+  --kk-layout-gutter-md: 32px; /* 区块之间 */
+  --kk-layout-gutter-lg: 48px; /* 大分区之间 */
+  --kk-layout-gutter-xl: 64px; /* 页面级分割 */
   --kk-container-max-width: 1440px;
-  --kk-container-pad: 40px;      /* desktop，响应式见文末 */
-  --kk-sidebar-width:  291px;
-  --kk-panel-width:    264px;
+  --kk-container-pad: 40px; /* desktop，响应式见文末 */
+  --kk-sidebar-width: 291px;
+  --kk-panel-width: 264px;
   --kk-toolbar-height: 50px;
-  --kk-topbar-height:  40px;
+  --kk-topbar-height: 40px;
 
   /* --- 2.6 控件档位 size tier --- */
-  --kk-control-h-sm: 24px;  --kk-control-h-md: 32px;
-  --kk-control-h-lg: 40px;  --kk-control-h-xl: 40px;
-  --kk-control-px-sm: 12px; --kk-control-px-md: 12px;
-  --kk-control-px-lg: 16px; --kk-control-px-xl: 20px;
-  --kk-control-gap-sm: 4px; --kk-control-gap-md: 8px;
-  --kk-control-gap-lg: 8px; --kk-control-gap-xl: 8px;
-  --kk-control-font-sm: 12px; --kk-control-font-md: 14px;
-  --kk-control-font-lg: 14px; --kk-control-font-xl: 14px;
-  --kk-control-icon-sm: 16px; --kk-control-icon-md: 20px;
-  --kk-control-icon-lg: 24px; --kk-control-icon-xl: 24px;
+  --kk-control-h-sm: 24px;
+  --kk-control-h-md: 32px;
+  --kk-control-h-lg: 40px;
+  --kk-control-h-xl: 40px;
+  --kk-control-px-sm: 12px;
+  --kk-control-px-md: 12px;
+  --kk-control-px-lg: 16px;
+  --kk-control-px-xl: 20px;
+  --kk-control-gap-sm: 4px;
+  --kk-control-gap-md: 8px;
+  --kk-control-gap-lg: 8px;
+  --kk-control-gap-xl: 8px;
+  --kk-control-font-sm: 12px;
+  --kk-control-font-md: 14px;
+  --kk-control-font-lg: 14px;
+  --kk-control-font-xl: 14px;
+  --kk-control-icon-sm: 16px;
+  --kk-control-icon-md: 20px;
+  --kk-control-icon-lg: 24px;
+  --kk-control-icon-xl: 24px;
   --kk-icon-glyph-sm: 16px;
   --kk-icon-glyph-md: 20px;
   --kk-icon-glyph-lg: 24px;
@@ -162,118 +173,157 @@
   --kk-hit-primary: 40px;
 
   /* --- 2.7 强调色：Default --- */
-  --kk-accent:       #635BFF;
-  --kk-accent-hover: #5B52ED;
-  --kk-accent-soft:  #B3ADFF;
-  --kk-on-accent:    #FFFFFF;
+  --kk-accent: #635bff;
+  --kk-accent-hover: #5b52ed;
+  --kk-accent-soft: #b3adff;
+  --kk-on-accent: #ffffff;
 
   /* ==========================================================================
      Tier 3 · 组件层 COMPONENT — 组件唯一取值入口，不许自己拼原始值
      ========================================================================== */
 
   /* Button（standard = lg 档 / compact = md 档） */
-  --kk-button-h-standard:    var(--kk-control-h-md);
-  --kk-button-h-primary:     var(--kk-control-h-lg);
-  --kk-button-h:             var(--kk-button-h-standard);
-  --kk-button-px:            var(--kk-control-px-lg);
-  --kk-button-gap:           var(--kk-control-gap-lg);
-  --kk-button-font:          var(--kk-control-font-lg);
-  --kk-button-icon:          var(--kk-control-icon-lg);
-  --kk-button-radius:        var(--kk-radius-control);
-  --kk-button-compact-h:     var(--kk-control-h-md);
-  --kk-button-compact-px:    var(--kk-control-px-md);
-  --kk-button-compact-font:  var(--kk-control-font-md);
-  --kk-button-compact-icon:  var(--kk-control-icon-md);
+  --kk-button-h-standard: var(--kk-control-h-md);
+  --kk-button-h-primary: var(--kk-control-h-lg);
+  --kk-button-h: var(--kk-button-h-standard);
+  --kk-button-px: var(--kk-control-px-lg);
+  --kk-button-gap: var(--kk-control-gap-lg);
+  --kk-button-font: var(--kk-control-font-lg);
+  --kk-button-icon: var(--kk-control-icon-lg);
+  --kk-button-radius: var(--kk-radius-control);
+  --kk-button-compact-h: var(--kk-control-h-md);
+  --kk-button-compact-px: var(--kk-control-px-md);
+  --kk-button-compact-font: var(--kk-control-font-md);
+  --kk-button-compact-icon: var(--kk-control-icon-md);
 
   /* Input */
-  --kk-input-h:      var(--kk-control-h-md);
-  --kk-input-px:     var(--kk-control-px-md);
-  --kk-input-gap:    var(--kk-control-gap-md);
-  --kk-input-font:   var(--kk-control-font-md);
-  --kk-input-icon:   var(--kk-control-icon-md);
+  --kk-input-h: var(--kk-control-h-md);
+  --kk-input-px: var(--kk-control-px-md);
+  --kk-input-gap: var(--kk-control-gap-md);
+  --kk-input-font: var(--kk-control-font-md);
+  --kk-input-icon: var(--kk-control-icon-md);
   --kk-input-radius: var(--kk-radius-control);
 
   /* Select */
-  --kk-select-h:            var(--kk-control-h-lg);
-  --kk-select-px:           var(--kk-control-px-lg);
-  --kk-select-font:         var(--kk-control-font-lg);
-  --kk-select-icon:         var(--kk-control-icon-lg);
-  --kk-select-radius:       var(--kk-radius-control);
-  --kk-select-menu-radius:  var(--kk-radius-menu);
+  --kk-select-h: var(--kk-control-h-lg);
+  --kk-select-px: var(--kk-control-px-lg);
+  --kk-select-font: var(--kk-control-font-lg);
+  --kk-select-icon: var(--kk-control-icon-lg);
+  --kk-select-radius: var(--kk-radius-control);
+  --kk-select-menu-radius: var(--kk-radius-menu);
 
   /* IconButton */
-  --kk-icon-button-h:      var(--kk-control-h-md);
-  --kk-icon-button-lg:     var(--kk-control-h-lg);
-  --kk-icon-button-xl:     var(--kk-control-h-xl);
+  --kk-icon-button-h: var(--kk-control-h-md);
+  --kk-icon-button-lg: var(--kk-control-h-lg);
+  --kk-icon-button-xl: var(--kk-control-h-xl);
   --kk-icon-button-radius: var(--kk-radius-control);
 
   /* 非控件档位成员，独立契约 */
-  --kk-menu-item-h:   36px;
-  --kk-badge-h:       20px;
-  --kk-capsule-h:     28px;
-  --kk-capsule-lg-h:  32px;
-  --kk-menu-indent:   16px;   /* 二级菜单固定缩进 */
+  --kk-menu-item-h: 36px;
+  --kk-badge-h: 20px;
+  --kk-capsule-h: 28px;
+  --kk-capsule-lg-h: 32px;
+  --kk-menu-indent: 16px; /* 二级菜单固定缩进 */
 
   /* Card / Panel / Toolbar */
-  --kk-card-pad:     var(--kk-space-4);
-  --kk-card-radius:  var(--kk-radius-card);
+  --kk-card-pad: var(--kk-space-4);
+  --kk-card-radius: var(--kk-radius-card);
   --kk-panel-radius: var(--kk-radius-panel);
-  --kk-toolbar-h:    var(--kk-toolbar-height);
+  --kk-toolbar-h: var(--kk-toolbar-height);
 }
 
 /* ============================================================================
  * 主题切换：Light
  * ========================================================================== */
 [data-theme="light"] {
-  --kk-bg-app:           #EDEDED;
-  --kk-bg-card:          #EEEEEE;
-  --kk-bg-elevated:      #ECECEC;
-  --kk-bg-soft:          #EAEAEA;
-  --kk-bg-surface:       #FFFFFF;
-  --kk-border-default:   #C4C4C4;
-  --kk-border-control:   #777777;
-  --kk-border-subtle:    #DEDEDE;
-  --kk-bg-input:         #E9E9E9;
-  --kk-neutral-selected: #E0E0E0;
-  --kk-text-primary:     #252525;
-  --kk-text-secondary:   #626262;
-  --kk-text-tertiary:    #636363;
-  --kk-text-accent:      #594ACC;
-  --kk-text-danger:      #AA263B;
-  --kk-danger:           #AA263B;
-  --kk-success:          #216947;
-  --kk-warning:          #8A590C;
-  --kk-on-accent:        #FFFFFF;
-  --kk-focus-ring:       #594ACC;
-  --kk-shadow-color:        rgba(0, 0, 0, 0.12);
-  --kk-shadow-color-strong: rgba(0, 0, 0, 0.20);
-  --kk-overlay:             rgba(237, 237, 237, 0.72);
-  --kk-like-start:          #AA263B;
-  --kk-like-end:            #8F1F37;
-  --kk-star-start:          #8A590C;
-  --kk-star-end:            #B66C1D;
+  --kk-bg-app: #ededed;
+  --kk-bg-card: #eeeeee;
+  --kk-bg-elevated: #ececec;
+  --kk-bg-soft: #eaeaea;
+  --kk-bg-surface: #ffffff;
+  --kk-border-default: #c4c4c4;
+  --kk-border-control: #777777;
+  --kk-border-subtle: #dedede;
+  --kk-bg-input: #e9e9e9;
+  --kk-neutral-selected: #e0e0e0;
+  --kk-text-primary: #252525;
+  --kk-text-secondary: #626262;
+  --kk-text-tertiary: #636363;
+  --kk-text-accent: #594acc;
+  --kk-text-danger: #aa263b;
+  --kk-danger: #aa263b;
+  --kk-success: #216947;
+  --kk-warning: #8a590c;
+  --kk-on-accent: #ffffff;
+  --kk-focus-ring: #594acc;
+  --kk-shadow-color: rgba(0, 0, 0, 0.12);
+  --kk-shadow-color-strong: rgba(0, 0, 0, 0.2);
+  --kk-overlay: rgba(237, 237, 237, 0.72);
+  --kk-like-start: #aa263b;
+  --kk-like-end: #8f1f37;
+  --kk-star-start: #8a590c;
+  --kk-star-end: #b66c1d;
 }
 
 /* ============================================================================
  * 强调色切换：8 种预留模式
  * ========================================================================== */
-[data-accent="blue"]   { --kk-accent:#2F80ED; --kk-accent-hover:#4D9AFF; --kk-accent-soft:#8CC2FF; --kk-on-accent:#0A0A0A; }
-[data-accent="green"]  { --kk-accent:#21A673; --kk-accent-hover:#2FBE86; --kk-accent-soft:#7FD6B2; --kk-on-accent:#0A0A0A; }
-[data-accent="yellow"] { --kk-accent:#E6B96A; --kk-accent-hover:#F0C97E; --kk-accent-soft:#F3D9A8; --kk-on-accent:#0A0A0A; }
-[data-accent="pink"]   { --kk-accent:#E86FA4; --kk-accent-hover:#F08BB8; --kk-accent-soft:#F4B7D2; --kk-on-accent:#0A0A0A; }
-[data-accent="orange"] { --kk-accent:#EE8B3A; --kk-accent-hover:#F5A05E; --kk-accent-soft:#F8C294; --kk-on-accent:#0A0A0A; }
-[data-accent="purple"] { --kk-accent:#8B5CF6; --kk-accent-hover:#A78BFA; --kk-accent-soft:#CFC0FE; --kk-on-accent:#0A0A0A; }
-[data-accent="white"]  { --kk-accent:#FFFFFF; --kk-accent-hover:#E8E8E8; --kk-accent-soft:#DBDBDB; --kk-on-accent:#0A0A0A; }
+[data-accent="blue"] {
+  --kk-accent: #2f80ed;
+  --kk-accent-hover: #4d9aff;
+  --kk-accent-soft: #8cc2ff;
+  --kk-on-accent: #0a0a0a;
+}
+[data-accent="green"] {
+  --kk-accent: #21a673;
+  --kk-accent-hover: #2fbe86;
+  --kk-accent-soft: #7fd6b2;
+  --kk-on-accent: #0a0a0a;
+}
+[data-accent="yellow"] {
+  --kk-accent: #e6b96a;
+  --kk-accent-hover: #f0c97e;
+  --kk-accent-soft: #f3d9a8;
+  --kk-on-accent: #0a0a0a;
+}
+[data-accent="pink"] {
+  --kk-accent: #e86fa4;
+  --kk-accent-hover: #f08bb8;
+  --kk-accent-soft: #f4b7d2;
+  --kk-on-accent: #0a0a0a;
+}
+[data-accent="orange"] {
+  --kk-accent: #ee8b3a;
+  --kk-accent-hover: #f5a05e;
+  --kk-accent-soft: #f8c294;
+  --kk-on-accent: #0a0a0a;
+}
+[data-accent="purple"] {
+  --kk-accent: #8b5cf6;
+  --kk-accent-hover: #a78bfa;
+  --kk-accent-soft: #cfc0fe;
+  --kk-on-accent: #0a0a0a;
+}
+[data-accent="white"] {
+  --kk-accent: #ffffff;
+  --kk-accent-hover: #e8e8e8;
+  --kk-accent-soft: #dbdbdb;
+  --kk-on-accent: #0a0a0a;
+}
 
 /* ============================================================================
  * 密度切换：compact（数据后台等密集场景）
  * 只改 Tier 2 的控件档位与布局节奏 → 组件层自动继承，变密度不变风格
  * ========================================================================== */
 [data-density="compact"] {
-  --kk-control-h-sm: 24px;  --kk-control-h-md: 32px;
-  --kk-control-h-lg: 40px;  --kk-control-h-xl: 40px;
-  --kk-control-px-sm: 8px;  --kk-control-px-md: 8px;
-  --kk-control-px-lg: 12px; --kk-control-px-xl: 12px;
+  --kk-control-h-sm: 24px;
+  --kk-control-h-md: 32px;
+  --kk-control-h-lg: 40px;
+  --kk-control-h-xl: 40px;
+  --kk-control-px-sm: 8px;
+  --kk-control-px-md: 8px;
+  --kk-control-px-lg: 12px;
+  --kk-control-px-xl: 12px;
   --kk-layout-gutter-sm: 16px;
   --kk-layout-gutter-md: 24px;
   --kk-layout-gutter-lg: 32px;
@@ -284,6 +334,18 @@
 /* ============================================================================
  * 响应式容器间距（只改 Tier 2 的 --kk-container-pad）
  * ========================================================================== */
-@media (max-width: 767px)  { :root { --kk-container-pad: 16px; } }
-@media (min-width: 768px) and (max-width: 1199px) { :root { --kk-container-pad: 24px; } }
-@media (min-width: 1200px) { :root { --kk-container-pad: 40px; } }
+@media (max-width: 767px) {
+  :root {
+    --kk-container-pad: 16px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1199px) {
+  :root {
+    --kk-container-pad: 24px;
+  }
+}
+@media (min-width: 1200px) {
+  :root {
+    --kk-container-pad: 40px;
+  }
+}

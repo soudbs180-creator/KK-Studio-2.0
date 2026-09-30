@@ -74,9 +74,7 @@ export function themeTokens(theme: string, accent: string) {
       const accentMatch = scoped.match(/\[data-accent="([^"]+)"\]/);
       if (themeMatch && themeMatch[1] !== theme) continue;
       if (accentMatch && accentMatch[1] !== accent) continue;
-      for (const [, name, value] of body.matchAll(
-        /(--[\w-]+)\s*:\s*([^;]+);/g,
-      ))
+      for (const [, name, value] of body.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g))
         tokens[name] = value.trim();
     }
   }

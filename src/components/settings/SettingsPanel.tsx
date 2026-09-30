@@ -36,7 +36,8 @@ function resolveInitialSection(initial: SettingsSection): {
       extensionsTab: legacyTab,
     };
   }
-  if (initial === "extensions") return { section: "mcp", extensionsTab: "plugins" };
+  if (initial === "extensions")
+    return { section: "mcp", extensionsTab: "plugins" };
   return { section: initial };
 }
 
@@ -83,9 +84,9 @@ export default function SettingsPanel({
   const [preferences, setPreferences] = useState(initial.preferences);
   const [resolved] = useState(() => resolveInitialSection(initialSection));
   const [section, setSection] = useState<SettingsSection>(resolved.section);
-  const [extensionsTab, setExtensionsTab] = useState<
-    ExtensionsTab | undefined
-  >(resolved.extensionsTab);
+  const [extensionsTab, setExtensionsTab] = useState<ExtensionsTab | undefined>(
+    resolved.extensionsTab,
+  );
   const [feedback, setFeedback] = useState({
     message: initial.message,
     error: initial.error,

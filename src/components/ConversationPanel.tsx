@@ -168,7 +168,11 @@ export default function ConversationPanel({
         label="拖拽调整对话面板宽度"
       />
       <ConversationHeader
-        title={project?.name && project.name !== "未命名项目" ? project.name : "KK Studio"}
+        title={
+          project?.name && project.name !== "未命名项目"
+            ? project.name
+            : "KK Studio"
+        }
         messageCount={
           agentActive ? (agent?.messages.length ?? 0) : visibleMessages.length
         }
@@ -198,7 +202,19 @@ export default function ConversationPanel({
             onStatus={setStatus}
           />
         )}
-        <ConversationStatus message={status} />
+        <ConversationStatus
+          message={
+            status ||
+            (!agentActive && input.trim() ? (directDisabledReason ?? "") : "")
+          }
+        />
+        {!agentActive && directState === "service-unconfigured" && (
+          <div className="chat-agent-controls">
+            <button type="button" onClick={() => onOpen("settings/providers")}>
+              前往模型设置
+            </button>
+          </div>
+        )}
       </div>
       <ConversationComposerRegion
         agent={agent}
@@ -210,8 +226,6 @@ export default function ConversationPanel({
         onInputChange={(value) => {
           setInput(value);
           updateDraft({ prompt: value });
-          if (!agentActive)
-            setStatus(value.trim() ? (directDisabledReason ?? "") : "");
         }}
         onSubmitMessage={submitMessage}
         disabled={
@@ -219,7 +233,8 @@ export default function ConversationPanel({
           (agentActive && (agentConnecting || Boolean(agent?.sending)))
         }
         submitDisabled={
-          submitting || (!agentActive && (directSubmitDisabled || readingFiles > 0))
+          submitting ||
+          (!agentActive && (directSubmitDisabled || readingFiles > 0))
         }
         placeholder={
           agentActive
@@ -242,7 +257,10 @@ export default function ConversationPanel({
         modelOptions={modelOptions}
         modelSelection={
           agentActive
-            ? { source: agentModel ? "codex" : "default", model: agentModel ?? "" }
+            ? {
+                source: agentModel ? "codex" : "default",
+                model: agentModel ?? "",
+              }
             : {
                 source: "api",
                 model: currentModel ?? "",
@@ -266,11 +284,17 @@ export default function ConversationPanel({
         skills={skills}
         onApplySkill={onApplySkill}
         approvalMode={
-          agentActive ? (agent?.permissionMode === "request" ? "ask" : "auto") : approvalMode
+          agentActive
+            ? agent?.permissionMode === "request"
+              ? "ask"
+              : "auto"
+            : approvalMode
         }
         onSelectMode={(value) => {
           if (agentActive) {
-            agent?.onPermissionModeChange(value === "ask" ? "request" : "automatic");
+            agent?.onPermissionModeChange(
+              value === "ask" ? "request" : "automatic",
+            );
             setApprovalMode(value);
             return;
           }

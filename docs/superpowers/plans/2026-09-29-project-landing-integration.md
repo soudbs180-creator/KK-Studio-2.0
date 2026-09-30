@@ -32,7 +32,7 @@
 - [ ] Create the task branch from the dirty workspace and record the baseline checks.
 - [ ] Commit a clearly marked candidate snapshot, excluding scratch output and credentials.
 - [ ] Merge `origin/main`; resolve conflicts in the source branch, retaining the newest storage/provider contracts.
-- [ ] Inspect branch heads and classify already-merged, stale, WIP and blocked branches. Do not merge branches whose ledger status is not complete.
+- [ ] Inspect branch heads and classify already-merged, stale, WIP and blocked branches. Carry the task commits of open PRs into this integration branch, verify the combined tree, and retain PARTIAL for external acceptance gaps.
 
 ### Task 2: Restore the actual UI path
 
@@ -41,6 +41,7 @@
 - [ ] Verify route → import → loaded bundle for home, chat, settings and canvas on port 1421.
 - [ ] Remove regressions introduced by fixed gaps, stale duplicate controls, or inaccessible disabled actions.
 - [ ] Keep current local model/service gating and meaningful empty/error/offline feedback.
+- [ ] Carry UI-010 and real project sidebar fixes forward without replacing the newer four-page Figma rules with historical layout rules.
 - [ ] Run focused Playwright geometry and interaction checks at 390, 1099 and 1920.
 
 ### Task 3: Land local competitor-derived canvas capabilities
@@ -59,3 +60,4 @@
 - [ ] Rebuild actual Vite production bundle and verify preview/desktop-facing entry paths.
 - [ ] Bind the final evidence to the final head and update only statuses proven by that evidence.
 - [ ] Finish with a local merge/PR decision after the merged tree is green; leave unresolved external gates explicit.
+- [ ] Merge the integration PR after exact-head independent review and hosted checks; fetch and fast-forward local main, then verify the merged tree and current Web/Desktop artifacts.
