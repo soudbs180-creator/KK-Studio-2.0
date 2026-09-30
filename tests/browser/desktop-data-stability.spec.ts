@@ -193,7 +193,10 @@ test("重新读取同一项目后搜索与改名使用新原件", async ({ page 
   });
   await page.goto("/");
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: /同一项目/ }).click();
+  await page
+    .locator(".project-library-card")
+    .filter({ hasText: "同一项目" })
+    .click();
   await expect(page.getByRole("alert")).toContainText("读取保护");
   await page.getByRole("button", { name: "重新读取", exact: true }).click();
   await expect(page.getByTestId("canvas-node-added-text-remote")).toBeVisible();
@@ -257,7 +260,10 @@ test("A/B 项目的连线、视口和位置在切换及刷新后保持隔离", a
   });
   await page.goto("/");
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: /项目 A/ }).click();
+  await page
+    .locator(".project-library-card")
+    .filter({ hasText: "项目 A" })
+    .click();
   const node = page.locator('[data-node-id="image"]');
   await node.focus();
   await node.press("ArrowRight");
@@ -279,7 +285,10 @@ test("A/B 项目的连线、视口和位置在切换及刷新后保持隔离", a
   expect(a.edges).toEqual([]);
   expect(a.viewport.scale).toBeLessThan(1);
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: /项目 B/ }).click();
+  await page
+    .locator(".project-library-card")
+    .filter({ hasText: "项目 B" })
+    .click();
   await expect(node).toHaveCSS("left", "82px");
   await expect(edge).toHaveCount(1);
   await node.focus();
@@ -287,7 +296,10 @@ test("A/B 项目的连线、视口和位置在切换及刷新后保持隔离", a
   await expect(page.locator(".project-save-state")).toContainText("已保存");
   await page.reload();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: /项目 A/ }).click();
+  await page
+    .locator(".project-library-card")
+    .filter({ hasText: "项目 A" })
+    .click();
   await expect(node).toHaveCSS("left", "90px");
   await expect(edge).toHaveCount(0);
   const transform = await page
@@ -386,8 +398,8 @@ test("画布参数不会在重开项目后回到默认值", async ({ page }) => 
   await page.reload();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page
-    .getByRole("button", { name: /未命名项目/ })
-    .last()
+    .locator(".project-library-card")
+    .filter({ hasText: "未命名项目" })
     .click();
   await node.focus();
   await node.press("Enter");
@@ -418,8 +430,8 @@ test("画布位置与新增身份在保存重开后保持", async ({ page }) => 
   await page.reload();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page
-    .getByRole("button", { name: /未命名项目/ })
-    .last()
+    .locator(".project-library-card")
+    .filter({ hasText: "未命名项目" })
     .click();
   await expect(node).toHaveCSS("left", `${initialLeft + 64}px`);
   await page.getByRole("button", { name: "添加资源", exact: true }).click();

@@ -48,18 +48,20 @@ test("开始创作首页、目录页和项目行操作保持真实状态", async
     page.getByRole("heading", { name: "ComfyUI 工作流", exact: true }),
   ).toBeVisible();
 
-  const grouped = page.locator(".project-entry").first();
-  await grouped.locator(".project-link").click({ button: "right" });
-  await grouped.getByRole("menuitem", { name: "置顶项目" }).click();
-  await expect(grouped).toHaveClass(/is-pinned/);
-  await grouped.locator(".project-link").click({ button: "right" });
+  await page.getByRole("button", { name: "创建项目文件夹" }).click();
+  const group = page.locator(".project-folder-group").first();
+  const toggle = group.locator(".folder-heading-toggle");
+  await toggle.click({ button: "right" });
+  await group.getByRole("menuitem", { name: "置顶文件夹" }).click();
+  await expect(group).toHaveClass(/is-pinned/);
+  await toggle.click({ button: "right" });
   await expect(
-    grouped.getByRole("menuitem", { name: "取消置顶项目" }),
+    group.getByRole("menuitem", { name: "取消置顶文件夹" }),
   ).toBeVisible();
-  await expect(grouped.getByRole("menu", { name: "项目组设置" })).toBeVisible();
-  await grouped.getByRole("menuitem", { name: "改名字" }).click();
+  await expect(group.getByRole("menu", { name: "项目组设置" })).toBeVisible();
+  await group.getByRole("menuitem", { name: "改名字" }).click();
   await expect(
-    grouped.getByRole("textbox", { name: "项目名称" }),
+    group.getByRole("textbox", { name: "项目文件夹名称" }),
   ).toBeVisible();
 
   await page.getByRole("button", { name: "项目库", exact: true }).click();
@@ -261,6 +263,9 @@ test("Skill 与工作流卡片保持当前页面并反馈本地预览状态", as
 test("项目区支持筛选、排序和创建文件夹入口", async ({ page }) => {
   await page.goto("/");
   const sidebar = page.locator(".sidebar");
+  await sidebar.getByRole("button", { name: "创建未分组项目" }).click();
+  await sidebar.getByRole("textbox", { name: "项目名称" }).fill("过滤项目");
+  await sidebar.getByRole("textbox", { name: "项目名称" }).press("Enter");
   await sidebar.getByRole("button", { name: "项目显示与排序" }).click();
   const menu = sidebar.getByRole("menu", { name: "项目显示与排序" });
   await expect(menu).toBeVisible();
@@ -270,13 +275,13 @@ test("项目区支持筛选、排序和创建文件夹入口", async ({ page }) 
   await sidebar.getByRole("button", { name: "项目显示与排序" }).click();
   await sidebar
     .getByRole("menu", { name: "项目显示与排序" })
-    .getByRole("menuitemradio", { name: "优先级" })
+    .getByRole("menuitemradio", { name: "任务状态优先" })
     .click();
   await sidebar.getByRole("button", { name: "项目显示与排序" }).click();
   await expect(
     sidebar
       .getByRole("menu", { name: "项目显示与排序" })
-      .getByRole("menuitemradio", { name: "优先级" }),
+      .getByRole("menuitemradio", { name: "任务状态优先" }),
   ).toHaveAttribute("aria-checked", "true");
   await sidebar.getByRole("button", { name: "项目显示与排序" }).click();
   await sidebar.getByRole("button", { name: "创建项目文件夹" }).click();

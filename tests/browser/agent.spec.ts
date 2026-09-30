@@ -22,7 +22,10 @@ async function fixture(nativeImage = false) {
   const emit = (type: string, data: unknown) =>
     stream?.write(`event: ${type}\r\ndata: ${JSON.stringify(data)}\r\n\r\n`);
   const server = createServer(async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:1423");
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      `http://127.0.0.1:${process.env.KK_TEST_PORT ?? "1423"}`,
+    );
     res.setHeader(
       "Access-Control-Allow-Headers",
       "content-type,x-canvas-agent-token,authorization,idempotency-key",

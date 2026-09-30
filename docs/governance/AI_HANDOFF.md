@@ -32,6 +32,10 @@ PR #21 已合入 `main@7bc7c67`，原 push run `36369533105` 因 390px 对比按
 - 远端 `main@a89792ad` 包含 PR #14/#15/#16；本任务 worktree `D:/kk-studio/.worktrees/TASK-UI-010-ui-regression` 正在将 #19 合入该主线，根目录 dirty UI 不参与。六处治理文档冲突已按任务/功能 ID 合并，72 个任务、32 个功能，检查零违规。
 - 两处浏览器偶发失败已定位为侧栏过渡期间断言与图片请求未到 Provider 前取消，定向用例各重复 16 次无重试通过。完整 `verify`、delivery、最终 head 独立审查及 Hosted 检查须在提交后回读，不用旧 `3db7b69` 的结果代替。
 - 未接线的 `tokens.css/json` 仍与运行 UI 的 291px 侧栏、40px 顶栏冲突；PR #20 堆叠在 #19 上且有独立未提交修正。真实媒体、第三方配置消费及正式 Desktop 发布仍为开放工作。
+## 2026-09-25 侧栏真实项目整合恢复入口
+
+- 当前候选 `D:/kk-studio/.worktrees/TASK-UI-009-integration` / `feat/TASK-UI-009-ui010-integration` 基于 UI-010 已提交的 `98c567f`；根工程、旧 UI-009 dirty 工作树与 1423 UI-010 preview 不要覆盖。
+- 候选侧栏和搜索使用真实 `CreationSnapshot` 项目；文件夹、拖放、置顶仍是会话 Prototype。完整 verify 370 Node/337 Edge browser、四档响应式与 fresh Tauri 真实项目恢复均通过；独立复核和 PR 待完成。1424 是本候选 production preview，1423 仍是 UI-010。以 [新验证记录](../changes/2026-09-25-sidebar-real-projects/verification.md) 和 Git 当前状态为准，不继承历史“307 浏览器通过”的结论。
 
 ## 2026-09-24 当前 UI 候选恢复入口（TASK-UI-010）
 

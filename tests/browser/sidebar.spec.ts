@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
+import { seedSidebarFixture } from "./sidebar-fixture";
 
 async function openWorkspace(page: Page): Promise<void> {
   await page.goto("/");

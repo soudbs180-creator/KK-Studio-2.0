@@ -28,6 +28,7 @@ export default function ResizeHandle({
   label: string;
 }) {
   const state = useRef<{ startX: number; startWidth: number } | null>(null);
+  const followReachableMax = useRef(false);
   const handle = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(min);
   const [reachableMax, setReachableMax] = useState(max);
@@ -62,6 +63,7 @@ export default function ResizeHandle({
   const onPointerDown = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
       event.preventDefault();
+      followReachableMax.current = false;
       const current =
         event.currentTarget.parentElement?.getBoundingClientRect().width ?? min;
       state.current = { startX: event.clientX, startWidth: current || min };
@@ -91,6 +93,10 @@ export default function ResizeHandle({
   useEffect(() => {
     const onResize = () => {
       setReachableMax(allowedMax());
+      if (followReachableMax.current) {
+        applyWidth(allowedMax());
+        return;
+      }
       const stored = parseFloat(
         document.documentElement.style.getPropertyValue(cssVar),
       );
@@ -138,6 +144,7 @@ export default function ResizeHandle({
           return;
         event.preventDefault();
         event.stopPropagation();
+        followReachableMax.current = event.key === "End" && growDir === "left";
         if (event.key === "Home" && event.shiftKey) applyWidth(defaultWidth);
         else if (event.key === "Home") applyWidth(min);
         else if (event.key === "End") applyWidth(allowedMax());

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import UiIcon from "./UiIcon";
 import type { CreationProject } from "../features/creation/model";
 import WorkflowCard from "./WorkflowCard";
@@ -41,7 +40,6 @@ export default function CatalogPageBody({
   onDeleteWorkflow?: (workflow: WorkflowRecord) => void;
   onRunWorkflow?: (workflow: WorkflowRecord) => void;
 }) {
-  const [folderCreated, setFolderCreated] = useState(false);
   if (view === "projects") {
     if (tab === "共享项目") {
       return (
@@ -67,7 +65,8 @@ export default function CatalogPageBody({
             type="button"
             className="project-library-action"
             aria-label="新建文件夹"
-            onClick={() => setFolderCreated(true)}
+            disabled
+            title="请在侧栏创建会话文件夹；项目库文件夹持久化尚未接入"
           >
             <UiIcon name="folderAdd" size={20} />
             <span>
@@ -89,11 +88,6 @@ export default function CatalogPageBody({
             </span>
           </button>
         </div>
-        {folderCreated && (
-          <p className="project-library-status" role="status">
-            已创建新文件夹，可在项目组中整理项目。
-          </p>
-        )}
         <div className="project-grid">
           {visibleProjects.map((project) => (
             <button

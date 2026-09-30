@@ -71,8 +71,10 @@ export function useDismissible(
         !ref.current?.contains(event.target) &&
         !trigger?.current?.contains(event.target)
       ) {
+        // 仅关闭，不在此处夺回焦点：pointerdown 期间调用 focus() 会吞掉
+        // 点击目标自身的 click 事件（例如点击文件夹行收起菜单时无法折叠）。
+        // Escape 路径仍会把焦点还给触发器。
         dismissRef.current();
-        focusTrigger(entry);
       }
     };
     const escape = (event: KeyboardEvent): void => {

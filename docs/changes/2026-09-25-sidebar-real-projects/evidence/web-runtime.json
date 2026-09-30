@@ -1,0 +1,21 @@
+{
+  "base": "http://127.0.0.1:1424/",
+  "assets": [
+    {
+      "asset": "/assets/index-DRgkYMRT.js",
+      "sha256": "d9ffe653831195282ed09e251ba31f65f6cbab81f7f5fed3db4ce7ec1b206183",
+      "bytes": 831497
+    },
+    {
+      "asset": "/assets/index-CxFneC7m.css",
+      "sha256": "812361afa9943d356df744c94a0ae977cf20e12170de9dfbc34722d250c0e1ab",
+      "bytes": 228724
+    }
+  ],
+  "pageErrors": [],
+  "passed": true,
+  "runtime": {
+    "entry": "src/main.tsx",
+    "mode": "production"
+  }
+}

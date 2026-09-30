@@ -40,6 +40,9 @@ TASK-COMPARE-001 在独立 worktree `codex/TASK-COMPARE-001-canvas-compare` 实�
 ## 2026-09-27 主线及 UI 候选
 
 远端 `main@a89792ad` 已经合入 PR #14 Agent 编排领域层、#15 MCP 50 项写入保护和 #16 Provider Connectivity 配置契约；三者不代表真实生成、第三方配置消费或发布已验收。UI PR #19 的任务工作树已承接该主线，治理/功能登记分别为 72/32 且零违规；当前仍是待最终门禁和独立复审的候选。运行态维持 291px/40px 外壳，未引入的 token 导出 200px/56px 尚待统一。根工程约 75 项未提交 UI 文件、堆叠 PR #20 和 Provider #17/#18 均未因这次同步进入主线。
+## 2026-09-25 真实项目侧栏候选（TASK-PROJECT-SIDEBAR-001）
+
+`feat/TASK-UI-009-ui010-integration` 基于 UI-010 候选承接旧 UI-009 的文件夹交互，并让侧栏与搜索使用 `CreationSnapshot` 的真实项目 ID；空库不再出现固定演示项目。项目创建、打开、改名与确认删除接入现有 App 操作，文件夹/拖放/置顶仍为会话态，刷新后恢复未分组，持久项目 schema 未变。工作树 `D:/kk-studio/.worktrees/TASK-UI-009-integration`；旧 UI-009 和根工作树均未覆盖。完整 verify 通过 370 Node、337 Edge browser，四档视口无溢出；1424 production preview 与隔离数据的 fresh Tauri release 资源哈希一致，原生真实项目创建、改名、刷新和打开通过。独立复核和 PR 待完成，不能把此候选视作主线或已安装桌面版本。见 [整合验证](../changes/2026-09-25-sidebar-real-projects/verification.md)。
 
 ## 2026-09-24 UI 回归候选（TASK-UI-010）
 
