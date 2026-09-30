@@ -6,6 +6,7 @@ import SidebarGroupHeading from "./SidebarGroupHeading";
 import AccountPopup from "./AccountPopup";
 import SidebarIcon from "./SidebarIcon";
 import SidebarNavigation from "./SidebarNavigation";
+import { SidebarResizeHandle } from "./ResizeHandle";
 import BrandLogo from "./BrandLogo";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
 
@@ -289,6 +290,7 @@ export default function Sidebar({
           <SidebarIcon name="settings" />
         </button>
       </div>
+      {!collapsed && !narrow && <SidebarResizeHandle />}
     </aside>
   );
 }

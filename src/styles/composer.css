@@ -549,7 +549,9 @@
 }
 
 .start-composer:has(.start-attachment-row) .start-composer-footer,
-.conversation-panel .chat-composer:has(.start-attachment-row) > .composer-toolbar {
+.conversation-panel
+  .chat-composer:has(.start-attachment-row)
+  > .composer-toolbar {
   margin-top: 7px;
 }
 
@@ -1035,4 +1037,3 @@
     margin-left: 4px;
   }
 }
-

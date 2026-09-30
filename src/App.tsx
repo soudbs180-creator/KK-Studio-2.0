@@ -1869,11 +1869,8 @@ export default function App() {
     const nextProject: CreationProject = {
       ...blank,
       name: "未命名项目",
-        canvas: createProjectCanvas(BASE_CANVAS_ITEMS),
-        items: BASE_CANVAS_ITEMS.map((item) => ({
-          ...item,
-          model: item.kind === "image" ? blank.model : item.model,
-        })),
+      canvas: createProjectCanvas([]),
+      items: [],
       messages: [],
       tasks: [],
       favoriteIds: [],
@@ -1943,12 +1940,22 @@ export default function App() {
       return;
     }
     if (view === "chat") {
-      if (!creationRef.current.projects.some((project) => project.id === activeProjectIdRef.current))
+      if (active === "workspace" && chat && (!sidebar.narrow || mobileChat)) {
+        setChat(false);
+        setMobileChat(false);
+        return;
+      }
+      if (
+        !creationRef.current.projects.some(
+          (project) => project.id === activeProjectIdRef.current,
+        )
+      ) {
         handleNewBlankProject();
-      setActive("workspace");
+      } else {
+        setActive("workspace");
+      }
       setChat(true);
-      if (sidebar.surface === "phone" || sidebar.narrow) setMobileChat(true);
-      else setMobileChat(false);
+      setMobileChat(sidebar.narrow);
       setModal("");
       return;
     }
@@ -2046,12 +2053,7 @@ export default function App() {
       <TopBar
         onOpen={open}
         onToggleSidebar={sidebar.toggle}
-        onToggleChat={() => {
-          if (sidebar.narrow) {
-            setChat(true);
-            setMobileChat((current) => !current);
-          } else setChat((current) => !current);
-        }}
+        onToggleChat={() => open("chat")}
       />
       <div className="app-body">
         {sidebar.narrow && !sidebar.collapsed && (
@@ -2059,7 +2061,10 @@ export default function App() {
         )}
         <Sidebar
           active={
-            active === "workspace" && mobileChat && sidebar.narrow
+            sidebar.surface === "phone" &&
+            active === "workspace" &&
+            mobileChat &&
+            chat
               ? "chat"
               : active
           }
@@ -2430,6 +2435,7 @@ export default function App() {
             <ShortcutsPanel onClose={() => setModal("")} />
           ) : modal === "settings" ? (
             <SettingsPanel
+              key={settingsSection}
               initialSection={settingsSection}
               saveState={saveState}
               revision={creation.revision}

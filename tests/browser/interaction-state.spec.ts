@@ -1,13 +1,7 @@
 import { expect, test } from "@playwright/test";
-import type { Page } from "@playwright/test";
-import { showCanvasNavigation } from "./helpers";
+import { openSeededProject, showCanvasNavigation } from "./helpers";
 
-async function openWorkspace(page: Page): Promise<void> {
-  await page.goto("/");
-  await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: "新建项目", exact: true }).click();
-  await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
-}
+const openWorkspace = openSeededProject;
 
 test("画布背景在点和网格之间切换，缩放到最小时降低点阵密度", async ({
   page,

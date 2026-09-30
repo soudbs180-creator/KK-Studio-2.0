@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { createServer, type ServerResponse } from "node:http";
+import { openSeededProject } from "./helpers";
 const png =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
 async function fixture(nativeImage = false) {
@@ -173,9 +174,7 @@ async function fixture(nativeImage = false) {
   };
 }
 async function project(page: Page) {
-  await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: "新建项目", exact: true }).click();
-  await page.getByRole("region", { name: "无限画布" }).waitFor();
+  await openSeededProject(page);
 }
 
 test("Agent 图片上传发送、离线保留、API 草稿隔离与真实视口多选", async ({
@@ -544,7 +543,7 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     );
     await page.goto("/");
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
-    await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+    await page.getByRole("button", { name: "模型接入", exact: true }).click();
     await page.getByLabel("API Base URL").fill(agent.url + "/v1");
     await page.getByLabel("API Key").fill("fixture-key");
     await page.getByLabel("默认模型").fill("image-fixture");
@@ -623,7 +622,7 @@ test("KK 输入框 → 命名 SSE → MCP → 已配置图片 API，重复工具
       (url) => localStorage.setItem("canvas-agent-url", url),
       agent.url,
     );
-    await page.goto("/");
+    await project(page);
     await page.getByRole("button", { name: "模型", exact: true }).click();
     await page
       .getByRole("menu")
@@ -634,7 +633,6 @@ test("KK 输入框 → 命名 SSE → MCP → 已配置图片 API，重复工具
     await page.getByLabel("默认模型").fill("image-fixture");
     await page.getByRole("button", { name: "保存供应商" }).click();
     await page.getByRole("button", { name: "关闭设置", exact: true }).click();
-    await project(page);
     await page.getByRole("button", { name: "连接 Codex", exact: true }).click();
     await expect(
       page.getByText("Codex 主 Agent · 已连接", { exact: true }),

@@ -37,6 +37,13 @@ TASK-COMPARE-001 源码 `f8d5165` 独立只读复审 PASS，Web preview 完整 `
 ## 2026-09-27 画布图片对比候选待审
 
 TASK-COMPARE-001 在独立 worktree `codex/TASK-COMPARE-001-canvas-compare` 实现 FEAT-036。Web preview 的 1440/1220/390px 操作、完整 `verify`（302 浏览器）以及隔离数据根目录的 Tauri release GUI 已通过；实际 production JS/CSS 同源。独立审查、PR Hosted 门禁、用户产品验收和主线集成仍待完成，主线与正式发布状态不因此改变。根 checkout 未提交 UI 改动保持隔离。证据见[验证记录](../changes/2026-09-27-canvas-image-compare/verification.md)。
+## 2026-09-27 主线及 UI 候选
+
+远端 `main@a89792ad` 已经合入 PR #14 Agent 编排领域层、#15 MCP 50 项写入保护和 #16 Provider Connectivity 配置契约；三者不代表真实生成、第三方配置消费或发布已验收。UI PR #19 的任务工作树已承接该主线，治理/功能登记分别为 72/32 且零违规；当前仍是待最终门禁和独立复审的候选。运行态维持 291px/40px 外壳，未引入的 token 导出 200px/56px 尚待统一。根工程约 75 项未提交 UI 文件、堆叠 PR #20 和 Provider #17/#18 均未因这次同步进入主线。
+
+## 2026-09-24 UI 回归候选（TASK-UI-010）
+
+`fix/TASK-UI-010-ui-regression` 是独立于 dirty 根工程的候选分支；已建立[草稿 PR #19](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/19)，记录见 [验证](../changes/2026-09-24-ui-regression/verification.md)与[架构核对](../changes/2026-09-24-ui-regression/architecture-audit.md)。已承接新 UI 规范并落实 Figma 四节点、六处批注与首页/画布/对话/设置修复；资产管理 A1、提示词库 A2+A4 和目录 A2 几何得到定向回归。无项目时的假卡已移除，真实新项目保持空白。独立 reviewer 对已推送 `3db7b69` 复审确认五项 P2 关闭、无新增 P0/P1/P2，代码审查 PASS；1440/390 共 42 个页面状态重新截图，完整 verify 通过 370 Node、319 browser，Web production preview 与隔离数据的 fresh Tauri release 加载同一 JS/CSS。候选 `tokens.css` 的外壳与颜色值仍与现行 Figma/运行态冲突，在线 Ardot 未回读，不宣称全站 token 迁移完成。原工程/正式入口整合也未完成。侧栏静态演示项目另列 `TASK-PROJECT-SIDEBAR-001`；旧快捷方式和旧 EXE 不代表这批 UI。WorkBuddy、豆包、共享记忆、素材账号和模型调度仍由开放任务跟踪。
 
 ## 2026-09-27 Provider #16 源码复审通过，托管门禁待完成
 

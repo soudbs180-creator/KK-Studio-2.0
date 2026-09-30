@@ -4,6 +4,7 @@ import StartAttachmentList from "./StartAttachmentList";
 import ComposerTextarea from "./ComposerTextarea";
 import useConversationAttachments from "./useConversationAttachments";
 import StartResourcePopover from "./StartResourcePopover";
+import StartModelPicker from "./StartModelPicker";
 import { StartApproval, StartModePicker } from "./StartComposerModes";
 import VoiceInputButton from "./VoiceInputButton";
 import { useComposerMenus } from "./useComposerMenus";
@@ -50,9 +51,6 @@ export default function StartComposer({
     closeMenus,
   } = useComposerMenus(pickerRef);
   const model = draft.model || defaultModel;
-  const modelOptions = [
-    ...new Set([defaultModel.trim(), draft.model.trim()].filter(Boolean)),
-  ];
   function commit(patch: Partial<CreationDraft>): void {
     onDraftChange({ ...draft, ...patch, updatedAt: Date.now() });
   }
@@ -153,54 +151,24 @@ export default function StartComposer({
                 event.currentTarget.value = "";
               }}
             />
-            <div className="start-model-picker">
-              <button
-                type="button"
-                className="start-tool-button"
-                aria-label="模型"
-                aria-haspopup="menu"
-                aria-expanded={modelMenuOpen}
-                title={model}
-                onClick={() => toggleMenu("model")}
-              >
-                <img src="/design/figma/composer-package.svg" alt="" />
-                <span>模型</span>
-              </button>
-              {modelMenuOpen && (
-                <div className="start-model-popover" role="menu">
-                  {modelOptions.length === 0 && (
-                    <div className="start-model-empty" role="menuitem">
-                      尚未配置模型
-                    </div>
-                  )}
-                  {modelOptions.map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      role="menuitemradio"
-                      aria-checked={model === option}
-                      onClick={() => {
-                        commit({ model: option });
-                        closeMenus();
-                      }}
-                    >
-                      {option}
-                      {option === defaultModel ? "（当前配置）" : ""}
-                    </button>
-                  ))}
-                  <button
-                    type="button"
-                    className="start-model-configure"
-                    onClick={() => {
-                      closeMenus();
-                      onOpenModel();
-                    }}
-                  >
-                    配置供应商…
-                  </button>
-                </div>
-              )}
-            </div>
+            <StartModelPicker
+              draft={draft}
+              model={model}
+              defaultModel={defaultModel}
+              open={modelMenuOpen}
+              onToggle={() => toggleMenu("model")}
+              onSelect={(choice) => {
+                commit({
+                  model: choice.model,
+                  providerConnectionId: choice.connectionId,
+                });
+                closeMenus();
+              }}
+              onConfigure={() => {
+                closeMenus();
+                onOpenModel();
+              }}
+            />
             <span
               className="start-composer-divider start-model-divider"
               aria-hidden="true"

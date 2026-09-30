@@ -12,6 +12,10 @@ test("开始创作首页、目录页和项目行操作保持真实状态", async
   await expect(
     page.getByRole("heading", { name: "项目库", exact: true }),
   ).toBeVisible();
+  await expect(page.locator(".project-library-card")).toHaveCount(0);
+  await expect(
+    page.getByText("还没有本地项目", { exact: false }),
+  ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "新建项目", exact: true }),
   ).toBeVisible();
@@ -61,6 +65,12 @@ test("开始创作首页、目录页和项目行操作保持真实状态", async
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
+  await expect(page.locator(".canvas-node")).toHaveCount(0);
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await expect(page.locator(".project-library-card")).toHaveCount(1);
+  await expect(page.locator(".project-library-card")).toContainText(
+    "0 个画布节点",
+  );
 });
 
 test("开始创作的 Skill 选项卡与 Skill 目录页保持职责分离", async ({ page }) => {
@@ -97,21 +107,23 @@ test("开始创作页的插件入口打开设置分类而不是 Skill 页面", a
   await page.goto("/");
   await page
     .getByRole("region", { name: "开始创作" })
-    .getByRole("button", { name: "插件", exact: true })
+    .getByRole("button", { name: "添加素材与生成设置" })
     .click();
   await page
-    .getByRole("menu", { name: "选择插件" })
-    .getByRole("menuitem", {
-      name: "管理画布插件",
-    })
+    .getByRole("dialog", { name: "添加素材与生成设置" })
+    .getByRole("button", { name: "插件（MCP）" })
     .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
-      name: "插件",
+      name: "插件·技能·伙伴",
       exact: true,
     }),
   ).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("tab", { name: /插件/ })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
   await expect(
     page.getByRole("heading", { name: "Skill", exact: true }),
   ).toHaveCount(0);
@@ -136,10 +148,14 @@ test("开始创作页的插件入口打开设置分类而不是 Skill 页面", a
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
-      name: "插件",
+      name: "插件·技能·伙伴",
       exact: true,
     }),
   ).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("tab", { name: /插件/ })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
 });
 
 test("开始创作与工作台的模型入口都定位到模型供应商设置", async ({ page }) => {
@@ -153,7 +169,7 @@ test("开始创作与工作台的模型入口都定位到模型供应商设置",
   await expect(
     page
       .getByRole("navigation", { name: "设置分类" })
-      .getByRole("button", { name: "模型供应商", exact: true }),
+      .getByRole("button", { name: "模型接入", exact: true }),
   ).toHaveAttribute("aria-current", "page");
 
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
@@ -173,7 +189,7 @@ test("开始创作与工作台的模型入口都定位到模型供应商设置",
   await expect(
     page
       .getByRole("navigation", { name: "设置分类" })
-      .getByRole("button", { name: "模型供应商", exact: true }),
+      .getByRole("button", { name: "模型接入", exact: true }),
   ).toHaveAttribute("aria-current", "page");
 });
 

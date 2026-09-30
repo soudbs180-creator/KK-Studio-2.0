@@ -35,7 +35,7 @@ const EXTENSION_TABS: {
 
 /**
  * 设置中心合并页：插件（MCP）· 技能（Skill）· 伙伴（智能体）。
- * 左侧导航只保留一个入口，进入后右侧顶部用分段控件切换三类能力。
+ * Skill/MCP 深链接共享同一组件，页内分段控件支持键盘切换。
  */
 export default function ExtensionsSettings({
   registry,
@@ -55,15 +55,40 @@ export default function ExtensionsSettings({
         role="tablist"
         aria-label="插件、技能与伙伴"
       >
-        {EXTENSION_TABS.map((item) => {
+        {EXTENSION_TABS.map((item, index) => {
           return (
             <button
               key={item.id}
               type="button"
               role="tab"
+              id={`settings-ext-tab-${item.id}`}
+              aria-controls="settings-ext-panel"
               aria-selected={tab === item.id}
+              tabIndex={tab === item.id ? 0 : -1}
               className={`settings-ext-tab${tab === item.id ? " is-active" : ""}`}
               onClick={() => setTab(item.id)}
+              onKeyDown={(event) => {
+                const count = EXTENSION_TABS.length;
+                const next =
+                  event.key === "Home"
+                    ? 0
+                    : event.key === "End"
+                      ? count - 1
+                      : event.key === "ArrowRight"
+                        ? (index + 1) % count
+                        : event.key === "ArrowLeft"
+                          ? (index + count - 1) % count
+                          : -1;
+                if (next < 0) return;
+                event.preventDefault();
+                event.stopPropagation();
+                setTab(EXTENSION_TABS[next].id);
+                const buttons =
+                  event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>(
+                    "[role='tab']",
+                  );
+                buttons?.item(next)?.focus();
+              }}
             >
               <img src={item.icon} alt="" aria-hidden="true" />
               <span>{item.label}</span>
@@ -73,7 +98,11 @@ export default function ExtensionsSettings({
         })}
       </div>
 
-      <div role="tabpanel">
+      <div
+        id="settings-ext-panel"
+        role="tabpanel"
+        aria-labelledby={`settings-ext-tab-${tab}`}
+      >
         {tab === "plugins" && (
           <div className="settings-detail-stack">
             <McpSettings onFeedback={onFeedback} />

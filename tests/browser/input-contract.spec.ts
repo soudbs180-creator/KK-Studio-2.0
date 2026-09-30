@@ -78,7 +78,9 @@ test("phone menus leave all composer actions reachable", async ({ page }) => {
       .evaluateAll((buttons) =>
         buttons
           .filter(
-            (el) => !el.closest('[role="menu"]') && el.getClientRects().length,
+            (el) =>
+              !el.closest('[role="menu"], [role="dialog"]') &&
+              el.getClientRects().length,
           )
           .map((el) => {
             const box = el.getBoundingClientRect();

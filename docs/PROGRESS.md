@@ -45,6 +45,17 @@ TASK-COMPARE-001 的源码 `f8d5165` 已经独立只读上下文复审 PASS，�
 ## 2026-09-27 画布图片对比候选（TASK-COMPARE-001）
 
 独立 worktree `codex/TASK-COMPARE-001-canvas-compare` 已实现图片卡片加入/移除对比、2–4 张并排与两张滑块、同步缩放滚动及错误重试。`npm run verify` 通过（302 条浏览器）；Tauri `client:check`、`client:build` 和隔离数据目录的 release GUI 对比操作均通过。1440/1220/390px Web 与桌面截图、运行元数据见[本轮验证](changes/2026-09-27-canvas-image-compare/verification.md)。独立最终审查、PR Hosted 检查、用户产品验收与主线集成待完成；FEAT-036 保持 PARTIAL。
+## 2026-09-27 UI #19 模型菜单补查
+
+独立只读补查发现首页在没有图片连接时仍显示可选的静态 `kk-image-2`，选择后没有连接 ID，与本轮“只列真实 BYOK 图片模型”规范冲突。已先用浏览器用例复现，再移除未绑定的菜单行；空配置显示配置入口，已保存的两个图片连接仍可键盘选择并保留连接身份。修复后 456 项 Node、320 项 Edge 浏览器及类型、UI、ESLint、治理/功能/Markdown、构建检查通过；最新提交的独立复审、Hosted 检查、fresh Desktop 和用户产品验收仍待完成。主线和正式入口未因此更新。
+
+## 2026-09-27 UI #19 与最新主线同步候选
+
+远端 `main@a89792ad` 已顺序合入 PR #14/#15/#16；#19 的独立工作树以普通 merge 承接该提交。六处冲突均为进度、功能登记与任务账本，按任务 ID 保留双方记录，治理检查为 72 项/0 违规，功能检查为 32 项/0 违规。运行 UI 保持已验证的 291px 侧栏与 40px 顶栏；未接线的 `tokens.css/json` 仍有 200px/56px 冲突，不能把它算作统一 token 已完成。两项浏览器偶发失败经复现定位为侧栏宽度动画中的断言和图片请求到达 Provider 前的取消，测试改为等待对应真实状态，定向重复 32/32 无重试通过。完整门禁、当前 head 的独立复审与 Hosted CI 仍需以最终提交核对；PR #20 及根工程未提交 UI 工作继续独立保留。
+
+## 2026-09-24 现行 UI 与真实操作回归（TASK-UI-010，进行中）
+
+在独立 `fix/TASK-UI-010-ui-regression` worktree 中承接新 `UI_INDEX / UI_RULES / UI_ARCHETYPES / DESIGN_TOKENS`，核对 Figma 四节点和六条浏览器批注，修复首页创作输入、搜索底部选线、持久对话、画布 HUD、设置与窄屏入口。资产管理按 A1 画廊修复 6px 文件名、22px 筛选和旧网格；提示词库按 A2+A4 调整卡片与空态。独立 reviewer 对[草稿 PR #19](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/19) 初审未发现 P0/P1，提出五项 P2；修复提交 `3db7b69` 已推送，复审确认五项均关闭、无新增 P0/P1/P2，代码审查 PASS。1440/390 共 42 个页面状态已重新截图；完整 `npm run verify` 通过 370 Node、319 browser，Web production preview 与隔离数据的 fresh Tauri release 加载同一 JS/CSS，页面错误 0。新建项目与项目库保持真实空态。侧栏静态演示项目另列 `TASK-PROJECT-SIDEBAR-001`；新增 token 导出与已验证 291/40 外壳及颜色仍冲突，在线 Ardot 未回读，用户当前 1421/旧桌面入口整合尚未完成。WorkBuddy/豆包真实接管、共享记忆与模型调度不由 UI 验收升级。证据见 [本轮 verification](changes/2026-09-24-ui-regression/verification.md) 和 [架构核对](changes/2026-09-24-ui-regression/architecture-audit.md)。
 
 ## 2026-09-27 Provider #16 源码独立补审通过
 

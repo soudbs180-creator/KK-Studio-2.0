@@ -68,7 +68,7 @@ for (const theme of ["dark", "light"]) {
       expect(contrast(thumbPaint.bg, switchPaint.bg)).toBeGreaterThanOrEqual(3);
       expect((await paint(select)).height).toBe("32px");
       await dialog
-        .getByRole("button", { name: "模型供应商", exact: true })
+        .getByRole("button", { name: "模型接入", exact: true })
         .click();
       const save = dialog.getByRole("button", {
         name: "保存供应商",
@@ -248,7 +248,7 @@ for (const theme of ["dark", "light"]) {
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     await page
       .getByRole("dialog", { name: "设置" })
-      .getByRole("button", { name: "插件", exact: true })
+      .getByRole("button", { name: "插件·技能·伙伴", exact: true })
       .click();
     const uninstall = page
       .getByRole("button", { name: "卸载", exact: true })

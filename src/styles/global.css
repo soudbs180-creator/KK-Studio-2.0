@@ -361,8 +361,8 @@ button[aria-pressed="true"] {
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    var(--text-accent, #4f8cff) 30%,
-    var(--text-accent, #4f8cff) 70%,
+    var(--text-accent) 30%,
+    var(--text-accent) 70%,
     transparent 100%
   );
   opacity: 0;
@@ -386,15 +386,15 @@ button[aria-pressed="true"] {
   height: 36px;
   display: grid;
   place-items: center;
-  border: 1.5px dashed var(--border-default, #3a3a3a);
+  border: 1.5px dashed var(--border-default);
   border-radius: var(--ui-radius-control);
   background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
 }
 .composer-ref-add:hover {
-  border-color: var(--text-accent, #4f8cff);
-  color: var(--text-accent, #4f8cff);
+  border-color: var(--text-accent);
+  color: var(--text-accent);
 }
 .composer-ref-thumb {
   position: relative;
@@ -415,8 +415,25 @@ button[aria-pressed="true"] {
   width: 14px;
   height: 14px;
   border-radius: 999px;
-  background: #000;
-  color: #fff;
+  background: var(--bg-surface);
+  color: var(--text-primary);
   font-size: 10px;
   line-height: 1;
+}
+
+.conversation-panel > .resize-handle {
+  position: absolute;
+  z-index: 50;
+}
+.resize-handle:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+.resize-handle:focus-visible::after {
+  opacity: 1;
+}
+@media (max-width: 1200px) {
+  .resize-handle {
+    display: none;
+  }
 }

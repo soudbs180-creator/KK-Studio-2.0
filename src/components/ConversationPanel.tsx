@@ -1,4 +1,4 @@
-import ResizeHandle from "./ResizeHandle";
+import { ConversationResizeHandle } from "./ResizeHandle";
 import type { ModelSelection } from "../features/models/modelSelection";
 import { useEffect, useState } from "react";
 import { useConversationOverlay } from "./useConversationOverlay";
@@ -7,16 +7,13 @@ import type {
   CreationDraft,
   CreationProject,
 } from "../features/creation/model";
-import ConversationMessages from "./ConversationMessages";
+import ConversationMessageFeed from "./ConversationMessageFeed";
 import type { SkillRecord } from "../features/skills/skillRegistry";
-import AgentConversationMessages, {
-  type AgentConversationProps,
-} from "./AgentConversationMessages";
+import type { AgentConversationProps } from "./AgentConversationMessages";
 import ConversationChannelSelector from "./ConversationChannelSelector";
 import ConversationTaskApproval from "./ConversationTaskApproval";
 import ConversationHeader from "./ConversationHeader";
 import ConversationComposerRegion from "./ConversationComposerRegion";
-import ConversationStatus from "./ConversationStatus";
 import {
   readAgentModel,
   writeAgentModel,
@@ -64,7 +61,7 @@ export default function ConversationPanel({
   onApplySkill?: (record: SkillRecord) => string;
   agent?: AgentConversationProps;
 }) {
-  const panelRef = useConversationOverlay(overlay, onClose);
+  const panelRef = useConversationOverlay(overlay);
   const [channel, setChannel] = useState(() =>
     safeStorage.getItem("kk-chat-channel") === "direct" ? "direct" : "codex",
   );
@@ -160,13 +157,7 @@ export default function ConversationPanel({
       data-node-id="407:29265"
       data-overlay={overlay}
     >
-      <ResizeHandle
-        cssVar="--conversation-width"
-        min={360}
-        max={760}
-        growDir="left"
-        label="拖拽调整对话面板宽度"
-      />
+      <ConversationResizeHandle />
       <ConversationHeader
         title={
           project?.name && project.name !== "未命名项目"
@@ -189,33 +180,23 @@ export default function ConversationPanel({
           }}
         />
       )}
-      <div className="conversation-messages">
-        {agentActive && agent ? (
-          <AgentConversationMessages
-            agent={agent}
-            onConfigure={() => onOpen("settings/partners")}
-          />
-        ) : (
-          <ConversationMessages
-            messages={visibleMessages}
-            onDelete={deleteMessage}
-            onStatus={setStatus}
-          />
-        )}
-        <ConversationStatus
-          message={
-            status ||
-            (!agentActive && input.trim() ? (directDisabledReason ?? "") : "")
-          }
-        />
-        {!agentActive && directState === "service-unconfigured" && (
-          <div className="chat-agent-controls">
-            <button type="button" onClick={() => onOpen("settings/providers")}>
-              前往模型设置
-            </button>
-          </div>
-        )}
-      </div>
+      <ConversationMessageFeed
+        agent={agent}
+        agentActive={agentActive}
+        messages={visibleMessages}
+        onDelete={deleteMessage}
+        onStatus={setStatus}
+        onConfigure={() => onOpen("settings/partners")}
+        onConfigureDirect={
+          directState === "service-unconfigured"
+            ? () => onOpen("settings/providers")
+            : undefined
+        }
+        status={
+          status ||
+          (!agentActive && input.trim() ? (directDisabledReason ?? "") : "")
+        }
+      />
       <ConversationComposerRegion
         agent={agent}
         draftKey={project?.id ?? "workspace"}

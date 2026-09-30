@@ -1,3 +1,4 @@
+import { isTauri } from "@tauri-apps/api/core";
 import type { ModelProviderProfile } from "../../domain/modelProvider";
 import ProviderApiKeyField from "./ProviderApiKeyField";
 
@@ -41,7 +42,9 @@ export default function ProviderProfileFields({
         onChange={onApiKeyChange}
       />
       <p className="settings-field-help">
-        密钥保存在本机。留空可保留已保存的密钥。
+        {isTauri()
+          ? "密钥保存在系统凭据库；留空可保留已保存的密钥。"
+          : "网页密钥仅保留在当前会话内，不会写入浏览器存储；留空可保留本次会话的密钥。"}
       </p>
       <label className="settings-field">
         <span>模型名称</span>

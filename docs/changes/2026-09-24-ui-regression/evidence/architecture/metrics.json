@@ -1,0 +1,3392 @@
+[
+  {
+    "width": 1440,
+    "name": "home",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "KK Studio"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".start-composer": {
+        "x": 535,
+        "y": 312,
+        "width": 652,
+        "height": 170,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "assets",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "KK Studio",
+      "KK工作流画布"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".start-composer": {
+        "x": 535,
+        "y": 312,
+        "width": 652,
+        "height": 170,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "prompts",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "KK Studio",
+      "提示词库"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".start-composer": {
+        "x": 535,
+        "y": 312,
+        "width": 652,
+        "height": 170,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "projects",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "项目库"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 1060,
+        "y": 211,
+        "width": 320,
+        "height": 32,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "skills",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "Skill",
+      "精选示例",
+      "本地模板与已导入"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 1060,
+        "y": 270,
+        "width": 320,
+        "height": 32,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 351,
+        "y": 384,
+        "width": 245,
+        "height": 278,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "comfyui",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 1060,
+        "y": 237,
+        "width": 320,
+        "height": 32,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 351,
+        "y": 334,
+        "width": 245,
+        "height": 264,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "settings-general",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "通用"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 1060,
+        "y": 237,
+        "width": 320,
+        "height": 32,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 351,
+        "y": 334,
+        "width": 245,
+        "height": 264,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 260,
+        "y": 100,
+        "width": 920,
+        "height": 700,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 297,
+        "y": 179,
+        "width": 263,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 624,
+        "y": 138,
+        "width": 513,
+        "height": 623,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "settings-account",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "账号管理"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 1060,
+        "y": 237,
+        "width": 320,
+        "height": 32,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 351,
+        "y": 334,
+        "width": 245,
+        "height": 264,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 260,
+        "y": 100,
+        "width": 920,
+        "height": 700,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 297,
+        "y": 179,
+        "width": 263,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 624,
+        "y": 138,
+        "width": 513,
+        "height": 623,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "settings-storage",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "储存"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 1060,
+        "y": 237,
+        "width": 320,
+        "height": 32,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 351,
+        "y": 334,
+        "width": 245,
+        "height": 264,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 260,
+        "y": 100,
+        "width": 920,
+        "height": 700,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 297,
+        "y": 179,
+        "width": 263,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 624,
+        "y": 138,
+        "width": 513,
+        "height": 623,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "settings-network",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "网络"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 1060,
+        "y": 237,
+        "width": 320,
+        "height": 32,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 351,
+        "y": 334,
+        "width": 245,
+        "height": 264,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 260,
+        "y": 100,
+        "width": 920,
+        "height": 700,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 297,
+        "y": 179,
+        "width": 263,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 624,
+        "y": 138,
+        "width": 513,
+        "height": 623,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "settings-memory",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "记忆"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 1060,
+        "y": 237,
+        "width": 320,
+        "height": 32,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 351,
+        "y": 334,
+        "width": 245,
+        "height": 264,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 260,
+        "y": 100,
+        "width": 920,
+        "height": 700,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 297,
+        "y": 179,
+        "width": 263,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 624,
+        "y": 138,
+        "width": 513,
+        "height": 623,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "settings-models",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "模型接入"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 1060,
+        "y": 237,
+        "width": 320,
+        "height": 32,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 351,
+        "y": 334,
+        "width": 245,
+        "height": 264,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 260,
+        "y": 100,
+        "width": 920,
+        "height": 700,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 297,
+        "y": 179,
+        "width": 263,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 624,
+        "y": 138,
+        "width": 513,
+        "height": 623,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "settings-extensions",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "插件·技能·伙伴"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 1060,
+        "y": 237,
+        "width": 320,
+        "height": 32,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 351,
+        "y": 334,
+        "width": 245,
+        "height": 264,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 260,
+        "y": 100,
+        "width": 920,
+        "height": 700,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 297,
+        "y": 179,
+        "width": 263,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 624,
+        "y": 138,
+        "width": 513,
+        "height": 623,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "settings-comfyui",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "Comfy UI"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 1060,
+        "y": 237,
+        "width": 320,
+        "height": 32,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 351,
+        "y": 334,
+        "width": 245,
+        "height": 264,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 260,
+        "y": 100,
+        "width": 920,
+        "height": 700,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 297,
+        "y": 179,
+        "width": 263,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 624,
+        "y": 138,
+        "width": 513,
+        "height": 623,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "settings-advanced",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "高级"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 1060,
+        "y": 237,
+        "width": 320,
+        "height": 32,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 351,
+        "y": 334,
+        "width": 245,
+        "height": 264,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 260,
+        "y": 100,
+        "width": 920,
+        "height": 700,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 297,
+        "y": 179,
+        "width": 263,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 624,
+        "y": 138,
+        "width": 513,
+        "height": 623,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "settings-updates",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "软件更新"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 1060,
+        "y": 237,
+        "width": 320,
+        "height": 32,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 351,
+        "y": 334,
+        "width": 245,
+        "height": 264,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 260,
+        "y": 100,
+        "width": 920,
+        "height": 700,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 297,
+        "y": 179,
+        "width": 263,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 624,
+        "y": 138,
+        "width": 513,
+        "height": 623,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "canvas",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".canvas-toolbar": {
+        "x": 479,
+        "y": 818,
+        "width": 294,
+        "height": 50,
+        "radius": "25px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".canvas-top-right": {
+        "x": 658,
+        "y": 72,
+        "width": 281,
+        "height": 31,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".conversation-panel": {
+        "x": 950,
+        "y": 61,
+        "width": 470,
+        "height": 818,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "tasks",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".canvas-toolbar": {
+        "x": 479,
+        "y": 818,
+        "width": 294,
+        "height": 50,
+        "radius": "25px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".canvas-top-right": {
+        "x": 658,
+        "y": 72,
+        "width": 281,
+        "height": 31,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".conversation-panel": {
+        "x": 950,
+        "y": 61,
+        "width": 470,
+        "height": 818,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "task-workbench",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "任务工作台"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".canvas-toolbar": {
+        "x": 479,
+        "y": 818,
+        "width": 294,
+        "height": 50,
+        "radius": "25px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".canvas-top-right": {
+        "x": 658,
+        "y": 72,
+        "width": 281,
+        "height": 31,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".conversation-panel": {
+        "x": 950,
+        "y": 61,
+        "width": 470,
+        "height": 818,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "canvas-chat",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [],
+    "classNames": "workspace chat-mobile",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".canvas-toolbar": {
+        "x": 479,
+        "y": 818,
+        "width": 294,
+        "height": 50,
+        "radius": "25px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".canvas-top-right": {
+        "x": 658,
+        "y": 72,
+        "width": 281,
+        "height": 31,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".conversation-panel": {
+        "x": 950,
+        "y": 61,
+        "width": 470,
+        "height": 818,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "name": "search",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "documentOverflow": 0,
+    "headings": [],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 40,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 40,
+        "width": 291,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 291,
+        "y": 40,
+        "width": 1149,
+        "height": 860,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".canvas-toolbar": {
+        "x": 479,
+        "y": 818,
+        "width": 294,
+        "height": 50,
+        "radius": "25px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".canvas-top-right": {
+        "x": 1082,
+        "y": 72,
+        "width": 281,
+        "height": 31,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-panel": {
+        "x": 270,
+        "y": 102,
+        "width": 900,
+        "height": 696,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-tab-indicator": {
+        "x": 314,
+        "y": 280,
+        "width": 120,
+        "height": 3,
+        "radius": "3px",
+        "font": "13px",
+        "background": "rgb(178, 173, 255)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "home",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "KK Studio"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".start-composer": {
+        "x": 25,
+        "y": 229,
+        "width": 306,
+        "height": 202,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "assets",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "KK Studio",
+      "KK工作流画布"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".start-composer": {
+        "x": 25,
+        "y": 229,
+        "width": 306,
+        "height": 202,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "prompts",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "KK Studio",
+      "提示词库"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".start-composer": {
+        "x": 25,
+        "y": 229,
+        "width": 306,
+        "height": 202,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "projects",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "项目库"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 16,
+        "y": 319,
+        "width": 358,
+        "height": 40,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "skills",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "Skill",
+      "精选示例",
+      "本地模板与已导入"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 16,
+        "y": 471,
+        "width": 358,
+        "height": 40,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 16,
+        "y": 592,
+        "width": 358,
+        "height": 344,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "comfyui",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 16,
+        "y": 346,
+        "width": 358,
+        "height": 40,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 16,
+        "y": 450,
+        "width": 358,
+        "height": 324,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "settings-general",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "通用"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 16,
+        "y": 346,
+        "width": 358,
+        "height": 40,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 16,
+        "y": 450,
+        "width": 358,
+        "height": 324,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 8,
+        "y": 42,
+        "width": 374,
+        "height": 760,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 21,
+        "y": 108,
+        "width": 313,
+        "height": 52,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 29,
+        "y": 183,
+        "width": 332,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "settings-account",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "账号管理"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 16,
+        "y": 346,
+        "width": 358,
+        "height": 40,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 16,
+        "y": 450,
+        "width": 358,
+        "height": 324,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 8,
+        "y": 42,
+        "width": 374,
+        "height": 760,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 21,
+        "y": 108,
+        "width": 313,
+        "height": 52,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 29,
+        "y": 183,
+        "width": 332,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "settings-storage",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "储存"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 16,
+        "y": 346,
+        "width": 358,
+        "height": 40,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 16,
+        "y": 450,
+        "width": 358,
+        "height": 324,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 8,
+        "y": 42,
+        "width": 374,
+        "height": 760,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 21,
+        "y": 108,
+        "width": 313,
+        "height": 52,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 29,
+        "y": 183,
+        "width": 332,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "settings-network",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "网络"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 16,
+        "y": 346,
+        "width": 358,
+        "height": 40,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 16,
+        "y": 450,
+        "width": 358,
+        "height": 324,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 8,
+        "y": 42,
+        "width": 374,
+        "height": 760,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 21,
+        "y": 108,
+        "width": 313,
+        "height": 52,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 29,
+        "y": 183,
+        "width": 332,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "settings-memory",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "记忆"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 16,
+        "y": 346,
+        "width": 358,
+        "height": 40,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 16,
+        "y": 450,
+        "width": 358,
+        "height": 324,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 8,
+        "y": 42,
+        "width": 374,
+        "height": 760,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 21,
+        "y": 108,
+        "width": 313,
+        "height": 52,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 29,
+        "y": 183,
+        "width": 332,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "settings-models",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "模型接入"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 16,
+        "y": 346,
+        "width": 358,
+        "height": 40,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 16,
+        "y": 450,
+        "width": 358,
+        "height": 324,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 8,
+        "y": 42,
+        "width": 374,
+        "height": 760,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 21,
+        "y": 108,
+        "width": 313,
+        "height": 52,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 29,
+        "y": 183,
+        "width": 332,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "settings-extensions",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "插件·技能·伙伴"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 16,
+        "y": 346,
+        "width": 358,
+        "height": 40,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 16,
+        "y": 450,
+        "width": 358,
+        "height": 324,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 8,
+        "y": 42,
+        "width": 374,
+        "height": 760,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 21,
+        "y": 108,
+        "width": 313,
+        "height": 52,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 29,
+        "y": 183,
+        "width": 332,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "settings-comfyui",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "Comfy UI"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 16,
+        "y": 346,
+        "width": 358,
+        "height": 40,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 16,
+        "y": 450,
+        "width": 358,
+        "height": 324,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 8,
+        "y": 42,
+        "width": 374,
+        "height": 760,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 21,
+        "y": 108,
+        "width": 313,
+        "height": 52,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 29,
+        "y": 183,
+        "width": 332,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "settings-advanced",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "高级"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 16,
+        "y": 346,
+        "width": 358,
+        "height": 40,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 16,
+        "y": 450,
+        "width": 358,
+        "height": 324,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 8,
+        "y": 42,
+        "width": 374,
+        "height": 760,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 21,
+        "y": 108,
+        "width": 313,
+        "height": 52,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 29,
+        "y": 183,
+        "width": 332,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "settings-updates",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "ComfyUI 工作流",
+      "精选工作流",
+      "设置",
+      "软件更新"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-page": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(10, 10, 10)"
+      },
+      ".catalog-page-search": {
+        "x": 16,
+        "y": 346,
+        "width": 358,
+        "height": 40,
+        "radius": "10px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-card": {
+        "x": 16,
+        "y": 450,
+        "width": 358,
+        "height": 324,
+        "radius": "12px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".settings-panel": {
+        "x": 8,
+        "y": 42,
+        "width": 374,
+        "height": 760,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".settings-nav": {
+        "x": 21,
+        "y": 108,
+        "width": 313,
+        "height": 52,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".settings-content": {
+        "x": 29,
+        "y": 183,
+        "width": 332,
+        "height": 598,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "canvas",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".canvas-toolbar": {
+        "x": 54,
+        "y": 700,
+        "width": 282,
+        "height": 56,
+        "radius": "25px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".canvas-top-right": {
+        "x": 108,
+        "y": 120,
+        "width": 262,
+        "height": 44,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "tasks",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".canvas-toolbar": {
+        "x": 54,
+        "y": 700,
+        "width": 282,
+        "height": 56,
+        "radius": "25px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".canvas-top-right": {
+        "x": 108,
+        "y": 120,
+        "width": 262,
+        "height": 44,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "task-workbench",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [
+      "任务工作台"
+    ],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".canvas-toolbar": {
+        "x": 54,
+        "y": 700,
+        "width": 282,
+        "height": 56,
+        "radius": "25px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".canvas-top-right": {
+        "x": 108,
+        "y": 120,
+        "width": 262,
+        "height": 44,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "canvas-chat",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [],
+    "classNames": "workspace chat-mobile",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".canvas-toolbar": {
+        "x": 54,
+        "y": 700,
+        "width": 282,
+        "height": 56,
+        "radius": "25px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".conversation-panel": {
+        "x": 9,
+        "y": 57,
+        "width": 372,
+        "height": 714,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "name": "search",
+    "title": "KK Studio 2.0",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "documentOverflow": 0,
+    "headings": [],
+    "classNames": "workspace ",
+    "geometry": {
+      ".topbar": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 56,
+        "radius": "0px",
+        "font": "12px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".sidebar": {
+        "x": 0,
+        "y": 780,
+        "width": 390,
+        "height": 64,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgb(22, 22, 22)"
+      },
+      ".workspace": {
+        "x": 0,
+        "y": 56,
+        "width": 390,
+        "height": 724,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".canvas-toolbar": {
+        "x": 54,
+        "y": 700,
+        "width": 282,
+        "height": 56,
+        "radius": "25px",
+        "font": "13px",
+        "background": "rgb(26, 26, 26)"
+      },
+      ".canvas-top-right": {
+        "x": 108,
+        "y": 120,
+        "width": 262,
+        "height": 44,
+        "radius": "0px",
+        "font": "13px",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      ".catalog-panel": {
+        "x": 12,
+        "y": 74,
+        "width": 366,
+        "height": 696,
+        "radius": "20px",
+        "font": "13px",
+        "background": "rgb(31, 31, 31)"
+      },
+      ".catalog-tab-indicator": {
+        "x": 29,
+        "y": 228,
+        "width": 80,
+        "height": 3,
+        "radius": "3px",
+        "font": "13px",
+        "background": "rgb(178, 173, 255)"
+      }
+    }
+  }
+]

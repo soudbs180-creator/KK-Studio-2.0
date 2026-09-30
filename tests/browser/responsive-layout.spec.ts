@@ -138,6 +138,8 @@ for (const [width, height] of [
         "",
       );
       await page.keyboard.press("Escape");
+      await expect(page.locator(".conversation-panel")).toBeVisible();
+      await page.getByRole("button", { name: "收起对话", exact: true }).click();
       await expect(page.locator(".conversation-panel")).toBeHidden();
       await expect(
         page.getByRole("button", { name: "打开对话", exact: true }),
@@ -264,6 +266,8 @@ for (const [width, height] of [
     expect((await page.locator(".topbar").boundingBox())!.y).toBe(0);
     await page.screenshot({ path: `${evidence}/${width}x${height}-chat.png` });
     await page.keyboard.press("Escape");
+    await expect(panel).toBeVisible();
+    await panel.getByRole("button", { name: "收起对话" }).click();
     await expect(panel).toBeHidden();
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     const dialog = page.getByRole("dialog", { name: "设置", exact: true });
@@ -328,6 +332,8 @@ test("resizing conversation keeps its visible editor focused and hands hidden fo
   await expect(model).toBeFocused();
   await expect(page.locator(".conversation-panel")).toBeVisible();
   await page.keyboard.press("Escape");
+  await expect(page.locator(".conversation-panel")).toBeVisible();
+  await page.getByRole("button", { name: "收起对话" }).click();
   await expect(page.locator(".conversation-panel")).toBeHidden();
   await expect(opener).toBeFocused();
   // A desktop-only panel that becomes hidden must not keep an invisible menu.
@@ -343,7 +349,7 @@ test("resizing conversation keeps its visible editor focused and hands hidden fo
   await expect(opener).toBeFocused();
 });
 
-test("rapid Escape after a breakpoint closes each composer menu before its conversation", async ({
+test("rapid Escape after a breakpoint closes menus while conversation remains open", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -362,6 +368,8 @@ test("rapid Escape after a breakpoint closes each composer menu before its conve
     await page.keyboard.press("Escape");
     await expect(menu).toHaveAttribute("aria-expanded", "false");
     await page.keyboard.press("Escape");
+    await expect(panel).toBeVisible();
+    await panel.getByRole("button", { name: "收起对话" }).click();
     await expect(panel).toBeHidden();
     await expect(opener).toBeFocused();
   }

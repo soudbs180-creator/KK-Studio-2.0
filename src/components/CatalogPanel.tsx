@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import {
   CANVAS_KIND_LABELS,
@@ -40,6 +40,26 @@ export default function CatalogPanel({
   const [type, setType] = useState("all");
   const input = useRef<HTMLInputElement>(null);
   const results = useRef<HTMLDivElement>(null);
+  const tabs = useRef<HTMLDivElement>(null);
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+  useLayoutEffect(() => {
+    const list = tabs.current;
+    const active = list?.querySelector<HTMLButtonElement>(
+      '[role="tab"][aria-selected="true"]',
+    );
+    if (!list || !active) return;
+    const place = () =>
+      setIndicator({ left: active.offsetLeft, width: active.offsetWidth });
+    place();
+    active.scrollIntoView({ block: "nearest", inline: "nearest" });
+    const observer = new ResizeObserver(place);
+    observer.observe(list);
+    for (const button of list.querySelectorAll<HTMLButtonElement>(
+      '[role="tab"]',
+    ))
+      observer.observe(button);
+    return () => observer.disconnect();
+  }, [tab]);
   const needle = query.trim().toLocaleLowerCase();
   const filtered = items.filter(
     (item) =>
@@ -97,7 +117,12 @@ export default function CatalogPanel({
           </button>
         )}
       </label>
-      <div className="catalog-tabs" role="tablist" aria-label="搜索分类">
+      <div
+        ref={tabs}
+        className="catalog-tabs"
+        role="tablist"
+        aria-label="搜索分类"
+      >
         {TABS.map((name, index) => (
           <button
             key={name}
@@ -128,6 +153,11 @@ export default function CatalogPanel({
             {name}
           </button>
         ))}
+        <span
+          className="catalog-tab-indicator"
+          style={{ left: indicator.left, width: indicator.width }}
+          aria-hidden="true"
+        />
       </div>
       <div
         ref={results}

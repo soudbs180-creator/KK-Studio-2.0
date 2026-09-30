@@ -12,6 +12,18 @@
   z-index: 80;
   text-align: left;
 }
+.kk-model-menu-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
+  margin-bottom: 8px;
+}
+.kk-model-menu-top > strong {
+  flex: 0 0 auto;
+  font-size: var(--ui-font-body);
+  font-weight: 500;
+}
 .kk-model-menu-head {
   display: flex;
   align-items: center;
@@ -19,10 +31,12 @@
   padding-bottom: 6px;
 }
 .kk-model-menu .kk-model-search {
-  width: 100%;
+  width: 0;
   min-width: 0;
-  margin-bottom: 8px;
-  padding: 8px;
+  height: 24px;
+  flex: 1;
+  margin: 0;
+  padding: 4px 8px;
   border: 1px solid var(--border-default);
   border-radius: 6px;
   background: var(--bg-surface);
@@ -116,6 +130,23 @@
   border-top: 1px solid var(--border-default);
   margin-top: 6px;
   border-radius: 0;
+}
+.creation-composer .kk-model-menu {
+  display: flex;
+  flex-direction: column;
+  width: 227px;
+  height: 318px;
+  max-height: min(318px, calc(100dvh - 24px));
+  border-radius: 10px;
+  background: var(--bg-card);
+}
+.creation-composer .kk-model-menu-list {
+  min-height: 0;
+  max-height: none;
+  flex: 1;
+}
+.creation-composer .kk-model-menu-row {
+  min-height: 40px;
 }
 .chat-agent-usage {
   border: 1px solid var(--border-default);

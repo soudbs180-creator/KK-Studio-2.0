@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { openSeededProject } from "./helpers";
 const pixel =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
 test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", async ({
@@ -32,9 +33,9 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
       return route.fulfill({ json: { data: [{ b64_json: pixel }] } });
     },
   );
-  await page.goto("/");
+  await openSeededProject(page);
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
   await page.getByLabel("供应商名称", { exact: true }).fill("星河 API");
   await page.getByLabel("API Base URL").fill("https://variants.example/v1");
   await page.getByLabel("API Key").fill("fixture-key");
@@ -45,8 +46,6 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
     "aurora-1-4k-high",
   );
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
-  await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page.getByRole("button", { name: "新建项目", exact: true }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型" });
   const search = menu.getByRole("searchbox", { name: "搜索模型、厂商或参数" });
@@ -218,7 +217,7 @@ test("分级菜单保留页面、返回、全部和置顶；同名模型使用�
   await expect(menu).toBeHidden();
   await expect(trigger).toBeFocused();
   await trigger.click();
-  await expect(menu.locator("strong")).toHaveText("B");
+  await expect(menu.locator(".kk-model-menu-head strong")).toHaveText("B");
   await expect(
     menu.getByRole("menuitemradio", { name: /brand-new-model/ }),
   ).toBeDisabled();
@@ -229,7 +228,9 @@ test("分级菜单保留页面、返回、全部和置顶；同名模型使用�
     menu.getByRole("button", { name: "取消置顶 image-same", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
   await menu.getByRole("button", { name: "返回上一级" }).click();
-  await expect(menu.locator("strong")).toHaveText("API 供应商");
+  await expect(menu.locator(".kk-model-menu-head strong")).toHaveText(
+    "API 供应商",
+  );
   await menu.getByRole("button", { name: "切换全部模型" }).click();
   await expect(
     menu.getByRole("menuitemradio", { name: /image-same/ }),
@@ -248,8 +249,10 @@ test("分级菜单保留页面、返回、全部和置顶；同名模型使用�
     page.locator('.demo-result-node[data-source="provider"]'),
   ).toHaveCount(1);
   expect(sent).toEqual(["https://b.example/v1/images/generations"]);
+  await page.getByRole("button", { name: "添加资源", exact: true }).click();
+  await page.getByRole("menuitem", { name: "图片", exact: true }).click();
   await page
-    .getByRole("group", { name: /^图片创建卡片，/ })
+    .locator("[data-testid^='canvas-node-added-image-']")
     .click({ position: { x: 250, y: 180 } });
   await page.getByTitle("使用当前模型声明支持的尺寸").click();
   const parameters = page.getByLabel("图片参数选项");

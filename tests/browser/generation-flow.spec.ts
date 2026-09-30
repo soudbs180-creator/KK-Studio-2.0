@@ -35,7 +35,7 @@ test("图片上传预览和重绘未配置时保留草稿并打开供应商设�
   await page.getByRole("button", { name: "开始重绘", exact: true }).click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "模型供应商", exact: true }),
+    page.getByRole("button", { name: "模型接入", exact: true }),
   ).toBeVisible();
   await expect(page.getByLabel("重绘指令")).toHaveValue(redrawPrompt);
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();

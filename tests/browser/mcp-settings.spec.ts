@@ -79,7 +79,9 @@ test("MCP 设置保存 endpoint，完成真实握手并展示 tools/list 返回�
 
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
-  await dialog.getByRole("button", { name: "MCP", exact: true }).click();
+  await dialog
+    .getByRole("button", { name: "插件·技能·伙伴", exact: true })
+    .click();
   await dialog.getByLabel("MCP服务器名称").fill("Browser fixture");
   await dialog.getByLabel("MCP地址").fill("https://mcp.example.test/mcp");
   await dialog.getByRole("button", { name: "保存服务器" }).click();
@@ -118,7 +120,9 @@ test("MCP 设置拒绝不安全的远程 HTTP endpoint", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
-  await dialog.getByRole("button", { name: "MCP", exact: true }).click();
+  await dialog
+    .getByRole("button", { name: "插件·技能·伙伴", exact: true })
+    .click();
   await dialog.getByLabel("MCP服务器名称").fill("Unsafe");
   await dialog.getByLabel("MCP地址").fill("http://remote.example.test/mcp");
   await dialog.getByRole("button", { name: "保存服务器" }).click();
