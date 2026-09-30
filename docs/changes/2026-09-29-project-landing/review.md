@@ -30,6 +30,13 @@
 - ledger 的两个 DONE 只表示已验证的本地候选范围；全量结果为根 623/631（8 原平台 skip）、Agent 169/171（2 原平台 skip）、browser 377/377，最新实际 Desktop 及 compare/plugin/version 通过。Installer/Mobile/真实外部服务仍保留开放任务。
 - 此次文档提交不修改产品、测试、CI 或远端规则；最终新 HEAD 审查、托管 verify/delivery、实际 merged/main 和分享包启动身份记录在集成 PR 与交付收据中，不能把候选检查当成主线推广完成。
 
+## 当前托管门禁返修（2026-09-30）
+
+- 5818418 的独立文档补审 PASS，R1/R2/R3 全部关闭；报告完整附于集成 PR #31 的描述，保留其原 SHA。
+- 初次 Hosted verify 在 Agent 阶段有两项 CodeBuddy 路径预期失败（167 PASS / 2 FAIL / 2 原平台 skip），后续 browser/Rust/client 未运行；delivery 和 deploy-linux 通过。不能用本地 PASS 代替此次失败。
+- CI 的 TEMP 使用 Windows RUNNER~1 短路径；实现按既有本机路径安全规则 realpath 后返回 runneradmin 实际路径，测试却期待原别名。工程外独立 TEMP junction 重现同两项失败（6/8），改为比较真实文件的 canonical path 后 8/8，完整 Agent 169/171 通过。
+- 本次仅调整两个测试的预期和文档；真实代码的 realpath/本机绝对路径/UNC/目标文件名检查、HTTP token/取消/超时/隔离断言、CI 均保留。证据与原日志 SHA 见 [验证补录](verification.md#托管-windows-路径预期返修)。新 HEAD 必须补审与重新 Hosted 验证。
+
 ## 托管规则与用户授权
 
 - 2026-09-30 实际回读 main 规则：必须 PR、严格 verify/delivery、评论解决；required approvals=0，无 bypass，禁止删除与非快进。独立 AI review 不能称作第二个人类审批，作者不会自行 approve。

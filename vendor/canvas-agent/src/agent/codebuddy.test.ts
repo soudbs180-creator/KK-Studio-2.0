@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { access, mkdtemp, realpath, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -16,7 +16,11 @@ async function fakeCli(t: test.TestContext, source: string) {
 
 test("only an existing absolute CodeBuddy script can be selected", async (t) => {
   const cliPath = await fakeCli(t, "process.stdout.write('{}');");
-  assert.equal(await validateCodeBuddyCliPath(cliPath), cliPath);
+  // Windows TEMP may use an 8.3 alias; selection resolves to the real local file.
+  assert.equal(
+    await validateCodeBuddyCliPath(cliPath),
+    await realpath(cliPath),
+  );
   await assert.rejects(
     () => validateCodeBuddyCliPath("relative/codebuddy.js"),
     /绝对路径/,

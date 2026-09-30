@@ -1,0 +1,54 @@
+2026-09-30T08:23:50.9714860Z ℹ tests 171
+2026-09-30T08:23:50.9715191Z ℹ suites 0
+2026-09-30T08:23:50.9715523Z ℹ pass 167
+2026-09-30T08:23:50.9715827Z ℹ fail 2
+2026-09-30T08:23:50.9716147Z ℹ cancelled 0
+2026-09-30T08:23:50.9716475Z ℹ skipped 2
+2026-09-30T08:23:50.9716797Z ℹ todo 0
+2026-09-30T08:23:50.9717170Z ℹ duration_ms 5382.9959
+2026-09-30T08:23:50.9735915Z
+2026-09-30T08:23:50.9736228Z ✖ failing tests:
+2026-09-30T08:23:50.9736454Z
+2026-09-30T08:23:50.9736739Z test at src\agent\codebuddy.test.ts:17:1
+2026-09-30T08:23:50.9737789Z ✖ only an existing absolute CodeBuddy script can be selected (33.3446ms)
+2026-09-30T08:23:50.9738376Z   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+2026-09-30T08:23:50.9738765Z   + actual - expected
+2026-09-30T08:23:50.9738979Z
+2026-09-30T08:23:50.9739370Z   + 'C:\\Users\\runneradmin\\AppData\\Local\\Temp\\kk-codebuddy-test-4kYkJt\\codebuddy.js'
+2026-09-30T08:23:50.9740020Z   - 'C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-codebuddy-test-4kYkJt\\codebuddy.js'
+2026-09-30T08:23:50.9740421Z
+2026-09-30T08:23:50.9740934Z       at TestContext.<anonymous> (D:\a\KK-Studio-2.0\KK-Studio-2.0\vendor\canvas-agent\src\agent\codebuddy.test.ts:19:10)
+2026-09-30T08:23:50.9741571Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-09-30T08:23:50.9742077Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+2026-09-30T08:23:50.9742501Z     generatedMessage: true,
+2026-09-30T08:23:50.9742732Z     code: 'ERR_ASSERTION',
+2026-09-30T08:23:50.9743191Z     actual: 'C:\\Users\\runneradmin\\AppData\\Local\\Temp\\kk-codebuddy-test-4kYkJt\\codebuddy.js',
+2026-09-30T08:23:50.9743879Z     expected: 'C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-codebuddy-test-4kYkJt\\codebuddy.js',
+2026-09-30T08:23:50.9744334Z     operator: 'strictEqual',
+2026-09-30T08:23:50.9744565Z     diff: 'simple'
+2026-09-30T08:23:50.9744750Z   }
+2026-09-30T08:23:50.9745094Z
+2026-09-30T08:23:50.9745301Z test at src\server\codebuddy-http.test.ts:8:1
+2026-09-30T08:23:50.9748741Z ✖ CodeBuddy config and probe require local token and distinguish saved from usable (1009.2501ms)
+2026-09-30T08:23:50.9749955Z   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+2026-09-30T08:23:50.9750694Z   + actual - expected
+2026-09-30T08:23:50.9751049Z
+2026-09-30T08:23:50.9751337Z     {
+2026-09-30T08:23:50.9752085Z   +   cliPath: 'C:\\Users\\runneradmin\\AppData\\Local\\Temp\\kk-codebuddy-http-M4VMhO\\codebuddy.js',
+2026-09-30T08:23:50.9753357Z   -   cliPath: 'C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-codebuddy-http-M4VMhO\\codebuddy.js',
+2026-09-30T08:23:50.9755922Z       configured: true,
+2026-09-30T08:23:50.9756281Z       ok: true
+2026-09-30T08:23:50.9756572Z     }
+2026-09-30T08:23:50.9756829Z
+2026-09-30T08:23:50.9757708Z       at TestContext.<anonymous> (D:\a\KK-Studio-2.0\KK-Studio-2.0\vendor\canvas-agent\src\server\codebuddy-http.test.ts:64:10)
+2026-09-30T08:23:50.9759049Z       at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-09-30T08:23:50.9760219Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-09-30T08:23:50.9761001Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+2026-09-30T08:23:50.9761674Z     generatedMessage: true,
+2026-09-30T08:23:50.9762034Z     code: 'ERR_ASSERTION',
+2026-09-30T08:23:50.9763006Z     actual: { ok: true, configured: true, cliPath: 'C:\\Users\\runneradmin\\AppData\\Local\\Temp\\kk-codebuddy-http-M4VMhO\\codebuddy.js' },
+2026-09-30T08:23:50.9764588Z     expected: { ok: true, configured: true, cliPath: 'C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\kk-codebuddy-http-M4VMhO\\codebuddy.js' },
+2026-09-30T08:23:50.9765574Z     operator: 'deepStrictEqual',
+2026-09-30T08:23:50.9765957Z     diff: 'simple'
+2026-09-30T08:23:50.9766262Z   }
+2026-09-30T08:23:51.0575259Z ##[error]Process completed with exit code 1.

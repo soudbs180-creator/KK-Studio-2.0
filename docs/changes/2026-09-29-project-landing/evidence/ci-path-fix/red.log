@@ -1,0 +1,67 @@
+✖ only an existing absolute CodeBuddy script can be selected (6.48ms)
+✔ single-shot call disables tools, omits KK secrets and returns JSON result (60.6552ms)
+✔ non-JSON, failed and empty CLI results fail closed (137.7519ms)
+✔ installed CLI's JSON event array uses only its final result (97.8713ms)
+✔ hung CLI is terminated and a second call cannot overlap (168.607ms)
+✔ an aborted consultation kills the CLI and releases the slot (122.4007ms)
+✔ oversized output and prompt are rejected (44.8338ms)
+Infinite Canvas Agent
+Local URL: http://127.0.0.1:61916
+Codex MCP is not installed by this command.
+Optional MCP add: codex mcp add infinite-canvas -- npx -y @basketikun/canvas-agent@latest mcp
+Remove manually added MCP: codex mcp remove infinite-canvas
+2026-09-30 16:30:06 INFO Canvas Agent started url='http://127.0.0.1:61916' workspace='D:\\kk-studio\\.tmp\\codebuddy-alias-temp-89fdcec5c4b1472e922889e1eb658b4c\\kk-codebuddy-http-o0awf0\\codex-workspaces\\site' debugLog=''
+✖ CodeBuddy config and probe require local token and distinguish saved from usable (333.8606ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 6
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 798.9543
+
+✖ failing tests:
+
+test at src\agent\codebuddy.test.ts:17:1
+✖ only an existing absolute CodeBuddy script can be selected (6.48ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'D:\\kk-studio\\.tmp\\codebuddy-real-temp-89fdcec5c4b1472e922889e1eb658b4c\\kk-codebuddy-test-YQ6jBU\\codebuddy.js'
+  - 'D:\\kk-studio\\.tmp\\codebuddy-alias-temp-89fdcec5c4b1472e922889e1eb658b4c\\kk-codebuddy-test-YQ6jBU\\codebuddy.js'
+
+      at TestContext.<anonymous> (D:\kk-studio\KK-Studio-2.0\vendor\canvas-agent\src\agent\codebuddy.test.ts:19:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'D:\\kk-studio\\.tmp\\codebuddy-real-temp-89fdcec5c4b1472e922889e1eb658b4c\\kk-codebuddy-test-YQ6jBU\\codebuddy.js',
+    expected: 'D:\\kk-studio\\.tmp\\codebuddy-alias-temp-89fdcec5c4b1472e922889e1eb658b4c\\kk-codebuddy-test-YQ6jBU\\codebuddy.js',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at src\server\codebuddy-http.test.ts:8:1
+✖ CodeBuddy config and probe require local token and distinguish saved from usable (333.8606ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   cliPath: 'D:\\kk-studio\\.tmp\\codebuddy-real-temp-89fdcec5c4b1472e922889e1eb658b4c\\kk-codebuddy-http-o0awf0\\codebuddy.js',
+  -   cliPath: 'D:\\kk-studio\\.tmp\\codebuddy-alias-temp-89fdcec5c4b1472e922889e1eb658b4c\\kk-codebuddy-http-o0awf0\\codebuddy.js',
+      configured: true,
+      ok: true
+    }
+
+      at TestContext.<anonymous> (D:\kk-studio\KK-Studio-2.0\vendor\canvas-agent\src\server\codebuddy-http.test.ts:64:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { ok: true, configured: true, cliPath: 'D:\\kk-studio\\.tmp\\codebuddy-real-temp-89fdcec5c4b1472e922889e1eb658b4c\\kk-codebuddy-http-o0awf0\\codebuddy.js' },
+    expected: { ok: true, configured: true, cliPath: 'D:\\kk-studio\\.tmp\\codebuddy-alias-temp-89fdcec5c4b1472e922889e1eb658b4c\\kk-codebuddy-http-o0awf0\\codebuddy.js' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

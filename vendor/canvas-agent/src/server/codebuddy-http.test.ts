@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { once } from "node:events";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -61,7 +61,11 @@ test("CodeBuddy config and probe require local token and distinguish saved from 
     headers,
     body: JSON.stringify({ cliPath }),
   });
-  assert.deepEqual(await saved.json(), { ok: true, configured: true, cliPath });
+  assert.deepEqual(await saved.json(), {
+    ok: true,
+    configured: true,
+    cliPath: await realpath(cliPath),
+  });
   const probe = await fetch(base + "/agent/codebuddy/probe", {
     method: "POST",
     headers,

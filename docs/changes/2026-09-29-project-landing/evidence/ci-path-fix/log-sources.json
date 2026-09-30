@@ -1,0 +1,32 @@
+[
+  {
+    "name": "red",
+    "source": "D:/kk-studio/.tmp/landing-codebuddy-realpath-red.log",
+    "rawSha256": "c55d54ad99697feea8f9d55ac29ceaedf6f7994a1eadd44a1cc8629b3e52360f",
+    "displaySha256": "06a2a4e464fb26c438b386121d3e2bfd18bda458b1471407beb014d28c2b0548",
+    "displayChange": "Line endings/trailing whitespace only; raw source retained outside repository."
+  },
+  {
+    "name": "green",
+    "source": "D:/kk-studio/.tmp/landing-codebuddy-realpath-green.log",
+    "rawSha256": "60a3f0658169ccb406a50b2e3562134862c18db28a499da701a9041e24d58b03",
+    "displaySha256": "cbaf9674efb93823f911c66cb3a6a27917e95fbe899f912859f82b6d0164caa7",
+    "displayChange": "Line endings/trailing whitespace only; raw source retained outside repository."
+  },
+  {
+    "name": "agent-tests",
+    "source": "D:/kk-studio/.tmp/landing-codebuddy-agent-all.log",
+    "rawSha256": "464fc4d4462d4cfd74c869713a2b3f5f6e05837d9f65261dab09f8ed2e9bf639",
+    "displaySha256": "0f10f8195289c71dd46ea0f991972363db3e099671ca9d7ee0753051e0bc9e9e",
+    "displayChange": "Line endings/trailing whitespace only; raw source retained outside repository."
+  },
+  {
+    "name": "hosted-failure-excerpt",
+    "job": 109801600095,
+    "run": 36689037732,
+    "head": "5818418e30b016669dcc9d3c4633e84505dd64b5",
+    "rawSha256": "b105cfb8ceed41d56a9d509bfee1ae2a8b01ac2d559aa5f529d121986df138e1",
+    "displaySha256": "499da76bdaa0ea02fd73bc0a0b1757c63d5cfc29973183f47bf04631e204f8a5",
+    "displayChange": "Only the 171-test summary and two CodeBuddy canonical-path assertion failures; full downloaded CI log retained outside repository."
+  }
+]

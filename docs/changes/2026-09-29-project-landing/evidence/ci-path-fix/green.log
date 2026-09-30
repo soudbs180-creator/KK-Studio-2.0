@@ -1,0 +1,24 @@
+✔ only an existing absolute CodeBuddy script can be selected (6.9656ms)
+✔ single-shot call disables tools, omits KK secrets and returns JSON result (46.5413ms)
+✔ non-JSON, failed and empty CLI results fail closed (141.9923ms)
+✔ installed CLI's JSON event array uses only its final result (90.6522ms)
+✔ hung CLI is terminated and a second call cannot overlap (173.9736ms)
+✔ an aborted consultation kills the CLI and releases the slot (122.1988ms)
+✔ oversized output and prompt are rejected (43.8658ms)
+Infinite Canvas Agent
+Local URL: http://127.0.0.1:59294
+Codex MCP is not installed by this command.
+Optional MCP add: codex mcp add infinite-canvas -- npx -y @basketikun/canvas-agent@latest mcp
+Remove manually added MCP: codex mcp remove infinite-canvas
+2026-09-30 16:31:16 INFO Canvas Agent started url='http://127.0.0.1:59294' workspace='D:\\kk-studio\\.tmp\\codebuddy-alias-temp-89fdcec5c4b1472e922889e1eb658b4c\\kk-codebuddy-http-Na4Qsz\\codex-workspaces\\site' debugLog=''
+2026-09-30 16:31:16 ERROR HTTP request failed method='POST' path='/agent/codebuddy/probe' error={ name: 'Error', message: 'CodeBuddy 正在处理上一任务，请稍后再试', stack: 'Error: CodeBuddy 正在处理上一任务，请稍后再试\n    at runCodeBuddy (D:\\kk-studio\\KK-Studio-2.0\\vendor\\canvas-agent\\src\\agent\\codebuddy.ts:52:22)\n    at <anonymous> (D:\\kk-studio\\KK-Studio-2.0\\vendor\\canvas-agent\\src\\server\\http.ts:221:28)\n    at <anonymous> (D:\\kk-studio\\KK-Studio-2.0\\vendor\\canvas-agent\\src\\server\\http.ts:554:70)\n    at Layer.handleRequest (D:\\kk-studio\\KK-Studio-2.0\\vendor\\canvas-agent\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\kk-studio\\KK-Studio-2.0\\vendor\\canvas-agent\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\kk-studio\\KK-Studio-2.0\\vendor\\canvas-agent\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\kk-studio\\KK-Studio-2.0\\vendor\\canvas-agent\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\kk-studio\\KK-Studio-2.0\\vendor\\canvas-agent\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\kk-studio\\KK-Studio-2.0\\vendor\\canvas-agent\\node_modules\\router\\index.js:295:15\n    at processParams (D:\\kk-studio\\KK-Studio-2.0\\vendor\\canvas-agent\\node_modules\\router\\index.js:582:12)' }
+2026-09-30 16:31:16 ERROR HTTP request failed method='POST' path='/agent/codebuddy/probe' error={ name: 'Error', message: 'CodeBuddy 请求已取消', stack: 'Error: CodeBuddy 请求已取消\n    at ChildProcess.<anonymous> (D:\\kk-studio\\KK-Studio-2.0\\vendor\\canvas-agent\\src\\agent\\codebuddy.ts:219:34)\n    at Object.onceWrapper (node:events:631:26)\n    at ChildProcess.emit (node:events:509:28)\n    at maybeClose (node:internal/child_process:1141:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:306:5)' }
+✔ CodeBuddy config and probe require local token and distinguish saved from usable (468.8407ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 752.2085

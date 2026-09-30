@@ -82,3 +82,12 @@ Windows 根测试与 Agent 的 POSIX 专属跳过分别为 8 和 2；沿用平�
 ## 平台与剩余门禁
 
 Web PASS，当前 Windows Tauri release 受影响路径 PASS；Mobile 原生 NOT RUN，外部 Provider/GPU、Installer/签名、VPS、真实跨应用记忆 NOT VERIFIED。完整剩余优先级见 remaining。正式最终 review/Hosted verify+delivery/主线合并是交付门禁，以托管 PR 的精确 SHA 记录为准。
+
+## 托管 Windows 路径预期返修
+
+- 初次 [PR31 Hosted run](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/36689037732) 的 head 是 5818418；delivery/deploy-linux PASS，verify 在 Agent 的两项 CodeBuddy 测试失败，尚未进入 browser/Rust/client。失败摘要：[Hosted 原始节选](evidence/ci-path-fix/hosted-failure-excerpt.log)。原完整下载日志 SHA b105cfb8ceed41d56a9d509bfee1ae2a8b01ac2d559aa5f529d121986df138e1 保留工程外。
+- 原因：CI TEMP 的 RUNNER~1 是文件系统别名，既有实现返回 realpath 的 runneradmin 路径；错误在两项测试期待原始别名，路径安全实现无需修改。
+- 本地先将两个测试的 TEMP/TMP 指向工程外新建 junction 别名，按同样的 canonical path 行为重现 6/8 PASS、2 FAIL（退出1）：[RED](evidence/ci-path-fix/red.log)。不是短文件名实机模拟，也不是其它依赖/模块加载失败。
+- 两项测试改用实际文件 realpath 作为预期；同一 junction 环境 8/8 PASS（退出0）：[GREEN](evidence/ci-path-fix/green.log)。完整 Agent 169/171 PASS、2 原平台 skip、0 FAIL（退出0）：[Agent](evidence/ci-path-fix/agent-tests.log)。全部 UNC/本机目标、隔离、HTTP token、取消/超时断言保留，未改产品或 CI。
+- Git 日志显示副本只规范换行/行末空白；外部原日志 SHA 与显示 SHA 在 [来源记录](evidence/ci-path-fix/log-sources.json)。第一次尝试直接 node --test 运行 TS 的模块加载失败仍在工程外保留，未冒充本轮 RED。
+- 上述是测试返修证据，旧 377 Web/原生与 5818418 独立 PASS 保留原范围；下一提交的补审、Hosted 当前结果、主线和分享包仍由 PR31/交付收据确认。
