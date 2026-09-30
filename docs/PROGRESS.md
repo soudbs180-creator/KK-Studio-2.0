@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-01 KK Codex 原生生图回传/归档验收
+
+TASK-AGENT-008 修复 Base64 生图完成事件超限与并发导入重复归档标记，3 MiB/并发两组回归均先失败后通过，保护限制保持。全新隔离 Tauri release 真实生图1,768,873bytes、自动归档/续聊/重连/重启hash一致，节点/标记均唯一；完整verify632root/172Agent/377browser和Rust97/fmt/clientcheck PASS，原平台skip保留。Desktop2.1.3/Web2.1.4；精确head独立审查与托管推广待完成。57/16字符短句对应809/768请求、附加规则恒752；上轮可见长文是 root 验收说明。豆包仍在区域限制登录页，自动回画布尚未接入，详见[本轮验证](changes/2026-10-01-agent-image-transport/verification.md)。
+
 ## 2026-09-30 Desktop NSIS 与隔离恢复验收
 
 TASK-DESKTOP-INSTALLER-001 在本机AC1–4范围DONE：currentUser Windows x64 安装器含完整Agent与WebView2 offlineInstaller，版本/数据身份保持现行。含空格隔离路径四次安装各4279文件、Tauri启动/Agent、项目保存/重装/损坏修复/卸载再装保留全部通过；损坏setup与已有注册/portable进程拒绝保护覆盖，独立审查关闭五项finding。设置几何改为同帧采样，原限制和可见性断言保留，无retry160/160；完整verify根631/639、Agent169/171（其余原平台skip）、browser377/377无flaky，Rust97/97及clientcheck通过。原生证据独立保存并真实重跑。最终文档head补审、托管PR/CI与推广以实际PR/交付收据为准，详见[本轮验证](changes/2026-09-30-desktop-installer/verification.md)。T7/FEAT-026仍PARTIAL：干净系统、无WebView2首装、真实断网、低版本回滚、签名/正式发布与真实服务未验收；原portable交付保留。

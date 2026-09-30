@@ -1,0 +1,34 @@
+✖ 同时到达的生图归档只提交一次，后续重放不会重复标记 (5.9449ms)
+✔ 视口与多选由真实宿主执行并反映在下一次快照 (1.2133ms)
+✔ 同一毫秒的无 ID 新节点保持独立身份与布局 (0.8063ms)
+✔ 同批新建配置及提示词后生成，返回真实任务 ID (0.4033ms)
+✔ 纯更新、位置及连线操作会落地，删除节点清理悬空边 (0.3671ms)
+✔ 生成错误原样回传；不支持的视频不调用 Provider (0.1781ms)
+✔ 取消在途生成后，不再落地同批后续操作 (0.2743ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 163.1703
+
+✖ failing tests:
+
+test at tests\unit\agentHost.test.ts:26:1
+✖ 同时到达的生图归档只提交一次，后续重放不会重复标记 (5.9449ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  2 !== 1
+
+      at TestContext.<anonymous> (file:///D:/kk-studio/.worktrees/TASK-AGENT-008-image-transport/tests/unit/agentHost.test.ts:73:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

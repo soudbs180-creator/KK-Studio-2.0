@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-10-01 Codex 生图回传恢复点
+
+先核对 TASK-AGENT-008 的实际 branch/head 和[计划](../changes/2026-10-01-agent-image-transport/plan.md)/[验证](../changes/2026-10-01-agent-image-transport/verification.md)。基线 main@709e51d；native result 去二进制与归档提交前幂等重检均 RED→GREEN，2 MiB 保护保持。run5 新生产 Tauri 生图/续聊/重连/重启原件 hash 一致、节点/标记唯一 PASS；verify632root/172Agent/377browser、Rust97 PASS。精确 SHA review/托管 PR 尚待完成，不能从本地证据猜测推广。run3 超限与 run4 重复标记历史不覆盖；run5 审计脚本两次设置错误另记并真实复验。重启需先开项目并按入口启动 Agent 服务，本次未改自动启动行为。豆包最新仍在区域限制登录页、输出自动回画布未接入，不并行使用其 profile。57/16短句对应809/768请求、附加752恒定。
+
 ## 2026-09-30 安装器恢复入口
 
 先fetch并核对实际origin/main、TASK-DESKTOP-INSTALLER-001的PR与交付收据，不从旧基线猜测合并状态。本机AC1–4已DONE，独立技术/运行证据审查至2cf5249 PASS、完整verify631root/169Agent/377browser无flaky、Rust97/clientcheck通过；最后文档精确head/托管门禁单独绑定。计划/证据在[本轮计划](../changes/2026-09-30-desktop-installer/plan.md)和[验证](../changes/2026-09-30-desktop-installer/verification.md)。安装器343681213bytes/hash7103126d…d635，receipt0fba927/build61b0c85；原生报告必须放独立.tmp目录并保存本轮evidence，不能被browser清理。保留已有portable与数据，不卸载用户应用；T7/FEAT-026的干净系统/真实断网/低版本回滚/签名/真实服务仍开放。后续本地顺序仍按上轮remaining中的阶段编排UI、侧栏持久化等推进。

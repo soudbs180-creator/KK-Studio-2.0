@@ -743,6 +743,63 @@ test("稀疏的命令完成通知会保留开始通知中的命令内容", () =>
     }]);
 });
 
+test("原生生图完成事件只传文件元数据，不把 Base64 图片塞进事件流或补充历史", () => {
+    for (const type of ["imageGeneration", "image_generation"]) {
+        const events: Array<{ type: string; payload: unknown }> = [];
+        const persisted: unknown[] = [];
+        const child = { stdin: { write: () => true } };
+        const history = { record: (entry: unknown) => (persisted.push(entry), Promise.resolve()) };
+        const client = Reflect.construct(CodexAppClient, [child, (event: string, payload: unknown) => events.push({ type: event, payload }), history]) as CodexAppClient;
+        const original = {
+            id: "image-1", type, status: "completed", result: "A".repeat(3 * 1024 * 1024),
+            savedPath: "C:\\generated_images\\image-1.png", revisedPrompt: "橙色小猫", transparentBackground: false, failure: null,
+        };
+
+        (client as unknown as TestClient).handleNotification("item/completed", { threadId: "thread-1", turnId: "turn-1", item: original });
+
+        const completed = events.find((event) => event.type === "agent_event" && eventType(event.payload) === "item.completed");
+        assert.ok(completed);
+        assert.ok(JSON.stringify(completed.payload).length < 2 * 1024 * 1024, "生图通知必须保留现行 SSE 大小保护");
+        const item = (completed.payload as { item: Record<string, unknown> }).item;
+        assert.deepEqual(item, {
+            id: "image-1", type: "image_generation", status: "completed",
+            savedPath: original.savedPath, revisedPrompt: original.revisedPrompt, transparentBackground: false, failure: null,
+        });
+        assert.deepEqual((persisted[0] as { item: unknown }).item, item);
+        assert.equal(original.result.length, 3 * 1024 * 1024, "不能修改 app-server 的原始对象");
+    }
+});
+
+test("生图开始和稀疏完成事件保留文件路径，失败事件保留真实失败原因", () => {
+    const events: Array<{ type: string; payload: unknown }> = [];
+    const child = { stdin: { write: () => true } };
+    const client = Reflect.construct(CodexAppClient, [child, (type: string, payload: unknown) => events.push({ type, payload }), emptyEventHistory]) as CodexAppClient;
+    const testClient = client as unknown as TestClient;
+    testClient.handleNotification("item/started", { threadId: "thread-1", turnId: "turn-1", item: { id: "image-1", type: "imageGeneration", status: "inProgress", result: "A".repeat(3 * 1024 * 1024), savedPath: "C:\\generated_images\\image-1.png" } });
+    testClient.handleNotification("item/completed", { threadId: "thread-1", turnId: "turn-1", item: { id: "image-1", type: "imageGeneration", status: "completed" } });
+    const failure = { code: "usage_limit_reached", message: "生成额度不足" };
+    testClient.handleNotification("item/completed", { threadId: "thread-1", turnId: "turn-1", item: { id: "image-2", type: "imageGeneration", status: "failed", result: null, savedPath: null, failure } });
+
+    const items = events.filter((event) => event.type === "agent_event").map((event) => (event.payload as { item: Record<string, unknown> }).item);
+    assert.equal(items.length, 3);
+    for (const item of items) assert.equal("result" in item, false);
+    assert.equal(items[1]?.savedPath, "C:\\generated_images\\image-1.png");
+    assert.equal(items[1]?.status, "completed");
+    assert.equal(items[2]?.status, "failed");
+    assert.equal(items[2]?.savedPath, null);
+    assert.deepEqual(items[2]?.failure, failure);
+});
+
+test("生图二进制过滤不删除普通工具的 result", () => {
+    const events: Array<{ type: string; payload: unknown }> = [];
+    const child = { stdin: { write: () => true } };
+    const client = Reflect.construct(CodexAppClient, [child, (type: string, payload: unknown) => events.push({ type, payload }), emptyEventHistory]) as CodexAppClient;
+    const result = { content: [{ type: "text", text: "画布已读取" }] };
+    (client as unknown as TestClient).handleNotification("item/completed", { threadId: "thread-1", turnId: "turn-1", item: { id: "tool-1", type: "mcpToolCall", status: "completed", result } });
+    const completed = events.find((event) => event.type === "agent_event" && eventType(event.payload) === "item.completed");
+    assert.deepEqual((completed?.payload as { item?: { result?: unknown } })?.item?.result, result);
+});
+
 test("稀疏的 plan 完成通知会保留流式正文", () => {
     const events: Array<{ type: string; payload: unknown }> = [];
     const persisted: unknown[] = [];

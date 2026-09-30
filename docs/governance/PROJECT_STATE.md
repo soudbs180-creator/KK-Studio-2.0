@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-10-01 Codex 生图回传与提示词检查
+
+TASK-AGENT-008 在独立 codex/TASK-AGENT-008-image-transport worktree 实施，基线 main/origin/main@709e51d（安装器 PR #32 已合入）。修复原生 Base64 生图事件超限与并发归档重复标记，两组回归先失败后通过；本 worktree Tauri 真实生图/续聊/重连/重启原件 hash 一致、节点/标记唯一，AC-1–3 PASS，精确 head review/PR 待完成，见[本轮验证](../changes/2026-10-01-agent-image-transport/verification.md)。完整 verify 632root/172Agent/377browser与Rust97通过，原平台skip保留。两条短句57/16对应请求809/768，附加规则恒752字符且无历史重复；先前可见长文由 root 手写。本分支版本 Desktop 2.1.3 / Web 2.1.4 / Mobile 规划 2.1.1。豆包最新仍受区域限制登录页阻挡、CLI 输出自动回画布未接入，其他 Provider 未因此完成。
+
 ## 2026-09-30 安装器后续任务
 
 任务基线 main/origin/main 为 bd3bc66；上轮PR#31的portable交付保留。TASK-DESKTOP-INSTALLER-001 的本机AC1–4已DONE：NSIS/收据、四次4279文件、启动/Agent、重装/修复/卸载再装项目保留通过。独立技术/运行证据补审至2cf5249 PASS、五项finding关闭；同帧/可见性测试无retry160/160，完整verify377browser/631root/169Agent通过（原skip保留）、Rust97/clientcheck通过。最终文档精确head补审、PR/CI/合并推广以实际PR与交付收据为准，不能从此基线描述猜测已合并。T7/FEAT-026仍PARTIAL：干净系统、真实断网、低版本回滚、签名和真实服务未验收。进度见[本轮验证](../changes/2026-09-30-desktop-installer/verification.md)。

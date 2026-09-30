@@ -1,0 +1,94 @@
+2026-10-01 05:52:54 WARN Interrupting active Codex turn threadId='thread-1' turnId='turn-1'
+2026-10-01 05:52:54 WARN Interrupting active Codex turn threadId='draft-thread' turnId='draft-turn'
+✔ 工作空间接受 Windows 包路径的原生规范形式，拒绝其他目录 (1.2459ms)
+✔ 新建持久会话使用锁定版本支持的 legacy 历史模式 (1.0484ms)
+✔ 审批只在 app-server 确认 resolved 后清除 (0.9844ms)
+✔ 中断请求只作用于当前运行线程 (1.3588ms)
+✔ Skill 列表与启用配置使用 app-server 原生协议 (0.2656ms)
+✔ 并发强制刷新同一工作空间时只扫描一次 Skill (0.2465ms)
+✔ 显式 Skill 同时使用文本标记和结构化输入传给 turn/start (3.9777ms)
+✔ 显式 Skill 不重复已有的文本标记 (1.0514ms)
+✔ skills/changed 作为站点级事件单独广播 (0.1554ms)
+✔ MCP 启动状态区分空对话预热与正常 turn 运行 (2.7235ms)
+✔ 静默 Skill 草稿 turn 只返回结构化结果，不广播也不写历史 (0.7071ms)
+✔ 静默线程创建期间只隐藏响应返回的线程 (0.166ms)
+✔ 静默 Skill 草稿不吞掉全局 Skill 变更通知 (0.1065ms)
+✔ 静默 Skill 草稿自动拒绝未携带线程 ID 的权限请求 (0.1045ms)
+✔ app-server 退出时清理尚未确认的静默线程 (0.3584ms)
+✔ app-server 在草稿运行中退出后不再等待线程取消订阅 (0.7776ms)
+✔ 画布 Skill 草稿源保留流程信息并移除媒体、本地路径、凭据和临时任务字段 (1.3153ms)
+✔ 画布 Skill 草稿源保留普通中文斜杠文本和斜杠命令 (0.1114ms)
+✔ 画布 Skill 草稿源匿名化任意字符串中的已知节点 ID (0.1293ms)
+✔ 画布 Skill 草稿源匿名化 metadata 对象键中的已知节点 ID (0.0917ms)
+✔ 画布 Skill 草稿源为截断节点保留完整快照范围内的安全引用 (15.994ms)
+✔ 画布 Skill 草稿源限制总长度并优先保留选中流程 (105.4753ms)
+✔ Skill 草稿拒绝普通外部 URL，避免对话内容泄露媒体地址 (0.3685ms)
+✔ Skill 草稿允许普通动作名称，但拒绝任意本地绝对路径 (0.3678ms)
+✔ turn/started 早于 turn/start 响应时保持完整事件归属 (0.3383ms)
+✔ turn/start 响应早于通知时 onTurn 仍只调用一次 (1.1415ms)
+✔ turn/started 通知缺失时使用 turn/start 响应回调 (0.3821ms)
+✔ onTurn 按 threadId 和 turnId 去重 (0.5617ms)
+✔ 稀疏的命令完成通知会保留开始通知中的命令内容 (0.3233ms)
+✖ 原生生图完成事件只传文件元数据，不把 Base64 图片塞进事件流或补充历史 (7.3269ms)
+✖ 生图开始和稀疏完成事件保留文件路径，失败事件保留真实失败原因 (0.3959ms)
+✔ 生图二进制过滤不删除普通工具的 result (0.0959ms)
+✔ 稀疏的 plan 完成通知会保留流式正文 (0.1135ms)
+✔ reasoning 完成通知缺少 summary 时保留流式摘要 (0.1889ms)
+✔ 流式更新只发送当前增量而不重复传输累计正文 (125.0976ms)
+✔ 新版协作工具完成通知会归一化并写入补充历史 (0.2413ms)
+✔ 并行条目按开始顺序保存而不是完成顺序 (0.1571ms)
+✔ turn 完成通知会保存本轮输入与终态 turn (0.5779ms)
+✔ turn 完成状态会等待补充历史落盘后再广播 (0.3083ms)
+✔ app-server 失效时清除不能跨进程复用的 turn 状态 (0.3149ms)
+✔ app-server 在 turn 完成通知前退出时保存失败终态 (0.5173ms)
+✔ turn/started 已到达但 turn/start 尚未响应时退出仍保存失败终态 (0.3128ms)
+✔ app-server 退出时等待失败历史落盘后再结束 turn (0.3893ms)
+ℹ tests 43
+ℹ suites 0
+ℹ pass 41
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 491.2908
+
+✖ failing tests:
+
+test at src\agent\codex-client.test.ts:746:1
+✖ 原生生图完成事件只传文件元数据，不把 Base64 图片塞进事件流或补充历史 (7.3269ms)
+  AssertionError [ERR_ASSERTION]: 生图通知必须保留现行 SSE 大小保护
+      at TestContext.<anonymous> (D:\kk-studio\.worktrees\TASK-AGENT-008-image-transport\vendor\canvas-agent\src\agent\codex-client.test.ts:762:16)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at src\agent\codex-client.test.ts:773:1
+✖ 生图开始和稀疏完成事件保留文件路径，失败事件保留真实失败原因 (0.3959ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+      at TestContext.<anonymous> (D:\kk-studio\.worktrees\TASK-AGENT-008-image-transport\vendor\canvas-agent\src\agent\codex-client.test.ts:785:38)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

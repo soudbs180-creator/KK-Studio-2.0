@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-09-30T22:18:24.348Z",
+  "command": "dbb doctor --deep --json",
+  "exit": 1,
+  "ok": false,
+  "reason": "COMPOSER_NOT_FOUND",
+  "page": {
+    "url": "https://www.doubao.com/security/doubao-region-ban?source=1",
+    "title": "豆包",
+    "hasEditor": false,
+    "editorKind": null,
+    "editorClass": null,
+    "loginHints": [
+      "登录"
+    ],
+    "challenge": false,
+    "rateLimited": false,
+    "textSample": "受区域限制，请先登录再使用豆包。你也可以选择使用 Dola。 使用 Dola 登录"
+  },
+  "model": null,
+  "note": "Cookie 存在不证明编辑器可用；未登录区域限制未解除，无生成图片。"
+}

@@ -87,7 +87,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-002-image-generation.md",
-    "summary": "自带 API Key 的真实图片生成：浏览器提交门禁 + Desktop 原生 TaskHost（journal/幂等/取消/恢复），真实付费出图未验收。",
+    "summary": "自带 API Key 的浏览器提交门禁 + Desktop 原生 TaskHost；Codex 内置生图已有真实生产归档/恢复证据，BYOK逐家真实出图仍待验收。",
     "entryPoints": [
       "图片节点生成按钮",
       "开始页/对话提交",
@@ -102,7 +102,10 @@
       "src-tauri/src/task_host.rs",
       "src/features/agent/googleInteractions.ts",
       "src/features/agent/googleAgentConnection.ts",
-      "src/components/GoogleAgentControls.tsx"
+      "src/components/GoogleAgentControls.tsx",
+      "vendor/canvas-agent/src/agent/codex-client.ts",
+      "src/features/agent/agentConnection.ts",
+      "src/features/agent/agentHost.ts"
     ],
     "tests": [
       "tests/unit/providerSubmission.test.ts",
@@ -114,16 +117,19 @@
       "tests/browser/unified-image-command.spec.ts",
       "tests/browser/creation-flow.spec.ts",
       "tests/browser/google-agent.spec.ts",
-      "tests/unit/googleInteractions.test.ts"
+      "tests/unit/googleInteractions.test.ts",
+      "vendor/canvas-agent/src/agent/codex-client.test.ts",
+      "tests/unit/agentEventStream.test.ts"
     ],
     "tasks": [
       "T5",
       "TASK-PROV-001",
       "EXT-PROVIDER",
       "TASK-AGENT-001",
-      "TASK-AGENT-004"
+      "TASK-AGENT-004",
+      "TASK-AGENT-008"
     ],
-    "updated": "2026-09-30",
+    "updated": "2026-10-01",
     "platforms": [
       "web",
       "desktop"
@@ -132,6 +138,14 @@
       {
         "platform": "web",
         "path": "docs/changes/2026-09-22-codex-default-agent/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-01-agent-image-transport/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-01-agent-image-transport/verification.md"
       }
     ]
   },
@@ -457,9 +471,10 @@
       "TASK-AGENT-003",
       "TASK-AGENT-004",
       "TASK-AGENT-005",
-      "TASK-AGENT-007"
+      "TASK-AGENT-007",
+      "TASK-AGENT-008"
     ],
-    "updated": "2026-09-30",
+    "updated": "2026-10-01",
     "platforms": [
       "web",
       "desktop"
@@ -480,6 +495,14 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-23-agent-attachments/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-01-agent-image-transport/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-01-agent-image-transport/verification.md"
       }
     ]
   },

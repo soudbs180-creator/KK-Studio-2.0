@@ -90,6 +90,12 @@ export function createAgentHost(options: AgentHostOptions) {
       const current = options.getProject();
       if (!current || current.id !== input.projectId || input.signal.aborted)
         throw new Error("项目已切换，图片已归档但未写入其他画布");
+      // 归档期间另一完成通知可能已导入同一图片，提交前再次检查幂等身份。
+      if (
+        current.items.some((item) => item.id === input.id) ||
+        current.agentGeneratedImageIds?.includes(input.id)
+      )
+        return;
       const item: CanvasCollectionItem = {
         id: input.id,
         kind: "image",

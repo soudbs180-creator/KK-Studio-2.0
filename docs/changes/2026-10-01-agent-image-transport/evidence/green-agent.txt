@@ -1,0 +1,315 @@
+
+> kk-studio@2.1.3 test:agent
+> npm run test --prefix vendor/canvas-agent
+
+
+> @basketikun/canvas-agent@0.6.0 test
+> tsx --test src/config.test.ts src/canvas/operations.test.ts src/canvas/session.test.ts src/agent/codex-client.test.ts src/agent/codex-history.test.ts src/agent/codex-provider-config.test.ts src/agent/provider-cli.test.ts src/agent/claude-provider-config.test.ts src/agent/message-metadata.test.ts src/skills/store.test.ts src/utils/agent-runtime.test.ts src/agent/codebuddy.test.ts src/server/codebuddy-http.test.ts src/server/codebuddy-mcp.test.ts
+
+✔ 空文件生成最小 settings.json (1.0295ms)
+✔ 保留用户设置并更新受管键 (0.2304ms)
+✔ 无 model 时不写顶层 model (0.0722ms)
+✔ 幂等：同一输入应用两次结果一致 (0.0641ms)
+✔ 非法 JSON 输入抛错且不静默覆盖 (0.1602ms)
+✔ UTF-8 BOM 输入被容忍 (0.0776ms)
+✔ baseUrl 内嵌 userinfo 被拒绝 (0.0648ms)
+✔ applyClaudeProviderConfig dry-run 返回合并结果且不写盘 (0.4622ms)
+✔ only an existing absolute CodeBuddy script can be selected (9.7825ms)
+✔ single-shot call disables tools, omits KK secrets and returns JSON result (91.6777ms)
+✔ non-JSON, failed and empty CLI results fail closed (161.8795ms)
+✔ installed CLI's JSON event array uses only its final result (93.7278ms)
+✔ hung CLI is terminated and a second call cannot overlap (173.2326ms)
+✔ an aborted consultation kills the CLI and releases the slot (134.3427ms)
+✔ oversized output and prompt are rejected (44.4783ms)
+2026-10-01 05:55:23 WARN Interrupting active Codex turn threadId='thread-1' turnId='turn-1'
+2026-10-01 05:55:23 WARN Interrupting active Codex turn threadId='draft-thread' turnId='draft-turn'
+✔ 工作空间接受 Windows 包路径的原生规范形式，拒绝其他目录 (2.1277ms)
+✔ 新建持久会话使用锁定版本支持的 legacy 历史模式 (1.8168ms)
+✔ 审批只在 app-server 确认 resolved 后清除 (1.0839ms)
+✔ 中断请求只作用于当前运行线程 (2.1063ms)
+✔ Skill 列表与启用配置使用 app-server 原生协议 (0.3757ms)
+✔ 并发强制刷新同一工作空间时只扫描一次 Skill (0.3385ms)
+✔ 显式 Skill 同时使用文本标记和结构化输入传给 turn/start (4.8369ms)
+✔ 显式 Skill 不重复已有的文本标记 (1.2046ms)
+✔ skills/changed 作为站点级事件单独广播 (0.2136ms)
+✔ MCP 启动状态区分空对话预热与正常 turn 运行 (3.6104ms)
+✔ 静默 Skill 草稿 turn 只返回结构化结果，不广播也不写历史 (0.8841ms)
+✔ 静默线程创建期间只隐藏响应返回的线程 (0.2013ms)
+✔ 静默 Skill 草稿不吞掉全局 Skill 变更通知 (0.1199ms)
+✔ 静默 Skill 草稿自动拒绝未携带线程 ID 的权限请求 (0.1189ms)
+✔ app-server 退出时清理尚未确认的静默线程 (0.3855ms)
+✔ app-server 在草稿运行中退出后不再等待线程取消订阅 (0.7992ms)
+✔ 画布 Skill 草稿源保留流程信息并移除媒体、本地路径、凭据和临时任务字段 (1.4541ms)
+✔ 画布 Skill 草稿源保留普通中文斜杠文本和斜杠命令 (0.1322ms)
+✔ 画布 Skill 草稿源匿名化任意字符串中的已知节点 ID (0.1438ms)
+✔ 画布 Skill 草稿源匿名化 metadata 对象键中的已知节点 ID (0.1077ms)
+✔ 画布 Skill 草稿源为截断节点保留完整快照范围内的安全引用 (19.9552ms)
+✔ 画布 Skill 草稿源限制总长度并优先保留选中流程 (111.1277ms)
+✔ Skill 草稿拒绝普通外部 URL，避免对话内容泄露媒体地址 (0.3364ms)
+✔ Skill 草稿允许普通动作名称，但拒绝任意本地绝对路径 (0.3884ms)
+✔ turn/started 早于 turn/start 响应时保持完整事件归属 (0.3517ms)
+✔ turn/start 响应早于通知时 onTurn 仍只调用一次 (1.2386ms)
+✔ turn/started 通知缺失时使用 turn/start 响应回调 (0.4035ms)
+✔ onTurn 按 threadId 和 turnId 去重 (0.6269ms)
+✔ 稀疏的命令完成通知会保留开始通知中的命令内容 (0.3357ms)
+✔ 原生生图完成事件只传文件元数据，不把 Base64 图片塞进事件流或补充历史 (0.2339ms)
+✔ 生图开始和稀疏完成事件保留文件路径，失败事件保留真实失败原因 (0.2462ms)
+✔ 生图二进制过滤不删除普通工具的 result (0.1412ms)
+✔ 稀疏的 plan 完成通知会保留流式正文 (0.1774ms)
+✔ reasoning 完成通知缺少 summary 时保留流式摘要 (0.2623ms)
+✔ 流式更新只发送当前增量而不重复传输累计正文 (122.658ms)
+✔ 新版协作工具完成通知会归一化并写入补充历史 (0.2692ms)
+✔ 并行条目按开始顺序保存而不是完成顺序 (0.1658ms)
+✔ turn 完成通知会保存本轮输入与终态 turn (0.6565ms)
+✔ turn 完成状态会等待补充历史落盘后再广播 (0.3957ms)
+✔ app-server 失效时清除不能跨进程复用的 turn 状态 (0.1234ms)
+✔ app-server 在 turn 完成通知前退出时保存失败终态 (0.5035ms)
+✔ turn/started 已到达但 turn/start 尚未响应时退出仍保存失败终态 (0.2652ms)
+✔ app-server 退出时等待失败历史落盘后再结束 turn (0.3739ms)
+✔ 线程摘要提取结构化状态类型 (0.8091ms)
+✔ reasoning 增量按 summaryIndex 聚合 (0.1587ms)
+✔ 只有终态 turn 会交给历史快照作为权威内容 (0.8926ms)
+✔ 标准历史的运行中状态不会覆盖本地已经完成的 turn (1.0849ms)
+✔ 标准历史进入终态后保持权威状态 (0.2769ms)
+✔ 线程历史将多个 reasoning 条目投影为一张稳定卡片 (0.5427ms)
+✔ 空 reasoning 不进入完成后的线程历史 (0.1331ms)
+✔ 用户消息使用与实时消息一致的 turn 级稳定 ID (0.1357ms)
+✔ 显式用户正文优先于 Codex 自动补入的 Skill 前缀 (0.2158ms)
+✔ 没有显式用户正文时保留用户自行输入的 Skill 标记和正文 (0.2121ms)
+✔ Codex 历史省略命令时使用补充事件恢复完整命令卡片 (0.3896ms)
+✔ Codex 标准历史与补充事件重复时以标准历史为准 (0.1441ms)
+✔ 标准历史重写 item id 时仍与同一条实时事件合并 (0.3139ms)
+✔ 标准历史正文损坏且重写 item id 时不会重复显示同一条回复 (0.6724ms)
+✔ 标准历史同时保留损坏临时条目和稳定条目时移除损坏副本 (0.1876ms)
+✔ 标准历史条目稀疏时按字段补全补充事件 (0.1506ms)
+✔ 标准历史的 falsy 字段仍优先于补充事件 (0.1354ms)
+✔ 补充事件按 item 开始顺序插入标准历史锚点之间 (0.1667ms)
+✔ 补充事件写入本地 JSON 后可在 Agent 重启后恢复 (16.6477ms)
+✔ 补充历史 JSON 损坏后会从空历史恢复并允许重新写入 (11.7617ms)
+✔ 标准历史尚未物化 turn 时从本地终态事件恢复完整对话 (11.2295ms)
+✔ 归档线程只清除该线程的补充事件 (5.2154ms)
+✔ 补充事件更新时保留已有字段并限制单项输出大小 (4.9933ms)
+✔ 补充事件落盘失败时不污染内存读取 (3.4428ms)
+✔ turn 错误优先于条目错误且只生成一张错误卡片 (0.3886ms)
+✔ 失败条目的状态与错误详情在历史中保持完整 (0.249ms)
+✔ 新版协作工具条目在标准历史和补充历史中保持同一张卡片 (0.1546ms)
+✔ 尚未完成的 turn 只由实时事件展示，不进入历史快照 (0.0714ms)
+✔ 缺少稳定 item id 的历史条目不会生成无法对齐的临时消息 (0.0628ms)
+✔ 通用工具只由标题和结构化状态表达完成结果 (0.3168ms)
+✔ 命令完成条目缺少 command 时仍保留历史卡片 (0.0813ms)
+✔ providerKey 生成稳定键并带 kk_ 前缀 (1.327ms)
+✔ providerKey 对无法生成键的 id 抛错 (0.2318ms)
+✔ envKeyFor 生成 KK_STUDIO_<ID>_API_KEY (0.1954ms)
+✔ Codex 连接仅接受当前 Responses 协议 (1.1734ms)
+✔ Provider URLs reject embedded credentials and unsupported schemes (0.4642ms)
+✔ tomlQuote 转义反斜杠与引号 (0.1626ms)
+✔ serializeCodexProviderTable 按字段渲染 (0.2021ms)
+✔ 空文件生成最小全新配置 (0.4414ms)
+✔ 保留注释与用户自定义 provider 表 (0.3122ms)
+✔ 已有 kk_* 表被原位替换且顶层键原位更新 (0.2966ms)
+✔ 顶层键缺失时追加且幂等 (0.255ms)
+✔ CRLF 输入保留 CRLF (0.1036ms)
+✔ 非法 providerKey 抛错 (0.0903ms)
+✔ 仅顶层区无表的文件可合并 (0.1203ms)
+✔ 自有 provider 表后面的数组表仍完整保留 (0.0902ms)
+✔ parseModelWindow 解析后缀 (0.7612ms)
+✔ buildModelCatalogJson 生成 cc-switch 兼容 catalog (0.2312ms)
+✔ catalog 文件名拒绝目录穿越 (0.1421ms)
+✔ assertNoSecrets 拒绝密钥形态文本 (0.394ms)
+✔ applyCodexProviderConfig dry-run 返回合并结果且不写盘 (0.7985ms)
+✔ 显式指定 active 连接才切换 Codex 默认模型 (0.6303ms)
+✔ message metadata survives Agent restarts (44.6582ms)
+✔ message preview assets survive restarts and are deleted with their thread (34.141ms)
+✔ deleting a thread only removes its metadata (27.0603ms)
+✔ history metadata is matched by thread and turn instead of client message id alone (18.7539ms)
+✔ unknown storage versions are never overwritten (8.2607ms)
+✔ storage without a manifest is never overwritten (6.9656ms)
+✔ oversized image previews are rejected instead of silently dropped (6.0017ms)
+已写入 Codex 配置
+config: C:\Users\Administrator\AppData\Local\Temp\kk-provider-cli-G0Pnq3\codex\config.toml
+providers: kk_custom_0862df34652cf74e
+已写入 Codex 配置
+config: C:\Users\Administrator\AppData\Local\Temp\kk-provider-cli-ry0dxY\codex\config.toml
+providers: kk_custom_0862df34652cf74e
+providers apply 失败: 不支持的参数: --unknown
+providers apply 失败: --catalog 缺少值
+providers apply 失败: 只能指定一个 config.json
+providers apply-claude 失败: 不支持的参数: --active
+connections: 1
+- kk_custom_0862df34652cf74e (Custom) baseUrl=https://provider.example.test/v1 wireApi=responses env=KK_STUDIO_CUSTOM_0862DF34652CF74E_API_KEY: 已就绪
+   探测 /models: HTTP 200
+✔ CLI accepts options before input and preserves the existing model by default (19.0096ms)
+✔ CLI explicitly activates a connection and strips catalog window suffix (10.0608ms)
+✔ CLI rejects unknown, incomplete and extra positional arguments before writing (3.9886ms)
+✔ check probes a Responses provider with the referenced environment credential (12.9545ms)
+✔ generation flow reuses referenced nodes when the prompt only mentions them (1.8859ms)
+✔ generation flow still creates a prompt node for prose prompts (0.6088ms)
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_get_state' input={} targetClientId='first'
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_get_state' input={} targetClientId='second'
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_create_text_node' input={ text: '只写入第二个画布' } targetClientId='second'
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_create_attachment_nodes' input={ attachmentIds: [ 'attachment-1' ], x: 100, y: 200 } targetClientId='first'
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_create_attachment_nodes' input={ attachmentIds: [ 'attachment-1' ] } targetClientId='second'
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_create_text_node' input={ text: 'first only' } targetClientId='first'
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO MCP tool called name='generation_get_status' input={ scope: 'all' } targetClientId='second'
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_get_state' input={} targetClientId='first'
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='third' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_get_state' input={} targetClientId='third'
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='third' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_create_text_node' input={ text: 'pending' } targetClientId='first'
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_get_state' input={} targetClientId='first'
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_create_text_node' input={ text: 'bound' } targetClientId='first'
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_get_state' input={} targetClientId='second'
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_get_state' input={} targetClientId='first'
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_get_state' input={} targetClientId='first'
+2026-10-01 05:55:23 INFO MCP tool called name='canvas_create_text_node' input={ text: 'reconnected' } targetClientId='first'
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='second' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client connected clientId='first' statusOnly=false
+2026-10-01 05:55:23 INFO SSE client disconnected clientId='first' statusOnly=false
+✔ MCP 读取当前激活网页的画布 (5.6711ms)
+✔ 按精确 clientId 读取画布快照，不受当前焦点影响 (0.9073ms)
+✔ 画布写操作只发送给当前激活网页 (2.0148ms)
+✔ 当前 turn 的图片附件可在发起标签页画布创建图片节点 (2.5241ms)
+✔ 图片附件只允许发起 turn 的标签页读取和落入画布 (0.86ms)
+✔ tool result is accepted only from the request client (0.6566ms)
+✔ 生成状态查询由当前激活网页返回 (0.6511ms)
+✔ 活动网页关闭后回退到仍连接的画布 (0.4335ms)
+✔ closing the active client falls back to the most recently focused client (0.4833ms)
+✔ closing a client rejects its pending tool requests (0.5347ms)
+✔ shared thread events are broadcast with the active thread id (0.5562ms)
+✔ new clients receive the current Codex state and later updates (0.4347ms)
+✔ 对话 revision 单调递增且 MCP 全部进入终态前保持 preparing (0.2338ms)
+✔ 可选 MCP 失败进入 warning，画布 MCP 失败进入 failed (0.0968ms)
+✔ Codex 写操作在多窗口之间互斥且不能与运行 turn 并发 (0.0687ms)
+✔ Skill draft generation broadcasts shared busy state and restores the previous thread (0.3481ms)
+✔ Skill draft busy state preserves the previous turn replay until history acknowledges it (0.3169ms)
+✔ a bound client remains the tool target while focus changes (0.5274ms)
+✔ a disconnected bound client never falls back and can resume with the same client id (0.6463ms)
+✔ 新连接会回放当前运行 turn 的最新事件快照 (0.3012ms)
+✔ 同一 item 的多次增量只回放最新内容 (0.3992ms)
+✔ 增量事件重放时转换为完整文本快照 (0.3662ms)
+✔ 并行 item 更新后重放仍保留开始顺序和命令字段 (0.3281ms)
+✔ 长 turn 不会淘汰仍在更新的活动条目快照 (0.8112ms)
+✔ 内置生图事件会回放展示但标记为不可重复执行 (0.3631ms)
+✔ turn 结束后保留实时快照，直到网页确认权威历史 (0.5218ms)
+✔ 开始下一 turn 时只回放当前 turn 的事件 (0.2785ms)
+✔ 同一用户消息从 pending 绑定 turn 后只回放最终版本 (0.2711ms)
+✔ 切换活动线程会清除上一线程的实时快照 (0.2714ms)
+﹣ writeConfigFile creates directory 0700 and file 0600 (0.7007ms) # SKIP
+﹣ writeConfigFile tightens existing loose permissions (0.1188ms) # SKIP
+✔ writeConfigFile persists the config content (6.9594ms)
+Infinite Canvas Agent
+Local URL: http://127.0.0.1:64207
+Codex MCP is not installed by this command.
+Optional MCP add: codex mcp add infinite-canvas -- npx -y @basketikun/canvas-agent@latest mcp
+Remove manually added MCP: codex mcp remove infinite-canvas
+2026-10-01 05:55:25 INFO Canvas Agent started url='http://127.0.0.1:64207' workspace='C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-codebuddy-http-sWmByg\\codex-workspaces\\site' debugLog=''
+2026-10-01 05:55:25 ERROR HTTP request failed method='POST' path='/agent/codebuddy/probe' error={ name: 'Error', message: 'CodeBuddy 正在处理上一任务，请稍后再试', stack: 'Error: CodeBuddy 正在处理上一任务，请稍后再试\n    at runCodeBuddy (D:\\kk-studio\\.worktrees\\TASK-AGENT-008-image-transport\\vendor\\canvas-agent\\src\\agent\\codebuddy.ts:52:22)\n    at <anonymous> (D:\\kk-studio\\.worktrees\\TASK-AGENT-008-image-transport\\vendor\\canvas-agent\\src\\server\\http.ts:221:28)\n    at <anonymous> (D:\\kk-studio\\.worktrees\\TASK-AGENT-008-image-transport\\vendor\\canvas-agent\\src\\server\\http.ts:554:70)\n    at Layer.handleRequest (D:\\kk-studio\\.worktrees\\TASK-AGENT-008-image-transport\\vendor\\canvas-agent\\node_modules\\router\\lib\\layer.js:152:17)\n    at next (D:\\kk-studio\\.worktrees\\TASK-AGENT-008-image-transport\\vendor\\canvas-agent\\node_modules\\router\\lib\\route.js:157:13)\n    at Route.dispatch (D:\\kk-studio\\.worktrees\\TASK-AGENT-008-image-transport\\vendor\\canvas-agent\\node_modules\\router\\lib\\route.js:117:3)\n    at handle (D:\\kk-studio\\.worktrees\\TASK-AGENT-008-image-transport\\vendor\\canvas-agent\\node_modules\\router\\index.js:435:11)\n    at Layer.handleRequest (D:\\kk-studio\\.worktrees\\TASK-AGENT-008-image-transport\\vendor\\canvas-agent\\node_modules\\router\\lib\\layer.js:152:17)\n    at D:\\kk-studio\\.worktrees\\TASK-AGENT-008-image-transport\\vendor\\canvas-agent\\node_modules\\router\\index.js:295:15\n    at processParams (D:\\kk-studio\\.worktrees\\TASK-AGENT-008-image-transport\\vendor\\canvas-agent\\node_modules\\router\\index.js:582:12)' }
+2026-10-01 05:55:25 ERROR HTTP request failed method='POST' path='/agent/codebuddy/probe' error={ name: 'Error', message: 'CodeBuddy 请求已取消', stack: 'Error: CodeBuddy 请求已取消\n    at ChildProcess.<anonymous> (D:\\kk-studio\\.worktrees\\TASK-AGENT-008-image-transport\\vendor\\canvas-agent\\src\\agent\\codebuddy.ts:219:34)\n    at Object.onceWrapper (node:events:631:26)\n    at ChildProcess.emit (node:events:509:28)\n    at maybeClose (node:internal/child_process:1141:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:306:5)' }
+✔ CodeBuddy config and probe require local token and distinguish saved from usable (1831.7765ms)
+✔ MCP exposes a bounded CodeBuddy consult tool and returns its real result (665.9546ms)
+✔ cancelling an MCP consultation stops the CLI and frees the next call (620.2036ms)
+✔ 创建、读取和更新画布专属 Skill (29.1646ms)
+✔ revision 不匹配时拒绝覆盖或删除 (10.4322ms)
+✔ 清空界面字段时保留未由画布管理的 openai 元数据 (20.4602ms)
+✔ 名称、正文大小和默认提示词均经过校验 (0.9388ms)
+✔ 更新校验失败时不会提前改写 SKILL.md (7.4937ms)
+✔ 拒绝读取非对象格式的 openai.yaml (10.5493ms)
+✔ 不完整更新请求返回校验错误而不是运行时异常 (0.574ms)
+✔ 空 interface 元数据读取为空 (10.4116ms)
+✔ 读取或修改不存在的 Skill 不会创建目录 (1.0338ms)
+✔ 更新后只保留完整文件且不遗留临时文件 (13.6145ms)
+✔ 拒绝读取非对象格式的 interface 元数据 (10.8936ms)
+✔ redactAgentLog masks bearer tokens (1.1401ms)
+✔ redactAgentLog masks sk- keys (0.0974ms)
+✔ redactAgentLog masks explicit api-key/token/authorization assignments (0.0693ms)
+✔ createAgentLogWriter redacts ANSI-colored credentials split across chunks (0.5289ms)
+✔ redactAgentLog keeps text without credentials intact (0.0663ms)
+ℹ tests 174
+ℹ suites 0
+ℹ pass 172
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 2
+ℹ todo 0
+ℹ duration_ms 3529.7614

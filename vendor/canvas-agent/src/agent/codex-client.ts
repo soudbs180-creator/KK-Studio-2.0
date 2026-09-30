@@ -864,6 +864,8 @@ function normalizeItem(item: unknown) {
     if (value.type === "webSearch") value.type = "web_search";
     if (value.type === "imageView") value.type = "image_view";
     if (value.type === "imageGeneration") value.type = "image_generation";
+    // 图片原件走鉴权文件端点；Base64 result 会使 SSE 和补充历史超限。
+    if (value.type === "image_generation") delete value.result;
     if (value.type === "contextCompaction") value.type = "context_compaction";
     if (value.type === "agent_message" && typeof value.id === "string") value.text = String(value.text || "");
     if ("arguments" in value) value.arguments = parseMaybeJson(value.arguments);

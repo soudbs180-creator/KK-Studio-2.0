@@ -1,0 +1,45 @@
+{
+  "base": "709e51d5c30c9c9216a888c22592e7870df8901e",
+  "sourceFingerprints": [
+    {
+      "path": "vendor/canvas-agent/src/agent/codex-client.ts",
+      "sha256": "3c0ce45e9b3da528f46b9c94d9312616fd2a5c2f46f0b15cf0539885a4265970"
+    },
+    {
+      "path": "src/features/agent/agentHost.ts",
+      "sha256": "1359a161ab15fa01144a278543db9fe26b82b7bc8e3398681587df2215aa88be"
+    }
+  ],
+  "node": "24.19.0",
+  "npm": "11",
+  "verify": {
+    "command": "npm run verify",
+    "exit": 0,
+    "root": {
+      "tests": 640,
+      "pass": 632,
+      "skip": 8
+    },
+    "agent": {
+      "tests": 174,
+      "pass": 172,
+      "skip": 2
+    },
+    "browser": {
+      "pass": 377,
+      "flaky": 0
+    }
+  },
+  "rust": {
+    "fmt": 0,
+    "test": 0,
+    "pass": 97,
+    "clientCheck": 0
+  },
+  "nativeBuild": {
+    "command": "npm run client:build:agent -- --no-bundle",
+    "exit": 0
+  },
+  "nativeRecovery": "PASS",
+  "sseLimit": "2 MiB retained"
+}

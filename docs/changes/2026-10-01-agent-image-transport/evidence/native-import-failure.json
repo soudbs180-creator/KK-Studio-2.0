@@ -1,0 +1,18 @@
+{
+  "startedAt": "2026-09-30T22:02:54.093Z",
+  "result": "FAIL",
+  "exe": {
+    "path": "D:\\kk-studio\\.worktrees\\TASK-AGENT-008-image-transport\\src-tauri\\target\\release\\kk-studio.exe",
+    "sha256": "ed78dd8589347b9407e443691bebbd1bd335012df804203ad7831eec0b365939"
+  },
+  "sourceFingerprint": "3c0ce45e9b3da528f46b9c94d9312616fd2a5c2f46f0b15cf0539885a4265970",
+  "expectedImage": {
+    "bytes": 1805481,
+    "sha256": "507e64c08fb52208e2381edc4668272d5622960fc1b9d19e4d0ea2ad95bb17c0",
+    "assetId": "asset-507e64c08fb52208e2381edc"
+  },
+  "errors": [
+    "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n2 !== 1\n\n    at checkAssets (file:///D:/kk-studio/.tmp/agent-image-008-restart.mjs:44:10)\n    at async file:///D:/kk-studio/.tmp/agent-image-008-restart.mjs:62:3"
+  ],
+  "note": "真实重复归档标记失败；旧数据不覆盖，新数据验收对应 native-summary.json。"
+}

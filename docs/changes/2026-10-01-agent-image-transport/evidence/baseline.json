@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-01",
+  "timezone": "Asia/Shanghai",
+  "base": "709e51d5c30c9c9216a888c22592e7870df8901e",
+  "dependencyInstall": "npm ci, exit 0, own worktree",
+  "lint": {
+    "exit": 0
+  },
+  "typecheck": {
+    "exit": 0
+  },
+  "codexClient": {
+    "exit": 0,
+    "pass": 40
+  },
+  "red": {
+    "exit": 1,
+    "pass": 41,
+    "fail": 2
+  }
+}

@@ -97,6 +97,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MEMORY-002 | 跨产品共享本地记忆（本机共享） | PARTIAL | TASK-MEMORY-001 | MainAgent |
 | TASK-AGENT-007 | Codex 通过本机 CodeBuddy CLI 受限委派短文本 | DONE | TASK-AGENT-001 | root |
 | TASK-DESKTOP-INSTALLER-001 | Windows NSIS 安装器及隔离恢复验收 | DONE | none | root |
+| TASK-AGENT-008 | Codex 原生生图事件传输与短提示词审计 | REVIEW | TASK-AGENT-001 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -1193,3 +1194,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — 本机AC1–4已验收：NSIS、四次4279文件、启动/Agent/重装/修复/卸载再装保留项目、已有注册/进程保护通过；8项定向、无retry160项、完整verify631root/169Agent/377browser（原skip保留）、Rust97/clientcheck、独立技术/运行证据审查至2cf5249通过。
 - Evidence: [docs/changes/2026-09-30-desktop-installer/verification.md](../../docs/changes/2026-09-30-desktop-installer/verification.md), [docs/changes/2026-09-30-desktop-installer/evidence/installer-runtime.json](../../docs/changes/2026-09-30-desktop-installer/evidence/installer-runtime.json), [docs/changes/2026-09-30-desktop-installer/evidence/candidate-verify.log](../../docs/changes/2026-09-30-desktop-installer/evidence/candidate-verify.log)
 - Updated: 2026-09-30
+
+## TASK-AGENT-008 — Codex 原生生图事件传输与短提示词审计
+
+- Goal: KK 控制 Codex 真正生图并归档，解释长提示词来源
+- Scope: Codex 生图事件元数据、并发归档提交前幂等、真实生产恢复和短提示词审计
+- Acceptance: 3 MiB 生图 result 不进入 SSE 或补充历史，大小保护保持; 真实 KK Tauri 生图完成后连接保持且原件进入画布; 重启/重连唯一恢复与短句请求/聊天显示审计; 相关完整验证、独立精确 SHA review、PR 门禁
+- Branch: `codex/TASK-AGENT-008-image-transport`
+- Worktree: `D:/kk-studio/.worktrees/TASK-AGENT-008-image-transport`
+- Modules: vendor/canvas-agent/src/agent/codex-client.ts, vendor/canvas-agent/src/agent/codex-client.test.ts, config/platform-versions.json, docs/governance, src/features/agent/agentHost.ts, tests/unit/agentHost.test.ts
+- Verification: PASS — 两组 RED→GREEN；verify 632 root/172 Agent/377 browser，原平台 skip 保留，Rust97/fmt/clientcheck；独立本 worktree Tauri 真实生图/续聊/重连/重启原件 hash 一致、节点/归档标记唯一。独立精确 SHA review 与 PR 门禁待完成；豆包登录/归档仍未验收。
+- Evidence: [docs/changes/2026-10-01-agent-image-transport/intent.md](../../docs/changes/2026-10-01-agent-image-transport/intent.md), [docs/changes/2026-10-01-agent-image-transport/spec.md](../../docs/changes/2026-10-01-agent-image-transport/spec.md), [docs/changes/2026-10-01-agent-image-transport/verification.md](../../docs/changes/2026-10-01-agent-image-transport/verification.md)
+- Updated: 2026-10-01
