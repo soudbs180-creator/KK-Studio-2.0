@@ -6,6 +6,13 @@ test("窄屏设置分类的同组入口保持在底部导航内", async ({ page 
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const nav = page.getByRole("navigation", { name: "设置分类" });
+  await expect(nav).toBeVisible();
+  await expect(
+    nav.getByRole("button", { name: "通用", exact: true }),
+  ).toBeVisible();
+  await expect(
+    nav.getByRole("button", { name: "账号管理", exact: true }),
+  ).toBeVisible();
   // The opening animation moves all three together; compare one frame.
   const { general, account, bar } = await nav.evaluate((el) => {
     const box = (label: string) => {
@@ -136,6 +143,8 @@ test("手机设置分类固定在底部横向滑块", async ({ page }) => {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
   const nav = dialog.locator(".settings-nav");
+  await expect(dialog.locator(".settings-panel")).toBeVisible();
+  await expect(dialog.locator(".settings-sidebar")).toBeVisible();
   const { panelBox, sidebarBox } = await dialog.evaluate((el) => ({
     panelBox: el
       .querySelector(".settings-panel")!
