@@ -1,0 +1,34 @@
+[WebServer] (node:64272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:35224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\browser\desktop-data-stability.spec.ts:19:1 › 原生连续保存更新 CAS，删除等待异步确认且取消保留项目 (6.9s)
+
+
+  1) tests\browser\desktop-data-stability.spec.ts:19:1 › 原生连续保存更新 CAS，删除等待异步确认且取消保留项目 ──────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      74 |     await entry.getByRole("button", { name: "更多项目设置" }).click();
+      75 |     await entry.getByRole("menuitem", { name: "删除项目", exact: true }).click();
+    > 76 |     await expect.poll(() => page.evaluate(() => Boolean((window as unknown as NativeWindow).nativeAcceptance.pending))).toBe(true);
+         |                                                                                                                         ^
+      77 |     await expect(entry).toHaveCount(1);
+      78 |     expect((await saved())?.projects).toHaveLength(1);
+      79 |   };
+        at remove (D:\kk-studio\KK-Studio-2.0\tests\browser\desktop-data-stability.spec.ts:76:121)
+        at D:\kk-studio\KK-Studio-2.0\tests\browser\desktop-data-stability.spec.ts:85:3
+
+    Error Context: test-results\desktop-data-stability-原生连续保存更新-CAS，删除等待异步确认且取消保留项目\error-context.md
+
+  1 failed
+    tests\browser\desktop-data-stability.spec.ts:19:1 › 原生连续保存更新 CAS，删除等待异步确认且取消保留项目 ───────────────
