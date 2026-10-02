@@ -1279,14 +1279,17 @@
       "tests/unit/mcpClient.test.ts",
       "tests/browser/mcp-settings.spec.ts"
     ],
-    "status": "TODO",
+    "status": "READY",
     "evidence": [
       "docs/changes/2026-09-24-mcp-registry-limit/spec.md",
-      "docs/features/feat-012-mcp.md"
+      "docs/features/feat-012-mcp.md",
+      "docs/changes/2026-10-03-task-audit/intent.md",
+      "docs/changes/2026-10-03-task-audit/spec.md",
+      "docs/changes/2026-10-03-task-audit/plan.md"
     ],
-    "verification": "NOT VERIFIED：当前客户端固定 2025-11-25 initialize；官方 2026-07-28 文档定义 server/discover。尚未运行现代协议真实服务器，兼容失败为静态推断。",
+    "verification": "已纳入本轮审计计划，尚未开始实现。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-24"
+    "updated": "2026-10-03"
   },
   {
     "id": "TASK-MCP-REGISTRY-001",
@@ -1307,13 +1310,16 @@
       "src/components/settings/McpSettings.tsx",
       "tests/unit/mcpClient.test.ts"
     ],
-    "status": "TODO",
+    "status": "READY",
     "evidence": [
-      "docs/changes/2026-09-24-mcp-registry-limit/review.md"
+      "docs/changes/2026-09-24-mcp-registry-limit/review.md",
+      "docs/changes/2026-10-03-task-audit/intent.md",
+      "docs/changes/2026-10-03-task-audit/spec.md",
+      "docs/changes/2026-10-03-task-audit/plan.md"
     ],
-    "verification": "独立审查在基线复现：两个实例各基于 49 项新增时，后写者覆盖先写者；修复及跨标签页验收未执行。",
+    "verification": "已纳入本轮审计计划，尚未开始实现。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-26"
+    "updated": "2026-10-03"
   },
   {
     "id": "TASK-MCP-REGISTRY-002",
@@ -1335,13 +1341,16 @@
       "tests/unit/mcpClient.test.ts",
       "tests/browser/mcp-settings.spec.ts"
     ],
-    "status": "TODO",
+    "status": "READY",
     "evidence": [
-      "docs/changes/2026-09-24-mcp-registry-limit/review.md"
+      "docs/changes/2026-09-24-mcp-registry-limit/review.md",
+      "docs/changes/2026-10-03-task-audit/intent.md",
+      "docs/changes/2026-10-03-task-audit/spec.md",
+      "docs/changes/2026-10-03-task-audit/plan.md"
     ],
-    "verification": "独立审查在基线复现：旧版 51 项存储仍在但当前界面列表为 0，registry 拒绝后续增删；恢复流程未实现。",
+    "verification": "已纳入本轮审计计划，尚未开始实现。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-26"
+    "updated": "2026-10-03"
   },
   {
     "id": "FEATURE-SYSTEM",
@@ -3223,5 +3232,72 @@
     "verification": "本机AC-1–3 DONE：两组RED→GREEN，verify632root/172Agent/377browser（原平台skip保留）、Rust97/fmt/clientcheck；真实Tauri生图/续聊/重连/重启hash一致、节点/标记唯一。实现head3c63f1e独立审查PASS（43/9/6定向复验），P3文档意见已修正。PR#33终稿head独立补审、托管CI与推广以实际PR/收据为准；豆包/Web真实账号/其他Provider/Mobile/正式发布未验收。",
     "verificationResult": "PASS",
     "updated": "2026-10-01"
+  },
+  {
+    "id": "TASK-ORCH-REPLAN-001",
+    "title": "编排计划失败项重排与依赖闭包",
+    "goal": "在不重复成功工作项的前提下，将失败项及其下游依赖物化为可恢复的新计划",
+    "scope": "src/features/agent/orchestrator.ts, tests/unit/orchestrator.test.ts",
+    "acceptance": [
+      "失败和部分失败工作项进入新计划 queued 状态",
+      "失败项的依赖下游一并重排，已成功项和原计划保留",
+      "重复请求返回同一新计划且持久化通过 stagePlans",
+      "审批门与 revision 语义合法，不触发真实 Provider 执行"
+    ],
+    "dependencies": [
+      "TASK-ORCH-001"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/features/agent/orchestrator.ts",
+      "tests/unit/orchestrator.test.ts"
+    ],
+    "status": "READY",
+    "evidence": [
+      "docs/changes/2026-10-03-task-audit/intent.md",
+      "docs/changes/2026-10-03-task-audit/spec.md",
+      "docs/changes/2026-10-03-task-audit/plan.md"
+    ],
+    "verification": "已纳入本轮审计计划，尚未开始实现。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-03"
+  },
+  {
+    "id": "TASK-AUDIT-20261003",
+    "title": "全项目任务盘点与可本地闭环项收口",
+    "goal": "盘点全部任务和功能卡，完成本地可验证缺陷并同步真实状态",
+    "scope": "docs/governance, docs/features, src/features/mcp, src/features/agent, tests",
+    "acceptance": [
+      "全部任务有状态、依赖、优先级或外部阻塞说明",
+      "本地可闭环的 MCP 注册表、协议和计划重排缺陷有实现与回归证据",
+      "治理视图和最终状态报告与实际命令输出一致"
+    ],
+    "dependencies": [
+      "TASK-MCP-REGISTRY-001",
+      "TASK-MCP-REGISTRY-002",
+      "TASK-MCP-PROTO-001",
+      "TASK-ORCH-REPLAN-001"
+    ],
+    "owner": "root",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "affectedModules": [
+      "docs/governance",
+      "docs/features",
+      "src/features/mcp",
+      "src/features/agent",
+      "tests"
+    ],
+    "status": "IN_PROGRESS",
+    "evidence": [
+      "docs/changes/2026-10-03-task-audit/intent.md",
+      "docs/changes/2026-10-03-task-audit/spec.md",
+      "docs/changes/2026-10-03-task-audit/plan.md"
+    ],
+    "verification": "盘点和实现进行中，最终回归尚未完成。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-03"
   }
 ]

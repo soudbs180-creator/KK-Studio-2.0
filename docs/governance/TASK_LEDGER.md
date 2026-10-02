@@ -44,9 +44,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AUDIT-SEC-001 | 安全边界与异常任务状态审计 | DONE | TASK-GOV-001 | root |
 | TASK-CAP-001 | 本地 Skill/MCP/ComfyUI 能力补齐 | PARTIAL | TASK-GOV-001, T6 | root |
 | TASK-MINIMAX-001 | MiniMax Design 交互审计与本地技能/MCP复刻 | PARTIAL | TASK-GOV-002 | root |
-| TASK-MCP-PROTO-001 | MCP 2026 协议协商与旧版兼容 | TODO | TASK-CAP-001 | root |
-| TASK-MCP-REGISTRY-001 | MCP 多标签页配置写入不丢失 | TODO | none | root |
-| TASK-MCP-REGISTRY-002 | 旧版超限 MCP 配置无损恢复 | TODO | none | root |
+| TASK-MCP-PROTO-001 | MCP 2026 协议协商与旧版兼容 | READY | TASK-CAP-001 | root |
+| TASK-MCP-REGISTRY-001 | MCP 多标签页配置写入不丢失 | READY | none | root |
+| TASK-MCP-REGISTRY-002 | 旧版超限 MCP 配置无损恢复 | READY | none | root |
 | FEATURE-SYSTEM | 功能卡片体系、状态看板与后端化路线 | DONE | TASK-KK2-MAIN-SYNC | root |
 | BACKEND-IMAGE-PARAMS | 图片比例与清晰度真实透传供应商 | PARTIAL | none | root |
 | BACKEND-TEXT-NODE | 文本节点接入统一任务宿主 | PARTIAL | T5 | root |
@@ -98,6 +98,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AGENT-007 | Codex 通过本机 CodeBuddy CLI 受限委派短文本 | DONE | TASK-AGENT-001 | root |
 | TASK-DESKTOP-INSTALLER-001 | Windows NSIS 安装器及隔离恢复验收 | DONE | none | root |
 | TASK-AGENT-008 | Codex 原生生图事件传输与短提示词审计 | DONE | TASK-AGENT-001 | root |
+| TASK-ORCH-REPLAN-001 | 编排计划失败项重排与依赖闭包 | READY | TASK-ORCH-001 | root |
+| TASK-AUDIT-20261003 | 全项目任务盘点与可本地闭环项收口 | IN_PROGRESS | TASK-MCP-REGISTRY-001, TASK-MCP-REGISTRY-002, TASK-MCP-PROTO-001, TASK-ORCH-REPLAN-001 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -567,9 +569,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/features/mcp/mcpClient.ts, src/components/settings/McpSettings.tsx, tests/unit/mcpClient.test.ts, tests/browser/mcp-settings.spec.ts
-- Verification: NOT_VERIFIED — NOT VERIFIED：当前客户端固定 2025-11-25 initialize；官方 2026-07-28 文档定义 server/discover。尚未运行现代协议真实服务器，兼容失败为静态推断。
-- Evidence: [docs/changes/2026-09-24-mcp-registry-limit/spec.md](../../docs/changes/2026-09-24-mcp-registry-limit/spec.md), [docs/features/feat-012-mcp.md](../../docs/features/feat-012-mcp.md)
-- Updated: 2026-09-24
+- Verification: NOT_VERIFIED — 已纳入本轮审计计划，尚未开始实现。
+- Evidence: [docs/changes/2026-09-24-mcp-registry-limit/spec.md](../../docs/changes/2026-09-24-mcp-registry-limit/spec.md), [docs/features/feat-012-mcp.md](../../docs/features/feat-012-mcp.md), [docs/changes/2026-10-03-task-audit/intent.md](../../docs/changes/2026-10-03-task-audit/intent.md), [docs/changes/2026-10-03-task-audit/spec.md](../../docs/changes/2026-10-03-task-audit/spec.md), [docs/changes/2026-10-03-task-audit/plan.md](../../docs/changes/2026-10-03-task-audit/plan.md)
+- Updated: 2026-10-03
 
 ## TASK-MCP-REGISTRY-001 — MCP 多标签页配置写入不丢失
 
@@ -579,9 +581,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/features/mcp/mcpClient.ts, src/components/settings/McpSettings.tsx, tests/unit/mcpClient.test.ts
-- Verification: NOT_VERIFIED — 独立审查在基线复现：两个实例各基于 49 项新增时，后写者覆盖先写者；修复及跨标签页验收未执行。
-- Evidence: [docs/changes/2026-09-24-mcp-registry-limit/review.md](../../docs/changes/2026-09-24-mcp-registry-limit/review.md)
-- Updated: 2026-09-26
+- Verification: NOT_VERIFIED — 已纳入本轮审计计划，尚未开始实现。
+- Evidence: [docs/changes/2026-09-24-mcp-registry-limit/review.md](../../docs/changes/2026-09-24-mcp-registry-limit/review.md), [docs/changes/2026-10-03-task-audit/intent.md](../../docs/changes/2026-10-03-task-audit/intent.md), [docs/changes/2026-10-03-task-audit/spec.md](../../docs/changes/2026-10-03-task-audit/spec.md), [docs/changes/2026-10-03-task-audit/plan.md](../../docs/changes/2026-10-03-task-audit/plan.md)
+- Updated: 2026-10-03
 
 ## TASK-MCP-REGISTRY-002 — 旧版超限 MCP 配置无损恢复
 
@@ -591,9 +593,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/features/mcp/mcpClient.ts, src/components/settings/McpSettings.tsx, tests/unit/mcpClient.test.ts, tests/browser/mcp-settings.spec.ts
-- Verification: NOT_VERIFIED — 独立审查在基线复现：旧版 51 项存储仍在但当前界面列表为 0，registry 拒绝后续增删；恢复流程未实现。
-- Evidence: [docs/changes/2026-09-24-mcp-registry-limit/review.md](../../docs/changes/2026-09-24-mcp-registry-limit/review.md)
-- Updated: 2026-09-26
+- Verification: NOT_VERIFIED — 已纳入本轮审计计划，尚未开始实现。
+- Evidence: [docs/changes/2026-09-24-mcp-registry-limit/review.md](../../docs/changes/2026-09-24-mcp-registry-limit/review.md), [docs/changes/2026-10-03-task-audit/intent.md](../../docs/changes/2026-10-03-task-audit/intent.md), [docs/changes/2026-10-03-task-audit/spec.md](../../docs/changes/2026-10-03-task-audit/spec.md), [docs/changes/2026-10-03-task-audit/plan.md](../../docs/changes/2026-10-03-task-audit/plan.md)
+- Updated: 2026-10-03
 
 ## FEATURE-SYSTEM — 功能卡片体系、状态看板与后端化路线
 
@@ -1206,3 +1208,27 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — 本机AC-1–3 DONE：两组RED→GREEN，verify632root/172Agent/377browser（原平台skip保留）、Rust97/fmt/clientcheck；真实Tauri生图/续聊/重连/重启hash一致、节点/标记唯一。实现head3c63f1e独立审查PASS（43/9/6定向复验），P3文档意见已修正。PR#33终稿head独立补审、托管CI与推广以实际PR/收据为准；豆包/Web真实账号/其他Provider/Mobile/正式发布未验收。
 - Evidence: [docs/changes/2026-10-01-agent-image-transport/intent.md](../../docs/changes/2026-10-01-agent-image-transport/intent.md), [docs/changes/2026-10-01-agent-image-transport/spec.md](../../docs/changes/2026-10-01-agent-image-transport/spec.md), [docs/changes/2026-10-01-agent-image-transport/verification.md](../../docs/changes/2026-10-01-agent-image-transport/verification.md)
 - Updated: 2026-10-01
+
+## TASK-ORCH-REPLAN-001 — 编排计划失败项重排与依赖闭包
+
+- Goal: 在不重复成功工作项的前提下，将失败项及其下游依赖物化为可恢复的新计划
+- Scope: src/features/agent/orchestrator.ts, tests/unit/orchestrator.test.ts
+- Acceptance: 失败和部分失败工作项进入新计划 queued 状态; 失败项的依赖下游一并重排，已成功项和原计划保留; 重复请求返回同一新计划且持久化通过 stagePlans; 审批门与 revision 语义合法，不触发真实 Provider 执行
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/agent/orchestrator.ts, tests/unit/orchestrator.test.ts
+- Verification: NOT_VERIFIED — 已纳入本轮审计计划，尚未开始实现。
+- Evidence: [docs/changes/2026-10-03-task-audit/intent.md](../../docs/changes/2026-10-03-task-audit/intent.md), [docs/changes/2026-10-03-task-audit/spec.md](../../docs/changes/2026-10-03-task-audit/spec.md), [docs/changes/2026-10-03-task-audit/plan.md](../../docs/changes/2026-10-03-task-audit/plan.md)
+- Updated: 2026-10-03
+
+## TASK-AUDIT-20261003 — 全项目任务盘点与可本地闭环项收口
+
+- Goal: 盘点全部任务和功能卡，完成本地可验证缺陷并同步真实状态
+- Scope: docs/governance, docs/features, src/features/mcp, src/features/agent, tests
+- Acceptance: 全部任务有状态、依赖、优先级或外部阻塞说明; 本地可闭环的 MCP 注册表、协议和计划重排缺陷有实现与回归证据; 治理视图和最终状态报告与实际命令输出一致
+- Branch: `codex/TASK-AUDIT-20261003`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`
+- Modules: docs/governance, docs/features, src/features/mcp, src/features/agent, tests
+- Verification: NOT_VERIFIED — 盘点和实现进行中，最终回归尚未完成。
+- Evidence: [docs/changes/2026-10-03-task-audit/intent.md](../../docs/changes/2026-10-03-task-audit/intent.md), [docs/changes/2026-10-03-task-audit/spec.md](../../docs/changes/2026-10-03-task-audit/spec.md), [docs/changes/2026-10-03-task-audit/plan.md](../../docs/changes/2026-10-03-task-audit/plan.md)
+- Updated: 2026-10-03
