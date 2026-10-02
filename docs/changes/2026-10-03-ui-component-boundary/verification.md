@@ -2,6 +2,8 @@
 
 状态：已完成本地验证（2026-10-03，Asia/Shanghai）。
 
+实现 head：`d297ce5`（基线 `c6db26a`）。
+
 ## 实现前失败证据
 
 - `node scripts/check-ui-standards.mjs` 在拆分前报告 `src/components/settings/McpSettings.tsx: 301 行，超过 300 行组件边界`。

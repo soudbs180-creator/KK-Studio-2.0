@@ -2,6 +2,8 @@
 
 状态：已完成本地验证；日期：2026-10-03，Asia/Shanghai。
 
+实现 head：`d297ce5`（基线 `c6db26a`）。
+
 ## 证据范围
 
 - 目标入口：`docs/governance/PROJECT_GOALS.md`。

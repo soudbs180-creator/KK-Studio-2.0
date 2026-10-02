@@ -4,6 +4,8 @@
 - 时间与时区：2026-10-03，Asia/Shanghai。
 - Reviewer/context：独立 reviewer `/root/task_audit_reviewer`，当前工作树复核。
 - 独立于实现上下文：是；reviewer 只读检查当前 diff 和运行结果。
+- Base SHA / head SHA：`c6db26a` / `d297ce5`。
+- Branch / worktree：`codex/TASK-AUDIT-20261003` / `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`。
 - Intent / Spec / Plan / Verification：[intent](intent.md) · [spec](spec.md) · [plan](plan.md) · [verification](verification.md)。
 
 ## 评审范围和方式
