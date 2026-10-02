@@ -3322,5 +3322,76 @@
     "verification": "94 项任务已盘点并保留真实状态、依赖与外部条件说明；本地可验证的注册表、协议和计划重排收口均有实现与边界回归证据，治理/功能/Markdown 门禁和最终构建回归通过。",
     "verificationResult": "PASS",
     "updated": "2026-10-03"
+  },
+  {
+    "id": "TASK-GOV-GOALS-001",
+    "title": "项目建设目标与验收基线",
+    "goal": "把核心用户路径、代码/UI/链路/质量/交付标准统一为可执行且受门禁保护的项目基线",
+    "scope": "docs/governance/PROJECT_GOALS.md, scripts/check-project-goals.mjs, package.json, docs/governance",
+    "acceptance": [
+      "明确创作、Agent、能力配置和恢复四条核心用户路径及完成证据",
+      "明确范围、非目标、Desktop/Web/Mobile边界、错误/取消/离线/未知受理和数据安全标准",
+      "项目目标检查接入 lint/verify，任务与变更证据同步"
+    ],
+    "dependencies": [
+      "TASK-AUDIT-20261003"
+    ],
+    "owner": "root",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "affectedModules": [
+      "docs/governance",
+      "scripts/check-project-goals.mjs",
+      "package.json"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-10-03-project-goals-baseline/intent.md",
+      "docs/changes/2026-10-03-project-goals-baseline/spec.md",
+      "docs/changes/2026-10-03-project-goals-baseline/plan.md",
+      "docs/changes/2026-10-03-project-goals-baseline/verification.md",
+      "docs/changes/2026-10-03-project-goals-baseline/review.md",
+      "docs/governance/PROJECT_GOALS.md",
+      "scripts/check-project-goals.mjs"
+    ],
+    "verification": "项目建设目标、四条用户主路径和六类验收门禁已落盘；目标检查通过并接入 lint/verify，外部能力继续由原任务和外部条件管理。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-03"
+  },
+  {
+    "id": "TASK-UI-COMPONENT-BOUNDARY-001",
+    "title": "MCP 设置组件职责拆分",
+    "goal": "消除 MCP 设置组件超过 300 行的职责堆叠并保持设置行为完整",
+    "scope": "src/components/settings/McpSettings.tsx, src/components/settings/McpServerForm.tsx, src/components/settings/McpServerList.tsx",
+    "acceptance": [
+      "McpSettings、表单和列表组件均符合 300 行职责边界",
+      "保存、只读禁用、连接/取消/断开、移除、工具展开和显式调用行为保持一致",
+      "类型、Lint、UI 标准和 MCP 设置浏览器回归通过"
+    ],
+    "dependencies": [
+      "TASK-GOV-GOALS-001"
+    ],
+    "owner": "root",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "affectedModules": [
+      "src/components/settings/McpSettings.tsx",
+      "src/components/settings/McpServerForm.tsx",
+      "src/components/settings/McpServerList.tsx"
+    ],
+    "status": "REVIEW",
+    "evidence": [
+      "docs/changes/2026-10-03-ui-component-boundary/intent.md",
+      "docs/changes/2026-10-03-ui-component-boundary/spec.md",
+      "docs/changes/2026-10-03-ui-component-boundary/plan.md",
+      "docs/changes/2026-10-03-ui-component-boundary/verification.md",
+      "docs/changes/2026-10-03-ui-component-boundary/review.md",
+      "src/components/settings/McpSettings.tsx",
+      "src/components/settings/McpServerForm.tsx",
+      "src/components/settings/McpServerList.tsx"
+    ],
+    "verification": "MCP 设置容器已拆为表单和列表职责，UI 标准 194 文件/0 违规；定向 TypeScript、ESLint 和 Prettier 通过，MCP 设置浏览器回归在完整 Playwright 中通过。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-03"
   }
 ]

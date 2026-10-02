@@ -100,6 +100,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AGENT-008 | Codex 原生生图事件传输与短提示词审计 | DONE | TASK-AGENT-001 | root |
 | TASK-ORCH-REPLAN-001 | 编排计划失败项重排与依赖闭包 | DONE | TASK-ORCH-001 | root |
 | TASK-AUDIT-20261003 | 全项目任务盘点与可本地闭环项收口 | DONE | TASK-MCP-REGISTRY-001, TASK-MCP-REGISTRY-002, TASK-MCP-PROTO-001, TASK-ORCH-REPLAN-001 | root |
+| TASK-GOV-GOALS-001 | 项目建设目标与验收基线 | DONE | TASK-AUDIT-20261003 | root |
+| TASK-UI-COMPONENT-BOUNDARY-001 | MCP 设置组件职责拆分 | REVIEW | TASK-GOV-GOALS-001 | root |
 
 ## T0 — 可复现候选源码与主线整合
 
@@ -1231,4 +1233,28 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: docs/governance, docs/features, src/features/mcp, src/features/agent, tests
 - Verification: PASS — 94 项任务已盘点并保留真实状态、依赖与外部条件说明；本地可验证的注册表、协议和计划重排收口均有实现与边界回归证据，治理/功能/Markdown 门禁和最终构建回归通过。
 - Evidence: [docs/changes/2026-10-03-task-audit/intent.md](../../docs/changes/2026-10-03-task-audit/intent.md), [docs/changes/2026-10-03-task-audit/spec.md](../../docs/changes/2026-10-03-task-audit/spec.md), [docs/changes/2026-10-03-task-audit/plan.md](../../docs/changes/2026-10-03-task-audit/plan.md), [docs/changes/2026-10-03-task-audit/inventory.md](../../docs/changes/2026-10-03-task-audit/inventory.md), [docs/changes/2026-10-03-task-audit/verification.md](../../docs/changes/2026-10-03-task-audit/verification.md), [docs/changes/2026-10-03-task-audit/review.md](../../docs/changes/2026-10-03-task-audit/review.md), [docs/governance/task-ledger.json](../../docs/governance/task-ledger.json), [docs/governance/TASK_LEDGER.md](../../docs/governance/TASK_LEDGER.md), [docs/features/features.registry.json](../../docs/features/features.registry.json)
+- Updated: 2026-10-03
+
+## TASK-GOV-GOALS-001 — 项目建设目标与验收基线
+
+- Goal: 把核心用户路径、代码/UI/链路/质量/交付标准统一为可执行且受门禁保护的项目基线
+- Scope: docs/governance/PROJECT_GOALS.md, scripts/check-project-goals.mjs, package.json, docs/governance
+- Acceptance: 明确创作、Agent、能力配置和恢复四条核心用户路径及完成证据; 明确范围、非目标、Desktop/Web/Mobile边界、错误/取消/离线/未知受理和数据安全标准; 项目目标检查接入 lint/verify，任务与变更证据同步
+- Branch: `codex/TASK-AUDIT-20261003`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`
+- Modules: docs/governance, scripts/check-project-goals.mjs, package.json
+- Verification: PASS — 项目建设目标、四条用户主路径和六类验收门禁已落盘；目标检查通过并接入 lint/verify，外部能力继续由原任务和外部条件管理。
+- Evidence: [docs/changes/2026-10-03-project-goals-baseline/intent.md](../../docs/changes/2026-10-03-project-goals-baseline/intent.md), [docs/changes/2026-10-03-project-goals-baseline/spec.md](../../docs/changes/2026-10-03-project-goals-baseline/spec.md), [docs/changes/2026-10-03-project-goals-baseline/plan.md](../../docs/changes/2026-10-03-project-goals-baseline/plan.md), [docs/changes/2026-10-03-project-goals-baseline/verification.md](../../docs/changes/2026-10-03-project-goals-baseline/verification.md), [docs/changes/2026-10-03-project-goals-baseline/review.md](../../docs/changes/2026-10-03-project-goals-baseline/review.md), [docs/governance/PROJECT_GOALS.md](../../docs/governance/PROJECT_GOALS.md), [scripts/check-project-goals.mjs](../../scripts/check-project-goals.mjs)
+- Updated: 2026-10-03
+
+## TASK-UI-COMPONENT-BOUNDARY-001 — MCP 设置组件职责拆分
+
+- Goal: 消除 MCP 设置组件超过 300 行的职责堆叠并保持设置行为完整
+- Scope: src/components/settings/McpSettings.tsx, src/components/settings/McpServerForm.tsx, src/components/settings/McpServerList.tsx
+- Acceptance: McpSettings、表单和列表组件均符合 300 行职责边界; 保存、只读禁用、连接/取消/断开、移除、工具展开和显式调用行为保持一致; 类型、Lint、UI 标准和 MCP 设置浏览器回归通过
+- Branch: `codex/TASK-AUDIT-20261003`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`
+- Modules: src/components/settings/McpSettings.tsx, src/components/settings/McpServerForm.tsx, src/components/settings/McpServerList.tsx
+- Verification: PASS — MCP 设置容器已拆为表单和列表职责，UI 标准 194 文件/0 违规；定向 TypeScript、ESLint 和 Prettier 通过，MCP 设置浏览器回归在完整 Playwright 中通过。
+- Evidence: [docs/changes/2026-10-03-ui-component-boundary/intent.md](../../docs/changes/2026-10-03-ui-component-boundary/intent.md), [docs/changes/2026-10-03-ui-component-boundary/spec.md](../../docs/changes/2026-10-03-ui-component-boundary/spec.md), [docs/changes/2026-10-03-ui-component-boundary/plan.md](../../docs/changes/2026-10-03-ui-component-boundary/plan.md), [docs/changes/2026-10-03-ui-component-boundary/verification.md](../../docs/changes/2026-10-03-ui-component-boundary/verification.md), [docs/changes/2026-10-03-ui-component-boundary/review.md](../../docs/changes/2026-10-03-ui-component-boundary/review.md), [src/components/settings/McpSettings.tsx](../../src/components/settings/McpSettings.tsx), [src/components/settings/McpServerForm.tsx](../../src/components/settings/McpServerForm.tsx), [src/components/settings/McpServerList.tsx](../../src/components/settings/McpServerList.tsx)
 - Updated: 2026-10-03

@@ -1,5 +1,11 @@
 # AI handoff
 
+## 2026-10-03 项目建设目标恢复入口
+
+先读[项目建设目标](PROJECT_GOALS.md)、[`PROJECT_STATE.md`](PROJECT_STATE.md)、[`TASK_LEDGER.md`](TASK_LEDGER.md)和[本轮变更计划](../changes/2026-10-03-project-goals-baseline/plan.md)。目标门禁为 `node scripts/check-project-goals.mjs`，并已接入 `lint`/`verify`；继续按创作、Agent、能力配置、恢复四条主路径检查 loading/success/error/cancel/offline/unknown 和重启/并发边界。当前任务账本的外部 Provider/GPU、ComfyUI、VPS、Mobile、第三方 MCP 与用户视觉验收仍保持原状态，不要用本地 fixture 或构建通过升级它们。
+
+同轮已修复 `McpSettings.tsx` 的 301 行组件边界问题，表单和服务器列表已拆分；继续改动时先读[组件变更](../changes/2026-10-03-ui-component-boundary/verification.md)，并重新执行 UI、类型和 MCP 设置回归。
+
 ## 2026-10-01 Codex 生图回传恢复点
 
 先核对PR #33真实merged状态、最新origin/main和最终文档head审查/CI；本机TASK-AGENT-008 AC-1–3 DONE不能替代推广收据。[计划](../changes/2026-10-01-agent-image-transport/plan.md)/[验证](../changes/2026-10-01-agent-image-transport/verification.md)保留main@709e51d基线、实现3c63f1e独立PASS与P3文档修正。native result去二进制和提交前幂等均RED→GREEN，2 MiB保护保留；run5真实生图/续聊/重连/重启hash一致且节点/标记唯一，verify632root/172Agent/377browser和Rust97 PASS。run3/run4失败历史及run5脚本设置错误不覆盖。重启先开项目并按入口启动服务，本次未改自动启动。豆包区域限制登录和CLI自动回画布仍未完成，不并行使用其profile。57/16→809/768，附加752恒定。
@@ -17,7 +23,6 @@
 若修改 head，重新独立审查、托管 verify/delivery、构建实际 bundle/客户端并绑定产物 hash。真实凭据/付费生成、安装器/签名、Mobile/VPS 与用户最终视觉验收仍需各自完成。
 
 ## 以下为历史恢复记录
-
 
 ## 2026-09-28 TASK-UI-CANVAS-001 当前恢复入口
 
@@ -46,11 +51,13 @@ PR #21 已合入 `main@7bc7c67`，原 push run `36369533105` 因 390px 对比按
 ## 2026-09-27 图片对比候选恢复点
 
 从 `D:/kk-studio/.worktrees/canvas-compare` 的 `codex/TASK-COMPARE-001-canvas-compare` 恢复；基线 `origin/main@a89792a`，先核对最新远端/main、当前分支 SHA、dirty 状态与任务账本。FEAT-036 的 Web 全量 `verify`（302 浏览器）、Tauri build 和隔离 release GUI 已通过，截图与运行身份见[本轮验证](../changes/2026-09-27-canvas-image-compare/verification.md)。独立最终审查、Hosted PR 检查和用户产品验收未完成；不把候选当成主线或发布版本。根 checkout 的未提交 UI 改动不得混入本任务。
+
 ## 2026-09-27 UI #19 主线同步恢复点
 
 - 远端 `main@a89792ad` 包含 PR #14/#15/#16；本任务 worktree `D:/kk-studio/.worktrees/TASK-UI-010-ui-regression` 正在将 #19 合入该主线，根目录 dirty UI 不参与。六处治理文档冲突已按任务/功能 ID 合并，72 个任务、32 个功能，检查零违规。
 - 两处浏览器偶发失败已定位为侧栏过渡期间断言与图片请求未到 Provider 前取消，定向用例各重复 16 次无重试通过。完整 `verify`、delivery、最终 head 独立审查及 Hosted 检查须在提交后回读，不用旧 `3db7b69` 的结果代替。
 - 未接线的 `tokens.css/json` 仍与运行 UI 的 291px 侧栏、40px 顶栏冲突；PR #20 堆叠在 #19 上且有独立未提交修正。真实媒体、第三方配置消费及正式 Desktop 发布仍为开放工作。
+
 ## 2026-09-25 侧栏真实项目整合恢复入口
 
 - 当前候选 `D:/kk-studio/.worktrees/TASK-UI-009-integration` / `feat/TASK-UI-009-ui010-integration` 基于 UI-010 已提交的 `98c567f`；根工程、旧 UI-009 dirty 工作树与 1423 UI-010 preview 不要覆盖。
@@ -113,6 +120,7 @@ PR #14 `67ff18fb` 独立复审已关闭原两项 P1，新发现重复工作项 I
 ## 2026-09-24 TASK-ORCH-001 候选
 
 `D:/kk-studio/.worktrees/TASK-ORCH-001` 的编排修复已在本地重跑 405 Node 与 300 Web 浏览器测试；最终独立复审仍 NOT VERIFIED，不可据此合并或宣称 Desktop/Provider 验收。恢复时核对任务分支实际 head、`origin/main`、dirty 状态及 [验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-24 MCP 配置上限候选
 
 `D:/kk-studio/.worktrees/TASK-MINIMAX-001-mcp-registry-limit` 在 `origin/main@76339c9f` 上处理第 51 个 MCP 服务器配置的数据丢失缺陷；恢复时核对实际 head、dirty 状态及 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)。`TASK-MCP-PROTO-001` 是另一个未开始的协议协商任务。编排候选在另一 worktree，两个分支的治理文档有重叠，禁止未解决冲突直接合并。
@@ -120,6 +128,7 @@ PR #14 `67ff18fb` 独立复审已关闭原两项 P1，新发现重复工作项 I
 ## 2026-09-23 Google 接入候选（TASK-AGENT-004/005，PARTIAL）
 
 当前候选分支 `feat/TASK-AGENT-004-google-closeout` 位于隔离 worktree `C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0`，叠加 004 API Key Interactions 对话/生图与 005 Gemini CLI 账号文字对话。真实账号、桌面运行与最终独立审查未验收。继续时先读 [004 验证](../changes/2026-09-23-google-interactions/verification.md)、[005 验证](../changes/2026-09-23-google-cli-login/verification.md)和 [ADR-007](../architecture/adr/ADR-007-gemini-cli-bridge.md)，核对当前 Git/PR 与最新校验结果；不得把旧 fixture 结果称为真实 Google 出图。
+
 ## 2026-09-24 当前恢复入口：CodeBuddy 受控委派
 
 - 当前工作树 `D:/kk-studio/.worktrees/TASK-AGENT-007-codebuddy-cli`，分支 `feat/TASK-AGENT-007-codebuddy-cli`，基于尚未合入的 `feat/TASK-MEMORY-001-local-memory`。先回读 Git 状态、[本轮验证](../changes/2026-09-24-codebuddy-delegation/verification.md)、[后续顺序](../changes/2026-09-24-codebuddy-delegation/remaining.md)，再看下方记忆历史。

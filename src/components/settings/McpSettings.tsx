@@ -5,13 +5,12 @@ import {
   type McpServerConfig,
   type McpTool,
 } from "../../features/mcp/mcpClient";
-import McpServerCard from "./McpServerCard";
+import McpServerForm from "./McpServerForm";
+import McpServerList, { type McpConnectionState } from "./McpServerList";
 import McpOverflowNotice from "./McpOverflowNotice";
 import McpProtocolNotice from "./McpProtocolNotice";
 import { z } from "zod";
 import { confirmAction } from "../../runtime/confirmAction";
-
-type ConnectionState = "disconnected" | "connecting" | "connected" | "error";
 
 export default function McpSettings({
   onFeedback,
@@ -28,7 +27,7 @@ export default function McpSettings({
     registry.list(),
   );
   const [tools, setTools] = useState<Record<string, McpTool[]>>({});
-  const [states, setStates] = useState<Record<string, ConnectionState>>({});
+  const [states, setStates] = useState<Record<string, McpConnectionState>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [expanded, setExpanded] = useState<string | null>(null);
   const [name, setName] = useState("");
@@ -231,71 +230,30 @@ export default function McpSettings({
           }
         />
       )}
-      <section className="settings-mcp-add" aria-labelledby="mcp-add-title">
-        <h3 id="mcp-add-title">添加 MCP 服务器</h3>
-        <label className="settings-field">
-          名称
-          <input
-            aria-label="MCP服务器名称"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder="例如：本地工具"
-          />
-        </label>
-        <label className="settings-field">
-          Streamable HTTP 地址
-          <input
-            aria-label="MCP地址"
-            value={endpoint}
-            onChange={(event) => setEndpoint(event.target.value)}
-            placeholder="https://example.com/mcp 或 http://127.0.0.1:3000/mcp"
-            inputMode="url"
-          />
-        </label>
-        {formError && (
-          <p className="settings-mcp-error" role="alert">
-            {formError}
-          </p>
-        )}
-        <button
-          type="button"
-          className="settings-action"
-          disabled={registry.isReadOnly || !name.trim() || !endpoint.trim()}
-          onClick={() => void addServer()}
-        >
-          保存服务器
-        </button>
-      </section>
-      <section className="settings-mcp-list" aria-label="MCP服务器列表">
-        <h3>已保存的服务器</h3>
-        {servers.length === 0 ? (
-          <div className="settings-empty-state">
-            <strong>暂无 MCP 服务器</strong>
-            <p>保存一个 HTTP/HTTPS endpoint 后，可以连接并查看真实工具。</p>
-          </div>
-        ) : (
-          servers.map((server) => (
-            <McpServerCard
-              key={server.id}
-              server={server}
-              state={states[server.id] ?? "disconnected"}
-              tools={tools[server.id] ?? []}
-              error={errors[server.id]}
-              expanded={expanded === server.id}
-              onConnect={() => void connectServer(server)}
-              onCancel={() => void cancelConnection(server)}
-              onDisconnect={() => void disconnectServer(server)}
-              onRemove={() => void removeServer(server)}
-              onToggleTools={() =>
-                setExpanded(expanded === server.id ? null : server.id)
-              }
-              onCallTool={(tool, arguments_) =>
-                callTool(server, tool, arguments_)
-              }
-            />
-          ))
-        )}
-      </section>
+      <McpServerForm
+        name={name}
+        endpoint={endpoint}
+        formError={formError}
+        readOnly={registry.isReadOnly}
+        onNameChange={setName}
+        onEndpointChange={setEndpoint}
+        onSubmit={() => void addServer()}
+      />
+      <McpServerList
+        servers={servers}
+        tools={tools}
+        states={states}
+        errors={errors}
+        expanded={expanded}
+        onConnect={(server) => void connectServer(server)}
+        onCancel={(server) => cancelConnection(server)}
+        onDisconnect={(server) => disconnectServer(server)}
+        onRemove={(server) => void removeServer(server)}
+        onToggleTools={(server) =>
+          setExpanded(expanded === server.id ? null : server.id)
+        }
+        onCallTool={callTool}
+      />
     </div>
   );
 }
