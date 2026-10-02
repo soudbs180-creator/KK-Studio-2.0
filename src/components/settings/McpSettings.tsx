@@ -225,7 +225,9 @@ export default function McpSettings({
           }
           onExport={exportRegistry}
           onRecover={
-            registry.hasOverflow ? () => void recoverOverflow() : undefined
+            registry.hasOverflow && !registry.isReadOnly
+              ? () => void recoverOverflow()
+              : undefined
           }
         />
       )}

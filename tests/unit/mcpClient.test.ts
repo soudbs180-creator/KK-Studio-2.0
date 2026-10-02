@@ -251,6 +251,22 @@ test("default browser MCP storage rejects mutations without Web Locks and preser
     await assert.rejects(() => first.recover([server.id]), /只读/);
     assert.equal(first.exportRaw(), raw);
     assert.equal(storage.getItem(MCP_SERVERS_STORAGE_KEY), raw);
+
+    const overflowStorage = new MemoryStorage();
+    overflowStorage.setItem(
+      MCP_SERVERS_STORAGE_KEY,
+      JSON.stringify(
+        Array.from({ length: 51 }, (_, index) => ({
+          ...server,
+          id: `overflow-${index}`,
+        })),
+      ),
+    );
+    await withDefaultBrowserStorage(overflowStorage, undefined, async () => {
+      const overflow = new McpServerRegistry();
+      assert.match(overflow.persistenceWarning, /超过当前 50 项上限.*只读/);
+      await assert.rejects(() => overflow.recover([]), /只读/);
+    });
   });
 });
 

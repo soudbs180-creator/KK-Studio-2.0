@@ -663,10 +663,13 @@ export class McpServerRegistry {
   }
 
   get persistenceWarning(): string {
+    const readOnlySuffix = this.storage?.readOnlyReason
+      ? ` ${this.storage.readOnlyReason}`
+      : "";
     if (this.corruptedOnRead)
-      return "MCP 本地记录无法读取，已停止覆盖原数据；请先导出原始配置后再清理。";
+      return `MCP 本地记录无法读取，已停止覆盖原数据；请先导出原始配置后再清理。${readOnlySuffix}`;
     if (this.overflowOnRead)
-      return `MCP 本地记录有 ${this.servers.length} 项，超过当前 ${MAX_SAVED_SERVERS} 项上限；已停止覆盖原数据，请先导出或显式恢复。`;
+      return `MCP 本地记录有 ${this.servers.length} 项，超过当前 ${MAX_SAVED_SERVERS} 项上限；已停止覆盖原数据，请先导出或显式恢复。${readOnlySuffix}`;
     if (this.storage?.readOnlyReason) return this.storage.readOnlyReason;
     return "";
   }
