@@ -666,8 +666,8 @@ TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点
 
 ## 2026-10-03 全项目任务盘点与本地收口
 
-- `TASK-AUDIT-20261003` 已在 `codex/TASK-AUDIT-20261003` 独立 worktree 完成本地范围收口；后续补入项目目标基线任务后，当前台账为 96 项：DONE 54、REVIEW 1、PARTIAL 27、TODO 10、BLOCKED 4。功能登记册 34 项，features/gov/markdown 门禁均为 0 违规。
+- `TASK-AUDIT-20261003` 已在 `codex/TASK-AUDIT-20261003` 独立 worktree 完成本地范围收口；后续补入项目目标基线和组件边界任务后，当前台账为 96 项：DONE 55、PARTIAL 27、TODO 10、BLOCKED 4。功能登记册 34 项，features/gov/markdown 门禁均为 0 违规。
 - 本轮新增并完成：MCP 多标签页注册表 reread/rebase 与冲突保护（TASK-MCP-REGISTRY-001）、旧版 51+ 配置原件导出/显式恢复（TASK-MCP-REGISTRY-002）、编排器失败项依赖闭包重排（TASK-ORCH-REPLAN-001）。MCP modern/legacy 协商（TASK-MCP-PROTO-001）本地实现与回归完成，真实第三方及 Desktop 实机仍待外部验收。
 - 实际回归：Node 661（653 pass/0 fail/8 skipped）、Canvas Agent 174（172 pass/0 fail/2 skipped）、Playwright 379/379、TypeScript/lint/format/build、Vite build、Cargo check 均通过；Vite 只留已有依赖注释与 bundle 大小 warning。
 - 后续优先级：P0 先保护注册表数据不丢失；P1 完成真实 MCP 端点验收并推进编排器真实生成执行；P2 继续 T5/T6/T7、平台服务、VPS、Mobile、Figma 完整验收。证据见 [本轮 verification](changes/2026-10-03-task-audit/verification.md) 和 [review](changes/2026-10-03-task-audit/review.md)。
-- 本轮补充：项目建设目标与验收入口已接入 `goals:check`；UI 门禁发现的 301 行 MCP 设置组件已拆分，相关任务处于 REVIEW，等待当前 head 的独立技术复核。
+- 本轮补充：项目建设目标与验收入口已接入 `goals:check`；UI 门禁发现的 301 行 MCP 设置组件已拆分，相关任务已通过当前 head 的独立技术复核。

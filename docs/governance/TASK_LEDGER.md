@@ -101,7 +101,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-ORCH-REPLAN-001 | 编排计划失败项重排与依赖闭包 | DONE | TASK-ORCH-001 | root |
 | TASK-AUDIT-20261003 | 全项目任务盘点与可本地闭环项收口 | DONE | TASK-MCP-REGISTRY-001, TASK-MCP-REGISTRY-002, TASK-MCP-PROTO-001, TASK-ORCH-REPLAN-001 | root |
 | TASK-GOV-GOALS-001 | 项目建设目标与验收基线 | DONE | TASK-AUDIT-20261003 | root |
-| TASK-UI-COMPONENT-BOUNDARY-001 | MCP 设置组件职责拆分 | REVIEW | TASK-GOV-GOALS-001 | root |
+| TASK-UI-COMPONENT-BOUNDARY-001 | MCP 设置组件职责拆分 | DONE | TASK-GOV-GOALS-001 | root |
 
 ## T0 — 可复现候选源码与主线整合
 

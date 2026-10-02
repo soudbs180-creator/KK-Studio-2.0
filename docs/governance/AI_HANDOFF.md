@@ -4,7 +4,7 @@
 
 先读[项目建设目标](PROJECT_GOALS.md)、[`PROJECT_STATE.md`](PROJECT_STATE.md)、[`TASK_LEDGER.md`](TASK_LEDGER.md)和[本轮变更计划](../changes/2026-10-03-project-goals-baseline/plan.md)。目标门禁为 `node scripts/check-project-goals.mjs`，并已接入 `lint`/`verify`；继续按创作、Agent、能力配置、恢复四条主路径检查 loading/success/error/cancel/offline/unknown 和重启/并发边界。当前任务账本的外部 Provider/GPU、ComfyUI、VPS、Mobile、第三方 MCP 与用户视觉验收仍保持原状态，不要用本地 fixture 或构建通过升级它们。
 
-同轮已修复 `McpSettings.tsx` 的 301 行组件边界问题，表单和服务器列表已拆分；继续改动时先读[组件变更](../changes/2026-10-03-ui-component-boundary/verification.md)，并重新执行 UI、类型和 MCP 设置回归。
+同轮已修复 `McpSettings.tsx` 的 301 行组件边界问题，表单和服务器列表已拆分并通过当前 head 独立复核；继续改动时先读[组件变更](../changes/2026-10-03-ui-component-boundary/verification.md)，并重新执行 UI、类型和 MCP 设置回归。
 
 ## 2026-10-01 Codex 生图回传恢复点
 

@@ -3379,7 +3379,7 @@
       "src/components/settings/McpServerForm.tsx",
       "src/components/settings/McpServerList.tsx"
     ],
-    "status": "REVIEW",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-10-03-ui-component-boundary/intent.md",
       "docs/changes/2026-10-03-ui-component-boundary/spec.md",

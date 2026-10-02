@@ -346,6 +346,6 @@ TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点
 ## 2026-10-03 任务审计当前状态
 
 - 当前审计候选位于 `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`，分支 `codex/TASK-AUDIT-20261003`，基线 `origin/main@21d121d2b884b2b7ced4a98eb0e03c590de5c3cd`。稳定 main 未被本轮提交直接修改。
-- `docs/governance/task-ledger.json` 当前共 96 项：DONE 54、REVIEW 1、PARTIAL 27、TODO 10、BLOCKED 4。外部条件任务保持原状态；本地可验证缺陷已由三个实现任务和一个协议任务的本地部分收口，新增项目目标基线已完成，MCP 设置组件拆分等待当前 head 独立复核。
+- `docs/governance/task-ledger.json` 当前共 96 项：DONE 55、PARTIAL 27、TODO 10、BLOCKED 4。外部条件任务保持原状态；本地可验证缺陷已由三个实现任务和一个协议任务的本地部分收口，项目目标基线和 MCP 设置组件拆分均已完成当前 head 独立复核。
 - MCP 注册表现在读取合法超限原件而不清空，写入会重读并检测冲突；现代 MCP 先走 `server/discover`，只对明确不支持发现的响应回退旧握手；编排器 `plan_replan` 会持久化稳定的新计划而不重复成功项。
 - 最终验证记录为 Node 661/653/0/8、Agent 174/172/0/2、Playwright 379/379，TypeScript、lint、format、features、governance、markdown、Vite 和 Cargo 均通过。真实第三方 MCP、Provider/GPU、ComfyUI、VPS、Mobile 和完整 TaskHost 运行态仍未证明。
