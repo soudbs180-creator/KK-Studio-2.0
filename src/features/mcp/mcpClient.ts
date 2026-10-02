@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { appVersion } from "../../runtime/appInfo.ts";
 
-const MCP_PROTOCOL_VERSION = "2025-11-25";
+const LEGACY_MCP_PROTOCOL_VERSION = "2025-11-25";
+const MODERN_MCP_PROTOCOL_VERSION = "2026-07-28";
 const MCP_CLIENT_NAME = "kk-studio";
 const MCP_CLIENT_VERSION = appVersion;
 const MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
@@ -207,15 +208,30 @@ async function readResponseBody(response: Response): Promise<string> {
   return new TextDecoder().decode(bytes);
 }
 
-/** Streamable HTTP client for the 2025-11-25 initialize/session protocol. */
+type McpProtocol = "legacy" | "modern";
+
+export interface McpHttpClientOptions {
+  protocolMode?: "auto" | McpProtocol;
+}
+
+interface PostResult {
+  rpc?: RpcResponse;
+  sessionId?: string;
+  status: number;
+}
+
+/** Streamable HTTP client with safe 2026 modern discovery and legacy fallback. */
 export class McpHttpClient {
   readonly server: McpServerConfig;
+  private readonly protocolMode: McpHttpClientOptions["protocolMode"];
   private sessionId: string | undefined;
+  private activeProtocol: McpProtocol | undefined;
   private connected = false;
   private tools: McpTool[] = [];
 
-  constructor(server: McpServerConfig) {
+  constructor(server: McpServerConfig, options: McpHttpClientOptions = {}) {
     this.server = mcpServerSchema.parse(server);
+    this.protocolMode = options.protocolMode ?? "auto";
   }
 
   get isConnected(): boolean {
@@ -228,17 +244,23 @@ export class McpHttpClient {
 
   private async post(
     payload: Record<string, unknown>,
+    protocol: McpProtocol,
     signal?: AbortSignal,
-  ): Promise<{ rpc?: RpcResponse; sessionId?: string; status: number }> {
+    allowErrorStatus = false,
+  ): Promise<PostResult> {
     const timeout = timeoutSignal(DEFAULT_TIMEOUT_MS, signal);
     try {
       const headers: Record<string, string> = {
         Accept: "application/json, text/event-stream",
         "Content-Type": "application/json",
       };
-      if (this.sessionId) headers["MCP-Session-Id"] = this.sessionId;
-      if (payload.method !== "initialize")
-        headers["MCP-Protocol-Version"] = MCP_PROTOCOL_VERSION;
+      if (protocol === "modern" || payload.method !== "initialize")
+        headers["MCP-Protocol-Version"] =
+          protocol === "modern"
+            ? MODERN_MCP_PROTOCOL_VERSION
+            : LEGACY_MCP_PROTOCOL_VERSION;
+      if (protocol === "legacy" && this.sessionId)
+        headers["MCP-Session-Id"] = this.sessionId;
       const response = await fetch(this.server.endpoint, {
         method: "POST",
         headers,
@@ -250,110 +272,208 @@ export class McpHttpClient {
       const sessionId = response.headers.get("MCP-Session-Id") ?? undefined;
       // Keep initialization headers even if body parsing fails, so connect's
       // cleanup can terminate a session created by a malformed response.
-      if (payload.method === "initialize" && response.ok)
+      if (
+        protocol === "legacy" &&
+        payload.method === "initialize" &&
+        response.ok
+      )
         this.sessionId = sessionId;
       if (response.status === 202)
         return { sessionId, status: response.status };
       const body = await readResponseBody(response);
-      if (!response.ok)
-        throw new Error(`MCP 请求失败（HTTP ${response.status}）。`);
       const id = typeof payload.id === "number" ? payload.id : undefined;
-      return {
-        rpc:
-          id === undefined
-            ? undefined
-            : extractRpcResponse(
-                body,
-                response.headers.get("content-type") ?? "",
-                id,
-              ),
-        sessionId,
-        status: response.status,
-      };
+      let rpc: RpcResponse | undefined;
+      if (id !== undefined && body) {
+        try {
+          rpc = extractRpcResponse(
+            body,
+            response.headers.get("content-type") ?? "",
+            id,
+          );
+        } catch {
+          if (!allowErrorStatus)
+            throw new Error("MCP 响应不是有效的 JSON-RPC 结果。");
+        }
+      }
+      if (!response.ok && !allowErrorStatus)
+        throw new Error(`MCP 请求失败（HTTP ${response.status}）。`);
+      return { rpc, sessionId, status: response.status };
     } finally {
       timeout.dispose();
     }
+  }
+
+  private async discoverModern(signal?: AbortSignal): Promise<boolean> {
+    const response = await this.post(
+      {
+        jsonrpc: "2.0",
+        id: jsonRpcId(),
+        method: "server/discover",
+        params: {
+          clientInfo: { name: MCP_CLIENT_NAME, version: MCP_CLIENT_VERSION },
+        },
+      },
+      "modern",
+      signal,
+      true,
+    );
+    if ([404, 405, 415, 501].includes(response.status)) return false;
+    if (
+      response.status === 401 ||
+      response.status === 403 ||
+      response.status >= 500
+    )
+      throw new Error(`MCP 请求失败（HTTP ${response.status}）。`);
+    if (!response.rpc) {
+      if (response.status >= 400 && response.status < 500)
+        throw new Error(`MCP 请求失败（HTTP ${response.status}）。`);
+      throw new Error("MCP 现代协议发现响应无效。");
+    }
+    if (response.rpc.error) {
+      if (
+        response.rpc.error.code === -32601 ||
+        /method\s+not\s+found|unknown method|unsupported/i.test(
+          response.rpc.error.message,
+        )
+      )
+        return false;
+      throw new Error(`MCP 现代协议发现失败：${response.rpc.error.message}`);
+    }
+    const result = response.rpc.result;
+    if (!result || typeof result !== "object")
+      throw new Error("MCP 现代协议发现响应无效。");
+    const record = result as {
+      protocolVersion?: unknown;
+      protocolVersions?: unknown;
+      supportedProtocolVersions?: unknown;
+    };
+    const versions = [
+      ...(Array.isArray(record.protocolVersions)
+        ? record.protocolVersions
+        : []),
+      ...(Array.isArray(record.supportedProtocolVersions)
+        ? record.supportedProtocolVersions
+        : []),
+      ...(typeof record.protocolVersion === "string"
+        ? [record.protocolVersion]
+        : []),
+    ];
+    if (!versions.includes(MODERN_MCP_PROTOCOL_VERSION))
+      throw new Error("MCP 现代协议发现响应未声明 2026-07-28 支持。");
+    return true;
+  }
+
+  private async listTools(
+    protocol: McpProtocol,
+    signal?: AbortSignal,
+  ): Promise<McpTool[]> {
+    let cursor: string | undefined;
+    const cursors = new Set<string>();
+    for (let page = 0; page < MAX_PAGES; page += 1) {
+      const listId = jsonRpcId();
+      const listed = await this.post(
+        {
+          jsonrpc: "2.0",
+          id: listId,
+          method: "tools/list",
+          params: cursor ? { cursor } : {},
+        },
+        protocol,
+        signal,
+      );
+      if (listed.rpc?.error)
+        throw new Error(`MCP tools/list 失败：${listed.rpc.error.message}`);
+      const listResult = listed.rpc?.result;
+      if (!listResult || typeof listResult !== "object")
+        throw new Error("MCP tools/list 没有返回工具列表。");
+      const rawTools = (listResult as { tools?: unknown }).tools;
+      if (!Array.isArray(rawTools)) throw new Error("MCP 工具列表格式无效。");
+      const pageTools = rawTools.map((tool) => {
+        const parsed = mcpToolSchema.safeParse(tool);
+        if (!parsed.success) throw new Error("MCP 工具列表格式无效。");
+        return parsed.data;
+      });
+      this.tools.push(...pageTools);
+      if (this.tools.length > MAX_TOOLS)
+        throw new Error("MCP 工具数量超过 500 个限制。");
+      const nextCursor = (listResult as { nextCursor?: unknown }).nextCursor;
+      if (typeof nextCursor !== "string" || !nextCursor) {
+        cursor = undefined;
+        break;
+      }
+      if (cursors.has(nextCursor)) throw new Error("MCP 分页游标重复。");
+      cursors.add(nextCursor);
+      cursor = nextCursor;
+    }
+    if (cursor && cursors.size >= MAX_PAGES)
+      throw new Error("MCP 工具分页超过 32 页限制。");
+    return this.discoveredTools;
+  }
+
+  private async connectLegacy(signal?: AbortSignal): Promise<McpTool[]> {
+    const initializeId = jsonRpcId();
+    const initialize = await this.post(
+      {
+        jsonrpc: "2.0",
+        id: initializeId,
+        method: "initialize",
+        params: {
+          protocolVersion: LEGACY_MCP_PROTOCOL_VERSION,
+          capabilities: {},
+          clientInfo: { name: MCP_CLIENT_NAME, version: MCP_CLIENT_VERSION },
+        },
+      },
+      "legacy",
+      signal,
+    );
+    this.sessionId = initialize.sessionId;
+    if (initialize.rpc?.error)
+      throw new Error(`MCP 初始化失败：${initialize.rpc.error.message}`);
+    const result = initialize.rpc?.result;
+    if (!result || typeof result !== "object")
+      throw new Error("MCP 初始化没有返回服务器信息。");
+    if (
+      (result as { protocolVersion?: unknown }).protocolVersion !==
+      LEGACY_MCP_PROTOCOL_VERSION
+    )
+      throw new Error("MCP 服务器返回了不受支持的协议版本。");
+
+    const initialized = await this.post(
+      { jsonrpc: "2.0", method: "notifications/initialized", params: {} },
+      "legacy",
+      signal,
+    );
+    if (initialized.status !== 202)
+      throw new Error("MCP initialized 通知未被接受。");
+    return this.listTools("legacy", signal);
+  }
+
+  private async connectModern(signal?: AbortSignal): Promise<McpTool[]> {
+    return this.listTools("modern", signal);
   }
 
   async connect(signal?: AbortSignal): Promise<McpTool[]> {
     await this.disconnect();
     this.connected = false;
     this.tools = [];
+    this.activeProtocol = undefined;
     try {
       signal?.throwIfAborted();
-      const initializeId = jsonRpcId();
-      const initialize = await this.post(
-        {
-          jsonrpc: "2.0",
-          id: initializeId,
-          method: "initialize",
-          params: {
-            protocolVersion: MCP_PROTOCOL_VERSION,
-            capabilities: {},
-            clientInfo: { name: MCP_CLIENT_NAME, version: MCP_CLIENT_VERSION },
-          },
-        },
-        signal,
-      );
-      this.sessionId = initialize.sessionId;
-      if (initialize.rpc?.error)
-        throw new Error(`MCP 初始化失败：${initialize.rpc.error.message}`);
-      const result = initialize.rpc?.result;
-      if (!result || typeof result !== "object")
-        throw new Error("MCP 初始化没有返回服务器信息。");
-      if (
-        (result as { protocolVersion?: unknown }).protocolVersion !==
-        MCP_PROTOCOL_VERSION
-      )
-        throw new Error("MCP 服务器返回了不受支持的协议版本。");
-
-      const initialized = await this.post(
-        { jsonrpc: "2.0", method: "notifications/initialized", params: {} },
-        signal,
-      );
-      if (initialized.status !== 202)
-        throw new Error("MCP initialized 通知未被接受。");
-
-      let cursor: string | undefined;
-      const cursors = new Set<string>();
-      for (let page = 0; page < MAX_PAGES; page += 1) {
-        const listId = jsonRpcId();
-        const listed = await this.post(
-          {
-            jsonrpc: "2.0",
-            id: listId,
-            method: "tools/list",
-            params: cursor ? { cursor } : {},
-          },
-          signal,
-        );
-        const listResult = listed.rpc?.result;
-        if (!listResult || typeof listResult !== "object")
-          throw new Error("MCP tools/list 没有返回工具列表。");
-        const rawTools = (listResult as { tools?: unknown }).tools;
-        if (!Array.isArray(rawTools)) throw new Error("MCP 工具列表格式无效。");
-        const pageTools = rawTools.map((tool) => {
-          const parsed = mcpToolSchema.safeParse(tool);
-          if (!parsed.success) throw new Error("MCP 工具列表格式无效。");
-          return parsed.data;
-        });
-        this.tools.push(...pageTools);
-        if (this.tools.length > MAX_TOOLS)
-          throw new Error("MCP 工具数量超过 500 个限制。");
-        const nextCursor = (listResult as { nextCursor?: unknown }).nextCursor;
-        if (typeof nextCursor !== "string" || !nextCursor) {
-          cursor = undefined;
-          break;
-        }
-        if (cursors.has(nextCursor)) throw new Error("MCP 分页游标重复。");
-        cursors.add(nextCursor);
-        cursor = nextCursor;
+      let protocol: McpProtocol = "legacy";
+      if (this.protocolMode !== "legacy") {
+        const modern = await this.discoverModern(signal);
+        if (!modern && this.protocolMode === "modern")
+          throw new Error("MCP 服务器不支持 2026-07-28 modern 协议。");
+        protocol = modern ? "modern" : "legacy";
       }
-      if (cursor && cursors.size >= MAX_PAGES)
-        throw new Error("MCP 工具分页超过 32 页限制。");
+      this.activeProtocol = protocol;
+      const tools =
+        protocol === "modern"
+          ? await this.connectModern(signal)
+          : await this.connectLegacy(signal);
       signal?.throwIfAborted();
       this.connected = true;
-      return this.discoveredTools;
+      return tools;
     } catch (error) {
       await this.disconnect();
       throw error;
@@ -362,10 +482,12 @@ export class McpHttpClient {
 
   async disconnect(signal?: AbortSignal): Promise<void> {
     const sessionId = this.sessionId;
+    const protocol = this.activeProtocol;
     this.connected = false;
     this.sessionId = undefined;
+    this.activeProtocol = undefined;
     this.tools = [];
-    if (sessionId) {
+    if (sessionId && protocol === "legacy") {
       const timeout = timeoutSignal(DEFAULT_TIMEOUT_MS, signal);
       try {
         await fetch(this.server.endpoint, {
@@ -373,7 +495,7 @@ export class McpHttpClient {
           headers: {
             Accept: "application/json",
             "MCP-Session-Id": sessionId,
-            "MCP-Protocol-Version": MCP_PROTOCOL_VERSION,
+            "MCP-Protocol-Version": LEGACY_MCP_PROTOCOL_VERSION,
           },
           credentials: "omit",
           redirect: "error",
@@ -405,6 +527,7 @@ export class McpHttpClient {
         method: "tools/call",
         params: { name, arguments: arguments_ },
       },
+      this.activeProtocol ?? "legacy",
       signal,
     );
     if (response.rpc?.error)

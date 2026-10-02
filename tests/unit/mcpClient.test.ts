@@ -185,6 +185,168 @@ test("legacy over-limit MCP persistence remains viewable, exportable, and explic
   );
 });
 
+test("MCP auto negotiation uses modern discover and keeps modern calls sessionless", async () => {
+  const calls: Array<{ method?: string; headers: Headers }> = [];
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = (async (_input, init) => {
+    const body = JSON.parse(String(init?.body ?? "{}")) as {
+      method?: string;
+      id?: number;
+    };
+    const headers = new Headers(init?.headers);
+    calls.push({ method: body.method, headers });
+    if (body.method === "server/discover")
+      return new Response(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: body.id,
+          result: {
+            protocolVersions: ["2026-07-28"],
+            serverInfo: { name: "modern", version: "1.0.0" },
+          },
+        }),
+        { headers: { "Content-Type": "application/json" } },
+      );
+    if (body.method === "tools/list")
+      return new Response(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: body.id,
+          result: {
+            tools: [{ name: "modern_tool", inputSchema: { type: "object" } }],
+          },
+        }),
+        { headers: { "Content-Type": "application/json" } },
+      );
+    if (body.method === "tools/call")
+      return new Response(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: body.id,
+          result: { content: [{ type: "text", text: "modern-ok" }] },
+        }),
+        { headers: { "Content-Type": "application/json" } },
+      );
+    return new Response(null, { status: 404 });
+  }) as typeof fetch;
+  try {
+    const client = new McpHttpClient(server);
+    assert.deepEqual(
+      (await client.connect()).map((tool) => tool.name),
+      ["modern_tool"],
+    );
+    assert.equal(calls[0]?.method, "server/discover");
+    assert.equal(calls[0]?.headers.get("MCP-Protocol-Version"), "2026-07-28");
+    assert.equal(calls[1]?.headers.get("MCP-Protocol-Version"), "2026-07-28");
+    assert.equal(calls[1]?.headers.has("MCP-Session-Id"), false);
+    assert.deepEqual(await client.callTool("modern_tool", {}, true), {
+      content: [{ type: "text", text: "modern-ok" }],
+    });
+    await client.disconnect();
+    assert.equal(
+      calls.some((call) => call.method === "DELETE"),
+      false,
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("MCP auto negotiation falls back to legacy only when discovery is unsupported", async () => {
+  const methods: string[] = [];
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = (async (_input, init) => {
+    const body = JSON.parse(String(init?.body ?? "{}")) as {
+      method?: string;
+      id?: number;
+    };
+    methods.push(body.method ?? "");
+    if (body.method === "server/discover")
+      return new Response(null, { status: 404 });
+    if (body.method === "initialize")
+      return new Response(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: body.id,
+          result: { protocolVersion: "2025-11-25" },
+        }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "MCP-Session-Id": "legacy-session",
+          },
+        },
+      );
+    if (body.method === "notifications/initialized")
+      return new Response(null, { status: 202 });
+    if (body.method === "tools/list")
+      return new Response(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: body.id,
+          result: { tools: [] },
+        }),
+        { headers: { "Content-Type": "application/json" } },
+      );
+    return new Response(null, { status: 404 });
+  }) as typeof fetch;
+  try {
+    await new McpHttpClient(server).connect();
+    assert.deepEqual(methods.slice(0, 3), [
+      "server/discover",
+      "initialize",
+      "notifications/initialized",
+    ]);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("MCP discovery authentication and service failures never masquerade as legacy support", async () => {
+  const originalFetch = globalThis.fetch;
+  for (const status of [401, 403, 500]) {
+    globalThis.fetch = (async () =>
+      new Response(null, { status })) as typeof fetch;
+    try {
+      await assert.rejects(
+        () => new McpHttpClient(server).connect(),
+        new RegExp(`HTTP ${status}`),
+      );
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  }
+});
+
+test("MCP auto negotiation fails closed on a malformed successful discovery response", async () => {
+  const methods: string[] = [];
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = (async (_input, init) => {
+    const body = JSON.parse(String(init?.body ?? "{}")) as {
+      method?: string;
+      id?: number;
+    };
+    methods.push(body.method ?? "");
+    return new Response(
+      JSON.stringify({
+        jsonrpc: "2.0",
+        id: body.id,
+        result: { serverInfo: { name: "missing-version" } },
+      }),
+      { headers: { "Content-Type": "application/json" } },
+    );
+  }) as typeof fetch;
+  try {
+    await assert.rejects(
+      () => new McpHttpClient(server).connect(),
+      /未声明 2026-07-28 支持/,
+    );
+    assert.deepEqual(methods, ["server/discover"]);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test("Streamable HTTP performs initialize, initialized, paginated tools/list, and SSE parsing", async () => {
   const calls: Array<{ method?: string; headers: Headers; id?: number }> = [];
   const originalFetch = globalThis.fetch;
@@ -279,11 +441,12 @@ test("Streamable HTTP performs initialize, initialized, paginated tools/list, an
       tools.map((tool) => tool.name),
       ["read_canvas", "inspect_asset"],
     );
-    assert.equal(calls[0].method, "initialize");
-    assert.equal(calls[1].method, "notifications/initialized");
-    assert.equal(calls[2].headers.get("MCP-Session-Id"), "fixture-session");
-    assert.equal(calls[2].headers.get("MCP-Protocol-Version"), "2025-11-25");
+    assert.equal(calls[0].method, "server/discover");
+    assert.equal(calls[1].method, "initialize");
+    assert.equal(calls[2].method, "notifications/initialized");
     assert.equal(calls[3].headers.get("MCP-Session-Id"), "fixture-session");
+    assert.equal(calls[3].headers.get("MCP-Protocol-Version"), "2025-11-25");
+    assert.equal(calls[4].headers.get("MCP-Session-Id"), "fixture-session");
     assert.equal(
       await client.callTool("read_canvas", {}, false).catch(() => "confirm"),
       "confirm",
@@ -304,6 +467,8 @@ test("unknown MCP tool and malformed tool list fail closed", async () => {
       id?: number;
       method?: string;
     };
+    if (body.method === "server/discover")
+      return new Response(null, { status: 404 });
     if (body.method === "initialize")
       return new Response(
         JSON.stringify({
