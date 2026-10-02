@@ -6,6 +6,8 @@ import {
   type McpTool,
 } from "../../features/mcp/mcpClient";
 import McpServerCard from "./McpServerCard";
+import McpOverflowNotice from "./McpOverflowNotice";
+import McpProtocolNotice from "./McpProtocolNotice";
 import { z } from "zod";
 import { confirmAction } from "../../runtime/confirmAction";
 
@@ -212,46 +214,13 @@ export default function McpSettings({
 
   return (
     <div className="settings-mcp">
-      <p className="settings-section-intro">
-        连接会先探测 MCP Streamable
-        HTTP（2026-07-28）现代协议，不支持时安全回退到 2025-11-25 legacy
-        握手。地址只保存名称和 endpoint，不保存密钥、OAuth token 或会话 ID。
-      </p>
-      <div className="settings-connection-note">
-        <span className="settings-status-dot" aria-hidden="true" />
-        <div>
-          <strong>支持工具发现和手动确认调用</strong>
-          <p>
-            现代服务器使用 server/discover → tools/list，legacy 服务器使用
-            initialize → initialized → tools/list，并显示服务器返回的
-            inputSchema。stdio、OAuth 和 Agent 自动调用仍为 Prototype。
-          </p>
-        </div>
-      </div>
+      <McpProtocolNotice />
       {registry.hasOverflow && (
-        <div className="settings-connection-note" role="alert">
-          <span className="settings-status-dot" aria-hidden="true" />
-          <div>
-            <strong>旧版 MCP 配置超过当前上限</strong>
-            <p>{registry.persistenceWarning}</p>
-            <div className="settings-inline-actions">
-              <button
-                type="button"
-                className="settings-action secondary"
-                onClick={exportRegistry}
-              >
-                导出原始 MCP 配置
-              </button>
-              <button
-                type="button"
-                className="settings-action"
-                onClick={() => void recoverOverflow()}
-              >
-                保留前 50 项并恢复
-              </button>
-            </div>
-          </div>
-        </div>
+        <McpOverflowNotice
+          warning={registry.persistenceWarning}
+          onExport={exportRegistry}
+          onRecover={() => void recoverOverflow()}
+        />
       )}
       <section className="settings-mcp-add" aria-labelledby="mcp-add-title">
         <h3 id="mcp-add-title">添加 MCP 服务器</h3>
