@@ -1271,24 +1271,28 @@
       "TASK-CAP-001"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
     "affectedModules": [
       "src/features/mcp/mcpClient.ts",
       "src/components/settings/McpSettings.tsx",
       "tests/unit/mcpClient.test.ts",
       "tests/browser/mcp-settings.spec.ts"
     ],
-    "status": "READY",
+    "status": "PARTIAL",
     "evidence": [
-      "docs/changes/2026-09-24-mcp-registry-limit/spec.md",
-      "docs/features/feat-012-mcp.md",
       "docs/changes/2026-10-03-task-audit/intent.md",
       "docs/changes/2026-10-03-task-audit/spec.md",
-      "docs/changes/2026-10-03-task-audit/plan.md"
+      "docs/changes/2026-10-03-task-audit/plan.md",
+      "docs/changes/2026-10-03-task-audit/verification.md",
+      "docs/changes/2026-10-03-task-audit/review.md",
+      "src/features/mcp/mcpClient.ts",
+      "src/components/settings/McpProtocolNotice.tsx",
+      "tests/unit/mcpClient.test.ts",
+      "tests/browser/mcp-settings.spec.ts"
     ],
-    "verification": "已纳入本轮审计计划，尚未开始实现。",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "本地 modern/legacy 协商、发现、列表/调用、错误分类、认证错误不回退、超时/取消、2 MB 响应、500 工具、32 页/重复游标、凭据边界已通过 23 项 MCP 单测和浏览器握手回归；真实第三方服务器及 Desktop 实机验收仍待外部环境。",
+    "verificationResult": "PARTIAL",
     "updated": "2026-10-03"
   },
   {
@@ -1303,22 +1307,25 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
     "affectedModules": [
       "src/features/mcp/mcpClient.ts",
       "src/components/settings/McpSettings.tsx",
       "tests/unit/mcpClient.test.ts"
     ],
-    "status": "READY",
+    "status": "DONE",
     "evidence": [
-      "docs/changes/2026-09-24-mcp-registry-limit/review.md",
       "docs/changes/2026-10-03-task-audit/intent.md",
       "docs/changes/2026-10-03-task-audit/spec.md",
-      "docs/changes/2026-10-03-task-audit/plan.md"
+      "docs/changes/2026-10-03-task-audit/plan.md",
+      "docs/changes/2026-10-03-task-audit/verification.md",
+      "docs/changes/2026-10-03-task-audit/review.md",
+      "src/features/mcp/mcpClient.ts",
+      "tests/unit/mcpClient.test.ts"
     ],
-    "verification": "已纳入本轮审计计划，尚未开始实现。",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "MCP 多实例写入使用浏览器 Web Locks（无该 API 时同上下文互斥与 localStorage 短租约）包住重读、冲突检查和写入，并做写后校验；并发新增保留两项，stale add/remove、删除/更新冲突、容量和凭据边界单测通过。",
+    "verificationResult": "PASS",
     "updated": "2026-10-03"
   },
   {
@@ -1333,23 +1340,29 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
     "affectedModules": [
       "src/features/mcp/mcpClient.ts",
       "src/components/settings/McpSettings.tsx",
       "tests/unit/mcpClient.test.ts",
       "tests/browser/mcp-settings.spec.ts"
     ],
-    "status": "READY",
+    "status": "DONE",
     "evidence": [
-      "docs/changes/2026-09-24-mcp-registry-limit/review.md",
       "docs/changes/2026-10-03-task-audit/intent.md",
       "docs/changes/2026-10-03-task-audit/spec.md",
-      "docs/changes/2026-10-03-task-audit/plan.md"
+      "docs/changes/2026-10-03-task-audit/plan.md",
+      "docs/changes/2026-10-03-task-audit/verification.md",
+      "docs/changes/2026-10-03-task-audit/review.md",
+      "src/features/mcp/mcpClient.ts",
+      "src/components/settings/McpSettings.tsx",
+      "src/components/settings/McpOverflowNotice.tsx",
+      "tests/unit/mcpClient.test.ts",
+      "tests/browser/mcp-settings.spec.ts"
     ],
-    "verification": "已纳入本轮审计计划，尚未开始实现。",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "51+ 合法旧配置保持原始字节，可导出并显式恢复；损坏 JSON 暴露 hasCorruption、停止覆盖且设置页提供导出入口；超限与损坏单测和浏览器回归通过，正常写入仍限制 50 项。",
+    "verificationResult": "PASS",
     "updated": "2026-10-03"
   },
   {
@@ -3248,20 +3261,24 @@
       "TASK-ORCH-001"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
     "affectedModules": [
       "src/features/agent/orchestrator.ts",
       "tests/unit/orchestrator.test.ts"
     ],
-    "status": "READY",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-10-03-task-audit/intent.md",
       "docs/changes/2026-10-03-task-audit/spec.md",
-      "docs/changes/2026-10-03-task-audit/plan.md"
+      "docs/changes/2026-10-03-task-audit/plan.md",
+      "docs/changes/2026-10-03-task-audit/verification.md",
+      "docs/changes/2026-10-03-task-audit/review.md",
+      "src/features/agent/orchestrator.ts",
+      "tests/unit/orchestrator.test.ts"
     ],
-    "verification": "已纳入本轮审计计划，尚未开始实现。",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "失败/部分失败项与下游依赖会生成稳定幂等的新计划，成功项和原计划保留，审批门状态合法，确定性 ID 冲突会拒绝写入；25 项 orchestrator 单测通过。",
+    "verificationResult": "PASS",
     "updated": "2026-10-03"
   },
   {
@@ -3290,14 +3307,20 @@
       "src/features/agent",
       "tests"
     ],
-    "status": "IN_PROGRESS",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-10-03-task-audit/intent.md",
       "docs/changes/2026-10-03-task-audit/spec.md",
-      "docs/changes/2026-10-03-task-audit/plan.md"
+      "docs/changes/2026-10-03-task-audit/plan.md",
+      "docs/changes/2026-10-03-task-audit/inventory.md",
+      "docs/changes/2026-10-03-task-audit/verification.md",
+      "docs/changes/2026-10-03-task-audit/review.md",
+      "docs/governance/task-ledger.json",
+      "docs/governance/TASK_LEDGER.md",
+      "docs/features/features.registry.json"
     ],
-    "verification": "盘点和实现进行中，最终回归尚未完成。",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "94 项任务已盘点并保留真实状态、依赖与外部条件说明；本地可验证的注册表、协议和计划重排收口均有实现与边界回归证据，治理/功能/Markdown 门禁和最终构建回归通过。",
+    "verificationResult": "PASS",
     "updated": "2026-10-03"
   }
 ]

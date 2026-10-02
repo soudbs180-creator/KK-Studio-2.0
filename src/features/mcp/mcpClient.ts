@@ -13,6 +13,7 @@ const DEFAULT_TIMEOUT_MS = 15_000;
 const MCP_STORAGE_LOCK_NAME = "kk-studio:mcp-server-registry";
 
 export const MCP_SERVERS_STORAGE_KEY = "kk-studio-next:mcp-servers:v1";
+const MCP_STORAGE_LEASE_KEY = `${MCP_SERVERS_STORAGE_KEY}:lock`;
 
 const CREDENTIAL_PATTERNS = [
   /(?:api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret|password)\s*[:=]/i,
@@ -554,6 +555,7 @@ export interface McpServerStorage {
 
 type LockCallback<T> = () => T | Promise<T>;
 const inProcessStorageLocks = new WeakMap<object, Promise<void>>();
+const defaultStorageMutex = {};
 
 function withInProcessStorageLock<T>(
   key: object,
@@ -577,6 +579,45 @@ function withInProcessStorageLock<T>(
   });
 }
 
+async function withLocalStorageLease<T>(
+  storage: Storage,
+  callback: LockCallback<T>,
+): Promise<T> {
+  const token = `${Date.now().toString(36)}-${Math.random()
+    .toString(36)
+    .slice(2)}`;
+  const deadline = Date.now() + 10_000;
+  while (Date.now() < deadline) {
+    const current = storage.getItem(MCP_STORAGE_LEASE_KEY);
+    const expiresAt = (() => {
+      try {
+        return Number(
+          (JSON.parse(current ?? "null") as { expiresAt?: unknown })?.expiresAt,
+        );
+      } catch {
+        return 0;
+      }
+    })();
+    if (!current || !Number.isFinite(expiresAt) || expiresAt <= Date.now()) {
+      const candidate = JSON.stringify({
+        token,
+        expiresAt: Date.now() + 5_000,
+      });
+      storage.setItem(MCP_STORAGE_LEASE_KEY, candidate);
+      if (storage.getItem(MCP_STORAGE_LEASE_KEY) === candidate) {
+        try {
+          return await callback();
+        } finally {
+          if (storage.getItem(MCP_STORAGE_LEASE_KEY) === candidate)
+            storage.removeItem(MCP_STORAGE_LEASE_KEY);
+        }
+      }
+    }
+    await new Promise<void>((resolve) => globalThis.setTimeout(resolve, 5));
+  }
+  throw new Error("MCP 配置锁不可用，请稍后重试。");
+}
+
 interface NavigatorWithLocks {
   locks?: {
     request<T>(
@@ -595,15 +636,17 @@ function defaultStorage(): McpServerStorage | null {
       getItem: (key) => localStorage.getItem(key),
       setItem: (key, value) => localStorage.setItem(key, value),
       withExclusiveLock: (callback) => {
-        const locks = (globalThis.navigator as NavigatorWithLocks | undefined)
-          ?.locks;
-        if (locks?.request)
-          return locks.request(
-            MCP_STORAGE_LOCK_NAME,
-            { mode: "exclusive" },
-            callback,
-          );
-        return withInProcessStorageLock(storage, callback);
+        return withInProcessStorageLock(defaultStorageMutex, () => {
+          const locks = (globalThis.navigator as NavigatorWithLocks | undefined)
+            ?.locks;
+          if (locks?.request)
+            return locks.request(
+              MCP_STORAGE_LOCK_NAME,
+              { mode: "exclusive" },
+              callback,
+            );
+          return withLocalStorageLease(localStorage, callback);
+        });
       },
     };
     return storage;
