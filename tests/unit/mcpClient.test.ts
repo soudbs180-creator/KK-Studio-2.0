@@ -105,7 +105,84 @@ test("MCP server labels reject credential-like text before persistence", () => {
 test("corrupted MCP persistence is reported and cannot be overwritten", () => {
   const registry = new McpServerRegistry(new CorruptedStorage());
   assert.match(registry.persistenceWarning, /无法读取/);
+  assert.equal(registry.exportRaw(), "not-json");
   assert.throws(() => registry.add(server), /无法读取/);
+});
+
+test("MCP registry rebases independent instances instead of overwriting newer entries", () => {
+  const storage = new MemoryStorage();
+  const seed = new McpServerRegistry(storage);
+  for (let index = 0; index < 48; index += 1)
+    seed.add({ ...server, id: `seed-${index}` });
+
+  const first = new McpServerRegistry(storage);
+  const second = new McpServerRegistry(storage);
+  first.add({ ...server, id: "first-tab" });
+  second.add({ ...server, id: "second-tab" });
+
+  const persisted = new McpServerRegistry(storage).list();
+  assert.equal(persisted.length, 50);
+  assert.ok(persisted.some((item) => item.id === "first-tab"));
+  assert.ok(persisted.some((item) => item.id === "second-tab"));
+});
+
+test("MCP registry reports a capacity conflict instead of hiding the first writer", () => {
+  const storage = new MemoryStorage();
+  const seed = new McpServerRegistry(storage);
+  for (let index = 0; index < 49; index += 1)
+    seed.add({ ...server, id: `seed-${index}` });
+
+  const first = new McpServerRegistry(storage);
+  const second = new McpServerRegistry(storage);
+  first.add({ ...server, id: "first-tab" });
+  assert.throws(
+    () => second.add({ ...server, id: "second-tab" }),
+    /并发冲突|最多保存 50 个/,
+  );
+  const persisted = new McpServerRegistry(storage).list();
+  assert.ok(persisted.some((item) => item.id === "first-tab"));
+  assert.ok(!persisted.some((item) => item.id === "second-tab"));
+});
+
+test("MCP registry rejects stale same-id updates and preserves the newer value", () => {
+  const storage = new MemoryStorage();
+  new McpServerRegistry(storage).add(server);
+  const first = new McpServerRegistry(storage);
+  const second = new McpServerRegistry(storage);
+  first.add({ ...server, name: "First tab" });
+  assert.throws(
+    () => second.add({ ...server, name: "Second tab" }),
+    /并发冲突/,
+  );
+  assert.equal(new McpServerRegistry(storage).list()[0]?.name, "First tab");
+});
+
+test("legacy over-limit MCP persistence remains viewable, exportable, and explicitly recoverable", () => {
+  const storage = new MemoryStorage();
+  const legacy = Array.from({ length: 51 }, (_, index) => ({
+    ...server,
+    id: `legacy-${index}`,
+  }));
+  const raw = JSON.stringify(legacy);
+  storage.values.set(MCP_SERVERS_STORAGE_KEY, raw);
+
+  const registry = new McpServerRegistry(storage);
+  assert.equal(registry.list().length, 51);
+  assert.equal(registry.hasOverflow, true);
+  assert.match(registry.persistenceWarning, /51.*50/);
+  assert.equal(registry.exportRaw(), raw);
+  assert.throws(() => registry.add(server), /超过当前 50 项上限/);
+
+  const keepIds = legacy.slice(1).map((item) => item.id);
+  const recovered = registry.recover(keepIds);
+  assert.equal(recovered.length, 50);
+  assert.equal(recovered[0]?.id, "legacy-1");
+  assert.equal(registry.hasOverflow, false);
+  assert.equal(new McpServerRegistry(storage).list().length, 50);
+  assert.throws(
+    () => registry.add({ ...server, id: "one-more" }),
+    /最多保存 50 个/,
+  );
 });
 
 test("Streamable HTTP performs initialize, initialized, paginated tools/list, and SSE parsing", async () => {

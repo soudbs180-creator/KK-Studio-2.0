@@ -428,51 +428,124 @@ function defaultStorage(): McpServerStorage | null {
 }
 
 const persistedServersSchema = z.array(mcpServerSchema).max(MAX_SAVED_SERVERS);
+const persistedServersUnboundedSchema = z.array(mcpServerSchema);
+
+interface ServerSnapshot {
+  raw: string | null;
+  servers: McpServerConfig[];
+  corrupted: boolean;
+  overflow: boolean;
+}
+
+function sameServer(left: McpServerConfig, right: McpServerConfig): boolean {
+  return JSON.stringify(left) === JSON.stringify(right);
+}
 
 /** Metadata registry; session IDs, discovered tools and secrets are memory-only. */
 export class McpServerRegistry {
   private readonly storage: McpServerStorage | null;
   private servers: McpServerConfig[];
-  private readonly corruptedOnRead: boolean;
+  private corruptedOnRead: boolean;
+  private overflowOnRead: boolean;
+  private baselineServers: McpServerConfig[];
+  private baselineRaw: string | null;
 
   constructor(storage: McpServerStorage | null = defaultStorage()) {
     this.storage = storage;
     const result = this.read();
     this.servers = result.servers;
     this.corruptedOnRead = result.corrupted;
+    this.overflowOnRead = result.overflow;
+    this.baselineServers = [...result.servers];
+    this.baselineRaw = result.raw;
   }
 
-  private read(): { servers: McpServerConfig[]; corrupted: boolean } {
-    if (!this.storage) return { servers: [], corrupted: false };
+  private read(): ServerSnapshot {
+    if (!this.storage)
+      return { raw: null, servers: [], corrupted: false, overflow: false };
+    const raw = this.storage.getItem(MCP_SERVERS_STORAGE_KEY);
+    if (!raw)
+      return { raw: null, servers: [], corrupted: false, overflow: false };
     try {
-      const raw = this.storage.getItem(MCP_SERVERS_STORAGE_KEY);
-      if (!raw) return { servers: [], corrupted: false };
-      const parsed = persistedServersSchema.safeParse(JSON.parse(raw));
-      return parsed.success
-        ? { servers: parsed.data, corrupted: false }
-        : { servers: [], corrupted: true };
+      const unbounded = persistedServersUnboundedSchema.safeParse(
+        JSON.parse(raw),
+      );
+      if (!unbounded.success)
+        return { raw, servers: [], corrupted: true, overflow: false };
+      const bounded = persistedServersSchema.safeParse(unbounded.data);
+      return bounded.success
+        ? { raw, servers: bounded.data, corrupted: false, overflow: false }
+        : {
+            raw,
+            servers: unbounded.data,
+            corrupted: false,
+            overflow: true,
+          };
     } catch {
-      return { servers: [], corrupted: true };
+      return { raw, servers: [], corrupted: true, overflow: false };
     }
+  }
+
+  get hasOverflow(): boolean {
+    return this.overflowOnRead;
   }
 
   get persistenceWarning(): string {
-    return this.corruptedOnRead
-      ? "MCP 本地记录无法读取，已停止覆盖原数据；请清理后重新添加。"
-      : "";
+    if (this.corruptedOnRead)
+      return "MCP 本地记录无法读取，已停止覆盖原数据；请先导出原始配置后再清理。";
+    if (this.overflowOnRead)
+      return `MCP 本地记录有 ${this.servers.length} 项，超过当前 ${MAX_SAVED_SERVERS} 项上限；已停止覆盖原数据，请先导出或显式恢复。`;
+    return "";
   }
 
-  private write(): boolean {
-    if (!this.storage) return false;
-    try {
-      this.storage.setItem(
-        MCP_SERVERS_STORAGE_KEY,
-        JSON.stringify(this.servers),
+  /** Return the exact persisted bytes so a damaged or over-limit record can be saved elsewhere. */
+  exportRaw(): string {
+    return (
+      this.storage?.getItem(MCP_SERVERS_STORAGE_KEY) ??
+      JSON.stringify(this.servers)
+    );
+  }
+
+  private assertWritable(snapshot: ServerSnapshot): void {
+    if (this.corruptedOnRead || snapshot.corrupted)
+      throw new Error(
+        snapshot.corrupted
+          ? "MCP 本地记录无法读取，已停止覆盖原数据；请先导出原始配置后再清理。"
+          : this.persistenceWarning,
       );
-      return true;
+    if (this.overflowOnRead || snapshot.overflow)
+      throw new Error(
+        snapshot.overflow
+          ? `MCP 本地记录超过当前 ${MAX_SAVED_SERVERS} 项上限，已停止覆盖原数据；请先导出或显式恢复。`
+          : this.persistenceWarning,
+      );
+  }
+
+  private write(
+    next: McpServerConfig[],
+    expectedRaw: string | null,
+    latest: McpServerConfig[],
+  ): void {
+    if (!this.storage) throw new Error("无法保存 MCP 服务器设置。");
+    if (this.storage.getItem(MCP_SERVERS_STORAGE_KEY) !== expectedRaw)
+      throw new Error("MCP 并发冲突：配置已在其他标签页变更，请刷新后重试。");
+    try {
+      const raw = JSON.stringify(next);
+      this.storage.setItem(MCP_SERVERS_STORAGE_KEY, raw);
+      this.servers = [...next];
+      this.baselineServers = [...next];
+      this.baselineRaw = raw;
     } catch {
-      return false;
+      this.servers = [...latest];
+      this.baselineServers = [...latest];
+      throw new Error("无法保存 MCP 服务器设置。");
     }
+  }
+
+  private latestWritableSnapshot(): ServerSnapshot {
+    const latest = this.read();
+    this.assertWritable(latest);
+    return latest;
   }
 
   list(): McpServerConfig[] {
@@ -480,29 +553,71 @@ export class McpServerRegistry {
   }
 
   add(value: unknown): McpServerConfig {
-    if (this.corruptedOnRead) throw new Error(this.persistenceWarning);
     const server = mcpServerSchema.parse(value);
-    const previous = this.servers;
-    const next = [...previous.filter((item) => item.id !== server.id), server];
+    const latest = this.latestWritableSnapshot();
+    const baseline = new Map(
+      this.baselineServers.map((item) => [item.id, item]),
+    );
+    const current = latest.servers.find((item) => item.id === server.id);
+    const original = baseline.get(server.id);
+    if (
+      current &&
+      ((!original && current) || (original && !sameServer(original, current)))
+    )
+      throw new Error("MCP 并发冲突：配置已在其他标签页变更，请刷新后重试。");
+    const next = [
+      ...latest.servers.filter((item) => item.id !== server.id),
+      server,
+    ];
     if (next.length > MAX_SAVED_SERVERS)
       throw new Error(`MCP 服务器最多保存 ${MAX_SAVED_SERVERS} 个。`);
-    this.servers = next;
-    if (!this.write()) {
-      this.servers = previous;
-      throw new Error("无法保存 MCP 服务器设置。");
-    }
+    this.write(next, latest.raw, latest.servers);
     return server;
   }
 
   remove(id: string): boolean {
-    if (this.corruptedOnRead) throw new Error(this.persistenceWarning);
-    const previous = this.servers;
-    this.servers = previous.filter((item) => item.id !== id);
-    if (this.servers.length === previous.length) return false;
-    if (!this.write()) {
-      this.servers = previous;
-      throw new Error("无法保存 MCP 服务器设置。");
+    const latest = this.latestWritableSnapshot();
+    const current = latest.servers.find((item) => item.id === id);
+    if (!current) {
+      this.servers = [...latest.servers];
+      this.baselineServers = [...latest.servers];
+      this.baselineRaw = latest.raw;
+      return false;
     }
+    const original = this.baselineServers.find((item) => item.id === id);
+    if (original && !sameServer(original, current))
+      throw new Error("MCP 并发冲突：配置已在其他标签页变更，请刷新后重试。");
+    const next = latest.servers.filter((item) => item.id !== id);
+    this.write(next, latest.raw, latest.servers);
     return true;
+  }
+
+  /** Explicitly trim a valid legacy over-limit record after the caller has exported it. */
+  recover(keepIds: readonly string[]): McpServerConfig[] {
+    if (this.corruptedOnRead) throw new Error(this.persistenceWarning);
+    if (!this.overflowOnRead)
+      throw new Error("当前没有需要恢复的超限 MCP 配置。");
+    const ids = [...keepIds];
+    if (new Set(ids).size !== ids.length)
+      throw new Error("恢复列表不能包含重复的 MCP 服务器。");
+    if (ids.length > MAX_SAVED_SERVERS)
+      throw new Error(`恢复后的 MCP 服务器最多保存 ${MAX_SAVED_SERVERS} 个。`);
+    const latest = this.read();
+    if (latest.corrupted || !latest.overflow)
+      throw new Error(
+        "MCP 并发冲突：超限配置已在其他标签页变更，请刷新后重试。",
+      );
+    if (latest.raw !== this.baselineRaw)
+      throw new Error("MCP 并发冲突：配置已在其他标签页变更，请刷新后重试。");
+    const byId = new Map(latest.servers.map((item) => [item.id, item]));
+    const next = ids.map((id) => {
+      const item = byId.get(id);
+      if (!item) throw new Error("恢复列表包含不存在的 MCP 服务器。");
+      return item;
+    });
+    this.write(next, latest.raw, latest.servers);
+    this.overflowOnRead = false;
+    this.corruptedOnRead = false;
+    return this.list();
   }
 }

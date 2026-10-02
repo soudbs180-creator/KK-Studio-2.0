@@ -490,6 +490,12 @@
   color: var(--settings-muted);
   margin-top: 6px;
 }
+.settings-inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
 .settings-field {
   display: flex;
   flex-direction: column;

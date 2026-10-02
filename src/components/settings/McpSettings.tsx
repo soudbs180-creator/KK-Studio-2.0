@@ -76,6 +76,47 @@ export default function McpSettings({
     }
   }
 
+  function exportRegistry(): void {
+    const blob = new Blob([registry.exportRaw()], {
+      type: "application/json;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "kk-studio-mcp-servers.json";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+    onFeedback(
+      "MCP 原始配置已导出；导出文件仍可能包含不可读记录，请妥善保存。",
+    );
+  }
+
+  async function recoverOverflow(): Promise<void> {
+    if (
+      !(await confirmAction(
+        "确认仅保留前 50 个 MCP 服务器并恢复正常编辑吗？请先导出原始配置。",
+      ))
+    )
+      return;
+    try {
+      registry.recover(
+        registry
+          .list()
+          .slice(0, 50)
+          .map((item) => item.id),
+      );
+      setFormError("");
+      updateServerList();
+      onFeedback("MCP 配置已恢复为前 50 项，可以继续编辑。");
+    } catch (error) {
+      setFormError(
+        error instanceof Error ? error.message : "MCP 配置恢复失败。",
+      );
+    }
+  }
+
   async function connectServer(server: McpServerConfig): Promise<void> {
     connectionControllers.get(server.id)?.abort();
     const prior = clients.get(server.id);
@@ -187,6 +228,31 @@ export default function McpSettings({
           </p>
         </div>
       </div>
+      {registry.hasOverflow && (
+        <div className="settings-connection-note" role="alert">
+          <span className="settings-status-dot" aria-hidden="true" />
+          <div>
+            <strong>旧版 MCP 配置超过当前上限</strong>
+            <p>{registry.persistenceWarning}</p>
+            <div className="settings-inline-actions">
+              <button
+                type="button"
+                className="settings-action secondary"
+                onClick={exportRegistry}
+              >
+                导出原始 MCP 配置
+              </button>
+              <button
+                type="button"
+                className="settings-action"
+                onClick={() => void recoverOverflow()}
+              >
+                保留前 50 项并恢复
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <section className="settings-mcp-add" aria-labelledby="mcp-add-title">
         <h3 id="mcp-add-title">添加 MCP 服务器</h3>
         <label className="settings-field">
