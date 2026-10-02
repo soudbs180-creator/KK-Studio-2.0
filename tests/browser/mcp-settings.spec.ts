@@ -154,6 +154,24 @@ test("MCP 设置显示并显式恢复旧版超限配置", async ({ page }) => {
   ).toBe(50);
 });
 
+test("MCP 设置为损坏配置提供原始导出入口", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(() => {
+    localStorage.setItem("kk-studio-next:mcp-servers:v1", "not-json");
+  });
+  await page.reload();
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "设置" });
+  await dialog.getByRole("button", { name: "MCP", exact: true }).click();
+  await expect(dialog.getByRole("alert")).toContainText("无法读取");
+  await expect(
+    dialog.getByRole("button", { name: "导出原始 MCP 配置", exact: true }),
+  ).toBeVisible();
+  await expect(
+    dialog.getByRole("button", { name: "保留前 50 项并恢复", exact: true }),
+  ).toHaveCount(0);
+});
+
 test("MCP 设置拒绝不安全的远程 HTTP endpoint", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();

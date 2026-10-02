@@ -52,10 +52,10 @@ export default function McpSettings({
     setServers(registry.list());
   }
 
-  function addServer(): void {
+  async function addServer(): Promise<void> {
     try {
       if (!name.trim()) throw new Error("请填写服务器名称。");
-      registry.add({
+      await registry.add({
         id: crypto.randomUUID(),
         name: name.trim(),
         transport: "streamable_http",
@@ -103,7 +103,7 @@ export default function McpSettings({
     )
       return;
     try {
-      registry.recover(
+      await registry.recover(
         registry
           .list()
           .slice(0, 50)
@@ -180,9 +180,9 @@ export default function McpSettings({
     onFeedback(`${server.name} 已断开。`);
   }
 
-  function removeServer(server: McpServerConfig): void {
+  async function removeServer(server: McpServerConfig): Promise<void> {
     try {
-      registry.remove(server.id);
+      await registry.remove(server.id);
       releaseServer(server);
       updateServerList();
       onFeedback(`${server.name} 已移除。`);
@@ -215,11 +215,18 @@ export default function McpSettings({
   return (
     <div className="settings-mcp">
       <McpProtocolNotice />
-      {registry.hasOverflow && (
+      {(registry.hasOverflow || registry.hasCorruption) && (
         <McpOverflowNotice
           warning={registry.persistenceWarning}
+          title={
+            registry.hasCorruption
+              ? "MCP 配置无法读取"
+              : "旧版 MCP 配置超过当前上限"
+          }
           onExport={exportRegistry}
-          onRecover={() => void recoverOverflow()}
+          onRecover={
+            registry.hasOverflow ? () => void recoverOverflow() : undefined
+          }
         />
       )}
       <section className="settings-mcp-add" aria-labelledby="mcp-add-title">
@@ -252,7 +259,7 @@ export default function McpSettings({
           type="button"
           className="settings-action"
           disabled={!name.trim() || !endpoint.trim()}
-          onClick={addServer}
+          onClick={() => void addServer()}
         >
           保存服务器
         </button>
@@ -276,7 +283,7 @@ export default function McpSettings({
               onConnect={() => void connectServer(server)}
               onCancel={() => void cancelConnection(server)}
               onDisconnect={() => void disconnectServer(server)}
-              onRemove={() => removeServer(server)}
+              onRemove={() => void removeServer(server)}
               onToggleTools={() =>
                 setExpanded(expanded === server.id ? null : server.id)
               }

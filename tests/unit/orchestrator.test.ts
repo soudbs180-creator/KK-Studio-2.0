@@ -1150,6 +1150,62 @@ test("plan_replan persists an idempotent plan that requeues failures and downstr
   assert.equal(read().stagePlans?.length, 2);
 });
 
+test("plan_replan treats partial work as recoverable input", () => {
+  const { orchestrator } = harness();
+  const stamp = Date.now();
+  const plan = orchestrator.upsertPlan({
+    id: "plan-replan-partial",
+    title: "部分失败重排",
+    projectId: "p",
+    createdBy: "agent",
+    stages: [
+      {
+        name: "部分结果",
+        goal: "重新生成部分结果",
+        workItems: [
+          {
+            id: "partial-item",
+            kind: "image",
+            prompt: "生成部分结果",
+            dependencies: [],
+            status: "queued",
+            createdAt: stamp,
+            updatedAt: stamp,
+          },
+        ],
+      },
+    ],
+  });
+  const running = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 0,
+    workItemId: "partial-item",
+    expectedRevision: plan.revision,
+    status: "running",
+  });
+  orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 0,
+    workItemId: "partial-item",
+    expectedRevision: running.revision,
+    status: "partial",
+    error: "fixture partial result",
+  });
+  const result = orchestrator
+    .planTools()
+    .find((item) => item.name === "plan_replan")!
+    .invoke({ planId: plan.id });
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.failedWorkItems, [
+    { stageIndex: 0, workItemId: "partial-item" },
+  ]);
+  assert.equal((result as { replanned: boolean }).replanned, true);
+  assert.equal(
+    orchestrator.getPlan(String(result.planId))?.stages[0].workItems[0]?.status,
+    "queued",
+  );
+});
+
 test("plan_replan refuses an unrelated plan occupying its deterministic id", () => {
   const { orchestrator, read } = harness();
   const stamp = Date.now();

@@ -10,6 +10,7 @@ const MAX_TOOLS = 500;
 const MAX_PAGES = 32;
 const MAX_SAVED_SERVERS = 50;
 const DEFAULT_TIMEOUT_MS = 15_000;
+const MCP_STORAGE_LOCK_NAME = "kk-studio:mcp-server-registry";
 
 export const MCP_SERVERS_STORAGE_KEY = "kk-studio-next:mcp-servers:v1";
 
@@ -212,6 +213,8 @@ type McpProtocol = "legacy" | "modern";
 
 export interface McpHttpClientOptions {
   protocolMode?: "auto" | McpProtocol;
+  /** Testable upper bound for request cancellation; production defaults to 15s. */
+  timeoutMs?: number;
 }
 
 interface PostResult {
@@ -224,6 +227,7 @@ interface PostResult {
 export class McpHttpClient {
   readonly server: McpServerConfig;
   private readonly protocolMode: McpHttpClientOptions["protocolMode"];
+  private readonly timeoutMs: number;
   private sessionId: string | undefined;
   private activeProtocol: McpProtocol | undefined;
   private connected = false;
@@ -232,6 +236,12 @@ export class McpHttpClient {
   constructor(server: McpServerConfig, options: McpHttpClientOptions = {}) {
     this.server = mcpServerSchema.parse(server);
     this.protocolMode = options.protocolMode ?? "auto";
+    this.timeoutMs =
+      typeof options.timeoutMs === "number" &&
+      Number.isFinite(options.timeoutMs) &&
+      options.timeoutMs > 0
+        ? Math.min(Math.floor(options.timeoutMs), DEFAULT_TIMEOUT_MS)
+        : DEFAULT_TIMEOUT_MS;
   }
 
   get isConnected(): boolean {
@@ -248,7 +258,7 @@ export class McpHttpClient {
     signal?: AbortSignal,
     allowErrorStatus = false,
   ): Promise<PostResult> {
-    const timeout = timeoutSignal(DEFAULT_TIMEOUT_MS, signal);
+    const timeout = timeoutSignal(this.timeoutMs, signal);
     try {
       const headers: Record<string, string> = {
         Accept: "application/json, text/event-stream",
@@ -487,7 +497,7 @@ export class McpHttpClient {
     this.activeProtocol = undefined;
     this.tools = [];
     if (sessionId && protocol === "legacy") {
-      const timeout = timeoutSignal(DEFAULT_TIMEOUT_MS, signal);
+      const timeout = timeoutSignal(this.timeoutMs, signal);
       try {
         await fetch(this.server.endpoint, {
           method: "DELETE",
@@ -538,12 +548,65 @@ export class McpHttpClient {
 export interface McpServerStorage {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
+  /** Serialize mutations across tabs; browser storage uses Web Locks when available. */
+  withExclusiveLock<T>(callback: () => T | Promise<T>): Promise<T>;
+}
+
+type LockCallback<T> = () => T | Promise<T>;
+const inProcessStorageLocks = new WeakMap<object, Promise<void>>();
+
+function withInProcessStorageLock<T>(
+  key: object,
+  callback: LockCallback<T>,
+): Promise<T> {
+  const previous = inProcessStorageLocks.get(key) ?? Promise.resolve();
+  let release!: () => void;
+  const current = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const queued = previous.then(() => current);
+  inProcessStorageLocks.set(key, queued);
+  return previous.then(async () => {
+    try {
+      return await callback();
+    } finally {
+      release();
+      if (inProcessStorageLocks.get(key) === queued)
+        inProcessStorageLocks.delete(key);
+    }
+  });
+}
+
+interface NavigatorWithLocks {
+  locks?: {
+    request<T>(
+      name: string,
+      options: { mode: "exclusive" },
+      callback: () => T | Promise<T>,
+    ): Promise<T>;
+  };
 }
 
 function defaultStorage(): McpServerStorage | null {
   if (typeof window === "undefined") return null;
   try {
-    return window.localStorage;
+    const localStorage = window.localStorage;
+    const storage: McpServerStorage = {
+      getItem: (key) => localStorage.getItem(key),
+      setItem: (key, value) => localStorage.setItem(key, value),
+      withExclusiveLock: (callback) => {
+        const locks = (globalThis.navigator as NavigatorWithLocks | undefined)
+          ?.locks;
+        if (locks?.request)
+          return locks.request(
+            MCP_STORAGE_LOCK_NAME,
+            { mode: "exclusive" },
+            callback,
+          );
+        return withInProcessStorageLock(storage, callback);
+      },
+    };
+    return storage;
   } catch {
     return null;
   }
@@ -612,6 +675,10 @@ export class McpServerRegistry {
     return this.overflowOnRead;
   }
 
+  get hasCorruption(): boolean {
+    return this.corruptedOnRead;
+  }
+
   get persistenceWarning(): string {
     if (this.corruptedOnRead)
       return "MCP 本地记录无法读取，已停止覆盖原数据；请先导出原始配置后再清理。";
@@ -654,13 +721,19 @@ export class McpServerRegistry {
     try {
       const raw = JSON.stringify(next);
       this.storage.setItem(MCP_SERVERS_STORAGE_KEY, raw);
+      if (this.storage.getItem(MCP_SERVERS_STORAGE_KEY) !== raw)
+        throw new Error(
+          "MCP 并发冲突：配置在写入后被其他标签页变更，请刷新后重试。",
+        );
       this.servers = [...next];
       this.baselineServers = [...next];
       this.baselineRaw = raw;
-    } catch {
+    } catch (error) {
       this.servers = [...latest];
       this.baselineServers = [...latest];
-      throw new Error("无法保存 MCP 服务器设置。");
+      if (error instanceof Error && error.message.includes("并发冲突"))
+        throw error;
+      throw new Error("无法保存 MCP 服务器设置。", { cause: error });
     }
   }
 
@@ -674,75 +747,86 @@ export class McpServerRegistry {
     return [...this.servers];
   }
 
-  add(value: unknown): McpServerConfig {
+  async add(value: unknown): Promise<McpServerConfig> {
     const server = mcpServerSchema.parse(value);
-    const latest = this.latestWritableSnapshot();
-    const baseline = new Map(
-      this.baselineServers.map((item) => [item.id, item]),
-    );
-    const current = latest.servers.find((item) => item.id === server.id);
-    const original = baseline.get(server.id);
-    if (
-      (original && (!current || !sameServer(original, current))) ||
-      (!original && current)
-    )
-      throw new Error("MCP 并发冲突：配置已在其他标签页变更，请刷新后重试。");
-    const next = [
-      ...latest.servers.filter((item) => item.id !== server.id),
-      server,
-    ];
-    if (next.length > MAX_SAVED_SERVERS)
-      throw new Error(`MCP 服务器最多保存 ${MAX_SAVED_SERVERS} 个。`);
-    this.write(next, latest.raw, latest.servers);
-    return server;
+    if (!this.storage) throw new Error("无法保存 MCP 服务器设置。");
+    return this.storage.withExclusiveLock(() => {
+      const latest = this.latestWritableSnapshot();
+      const baseline = new Map(
+        this.baselineServers.map((item) => [item.id, item]),
+      );
+      const current = latest.servers.find((item) => item.id === server.id);
+      const original = baseline.get(server.id);
+      if (
+        (original && (!current || !sameServer(original, current))) ||
+        (!original && current)
+      )
+        throw new Error("MCP 并发冲突：配置已在其他标签页变更，请刷新后重试。");
+      const next = [
+        ...latest.servers.filter((item) => item.id !== server.id),
+        server,
+      ];
+      if (next.length > MAX_SAVED_SERVERS)
+        throw new Error(`MCP 服务器最多保存 ${MAX_SAVED_SERVERS} 个。`);
+      this.write(next, latest.raw, latest.servers);
+      return server;
+    });
   }
 
-  remove(id: string): boolean {
-    const latest = this.latestWritableSnapshot();
-    const current = latest.servers.find((item) => item.id === id);
-    const original = this.baselineServers.find((item) => item.id === id);
-    if (
-      (original && (!current || !sameServer(original, current))) ||
-      (!original && current)
-    )
-      throw new Error("MCP 并发冲突：配置已在其他标签页变更，请刷新后重试。");
-    if (!current) {
-      this.servers = [...latest.servers];
-      this.baselineServers = [...latest.servers];
-      this.baselineRaw = latest.raw;
-      return false;
-    }
-    const next = latest.servers.filter((item) => item.id !== id);
-    this.write(next, latest.raw, latest.servers);
-    return true;
+  async remove(id: string): Promise<boolean> {
+    if (!this.storage) throw new Error("无法保存 MCP 服务器设置。");
+    return this.storage.withExclusiveLock(() => {
+      const latest = this.latestWritableSnapshot();
+      const current = latest.servers.find((item) => item.id === id);
+      const original = this.baselineServers.find((item) => item.id === id);
+      if (
+        (original && (!current || !sameServer(original, current))) ||
+        (!original && current)
+      )
+        throw new Error("MCP 并发冲突：配置已在其他标签页变更，请刷新后重试。");
+      if (!current) {
+        this.servers = [...latest.servers];
+        this.baselineServers = [...latest.servers];
+        this.baselineRaw = latest.raw;
+        return false;
+      }
+      const next = latest.servers.filter((item) => item.id !== id);
+      this.write(next, latest.raw, latest.servers);
+      return true;
+    });
   }
 
   /** Explicitly trim a valid legacy over-limit record after the caller has exported it. */
-  recover(keepIds: readonly string[]): McpServerConfig[] {
-    if (this.corruptedOnRead) throw new Error(this.persistenceWarning);
-    if (!this.overflowOnRead)
-      throw new Error("当前没有需要恢复的超限 MCP 配置。");
-    const ids = [...keepIds];
-    if (new Set(ids).size !== ids.length)
-      throw new Error("恢复列表不能包含重复的 MCP 服务器。");
-    if (ids.length > MAX_SAVED_SERVERS)
-      throw new Error(`恢复后的 MCP 服务器最多保存 ${MAX_SAVED_SERVERS} 个。`);
-    const latest = this.read();
-    if (latest.corrupted || !latest.overflow)
-      throw new Error(
-        "MCP 并发冲突：超限配置已在其他标签页变更，请刷新后重试。",
-      );
-    if (latest.raw !== this.baselineRaw)
-      throw new Error("MCP 并发冲突：配置已在其他标签页变更，请刷新后重试。");
-    const byId = new Map(latest.servers.map((item) => [item.id, item]));
-    const next = ids.map((id) => {
-      const item = byId.get(id);
-      if (!item) throw new Error("恢复列表包含不存在的 MCP 服务器。");
-      return item;
+  async recover(keepIds: readonly string[]): Promise<McpServerConfig[]> {
+    if (!this.storage) throw new Error("无法保存 MCP 服务器设置。");
+    return this.storage.withExclusiveLock(() => {
+      if (this.corruptedOnRead) throw new Error(this.persistenceWarning);
+      if (!this.overflowOnRead)
+        throw new Error("当前没有需要恢复的超限 MCP 配置。");
+      const ids = [...keepIds];
+      if (new Set(ids).size !== ids.length)
+        throw new Error("恢复列表不能包含重复的 MCP 服务器。");
+      if (ids.length > MAX_SAVED_SERVERS)
+        throw new Error(
+          `恢复后的 MCP 服务器最多保存 ${MAX_SAVED_SERVERS} 个。`,
+        );
+      const latest = this.read();
+      if (latest.corrupted || !latest.overflow)
+        throw new Error(
+          "MCP 并发冲突：超限配置已在其他标签页变更，请刷新后重试。",
+        );
+      if (latest.raw !== this.baselineRaw)
+        throw new Error("MCP 并发冲突：配置已在其他标签页变更，请刷新后重试。");
+      const byId = new Map(latest.servers.map((item) => [item.id, item]));
+      const next = ids.map((id) => {
+        const item = byId.get(id);
+        if (!item) throw new Error("恢复列表包含不存在的 MCP 服务器。");
+        return item;
+      });
+      this.write(next, latest.raw, latest.servers);
+      this.overflowOnRead = false;
+      this.corruptedOnRead = false;
+      return this.list();
     });
-    this.write(next, latest.raw, latest.servers);
-    this.overflowOnRead = false;
-    this.corruptedOnRead = false;
-    return this.list();
   }
 }

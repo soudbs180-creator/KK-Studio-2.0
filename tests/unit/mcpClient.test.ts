@@ -19,6 +19,7 @@ const server = {
 
 class MemoryStorage implements McpServerStorage {
   values = new Map<string, string>();
+  private lock: Promise<void> = Promise.resolve();
 
   getItem(key: string): string | null {
     return this.values.get(key) ?? null;
@@ -27,6 +28,20 @@ class MemoryStorage implements McpServerStorage {
   setItem(key: string, value: string): void {
     this.values.set(key, value);
   }
+
+  async withExclusiveLock<T>(callback: () => T | Promise<T>): Promise<T> {
+    const previous = this.lock;
+    let release!: () => void;
+    this.lock = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await previous;
+    try {
+      return await callback();
+    } finally {
+      release();
+    }
+  }
 }
 
 class CorruptedStorage extends MemoryStorage {
@@ -34,6 +49,35 @@ class CorruptedStorage extends MemoryStorage {
     super();
     this.values.set(MCP_SERVERS_STORAGE_KEY, "not-json");
   }
+}
+
+function legacyFixture(
+  onRequest: (
+    method: string,
+    body: Record<string, unknown>,
+  ) => Response | Promise<Response>,
+): typeof fetch {
+  return (async (_input, init) => {
+    const body = JSON.parse(String(init?.body ?? "{}")) as Record<
+      string,
+      unknown
+    >;
+    const method = typeof body.method === "string" ? body.method : "";
+    if (method === "server/discover")
+      return new Response(null, { status: 404 });
+    if (method === "initialize")
+      return new Response(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: body.id,
+          result: { protocolVersion: "2025-11-25" },
+        }),
+        { headers: { "Content-Type": "application/json" } },
+      );
+    if (method === "notifications/initialized")
+      return new Response(null, { status: 202 });
+    return onRequest(method, body);
+  }) as typeof fetch;
 }
 
 test("MCP endpoint accepts loopback HTTP and remote HTTPS only", () => {
@@ -59,33 +103,33 @@ test("MCP endpoint accepts loopback HTTP and remote HTTPS only", () => {
   }
 });
 
-test("server registry persists endpoint metadata without credentials or session state", () => {
+test("server registry persists endpoint metadata without credentials or session state", async () => {
   const storage = new MemoryStorage();
   const registry = new McpServerRegistry(storage);
-  registry.add(server);
+  await registry.add(server);
   const persisted = storage.getItem(MCP_SERVERS_STORAGE_KEY) ?? "";
   assert.match(persisted, /local-tools/);
   assert.doesNotMatch(persisted, /token|session|authorization|secret/i);
   assert.deepEqual(new McpServerRegistry(storage).list(), [server]);
 });
 
-test("server registry never writes more servers than it can read back", () => {
+test("server registry never writes more servers than it can read back", async () => {
   const storage = new MemoryStorage();
   const registry = new McpServerRegistry(storage);
   for (let index = 0; index < 50; index += 1)
-    registry.add({ ...server, id: `local-${index}` });
+    await registry.add({ ...server, id: `local-${index}` });
   const before = storage.getItem(MCP_SERVERS_STORAGE_KEY);
 
-  assert.throws(() => registry.add({ ...server, id: "local-50" }), /50/);
+  await assert.rejects(() => registry.add({ ...server, id: "local-50" }), /50/);
   assert.equal(storage.getItem(MCP_SERVERS_STORAGE_KEY), before);
   assert.equal(registry.list().length, 50);
   assert.equal(new McpServerRegistry(storage).list().length, 50);
 
-  registry.add({ ...server, id: "local-0", name: "更新现有服务器" });
+  await registry.add({ ...server, id: "local-0", name: "更新现有服务器" });
   assert.equal(new McpServerRegistry(storage).list().length, 50);
 });
 
-test("MCP server labels reject credential-like text before persistence", () => {
+test("MCP server labels reject credential-like text before persistence", async () => {
   const storage = new MemoryStorage();
   const registry = new McpServerRegistry(storage);
   assert.equal(
@@ -95,30 +139,45 @@ test("MCP server labels reject credential-like text before persistence", () => {
     }).success,
     false,
   );
-  assert.throws(
+  await assert.rejects(
     () => registry.add({ ...server, name: "Bearer abcdefghijklmnop" }),
     /MCP 名称疑似包含密钥或凭据/,
   );
   assert.equal(storage.getItem(MCP_SERVERS_STORAGE_KEY), null);
 });
 
-test("corrupted MCP persistence is reported and cannot be overwritten", () => {
+test("corrupted MCP persistence is reported and cannot be overwritten", async () => {
   const registry = new McpServerRegistry(new CorruptedStorage());
   assert.match(registry.persistenceWarning, /无法读取/);
+  assert.equal(registry.hasCorruption, true);
   assert.equal(registry.exportRaw(), "not-json");
-  assert.throws(() => registry.add(server), /无法读取/);
+  await assert.rejects(() => registry.add(server), /无法读取/);
 });
 
-test("MCP registry rebases independent instances instead of overwriting newer entries", () => {
+test("MCP registry serializes concurrent writers without losing either entry", async () => {
+  const storage = new MemoryStorage();
+  const first = new McpServerRegistry(storage);
+  const second = new McpServerRegistry(storage);
+  await Promise.all([
+    first.add({ ...server, id: "first-tab" }),
+    second.add({ ...server, id: "second-tab" }),
+  ]);
+  const persisted = new McpServerRegistry(storage).list();
+  assert.equal(persisted.length, 2);
+  assert.ok(persisted.some((item) => item.id === "first-tab"));
+  assert.ok(persisted.some((item) => item.id === "second-tab"));
+});
+
+test("MCP registry rebases independent instances instead of overwriting newer entries", async () => {
   const storage = new MemoryStorage();
   const seed = new McpServerRegistry(storage);
   for (let index = 0; index < 48; index += 1)
-    seed.add({ ...server, id: `seed-${index}` });
+    await seed.add({ ...server, id: `seed-${index}` });
 
   const first = new McpServerRegistry(storage);
   const second = new McpServerRegistry(storage);
-  first.add({ ...server, id: "first-tab" });
-  second.add({ ...server, id: "second-tab" });
+  await first.add({ ...server, id: "first-tab" });
+  await second.add({ ...server, id: "second-tab" });
 
   const persisted = new McpServerRegistry(storage).list();
   assert.equal(persisted.length, 50);
@@ -126,16 +185,16 @@ test("MCP registry rebases independent instances instead of overwriting newer en
   assert.ok(persisted.some((item) => item.id === "second-tab"));
 });
 
-test("MCP registry reports a capacity conflict instead of hiding the first writer", () => {
+test("MCP registry reports a capacity conflict instead of hiding the first writer", async () => {
   const storage = new MemoryStorage();
   const seed = new McpServerRegistry(storage);
   for (let index = 0; index < 49; index += 1)
-    seed.add({ ...server, id: `seed-${index}` });
+    await seed.add({ ...server, id: `seed-${index}` });
 
   const first = new McpServerRegistry(storage);
   const second = new McpServerRegistry(storage);
-  first.add({ ...server, id: "first-tab" });
-  assert.throws(
+  await first.add({ ...server, id: "first-tab" });
+  await assert.rejects(
     () => second.add({ ...server, id: "second-tab" }),
     /并发冲突|最多保存 50 个/,
   );
@@ -144,44 +203,47 @@ test("MCP registry reports a capacity conflict instead of hiding the first write
   assert.ok(!persisted.some((item) => item.id === "second-tab"));
 });
 
-test("MCP registry rejects stale same-id updates and preserves the newer value", () => {
+test("MCP registry rejects stale same-id updates and preserves the newer value", async () => {
   const storage = new MemoryStorage();
-  new McpServerRegistry(storage).add(server);
+  await new McpServerRegistry(storage).add(server);
   const first = new McpServerRegistry(storage);
   const second = new McpServerRegistry(storage);
-  first.add({ ...server, name: "First tab" });
-  assert.throws(
+  await first.add({ ...server, name: "First tab" });
+  await assert.rejects(
     () => second.add({ ...server, name: "Second tab" }),
     /并发冲突/,
   );
   assert.equal(new McpServerRegistry(storage).list()[0]?.name, "First tab");
 });
 
-test("MCP registry rejects stale deletes after another tab removes or adds the id", () => {
+test("MCP registry rejects stale deletes after another tab removes or adds the id", async () => {
   const storage = new MemoryStorage();
-  new McpServerRegistry(storage).add(server);
+  await new McpServerRegistry(storage).add(server);
   const first = new McpServerRegistry(storage);
   const second = new McpServerRegistry(storage);
-  first.remove(server.id);
-  assert.throws(() => second.remove(server.id), /并发冲突/);
+  await first.remove(server.id);
+  await assert.rejects(() => second.remove(server.id), /并发冲突/);
 
   const third = new McpServerRegistry(storage);
   const fourth = new McpServerRegistry(storage);
-  third.add(server);
-  assert.throws(() => fourth.remove(server.id), /并发冲突/);
+  await third.add(server);
+  await assert.rejects(() => fourth.remove(server.id), /并发冲突/);
 });
 
-test("MCP registry rejects stale adds after another tab removes the id", () => {
+test("MCP registry rejects stale adds after another tab removes the id", async () => {
   const storage = new MemoryStorage();
-  new McpServerRegistry(storage).add(server);
+  await new McpServerRegistry(storage).add(server);
   const first = new McpServerRegistry(storage);
   const second = new McpServerRegistry(storage);
-  first.remove(server.id);
-  assert.throws(() => second.add({ ...server, name: "復活禁止" }), /并发冲突/);
+  await first.remove(server.id);
+  await assert.rejects(
+    () => second.add({ ...server, name: "復活禁止" }),
+    /并发冲突/,
+  );
   assert.equal(new McpServerRegistry(storage).list().length, 0);
 });
 
-test("legacy over-limit MCP persistence remains viewable, exportable, and explicitly recoverable", () => {
+test("legacy over-limit MCP persistence remains viewable, exportable, and explicitly recoverable", async () => {
   const storage = new MemoryStorage();
   const legacy = Array.from({ length: 51 }, (_, index) => ({
     ...server,
@@ -195,15 +257,15 @@ test("legacy over-limit MCP persistence remains viewable, exportable, and explic
   assert.equal(registry.hasOverflow, true);
   assert.match(registry.persistenceWarning, /51.*50/);
   assert.equal(registry.exportRaw(), raw);
-  assert.throws(() => registry.add(server), /超过当前 50 项上限/);
+  await assert.rejects(() => registry.add(server), /超过当前 50 项上限/);
 
   const keepIds = legacy.slice(1).map((item) => item.id);
-  const recovered = registry.recover(keepIds);
+  const recovered = await registry.recover(keepIds);
   assert.equal(recovered.length, 50);
   assert.equal(recovered[0]?.id, "legacy-1");
   assert.equal(registry.hasOverflow, false);
   assert.equal(new McpServerRegistry(storage).list().length, 50);
-  assert.throws(
+  await assert.rejects(
     () => registry.add({ ...server, id: "one-more" }),
     /最多保存 50 个/,
   );
@@ -547,6 +609,122 @@ test("unknown MCP tool and malformed tool list fail closed", async () => {
       () => new McpHttpClient(server).connect(),
       /工具列表格式无效/,
     );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("MCP request timeout and caller cancellation abort safely", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = (async (_input, init) =>
+    new Promise<Response>((_, reject) => {
+      init?.signal?.addEventListener("abort", () =>
+        reject(init.signal?.reason ?? new Error("aborted")),
+      );
+    })) as typeof fetch;
+  try {
+    await assert.rejects(
+      () => new McpHttpClient(server, { timeoutMs: 5 }).connect(),
+      /超时/,
+    );
+    const controller = new AbortController();
+    controller.abort(new Error("caller cancelled"));
+    await assert.rejects(
+      () =>
+        new McpHttpClient(server, { timeoutMs: 50 }).connect(controller.signal),
+      /caller cancelled/,
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("MCP response size limit rejects bodies larger than 2 MB", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = legacyFixture(
+    () =>
+      new Response("x".repeat(2 * 1024 * 1024 + 1), {
+        headers: { "Content-Type": "application/json" },
+      }),
+  );
+  try {
+    await assert.rejects(
+      () => new McpHttpClient(server).connect(),
+      /超过 2 MB/,
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("MCP tool discovery rejects more than 500 tools", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = legacyFixture((method, body) => {
+    if (method !== "tools/list") return new Response(null, { status: 404 });
+    return new Response(
+      JSON.stringify({
+        jsonrpc: "2.0",
+        id: body.id,
+        result: {
+          tools: Array.from({ length: 501 }, (_, index) => ({
+            name: `tool-${index}`,
+            inputSchema: { type: "object" },
+          })),
+        },
+      }),
+      { headers: { "Content-Type": "application/json" } },
+    );
+  });
+  try {
+    await assert.rejects(
+      () => new McpHttpClient(server).connect(),
+      /超过 500 个限制/,
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("MCP tool pagination rejects repeated cursors and more than 32 pages", async () => {
+  const originalFetch = globalThis.fetch;
+  let repeatedCalls = 0;
+  globalThis.fetch = legacyFixture((method, body) => {
+    if (method !== "tools/list") return new Response(null, { status: 404 });
+    repeatedCalls += 1;
+    return new Response(
+      JSON.stringify({
+        jsonrpc: "2.0",
+        id: body.id,
+        result: { tools: [], nextCursor: "same-cursor" },
+      }),
+      { headers: { "Content-Type": "application/json" } },
+    );
+  });
+  try {
+    await assert.rejects(
+      () => new McpHttpClient(server).connect(),
+      /分页游标重复/,
+    );
+    assert.equal(repeatedCalls, 2);
+
+    let pageCalls = 0;
+    globalThis.fetch = legacyFixture((method, body) => {
+      if (method !== "tools/list") return new Response(null, { status: 404 });
+      pageCalls += 1;
+      return new Response(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: body.id,
+          result: { tools: [], nextCursor: `page-${pageCalls}` },
+        }),
+        { headers: { "Content-Type": "application/json" } },
+      );
+    });
+    await assert.rejects(
+      () => new McpHttpClient(server).connect(),
+      /超过 32 页限制/,
+    );
+    assert.equal(pageCalls, 32);
   } finally {
     globalThis.fetch = originalFetch;
   }
