@@ -157,6 +157,30 @@ test("MCP registry rejects stale same-id updates and preserves the newer value",
   assert.equal(new McpServerRegistry(storage).list()[0]?.name, "First tab");
 });
 
+test("MCP registry rejects stale deletes after another tab removes or adds the id", () => {
+  const storage = new MemoryStorage();
+  new McpServerRegistry(storage).add(server);
+  const first = new McpServerRegistry(storage);
+  const second = new McpServerRegistry(storage);
+  first.remove(server.id);
+  assert.throws(() => second.remove(server.id), /并发冲突/);
+
+  const third = new McpServerRegistry(storage);
+  const fourth = new McpServerRegistry(storage);
+  third.add(server);
+  assert.throws(() => fourth.remove(server.id), /并发冲突/);
+});
+
+test("MCP registry rejects stale adds after another tab removes the id", () => {
+  const storage = new MemoryStorage();
+  new McpServerRegistry(storage).add(server);
+  const first = new McpServerRegistry(storage);
+  const second = new McpServerRegistry(storage);
+  first.remove(server.id);
+  assert.throws(() => second.add({ ...server, name: "復活禁止" }), /并发冲突/);
+  assert.equal(new McpServerRegistry(storage).list().length, 0);
+});
+
 test("legacy over-limit MCP persistence remains viewable, exportable, and explicitly recoverable", () => {
   const storage = new MemoryStorage();
   const legacy = Array.from({ length: 51 }, (_, index) => ({
@@ -340,6 +364,35 @@ test("MCP auto negotiation fails closed on a malformed successful discovery resp
     await assert.rejects(
       () => new McpHttpClient(server).connect(),
       /未声明 2026-07-28 支持/,
+    );
+    assert.deepEqual(methods, ["server/discover"]);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("MCP discovery errors mentioning unsupported auth never fall back to legacy", async () => {
+  const methods: string[] = [];
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = (async (_input, init) => {
+    const body = JSON.parse(String(init?.body ?? "{}")) as {
+      method?: string;
+      id?: number;
+    };
+    methods.push(body.method ?? "");
+    return new Response(
+      JSON.stringify({
+        jsonrpc: "2.0",
+        id: body.id,
+        error: { code: -32001, message: "unsupported authentication" },
+      }),
+      { headers: { "Content-Type": "application/json" } },
+    );
+  }) as typeof fetch;
+  try {
+    await assert.rejects(
+      () => new McpHttpClient(server).connect(),
+      /现代协议发现失败：unsupported authentication/,
     );
     assert.deepEqual(methods, ["server/discover"]);
   } finally {

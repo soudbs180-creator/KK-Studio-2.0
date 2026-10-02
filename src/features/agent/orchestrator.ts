@@ -108,7 +108,7 @@ const planPatchInputSchema = z.object({
     .max(32),
 });
 
-function planDefinition(plan: StagePlan): string {
+function planDefinition(plan: StagePlan, includeReworkPrompt = false): string {
   return JSON.stringify({
     title: plan.title,
     createdBy: plan.createdBy,
@@ -120,6 +120,7 @@ function planDefinition(plan: StagePlan): string {
         id: item.id,
         kind: item.kind,
         prompt: item.prompt,
+        reworkPrompt: includeReworkPrompt ? item.reworkPrompt : undefined,
         dependencies: item.dependencies,
         model: item.model,
         params: item.params
@@ -251,6 +252,11 @@ function failedWorkItems(plan: StagePlan): Array<{
   );
 }
 
+function replannedPlanId(plan: StagePlan): string {
+  const suffix = `-replan-${plan.revision}`;
+  return `${plan.id.slice(0, 160 - suffix.length)}${suffix}`;
+}
+
 /** Build a new durable plan for failed work and every dependent downstream item. */
 function buildReplannedPlan(plan: StagePlan): {
   plan: StagePlan;
@@ -269,8 +275,7 @@ function buildReplannedPlan(plan: StagePlan): {
       }
     }
   }
-  const suffix = `-replan-${plan.revision}`;
-  const id = `${plan.id.slice(0, 160 - suffix.length)}${suffix}`;
+  const id = replannedPlanId(plan);
   const titleSuffix = "（重排）";
   const created = createStagePlan({
     id,
@@ -719,35 +724,69 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
             "根据当前计划的失败项及依赖下游创建可恢复的新计划；已成功项和原计划保持不变。输入 { planId? }。",
           invoke(input) {
             const planId = requirePlanId(input);
-            const plan = planId ? getPlan(planId) : null;
-            if (!plan) return { ok: false, error: "没有可重排的计划。" };
-            const failed = failedWorkItems(plan);
-            if (!failed.length)
-              return {
-                ok: true,
-                planId: plan.id,
-                replanned: false,
-                summary: stagePlanSummary(plan),
-                failedWorkItems: failed,
-              };
             try {
               const project = projectOrThrow();
-              const suffix = `-replan-${plan.revision}`;
-              const newPlanId = `${plan.id.slice(0, 160 - suffix.length)}${suffix}`;
+              const plan = planId ? readPlan(project, planId) : null;
+              if (!plan) return { ok: false, error: "没有可重排的计划。" };
+              const failed = failedWorkItems(plan);
+              if (!failed.length)
+                return {
+                  ok: true,
+                  planId: plan.id,
+                  replanned: false,
+                  summary: stagePlanSummary(plan),
+                  failedWorkItems: failed,
+                };
+              const generated = buildReplannedPlan(plan).plan;
+              const newPlanId = replannedPlanId(plan);
               const existing = project.stagePlans?.find(
                 (item) => item.id === newPlanId,
               );
-              const replanned = existing ?? buildReplannedPlan(plan).plan;
+              if (
+                existing &&
+                (existing.projectId !== project.id ||
+                  planDefinition(existing, true) !==
+                    planDefinition(generated, true))
+              )
+                throw new StagePlanError(
+                  `重排计划 ID ${newPlanId} 已被其他计划占用，未写入项目。`,
+                );
+              let replanned = existing ?? generated;
               if (!existing) {
-                if ((project.stagePlans?.length ?? 0) >= 64)
+                const latestProject = projectOrThrow();
+                const latestSource = readPlan(latestProject, plan.id);
+                if (latestSource.revision !== plan.revision)
+                  throw new StagePlanError(
+                    "编排计划 revision 已变化（并发冲突，未写入）。",
+                  );
+                const raced = latestProject.stagePlans?.find(
+                  (item) => item.id === newPlanId,
+                );
+                if (
+                  raced &&
+                  (raced.projectId !== latestProject.id ||
+                    planDefinition(raced, true) !==
+                      planDefinition(generated, true))
+                )
+                  throw new StagePlanError(
+                    `重排计划 ID ${newPlanId} 已被其他计划占用，未写入项目。`,
+                  );
+                if (raced) {
+                  replanned = raced;
+                } else if ((latestProject.stagePlans?.length ?? 0) >= 64) {
                   throw new StagePlanError(
                     "编排计划已达 64 个上限，未写入项目。",
                   );
-                options.commit({
-                  ...project,
-                  stagePlans: [...(project.stagePlans ?? []), replanned],
-                  updatedAt: Date.now(),
-                });
+                } else {
+                  options.commit({
+                    ...latestProject,
+                    stagePlans: [
+                      ...(latestProject.stagePlans ?? []),
+                      replanned,
+                    ],
+                    updatedAt: Date.now(),
+                  });
+                }
               }
               return {
                 ok: true,

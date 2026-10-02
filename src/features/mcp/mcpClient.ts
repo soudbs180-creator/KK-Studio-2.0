@@ -330,11 +330,10 @@ export class McpHttpClient {
       throw new Error("MCP 现代协议发现响应无效。");
     }
     if (response.rpc.error) {
+      const discoveryError = response.rpc.error.message.trim();
       if (
         response.rpc.error.code === -32601 ||
-        /method\s+not\s+found|unknown method|unsupported/i.test(
-          response.rpc.error.message,
-        )
+        /^(?:method\s+not\s+found|unknown\s+method)$/i.test(discoveryError)
       )
         return false;
       throw new Error(`MCP 现代协议发现失败：${response.rpc.error.message}`);
@@ -684,8 +683,8 @@ export class McpServerRegistry {
     const current = latest.servers.find((item) => item.id === server.id);
     const original = baseline.get(server.id);
     if (
-      current &&
-      ((!original && current) || (original && !sameServer(original, current)))
+      (original && (!current || !sameServer(original, current))) ||
+      (!original && current)
     )
       throw new Error("MCP 并发冲突：配置已在其他标签页变更，请刷新后重试。");
     const next = [
@@ -701,15 +700,18 @@ export class McpServerRegistry {
   remove(id: string): boolean {
     const latest = this.latestWritableSnapshot();
     const current = latest.servers.find((item) => item.id === id);
+    const original = this.baselineServers.find((item) => item.id === id);
+    if (
+      (original && (!current || !sameServer(original, current))) ||
+      (!original && current)
+    )
+      throw new Error("MCP 并发冲突：配置已在其他标签页变更，请刷新后重试。");
     if (!current) {
       this.servers = [...latest.servers];
       this.baselineServers = [...latest.servers];
       this.baselineRaw = latest.raw;
       return false;
     }
-    const original = this.baselineServers.find((item) => item.id === id);
-    if (original && !sameServer(original, current))
-      throw new Error("MCP 并发冲突：配置已在其他标签页变更，请刷新后重试。");
     const next = latest.servers.filter((item) => item.id !== id);
     this.write(next, latest.raw, latest.servers);
     return true;

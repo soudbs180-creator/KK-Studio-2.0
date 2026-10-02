@@ -1150,6 +1150,82 @@ test("plan_replan persists an idempotent plan that requeues failures and downstr
   assert.equal(read().stagePlans?.length, 2);
 });
 
+test("plan_replan refuses an unrelated plan occupying its deterministic id", () => {
+  const { orchestrator, read } = harness();
+  const stamp = Date.now();
+  const plan = orchestrator.upsertPlan({
+    id: "replan-collision-source",
+    title: "重排源计划",
+    projectId: "p",
+    createdBy: "agent",
+    stages: [
+      {
+        name: "执行",
+        goal: "执行失败项",
+        workItems: [
+          {
+            id: "collision-source",
+            kind: "text",
+            prompt: "失败文本",
+            dependencies: [],
+            status: "queued",
+            createdAt: stamp,
+            updatedAt: stamp,
+          },
+        ],
+      },
+    ],
+  });
+  const running = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 0,
+    workItemId: "collision-source",
+    expectedRevision: plan.revision,
+    status: "running",
+  });
+  const failed = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 0,
+    workItemId: "collision-source",
+    expectedRevision: running.revision,
+    status: "failed",
+    error: "fixture failure",
+  });
+  const suffix = `-replan-${failed.revision}`;
+  const collisionId = `${plan.id.slice(0, 160 - suffix.length)}${suffix}`;
+  orchestrator.upsertPlan({
+    id: collisionId,
+    title: "无关占用计划",
+    projectId: "p",
+    createdBy: "agent",
+    stages: [
+      {
+        name: "占用",
+        goal: "不是重排结果",
+        workItems: [
+          {
+            id: "unrelated-item",
+            kind: "text",
+            prompt: "无关内容",
+            dependencies: [],
+            status: "queued",
+            createdAt: stamp,
+            updatedAt: stamp,
+          },
+        ],
+      },
+    ],
+  });
+
+  const result = orchestrator
+    .planTools()
+    .find((item) => item.name === "plan_replan")!
+    .invoke({ planId: plan.id });
+  assert.equal(result.ok, false);
+  assert.match(String(result.error), /ID .*占用/);
+  assert.equal(read().stagePlans?.length, 2);
+});
+
 test("Agent plan tool cannot approve or unblock its own stages", () => {
   const { orchestrator } = harness();
   const plan = orchestrator.upsertPlan(planInput("p"));
