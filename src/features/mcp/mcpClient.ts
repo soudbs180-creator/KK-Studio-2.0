@@ -13,7 +13,6 @@ const DEFAULT_TIMEOUT_MS = 15_000;
 const MCP_STORAGE_LOCK_NAME = "kk-studio:mcp-server-registry";
 
 export const MCP_SERVERS_STORAGE_KEY = "kk-studio-next:mcp-servers:v1";
-const MCP_STORAGE_LEASE_KEY = `${MCP_SERVERS_STORAGE_KEY}:lock`;
 
 const CREDENTIAL_PATTERNS = [
   /(?:api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret|password)\s*[:=]/i,
@@ -549,73 +548,10 @@ export class McpHttpClient {
 export interface McpServerStorage {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
-  /** Serialize mutations across tabs; browser storage uses Web Locks when available. */
+  /** Serialize mutations across tabs with a real cross-agent lock. */
   withExclusiveLock<T>(callback: () => T | Promise<T>): Promise<T>;
-}
-
-type LockCallback<T> = () => T | Promise<T>;
-const inProcessStorageLocks = new WeakMap<object, Promise<void>>();
-const defaultStorageMutex = {};
-
-function withInProcessStorageLock<T>(
-  key: object,
-  callback: LockCallback<T>,
-): Promise<T> {
-  const previous = inProcessStorageLocks.get(key) ?? Promise.resolve();
-  let release!: () => void;
-  const current = new Promise<void>((resolve) => {
-    release = resolve;
-  });
-  const queued = previous.then(() => current);
-  inProcessStorageLocks.set(key, queued);
-  return previous.then(async () => {
-    try {
-      return await callback();
-    } finally {
-      release();
-      if (inProcessStorageLocks.get(key) === queued)
-        inProcessStorageLocks.delete(key);
-    }
-  });
-}
-
-async function withLocalStorageLease<T>(
-  storage: Storage,
-  callback: LockCallback<T>,
-): Promise<T> {
-  const token = `${Date.now().toString(36)}-${Math.random()
-    .toString(36)
-    .slice(2)}`;
-  const deadline = Date.now() + 10_000;
-  while (Date.now() < deadline) {
-    const current = storage.getItem(MCP_STORAGE_LEASE_KEY);
-    const expiresAt = (() => {
-      try {
-        return Number(
-          (JSON.parse(current ?? "null") as { expiresAt?: unknown })?.expiresAt,
-        );
-      } catch {
-        return 0;
-      }
-    })();
-    if (!current || !Number.isFinite(expiresAt) || expiresAt <= Date.now()) {
-      const candidate = JSON.stringify({
-        token,
-        expiresAt: Date.now() + 5_000,
-      });
-      storage.setItem(MCP_STORAGE_LEASE_KEY, candidate);
-      if (storage.getItem(MCP_STORAGE_LEASE_KEY) === candidate) {
-        try {
-          return await callback();
-        } finally {
-          if (storage.getItem(MCP_STORAGE_LEASE_KEY) === candidate)
-            storage.removeItem(MCP_STORAGE_LEASE_KEY);
-        }
-      }
-    }
-    await new Promise<void>((resolve) => globalThis.setTimeout(resolve, 5));
-  }
-  throw new Error("MCP 配置锁不可用，请稍后重试。");
+  /** Present when this storage can be read but cannot safely mutate across tabs. */
+  readOnlyReason?: string;
 }
 
 interface NavigatorWithLocks {
@@ -632,22 +568,22 @@ function defaultStorage(): McpServerStorage | null {
   if (typeof window === "undefined") return null;
   try {
     const localStorage = window.localStorage;
+    const locks = (globalThis.navigator as NavigatorWithLocks | undefined)
+      ?.locks;
+    const readOnlyReason =
+      "当前浏览器不支持跨标签安全写入，MCP 配置暂为只读；可导出原始配置。";
     const storage: McpServerStorage = {
       getItem: (key) => localStorage.getItem(key),
       setItem: (key, value) => localStorage.setItem(key, value),
-      withExclusiveLock: (callback) => {
-        return withInProcessStorageLock(defaultStorageMutex, () => {
-          const locks = (globalThis.navigator as NavigatorWithLocks | undefined)
-            ?.locks;
-          if (locks?.request)
-            return locks.request(
+      withExclusiveLock: (callback) =>
+        locks?.request
+          ? locks.request(
               MCP_STORAGE_LOCK_NAME,
               { mode: "exclusive" },
               callback,
-            );
-          return withLocalStorageLease(localStorage, callback);
-        });
-      },
+            )
+          : Promise.reject(new Error(readOnlyReason)),
+      readOnlyReason: locks?.request ? undefined : readOnlyReason,
     };
     return storage;
   } catch {
@@ -722,11 +658,16 @@ export class McpServerRegistry {
     return this.corruptedOnRead;
   }
 
+  get isReadOnly(): boolean {
+    return Boolean(this.storage?.readOnlyReason);
+  }
+
   get persistenceWarning(): string {
     if (this.corruptedOnRead)
       return "MCP 本地记录无法读取，已停止覆盖原数据；请先导出原始配置后再清理。";
     if (this.overflowOnRead)
       return `MCP 本地记录有 ${this.servers.length} 项，超过当前 ${MAX_SAVED_SERVERS} 项上限；已停止覆盖原数据，请先导出或显式恢复。`;
+    if (this.storage?.readOnlyReason) return this.storage.readOnlyReason;
     return "";
   }
 
@@ -751,6 +692,8 @@ export class McpServerRegistry {
           ? `MCP 本地记录超过当前 ${MAX_SAVED_SERVERS} 项上限，已停止覆盖原数据；请先导出或显式恢复。`
           : this.persistenceWarning,
       );
+    if (this.storage?.readOnlyReason)
+      throw new Error(this.storage.readOnlyReason);
   }
 
   private write(

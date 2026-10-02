@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 
 test("MCP 设置保存 endpoint，完成真实握手并展示 tools/list 返回的 inputSchema", async ({
   page,
@@ -169,6 +170,14 @@ test("MCP 设置为损坏配置提供原始导出入口", async ({ page }) => {
   await expect(
     dialog.getByRole("button", { name: "导出原始 MCP 配置", exact: true }),
   ).toBeVisible();
+  const downloadPromise = page.waitForEvent("download");
+  await dialog
+    .getByRole("button", { name: "导出原始 MCP 配置", exact: true })
+    .click();
+  const download = await downloadPromise;
+  const downloadPath = await download.path();
+  expect(downloadPath).toBeTruthy();
+  expect(await readFile(downloadPath!, "utf8")).toBe("not-json");
   await expect(
     dialog.getByRole("button", { name: "保留前 50 项并恢复", exact: true }),
   ).toHaveCount(0);

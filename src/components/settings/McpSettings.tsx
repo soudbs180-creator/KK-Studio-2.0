@@ -258,7 +258,7 @@ export default function McpSettings({
         <button
           type="button"
           className="settings-action"
-          disabled={!name.trim() || !endpoint.trim()}
+          disabled={registry.isReadOnly || !name.trim() || !endpoint.trim()}
           onClick={() => void addServer()}
         >
           保存服务器

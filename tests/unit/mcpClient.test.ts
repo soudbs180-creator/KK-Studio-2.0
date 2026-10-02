@@ -51,6 +51,39 @@ class CorruptedStorage extends MemoryStorage {
   }
 }
 
+async function withDefaultBrowserStorage(
+  storage: MemoryStorage,
+  locks: unknown,
+  callback: () => Promise<void>,
+): Promise<void> {
+  const windowDescriptor = Object.getOwnPropertyDescriptor(
+    globalThis,
+    "window",
+  );
+  const navigatorDescriptor = Object.getOwnPropertyDescriptor(
+    globalThis,
+    "navigator",
+  );
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: { localStorage: storage },
+  });
+  Object.defineProperty(globalThis, "navigator", {
+    configurable: true,
+    value: { locks },
+  });
+  try {
+    await callback();
+  } finally {
+    if (windowDescriptor)
+      Object.defineProperty(globalThis, "window", windowDescriptor);
+    else Reflect.deleteProperty(globalThis, "window");
+    if (navigatorDescriptor)
+      Object.defineProperty(globalThis, "navigator", navigatorDescriptor);
+    else Reflect.deleteProperty(globalThis, "navigator");
+  }
+}
+
 function legacyFixture(
   onRequest: (
     method: string,
@@ -166,6 +199,59 @@ test("MCP registry serializes concurrent writers without losing either entry", a
   assert.equal(persisted.length, 2);
   assert.ok(persisted.some((item) => item.id === "first-tab"));
   assert.ok(persisted.some((item) => item.id === "second-tab"));
+});
+
+test("default browser MCP storage delegates all mutations to the same exclusive Web Lock", async () => {
+  const storage = new MemoryStorage();
+  const requests: { name: string; mode: string }[] = [];
+  const locks = {
+    request<T>(
+      name: string,
+      options: { mode: string },
+      callback: () => T | Promise<T>,
+    ): Promise<T> {
+      requests.push({ name, mode: options.mode });
+      return storage.withExclusiveLock(callback);
+    },
+  };
+  await withDefaultBrowserStorage(storage, locks, async () => {
+    const first = new McpServerRegistry();
+    const second = new McpServerRegistry();
+    await Promise.all([
+      first.add({ ...server, id: "first-tab" }),
+      second.add({ ...server, id: "second-tab" }),
+    ]);
+    await new McpServerRegistry().remove("first-tab");
+    assert.deepEqual(
+      new McpServerRegistry().list().map((item) => item.id),
+      ["second-tab"],
+    );
+    assert.deepEqual(
+      requests,
+      Array.from({ length: 3 }, () => ({
+        name: "kk-studio:mcp-server-registry",
+        mode: "exclusive",
+      })),
+    );
+  });
+});
+
+test("default browser MCP storage rejects mutations without Web Locks and preserves readable export", async () => {
+  const storage = new MemoryStorage();
+  const raw = JSON.stringify([server]);
+  storage.setItem(MCP_SERVERS_STORAGE_KEY, raw);
+  await withDefaultBrowserStorage(storage, undefined, async () => {
+    const first = new McpServerRegistry();
+    const second = new McpServerRegistry();
+    assert.deepEqual(first.list(), [server]);
+    assert.equal(first.isReadOnly, true);
+    assert.match(first.persistenceWarning, /暂为只读/);
+    await assert.rejects(() => first.add({ ...server, id: "new" }), /只读/);
+    await assert.rejects(() => second.remove(server.id), /只读/);
+    await assert.rejects(() => first.recover([server.id]), /只读/);
+    assert.equal(first.exportRaw(), raw);
+    assert.equal(storage.getItem(MCP_SERVERS_STORAGE_KEY), raw);
+  });
 });
 
 test("MCP registry rebases independent instances instead of overwriting newer entries", async () => {
