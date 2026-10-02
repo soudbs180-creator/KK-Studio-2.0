@@ -1028,6 +1028,128 @@ test("planTools expose the four plan tools with working invocations", () => {
   );
 });
 
+test("plan_replan persists an idempotent plan that requeues failures and downstream work", () => {
+  const { orchestrator, read } = harness();
+  const stamp = Date.now();
+  const plan = orchestrator.upsertPlan({
+    id: "plan-replan-source",
+    title: "失败项重排",
+    projectId: "p",
+    createdBy: "agent",
+    stages: [
+      {
+        name: "前置文本",
+        goal: "生成前置文本",
+        approvalGate: "plan",
+        workItems: [
+          {
+            id: "replan-source",
+            kind: "text",
+            prompt: "前置内容",
+            dependencies: [],
+            status: "queued",
+            createdAt: stamp,
+            updatedAt: stamp,
+          },
+        ],
+      },
+      {
+        name: "图片与摘要",
+        goal: "依据前置内容生成结果",
+        workItems: [
+          {
+            id: "replan-failed",
+            kind: "image",
+            prompt: "主图",
+            dependencies: ["replan-source"],
+            status: "queued",
+            createdAt: stamp,
+            updatedAt: stamp,
+          },
+          {
+            id: "replan-downstream",
+            kind: "text",
+            prompt: "结果摘要",
+            dependencies: ["replan-failed"],
+            status: "queued",
+            createdAt: stamp,
+            updatedAt: stamp,
+          },
+        ],
+      },
+    ],
+  });
+  const approved = orchestrator.decideStage({
+    planId: plan.id,
+    stageIndex: 0,
+    expectedRevision: orchestrator.requestStageApproval(
+      plan.id,
+      0,
+      "plan",
+      plan.revision,
+    ).revision,
+    gate: "plan",
+    decision: "approve",
+  });
+  const runningSource = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 0,
+    workItemId: "replan-source",
+    expectedRevision: approved.revision,
+    status: "running",
+  });
+  const succeededSource = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 0,
+    workItemId: "replan-source",
+    expectedRevision: runningSource.revision,
+    status: "succeeded",
+    assetId: "asset-0123456789abcdef01234567",
+  });
+  const runningFailed = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 1,
+    workItemId: "replan-failed",
+    expectedRevision: succeededSource.revision,
+    status: "running",
+  });
+  const failed = orchestrator.updateWorkItem({
+    planId: plan.id,
+    stageIndex: 1,
+    workItemId: "replan-failed",
+    expectedRevision: runningFailed.revision,
+    status: "failed",
+    error: "fixture failure",
+  });
+
+  const tool = orchestrator
+    .planTools()
+    .find((item) => item.name === "plan_replan")!;
+  const result = tool.invoke({ planId: plan.id });
+  assert.equal(result.ok, true);
+  assert.notEqual(result.planId, plan.id);
+  assert.deepEqual(result.failedWorkItems, [
+    { stageIndex: 1, workItemId: "replan-failed" },
+  ]);
+  assert.equal((result as { replanned: boolean }).replanned, true);
+  assert.equal(read().stagePlans?.length, 2);
+
+  const replanned = orchestrator.getPlan(String(result.planId))!;
+  assert.equal(replanned.stages[0].workItems[0]?.status, "succeeded");
+  assert.equal(replanned.stages[1].workItems[0]?.status, "queued");
+  assert.equal(replanned.stages[1].workItems[1]?.status, "queued");
+  assert.equal(replanned.stages[0].planApprovedAt !== undefined, true);
+  assert.equal(
+    orchestrator.getPlan(plan.id)?.stages[1].workItems[0]?.status,
+    failed.stages[1].workItems[0]?.status,
+  );
+
+  const replay = tool.invoke({ planId: plan.id });
+  assert.equal(replay.ok, true);
+  assert.equal(replay.planId, result.planId);
+  assert.equal(read().stagePlans?.length, 2);
+});
+
 test("Agent plan tool cannot approve or unblock its own stages", () => {
   const { orchestrator } = harness();
   const plan = orchestrator.upsertPlan(planInput("p"));

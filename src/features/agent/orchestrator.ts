@@ -240,6 +240,104 @@ function reworkRejectedResults(
   };
 }
 
+function failedWorkItems(plan: StagePlan): Array<{
+  stageIndex: number;
+  workItemId: string;
+}> {
+  return plan.stages.flatMap((stage) =>
+    stage.workItems
+      .filter((item) => item.status === "failed" || item.status === "partial")
+      .map((item) => ({ stageIndex: stage.index, workItemId: item.id })),
+  );
+}
+
+/** Build a new durable plan for failed work and every dependent downstream item. */
+function buildReplannedPlan(plan: StagePlan): {
+  plan: StagePlan;
+  affected: Set<string>;
+} {
+  const failed = failedWorkItems(plan);
+  const affected = new Set(failed.map((item) => item.workItemId));
+  const allItems = plan.stages.flatMap((stage) => stage.workItems);
+  const pending = [...affected];
+  while (pending.length) {
+    const parent = pending.pop()!;
+    for (const item of allItems) {
+      if (!affected.has(item.id) && item.dependencies.includes(parent)) {
+        affected.add(item.id);
+        pending.push(item.id);
+      }
+    }
+  }
+  const suffix = `-replan-${plan.revision}`;
+  const id = `${plan.id.slice(0, 160 - suffix.length)}${suffix}`;
+  const titleSuffix = "（重排）";
+  const created = createStagePlan({
+    id,
+    title: `${plan.title.slice(0, 120 - titleSuffix.length)}${titleSuffix}`,
+    projectId: plan.projectId,
+    createdBy: plan.createdBy,
+    stages: plan.stages.map((stage) => ({
+      name: stage.name,
+      goal: stage.goal,
+      approvalGate: stage.approvalGate,
+      workItems: stage.workItems.map((item) =>
+        stage.approvalGate === "plan"
+          ? {
+              ...item,
+              status: "queued" as const,
+              assetId: undefined,
+              error: undefined,
+            }
+          : { ...item },
+      ),
+    })),
+  });
+  const stamp = Date.now();
+  const candidate: StagePlan = {
+    ...created,
+    stages: created.stages.map((stage, index) => {
+      const source = plan.stages[index];
+      const hasAffected = source.workItems.some((item) =>
+        affected.has(item.id),
+      );
+      const status: StageStatus = hasAffected
+        ? source.approvalGate === "plan" && source.planApprovedAt === undefined
+          ? "plan_review"
+          : "doing"
+        : source.status;
+      return {
+        ...stage,
+        status,
+        planApprovedAt: source.planApprovedAt,
+        resultSummary: hasAffected ? undefined : source.resultSummary,
+        updatedAt: hasAffected ? stamp : stage.updatedAt,
+        workItems: stage.workItems.map((item) => {
+          const sourceItem = source.workItems.find(
+            (candidateItem) => candidateItem.id === item.id,
+          )!;
+          return affected.has(item.id)
+            ? {
+                ...item,
+                status: "queued" as const,
+                assetId: undefined,
+                error: undefined,
+                updatedAt: stamp,
+              }
+            : sourceItem;
+        }),
+      };
+    }),
+    updatedAt: stamp,
+  };
+  const parsed = stagePlanSchema.safeParse(candidate);
+  if (!parsed.success)
+    throw new StagePlanError(
+      `重排计划无效：${parsed.error.issues[0]?.path.join(".") || "plan"} ${parsed.error.issues[0]?.message || "校验失败"}`,
+    );
+  return { plan: parsed.data, affected };
+}
+
 export function createStageOrchestrator(options: StageOrchestratorOptions) {
   const projectOrThrow = () => {
     const project = options.getProject();
@@ -618,29 +716,53 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
         {
           name: "plan_replan",
           description:
-            "根据当前计划摘要与失败项重建计划（占位：仅返回现有计划摘要与失败项；编排修复在后续任务实现）。输入 { planId? }。",
+            "根据当前计划的失败项及依赖下游创建可恢复的新计划；已成功项和原计划保持不变。输入 { planId? }。",
           invoke(input) {
             const planId = requirePlanId(input);
             const plan = planId ? getPlan(planId) : null;
             if (!plan) return { ok: false, error: "没有可重排的计划。" };
-            const failed = plan.stages.flatMap((stage) =>
-              stage.workItems
-                .filter(
-                  (item) =>
-                    item.status === "failed" || item.status === "partial",
-                )
-                .map((item) => ({
-                  stageIndex: stage.index,
-                  workItemId: item.id,
-                })),
-            );
-            return {
-              ok: true,
-              planId: plan.id,
-              summary: stagePlanSummary(plan),
-              failedWorkItems: failed,
-              note: "拓扑修复与重排执行在 BACKEND-MCP-AUTO 阶段接入。",
-            };
+            const failed = failedWorkItems(plan);
+            if (!failed.length)
+              return {
+                ok: true,
+                planId: plan.id,
+                replanned: false,
+                summary: stagePlanSummary(plan),
+                failedWorkItems: failed,
+              };
+            try {
+              const project = projectOrThrow();
+              const suffix = `-replan-${plan.revision}`;
+              const newPlanId = `${plan.id.slice(0, 160 - suffix.length)}${suffix}`;
+              const existing = project.stagePlans?.find(
+                (item) => item.id === newPlanId,
+              );
+              const replanned = existing ?? buildReplannedPlan(plan).plan;
+              if (!existing) {
+                if ((project.stagePlans?.length ?? 0) >= 64)
+                  throw new StagePlanError(
+                    "编排计划已达 64 个上限，未写入项目。",
+                  );
+                options.commit({
+                  ...project,
+                  stagePlans: [...(project.stagePlans ?? []), replanned],
+                  updatedAt: Date.now(),
+                });
+              }
+              return {
+                ok: true,
+                planId: replanned.id,
+                sourcePlanId: plan.id,
+                replanned: true,
+                summary: stagePlanSummary(replanned),
+                failedWorkItems: failed,
+              };
+            } catch (error) {
+              return {
+                ok: false,
+                error: error instanceof Error ? error.message : "计划重排失败",
+              };
+            }
           },
         },
       ];
