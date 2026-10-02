@@ -163,7 +163,9 @@ test("MCP 设置为损坏配置提供原始导出入口", async ({ page }) => {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置" });
   await dialog.getByRole("button", { name: "MCP", exact: true }).click();
-  await expect(dialog.getByRole("alert")).toContainText("无法读取");
+  await expect(
+    dialog.getByRole("alert").filter({ hasText: "无法读取" }).first(),
+  ).toContainText("无法读取");
   await expect(
     dialog.getByRole("button", { name: "导出原始 MCP 配置", exact: true }),
   ).toBeVisible();
