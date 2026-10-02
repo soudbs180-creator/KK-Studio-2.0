@@ -1,6 +1,6 @@
 # Plan：全项目任务盘点与本地收口
 
-- Task ID：TASK-AUDIT-20261003；状态：IN_PROGRESS。
+- Task ID：TASK-AUDIT-20261003；状态：DONE（本地范围）。
 - Owner：root；分支：`codex/TASK-AUDIT-20261003`。
 - Worktree：`D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`。
 - Base：`origin/main@21d121d2b884b2b7ced4a98eb0e03c590de5c3cd`。
@@ -44,7 +44,9 @@
 1. 运行本项目可执行的 lint、format、typecheck、Node unit/deploy、canvas-agent tests、features、governance、markdown、tsc build、Vite build、Cargo check、Playwright 检查。
 2. 修复本轮引入的所有失败；对已完成任务做清单式抽样回归，不修改无关候选分支。
 3. 写入 `verification.md`、`review.md`，更新四个任务与审计任务的真实状态和证据，重新生成治理视图。
-4. 进行独立于实现步骤的作者自审；由于当前规则禁止无明确请求的额外子代理，记录为 self-review，并把任何未能由本地证据证明的项目列为风险。
+4. 进行独立于实现步骤的作者自审，并按代码审查技能请求一次只读 reviewer；把任何未能由本地证据证明的项目列为风险。
+
+执行结果：步骤 1–5 均已完成。治理台账最终为 94 项（DONE 53、PARTIAL 27、TODO 10、BLOCKED 4）；本地可闭环的注册表、协议和计划重排实现与回归已记录在 verification，外部依赖项未被升级为已完成。
 
 ## 依赖图
 

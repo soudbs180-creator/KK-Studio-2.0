@@ -314,3 +314,10 @@ TASK-UI-MAIN-001 从 origin/main@8aca3ab 出发，三方整合27项原目录交�
 ## 窄屏关闭优先级补充
 
 TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点击不关闭；同状态三环境专项与191项浏览器回归通过。详见 docs/changes/2026-09-20-ui-main-alignment/followup.md。稳定main提交以Git回读为准，上述旧SHA是阶段记录。UI-004设计来源缺口与PERF-001压力边界继续保留。
+
+## 2026-10-03 审计交接点
+
+- 接手入口：先读 `AGENTS.md`、`AI_RULES.md`、本段、`docs/governance/TASK_LEDGER.md`，再核对 `git -C D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003 status`。本轮分支为 `codex/TASK-AUDIT-20261003`，不要把工作树直接快进稳定 main。
+- 当前任务台账 94 项：DONE 53、PARTIAL 27、TODO 10、BLOCKED 4。最近完成的本地任务是 `TASK-MCP-REGISTRY-001/002`、`TASK-ORCH-REPLAN-001`；`TASK-MCP-PROTO-001` 只将本地协议实现标为可验证，真实第三方 MCP 与 Desktop 实机验收仍待安排。
+- 已生成的证据包：`docs/changes/2026-10-03-task-audit/{intent,spec,plan,verification,review}.md`。完整回归为 Node 661（653/0/8）、Canvas Agent 174（172/0/2）、Playwright 379/379；不要用历史 verify 数字替代本轮记录。
+- 下一步按优先级处理：P0 数据保留/冲突回归；P1 真实 MCP 端点和编排器真实执行；P2 T5 TaskHost 原生恢复、T6 ComfyUI、T7 安装恢复及其余平台/发布外部验收。真实凭据、GPU、VPS 或 Mobile 缺失时，保持台账状态并记录阻塞原因。

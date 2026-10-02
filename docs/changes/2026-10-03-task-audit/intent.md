@@ -1,13 +1,13 @@
 # Intent：全项目任务盘点与可本地闭环项收口
 
 - Task ID：TASK-AUDIT-20261003。
-- 状态：IN_PROGRESS；日期：2026-10-03。
+- 状态：DONE（本地范围）；日期：2026-10-03。
 - 用户来源：“请对当前项目做一次完整的任务盘点与执行，确保质量”。
 - Owner：root；分支：`codex/TASK-AUDIT-20261003`。
 - Worktree：`D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`。
 - [Spec](spec.md) · [Plan](plan.md) · [Verification](verification.md) · [Review](review.md)。
 
-本轮以 `docs/governance/task-ledger.json` 和 `docs/features/features.registry.json` 为事实源，逐项核对 92 个登记任务和 34 个功能卡，区分本地可验证实现、外部条件阻塞和仍未开工项。对能够在当前仓库完整闭环的缺陷，按测试先行补齐实现、错误处理、边界行为和证据；对真实 Provider、ComfyUI、VPS、Mobile、用户视觉验收等依赖外部条件的任务保留真实状态，不用 mock 或静态代码冒充完成。
+本轮以 `docs/governance/task-ledger.json` 和 `docs/features/features.registry.json` 为事实源，逐项核对最终 94 个登记任务和 34 个功能卡，区分本地可验证实现、外部条件阻塞和仍未开工项。对能够在当前仓库完整闭环的缺陷，按测试先行补齐实现、错误处理、边界行为和证据；对真实 Provider、ComfyUI、VPS、Mobile、用户视觉验收等依赖外部条件的任务保留真实状态，不用 mock 或静态代码冒充完成。
 
 本轮的可交付收口包括：
 

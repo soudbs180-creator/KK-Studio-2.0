@@ -1291,7 +1291,7 @@
       "tests/unit/mcpClient.test.ts",
       "tests/browser/mcp-settings.spec.ts"
     ],
-    "verification": "本地 modern/legacy 协商、发现、列表/调用、错误分类、认证错误不回退、超时/取消、2 MB 响应、500 工具、32 页/重复游标、凭据边界已通过 23 项 MCP 单测和浏览器握手回归；真实第三方服务器及 Desktop 实机验收仍待外部环境。",
+    "verification": "本地 modern/legacy 协商、发现、列表/调用、错误分类、认证错误不回退、超时/取消、2 MB 响应、500 工具、32 页/重复游标、凭据边界已通过 25 项 MCP 单测和浏览器握手回归；真实第三方服务器及 Desktop 实机验收仍待外部环境。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-03"
   },
@@ -1324,7 +1324,7 @@
       "src/features/mcp/mcpClient.ts",
       "tests/unit/mcpClient.test.ts"
     ],
-    "verification": "MCP 多实例写入使用浏览器 Web Locks（无该 API 时同上下文互斥与 localStorage 短租约）包住重读、冲突检查和写入，并做写后校验；并发新增保留两项，stale add/remove、删除/更新冲突、容量和凭据边界单测通过。",
+    "verification": "MCP 多实例写入在支持 Web Locks 时使用统一 exclusive lock 包住重读、冲突检查和写入并做写后校验；不支持时拒绝写入并显示只读原因，原始配置仍可查看和导出；定向单测覆盖两条默认存储路径及并发、stale add/remove、删除/更新冲突、容量和凭据边界。",
     "verificationResult": "PASS",
     "updated": "2026-10-03"
   },
