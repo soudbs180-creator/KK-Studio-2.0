@@ -715,3 +715,61 @@ test("native failure preserves already archived output evidence", async () => {
     Reflect.deleteProperty(globalThis, "window");
   }
 });
+
+test("native failure with complete archived evidence resolves as succeeded", async () => {
+  desktop(async (command) => {
+    if (command === "task_host_list")
+      return [
+        record({
+          taskId: "task-1",
+          idempotencyKey: "stable-1",
+          status: "failed",
+          failure: "provider summary failed after the output was archived",
+          outputs: [{ index: 0, status: "failed" }],
+        }),
+      ];
+    throw new Error("complete archived evidence must not read a missing asset");
+  });
+  const project = createProject({
+    prompt: "生成",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  project.tasks = [
+    {
+      ...createTask(project),
+      id: "task-1",
+      idempotencyKey: "stable-1",
+      sourceItemId: project.items[0].id,
+      status: "running",
+      submissionState: "submitted",
+      outputs: [
+        {
+          index: 0,
+          status: "succeeded",
+          assetId: "asset-old",
+          model: "image-test",
+          createdAt: Date.now(),
+        },
+      ],
+      completedOutputs: 1,
+    },
+  ];
+  const snapshot: CreationSnapshot = {
+    ...emptySnapshot(),
+    revision: 1,
+    activeProjectId: project.id,
+    projects: [project],
+  };
+  try {
+    const reconciled = await reconcileNativeTasks(snapshot);
+    const task = reconciled.projects[0].tasks[0];
+    assert.equal(task.status, "succeeded");
+    assert.equal(task.submissionState, "terminal");
+    assert.equal(task.completedOutputs, 1);
+    assert.equal(task.outputs?.[0].status, "succeeded");
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});

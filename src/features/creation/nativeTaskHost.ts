@@ -522,21 +522,26 @@ export async function reconcileNativeTasks(
             (output) =>
               output.status === "failed" || output.status === "cancelled",
           );
+          const completeArchivedEvidence =
+            completed === task.requestedOutputs &&
+            (native.status === "succeeded" || native.status === "failed");
           const status = hasUnknown
             ? "unknown"
-            : native.status === "succeeded"
-              ? completed === task.requestedOutputs
-                ? "succeeded"
-                : hasFailed
+            : completeArchivedEvidence
+              ? "succeeded"
+              : native.status === "succeeded"
+                ? completed === task.requestedOutputs
+                  ? "succeeded"
+                  : hasFailed
+                    ? completed > 0
+                      ? "partial"
+                      : "failed"
+                    : "unknown"
+                : native.status === "failed"
                   ? completed > 0
                     ? "partial"
                     : "failed"
-                  : "unknown"
-              : native.status === "failed"
-                ? completed > 0
-                  ? "partial"
-                  : "failed"
-                : "running";
+                  : "running";
           const firstSucceeded = outputs.find(
             (output) => output.status === "succeeded",
           );

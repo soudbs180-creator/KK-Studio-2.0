@@ -1110,17 +1110,21 @@ export default function App() {
           ).length;
           const terminal =
             record.status === "succeeded" || record.status === "failed";
+          const completeArchivedEvidence =
+            completed === task.requestedOutputs && terminal;
           const status = uncertain
             ? ("unknown" as const)
-            : record.status === "succeeded"
-              ? completed === task.requestedOutputs
-                ? "succeeded"
-                : "partial"
-              : record.status === "failed"
-                ? completed > 0
-                  ? "partial"
-                  : "failed"
-                : "running";
+            : completeArchivedEvidence
+              ? "succeeded"
+              : record.status === "succeeded"
+                ? completed === task.requestedOutputs
+                  ? "succeeded"
+                  : "partial"
+                : record.status === "failed"
+                  ? completed > 0
+                    ? "partial"
+                    : "failed"
+                  : "running";
           publish(
             status,
             uncertain
