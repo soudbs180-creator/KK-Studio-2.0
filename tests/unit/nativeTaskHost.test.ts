@@ -769,6 +769,7 @@ test("native failure with complete archived evidence resolves as succeeded", asy
     assert.equal(task.submissionState, "terminal");
     assert.equal(task.completedOutputs, 1);
     assert.equal(task.outputs?.[0].status, "succeeded");
+    assert.equal(task.error, undefined);
   } finally {
     Reflect.deleteProperty(globalThis, "window");
   }

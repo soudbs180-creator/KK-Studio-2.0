@@ -560,11 +560,15 @@ export async function reconcileNativeTasks(
             resultItemId: firstSucceeded
               ? `${project.id}-${task.id}-result-${firstSucceeded.index + 1}`
               : task.resultItemId,
-            error: hasUnknown
-              ? (outputs.find((output) => output.status === "unknown")?.error ??
-                native.failure ??
-                "原生任务受理状态不明，请先核对供应商；不会自动重复提交。")
-              : native.failure,
+            error:
+              status === "succeeded"
+                ? undefined
+                : hasUnknown
+                  ? (outputs.find((output) => output.status === "unknown")
+                      ?.error ??
+                    native.failure ??
+                    "原生任务受理状态不明，请先核对供应商；不会自动重复提交。")
+                  : native.failure,
             updatedAt: native.updatedAt,
           };
           if (
