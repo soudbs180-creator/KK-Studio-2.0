@@ -141,6 +141,13 @@ test("阶段计划在任务工作台显示并通过编排器审批", async ({ pa
   await expect(page.getByTestId("stage-plan-panel")).toContainText("计划审批");
   await page.getByRole("button", { name: "批准计划" }).click();
   await expect(page.getByTestId("stage-plan-panel")).toContainText("执行中");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.locator(".task-workbench-tabs")).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
 });
 
 test("审批阻断远程请求，部分成功矩阵单项重试回填且审阅任务保留", async ({

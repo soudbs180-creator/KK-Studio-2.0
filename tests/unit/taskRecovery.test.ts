@@ -10,6 +10,7 @@ import {
   canRetryTask,
   mergeRetryTaskState,
   recoverInterruptedTasks,
+  retryableOutputIndices,
 } from "../../src/features/creation/taskRecovery.ts";
 
 function task(
@@ -187,6 +188,39 @@ test("unknown or submitted tasks cannot enter the ordinary retry path", () => {
   assert.equal(canRetryTask(unknown), false);
   assert.equal(canRetryTask(submitted), false);
   assert.equal(canRetryTask(task("failed", "failed")), true);
+});
+
+test("retryable output selection excludes unknown slots from mixed batches", () => {
+  const mixed = task("mixed", "partial");
+  mixed.submissionState = "terminal";
+  const outputs = [
+    { index: 0, status: "failed" as const, model: mixed.model, createdAt: 1 },
+    { index: 1, status: "unknown" as const, model: mixed.model, createdAt: 1 },
+    {
+      index: 2,
+      status: "succeeded" as const,
+      model: mixed.model,
+      createdAt: 1,
+    },
+  ];
+  assert.deepEqual(retryableOutputIndices(mixed, outputs), [0]);
+  assert.deepEqual(retryableOutputIndices(mixed, outputs, 1), []);
+  const interrupted = task("interrupted", "interrupted");
+  interrupted.submissionState = "intent";
+  assert.deepEqual(
+    retryableOutputIndices(interrupted, [
+      { index: 0, status: "waiting", model: interrupted.model, createdAt: 1 },
+    ]),
+    [0],
+  );
+  const legacy = task("legacy", "failed");
+  legacy.outputs = undefined;
+  assert.deepEqual(
+    retryableOutputIndices(legacy, [
+      { index: 0, status: "waiting", model: legacy.model, createdAt: 1 },
+    ]),
+    [0],
+  );
 });
 
 test("retry child uncertainty propagates to the parent and locks ordinary retry", () => {

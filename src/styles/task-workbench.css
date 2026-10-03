@@ -175,16 +175,22 @@
   display: flex;
   gap: 4px;
   padding: 15px 0 13px;
+  overflow-x: auto;
   border-bottom: 1px solid var(--border-subtle);
   background: var(--bg-surface);
+  scrollbar-width: none;
+}
+.task-workbench-tabs::-webkit-scrollbar {
+  display: none;
 }
 .task-workbench-tabs button {
-  min-width: 74px;
-  height: 28px;
+  min-width: 64px;
+  height: 32px;
+  flex: 0 0 auto;
   padding: 0 12px;
-  border-radius: 14px;
+  border-radius: 8px;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 12px;
 }
 .task-workbench-tabs button:hover {
   background: var(--bg-card-hover);
@@ -266,7 +272,7 @@
 .stage-plan-stage-meta,
 .stage-plan-progress {
   color: var(--text-secondary);
-  font-size: 10px;
+  font-size: 12px;
 }
 .stage-plan-progress {
   white-space: nowrap;
@@ -295,7 +301,7 @@
   border-radius: 999px;
   background: var(--bg-card-hover);
   color: var(--text-secondary);
-  font-size: 9px;
+  font-size: 12px;
   white-space: nowrap;
 }
 .stage-status-plan_review,
@@ -316,12 +322,12 @@
   gap: 6px;
 }
 .stage-plan-actions button {
-  min-height: 25px;
+  min-height: 32px;
   padding: 0 8px;
   border: 1px solid var(--border-default);
-  border-radius: 12px;
+  border-radius: 8px;
   color: var(--text-secondary);
-  font-size: 9px;
+  font-size: 12px;
 }
 .stage-plan-actions button:hover {
   border-color: var(--border-accent);
@@ -339,7 +345,7 @@
   border-radius: 10px;
   background: color-mix(in srgb, var(--ui-danger) 8%, var(--bg-card));
   color: var(--ui-danger);
-  font-size: 11px;
+  font-size: 12px;
 }
 .task-overview-grid {
   display: grid;

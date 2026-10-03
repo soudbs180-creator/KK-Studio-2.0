@@ -136,6 +136,7 @@ import {
   canRetryTask,
   mergeRetryTaskState,
   recoverInterruptedTasks,
+  retryableOutputIndices,
 } from "./features/creation/taskRecovery";
 import {
   cancelNativeTask,
@@ -1487,13 +1488,11 @@ export default function App() {
     if (!project || !oldTask || taskControllers.current[oldTaskId]) return;
     if (!canRetryTask(oldTask)) return;
     let rootTask = oldTask;
-    let targetIndices = outputsForTask(oldTask)
-      .filter(
-        (output) =>
-          output.status !== "succeeded" &&
-          (outputIndex == null || output.index === outputIndex),
-      )
-      .map((output) => output.index);
+    let targetIndices = retryableOutputIndices(
+      oldTask,
+      outputsForTask(oldTask),
+      outputIndex,
+    );
     const visited = new Set<string>();
     while (rootTask.retryOfTaskId && !visited.has(rootTask.id)) {
       visited.add(rootTask.id);
@@ -1506,10 +1505,9 @@ export default function App() {
       );
       rootTask = parent;
     }
-    targetIndices = targetIndices.filter(
-      (index) =>
-        outputsForTask(rootTask).find((output) => output.index === index)
-          ?.status !== "succeeded",
+    const rootOutputs = outputsForTask(rootTask);
+    targetIndices = targetIndices.filter((index) =>
+      retryableOutputIndices(rootTask, rootOutputs, index).includes(index),
     );
     const busyIndices = new Set(
       project.tasks

@@ -4,7 +4,7 @@
 
 - 已完成本轮本地闭环：`TASK-ORCH-002` 阶段计划视图与 plan/result 审批；`TASK-TASKSTATE-001` 的本地成本语义清理；`TASK-CANVAS-001` 的 Agent host/App 画布交付校验。
 - 新增 `TASK-TASKSTATE-002`（P1）：等待供应商可验证报价/账单回执，定义 schema、来源和回归证据。
-- 证据：`docs/changes/2026-10-03-incomplete-tasks/`；提交 `6ebaad8`、`937b050`、`d61adda`。定向单元、类型、Vite 构建和 task-workbench 7/7 通过；全量验证以本轮最终收据为准。
+- 证据：`docs/changes/2026-10-03-incomplete-tasks/`；最终代码提交 `085b083`（包含 `6ebaad8`、`937b050`、`d61adda` 的本地闭环及不确定重试/文案交付边界修复）。全量 Node 667、Canvas Agent 174、浏览器 380、Rust 97 及静态门禁以本轮最终收据为准。
 - 外部未完成项保持原状态：真实 Provider/GPU/ComfyUI、TASK-ORCH-003、BACKEND-MCP-AUTO、Mobile、VPS、第三方 MCP 与用户视觉验收。
 
 ## 2026-10-03 项目建设目标与验收基线

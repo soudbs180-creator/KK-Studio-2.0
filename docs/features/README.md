@@ -43,7 +43,7 @@
 | FEAT-009 | 对话与模型聊天 | PARTIAL（部分可用） | [卡片](feat-009-conversation.md) | T4, BACKEND-CONVERSATION, TASK-UI-005, TASK-AGENT-001, TASK-AGENT-002, TASK-AGENT-003, TASK-AGENT-004, TASK-AGENT-005, TASK-AGENT-007, TASK-AGENT-008 |
 | FEAT-010 | 语音输入 | PARTIAL（部分可用） | [卡片](feat-010-voice-input.md) | TASK-CAP-001 |
 | FEAT-029 | 提示词库 | PARTIAL（部分可用） | [卡片](feat-029-prompt-library.md) | TASK-UI-005, BACKEND-PLATFORM |
-| FEAT-031 | 统一任务态契约 | PARTIAL（部分可用） | [卡片](feat-031-unified-task-state.md) | TASK-TASKSTATE-001, BACKEND-MEDIA-001 |
+| FEAT-031 | 统一任务态契约 | PARTIAL（部分可用） | [卡片](feat-031-unified-task-state.md) | TASK-TASKSTATE-001, TASK-TASKSTATE-002, BACKEND-MEDIA-001 |
 
 ## 智能能力
 

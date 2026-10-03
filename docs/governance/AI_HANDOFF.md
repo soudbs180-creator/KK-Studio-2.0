@@ -2,7 +2,7 @@
 
 ## 2026-10-03 未完成任务继续执行恢复点
 
-当前实现工作树为 `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`，分支 `codex/TASK-AUDIT-20261003`。本轮已提交 `6ebaad8`（阶段计划工作台）、`937b050`（成本未知语义）和 `d61adda`（画布交付契约宿主接入）。恢复时先读[本轮计划](../changes/2026-10-03-incomplete-tasks/plan.md)、[验证](../changes/2026-10-03-incomplete-tasks/verification.md)和 `docs/governance/task-ledger.json`，再检查当前 HEAD、工作树与最新 bundle。
+当前实现工作树为 `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`，分支 `codex/TASK-AUDIT-20261003`。本轮最终代码提交为 `085b083`，包含阶段计划工作台、成本未知语义、画布交付边界、文案非空校验以及不确定重试向父任务传播。恢复时先读[本轮计划](../changes/2026-10-03-incomplete-tasks/plan.md)、[验证](../changes/2026-10-03-incomplete-tasks/verification.md)和 `docs/governance/task-ledger.json`，再检查当前 HEAD、工作树与最新 bundle。
 
 账本当前为 97 项；TASK-ORCH-002 已在本地范围 DONE，TASK-CANVAS-001/TASK-TASKSTATE-001 保持 PARTIAL，新增 P1 `TASK-TASKSTATE-002` 等待真实供应商报价回执。继续工作不得把本地 fixture、构建通过或历史证据当作真实 Provider、Mobile、VPS、第三方 MCP 或用户视觉验收。
 

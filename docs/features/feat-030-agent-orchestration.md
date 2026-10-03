@@ -2,13 +2,13 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-09-26
+- 最近更新：2026-10-03
 - 关联任务：TASK-ORCH-001, TASK-ORCH-002, TASK-ORCH-003, TASK-CANVAS-001
 
 ## 用户可见入口
 
 - 能力：Agent 生成任务按"阶段执行计划"编排：规划（plan）→ 审批（plan_review）→ 执行（doing）→ 结果审批（result_review）→ 完成（done）；失败只重试失败工作项。
-- 当前 UI 入口：任务工作台（TaskWorkbench）展示任务队列；阶段计划状态条（待审批提示）在本功能后续任务（TASK-ORCH-002）接入。
+- 当前 UI 入口：任务工作台（TaskWorkbench）展示任务队列，并通过 Plan 标签显示阶段状态、工作项数量及计划/结果审批门；真实生成执行仍由 TASK-ORCH-003 衔接。
 - Desktop / Web 差异：领域层与工具面两端一致；Agent MCP 注册（plan 工具面接入 Codex）在 BACKEND-MCP-AUTO（TASK-MCP-AUTO）完成，当前工具面仅以纯函数形态存在。
 
 ## 代码位置
@@ -20,8 +20,8 @@
 
 ## 测试与证据
 
-- 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/agentCanvas.test.ts`；当前全量 Node 422/422 通过。
-- 浏览器回归：既有浏览器回归 300/300 通过；Stage UI 交互尚未接入，专项回归由后续任务补充。
+- 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/agentCanvas.test.ts`；本轮 Node 全量 667 项（659 pass、0 fail、8 Windows skip）。
+- 浏览器回归：全量 380/380 通过，包含阶段计划 Plan 标签与审批专项回归。
 - Rust 测试 / 实机验收：项目包导出/导入及重复身份拒绝回归，当前 82/82 Rust 全量通过；Desktop GUI 与正式发布未验收。
 - 变更与验证证据：`docs/changes/2026-09-23-agent-orchestration/verification.md`
 
@@ -35,22 +35,24 @@
   - 工作项写入：按预期 revision 与合法状态迁移更新，审批后的迟到结果不得覆盖计划；依赖项须先成功，缺失、自依赖或环形依赖被拒绝；Web/Rust 项目包保留空计划字段与只由计划引用的素材原件，拒绝跨项目计划；
   - 计划工作项 ID 在所有阶段内唯一；重复 ID 在创建和项目包预检时拒绝，防止按 ID 更新误推进其它工作项。
   - MCP 风格工具面：plan_get_stage_status / plan_update_stage_state / plan_patch_stage / plan_replan（纯函数形态，供后续 MCP 注册）；Agent 工具不能自行完成 plan/result 审批或解除阻断，阶段操作与宿主审批均须携预期 revision；
-  - 交付契约：产物必须携带 node_id 且已注册素材资产，否则拦截；本轮产物按 result 连线收集与摘要。
+  - 交付契约：图片产物必须携带 node_id 且已注册素材资产，文案产物必须带非空 provider 文本，否则在宿主/App 提交边界拦截并标记 unknown；本轮产物按 result 连线收集与摘要。
 - 明确标注未接：
-  - TaskWorkbench 阶段计划 UI（只读/审批交互）未接（TASK-ORCH-002/003）；
+  - TaskWorkbench 阶段计划 UI 已完成本地只读/审批闭环（TASK-ORCH-002）；真实编排执行仍未接（TASK-ORCH-003）；
   - 工具面尚未注册到 Agent MCP 服务（BACKEND-MCP-AUTO）；
   - 编排器尚未驱动真实生成执行（依赖 B3 媒体真实链路）。
 
 ## 差距与后端化
 
-- “UI 已显示但后端未接”的点：任务工作台无阶段计划视图；审批仍走现有 TaskExecutionApproval（高成本/远程门），未走 plan/result 门。
+- “UI 已显示但后端未接”的点：阶段计划审批已由本地编排器闭环；真实生成执行仍未由编排器驱动，Agent plan 工具也尚未注册到 MCP 服务。
 - “已实现但未验证”的点：编排器驱动真实多视频任务未实机验证（媒体链路未闭合）。
-- 变成 REAL 还缺什么：TaskWorkbench 阶段计划视图与审批交互（TASK-ORCH-002/003）、MCP 工具注册（BACKEND-MCP-AUTO）、真实媒体链路（BACKEND-MEDIA-001）、每平台运行证据。
+- 变成 REAL 还缺什么：编排器驱动真实生成（TASK-ORCH-003）、MCP 工具注册（BACKEND-MCP-AUTO）、真实媒体链路（BACKEND-MEDIA-001）、每平台运行证据。
 - 外部依赖与阻断条件：无外部密钥依赖；媒体真实链路依赖供应商 Key（EXT-PROVIDER）。
 
 ## 变更记录
 
 - 2026-09-26：`9ddfcb5` 源码独立复审 PASS，Hosted verify/delivery 成功；功能仍为 PARTIAL，Desktop GUI、真实 Provider、MCP 注册与 UI 阶段视图未验收。详情见验证记录。
+
+- 2026-10-03：`6ebaad8` 接入 TaskWorkbench Plan 标签与 plan/result 审批；`085b083` 补交付文本校验与不确定重试父任务锁定。功能仍为 PARTIAL，真实编排执行、MCP 注册、Provider 与 Desktop 运行证据仍待完成。
 
 - 2026-09-26：`abb2bb8` 独立复审发现返工提示词绕过计划审批与破坏同 ID 重放；当前候选改为可选 `reworkPrompt` 并在提示词变化时重新审批，Web/Rust 包契约同步，新 head 待验证。
 

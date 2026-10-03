@@ -1319,7 +1319,7 @@
     "card": "docs/features/feat-030-agent-orchestration.md",
     "summary": "Stage 状态机（doing/plan_review/blocked/result_review/done）+ 编排器工具面（plan_get_stage_status/plan_update_stage_state/plan_patch_stage/plan_replan）+ 画布交付契约（无 node_id 不算交付、当轮产物收集）。",
     "entryPoints": [
-      "任务工作台（阶段计划视图待 TASK-ORCH-002）",
+      "任务工作台 Plan 标签（阶段状态与计划/结果审批）",
       "Agent plan 工具面（MCP 注册待 BACKEND-MCP-AUTO）"
     ],
     "code": [
@@ -1339,7 +1339,7 @@
       "TASK-ORCH-003",
       "TASK-CANVAS-001"
     ],
-    "updated": "2026-09-23"
+    "updated": "2026-10-03"
   },
   {
     "id": "FEAT-031",
@@ -1362,9 +1362,10 @@
     ],
     "tasks": [
       "TASK-TASKSTATE-001",
+      "TASK-TASKSTATE-002",
       "BACKEND-MEDIA-001"
     ],
-    "updated": "2026-09-23"
+    "updated": "2026-10-03"
   },
   {
     "id": "FEAT-032",

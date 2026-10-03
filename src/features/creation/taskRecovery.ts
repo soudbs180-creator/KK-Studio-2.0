@@ -42,6 +42,34 @@ export function canRetryTask(
 }
 
 /**
+ * Select output slots that are safe to submit again. Unknown and in-flight
+ * slots are excluded; an interrupted intent is safe only when it never passed
+ * the durable submission boundary.
+ */
+export function retryableOutputIndices(
+  task: Pick<CreationTask, "status" | "submissionState" | "outputs">,
+  outputs: CreationTaskOutput[],
+  outputIndex?: number,
+): number[] {
+  if (!canRetryTask(task)) return [];
+  const interruptedIntent =
+    task.status === "interrupted" &&
+    task.submissionState !== "submitted" &&
+    task.submissionState !== "unknown";
+  const legacyOutputs = !task.outputs?.length;
+  return outputs
+    .filter(
+      (output) =>
+        output.status === "failed" ||
+        output.status === "cancelled" ||
+        ((interruptedIntent || legacyOutputs) &&
+          (output.status === "waiting" || output.status === "running")),
+    )
+    .filter((output) => outputIndex == null || output.index === outputIndex)
+    .map((output) => output.index);
+}
+
+/**
  * Propagate a retry child's terminal result back to its source task.
  *
  * A provider-accepted or delivery-invalid retry is uncertain even when other
