@@ -2,6 +2,7 @@ import type {
   CreationProject,
   CreationSnapshot,
   CreationTask,
+  CreationTaskOutput,
 } from "./model.ts";
 
 const INTERRUPTIBLE_STATUSES = new Set(["queued", "running"]);
@@ -38,6 +39,98 @@ export function canRetryTask(
   return ["partial", "failed", "offline", "cancelled", "interrupted"].includes(
     task.status,
   );
+}
+
+/**
+ * Propagate a retry child's terminal result back to its source task.
+ *
+ * A provider-accepted or delivery-invalid retry is uncertain even when other
+ * outputs in the same retry succeeded. Keeping that uncertainty on the source
+ * task prevents the Batch Matrix from offering an ordinary duplicate retry.
+ */
+export function mergeRetryTaskState(input: {
+  parent: Pick<
+    CreationTask,
+    "outputs" | "requestedOutputs" | "status" | "submissionState" | "error"
+  > & { outputs: CreationTaskOutput[] };
+  retry: Pick<
+    CreationTask,
+    "outputs" | "retryOutputIndices" | "status" | "submissionState" | "error"
+  >;
+}): Pick<
+  CreationTask,
+  "outputs" | "completedOutputs" | "status" | "submissionState" | "error"
+> {
+  const retryOutputs = input.retry.outputs ?? [];
+  const retryIndices = input.retry.retryOutputIndices ?? [];
+  const retryIsUncertain =
+    input.retry.status === "unknown" ||
+    input.retry.submissionState === "unknown";
+  let uncertain =
+    input.parent.status === "unknown" ||
+    input.parent.submissionState === "unknown" ||
+    retryIsUncertain;
+  const unknownMessage =
+    input.retry.error ??
+    "重试任务受理状态不明，请先核对供应商；不会自动重复提交。";
+  const outputs = input.parent.outputs.map((original) => {
+    const retryIndex = retryIndices.indexOf(original.index);
+    const replacement = retryIndex >= 0 ? retryOutputs[retryIndex] : undefined;
+    if (!replacement) {
+      if (retryIsUncertain && retryIndex >= 0) {
+        uncertain = true;
+        return {
+          ...original,
+          status: "unknown" as const,
+          error: unknownMessage,
+        };
+      }
+      return original;
+    }
+    if (replacement.status === "succeeded")
+      return { ...replacement, index: original.index };
+    if (replacement.status === "unknown" || retryIsUncertain) {
+      uncertain = true;
+      return {
+        ...original,
+        ...replacement,
+        index: original.index,
+        status: "unknown" as const,
+        error: replacement.error ?? unknownMessage,
+      };
+    }
+    return original;
+  });
+  const completedOutputs = outputs.filter(
+    (output) => output.status === "succeeded",
+  ).length;
+  if (uncertain) {
+    return {
+      outputs,
+      completedOutputs,
+      status: "unknown",
+      submissionState: "unknown",
+      error:
+        outputs.find((output) => output.status === "unknown")?.error ??
+        unknownMessage,
+    };
+  }
+  const status =
+    completedOutputs === input.parent.requestedOutputs
+      ? ("succeeded" as const)
+      : completedOutputs > 0
+        ? ("partial" as const)
+        : input.parent.status;
+  return {
+    outputs,
+    completedOutputs,
+    status,
+    submissionState: input.parent.submissionState,
+    error:
+      status === "succeeded"
+        ? undefined
+        : `${completedOutputs}/${input.parent.requestedOutputs} 张已归档，可重试未归档结果。`,
+  };
 }
 
 function isInterruptible(status: string): boolean {

@@ -331,6 +331,32 @@ test("assertCanvasDelivery 接受已登记的文案供应商结果", () => {
   );
 });
 
+test("assertCanvasDelivery 不因文案节点残留 assetId 而接受空供应商结果", () => {
+  const project = deliveryProject();
+  project.items = [
+    ...project.items,
+    {
+      id: "empty-text-result",
+      title: "空文案结果",
+      description: "",
+      kind: "text",
+      assetId: "stale-asset",
+      result: {
+        id: "empty-text-result",
+        kind: "text",
+        title: "空文案结果",
+        description: "",
+        text: "   ",
+        source: "provider",
+      },
+    },
+  ];
+  assert.throws(
+    () => assertCanvasDelivery({ nodeId: "empty-text-result", project }),
+    /尚未注册素材资产/,
+  );
+});
+
 test("collectRecentOutputs 按 result 连线收集已归档产物", () => {
   const project = deliveryProject();
   const outputs = collectRecentOutputs(project);

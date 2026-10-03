@@ -134,6 +134,7 @@ import { getDisabledReason, getGenerationUiState } from "./domain/uiGovernance";
 import {
   abortedAfterProviderSubmission,
   canRetryTask,
+  mergeRetryTaskState,
   recoverInterruptedTasks,
 } from "./features/creation/taskRecovery";
 import {
@@ -699,31 +700,19 @@ export default function App() {
                 updatedAt: Date.now(),
               };
             if (item.id !== task.retryOfTaskId) return item;
-            const merged = outputsForTask(item).map((original) => {
-              const index =
-                task.retryOutputIndices?.indexOf(original.index) ?? -1;
-              const replacement = index >= 0 ? outputs[index] : undefined;
-              return replacement?.status === "succeeded"
-                ? { ...replacement, index: original.index }
-                : original;
+            const merged = mergeRetryTaskState({
+              parent: { ...item, outputs: outputsForTask(item) },
+              retry: {
+                outputs,
+                retryOutputIndices: task.retryOutputIndices,
+                status: publishedStatus,
+                submissionState: publishedSubmissionState,
+                error: publishedError,
+              },
             });
-            const completed = merged.filter(
-              (output) => output.status === "succeeded",
-            ).length;
             return {
               ...item,
-              outputs: merged,
-              completedOutputs: completed,
-              status:
-                completed === item.requestedOutputs
-                  ? "succeeded"
-                  : completed > 0
-                    ? "partial"
-                    : item.status,
-              error:
-                completed === item.requestedOutputs
-                  ? undefined
-                  : `${completed}/${item.requestedOutputs} 张已归档，可重试未归档结果。`,
+              ...merged,
               updatedAt: Date.now(),
             };
           }),

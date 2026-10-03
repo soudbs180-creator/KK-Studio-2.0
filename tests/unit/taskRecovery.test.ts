@@ -8,6 +8,7 @@ import {
 import {
   abortedAfterProviderSubmission,
   canRetryTask,
+  mergeRetryTaskState,
   recoverInterruptedTasks,
 } from "../../src/features/creation/taskRecovery.ts";
 
@@ -186,6 +187,81 @@ test("unknown or submitted tasks cannot enter the ordinary retry path", () => {
   assert.equal(canRetryTask(unknown), false);
   assert.equal(canRetryTask(submitted), false);
   assert.equal(canRetryTask(task("failed", "failed")), true);
+});
+
+test("retry child uncertainty propagates to the parent and locks ordinary retry", () => {
+  const parent = task("parent", "partial");
+  parent.submissionState = "terminal";
+  parent.requestedOutputs = 2;
+  parent.outputs = [
+    {
+      index: 0,
+      status: "failed",
+      model: parent.model,
+      createdAt: 1,
+    },
+    {
+      index: 1,
+      status: "succeeded",
+      assetId: "asset-1",
+      model: parent.model,
+      createdAt: 1,
+    },
+  ];
+  const retry = task("retry", "unknown");
+  retry.submissionState = "unknown";
+  retry.retryOfTaskId = parent.id;
+  retry.retryOutputIndices = [0];
+  retry.outputs = [
+    {
+      index: 0,
+      status: "unknown",
+      model: retry.model,
+      createdAt: 2,
+      error: "生成产物尚未登记到画布。",
+    },
+  ];
+  const merged = mergeRetryTaskState({ parent, retry });
+  assert.equal(merged.status, "unknown");
+  assert.equal(merged.submissionState, "unknown");
+  assert.equal(merged.outputs?.[0]?.status, "unknown");
+  assert.equal(canRetryTask(merged), false);
+
+  const missingOutput = mergeRetryTaskState({
+    parent,
+    retry: {
+      outputs: [],
+      retryOutputIndices: [0],
+      status: "unknown",
+      submissionState: "unknown",
+      error: "供应商受理状态不明。",
+    },
+  });
+  assert.equal(missingOutput.outputs?.[0]?.status, "unknown");
+  assert.equal(missingOutput.status, "unknown");
+  assert.equal(canRetryTask(missingOutput), false);
+
+  const succeededButUncertain = mergeRetryTaskState({
+    parent,
+    retry: {
+      outputs: [
+        {
+          index: 0,
+          status: "succeeded",
+          assetId: "asset-2",
+          model: retry.model,
+          createdAt: 2,
+        },
+      ],
+      retryOutputIndices: [0],
+      status: "unknown",
+      submissionState: "unknown",
+      error: "原生任务最终状态仍需核对。",
+    },
+  });
+  assert.equal(succeededButUncertain.status, "unknown");
+  assert.equal(succeededButUncertain.submissionState, "unknown");
+  assert.equal(canRetryTask(succeededButUncertain), false);
 });
 
 test("aborting after a provider request starts is always treated as unknown", () => {

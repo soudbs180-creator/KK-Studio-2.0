@@ -394,11 +394,12 @@ export function summarizeAgentOps(ops?: CanvasAgentOp[]): string {
 export class CanvasDeliveryContractError extends Error {}
 
 function hasRegisteredCanvasDelivery(item: CanvasCollectionItem): boolean {
-  if (item.assetId) return true;
   if (item.result?.source !== "provider") return false;
-  return item.kind === "text"
-    ? Boolean(item.result.text?.trim())
-    : Boolean(item.result.src);
+  // Text delivery is validated by its content. A stale assetId must not make
+  // an empty provider response look like a successful copy result.
+  if (item.kind === "text") return Boolean(item.result.text?.trim());
+  if (item.assetId) return true;
+  return Boolean(item.result.src);
 }
 
 export function assertCanvasDelivery(input: {
