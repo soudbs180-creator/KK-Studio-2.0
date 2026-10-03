@@ -70,6 +70,52 @@ export function retryableOutputIndices(
 }
 
 /**
+ * Returns root output slots that already have a retry child in flight or in
+ * an uncertain/accepted state. These slots must remain fenced even when the
+ * parent snapshot has not yet been merged (for example after a browser
+ * restart between the child write and its completion callback).
+ */
+export function retryBlockedOutputIndices(
+  tasks: readonly (Pick<
+    CreationTask,
+    | "retryOfTaskId"
+    | "retryOutputIndices"
+    | "status"
+    | "submissionState"
+    | "outputs"
+  >)[],
+  rootTaskId: string,
+): number[] {
+  const blocked = new Set<number>();
+  for (const child of tasks) {
+    if (child.retryOfTaskId !== rootTaskId) continue;
+    const indices = child.retryOutputIndices ?? [];
+    const uncertainTask =
+      child.status === "unknown" ||
+      child.submissionState === "unknown" ||
+      child.submissionState === "submitted";
+    const safeInterrupted =
+      child.status === "interrupted" && child.submissionState === "intent";
+    indices.forEach((rootIndex, localIndex) => {
+      const output =
+        child.outputs?.find((candidate) => candidate.index === localIndex) ??
+        child.outputs?.[localIndex];
+      const inFlight =
+        !safeInterrupted &&
+        (child.status === "queued" ||
+          child.status === "running" ||
+          output?.status === "waiting" ||
+          output?.status === "running");
+      const accepted =
+        output?.status === "succeeded" || output?.status === "unknown";
+      if (uncertainTask || inFlight || accepted)
+        blocked.add(rootIndex);
+    });
+  }
+  return [...blocked];
+}
+
+/**
  * Propagate a retry child's terminal result back to its source task.
  *
  * A provider-accepted or delivery-invalid retry is uncertain even when other
@@ -91,9 +137,18 @@ export function mergeRetryTaskState(input: {
 > {
   const retryOutputs = input.retry.outputs ?? [];
   const retryIndices = input.retry.retryOutputIndices ?? [];
+  const missingSucceededOutput =
+    input.retry.status === "succeeded" &&
+    retryIndices.length > 0 &&
+    retryIndices.some(
+      (_, localIndex) =>
+        !retryOutputs.some((output) => output.index === localIndex),
+    );
   const retryIsUncertain =
     input.retry.status === "unknown" ||
-    input.retry.submissionState === "unknown";
+    input.retry.submissionState === "unknown" ||
+    missingSucceededOutput ||
+    retryOutputs.some((output) => output.status === "unknown");
   let uncertain =
     input.parent.status === "unknown" ||
     input.parent.submissionState === "unknown" ||
@@ -159,6 +214,71 @@ export function mergeRetryTaskState(input: {
         ? undefined
         : `${completedOutputs}/${input.parent.requestedOutputs} 张已归档，可重试未归档结果。`,
   };
+}
+
+/**
+ * Reconciles persisted retry children into their source task before the UI
+ * offers another retry. This closes the restart window where a child had
+ * already crossed the durable submission boundary but its live callback had
+ * not yet merged the result into the parent task.
+ */
+export function reconcileRetryTaskParents(
+  snapshot: CreationSnapshot,
+  now = Date.now(),
+): CreationSnapshot {
+  let changed = false;
+  const projects = snapshot.projects.map((project) => {
+    let tasks = project.tasks;
+    let projectChanged = false;
+    for (const child of project.tasks) {
+      if (!child.retryOfTaskId) continue;
+      const parentIndex = tasks.findIndex(
+        (candidate) => candidate.id === child.retryOfTaskId,
+      );
+      if (parentIndex < 0) continue;
+      const parent = tasks[parentIndex];
+      const reconciliationRetry =
+        child.submissionState === "submitted"
+          ? {
+              ...child,
+              status: "unknown" as const,
+              submissionState: "unknown" as const,
+            }
+          : child;
+      const merged = mergeRetryTaskState({
+        parent: { ...parent, outputs: parent.outputs ?? [] },
+        retry: reconciliationRetry,
+      });
+      const nextParent: CreationTask = {
+        ...parent,
+        ...merged,
+        updatedAt: now,
+      };
+      const previousComparable = JSON.stringify({
+        outputs: parent.outputs ?? [],
+        completedOutputs: parent.completedOutputs,
+        status: parent.status,
+        submissionState: parent.submissionState,
+        error: parent.error,
+      });
+      const nextComparable = JSON.stringify({
+        outputs: nextParent.outputs ?? [],
+        completedOutputs: nextParent.completedOutputs,
+        status: nextParent.status,
+        submissionState: nextParent.submissionState,
+        error: nextParent.error,
+      });
+      if (previousComparable === nextComparable) continue;
+      tasks = tasks.map((task, index) =>
+        index === parentIndex ? nextParent : task,
+      );
+      changed = projectChanged = true;
+    }
+    return projectChanged ? { ...project, tasks, updatedAt: now } : project;
+  });
+  return changed
+    ? { ...snapshot, projects, revision: snapshot.revision + 1 }
+    : snapshot;
 }
 
 function isInterruptible(status: string): boolean {
@@ -237,9 +357,9 @@ export function recoverInterruptedTasks(
       updatedAt: now,
     };
   });
-  return {
+  return reconcileRetryTaskParents({
     ...snapshot,
     revision: interruptedAny ? snapshot.revision + 1 : snapshot.revision,
     projects,
-  };
+  }, now);
 }

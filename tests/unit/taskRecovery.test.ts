@@ -10,6 +10,7 @@ import {
   canRetryTask,
   mergeRetryTaskState,
   recoverInterruptedTasks,
+  retryBlockedOutputIndices,
   retryableOutputIndices,
 } from "../../src/features/creation/taskRecovery.ts";
 
@@ -220,6 +221,61 @@ test("retryable output selection excludes unknown slots from mixed batches", () 
       { index: 0, status: "waiting", model: legacy.model, createdAt: 1 },
     ]),
     [0],
+  );
+});
+
+test("restart reconciles an accepted retry child into its parent", () => {
+  const parent = task("parent", "partial");
+  parent.submissionState = "terminal";
+  parent.outputs = [
+    { index: 0, status: "failed", model: parent.model, createdAt: 1 },
+  ];
+  const child = task("retry", "running");
+  child.retryOfTaskId = parent.id;
+  child.retryOutputIndices = [0];
+  child.outputs = [
+    { index: 0, status: "running", model: child.model, createdAt: 2 },
+  ];
+  const value = project([], [parent, child]);
+  const recovered = recoverInterruptedTasks(snapshot([value]), 99);
+  const tasks = recovered.projects[0].tasks;
+  assert.equal(tasks[1].status, "unknown");
+  assert.equal(tasks[1].submissionState, "unknown");
+  assert.equal(tasks[0].status, "unknown");
+  assert.equal(tasks[0].submissionState, "unknown");
+  assert.equal(tasks[0].outputs?.[0]?.status, "unknown");
+  assert.equal(canRetryTask(tasks[0]), false);
+});
+
+test("retry selection fences persisted accepted descendants before parent merge", () => {
+  const child = task("retry", "unknown");
+  child.retryOfTaskId = "parent";
+  child.retryOutputIndices = [0, 2];
+  child.outputs = [
+    { index: 0, status: "unknown", model: child.model, createdAt: 1 },
+    { index: 1, status: "failed", model: child.model, createdAt: 1 },
+  ];
+  assert.deepEqual(retryBlockedOutputIndices([child], "parent"), [0, 2]);
+  const failedChild = task("failed-retry", "failed");
+  failedChild.retryOfTaskId = "parent";
+  failedChild.retryOutputIndices = [1];
+  failedChild.outputs = [
+    { index: 0, status: "failed", model: failedChild.model, createdAt: 1 },
+  ];
+  assert.deepEqual(
+    retryBlockedOutputIndices([child, failedChild], "parent"),
+    [0, 2],
+  );
+  const safeInterrupted = task("safe-retry", "interrupted");
+  safeInterrupted.retryOfTaskId = "parent";
+  safeInterrupted.retryOutputIndices = [1];
+  safeInterrupted.submissionState = "intent";
+  safeInterrupted.outputs = [
+    { index: 0, status: "waiting", model: safeInterrupted.model, createdAt: 1 },
+  ];
+  assert.deepEqual(
+    retryBlockedOutputIndices([safeInterrupted], "parent"),
+    [],
   );
 });
 

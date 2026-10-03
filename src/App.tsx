@@ -136,6 +136,7 @@ import {
   canRetryTask,
   mergeRetryTaskState,
   recoverInterruptedTasks,
+  retryBlockedOutputIndices,
   retryableOutputIndices,
 } from "./features/creation/taskRecovery";
 import {
@@ -1510,13 +1511,7 @@ export default function App() {
       retryableOutputIndices(rootTask, rootOutputs, index).includes(index),
     );
     const busyIndices = new Set(
-      project.tasks
-        .filter(
-          (candidate) =>
-            candidate.retryOfTaskId === rootTask.id &&
-            (candidate.status === "queued" || candidate.status === "running"),
-        )
-        .flatMap((candidate) => candidate.retryOutputIndices ?? []),
+      retryBlockedOutputIndices(project.tasks, rootTask.id),
     );
     targetIndices = targetIndices.filter((index) => !busyIndices.has(index));
     if (!targetIndices.length) return;
