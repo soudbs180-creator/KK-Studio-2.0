@@ -411,6 +411,40 @@ test("retry child uncertainty propagates to the parent and locks ordinary retry"
   assert.equal(resolved.status, "succeeded");
   assert.equal(resolved.submissionState, "terminal");
   assert.equal(resolved.outputs?.[0]?.status, "succeeded");
+
+  const lateReceipt = mergeRetryTaskState({
+    parent: {
+      ...parent,
+      status: "unknown",
+      submissionState: "unknown",
+      outputs: [
+        {
+          index: 0,
+          status: "succeeded",
+          assetId: "asset-final",
+          model: parent.model,
+          createdAt: 3,
+        },
+        parent.outputs[1],
+      ],
+    },
+    retry: {
+      outputs: [
+        {
+          index: 0,
+          status: "succeeded",
+          assetId: "asset-final",
+          model: parent.model,
+          createdAt: 3,
+        },
+      ],
+      retryOutputIndices: [0],
+      status: "succeeded",
+      submissionState: "terminal",
+    },
+  });
+  assert.equal(lateReceipt.status, "succeeded");
+  assert.equal(lateReceipt.submissionState, "terminal");
 });
 
 test("aborting after a provider request starts is always treated as unknown", () => {

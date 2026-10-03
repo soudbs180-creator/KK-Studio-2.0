@@ -151,21 +151,34 @@ export function mergeRetryTaskState(input: {
   const priorUnknownOutputs = input.parent.outputs.filter(
     (output) => output.status === "unknown",
   );
+  const terminalRetryReceipt =
+    input.retry.submissionState === "terminal" &&
+    retryIndices.length > 0 &&
+    retryIndices.every((_, localIndex) => {
+      const output = retryOutputs.find(
+        (candidate) => candidate.index === localIndex,
+      );
+      return (
+        output !== undefined &&
+        ["succeeded", "failed", "cancelled"].includes(output.status)
+      );
+    });
   const resolvedParentUncertainty =
     !retryIsUncertain &&
     input.retry.submissionState === "terminal" &&
-    priorUnknownOutputs.length > 0 &&
-    priorUnknownOutputs.every((output) => {
-      const retryIndex = retryIndices.indexOf(output.index);
-      const replacement = retryOutputs.find(
-        (candidate) => candidate.index === retryIndex,
-      );
-      return (
-        retryIndex >= 0 &&
-        replacement !== undefined &&
-        ["succeeded", "failed", "cancelled"].includes(replacement.status)
-      );
-    });
+    terminalRetryReceipt &&
+    (priorUnknownOutputs.length === 0 ||
+      priorUnknownOutputs.every((output) => {
+        const retryIndex = retryIndices.indexOf(output.index);
+        const replacement = retryOutputs.find(
+          (candidate) => candidate.index === retryIndex,
+        );
+        return (
+          retryIndex >= 0 &&
+          replacement !== undefined &&
+          ["succeeded", "failed", "cancelled"].includes(replacement.status)
+        );
+      }));
   let uncertain =
     (!resolvedParentUncertainty && input.parent.status === "unknown") ||
     (!resolvedParentUncertainty &&
