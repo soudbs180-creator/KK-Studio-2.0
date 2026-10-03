@@ -148,16 +148,38 @@ export function mergeRetryTaskState(input: {
     input.retry.submissionState === "unknown" ||
     missingSucceededOutput ||
     retryOutputs.some((output) => output.status === "unknown");
+  const priorUnknownOutputs = input.parent.outputs.filter(
+    (output) => output.status === "unknown",
+  );
+  const resolvedParentUncertainty =
+    !retryIsUncertain &&
+    input.retry.submissionState === "terminal" &&
+    priorUnknownOutputs.length > 0 &&
+    priorUnknownOutputs.every((output) => {
+      const retryIndex = retryIndices.indexOf(output.index);
+      const replacement = retryOutputs.find(
+        (candidate) => candidate.index === retryIndex,
+      );
+      return (
+        retryIndex >= 0 &&
+        replacement !== undefined &&
+        ["succeeded", "failed", "cancelled"].includes(replacement.status)
+      );
+    });
   let uncertain =
-    input.parent.status === "unknown" ||
-    input.parent.submissionState === "unknown" ||
+    (!resolvedParentUncertainty && input.parent.status === "unknown") ||
+    (!resolvedParentUncertainty &&
+      input.parent.submissionState === "unknown") ||
     retryIsUncertain;
   const unknownMessage =
     input.retry.error ??
     "重试任务受理状态不明，请先核对供应商；不会自动重复提交。";
   const outputs = input.parent.outputs.map((original) => {
     const retryIndex = retryIndices.indexOf(original.index);
-    const replacement = retryIndex >= 0 ? retryOutputs[retryIndex] : undefined;
+    const replacement =
+      retryIndex >= 0
+        ? retryOutputs.find((candidate) => candidate.index === retryIndex)
+        : undefined;
     if (!replacement) {
       if (retryIsUncertain && retryIndex >= 0) {
         uncertain = true;
@@ -181,8 +203,15 @@ export function mergeRetryTaskState(input: {
         error: replacement.error ?? unknownMessage,
       };
     }
+    if (
+      original.status === "unknown" &&
+      input.retry.submissionState === "terminal" &&
+      (replacement.status === "failed" || replacement.status === "cancelled")
+    )
+      return { ...replacement, index: original.index };
     return original;
   });
+  uncertain ||= outputs.some((output) => output.status === "unknown");
   const completedOutputs = outputs.filter(
     (output) => output.status === "succeeded",
   ).length;
@@ -202,12 +231,16 @@ export function mergeRetryTaskState(input: {
       ? ("succeeded" as const)
       : completedOutputs > 0
         ? ("partial" as const)
-        : input.parent.status;
+        : resolvedParentUncertainty
+          ? ("failed" as const)
+          : input.parent.status;
   return {
     outputs,
     completedOutputs,
     status,
-    submissionState: input.parent.submissionState,
+    submissionState: resolvedParentUncertainty
+      ? "terminal"
+      : input.parent.submissionState,
     error:
       status === "succeeded"
         ? undefined
@@ -236,6 +269,34 @@ export function reconcileRetryTaskParents(
       );
       if (parentIndex < 0) continue;
       const parent = tasks[parentIndex];
+      // Legacy snapshots may retain only a completion count. Do not erase it
+      // by inventing an empty output vector; an uncertain child still fences
+      // the parent, while known terminal children leave its evidence intact.
+      if (!parent.outputs?.length) {
+        const uncertainChild =
+          child.status === "unknown" ||
+          child.submissionState === "unknown" ||
+          child.submissionState === "submitted" ||
+          child.outputs?.some((output) => output.status === "unknown");
+        if (!uncertainChild) continue;
+        if (parent.status === "unknown" && parent.submissionState === "unknown")
+          continue;
+        tasks = tasks.map((task, index) =>
+          index === parentIndex
+            ? {
+                ...parent,
+                status: "unknown",
+                submissionState: "unknown",
+                error:
+                  child.error ??
+                  "重试任务受理状态不明，请先核对供应商；不会自动重复提交。",
+                updatedAt: now,
+              }
+            : task,
+        );
+        changed = projectChanged = true;
+        continue;
+      }
       const reconciliationRetry =
         child.submissionState === "submitted"
           ? {

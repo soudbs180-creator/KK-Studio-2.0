@@ -247,6 +247,33 @@ test("restart reconciles an accepted retry child into its parent", () => {
   assert.equal(canRetryTask(tasks[0]), false);
 });
 
+test("retry recovery preserves legacy completion evidence without an output vector", () => {
+  const parent = task("legacy-parent", "partial");
+  parent.submissionState = "terminal";
+  parent.requestedOutputs = 2;
+  parent.completedOutputs = 1;
+  parent.resultItemId = "saved-result";
+  const child = task("retry", "failed");
+  child.retryOfTaskId = parent.id;
+  child.retryOutputIndices = [1];
+  child.submissionState = "terminal";
+  child.outputs = [
+    { index: 0, status: "failed", model: child.model, createdAt: 2 },
+  ];
+  const value = project([], [parent, child]);
+  const known = recoverInterruptedTasks(snapshot([value]), 99).projects[0]
+    .tasks[0];
+  assert.deepEqual(known, parent);
+  child.status = "unknown";
+  child.submissionState = "unknown";
+  const uncertain = recoverInterruptedTasks(snapshot([value]), 99).projects[0]
+    .tasks[0];
+  assert.equal(uncertain.status, "unknown");
+  assert.equal(uncertain.completedOutputs, 1);
+  assert.equal(uncertain.resultItemId, "saved-result");
+  assert.equal(uncertain.outputs, undefined);
+});
+
 test("retry selection fences persisted accepted descendants before parent merge", () => {
   const child = task("retry", "unknown");
   child.retryOfTaskId = "parent";
@@ -349,6 +376,41 @@ test("retry child uncertainty propagates to the parent and locks ordinary retry"
   assert.equal(succeededButUncertain.status, "unknown");
   assert.equal(succeededButUncertain.submissionState, "unknown");
   assert.equal(canRetryTask(succeededButUncertain), false);
+
+  const resolved = mergeRetryTaskState({
+    parent: {
+      ...parent,
+      outputs: [
+        {
+          index: 0,
+          status: "unknown",
+          model: parent.model,
+          createdAt: 1,
+          error: "等待最终回执",
+        },
+        parent.outputs[1],
+      ],
+      status: "unknown",
+      submissionState: "unknown",
+    },
+    retry: {
+      outputs: [
+        {
+          index: 0,
+          status: "succeeded",
+          assetId: "asset-final",
+          model: parent.model,
+          createdAt: 3,
+        },
+      ],
+      retryOutputIndices: [0],
+      status: "succeeded",
+      submissionState: "terminal",
+    },
+  });
+  assert.equal(resolved.status, "succeeded");
+  assert.equal(resolved.submissionState, "terminal");
+  assert.equal(resolved.outputs?.[0]?.status, "succeeded");
 });
 
 test("aborting after a provider request starts is always treated as unknown", () => {

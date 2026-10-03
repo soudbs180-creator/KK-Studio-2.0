@@ -7,6 +7,7 @@ import type {
 import { readNativeAsset, usesNativeAssets } from "./nativeAssetAdapter.ts";
 import { textTaskResult } from "./textTaskResult.ts";
 import { reconcileProjectCanvas } from "../../domain/projectCanvas.ts";
+import { reconcileRetryTaskParents } from "./taskRecovery.ts";
 
 /** The request crossing the Desktop TaskHost IPC boundary. It contains no API key. */
 export interface NativeTaskHostRequest {
@@ -468,7 +469,9 @@ export async function reconcileNativeTasks(
       return { ...project, items, tasks, canvas, updatedAt: Date.now() };
     }),
   );
-  return changed
-    ? { ...snapshot, projects, revision: snapshot.revision + 1 }
-    : snapshot;
+  return reconcileRetryTaskParents(
+    changed
+      ? { ...snapshot, projects, revision: snapshot.revision + 1 }
+      : snapshot,
+  );
 }
