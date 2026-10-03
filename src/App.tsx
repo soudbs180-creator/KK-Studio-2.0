@@ -62,6 +62,11 @@ import {
 } from "./features/plugins/pluginRuntime.ts";
 import type { PluginAi } from "./features/plugins/pluginTypes.ts";
 import { createAgentHost } from "./features/agent/agentHost.ts";
+import {
+  createStageOrchestrator,
+  type StageOrchestrator,
+  type StageDecisionInput,
+} from "./features/agent/orchestrator.ts";
 import type { AgentCanvasBinding } from "./components/canvas/useAgentCanvasView";
 
 function outputsForTask(task: CreationTask): CreationTaskOutput[] {
@@ -403,6 +408,22 @@ export default function App() {
     );
   }
 
+  const stageOrchestrator = useMemo<StageOrchestrator>(
+    () =>
+      createStageOrchestrator({
+        getProject: () =>
+          creationRef.current.projects.find(
+            (project) => project.id === activeProjectIdRef.current,
+          ),
+        commit: (project) => {
+          updateProject(project.id, () => project);
+          if (activeProjectIdRef.current === project.id)
+            replaceCanvasItems(project.items);
+        },
+      }),
+    [],
+  );
+
   const agentSubmitRef = useRef<
     (
       node: CanvasCollectionItem,
@@ -429,8 +450,9 @@ export default function App() {
         },
         generate: (node, prompt, signal) =>
           agentSubmitRef.current(node, prompt, signal),
+        orchestrator: stageOrchestrator,
       }),
-    [],
+    [stageOrchestrator],
   );
   agentSubmitRef.current = async (node, prompt, signal) => {
     const project = creationRef.current.projects.find(
@@ -2533,6 +2555,10 @@ export default function App() {
               onRetryOutput={(taskId, index) => {
                 if (activeProject) retryTask(activeProject.id, taskId, index);
               }}
+              stagePlans={activeProject?.stagePlans ?? []}
+              onStageDecision={(input: StageDecisionInput) =>
+                stageOrchestrator.decideStage(input)
+              }
             />
           ) : (
             <InfoPanel

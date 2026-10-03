@@ -7,9 +7,12 @@ import type {
 import TaskWorkbenchExport from "./TaskWorkbenchExport";
 import BatchMatrix from "./BatchMatrix";
 import TaskWorkbenchReview from "./TaskWorkbenchReview";
+import TaskWorkbenchStages from "./TaskWorkbenchStages";
+import type { StagePlan } from "../domain/stagePlan";
+import type { StageDecisionInput } from "../features/agent/orchestrator";
 
 export type WorkbenchTab =
-  "queue" | "prompt" | "generate" | "review" | "export";
+  "queue" | "prompt" | "generate" | "review" | "export" | "plan";
 
 export function statusLabel(task: CreationTask): string {
   return task.status === "queued"
@@ -68,6 +71,8 @@ export default function TaskWorkbenchContent({
   gates,
   comments,
   onCommentsChange,
+  stagePlans,
+  onStageDecision,
 }: {
   selected?: CreationTask;
   outputs: CreationTaskOutput[];
@@ -80,7 +85,13 @@ export default function TaskWorkbenchContent({
   gates: ApprovalGate[];
   comments: ReviewComment[];
   onCommentsChange: (comments: ReviewComment[]) => void;
+  stagePlans: StagePlan[];
+  onStageDecision: (input: StageDecisionInput) => void;
 }) {
+  if (tab === "plan")
+    return (
+      <TaskWorkbenchStages plans={stagePlans} onDecision={onStageDecision} />
+    );
   if (!selected)
     return (
       <div className="task-workbench-empty">选择一个任务查看批量矩阵。</div>
