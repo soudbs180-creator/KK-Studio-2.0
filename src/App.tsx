@@ -144,10 +144,12 @@ import {
   abortedAfterProviderSubmission,
   canRetryTask,
   mergeRetryTaskState,
+  markArchiveFailuresUnknown,
   preserveAcceptedOutputsOnDeliveryFailure,
   recoverInterruptedTasks,
   retryBlockedOutputIndices,
   retryableOutputIndices,
+  submissionMayHaveBeenAccepted,
 } from "./features/creation/taskRecovery";
 import {
   cancelNativeTask,
@@ -643,9 +645,11 @@ export default function App() {
     const createdItems: CanvasCollectionItem[] = [];
     const publishedItems = new Set<string>();
     const rejectedDeliveryIds = new Set<string>();
+    const archiveFailureIndices = new Set<number>();
     let deliveryErrorMessage: string | undefined;
     let durableSubmission = false;
     let providerRequestStarted = false;
+    let nativeSubmissionStarted = false;
     const publish = (
       status: CreationTask["status"],
       error?: string,
@@ -866,6 +870,7 @@ export default function App() {
             );
           return { assetId: attachment.assetId, name: attachment.name };
         });
+        nativeSubmissionStarted = true;
         let nativeRecord = await submitNativeTask({
           kind: task.kind === "text" ? "text" : undefined,
           concurrencyLimit: nativeConnection?.concurrencyLimit,
@@ -881,10 +886,10 @@ export default function App() {
           promptHash,
           size: task.imageSize,
         });
+        durableSubmission = true;
         nativeTaskRecords.current[taskId] = nativeRecord;
         publish("running", undefined, "submitted");
         await persistence.flush();
-        durableSubmission = true;
 
         const applyNativeRecord = async (
           record: NativeTaskHostRecord,
@@ -918,13 +923,30 @@ export default function App() {
               output.error = undefined;
               continue;
             }
+            const missingText =
+              task.kind === "text" &&
+              nativeOutput.status === "succeeded" &&
+              !nativeOutput.text?.trim();
+            if (missingText && hasArchivedOutputEvidence(task, priorOutput)) {
+              output.status = "succeeded";
+              output.assetId = priorOutput.assetId;
+              output.text = priorOutput.text;
+              output.error = undefined;
+              continue;
+            }
             output.status =
               nativeOutput.status === "pending"
                 ? "running"
-                : nativeOutput.status;
+                : missingText
+                  ? "unknown"
+                  : nativeOutput.status;
             output.assetId = nativeOutput.assetId;
-            output.text = nativeOutput.text;
+            output.text = nativeOutput.text ?? priorOutput.text;
             output.error = nativeOutput.error;
+            if (missingText) {
+              output.error = "原生任务完成但未返回文案正文。";
+              continue;
+            }
             if (
               nativeOutput.status === "failed" &&
               hasArchivedOutputEvidence(task, priorOutput)
@@ -1221,7 +1243,7 @@ export default function App() {
           const archived = await mapWithConcurrency(
             sources,
             2,
-            async (source) => {
+            async (source, sourceIndex) => {
               try {
                 return await storeGeneratedAsset({
                   source,
@@ -1237,6 +1259,8 @@ export default function App() {
                   signal: controller.signal,
                 });
               } catch {
+                const target = pendingIndices[offset + sourceIndex];
+                if (target != null) archiveFailureIndices.add(target);
                 return null;
               }
             },
@@ -1321,7 +1345,11 @@ export default function App() {
         },
       });
       if (controller.signal.aborted) throw new Error("任务已停止。");
-      outputs = outputs.map((output) =>
+      outputs = markArchiveFailuresUnknown(
+        outputs,
+        archiveFailureIndices,
+        "供应商结果已返回，但本地素材归档失败；请先核对素材库，不会自动重复提交。",
+      ).map((output) =>
         output.status === "succeeded" || output.status === "unknown"
           ? output
           : {
@@ -1349,17 +1377,25 @@ export default function App() {
         durableSubmission &&
         generated.failure instanceof GenerationProviderError &&
         generated.failure.failureClass === "network";
-      const finalStatus = generatedUncertain ? ("unknown" as const) : status;
+      const archiveUncertain = outputs.some(
+        (output) =>
+          output.status === "unknown" &&
+          archiveFailureIndices.has(output.index),
+      );
+      const finalStatus =
+        generatedUncertain || archiveUncertain ? ("unknown" as const) : status;
       publish(
         finalStatus,
-        generatedUncertain
-          ? "供应商受理状态不明，请先核对供应商；为避免重复扣费，当前不会普通重试。"
-          : status === "succeeded"
-            ? undefined
-            : generated.failure instanceof ProviderSubmissionError
-              ? generated.failure.message
-              : `${completed}/${task.requestedOutputs} 张已归档，可重试未归档结果。`,
-        generatedUncertain ? "unknown" : "terminal",
+        archiveUncertain
+          ? "供应商结果已返回，但本地素材归档失败；请先核对素材库，不会自动重复提交。"
+          : generatedUncertain
+            ? "供应商受理状态不明，请先核对供应商；为避免重复扣费，当前不会普通重试。"
+            : status === "succeeded"
+              ? undefined
+              : generated.failure instanceof ProviderSubmissionError
+                ? generated.failure.message
+                : `${completed}/${task.requestedOutputs} 张已归档，可重试未归档结果。`,
+        generatedUncertain || archiveUncertain ? "unknown" : "terminal",
       );
       await persistence.flush();
       if (task.providerConnectionId) {
@@ -1383,7 +1419,11 @@ export default function App() {
               | "network",
             retryAfterSeconds: failure.retryAfterSeconds,
           });
-        else if (!failure && reservation?.healthUnchanged())
+        else if (
+          !failure &&
+          !archiveUncertain &&
+          reservation?.healthUnchanged()
+        )
           markProviderConnectionHealthy(task.providerConnectionId);
       }
     } catch (error) {
@@ -1394,6 +1434,13 @@ export default function App() {
           nativeTaskHost,
           aborted: controller.signal.aborted,
         }) ||
+        (nativeTaskHost &&
+          submissionMayHaveBeenAccepted({
+            durableSubmission,
+            providerRequestStarted,
+            nativeTaskHost,
+            nativeSubmissionStarted,
+          })) ||
         (durableSubmission &&
           (providerRequestStarted || nativeTaskHost) &&
           (error instanceof GenerationProviderError

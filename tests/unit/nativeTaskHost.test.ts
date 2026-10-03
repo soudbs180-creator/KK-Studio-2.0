@@ -92,6 +92,62 @@ test("native text recovery restores bounded content and result edge exactly once
   }
 });
 
+test("native text success without final text does not promote a draft", async () => {
+  desktop(async (command) => {
+    if (command === "task_host_list")
+      return [
+        record({
+          taskId: "task-1",
+          idempotencyKey: "stable-1",
+          status: "succeeded",
+          outputs: [{ index: 0, status: "succeeded" }],
+        }),
+      ];
+    throw new Error("an incomplete text receipt must not create a result");
+  });
+  const project = createProject({
+    prompt: "介绍",
+    model: "gpt-text-test",
+    kind: "text",
+    attachments: [],
+  });
+  project.tasks = [
+    {
+      ...createTask(project),
+      id: "task-1",
+      idempotencyKey: "stable-1",
+      sourceItemId: project.items[0].id,
+      status: "running",
+      submissionState: "submitted",
+      outputs: [
+        {
+          index: 0,
+          status: "running",
+          text: "流式草稿",
+          model: "gpt-text-test",
+          createdAt: 1,
+        },
+      ],
+    },
+  ];
+  try {
+    const recovered = await reconcileNativeTasks({
+      ...emptySnapshot(),
+      revision: 1,
+      activeProjectId: project.id,
+      projects: [project],
+    });
+    const task = recovered.projects[0].tasks[0];
+    assert.equal(task.status, "unknown");
+    assert.equal(task.submissionState, "unknown");
+    assert.equal(task.outputs?.[0].status, "unknown");
+    assert.equal(task.outputs?.[0].text, "流式草稿");
+    assert.equal(task.resultItemId, undefined);
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});
+
 function desktop(
   invoke: (command: string, args?: Record<string, unknown>) => Promise<unknown>,
 ) {

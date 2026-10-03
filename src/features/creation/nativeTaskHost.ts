@@ -355,6 +355,10 @@ export async function reconcileNativeTasks(
               task.kind !== "text" &&
               outputStatusValue === "succeeded" &&
               !nativeOutput.assetId;
+            const missingText =
+              task.kind === "text" &&
+              outputStatusValue === "succeeded" &&
+              !nativeOutput.text?.trim();
             const terminalPendingOutput =
               native.status === "succeeded" && outputStatusValue === "running";
             const uncertainPendingOutput =
@@ -366,6 +370,8 @@ export async function reconcileNativeTasks(
               prior &&
               hasArchivedOutputEvidence(task, prior)
             )
+              return prior;
+            if (missingText && prior && hasArchivedOutputEvidence(task, prior))
               return prior;
             if (
               terminalPendingOutput &&
@@ -401,6 +407,7 @@ export async function reconcileNativeTasks(
               index,
               status:
                 missingImageAsset ||
+                missingText ||
                 terminalPendingOutput ||
                 uncertainPendingOutput
                   ? ("unknown" as const)
@@ -414,14 +421,17 @@ export async function reconcileNativeTasks(
               text: nativeOutput.text ?? prior?.text,
               error: missingImageAsset
                 ? "原生任务完成但未返回该输出的素材标识。"
-                : terminalPendingOutput
-                  ? "原生任务完成但该输出没有终态回执。"
-                  : uncertainPendingOutput
-                    ? (native.failure ??
-                      "原生任务输出回执状态不明，请先核对供应商。")
-                    : failedTerminalOutput
-                      ? (native.failure ?? "原生任务失败但该输出没有终态回执。")
-                      : nativeOutput.error,
+                : missingText
+                  ? "原生任务完成但未返回文案正文。"
+                  : terminalPendingOutput
+                    ? "原生任务完成但该输出没有终态回执。"
+                    : uncertainPendingOutput
+                      ? (native.failure ??
+                        "原生任务输出回执状态不明，请先核对供应商。")
+                      : failedTerminalOutput
+                        ? (native.failure ??
+                          "原生任务失败但该输出没有终态回执。")
+                        : nativeOutput.error,
               createdAt: prior?.createdAt ?? task.createdAt,
             } satisfies CreationTaskOutput;
           });

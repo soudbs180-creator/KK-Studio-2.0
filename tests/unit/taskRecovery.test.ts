@@ -8,11 +8,13 @@ import {
 import {
   abortedAfterProviderSubmission,
   canRetryTask,
+  markArchiveFailuresUnknown,
   mergeRetryTaskState,
   preserveAcceptedOutputsOnDeliveryFailure,
   recoverInterruptedTasks,
   retryBlockedOutputIndices,
   retryableOutputIndices,
+  submissionMayHaveBeenAccepted,
 } from "../../src/features/creation/taskRecovery.ts";
 
 function task(
@@ -710,6 +712,33 @@ test("delivery rejection fences only the rejected batch slot", () => {
   assert.equal(next[1].error, "结果未通过画布交付校验。");
 });
 
+test("archive failure fences only the unarchived provider slot", () => {
+  const outputs = [
+    {
+      index: 0,
+      status: "waiting" as const,
+      model: "image-test",
+      createdAt: 1,
+    },
+    {
+      index: 1,
+      status: "succeeded" as const,
+      assetId: "asset-1",
+      model: "image-test",
+      createdAt: 1,
+    },
+  ];
+  const next = markArchiveFailuresUnknown(
+    outputs,
+    new Set([0]),
+    "供应商结果已返回，但本地素材归档失败。",
+  );
+  assert.equal(next[0].status, "unknown");
+  assert.equal(next[0].error, "供应商结果已返回，但本地素材归档失败。");
+  assert.equal(next[1].status, "succeeded");
+  assert.deepEqual(retryableOutputIndices(task("mixed", "partial"), next), []);
+});
+
 test("terminal retry failure closes a stale waiting parent slot", () => {
   const parent = task("waiting-parent", "partial");
   parent.submissionState = "terminal";
@@ -794,6 +823,24 @@ test("aborting after a provider request starts is always treated as unknown", ()
       providerRequestStarted: true,
       nativeTaskHost: false,
       aborted: true,
+    }),
+    false,
+  );
+  assert.equal(
+    submissionMayHaveBeenAccepted({
+      durableSubmission: false,
+      providerRequestStarted: false,
+      nativeTaskHost: true,
+      nativeSubmissionStarted: true,
+    }),
+    true,
+  );
+  assert.equal(
+    submissionMayHaveBeenAccepted({
+      durableSubmission: false,
+      providerRequestStarted: false,
+      nativeTaskHost: true,
+      nativeSubmissionStarted: false,
     }),
     false,
   );

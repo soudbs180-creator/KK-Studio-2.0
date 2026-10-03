@@ -26,6 +26,20 @@ export function abortedAfterProviderSubmission(options: {
   );
 }
 
+/** A native submit call may have reached the host even when its response was lost. */
+export function submissionMayHaveBeenAccepted(options: {
+  durableSubmission: boolean;
+  providerRequestStarted: boolean;
+  nativeTaskHost: boolean;
+  nativeSubmissionStarted: boolean;
+}): boolean {
+  return (
+    options.durableSubmission ||
+    options.providerRequestStarted ||
+    (options.nativeTaskHost && options.nativeSubmissionStarted)
+  );
+}
+
 /** Ordinary retry is forbidden once a provider may have accepted the task. */
 export function canRetryTask(
   task: Pick<CreationTask, "status" | "submissionState">,
@@ -91,6 +105,19 @@ export function preserveAcceptedOutputsOnDeliveryFailure(
       error,
     };
   });
+}
+
+/** A provider result that cannot be archived is not safe to submit again. */
+export function markArchiveFailuresUnknown(
+  outputs: CreationTaskOutput[],
+  failedIndices: ReadonlySet<number>,
+  error: string,
+): CreationTaskOutput[] {
+  return outputs.map((output) =>
+    failedIndices.has(output.index) && output.status !== "succeeded"
+      ? { ...output, status: "unknown" as const, error }
+      : output,
+  );
 }
 
 /**
