@@ -417,6 +417,26 @@ export async function reconcileNativeTasks(
           return nextTask;
         }),
       );
+      for (const task of tasks) {
+        if (
+          task.status !== "unknown" &&
+          !task.outputs?.some((output) => output.status === "unknown")
+        )
+          continue;
+        const sourceItemId =
+          task.sourceItemId ??
+          items.find((item) => item.id === `${project.id}-prompt`)?.id ??
+          items.find((item) => item.kind === "image" && !item.result)?.id;
+        if (!sourceItemId) continue;
+        const sourceIndex = items.findIndex((item) => item.id === sourceItemId);
+        if (sourceIndex < 0 || items[sourceIndex].generationStatus === "error")
+          continue;
+        items[sourceIndex] = {
+          ...items[sourceIndex],
+          generationStatus: "error",
+        };
+        projectChanged = changed = true;
+      }
       if (!projectChanged) return project;
       const canvas = reconcileProjectCanvas(project.canvas, items);
       for (const task of tasks) {

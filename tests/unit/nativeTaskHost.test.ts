@@ -205,6 +205,7 @@ test("native reconciliation fences a missing submitted task as unknown", async (
     assert.equal(task.status, "unknown");
     assert.equal(task.submissionState, "unknown");
     assert.match(task.error ?? "", /不会自动重复提交/);
+    assert.equal(reconciled.projects[0].items[0].generationStatus, "error");
   } finally {
     Reflect.deleteProperty(globalThis, "window");
   }
