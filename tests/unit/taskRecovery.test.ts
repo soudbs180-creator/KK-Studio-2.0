@@ -273,10 +273,7 @@ test("retry selection fences persisted accepted descendants before parent merge"
   safeInterrupted.outputs = [
     { index: 0, status: "waiting", model: safeInterrupted.model, createdAt: 1 },
   ];
-  assert.deepEqual(
-    retryBlockedOutputIndices([safeInterrupted], "parent"),
-    [],
-  );
+  assert.deepEqual(retryBlockedOutputIndices([safeInterrupted], "parent"), []);
 });
 
 test("retry child uncertainty propagates to the parent and locks ordinary retry", () => {

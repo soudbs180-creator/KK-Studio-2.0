@@ -76,14 +76,14 @@ export function retryableOutputIndices(
  * restart between the child write and its completion callback).
  */
 export function retryBlockedOutputIndices(
-  tasks: readonly (Pick<
+  tasks: readonly Pick<
     CreationTask,
     | "retryOfTaskId"
     | "retryOutputIndices"
     | "status"
     | "submissionState"
     | "outputs"
-  >)[],
+  >[],
   rootTaskId: string,
 ): number[] {
   const blocked = new Set<number>();
@@ -108,8 +108,7 @@ export function retryBlockedOutputIndices(
           output?.status === "running");
       const accepted =
         output?.status === "succeeded" || output?.status === "unknown";
-      if (uncertainTask || inFlight || accepted)
-        blocked.add(rootIndex);
+      if (uncertainTask || inFlight || accepted) blocked.add(rootIndex);
     });
   }
   return [...blocked];
@@ -357,9 +356,12 @@ export function recoverInterruptedTasks(
       updatedAt: now,
     };
   });
-  return reconcileRetryTaskParents({
-    ...snapshot,
-    revision: interruptedAny ? snapshot.revision + 1 : snapshot.revision,
-    projects,
-  }, now);
+  return reconcileRetryTaskParents(
+    {
+      ...snapshot,
+      revision: interruptedAny ? snapshot.revision + 1 : snapshot.revision,
+      projects,
+    },
+    now,
+  );
 }
