@@ -40,20 +40,29 @@ export function statusLabel(task: CreationTask): string {
 }
 
 export function outputsFor(task: CreationTask): CreationTaskOutput[] {
+  const completed = new Set(
+    task.completedOutputIndices?.length
+      ? task.completedOutputIndices
+      : Array.from(
+          {
+            length: Math.min(task.completedOutputs, task.requestedOutputs),
+          },
+          (_, index) => index,
+        ),
+  );
   return task.outputs?.length
     ? task.outputs
     : Array.from({ length: task.requestedOutputs }, (_, index) => ({
         index,
-        status:
-          task.status === "succeeded"
-            ? ("succeeded" as const)
-            : task.status === "failed"
-              ? ("failed" as const)
-              : task.status === "cancelled"
-                ? ("cancelled" as const)
-                : task.status === "unknown"
-                  ? ("unknown" as const)
-                  : ("waiting" as const),
+        status: completed.has(index)
+          ? ("succeeded" as const)
+          : task.status === "failed"
+            ? ("failed" as const)
+            : task.status === "cancelled"
+              ? ("cancelled" as const)
+              : task.status === "unknown"
+                ? ("unknown" as const)
+                : ("waiting" as const),
         model: task.model,
         provider: task.providerName,
         createdAt: task.createdAt,
@@ -65,6 +74,7 @@ export default function TaskWorkbenchContent({
   outputs,
   tab,
   onPauseTask,
+  canPauseTask,
   onCancelTask,
   onResumeTask,
   onRetryTask,
@@ -79,6 +89,7 @@ export default function TaskWorkbenchContent({
   outputs: CreationTaskOutput[];
   tab: WorkbenchTab;
   onPauseTask: (taskId: string) => void;
+  canPauseTask: (taskId: string) => boolean;
   onCancelTask: (taskId: string) => void;
   onResumeTask: (taskId: string) => void;
   onRetryTask: (taskId: string) => void;
@@ -110,9 +121,11 @@ export default function TaskWorkbenchContent({
         <div className="task-workbench-actions">
           {selected.status === "running" && (
             <>
-              <button type="button" onClick={() => onPauseTask(selected.id)}>
-                暂停
-              </button>
+              {canPauseTask(selected.id) && (
+                <button type="button" onClick={() => onPauseTask(selected.id)}>
+                  暂停
+                </button>
+              )}
               <button type="button" onClick={() => onCancelTask(selected.id)}>
                 取消
               </button>

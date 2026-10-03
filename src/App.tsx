@@ -71,14 +71,23 @@ import {
 import type { AgentCanvasBinding } from "./components/canvas/useAgentCanvasView";
 
 function outputsForTask(task: CreationTask): CreationTaskOutput[] {
+  const completed = new Set(
+    task.completedOutputIndices?.length
+      ? task.completedOutputIndices
+      : Array.from(
+          {
+            length: Math.min(task.completedOutputs, task.requestedOutputs),
+          },
+          (_, index) => index,
+        ),
+  );
   return task.outputs?.length
     ? task.outputs
     : Array.from({ length: task.requestedOutputs }, (_, index) => ({
         index,
-        status:
-          task.status === "succeeded"
-            ? ("succeeded" as const)
-            : ("waiting" as const),
+        status: completed.has(index)
+          ? ("succeeded" as const)
+          : ("waiting" as const),
         model: task.model,
         provider: task.providerName,
         createdAt: task.createdAt,
@@ -107,7 +116,7 @@ import {
 } from "./features/creation/CanvasImageCommand";
 import { generateText } from "./features/creation/textGeneration";
 import { textTaskResult } from "./features/creation/textTaskResult";
-import { useNativeTextRecovery } from "./features/creation/useNativeTextRecovery";
+import { useNativeTaskRecovery } from "./features/creation/useNativeTextRecovery";
 import { useCreationStorage } from "./features/creation/useCreationStorage";
 import { useAssetArchive } from "./features/creation/useAssetArchive";
 import CreationStorageNotice from "./components/CreationStorageNotice";
@@ -135,6 +144,7 @@ import {
   abortedAfterProviderSubmission,
   canRetryTask,
   mergeRetryTaskState,
+  preserveAcceptedOutputsOnDeliveryFailure,
   recoverInterruptedTasks,
   retryBlockedOutputIndices,
   retryableOutputIndices,
@@ -249,6 +259,18 @@ export default function App() {
       return next;
     });
   }
+
+  function hasArchivedOutputEvidence(
+    task: Pick<CreationTask, "kind">,
+    output: Pick<CreationTaskOutput, "assetId" | "text" | "status">,
+  ): boolean {
+    if (output.status !== "succeeded") return false;
+    if (task.kind !== "text") return Boolean(output.assetId);
+    return Boolean(
+      output.text?.trim() &&
+      new TextEncoder().encode(output.text).length <= 32768,
+    );
+  }
   function deleteWorkflow(workflow: WorkflowRecord): void {
     setLocalWorkflows((current) => {
       const next = current.filter((item) => item.id !== workflow.id);
@@ -257,7 +279,7 @@ export default function App() {
     });
   }
   const taskControllers = useRef<Record<string, AbortController>>({});
-  useNativeTextRecovery(
+  useNativeTaskRecovery(
     creationRef,
     taskControllers,
     commitCreation,
@@ -660,14 +682,12 @@ export default function App() {
           }
         }
         if (deliveryErrorMessage) {
-          outputs = outputs.map((output) =>
-            output.status === "succeeded"
-              ? {
-                  ...output,
-                  status: "unknown" as const,
-                  error: deliveryErrorMessage,
-                }
-              : output,
+          outputs = preserveAcceptedOutputsOnDeliveryFailure(
+            outputs,
+            projectId,
+            taskId,
+            rejectedDeliveryIds,
+            deliveryErrorMessage,
           );
         }
         const publishedStatus = deliveryErrorMessage ? "unknown" : status;
@@ -675,61 +695,83 @@ export default function App() {
         const publishedSubmissionState = deliveryErrorMessage
           ? ("unknown" as const)
           : submissionState;
+        const sourceItemId = task.sourceItemId ?? rootItemId(current);
         const nextProject = appendImageTaskResults(
           current,
           acceptedResults,
-          task.sourceItemId ?? rootItemId(current),
+          sourceItemId,
         );
-        return {
-          ...nextProject,
-          tasks: current.tasks.map((item) => {
-            if (item.id === taskId)
-              return {
-                ...item,
-                status: publishedStatus,
-                error: publishedError,
-                submissionState:
-                  publishedSubmissionState ?? item.submissionState,
-                submittedAt:
-                  publishedSubmissionState === "submitted"
-                    ? (item.submittedAt ?? Date.now())
-                    : item.submittedAt,
-                outputs: [...outputs],
-                completedOutputs: outputs.filter(
-                  (output) => output.status === "succeeded",
-                ).length,
-                resultItemId: acceptedResults[0]?.id ?? item.resultItemId,
-                updatedAt: Date.now(),
-              };
-            if (item.id !== task.retryOfTaskId) return item;
-            const merged = mergeRetryTaskState({
-              parent: { ...item, outputs: outputsForTask(item) },
-              retry: {
-                outputs,
-                retryOutputIndices: task.retryOutputIndices,
-                status: publishedStatus,
-                submissionState: publishedSubmissionState,
-                error: publishedError,
-              },
-            });
+        const nextTasks = current.tasks.map((item) => {
+          if (item.id === taskId)
             return {
               ...item,
-              ...merged,
+              status: publishedStatus,
+              error: publishedError,
+              submissionState: publishedSubmissionState ?? item.submissionState,
+              submittedAt:
+                publishedSubmissionState === "submitted"
+                  ? (item.submittedAt ?? Date.now())
+                  : item.submittedAt,
+              outputs: [...outputs],
+              completedOutputs: outputs.filter(
+                (output) => output.status === "succeeded",
+              ).length,
+              resultItemId: acceptedResults[0]?.id ?? item.resultItemId,
               updatedAt: Date.now(),
             };
-          }),
+          if (item.id !== task.retryOfTaskId) return item;
+          const merged = mergeRetryTaskState({
+            parent: { ...item, outputs: outputsForTask(item) },
+            retry: {
+              outputs,
+              retryOutputIndices: task.retryOutputIndices,
+              status: publishedStatus,
+              submissionState: publishedSubmissionState,
+              error: publishedError,
+            },
+          });
+          return {
+            ...item,
+            ...merged,
+            updatedAt: Date.now(),
+          };
+        });
+        const sourceTasks = nextTasks.filter(
+          (candidate) =>
+            (candidate.sourceItemId ?? rootItemId(current)) === sourceItemId,
+        );
+        const sourceUncertain = sourceTasks.some(
+          (candidate) =>
+            candidate.status === "unknown" ||
+            candidate.submissionState === "unknown" ||
+            candidate.outputs?.some((output) => output.status === "unknown"),
+        );
+        const sourceRunning = sourceTasks.some(
+          (candidate) =>
+            candidate.status === "queued" ||
+            candidate.status === "running" ||
+            candidate.submissionState === "submitted",
+        );
+        const sourceFailed = sourceTasks.some(
+          (candidate) =>
+            candidate.status === "failed" || candidate.status === "offline",
+        );
+        const sourceGenerationStatus = sourceUncertain
+          ? ("error" as const)
+          : sourceRunning
+            ? ("pending" as const)
+            : sourceFailed
+              ? ("error" as const)
+              : undefined;
+        return {
+          ...nextProject,
+          tasks: nextTasks,
           items: [
             ...current.items.map((item) =>
-              item.id === (task.sourceItemId ?? rootItemId(current))
+              item.id === sourceItemId
                 ? {
                     ...item,
-                    generationStatus:
-                      publishedStatus === "running"
-                        ? ("pending" as const)
-                        : publishedStatus === "failed" ||
-                            publishedStatus === "offline"
-                          ? ("error" as const)
-                          : undefined,
+                    generationStatus: sourceGenerationStatus,
                   }
                 : item,
             ),
@@ -854,12 +896,18 @@ export default function App() {
           for (const output of outputs) {
             const nativeOutput = recordOutputs.get(output.index);
             if (!nativeOutput) {
+              if (hasArchivedOutputEvidence(task, output)) continue;
               if (record.status === "succeeded") {
                 output.status = "unknown";
                 output.error = "原生任务完成但未返回该输出的素材标识。";
+              } else if (record.status === "failed") {
+                output.status = "failed";
+                output.error =
+                  record.failure ?? "原生任务失败但未返回该输出回执。";
               }
               continue;
             }
+            const priorOutput = { ...output };
             output.status =
               nativeOutput.status === "pending"
                 ? "running"
@@ -867,6 +915,79 @@ export default function App() {
             output.assetId = nativeOutput.assetId;
             output.text = nativeOutput.text;
             output.error = nativeOutput.error;
+            if (
+              nativeOutput.status === "failed" &&
+              hasArchivedOutputEvidence(task, priorOutput)
+            ) {
+              output.status = "succeeded";
+              output.assetId = priorOutput.assetId;
+              output.text = priorOutput.text;
+              output.error = undefined;
+              continue;
+            }
+            if (
+              task.kind !== "text" &&
+              nativeOutput.status === "succeeded" &&
+              !nativeOutput.assetId
+            ) {
+              if (hasArchivedOutputEvidence(task, priorOutput)) {
+                output.status = "succeeded";
+                output.assetId = priorOutput.assetId;
+                output.text = priorOutput.text;
+                output.error = undefined;
+                continue;
+              }
+              output.status = "unknown";
+              output.error = "原生任务完成但未返回该输出的素材标识。";
+              continue;
+            }
+            if (
+              record.status === "succeeded" &&
+              nativeOutput.status === "pending"
+            ) {
+              if (hasArchivedOutputEvidence(task, priorOutput)) {
+                output.status = "succeeded";
+                output.assetId = priorOutput.assetId;
+                output.text = priorOutput.text;
+                output.error = undefined;
+                continue;
+              }
+              output.status = "unknown";
+              output.error = "原生任务完成但该输出没有终态回执。";
+              continue;
+            }
+            if (
+              record.status === "failed" &&
+              nativeOutput.status === "pending"
+            ) {
+              if (hasArchivedOutputEvidence(task, priorOutput)) {
+                output.status = "succeeded";
+                output.assetId = priorOutput.assetId;
+                output.text = priorOutput.text;
+                output.error = undefined;
+                continue;
+              }
+              output.status = "failed";
+              output.error =
+                record.failure ?? "原生任务失败但该输出没有终态回执。";
+              continue;
+            }
+            if (
+              record.status === "unknown" &&
+              nativeOutput.status === "pending"
+            ) {
+              if (hasArchivedOutputEvidence(task, priorOutput)) {
+                output.status = "succeeded";
+                output.assetId = priorOutput.assetId;
+                output.text = priorOutput.text;
+                output.error = undefined;
+                continue;
+              }
+              output.status = "unknown";
+              output.error =
+                record.failure ?? "原生任务输出回执状态不明，请先核对供应商。";
+              continue;
+            }
             if (task.kind === "text") {
               if (nativeOutput.status === "succeeded") {
                 try {
@@ -971,7 +1092,8 @@ export default function App() {
           publish(
             status,
             uncertain
-              ? (record.failure ??
+              ? (outputs.find((output) => output.status === "unknown")?.error ??
+                  record.failure ??
                   "原生任务受理状态不明，请先核对供应商；不会自动重复提交。")
               : terminal && status === "failed"
                 ? (record.failure ?? "原生任务失败，可检查供应商后重试。")
@@ -1369,7 +1491,6 @@ export default function App() {
       .find(
         (task) =>
           task.id === taskId &&
-          task.kind === "text" &&
           (task.submissionState === "submitted" ||
             task.submissionState === "unknown"),
       );
@@ -2580,6 +2701,9 @@ export default function App() {
               onConfigure={() => open("settings/providers")}
               onCancelTask={cancelTask}
               onPauseTask={pauseTask}
+              canPauseTask={(taskId) =>
+                Boolean(taskControllers.current[taskId])
+              }
               onResumeTask={resumeTask}
               onRetryTask={(taskId) => {
                 if (activeProject) retryTask(activeProject.id, taskId);

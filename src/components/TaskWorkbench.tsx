@@ -16,6 +16,7 @@ export default function TaskWorkbench({
   onConfigure,
   onCancelTask,
   onPauseTask,
+  canPauseTask,
   onResumeTask,
   onRetryTask,
   onRetryOutput,
@@ -28,6 +29,7 @@ export default function TaskWorkbench({
   onConfigure: () => void;
   onCancelTask: (taskId: string) => void;
   onPauseTask: (taskId: string) => void;
+  canPauseTask: (taskId: string) => boolean;
   onResumeTask: (taskId: string) => void;
   onRetryTask: (taskId: string) => void;
   onRetryOutput: (taskId: string, outputIndex: number) => void;
@@ -172,6 +174,7 @@ export default function TaskWorkbench({
             outputs={outputs}
             tab={tab}
             onPauseTask={onPauseTask}
+            canPauseTask={canPauseTask}
             onCancelTask={onCancelTask}
             onResumeTask={onResumeTask}
             onRetryTask={onRetryTask}

@@ -91,6 +91,34 @@ test("task source item provenance is optional and survives normalization", () =>
   assert.equal(snapshot?.projects[0]?.tasks[1]?.sourceItemId, undefined);
 });
 
+test("empty completed slot metadata falls back to the legacy completion count", () => {
+  const snapshot = normalizeCreationSnapshot({
+    version: 2,
+    projects: [
+      {
+        id: "project-legacy-slots",
+        items: [],
+        tasks: [
+          {
+            id: "task-legacy-slots",
+            prompt: "生成",
+            model: "image-test",
+            status: "partial",
+            requestedOutputs: 2,
+            completedOutputs: 1,
+            completedOutputIndices: [],
+          },
+        ],
+      },
+    ],
+  });
+  assert.equal(
+    snapshot?.projects[0]?.tasks[0]?.completedOutputIndices,
+    undefined,
+  );
+  assert.equal(snapshot?.projects[0]?.tasks[0]?.completedOutputs, 1);
+});
+
 test("unknown submissions normalize conservatively and retain the stable identity", () => {
   const snapshot = normalizeCreationSnapshot({
     version: 2,

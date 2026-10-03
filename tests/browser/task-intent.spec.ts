@@ -201,6 +201,89 @@ async function fulfillPixel(route: Route): Promise<void> {
   await route.fulfill({ json: { data: [{ b64_json: pixel }] } });
 }
 
+test("reloaded native image task can cancel and exposes no inactive pause", async ({
+  page,
+}) => {
+  const value = task("running", "submitted");
+  await page.addInitScript(
+    ({ seeded, taskId, idempotencyKey }) => {
+      const state = {
+        saved: seeded,
+        cancellations: 0,
+        status: "submitted",
+      };
+      const receipt = () => ({
+        taskId,
+        idempotencyKey,
+        status: state.status,
+        outputIndices: [0],
+        outputs: [{ index: 0, status: "pending" }],
+        failure:
+          state.status === "unknown" ? "取消后供应商状态仍需核对。" : undefined,
+        updatedAt: 42,
+      });
+      Object.assign(window, {
+        nativeTaskTest: state,
+        __TAURI_INTERNALS__: {
+          invoke: async (
+            command: string,
+            args?: { snapshot?: typeof seeded },
+          ) => {
+            if (command === "read_creation_snapshot")
+              return { status: "loaded", snapshot: state.saved };
+            if (command === "write_creation_snapshot") {
+              state.saved = args!.snapshot!;
+              return;
+            }
+            if (command === "task_host_list") return [receipt()];
+            if (command === "task_host_get") return receipt();
+            if (command === "task_host_cancel") {
+              state.cancellations++;
+              state.status = "unknown";
+              return receipt();
+            }
+            if (command === "credential_get") return null;
+            throw new Error(`Unexpected native task IPC: ${command}`);
+          },
+        },
+      });
+    },
+    {
+      seeded: snapshot(value),
+      taskId: value.id,
+      idempotencyKey: value.idempotencyKey,
+    },
+  );
+  await page.goto("/");
+  await openSeededProject(page);
+  await expect(
+    page
+      .getByTestId("task-workbench")
+      .getByText("生成中", { exact: true })
+      .last(),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "暂停", exact: true }),
+  ).toHaveCount(0);
+  await page
+    .getByTestId("task-workbench")
+    .getByRole("button", { name: "取消", exact: true })
+    .click();
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          (window as Window & { nativeTaskTest: { cancellations: number } })
+            .nativeTaskTest.cancellations,
+      ),
+    )
+    .toBe(1);
+  await expect(page.getByTestId("task-workbench")).toContainText(
+    "受理状态不明",
+  );
+  await expect(page.getByRole("button", { name: "重试剩余" })).toHaveCount(0);
+});
+
 test("provider request only arrives after durable submitted intent with stable key", async ({
   page,
 }) => {

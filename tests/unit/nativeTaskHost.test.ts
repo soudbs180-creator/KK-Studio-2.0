@@ -210,3 +210,390 @@ test("native reconciliation fences a missing submitted task as unknown", async (
     Reflect.deleteProperty(globalThis, "window");
   }
 });
+
+test("native unknown receipt marks pending outputs unknown", async () => {
+  desktop(async (command) => {
+    if (command === "task_host_list")
+      return [
+        record({
+          taskId: "task-1",
+          idempotencyKey: "stable-1",
+          status: "unknown",
+          failure: "provider receipt unavailable",
+        }),
+      ];
+    throw new Error("unknown receipts must not read assets");
+  });
+  const project = createProject({
+    prompt: "生成",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  project.tasks = [
+    {
+      ...createTask(project),
+      id: "task-1",
+      idempotencyKey: "stable-1",
+      sourceItemId: project.items[0].id,
+      status: "running",
+      submissionState: "submitted",
+    },
+  ];
+  try {
+    const recovered = await reconcileNativeTasks({
+      ...emptySnapshot(),
+      revision: 1,
+      activeProjectId: project.id,
+      projects: [project],
+    });
+    const task = recovered.projects[0].tasks[0];
+    assert.equal(task.status, "unknown");
+    assert.equal(task.outputs?.[0].status, "unknown");
+    assert.match(task.error ?? "", /provider receipt unavailable/);
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});
+
+test("native image success without an asset identity is treated as unknown", async () => {
+  desktop(async (command) => {
+    if (command === "task_host_list")
+      return [
+        record({
+          taskId: "task-1",
+          idempotencyKey: "stable-1",
+          status: "succeeded",
+          outputs: [{ index: 0, status: "succeeded" }],
+        }),
+      ];
+    throw new Error("a missing asset identity must not read an asset");
+  });
+  const project = createProject({
+    prompt: "生成",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  project.tasks = [
+    {
+      ...createTask(project),
+      id: "task-1",
+      idempotencyKey: "stable-1",
+      sourceItemId: project.items[0].id,
+      status: "running",
+      submissionState: "submitted",
+    },
+  ];
+  const snapshot: CreationSnapshot = {
+    ...emptySnapshot(),
+    revision: 1,
+    activeProjectId: project.id,
+    projects: [project],
+  };
+  try {
+    const reconciled = await reconcileNativeTasks(snapshot);
+    const task = reconciled.projects[0].tasks[0];
+    assert.equal(task.status, "unknown");
+    assert.equal(task.submissionState, "unknown");
+    assert.equal(task.outputs?.[0].status, "unknown");
+    assert.match(task.error ?? "", /素材标识/);
+    assert.equal(reconciled.projects[0].items[0].generationStatus, "error");
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});
+
+test("native recovery preserves an archived image when a terminal receipt omits its asset", async () => {
+  desktop(async (command) => {
+    if (command === "task_host_list")
+      return [
+        record({
+          taskId: "task-1",
+          idempotencyKey: "stable-1",
+          status: "succeeded",
+          outputs: [{ index: 0, status: "succeeded" }],
+        }),
+      ];
+    if (command === "asset_read")
+      return {
+        metadata: {
+          assetId: "asset-old",
+          sha256: "hash",
+          mime: "image/png",
+          tags: [],
+          provenance: { generatedAt: "2026-10-03T00:00:00.000Z" },
+        },
+        dataBase64: "aW1hZ2U=",
+      };
+    throw new Error(`unexpected native command: ${command}`);
+  });
+  const project = createProject({
+    prompt: "生成",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  project.tasks = [
+    {
+      ...createTask(project),
+      id: "task-1",
+      idempotencyKey: "stable-1",
+      sourceItemId: project.items[0].id,
+      status: "running",
+      submissionState: "submitted",
+      outputs: [
+        {
+          index: 0,
+          status: "succeeded",
+          assetId: "asset-old",
+          model: "image-test",
+          createdAt: 1,
+        },
+      ],
+      completedOutputs: 1,
+    },
+  ];
+  const snapshot: CreationSnapshot = {
+    ...emptySnapshot(),
+    revision: 1,
+    activeProjectId: project.id,
+    projects: [project],
+  };
+  try {
+    const recovered = await reconcileNativeTasks(snapshot);
+    const task = recovered.projects[0].tasks[0];
+    assert.equal(task.status, "succeeded");
+    assert.equal(task.completedOutputs, 1);
+    assert.equal(task.outputs?.[0].assetId, "asset-old");
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});
+
+test("native image success without per-output receipts is treated as unknown", async () => {
+  desktop(async (command) => {
+    if (command === "task_host_list")
+      return [
+        record({
+          taskId: "task-1",
+          idempotencyKey: "stable-1",
+          status: "succeeded",
+          outputs: [],
+        }),
+      ];
+    throw new Error("an absent output receipt must not read an asset");
+  });
+  const project = createProject({
+    prompt: "生成",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  const task = {
+    ...createTask(project),
+    id: "task-1",
+    idempotencyKey: "stable-1",
+    sourceItemId: project.items[0].id,
+    status: "running" as const,
+    submissionState: "submitted" as const,
+  };
+  project.tasks = [task];
+  const snapshot: CreationSnapshot = {
+    ...emptySnapshot(),
+    revision: 1,
+    activeProjectId: project.id,
+    projects: [project],
+  };
+  try {
+    const reconciled = await reconcileNativeTasks(snapshot);
+    const recovered = reconciled.projects[0].tasks[0];
+    assert.equal(recovered.status, "unknown");
+    assert.equal(recovered.submissionState, "unknown");
+    assert.equal(recovered.outputs?.[0].status, "unknown");
+    assert.match(recovered.error ?? "", /输出/);
+    assert.equal(reconciled.projects[0].items[0].generationStatus, "error");
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});
+
+test("native image recovery reconnects the result edge to its source", async () => {
+  desktop(async (command) => {
+    if (command === "task_host_list")
+      return [
+        record({
+          taskId: "task-1",
+          idempotencyKey: "stable-1",
+          status: "succeeded",
+          outputs: [{ index: 0, status: "succeeded", assetId: "asset-result" }],
+        }),
+      ];
+    if (command === "asset_read")
+      return {
+        metadata: {
+          assetId: "asset-result",
+          sha256: "hash",
+          mime: "image/png",
+          tags: [],
+          provenance: { generatedAt: "2026-10-03T00:00:00.000Z" },
+        },
+        dataBase64: "aW1hZ2U=",
+      };
+    throw new Error(`unexpected native command: ${command}`);
+  });
+  const project = createProject({
+    prompt: "生成",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  const task = {
+    ...createTask(project),
+    id: "task-1",
+    idempotencyKey: "stable-1",
+    sourceItemId: project.items[0].id,
+    status: "running" as const,
+    submissionState: "submitted" as const,
+  };
+  project.tasks = [task];
+  const snapshot: CreationSnapshot = {
+    ...emptySnapshot(),
+    revision: 1,
+    activeProjectId: project.id,
+    projects: [project],
+  };
+  try {
+    const reconciled = await reconcileNativeTasks(snapshot);
+    const resultId = `${project.id}-task-1-result-1`;
+    assert.ok(
+      reconciled.projects[0].items.some((item) => item.id === resultId),
+    );
+    assert.ok(
+      reconciled.projects[0].canvas.edges.some(
+        (edge) =>
+          edge.source === project.items[0].id &&
+          edge.target === resultId &&
+          edge.kind === "result",
+      ),
+    );
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});
+
+test("native terminal output failures do not become a succeeded task", async () => {
+  desktop(async (command) => {
+    if (command === "task_host_list")
+      return [
+        record({
+          taskId: "task-1",
+          idempotencyKey: "stable-1",
+          status: "succeeded",
+          outputs: [{ index: 0, status: "failed", error: "provider failed" }],
+        }),
+      ];
+    throw new Error("a failed output must not read an asset");
+  });
+  const project = createProject({
+    prompt: "生成",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  project.tasks = [
+    {
+      ...createTask(project),
+      id: "task-1",
+      idempotencyKey: "stable-1",
+      sourceItemId: project.items[0].id,
+      status: "running",
+      submissionState: "submitted",
+    },
+  ];
+  const snapshot: CreationSnapshot = {
+    ...emptySnapshot(),
+    revision: 1,
+    activeProjectId: project.id,
+    projects: [project],
+  };
+  try {
+    const reconciled = await reconcileNativeTasks(snapshot);
+    const task = reconciled.projects[0].tasks[0];
+    assert.equal(task.status, "failed");
+    assert.equal(task.submissionState, "terminal");
+    assert.equal(task.outputs?.[0].status, "failed");
+    assert.equal(reconciled.projects[0].items[0].generationStatus, "error");
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});
+
+test("native failure preserves already archived output evidence", async () => {
+  desktop(async (command) => {
+    if (command === "task_host_list")
+      return [
+        record({
+          taskId: "task-1",
+          idempotencyKey: "stable-1",
+          status: "failed",
+          failure: "provider failed",
+          outputs: [
+            { index: 0, status: "failed" },
+            { index: 1, status: "pending" },
+          ],
+        }),
+      ];
+    throw new Error("archived output evidence must not read a missing asset");
+  });
+  const project = createProject({
+    prompt: "生成",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  const now = Date.now();
+  project.tasks = [
+    {
+      ...createTask(project),
+      id: "task-1",
+      idempotencyKey: "stable-1",
+      sourceItemId: project.items[0].id,
+      status: "running",
+      submissionState: "submitted",
+      requestedOutputs: 2,
+      outputs: [
+        {
+          index: 0,
+          status: "succeeded",
+          assetId: "asset-old",
+          model: "image-test",
+          createdAt: now,
+        },
+        {
+          index: 1,
+          status: "waiting",
+          model: "image-test",
+          createdAt: now,
+        },
+      ],
+    },
+  ];
+  const snapshot: CreationSnapshot = {
+    ...emptySnapshot(),
+    revision: 1,
+    activeProjectId: project.id,
+    projects: [project],
+  };
+  try {
+    const reconciled = await reconcileNativeTasks(snapshot);
+    const task = reconciled.projects[0].tasks[0];
+    assert.equal(task.outputs?.[0].status, "succeeded");
+    assert.equal(task.outputs?.[1].status, "failed");
+    assert.equal(task.status, "partial");
+    assert.equal(task.completedOutputs, 1);
+    assert.equal(reconciled.projects[0].items[0].generationStatus, undefined);
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});
