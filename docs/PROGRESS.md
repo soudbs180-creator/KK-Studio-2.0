@@ -4,7 +4,7 @@
 
 - 已完成本轮本地闭环：`TASK-ORCH-002` 阶段计划视图与 plan/result 审批；`TASK-TASKSTATE-001` 的本地成本语义清理；`TASK-CANVAS-001` 的 Agent host/App 画布交付校验。
 - 新增 `TASK-TASKSTATE-002`（P1）：等待供应商可验证报价/账单回执，定义 schema、来源和回归证据。
-- 证据：`docs/changes/2026-10-03-incomplete-tasks/`；最终代码提交 `085b083`（包含 `6ebaad8`、`937b050`、`d61adda` 的本地闭环及不确定重试/文案交付边界修复）。全量 Node 667、Canvas Agent 174、浏览器 380、Rust 97 及静态门禁以本轮最终收据为准。
+- 证据：`docs/changes/2026-10-03-incomplete-tasks/`；最终代码提交 `c4cac9c`（包含 `6ebaad8`、`937b050`、`d61adda`、`085b083`、`db84558`、`760b3e0`、`f344563`、`a68fd10`、`768326a` 的本地闭环及归档失败、原生提交不确定、缺失文案正文和完整归档证据防线修复）。全量 Node 693、Canvas Agent 174、浏览器 381、Rust 97 及静态门禁以本轮最终收据为准。
 - 外部未完成项保持原状态：真实 Provider/GPU/ComfyUI、TASK-ORCH-003、BACKEND-MCP-AUTO、Mobile、VPS、第三方 MCP 与用户视觉验收。
 
 ## 2026-10-03 项目建设目标与验收基线
@@ -671,9 +671,9 @@ TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点
 - `origin/main` now includes the governance closeout at `3c4d012`; TASK-GOV-002 remains PARTIAL because hosted branch protection is still blocked by the GitHub billing/API403 boundary. Its closeout package and current ledger entry were retained when preparing this candidate.
 - This candidate keeps the UI/asset work scoped to TASK-MAIN-CLOSE-002; it does not re-own the governance worktree or claim remote rules are active.
 
-## 2026-10-03 全项目任务盘点与本地收口
+## 2026-10-03 早期任务盘点与本地收口（历史快照）
 
-- `TASK-AUDIT-20261003` 已在 `codex/TASK-AUDIT-20261003` 独立 worktree 完成本地范围收口；后续补入项目目标基线和组件边界任务后，当前台账为 96 项：DONE 55、PARTIAL 27、TODO 10、BLOCKED 4。功能登记册 34 项，features/gov/markdown 门禁均为 0 违规。
+- 早期同日快照曾记录 96 项：DONE 55、PARTIAL 27、TODO 10、BLOCKED 4；当前台账以本文件顶部、`docs/governance/task-ledger.json` 和本轮 verification 为准。
 - 本轮新增并完成：MCP 多标签页注册表 reread/rebase 与冲突保护（TASK-MCP-REGISTRY-001）、旧版 51+ 配置原件导出/显式恢复（TASK-MCP-REGISTRY-002）、编排器失败项依赖闭包重排（TASK-ORCH-REPLAN-001）。MCP modern/legacy 协商（TASK-MCP-PROTO-001）本地实现与回归完成，真实第三方及 Desktop 实机仍待外部验收。
 - 实际回归：Node 661（653 pass/0 fail/8 skipped）、Canvas Agent 174（172 pass/0 fail/2 skipped）、Playwright 379/379、TypeScript/lint/format/build、Vite build、Cargo check 均通过；Vite 只留已有依赖注释与 bundle 大小 warning。
 - 后续优先级：P0 先保护注册表数据不丢失；P1 完成真实 MCP 端点验收并推进编排器真实生成执行；P2 继续 T5/T6/T7、平台服务、VPS、Mobile、Figma 完整验收。证据见 [本轮 verification](changes/2026-10-03-task-audit/verification.md) 和 [review](changes/2026-10-03-task-audit/review.md)。

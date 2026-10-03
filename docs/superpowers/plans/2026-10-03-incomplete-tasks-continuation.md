@@ -30,6 +30,7 @@
 ### Task 1: TaskWorkbench 阶段计划视图与审批交互（TASK-ORCH-002）
 
 **Files:**
+
 - Create: `src/components/TaskWorkbenchStages.tsx`
 - Modify: `src/components/TaskWorkbench.tsx`
 - Modify: `src/components/TaskWorkbenchContent.tsx`
@@ -38,6 +39,7 @@
 - Test: `tests/browser/task-workbench.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `StagePlan`, `stageApprovalGateFor`, `stagePlanProgress`, `stageWorkItemCounts`, `StageOrchestrator.decideStage`。
 - Produces: TaskWorkbench 的 `Plan` 标签、阶段状态徽标、plan/result 审批按钮和错误提示；Agent host 使用同一个 `createStageOrchestrator` 实例。
 
@@ -50,6 +52,7 @@
 ### Task 2: 统一任务成本估算语义（TASK-TASKSTATE-001 本地收口）
 
 **Files:**
+
 - Modify: `src/features/creation/model.ts`
 - Modify: `src/App.tsx`
 - Modify: `src/components/TaskExecutionApproval.tsx`
@@ -58,6 +61,7 @@
 - Test: `tests/browser/task-workbench.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `estimateTaskCostUsd`, `formatCostUsd`。
 - Produces: 新任务和重试任务在无供应商报价时 `estimatedCostUsd` 为 `undefined`；UI 统一显示“尚未取得报价”，有真实估算时明确标注“估算，非实际扣费”。
 
@@ -70,6 +74,7 @@
 ### Task 3: 画布交付契约接入宿主（TASK-CANVAS-001 本地收口）
 
 **Files:**
+
 - Modify: `src/features/agent/agentCanvas.ts`
 - Modify: `src/features/agent/agentHost.ts`
 - Modify: `src/App.tsx`
@@ -77,6 +82,7 @@
 - Modify: `tests/unit/agentHost.test.ts`
 
 **Interfaces:**
+
 - Consumes: `assertCanvasDelivery`, `CanvasDeliveryContractError`, `appendImageTaskResults`。
 - Produces: 图片和文本结果在宿主提交前通过稳定节点与已注册结果校验；失败转为可观察错误，不静默把未归档结果写入画布。
 
@@ -92,4 +98,3 @@
 - 定向浏览器：`node node_modules/@playwright/test/cli.js test tests/browser/task-workbench.spec.ts`
 - 全量：`node --test tests/unit/*.test.ts tests/deploy/*.test.mjs`、Canvas Agent、Playwright、TypeScript、ESLint、Prettier、UI、治理、功能、Markdown、Vite、Cargo。
 - 更新 `docs/changes/2026-10-03-incomplete-tasks/` 五份交付文档、`task-ledger.json`/生成视图、`PROJECT_STATE.md`、`AI_HANDOFF.md`、`docs/PROGRESS.md`。
-

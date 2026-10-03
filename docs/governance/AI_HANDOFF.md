@@ -2,7 +2,7 @@
 
 ## 2026-10-03 未完成任务继续执行恢复点
 
-当前实现工作树为 `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`，分支 `codex/TASK-AUDIT-20261003`。本轮最终代码提交为 `085b083`，包含阶段计划工作台、成本未知语义、画布交付边界、文案非空校验以及不确定重试向父任务传播。恢复时先读[本轮计划](../changes/2026-10-03-incomplete-tasks/plan.md)、[验证](../changes/2026-10-03-incomplete-tasks/verification.md)和 `docs/governance/task-ledger.json`，再检查当前 HEAD、工作树与最新 bundle。
+当前实现工作树为 `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`，分支 `codex/TASK-AUDIT-20261003`。本轮最终代码提交为 `c4cac9c`，包含阶段计划工作台、成本未知语义、画布交付边界、文案非空校验、不确定重试向父任务传播、重启恢复时的重试子任务合并与重复提交防线、终态回执解除父任务不确定状态、终态缺回执与 unknown 回执证据保护，以及归档失败、原生提交不确定、缺失文案正文和完整归档证据优先；原生成功缺资产/回执进入 unknown，恢复图像结果补回源节点连线。恢复时先读[本轮计划](../changes/2026-10-03-incomplete-tasks/plan.md)、[验证](../changes/2026-10-03-incomplete-tasks/verification.md)和 `docs/governance/task-ledger.json`，再检查当前 HEAD、工作树与最新 bundle。
 
 账本当前为 97 项；TASK-ORCH-002 已在本地范围 DONE，TASK-CANVAS-001/TASK-TASKSTATE-001 保持 PARTIAL，新增 P1 `TASK-TASKSTATE-002` 等待真实供应商报价回执。继续工作不得把本地 fixture、构建通过或历史证据当作真实 Provider、Mobile、VPS、第三方 MCP 或用户视觉验收。
 
@@ -330,9 +330,9 @@ TASK-UI-MAIN-001 从 origin/main@8aca3ab 出发，三方整合27项原目录交�
 
 TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点击不关闭；同状态三环境专项与191项浏览器回归通过。详见 docs/changes/2026-09-20-ui-main-alignment/followup.md。稳定main提交以Git回读为准，上述旧SHA是阶段记录。UI-004设计来源缺口与PERF-001压力边界继续保留。
 
-## 2026-10-03 审计交接点
+## 2026-10-03 早期审计交接点（历史快照）
 
 - 接手入口：先读 `AGENTS.md`、`AI_RULES.md`、本段、`docs/governance/TASK_LEDGER.md`，再核对 `git -C D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003 status`。本轮分支为 `codex/TASK-AUDIT-20261003`，不要把工作树直接快进稳定 main。
-- 当前任务台账 94 项：DONE 53、PARTIAL 27、TODO 10、BLOCKED 4。最近完成的本地任务是 `TASK-MCP-REGISTRY-001/002`、`TASK-ORCH-REPLAN-001`；`TASK-MCP-PROTO-001` 只将本地协议实现标为可验证，真实第三方 MCP 与 Desktop 实机验收仍待安排。
-- 已生成的证据包：`docs/changes/2026-10-03-task-audit/{intent,spec,plan,verification,review}.md`。完整回归为 Node 661（653/0/8）、Canvas Agent 174（172/0/2）、Playwright 379/379；不要用历史 verify 数字替代本轮记录。
+- 早期快照中的任务台账为 94 项：DONE 53、PARTIAL 27、TODO 10、BLOCKED 4；当前台账以本文件顶部和 `docs/governance/task-ledger.json` 为准。
+- 已生成的早期证据包：`docs/changes/2026-10-03-task-audit/{intent,spec,plan,verification,review}.md`；不要用历史 verify 数字替代当前 `docs/changes/2026-10-03-incomplete-tasks/verification.md` 的收据。
 - 下一步按优先级处理：P0 数据保留/冲突回归；P1 真实 MCP 端点和编排器真实执行；P2 T5 TaskHost 原生恢复、T6 ComfyUI、T7 安装恢复及其余平台/发布外部验收。真实凭据、GPU、VPS 或 Mobile 缺失时，保持台账状态并记录阻塞原因。

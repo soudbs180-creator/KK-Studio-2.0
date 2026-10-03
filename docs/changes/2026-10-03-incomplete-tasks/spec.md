@@ -25,10 +25,10 @@
 
 ## 验收
 
-| ID | 验收 | 证据 |
-| --- | --- | --- |
-| ORCH-002-A | Plan 视图显示计划与审批门 | `tests/browser/task-workbench.spec.ts` |
-| ORCH-002-B | 批准计划后阶段进入执行中 | `tests/browser/task-workbench.spec.ts` |
-| TASKSTATE-A | 新建/重试任务没有演示成本 | `tests/unit/creation.test.ts` |
-| TASKSTATE-B | 审批与工作台显示未知报价 | `tests/browser/task-workbench.spec.ts` |
-| CANVAS-A | 文案 provider 结果可通过契约，缺资产图片被拒 | `tests/unit/agentCanvas.test.ts`, `tests/unit/agentHost.test.ts` |
+| ID          | 验收                                         | 证据                                                             |
+| ----------- | -------------------------------------------- | ---------------------------------------------------------------- |
+| ORCH-002-A  | Plan 视图显示计划与审批门                    | `tests/browser/task-workbench.spec.ts`                           |
+| ORCH-002-B  | 批准计划后阶段进入执行中                     | `tests/browser/task-workbench.spec.ts`                           |
+| TASKSTATE-A | 新建/重试任务没有演示成本                    | `tests/unit/creation.test.ts`                                    |
+| TASKSTATE-B | 审批与工作台显示未知报价                     | `tests/browser/task-workbench.spec.ts`                           |
+| CANVAS-A    | 文案 provider 结果可通过契约，缺资产图片被拒 | `tests/unit/agentCanvas.test.ts`, `tests/unit/agentHost.test.ts` |

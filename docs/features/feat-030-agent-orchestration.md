@@ -20,10 +20,10 @@
 
 ## 测试与证据
 
-- 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/agentCanvas.test.ts`；本轮 Node 全量 667 项（659 pass、0 fail、8 Windows skip）。
-- 浏览器回归：全量 380/380 通过，包含阶段计划 Plan 标签与审批专项回归。
-- Rust 测试 / 实机验收：项目包导出/导入及重复身份拒绝回归，当前 82/82 Rust 全量通过；Desktop GUI 与正式发布未验收。
-- 变更与验证证据：`docs/changes/2026-09-23-agent-orchestration/verification.md`
+- 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/agentCanvas.test.ts`；本轮 Node 全量 693 项（685 pass、0 fail、8 Windows skip）。
+- 浏览器回归：全量 381/381 通过，包含阶段计划 Plan 标签与审批专项回归。
+- Rust 测试 / 实机验收：项目包导出/导入及重复身份拒绝回归，当前 97/97 Rust 全量通过；Desktop GUI 与正式发布未验收。
+- 变更与验证证据：`docs/changes/2026-10-03-incomplete-tasks/verification.md`
 
 ## 当前能力
 
@@ -52,7 +52,7 @@
 
 - 2026-09-26：`9ddfcb5` 源码独立复审 PASS，Hosted verify/delivery 成功；功能仍为 PARTIAL，Desktop GUI、真实 Provider、MCP 注册与 UI 阶段视图未验收。详情见验证记录。
 
-- 2026-10-03：`6ebaad8` 接入 TaskWorkbench Plan 标签与 plan/result 审批；`085b083` 补交付文本校验与不确定重试父任务锁定。功能仍为 PARTIAL，真实编排执行、MCP 注册、Provider 与 Desktop 运行证据仍待完成。
+- 2026-10-03：`6ebaad8` 接入 TaskWorkbench Plan 标签与 plan/result 审批；`085b083` 补交付文本校验与不确定重试父任务锁定；`db84558` 补重启恢复时的重试子任务合并与重复提交防线；`760b3e0` 补终态回执解除父任务不确定状态；`f344563`/`a68fd10` 补齐终态缺回执、旧格式错误传播、排队 intent 源状态和 unknown 回执证据保护；`768326a`/`c4cac9c` 补归档失败、原生提交不确定、缺失文案正文与完整归档证据优先。功能仍为 PARTIAL，真实编排执行、MCP 注册、Provider 与 Desktop 运行证据仍待完成。
 
 - 2026-09-26：`abb2bb8` 独立复审发现返工提示词绕过计划审批与破坏同 ID 重放；当前候选改为可选 `reworkPrompt` 并在提示词变化时重新审批，Web/Rust 包契约同步，新 head 待验证。
 

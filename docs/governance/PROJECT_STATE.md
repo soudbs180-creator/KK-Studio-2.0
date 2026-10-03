@@ -2,7 +2,7 @@
 
 ## 2026-10-03 未完成任务继续执行
 
-本轮隔离工作树 `codex/TASK-AUDIT-20261003` 已完成 TASK-ORCH-002 的阶段计划视图与审批闭环（`6ebaad8`）：任务工作台的 Plan 标签显示阶段状态、工作项数量和审批门，审批通过后进入执行中。TASK-TASKSTATE-001 的本地成本语义已收口（`937b050`）：新建/重试任务不再写入 `$0.04/张` 示例价格，UI 统一显示未知或带口径的估算。TASK-CANVAS-001 已接入 Agent host 与 App 统一发布边界（`d61adda`、`085b083`）：图片要求资产身份，文案要求非空 provider 文本，契约失败保留为 unknown；混合批次的 unknown 重试会锁定父任务。最终代码提交为 `085b083`，全量门禁以本轮 verification 最终记录为准。
+本轮隔离工作树 `codex/TASK-AUDIT-20261003` 已完成 TASK-ORCH-002 的阶段计划视图与审批闭环（`6ebaad8`）：任务工作台的 Plan 标签显示阶段状态、工作项数量和审批门，审批通过后进入执行中。TASK-TASKSTATE-001 的本地成本语义已收口（`937b050`）：新建/重试任务在没有供应商报价时保持未知，UI 统一显示未知或带明确口径的估算。TASK-CANVAS-001 已接入 Agent host 与 App 统一发布边界（`d61adda`、`085b083`、`db84558`、`760b3e0`、`f344563`、`a68fd10`、`768326a`、`c4cac9c`）：图片要求资产身份，文案要求非空 provider 文本，契约失败保留为 unknown；混合批次的 unknown 重试会锁定父任务，重启恢复会合并已受理重试子任务并防止重复提交，终态缺回执会关闭 stale waiting 槽，旧格式错误优先采用终态子任务，排队 intent 保持源节点 pending，unknown 回执不抹掉已有归档证据；归档失败、原生提交响应/flush 丢失、缺失文案正文以及失败汇总覆盖完整归档证据都会进入保守围栏；原生成功缺资产/回执会进入 unknown，恢复图像结果会补回源节点连线。最终代码提交为 `c4cac9c`，全量门禁以本轮 verification 最终记录为准。
 
 本轮盘点新增 `TASK-TASKSTATE-002`（P1，供应商成本报价回执接入）。TASK-ORCH-003、BACKEND-MEDIA-001、BACKEND-MCP-AUTO、Mobile/VPS 和真实视觉验收仍未完成或受外部条件约束，不因本地 fixture、构建或类型检查升级状态。详见[变更验证](../changes/2026-10-03-incomplete-tasks/verification.md)与[执行计划](../changes/2026-10-03-incomplete-tasks/plan.md)。
 
@@ -349,9 +349,9 @@ TASK-UI-MAIN-001 从 origin/main@8aca3ab 出发，三方整合27项原目录交�
 
 TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点击不关闭；同状态三环境专项与191项浏览器回归通过。详见 docs/changes/2026-09-20-ui-main-alignment/followup.md。稳定main提交以Git回读为准，上述旧SHA是阶段记录。UI-004设计来源缺口与PERF-001压力边界继续保留。
 
-## 2026-10-03 任务审计当前状态
+## 2026-10-03 早期任务审计快照
 
 - 当前审计候选位于 `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`，分支 `codex/TASK-AUDIT-20261003`，基线 `origin/main@21d121d2b884b2b7ced4a98eb0e03c590de5c3cd`。稳定 main 未被本轮提交直接修改。
-- `docs/governance/task-ledger.json` 当前共 96 项：DONE 55、PARTIAL 27、TODO 10、BLOCKED 4。外部条件任务保持原状态；本地可验证缺陷已由三个实现任务和一个协议任务的本地部分收口，项目目标基线和 MCP 设置组件拆分均已完成当前 head 独立复核。
+- 早期快照记录 `docs/governance/task-ledger.json` 共 96 项：DONE 55、PARTIAL 27、TODO 10、BLOCKED 4；当前台账以文件顶部和实际账本为准。
 - MCP 注册表现在读取合法超限原件而不清空，写入会重读并检测冲突；现代 MCP 先走 `server/discover`，只对明确不支持发现的响应回退旧握手；编排器 `plan_replan` 会持久化稳定的新计划而不重复成功项。
-- 最终验证记录为 Node 661/653/0/8、Agent 174/172/0/2、Playwright 379/379，TypeScript、lint、format、features、governance、markdown、Vite 和 Cargo 均通过。真实第三方 MCP、Provider/GPU、ComfyUI、VPS、Mobile 和完整 TaskHost 运行态仍未证明。
+- 早期验证记录为 Node 661/653/0/8、Agent 174/172/0/2、Playwright 379/379；当前验证以 `docs/changes/2026-10-03-incomplete-tasks/verification.md` 为准。真实第三方 MCP、Provider/GPU、ComfyUI、VPS、Mobile 和完整 TaskHost 运行态仍未证明。
