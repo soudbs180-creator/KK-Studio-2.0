@@ -799,7 +799,7 @@ export default function App() {
       if (controller.signal.aborted) throw new Error("任务已停止。");
       assertTextCurrent();
       outputs = outputs.map((output) =>
-        output.status === "succeeded" || output.status === "unknown"
+        output.status === "succeeded"
           ? output
           : { ...output, status: "running", error: undefined },
       );
@@ -1199,7 +1199,7 @@ export default function App() {
       });
       if (controller.signal.aborted) throw new Error("任务已停止。");
       outputs = outputs.map((output) =>
-        output.status === "succeeded"
+        output.status === "succeeded" || output.status === "unknown"
           ? output
           : {
               ...output,

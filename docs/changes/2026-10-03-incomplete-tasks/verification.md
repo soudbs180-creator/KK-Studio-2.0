@@ -3,6 +3,7 @@
 - Task ID：TASK-AUDIT-20261003
 - 工作树：`D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`
 - 分支：`codex/TASK-AUDIT-20261003`
+- 最终实现提交：`6ed831f`（文档收口）与 `06d8490`（交付失败后保留 unknown 输出）
 
 ## 失败先行与定向验证
 
@@ -16,6 +17,7 @@
 | `node_modules\\.bin\\tsc --noEmit --pretty false` | PASS |
 | `node node_modules/vite/bin/vite.js build` | PASS；仅保留依赖注释和 bundle 大小提示 |
 | `node node_modules/@playwright/test/cli.js test tests/browser/task-workbench.spec.ts` | PASS，7/7 |
+| 最终交付边界修复后的定向浏览器回归（task-workbench + unified-image-command） | PASS，15/15 |
 
 ## 全量验证
 
