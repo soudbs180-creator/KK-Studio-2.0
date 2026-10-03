@@ -41,7 +41,7 @@
 | Prettier、UI、goals、governance、features、Markdown、version | PASS；UI 195 文件/0 违规，governance 97 tasks/0 违规，features 34/0，Markdown 99/0 |
 | Vite production build                                        | PASS；2978 modules transformed，保留依赖注释与 bundle 大小提示                     |
 | `cargo fmt --check`、`cargo test`、`cargo check`             | PASS；Rust 97/97，只有既有 dead-code warnings                                      |
-| `check-delivery`                                             | PASS；当前 diff 文件数以最终命令输出为准，0 violations                             |
+| `check-delivery`                                             | PASS；当前 diff 69 files，0 violations                                             |
 
 ## 限制
 
