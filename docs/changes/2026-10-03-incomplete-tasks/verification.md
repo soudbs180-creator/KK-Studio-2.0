@@ -19,7 +19,19 @@
 
 ## 全量验证
 
-本文件在本轮最终命令完成后更新。全量 Node、Canvas Agent、Playwright、ESLint、Prettier、UI、治理、功能、Markdown、版本、Vite 与 Rust 检查的真实退出码和计数只以最终命令输出为准。
+## 最终全量收据
+
+| 检查 | 结果 |
+| --- | --- |
+| `node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` | PASS，664 项：656 pass、0 fail、8 Windows skip |
+| Canvas Agent suite | PASS，174 项：172 pass、0 fail、2 Windows skip |
+| `node node_modules/@playwright/test/cli.js test` | PASS，380/380 |
+| ESLint（`--max-warnings 0`） | PASS |
+| TypeScript `--noEmit` 与 `tsc -b` | PASS |
+| Prettier、UI、goals、governance、features、Markdown、version | PASS；UI 195 文件/0 违规，governance 97 tasks/0 违规，features 34/0，Markdown 99/0 |
+| Vite production build | PASS；2978 modules transformed，保留依赖注释与 bundle 大小提示 |
+| `cargo fmt --check`、`cargo test`、`cargo check` | PASS；Rust 97/97，只有既有 dead-code warnings |
+| `check-delivery` | PASS；当前 diff 58 files/0 violations |
 
 ## 限制
 
