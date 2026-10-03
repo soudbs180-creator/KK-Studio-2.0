@@ -1515,7 +1515,7 @@ export default function App() {
       submissionState: "intent" as const,
       submittedAt: undefined,
       requestedOutputs: targetIndices.length,
-      estimatedCostUsd: targetIndices.length * 0.04,
+      estimatedCostUsd: undefined,
       outputs: Array.from(
         {
           length: targetIndices.length,

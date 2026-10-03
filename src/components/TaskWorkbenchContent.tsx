@@ -10,6 +10,7 @@ import TaskWorkbenchReview from "./TaskWorkbenchReview";
 import TaskWorkbenchStages from "./TaskWorkbenchStages";
 import type { StagePlan } from "../domain/stagePlan";
 import type { StageDecisionInput } from "../features/agent/orchestrator";
+import { formatCostUsd } from "../features/creation/taskState";
 
 export type WorkbenchTab =
   "queue" | "prompt" | "generate" | "review" | "export" | "plan";
@@ -144,12 +145,8 @@ export default function TaskWorkbenchContent({
         <div className="task-overview-grid">
           <div>
             <span>预计成本</span>
-            <strong>
-              {selected.estimatedCostUsd
-                ? `$${selected.estimatedCostUsd.toFixed(2)}`
-                : "未估算"}
-            </strong>
-            <small>Prototype 示例单价 $0.04/张 · 尚未取得供应商报价</small>
+            <strong>{formatCostUsd(selected.estimatedCostUsd)}</strong>
+            <small>供应商未回报价时只显示未知状态</small>
           </div>
           <div>
             <span>实际消耗</span>

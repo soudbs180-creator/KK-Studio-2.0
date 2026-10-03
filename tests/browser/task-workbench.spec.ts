@@ -163,6 +163,9 @@ test("审批阻断远程请求，部分成功矩阵单项重试回填且审阅�
   await expect(
     page.getByRole("dialog", { name: "人工审批任务" }),
   ).toContainText("数据保留");
+  await expect(
+    page.getByRole("dialog", { name: "人工审批任务" }),
+  ).toContainText("尚未取得报价");
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect(page.locator(".project-task-partial")).toBeVisible();
   await workbench(page);

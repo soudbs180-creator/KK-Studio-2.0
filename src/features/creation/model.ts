@@ -913,10 +913,5 @@ export function createTask(project: CreationProject): CreationTask {
         createdAt: now,
       }),
     ),
-    estimatedCostUsd:
-      Math.max(
-        1,
-        Math.min(64, Math.floor(project.composerDraft.outputCount || 1)),
-      ) * 0.04,
   };
 }

@@ -49,6 +49,17 @@ test("creation snapshots normalize old drafts without losing project content", (
   assert.equal(snapshot?.projects[0]?.composerDraft.approvalMode, "auto");
 });
 
+test("new tasks keep cost unknown until a provider returns a quote", () => {
+  const project = createProject({
+    prompt: "生成一张产品图",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+
+  assert.equal(createTask(project).estimatedCostUsd, undefined);
+});
+
 test("task source item provenance is optional and survives normalization", () => {
   const snapshot = normalizeCreationSnapshot({
     version: 2,
