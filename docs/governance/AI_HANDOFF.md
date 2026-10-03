@@ -1,5 +1,11 @@
 # AI handoff
 
+## 2026-10-03 未完成任务继续执行恢复点
+
+当前实现工作树为 `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`，分支 `codex/TASK-AUDIT-20261003`。本轮已提交 `6ebaad8`（阶段计划工作台）、`937b050`（成本未知语义）和 `d61adda`（画布交付契约宿主接入）。恢复时先读[本轮计划](../changes/2026-10-03-incomplete-tasks/plan.md)、[验证](../changes/2026-10-03-incomplete-tasks/verification.md)和 `docs/governance/task-ledger.json`，再检查当前 HEAD、工作树与最新 bundle。
+
+账本当前为 97 项；TASK-ORCH-002 已在本地范围 DONE，TASK-CANVAS-001/TASK-TASKSTATE-001 保持 PARTIAL，新增 P1 `TASK-TASKSTATE-002` 等待真实供应商报价回执。继续工作不得把本地 fixture、构建通过或历史证据当作真实 Provider、Mobile、VPS、第三方 MCP 或用户视觉验收。
+
 ## 2026-10-03 项目建设目标恢复入口
 
 先读[项目建设目标](PROJECT_GOALS.md)、[`PROJECT_STATE.md`](PROJECT_STATE.md)、[`TASK_LEDGER.md`](TASK_LEDGER.md)和[本轮变更计划](../changes/2026-10-03-project-goals-baseline/plan.md)。目标门禁为 `node scripts/check-project-goals.mjs`，并已接入 `lint`/`verify`；继续按创作、Agent、能力配置、恢复四条主路径检查 loading/success/error/cancel/offline/unknown 和重启/并发边界。当前任务账本的外部 Provider/GPU、ComfyUI、VPS、Mobile、第三方 MCP 与用户视觉验收仍保持原状态，不要用本地 fixture 或构建通过升级它们。

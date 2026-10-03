@@ -1,5 +1,11 @@
 # 当前项目状态
 
+## 2026-10-03 未完成任务继续执行
+
+本轮隔离工作树 `codex/TASK-AUDIT-20261003` 已完成 TASK-ORCH-002 的阶段计划视图与审批闭环（`6ebaad8`）：任务工作台的 Plan 标签显示阶段状态、工作项数量和审批门，审批通过后进入执行中。TASK-TASKSTATE-001 的本地成本语义已收口（`937b050`）：新建/重试任务不再写入 `$0.04/张` 示例价格，UI 统一显示未知或带口径的估算。TASK-CANVAS-001 已接入 Agent host 与 App 统一发布边界（`d61adda`）：图片要求资产身份，文案要求非空 provider 文本，契约失败保留为 unknown。定向单元 41/41、TypeScript、Vite 和任务工作台浏览器 7/7 已通过；全量门禁以本轮 verification 最终记录为准。
+
+本轮盘点新增 `TASK-TASKSTATE-002`（P1，供应商成本报价回执接入）。TASK-ORCH-003、BACKEND-MEDIA-001、BACKEND-MCP-AUTO、Mobile/VPS 和真实视觉验收仍未完成或受外部条件约束，不因本地 fixture、构建或类型检查升级状态。详见[变更验证](../changes/2026-10-03-incomplete-tasks/verification.md)与[执行计划](../changes/2026-10-03-incomplete-tasks/plan.md)。
+
 ## 2026-10-03 项目建设目标与验收基线
 
 项目级建设目标、四条核心用户路径、代码/UI/链路/质量/交付验收标准已统一写入[项目建设目标](PROJECT_GOALS.md)，并由 `goals:check` 接入 lint/verify。当前审计工作树的实现和验证边界仍以本文件、任务账本与对应 change verification 为准；该基线不会把外部 Provider、ComfyUI、VPS、Mobile、真实第三方 MCP 或用户最终视觉验收标为已完成。

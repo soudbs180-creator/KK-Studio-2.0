@@ -2232,18 +2232,22 @@
       "TASK-ORCH-001"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
     "affectedModules": [
       "src/components/TaskWorkbench.tsx",
       "src/components/TaskWorkbenchContent.tsx",
-      "src/App.tsx"
+      "src/components/TaskWorkbenchStages.tsx",
+      "src/App.tsx",
+      "tests/browser/task-workbench.spec.ts"
     ],
-    "status": "TODO",
-    "evidence": [],
-    "verification": "未开工。",
-    "updated": "2026-09-23",
-    "verificationResult": "NOT_VERIFIED"
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-10-03-incomplete-tasks/verification.md"
+    ],
+    "verification": "TaskWorkbench 已显示 Plan 标签、阶段状态、工作项数量和 plan/result 审批；App 通过当前项目编排器执行决定。定向与完整 task-workbench Playwright 7/7 通过，提交 6ebaad8。",
+    "updated": "2026-10-03",
+    "verificationResult": "PASS"
   },
   {
     "id": "TASK-ORCH-003",
@@ -2296,10 +2300,11 @@
     ],
     "status": "PARTIAL",
     "evidence": [
-      "docs/changes/2026-09-23-agent-orchestration/verification.md"
+      "docs/changes/2026-09-23-agent-orchestration/verification.md",
+      "docs/changes/2026-10-03-incomplete-tasks/verification.md"
     ],
-    "verification": "契约纯函数与单测完成；宿主强制接入（所有生成路径统一走 assertCanvasDelivery）未全量覆盖。",
-    "updated": "2026-09-23",
+    "verification": "契约现在覆盖图片与非空文案 provider 结果；Agent 图片导入要求 assetId，App 统一发布路径在 commit 前校验并把契约失败保留为 unknown。定向 agentCanvas/agentHost 23/23 通过；真实 Provider 与 Desktop 运行验收仍未完成。",
+    "updated": "2026-10-03",
     "verificationResult": "PARTIAL"
   },
   {
@@ -2327,11 +2332,40 @@
     ],
     "status": "PARTIAL",
     "evidence": [
-      "docs/changes/2026-09-23-agent-orchestration/verification.md"
+      "docs/changes/2026-09-23-agent-orchestration/verification.md",
+      "docs/changes/2026-10-03-incomplete-tasks/verification.md"
     ],
-    "verification": "统一任务态复用既有普通重试门禁；unknown/已提交任务与 unknown 输出不进入失败子项重试，定向及全量 Node 单测通过。UI 硬编码示例单价未全部收口，真实 Provider 回执丢失仍需运行验收。",
-    "updated": "2026-09-23",
+    "verification": "统一任务态复用既有普通重试门禁；unknown/已提交任务与 unknown 输出不进入失败子项重试；新建与重试任务不再写入 0.04 演示单价，审批和工作台统一使用 formatCostUsd。真实 Provider 报价回执仍待 TASK-TASKSTATE-002。",
+    "updated": "2026-10-03",
     "verificationResult": "PARTIAL"
+  },
+  {
+    "id": "TASK-TASKSTATE-002",
+    "title": "供应商成本报价回执接入",
+    "goal": "把可验证的供应商报价或账单回执接入统一任务态，避免成本长期停留在未知状态",
+    "scope": "src/features/creation/taskState.ts, src/features/creation/model.ts, provider adapters, tests, docs/changes/2026-10-03-incomplete-tasks",
+    "acceptance": [
+      "供应商回执中的成本字段经过 schema 与非负有限边界校验",
+      "任务快照保留报价来源、币种和回执身份，未知/缺失报价仍安全显示未知",
+      "Provider fixture 与真实运行证据分别记录，不以示例单价代替实际账单"
+    ],
+    "dependencies": [
+      "TASK-TASKSTATE-001"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/features/creation/taskState.ts",
+      "src/features/creation/model.ts",
+      "src/features/creation/provider adapters",
+      "tests/unit"
+    ],
+    "status": "TODO",
+    "evidence": [],
+    "verification": "已在 2026-10-03 盘点中新增并排为 P1；等待供应商回执契约与真实运行条件。",
+    "updated": "2026-10-03",
+    "verificationResult": "NOT_VERIFIED"
   },
   {
     "id": "TASK-PROV-002",

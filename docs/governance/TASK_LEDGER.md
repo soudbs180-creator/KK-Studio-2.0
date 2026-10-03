@@ -71,10 +71,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
 | TASK-ORCH-001 | Agent 编排领域状态机与编排器工具面 | DONE | TASK-AGENT-001 | root |
-| TASK-ORCH-002 | TaskWorkbench 阶段计划视图与审批交互 | TODO | TASK-ORCH-001 | root |
+| TASK-ORCH-002 | TaskWorkbench 阶段计划视图与审批交互 | DONE | TASK-ORCH-001 | root |
 | TASK-ORCH-003 | 编排器驱动生成执行与计划门禁 | TODO | TASK-ORCH-001, BACKEND-MEDIA-001 | root |
 | TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | TASK-ORCH-001 | root |
 | TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | TASK-AGENT-001 | root |
+| TASK-TASKSTATE-002 | 供应商成本报价回执接入 | TODO | TASK-TASKSTATE-001 | root |
 | TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | DONE | none | root |
 | TASK-COMPARE-001 | 画布图片对比操作 | DONE | none | root |
 | TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | DONE | TASK-COMPARE-001 | root |
@@ -892,12 +893,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 任务工作台展示 Stage 计划状态与 plan/result 审批门，审批按钮驱动编排器
 - Scope: src/components/TaskWorkbench.tsx, TaskWorkbenchContent.tsx, src/App.tsx（onStageDecision 回调链）
 - Acceptance: 工作台显示各阶段状态徽标与待审批门; plan/result 审批按钮调用编排器 decideStage; 浏览器回归覆盖展示与审批流
-- Branch: `unallocated`
-- Worktree: `unallocated`
-- Modules: src/components/TaskWorkbench.tsx, src/components/TaskWorkbenchContent.tsx, src/App.tsx
-- Verification: NOT_VERIFIED — 未开工。
-- Evidence: NOT VERIFIED
-- Updated: 2026-09-23
+- Branch: `codex/TASK-AUDIT-20261003`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`
+- Modules: src/components/TaskWorkbench.tsx, src/components/TaskWorkbenchContent.tsx, src/components/TaskWorkbenchStages.tsx, src/App.tsx, tests/browser/task-workbench.spec.ts
+- Verification: PASS — TaskWorkbench 已显示 Plan 标签、阶段状态、工作项数量和 plan/result 审批；App 通过当前项目编排器执行决定。定向与完整 task-workbench Playwright 7/7 通过，提交 6ebaad8。
+- Evidence: [docs/changes/2026-10-03-incomplete-tasks/verification.md](../../docs/changes/2026-10-03-incomplete-tasks/verification.md)
+- Updated: 2026-10-03
 
 ## TASK-ORCH-003 — 编排器驱动生成执行与计划门禁
 
@@ -919,9 +920,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/features/agent/agentCanvas.ts, src/features/agent/agentHost.ts, tests/unit/agentCanvas.test.ts
-- Verification: PARTIAL — 契约纯函数与单测完成；宿主强制接入（所有生成路径统一走 assertCanvasDelivery）未全量覆盖。
-- Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
-- Updated: 2026-09-23
+- Verification: PARTIAL — 契约现在覆盖图片与非空文案 provider 结果；Agent 图片导入要求 assetId，App 统一发布路径在 commit 前校验并把契约失败保留为 unknown。定向 agentCanvas/agentHost 23/23 通过；真实 Provider 与 Desktop 运行验收仍未完成。
+- Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md), [docs/changes/2026-10-03-incomplete-tasks/verification.md](../../docs/changes/2026-10-03-incomplete-tasks/verification.md)
+- Updated: 2026-10-03
 
 ## TASK-TASKSTATE-001 — 统一任务态契约定稿
 
@@ -931,9 +932,21 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/features/creation/taskState.ts, src/features/creation/taskRecovery.ts, src/features/creation/model.ts, tests/unit/taskState.test.ts
-- Verification: PARTIAL — 统一任务态复用既有普通重试门禁；unknown/已提交任务与 unknown 输出不进入失败子项重试，定向及全量 Node 单测通过。UI 硬编码示例单价未全部收口，真实 Provider 回执丢失仍需运行验收。
-- Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md)
-- Updated: 2026-09-23
+- Verification: PARTIAL — 统一任务态复用既有普通重试门禁；unknown/已提交任务与 unknown 输出不进入失败子项重试；新建与重试任务不再写入 0.04 演示单价，审批和工作台统一使用 formatCostUsd。真实 Provider 报价回执仍待 TASK-TASKSTATE-002。
+- Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md), [docs/changes/2026-10-03-incomplete-tasks/verification.md](../../docs/changes/2026-10-03-incomplete-tasks/verification.md)
+- Updated: 2026-10-03
+
+## TASK-TASKSTATE-002 — 供应商成本报价回执接入
+
+- Goal: 把可验证的供应商报价或账单回执接入统一任务态，避免成本长期停留在未知状态
+- Scope: src/features/creation/taskState.ts, src/features/creation/model.ts, provider adapters, tests, docs/changes/2026-10-03-incomplete-tasks
+- Acceptance: 供应商回执中的成本字段经过 schema 与非负有限边界校验; 任务快照保留报价来源、币种和回执身份，未知/缺失报价仍安全显示未知; Provider fixture 与真实运行证据分别记录，不以示例单价代替实际账单
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/creation/taskState.ts, src/features/creation/model.ts, src/features/creation/provider adapters, tests/unit
+- Verification: NOT_VERIFIED — 已在 2026-10-03 盘点中新增并排为 P1；等待供应商回执契约与真实运行条件。
+- Evidence: NOT VERIFIED
+- Updated: 2026-10-03
 
 ## TASK-PROV-002 — 多供应商接入与多目标配置（Provider Connectivity）
 

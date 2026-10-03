@@ -40,25 +40,33 @@ async function injectPlanReview(page: Page) {
     }
   });
   await page.evaluate(async () => {
-    const indexedSnapshot = await new Promise<any>((resolve, reject) => {
-      const request = indexedDB.open("kk-studio-next", 1);
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => {
-        const db = request.result;
-        const read = db
-          .transaction("creation", "readonly")
-          .objectStore("creation")
-          .get("snapshot");
-        read.onerror = () => reject(read.error);
-        read.onsuccess = () => {
-          db.close();
-          resolve(read.result ?? null);
+    type SnapshotProject = { id: string; [key: string]: unknown };
+    type Snapshot = {
+      activeProjectId?: string;
+      revision: number;
+      projects: SnapshotProject[];
+    };
+    const indexedSnapshot = await new Promise<Snapshot | null>(
+      (resolve, reject) => {
+        const request = indexedDB.open("kk-studio-next", 1);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+          const db = request.result;
+          const read = db
+            .transaction("creation", "readonly")
+            .objectStore("creation")
+            .get("snapshot");
+          read.onerror = () => reject(read.error);
+          read.onsuccess = () => {
+            db.close();
+            resolve(read.result ?? null);
+          };
         };
-      };
-    });
+      },
+    );
     const localSnapshot = JSON.parse(
       localStorage.getItem("kk-studio-next:creation:v1") ?? "null",
-    );
+    ) as Snapshot | null;
     const snapshot = indexedSnapshot ?? localSnapshot;
     if (!snapshot) throw new Error("creation snapshot missing");
     const project = snapshot.projects.find(

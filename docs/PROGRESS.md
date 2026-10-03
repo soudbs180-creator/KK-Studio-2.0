@@ -1,5 +1,12 @@
 # 当前进度
 
+## 2026-10-03 未完成任务继续执行
+
+- 已完成本轮本地闭环：`TASK-ORCH-002` 阶段计划视图与 plan/result 审批；`TASK-TASKSTATE-001` 的本地成本语义清理；`TASK-CANVAS-001` 的 Agent host/App 画布交付校验。
+- 新增 `TASK-TASKSTATE-002`（P1）：等待供应商可验证报价/账单回执，定义 schema、来源和回归证据。
+- 证据：`docs/changes/2026-10-03-incomplete-tasks/`；提交 `6ebaad8`、`937b050`、`d61adda`。定向单元、类型、Vite 构建和 task-workbench 7/7 通过；全量验证以本轮最终收据为准。
+- 外部未完成项保持原状态：真实 Provider/GPU/ComfyUI、TASK-ORCH-003、BACKEND-MCP-AUTO、Mobile、VPS、第三方 MCP 与用户视觉验收。
+
 ## 2026-10-03 项目建设目标与验收基线
 
 新增 [`PROJECT_GOALS.md`](governance/PROJECT_GOALS.md)，统一记录创作、Agent、能力配置和恢复四条核心用户路径，以及代码、UI、状态链路、质量和交付标准。`scripts/check-project-goals.mjs` 已接入 lint/verify；本任务只补治理和可执行门禁，不提升外部 Provider、ComfyUI、VPS、Mobile、第三方 MCP 或用户视觉验收的状态。详见[变更验证](changes/2026-10-03-project-goals-baseline/verification.md)。
