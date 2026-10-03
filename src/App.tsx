@@ -62,6 +62,7 @@ import {
 } from "./features/plugins/pluginRuntime.ts";
 import type { PluginAi } from "./features/plugins/pluginTypes.ts";
 import { createAgentHost } from "./features/agent/agentHost.ts";
+import { assertCanvasDeliveries } from "./features/agent/agentCanvas.ts";
 import {
   createStageOrchestrator,
   type StageOrchestrator,
@@ -616,6 +617,8 @@ export default function App() {
       .map((output) => output.index);
     const createdItems: CanvasCollectionItem[] = [];
     const publishedItems = new Set<string>();
+    const rejectedDeliveryIds = new Set<string>();
+    let deliveryErrorMessage: string | undefined;
     let durableSubmission = false;
     let providerRequestStarted = false;
     const publish = (
@@ -624,82 +627,129 @@ export default function App() {
       submissionState?: CreationTask["submissionState"],
     ): void => {
       if (taskControllers.current[taskId] !== controller) return;
-      updateProject(projectId, (current) => ({
-        ...appendImageTaskResults(
+      let acceptedResults: CanvasCollectionItem[] = [];
+      updateProject(projectId, (current) => {
+        const pendingResults = createdItems.filter(
+          (item) =>
+            !publishedItems.has(item.id) && !rejectedDeliveryIds.has(item.id),
+        );
+        const withResults = appendImageTaskResults(
           current,
-          createdItems.filter((item) => !publishedItems.has(item.id)),
+          pendingResults,
           task.sourceItemId ?? rootItemId(current),
-        ),
-        tasks: current.tasks.map((item) => {
-          if (item.id === taskId)
+        );
+        acceptedResults = [];
+        for (const result of pendingResults) {
+          try {
+            assertCanvasDeliveries({
+              items: [result],
+              project: withResults,
+              label: "生成产物",
+              requireAssetId: result.kind !== "text",
+            });
+            acceptedResults.push(result);
+          } catch (validationError) {
+            rejectedDeliveryIds.add(result.id);
+            deliveryErrorMessage =
+              validationError instanceof Error
+                ? validationError.message
+                : "生成产物未通过画布交付校验。";
+          }
+        }
+        if (deliveryErrorMessage) {
+          outputs = outputs.map((output) =>
+            output.status === "succeeded"
+              ? {
+                  ...output,
+                  status: "unknown" as const,
+                  error: deliveryErrorMessage,
+                }
+              : output,
+          );
+        }
+        const publishedStatus = deliveryErrorMessage ? "unknown" : status;
+        const publishedError = deliveryErrorMessage ?? error;
+        const publishedSubmissionState = deliveryErrorMessage
+          ? ("unknown" as const)
+          : submissionState;
+        const nextProject = appendImageTaskResults(
+          current,
+          acceptedResults,
+          task.sourceItemId ?? rootItemId(current),
+        );
+        return {
+          ...nextProject,
+          tasks: current.tasks.map((item) => {
+            if (item.id === taskId)
+              return {
+                ...item,
+                status: publishedStatus,
+                error: publishedError,
+                submissionState:
+                  publishedSubmissionState ?? item.submissionState,
+                submittedAt:
+                  publishedSubmissionState === "submitted"
+                    ? (item.submittedAt ?? Date.now())
+                    : item.submittedAt,
+                outputs: [...outputs],
+                completedOutputs: outputs.filter(
+                  (output) => output.status === "succeeded",
+                ).length,
+                resultItemId: acceptedResults[0]?.id ?? item.resultItemId,
+                updatedAt: Date.now(),
+              };
+            if (item.id !== task.retryOfTaskId) return item;
+            const merged = outputsForTask(item).map((original) => {
+              const index =
+                task.retryOutputIndices?.indexOf(original.index) ?? -1;
+              const replacement = index >= 0 ? outputs[index] : undefined;
+              return replacement?.status === "succeeded"
+                ? { ...replacement, index: original.index }
+                : original;
+            });
+            const completed = merged.filter(
+              (output) => output.status === "succeeded",
+            ).length;
             return {
               ...item,
-              status,
-              error,
-              submissionState: submissionState ?? item.submissionState,
-              submittedAt:
-                submissionState === "submitted"
-                  ? (item.submittedAt ?? Date.now())
-                  : item.submittedAt,
-              outputs: [...outputs],
-              completedOutputs: outputs.filter(
-                (output) => output.status === "succeeded",
-              ).length,
-              resultItemId: createdItems[0]?.id ?? item.resultItemId,
+              outputs: merged,
+              completedOutputs: completed,
+              status:
+                completed === item.requestedOutputs
+                  ? "succeeded"
+                  : completed > 0
+                    ? "partial"
+                    : item.status,
+              error:
+                completed === item.requestedOutputs
+                  ? undefined
+                  : `${completed}/${item.requestedOutputs} 张已归档，可重试未归档结果。`,
               updatedAt: Date.now(),
             };
-          if (item.id !== task.retryOfTaskId) return item;
-          const merged = outputsForTask(item).map((original) => {
-            const index =
-              task.retryOutputIndices?.indexOf(original.index) ?? -1;
-            const replacement = index >= 0 ? outputs[index] : undefined;
-            return replacement?.status === "succeeded"
-              ? { ...replacement, index: original.index }
-              : original;
-          });
-          const completed = merged.filter(
-            (output) => output.status === "succeeded",
-          ).length;
-          return {
-            ...item,
-            outputs: merged,
-            completedOutputs: completed,
-            status:
-              completed === item.requestedOutputs
-                ? "succeeded"
-                : completed > 0
-                  ? "partial"
-                  : item.status,
-            error:
-              completed === item.requestedOutputs
-                ? undefined
-                : `${completed}/${item.requestedOutputs} 张已归档，可重试未归档结果。`,
-            updatedAt: Date.now(),
-          };
-        }),
-        items: [
-          ...current.items.map((item) =>
-            item.id === (task.sourceItemId ?? rootItemId(current))
-              ? {
-                  ...item,
-                  generationStatus:
-                    status === "running"
-                      ? ("pending" as const)
-                      : status === "failed" || status === "offline"
-                        ? ("error" as const)
-                        : undefined,
-                }
-              : item,
-          ),
-          ...createdItems.filter(
-            (result) =>
-              !publishedItems.has(result.id) &&
-              !current.items.some((item) => item.id === result.id),
-          ),
-        ],
-        updatedAt: Date.now(),
-      }));
-      createdItems.forEach((item) => publishedItems.add(item.id));
+          }),
+          items: [
+            ...current.items.map((item) =>
+              item.id === (task.sourceItemId ?? rootItemId(current))
+                ? {
+                    ...item,
+                    generationStatus:
+                      publishedStatus === "running"
+                        ? ("pending" as const)
+                        : publishedStatus === "failed" ||
+                            publishedStatus === "offline"
+                          ? ("error" as const)
+                          : undefined,
+                  }
+                : item,
+            ),
+            ...acceptedResults.filter(
+              (result) => !current.items.some((item) => item.id === result.id),
+            ),
+          ],
+          updatedAt: Date.now(),
+        };
+      });
+      acceptedResults.forEach((item) => publishedItems.add(item.id));
       if (activeProjectIdRef.current === projectId) {
         const latest = creationRef.current.projects.find(
           (item) => item.id === projectId,

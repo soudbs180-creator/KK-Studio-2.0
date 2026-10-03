@@ -306,6 +306,31 @@ test("assertCanvasDelivery 拒绝无 node_id / 无资产注册的交付", () => 
   );
 });
 
+test("assertCanvasDelivery 接受已登记的文案供应商结果", () => {
+  const project = deliveryProject();
+  project.items = [
+    ...project.items,
+    {
+      id: "text-result-1",
+      title: "文案结果",
+      description: "",
+      kind: "text",
+      generationStatus: "ready",
+      result: {
+        id: "text-result-1",
+        kind: "text",
+        title: "文案结果",
+        description: "",
+        text: "供应商返回的文案",
+        source: "provider",
+      },
+    },
+  ];
+  assert.doesNotThrow(() =>
+    assertCanvasDelivery({ nodeId: "text-result-1", project }),
+  );
+});
+
 test("collectRecentOutputs 按 result 连线收集已归档产物", () => {
   const project = deliveryProject();
   const outputs = collectRecentOutputs(project);

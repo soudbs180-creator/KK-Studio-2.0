@@ -393,10 +393,19 @@ export function summarizeAgentOps(ops?: CanvasAgentOp[]): string {
  */
 export class CanvasDeliveryContractError extends Error {}
 
+function hasRegisteredCanvasDelivery(item: CanvasCollectionItem): boolean {
+  if (item.assetId) return true;
+  if (item.result?.source !== "provider") return false;
+  return item.kind === "text"
+    ? Boolean(item.result.text?.trim())
+    : Boolean(item.result.src);
+}
+
 export function assertCanvasDelivery(input: {
   nodeId?: string;
   project: CreationProject;
   label?: string;
+  requireAssetId?: boolean;
 }): void {
   const label = input.label ?? "Agent 产物";
   if (!input.nodeId)
@@ -408,13 +417,30 @@ export function assertCanvasDelivery(input: {
     throw new CanvasDeliveryContractError(
       `${label} 指向的画布节点 ${input.nodeId} 不存在。`,
     );
-  const registered =
-    Boolean(item.assetId) ||
-    (item.result?.source === "provider" && Boolean(item.result.src));
-  if (!registered)
+  if (input.requireAssetId && !item.assetId)
     throw new CanvasDeliveryContractError(
       `${label} 节点 ${input.nodeId} 尚未注册素材资产，交付不成立。`,
     );
+  if (!hasRegisteredCanvasDelivery(item))
+    throw new CanvasDeliveryContractError(
+      `${label} 节点 ${input.nodeId} 尚未注册素材资产，交付不成立。`,
+    );
+}
+
+/** Commit-boundary guard for a batch of newly published Agent results. */
+export function assertCanvasDeliveries(input: {
+  items: CanvasCollectionItem[];
+  project: CreationProject;
+  label?: string;
+  requireAssetId?: boolean;
+}): void {
+  for (const item of input.items)
+    assertCanvasDelivery({
+      nodeId: item.id,
+      project: input.project,
+      label: input.label,
+      requireAssetId: input.requireAssetId,
+    });
 }
 
 /**
@@ -433,10 +459,7 @@ export function collectRecentOutputs(
     resultIds.add(edge.target);
   }
   return project.items.filter(
-    (item) =>
-      resultIds.has(item.id) &&
-      (Boolean(item.assetId) ||
-        (item.result?.source === "provider" && Boolean(item.result.src))),
+    (item) => resultIds.has(item.id) && hasRegisteredCanvasDelivery(item),
   );
 }
 
