@@ -256,6 +256,68 @@ test("native unknown receipt marks pending outputs unknown", async () => {
   }
 });
 
+test("native unknown output keeps previously archived evidence", async () => {
+  desktop(async (command) => {
+    if (command === "task_host_list")
+      return [
+        record({
+          taskId: "task-1",
+          idempotencyKey: "stable-1",
+          status: "unknown",
+          outputs: [
+            {
+              index: 0,
+              status: "unknown",
+              error: "provider receipt unavailable",
+            },
+          ],
+        }),
+      ];
+    throw new Error("archived evidence must not be read again");
+  });
+  const project = createProject({
+    prompt: "生成",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  project.tasks = [
+    {
+      ...createTask(project),
+      id: "task-1",
+      idempotencyKey: "stable-1",
+      sourceItemId: project.items[0].id,
+      status: "unknown",
+      submissionState: "unknown",
+      outputs: [
+        {
+          index: 0,
+          status: "succeeded",
+          assetId: "asset-old",
+          model: "image-test",
+          createdAt: 1,
+        },
+      ],
+      completedOutputs: 1,
+    },
+  ];
+  try {
+    const recovered = await reconcileNativeTasks({
+      ...emptySnapshot(),
+      revision: 1,
+      activeProjectId: project.id,
+      projects: [project],
+    });
+    const task = recovered.projects[0].tasks[0];
+    assert.equal(task.status, "unknown");
+    assert.equal(task.outputs?.[0].status, "succeeded");
+    assert.equal(task.completedOutputs, 1);
+    assert.equal(task.outputs?.[0].assetId, "asset-old");
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});
+
 test("native image success without an asset identity is treated as unknown", async () => {
   desktop(async (command) => {
     if (command === "task_host_list")

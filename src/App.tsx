@@ -908,6 +908,16 @@ export default function App() {
               continue;
             }
             const priorOutput = { ...output };
+            if (
+              nativeOutput.status === "unknown" &&
+              hasArchivedOutputEvidence(task, priorOutput)
+            ) {
+              output.status = "succeeded";
+              output.assetId = priorOutput.assetId;
+              output.text = priorOutput.text;
+              output.error = undefined;
+              continue;
+            }
             output.status =
               nativeOutput.status === "pending"
                 ? "running"

@@ -391,6 +391,12 @@ export async function reconcileNativeTasks(
               hasArchivedOutputEvidence(task, prior)
             )
               return prior;
+            if (
+              outputStatusValue === "unknown" &&
+              prior &&
+              hasArchivedOutputEvidence(task, prior)
+            )
+              return prior;
             return {
               index,
               status:
