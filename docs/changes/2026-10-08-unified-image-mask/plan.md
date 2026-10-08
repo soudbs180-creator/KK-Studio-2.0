@@ -38,6 +38,8 @@
 2. 在全文重编译前，对末尾已知whole body之前的整个prefix检查完整自动正文头，包含root及recent；头由原formatter派生，要求开头/换行边界。真实local自动头必在该prefix，不能被root预算截断隐藏；current内绑定引用在body内部。新角色标志沿用确证逻辑。
 3. 同一未发布版本重新完整verify、fresh dist/release/实际Desktop及原生回归；新证据目录run-followup-IM011-prefix，提交后独立准确SHA复验，保留17ef失败及平台中止记录。
 
+完成记录：上述三步已执行，93定向、完整775root/172Agent/423browser零重试、Rust102及fresh两端验收通过；源码head64c8b9d168308ff1aefff39daf7126c56e354eef于2026-10-08 23:38:25+08独立PASS，IM-010–013全部CLOSED。reviewer另外执行93定向、四个完整PNG保护探针和类型/格式检查，71源码/22工件重算相符。TASK-IMAGE-EDIT-001本地实现DONE；本次文档收尾提交须另补审精确head，保留外部真实效果任务TODO。见[review](review.md)。
+
 ## Global Constraints
 
 - 原图像素坐标；5%每边外扩；ceil偶数；1000/2500阈值；最多3块。

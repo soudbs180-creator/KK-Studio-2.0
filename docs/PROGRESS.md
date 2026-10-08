@@ -2,7 +2,7 @@
 
 ## 2026-10-08 统一 Mask 继续审查返修
 
-继续审查关闭IM-010/012/013；17ef724独立复验仍发现011旧文本root预算歧义，P1 OPEN。整个prefix补修先RED后GREEN，93定向、完整verify775root/172Agent/423browser零retry/flaky、Rust102、fresh Tauri/原生11组通过，Mask外0、凭据保护/清理通过。当前IN_PROGRESS，待新提交准确SHA独立关闭011；旧失败/平台中止/superseded及历史PASS保留。Desktop2.1.9/Web2.1.10/Mobile规划2.1.1同轮未发布候选；见[验证](changes/2026-10-08-unified-image-mask/verification.md)和[审查](changes/2026-10-08-unified-image-mask/review.md)，未推送/合入main/发布。
+TASK-IMAGE-EDIT-001 本地实现 DONE：源码 head64c8b9d 于23:38:25+08独立PASS，IM-010–013全部CLOSED，未发现新增P1/P2。修正跨端schema、缺失快照恢复、可撤销清空及区域意见重复；旧恢复全文结构歧义先RED后GREEN。完整verify775root/172Agent/423browser零retry/flaky、Rust102、fresh Tauri/原生11组通过，Mask外0、凭据保护/清理通过；reviewer另跑93定向和四个完整PNG保护探针，71源码/22工件匹配。收尾仅文档，最终文档head另补审；历史失败/平台中止/superseded保留。Desktop2.1.9/Web2.1.10/Mobile规划2.1.1；FEAT-035 PARTIAL、VERIFY-002 TODO，真实Provider/真机/用户视觉未验。见[验证](changes/2026-10-08-unified-image-mask/verification.md)和[审查](changes/2026-10-08-unified-image-mask/review.md)，未推送/合入main/发布。下方保留历史范围。
 
 ## 2026-10-08 统一 Mask 本地实现完成
 

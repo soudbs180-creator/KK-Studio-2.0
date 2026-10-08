@@ -1,15 +1,30 @@
 # Review：统一图片编辑蒙版
 
-- Task ID：TASK-IMAGE-EDIT-001；最新 17ef724 独立复验 CHANGES REQUIRED，IM-010/012/013 CLOSED、IM-011 OPEN；prefix补修待新head复验。IM-001–009 历史 CLOSED 保留。
-- 2026-10-08，Asia/Shanghai；开工 base 1af0357b088df79dc51e9b309ef310a500722cf8；正式审查 base 78cea37af9359fd2d9f58f2854525516deee8a06、源码 head dbc88bbd1a3425c04b509730780ff50547788e67。
+- Task ID：TASK-IMAGE-EDIT-001；最新源码 head 64c8b9d 独立 PASS，IM-010–013 全部 CLOSED；IM-001–009 历史 CLOSED 保留。本地实现 DONE；最终文档提交单独补审。
+- 2026-10-08，Asia/Shanghai；开工 base 1af0357b088df79dc51e9b309ef310a500722cf8；正式审查 base 78cea37af9359fd2d9f58f2854525516deee8a06、最新源码 head 64c8b9d168308ff1aefff39daf7126c56e354eef。
 - 分支 codex/TASK-IMAGE-EDIT-001-unified-mask；[intent](intent.md)、[spec](spec.md)、[plan](plan.md)、[verification](verification.md)。
 - 独立预检：只读子代理 /root/mask_review，独立上下文从规则、需求、base/diff 开始，不承担实现。Codex collaboration；具体服务端模型版本未知，不虚构。
 
-## 17ef724 独立复验（最新正式结论）
+## 64c8b9d 独立源码复验（最新正式结论）
+
+2026-10-08 23:38:25+08，独立只读 /root/mask_review 对 base78cea37 → head64c8b9d168308ff1aefff39daf7126c56e354eef 给出 **PASS（已审本地实现范围）**，未发现新增 P1/P2。重点增量为17ef724..64c8b9d；reviewer 重新读取规则、原需求、spec/plan/ADR 与真实 diff，不承担实现。具体服务端模型版本 UNKNOWN。见[完整独立收据副本](evidence/review-followup-64c8b9d.md)，外部原件 SHA-256 855f6314206d167203463f93998b6d2a0e6bcc5345ebe7a92fe9f4a3db334af8；副本只规范行尾。
+
+| ID | 严重度 | 当前独立状态 | 关闭依据 |
+| --- | --- | --- | --- |
+| IM-010 | P2 | CLOSED | 跨端 allowlist/可选字段与项目包实现未变；本次 schema vectors/包定向通过，82b 独立 Rust 证据保留 |
+| IM-011 | P1 | CLOSED | 整个前缀先检查角色歧义；意见模板后缀与长 root 双编译完整 PNG 恢复均 unknown、无 raw 读取/发布/重发，原件和受保护字段保留；明确整图角色与无歧义旧记录兼容 |
+| IM-012 | P2 | CLOSED | 统一清空/history 路径未变，既有两端交互证据保留；本次独立完整 PNG 探针确认已归档候选和用户草稿保留 |
+| IM-013 | P2 | CLOSED | 预检查 placeholder 与真实 crop 输入隔离未变，定向 prompt 通过；既有两区/四区浏览器证据保留 |
+
+reviewer 自行执行93/93定向 Node、四个有效完整 PNG 恢复探针、type/format/diff 检查；独立重算71源码与22工件哈希、实际 JS/EXE均匹配。完整verify775root/172Agent/423browser零重试、Rust102、fresh Tauri/原生11组属于实现者证据，未代填为 reviewer 执行。reviewer 首次探针的额外“整个 source item 不变”断言包含应变化的 generationStatus，exit1原件保留；另存校正探针明确要求 error 呈现并逐字段保护其余数据，exit0，不改产品或 tracked 测试。
+
+本轮收尾只同步文档、账本、生成视图与收据副本；源码/config/test/build保持本次已验证内容。最终已提交文档 head 仍需短补审，收据另存 D:/kk-studio/output/unified-image-mask-20261008/review-followup-final-head.md，不覆盖旧 review-final-head.md。FEAT-035 PARTIAL、VERIFY-002 TODO；真实模型/真机/用户视觉尚未验收，不阻断已证实的本地实现。
+
+## 17ef724 独立复验（历史 CHANGES REQUIRED）
 
 独立只读 /root/mask_review 绑定 head17ef724e14a1b2924d6f8f7dbd12fb25f6443e8d，2026-10-08 23:08:50+08，正式 **CHANGES REQUIRED**。IM-011 P1仍OPEN：4000字root/1580字current/3822字合法prompt可由两个编译结构生成，已知root吸收local正文，仅删除imageEdit后reconcile发布raw4×4（原图8×8）；保护断言exit1。独立91定向与type/format通过，71源码/23工件匹配，不能代替该失败路径。IM-010/012/013保持CLOSED。见[正式收据副本](evidence/review-followup-17ef724.md)，外部原件SHA-256 72616f75bf7b0fcdd8bf869f58ab84f4fcf06b8776a91b1d5b152ae16a575d6f；初步PASS另存superseded，不作为当前结论。
 
-/root/mask_audit 对17ef的前次尝试被平台内容风险检查中止（possible cybersecurity risk），未产生正式结论；外部review-followup-17ef724-platform-interruption.json和其partial Node日志保留，未代填PASS。后续只读审查由/root/mask_review独立完成。本次prefix补修按新plan先RED，仍需新提交独立关闭。
+/root/mask_audit 对17ef的前次尝试被平台内容风险检查中止（possible cybersecurity risk），未产生正式结论；外部review-followup-17ef724-platform-interruption.json和其partial Node日志保留，未代填PASS。后续只读审查由/root/mask_review独立完成。prefix补修先RED，并由上节64c8b9d新提交独立关闭；17ef本身的失败结论保留。
 
 ## 82b7490 独立返修复验（历史）
 
@@ -57,7 +72,7 @@ Self-review 另修 native 缺省 Option 写 null 导致元数据拒绝（RED→G
 
 修复限于测试脚本与有意义的凭据安全回归，不改产品源码或版本。实现者最新 Native 收据在 .tmp/image-edit/desktop/run-1791463594856-56968/，Mask 外改变 0、两次请求/包/删除再生/重启继续通过，cleanup 成功读回。完整 verify 741 root / 172 Agent / 420 browser 无重试通过。该返修阶段的结论须绑定新 head；以下正式复验完成该门禁，1527b48 的 CHANGES REQUIRED 保留。
 
-## dbc88bb 正式源码复验（当前源码结论）
+## dbc88bb 正式源码复验（历史源码结论）
 
 2026-10-08 20:55:05 +08:00，独立只读 /root/mask_review 对 base 78cea37af9359fd2d9f58f2854525516deee8a06 → head dbc88bbd1a3425c04b509730780ff50547788e67 出具 **PASS（已审范围）**，IM-001–009 全部 CLOSED，无新增 P1/P2。[完整独立收据](evidence/review-dbc88bb.md)保留规则 blob、真实 diff、命令、范围和哈希，具体模型版本 UNKNOWN。
 
@@ -65,13 +80,13 @@ reviewer 独立执行 61/61 定向 Node、三个脚本的 formatter 和实际 Ta
 
 完整 verify 与 Rust100 等是实现者运行证据；前轮 reviewer 自行执行的 production Web 11/11、Rust 3/3 和 typecheck 按未变产品内容继续绑定。独立性与测试来源不互相代填。
 
-本轮收尾提交仅同步文档、任务状态、生成视图和上述独立收据副本。提交后仍需短补审实际最终 SHA；补审收据将保存到本机 D:/kk-studio/output/unified-image-mask-20261008/review-final-head.md，不重写历史收据或把 dbc88bb 的 PASS 自动转给未审 head。
+该历史阶段收尾仅同步文档、任务状态、生成视图和独立收据副本；后续7532e94文档 head 的补审原件保存在 D:/kk-studio/output/unified-image-mask-20261008/review-final-head.md。此历史 PASS 与本轮64c8b9d源码审查及新文档补审分别记录。
 
 ## 门禁与结论
 
 - 本地 lint/typecheck/root/Agent/UI/format/build/full browser、Rust/client/fresh EXE 与包恢复：PASS，见 verification。
 - Self-review：来源不可变、坐标/Mask 外保护、能力/参考限额、串行/取消、unknown、恢复/删除、包完整性与敏感数据边界。
-- 正式独立源码 head 审查：dbc88bb PASS；最终文档提交的精确 head 补审单独记录，不由预检或源码 PASS 自动覆盖。
+- 正式独立源码 head 审查：64c8b9d PASS，IM-001–013 CLOSED；最终文档提交的精确 head 补审单独记录，不由预检或源码 PASS 自动覆盖。
 - GitHub PR/Hosted CI/人工审批：未执行；无合并/发布授权。
 - 用户 UI/交互/产品验收：未发生，不由技术测试代填。
 - 真实 Provider、Mobile 与语义几何检测：外部后续，不以 fixture 声称完成。

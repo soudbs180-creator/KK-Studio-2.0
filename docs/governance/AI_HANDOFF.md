@@ -2,7 +2,7 @@
 
 ## 2026-10-08 统一 Mask 继续审查返修入口（当前）
 
-复用 .worktrees/TASK-IMAGE-EDIT-001 / codex/TASK-IMAGE-EDIT-001-unified-mask，base78cea37。17ef724正式CHANGES REQUIRED，011旧root预算歧义仍P1，010/012/013保持CLOSED；dirty整个prefix补修93定向、完整775root/172Agent/423browser零retry、Rust102、fresh Tauri/原生11组通过，Mask外0/凭据清理true。任务仍IN_PROGRESS，下一步新提交准确SHA独立关闭011，不能用作者GREEN关闭。Desktop2.1.9/Web2.1.10同轮候选；先读[计划](../changes/2026-10-08-unified-image-mask/plan.md)、[验证](../changes/2026-10-08-unified-image-mask/verification.md)、[审查](../changes/2026-10-08-unified-image-mask/review.md)和账本；最新证据本机output/unified-image-mask-20261008/run-followup-IM011-prefix，旧失败/平台中止/superseded/绑定保留。VERIFY-002仍TODO；不操作其他worktree/用户数据，不推送/合并/发布。
+恢复入口 .worktrees/TASK-IMAGE-EDIT-001 / codex/TASK-IMAGE-EDIT-001-unified-mask，base78cea37。源码head64c8b9d168308ff1aefff39daf7126c56e354eef正式独立PASS，IM-010–013 CLOSED，本地TASK-IMAGE-EDIT-001 DONE；93定向、完整775root/172Agent/423browser零retry、Rust102、fresh Tauri/原生11组通过，Mask外0/凭据清理true。reviewer另跑93定向/四个完整PNG保护探针，71源码/22工件与JS/EXE重算匹配。收尾只改文档，最终文档head另做短补审，外部收据review-followup-final-head.md不能覆盖旧review-final-head.md。Desktop2.1.9/Web2.1.10；先核对Git状态，读[计划](../changes/2026-10-08-unified-image-mask/plan.md)、[验证](../changes/2026-10-08-unified-image-mask/verification.md)、[审查](../changes/2026-10-08-unified-image-mask/review.md)和账本；最新本地证据output/unified-image-mask-20261008/run-followup-IM011-prefix。旧失败/平台中止/superseded/绑定保留。FEAT-035 PARTIAL、VERIFY-002 TODO；不把fixture视为真实Provider/真机/用户验收，不操作其他worktree/用户数据，不推送/合并/发布。下方保留历史恢复点。
 
 ## 2026-10-08 统一 Mask 已完成的本地分支
 

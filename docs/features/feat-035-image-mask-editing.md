@@ -18,9 +18,9 @@
 
 ## 测试与证据
 
-IM-010/012/013正式CLOSED；17ef724独立复验011旧root预算歧义仍P1，整个prefix补修先RED后GREEN。93定向、完整root775/783（原8skip）、Agent172/174（原2skip）、browser423/423零retry/flaky、Rust102、fresh Tauri/原生11组通过，Mask外0。跨端vectors/快照缺失保护/清空/色块意见隔离覆盖，待新head独立关闭011；旧证据保留。Desktop2.1.9/Web2.1.10，仍PARTIAL。
+源码head64c8b9d正式独立PASS，IM-010–013全部CLOSED，本地TASK-IMAGE-EDIT-001 DONE。跨端vectors/快照缺失保护/清空/色块意见隔离覆盖，旧恢复预算歧义先RED后GREEN。完整root775/783（原8skip）、Agent172/174（原2skip）、browser423/423零retry/flaky、Rust102、fresh Tauri/原生11组通过，Mask外0；reviewer另外执行93定向和四个完整PNG保护探针，71源码/22工件重算匹配。最终文档提交另补审；历史失败保留。Desktop2.1.9/Web2.1.10，外部真实效果仍未验，功能保持PARTIAL。
 
-[本轮验证](../changes/2026-10-08-unified-image-mask/verification.md) / [独立审查](../changes/2026-10-08-unified-image-mask/review.md)。本地完整verify root741/749、Agent172/174（原skip8/2）、browser420/420零重试，100 Rust、两端production bundle与原生重启/包恢复通过。源码head dbc88bb独立PASS、IM-001–009关闭；reviewer另跑61定向单测和实际Tauri验收，原件保护/凭据清理通过。具体范围和fixture错误勘误见验证记录。
+[本轮验证](../changes/2026-10-08-unified-image-mask/verification.md) / [独立审查](../changes/2026-10-08-unified-image-mask/review.md)。历史源码head dbc88bb独立PASS、IM-001–009关闭：当时完整verify root741/749、Agent172/174（原skip8/2）、browser420/420零重试、Rust100及两端production/重启/包通过，reviewer另跑61定向和实际Tauri。该历史范围与本轮结果分开记录，fixture错误勘误见验证记录。
 
 ## 当前能力
 

@@ -1,6 +1,6 @@
 # Verification：统一图片编辑蒙版
 
-- Task ID：TASK-IMAGE-EDIT-001；17ef724独立复验IM-011仍P1，整个prefix补修的完整本地检查与fresh两端运行PASS，待新head独立关闭；见[review](review.md)。历史验证保留各自范围。
+- Task ID：TASK-IMAGE-EDIT-001；本地实现 DONE，源码 head64c8b9d 独立 PASS，IM-010–013 CLOSED；最终文档提交单独补审，见[review](review.md)。历史验证保留各自范围。
 - 日期：2026-10-08，Asia/Shanghai；开工 base 1af0357b088df79dc51e9b309ef310a500722cf8；整合 base 78cea37af9359fd2d9f58f2854525516deee8a06。
 - cwd：本仓库 .worktrees/TASK-IMAGE-EDIT-001；branch codex/TASK-IMAGE-EDIT-001-unified-mask。
 - Node 24.20.0；独立 npm ci 完成；初轮 Desktop 2.1.7 / Web 2.1.8；整合后 Desktop 2.1.8 / Web 2.1.9 / Mobile 规划 2.1.1。
@@ -132,7 +132,7 @@ IM-011 由 request/receipt/journal 的 imageEditRequired 独立证明融合角�
 
 新证据目录 D:/kk-studio/output/unified-image-mask-20261008/run-followup-IM011-parser/ 保存 RED/GREEN/完整检查、失败脚本的验证副本、Web DOM/PNG、Desktop收据/截图和11组收据，不含profile/dataRoot/凭据；源码/工件清单及提交绑定单独生成。旧报告、清单、绑定和产物证据保留。结束本次owned1423/9364/9349均无监听，无其他进程终止。本地通过不是独立关闭，仍待新 head 复验。
 
-## 17ef724 之后的整个前缀补修（最新本地结果）
+## 17ef724 之后的整个前缀补修（最新实现结果与独立关闭）
 
 17ef724 独立复验纠正上节兼容结论：known root 中的完整自动正文引用也能造成角色歧义；仅核对全文和recent仍不足。有效完整PNG/local编译/decoder/reconcile证明raw4×4被发布，IM-011保持P1 OPEN。新prefix补修的12项恢复用例先2项RED（succeeded而期望unknown），再93项相关Node GREEN；完整保护断言未放宽。原root/current完整模板成功用例保留输入与成功断言，明确原生false确证角色；新增legacy普通root措辞/current引用成功及root/recent完整正文unknown双分支，依据独立实证更正旧假设。新增双编译结构用例实际assert两个formatter产出相同字符串，再仅删imageEdit验证保护，不能把文本匹配当作独立角色证明。新证据run-followup-IM011-prefix保留RED/GREEN，后续完整验证单列；此前报告、清单、平台中止和superseded结果均保留。
 
@@ -143,8 +143,13 @@ IM-011 由 request/receipt/journal 的 imageEditRequired 独立证明融合角�
 | 双编译结构完整PNG探针的作者验证副本 | unknown、无raw读/发布/重发、原件引用不变，exit0；原17ef失败脚本和日志未改 |
 | fresh release / 实际Desktop / 原生生命周期 | exit0；两次PNG Mask、clear undo/redo、4素材包、删除来源原图/再生/重启、marker仍true；1071分量改变、Mask外0，凭据冲突保留/清理true；主线11组通过 |
 | Web运行链路 | 严格production preview1436，route /、src/main.tsx；最新1099清空editor及1920四区成功DOM/PNG，工程补充控件仍32px/14px；390回归通过 |
+| 独立准确源码 SHA 复验 | 64c8b9d168308ff1aefff39daf7126c56e354eef：PASS，011 P1 CLOSED，010/012/013保持CLOSED，无新增P1/P2；reviewer自行执行93定向、四个完整PNG保护探针及type/format/diff，未把作者完整流水线算作独立执行 |
 
-实际Web/Desktop均加载index-BC59cAkv.js，响应与dist SHA-256 bb763f27d3ea8cfd4d26e3fbb2f7429b08eecf82946736ca0a69975207f3a829；CSS仍index-CSF9XnZa.css。新EXE SHA-256 b4cbcaaf7fe7614977960275aecdfae440cb31e95ecb870e1d2e0131e5a80d7d，版本仍Desktop2.1.9/Web2.1.10。编辑收据.tmp/image-edit/desktop/run-1791472855015-2544/，原生11组test-results/desktop/taskhost-lifecycle/1791472863296-5d3b85b9-85c8-4301-bb72-b0049753d2a4/；sourceHead仍17ef（真实dirty-run起点），源码/工件清单和提交绑定另存，不改历史SHA。新证据在D:/kk-studio/output/unified-image-mask-20261008/run-followup-IM011-prefix，不含profile/dataRoot/凭据；本地GREEN不是独立关闭，等待新head正式复验。
+实际Web/Desktop均加载index-BC59cAkv.js，响应与dist SHA-256 bb763f27d3ea8cfd4d26e3fbb2f7429b08eecf82946736ca0a69975207f3a829；CSS仍index-CSF9XnZa.css。新EXE SHA-256 b4cbcaaf7fe7614977960275aecdfae440cb31e95ecb870e1d2e0131e5a80d7d，版本仍Desktop2.1.9/Web2.1.10。编辑收据.tmp/image-edit/desktop/run-1791472855015-2544/，原生11组test-results/desktop/taskhost-lifecycle/1791472863296-5d3b85b9-85c8-4301-bb72-b0049753d2a4/；sourceHead仍17ef（真实dirty-run起点），源码/工件清单和提交绑定另存，不改历史SHA。新证据在D:/kk-studio/output/unified-image-mask-20261008/run-followup-IM011-prefix，不含profile/dataRoot/凭据。source-manifest-prefix.json SHA-256 526219d931b360dd7a3264e4c0fa019b1f8b79d0e5cd584f2fa9a4d084d6923a，71源码/22工件；commit-binding-prefix-64c8b9d.json绑定clean源码提交，独立再次重算全部匹配。本次owned1436/9364/9349均已无监听，没有终止其他任务进程。
+
+2026-10-08 23:38:25+08，/root/mask_review 正式[源码复审PASS](evidence/review-followup-64c8b9d.md)，IM-011独立关闭。原件SHA-256 855f6314206d167203463f93998b6d2a0e6bcc5345ebe7a92fe9f4a3db334af8；外部新probes目录review-followup-probes-64c8b9d保留其93定向及完整PNG/type/format/diff、字节核对。首次额外断言误把generationStatus视为不可变而exit1，原件保留；独立校正探针要求预期error并保护所有其余source字段通过，不能把该断言错误解释成产品失败或删除失败证据。此次没有放宽tracked测试、增加skip/retry或虚构付费模型/真机结果。收尾仅改文档和生成视图；最终已提交文档head另做一致性补审，外部review-followup-final-head.md与旧review-final-head.md分开保存。
+
+文档收尾 lint/version/goals、103任务治理、35功能与102活动Markdown检查通过。最初DONE验证描述含其它功能的PARTIAL字样，被治理器拒绝；已将完成任务字段限定为本地实现证据，FEAT-035卡片的PARTIAL与VERIFY-002的TODO及原验收内容保留，没有修改检查器。额外docs JSON格式检查暴露基线账本既有的Prettier差异，不在项目format:check范围内；撤回整文件格式重排，保留原JSON.stringify格式，独立比较其他102条任务内容未变。勘误在本机prefix-closure-ledger-format-scope.json；最终lint日志prefix-closure-final-doc-checks.log，源码与构建无新变化。
 
 ## 外部验收边界（保留）
 

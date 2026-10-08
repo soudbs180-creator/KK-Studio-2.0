@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
-| TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | IN_PROGRESS | TASK-MODEL-001 | root |
+| TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | DONE | TASK-MODEL-001 | root |
 | TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | TASK-IMAGE-EDIT-001 | root |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
 | TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
@@ -118,7 +118,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-IMAGE-EDIT-001-unified-mask`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-EDIT-001`
 - Modules: src/features/image-edit, src/features/creation, src/components/nodes, src/App.tsx, src-tauri/src/task_host.rs, tests, docs
-- Verification: NOT_VERIFIED — 17ef724独立CHANGES REQUIRED：010/012/013 CLOSED，011旧root预算歧义P1 OPEN。整个prefix补修先RED后GREEN，93定向/完整775root+172Agent+423browser零重试/Rust102/fresh Tauri/原生11组通过，Mask外0；待新已提交head独立关闭。历史失败/平台中止/superseded保留，真实Provider/真机归VERIFY-002。
+- Verification: PASS — 64c8b9d独立PASS：IM-010–013 CLOSED，无新增P1/P2；历史001–009 CLOSED保留。完整775root+172Agent+423browser零重试/Rust102/fresh Tauri/原生11组通过，Mask外0；reviewer另跑93定向与四个完整PNG保护探针，71源码/22工件匹配。本条只验证本地实现，文档收尾head单独补审；历史失败/平台中止/superseded保留，真实Provider/真机/用户视觉另由VERIFY-002 TODO登记。
 - Evidence: [docs/changes/2026-10-08-unified-image-mask/intent.md](../../docs/changes/2026-10-08-unified-image-mask/intent.md), [docs/changes/2026-10-08-unified-image-mask/spec.md](../../docs/changes/2026-10-08-unified-image-mask/spec.md), [docs/changes/2026-10-08-unified-image-mask/plan.md](../../docs/changes/2026-10-08-unified-image-mask/plan.md), [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/changes/2026-10-08-unified-image-mask/review.md](../../docs/changes/2026-10-08-unified-image-mask/review.md)
 - Updated: 2026-10-08
 

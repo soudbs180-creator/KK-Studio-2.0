@@ -2,7 +2,7 @@
 
 ## 2026-10-08 统一 Mask 继续审查返修（当前）
 
-TASK-IMAGE-EDIT-001 仍IN_PROGRESS：IM-010/012/013 CLOSED，17ef724正式CHANGES REQUIRED，011旧root预算歧义仍P1。整个prefix补修93定向、完整775root/172Agent/423browser零retry/flaky、Rust102、fresh Tauri及原生11组通过，Mask外0/凭据保护清理通过；待新提交独立准确SHA关闭。Desktop2.1.9/Web2.1.10同轮候选，FEAT-035 PARTIAL、VERIFY-002 TODO。原任务worktree保留，无main集成/发布。见[验证](../changes/2026-10-08-unified-image-mask/verification.md)和[审查](../changes/2026-10-08-unified-image-mask/review.md)，下方保留历史范围。
+TASK-IMAGE-EDIT-001 本地实现 DONE：源码head64c8b9d正式独立PASS、IM-010–013 CLOSED，无新增P1/P2。统一Mask与现有任务/归档链不分叉；跨端schema、恢复角色证据、清空历史、区域意见隔离已修。完整775root/172Agent/423browser零retry/flaky、Rust102、fresh Tauri及原生11组通过，Mask外0/凭据保护清理通过；reviewer另跑93定向及四个完整PNG保护探针，71源码/22工件匹配。最终文档提交另补审；Desktop2.1.9/Web2.1.10同轮未发布候选，FEAT-035 PARTIAL、VERIFY-002 TODO，真实Provider/真机/用户视觉仍未验。原任务worktree保留，无main集成/发布。见[验证](../changes/2026-10-08-unified-image-mask/verification.md)和[审查](../changes/2026-10-08-unified-image-mask/review.md)，下方保留历史范围。
 
 ## 2026-10-08 统一 Mask 本地实现完成
 
