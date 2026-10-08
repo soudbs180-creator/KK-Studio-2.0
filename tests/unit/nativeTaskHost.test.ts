@@ -434,6 +434,62 @@ test("legacy assetIds receipts retain their declared output identity", async () 
   }
 });
 
+for (const malformedOutputs of ["corrupt-output-vector", { index: 0 }, null]) {
+  test(`explicit ${JSON.stringify(malformedOutputs)} outputs cannot fall back to legacy assetIds`, async () => {
+    const project = createProject({
+      prompt: "生成",
+      model: "image-test",
+      kind: "image",
+      attachments: [],
+    });
+    project.tasks = [
+      {
+        ...createTask(project),
+        id: "task-1",
+        idempotencyKey: "stable-1",
+        status: "running",
+        submissionState: "submitted",
+      },
+    ];
+    let assetReads = 0;
+    desktop(async (command) => {
+      if (command === "task_host_list")
+        return [
+          record({
+            status: "succeeded",
+            outputs: malformedOutputs,
+            assetIds: ["asset-foreign"],
+          }),
+        ];
+      if (command === "asset_read") {
+        assetReads++;
+        return {
+          metadata: { assetId: "asset-foreign", mime: "image/png" },
+          dataBase64: "AA==",
+        };
+      }
+      throw new Error("malformed receipts must not submit again");
+    });
+    try {
+      const recovered = await reconcileNativeTasks({
+        ...emptySnapshot(),
+        activeProjectId: project.id,
+        projects: [project],
+      });
+      const result = recovered.projects[0].tasks[0];
+      assert.equal(result.status, "unknown");
+      assert.equal(result.submissionState, "unknown");
+      assert.equal(result.outputs?.[0].status, "unknown");
+      assert.equal(result.outputs?.[0].assetId, undefined);
+      assert.equal(result.resultItemId, undefined);
+      assert.equal(recovered.projects[0].items.length, project.items.length);
+      assert.equal(assetReads, 0);
+    } finally {
+      Reflect.deleteProperty(globalThis, "window");
+    }
+  });
+}
+
 test("native TaskHost adapter forwards stable request and command arguments", async () => {
   const calls: Array<{ command: string; args?: Record<string, unknown> }> = [];
   desktop(async (command, args) => {

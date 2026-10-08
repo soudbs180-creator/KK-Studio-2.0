@@ -74,7 +74,7 @@ function normalizeRecord(input: unknown): NativeTaskHostRecord {
       : {};
   const rawOutputs = Array.isArray(value.outputs)
     ? value.outputs
-    : Array.isArray(value.assetIds)
+    : value.outputs === undefined && Array.isArray(value.assetIds)
       ? value.assetIds.map((assetId, index) => ({
           index: Array.isArray(value.outputIndices)
             ? (value.outputIndices[index] ?? index)
@@ -96,6 +96,7 @@ function normalizeRecord(input: unknown): NativeTaskHostRecord {
   );
   // Do not discard malformed entries and then accept the remaining receipt.
   const malformed =
+    (value.outputs !== undefined && !Array.isArray(value.outputs)) ||
     validOutputs.length !== rawOutputs.length ||
     (value.outputIndices !== undefined &&
       (!Array.isArray(value.outputIndices) ||
