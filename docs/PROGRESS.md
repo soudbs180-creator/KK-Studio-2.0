@@ -1,5 +1,13 @@
 # 当前进度
 
+## 2026-10-08 启动分支最新主线组合验收完成
+
+TASK-LAUNCH-001 精确产品5ecf77b/basef922完整428browser（428attempts零flaky/实际retry）、97Rust、fresh带Agent native UI13+TaskHost11+模型/首屏、三宽度Web全部PASS；独立task_audit_reviewer复审PASS，main102项账本和核心TaskHost/工作台行为完整保留。Desktop2.1.9/Web2.1.10/Mobile规划2.1.1；权威103项DONE60/TODO13/PARTIAL26/BLOCKED4。任务声明scope完成；最终doc head补审、当前Hosted、普通PR38合并和主线CI以实际交付回读，不能用旧提交替代新门禁。历史两侧段落保留其当时时间含义，当前恢复入口为[最新验收](changes/2026-10-08-startup-experience/verification.md)与[PR38](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/38)。UI012/蒙版在途仍由原执行者负责；未推断现有快捷方式已换成最终稳定产物，不归档其引用的树。
+
+## 2026-10-08 已验收启动分支承接主线
+
+用户本轮明确授权“合并已经完成检查的分支”。在原登记 TASK-LAUNCH-001 clean worktree 上串行承接 main@f922cf8e3e3318c5b01a922eaed424b11ccb2d0a；原作者已结束，root 负责本次组合与交付。保留图片卡片上方选择动作、T5 unknown/归档/重试门禁及静默启动/Unicode快捷方式/首屏按需加载。历史两侧记录逐段保留；版本承接最新主线后自动调配。组合完整验证、新 Web/Tauri、原生启动与 UI/TaskHost/模型能力回归、精确独立审查及当前 Hosted 仍待实际执行，本任务暂 REVIEW。UI012与蒙版仍由原执行者在途维护，不纳入本次合并。用户现有程序不被强制停止，快捷方式树保留。
+
 ## 2026-10-08 图片操作栏与T5组合验收完成
 
 TASK-UI-011 产品7d27265/base78cea37完整423browser（零flaky/零实际retry）、97Rust、fresh UI13+TaskHost11+同EXE模型能力PASS；精确独立补审PASS关闭R1/R2，当前PR39 Hosted37776187321及push37776180456全部必需检查SUCCESS。图片单击仅选择，上方显示唯一标准32px动作栏；顶部/390pxHUD/重选与真实非空工作台规则均核验。任务DONE；随后仅补文档与证据，最终文档head独立/Hosted及普通合并/落地tree/主线CI另绑，不能让旧提交门禁替代新提交。
@@ -42,6 +50,14 @@ T5 本机产品验收十一组与精确源码 8399 补审 PASS，但其 Hosted n
 - 独立 npm ci；最终返修完整 verify exit 0：root 708/716、Agent 172/174（原 skip 8/2）、browser 401/401 无 flaky；主线组合 Rust 97/fmt/check、新 native release 十一组通过。新增 `client:taskhost:test` 接入 Windows CI。源码 Desktop 2.1.6 / Web 2.1.7，Mobile 规划 2.1.1。
 - T5 当前 REVIEW，最终精确 head 审查、PR/Hosted 与主线推广以新收据为准。[验证](changes/2026-10-08-taskhost-native-lifecycle/verification.md)与[盘点/优先级](changes/2026-10-08-taskhost-native-lifecycle/status.md)保存当前事实。
 - 新增 P1 TASK-PROV-005（供应商非秘密配置的异常退出 durable 恢复）及 TASK-PROV-006（既有 native image 连接/容量/health 统一）；未实现仍为 TODO。所有 Provider/GPU、ComfyUI、VPS/Mobile 和安装/视觉终验不因本机 fixture 升级。
+
+## 2026-10-08 桌面与网页启动体验
+
+6fe7ccb Unicode独立补审PASS后，Hosted暴露临时目录8.3别名的测试误断言；fixture创建前用原生realpath，全部严格产品断言保留，产品源码未再改。本次native3/3及完整verify726Node/172Agent/413browser零flaky PASS；最终精确SHA收据为`startup-review-canonical-temp-20261008.md`，当前Hosted按新HEAD回读，旧失败与审查留档。
+
+PR#38首轮7a1c3358的Hosted verify发现LAUNCH-R4：WSH快捷方式接口不能处理系统ACP无法表示的路径字符。本地增强中文+emoji路径复现RED，改为Unicode Shell Link后真实lnk/重复安装native3/3 GREEN，完整verify726Node/172Agent/413browser再次PASS；实际桌面宽接口重装成功，前端/native产物哈希不变。旧CI失败保留；新HEAD独立补审及Hosted结果分别绑定，见本轮验证追加段。
+
+TASK-LAUNCH-001 本地AC完成：桌面/canonical快捷方式使用内嵌Logo GUI入口，实际最新release免编译窗口304ms，冷重建与正常启动均GUI退出0/无新增可见控制台；窗口Logo与原icon逐像素一致。Web首屏延后隐藏工作区并按需加载页面，历史/焦点/错误恢复保留。推送前融合最新main@1af0357b的模型能力，最终候选Desktop2.1.7/Web2.1.8/Mobile2.1.1；完整verify726/734Node（8原skip）、172/174Agent（2原skip）、413/413browser零flaky，clientcheck/newTauri与原生能力回归PASS。最新main首屏JS995,957→806,571（减19.0%）、CSS完全一致；受控5次cold中位数1656→1405ms，非线上保证。独立694a237/f74548d审查PASS、R1/R2/R3关闭，最终组合精确SHA收据见[本轮验证](changes/2026-10-08-startup-experience/verification.md)。本轮main/线上尚未推广；实际快捷方式引用本任务树，须保留至稳定产物推广。
 
 ## 2026-10-08 模型能力声明：Hosted日志复核后的增量修正
 

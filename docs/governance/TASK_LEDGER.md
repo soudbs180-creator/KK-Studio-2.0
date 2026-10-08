@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
+| TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | none | root |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
 | TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
 | T0 | 可复现候选源码与主线整合 | DONE | none | root |
@@ -108,6 +109,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | T2, TASK-UI-GOV-003 | root |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
+
+## TASK-LAUNCH-001 — 桌面与网页启动体验及图标修复
+
+- Goal: 双击直接启动无控制台，恢复桌面图标，减少 Web 首屏负担
+- Scope: Windows launcher, shortcuts, Web first load
+- Acceptance: 无可见命令窗口且可取消失败可诊断; 当前图标与 release 新鲜度正确; Web 首屏按需加载且工作区历史保留
+- Branch: `codex/TASK-LAUNCH-001-quiet-start`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-LAUNCH-001`
+- Modules: scripts/windows, start-kk-studio.bat, src/App.tsx, FEAT-026
+- Verification: PASS — 精确组合5ecf77b/basef922：AC1–5 PASS，verify726Node/172Agent（既有skip8/2）、428browser428attempts零flaky/实际retry/skip、97Rust/fmt/clientcheck/fresh带Agent release；原生UI13/TaskHost11/模型/首屏与三宽度Web PASS，独立复审PASS且102上游task完整保留。同EXE1a943...c76e；本地elevation/runtime not-recorded。最终doc head补审/Hosted与PR38普通main推广须独立回读，不代填历史失败或真实Provider/安装/线上能力。
+- Evidence: [docs/changes/2026-10-08-startup-experience/verification.md](../../docs/changes/2026-10-08-startup-experience/verification.md)
+- Updated: 2026-10-08
 
 ## TASK-MODEL-001 — 账号级图片模型能力声明与提交校验
 
