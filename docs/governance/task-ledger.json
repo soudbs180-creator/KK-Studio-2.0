@@ -1,5 +1,39 @@
 [
   {
+    "id": "TASK-UI-013",
+    "title": "桌面标题栏与菜单合并为单排",
+    "goal": "应用名、菜单和真实窗口控制共用一排，保留窗口与Web导航行为",
+    "scope": "Desktop TopBar/window controls/Tauri config；Web相邻回归",
+    "acceptance": [
+      "单排40px与同状态原生DOM截图",
+      "菜单、拖动、双击、最小化、最大化/还原、关闭真实操作；乱序读/旧错误/卸载/异步清理故障覆盖",
+      "Web三断点及完整verify、clientcheck、独立审查"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "fix/TASK-UI-013-single-row-titlebar",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-013-single-row-titlebar",
+    "affectedModules": [
+      "src/components/TopBar.tsx",
+      "src/components/WindowControls.tsx",
+      "src/styles/desktop-titlebar.css",
+      "src-tauri",
+      "tests",
+      "docs"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-10-08-single-row-titlebar/intent.md",
+      "docs/changes/2026-10-08-single-row-titlebar/spec.md",
+      "docs/changes/2026-10-08-single-row-titlebar/plan.md",
+      "docs/changes/2026-10-08-single-row-titlebar/verification.md",
+      "docs/changes/2026-10-08-single-row-titlebar/review.md"
+    ],
+    "verification": "最新2cb主线组合86e：AC1–3 PASS、7条故障RED→GREEN、verify733Node/172Agent（原skip8/2）、431browser431attempts零flaky/retry/skip、97Rust/fmt/clientcheck/fresh带Agent release；真实titlebar drag/min/max/restore/close0，UI13/T511/模型/首屏及Web两态3宽度PASS，独立关闭001/002。103上游task保留；同EXE2e69...1a5f，环境not-recorded。最终doc/Hosted/PR40合并/mainCI须独立回读，不冒充签名安装/真实Provider/Mobile能力。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-08"
+  },
+  {
     "id": "TASK-LAUNCH-001",
     "title": "桌面与网页启动体验及图标修复",
     "goal": "双击直接启动无控制台，恢复桌面图标，减少 Web 首屏负担",

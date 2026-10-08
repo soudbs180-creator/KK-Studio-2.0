@@ -2886,3 +2886,4 @@ import "./styles/composer.css";
 import "./styles/page-templates.css";
 import "./styles/canvas-compare.css";
 import "./styles/image-selection.css";
+import "./styles/desktop-titlebar.css";

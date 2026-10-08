@@ -1,0 +1,49 @@
+{
+  "executable": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-UI-013-single-row-titlebar\\src-tauri\\target\\release\\kk-studio.exe",
+  "sha256": "1b153f93ca49de59b56a635923576d69117a963befca9d28d5ee11ada458c6e8",
+  "geometry": {
+    "header": {
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 40
+    },
+    "brand": {
+      "x": 24,
+      "y": 10,
+      "width": 64.953125,
+      "height": 20
+    },
+    "menu": {
+      "x": 112.953125,
+      "y": 4,
+      "width": 52,
+      "height": 32
+    },
+    "controls": {
+      "x": 1800,
+      "y": 0,
+      "width": 120,
+      "height": 40
+    }
+  },
+  "movement": {
+    "before": {
+      "y": 0,
+      "x": 0
+    },
+    "after": {
+      "y": 60,
+      "x": 80
+    }
+  },
+  "runtime": {
+    "url": "http://tauri.localhost/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": ["http://tauri.localhost/assets/index-DNpbFtYK.js"],
+    "styles": ["http://tauri.localhost/assets/index-CsTE5i3I.css", null]
+  },
+  "dataRoot": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-UI-013-single-row-titlebar\\.tmp\\titlebar\\desktop-1791458912702\\data",
+  "profile": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-UI-013-single-row-titlebar\\.tmp\\titlebar\\desktop-1791458912702\\webview"
+}

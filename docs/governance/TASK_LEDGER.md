@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
+| TASK-UI-013 | 桌面标题栏与菜单合并为单排 | DONE | none | root |
 | TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | none | root |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
 | TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
@@ -109,6 +110,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | T2, TASK-UI-GOV-003 | root |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
+
+## TASK-UI-013 — 桌面标题栏与菜单合并为单排
+
+- Goal: 应用名、菜单和真实窗口控制共用一排，保留窗口与Web导航行为
+- Scope: Desktop TopBar/window controls/Tauri config；Web相邻回归
+- Acceptance: 单排40px与同状态原生DOM截图; 菜单、拖动、双击、最小化、最大化/还原、关闭真实操作；乱序读/旧错误/卸载/异步清理故障覆盖; Web三断点及完整verify、clientcheck、独立审查
+- Branch: `fix/TASK-UI-013-single-row-titlebar`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-013-single-row-titlebar`
+- Modules: src/components/TopBar.tsx, src/components/WindowControls.tsx, src/styles/desktop-titlebar.css, src-tauri, tests, docs
+- Verification: PASS — 最新2cb主线组合86e：AC1–3 PASS、7条故障RED→GREEN、verify733Node/172Agent（原skip8/2）、431browser431attempts零flaky/retry/skip、97Rust/fmt/clientcheck/fresh带Agent release；真实titlebar drag/min/max/restore/close0，UI13/T511/模型/首屏及Web两态3宽度PASS，独立关闭001/002。103上游task保留；同EXE2e69...1a5f，环境not-recorded。最终doc/Hosted/PR40合并/mainCI须独立回读，不冒充签名安装/真实Provider/Mobile能力。
+- Evidence: [docs/changes/2026-10-08-single-row-titlebar/intent.md](../../docs/changes/2026-10-08-single-row-titlebar/intent.md), [docs/changes/2026-10-08-single-row-titlebar/spec.md](../../docs/changes/2026-10-08-single-row-titlebar/spec.md), [docs/changes/2026-10-08-single-row-titlebar/plan.md](../../docs/changes/2026-10-08-single-row-titlebar/plan.md), [docs/changes/2026-10-08-single-row-titlebar/verification.md](../../docs/changes/2026-10-08-single-row-titlebar/verification.md), [docs/changes/2026-10-08-single-row-titlebar/review.md](../../docs/changes/2026-10-08-single-row-titlebar/review.md)
+- Updated: 2026-10-08
 
 ## TASK-LAUNCH-001 — 桌面与网页启动体验及图标修复
 
