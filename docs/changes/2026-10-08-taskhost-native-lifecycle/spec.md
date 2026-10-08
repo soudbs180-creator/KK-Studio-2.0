@@ -17,3 +17,5 @@ Desktop 的 submitted 持久证据是宿主 POST 前写入的 native journal；�
 Desktop 为本轮真实原生验收对象；Web 的 durable intent/unknown 契约运行现有浏览器回归；Mobile 尚无产物。离线/取消不清空已归档结果；保存错误继续保留原件，旧 schema 和原用户数据身份不改变。若仅补测试/文档不 bump；修复 Rust 和共享 UI 行为自动递增受影响 Desktop/Web patch。承接 PR #35 后本候选 Desktop 2.1.6 / Web 2.1.7 / Mobile 规划 2.1.1。普通局部取消修复不新增 ADR，沿用现有任务和存储 ADR。
 
 AC-1–6 的结果和环境逐项记录于 [verification](verification.md)。回滚为 revert 本次修复，测试数据与历史失败证据保留；不删除用户数据或清理分支。
+
+当前T5已验收候选04260ad（Desktop2.1.7/Web2.1.8）及main落地78cea37；AC1–6本机与当前Hosted通过。后续UI011组合版本单独取证，不复用旧产物hash；旧阶段版本文字保留历史。

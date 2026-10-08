@@ -1,6 +1,6 @@
 [package]
 name = "kk-studio"
-version = "2.1.7"
+version = "2.1.8"
 description = "kk Studio - AI 创作工作台"
 authors = ["kk Studio"]
 license = "MIT"

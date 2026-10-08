@@ -105,6 +105,7 @@ export default function BatchMatrix({
             {retryableIndices.has(output.index) && (
               <button
                 type="button"
+                className="kk-button kk-button--secondary"
                 onClick={() => onRetryOutput(task.id, output.index)}
               >
                 单项重试

@@ -8,6 +8,7 @@ import TaskWorkbenchContent, {
   type WorkbenchTab,
 } from "./TaskWorkbenchContent";
 import type { StagePlanActions } from "./TaskWorkbenchStages";
+import UiIcon from "./UiIcon";
 
 export default function TaskWorkbench({
   project,
@@ -64,11 +65,11 @@ export default function TaskWorkbench({
         </div>
         <button
           type="button"
-          className="task-workbench-close"
+          className="task-workbench-close kk-button kk-button--tertiary"
           aria-label="关闭任务工作台"
           onClick={onClose}
         >
-          ×
+          <UiIcon name="close" />
         </button>
       </header>
       <div className="task-workbench-layout">

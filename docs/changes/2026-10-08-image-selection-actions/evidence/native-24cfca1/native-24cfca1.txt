@@ -1,0 +1,1 @@
+{"passed":true,"checks":13,"output":"D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-UI-011-image-selection-actions\\.tmp\\desktop\\image-selection\\1791456822853-daeb0ef7-cffd-4c99-89f6-5228cd2ae851"}

@@ -1,0 +1,19 @@
+{
+  "sourceHead": "21ac41433099edb661c5fbd58dee9b935fad5f62",
+  "runId": 37765011214,
+  "artifactId": 11546450599,
+  "archiveBytes": 14915441,
+  "archiveSha256": "bc0fb3d22d6c3a2434e6643ac8f8f94f83510aeac819be2c45634604c0e6b4c2",
+  "browserStats": {
+    "startTime": "2026-10-08T10:44:29.454Z",
+    "duration": 573891.486,
+    "expected": 409,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "browserReportSha256": "cf04e89168ff6dc108dede0efcaa470b2fdffd0c2885b3340dd814ffd91af210",
+  "nativeHarnessStarted": false,
+  "nativeReceiptPresent": false,
+  "reason": "Registry empty Properties strict-mode Name failure occurred before npm native harness invocation; ZIP has no native taskhost receipt."
+}

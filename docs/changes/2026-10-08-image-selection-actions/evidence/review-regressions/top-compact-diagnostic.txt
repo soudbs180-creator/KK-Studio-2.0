@@ -1,0 +1,70 @@
+[WebServer] (node:16444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:46140) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Selected image geometry {
+  canvas: {
+    x: 8,
+    y: 40,
+    width: 374,
+    height: 732,
+    style: '--canvas-usable-width: 374px; background-color: rgb(10, 10, 10); background-size: 13.9119px 13.9119px; --canvas-pan-x: -31.5322033898305px; --canvas-pan-y: 7.976271186440684px; --canvas-dot-cell: 13.91186440677966px; --canvas-pattern-opacity: 0.2357473035439136;'
+  },
+  toolbar: {
+    x: 16,
+    y: 86.5,
+    width: 10,
+    height: 42,
+    style: 'left: 16px; top: 86.5051px; max-width: 0px; visibility: hidden;'
+  },
+  caption: {
+    x: 80.64745330810547,
+    y: 136.50509643554688,
+    width: 48.057533264160156,
+    height: 7.53558349609375,
+    style: null
+  },
+  image: {
+    x: 79.4881362915039,
+    y: 144.62033081054688,
+    width: 231.86441040039062,
+    height: 231.86441040039062,
+    style: null
+  },
+  hud: { x: 20, y: 52, width: 298, height: 44, style: null },
+  navigation: { x: 108, y: 104, width: 262, height: 44, style: null }
+}
+  x  1 tests\browser\image-selection-actions.spec.ts:201:3 › 图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 390 (5.8s)
+
+
+  1) tests\browser\image-selection-actions.spec.ts:201:3 › 图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 390 ─────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('toolbar', { name: /^图片操作：/ })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('toolbar', { name: /^图片操作：/ }) with timeout 5000ms
+      - waiting for getByRole('toolbar', { name: /^图片操作：/ })
+
+
+      17 |   await expect(node).toHaveClass(/is-selected/);
+      18 |   try {
+    > 19 |     await expect(toolbar(page)).toBeVisible();
+         |                                 ^
+      20 |   } catch (cause) {
+      21 |     console.log(
+      22 |       "Selected image geometry",
+        at selectImage (D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-UI-011-image-selection-actions\tests\browser\image-selection-actions.spec.ts:19:33)
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-UI-011-image-selection-actions\tests\browser\image-selection-actions.spec.ts:208:5
+
+    Error Context: test-results\image-selection-actions-图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作-390\error-context.md
+
+  1 failed
+    tests\browser\image-selection-actions.spec.ts:201:3 › 图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 390 ──────────

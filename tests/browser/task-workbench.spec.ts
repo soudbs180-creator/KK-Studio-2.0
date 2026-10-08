@@ -295,6 +295,13 @@ test("提交后暂停进入受理状态不明并保留已归档结果", async ({
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect(page.locator(".project-task-running")).toBeVisible();
   await workbench(page);
+  for (const action of ["暂停", "取消"]) {
+    const button = page
+      .locator(".task-workbench-actions")
+      .getByRole("button", { name: action, exact: true });
+    await expect(button).toHaveCSS("height", "32px");
+    await expect(button).toHaveCSS("font-size", "14px");
+  }
   await page.getByRole("button", { name: "暂停", exact: true }).click();
   await expect(page.locator(".task-workbench-task-head")).toContainText(
     "受理状态不明",

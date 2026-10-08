@@ -1,0 +1,18 @@
+{
+  "sourceHead": "7d2726526ab7eabe3ce96c08dbfbf365473876d7",
+  "base": "78cea37af9359fd2d9f58f2854525516deee8a06",
+  "stats": {
+    "startTime": "2026-10-08T12:03:32.192Z",
+    "duration": 105255.246,
+    "expected": 423,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "total": 423,
+  "attempts": 423,
+  "configuredWorkers": 12,
+  "actualWorkers": 12,
+  "maxRetryIndex": 0,
+  "reporterSha256": "9214056fb72a71663d18a4afbe9982776b991f40226bebc8b7c85c2b2b08753d"
+}

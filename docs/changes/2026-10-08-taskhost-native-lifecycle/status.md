@@ -1,5 +1,11 @@
 # 收尾状态与后续优先级
 
+## 最新：已合入主线
+
+T5 source04260ad精确独立PASS，ENV004 CLOSED；Hosted37770000879/37769995909全部SUCCESS，实际native11组及策略清理通过。PR37已合入main@78cea37，完整tree一致；T5 DONE、PROV005/006 TODO。主线合并后37773335548 verify/deploy-linux SUCCESS，真实Hosted原始merge-ref收据与完整tree已核验。UI011组合423browser/97Rust/Native13+11+模型门禁、独立及产品当前HostedPASS；最终文档推广另绑。权威账本现在102项：DONE59/TODO13/PARTIAL26/BLOCKED4。
+
+## 以下为此前阶段历史
+
 日期：2026-10-08。
 
 当前：21ac独立补审PASS但Hosted空Registry集合失败，native未启动；已真实RED→26/26GREEN返修，待新head补审/Hosted。下面当时阶段文字保留历史。PR #36 已 squash 合入 main@1af0357，合并后 CI PASS；T5承接最新主线，本机组合409浏览器/97Rust/11组native PASS，但Hosted启动返修仍待实测，保持REVIEW。账本101项：DONE 57 / TODO 13 / REVIEW 1 / PARTIAL 26 / BLOCKED 4。源码Desktop2.1.7/Web2.1.8/Mobile规划2.1.1。UI新要求在TASK-UI-011单独分支返修；下表旧source阶段记录保留为历史，现行结论以此段及最新verification为准。任务权威：[task-ledger.json](../../governance/task-ledger.json)；逐项状态：[TASK_LEDGER](../../governance/TASK_LEDGER.md)。本表只收敛当前候选与剩余依赖，不将所有历史分支视为待合并。

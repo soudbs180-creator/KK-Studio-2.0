@@ -16,7 +16,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | T3a | 原生素材及引用最终验收 | DONE | T1, T2 | root |
 | T3b | 完整项目包导出导入与恢复 | DONE | T3a | root |
 | T4 | 统一实际图片生成入口及健康语义 | DONE | T3b, TASK-PROV-001 | root |
-| T5 | 持久本地 TaskHost 与未知受理恢复 | REVIEW | T4 | root |
+| T5 | 持久本地 TaskHost 与未知受理恢复 | DONE | T4 | root |
 | T6 | Desktop ComfyUI最小链实现 | PARTIAL | T5 | root |
 | EXT-PROVIDER | 真实 Provider/GPU 生成验收 | BLOCKED | T4 | root |
 | EXT-COMFY | 真实 ComfyUI/模型验收 | BLOCKED | T6 | root |
@@ -105,6 +105,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AUDIT-20261003 | 全项目任务盘点与可本地闭环项收口 | DONE | TASK-MCP-REGISTRY-001, TASK-MCP-REGISTRY-002, TASK-MCP-PROTO-001, TASK-ORCH-REPLAN-001 | root |
 | TASK-GOV-GOALS-001 | 项目建设目标与验收基线 | DONE | TASK-AUDIT-20261003 | root |
 | TASK-UI-COMPONENT-BOUNDARY-001 | MCP 设置组件职责拆分 | DONE | TASK-GOV-GOALS-001 | root |
+| TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | T2, TASK-UI-GOV-003 | root |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
 
@@ -236,7 +237,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/T5-native-lifecycle`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/T5-native-lifecycle`
 - Modules: src/features/generation-server, src-tauri, src/features/creation, deploy
-- Verification: PASS — 最新主线1af组合731root/174Agent（原skip8/2）、409browser零flaky/零实际retry、Rust97/fmt/check/fresh native11组PASS；d521产品/harness9个hash保持一致。21ac独立源码/文档PASS关闭ENV003，但当前Hosted在空Registry Properties.Name严格模式失败、native未启动；正确空对象RED后四处逐项枚举、26边界回归PASS，当前新head补审/Hosted与主线整合待满足。PROV005/006独立开放。
+- Verification: PASS — 04260ad精确独立补审PASS关闭ENV004；26策略及额外9边界回归通过；Hosted37770000879/37769995909全部SUCCESS，native11组/5CDP启动与策略清理通过。PR37普通squash合入main78cea37，完整tree一致；合并后main37773335548 verify/deploy-linux SUCCESS。Hosted实际checkout source7849310为base1af+candidate042合成merge，完整tree等同042/78，9/9源码hash核验；原收据身份不改写。PROV005/006继续TODO。
 - Evidence: [docs/changes/2026-09-19-taskhost-durable-intent/verification.md](../../docs/changes/2026-09-19-taskhost-durable-intent/verification.md), [tests/browser/task-intent.spec.ts](../../tests/browser/task-intent.spec.ts), [tests/unit/nativeTaskHost.test.ts](../../tests/unit/nativeTaskHost.test.ts), [deploy/README.md](../../deploy/README.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md), [tests/desktop/taskhost-lifecycle.mjs](../../tests/desktop/taskhost-lifecycle.mjs), [tests/desktop/native-ci-policy.ps1](../../tests/desktop/native-ci-policy.ps1)
 - Updated: 2026-10-08
 
@@ -1299,6 +1300,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — MCP 设置容器已拆为表单和列表职责，UI 标准 194 文件/0 违规；定向 TypeScript、ESLint 和 Prettier 通过，MCP 设置浏览器回归在完整 Playwright 中通过。
 - Evidence: [docs/changes/2026-10-03-ui-component-boundary/intent.md](../../docs/changes/2026-10-03-ui-component-boundary/intent.md), [docs/changes/2026-10-03-ui-component-boundary/spec.md](../../docs/changes/2026-10-03-ui-component-boundary/spec.md), [docs/changes/2026-10-03-ui-component-boundary/plan.md](../../docs/changes/2026-10-03-ui-component-boundary/plan.md), [docs/changes/2026-10-03-ui-component-boundary/verification.md](../../docs/changes/2026-10-03-ui-component-boundary/verification.md), [docs/changes/2026-10-03-ui-component-boundary/review.md](../../docs/changes/2026-10-03-ui-component-boundary/review.md), [src/components/settings/McpSettings.tsx](../../src/components/settings/McpSettings.tsx), [src/components/settings/McpServerForm.tsx](../../src/components/settings/McpServerForm.tsx), [src/components/settings/McpServerList.tsx](../../src/components/settings/McpServerList.tsx)
 - Updated: 2026-10-03
+
+## TASK-UI-011 — 图片选择工具栏与新增页面 UI 规则回归
+
+- Goal: 点击图片卡片后在上方显示共享操作栏，消除图片内部动作与新页面的实际规范偏差
+- Scope: 参考图片与结果卡片选择、操作、缩放/拖动定位以及模型设置/阶段工作台/资源页面回归
+- Acceptance: 单击图片只选中，未选中时无工具栏，选中后动作在卡片上方; 参考与结果图片复用共享操作，预览/重绘/对比/收藏/删除保持真实行为和原门禁; 工具栏随拖动、平移、缩放定位并保持标准控件尺寸，不遮挡图片或对话; Escape/空白/切换选中关闭，键盘与窄屏操作可用; Web 与 fresh Desktop 分别具有真实页面、DOM、截图证据，相关及完整验证通过
+- Branch: `codex/TASK-UI-011-image-selection-actions`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-011-image-selection-actions`
+- Modules: src/components/nodes, src/components/canvas, src/features/compare, src/styles, tests/browser, docs/UI_RULES.md
+- Verification: PASS — 精确产品7d27265承接main78cea37：完整verify root723/731(8原skip)、Agent172/174(2原skip)、423/423browser零flaky/零实际retry；Rust97/fmt/clientcheck/fresh UI13(385hash)+TaskHost11(9hash/5CDP)+同EXE模型能力PASS。独立补审PASS、R1/R2 CLOSED，当前PR Hosted37776187321及push37776180456必需检查SUCCESS。Task声明范围完成；最终文档head精确补审/Hosted与普通主线推广另绑。历史失败保留；不代表全项目/付费Provider/Mobile/安装/最终视觉验收。
+- Evidence: [docs/changes/2026-10-08-image-selection-actions/intent.md](../../docs/changes/2026-10-08-image-selection-actions/intent.md), [docs/changes/2026-10-08-image-selection-actions/spec.md](../../docs/changes/2026-10-08-image-selection-actions/spec.md), [docs/changes/2026-10-08-image-selection-actions/plan.md](../../docs/changes/2026-10-08-image-selection-actions/plan.md), [docs/changes/2026-10-08-image-selection-actions/verification.md](../../docs/changes/2026-10-08-image-selection-actions/verification.md), [docs/changes/2026-10-08-image-selection-actions/review.md](../../docs/changes/2026-10-08-image-selection-actions/review.md)
+- Updated: 2026-10-08
 
 ## TASK-PROV-005 — Desktop 供应商非秘密配置 durable 保存与恢复
 

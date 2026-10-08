@@ -32,3 +32,15 @@ reviewer 独立运行 53/53 定向单测、原/新凭据 helper 合成复现、�
 ## 21ac414 独立PASS及Hosted新阻断返修
 
 [精确独立回执](evidence/review-21ac414.md)：1af0357 →21ac414源码/文档PASS，ENV-003 CLOSED，五项原finding全关闭；独立23/23mocks、旧d521 Force内存RED、9/9 native哈希/409浏览器零实际retry一致。该结论明确当前Hosted未验收，不代填通过。随后Hosted暴露 T5-ENV-REVIEW-004（root发现，P2 merge blocker）：空Registry item没有属性，Properties.Name在严格模式失败，原mock人为添加PSPath遗漏。已以实际脚本+正确空对象RED、四处逐项枚举与26/26GREEN返修；新精确head仍待独立关闭004。
+
+## 04260ad 精确审查、Hosted与主线落地
+
+2026-10-08：[只读独立补审](evidence/review-04260ad.md)技术PASS，T5-ENV-REVIEW-004 CLOSED；正确空对象替身回放旧21ac失败，26/26当前策略及额外9/9边界检查通过，ENV003保持关闭。当前source04260ad的Hosted37770000879/37769995909全部SUCCESS，Runtime154.0.4258.62、真实原生11组passed、应用专属策略清理通过。完整日志按原始字节保存于[编码原件](evidence/hosted-04260ad-pass-log.json)；旧21ac完整artifact已核验[长度与SHA](evidence/hosted-21ac414-artifact-integrity.json)，未启动native的旧失败不改写。
+
+[PR37普通squash回执](evidence/pr37-merge-receipt.json)已确认合入main@78cea37af9359fd2d9f58f2854525516deee8a06，[完整tree一致](evidence/pr37-landing-integrity.json)。T5 DONE；合并后main CI另绑，PROV005/006仍TODO。UI011承接该主线另做组合回归，Desktop2.1.8/Web2.1.9只对应UI新候选，不回写T5旧Runtime收据。
+
+## 合并后主线CI与Hosted身份核验 PASS
+
+[main78cea37合并后37773335548](evidence/pr37-main-ci.json) verify/deploy-linux SUCCESS；delivery在push事件预期skip。PR37原生[原始收据](evidence/hosted-04260ad-receipt.json) sourceHead为7849310fc8049ed90cfbda2c0c23091e19d8d250，actions/checkout默认PR merge ref；不是042的伪造收据。[完整核验](evidence/hosted-04260ad-integrity.json)证明其parents为base1af+candidate042、完整tree与042/landing78一致，9/9源hash、11组/5次真实elevated/CDP/Runtime154启动及完整ZIP SHA均匹配。四次exit1发生在owned cleanup请求之后，不能称为自行崩溃。本机not-recorded权限字段不据此改写为true。
+
+T5 DONE，PROV005/006独立TODO。UI7d组合另有423browser/97Rust/fresh UI13+TaskHost11+模型能力及独立/HostedPASS；两个任务原生收据与源码版本分别绑定。
