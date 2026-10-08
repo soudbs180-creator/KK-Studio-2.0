@@ -1,0 +1,103 @@
+{
+  "startedAt": "2026-10-08T06:00:02.003Z",
+  "sourceHead": "5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3",
+  "dataRoot": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\T5-native-lifecycle\\src-tauri\\target\\taskhost-acceptance\\1791439202003-bd2e52f0-ac77-4556-9565-009edf20c539\\data",
+  "profile": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\T5-native-lifecycle\\src-tauri\\target\\taskhost-acceptance\\1791439202003-bd2e52f0-ac77-4556-9565-009edf20c539\\profile",
+  "checks": [
+    {
+      "name": "cancel-header-hold",
+      "passed": true,
+      "elapsedMs": 115,
+      "record": {
+        "taskId": "taskhost-57f16a60-5efc-4b17-b0eb-b2eb7d657104",
+        "idempotencyKey": "taskhost-1bc6f9aa-c62c-4509-8276-f6b2e15bfed0",
+        "outputIndices": [
+          0
+        ],
+        "status": "unknown",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "unknown"
+          }
+        ],
+        "failure": {
+          "failureClass": "cancelled",
+          "status": 0,
+          "message": "已停止等待图像生成，供应商最终状态需核对"
+        },
+        "updatedAt": 1791439202785
+      }
+    },
+    {
+      "name": "cancel-body-hold",
+      "passed": true,
+      "elapsedMs": 115,
+      "record": {
+        "taskId": "taskhost-4f981086-1e6c-432e-9260-9a758263776f",
+        "idempotencyKey": "taskhost-f2a8961b-e8d0-431f-8f47-6d69258cf8cc",
+        "outputIndices": [
+          0
+        ],
+        "status": "unknown",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "unknown"
+          }
+        ],
+        "failure": {
+          "failureClass": "cancelled",
+          "status": 0,
+          "message": "已停止等待图像生成，供应商最终状态需核对"
+        },
+        "updatedAt": 1791439203017
+      }
+    }
+  ],
+  "launches": [
+    {
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-CznBbzGu.js"
+      ],
+      "styles": [
+        "http://tauri.localhost/assets/index-CBRGzoZu.css"
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/v1/images/generations",
+      "prompt": "header-hold",
+      "key": "taskhost-1bc6f9aa-c62c-4509-8276-f6b2e15bfed0",
+      "taskId": "taskhost-57f16a60-5efc-4b17-b0eb-b2eb7d657104",
+      "durableJournal": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/images/generations",
+      "prompt": "body-hold",
+      "key": "taskhost-f2a8961b-e8d0-431f-8f47-6d69258cf8cc",
+      "taskId": "taskhost-4f981086-1e6c-432e-9260-9a758263776f",
+      "durableJournal": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/images/generations",
+      "prompt": "download-hold",
+      "key": "taskhost-f8a39898-e66d-4613-ba52-e0f178b329e3",
+      "taskId": "taskhost-4a6815fd-de7e-434f-828f-3e12d7f1c7eb",
+      "durableJournal": true
+    }
+  ],
+  "errors": [],
+  "passed": false,
+  "executableSha256": "7e06e69c455a44669daaa841c39780bb7a1c3c58b355857a1bc9c05f26aed563",
+  "failure": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"succeeded\"\nReceived: \"unknown\"\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
+  "finishedAt": "2026-10-08T06:00:08.664Z",
+  "credentialCleanupComplete": true
+}

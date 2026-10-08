@@ -126,7 +126,7 @@ impl TextStream {
     }
 }
 
-async fn cancelled(control: &JobControl) {
+pub(super) async fn cancelled(control: &JobControl) {
     // Enabling before checking the flag closes the notify-before-wait race.
     let notified = control.wake.notified();
     tokio::pin!(notified);

@@ -1,0 +1,351 @@
+{
+  "startedAt": "2026-10-08T06:17:57.875Z",
+  "sourceHead": "5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3",
+  "dataRoot": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\T5-native-lifecycle\\src-tauri\\target\\taskhost-acceptance\\1791440277875-43ad27e3-26d3-48f0-840c-4fb6600e2881\\data",
+  "profile": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\T5-native-lifecycle\\src-tauri\\target\\taskhost-acceptance\\1791440277875-43ad27e3-26d3-48f0-840c-4fb6600e2881\\profile",
+  "checks": [
+    {
+      "name": "cancel-header-hold",
+      "passed": true,
+      "elapsedMs": 19,
+      "record": {
+        "taskId": "taskhost-32dc1e20-c0ab-48c3-a0cf-7f7942810684",
+        "idempotencyKey": "taskhost-243486e6-ff92-4c7c-9108-6fbfe6094831",
+        "outputIndices": [
+          0
+        ],
+        "status": "unknown",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "unknown"
+          }
+        ],
+        "failure": {
+          "failureClass": "cancelled",
+          "status": 0,
+          "message": "已停止等待图像生成，供应商最终状态需核对"
+        },
+        "updatedAt": 1791440278470
+      }
+    },
+    {
+      "name": "cancel-body-hold",
+      "passed": true,
+      "elapsedMs": 116,
+      "record": {
+        "taskId": "taskhost-91a53ab0-4d15-43ec-a8a2-23cb0c26b53b",
+        "idempotencyKey": "taskhost-dc39d34d-97d5-4620-ad40-3a6cc952944b",
+        "outputIndices": [
+          0
+        ],
+        "status": "unknown",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "unknown"
+          }
+        ],
+        "failure": {
+          "failureClass": "cancelled",
+          "status": 0,
+          "message": "已停止等待图像生成，供应商最终状态需核对"
+        },
+        "updatedAt": 1791440278611
+      }
+    },
+    {
+      "name": "cancel-download-hold",
+      "passed": true,
+      "elapsedMs": 113,
+      "record": {
+        "taskId": "taskhost-ed0e80a4-8459-4951-bbde-66f8423c9b53",
+        "idempotencyKey": "taskhost-ec3de5aa-4c12-42da-bd88-727b435b140f",
+        "outputIndices": [
+          0,
+          1
+        ],
+        "status": "unknown",
+        "assetIds": [
+          "asset-431ced6916a2a21a156e3870"
+        ],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "succeeded",
+            "assetId": "asset-431ced6916a2a21a156e3870"
+          },
+          {
+            "index": 1,
+            "status": "unknown"
+          }
+        ],
+        "failure": {
+          "failureClass": "cancelled",
+          "status": 0,
+          "message": "已停止等待图像结果下载，供应商最终状态需核对"
+        },
+        "updatedAt": 1791440278847
+      }
+    },
+    {
+      "name": "completed-image-and-idempotency",
+      "passed": true,
+      "record": {
+        "taskId": "taskhost-3c845338-761f-48bf-ac5d-de936cab0e2c",
+        "idempotencyKey": "taskhost-6a05deea-3f82-4955-99f6-e032573f4bc8",
+        "outputIndices": [
+          0,
+          1
+        ],
+        "status": "succeeded",
+        "assetIds": [
+          "asset-431ced6916a2a21a156e3870",
+          "asset-c9db2dfdfef3c9631df79a74"
+        ],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "succeeded",
+            "assetId": "asset-431ced6916a2a21a156e3870"
+          },
+          {
+            "index": 1,
+            "status": "succeeded",
+            "assetId": "asset-c9db2dfdfef3c9631df79a74"
+          }
+        ],
+        "updatedAt": 1791440279010
+      }
+    },
+    {
+      "name": "reload-process-crash-slot-recovery",
+      "passed": true,
+      "record": {
+        "taskId": "taskhost-ca39a976-96fa-4c49-a8fb-71b1eba272c0",
+        "idempotencyKey": "taskhost-eeb1f6c2-435f-454b-9dde-14651f0779a1",
+        "outputIndices": [
+          0,
+          1
+        ],
+        "status": "unknown",
+        "assetIds": [
+          "asset-431ced6916a2a21a156e3870"
+        ],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "succeeded",
+            "assetId": "asset-431ced6916a2a21a156e3870"
+          },
+          {
+            "index": 1,
+            "status": "submitted"
+          }
+        ],
+        "failure": {
+          "failureClass": "network",
+          "status": 0,
+          "message": "应用关闭时供应商受理状态不明，请先核对供应商"
+        },
+        "updatedAt": 1791440279899
+      },
+      "assetSha256": "431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460"
+    },
+    {
+      "name": "native-capacity-and-text-cancel-release",
+      "passed": true
+    },
+    {
+      "name": "native-text-draft-process-recovery",
+      "passed": true,
+      "record": {
+        "taskId": "taskhost-46be1e7e-3f3c-415a-8fd1-35049bd7ab47",
+        "idempotencyKey": "taskhost-cb1c5e58-e02a-4c80-a6ad-f1ffee944289",
+        "outputIndices": [
+          0
+        ],
+        "status": "unknown",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "submitted",
+            "text": "未确认的原生文本草稿"
+          }
+        ],
+        "failure": {
+          "failureClass": "network",
+          "status": 0,
+          "message": "应用关闭时供应商受理状态不明，请先核对供应商"
+        },
+        "updatedAt": 1791440281312
+      }
+    },
+    {
+      "name": "actual-app-durable-intent-and-restart",
+      "passed": true,
+      "taskId": "project-muz5age6-hqalwo2e-task-muz5age6-8qfrd5",
+      "key": "project-muz5age6-hqalwo2e-generation-muz5age6"
+    }
+  ],
+  "launches": [
+    {
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-CznBbzGu.js"
+      ],
+      "styles": [
+        "http://tauri.localhost/assets/index-CBRGzoZu.css"
+      ]
+    },
+    {
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-CznBbzGu.js"
+      ],
+      "styles": [
+        "http://tauri.localhost/assets/index-CBRGzoZu.css"
+      ]
+    },
+    {
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-CznBbzGu.js"
+      ],
+      "styles": [
+        "http://tauri.localhost/assets/index-CBRGzoZu.css"
+      ]
+    },
+    {
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-CznBbzGu.js"
+      ],
+      "styles": [
+        "http://tauri.localhost/assets/index-CBRGzoZu.css"
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/v1/images/generations",
+      "prompt": "header-hold",
+      "key": "taskhost-243486e6-ff92-4c7c-9108-6fbfe6094831",
+      "taskId": "taskhost-32dc1e20-c0ab-48c3-a0cf-7f7942810684",
+      "durableJournal": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/images/generations",
+      "prompt": "body-hold",
+      "key": "taskhost-dc39d34d-97d5-4620-ad40-3a6cc952944b",
+      "taskId": "taskhost-91a53ab0-4d15-43ec-a8a2-23cb0c26b53b",
+      "durableJournal": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/images/generations",
+      "prompt": "download-hold",
+      "key": "taskhost-ec3de5aa-4c12-42da-bd88-727b435b140f",
+      "taskId": "taskhost-ed0e80a4-8459-4951-bbde-66f8423c9b53",
+      "durableJournal": true
+    },
+    {
+      "path": "/slow/download-hold",
+      "method": "GET"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/images/generations",
+      "prompt": "native-success",
+      "key": "taskhost-6a05deea-3f82-4955-99f6-e032573f4bc8",
+      "taskId": "taskhost-3c845338-761f-48bf-ac5d-de936cab0e2c",
+      "durableJournal": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/images/generations",
+      "prompt": "partial-restart",
+      "key": "taskhost-eeb1f6c2-435f-454b-9dde-14651f0779a1",
+      "taskId": "taskhost-ca39a976-96fa-4c49-a8fb-71b1eba272c0",
+      "durableJournal": true
+    },
+    {
+      "path": "/slow/partial-restart",
+      "method": "GET"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "prompt": "text-hold",
+      "key": "taskhost-a94c7a81-adf9-497d-aeb9-d32ff61bc1a9",
+      "taskId": "taskhost-114b73a3-6971-486f-b56a-6bdc27b2d515",
+      "durableJournal": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "prompt": "text-success",
+      "key": "taskhost-f7274ce7-5170-4be5-9683-40892e760c12",
+      "taskId": "taskhost-26168d9b-8803-49df-9ec5-412aa74fe642",
+      "durableJournal": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "prompt": "text-draft-restart",
+      "key": "taskhost-cb1c5e58-e02a-4c80-a6ad-f1ffee944289",
+      "taskId": "taskhost-46be1e7e-3f3c-415a-8fd1-35049bd7ab47",
+      "durableJournal": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/images/generations",
+      "prompt": "ui-success",
+      "key": "project-muz5age6-hqalwo2e-generation-muz5age6",
+      "taskId": "project-muz5age6-hqalwo2e-task-muz5age6-8qfrd5",
+      "durableJournal": true,
+      "projectIntent": true
+    }
+  ],
+  "errors": [],
+  "passed": false,
+  "versions": {
+    "schemaVersion": 1,
+    "desktop": "2.1.5",
+    "web": "2.1.5",
+    "mobile": "2.1.1"
+  },
+  "sourceHashes": {
+    "src-tauri/src/task_host.rs": "de06fb61c592729e6cca334c5a539ff49e24cd87a87aa0be92175be42bb9eec5",
+    "src-tauri/src/task_host_text.rs": "ebd247a2931f0582f48678e8aabd1f84f7307bf1933b472654b2c532d3a92b6e",
+    "src/App.tsx": "3108b31699893684fd90f7c69c85bb88ab1e15bb62463313caf4ac4b85f549ac",
+    "src/features/creation/nativeTaskHost.ts": "adb5992e13b253659f05682a4b24031d122f8fa7330fdb07554416b823e17a8f",
+    "src/features/creation/useCreationStorage.ts": "375adc1bfb2b3a7e47734c8e60407e3d88fbe45568befba697c729732c65dafb",
+    "tests/desktop/taskhost-lifecycle.mjs": "4b1e9a2968fffc16715c13b0e593ea9f5d3ec37adda4847d4a78d65477ac0210",
+    "config/platform-versions.json": "48fb4fe97413ccf50a0a3b867a490941a31d8a6f26acb81afc8e64897ad63ff6",
+    "src-tauri/Cargo.lock": "8531d202ac1fa511557cd04fe5fdc4e7e5e2e1d4d123b3fea6d3289a46dfb515"
+  },
+  "bundleHashes": {
+    "assets/index-CBRGzoZu.css": "14de3a9876441cfe46661e50ecb0a9daa3f255a5ef491335bb2cabad108679b1",
+    "assets/index-CznBbzGu.js": "5257ddfd5e92bac1a2d39f268480b16b0cbb3030b6bb18f2283579077149a7ac"
+  },
+  "executableSha256": "81e3c35dacf18112432f51cf3b87f3cbcc976f4afb46828e23f3649a9774c1af",
+  "failure": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  getByRole('menu', { name: '选择模型' }).getByRole('menuitemradio')\nExpected: 1\nReceived: 0\nTimeout:  5000ms\n\nCall log:\n  - Expect \"toHaveCount\" getByRole('menu', { name: '选择模型' }).getByRole('menuitemradio') with timeout 5000ms\n  - waiting for getByRole('menu', { name: '选择模型' }).getByRole('menuitemradio')\n    13 × locator resolved to 0 elements\n       - unexpected value \"0\"\n",
+  "failureUi": "KK Studio\n文件\n编辑\n窗口\n帮助\n桌面版\n开始创作\n项目库\n技能\nComfyUI 工作流\nKK Studio\n\n属于你的多模态 Agent 团队\n\n模型\n模型\n选择当前可用模型\n\n没有匹配的图片模型，请配置供应商。\n\n生成设置\n批量\n1 张\n4 张\n8 张\n16 张\n32 张\n数据\nBYOK 本地\n仅本地\n平台额度（Prototype）\n配置供应商与模型…\nSkill\n自动\n创作灵感\n技能\nH3 精选\n特效包装\n品牌广告\n影视片头\nMV\n二次元 PV\nH3 精选\n蓝调时刻 · 城市短片\n\n用一张参考图规划镜头、节奏和配乐，适合快速验证画面方向。\n\n品牌广告\n产品故事板\n\n把产品卖点拆成可编辑的画面节点，再交给模型继续完善。\n\n音乐 MV\n音乐 MV 分镜\n\n从一句歌词开始，生成镜头草稿与视觉参考，保持创作方向可控。",
+  "failureMetadata": {
+    "keys": [
+      "kk-studio-next:skills:records:v2",
+      "canvas-plugins",
+      "kk-studio-next:skills:v1",
+      "kk-canvas-ui-preferences-v1"
+    ],
+    "provider": null
+  },
+  "finishedAt": "2026-10-08T06:18:09.813Z",
+  "credentialCleanupComplete": true
+}

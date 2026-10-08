@@ -27,3 +27,7 @@ R1 结果恢复锚点已改为整张 article，与实际 Toolbar 一致；新增
 ## 976db180 独立技术补审 PASS
 
 固定 base1af0357 → head976db180d2b12eabf4d301d2059956cd585e1901；[完整收到的报告](evidence/review-976db180.md)。R1/R2 均 CLOSED，无 P0/P1/P2/P3；独立顶部/HUD 探针、6/6纯unit、UI202/0、治理100/0、功能34/0、Markdown100/0、version/diff-check通过。385源码/提交/EXE/bundle指纹与 Native/model 相符，422tests=422attempts/0实际retry/12workers、148585字节原日志/base64/SHA均核对。reviewer 未重跑full/native或核验Hosted，最终文档 head 补审与当前 Hosted 门禁另记；当前用户已授权通过门禁后普通合并，不伪造人类 approval。
+
+## bcc8d34文档PASS与新主线组合待补审
+
+[完整只读审查](evidence/review-bcc8d34.md)确认bcc8仅文档变化，R1/R2保持CLOSED，产品976db技术PASS有效。PR37落地main78cea37后，当前UI011承接双方历史与实际重试门禁、自动bumpDesktop2.1.8/Web2.1.9；新的组合完整验收与精确提交补审尚待完成，不让bcc8结论代替新组合审查。

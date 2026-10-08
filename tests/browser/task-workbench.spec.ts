@@ -192,6 +192,9 @@ test("审批阻断远程请求，部分成功矩阵单项重试回填且审阅�
   await page.getByRole("tab", { name: "Generate" }).click();
   await expect(page.locator(".batch-cell")).toHaveCount(4);
   await expect(page.locator(".batch-preview")).toHaveCount(2);
+  await expect(page.locator(".batch-matrix-header")).toContainText(
+    "单项可重试",
+  );
   await page.getByRole("button", { name: "单项重试" }).first().click();
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect(page.locator(".batch-cell.is-succeeded")).toHaveCount(3);
@@ -216,6 +219,62 @@ test("审批阻断远程请求，部分成功矩阵单项重试回填且审阅�
     "降低这一区域的高光",
   );
   await expect(page.getByLabel("评论任务分配")).toHaveValue("reviewer");
+});
+
+test("归档不明与失败输出并存时，矩阵不提供普通重试", async ({
+  page,
+}, testInfo) => {
+  let requests = 0;
+  await page.route(endpoint, async (route) => {
+    requests += 1;
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        data: [{ b64_json: pixel }, { b64_json: "invalid!!" }],
+      }),
+    });
+  });
+  await configure(page);
+  await submit(page);
+  await page.getByRole("button", { name: "批准并提交" }).click();
+  await expect(page.locator(".project-task-unknown")).toBeVisible();
+  await workbench(page);
+  await page.getByRole("tab", { name: "Generate" }).click();
+  await expect(page.locator(".batch-cell.is-succeeded")).toHaveCount(1);
+  await expect(page.locator(".batch-cell.is-unknown")).toHaveCount(1);
+  await expect(page.locator(".batch-cell.is-failed")).toHaveCount(2);
+  await expect(page.locator(".batch-cell.is-failed").first()).not.toContainText(
+    "可单项重试",
+  );
+  await expect(page.locator(".batch-matrix-header")).not.toContainText(
+    "单项可重试",
+  );
+  await expect(
+    page.getByRole("button", { name: "单项重试", exact: true }),
+  ).toHaveCount(0);
+  expect(requests).toBe(1);
+  await expect(page.locator(".app")).toHaveAttribute(
+    "data-runtime-mode",
+    "production",
+  );
+  await page.screenshot({
+    path: testInfo.outputPath("unknown-failed-matrix.png"),
+  });
+  await testInfo.attach("production-runtime", {
+    body: JSON.stringify(
+      await page.evaluate(() => ({
+        url: location.href,
+        mode: document.querySelector(".app")?.getAttribute("data-runtime-mode"),
+        entry: document
+          .querySelector(".app")
+          ?.getAttribute("data-runtime-entry"),
+        scripts: [...document.scripts]
+          .map((script) => script.src)
+          .filter(Boolean),
+      })),
+    ),
+    contentType: "application/json",
+  });
 });
 
 test("提交后暂停进入受理状态不明并保留已归档结果", async ({ page }) => {

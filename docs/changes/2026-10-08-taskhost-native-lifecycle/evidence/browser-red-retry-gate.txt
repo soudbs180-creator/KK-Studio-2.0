@@ -1,0 +1,39 @@
+[WebServer] (node:13788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:53588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\browser\task-workbench.spec.ts:222:1 › 归档不明与失败输出并存时，矩阵不提供普通重试 (6.7s)
+
+
+  1) tests\browser\task-workbench.spec.ts:222:1 › 归档不明与失败输出并存时，矩阵不提供普通重试 ───────────────────────────
+
+    Error: expect(locator).not.toContainText(expected) failed
+
+    Locator: locator('.batch-matrix-header')
+    Expected substring: not "单项可重试"
+    Received string: "Batch Matrix4 个输出 · 单项可重试"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "not toContainText" locator('.batch-matrix-header') with timeout 5000ms
+      - waiting for locator('.batch-matrix-header')
+        14 × locator resolved to <div class="batch-matrix-header">…</div>
+           - unexpected value "Batch Matrix4 个输出 · 单项可重试"
+
+
+      240 |   await expect(page.locator(".batch-cell.is-unknown")).toHaveCount(1);
+      241 |   await expect(page.locator(".batch-cell.is-failed")).toHaveCount(2);
+    > 242 |   await expect(page.locator(".batch-matrix-header")).not.toContainText(
+          |                                                          ^
+      243 |     "单项可重试",
+      244 |   );
+      245 |   await expect(
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\T5-native-lifecycle\tests\browser\task-workbench.spec.ts:242:58
+
+    Error Context: test-results\task-workbench-归档不明与失败输出并存时，矩阵不提供普通重试\error-context.md
+
+  1 failed
+    tests\browser\task-workbench.spec.ts:222:1 › 归档不明与失败输出并存时，矩阵不提供普通重试 ────────────────────────────

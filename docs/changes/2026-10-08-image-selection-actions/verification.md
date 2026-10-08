@@ -41,3 +41,7 @@ UI011-R2：非空队列按钮27px、单项重试22px；补入真实createTask的
 该本机 fixture 不证明真实付费 Provider、Mobile、安装器发布或用户最终 Figma 视觉批准。独立新head复核 R1/R2 与当前 Hosted/主线推广仍待记录；旧 CHANGES REQUIRED 和失败均保留，不升级旧 source 证据。
 
 独立精确 1af0357 →976db180 [技术补审PASS](evidence/review-976db180.md)，R1/R2 CLOSED，无新blocker；源文件/提交/EXE/bundle、Web reporter/base64日志和实际Native收据全部核对。随后只补审查与状态文档；最终文档head/当前Hosted仍待满足。T5 21ac的Hosted实际在空Registry属性集合失败，原生尚未启动；root已26项正确替身回归返修，未当作通过或合并。
+
+## 承接已验收T5主线78cea37
+
+bcc8d34最终文档[独立只读审查](evidence/review-bcc8d34.md)PASS，976db180产品结论保持有效。PR37的04260ad已完成Hosted并合入main78cea37；UI011普通任务分支现保留双方历史、按task ID合并102项账本，保留BatchMatrix真实retryableOutputIndices和共享32px样式，候选自动递增Desktop2.1.8/Web2.1.9/Mobile规划2.1.1。组合后的完整verify/fresh Tauri/UI13/TaskHost11/模型门禁、精确新head补审与Hosted尚待实际完成；旧422/24cf收据不当作新组合验收。

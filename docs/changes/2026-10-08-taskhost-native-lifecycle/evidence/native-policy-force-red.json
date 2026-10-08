@@ -1,0 +1,7 @@
+{
+  "source": "D:/kk-studio/.verification/T5-native-lifecycle/native-policy-registry-force-red.txt",
+  "sha256": "1651b81c1490f249be031cc318bc8a1b149ce98c92f79e91c697ef3d554e93cc",
+  "encoding": "base64",
+  "rawBytes": "RXhjZXB0aW9uOiBEOlxray1zdHVkaW9cS0stU3R1ZGlvLTIuMFwud29ya3RyZWVzXFQ1LW5hdGl2ZS1saWZlY3ljbGVcdGVzdHNcZGVza3RvcFxuYXRpdmUtY2ktcG9saWN5LnBzMToxMDINCkxpbmUgfA0KIDEwMiB8ICDigKYgZXJ2ZS1jaGlsZC1rZXknKSB7IHRocm93ICdFeGlzdGluZyBjaGlsZCByZWdpc3RyeSBrZXkgd2FzIHJlbW92ZWQuJyB9DQogICAgIHwgICAgICAgICAgICAgICAgICAgICAgIH5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fg0KICAgICB8IEV4aXN0aW5nIGNoaWxkIHJlZ2lzdHJ5IGtleSB3YXMgcmVtb3ZlZC4NCg0K",
+  "text": "Exception: D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\T5-native-lifecycle\\tests\\desktop\\native-ci-policy.ps1:102\r\nLine |\r\n 102 |  … erve-child-key') { throw 'Existing child registry key was removed.' }\r\n     |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n     | Existing child registry key was removed.\r\n\r\n"
+}
