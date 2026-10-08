@@ -1,0 +1,20 @@
+{
+  "testedHead": "bdb82df6e99dd20c20e5a6d5e2181fe345992242",
+  "tests": 447,
+  "attempts": 447,
+  "stats": {
+    "startTime": "2026-10-08T20:00:31.805Z",
+    "duration": 215078.34900000002,
+    "expected": 447,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "configuredWorkers": 12,
+  "actualWorkers": 12,
+  "configuredRetries": [
+    null
+  ],
+  "maxActualRetry": 0,
+  "sha256": "4ff8bb2d3a932acb8207614aee2a58efc8d8ca9121a21f3d7e1f7829bf3eb9bb"
+}

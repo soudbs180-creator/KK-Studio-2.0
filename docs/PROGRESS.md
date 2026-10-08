@@ -850,3 +850,6 @@ TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，�
 
 
 - TASK-DESKTOP-FLUSH-001：本轮插件原生立即关闭实际复现最后编辑丢失（P1）；已登记并实现 CloseRequested 耐久队列守卫，重复关闭/最新revision/失败及读保护留窗/卸载单元 7 PASS。fresh 原生与当前提交独立验收仍未完成，原 FAIL 保留。
+
+
+- TASK-PLUGIN-DEV-001及RECOVERY/MARKDOWN/DESKTOP-FLUSH三个新P1本地闭合：真实开发/生产/fresh原生正文及恢复、立即关闭/真实IO失败留窗与原件保护、完整447浏览器和同EXE邻接全部通过。原FAIL、来源身份和标题栏第一拖动未知原因保留；最终doc/Hosted/普通集成/main按各自收据，UI012/UI014与43项既有开放能力继续。见[本轮完整状态](changes/2026-10-09-plugin-development/status.md)。

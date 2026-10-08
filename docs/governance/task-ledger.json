@@ -24,14 +24,15 @@
       "tests/desktop",
       "docs"
     ],
-    "status": "PARTIAL",
+    "status": "DONE",
     "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-09-plugin-development/spec.md",
-      "docs/changes/2026-10-09-plugin-development/verification.md"
+      "docs/changes/2026-10-09-plugin-development/verification.md",
+      "docs/changes/2026-10-09-plugin-development/review.md"
     ],
-    "verification": "FACT / PRE-EXISTING FAILURE：native-immediate-close-red 最后 SVG 修改丢失；closing=true 时实际 http://ipc.localhost/write_creation_snapshot 请求失败。原始 desktop-runtime.json/PNG/日志保留。当前未修复，关联 PLUGIN-REVIEW-002，唯一 active 实现任务仍为 TASK-PLUGIN-DEV-001。",
-    "verificationResult": "FAIL",
+    "verification": "本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。",
+    "verificationResult": "PASS",
     "updated": "2026-10-09"
   },
   {
@@ -59,14 +60,15 @@
       "tests/desktop",
       "docs"
     ],
-    "status": "PARTIAL",
+    "status": "DONE",
     "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-09-plugin-development/spec.md",
-      "docs/changes/2026-10-09-plugin-development/verification.md"
+      "docs/changes/2026-10-09-plugin-development/verification.md",
+      "docs/changes/2026-10-09-plugin-development/review.md"
     ],
-    "verification": "PRE-EXISTING FAILURE：共享4插件编辑flow在真实开发阻断esm.sh时Markdown标题为空，页面console net::ERR_FAILED及dynamic import pageerror；原receipt/PNG/日志保留FAIL。当前尚未修复。 当前预验收快照10/10和固定1421四插件编辑/正文/刷新恢复/启停/零错误通过，仍需完整verify、fresh Tauri和当前独立审查；历史FAIL保留。 实现及局部复验完成，最终验收未完成；作为同一逻辑目标的关联缺陷串行由唯一active任务TASK-PLUGIN-DEV-001执行，不创建第二个并行写入者。",
-    "verificationResult": "FAIL",
+    "verification": "本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。",
+    "verificationResult": "PASS",
     "updated": "2026-10-09"
   },
   {
@@ -93,14 +95,15 @@
       "tests/desktop",
       "docs"
     ],
-    "status": "PARTIAL",
+    "status": "DONE",
     "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-09-plugin-development/spec.md",
-      "docs/changes/2026-10-09-plugin-development/verification.md"
+      "docs/changes/2026-10-09-plugin-development/verification.md",
+      "docs/changes/2026-10-09-plugin-development/review.md"
     ],
-    "verification": "PRE-EXISTING FAILURE：最新main8c组合的真实开发回归创建四插件成功，重启并打开唯一保存项目后找不到HTML插件节点；页面零错误/无遮罩。源码normalizeCanvasItem未返回plugin字段，当前尚未修复和独立验收。 当前预验收快照10/10和固定1421四插件编辑/正文/刷新恢复/启停/零错误通过，仍需完整verify、fresh Tauri和当前独立审查；历史FAIL保留。 实现及局部复验完成，最终验收未完成；作为同一逻辑目标的关联缺陷串行由唯一active任务TASK-PLUGIN-DEV-001执行，不创建第二个并行写入者。",
-    "verificationResult": "FAIL",
+    "verification": "本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。",
+    "verificationResult": "PASS",
     "updated": "2026-10-09"
   },
   {
@@ -298,7 +301,7 @@
       "vite.config.ts",
       "tests/browser"
     ],
-    "status": "IN_PROGRESS",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-10-08-model-capabilities/verification.md",
       "docs/changes/2026-10-09-plugin-development/intent.md",
@@ -307,8 +310,8 @@
       "docs/changes/2026-10-09-plugin-development/verification.md",
       "docs/changes/2026-10-09-plugin-development/review.md"
     ],
-    "verification": "PRE-EXISTING FAILURE：main@21d121d和本任务1421均出现/plugins/*.js public-import错误；本任务只诊断登记。Esc后能力表单可保存，插件加载仍未修复。 当前预验收快照10/10和固定1421四插件编辑/正文/刷新恢复/启停/零错误通过，仍需完整verify、fresh Tauri和当前独立审查；历史FAIL保留。",
-    "verificationResult": "FAIL",
+    "verification": "本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。",
+    "verificationResult": "PASS",
     "updated": "2026-10-09"
   },
   {

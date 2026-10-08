@@ -6,15 +6,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
-| TASK-DESKTOP-FLUSH-001 | 桌面关闭前耐久保存与失败留窗 | PARTIAL | TASK-PLUGIN-DEV-001 | root |
-| TASK-PLUGIN-MARKDOWN-001 | 随包Markdown去除CDN代码依赖与离线渲染 | PARTIAL | TASK-PLUGIN-DEV-001 | root |
-| TASK-PLUGIN-RECOVERY-001 | 插件节点快照完整恢复与坏数据保护 | PARTIAL | TASK-PLUGIN-DEV-001 | root |
+| TASK-DESKTOP-FLUSH-001 | 桌面关闭前耐久保存与失败留窗 | DONE | TASK-PLUGIN-DEV-001 | root |
+| TASK-PLUGIN-MARKDOWN-001 | 随包Markdown去除CDN代码依赖与离线渲染 | DONE | TASK-PLUGIN-DEV-001 | root |
+| TASK-PLUGIN-RECOVERY-001 | 插件节点快照完整恢复与坏数据保护 | DONE | TASK-PLUGIN-DEV-001 | root |
 | TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | DONE | TASK-MODEL-001 | root |
 | TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | TASK-IMAGE-EDIT-001 | root |
 | TASK-UI-013 | 桌面标题栏与菜单合并为单排 | DONE | none | root |
 | TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | none | root |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
-| TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | IN_PROGRESS | none | root |
+| TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | DONE | none | root |
 | T0 | 可复现候选源码与主线整合 | DONE | none | root |
 | TASK-GOV-001 | 治理源、ESLint、架构门禁和 CI | DONE | T0 | root |
 | TASK-PROV-001 | 冷却恢复与产品调度入口边界 | DONE | TASK-GOV-001 | root |
@@ -124,8 +124,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-PLUGIN-DEV-001-same-origin-modules`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001`
 - Modules: src/features/creation/useCreationStorage.ts, src/features/creation/nativeClose.ts, src-tauri/capabilities/default.json, tests/unit, tests/desktop, docs
-- Verification: FAIL — FACT / PRE-EXISTING FAILURE：native-immediate-close-red 最后 SVG 修改丢失；closing=true 时实际 http://ipc.localhost/write_creation_snapshot 请求失败。原始 desktop-runtime.json/PNG/日志保留。当前未修复，关联 PLUGIN-REVIEW-002，唯一 active 实现任务仍为 TASK-PLUGIN-DEV-001。
-- Evidence: [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md)
+- Verification: PASS — 本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。
+- Evidence: [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md), [docs/changes/2026-10-09-plugin-development/review.md](../../docs/changes/2026-10-09-plugin-development/review.md)
 - Updated: 2026-10-09
 
 ## TASK-PLUGIN-MARKDOWN-001 — 随包Markdown去除CDN代码依赖与离线渲染
@@ -136,8 +136,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-PLUGIN-DEV-001-same-origin-modules`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001`
 - Modules: vendor/canvas-plugins/markdown, vendor/canvas-plugins/package-lock.json, tests/support, tests/development, tests/browser, tests/desktop, docs
-- Verification: FAIL — PRE-EXISTING FAILURE：共享4插件编辑flow在真实开发阻断esm.sh时Markdown标题为空，页面console net::ERR_FAILED及dynamic import pageerror；原receipt/PNG/日志保留FAIL。当前尚未修复。 当前预验收快照10/10和固定1421四插件编辑/正文/刷新恢复/启停/零错误通过，仍需完整verify、fresh Tauri和当前独立审查；历史FAIL保留。 实现及局部复验完成，最终验收未完成；作为同一逻辑目标的关联缺陷串行由唯一active任务TASK-PLUGIN-DEV-001执行，不创建第二个并行写入者。
-- Evidence: [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md)
+- Verification: PASS — 本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。
+- Evidence: [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md), [docs/changes/2026-10-09-plugin-development/review.md](../../docs/changes/2026-10-09-plugin-development/review.md)
 - Updated: 2026-10-09
 
 ## TASK-PLUGIN-RECOVERY-001 — 插件节点快照完整恢复与坏数据保护
@@ -148,8 +148,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-PLUGIN-DEV-001-same-origin-modules`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001`
 - Modules: src/features/creation/model.ts, src/features/creation/snapshotCodec.ts, tests/unit, tests/development, tests/desktop, docs
-- Verification: FAIL — PRE-EXISTING FAILURE：最新main8c组合的真实开发回归创建四插件成功，重启并打开唯一保存项目后找不到HTML插件节点；页面零错误/无遮罩。源码normalizeCanvasItem未返回plugin字段，当前尚未修复和独立验收。 当前预验收快照10/10和固定1421四插件编辑/正文/刷新恢复/启停/零错误通过，仍需完整verify、fresh Tauri和当前独立审查；历史FAIL保留。 实现及局部复验完成，最终验收未完成；作为同一逻辑目标的关联缺陷串行由唯一active任务TASK-PLUGIN-DEV-001执行，不创建第二个并行写入者。
-- Evidence: [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md)
+- Verification: PASS — 本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。
+- Evidence: [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md), [docs/changes/2026-10-09-plugin-development/review.md](../../docs/changes/2026-10-09-plugin-development/review.md)
 - Updated: 2026-10-09
 
 ## TASK-IMAGE-EDIT-001 — 统一图片编辑蒙版与连续重绘
@@ -220,7 +220,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-PLUGIN-DEV-001-same-origin-modules`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001`
 - Modules: src/features/plugins/pluginLoader.ts, vite.config.ts, tests/browser
-- Verification: FAIL — PRE-EXISTING FAILURE：main@21d121d和本任务1421均出现/plugins/*.js public-import错误；本任务只诊断登记。Esc后能力表单可保存，插件加载仍未修复。 当前预验收快照10/10和固定1421四插件编辑/正文/刷新恢复/启停/零错误通过，仍需完整verify、fresh Tauri和当前独立审查；历史FAIL保留。
+- Verification: PASS — 本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。
 - Evidence: [docs/changes/2026-10-08-model-capabilities/verification.md](../../docs/changes/2026-10-08-model-capabilities/verification.md), [docs/changes/2026-10-09-plugin-development/intent.md](../../docs/changes/2026-10-09-plugin-development/intent.md), [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/plan.md](../../docs/changes/2026-10-09-plugin-development/plan.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md), [docs/changes/2026-10-09-plugin-development/review.md](../../docs/changes/2026-10-09-plugin-development/review.md)
 - Updated: 2026-10-09
 

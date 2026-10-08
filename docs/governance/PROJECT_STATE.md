@@ -1,5 +1,10 @@
 # 当前项目状态
 
+## 2026-10-09 随包插件及关闭保存本地验收完成
+
+PR41已普通合入main8c921a5，实际post-main37826264108全部必需检查成功；PR38/39/40亦已合并。root独立插件分支修复开发模块、JSX、完整插件恢复、Markdown离线和立即关闭丢失；804root/172Agent（原skip8/2）、447browser零retry/flaky、严格开发、Rust102/fmt/clientcheck/fresh Agent及原生8步/TaskHost11/上方动作13/CSP和最终标题栏通过，c8独立关闭两阻断。Desktop/Web2.1.12、Mobile规划2.1.1；109任务DONE66/TODO13/PARTIAL26/BLOCKED4，43项开放，105上游无关对象完整保留。本地产品DONE，最终doc review/当前Hosted/普通PR合并、landing全树及post-main CI须分别实际回读。UI012/UI014继续原作者收尾；19条旧健康审计须在当前main复证并承接，不能整合未完成候选。原首轮titlebar拖动FAIL原因UNKNOWN，未改写成PASS；外部live/物理设备/用户视觉与整体UI规范仍开放。恢复入口 [状态报告](../changes/2026-10-09-plugin-development/status.md) / [验证](../changes/2026-10-09-plugin-development/verification.md)。
+
+
 ## 2026-10-09 统一Mask最新主线组合本地验收完成
 
 用户授权普通合并已检查分支。PR38/40已正常合并，当前base main1d6f640及其实际post-main37806381609成功；Mask产品27b/driver-eaa承接该主线，完整445browser零retry、102Rust和fresh Agent原生Mask外0/重启/undo/凭据保护、上方操作栏/TaskHost/模型/标题栏/首屏及生产Web3宽度通过，当前独立复审。Desktop/Web2.1.11、Mobile规划2.1.1；104上游对象完整保留，106项DONE62/TODO14/PARTIAL26/BLOCKED4，44项开放。TASK-PLUGIN-DEV-001开发遮罩依然FAIL/TODO，源码与main相同；开发其余UI只在留证后Escape收起遮罩作局部检查，primary-main开发两次超时为NOT VERIFIED。真实效果/手机/用户验收仍VERIFY-002，FEAT035仍PARTIAL。最终docs独立/最新Hosted、普通合并、完整landing tree/主线FF与post-mainCI另外实际回读，不预填成功。UI012仍原执行者在途。恢复入口[本轮验证](../changes/2026-10-09-unified-mask-main-integration/verification.md) / [任务状态报告](../changes/2026-10-09-unified-mask-main-integration/status.md)。保留所有历史/工作树/快捷方式及用户数据，不宣称既有启动入口已换包或已发布。

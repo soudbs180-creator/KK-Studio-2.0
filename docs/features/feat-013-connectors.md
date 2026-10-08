@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-10-08
-- 关联任务：TASK-UI-005、TASK-CAP-001、TASK-MINIMAX-001、PLUGIN-DESKTOP-001、TASK-PLUGIN-DEV-001
+- 最近更新：2026-10-09
+- 关联任务：TASK-UI-005、TASK-CAP-001、TASK-MINIMAX-001、PLUGIN-DESKTOP-001、TASK-PLUGIN-DEV-001、TASK-PLUGIN-RECOVERY-001、TASK-PLUGIN-MARKDOWN-001、TASK-DESKTOP-FLUSH-001
 
 ## 用户可见入口
 
@@ -25,6 +25,8 @@
 - `tests/unit/pluginLoader.test.ts`（11 项：安装/启停/卸载/本地发现/更新/无效导出/清理，以及远程地址、重定向和旧缓存拒绝）
 - `tests/browser/plugins.spec.ts`（添加菜单 → 创建 SVG 插件节点 → plugin 变体渲染）
 
+- 当前回归：`tests/development/plugins.mjs`、`tests/browser/plugin-recovery.spec.ts`、`tests/desktop/plugin-recovery.mjs` 及恢复/JSX/关闭单元。447浏览器、原生8步和邻接TaskHost11/上方动作13实际通过；完整来源与原始失败见[本轮证据](../changes/2026-10-09-plugin-development/verification.md)。
+
 ## 当前能力
 
 - Web production preview 中，插件 SDK 契约、注册表、启停 store、HTTPS URL 安装/更新/卸载和内置节点渲染已通过本地测试；第三方插件以应用页面权限执行，应只安装可信来源。
@@ -33,7 +35,7 @@
 
 ## 差距与后端化
 
-- TASK-PLUGIN-DEV-001：固定 1421 的 Vite development 会因随包 `/plugins/*.js` public-import 错误弹出遮罩；原主线与 TASK-MODEL-001 均复现。Production/Tauri 的既有结果保留，开发加载未完成；见[本轮诊断](../changes/2026-10-08-model-capabilities/verification.md)。
+- 开发 public-import、静态 JSX、插件快照字段遗漏、Markdown 外部代码和立即关闭丢失的失败项已实际修复，原始 FAIL 保留。固定1421与Web生产四插件真实正文编辑/恢复通过，fresh Tauri立即关闭、真实IO失败留窗/重试和坏主备保护通过；见[本轮验收](../changes/2026-10-09-plugin-development/verification.md)。其余统一入口与真实能力缺口继续由开放任务承接。
 - 将连接器目录页与插件系统合并为统一“连接器/插件”入口。
 - 插件 `ctx.ai` 生成能力走本项目资产管线（result 入画布），generateText 提示走对话面板。
 - 远程插件仍以应用权限运行，仅允许不含凭据/片段的 HTTPS 地址且禁止自动重定向；本轮不承诺远程代码在 Desktop 中执行。

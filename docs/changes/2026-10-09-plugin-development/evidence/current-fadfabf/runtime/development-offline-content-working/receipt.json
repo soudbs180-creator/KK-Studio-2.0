@@ -1,0 +1,194 @@
+{
+  "runtime": "Vite development",
+  "sourceHead": "3c8b962f1fb678b068c9ed57e507406507e63364",
+  "loaderSha256": "f1cbe8dc0bdf061a6ec201e7997c01c23e2998a03d178cb4723c3ec2fb69fb1d",
+  "startedAt": "2026-10-08T19:12:24.548Z",
+  "url": "http://127.0.0.1:1421/",
+  "requests": [
+    "http://127.0.0.1:1421/plugins/index.json",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791486747323",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791486747324",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486747324",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791486747324",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791486747324",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791486747323",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791486747324",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486747324",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791486747342",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791486747342",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791486747342",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486747342",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791486747342",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791486747342",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791486747342",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486747342",
+    "http://127.0.0.1:1421/plugins/index.json",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791486748923",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791486748923",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486748923",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791486748923",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791486748923",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791486748923",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486748923",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791486748923",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791486748940",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791486748940",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486748940",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791486748940",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791486748940",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486748940",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791486749094",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791486749094"
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:1421/plugins/index.json",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791486747324",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791486747323",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791486747324",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486747324",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791486747324",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791486747323",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791486747324",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486747324",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791486747342",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791486747342",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791486747342",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486747342",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791486747342",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791486747342",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791486747342",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486747342",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/index.json",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791486748923",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791486748923",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486748923",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791486748923",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791486748923",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791486748923",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486748923",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791486748923",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791486748940",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791486748940",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486748940",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791486748940",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791486748940",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791486748940",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791486749094",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791486749094",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "steps": [
+    "discover-four-plugins-without-overlay",
+    "add-edit-and-render-four-plugin-nodes-without-cdn",
+    "disable-reload-restore-enable",
+    "reject-unsafe-remote-before-request"
+  ],
+  "result": "PASS",
+  "entry": "src/main.tsx",
+  "mode": "development",
+  "finalUrl": "http://127.0.0.1:1421/",
+  "overlay": "",
+  "completedAt": "2026-10-08T19:12:29.775Z"
+}

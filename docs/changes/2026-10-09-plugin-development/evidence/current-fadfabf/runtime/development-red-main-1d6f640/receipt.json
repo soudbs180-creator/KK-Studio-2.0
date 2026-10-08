@@ -1,0 +1,74 @@
+{
+  "runtime": "Vite development",
+  "sourceHead": "1d6f640ac6f3a1e7af32c38d85596527704dc54a",
+  "loaderSha256": "345ec3a7033b22d7bdf7c1e4c2078d9d1520a032f555d88a8a98ba71bca82388",
+  "startedAt": "2026-10-08T18:26:10.394Z",
+  "url": "http://127.0.0.1:1421/",
+  "requests": [
+    "http://127.0.0.1:1421/plugins/index.json",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791483988027",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791483988027",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791483988028",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791483988028",
+    "http://127.0.0.1:1421/plugins/markdown.js?import&t=1791483988027",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?import&t=1791483988028",
+    "http://127.0.0.1:1421/plugins/html.js?import&t=1791483988027",
+    "http://127.0.0.1:1421/plugins/svg.js?import&t=1791483988028"
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:1421/plugins/index.json",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791483988027",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791483988028",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791483988027",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791483988028",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?import&t=1791483988027",
+      "status": 500
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?import&t=1791483988028",
+      "status": 500
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?import&t=1791483988027",
+      "status": 500
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?import&t=1791483988028",
+      "status": 500
+    }
+  ],
+  "errors": [
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "[plugins] 发现本地插件失败：/plugins/markdown.js TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:1421/plugins/markdown.js?import&t=1791483988027",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "[plugins] 发现本地插件失败：/plugins/sticky-note.js TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:1421/plugins/sticky-note.js?import&t=1791483988028",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "[plugins] 发现本地插件失败：/plugins/html.js TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:1421/plugins/html.js?import&t=1791483988027",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "[plugins] 发现本地插件失败：/plugins/svg.js TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:1421/plugins/svg.js?import&t=1791483988028"
+  ],
+  "steps": [],
+  "result": "FAIL",
+  "entry": "src/main.tsx",
+  "mode": "development",
+  "failure": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '打开设置', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <button aria-label=\"打开设置\" class=\"sidebar-settings\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <vite-error-overlay></vite-error-overlay> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <vite-error-overlay></vite-error-overlay> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <vite-error-overlay></vite-error-overlay> intercepts pointer events\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+  "finalUrl": "http://127.0.0.1:1421/",
+  "overlay": "Failed to load url /plugins/svg.js (resolved id: /plugins/svg.js). This file is in /public and will be copied as-is during build without going through the plugin transforms, and therefore should not be imported from source code. It can only be referenced via HTML tags.    at loadAndTransform (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001/node_modules/vite/dist/node/chunks/config.js:22739:33)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)Click outside, press Esc key, or fix the code to dismiss.You can also disable this overlay by setting server.hmr.overlay to false in vite.config.ts.\n:host {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  z-index: 99999;\n  --monospace: 'SFMono-Regular', Consolas,\n  'Liberation Mono', Menlo, Courier, monospace;\n  --red: #ff5555;\n  --yellow: #e2aa53;\n  --purple: #cfa4ff;\n  --cyan: #2dd9da;\n  --dim: #c9c9c9;\n\n  --window-background: #181818;\n  --window-color: #d8d8d8;\n}\n\n.backdrop {\n  position: fixed;\n  z-index: 99999;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  overflow-y: scroll;\n  margin: 0;\n  background: rgba(0, 0, 0, 0.66);\n}\n\n.window {\n  font-family: var(--monospace);\n  line-height: 1.5;\n  max-width: 80vw;\n  color: var(--window-color);\n  box-sizing: border-box;\n  margin: 30px auto;\n  padding: 2.5vh 4vw;\n  position: relative;\n  background: var(--window-background);\n  border-radius: 6px 6px 8px 8px;\n  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);\n  overflow: hidden;\n  border-top: 8px solid var(--red);\n  direction: ltr;\n  text-align: left;\n}\n\npre {\n  font-family: var(--monospace);\n  font-size: 16px;\n  margin-top: 0;\n  margin-bottom: 1em;\n  overflow-x: scroll;\n  scrollbar-width: none;\n}\n\npre::-webkit-scrollbar {\n  display: none;\n}\n\npre.frame::-webkit-scrollbar {\n  display: block;\n  height: 5px;\n}\n\npre.frame::-webkit-scrollbar-thumb {\n  background: #999;\n  border-radius: 5px;\n}\n\npre.frame {\n  scrollbar-width: thin;\n}\n\n.message {\n  line-height: 1.3;\n  font-weight: 600;\n  white-space: pre-wrap;\n}\n\n.message-body {\n  color: var(--red);\n}\n\n.plugin {\n  color: var(--purple);\n}\n\n.file {\n  color: var(--cyan);\n  margin-bottom: 0;\n  white-space: pre-wrap;\n  word-break: break-all;\n}\n\n.frame {\n  color: var(--yellow);\n}\n\n.stack {\n  font-size: 13px;\n  color: var(--dim);\n}\n\n.tip {\n  font-size: 13px;\n  color: #999;\n  border-top: 1px dotted #999;\n  padding-top: 13px;\n  line-height: 1.8;\n}\n\ncode {\n  font-size: 13px;\n  font-family: var(--monospace);\n  color: var(--yellow);\n}\n\n.file-link {\n  text-decoration: underline;\n  cursor: pointer;\n}\n\nkbd {\n  line-height: 1.5;\n  font-family: ui-monospace, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;\n  font-size: 0.75rem;\n  font-weight: 700;\n  background-color: rgb(38, 40, 44);\n  color: rgb(166, 167, 171);\n  padding: 0.15rem 0.3rem;\n  border-radius: 0.25rem;\n  border-width: 0.0625rem 0.0625rem 0.1875rem;\n  border-style: solid;\n  border-color: rgb(54, 57, 64);\n  border-image: initial;\n}\n",
+  "completedAt": "2026-10-08T18:26:43.350Z"
+}

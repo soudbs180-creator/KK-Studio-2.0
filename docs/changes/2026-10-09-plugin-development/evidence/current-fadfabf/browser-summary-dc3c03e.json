@@ -1,0 +1,33 @@
+{
+  "sourceHead": "dc3c03eb316f3009c939dc33f25d78c4a2acd576",
+  "stats": {
+    "startTime": "2026-10-08T19:20:24.727Z",
+    "duration": 114233.405,
+    "expected": 447,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "tests": 447,
+  "attempts": 447,
+  "actualRetries": 0,
+  "statuses": {
+    "expected": 447
+  },
+  "configRetries": [
+    1
+  ],
+  "workers": 12,
+  "newRecoveryTests": [
+    {
+      "title": "四个随包插件离线编辑并刷新恢复完整内容和负载",
+      "status": "expected",
+      "attempts": 1
+    },
+    {
+      "title": "损坏插件读取和重试不会覆盖IndexedDB原件及备份",
+      "status": "expected",
+      "attempts": 1
+    }
+  ]
+}

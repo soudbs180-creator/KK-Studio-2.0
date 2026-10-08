@@ -1,0 +1,29 @@
+{
+  "source": "dc3c03eb316f3009c939dc33f25d78c4a2acd576",
+  "driverHead": "83639e747c9d450542e5363b4029a13287ffae82",
+  "productUnchanged": true,
+  "delta": [
+    "docs/changes/2026-10-09-plugin-development/verification.md",
+    "tests/desktop/plugin-recovery.mjs"
+  ],
+  "version": {
+    "schemaVersion": 1,
+    "desktop": "2.1.12",
+    "web": "2.1.12",
+    "mobile": "2.1.1"
+  },
+  "executableSha256": "eaa83aa100bf421503cf35d9c6ee51a871119019a67820e33624e5757d41a236",
+  "dist": [
+    {
+      "file": "index-BlsdGcnW.js",
+      "sha256": "7a980551438fd39be162dc8fc57bb2d86b27a22e2cb79874549ed9764f28b7a6"
+    },
+    {
+      "file": "index-D4acWk3o.css",
+      "sha256": "06252c7cbc8773dd750901ff0b71820449fa4d0d7850d5eb6c6c1ac9a0e01b21"
+    }
+  ],
+  "buildExit": 0,
+  "time": "2026-10-08T19:28:39.143Z",
+  "generatedSchemaChanges": "line endings only, verified against committed content"
+}

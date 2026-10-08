@@ -1,0 +1,195 @@
+{
+  "runtime": "Vite development",
+  "sourceHead": "1d6f640ac6f3a1e7af32c38d85596527704dc54a",
+  "loaderSha256": "f1cbe8dc0bdf061a6ec201e7997c01c23e2998a03d178cb4723c3ec2fb69fb1d",
+  "startedAt": "2026-10-08T18:27:29.920Z",
+  "url": "http://127.0.0.1:1421/",
+  "requests": [
+    "http://127.0.0.1:1421/plugins/index.json",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791484052976",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791484052976",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484052976",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791484052976",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791484052976",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484052976",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791484052976",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791484052976",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791484052992",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484052993",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791484052993",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791484052993",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791484052992",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791484052993",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484052993",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791484052993",
+    "http://127.0.0.1:1421/plugins/index.json",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791484054269",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791484054269",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484054269",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791484054269",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791484054269",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484054269",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791484054269",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791484054269",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791484054284",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484054284",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791484054284",
+    "http://127.0.0.1:1421/plugins/html.js?t=1791484054284",
+    "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484054284",
+    "http://127.0.0.1:1421/plugins/markdown.js?t=1791484054284",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791484054409",
+    "http://127.0.0.1:1421/plugins/svg.js?t=1791484054409"
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:1421/plugins/index.json",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791484052976",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484052976",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791484052976",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791484052976",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791484052976",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484052976",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791484052976",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791484052976",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791484052992",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791484052993",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484052993",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791484052993",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791484052992",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791484052993",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484052993",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791484052993",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/index.json",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791484054269",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484054269",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791484054269",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791484054269",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484054269",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791484054269",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791484054269",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791484054269",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791484054284",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484054284",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791484054284",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/html.js?t=1791484054284",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/sticky-note.js?t=1791484054284",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/markdown.js?t=1791484054284",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791484054409",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:1421/plugins/svg.js?t=1791484054409",
+      "status": 200
+    }
+  ],
+  "errors": [
+    "Warning: Each child in a list should have a unique \"key\" prop. See https://reactjs.org/link/warning-keys for more information.%s \n    at div\n    at v (http://127.0.0.1:1421/plugins/html.js?t=1791484052992:2:1208)\n    at div\n    at PluginNode (http://127.0.0.1:1421/src/components/nodes/PluginNode.tsx:27:3)\n    at CanvasNodeContent (http://127.0.0.1:1421/src/components/canvas/CanvasNodeContent.tsx:8:3)\n    at div\n    at CanvasNodeFrame (http://127.0.0.1:1421/src/components/canvas/CanvasNodeFrame.tsx:4:3)\n    at CanvasNodeItem (http://127.0.0.1:1421/src/components/canvas/CanvasNodeItem.tsx:13:3)\n    at div\n    at CanvasNodeLayer (http://127.0.0.1:1421/src/components/canvas/CanvasNodeLayer.tsx:19:3)\n    at div\n    at ImageCompareProvider (http://127.0.0.1:1421/src/features/compare/ImageCompareProvider.tsx:22:3)\n    at Canvas (http://127.0.0.1:1421/src/components/Canvas.tsx:26:3)\n    at div\n    at main\n    at div\n    at div\n    at App (http://127.0.0.1:1421/src/App.tsx:181:31)"
+  ],
+  "steps": [
+    "discover-four-plugins-without-overlay",
+    "add-and-render-four-plugin-nodes"
+  ],
+  "result": "FAIL",
+  "entry": "src/main.tsx",
+  "mode": "development",
+  "failure": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '添加资源', exact: true })\u001b[22m\n",
+  "finalUrl": "http://127.0.0.1:1421/",
+  "overlay": "",
+  "completedAt": "2026-10-08T18:27:49.797Z"
+}
