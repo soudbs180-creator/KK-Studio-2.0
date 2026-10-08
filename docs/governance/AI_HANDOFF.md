@@ -2,7 +2,7 @@
 
 ## 2026-10-08 TASK-MODEL-001 恢复入口
 
-任务 worktree `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`，分支 codex/TASK-MODEL-001-capabilities，基线 main/origin/main@21d121d；原 checkout clean。先读[本轮计划](../changes/2026-10-08-model-capabilities/plan.md)、[验证](../changes/2026-10-08-model-capabilities/verification.md)、[review](../changes/2026-10-08-model-capabilities/review.md)和账本。完整verify已通过645root/172Agent/381browser，fresh Tauri最终补测/独立审查进行中。固定1421开发plugin错误在原main复现，TASK-PLUGIN-DEV-001待办；Esc后新声明表单已验证。没有以1425上失败的本机服务/图片比较结果放宽测试；1423原配置最终通过。生产/原生证据与构建hash需回读本包evidence，真实Provider/蒙版/扩图、用户验收、托管门禁、合并/发布另计。
+任务worktree `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`，分支codex/TASK-MODEL-001-capabilities，最新base5dd6e6dd；构建/完整验证源码基准577ed3ee。TASK-MODEL-001 已实现精确账号/model 图片操作三态及参考图/任务数量限额，MC-001修正统一归档素材去重和重绘预校验。当前base main@5dd6e6dd的完整verify723root/172Agent/406browser通过，原skip8/2保留且0flaky，UI198/0；client:check、fresh Tauri和隔离运行通过。候选源码Desktop2.1.6/Web2.1.7，Mobile规划2.1.1；独立新head补审与draft PR/Hosted门禁待完成。FEAT-003保持PARTIAL，真实Provider和蒙版/扩图执行另验；TASK-PLUGIN-DEV-001开发插件既有错误仍TODO。 先读[计划](../changes/2026-10-08-model-capabilities/plan.md)、[验证](../changes/2026-10-08-model-capabilities/verification.md)、[review](../changes/2026-10-08-model-capabilities/review.md)和账本；最后证据在evidence/latest-main5dd，不能用首轮0d或过渡5b产物代替。初次公开push审核拒绝与用户后续持续授权已记录，检查/审查通过后创建draft PR；实际合并/发布另计。
 
 ## 2026-10-08 阶段工作台主线融合
 

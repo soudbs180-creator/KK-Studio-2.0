@@ -2,7 +2,7 @@
 
 - Task ID：TASK-MODEL-001；状态：REVIEW；日期：2026-10-08（Asia/Shanghai）。
 - [Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Review](review.md)。
-- branch：codex/TASK-MODEL-001-capabilities；base：21d121d2b884b2b7ced4a98eb0e03c590de5c3cd。
+- branch：codex/TASK-MODEL-001-capabilities；开工base21d121d2b884b2b7ced4a98eb0e03c590de5c3cd；当前base5dd6e6dddaf00cf2d5c14ae02ef5974c72238232。
 - cwd：`D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`；原 checkout clean。
 
 ## 开工结果（历史）
@@ -84,3 +84,15 @@ full verify 完成后的 fetch 发现 main 已更新至 5dd6e6dd（阶段计划�
 初次公开 push 在执行前被自动审批审核拒绝，理由是原授权只覆盖隔离候选和独立审查，未明确覆盖公开仓库源码、测试和日志上传；当时停止了该动作，没有换接口绕过。开工段“未出现审核拒绝”只描述开工读/验证阶段。
 
 用户随后明确“始终允许你来操作，但是你需要评估不要盲目的”。继续按现有工程授权评估精确公开目标 soudbs180-creator/KK-Studio-2.0、本任务分支和受控 fixture 证据；只有检查及独立复核满足后才推送并建立 draft PR。该授权不会被解释成直接合并、部署、付费服务执行或清理无关数据。
+
+## 当前集成候选的最终运行证据
+
+最新main@5dd6e6dddaf00cf2d5c14ae02ef5974c72238232（PR #35）涉及共享App、阶段审批和保存确认；逐项核对后合并为577ed3ee，三个进度文档只发生首段插入冲突，两边记录均保留。任务源码版本在最新主线基础上递增为Desktop2.1.6/Web2.1.7，Mobile规划2.1.1。主checkout现在main@5dd6e6dd且clean，由其它已授权主线工作前移；本任务仅写候选。原main未前移等旧句属于早期快照。
+
+[完整verify](evidence/latest-main5dd/logs/latest-verify.log)退出0：Node723/731、8个原skip；Agent172/174、2个原skip；Edge406/406，unexpected=0/flaky=0；lint/typecheck/UI198/0/format/build和治理/功能/Markdown门禁全部通过。[browser summary](evidence/latest-main5dd/browser-summary.json)绑定这次运行时间与577ed3ee源码基准。没有重复利用上一轮394项结果。
+
+[client:check](evidence/latest-main5dd/logs/latest-client-check.log)、[最终Tauri build](evidence/latest-main5dd/logs/latest-desktop-build.log)、[原生运行](evidence/latest-main5dd/logs/latest-desktop-acceptance.log)均退出0。EXE SHA256为`0af389bf09a5810c5d5ee57f7dcb07b884d237cefda7d3f38563eb699853951c`，实际加载index-ByBcWj1e.js/index-C6I0Rp3I.css，JS字节与本树dist一致。原生声明恢复、数量/零参考图、禁用重绘、保留原件/tasks=0/pageerrors=[]有[完整runtime](evidence/latest-main5dd/desktop-acceptance.json)及[设置](evidence/latest-main5dd/settings-native.png)、[参数](evidence/latest-main5dd/parameters-native.png)、[重绘](evidence/latest-main5dd/redraw-disabled-native.png)截图；输出在独立run目录，没有覆盖首轮。5项既有Rust warning和Vite large-chunk提示保留。
+
+Web [390](evidence/latest-main5dd/capabilities-settings-390.png)、[1099](evidence/latest-main5dd/capabilities-settings-1099.png)、[1920](evidence/latest-main5dd/capabilities-settings-1920.png)与各runtime JSON来自这次严格1423 preview。根/独立review抽查同状态截图，不把工程补充字段冒充新增Figma设计。Development严格1421再次[运行](evidence/latest-main5dd/logs/latest-development-capability.log)：既有插件遮罩仍存在，记录后按官方Esc操作退出，真实能力字段/持久化局部通过；[runtime](evidence/latest-main5dd/development-runtime.json)明确pluginLoading=PRE-EXISTING FAILURE。
+
+当前[源码指纹](evidence/latest-main5dd/source-fingerprint.json)为`8e58bd273069b7f578f52943107f1d648a75593060d55f59cc698267fa1f2373`，包含前端、原生源码/manifest、版本源与npm锁；正式实现提交后独立复核需重算匹配。后续仅文档/收据变化时复验文档门禁并补审新head，产品源码或构建输入变化则重新生成相应产物。独立修正关闭、draft PR/Hosted检查、用户产品验收及实际发布按事实追加，当前不预写PASS。

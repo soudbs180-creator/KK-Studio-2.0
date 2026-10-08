@@ -2,7 +2,7 @@
 
 ## 2026-10-08 模型能力声明候选
 
-TASK-MODEL-001 基线 main/origin/main@21d121d，任务分支 codex/TASK-MODEL-001-capabilities；原 checkout clean、未前移。精确账号图片声明和 Web/Desktop 共享校验已实现，完整 verify645root/172Agent/381browser通过（原8/2skip保留）；最终native/独立审查尚在进行。Desktop2.1.4/Web2.1.5/Mobile规划2.1.1。FEAT-003保持PARTIAL：声明不代表真实服务验收，蒙版/扩图执行未接通。TASK-PLUGIN-DEV-001是原主线开发插件public-import错误，单独登记未修复。实际SHA、runtime与交付以[本轮验证](../changes/2026-10-08-model-capabilities/verification.md)和[review](../changes/2026-10-08-model-capabilities/review.md)为准；未合并/发布。
+TASK-MODEL-001 已实现精确账号/model 图片操作三态及参考图/任务数量限额，MC-001修正统一归档素材去重和重绘预校验。当前base main@5dd6e6dd的完整verify723root/172Agent/406browser通过，原skip8/2保留且0flaky，UI198/0；client:check、fresh Tauri和隔离运行通过。候选源码Desktop2.1.6/Web2.1.7，Mobile规划2.1.1；独立新head补审与draft PR/Hosted门禁待完成。FEAT-003保持PARTIAL，真实Provider和蒙版/扩图执行另验；TASK-PLUGIN-DEV-001开发插件既有错误仍TODO。 本任务只写隔离分支codex/TASK-MODEL-001-capabilities；主checkout当前main@5dd6e6dd且clean。当前SHA/产物/交付以[验证](../changes/2026-10-08-model-capabilities/verification.md)与[review](../changes/2026-10-08-model-capabilities/review.md)为准。
 
 ## 2026-10-08 阶段工作台主线融合
 

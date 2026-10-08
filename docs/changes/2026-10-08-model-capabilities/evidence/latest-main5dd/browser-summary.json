@@ -1,0 +1,19 @@
+{
+  "stats": {
+    "startTime": "2026-10-08T06:48:46.000Z",
+    "duration": 94702.768,
+    "expected": 406,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "errors": [],
+  "rawReportSha256": "74402ef97c37570360ac247411c443b4a9ea6405bec05c4977a107089a12e1ef",
+  "capturedAt": "2026-10-08T06:54:33.240Z",
+  "command": "npm run verify",
+  "exitCode": 0,
+  "url": "http://127.0.0.1:1423/",
+  "base": "5dd6e6dddaf00cf2d5c14ae02ef5974c72238232",
+  "headBeforeCommit": "577ed3eea0c50fd47e52a761271786e81bc9ed87",
+  "mode": "dirty candidate before commit"
+}

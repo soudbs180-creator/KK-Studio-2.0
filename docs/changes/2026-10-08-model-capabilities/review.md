@@ -2,7 +2,7 @@
 
 - Task ID：TASK-MODEL-001；当前状态：CHANGES REQUIRED，修正候选待提交后补审；日期：2026-10-08。
 - [Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Verification](verification.md)。
-- 当前目标基线：origin/main@5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3；已合并到候选分支，原 main checkout 未前移。
+- 当前目标基线：origin/main@5dd6e6dddaf00cf2d5c14ae02ef5974c72238232；集成提交577ed3ee，主checkout目前同一main SHA且clean。本任务仅写隔离候选。
 - 实际 GitHub 审批、用户产品验收、合并与发布分别记录，不由技术检查代填。
 
 ## 首轮独立审查（保留历史 SHA）
@@ -38,4 +38,4 @@
 
 账号/完整 model、false/zero/未知、文本/Codex隔离及任务数量与 HTTP 分块契约保留。最新主线的 native intent/回执恢复和显式重试逻辑保留；本修正不迁移项目/素材/凭据、不复制 ArtCraft 产品代码或目录，不新增依赖/CSS。
 
-定向单测 28/28、六项 capability 浏览器诊断通过；该浏览器诊断明确使用 1425，只证明本文件的 fixture 范围，不能替代仓库规定的 1423 全量验收。标准端口自然释放后，当前集成源码正在执行完整 verify；fresh Tauri 最终构建/运行和提交后独立复核以新记录为准。
+定向单测 28/28、六项 capability 浏览器诊断通过；该浏览器诊断明确使用 1425，只证明本文件的 fixture 范围，不能替代仓库规定的 1423 全量验收。标准端口自然释放后，5b集成轮完整verify已通过；又融合新main@5dd6e6dd，最后源码完整verify723/731root、172/174Agent（原skip保留）、406browser无flaky、clientcheck、fresh Tauri/隔离运行全部通过。新head正式独立复核待完成，旧review不套用新SHA。

@@ -114,7 +114,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-MODEL-001-capabilities`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`
 - Modules: src/domain, src/features/models, src/features/creation, src/components, src/App.tsx, tests, docs/features, docs/governance
-- Verification: PARTIAL — 实现和完整 npm verify 已通过：Node645/653(8skip)、Agent172/174(2skip)、browser381/381；定向Web与Tauri初验通过，最新native补测/独立审查/托管门禁进行中。开发插件错误在原主线复现，登记为独立问题。
+- Verification: PARTIAL — 最新main@5dd6e6dd融合后：完整verify723/731root(8skip)、172/174Agent(2skip)、406/406browser零flaky、UI198/0；clientcheck/fresh Tauri及隔离运行通过。MC-001定向修正已GREEN；精确提交独立补审、draft PR与Hosted门禁待完成，真实Provider/蒙版/扩图不在本地证明范围。
 - Evidence: [docs/changes/2026-10-08-model-capabilities/intent.md](../../docs/changes/2026-10-08-model-capabilities/intent.md), [docs/changes/2026-10-08-model-capabilities/spec.md](../../docs/changes/2026-10-08-model-capabilities/spec.md), [docs/changes/2026-10-08-model-capabilities/plan.md](../../docs/changes/2026-10-08-model-capabilities/plan.md), [docs/changes/2026-10-08-model-capabilities/verification.md](../../docs/changes/2026-10-08-model-capabilities/verification.md), [docs/changes/2026-10-08-model-capabilities/review.md](../../docs/changes/2026-10-08-model-capabilities/review.md)
 - Updated: 2026-10-08
 

@@ -14,6 +14,7 @@
 ## 代码位置
 
 - 映射（唯一事实源，纯函数）：`src/domain/imageParameters.ts`
+- 操作/限额白名单：`src/domain/imageModelCapabilities.ts`；归档参考图计数：`src/domain/imageReferences.ts`；账号模型解析：`src/features/models/imageModelCapabilities.ts`。
 - UI：`src/components/nodes/ImageModelParameters.tsx`、`src/components/settings/ProviderModelCatalog.tsx`；目录：`src/features/models/modelCatalog.ts`
 - 浏览器请求：`src/features/creation/imageGeneration.ts`（JSON body 与 multipart 均透传 size）
 - Desktop 请求：`src/features/creation/nativeTaskHost.ts`、`src-tauri/src/task_host.rs`（`size` 字段透传，Rust 不重复映射）
@@ -29,7 +30,7 @@
 
 ## 当前能力
 
-- TASK-MODEL-001 已实现同一目录的图片操作三态、参考图和任务生成数量声明，初始准备/Web租约/Desktop提交前消费同一限制。声明限定精确账号/model，provider 禁止优先；未知保留原兼容，false/0 不丢失。完整 Web verify 已通过，最新 native/独立审查以本轮验证为准。
+- TASK-MODEL-001 已实现同一目录的图片操作三态、参考图和任务生成数量声明，初始准备/Web租约/Desktop提交前消费同一限制。声明限定精确账号/model，provider 禁止优先；未知保留原兼容，false/0 不丢失。归档素材去重计数用于普通生成、重绘、连线和附件读取，原件缺失仍拒绝。最新集成完整verify及fresh Tauri通过，精确提交独立补审/PR门禁以本轮验证为准。
 
 - 任务校验精确 size 属于所选账号/模型，进入原有 Web/Desktop 透传链。切模型清除旧尺寸；参数保存重开保持。旧比例映射仅保留历史项目兼容。
 - 供应商不支持某尺寸时返回其真实错误，不静默吞掉。

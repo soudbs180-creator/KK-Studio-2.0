@@ -2,13 +2,13 @@
 
 > For agentic workers: execute with superpowers:executing-plans; tests follow superpowers:test-driven-development. The project spec and AGENTS govern approvals and delivery.
 
-- Task ID：TASK-MODEL-001；状态：READY；日期：2026-10-08。
+- Task ID：TASK-MODEL-001；状态：REVIEW；日期：2026-10-08。
 - Goal：现有目录成为图片参数和已知限制的统一来源。
 - Architecture：domain 白名单 → account-scoped catalog → shared resolver → UI/共享提交校验。
 - Tech Stack：React 18 / TypeScript / Node 24 / Tauri 2；无新增依赖。
 - [Intent](intent.md) · [Spec](spec.md) · [ADR](../../architecture/adr/ADR-009-image-model-capabilities.md)。
 - branch：codex/TASK-MODEL-001-capabilities；worktree：`D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`。
-- Base：21d121d2b884b2b7ced4a98eb0e03c590de5c3cd；远端目标 main；开始时 worktree/main 均 clean。
+- 开工 Base：21d121d2b884b2b7ced4a98eb0e03c590de5c3cd；最新目标 main@5dd6e6dddaf00cf2d5c14ae02ef5974c72238232；集成提交577ed3ee。开始时main clean；当前main@5dd6e6dd clean，本任务只写隔离候选。
 
 ## 开工与全局约束
 
@@ -48,7 +48,7 @@
 
 1. 浏览器失败先行：保存能力、重载、切换、max count、unsupported redraw、不发送 HTTP。
 2. 构建现有 bundle 后运行定向测试；Expected：缺少新控件/未阻止请求。
-3. 实现并复用现有 CSS 和 shared controls；数字值严格校验，读取刷新 event/storage；旧超限草稿保留并显示原因。参考图入口/连线使用同一限额，已归档源图扣一张。
+3. 实现并复用现有 CSS 和 shared controls；数字值严格校验，读取刷新 event/storage；旧超限草稿保留并显示原因。参考图入口/连线/重绘共用归档素材去重计数，源图与incoming相同assetId只算一张；非法或未归档引用保持拒绝。
 4. 定向浏览器和既有模型/画布/提交回归；Expected：通过；追加三档 DOM/截图和实际 import chain。
 
 ## Task 4: Delivery and review
@@ -72,6 +72,6 @@
 
 Pre-flight：Task 2/3 消费 Task 1；Task 3 消费 Task 2 的门禁，输出数量使用 maxGenerationCount（任务级），不得替换 maxOutputs（HTTP 级）。暂无契约冲突。
 
-Task 1–3 已实现并完成 RED→GREEN；Task 4 的版本、完整 verify、client:check、fresh Tauri 和运行证据已通过，独立审查与 PR 门禁待完成。CanvasNodeLayer 达到 317 行时触发 UI check，按职责拆出原参考图映射为 canvasReferences.ts；不是额外界面重构。发现的原主线开发插件错误登记 TASK-PLUGIN-DEV-001，本任务不接管插件修复。文本模型和单张重绘兼容缺陷均有失败先行修正，见 verification。
+Task 1–3 已实现并完成 RED→GREEN，首轮审查MC-001已定向修正。历史5b轮完整verify/native通过已留档；融合新main@5dd后，Task4候选版本Desktop2.1.6/Web2.1.7的完整verify、client:check、final Tauri/隔离运行已通过，新head独立补审/PR门禁待完成。CanvasNodeLayer 达到 317 行时触发 UI check，按职责拆出原参考图映射为 canvasReferences.ts；不是额外界面重构。发现的原主线开发插件错误登记 TASK-PLUGIN-DEV-001，本任务不接管插件修复。文本模型和单张重绘兼容缺陷均有失败先行修正，见 verification。
 
 实施/测试/裁决与结果持续记录在 [verification](verification.md)，不得因上下文恢复重做已完成步骤。

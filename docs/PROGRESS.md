@@ -2,7 +2,7 @@
 
 ## 2026-10-08 精确账号图片模型能力声明
 
-TASK-MODEL-001 在隔离分支实现 generate/edit/inpaint/outpaint 三态、参考图与单次任务数量白名单，报告/手动保存恢复、精确账号/model 与共享 Web/Desktop 门禁贯通。任务上限 maxGenerationCount 和每次 HTTP maxOutputs 分开；未知兼容、原图和超限草稿保留，单张重绘使用自己的数量。Desktop/Web 源码2.1.4/2.1.5，Mobile规划2.1.1。完整 verify645root/172Agent/381browser通过，原8/2 skip保留；fresh Tauri最终补测和独立审查进行中。开发模式插件遮罩在原main复现，独立入账TASK-PLUGIN-DEV-001；真实Provider、蒙版/扩图执行、合并/发布未完成。见[验证](changes/2026-10-08-model-capabilities/verification.md)。
+TASK-MODEL-001 已实现精确账号/model 图片操作三态及参考图/任务数量限额，MC-001修正统一归档素材去重和重绘预校验。当前base main@5dd6e6dd的完整verify723root/172Agent/406browser通过，原skip8/2保留且0flaky，UI198/0；client:check、fresh Tauri和隔离运行通过。候选源码Desktop2.1.6/Web2.1.7，Mobile规划2.1.1；独立新head补审与draft PR/Hosted门禁待完成。FEAT-003保持PARTIAL，真实Provider和蒙版/扩图执行另验；TASK-PLUGIN-DEV-001开发插件既有错误仍TODO。见[验证](changes/2026-10-08-model-capabilities/verification.md)。
 
 ## 2026-10-08 阶段工作台主线融合
 
