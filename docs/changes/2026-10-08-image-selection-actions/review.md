@@ -15,3 +15,7 @@
 | UI011-R2 | P2 / merge blocker | 实际队列27px/输出22px，空态审计漏检 | 非空task/output RED；32px共享任务/评论动作，Web/native补非空状态    | REPAIRED，等待新head独立关闭 |
 
 旧head不能合并，修复后full verify/fresh native/当前SHA补审/Hosted通过才完成。本机原生能力测试仍为fixture，不提升为真实Provider、Figma最终批准、Mobile或发布结论。
+
+## 0c3bb9b 补审：R2 CLOSED，R1 OPEN
+
+/root/task_audit_reviewer 固定base1af → head0c3bb9b675a03dc91642630ae961bd5da61247fd，独立6/6 canvas单测、UI202/0、governance100/0、features34/0、markdown100/0、diff-check PASS。R2共享动作和非空fixture CLOSED；R1结果工具栏article锚点与controls内部preview不同，纯内存 exact-head几何反例确认顶部工具隐藏但revealDelta误判0，仍P2 merge blocker。root已按真实结果RED返修相同anchor，并保留25/26测试设置失败与最终真实结果动作PASS；等待新head关闭，旧补审不升级。

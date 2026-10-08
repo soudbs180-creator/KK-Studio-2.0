@@ -137,7 +137,7 @@ export function useCanvasControls({
       ".canvas-node.is-selected",
     );
     const image = frame?.querySelector<HTMLElement>(
-      ".image-preview,.demo-result-preview.is-image",
+      ".demo-result-node,.image-preview",
     );
     const toolbar = document.querySelector<HTMLElement>(
       ".image-selection-toolbar",

@@ -27,3 +27,5 @@ UI011-R1：已选择图片拖到画布顶部时工具栏直接隐藏，Escape后
 UI011-R2：非空队列按钮27px、单项重试22px；补入真实createTask的failed/failed-output fixture后[390/1920 RED](evidence/review-regressions/queue-actions-red.txt)。取消/暂停/恢复/重试及评论区动作统一共享32px按钮；清除局部padding/font覆盖。补测又检出‘添加评论’34px，已修复。Web/native六阶段都用非空任务，采样明确覆盖实际任务与输出按钮，真实运行中暂停/取消另用原Provider fixture回归。
 
 第一次共享几何返修39/40通过但使空卡片连线释放位置改变，原[失败](evidence/review-regressions/geometry-complete.txt)保留；修正仅有真实图片且需要空间时增加headroom，不改变空卡片/非图片reveal。[16项图片/连线定向复验](evidence/review-regressions/geometry-final-green.txt)全通过、1worker/0retry；完整verify、修复后fresh native与精确新head补审继续进行，任务保持IN_PROGRESS。
+
+0c3bb9b675a03dc91642630ae961bd5da61247fd 修复后完整verify PASS，422/422浏览器零flaky；独立补审 R2 CLOSED、R1参考路径修好但结果路径仍CHANGES REQUIRED。结果Toolbar用article，controls用内部preview，高差会漏掉顶部恢复；新增真实生成/归档结果的三个宽度拖顶/取消平移重选，取得[实际RED](evidence/review-regressions/result-top-anchor-red.txt)。恢复选择器改为与Toolbar一致的结果article/参考preview。首轮25/26通过，重选测试在窄屏直接点击被HUD覆盖的图片中心发生超时，保留[设置失败](evidence/review-regressions/result-anchor-green.txt)；改为实际可见图片底部点击，没有force、延长timeout或弱化动作。结果三个宽度及收藏/重绘原件字节/单次请求/对比/删除保留原件的[完整用例PASS](evidence/review-regressions/result-anchor-final-green.txt)。当前source重新full/native取证后再精确补审。

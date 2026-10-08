@@ -219,6 +219,52 @@ test("已归档图片结果使用上方选择工具栏，收藏重绘对比删�
   const cardBox = (await node.locator(".demo-result-node").boundingBox())!;
   const toolbarBox = (await actions.boundingBox())!;
   expect(toolbarBox.y + toolbarBox.height).toBeLessThan(cardBox.y);
+  for (const width of [390, 1099, 1920]) {
+    await page.setViewportSize({ width, height: width === 390 ? 844 : 1080 });
+    const canvas = (await page.getByTestId("infinite-canvas").boundingBox())!;
+    const card = (await node.locator(".demo-result-node").boundingBox())!;
+    const image = (await node
+      .locator(".demo-result-preview img")
+      .boundingBox())!;
+    const x = image.x + image.width / 2,
+      y = image.y + image.height / 2;
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x, y + canvas.y + 20 - card.y, { steps: 8 });
+    await page.mouse.up();
+    await expect(actions).toBeVisible();
+    await expect
+      .poll(async () => {
+        const current = await node.locator(".demo-result-node").boundingBox();
+        const bar = await actions.boundingBox();
+        return Boolean(current && bar && bar.y + bar.height < current.y);
+      })
+      .toBe(true);
+    await node.focus();
+    await node.press("Escape");
+    await expect(actions).toHaveCount(0);
+    const current = (await node.locator(".demo-result-node").boundingBox())!;
+    const pan = { x: canvas.x + 12, y: canvas.y + canvas.height - 120 };
+    await page.mouse.move(pan.x, pan.y);
+    await page.mouse.down({ button: "middle" });
+    await page.mouse.move(pan.x, pan.y + canvas.y + 20 - current.y, {
+      steps: 8,
+    });
+    await page.mouse.up({ button: "middle" });
+    const reselect = node.locator(".demo-result-preview img");
+    const visibleImage = (await reselect.boundingBox())!;
+    await reselect.click({
+      position: { x: visibleImage.width / 2, y: visibleImage.height - 8 },
+    });
+    await expect(actions).toBeVisible();
+    await expect
+      .poll(async () => {
+        const current = await node.locator(".demo-result-node").boundingBox();
+        const bar = await actions.boundingBox();
+        return Boolean(current && bar && bar.y + bar.height < current.y);
+      })
+      .toBe(true);
+  }
   const favorite = actions.getByRole("button", { name: `收藏${result.title}` });
   await favorite.click();
   await expect(
