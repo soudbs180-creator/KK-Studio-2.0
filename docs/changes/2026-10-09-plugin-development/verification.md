@@ -9,6 +9,7 @@
 - 标题栏第一轮实际拖动FAIL原因UNKNOWN；仅新增wx位移诊断后的下一次完整门禁PASS（x+80/y+60）。原始失败、截图和最终结果均保留，不宣称已根治环境不稳定。四插件fixture节点叠放，正文逐项DOM断言与截图的可读范围区分。
 - 证据归档[manifest](evidence/current-fadfabf/manifest.json)包含原始工件（47PNG）、source identity、实际raw与gzip-base64 lossless logs；每件原始SHA与bytes校验，原始FAIL不覆写。后续独立review收据另加入。当前[全部任务及优先级](status.md)，FEAT013保持PARTIAL，真实Provider/真机/用户视觉等原开放对象保留。
 - 文档收尾首次lint因启动命令遗漏Node24的PATH、子npm无法找到而失败，原始final-doc-lint.txt保留。修正命令环境后final-doc-lint-corrected实际exit0：109任务、35功能、102现行Markdown与版本全部零违例；未修改或关闭门禁。
+- 最终a5ee57e独立补审发现PLUGIN-DOC-001/P2：工作区172条原字节校验通过，但已提交Git blob仅170条通过，marked-version.json与review-source-fadfabf.md被换行规范化。该次提交不满足证据保真验收，不能合并。工程外原件不变；新增evidence的Git -text属性并重新保存两个原件，随后按提交中的blob逐条校验并补审，新结果另记。
 
 以下为各阶段的历史记录，旧“未修复/未运行”描述不覆盖当前事实。
 

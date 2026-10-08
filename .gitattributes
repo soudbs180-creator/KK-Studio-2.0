@@ -1,0 +1,2 @@
+# Preserve verification originals and lossless archives across Windows checkouts.
+docs/changes/**/evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
