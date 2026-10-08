@@ -1,6 +1,6 @@
 # Verification：T5 原生生命周期
 
-- Task ID：T5；状态：本机验收 PASS，独立审查与托管门禁待完成；2026-10-08。
+- Task ID：T5；状态：本机验收与独立源码审查 PASS，Hosted 原生启动失败待复验；2026-10-08。
 - [Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Review](review.md)
 - Base：`5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3`。
 - 环境：Windows，Node 24.21.0 / npm 11.19，独立根/Agent/plugin npm ci，未借用 node_modules。
@@ -51,3 +51,11 @@ Web 新增回归通过真实供应商响应制造 1 success + 1 unknown + 2 fail
 PR #34 已 squash 合入 `main@5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3`，候选/合并 tree 一致；[主线 hosted CI](evidence/pr34-main-ci.json) verify/deploy-linux 成功。PR #35 合并结果见上节。模型能力分支仍由原执行者处理；不覆盖其源码或重复 cherry-pick。详见[状态盘点](status.md)。
 
 本机 fixture 证明原生宿主，不能证明付费 Provider 质量、最终账单、VPS/Mobile/ComfyUI 或安装器发布。新保存的浏览器供应商元数据在立即强杀整个 WebView 进程树时曾丢失，[现场](evidence/provider-abrupt-exit-observation.json)；系统凭据和原生任务/素材保留，正常应用退出后配置恢复通过。该配置落盘缺口和既有 native image health/连接门禁缺口分别登记 TASK-PROV-005/006，保持开放，不能随 T5 验收升级。
+
+## Hosted 启动失败与环境修复
+
+PR #37 / source `3d415abe04604e0753d31323f07d89c3c34e7fd6` 的 push run 37743753356 与 PR run 37744526462，完整 Web/Rust/native 构建通过，但真实 native 生命周期在 CDP 启动 30 秒门禁失败，未执行任何验收组；delivery 与 deploy-linux PASS。不能以本机成功代填 Hosted 通过。原始日志、SHA256 验证后的 verification-evidence artifact 保存在工程外 `.verification/T5-native-lifecycle/hosted-native-failure-3d415ab*`；PR 收据 sourceHead 是 GitHub 的测试合并提交 `57337109418379234eaf73c77c5eef98605b690a`，其 source/bundle hashes 可与 PR 源码交叉核对。
+
+FACT：CI 只安装 Edge，未检测或准备 WebView2 Runtime；原启动脚本忽略 stderr，失败收据没有启动进程证据。INFERENCE：托管 Windows 的 WebView2 Runtime 缺失可能阻断 Tauri 创建 WebView，现有收据不足以证明具体原因。按 [Microsoft 官方分发说明](https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution) 加入 Evergreen 注册表版本检测；仅隔离 CI 缺失时下载官方、签名校验通过的 bootstrapper 并静默安装，安装后必须再次确认版本。没有跳过或降低 native 门禁，也不替换真实 IPC。
+
+启动收据现在立即记录 owned PID、退出/信号、CDP 是否就绪和有界脱敏 stderr；spawn 异常进入真实失败。当前本机检测 Runtime `154.0.4258.62`，未执行安装，[十一组原生诊断复验](evidence/native-startup-diagnostics.json) PASS，五次生产 EXE 启动均 CDP ready、errors=[]、凭据清理完成。EXE 未改动，diagnostic harness 的新 hash 明确留在收据；`runtimeVersion=not-recorded` 表示本机未注入 CI 环境收据字段，不伪造注册表值。新提交仍须独立精确 SHA 补审和 Hosted 复验。

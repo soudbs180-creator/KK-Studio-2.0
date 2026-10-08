@@ -34,6 +34,7 @@ const report = {
   profile,
   checks: [],
   launches: [],
+  startups: [],
   requests: [],
   errors: [],
   passed: false,
@@ -234,10 +235,20 @@ async function submit(request) {
 }
 async function launch() {
   assert.equal(await available(), false, "Owned CDP port 9349 must be free");
+  const startup = {
+    startedAt: new Date().toISOString(),
+    runtimeVersion: process.env.KK_WEBVIEW2_RUNTIME_VERSION ?? "not-recorded",
+    pid: null,
+    exitCode: null,
+    signalCode: null,
+    cdpReady: false,
+    stderr: "",
+  };
+  report.startups.push(startup);
   app = spawn(executable, ["--data-dir", dataRoot], {
     cwd: root,
     windowsHide: true,
-    stdio: "ignore",
+    stdio: ["ignore", "ignore", "pipe"],
     env: {
       ...process.env,
       WEBVIEW2_USER_DATA_FOLDER: profile,
@@ -245,15 +256,35 @@ async function launch() {
         "--remote-debugging-port=9349 --remote-debugging-address=127.0.0.1",
     },
   });
+  startup.pid = app.pid ?? null;
+  let spawnFailure;
+  app.once("error", (cause) => {
+    spawnFailure = cause;
+    startup.spawnFailure = String(cause).replaceAll(
+      secret,
+      "<synthetic credential>",
+    );
+  });
+  app.stderr.on("data", (chunk) => {
+    startup.stderr = (startup.stderr + chunk.toString())
+      .replaceAll(secret, "<synthetic credential>")
+      .slice(-8192);
+  });
+  app.once("exit", (code, signal) => {
+    startup.exitCode = code;
+    startup.signalCode = signal;
+  });
   await expect
     .poll(
       async () => {
+        if (spawnFailure) throw spawnFailure;
         assert.equal(app.exitCode, null, "Owned desktop exited");
         return available();
       },
       { timeout: 30000 },
     )
     .toBe(true);
+  startup.cdpReady = true;
   browser = await chromium.connectOverCDP(cdp);
   page = browser.contexts().flatMap((context) => context.pages())[0];
   assert(page, "Native WebView page missing");
