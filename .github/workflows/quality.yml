@@ -76,7 +76,10 @@ jobs:
           ./tests/desktop/webview2-prerequisite.ps1
           ./.github/scripts/ensure-webview2.ps1
       - name: Verify native TaskHost lifecycle with isolated local fixtures
-        run: npm run client:taskhost:test
+        shell: pwsh
+        run: |
+          ./tests/desktop/native-ci-policy.ps1
+          ./.github/scripts/invoke-native-taskhost.ps1
       - uses: actions/upload-artifact@v4
         if: always()
         with:

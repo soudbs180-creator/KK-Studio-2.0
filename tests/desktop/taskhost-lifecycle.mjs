@@ -20,7 +20,8 @@ const output = path.resolve(
 const executable = path.join(root, "src-tauri/target/release/kk-studio.exe");
 const isolated = path.join(root, "src-tauri/target/taskhost-acceptance", runId);
 const dataRoot = path.join(isolated, "data");
-const profile = path.join(isolated, "profile");
+const profile =
+  process.env.KK_TASKHOST_PROFILE ?? path.join(isolated, "profile");
 const cdp = "http://127.0.0.1:9349";
 const secret = `synthetic-taskhost-${randomUUID()}`;
 const credentialRef = `taskhost_fixture_${randomUUID()}`;
@@ -238,10 +239,13 @@ async function launch() {
   const startup = {
     startedAt: new Date().toISOString(),
     runtimeVersion: process.env.KK_WEBVIEW2_RUNTIME_VERSION ?? "not-recorded",
+    hostElevated: process.env.KK_TASKHOST_ELEVATED ?? "not-recorded",
     pid: null,
     exitCode: null,
     signalCode: null,
     cdpReady: false,
+    exitedAt: null,
+    cleanupRequestedAt: null,
     stderr: "",
   };
   report.startups.push(startup);
@@ -271,6 +275,7 @@ async function launch() {
       .slice(-8192);
   });
   app.once("exit", (code, signal) => {
+    startup.exitedAt = new Date().toISOString();
     startup.exitCode = code;
     startup.signalCode = signal;
   });
@@ -322,6 +327,7 @@ async function launch() {
 }
 async function stop(graceful = false) {
   if (app?.exitCode === null) {
+    report.startups.at(-1).cleanupRequestedAt = new Date().toISOString();
     assert(
       Number.isSafeInteger(app.pid) && app.pid > 0,
       "Owned process PID missing",

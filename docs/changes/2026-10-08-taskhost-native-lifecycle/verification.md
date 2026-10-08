@@ -63,3 +63,11 @@ FACT：CI 只安装 Edge，未检测或准备 WebView2 Runtime；原启动脚本
 独立审查 source `47c0ba6d277a691b0fbb8797b44c10c69eb41a82` 发现环境安装限制和签名发布者前缀两个 P2：仅 RUNNER_TEMP 不足以证明托管 CI；Microsoft Corporation Example 不得匹配 Microsoft 发布者。已分别用实际脚本、全副作用替身复现 RED，再修复为 GITHUB_ACTIONS=true + RUNNER_ENVIRONMENT=github-hosted + temp，以及完整 DN 的组织字段匹配。`tests/desktop/webview2-prerequisite.ps1` 的十三项回归 PASS，并纳入 Hosted 必经步骤；本机/自托管缺 Runtime、无 runner 身份、无效签名、其他发布者/前后缀伪装、安装失败/超时/仍无版本均不能宣告就绪。测试不读取真实注册表、不联网、不启动安装器、不修改真实环境文件。原 RED 设置盘符 X 不存在曾导致预期之外失败，保留为测试设置问题；改为存在盘符 C 后两处产品 RED 单独复现，原失败不掩盖。最终精确提交审查和 Hosted 门禁仍待执行。
 
 第二次独立补审 `3229489bf61fe04734beea3dd7353817ee65d4b8`：CI 限制 CLOSED，发布者 P2 仍 CHANGES REQUIRED；[47 原审查](evidence/review-47c0ba6.md) 与 [322 补审](evidence/review-3229489.md) 均保留。合法证书 DN 的带引号 CN 可以包含伪装组织文字，完整字段边界正则仍会误认；用 .NET X500DistinguishedName 编码的 quoted-CN 反例取得真实脚本 RED。现在用 .NET AsnReader 按 DER 解码 subjectName，仅检查真实组织 OID 2.5.4.10，必须恰好一个且 Ordinal 等于 Microsoft Corporation；无效编码失败关闭。十五项[正式脚本反例回归](evidence/webview2-asn1-green.txt) PASS，含 quoted-CN 和重复组织；本机有效 Microsoft 系统文件签名只读检查 PASS。最终精确补审与 Hosted 当前新 SHA 仍待回读。
+
+## 托管启动返修：保留失败并验证提升权限策略
+
+独立精确补审 8399c1de04acb54c876f5a049db8d5ce93721b06 [PASS](evidence/review-8399c1d.md)，但 [PR CI 37752659602](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37752659602) 仍在原生步骤失败；其余完整 verify、Rust、client check/release build 和 Runtime 先决检查通过。Runtime 实际为 154.0.4258.62，不再推断缺少运行时。[原生失败收据](evidence/native-hosted-8399-failure.json) 为 0 checks/0 launches/CDP 未就绪；finally 强杀可能产生 exitCode=1，不能据此宣称进程自行崩溃。完整 artifact 11539009476 保存工程外，ZIP SHA-256 e87c02a7b74eb2617fbfee8a37f0922cab2495c5991f02aa013df78af1a3ba0a，原失败不改写。
+
+[微软官方文档](https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/security#for-an-elevated-host-app-use-appropriate-override-flags) 说明 High IL 宿主忽略 WEBVIEW2 环境变量及 HKCU、接受 HKLM 策略。此前未记录真实 token，故它仍是机制支持的待实测原因。CI 包装器只在 GitHub-hosted 身份、64-bit 进程和现有 RUNNER_TEMP 下运行，拒绝 SYSTEM；提升权限时创建 kk-studio.exe 专属 HKLM 调试端口/唯一 profile，任何既有值均失败关闭，不覆盖或删除其他 AppId/空值/通配符。finally 仅移除仍匹配本次值的成功写入，保留并报告并发变化，清理失败使 job 失败；本机及自托管不做策略修改。Native 收据增加真实提升权限布尔值、退出与清理请求时间。产品代码、沙箱设置和 30 秒 CDP 门禁保持现有安全边界。
+
+[19 项内存副作用替身检查](evidence/native-ci-policy-mocks.txt) PASS：本机/自托管/缺 temp/SYSTEM/重复 profile 拒绝；非提升零机器策略；成功、既有私密/空/通配符/AppId 值、部分写入、读回失败、子进程失败、清理失败、并发 sibling 与 ownership 变化。它们不访问真实注册表、不运行 native、不代表 Hosted High IL 验收。最新主线组合、当前源码复审和实际 Hosted 仍待完成；AC-6 保持未完成。
