@@ -8,9 +8,13 @@ import { readNativeAsset, usesNativeAssets } from "./nativeAssetAdapter.ts";
 import { textTaskResult } from "./textTaskResult.ts";
 import { reconcileProjectCanvas } from "../../domain/projectCanvas.ts";
 import { reconcileRetryTaskParents } from "./taskRecovery.ts";
+import { composeNativeEditAsset } from "../image-edit/editTasks.ts";
+import { imageResultContext } from "../image-edit/context.ts";
+import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
 
 /** The request crossing the Desktop TaskHost IPC boundary. It contains no API key. */
 export interface NativeTaskHostRequest {
+  maskAssetId?: string;
   kind?: "image" | "text";
   concurrencyLimit?: number;
   taskId: string;
@@ -541,13 +545,46 @@ export async function reconcileNativeTasks(
             }
             if (!output.assetId) continue;
             try {
-              const asset = await readNativeAsset(output.assetId);
+              const resultId = `${project.id}-${task.id}-result-${output.index + 1}`;
+              const priorOutput = existing.find(
+                (candidate) => candidate.index === output.index,
+              );
+              if (
+                task.imageEdit &&
+                priorOutput?.status === "failed" &&
+                priorOutput.error?.includes("无法可靠映射")
+              ) {
+                Object.assign(output, priorOutput);
+                continue;
+              }
+              // A protected composite is durable evidence; never reapply an old
+              // native crop over a result or draft already owned by the user.
+              if (
+                priorOutput?.status === "succeeded" &&
+                priorOutput.assetId &&
+                (task.resultItemId ||
+                  items.some(
+                    (item) =>
+                      item.id === resultId &&
+                      item.assetId === priorOutput.assetId,
+                  ))
+              ) {
+                const archived = await readNativeAsset(priorOutput.assetId);
+                if (archived) {
+                  Object.assign(output, priorOutput);
+                  continue;
+                }
+              }
+              const rawAsset = await readNativeAsset(output.assetId);
+              const asset = rawAsset
+                ? await composeNativeEditAsset(task, rawAsset, project.tasks)
+                : null;
               if (!asset) {
                 output.status = "unknown";
                 output.error = "原生任务已完成，但本地素材原件尚未找到。";
                 continue;
               }
-              const resultId = `${project.id}-${task.id}-result-${output.index + 1}`;
+              output.assetId = asset.assetId;
               const resultItem = {
                 id: resultId,
                 title: `图片结果 ${output.index + 1}`,
@@ -555,6 +592,9 @@ export async function reconcileNativeTasks(
                 kind: "image" as const,
                 prompt: task.prompt,
                 model: task.model,
+                providerConnectionId: task.providerConnectionId,
+                imageEditDraft: task.imageEdit?.document,
+                imageEditContext: imageResultContext(task, asset.assetId),
                 assetId: asset.assetId,
                 parentAssetId: asset.parentId,
                 preview: asset.preview,
@@ -579,9 +619,13 @@ export async function reconcileNativeTasks(
                 items.push(resultItem);
                 projectChanged = changed = true;
               }
-            } catch {
-              output.status = "unknown";
-              output.error = "原生任务已完成，但本地素材原件读取失败。";
+            } catch (error) {
+              output.status =
+                error instanceof ImageEditMappingError ? "failed" : "unknown";
+              output.error =
+                error instanceof ImageEditMappingError
+                  ? error.message
+                  : "原生任务已完成，但本地素材原件读取失败。";
             }
           }
           const hasUnknown =

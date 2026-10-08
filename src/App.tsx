@@ -113,6 +113,17 @@ import {
   CanvasImageCommandContext,
   type CanvasImageRequest,
 } from "./features/creation/CanvasImageCommand";
+import {
+  prepareEditInputs,
+  composeEditResult,
+  composeNativeEditAsset,
+} from "./features/image-edit/editTasks.ts";
+import { compileEditPrompt } from "./features/image-edit/prompt.ts";
+import { imageResultContext } from "./features/image-edit/context.ts";
+import { ImageEditMappingError } from "./features/image-edit/imageProcessing.ts";
+import { imageRegeneration } from "./features/image-edit/regeneration.ts";
+import ImageLightbox from "./features/image-edit/ImageLightbox.tsx";
+import { imageCapabilitiesForSelection } from "./features/models/imageModelCapabilities.ts";
 import { generateText } from "./features/creation/textGeneration";
 import { textTaskResult } from "./features/creation/textTaskResult";
 import { useNativeTaskRecovery } from "./features/creation/useNativeTextRecovery";
@@ -295,12 +306,19 @@ export default function App() {
     taskId: string;
     gates: ApprovalGate[];
   } | null>(null);
+  const pendingApprovalRef = useRef(pendingApproval);
+  pendingApprovalRef.current = pendingApproval;
   const pendingApprovalTask = creation.projects
     .find((project) => project.id === pendingApproval?.projectId)
     ?.tasks.find((task) => task.id === pendingApproval?.taskId);
   const activeProject = creation.projects.find(
     (project) => project.id === creation.activeProjectId,
   );
+  const [imagePreview, setImagePreview] = useState<{
+    source: CanvasCollectionItem;
+    title: string;
+  }>();
+  useEffect(() => setImagePreview(undefined), [activeProject?.id]);
 
   const agentPermission = useSyncExternalStore(
     subscribeAgentPreferences,
@@ -614,6 +632,24 @@ export default function App() {
       creationRef.current.projects.find((item) => item.id === projectId);
     const task = project?.tasks.find((item) => item.id === taskId);
     if (!project || !task || taskControllers.current[taskId]) return;
+    if (task.imageEdit) {
+      const live =
+        creationRef.current.projects.find((p) => p.id === projectId) ?? project;
+      if (
+        live.tasks.some(
+          (other) =>
+            other.id !== taskId &&
+            other.imageEdit?.groupId === task.imageEdit?.groupId &&
+            taskControllers.current[other.id],
+        )
+      )
+        return;
+      if (
+        pendingApprovalRef.current &&
+        pendingApprovalRef.current.taskId !== taskId
+      )
+        return;
+    }
     if (
       task.status === "unknown" ||
       task.submissionState === "unknown" ||
@@ -626,6 +662,7 @@ export default function App() {
       providerBaseUrl: task.providerBaseUrl,
     }).filter((gate) => !task.approvedGates?.includes(gate));
     if (missingGates.length) {
+      pendingApprovalRef.current = { projectId, taskId, gates: missingGates };
       setPendingApproval({ projectId, taskId, gates: missingGates });
       updateProject(projectId, (current) => ({
         ...current,
@@ -651,6 +688,7 @@ export default function App() {
     const publishedItems = new Set<string>();
     const rejectedDeliveryIds = new Set<string>();
     const archiveFailureIndices = new Set<number>();
+    const mappingFailures = new Map<number, string>();
     let deliveryErrorMessage: string | undefined;
     let durableSubmission = false;
     let providerRequestStarted = false;
@@ -818,7 +856,7 @@ export default function App() {
         return;
       }
       const compiledPrompt =
-        task.kind === "text"
+        task.kind === "text" || task.imageEdit || task.imageEditContext
           ? task.prompt
           : compileDesignPrompt(task.prompt, {
               referenceCount: task.attachments.length,
@@ -836,6 +874,8 @@ export default function App() {
             kind: task.kind === "text" ? "text" : "image",
             model: task.model,
             outputCount: task.requestedOutputs,
+            operation: task.imageEdit?.nativeMask ? "inpaint" : undefined,
+            localEdit: Boolean(task.imageEdit),
           },
           { explicitRetry: explicitRetry || Boolean(task.retryOfTaskId) },
         );
@@ -864,6 +904,8 @@ export default function App() {
             kind: task.kind === "text" ? "text" : "image",
             model: task.model,
             outputCount: task.requestedOutputs,
+            operation: task.imageEdit?.nativeMask ? "inpaint" : undefined,
+            localEdit: Boolean(task.imageEdit),
           },
           {
             skipCapacity: true,
@@ -892,6 +934,9 @@ export default function App() {
           providerName: task.providerName,
           promptHash,
           size: task.imageSize,
+          maskAssetId: task.imageEdit?.nativeMask
+            ? task.imageEdit.maskAssetId
+            : undefined,
         });
         durableSubmission = true;
         nativeRecord = validateNativeTaskRecord(
@@ -1058,8 +1103,17 @@ export default function App() {
             if (nativeOutput.status !== "succeeded" || !nativeOutput.assetId)
               continue;
             try {
-              const asset = await readNativeAsset(nativeOutput.assetId);
+              const rawAsset = await readNativeAsset(nativeOutput.assetId);
+              const asset = rawAsset
+                ? await composeNativeEditAsset(
+                    task,
+                    rawAsset,
+                    creationRef.current.projects.find((p) => p.id === projectId)
+                      ?.tasks ?? [],
+                  )
+                : null;
               if (!asset) throw new Error("原生素材原件尚未找到。");
+              output.assetId = asset.assetId;
               const id = `${projectId}-${taskId}-result-${output.index + 1}`;
               const item: CanvasCollectionItem = {
                 id,
@@ -1068,6 +1122,9 @@ export default function App() {
                 kind: "image",
                 prompt: task.prompt,
                 model: task.model,
+                providerConnectionId: task.providerConnectionId,
+                imageEditDraft: task.imageEdit?.document,
+                imageEditContext: imageResultContext(task, asset.assetId),
                 assetId: asset.assetId,
                 parentAssetId: asset.parentId,
                 preview: asset.preview,
@@ -1114,9 +1171,13 @@ export default function App() {
                   },
                 ];
               });
-            } catch {
-              output.status = "unknown";
-              output.error = "原生任务已完成，但本地素材原件读取失败。";
+            } catch (error) {
+              output.status =
+                error instanceof ImageEditMappingError ? "failed" : "unknown";
+              output.error =
+                error instanceof ImageEditMappingError
+                  ? error.message
+                  : "原生任务已完成，但本地素材原件读取失败。";
             }
           }
           const uncertain =
@@ -1257,6 +1318,9 @@ export default function App() {
         count: pendingIndices.length,
         idempotencyKey: `${task.idempotencyKey}-remaining-${pendingIndices.join("-")}`,
         size: task.imageSize,
+        maskAssetId: task.imageEdit?.nativeMask
+          ? task.imageEdit.maskAssetId
+          : undefined,
         beforeRequest: () => reservation!.assertCurrent(),
         onRequestStart: () => {
           providerRequestStarted = true;
@@ -1267,22 +1331,34 @@ export default function App() {
             2,
             async (source, sourceIndex) => {
               try {
-                return await storeGeneratedAsset({
+                const protectedSource = await composeEditResult(
+                  task,
                   source,
+                  creationRef.current.projects.find((p) => p.id === projectId)
+                    ?.tasks ?? [],
+                  controller.signal,
+                );
+                return await storeGeneratedAsset({
+                  source: protectedSource,
                   provider: task.providerName,
                   model: task.model,
                   sourceJobId: task.id,
                   connectionId: task.providerConnectionId,
                   promptHash,
-                  parentId: task.attachments.find(
-                    (attachment) => attachment.assetId,
-                  )?.assetId,
+                  parentId:
+                    task.imageEdit?.sourceAssetId ??
+                    task.attachments.find((attachment) => attachment.assetId)
+                      ?.assetId,
                   tags: ["AI生成", task.providerName ?? ""],
                   signal: controller.signal,
                 });
-              } catch {
+              } catch (error) {
                 const target = pendingIndices[offset + sourceIndex];
-                if (target != null) archiveFailureIndices.add(target);
+                if (target != null) {
+                  if (error instanceof ImageEditMappingError)
+                    mappingFailures.set(target, error.message);
+                  else archiveFailureIndices.add(target);
+                }
                 return null;
               }
             },
@@ -1312,6 +1388,9 @@ export default function App() {
               kind: "image",
               prompt: task.prompt,
               model: task.model,
+              providerConnectionId: task.providerConnectionId,
+              imageEditDraft: task.imageEdit?.document,
+              imageEditContext: imageResultContext(task, asset.assetId),
               assetId: asset.assetId,
               parentAssetId: asset.parentId,
               preview: asset.preview,
@@ -1383,7 +1462,9 @@ export default function App() {
                   ? "unknown"
                   : "failed",
               promptHash,
-              error: "此项尚未归档，可单项重试。",
+              error:
+                mappingFailures.get(output.index) ??
+                "此项尚未归档，可单项重试。",
             },
       );
       const completed = outputs.filter(
@@ -1416,7 +1497,8 @@ export default function App() {
               ? undefined
               : generated.failure instanceof ProviderSubmissionError
                 ? generated.failure.message
-                : `${completed}/${task.requestedOutputs} 张已归档，可重试未归档结果。`,
+                : (mappingFailures.values().next().value ??
+                  `${completed}/${task.requestedOutputs} 张已归档，可重试未归档结果。`),
         generatedUncertain || archiveUncertain ? "unknown" : "terminal",
       );
       await persistence.flush();
@@ -1551,9 +1633,47 @@ export default function App() {
       }
       if (taskControllers.current[taskId] === controller)
         delete taskControllers.current[taskId];
+      if (task.imageEdit && !controller.signal.aborted) {
+        const latest = creationRef.current.projects.find(
+          (p) => p.id === projectId,
+        );
+        const next = latest?.tasks.find(
+          (t) =>
+            t.id !== task.id &&
+            t.imageEdit?.groupId === task.imageEdit?.groupId &&
+            t.status === "queued" &&
+            t.submissionState !== "submitted" &&
+            t.submissionState !== "unknown",
+        );
+        if (next) void executeTask(projectId, next.id);
+      }
     }
   }
   function cancelTask(taskId: string): void {
+    for (const project of creationRef.current.projects) {
+      const groupId = project.tasks.find((t) => t.id === taskId)?.imageEdit
+        ?.groupId;
+      if (groupId)
+        updateProject(project.id, (current) => ({
+          ...current,
+          tasks: current.tasks.map((t) =>
+            t.id !== taskId &&
+            t.imageEdit?.groupId === groupId &&
+            t.status === "queued"
+              ? {
+                  ...t,
+                  status: "cancelled",
+                  submissionState: "terminal",
+                  error: "本轮区域重绘已取消，成功候选保留。",
+                  outputs: t.outputs?.map((o) => ({
+                    ...o,
+                    status: "cancelled",
+                  })),
+                }
+              : t,
+          ),
+        }));
+    }
     pausedTaskIds.current.delete(taskId);
     const controller = taskControllers.current[taskId];
     if (controller) {
@@ -1624,6 +1744,16 @@ export default function App() {
       setPendingApproval(null);
       return;
     }
+    if (
+      !approved &&
+      project.tasks.find((task) => task.id === pendingApproval.taskId)
+        ?.imageEdit
+    ) {
+      pendingApprovalRef.current = null;
+      cancelTask(pendingApproval.taskId);
+      setPendingApproval(null);
+      return;
+    }
     const nextProject: CreationProject = {
       ...project,
       items: approved
@@ -1662,6 +1792,7 @@ export default function App() {
     if (activeProjectIdRef.current === project.id)
       replaceCanvasItems(nextProject.items);
     setPendingApproval(null);
+    pendingApprovalRef.current = null;
     if (approved)
       void executeTask(project.id, pendingApproval.taskId, nextProject);
   }
@@ -1676,6 +1807,33 @@ export default function App() {
     if (!project || taskControllers.current[taskId]) return;
     pausedTaskIds.current.delete(taskId);
     void executeTask(project.id, taskId, project, true);
+  }
+  function regenerateImageTask(projectId: string, taskId: string): void {
+    const project = creationRef.current.projects.find(
+        (p) => p.id === projectId,
+      ),
+      task = project?.tasks.find((t) => t.id === taskId);
+    if (
+      !project ||
+      !task ||
+      task.kind !== "image" ||
+      task.status !== "succeeded" ||
+      project.tasks.some((t) => ["queued", "running"].includes(t.status))
+    )
+      return;
+    const regenerated = imageRegeneration(task),
+      next = {
+        ...project,
+        tasks: [...project.tasks, regenerated],
+        updatedAt: Date.now(),
+      };
+    commitCreation({
+      ...creationRef.current,
+      projects: creationRef.current.projects.map((p) =>
+        p.id === projectId ? next : p,
+      ),
+    });
+    void executeTask(projectId, regenerated.id, next, true);
   }
   function retryTask(
     projectId: string,
@@ -1815,9 +1973,24 @@ export default function App() {
     );
     const requestModel =
       request.origin === "canvas" ? request.input.model : request.input.model;
+    let effectivePrompt = request.input.prompt;
+    if (request.origin === "canvas" && request.input.imageEdit) {
+      try {
+        const compiled = compileEditPrompt(
+          effectivePrompt,
+          request.input.imageEdit.document,
+        );
+        if (!effectivePrompt.trim())
+          effectivePrompt = compiled.instructions
+            .map((i) => `${i.label}：${i.text}`)
+            .join("\n");
+      } catch (error) {
+        return error instanceof Error ? error.message : "区域引用无效。";
+      }
+    }
     const uiState = getGenerationUiState({
-      prompt: request.input.prompt,
-      inputValid: Boolean(request.input.prompt.trim()),
+      prompt: effectivePrompt,
+      inputValid: Boolean(effectivePrompt.trim()),
       modelConfigured: request.origin === "agent" || homeModelConfig.configured,
       quotaAvailable: true,
       online: typeof navigator === "undefined" ? true : navigator.onLine,
@@ -1841,6 +2014,7 @@ export default function App() {
         ? (rootItemId(original) ?? undefined)
         : undefined;
       let input: CreateProjectInput;
+      let editSource: CanvasCollectionItem | undefined;
       let sourceSignature: string | undefined;
       const canvasSignature = (project: CreationProject, id: string) =>
         JSON.stringify({
@@ -1861,6 +2035,7 @@ export default function App() {
       if (request.origin === "canvas") {
         sourceItemId = request.input.sourceItemId;
         const source = original!.items.find((item) => item.id === sourceItemId);
+        editSource = source;
         if (!source || (source.kind !== "image" && source.kind !== "text"))
           return "来源节点已删除或不支持，当前未提交生成。";
         sourceSignature = canvasSignature(original!, source.id);
@@ -1886,7 +2061,7 @@ export default function App() {
           });
         }
         input = {
-          prompt: request.input.prompt,
+          prompt: effectivePrompt,
           model: request.input.model,
           providerConnectionId: source.providerConnectionId,
           kind: source.kind,
@@ -1897,11 +2072,60 @@ export default function App() {
           outputCount: request.input.count,
           privacyMode: original!.composerDraft.privacyMode,
           imageSize:
-            source.kind === "text" ? undefined : source.parameters?.imageSize,
+            source.kind === "text" || source.assetId
+              ? undefined
+              : source.parameters?.imageSize,
+          imageOperation:
+            request.input.imageEdit?.document.regions.length &&
+            imageCapabilitiesForSelection(
+              {
+                source: "api",
+                model: request.input.model,
+                connectionId:
+                  source.providerConnectionId ??
+                  original!.composerDraft.providerConnectionId,
+              },
+              readProviderConnections(),
+            ).operations.inpaint === "supported"
+              ? "inpaint"
+              : undefined,
         };
       } else input = structuredClone(request.input);
+      if (
+        request.origin === "canvas" &&
+        request.input.imageEdit &&
+        !input.prompt.trim()
+      ) {
+        const compiled = compileEditPrompt(
+          input.prompt,
+          request.input.imageEdit.document,
+        );
+        input.prompt = compiled.instructions
+          .map((i) => `${i.label}：${i.text}`)
+          .join("\n");
+      }
       if (signal?.aborted) return "已取消提交，草稿和参考图已保留。";
       const connection = await prepareImageTask(input, original);
+      const editRequest =
+        request.origin === "canvas"
+          ? (request.input.imageEdit ??
+            (editSource?.assetId && editSource.kind === "image"
+              ? { document: { width: 1, height: 1, regions: [] } }
+              : undefined))
+          : undefined;
+      const editInputs =
+        editRequest && editSource && original
+          ? await prepareEditInputs(
+              input,
+              editSource,
+              original,
+              connection,
+              editRequest,
+              signal,
+            )
+          : [input];
+      for (const editInput of editInputs)
+        await prepareImageTask(editInput, original);
       if (signal?.aborted) return "已取消提交，草稿和参考图已保留。";
       const current = projectId
         ? creationRef.current.projects.find(
@@ -1924,8 +2148,20 @@ export default function App() {
         return "节点或参考图在检查期间发生变化，请重新提交；当前内容已保留。";
       const base = current ?? createProject(input);
       sourceItemId ??= rootItemId(base) ?? undefined;
-      const appended = appendImageTask(base, input, connection, sourceItemId);
+      const appended = appendImageTask(
+        base,
+        editInputs[0],
+        connection,
+        sourceItemId,
+      );
       let nextProject = appended.project;
+      for (const editInput of editInputs.slice(1))
+        nextProject = appendImageTask(
+          nextProject,
+          editInput,
+          connection,
+          sourceItemId,
+        ).project;
       if (request.origin === "chat")
         nextProject = {
           ...nextProject,
@@ -2413,6 +2649,30 @@ export default function App() {
           <div className="workspace-content" hidden={active !== "workspace"}>
             <CanvasImageCommandContext.Provider
               value={{
+                items: activeProject?.items,
+                updateItem: (id, patch) =>
+                  updateCanvasItems((current) =>
+                    current.map((item) =>
+                      item.id === id ? { ...item, ...patch } : item,
+                    ),
+                  ),
+                deleteItem: (id) =>
+                  updateCanvasItems((current) =>
+                    current.filter((item) => item.id !== id),
+                  ),
+                retryTask: (id) => {
+                  if (activeProject) retryTask(activeProject.id, id);
+                },
+                regenerateTask: (id) => {
+                  if (activeProject) regenerateImageTask(activeProject.id, id);
+                },
+                openPreview: (id, title) => {
+                  const source = activeProject?.items.find(
+                    (item) => item.id === id,
+                  );
+                  if (source)
+                    setImagePreview({ source, title: title ?? source.title });
+                },
                 submit: (input) =>
                   submitImageCommand({ origin: "canvas", input }),
                 cancel: cancelTask,
@@ -2554,6 +2814,14 @@ export default function App() {
                 onToggleLike={toggleLike}
                 onToggleFavorite={toggleFavorite}
               />
+              {imagePreview && (
+                <ImageLightbox
+                  key={imagePreview.source.id}
+                  source={imagePreview.source}
+                  title={imagePreview.title}
+                  onClose={() => setImagePreview(undefined)}
+                />
+              )}
             </CanvasImageCommandContext.Provider>
             <div className={"chat-container " + (!chat ? "chat-hidden" : "")}>
               <ConversationPanel
@@ -2850,3 +3118,4 @@ import "./styles/responsive-content.css";
 import "./styles/composer.css";
 import "./styles/page-templates.css";
 import "./styles/canvas-compare.css";
+import "./styles/image-edit.css";

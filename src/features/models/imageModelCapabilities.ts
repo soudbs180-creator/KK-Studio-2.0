@@ -122,7 +122,7 @@ export function resolveImageModelCapabilities(
     declaration,
     operations,
     maxReferences:
-      operations.edit === "unsupported"
+      operations.edit === "unsupported" && operations.inpaint !== "supported"
         ? 0
         : limits.length
           ? Math.min(...limits)

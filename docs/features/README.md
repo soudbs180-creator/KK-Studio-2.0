@@ -13,7 +13,7 @@
 | PROTOTYPE | 只有 UI、本地 fixture 或固定演示素材，无真实后端；界面必须显式标注 Prototype |
 | PLANNED | 只有计划/设计，无实现或无 UI |
 
-当前共 **34** 个功能：REAL（真实可用）2、PARTIAL（部分可用）26、PROTOTYPE（仅演示/UI）4、PLANNED（仅计划）2。
+当前共 **35** 个功能：REAL（真实可用）2、PARTIAL（部分可用）27、PROTOTYPE（仅演示/UI）4、PLANNED（仅计划）2。
 
 ## 如何新增一个功能（任何 AI 照此执行）
 
@@ -44,6 +44,7 @@
 | FEAT-010 | 语音输入 | PARTIAL（部分可用） | [卡片](feat-010-voice-input.md) | TASK-CAP-001 |
 | FEAT-029 | 提示词库 | PARTIAL（部分可用） | [卡片](feat-029-prompt-library.md) | TASK-UI-005, BACKEND-PLATFORM |
 | FEAT-031 | 统一任务态契约 | PARTIAL（部分可用） | [卡片](feat-031-unified-task-state.md) | TASK-TASKSTATE-001, TASK-TASKSTATE-002, BACKEND-MEDIA-001 |
+| FEAT-035 | 图片蒙版编辑 | PARTIAL（部分可用） | [卡片](feat-035-image-mask-editing.md) | TASK-IMAGE-EDIT-001, TASK-IMAGE-EDIT-VERIFY-002 |
 
 ## 智能能力
 

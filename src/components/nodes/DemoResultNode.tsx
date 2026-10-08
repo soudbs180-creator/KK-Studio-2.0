@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useContext, useLayoutEffect, useRef, useState } from "react";
+import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand.tsx";
 import {
   CANVAS_KIND_LABELS,
   type CanvasCollectionItem,
@@ -12,6 +13,7 @@ import DemoRunButton from "./DemoRunButton";
 import CreationComposer from "./CreationComposer";
 import { readReferenceImages } from "./referenceUpload";
 import CompareImageButton from "../../features/compare/CompareImageButton";
+import ImageRedrawDialog from "./ImageRedrawDialog.tsx";
 
 export default function DemoResultNode({
   item,
@@ -31,6 +33,8 @@ export default function DemoResultNode({
   editing?: NodeEditingProps;
 }) {
   const [open, setOpen] = useState(false);
+  const command = useContext(CanvasImageCommandContext);
+  const [redraw, setRedraw] = useState(false);
   const [referenceError, setReferenceError] = useState("");
   const result = item.result;
   const hasReferenceComposer = Boolean(
@@ -84,7 +88,15 @@ export default function DemoResultNode({
             <button
               className={`demo-result-preview is-${item.kind}`}
               aria-label={`预览${item.title}`}
-              onClick={() => setOpen(true)}
+              onClick={() => {
+                if (
+                  item.kind === "image" &&
+                  item.assetId &&
+                  command?.openPreview
+                )
+                  command.openPreview(item.id);
+                else setOpen(true);
+              }}
             >
               {result.poster || item.kind === "image" ? (
                 <img
@@ -127,6 +139,15 @@ export default function DemoResultNode({
         )}
         <footer>
           <CompareImageButton item={item} />
+          {item.kind === "image" && item.assetId && (
+            <button
+              className="ui-button"
+              aria-label="重绘当前图片"
+              onClick={() => setRedraw(true)}
+            >
+              重绘
+            </button>
+          )}
           <button
             className="ui-button"
             aria-label={
@@ -149,9 +170,16 @@ export default function DemoResultNode({
         </footer>
         {open && result && (
           <DemoMediaPreview
+            source={item}
             result={{ ...result, title: item.title }}
             onClose={() => setOpen(false)}
             onTextChange={(text) => onChange({ result: { ...result, text } })}
+          />
+        )}
+        {redraw && (
+          <ImageRedrawDialog
+            references={editing?.references}
+            onClose={() => setRedraw(false)}
           />
         )}
       </article>

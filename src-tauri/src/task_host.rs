@@ -41,6 +41,8 @@ pub struct TaskHostAttachment {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskHostRequest {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mask_asset_id: Option<String>,
     pub task_id: String,
     pub idempotency_key: String,
     pub base_url: String,
@@ -506,6 +508,26 @@ impl TaskHost {
                     .map_err(|_| RunError::failed("invalid_request", "请求引用的素材类型无效"))?;
                 form = form.part("image[]", part);
             }
+            if let Some(id) = &request.mask_asset_id {
+                let asset = self
+                    .assets
+                    .read(id)
+                    .map_err(|_| RunError::failed("invalid_request", "编辑蒙版不可用"))?
+                    .ok_or_else(|| RunError::failed("invalid_request", "编辑蒙版缺失"))?;
+                if asset.metadata.get("mime").and_then(Value::as_str) != Some("image/png") {
+                    return Err(RunError::failed("invalid_request", "编辑蒙版必须是 PNG"));
+                }
+                let bytes = STANDARD
+                    .decode(&asset.data_base64)
+                    .map_err(|_| RunError::failed("invalid_request", "编辑蒙版编码无效"))?;
+                form = form.part(
+                    "mask",
+                    reqwest::multipart::Part::bytes(bytes)
+                        .file_name("mask.png")
+                        .mime_str("image/png")
+                        .map_err(|_| RunError::failed("invalid_request", "编辑蒙版格式无效"))?,
+                );
+            }
             builder
                 .multipart(form)
                 .send()
@@ -609,8 +631,7 @@ impl TaskHost {
                     ids,
                 ));
             };
-            let sha = format!("{:x}", Sha256::digest(&bytes));
-            let metadata = json!({"assetId": format!("asset-{}", &sha[..24]), "sha256": sha, "mime": mime, "tags": ["generated"], "sourceJobId": request.task_id, "promptHash": request.prompt_hash, "isAiGenerated": true, "source": "provider", "provenance": {"provider": request.provider_name.clone().unwrap_or_else(|| "provider".into()), "model": request.model, "providerRequestId": provider_request_id, "generatedAt": rfc3339_now()}});
+            let metadata = image_output_metadata(&request, &bytes, mime, &provider_request_id);
             match self.assets.store(STANDARD.encode(bytes), metadata) {
                 Ok(stored) => {
                     let asset_id = stored["assetId"].as_str().unwrap_or_default().to_string();
@@ -639,6 +660,23 @@ impl TaskHost {
         }
         Ok(ids)
     }
+}
+
+fn image_output_metadata(
+    request: &TaskHostRequest,
+    bytes: &[u8],
+    mime: &str,
+    provider_request_id: &Option<String>,
+) -> Value {
+    let sha = format!("{:x}", Sha256::digest(bytes));
+    let mut metadata = json!({"assetId": format!("asset-{}", &sha[..24]), "sha256": sha, "mime": mime, "tags": ["generated"], "sourceJobId": request.task_id, "isAiGenerated": true, "source": "provider", "provenance": {"provider": request.provider_name.clone().unwrap_or_else(|| "provider".into()), "model": request.model, "generatedAt": rfc3339_now()}});
+    if let Some(hash) = &request.prompt_hash {
+        metadata["promptHash"] = json!(hash);
+    }
+    if let Some(id) = provider_request_id {
+        metadata["provenance"]["providerRequestId"] = json!(id);
+    }
+    metadata
 }
 
 fn merge_asset_ids(target: &mut Vec<String>, incoming: Vec<String>) {
@@ -909,6 +947,12 @@ fn append_bounded_chunk(
 }
 
 fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
+    if let Some(id) = &value.mask_asset_id {
+        validate_id(id, "maskAssetId")?;
+        if value.kind.as_deref() == Some("text") || value.attachments.is_empty() {
+            return Err("invalid: mask requires image edit".into());
+        }
+    }
     if value
         .concurrency_limit
         .is_some_and(|limit| !(1..=256).contains(&limit))
@@ -1125,6 +1169,7 @@ mod tests {
     }
     fn request(task: &str) -> TaskHostRequest {
         TaskHostRequest {
+            mask_asset_id: None,
             task_id: task.into(),
             idempotency_key: "idem-1".into(),
             base_url: "http://127.0.0.1:1234/v1".into(),
@@ -1141,6 +1186,20 @@ mod tests {
         }
     }
     #[test]
+    fn image_output_without_optional_receipt_metadata_can_be_archived() {
+        let mut input = request("image-task");
+        let metadata = image_output_metadata(&input, b"image bytes", "image/png", &None);
+        assert!(crate::asset_storage::validation::metadata(&metadata).is_ok());
+        assert!(metadata.get("promptHash").is_none());
+        assert!(metadata["provenance"].get("providerRequestId").is_none());
+        input.prompt_hash = Some("hash".into());
+        let metadata =
+            image_output_metadata(&input, b"image bytes", "image/png", &Some("receipt".into()));
+        assert!(crate::asset_storage::validation::metadata(&metadata).is_ok());
+        assert_eq!(metadata["promptHash"], "hash");
+        assert_eq!(metadata["provenance"]["providerRequestId"], "receipt");
+    }
+    #[test]
     fn text_request_roundtrip_and_image_parameters_are_rejected() {
         let mut value = serde_json::to_value(request("text-task")).unwrap();
         value["kind"] = json!("text");
@@ -1149,6 +1208,29 @@ mod tests {
         assert!(validate_request(&text).is_ok());
         value["size"] = json!("1024x1024");
         assert!(validate_request(&serde_json::from_value(value).unwrap()).is_err());
+    }
+
+    #[test]
+    fn mask_is_optional_fingerprinted_and_requires_an_image_original() {
+        let original = request("mask-task");
+        let value = serde_json::to_value(&original).unwrap();
+        assert!(value.get("maskAssetId").is_none());
+        let mut masked: TaskHostRequest = serde_json::from_value(value.clone()).unwrap();
+        masked.mask_asset_id = Some("asset-aaaaaaaaaaaaaaaaaaaaaaaa".into());
+        assert!(validate_request(&masked).is_err());
+        let mut with_original = value;
+        with_original["attachments"] =
+            json!([{"assetId":"asset-bbbbbbbbbbbbbbbbbbbbbbbb","name":"original.png"}]);
+        masked = serde_json::from_value(with_original).unwrap();
+        let without_mask = fingerprint(&masked).unwrap();
+        masked.mask_asset_id = Some("asset-aaaaaaaaaaaaaaaaaaaaaaaa".into());
+        assert!(validate_request(&masked).is_ok());
+        assert_ne!(without_mask, fingerprint(&masked).unwrap());
+        masked.kind = Some("text".into());
+        assert!(validate_request(&masked).is_err());
+        masked.kind = None;
+        masked.mask_asset_id = Some("../outside".into());
+        assert!(validate_request(&masked).is_err());
     }
 
     #[test]

@@ -1,5 +1,11 @@
 # AI handoff
 
+## 2026-10-08 统一图片编辑蒙版本地候选
+
+框选、画笔、色块产生原像素Mask，共用扩边/合并/裁剪、能力校验、Web/native模型请求、Mask内融合；保存/导出/恢复与连续编辑保持原件不可变。完整verify739root/172Agent/419browser（原skip8/2、0flaky）、Rust100、fresh Tauri两次Mask请求/包恢复/删除再生/重启通过，Web/Desktop实际bundle同hash。候选Desktop2.1.7/Web2.1.8；正式独立head复验待补，未推送/合并/发布。FEAT-035仍PARTIAL，真实Provider/语义几何偏移/真机/用户视觉归TASK-IMAGE-EDIT-VERIFY-002。[验证](../changes/2026-10-08-unified-image-mask/verification.md)。
+
+恢复入口：本仓库 .worktrees/TASK-IMAGE-EDIT-001，分支 codex/TASK-IMAGE-EDIT-001-unified-mask、base1af0357b；先核对Git状态和verification/review。不要操作其他worktree或原checkout的main-after-PR36-latest.json。运行证据在本任务.tmp/image-edit及本机output/unified-image-mask-20261008，重启前核对实际EXE与dist指纹。
+
 ## 2026-10-08 模型能力声明：Hosted日志复核后的增量修正
 
 TASK-MODEL-001 本地AC1–5 DONE。草稿无变化通知覆盖与显示字段依赖问题已修正：32定向无retry、完整verify723/731root(8原skip)、172/174Agent(2原skip)、408/408browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行PASS。2026-10-08 16:31 独立只读审查base5dd6e6dd..head71ddb625 PASS，MC-002/MC-003关闭，MC-001保持关闭；独立87/87、389源码hash和产物匹配，新指纹2ebaab3d。最终文档HEAD需补审，PR#36当前新SHA Hosted待取得；首轮2797687c的405pass+1flaky留档，唯一因果仍UNKNOWN。未合并发布，原主checkout未写入；FEAT-003仍PARTIAL，真实Provider/蒙版/扩图/Mobile及既有开发插件边界不变。下面早先PASS条目保留为当时SHA的历史记录。

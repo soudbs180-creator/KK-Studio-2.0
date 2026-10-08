@@ -18,6 +18,13 @@ import {
   type ReviewComment,
 } from "../../domain/reviewWorkflow.ts";
 import { normalizeStagePlans, type StagePlan } from "../../domain/stagePlan.ts";
+import { readMaskDocument } from "../image-edit/mask.ts";
+import {
+  readImageEditSnapshot,
+  readImageEditContext,
+  type ImageEditSnapshot,
+  type ImageEditContext,
+} from "../image-edit/snapshot.ts";
 
 export type CreationTaskStatus =
   | "queued"
@@ -68,6 +75,8 @@ export interface CreationMessage {
 }
 
 export interface CreationTask {
+  imageEdit?: ImageEditSnapshot;
+  imageEditContext?: ImageEditContext;
   id: string;
   /** Optional canvas node that originated this task submission. */
   sourceItemId?: string;
@@ -178,6 +187,10 @@ export interface CreationDraft {
 }
 
 export interface CreateProjectInput {
+  /** Preliminary binding check before request crops and masks are archived. */
+  imageOperation?: "inpaint";
+  imageEdit?: ImageEditSnapshot;
+  imageEditContext?: ImageEditContext;
   providerConnectionId?: string;
   prompt: string;
   model: string;
@@ -445,6 +458,23 @@ function normalizeCanvasItem(
 ): CanvasCollectionItem {
   const result = value.result;
   return {
+    imageEditDraft:
+      value.imageEditDraft === undefined
+        ? undefined
+        : readMaskDocument(value.imageEditDraft),
+    imageEditContext: readImageEditContext(value.imageEditContext),
+    imageEditPrompt:
+      typeof value.imageEditPrompt === "string"
+        ? value.imageEditPrompt.slice(0, 2000)
+        : undefined,
+    imageEditReferenceIds: Array.isArray(value.imageEditReferenceIds)
+      ? value.imageEditReferenceIds
+          .filter(
+            (id): id is string =>
+              typeof id === "string" && /^asset-[a-f0-9]{24}$/.test(id),
+          )
+          .slice(0, 64)
+      : undefined,
     id: safeText(value.id, 160),
     providerConnectionId:
       typeof value.providerConnectionId === "string"
@@ -689,6 +719,8 @@ function normalizeProject(value: CreationProject): CreationProject {
             : undefined,
         providerBaseUrl: safeBaseUrl(task.providerBaseUrl),
         providerName: safeText(task.providerName, 80) || undefined,
+        imageEdit: readImageEditSnapshot(task.imageEdit),
+        imageEditContext: readImageEditContext(task.imageEditContext),
         imageSize:
           typeof task.imageSize === "string" &&
           /^\d{2,5}x\d{2,5}$/.test(task.imageSize)

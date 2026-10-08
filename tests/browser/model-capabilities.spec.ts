@@ -199,6 +199,7 @@ for (const duplicate of [true, false]) {
       .click();
     const redraw = page.getByRole("dialog", { name: "重绘参考图片" });
     const start = redraw.getByRole("button", { name: "开始重绘", exact: true });
+    await redraw.getByLabel("重绘指令").fill("保留主体，调整背景");
     if (duplicate) await expect(start).toBeEnabled();
     else {
       await expect(start).toBeDisabled();
@@ -481,7 +482,9 @@ test("明确编辑限制禁用重绘和参考图并保留原图，不发送请�
   expect(requests).toBe(0);
 });
 
-test("报告能力限制数量且 unknown 蒙版只显示未接通说明", async ({ page }) => {
+test("报告能力限制数量且 unknown 蒙版保留未声明状态和编辑能力说明", async ({
+  page,
+}) => {
   await page.route(`${api}/models`, (route) =>
     route.fulfill({
       json: {
@@ -523,7 +526,8 @@ test("报告能力限制数量且 unknown 蒙版只显示未接通说明", async
   await item.getByTitle("使用当前模型声明支持的尺寸").click();
   const parameters = item.getByLabel("图片参数选项");
   await expect(parameters).toContainText("参考图编辑：支持");
-  await expect(parameters).toContainText("蒙版与扩图执行尚未接通");
+  await expect(parameters).toContainText("局部重绘需要已声明的编辑能力");
+  await expect(parameters).toContainText("扩图暂不可用");
   await expect(parameters).toContainText("最多 1 张参考图");
 });
 

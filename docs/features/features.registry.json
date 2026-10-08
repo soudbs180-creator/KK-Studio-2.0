@@ -1,5 +1,41 @@
 [
   {
+    "id": "FEAT-035",
+    "title": "图片蒙版编辑",
+    "area": "creation",
+    "status": "PARTIAL",
+    "card": "docs/features/feat-035-image-mask-editing.md",
+    "summary": "框选、画笔、色块共用原像素Mask、裁剪/请求/保护融合；Web/Desktop保存、重绘和灯箱本地验收通过，真实模型质量与移动真机待验。",
+    "entryPoints": [
+      "图片节点重绘",
+      "图片灯箱重绘"
+    ],
+    "code": [
+      "src/domain/imageEdit.ts",
+      "src/features/image-edit/mask.ts",
+      "src/features/image-edit/regions.ts",
+      "src/features/image-edit/editTasks.ts",
+      "src/components/nodes/ImageRedrawDialog.tsx",
+      "src/features/creation/imageTaskCommand.ts",
+      "src-tauri/src/task_host.rs",
+      "src-tauri/src/image_edit_schema.rs"
+    ],
+    "tests": [
+      "tests/unit/imageEdit.test.ts",
+      "tests/unit/imageEditSnapshot.test.ts",
+      "tests/unit/imageMaskAnnotation.test.ts",
+      "tests/unit/nativeTaskHost.test.ts",
+      "tests/unit/projectPackage.test.ts",
+      "tests/browser/image-edit.spec.ts",
+      "tests/desktop/image-edit.mjs"
+    ],
+    "tasks": [
+      "TASK-IMAGE-EDIT-001",
+      "TASK-IMAGE-EDIT-VERIFY-002"
+    ],
+    "updated": "2026-10-08"
+  },
+  {
     "id": "FEAT-001",
     "title": "创作画布（节点/连线/编辑）",
     "area": "canvas",
@@ -155,7 +191,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-003-image-parameters.md",
-    "summary": "图片参数与生成/编辑三态、参考图/任务数量限额按精确账号模型目录生效；手动/报告声明、恢复和Web/Desktop提交校验已接入。声明不代表真实Provider验收；蒙版/扩图执行待接通。",
+    "summary": "图片参数与生成/编辑三态、参考图/任务数量限额按精确账号模型目录生效；手动/报告声明、恢复和Web/Desktop提交校验已接入。声明不代表真实Provider验收；蒙版编辑见FEAT-035；扩图执行待接通。",
     "entryPoints": [
       "图片节点参数弹层 CreationParameters",
       "图片卡片模型/参数菜单",

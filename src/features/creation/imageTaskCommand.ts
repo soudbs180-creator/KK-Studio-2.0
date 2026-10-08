@@ -160,6 +160,11 @@ export async function prepareImageTask(
       baseUrl: selected.baseUrl,
       credentialRef: selected.credentialRef,
       referenceCount: input.attachments.length,
+      operation:
+        input.imageEdit?.nativeMask || input.imageOperation === "inpaint"
+          ? ("inpaint" as const)
+          : undefined,
+      localEdit: Boolean(input.imageEdit),
       outputCount: input.outputCount ?? 1,
       kind: input.kind === "text" ? ("text" as const) : ("image" as const),
       model: input.model,
@@ -203,6 +208,13 @@ export async function prepareImageTask(
         input.kind === "text" ? "text" : "image",
         input.model,
         input.outputCount ?? 1,
+        {
+          operation:
+            input.imageEdit?.nativeMask || input.imageOperation === "inpaint"
+              ? "inpaint"
+              : undefined,
+          localEdit: Boolean(input.imageEdit),
+        },
       ),
     );
   }
@@ -217,6 +229,11 @@ export async function prepareImageTask(
     baseUrl: project.providerBaseUrl,
     credentialRef: project.providerCredentialRef,
     referenceCount: input.attachments.length,
+    operation:
+      input.imageEdit?.nativeMask || input.imageOperation === "inpaint"
+        ? ("inpaint" as const)
+        : undefined,
+    localEdit: Boolean(input.imageEdit),
     outputCount: input.outputCount ?? 1,
     kind: input.kind === "text" ? ("text" as const) : ("image" as const),
     model: input.model,
@@ -260,6 +277,8 @@ export function appendImageTask(
     sourceItemId,
     providerConnectionId: connection.id,
     imageSize: input.imageSize,
+    imageEdit: input.imageEdit,
+    imageEditContext: input.imageEditContext,
   };
   return {
     task,

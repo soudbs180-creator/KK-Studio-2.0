@@ -6,6 +6,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
+| TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | IN_PROGRESS | TASK-MODEL-001 | root |
+| TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | TASK-IMAGE-EDIT-001 | root |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
 | TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
 | T0 | 可复现候选源码与主线整合 | DONE | none | root |
@@ -105,6 +107,30 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AUDIT-20261003 | 全项目任务盘点与可本地闭环项收口 | DONE | TASK-MCP-REGISTRY-001, TASK-MCP-REGISTRY-002, TASK-MCP-PROTO-001, TASK-ORCH-REPLAN-001 | root |
 | TASK-GOV-GOALS-001 | 项目建设目标与验收基线 | DONE | TASK-AUDIT-20261003 | root |
 | TASK-UI-COMPONENT-BOUNDARY-001 | MCP 设置组件职责拆分 | DONE | TASK-GOV-GOALS-001 | root |
+
+## TASK-IMAGE-EDIT-001 — 统一图片编辑蒙版与连续重绘
+
+- Goal: 框选、画笔、色块共享坐标、裁剪、请求及融合，保护原图与未选像素
+- Scope: 现有重绘和图片预览入口，领域Mask、Web/Desktop请求合成、编辑上下文
+- Acceptance: 三个工具统一原像素Mask与历史; 5%偶数裁剪、合并及1K/2K/4K路由; 保护非编辑像素、部分成功与重试; 色块结构化指令、灯箱和上下文; 相关验证、完整verify、独立审查和文档
+- Branch: `codex/TASK-IMAGE-EDIT-001-unified-mask`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-EDIT-001`
+- Modules: src/features/image-edit, src/features/creation, src/components/nodes, src/App.tsx, src-tauri/src/task_host.rs, tests, docs
+- Verification: PASS — 本地统一Mask、裁剪/融合/模型请求、交互/灯箱、Web/native包与重启已通过；root739/747(原skip8)、Agent172/174(原skip2)、browser419/419零retry、Rust100、fresh EXE PASS；正式独立SHA复验待完成。
+- Evidence: [docs/changes/2026-10-08-unified-image-mask/intent.md](../../docs/changes/2026-10-08-unified-image-mask/intent.md), [docs/changes/2026-10-08-unified-image-mask/spec.md](../../docs/changes/2026-10-08-unified-image-mask/spec.md), [docs/changes/2026-10-08-unified-image-mask/plan.md](../../docs/changes/2026-10-08-unified-image-mask/plan.md), [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/changes/2026-10-08-unified-image-mask/review.md](../../docs/changes/2026-10-08-unified-image-mask/review.md)
+- Updated: 2026-10-08
+
+## TASK-IMAGE-EDIT-VERIFY-002 — 图片编辑真实模型与移动设备效果验收
+
+- Goal: 验证真实模型局部重绘质量、映射偏移和物理手机手势/键盘，补齐本地fixture之外的证据
+- Scope: FEAT-035真实Provider质量与移动验收；不将fixture当作真实效果
+- Acceptance: 明确供应商/账号/能力规格，在取得真实调用授权后验证Mask和标注编辑; 核对原件/未选像素、边缘融合、模型内部几何与透视变化；记录需要人工确认的边界; 在实际手机验证双指、输入键盘、安全区、工具栏与竖滑；完成用户视觉验收
+- Branch: `UNASSIGNED`
+- Worktree: `UNASSIGNED`
+- Modules: src/features/image-edit, src/features/creation, tests, docs/features/feat-035-image-mask-editing.md
+- Verification: NOT_VERIFIED — 本轮未使用真实付费连接、物理手机或用户视觉验收；比例异常已自动拒绝，任意语义几何位移仍需人工确认。
+- Evidence: [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/features/feat-035-image-mask-editing.md](../../docs/features/feat-035-image-mask-editing.md)
+- Updated: 2026-10-08
 
 ## TASK-MODEL-001 — 账号级图片模型能力声明与提交校验
 
