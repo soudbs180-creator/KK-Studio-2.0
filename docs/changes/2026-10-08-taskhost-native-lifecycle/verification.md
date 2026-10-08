@@ -46,6 +46,8 @@ Web 新增回归通过真实供应商响应制造 1 success + 1 unknown + 2 fail
 
 ## 分支收敛与边界
 
+正式独立补审 `5dd6e6dd → 0251cf797a60ead936849c185999dc3fe6a005c0` PASS，原两项 P2 已关闭；[独立收据](evidence/review-0251cf7.md)分别列出 reviewer 自行运行与执行者证据。任务实施和本机验收完成；T5 保持 REVIEW，当前 Hosted 与整合门禁未完成前不写全流程完成。
+
 PR #34 已 squash 合入 `main@5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3`，候选/合并 tree 一致；[主线 hosted CI](evidence/pr34-main-ci.json) verify/deploy-linux 成功。PR #35 合并结果见上节。模型能力分支仍由原执行者处理；不覆盖其源码或重复 cherry-pick。详见[状态盘点](status.md)。
 
 本机 fixture 证明原生宿主，不能证明付费 Provider 质量、最终账单、VPS/Mobile/ComfyUI 或安装器发布。新保存的浏览器供应商元数据在立即强杀整个 WebView 进程树时曾丢失，[现场](evidence/provider-abrupt-exit-observation.json)；系统凭据和原生任务/素材保留，正常应用退出后配置恢复通过。该配置落盘缺口和既有 native image health/连接门禁缺口分别登记 TASK-PROV-005/006，保持开放，不能随 T5 验收升级。
