@@ -20,6 +20,37 @@ function Get-WebView2Version {
     return $null
 }
 
+function Test-MicrosoftSigner {
+    param($Certificate)
+    try {
+        $reader = [System.Formats.Asn1.AsnReader]::new(
+            [System.ReadOnlyMemory[byte]]::new($Certificate.SubjectName.RawData),
+            [System.Formats.Asn1.AsnEncodingRules]::DER
+        )
+        $name = $reader.ReadSequence()
+        $organizations = [System.Collections.Generic.List[string]]::new()
+        while ($name.HasData) {
+            $attributes = $name.ReadSetOf()
+            while ($attributes.HasData) {
+                $attribute = $attributes.ReadSequence()
+                $oid = $attribute.ReadObjectIdentifier()
+                if ($oid -eq '2.5.4.10') {
+                    $tag = $attribute.PeekTag()
+                    if ($tag.TagClass -ne [System.Formats.Asn1.TagClass]::Universal) { return $false }
+                    $organizations.Add($attribute.ReadCharacterString([System.Formats.Asn1.UniversalTagNumber]$tag.TagValue))
+                } else {
+                    $null = $attribute.ReadEncodedValue()
+                }
+                $attribute.ThrowIfNotEmpty()
+            }
+        }
+        $reader.ThrowIfNotEmpty()
+        return $organizations.Count -eq 1 -and [string]::Equals($organizations[0], 'Microsoft Corporation', [StringComparison]::Ordinal)
+    } catch {
+        return $false
+    }
+}
+
 $installedVersion = Get-WebView2Version
 Write-Output "WebView2 Runtime before setup: $($installedVersion ?? 'MISSING')"
 if (-not $installedVersion) {
@@ -29,7 +60,7 @@ if (-not $installedVersion) {
     $installerPath = Join-Path $env:RUNNER_TEMP ('webview2-' + [guid]::NewGuid().ToString() + '.exe')
     Invoke-WebRequest -Uri 'https://go.microsoft.com/fwlink/p/?LinkId=2124703' -OutFile $installerPath -TimeoutSec 60
     $signature = Get-AuthenticodeSignature -LiteralPath $installerPath
-    if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch '(?:^|,\s*)O=Microsoft Corporation(?=,|$)') {
+    if ($signature.Status -ne 'Valid' -or -not (Test-MicrosoftSigner $signature.SignerCertificate)) {
         throw 'WebView2 bootstrapper must have a valid Microsoft signature.'
     }
     $installer = Start-Process -FilePath $installerPath -ArgumentList '/silent', '/install' -WindowStyle Hidden -PassThru

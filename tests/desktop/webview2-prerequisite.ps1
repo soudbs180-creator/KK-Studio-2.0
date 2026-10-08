@@ -33,7 +33,10 @@ function Test-Prerequisite {
     }
     function Get-AuthenticodeSignature {
         param($LiteralPath)
-        return @{ Status = $script:Fixture.Signature; SignerCertificate = @{ Subject = $script:Fixture.Subject } }
+        return @{ Status = $script:Fixture.Signature; SignerCertificate = @{
+            Subject = $script:Fixture.Subject
+            SubjectName = [System.Security.Cryptography.X509Certificates.X500DistinguishedName]::new($script:Fixture.Subject)
+        } }
     }
     function Start-Process {
         param($FilePath, $ArgumentList, $WindowStyle, [switch]$PassThru)
@@ -83,6 +86,8 @@ $cases = @(
     @{ Name = 'other-publisher'; Subject = 'CN=Example, O=Example'; Fails = $true; Starts = 0 },
     @{ Name = 'publisher-prefix-spoof'; Subject = 'CN=Example, O=Microsoft Corporation Example, C=US'; Fails = $true; Starts = 0 },
     @{ Name = 'publisher-suffix-spoof'; Subject = 'CN=Example, O=Example Microsoft Corporation, C=US'; Fails = $true; Starts = 0 },
+    @{ Name = 'quoted-cn-publisher-spoof'; Subject = 'CN="Example, O=Microsoft Corporation, Extra", O=Example Publisher, C=US'; Fails = $true; Starts = 0 },
+    @{ Name = 'multiple-organizations'; Subject = 'CN=Example, O=Microsoft Corporation, O=Example Publisher, C=US'; Fails = $true; Starts = 0 },
     @{ Name = 'install-nonzero'; ExitCode = 1; Fails = $true },
     @{ Name = 'install-timeout'; Finished = $false; Fails = $true },
     @{ Name = 'installed-version-still-missing'; RegisteredAfter = $false; Fails = $true }
