@@ -1,5 +1,39 @@
 [
   {
+    "id": "TASK-UI-013",
+    "title": "桌面标题栏与菜单合并为单排",
+    "goal": "应用名、菜单和真实窗口控制共用一排，保留窗口与Web导航行为",
+    "scope": "Desktop TopBar/window controls/Tauri config；Web相邻回归",
+    "acceptance": [
+      "单排40px与同状态原生DOM截图",
+      "菜单、拖动、双击、最小化、最大化/还原、关闭真实操作",
+      "Web三断点及完整verify、clientcheck、独立审查"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "fix/TASK-UI-013-single-row-titlebar",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-013-single-row-titlebar",
+    "affectedModules": [
+      "src/components/TopBar.tsx",
+      "src/components/WindowControls.tsx",
+      "src/styles/desktop-titlebar.css",
+      "src-tauri",
+      "tests",
+      "docs"
+    ],
+    "status": "REVIEW",
+    "evidence": [
+      "docs/changes/2026-10-08-single-row-titlebar/intent.md",
+      "docs/changes/2026-10-08-single-row-titlebar/spec.md",
+      "docs/changes/2026-10-08-single-row-titlebar/plan.md",
+      "docs/changes/2026-10-08-single-row-titlebar/verification.md",
+      "docs/changes/2026-10-08-single-row-titlebar/review.md"
+    ],
+    "verification": "本地AC1–3通过：旧release真窗口RED、初始化边界3项既有回归修正、定向8/8、完整verify723root/172Agent/411browser零失败与零flaky、clientcheck/fresh Tauri真窗口与三档development通过。Desktop2.1.7、Web2.1.7保持，独立审查进行中；原main未写入，未合并或发布。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-08"
+  },
+  {
     "id": "TASK-MODEL-001",
     "title": "账号级图片模型能力声明与提交校验",
     "goal": "让图片参数、编辑操作与限额按精确账号模型声明解析、保存恢复和执行校验",

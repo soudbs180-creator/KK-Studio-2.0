@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
+| TASK-UI-013 | 桌面标题栏与菜单合并为单排 | REVIEW | none | root |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
 | TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
 | T0 | 可复现候选源码与主线整合 | DONE | none | root |
@@ -105,6 +106,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AUDIT-20261003 | 全项目任务盘点与可本地闭环项收口 | DONE | TASK-MCP-REGISTRY-001, TASK-MCP-REGISTRY-002, TASK-MCP-PROTO-001, TASK-ORCH-REPLAN-001 | root |
 | TASK-GOV-GOALS-001 | 项目建设目标与验收基线 | DONE | TASK-AUDIT-20261003 | root |
 | TASK-UI-COMPONENT-BOUNDARY-001 | MCP 设置组件职责拆分 | DONE | TASK-GOV-GOALS-001 | root |
+
+## TASK-UI-013 — 桌面标题栏与菜单合并为单排
+
+- Goal: 应用名、菜单和真实窗口控制共用一排，保留窗口与Web导航行为
+- Scope: Desktop TopBar/window controls/Tauri config；Web相邻回归
+- Acceptance: 单排40px与同状态原生DOM截图; 菜单、拖动、双击、最小化、最大化/还原、关闭真实操作; Web三断点及完整verify、clientcheck、独立审查
+- Branch: `fix/TASK-UI-013-single-row-titlebar`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-013-single-row-titlebar`
+- Modules: src/components/TopBar.tsx, src/components/WindowControls.tsx, src/styles/desktop-titlebar.css, src-tauri, tests, docs
+- Verification: PASS — 本地AC1–3通过：旧release真窗口RED、初始化边界3项既有回归修正、定向8/8、完整verify723root/172Agent/411browser零失败与零flaky、clientcheck/fresh Tauri真窗口与三档development通过。Desktop2.1.7、Web2.1.7保持，独立审查进行中；原main未写入，未合并或发布。
+- Evidence: [docs/changes/2026-10-08-single-row-titlebar/intent.md](../../docs/changes/2026-10-08-single-row-titlebar/intent.md), [docs/changes/2026-10-08-single-row-titlebar/spec.md](../../docs/changes/2026-10-08-single-row-titlebar/spec.md), [docs/changes/2026-10-08-single-row-titlebar/plan.md](../../docs/changes/2026-10-08-single-row-titlebar/plan.md), [docs/changes/2026-10-08-single-row-titlebar/verification.md](../../docs/changes/2026-10-08-single-row-titlebar/verification.md), [docs/changes/2026-10-08-single-row-titlebar/review.md](../../docs/changes/2026-10-08-single-row-titlebar/review.md)
+- Updated: 2026-10-08
 
 ## TASK-MODEL-001 — 账号级图片模型能力声明与提交校验
 

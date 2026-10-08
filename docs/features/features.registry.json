@@ -1109,7 +1109,10 @@
       "src/components/SidebarProjectEntry.tsx",
       "src/components/CatalogPanel.tsx",
       "src/components/SavedPane.tsx",
-      "src/App.tsx"
+      "src/App.tsx",
+      "src/components/TopBar.tsx",
+      "src/components/WindowControls.tsx",
+      "src/styles/desktop-titlebar.css"
     ],
     "tests": [
       "tests/browser/sidebar.spec.ts",
@@ -1117,15 +1120,18 @@
       "tests/browser/catalog-pages.spec.ts",
       "tests/browser/ui-interactions.spec.ts",
       "tests/browser/ui-interaction-matrix.spec.ts",
-      "tests/desktop/project-landing.mjs"
+      "tests/desktop/project-landing.mjs",
+      "tests/browser/titlebar.spec.ts",
+      "tests/desktop/titlebar.mjs"
     ],
     "tasks": [
       "TASK-UI-DISMISS-002",
       "UI-004",
       "TASK-UI-006",
-      "TASK-PROJECT-SIDEBAR-001"
+      "TASK-PROJECT-SIDEBAR-001",
+      "TASK-UI-013"
     ],
-    "updated": "2026-09-30",
+    "updated": "2026-10-08",
     "platforms": [
       "web",
       "desktop"
@@ -1146,6 +1152,14 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-29-project-landing/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-08-single-row-titlebar/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-08-single-row-titlebar/verification.md"
       }
     ]
   },

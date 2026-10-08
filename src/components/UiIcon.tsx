@@ -21,6 +21,8 @@ import {
   Cpu,
   Eye,
   EyeSlash,
+  Minus,
+  Stop,
 } from "iconsax-react";
 import { getUiIconSizeName, normalizeUiIconSize } from "./uiIconSizing";
 
@@ -47,6 +49,8 @@ const ICONS = {
   agent: Cpu,
   eye: Eye,
   eyeOff: EyeSlash,
+  minimize: Minus,
+  maximize: Stop,
 };
 export type UiIconName = keyof typeof ICONS;
 

@@ -1,0 +1,92 @@
+/* Desktop shell: menu and native window controls share the existing 40px rail. */
+.app .topbar.desktop-titlebar {
+  height: var(--kk-topbar-height);
+  flex: 0 0 var(--kk-topbar-height);
+  align-items: center;
+  gap: var(--kk-space-5);
+  padding: 0 0 0 var(--kk-space-5);
+  background: var(--kk-bg-surface);
+  color: var(--kk-text-secondary);
+  user-select: none;
+}
+
+.app .desktop-titlebar > strong,
+.app .desktop-titlebar nav button {
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+  font-weight: var(--kk-font-weight-body);
+  white-space: nowrap;
+}
+
+.app .desktop-titlebar nav {
+  align-items: center;
+  gap: 0;
+}
+
+.app .desktop-titlebar .top-menu > button {
+  min-height: var(--kk-control-h-md);
+  padding: 0 var(--kk-space-3);
+  border-radius: var(--kk-radius-xs);
+}
+
+.app .desktop-titlebar .menu-popover {
+  top: calc(100% + var(--kk-space-1));
+}
+
+.window-controls {
+  display: flex;
+  align-self: stretch;
+  flex-shrink: 0;
+  margin-left: auto;
+  position: relative;
+}
+
+.window-controls > button {
+  display: grid;
+  place-items: center;
+  width: var(--kk-control-h-lg);
+  height: var(--kk-topbar-height);
+  padding: 0;
+  border-radius: var(--kk-radius-0);
+  color: var(--kk-text-secondary);
+}
+
+.window-controls > button:hover,
+.app .desktop-titlebar .top-menu > button:hover {
+  background: var(--kk-bg-elevated);
+  color: var(--kk-text-primary);
+}
+
+.window-controls > button:active {
+  background: var(--kk-bg-soft);
+}
+
+.window-controls > button:focus-visible {
+  outline: var(--kk-border-width-focus) solid var(--kk-focus-ring);
+  outline-offset: calc(-1 * var(--kk-border-width-focus));
+}
+
+.window-controls > button:disabled {
+  opacity: 0.5;
+}
+
+.window-controls > .window-control-close:hover {
+  color: var(--kk-text-danger);
+}
+
+.window-control-close .ui-icon {
+  transform: rotate(45deg);
+}
+
+.window-control-error {
+  position: absolute;
+  top: 100%;
+  right: var(--kk-space-4);
+  z-index: 46;
+  padding: var(--kk-space-2) var(--kk-space-3);
+  border-radius: var(--kk-radius-xs);
+  background: var(--kk-bg-elevated);
+  color: var(--kk-text-danger);
+  font-size: var(--kk-font-caption);
+  white-space: nowrap;
+}

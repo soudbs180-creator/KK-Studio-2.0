@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-08 桌面单排标题栏候选
+
+TASK-UI-013 已将桌面应用名、菜单与原生窗口控制合并为一排40px。完整 verify（723root/172Agent/411browser，原skip8/2、零失败/零flaky）、client:check、fresh Tauri 单排/真实拖动/最大化还原/最小化关闭及 Web 三档 development 验证通过；初始化错误不再影响设置入口，既有3项回归未放宽。Desktop2.1.7，Web2.1.7/Mobile规划2.1.1保持；FEAT-023仍部分实现。分支 `fix/TASK-UI-013-single-row-titlebar`，base main@1af0357b；原main未修改，独立只读审查与提交收据另绑，未合并/安装器/正式发布。[验证](changes/2026-10-08-single-row-titlebar/verification.md) / [审查](changes/2026-10-08-single-row-titlebar/review.md)。
+
 ## 2026-10-08 模型能力声明：Hosted日志复核后的增量修正
 
 TASK-MODEL-001 本地AC1–5 DONE。草稿无变化通知覆盖与显示字段依赖问题已修正：32定向无retry、完整verify723/731root(8原skip)、172/174Agent(2原skip)、408/408browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行PASS。2026-10-08 16:31 独立只读审查base5dd6e6dd..head71ddb625 PASS，MC-002/MC-003关闭，MC-001保持关闭；独立87/87、389源码hash和产物匹配，新指纹2ebaab3d。最终文档HEAD需补审，PR#36当前新SHA Hosted待取得；首轮2797687c的405pass+1flaky留档，唯一因果仍UNKNOWN。未合并发布，原主checkout未写入；FEAT-003仍PARTIAL，真实Provider/蒙版/扩图/Mobile及既有开发插件边界不变。下面早先PASS条目保留为当时SHA的历史记录。
