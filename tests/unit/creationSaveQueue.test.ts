@@ -9,6 +9,10 @@ import {
 } from "../../src/features/creation/model.ts";
 import { storageError } from "../../src/features/creation/snapshotCodec.ts";
 import { reconcileProjectCanvas } from "../../src/domain/projectCanvas.ts";
+import {
+  createNativeCloseHandler,
+  flushCreationBeforeClose,
+} from "../../src/features/creation/nativeClose.ts";
 
 type StorageHook = ReturnType<
   typeof import("../../src/features/creation/useCreationStorage.ts").useCreationStorage
@@ -16,9 +20,10 @@ type StorageHook = ReturnType<
 
 // Run the actual hook with deterministic React lifecycle/timers and IO boundaries.
 // No save-queue, revision, conflict or recovery logic is replaced by this harness.
-async function harness() {
+async function harness(native = false, registration?: Promise<() => void>) {
   const slots: unknown[] = [];
-  const effects: (() => void)[] = [];
+  const effects: (() => void | (() => void))[] = [];
+  const cleanup: (() => void)[] = [];
   let cursor = 0;
   const writes: CreationSnapshot[] = [];
   const loaded = { ...emptySnapshot(), revision: 1 };
@@ -46,7 +51,7 @@ async function harness() {
       if (!(index in slots)) slots[index] = { current: initial };
       return slots[index];
     },
-    useEffect(effect: () => void) {
+    useEffect(effect: () => void | (() => void)) {
       const index = cursor++;
       if (!(index in slots)) {
         slots[index] = true;
@@ -67,8 +72,32 @@ async function harness() {
     persistCreationSnapshotSync: () => {},
     pendingRecoveryDraft: () => null,
   };
+  let nativeClose: ReturnType<typeof createNativeCloseHandler> | undefined;
+  let destroyed = 0;
+  let released = 0;
   const modules: Record<string, unknown> = {
     react: hooks,
+    "@tauri-apps/api/core": { isTauri: () => native },
+    "@tauri-apps/api/window": {
+      getCurrentWindow: () => {
+        assert(native, "Web must not register native window events");
+        return {
+          onCloseRequested: (handler: typeof nativeClose) => {
+            nativeClose = handler;
+            return (
+              registration ??
+              Promise.resolve(() => {
+                released++;
+              })
+            );
+          },
+          destroy: async () => {
+            destroyed++;
+          },
+        };
+      },
+    },
+    "./nativeClose": { createNativeCloseHandler, flushCreationBeforeClose },
     "./model": { emptySnapshot },
     "./storage": storage,
     "./snapshotCodec": { storageError },
@@ -110,7 +139,10 @@ async function harness() {
     return exports.useCreationStorage!((snapshot) => snapshot);
   };
   render();
-  effects.forEach((effect) => effect());
+  effects.forEach((effect) => {
+    const stop = effect();
+    if (stop) cleanup.push(stop);
+  });
   await new Promise<void>((resolve) => setImmediate(resolve));
   assert.equal(render().state, "saved");
   return {
@@ -120,6 +152,13 @@ async function harness() {
     setPersist: (next: typeof persist) => {
       persist = next;
     },
+    nativeClose: () => {
+      assert(nativeClose);
+      return nativeClose;
+    },
+    destroyed: () => destroyed,
+    released: () => released,
+    dispose: () => cleanup.reverse().forEach((stop) => stop()),
   };
 }
 
@@ -189,4 +228,89 @@ test("flushing an already durable revision restores saved status without writing
   await hook.flush();
   assert.equal(fixture.writes.length, 1);
   assert.equal(fixture.render().state, "saved");
+});
+
+test("the actual hook drains the latest revision before native destruction", async () => {
+  const fixture = await harness(true);
+  let finish!: () => void;
+  fixture.setPersist((snapshot) =>
+    snapshot.revision === 2
+      ? new Promise<void>((resolve) => {
+          finish = resolve;
+        })
+      : Promise.resolve(),
+  );
+  let hook = fixture.render();
+  hook.commitCreation({
+    ...hook.creation,
+    homeDraft: { ...hook.creation.homeDraft, prompt: "first" },
+  });
+  let prevented = 0;
+  const closing = fixture.nativeClose()({
+    preventDefault: () => {
+      prevented++;
+    },
+  });
+  await new Promise<void>((resolve) => setImmediate(resolve));
+  assert.equal(prevented, 1);
+  assert.equal(fixture.destroyed(), 0);
+  hook = fixture.render();
+  hook.commitCreation({
+    ...hook.creation,
+    homeDraft: { ...hook.creation.homeDraft, prompt: "latest" },
+  });
+  finish();
+  await closing;
+  assert.deepEqual(
+    fixture.writes.map((s) => s.revision),
+    [2, 3],
+  );
+  assert.equal(fixture.render().creation.homeDraft.prompt, "latest");
+  assert.equal(fixture.render().state, "saved");
+  assert.equal(fixture.destroyed(), 1);
+  fixture.dispose();
+  assert.equal(fixture.released(), 1);
+});
+
+test("native save failure keeps the hook draft and safe error visible until retry", async () => {
+  const fixture = await harness(true);
+  const hook = fixture.render();
+  hook.commitCreation({
+    ...hook.creation,
+    homeDraft: { ...hook.creation.homeDraft, prompt: "unsaved" },
+  });
+  fixture.setPersist(async () => {
+    throw new Error("private path should not leak");
+  });
+  await fixture.nativeClose()({ preventDefault() {} });
+  assert.equal(fixture.destroyed(), 0);
+  assert.equal(fixture.render().state, "write_error");
+  assert.equal(fixture.render().creation.homeDraft.prompt, "unsaved");
+  assert.match(fixture.render().message, /窗口保持打开/);
+  assert(!fixture.render().message.includes("private path"));
+  fixture.setPersist(async () => {});
+  await fixture.nativeClose()({ preventDefault() {} });
+  assert.equal(fixture.destroyed(), 1);
+  assert.equal(fixture.render().state, "saved");
+  fixture.dispose();
+});
+
+test("a native subscription resolving after unmount is released without a stale close", async () => {
+  let register!: (stop: () => void) => void;
+  let stopped = 0;
+  const fixture = await harness(
+    true,
+    new Promise((resolve) => {
+      register = resolve;
+    }),
+  );
+  fixture.dispose();
+  register(() => {
+    stopped++;
+  });
+  await new Promise<void>((resolve) => setImmediate(resolve));
+  await fixture.nativeClose()({ preventDefault() {} });
+  assert.equal(stopped, 1);
+  assert.equal(fixture.destroyed(), 0);
+  assert.equal(fixture.writes.length, 0);
 });

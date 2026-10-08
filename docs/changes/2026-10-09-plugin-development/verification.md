@@ -44,3 +44,6 @@
 
 
 - 关闭守卫单元先缺实现 RED，随后 7 个关闭契约 + 6 恢复 + 3 JSX = 16/16 PASS；typecheck/lint、109任务治理零违例。当前是工作区预验收；完整verify、fresh EXE及立即关闭/真实IO失败留窗仍待新提交执行。
+
+
+- verify-e3a6660.txt 实际 FAIL：原 3 个保存队列 VM 回归拒绝新增 @tauri-apps/api/core import，尚未执行原队列断言；保留原 fail，未删断言。更新 harness 显式平台边界并调用真实 nativeClose，实现不替换；原 3 + 3 新实际 hook + 7 helper 共13/13 PASS。新增覆盖最新revision/真实hookIO失败错误脱敏及重试/异步监听晚到清理。Rust fmt/test102 PASS；capabilities.json 新 allow-destroy 为真实生成变化，必须保留；desktop/windows schema 已逐字符排除换行编码确认无语义变化。完整verify随后重跑。
