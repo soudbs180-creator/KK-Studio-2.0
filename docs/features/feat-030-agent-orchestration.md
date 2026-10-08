@@ -20,7 +20,7 @@
 
 ## 测试与证据
 
-- 本轮：领域42/42、Stage浏览器10/10无retry、隔离数据目录的production Tauri审批/返工/重启通过；完整verify/最终HEAD独立review待完成，见[本轮验证](../changes/2026-10-08-stage-workbench/verification.md)。下列数字是历史证据。
+- 本轮：领域42/42、Stage浏览器10/10无retry、隔离数据目录的production Tauri审批/返工/重启通过；完整verify退出0、全量browser387/387零重试通过；最终HEAD独立review待完成，见[本轮验证](../changes/2026-10-08-stage-workbench/verification.md)。下列数字是历史证据。
 - 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/agentCanvas.test.ts`；当前全量 Node 422/422 通过。
 - 浏览器回归：历史300/300；本轮新增 `tests/browser/stage-workbench.spec.ts` 的真实 App/IndexedDB 审批流，Desktop 对应 `tests/desktop/stage-workbench.mjs`。
 - Rust 测试 / 实机验收：项目包导出/导入及重复身份拒绝回归，当前 82/82 Rust 全量通过；Desktop GUI 与正式发布未验收。

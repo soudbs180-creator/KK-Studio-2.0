@@ -891,7 +891,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-ORCH-002-stage-workbench`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-ORCH-002-stage-workbench`
 - Modules: src/components/TaskWorkbench.tsx, src/components/StagePlanPanel.tsx, src/components/StagePlanDetail.tsx, src/styles/stage-workbench.css, src/features/agent/orchestrator.ts, src/App.tsx
-- Verification: NOT_VERIFIED — 领域42/42、Stage浏览器10/10无retry、production Tauri审批/返工/重启通过；完整verify与最终HEAD独立review待完成。自动执行/MCP注册未完成，FEAT-030仍PARTIAL。
+- Verification: NOT_VERIFIED — 实现源ba9adbb；完整verify退出0，根634/642、Agent172/174（原平台skip8/2）、browser387/387零重试；production Tauri审批/返工/重启与clientcheck通过。最终HEAD独立review待完成，FEAT-030仍PARTIAL。
 - Evidence: [docs/changes/2026-10-08-stage-workbench/intent.md](../../docs/changes/2026-10-08-stage-workbench/intent.md), [docs/changes/2026-10-08-stage-workbench/spec.md](../../docs/changes/2026-10-08-stage-workbench/spec.md), [docs/changes/2026-10-08-stage-workbench/plan.md](../../docs/changes/2026-10-08-stage-workbench/plan.md), [docs/changes/2026-10-08-stage-workbench/comparison.md](../../docs/changes/2026-10-08-stage-workbench/comparison.md), [docs/changes/2026-10-08-stage-workbench/verification.md](../../docs/changes/2026-10-08-stage-workbench/verification.md), [docs/changes/2026-10-08-stage-workbench/review.md](../../docs/changes/2026-10-08-stage-workbench/review.md), [docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance.json](../../docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance.json)
 - Updated: 2026-10-08
 

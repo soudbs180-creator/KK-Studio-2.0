@@ -2,7 +2,7 @@
 
 ## 2026-10-08 阶段计划工作台候选
 
-基线main/origin/main@21d121d，实施在独立 `codex/TASK-ORCH-002-stage-workbench`。原TASK-ORCH-002已实现阶段查看、plan/result审批、选项返工/解除阻断、共享编排器和项目范围保护；领域42/42、浏览器10/10无retry、production Tauri保存/重启通过。完整verify、最终committed HEAD独立review与治理完成尚待。未推送/合并/发布，main不变。候选Desktop2.1.4/Web2.1.5/Mobile规划2.1.1。FEAT-030保持PARTIAL，自动执行、MCP和真实媒体未完成。[比较](../changes/2026-10-08-stage-workbench/comparison.md) / [验证](../changes/2026-10-08-stage-workbench/verification.md)。以下旧记录保留为历史轮次事实。
+基线main/origin/main@21d121d，实施在独立 `codex/TASK-ORCH-002-stage-workbench`。原TASK-ORCH-002已实现阶段查看、plan/result审批、选项返工/解除阻断、共享编排器和项目范围保护；领域42/42、浏览器10/10无retry、production Tauri保存/重启通过。完整verify退出0，根634/642、Agent172/174（原平台skip8/2），全量browser387/387零重试通过；最终committed HEAD独立review尚待。未推送/合并/发布，main不变。候选Desktop2.1.4/Web2.1.5/Mobile规划2.1.1。FEAT-030保持PARTIAL，自动执行、MCP和真实媒体未完成。[比较](../changes/2026-10-08-stage-workbench/comparison.md) / [验证](../changes/2026-10-08-stage-workbench/verification.md)。以下旧记录保留为历史轮次事实。
 
 ## 2026-10-01 Codex 生图回传与提示词检查
 

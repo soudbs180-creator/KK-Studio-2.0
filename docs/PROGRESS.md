@@ -2,7 +2,7 @@
 
 ## 2026-10-08 竞品学习与阶段计划工作台
 
-REA 拆解与 KK 对照形成31项结论、311条定位，映射原 feature/task；首轮实现原TASK-ORCH-002：既有工作台阶段查看、plan/result审批、选项返工/解除阻断、原编排器项目范围校验和App/AgentHost共享实例。领域42/42、Stage浏览器10/10无retry、production Tauri保存/重启通过；完整verify/最终HEAD独立review待完成。Desktop2.1.4/Web2.1.5/Mobile2.1.1。工作在独立分支，main未改，FEAT-030仍PARTIAL。见[比较](changes/2026-10-08-stage-workbench/comparison.md)和[验证](changes/2026-10-08-stage-workbench/verification.md)。
+REA 拆解与 KK 对照形成31项结论、311条定位，映射原 feature/task；首轮实现原TASK-ORCH-002：既有工作台阶段查看、plan/result审批、选项返工/解除阻断、原编排器项目范围校验和App/AgentHost共享实例。领域42/42、Stage浏览器10/10无retry、production Tauri保存/重启通过；完整verify退出0，根634/642、Agent172/174（原平台skip8/2），全量browser387/387零重试复核通过；最终HEAD独立review待完成。Desktop2.1.4/Web2.1.5/Mobile2.1.1。工作在独立分支，main未改，FEAT-030仍PARTIAL。见[比较](changes/2026-10-08-stage-workbench/comparison.md)和[验证](changes/2026-10-08-stage-workbench/verification.md)。
 
 ## 2026-10-01 KK Codex 原生生图回传/归档验收
 

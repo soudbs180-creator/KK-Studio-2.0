@@ -5,7 +5,7 @@
 - 执行时间与时区：2026-10-08，Asia/Shanghai。
 - Intent / Spec / Plan / AC：本目录三份同名文件；AC-1–AC-4。
 - cwd / branch：独立 worktree `TASK-ORCH-002-stage-workbench` / `codex/TASK-ORCH-002-stage-workbench`。
-- 被验证 base SHA：21d121d2b884b2b7ced4a98eb0e03c590de5c3cd；当前未提交实现，最终 HEAD 和独立 review 后补。
+- 被验证 base SHA：21d121d2b884b2b7ced4a98eb0e03c590de5c3cd；实现源代码commit ba9adbbe4533d3669484935490bf59a4c7de6def；独立review后补。
 - 工具：Windows、Node v24.20.0、npm、Playwright msedge、Tauri 2 release；仅使用本地 fixture，没有供应商调用。
 
 ## 实际命令和结果
@@ -27,7 +27,7 @@
 | Desktop 新测试初次/第二次运行                               | 1      | FAIL，测试进程关闭方式                           | .stage-native-ui.log / .stage-native-ui-2.log            | Node signal 退出码与 CDP 关闭时序；改用仓库既有 CloseMainWindow 方法    |
 | node tests/desktop/stage-workbench.mjs                      | 0      | PASS                                             | .stage-native-ui-3.log；evidence/desktop-acceptance.json | 真实 release、隔离数据目录、2 次进程启动；审批/返工/重启保存，无生成    |
 | npm run verify                                              | 0      | PASS：根634/642、Agent172/174、浏览器386+1 flaky | evidence/verify-initial.txt                              | 根8项/Agent2项原平台skip；ui-motion动画等待首次超时后重试通过，保留失败 |
-| Playwright全量 --workers=2 --retries=0                      | —      | IN PROGRESS                                      | .stage-browser-no-retry.log                              | 降低并发验证首次动画等待重试的影响，断言不变                            |
+| Playwright全量 --workers=2 --retries=0                      | 0      | PASS，387/387，零重试、零flaky                   | evidence/browser-no-retry.txt                            | 首轮动画等待超时记录保留；本次完整回归未改变任何断言                    |
 | npm run client:check                                        | 0      | PASS                                             | evidence/native-check.txt                                | 5项既有Rust dead-code warning                                           |
 | 独立 review                                                 | —      | NOT RUN                                          | review.md                                                | 必须对最终 committed HEAD 审查                                          |
 
@@ -55,4 +55,4 @@
 
 ## 当前结论
 
-审批UI和共享编排器接线已实现；全套verify退出0，包含一条既有ui-motion动画等待重试，正在零重试全量复核。定向Web/Desktop和client:check通过，最终HEAD独立review尚待。未推送、合并或发布，main不变。
+审批UI和共享编排器接线已实现；全套verify退出0，随后全量浏览器387/387零重试通过。根634/642、Agent172/174（原平台skip8/2）、Desktop原生保存/重启及client:check通过。最终HEAD独立review尚待。未推送、合并或发布，main不变。

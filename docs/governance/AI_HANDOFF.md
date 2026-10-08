@@ -2,7 +2,7 @@
 
 ## 2026-10-08 阶段计划工作台恢复点
 
-继续在独立 `codex/TASK-ORCH-002-stage-workbench`，先核对status/HEAD，读[计划](../changes/2026-10-08-stage-workbench/plan.md)、[比较](../changes/2026-10-08-stage-workbench/comparison.md)和[验证](../changes/2026-10-08-stage-workbench/verification.md)。仅更新原TASK-ORCH-002/FEAT-030，无新队列/存储；生产Tauri审批/返工/保存/重启已验，完整verify/最终HEAD独立review待完成。Native证据复制到本轮evidence，不能被browser清理覆盖。下一步ORCH-003需taskId/attempt绑定和unknown映射，Comfy归T6，健康/恢复归T5；计划批准不能替代供应商提交授权。main@21d121d未改，未推送/合并/发布。
+继续在独立 `codex/TASK-ORCH-002-stage-workbench`，先核对status/HEAD，读[计划](../changes/2026-10-08-stage-workbench/plan.md)、[比较](../changes/2026-10-08-stage-workbench/comparison.md)和[验证](../changes/2026-10-08-stage-workbench/verification.md)。仅更新原TASK-ORCH-002/FEAT-030，无新队列/存储；生产Tauri审批/返工/保存/重启已验，完整verify退出0、全量browser387/387零重试通过；最终HEAD独立review待完成。Native证据复制到本轮evidence，不能被browser清理覆盖。下一步ORCH-003需taskId/attempt绑定和unknown映射，Comfy归T6，健康/恢复归T5；计划批准不能替代供应商提交授权。main@21d121d未改，未推送/合并/发布。
 
 ## 2026-10-01 Codex 生图回传恢复点
 
