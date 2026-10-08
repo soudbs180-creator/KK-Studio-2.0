@@ -267,6 +267,30 @@ try {
     "0 个编辑区域",
   );
   await dialog.getByRole("button", { name: "重做编辑" }).click();
+  await expect(dialog.getByTestId("edit-region-count")).toHaveText(
+    "1 个编辑区域",
+  );
+  await dialog
+    .getByRole("button", { name: "清空编辑区域", exact: true })
+    .click();
+  await expect(dialog.getByTestId("edit-region-count")).toHaveText(
+    "0 个编辑区域",
+  );
+  await expect(
+    dialog.getByRole("button", { name: "清空编辑区域", exact: true }),
+  ).toBeDisabled();
+  await dialog.getByRole("button", { name: "撤销编辑" }).click();
+  await expect(dialog.getByTestId("edit-region-count")).toHaveText(
+    "1 个编辑区域",
+  );
+  await dialog.getByRole("button", { name: "重做编辑" }).click();
+  await expect(dialog.getByTestId("edit-region-count")).toHaveText(
+    "0 个编辑区域",
+  );
+  await dialog.getByRole("button", { name: "撤销编辑" }).click();
+  await expect(dialog.getByTestId("edit-region-count")).toHaveText(
+    "1 个编辑区域",
+  );
   await dialog.getByRole("textbox", { name: "重绘指令" }).fill("局部改成红色");
   await expect
     .poll(
@@ -286,6 +310,11 @@ try {
     project = snapshot.projects[0],
     task = project.tasks[0];
   assert(task.imageEdit.nativeMask);
+  assert.equal(
+    (await nativeInvoke("task_host_get", { taskId: task.id }))
+      .imageEditRequired,
+    true,
+  );
   assert.equal(requests.length, 1);
   assert.equal(project.items.length, 2);
   const protection = await page.evaluate(
@@ -431,6 +460,11 @@ try {
     ),
   );
   assert.equal(requests.length, 2, "restart must not resubmit edits");
+  const restartedReceipts = await nativeInvoke("task_host_list");
+  assert.equal(restartedReceipts.length, 2);
+  assert(
+    restartedReceipts.every((record) => record.imageEditRequired === true),
+  );
   assert.deepEqual(errors, []);
   receipt = {
     runtime,
@@ -442,6 +476,8 @@ try {
     protection,
     packageAssetCount: exported.assetIds.length,
     restart: "PASS",
+    compositionMarkerSurvivedRestart: true,
+    clearUndoRedo: "PASS",
     credentialConflictPreserved,
     errors,
   };

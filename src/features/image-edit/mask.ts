@@ -1,3 +1,4 @@
+import { assertEditShape } from "./schema.ts";
 import type {
   Point,
   MaskRun,
@@ -183,13 +184,20 @@ export function nextColorLabel(color: string, number: number): string {
 }
 /** Invalid edit documents must not silently become ordinary generation. */
 export function readMaskDocument(input: unknown): MaskDocument {
+  assertEditShape(
+    input,
+    ["width", "height", "regions", "colorCounters"],
+    ["width", "height", "regions"],
+    "编辑蒙版数据损坏，原件已保留。",
+  );
   const doc = input as MaskDocument;
   if (!doc || !Array.isArray(doc.regions))
     throw new Error("编辑蒙版数据损坏，原件已保留。");
   assertImageDimensions(doc.width, doc.height);
   if (
-    doc.colorCounters &&
-    (typeof doc.colorCounters !== "object" ||
+    doc.colorCounters !== undefined &&
+    (!doc.colorCounters ||
+      typeof doc.colorCounters !== "object" ||
       Array.isArray(doc.colorCounters) ||
       Object.keys(doc.colorCounters).length > 200 ||
       Object.entries(doc.colorCounters).some(
@@ -203,6 +211,12 @@ export function readMaskDocument(input: unknown): MaskDocument {
   const ids = new Set<string>();
   let total = 0;
   for (const region of doc.regions) {
+    assertEditShape(
+      region,
+      ["id", "runs", "color", "colorName", "number", "instruction"],
+      ["id", "runs"],
+      "编辑区域标识无效。",
+    );
     if (
       !region ||
       typeof region.id !== "string" ||
@@ -216,12 +230,18 @@ export function readMaskDocument(input: unknown): MaskDocument {
     total += region.runs.length;
     if (total > 500000) throw new Error("蒙版过于复杂，请分批编辑。");
     if (
-      region.color !== undefined &&
-      (!/^#[a-f\d]{6}$/i.test(region.color) ||
-        typeof region.colorName !== "string" ||
-        region.colorName.length > 40 ||
-        !Number.isSafeInteger(region.number) ||
-        region.number! <= 0)
+      (region.colorName !== undefined &&
+        (typeof region.colorName !== "string" ||
+          region.colorName.length > 40)) ||
+      (region.number !== undefined &&
+        (!Number.isSafeInteger(region.number) || region.number <= 0)) ||
+      (region.color !== undefined &&
+        (typeof region.color !== "string" ||
+          !/^#[a-f\d]{6}$/i.test(region.color) ||
+          typeof region.colorName !== "string" ||
+          region.colorName.length > 40 ||
+          !Number.isSafeInteger(region.number) ||
+          region.number! <= 0))
     )
       throw new Error("色块标记数据无效。");
     if (

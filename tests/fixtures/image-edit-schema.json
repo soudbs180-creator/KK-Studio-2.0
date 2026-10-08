@@ -1,0 +1,170 @@
+{
+  "base": {
+    "mask": {
+      "width": 8,
+      "height": 8,
+      "regions": [
+        {
+          "id": "area",
+          "runs": [
+            [3, 3, 5],
+            [4, 3, 5]
+          ]
+        }
+      ]
+    },
+    "context": {
+      "originalPrompt": "保留原设计",
+      "referenceAssetIds": [],
+      "lastInstruction": "改为红色"
+    },
+    "edit": {
+      "sourceAssetId": "asset-aaaaaaaaaaaaaaaaaaaaaaaa",
+      "groupId": "edit-group",
+      "document": {
+        "width": 8,
+        "height": 8,
+        "regions": [
+          {
+            "id": "area",
+            "runs": [
+              [3, 3, 5],
+              [4, 3, 5]
+            ]
+          }
+        ]
+      },
+      "crop": {
+        "x": 2,
+        "y": 2,
+        "width": 4,
+        "height": 4,
+        "regionIds": ["area"]
+      },
+      "nativeMask": false
+    }
+  },
+  "cases": [
+    { "name": "ordinary mask", "kind": "mask", "valid": true, "changes": [] },
+    {
+      "name": "continuous context",
+      "kind": "context",
+      "valid": true,
+      "changes": []
+    },
+    { "name": "annotated edit", "kind": "edit", "valid": true, "changes": [] },
+    {
+      "name": "unknown document field",
+      "kind": "mask",
+      "valid": false,
+      "changes": [{ "path": ["futureField"], "value": true }]
+    },
+    {
+      "name": "unknown region field",
+      "kind": "mask",
+      "valid": false,
+      "changes": [{ "path": ["regions", "0", "extension"], "value": true }]
+    },
+    {
+      "name": "unknown context field",
+      "kind": "context",
+      "valid": false,
+      "changes": [{ "path": ["futureField"], "value": true }]
+    },
+    {
+      "name": "unknown snapshot field",
+      "kind": "edit",
+      "valid": false,
+      "changes": [{ "path": ["futureField"], "value": true }]
+    },
+    {
+      "name": "unknown crop field",
+      "kind": "edit",
+      "valid": false,
+      "changes": [{ "path": ["crop", "extension"], "value": true }]
+    },
+    {
+      "name": "null counters",
+      "kind": "mask",
+      "valid": false,
+      "changes": [{ "path": ["colorCounters"], "value": null }]
+    },
+    {
+      "name": "zero counters",
+      "kind": "mask",
+      "valid": false,
+      "changes": [{ "path": ["colorCounters"], "value": 0 }]
+    },
+    {
+      "name": "false counters",
+      "kind": "mask",
+      "valid": false,
+      "changes": [{ "path": ["colorCounters"], "value": false }]
+    },
+    {
+      "name": "empty string counters",
+      "kind": "mask",
+      "valid": false,
+      "changes": [{ "path": ["colorCounters"], "value": "" }]
+    },
+    {
+      "name": "empty counters",
+      "kind": "mask",
+      "valid": true,
+      "changes": [{ "path": ["colorCounters"], "value": {} }]
+    },
+    {
+      "name": "bounded orphan name",
+      "kind": "mask",
+      "valid": true,
+      "changes": [{ "path": ["regions", "0", "colorName"], "value": "红色" }]
+    },
+    {
+      "name": "long orphan name",
+      "kind": "mask",
+      "valid": false,
+      "changes": [
+        {
+          "path": ["regions", "0", "colorName"],
+          "value": "12345678901234567890123456789012345678901"
+        }
+      ]
+    },
+    {
+      "name": "nonstring orphan name",
+      "kind": "mask",
+      "valid": false,
+      "changes": [{ "path": ["regions", "0", "colorName"], "value": {} }]
+    },
+    {
+      "name": "null orphan name",
+      "kind": "mask",
+      "valid": false,
+      "changes": [{ "path": ["regions", "0", "colorName"], "value": null }]
+    },
+    {
+      "name": "valid orphan number",
+      "kind": "mask",
+      "valid": true,
+      "changes": [{ "path": ["regions", "0", "number"], "value": 2 }]
+    },
+    {
+      "name": "object orphan number",
+      "kind": "mask",
+      "valid": false,
+      "changes": [{ "path": ["regions", "0", "number"], "value": {} }]
+    },
+    {
+      "name": "zero orphan number",
+      "kind": "mask",
+      "valid": false,
+      "changes": [{ "path": ["regions", "0", "number"], "value": 0 }]
+    },
+    {
+      "name": "null orphan number",
+      "kind": "mask",
+      "valid": false,
+      "changes": [{ "path": ["regions", "0", "number"], "value": null }]
+    }
+  ]
+}

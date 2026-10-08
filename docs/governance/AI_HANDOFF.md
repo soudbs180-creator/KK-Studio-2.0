@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-10-08 统一 Mask 继续审查返修入口（当前）
+
+复用 .worktrees/TASK-IMAGE-EDIT-001 / codex/TASK-IMAGE-EDIT-001-unified-mask，基线78cea37，继续审查源head7532e94。任务重开 IN_PROGRESS，IM-010–013 已复现并做有界修正，当前 dirty 产品增量 Desktop2.1.9/Web2.1.10；定向 RED→GREEN 通过，完整 verify/fresh Tauri/准确SHA独立复验待完成。先读本任务[计划](../changes/2026-10-08-unified-image-mask/plan.md)、[验证](../changes/2026-10-08-unified-image-mask/verification.md)、[审查](../changes/2026-10-08-unified-image-mask/review.md)和账本；原7532审查报告在本机 output/unified-image-mask-20261008/review-audit-7532e94.md。历史 PASS 不覆盖本轮新发现，保留原失败证据；不操作其他worktree或用户数据，不推送/合并/发布。
+
 ## 2026-10-08 统一 Mask 已完成的本地分支
 
 恢复入口仍为本仓库 .worktrees/TASK-IMAGE-EDIT-001、分支 codex/TASK-IMAGE-EDIT-001-unified-mask；先核对 Git 状态，读[verification](../changes/2026-10-08-unified-image-mask/verification.md)、[review](../changes/2026-10-08-unified-image-mask/review.md)与账本。本地实现 TASK-IMAGE-EDIT-001 DONE；base78cea37 → 源码head dbc88bb 独立PASS、IM-001–009 CLOSED，完整verify741root/172Agent/420browser零重试（原skip8/2）、Rust100/fresh Tauri/主线原生11组通过。reviewer自行执行61单测和实际Tauri，Mask外0改动、凭据保护与清理读回通过。Desktop2.1.8/Web2.1.9，无新产品增量；最终文档提交需短补审，精确head收据保存于本机output/unified-image-mask-20261008/review-final-head.md。保留本地提交与工作树，未推送/合入main/发布；FEAT-035保持PARTIAL，真实Provider、语义几何检测与物理手机/用户视觉仍由TASK-IMAGE-EDIT-VERIFY-002验收。历史失败收据保留，不覆盖其他worktree或用户数据。

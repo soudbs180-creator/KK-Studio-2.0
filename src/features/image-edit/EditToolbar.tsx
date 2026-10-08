@@ -14,6 +14,8 @@ export default function EditToolbar({
   canUndo,
   canRedo,
   onReset,
+  onClear,
+  hasRegions,
   disabled,
 }: {
   tool: ImageTool;
@@ -27,6 +29,8 @@ export default function EditToolbar({
   canUndo: boolean;
   canRedo: boolean;
   onReset: () => void;
+  onClear: () => void;
+  hasRegions: boolean;
   disabled: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null),
@@ -175,6 +179,16 @@ export default function EditToolbar({
         onClick={redo}
       >
         重做
+      </button>
+      <button
+        type="button"
+        className="ui-button"
+        aria-label="清空编辑区域"
+        title={!hasRegions ? "没有需要清空的编辑区域" : "清空全部区域，可撤销"}
+        disabled={!hasRegions || disabled}
+        onClick={onClear}
+      >
+        清空
       </button>
       <button
         type="button"

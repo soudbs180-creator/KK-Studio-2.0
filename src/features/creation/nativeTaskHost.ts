@@ -11,9 +11,11 @@ import { reconcileRetryTaskParents } from "./taskRecovery.ts";
 import { composeNativeEditAsset } from "../image-edit/editTasks.ts";
 import { imageResultContext } from "../image-edit/context.ts";
 import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
+import { editReceiptReason } from "../image-edit/recovery.ts";
 
 /** The request crossing the Desktop TaskHost IPC boundary. It contains no API key. */
 export interface NativeTaskHostRequest {
+  imageEditRequired?: boolean;
   maskAssetId?: string;
   kind?: "image" | "text";
   concurrencyLimit?: number;
@@ -45,6 +47,7 @@ export interface NativeTaskHostOutput {
 }
 
 export interface NativeTaskHostRecord {
+  imageEditRequired?: boolean;
   taskId: string;
   idempotencyKey: string;
   status: NativeTaskStatus;
@@ -100,6 +103,8 @@ function normalizeRecord(input: unknown): NativeTaskHostRecord {
   );
   // Do not discard malformed entries and then accept the remaining receipt.
   const malformed =
+    (value.imageEditRequired !== undefined &&
+      typeof value.imageEditRequired !== "boolean") ||
     (value.outputs !== undefined && !Array.isArray(value.outputs)) ||
     validOutputs.length !== rawOutputs.length ||
     (value.outputIndices !== undefined &&
@@ -128,6 +133,10 @@ function normalizeRecord(input: unknown): NativeTaskHostRecord {
     error: typeof output.error === "string" ? output.error : undefined,
   }));
   return {
+    imageEditRequired:
+      typeof value.imageEditRequired === "boolean"
+        ? value.imageEditRequired
+        : undefined,
     taskId: typeof value.taskId === "string" ? value.taskId : "",
     idempotencyKey:
       typeof value.idempotencyKey === "string" ? value.idempotencyKey : "",
@@ -163,7 +172,8 @@ function normalizeRecord(input: unknown): NativeTaskHostRecord {
 /** Quarantine an inconsistent receipt before either live or recovered output is applied. */
 export function validateNativeTaskRecord(
   record: NativeTaskHostRecord,
-  task: Pick<CreationTask, "id" | "idempotencyKey" | "requestedOutputs">,
+  task: Pick<CreationTask, "id" | "idempotencyKey" | "requestedOutputs"> &
+    Partial<Pick<CreationTask, "imageEdit" | "imageEditContext" | "prompt">>,
   submittedOutputIndices?: readonly number[],
 ): NativeTaskHostRecord {
   const declared = new Set(record.outputIndices);
@@ -185,14 +195,19 @@ export function validateNativeTaskRecord(
     (submittedOutputIndices !== undefined &&
       (submittedOutputIndices.length !== declared.size ||
         submittedOutputIndices.some((index) => !declared.has(index))));
-  if (!identityMismatch && !invalidOutputs) return record;
+  const editFailure = editReceiptReason(
+    { ...task, prompt: task.prompt ?? "" },
+    record.imageEditRequired,
+  );
+  if (!identityMismatch && !invalidOutputs && !editFailure) return record;
   const failure = identityMismatch
     ? "Desktop TaskHost 回执的任务身份不匹配，请先核对供应商；不会自动重复提交。"
-    : INVALID_RECEIPT;
+    : (editFailure ?? INVALID_RECEIPT);
   const outputIndices = submittedOutputIndices
     ? [...submittedOutputIndices]
     : Array.from({ length: task.requestedOutputs }, (_, index) => index);
   return {
+    imageEditRequired: record.imageEditRequired,
     taskId: task.id,
     idempotencyKey: task.idempotencyKey,
     status: "unknown",

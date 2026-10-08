@@ -18,6 +18,8 @@
 
 ## 测试与证据
 
+继续审查7532e94发现IM-010–013后任务重开返修；本轮完整verify root768/776（原8skip）、Agent172/174（原2skip）、browser423/423零retry/flaky、Rust102、fresh Tauri与原生11组通过。跨端共享vectors、缺失快照隔离、可撤销清空、空输入意见不重复/不串crop覆盖；新已提交head独立复验待完成，不用下方历史PASS关闭新问题。Desktop2.1.9/Web2.1.10，仍PARTIAL。
+
 [本轮验证](../changes/2026-10-08-unified-image-mask/verification.md) / [独立审查](../changes/2026-10-08-unified-image-mask/review.md)。本地完整verify root741/749、Agent172/174（原skip8/2）、browser420/420零重试，100 Rust、两端production bundle与原生重启/包恢复通过。源码head dbc88bb独立PASS、IM-001–009关闭；reviewer另跑61定向单测和实际Tauri验收，原件保护/凭据清理通过。具体范围和fixture错误勘误见验证记录。
 
 ## 当前能力

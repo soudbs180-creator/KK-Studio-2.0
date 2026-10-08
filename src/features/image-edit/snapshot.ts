@@ -1,4 +1,5 @@
 import { readMaskDocument, maskBounds } from "./mask.ts";
+import { assertEditShape } from "./schema.ts";
 import type {
   ImageEditSnapshot,
   ImageEditContext,
@@ -14,6 +15,19 @@ export function readImageEditSnapshot(
   input: unknown,
 ): ImageEditSnapshot | undefined {
   if (input === undefined) return undefined;
+  assertEditShape(
+    input,
+    [
+      "sourceAssetId",
+      "maskAssetId",
+      "groupId",
+      "document",
+      "crop",
+      "nativeMask",
+    ],
+    ["sourceAssetId", "groupId", "document", "crop", "nativeMask"],
+    "编辑原件引用损坏，不能取消蒙版保护。",
+  );
   const snapshot = input as ImageEditSnapshot;
   if (
     !snapshot ||
@@ -30,6 +44,12 @@ export function readImageEditSnapshot(
     throw new Error("编辑任务身份损坏。");
   const document = readMaskDocument(snapshot.document),
     crop = snapshot.crop;
+  assertEditShape(
+    crop,
+    ["x", "y", "width", "height", "regionIds"],
+    ["x", "y", "width", "height", "regionIds"],
+    "编辑裁剪区域数据损坏。",
+  );
   if (
     !crop ||
     ![crop.x, crop.y, crop.width, crop.height].every(Number.isSafeInteger) ||
@@ -76,6 +96,17 @@ export function readImageEditContext(
 ): ImageEditContext | undefined {
   if (input === undefined) return undefined;
   const context = input as ImageEditContext;
+  assertEditShape(
+    input,
+    [
+      "originalPrompt",
+      "originalAssetId",
+      "referenceAssetIds",
+      "lastInstruction",
+    ],
+    ["originalPrompt", "referenceAssetIds"],
+    "连续编辑上下文无效，原件已保留。",
+  );
   if (
     !context ||
     typeof context.originalPrompt !== "string" ||

@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-08 统一 Mask 继续审查返修
+
+用户要求继续检查合理性和合规性；7532e94 的独立审查发现 IM-010–013，本任务重新 IN_PROGRESS，历史 PASS 保留原范围。已复现并修正跨端字段校验、原生缺失编辑快照发布裁剪结果、保存选区清空和空输入色块重复编译；新增 Node/Rust/浏览器回归均观察 RED→GREEN。共享版本 Desktop2.1.9/Web2.1.10/Mobile规划2.1.1；完整 verify、fresh Tauri 和新 head 独立复审仍待完成。见[计划](changes/2026-10-08-unified-image-mask/plan.md)，未推送/合入main/发布。
+
 ## 2026-10-08 统一 Mask 本地实现完成
 
 TASK-IMAGE-EDIT-001 本地实现 DONE：三个工具共用原像素 Mask、坐标/合并/裁剪/发送/融合，灯箱与连续编辑接入既有归档及任务链。承接 main@78cea37 后，完整 verify root741/749、Agent172/174（原skip8/2）、browser420/420零重试/零flaky，Rust100、fresh Tauri 编辑验收与主线原生11组通过；实际 Web/Desktop bundle 相同。2026-10-08 20:55:05+08 的源码 head dbc88bb 独立 PASS，IM-001–009 CLOSED；reviewer 自行补跑61单测及实际 Tauri，Mask外0改动、凭据冲突保护/最终清理通过。Desktop2.1.8/Web2.1.9，保留本地任务分支，未推送/合入main/发布。收尾仅更新文档，最终文档提交另补审。FEAT-035仍PARTIAL，真实Provider效果、任意语义几何漂移、物理手机与用户视觉归TASK-IMAGE-EDIT-VERIFY-002。见[验证](changes/2026-10-08-unified-image-mask/verification.md)和[审查](changes/2026-10-08-unified-image-mask/review.md)。以下记录保留当时事实。

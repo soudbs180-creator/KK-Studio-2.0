@@ -99,6 +99,32 @@ async function validPackage(): Promise<{
   return { input: built, source };
 }
 
+test("Web package export and preflight both reject unknown nested editing fields", async () => {
+  const source = fixture();
+  source.snapshot.projects[0].items[0].imageEditDraft = {
+    width: 8,
+    height: 8,
+    regions: [{ id: "area", runs: [[3, 3, 5]] }],
+  };
+  const valid = await createProjectPackageManifest(
+    source.snapshot,
+    async () => source.asset,
+  );
+  const bad = structuredClone(source.snapshot);
+  Object.assign(bad.projects[0].items[0].imageEditDraft!, {
+    futureField: true,
+  });
+  await assert.rejects(
+    createProjectPackageManifest(bad, async () => source.asset),
+  );
+  const manifest = structuredClone(valid.manifest);
+  Object.assign(manifest.snapshot.projects[0].items[0].imageEditDraft!, {
+    futureField: true,
+  });
+  manifest.checksum = await manifestChecksum(manifest);
+  await assert.rejects(preflightProjectPackage({ ...valid, manifest }));
+});
+
 test("canonical JSON sorts object keys while preserving array order", () => {
   assert.equal(
     canonicalJson({ z: 1, a: { y: 2, x: 3 }, list: [{ b: 1, a: 2 }] }),

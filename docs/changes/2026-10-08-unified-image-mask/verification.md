@@ -1,6 +1,6 @@
 # Verification：统一图片编辑蒙版
 
-- Task ID：TASK-IMAGE-EDIT-001；本地实现与运行检查 PASS，最终独立审查见 [review](review.md)。
+- Task ID：TASK-IMAGE-EDIT-001；7532e94 后继续审查返修的本地检查 PASS，新已提交 head 独立复验尚待完成，见 [review](review.md)。历史验证保留各自范围。
 - 日期：2026-10-08，Asia/Shanghai；开工 base 1af0357b088df79dc51e9b309ef310a500722cf8；整合 base 78cea37af9359fd2d9f58f2854525516deee8a06。
 - cwd：本仓库 .worktrees/TASK-IMAGE-EDIT-001；branch codex/TASK-IMAGE-EDIT-001-unified-mask。
 - Node 24.20.0；独立 npm ci 完成；初轮 Desktop 2.1.7 / Web 2.1.8；整合后 Desktop 2.1.8 / Web 2.1.9 / Mobile 规划 2.1.1。
@@ -91,7 +91,30 @@ reviewer 自行执行定向 Node 61/61、formatter 和本轮实际 Tauri 验收�
 
 独立重算 66/66 清单匹配，产品源码/配置/版本相对 1527b48 没有变化，EXE 与 JS 仍匹配上述组合运行指纹。完整 verify、Rust100 与主线原生11组明确是实现者的运行结果；前轮 reviewer 的 Web11/Rust3/typecheck 依据未变产品内容继续有效。本次只收尾文档，最终提交另做精确 SHA 补审，不重复声称产品重新构建。
 
-## 尚未验收
+## IM-010–013 继续审查返修验证（最新本地结果）
+
+用户要求继续检查合理性和合规性；7532e94 独立报告 CHANGES REQUIRED，保留于 [review](review.md)。IM-011 P1 与三项 P2 都在原任务 worktree 有界修正，不新增依赖、权限或模型服务。原审查/probes 和此前 PASS 收据不覆盖、不改写。任务暂 IN_PROGRESS，等待本次代码提交的独立关闭。
+
+| 检查 | 实际结果 |
+| --- | --- |
+| `npm run verify -- -- --workers=4 --retries=0` | exit0；root 768/776（原8skip）、Agent172/174（原2skip）、browser423/423、0retry/0flaky；lint/typecheck/UI207/format/build/账本/功能/Markdown全通过 |
+| `cargo fmt -- --check` / `cargo test` / `npm run client:check` | fmt/check exit0；Rust102/102、0ignored；既有5条dead_code提示保留 |
+| `cargo build --release` + `node tests/desktop/image-edit.mjs` | exit0；实际新EXE清空/undo/redo、两次PNG Mask、包4素材、原图节点删除/再生/重启通过；1071分量改变、Mask外改变0 |
+| 原生独立编辑标志 | 实际 get/list 读回true，重启两条回执仍true；credentialConflictPreserved/credentialCleanupComplete均true |
+| `npm run client:taskhost:test` | exit0；11组、credentialCleanupComplete=true；普通图像/文本和原幂等恢复/取消/异常边界继续通过 |
+| Web同状态 | production preview1436、route /；1099宽清空零区域、1920宽空输入四区发送成功DOM/PNG；390宽工具栏边界测试通过 |
+
+RED→GREEN：新5项Node恢复回归先出现 succeeded/raw而预期unknown；原生marker指纹被忽略先失败；21共享Web/Rust vectors先暴露未知字段、null/false counters、无color可选字段绕过，项目包export/preflight先未拒绝；新3项浏览器先因没有清空按钮、重复计数、四区意见过长无审批而失败。修正后上述定向检查和全集全部通过，未放宽有效断言/重试或禁用检查。
+
+IM-011 由 request/receipt/journal 的 imageEditRequired 独立证明融合角色并入指纹，Mask强制true，fallback也true。live/recovery共同校验；缺失/非法快照隔离unknown，不读raw素材、不发布新候选、不自动重发。旧连续编辑无marker时只允许其整图完整自动body与保存lastInstruction精确匹配；普通旧生成无context兼容，整图意见含局部保护文字及同字节继承“编辑输入”tag均不误判。若旧数据的context和标志也全部丢失，无法可靠识别角色，明确UNKNOWN，不宣称能保护任意多字段伪造/删除。
+
+清空混合框选/笔刷/色块后撤销精确恢复所有runs和单调计数器，重做为空；输入和原图不变，能够创建无imageEdit的整图连续任务，刷新仍为空。空输入两区各自意见只出现一次，另一crop意见不出现；四区约2200字一次整图Mask请求成功且总长<=4000，主输入保持空。
+
+本次 Desktop2.1.8→2.1.9、Web2.1.9→2.1.10，Mobile规划2.1.1。沿用上述 UI_INDEX→tokens/shared classes→main/App/Canvas/ImageRedrawDialog/ImageEditor 链路；清空是工程补充控件，32px/14px，selected/disabled使用同一ui-button规则，无新页面样式。实际Web/Desktop同为production入口src/main.tsx，加载/assets/index-BUvutOxY.js；响应/当前dist SHA-256均6b1431869a4b4cafe51150490aa5fcbbc79d16caf7e1527c2f83811629098d6f。CSS仍index-CSF9XnZa.css，EXE SHA-256为4749989f202dc5b35f103d542b1d02635efb4e43eeddca39c22ba051a98503bd。
+
+本机证据 D:/kk-studio/output/unified-image-mask-20261008/run-followup-IM010-013/：RED/GREEN/完整检查日志、Web DOM/截图/423结果、Desktop收据/截图和原生11组收据；不含profile、dataRoot或凭据。source-manifest-followup.json绑定71个实际源码/配置/测试文件和30个工件hash，阶段明确为7532e94之后dirty返修。原生11组收据sourceHead仍7532e94，不冒充新已提交SHA；提交后按未变文件hash另写绑定收据。端口9364/9349/1436结束均无监听，未停止其他任务。
+
+## 外部验收边界（保留）
 
 真实付费 Provider 视觉质量、任意模型语义几何位移自动识别、物理手机键盘/触控及最终用户验收未发生。当前拒绝比例偏移大于 2% 的结果；不能声称自动识别所有构图位移。Mobile 原生应用未改，Web 窄屏与合成触控不等于真机验收。功能保持 PARTIAL，外部后续独立登记，不冻结已通过的本地实现。
 

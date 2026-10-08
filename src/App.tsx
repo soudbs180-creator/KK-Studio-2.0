@@ -921,6 +921,11 @@ export default function App() {
         });
         nativeSubmissionStarted = true;
         let nativeRecord = await submitNativeTask({
+          imageEditRequired: task.imageEdit
+            ? true
+            : task.imageEditContext
+              ? false
+              : undefined,
           kind: task.kind === "text" ? "text" : undefined,
           concurrencyLimit: nativeConnection?.concurrencyLimit,
           taskId: task.id,
@@ -1978,10 +1983,8 @@ export default function App() {
           effectivePrompt,
           request.input.imageEdit.document,
         );
-        if (!effectivePrompt.trim())
-          effectivePrompt = compiled.instructions
-            .map((i) => `${i.label}：${i.text}`)
-            .join("\n");
+        if (!effectivePrompt.trim() && compiled.instructions.length)
+          effectivePrompt = "按已确认的区域修改意见编辑图片。";
       } catch (error) {
         return error instanceof Error ? error.message : "区域引用无效。";
       }
@@ -2059,7 +2062,7 @@ export default function App() {
           });
         }
         input = {
-          prompt: effectivePrompt,
+          prompt: request.input.prompt,
           model: request.input.model,
           providerConnectionId: source.providerConnectionId,
           kind: source.kind,
@@ -2089,21 +2092,13 @@ export default function App() {
               : undefined,
         };
       } else input = structuredClone(request.input);
-      if (
-        request.origin === "canvas" &&
-        request.input.imageEdit &&
-        !input.prompt.trim()
-      ) {
-        const compiled = compileEditPrompt(
-          input.prompt,
-          request.input.imageEdit.document,
-        );
-        input.prompt = compiled.instructions
-          .map((i) => `${i.label}：${i.text}`)
-          .join("\n");
-      }
       if (signal?.aborted) return "已取消提交，草稿和参考图已保留。";
-      const connection = await prepareImageTask(input, original);
+      // Connection preflight needs a non-empty prompt. Keep that placeholder
+      // out of the real edit compiler: structured opinions belong to each crop.
+      const connection = await prepareImageTask(
+        { ...input, prompt: effectivePrompt },
+        original,
+      );
       const editRequest =
         request.origin === "canvas"
           ? (request.input.imageEdit ??

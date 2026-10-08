@@ -10,6 +10,18 @@
 
 **Spec:** [spec.md](spec.md)；Task ID TASK-IMAGE-EDIT-001。
 
+## 继续审查返修（2026-10-08，7532e94 之后）
+
+用户要求继续检查合理性和合规性；独立审查发现 IM-010–013，保留原 PASS 的历史范围，本轮任务重新进入 IN_PROGRESS。按同一已授权目标修正，不新增工程、依赖或发布操作。
+
+1. IM-011：先补恢复回归，原生 request/receipt/journal 独立持久化 `imageEditRequired` 并纳入 fingerprint。Mask 与标注编辑均 true；完整连续编辑 false；旧普通任务缺省保持原指纹。live/recovery 同一校验器拒绝缺失/非法编辑快照，不发布 raw、不自动重发。无 marker 的旧连续编辑记录仅在完整自动 body 与其 lastInstruction 精确匹配整图编译时兼容，其余保守 unknown；不能从素材 tags 推断任务角色。
+2. IM-010：Web/Rust 对 document、region、snapshot、crop、context 采用相同 allowlist；显式可选字段独立验证类型/长度，拒绝 unknown/null。先添加 validator/项目包异常输入回归，再修实现。
+3. IM-012：工具栏增加独立“清空编辑区域”，复用统一 commit/undo/redo；保留原件、输入、参考图和单调色块计数器。浏览器验证保存重开、清空、撤销/重做、刷新及整图发送。
+4. IM-013：UI/连接预检查只用有效结构化意见判断可发送；实际编辑编译使用原始主输入，每个 crop 仅展开自己的区域意见。浏览器验证空输入四区正常发送及两区意见不串区。
+5. 共享行为 Desktop/Web 补丁递增，运行完整 verify、Rust/client、fresh release 与隔离原生运行，保存同状态 DOM/截图和构建指纹。提交后独立准确 SHA 复审；全部关闭再更新任务状态。
+
+依赖：测试→各自修正→全集及两端运行→提交→独立复审→文档收尾。实现串行；reviewer 只读，禁止共享 dirty worktree 写入。技术决策来自当前请求授权和仓库证据，不要求形式审批。
+
 ## Global Constraints
 
 - 原图像素坐标；5%每边外扩；ceil偶数；1000/2500阈值；最多3块。

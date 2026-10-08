@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-10-08 统一 Mask 继续审查返修（当前）
+
+TASK-IMAGE-EDIT-001 重新 IN_PROGRESS：用户要求继续检查，7532e94 独立审查 CHANGES REQUIRED，IM-011 P1 恢复保护阻断、IM-010/012/013 P2 有界返修。定向 RED→GREEN 已完成；完整 verify、fresh release 两端运行和已提交 head 独立复验尚未完成，不沿用旧 PASS 关闭新问题。Desktop2.1.9/Web2.1.10；功能仍 PARTIAL、VERIFY-002 TODO。仍在原任务 worktree，本轮没有 main 集成或发布。见[计划](../changes/2026-10-08-unified-image-mask/plan.md)和[审查](../changes/2026-10-08-unified-image-mask/review.md)；下方原 DONE/PASS 是历史范围。
+
 ## 2026-10-08 统一 Mask 本地实现完成
 
 TASK-IMAGE-EDIT-001 本地实现 DONE；任务分支 codex/TASK-IMAGE-EDIT-001-unified-mask 已承接 main@78cea37，源码 head dbc88bb 独立 PASS、IM-001–009 CLOSED。完整 verify root741/749、Agent172/174（原skip8/2）、browser420/420零重试/零flaky；Rust100、fresh Tauri 编辑与主线原生11组通过，Web/Desktop实际生产bundle相同。独立reviewer另跑61单测和实际Tauri，Mask外0改动、合成凭据冲突保留与清理读回通过。源码Desktop2.1.8/Web2.1.9；最终文档提交单独补审，保留本地分支，未推送/合入main/发布。FEAT-035 PARTIAL，TASK-IMAGE-EDIT-VERIFY-002 TODO，真实Provider质量、任意语义几何漂移、物理手机/键盘与用户最终视觉未验。见[验证](../changes/2026-10-08-unified-image-mask/verification.md)和[审查](../changes/2026-10-08-unified-image-mask/review.md)。下面早期候选及主线记录保留为当时事实。

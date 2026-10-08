@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
-| TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | DONE | TASK-MODEL-001 | root |
+| TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | IN_PROGRESS | TASK-MODEL-001 | root |
 | TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | TASK-IMAGE-EDIT-001 | root |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
 | TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
@@ -118,7 +118,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-IMAGE-EDIT-001-unified-mask`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-EDIT-001`
 - Modules: src/features/image-edit, src/features/creation, src/components/nodes, src/App.tsx, src-tauri/src/task_host.rs, tests, docs
-- Verification: PASS — 承接main78cea37后的统一Mask/裁剪/请求/融合/灯箱、Web/native包和重启PASS；完整verify exit0：root741/749(原skip8)、Agent172/174(原skip2)、browser420/420零retry/零flaky、Rust100、EXE Mask及主线原生11组PASS；2026-10-08独立源码head dbc88bb PASS，IM001–009 CLOSED，独立61单测及实际Tauri凭据冲突/清理、Mask外0改动通过。仅本地实现DONE，最终文档提交另补审；真实Provider/真机/用户视觉由VERIFY-002继续验收，未合入main/发布。
+- Verification: NOT_VERIFIED — 用户要求继续检查；7532e94 独立复审 CHANGES REQUIRED：IM-011 恢复缺失元数据 P1，IM-010/012/013 校验、清空、色块编译 P2；已复现，先补回归再返修，历史 PASS 保留。
 - Evidence: [docs/changes/2026-10-08-unified-image-mask/intent.md](../../docs/changes/2026-10-08-unified-image-mask/intent.md), [docs/changes/2026-10-08-unified-image-mask/spec.md](../../docs/changes/2026-10-08-unified-image-mask/spec.md), [docs/changes/2026-10-08-unified-image-mask/plan.md](../../docs/changes/2026-10-08-unified-image-mask/plan.md), [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/changes/2026-10-08-unified-image-mask/review.md](../../docs/changes/2026-10-08-unified-image-mask/review.md)
 - Updated: 2026-10-08
 

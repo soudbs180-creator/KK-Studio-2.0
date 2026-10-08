@@ -210,6 +210,12 @@ export default function ImageEditor({
           }}
           canUndo={mask.canUndo}
           canRedo={mask.canRedo}
+          hasRegions={document.regions.length > 0}
+          onClear={() => {
+            drawing.cancel();
+            mask.commit({ ...document, regions: [] });
+            setActive(undefined);
+          }}
           onReset={viewport.reset}
           disabled={loading || !mask.ready}
         />

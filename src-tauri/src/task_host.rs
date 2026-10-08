@@ -42,6 +42,8 @@ pub struct TaskHostAttachment {
 #[serde(rename_all = "camelCase")]
 pub struct TaskHostRequest {
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub image_edit_required: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub mask_asset_id: Option<String>,
     pub task_id: String,
     pub idempotency_key: String,
@@ -79,6 +81,8 @@ pub struct TaskHostFailure {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct JobRecord {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub image_edit_required: Option<bool>,
     pub task_id: String,
     pub idempotency_key: String,
     pub output_indices: Vec<u32>,
@@ -232,7 +236,13 @@ impl TaskHost {
         Ok(())
     }
 
-    pub async fn submit(self: Arc<Self>, request: TaskHostRequest) -> Result<JobRecord, String> {
+    pub async fn submit(
+        self: Arc<Self>,
+        mut request: TaskHostRequest,
+    ) -> Result<JobRecord, String> {
+        if request.mask_asset_id.is_some() {
+            request.image_edit_required = Some(true);
+        }
         validate_request(&request)?;
         let fingerprint = fingerprint(&request)?;
         let _journal_lock = self.lock()?;
@@ -261,6 +271,7 @@ impl TaskHost {
             }
         }
         let record = JobRecord {
+            image_edit_required: request.image_edit_required,
             task_id: request.task_id.clone(),
             idempotency_key: request.idempotency_key.clone(),
             output_indices: request.output_indices.clone(),
@@ -956,6 +967,11 @@ fn append_bounded_chunk(
 }
 
 fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
+    if value.image_edit_required == Some(true)
+        && (value.kind.as_deref() == Some("text") || value.attachments.is_empty())
+    {
+        return Err("invalid: imageEditRequired requires image edit".into());
+    }
     if let Some(id) = &value.mask_asset_id {
         validate_id(id, "maskAssetId")?;
         if value.kind.as_deref() == Some("text") || value.attachments.is_empty() {
@@ -1111,6 +1127,9 @@ fn fingerprint(value: &TaskHostRequest) -> Result<String, String> {
     // Keep the exact serialization of legacy image identities; explicit image
     // is equivalent to an omitted kind, while text gets a distinct fingerprint.
     let mut normalized = value.clone();
+    if normalized.mask_asset_id.is_some() {
+        normalized.image_edit_required = Some(true);
+    }
     if normalized.kind.as_deref() == Some("image") {
         normalized.kind = None;
     }
@@ -1178,6 +1197,7 @@ mod tests {
     }
     fn request(task: &str) -> TaskHostRequest {
         TaskHostRequest {
+            image_edit_required: None,
             mask_asset_id: None,
             task_id: task.into(),
             idempotency_key: "idem-1".into(),
@@ -1207,6 +1227,48 @@ mod tests {
         assert!(crate::asset_storage::validation::metadata(&metadata).is_ok());
         assert_eq!(metadata["promptHash"], "hash");
         assert_eq!(metadata["provenance"]["providerRequestId"], "receipt");
+    }
+    #[test]
+    fn composition_role_is_independently_fingerprinted_and_durable() {
+        let ordinary = request("edit-required");
+        let mut value = serde_json::to_value(&ordinary).unwrap();
+        value["imageEditRequired"] = json!(true);
+        value["attachments"] = json!([{"assetId":"asset-original","name":"原图"}]);
+        let required: TaskHostRequest = serde_json::from_value(value.clone()).unwrap();
+        value["imageEditRequired"] = json!(false);
+        let whole: TaskHostRequest = serde_json::from_value(value).unwrap();
+        assert_ne!(
+            fingerprint(&required).unwrap(),
+            fingerprint(&whole).unwrap()
+        );
+        assert_eq!(
+            serde_json::to_value(&required).unwrap()["imageEditRequired"],
+            true
+        );
+        let path = root();
+        let host = TaskHost::new(
+            path.clone(),
+            Arc::new(AssetRepository::new(path.join("assets"))),
+        )
+        .unwrap();
+        let journal: JournalRecord = serde_json::from_value(json!({
+            "taskId":"edit-required", "idempotencyKey":"idem-1", "outputIndices":[0],
+            "status":"succeeded", "assetIds":["asset-result"], "outputs":[{"index":0,"status":"succeeded","assetId":"asset-result"}],
+            "updatedAt":42, "imageEditRequired":true, "fingerprint":fingerprint(&required).unwrap()
+        })).unwrap();
+        host.write_one_unlocked(&journal).unwrap();
+        drop(host);
+        let reopened = TaskHost::new(
+            path.clone(),
+            Arc::new(AssetRepository::new(path.join("assets"))),
+        )
+        .unwrap();
+        assert_eq!(
+            serde_json::to_value(reopened.list().unwrap()).unwrap()[0]["imageEditRequired"],
+            true
+        );
+        drop(reopened);
+        fs::remove_dir_all(path).unwrap();
     }
     #[test]
     fn text_request_roundtrip_and_image_parameters_are_rejected() {
@@ -1376,6 +1438,7 @@ mod tests {
     fn submitted_journal_reopens_as_unknown() {
         let path = root();
         let rec = JobRecord {
+            image_edit_required: None,
             task_id: "task".into(),
             idempotency_key: "idem".into(),
             output_indices: vec![0],
@@ -1415,6 +1478,7 @@ mod tests {
         let req = request("task");
         let fingerprint = fingerprint(&req).unwrap();
         let record = JobRecord {
+            image_edit_required: None,
             task_id: req.task_id.clone(),
             idempotency_key: req.idempotency_key.clone(),
             output_indices: req.output_indices.clone(),

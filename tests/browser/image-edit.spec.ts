@@ -1,4 +1,55 @@
 import { expect, test, type Page } from "@playwright/test";
+import { writeFile } from "node:fs/promises";
+
+async function editUiEvidence(page: Page, file: string) {
+  const state = await page.evaluate(async () => ({
+    url: location.href,
+    route: location.pathname,
+    mode: document
+      .querySelector("[data-runtime-mode]")
+      ?.getAttribute("data-runtime-mode"),
+    entry: document
+      .querySelector("[data-runtime-entry]")
+      ?.getAttribute("data-runtime-entry"),
+    viewport: { width: innerWidth, height: innerHeight },
+    regionCount: document.querySelector('[data-testid="edit-region-count"]')
+      ?.textContent,
+    layers: [...document.querySelectorAll(".image-edit-viewport canvas")].map(
+      (c) => ({
+        width: (c as HTMLCanvasElement).width,
+        height: (c as HTMLCanvasElement).height,
+      }),
+    ),
+    clear: [
+      ...document.querySelectorAll<HTMLButtonElement>(
+        '.image-edit-toolbar button[aria-label="清空编辑区域"]',
+      ),
+    ].map((b) => ({
+      disabled: b.disabled,
+      height: b.getBoundingClientRect().height,
+      fontSize: getComputedStyle(b).fontSize,
+    })),
+    scripts: await Promise.all(
+      [...document.scripts]
+        .filter((s) => s.src)
+        .map(async (s) => ({
+          url: s.src,
+          sha256: Array.from(
+            new Uint8Array(
+              await crypto.subtle.digest(
+                "SHA-256",
+                await (await fetch(s.src)).arrayBuffer(),
+              ),
+            ),
+          )
+            .map((v) => v.toString(16).padStart(2, "0"))
+            .join(""),
+        })),
+    ),
+    styles: [...document.styleSheets].map((s) => s.href).filter(Boolean),
+  }));
+  await writeFile(file, JSON.stringify(state, null, 2) + "\n");
+}
 
 async function activeEditProject(page: Page) {
   return page.evaluate(
@@ -245,7 +296,7 @@ test("confirmed color instructions send with an empty composer and native union 
   expect(requests).toBe(1);
 });
 
-async function editor(page: Page, configured = false) {
+async function editor(page: Page, configured = false, separateColors = false) {
   if (!configured) await page.goto("/");
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
@@ -253,7 +304,7 @@ async function editor(page: Page, configured = false) {
   await page.getByRole("menuitem", { name: "图片", exact: true }).click();
   const node = page.locator(".canvas-node-image").first();
   const fixture = configured
-    ? await page.evaluate(() => {
+    ? await page.evaluate((separateColors) => {
         const c = document.createElement("canvas");
         c.width = 100;
         c.height = 80;
@@ -264,11 +315,21 @@ async function editor(page: Page, configured = false) {
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, 100, 80);
         ctx.fillStyle = "#2255aa";
-        ctx.fillRect(35, 25, 30, 30);
-        ctx.fillStyle = "#55bb44";
-        ctx.fillRect(67, 25, 8, 8);
+        if (separateColors) {
+          for (const [x, y] of [
+            [20, 18],
+            [68, 18],
+            [20, 58],
+            [68, 58],
+          ])
+            ctx.fillRect(x, y, 8, 8);
+        } else {
+          ctx.fillRect(35, 25, 30, 30);
+          ctx.fillStyle = "#55bb44";
+          ctx.fillRect(67, 25, 8, 8);
+        }
         return c.toDataURL().split(",")[1];
-      })
+      }, separateColors)
     : undefined;
   await node
     .locator('input[type="file"]')
@@ -286,6 +347,216 @@ async function editor(page: Page, configured = false) {
   await node.getByRole("button", { name: "重绘参考图片" }).click();
   return page.getByRole("dialog", { name: "重绘参考图片" });
 }
+
+test("saved mixed masks can be cleared, undone and redone before whole-image editing", async ({
+  page,
+}, info) => {
+  await page.setViewportSize({ width: 1099, height: 900 });
+  await configureEdit(page, false);
+  const dialog = await editor(page, true);
+  await rectangles(page, dialog, 1);
+  await dialog.getByRole("button", { name: "画笔区域", exact: true }).click();
+  let box = (await dialog.locator("canvas.image-original").boundingBox())!;
+  await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.65);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.6, box.y + box.height * 0.65);
+  await page.mouse.up();
+  await dialog.getByRole("button", { name: "色块区域", exact: true }).click();
+  box = (await dialog.locator("canvas.image-original").boundingBox())!;
+  await page.mouse.click(box.x + box.width * 0.5, box.y + box.height * 0.5);
+  await dialog
+    .getByRole("textbox", { name: "色块修改意见" })
+    .fill("区域修改意见");
+  await dialog.getByRole("button", { name: "确认", exact: true }).click();
+  await dialog.getByRole("textbox", { name: "重绘指令" }).fill("全图改为红色");
+  await expect
+    .poll(
+      async () =>
+        (await activeEditProject(page)).items[0].imageEditDraft?.regions.length,
+    )
+    .toBe(3);
+  await expect
+    .poll(async () => (await activeEditProject(page)).items[0].imageEditPrompt)
+    .toBe("全图改为红色");
+  const original = (await activeEditProject(page)).items[0];
+  await dialog.getByRole("button", { name: "取消", exact: true }).click();
+  await expect(dialog).toBeHidden();
+  await page
+    .locator(".canvas-node-image")
+    .first()
+    .getByRole("button", { name: "重绘参考图片" })
+    .click();
+  await expect(dialog.getByTestId("edit-region-count")).toHaveText(
+    "3 个编辑区域",
+  );
+  await expect(
+    dialog.getByRole("button", { name: "撤销编辑", exact: true }),
+  ).toBeDisabled();
+  const clear = dialog.getByRole("button", {
+    name: "清空编辑区域",
+    exact: true,
+  });
+  await expect(clear).toBeVisible();
+  await dialog.getByRole("button", { name: "复位图片", exact: true }).click();
+  await expect(dialog.getByTestId("edit-region-count")).toHaveText(
+    "3 个编辑区域",
+  );
+  await clear.click();
+  await expect
+    .poll(
+      async () =>
+        (await activeEditProject(page)).items[0].imageEditDraft?.regions.length,
+    )
+    .toBe(0);
+  await expect(clear).toBeDisabled();
+  await expect(dialog.getByRole("textbox", { name: "重绘指令" })).toHaveValue(
+    "全图改为红色",
+  );
+  await dialog.getByRole("button", { name: "撤销编辑", exact: true }).click();
+  await expect
+    .poll(async () => (await activeEditProject(page)).items[0].imageEditDraft)
+    .toEqual(original.imageEditDraft);
+  await dialog.getByRole("button", { name: "重做编辑", exact: true }).click();
+  await expect
+    .poll(
+      async () =>
+        (await activeEditProject(page)).items[0].imageEditDraft?.regions.length,
+    )
+    .toBe(0);
+  const cleared = (await activeEditProject(page)).items[0];
+  expect(cleared.assetId).toBe(original.assetId);
+  expect(cleared.imageEditDraft.colorCounters).toEqual(
+    original.imageEditDraft.colorCounters,
+  );
+  await page.screenshot({ path: info.outputPath("cleared-mask-editor.png") });
+  await editUiEvidence(page, info.outputPath("cleared-mask-editor.json"));
+  const output = await page.evaluate(() => {
+    const c = document.createElement("canvas");
+    c.width = 100;
+    c.height = 80;
+    const ctx = c.getContext("2d")!;
+    ctx.fillStyle = "#ff0000";
+    ctx.fillRect(0, 0, 100, 80);
+    return c.toDataURL().split(",")[1];
+  });
+  let requests = 0;
+  await page.route(
+    "https://models.example.test/v1/images/edits",
+    async (route) => {
+      requests++;
+      expect(
+        route.request().postDataBuffer()!.toString("latin1"),
+      ).not.toContain('name="mask"');
+      await route.fulfill({ json: { data: [{ b64_json: output }] } });
+    },
+  );
+  await dialog.getByRole("button", { name: "开始重绘", exact: true }).click();
+  await page.getByRole("button", { name: "批准并提交" }).click();
+  await expect
+    .poll(async () => (await activeEditProject(page)).tasks.at(-1)?.status)
+    .toBe("succeeded");
+  const task = (await activeEditProject(page)).tasks.at(-1);
+  expect(task.imageEdit).toBeUndefined();
+  expect(task.imageEditContext.originalAssetId).toBe(original.assetId);
+  expect(requests).toBe(1);
+  await dialog.getByRole("button", { name: "取消", exact: true }).click();
+  await expect(page.locator(".project-save-state")).toContainText("已保存");
+  await page.reload();
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page.locator(".project-library-card").first().click();
+  await page
+    .locator(".canvas-node-image")
+    .first()
+    .getByRole("button", { name: "重绘参考图片" })
+    .click();
+  await expect(dialog.getByTestId("edit-region-count")).toHaveText(
+    "0 个编辑区域",
+  );
+  expect(
+    (await activeEditProject(page)).items[0].imageEditDraft.colorCounters,
+  ).toEqual(original.imageEditDraft.colorCounters);
+});
+
+for (const count of [2, 4])
+  test(`empty composer compiles ${count} color instructions once and keeps crop opinions separate`, async ({
+    page,
+  }, info) => {
+    await configureEdit(page, true);
+    const dialog = await editor(page, true, true);
+    await dialog.getByRole("button", { name: "色块区域", exact: true }).click();
+    const instructions = Array.from(
+      { length: count },
+      (_, i) => `唯一意见${i}：${"保持质感".repeat(136)}`,
+    );
+    for (let i = 0; i < count; i++) {
+      const box = (await dialog
+        .locator("canvas.image-original")
+        .boundingBox())!;
+      const [x, y] = [
+        [24, 22],
+        [72, 22],
+        [24, 62],
+        [72, 62],
+      ][i];
+      await page.mouse.click(
+        box.x + (box.width * x) / 100,
+        box.y + (box.height * y) / 80,
+      );
+      await dialog
+        .getByRole("textbox", { name: "色块修改意见" })
+        .fill(instructions[i]);
+      await dialog.getByRole("button", { name: "确认", exact: true }).click();
+    }
+    await expect(dialog.getByRole("textbox", { name: "重绘指令" })).toHaveValue(
+      "",
+    );
+    const output = await page.evaluate((full) => {
+      const c = document.createElement("canvas");
+      c.width = full ? 100 : 32;
+      c.height = full ? 80 : 32;
+      const ctx = c.getContext("2d")!;
+      ctx.fillStyle = "#ff0000";
+      ctx.fillRect(0, 0, c.width, c.height);
+      return c.toDataURL().split(",")[1];
+    }, count === 4);
+    let requests = 0;
+    await page.route(
+      "https://models.example.test/v1/images/edits",
+      async (route) => {
+        requests++;
+        await route.fulfill({ json: { data: [{ b64_json: output }] } });
+      },
+    );
+    await dialog.getByRole("button", { name: "开始重绘", exact: true }).click();
+    const taskCount = count === 4 ? 1 : 2;
+    for (let i = 0; i < taskCount; i++)
+      await page
+        .getByRole("button", { name: "批准并提交" })
+        .click({ timeout: 5000 });
+    await expect
+      .poll(async () =>
+        (await activeEditProject(page)).tasks.map(
+          (t: { status: string }) => t.status,
+        ),
+      )
+      .toEqual(Array(taskCount).fill("succeeded"));
+    const tasks = (await activeEditProject(page)).tasks;
+    expect(requests).toBe(taskCount);
+    for (const [i, task] of tasks.entries()) {
+      expect(task.prompt.length).toBeLessThanOrEqual(4000);
+      for (const [j, text] of instructions.entries())
+        expect(task.prompt.split(text).length - 1).toBe(
+          count === 4 || i === j ? 1 : 0,
+        );
+    }
+    await page.screenshot({
+      path: info.outputPath(`color-only-${count}-success.png`),
+    });
+    await editUiEvidence(
+      page,
+      info.outputPath(`color-only-${count}-success.json`),
+    );
+  });
 test("unified image tools keep original coordinates across zoom, reset and undo/redo", async ({
   page,
 }, info) => {

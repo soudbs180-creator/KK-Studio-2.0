@@ -1,11 +1,24 @@
 # Review：统一图片编辑蒙版
 
-- Task ID：TASK-IMAGE-EDIT-001；self-review PASS，正式独立源码 head 复验 PASS，IM-001–009 全部 CLOSED。
+- Task ID：TASK-IMAGE-EDIT-001；最新 7532e94 继续审查 CHANGES REQUIRED，IM-010–013 返修待已提交 head 独立复验；IM-001–009 历史 CLOSED 保留。
 - 2026-10-08，Asia/Shanghai；开工 base 1af0357b088df79dc51e9b309ef310a500722cf8；正式审查 base 78cea37af9359fd2d9f58f2854525516deee8a06、源码 head dbc88bbd1a3425c04b509730780ff50547788e67。
 - 分支 codex/TASK-IMAGE-EDIT-001-unified-mask；[intent](intent.md)、[spec](spec.md)、[plan](plan.md)、[verification](verification.md)。
 - 独立预检：只读子代理 /root/mask_review，独立上下文从规则、需求、base/diff 开始，不承担实现。Codex collaboration；具体服务端模型版本未知，不虚构。
 
-## 范围和发现
+## 7532e94 继续审查（最新正式结论）
+
+独立只读 /root/mask_audit，base78cea37..head7532e949e272784e0684b7ea0383901a8b23eeeb，2026-10-08 21:30:39+08，59/59 定向 Node 通过仍复现四项新问题，结论 CHANGES REQUIRED。参见[原审查副本](evidence/review-audit-7532e94.md)；工程外原始报告和 probes 保留，副本只规范行尾，不改结论。当前实现者定向 RED→GREEN 不是独立关闭。
+
+| ID | 严重度 | 问题 | 当前处理 | 独立状态 |
+| --- | --- | --- | --- | --- |
+| IM-010 | P2 | Web/Rust 编辑字段白名单/可选字段上限不一致 | 21 共用 vectors 与项目包异常输入先 RED 后 GREEN | 待复验 |
+| IM-011 | P1 / merge-blocker | 缺失整字段 imageEdit 时恢复发布 raw crop | 原生独立 marker/指纹，live/recovery 校验及旧连续编辑精确 body，回归 RED→GREEN | 待复验 |
+| IM-012 | P2 / 本轮验收阻断 | 保存矩形/笔刷 Mask 重新打开后无法清空 | 可撤销清空操作；混合区域/持久化/整图发送回归 RED→GREEN | 待复验 |
+| IM-013 | P2 / 本轮验收阻断 | 空输入意见重复展开、跨 crop 混入 | 真实输入保留，预检查 placeholder 不进入编辑编译；二/四区回归 RED→GREEN | 待复验 |
+
+以下历史审查保留各自 SHA 与范围，不代表上述新问题已关闭。
+
+## 首轮范围和发现（历史）
 
 Dirty 预检结论 CHANGES REQUIRED，正式 SHA 审查之前的预检。以下表格保留当时的修复与待复验状态；后续正式关闭结论见下方 1527b48 与 dbc88bb 记录，不能把 self-review 改名。
 

@@ -107,6 +107,12 @@ pub(super) fn mask(value: &Value) -> Result<(), String> {
         if id.is_empty() || !ids.insert(id) {
             return Err(invalid());
         }
+        if let Some(name) = region.get("colorName") {
+            text(name, 40)?;
+        }
+        if let Some(number) = region.get("number") {
+            integer(number, 1, 9_007_199_254_740_991)?;
+        }
         if let Some(color) = region.get("color") {
             if !text(color, 7)?
                 .strip_prefix('#')
@@ -213,4 +219,44 @@ pub(super) fn edit(value: &Value) -> Result<(), String> {
         }
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn portable_schema_uses_the_same_web_vectors() {
+        let vectors: Value =
+            serde_json::from_str(include_str!("../../tests/fixtures/image-edit-schema.json"))
+                .unwrap();
+        for case in vectors["cases"].as_array().unwrap() {
+            let kind = case["kind"].as_str().unwrap();
+            let mut input = vectors["base"][kind].clone();
+            for change in case["changes"].as_array().unwrap() {
+                let path = change["path"].as_array().unwrap();
+                let mut target = &mut input;
+                for segment in &path[..path.len() - 1] {
+                    let key = segment.as_str().unwrap();
+                    target = if target.is_array() {
+                        &mut target[key.parse::<usize>().unwrap()]
+                    } else {
+                        &mut target[key]
+                    };
+                }
+                target[path.last().unwrap().as_str().unwrap()] = change["value"].clone();
+            }
+            let result = match kind {
+                "mask" => mask(&input),
+                "context" => context(&input),
+                "edit" => edit(&input),
+                _ => unreachable!(),
+            };
+            assert_eq!(
+                result.is_ok(),
+                case["valid"].as_bool().unwrap(),
+                "{}",
+                case["name"]
+            );
+        }
+    }
 }

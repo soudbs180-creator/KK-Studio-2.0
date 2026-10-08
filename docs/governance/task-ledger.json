@@ -26,7 +26,7 @@
       "tests",
       "docs"
     ],
-    "status": "DONE",
+    "status": "IN_PROGRESS",
     "evidence": [
       "docs/changes/2026-10-08-unified-image-mask/intent.md",
       "docs/changes/2026-10-08-unified-image-mask/spec.md",
@@ -34,8 +34,8 @@
       "docs/changes/2026-10-08-unified-image-mask/verification.md",
       "docs/changes/2026-10-08-unified-image-mask/review.md"
     ],
-    "verification": "承接main78cea37后的统一Mask/裁剪/请求/融合/灯箱、Web/native包和重启PASS；完整verify exit0：root741/749(原skip8)、Agent172/174(原skip2)、browser420/420零retry/零flaky、Rust100、EXE Mask及主线原生11组PASS；2026-10-08独立源码head dbc88bb PASS，IM001–009 CLOSED，独立61单测及实际Tauri凭据冲突/清理、Mask外0改动通过。仅本地实现DONE，最终文档提交另补审；真实Provider/真机/用户视觉由VERIFY-002继续验收，未合入main/发布。",
-    "verificationResult": "PASS",
+    "verification": "用户要求继续检查；7532e94 独立复审 CHANGES REQUIRED：IM-011 恢复缺失元数据 P1，IM-010/012/013 校验、清空、色块编译 P2；已复现，先补回归再返修，历史 PASS 保留。",
+    "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-08"
   },
   {
