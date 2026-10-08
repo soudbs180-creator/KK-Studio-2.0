@@ -1,7 +1,7 @@
 # Spec：阶段计划在现有任务工作台中审批
 
 - Task ID：TASK-ORCH-002
-- 状态：READY
+- 状态：IMPLEMENTED（本地验收完成，真实执行仍为未接项）
 - 日期：2026-10-08
 - Intent / 账本：本目录 `intent.md`；`docs/governance/task-ledger.json` 的既有 TASK-ORCH-002。
 - 当前规范与实现基线：main / origin/main@21d121d2b884b2b7ced4a98eb0e03c590de5c3cd。

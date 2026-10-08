@@ -2,7 +2,7 @@
 
 ## 2026-10-08 阶段计划工作台候选
 
-基线main/origin/main@21d121d，实施在独立 `codex/TASK-ORCH-002-stage-workbench`。原TASK-ORCH-002的阶段查看、plan/result审批、返工/解除阻断/重新申请、共享编排器和项目范围保护已实现；初轮独立review三项finding已修复。最新verify根638/646、Agent172/174（原skip8/2）、browser389/389零retry，production Tauri保存/重启/真实CAS冲突/草稿恢复及clientcheck PASS。修复committed HEAD独立复验待完成。未推送/合并/发布，main不变；候选Desktop2.1.4/Web2.1.5/Mobile规划2.1.1。FEAT-030保持PARTIAL，自动执行、MCP和真实媒体未完成。[比较](../changes/2026-10-08-stage-workbench/comparison.md) / [验证](../changes/2026-10-08-stage-workbench/verification.md)。以下旧记录为历史轮次事实。
+基线main/origin/main@21d121d，独立 `codex/TASK-ORCH-002-stage-workbench`。TASK-ORCH-002本轮本地AC DONE：阶段查看/plan-result审批/返工/解除-重新申请、共享编排器、项目范围及保存确认/恢复通过；源码41dd865独立复验PASS，3项finding关闭。完整verify根638/646、Agent172/174（原skip8/2）、browser389/389零retry；production Tauri保存/重启/真实CAS冲突/恢复草稿及clientcheck PASS。最终文档精确SHA补审另记。未推送/合并/发布，main不变；候选Desktop2.1.4/Web2.1.5/Mobile规划2.1.1。FEAT-030保持PARTIAL，自动执行/MCP/真实媒体未接；本地DONE不代替用户最终产品或Hosted门禁。[比较](../changes/2026-10-08-stage-workbench/comparison.md) / [验证](../changes/2026-10-08-stage-workbench/verification.md) / [审查](../changes/2026-10-08-stage-workbench/review.md)。以下旧记录为历史轮次事实。
 
 ## 2026-10-01 Codex 生图回传与提示词检查
 

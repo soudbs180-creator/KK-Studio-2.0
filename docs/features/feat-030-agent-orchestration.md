@@ -20,7 +20,7 @@
 
 ## 测试与证据
 
-- 本轮：领域/实际持久 hook 定向46/46、Stage浏览器12/12，最新完整verify根638/646、Agent172/174（原平台skip8/2）、browser389/389零重试；production Tauri审批/返工/重启和真实原生CAS冲突/草稿恢复通过；修复HEAD独立复验待完成，见[本轮验证](../changes/2026-10-08-stage-workbench/verification.md)。下列数字是历史证据。
+- 本轮TASK-ORCH-002本地AC DONE：领域/实际持久hook定向46/46、Stage浏览器12/12，完整verify根638/646、Agent172/174（原skip8/2）、browser389/389零retry；production Tauri审批/返工/重启和真实CAS冲突/草稿恢复通过。源码HEAD 41dd865独立复验PASS，最终文档精确SHA收据另记，见[本轮验证](../changes/2026-10-08-stage-workbench/verification.md)。以下数字是历史证据。
 - 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/creationSaveQueue.test.ts`、`tests/unit/agentCanvas.test.ts`；历史全量 Node 422/422 通过。
 - 浏览器回归：历史300/300；本轮新增 `tests/browser/stage-workbench.spec.ts` 的真实 App/IndexedDB 审批流，Desktop 对应 `tests/desktop/stage-workbench.mjs`。
 - Rust 历史验收：项目包导出/导入及重复身份拒绝回归82/82；本轮Desktop GUI范围为上列本地审批/保存/冲突恢复，真实生成与正式发布未验收。

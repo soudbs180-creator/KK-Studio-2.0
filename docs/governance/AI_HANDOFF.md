@@ -2,7 +2,7 @@
 
 ## 2026-10-08 阶段计划工作台恢复点
 
-继续在独立 `codex/TASK-ORCH-002-stage-workbench`，先核对status/HEAD，读[计划](../changes/2026-10-08-stage-workbench/plan.md)、[比较](../changes/2026-10-08-stage-workbench/comparison.md)、[验证](../changes/2026-10-08-stage-workbench/verification.md)和[审查](../changes/2026-10-08-stage-workbench/review.md)。仅更新原TASK-ORCH-002/FEAT-030，无新队列/存储；初轮3项review finding已修复，最新verify638root/172Agent/389browser零retry，production Tauri拒绝/重提/返工/重启/真实CAS冲突/草稿恢复通过；修复HEAD独立复验待完成。Native临时证据在独立.tmp目录，已复制本轮evidence，不能被browser清理。下一步ORCH-003需taskId/attempt绑定和unknown映射，Comfy归T6，健康/恢复归T5；计划批准不替代供应商提交授权。main@21d121d未改，未推送/合并/发布。
+保留独立 `codex/TASK-ORCH-002-stage-workbench`，先核对status/HEAD，读[计划](../changes/2026-10-08-stage-workbench/plan.md)、[比较](../changes/2026-10-08-stage-workbench/comparison.md)、[验证](../changes/2026-10-08-stage-workbench/verification.md)、[审查](../changes/2026-10-08-stage-workbench/review.md)。TASK-ORCH-002本轮本地AC DONE；源码41dd865独立PASS，3项finding关闭；完整verify638root/172Agent/389browser零retry，production Tauri拒绝/重提/返工/重启/真实CAS冲突/恢复草稿通过。最终文档SHA补审收据在 D:/kk-studio/output/minimax-rea-20261008/evidence/stage-workbench-review-final.md，必须回读真实结论。仅更新原feature/task，无新队列/存储；FEAT-030仍PARTIAL。Native临时证据在.tmp且已复制本轮evidence，不能被browser清理。下一步ORCH-003需taskId/attempt绑定和unknown映射，先明确图片/文本与媒体依赖范围；Comfy归T6，健康/恢复归T5；计划批准不替代供应商提交授权。main@21d121d未改，未推送/合并/发布。
 
 ## 2026-10-01 Codex 生图回传恢复点
 

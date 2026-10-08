@@ -1,11 +1,11 @@
 # Verification：阶段计划工作台与竞品能力比较
 
 - Task ID：TASK-ORCH-002
-- 记录状态：IN PROGRESS
+- 记录状态：PASS（本轮本地AC；主线与发布另验）
 - 执行时间与时区：2026-10-08，Asia/Shanghai。
 - Intent / Spec / Plan / AC：本目录三份同名文件；AC-1–AC-4。
 - cwd / branch：独立 worktree `TASK-ORCH-002-stage-workbench` / `codex/TASK-ORCH-002-stage-workbench`。
-- 被验证 base SHA：21d121d2b884b2b7ced4a98eb0e03c590de5c3cd；初轮实现 ba9adbbe4533d3669484935490bf59a4c7de6def；独立 review 的 dfd4c12 返修后在当前候选树重新完整验证，修复 committed HEAD / 复验收据后补。
+- 被验证 base SHA：21d121d2b884b2b7ced4a98eb0e03c590de5c3cd；初轮实现ba9adbb；返修源码HEAD `41dd86587ad7996eb76f2ba40c416b5d0b077e2f` 已完整重新验证并独立复验PASS；最终仅文档补录，精确HEAD补审收据另记。
 - 工具：Windows、Node v24.20.0、npm、Playwright msedge、Tauri 2 release；仅使用本地 fixture，没有供应商调用。
 
 ## 实际命令和结果
@@ -48,6 +48,8 @@
 | native 新测试前几次 | 1 | 正常审批后永久保存中被真实发现并修复；随后故障步骤不能改写原生只读invoke，调整测试传输边界 | evidence/review-native-ui.txt / review-native-ui-2.txt / review-native-ui-3.txt / review-native-ui-4.txt |
 | node tests/desktop/stage-workbench.mjs，最终 | 0 | PASS，2次真实进程；拒绝/解除/重新申请/批准、结果返工、重启；实际Rust CAS冲突后排队审批拒绝且无成功提示；原件/恢复草稿保留 | evidence/review-native-ui-5.txt；evidence/desktop-acceptance-review-fixed.json |
 | npm run client:check，返修后 | 0 | PASS；5项既有warning未隐藏 | evidence/native-check-review-fixed.txt |
+| 独立修复复验，41dd865 | 0（实际定向测试） | PASS，3项finding关闭；独立46/46，14项源码/测试与EXE hash一致，无新增阻断 | evidence/review-41dd865.md |
+| npm run delivery:check -- --base 21d121d --branch codex/TASK-ORCH-002-stage-workbench | 0 | PASS，83文件0violation；仅结构检查，不代替实际review | 工具实际输出；最终文档HEAD再重验 |
 
 原生故障测试只在隔离测试进程中延迟第一笔 fetch IPC 传输，原生 invoke 的不可写保护保持不变。另一写入通过真实 write_creation_snapshot 更新同一隔离数据根的 revision；释放旧请求后由 Rust 返回真实 conflict。writes=1 仅统计被测试 UI 的传输，另一个写入单独执行。截图显示内存审批变化及明确未保存错误；磁盘阶段仍为 result_review。重新读取回到磁盘原件并显示内存草稿可单独下载；没有宣称自动回滚整个内存操作。
 
@@ -63,6 +65,7 @@
 ## UI / 运行态证据
 
 - Web：Vite preview 1423、production dist；Desktop：当前 worktree release EXE，`http://tauri.localhost/`，runtime mode=production、entry=src/main.tsx。
+- 页面路径：`src/main.tsx → App.tsx → TaskWorkbench.tsx → StagePlanPanel.tsx → StagePlanDetail.tsx`；`/`下打开本地项目workspace，再打开modal=tasks和阶段计划tab。App统一导入stage-workbench.css，消费tokens.css及现有工作台组件样式。
 - 原生数据根在本 worktree target/stage-workbench-acceptance 下，独立 WebView profiles；未访问用户正常数据目录。
 - 初轮 Desktop EXE SHA-256：`5cdb9d86d50e3d97cf144b6d2da46912d2188711f7bc2f132ff32a9b7d3bd6b0`。返修后的实际 EXE 为 `896a9a0eeb683dfa79b4f3a4b884d318c273f87c69ade47d91cb4b5a2842242d`，production entry `src/main.tsx`、bundle `index-DCiDe2Qa.js`、1920×1080、无 pageerror，见新收据。
 - 同状态源：现有 UI_INDEX / 工作台 / tokens；新阶段 UI 是工程补充，没有独立 Figma frame，本轮未做新 Figma 读取或精确对齐声明。
@@ -75,4 +78,4 @@
 
 ## 当前结论
 
-审批 UI 和共享编排器接线已实现；独立审查三项finding均已修复，并补已确认版本的保存状态修复。最新完整verify退出0：根638/646、Agent172/174（原平台skip8/2）、browser389/389零重试；Desktop真实保存/重启/原生冲突/草稿恢复和client:check通过。修复committed HEAD的独立复验尚待。未推送、合并或发布，main不变。
+TASK-ORCH-002本轮本地AC已完成：审批UI与共享编排器接线、重新申请/空结果拒绝、保存确认与恢复均通过。修复源码HEAD 41dd865独立复验PASS，三项finding关闭；完整verify根638/646、Agent172/174（原skip8/2）、browser389/389零retry，Desktop真实保存/重启/原生冲突/草稿恢复及clientcheck通过。最终文档精确SHA补审另记。本地任务DONE不代表FEAT-030已REAL；真实执行/MCP/媒体仍未接。未推送、合并或发布，main不变。
