@@ -47,3 +47,6 @@
 
 
 - verify-e3a6660.txt 实际 FAIL：原 3 个保存队列 VM 回归拒绝新增 @tauri-apps/api/core import，尚未执行原队列断言；保留原 fail，未删断言。更新 harness 显式平台边界并调用真实 nativeClose，实现不替换；原 3 + 3 新实际 hook + 7 helper 共13/13 PASS。新增覆盖最新revision/真实hookIO失败错误脱敏及重试/异步监听晚到清理。Rust fmt/test102 PASS；capabilities.json 新 allow-destroy 为真实生成变化，必须保留；desktop/windows schema 已逐字符排除换行编码确认无语义变化。完整verify随后重跑。
+
+
+- bdb82df 完整 verify-close-final 实际 exit0：root804/812（既有skip8）、Agent172/174（既有skip2）、447/447浏览器，固定1421严格四插件开发 PASS/零错误。Rust102/fmt先前 e3 产品组合通过；e3→bdb产品未变。原生fixture释放锁可重复清理，且锁清理失败不跳过本次自有桌面进程清理；未放宽任何内容/console/正常退出断言。fresh build与native当前证据随后追加。

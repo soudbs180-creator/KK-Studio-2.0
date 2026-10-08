@@ -104,9 +104,13 @@ async function lockSnapshot() {
 
 async function releaseSnapshotLock() {
   if (!snapshotLock) return;
-  await writeFile(path.join(evidenceDir, "lock.release"), "release", {
-    flag: "wx",
-  });
+  const releasePath = path.join(evidenceDir, "lock.release");
+  try {
+    await writeFile(releasePath, "release", { flag: "wx" });
+  } catch (error) {
+    if (error.code !== "EEXIST") throw error;
+    assert.equal(await readFile(releasePath, "utf8"), "release");
+  }
   const owned = snapshotLock;
   await expect.poll(() => owned.exitCode, { timeout: 5000 }).toBe(0);
   snapshotLock = undefined;
@@ -424,6 +428,12 @@ try {
 } finally {
   try {
     await releaseSnapshotLock();
+  } catch (error) {
+    failure ??= error;
+    receipt.result = "FAIL";
+    receipt.lockCleanupFailure = String(error);
+  }
+  try {
     await stop();
   } catch (error) {
     failure ??= error;
