@@ -105,7 +105,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AUDIT-20261003 | 全项目任务盘点与可本地闭环项收口 | DONE | TASK-MCP-REGISTRY-001, TASK-MCP-REGISTRY-002, TASK-MCP-PROTO-001, TASK-ORCH-REPLAN-001 | root |
 | TASK-GOV-GOALS-001 | 项目建设目标与验收基线 | DONE | TASK-AUDIT-20261003 | root |
 | TASK-UI-COMPONENT-BOUNDARY-001 | MCP 设置组件职责拆分 | DONE | TASK-GOV-GOALS-001 | root |
-| TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | IN_PROGRESS | T2, TASK-UI-GOV-003 | root |
+| TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | REVIEW | T2, TASK-UI-GOV-003 | root |
 
 ## TASK-MODEL-001 — 账号级图片模型能力声明与提交校验
 
@@ -1307,6 +1307,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-UI-011-image-selection-actions`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-011-image-selection-actions`
 - Modules: src/components/nodes, src/components/canvas, src/features/compare, src/styles, tests/browser, docs/UI_RULES.md
-- Verification: NOT_VERIFIED — 用户已明确图片动作应在选中卡片上方；已检查现有参考/结果卡片和共享动作，独立依赖安装完成，实现与运行验收进行中。
+- Verification: PASS — 最新24cfca1完整verify root723/731(8原skip)、Agent172/174(2原skip)、422/422 browser无flaky无实际retry；fresh Tauri13组/385源码hash/同EXE模型能力PASS。顶部实际参考/结果三宽度恢复与非空工作台/评论32px动作已返修，独立新head关闭R1/R2及当前Hosted/主线推广待满足。旧失败/审查保留，不代表全项目或付费Provider验收。
 - Evidence: [docs/changes/2026-10-08-image-selection-actions/intent.md](../../docs/changes/2026-10-08-image-selection-actions/intent.md), [docs/changes/2026-10-08-image-selection-actions/spec.md](../../docs/changes/2026-10-08-image-selection-actions/spec.md), [docs/changes/2026-10-08-image-selection-actions/plan.md](../../docs/changes/2026-10-08-image-selection-actions/plan.md), [docs/changes/2026-10-08-image-selection-actions/verification.md](../../docs/changes/2026-10-08-image-selection-actions/verification.md), [docs/changes/2026-10-08-image-selection-actions/review.md](../../docs/changes/2026-10-08-image-selection-actions/review.md)
 - Updated: 2026-10-08

@@ -1,5 +1,13 @@
 # 当前进度
 
+## 2026-10-08 图片选择动作与新页面规则返修
+
+PR #36 已 squash 合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，合并后 Hosted37756981271 verify/deploy-linux PASS。TASK-UI-011 承接该主线：单击参考/结果图片仅选择，唯一动作栏在卡片上方；保持预览/重绘/对比/收藏/删除、精确模型与原件门禁。顶部拖动和 Escape 后同图重选的三宽度恢复、非空队列/输出/评论共享32px动作已返修。最新24cfca1完整verify723root/172Agent（原skip8/2）、422浏览器无flaky/无实际retry、fresh Native13组及模型能力PASS；独立最终head补审/Hosted仍待满足，任务REVIEW。源码Desktop2.1.7/Web2.1.8/Mobile规划2.1.1；本分支账本100项：DONE57/TODO11/PARTIAL27/BLOCKED4/REVIEW1。T5独立21ac补审PASS、云端尚在运行，未合入；不能将本机或旧source结果当当前Hosted成功。
+
+下面 Model“未合并”等段落保留为当时历史，当前状态以本段与本轮 verification 为准。
+
+先读取[本轮验收](changes/2026-10-08-image-selection-actions/verification.md)、review、task-ledger 和实际 origin/main；并发 TASK-LAUNCH-001、TASK-UI-012、TASK-IMAGE-EDIT-001 由各自执行者维护，未验收内容不能抢合或覆盖。
+
 ## 2026-10-08 模型能力声明：Hosted日志复核后的增量修正
 
 TASK-MODEL-001 本地AC1–5 DONE。草稿无变化通知覆盖与显示字段依赖问题已修正：32定向无retry、完整verify723/731root(8原skip)、172/174Agent(2原skip)、408/408browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行PASS。2026-10-08 16:31 独立只读审查base5dd6e6dd..head71ddb625 PASS，MC-002/MC-003关闭，MC-001保持关闭；独立87/87、389源码hash和产物匹配，新指纹2ebaab3d。最终文档HEAD需补审，PR#36当前新SHA Hosted待取得；首轮2797687c的405pass+1flaky留档，唯一因果仍UNKNOWN。未合并发布，原主checkout未写入；FEAT-003仍PARTIAL，真实Provider/蒙版/扩图/Mobile及既有开发插件边界不变。下面早先PASS条目保留为当时SHA的历史记录。

@@ -2,8 +2,8 @@
 
 - 状态：REAL
 - 领域：canvas
-- 最近更新：2026-09-29
-- 关联任务：T2、UI-004、TASK-UI-006、TASK-CANVAS-KAWORKAI-001
+- 最近更新：2026-10-08
+- 关联任务：T2、UI-004、TASK-UI-006、TASK-CANVAS-KAWORKAI-001、TASK-UI-011
 
 ## 用户可见入口
 
@@ -42,3 +42,5 @@
 - 2026-09-22：TASK-UI-006修复折叠、HUD背景与弹层生命周期；关联 `tests/browser/ui-interactions.spec.ts`、`ui-interaction-matrix.spec.ts`，验收见 `docs/changes/2026-09-22-ui-interactions/verification.md`。不升级外部服务或分组持久化能力状态。
 
 - 2026-09-29：TASK-CANVAS-KAWORKAI-001 完成参考画布只读审计，并把快照历史、键盘/右键撤销重做、可持久化网格吸附和无分组图层定位并入本地画布；竞品 AI 工具、积分、云端 board 和分组折叠仍未接入。
+
+- 2026-10-08：TASK-UI-011 将参考/结果图片动作统一到选中卡片上方，单击选择/双击预览；画布缩放、顶部手势/重选及历史语义实测，重绘与现有精确模型/原件/审批门禁共用。完整422浏览器与fresh Native13组通过，独立新head/Hosted尚待满足，见[本轮验收](../changes/2026-10-08-image-selection-actions/verification.md)。未实现的裁剪/高清/多视角没有伪装成可用动作。

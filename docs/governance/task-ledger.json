@@ -3554,7 +3554,7 @@
       "tests/browser",
       "docs/UI_RULES.md"
     ],
-    "status": "IN_PROGRESS",
+    "status": "REVIEW",
     "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-08-image-selection-actions/intent.md",
@@ -3563,8 +3563,8 @@
       "docs/changes/2026-10-08-image-selection-actions/verification.md",
       "docs/changes/2026-10-08-image-selection-actions/review.md"
     ],
-    "verification": "用户已明确图片动作应在选中卡片上方；已检查现有参考/结果卡片和共享动作，独立依赖安装完成，实现与运行验收进行中。",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "最新24cfca1完整verify root723/731(8原skip)、Agent172/174(2原skip)、422/422 browser无flaky无实际retry；fresh Tauri13组/385源码hash/同EXE模型能力PASS。顶部实际参考/结果三宽度恢复与非空工作台/评论32px动作已返修，独立新head关闭R1/R2及当前Hosted/主线推广待满足。旧失败/审查保留，不代表全项目或付费Provider验收。",
+    "verificationResult": "PASS",
     "updated": "2026-10-08"
   }
 ]

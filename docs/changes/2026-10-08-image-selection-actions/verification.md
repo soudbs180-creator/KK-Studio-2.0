@@ -1,6 +1,6 @@
 # Verification：TASK-UI-011
 
-- 日期：2026-10-08；状态：IN_PROGRESS；[Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Review](review.md)。
+- 日期：2026-10-08；状态：REVIEW；本地最新源码回归通过，精确补审与当前 Hosted 待满足；[Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Review](review.md)。
 - 起始 main@5dd6e6dd；独立 npm ci 完成（root 244 / Agent / plugins 自有安装）。
 - 已只读确认偏差：ImageCreationNode 的 image-preview-actions 位于 image-preview 内部，单击 uploaded-image 打开预览；DemoResultNode 的图片结果操作常驻 footer。
 - 模型任务已提交到 2797687c、原工作树 clean；本任务不编辑其工作树，后续集成复核其能力/参考图门禁。
@@ -29,3 +29,13 @@ UI011-R2：非空队列按钮27px、单项重试22px；补入真实createTask的
 第一次共享几何返修39/40通过但使空卡片连线释放位置改变，原[失败](evidence/review-regressions/geometry-complete.txt)保留；修正仅有真实图片且需要空间时增加headroom，不改变空卡片/非图片reveal。[16项图片/连线定向复验](evidence/review-regressions/geometry-final-green.txt)全通过、1worker/0retry；完整verify、修复后fresh native与精确新head补审继续进行，任务保持IN_PROGRESS。
 
 0c3bb9b675a03dc91642630ae961bd5da61247fd 修复后完整verify PASS，422/422浏览器零flaky；独立补审 R2 CLOSED、R1参考路径修好但结果路径仍CHANGES REQUIRED。结果Toolbar用article，controls用内部preview，高差会漏掉顶部恢复；新增真实生成/归档结果的三个宽度拖顶/取消平移重选，取得[实际RED](evidence/review-regressions/result-top-anchor-red.txt)。恢复选择器改为与Toolbar一致的结果article/参考preview。首轮25/26通过，重选测试在窄屏直接点击被HUD覆盖的图片中心发生超时，保留[设置失败](evidence/review-regressions/result-anchor-green.txt)；改为实际可见图片底部点击，没有force、延长timeout或弱化动作。结果三个宽度及收藏/重绘原件字节/单次请求/对比/删除保留原件的[完整用例PASS](evidence/review-regressions/result-anchor-final-green.txt)。当前source重新full/native取证后再精确补审。
+
+## 24cfca1 最新返修验收
+
+精确产品源码 `24cfca17abc6a786e5130496097d4db18343e1d0`，base main@1af0357。结果卡片与参考图使用同一个实际 anchor；结果三种宽度（390/1099/1920）的顶部拖动、Escape 后平移与同图重选，以及真实归档、收藏、重绘原件字节、仅一次请求、比较和删除保留素材均通过。没有 force 点击、延长 timeout 或新增重试。
+
+完整 `npm run verify` exit0：root731/723 pass/8原skip，Agent174/172/2原skip；browser422/422、unexpected0/flaky0/skipped0，12 actual workers、422 attempts、maxRetry0。配置仍 retries=1，实际无重试。[机器 summary](evidence/web-24cfca1/summary.json)与[实际 reporter](evidence/web-24cfca1/browser-results.json)、本轮相关全部页面截图/运行附件已保留；[完整日志](evidence/web-24cfca1/verify-log.json)按原字节 base64+SHA 保存，外部原件未改写。首次 full 被占用1423拒绝启动，记录于[原失败](evidence/review-regressions/verify-port-occupied.json)；随后确认端口空闲才重新运行，未终止外部进程、切换端口或设置 reuseExistingServer。
+
+同一 source fresh `client:build -- --no-bundle` exit0/30.04s。[Native13组](evidence/native-24cfca1/receipt.json) passed/cleanupComplete=true、errors=[]，385个源码/配置 hash 与现文件一致；EXE SHA256 `48609716af37346ec48b5b6e7b4d5efb15ef65d13e0c7958f23e2ad981e2070c`。真实 production URL `http://tauri.localhost/`，实际加载 index-Bf0eW_YL.js / index-B2nRDpHV.css。测试通过 Node tests/desktop/image-selection-actions.mjs 从隔离 data/profile 启动本轮 EXE；DOM 身份 src/main.tsx → App → Canvas/ImageCreationNode/DemoResultNode/共享Toolbar、SettingsModal/ModelSettings/Mcp、AssetPanel 和 TaskWorkbench 六阶段，Web 使用同链的 `http://127.0.0.1:1423/` production preview。原生工作台使用真实 createTask 非空 failed task/failed outputs，标准32px动作和12px最小字号采样均通过；实际运行中暂停/取消由完整 Web Provider fixture 验证。原生模型能力脚本同 EXE/bundle PASS，保留账号/model/编辑声明门禁且不发送外部请求。
+
+该本机 fixture 不证明真实付费 Provider、Mobile、安装器发布或用户最终 Figma 视觉批准。独立新head复核 R1/R2 与当前 Hosted/主线推广仍待记录；旧 CHANGES REQUIRED 和失败均保留，不升级旧 source 证据。
