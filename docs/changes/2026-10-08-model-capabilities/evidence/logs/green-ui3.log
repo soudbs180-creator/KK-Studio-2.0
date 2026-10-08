@@ -1,0 +1,25 @@
+[WebServer] (node:40364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 14 tests using 2 workers
+
+(node:56444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:66116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\browser\model-capabilities.spec.ts:33:1 › 手动三态声明保存恢复并切模型，不把未知变成支持 (1.4s)
+  ok  3 tests\browser\model-capabilities.spec.ts:106:1 › 明确编辑限制禁用重绘和参考图并保留原图，不发送请求 (2.0s)
+  ok  2 tests\browser\model-picker.spec.ts:5:1 › 模型前缀分组、参数选择和模糊搜索保留实际厂商 ID (3.9s)
+  ok  4 tests\browser\model-capabilities.spec.ts:157:1 › 报告能力限制数量且 unknown 蒙版只显示未接通说明 (1.7s)
+  ok  5 tests\browser\model-picker.spec.ts:160:1 › 分级菜单保留页面、返回、全部和置顶；同名模型使用明确选择的 API 账号 (2.6s)
+  ok  6 tests\browser\model-capabilities.spec.ts:203:1 › 单张重绘使用自己的数量，不被原节点超限草稿阻止 (2.0s)
+  ok  7 tests\browser\unified-image-command.spec.ts:117:1 › active project canvas uses the provider command for a non-root source and archives a linked result (2.9s)
+  ok  8 tests\browser\unified-image-command.spec.ts:234:1 › provider image cancellation cannot publish a late success (2.3s)
+  ok  9 tests\browser\unified-image-command.spec.ts:282:3 › canvas cooldown rejects submission while preserving the draft (1.6s)
+  ok 10 tests\browser\unified-image-command.spec.ts:282:3 › canvas quarantined rejects submission while preserving the draft (1.6s)
+  ok 11 tests\browser\unified-image-command.spec.ts:312:1 › uploaded image redraw uses edits with the archived reference bytes (3.3s)
+  ok 12 tests\browser\unified-image-command.spec.ts:353:1 › unconfigured canvas generation opens provider settings and keeps the prompt (860ms)
+  ok 13 tests\browser\unified-image-command.spec.ts:376:1 › declining canvas approval clears only its source status and sends no request (2.3s)
+  ok 14 tests\browser\unified-image-command.spec.ts:413:1 › actual long model identifiers remain readable without covering canvas controls (1.6s)
+
+  14 passed (24.5s)

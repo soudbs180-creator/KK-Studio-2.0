@@ -1,0 +1,15 @@
+{
+  "stats": {
+    "startTime": "2026-10-08T05:43:25.098Z",
+    "duration": 121455.419,
+    "expected": 381,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "errors": [],
+  "rawReportSha256": "e8cf495098805eec2c63f7ee03b110ce35273ec9d3adaa0d213460814fa0a341",
+  "runtimeURL": "http://127.0.0.1:1423/",
+  "command": "npm run verify (original 1423 preview config)",
+  "sourceMode": "dirty task candidate before implementation commit"
+}

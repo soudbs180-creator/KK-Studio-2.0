@@ -9,6 +9,7 @@ import {
 } from "./providerRegistry.ts";
 import { hasApiKey } from "./providerCredentials.ts";
 import { catalogForConnection } from "../models/modelCatalog.ts";
+import { resolveImageModelCapabilities } from "../models/imageModelCapabilities.ts";
 
 export class ProviderSubmissionError extends Error {}
 export interface SubmissionBinding {
@@ -18,6 +19,7 @@ export interface SubmissionBinding {
   referenceCount: number;
   kind?: "image" | "text";
   model?: string;
+  outputCount?: number;
 }
 interface SubmissionOptions {
   explicitRetry?: boolean;
@@ -79,6 +81,11 @@ export function assertSubmissionConnection(
   const selectedModel = catalogForConnection(connection).find(
     (model) => model.id === binding.model,
   );
+  const isImage = (binding.kind ?? "image") === "image";
+  const imageCapabilities = resolveImageModelCapabilities(
+    connection,
+    binding.model ?? connection.model ?? "",
+  );
   if (
     endpoint(connection.baseUrl) !== endpoint(binding.baseUrl) ||
     connection.credentialRef !== binding.credentialRef ||
@@ -117,14 +124,30 @@ export function assertSubmissionConnection(
       ? selectedModel.kind === (binding.kind ?? "image")
       : connection.capabilities.modalities.includes(binding.kind ?? "image")) ||
     (binding.kind === "text" && binding.referenceCount !== 0) ||
-    !connection.capabilities.operations.includes(
-      binding.referenceCount ? "edit" : "generate",
-    ) ||
-    (connection.capabilities.maxReferences !== undefined &&
-      binding.referenceCount > connection.capabilities.maxReferences)
+    (isImage
+      ? imageCapabilities.operations[
+          binding.referenceCount ? "edit" : "generate"
+        ] === "unsupported" ||
+        (imageCapabilities.maxReferences !== undefined &&
+          binding.referenceCount > imageCapabilities.maxReferences)
+      : !connection.capabilities.operations.includes("generate"))
   )
     throw new ProviderSubmissionError(
       "连接不支持本次操作、模型或参考图数量，请选择支持的连接。",
+    );
+  if (
+    binding.outputCount !== undefined &&
+    (!Number.isInteger(binding.outputCount) ||
+      binding.outputCount < 1 ||
+      binding.outputCount > 64 ||
+      (isImage &&
+        imageCapabilities.maxGenerationCount !== undefined &&
+        binding.outputCount > imageCapabilities.maxGenerationCount))
+  )
+    throw new ProviderSubmissionError(
+      isImage && imageCapabilities.maxGenerationCount !== undefined
+        ? `当前模型一次任务最多生成 ${imageCapabilities.maxGenerationCount} 张图片，请重新选择生成数量。`
+        : "生成数量必须为 1 至 64 的整数。",
     );
   return connection;
 }
@@ -134,6 +157,7 @@ export async function selectSubmissionConnection(
   referenceCount: number,
   kind: "image" | "text" = "image",
   model?: string,
+  outputCount?: number,
 ): Promise<ProviderConnection> {
   const candidates = readProviderConnections().sort(
     (a, b) =>
@@ -149,6 +173,7 @@ export async function selectSubmissionConnection(
       referenceCount,
       kind,
       model,
+      outputCount,
     };
     try {
       assertSubmissionConnection(binding);

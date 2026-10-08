@@ -1,0 +1,109 @@
+[WebServer] (node:27664) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+
+(node:59020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/2] tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑
+(node:60288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[2/2] (retries) tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 (retry #1)
+  1) tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 ────────────────────────
+
+    Error: expect(locator).toBeEnabled() failed
+
+    Locator:  getByTestId('canvas-node-added-image-ae69d9ec-84b0-4904-8759-dbc925d57fd2').getByRole('button', { name: '生成图片', exact: true })
+    Expected: enabled
+    Received: disabled
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeEnabled" getByTestId('canvas-node-added-image-ae69d9ec-84b0-4904-8759-dbc925d57fd2').getByRole('button', { name: '生成图片', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('canvas-node-added-image-ae69d9ec-84b0-4904-8759-dbc925d57fd2').getByRole('button', { name: '生成图片', exact: true })
+        14 × locator resolved to <button disabled aria-label="生成图片" class="generate-button" title="当前模型最多接收 1 张参考图（包含原图），请移除多余参考图。">…</button>
+           - unexpected value "disabled"
+
+
+      88 |       exact: true,
+      89 |     });
+    > 90 |     if (duplicate) await expect(generate).toBeEnabled();
+         |                                           ^
+      91 |     else await expect(generate).toBeDisabled();
+      92 |     await item
+      93 |       .getByRole("button", { name: "重绘参考图片", exact: true })
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-MODEL-001-capabilities\tests\browser\model-capabilities.spec.ts:90:43
+
+    Error Context: test-results\model-capabilities-原图和连线参考图按归档素材去重：同素材可编辑\error-context.md
+
+
+[3/2] tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘
+(node:68904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[4/2] (retries) tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 (retry #1)
+  2) tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 ────────────────────
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator:  getByTestId('canvas-node-added-image-3d044e8f-c746-4991-ad61-e1e91a9b3257').getByRole('button', { name: '生成图片', exact: true })
+    Expected: disabled
+    Received: enabled
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeDisabled" getByTestId('canvas-node-added-image-3d044e8f-c746-4991-ad61-e1e91a9b3257').getByRole('button', { name: '生成图片', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('canvas-node-added-image-3d044e8f-c746-4991-ad61-e1e91a9b3257').getByRole('button', { name: '生成图片', exact: true })
+        14 × locator resolved to <button aria-label="生成图片" title="使用已配置连接生成并保存图片" class="generate-button">…</button>
+           - unexpected value "enabled"
+
+
+      89 |     });
+      90 |     if (duplicate) await expect(generate).toBeEnabled();
+    > 91 |     else await expect(generate).toBeDisabled();
+         |                                 ^
+      92 |     await item
+      93 |       .getByRole("button", { name: "重绘参考图片", exact: true })
+      94 |       .click();
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-MODEL-001-capabilities\tests\browser\model-capabilities.spec.ts:91:33
+
+    Error Context: test-results\model-capabilities-原图和连线参考图按归档素材去重：不同素材超限禁用重绘\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator:  getByTestId('canvas-node-added-image-4e9db849-4428-42fd-b371-97decb1dd0e3').getByRole('button', { name: '生成图片', exact: true })
+    Expected: disabled
+    Received: enabled
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeDisabled" getByTestId('canvas-node-added-image-4e9db849-4428-42fd-b371-97decb1dd0e3').getByRole('button', { name: '生成图片', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('canvas-node-added-image-4e9db849-4428-42fd-b371-97decb1dd0e3').getByRole('button', { name: '生成图片', exact: true })
+        14 × locator resolved to <button aria-label="生成图片" title="使用已配置连接生成并保存图片" class="generate-button">…</button>
+           - unexpected value "enabled"
+
+
+      89 |     });
+      90 |     if (duplicate) await expect(generate).toBeEnabled();
+    > 91 |     else await expect(generate).toBeDisabled();
+         |                                 ^
+      92 |     await item
+      93 |       .getByRole("button", { name: "重绘参考图片", exact: true })
+      94 |       .click();
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-MODEL-001-capabilities\tests\browser\model-capabilities.spec.ts:91:33
+
+    Error Context: test-results\model-capabilities-原图和连线参考图按归档素材去重：不同素材超限禁用重绘-retry1\error-context.md
+
+
+  1 failed
+    tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 ─────────────────────
+  1 flaky
+    tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 ─────────────────────────

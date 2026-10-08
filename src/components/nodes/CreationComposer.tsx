@@ -85,7 +85,12 @@ export default function CreationComposer({
   }
   const [expanded, setExpanded] = useState(false);
   const localGeneration = useLocalGeneration(kind, onDemoResults);
-  const imageGeneration = useCanvasImageGeneration();
+  const imageGeneration = useCanvasImageGeneration({
+    references,
+  });
+  const incomingReferenceCount = video
+    ? references.length
+    : imageGeneration.incomingReferenceCount;
   const generation = video ? localGeneration : imageGeneration;
   const selectedModel = modelProp ?? (video ? model : imageGeneration.model);
   const ref = useRef<HTMLDivElement>(null);
@@ -154,6 +159,7 @@ export default function CreationComposer({
       {expanded ? (
         <ReferenceStrip
           references={references}
+          referenceCount={incomingReferenceCount}
           limit={referenceLimit}
           onAdd={onReference}
           onRemove={onRemoveReference}
@@ -178,6 +184,12 @@ export default function CreationComposer({
             className="composer-ref-add"
             type="button"
             aria-label="添加参考图片"
+            disabled={incomingReferenceCount >= referenceLimit}
+            title={
+              referenceLimit === 0
+                ? "当前模型没有可用的参考图位置"
+                : `最多 ${referenceLimit} 张参考图`
+            }
             onClick={() => onReference()}
           >
             <UiIcon name="add" size={16} />
@@ -205,7 +217,6 @@ export default function CreationComposer({
       <div className="creation-controls">
         <CreationModelPicker
           kind={kind}
-          referenceCount={references.length}
           value={selectedModel}
           actualModels={video ? undefined : imageGeneration.models}
           open={menu === "model"}
@@ -255,7 +266,11 @@ export default function CreationComposer({
           />
         </button>
         <GenerationCount
-          maxCount={imageGeneration.usesCodex ? 4 : 8}
+          maxCount={
+            imageGeneration.usesCodex
+              ? 4
+              : Math.min(8, imageGeneration.maxGenerationCount ?? 8)
+          }
           value={count}
           open={menu === "count"}
           onToggle={() => setMenu(menu === "count" ? "" : "count")}

@@ -1,0 +1,39 @@
+[WebServer] (node:73652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:62928) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\browser\model-capabilities.spec.ts:241:1 › 仅显示元数据更新时刷新分组、型号和别名草稿 (5.8s)
+
+
+  1) tests\browser\model-capabilities.spec.ts:241:1 › 仅显示元数据更新时刷新分组、型号和别名草稿 ────────────────────────
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByLabel('模型分组名称', { exact: true })
+    Expected: "New group"
+    Received: "Old group"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" getByLabel('模型分组名称', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('模型分组名称', { exact: true })
+        14 × locator resolved to <input maxlength="120" value="Old group" aria-label="模型分组名称" placeholder="留空自动识别末尾 2K / 4K / High / Low"/>
+           - unexpected value "Old group"
+
+
+      272 |   updated = true;
+      273 |   await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
+    > 274 |   await expect(page.getByLabel("模型分组名称", { exact: true })).toHaveValue(
+          |                                                            ^
+      275 |     "New group",
+      276 |   );
+      277 |   await expect(page.getByLabel("型号参数名称", { exact: true })).toHaveValue(
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-MODEL-001-capabilities\tests\browser\model-capabilities.spec.ts:274:60
+
+    Error Context: test-results\model-capabilities-仅显示元数据更新时刷新分组、型号和别名草稿\error-context.md
+
+  1 failed
+    tests\browser\model-capabilities.spec.ts:241:1 › 仅显示元数据更新时刷新分组、型号和别名草稿 ─────────────────────────

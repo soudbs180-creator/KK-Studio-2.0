@@ -1,5 +1,11 @@
 # AI handoff
 
+## 2026-10-08 当前合并与托管返修恢复点
+
+PR #34/#35 已合并且合并后 CI PASS。PR #36 精确源 12f5f6ab18fec932e787a729e78994544e822708 已 squash 合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，合并后 hosted run 37756981271 verify/deploy-linux PASS。本 T5 分支正在承接该最新主线，保留模型账号隔离、编辑能力和参考图去重门禁；源码 Desktop2.1.7/Web2.1.8/Mobile规划2.1.1。
+
+T5 本机产品验收十一组与精确源码 8399 补审 PASS，但其 Hosted native 在 Runtime154.0.4258.62 下 CDP 启动失败，尚不能合并。新 CI 包装器记录实际权限，仅在托管临时 runner 准备并清理应用专属策略；19 项内存边界检查 PASS，实际 Hosted 原因与当前组合验证仍待取得。[最新验证](../changes/2026-10-08-taskhost-native-lifecycle/verification.md)和[逐项盘点](../changes/2026-10-08-taskhost-native-lifecycle/status.md)是当前恢复入口。TASK-PROV-005/006、外部 Provider/GPU/Comfy/VPS/Mobile/安装/视觉验收仍开放；UI 图片选择工具栏在单独任务分支进行，本树不覆盖。以下两侧迭代记录均保留为各自当时事实，历史‘尚未合并’不代表 PR #36 当前状态。
+
 ## 2026-10-08 T5 原生收尾恢复入口（最新）
 
 先读 [T5 plan](../changes/2026-10-08-taskhost-native-lifecycle/plan.md)、[verification](../changes/2026-10-08-taskhost-native-lifecycle/verification.md)、[review](../changes/2026-10-08-taskhost-native-lifecycle/review.md)、[状态盘点](../changes/2026-10-08-taskhost-native-lifecycle/status.md)和机器账本。隔离树 `D:/kk-studio/KK-Studio-2.0/.worktrees/T5-native-lifecycle`、分支 `codex/T5-native-lifecycle`、基线 main@5b0eb6a。PR #34 已合并且主线 hosted CI 通过；后续不能重复合并其来源分支。PR #35 与模型能力分支由其他上下文处理，先核对实际 PR/main 和工作树，再承接。
@@ -7,6 +13,14 @@
 PR #35 已合并 main@5dd6e6dd 且主线 hosted CI PASS；T5 已在 fa9da162 承接，保留唯一 Plan 工作台。当前 T5 REVIEW：取消等待、可选元数据归档及独立审查指出的安全日志/unknown 矩阵重试门禁已修复；最新 fresh native 十一组 PASS。测试使用唯一 OS 合成凭据、独立 profile/dataRoot 和 owned CDP 9349，只终止本轮 PID，cleanup=true；新增真实凭据冲突拒绝的原值保留/脱敏回归。成功正常退出；部分输出、文本草稿明确异常终止后恢复 unknown、同身份无二次 POST。收据绑定九个源文件/EXE/bundle hash，dirty 基线收据不能冒充最终 head；最终完整 verify、精确 SHA 补审、Hosted 与合并后复验需当前结果。Desktop 2.1.6 / Web 2.1.7，Mobile 规划 2.1.1。
 
 TASK-PROV-005/006 为 P1 TODO，配置 durable 恢复与 native image health/容量分别推进。BACKEND-MEDIA-001 → ORCH-003、报价回执、MCP-AUTO 可以先本地实现；真正付费服务、VPS、ComfyUI、Mobile/安装/视觉验收仍按原任务。原历史失败、源分支、其他工作树和用户数据全部保留。
+
+## 2026-10-08 模型能力声明：Hosted日志复核后的增量修正
+
+TASK-MODEL-001 本地AC1–5 DONE。草稿无变化通知覆盖与显示字段依赖问题已修正：32定向无retry、完整verify723/731root(8原skip)、172/174Agent(2原skip)、408/408browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行PASS。2026-10-08 16:31 独立只读审查base5dd6e6dd..head71ddb625 PASS，MC-002/MC-003关闭，MC-001保持关闭；独立87/87、389源码hash和产物匹配，新指纹2ebaab3d。最终文档HEAD需补审，PR#36当前新SHA Hosted待取得；首轮2797687c的405pass+1flaky留档，唯一因果仍UNKNOWN。未合并发布，原主checkout未写入；FEAT-003仍PARTIAL，真实Provider/蒙版/扩图/Mobile及既有开发插件边界不变。下面早先PASS条目保留为当时SHA的历史记录。
+
+## 2026-10-08 TASK-MODEL-001 恢复入口
+
+任务worktree `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`，分支codex/TASK-MODEL-001-capabilities，最新base5dd6e6dd；构建/完整验证源码基准577ed3ee。TASK-MODEL-001 已实现精确账号/model 图片操作三态及参考图/任务数量限额，MC-001修正统一归档素材去重和重绘预校验。当前base main@5dd6e6dd的完整verify723root/172Agent/406browser通过，原skip8/2保留且0flaky，UI198/0；client:check、fresh Tauri和隔离运行通过。候选源码Desktop2.1.6/Web2.1.7，Mobile规划2.1.1；本地AC1–5完成，独立6da9920e技术补审PASS、MC-001关闭；最终文档head补审和PR/Hosted交付收据另绑，不代表已合并/发布。FEAT-003保持PARTIAL，真实Provider和蒙版/扩图执行另验；TASK-PLUGIN-DEV-001开发插件既有错误仍TODO。 先读[计划](../changes/2026-10-08-model-capabilities/plan.md)、[验证](../changes/2026-10-08-model-capabilities/verification.md)、[review](../changes/2026-10-08-model-capabilities/review.md)和账本；最后证据在evidence/latest-main5dd，不能用首轮0d或过渡5b产物代替。初次公开push审核拒绝与用户后续持续授权已记录，检查/审查通过后创建draft PR；实际合并/发布另计。
 
 ## 2026-10-08 阶段工作台主线融合
 
@@ -17,6 +31,7 @@ TASK-PROV-005/006 为 P1 TODO，配置 durable 恢复与 native image health/容
 ## 2026-10-08 阶段计划工作台恢复点
 
 保留独立 `codex/TASK-ORCH-002-stage-workbench`，先核对status/HEAD，读[计划](../changes/2026-10-08-stage-workbench/plan.md)、[比较](../changes/2026-10-08-stage-workbench/comparison.md)、[验证](../changes/2026-10-08-stage-workbench/verification.md)、[审查](../changes/2026-10-08-stage-workbench/review.md)。TASK-ORCH-002本轮本地AC DONE；源码41dd865独立PASS，3项finding关闭；完整verify638root/172Agent/389browser零retry，production Tauri拒绝/重提/返工/重启/真实CAS冲突/恢复草稿通过。最终文档SHA补审收据在 D:/kk-studio/output/minimax-rea-20261008/evidence/stage-workbench-review-final.md，必须回读真实结论。仅更新原feature/task，无新队列/存储；FEAT-030仍PARTIAL。Native临时证据在.tmp且已复制本轮evidence，不能被browser清理。下一步ORCH-003需taskId/attempt绑定和unknown映射，先明确图片/文本与媒体依赖范围；Comfy归T6，健康/恢复归T5；计划批准不替代供应商提交授权。main@21d121d未改，未推送/合并/发布。
+
 ## 2026-10-08 未完成任务继续执行恢复点
 
 当前实现工作树为 `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`，分支 `codex/TASK-AUDIT-20261003`。本轮最终业务代码提交为 `dc055566457f8413c8ac7f9cc17778a9958bd5d8`，包含阶段计划工作台、成本未知语义、画布交付边界、不确定重试与重启恢复对账、归档证据保护和恢复错误文案清理。独立复核返修后，原生回执同时核对任务 ID/幂等键，重复、缺失、越界、声明冲突与非法类型均隔离为 unknown，不导入异常结果、不普通重试、不自动重复提交；保留有效归档、合法子集和真正缺失 `outputs` 的旧 `assetIds` 格式。恢复时先读[本轮计划](../changes/2026-10-03-incomplete-tasks/plan.md)、[验证](../changes/2026-10-03-incomplete-tasks/verification.md)、[复核记录](../changes/2026-10-03-incomplete-tasks/review.md)和 `docs/governance/task-ledger.json`，再检查当前 HEAD、工作树与最新 bundle。

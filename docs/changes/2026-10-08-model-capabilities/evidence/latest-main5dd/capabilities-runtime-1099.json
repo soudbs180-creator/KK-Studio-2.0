@@ -1,0 +1,20 @@
+{
+  "url": "http://127.0.0.1:1423/",
+  "mode": "production",
+  "entry": "src/main.tsx",
+  "scripts": [
+    "http://127.0.0.1:1423/assets/index-ByBcWj1e.js"
+  ],
+  "styles": [
+    "http://127.0.0.1:1423/assets/index-C6I0Rp3I.css"
+  ],
+  "declaration": {
+    "edit": "unsupported"
+  },
+  "control": {
+    "fontSize": "14px",
+    "height": "40px",
+    "color": "rgb(219, 219, 219)",
+    "background": "rgb(22, 22, 22)"
+  }
+}
