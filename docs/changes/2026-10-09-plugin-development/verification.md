@@ -53,3 +53,7 @@
 
 
 - native-close-final-be5f327 实际 FAIL：新 EXE12009ce4… 首次立即关闭最后编辑保留/exit0，真实重启四正文通过、console/requestfailed均零；真实IO失败与重复关闭留窗已发生，随后 driver 在释放锁之后错误要求主件仍不可变，而恢复后的排队自动保存已正常写入新草稿。该次FAIL完整保留。主件保护断言改为独占锁持有者在释放前读取实际文件句柄字节，backup仍在锁持有期间检查；不删除原件/草稿/留窗/零错误断言，不用等待代替立即关闭。fresh产品源码未变。
+
+
+- c8ce21c native-close-protected-final 实际8步 PASS：立即关闭最后修改保留、实际重启、真实Windows独占文件导致Rust IO失败/重复关闭保留窗口与草稿、释放后重试完整落盘、坏读+脏草稿拒绝关闭、主备原件不变、恢复原件四正文；errors/consoleDetails/requestFailures皆空。3个正常exit0，坏读脏草稿仅测试自身SIGTERM清理（不冒称正常退出）。fresh EXE SHA25612009ce4452f9b61e495f3d6931c0d4a0ef3040bf4ded501a88eb46d1e521e69，入口index-DP4RQQ71.js f581ef80…；428源码/config身份与verify→fresh→runtime产品无差异已记录identity-c8ce21c。
+- 同EXE原CSP启停driver通过，TaskHost11组PASS且合成凭据清理读回成功、errors[]。titlebar第一次真实拖动断言FAIL（raw/initial PNG保留，原因UNKNOWN）；只新增写出实际drag-movement的诊断，未改动作/阈值/断言，下一次完整标题栏/真实拖动/最大化还原/最小化/菜单/正常关闭全部PASS。不将前一次失败改写；保留原生手势环境不稳定维护风险。
