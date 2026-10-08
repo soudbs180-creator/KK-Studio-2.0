@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
+| TASK-DESKTOP-FLUSH-001 | 桌面关闭前耐久保存与失败留窗 | PARTIAL | TASK-PLUGIN-DEV-001 | root |
 | TASK-PLUGIN-MARKDOWN-001 | 随包Markdown去除CDN代码依赖与离线渲染 | PARTIAL | TASK-PLUGIN-DEV-001 | root |
 | TASK-PLUGIN-RECOVERY-001 | 插件节点快照完整恢复与坏数据保护 | PARTIAL | TASK-PLUGIN-DEV-001 | root |
 | TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | DONE | TASK-MODEL-001 | root |
@@ -114,6 +115,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | T2, TASK-UI-GOV-003 | root |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
+
+## TASK-DESKTOP-FLUSH-001 — 桌面关闭前耐久保存与失败留窗
+
+- Goal: 编辑后立即关闭窗口仍保留最后修改，保存失败保留窗口和草稿
+- Scope: 当前创作快照队列与原生 CloseRequested 生命周期；同一随包插件可用目标的关联数据丢失缺陷
+- Acceptance: 最后编辑后立即关闭并重新打开，磁盘与节点正文完整; 窗口按钮及原生关闭事件都等待耐久队列，重复关闭去重; 保存失败或读保护下有未保存草稿时阻止关闭，主备原件不变; Web原有保存行为保持，fresh原生零console错误及独立审查
+- Branch: `fix/TASK-PLUGIN-DEV-001-same-origin-modules`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001`
+- Modules: src/features/creation/useCreationStorage.ts, src/features/creation/nativeClose.ts, src-tauri/capabilities/default.json, tests/unit, tests/desktop, docs
+- Verification: FAIL — FACT / PRE-EXISTING FAILURE：native-immediate-close-red 最后 SVG 修改丢失；closing=true 时实际 http://ipc.localhost/write_creation_snapshot 请求失败。原始 desktop-runtime.json/PNG/日志保留。当前未修复，关联 PLUGIN-REVIEW-002，唯一 active 实现任务仍为 TASK-PLUGIN-DEV-001。
+- Evidence: [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md)
+- Updated: 2026-10-09
 
 ## TASK-PLUGIN-MARKDOWN-001 — 随包Markdown去除CDN代码依赖与离线渲染
 

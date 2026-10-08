@@ -9,3 +9,6 @@
 - 对应 [spec](spec.md)、[plan](plan.md)、[verification](verification.md)、[review](review.md)。
 
 - 运行追加范围：TASK-PLUGIN-RECOVERY-001 保存/重启插件负载，TASK-PLUGIN-MARKDOWN-001 随包Markdown离线渲染；均为四插件完整可用的直接验收失败。Desktop/Web共享运行行为版本2.1.11 → 2.1.12；Mobile规划保持2.1.1。
+
+
+- 新原生回归发现 TASK-DESKTOP-FLUSH-001 / PLUGIN-REVIEW-002 P1：编辑后立即关闭丢失最后修改。本轮继续完成已授权失败项，关闭生命周期纳入同一随包插件完整可用验收。

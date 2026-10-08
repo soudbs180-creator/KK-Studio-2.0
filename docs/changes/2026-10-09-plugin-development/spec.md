@@ -23,3 +23,8 @@ URL修复后四插件响应200并可创建，但HTML节点触发React静态child
 阻断esm.sh的真实DOM四插件编辑验收FAIL：Markdown标题为空并有模块加载pageerror，不能作为四插件可用。原隐式marked@14依赖改为workspace声明的精确marked14.1.4并按npm integrity锁定随包，不升级解析器主版本，不增加运行时外部权限。技术范围更正：早期“不新增依赖”指不引入替代方案；这里显式声明已有外部解析器。保持现有同步解析/缓存和React单例，CDN请求必须为零；development/production/native各自验收正文及恢复。以[官方parse契约](https://marked.js.org/using_advanced#the-parse-function)和实际锁定14.1.4类型为依据。
 
 新增tests/support/pluginFlow.mjs共享四插件真实编辑/预览内容断言；坏snapshot测试必须检查失败后主件和backup原件。既有SVG CSP启停回归保留，新native recovery使用独立数据/profile并真实停止、重开同一fresh EXE。
+
+
+## P1 TASK-DESKTOP-FLUSH-001 / PLUGIN-REVIEW-002
+
+真实立即关闭 RED 丢失最后 SVG comment；trace 定位 closing=true 的 write_creation_snapshot IPC 请求。原生所有 CloseRequested 必须同步阻止默认关闭，等待现有耐久写队列及最新 revision 成功后才关闭；重复事件不得提前关闭。保存失败或读保护下有未保存草稿时保留窗口和原件，提供现有错误/草稿下载及重读入口。Web beforeunload 原契约保持，Native 不再在 destroy 后发起异步保存。使用已锁定 Tauri SDK 的 onCloseRequested/destroy（SDK 本身也以 destroy 完成此事件）；仅 main 窗口补相应 allow-destroy，与既有 allow-close 同范围，未增加文件、网络或系统权限。数据 schema、存储身份、CSP 不变。原坏数据 fixture 应真实验证阻止关闭，然后仅清理本次自有测试进程，不能要求带未保存草稿正常退出。

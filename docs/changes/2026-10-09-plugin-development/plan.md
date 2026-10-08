@@ -20,3 +20,6 @@
 - TASK-PLUGIN-MARKDOWN-001（P1，新登记）：共享真实编辑flow先阻断CDN获得正文为空/模块错误RED；将已有marked14固定14.1.4构建随包（npm registry版本/integrity已验证），移除无效远程声明与异步加载状态，不扩大CSP。新增真实四插件正文/IndexedDB备份保护浏览器回归；新native driver真实重启及坏数据/恢复复验，旧CSP启停driver不删减。
 
 - 唯一active worktree任务为TASK-PLUGIN-DEV-001；两个新增相关缺陷已有实现/局部验证，账本保持PARTIAL等待最终验收，串行同一逻辑目标且同一实现者。原错误的三个active任务声明由治理门禁拒绝，原source-lint.txt保留FAIL；没有改门禁。
+
+
+- 追加关闭 P1：保留 native-immediate-close-red 原始 FAIL；先补耐久等待、最新 revision、重复关闭、读保护、失败和卸载生命周期单元回归，再最小原生事件守卫接入当前 useCreationStorage 队列。fresh rebuild 后严格执行立即关闭、失败留窗、主备保护及原 CSP/TaskHost/标题栏回归，再当前 SHA 独立补审。

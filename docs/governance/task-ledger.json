@@ -1,5 +1,40 @@
 [
   {
+    "id": "TASK-DESKTOP-FLUSH-001",
+    "title": "桌面关闭前耐久保存与失败留窗",
+    "goal": "编辑后立即关闭窗口仍保留最后修改，保存失败保留窗口和草稿",
+    "scope": "当前创作快照队列与原生 CloseRequested 生命周期；同一随包插件可用目标的关联数据丢失缺陷",
+    "acceptance": [
+      "最后编辑后立即关闭并重新打开，磁盘与节点正文完整",
+      "窗口按钮及原生关闭事件都等待耐久队列，重复关闭去重",
+      "保存失败或读保护下有未保存草稿时阻止关闭，主备原件不变",
+      "Web原有保存行为保持，fresh原生零console错误及独立审查"
+    ],
+    "dependencies": [
+      "TASK-PLUGIN-DEV-001"
+    ],
+    "owner": "root",
+    "branch": "fix/TASK-PLUGIN-DEV-001-same-origin-modules",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001",
+    "affectedModules": [
+      "src/features/creation/useCreationStorage.ts",
+      "src/features/creation/nativeClose.ts",
+      "src-tauri/capabilities/default.json",
+      "tests/unit",
+      "tests/desktop",
+      "docs"
+    ],
+    "status": "PARTIAL",
+    "priority": "P1",
+    "evidence": [
+      "docs/changes/2026-10-09-plugin-development/spec.md",
+      "docs/changes/2026-10-09-plugin-development/verification.md"
+    ],
+    "verification": "FACT / PRE-EXISTING FAILURE：native-immediate-close-red 最后 SVG 修改丢失；closing=true 时实际 http://ipc.localhost/write_creation_snapshot 请求失败。原始 desktop-runtime.json/PNG/日志保留。当前未修复，关联 PLUGIN-REVIEW-002，唯一 active 实现任务仍为 TASK-PLUGIN-DEV-001。",
+    "verificationResult": "FAIL",
+    "updated": "2026-10-09"
+  },
+  {
     "id": "TASK-PLUGIN-MARKDOWN-001",
     "title": "随包Markdown去除CDN代码依赖与离线渲染",
     "goal": "四个随包插件在固定开发、生产和严格同源CSP桌面中编辑及重启恢复完整内容",

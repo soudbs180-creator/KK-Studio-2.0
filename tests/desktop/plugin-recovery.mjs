@@ -53,6 +53,84 @@ let child;
 let browser;
 let page;
 let failure;
+let snapshotLock;
+
+async function lockSnapshot() {
+  const readyPath = path.join(evidenceDir, "lock.ready");
+  const releasePath = path.join(evidenceDir, "lock.release");
+  snapshotLock = spawn(
+    "powershell.exe",
+    [
+      "-NoProfile",
+      "-Command",
+      `
+    $fixtureHandle = [System.IO.File]::Open($env:KK_NATIVE_LOCK_PATH, 'Open', 'ReadWrite', 'None')
+    try {
+      [System.IO.File]::WriteAllText($env:KK_NATIVE_LOCK_READY, 'ready')
+      $fixtureDeadline = [DateTime]::UtcNow.AddSeconds(30)
+      while (-not (Test-Path -LiteralPath $env:KK_NATIVE_LOCK_RELEASE)) {
+        if ([DateTime]::UtcNow -gt $fixtureDeadline) { throw 'Fixture lock timed out' }
+        Start-Sleep -Milliseconds 50
+      }
+    } finally { $fixtureHandle.Dispose() }
+  `,
+    ],
+    {
+      windowsHide: true,
+      stdio: "ignore",
+      env: {
+        ...process.env,
+        KK_NATIVE_LOCK_PATH: snapshotPath,
+        KK_NATIVE_LOCK_READY: readyPath,
+        KK_NATIVE_LOCK_RELEASE: releasePath,
+      },
+    },
+  );
+  await expect
+    .poll(async () => {
+      assert.equal(
+        snapshotLock.exitCode,
+        null,
+        "Owned file-lock fixture exited early",
+      );
+      try {
+        return await readFile(readyPath, "utf8");
+      } catch {
+        return "";
+      }
+    })
+    .toBe("ready");
+}
+
+async function releaseSnapshotLock() {
+  if (!snapshotLock) return;
+  await writeFile(path.join(evidenceDir, "lock.release"), "release", {
+    flag: "wx",
+  });
+  const owned = snapshotLock;
+  await expect.poll(() => owned.exitCode, { timeout: 5000 }).toBe(0);
+  snapshotLock = undefined;
+}
+
+async function expectCloseBlocked() {
+  await page.evaluate(async () => {
+    await Promise.all(
+      [1, 2].map(() =>
+        window.__TAURI_INTERNALS__.invoke("plugin:window|close", {
+          label: "main",
+        }),
+      ),
+    );
+  });
+  await expect(page.getByRole("alert")).toContainText("窗口保持打开");
+  assert.equal(
+    child.exitCode,
+    null,
+    "Failed save must retain the native window",
+  );
+  assert.equal(child.signalCode, null);
+  assert.equal(await page.evaluate(() => document.visibilityState), "visible");
+}
 
 async function launch() {
   let busy = false;
@@ -236,19 +314,62 @@ try {
   }
   receipt.steps.push("four-plugins-edit-render-and-native-durable-save");
   await page.screenshot({ path: path.join(evidenceDir, "before-restart.png") });
+  const closeEdit = svg.content + "\n<!-- 关闭前的最后修改必须完整保存 -->";
+  await svgNode.getByTitle("编辑源码", { exact: true }).click();
+  await svgNode.locator("textarea").fill(closeEdit);
+  await svgNode.locator("textarea").press("Escape");
   await stop(true);
-  const original = await readFile(snapshotPath);
-  const snapshot = JSON.parse(original);
+  let original = await readFile(snapshotPath);
+  let snapshot = JSON.parse(original);
+  assert.equal(
+    snapshot.projects[0].items.find((item) => item.plugin?.type === svg.type)
+      ?.plugin.metadata.content,
+    closeEdit,
+  );
+  receipt.steps.push("immediate-close-retains-last-plugin-edit");
   receipt.snapshotSha256 = sha256(original);
   await launch();
   await openSavedProject();
   await page.screenshot({ path: path.join(evidenceDir, "after-restart.png") });
-  await stop(true);
   assert.deepEqual(
     JSON.parse(await readFile(snapshotPath, "utf8")).projects[0].items,
     snapshot.projects[0].items,
   );
   receipt.steps.push("fresh-process-restart-and-four-contents-recovered");
+
+  // A real Windows exclusive handle makes Rust snapshot IO fail. Only this
+  // fixture's isolated file is locked; no user directory or process is touched.
+  await expect(page.locator(".project-save-state")).toHaveText("已保存");
+  const beforeFailure = await readFile(snapshotPath);
+  const backupBeforeFailure = await readFile(backupPath);
+  await lockSnapshot();
+  const failedEdit = closeEdit + "\n<!-- 保存失败后的草稿也必须保留 -->";
+  const recoveredSvg = page.locator('[data-plugin-type="svg:vector"]');
+  await recoveredSvg.getByTitle("编辑源码", { exact: true }).click();
+  await recoveredSvg.locator("textarea").fill(failedEdit);
+  await recoveredSvg.locator("textarea").press("Escape");
+  await expectCloseBlocked();
+  await page.screenshot({
+    path: path.join(evidenceDir, "save-failure-window-retained.png"),
+  });
+  await releaseSnapshotLock();
+  assert.deepEqual(await readFile(snapshotPath), beforeFailure);
+  assert.deepEqual(await readFile(backupPath), backupBeforeFailure);
+  await recoveredSvg.getByTitle("编辑源码", { exact: true }).click();
+  await expect(recoveredSvg.locator("textarea")).toHaveValue(failedEdit);
+  await recoveredSvg.locator("textarea").press("Escape");
+  receipt.steps.push(
+    "real-native-io-failure-and-duplicate-close-retain-window-draft-and-originals",
+  );
+  await stop(true);
+  original = await readFile(snapshotPath);
+  snapshot = JSON.parse(original);
+  assert.equal(
+    snapshot.projects[0].items.find((item) => item.plugin?.type === svg.type)
+      ?.plugin.metadata.content,
+    failedEdit,
+  );
+  receipt.steps.push("successful-close-retry-retains-the-entire-unsaved-draft");
 
   // Mutate only this fixture's isolated snapshot, retaining a verified copy.
   const backup = await readFile(backupPath);
@@ -273,7 +394,9 @@ try {
   await page.screenshot({
     path: path.join(evidenceDir, "corrupt-protected.png"),
   });
-  await stop(true);
+  await expectCloseBlocked();
+  receipt.steps.push("protected-read-dirty-draft-blocks-native-close");
+  await stop();
   assert.deepEqual(await readFile(snapshotPath), corruptBytes);
   assert.deepEqual(await readFile(backupPath), backup);
   receipt.corruptSnapshotSha256 = sha256(corruptBytes);
@@ -300,6 +423,7 @@ try {
     .catch(() => {});
 } finally {
   try {
+    await releaseSnapshotLock();
     await stop();
   } catch (error) {
     failure ??= error;

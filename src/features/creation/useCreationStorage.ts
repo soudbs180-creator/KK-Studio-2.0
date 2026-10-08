@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { isTauri } from "@tauri-apps/api/core";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { emptySnapshot, type CreationSnapshot } from "./model";
 import {
   loadCreationSnapshot,
@@ -8,6 +10,10 @@ import {
 } from "./storage";
 import { storageError } from "./snapshotCodec";
 import { reconcileProjectCanvas } from "../../domain/projectCanvas";
+import {
+  createNativeCloseHandler,
+  flushCreationBeforeClose,
+} from "./nativeClose";
 
 export type SaveState =
   "loading" | "saved" | "saving" | "read_error" | "write_error" | "conflict";
@@ -32,6 +38,7 @@ export function useCreationStorage(
   const queue = useRef(Promise.resolve());
   const mounted = useRef(false);
   const readSequence = useRef(0);
+  const pendingRead = useRef(Promise.resolve());
 
   function commitCreation(next: CreationSnapshot): void {
     next = {
@@ -161,9 +168,12 @@ export function useCreationStorage(
     setState("saving");
     await enqueuePersist(creationRef.current);
   }
+  function startRead(retry = false): void {
+    pendingRead.current = read(retry);
+  }
   useEffect(() => {
     mounted.current = true;
-    void read();
+    startRead();
     return () => {
       mounted.current = false;
       readSequence.current++;
@@ -175,7 +185,52 @@ export function useCreationStorage(
     return () => window.clearTimeout(timer);
   }, [creation]);
   useEffect(() => {
+    if (!isTauri()) return;
+    const nativeWindow = getCurrentWindow();
+    let disposed = false;
+    let unlisten: (() => void) | undefined;
+    const report = (error: unknown) => {
+      if (!disposed && mounted.current)
+        setMessage(
+          `${storageError(error).message} 窗口保持打开，请重试保存或下载草稿。`,
+        );
+    };
+    const release = (stop: () => void) => {
+      try {
+        void Promise.resolve(stop()).catch(report);
+      } catch (error) {
+        report(error);
+      }
+    };
+    const closing = createNativeCloseHandler({
+      flush: () =>
+        flushCreationBeforeClose({
+          waitForRead: () => pendingRead.current,
+          canWrite: () => ready.current,
+          hasChanges: () => dirty.current,
+          flush,
+        }),
+      destroy: () => nativeWindow.destroy(),
+      active: () => !disposed && mounted.current,
+      report,
+    });
+    void nativeWindow
+      .onCloseRequested(closing)
+      .then((stop) => {
+        if (disposed) release(stop);
+        else unlisten = stop;
+      })
+      .catch(report);
+    return () => {
+      disposed = true;
+      if (unlisten) release(unlisten);
+    };
+  }, []);
+  useEffect(() => {
     const closing = (event: BeforeUnloadEvent) => {
+      // Native CloseRequested owns the awaited save. Starting another IPC
+      // write during WebView destruction loses data and produces a late error.
+      if (isTauri()) return;
       if (!dirty.current) return;
       save();
       event.preventDefault();
@@ -207,7 +262,7 @@ export function useCreationStorage(
     message,
     recoveryDraft,
     downloadDraft,
-    retryRead: () => void read(true),
+    retryRead: () => startRead(true),
     retrySave: save,
     flush,
   };

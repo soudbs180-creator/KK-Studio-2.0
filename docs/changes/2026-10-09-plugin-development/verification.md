@@ -34,3 +34,13 @@
 ## 原生备份fixture生命周期修正
 
 19fb真实native-recovery-graceful仍FAIL：四插件编辑/原生保存/真实关闭exit0/重开恢复内容已经通过且零错误；backup读取ENOENT。实际独立目录只有第一次完整保存，Rust契约首次写入没有上一版可备份；并非产品丢失backup。新增真实SVG编辑并等待耐久提交、恢复正文并等待第二次耐久提交，确保先存在实际上一版backup再进行坏数据断言，不手造成功backup。旧FAIL保持原始含义；fresh EXE/runtime不变。
+
+
+## 新关闭数据丢失 RED（未关闭）
+
+- native-recovery-request-trace @0260ece：四轮真实 exit0，但 console/requestfailed 实际 URL 为 http://ipc.localhost/write_creation_snapshot，closing=true；严格结果 FAIL，没有过滤错误。
+- native-immediate-close-red @0260ece + 未提交回归探针，fresh EXE SHA256 eaa83aa100bf421503cf35d9c6ee51a871119019a67820e33624e5757d41a236：最后 SVG 编辑后立即关闭，磁盘正文缺失 `<!-- 关闭前的最后修改必须完整保存 -->`，同时 IPC connection refused，实际 FAIL。原件在工程外 TASK-PLUGIN-DEV-001-20261009/native-immediate-close-red/desktop-runtime.json；不把旧已保存关闭测试当成此路径通过。
+- 登记 TASK-DESKTOP-FLUSH-001 P1 / PLUGIN-REVIEW-002 merge-blocker；最终验收仍未完成。
+
+
+- 关闭守卫单元先缺实现 RED，随后 7 个关闭契约 + 6 恢复 + 3 JSX = 16/16 PASS；typecheck/lint、109任务治理零违例。当前是工作区预验收；完整verify、fresh EXE及立即关闭/真实IO失败留窗仍待新提交执行。
