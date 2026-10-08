@@ -6,6 +6,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
+| TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | DONE | TASK-MODEL-001 | root |
+| TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | TASK-IMAGE-EDIT-001 | root |
 | TASK-UI-013 | 桌面标题栏与菜单合并为单排 | DONE | none | root |
 | TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | none | root |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
@@ -110,6 +112,30 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | T2, TASK-UI-GOV-003 | root |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
+
+## TASK-IMAGE-EDIT-001 — 统一图片编辑蒙版与连续重绘
+
+- Goal: 框选、画笔、色块共享坐标、裁剪、请求及融合，保护原图与未选像素
+- Scope: 现有重绘和图片预览入口，领域Mask、Web/Desktop请求合成、编辑上下文
+- Acceptance: 三个工具统一原像素Mask与历史; 5%偶数裁剪、合并及1K/2K/4K路由; 保护非编辑像素、部分成功与重试; 色块结构化指令、灯箱和上下文; 相关验证、完整verify、独立审查和文档
+- Branch: `codex/TASK-IMAGE-EDIT-001-unified-mask`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-EDIT-001`
+- Modules: src/features/image-edit, src/features/creation, src/components/nodes, src/App.tsx, src-tauri/src/task_host.rs, tests, docs
+- Verification: PASS — 最新main1d组合27b/eaa本地实现scope完成：完整verify785Node/172Agent（原skip8/2）、445browser445attempts零retry/flaky、102Rust/fmt/clientcheck/fresh Agent EXE；native Mask外0/重启/包/undo/临时凭据清理，UI13/TaskHost11/模型/titlebar/首屏和生产Web3宽度通过；MASK-INTEGRATION-001定位歧义修复且当前独立关闭。104上游task对象保留，当前源码与运行审查通过并保留后续项。开发插件另归TASK-PLUGIN-DEV-001，开发其余UI只在留证收起遮罩后局部验收；真实效果/手机/用户验收归VERIFY-002。原失败日志与各未验边界详见本task当前verification/review；最终docs/Hosted/普通合并/main CI另按实际回读。
+- Evidence: [docs/changes/2026-10-08-unified-image-mask/intent.md](../../docs/changes/2026-10-08-unified-image-mask/intent.md), [docs/changes/2026-10-08-unified-image-mask/spec.md](../../docs/changes/2026-10-08-unified-image-mask/spec.md), [docs/changes/2026-10-08-unified-image-mask/plan.md](../../docs/changes/2026-10-08-unified-image-mask/plan.md), [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/changes/2026-10-08-unified-image-mask/review.md](../../docs/changes/2026-10-08-unified-image-mask/review.md), [docs/changes/2026-10-09-unified-mask-main-integration/intent.md](../../docs/changes/2026-10-09-unified-mask-main-integration/intent.md), [docs/changes/2026-10-09-unified-mask-main-integration/spec.md](../../docs/changes/2026-10-09-unified-mask-main-integration/spec.md), [docs/changes/2026-10-09-unified-mask-main-integration/plan.md](../../docs/changes/2026-10-09-unified-mask-main-integration/plan.md), [docs/changes/2026-10-09-unified-mask-main-integration/verification.md](../../docs/changes/2026-10-09-unified-mask-main-integration/verification.md), [docs/changes/2026-10-09-unified-mask-main-integration/review.md](../../docs/changes/2026-10-09-unified-mask-main-integration/review.md)
+- Updated: 2026-10-09
+
+## TASK-IMAGE-EDIT-VERIFY-002 — 图片编辑真实模型与移动设备效果验收
+
+- Goal: 验证真实模型局部重绘质量、映射偏移和物理手机手势/键盘，补齐本地fixture之外的证据
+- Scope: FEAT-035真实Provider质量与移动验收；不将fixture当作真实效果
+- Acceptance: 明确供应商/账号/能力规格，在取得真实调用授权后验证Mask和标注编辑; 核对原件/未选像素、边缘融合、模型内部几何与透视变化；记录需要人工确认的边界; 在实际手机验证双指、输入键盘、安全区、工具栏与竖滑；完成用户视觉验收
+- Branch: `UNASSIGNED`
+- Worktree: `UNASSIGNED`
+- Modules: src/features/image-edit, src/features/creation, tests, docs/features/feat-035-image-mask-editing.md
+- Verification: NOT_VERIFIED — 本轮未使用真实付费连接、物理手机或用户视觉验收；比例异常已自动拒绝，任意语义几何位移仍需人工确认。
+- Evidence: [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/features/feat-035-image-mask-editing.md](../../docs/features/feat-035-image-mask-editing.md)
+- Updated: 2026-10-08
 
 ## TASK-UI-013 — 桌面标题栏与菜单合并为单排
 

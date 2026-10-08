@@ -1,5 +1,13 @@
 # 当前进度
 
+## 2026-10-09 统一Mask最新主线组合本地验收完成
+
+用户授权普通合并已检查分支。PR38/40已正常合并，当前base main1d6f640及其实际post-main37806381609成功；Mask产品27b/driver-eaa承接该主线，完整445browser零retry、102Rust和fresh Agent原生Mask外0/重启/undo/凭据保护、上方操作栏/TaskHost/模型/标题栏/首屏及生产Web3宽度通过，当前独立复审。Desktop/Web2.1.11、Mobile规划2.1.1；104上游对象完整保留，106项DONE62/TODO14/PARTIAL26/BLOCKED4，44项开放。TASK-PLUGIN-DEV-001开发遮罩依然FAIL/TODO，源码与main相同；开发其余UI只在留证后Escape收起遮罩作局部检查，primary-main开发两次超时为NOT VERIFIED。真实效果/手机/用户验收仍VERIFY-002，FEAT035仍PARTIAL。最终docs独立/最新Hosted、普通合并、完整landing tree/主线FF与post-mainCI另外实际回读，不预填成功。UI012仍原执行者在途。恢复入口[本轮验证](changes/2026-10-09-unified-mask-main-integration/verification.md) / [任务状态报告](changes/2026-10-09-unified-mask-main-integration/status.md)。保留所有历史/工作树/快捷方式及用户数据，不宣称既有启动入口已换包或已发布。
+
+## 2026-10-09 统一 Mask 承接最新主线（进行中）
+
+用户已授权合并完成检查的分支。Mask e7cfd28在旧78cea基线独立PASS；当前承接main1d6f640（图片操作栏、静默启动、单排标题栏）。三个产品冲突逐项保留双方行为，Desktop/Web将从当前主线自动递增。当前组合尚未验证，不用历史PASS代填；新源码审查、完整两端检查和Hosted/main CI均须实际完成。FEAT-035保持PARTIAL、真实效果/真机/用户验收任务保持TODO。下方保留各旧SHA的历史事实。
+
 ## 2026-10-08 单排标题栏最新主线组合验收完成
 
 PR38 已普通合入main2cb73d，source a550f31与landing完整tree相同，当前Hosted成功；PR38 合并后 main37797150560 verify/deploy-linux SUCCESS，delivery 按 main push 条件 skipped；实际收据已归档。 TASK-UI-013产品86e712f承接该主线，7条故障先RED后GREEN，001/002当前独立CLOSED，完整431browser（431attempts零flaky/retry）、97Rust、fresh带Agent titlebar/UI13/T511/模型/首屏及Web两态3宽度全部PASS。Desktop2.1.10/Web2.1.10/Mobile规划2.1.1；104项DONE61/TODO13/PARTIAL26/BLOCKED4，103上游对象完整保留。最终doc head补审/当前Hosted、普通PR40合并与main CI另按实际回读，不能用旧门禁代替。当前恢复入口[最新验收](changes/2026-10-08-single-row-titlebar/verification.md)及[PR40](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/40)。UI012/蒙版仍原执行者维护；保留历史、工作树、快捷方式引用和用户数据，不推断既有快捷方式已切到最终稳定包。
@@ -41,6 +49,21 @@ PR #36 已 squash 合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，合并�
 
 先读取[本轮验收](changes/2026-10-08-image-selection-actions/verification.md)、review、task-ledger 和实际 origin/main；并发 TASK-LAUNCH-001、TASK-UI-012、TASK-IMAGE-EDIT-001 由各自执行者维护，未验收内容不能抢合或覆盖。
 
+## 2026-10-08 统一 Mask 继续审查返修
+
+TASK-IMAGE-EDIT-001 本地实现 DONE：源码 head64c8b9d 于23:38:25+08独立PASS，IM-010–013全部CLOSED，未发现新增P1/P2。修正跨端schema、缺失快照恢复、可撤销清空及区域意见重复；旧恢复全文结构歧义先RED后GREEN。完整verify775root/172Agent/423browser零retry/flaky、Rust102、fresh Tauri/原生11组通过，Mask外0、凭据保护/清理通过；reviewer另跑93定向和四个完整PNG保护探针，71源码/22工件匹配。收尾仅文档，最终文档head另补审；历史失败/平台中止/superseded保留。Desktop2.1.9/Web2.1.10/Mobile规划2.1.1；FEAT-035 PARTIAL、VERIFY-002 TODO，真实Provider/真机/用户视觉未验。见[验证](changes/2026-10-08-unified-image-mask/verification.md)和[审查](changes/2026-10-08-unified-image-mask/review.md)，未推送/合入main/发布。下方保留历史范围。
+
+## 2026-10-08 统一 Mask 本地实现完成
+
+TASK-IMAGE-EDIT-001 本地实现 DONE：三个工具共用原像素 Mask、坐标/合并/裁剪/发送/融合，灯箱与连续编辑接入既有归档及任务链。承接 main@78cea37 后，完整 verify root741/749、Agent172/174（原skip8/2）、browser420/420零重试/零flaky，Rust100、fresh Tauri 编辑验收与主线原生11组通过；实际 Web/Desktop bundle 相同。2026-10-08 20:55:05+08 的源码 head dbc88bb 独立 PASS，IM-001–009 CLOSED；reviewer 自行补跑61单测及实际 Tauri，Mask外0改动、凭据冲突保护/最终清理通过。Desktop2.1.8/Web2.1.9，保留本地任务分支，未推送/合入main/发布。收尾仅更新文档，最终文档提交另补审。FEAT-035仍PARTIAL，真实Provider效果、任意语义几何漂移、物理手机与用户视觉归TASK-IMAGE-EDIT-VERIFY-002。见[验证](changes/2026-10-08-unified-image-mask/verification.md)和[审查](changes/2026-10-08-unified-image-mask/review.md)。以下记录保留当时事实。
+
+## 2026-10-08 统一 Mask 承接主线后的候选
+
+TASK-IMAGE-EDIT-001 在独立任务分支承接 main@78cea37（PR #37），保留原生取消和归档修复。组合完整 verify exit 0：739 root / 172 Agent（原 skip 8/2）、420 browser 零重试、Rust 100；fresh Tauri 的 Mask、项目包、删除再生/重启和主线生命周期 11 组通过。Web/Desktop 实际生产 bundle hash 一致。源码 Desktop 2.1.8 / Web 2.1.9；正式已提交 head 的独立复验待完成，未推送本任务、合入 main 或发布。FEAT-035 仍 PARTIAL，真实 Provider/手机/视觉边界归 TASK-IMAGE-EDIT-VERIFY-002。见[组合验证](changes/2026-10-08-unified-image-mask/verification.md)。以下首轮及主线记录保留为各自当时事实。
+
+## 2026-10-08 统一图片编辑蒙版本地候选
+
+框选、画笔、色块产生原像素Mask，共用扩边/合并/裁剪、能力校验、Web/native模型请求、Mask内融合；保存/导出/恢复与连续编辑保持原件不可变。完整verify739root/172Agent/419browser（原skip8/2、0flaky）、Rust100、fresh Tauri两次Mask请求/包恢复/删除再生/重启通过，Web/Desktop实际bundle同hash。候选Desktop2.1.7/Web2.1.8；正式独立head复验待补，未推送/合并/发布。FEAT-035仍PARTIAL，真实Provider/语义几何偏移/真机/用户视觉归TASK-IMAGE-EDIT-VERIFY-002。[验证](changes/2026-10-08-unified-image-mask/verification.md)。
 ## 2026-10-08 Hosted 空 Registry 属性返修
 
 T5当前本机/源码验收完成、REVIEW。21ac独立补审PASS、ENV003 CLOSED；其Hosted37765011214完整Web/Rust/release/Runtime通过，实际CI包装器在新建空key的Properties.Name严格模式失败，native尚未启动。修正mock空属性集合并复现真实RED；四处逐项枚举后26/26边界回归PASS，产品/harness与d521 native十一组hash不变。新head独立关闭ENV004、Hosted与主线整合仍待满足，未假填High IL。UI976db独立PASS关闭两P2、422browser/fresh Native13组通过，当前Hosted待创建。main仍1af/PR36合并后CI通过；其他执行者任务保留。

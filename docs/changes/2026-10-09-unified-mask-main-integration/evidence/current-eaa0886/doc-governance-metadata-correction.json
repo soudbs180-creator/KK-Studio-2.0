@@ -1,0 +1,96 @@
+{
+  "sourceHead": "eaa0886e99965d00a5a514b301adb665b150373d",
+  "stage": "uncommitted docs-only closeout",
+  "result": "first governance --write correctly rejected DONE verification prose containing separate historical/follow-up FAIL and NOT VERIFIED keywords",
+  "rule": "unchanged scripts/governance/ledger.mjs DONE validation",
+  "change": "verification describes completed local task scope; all failure/unknown conditions preserved in verificationLimits, original raw receipts, active verification/review/status documents and unchanged other task objects; no check bypass or failure status changed",
+  "before": {
+    "id": "TASK-IMAGE-EDIT-001",
+    "title": "统一图片编辑蒙版与连续重绘",
+    "goal": "框选、画笔、色块共享坐标、裁剪、请求及融合，保护原图与未选像素",
+    "scope": "现有重绘和图片预览入口，领域Mask、Web/Desktop请求合成、编辑上下文",
+    "acceptance": [
+      "三个工具统一原像素Mask与历史",
+      "5%偶数裁剪、合并及1K/2K/4K路由",
+      "保护非编辑像素、部分成功与重试",
+      "色块结构化指令、灯箱和上下文",
+      "相关验证、完整verify、独立审查和文档"
+    ],
+    "dependencies": [
+      "TASK-MODEL-001"
+    ],
+    "owner": "root",
+    "branch": "codex/TASK-IMAGE-EDIT-001-unified-mask",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-EDIT-001",
+    "affectedModules": [
+      "src/features/image-edit",
+      "src/features/creation",
+      "src/components/nodes",
+      "src/App.tsx",
+      "src-tauri/src/task_host.rs",
+      "tests",
+      "docs"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-10-08-unified-image-mask/intent.md",
+      "docs/changes/2026-10-08-unified-image-mask/spec.md",
+      "docs/changes/2026-10-08-unified-image-mask/plan.md",
+      "docs/changes/2026-10-08-unified-image-mask/verification.md",
+      "docs/changes/2026-10-08-unified-image-mask/review.md",
+      "docs/changes/2026-10-09-unified-mask-main-integration/intent.md",
+      "docs/changes/2026-10-09-unified-mask-main-integration/spec.md",
+      "docs/changes/2026-10-09-unified-mask-main-integration/plan.md",
+      "docs/changes/2026-10-09-unified-mask-main-integration/verification.md",
+      "docs/changes/2026-10-09-unified-mask-main-integration/review.md"
+    ],
+    "verification": "最新main1d组合27b/eaa本地scope完成：verify785Node/172Agent（原skip8/2）、445browser445attempts零retry/flaky、102Rust/fmt/clientcheck/fresh Agent EXE；native Mask外0/重启/包/undo/临时凭据清理，UI13/TaskHost11/模型/titlebar/首屏和生产Web3宽度通过；MASK-INTEGRATION-001定位先FAIL后修并独立关闭。开发插件既有FAIL继续TASK-PLUGIN-DEV-001 TODO，开发其他UI仅收起遮罩后局部PASS，primary-main开发冷启动NOT VERIFIED。最终docs/Hosted/普通合并/main CI另外实际回读；真实效果/手机/用户验收归VERIFY-002。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-09"
+  },
+  "after": {
+    "id": "TASK-IMAGE-EDIT-001",
+    "title": "统一图片编辑蒙版与连续重绘",
+    "goal": "框选、画笔、色块共享坐标、裁剪、请求及融合，保护原图与未选像素",
+    "scope": "现有重绘和图片预览入口，领域Mask、Web/Desktop请求合成、编辑上下文",
+    "acceptance": [
+      "三个工具统一原像素Mask与历史",
+      "5%偶数裁剪、合并及1K/2K/4K路由",
+      "保护非编辑像素、部分成功与重试",
+      "色块结构化指令、灯箱和上下文",
+      "相关验证、完整verify、独立审查和文档"
+    ],
+    "dependencies": [
+      "TASK-MODEL-001"
+    ],
+    "owner": "root",
+    "branch": "codex/TASK-IMAGE-EDIT-001-unified-mask",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-EDIT-001",
+    "affectedModules": [
+      "src/features/image-edit",
+      "src/features/creation",
+      "src/components/nodes",
+      "src/App.tsx",
+      "src-tauri/src/task_host.rs",
+      "tests",
+      "docs"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-10-08-unified-image-mask/intent.md",
+      "docs/changes/2026-10-08-unified-image-mask/spec.md",
+      "docs/changes/2026-10-08-unified-image-mask/plan.md",
+      "docs/changes/2026-10-08-unified-image-mask/verification.md",
+      "docs/changes/2026-10-08-unified-image-mask/review.md",
+      "docs/changes/2026-10-09-unified-mask-main-integration/intent.md",
+      "docs/changes/2026-10-09-unified-mask-main-integration/spec.md",
+      "docs/changes/2026-10-09-unified-mask-main-integration/plan.md",
+      "docs/changes/2026-10-09-unified-mask-main-integration/verification.md",
+      "docs/changes/2026-10-09-unified-mask-main-integration/review.md"
+    ],
+    "verification": "最新main1d组合27b/eaa本地实现scope完成：完整verify785Node/172Agent（原skip8/2）、445browser445attempts零retry/flaky、102Rust/fmt/clientcheck/fresh Agent EXE；native Mask外0/重启/包/undo/临时凭据清理，UI13/TaskHost11/模型/titlebar/首屏和生产Web3宽度通过；MASK-INTEGRATION-001定位歧义修复且当前独立关闭。104上游task对象保留，当前源码与运行审查通过并保留后续项。开发插件另归TASK-PLUGIN-DEV-001，开发其余UI只在留证收起遮罩后局部验收；真实效果/手机/用户验收归VERIFY-002。原失败日志与各未验边界详见本task当前verification/review；最终docs/Hosted/普通合并/main CI另按实际回读。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-09",
+    "verificationLimits": "TASK-PLUGIN-DEV-001仍TODO/FAIL，未修；strict-original development FAIL，仅Escape后其他UI局部PASS。primary-main两次开发冷启动NOT VERIFIED。旧native模型driver FAIL后实际修复及独立关闭，原失败和现通过收据不覆盖；最终doc/Hosted/merge/main CI在本地完成scope之后单独实际回读。VERIFY-002真实Provider/手机/用户验收TODO/NOT_VERIFIED。"
+  }
+}

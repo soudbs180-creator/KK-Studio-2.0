@@ -1,4 +1,5 @@
 import type { ModelSelection } from "./modelSelection.ts";
+import type { MaskDocument, ImageEditContext } from "./imageEdit.ts";
 export type CanvasItemKind = "image" | "video" | "audio" | "text";
 
 export const CANVAS_KIND_LABELS: Record<CanvasItemKind, string> = {
@@ -31,6 +32,10 @@ export interface PluginItemPayload {
 }
 
 export interface CanvasCollectionItem {
+  imageEditDraft?: MaskDocument;
+  imageEditContext?: ImageEditContext;
+  imageEditPrompt?: string;
+  imageEditReferenceIds?: string[];
   providerConnectionId?: string;
   generationSource?: "codex";
   parameters?: CanvasParameters;

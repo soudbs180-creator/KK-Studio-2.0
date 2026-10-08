@@ -1,0 +1,57 @@
+{
+  "copies": [
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-eaa0886-1791480507375\\home-1099.png",
+      "copy": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\home-1099.png",
+      "sha256": "551d1381c71b6a34fed178286e668856e97c39c240995f038a0ad04f7d6b27f1"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-eaa0886-1791480507375\\home-1920.png",
+      "copy": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\home-1920.png",
+      "sha256": "4d74c186af936c9ebb8e36ce96b36ca6c2a2d113d1d40eb91b0eb6f5688e13fa"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-eaa0886-1791480507375\\home-390.png",
+      "copy": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\home-390.png",
+      "sha256": "b5b9583ca15e4878b34e87b6600acb0c3b3da2b2888ebb3c906a5acc95c13f40"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-eaa0886-1791480507375\\known-plugin-error-1099.png",
+      "copy": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\known-plugin-error-1099.png",
+      "sha256": "04a7acf29f49ae7434baf0f222376e615adf88d90429ea59d73df48e98d5d59a"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-eaa0886-1791480507375\\known-plugin-error-1920.png",
+      "copy": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\known-plugin-error-1920.png",
+      "sha256": "6ae6d5b13571692ef5d8bf0206ccd7937f7b7a0e77cff414552a3d85ce9432be"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-eaa0886-1791480507375\\known-plugin-error-390.png",
+      "copy": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\known-plugin-error-390.png",
+      "sha256": "4ddac6a1487d9a3c6e3306e38f0ac15a6ace0d7d599f5b0c9a9c65e66eb2ca1c"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-eaa0886-1791480507375\\receipt.json",
+      "copy": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\receipt.json",
+      "sha256": "0ad7a64b61747d27daee277ae0a6db5092b021162d1ef54f3e4a699f09a6eac2"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-eaa0886-1791480507375\\settings-1099.png",
+      "copy": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\settings-1099.png",
+      "sha256": "d93d4d7d1cfd01bff535040cb69ef9059e7f22f6050f2df5d62474c6e82f6f36"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-eaa0886-1791480507375\\settings-1920.png",
+      "copy": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\settings-1920.png",
+      "sha256": "57265e7d15bc586f1b74b4c0f27bf231dcb995e83dccd29c42b5a671d3273ed3"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-eaa0886-1791480507375\\settings-390.png",
+      "copy": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\settings-390.png",
+      "sha256": "2f00fc12c6deac3e0157bb30bf2f14815b010a95e12b6470e28dc95e032fce54"
+    }
+  ],
+  "baselineFailureUnfixed": true,
+  "task": "TASK-PLUGIN-DEV-001",
+  "mainRuntimeReproduction": "Two actual primary-main attempts timed out before page init; retained as NOT VERIFIED. Current source loader/vite/public blobs equal main1d and historical ledger directly records same failure at main21d; no current-main runtime PASS inferred."
+}

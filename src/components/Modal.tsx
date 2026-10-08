@@ -1,15 +1,17 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode, type CSSProperties } from "react";
 
 export default function Modal({
   children,
   title,
   onClose,
   className = "",
+  style,
 }: {
   children: ReactNode;
   title: string;
   onClose: () => void;
   className?: string;
+  style?: CSSProperties;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const backdropPress = useRef(false);
@@ -48,6 +50,7 @@ export default function Modal({
   return (
     <dialog
       ref={ref}
+      style={style}
       className={`modal ${className}`}
       aria-label={title}
       tabIndex={-1}

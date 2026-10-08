@@ -41,6 +41,10 @@ pub struct TaskHostAttachment {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskHostRequest {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub image_edit_required: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mask_asset_id: Option<String>,
     pub task_id: String,
     pub idempotency_key: String,
     pub base_url: String,
@@ -77,6 +81,8 @@ pub struct TaskHostFailure {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct JobRecord {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub image_edit_required: Option<bool>,
     pub task_id: String,
     pub idempotency_key: String,
     pub output_indices: Vec<u32>,
@@ -230,7 +236,13 @@ impl TaskHost {
         Ok(())
     }
 
-    pub async fn submit(self: Arc<Self>, request: TaskHostRequest) -> Result<JobRecord, String> {
+    pub async fn submit(
+        self: Arc<Self>,
+        mut request: TaskHostRequest,
+    ) -> Result<JobRecord, String> {
+        if request.mask_asset_id.is_some() {
+            request.image_edit_required = Some(true);
+        }
         validate_request(&request)?;
         let fingerprint = fingerprint(&request)?;
         let _journal_lock = self.lock()?;
@@ -259,6 +271,7 @@ impl TaskHost {
             }
         }
         let record = JobRecord {
+            image_edit_required: request.image_edit_required,
             task_id: request.task_id.clone(),
             idempotency_key: request.idempotency_key.clone(),
             output_indices: request.output_indices.clone(),
@@ -506,6 +519,26 @@ impl TaskHost {
                     .map_err(|_| RunError::failed("invalid_request", "请求引用的素材类型无效"))?;
                 form = form.part("image[]", part);
             }
+            if let Some(id) = &request.mask_asset_id {
+                let asset = self
+                    .assets
+                    .read(id)
+                    .map_err(|_| RunError::failed("invalid_request", "编辑蒙版不可用"))?
+                    .ok_or_else(|| RunError::failed("invalid_request", "编辑蒙版缺失"))?;
+                if asset.metadata.get("mime").and_then(Value::as_str) != Some("image/png") {
+                    return Err(RunError::failed("invalid_request", "编辑蒙版必须是 PNG"));
+                }
+                let bytes = STANDARD
+                    .decode(&asset.data_base64)
+                    .map_err(|_| RunError::failed("invalid_request", "编辑蒙版编码无效"))?;
+                form = form.part(
+                    "mask",
+                    reqwest::multipart::Part::bytes(bytes)
+                        .file_name("mask.png")
+                        .mime_str("image/png")
+                        .map_err(|_| RunError::failed("invalid_request", "编辑蒙版格式无效"))?,
+                );
+            }
             builder.multipart(form).send()
         };
         let response = tokio::select! {
@@ -618,28 +651,7 @@ impl TaskHost {
                     ids,
                 ));
             };
-            let sha = format!("{:x}", Sha256::digest(&bytes));
-            let mut provenance = json!({
-                "provider": request.provider_name.clone().unwrap_or_else(|| "provider".into()),
-                "model": request.model,
-                "generatedAt": rfc3339_now(),
-            });
-            if let Some(id) = &provider_request_id {
-                provenance["providerRequestId"] = json!(id);
-            }
-            let mut metadata = json!({
-                "assetId": format!("asset-{}", &sha[..24]),
-                "sha256": sha,
-                "mime": mime,
-                "tags": ["generated"],
-                "sourceJobId": request.task_id,
-                "isAiGenerated": true,
-                "source": "provider",
-                "provenance": provenance,
-            });
-            if let Some(hash) = &request.prompt_hash {
-                metadata["promptHash"] = json!(hash);
-            }
+            let metadata = image_output_metadata(&request, &bytes, mime, &provider_request_id);
             match self.assets.store(STANDARD.encode(bytes), metadata) {
                 Ok(stored) => {
                     let asset_id = stored["assetId"].as_str().unwrap_or_default().to_string();
@@ -668,6 +680,23 @@ impl TaskHost {
         }
         Ok(ids)
     }
+}
+
+fn image_output_metadata(
+    request: &TaskHostRequest,
+    bytes: &[u8],
+    mime: &str,
+    provider_request_id: &Option<String>,
+) -> Value {
+    let sha = format!("{:x}", Sha256::digest(bytes));
+    let mut metadata = json!({"assetId": format!("asset-{}", &sha[..24]), "sha256": sha, "mime": mime, "tags": ["generated"], "sourceJobId": request.task_id, "isAiGenerated": true, "source": "provider", "provenance": {"provider": request.provider_name.clone().unwrap_or_else(|| "provider".into()), "model": request.model, "generatedAt": rfc3339_now()}});
+    if let Some(hash) = &request.prompt_hash {
+        metadata["promptHash"] = json!(hash);
+    }
+    if let Some(id) = provider_request_id {
+        metadata["provenance"]["providerRequestId"] = json!(id);
+    }
+    metadata
 }
 
 fn merge_asset_ids(target: &mut Vec<String>, incoming: Vec<String>) {
@@ -938,6 +967,17 @@ fn append_bounded_chunk(
 }
 
 fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
+    if value.image_edit_required == Some(true)
+        && (value.kind.as_deref() == Some("text") || value.attachments.is_empty())
+    {
+        return Err("invalid: imageEditRequired requires image edit".into());
+    }
+    if let Some(id) = &value.mask_asset_id {
+        validate_id(id, "maskAssetId")?;
+        if value.kind.as_deref() == Some("text") || value.attachments.is_empty() {
+            return Err("invalid: mask requires image edit".into());
+        }
+    }
     if value
         .concurrency_limit
         .is_some_and(|limit| !(1..=256).contains(&limit))
@@ -1087,6 +1127,9 @@ fn fingerprint(value: &TaskHostRequest) -> Result<String, String> {
     // Keep the exact serialization of legacy image identities; explicit image
     // is equivalent to an omitted kind, while text gets a distinct fingerprint.
     let mut normalized = value.clone();
+    if normalized.mask_asset_id.is_some() {
+        normalized.image_edit_required = Some(true);
+    }
     if normalized.kind.as_deref() == Some("image") {
         normalized.kind = None;
     }
@@ -1154,6 +1197,8 @@ mod tests {
     }
     fn request(task: &str) -> TaskHostRequest {
         TaskHostRequest {
+            image_edit_required: None,
+            mask_asset_id: None,
             task_id: task.into(),
             idempotency_key: "idem-1".into(),
             base_url: "http://127.0.0.1:1234/v1".into(),
@@ -1170,6 +1215,62 @@ mod tests {
         }
     }
     #[test]
+    fn image_output_without_optional_receipt_metadata_can_be_archived() {
+        let mut input = request("image-task");
+        let metadata = image_output_metadata(&input, b"image bytes", "image/png", &None);
+        assert!(crate::asset_storage::validation::metadata(&metadata).is_ok());
+        assert!(metadata.get("promptHash").is_none());
+        assert!(metadata["provenance"].get("providerRequestId").is_none());
+        input.prompt_hash = Some("hash".into());
+        let metadata =
+            image_output_metadata(&input, b"image bytes", "image/png", &Some("receipt".into()));
+        assert!(crate::asset_storage::validation::metadata(&metadata).is_ok());
+        assert_eq!(metadata["promptHash"], "hash");
+        assert_eq!(metadata["provenance"]["providerRequestId"], "receipt");
+    }
+    #[test]
+    fn composition_role_is_independently_fingerprinted_and_durable() {
+        let ordinary = request("edit-required");
+        let mut value = serde_json::to_value(&ordinary).unwrap();
+        value["imageEditRequired"] = json!(true);
+        value["attachments"] = json!([{"assetId":"asset-original","name":"原图"}]);
+        let required: TaskHostRequest = serde_json::from_value(value.clone()).unwrap();
+        value["imageEditRequired"] = json!(false);
+        let whole: TaskHostRequest = serde_json::from_value(value).unwrap();
+        assert_ne!(
+            fingerprint(&required).unwrap(),
+            fingerprint(&whole).unwrap()
+        );
+        assert_eq!(
+            serde_json::to_value(&required).unwrap()["imageEditRequired"],
+            true
+        );
+        let path = root();
+        let host = TaskHost::new(
+            path.clone(),
+            Arc::new(AssetRepository::new(path.join("assets"))),
+        )
+        .unwrap();
+        let journal: JournalRecord = serde_json::from_value(json!({
+            "taskId":"edit-required", "idempotencyKey":"idem-1", "outputIndices":[0],
+            "status":"succeeded", "assetIds":["asset-result"], "outputs":[{"index":0,"status":"succeeded","assetId":"asset-result"}],
+            "updatedAt":42, "imageEditRequired":true, "fingerprint":fingerprint(&required).unwrap()
+        })).unwrap();
+        host.write_one_unlocked(&journal).unwrap();
+        drop(host);
+        let reopened = TaskHost::new(
+            path.clone(),
+            Arc::new(AssetRepository::new(path.join("assets"))),
+        )
+        .unwrap();
+        assert_eq!(
+            serde_json::to_value(reopened.list().unwrap()).unwrap()[0]["imageEditRequired"],
+            true
+        );
+        drop(reopened);
+        fs::remove_dir_all(path).unwrap();
+    }
+    #[test]
     fn text_request_roundtrip_and_image_parameters_are_rejected() {
         let mut value = serde_json::to_value(request("text-task")).unwrap();
         value["kind"] = json!("text");
@@ -1178,6 +1279,29 @@ mod tests {
         assert!(validate_request(&text).is_ok());
         value["size"] = json!("1024x1024");
         assert!(validate_request(&serde_json::from_value(value).unwrap()).is_err());
+    }
+
+    #[test]
+    fn mask_is_optional_fingerprinted_and_requires_an_image_original() {
+        let original = request("mask-task");
+        let value = serde_json::to_value(&original).unwrap();
+        assert!(value.get("maskAssetId").is_none());
+        let mut masked: TaskHostRequest = serde_json::from_value(value.clone()).unwrap();
+        masked.mask_asset_id = Some("asset-aaaaaaaaaaaaaaaaaaaaaaaa".into());
+        assert!(validate_request(&masked).is_err());
+        let mut with_original = value;
+        with_original["attachments"] =
+            json!([{"assetId":"asset-bbbbbbbbbbbbbbbbbbbbbbbb","name":"original.png"}]);
+        masked = serde_json::from_value(with_original).unwrap();
+        let without_mask = fingerprint(&masked).unwrap();
+        masked.mask_asset_id = Some("asset-aaaaaaaaaaaaaaaaaaaaaaaa".into());
+        assert!(validate_request(&masked).is_ok());
+        assert_ne!(without_mask, fingerprint(&masked).unwrap());
+        masked.kind = Some("text".into());
+        assert!(validate_request(&masked).is_err());
+        masked.kind = None;
+        masked.mask_asset_id = Some("../outside".into());
+        assert!(validate_request(&masked).is_err());
     }
 
     #[test]
@@ -1314,6 +1438,7 @@ mod tests {
     fn submitted_journal_reopens_as_unknown() {
         let path = root();
         let rec = JobRecord {
+            image_edit_required: None,
             task_id: "task".into(),
             idempotency_key: "idem".into(),
             output_indices: vec![0],
@@ -1353,6 +1478,7 @@ mod tests {
         let req = request("task");
         let fingerprint = fingerprint(&req).unwrap();
         let record = JobRecord {
+            image_edit_required: None,
             task_id: req.task_id.clone(),
             idempotency_key: req.idempotency_key.clone(),
             output_indices: req.output_indices.clone(),

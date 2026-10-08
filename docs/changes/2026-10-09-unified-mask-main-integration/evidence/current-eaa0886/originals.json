@@ -1,0 +1,415 @@
+{
+  "head": "eaa0886e99965d00a5a514b301adb665b150373d",
+  "product": "27bdb8bda6bdd5eec041dd5e2fab28e4dd728d0a",
+  "base": "1d6f640ac6f3a1e7af32c38d85596527704dc54a",
+  "files": [
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\browser-results-27bdb8b.json",
+      "copied": "evidence/current-eaa0886/browser-results-27bdb8b.json",
+      "bytes": 590658,
+      "sha256": "480a41f230fc941136e7f4ab2c768a3eac77d7b79dddb168bf98bf6e4ae78244"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\browser-summary-27bdb8b.json",
+      "copied": "evidence/current-eaa0886/browser-summary-27bdb8b.json",
+      "bytes": 447,
+      "sha256": "61279887f6a9b15068ca1cd10c7267cd7787eb979e7ff4c9944951c18da84da4"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\browser-results-eaa0886.json",
+      "copied": "evidence/current-eaa0886/browser-results-eaa0886.json",
+      "bytes": 590707,
+      "sha256": "33f40cc629867140de3c5010e372024bd50f039f5acef19ef0a4cf1f0fec3dae"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\browser-summary-eaa0886.json",
+      "copied": "evidence/current-eaa0886/browser-summary-eaa0886.json",
+      "bytes": 450,
+      "sha256": "910f4e6e4d5bbec2c7254d17b8fc1994529c5e6ddc4593a328c2703fce63b284"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\browser-summary-eaa0886-corrected.json",
+      "copied": "evidence/current-eaa0886/browser-summary-eaa0886-corrected.json",
+      "bytes": 708,
+      "sha256": "d0e72035a7900949561cbe86ddeada81118a4baf7dfb7e80ad60c4d84ec3250d"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\identity-eaa0886.json",
+      "copied": "evidence/current-eaa0886/identity-eaa0886.json",
+      "bytes": 63888,
+      "sha256": "d51aaefe59e1b824ecbca4a4203bc6b9ecf809e98f0c473f301a70d6110651aa"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-originals-eaa0886.json",
+      "copied": "evidence/current-eaa0886/development-originals-eaa0886.json",
+      "bytes": 4033,
+      "sha256": "569258d626a0e793971470b02155a82e26bc4cecca57ec0188f61447c4ac60c8"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\resolution-provenance.json",
+      "copied": "evidence/current-eaa0886/resolution-provenance.json",
+      "bytes": 2541,
+      "sha256": "70831fbb5787911c62de960b4455b07589ee0251b4652897ac6986eed17036c9"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\preparation-task-delta.json",
+      "copied": "evidence/current-eaa0886/preparation-task-delta.json",
+      "bytes": 960,
+      "sha256": "577371c3ca541e0e5564e85373911f0c00dc03760095e73c08d01828d032b60d"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\automatic-review-timeout-recovery.json",
+      "copied": "evidence/current-eaa0886/automatic-review-timeout-recovery.json",
+      "bytes": 345,
+      "sha256": "fb75dd1c5a941232abd786dec8ed2d8c4f9723108b8a25e3a31a2f84ce975d78"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\review-source-27bdb8b.md",
+      "copied": "evidence/current-eaa0886/review-source-27bdb8b.md",
+      "bytes": 8964,
+      "sha256": "ccc70610c2a0dff3d5d02ab995457250363dd8387950f990867ecfb675757c4b"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\review-runtime-eaa0886.md",
+      "copied": "evidence/current-eaa0886/review-runtime-eaa0886.md",
+      "bytes": 20962,
+      "sha256": "8c8de73965cd8d9dcbc626b5f85fe497ca184591bc0b4590c5bfdc776baa5bfe"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-qa-strict-original.mjs",
+      "copied": "evidence/current-eaa0886/runtime-qa-strict-original.mjs",
+      "bytes": 8947,
+      "sha256": "940fbc8f9de49f248363e799335d0f710f9a78d32ace1d8513d6f5a0edf16277"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-qa.mjs",
+      "copied": "evidence/current-eaa0886/runtime-qa.mjs",
+      "bytes": 10868,
+      "sha256": "48a1e93b5a4a971ac1a6a3e8f0c30cc41d24ef6aeed65e90cd9da087c68669dd"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\collect-runtime.mjs",
+      "copied": "evidence/current-eaa0886/collect-runtime.mjs",
+      "bytes": 6069,
+      "sha256": "530e3079dbc83b9989103c7baba737df98cebc0bf762f30e1232a679e14bc1c4"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-mask\\desktop-acceptance.json",
+      "copied": "evidence/current-eaa0886/runtime/native-mask/desktop-acceptance.json",
+      "bytes": 1011,
+      "sha256": "436f3692f3a50912addcc1dd9b3f0ed1f24b1cd78f6386d8f8ac3d51969f252b"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-mask\\editor-native.png",
+      "copied": "evidence/current-eaa0886/runtime/native-mask/editor-native.png",
+      "bytes": 73073,
+      "sha256": "600dce968b89b234e4e4d179f31fe99e79ce66f07c8045e2144ddfc9c6438e6f"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-mask\\lightbox-native.png",
+      "copied": "evidence/current-eaa0886/runtime/native-mask/lightbox-native.png",
+      "bytes": 70132,
+      "sha256": "084d9c953b15eea729e0f20fabc1d3a9dfa447e0e514bc31c4fc652a5c3fbc34"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-model\\desktop-acceptance.json",
+      "copied": "evidence/current-eaa0886/runtime/native-model/desktop-acceptance.json",
+      "bytes": 1170,
+      "sha256": "eba76bf602183c2a006558b6decb837fc78aff4a30dcb4803ea0d2050d0799dc"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-model\\parameters-native.png",
+      "copied": "evidence/current-eaa0886/runtime/native-model/parameters-native.png",
+      "bytes": 97506,
+      "sha256": "64fd6ba7dd8015d4faff8506461a6854f6ff1bd02aa96cd63483cde7eb0f7295"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-model\\redraw-disabled-native.png",
+      "copied": "evidence/current-eaa0886/runtime/native-model/redraw-disabled-native.png",
+      "bytes": 1406540,
+      "sha256": "2119aa3c30a10c5952ec492365a9a0aed61a0a650b458626b07963bb310c4bd6"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-model\\settings-native.png",
+      "copied": "evidence/current-eaa0886/runtime/native-model/settings-native.png",
+      "bytes": 216910,
+      "sha256": "7134cab6c020a6f764b3adbbdee43b631c60694fb94edcccd88e548fcd08c037"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-selection\\asset-actions.png",
+      "copied": "evidence/current-eaa0886/runtime/native-selection/asset-actions.png",
+      "bytes": 118973,
+      "sha256": "106be8350b12d019f3052f20f13b96b64157ed695b0471daf6ee41bed6695267"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-selection\\asset-library.png",
+      "copied": "evidence/current-eaa0886/runtime/native-selection/asset-library.png",
+      "bytes": 212381,
+      "sha256": "1a5779f003eff0f6320fda94f052d9b52aaae3370b730f6df92450bf4ffc0595"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-selection\\google-cli.png",
+      "copied": "evidence/current-eaa0886/runtime/native-selection/google-cli.png",
+      "bytes": 167223,
+      "sha256": "5279629e7929de7d3277fc681a06b3574982fe87772adf9e50a14f7aa5f9856c"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-selection\\model-actions.png",
+      "copied": "evidence/current-eaa0886/runtime/native-selection/model-actions.png",
+      "bytes": 163162,
+      "sha256": "5f19f088e99b41bda603787940585e0a75d52c255113f6ef76eced5eecdff41a"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-selection\\model-settings.png",
+      "copied": "evidence/current-eaa0886/runtime/native-selection/model-settings.png",
+      "bytes": 150553,
+      "sha256": "87869d6ea39bbc9895aeaf8fd95896bb64cb90171c6e249bf649712c5446a4db"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-selection\\receipt.json",
+      "copied": "evidence/current-eaa0886/runtime/native-selection/receipt.json",
+      "bytes": 81229,
+      "sha256": "ceba49af8806850a09de77e79c8353b88a846af042d790cd4109728399de07d4"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-selection\\selected-reference.png",
+      "copied": "evidence/current-eaa0886/runtime/native-selection/selected-reference.png",
+      "bytes": 236000,
+      "sha256": "914679733566a279d0541b9b732d5f420c86607c08584dce11f2cdaafab63a84"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-selection\\workbench-export.png",
+      "copied": "evidence/current-eaa0886/runtime/native-selection/workbench-export.png",
+      "bytes": 152651,
+      "sha256": "14381e6b326980e1f39de6dea34d69edf8729cccdfe089edf6171a480c30bed8"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-selection\\workbench-generate.png",
+      "copied": "evidence/current-eaa0886/runtime/native-selection/workbench-generate.png",
+      "bytes": 132553,
+      "sha256": "a65fae88bddff99cfd990886fea2b2aefc5b0a2dc4a823e168768c8b654318fb"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-selection\\workbench-plan.png",
+      "copied": "evidence/current-eaa0886/runtime/native-selection/workbench-plan.png",
+      "bytes": 138660,
+      "sha256": "14f575b720f52d50bfe72ec69df3951cb3504c8b23c3631df67f1c034a6b2d78"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-selection\\workbench-prompt.png",
+      "copied": "evidence/current-eaa0886/runtime/native-selection/workbench-prompt.png",
+      "bytes": 125100,
+      "sha256": "83b689a5ea8388f1319cbefaa71c8afa06b3eae08fb76b5e47241aaa3b6b76d3"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-selection\\workbench-queue.png",
+      "copied": "evidence/current-eaa0886/runtime/native-selection/workbench-queue.png",
+      "bytes": 129929,
+      "sha256": "62e233fa60f391742eb7f5990e594d7f7c4496389afa49bb89c3bfeab5f50115"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-selection\\workbench-review.png",
+      "copied": "evidence/current-eaa0886/runtime/native-selection/workbench-review.png",
+      "bytes": 164917,
+      "sha256": "46de0edf3a3964adea56d80234ad85ce440ea230b924082f556ed85bcf3270b3"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-startup\\home-1920.png",
+      "copied": "evidence/current-eaa0886/runtime/native-startup/home-1920.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-startup\\receipt.json",
+      "copied": "evidence/current-eaa0886/runtime/native-startup/receipt.json",
+      "bytes": 2431,
+      "sha256": "2c221d95f1d5a0981eae3037e84972629b3b620840017b366d4c2c35a1adb9f2"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-startup\\settings-1920.png",
+      "copied": "evidence/current-eaa0886/runtime/native-startup/settings-1920.png",
+      "bytes": 384539,
+      "sha256": "594c89b012b218a72fe282e2885ecd086966866545c780652de743144f6ecb29"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-taskhost\\native-ui-success.png",
+      "copied": "evidence/current-eaa0886/runtime/native-taskhost/native-ui-success.png",
+      "bytes": 221520,
+      "sha256": "a41c9f477337beb6bb07cfee8464541dedb2c11d52ced0e5174d6a8c272ca724"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-taskhost\\native-unknown-recovery.png",
+      "copied": "evidence/current-eaa0886/runtime/native-taskhost/native-unknown-recovery.png",
+      "bytes": 152438,
+      "sha256": "0e8cd56d554ccaca49ae034c5f7250c2a0e95d534a9941e3f85a34b0a83b9c23"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-taskhost\\receipt.json",
+      "copied": "evidence/current-eaa0886/runtime/native-taskhost/receipt.json",
+      "bytes": 13556,
+      "sha256": "3c79c1e19cb63d358900924d558cab084f7ed816edfd698b3b56401bf468ed17"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-titlebar\\initial.png",
+      "copied": "evidence/current-eaa0886/runtime/native-titlebar/initial.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-titlebar\\receipt.json",
+      "copied": "evidence/current-eaa0886/runtime/native-titlebar/receipt.json",
+      "bytes": 1260,
+      "sha256": "0ab8d627f44a37ee000adccd6930642726b8d5e2d95f3413f900acc0a1158f48"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-titlebar\\single-row.png",
+      "copied": "evidence/current-eaa0886/runtime/native-titlebar/single-row.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\native-titlebar\\titlebar.png",
+      "copied": "evidence/current-eaa0886/runtime/native-titlebar/titlebar.png",
+      "bytes": 3655,
+      "sha256": "de22ab5c362d38b8bf949079fea219f760794f6059e5b95a480508e26037383e"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\home-1099.png",
+      "copied": "evidence/current-eaa0886/runtime/web-development/home-1099.png",
+      "bytes": 155454,
+      "sha256": "551d1381c71b6a34fed178286e668856e97c39c240995f038a0ad04f7d6b27f1"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\home-1920.png",
+      "copied": "evidence/current-eaa0886/runtime/web-development/home-1920.png",
+      "bytes": 450181,
+      "sha256": "4d74c186af936c9ebb8e36ce96b36ca6c2a2d113d1d40eb91b0eb6f5688e13fa"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\home-390.png",
+      "copied": "evidence/current-eaa0886/runtime/web-development/home-390.png",
+      "bytes": 82015,
+      "sha256": "b5b9583ca15e4878b34e87b6600acb0c3b3da2b2888ebb3c906a5acc95c13f40"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\known-plugin-error-1099.png",
+      "copied": "evidence/current-eaa0886/runtime/web-development/known-plugin-error-1099.png",
+      "bytes": 152277,
+      "sha256": "04a7acf29f49ae7434baf0f222376e615adf88d90429ea59d73df48e98d5d59a"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\known-plugin-error-1920.png",
+      "copied": "evidence/current-eaa0886/runtime/web-development/known-plugin-error-1920.png",
+      "bytes": 362654,
+      "sha256": "6ae6d5b13571692ef5d8bf0206ccd7937f7b7a0e77cff414552a3d85ce9432be"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\known-plugin-error-390.png",
+      "copied": "evidence/current-eaa0886/runtime/web-development/known-plugin-error-390.png",
+      "bytes": 77095,
+      "sha256": "4ddac6a1487d9a3c6e3306e38f0ac15a6ace0d7d599f5b0c9a9c65e66eb2ca1c"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\receipt.json",
+      "copied": "evidence/current-eaa0886/runtime/web-development/receipt.json",
+      "bytes": 27799,
+      "sha256": "0ad7a64b61747d27daee277ae0a6db5092b021162d1ef54f3e4a699f09a6eac2"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\settings-1099.png",
+      "copied": "evidence/current-eaa0886/runtime/web-development/settings-1099.png",
+      "bytes": 181177,
+      "sha256": "d93d4d7d1cfd01bff535040cb69ef9059e7f22f6050f2df5d62474c6e82f6f36"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\settings-1920.png",
+      "copied": "evidence/current-eaa0886/runtime/web-development/settings-1920.png",
+      "bytes": 467623,
+      "sha256": "57265e7d15bc586f1b74b4c0f27bf231dcb995e83dccd29c42b5a671d3273ed3"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-development\\settings-390.png",
+      "copied": "evidence/current-eaa0886/runtime/web-development/settings-390.png",
+      "bytes": 40905,
+      "sha256": "2f00fc12c6deac3e0157bb30bf2f14815b010a95e12b6470e28dc95e032fce54"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-production\\home-1099.png",
+      "copied": "evidence/current-eaa0886/runtime/web-production/home-1099.png",
+      "bytes": 155454,
+      "sha256": "551d1381c71b6a34fed178286e668856e97c39c240995f038a0ad04f7d6b27f1"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-production\\home-1920.png",
+      "copied": "evidence/current-eaa0886/runtime/web-production/home-1920.png",
+      "bytes": 450181,
+      "sha256": "4d74c186af936c9ebb8e36ce96b36ca6c2a2d113d1d40eb91b0eb6f5688e13fa"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-production\\home-390.png",
+      "copied": "evidence/current-eaa0886/runtime/web-production/home-390.png",
+      "bytes": 82015,
+      "sha256": "b5b9583ca15e4878b34e87b6600acb0c3b3da2b2888ebb3c906a5acc95c13f40"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-production\\receipt.json",
+      "copied": "evidence/current-eaa0886/runtime/web-production/receipt.json",
+      "bytes": 4961,
+      "sha256": "090c24b94f4327a25e8476f0034a3fb003d9cd9765b093099279a7ff1015cc38"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-production\\settings-1099.png",
+      "copied": "evidence/current-eaa0886/runtime/web-production/settings-1099.png",
+      "bytes": 208890,
+      "sha256": "c25986e29a15402e51d730875bf91a48b9daa26935531395123b13d1ccfa6746"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-production\\settings-1920.png",
+      "copied": "evidence/current-eaa0886/runtime/web-production/settings-1920.png",
+      "bytes": 513830,
+      "sha256": "a86ed267f1ac054af162fffdbc6a1a91edf6300f14c8261cc13c86b3dec9ed65"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\runtime-eaa0886\\web-production\\settings-390.png",
+      "copied": "evidence/current-eaa0886/runtime/web-production/settings-390.png",
+      "bytes": 117890,
+      "sha256": "c25ea8b22b475ebf8b5293f09d1dd6995b6f9ff74dedb4dfc4e3667c4e7f11a5"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-eaa0886-1791480035787\\home-390.png",
+      "copied": "evidence/current-eaa0886/failed-runtime/development-eaa0886-1791480035787/home-390.png",
+      "bytes": 77095,
+      "sha256": "4ddac6a1487d9a3c6e3306e38f0ac15a6ace0d7d599f5b0c9a9c65e66eb2ca1c"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-eaa0886-1791480035787\\receipt.json",
+      "copied": "evidence/current-eaa0886/failed-runtime/development-eaa0886-1791480035787/receipt.json",
+      "bytes": 2477,
+      "sha256": "686a65287d51c21816ce3ab85b8b6cec7bf54b47ebcba5518560f37f98a7320c"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-1d6f640-1791480297664\\receipt.json",
+      "copied": "evidence/current-eaa0886/failed-runtime/development-1d6f640-1791480297664/receipt.json",
+      "bytes": 1060,
+      "sha256": "54f5dfba40be3de74f94f0a5511006b8a9e306bf8dbcc4bfd3bcfb06a43ad457"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\development-1d6f640-1791480402496\\receipt.json",
+      "copied": "evidence/current-eaa0886/failed-runtime/development-1d6f640-1791480402496/receipt.json",
+      "bytes": 1072,
+      "sha256": "f512c77bc887b854d6f7edcf917c7d77246e2b206fa2ad3a600e0424b2f48c6d"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-UI-013-integration/main-1d6f640-final.json",
+      "copied": "evidence/current-eaa0886/parent-main-1d6f640-ci.json",
+      "bytes": 5199,
+      "sha256": "e3ee623aa7b0f0fa7f7e0494c61c075963a6d1552d5db99a74b6915d7049ca7d"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-EDIT-001-integration/doc-governance-metadata-correction.json",
+      "copied": "evidence/current-eaa0886/doc-governance-metadata-correction.json",
+      "bytes": 6033,
+      "sha256": "bf1bf4d6d6e99f673dfd5fb3a4ccc5512fae7066b31612af549ba0282209dd28"
+    }
+  ]
+}

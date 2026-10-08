@@ -1,0 +1,71 @@
+{
+  "sourceHead": "eaa0886e99965d00a5a514b301adb665b150373d",
+  "productSourceHead": "27bdb8bda6bdd5eec041dd5e2fab28e4dd728d0a",
+  "mode": "desktop",
+  "command": [
+    "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-EDIT-001\\src-tauri\\target\\release\\kk-studio.exe",
+    "--data-dir",
+    "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\desktop-eaa0886-1791480003053\\isolated-data"
+  ],
+  "cwd": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-EDIT-001",
+  "pid": 49184,
+  "port": 9365,
+  "route": "/",
+  "chain": "index.html -> src/main.tsx -> App -> StartPage / deferred SettingsPanel; workspace -> CanvasImageActions / App ImageLightbox",
+  "startedAt": "2026-10-08T17:20:03.059Z",
+  "pages": [
+    {
+      "width": 1920,
+      "runtime": {
+        "url": "http://tauri.localhost/",
+        "mode": "production",
+        "entry": "src/main.tsx",
+        "native": true,
+        "scripts": [
+          "http://tauri.localhost/assets/index-DcEEaxES.js"
+        ],
+        "styles": [
+          "http://tauri.localhost/assets/index-D4acWk3o.css"
+        ],
+        "devStyleModules": [],
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": false,
+        "topbar": {
+          "height": "40px",
+          "align": "center"
+        },
+        "canvasCount": 0,
+        "conversationCount": 0
+      },
+      "actualBundles": [
+        {
+          "url": "http://tauri.localhost/assets/index-DcEEaxES.js",
+          "relative": "assets/index-DcEEaxES.js",
+          "sha256": "5837a30790051576bc0af9ae4dcd1c4a13e47c462103cdf6953401e95c3a4ea4",
+          "bytes": 884798
+        },
+        {
+          "url": "http://tauri.localhost/assets/index-D4acWk3o.css",
+          "relative": "assets/index-D4acWk3o.css",
+          "sha256": "06252c7cbc8773dd750901ff0b71820449fa4d0d7850d5eb6c6c1ac9a0e01b21",
+          "bytes": 286041
+        }
+      ],
+      "deferredSettings": {
+        "requests": [
+          "http://tauri.localhost/assets/SettingsPanel-BsZGuC3n.js"
+        ],
+        "focusAndEscape": "PASS"
+      },
+      "errors": []
+    }
+  ],
+  "passed": true,
+  "executableSha256": "ad5e3428497bc69fbabc40d52ac3269fd5df5b06019407a7b9b99e121944d4c9",
+  "actualDataRoot": "D:\\kk-studio\\.verification\\TASK-IMAGE-EDIT-001-integration\\desktop-eaa0886-1791480003053\\isolated-data",
+  "observedHomeReadyMs": 2587.7044,
+  "ownProcessStopped": true
+}

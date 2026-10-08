@@ -87,7 +87,9 @@ export default function ImageModelParameters({
           一次任务最多生成 {capabilities.maxGenerationCount} 张图片。
         </small>
       )}
-      <small>蒙版与扩图执行尚未接通。能力声明不代表实际生成验证。</small>
+      <small>
+        局部重绘需要已声明的编辑能力；扩图暂不可用。能力声明不代表实际生成验证。
+      </small>
     </div>
   );
 }

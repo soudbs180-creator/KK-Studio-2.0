@@ -12,6 +12,18 @@
  * ========================================================================== */
 
 :root {
+  --kk-image-scratch-opacity: 0.55;
+  /* Gallery editor shell; internal controls consume the shared size axes. */
+  --kk-image-editor-max-width: 1280px;
+  --kk-image-editor-min-stage: 160px;
+  --kk-image-brush-slider-width: 96px;
+  --kk-image-editor-input-max-height: 120px;
+  --kk-image-annotation-label-width: 200px;
+  --kk-image-annotation-label-text: #ffffff;
+  --kk-image-model-width: 240px;
+  --kk-image-region-input-width: 280px;
+  --kk-image-lightbox-thumb-width: 96px;
+  --kk-image-lightbox-thumb-height: 64px;
   /* ==========================================================================
      Tier 1 · 原始层 PRIMITIVE — 纯数值，无语义。禁止业务代码直接消费。
      ========================================================================== */

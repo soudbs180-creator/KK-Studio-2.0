@@ -4,6 +4,8 @@
 
 use serde_json::Value;
 use std::collections::{HashMap, HashSet};
+#[path = "image_edit_schema.rs"]
+mod image_edit;
 
 const MAX_SAFE_INTEGER: f64 = 9_007_199_254_740_991.0;
 const MEDIA_LIMIT: usize = 16 * 1024 * 1024;
@@ -443,12 +445,28 @@ fn item(value: &Value) -> Result<(), String> {
             "referenceSlot",
             "generationStatus",
             "generationIndex",
+            "providerConnectionId",
+            "imageEditDraft",
+            "imageEditContext",
+            "imageEditPrompt",
+            "imageEditReferenceIds",
             "result",
         ],
         &["id", "title", "description", "kind"],
     )?;
     text(value, "id", 1, 160)?;
     text(value, "parentAssetId", 1, 160)?;
+    text(value, "providerConnectionId", 0, 120)?;
+    text(value, "imageEditPrompt", 0, 2000)?;
+    if let Some(document) = value.get("imageEditDraft") {
+        image_edit::mask(document)?;
+    }
+    if let Some(context) = value.get("imageEditContext") {
+        image_edit::context(context)?;
+    }
+    if let Some(references) = value.get("imageEditReferenceIds") {
+        image_edit::references(references)?;
+    }
     texts(
         value,
         &[
@@ -481,7 +499,14 @@ fn item(value: &Value) -> Result<(), String> {
         shape(
             parameters,
             "parameters",
-            &["ratio", "quality", "duration", "count", "soundEnabled"],
+            &[
+                "ratio",
+                "quality",
+                "duration",
+                "count",
+                "soundEnabled",
+                "imageSize",
+            ],
             &[],
         )?;
         texts(
@@ -567,11 +592,21 @@ fn task(value: &Value) -> Result<(), String> {
             "approvedGates",
             "retryOfTaskId",
             "retryOutputIndices",
+            "imageSize",
+            "imageEdit",
+            "imageEditContext",
         ],
         &["id", "prompt", "model", "status"],
     )?;
     text(value, "id", 1, 160)?;
     text(value, "sourceItemId", 1, 160)?;
+    text(value, "imageSize", 0, 30)?;
+    if let Some(edit) = value.get("imageEdit") {
+        image_edit::edit(edit)?;
+    }
+    if let Some(context) = value.get("imageEditContext") {
+        image_edit::context(context)?;
+    }
     texts(
         value,
         &[

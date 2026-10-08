@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import {
   canonicalJson,
   collectReferencedAssetIds,
@@ -98,10 +99,109 @@ async function validPackage(): Promise<{
   return { input: built, source };
 }
 
+test("Web package export and preflight both reject unknown nested editing fields", async () => {
+  const source = fixture();
+  source.snapshot.projects[0].items[0].imageEditDraft = {
+    width: 8,
+    height: 8,
+    regions: [{ id: "area", runs: [[3, 3, 5]] }],
+  };
+  const valid = await createProjectPackageManifest(
+    source.snapshot,
+    async () => source.asset,
+  );
+  const bad = structuredClone(source.snapshot);
+  Object.assign(bad.projects[0].items[0].imageEditDraft!, {
+    futureField: true,
+  });
+  await assert.rejects(
+    createProjectPackageManifest(bad, async () => source.asset),
+  );
+  const manifest = structuredClone(valid.manifest);
+  Object.assign(manifest.snapshot.projects[0].items[0].imageEditDraft!, {
+    futureField: true,
+  });
+  manifest.checksum = await manifestChecksum(manifest);
+  await assert.rejects(preflightProjectPackage({ ...valid, manifest }));
+});
+
 test("canonical JSON sorts object keys while preserving array order", () => {
   assert.equal(
     canonicalJson({ z: 1, a: { y: 2, x: 3 }, list: [{ b: 1, a: 2 }] }),
     '{"a":{"x":3,"y":2},"list":[{"a":2,"b":1}],"z":1}',
+  );
+});
+
+test("image edit packages retain masks and references that exist only in editing history", async () => {
+  const { snapshot, asset } = fixture(),
+    project = snapshot.projects[0],
+    task = project.tasks[0];
+  const extras = [
+    [4, 5, 6],
+    [7, 8, 9],
+  ].map((values) => {
+    const sha256 = createHash("sha256")
+      .update(new Uint8Array(values))
+      .digest("hex");
+    return {
+      ...asset,
+      assetId: `asset-${sha256.slice(0, 24)}`,
+      sha256,
+      preview: `data:image/png;base64,${Buffer.from(values).toString("base64")}`,
+    };
+  });
+  const document = {
+    width: 20,
+    height: 20,
+    regions: [{ id: "area", runs: [[3, 2, 8] as [number, number, number]] }],
+    colorCounters: { 红色: 2 },
+  };
+  project.items[0].imageEditDraft = document;
+  project.items[0].imageEditPrompt = "保留构图";
+  task.imageEdit = {
+    sourceAssetId: assetId,
+    maskAssetId: extras[0].assetId,
+    groupId: "group-a",
+    document,
+    crop: { x: 1, y: 1, width: 8, height: 8, regionIds: ["area"] },
+    nativeMask: true,
+  };
+  task.imageEditContext = {
+    originalPrompt: "原始约束",
+    originalAssetId: assetId,
+    referenceAssetIds: [extras[1].assetId],
+    lastInstruction: "修改区域",
+  };
+  const assets = [asset, ...extras];
+  assert.deepEqual(
+    new Set(collectReferencedAssetIds(snapshot)),
+    new Set(assets.map((a) => a.assetId)),
+  );
+  const built = await createProjectPackageManifest(
+    snapshot,
+    async (id) => assets.find((a) => a.assetId === id) ?? null,
+  );
+  const checked = await preflightProjectPackage(built);
+  assert.equal(checked.assets.size, 3);
+  assert.deepEqual(
+    checked.snapshot.projects[0].tasks[0].imageEdit,
+    task.imageEdit,
+  );
+  assert.deepEqual(
+    checked.snapshot.projects[0].tasks[0].imageEditContext,
+    task.imageEditContext,
+  );
+  assert.deepEqual(
+    checked.snapshot.projects[0].items[0].imageEditDraft,
+    document,
+  );
+  await assert.rejects(
+    createProjectPackageManifest(snapshot, async (id) =>
+      id === extras[0].assetId
+        ? null
+        : (assets.find((a) => a.assetId === id) ?? null),
+    ),
+    (error: unknown) => (error as { code?: string }).code === "missing-asset",
   );
 });
 

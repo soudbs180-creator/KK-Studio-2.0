@@ -1,0 +1,54 @@
+{
+  "base": 101,
+  "main": 104,
+  "mask": 103,
+  "maskChanges": [
+    {
+      "id": "TASK-IMAGE-EDIT-001",
+      "status": "DONE",
+      "fields": [
+        "id",
+        "title",
+        "goal",
+        "scope",
+        "acceptance",
+        "dependencies",
+        "owner",
+        "branch",
+        "worktree",
+        "affectedModules",
+        "status",
+        "evidence",
+        "verification",
+        "verificationResult",
+        "updated"
+      ]
+    },
+    {
+      "id": "TASK-IMAGE-EDIT-VERIFY-002",
+      "status": "TODO",
+      "fields": [
+        "id",
+        "title",
+        "goal",
+        "scope",
+        "acceptance",
+        "dependencies",
+        "owner",
+        "branch",
+        "worktree",
+        "affectedModules",
+        "status",
+        "evidence",
+        "verification",
+        "verificationResult",
+        "updated"
+      ]
+    }
+  ],
+  "mainAdded": [
+    "TASK-UI-013",
+    "TASK-LAUNCH-001",
+    "TASK-UI-011"
+  ]
+}

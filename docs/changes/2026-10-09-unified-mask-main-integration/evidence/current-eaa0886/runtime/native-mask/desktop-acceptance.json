@@ -1,0 +1,43 @@
+{
+  "runtime": {
+    "url": "http://tauri.localhost/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://tauri.localhost/assets/index-DcEEaxES.js"
+    ],
+    "styles": [
+      "http://tauri.localhost/assets/index-D4acWk3o.css"
+    ]
+  },
+  "distScripts": [
+    {
+      "file": "/assets/index-DcEEaxES.js",
+      "sha256": "5837a30790051576bc0af9ae4dcd1c4a13e47c462103cdf6953401e95c3a4ea4"
+    }
+  ],
+  "executableSha256": "ad5e3428497bc69fbabc40d52ac3269fd5df5b06019407a7b9b99e121944d4c9",
+  "requests": [
+    {
+      "maskMime": "image/png",
+      "imageCount": 1,
+      "size": "1024x1024"
+    },
+    {
+      "maskMime": "image/png",
+      "imageCount": 1,
+      "size": "1024x1024"
+    }
+  ],
+  "protection": {
+    "changed": 1071,
+    "outsideChanged": 0
+  },
+  "packageAssetCount": 4,
+  "restart": "PASS",
+  "compositionMarkerSurvivedRestart": true,
+  "clearUndoRedo": "PASS",
+  "credentialConflictPreserved": true,
+  "errors": [],
+  "credentialCleanupComplete": true
+}
