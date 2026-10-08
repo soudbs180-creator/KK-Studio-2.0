@@ -417,6 +417,34 @@ test("image declarations do not restrict a text model on the same account", (t) 
   );
 });
 
+test("canvas reference permission counts the same archived asset once and still rejects an edit prohibition", (t) => {
+  const { provider } = submission(t, { edit: true, maxReferences: 1 });
+  const source: CanvasCollectionItem = {
+    id: "source",
+    kind: "image",
+    title: "source",
+    description: "",
+    assetId: "shared-original",
+  };
+  const target = {
+    ...source,
+    id: "target",
+    providerConnectionId: provider.id,
+    model: provider.model,
+  };
+  assert.equal(
+    canConnectTarget([source, target], [], source.id, target.id),
+    true,
+  );
+  saveModelCatalog(provider, [
+    { id: provider.model!, kind: "image", image: { edit: false } },
+  ]);
+  assert.equal(
+    canConnectTarget([source, target], [], source.id, target.id),
+    false,
+  );
+});
+
 test("new canvas nodes without an explicit model use the current command selection for reference limits", (t) => {
   const { provider } = submission(t, { edit: false });
   const items: CanvasCollectionItem[] = [

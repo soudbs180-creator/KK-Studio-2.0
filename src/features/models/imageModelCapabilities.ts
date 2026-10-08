@@ -4,6 +4,7 @@ import {
 } from "../../domain/imageModelCapabilities.ts";
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import type { ModelSelection } from "../../domain/modelSelection.ts";
+import { imageReferenceCount } from "../../domain/imageReferences.ts";
 import {
   maxReferenceCount,
   type CanvasCollectionItem,
@@ -46,8 +47,8 @@ export function imageCapabilitiesForSelection(
   return resolveImageModelCapabilities(connection, selection.model, catalogs);
 }
 
-/** Incoming canvas references exclude the source image that edits also submit. */
-export function canvasImageReferenceLimit(
+/** Total submitted images, including the source original for an edit. */
+export function canvasImageTotalReferenceLimit(
   item: CanvasCollectionItem,
   connections: ProviderConnection[],
   defaultSelection?: ModelSelection,
@@ -63,10 +64,28 @@ export function canvasImageReferenceLimit(
     connections,
     catalogs,
   );
-  if (capabilities.maxReferences === undefined) return maxReferenceCount(item);
+  return (
+    capabilities.maxReferences ??
+    maxReferenceCount(item) + imageReferenceCount(item)
+  );
+}
+
+/** Remaining distinct images; edges sharing the source asset use no extra slot. */
+export function canvasImageReferenceLimit(
+  item: CanvasCollectionItem,
+  connections: ProviderConnection[],
+  defaultSelection?: ModelSelection,
+  catalogs?: ModelCatalog[],
+): number {
+  if (item.kind !== "image") return maxReferenceCount(item);
   return Math.max(
     0,
-    capabilities.maxReferences - (item.assetId || item.result ? 1 : 0),
+    canvasImageTotalReferenceLimit(
+      item,
+      connections,
+      defaultSelection,
+      catalogs,
+    ) - imageReferenceCount(item),
   );
 }
 

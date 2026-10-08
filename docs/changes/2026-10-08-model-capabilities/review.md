@@ -1,8 +1,41 @@
 # Review：模型能力声明
 
-- Task ID：TASK-MODEL-001；状态：NOT VERIFIED；日期：2026-10-08。
+- Task ID：TASK-MODEL-001；当前状态：CHANGES REQUIRED，修正候选待提交后补审；日期：2026-10-08。
 - [Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Verification](verification.md)。
-- base：21d121d2b884b2b7ced4a98eb0e03c590de5c3cd；head 待实现提交。
-- 自审与独立上下文审查尚未执行；不以本文件存在代表通过。
+- 当前目标基线：origin/main@5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3；已合并到候选分支，原 main checkout 未前移。
+- 实际 GitHub 审批、用户产品验收、合并与发布分别记录，不由技术检查代填。
 
-独立审查在实现/运行证据形成后，对实际 diff、精确账号/三态/限额契约、共享提交入口和 Web/Desktop 证据进行只读复核，绑定 base/head。GitHub 身份审批、用户验收、合并/发布分别记录。
+## 首轮独立审查（保留历史 SHA）
+
+- 时间：2026-10-08 13:55，Asia/Shanghai。
+- Base：21d121d2b884b2b7ced4a98eb0e03c590de5c3cd。
+- Head：0d20696eed73a4c8f8710dadb0b911700baf0751。
+- Reviewer：独立只读 Codex 上下文 model_capability_review；调度工具指定 gpt-6-astra，reviewer 自报 Codex/GPT-6、部署型号未暴露。未派二级代理，未修改源码。
+- 规则：上述 head 的 AGENTS、AI_RULES、DEVELOPMENT、REVIEW，按 requesting-code-review 工作流检查实际 diff。
+- 结论：CHANGES REQUIRED；没有发现 P0/P1，一项 P2 阻断 AC-4 技术验收。
+
+独立重跑四个相关单测文件 29/29 PASS；逐项重算 381 个源码指纹，无差异；EXE/dist JS 与原生记录相符。抽查完整 verify4、client-check、fresh Tauri 日志及 runtime，支持 Node 645/653、Agent 172/174（原平台 skip 保留）、browser 381/381 且无 flaky。抽查 390px 设置与 native 重绘禁用截图。
+
+## MC-001：参考图预校验与实际附件数量不一致
+
+- 严重度：P2；pass：行为与 UI；阻断本任务 AC-4 及无条件合并结论。
+- 位置（首轮 head）：CreationComposer.tsx:89、CanvasImageCommand.tsx:59、ImageRedrawDialog.tsx:12；对照 imageTaskCommand.ts:321。
+- 条件：原图与一个连线节点共用 assetId，限额 1 时实际附件去重为一张，而普通 UI 会重复计数；原图加另一张连线参考图、限额收紧至 1 时，重绘窗口遗漏 incoming，直到 prepare 才拒绝。
+- 影响：合法编辑被误禁，或超限编辑未提前给出正确禁用说明。底层门禁有效，未发现超限 HTTP 或任务受理绕过。
+- 负责人：TASK-MODEL-001 实现者；当前状态：修正已写入，定向单测通过，最终候选独立复验待完成。
+
+接收审查后先核对实际归档逻辑。图边单测确实复现了同素材误拒；浏览器准备先修正恢复时卸载保存竞争、动态 first 定位器和未知模型绑定，保留这些失败记录。稳定真实控件回归复现了不同素材超限时重绘仍 enabled，未删验收断言。修正将归档素材去重、源图存在判定用于普通生成、重绘、连线和附件读取；非图片、未归档与悬空引用保留失败关闭保护。参见 verification 的 RED/GREEN 与最终集成记录。
+
+## 首轮未评定范围与裁决
+
+- 真实付费 Provider、实际 mask/outpaint、原生 Mobile 不在本轮范围，fixture 无法证明。
+- Vite development public-plugin import 已在原 main 复现并登记 TASK-PLUGIN-DEV-001；它不阻断 production 能力功能，但 Esc 后局部表单通过不能替代开发插件完整验收。
+- 新 main@5b0eb6a 集成结果不在首轮固定 SHA 内，需新 base/head 补审。没有把首轮 PASS 范围改写到新提交。
+- 原始日志尾空格是审计数据，未作为源码缺陷清理；正式 source/document diff 另行检查。
+- GitHub 身份审批、公开上传授权、用户最终产品验收和合并发布不由独立技术 reviewer 代填。
+
+## 实现者自审与当前候选
+
+账号/完整 model、false/zero/未知、文本/Codex隔离及任务数量与 HTTP 分块契约保留。最新主线的 native intent/回执恢复和显式重试逻辑保留；本修正不迁移项目/素材/凭据、不复制 ArtCraft 产品代码或目录，不新增依赖/CSS。
+
+定向单测 28/28、六项 capability 浏览器诊断通过；该浏览器诊断明确使用 1425，只证明本文件的 fixture 范围，不能替代仓库规定的 1423 全量验收。标准端口自然释放后，当前集成源码正在执行完整 verify；fresh Tauri 最终构建/运行和提交后独立复核以新记录为准。

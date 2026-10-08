@@ -1,0 +1,41 @@
+[WebServer] (node:60036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:47324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 (3.3s)
+  x  2 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 (8.3s)
+
+
+  1) tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 ────────────────────
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator:  getByRole('dialog', { name: '重绘参考图片' }).getByRole('button', { name: '开始重绘', exact: true })
+    Expected: disabled
+    Received: enabled
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeDisabled" getByRole('dialog', { name: '重绘参考图片' }).getByRole('button', { name: '开始重绘', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: '重绘参考图片' }).getByRole('button', { name: '开始重绘', exact: true })
+        14 × locator resolved to <button type="button" class="primary-button">开始重绘</button>
+           - unexpected value "enabled"
+
+
+       97 |     if (duplicate) await expect(start).toBeEnabled();
+       98 |     else {
+    >  99 |       await expect(start).toBeDisabled();
+          |                           ^
+      100 |       await expect(redraw.getByRole("status")).toContainText(
+      101 |         "最多接收 1 张参考图",
+      102 |       );
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-MODEL-001-capabilities\tests\browser\model-capabilities.spec.ts:99:27
+
+    Error Context: test-results\model-capabilities-原图和连线参考图按归档素材去重：不同素材超限禁用重绘\error-context.md
+
+  1 failed
+    tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 ─────────────────────
+  1 passed (13.1s)

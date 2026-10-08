@@ -6,11 +6,13 @@ const REFERENCE_SLOTS = ["主体", "风格", "材质", "构图", "Mask"] as cons
 /** Five semantic slots while keeping the node-owned file picker contract. */
 export default function ReferenceStrip({
   references,
+  referenceCount = references.length,
   limit,
   onAdd,
   onRemove,
 }: {
   references: CanvasReference[];
+  referenceCount?: number;
   limit: number;
   onAdd: (slot?: CanvasReference["slot"]) => void;
   onRemove?: (connectionId: string) => void;
@@ -72,7 +74,7 @@ export default function ReferenceStrip({
                 className="reference-slot-add"
                 type="button"
                 aria-label={`添加${slot}参考图`}
-                disabled={references.length >= limit}
+                disabled={referenceCount >= limit}
                 title={
                   limit === 0
                     ? "当前模型没有可用的参考图位置"
@@ -105,7 +107,7 @@ export default function ReferenceStrip({
           className="reference-add"
           type="button"
           aria-label="添加参考图片"
-          disabled={references.length >= limit}
+          disabled={referenceCount >= limit}
           title={
             limit > 0
               ? `最多 ${limit} 张参考图`
@@ -118,7 +120,7 @@ export default function ReferenceStrip({
         </button>
         {limit > 0 && (
           <span className="reference-limit">
-            {references.length}/{limit}
+            {referenceCount}/{limit}
           </span>
         )}
         {limit === 0 && (

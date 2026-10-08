@@ -7,7 +7,11 @@ import { chromium, expect } from "@playwright/test";
 
 const root = process.cwd();
 const executable = path.join(root, "src-tauri/target/release/kk-studio.exe");
-const evidence = path.join(root, ".tmp/model-capabilities/desktop");
+const evidence = path.join(
+  root,
+  ".tmp/model-capabilities/desktop",
+  `run-${Date.now()}-${process.pid}`,
+);
 const isolated = path.join(evidence, `isolated-${Date.now()}`);
 const dataRoot = path.join(isolated, "data");
 const profile = path.join(isolated, "webview-profile");

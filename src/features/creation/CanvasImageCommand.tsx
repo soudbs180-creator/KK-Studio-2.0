@@ -7,7 +7,11 @@ import {
   useSyncExternalStore,
 } from "react";
 import { agentConnection } from "../agent/agentConnection";
-import type { CanvasCollectionItem } from "../../domain/canvasItems";
+import type {
+  CanvasCollectionItem,
+  CanvasReference,
+} from "../../domain/canvasItems";
+import { imageReferenceCount } from "../../domain/imageReferences";
 import type { CreationTask } from "./model";
 import { useImageModelCapabilities } from "../models/useImageModelCapabilities";
 
@@ -35,9 +39,9 @@ export const CanvasImageNodeContext =
 
 /** Task lifetime belongs to App. Unmounting a card cancels preparation only. */
 export function useCanvasImageGeneration({
-  referenceCount = 0,
+  references = [],
   outputCount,
-}: { referenceCount?: number; outputCount?: number } = {}) {
+}: { references?: CanvasReference[]; outputCount?: number } = {}) {
   const command = useContext(CanvasImageCommandContext);
   const item = useContext(CanvasImageNodeContext);
   const agent = useSyncExternalStore(
@@ -56,8 +60,7 @@ export function useCanvasImageGeneration({
     model,
     connectionId: item?.providerConnectionId ?? command?.providerConnectionId,
   });
-  const totalReferences =
-    referenceCount + (item?.assetId || item?.result ? 1 : 0);
+  const totalReferences = imageReferenceCount(item, references);
   const operation = totalReferences ? "edit" : "generate";
   const capabilityReason =
     !isText && !usesCodex
@@ -186,6 +189,7 @@ export function useCanvasImageGeneration({
     kind: isText ? ("text" as const) : ("image" as const),
     draftText: task?.status === "running" ? task.outputs?.[0]?.text : undefined,
     model,
+    incomingReferenceCount: totalReferences - imageReferenceCount(item),
     maxGenerationCount: capabilities.maxGenerationCount,
     models: command?.models ?? [],
     usesCodex,

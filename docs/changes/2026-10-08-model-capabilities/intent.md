@@ -3,6 +3,7 @@
 - Task ID：TASK-MODEL-001；状态：READY；日期：2026-10-08。
 - 请求来源：用户提供 ArtCraft 仓库并要求学习，在第一阶段落地建议后说“开始”。
 - 授权：本轮实施第一阶段的模型能力目录、参数与提交校验；普通工程决策由 AI 自主执行。
+- 后续授权：用户要求继续，并明确“始终允许你来操作，但是你需要评估不要盲目的”；在已授权目标内完成隔离候选、验证、审查和 draft PR，按真实证据决定下一步。
 - [Spec](spec.md) · [Plan](plan.md) · [Verification](verification.md) · [Review](review.md) · [账本](../../governance/TASK_LEDGER.md)。
 
 ## 用户原意与工程转译

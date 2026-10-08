@@ -16,7 +16,7 @@
 
 `resolveImageModelCapabilities` 返回每种操作 `unknown/supported/unsupported`、参考图有效上限和可选任务生成数量上限。连接不允许的操作始终 unsupported；模型不能扩大连接权限。模型未声明的 generate/edit 允许原兼容流程，inpaint/outpaint 不因连接的宽泛默认列表推断为 supported。
 
-参考图上限取连接/模型声明中较小值；编辑明确不支持时为零。已归档源图算一张参考图，画布新增参考图可用上限扣除源图。一次任务输出上限只用模型 `maxGenerationCount`，连接 `maxOutputs` 保持现有每次 HTTP 语义，大批量旧任务和既有分块行为不改变。
+参考图上限取连接/模型声明中较小值；编辑明确不支持时为零。源图与 incoming 按归档 assetId 去重，同一原件只算一张；可见但未归档的源图仍需通过原件校验，不能退化成纯文生图。画布新增不同素材的可用上限扣除源图，普通生成、重绘、连线与附件读取保持一致。非图片、悬空和未归档引用不因去重被忽略。一次任务输出上限只用模型 `maxGenerationCount`，连接 `maxOutputs` 保持现有每次 HTTP 语义，大批量旧任务和既有分块行为不改变。
 
 `assertSubmissionConnection` 是初始检查、租约复查与原生提交前共同入口：参考图时检查 edit，无参考图检查 generate，并校验 outputCount。`prepareImageTask` 的显式账号、自动选择、绑定账号均带数量；App 在 Web 租约和 Desktop native 调用前复查。明确限制不会绕过到新账号。
 

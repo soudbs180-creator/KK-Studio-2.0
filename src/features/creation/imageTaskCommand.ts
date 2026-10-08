@@ -1,4 +1,8 @@
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
+import {
+  hasImageReferenceSource,
+  uniqueImageReferences,
+} from "../../domain/imageReferences.ts";
 import { reconcileProjectCanvas } from "../../domain/projectCanvas.ts";
 import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import {
@@ -307,19 +311,15 @@ export async function canvasImageAttachments(
     .filter((edge) => edge.target === source.id && edge.kind !== "result")
     .map((edge) => project.items.find((item) => item.id === edge.source))
     .filter((item) => item?.kind !== "text");
-  const sources =
-    source.assetId || source.preview || source.result
-      ? [source, ...incoming]
-      : incoming;
-  const seen = new Set<string>();
+  const sources = hasImageReferenceSource(source)
+    ? [source, ...incoming]
+    : incoming;
   const attachments: CreationAttachment[] = [];
-  for (const item of sources) {
+  for (const item of uniqueImageReferences(sources)) {
     if (!item || item.kind !== "image" || !item.assetId)
       throw new ImageTaskCommandError(
         "参考图片尚未归档，未提交生成；请重新导入原件。",
       );
-    if (seen.has(item.assetId)) continue;
-    seen.add(item.assetId);
     const asset = await read(item.assetId);
     if (!asset || !/^image\/(png|jpeg|webp|gif)$/.test(asset.mime))
       throw new ImageTaskCommandError(

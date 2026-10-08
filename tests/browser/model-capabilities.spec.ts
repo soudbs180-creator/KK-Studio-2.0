@@ -6,6 +6,154 @@ const api = "https://capabilities.example.test/v1";
 const pixel =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
 
+for (const duplicate of [true, false]) {
+  test(`原图和连线参考图按归档素材去重：${duplicate ? "同素材可编辑" : "不同素材超限禁用重绘"}`, async ({
+    page,
+  }) => {
+    let requests = 0;
+    await page.route(`${api}/images/**`, (route) => {
+      requests += 1;
+      return route.fulfill({ json: { data: [{ b64_json: pixel }] } });
+    });
+    await configure(page);
+    const item = await node(page);
+    await item.getByRole("button", { name: "生成数量", exact: true }).click();
+    await item.getByRole("button", { name: "生成 1 个", exact: true }).click();
+    const original = {
+      name: "original.png",
+      mimeType: "image/png",
+      buffer: Buffer.from(pixel, "base64"),
+    };
+    await item.locator('input[type="file"]').first().setInputFiles(original);
+    await expect(item.locator(".uploaded-image")).toBeVisible();
+    const sourceId = (await item.getAttribute("data-testid"))!.replace(
+      "canvas-node-",
+      "",
+    );
+    await expect
+      .poll(() =>
+        page.evaluate((id) => {
+          const snapshot = JSON.parse(
+            localStorage.getItem("kk-studio-next:creation:v1")!,
+          );
+          return snapshot.projects
+            .find(
+              (project: { id: string }) =>
+                project.id === snapshot.activeProjectId,
+            )
+            ?.items.find((entry: { id: string }) => entry.id === id)?.assetId;
+        }, sourceId),
+      )
+      .toBeTruthy();
+    // Restore an editable archived node, as a generated or legacy image can be.
+    // Upload-only nodes deliberately reject incoming edges in the current UI.
+    const restored = await page.evaluate((id) => {
+      const key = "kk-studio-next:creation:v1";
+      const snapshot = JSON.parse(localStorage.getItem(key)!);
+      const project = snapshot.projects.find(
+        (entry: { id: string }) => entry.id === snapshot.activeProjectId,
+      );
+      project.items.find(
+        (entry: { id: string }) => entry.id === id,
+      ).referenceOnly = false;
+      snapshot.revision = Date.now();
+      return JSON.stringify(snapshot);
+    }, sourceId);
+    await page.addInitScript((snapshot) => {
+      localStorage.setItem("kk-studio-next:creation:v1", snapshot);
+    }, restored);
+    await page.reload();
+    await page.getByRole("button", { name: "项目库", exact: true }).click();
+    await page.locator(".project-library-card").first().click();
+    await waitForConversationPanelSettled(page);
+    await item.click();
+    await item
+      .locator('input[type="file"]')
+      .nth(1)
+      .setInputFiles(
+        duplicate ? original : "public/fixtures/demo/blue-hour.png",
+      );
+    await expect(item.locator(".composer-ref-thumb")).toHaveCount(1);
+    await expect
+      .poll(() =>
+        page.evaluate(
+          ({ id, duplicate }) => {
+            const snapshot = JSON.parse(
+              localStorage.getItem("kk-studio-next:creation:v1")!,
+            );
+            const project = snapshot.projects.find(
+              (entry: { id: string }) => entry.id === snapshot.activeProjectId,
+            );
+            const source = project.items.find(
+              (entry: { id: string }) => entry.id === id,
+            );
+            const edge = project.canvas.edges.find(
+              (entry: { target: string; kind: string }) =>
+                entry.target === id && entry.kind !== "result",
+            );
+            const reference = project.items.find(
+              (entry: { id: string }) => entry.id === edge?.source,
+            );
+            return Boolean(
+              source?.assetId &&
+              reference?.assetId &&
+              (source.assetId === reference.assetId) === duplicate,
+            );
+          },
+          { id: sourceId, duplicate },
+        ),
+      )
+      .toBe(true);
+    await settings(page);
+    await page.getByLabel("API Key").fill("fixture-key");
+    await page.getByRole("button", { name: "保存", exact: true }).click();
+    await page.getByLabel("当前模型用途").selectOption("image");
+    await page
+      .getByLabel("参考图编辑能力", { exact: true })
+      .selectOption("supported");
+    await page.getByLabel("参考图数量上限", { exact: true }).fill("1");
+    await page
+      .getByRole("button", { name: "保存此模型能力", exact: true })
+      .click();
+    await expect(
+      page.locator(".provider-model-catalog").getByRole("status"),
+    ).toContainText("已保存此模型");
+    await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+    await item.getByRole("button", { name: "画布模型", exact: true }).click();
+    await page
+      .getByRole("searchbox", { name: "搜索模型、厂商或参数" })
+      .fill("image-capability-a");
+    await page
+      .getByRole("menuitemradio", { name: /image-capability-a/ })
+      .click();
+    await expect(
+      item.getByRole("button", { name: "画布模型", exact: true }),
+    ).toContainText("image-capability-a");
+    await expect(item.locator(".composer-ref-thumb")).toHaveCount(1);
+    const generate = item.getByRole("button", {
+      name: "生成图片",
+      exact: true,
+    });
+    if (duplicate) await expect(generate).toBeEnabled();
+    else await expect(generate).toBeDisabled();
+    await item
+      .getByRole("button", { name: "重绘参考图片", exact: true })
+      .click();
+    const redraw = page.getByRole("dialog", { name: "重绘参考图片" });
+    const start = redraw.getByRole("button", { name: "开始重绘", exact: true });
+    if (duplicate) await expect(start).toBeEnabled();
+    else {
+      await expect(start).toBeDisabled();
+      await expect(redraw.getByRole("status")).toContainText(
+        "最多接收 1 张参考图",
+      );
+    }
+    await redraw.getByRole("button", { name: "取消", exact: true }).click();
+    await expect(item.locator(".uploaded-image")).toBeVisible();
+    expect(requests).toBe(0);
+  });
+}
+
 async function settings(page: Page) {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
@@ -26,7 +174,8 @@ async function node(page: Page) {
   await waitForConversationPanelSettled(page);
   await page.getByRole("button", { name: "添加资源", exact: true }).click();
   await page.getByRole("menuitem", { name: "图片", exact: true }).click();
-  const item = page.getByTestId(/^canvas-node-added-image-/).first();
+  const first = page.getByTestId(/^canvas-node-added-image-/).first();
+  const item = page.getByTestId((await first.getAttribute("data-testid"))!);
   await item.click();
   return item;
 }

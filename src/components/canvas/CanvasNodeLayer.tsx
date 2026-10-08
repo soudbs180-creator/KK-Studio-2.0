@@ -23,6 +23,7 @@ import { canConnectTarget } from "./connectionRules";
 import { canvasReferencesFor } from "./canvasReferences";
 import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
 import type { ModelSelection } from "../../domain/modelSelection";
+import { imageReferenceCount } from "../../domain/imageReferences";
 
 interface CanvasNodeLayerProps {
   controls: ReturnType<typeof useCanvasControls>;
@@ -187,12 +188,11 @@ export default function CanvasNodeLayer({
     const parent = nodes[parentId];
     const source = items.find((item) => item.id === parentId);
     if (!parent || !source) return;
-    const incoming = edges.filter(
-      (edge) =>
-        edge.target === parentId &&
-        edge.kind !== "result" &&
-        items.find((item) => item.id === edge.source)?.kind === "image",
-    ).length;
+    const incoming =
+      source.kind === "image"
+        ? imageReferenceCount(source, referencesFor(parentId)) -
+          imageReferenceCount(source)
+        : referencesFor(parentId).length;
     const limit = canvasImageReferenceLimit(
       source,
       readProviderConnections(),

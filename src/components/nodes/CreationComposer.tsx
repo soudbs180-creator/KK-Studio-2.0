@@ -86,8 +86,11 @@ export default function CreationComposer({
   const [expanded, setExpanded] = useState(false);
   const localGeneration = useLocalGeneration(kind, onDemoResults);
   const imageGeneration = useCanvasImageGeneration({
-    referenceCount: references.length,
+    references,
   });
+  const incomingReferenceCount = video
+    ? references.length
+    : imageGeneration.incomingReferenceCount;
   const generation = video ? localGeneration : imageGeneration;
   const selectedModel = modelProp ?? (video ? model : imageGeneration.model);
   const ref = useRef<HTMLDivElement>(null);
@@ -156,6 +159,7 @@ export default function CreationComposer({
       {expanded ? (
         <ReferenceStrip
           references={references}
+          referenceCount={incomingReferenceCount}
           limit={referenceLimit}
           onAdd={onReference}
           onRemove={onRemoveReference}
@@ -180,7 +184,7 @@ export default function CreationComposer({
             className="composer-ref-add"
             type="button"
             aria-label="添加参考图片"
-            disabled={references.length >= referenceLimit}
+            disabled={incomingReferenceCount >= referenceLimit}
             title={
               referenceLimit === 0
                 ? "当前模型没有可用的参考图位置"
@@ -213,7 +217,6 @@ export default function CreationComposer({
       <div className="creation-controls">
         <CreationModelPicker
           kind={kind}
-          referenceCount={references.length}
           value={selectedModel}
           actualModels={video ? undefined : imageGeneration.models}
           open={menu === "model"}

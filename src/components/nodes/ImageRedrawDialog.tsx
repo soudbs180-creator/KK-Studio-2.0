@@ -2,14 +2,17 @@ import { useState } from "react";
 import Modal from "../Modal";
 import { useCanvasImageGeneration } from "../../features/creation/CanvasImageCommand";
 import { GenerationStatus } from "./GenerationAction";
+import type { CanvasReference } from "../../domain/canvasItems";
 
 export default function ImageRedrawDialog({
   onClose,
+  references,
 }: {
   onClose: () => void;
+  references?: CanvasReference[];
 }) {
   const [prompt, setPrompt] = useState("");
-  const generation = useCanvasImageGeneration({ outputCount: 1 });
+  const generation = useCanvasImageGeneration({ outputCount: 1, references });
   const loading = generation.phase === "loading";
   return (
     <Modal title="重绘参考图片" onClose={onClose} className="redraw-modal">

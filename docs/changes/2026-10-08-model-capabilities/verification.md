@@ -5,7 +5,7 @@
 - branch：codex/TASK-MODEL-001-capabilities；base：21d121d2b884b2b7ced4a98eb0e03c590de5c3cd。
 - cwd：`D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`；原 checkout clean。
 
-## 开工结果
+## 开工结果（历史）
 
 原生 worktree 工具在容器目录报 Not a git repository，使用已 ignore 的 .worktrees Git fallback。fetch 默认失效回环代理，临时 `git -c http.proxy= fetch origin main` 成功，main 未前移。默认沙箱启动器返回 HRESULT 0x80070020，读/验证命令经自动审核在非沙箱上下文运行；未出现审核拒绝。
 
@@ -62,3 +62,25 @@ Desktop/Web 源码版本 2.1.4/2.1.5；Mobile 规划版本仍 2.1.1。`client:ch
 ## 真实性边界
 
 本轮以本地目录和受控 HTTP fixture 验证声明/校验；不触发真实付费生图。真实 provider 的正确能力、服务验收、mask/outpaint 执行、Mobile、合并/发布和用户最终产品验收尚未发生。
+
+## MC-001 修正与 main@5b0eb6a 集成记录
+
+首轮实现提交 0d20696e 的独立审查为 CHANGES REQUIRED：MC-001（P2）要求参考图 UI 与真实归档附件去重一致，详见 review。当前分支先合并 origin/main@5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3，再修正该 finding；这一轮的证据不会替换原 21d/0d 记录。
+
+[图边 RED](evidence/correction-baseline5b/logs/review-red-reference-unit.log) 13 pass / 1 fail，真实断言为同一归档原件应允许连线而被误拒；[稳定 UI RED](evidence/correction-baseline5b/logs/review-red-ui6.log) 复现不同素材超限时重绘仍 enabled。此前 UI 准备失败涉及 upload-only 节点、卸载保存、动态 first 定位与未知模型，日志 ui1–5 保留，没有把准备失败当产品 RED，也没有删掉超限断言。
+
+纯函数统一源图存在判断和 assetId 去重；普通生成和重绘消费完整参考图，实际连线与 hover permission 共用校验。missing/unarchived/non-image 引用保留 fail-closed，补了共享 assetId 非图片与悬空引用保护。定向 [单测 GREEN](evidence/correction-baseline5b/logs/review-green-unit.log) 28/28；[六项 UI 诊断](evidence/correction-baseline5b/logs/review-green-ui2.log) 6/6、无 retry。该次诊断用了 1425，只代表本文件 fixture；不能替代 1423 全量验收。
+
+修正增加控件计数后 UI check 暴露 CreationComposer 303 行；移除本修正向模型选择器传入的无消费计数参数，保持原组件和职责，没有修改行数门禁。最终 [UI check](evidence/correction-baseline5b/logs/integrated-ui-check-final.log) 196/0。
+
+标准 1423 端口此前由另一份不同 bundle 的 preview 使用；没有终止它。自然释放后 [完整 verify](evidence/correction-baseline5b/logs/integrated-verify.log) 退出 0：Node 717/725（原 8 skip）、Agent 172/174（原 2 skip）、Edge 394/394、0 flaky；lint/typecheck/format/build/governance/features/Markdown 均通过。[浏览器摘要](evidence/correction-baseline5b/browser-summary.json)、[Web 1920](evidence/correction-baseline5b/capabilities-runtime-1920.json)、[源码指纹](evidence/correction-baseline5b/source-fingerprint.json) 属于此轮 dirty 修正候选。指纹为 16e62a55a239c24e48b9abe0b62d5ed4e170ba94103c1b764e6cb28d080f8026。
+
+本轮 [client:check](evidence/correction-baseline5b/logs/integrated-client-check.log) 退出 0。第一次 [Tauri build](evidence/correction-baseline5b/logs/integrated-desktop-build.log)/[运行](evidence/correction-baseline5b/logs/integrated-desktop-acceptance.log) 也退出 0，EXE 86f1ac471ed2a53864d7dbbc060eccea5738ebacf4e347e8169da3c032dd17bd；随后删除无消费 prop，因此该 native 产物不是最终候选，需要重建。报告输出现使用独立 run 目录，旧报告不覆盖。
+
+full verify 完成后的 fetch 发现 main 已更新至 5dd6e6dd（阶段计划、保存恢复和版本元数据）。这是 App/shared storage 的真实变更，不能沿用上述 5b 验收；将整合后重新验证 Web/Tauri，并对精确新 base/head 独立复核。Desktop/Web 的最终 patch 需在最新主线基础上递增。
+
+## 公开交付授权记录
+
+初次公开 push 在执行前被自动审批审核拒绝，理由是原授权只覆盖隔离候选和独立审查，未明确覆盖公开仓库源码、测试和日志上传；当时停止了该动作，没有换接口绕过。开工段“未出现审核拒绝”只描述开工读/验证阶段。
+
+用户随后明确“始终允许你来操作，但是你需要评估不要盲目的”。继续按现有工程授权评估精确公开目标 soudbs180-creator/KK-Studio-2.0、本任务分支和受控 fixture 证据；只有检查及独立复核满足后才推送并建立 draft PR。该授权不会被解释成直接合并、部署、付费服务执行或清理无关数据。

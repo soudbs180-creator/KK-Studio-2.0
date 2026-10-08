@@ -1,6 +1,7 @@
 import { type CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import type { CanvasConnection } from "../../domain/canvasGraph";
-import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities.ts";
+import { canvasImageTotalReferenceLimit } from "../../features/models/imageModelCapabilities.ts";
+import { imageReferenceCount } from "../../domain/imageReferences.ts";
 import { readProviderConnections } from "../../features/creation/providerRegistry.ts";
 import type { ModelSelection } from "../../domain/modelSelection.ts";
 
@@ -24,19 +25,16 @@ export function canConnectTarget(
   const limited = target.kind === "image" || target.kind === "video";
   if (limited && source && source.kind !== "image") return false;
   if (!limited) return true;
-  const incoming = edges.filter(
-    (edge) =>
-      edge.target === targetId &&
-      edge.kind !== "result" &&
-      (items.find((item) => item.id === edge.source)?.kind === "image" ||
-        !items.some((item) => item.id === edge.source)),
-  ).length;
-  return (
-    incoming <
-    canvasImageReferenceLimit(
-      target,
-      readProviderConnections(),
-      defaultSelection,
-    )
+  const incoming = edges
+    .filter((edge) => edge.target === targetId && edge.kind !== "result")
+    .map((edge) => items.find((item) => item.id === edge.source))
+    .filter((item) => !item || item.kind === "image");
+  const limit = canvasImageTotalReferenceLimit(
+    target,
+    readProviderConnections(),
+    defaultSelection,
   );
+  return target.kind === "image"
+    ? imageReferenceCount(target, [...incoming, source]) <= limit
+    : incoming.length < limit;
 }

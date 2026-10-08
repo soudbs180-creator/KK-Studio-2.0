@@ -1,0 +1,6 @@
+
+> kk-studio@2.1.6 ui:check
+> node scripts/check-ui-standards.mjs
+
+UI 标准检查：196 个文件，1 项违规。
+src/components/nodes/CreationComposer.tsx: 303 行，超过 300 行组件边界
