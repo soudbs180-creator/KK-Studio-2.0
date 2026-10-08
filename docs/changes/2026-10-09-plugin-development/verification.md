@@ -26,3 +26,7 @@
 ## Native driver 平台语义修正
 
 精确dc3 source审查独立复现PLUGIN-REVIEW-001：Windows/Node24 own child kill 的 exit code=null / signal=SIGTERM / signalCode=SIGTERM，原stop仅以exitCode会错判已退出。root独立owned-child-exit-probe.json同态复现；未启动真实native验收前修正等待真实exit事件并记录code/signal，以exitCode或signalCode判断退出，保留10秒有界失败。未放宽任何内容/原件/重启断言；runtime实现未变，fresh build实际从dc3来源完成。新的driver提交和实际原生验收随后记录。
+
+## 首次真实native与关闭链路修正
+
+836 driver实际native-recovery-83639e7 FAIL：四插件编辑/正确正文/原生保存通过、零错误；父进程SIGTERM已退出，但旧WebView CDP短暂未关闭，立即重启被正确拒绝“port occupied”。该raw/PNG/JSON保持FAIL。运行停止后9359实际自动释放，未停止其他owner。改为正常验收点击真实“关闭窗口”并等待原生exitCode0、旧CDP消失后再启动；信号退出仅用于自身失败清理，10秒有界失败不放宽。独立审查保存建议落实：变异前wx归档pristine主件/backup和corrupt输入原始字节，失败也可复核还原。产品源码与fresh EXE未变。

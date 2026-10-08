@@ -108,10 +108,7 @@ async function launch() {
     .getAttribute("data-runtime-entry");
 }
 
-async function stop() {
-  await browser?.close();
-  browser = undefined;
-  page = undefined;
+async function stop(graceful = false) {
   if (child && child.exitCode === null && child.signalCode === null) {
     const owned = child;
     const exited = new Promise((resolve) =>
@@ -120,7 +117,9 @@ async function stop() {
         resolve();
       }),
     );
-    owned.kill();
+    if (graceful)
+      await page.getByRole("button", { name: "关闭窗口", exact: true }).click();
+    else owned.kill();
     for (
       let attempt = 0;
       attempt < 50 && owned.exitCode === null && owned.signalCode === null;
@@ -131,8 +130,31 @@ async function stop() {
       owned.exitCode !== null || owned.signalCode !== null,
       "Owned desktop process did not exit",
     );
+    if (graceful)
+      assert.equal(owned.exitCode, 0, "Native close must exit normally");
   }
+  await browser?.close();
+  browser = undefined;
+  page = undefined;
   child = undefined;
+  // The old owned WebView may finish after the native host exits. Wait for
+  // its debug endpoint to close before restarting; never adopt that endpoint.
+  await expect
+    .poll(
+      async () => {
+        try {
+          return !(
+            await fetch(`http://127.0.0.1:${port}/json/version`, {
+              signal: AbortSignal.timeout(1000),
+            })
+          ).ok;
+        } catch {
+          return true;
+        }
+      },
+      { timeout: 10_000 },
+    )
+    .toBe(true);
 }
 
 async function openSavedProject() {
@@ -177,14 +199,14 @@ try {
     .toEqual(bundledPlugins.map((plugin) => plugin.content));
   receipt.steps.push("four-plugins-edit-render-and-native-durable-save");
   await page.screenshot({ path: path.join(evidenceDir, "before-restart.png") });
-  await stop();
+  await stop(true);
   const original = await readFile(snapshotPath);
   const snapshot = JSON.parse(original);
   receipt.snapshotSha256 = sha256(original);
   await launch();
   await openSavedProject();
   await page.screenshot({ path: path.join(evidenceDir, "after-restart.png") });
-  await stop();
+  await stop(true);
   assert.deepEqual(
     JSON.parse(await readFile(snapshotPath, "utf8")).projects[0].items,
     snapshot.projects[0].items,
@@ -196,6 +218,15 @@ try {
   const corrupt = structuredClone(snapshot);
   corrupt.projects[0].items[0].plugin.width = 0;
   const corruptBytes = Buffer.from(JSON.stringify(corrupt, null, 2));
+  await writeFile(path.join(evidenceDir, "pristine-main.json"), original, {
+    flag: "wx",
+  });
+  await writeFile(path.join(evidenceDir, "pristine-backup.json"), backup, {
+    flag: "wx",
+  });
+  await writeFile(path.join(evidenceDir, "corrupt-input.json"), corruptBytes, {
+    flag: "wx",
+  });
   await writeFile(snapshotPath, corruptBytes);
   await launch();
   await expect(page.getByRole("alert")).toContainText(/原件|保护/);
@@ -205,7 +236,7 @@ try {
   await page.screenshot({
     path: path.join(evidenceDir, "corrupt-protected.png"),
   });
-  await stop();
+  await stop(true);
   assert.deepEqual(await readFile(snapshotPath), corruptBytes);
   assert.deepEqual(await readFile(backupPath), backup);
   receipt.corruptSnapshotSha256 = sha256(corruptBytes);
@@ -221,6 +252,7 @@ try {
     path: path.join(evidenceDir, "original-restored.png"),
   });
   receipt.steps.push("restore-isolated-original-and-four-plugin-contents");
+  await stop(true);
   assert.deepEqual(receipt.errors, []);
   receipt.result = "PASS";
 } catch (error) {
