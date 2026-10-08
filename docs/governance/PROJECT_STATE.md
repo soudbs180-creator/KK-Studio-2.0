@@ -8,7 +8,11 @@
 
 本轮源码版本为 Desktop 2.1.4 / Web 2.1.5 / Mobile 规划 2.1.1（平台元数据 `d9f8eab`）；已重新构建并复验 Web 版本显示、388 项浏览器与 Rust 97 项，不代表新客户端安装或发布完成。
 
+继续收尾以`ef580db`为源码基准，纠正借用主线node_modules的隔离规则违例：保留共享链接、按本树lock独立完整npm ci，主线依赖保持原件。完整verify、带Agent的Desktop release与隔离Tauri基础运行通过；当前JS为`index-DWwNRuIh.js`。原生版本2.1.4、项目保存/重启/确认取消与接受、画布撤销重做和记忆保护均有新收据；这些证据不包含TaskHost真实生成提交/取消/进程恢复或真实Provider。PR、托管CI、最终产品验收与推广以本任务实际PR的当前head和检查为准。
+
 本轮盘点新增 `TASK-TASKSTATE-002`（P1，供应商成本报价回执接入）。TASK-ORCH-003、BACKEND-MEDIA-001、BACKEND-MCP-AUTO、Mobile/VPS 和真实视觉验收仍未完成或受外部条件约束，不因本地 fixture、构建或类型检查升级状态。详见[变更验证](../changes/2026-10-03-incomplete-tasks/verification.md)与[执行计划](../changes/2026-10-03-incomplete-tasks/plan.md)。
+
+其中ORCH-003、MEDIA-001与MCP-AUTO的代码可以先做本地建设，并非都需要等待真实凭据；尚未实施仍保留TODO，只有对应真实验收受外部条件约束。
 
 ## 2026-10-03 项目建设目标与验收基线
 

@@ -6,7 +6,9 @@
 
 账本当前为 97 项；TASK-ORCH-002 已在本地范围 DONE，TASK-CANVAS-001/TASK-TASKSTATE-001 保持 PARTIAL，新增 P1 `TASK-TASKSTATE-002` 等待真实供应商报价回执。继续工作不得把本地 fixture、构建通过或历史证据当作真实 Provider、Mobile、VPS、第三方 MCP 或用户视觉验收。
 
-平台元数据为 `d9f8eab`：Desktop 2.1.4 / Web 2.1.5 / Mobile 规划 2.1.1。最新生产 JS 是 `index-Cbd-sL3-.js`，全量浏览器 388/388 无重试通过；后续运行应先核对实际 HEAD、配置与 bundle，不能使用旧运行时推断本轮已发布。
+平台元数据为 `d9f8eab`：Desktop 2.1.4 / Web 2.1.5 / Mobile 规划 2.1.1。收尾源码基准`ef580db`已经按本树lock独立npm ci，API/Dialog/CLI为2.11.1/2.7.3/2.11.4；原共享链接保存在本树`.tmp/dependency-links-before-closeout-20261008/`，主线依赖未动。完整verify及浏览器388/388无flaky通过，当前生产JS为`index-DWwNRuIh.js`；新带Agent的Tauri release、平台版本/项目重启/确认与隔离记忆保护通过，独立收据在外层`.verification/TASK-AUDIT-20261003-closeout/`。这不证明真实TaskHost生成与Provider；继续运行先核对当前HEAD、lock、bundle/EXE和本任务实际PR的当前检查，不能从旧审查或本机构建推断已推广或发布。
+
+后续代码优先级仍按ORCH-003及其MEDIA-001依赖、报价回执、MCP-AUTO推进；代码建设可先于真实凭据，不能把TODO一概当作外部BLOCKED。
 
 ## 2026-10-03 项目建设目标恢复入口
 

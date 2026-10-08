@@ -3366,7 +3366,7 @@
       "docs/changes/2026-10-03-incomplete-tasks/verification.md",
       "docs/changes/2026-10-03-incomplete-tasks/review.md"
     ],
-    "verification": "当前97项任务已盘点并保留真实状态、依赖与外部条件；本地注册表、协议、计划重排、阶段审批、未知报价、交付与恢复边界有实现及回归。最终业务代码dc05556独立复验PASS；Node710项（702pass/8Windows skip/0fail）、浏览器388项无重试、Agent174项与Rust97项及构建/静态门禁通过，当前证据见本轮verification/review。",
+    "verification": "当前97项任务已盘点并保留真实状态、依赖与外部条件；本地注册表、协议、计划重排、阶段审批、未知报价、交付与恢复边界有实现及回归。最终业务代码dc05556独立复验PASS；最新ef580db基准独立锁定npm ci后完整verify通过：Node710项（702pass/8Windows skip/0fail）、Agent174项（172pass/2Windows skip/0fail）、浏览器388项无flaky、Rust97项。带Agent的新Desktop2.1.4 release及隔离版本/项目重启/确认/画布与记忆保护通过；真实TaskHost生成/Provider和PR/CI/推广范围以本轮verification/review及实际PR收据为准。",
     "verificationResult": "PASS",
     "updated": "2026-10-08"
   },
