@@ -130,8 +130,12 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
   async function importBundledModule(
     url: string,
   ): Promise<{ default?: unknown; plugin?: unknown }> {
-    if (options.importUrl) return options.importUrl(url);
-    return (await import(/* @vite-ignore */ url)) as {
+    // Vite adds an import query to dynamic root-relative paths, which prevents
+    // its public middleware from serving these already-built ESM bundles.
+    const moduleUrl =
+      typeof location === "undefined" ? url : new URL(url, location.href).href;
+    if (options.importUrl) return options.importUrl(moduleUrl);
+    return (await import(/* @vite-ignore */ moduleUrl)) as {
       default?: unknown;
       plugin?: unknown;
     };

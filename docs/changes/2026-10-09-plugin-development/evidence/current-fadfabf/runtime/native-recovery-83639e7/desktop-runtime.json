@@ -1,0 +1,29 @@
+{
+  "result": "FAIL",
+  "runtime": "Tauri release",
+  "sourceHead": "83639e747c9d450542e5363b4029a13287ffae82",
+  "executable": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\src-tauri\\target\\release\\kk-studio.exe",
+  "executableSha256": "eaa83aa100bf421503cf35d9c6ee51a871119019a67820e33624e5757d41a236",
+  "startedAt": "2026-10-08T19:28:24.436Z",
+  "dataRoot": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-83639e7\\isolated\\data",
+  "profile": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-83639e7\\isolated\\webview-profile",
+  "errors": [],
+  "resources": [],
+  "steps": [
+    "four-plugins-edit-render-and-native-durable-save"
+  ],
+  "processExits": [
+    {
+      "pid": 38088,
+      "code": null,
+      "signal": "SIGTERM"
+    }
+  ],
+  "csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: http: https:; media-src 'self' data: blob: http: https:; font-src 'self' data:; connect-src 'self' http: https: ws: wss: ipc: http://ipc.localhost; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'",
+  "url": "http://tauri.localhost/",
+  "mode": "production",
+  "entry": "src/main.tsx",
+  "snapshotSha256": "b68b0ba652fb3e3343a6510b58765bd98f82d9f9795f09e592127bfe3700cda4",
+  "failure": "AssertionError [ERR_ASSERTION]: Desktop CDP port 9359 is already occupied",
+  "completedAt": "2026-10-08T19:28:33.850Z"
+}

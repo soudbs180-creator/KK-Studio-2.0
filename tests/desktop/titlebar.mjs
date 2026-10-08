@@ -118,6 +118,11 @@ try {
       { windowsHide: true, encoding: "utf8" },
     ),
   );
+  await writeFile(
+    path.join(evidence, "drag-movement.json"),
+    JSON.stringify(movement, null, 2) + "\n",
+    { flag: "wx" },
+  );
   assert(
     movement.after.x - movement.before.x >= 50,
     "drag region must move the actual native window horizontally",

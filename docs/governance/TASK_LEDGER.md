@@ -6,12 +6,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
+| TASK-DESKTOP-FLUSH-001 | 桌面关闭前耐久保存与失败留窗 | DONE | TASK-PLUGIN-DEV-001 | root |
+| TASK-PLUGIN-MARKDOWN-001 | 随包Markdown去除CDN代码依赖与离线渲染 | DONE | TASK-PLUGIN-DEV-001 | root |
+| TASK-PLUGIN-RECOVERY-001 | 插件节点快照完整恢复与坏数据保护 | DONE | TASK-PLUGIN-DEV-001 | root |
 | TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | DONE | TASK-MODEL-001 | root |
 | TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | TASK-IMAGE-EDIT-001 | root |
 | TASK-UI-013 | 桌面标题栏与菜单合并为单排 | DONE | none | root |
 | TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | none | root |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
-| TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
+| TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | DONE | none | root |
 | T0 | 可复现候选源码与主线整合 | DONE | none | root |
 | TASK-GOV-001 | 治理源、ESLint、架构门禁和 CI | DONE | T0 | root |
 | TASK-PROV-001 | 冷却恢复与产品调度入口边界 | DONE | TASK-GOV-001 | root |
@@ -126,6 +129,42 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GIT-HEALTH-002 | 分支准入与未提交工作持续盘点 | TODO | TASK-GOV-001 | root |
 | TASK-UI-014-RESUME-001 | 接续因模型容量错误中断的UI审计 | TODO | UI-001 | root |
 
+## TASK-DESKTOP-FLUSH-001 — 桌面关闭前耐久保存与失败留窗
+
+- Goal: 编辑后立即关闭窗口仍保留最后修改，保存失败保留窗口和草稿
+- Scope: 当前创作快照队列与原生 CloseRequested 生命周期；同一随包插件可用目标的关联数据丢失缺陷
+- Acceptance: 最后编辑后立即关闭并重新打开，磁盘与节点正文完整; 窗口按钮及原生关闭事件都等待耐久队列，重复关闭去重; 保存失败或读保护下有未保存草稿时阻止关闭，主备原件不变; Web原有保存行为保持，fresh原生零console错误及独立审查
+- Branch: `fix/TASK-PLUGIN-DEV-001-same-origin-modules`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001`
+- Modules: src/features/creation/useCreationStorage.ts, src/features/creation/nativeClose.ts, src-tauri/capabilities/default.json, tests/unit, tests/desktop, docs
+- Verification: PASS — 本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。
+- Evidence: [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md), [docs/changes/2026-10-09-plugin-development/review.md](../../docs/changes/2026-10-09-plugin-development/review.md)
+- Updated: 2026-10-09
+
+## TASK-PLUGIN-MARKDOWN-001 — 随包Markdown去除CDN代码依赖与离线渲染
+
+- Goal: 四个随包插件在固定开发、生产和严格同源CSP桌面中编辑及重启恢复完整内容
+- Scope: 现有Markdown解析器从隐式marked@14 CDN导入转为锁定版本随包；不扩大CSP或远程权限
+- Acceptance: 阻断CDN时真实Markdown正文正确渲染且零页面错误; 原解析器主版本和语义保留，构建产物不请求外部可执行代码; 完整verify及fresh Tauri四插件重启验收与独立审查
+- Branch: `fix/TASK-PLUGIN-DEV-001-same-origin-modules`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001`
+- Modules: vendor/canvas-plugins/markdown, vendor/canvas-plugins/package-lock.json, tests/support, tests/development, tests/browser, tests/desktop, docs
+- Verification: PASS — 本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。
+- Evidence: [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md), [docs/changes/2026-10-09-plugin-development/review.md](../../docs/changes/2026-10-09-plugin-development/review.md)
+- Updated: 2026-10-09
+
+## TASK-PLUGIN-RECOVERY-001 — 插件节点快照完整恢复与坏数据保护
+
+- Goal: 保存及重新读取后保留插件类型、尺寸和完整JSON元数据，坏数据不成为可写空卡片
+- Scope: 现有CanvasCollectionItem.plugin的共享归一化与快照codec；不改变schema版本、存储身份或用户数据
+- Acceptance: 现有插件负载及长内容经过存储编码/解码完整保留，普通节点兼容; 非法负载/尺寸/非JSON元数据和嵌套秘密拒绝，原件不变; 真实development和production/Tauri重启插件项目后节点及编辑内容完整，相关回归和独立审查
+- Branch: `fix/TASK-PLUGIN-DEV-001-same-origin-modules`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001`
+- Modules: src/features/creation/model.ts, src/features/creation/snapshotCodec.ts, tests/unit, tests/development, tests/desktop, docs
+- Verification: PASS — 本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。
+- Evidence: [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md), [docs/changes/2026-10-09-plugin-development/review.md](../../docs/changes/2026-10-09-plugin-development/review.md)
+- Updated: 2026-10-09
+
 ## TASK-IMAGE-EDIT-001 — 统一图片编辑蒙版与连续重绘
 
 - Goal: 框选、画笔、色块共享坐标、裁剪、请求及融合，保护原图与未选像素
@@ -191,12 +230,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 在严格固定1421的开发模式中正常发现插件，不弹出阻断界面的Vite错误遮罩
 - Scope: 随包插件开发模块加载与回归，保持production/Tauri同源加载和CSP边界
 - Acceptance: 原主线已复现的public插件import错误在fresh development关闭; 固定1421开发设置/插件可操作且无新页面错误; production preview和Tauri插件回归通过，不关闭HMR遮罩或放宽CSP
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `fix/TASK-PLUGIN-DEV-001-same-origin-modules`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001`
 - Modules: src/features/plugins/pluginLoader.ts, vite.config.ts, tests/browser
-- Verification: FAIL — PRE-EXISTING FAILURE：main@21d121d和本任务1421均出现/plugins/*.js public-import错误；本任务只诊断登记。Esc后能力表单可保存，插件加载仍未修复。
-- Evidence: [docs/changes/2026-10-08-model-capabilities/verification.md](../../docs/changes/2026-10-08-model-capabilities/verification.md)
-- Updated: 2026-10-08
+- Verification: PASS — 本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。
+- Evidence: [docs/changes/2026-10-08-model-capabilities/verification.md](../../docs/changes/2026-10-08-model-capabilities/verification.md), [docs/changes/2026-10-09-plugin-development/intent.md](../../docs/changes/2026-10-09-plugin-development/intent.md), [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/plan.md](../../docs/changes/2026-10-09-plugin-development/plan.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md), [docs/changes/2026-10-09-plugin-development/review.md](../../docs/changes/2026-10-09-plugin-development/review.md)
+- Updated: 2026-10-09
 
 ## T0 — 可复现候选源码与主线整合
 

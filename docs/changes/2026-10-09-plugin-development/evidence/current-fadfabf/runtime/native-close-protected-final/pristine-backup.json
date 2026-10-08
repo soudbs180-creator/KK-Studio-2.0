@@ -1,0 +1,135 @@
+{
+  "activeProjectId": "project-muzyy43g-fambsmqb",
+  "homeDraft": {
+    "approvalMode": "auto",
+    "attachments": [],
+    "kind": "image",
+    "model": "",
+    "outputCount": 1,
+    "privacyMode": "byok_local",
+    "prompt": "",
+    "updatedAt": 0
+  },
+  "projects": [
+    {
+      "attachments": [],
+      "canvas": {
+        "edges": [],
+        "positions": {
+          "added-text-0ccb53f6-e6d3-4457-b9d2-ff3c7bf141bd": {
+            "x": 552,
+            "y": 397.5
+          },
+          "added-text-1b29930a-228f-4bce-a7b6-3af7677f7521": {
+            "x": 512,
+            "y": 337.5
+          },
+          "added-text-3efc7efe-c18e-4675-a9dd-6289867a1c90": {
+            "x": 492,
+            "y": 347.5
+          },
+          "added-text-5223adcb-456a-4a2d-bae9-856298e90ac2": {
+            "x": 462,
+            "y": 337.5
+          }
+        },
+        "version": 1,
+        "viewport": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        }
+      },
+      "composerDraft": {
+        "approvalMode": "auto",
+        "attachments": [],
+        "kind": "image",
+        "model": "kk-image-2",
+        "outputCount": 1,
+        "privacyMode": "byok_local",
+        "prompt": "",
+        "updatedAt": 1791490094908
+      },
+      "createdAt": 1791490094908,
+      "favoriteIds": [],
+      "id": "project-muzyy43g-fambsmqb",
+      "items": [
+        {
+          "description": "沙箱渲染 HTML",
+          "id": "added-text-5223adcb-456a-4a2d-bae9-856298e90ac2",
+          "kind": "text",
+          "plugin": {
+            "height": 320,
+            "metadata": {
+              "content": "<p>HTML 内容恢复 001</p>",
+              "editing": false
+            },
+            "type": "html:render",
+            "width": 420
+          },
+          "title": "HTML",
+          "updatedAt": 1791490095208
+        },
+        {
+          "description": "编辑与渲染 Markdown",
+          "id": "added-text-3efc7efe-c18e-4675-a9dd-6289867a1c90",
+          "kind": "text",
+          "plugin": {
+            "height": 300,
+            "metadata": {
+              "content": "# Markdown 内容恢复 001\n\n**完整正文**",
+              "editing": false
+            },
+            "type": "markdown:doc",
+            "width": 360
+          },
+          "title": "Markdown",
+          "updatedAt": 1791490095432
+        },
+        {
+          "description": "彩色便利贴",
+          "id": "added-text-0ccb53f6-e6d3-4457-b9d2-ff3c7bf141bd",
+          "kind": "text",
+          "plugin": {
+            "height": 200,
+            "metadata": {
+              "content": "便利贴内容恢复 001\n第二行完整保留",
+              "pluginColor": "#fde68a"
+            },
+            "type": "sticky-note:note",
+            "width": 240
+          },
+          "title": "便利贴",
+          "updatedAt": 1791490095666
+        },
+        {
+          "description": "渲染 SVG 矢量图",
+          "id": "added-text-1b29930a-228f-4bce-a7b6-3af7677f7521",
+          "kind": "text",
+          "plugin": {
+            "height": 320,
+            "metadata": {
+              "content": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 200 100\"><text x=\"5\" y=\"30\">SVG 恢复 001</text></svg>\n<!-- 关闭前的最后修改必须完整保存 -->"
+            },
+            "type": "svg:vector",
+            "width": 320
+          },
+          "title": "SVG",
+          "updatedAt": 1791490097200
+        }
+      ],
+      "kind": "image",
+      "likedIds": [],
+      "messages": [],
+      "model": "kk-image-2",
+      "name": "未命名项目",
+      "prompt": "",
+      "reviewComments": [],
+      "stagePlans": [],
+      "tasks": [],
+      "updatedAt": 1791490097200
+    }
+  ],
+  "revision": 21,
+  "version": 2
+}

@@ -1,0 +1,76 @@
+# Verification：开发插件修复
+
+## 当前本地验收事实
+
+- Base：main8c921a525ae505a558b0efee641830f1d61166fa（PR41已落地且实际post-main37826264108成功）。最终产品集合以identity-c8ce21c为准；bdb完整verify、be5 fresh build、c8原生8步、fad上方动作13之间产品blob零变化。最终doc head审查/Hosted/普通合并/main gate单独执行，不能让当前本地证据自动代表托管完成。
+- 完整verify804root/172Agent（原skip8/2）、447browser447attempts零实际retry/flaky/skip、固定1421严格development四插件PASS；Rust102/fmt/clientcheck/fresh带Agent EXE PASS。Web与Tauri实际production入口assets/index-DP4RQQ71.js，SHA256f581ef80aeaa08b64ee5e2feb593a03670c7ff8a0e031fbf5263ff1592a71bab；CSS06252c7c…保持。
+- Native launch实际命令由tests/desktop/plugin-recovery.mjs spawn fresh release/--data-dir独立目录；CDP127.0.0.1:9359，实际route http://tauri.localhost/，mode=production/entry=src/main.tsx；Web development实际127.0.0.1:1421，Vite模式/source entry。链路：main.tsx→App.tsx→pluginLoader/nodeRegistry→PluginNode→随包/plugins/*.js；App→useCreationStorage→snapshotCodec/model→现有存储桥。全部4文件public/dist字节相同，Markdown未请求CDN代码，CSP self保持。
+- 原生8步与同EXE CSP/TaskHost11/上方动作13/最终标题栏PASS，EXE SHA25612009ce4452f9b61e495f3d6931c0d4a0ef3040bf4ded501a88eb46d1e521e69。3轮正常exit0，保护脏draft专用轮只验证阻止关闭后owned SIGTERM清理。errors/requestFailures/consoleDetails皆[]；真实IO锁主件在释放前handle capture与backup字节保护、重试后完整最后草稿，不能跨恢复阶段错误要求整个snapshot hash不变。
+- 标题栏第一轮实际拖动FAIL原因UNKNOWN；仅新增wx位移诊断后的下一次完整门禁PASS（x+80/y+60）。原始失败、截图和最终结果均保留，不宣称已根治环境不稳定。四插件fixture节点叠放，正文逐项DOM断言与截图的可读范围区分。
+- 证据归档[manifest](evidence/current-fadfabf/manifest.json)包含原始工件（47PNG）、source identity、实际raw与gzip-base64 lossless logs；每件原始SHA与bytes校验，原始FAIL不覆写。后续独立review收据另加入。当前[全部任务及优先级](status.md)，FEAT013保持PARTIAL，真实Provider/真机/用户视觉等原开放对象保留。
+- 文档收尾首次lint因启动命令遗漏Node24的PATH、子npm无法找到而失败，原始final-doc-lint.txt保留。修正命令环境后final-doc-lint-corrected实际exit0：109任务、35功能、102现行Markdown与版本全部零违例；未修改或关闭门禁。
+- 最终a5ee57e独立补审发现PLUGIN-DOC-001/P2：工作区172条原字节校验通过，但已提交Git blob仅170条通过，marked-version.json与review-source-fadfabf.md被换行规范化。该次提交不满足证据保真验收，不能合并。工程外原件不变；新增evidence的Git -text属性并重新保存两个原件，随后按提交中的blob逐条校验并补审，新结果另记。
+
+以下为各阶段的历史记录，旧“未修复/未运行”描述不覆盖当前事实。
+
+
+- Task：TASK-PLUGIN-DEV-001；准备base 1d6f640ac6f3a1e7af32c38d85596527704dc54a。
+- PRE-EXISTING FAILURE：当前主线账本及Mask原始strict development证据记录public插件import失败。当前任务尚未运行新开发复现，不把历史PASS/FAIL改绑此分支。
+- npm ci正在本任务独立worktree执行。源码修复、开发/生产/native回归、full verify、独立review、Hosted/merge/main尚未完成。
+- 外部原始证据：D:/kk-studio/.verification/TASK-PLUGIN-DEV-001-20261009；实际来源/结果随后追加。
+
+## 当前准备结果（未最终验收）
+
+独立npm ci通过；12旧loader测试通过。fresh固定1421以main1d的未改loader实际复现4模块500、Vite遮罩阻挡设置，原PNG/JSON/日志保留。URL修复后4模块200、4节点已渲染，后续driver对reload默认首页的旧假设失败；按实际项目库重新打开保存项目，未放宽启停/数据断言。该次真实DOM又暴露HTML静态children key警告，错误没有过滤。SDK静态/动态校验测试先2RED/1GREEN，修复后15/15（12旧+3新）PASS；SDK类型检查和四插件重建PASS。初次SSR探针错误地期待SSR提供DOM缺key警告，原probe及失败保留，未用于产品成功结论。下一次开发尝试1421被其他进程占用，实际未开始，仍FAIL；未换端口、复用或杀其他进程。最新开发/native/full verify/独立review仍未完成。
+
+## 2026-10-09 最新main组合的第二次真实失败
+
+当前head 3c8b962（已合main8c，版本工作区2.1.12）实际development四插件200/可创建/零console error/无遮罩，关闭设置后按实际项目库打开唯一保存项目，HTML插件定位失败。原始receipt/PNG/日志development-green-main-8c921a5-working保持FAIL；未删除新恢复断言或把此运行改为PASS。已登记TASK-PLUGIN-RECOVERY-001 P1，源码缺字段与恢复回归随后修复。
+
+## 2026-10-09 最小修复预验收（working tree，尚未最终提交）
+
+- plugin-recovery-red.txt：6项新snapshot回归实际4 FAIL/2 PASS，原因分别为负载遗漏、浅层不存在以及坏payload/非JSON静默接受；保留原长内容失败日志。
+- plugin-recovery-green.txt：修复现有字段clone和codec JSON schema后，新6+旧4共10/10 PASS，长内容/JSON扩展完整、非共享引用、坏字段/尺寸/非JSON及嵌套secret拒绝、原输入不变、普通旧节点兼容。
+- development-recovery-working：当前3c8+working修复实际四模块200/4节点恢复/启停持久化/unsafe0/零console/无遮罩 PASS。
+- development-markdown-offline-red：扩到实际4节点内容编辑并阻断esm.sh后，Markdown标题为空，net::ERR_FAILED及真实dynamic import pageerror，receipt仍FAIL；已登记新P1，未过滤错误。
+- marked-version.json/marked-install.txt/plugins-offline-build.txt：实际registry14.1.4/integrity回读、workspace精确锁依赖安装、四插件重新构建 PASS。
+- development-offline-content-working：再次固定1421并阻断CDN，四插件创建/编辑/正确预览、刷新恢复完整内容、启停持久化、unsafe0、4模块200、零console/遮罩实际PASS。
+- 以上是已发生的局部预验收；完整verify、fresh桌面原生重启/坏数据原件保护、最新已提交SHA独立review、Hosted/普通合并/main还须继续。
+
+## Native driver 平台语义修正
+
+精确dc3 source审查独立复现PLUGIN-REVIEW-001：Windows/Node24 own child kill 的 exit code=null / signal=SIGTERM / signalCode=SIGTERM，原stop仅以exitCode会错判已退出。root独立owned-child-exit-probe.json同态复现；未启动真实native验收前修正等待真实exit事件并记录code/signal，以exitCode或signalCode判断退出，保留10秒有界失败。未放宽任何内容/原件/重启断言；runtime实现未变，fresh build实际从dc3来源完成。新的driver提交和实际原生验收随后记录。
+
+## 首次真实native与关闭链路修正
+
+836 driver实际native-recovery-83639e7 FAIL：四插件编辑/正确正文/原生保存通过、零错误；父进程SIGTERM已退出，但旧WebView CDP短暂未关闭，立即重启被正确拒绝“port occupied”。该raw/PNG/JSON保持FAIL。运行停止后9359实际自动释放，未停止其他owner。改为正常验收点击真实“关闭窗口”并等待原生exitCode0、旧CDP消失后再启动；信号退出仅用于自身失败清理，10秒有界失败不放宽。独立审查保存建议落实：变异前wx归档pristine主件/backup和corrupt输入原始字节，失败也可复核还原。产品源码与fresh EXE未变。
+
+## 原生备份fixture生命周期修正
+
+19fb真实native-recovery-graceful仍FAIL：四插件编辑/原生保存/真实关闭exit0/重开恢复内容已经通过且零错误；backup读取ENOENT。实际独立目录只有第一次完整保存，Rust契约首次写入没有上一版可备份；并非产品丢失backup。新增真实SVG编辑并等待耐久提交、恢复正文并等待第二次耐久提交，确保先存在实际上一版backup再进行坏数据断言，不手造成功backup。旧FAIL保持原始含义；fresh EXE/runtime不变。
+
+
+## 新关闭数据丢失 RED（未关闭）
+
+- native-recovery-request-trace @0260ece：四轮真实 exit0，但 console/requestfailed 实际 URL 为 http://ipc.localhost/write_creation_snapshot，closing=true；严格结果 FAIL，没有过滤错误。
+- native-immediate-close-red @0260ece + 未提交回归探针，fresh EXE SHA256 eaa83aa100bf421503cf35d9c6ee51a871119019a67820e33624e5757d41a236：最后 SVG 编辑后立即关闭，磁盘正文缺失 `<!-- 关闭前的最后修改必须完整保存 -->`，同时 IPC connection refused，实际 FAIL。原件在工程外 TASK-PLUGIN-DEV-001-20261009/native-immediate-close-red/desktop-runtime.json；不把旧已保存关闭测试当成此路径通过。
+- 登记 TASK-DESKTOP-FLUSH-001 P1 / PLUGIN-REVIEW-002 merge-blocker；最终验收仍未完成。
+
+
+- 关闭守卫单元先缺实现 RED，随后 7 个关闭契约 + 6 恢复 + 3 JSX = 16/16 PASS；typecheck/lint、109任务治理零违例。当前是工作区预验收；完整verify、fresh EXE及立即关闭/真实IO失败留窗仍待新提交执行。
+
+
+- verify-e3a6660.txt 实际 FAIL：原 3 个保存队列 VM 回归拒绝新增 @tauri-apps/api/core import，尚未执行原队列断言；保留原 fail，未删断言。更新 harness 显式平台边界并调用真实 nativeClose，实现不替换；原 3 + 3 新实际 hook + 7 helper 共13/13 PASS。新增覆盖最新revision/真实hookIO失败错误脱敏及重试/异步监听晚到清理。Rust fmt/test102 PASS；capabilities.json 新 allow-destroy 为真实生成变化，必须保留；desktop/windows schema 已逐字符排除换行编码确认无语义变化。完整verify随后重跑。
+
+
+- bdb82df 完整 verify-close-final 实际 exit0：root804/812（既有skip8）、Agent172/174（既有skip2）、447/447浏览器，固定1421严格四插件开发 PASS/零错误。Rust102/fmt先前 e3 产品组合通过；e3→bdb产品未变。原生fixture释放锁可重复清理，且锁清理失败不跳过本次自有桌面进程清理；未放宽任何内容/console/正常退出断言。fresh build与native当前证据随后追加。
+
+
+- native-close-final-be5f327 实际 FAIL：新 EXE12009ce4… 首次立即关闭最后编辑保留/exit0，真实重启四正文通过、console/requestfailed均零；真实IO失败与重复关闭留窗已发生，随后 driver 在释放锁之后错误要求主件仍不可变，而恢复后的排队自动保存已正常写入新草稿。该次FAIL完整保留。主件保护断言改为独占锁持有者在释放前读取实际文件句柄字节，backup仍在锁持有期间检查；不删除原件/草稿/留窗/零错误断言，不用等待代替立即关闭。fresh产品源码未变。
+
+
+- c8ce21c native-close-protected-final 实际8步 PASS：立即关闭最后修改保留、实际重启、真实Windows独占文件导致Rust IO失败/重复关闭保留窗口与草稿、释放后重试完整落盘、坏读+脏草稿拒绝关闭、主备原件不变、恢复原件四正文；errors/consoleDetails/requestFailures皆空。3个正常exit0，坏读脏草稿仅测试自身SIGTERM清理（不冒称正常退出）。fresh EXE SHA25612009ce4452f9b61e495f3d6931c0d4a0ef3040bf4ded501a88eb46d1e521e69，入口index-DP4RQQ71.js f581ef80…；428源码/config身份与verify→fresh→runtime产品无差异已记录identity-c8ce21c。
+- 同EXE原CSP启停driver通过，TaskHost11组PASS且合成凭据清理读回成功、errors[]。titlebar第一次真实拖动断言FAIL（raw/initial PNG保留，原因UNKNOWN）；只新增写出实际drag-movement的诊断，未改动作/阈值/断言，下一次完整标题栏/真实拖动/最大化还原/最小化/菜单/正常关闭全部PASS。不将前一次失败改写；保留原生手势环境不稳定维护风险。
+
+
+- fadfabf 精确独立报告实际 PASS WITH FOLLOW-UPS；001/002 CLOSED、未关闭P0–P2为0，003非阻断P3保留首次标题栏失败未知原因。原报告169工件manifest内完整归档，最终文档SHA另补审；其他105上游对象只读 deepEqual 保护不变。
