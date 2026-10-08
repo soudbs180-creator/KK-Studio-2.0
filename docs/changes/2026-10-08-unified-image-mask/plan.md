@@ -60,7 +60,7 @@ Interfaces：ImageEditor(document,onChange,onSubmit)；现有 command context �
 
 - [x] 同步功能卡/registry/任务账本/PROGRESS/PROJECT_STATE/HANDOFF，版本 bump Desktop/Web。
 - [x] npm run verify、client:check、Rust tests和可执行原生验证；明确真实模型/真机边界。
-- [ ] 绑定当前 base/head 独立只读 reviewer，修复阻断及复核；保留本地可审阅提交，不自动合并发布。
+- [x] 绑定 base 78cea37 / 源码 head dbc88bb 的独立只读 reviewer，IM-001–009 全部 CLOSED；保留本地可审阅提交，不自动合并发布。最终文档提交另做精确 head 补审，见 review。
 
 ## 开工与恢复记录
 

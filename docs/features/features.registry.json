@@ -23,6 +23,7 @@
     "tests": [
       "tests/unit/imageEdit.test.ts",
       "tests/unit/imageEditSnapshot.test.ts",
+      "tests/unit/imageEditFixtureCredential.test.ts",
       "tests/unit/imageMaskAnnotation.test.ts",
       "tests/unit/nativeTaskHost.test.ts",
       "tests/unit/projectPackage.test.ts",

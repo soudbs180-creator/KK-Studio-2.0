@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-10-08 统一 Mask 本地实现完成
+
+TASK-IMAGE-EDIT-001 本地实现 DONE；任务分支 codex/TASK-IMAGE-EDIT-001-unified-mask 已承接 main@78cea37，源码 head dbc88bb 独立 PASS、IM-001–009 CLOSED。完整 verify root741/749、Agent172/174（原skip8/2）、browser420/420零重试/零flaky；Rust100、fresh Tauri 编辑与主线原生11组通过，Web/Desktop实际生产bundle相同。独立reviewer另跑61单测和实际Tauri，Mask外0改动、合成凭据冲突保留与清理读回通过。源码Desktop2.1.8/Web2.1.9；最终文档提交单独补审，保留本地分支，未推送/合入main/发布。FEAT-035 PARTIAL，TASK-IMAGE-EDIT-VERIFY-002 TODO，真实Provider质量、任意语义几何漂移、物理手机/键盘与用户最终视觉未验。见[验证](../changes/2026-10-08-unified-image-mask/verification.md)和[审查](../changes/2026-10-08-unified-image-mask/review.md)。下面早期候选及主线记录保留为当时事实。
+
 ## 2026-10-08 统一 Mask 承接主线后的候选
 
 TASK-IMAGE-EDIT-001 在独立任务分支承接 main@78cea37（PR #37），保留原生取消和归档修复。组合完整 verify exit 0：739 root / 172 Agent（原 skip 8/2）、420 browser 零重试、Rust 100；fresh Tauri 的 Mask、项目包、删除再生/重启和主线生命周期 11 组通过。Web/Desktop 实际生产 bundle hash 一致。源码 Desktop 2.1.8 / Web 2.1.9；正式已提交 head 的独立复验待完成，未推送本任务、合入 main 或发布。FEAT-035 仍 PARTIAL，真实 Provider/手机/视觉边界归 TASK-IMAGE-EDIT-VERIFY-002。见[组合验证](../changes/2026-10-08-unified-image-mask/verification.md)。以下首轮及主线记录保留为各自当时事实。

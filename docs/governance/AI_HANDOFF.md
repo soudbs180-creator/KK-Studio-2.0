@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-10-08 统一 Mask 已完成的本地分支
+
+恢复入口仍为本仓库 .worktrees/TASK-IMAGE-EDIT-001、分支 codex/TASK-IMAGE-EDIT-001-unified-mask；先核对 Git 状态，读[verification](../changes/2026-10-08-unified-image-mask/verification.md)、[review](../changes/2026-10-08-unified-image-mask/review.md)与账本。本地实现 TASK-IMAGE-EDIT-001 DONE；base78cea37 → 源码head dbc88bb 独立PASS、IM-001–009 CLOSED，完整verify741root/172Agent/420browser零重试（原skip8/2）、Rust100/fresh Tauri/主线原生11组通过。reviewer自行执行61单测和实际Tauri，Mask外0改动、凭据保护与清理读回通过。Desktop2.1.8/Web2.1.9，无新产品增量；最终文档提交需短补审，精确head收据保存于本机output/unified-image-mask-20261008/review-final-head.md。保留本地提交与工作树，未推送/合入main/发布；FEAT-035保持PARTIAL，真实Provider、语义几何检测与物理手机/用户视觉仍由TASK-IMAGE-EDIT-VERIFY-002验收。历史失败收据保留，不覆盖其他worktree或用户数据。
+
 ## 2026-10-08 统一 Mask 主线整合恢复入口
 
 任务工作树 .worktrees/TASK-IMAGE-EDIT-001、分支 codex/TASK-IMAGE-EDIT-001-unified-mask。首次实现 ba8806d，随后在源分支承接 main@78cea37（PR #37）。先读[plan](../changes/2026-10-08-unified-image-mask/plan.md)、[组合 verification](../changes/2026-10-08-unified-image-mask/verification.md)及[review](../changes/2026-10-08-unified-image-mask/review.md)。组合完整 verify/Rust100/fresh EXE Mask 与主线原生11组、Web production 同 hash PASS；Desktop2.1.8/Web2.1.9。下一步绑定已提交 head 独立关闭 IM-001–008，不能以 dirty 预检代填。未推送/合并本任务或发布；保留 TASK-IMAGE-EDIT-VERIFY-002 真实 Provider/真机/视觉后续及双方历史记录。

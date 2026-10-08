@@ -81,7 +81,15 @@ Desktop 脚本的目录 key、summary camelCase、按钮名称及保存等待错
 
 完整 `npm run verify -- -- --workers=4 --retries=0` 再次 exit 0：root 741/749（原 skip 8）、Agent 172/174（原 skip 2）、browser 420/420，0 retry/0 flaky；lint/typecheck/UI207/format/build 全通过。随后补充 cleanup 的 browser.isConnected 检查，最新 Native 与定向 formatter 再次 exit 0；产品源码、版本、EXE/JS hash 未变，不重复声称新的产品构建。
 
-最新 Native 收据 .tmp/image-edit/desktop/run-1791463594856-56968/desktop-acceptance.json；两次 Mask 请求、包/删除原图/再生/重启、Mask 外 0 改动继续通过。证据副本 D:/kk-studio/output/unified-image-mask-20261008/run-credential-fixed-IM009/，含新脚本 66 文件源清单与故障/完整 verify 日志。旧 64 文件清单、原生收据及 1527b48 的审查失败结论保留；新 head 独立关闭 IM-009 才能完成。
+最新 Native 收据 .tmp/image-edit/desktop/run-1791463594856-56968/desktop-acceptance.json；两次 Mask 请求、包/删除原图/再生/重启、Mask 外 0 改动继续通过。证据副本 D:/kk-studio/output/unified-image-mask-20261008/run-credential-fixed-IM009/，含新脚本 66 文件源清单与故障/完整 verify 日志。旧 64 文件清单、原生收据及 1527b48 的审查失败结论保留；返修阶段尚待新 head 独立关闭 IM-009，后续结果如下。
+
+## 已提交源码的独立复验
+
+源码 head dbc88bbd1a3425c04b509730780ff50547788e67、base 78cea37af9359fd2d9f58f2854525516deee8a06；2026-10-08 20:55:05 +08:00 独立 /root/mask_review 正式 PASS，IM-001–009 全部 CLOSED。见[独立收据副本](evidence/review-dbc88bb.md)与 [review](review.md)。本地实现任务可关闭，FEAT-035 PARTIAL 和真实模型/手机后续保持开放。
+
+reviewer 自行执行定向 Node 61/61、formatter 和本轮实际 Tauri 验收（.tmp/image-edit/desktop/run-1791463898383-70816/desktop-acceptance.json，SHA-256 699dd1f1abd070db1fd8bf597cb015184f85ff7f961fc2eb508e0c775e226284）。两次 PNG Mask、4 素材包/删除来源原图/相邻候选/再生/重启通过，Mask 外改动 0，credentialConflictPreserved 与 credentialCleanupComplete 均 true，0 errors；结束后本轮 CDP 9364 无监听。删除生成候选的恢复保护由单测验证，不混同实际删除来源原图的验收。
+
+独立重算 66/66 清单匹配，产品源码/配置/版本相对 1527b48 没有变化，EXE 与 JS 仍匹配上述组合运行指纹。完整 verify、Rust100 与主线原生11组明确是实现者的运行结果；前轮 reviewer 的 Web11/Rust3/typecheck 依据未变产品内容继续有效。本次只收尾文档，最终提交另做精确 SHA 补审，不重复声称产品重新构建。
 
 ## 尚未验收
 

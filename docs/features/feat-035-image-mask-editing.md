@@ -18,7 +18,7 @@
 
 ## 测试与证据
 
-[本轮验证](../changes/2026-10-08-unified-image-mask/verification.md) / [独立审查](../changes/2026-10-08-unified-image-mask/review.md)。本地verify、100 Rust测试、两端production bundle与原生重启/包恢复通过；具体范围和fixture错误勘误见验证记录。
+[本轮验证](../changes/2026-10-08-unified-image-mask/verification.md) / [独立审查](../changes/2026-10-08-unified-image-mask/review.md)。本地完整verify root741/749、Agent172/174（原skip8/2）、browser420/420零重试，100 Rust、两端production bundle与原生重启/包恢复通过。源码head dbc88bb独立PASS、IM-001–009关闭；reviewer另跑61定向单测和实际Tauri验收，原件保护/凭据清理通过。具体范围和fixture错误勘误见验证记录。
 
 ## 当前能力
 
