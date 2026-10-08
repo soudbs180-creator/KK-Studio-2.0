@@ -1,0 +1,60 @@
+[WebServer] (node:56776) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:40968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\browser\stage-workbench.spec.ts:74:1 › 计划拒绝和解除阻断沿用原计划，仍须再次审批 (30.0s)
+(node:64388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\browser\stage-workbench.spec.ts:98:1 › 无工作项的合法结果阶段可以拒绝摘要并保存 (30.0s)
+(node:11164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 tests\browser\stage-workbench.spec.ts:110:1 › 有工作项的结果拒绝仍需选择返工范围 (1.3s)
+
+
+  1) tests\browser\stage-workbench.spec.ts:74:1 › 计划拒绝和解除阻断沿用原计划，仍须再次审批 ────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.dblclick: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '重新提交计划审批', exact: true })
+
+
+      86 |     "计划审批尚未通过",
+      87 |   );
+    > 88 |   await page.getByRole("button", { name: "重新提交计划审批", exact: true }).dblclick();
+         |                                                                     ^
+      89 |   await expect.poll(async () => (await savedPlan(page))?.stages[0].status).toBe("plan_review");
+      90 |   expect((await savedPlan(page)).revision).toBe(4);
+      91 |   expect((await savedPlan(page)).stages[0].planApprovedAt).toBeUndefined();
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-ORCH-002-stage-workbench\tests\browser\stage-workbench.spec.ts:88:69
+
+    Error Context: test-results\stage-workbench-计划拒绝和解除阻断沿用原计划，仍须再次审批\error-context.md
+
+  2) tests\browser\stage-workbench.spec.ts:98:1 › 无工作项的合法结果阶段可以拒绝摘要并保存 ─────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '确认拒绝阶段结果', exact: true })
+
+
+      101 |   await page.getByRole("button", { name: "返工结果", exact: true }).click();
+      102 |   await expect(page.getByRole("checkbox")).toHaveCount(0);
+    > 103 |   await page.getByRole("button", { name: "确认拒绝阶段结果", exact: true }).click();
+          |                                                                     ^
+      104 |   await expect.poll(async () => (await savedPlan(page))?.stages[1].status).toBe("doing");
+      105 |   expect((await savedPlan(page)).stages[1].resultSummary).toBeUndefined();
+      106 |   expect((await savedPlan(page)).stages[1].workItems).toEqual([]);
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-ORCH-002-stage-workbench\tests\browser\stage-workbench.spec.ts:103:69
+
+    Error Context: test-results\stage-workbench-无工作项的合法结果阶段可以拒绝摘要并保存\error-context.md
+
+  2 failed
+    tests\browser\stage-workbench.spec.ts:74:1 › 计划拒绝和解除阻断沿用原计划，仍须再次审批 ─────────────────────────────
+    tests\browser\stage-workbench.spec.ts:98:1 › 无工作项的合法结果阶段可以拒绝摘要并保存 ──────────────────────────────
+  1 passed (1.1m)

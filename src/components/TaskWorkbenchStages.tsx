@@ -1,147 +1,183 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  stageApprovalGateFor,
+  pendingStageApprovals,
   stagePlanProgress,
-  stageWorkItemCounts,
-  type StageApprovalGate,
-  type StagePlan,
+  type StageStatus,
 } from "../domain/stagePlan";
+import type { CreationProject } from "../features/creation/model";
 import type { StageDecisionInput } from "../features/agent/orchestrator";
+import StagePlanDetail from "./StagePlanDetail";
 
-const STAGE_STATUS_LABELS: Record<
-  StagePlan["stages"][number]["status"],
-  string
-> = {
-  doing: "执行中",
-  plan_review: "计划审批",
+export const stageStatusLabels: Record<StageStatus, string> = {
+  doing: "待执行 / 执行中",
+  plan_review: "等待计划审批",
   blocked: "已阻断",
-  result_review: "结果审批",
+  result_review: "等待结果审批",
   done: "已完成",
 };
 
-const GATE_LABELS: Record<StageApprovalGate, string> = {
-  plan: "计划",
-  result: "结果",
-};
-
-function handleLabel(gate: StageApprovalGate, decision: "approve" | "reject") {
-  if (gate === "plan") return decision === "approve" ? "批准计划" : "阻止计划";
-  return decision === "approve" ? "批准结果" : "退回返工";
+export interface StagePlanActions {
+  onStageDecision: (
+    projectId: string,
+    input: StageDecisionInput,
+  ) => Promise<void>;
+  onRetryStage: (
+    projectId: string,
+    planId: string,
+    stageIndex: number,
+    expectedRevision: number,
+  ) => Promise<void>;
+  onRequestPlanApproval: (
+    projectId: string,
+    planId: string,
+    stageIndex: number,
+    expectedRevision: number,
+  ) => Promise<void>;
+  stageWriteDisabledReason?: string;
 }
 
 export default function TaskWorkbenchStages({
-  plans,
-  onDecision,
-}: {
-  plans: StagePlan[];
-  onDecision: (input: StageDecisionInput) => void;
-}) {
+  project,
+  onStageDecision,
+  onRetryStage,
+  onRequestPlanApproval,
+  stageWriteDisabledReason,
+}: StagePlanActions & { project?: CreationProject }) {
+  const [planId, setPlanId] = useState("");
+  const [stageIndex, setStageIndex] = useState<number | null>(null);
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  function decide(
-    plan: StagePlan,
-    stageIndex: number,
-    gate: StageApprovalGate,
-    decision: "approve" | "reject",
-  ): void {
+  const [notice, setNotice] = useState("");
+  const busyRef = useRef(false);
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  const plans = project?.stagePlans ?? [];
+  const plan = plans.find((item) => item.id === planId) ?? plans[0];
+  const pending = plan ? pendingStageApprovals(plan) : [];
+  const stage =
+    plan?.stages.find((item) => item.index === stageIndex) ??
+    plan?.stages.find((item) => item.index === pending[0]?.stageIndex) ??
+    plan?.stages[0];
+  const progress = plan ? stagePlanProgress(plan) : null;
+
+  async function run(action: () => Promise<void>) {
+    if (busyRef.current || stageWriteDisabledReason) return;
+    busyRef.current = true;
+    if (stage) setStageIndex(stage.index);
+    setBusy(true);
     setError("");
+    setNotice("");
     try {
-      onDecision({
-        planId: plan.id,
-        stageIndex,
-        gate,
-        decision,
-        expectedRevision: plan.revision,
-      });
-    } catch (reason) {
-      setError(
-        reason instanceof Error ? reason.message : "审批未写入，请刷新后重试。",
-      );
+      await action();
+      if (mounted.current) setNotice("阶段状态已保存到当前项目。");
+    } catch (cause) {
+      if (mounted.current)
+        setError(cause instanceof Error ? cause.message : "阶段操作失败。");
+    } finally {
+      busyRef.current = false;
+      if (mounted.current) setBusy(false);
     }
   }
 
   return (
-    <div className="stage-plan-panel" data-testid="stage-plan-panel">
-      {error && (
-        <p className="stage-plan-error" role="alert">
-          {error}
-        </p>
-      )}
-      {!plans.length ? (
-        <div className="task-workbench-empty">当前项目暂无编排计划。</div>
+    <section
+      className="stage-plan-panel"
+      aria-label="阶段计划"
+      data-testid="stage-plan-panel"
+    >
+      {!project || !plan || !stage || !progress ? (
+        <div className="stage-plan-empty">
+          <h3>暂无阶段计划</h3>
+          <p>打开或导入包含阶段计划的项目后，可在这里审阅计划与结果。</p>
+          <p>计划自动创建和自动执行尚未接入；现有生成任务仍在 Queue 中查看。</p>
+        </div>
       ) : (
-        plans.map((plan) => {
-          const progress = stagePlanProgress(plan);
-          return (
-            <section className="stage-plan-card" key={plan.id}>
-              <header className="stage-plan-header">
-                <div>
-                  <h3>{plan.title}</h3>
-                  <p>
-                    {progress.done}/{progress.total} 阶段完成 · revision{" "}
-                    {plan.revision}
-                  </p>
-                </div>
-                <span className="stage-plan-progress">
-                  {progress.pendingApprovals
-                    ? `待审批 ${progress.pendingApprovals}`
-                    : "无待审批"}
-                </span>
-              </header>
-              <ol className="stage-plan-stages">
-                {plan.stages.map((stage) => {
-                  const gate = stageApprovalGateFor(stage);
-                  const counts = stageWorkItemCounts(stage);
-                  return (
-                    <li className="stage-plan-stage" key={stage.index}>
-                      <div className="stage-plan-stage-head">
-                        <div>
-                          <strong>
-                            {stage.index + 1}. {stage.name}
-                          </strong>
-                          <span>{stage.goal}</span>
-                        </div>
-                        <span
-                          className={`stage-status stage-status-${stage.status}`}
-                        >
-                          {STAGE_STATUS_LABELS[stage.status]}
-                        </span>
-                      </div>
-                      <div className="stage-plan-stage-meta">
-                        <span>
-                          工作项 {counts.succeeded}/{counts.total} 成功
-                          {counts.failed ? ` · 失败 ${counts.failed}` : ""}
-                        </span>
-                        {gate && (
-                          <div className="stage-plan-actions">
-                            <span>{GATE_LABELS[gate]}门</span>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                decide(plan, stage.index, gate, "reject")
-                              }
-                            >
-                              {handleLabel(gate, "reject")}
-                            </button>
-                            <button
-                              type="button"
-                              className="primary-button"
-                              onClick={() =>
-                                decide(plan, stage.index, gate, "approve")
-                              }
-                            >
-                              {handleLabel(gate, "approve")}
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </li>
-                  );
-                })}
-              </ol>
-            </section>
-          );
-        })
+        <>
+          <header className="stage-plan-heading">
+            <label>
+              选择阶段计划
+              <select
+                value={plan.id}
+                disabled={busy}
+                onChange={(event) => {
+                  setPlanId(event.target.value);
+                  setStageIndex(null);
+                  setError("");
+                  setNotice("");
+                }}
+              >
+                {plans.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.title}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <p>
+              {progress.done} / {progress.total} 阶段已完成 ·{" "}
+              {progress.pendingApprovals} 项待审批
+            </p>
+          </header>
+          <ol className="stage-plan-timeline" aria-label="计划阶段">
+            {plan.stages.map((item, index) => (
+              <li key={item.index}>
+                <button
+                  type="button"
+                  aria-pressed={item.index === stage.index}
+                  onClick={() => setStageIndex(item.index)}
+                >
+                  <strong>
+                    阶段 {index + 1}：{item.name}
+                  </strong>
+                  <span>{stageStatusLabels[item.status]}</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+          {stageWriteDisabledReason && (
+            <p className="stage-plan-error" role="alert">
+              {stageWriteDisabledReason}
+            </p>
+          )}
+          {error && (
+            <div className="stage-plan-error" role="alert">
+              <p>{error}</p>
+              <p>请查看最新阶段状态；保存失败时请先处理项目恢复提示。</p>
+            </div>
+          )}
+          {notice && <p role="status">{notice}</p>}
+          <StagePlanDetail
+            key={`${plan.id}-${stage.index}`}
+            plan={plan}
+            stage={stage}
+            busy={busy}
+            disabledReason={stageWriteDisabledReason}
+            onDecision={(input) =>
+              run(() => onStageDecision(project.id, input))
+            }
+            onRetry={() =>
+              run(() =>
+                onRetryStage(project.id, plan.id, stage.index, plan.revision),
+              )
+            }
+            onRequestPlanApproval={() =>
+              run(() =>
+                onRequestPlanApproval(
+                  project.id,
+                  plan.id,
+                  stage.index,
+                  plan.revision,
+                ),
+              )
+            }
+          />
+        </>
       )}
-    </div>
+    </section>
   );
 }

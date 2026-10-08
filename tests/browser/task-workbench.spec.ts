@@ -134,7 +134,12 @@ test("阶段计划在任务工作台显示并通过编排器审批", async ({ pa
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.locator(".project-library-card").first().click();
   await workbench(page);
-  await page.getByRole("tab", { name: "Plan" }).click();
+  await expect(
+    page.getByRole("tab", { name: "Plan", exact: true }),
+  ).toHaveCount(1);
+  await expect(page.getByRole("tab", { name: /^阶段计划/ })).toHaveCount(0);
+  await page.getByRole("tab", { name: "Plan", exact: true }).click();
+  await expect(page.getByTestId("stage-plan-panel")).toHaveCount(1);
   await expect(page.getByTestId("stage-plan-panel")).toContainText(
     "季度宣传计划",
   );

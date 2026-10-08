@@ -8,6 +8,15 @@
 
 TASK-PROV-005/006 为 P1 TODO，配置 durable 恢复与 native image health/容量分别推进。BACKEND-MEDIA-001 → ORCH-003、报价回执、MCP-AUTO 可以先本地实现；真正付费服务、VPS、ComfyUI、Mobile/安装/视觉验收仍按原任务。原历史失败、源分支、其他工作树和用户数据全部保留。
 
+## 2026-10-08 阶段工作台主线融合
+
+用户已授权“合并主线”。原候选ca6bc52在推送前遇到主线PR #34/5b0eb6a前移；本轮在既有TASK-ORCH-002分支融合为唯一Plan入口、TaskWorkbenchStages和共享编排器，保留主线的暂停/重规划/回执/MCP改进。候选Desktop2.1.5/Web2.1.6/Mobile规划2.1.1；97tasks/34features不新增重复登记，FEAT-030仍PARTIAL。组合本地AC完成：49/49、完整verify708root/172Agent/400browser零retry（原skip8/2）、Rust97及fresh Tauri审批/重启/真实CAS/恢复草稿通过；精确SHA独立补审和Hosted门禁另验；实际集成以本轮PR merged及merge SHA为准。下方首轮未推送/main不变等描述保留为历史，不代替当前进度。
+
+先核对origin/main、当前分支/HEAD，读[融合计划](../changes/2026-10-08-stage-workbench/integration-plan.md)和本轮verification/review；不要再引入StagePlanPanel或第二个stages标签。最终集成独立收据在D:/kk-studio/output/minimax-rea-20261008/evidence/stage-workbench-review-integration.md，必须回读精确SHA和真实结论。未获清理授权，保留分支/worktree。
+
+## 2026-10-08 阶段计划工作台恢复点
+
+保留独立 `codex/TASK-ORCH-002-stage-workbench`，先核对status/HEAD，读[计划](../changes/2026-10-08-stage-workbench/plan.md)、[比较](../changes/2026-10-08-stage-workbench/comparison.md)、[验证](../changes/2026-10-08-stage-workbench/verification.md)、[审查](../changes/2026-10-08-stage-workbench/review.md)。TASK-ORCH-002本轮本地AC DONE；源码41dd865独立PASS，3项finding关闭；完整verify638root/172Agent/389browser零retry，production Tauri拒绝/重提/返工/重启/真实CAS冲突/恢复草稿通过。最终文档SHA补审收据在 D:/kk-studio/output/minimax-rea-20261008/evidence/stage-workbench-review-final.md，必须回读真实结论。仅更新原feature/task，无新队列/存储；FEAT-030仍PARTIAL。Native临时证据在.tmp且已复制本轮evidence，不能被browser清理。下一步ORCH-003需taskId/attempt绑定和unknown映射，先明确图片/文本与媒体依赖范围；Comfy归T6，健康/恢复归T5；计划批准不替代供应商提交授权。main@21d121d未改，未推送/合并/发布。
 ## 2026-10-08 未完成任务继续执行恢复点
 
 当前实现工作树为 `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`，分支 `codex/TASK-AUDIT-20261003`。本轮最终业务代码提交为 `dc055566457f8413c8ac7f9cc17778a9958bd5d8`，包含阶段计划工作台、成本未知语义、画布交付边界、不确定重试与重启恢复对账、归档证据保护和恢复错误文案清理。独立复核返修后，原生回执同时核对任务 ID/幂等键，重复、缺失、越界、声明冲突与非法类型均隔离为 unknown，不导入异常结果、不普通重试、不自动重复提交；保留有效归档、合法子集和真正缺失 `outputs` 的旧 `assetIds` 格式。恢复时先读[本轮计划](../changes/2026-10-03-incomplete-tasks/plan.md)、[验证](../changes/2026-10-03-incomplete-tasks/verification.md)、[复核记录](../changes/2026-10-03-incomplete-tasks/review.md)和 `docs/governance/task-ledger.json`，再检查当前 HEAD、工作树与最新 bundle。

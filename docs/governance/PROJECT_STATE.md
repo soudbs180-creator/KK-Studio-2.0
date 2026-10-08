@@ -8,6 +8,13 @@ T5 在独立 `codex/T5-native-lifecycle` / `.worktrees/T5-native-lifecycle` 补�
 
 新增 P1 TASK-PROV-005：供应商非秘密配置在立即异常退出时可能未落盘；P1 TASK-PROV-006：既有 native image 连接/容量及结构化 health 统一。这两项、真实 Provider/GPU、ComfyUI、VPS/Mobile、安装/视觉终验保持开放。PR #35 的阶段工作台与 TASK-MODEL-001 由原执行者处理，本轮不覆盖。全部逐项状态及后续顺序见[收尾盘点](../changes/2026-10-08-taskhost-native-lifecycle/status.md)和机器账本；下面为此前迭代记录，不能从其“尚未合并”文字推断当前 PR 状态。
 
+## 2026-10-08 阶段工作台主线融合
+
+用户已授权“合并主线”。原候选ca6bc52在推送前遇到主线PR #34/5b0eb6a前移；本轮在既有TASK-ORCH-002分支融合为唯一Plan入口、TaskWorkbenchStages和共享编排器，保留主线的暂停/重规划/回执/MCP改进。候选Desktop2.1.5/Web2.1.6/Mobile规划2.1.1；97tasks/34features不新增重复登记，FEAT-030仍PARTIAL。组合本地AC完成：49/49、完整verify708root/172Agent/400browser零retry（原skip8/2）、Rust97及fresh Tauri审批/重启/真实CAS/恢复草稿通过；精确SHA独立补审和Hosted门禁另验；实际集成以本轮PR merged及merge SHA为准。下方首轮未推送/main不变等描述保留为历史，不代替当前进度。
+
+## 2026-10-08 阶段计划工作台候选
+
+基线main/origin/main@21d121d，独立 `codex/TASK-ORCH-002-stage-workbench`。TASK-ORCH-002本轮本地AC DONE：阶段查看/plan-result审批/返工/解除-重新申请、共享编排器、项目范围及保存确认/恢复通过；源码41dd865独立复验PASS，3项finding关闭。完整verify根638/646、Agent172/174（原skip8/2）、browser389/389零retry；production Tauri保存/重启/真实CAS冲突/恢复草稿及clientcheck PASS。最终文档精确SHA补审另记。未推送/合并/发布，main不变；候选Desktop2.1.4/Web2.1.5/Mobile规划2.1.1。FEAT-030保持PARTIAL，自动执行/MCP/真实媒体未接；本地DONE不代替用户最终产品或Hosted门禁。[比较](../changes/2026-10-08-stage-workbench/comparison.md) / [验证](../changes/2026-10-08-stage-workbench/verification.md) / [审查](../changes/2026-10-08-stage-workbench/review.md)。以下旧记录为历史轮次事实。
 ## 2026-10-08 未完成任务继续执行与复核返修
 
 本轮隔离工作树 `codex/TASK-AUDIT-20261003` 已完成 TASK-ORCH-002 的阶段计划视图与审批闭环（`6ebaad8`）：任务工作台的 Plan 标签显示阶段状态、工作项数量和审批门，审批通过后进入执行中。TASK-TASKSTATE-001 的本地成本语义已收口（`937b050`）：新建/重试任务在没有供应商报价时保持未知，UI 统一显示未知或带明确口径的估算。TASK-CANVAS-001 已接入 Agent host 与 App 统一发布边界：图片要求资产身份，文案要求非空 provider 文本，契约失败保留为 unknown；混合批次的 unknown 重试会锁定父任务，重启恢复会合并已受理重试子任务并防止重复提交，终态缺回执会关闭 stale waiting 槽，旧格式错误优先采用终态子任务，排队 intent 保持源节点 pending。归档失败、原生提交响应/flush 丢失、缺失文案正文进入 unknown；有效归档结果保留，完整归档证据可解决终态失败汇总冲突，恢复成功后清除旧错误文案。原生成功缺资产/回执进入 unknown，恢复图像结果补回源节点连线。

@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "timestamp": "2026-10-08T03:58:45.075Z",
+  "runtime": {
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": ["http://tauri.localhost/assets/index-D14qbBzj.js"],
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "dataRoot": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-ORCH-002-stage-workbench\\src-tauri\\target\\stage-workbench-acceptance\\1791431922434\\data",
+  "executableSha256": "5cdb9d86d50e3d97cf144b6d2da46912d2188711f7bc2f132ff32a9b7d3bd6b0",
+  "launches": 2,
+  "planRevision": 2,
+  "errors": [],
+  "scope": "Local fixture plan approval, result rework, native persistence and process restart; no provider execution."
+}

@@ -1,15 +1,16 @@
 import type { ReviewComment } from "../domain/reviewWorkflow";
 import type { ApprovalGate } from "../domain/agentWorkflow";
 import type {
+  CreationProject,
   CreationTask,
   CreationTaskOutput,
 } from "../features/creation/model";
 import TaskWorkbenchExport from "./TaskWorkbenchExport";
 import BatchMatrix from "./BatchMatrix";
 import TaskWorkbenchReview from "./TaskWorkbenchReview";
-import TaskWorkbenchStages from "./TaskWorkbenchStages";
-import type { StagePlan } from "../domain/stagePlan";
-import type { StageDecisionInput } from "../features/agent/orchestrator";
+import TaskWorkbenchStages, {
+  type StagePlanActions,
+} from "./TaskWorkbenchStages";
 import { formatCostUsd } from "../features/creation/taskState";
 
 export type WorkbenchTab =
@@ -82,8 +83,11 @@ export default function TaskWorkbenchContent({
   gates,
   comments,
   onCommentsChange,
-  stagePlans,
+  project,
   onStageDecision,
+  onRetryStage,
+  onRequestPlanApproval,
+  stageWriteDisabledReason,
 }: {
   selected?: CreationTask;
   outputs: CreationTaskOutput[];
@@ -97,12 +101,18 @@ export default function TaskWorkbenchContent({
   gates: ApprovalGate[];
   comments: ReviewComment[];
   onCommentsChange: (comments: ReviewComment[]) => void;
-  stagePlans: StagePlan[];
-  onStageDecision: (input: StageDecisionInput) => void;
-}) {
+  project?: CreationProject;
+} & StagePlanActions) {
   if (tab === "plan")
     return (
-      <TaskWorkbenchStages plans={stagePlans} onDecision={onStageDecision} />
+      <TaskWorkbenchStages
+        key={project?.id ?? "no-project"}
+        project={project}
+        onStageDecision={onStageDecision}
+        onRetryStage={onRetryStage}
+        onRequestPlanApproval={onRequestPlanApproval}
+        stageWriteDisabledReason={stageWriteDisabledReason}
+      />
     );
   if (!selected)
     return (
