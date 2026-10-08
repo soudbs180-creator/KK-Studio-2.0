@@ -1,0 +1,20 @@
+{
+  "head": "eaa0886e99965d00a5a514b301adb665b150373d",
+  "tests": 445,
+  "attempts": 445,
+  "stats": {
+    "startTime": "2026-10-08T17:17:37.465Z",
+    "duration": 115434.637,
+    "expected": 445,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "configuredWorkers": 12,
+  "actualWorkers": 12,
+  "maxActualRetry": 0,
+  "configuredRetries": [
+    null
+  ],
+  "sha256": "33f40cc629867140de3c5010e372024bd50f039f5acef19ef0a4cf1f0fec3dae"
+}

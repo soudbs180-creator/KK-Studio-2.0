@@ -277,6 +277,16 @@ function collectProject(ids: Set<string>, project: CreationProject): void {
     collectAttachment(ids, attachment),
   );
   project.tasks.forEach((task) => {
+    for (const id of [
+      task.imageEdit?.sourceAssetId,
+      task.imageEdit?.maskAssetId,
+      task.imageEditContext?.originalAssetId,
+      ...(task.imageEditContext?.referenceAssetIds ?? []),
+    ])
+      if (id) {
+        checkAssetId(id);
+        ids.add(id);
+      }
     task.attachments.forEach((attachment) =>
       collectAttachment(ids, attachment),
     );
@@ -297,6 +307,15 @@ function collectProject(ids: Set<string>, project: CreationProject): void {
     ),
   );
   project.items.forEach((item) => {
+    for (const id of [
+      item.imageEditContext?.originalAssetId,
+      ...(item.imageEditContext?.referenceAssetIds ?? []),
+      ...(item.imageEditReferenceIds ?? []),
+    ])
+      if (id) {
+        checkAssetId(id);
+        ids.add(id);
+      }
     for (const id of [item.assetId, item.parentAssetId]) {
       if (id) {
         checkAssetId(id);

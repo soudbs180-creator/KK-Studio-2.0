@@ -14,8 +14,10 @@ import type {
 import { imageReferenceCount } from "../../domain/imageReferences";
 import type { CreationTask } from "./model";
 import { useImageModelCapabilities } from "../models/useImageModelCapabilities";
+import type { ImageEditRequest } from "../image-edit/editTasks.ts";
 
 export interface CanvasImageRequest {
+  imageEdit?: ImageEditRequest;
   sourceItemId: string;
   prompt: string;
   model: string;
@@ -26,6 +28,12 @@ export const CanvasImageCommandContext = createContext<{
   submit: (request: CanvasImageRequest) => Promise<string | undefined>;
   cancel: (taskId: string) => void;
   tasks: CreationTask[];
+  items?: CanvasCollectionItem[];
+  updateItem?: (id: string, patch: Partial<CanvasCollectionItem>) => void;
+  deleteItem?: (id: string) => void;
+  retryTask?: (taskId: string) => void;
+  regenerateTask?: (taskId: string) => void;
+  openPreview?: (itemId: string, title?: string) => void;
   model: string;
   models: string[];
   textModel?: string;
@@ -41,7 +49,12 @@ export const CanvasImageNodeContext =
 export function useCanvasImageGeneration({
   references = [],
   outputCount,
-}: { references?: CanvasReference[]; outputCount?: number } = {}) {
+  operation: requestedOperation,
+}: {
+  references?: CanvasReference[];
+  outputCount?: number;
+  operation?: "inpaint";
+} = {}) {
   const command = useContext(CanvasImageCommandContext);
   const item = useContext(CanvasImageNodeContext);
   const agent = useSyncExternalStore(
@@ -61,11 +74,12 @@ export function useCanvasImageGeneration({
     connectionId: item?.providerConnectionId ?? command?.providerConnectionId,
   });
   const totalReferences = imageReferenceCount(item, references);
-  const operation = totalReferences ? "edit" : "generate";
+  const operation =
+    requestedOperation ?? (totalReferences ? "edit" : "generate");
   const capabilityReason =
     !isText && !usesCodex
       ? capabilities.operations[operation] === "unsupported"
-        ? `当前模型不支持${operation === "edit" ? "参考图编辑" : "图片生成"}，请切换支持的模型。`
+        ? `当前模型不支持${operation === "inpaint" ? "蒙版编辑" : operation === "edit" ? "参考图编辑" : "图片生成"}，请切换支持的模型。`
         : capabilities.maxReferences !== undefined &&
             totalReferences > capabilities.maxReferences
           ? `当前模型最多接收 ${capabilities.maxReferences} 张参考图（包含原图），请移除多余参考图。`
@@ -86,13 +100,14 @@ export function useCanvasImageGeneration({
       request.current?.abort();
     };
   }, []);
-  const task =
+  const sourceTasks =
     item && !usesCodex
-      ? command?.tasks
-          .slice()
-          .reverse()
-          .find((task) => task.sourceItemId === item.id)
-      : undefined;
+      ? (command?.tasks.filter((task) => task.sourceItemId === item?.id) ?? [])
+      : [];
+  const task =
+    sourceTasks.find((task) => task.status === "running") ??
+    sourceTasks.find((task) => task.status === "queued") ??
+    sourceTasks.at(-1);
   const loading =
     preparing ||
     codexBusy ||
@@ -155,7 +170,12 @@ export function useCanvasImageGeneration({
     request.current?.abort();
     if (task && loading) command?.cancel(task.id);
   }
-  async function run(prompt: string, count: number, model: string) {
+  async function run(
+    prompt: string,
+    count: number,
+    model: string,
+    imageEdit?: ImageEditRequest,
+  ) {
     if (!command || !item || request.current || loading || disabledReason)
       return;
     const controller = new AbortController();
@@ -169,6 +189,7 @@ export function useCanvasImageGeneration({
         model,
         count,
         signal: controller.signal,
+        imageEdit,
       });
       if (mounted.current && failure) setError(failure);
     } catch {

@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand.tsx";
 import { Upload, Image as ImageIcon } from "lucide-react";
 import CreationComposer from "./CreationComposer";
 import type {
@@ -31,6 +32,11 @@ export default function ImageCreationNode({
   const [image, setImage] = useState(item.preview ?? "");
   const [error, setError] = useState("");
   const [previewOpen, setPreviewOpen] = useState(false);
+  const command = useContext(CanvasImageCommandContext);
+  const openPreview = () =>
+    command?.openPreview && item.assetId
+      ? command.openPreview(item.id, "参考图片")
+      : setPreviewOpen(true);
   const preview = useRef<HTMLDivElement>(null);
   const file = useRef<HTMLInputElement>(null);
   const referenceFile = useRef<HTMLInputElement>(null);
@@ -139,7 +145,7 @@ export default function ImageCreationNode({
               draggable={false}
               onDoubleClick={(event) => {
                 event.stopPropagation();
-                setPreviewOpen(true);
+                openPreview();
               }}
             />
           </>
@@ -156,7 +162,7 @@ export default function ImageCreationNode({
           item={item}
           anchor={preview}
           selected={selected}
-          onPreview={() => setPreviewOpen(true)}
+          onPreview={openPreview}
           references={references}
         />
       )}
@@ -192,6 +198,7 @@ export default function ImageCreationNode({
       />
       {previewOpen && image && (
         <DemoMediaPreview
+          source={item}
           result={{
             id: "reference-preview",
             kind: "image",

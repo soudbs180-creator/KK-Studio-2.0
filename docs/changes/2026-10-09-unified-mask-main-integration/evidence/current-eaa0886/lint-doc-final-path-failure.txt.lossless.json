@@ -1,0 +1,9 @@
+{
+  "original": "D:/kk-studio/.verification/TASK-IMAGE-EDIT-001-integration/lint-doc-final-path-failure.txt",
+  "runWorktreeHead": "eaa0886e99965d00a5a514b301adb665b150373d",
+  "stage": "uncommitted docs-only closeout",
+  "bytes": 358,
+  "sha256": "d7338acbd99ff5692585c9601fc72d09eba517cc000749e35fe1eac262b91102",
+  "encoding": "base64",
+  "data": "DQo+IGtrLXN0dWRpb0AyLjEuMTEgbGludA0KPiBlc2xpbnQgc3JjIHRlc3RzIHNjcmlwdHMgKi5jb25maWcue3RzLG1qc30gLS1tYXgtd2FybmluZ3MgMCAmJiBucG0gcnVuIHZlcnNpb246Y2hlY2sgJiYgbm9kZSBzY3JpcHRzL2NoZWNrLXByb2plY3QtZ29hbHMubWpzICYmIG5vZGUgc2NyaXB0cy9jaGVjay1nb3Zlcm5hbmNlLm1qcyAmJiBub2RlIHNjcmlwdHMvY2hlY2stZmVhdHVyZXMubWpzICYmIG5vZGUgc2NyaXB0cy9jaGVjay1tYXJrZG93bi5tanMNCg0KJ25wbScgaXMgbm90IHJlY29nbml6ZWQgYXMgYW4gaW50ZXJuYWwgb3IgZXh0ZXJuYWwgY29tbWFuZCwNCm9wZXJhYmxlIHByb2dyYW0gb3IgYmF0Y2ggZmlsZS4NCg=="
+}

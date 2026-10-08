@@ -1642,13 +1642,13 @@ fn main() {
     let (memory_path, legacy_memory_path) = memory_paths(paths.memory.clone(), paths.isolated);
     let config_path = paths.config;
     let conversations_path = paths.conversations;
+    // TaskHost and IPC serialize through one in-process asset lock. Separate
+    // repositories can race on the same exclusive Windows repository.lock.
+    let assets = Arc::new(asset_storage::AssetRepository::new(paths.assets));
     // Legacy memory is validated and migrated only when enabled memory is first read.
     let task_host = Arc::new(
-        task_host::TaskHost::new(
-            paths.tasks.join("native-host"),
-            Arc::new(asset_storage::AssetRepository::new(paths.assets.clone())),
-        )
-        .expect("KK Studio 无法初始化原生任务主机"),
+        task_host::TaskHost::new(paths.tasks.join("native-host"), Arc::clone(&assets))
+            .expect("KK Studio 无法初始化原生任务主机"),
     );
 
     let config = if config_path.exists() {
@@ -1682,7 +1682,7 @@ fn main() {
             memory_path,
             legacy_memory_path,
             creation: Arc::new(creation_storage::SnapshotRepository::new(paths.creation)),
-            assets: Arc::new(asset_storage::AssetRepository::new(paths.assets)),
+            assets,
             task_host,
             restored_roots: Mutex::new(std::collections::HashSet::new()),
         })

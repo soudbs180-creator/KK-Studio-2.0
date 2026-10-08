@@ -248,6 +248,38 @@ fn attachments(value: &Value, ids: &mut BTreeSet<String>) -> Result<(), String> 
 }
 
 fn collect_references(snapshot: &Value, ids: &mut BTreeSet<String>) -> Result<(), String> {
+    fn edit_references(value: &Value, ids: &mut BTreeSet<String>) -> Result<(), String> {
+        if let Some(edit) = value.get("imageEdit") {
+            optional_id(edit, "sourceAssetId", ids)?;
+            optional_id(edit, "maskAssetId", ids)?;
+        }
+        if let Some(context) = value.get("imageEditContext") {
+            optional_id(context, "originalAssetId", ids)?;
+            for id in context["referenceAssetIds"]
+                .as_array()
+                .ok_or_else(|| failure("corrupt", "编辑参考图无效"))?
+            {
+                let id = id
+                    .as_str()
+                    .ok_or_else(|| failure("corrupt", "编辑参考图无效"))?;
+                asset_id(id)?;
+                ids.insert(id.into());
+            }
+        }
+        if let Some(references) = value.get("imageEditReferenceIds") {
+            for id in references
+                .as_array()
+                .ok_or_else(|| failure("corrupt", "编辑参考图无效"))?
+            {
+                let id = id
+                    .as_str()
+                    .ok_or_else(|| failure("corrupt", "编辑参考图无效"))?;
+                asset_id(id)?;
+                ids.insert(id.into());
+            }
+        }
+        Ok(())
+    }
     // Visit only schema media fields. User prompts and messages are plain text.
     attachments(&snapshot["homeDraft"], ids)?;
     for project in snapshot["projects"]
@@ -258,6 +290,7 @@ fn collect_references(snapshot: &Value, ids: &mut BTreeSet<String>) -> Result<()
         attachments(&project["composerDraft"], ids)?;
         if let Some(tasks) = project["tasks"].as_array() {
             for task in tasks {
+                edit_references(task, ids)?;
                 attachments(task, ids)?;
                 if let Some(outputs) = task["outputs"].as_array() {
                     for output in outputs {
@@ -289,6 +322,7 @@ fn collect_references(snapshot: &Value, ids: &mut BTreeSet<String>) -> Result<()
             .ok_or_else(|| failure("corrupt", "节点集合无效"))?
         {
             let id = optional_id(item, "assetId", ids)?;
+            edit_references(item, ids)?;
             optional_id(item, "parentAssetId", ids)?;
             media_reference(item.get("preview"), id.as_deref(), ids, false)?;
             if let Some(result) = item.get("result") {
@@ -1010,6 +1044,46 @@ mod tests {
         let package_path = source.join("empty-plans.kkproject");
         export_package(&snapshots, &assets, &package_path).unwrap();
         preflight_package(&package_path).unwrap();
+        let _ = fs::remove_dir_all(source);
+    }
+
+    #[test]
+    fn image_edit_draft_mask_and_history_only_assets_round_trip() {
+        let source = fixture_root();
+        let (snapshots, assets, original_id, _) = seed(&source);
+        let mut extra = Vec::new();
+        for bytes in [b"mask-original".as_slice(), b"history-reference".as_slice()] {
+            let sha = asset_validation::hash(bytes);
+            let id = format!("asset-{}", &sha[..24]);
+            assets.store(STANDARD.encode(bytes), json!({"assetId":id,"sha256":sha,"mime":"image/png","tags":[],"isAiGenerated":false,"source":"upload","provenance":{"generatedAt":"2026-01-01T00:00:00Z"}})).unwrap();
+            extra.push(id);
+        }
+        let document = json!({"width":100,"height":80,"regions":[{"id":"red-1","runs":[[20,10,30]],"color":"#e44747","colorName":"红色","number":1,"instruction":"改为水流"}],"colorCounters":{"红色":1}});
+        let context = json!({"originalPrompt":"设计约束","originalAssetId":original_id,"referenceAssetIds":[extra[1]],"lastInstruction":"最近修改"});
+        let mut current = snapshot(&original_id);
+        current["revision"] = json!(2);
+        current["projects"][0]["items"] = json!([{"id":"n2","title":"草稿","description":"","kind":"image","imageEditDraft":document,"imageEditContext":context,"imageEditPrompt":"@红色-A 改为水流","imageEditReferenceIds":[extra[1]]}]);
+        current["projects"][0]["tasks"][0]["imageEdit"] = json!({"sourceAssetId":original_id,"maskAssetId":extra[0],"groupId":"edit-group","document":document,"crop":{"x":9,"y":9,"width":22,"height":22,"regionIds":["red-1"]},"nativeMask":true});
+        current["projects"][0]["tasks"][0]["imageEditContext"] = context;
+        snapshots.write(current.clone(), Some(1)).unwrap();
+        let package = source.join("mask.kkproject");
+        let exported = export_package(&snapshots, &assets, &package).unwrap();
+        assert_eq!(exported.asset_ids.len(), 3);
+        let target = source.join("restored-mask");
+        import_package(&package, &target).unwrap();
+        let restored = SnapshotRepository::new(target.join("projects/creation-v2.json"));
+        assert_eq!(restored.read().unwrap().snapshot.unwrap(), current);
+        let restored_assets = AssetRepository::new(target.join("assets"));
+        for id in exported.asset_ids {
+            assert!(restored_assets.read(&id).unwrap().is_some());
+        }
+        current["revision"] = json!(3);
+        current["projects"][0]["tasks"][0]["imageEdit"]["document"]["regions"][0]["runs"] =
+            json!([[900, 10, 30]]);
+        snapshots.write(current, Some(2)).unwrap();
+        assert!(
+            export_package(&snapshots, &assets, &source.join("invalid-mask.kkproject")).is_err()
+        );
         let _ = fs::remove_dir_all(source);
     }
 

@@ -158,6 +158,76 @@ function desktop(
   });
 }
 
+test("native recovery retains success evidence without resurrecting a user-deleted image candidate", async () => {
+  const assetId = "asset-" + "a".repeat(24);
+  const project = createProject({
+    prompt: "生成",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  const task = {
+    ...createTask(project),
+    id: "task-1",
+    idempotencyKey: "stable-1",
+    sourceItemId: project.items[0].id,
+    status: "succeeded" as const,
+    submissionState: "terminal" as const,
+    resultItemId: "deleted-result",
+    completedOutputs: 1,
+    outputs: [
+      {
+        index: 0,
+        status: "succeeded" as const,
+        assetId,
+        model: "image-test",
+        createdAt: 1,
+      },
+    ],
+  };
+  project.tasks = [task];
+  desktop(async (command) => {
+    if (command === "task_host_list")
+      return [
+        record({
+          taskId: task.id,
+          idempotencyKey: task.idempotencyKey,
+          status: "succeeded",
+          outputs: [{ index: 0, status: "succeeded", assetId }],
+        }),
+      ];
+    if (command === "asset_read")
+      return {
+        metadata: {
+          assetId,
+          sha256: "a".repeat(64),
+          mime: "image/png",
+          tags: [],
+          provenance: { generatedAt: "2026-10-08T00:00:00.000Z" },
+        },
+        dataBase64: "AQID",
+      };
+    throw new Error(`deleted candidate must not be resubmitted: ${command}`);
+  });
+  try {
+    const recovered = await reconcileNativeTasks({
+      ...emptySnapshot(),
+      activeProjectId: project.id,
+      projects: [project],
+    });
+    assert.equal(recovered.projects[0].tasks[0].status, "succeeded");
+    assert.equal(recovered.projects[0].tasks[0].outputs?.[0].assetId, assetId);
+    assert.deepEqual(
+      recovered.projects[0].items.map((item) => item.id),
+      project.items.map((item) => item.id),
+    );
+    const again = await reconcileNativeTasks(recovered);
+    assert.equal(again.projects[0].items.length, project.items.length);
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});
+
 function record(overrides: Record<string, unknown> = {}) {
   return {
     taskId: "task-1",

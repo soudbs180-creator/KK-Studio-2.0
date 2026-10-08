@@ -171,6 +171,7 @@ function linkAbortSignal(signal: AbortSignal): {
 }
 
 async function requestImageChunk(options: {
+  mask?: CreationAttachment;
   baseUrl: string;
   model: string;
   prompt: string;
@@ -205,6 +206,8 @@ async function requestImageChunk(options: {
             form.set("prompt", options.prompt);
             form.set("n", String(options.count));
             if (options.size) form.set("size", options.size);
+            if (options.mask?.dataUrl)
+              form.set("mask", dataUrlToBlob(options.mask.dataUrl), "mask.png");
             options.attachments.forEach((attachment, index) => {
               if (attachment.dataUrl)
                 form.append(
@@ -279,6 +282,7 @@ export interface GeneratedImages {
 }
 
 export async function generateImages(options: {
+  maskAssetId?: string;
   prompt: string;
   model: string;
   attachments: CreationAttachment[];
@@ -324,6 +328,14 @@ export async function generateImages(options: {
     options.attachments,
     loadStoredAsset,
   );
+  const mask = options.maskAssetId
+    ? await loadStoredAsset(options.maskAssetId)
+    : null;
+  if (
+    options.maskAssetId &&
+    (!mask || mask.mime !== "image/png" || !attachments.length)
+  )
+    throw new Error("编辑蒙版原件缺失或格式无效，本次未发送。");
   // OpenAI's official image endpoint accepts at most ten outputs per request
   // (and dall-e-3 only accepts one). Larger UI batches become idempotent chunks.
   const perRequest = /dall[-_ ]?e[-_ ]?3/i.test(model) ? 1 : 10;
@@ -350,6 +362,15 @@ export async function generateImages(options: {
         count,
         apiKey: sessionApiKey,
         signal: options.signal,
+        mask: mask
+          ? {
+              id: mask.assetId,
+              name: "mask.png",
+              mime: mask.mime,
+              size: 0,
+              dataUrl: mask.preview,
+            }
+          : undefined,
         size: options.size,
         idempotencyKey: options.idempotencyKey
           ? `${options.idempotencyKey}-part-${Math.floor(offset / perRequest) + 1}`

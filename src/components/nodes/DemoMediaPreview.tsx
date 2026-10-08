@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import type { DemoResult } from "../../domain/canvasItems";
+import type {
+  DemoResult,
+  CanvasCollectionItem,
+} from "../../domain/canvasItems";
+import ImageLightbox from "../../features/image-edit/ImageLightbox.tsx";
 import Modal from "../Modal";
 import UiIcon from "../UiIcon";
 
@@ -7,10 +11,12 @@ export default function DemoMediaPreview({
   result,
   onClose,
   onTextChange,
+  source,
 }: {
   result: DemoResult;
   onClose: () => void;
   onTextChange: (text: string) => void;
+  source?: CanvasCollectionItem;
 }) {
   const [text, setText] = useState(result.text ?? "");
   const [feedback, setFeedback] = useState("");
@@ -25,6 +31,10 @@ export default function DemoMediaPreview({
     setTextUrl(url);
     return () => URL.revokeObjectURL(url);
   }, [text, result.kind]);
+  if (result.kind === "image" && source?.assetId)
+    return (
+      <ImageLightbox source={source} title={result.title} onClose={onClose} />
+    );
   const media =
     result.kind === "video" ? (
       <video

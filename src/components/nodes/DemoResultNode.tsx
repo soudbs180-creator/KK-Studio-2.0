@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useContext, useLayoutEffect, useRef, useState } from "react";
+import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand.tsx";
 import {
   CANVAS_KIND_LABELS,
   type CanvasCollectionItem,
@@ -33,6 +34,12 @@ export default function DemoResultNode({
   editing?: NodeEditingProps;
 }) {
   const [open, setOpen] = useState(false);
+  const command = useContext(CanvasImageCommandContext);
+  const openPreview = () => {
+    if (item.kind === "image" && item.assetId && command?.openPreview)
+      command.openPreview(item.id);
+    else setOpen(true);
+  };
   const [referenceError, setReferenceError] = useState("");
   const result = item.result;
   const card = useRef<HTMLElement>(null);
@@ -89,7 +96,7 @@ export default function DemoResultNode({
             <ResultPreview
               result={result}
               title={item.title}
-              onPreview={() => setOpen(true)}
+              onPreview={openPreview}
             />
             <p className="demo-description">{result.description}</p>
           </>
@@ -131,6 +138,7 @@ export default function DemoResultNode({
         )}
         {open && result && (
           <DemoMediaPreview
+            source={item}
             result={{ ...result, title: item.title }}
             onClose={() => setOpen(false)}
             onTextChange={(text) => onChange({ result: { ...result, text } })}
@@ -142,7 +150,7 @@ export default function DemoResultNode({
           item={item}
           anchor={card}
           selected={Boolean(editing?.selected)}
-          onPreview={() => setOpen(true)}
+          onPreview={openPreview}
           favorite={favorite}
           onFavorite={onFavorite}
           onDelete={onDelete}

@@ -13,6 +13,8 @@ import { resolveImageModelCapabilities } from "../models/imageModelCapabilities.
 
 export class ProviderSubmissionError extends Error {}
 export interface SubmissionBinding {
+  operation?: "generate" | "edit" | "inpaint";
+  localEdit?: boolean;
   id?: string;
   baseUrl?: string;
   credentialRef?: string;
@@ -126,8 +128,11 @@ export function assertSubmissionConnection(
     (binding.kind === "text" && binding.referenceCount !== 0) ||
     (isImage
       ? imageCapabilities.operations[
-          binding.referenceCount ? "edit" : "generate"
+          binding.operation ?? (binding.referenceCount ? "edit" : "generate")
         ] === "unsupported" ||
+        (binding.localEdit &&
+          imageCapabilities.operations[binding.operation ?? "edit"] !==
+            "supported") ||
         (imageCapabilities.maxReferences !== undefined &&
           binding.referenceCount > imageCapabilities.maxReferences)
       : !connection.capabilities.operations.includes("generate"))
@@ -158,6 +163,7 @@ export async function selectSubmissionConnection(
   kind: "image" | "text" = "image",
   model?: string,
   outputCount?: number,
+  editOptions: Pick<SubmissionBinding, "operation" | "localEdit"> = {},
 ): Promise<ProviderConnection> {
   const candidates = readProviderConnections().sort(
     (a, b) =>
@@ -174,6 +180,7 @@ export async function selectSubmissionConnection(
       kind,
       model,
       outputCount,
+      ...editOptions,
     };
     try {
       assertSubmissionConnection(binding);

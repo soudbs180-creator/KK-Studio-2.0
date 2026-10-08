@@ -1,5 +1,13 @@
 # AI handoff
 
+## 2026-10-09 统一Mask最新主线组合本地验收完成
+
+用户授权普通合并已检查分支。PR38/40已正常合并，当前base main1d6f640及其实际post-main37806381609成功；Mask产品27b/driver-eaa承接该主线，完整445browser零retry、102Rust和fresh Agent原生Mask外0/重启/undo/凭据保护、上方操作栏/TaskHost/模型/标题栏/首屏及生产Web3宽度通过，当前独立复审。Desktop/Web2.1.11、Mobile规划2.1.1；104上游对象完整保留，106项DONE62/TODO14/PARTIAL26/BLOCKED4，44项开放。TASK-PLUGIN-DEV-001开发遮罩依然FAIL/TODO，源码与main相同；开发其余UI只在留证后Escape收起遮罩作局部检查，primary-main开发两次超时为NOT VERIFIED。真实效果/手机/用户验收仍VERIFY-002，FEAT035仍PARTIAL。最终docs独立/最新Hosted、普通合并、完整landing tree/主线FF与post-mainCI另外实际回读，不预填成功。UI012仍原执行者在途。恢复入口[本轮验证](../changes/2026-10-09-unified-mask-main-integration/verification.md) / [任务状态报告](../changes/2026-10-09-unified-mask-main-integration/status.md)。保留所有历史/工作树/快捷方式及用户数据，不宣称既有启动入口已换包或已发布。
+
+## 2026-10-09 统一 Mask 承接最新主线（进行中）
+
+用户已授权合并完成检查的分支。Mask e7cfd28在旧78cea基线独立PASS；当前承接main1d6f640（图片操作栏、静默启动、单排标题栏）。三个产品冲突逐项保留双方行为，Desktop/Web将从当前主线自动递增。当前组合尚未验证，不用历史PASS代填；新源码审查、完整两端检查和Hosted/main CI均须实际完成。FEAT-035保持PARTIAL、真实效果/真机/用户验收任务保持TODO。下方保留各旧SHA的历史事实。
+
 ## 2026-10-08 单排标题栏最新主线组合验收完成
 
 PR38 已普通合入main2cb73d，source a550f31与landing完整tree相同，当前Hosted成功；PR38 合并后 main37797150560 verify/deploy-linux SUCCESS，delivery 按 main push 条件 skipped；实际收据已归档。 TASK-UI-013产品86e712f承接该主线，7条故障先RED后GREEN，001/002当前独立CLOSED，完整431browser（431attempts零flaky/retry）、97Rust、fresh带Agent titlebar/UI13/T511/模型/首屏及Web两态3宽度全部PASS。Desktop2.1.10/Web2.1.10/Mobile规划2.1.1；104项DONE61/TODO13/PARTIAL26/BLOCKED4，103上游对象完整保留。最终doc head补审/当前Hosted、普通PR40合并与main CI另按实际回读，不能用旧门禁代替。当前恢复入口[最新验收](../changes/2026-10-08-single-row-titlebar/verification.md)及[PR40](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/40)。UI012/蒙版仍原执行者维护；保留历史、工作树、快捷方式引用和用户数据，不推断既有快捷方式已切到最终稳定包。
@@ -41,6 +49,23 @@ PR #36 已 squash 合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，合并�
 
 先读取[本轮验收](../changes/2026-10-08-image-selection-actions/verification.md)、review、task-ledger 和实际 origin/main；并发 TASK-LAUNCH-001、TASK-UI-012、TASK-IMAGE-EDIT-001 由各自执行者维护，未验收内容不能抢合或覆盖。
 
+## 2026-10-08 统一 Mask 继续审查返修入口（当前）
+
+恢复入口 .worktrees/TASK-IMAGE-EDIT-001 / codex/TASK-IMAGE-EDIT-001-unified-mask，base78cea37。源码head64c8b9d168308ff1aefff39daf7126c56e354eef正式独立PASS，IM-010–013 CLOSED，本地TASK-IMAGE-EDIT-001 DONE；93定向、完整775root/172Agent/423browser零retry、Rust102、fresh Tauri/原生11组通过，Mask外0/凭据清理true。reviewer另跑93定向/四个完整PNG保护探针，71源码/22工件与JS/EXE重算匹配。收尾只改文档，最终文档head另做短补审，外部收据review-followup-final-head.md不能覆盖旧review-final-head.md。Desktop2.1.9/Web2.1.10；先核对Git状态，读[计划](../changes/2026-10-08-unified-image-mask/plan.md)、[验证](../changes/2026-10-08-unified-image-mask/verification.md)、[审查](../changes/2026-10-08-unified-image-mask/review.md)和账本；最新本地证据output/unified-image-mask-20261008/run-followup-IM011-prefix。旧失败/平台中止/superseded/绑定保留。FEAT-035 PARTIAL、VERIFY-002 TODO；不把fixture视为真实Provider/真机/用户验收，不操作其他worktree/用户数据，不推送/合并/发布。下方保留历史恢复点。
+
+## 2026-10-08 统一 Mask 已完成的本地分支
+
+恢复入口仍为本仓库 .worktrees/TASK-IMAGE-EDIT-001、分支 codex/TASK-IMAGE-EDIT-001-unified-mask；先核对 Git 状态，读[verification](../changes/2026-10-08-unified-image-mask/verification.md)、[review](../changes/2026-10-08-unified-image-mask/review.md)与账本。本地实现 TASK-IMAGE-EDIT-001 DONE；base78cea37 → 源码head dbc88bb 独立PASS、IM-001–009 CLOSED，完整verify741root/172Agent/420browser零重试（原skip8/2）、Rust100/fresh Tauri/主线原生11组通过。reviewer自行执行61单测和实际Tauri，Mask外0改动、凭据保护与清理读回通过。Desktop2.1.8/Web2.1.9，无新产品增量；最终文档提交需短补审，精确head收据保存于本机output/unified-image-mask-20261008/review-final-head.md。保留本地提交与工作树，未推送/合入main/发布；FEAT-035保持PARTIAL，真实Provider、语义几何检测与物理手机/用户视觉仍由TASK-IMAGE-EDIT-VERIFY-002验收。历史失败收据保留，不覆盖其他worktree或用户数据。
+
+## 2026-10-08 统一 Mask 主线整合恢复入口
+
+任务工作树 .worktrees/TASK-IMAGE-EDIT-001、分支 codex/TASK-IMAGE-EDIT-001-unified-mask。首次实现 ba8806d，随后在源分支承接 main@78cea37（PR #37）。先读[plan](../changes/2026-10-08-unified-image-mask/plan.md)、[组合 verification](../changes/2026-10-08-unified-image-mask/verification.md)及[review](../changes/2026-10-08-unified-image-mask/review.md)。组合完整 verify/Rust100/fresh EXE Mask 与主线原生11组、Web production 同 hash PASS；Desktop2.1.8/Web2.1.9。下一步绑定已提交 head 独立关闭 IM-001–008，不能以 dirty 预检代填。未推送/合并本任务或发布；保留 TASK-IMAGE-EDIT-VERIFY-002 真实 Provider/真机/视觉后续及双方历史记录。
+
+## 2026-10-08 统一图片编辑蒙版本地候选
+
+框选、画笔、色块产生原像素Mask，共用扩边/合并/裁剪、能力校验、Web/native模型请求、Mask内融合；保存/导出/恢复与连续编辑保持原件不可变。完整verify739root/172Agent/419browser（原skip8/2、0flaky）、Rust100、fresh Tauri两次Mask请求/包恢复/删除再生/重启通过，Web/Desktop实际bundle同hash。候选Desktop2.1.7/Web2.1.8；正式独立head复验待补，未推送/合并/发布。FEAT-035仍PARTIAL，真实Provider/语义几何偏移/真机/用户视觉归TASK-IMAGE-EDIT-VERIFY-002。[验证](../changes/2026-10-08-unified-image-mask/verification.md)。
+
+恢复入口：本仓库 .worktrees/TASK-IMAGE-EDIT-001，分支 codex/TASK-IMAGE-EDIT-001-unified-mask、base1af0357b；先核对Git状态和verification/review。不要操作其他worktree或原checkout的main-after-PR36-latest.json。运行证据在本任务.tmp/image-edit及本机output/unified-image-mask-20261008，重启前核对实际EXE与dist指纹。
 ## 2026-10-08 Hosted 空 Registry 属性返修
 
 T5当前本机/源码验收完成、REVIEW。21ac独立补审PASS、ENV003 CLOSED；其Hosted37765011214完整Web/Rust/release/Runtime通过，实际CI包装器在新建空key的Properties.Name严格模式失败，native尚未启动。修正mock空属性集合并复现真实RED；四处逐项枚举后26/26边界回归PASS，产品/harness与d521 native十一组hash不变。新head独立关闭ENV004、Hosted与主线整合仍待满足，未假填High IL。UI976db独立PASS关闭两P2、422browser/fresh Native13组通过，当前Hosted待创建。main仍1af/PR36合并后CI通过；其他执行者任务保留。
