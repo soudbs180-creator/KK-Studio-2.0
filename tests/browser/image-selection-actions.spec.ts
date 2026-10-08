@@ -15,7 +15,37 @@ async function uploadImage(node: Locator): Promise<void> {
 async function selectImage(page: Page, node: Locator): Promise<void> {
   await node.locator(".uploaded-image").click();
   await expect(node).toHaveClass(/is-selected/);
-  await expect(toolbar(page)).toBeVisible();
+  try {
+    await expect(toolbar(page)).toBeVisible();
+  } catch (cause) {
+    console.log(
+      "Selected image geometry",
+      await page.evaluate(() => {
+        const rect = (selector: string) => {
+          const element = document.querySelector<HTMLElement>(selector);
+          const box = element?.getBoundingClientRect();
+          return element && box
+            ? {
+                x: box.x,
+                y: box.y,
+                width: box.width,
+                height: box.height,
+                style: element.getAttribute("style"),
+              }
+            : null;
+        };
+        return {
+          canvas: rect(".canvas"),
+          toolbar: rect(".image-selection-toolbar"),
+          caption: rect(".is-selected .image-caption"),
+          image: rect(".is-selected .image-preview"),
+          hud: rect(".canvas-hud-actions"),
+          navigation: rect(".canvas-top-right"),
+        };
+      }),
+    );
+    throw cause;
+  }
 }
 
 async function expectAboveImage(page: Page, node: Locator): Promise<void> {
@@ -166,6 +196,37 @@ test("工具栏随图片拖动和平移移动，缩放不缩小操作命中区",
     await expectAboveImage(page, node);
   }
 });
+
+for (const width of [390, 1099, 1920]) {
+  test(`图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 ${width}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: width === 390 ? 844 : 1080 });
+    await openWorkspace(page);
+    const node = page.getByTestId("canvas-node-image");
+    await uploadImage(node);
+    await selectImage(page, node);
+    const canvas = (await page.getByTestId("infinite-canvas").boundingBox())!;
+    const card = (await node.locator(".image-preview").boundingBox())!;
+    await page.mouse.move(card.x + 100, card.y + 100);
+    await page.mouse.down();
+    await page.mouse.move(card.x + 100, canvas.y + 120, { steps: 8 });
+    await page.mouse.up();
+    await expect(toolbar(page)).toBeVisible();
+    await expectAboveImage(page, node);
+
+    await page.keyboard.press("Escape");
+    await expect(toolbar(page)).toHaveCount(0);
+    const current = (await node.locator(".image-preview").boundingBox())!;
+    const delta = canvas.y + 20 - current.y;
+    await page.mouse.move(canvas.x + 24, canvas.y + 500);
+    await page.mouse.down({ button: "middle" });
+    await page.mouse.move(canvas.x + 24, canvas.y + 500 + delta, { steps: 8 });
+    await page.mouse.up({ button: "middle" });
+    await selectImage(page, node);
+    await expectAboveImage(page, node);
+  });
+}
 
 for (const width of [390, 1099, 1920]) {
   test(`图片选择工具栏在 ${width} 屏幕内可触达且保持标准尺寸`, async ({

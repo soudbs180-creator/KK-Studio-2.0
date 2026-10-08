@@ -8,7 +8,7 @@ import { createRequire } from "node:module";
 const root = process.cwd();
 const require = createRequire(path.join(root, "package.json"));
 const { chromium, expect } = require("@playwright/test");
-const { emptySnapshot } = await import(
+const { createTask, emptySnapshot } = await import(
   pathToFileURL(path.join(root, "src/features/creation/model.ts"))
 );
 const { stageProject } = await import(
@@ -79,6 +79,14 @@ await fs.mkdir(path.join(dataRoot, "projects"), { recursive: true });
 await fs.mkdir(profile, { recursive: true });
 await fs.mkdir(output, { recursive: true });
 const project = stageProject();
+const failed = createTask(project);
+failed.status = "failed";
+failed.outputs = failed.outputs.map((output) => ({
+  ...output,
+  status: "failed",
+  error: "UI 验收：供应商尚未返回可归档结果。",
+}));
+project.tasks = [failed];
 await fs.writeFile(
   path.join(dataRoot, "projects/creation-v2.json"),
   JSON.stringify({
@@ -126,7 +134,7 @@ async function audit(selector, name) {
         })),
       controls: [
         ...element.querySelectorAll(
-          ".kk-button,.ui-button,.primary-button,.settings-action",
+          ".kk-button,.ui-button,.primary-button,.settings-action,.task-workbench-actions button,.batch-cell button,.comment-region-presets button,.comment-entry button",
         ),
       ]
         .filter(visible)

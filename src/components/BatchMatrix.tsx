@@ -100,6 +100,7 @@ export default function BatchMatrix({
             {(output.status === "failed" || output.status === "cancelled") && (
               <button
                 type="button"
+                className="kk-button kk-button--secondary"
                 onClick={() => onRetryOutput(task.id, output.index)}
               >
                 单项重试

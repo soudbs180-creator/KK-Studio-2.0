@@ -132,21 +132,37 @@ export default function TaskWorkbenchContent({
           {selected.status === "running" && (
             <>
               {canPauseTask(selected.id) && (
-                <button type="button" onClick={() => onPauseTask(selected.id)}>
+                <button
+                  type="button"
+                  className="kk-button kk-button--secondary"
+                  onClick={() => onPauseTask(selected.id)}
+                >
                   暂停
                 </button>
               )}
-              <button type="button" onClick={() => onCancelTask(selected.id)}>
+              <button
+                type="button"
+                className="kk-button kk-button--secondary"
+                onClick={() => onCancelTask(selected.id)}
+              >
                 取消
               </button>
             </>
           )}
           {selected.status === "queued" && selected.error?.includes("暂停") && (
             <>
-              <button type="button" onClick={() => onResumeTask(selected.id)}>
+              <button
+                type="button"
+                className="kk-button kk-button--secondary"
+                onClick={() => onResumeTask(selected.id)}
+              >
                 恢复
               </button>
-              <button type="button" onClick={() => onCancelTask(selected.id)}>
+              <button
+                type="button"
+                className="kk-button kk-button--secondary"
+                onClick={() => onCancelTask(selected.id)}
+              >
                 取消
               </button>
             </>
@@ -158,7 +174,11 @@ export default function TaskWorkbenchContent({
             "offline",
             "interrupted",
           ].includes(selected.status) && (
-            <button type="button" onClick={() => onRetryTask(selected.id)}>
+            <button
+              type="button"
+              className="kk-button kk-button--secondary"
+              onClick={() => onRetryTask(selected.id)}
+            >
               重试剩余
             </button>
           )}

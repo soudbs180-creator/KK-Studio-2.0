@@ -137,12 +137,14 @@ export default function CommentRegion({
         <div className="comment-region-presets">
           <button
             type="button"
+            className="kk-button kk-button--secondary"
             onClick={() => onChange({ x: 0, y: 0, width: 1, height: 1 })}
           >
             标记全图
           </button>
           <button
             type="button"
+            className="kk-button kk-button--secondary"
             onClick={() =>
               onChange({ x: 0.25, y: 0.25, width: 0.5, height: 0.5 })
             }
@@ -151,6 +153,7 @@ export default function CommentRegion({
           </button>
           <button
             type="button"
+            className="kk-button kk-button--secondary"
             disabled={!value}
             onClick={() => onChange(undefined)}
           >

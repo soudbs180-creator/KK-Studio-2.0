@@ -7,6 +7,7 @@ import {
 } from "@playwright/test";
 import {
   CREATION_STORAGE_KEY,
+  createTask,
   emptySnapshot,
 } from "../../src/features/creation/model";
 import { stageProject } from "../fixtures/stage-project";
@@ -51,7 +52,7 @@ async function inspectPage(
       }));
     const controls = [
       ...element.querySelectorAll(
-        ".ui-button,.primary-button,.kk-button,.settings-action",
+        ".ui-button,.primary-button,.kk-button,.settings-action,.task-workbench-actions button,.batch-cell button,.comment-region-presets button,.comment-entry button",
       ),
     ]
       .filter(visible)
@@ -171,6 +172,14 @@ for (const width of [390, 1920]) {
   test(`阶段计划工作台遵循现行 UI 规则 ${width}`, async ({ page }, info) => {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1080 });
     const project = stageProject();
+    const failed = createTask(project);
+    failed.status = "failed";
+    failed.outputs = failed.outputs.map((output) => ({
+      ...output,
+      status: "failed",
+      error: "UI 验收：供应商尚未返回可归档结果。",
+    }));
+    project.tasks = [failed];
     await page.goto("/");
     await page.evaluate(({ key, value }) => localStorage.setItem(key, value), {
       key: CREATION_STORAGE_KEY,

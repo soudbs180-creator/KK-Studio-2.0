@@ -241,21 +241,8 @@
 .task-workbench-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: var(--kk-space-2);
   justify-content: flex-end;
-}
-.task-workbench-actions button {
-  min-height: 27px;
-  padding: 0 10px;
-  border: 1px solid var(--border-default);
-  border-radius: var(--kk-radius-menu);
-  color: var(--text-secondary);
-  font-size: var(--kk-font-caption);
-  line-height: var(--kk-line-caption);
-}
-.task-workbench-actions button:hover {
-  border-color: var(--border-accent);
-  color: var(--text-primary);
 }
 .task-workbench-empty {
   padding: 72px 20px;
@@ -390,12 +377,6 @@
 }
 .batch-cell button {
   justify-self: start;
-  padding: 3px 6px;
-  border-radius: var(--kk-radius-control);
-  background: var(--bg-card-hover);
-  color: var(--text-accent);
-  font-size: var(--kk-font-caption);
-  line-height: var(--kk-line-caption);
 }
 .review-grid,
 .export-grid {
@@ -515,11 +496,6 @@
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
   resize: vertical;
-}
-.comment-card .primary-button {
-  padding: 8px 10px;
-  font-size: var(--kk-font-caption);
-  line-height: var(--kk-line-caption);
 }
 .comment-entry {
   margin-top: 9px;
@@ -721,15 +697,11 @@
 }
 .comment-region-presets {
   display: flex;
-  gap: 7px;
+  flex-wrap: wrap;
+  gap: var(--kk-space-2);
   margin-bottom: 8px;
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
-}
-.comment-region-presets button {
-  padding: 5px;
-  border: 1px solid var(--border-default);
-  border-radius: var(--kk-radius-control);
 }
 .comment-card > p {
   margin-top: 10px;

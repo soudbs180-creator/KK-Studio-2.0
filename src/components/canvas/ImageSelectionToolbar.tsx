@@ -6,14 +6,9 @@ import {
   type RefObject,
 } from "react";
 import { createPortal } from "react-dom";
-import { surfaceScale } from "./canvasSurface";
+import { getImageSelectionPosition } from "./imageSelectionPosition";
 
-type Position = {
-  left: number;
-  top: number;
-  maxWidth: number;
-  visible: boolean;
-};
+type Position = ReturnType<typeof getImageSelectionPosition>;
 
 /** A screen-sized selection surface outside the transformed canvas stage. */
 export default function ImageSelectionToolbar({
@@ -33,6 +28,7 @@ export default function ImageSelectionToolbar({
     top: 0,
     maxWidth: 0,
     visible: false,
+    revealDelta: 0,
   });
   useLayoutEffect(() => {
     if (!selected) return;
@@ -43,82 +39,7 @@ export default function ImageSelectionToolbar({
       const canvas = element?.closest<HTMLElement>(".canvas");
       const toolbar = ref.current;
       if (element && canvas && toolbar) {
-        const card = element.getBoundingClientRect();
-        const caption = element.parentElement
-          ?.querySelector(".image-caption")
-          ?.getBoundingClientRect();
-        const bounds = canvas.getBoundingClientRect();
-        const scale = surfaceScale(canvas);
-        const gap = parseFloat(
-          getComputedStyle(toolbar).getPropertyValue("--kk-space-2"),
-        );
-        const usableWidth =
-          parseFloat(canvas.style.getPropertyValue("--canvas-usable-width")) *
-          scale;
-        const leftEdge = Math.max(0, bounds.left) + gap;
-        const rightEdge =
-          Math.min(window.innerWidth, bounds.right, bounds.left + usableWidth) -
-          gap;
-        const top =
-          Math.min(card.top, caption?.top ?? card.top) -
-          toolbar.offsetHeight -
-          gap;
-        let slots: Array<[number, number]> = [[leftEdge, rightEdge]];
-        for (const hud of [
-          ...canvas.querySelectorAll<HTMLElement>(
-            ".canvas-hud-actions,.canvas-top-right,.canvas-minimap",
-          ),
-        ]) {
-          const box = hud.getBoundingClientRect();
-          if (
-            box.width > 0 &&
-            box.height > 0 &&
-            getComputedStyle(hud).visibility !== "hidden" &&
-            top < box.bottom + gap &&
-            top + toolbar.offsetHeight > box.top - gap
-          ) {
-            slots = slots.flatMap(([start, end]) => {
-              if (box.right + gap <= start || box.left - gap >= end)
-                return [[start, end]];
-              const remaining: Array<[number, number]> = [];
-              if (box.left - gap > start)
-                remaining.push([start, box.left - gap]);
-              if (box.right + gap < end) remaining.push([box.right + gap, end]);
-              return remaining;
-            });
-          }
-        }
-        const center = card.left + card.width / 2;
-        const minimumWidth =
-          (toolbar.querySelector("button")?.getBoundingClientRect().width ??
-            0) +
-          gap * 2;
-        const slot = slots
-          .filter(([start, end]) => end - start >= minimumWidth)
-          .sort(
-            (a, b) =>
-              Math.abs(Math.max(a[0], Math.min(center, a[1])) - center) -
-              Math.abs(Math.max(b[0], Math.min(center, b[1])) - center),
-          )[0];
-        const maxWidth = slot ? slot[1] - slot[0] : 0;
-        const width = Math.min(toolbar.scrollWidth, maxWidth);
-        const left = slot
-          ? Math.max(slot[0], Math.min(center - width / 2, slot[1] - width))
-          : leftEdge;
-        const next = {
-          left,
-          top,
-          maxWidth,
-          // Never float an action over the image when its top has left the viewport.
-          visible:
-            !canvas.closest("[inert]") &&
-            maxWidth > 0 &&
-            top >= bounds.top + gap &&
-            card.bottom > bounds.top &&
-            card.top < bounds.bottom &&
-            card.right > leftEdge &&
-            card.left < rightEdge,
-        };
+        const next = getImageSelectionPosition(element, canvas, toolbar);
         if (
           !previous ||
           Object.keys(next).some(
