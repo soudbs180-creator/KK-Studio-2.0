@@ -1,0 +1,21 @@
+[WebServer] (node:63540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:28044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\browser\stage-workbench.spec.ts:48:1 › 计划批准只推进一次并持久化，不创建生成任务 (2.1s)
+  ok  2 tests\browser\stage-workbench.spec.ts:77:1 › 计划拒绝和解除阻断沿用原计划，仍须再次审批 (1.6s)
+  ok  3 tests\browser\stage-workbench.spec.ts:107:1 › 无工作项的合法结果阶段可以拒绝摘要并保存 (1.3s)
+  ok  4 tests\browser\stage-workbench.spec.ts:125:1 › 有工作项的结果拒绝仍需选择返工范围 (1.2s)
+  ok  5 tests\browser\stage-workbench.spec.ts:140:1 › 结果返工保留原提示词并重置依赖结果 (1.3s)
+  ok  6 tests\browser\stage-workbench.spec.ts:155:1 › 保存失败持续显示原因，审批不宣称已保存 (1.3s)
+  ok  7 tests\browser\stage-workbench.spec.ts:179:1 › 离线审批仍在本地保存，键盘能够提交 (881ms)
+  ok  8 tests\browser\stage-workbench.spec.ts:194:3 › 1099px 阶段审批视图没有水平溢出 (1.1s)
+  ok  9 tests\browser\stage-workbench.spec.ts:194:3 › 1920px 阶段审批视图没有水平溢出 (989ms)
+  ok 10 tests\browser\stage-workbench.spec.ts:210:1 › 结果审批通过后显示完成进度 (1.3s)
+  ok 11 tests\browser\stage-workbench.spec.ts:222:1 › 空项目显示明确计划来源且保留单一任务队列 (885ms)
+  ok 12 tests\browser\stage-workbench.spec.ts:233:1 › 窄屏仍可查看计划与提交审批 (1.2s)
+
+  12 passed (16.7s)

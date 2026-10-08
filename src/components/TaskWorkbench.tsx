@@ -1,14 +1,13 @@
 import { useMemo, useState } from "react";
 import type { ReviewComment } from "../domain/reviewWorkflow";
 import type { CreationProject } from "../features/creation/model";
-import type { StagePlan } from "../domain/stagePlan";
-import type { StageDecisionInput } from "../features/agent/orchestrator";
 import { requiredApprovalGates } from "../domain/agentWorkflow";
 import TaskWorkbenchContent, {
   outputsFor,
   statusLabel,
   type WorkbenchTab,
 } from "./TaskWorkbenchContent";
+import type { StagePlanActions } from "./TaskWorkbenchStages";
 
 export default function TaskWorkbench({
   project,
@@ -21,8 +20,10 @@ export default function TaskWorkbench({
   onRetryTask,
   onRetryOutput,
   onCommentsChange,
-  stagePlans,
   onStageDecision,
+  onRetryStage,
+  onRequestPlanApproval,
+  stageWriteDisabledReason,
 }: {
   project?: CreationProject;
   onClose: () => void;
@@ -34,9 +35,7 @@ export default function TaskWorkbench({
   onRetryTask: (taskId: string) => void;
   onRetryOutput: (taskId: string, outputIndex: number) => void;
   onCommentsChange: (comments: ReviewComment[]) => void;
-  stagePlans: StagePlan[];
-  onStageDecision: (input: StageDecisionInput) => void;
-}) {
+} & StagePlanActions) {
   const [tab, setTab] = useState<WorkbenchTab>("queue");
   const [selectedId, setSelectedId] = useState(project?.tasks.at(-1)?.id ?? "");
   const tasks = project?.tasks ?? [];
@@ -96,7 +95,7 @@ export default function TaskWorkbench({
               暂无任务。连接模型后可从画布提交。
             </p>
           )}
-          {!tasks.length && (
+          {!tasks.length && tab !== "plan" && (
             <button
               type="button"
               className="primary-button"
@@ -182,8 +181,11 @@ export default function TaskWorkbench({
             gates={gates}
             comments={project?.reviewComments ?? []}
             onCommentsChange={onCommentsChange}
-            stagePlans={stagePlans}
+            project={project}
             onStageDecision={onStageDecision}
+            onRetryStage={onRetryStage}
+            onRequestPlanApproval={onRequestPlanApproval}
+            stageWriteDisabledReason={stageWriteDisabledReason}
           />
         </div>
       </div>

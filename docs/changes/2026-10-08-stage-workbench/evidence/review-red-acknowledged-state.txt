@@ -1,0 +1,30 @@
+✔ a queued flush rejects when the preceding native conflict pauses saving and keeps the newer draft (44.3904ms)
+✔ queued flushes for an acknowledged revision resolve without duplicate writes (12.1297ms)
+✖ flushing an already durable revision restores saved status without writing again (8.0065ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 312.5862
+
+✖ failing tests:
+
+test at tests\unit\creationSaveQueue.test.ts:179:1
+✖ flushing an already durable revision restores saved status without writing again (8.0065ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  'saving' !== 'saved'
+
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-ORCH-002-stage-workbench/tests/unit/creationSaveQueue.test.ts:188:10)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'saving',
+    expected: 'saved',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
