@@ -2200,11 +2200,13 @@
     "id": "TASK-ORCH-002",
     "title": "TaskWorkbench 阶段计划视图与审批交互",
     "goal": "任务工作台展示 Stage 计划状态与 plan/result 审批门，审批按钮驱动编排器",
-    "scope": "现有工作台阶段计划视图、plan/result 审批/返工/解除阻断；原编排器项目范围校验与 App/AgentHost 共用实例；竞品能力比较归入现有 feature/task。",
+    "scope": "现有工作台阶段计划视图、plan/result审批/返工/解除阻断/重新申请；原编排器项目范围校验与App/AgentHost共用实例；原存储队列确认/冲突传播与草稿恢复；竞品能力比较归入现有feature/task。",
     "acceptance": [
       "工作台显示各阶段状态徽标与待审批门",
       "plan/result 审批按钮调用编排器 decideStage",
-      "浏览器回归覆盖展示与审批流"
+      "浏览器回归覆盖展示与审批流",
+      "拒绝计划后可解除阻断并重新申请审批，零工作项结果阶段可拒绝",
+      "排队保存冲突不显示成功，原件与未保存草稿保留；Web和production Desktop分别验收"
     ],
     "dependencies": [
       "TASK-ORCH-001"
@@ -2218,7 +2220,8 @@
       "src/components/StagePlanDetail.tsx",
       "src/styles/stage-workbench.css",
       "src/features/agent/orchestrator.ts",
-      "src/App.tsx"
+      "src/App.tsx",
+      "src/features/creation/useCreationStorage.ts"
     ],
     "status": "IN_PROGRESS",
     "evidence": [
@@ -2228,9 +2231,12 @@
       "docs/changes/2026-10-08-stage-workbench/comparison.md",
       "docs/changes/2026-10-08-stage-workbench/verification.md",
       "docs/changes/2026-10-08-stage-workbench/review.md",
-      "docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance.json"
+      "docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance.json",
+      "docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance-review-fixed.json",
+      "docs/changes/2026-10-08-stage-workbench/evidence/review-dfd4c12.md",
+      "docs/changes/2026-10-08-stage-workbench/evidence/verify-review-fixed.txt"
     ],
-    "verification": "实现源ba9adbb；完整verify退出0，根634/642、Agent172/174（原平台skip8/2）、browser387/387零重试；production Tauri审批/返工/重启与clientcheck通过。最终HEAD独立review待完成，FEAT-030仍PARTIAL。",
+    "verification": "初轮dfd4c12独立审查3项finding已修复；实际持久hook/领域46、Stage Web12通过，最新完整verify根638/646、Agent172/174（原skip8/2）、browser389/389零retry；production Tauri重启/真实CAS冲突/恢复草稿及clientcheck PASS。修复committed HEAD独立复验待完成，FEAT-030仍PARTIAL。",
     "updated": "2026-10-08",
     "verificationResult": "NOT_VERIFIED"
   },

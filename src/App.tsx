@@ -2552,6 +2552,21 @@ export default function App() {
                 );
                 await persistence.flush();
               }}
+              onRequestPlanApproval={async (
+                projectId,
+                planId,
+                stageIndex,
+                revision,
+              ) => {
+                stageOrchestrator.requestStageApproval(
+                  planId,
+                  stageIndex,
+                  "plan",
+                  revision,
+                  projectId,
+                );
+                await persistence.flush();
+              }}
               onCommentsChange={(reviewComments) => {
                 if (activeProject)
                   updateProject(activeProject.id, (project) => ({

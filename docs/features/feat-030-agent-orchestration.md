@@ -7,9 +7,9 @@
 
 ## 用户可见入口
 
-- 能力：Agent 生成任务按"阶段执行计划"编排：规划（plan）→ 审批（plan_review）→ 执行（doing）→ 结果审批（result_review）→ 完成（done）；失败只重试失败工作项。
-- 当前 UI 入口：任务工作台 → 阶段计划；查看阶段/工作项/进度，plan/result 人工审批、选项返工与解除阻断共用原编排器。审批不自动提交生成。
-- Desktop / Web 差异：领域层与工具面两端一致；Agent MCP 注册（plan 工具面接入 Codex）在 BACKEND-MCP-AUTO（TASK-MCP-AUTO）完成，当前工具面仅以纯函数形态存在。
+- 能力：已有本地阶段计划采用 plan_review → doing → result_review → done 审批流程，拒绝计划进入 blocked，解除阻断只重置失败工作项；真实生成执行尚未接入。
+- 当前 UI 入口：任务工作台 → 阶段计划；查看阶段/工作项/进度，plan/result 人工审批、选项返工、空阶段拒绝、解除阻断与重新申请审批共用原编排器。审批不自动提交生成。
+- Desktop / Web 差异：领域层与工具面两端一致；Agent MCP 注册（plan 工具面接入 Codex）由 BACKEND-MCP-AUTO（TASK-MCP-AUTO）负责，当前尚未接入，仅以宿主纯函数形态存在。
 
 ## 代码位置
 
@@ -20,15 +20,15 @@
 
 ## 测试与证据
 
-- 本轮：领域42/42、Stage浏览器10/10无retry、隔离数据目录的production Tauri审批/返工/重启通过；完整verify退出0、全量browser387/387零重试通过；最终HEAD独立review待完成，见[本轮验证](../changes/2026-10-08-stage-workbench/verification.md)。下列数字是历史证据。
-- 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/agentCanvas.test.ts`；当前全量 Node 422/422 通过。
+- 本轮：领域/实际持久 hook 定向46/46、Stage浏览器12/12，最新完整verify根638/646、Agent172/174（原平台skip8/2）、browser389/389零重试；production Tauri审批/返工/重启和真实原生CAS冲突/草稿恢复通过；修复HEAD独立复验待完成，见[本轮验证](../changes/2026-10-08-stage-workbench/verification.md)。下列数字是历史证据。
+- 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/creationSaveQueue.test.ts`、`tests/unit/agentCanvas.test.ts`；历史全量 Node 422/422 通过。
 - 浏览器回归：历史300/300；本轮新增 `tests/browser/stage-workbench.spec.ts` 的真实 App/IndexedDB 审批流，Desktop 对应 `tests/desktop/stage-workbench.mjs`。
-- Rust 测试 / 实机验收：项目包导出/导入及重复身份拒绝回归，当前 82/82 Rust 全量通过；Desktop GUI 与正式发布未验收。
+- Rust 历史验收：项目包导出/导入及重复身份拒绝回归82/82；本轮Desktop GUI范围为上列本地审批/保存/冲突恢复，真实生成与正式发布未验收。
 - 变更与验证证据：`docs/changes/2026-09-23-agent-orchestration/verification.md`
 
 ## 当前能力
 
-- 已实现的本地领域层能力（尚无端到端运行验收）：
+- 已实现的本地领域与工作台能力（审批和持久化已有本地 fixture 端到端验收）：
   - Stage 状态机：doing / plan_review / blocked / result_review / done，CAS 推进（乐观锁），非法迁移与并发冲突拦截；计划审批前不得执行，全部工作项成功后才能请求结果审批或完成；
   - 编排器：计划物化（同 id 同定义重放保留进度，不同定义拒绝覆盖；写前校验）、审批决策（plan/result 两门）、异常阻断、解除阻断并只重试失败工作项、待审批汇总；
   - 结果审批拒绝由宿主指定返工项及可选新 prompt（省略时整个阶段返工）；关联下游工作项与旧素材引用失效，受影响的结果审批需重新进行；

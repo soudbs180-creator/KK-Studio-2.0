@@ -376,8 +376,9 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
       stageIndex: number,
       gate: StageApprovalGate,
       expectedRevision: number,
+      expectedProjectId?: string,
     ): StagePlan {
-      const project = projectOrThrow();
+      const project = projectOrThrow(expectedProjectId);
       const plan = readPlan(project, planId);
       assertRevision(plan, expectedRevision);
       const expected: "plan_review" | "result_review" =

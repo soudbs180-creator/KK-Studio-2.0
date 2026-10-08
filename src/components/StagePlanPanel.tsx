@@ -27,6 +27,12 @@ export interface StagePlanActions {
     stageIndex: number,
     expectedRevision: number,
   ) => Promise<void>;
+  onRequestPlanApproval: (
+    projectId: string,
+    planId: string,
+    stageIndex: number,
+    expectedRevision: number,
+  ) => Promise<void>;
   stageWriteDisabledReason?: string;
 }
 
@@ -34,6 +40,7 @@ export default function StagePlanPanel({
   project,
   onStageDecision,
   onRetryStage,
+  onRequestPlanApproval,
   stageWriteDisabledReason,
 }: StagePlanActions & { project?: CreationProject }) {
   const [planId, setPlanId] = useState("");
@@ -152,6 +159,16 @@ export default function StagePlanPanel({
             onRetry={() =>
               run(() =>
                 onRetryStage(project.id, plan.id, stage.index, plan.revision),
+              )
+            }
+            onRequestPlanApproval={() =>
+              run(() =>
+                onRequestPlanApproval(
+                  project.id,
+                  plan.id,
+                  stage.index,
+                  plan.revision,
+                ),
               )
             }
           />

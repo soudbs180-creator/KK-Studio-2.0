@@ -113,7 +113,15 @@ export function useCreationStorage(
   }
   function enqueuePersist(snapshot: CreationSnapshot): Promise<void> {
     const operation = queue.current.then(async () => {
-      if (!ready.current || snapshot.revision <= acknowledged.current) return;
+      if (snapshot.revision <= acknowledged.current) {
+        if (mounted.current && ready.current)
+          setState(dirty.current ? "saving" : "saved");
+        return;
+      }
+      if (!ready.current)
+        throw new Error(
+          "项目保存已暂停，本次修改尚未保存；请先处理项目恢复提示。",
+        );
       try {
         await persistCreationSnapshotAsync(snapshot);
         acknowledged.current = snapshot.revision;

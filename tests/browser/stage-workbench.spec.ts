@@ -6,8 +6,16 @@ import {
 import { stageProject } from "../fixtures/stage-project";
 import { expandSidebar } from "./helpers";
 
-async function openPlans(page: Page, empty = false) {
+async function openPlans(
+  page: Page,
+  { empty = false, summaryOnly = false } = {},
+) {
   const project = stageProject(empty);
+  if (summaryOnly) {
+    project.stagePlans![0].stages[1].workItems = [];
+    project.stagePlans![0].stages[1].resultSummary = "阶段摘要需要调整";
+    project.stagePlans![0].stages[2].workItems = [];
+  }
   await page.goto("/");
   await page.evaluate(({ key, value }) => localStorage.setItem(key, value), {
     key: CREATION_STORAGE_KEY,
@@ -80,6 +88,53 @@ test("计划拒绝和解除阻断沿用原计划，仍须再次审批", async ({
   await expect(page.getByRole("region", { name: "阶段计划" })).toContainText(
     "计划审批尚未通过",
   );
+  await page
+    .getByRole("button", { name: "重新提交计划审批", exact: true })
+    .dblclick();
+  await expect
+    .poll(async () => (await savedPlan(page))?.stages[0].status)
+    .toBe("plan_review");
+  expect((await savedPlan(page)).revision).toBe(4);
+  expect((await savedPlan(page)).stages[0].planApprovedAt).toBeUndefined();
+  await page.getByRole("button", { name: "批准计划", exact: true }).click();
+  await expect
+    .poll(async () => (await savedPlan(page))?.stages[0].planApprovedAt)
+    .toBeTruthy();
+  expect((await savedPlan(page)).revision).toBe(5);
+  await expect(page.locator(".task-queue-item")).toHaveCount(0);
+});
+
+test("无工作项的合法结果阶段可以拒绝摘要并保存", async ({ page }) => {
+  await openPlans(page, { summaryOnly: true });
+  await page.getByRole("button", { name: /阶段 2：画面结果/ }).click();
+  await page.getByRole("button", { name: "返工结果", exact: true }).click();
+  await expect(page.getByRole("checkbox")).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "确认拒绝阶段结果", exact: true })
+    .click();
+  await expect
+    .poll(async () => (await savedPlan(page))?.stages[1].status)
+    .toBe("doing");
+  expect((await savedPlan(page)).stages[1].resultSummary).toBeUndefined();
+  expect((await savedPlan(page)).stages[1].workItems).toEqual([]);
+  await expect(
+    page.getByRole("region", { name: "阶段计划" }).getByRole("status"),
+  ).toBeVisible();
+});
+
+test("有工作项的结果拒绝仍需选择返工范围", async ({ page }) => {
+  await openPlans(page);
+  await page.getByRole("button", { name: /阶段 2：画面结果/ }).click();
+  await page.getByRole("button", { name: "返工结果", exact: true }).click();
+  await page
+    .getByRole("checkbox", { name: "返工 work-image", exact: true })
+    .uncheck();
+  await expect(
+    page.getByRole("button", { name: "确认返工", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    page.getByText("请至少选择一个返工工作项。", { exact: true }),
+  ).toBeVisible();
 });
 
 test("结果返工保留原提示词并重置依赖结果", async ({ page }) => {
@@ -165,7 +220,7 @@ test("结果审批通过后显示完成进度", async ({ page }) => {
 });
 
 test("空项目显示明确计划来源且保留单一任务队列", async ({ page }) => {
-  await openPlans(page, true);
+  await openPlans(page, { empty: true });
   await expect(page.getByRole("region", { name: "阶段计划" })).toContainText(
     "暂无阶段计划",
   );

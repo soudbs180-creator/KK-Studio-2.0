@@ -24,6 +24,7 @@ export default function StagePlanDetail({
   disabledReason,
   onDecision,
   onRetry,
+  onRequestPlanApproval,
 }: {
   plan: StagePlan;
   stage: Stage;
@@ -31,6 +32,7 @@ export default function StagePlanDetail({
   disabledReason?: string;
   onDecision: (input: StageDecisionInput) => Promise<void>;
   onRetry: () => Promise<void>;
+  onRequestPlanApproval: () => Promise<void>;
 }) {
   const [rework, setRework] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -41,6 +43,8 @@ export default function StagePlanDetail({
   const gate = stageApprovalGateFor(stage);
   const counts = stageWorkItemCounts(stage);
   const disabled = busy || Boolean(disabledReason);
+  const needsPlanApproval =
+    stage.approvalGate === "plan" && stage.planApprovedAt === undefined;
   const decide = (decision: "approve" | "reject", ids?: string[]) => {
     if (!gate) return;
     void onDecision({
@@ -83,11 +87,25 @@ export default function StagePlanDetail({
         ))}
       </ul>
       {stage.status === "doing" && (
-        <p className="stage-plan-guidance">
-          {stage.approvalGate === "plan" && stage.planApprovedAt === undefined
-            ? "计划审批尚未通过，请等待宿主重新提交计划审批。"
-            : "计划自动执行尚未接入；审批不会自动提交或重复创建生成任务。"}
-        </p>
+        <>
+          <p className="stage-plan-guidance">
+            {needsPlanApproval
+              ? "计划审批尚未通过，请重新提交计划审批。"
+              : "计划自动执行尚未接入；审批不会自动提交或重复创建生成任务。"}
+          </p>
+          {needsPlanApproval && (
+            <div className="stage-plan-actions">
+              <button
+                type="button"
+                className="primary-button"
+                disabled={disabled}
+                onClick={() => void onRequestPlanApproval()}
+              >
+                {busy ? "保存中…" : "重新提交计划审批"}
+              </button>
+            </div>
+          )}
+        </>
       )}
       {gate && !rework && (
         <div className="stage-plan-actions">
@@ -117,8 +135,14 @@ export default function StagePlanDetail({
       )}
       {rework && gate === "result" && (
         <div className="stage-rework-confirm">
-          <h4>确认返工范围</h4>
-          <p>所选工作项及依赖它们的后续结果将重新审阅；原始提示词保留。</p>
+          <h4>
+            {stage.workItems.length ? "确认返工范围" : "确认拒绝阶段结果"}
+          </h4>
+          <p>
+            {stage.workItems.length
+              ? "所选工作项及依赖它们的后续结果将重新审阅；原始提示词保留。"
+              : "当前阶段没有工作项；拒绝后将撤回阶段摘要，等待重新审阅。"}
+          </p>
           {stage.workItems.map((item) => (
             <label key={item.id}>
               <input
@@ -136,15 +160,19 @@ export default function StagePlanDetail({
               返工 {item.id}
             </label>
           ))}
-          {!selectedIds.length && <p>请至少选择一个返工工作项。</p>}
+          {stage.workItems.length > 0 && !selectedIds.length && (
+            <p>请至少选择一个返工工作项。</p>
+          )}
           <div className="stage-plan-actions">
             <button
               type="button"
               className="primary-button"
-              disabled={disabled || !selectedIds.length}
+              disabled={
+                disabled || (stage.workItems.length > 0 && !selectedIds.length)
+              }
               onClick={() => decide("reject", selectedIds)}
             >
-              确认返工
+              {stage.workItems.length ? "确认返工" : "确认拒绝阶段结果"}
             </button>
             <button
               type="button"

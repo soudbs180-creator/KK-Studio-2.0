@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-10-08T04:45:16.688Z",
+  "base": "21d121d2b884b2b7ced4a98eb0e03c590de5c3cd",
+  "scope": "Working tree after accepted fixes; compare these hashes against the committed fix head. Full verify and Desktop receipt bind this source tree; no credentials or user data.",
+  "sha256": {
+    "src/domain/stagePlan.ts": "6fd1c534077e2d05cfc86f3cf4c8a237d5ea0b41dbee081c7fae558e1c00f45b",
+    "src/features/agent/orchestrator.ts": "e6af795266c3441231978e3d9dc5b675cd6ea11173046d078f655304c40481be",
+    "src/features/agent/agentHost.ts": "1359a161ab15fa01144a278543db9fe26b82b7bc8e3398681587df2215aa88be",
+    "src/features/agent/agentCanvas.ts": "778367a2f158326f70aabf72a1d8f3fbd8bfb07d1debf3c0e627395baf4b5abd",
+    "src/components/TaskWorkbench.tsx": "35972ff5b0f85e07335fab249bc3ac0c80060649738efea3b0c625eb77a1f771",
+    "src/components/StagePlanPanel.tsx": "87d37e41e52cf5c40acf5b7af9398afe6a619aef13887e66068083e31392a235",
+    "src/components/StagePlanDetail.tsx": "3ce580f2d33025fe9aa74568fa4aaf89c74f999a6ff96f9f618279bd8d13e5b5",
+    "src/styles/stage-workbench.css": "d5b8653df7b8b02698647fb167cabc1878fbada5da37c853707c52a30f5e9865",
+    "src/App.tsx": "ef7ffdeb1ab74cd89c6906421291cbb4698abbad71f363559b6d8662ca43ff00",
+    "src/features/creation/useCreationStorage.ts": "5191f4af976a3d32ba2cfdbd38c5e80a9cf882b53d41d28288c44dff3349a9c9",
+    "tests/desktop/stage-workbench.mjs": "420580c1e49e72429e758685dde40ab52f5246ea7b326c263b5bc46379b8c66b",
+    "tests/browser/stage-workbench.spec.ts": "bb70ca1b0a64a159c4577280878f052b9b4f3a72d063c550ee79032f24f87142",
+    "tests/unit/creationSaveQueue.test.ts": "c0029203d27291a50f0196e86a42fba46206cd553aec353754cca5abb97b8df0",
+    "tests/unit/orchestrator.test.ts": "539d10e60861f2ca863127dec707b2c12b9baec6131ab5e3deb8d544efc01e08"
+  }
+}

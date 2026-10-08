@@ -1319,7 +1319,7 @@
     "card": "docs/features/feat-030-agent-orchestration.md",
     "summary": "Stage 状态机、工作台阶段计划及 plan/result 人工审批、严格项目范围/revision 校验、原计划工具面和画布交付契约；自动执行与 MCP 注册仍待接入。",
     "entryPoints": [
-      "任务工作台 → 阶段计划（查看、plan/result 审批、返工与解除阻断）",
+      "任务工作台 → 阶段计划（查看、plan/result审批、返工、解除阻断与重新申请审批）",
       "Agent plan 工具面（MCP 注册待 BACKEND-MCP-AUTO）"
     ],
     "code": [
@@ -1331,14 +1331,16 @@
       "src/components/StagePlanPanel.tsx",
       "src/components/StagePlanDetail.tsx",
       "src/styles/stage-workbench.css",
-      "src/App.tsx"
+      "src/App.tsx",
+      "src/features/creation/useCreationStorage.ts"
     ],
     "tests": [
       "tests/unit/stagePlan.test.ts",
       "tests/unit/orchestrator.test.ts",
       "tests/unit/agentCanvas.test.ts",
       "tests/browser/stage-workbench.spec.ts",
-      "tests/desktop/stage-workbench.mjs"
+      "tests/desktop/stage-workbench.mjs",
+      "tests/unit/creationSaveQueue.test.ts"
     ],
     "tasks": [
       "TASK-ORCH-001",

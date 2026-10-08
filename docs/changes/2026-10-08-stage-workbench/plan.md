@@ -57,9 +57,9 @@
 
 **Files:** 本目录 comparison/verification/review、原 FEAT-030 card/registry、TASK-ORCH-002 ledger、PROGRESS/PROJECT_STATE/AI_HANDOFF、版本文件。
 
-- [ ] 比较结论映射已有 feature/task，保留 KK 的强制 CAS/BYOK/本地资产归档；对竞品插件优势记录现有任务归属，不再登记同功能。
-- [ ] 按脚本提升受影响平台 patch，生成治理文档；Expected：version/governance/features 检查通过。
-- [ ] 完整 npm run verify 和必要 native 检查；Expected：通过或逐项记录实际阻断，不能隐藏失败。
+- [x] 比较结论映射已有 feature/task，保留 KK 的强制 CAS/BYOK/本地资产归档；对竞品插件优势记录现有任务归属，不再登记同功能。
+- [x] 按脚本提升受影响平台 patch，生成治理文档；Expected：version/governance/features 检查通过。
+- [x] 完整 npm run verify 和必要 native 检查；Expected：通过或逐项记录实际阻断，不能隐藏失败。
 - [ ] 对当前 committed HEAD 进行独立 fresh-context review，修复 blocker 并重跑相关/完整验证。
 - [ ] 更新 ledger、状态和交接，保持 FEAT-030 PARTIAL。保留隔离分支供审查，不推送或发布。
 
@@ -70,3 +70,5 @@
 ## 计划变更记录
 
 2026-10-08：进一步读取原方法后，直接在编排器的既有审批/解除阻断入口增加项目范围校验，替代新的 stageWorkbench 包装模块。共享接口沿用 StageDecisionInput；App 传入额外 expectedProjectId。减少重复封装，旧内部调用兼容，验收不变。
+
+2026-10-08 独立 review 后统一修复：requestStageApproval 增加同样的项目范围校验并在原面板提供重新提交入口；空工作项结果拒绝沿用现有领域契约。审查同时发现旧持久层的排队跳过写入分支会使新增审批误报保存成功，因此修复 useCreationStorage 的执行时可写性检查；新增真实源码存储队列测试，保留 acknowledged revision 的幂等保存，不新建存储模块或任务。修复后重跑完整 verify，并在隔离 release 中覆盖原生 CAS 冲突与恢复草稿，再按新 committed HEAD 复验三项 finding。

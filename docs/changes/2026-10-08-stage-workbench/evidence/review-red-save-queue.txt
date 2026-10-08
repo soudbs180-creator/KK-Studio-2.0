@@ -1,0 +1,27 @@
+✖ a queued flush rejects when the preceding native conflict pauses saving and keeps the newer draft (48.96ms)
+✔ queued flushes for an acknowledged revision resolve without duplicate writes (11.575ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 526.9451
+
+✖ failing tests:
+
+test at tests\unit\creationSaveQueue.test.ts:67:1
+✖ a queued flush rejects when the preceding native conflict pauses saving and keeps the newer draft (48.96ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async Promise.all (index 1)
+      at async TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-ORCH-002-stage-workbench/tests/unit/creationSaveQueue.test.ts:81:3)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /保存.*暂停|尚未.*保存/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

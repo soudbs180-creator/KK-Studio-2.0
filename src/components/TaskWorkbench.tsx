@@ -21,6 +21,7 @@ export default function TaskWorkbench({
   onCommentsChange,
   onStageDecision,
   onRetryStage,
+  onRequestPlanApproval,
   stageWriteDisabledReason,
 }: {
   project?: CreationProject;
@@ -171,6 +172,7 @@ export default function TaskWorkbench({
               project={project}
               onStageDecision={onStageDecision}
               onRetryStage={onRetryStage}
+              onRequestPlanApproval={onRequestPlanApproval}
               stageWriteDisabledReason={stageWriteDisabledReason}
             />
           ) : (

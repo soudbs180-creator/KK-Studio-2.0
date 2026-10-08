@@ -134,6 +134,34 @@ test("a stale workbench retry cannot unblock another project's matching plan", (
   assert.equal(read().stagePlans?.[0].stages[0].status, "blocked");
 });
 
+test("a stale workbench approval request cannot target another project's matching plan", () => {
+  const first = createProject(input);
+  let active = first;
+  const orchestrator = createStageOrchestrator({
+    getProject: () => active,
+    commit: (next) => {
+      active = next;
+    },
+  });
+  const plan = orchestrator.upsertPlan(planInput(first.id));
+  const second = createProject(input);
+  active = { ...second, stagePlans: [{ ...plan, projectId: second.id }] };
+  const before = active;
+  assert.throws(
+    () =>
+      orchestrator.requestStageApproval(
+        plan.id,
+        0,
+        "plan",
+        plan.revision,
+        first.id,
+      ),
+    /项目已切换/,
+  );
+  assert.strictEqual(active, before);
+  assert.equal(active.stagePlans?.[0].stages[0].status, "doing");
+});
+
 test("upsertPlan persists a plan into the project (idempotent by id)", () => {
   const { orchestrator, read } = harness();
   const plan = orchestrator.upsertPlan(planInput("p"));
