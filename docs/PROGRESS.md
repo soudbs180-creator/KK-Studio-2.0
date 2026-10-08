@@ -839,3 +839,17 @@ TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点
 - 实际回归：Node 661（653 pass/0 fail/8 skipped）、Canvas Agent 174（172 pass/0 fail/2 skipped）、Playwright 379/379、TypeScript/lint/format/build、Vite build、Cargo check 均通过；Vite 只留已有依赖注释与 bundle 大小 warning。
 - 后续优先级：P0 先保护注册表数据不丢失；P1 完成真实 MCP 端点验收并推进编排器真实生成执行；P2 继续 T5/T6/T7、平台服务、VPS、Mobile、Figma 完整验收。证据见 [本轮 verification](changes/2026-10-03-task-audit/verification.md) 和 [review](changes/2026-10-03-task-audit/review.md)。
 - 本轮补充：项目建设目标与验收入口已接入 `goals:check`；UI 门禁发现的 301 行 MCP 设置组件已拆分，相关任务已通过当前 head 的独立技术复核。
+
+## 2026-10-09 开发插件失败项继续处理
+
+TASK-PLUGIN-DEV-001在独立任务树认领，固定1421复现四个public模块500和遮罩；最小同源绝对URL及SDK静态JSX校验候选已实现，15针对性Node测试/SDK类型/插件重建通过。当前仍IN_PROGRESS，开发完整流程、最新main组合、fresh Tauri/full verify/独立审查及托管门禁待实际执行。原失败/驱动和SSR探针纠正均在[本轮记录](changes/2026-10-09-plugin-development/verification.md)保留，不预填完成。
+
+## 2026-10-09 随包插件运行失败项继续收尾（IN_PROGRESS）
+
+TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，回归新发现TASK-PLUGIN-RECOVERY-001 P1（归一化遗漏现有plugin）与TASK-PLUGIN-MARKDOWN-001 P1（CDN离线正文为空/模块错误）。已登记并做RED→GREEN预验收：快照10/10、固定1421实际4插件编辑/预览/内容刷新恢复零错误。共享Desktop/Web源码版本递增2.1.12，Mobile保持规划2.1.1；解析器原marked14改为精确14.1.4随包，不扩大CSP。完整验证、fresh原生、独立review和Hosted/合并仍未完成，当前任务不标DONE。见[验证](changes/2026-10-09-plugin-development/verification.md)。
+
+
+- TASK-DESKTOP-FLUSH-001：本轮插件原生立即关闭实际复现最后编辑丢失（P1）；已登记并实现 CloseRequested 耐久队列守卫，重复关闭/最新revision/失败及读保护留窗/卸载单元 7 PASS。fresh 原生与当前提交独立验收仍未完成，原 FAIL 保留。
+
+
+- TASK-PLUGIN-DEV-001及RECOVERY/MARKDOWN/DESKTOP-FLUSH三个新P1本地闭合：真实开发/生产/fresh原生正文及恢复、立即关闭/真实IO失败留窗与原件保护、完整447浏览器和同EXE邻接全部通过。原FAIL、来源身份和标题栏第一拖动未知原因保留；最终doc/Hosted/普通集成/main按各自收据，UI012/UI014与43项既有开放能力继续。见[本轮完整状态](changes/2026-10-09-plugin-development/status.md)。

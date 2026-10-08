@@ -1,0 +1,1211 @@
+{
+  "collectedAt": "2026-10-08T20:17:44.770Z",
+  "collectionHead": "fadfabf886641ee5590a14f28924cc4ae497be8a",
+  "preserveHistoricalResultAndSourceIdentity": true,
+  "artifacts": [
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\browser-results-close-final.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/browser-results-close-final.json.lossless.json",
+      "bytes": 592972,
+      "sha256": "4ff8bb2d3a932acb8207614aee2a58efc8d8ca9121a21f3d7e1f7829bf3eb9bb",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\browser-summary-close-final.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/browser-summary-close-final.json",
+      "bytes": 464,
+      "sha256": "b89002a01bd639f5575ba28419b0ce75c7b86e7e06ee82b1154f2131f86c2823",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\browser-summary-dc3c03e.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/browser-summary-dc3c03e.json",
+      "bytes": 693,
+      "sha256": "d21f7a5a5b65bab700e1458a268edf9ae537dcd1c0fa736b4c403e7617c3402a",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\client-check-close-final.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/client-check-close-final.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\client-check-close-final.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/client-check-close-final.txt.lossless.json",
+      "bytes": 1383,
+      "sha256": "f526e54a9df4bcaa7c3dd4f4ab380c30e8c6714ee75396610161cb586e987cc9",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\client-check-dc3c03e.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/client-check-dc3c03e.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\client-check-dc3c03e.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/client-check-dc3c03e.txt.lossless.json",
+      "bytes": 9156,
+      "sha256": "ccd7da64994cd96ee0d873d92a101b26eeaf1e11120fd1d0d7b99f2b58ac750f",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\close-hook-unit-green.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/close-hook-unit-green.txt.lossless.json",
+      "bytes": 1316,
+      "sha256": "b6b772d04c9835eaea57414da555f4e1d915d810ac98feac060b7b6d0b9ced3d",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\commit-preparation.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/commit-preparation.txt.lossless.json",
+      "bytes": 663,
+      "sha256": "42a98a5906d5778f6632cd4293bf9d76123cd24034da6e11ae56f05a7d40b901",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-green-main-8c921a5-working.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/development-green-main-8c921a5-working.txt.lossless.json",
+      "bytes": 7670,
+      "sha256": "49a7267ce7222bde7101fd3213f51df4da08bdfcdf3fed335bff717b1e487df6",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-green-working.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/development-green-working.txt.lossless.json",
+      "bytes": 1735,
+      "sha256": "3f089bce8149b17d4e7436c7c90624dfd72bf26f914c5a608f716ac0522d793f",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-markdown-offline-red.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/development-markdown-offline-red.txt.lossless.json",
+      "bytes": 7186,
+      "sha256": "d1768cac8e9c4c4f1dbaaccc2a44706b69ad007e7107f44f0acaf82250d981be",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-offline-content-working.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/development-offline-content-working.txt.lossless.json",
+      "bytes": 367,
+      "sha256": "33fc74f6fabe5856400fa2db5a6fa92da24d4eb0337489631007e8c87c6a8fa3",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-recovery-working.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/development-recovery-working.txt.lossless.json",
+      "bytes": 343,
+      "sha256": "3fdad80044ae083f43a5dd91d2c70e1f0e6b1b3b5dca71c0295133069bd7d4fe",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-red-main-1d6f640.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/development-red-main-1d6f640.txt.lossless.json",
+      "bytes": 6318,
+      "sha256": "0179112f460114f1e8011e2b9ee8494bb5f5fb0969b3d46ef50fd815607f5ecb",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-sdk-red.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/development-sdk-red.txt.lossless.json",
+      "bytes": 780,
+      "sha256": "fd589e5493ad0cad72316ccf99ba94306fc7d19209478313fd65078286ef692b",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\fresh-agent-build-close-final.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/fresh-agent-build-close-final.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\fresh-agent-build-close-final.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/fresh-agent-build-close-final.txt.lossless.json",
+      "bytes": 5412,
+      "sha256": "7de4a46aed7306482fe210c06b7ae197f09ea2110aa28c37a357242ebf0cd844",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\fresh-agent-build-dc3c03e.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/fresh-agent-build-dc3c03e.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\fresh-agent-build-dc3c03e.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/fresh-agent-build-dc3c03e.txt.lossless.json",
+      "bytes": 15155,
+      "sha256": "5a8ee8be821a87e096be6519c813741be15dc6c249064a8a07c8e0869828c635",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\fresh-identity-dc3c03e-83639e7.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/fresh-identity-dc3c03e-83639e7.json",
+      "bytes": 893,
+      "sha256": "b4a339274fe2c224699fbe098e90625fd8a02d2088d08d720fd14bb99992386b",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\identity-c8ce21c.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/identity-c8ce21c.json",
+      "bytes": 49744,
+      "sha256": "ff95d201f98ad64e5237b640c6375992d0243580bed453c2eb06a9e4e82e609c",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\ledger-bdb82df-preservation.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/ledger-bdb82df-preservation.json",
+      "bytes": 415,
+      "sha256": "1896abf30c557b9b3afd7f51b16fed18b7efb57032e35cce164b57330c620676",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\markdown-typecheck.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/markdown-typecheck.txt.lossless.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\marked-install.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/marked-install.txt.lossless.json",
+      "bytes": 25,
+      "sha256": "f2a59920b7bb73f83ad4f8b1d8a245309cae6f3b4fcf1650759b421d16c7b6f6",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\marked-version.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/marked-version.json",
+      "bytes": 149,
+      "sha256": "3c986600f0fae4bd043051f0d76ce1300ce4d42cb746b08ecb86c3b9424a00b0",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\merge-main-8c921a5.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/merge-main-8c921a5.txt.lossless.json",
+      "bytes": 31986,
+      "sha256": "b2d4f11fea6e23598be549fc1691da359d73505b9bc1faa15d7ce144d0ae7bbe",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-final-be5f327.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-close-final-be5f327.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-final-be5f327.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-close-final-be5f327.txt.lossless.json",
+      "bytes": 2991,
+      "sha256": "1e318aed3682aec22412ac790c4f42682d9775c7590f7179541756a8dcb75552",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-protected-final.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-close-protected-final.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-protected-final.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-close-protected-final.txt.lossless.json",
+      "bytes": 645,
+      "sha256": "750b38daaa5436850b58f4172f63c4bea3d83c26235d2d37c05d6d61bf7bfd12",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-unit-green.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-close-unit-green.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-unit-green.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-close-unit-green.txt.lossless.json",
+      "bytes": 1527,
+      "sha256": "3c9eff25c3a05541945e73745c34fbd34c0e897e5ca4ad8888f650828931159e",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-unit-red.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-close-unit-red.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-unit-red.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-close-unit-red.txt.lossless.json",
+      "bytes": 1533,
+      "sha256": "8c6ba2fffc348be359145c7e3505ffd32316d655bd33e03c05065120d5c1b00a",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-csp-c8ce21c.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-csp-c8ce21c.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-csp-c8ce21c.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-csp-c8ce21c.txt.lossless.json",
+      "bytes": 1423,
+      "sha256": "f59b01c06be80ff6a6abea44eb5ea93132814089e26bee09edec4a5672353d2a",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-immediate-close-red.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-immediate-close-red.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-immediate-close-red.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-immediate-close-red.txt.lossless.json",
+      "bytes": 1314,
+      "sha256": "650a10b21fa964cb75340d4ed0a0bffdc29c411fd027205ec45b191a245c6a04",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-83639e7.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-recovery-83639e7.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-83639e7.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-recovery-83639e7.txt.lossless.json",
+      "bytes": 874,
+      "sha256": "b7e7bb956045d6bbb6c6df5f91b929fadbc5e32c70c691d68d4215596a087ab2",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-durable-backup.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-recovery-durable-backup.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-durable-backup.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-recovery-durable-backup.txt.lossless.json",
+      "bytes": 1241,
+      "sha256": "c15ed357827fcc6cff4d9777ab417922c14c2c1cd6d6a87d54ac5f83ed1dbb26",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-graceful.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-recovery-graceful.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-graceful.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-recovery-graceful.txt.lossless.json",
+      "bytes": 1046,
+      "sha256": "a215c324d5b5b5340c4a6efecb7caf555ae42329c6a0b27e4ba22fa1cdd05946",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-request-trace.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-recovery-request-trace.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-request-trace.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-recovery-request-trace.txt.lossless.json",
+      "bytes": 1139,
+      "sha256": "d5140b28f3987e147174ae0dddbe22bd5d773009b4b861520cdf5e6d2f0b1b21",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-selection-final.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-selection-final.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-selection-final.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-selection-final.txt.lossless.json",
+      "bytes": 186,
+      "sha256": "6482d5409144d8fd1e7f7ccccae20feccbbdd1d0638d3e85ddd34c2c88ced4ab",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-taskhost-c8ce21c.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-taskhost-c8ce21c.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-taskhost-c8ce21c.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-taskhost-c8ce21c.txt.lossless.json",
+      "bytes": 138,
+      "sha256": "a22e614652c9a79db99649e416b2dcfc0a5fc39c3776bc6bda0c7fcfbb66e529",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-titlebar-c8ce21c.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-titlebar-c8ce21c.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-titlebar-c8ce21c.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-titlebar-c8ce21c.txt.lossless.json",
+      "bytes": 429,
+      "sha256": "9d0cc0933621ae6b2be206790fd1180228a16b2190953a92d6a7687890e4bab2",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-titlebar-diagnostic-c8ce21c.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-titlebar-diagnostic-c8ce21c.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-titlebar-diagnostic-c8ce21c.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/native-titlebar-diagnostic-c8ce21c.txt.lossless.json",
+      "bytes": 123,
+      "sha256": "9ff4d58a31813fb51f4351a3beeda1e6585452047dc50321c656d02bcec30502",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\npm-ci.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/npm-ci.txt.lossless.json",
+      "bytes": 1759,
+      "sha256": "f9e918d87b3fa918549c025789943be171d7a1a85a799fba5613554d50fec090",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\owned-child-exit-probe.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/owned-child-exit-probe.json",
+      "bytes": 89,
+      "sha256": "8f6c6b005244294cafd30aa847d55181f00c2d73f88412dc24a1dd5b0ef4201a",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\plugin-recovery-format.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/plugin-recovery-format.txt.lossless.json",
+      "bytes": 133,
+      "sha256": "11de5fd7df9fbff8d08d4be08a962b68ea9a56db8dd60778a9a30e706ce810db",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\plugin-recovery-green.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/plugin-recovery-green.txt.lossless.json",
+      "bytes": 1033,
+      "sha256": "3fef10da7c14c9410b0b0cd02b17f66e46925292e250837aaa6d38a4a757246c",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\plugin-recovery-red.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/plugin-recovery-red.txt.lossless.json",
+      "bytes": 84888,
+      "sha256": "48f803f6a86ba69b522578334eaecb8622c05087ee13b15408c3855a3f194448",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\plugin-sdk-unit-green.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/plugin-sdk-unit-green.txt.lossless.json",
+      "bytes": 1244,
+      "sha256": "b324ff6ccd93dc1daf1e8ec7fe067593084cf50d0ae60c85767ec70f856f418b",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\plugin-unit-green.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/plugin-unit-green.txt.lossless.json",
+      "bytes": 995,
+      "sha256": "c8121633bb565e88b02680ac647b338501476148444dabeb0ea1bc65144fc03e",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\plugins-build.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/plugins-build.txt.lossless.json",
+      "bytes": 678,
+      "sha256": "ca303efcdf02a016c6eab5abc2b0ee1e7ad55a357ba634c96f2dd3f74d0f784f",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\plugins-offline-build.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/plugins-offline-build.txt.lossless.json",
+      "bytes": 678,
+      "sha256": "27b8503b6dd37f16a0c07bbee36bd1e8da55c4583db5794dc7804f5d5c52b2f0",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\preparation-format-2.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/preparation-format-2.txt.lossless.json",
+      "bytes": 448,
+      "sha256": "a5d5b1da8a3512bcafd0f8300281abf131c28d85fad9da80f12c0c9a1125652a",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\preparation-format.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/preparation-format.txt.lossless.json",
+      "bytes": 373,
+      "sha256": "2baf098bb518cddafd9abbf7e2764cf701f3873280d7dcb70aaf7a376c242cea",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\preparation-lint.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/preparation-lint.txt.lossless.json",
+      "bytes": 591,
+      "sha256": "a492356f44cf0f72bcf01e384c2ee08786e3b9dac4d51345bdf4c0de2179fd7b",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\preparation-typecheck.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/preparation-typecheck.txt.lossless.json",
+      "bytes": 50,
+      "sha256": "4066b4e8297d9ea6ce1653c8da8d4389c65e3a71cdca5f1f31a10e1e9925e4f9",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\review-source-dc3c03e.md",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/review-source-dc3c03e.md",
+      "bytes": 21960,
+      "sha256": "5671871e562893fbf870245ec2ee666ca80967eeb5719e68030a9afc54f98711",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\rust-e3a6660.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/rust-e3a6660.exit.txt.lossless.json",
+      "bytes": 14,
+      "sha256": "c2c107bf3af2084585c4bef48ab2cd3733405daa939dd0228c971a1114982dbe",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\rust-fmt-dc3c03e.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/rust-fmt-dc3c03e.txt.lossless.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\rust-fmt-e3a6660.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/rust-fmt-e3a6660.txt.lossless.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\rust-test-dc3c03e.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/rust-test-dc3c03e.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\rust-test-dc3c03e.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/rust-test-dc3c03e.txt.lossless.json",
+      "bytes": 20516,
+      "sha256": "8daf4a3a20b721dafbd2d760c4f5a2492d235caec052e2cb33b508fc4a360f3d",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\rust-test-e3a6660.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/rust-test-e3a6660.txt.lossless.json",
+      "bytes": 10953,
+      "sha256": "6b1f6ed8ecdecb6391d6d3231713148ca76a28e8b42f33304c3b5fdf2ef7c135",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\sdk-jsx-red.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/sdk-jsx-red.txt.lossless.json",
+      "bytes": 1141,
+      "sha256": "c7e6a27b0189caa28ea7cad211bd2c8c57c2d456b6b5ae92848a58672c06197e",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\sdk-jsx-validation-red.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/sdk-jsx-validation-red.txt.lossless.json",
+      "bytes": 1963,
+      "sha256": "a5522b6a7b3bca5e77171558ee49db411a189984f0e780e2c545899fac5f9da3",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\sdk-typecheck.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/sdk-typecheck.txt.lossless.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\source-format.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/source-format.txt.lossless.json",
+      "bytes": 159,
+      "sha256": "074d48c02a11c3796c48b86e09d633d2f01197441b267843d462d182200bece1",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\source-lint-close.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/source-lint-close.txt.lossless.json",
+      "bytes": 591,
+      "sha256": "ba502cae650594b53fbc575f720543672080f1005f84889ed7356016a28ef7f2",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\source-lint-corrected-2.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/source-lint-corrected-2.txt.lossless.json",
+      "bytes": 591,
+      "sha256": "c99f0e90d7f3dc073a0cd812d60a69ed848c4e330ffb40afab24d9e51e8935e2",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\source-lint-corrected.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/source-lint-corrected.txt.lossless.json",
+      "bytes": 358,
+      "sha256": "8f16b98d155bfcbfd1722ddc01a646535a5fd878ea6d595c7471e9ddfad106fe",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\source-lint.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/source-lint.txt.lossless.json",
+      "bytes": 760,
+      "sha256": "f4ed665cac5d219d1fba01762ef1e55abeea809e3560a59ebf65296c8bca8500",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\source-typecheck.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/source-typecheck.txt.lossless.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\stage-preparation.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/stage-preparation.txt.lossless.json",
+      "bytes": 1344,
+      "sha256": "0087363995e8b19cab3b96fd91884a965cde50ff89ef87ec14dc0a8cc4d7fed6",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\verify-close-final.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/verify-close-final.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\verify-close-final.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/verify-close-final.txt.lossless.json",
+      "bytes": 160010,
+      "sha256": "8f2e70d4bdab06130ac453fddb11311a5fb0c8d577c976c1ecb6e3d2f2c1c24d",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\verify-dc3c03e.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/verify-dc3c03e.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\verify-dc3c03e.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/verify-dc3c03e.txt.lossless.json",
+      "bytes": 159098,
+      "sha256": "d49c6d8fbff9db1906682e60adf6564755939ff6319bd74e0f1522f963b02344",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\verify-e3a6660.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/verify-e3a6660.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\verify-e3a6660.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/verify-e3a6660.txt.lossless.json",
+      "bytes": 72093,
+      "sha256": "ebc993e25a3117db92e3b33f4416865727a718432939776d530a0c58cf016633",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-red-main-1d6f640\\plugins.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-red-main-1d6f640/plugins.png",
+      "bytes": 359615,
+      "sha256": "1e28025601ce0c6d920fbba52012d6a3ca5211c90ef70501336c864dc3f4f984",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-red-main-1d6f640\\receipt.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-red-main-1d6f640/receipt.json",
+      "bytes": 8014,
+      "sha256": "abaefef957050655fd13d5660f348ccd2de631ad0c1b147100f0f56d218e3feb",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-green-working\\plugins.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-green-working/plugins.png",
+      "bytes": 450181,
+      "sha256": "4d74c186af936c9ebb8e36ce96b36ca6c2a2d113d1d40eb91b0eb6f5688e13fa",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-green-working\\receipt.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-green-working/receipt.json",
+      "bytes": 7472,
+      "sha256": "c07a5a954251dee2204c8d2144fee99979491f22c7ccf135d991e592c60887e8",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-sdk-red\\receipt.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-sdk-red/receipt.json",
+      "bytes": 444,
+      "sha256": "ac2f45f796e27a5759f72fcf10e2a88f6f90dd01d9e24036a92a26bef683eb77",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-green-main-8c921a5-working\\plugins.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-green-main-8c921a5-working/plugins.png",
+      "bytes": 84894,
+      "sha256": "25dd36468f158a3b591041d61a735c3de5bd459372942cdebd92897f94fe666f",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-green-main-8c921a5-working\\receipt.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-green-main-8c921a5-working/receipt.json",
+      "bytes": 6632,
+      "sha256": "4c0a3e8823dd9407e7ebc5a5632960d35405ac6acecd3988c6e112fae93774e1",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-recovery-working\\plugins.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-recovery-working/plugins.png",
+      "bytes": 144757,
+      "sha256": "8b530ebd1c7b2471e779c54b5a7f12764f9b19123c0a2c4241dce0e0b60c569c",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-recovery-working\\receipt.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-recovery-working/receipt.json",
+      "bytes": 6357,
+      "sha256": "f253b868dbbfb8bc52279d71af07940208c898b4ce123ee8766da11433571e2d",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-markdown-offline-red\\plugins.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-markdown-offline-red/plugins.png",
+      "bytes": 75433,
+      "sha256": "a43bb4b14b90e4d91ffdfaa09b1a0de574d7a7426229ac065531f83305ef69c9",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-markdown-offline-red\\receipt.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-markdown-offline-red/receipt.json",
+      "bytes": 4288,
+      "sha256": "86b3bac3e2915766e541d876e013d3076155d9b19ff596e0a8863700847a8f00",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-offline-content-working\\plugins.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-offline-content-working/plugins.png",
+      "bytes": 130144,
+      "sha256": "b62a99e46ec7c9b430ac88e4bd44bf806ff660ba5ed73d05bf019d565ed0a6ba",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-offline-content-working\\receipt.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-offline-content-working/receipt.json",
+      "bytes": 6374,
+      "sha256": "bd1fef274ed211618472f65a0be9bb40c5a4328b529620e21f5cd225ab772dad",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-close-final-verify\\plugins.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-close-final-verify/plugins.png",
+      "bytes": 130461,
+      "sha256": "d948fac6032e2040d88035196f7ddaa7246a86e17636b68e7d2e81df84803ae8",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\development-close-final-verify\\receipt.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/development-close-final-verify/receipt.json",
+      "bytes": 6374,
+      "sha256": "b7d4ffe2a8498a2858f60a94ce059c94f7c446a1f2add2014c27d19f7c1ec810",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-83639e7\\before-restart.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-83639e7/before-restart.png",
+      "bytes": 75267,
+      "sha256": "c0362380e3b60b8d7685384de4c3f82660926ea83869245699ef9459d7197f7d",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-83639e7\\desktop-runtime.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-83639e7/desktop-runtime.json",
+      "bytes": 1498,
+      "sha256": "63744afcca732cf7f35b73512e25b64a802b74e8317722973e8a4f6b8af47383",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-graceful\\after-restart.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-graceful/after-restart.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-graceful\\before-restart.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-graceful/before-restart.png",
+      "bytes": 75267,
+      "sha256": "c0362380e3b60b8d7685384de4c3f82660926ea83869245699ef9459d7197f7d",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-graceful\\desktop-runtime.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-graceful/desktop-runtime.json",
+      "bytes": 6422,
+      "sha256": "db0d7a0366b30f947295d558e96c2f8eba53b04a82ca09fa320be39e4c0ec5a8",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-durable-backup\\after-restart.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/after-restart.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-durable-backup\\before-restart.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/before-restart.png",
+      "bytes": 75267,
+      "sha256": "c0362380e3b60b8d7685384de4c3f82660926ea83869245699ef9459d7197f7d",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-durable-backup\\corrupt-input.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/corrupt-input.json",
+      "bytes": 3640,
+      "sha256": "2620a2d02cb6bc7eceda677ecd0ac30ce1552be6494bc8c0e58fe02b68890a23",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-durable-backup\\corrupt-protected.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/corrupt-protected.png",
+      "bytes": 377356,
+      "sha256": "b143322fb8421709daa5e5b223bef958a8e6fffca692686aa6d2fae18d20454d",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-durable-backup\\desktop-runtime.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/desktop-runtime.json",
+      "bytes": 11751,
+      "sha256": "5953d40bc094fef39030642ba50895e83ffde611e8de27d9bd7d281d8b89d67d",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-durable-backup\\original-restored.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/original-restored.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-durable-backup\\pristine-backup.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/pristine-backup.json",
+      "bytes": 3644,
+      "sha256": "2ed86041bf3ce1853bc204151d87d89f6f1a85467cf6340fb03b8044a02dc496",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-durable-backup\\pristine-main.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-durable-backup/pristine-main.json",
+      "bytes": 3642,
+      "sha256": "492607c6a51b44c67512c7da2b1b40f4ace8a0bfca4ed6d5e48b0e0cb670a681",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-request-trace\\after-restart.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/after-restart.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-request-trace\\before-restart.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/before-restart.png",
+      "bytes": 75267,
+      "sha256": "c0362380e3b60b8d7685384de4c3f82660926ea83869245699ef9459d7197f7d",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-request-trace\\corrupt-input.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/corrupt-input.json",
+      "bytes": 3640,
+      "sha256": "95792134b980328f18f9fadfaa49865d9bfbeaf8959bd7f8eeb1d0fb25ed48eb",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-request-trace\\corrupt-protected.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/corrupt-protected.png",
+      "bytes": 377356,
+      "sha256": "b143322fb8421709daa5e5b223bef958a8e6fffca692686aa6d2fae18d20454d",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-request-trace\\desktop-runtime.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/desktop-runtime.json",
+      "bytes": 12252,
+      "sha256": "ffb5999a890b28a68dfc722514201823e98c23056d663c2df83ab6ffb78d93c6",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-request-trace\\original-restored.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/original-restored.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-request-trace\\pristine-backup.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/pristine-backup.json",
+      "bytes": 3644,
+      "sha256": "dc0b7b4f97387c4b0d79e98fd39b50b39e213f486f1ef9e652ae28074238293d",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-recovery-request-trace\\pristine-main.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-recovery-request-trace/pristine-main.json",
+      "bytes": 3642,
+      "sha256": "7cd6923b185df253d38eabedf65860c5463bbd4d91ba3de424743192cbcb05bb",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-immediate-close-red\\before-restart.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-immediate-close-red/before-restart.png",
+      "bytes": 75267,
+      "sha256": "c0362380e3b60b8d7685384de4c3f82660926ea83869245699ef9459d7197f7d",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-immediate-close-red\\desktop-runtime.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-immediate-close-red/desktop-runtime.json",
+      "bytes": 2423,
+      "sha256": "ca47b3453a1fa3abc9ca9764e4347853a842b03c75cceb164181b10aca83985e",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-final-be5f327\\after-restart.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-final-be5f327/after-restart.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-final-be5f327\\before-restart.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-final-be5f327/before-restart.png",
+      "bytes": 75267,
+      "sha256": "c0362380e3b60b8d7685384de4c3f82660926ea83869245699ef9459d7197f7d",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-final-be5f327\\desktop-runtime.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-final-be5f327/desktop-runtime.json",
+      "bytes": 7525,
+      "sha256": "42e0dce904298d8d7aec5e55462473bd3d7ce2d439678c805c32a7e4a1ce60d0",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-final-be5f327\\failure.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-final-be5f327/failure.png",
+      "bytes": 73823,
+      "sha256": "312112c369ad42fa59be50cffad20e27e2addbd97b3854e4926e0b25bb4a4021",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-final-be5f327\\save-failure-window-retained.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-final-be5f327/save-failure-window-retained.png",
+      "bytes": 83185,
+      "sha256": "5ab87d1af4927e1a1d6e0567a920cf4efc1746c9a022a79826308ec87dfbf4f0",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-protected-final\\after-restart.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/after-restart.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-protected-final\\before-restart.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/before-restart.png",
+      "bytes": 75267,
+      "sha256": "c0362380e3b60b8d7685384de4c3f82660926ea83869245699ef9459d7197f7d",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-protected-final\\corrupt-input.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/corrupt-input.json",
+      "bytes": 3795,
+      "sha256": "fc72973ddbfe3d33134555070979a147960750e09a2b006d42cc0516b29f1fda",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-protected-final\\corrupt-protected.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/corrupt-protected.png",
+      "bytes": 377356,
+      "sha256": "b143322fb8421709daa5e5b223bef958a8e6fffca692686aa6d2fae18d20454d",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-protected-final\\desktop-runtime.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/desktop-runtime.json",
+      "bytes": 11810,
+      "sha256": "8d2fa688ec6f45b0d2af67d540638773c41327048ac9d0b382c7e93fab1d2d60",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-protected-final\\locked-main-before-release.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/locked-main-before-release.json",
+      "bytes": 3747,
+      "sha256": "92e12b8e74ee59f7ecf422fbecd64d166a63ee1ebb3f355cb471fd0e7b5a7f80",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-protected-final\\original-restored.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/original-restored.png",
+      "bytes": 73220,
+      "sha256": "b45f2879af21530803ec2247f11e86e09d5f0e0527ce60c36713bf86fad9266a",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-protected-final\\pristine-backup.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/pristine-backup.json",
+      "bytes": 3747,
+      "sha256": "92e12b8e74ee59f7ecf422fbecd64d166a63ee1ebb3f355cb471fd0e7b5a7f80",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-protected-final\\pristine-main.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/pristine-main.json",
+      "bytes": 3797,
+      "sha256": "aa2c01ef00efc5df876598213100e988b54d430fbb2ca1b1c634391bae0f786b",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-close-protected-final\\save-failure-window-retained.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-close-protected-final/save-failure-window-retained.png",
+      "bytes": 83185,
+      "sha256": "5ab87d1af4927e1a1d6e0567a920cf4efc1746c9a022a79826308ec87dfbf4f0",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-taskhost-c8ce21c\\native-ui-success.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-taskhost-c8ce21c/native-ui-success.png",
+      "bytes": 222248,
+      "sha256": "1c03096da3ac1414128257a92450045ca3b61cb998c96ffe77f1ae80d6c731d7",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-taskhost-c8ce21c\\native-unknown-recovery.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-taskhost-c8ce21c/native-unknown-recovery.png",
+      "bytes": 153336,
+      "sha256": "540c4181dedb3292ef8f264736810d4f63c34ac6ec7b827c7873d06334d45857",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\native-taskhost-c8ce21c\\receipt.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/native-taskhost-c8ce21c/receipt.json",
+      "bytes": 13556,
+      "sha256": "2106423509b5166eb8e90fc7ace0eff1db97730e5ea72e96ebdbd7abdfe1f167",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\titlebar\\desktop-1791490277169\\initial.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/titlebar-first-fail/initial.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\titlebar\\desktop-1791490392229\\drag-movement.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/titlebar-final-pass/drag-movement.json",
+      "bytes": 88,
+      "sha256": "d34bedb0dca172c7974d1fc8e39ee5bcbeb09fd6b8b05c54ce61303f6e2ac8ac",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\titlebar\\desktop-1791490392229\\initial.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/titlebar-final-pass/initial.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\titlebar\\desktop-1791490392229\\receipt.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/titlebar-final-pass/receipt.json",
+      "bytes": 1260,
+      "sha256": "3da959981dd68be8fdaec832f7144531b46be2357a107eb87d53d5ac9950249f",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\titlebar\\desktop-1791490392229\\single-row.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/titlebar-final-pass/single-row.png",
+      "bytes": 449853,
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\titlebar\\desktop-1791490392229\\titlebar.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/titlebar-final-pass/titlebar.png",
+      "bytes": 3655,
+      "sha256": "de22ab5c362d38b8bf949079fea219f760794f6059e5b95a480508e26037383e",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\desktop\\image-selection\\1791490464548-cc42fcac-506c-495a-8607-7ad2e60d088f\\asset-actions.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/asset-actions.png",
+      "bytes": 118961,
+      "sha256": "c3522b039e503fa6639a056bead60f7bcb178c01da9090dd8fee359c0af7cc52",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\desktop\\image-selection\\1791490464548-cc42fcac-506c-495a-8607-7ad2e60d088f\\asset-library.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/asset-library.png",
+      "bytes": 219138,
+      "sha256": "f8b6451cadf1e58fe6b0a839ce4a70a3f710c64ae0de8dd54266099ad236fc8b",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\desktop\\image-selection\\1791490464548-cc42fcac-506c-495a-8607-7ad2e60d088f\\google-cli.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/google-cli.png",
+      "bytes": 167237,
+      "sha256": "bbaaecdd91ab595d01020ca48330ccba01a3fd7a55260e2d0fd3cb67b577ba6e",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\desktop\\image-selection\\1791490464548-cc42fcac-506c-495a-8607-7ad2e60d088f\\model-actions.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/model-actions.png",
+      "bytes": 163162,
+      "sha256": "5f19f088e99b41bda603787940585e0a75d52c255113f6ef76eced5eecdff41a",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\desktop\\image-selection\\1791490464548-cc42fcac-506c-495a-8607-7ad2e60d088f\\model-settings.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/model-settings.png",
+      "bytes": 150562,
+      "sha256": "b84adebb17416c78ba26e3f955ee3a7ae15621f6b732821ac627553452d47000",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\desktop\\image-selection\\1791490464548-cc42fcac-506c-495a-8607-7ad2e60d088f\\receipt.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/receipt.json",
+      "bytes": 81341,
+      "sha256": "52eba5208ff2b56d1d552d9168843dfd1d78ae38d3bc12ac6c0efe2ace9426d0",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\desktop\\image-selection\\1791490464548-cc42fcac-506c-495a-8607-7ad2e60d088f\\selected-reference.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/selected-reference.png",
+      "bytes": 236000,
+      "sha256": "914679733566a279d0541b9b732d5f420c86607c08584dce11f2cdaafab63a84",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\desktop\\image-selection\\1791490464548-cc42fcac-506c-495a-8607-7ad2e60d088f\\workbench-export.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-export.png",
+      "bytes": 152619,
+      "sha256": "e01dbc1b2e29758a4e0b136382bb141e20b8cd39cf995d13ef81c5f8ff315a5e",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\desktop\\image-selection\\1791490464548-cc42fcac-506c-495a-8607-7ad2e60d088f\\workbench-generate.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-generate.png",
+      "bytes": 132574,
+      "sha256": "f28e19a57a236b702cce6a4a330595360a71472dfecb82702f06e5e9a3ad8068",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\desktop\\image-selection\\1791490464548-cc42fcac-506c-495a-8607-7ad2e60d088f\\workbench-plan.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-plan.png",
+      "bytes": 138690,
+      "sha256": "4448ec300852bb294fc6db8f9e03a2f4bf72aee7a3a4b56bdc2657f0f4acf31c",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\desktop\\image-selection\\1791490464548-cc42fcac-506c-495a-8607-7ad2e60d088f\\workbench-prompt.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-prompt.png",
+      "bytes": 125124,
+      "sha256": "40c7f87fef12c7e8f08aac7679d356e3583865ccdfe177c5665bbc3c61cc7c92",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\desktop\\image-selection\\1791490464548-cc42fcac-506c-495a-8607-7ad2e60d088f\\workbench-queue.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-queue.png",
+      "bytes": 129929,
+      "sha256": "62e233fa60f391742eb7f5990e594d7f7c4496389afa49bb89c3bfeab5f50115",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\.tmp\\desktop\\image-selection\\1791490464548-cc42fcac-506c-495a-8607-7ad2e60d088f\\workbench-review.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/image-selection/workbench-review.png",
+      "bytes": 164960,
+      "sha256": "47b427072376e610a805c9ee09a9d09a32f5c96f2374b4433e9bc1712bff467d",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\test-results\\desktop\\plugin-csp\\desktop-plugin-csp.png",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/plugin-csp/desktop-plugin-csp.png",
+      "bytes": 90645,
+      "sha256": "e843488643b129c8254e03c3888bb385802d3038eb70c5ccbf573f1068d515a7",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-PLUGIN-DEV-001\\test-results\\desktop\\plugin-csp\\desktop-runtime.json",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/runtime/plugin-csp/desktop-runtime.json",
+      "bytes": 1753,
+      "sha256": "9bf4e7d184ddc6d08334b0f084def7de549f9971e69d3419988f4986782bb93b",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PLUGIN-DEV-001-20261009/review-source-fadfabf.md",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/review-source-fadfabf.md",
+      "bytes": 27561,
+      "sha256": "a06bf1055f19cec90a6de916e8807e98af76a266f5b145c4dc4cb0e9acb5ca32",
+      "losslessCompressed": false
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\final-doc-lint.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/final-doc-lint.txt.lossless.json",
+      "bytes": 358,
+      "sha256": "8f16b98d155bfcbfd1722ddc01a646535a5fd878ea6d595c7471e9ddfad106fe",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\final-doc-lint-corrected.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/final-doc-lint-corrected.txt.lossless.json",
+      "bytes": 591,
+      "sha256": "ba502cae650594b53fbc575f720543672080f1005f84889ed7356016a28ef7f2",
+      "losslessCompressed": true
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-PLUGIN-DEV-001-20261009\\final-doc-lint-corrected.exit.txt",
+      "archived": "docs/changes/2026-10-09-plugin-development/evidence/current-fadfabf/final-doc-lint-corrected.exit.txt.lossless.json",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "losslessCompressed": true
+    }
+  ]
+}

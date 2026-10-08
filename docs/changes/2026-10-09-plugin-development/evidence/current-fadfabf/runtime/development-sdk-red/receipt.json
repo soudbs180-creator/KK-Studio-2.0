@@ -1,0 +1,14 @@
+{
+  "runtime": "Vite development",
+  "sourceHead": "1d6f640ac6f3a1e7af32c38d85596527704dc54a",
+  "loaderSha256": "f1cbe8dc0bdf061a6ec201e7997c01c23e2998a03d178cb4723c3ec2fb69fb1d",
+  "startedAt": "2026-10-08T18:37:28.171Z",
+  "url": "http://127.0.0.1:1421/",
+  "requests": [],
+  "responses": [],
+  "errors": [],
+  "steps": [],
+  "result": "FAIL",
+  "failure": "Error: Port 1421 is already in use",
+  "completedAt": "2026-10-08T18:37:28.236Z"
+}

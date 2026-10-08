@@ -1,0 +1,19 @@
+{
+  "sourceHead": "bdb82df6e99dd20c20e5a6d5e2181fe345992242",
+  "base": "8c921a525ae505a558b0efee641830f1d61166fa",
+  "baseTasks": 106,
+  "currentTasks": 109,
+  "preservedUnrelated": 105,
+  "added": [
+    "TASK-DESKTOP-FLUSH-001",
+    "TASK-PLUGIN-MARKDOWN-001",
+    "TASK-PLUGIN-RECOVERY-001"
+  ],
+  "statusCounts": {
+    "PARTIAL": 29,
+    "DONE": 62,
+    "TODO": 13,
+    "IN_PROGRESS": 1,
+    "BLOCKED": 4
+  }
+}

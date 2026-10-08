@@ -711,7 +711,7 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-013-connectors.md",
-    "summary": "画布插件系统的 HTTPS URL 安装和内置节点在 Web preview 可用；随包插件现通过同源模块路径在 fresh Tauri Desktop 验证发现、添加、渲染和启停，严格 CSP 未放宽。远程代码仍保持 HTTPS/重定向边界，连接器目录页与插件系统尚未合并。",
+    "summary": "四种随包插件在固定1421开发、Web生产和fresh Tauri可创建、编辑、离线渲染并完整恢复；立即关闭耐久保存、写入失败留窗及坏数据主备保护已验证，CSP仍self。连接器统一入口、ctx.ai真实管线及远程Desktop插件仍未完成。",
     "entryPoints": [
       "技能页内连接器目录 ConnectorCatalog"
     ],
@@ -726,19 +726,39 @@
     "tests": [
       "tests/unit/pluginLoader.test.ts",
       "tests/browser/plugins.spec.ts",
-      "tests/browser/ui-feature-parity.spec.ts"
+      "tests/browser/ui-feature-parity.spec.ts",
+      "tests/unit/pluginRecovery.test.ts",
+      "tests/unit/pluginJsxRuntime.test.ts",
+      "tests/unit/nativeClose.test.ts",
+      "tests/unit/creationSaveQueue.test.ts",
+      "tests/browser/plugin-recovery.spec.ts",
+      "tests/development/plugins.mjs",
+      "tests/desktop/plugin-recovery.mjs"
     ],
     "tasks": [
       "TASK-CAP-001",
       "TASK-MINIMAX-001",
       "TASK-UI-005",
       "PLUGIN-DESKTOP-001",
-      "TASK-PLUGIN-DEV-001"
+      "TASK-PLUGIN-DEV-001",
+      "TASK-PLUGIN-RECOVERY-001",
+      "TASK-PLUGIN-MARKDOWN-001",
+      "TASK-DESKTOP-FLUSH-001"
     ],
-    "updated": "2026-10-08",
+    "updated": "2026-10-09",
     "platforms": [
       "web",
       "desktop"
+    ],
+    "runtimeEvidence": [
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-09-plugin-development/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-09-plugin-development/verification.md"
+      }
     ]
   },
   {
