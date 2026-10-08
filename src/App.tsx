@@ -1399,7 +1399,7 @@ export default function App() {
                   ? "unknown"
                   : "failed",
               promptHash,
-              error: "此项尚未归档，可单项重试。",
+              error: "此项尚未归档。",
             },
       );
       const completed = outputs.filter(
@@ -2885,3 +2885,4 @@ import "./styles/responsive-content.css";
 import "./styles/composer.css";
 import "./styles/page-templates.css";
 import "./styles/canvas-compare.css";
+import "./styles/image-selection.css";

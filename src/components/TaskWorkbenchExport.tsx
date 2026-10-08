@@ -110,6 +110,7 @@ export default function TaskWorkbenchExport({
             {entry.status === "comment" ? (
               <button
                 type="button"
+                className="kk-button kk-button--secondary"
                 onClick={() =>
                   update(entry.id, {
                     status: "open",
@@ -149,6 +150,7 @@ export default function TaskWorkbenchExport({
                 </small>
                 <button
                   type="button"
+                  className="kk-button kk-button--secondary"
                   onClick={() =>
                     update(entry.id, {
                       status: entry.status === "done" ? "open" : "done",

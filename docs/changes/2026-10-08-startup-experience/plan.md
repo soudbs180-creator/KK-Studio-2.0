@@ -16,3 +16,7 @@
 依赖图：桌面调查和 Web 只读调查独立；实现、版本、构建、运行验收、审查、安装串行。root 是唯一写入者。风险：后台失败沉默、重复构建、首次工作区事件丢失和回到首页时丢失局部状态；分别由日志/错误、互斥、保持必要同步依赖及 sticky mount 回归覆盖。快捷方式变更前保存原目标/参数/图标收据；新快捷方式只在编译成功后写入；回滚可恢复收据，不覆盖用户数据。
 
 推送前增量：origin/main前移至1af0357b，按分支规则在任务树保留双方记录并整合能力复查；新版本Desktop2.1.7/Web2.1.8。对组合重跑verify/clientcheck、production/Tauri/GUI图标与新鲜度，再绑定当前SHA独立补审；保留第一轮验证，不改写其版本/hash结果。
+
+## PR38 当前主线组合计划
+
+基线 f922cf8e3e3318c5b01a922eaed424b11ccb2d0a，原 head e0506621ea93b5ec1ab52c32d966914ca63b4dd5。版本冲突先承接主线值，再按 Desktop/Web 实际变化自动 patch；治理记录保留双方历史并生成视图。App 自动合并需逐项检查 retryableOutputIndices、缺失归档恢复、共享工具栏/工作台样式与 sticky workspace。顺序：组合源码提交 → 完整 verify / Rust / clientcheck / fresh release → 隔离原生Launcher3、UI13、TaskHost11、模型能力与首屏运行 → 精确独立 review → 真实结果和证据文档 → 最终 head 补审 / 当前 Hosted verify+delivery → ordinary squash PR38 → fetch/ff-only/完整tree核对及主线 Hosted 验证。所有固定端口使用前核对，不停其他程序；日志保留工程外唯一新目录。

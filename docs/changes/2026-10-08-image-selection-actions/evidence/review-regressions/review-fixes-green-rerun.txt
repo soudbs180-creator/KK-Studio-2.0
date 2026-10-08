@@ -1,0 +1,113 @@
+[WebServer] (node:13836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 38 tests using 1 worker
+
+(node:59164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\browser\canvas-history-layers.spec.ts:38:1 › 画布右键撤销和重做会恢复新增节点 (1.9s)
+  ok  2 tests\browser\canvas-history-layers.spec.ts:74:1 › 画布菜单可以切换吸附并打开图层搜索定位 (1.9s)
+  ok  3 tests\browser\canvas-history-layers.spec.ts:118:1 › 删除带连线节点后一次撤销恢复节点和连线，重做后仍能继续编辑 (1.4s)
+  ok  4 tests\browser\canvas-history-layers.spec.ts:157:1 › 超过80帧的连续拖动只撤销一次且保留拖动前的编辑历史 (2.7s)
+  ok  5 tests\browser\canvas-history-layers.spec.ts:190:3 › Escape取消手势恢复起点且不清空已有重做 (1.5s)
+  ok  6 tests\browser\canvas-history-layers.spec.ts:190:3 › pointercancel取消手势恢复起点且不清空已有重做 (1.5s)
+  ok  7 tests\browser\canvas-history-layers.spec.ts:190:3 › blur取消手势恢复起点且不清空已有重做 (1.4s)
+  ok  8 tests\browser\canvas-history-layers.spec.ts:190:3 › pan取消手势恢复起点且不清空已有重做 (1.4s)
+  ok  9 tests\browser\canvas-pointer.spec.ts:4:1 › 左键框选可见卡片，不平移画布；空白点击清空选择 (1.4s)
+  ok 10 tests\browser\canvas-pointer.spec.ts:38:3 › middle拖动卡片和平移空白都只移动视图，保留选择 (1.5s)
+  ok 11 tests\browser\canvas-pointer.spec.ts:38:3 › right拖动卡片和平移空白都只移动视图，保留选择 (1.5s)
+  ok 12 tests\browser\canvas-pointer.spec.ts:63:1 › Shift追加多选可一起拖动；Escape取消拖动恢复位置 (1.5s)
+  ok 13 tests\browser\canvas-pointer.spec.ts:107:1 › 提示词输入中的H、V和空格不会切换工具或移动画布 (1.2s)
+  ok 14 tests\browser\connection-drag.spec.ts:63:1 › 不同缩放下图片和两张视频连接均落在可见侧边正中 (1.3s)
+  ok 15 tests\browser\connection-drag.spec.ts:97:1 › 加号区域磁吸，拖动只预览，释放后选类型才创建并连线 (1.6s)
+  ok 16 tests\browser\connection-drag.spec.ts:167:1 › 新增节点同事件连线仍遵守参考图能力限制 (1.3s)
+  ok 17 tests\browser\connection-drag.spec.ts:183:1 › 拖出取消和无效区域释放无残留，键盘随后仍能打开菜单 (2.0s)
+  ok 18 tests\browser\connection-drag.spec.ts:210:1 › 底栏、空白双击与下游共用菜单；窄屏和减弱动态可用 (802ms)
+  ok 19 tests\browser\connection-drag.spec.ts:256:1 › 平移缩放后按释放点创建文本，结果连线居中并保留原草稿 (1.8s)
+  ok 20 tests\browser\connection-drag.spec.ts:315:1 › 触屏加号可拖出释放，菜单保持44px以上行高并可点选 (813ms)
+  ok 21 tests\browser\image-selection-actions.spec.ts:47:1 › 单击参考图片只选中，上方工具栏复用预览重绘对比并可关闭 (2.3s)
+  ok 22 tests\browser\image-selection-actions.spec.ts:99:1 › 键盘工具栏、双击预览与切换卡片保留唯一选择和焦点 (2.2s)
+  ok 23 tests\browser\image-selection-actions.spec.ts:137:1 › 工具栏随图片拖动和平移移动，缩放不缩小操作命中区 (2.5s)
+  ok 24 tests\browser\image-selection-actions.spec.ts:170:1 › 图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 (2.3s)
+  ok 25 tests\browser\image-selection-actions.spec.ts:199:3 › 图片选择工具栏在 390 屏幕内可触达且保持标准尺寸 (1.0s)
+  ok 26 tests\browser\image-selection-actions.spec.ts:199:3 › 图片选择工具栏在 1099 屏幕内可触达且保持标准尺寸 (1.1s)
+  ok 27 tests\browser\image-selection-actions.spec.ts:199:3 › 图片选择工具栏在 1920 屏幕内可触达且保持标准尺寸 (1.9s)
+  ok 28 tests\browser\task-workbench.spec.ts:128:1 › 阶段计划在任务工作台显示并通过编排器审批 (1.0s)
+  ok 29 tests\browser\task-workbench.spec.ts:158:1 › 审批阻断远程请求，部分成功矩阵单项重试回填且审阅任务保留 (3.7s)
+  ok 30 tests\browser\task-workbench.spec.ts:221:1 › 提交后暂停进入受理状态不明并保留已归档结果 (1.6s)
+  ok 31 tests\browser\task-workbench.spec.ts:259:1 › 指定风格参考槽可上传并移除，展开按钮仍可点击 (1.1s)
+  ok 32 tests\browser\task-workbench.spec.ts:286:1 › 16 项批次在归档 10 项后暂停，剩余受理状态进入未知 (1.6s)
+  ok 33 tests\browser\task-workbench.spec.ts:321:1 › 重复重试被锁定，重试任务再次重试后回填原始输出 (2.4s)
+  ok 34 tests\browser\task-workbench.spec.ts:365:1 › 相同内容重新导入保持 AI 来源，SHA-256 去重和本地集合持久化 (2.3s)
+  ok 35 tests\browser\ui-page-rules.spec.ts:116:3 › 模型设置与资源页遵循现行 UI 规则 390 (1.2s)
+  x  36 tests\browser\ui-page-rules.spec.ts:172:3 › 阶段计划工作台遵循现行 UI 规则 390 (1.3s)
+(node:50532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 37 tests\browser\ui-page-rules.spec.ts:116:3 › 模型设置与资源页遵循现行 UI 规则 1920 (1.7s)
+  x  38 tests\browser\ui-page-rules.spec.ts:172:3 › 阶段计划工作台遵循现行 UI 规则 1920 (1.6s)
+
+
+  1) tests\browser\ui-page-rules.spec.ts:172:3 › 阶段计划工作台遵循现行 UI 规则 390 ─────────────────────────────
+
+    Error: 标准动作遵循 24/32/40 高度
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 7
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "height": 34,
+    +     "label": "添加评论",
+    +     "radius": "8px",
+    +   },
+    + ]
+
+      101 |     ),
+      102 |     "标准动作遵循 24/32/40 高度",
+    > 103 |   ).toEqual([]);
+          |     ^
+      104 |   expect(metrics.primary.length, "页面只有一个 Primary").toBeLessThanOrEqual(1);
+      105 |   expect(metrics.bounds.x).toBeGreaterThanOrEqual(0);
+      106 |   expect(metrics.bounds.x + metrics.bounds.width).toBeLessThanOrEqual(
+        at inspectPage (D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-UI-011-image-selection-actions\tests\browser\ui-page-rules.spec.ts:103:5)
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-UI-011-image-selection-actions\tests\browser\ui-page-rules.spec.ts:211:7
+
+    Error Context: test-results\ui-page-rules-阶段计划工作台遵循现行-UI-规则-390\error-context.md
+
+  2) tests\browser\ui-page-rules.spec.ts:172:3 › 阶段计划工作台遵循现行 UI 规则 1920 ────────────────────────────
+
+    Error: 标准动作遵循 24/32/40 高度
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 7
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "height": 34,
+    +     "label": "添加评论",
+    +     "radius": "8px",
+    +   },
+    + ]
+
+      101 |     ),
+      102 |     "标准动作遵循 24/32/40 高度",
+    > 103 |   ).toEqual([]);
+          |     ^
+      104 |   expect(metrics.primary.length, "页面只有一个 Primary").toBeLessThanOrEqual(1);
+      105 |   expect(metrics.bounds.x).toBeGreaterThanOrEqual(0);
+      106 |   expect(metrics.bounds.x + metrics.bounds.width).toBeLessThanOrEqual(
+        at inspectPage (D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-UI-011-image-selection-actions\tests\browser\ui-page-rules.spec.ts:103:5)
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-UI-011-image-selection-actions\tests\browser\ui-page-rules.spec.ts:211:7
+
+    Error Context: test-results\ui-page-rules-阶段计划工作台遵循现行-UI-规则-1920\error-context.md
+
+  2 failed
+    tests\browser\ui-page-rules.spec.ts:172:3 › 阶段计划工作台遵循现行 UI 规则 390 ──────────────────────────────
+    tests\browser\ui-page-rules.spec.ts:172:3 › 阶段计划工作台遵循现行 UI 规则 1920 ─────────────────────────────
+  36 passed (1.1m)

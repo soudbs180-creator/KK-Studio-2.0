@@ -1,0 +1,37 @@
+[WebServer] (node:45688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:82316) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\browser\unified-image-command.spec.ts:143:1 › 已归档图片结果使用上方选择工具栏，收藏重绘对比删除保留原件 (8.1s)
+
+
+  1) tests\browser\unified-image-command.spec.ts:143:1 › 已归档图片结果使用上方选择工具栏，收藏重绘对比删除保留原件 ─────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('toolbar', { name: /^图片操作：/ })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('toolbar', { name: /^图片操作：/ }) with timeout 5000ms
+      - waiting for getByRole('toolbar', { name: /^图片操作：/ })
+
+
+      233 |     await page.mouse.move(x, y + canvas.y + 20 - card.y, { steps: 8 });
+      234 |     await page.mouse.up();
+    > 235 |     await expect(actions).toBeVisible();
+          |                           ^
+      236 |     await expect
+      237 |       .poll(async () => {
+      238 |         const current = await node.locator(".demo-result-node").boundingBox();
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-UI-011-image-selection-actions\tests\browser\unified-image-command.spec.ts:235:27
+
+    Error Context: test-results\unified-image-command-已归档图片结果使用上方选择工具栏，收藏重绘对比删除保留原件\error-context.md
+
+  1 failed
+    tests\browser\unified-image-command.spec.ts:143:1 › 已归档图片结果使用上方选择工具栏，收藏重绘对比删除保留原件 ──────────────

@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：creation
-- 最近更新：2026-10-01
-- 关联任务：T5、TASK-PROV-001、EXT-PROVIDER、TASK-AGENT-001、TASK-AGENT-004、TASK-AGENT-008
+- 最近更新：2026-10-08
+- 关联任务：T5、TASK-PROV-001、TASK-PROV-005、TASK-PROV-006、EXT-PROVIDER、TASK-AGENT-001、TASK-AGENT-004、TASK-AGENT-008
 
 ## 用户可见入口
 
@@ -28,13 +28,13 @@
 - Codex 内置生图：KK 新账号真实生成 PNG；本轮修复事件超限和并发归档标记，生产 Tauri 自动归档/续聊/重连/重启原件一致、节点/标记唯一，见 [TASK-AGENT-008](../changes/2026-10-01-agent-image-transport/verification.md)。本卡保持 PARTIAL，不扩大为所有 Provider 验收。
 
 - Web：真实 BYOK 提交、连接门禁、取消、错误分类、原件归档。
-- Desktop：原生 TaskHost 代码已接入（durable intent、journal、幂等身份、unknown 受理保护、逐 slot）。
+- Desktop：原生 TaskHost 已在隔离 production release/WebView 下实测提交、三处取消、重载/进程异常重启、逐 slot 与原件 hash 恢复、unknown 禁普通重试；十组原生 fixture 与完整回归通过，见 [T5 新验证](../changes/2026-10-08-taskhost-native-lifecycle/verification.md)。fixture 不代表真实付费服务验收。
 - Google Interactions：API Key 通道的图片结果可归档至当前画布；此项已有浏览器 fixture 验证，真实 Google 图片与 Tauri 仍待验收，见 [TASK-AGENT-004](../changes/2026-09-23-google-interactions/verification.md)。
 
 ## 差距与后端化
 
-- 未做隔离 Tauri/WebView 下提交、取消、进程重启与恢复的运行态证据（T5 缺口）。
-- Desktop Provider gate：原生提交未复用前端 reservation/assertCurrent；native failure 的结构化 health 未回写连接状态。
+- 新保存的浏览器供应商非秘密配置在立即异常终止时可能尚未落盘；正常退出恢复通过，原生任务、原件与系统凭据保留。原生 durable 配置恢复归 TASK-PROV-005。
+- Desktop image Provider gate：原生提交的连接/容量复查与结构化 health 回写仍未统一，归 TASK-PROV-006；文本容量已在原生 jobs 实测。
 - 真实付费出图、真实供应商/GPU 验收受 EXT-PROVIDER 外部凭据/额度阻断。
 
 ## 变更记录

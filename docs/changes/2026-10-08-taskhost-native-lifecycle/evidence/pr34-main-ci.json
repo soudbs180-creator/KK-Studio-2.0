@@ -1,0 +1,34 @@
+{
+  "sha": "5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3",
+  "checks": [
+    {
+      "name": "delivery",
+      "status": "completed",
+      "conclusion": "skipped",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37733238651/job/113166915693"
+    },
+    {
+      "name": "verify",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37733238651/job/113166914272"
+    },
+    {
+      "name": "deploy-linux",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37733238651/job/113166914049"
+    }
+  ],
+  "runs": [
+    {
+      "id": 37733238651,
+      "head": "5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3",
+      "branch": "main",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37733238651"
+    }
+  ]
+}
