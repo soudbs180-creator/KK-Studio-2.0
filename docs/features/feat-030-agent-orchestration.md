@@ -2,7 +2,7 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-10-03
+- 最近更新：2026-10-08
 - 关联任务：TASK-ORCH-001, TASK-ORCH-002, TASK-ORCH-003, TASK-CANVAS-001
 
 ## 用户可见入口
@@ -20,8 +20,8 @@
 
 ## 测试与证据
 
-- 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/agentCanvas.test.ts`；本轮 Node 全量 693 项（685 pass、0 fail、8 Windows skip）。
-- 浏览器回归：全量 381/381 通过，包含阶段计划 Plan 标签与审批专项回归。
+- 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/agentCanvas.test.ts`；本轮 Node 全量 710 项（702 pass、0 fail、8 Windows skip）。
+- 浏览器回归：全量 388/388 通过，包含阶段计划 Plan 标签与审批专项回归。
 - Rust 测试 / 实机验收：项目包导出/导入及重复身份拒绝回归，当前 97/97 Rust 全量通过；Desktop GUI 与正式发布未验收。
 - 变更与验证证据：`docs/changes/2026-10-03-incomplete-tasks/verification.md`
 
@@ -52,7 +52,7 @@
 
 - 2026-09-26：`9ddfcb5` 源码独立复审 PASS，Hosted verify/delivery 成功；功能仍为 PARTIAL，Desktop GUI、真实 Provider、MCP 注册与 UI 阶段视图未验收。详情见验证记录。
 
-- 2026-10-03：`6ebaad8` 接入 TaskWorkbench Plan 标签与 plan/result 审批；`085b083` 补交付文本校验与不确定重试父任务锁定；`db84558` 补重启恢复时的重试子任务合并与重复提交防线；`760b3e0` 补终态回执解除父任务不确定状态；`f344563`/`a68fd10` 补齐终态缺回执、旧格式错误传播、排队 intent 源状态和 unknown 回执证据保护；`768326a`/`c4cac9c` 补归档失败、原生提交不确定、缺失文案正文与完整归档证据优先。功能仍为 PARTIAL，真实编排执行、MCP 注册、Provider 与 Desktop 运行证据仍待完成。
+- 2026-10-03：`6ebaad8` 接入 TaskWorkbench Plan 标签与 plan/result 审批；`085b083` 补交付文本校验与不确定重试父任务锁定；`db84558` 补重启恢复时的重试子任务合并与重复提交防线；`760b3e0` 补终态回执解除父任务不确定状态；`f344563`/`a68fd10` 补齐终态缺回执、旧格式错误传播、排队 intent 源状态和 unknown 回执证据保护；`768326a`/`c4cac9c`/`e5644eb` 补归档失败、原生提交不确定、缺失文案正文、完整归档证据优先与恢复错误文案清理。功能仍为 PARTIAL，真实编排执行、MCP 注册、Provider 与 Desktop 运行证据仍待完成。
 
 - 2026-09-26：`abb2bb8` 独立复审发现返工提示词绕过计划审批与破坏同 ID 重放；当前候选改为可选 `reworkPrompt` 并在提示词变化时重新审批，Web/Rust 包契约同步，新 head 待验证。
 
@@ -65,3 +65,5 @@
 - 2026-09-24：实现者自查修复 Agent 工具绕过人工审批门的问题；新增越权路径回归测试，独立复审仍待完成。
 - 2026-09-24：独立预审发现旧计划覆写与跨端项目包漏同步两项阻断；已补受控工作项写入及 Web/Rust 项目包往返回归，修复后 head 的独立复审待完成。
 - 2026-09-24：`67ff18fb` 独立复审关闭前两项 P1，同时发现重复工作项 ID 问题；新增 TS/Rust 失败先行测试并补计划级唯一性校验，新 head 仍待复审。跨端决定见 [ADR-006](../architecture/adr/ADR-006-stage-plan-package-contract.md)。
+
+- 2026-10-08：`5cbfe99`/`dc05556` 完成原生回执双重身份、索引一致性和非法类型校验，实时与恢复共用围栏；既有归档、合法子集及缺失 outputs 的旧 assetIds 格式保留。定向原生/恢复53项与完整浏览器388项通过，独立源码复验PASS；真实Provider/Desktop运行与外部门禁仍未完成。

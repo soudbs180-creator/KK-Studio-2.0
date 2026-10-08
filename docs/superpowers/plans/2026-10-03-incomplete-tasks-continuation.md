@@ -43,11 +43,11 @@
 - Consumes: `StagePlan`, `stageApprovalGateFor`, `stagePlanProgress`, `stageWorkItemCounts`, `StageOrchestrator.decideStage`。
 - Produces: TaskWorkbench 的 `Plan` 标签、阶段状态徽标、plan/result 审批按钮和错误提示；Agent host 使用同一个 `createStageOrchestrator` 实例。
 
-- [ ] **Step 1: Write the failing browser test** — 在有效项目快照中注入一个 `plan_review` 阶段，打开任务工作台，断言计划标题、阶段状态和“批准计划”可见；点击后断言状态变为 `doing`。
-- [ ] **Step 2: Run the browser test to verify it fails** — 运行定向 Playwright；预期失败于计划标签或审批按钮不存在。
-- [ ] **Step 3: Implement the plan panel and callback chain** — 新建 `TaskWorkbenchStages`，父组件增加 `Plan` 标签和显式 `onStageDecision` 回调；App 以 ref 动态读取活动项目并创建编排器，审批失败由面板显示。
-- [ ] **Step 4: Run the browser test to verify it passes** — 定向 Playwright 通过，并确认现有任务工作台测试无失败。
-- [ ] **Step 5: Commit** — `feat: expose stage plan approvals in task workbench`。
+- [x] **Step 1: Write the failing browser test** — 在有效项目快照中注入一个 `plan_review` 阶段，打开任务工作台，断言计划标题、阶段状态和“批准计划”可见；点击后断言状态变为 `doing`。
+- [x] **Step 2: Run the browser test to verify it fails** — 运行定向 Playwright；预期失败于计划标签或审批按钮不存在。
+- [x] **Step 3: Implement the plan panel and callback chain** — 新建 `TaskWorkbenchStages`，父组件增加 `Plan` 标签和显式 `onStageDecision` 回调；App 以 ref 动态读取活动项目并创建编排器，审批失败由面板显示。
+- [x] **Step 4: Run the browser test to verify it passes** — 定向 Playwright 通过，并确认现有任务工作台测试无失败。
+- [x] **Step 5: Commit** — `feat: expose stage plan approvals in task workbench`。
 
 ### Task 2: 统一任务成本估算语义（TASK-TASKSTATE-001 本地收口）
 
@@ -57,7 +57,7 @@
 - Modify: `src/App.tsx`
 - Modify: `src/components/TaskExecutionApproval.tsx`
 - Modify: `src/components/TaskWorkbenchContent.tsx`
-- Modify: `tests/unit/taskState.test.ts`
+- Modify: `tests/unit/creation.test.ts`
 - Test: `tests/browser/task-workbench.spec.ts`
 
 **Interfaces:**
@@ -65,11 +65,11 @@
 - Consumes: `estimateTaskCostUsd`, `formatCostUsd`。
 - Produces: 新任务和重试任务在无供应商报价时 `estimatedCostUsd` 为 `undefined`；UI 统一显示“尚未取得报价”，有真实估算时明确标注“估算，非实际扣费”。
 
-- [ ] **Step 1: Write the failing test** — 断言 `createTask` 和重试任务不再写入 `0.04` 示例价格；审批对话框和工作台显示未知报价。
-- [ ] **Step 2: Run the unit/browser tests to verify they fail** — 预期现有任务仍带 `0.04` 或显示 Prototype 示例单价。
-- [ ] **Step 3: Implement minimal cleanup** — 删除模型和重试入口中的示例单价，审批与工作台改用 `formatCostUsd`；保留供应商回报价字段与现有 schema 兼容。
-- [ ] **Step 4: Run unit and browser tests to verify they pass**。
-- [ ] **Step 5: Commit** — `fix: keep task cost unknown without provider quote`。
+- [x] **Step 1: Write the failing test** — 断言 `createTask` 和重试任务不再写入 `0.04` 示例价格；审批对话框和工作台显示未知报价。
+- [x] **Step 2: Run the unit/browser tests to verify they fail** — 预期现有任务仍带 `0.04` 或显示 Prototype 示例单价。
+- [x] **Step 3: Implement minimal cleanup** — 删除模型和重试入口中的示例单价，审批与工作台改用 `formatCostUsd`；保留供应商回报价字段与现有 schema 兼容。
+- [x] **Step 4: Run unit and browser tests to verify they pass**。
+- [x] **Step 5: Commit** — `fix: keep task cost unknown without provider quote`。
 
 ### Task 3: 画布交付契约接入宿主（TASK-CANVAS-001 本地收口）
 
@@ -86,11 +86,11 @@
 - Consumes: `assertCanvasDelivery`, `CanvasDeliveryContractError`, `appendImageTaskResults`。
 - Produces: 图片和文本结果在宿主提交前通过稳定节点与已注册结果校验；失败转为可观察错误，不静默把未归档结果写入画布。
 
-- [ ] **Step 1: Write the failing test** — 覆盖宿主图片导入和统一生成发布路径；构造缺少资产/空文本的结果，断言不会提交并返回契约错误。
-- [ ] **Step 2: Run the tests to verify they fail** — 预期当前宿主仍会提交未经契约校验的结果。
-- [ ] **Step 3: Implement centralized validation** — 扩展契约对文本 Provider 结果的注册判断；Agent host 和 App 发布路径在 commit 前校验每个新结果，保留已归档结果和稳定来源连线。
-- [ ] **Step 4: Run targeted and full unit tests to verify they pass**。
-- [ ] **Step 5: Commit** — `fix: enforce canvas delivery contract at host boundaries`。
+- [x] **Step 1: Write the failing test** — 覆盖宿主图片导入和统一生成发布路径；构造缺少资产/空文本的结果，断言不会提交并返回契约错误。
+- [x] **Step 2: Run the tests to verify they fail** — 预期当前宿主仍会提交未经契约校验的结果。
+- [x] **Step 3: Implement centralized validation** — 扩展契约对文本 Provider 结果的注册判断；Agent host 和 App 发布路径在 commit 前校验每个新结果，保留已归档结果和稳定来源连线。
+- [x] **Step 4: Run targeted and full unit tests to verify they pass**。
+- [x] **Step 5: Commit** — `fix: enforce canvas delivery contract at host boundaries`。
 
 ## Verification
 
@@ -98,3 +98,13 @@
 - 定向浏览器：`node node_modules/@playwright/test/cli.js test tests/browser/task-workbench.spec.ts`
 - 全量：`node --test tests/unit/*.test.ts tests/deploy/*.test.mjs`、Canvas Agent、Playwright、TypeScript、ESLint、Prettier、UI、治理、功能、Markdown、Vite、Cargo。
 - 更新 `docs/changes/2026-10-03-incomplete-tasks/` 五份交付文档、`task-ledger.json`/生成视图、`PROJECT_STATE.md`、`AI_HANDOFF.md`、`docs/PROGRESS.md`。
+
+## 2026-10-08 补充执行结果
+
+- [x] 按独立复核补任务ID/幂等键双重匹配、重复/缺失/越界/声明冲突输出和非法类型隔离；15个缺陷负测分别在修复前失败，修复后原生/恢复53项通过。
+- [x] 保留合法子集、旧assetIds及有效归档的正例；实时退出循环、后台恢复查询和刷新后的重试围栏由浏览器回归验证。
+- [x] 完整Node710项（702pass、8既有Windows skip）、浏览器388项无重试、Agent174项、Rust97项、类型/lint/构建均通过。
+- [x] 按共享前端行为递增 Desktop 2.1.4 / Web 2.1.5 源码版本（Mobile 规划2.1.1），重新构建并复验完整Node、浏览器、Rust及静态检查。
+- [x] `dc055566457f8413c8ac7f9cc17778a9958bd5d8` 独立源码复验PASS，已报告P1/P2代码阻断关闭；最终治理文档另行补审。
+
+精确命令、运行产物和外部限制见[验证记录](../../changes/2026-10-03-incomplete-tasks/verification.md)。

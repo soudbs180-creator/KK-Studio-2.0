@@ -898,7 +898,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/TaskWorkbench.tsx, src/components/TaskWorkbenchContent.tsx, src/components/TaskWorkbenchStages.tsx, src/App.tsx, tests/browser/task-workbench.spec.ts
 - Verification: PASS — TaskWorkbench 已显示 Plan 标签、阶段状态、工作项数量和 plan/result 审批；App 通过当前项目编排器执行决定。定向与完整 task-workbench Playwright 7/7 通过，提交 6ebaad8。
 - Evidence: [docs/changes/2026-10-03-incomplete-tasks/verification.md](../../docs/changes/2026-10-03-incomplete-tasks/verification.md)
-- Updated: 2026-10-03
+- Updated: 2026-10-08
 
 ## TASK-ORCH-003 — 编排器驱动生成执行与计划门禁
 
@@ -922,19 +922,19 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/agent/agentCanvas.ts, src/features/agent/agentHost.ts, tests/unit/agentCanvas.test.ts
 - Verification: PARTIAL — 契约现在覆盖图片与非空文案 provider 结果；Agent 图片导入要求 assetId，App 统一发布路径在 commit 前校验并把契约失败保留为 unknown。定向 agentCanvas/agentHost 23/23 通过；真实 Provider 与 Desktop 运行验收仍未完成。
 - Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md), [docs/changes/2026-10-03-incomplete-tasks/verification.md](../../docs/changes/2026-10-03-incomplete-tasks/verification.md)
-- Updated: 2026-10-03
+- Updated: 2026-10-08
 
 ## TASK-TASKSTATE-001 — 统一任务态契约定稿
 
 - Goal: 把 9 态任务模型、可重试判定、失败只重试失败输出、成本估算收口为可复用契约模块
-- Scope: src/features/creation/taskState.ts, src/features/creation/taskRecovery.ts, tests/unit/taskState.test.ts
+- Scope: src/features/creation/taskState.ts, src/features/creation/taskRecovery.ts, tests/unit/taskState.test.ts, src/features/creation/nativeTaskHost.ts, src/App.tsx, tests/unit/nativeTaskHost.test.ts, tests/browser/task-intent.spec.ts
 - Acceptance: unifiedTaskStatuses 覆盖 9 态; canRetryTask/retryFailedOutputIndices 语义正确; estimateTaskCostUsd 边界与估算口径标注; UI 成本显示收口到 estimateTaskCostUsd（后续任务）
 - Branch: `unallocated`
 - Worktree: `unallocated`
-- Modules: src/features/creation/taskState.ts, src/features/creation/taskRecovery.ts, src/features/creation/model.ts, tests/unit/taskState.test.ts
-- Verification: PARTIAL — 统一任务态复用既有普通重试门禁；unknown/已提交任务与 unknown 输出不进入失败子项重试；新建与重试任务不再写入 0.04 演示单价，审批和工作台统一使用 formatCostUsd。真实 Provider 报价回执仍待 TASK-TASKSTATE-002。
+- Modules: src/features/creation/taskState.ts, src/features/creation/taskRecovery.ts, src/features/creation/model.ts, tests/unit/taskState.test.ts, src/features/creation/nativeTaskHost.ts, src/App.tsx, tests/unit/nativeTaskHost.test.ts, tests/browser/task-intent.spec.ts
+- Verification: PARTIAL — 统一普通重试门禁、重启父子对账与归档证据保护；dc05556统一原生回执任务ID/幂等键、逐输出索引与类型校验，非法回执为unknown且无重复提交。原生/恢复53项与全量Node710项（702pass/8Windows skip/0fail）、浏览器388项无重试通过；未取得供应商报价时成本未知，真实Provider/每平台运行仍待验收，保持PARTIAL。
 - Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md), [docs/changes/2026-10-03-incomplete-tasks/verification.md](../../docs/changes/2026-10-03-incomplete-tasks/verification.md)
-- Updated: 2026-10-03
+- Updated: 2026-10-08
 
 ## TASK-TASKSTATE-002 — 供应商成本报价回执接入
 
@@ -1239,14 +1239,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## TASK-AUDIT-20261003 — 全项目任务盘点与可本地闭环项收口
 
 - Goal: 盘点全部任务和功能卡，完成本地可验证缺陷并同步真实状态
-- Scope: docs/governance, docs/features, src/features/mcp, src/features/agent, tests
-- Acceptance: 全部任务有状态、依赖、优先级或外部阻塞说明; 本地可闭环的 MCP 注册表、协议和计划重排缺陷有实现与回归证据; 治理视图和最终状态报告与实际命令输出一致
+- Scope: docs/governance, docs/features, src/features/mcp, src/features/agent, tests, src/features/creation, src/components/TaskWorkbench*.tsx, src/App.tsx
+- Acceptance: 全部任务有状态、依赖、优先级或外部阻塞说明; 本地可闭环的 MCP 注册表、协议和计划重排缺陷有实现与回归证据; 治理视图和最终状态报告与实际命令输出一致; 继续收口阶段审批、未知报价、画布交付及原生任务恢复的本地边界，不升级外部待验收项
 - Branch: `codex/TASK-AUDIT-20261003`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`
-- Modules: docs/governance, docs/features, src/features/mcp, src/features/agent, tests
-- Verification: PASS — 94 项任务已盘点并保留真实状态、依赖与外部条件说明；本地可验证的注册表、协议和计划重排收口均有实现与边界回归证据，治理/功能/Markdown 门禁和最终构建回归通过。
-- Evidence: [docs/changes/2026-10-03-task-audit/intent.md](../../docs/changes/2026-10-03-task-audit/intent.md), [docs/changes/2026-10-03-task-audit/spec.md](../../docs/changes/2026-10-03-task-audit/spec.md), [docs/changes/2026-10-03-task-audit/plan.md](../../docs/changes/2026-10-03-task-audit/plan.md), [docs/changes/2026-10-03-task-audit/inventory.md](../../docs/changes/2026-10-03-task-audit/inventory.md), [docs/changes/2026-10-03-task-audit/verification.md](../../docs/changes/2026-10-03-task-audit/verification.md), [docs/changes/2026-10-03-task-audit/review.md](../../docs/changes/2026-10-03-task-audit/review.md), [docs/governance/task-ledger.json](../../docs/governance/task-ledger.json), [docs/governance/TASK_LEDGER.md](../../docs/governance/TASK_LEDGER.md), [docs/features/features.registry.json](../../docs/features/features.registry.json)
-- Updated: 2026-10-03
+- Modules: docs/governance, docs/features, src/features/mcp, src/features/agent, tests, src/features/creation, src/components/TaskWorkbenchStages.tsx, src/App.tsx
+- Verification: PASS — 当前97项任务已盘点并保留真实状态、依赖与外部条件；本地注册表、协议、计划重排、阶段审批、未知报价、交付与恢复边界有实现及回归。最终业务代码dc05556独立复验PASS；Node710项（702pass/8Windows skip/0fail）、浏览器388项无重试、Agent174项与Rust97项及构建/静态门禁通过，当前证据见本轮verification/review。
+- Evidence: [docs/changes/2026-10-03-task-audit/intent.md](../../docs/changes/2026-10-03-task-audit/intent.md), [docs/changes/2026-10-03-task-audit/spec.md](../../docs/changes/2026-10-03-task-audit/spec.md), [docs/changes/2026-10-03-task-audit/plan.md](../../docs/changes/2026-10-03-task-audit/plan.md), [docs/changes/2026-10-03-task-audit/inventory.md](../../docs/changes/2026-10-03-task-audit/inventory.md), [docs/changes/2026-10-03-task-audit/verification.md](../../docs/changes/2026-10-03-task-audit/verification.md), [docs/changes/2026-10-03-task-audit/review.md](../../docs/changes/2026-10-03-task-audit/review.md), [docs/governance/task-ledger.json](../../docs/governance/task-ledger.json), [docs/governance/TASK_LEDGER.md](../../docs/governance/TASK_LEDGER.md), [docs/features/features.registry.json](../../docs/features/features.registry.json), [docs/changes/2026-10-03-incomplete-tasks/intent.md](../../docs/changes/2026-10-03-incomplete-tasks/intent.md), [docs/changes/2026-10-03-incomplete-tasks/spec.md](../../docs/changes/2026-10-03-incomplete-tasks/spec.md), [docs/changes/2026-10-03-incomplete-tasks/plan.md](../../docs/changes/2026-10-03-incomplete-tasks/plan.md), [docs/changes/2026-10-03-incomplete-tasks/verification.md](../../docs/changes/2026-10-03-incomplete-tasks/verification.md), [docs/changes/2026-10-03-incomplete-tasks/review.md](../../docs/changes/2026-10-03-incomplete-tasks/review.md)
+- Updated: 2026-10-08
 
 ## TASK-GOV-GOALS-001 — 项目建设目标与验收基线
 

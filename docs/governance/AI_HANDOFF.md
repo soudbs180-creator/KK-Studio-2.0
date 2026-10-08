@@ -1,10 +1,12 @@
 # AI handoff
 
-## 2026-10-03 未完成任务继续执行恢复点
+## 2026-10-08 未完成任务继续执行恢复点
 
-当前实现工作树为 `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`，分支 `codex/TASK-AUDIT-20261003`。本轮最终代码提交为 `c4cac9c`，包含阶段计划工作台、成本未知语义、画布交付边界、文案非空校验、不确定重试向父任务传播、重启恢复时的重试子任务合并与重复提交防线、终态回执解除父任务不确定状态、终态缺回执与 unknown 回执证据保护，以及归档失败、原生提交不确定、缺失文案正文和完整归档证据优先；原生成功缺资产/回执进入 unknown，恢复图像结果补回源节点连线。恢复时先读[本轮计划](../changes/2026-10-03-incomplete-tasks/plan.md)、[验证](../changes/2026-10-03-incomplete-tasks/verification.md)和 `docs/governance/task-ledger.json`，再检查当前 HEAD、工作树与最新 bundle。
+当前实现工作树为 `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`，分支 `codex/TASK-AUDIT-20261003`。本轮最终业务代码提交为 `dc055566457f8413c8ac7f9cc17778a9958bd5d8`，包含阶段计划工作台、成本未知语义、画布交付边界、不确定重试与重启恢复对账、归档证据保护和恢复错误文案清理。独立复核返修后，原生回执同时核对任务 ID/幂等键，重复、缺失、越界、声明冲突与非法类型均隔离为 unknown，不导入异常结果、不普通重试、不自动重复提交；保留有效归档、合法子集和真正缺失 `outputs` 的旧 `assetIds` 格式。恢复时先读[本轮计划](../changes/2026-10-03-incomplete-tasks/plan.md)、[验证](../changes/2026-10-03-incomplete-tasks/verification.md)、[复核记录](../changes/2026-10-03-incomplete-tasks/review.md)和 `docs/governance/task-ledger.json`，再检查当前 HEAD、工作树与最新 bundle。
 
 账本当前为 97 项；TASK-ORCH-002 已在本地范围 DONE，TASK-CANVAS-001/TASK-TASKSTATE-001 保持 PARTIAL，新增 P1 `TASK-TASKSTATE-002` 等待真实供应商报价回执。继续工作不得把本地 fixture、构建通过或历史证据当作真实 Provider、Mobile、VPS、第三方 MCP 或用户视觉验收。
+
+平台元数据为 `d9f8eab`：Desktop 2.1.4 / Web 2.1.5 / Mobile 规划 2.1.1。最新生产 JS 是 `index-Cbd-sL3-.js`，全量浏览器 388/388 无重试通过；后续运行应先核对实际 HEAD、配置与 bundle，不能使用旧运行时推断本轮已发布。
 
 ## 2026-10-03 项目建设目标恢复入口
 

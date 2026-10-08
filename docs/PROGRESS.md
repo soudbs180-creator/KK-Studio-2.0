@@ -1,10 +1,12 @@
 # 当前进度
 
-## 2026-10-03 未完成任务继续执行
+## 2026-10-08 未完成任务继续执行与复核返修
 
+- 当前台账共 97 项：DONE 56、PARTIAL 27、TODO 10、BLOCKED 4。
 - 已完成本轮本地闭环：`TASK-ORCH-002` 阶段计划视图与 plan/result 审批；`TASK-TASKSTATE-001` 的本地成本语义清理；`TASK-CANVAS-001` 的 Agent host/App 画布交付校验。
 - 新增 `TASK-TASKSTATE-002`（P1）：等待供应商可验证报价/账单回执，定义 schema、来源和回归证据。
-- 证据：`docs/changes/2026-10-03-incomplete-tasks/`；最终代码提交 `c4cac9c`（包含 `6ebaad8`、`937b050`、`d61adda`、`085b083`、`db84558`、`760b3e0`、`f344563`、`a68fd10`、`768326a` 的本地闭环及归档失败、原生提交不确定、缺失文案正文和完整归档证据防线修复）。全量 Node 693、Canvas Agent 174、浏览器 381、Rust 97 及静态门禁以本轮最终收据为准。
+- 本轮源码版本：Desktop 2.1.4 / Web 2.1.5 / Mobile 规划 2.1.1；新生产 bundle 与浏览器版本显示已复验，未发布或安装新客户端。
+- 证据：`docs/changes/2026-10-03-incomplete-tasks/`；最终业务代码提交 `dc055566457f8413c8ac7f9cc17778a9958bd5d8`。在阶段计划、未知报价和画布交付闭环上，补齐归档失败、原生提交不确定、缺失文案正文、完整归档证据与恢复错误文案清理，并按独立复核返修原生回执身份、重复/缺失/越界输出和非法类型回退边界。全量 Node 710、Canvas Agent 174、浏览器 388、Rust 97 及静态门禁以本轮最终收据为准。
 - 外部未完成项保持原状态：真实 Provider/GPU/ComfyUI、TASK-ORCH-003、BACKEND-MCP-AUTO、Mobile、VPS、第三方 MCP 与用户视觉验收。
 
 ## 2026-10-03 项目建设目标与验收基线
