@@ -6,6 +6,8 @@ GUI 启动器继续调用根目录 `start-kk-studio.bat --background` 和唯一�
 
 快捷方式的目标和工作目录必须对应当前已验证 checkout，不能指向旧 `D:/kk-studio-next`、archive 或过期候选。安装脚本通过 Windows 自带 .NET Framework 编译器生成 GUI 子系统程序，编译成功后替换 EXE 并更新快捷方式；此前快捷方式的目标、参数、工作目录与图标收据保存在 checkout 的 `.tmp/launcher/`。这只是开发启动入口，不替代 NSIS 安装器及正式发布验收。
 
+链接读写使用 `scripts/windows/unicode-shortcut.cs` 的 Unicode Shell Link 接口，支持包含中文和 emoji 的目录，不依赖 Windows 系统 ANSI 编码。重复安装会保留原链接 metadata；测试通过真实 `.lnk` 启动并检查无控制台、工作目录和后台参数。
+
 当前稳定 portable Desktop 版本为 2.1.2，main@bd3bc66 的完整 ZIP 已实际启动并验证随包 Agent；本地交付收据保存在 `releases/DELIVERY.md`。解压整个目录后运行 `kk-studio.exe`，保留旁边的 agent-runtime，无需 Node/Rust。portable 需要已有 WebView2。用户数据仍写入 `%APPDATA%/kk-studio`，应用标识和凭据服务保持不变。
 
 Windows NSIS 安装器构建、文件校验与隔离验收见 [WINDOWS-INSTALLER](WINDOWS-INSTALLER.md)，当前真实结果见[本轮验证](../changes/2026-09-30-desktop-installer/verification.md)。干净系统、签名与正式发布仍由 T7 验收。

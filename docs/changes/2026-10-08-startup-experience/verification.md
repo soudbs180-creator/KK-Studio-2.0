@@ -68,3 +68,15 @@
 临时实机取证脚本的非public刷新类型/PowerShell静态返回绑定、GetProcess缓存初始窗口句柄错误已修正，并保存旧失败日志；最终刷新真实window handle后取得正确Logo。这些是取证夹具问题，没有通过修改产品或放宽Logo/控制台断言来掩盖。
 
 AC-1–5本地实现/验收全部PASS。本轮未合入main、未线上部署或正式发布；Hosted CI/PR结果与用户最终产品验收另以实际收据记录。FEAT-026仍PARTIAL，T7真实安装/签名/干净系统边界不关闭。
+
+## Hosted 失败与 Unicode 快捷方式修复
+
+草稿[PR #38](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/38)绑定7a1c3358后，push/PR的Hosted verify均在Windows installer第一项失败：`WScript.Shell.TargetPath`抛ArgumentException；另两项原生启动测试PASS。完整原始日志保留在最终证据目录的`hosted-job-113264320693.log`与`hosted-job-113264987185.log`。这些失败不是预先存在的上游错误，不能将当时本地PASS代替托管交付门禁。
+
+LAUNCH-R4（P2）：仅将原测试路径增强为中文+🌐+空格+`&`，本机也在相同setter失败RED，见`unicode-shortcut-red.log`。reviewer独立内存COM探针确认ACP936能表示的中文成功、不能表示的🌐触发0x80070057；不修改系统区域或编码配置。根因是路径字符超出系统ANSI编码，不能仅归因“非中文Windows”。
+
+新增`unicode-shortcut.cs`使用微软[IShellLinkW](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishelllinkw)与IPersistFile，目标/参数/工作目录/图标/说明全部使用Unicode，原快捷方式metadata也通过宽接口读取。独立Shell.Application读取维持原目标/目录/图标精确断言，二次安装metadata所有字段检查，并通过真实`.lnk`启动probe验无控制台、cwd和`--background`。Windows3/3 GREEN，日志`unicode-shortcut-green.log`/`unicode-shortcut-native-all.log`；未跳过或弱化原断言。
+
+该增量完整`npm run verify`退出0：726/734Node（8既有skip）、172/174Agent（2既有skip）、413/413browser、0retry/flaky，UI199/0及所有静态/构建门禁PASS；日志`D:/kk-studio/output/startup-unicode-full-verify-20261008.log`。前端JS/CSS哈希与最终组合完全一致，Tauri源码/产物未变化，无需将旧native产物冒称重建。实际桌面已用宽接口重装成功，两个链接的宽接口metadata收据`unicode-actual-shortcuts.json`、安装日志`unicode-actual-install.log`均在最终目录；原raw备份保留，已打开的72244未关闭。
+
+7a1c3358的原独立收据留作历史；R4修复后的精确HEAD审查以`D:/kk-studio/output/startup-review-unicode-20261008.md`回读，Hosted结果以对应PR当前SHA为准。当前尚未合入main、部署Web或正式发布。

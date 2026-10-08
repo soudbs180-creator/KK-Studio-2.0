@@ -2,6 +2,8 @@
 
 ## 2026-10-08 启动体验
 
+PR#38当前追加Unicode快捷方式修复：旧7a1c3358 Hosted失败与ACP936独立探针均确认R4；新接口已native3/3和完整verify726Node/172Agent/413browser PASS，实际桌面重装、前端/native哈希不变。最终收据改以`D:/kk-studio/output/startup-review-unicode-20261008.md`匹配当前SHA；旧final收据仅对应7a1c3358历史，Hosted结果另回读。保留被快捷方式引用的任务树与原链接备份。
+
 恢复入口：[intent](../changes/2026-10-08-startup-experience/intent.md)、[plan](../changes/2026-10-08-startup-experience/plan.md)、[verification](../changes/2026-10-08-startup-experience/verification.md)。TASK-LAUNCH-001 在 codex/TASK-LAUNCH-001-quiet-start（canonical 仓库登记 worktree）修复无控制台启动/Logo及 Web 首屏按需加载；后续推广核对当前 base/head、完整 verify、实际 EXE/shortcut 图标、同态运行证据和独立审查，不能从旧 main release 或过期 worktree 启动。用户请求已授权普通修复，不重复索取阶段批准；main 合并、线上部署及正式发布另按真实授权和门禁执行。
 
 最终本地AC完成，已融合最新main@1af0357b，Desktop2.1.7/Web2.1.8/Mobile2.1.1，verify726Node/172Agent/413browser和clientcheck/新Tauri/实际入口/Logo均PASS。桌面与canonical的lnk正在引用此任务树，禁止归档/删除它；待PR集成及新稳定产物复验后再切换。工程外最终独立收据`D:/kk-studio/output/startup-review-final-20261008.md`需与当前HEAD核对；上游历史记录保持，真实Provider/发布/Mobile范围不变。

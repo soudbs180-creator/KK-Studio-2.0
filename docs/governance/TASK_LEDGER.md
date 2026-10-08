@@ -115,7 +115,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-LAUNCH-001-quiet-start`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-LAUNCH-001`
 - Modules: scripts/windows, start-kk-studio.bat, src/App.tsx, FEAT-026
-- Verification: PASS — 本地AC1–5 DONE：融合最新main1af0357b，verify726/734Node(8原skip)、172/174Agent(2原skip)、413/413browser零flaky、clientcheck/新Tauri/原生能力PASS。实际桌面/canonical入口GUI退出0、免编译窗口304ms、无新增可见控制台/Logo正确。R1/R2/R3独立关闭，694a237/f74548d源码PASS；最终组合SHA收据与PR/Hosted另绑，main和线上未推广。
+- Verification: PASS — 本地AC1–5 DONE：融合main1af0357b，verify726/734Node(8原skip)、172/174Agent(2原skip)、413/413browser零flaky、clientcheck/新Tauri/原生能力PASS。实际桌面/canonical入口GUI退出0、免编译窗口304ms、无新增可见控制台/Logo正确。R1/R2/R3独立关闭；PR38旧7a1c Hosted暴露R4，中文+emoji路径RED→Unicode接口和真实lnk/重装native3/3 GREEN，完整verify再次PASS。最终Unicode精确SHA补审/Hosted另回读，旧失败保留，main与线上未推广。
 - Evidence: [docs/changes/2026-10-08-startup-experience/verification.md](../../docs/changes/2026-10-08-startup-experience/verification.md)
 - Updated: 2026-10-08
 

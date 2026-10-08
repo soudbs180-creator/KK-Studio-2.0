@@ -10,7 +10,7 @@ test(
   { skip: process.platform !== "win32" },
   (t) => {
     const parent = fs.mkdtempSync(path.join(os.tmpdir(), "kk-gui-launcher-"));
-    const root = path.join(parent, "KK 测试 & launch");
+    const root = path.join(parent, "KK 测试 🌐 & launch");
     t.after(() => {
       assert.equal(path.dirname(parent), path.resolve(os.tmpdir()));
       assert.ok(path.basename(parent).startsWith("kk-gui-launcher-"));
@@ -18,7 +18,11 @@ test(
     });
     fs.mkdirSync(path.join(root, "scripts", "windows"), { recursive: true });
     fs.mkdirSync(path.join(root, "src-tauri", "icons"), { recursive: true });
-    for (const name of ["install-shortcut.ps1", "desktop-launcher.cs"]) {
+    for (const name of [
+      "install-shortcut.ps1",
+      "desktop-launcher.cs",
+      "unicode-shortcut.cs",
+    ]) {
       const source = new URL(`../../scripts/windows/${name}`, import.meta.url);
       if (fs.existsSync(source))
         fs.copyFileSync(source, path.join(root, "scripts", "windows", name));
@@ -75,7 +79,7 @@ test(
       [
         "-NoProfile",
         "-Command",
-        "[Console]::OutputEncoding = New-Object System.Text.UTF8Encoding; $s = (New-Object -ComObject WScript.Shell).CreateShortcut($env:KK_TEST_LINK); @{Target=$s.TargetPath;Directory=$s.WorkingDirectory;Icon=$s.IconLocation} | ConvertTo-Json -Compress",
+        "[Console]::OutputEncoding = New-Object System.Text.UTF8Encoding; $folder = (New-Object -ComObject Shell.Application).NameSpace([IO.Path]::GetDirectoryName($env:KK_TEST_LINK)); $s = $folder.ParseName([IO.Path]::GetFileName($env:KK_TEST_LINK)).GetLink; $icon = ''; $index = $s.GetIconLocation([ref]$icon); @{Target=$s.Path;Directory=$s.WorkingDirectory;Icon=($icon + ',' + $index)} | ConvertTo-Json -Compress",
       ],
       {
         env: { ...process.env, KK_TEST_LINK: link },
@@ -104,11 +108,36 @@ test(
       { windowsHide: true, encoding: "utf8", timeout: 15000 },
     );
     assert.equal(reinstall.status, 0, reinstall.stdout + reinstall.stderr);
-    const launch = spawnSync(exe, [], {
-      cwd: parent,
-      encoding: "utf8",
-      timeout: 15000,
-    });
+    const receipts = fs
+      .readdirSync(path.join(root, ".tmp", "launcher"))
+      .filter((name) => name.startsWith("shortcuts-before-"));
+    assert.equal(receipts.length, 1);
+    const retained = JSON.parse(
+      fs
+        .readFileSync(path.join(root, ".tmp", "launcher", receipts[0]), "utf8")
+        .replace(/^\uFEFF/, ""),
+    );
+    assert.equal(retained.Path, link);
+    assert.equal(retained.Target, exe);
+    assert.equal(retained.WorkingDirectory, root);
+    assert.equal(retained.Icon, `${exe},0`);
+    assert.equal(retained.Arguments, "");
+    assert.equal(retained.WindowStyle, 1);
+    const launch = spawnSync(
+      "powershell.exe",
+      [
+        "-NoProfile",
+        "-Command",
+        "$p = Start-Process -FilePath $env:KK_TEST_LINK -PassThru; $p.WaitForExit(); exit $p.ExitCode",
+      ],
+      {
+        env: { ...process.env, KK_TEST_LINK: link },
+        cwd: parent,
+        windowsHide: true,
+        encoding: "utf8",
+        timeout: 15000,
+      },
+    );
     assert.equal(launch.status, 0, launch.error?.message ?? launch.stderr);
     const observed = fs
       .readFileSync(path.join(root, "probe.txt"), "utf8")
