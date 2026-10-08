@@ -1,10 +1,15 @@
 /** Non-secret, account-scoped discovery. A model list is not generation verification. */
 import type { ModelKind } from "../../domain/modelSelection.ts";
+import {
+  parseImageModelCapabilities,
+  type ImageModelCapabilities,
+} from "../../domain/imageModelCapabilities.ts";
 export type { ModelKind } from "../../domain/modelSelection.ts";
 export interface CatalogModel {
   id: string;
   kind: ModelKind;
   sizes?: string[];
+  image?: ImageModelCapabilities;
   source?: "reported" | "manual";
   /** Display grouping is never a substitute for the exact provider route ID. */
   family?: string;
@@ -83,11 +88,36 @@ export function parseCatalogModels(value: unknown): CatalogModel[] {
         id: model.id,
         kind,
         sizes,
+        image: parseImageModelCapabilities(cap.image),
         source: "reported" as const,
         ...displayMetadata(record(model.display)),
       },
     ];
   });
+}
+function storedModel(value: unknown): CatalogModel | undefined {
+  const model = record(value);
+  if (typeof model.id !== "string" || !model.id.trim() || model.id.length > 120)
+    return undefined;
+  return {
+    id: model.id,
+    ...displayMetadata(model),
+    kind: kinds.includes(String(model.kind))
+      ? (model.kind as ModelKind)
+      : "unknown",
+    sizes: Array.isArray(model.sizes)
+      ? [
+          ...new Set(
+            model.sizes.filter(
+              (size): size is string =>
+                typeof size === "string" && sizePattern.test(size),
+            ),
+          ),
+        ].slice(0, 100)
+      : undefined,
+    image: parseImageModelCapabilities(model.image),
+    source: model.source === "manual" ? "manual" : "reported",
+  };
 }
 export function readModelCatalogs(): ModelCatalog[] {
   try {
@@ -96,30 +126,9 @@ export function readModelCatalogs(): ModelCatalog[] {
     return raw.slice(0, 200).flatMap((value) => {
       const item = record(value);
       if (typeof item.id !== "string" || !Array.isArray(item.models)) return [];
-      const models = item.models.flatMap((value) => {
-        const model = record(value);
-        if (typeof model.id !== "string" || model.id.length > 120) return [];
-        return [
-          {
-            id: model.id,
-            ...displayMetadata(model),
-            kind: kinds.includes(String(model.kind))
-              ? (model.kind as ModelKind)
-              : "unknown",
-            sizes: Array.isArray(model.sizes)
-              ? model.sizes
-                  .filter(
-                    (size): size is string =>
-                      typeof size === "string" && sizePattern.test(size),
-                  )
-                  .slice(0, 100)
-              : undefined,
-            source:
-              model.source === "manual"
-                ? ("manual" as const)
-                : ("reported" as const),
-          },
-        ];
+      const models = item.models.slice(0, 5000).flatMap((value) => {
+        const model = storedModel(value);
+        return model ? [model] : [];
       });
       return [
         {
@@ -188,7 +197,10 @@ export function saveModelCatalog(
         baseUrl: connection.baseUrl,
         credentialRef: connection.credentialRef,
         fetchedAt: Date.now(),
-        models: next,
+        models: next.slice(0, 5000).flatMap((value) => {
+          const model = storedModel(value);
+          return model ? [model] : [];
+        }),
       },
     ]),
   );

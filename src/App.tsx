@@ -835,6 +835,7 @@ export default function App() {
             referenceCount: task.attachments.length,
             kind: task.kind === "text" ? "text" : "image",
             model: task.model,
+            outputCount: task.requestedOutputs,
           },
           { explicitRetry: explicitRetry || Boolean(task.retryOfTaskId) },
         );
@@ -854,20 +855,21 @@ export default function App() {
       if (nativeTaskHost) {
         if (controller.signal.aborted) throw new Error("任务已停止。");
         assertTextCurrent();
-        const nativeConnection =
-          task.kind === "text"
-            ? assertSubmissionConnection(
-                {
-                  id: task.providerConnectionId,
-                  baseUrl: task.providerBaseUrl,
-                  credentialRef: task.providerCredentialRef,
-                  referenceCount: 0,
-                  kind: "text",
-                  model: task.model,
-                },
-                { skipCapacity: true },
-              )
-            : undefined;
+        const nativeConnection = assertSubmissionConnection(
+          {
+            id: task.providerConnectionId,
+            baseUrl: task.providerBaseUrl,
+            credentialRef: task.providerCredentialRef,
+            referenceCount: task.attachments.length,
+            kind: task.kind === "text" ? "text" : "image",
+            model: task.model,
+            outputCount: task.requestedOutputs,
+          },
+          {
+            skipCapacity: true,
+            explicitRetry: explicitRetry || Boolean(task.retryOfTaskId),
+          },
+        );
         const attachments = task.attachments.map((attachment) => {
           if (!attachment.assetId)
             throw new Error(

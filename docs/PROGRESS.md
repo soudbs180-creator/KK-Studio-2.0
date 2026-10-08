@@ -1,5 +1,13 @@
 # 当前进度
 
+## 2026-10-08 模型能力声明：Hosted日志复核后的增量修正
+
+TASK-MODEL-001 本地AC1–5 DONE。草稿无变化通知覆盖与显示字段依赖问题已修正：32定向无retry、完整verify723/731root(8原skip)、172/174Agent(2原skip)、408/408browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行PASS。2026-10-08 16:31 独立只读审查base5dd6e6dd..head71ddb625 PASS，MC-002/MC-003关闭，MC-001保持关闭；独立87/87、389源码hash和产物匹配，新指纹2ebaab3d。最终文档HEAD需补审，PR#36当前新SHA Hosted待取得；首轮2797687c的405pass+1flaky留档，唯一因果仍UNKNOWN。未合并发布，原主checkout未写入；FEAT-003仍PARTIAL，真实Provider/蒙版/扩图/Mobile及既有开发插件边界不变。下面早先PASS条目保留为当时SHA的历史记录。
+
+## 2026-10-08 精确账号图片模型能力声明
+
+TASK-MODEL-001 已实现精确账号/model 图片操作三态及参考图/任务数量限额，MC-001修正统一归档素材去重和重绘预校验。当前base main@5dd6e6dd的完整verify723root/172Agent/406browser通过，原skip8/2保留且0flaky，UI198/0；client:check、fresh Tauri和隔离运行通过。候选源码Desktop2.1.6/Web2.1.7，Mobile规划2.1.1；本地AC1–5完成，独立6da9920e技术补审PASS、MC-001关闭；最终文档head补审和PR/Hosted交付收据另绑，不代表已合并/发布。FEAT-003保持PARTIAL，真实Provider和蒙版/扩图执行另验；TASK-PLUGIN-DEV-001开发插件既有错误仍TODO。见[验证](changes/2026-10-08-model-capabilities/verification.md)。
+
 ## 2026-10-08 阶段工作台主线融合
 
 用户已授权“合并主线”。原候选ca6bc52在推送前遇到主线PR #34/5b0eb6a前移；本轮在既有TASK-ORCH-002分支融合为唯一Plan入口、TaskWorkbenchStages和共享编排器，保留主线的暂停/重规划/回执/MCP改进。候选Desktop2.1.5/Web2.1.6/Mobile规划2.1.1；97tasks/34features不新增重复登记，FEAT-030仍PARTIAL。组合本地AC完成：49/49、完整verify708root/172Agent/400browser零retry（原skip8/2）、Rust97及fresh Tauri审批/重启/真实CAS/恢复草稿通过；精确SHA独立补审和Hosted门禁另验；实际集成以本轮PR merged及merge SHA为准。下方首轮未推送/main不变等描述保留为历史，不代替当前进度。
@@ -7,6 +15,7 @@
 ## 2026-10-08 竞品学习与阶段计划工作台
 
 REA拆解与KK对照形成31项结论、311条定位，映射原feature/task。TASK-ORCH-002本轮本地AC DONE：既有工作台阶段查看、plan/result审批、返工、解除/重新申请、共享宿主及保存确认/恢复已验；源码41dd865独立复验PASS，3项finding关闭。完整verify根638/646、Agent172/174（原skip8/2）、browser389/389零retry；production Tauri重启/真实CAS冲突/恢复草稿及clientcheck PASS。最终文档精确SHA补审收据另记。Desktop2.1.4/Web2.1.5/Mobile2.1.1；独立分支保留，main未改、未推送合并发布；FEAT-030仍PARTIAL，真实执行/MCP/媒体未接。见[比较](changes/2026-10-08-stage-workbench/comparison.md)、[验证](changes/2026-10-08-stage-workbench/verification.md)及[审查](changes/2026-10-08-stage-workbench/review.md)。
+
 ## 2026-10-08 未完成任务继续执行与复核返修
 
 - 当前台账共 97 项：DONE 56、PARTIAL 27、TODO 10、BLOCKED 4。

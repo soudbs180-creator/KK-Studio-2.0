@@ -1,0 +1,239 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: model-capabilities.spec.ts >> 原图和连线参考图按归档素材去重：不同素材超限禁用重绘
+- Location: tests\browser\model-capabilities.spec.ts:10:3
+
+# Error details
+
+```
+Error: expect(locator).toBeDisabled() failed
+
+Locator:  getByTestId('canvas-node-added-image-8c24e835-5170-42ac-9e88-32221683d4b3').getByRole('button', { name: '生成图片', exact: true })
+Expected: disabled
+Received: enabled
+Timeout:  5000ms
+
+Call log:
+  - Expect "toBeDisabled" getByTestId('canvas-node-added-image-8c24e835-5170-42ac-9e88-32221683d4b3').getByRole('button', { name: '生成图片', exact: true }) with timeout 5000ms
+  - waiting for getByTestId('canvas-node-added-image-8c24e835-5170-42ac-9e88-32221683d4b3').getByRole('button', { name: '生成图片', exact: true })
+    14 × locator resolved to <button aria-label="生成图片" title="使用已配置连接生成并保存图片" class="generate-button">…</button>
+       - unexpected value "enabled"
+
+```
+
+```yaml
+- button "生成图片": 生成
+```
+
+# Test source
+
+```ts
+  38  |           );
+  39  |           return snapshot.projects
+  40  |             .find(
+  41  |               (project: { id: string }) =>
+  42  |                 project.id === snapshot.activeProjectId,
+  43  |             )
+  44  |             ?.items.find((entry: { id: string }) => entry.id === id)?.assetId;
+  45  |         }, sourceId),
+  46  |       )
+  47  |       .toBeTruthy();
+  48  |     // Restore an editable archived node, as a generated or legacy image can be.
+  49  |     // Upload-only nodes deliberately reject incoming edges in the current UI.
+  50  |     const restored = await page.evaluate((id) => {
+  51  |       const key = "kk-studio-next:creation:v1";
+  52  |       const snapshot = JSON.parse(localStorage.getItem(key)!);
+  53  |       const project = snapshot.projects.find(
+  54  |         (entry: { id: string }) => entry.id === snapshot.activeProjectId,
+  55  |       );
+  56  |       project.items.find(
+  57  |         (entry: { id: string }) => entry.id === id,
+  58  |       ).referenceOnly = false;
+  59  |       snapshot.revision = Date.now();
+  60  |       return JSON.stringify(snapshot);
+  61  |     }, sourceId);
+  62  |     await page.addInitScript((snapshot) => {
+  63  |       localStorage.setItem("kk-studio-next:creation:v1", snapshot);
+  64  |     }, restored);
+  65  |     await page.reload();
+  66  |     await page.getByRole("button", { name: "项目库", exact: true }).click();
+  67  |     await page.locator(".project-library-card").first().click();
+  68  |     await waitForConversationPanelSettled(page);
+  69  |     await item.click();
+  70  |     await item
+  71  |       .locator('input[type="file"]')
+  72  |       .nth(1)
+  73  |       .setInputFiles(
+  74  |         duplicate ? original : "public/fixtures/demo/blue-hour.png",
+  75  |       );
+  76  |     await expect(item.locator(".composer-ref-thumb")).toHaveCount(1);
+  77  |     await expect
+  78  |       .poll(() =>
+  79  |         page.evaluate(
+  80  |           ({ id, duplicate }) => {
+  81  |             const snapshot = JSON.parse(
+  82  |               localStorage.getItem("kk-studio-next:creation:v1")!,
+  83  |             );
+  84  |             const project = snapshot.projects.find(
+  85  |               (entry: { id: string }) => entry.id === snapshot.activeProjectId,
+  86  |             );
+  87  |             const source = project.items.find(
+  88  |               (entry: { id: string }) => entry.id === id,
+  89  |             );
+  90  |             const edge = project.canvas.edges.find(
+  91  |               (entry: { target: string; kind: string }) =>
+  92  |                 entry.target === id && entry.kind !== "result",
+  93  |             );
+  94  |             const reference = project.items.find(
+  95  |               (entry: { id: string }) => entry.id === edge?.source,
+  96  |             );
+  97  |             return Boolean(
+  98  |               source?.assetId &&
+  99  |               reference?.assetId &&
+  100 |               (source.assetId === reference.assetId) === duplicate,
+  101 |             );
+  102 |           },
+  103 |           { id: sourceId, duplicate },
+  104 |         ),
+  105 |       )
+  106 |       .toBe(true);
+  107 |     await settings(page);
+  108 |     await page.getByLabel("API Key").fill("fixture-key");
+  109 |     await page.getByRole("button", { name: "保存", exact: true }).click();
+  110 |     await page.getByLabel("当前模型用途").selectOption("image");
+  111 |     await page
+  112 |       .getByLabel("参考图编辑能力", { exact: true })
+  113 |       .selectOption("supported");
+  114 |     await page.getByLabel("参考图数量上限", { exact: true }).fill("1");
+  115 |     await page
+  116 |       .getByRole("button", { name: "保存此模型能力", exact: true })
+  117 |       .click();
+  118 |     await expect(
+  119 |       page.locator(".provider-model-catalog").getByRole("status"),
+  120 |     ).toContainText("已保存此模型");
+  121 |     await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  122 |     await item.getByRole("button", { name: "画布模型", exact: true }).click();
+  123 |     await page
+  124 |       .getByRole("searchbox", { name: "搜索模型、厂商或参数" })
+  125 |       .fill("image-capability-a");
+  126 |     await page
+  127 |       .getByRole("menuitemradio", { name: /image-capability-a/ })
+  128 |       .click();
+  129 |     await expect(
+  130 |       item.getByRole("button", { name: "画布模型", exact: true }),
+  131 |     ).toContainText("image-capability-a");
+  132 |     await expect(item.locator(".composer-ref-thumb")).toHaveCount(1);
+  133 |     const generate = item.getByRole("button", {
+  134 |       name: "生成图片",
+  135 |       exact: true,
+  136 |     });
+  137 |     if (duplicate) await expect(generate).toBeEnabled();
+> 138 |     else await expect(generate).toBeDisabled();
+      |                                 ^ Error: expect(locator).toBeDisabled() failed
+  139 |     await item
+  140 |       .getByRole("button", { name: "重绘参考图片", exact: true })
+  141 |       .click();
+  142 |     const redraw = page.getByRole("dialog", { name: "重绘参考图片" });
+  143 |     const start = redraw.getByRole("button", { name: "开始重绘", exact: true });
+  144 |     if (duplicate) await expect(start).toBeEnabled();
+  145 |     else {
+  146 |       await expect(start).toBeDisabled();
+  147 |       await expect(redraw.getByRole("status")).toContainText(
+  148 |         "最多接收 1 张参考图",
+  149 |       );
+  150 |     }
+  151 |     await redraw.getByRole("button", { name: "取消", exact: true }).click();
+  152 |     await expect(item.locator(".uploaded-image")).toBeVisible();
+  153 |     expect(requests).toBe(0);
+  154 |   });
+  155 | }
+  156 | 
+  157 | async function settings(page: Page) {
+  158 |   await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  159 |   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  160 | }
+  161 | async function configure(page: Page) {
+  162 |   await page.goto("/");
+  163 |   await settings(page);
+  164 |   await page.getByLabel("提供商", { exact: true }).fill("Capability fixture");
+  165 |   await page.getByLabel("接口地址").fill(api);
+  166 |   await page.getByLabel("API Key").fill("fixture-key");
+  167 |   await page.getByLabel("模型名称").fill("image-capability-a");
+  168 |   await page.getByRole("button", { name: "保存", exact: true }).click();
+  169 | }
+  170 | async function node(page: Page) {
+  171 |   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  172 |   await page.getByRole("button", { name: "项目库", exact: true }).click();
+  173 |   await page.getByRole("button", { name: "新建项目", exact: true }).click();
+  174 |   await waitForConversationPanelSettled(page);
+  175 |   await page.getByRole("button", { name: "添加资源", exact: true }).click();
+  176 |   await page.getByRole("menuitem", { name: "图片", exact: true }).click();
+  177 |   const first = page.getByTestId(/^canvas-node-added-image-/).first();
+  178 |   const item = page.getByTestId((await first.getAttribute("data-testid"))!);
+  179 |   await item.click();
+  180 |   return item;
+  181 | }
+  182 | 
+  183 | test("手动三态声明保存恢复并切模型，不把未知变成支持", async ({
+  184 |   page,
+  185 | }, info) => {
+  186 |   await page.route(`${api}/models`, (route) =>
+  187 |     route.fulfill({
+  188 |       json: {
+  189 |         data: [
+  190 |           {
+  191 |             id: "image-capability-a",
+  192 |             capabilities: { modalities: ["image"], sizes: ["1024x1024"] },
+  193 |           },
+  194 |           { id: "image-capability-b", capabilities: { modalities: ["image"] } },
+  195 |         ],
+  196 |       },
+  197 |     }),
+  198 |   );
+  199 |   await configure(page);
+  200 |   await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
+  201 |   await expect(page.getByLabel("已发现的模型")).toContainText(
+  202 |     "image-capability-b",
+  203 |   );
+  204 |   await page
+  205 |     .getByLabel("图片生成能力", { exact: true })
+  206 |     .selectOption("supported");
+  207 |   await page
+  208 |     .getByLabel("参考图编辑能力", { exact: true })
+  209 |     .selectOption("unsupported");
+  210 |   await page.getByLabel("参考图数量上限", { exact: true }).fill("0");
+  211 |   await page.getByLabel("单次任务生成数量上限", { exact: true }).fill("2");
+  212 |   await page
+  213 |     .getByRole("button", { name: "保存此模型能力", exact: true })
+  214 |     .click();
+  215 |   await expect(
+  216 |     page.locator(".provider-model-catalog").getByRole("status"),
+  217 |   ).toContainText("已保存此模型");
+  218 |   for (const width of [390, 1099, 1920]) {
+  219 |     await page.setViewportSize({ width, height: 1080 });
+  220 |     await page
+  221 |       .getByLabel("参考图编辑能力", { exact: true })
+  222 |       .scrollIntoViewIfNeeded();
+  223 |     await expect(
+  224 |       page.getByLabel("参考图编辑能力", { exact: true }),
+  225 |     ).toBeVisible();
+  226 |     expect(
+  227 |       await page.evaluate(
+  228 |         () => document.documentElement.scrollWidth <= innerWidth,
+  229 |       ),
+  230 |     ).toBe(true);
+  231 |     await page.screenshot({
+  232 |       path: info.outputPath(`capabilities-settings-${width}.png`),
+  233 |     });
+  234 |     const runtime = await page.evaluate(() => {
+  235 |       const control = document.querySelector<HTMLSelectElement>(
+  236 |         '[aria-label="参考图编辑能力"]',
+  237 |       )!;
+  238 |       const style = getComputedStyle(control);
+```

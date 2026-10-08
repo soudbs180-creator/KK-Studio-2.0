@@ -323,3 +323,40 @@ test("canvasImageAttachments fails closed for missing or invalid archived origin
     /尚未归档/,
   );
 });
+
+test("archived-asset deduplication cannot hide malformed or dangling references", async () => {
+  const project = createProject(input);
+  const source = sourceItem("source", "asset-shared");
+  const video = {
+    ...sourceItem("invalid", "asset-shared"),
+    kind: "video" as const,
+  };
+  const unarchived = {
+    ...sourceItem("invalid", "asset-shared"),
+    assetId: undefined,
+  };
+  for (const incoming of [video, unarchived, undefined]) {
+    await assert.rejects(
+      canvasImageAttachments(
+        {
+          ...project,
+          items: incoming ? [source, incoming] : [source],
+          canvas: {
+            ...project.canvas,
+            edges: [
+              {
+                id: "invalid-edge",
+                source: "invalid",
+                target: source.id,
+                kind: "reference",
+              },
+            ],
+          },
+        },
+        source,
+        async (id) => asset(id),
+      ),
+      /尚未归档/,
+    );
+  }
+});

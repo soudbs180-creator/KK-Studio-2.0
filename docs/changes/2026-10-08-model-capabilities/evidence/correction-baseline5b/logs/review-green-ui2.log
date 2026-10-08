@@ -1,0 +1,15 @@
+[WebServer] (node:42344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:13344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 (4.0s)
+  ok 2 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 (4.2s)
+  ok 3 tests\browser\model-capabilities.spec.ts:183:1 › 手动三态声明保存恢复并切模型，不把未知变成支持 (1.6s)
+  ok 4 tests\browser\model-capabilities.spec.ts:291:1 › 明确编辑限制禁用重绘和参考图并保留原图，不发送请求 (2.0s)
+  ok 5 tests\browser\model-capabilities.spec.ts:342:1 › 报告能力限制数量且 unknown 蒙版只显示未接通说明 (1.7s)
+  ok 6 tests\browser\model-capabilities.spec.ts:388:1 › 单张重绘使用自己的数量，不被原节点超限草稿阻止 (2.0s)
+
+  6 passed (17.2s)

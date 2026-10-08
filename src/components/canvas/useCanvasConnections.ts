@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useContext,
   useRef,
   useState,
   type Dispatch,
@@ -9,17 +10,19 @@ import {
   INITIAL_CONNECTIONS,
   type CanvasConnection,
 } from "../../domain/canvasGraph";
-import {
-  maxReferenceCount,
-  type CanvasCollectionItem,
-} from "../../domain/canvasItems";
+import { type CanvasCollectionItem } from "../../domain/canvasItems";
 import { reconcileCanvasConnections } from "../../domain/canvasConnections";
+import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities";
+import { readProviderConnections } from "../../features/creation/providerRegistry";
+import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
+import { canConnectTarget } from "./connectionRules";
 
 export function useCanvasConnections(
   items: CanvasCollectionItem[],
   onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>,
   initialEdges: CanvasConnection[] = INITIAL_CONNECTIONS,
 ) {
+  const command = useContext(CanvasImageCommandContext);
   const [edges, setEdges] = useState(initialEdges);
   const [observedEdges, setObservedEdges] = useState(initialEdges);
   // Async provider results arrive through project state while this canvas stays
@@ -104,23 +107,36 @@ export function useCanvasConnections(
       !uploadOnlyTarget &&
       (targetItem.kind === "image" || targetItem.kind === "video");
     const max = limited
-      ? maxReferenceCount(targetItem)
+      ? canvasImageReferenceLimit(
+          targetItem,
+          readProviderConnections(),
+          command
+            ? {
+                source: "api",
+                model: command.model,
+                connectionId: command.providerConnectionId,
+              }
+            : undefined,
+        )
       : Number.POSITIVE_INFINITY;
     const invalidReference =
       limited && Boolean(sourceItem) && sourceItem?.kind !== "image";
-    const incoming = currentEdges.filter(
-      (edge) =>
-        edge.target === target &&
-        edge.kind !== "result" &&
-        (items.find((item) => item.id === edge.source)?.kind === "image" ||
-          !items.some((item) => item.id === edge.source)),
-    ).length;
-    if (
-      existing ||
-      uploadOnlyTarget ||
-      invalidReference ||
-      (limited && (max === 0 || incoming >= max))
-    ) {
+    const acceptsReference =
+      !limited ||
+      canConnectTarget(
+        items,
+        currentEdges,
+        source,
+        target,
+        command
+          ? {
+              source: "api",
+              model: command.model,
+              connectionId: command.providerConnectionId,
+            }
+          : undefined,
+      );
+    if (existing || uploadOnlyTarget || invalidReference || !acceptsReference) {
       const message = existing
         ? "这条连接已经存在。"
         : uploadOnlyTarget
