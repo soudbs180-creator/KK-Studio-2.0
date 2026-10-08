@@ -6,8 +6,10 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
-| TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | DONE | TASK-MODEL-001 | root |
+| TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | IN_PROGRESS | TASK-MODEL-001 | root |
 | TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | TASK-IMAGE-EDIT-001 | root |
+| TASK-UI-013 | 桌面标题栏与菜单合并为单排 | DONE | none | root |
+| TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | none | root |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
 | TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
 | T0 | 可复现候选源码与主线整合 | DONE | none | root |
@@ -18,7 +20,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | T3a | 原生素材及引用最终验收 | DONE | T1, T2 | root |
 | T3b | 完整项目包导出导入与恢复 | DONE | T3a | root |
 | T4 | 统一实际图片生成入口及健康语义 | DONE | T3b, TASK-PROV-001 | root |
-| T5 | 持久本地 TaskHost 与未知受理恢复 | REVIEW | T4 | root |
+| T5 | 持久本地 TaskHost 与未知受理恢复 | DONE | T4 | root |
 | T6 | Desktop ComfyUI最小链实现 | PARTIAL | T5 | root |
 | EXT-PROVIDER | 真实 Provider/GPU 生成验收 | BLOCKED | T4 | root |
 | EXT-COMFY | 真实 ComfyUI/模型验收 | BLOCKED | T6 | root |
@@ -107,6 +109,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AUDIT-20261003 | 全项目任务盘点与可本地闭环项收口 | DONE | TASK-MCP-REGISTRY-001, TASK-MCP-REGISTRY-002, TASK-MCP-PROTO-001, TASK-ORCH-REPLAN-001 | root |
 | TASK-GOV-GOALS-001 | 项目建设目标与验收基线 | DONE | TASK-AUDIT-20261003 | root |
 | TASK-UI-COMPONENT-BOUNDARY-001 | MCP 设置组件职责拆分 | DONE | TASK-GOV-GOALS-001 | root |
+| TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | T2, TASK-UI-GOV-003 | root |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
 
@@ -118,9 +121,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-IMAGE-EDIT-001-unified-mask`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-EDIT-001`
 - Modules: src/features/image-edit, src/features/creation, src/components/nodes, src/App.tsx, src-tauri/src/task_host.rs, tests, docs
-- Verification: PASS — 64c8b9d独立PASS：IM-010–013 CLOSED，无新增P1/P2；历史001–009 CLOSED保留。完整775root+172Agent+423browser零重试/Rust102/fresh Tauri/原生11组通过，Mask外0；reviewer另跑93定向与四个完整PNG保护探针，71源码/22工件匹配。本条只验证本地实现，文档收尾head单独补审；历史失败/平台中止/superseded保留，真实Provider/真机/用户视觉另由VERIFY-002 TODO登记。
-- Evidence: [docs/changes/2026-10-08-unified-image-mask/intent.md](../../docs/changes/2026-10-08-unified-image-mask/intent.md), [docs/changes/2026-10-08-unified-image-mask/spec.md](../../docs/changes/2026-10-08-unified-image-mask/spec.md), [docs/changes/2026-10-08-unified-image-mask/plan.md](../../docs/changes/2026-10-08-unified-image-mask/plan.md), [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/changes/2026-10-08-unified-image-mask/review.md](../../docs/changes/2026-10-08-unified-image-mask/review.md)
-- Updated: 2026-10-08
+- Verification: NOT_VERIFIED — e7cfd28源码及文档独立PASS为旧78cea基线的本地证据。当前承接1d6f640主线，保留卡片上方操作栏/启动/标题栏；组合完整验证与新SHA独立复审进行中。真实Provider/真机/用户验收继续由VERIFY-002登记。
+- Evidence: [docs/changes/2026-10-08-unified-image-mask/intent.md](../../docs/changes/2026-10-08-unified-image-mask/intent.md), [docs/changes/2026-10-08-unified-image-mask/spec.md](../../docs/changes/2026-10-08-unified-image-mask/spec.md), [docs/changes/2026-10-08-unified-image-mask/plan.md](../../docs/changes/2026-10-08-unified-image-mask/plan.md), [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/changes/2026-10-08-unified-image-mask/review.md](../../docs/changes/2026-10-08-unified-image-mask/review.md), [docs/changes/2026-10-09-unified-mask-main-integration/intent.md](../../docs/changes/2026-10-09-unified-mask-main-integration/intent.md), [docs/changes/2026-10-09-unified-mask-main-integration/spec.md](../../docs/changes/2026-10-09-unified-mask-main-integration/spec.md), [docs/changes/2026-10-09-unified-mask-main-integration/plan.md](../../docs/changes/2026-10-09-unified-mask-main-integration/plan.md), [docs/changes/2026-10-09-unified-mask-main-integration/verification.md](../../docs/changes/2026-10-09-unified-mask-main-integration/verification.md), [docs/changes/2026-10-09-unified-mask-main-integration/review.md](../../docs/changes/2026-10-09-unified-mask-main-integration/review.md)
+- Updated: 2026-10-09
 
 ## TASK-IMAGE-EDIT-VERIFY-002 — 图片编辑真实模型与移动设备效果验收
 
@@ -132,6 +135,30 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/image-edit, src/features/creation, tests, docs/features/feat-035-image-mask-editing.md
 - Verification: NOT_VERIFIED — 本轮未使用真实付费连接、物理手机或用户视觉验收；比例异常已自动拒绝，任意语义几何位移仍需人工确认。
 - Evidence: [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/features/feat-035-image-mask-editing.md](../../docs/features/feat-035-image-mask-editing.md)
+- Updated: 2026-10-08
+
+## TASK-UI-013 — 桌面标题栏与菜单合并为单排
+
+- Goal: 应用名、菜单和真实窗口控制共用一排，保留窗口与Web导航行为
+- Scope: Desktop TopBar/window controls/Tauri config；Web相邻回归
+- Acceptance: 单排40px与同状态原生DOM截图; 菜单、拖动、双击、最小化、最大化/还原、关闭真实操作；乱序读/旧错误/卸载/异步清理故障覆盖; Web三断点及完整verify、clientcheck、独立审查
+- Branch: `fix/TASK-UI-013-single-row-titlebar`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-013-single-row-titlebar`
+- Modules: src/components/TopBar.tsx, src/components/WindowControls.tsx, src/styles/desktop-titlebar.css, src-tauri, tests, docs
+- Verification: PASS — 最新2cb主线组合86e：AC1–3 PASS、7条故障RED→GREEN、verify733Node/172Agent（原skip8/2）、431browser431attempts零flaky/retry/skip、97Rust/fmt/clientcheck/fresh带Agent release；真实titlebar drag/min/max/restore/close0，UI13/T511/模型/首屏及Web两态3宽度PASS，独立关闭001/002。103上游task保留；同EXE2e69...1a5f，环境not-recorded。最终doc/Hosted/PR40合并/mainCI须独立回读，不冒充签名安装/真实Provider/Mobile能力。
+- Evidence: [docs/changes/2026-10-08-single-row-titlebar/intent.md](../../docs/changes/2026-10-08-single-row-titlebar/intent.md), [docs/changes/2026-10-08-single-row-titlebar/spec.md](../../docs/changes/2026-10-08-single-row-titlebar/spec.md), [docs/changes/2026-10-08-single-row-titlebar/plan.md](../../docs/changes/2026-10-08-single-row-titlebar/plan.md), [docs/changes/2026-10-08-single-row-titlebar/verification.md](../../docs/changes/2026-10-08-single-row-titlebar/verification.md), [docs/changes/2026-10-08-single-row-titlebar/review.md](../../docs/changes/2026-10-08-single-row-titlebar/review.md)
+- Updated: 2026-10-08
+
+## TASK-LAUNCH-001 — 桌面与网页启动体验及图标修复
+
+- Goal: 双击直接启动无控制台，恢复桌面图标，减少 Web 首屏负担
+- Scope: Windows launcher, shortcuts, Web first load
+- Acceptance: 无可见命令窗口且可取消失败可诊断; 当前图标与 release 新鲜度正确; Web 首屏按需加载且工作区历史保留
+- Branch: `codex/TASK-LAUNCH-001-quiet-start`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-LAUNCH-001`
+- Modules: scripts/windows, start-kk-studio.bat, src/App.tsx, FEAT-026
+- Verification: PASS — 精确组合5ecf77b/basef922：AC1–5 PASS，verify726Node/172Agent（既有skip8/2）、428browser428attempts零flaky/实际retry/skip、97Rust/fmt/clientcheck/fresh带Agent release；原生UI13/TaskHost11/模型/首屏与三宽度Web PASS，独立复审PASS且102上游task完整保留。同EXE1a943...c76e；本地elevation/runtime not-recorded。最终doc head补审/Hosted与PR38普通main推广须独立回读，不代填历史失败或真实Provider/安装/线上能力。
+- Evidence: [docs/changes/2026-10-08-startup-experience/verification.md](../../docs/changes/2026-10-08-startup-experience/verification.md)
 - Updated: 2026-10-08
 
 ## TASK-MODEL-001 — 账号级图片模型能力声明与提交校验
@@ -262,7 +289,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/T5-native-lifecycle`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/T5-native-lifecycle`
 - Modules: src/features/generation-server, src-tauri, src/features/creation, deploy
-- Verification: PASS — 最新主线1af组合731root/174Agent（原skip8/2）、409browser零flaky/零实际retry、Rust97/fmt/check/fresh native11组PASS；d521产品/harness9个hash保持一致。21ac独立源码/文档PASS关闭ENV003，但当前Hosted在空Registry Properties.Name严格模式失败、native未启动；正确空对象RED后四处逐项枚举、26边界回归PASS，当前新head补审/Hosted与主线整合待满足。PROV005/006独立开放。
+- Verification: PASS — 04260ad精确独立补审PASS关闭ENV004；26策略及额外9边界回归通过；Hosted37770000879/37769995909全部SUCCESS，native11组/5CDP启动与策略清理通过。PR37普通squash合入main78cea37，完整tree一致；合并后main37773335548 verify/deploy-linux SUCCESS。Hosted实际checkout source7849310为base1af+candidate042合成merge，完整tree等同042/78，9/9源码hash核验；原收据身份不改写。PROV005/006继续TODO。
 - Evidence: [docs/changes/2026-09-19-taskhost-durable-intent/verification.md](../../docs/changes/2026-09-19-taskhost-durable-intent/verification.md), [tests/browser/task-intent.spec.ts](../../tests/browser/task-intent.spec.ts), [tests/unit/nativeTaskHost.test.ts](../../tests/unit/nativeTaskHost.test.ts), [deploy/README.md](../../deploy/README.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md), [tests/desktop/taskhost-lifecycle.mjs](../../tests/desktop/taskhost-lifecycle.mjs), [tests/desktop/native-ci-policy.ps1](../../tests/desktop/native-ci-policy.ps1)
 - Updated: 2026-10-08
 
@@ -1325,6 +1352,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — MCP 设置容器已拆为表单和列表职责，UI 标准 194 文件/0 违规；定向 TypeScript、ESLint 和 Prettier 通过，MCP 设置浏览器回归在完整 Playwright 中通过。
 - Evidence: [docs/changes/2026-10-03-ui-component-boundary/intent.md](../../docs/changes/2026-10-03-ui-component-boundary/intent.md), [docs/changes/2026-10-03-ui-component-boundary/spec.md](../../docs/changes/2026-10-03-ui-component-boundary/spec.md), [docs/changes/2026-10-03-ui-component-boundary/plan.md](../../docs/changes/2026-10-03-ui-component-boundary/plan.md), [docs/changes/2026-10-03-ui-component-boundary/verification.md](../../docs/changes/2026-10-03-ui-component-boundary/verification.md), [docs/changes/2026-10-03-ui-component-boundary/review.md](../../docs/changes/2026-10-03-ui-component-boundary/review.md), [src/components/settings/McpSettings.tsx](../../src/components/settings/McpSettings.tsx), [src/components/settings/McpServerForm.tsx](../../src/components/settings/McpServerForm.tsx), [src/components/settings/McpServerList.tsx](../../src/components/settings/McpServerList.tsx)
 - Updated: 2026-10-03
+
+## TASK-UI-011 — 图片选择工具栏与新增页面 UI 规则回归
+
+- Goal: 点击图片卡片后在上方显示共享操作栏，消除图片内部动作与新页面的实际规范偏差
+- Scope: 参考图片与结果卡片选择、操作、缩放/拖动定位以及模型设置/阶段工作台/资源页面回归
+- Acceptance: 单击图片只选中，未选中时无工具栏，选中后动作在卡片上方; 参考与结果图片复用共享操作，预览/重绘/对比/收藏/删除保持真实行为和原门禁; 工具栏随拖动、平移、缩放定位并保持标准控件尺寸，不遮挡图片或对话; Escape/空白/切换选中关闭，键盘与窄屏操作可用; Web 与 fresh Desktop 分别具有真实页面、DOM、截图证据，相关及完整验证通过
+- Branch: `codex/TASK-UI-011-image-selection-actions`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-011-image-selection-actions`
+- Modules: src/components/nodes, src/components/canvas, src/features/compare, src/styles, tests/browser, docs/UI_RULES.md
+- Verification: PASS — 精确产品7d27265承接main78cea37：完整verify root723/731(8原skip)、Agent172/174(2原skip)、423/423browser零flaky/零实际retry；Rust97/fmt/clientcheck/fresh UI13(385hash)+TaskHost11(9hash/5CDP)+同EXE模型能力PASS。独立补审PASS、R1/R2 CLOSED，当前PR Hosted37776187321及push37776180456必需检查SUCCESS。Task声明范围完成；最终文档head精确补审/Hosted与普通主线推广另绑。历史失败保留；不代表全项目/付费Provider/Mobile/安装/最终视觉验收。
+- Evidence: [docs/changes/2026-10-08-image-selection-actions/intent.md](../../docs/changes/2026-10-08-image-selection-actions/intent.md), [docs/changes/2026-10-08-image-selection-actions/spec.md](../../docs/changes/2026-10-08-image-selection-actions/spec.md), [docs/changes/2026-10-08-image-selection-actions/plan.md](../../docs/changes/2026-10-08-image-selection-actions/plan.md), [docs/changes/2026-10-08-image-selection-actions/verification.md](../../docs/changes/2026-10-08-image-selection-actions/verification.md), [docs/changes/2026-10-08-image-selection-actions/review.md](../../docs/changes/2026-10-08-image-selection-actions/review.md)
+- Updated: 2026-10-08
 
 ## TASK-PROV-005 — Desktop 供应商非秘密配置 durable 保存与恢复
 

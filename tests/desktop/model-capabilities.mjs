@@ -143,7 +143,11 @@ try {
     .first()
     .setInputFiles(path.join(root, "public/fixtures/demo/blue-hour.png"));
   await expect(item.locator(".uploaded-image")).toBeVisible();
-  await item.getByRole("button", { name: "重绘参考图片", exact: true }).click();
+  await item.locator(".uploaded-image").click();
+  await page
+    .getByRole("toolbar")
+    .getByRole("button", { name: "重绘参考图片", exact: true })
+    .click();
   const redraw = page.getByRole("dialog", { name: "重绘参考图片" });
   await redraw.getByLabel("重绘指令").fill("调整背景");
   await expect(

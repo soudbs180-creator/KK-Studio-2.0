@@ -17,6 +17,14 @@ async function addSecondImage(page: Page) {
   return node;
 }
 
+async function imageActions(page: Page, node: ReturnType<Page["getByTestId"]>) {
+  await node.focus();
+  await node.press("Enter");
+  const actions = page.getByRole("toolbar", { name: /^图片操作：/ });
+  await expect(actions).toBeVisible();
+  return actions;
+}
+
 test("two canvas images open a comparison and the slider supports keyboard steps", async ({
   page,
 }) => {
@@ -33,7 +41,11 @@ test("two canvas images open a comparison and the slider supports keyboard steps
   expect(styles[0]).toContain("/assets/index-");
   const first = page.getByTestId("canvas-node-image");
   await uploadImage(page, first);
-  await first.getByRole("button", { name: /加入对比/ }).click();
+  await (
+    await imageActions(page, first)
+  )
+    .getByRole("button", { name: /加入对比/ })
+    .click();
   const selection = page.getByRole("region", { name: "图片对比选择" });
   await expect(selection).toContainText("1/4");
   await expect(
@@ -41,7 +53,11 @@ test("two canvas images open a comparison and the slider supports keyboard steps
   ).toBeDisabled();
 
   const second = await addSecondImage(page);
-  await second.getByRole("button", { name: /加入对比/ }).click();
+  await (
+    await imageActions(page, second)
+  )
+    .getByRole("button", { name: /加入对比/ })
+    .click();
   await expect(selection).toContainText("2/4");
   const open = selection.getByRole("button", { name: "打开对比" });
   const trayBox = (await selection.boundingBox())!;
@@ -163,13 +179,17 @@ test("narrow canvas keeps the comparison controls reachable and slider draggable
     await uploadImage(page, first);
     await page.getByRole("button", { name: "小地图" }).click();
     await page.getByRole("button", { name: "定位 blue-hour.png" }).click();
-    const firstCompare = first.getByRole("button", { name: /加入对比/ });
-    expect((await firstCompare.boundingBox())!.height).toBeGreaterThanOrEqual(
-      44,
-    );
+    const firstCompare = (await imageActions(page, first)).getByRole("button", {
+      name: /加入对比/,
+    });
+    expect((await firstCompare.boundingBox())!.height).toBeCloseTo(32, 0);
     await firstCompare.click();
     const second = await addSecondImage(page);
-    await second.getByRole("button", { name: /加入对比/ }).click();
+    await (
+      await imageActions(page, second)
+    )
+      .getByRole("button", { name: /加入对比/ })
+      .click();
     const selection = page.getByRole("region", { name: "图片对比选择" });
     await expect(
       selection.getByRole("button", { name: "打开对比" }),

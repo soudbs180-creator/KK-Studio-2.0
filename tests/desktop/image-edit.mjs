@@ -27,6 +27,13 @@ const requests = [],
 const fixtureProvider = `Image edit fixture ${randomUUID()}`;
 let resultBase64, child, browser, page, vaultId, receipt;
 let credentialConflictPreserved = false;
+async function canvasImageAction(node, name) {
+  await node.locator(".uploaded-image").click();
+  const toolbar = page.getByRole("toolbar", { name: /^图片操作：/ });
+  await expect(toolbar).toBeVisible();
+  await expect(node.getByRole("button", { name, exact: true })).toHaveCount(0);
+  await toolbar.getByRole("button", { name, exact: true }).click();
+}
 const server = createServer(async (request, response) => {
   try {
     assert.equal(request.url, "/v1/images/edits");
@@ -245,7 +252,7 @@ try {
       buffer: Buffer.from(original, "base64"),
     });
   await expect(node.locator(".uploaded-image")).toBeVisible();
-  await node.getByRole("button", { name: "重绘参考图片" }).click();
+  await canvasImageAction(node, "重绘参考图片");
   const dialog = page.getByRole("dialog", { name: "重绘参考图片" });
   await dialog.getByRole("button", { name: "框选区域", exact: true }).click();
   const image = await dialog.locator("canvas.image-original").boundingBox();
@@ -385,7 +392,7 @@ try {
     project.items[0].imageEditDraft,
   );
   await dialog.getByRole("button", { name: "取消", exact: true }).click();
-  await node.getByRole("button", { name: "放大查看参考图片" }).click();
+  await canvasImageAction(node, "放大查看参考图片");
   const lightbox = page.getByRole("dialog", { name: /预览/ });
   await expect(
     lightbox.getByRole("navigation", { name: "相关图片" }).getByRole("button"),

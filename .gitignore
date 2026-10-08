@@ -21,6 +21,7 @@ src-tauri/target/
 /pnpm-lock.yaml
 /pnpm-workspace.yaml
 /*.lnk
+/KK Studio Launcher.exe
 /*.lnk.before-ui-runtime-*.bak
 /start-kk-studio.bat.before-ui-runtime-*.bak
 

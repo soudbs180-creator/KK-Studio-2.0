@@ -80,7 +80,8 @@
       "T2",
       "UI-004",
       "TASK-UI-006",
-      "TASK-CANVAS-KAWORKAI-001"
+      "TASK-CANVAS-KAWORKAI-001",
+      "TASK-UI-011"
     ],
     "updated": "2026-09-30",
     "platforms": [
@@ -1161,7 +1162,10 @@
       "src/components/SidebarProjectEntry.tsx",
       "src/components/CatalogPanel.tsx",
       "src/components/SavedPane.tsx",
-      "src/App.tsx"
+      "src/App.tsx",
+      "src/components/TopBar.tsx",
+      "src/components/WindowControls.tsx",
+      "src/styles/desktop-titlebar.css"
     ],
     "tests": [
       "tests/browser/sidebar.spec.ts",
@@ -1169,15 +1173,19 @@
       "tests/browser/catalog-pages.spec.ts",
       "tests/browser/ui-interactions.spec.ts",
       "tests/browser/ui-interaction-matrix.spec.ts",
-      "tests/desktop/project-landing.mjs"
+      "tests/desktop/project-landing.mjs",
+      "tests/browser/titlebar.spec.ts",
+      "tests/desktop/titlebar.mjs",
+      "tests/unit/windowControls.test.ts"
     ],
     "tasks": [
       "TASK-UI-DISMISS-002",
       "UI-004",
       "TASK-UI-006",
-      "TASK-PROJECT-SIDEBAR-001"
+      "TASK-PROJECT-SIDEBAR-001",
+      "TASK-UI-013"
     ],
-    "updated": "2026-09-30",
+    "updated": "2026-10-08",
     "platforms": [
       "web",
       "desktop"
@@ -1198,6 +1206,14 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-29-project-landing/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-08-single-row-titlebar/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-08-single-row-titlebar/verification.md"
       }
     ]
   },
@@ -1270,11 +1286,12 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-026-launcher.md",
-    "summary": "Windows启动/portable发布与完整Agent/离线WebView2 NSIS已通过本机隔离安装、重装、损坏修复、卸载再装保留项目；干净系统、低版回滚、签名与正式发布仍待T7。",
+    "summary": "Windows GUI启动器后台检查当前release并支持进度/取消/失败日志，快捷方式使用当前内嵌Logo；portable/NSIS本机验收已具备，干净系统、低版回滚、签名与正式发布仍待T7。",
     "entryPoints": [
       "start-kk-studio.bat",
       "verify-kk-studio.cmd",
       "启动 KK Studio.lnk",
+      "npm run client:shortcut",
       "scripts/windows/desktop-release.mjs",
       "npm run client:installer"
     ],
@@ -1282,6 +1299,8 @@
       "start-kk-studio.bat",
       "verify-kk-studio.cmd",
       "scripts/windows/desktop-release.mjs",
+      "scripts/windows/desktop-launcher.cs",
+      "scripts/windows/install-shortcut.ps1",
       "docs/engineering/LAUNCHER.md",
       "src-tauri/tauri.installer.conf.json",
       "scripts/windows/installer-inputs.mjs",
@@ -1291,6 +1310,7 @@
     ],
     "tests": [
       "tests/unit/desktopRelease.test.ts",
+      "tests/unit/desktopLauncher.test.ts",
       "tests/deploy/release-scripts.test.mjs",
       "tests/unit/installerReceipt.test.ts",
       "tests/unit/installerGuards.test.ts",
@@ -1298,9 +1318,10 @@
     ],
     "tasks": [
       "T7",
-      "TASK-DESKTOP-INSTALLER-001"
+      "TASK-DESKTOP-INSTALLER-001",
+      "TASK-LAUNCH-001"
     ],
-    "updated": "2026-09-30",
+    "updated": "2026-10-08",
     "platforms": [
       "desktop"
     ],

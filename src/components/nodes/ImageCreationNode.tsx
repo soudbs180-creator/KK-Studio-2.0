@@ -8,9 +8,8 @@ import type {
   NodeEditingProps,
 } from "../../domain/canvasItems";
 import DemoMediaPreview from "./DemoMediaPreview";
-import ImageRedrawDialog from "./ImageRedrawDialog";
 import { readReferenceImages } from "./referenceUpload";
-import CompareImageButton from "../../features/compare/CompareImageButton";
+import CanvasImageActions from "./CanvasImageActions";
 
 export default function ImageCreationNode({
   item,
@@ -34,11 +33,11 @@ export default function ImageCreationNode({
   const [error, setError] = useState("");
   const [previewOpen, setPreviewOpen] = useState(false);
   const command = useContext(CanvasImageCommandContext);
-  const preview = () =>
+  const openPreview = () =>
     command?.openPreview && item.assetId
       ? command.openPreview(item.id, "参考图片")
       : setPreviewOpen(true);
-  const [redrawOpen, setRedrawOpen] = useState(false);
+  const preview = useRef<HTMLDivElement>(null);
   const file = useRef<HTMLInputElement>(null);
   const referenceFile = useRef<HTMLInputElement>(null);
   const referenceSlot = useRef<CanvasReference["slot"]>();
@@ -129,6 +128,7 @@ export default function ImageCreationNode({
         {item.referenceOnly ? item.title : "图片"}
       </span>
       <div
+        ref={preview}
         className="image-preview"
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
@@ -142,29 +142,12 @@ export default function ImageCreationNode({
               className="uploaded-image"
               src={image}
               alt="参考图片"
-              onClick={preview}
+              draggable={false}
+              onDoubleClick={(event) => {
+                event.stopPropagation();
+                openPreview();
+              }}
             />
-            <div className="image-preview-actions">
-              <button
-                type="button"
-                aria-label="放大查看参考图片"
-                onPointerDown={(event) => event.stopPropagation()}
-                onClick={preview}
-              >
-                放大
-              </button>
-              <button
-                type="button"
-                aria-label="重绘参考图片"
-                onPointerDown={(event) => event.stopPropagation()}
-                onClick={() => {
-                  setRedrawOpen(true);
-                }}
-              >
-                重绘
-              </button>
-            </div>
-            <CompareImageButton item={item} />
           </>
         ) : (
           <img
@@ -174,6 +157,15 @@ export default function ImageCreationNode({
           />
         )}
       </div>
+      {image && (
+        <CanvasImageActions
+          item={item}
+          anchor={preview}
+          selected={selected}
+          onPreview={openPreview}
+          references={references}
+        />
+      )}
       {!selected && error && (
         <p className="upload-feedback" role="status">
           {error}
@@ -217,12 +209,6 @@ export default function ImageCreationNode({
           }}
           onClose={() => setPreviewOpen(false)}
           onTextChange={() => undefined}
-        />
-      )}
-      {redrawOpen && (
-        <ImageRedrawDialog
-          references={references}
-          onClose={() => setRedrawOpen(false)}
         />
       )}
     </div>

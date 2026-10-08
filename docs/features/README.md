@@ -26,7 +26,7 @@
 
 | ID | 功能 | 状态 | 卡片 | 关联任务 |
 | --- | --- | --- | --- | --- |
-| FEAT-001 | 创作画布（节点/连线/编辑） | REAL（真实可用） | [卡片](feat-001-canvas-workbench.md) | T2, UI-004, TASK-UI-006, TASK-CANVAS-KAWORKAI-001 |
+| FEAT-001 | 创作画布（节点/连线/编辑） | REAL（真实可用） | [卡片](feat-001-canvas-workbench.md) | T2, UI-004, TASK-UI-006, TASK-CANVAS-KAWORKAI-001, TASK-UI-011 |
 | FEAT-036 | 画布图片对比 | PARTIAL（部分可用） | [卡片](feat-036-image-compare.md) | TASK-COMPARE-001, TASK-COMPARE-002, UI-004 |
 
 ## 创作生成
@@ -75,9 +75,9 @@
 | FEAT-015 | 项目与项目包 | PARTIAL（部分可用） | [卡片](feat-015-projects.md) | T3a, T3b, T9, TASK-DS-002, TASK-PROJECT-SIDEBAR-001 |
 | FEAT-016 | 任务工作台与审批 | PARTIAL（部分可用） | [卡片](feat-016-task-workbench.md) | T4, T5, UI-003, TASK-UI-006, TASK-ORCH-002, TASK-TASKSTATE-001 |
 | FEAT-022 | 设置中心 | PARTIAL（部分可用） | [卡片](feat-022-settings.md) | TASK-PROV-001, UI-004, TASK-DS-001, TASK-DS-002, TASK-UI-005, TASK-AGENT-001 |
-| FEAT-023 | 导航、侧栏与多创作页 | PARTIAL（部分可用） | [卡片](feat-023-navigation.md) | TASK-UI-DISMISS-002, UI-004, TASK-UI-006, TASK-PROJECT-SIDEBAR-001 |
+| FEAT-023 | 导航、侧栏与多创作页 | PARTIAL（部分可用） | [卡片](feat-023-navigation.md) | TASK-UI-DISMISS-002, UI-004, TASK-UI-006, TASK-PROJECT-SIDEBAR-001, TASK-UI-013 |
 | FEAT-025 | 本地演示素材管线（待替换 seam） | PROTOTYPE（仅演示/UI） | [卡片](feat-025-demo-media.md) | UI-003, BACKEND-MEDIA-001, BACKEND-TEXT-NODE |
-| FEAT-026 | Windows 启动器与分享包 | PARTIAL（部分可用） | [卡片](feat-026-launcher.md) | T7, TASK-DESKTOP-INSTALLER-001 |
+| FEAT-026 | Windows 启动器与分享包 | PARTIAL（部分可用） | [卡片](feat-026-launcher.md) | T7, TASK-DESKTOP-INSTALLER-001, TASK-LAUNCH-001 |
 
 ## 后端服务
 

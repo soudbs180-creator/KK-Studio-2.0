@@ -131,7 +131,7 @@ function buildDesktopRelease(projectRoot) {
   const result = spawnSync(
     process.execPath,
     [resolveNpmCliPath(), "run", "client:build:agent", "--", "--no-bundle"],
-    { cwd: projectRoot, stdio: "inherit" },
+    { cwd: projectRoot, stdio: "inherit", windowsHide: true },
   );
   if (result.error) throw result.error;
   if (result.status !== 0) {

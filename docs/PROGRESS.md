@@ -1,5 +1,50 @@
 # 当前进度
 
+## 2026-10-09 统一 Mask 承接最新主线（进行中）
+
+用户已授权合并完成检查的分支。Mask e7cfd28在旧78cea基线独立PASS；当前承接main1d6f640（图片操作栏、静默启动、单排标题栏）。三个产品冲突逐项保留双方行为，Desktop/Web将从当前主线自动递增。当前组合尚未验证，不用历史PASS代填；新源码审查、完整两端检查和Hosted/main CI均须实际完成。FEAT-035保持PARTIAL、真实效果/真机/用户验收任务保持TODO。下方保留各旧SHA的历史事实。
+
+## 2026-10-08 单排标题栏最新主线组合验收完成
+
+PR38 已普通合入main2cb73d，source a550f31与landing完整tree相同，当前Hosted成功；PR38 合并后 main37797150560 verify/deploy-linux SUCCESS，delivery 按 main push 条件 skipped；实际收据已归档。 TASK-UI-013产品86e712f承接该主线，7条故障先RED后GREEN，001/002当前独立CLOSED，完整431browser（431attempts零flaky/retry）、97Rust、fresh带Agent titlebar/UI13/T511/模型/首屏及Web两态3宽度全部PASS。Desktop2.1.10/Web2.1.10/Mobile规划2.1.1；104项DONE61/TODO13/PARTIAL26/BLOCKED4，103上游对象完整保留。最终doc head补审/当前Hosted、普通PR40合并与main CI另按实际回读，不能用旧门禁代替。当前恢复入口[最新验收](changes/2026-10-08-single-row-titlebar/verification.md)及[PR40](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/40)。UI012/蒙版仍原执行者维护；保留历史、工作树、快捷方式引用和用户数据，不推断既有快捷方式已切到最终稳定包。
+
+## 2026-10-08 标题栏承接静默启动主线
+
+PR38 source a550f31 经独立审查与最新 Hosted37792689982/37792680207 全部SUCCESS，普通squash落地main2cb73d，完整tree相同；合并后main37797150560仍在运行。TASK-UI-013保留静默启动/首页按需加载、图片上方动作和T5生命周期；预检发现001乱序状态及002异步监听清理，真实组件7条先RED后GREEN，独立关闭和完整新组合验收待完成。当前账本104项（DONE60/TODO13/PARTIAL26/BLOCKED4/REVIEW1），UI012/蒙版原在途执行者保留。以下两侧记录按各自时间保留；不能将旧证据或中途GREEN当最终合并通过。
+
+
+## 2026-10-08 启动分支最新主线组合验收完成
+
+TASK-LAUNCH-001 精确产品5ecf77b/basef922完整428browser（428attempts零flaky/实际retry）、97Rust、fresh带Agent native UI13+TaskHost11+模型/首屏、三宽度Web全部PASS；独立task_audit_reviewer复审PASS，main102项账本和核心TaskHost/工作台行为完整保留。Desktop2.1.9/Web2.1.10/Mobile规划2.1.1；权威103项DONE60/TODO13/PARTIAL26/BLOCKED4。任务声明scope完成；最终doc head补审、当前Hosted、普通PR38合并和主线CI以实际交付回读，不能用旧提交替代新门禁。历史两侧段落保留其当时时间含义，当前恢复入口为[最新验收](changes/2026-10-08-startup-experience/verification.md)与[PR38](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/38)。UI012/蒙版在途仍由原执行者负责；未推断现有快捷方式已换成最终稳定产物，不归档其引用的树。
+
+## 2026-10-08 已验收启动分支承接主线
+
+用户本轮明确授权“合并已经完成检查的分支”。在原登记 TASK-LAUNCH-001 clean worktree 上串行承接 main@f922cf8e3e3318c5b01a922eaed424b11ccb2d0a；原作者已结束，root 负责本次组合与交付。保留图片卡片上方选择动作、T5 unknown/归档/重试门禁及静默启动/Unicode快捷方式/首屏按需加载。历史两侧记录逐段保留；版本承接最新主线后自动调配。组合完整验证、新 Web/Tauri、原生启动与 UI/TaskHost/模型能力回归、精确独立审查及当前 Hosted 仍待实际执行，本任务暂 REVIEW。UI012与蒙版仍由原执行者在途维护，不纳入本次合并。用户现有程序不被强制停止，快捷方式树保留。
+
+## 2026-10-08 图片操作栏与T5组合验收完成
+
+TASK-UI-011 产品7d27265/base78cea37完整423browser（零flaky/零实际retry）、97Rust、fresh UI13+TaskHost11+同EXE模型能力PASS；精确独立补审PASS关闭R1/R2，当前PR39 Hosted37776187321及push37776180456全部必需检查SUCCESS。图片单击仅选择，上方显示唯一标准32px动作栏；顶部/390pxHUD/重选与真实非空工作台规则均核验。任务DONE；随后仅补文档与证据，最终文档head独立/Hosted及普通合并/落地tree/主线CI另绑，不能让旧提交门禁替代新提交。
+
+T5 PR37已合入main78cea37，source042完整tree相同；合并后main37773335548 verify/deploy-linux SUCCESS。当前本分支权威102项：DONE59/TODO13/PARTIAL26/BLOCKED4。源码Desktop2.1.8/Web2.1.9/Mobile规划2.1.1；静默启动/单排标题栏/UI012/蒙版由原执行者继续维护并分别验收，不能从本轮源码构建推断用户现有快捷方式已换包。PROV005/006、媒体/编排执行、报价回执、工具/开发插件及外部/移动/安装/最终视觉验收仍开放。
+
+当前恢复入口：[本轮验证](changes/2026-10-08-image-selection-actions/verification.md)、[状态报告](changes/2026-10-08-image-selection-actions/status.md)、机器账本与实际PR39/main。以下各轮段落保留为当时历史，当前事实以上述精确证据及后续交付回执为准。
+
+## 2026-10-08 T5落地与图片操作栏组合候选
+
+PR #37 已按授权普通squash合入 main@78cea37af9359fd2d9f58f2854525516deee8a06；source04260ad精确独立PASS关闭ENV004，Hosted37770000879/37769995909全部SUCCESS、真实原生11组和策略清理通过，source/landing完整tree一致。T5 DONE，PROV005/006 TODO；合并后main CI另绑。
+
+TASK-UI-011 在原bcc8d34上承接新main，保留T5 retryableOutputIndices及UI共享32px按钮，账本102项（DONE58/TODO13/PARTIAL26/BLOCKED4/REVIEW1）。候选自动递增Desktop2.1.8/Web2.1.9/Mobile规划2.1.1；新的组合完整verify/fresh native、精确补审/Hosted尚待实际完成，不复用旧提交CI。静默启动、单排标题栏、UI012和统一蒙版为其他执行者在途分支，分别保留验收与归属。
+
+以下为合并前各轮历史记录；旧待验收描述不替代上述已发生的合并结果。
+
+## 2026-10-08 图片选择动作与新页面规则返修
+
+PR #36 已 squash 合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，合并后 Hosted37756981271 verify/deploy-linux PASS。TASK-UI-011 承接该主线：单击参考/结果图片仅选择，唯一动作栏在卡片上方；保持预览/重绘/对比/收藏/删除、精确模型与原件门禁。顶部拖动和 Escape 后同图重选的三宽度恢复、非空队列/输出/评论共享32px动作已返修。最新24cfca1完整verify723root/172Agent（原skip8/2）、422浏览器无flaky/无实际retry、fresh Native13组及模型能力PASS；976db独立技术补审PASS、R1/R2 CLOSED；最终文档head/Hosted仍待满足，任务REVIEW。源码Desktop2.1.7/Web2.1.8/Mobile规划2.1.1；本分支账本100项：DONE57/TODO11/PARTIAL27/BLOCKED4/REVIEW1。T5独立21ac补审PASS但Hosted空Registry属性失败、native未启动；26边界返修后新head/CI待满足，未合入；不能将本机或旧source结果当当前Hosted成功。
+
+下面 Model“未合并”等段落保留为当时历史，当前状态以本段与本轮 verification 为准。
+
+先读取[本轮验收](changes/2026-10-08-image-selection-actions/verification.md)、review、task-ledger 和实际 origin/main；并发 TASK-LAUNCH-001、TASK-UI-012、TASK-IMAGE-EDIT-001 由各自执行者维护，未验收内容不能抢合或覆盖。
+
 ## 2026-10-08 统一 Mask 继续审查返修
 
 TASK-IMAGE-EDIT-001 本地实现 DONE：源码 head64c8b9d 于23:38:25+08独立PASS，IM-010–013全部CLOSED，未发现新增P1/P2。修正跨端schema、缺失快照恢复、可撤销清空及区域意见重复；旧恢复全文结构歧义先RED后GREEN。完整verify775root/172Agent/423browser零retry/flaky、Rust102、fresh Tauri/原生11组通过，Mask外0、凭据保护/清理通过；reviewer另跑93定向和四个完整PNG保护探针，71源码/22工件匹配。收尾仅文档，最终文档head另补审；历史失败/平台中止/superseded保留。Desktop2.1.9/Web2.1.10/Mobile规划2.1.1；FEAT-035 PARTIAL、VERIFY-002 TODO，真实Provider/真机/用户视觉未验。见[验证](changes/2026-10-08-unified-image-mask/verification.md)和[审查](changes/2026-10-08-unified-image-mask/review.md)，未推送/合入main/发布。下方保留历史范围。
@@ -33,6 +78,64 @@ T5 本机产品验收十一组与精确源码 8399 补审 PASS，但其 Hosted n
 - 独立 npm ci；最终返修完整 verify exit 0：root 708/716、Agent 172/174（原 skip 8/2）、browser 401/401 无 flaky；主线组合 Rust 97/fmt/check、新 native release 十一组通过。新增 `client:taskhost:test` 接入 Windows CI。源码 Desktop 2.1.6 / Web 2.1.7，Mobile 规划 2.1.1。
 - T5 当前 REVIEW，最终精确 head 审查、PR/Hosted 与主线推广以新收据为准。[验证](changes/2026-10-08-taskhost-native-lifecycle/verification.md)与[盘点/优先级](changes/2026-10-08-taskhost-native-lifecycle/status.md)保存当前事实。
 - 新增 P1 TASK-PROV-005（供应商非秘密配置的异常退出 durable 恢复）及 TASK-PROV-006（既有 native image 连接/容量/health 统一）；未实现仍为 TODO。所有 Provider/GPU、ComfyUI、VPS/Mobile 和安装/视觉终验不因本机 fixture 升级。
+
+## 2026-10-08 桌面与网页启动体验
+
+6fe7ccb Unicode独立补审PASS后，Hosted暴露临时目录8.3别名的测试误断言；fixture创建前用原生realpath，全部严格产品断言保留，产品源码未再改。本次native3/3及完整verify726Node/172Agent/413browser零flaky PASS；最终精确SHA收据为`startup-review-canonical-temp-20261008.md`，当前Hosted按新HEAD回读，旧失败与审查留档。
+
+PR#38首轮7a1c3358的Hosted verify发现LAUNCH-R4：WSH快捷方式接口不能处理系统ACP无法表示的路径字符。本地增强中文+emoji路径复现RED，改为Unicode Shell Link后真实lnk/重复安装native3/3 GREEN，完整verify726Node/172Agent/413browser再次PASS；实际桌面宽接口重装成功，前端/native产物哈希不变。旧CI失败保留；新HEAD独立补审及Hosted结果分别绑定，见本轮验证追加段。
+
+TASK-LAUNCH-001 本地AC完成：桌面/canonical快捷方式使用内嵌Logo GUI入口，实际最新release免编译窗口304ms，冷重建与正常启动均GUI退出0/无新增可见控制台；窗口Logo与原icon逐像素一致。Web首屏延后隐藏工作区并按需加载页面，历史/焦点/错误恢复保留。推送前融合最新main@1af0357b的模型能力，最终候选Desktop2.1.7/Web2.1.8/Mobile2.1.1；完整verify726/734Node（8原skip）、172/174Agent（2原skip）、413/413browser零flaky，clientcheck/newTauri与原生能力回归PASS。最新main首屏JS995,957→806,571（减19.0%）、CSS完全一致；受控5次cold中位数1656→1405ms，非线上保证。独立694a237/f74548d审查PASS、R1/R2/R3关闭，最终组合精确SHA收据见[本轮验证](changes/2026-10-08-startup-experience/verification.md)。本轮main/线上尚未推广；实际快捷方式引用本任务树，须保留至稳定产物推广。
+## 2026-10-08 单排标题栏主线集成准备
+
+用户明确授权合并已检查分支，TASK-UI-013原535 clean且原作者已结束，由root单一写入承接main f922。保留UI011图片上方动作及T5生命周期，App CSS按统一末端顺序合并。当前为预备组合REVIEW；启动PR38落地后再承接最新main并做最终当前source/fresh native/独立review/Hosted和普通合并，不把旧535的验收冒充新组合。历史双方段落保留其时间含义；UI012/蒙版仍由原在途执行者维护。
+
+## 2026-10-08 图片操作栏与T5组合验收完成
+
+TASK-UI-011 产品7d27265/base78cea37完整423browser（零flaky/零实际retry）、97Rust、fresh UI13+TaskHost11+同EXE模型能力PASS；精确独立补审PASS关闭R1/R2，当前PR39 Hosted37776187321及push37776180456全部必需检查SUCCESS。图片单击仅选择，上方显示唯一标准32px动作栏；顶部/390pxHUD/重选与真实非空工作台规则均核验。任务DONE；随后仅补文档与证据，最终文档head独立/Hosted及普通合并/落地tree/主线CI另绑，不能让旧提交门禁替代新提交。
+
+T5 PR37已合入main78cea37，source042完整tree相同；合并后main37773335548 verify/deploy-linux SUCCESS。当前本分支权威102项：DONE59/TODO13/PARTIAL26/BLOCKED4。源码Desktop2.1.8/Web2.1.9/Mobile规划2.1.1；静默启动/单排标题栏/UI012/蒙版由原执行者继续维护并分别验收，不能从本轮源码构建推断用户现有快捷方式已换包。PROV005/006、媒体/编排执行、报价回执、工具/开发插件及外部/移动/安装/最终视觉验收仍开放。
+
+当前恢复入口：[本轮验证](changes/2026-10-08-image-selection-actions/verification.md)、[状态报告](changes/2026-10-08-image-selection-actions/status.md)、机器账本与实际PR39/main。以下各轮段落保留为当时历史，当前事实以上述精确证据及后续交付回执为准。
+
+## 2026-10-08 T5落地与图片操作栏组合候选
+
+PR #37 已按授权普通squash合入 main@78cea37af9359fd2d9f58f2854525516deee8a06；source04260ad精确独立PASS关闭ENV004，Hosted37770000879/37769995909全部SUCCESS、真实原生11组和策略清理通过，source/landing完整tree一致。T5 DONE，PROV005/006 TODO；合并后main CI另绑。
+
+TASK-UI-011 在原bcc8d34上承接新main，保留T5 retryableOutputIndices及UI共享32px按钮，账本102项（DONE58/TODO13/PARTIAL26/BLOCKED4/REVIEW1）。候选自动递增Desktop2.1.8/Web2.1.9/Mobile规划2.1.1；新的组合完整verify/fresh native、精确补审/Hosted尚待实际完成，不复用旧提交CI。静默启动、单排标题栏、UI012和统一蒙版为其他执行者在途分支，分别保留验收与归属。
+
+以下为合并前各轮历史记录；旧待验收描述不替代上述已发生的合并结果。
+
+## 2026-10-08 图片选择动作与新页面规则返修
+
+PR #36 已 squash 合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，合并后 Hosted37756981271 verify/deploy-linux PASS。TASK-UI-011 承接该主线：单击参考/结果图片仅选择，唯一动作栏在卡片上方；保持预览/重绘/对比/收藏/删除、精确模型与原件门禁。顶部拖动和 Escape 后同图重选的三宽度恢复、非空队列/输出/评论共享32px动作已返修。最新24cfca1完整verify723root/172Agent（原skip8/2）、422浏览器无flaky/无实际retry、fresh Native13组及模型能力PASS；976db独立技术补审PASS、R1/R2 CLOSED；最终文档head/Hosted仍待满足，任务REVIEW。源码Desktop2.1.7/Web2.1.8/Mobile规划2.1.1；本分支账本100项：DONE57/TODO11/PARTIAL27/BLOCKED4/REVIEW1。T5独立21ac补审PASS但Hosted空Registry属性失败、native未启动；26边界返修后新head/CI待满足，未合入；不能将本机或旧source结果当当前Hosted成功。
+
+下面 Model“未合并”等段落保留为当时历史，当前状态以本段与本轮 verification 为准。
+
+先读取[本轮验收](changes/2026-10-08-image-selection-actions/verification.md)、review、task-ledger 和实际 origin/main；并发 TASK-LAUNCH-001、TASK-UI-012、TASK-IMAGE-EDIT-001 由各自执行者维护，未验收内容不能抢合或覆盖。
+
+## 2026-10-08 Hosted 空 Registry 属性返修
+
+T5当前本机/源码验收完成、REVIEW。21ac独立补审PASS、ENV003 CLOSED；其Hosted37765011214完整Web/Rust/release/Runtime通过，实际CI包装器在新建空key的Properties.Name严格模式失败，native尚未启动。修正mock空属性集合并复现真实RED；四处逐项枚举后26/26边界回归PASS，产品/harness与d521 native十一组hash不变。新head独立关闭ENV004、Hosted与主线整合仍待满足，未假填High IL。UI976db独立PASS关闭两P2、422browser/fresh Native13组通过，当前Hosted待创建。main仍1af/PR36合并后CI通过；其他执行者任务保留。
+
+## 2026-10-08 当前合并与托管返修恢复点
+
+PR #34/#35 已合并且合并后 CI PASS。PR #36 精确源 12f5f6ab18fec932e787a729e78994544e822708 已 squash 合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，合并后 hosted run 37756981271 verify/deploy-linux PASS。本 T5 分支正在承接该最新主线，保留模型账号隔离、编辑能力和参考图去重门禁；源码 Desktop2.1.7/Web2.1.8/Mobile规划2.1.1。
+
+T5 本机产品验收十一组与精确源码 8399 补审 PASS，但其 Hosted native 在 Runtime154.0.4258.62 下 CDP 启动失败，尚不能合并。新 CI 包装器记录实际权限，仅在托管临时 runner 准备并清理应用专属策略；19 项内存边界检查 PASS，实际 Hosted 原因与当前组合验证仍待取得。[最新验证](changes/2026-10-08-taskhost-native-lifecycle/verification.md)和[逐项盘点](changes/2026-10-08-taskhost-native-lifecycle/status.md)是当前恢复入口。TASK-PROV-005/006、外部 Provider/GPU/Comfy/VPS/Mobile/安装/视觉验收仍开放；UI 图片选择工具栏在单独任务分支进行，本树不覆盖。以下两侧迭代记录均保留为各自当时事实，历史‘尚未合并’不代表 PR #36 当前状态。
+
+## 2026-10-08 合并审计分支与原生生命周期收尾
+
+- PR #34 已从精确 head cddacaf squash 合入 main@5b0eb6a，tree 一致，合并后 hosted CI PASS；根 main clean fast-forward，历史分支/工作树保留。
+- PR #35 阶段工作台已合入 main@5dd6e6dd，合并后 verify/deploy-linux PASS，T5 已通过 fa9da162 承接；保留唯一 Plan 入口及共享编排器。
+- T5 修复图片 HTTP/响应体/结果下载取消等待和可选元数据 null 归档失败；独立审查两项 P2（凭据冲突日志、unknown 矩阵重试门禁）已返修。最新 fresh native 十一组 PASS，包含实际凭据冲突保留/脱敏、取消/恢复/原件/文本容量和无误导重试 UI。
+- 独立 npm ci；最终返修完整 verify exit 0：root 708/716、Agent 172/174（原 skip 8/2）、browser 401/401 无 flaky；主线组合 Rust 97/fmt/check、新 native release 十一组通过。新增 `client:taskhost:test` 接入 Windows CI。源码 Desktop 2.1.6 / Web 2.1.7，Mobile 规划 2.1.1。
+- T5 当前 REVIEW，最终精确 head 审查、PR/Hosted 与主线推广以新收据为准。[验证](changes/2026-10-08-taskhost-native-lifecycle/verification.md)与[盘点/优先级](changes/2026-10-08-taskhost-native-lifecycle/status.md)保存当前事实。
+- 新增 P1 TASK-PROV-005（供应商非秘密配置的异常退出 durable 恢复）及 TASK-PROV-006（既有 native image 连接/容量/health 统一）；未实现仍为 TODO。所有 Provider/GPU、ComfyUI、VPS/Mobile 和安装/视觉终验不因本机 fixture 升级。
+
+## 2026-10-08 桌面单排标题栏候选
+
+TASK-UI-013 已将桌面应用名、菜单与原生窗口控制合并为一排40px。完整 verify（723root/172Agent/411browser，原skip8/2、零失败/零flaky）、client:check、fresh Tauri 单排/真实拖动/最大化还原/最小化关闭及 Web 三档 development 验证通过；初始化错误不再影响设置入口，既有3项回归未放宽。Desktop2.1.7，Web2.1.7/Mobile规划2.1.1保持；FEAT-023仍部分实现。分支 `fix/TASK-UI-013-single-row-titlebar`，base main@1af0357b；原main未修改，独立只读6c37fb5a审查通过（2026-10-08 19:40 Asia/Shanghai），最终治理文档补审另绑，未合并/安装器/正式发布。[验证](changes/2026-10-08-single-row-titlebar/verification.md) / [审查](changes/2026-10-08-single-row-titlebar/review.md)。
 
 ## 2026-10-08 模型能力声明：Hosted日志复核后的增量修正
 

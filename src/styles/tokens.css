@@ -242,6 +242,10 @@
   --kk-card-radius: var(--kk-radius-card);
   --kk-panel-radius: var(--kk-radius-panel);
   --kk-toolbar-h: var(--kk-toolbar-height);
+  /* Registered task workbench shell; selection cards are content, not standard buttons. */
+  --kk-task-workbench-width: 1100px;
+  --kk-task-workbench-height: 760px;
+  --kk-task-queue-width: 220px;
 }
 
 /* ============================================================================

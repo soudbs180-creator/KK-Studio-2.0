@@ -1,0 +1,23 @@
+{
+  "base": "1af0357b088df79dc51e9b309ef310a500722cf8",
+  "files": {
+    "src/App.tsx": "42d2839d93e5d77574126b7c8769906f584dcf726878d1a9a9188bdcf07853f6",
+    "src/components/TopBar.tsx": "4ff74e11ea1de167dcddcc26dc7c9c08b16499f33c0c74f3a4ff56e2126c375d",
+    "src/components/WindowControls.tsx": "5937d32ef927a8022d4838fed512f20571ef2f377cae3027b6e56dfbee616e2e",
+    "src/components/UiIcon.tsx": "205f3d09626c3c40aaae9980cc44fbd6f572d66e9a6d6faee3e83cdb40e357c7",
+    "src/styles/desktop-titlebar.css": "661d21ccfef9924e1eb217e65e9cc364d09ba55a0bcbedae188549d081d182b8",
+    "src/styles/tokens.css": "e754126be0682d8804f18088864d39e09022c1d8bb6b4243489f9a8da567dea0",
+    "src-tauri/tauri.conf.json": "c12f92af2218fba19a1c2db9dfb14868adc894b19acdfba710e26bb918c27668",
+    "src-tauri/capabilities/default.json": "15dbe59db72a006a1315d238c959cb5ddccdcd2aac99cecbee95da0d9830f7a3",
+    "src-tauri/gen/schemas/capabilities.json": "8b89016225d2591469bad0e6bf2eddfe3d34d7cfec98a62b3989a1bce6ab5a43",
+    "src-tauri/Cargo.toml": "2b44d37a48900e70508c2aeaf85246e57e2c93ac4afda8d345525122c6b0ce69",
+    "src-tauri/Cargo.lock": "c528d374c187609d2fa7cb0a3c781bfe4795a2e6d62afc48a1c572691ca58a03",
+    "config/platform-versions.json": "d35d454bf2c75eb54679464e8b6d868bd13b03b184633bacbac432be1309464a",
+    "tests/desktop/titlebar.mjs": "4ec1ae0c76e97682c3af230819476e859b4b8a6666cb85de847cfc14c461f3f9",
+    "tests/desktop/titlebar-drag.ps1": "db28a0749bfbac49b37eb43c2b85d2b51c2b040b465cc6d6f6d93c14d7b28684",
+    "tests/browser/titlebar.spec.ts": "8e17465513652bbbe472a25047955b6553d48234d6ec7bbd69280fe73a107599"
+  },
+  "webBundle": "34ed4381b87e3d3315caa7aded1e9bb64057a6dfceb39f89719ea27ae73600ae",
+  "css": "1b08388e11cc0bc521fa590f1c418e3c39bd686189df37ffc2785a16e196e1eb",
+  "exe": "1b153f93ca49de59b56a635923576d69117a963befca9d28d5ee11ada458c6e8"
+}

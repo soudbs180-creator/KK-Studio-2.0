@@ -1,0 +1,49 @@
+{
+  "number": 39,
+  "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/39",
+  "head": "7d2726526ab7eabe3ce96c08dbfbf365473876d7",
+  "base": "78cea37af9359fd2d9f58f2854525516deee8a06",
+  "state": "open",
+  "draft": false,
+  "mergeable": true,
+  "mergeableState": "clean",
+  "checks": [
+    {
+      "name": "verify",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37776187321/job/113307525297"
+    },
+    {
+      "name": "delivery",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37776187321/job/113307525202"
+    },
+    {
+      "name": "deploy-linux",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37776187321/job/113307524934"
+    },
+    {
+      "name": "delivery",
+      "status": "completed",
+      "conclusion": "skipped",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37776180456/job/113307503683"
+    },
+    {
+      "name": "deploy-linux",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37776180456/job/113307502750"
+    },
+    {
+      "name": "verify",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37776180456/job/113307502251"
+    }
+  ],
+  "observedAt": "2026-10-08T12:49:07.250Z"
+}

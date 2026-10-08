@@ -188,7 +188,13 @@ export default function StartPage({
                   setStatus("模板内容已放入提示词，可以继续编辑后创建项目。");
                 }}
               >
-                <img src={item.image} alt="" draggable={false} />
+                <img
+                  src={item.image}
+                  alt=""
+                  draggable={false}
+                  loading="lazy"
+                  decoding="async"
+                />
                 <div>
                   <span>{item.tag}</span>
                   <strong>{item.title}</strong>

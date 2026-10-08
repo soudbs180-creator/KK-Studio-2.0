@@ -98,7 +98,8 @@
 .asset-search input {
   width: 100%;
   min-width: 0;
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 .asset-view {
   display: flex;
@@ -240,13 +241,15 @@
   border-radius: 7px;
   background: var(--bg-card-hover);
   color: var(--text-accent);
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 .asset-provenance-badges button {
   padding: 5px 8px;
   border: 1px solid var(--border-default);
   border-radius: 8px;
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 .asset-provenance-badges button[aria-pressed="true"] {
   border-color: var(--border-accent);
@@ -256,7 +259,8 @@
   display: grid;
   grid-template-columns: 80px minmax(0, 1fr);
   gap: 10px;
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 .asset-provenance dd {
   overflow: hidden;
@@ -266,8 +270,8 @@
 }
 .asset-provenance p {
   margin-top: 14px;
-  font-size: 10px;
-  line-height: 1.6;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 .asset-thumbnail > .asset-icon {
   width: 40px;
@@ -311,7 +315,7 @@
   height: 24px;
 }
 .list .asset-name {
-  font-size: 13px;
+  font-size: var(--kk-font-body);
   line-height: var(--ui-line-height-label);
 }
 .asset-bottom-actions {
@@ -319,17 +323,19 @@
   bottom: 37px;
   left: 35px;
   display: flex;
+  align-items: center;
   gap: var(--ui-space-2);
 }
 .asset-bottom-actions button {
-  width: 115px;
+  min-width: 115px;
 }
 .asset-feedback {
   position: absolute;
   bottom: 8px;
   left: 35px;
   right: 30px;
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
   color: var(--text-primary);
 }
 .asset-load-more {
@@ -341,7 +347,8 @@
   border-radius: 6px;
   background: var(--bg-card);
   color: var(--text-primary);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 .asset-empty {
   grid-column: 1/-1;
@@ -405,7 +412,8 @@
 }
 .asset-create h3 {
   color: var(--text-primary);
-  font-size: 18px;
+  font-size: var(--kk-font-title);
+  line-height: var(--kk-line-title);
 }
 .asset-create p {
   font-size: 12px;

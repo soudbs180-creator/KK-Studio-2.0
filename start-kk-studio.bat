@@ -8,7 +8,7 @@ if exist "%NODE24%\node.exe" set "PATH=%NODE24%;%PATH%"
 where node >nul 2>nul
 if errorlevel 1 (
     echo [KK Studio] Node.js was not found. Install Node 24 or restore %NODE24%.
-    pause
+    if /i not "%~1"=="--background" pause
     exit /b 1
 )
 
@@ -17,7 +17,7 @@ rem only missing/stale releases and never starts the old executable on failure.
 node "%~dp0scripts\windows\desktop-release.mjs"
 if errorlevel 1 (
     echo [KK Studio] Desktop launch failed. The previous release was not started.
-    pause
+    if /i not "%~1"=="--background" pause
     exit /b 1
 )
 

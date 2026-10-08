@@ -1,6 +1,26 @@
 import { expect, test, type Page } from "@playwright/test";
 import { writeFile } from "node:fs/promises";
 
+async function canvasImageAction(page: Page, name: string) {
+  const node = page.locator(".canvas-node-image").first();
+  await node.locator(".uploaded-image").click();
+  const toolbar = page.getByRole("toolbar", { name: /^图片操作：/ });
+  await expect(toolbar).toBeVisible();
+  await expect(node.getByRole("button", { name, exact: true })).toHaveCount(0);
+  if (name === "放大查看参考图片") {
+    await expect
+      .poll(async () => {
+        const [bar, card] = await Promise.all([
+          toolbar.boundingBox(),
+          node.locator(".image-preview").boundingBox(),
+        ]);
+        return Boolean(bar && card && bar.y + bar.height <= card.y + 1);
+      })
+      .toBe(true);
+  }
+  await toolbar.getByRole("button", { name, exact: true }).click();
+}
+
 async function editUiEvidence(page: Page, file: string) {
   const state = await page.evaluate(async () => ({
     url: location.href,
@@ -344,7 +364,7 @@ async function editor(page: Page, configured = false, separateColors = false) {
         : "public/fixtures/demo/blue-hour.png",
     );
   await expect(node.locator(".uploaded-image")).toBeVisible();
-  await node.getByRole("button", { name: "重绘参考图片" }).click();
+  await canvasImageAction(page, "重绘参考图片");
   return page.getByRole("dialog", { name: "重绘参考图片" });
 }
 
@@ -381,11 +401,7 @@ test("saved mixed masks can be cleared, undone and redone before whole-image edi
   const original = (await activeEditProject(page)).items[0];
   await dialog.getByRole("button", { name: "取消", exact: true }).click();
   await expect(dialog).toBeHidden();
-  await page
-    .locator(".canvas-node-image")
-    .first()
-    .getByRole("button", { name: "重绘参考图片" })
-    .click();
+  await canvasImageAction(page, "重绘参考图片");
   await expect(dialog.getByTestId("edit-region-count")).toHaveText(
     "3 个编辑区域",
   );
@@ -464,11 +480,7 @@ test("saved mixed masks can be cleared, undone and redone before whole-image edi
   await page.reload();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.locator(".project-library-card").first().click();
-  await page
-    .locator(".canvas-node-image")
-    .first()
-    .getByRole("button", { name: "重绘参考图片" })
-    .click();
+  await canvasImageAction(page, "重绘参考图片");
   await expect(dialog.getByTestId("edit-region-count")).toHaveText(
     "0 个编辑区域",
   );
@@ -790,11 +802,7 @@ test("archived image previews expose the shared lightbox and edit actions", asyn
 }) => {
   const dialog = await editor(page);
   await dialog.getByRole("button", { name: "取消", exact: true }).click();
-  await page
-    .locator(".canvas-node-image")
-    .first()
-    .getByRole("button", { name: "放大查看参考图片" })
-    .click();
+  await canvasImageAction(page, "放大查看参考图片");
   const lightbox = page.getByRole("dialog", { name: /预览/ });
   await expect(
     lightbox.getByRole("button", { name: "重绘当前图片", exact: true }),
@@ -889,11 +897,7 @@ test("narrow image editor keeps its draggable toolbar within the canvas and pers
   );
   await page.screenshot({ path: info.outputPath("mask-editor-narrow.png") });
   await dialog.getByRole("button", { name: "取消", exact: true }).click();
-  await page
-    .locator(".canvas-node-image")
-    .first()
-    .getByRole("button", { name: "重绘参考图片" })
-    .click();
+  await canvasImageAction(page, "重绘参考图片");
   await expect(dialog.getByTestId("edit-region-count")).toHaveText(
     "1 个编辑区域",
   );
@@ -901,11 +905,7 @@ test("narrow image editor keeps its draggable toolbar within the canvas and pers
   await page.reload();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.locator(".project-library-card").first().click();
-  await page
-    .locator(".canvas-node-image")
-    .first()
-    .getByRole("button", { name: "重绘参考图片" })
-    .click();
+  await canvasImageAction(page, "重绘参考图片");
   await expect(dialog.getByTestId("edit-region-count")).toHaveText(
     "1 个编辑区域",
   );

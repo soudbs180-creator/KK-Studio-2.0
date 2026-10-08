@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：system
-- 最近更新：2026-09-30
-- 关联任务：TASK-UI-DISMISS-002、UI-004、TASK-UI-006、TASK-PROJECT-SIDEBAR-001
+- 最近更新：2026-10-08
+- 关联任务：TASK-UI-DISMISS-002、UI-004、TASK-UI-006、TASK-PROJECT-SIDEBAR-001、TASK-UI-013
 
 ## 用户可见入口
 
@@ -14,10 +14,12 @@
 - `src/components/Sidebar.tsx`、`SidebarProjectEntry.tsx`、`SidebarProjectGroups.tsx`、`SidebarFolderGroup.tsx`、`SidebarProjectSections.tsx`、`SidebarGroupHeading.tsx`
 - 搜索/收藏实际由 `CatalogPanel` + `SavedPane` 承接（旧 SearchPage/CollectionPage 已删除）
 - 路由：`src/App.tsx` 的 open/modal 视图
+- 桌面单排标题栏：`src/components/TopBar.tsx`、`WindowControls.tsx`、`src/styles/desktop-titlebar.css`
 
 ## 测试与证据
 
 - 浏览器：`sidebar`、`sidebar-real-projects`、`sidebar-project-groups`、`menu-boundaries`、`catalog-pages`、`composer-menu-audit`、`topbar-popup-lifecycle`
+- 单排标题栏：`tests/browser/titlebar.spec.ts`、`tests/desktop/titlebar.mjs`、`tests/unit/windowControls.test.ts`；[本轮验证](../changes/2026-10-08-single-row-titlebar/verification.md)。
 
 ## 当前能力
 
@@ -36,3 +38,7 @@
 - 2026-09-22：TASK-UI-006修复折叠、HUD背景与弹层生命周期；关联 `tests/browser/ui-interactions.spec.ts`、`ui-interaction-matrix.spec.ts`，验收见 `docs/changes/2026-09-22-ui-interactions/verification.md`。不升级外部服务或分组持久化能力状态。
 
 - 2026-09-30：集成版本当前验证与剩余边界见 [落地验证](../changes/2026-09-29-project-landing/verification.md)。
+
+- 2026-10-08：TASK-UI-013 关闭重复原生标题栏，复用 40px 菜单栏与真实窗口控制；Web 导航不变。新 Tauri 的单排、菜单、拖动、最大化/还原、最小化和关闭通过；能力状态仍 PARTIAL，合并与正式发布另记。
+
+- 2026-10-08：最新主线组合86e712f保留首页按需加载、图片上方操作栏与T5；窗口乱序状态及同步/异步监听清理故障回归先RED后GREEN，当前独立关闭001/002，fresh带Agent原生与Web两态回归通过。最终PR40 Hosted/普通合并/主线CI独立回读，功能状态仍PARTIAL。

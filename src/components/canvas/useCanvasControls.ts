@@ -11,7 +11,8 @@ import { cardLayout } from "../../domain/canvasGraph";
 import { useCanvasNodeActions } from "./useCanvasNodeActions";
 import { useCanvasView } from "./useCanvasView";
 import { useCanvasViewport } from "./useCanvasViewport";
-import { toSurfacePoint } from "./canvasSurface";
+import { surfaceScale, toSurfacePoint } from "./canvasSurface";
+import { getImageSelectionPosition } from "./imageSelectionPosition";
 import { useCanvasPreferences } from "./useCanvasPreferences";
 import type {
   KeyboardEvent as ReactKeyboardEvent,
@@ -52,6 +53,7 @@ export function useCanvasControls({
   const [transform, setTransform] = useState<ViewTransform>(
     () => initialCanvas?.viewport ?? INITIAL_TRANSFORM,
   );
+  const automaticViewport = useRef<ViewTransform | null>(null);
   const [nodes, setNodes] = useState(
     () => initialCanvas?.positions ?? createProjectCanvas(items).positions,
   );
@@ -97,8 +99,22 @@ export function useCanvasControls({
     setSelectedNode,
     usableViewport,
   });
+  const pointer = useCanvasPointer({
+    containerRef,
+    nodes,
+    setNodes,
+    transform,
+    setTransform,
+    selectedNode,
+    setSelectedNode,
+    snapEnabled: canvasPreferences.preferences.snapEnabled,
+  });
   useLayoutEffect(() => {
-    if (!selectedNode) return;
+    if (!selectedNode) {
+      revealSelection.current = null;
+      return;
+    }
+    if (pointer.dragging) return;
     const node = nodes[selectedNode];
     const item = items.find((item) => item.id === selectedNode);
     if (!node || !item) return;
@@ -116,7 +132,35 @@ export function useCanvasControls({
       revealViewport.current.width !== viewport.width ||
       revealViewport.current.height !== viewport.height;
     revealViewport.current = { width: viewport.width, height: viewport.height };
+    const canvas = containerRef.current;
+    const frame = canvas?.querySelector<HTMLElement>(
+      ".canvas-node.is-selected",
+    );
+    const image = frame?.querySelector<HTMLElement>(
+      ".demo-result-node,.image-preview",
+    );
+    const toolbar = document.querySelector<HTMLElement>(
+      ".image-selection-toolbar",
+    );
+    const imageActions =
+      item.kind === "image" &&
+      Boolean(item.preview || item.result?.src) &&
+      canvas &&
+      image &&
+      toolbar
+        ? getImageSelectionPosition(image, canvas, toolbar)
+        : undefined;
+    const needsImageActions = Boolean(imageActions?.revealDelta);
+    const minimumTop = imageActions?.revealDelta
+      ? Math.max(
+          70,
+          node.y * transform.scale +
+            transform.y +
+            imageActions.revealDelta / (canvas ? surfaceScale(canvas) : 1),
+        )
+      : 70;
     if (
+      !needsImageActions &&
       !isNewSelection &&
       !viewportChanged &&
       composerExtraHeight === revealBaselineHeight.current
@@ -133,48 +177,40 @@ export function useCanvasControls({
         ? Math.max(0, composerExtraHeight - 60)
         : composerExtraHeight);
     const left = node.x + layout.left;
-    setTransform((current) => {
-      const scale = Math.max(
-        MIN_SCALE,
-        Math.min(
-          current.scale,
-          (viewport.width - 32 - actionSpace) / viewWidth,
-          (viewport.height - 170) / height,
-        ),
-      );
-      let x = current.x;
-      let y = current.y;
-      if (left * scale + x < 16) x = 16 - left * scale;
-      if ((left + viewWidth) * scale + x > viewport.width - 16 - actionSpace)
-        x = viewport.width - 16 - actionSpace - (left + viewWidth) * scale;
-      if (node.y * scale + y < 70) y = 70 - node.y * scale;
-      if ((node.y + height) * scale + y > viewport.height - 100)
-        y = viewport.height - 100 - (node.y + height) * scale;
-      return x === current.x && y === current.y && scale === current.scale
-        ? current
-        : { x, y, scale };
-    });
+    const scale = Math.max(
+      MIN_SCALE,
+      Math.min(
+        transform.scale,
+        (viewport.width - 32 - actionSpace) / viewWidth,
+        (viewport.height - 100 - minimumTop) / height,
+      ),
+    );
+    let x = transform.x;
+    let y = transform.y;
+    if (left * scale + x < 16) x = 16 - left * scale;
+    if ((left + viewWidth) * scale + x > viewport.width - 16 - actionSpace)
+      x = viewport.width - 16 - actionSpace - (left + viewWidth) * scale;
+    if (node.y * scale + y < minimumTop) y = minimumTop - node.y * scale;
+    if ((node.y + height) * scale + y > viewport.height - 100)
+      y = viewport.height - 100 - (node.y + height) * scale;
+    if (x !== transform.x || y !== transform.y || scale !== transform.scale) {
+      const next = { x, y, scale };
+      automaticViewport.current = next;
+      setTransform(next);
+    }
     // Reveal once on selection; dragging a selected node must remain pointer-driven.
   }, [
     items,
+    nodes,
     selectedNode,
+    transform,
     composerExtraHeight,
+    pointer.dragging,
     viewport.width,
     viewport.height,
   ]);
   // 用 useLayoutEffect 让"选中→高度报告→reveal"链路在首帧绘制前完成，
   // 避免编辑器挂载后（0→60 基准高度）的二次位移被用户/测试观察到。
-
-  const pointer = useCanvasPointer({
-    containerRef,
-    nodes,
-    setNodes,
-    transform,
-    setTransform,
-    selectedNode,
-    setSelectedNode,
-    snapEnabled: canvasPreferences.preferences.snapEnabled,
-  });
 
   const zoomCanvas = useCallback(
     (event: ReactWheelEvent<HTMLDivElement>): void => {
@@ -277,6 +313,7 @@ export function useCanvasControls({
     setSelectedNode,
     transform,
     zoomCanvas,
+    automaticViewport,
     setTransform,
     viewport,
   };

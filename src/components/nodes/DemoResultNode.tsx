@@ -13,7 +13,8 @@ import DemoRunButton from "./DemoRunButton";
 import CreationComposer from "./CreationComposer";
 import { readReferenceImages } from "./referenceUpload";
 import CompareImageButton from "../../features/compare/CompareImageButton";
-import ImageRedrawDialog from "./ImageRedrawDialog.tsx";
+import CanvasImageActions from "./CanvasImageActions";
+import ResultPreview from "./ResultPreview";
 
 export default function DemoResultNode({
   item,
@@ -34,9 +35,15 @@ export default function DemoResultNode({
 }) {
   const [open, setOpen] = useState(false);
   const command = useContext(CanvasImageCommandContext);
-  const [redraw, setRedraw] = useState(false);
+  const openPreview = () => {
+    if (item.kind === "image" && item.assetId && command?.openPreview)
+      command.openPreview(item.id);
+    else setOpen(true);
+  };
   const [referenceError, setReferenceError] = useState("");
   const result = item.result;
+  const card = useRef<HTMLElement>(null);
+  const imageResult = item.kind === "image" && Boolean(result);
   const hasReferenceComposer = Boolean(
     editing &&
     result &&
@@ -52,6 +59,7 @@ export default function DemoResultNode({
   return (
     <>
       <article
+        ref={card}
         className="demo-result-node"
         data-kind={item.kind}
         data-source={result?.source}
@@ -85,44 +93,11 @@ export default function DemoResultNode({
           </div>
         ) : result ? (
           <>
-            <button
-              className={`demo-result-preview is-${item.kind}`}
-              aria-label={`预览${item.title}`}
-              onClick={() => {
-                if (
-                  item.kind === "image" &&
-                  item.assetId &&
-                  command?.openPreview
-                )
-                  command.openPreview(item.id);
-                else setOpen(true);
-              }}
-            >
-              {result.poster || item.kind === "image" ? (
-                <img
-                  src={result.poster ?? result.src}
-                  alt={item.title}
-                  draggable={false}
-                />
-              ) : item.kind === "audio" ? (
-                <div className="demo-wave" aria-hidden="true">
-                  {Array.from({ length: 27 }, (_, i) => (
-                    <i
-                      key={i}
-                      style={{ height: `${18 + ((i * 19) % 51)}px` }}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <p>{result.text}</p>
-              )}
-              <span className="demo-preview-hint">
-                <UiIcon name={item.kind === "audio" ? "audio" : "preview"} />
-                {item.kind === "video" || item.kind === "audio"
-                  ? "打开播放"
-                  : "打开预览"}
-              </span>
-            </button>
+            <ResultPreview
+              result={result}
+              title={item.title}
+              onPreview={openPreview}
+            />
             <p className="demo-description">{result.description}</p>
           </>
         ) : (
@@ -137,37 +112,30 @@ export default function DemoResultNode({
             <DemoRunButton kind={item.kind} onResult={onResult} />
           </>
         )}
-        <footer>
-          <CompareImageButton item={item} />
-          {item.kind === "image" && item.assetId && (
+        {!imageResult && (
+          <footer>
+            <CompareImageButton item={item} />
             <button
               className="ui-button"
-              aria-label="重绘当前图片"
-              onClick={() => setRedraw(true)}
+              aria-label={
+                favorite ? `取消收藏${item.title}` : `收藏${item.title}`
+              }
+              aria-pressed={favorite}
+              onClick={onFavorite}
             >
-              重绘
+              <UiIcon name="favorite" />
+              {favorite ? "已收藏" : "收藏"}
             </button>
-          )}
-          <button
-            className="ui-button"
-            aria-label={
-              favorite ? `取消收藏${item.title}` : `收藏${item.title}`
-            }
-            aria-pressed={favorite}
-            onClick={onFavorite}
-          >
-            <UiIcon name="favorite" />
-            {favorite ? "已收藏" : "收藏"}
-          </button>
-          <button
-            className="ui-button is-danger"
-            aria-label={`删除${item.title}`}
-            onClick={onDelete}
-          >
-            <UiIcon name="delete" />
-            删除
-          </button>
-        </footer>
+            <button
+              className="ui-button is-danger"
+              aria-label={`删除${item.title}`}
+              onClick={onDelete}
+            >
+              <UiIcon name="delete" />
+              删除
+            </button>
+          </footer>
+        )}
         {open && result && (
           <DemoMediaPreview
             source={item}
@@ -176,13 +144,19 @@ export default function DemoResultNode({
             onTextChange={(text) => onChange({ result: { ...result, text } })}
           />
         )}
-        {redraw && (
-          <ImageRedrawDialog
-            references={editing?.references}
-            onClose={() => setRedraw(false)}
-          />
-        )}
       </article>
+      {imageResult && (
+        <CanvasImageActions
+          item={item}
+          anchor={card}
+          selected={Boolean(editing?.selected)}
+          onPreview={openPreview}
+          favorite={favorite}
+          onFavorite={onFavorite}
+          onDelete={onDelete}
+          references={editing?.references}
+        />
+      )}
       {hasReferenceComposer && editing && (
         <>
           <input

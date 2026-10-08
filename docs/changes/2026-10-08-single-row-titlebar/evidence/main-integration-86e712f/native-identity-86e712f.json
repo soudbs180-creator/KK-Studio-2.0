@@ -1,0 +1,43 @@
+{
+  "sourceHead": "86e712f2c6b94e24267e3468ee667c8e91feb2d3",
+  "root": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-UI-013-single-row-titlebar",
+  "recordedAt": "2026-10-08T15:12:42.723Z",
+  "executableSha256": "2e69e746de0efbb18c1923ceeeafebf600006e93bb98b7acb37f38ea38b11a5f",
+  "bundles": {
+    "index-CZNs9Itz.js": "a336da91fc0c1e96740ac519337c0d33e42b21ad03b7b12799c6efbaf06ea5e2",
+    "index-DB0YxkTv.css": "d8c21df0d2620a7747dabb34468543a489f3230257e4090f745d30e9dbb7e711"
+  },
+  "versions": {
+    "schemaVersion": 1,
+    "desktop": "2.1.10",
+    "web": "2.1.10",
+    "mobile": "2.1.1"
+  },
+  "dirtyFiles": "",
+  "schemas": [
+    {
+      "path": "src-tauri/gen/schemas/acl-manifests.json",
+      "sha256": "2a4748317c0ab859659e2c017f63f65b619c6dffd4de51c15334c9970d3970f6",
+      "byteEqual": true,
+      "jsonEqual": true
+    },
+    {
+      "path": "src-tauri/gen/schemas/capabilities.json",
+      "sha256": "8b89016225d2591469bad0e6bf2eddfe3d34d7cfec98a62b3989a1bce6ab5a43",
+      "byteEqual": true,
+      "jsonEqual": true
+    },
+    {
+      "path": "src-tauri/gen/schemas/desktop-schema.json",
+      "sha256": "0b57b9068cc886bd9a2bd3b5d8cc58d85298398b94a69f546ed2d87e9dfc39d9",
+      "byteEqual": true,
+      "jsonEqual": true
+    },
+    {
+      "path": "src-tauri/gen/schemas/windows-schema.json",
+      "sha256": "0b57b9068cc886bd9a2bd3b5d8cc58d85298398b94a69f546ed2d87e9dfc39d9",
+      "byteEqual": true,
+      "jsonEqual": true
+    }
+  ]
+}

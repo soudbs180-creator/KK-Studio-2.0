@@ -222,7 +222,7 @@ export default function GoogleConnectionSettings({
         {cli ? (
           <button
             type="button"
-            className="settings-action"
+            className="settings-action secondary"
             disabled={disabled}
             onClick={() => void saveCliMode()}
           >
@@ -231,7 +231,7 @@ export default function GoogleConnectionSettings({
         ) : (
           <button
             type="button"
-            className="settings-action"
+            className="settings-action secondary"
             disabled={disabled || (!key.trim() && !stored)}
             onClick={() => void saveKey()}
           >
@@ -240,7 +240,7 @@ export default function GoogleConnectionSettings({
         )}
         <button
           type="button"
-          className="settings-action"
+          className="settings-action secondary"
           disabled={disabled || (!cli && !key.trim() && !stored)}
           onClick={() => void check()}
         >
@@ -249,7 +249,7 @@ export default function GoogleConnectionSettings({
         {busy && request.current && (
           <button
             type="button"
-            className="settings-action"
+            className="settings-action secondary"
             onClick={() => request.current?.abort()}
           >
             取消检测

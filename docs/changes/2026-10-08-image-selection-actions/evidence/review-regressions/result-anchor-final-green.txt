@@ -1,0 +1,10 @@
+[WebServer] (node:16596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:80152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\browser\unified-image-command.spec.ts:143:1 › 已归档图片结果使用上方选择工具栏，收藏重绘对比删除保留原件 (7.5s)
+
+  1 passed (9.3s)

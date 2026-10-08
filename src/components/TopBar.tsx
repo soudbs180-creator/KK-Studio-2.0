@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useDismissible } from "./useDismissible";
 import { appPlatform } from "../runtime/appInfo";
+import { isTauri } from "@tauri-apps/api/core";
 import CompactAppMenu from "./CompactAppMenu";
+import WindowControls from "./WindowControls";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
 export default function TopBar({
   onOpen,
@@ -12,6 +14,7 @@ export default function TopBar({
   onToggleSidebar: () => void;
   onToggleChat: () => void;
 }) {
+  const desktop = isTauri();
   const [menu, setMenu] = useState("");
   const navRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -53,8 +56,14 @@ export default function TopBar({
     帮助: [{ text: "使用说明", action: () => onOpen("help") }],
   };
   return (
-    <header className="topbar" ref={headerRef}>
-      <strong>KK Studio</strong>
+    <header
+      className={`topbar${desktop ? " desktop-titlebar" : ""}`}
+      data-tauri-drag-region={desktop ? "" : undefined}
+      ref={headerRef}
+    >
+      <strong data-tauri-drag-region={desktop ? "" : undefined}>
+        KK Studio
+      </strong>
       <nav ref={navRef} aria-label="应用菜单">
         {Object.entries(entries).map(([label, items]) => (
           <div className="top-menu" key={label}>
@@ -110,7 +119,11 @@ export default function TopBar({
       >
         <img src="/design/figma/sidebar-settings-container.svg" alt="" />
       </button>
-      <span className="preview-label">{appPlatform()}</span>
+      {desktop ? (
+        <WindowControls />
+      ) : (
+        <span className="preview-label">{appPlatform()}</span>
+      )}
       <CompactAppMenu entries={entries} />
     </header>
   );

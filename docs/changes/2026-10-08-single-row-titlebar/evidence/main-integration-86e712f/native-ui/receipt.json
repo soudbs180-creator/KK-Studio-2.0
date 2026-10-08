@@ -1,0 +1,1966 @@
+{
+  "startedAt": "2026-10-08T15:12:46.614Z",
+  "sourceHead": "86e712f2c6b94e24267e3468ee667c8e91feb2d3",
+  "dirtyFiles": [
+    ""
+  ],
+  "versions": {
+    "schemaVersion": 1,
+    "desktop": "2.1.10",
+    "web": "2.1.10",
+    "mobile": "2.1.1"
+  },
+  "executableSha256": "2e69e746de0efbb18c1923ceeeafebf600006e93bb98b7acb37f38ea38b11a5f",
+  "bundles": {
+    "assets/index-CZNs9Itz.js": "a336da91fc0c1e96740ac519337c0d33e42b21ad03b7b12799c6efbaf06ea5e2",
+    "assets/index-DB0YxkTv.css": "d8c21df0d2620a7747dabb34468543a489f3230257e4090f745d30e9dbb7e711"
+  },
+  "checks": [
+    "native-single-click-selected-above-image",
+    "native-preview-redraw-gate-compare-doubleclick-focus",
+    "model-settings",
+    "model-actions",
+    "google-cli",
+    "asset-library",
+    "asset-actions",
+    "workbench-queue",
+    "workbench-prompt",
+    "workbench-generate",
+    "workbench-review",
+    "workbench-export",
+    "workbench-plan"
+  ],
+  "pages": [
+    {
+      "name": "model-settings",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "url": "http://tauri.localhost/",
+      "text": [
+        {
+          "label": "设置",
+          "font": 14
+        },
+        {
+          "label": "通用",
+          "font": 14
+        },
+        {
+          "label": "账号管理",
+          "font": 14
+        },
+        {
+          "label": "储存",
+          "font": 14
+        },
+        {
+          "label": "网络",
+          "font": 14
+        },
+        {
+          "label": "记忆",
+          "font": 14
+        },
+        {
+          "label": "模型供应商",
+          "font": 14
+        },
+        {
+          "label": "Skill",
+          "font": 14
+        },
+        {
+          "label": "MCP",
+          "font": 14
+        },
+        {
+          "label": "Comfy UI",
+          "font": 14
+        },
+        {
+          "label": "高级",
+          "font": 14
+        },
+        {
+          "label": "软件更新",
+          "font": 14
+        },
+        {
+          "label": "模型供应商",
+          "font": 16
+        },
+        {
+          "label": "添加自定义提供商和模型后，可在对话中选择。自定义模型请求由本机直接发送给提供商。",
+          "font": 14
+        },
+        {
+          "label": "API 连接",
+          "font": 14
+        },
+        {
+          "label": "填写 API 地址后可保存；测试连接仅在你点击时发起。",
+          "font": 12
+        },
+        {
+          "label": "提供商",
+          "font": 14
+        },
+        {
+          "label": "接口地址",
+          "font": 14
+        },
+        {
+          "label": "API Key",
+          "font": 14
+        },
+        {
+          "label": "密钥保存在系统凭据库；留空可保留已保存的密钥。",
+          "font": 12
+        },
+        {
+          "label": "模型名称",
+          "font": 14
+        },
+        {
+          "label": "支持 OpenAI 兼容 API。同一地址使用不同名称可登记独立连接；连接测试不代表已验证图片或视频生成。",
+          "font": 12
+        },
+        {
+          "label": "模型与参数",
+          "font": 14
+        }
+      ],
+      "controls": []
+    },
+    {
+      "name": "model-actions",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "url": "http://tauri.localhost/",
+      "text": [
+        {
+          "label": "设置",
+          "font": 14
+        },
+        {
+          "label": "通用",
+          "font": 14
+        },
+        {
+          "label": "账号管理",
+          "font": 14
+        },
+        {
+          "label": "储存",
+          "font": 14
+        },
+        {
+          "label": "网络",
+          "font": 14
+        },
+        {
+          "label": "记忆",
+          "font": 14
+        },
+        {
+          "label": "模型供应商",
+          "font": 14
+        },
+        {
+          "label": "Skill",
+          "font": 14
+        },
+        {
+          "label": "MCP",
+          "font": 14
+        },
+        {
+          "label": "Comfy UI",
+          "font": 14
+        },
+        {
+          "label": "高级",
+          "font": 14
+        },
+        {
+          "label": "软件更新",
+          "font": 14
+        },
+        {
+          "label": "已发现的模型选择模型",
+          "font": 14
+        },
+        {
+          "label": "当前模型用途未声明文本对话图片视频（执行器待接入）音频（执行器待接入）",
+          "font": 14
+        },
+        {
+          "label": "声明来源：未声明。能力声明不代表实际生成验证。",
+          "font": 12
+        },
+        {
+          "label": "按供应商文档填写。模型列表通常不包含尺寸信息；未声明时只使用默认尺寸，不推测 2K 或 4K 能力。",
+          "font": 12
+        },
+        {
+          "label": "型号显示与搜索别名",
+          "font": 14
+        },
+        {
+          "label": "模型分组名称",
+          "font": 14
+        },
+        {
+          "label": "型号参数名称",
+          "font": 14
+        },
+        {
+          "label": "搜索别名",
+          "font": 14
+        },
+        {
+          "label": "仅影响分组和检索。生成仍发送选定型号的完整 ID，不根据后缀拼造参数或不存在的型号。",
+          "font": 12
+        },
+        {
+          "label": "保存此模型能力",
+          "font": 14
+        },
+        {
+          "label": "保存",
+          "font": 14
+        },
+        {
+          "label": "测试连接",
+          "font": 14
+        },
+        {
+          "label": "Google Gemini 对话与生图",
+          "font": 14
+        },
+        {
+          "label": "对话与生图",
+          "font": 12
+        },
+        {
+          "label": "登录方式",
+          "font": 12
+        },
+        {
+          "label": "密钥登录（对话与生图）",
+          "font": 12
+        },
+        {
+          "label": "Gemini CLI 账号（Google 登录，免 Key，仅对话）",
+          "font": 12
+        },
+        {
+          "label": "填写 Google AI Studio API Key 后，在项目对话中选择 Google Gemini。生成的图片会自动保存到当",
+          "font": 12
+        },
+        {
+          "label": "Google 密钥",
+          "font": 12
+        },
+        {
+          "label": "桌面版保存在系统凭据库；网页版仅保留在本次会话中。Google 可能保留连续对话记录，具体期限由其项目设置决定。",
+          "font": 12
+        },
+        {
+          "label": "保存 Google",
+          "font": 14
+        },
+        {
+          "label": "测试 Google 连接",
+          "font": 14
+        },
+        {
+          "label": "获取 API Key",
+          "font": 14
+        }
+      ],
+      "controls": [
+        {
+          "label": "保存",
+          "height": 32
+        },
+        {
+          "label": "测试连接",
+          "height": 32
+        },
+        {
+          "label": "保存 Google",
+          "height": 32
+        },
+        {
+          "label": "测试 Google 连接",
+          "height": 32
+        }
+      ]
+    },
+    {
+      "name": "google-cli",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "url": "http://tauri.localhost/",
+      "text": [
+        {
+          "label": "设置",
+          "font": 14
+        },
+        {
+          "label": "通用",
+          "font": 14
+        },
+        {
+          "label": "账号管理",
+          "font": 14
+        },
+        {
+          "label": "储存",
+          "font": 14
+        },
+        {
+          "label": "网络",
+          "font": 14
+        },
+        {
+          "label": "记忆",
+          "font": 14
+        },
+        {
+          "label": "模型供应商",
+          "font": 14
+        },
+        {
+          "label": "Skill",
+          "font": 14
+        },
+        {
+          "label": "MCP",
+          "font": 14
+        },
+        {
+          "label": "Comfy UI",
+          "font": 14
+        },
+        {
+          "label": "高级",
+          "font": 14
+        },
+        {
+          "label": "软件更新",
+          "font": 14
+        },
+        {
+          "label": "已发现的模型选择模型",
+          "font": 14
+        },
+        {
+          "label": "当前模型用途未声明文本对话图片视频（执行器待接入）音频（执行器待接入）",
+          "font": 14
+        },
+        {
+          "label": "声明来源：未声明。能力声明不代表实际生成验证。",
+          "font": 12
+        },
+        {
+          "label": "按供应商文档填写。模型列表通常不包含尺寸信息；未声明时只使用默认尺寸，不推测 2K 或 4K 能力。",
+          "font": 12
+        },
+        {
+          "label": "型号显示与搜索别名",
+          "font": 14
+        },
+        {
+          "label": "模型分组名称",
+          "font": 14
+        },
+        {
+          "label": "型号参数名称",
+          "font": 14
+        },
+        {
+          "label": "搜索别名",
+          "font": 14
+        },
+        {
+          "label": "仅影响分组和检索。生成仍发送选定型号的完整 ID，不根据后缀拼造参数或不存在的型号。",
+          "font": 12
+        },
+        {
+          "label": "保存此模型能力",
+          "font": 14
+        },
+        {
+          "label": "保存",
+          "font": 14
+        },
+        {
+          "label": "测试连接",
+          "font": 14
+        },
+        {
+          "label": "Google Gemini 对话与生图",
+          "font": 14
+        },
+        {
+          "label": "对话与生图",
+          "font": 12
+        },
+        {
+          "label": "登录方式",
+          "font": 12
+        },
+        {
+          "label": "密钥登录（对话与生图）",
+          "font": 12
+        },
+        {
+          "label": "Gemini CLI 账号（Google 登录，免 Key，仅对话）",
+          "font": 12
+        },
+        {
+          "label": "用本机 Gemini CLI 登录 Google 账号，经本地桥免 API Key 对话。首次使用：",
+          "font": 12
+        },
+        {
+          "label": "安装：npm install -g @google/gemini-cli",
+          "font": 12
+        },
+        {
+          "label": "登录：终端运行 gemini，选择 Login with Google",
+          "font": 12
+        },
+        {
+          "label": "启动桥：node scripts/gemini-bridge.mjs（默认端口 1424）",
+          "font": 12
+        },
+        {
+          "label": "检测或连接会用一次简短请求确认登录态，可能消耗 Gemini CLI 额度。",
+          "font": 12
+        },
+        {
+          "label": "Gemini CLI 桥地址",
+          "font": 12
+        },
+        {
+          "label": "保存登录方式",
+          "font": 14
+        },
+        {
+          "label": "检测 Gemini CLI",
+          "font": 14
+        }
+      ],
+      "controls": [
+        {
+          "label": "保存",
+          "height": 32
+        },
+        {
+          "label": "测试连接",
+          "height": 32
+        },
+        {
+          "label": "保存登录方式",
+          "height": 32
+        },
+        {
+          "label": "检测 Gemini CLI",
+          "height": 32
+        }
+      ]
+    },
+    {
+      "name": "asset-library",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "url": "http://tauri.localhost/",
+      "text": [
+        {
+          "label": "资产管理",
+          "font": 14
+        },
+        {
+          "label": "KK工作流画布",
+          "font": 16
+        },
+        {
+          "label": "画布",
+          "font": 16
+        },
+        {
+          "label": "资产",
+          "font": 16
+        },
+        {
+          "label": "静音冷风扇3.png",
+          "font": 14
+        },
+        {
+          "label": "静音冷风扇.png",
+          "font": 14
+        },
+        {
+          "label": "静音冷风扇2.png",
+          "font": 14
+        },
+        {
+          "label": "静音冷风扇4.png",
+          "font": 14
+        },
+        {
+          "label": "静音冷风扇3.png",
+          "font": 12
+        },
+        {
+          "label": "静音冷风扇.png",
+          "font": 12
+        },
+        {
+          "label": "静音冷风扇2.png",
+          "font": 12
+        },
+        {
+          "label": "静音冷风扇4.png",
+          "font": 12
+        },
+        {
+          "label": "图片名字1.png",
+          "font": 12
+        },
+        {
+          "label": "图片名字2.png",
+          "font": 12
+        }
+      ],
+      "controls": []
+    },
+    {
+      "name": "asset-actions",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "url": "http://tauri.localhost/",
+      "text": [
+        {
+          "label": "资产管理",
+          "font": 14
+        },
+        {
+          "label": "KK工作流画布",
+          "font": 16
+        },
+        {
+          "label": "画布",
+          "font": 16
+        },
+        {
+          "label": "资产",
+          "font": 16
+        },
+        {
+          "label": "人物",
+          "font": 14
+        },
+        {
+          "label": "文件夹名字或资源包名字",
+          "font": 14
+        },
+        {
+          "label": "人物",
+          "font": 12
+        },
+        {
+          "label": "文件夹名字或资源包名字",
+          "font": 12
+        },
+        {
+          "label": "创建主体",
+          "font": 14
+        },
+        {
+          "label": "导入资源包",
+          "font": 14
+        }
+      ],
+      "controls": [
+        {
+          "label": "创建主体",
+          "height": 40
+        },
+        {
+          "label": "导入资源包",
+          "height": 32
+        }
+      ]
+    },
+    {
+      "name": "workbench-queue",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "url": "http://tauri.localhost/",
+      "text": [
+        {
+          "label": "TASK WORKBENCH · PROTOTYPE",
+          "font": 12
+        },
+        {
+          "label": "任务工作台",
+          "font": 20
+        },
+        {
+          "label": "阶段审批项目 · 队列、批量结果与来源检查",
+          "font": 12
+        },
+        {
+          "label": "Queue",
+          "font": 12
+        },
+        {
+          "label": "1",
+          "font": 12
+        },
+        {
+          "label": "fixture-model",
+          "font": 12
+        },
+        {
+          "label": "失败",
+          "font": 12
+        },
+        {
+          "label": "Queue",
+          "font": 12
+        },
+        {
+          "label": "Prompt",
+          "font": 12
+        },
+        {
+          "label": "Generate",
+          "font": 12
+        },
+        {
+          "label": "Review",
+          "font": 12
+        },
+        {
+          "label": "Export",
+          "font": 12
+        },
+        {
+          "label": "Plan",
+          "font": 12
+        },
+        {
+          "label": "失败",
+          "font": 14
+        },
+        {
+          "label": "fixture-model · 连接未绑定",
+          "font": 12
+        },
+        {
+          "label": "重试剩余",
+          "font": 14
+        },
+        {
+          "label": "预计成本",
+          "font": 12
+        },
+        {
+          "label": "尚未取得报价",
+          "font": 16
+        },
+        {
+          "label": "供应商未回报价时只显示未知状态",
+          "font": 12
+        },
+        {
+          "label": "实际消耗",
+          "font": 12
+        },
+        {
+          "label": "未接入",
+          "font": 16
+        },
+        {
+          "label": "仅在供应商账单回传后显示",
+          "font": 12
+        },
+        {
+          "label": "隐私模式",
+          "font": 12
+        },
+        {
+          "label": "BYOK 本地",
+          "font": 16
+        },
+        {
+          "label": "结果保存在本机；请求会发送到指定 Provider",
+          "font": 12
+        },
+        {
+          "label": "Prototype · 成本、审批、评论与导出状态均以本地任务快照为准；真实供应商账单和公网分享尚未接入。",
+          "font": 12
+        }
+      ],
+      "controls": [
+        {
+          "label": "关闭任务工作台",
+          "height": 32
+        },
+        {
+          "label": "重试剩余",
+          "height": 32
+        }
+      ]
+    },
+    {
+      "name": "workbench-prompt",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "url": "http://tauri.localhost/",
+      "text": [
+        {
+          "label": "TASK WORKBENCH · PROTOTYPE",
+          "font": 12
+        },
+        {
+          "label": "任务工作台",
+          "font": 20
+        },
+        {
+          "label": "阶段审批项目 · 队列、批量结果与来源检查",
+          "font": 12
+        },
+        {
+          "label": "Queue",
+          "font": 12
+        },
+        {
+          "label": "1",
+          "font": 12
+        },
+        {
+          "label": "fixture-model",
+          "font": 12
+        },
+        {
+          "label": "失败",
+          "font": 12
+        },
+        {
+          "label": "Queue",
+          "font": 12
+        },
+        {
+          "label": "Prompt",
+          "font": 12
+        },
+        {
+          "label": "Generate",
+          "font": 12
+        },
+        {
+          "label": "Review",
+          "font": 12
+        },
+        {
+          "label": "Export",
+          "font": 12
+        },
+        {
+          "label": "Plan",
+          "font": 12
+        },
+        {
+          "label": "失败",
+          "font": 14
+        },
+        {
+          "label": "fixture-model · 连接未绑定",
+          "font": 12
+        },
+        {
+          "label": "重试剩余",
+          "font": 14
+        },
+        {
+          "label": "Prompt",
+          "font": 14
+        },
+        {
+          "label": "阶段审批验证",
+          "font": 12
+        },
+        {
+          "label": "Prompt Hash",
+          "font": 12
+        },
+        {
+          "label": "归档结果后生成",
+          "font": 12
+        },
+        {
+          "label": "参考素材",
+          "font": 12
+        },
+        {
+          "label": "0 项 · 不含密钥",
+          "font": 12
+        },
+        {
+          "label": "Prototype · 成本、审批、评论与导出状态均以本地任务快照为准；真实供应商账单和公网分享尚未接入。",
+          "font": 12
+        }
+      ],
+      "controls": [
+        {
+          "label": "关闭任务工作台",
+          "height": 32
+        },
+        {
+          "label": "重试剩余",
+          "height": 32
+        }
+      ]
+    },
+    {
+      "name": "workbench-generate",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "url": "http://tauri.localhost/",
+      "text": [
+        {
+          "label": "TASK WORKBENCH · PROTOTYPE",
+          "font": 12
+        },
+        {
+          "label": "任务工作台",
+          "font": 20
+        },
+        {
+          "label": "阶段审批项目 · 队列、批量结果与来源检查",
+          "font": 12
+        },
+        {
+          "label": "Queue",
+          "font": 12
+        },
+        {
+          "label": "1",
+          "font": 12
+        },
+        {
+          "label": "fixture-model",
+          "font": 12
+        },
+        {
+          "label": "失败",
+          "font": 12
+        },
+        {
+          "label": "Queue",
+          "font": 12
+        },
+        {
+          "label": "Prompt",
+          "font": 12
+        },
+        {
+          "label": "Generate",
+          "font": 12
+        },
+        {
+          "label": "Review",
+          "font": 12
+        },
+        {
+          "label": "Export",
+          "font": 12
+        },
+        {
+          "label": "Plan",
+          "font": 12
+        },
+        {
+          "label": "失败",
+          "font": 14
+        },
+        {
+          "label": "fixture-model · 连接未绑定",
+          "font": 12
+        },
+        {
+          "label": "重试剩余",
+          "font": 14
+        },
+        {
+          "label": "Batch Matrix",
+          "font": 14
+        },
+        {
+          "label": "1 个输出 · 单项可重试",
+          "font": 12
+        },
+        {
+          "label": "01",
+          "font": 12
+        },
+        {
+          "label": "失败",
+          "font": 12
+        },
+        {
+          "label": "assetId",
+          "font": 12
+        },
+        {
+          "label": "等待归档",
+          "font": 12
+        },
+        {
+          "label": "模型",
+          "font": 12
+        },
+        {
+          "label": "fixture-model",
+          "font": 12
+        },
+        {
+          "label": "连接",
+          "font": 12
+        },
+        {
+          "label": "未绑定",
+          "font": 12
+        },
+        {
+          "label": "Prompt Hash",
+          "font": 12
+        },
+        {
+          "label": "等待编译",
+          "font": 12
+        },
+        {
+          "label": "查看提示词",
+          "font": 12
+        },
+        {
+          "label": "阶段审批验证",
+          "font": 12
+        },
+        {
+          "label": "UI 验收：供应商尚未返回可归档结果。",
+          "font": 12
+        },
+        {
+          "label": "单项重试",
+          "font": 14
+        },
+        {
+          "label": "Prototype · 成本、审批、评论与导出状态均以本地任务快照为准；真实供应商账单和公网分享尚未接入。",
+          "font": 12
+        }
+      ],
+      "controls": [
+        {
+          "label": "关闭任务工作台",
+          "height": 32
+        },
+        {
+          "label": "重试剩余",
+          "height": 32
+        },
+        {
+          "label": "单项重试",
+          "height": 32
+        }
+      ]
+    },
+    {
+      "name": "workbench-review",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "url": "http://tauri.localhost/",
+      "text": [
+        {
+          "label": "TASK WORKBENCH · PROTOTYPE",
+          "font": 12
+        },
+        {
+          "label": "任务工作台",
+          "font": 20
+        },
+        {
+          "label": "阶段审批项目 · 队列、批量结果与来源检查",
+          "font": 12
+        },
+        {
+          "label": "Queue",
+          "font": 12
+        },
+        {
+          "label": "1",
+          "font": 12
+        },
+        {
+          "label": "fixture-model",
+          "font": 12
+        },
+        {
+          "label": "失败",
+          "font": 12
+        },
+        {
+          "label": "Queue",
+          "font": 12
+        },
+        {
+          "label": "Prompt",
+          "font": 12
+        },
+        {
+          "label": "Generate",
+          "font": 12
+        },
+        {
+          "label": "Review",
+          "font": 12
+        },
+        {
+          "label": "Export",
+          "font": 12
+        },
+        {
+          "label": "Plan",
+          "font": 12
+        },
+        {
+          "label": "失败",
+          "font": 14
+        },
+        {
+          "label": "fixture-model · 连接未绑定",
+          "font": 12
+        },
+        {
+          "label": "重试剩余",
+          "font": 14
+        },
+        {
+          "label": "Approval Gates",
+          "font": 14
+        },
+        {
+          "label": "远程传输",
+          "font": 12
+        },
+        {
+          "label": "等待提交前审批",
+          "font": 12
+        },
+        {
+          "label": "高成本批量",
+          "font": 12
+        },
+        {
+          "label": "本次未触发",
+          "font": 12
+        },
+        {
+          "label": "覆盖原图",
+          "font": 12
+        },
+        {
+          "label": "本次未触发",
+          "font": 12
+        },
+        {
+          "label": "外部分享",
+          "font": 12
+        },
+        {
+          "label": "本次未触发",
+          "font": 12
+        },
+        {
+          "label": "审批记录绑定当前任务。覆盖原图、外部分享入口尚未启用。",
+          "font": 12
+        },
+        {
+          "label": "Agent Cards",
+          "font": 14
+        },
+        {
+          "label": "1",
+          "font": 12
+        },
+        {
+          "label": "Planner",
+          "font": 12
+        },
+        {
+          "label": "拆解目标与审批边界 · Prototype",
+          "font": 12
+        },
+        {
+          "label": "Prototype",
+          "font": 12
+        },
+        {
+          "label": "2",
+          "font": 12
+        },
+        {
+          "label": "Prompt Compiler",
+          "font": 12
+        },
+        {
+          "label": "本地规则编译提示词与参数",
+          "font": 12
+        },
+        {
+          "label": "本地规则",
+          "font": 12
+        },
+        {
+          "label": "3",
+          "font": 12
+        },
+        {
+          "label": "Reference Analyst",
+          "font": 12
+        },
+        {
+          "label": "五类参考用途 · 视觉分析未接入",
+          "font": 12
+        },
+        {
+          "label": "Prototype",
+          "font": 12
+        },
+        {
+          "label": "4",
+          "font": 12
+        },
+        {
+          "label": "Generation Worker",
+          "font": 12
+        },
+        {
+          "label": "按连接提交批量任务",
+          "font": 12
+        },
+        {
+          "label": "待命",
+          "font": 12
+        },
+        {
+          "label": "5",
+          "font": 12
+        },
+        {
+          "label": "Asset Tagger",
+          "font": 12
+        },
+        {
+          "label": "归档 SHA-256 与 AI 标签",
+          "font": 12
+        },
+        {
+          "label": "等待结果",
+          "font": 12
+        },
+        {
+          "label": "6",
+          "font": 12
+        },
+        {
+          "label": "Reviewer",
+          "font": 12
+        },
+        {
+          "label": "人工审阅与区域评论",
+          "font": 12
+        },
+        {
+          "label": "人工",
+          "font": 12
+        },
+        {
+          "label": "7",
+          "font": 12
+        },
+        {
+          "label": "Compositor / Exporter",
+          "font": 12
+        },
+        {
+          "label": "外部导出服务未接入 · Prototype",
+          "font": 12
+        },
+        {
+          "label": "Prototype",
+          "font": 12
+        },
+        {
+          "label": "Prototype · 成本、审批、评论与导出状态均以本地任务快照为准；真实供应商账单和公网分享尚未接入。",
+          "font": 12
+        }
+      ],
+      "controls": [
+        {
+          "label": "关闭任务工作台",
+          "height": 32
+        },
+        {
+          "label": "重试剩余",
+          "height": 32
+        }
+      ]
+    },
+    {
+      "name": "workbench-export",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "url": "http://tauri.localhost/",
+      "text": [
+        {
+          "label": "TASK WORKBENCH · PROTOTYPE",
+          "font": 12
+        },
+        {
+          "label": "任务工作台",
+          "font": 20
+        },
+        {
+          "label": "阶段审批项目 · 队列、批量结果与来源检查",
+          "font": 12
+        },
+        {
+          "label": "Queue",
+          "font": 12
+        },
+        {
+          "label": "1",
+          "font": 12
+        },
+        {
+          "label": "fixture-model",
+          "font": 12
+        },
+        {
+          "label": "失败",
+          "font": 12
+        },
+        {
+          "label": "Queue",
+          "font": 12
+        },
+        {
+          "label": "Prompt",
+          "font": 12
+        },
+        {
+          "label": "Generate",
+          "font": 12
+        },
+        {
+          "label": "Review",
+          "font": 12
+        },
+        {
+          "label": "Export",
+          "font": 12
+        },
+        {
+          "label": "Plan",
+          "font": 12
+        },
+        {
+          "label": "失败",
+          "font": 14
+        },
+        {
+          "label": "fixture-model · 连接未绑定",
+          "font": 12
+        },
+        {
+          "label": "重试剩余",
+          "font": 14
+        },
+        {
+          "label": "Comments to Tasks",
+          "font": 14
+        },
+        {
+          "label": "添加评论",
+          "font": 14
+        },
+        {
+          "label": "评论和任务分配保存在当前本地项目。Agent 自动执行与多人同步为 Prototype。",
+          "font": 12
+        },
+        {
+          "label": "Provenance",
+          "font": 14
+        },
+        {
+          "label": "模型",
+          "font": 12
+        },
+        {
+          "label": "fixture-model",
+          "font": 12
+        },
+        {
+          "label": "连接",
+          "font": 12
+        },
+        {
+          "label": "未绑定",
+          "font": 12
+        },
+        {
+          "label": "任务",
+          "font": 12
+        },
+        {
+          "label": "project-muzoe4yc-zwhpl513-task-muzoe4yf-duvrap",
+          "font": 12
+        },
+        {
+          "label": "父素材",
+          "font": 12
+        },
+        {
+          "label": "无",
+          "font": 12
+        },
+        {
+          "label": "生成时间",
+          "font": 12
+        },
+        {
+          "label": "尚未生成",
+          "font": 12
+        },
+        {
+          "label": "C2PA / SynthID",
+          "font": 12
+        },
+        {
+          "label": "未知 · 未收到可验证信号",
+          "font": 12
+        },
+        {
+          "label": "AI 生成标签",
+          "font": 12
+        },
+        {
+          "label": "等待生成结果",
+          "font": 12
+        },
+        {
+          "label": "覆盖原图和公网分享尚未接入；当前操作不会发送给外部协作者。",
+          "font": 12
+        },
+        {
+          "label": "外部分享 · Prototype",
+          "font": 14
+        },
+        {
+          "label": "Prototype · 成本、审批、评论与导出状态均以本地任务快照为准；真实供应商账单和公网分享尚未接入。",
+          "font": 12
+        }
+      ],
+      "controls": [
+        {
+          "label": "关闭任务工作台",
+          "height": 32
+        },
+        {
+          "label": "重试剩余",
+          "height": 32
+        },
+        {
+          "label": "添加评论",
+          "height": 32
+        }
+      ]
+    },
+    {
+      "name": "workbench-plan",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "url": "http://tauri.localhost/",
+      "text": [
+        {
+          "label": "TASK WORKBENCH · PROTOTYPE",
+          "font": 12
+        },
+        {
+          "label": "任务工作台",
+          "font": 20
+        },
+        {
+          "label": "阶段审批项目 · 队列、批量结果与来源检查",
+          "font": 12
+        },
+        {
+          "label": "Queue",
+          "font": 12
+        },
+        {
+          "label": "1",
+          "font": 12
+        },
+        {
+          "label": "fixture-model",
+          "font": 12
+        },
+        {
+          "label": "失败",
+          "font": 12
+        },
+        {
+          "label": "Queue",
+          "font": 12
+        },
+        {
+          "label": "Prompt",
+          "font": 12
+        },
+        {
+          "label": "Generate",
+          "font": 12
+        },
+        {
+          "label": "Review",
+          "font": 12
+        },
+        {
+          "label": "Export",
+          "font": 12
+        },
+        {
+          "label": "Plan",
+          "font": 12
+        },
+        {
+          "label": "选择阶段计划产品短片计划",
+          "font": 14
+        },
+        {
+          "label": "0 / 3 阶段已完成 · 2 项待审批",
+          "font": 14
+        },
+        {
+          "label": "阶段 1：分镜方案",
+          "font": 14
+        },
+        {
+          "label": "等待计划审批",
+          "font": 14
+        },
+        {
+          "label": "阶段 2：画面结果",
+          "font": 14
+        },
+        {
+          "label": "等待结果审批",
+          "font": 14
+        },
+        {
+          "label": "阶段 3：后续镜头",
+          "font": 14
+        },
+        {
+          "label": "待执行 / 执行中",
+          "font": 14
+        },
+        {
+          "label": "分镜方案",
+          "font": 16
+        },
+        {
+          "label": "确认场景与镜头",
+          "font": 14
+        },
+        {
+          "label": "0 / 1 工作项已成功 · 0 项失败 · 版本 0",
+          "font": 14
+        },
+        {
+          "label": "work-script · text · 待执行",
+          "font": 12
+        },
+        {
+          "label": "编写产品分镜",
+          "font": 14
+        },
+        {
+          "label": "批准计划",
+          "font": 14
+        },
+        {
+          "label": "拒绝计划",
+          "font": 14
+        },
+        {
+          "label": "Prototype · 成本、审批、评论与导出状态均以本地任务快照为准；真实供应商账单和公网分享尚未接入。",
+          "font": 12
+        }
+      ],
+      "controls": [
+        {
+          "label": "关闭任务工作台",
+          "height": 32
+        },
+        {
+          "label": "批准计划",
+          "height": 32
+        },
+        {
+          "label": "拒绝计划",
+          "height": 32
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "sourceHashes": {
+    "src/App.tsx": "5d9bac7c60d58f9e691d2558df54ea3e5fac0accf8075842e9c22405b29ddf1f",
+    "src/components/AccountPopup.tsx": "086b5f474bddafaa88264c1d8d629d0a0f2904c8e910d56f92c3f5ee50eb5a11",
+    "src/components/AgentComposer.tsx": "fc7fe946dce1786e51e7d460b53785d7225791b1afa95e3d5a0bc13f47da464c",
+    "src/components/AgentConversationMessages.tsx": "a3b8ef9c53d9d028d3cd1ad7588fdd3b8fe86484ea9fadac433756154fea735c",
+    "src/components/AgentUsageStatus.tsx": "4659ff314880abe33b94c8aa272bb503cfafa6b909aa055875c1ec83bb208fbe",
+    "src/components/assets/AssetActions.tsx": "8b75a12081fa67a8735d0ef039960538c423489a23517b60ad98458029cea77b",
+    "src/components/assets/AssetCard.tsx": "a8d015ac5081c9518d5feb3f89fb404fcb9e786f11c98058a5abd62eb9dfad81",
+    "src/components/assets/AssetDetail.tsx": "e153979df73146eaeae3a6bad8a04048072141290eb21e198393f982510368a7",
+    "src/components/assets/AssetFilterControls.tsx": "fe4ca080df120542719f290516bc185906265391181e8622b8fe5a6e9fcecac1",
+    "src/components/assets/AssetPanel.tsx": "4c494742b8bd99b2edc1266b625737267a199b3ca3ff75bffc535a9510c5715a",
+    "src/components/assets/AssetProvenanceDetail.tsx": "13e7b82c40bbf61e42b673c05b75708c6296ee709aaa64d95829972781d35dc8",
+    "src/components/assets/assets.css": "1d72df05d401fdfb7676226519b509320ac8ae5d0c59513f0f8cc9931fc88af4",
+    "src/components/assets/CreateSubject.tsx": "53512ae933f7d5aba828f1895ba4a84b53a2b08cca9bf1c83998b9c7bab00eb9",
+    "src/components/assets/useAssetCollections.ts": "13e07c326f345fca4b8d7d339c0f2c1b4bddff2b76f68a3e2385d003bdfdd649",
+    "src/components/assets/useAssetDetail.ts": "49c16dbfd4abb558b41888b7278a1e74a05649259859b0026e2351096e2148cb",
+    "src/components/assets/useAssetImport.ts": "d87f080cddeb464663c0b49b6f43dd116afbd31faa6f8b141d5a1243a532a803",
+    "src/components/BatchMatrix.tsx": "96c46df4cc86f99d5445800feae85eb7c42b1a51b6ba08a82098c93d319c0455",
+    "src/components/BrandLogo.tsx": "6559a514ae26efbba19e3eb2868d61ea5fbd248cc0cd4c82696903e146b16ffb",
+    "src/components/canvas/AddNodeMenu.tsx": "302fcc6d3ca30bf4169da19cc0b41d5cf9f09c13dfd0b4e0660e924d02159f4c",
+    "src/components/canvas/CanvasConnections.tsx": "e1bcad8fddd9dad444c5feb447f7dc14c1acb119fde028a6c467400d6c08b01e",
+    "src/components/canvas/CanvasContextMenu.tsx": "b08674e118185cfdaa1d0d7587c0baebe1b4d3c9227232919132bfa604f7e6d9",
+    "src/components/canvas/CanvasHud.tsx": "da1552e096901f50691378c2f4d71b9e7d225f691a9f5725029d6c5e86db8b6b",
+    "src/components/canvas/CanvasLayersPanel.tsx": "abae52e652ae12279ec95349364195f1ed032a2ebb87bca8765a76c101b13689",
+    "src/components/canvas/CanvasMarquee.tsx": "ec91afa7df9087a21480d1d0ffe6f5c246274c14f2d59eca388119cb0329eb82",
+    "src/components/canvas/CanvasMinimap.tsx": "f7f995f439b53c673faaa358f3312a5ef908c265a21780afc0c45710b604febf",
+    "src/components/canvas/canvasModel.ts": "8608e13689aaf7e1b2d65b6d22bc0d852efb8af625d4d4dc0bcf75d350d518c0",
+    "src/components/canvas/CanvasNavigation.tsx": "1bdc4b202ef04ba6912f939316f953c7757cc0945fca2bc1951c5db8d8ecadd7",
+    "src/components/canvas/CanvasNodeContent.tsx": "b7b9826e8266b6017c051ad5ae5f794d2e3108fb4a6040152867a6608651cf7a",
+    "src/components/canvas/CanvasNodeFrame.tsx": "8b0bd27e167a998a99116b2cb5619bf3e57c27354ed0adb6fb615742ce786c70",
+    "src/components/canvas/CanvasNodeItem.tsx": "a4537c9e79f2e9a5ee5f9d05b6e9006a015f1ee72417f6509701879c685afa6c",
+    "src/components/canvas/CanvasNodeLayer.tsx": "71de49e589e65086a14caac19c83feaac7a7265eb5fdb770026702fc986d29f0",
+    "src/components/canvas/CanvasOverlays.tsx": "8784a0e69771b5cbe2040ea920ba2208737e67296e4d11f5230912100a8fc8bc",
+    "src/components/canvas/CanvasProps.ts": "7bd34b590994385d5371a1cd6f8af21abad00f20da91e96d33b38eed18bb68ed",
+    "src/components/canvas/canvasReferences.ts": "fef2812e73fb7f9a4f101c3b7ee6bdee37a194963db1640498aa530a6d251430",
+    "src/components/canvas/canvasSurface.ts": "2fabc26b6e96fef240b9db36ccef67690767d9aa7e1af1862a7d1ef042a6515e",
+    "src/components/canvas/CanvasToolbar.tsx": "7cd45eb8f0884e2ccf0641f67e7ebd3826766b2d7d4c90e7d13481c28d4175f1",
+    "src/components/canvas/CanvasZoomMenu.tsx": "90ed6de944a829c1f472c943bdeba7cf819a56ce7a7bd079b18c4c7703197e2a",
+    "src/components/canvas/ConnectionFeedback.tsx": "dbabb068d6a2f38702c7057c0101ada17c57264f81602cdb354f2f49fcbe6a6a",
+    "src/components/canvas/connectionRules.ts": "338201af1d38b645ed2475e528206d77985a43cad4dbdd0f49dd8c43603d873c",
+    "src/components/canvas/imageSelectionPosition.ts": "9247a4ee4ea5a8c9e32661a80a83cbf314089003d98975cc95687145d333d6e0",
+    "src/components/canvas/ImageSelectionToolbar.tsx": "151c51a018fdd01c6d035b515f7b6e8927832b438978026e94a894a95d3cceec",
+    "src/components/canvas/NodeActions.tsx": "7c9943bd1817cfefbb2de9f3de5374b3bd0ecd543051e69e7da3bde70ebfa356",
+    "src/components/canvas/TaskDetail.tsx": "d5c3427be5346fc3c9d0342158737c2b3712314411fc34deb8ec9e8e3b24789b",
+    "src/components/canvas/TaskPanel.tsx": "6a2649584ab73acd3710863dd554569b7387cf8d0eebce1040ce10f617f7a21f",
+    "src/components/canvas/TaskPanelPopover.tsx": "27da667ab6fc96219bc05c24c9b8612203e8fe0a9c51bd515dff3be6f5b79b62",
+    "src/components/canvas/ToolbarIcon.tsx": "781200a35bef41ef62898289b80909eedb3dbba632e19796835d36f4cb3e680f",
+    "src/components/canvas/useAgentCanvasView.ts": "3aa1cc324db8f971285bf438dc810ddfe28637961e8312d209825ecd14c3e7b2",
+    "src/components/canvas/useCanvasAddMenu.ts": "929041ba869848532e5d94155e9c4fdf0c3eee733fc051531ab96ede639bc15d",
+    "src/components/canvas/useCanvasConnections.ts": "471d9f6113767512573c005b6f0b4b3ea292faff0fec9dda0345830f52da2db5",
+    "src/components/canvas/useCanvasContextMenu.ts": "7d2dfccf1892e9b7b234c9af185d22010530d61340df14651b0ea413188cb4f5",
+    "src/components/canvas/useCanvasControls.ts": "d5cd84caf536311549d6479940b4763009f69bff14a0873715d75554edb922fa",
+    "src/components/canvas/useCanvasHistory.ts": "c1e25fd0306a7911dcc2cda50384f1ec07127ff04db740a1613b4a2da280634e",
+    "src/components/canvas/useCanvasNodeActions.ts": "f19773c7c1ff658d1e904cf4c021d17cde67a6e6cb9b42059cd44589fd451c43",
+    "src/components/canvas/useCanvasPersistence.ts": "92ff81e3ecc224dcf02cbe397f867d349eb04bfd91efcd39deaa9cff407432c5",
+    "src/components/canvas/useCanvasPointer.ts": "d7d34bb23a4c720403389ed6ecc14d97f051c6a51fd1dbe803fa22feca42a048",
+    "src/components/canvas/useCanvasPreferences.ts": "49860ada0e0629e3acd3607e71b3b262127a578261a1fc3af3fbdbcef9edeedf",
+    "src/components/canvas/useCanvasView.ts": "d40446196d1000985160745772bf8a87bafac0ec9938505e3e4b495e6746d832",
+    "src/components/canvas/useCanvasViewport.ts": "6130e0d211df4116eb4e49df29e9276a24c9c23cfda67cef6eb7ba9d9431f48e",
+    "src/components/canvas/useCanvasWorkbenchState.ts": "c20b7dc5eb0e731be551f9947ad37705da2a799f7806abe0826f549e1171f68f",
+    "src/components/Canvas.tsx": "03986cefa536b8993a8376e83e7188cd4d2018a00330b991d805ea12819d91d2",
+    "src/components/CatalogPageBody.tsx": "0ea43631caa995ca2d6d4978597402952abed5bedde913cdee60d3cc7146fa86",
+    "src/components/CatalogPageHeader.tsx": "fe73801ce906eacdc37dc2bba34e7ba1dba0b6787f6bb02ea48400fdd814436b",
+    "src/components/CatalogPanel.tsx": "487de676a6a02fb1ee0745ed5b4614268f333d0941ef53d527f00d884125f219",
+    "src/components/CatalogTutorial.tsx": "2305c20fbe626ec54f9fc27b78df20872171375aaf3ae08bcbd1b9b71a0b3d43",
+    "src/components/CommentRegion.tsx": "1dd55442e5c74db9ea2b6a994e404074ce11c9eb0b813325b37ad36da60a09a2",
+    "src/components/CompactAppMenu.tsx": "64786b6934d4d5bbb3c48e09db8c0836b1257f75c8c17cf125675ca6e418105e",
+    "src/components/ComposerPluginSummary.tsx": "735eee45cd562f8aefe8438c24ccc0706ec390d88ca86ab7016e553436c31334",
+    "src/components/ComposerTextarea.tsx": "31492cd753a28c2ab160d1952af14a2be5e28056e64f23099af138a8754f6b25",
+    "src/components/ConnectorCatalog.tsx": "dc56d6801c0041a4e23d003d04f623fd3de0efbb493a50bd403a5d899239c3a7",
+    "src/components/ConversationActions.tsx": "eae3a4888383da4f10aae400033f56c25341487e6066e1b795d4827773a3afe1",
+    "src/components/ConversationChannelSelector.tsx": "923bf450c9090a9e36f732bbc9505c5d9a63e1e7598c1ca68ce2f1caa7d219dc",
+    "src/components/ConversationComposer.tsx": "3d7d9b3bd3d9edc9a8b82967b6804197f7e69568a5e173d46ac72b86c097886c",
+    "src/components/ConversationComposerRegion.tsx": "7c1a7ba810c431c268ac9b1d2a5a8bd27969610fe67655b246ad979d4cfe5fad",
+    "src/components/ConversationHeader.tsx": "6638c4606bbf6f0516fc64026186a454b8328542a65231b918d9d486e0567d82",
+    "src/components/ConversationMessageFeed.tsx": "c3630477d0d9369596d6e222bfd77abcfa72cd39063cb40364a3f6d0dfea70a1",
+    "src/components/ConversationMessages.tsx": "7a028a2c9e6d981ea7fb41272367643c5317e36c2d31f340babff377d2912935",
+    "src/components/ConversationModelPicker.tsx": "44be8f39704c74db05bb6de3fbee901720eec41d26836c718114e3fe1d6c2007",
+    "src/components/ConversationPanel.tsx": "c790778ebca7646523fbcf5e07b07cb400bab8cf91e8e6129c1e07d85280f3ee",
+    "src/components/ConversationPanel.types.ts": "a0178b6a11135491af8d6e2ce5d217ffb3783a87594fcf1c2cb9413074fe8244",
+    "src/components/ConversationStatus.tsx": "59ae87518a1a4f77651bda8cf88a9a385575d0ed54633fa3aa8341769bc13e0d",
+    "src/components/ConversationTaskApproval.tsx": "47402a18f1df17035d4d700f459cc1df0e7ad541012c200c7902f3148221d74e",
+    "src/components/CreationStorageNotice.tsx": "73ceffa39f656a613b450b90cc0080e6aefddd7f39f88e31e3a23698091b217b",
+    "src/components/DeferredPanelBoundary.tsx": "1c761759cd8f04b9526005ac61bd31dc11d237aac20612e54f80801797485b30",
+    "src/components/GenerationOptions.tsx": "fe22680eee5a5888d74a3ec2b15850bcdc3efc8ae8b3682eccf088241b40b52d",
+    "src/components/GenerationPrivacyNotice.tsx": "310577aceecbcd746f416a02a52c90f9dddc396dcd9a14136338c2b7ae206010",
+    "src/components/GoogleAgentControls.tsx": "fec842f5d3e134bf18711f4ea03b996ad4ec217ede5234f8141639c2259e429e",
+    "src/components/GoogleConversationPanel.tsx": "865157a6af46d109b53f9109ce67adeb7e7be0865b4e43599f835e705509c702",
+    "src/components/InfoPanel.tsx": "61dabb260a5863a03cf398861c498b1e2e0157e7c070cebad47bdac3e1735a2f",
+    "src/components/LibraryPage.tsx": "9155e9aaafb34fd6fc94abec584b9422915b2febbd97b2d075eadfd5385100b0",
+    "src/components/Modal.tsx": "f96f350c6f977cb4121942c88d06f383519f9fede2617f1972b7c3e115035e53",
+    "src/components/ModelPickerMenu.tsx": "8785f51fea57df62bf695a3846f63b1e05ce7da3797e84e755e27e2c7a6a923c",
+    "src/components/ModelVariantControl.tsx": "4d6dc2a761c2d3e0752b9a89702c2761e45511ea3eb7a378c425435ed8d92e75",
+    "src/components/nodes/CanvasImageActions.tsx": "03e938adf10252db721e58434e46923444531729021928cbb0581980ba68f2a8",
+    "src/components/nodes/CreationComposer.tsx": "bec62c8af8853072996fa4d05937fa9d1fd2b11c56333009c76ad95ed1b0cf64",
+    "src/components/nodes/CreationModelPicker.tsx": "15e85b07d165b533eb5e0446314b45b70c31207fb6449fb49070bf956c0c0523",
+    "src/components/nodes/CreationParameterControl.tsx": "b607ebde231128b92df9ed2f2f4f7317e92dd6d2e2a178285cbea373a718a0f8",
+    "src/components/nodes/CreationParameters.tsx": "280951f236d69b2c969d246000e05fbb56bccdf594c42a0a1ef0181e1b58af7f",
+    "src/components/nodes/DemoMediaPreview.tsx": "b692e6fcf414491b30ec4d0ddb15336fe914e95ef1c7278af8fdd136d1ff4c74",
+    "src/components/nodes/DemoResultNode.tsx": "2d1d7543c7a2f44c8b3540f61dfdc90dfca8a71d5a641d20e0139adabed1672a",
+    "src/components/nodes/DemoRunButton.tsx": "84b3d8f0b3156b689e7a2dbe327d2347a4017ee20edb823d4ebcebeab86555c3",
+    "src/components/nodes/GenerationAction.tsx": "2595d6f5c7b05fb3d295b8f6f0a1af17c26a58709fbf1f412bb423e4cb3f26f7",
+    "src/components/nodes/GenerationCount.tsx": "010e4177b9bbd247949a4e95f77c78ceb0e28dca0f6ac51e1bc0806d8bc0ccb8",
+    "src/components/nodes/ImageCreationNode.tsx": "d69eb3a2b18b828fe41bc5aade041cb7a188851dc6a4bc42e4be72df38fe9416",
+    "src/components/nodes/ImageModelParameters.tsx": "4106b15818143500f4d6a8fd2487bcc3ffba5842e07dc0d02e668a16d99320dd",
+    "src/components/nodes/ImageRedrawDialog.tsx": "2adc8729834b9713aa0258465efadee997570a3582002be26bebb29ee6924e09",
+    "src/components/nodes/PluginNode.tsx": "bd3f0e2803b9bbd1809abb3cc6ebe0801dc6b4252f15dba936023e78b95eb348",
+    "src/components/nodes/PromptCreationNode.tsx": "15b394f2d4e2a07b84804d27b8a75402a2bab2584866a22ec824311ee7efa8bc",
+    "src/components/nodes/ReferenceStrip.tsx": "dec9f7eee67d4313bfc6bf64b2ce34f3a21c9b52a5a98d602f2fe56a5e2f4a1b",
+    "src/components/nodes/referenceUpload.ts": "9b8a998973741ffeb2ce7d5a02827258b9327ffbe43d9177b4be40e8a9ee576a",
+    "src/components/nodes/ResultPreview.tsx": "b408fe75d44056d94a3cd47738f3ee122af1fa09670695a72fb15e92467332b9",
+    "src/components/nodes/useLocalGeneration.ts": "a6f98d1215a132ea40f768cfdc44ff720fc0d42baffc4633b31b92d43ffc9c04",
+    "src/components/nodes/VideoNode.tsx": "86afeec83fa75fb7dec04463702cf456c0f0037a85fb0ba25e21ad554b7923d4",
+    "src/components/PromptLibraryPanel.tsx": "78816791787b3126e6ff634800dfa44ad8761323cb29b5a7aa6f56fc0c1ad72b",
+    "src/components/readAttachmentBatch.ts": "468a804f622f79ab68fe373ee921fa268f560c102a7a72a4b9854b04cbf100f7",
+    "src/components/ResizeHandle.tsx": "6994af6d2a32bb9758f449e2a1c68de841dd90777fcfa09d674a3c28bd1b9f86",
+    "src/components/SavedPane.tsx": "71af5386045461e87260f3643681b3b4f16daab94245c316a8018ba11bb211a7",
+    "src/components/settings/AgentConnectionSettings.tsx": "471737fb435ba7681a5d191d097b69961e59b2c0ba5cbaa81883aeb32c5873b5",
+    "src/components/settings/CodeBuddyConnectionSettings.tsx": "f9521efe6234b4319ea553e190e7a6468fbc4bdbdbbc52e1ea93b1cfeb9a3bb8",
+    "src/components/settings/CompanionMigrationActions.tsx": "b27b13b193a589de25a7169475b296f55a15894f203c8d550060ab452cc040af",
+    "src/components/settings/CompanionSettings.tsx": "1e6015b74d9c3dfdbb15dc33ea03466f02df0d774046c5397e8e390bcfb49f2f",
+    "src/components/settings/ConnectionSettings.tsx": "38a9a646929396c3bb996c3a665be1a7816a7929ac50900cfc179cb289c8b712",
+    "src/components/settings/DesktopAgentControl.tsx": "dcefd62442863ee99b6c6f6b7814f757f06f45b1bd46bf70117c7091a81d3146",
+    "src/components/settings/ExtensionsSettings.tsx": "8f0980093243660a7d1fd72a0951b475b37583819255738b1375fe6f4ce18bba",
+    "src/components/settings/GeneralSettings.tsx": "5517d2c437087a2e3e43b91ef7bdebbc0d577e8c818f3df2fb11e359c299a223",
+    "src/components/settings/GoogleConnectionSettings.tsx": "709361fc83f6c60e4aa6ff2f0ed271eb26f6315e5be3198446b91747d453fe61",
+    "src/components/settings/GoogleLoginModePanels.tsx": "59cb400f61de35adec09c4d6187c3e2fadf301d86c0a4c27c89344b8e1ddcb02",
+    "src/components/settings/ImageModelCapabilityFields.tsx": "d08969fd79004dc7a998a48e59d1b614d545f3f96ff06d165e913a3a2f73f8cc",
+    "src/components/settings/McpOverflowNotice.tsx": "976376a8037f7feda1948913f1d64f32f35b23eb1cbda5526d21f4415b0e94a2",
+    "src/components/settings/McpProtocolNotice.tsx": "f1d6996b5e752863d3d1037c288ac5a6d528d80fba09d8e7bc3b0e6df3510887",
+    "src/components/settings/McpServerCard.tsx": "d89b6cd0ffec032a42837032fc2e4393be408add85effee26f37156a1d1b561e",
+    "src/components/settings/McpServerForm.tsx": "db12df9b71a6fbf670a5c364357b4a51b5f1f7a94e3ae9beac595fdf2c9e36e5",
+    "src/components/settings/McpServerList.tsx": "6febb6e1bfa7c35d854b9af15dbf5d8e8ce7ae8c4d9ff5fc8cde9ec45b43ec6d",
+    "src/components/settings/McpSettings.tsx": "d7824cd6183156eb5dfaf9a443df7d0b5f27b74ad21595eef7ef619335d1f611",
+    "src/components/settings/MemorySettingsSection.tsx": "ee5a3157b15a4961ee3bc1d372cd57f5396324c0423010898f0e340ef6470a21",
+    "src/components/settings/ModelProviderSettings.tsx": "0c5c43b54361dd3341f03544e2801449179fc7fc6bde83d99e6eb29d10d45fba",
+    "src/components/settings/plugin-manager.css": "2aff236ea30211289ef1e01b5c41653365e36dbafc1ce4aaff4c837af8232978",
+    "src/components/settings/PluginManagerSettings.tsx": "2db057873137ea6a38bf25e3d93f61478b0ff0a7f04b019a71c8f73646ed09af",
+    "src/components/settings/ProviderApiKeyField.tsx": "859513952fc89aeb5365fb10b7456691081db0fe0bc052518556c8e8be14779f",
+    "src/components/settings/ProviderConnectionList.tsx": "b62849f2314caaf24ad28d413f2eb0fd8836fbc1019d55a1fef727c3d833c838",
+    "src/components/settings/ProviderConnectionStatus.tsx": "48e26e5d839fba557cc9321064eabcfa6f3be62a0d0ddc96de1241ffc0841a43",
+    "src/components/settings/ProviderModelCatalog.tsx": "f817b3069e21d5309ac116471a920b5e298f6cf1c1814c3b9e55f2353ed68447",
+    "src/components/settings/ProviderProfileFields.tsx": "45a314cffe587414ccb45f0e58ec813e1da2d5dd0133dce0a65bd6bb323d8707",
+    "src/components/settings/ProviderSettingsActions.tsx": "716750973c9e3d3bddc704ad40ca05ac154c1257cff71cfd10da3f651f98f6e3",
+    "src/components/settings/settings.css": "6f296016539c3d3f217ea4a408e1e2abd2b619d5cc1979546edd5ed1bdf5d425",
+    "src/components/settings/SettingsControls.tsx": "49aec7df6d40fb349e8423d37fafd5c650a6629180dcec519aac047e0b1f8b88",
+    "src/components/settings/SettingsPanel.tsx": "6c26c1cb16f06a66aaa16dc59e96ebd01219e5914b499fc07ed9e0038448fdc9",
+    "src/components/settings/SettingsSectionData.tsx": "916252953e661d324bc6198cf9172a777d68224da480d2a116f1332f455c8899",
+    "src/components/settings/SettingsSections.tsx": "49e493804924dd68c106c514edf351992e7e1358a6781f1af70675f851f9e3a5",
+    "src/components/settings/SkillsSettings.tsx": "f70b1dd8e5012feea920ad20c46d8250d82aa270e15c1792541d1dae7e7b671a",
+    "src/components/ShortcutsPanel.tsx": "eba331bc17d8bf35aba9e8791b6fe682dbb963d0f70f51386530cc01333d2059",
+    "src/components/Sidebar.tsx": "2e994207ab77232d99de29b42de1081e5b1b4aadf488e396fd7e33bfc02fab03",
+    "src/components/SidebarFolderGroup.tsx": "0b663fa5a47ac4ce9800832c229b73747055ccf3f3c8511cf8c9b66831d665a2",
+    "src/components/SidebarFolderMenu.tsx": "95f209fd1f129dc87dd93d822dd699adc0e49c420c4aaf67d18772c24824894f",
+    "src/components/SidebarGroupHeading.tsx": "def4ffb5885fbf599f90ac3b77966368940958557bdc871bc6c168c61d524e7a",
+    "src/components/SidebarIcon.tsx": "c401b4aa3e44787e2ae07900e5b1210ad89a4520ba0e219158754c0f0fae20ac",
+    "src/components/SidebarNavigation.tsx": "a64efe3ec983c7165b0ef116a18539bdcb5e04067ba7ecc3766830138da22b91",
+    "src/components/SidebarProjectEntry.tsx": "783fb354ce75131b4084fab3fe3dccf6f765dbc93a7125b9661cba7c7aa22cd3",
+    "src/components/SidebarProjectGroups.tsx": "5a16fa297a969508b4812d104c4a8da52c7a4931b0e1a036872f2177f912ad7c",
+    "src/components/SidebarProjectHeader.tsx": "deb5c833ddd95a44e09e40bb46a27963c30c867db635f26163186810ea7fa5e9",
+    "src/components/SidebarProjectSections.tsx": "70a759a77b71749d021e50ebfacb1dfc35e81edf2b6582699a24ffc4954a5b82",
+    "src/components/SkillCollection.tsx": "6bcfb32fd1c5140ad73e371029417084922702d18a52ec1597da40b40c781536",
+    "src/components/SkillEditor.tsx": "684a81e3d418285cbd2fddc5f21ab0970150f7aadf76869e4063c2324ff00d7f",
+    "src/components/SkillPageControls.tsx": "addb49049efa9dbf7fbc251aa5af558137c684869698191958db24177b3d2d72",
+    "src/components/SkillRecordCard.tsx": "baa5df0da6d24d913e20775f3aeb443c44aae72b0832b25d2cfc846470b7471c",
+    "src/components/SkillsPage.tsx": "8d178ba17ec7d9fac13cef1ec4f9a8fa403b04aa574f104a2ed157795151de7b",
+    "src/components/StagePlanDetail.tsx": "52bc45f21841257b348c0175d6c108c612307b49118814a9869037be975df3ea",
+    "src/components/StartAddPicker.tsx": "3ed3b54ca977e33fa3692f5da6a8bcbaa8c390fc6b559b114df97e8425886042",
+    "src/components/StartAttachmentList.tsx": "be6daf31216f34357858a856ebf709eb3479c81311596bb94178149be863b9c4",
+    "src/components/StartComposer.tsx": "905eed6aabac7f0939b6acdf12dc51fe39fb1405703db50558d5db0a0a9dbb8d",
+    "src/components/StartComposerExtensions.tsx": "a6a2f18f910bddc873c57103bc352f2daf9a0141b42201593887ce4ca67023c1",
+    "src/components/StartComposerModes.tsx": "36ff80bc1e82d264c3b3fb23d3fd79def3fddb7bafe898f9bd78491d4a7e14cf",
+    "src/components/StartModelPicker.tsx": "91098343ed62950ddd706e9def8980c63f52f956780052b27edef22970030993",
+    "src/components/StartPage.tsx": "2d90f85b751037b3583a390609aacbdf7b7decd8e862705f9fe610d63a5a6cec",
+    "src/components/StartResourcePopover.tsx": "cb38c3729833ae96a1e07bf7697a26bc265b1231eb5d8d2402f4fbef59239c6f",
+    "src/components/TaskExecutionApproval.tsx": "4a7e6e3a5ad83bcc4cbaf0aa75805db49bd4a7b1b4341bb6be29eb877c381628",
+    "src/components/TaskWorkbench.tsx": "cb1960e61d36c2bceee845a88d6b2cf2d4c3688c75ff733b225b72f41777547b",
+    "src/components/TaskWorkbenchContent.tsx": "1aaf62616cea6c028c55efde91ca8537b46601c260d647bf48786fe3c7f956af",
+    "src/components/TaskWorkbenchExport.tsx": "98d4fd133be2137a8c0510fff1485147e7b38778f12d03922f517e28d518db81",
+    "src/components/TaskWorkbenchReview.tsx": "91d85b5c559963b5de51b2a099368a77d92e54e2ea65555d225bab94bef2a19d",
+    "src/components/TaskWorkbenchStages.tsx": "bbce0692529be0ecf7d6cec670e28b0f72c3b6127fcdb0c3871cd87240f74096",
+    "src/components/TopBar.tsx": "4ff74e11ea1de167dcddcc26dc7c9c08b16499f33c0c74f3a4ff56e2126c375d",
+    "src/components/UiIcon.tsx": "205f3d09626c3c40aaae9980cc44fbd6f572d66e9a6d6faee3e83cdb40e357c7",
+    "src/components/uiIconSizing.ts": "7c80900f93f6995adab9ec81eee0bffafc97aa40896ffc4e3ca58cbb0bfcdc4e",
+    "src/components/useComposerMenus.ts": "5a7065d375d1cf9e239dd76364692cce391f4a59794ff65945d00ec3689fc915",
+    "src/components/useConversationAttachments.ts": "4ae0d30f6b63044ec79a4607ae654e1c76118205d0839b4e181ce27c37aeda07",
+    "src/components/useConversationOverlay.ts": "a6a560ae1de9f0111128233fa76c9d32181489671baf3cae5b00c8133c6becbd",
+    "src/components/useConversationSubmit.ts": "e51e65aca41de7e7b276a22a65751855d458f5089a98024e6663ab8a205e51ad",
+    "src/components/useDismissible.ts": "88b550c82d56c588763d3757abcbcb91be3ba3c8fef4ae8e501af09903ccc19a",
+    "src/components/useHiddenControlFocus.ts": "97c9794085d1d9bfbe7eefda7761937da79213a3f18c8fcc82062849a72b37d6",
+    "src/components/useSidebarLayout.ts": "fb9a32db9a1ae703673ad503a74a60472cf681038ab75c381b2ae021241b4f76",
+    "src/components/VoiceInputButton.tsx": "696601f2ae87f3c0a7d7606ea3c0fe833e136cb964d56b27e867bb8f55994b29",
+    "src/components/WindowControls.tsx": "dba64b878c058b2194aa1f6d4fbfb1be42b411c20c61c4a03bc538fca32dcae2",
+    "src/components/WorkflowCard.tsx": "bf38e39c30158f0d008a2040138896c5cb726bd2af192319a162d00631db509b",
+    "src/components/WorkflowImportButton.tsx": "32d81c683ff1e3abbe82cf79c4ae8c8d03fb62e38441c49a7e8c92de33a8e0b8",
+    "src/domain/agentWorkflow.ts": "2be4c56513cf92b14559705ab5b5dd0eee1f04b79c514679424a9e638881796d",
+    "src/domain/assets.ts": "f3adb650a0deb785b8a2809b5b5041e8cbfa5b115552800c5b9730d58c9bfb3b",
+    "src/domain/canvasConnections.ts": "0f8a78481a4f8ad402d18ea6705d9dacd1750b8b39420f5c3ac7977ef659bad4",
+    "src/domain/canvasGraph.ts": "d5894a6f4301aef184cac142e438ba6f6da8ead003130fe8fcd2fbb25168bfd4",
+    "src/domain/canvasHistory.ts": "131cf4d766e159021f041b550b0e9b6de6a675afc4877aa204b8685b8ff3a14c",
+    "src/domain/canvasItems.ts": "9f59721b05a8c58b7e392de8b35bde4a877f7c6358837acc4bcb1a1744f14bb0",
+    "src/domain/canvasPreferences.ts": "44284f5b3d5a39f3255cce64c3854c2085801a7fa96b7572e79eff4db106ce31",
+    "src/domain/canvasViewport.ts": "cba5ce5f26ea69d4a7f3fd90e404072c89946ce0468ede799620628b1619dff7",
+    "src/domain/demoMedia.ts": "ac680da4253f55b4f393069d07391e5bb41a635c68483cc38c4a5ca7ba4a0fe6",
+    "src/domain/googleConversation.ts": "efa7ab1f391b0b32b6057e503e458012fd4881e39a4a534d4463f0a36107f4e8",
+    "src/domain/imageModelCapabilities.ts": "705cf0528fddd17242fb2a926805b5e4b46ed00d0b9be9865bd3d2714c4a03b6",
+    "src/domain/imageParameters.ts": "07dcdaa3a9aa4c094ac7287abe45c6ea2896bfa80485ecf45a1a2c3a2fa4a670",
+    "src/domain/imageReferences.ts": "e4e0eb8f64efec4534a476d3933040c4f1063bf7c5639551f87d233034a7cb8e",
+    "src/domain/localGeneration.ts": "a73f3435872c7dd2fbaaa0b592bc000a9c22e698232cbe2f99e7b8d83a9a1eec",
+    "src/domain/modelProvider.ts": "5468634294fca37175ae79806318a3e1132bb443372d9fccfb51e7304662711c",
+    "src/domain/modelSelection.ts": "b4a3414c925acf914ba9aca37b19551789ef88b4455c7c1fc0a4e2d74869ea66",
+    "src/domain/pageTemplates.ts": "50cf2f9f9567bada4f8670915d218b919468cc07fd78c2667d80132967f959ae",
+    "src/domain/projectCanvas.ts": "f615c4c2d8b3f7442b0e913dc463f1404135aa1e4d99c22b6e20c07815e4c701",
+    "src/domain/providerConnections.ts": "424f5222b5fad1ec2ecafc5ad81d14968ddeab898de58058f9978171e2ff30c0",
+    "src/domain/providerUrl.ts": "9c617bb5585564c8de56cc86aab1619f66b14c4da9d05c4892dedb7bd1c01ea7",
+    "src/domain/reviewWorkflow.ts": "fc3d0194b393e762a6ce0002102ffc2a3b57f68abfb7563c3016d46d3ffed363",
+    "src/domain/settings.ts": "84026b7b6435e16182bc4e48386c78890abbcad23def06d29723f13b0aae3df4",
+    "src/domain/stagePlan.ts": "6fd1c534077e2d05cfc86f3cf4c8a237d5ea0b41dbee081c7fae558e1c00f45b",
+    "src/domain/uiGovernance.ts": "a006a81a0b5a4ce46e7f245db87c5096a723264c82b48236b3b31f1be041271b",
+    "src/features/agent/agentApi.ts": "ed9533fa7c90a78baa4f351fce06fcbae07d80f50cafea05c9cedca0ed211a08",
+    "src/features/agent/agentAttachments.ts": "63c00483af84d33273d126f5d353d7dc5c577421581ffd9ce9524b4c6e89f678",
+    "src/features/agent/agentCanvas.ts": "b824c505085f330deea9ca3a7319fdcbe2d7b7a32ddf085d4ba02b983927e7ef",
+    "src/features/agent/agentCanvasView.ts": "d8851c14a32aa6a8b53d8a2fd97b1ba6c9b661ca8570b3f5e4e6641f7b2400ae",
+    "src/features/agent/agentConnection.ts": "8493b7751f72ec7a0ef21601e56703f28b21702167a46b1e15f83ffeb356fcea",
+    "src/features/agent/agentEvents.ts": "a84e6cc0ded4560ea088d835ad8bb5ddbc3265e59ea407b2a121898d0e22d02a",
+    "src/features/agent/agentEventStream.ts": "9c4cd5bcb0aee8137187c8584e118c518f54ac3ae09bf9567707c9b84b531dfd",
+    "src/features/agent/agentHost.ts": "a893c173eb587a470fd607f73f7d04e41ddca15956443bbc9208126f9e003f95",
+    "src/features/agent/agentImages.ts": "a2e8bbb261fb79438a1c720917f9072d1808e125344ec5a02b04d6a94c37db87",
+    "src/features/agent/agentTypes.ts": "e4dcb6bd0260a1cb1959db2d9972bc9be5f6329c0f435e12c4258898b7133d7f",
+    "src/features/agent/agentUsage.ts": "e2e7b7850f972277262e383f0b31081ac26b3806e641f7bc653a8f9e4a8199e2",
+    "src/features/agent/geminiCliAdapter.ts": "aad62b57bb283ccb836446bf2479f3a78604f7e45f5b60baf7543b72965c0a28",
+    "src/features/agent/googleAgentConfig.ts": "0f0d52f7248a0bd08a62814ce16c31e5965b381cddc694bb2b256a7e10c18823",
+    "src/features/agent/googleAgentConnection.ts": "b636e630a7b17a20a08114f923cf75940b92821282fbc7b2924d3c87b91d23da",
+    "src/features/agent/googleAgentTools.ts": "fab8e247a26af9d15cf156d54ebb80e535c98950c4262df523f5c6d4ddf7197a",
+    "src/features/agent/googleInteractions.ts": "9b03d841d8e2cc62455858b436ef8d351d9a67dab21479259aa37d85ac010df7",
+    "src/features/agent/orchestrator.ts": "b821463073000ee532c141e2427b05bb491183e654f9ad7df78bccec97433cd5",
+    "src/features/comfyui/workflowRegistry.ts": "d290d792b35ab7e250d850cbc8492d775944ab8bdb2af9f8dd76d3e7775517eb",
+    "src/features/compare/CompareImageButton.tsx": "3bd47368499685dfc82922a7cf7a5443269b172a8e50bfbb56aef2119757e987",
+    "src/features/compare/imageCompare.ts": "13ccee0ed8899a7fe0097d19f8c910df1c4773de08b5a1d17d1beeb4a5feaad5",
+    "src/features/compare/ImageCompareControls.tsx": "f086722a3f61465610db451bd22a3ca18f5525c175125956e88bc23be1acddd1",
+    "src/features/compare/ImageCompareDialog.tsx": "70e2f4795ade00583a4eacfe1c10d33c6202b9fba17cd4bef23820e7f091cfa6",
+    "src/features/compare/ImageCompareProvider.tsx": "5f02efb8e21f8c25967fb9cda1faf56bf759f03e61b715f6f4e04295abb8befd",
+    "src/features/creation/assetPreview.ts": "a656ece15c6618c123ed7bd62a193fc517e720ef01ceaa778379cbff52cb3cf5",
+    "src/features/creation/assetRepository.ts": "1d4ac816a0c3def5a7d6d69aba7c0da59fe56f073c371715cc21a46822079698",
+    "src/features/creation/audioGeneration.ts": "4320f05e473bd55253b08cc7b7722be795aad5793f2bbabaa57c8db37ae88d1e",
+    "src/features/creation/CanvasImageCommand.tsx": "75eeb59dc4656974baac1487f087d5d3e3f4ef8053ffbe91c4598129e213abbd",
+    "src/features/creation/generationQueue.ts": "fe9d2033b028a53530c87103ec226ec4b77b0e0862e2f95f8079e915000d5dd2",
+    "src/features/creation/imageGeneration.ts": "7101dfcb670d511b0fef32b7d82e9bfd61bbc1ac23c93b4e7f4771695024a260",
+    "src/features/creation/imageTaskCommand.ts": "0853b0baaf7da24151a0f69887d7cb91985bb6d715c606bf647a80402e6e0a96",
+    "src/features/creation/model.ts": "65618fe8a09c17ff0d9813c4f0311f61a6ebd24952099843e0617c779bd74694",
+    "src/features/creation/nativeAssetAdapter.ts": "5c10fe6f9cd0a1ab36059be418af51262f4052b644aa5d5ebeea56bcc28bd57d",
+    "src/features/creation/nativeTaskHost.ts": "adb5992e13b253659f05682a4b24031d122f8fa7330fdb07554416b823e17a8f",
+    "src/features/creation/promptCompiler.ts": "f0ccaf4616559cf3ad7d44d3fa9c8059dd685aa31f3c5c265061ea364a8e78f8",
+    "src/features/creation/providerCredentials.ts": "431a36b49a1d2eca46728a2879f3b47eec9e741e6ae6b4d186f87a441f4bb9d5",
+    "src/features/creation/providerRegistry.ts": "2ad42d14f881eda411b8acd58293973e91f70d9f77c4f6a0fa169533d575f80a",
+    "src/features/creation/providerSubmission.ts": "020a4a41ca9694580fab17ddf48cea70eb3c7eb4e9632f96c06ec34729ccd49a",
+    "src/features/creation/resolveAttachments.ts": "d36b5d8c2abaa57e1c8a564980d99c1d51b758b4ca39fcc9a0bd69d429d9e665",
+    "src/features/creation/snapshotAssets.ts": "f5237bb763fb5626620e91b54e6dc5bd101bc8765d2645d12eddc686cabb7f7d",
+    "src/features/creation/snapshotCodec.ts": "414566cbda5a72b58a989c2938ad8809c4531dcc21321edd8189af907ca5cdb3",
+    "src/features/creation/storage.ts": "a3d021a0c1e61425330c78942acd39e363fb15c9916fdaa8487421fa1c9d1ac9",
+    "src/features/creation/taskRecovery.ts": "51f8674906acfa0f469cab7604f97525358757478a40820af6830266e8b9cdf3",
+    "src/features/creation/taskState.ts": "e609d6bbdbdfcaee0a15335873fb51a02375b14859b61377a1a14754593caa4a",
+    "src/features/creation/textGeneration.ts": "00022831e0d14b7b7e7c894b13cec7db5c3a810b036c0d09725ca5716704a0f3",
+    "src/features/creation/textTaskResult.ts": "a7ba7105163fe9e3105aefef1147d744c75100f413c9015a592a89518fbbe1d7",
+    "src/features/creation/useAssetArchive.ts": "38bce5f59a0648756b2b5a270cbd886118ba0d758c874172fc7b06c75c173e7c",
+    "src/features/creation/useCreationStorage.ts": "5191f4af976a3d32ba2cfdbd38c5e80a9cf882b53d41d28288c44dff3349a9c9",
+    "src/features/creation/useNativeTextRecovery.ts": "83a8611750b5fe88d6dbcd560207b45b150e2025ab5c6ccf77a14acbbde29479",
+    "src/features/creation/useSpeechInput.ts": "4ef33bdba4f096e981b137e82e456c0ef56187e85a06544a475e4e814dabe42e",
+    "src/features/generation-server/assets.ts": "76a9845f907433fcac346eb32d407fba643aa6e4302e35c01deb209d2c10bde2",
+    "src/features/generation-server/http.ts": "63ce620ed3b38d80d62cd00941daae9c79f17e415f64760cf30b6a4a1a75cdaa",
+    "src/features/generation-server/main.ts": "314b6e9929aecd93f37f78c828a0fb7a243bc77855248b81ec4d6ff409a806e9",
+    "src/features/generation-server/provider.ts": "5b80d50f079dd0a45a1623c71dfa4a3977783b27f458f080392f106190a26838",
+    "src/features/generation-server/repository.ts": "43b2c2cd05f7dfb346c8cb992bca19e4a5915493f2d05a4f31688ae69dca0248",
+    "src/features/generation-server/types.ts": "28c4e7b4184f77f228a86e22d0be330e16b21bcc6a7e75d63a7abc97597a2404",
+    "src/features/generation-server/webhook.ts": "3ab368fe60551c3abec8a220746635515f655486d04cad71a6fe5e85eb29df5f",
+    "src/features/generation-server/worker.ts": "8f3fe6dc7d34147c7d19de7d0371d49482da1c89f4afa77998de94384ae52736",
+    "src/features/local-service/client.ts": "68e3e17a3e42502cc56d7baf5bca73ee1b3ed1a5d11d6807d47f709d43d035be",
+    "src/features/local-service/connection.ts": "ed5f6a55b10aacc0075c73a053d6766ab282fb62d06e4e622ebe61d889439698",
+    "src/features/local-service/main.ts": "e34c1cb0676d2656d610d5f2e0afbe87fe51ab8f49eb7ef2b2973cbf3a4c721e",
+    "src/features/local-service/manifest.ts": "ecd4999906b7e09938c807adfe58b1417a393f427e0a49fc5ec1de74a6644d5b",
+    "src/features/local-service/migration.ts": "2012a603fa6aea24f8acdfc3a7bf4a00e29a2cfd5dc2a94ad25e4f2f88da10ef",
+    "src/features/local-service/protocol.ts": "0ad94c87c1a4af37125e383f2757d140e954a1d4c8a7ea851f6233e62c8d79fe",
+    "src/features/local-service/server.ts": "4b823370fdffc0946d5933b7790d4154a96eed788e46ad71157dc8713da331e8",
+    "src/features/local-service/session.ts": "16d970fa56435b071cdb4c632d9461e6a051284fbac71959065dff0216de22cb",
+    "src/features/local-service/store.ts": "9c6d795d62163a92b26b9a3f6ebf7bfcf7d951efa07a0374fce0ace8366e3077",
+    "src/features/mcp/mcpClient.ts": "e72a97c1583bb2e800a4096191e04415f73d5435a8236ceb42cba102c26d7427",
+    "src/features/mcp/mcpConfig.ts": "787351c55d92f197834ec30e991a9250fa90447a544aa970a22c7db3e43babff",
+    "src/features/memory/extractor.ts": "cb15028db390aad12d399573098def23064bc03b0d925aba0f63e55a413e403b",
+    "src/features/memory/index.ts": "5122aa550c1fc5e10f72aae395132d4b35d1dd5a892d315c1b300806e2661afa",
+    "src/features/memory/injector.ts": "c06c5d5c11cd2a55f152e68a6a574acd28e9a5e7ec7748119f720f7c0bda471f",
+    "src/features/memory/memoryService.ts": "0eb1859e16afe3951c33089415da7464f5c929d02d16c6fbf36cd699cdb3e0cd",
+    "src/features/memory/reply.ts": "7786c16f24ee1fc53d3c423d61deed743f65f01cb55268e57fa1f1f583add0d2",
+    "src/features/memory/storage.ts": "408884c2fce300eeabbe74a6cd88e668978f086b16c6075af625a7fe2b165bbb",
+    "src/features/memory/types.ts": "1265e4935e6ab9b8b5ac09951c27540e44ae8a779b2facb1f398797fc65e6a01",
+    "src/features/memory/useMemory.ts": "f059bebd77ac62a9ec6100a0af791483ef7588cb9541636e2a2719e89a0abcdf",
+    "src/features/models/imageModelCapabilities.ts": "bd29708c8c85d41a593cf93ae0e3aa04a633150f520a1f56616f56e883b23318",
+    "src/features/models/modelCatalog.ts": "8adc3431e1875ca8ad0d68e9e5e8c5a8ff0a231e00082ba077f78436b2adb6a3",
+    "src/features/models/modelCatalogWindow.ts": "c3d850193d238cc032b0928b47a51ad03836ed85a77500eeb9d138b1cc6ed8f0",
+    "src/features/models/modelFamilies.ts": "82b89d4d322ef47feee83a5b1109488c103ff04209fa0d9143f52b4fdc732765",
+    "src/features/models/modelMenuEntries.ts": "21416e8bab5592b39073811effb51acf9c83175b4a8f931fc394bd212fd3a7eb",
+    "src/features/models/modelPresentation.ts": "f57e023c5f76cdc26b7ecf5d15dbbef2a70732249105a8393a41d87c4e93d24d",
+    "src/features/models/modelSearch.ts": "86b1bd1e2670281c3a9a065fb77cf55f432ddd75a65864cd9982ca293517b608",
+    "src/features/models/modelSelection.ts": "594d3c856a78f8cb09012cab15fdab9b81092a4d58c301d3fb3fbbc75f02bc56",
+    "src/features/models/useImageModelCapabilities.ts": "8f4a73de3853c0adb3e28d4d156f65e0eece69d82cac685481213e8c74cb2bdf",
+    "src/features/plugins/nodeRegistry.ts": "b65d131961f0828bd4302a62fc3a2ee5a8e88e5be992e4d023352e4f17a884f7",
+    "src/features/plugins/pluginLoader.ts": "345ec3a7033b22d7bdf7c1e4c2078d9d1520a032f555d88a8a98ba71bca82388",
+    "src/features/plugins/pluginRuntime.ts": "26eea87c94f637c351ea716f9e92a7abe3e457779e29c0f7c51c5f68f17dab54",
+    "src/features/plugins/pluginStore.ts": "2427eff76921105e572ddb0a1bc24c4ead6a51bb6497a4a782c8f3a96810e721",
+    "src/features/plugins/pluginTypes.ts": "50d8d3a461e3b2994034b30ea003a5abc85bc79529e4362170c5e3fa5e5668d8",
+    "src/features/projects/nativeProjectPackageAdapter.ts": "9fe965e584c84145c90f35c4d38796c488278ee496a86ebb718864b209d2b051",
+    "src/features/projects/projectPackage.ts": "df596d3c32e5c248ff8228cf1401ed15493a17698a818ba047c294c25cbda808",
+    "src/features/projects/ProjectPackageActions.tsx": "66a6152c0774fd907c595af19a49a858597bd37379912f0b85f3362a81ef7c70",
+    "src/features/projects/sidebarProjectModel.ts": "b66062569060dd56027ce9483311c0dff5b6b3e8cd97c982b3c4a07a697d098d",
+    "src/features/prompts/promptLibrary.ts": "fc06530c6635bda264d1c4e102fe63199154978ab1b493e56f6a29b50d5a4c52",
+    "src/features/providers/providerConfigIO.ts": "da3dcfdea8f7fd9316662cb7505aafcc174d6908db7da19bac52cbc56625413e",
+    "src/features/providers/providerTargetRenderers.ts": "24c66f3990d5f1ef8cad1e3852784f4dbcfc95c53e3bf3cdb2be0d29f5c20781",
+    "src/features/skills/skillRegistry.ts": "777645f86588dcac6bc7cc3be6aadee41193fb98b9c0f373a2866a6bc6ac2af7",
+    "src/features/skills/templateSkills.ts": "d4a8da779c3217671849077f27afe6530e5832d4abcabd4654ab0662195238ff",
+    "src/features/sync/webdav.ts": "ec11d604377df1346fbf5b164d0cfc62bc245e4303afd286530cc739b6f0dae6",
+    "src/integrations/generation/geminiApiAdapter.ts": "6e29405a91dc0ec2479a96e01fec152c822b220388eb66ee4e850e5fc039da69",
+    "src/integrations/generation/jobClient.ts": "127e8b129a3047f3722482f89f91727cc8f22f80b96b02735200075ee846389e",
+    "src/integrations/generation/localComfyUiAdapter.ts": "1a9bd61ad3ca9f587ed1f845fe3eea6ceedc1cb60c0a2685510350fa6980fb9f",
+    "src/integrations/generation/openAiImageAdapter.ts": "a9228dc64b935c238ae120021cf4e522f59ac4d69c4e22836b548532199e19b0",
+    "src/integrations/generation/providerAdapter.ts": "0409a8fe17f2d2a1e81e84ba43c1d899c1bbc653c80eecb6ecec751707611d69",
+    "src/integrations/generation/providerAdapterFactory.ts": "2679b58c1087907ffa365a2cfa02d669c66606cd96500918d436f0a828529111",
+    "src/integrations/modelProvider.ts": "00ecb36208ed51649e91bb7e2997f16f2842e932aa0bc3ba9d9a52376cb4aa26",
+    "src/main.tsx": "137db75fc5311b1aabd60c6578bb9c8af8caef5b9b5b8b3cde3942fc89bd3983",
+    "src/runtime/appInfo.ts": "dc623890738dac866b049fb41b2e73d79be988648a3566699696dfb7ef9cec33",
+    "src/runtime/confirmAction.ts": "ef3ac10de181707c7125e33f33417937945565b6f5917edfd4c764ac463a90d6",
+    "src/runtime/storage-contract.ts": "9f6a9de64c96e9bf2367f78e9b7766968ad532352070092af1fcc2c8aa1532d5",
+    "src/styles/account-popup.css": "13deb059ad802c96cdef024c7b120f4846d8d27559dacbba88a317a0308569ea",
+    "src/styles/archetypes.css": "e18a18ca697d217e6ed220a1715c57eb44c2c572df8394efc5643564eb619eee",
+    "src/styles/canvas-actions.css": "a464864e0cb104750eb583ebb02f2a1d487007ebfd868cc82d1e8e1c98921058",
+    "src/styles/canvas-compare.css": "3629ba81f714e309a107ae8b354afeeefc60eb7c7aafce90eafb7e1468806c62",
+    "src/styles/canvas-context-menu.css": "582b211e66f3afb79e6f240da05b21c0e18aa00ef17f78464dc1823c8ec5677a",
+    "src/styles/canvas-hud.css": "2981e1bd4a3baf94beb8a1b00b74b7a4889f7f51b00d4f2f6e84efabe4b24d07",
+    "src/styles/canvas-layers.css": "bbd6c2e08cf69f023492e88acae98cb15be3b048fb3bd214dc166167f637818b",
+    "src/styles/canvas-navigation.css": "9ab6ddb84e7587fdd152b1b32805de66cacc23ad1d238fb226e8d08d99a9e09a",
+    "src/styles/canvas-tools.css": "ba520a2dcb5a31c491c2adbf5280c5add71e67a8723a617b13bd6fdfa50df64c",
+    "src/styles/catalog-pages.css": "c17a3434826f513d56a7465f0d6be8bc7217b896345d02935427fd62d08676bb",
+    "src/styles/catalog.css": "7fb1fc24e7e312e46f845f7a4c3fef9edd6891a8673b1f67b6c07c9409ef0c98",
+    "src/styles/composer.css": "5adad44ee1b410eb86a3f58cb0f5d01362213164af7426bd1b525dc9af179a2e",
+    "src/styles/conversation-panel.css": "a928a08ed651e19e012b8e37e8de0a09ee8d25e608a2305cccfc951db722eb3f",
+    "src/styles/demo-results.css": "b0a7706855775b7636275614616bc23d83fc5f8cd51bb15ccdc3dd378ecceb26",
+    "src/styles/design-surface.css": "f08dfac76ea69cf9ffb43d3ce9a12a4b0783481cf0707ee8d68cda7f548baed2",
+    "src/styles/desktop-titlebar.css": "661d21ccfef9924e1eb217e65e9cc364d09ba55a0bcbedae188549d081d182b8",
+    "src/styles/feature-parity.css": "ba0887f6a291d924bffbd0c5bb7fa37b3a455c20670f14326277595658b99ebe",
+    "src/styles/generation-count.css": "36a3562b26a53dc1511fccf84fa4ee712edfc682f8a4de6adb46dcd789ffff9b",
+    "src/styles/global.css": "d5ad6a30e45ad639071f8e793c3be830c622ddbe1088ba81675e70ae22eb1571",
+    "src/styles/image-selection.css": "afbb9e2a407d1e535027aab040e6c802394063158adb8583fdcdc6de6e6d6a75",
+    "src/styles/interaction.css": "ae3e215a9807a6380493fd43fd261e84b82e6722c26b2ba39f7650e5a8c6f245",
+    "src/styles/local-generation.css": "fdd7c0244ffde7b8963ade3554bd0c0b625b30a0e057842ae8bd3408194f5de9",
+    "src/styles/model-picker.css": "5474b1a096668bfc80ce0d1867d4d0011dd5cefd5ebececc1b28d09584686b89",
+    "src/styles/motion.css": "15789529baa77510606501972724a95dd488ca640585be835edc101a6cc64a32",
+    "src/styles/node-menu.css": "3554b94c4e21fb905e9755f9c60c3abd87c7b49b8a31099c4cd06e7239ba9082",
+    "src/styles/page-templates.css": "f2be94c9f175430fc2fe48280e91ce75b4b9d799001980eb3ebedcd6517fd455",
+    "src/styles/plugin-nodes.css": "196bd9a3b67f88673e562b1059af3c87d3e92dcebad2845a8859b8ec66448937",
+    "src/styles/responsive-content.css": "fc9e3e86dabd9a421c75ae2ba2c933098d55c086d7314d81f8363556ffc4cd92",
+    "src/styles/responsive.css": "bacb5dee6b4d426aa37f09d2950fd0b7f6a49b28bff413b1b451c8f3c7961e31",
+    "src/styles/shortcuts.css": "b088734698f501b0841e2a0eb41002c29bdbafd22247cb87bc949b983956a8ee",
+    "src/styles/sidebar.css": "c39e59e326656f949ad4a71216f008d1035da315173545be54accfe3d1a3b391",
+    "src/styles/stage-workbench.css": "8f67b28283039ea57a8a12575f22ee15f11f79251e1875f28473eb604c56bb1f",
+    "src/styles/task-workbench.css": "cbb8d7a7289108ef485991b7aa4a06e58f39c157deb187454e9be85355ac91a5",
+    "src/styles/tokens.css": "2eaf3dc312a7e84e3068550b8c712045659aa1bab20c58ad8afd9fc43fef4d87",
+    "src/styles/toolbar-icons.css": "6e84a07090c52bf24d92a4d8ac22b09180db81acbf7b91ce64004a2fbded12b3",
+    "src/styles/ui-governance.css": "51c083665444ed34d8ba3b2b90f16c3f510407019e05faccc40dca76acacc451",
+    "src/styles/ui-tokens.css": "078baf471f60f01376243e878d0ff3bdc401e3f510feb36091e44e9db35c6903",
+    "src/styles/workspace.css": "33f1b6300899da101587c59f7cd51083a0977ed7247861467ff196cecff2f053",
+    "src/vite-env.d.ts": "424faf9241dd699dda995b367ed36665732da1e6ec1f33b2fd40394488ecac92",
+    "src-tauri/src/agent_process.rs": "ae2bb2a59ce485edb6131068f66b61b7ad6f3b49a1d409b175f1693dd0021706",
+    "src-tauri/src/agent_runtime.rs": "23d8c9197e2df59dc450c47ee4b54a63b448e91011083dd3467c5af3a24698a0",
+    "src-tauri/src/asset_io.rs": "d96f7da894d58f0722cc864d8252d81c773598f4bf36f3ae1f9b82d21b7fbf28",
+    "src-tauri/src/asset_storage.rs": "678ad19a3b9df35ba6cde93aafcd84b046dc5b263705e32846f7316e1c4f65db",
+    "src-tauri/src/asset_storage_integrity_tests.rs": "b2d290bfca1278248436a36430c08e1e08ba4d68ec58de223f92400333b6dbe4",
+    "src-tauri/src/asset_storage_tests.rs": "8b5f7e1f178efa6d2d779b392f6dc2cbfaa55ed51f5e0c601ad8d24d9f7d88d3",
+    "src-tauri/src/asset_validation.rs": "a5c0228a85964630ecd761e2d6dc4f2222c15b31790349d0e2d5c976a27e4845",
+    "src-tauri/src/creation_storage.rs": "b776afdcc0ea42f8d9addd8a245ee9ce49feb77b7385ffec31a0cc08841f98d2",
+    "src-tauri/src/creation_storage_tests.rs": "efa3ebebccb22aadb95995682fc868f599e47f0bc258d10d9d68e405c969473e",
+    "src-tauri/src/creation_validation.rs": "8b2d95876f69b1daec5b088d89653267abd784d8e29e24f3287970c79ed86cc2",
+    "src-tauri/src/main.rs": "717ded3c29e2993d6d5260301448b3737dbef1b7f50503ddb25153eefa231340",
+    "src-tauri/src/project_package.rs": "d3623e165019e0c326adb7faa53580b39459c2aa235a9d71063247bee414878b",
+    "src-tauri/src/project_package_failure_tests.rs": "066b5db5c93543a48fbddb03bec16f4f2565bd958258c9822e15f7be84b047fd",
+    "src-tauri/src/project_package_json.rs": "322af812669e261355962a26a6d6cfb7e2353ab5923818eda6acb398ae7f71aa",
+    "src-tauri/src/project_package_snapshot.rs": "cc3ae246a67129d61992340625eb81c2c478beed79a1c784bcafa7a02d08658f",
+    "src-tauri/src/storage_paths.rs": "dd6fd9412ad362c5d222b6e9017836afb0ed36c32e1659c468d72a19a6f7a2bb",
+    "src-tauri/src/task_host.rs": "de06fb61c592729e6cca334c5a539ff49e24cd87a87aa0be92175be42bb9eec5",
+    "src-tauri/src/task_host_text.rs": "ebd247a2931f0582f48678e8aabd1f84f7307bf1933b472654b2c532d3a92b6e",
+    "config/platform-versions.json": "1ad246e1ed4c63809ce8c8886c3c7b076cf0ddc18b18e0623214d7beb992f7fd",
+    "src-tauri/tauri.conf.json": "c62b36ab38796cbd523738329ab88fd9996bf512d18d7e668578393a85e1d44a",
+    "src-tauri/Cargo.toml": "57557bb069d551a788ec6d9d729ff344ec01817cce4c7c35c8a0b170fbb7efba"
+  },
+  "identity": {
+    "url": "http://tauri.localhost/",
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "root": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-UI-013-single-row-titlebar\\src-tauri\\target\\image-selection-acceptance\\1791472366614-7d143ee8-85d7-4a7a-851a-93a91433ff02\\data",
+    "scripts": [
+      "http://tauri.localhost/assets/index-CZNs9Itz.js"
+    ],
+    "styles": [
+      "http://tauri.localhost/assets/index-DB0YxkTv.css"
+    ]
+  },
+  "cleanupComplete": true,
+  "finishedAt": "2026-10-08T15:12:52.662Z"
+}

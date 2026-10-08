@@ -1,0 +1,8 @@
+{
+  "main": "2cb73d237927afd68ea492394a76f1beac468369",
+  "appText": "complete source identical after CRLF normalization and removal of only owned desktop CSS import",
+  "upstreamAppAllStatementsPreserved": true,
+  "featuresPreserved": 34,
+  "ownedFeature": "FEAT-023 extends only task/code/test/evidence references and date",
+  "probeCorrection": "AST printer attached trailing comments differently; complete normalized text proves preservation. Registry has existing intentional Titlebar FEAT-023 additions; all upstream fields and other features preserved."
+}

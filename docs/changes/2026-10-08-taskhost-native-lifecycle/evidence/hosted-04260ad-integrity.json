@@ -1,0 +1,131 @@
+{
+  "checkHead": "04260ad823b1f46b2d1b55874fe7c4367f60322e",
+  "sourceHead": "7849310fc8049ed90cfbda2c0c23091e19d8d250",
+  "checkoutKind": "GitHub pull_request synthetic merge; actual sourceHead retained",
+  "parents": [
+    "1af0357b088df79dc51e9b309ef310a500722cf8",
+    "04260ad823b1f46b2d1b55874fe7c4367f60322e"
+  ],
+  "tree": "dfb40b2ad12857c53bf3df01aa298bb36697c9a7",
+  "candidateTreeEqual": true,
+  "runId": 37770000879,
+  "artifactId": 11547454383,
+  "archiveBytes": 15073811,
+  "archiveSha256": "c861ee0f9f65239e2bc5526fef6ca224894c6c4b4da8d0022e77b42f7465d016",
+  "receipt": "D:\\kk-studio\\.verification\\T5-native-lifecycle\\hosted-04260ad-pass-verified\\test-results\\desktop\\taskhost-lifecycle\\1791460335466-c9b1611c-d413-4491-a429-1614da3e6112\\receipt.json",
+  "receiptSha256": "65670acaf974a036da36b9a44ab870522efdd7724249a75a61910bee882f3347",
+  "passed": true,
+  "checks": 11,
+  "launches": 5,
+  "startups": [
+    {
+      "startedAt": "2026-10-08T11:52:15.547Z",
+      "runtimeVersion": "154.0.4258.62",
+      "hostElevated": "true",
+      "pid": 1580,
+      "exitCode": 1,
+      "signalCode": null,
+      "cdpReady": true,
+      "exitedAt": "2026-10-08T11:52:18.113Z",
+      "cleanupRequestedAt": "2026-10-08T11:52:17.968Z",
+      "stderr": ""
+    },
+    {
+      "startedAt": "2026-10-08T11:52:18.207Z",
+      "runtimeVersion": "154.0.4258.62",
+      "hostElevated": "true",
+      "pid": 7568,
+      "exitCode": 1,
+      "signalCode": null,
+      "cdpReady": true,
+      "exitedAt": "2026-10-08T11:52:19.943Z",
+      "cleanupRequestedAt": "2026-10-08T11:52:19.844Z",
+      "stderr": ""
+    },
+    {
+      "startedAt": "2026-10-08T11:52:20.047Z",
+      "runtimeVersion": "154.0.4258.62",
+      "hostElevated": "true",
+      "pid": 6988,
+      "exitCode": 0,
+      "signalCode": null,
+      "cdpReady": true,
+      "exitedAt": "2026-10-08T11:52:24.181Z",
+      "cleanupRequestedAt": "2026-10-08T11:52:23.850Z",
+      "stderr": ""
+    },
+    {
+      "startedAt": "2026-10-08T11:52:24.275Z",
+      "runtimeVersion": "154.0.4258.62",
+      "hostElevated": "true",
+      "pid": 9196,
+      "exitCode": 1,
+      "signalCode": null,
+      "cdpReady": true,
+      "exitedAt": "2026-10-08T11:52:27.007Z",
+      "cleanupRequestedAt": "2026-10-08T11:52:26.890Z",
+      "stderr": ""
+    },
+    {
+      "startedAt": "2026-10-08T11:52:27.109Z",
+      "runtimeVersion": "154.0.4258.62",
+      "hostElevated": "true",
+      "pid": 3316,
+      "exitCode": 1,
+      "signalCode": null,
+      "cdpReady": true,
+      "exitedAt": "2026-10-08T11:52:29.943Z",
+      "cleanupRequestedAt": "2026-10-08T11:52:29.830Z",
+      "stderr": ""
+    }
+  ],
+  "errors": [],
+  "credentialCleanupComplete": true,
+  "fingerprints": [
+    {
+      "file": "src-tauri/src/task_host.rs",
+      "sha256": "de06fb61c592729e6cca334c5a539ff49e24cd87a87aa0be92175be42bb9eec5",
+      "matchedGitCheckoutContent": true
+    },
+    {
+      "file": "src-tauri/src/task_host_text.rs",
+      "sha256": "ebd247a2931f0582f48678e8aabd1f84f7307bf1933b472654b2c532d3a92b6e",
+      "matchedGitCheckoutContent": true
+    },
+    {
+      "file": "src/App.tsx",
+      "sha256": "e4eb0c3f3fa06c64d12e41a03aed28a2201fdb68e929d2a2c8aac5b88dfe3de8",
+      "matchedGitCheckoutContent": true
+    },
+    {
+      "file": "src/components/BatchMatrix.tsx",
+      "sha256": "14aa9a0a3afc9a7fc77df286cc2a7358a0b3144d6b98b48aee013fab9f22b5c4",
+      "matchedGitCheckoutContent": true
+    },
+    {
+      "file": "src/features/creation/nativeTaskHost.ts",
+      "sha256": "adb5992e13b253659f05682a4b24031d122f8fa7330fdb07554416b823e17a8f",
+      "matchedGitCheckoutContent": true
+    },
+    {
+      "file": "src/features/creation/useCreationStorage.ts",
+      "sha256": "5191f4af976a3d32ba2cfdbd38c5e80a9cf882b53d41d28288c44dff3349a9c9",
+      "matchedGitCheckoutContent": true
+    },
+    {
+      "file": "tests/desktop/taskhost-lifecycle.mjs",
+      "sha256": "169f25445eb4836115ccea48af83233072d2582d588ef0ca5d7a0bfc68c43aaa",
+      "matchedGitCheckoutContent": true
+    },
+    {
+      "file": "config/platform-versions.json",
+      "sha256": "354b315ec9c76b7564bf1642bfd2c112dea401677d4f9149a150457dab8dee5f",
+      "matchedGitCheckoutContent": true
+    },
+    {
+      "file": "src-tauri/Cargo.lock",
+      "sha256": "c528d374c187609d2fa7cb0a3c781bfe4795a2e6d62afc48a1c572691ca58a03",
+      "matchedGitCheckoutContent": true
+    }
+  ]
+}
