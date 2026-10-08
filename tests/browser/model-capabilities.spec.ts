@@ -205,9 +205,10 @@ for (const duplicate of [true, false]) {
     if (duplicate) await expect(start).toBeEnabled();
     else {
       await expect(start).toBeDisabled();
-      await expect(redraw.getByRole("status")).toContainText(
-        "最多接收 1 张参考图",
-      );
+      const capabilityStatus = redraw.locator(".local-generation-status");
+      await expect(capabilityStatus).toHaveCount(1);
+      await expect(capabilityStatus).toHaveAttribute("role", "status");
+      await expect(capabilityStatus).toContainText("最多接收 1 张参考图");
     }
     await redraw.getByRole("button", { name: "取消", exact: true }).click();
     await expect(item.locator(".uploaded-image")).toBeVisible();
@@ -482,7 +483,10 @@ test("明确编辑限制禁用重绘和参考图并保留原图，不发送请�
   await expect(
     redraw.getByRole("button", { name: "开始重绘", exact: true }),
   ).toBeDisabled();
-  await expect(redraw.getByRole("status")).toContainText("不支持参考图编辑");
+  const capabilityStatus = redraw.locator(".local-generation-status");
+  await expect(capabilityStatus).toHaveCount(1);
+  await expect(capabilityStatus).toHaveAttribute("role", "status");
+  await expect(capabilityStatus).toContainText("不支持参考图编辑");
   await redraw.getByRole("button", { name: "取消", exact: true }).click();
   await expect(item.locator(".uploaded-image")).toBeVisible();
   expect(requests).toBe(0);

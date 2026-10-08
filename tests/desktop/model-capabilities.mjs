@@ -153,7 +153,10 @@ try {
   await expect(
     redraw.getByRole("button", { name: "开始重绘", exact: true }),
   ).toBeDisabled();
-  await expect(redraw.getByRole("status")).toContainText("不支持参考图编辑");
+  const capabilityStatus = redraw.locator(".local-generation-status");
+  await expect(capabilityStatus).toHaveCount(1);
+  await expect(capabilityStatus).toHaveAttribute("role", "status");
+  await expect(capabilityStatus).toContainText("不支持参考图编辑");
   await page.screenshot({
     path: path.join(evidence, "redraw-disabled-native.png"),
   });
