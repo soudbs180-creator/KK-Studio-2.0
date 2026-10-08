@@ -1503,7 +1503,7 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-032-provider-connectivity.md",
-    "summary": "统一 Provider 多目标渲染（Codex/Claude/OpenAI 兼容）、便携配置导入导出、模型上下文窗口 catalog、MCP stdio 配置契约——为接入更多供应商与工具打底。",
+    "summary": "统一Provider多目标渲染与配置CLI、catalog已接入；Codex受管TOML注释/引号/多行值、当前选择与profile引用及写入前原件保护已修复，当前完整组合验收进行中。App设置/真实目标CLI消费与接线仍待完成。",
     "entryPoints": [
       "Agent providers apply/check/apply-claude CLI（App 设置 UI 尚未接入）"
     ],
@@ -1526,9 +1526,10 @@
     "tasks": [
       "TASK-PROV-002",
       "TASK-PROV-003",
-      "TASK-PROV-004"
+      "TASK-PROV-004",
+      "TASK-PROV-CONFIG-004"
     ],
-    "updated": "2026-09-30"
+    "updated": "2026-10-09"
   },
   {
     "id": "FEAT-036",

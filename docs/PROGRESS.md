@@ -857,3 +857,8 @@ TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，�
 
 
 - TASK-PLUGIN-DEV-001及RECOVERY/MARKDOWN/DESKTOP-FLUSH三个新P1本地闭合：真实开发/生产/fresh原生正文及恢复、立即关闭/真实IO失败留窗与原件保护、完整447浏览器和同EXE邻接全部通过。原FAIL、来源身份和标题栏第一拖动未知原因保留；最终doc/Hosted/普通集成/main按各自收据，UI012/UI014与43项既有开放能力继续。见[本轮完整状态](changes/2026-10-09-plugin-development/status.md)。
+
+
+## 2026-10-09：PR42已落地，Codex与健康收尾继续
+
+PR42已普通受保护squash合入main6a97f456ab7334f97c604461e8d29789caa754cb，source cc28d8c与landing完整tree87851a556dc1cf86997fbefea6de78dad6b57b8f相同，本地main已干净FF；当前实际post-main37845923441运行中，未预填成功。TASK-PROV-CONFIG-004已合这条main并逐段保留PROGRESS唯一冲突双方历史，修复配置安全并登记健康19条、53分支时点分类与13新后续任务。Desktop自动2.1.13、Web2.1.12、Mobile规划2.1.1；当前123项DONE66/TODO26/PARTIAL27/BLOCKED4，57项开放。Codex局部35回归/生产包CLI预验收通过，当前完整组合验收和独立精确head/Hosted尚未完成，不能合并此任务。UI012原owner产品验收后在收尾；UI014原会话容量错误失败，TASK-UI-014-RESUME-001已登记续验，原dirty候选不动。真实Provider/ComfyUI/VPS/手机等开放条件保持。

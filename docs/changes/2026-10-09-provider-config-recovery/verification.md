@@ -13,3 +13,7 @@
 - 这些为当前工作区预验收；PR42落地后的组合main、Desktop版本递增、完整verify/新原生包/精确head独立review与托管/main gate仍待执行。TASK-PROV-CONFIG-004继续PARTIAL，TASK-PROV-003整体不变。
 
 - profile-reference-red实际复现profile残留受管引用，修复后35/35；原型同名用户键保留。新的19条承接/53分支时点分类及12项缺口任务见health-followup.md；UI014容量中断已登记续验，旧候选原件未动。
+
+## 最新主线组合准备
+
+PR42已普通落地6a97f45，整个tree与已审cc相同；本分支merge814f2b27已纳入该main，仅PROGRESS发生真实冲突，双方历史逐段保留，122任务生成视图重建。Desktop仅递增2.1.13、Web2.1.12；npm ci按组合锁重新安装/编译Agent与四插件通过。新增P3原生拖动诊断后123任务，13个后续项仍TODO，当前任务仍PARTIAL。合并前health-lint-pre-merge因修改源码路径未重建TaskLedger而FAIL，原日志保留，生成视图后corrected通过；未放宽门禁。完整verify/fresh桌面组合/精确head审查随后执行。

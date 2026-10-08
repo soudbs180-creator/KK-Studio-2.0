@@ -1,5 +1,11 @@
 # AI handoff
 
+## 2026-10-09 PR42实际落地及健康故障继续执行
+
+PR42已普通受保护squash合入main6a97f456ab7334f97c604461e8d29789caa754cb，source cc28d8c与landing完整tree87851a556dc1cf86997fbefea6de78dad6b57b8f相同，本地main已干净FF；当前实际post-main37845923441运行中，未预填成功。TASK-PROV-CONFIG-004已合这条main并逐段保留PROGRESS唯一冲突双方历史，修复配置安全并登记健康19条、53分支时点分类与13新后续任务。Desktop自动2.1.13、Web2.1.12、Mobile规划2.1.1；当前123项DONE66/TODO26/PARTIAL27/BLOCKED4，57项开放。Codex局部35回归/生产包CLI预验收通过，当前完整组合验收和独立精确head/Hosted尚未完成，不能合并此任务。UI012原owner产品验收后在收尾；UI014原会话容量错误失败，TASK-UI-014-RESUME-001已登记续验，原dirty候选不动。真实Provider/ComfyUI/VPS/手机等开放条件保持。
+
+恢复入口：[当前验证](../changes/2026-10-09-provider-config-recovery/verification.md) / [19条承接清单](../changes/2026-10-09-provider-config-recovery/health-followup.md)。下方保留各来源时间的历史记录。
+
 ## 2026-10-09 随包插件及关闭保存本地验收完成
 
 PR41已普通合入main8c921a5，实际post-main37826264108全部必需检查成功；PR38/39/40亦已合并。root独立插件分支修复开发模块、JSX、完整插件恢复、Markdown离线和立即关闭丢失；804root/172Agent（原skip8/2）、447browser零retry/flaky、严格开发、Rust102/fmt/clientcheck/fresh Agent及原生8步/TaskHost11/上方动作13/CSP和最终标题栏通过，c8独立关闭两阻断。Desktop/Web2.1.12、Mobile规划2.1.1；109任务DONE66/TODO13/PARTIAL26/BLOCKED4，43项开放，105上游无关对象完整保留。本地产品DONE，最终doc review/当前Hosted/普通PR合并、landing全树及post-main CI须分别实际回读。UI012/UI014继续原作者收尾；19条旧健康审计须在当前main复证并承接，不能整合未完成候选。原首轮titlebar拖动FAIL原因UNKNOWN，未改写成PASS；外部live/物理设备/用户视觉与整体UI规范仍开放。恢复入口 [状态报告](../changes/2026-10-09-plugin-development/status.md) / [验证](../changes/2026-10-09-plugin-development/verification.md)。

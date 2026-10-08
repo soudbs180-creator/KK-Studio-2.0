@@ -128,6 +128,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DOC-CURRENT-002 | README与已知问题的当前入口一致性 | TODO | TASK-GOV-001 | root |
 | TASK-GIT-HEALTH-002 | 分支准入与未提交工作持续盘点 | TODO | TASK-GOV-001 | root |
 | TASK-UI-014-RESUME-001 | 接续因模型容量错误中断的UI审计 | TODO | UI-001 | root |
+| TASK-NATIVE-GESTURE-002 | 原生标题栏拖动首轮失败的环境诊断 | TODO | TASK-UI-013 | root |
 
 ## TASK-DESKTOP-FLUSH-001 — 桌面关闭前耐久保存与失败留窗
 
@@ -1595,4 +1596,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components, src/styles, docs/UI_INDEX.md
 - Verification: NOT_VERIFIED — 原会话审计并完善UI规范于2026-10-08T21:06:47Z模型容量错误中断，最后菜单27定向通过、布局变量门禁曾失败后已补定义但最终结果未知。保留原worktree，独立候选续验；不能当成产品已验收或偷偷改变会话模型。
 - Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-NATIVE-GESTURE-002 — 原生标题栏拖动首轮失败的环境诊断
+
+- Goal: 复核标题栏首轮失败的焦点/宿主条件，保留真实输入而不依赖无解释重复通过
+- Scope: PLUGIN-REVIEW-003/P3；同EXE首轮drag FAIL与下一次完整PASS，当前原因UNKNOWN
+- Acceptance: 使用真实原生鼠标输入和窗口位置取证，确认前置焦点/宿主条件; 原FAIL与PASS保留，不用改弱阈值或过滤错误消除失败
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: tests/desktop/titlebar.mjs
+- Verification: NOT_VERIFIED — 当前仅复核同一EXE真实首轮失败与完整第二轮PASS，未确认原因；不阻断已验收的插件源码范围，后续诊断独立执行。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md)
 - Updated: 2026-10-09

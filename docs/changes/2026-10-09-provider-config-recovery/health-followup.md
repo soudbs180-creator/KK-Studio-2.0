@@ -42,3 +42,5 @@
 - **TASK-DOC-CURRENT-002 · P2 · TODO**：README与已知问题的当前入口一致性。当前README仍写2.1.0；已知问题需逐项以新main账本/唯一UI_INDEX裁决，保留历史发布来源。同步UI014候选文档后最小纠正。
 - **TASK-GIT-HEALTH-002 · P2 · TODO**：分支准入与未提交工作持续盘点。当前53本地分支/41worktree分类实证已生成，8非当前owner dirty单独保留；不能凭squash的branch --merged或任务DONE清理。只普通PR集成，无删除授权则不删。
 - **TASK-UI-014-RESUME-001 · P1 · TODO**：接续因模型容量错误中断的UI审计。原会话审计并完善UI规范于2026-10-08T21:06:47Z模型容量错误中断，最后菜单27定向通过、布局变量门禁曾失败后已补定义但最终结果未知。保留原worktree，独立候选续验；不能当成产品已验收或偷偷改变会话模型。
+
+- **TASK-NATIVE-GESTURE-002 · P3 · TODO**：承接PLUGIN-REVIEW-003，首轮真实drag失败原因UNKNOWN，保留同EXE下一轮完整PASS，独立诊断焦点/宿主条件，不弱化输入或阈值。

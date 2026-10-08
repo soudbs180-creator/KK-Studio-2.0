@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-09-30
-- 关联任务：TASK-PROV-002（已合入）、TASK-PROV-003/004（PARTIAL）
+- 最近更新：2026-10-09
+- 关联任务：TASK-PROV-002（已合入）、TASK-PROV-003/004（PARTIAL）、TASK-PROV-CONFIG-004（本轮故障收尾中）
 
 ## 用户可见入口
 
@@ -51,3 +51,6 @@
 - 2026-09-24：创建卡片，状态 PARTIAL（TASK-PROV-002）。
 
 - 2026-09-30：集成版本当前验证与剩余边界见 [落地验证](../changes/2026-09-29-project-landing/verification.md)。
+
+
+- 2026-10-09：TASK-PROV-CONFIG-004承接LEG-001/002，35项provider/CLI相关回归通过；注释/引号/多行值、根选择/profile引用、无效输入时config/catalog原件及诊断脱敏已覆盖，包内Node生产CLI与独立Python tomllib预验收通过。当前最新main组合/完整检查/独立审查/Hosted还须执行，功能保持PARTIAL；见[本轮验证](../changes/2026-10-09-provider-config-recovery/verification.md)。
