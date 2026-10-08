@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-10-08 阶段计划工作台候选
+
+基线main/origin/main@21d121d，实施在独立 `codex/TASK-ORCH-002-stage-workbench`。原TASK-ORCH-002已实现阶段查看、plan/result审批、选项返工/解除阻断、共享编排器和项目范围保护；领域42/42、浏览器10/10无retry、production Tauri保存/重启通过。完整verify、最终committed HEAD独立review与治理完成尚待。未推送/合并/发布，main不变。候选Desktop2.1.4/Web2.1.5/Mobile规划2.1.1。FEAT-030保持PARTIAL，自动执行、MCP和真实媒体未完成。[比较](../changes/2026-10-08-stage-workbench/comparison.md) / [验证](../changes/2026-10-08-stage-workbench/verification.md)。以下旧记录保留为历史轮次事实。
+
 ## 2026-10-01 Codex 生图回传与提示词检查
 
 TASK-AGENT-008 本机AC-1–3 DONE，基线 main@709e51d（安装器 PR #32 已合入）。修复 Base64 生图事件超限与并发归档重复标记；两组RED→GREEN及新生产Tauri真实生图/续聊/重连/重启hash一致、节点/标记唯一，verify632root/172Agent/377browser和Rust97通过、原平台skip保留。实现head3c63f1e独立只读审查PASS，P3过期文档已修正；PR #33最终文档head补审/CI/主线推广以实际PR与交付收据为准，不从本机完成推断已合并。见[验证](../changes/2026-10-01-agent-image-transport/verification.md)。57/16短句对应809/768请求，附加恒752且无历史重复；先前长文由root手写。本轮源码Desktop2.1.3/Web2.1.4/Mobile规划2.1.1。豆包仍在区域限制登录页、CLI自动回画布未接入，其他Provider未因此完成。

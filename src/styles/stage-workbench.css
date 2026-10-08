@@ -1,0 +1,131 @@
+.stage-plan-panel {
+  min-width: 0;
+  padding: var(--kk-space-4);
+  display: grid;
+  gap: var(--kk-space-4);
+  font-size: var(--kk-font-body);
+  color: var(--text-primary);
+}
+
+.stage-plan-panel p {
+  margin: 0;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.stage-plan-panel h3,
+.stage-plan-panel h4 {
+  margin: 0;
+  font-size: var(--kk-font-subtitle);
+}
+.stage-plan-heading,
+.stage-plan-empty,
+.stage-plan-detail {
+  display: grid;
+  gap: var(--kk-space-3);
+}
+.stage-plan-heading label {
+  display: grid;
+  gap: var(--kk-space-2);
+}
+.stage-plan-heading select {
+  width: 100%;
+  height: var(--kk-control-h-md);
+  padding: 0 var(--kk-space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--kk-radius-control);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font: inherit;
+}
+
+.stage-plan-timeline,
+.stage-work-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--kk-space-2);
+}
+.stage-plan-timeline {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+}
+.stage-plan-timeline button {
+  width: 100%;
+  text-align: left;
+  display: grid;
+  gap: var(--kk-space-1);
+  padding: var(--kk-space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--kk-radius-control);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font: inherit;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.stage-plan-timeline button[aria-pressed="true"] {
+  border-color: var(--border-accent);
+}
+.stage-plan-timeline span,
+.stage-plan-guidance,
+.stage-plan-heading p {
+  color: var(--text-secondary);
+}
+.stage-work-items li {
+  display: grid;
+  gap: var(--kk-space-2);
+  padding: var(--kk-space-3);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.stage-work-items strong {
+  overflow-wrap: anywhere;
+  font-size: var(--kk-font-caption);
+}
+.stage-plan-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kk-space-2);
+}
+.stage-plan-actions button {
+  min-height: var(--kk-control-h-md);
+  padding: 0 var(--kk-space-3);
+  font-size: var(--kk-font-body);
+  border-radius: var(--kk-radius-control);
+}
+.stage-plan-actions p {
+  flex-basis: 100%;
+  color: var(--text-secondary);
+}
+.stage-plan-error {
+  color: var(--kk-text-danger);
+}
+.stage-rework-confirm {
+  display: grid;
+  gap: var(--kk-space-3);
+}
+.stage-rework-confirm label {
+  display: flex;
+  gap: var(--kk-space-2);
+  align-items: center;
+  min-height: var(--kk-control-h-md);
+}
+.stage-plan-panel :is(button, select, input):focus-visible {
+  outline: 2px solid var(--border-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 767px) {
+  .task-workbench:has(.stage-plan-panel) .task-workbench-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .task-workbench:has(.stage-plan-panel) .task-queue {
+    display: none;
+  }
+  .task-workbench:has(.stage-plan-panel) .task-workbench-tabs {
+    overflow-x: auto;
+  }
+  .stage-plan-panel {
+    padding: var(--kk-space-3);
+  }
+}

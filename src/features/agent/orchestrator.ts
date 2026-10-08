@@ -241,9 +241,11 @@ function reworkRejectedResults(
 }
 
 export function createStageOrchestrator(options: StageOrchestratorOptions) {
-  const projectOrThrow = () => {
+  const projectOrThrow = (expectedProjectId?: string) => {
     const project = options.getProject();
     if (!project) throw new StagePlanError("当前没有活动项目，无法编排。");
+    if (expectedProjectId !== undefined && project.id !== expectedProjectId)
+      throw new StagePlanError("项目已切换，请重新打开当前项目的阶段计划。");
     return project;
   };
   const persist = (project: CreationProject, plan: StagePlan) => {
@@ -389,8 +391,11 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
      *  - plan 门：approve → doing；reject → blocked；
      *  - result 门：approve → done；reject → doing（返回修改）。
      */
-    decideStage(input: StageDecisionInput): StagePlan {
-      const project = projectOrThrow();
+    decideStage(
+      input: StageDecisionInput,
+      expectedProjectId?: string,
+    ): StagePlan {
+      const project = projectOrThrow(expectedProjectId);
       const plan = readPlan(project, input.planId);
       assertRevision(plan, input.expectedRevision);
       const waiting: "plan_review" | "result_review" =
@@ -441,8 +446,9 @@ export function createStageOrchestrator(options: StageOrchestratorOptions) {
       planId: string,
       stageIndex: number,
       expectedRevision: number,
+      expectedProjectId?: string,
     ): StagePlan {
-      const project = projectOrThrow();
+      const project = projectOrThrow(expectedProjectId);
       const plan = readPlan(project, planId);
       assertRevision(plan, expectedRevision);
       const requeued = retryStageWorkItems(plan, stageIndex);

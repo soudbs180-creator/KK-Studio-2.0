@@ -80,6 +80,60 @@ function planInput(projectId: string) {
   };
 }
 
+test("a stale workbench decision cannot approve the same plan in another project", () => {
+  const first = createProject(input);
+  let active = first;
+  const orchestrator = createStageOrchestrator({
+    getProject: () => active,
+    commit: (next) => {
+      active = next;
+    },
+  });
+  const plan = orchestrator.upsertPlan(planInput(first.id));
+  const pending = orchestrator.requestStageApproval(
+    plan.id,
+    0,
+    "plan",
+    plan.revision,
+  );
+  const second = createProject(input);
+  active = {
+    ...second,
+    stagePlans: [{ ...pending, projectId: second.id }],
+  };
+  const before = active;
+  assert.throws(
+    () =>
+      orchestrator.decideStage(
+        {
+          planId: plan.id,
+          stageIndex: 0,
+          expectedRevision: pending.revision,
+          gate: "plan",
+          decision: "approve",
+        },
+        first.id,
+      ),
+    /项目已切换/,
+  );
+  assert.strictEqual(active, before);
+  assert.equal(active.stagePlans?.[0].stages[0].status, "plan_review");
+});
+
+test("a stale workbench retry cannot unblock another project's matching plan", () => {
+  const { orchestrator, read } = harness();
+  const plan = orchestrator.upsertPlan(planInput(read().id));
+  const blocked = orchestrator.markStageBlocked(plan.id, 0, plan.revision);
+  const before = read();
+  assert.throws(
+    () =>
+      orchestrator.retryStage(plan.id, 0, blocked.revision, "previous-project"),
+    /项目已切换/,
+  );
+  assert.strictEqual(read(), before);
+  assert.equal(read().stagePlans?.[0].stages[0].status, "blocked");
+});
+
 test("upsertPlan persists a plan into the project (idempotent by id)", () => {
   const { orchestrator, read } = harness();
   const plan = orchestrator.upsertPlan(planInput("p"));

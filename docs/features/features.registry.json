@@ -1317,21 +1317,28 @@
     "area": "intelligence",
     "status": "PARTIAL",
     "card": "docs/features/feat-030-agent-orchestration.md",
-    "summary": "Stage 状态机（doing/plan_review/blocked/result_review/done）+ 编排器工具面（plan_get_stage_status/plan_update_stage_state/plan_patch_stage/plan_replan）+ 画布交付契约（无 node_id 不算交付、当轮产物收集）。",
+    "summary": "Stage 状态机、工作台阶段计划及 plan/result 人工审批、严格项目范围/revision 校验、原计划工具面和画布交付契约；自动执行与 MCP 注册仍待接入。",
     "entryPoints": [
-      "任务工作台（阶段计划视图待 TASK-ORCH-002）",
+      "任务工作台 → 阶段计划（查看、plan/result 审批、返工与解除阻断）",
       "Agent plan 工具面（MCP 注册待 BACKEND-MCP-AUTO）"
     ],
     "code": [
       "src/domain/stagePlan.ts",
       "src/features/agent/orchestrator.ts",
       "src/features/agent/agentHost.ts",
-      "src/features/agent/agentCanvas.ts"
+      "src/features/agent/agentCanvas.ts",
+      "src/components/TaskWorkbench.tsx",
+      "src/components/StagePlanPanel.tsx",
+      "src/components/StagePlanDetail.tsx",
+      "src/styles/stage-workbench.css",
+      "src/App.tsx"
     ],
     "tests": [
       "tests/unit/stagePlan.test.ts",
       "tests/unit/orchestrator.test.ts",
-      "tests/unit/agentCanvas.test.ts"
+      "tests/unit/agentCanvas.test.ts",
+      "tests/browser/stage-workbench.spec.ts",
+      "tests/desktop/stage-workbench.mjs"
     ],
     "tasks": [
       "TASK-ORCH-001",
@@ -1339,7 +1346,7 @@
       "TASK-ORCH-003",
       "TASK-CANVAS-001"
     ],
-    "updated": "2026-09-23"
+    "updated": "2026-10-08"
   },
   {
     "id": "FEAT-031",

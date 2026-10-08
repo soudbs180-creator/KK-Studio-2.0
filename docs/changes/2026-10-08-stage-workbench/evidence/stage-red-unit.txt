@@ -1,0 +1,68 @@
+✖ a stale workbench decision cannot approve the same plan in another project (4.7032ms)
+✖ a stale workbench retry cannot unblock another project's matching plan (0.5598ms)
+✔ upsertPlan persists a plan into the project (idempotent by id) (0.3477ms)
+✔ replaying an existing plan preserves completed stages and assets (1.4064ms)
+✔ result rejection requeues selected work for revised output and a second review (0.9082ms)
+✔ reworking an upstream result invalidates succeeded downstream work and review (1.211ms)
+✔ plan_patch_stage rejects invalid input without persisting a plan (2.2743ms)
+✔ plan_patch_stage rejects duplicate work item IDs without writing (0.1709ms)
+✔ plan_patch_stage is durable and replay cannot reset progress (0.4193ms)
+✔ upsertPlan refuses plans beyond the storage limit (0.9874ms)
+✔ requestStageApproval moves doing to plan_review with CAS (0.1902ms)
+✔ plan-gated work cannot run or enter result review before host approval (0.2181ms)
+✔ queued work cannot be reported as a completed stage (0.0999ms)
+✔ stage tool rejects an old revision after the same status returns (0.3122ms)
+✔ host approval rejects a stale result review after rejection and resubmission (0.2254ms)
+✔ dependent work cannot start before its prerequisite succeeds (0.1283ms)
+✔ decideStage approve plan continues doing; reject blocks (0.1859ms)
+✔ decideStage cannot approve a stage not in review (0.1103ms)
+✔ result gate completes on approve and returns to doing on reject (0.2754ms)
+✔ markStageBlocked and retryStage requeue only failed work items (0.1651ms)
+✔ late work results cannot overwrite an approved plan (0.1919ms)
+✔ approvalSummary lists pending gates across plans (0.1841ms)
+✔ planTools expose the four plan tools with working invocations (0.2521ms)
+✔ Agent plan tool cannot approve or unblock its own stages (0.2171ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 22
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 157.4924
+
+✖ failing tests:
+
+test at tests\unit\orchestrator.test.ts:83:1
+✖ a stale workbench decision cannot approve the same plan in another project (4.7032ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-ORCH-002-stage-workbench/tests/unit/orchestrator.test.ts:100:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.start (node:internal/test_runner/test:1257:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /项目已切换/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tests\unit\orchestrator.test.ts:114:1
+✖ a stale workbench retry cannot unblock another project's matching plan (0.5598ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-ORCH-002-stage-workbench/tests/unit/orchestrator.test.ts:119:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /项目已切换/,
+    operator: 'throws',
+    diff: 'simple'
+  }

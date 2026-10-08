@@ -62,6 +62,7 @@ import {
 } from "./features/plugins/pluginRuntime.ts";
 import type { PluginAi } from "./features/plugins/pluginTypes.ts";
 import { createAgentHost } from "./features/agent/agentHost.ts";
+import { createStageOrchestrator } from "./features/agent/orchestrator.ts";
 import type { AgentCanvasBinding } from "./components/canvas/useAgentCanvasView";
 
 function outputsForTask(task: CreationTask): CreationTaskOutput[] {
@@ -411,9 +412,28 @@ export default function App() {
     ) => Promise<{ taskId?: string; error?: string }>
   >(async () => ({ error: "生成入口未就绪" }));
   const agentViewRef = useRef<AgentCanvasBinding | null>(null);
+  const stageOrchestrator = useMemo(
+    () =>
+      createStageOrchestrator({
+        getProject: () =>
+          creationRef.current.projects.find(
+            (project) => project.id === creationRef.current.activeProjectId,
+          ),
+        commit: (project) => {
+          if (
+            saveStateRef.current !== "saved" &&
+            saveStateRef.current !== "saving"
+          )
+            throw new Error("项目尚未保存成功，请先处理项目恢复提示。");
+          updateProject(project.id, () => project);
+        },
+      }),
+    [],
+  );
   const agentCanvasBridge = useMemo<AgentBridge>(
     () =>
       createAgentHost({
+        orchestrator: stageOrchestrator,
         getView: () =>
           agentViewRef.current?.projectId === activeProjectIdRef.current
             ? agentViewRef.current.view
@@ -2514,6 +2534,24 @@ export default function App() {
           ) : modal === "tasks" ? (
             <TaskWorkbench
               project={activeProject}
+              stageWriteDisabledReason={
+                saveState === "saved" || saveState === "saving"
+                  ? undefined
+                  : "项目尚未保存成功，阶段操作暂不可用；请先处理项目恢复提示。"
+              }
+              onStageDecision={async (projectId, input) => {
+                stageOrchestrator.decideStage(input, projectId);
+                await persistence.flush();
+              }}
+              onRetryStage={async (projectId, planId, stageIndex, revision) => {
+                stageOrchestrator.retryStage(
+                  planId,
+                  stageIndex,
+                  revision,
+                  projectId,
+                );
+                await persistence.flush();
+              }}
               onCommentsChange={(reviewComments) => {
                 if (activeProject)
                   updateProject(activeProject.id, (project) => ({
@@ -2551,6 +2589,7 @@ import "./styles/motion.css";
 
 import "./styles/catalog.css";
 import "./styles/task-workbench.css";
+import "./styles/stage-workbench.css";
 
 import "./styles/feature-parity.css";
 // Screen layout is the final owner; imports in components execute earlier.

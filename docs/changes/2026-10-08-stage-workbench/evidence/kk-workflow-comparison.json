@@ -1,0 +1,2296 @@
+{
+  "schema_version": 1,
+  "scope": {
+    "repository": "D:/kk-studio/KK-Studio-2.0",
+    "branch": "main",
+    "commit": "21d121d2b884b2b7ced4a98eb0e03c590de5c3cd",
+    "analysis_date": "2026-10-08",
+    "mode": "read_only_static_comparison",
+    "line_numbers": "1-based source LF lines (CRLF normalized)",
+    "runtime_verified": false,
+    "product_files_modified": false,
+    "excluded": [
+      "个人或账户数据",
+      "竞品执行",
+      "云服务调用",
+      "历史分支移植",
+      "产品/账本/功能登记修改"
+    ],
+    "worktree_clean": true
+  },
+  "documents_read": [
+    "AGENTS.md",
+    "AI_RULES.md",
+    "docs/engineering/PROMPTING.md",
+    "docs/engineering/SDLC.md",
+    "docs/engineering/BRANCH-POLICY.md",
+    "docs/engineering/REVIEW.md",
+    "docs/governance/PROJECT_STATE.md (current segment)",
+    "docs/UI_INDEX.md",
+    "docs/features/features.registry.json",
+    "docs/governance/task-ledger.json",
+    "docs/features/feat-004-comfyui.md",
+    "docs/features/feat-005-comfyui-workflows.md",
+    "docs/features/feat-011-skills.md",
+    "docs/features/feat-012-mcp.md",
+    "docs/features/feat-013-connectors.md",
+    "docs/features/feat-016-task-workbench.md",
+    "docs/features/feat-030-agent-orchestration.md",
+    "docs/features/feat-031-unified-task-state.md"
+  ],
+  "findings": [
+    {
+      "id": "KW01",
+      "claim": "阶段领域基座已经在 main：五种 Stage 状态、plan/result 审批、revision CAS、唯一 ID、无环依赖及失败项 requeue。应复用，不能再造 Plan 领域。",
+      "classification": "FACT",
+      "category": "reuse",
+      "confidence": "high",
+      "feature_ids": ["FEAT-030", "FEAT-031"],
+      "task_ids": ["TASK-ORCH-001"],
+      "kk_evidence": [
+        {
+          "path": "src/domain/stagePlan.ts",
+          "line": 17,
+          "marker": "stageStatusSchema"
+        },
+        {
+          "path": "src/domain/stagePlan.ts",
+          "line": 100,
+          "marker": "每次推进递增"
+        },
+        {
+          "path": "src/domain/stagePlan.ts",
+          "line": 155,
+          "marker": "stage.workItems.forEach"
+        },
+        {
+          "path": "src/domain/stagePlan.ts",
+          "line": 207,
+          "marker": "visited !== workItems.length"
+        },
+        {
+          "path": "src/features/agent/orchestrator.ts",
+          "line": 392,
+          "marker": "decideStage"
+        },
+        {
+          "path": "src/domain/stagePlan.ts",
+          "line": 382,
+          "marker": "只重试失败/部分成功"
+        }
+      ],
+      "competitor_finding_ids": ["W05", "W06"],
+      "recommendation": "保留 StagePlan 与编排器；把竞品的角色职责和稳定 work_item 语义融合成现有调用契约。工具名称/纯函数不能证明端到端已可用。",
+      "limitations": [
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW02",
+      "claim": "ORCH-002 的真实缺口是 TaskWorkbench 尚不读取 stagePlans，也没有 onStageDecision 回调；它仍只选择 project.tasks。",
+      "classification": "FACT",
+      "category": "gap",
+      "confidence": "high",
+      "feature_ids": ["FEAT-030", "FEAT-016"],
+      "task_ids": ["TASK-ORCH-002"],
+      "kk_evidence": [
+        {
+          "path": "src/components/TaskWorkbench.tsx",
+          "line": 11,
+          "marker": "function TaskWorkbench"
+        },
+        {
+          "path": "src/components/TaskWorkbench.tsx",
+          "line": 30,
+          "marker": "onCommentsChange:"
+        },
+        {
+          "path": "src/components/TaskWorkbench.tsx",
+          "line": 34,
+          "marker": "project?.tasks"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 2516,
+          "marker": "project={activeProject}"
+        },
+        {
+          "path": "src/features/agent/orchestrator.ts",
+          "line": 467,
+          "marker": "approvalSummary"
+        },
+        {
+          "path": "docs/governance/task-ledger.json",
+          "line": 2203,
+          "marker": "onStageDecision"
+        },
+        {
+          "path": "docs/governance/task-ledger.json",
+          "line": 2220,
+          "marker": "\"status\": \"TODO\""
+        }
+      ],
+      "competitor_finding_ids": ["W05", "W11"],
+      "recommendation": "在现有工作台增加阶段区域和待审批摘要，App 构造共用编排器，以 planId/stageIndex/expectedRevision/gate/decision 调用 decideStage 后走 commitCreation；无 generation tasks 时也要显示计划。测试审批冲突、拒绝返工及项目切换。不新建第二个工作台。",
+      "limitations": [
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW03",
+      "claim": "AgentHost 的 planTools 是可选出口；App 未注入 orchestrator，故为空。现有 canvas-agent MCP 工具列表也没有 plan_* 注册。",
+      "classification": "FACT",
+      "category": "gap",
+      "confidence": "high",
+      "feature_ids": ["FEAT-030", "FEAT-012"],
+      "task_ids": ["TASK-ORCH-002", "BACKEND-MCP-AUTO"],
+      "kk_evidence": [
+        {
+          "path": "src/features/agent/agentHost.ts",
+          "line": 23,
+          "marker": "orchestrator?:"
+        },
+        {
+          "path": "src/features/agent/agentHost.ts",
+          "line": 58,
+          "marker": "options.orchestrator ?"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 416,
+          "marker": "createAgentHost({"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 430,
+          "marker": "generate:"
+        },
+        {
+          "path": "vendor/canvas-agent/src/server/mcp.ts",
+          "line": 32,
+          "marker": "toolNames.forEach"
+        },
+        {
+          "path": "vendor/canvas-agent/src/canvas/schemas.ts",
+          "line": 10,
+          "marker": "export const toolNames"
+        },
+        {
+          "path": "vendor/canvas-agent/src/canvas/schemas.ts",
+          "line": 45,
+          "marker": "] as const;"
+        }
+      ],
+      "competitor_finding_ids": ["W03", "W05"],
+      "recommendation": "App 注入同一编排器，再接现有 bridge/tool schema/服务注册。宿主审批与 Agent 更新权限分开，Agent 不可自行 approve。内部工具接通可做 BACKEND-MCP-AUTO 子验收；完整任务仍要第三方 MCP 自动发现/授权/取消/超时/离线的真实桌面证据。",
+      "limitations": [
+        "负证据限定 src、vendor/canvas-agent/src、tests；createStageOrchestrator/decideStage 的调用仅见领域定义及单测，未穷尽历史或外部工具。",
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW04",
+      "claim": "ORCH-003 尚无生成调度器：StageOrchestratorOptions 只有 getProject/commit；工作项无持久 taskId/attempt 绑定。现有 AgentHost 生成入口已返回统一任务 taskId，可复用。",
+      "classification": "FACT",
+      "category": "gap",
+      "confidence": "high",
+      "feature_ids": ["FEAT-030", "FEAT-031"],
+      "task_ids": ["TASK-ORCH-003", "TASK-AGENT-001"],
+      "kk_evidence": [
+        {
+          "path": "src/features/agent/orchestrator.ts",
+          "line": 35,
+          "marker": "interface StageOrchestratorOptions"
+        },
+        {
+          "path": "src/features/agent/orchestrator.ts",
+          "line": 37,
+          "marker": "commit(project:"
+        },
+        {
+          "path": "src/domain/stagePlan.ts",
+          "line": 49,
+          "marker": "stageWorkItemSchema"
+        },
+        {
+          "path": "src/domain/stagePlan.ts",
+          "line": 73,
+          "marker": "updatedAt:"
+        },
+        {
+          "path": "src/features/creation/model.ts",
+          "line": 88,
+          "marker": "attempt:"
+        },
+        {
+          "path": "src/features/creation/model.ts",
+          "line": 94,
+          "marker": "idempotencyKey:"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 451,
+          "marker": "await submitImageCommand"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 462,
+          "marker": "(id) =>"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 466,
+          "marker": "return { taskId, error }"
+        },
+        {
+          "path": "docs/governance/task-ledger.json",
+          "line": 2229,
+          "marker": "图片/文本走统一任务态"
+        }
+      ],
+      "competitor_finding_ids": ["W02", "W06", "W07"],
+      "recommendation": "以 CreationTask 为执行权威，稳定绑定 workItem→taskId/attempt；审批通过且依赖成功后复用统一提交；监听 task/output 终态，以 CAS 回填。先图片/文本小闭环，再按能力接视频/音频/merge。持久字段变化同步 Web/Rust 包校验。",
+      "limitations": [
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW05",
+      "claim": "Stage 工作项只有六种状态；CreationTask 有 unknown/offline/interrupted，供应商可能已受理时禁止普通 retry。两层映射是 ORCH-003 的实质风险。",
+      "classification": "FACT",
+      "category": "integration_risk",
+      "confidence": "high",
+      "feature_ids": ["FEAT-030", "FEAT-031"],
+      "task_ids": ["TASK-ORCH-003", "T5"],
+      "kk_evidence": [
+        {
+          "path": "src/domain/stagePlan.ts",
+          "line": 30,
+          "marker": "stageWorkItemStatusSchema"
+        },
+        {
+          "path": "src/domain/stagePlan.ts",
+          "line": 37,
+          "marker": "]);"
+        },
+        {
+          "path": "src/features/creation/model.ts",
+          "line": 25,
+          "marker": "unknown"
+        },
+        {
+          "path": "src/features/creation/taskRecovery.ts",
+          "line": 29,
+          "marker": "function canRetryTask"
+        },
+        {
+          "path": "src/features/creation/taskRecovery.ts",
+          "line": 33,
+          "marker": "task.status === \"unknown\""
+        },
+        {
+          "path": "src/features/creation/taskRecovery.ts",
+          "line": 101,
+          "marker": "status: uncertain ?"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 563,
+          "marker": "task.status === \"unknown\""
+        },
+        {
+          "path": "src/features/agent/orchestrator.ts",
+          "line": 448,
+          "marker": "retryStageWorkItems"
+        }
+      ],
+      "competitor_finding_ids": ["W06", "W17"],
+      "recommendation": "绑定任务 unknown 时阻断 Stage 并展示需核对，不映射 failed 后自动重提。恢复/取消/迟到回写检查任务身份和 revision；可重试失败按 retryOfTaskId/retryOutputIndices 复用现有局部重试。",
+      "limitations": [
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW06",
+      "claim": "plan_patch_stage 是完整计划物化/同定义重放；plan_replan 明确为摘要和失败项占位，尚不支持增量当前阶段及保留接受前缀的重规划。",
+      "classification": "FACT",
+      "category": "deferred_gap",
+      "confidence": "high",
+      "feature_ids": ["FEAT-030", "FEAT-012"],
+      "task_ids": ["TASK-ORCH-003", "BACKEND-MCP-AUTO"],
+      "kk_evidence": [
+        {
+          "path": "src/domain/stagePlan.ts",
+          "line": 102,
+          "marker": "stages: z.array(stageSchema)"
+        },
+        {
+          "path": "src/features/agent/orchestrator.ts",
+          "line": 268,
+          "marker": "const upsertPlan"
+        },
+        {
+          "path": "src/features/agent/orchestrator.ts",
+          "line": 574,
+          "marker": "物化编排计划"
+        },
+        {
+          "path": "src/features/agent/orchestrator.ts",
+          "line": 619,
+          "marker": "name: \"plan_replan\""
+        },
+        {
+          "path": "src/features/agent/orchestrator.ts",
+          "line": 621,
+          "marker": "占位"
+        },
+        {
+          "path": "src/features/agent/orchestrator.ts",
+          "line": 642,
+          "marker": "BACKEND-MCP-AUTO"
+        }
+      ],
+      "competitor_finding_ids": ["W05", "W06"],
+      "recommendation": "如实保留占位标签，先完成现有闭环；再在 FEAT-030 设计受控 current-stage/suffix patch、稳定 ID、已接受前缀、expectedRevision/requestId、下游失效和资产规则。该域模型/包契约扩展不应混入 ORCH-002 的 UI 接线。",
+      "limitations": [
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW07",
+      "claim": "画布 TaskPanel/Popover 与 TaskWorkbench 是同一 CreationProject.tasks 的两种视图，取消/重试汇入 App；多入口没有第二份执行队列。",
+      "classification": "FACT",
+      "category": "reuse",
+      "confidence": "high",
+      "feature_ids": ["FEAT-016", "FEAT-031"],
+      "task_ids": ["TASK-ORCH-002", "TASK-ORCH-003"],
+      "kk_evidence": [
+        {
+          "path": "src/App.tsx",
+          "line": 2285,
+          "marker": "tasks={activeProject?.tasks}"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 2286,
+          "marker": "onCancelTask={cancelTask}"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 2516,
+          "marker": "project={activeProject}"
+        },
+        {
+          "path": "src/components/TaskWorkbench.tsx",
+          "line": 34,
+          "marker": "project?.tasks"
+        },
+        {
+          "path": "src/components/canvas/TaskPanel.tsx",
+          "line": 85,
+          "marker": "tasks.map(liveTaskCard)"
+        },
+        {
+          "path": "src/components/canvas/CanvasHud.tsx",
+          "line": 38,
+          "marker": "tasks={tasks}"
+        }
+      ],
+      "competitor_finding_ids": ["W05", "W06"],
+      "recommendation": "保留一份 tasks/stagePlans；工作台做完整阶段决策，面板显示紧凑投影并跳转工作台。共用取消/重试/状态/成本选择器，不新增 queue。",
+      "limitations": [
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW08",
+      "claim": "首页、项目输入框、Skills 页、设置消费 App 创建的同一 SkillRegistry；持久化后发 SKILLS_CHANGED_EVENT。当前多入口已共享状态。",
+      "classification": "FACT",
+      "category": "reuse",
+      "confidence": "high",
+      "feature_ids": ["FEAT-011"],
+      "task_ids": ["TASK-CAP-001", "BACKEND-MCP-AUTO"],
+      "kk_evidence": [
+        {
+          "path": "src/App.tsx",
+          "line": 181,
+          "marker": "const [skillRegistry]"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 197,
+          "marker": "addEventListener(SKILLS_CHANGED_EVENT"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 2154,
+          "marker": "skills={skillRegistry.listRecords()}"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 2328,
+          "marker": "skills={skillRegistry.listRecords()}"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 2393,
+          "marker": "registry={skillRegistry}"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 2503,
+          "marker": "registry={skillRegistry}"
+        },
+        {
+          "path": "src/features/skills/skillRegistry.ts",
+          "line": 428,
+          "marker": "dispatchEvent(new Event(SKILLS_CHANGED_EVENT))"
+        },
+        {
+          "path": "src/components/settings/SkillsSettings.tsx",
+          "line": 16,
+          "marker": "addEventListener(SKILLS_CHANGED_EVENT"
+        }
+      ],
+      "competitor_finding_ids": ["W04", "W09"],
+      "recommendation": "专用广告/MV/一致性模板复用注册表、开关及导入导出，不增第二套目录/安装状态。自动路由使用已启用记录与真实能力，不凭静态菜单名假设工具已可用。",
+      "limitations": [
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW09",
+      "claim": "Skill 触发只是附加指令到 prompt；设置明确不自动运行脚本/连云端，官方 3D/品牌短片/H3 名称只是演示目录。",
+      "classification": "FACT",
+      "category": "gap",
+      "confidence": "high",
+      "feature_ids": ["FEAT-011", "FEAT-012"],
+      "task_ids": ["BACKEND-MCP-AUTO"],
+      "kk_evidence": [
+        {
+          "path": "src/features/skills/skillRegistry.ts",
+          "line": 372,
+          "marker": "function applySkillInstructions"
+        },
+        {
+          "path": "src/features/skills/skillRegistry.ts",
+          "line": 376,
+          "marker": "const block ="
+        },
+        {
+          "path": "src/features/skills/skillRegistry.ts",
+          "line": 377,
+          "marker": "const result ="
+        },
+        {
+          "path": "src/components/settings/SkillsSettings.tsx",
+          "line": 24,
+          "marker": "不会自动运行脚本"
+        },
+        {
+          "path": "src/components/SkillsPage.tsx",
+          "line": 50,
+          "marker": "const OFFICIAL_SKILLS"
+        },
+        {
+          "path": "src/components/SkillsPage.tsx",
+          "line": 51,
+          "marker": "3D 动画短片"
+        },
+        {
+          "path": "docs/features/feat-011-skills.md",
+          "line": 29,
+          "marker": "Prototype"
+        },
+        {
+          "path": "docs/features/feat-011-skills.md",
+          "line": 30,
+          "marker": "BACKEND-MCP-AUTO"
+        }
+      ],
+      "competitor_finding_ids": ["W02", "W03", "W04", "W09"],
+      "recommendation": "保留手动模板，在 BACKEND-MCP-AUTO 增工具路由授权和过程记录，在 FEAT-030 上实现流程。权限字段和提示词约束不可当宿主强制安全策略；能力声明只反映实际执行工具。",
+      "limitations": [
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW10",
+      "claim": "Comfy 库运行入口只派发事件并打开任务框；限定代码中无消费者。local_only 明确拒绝，但 HTTP adapter/factory 已存在，属于接线缺口。",
+      "classification": "FACT",
+      "category": "gap",
+      "confidence": "high",
+      "feature_ids": ["FEAT-004", "FEAT-005"],
+      "task_ids": ["T6", "EXT-COMFY"],
+      "kk_evidence": [
+        {
+          "path": "src/App.tsx",
+          "line": 2404,
+          "marker": "localWorkflows={localWorkflows}"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 2407,
+          "marker": "onRunWorkflow="
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 2410,
+          "marker": "kk:comfyui-workflow-requested"
+        },
+        {
+          "path": "src/features/creation/imageTaskCommand.ts",
+          "line": 71,
+          "marker": "privacyMode === \"local_only\""
+        },
+        {
+          "path": "src/features/creation/imageTaskCommand.ts",
+          "line": 73,
+          "marker": "此入口尚未接入"
+        },
+        {
+          "path": "src/integrations/generation/providerAdapterFactory.ts",
+          "line": 16,
+          "marker": "kind === \"local_comfyui\""
+        },
+        {
+          "path": "src/integrations/generation/localComfyUiAdapter.ts",
+          "line": 86,
+          "marker": "async submit"
+        },
+        {
+          "path": "src/integrations/generation/localComfyUiAdapter.ts",
+          "line": 137,
+          "marker": "async cancel"
+        },
+        {
+          "path": "docs/governance/task-ledger.json",
+          "line": 327,
+          "marker": "App/imageTaskCommand 尚未接入"
+        }
+      ],
+      "competitor_finding_ids": ["P14", "P15"],
+      "recommendation": "T6 使用选定 workflow 接现有任务链，补 Desktop invoke/宿主、能力探测、逐任务取消、归档和恢复，不另建 Comfy 队列。/interrupt 是否只取消指定任务须真实验证，不能凭 body 带 prompt_id 宣称逐任务取消。",
+      "limitations": [
+        "事件消费者负证据限定 src、vendor/canvas-agent、tests。",
+        "未请求 Comfy 服务，未推断 /interrupt 对 prompt_id 的运行语义。",
+        "本地 generation-server 还有 local_comfyui/显式 workflow primitives；不能据此声称 App 本地入口已接通。",
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW11",
+      "claim": "WorkflowRecord 当前是工作流库记录，保存 JSON；尚无竞品 Draft/执行 snapshot/来源 hash 三层的明确绑定。T6 明确不自动下载模型。",
+      "classification": "FACT",
+      "category": "fusion",
+      "confidence": "high",
+      "feature_ids": ["FEAT-004", "FEAT-005"],
+      "task_ids": ["T6", "EXT-COMFY"],
+      "kk_evidence": [
+        {
+          "path": "src/features/comfyui/workflowRegistry.ts",
+          "line": 3,
+          "marker": "const WORKFLOW_STORAGE_KEY"
+        },
+        {
+          "path": "src/features/comfyui/workflowRegistry.ts",
+          "line": 18,
+          "marker": "workflow: workflowSchema"
+        },
+        {
+          "path": "src/features/comfyui/workflowRegistry.ts",
+          "line": 23,
+          "marker": "export type WorkflowRecord"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 2404,
+          "marker": "localWorkflows={localWorkflows}"
+        },
+        {
+          "path": "docs/governance/task-ledger.json",
+          "line": 308,
+          "marker": "不自动下载模型"
+        },
+        {
+          "path": "docs/governance/task-ledger.json",
+          "line": 327,
+          "marker": "等待用户选定服务"
+        }
+      ],
+      "competitor_finding_ids": ["P14", "P15", "P16", "P17"],
+      "recommendation": "复用 FEAT-005。T6 提交冻结图和参数快照并绑定库 ID/revision 或内容 hash；恢复/重试用原 snapshot，不读后来编辑的图。先接用户选定安装/模型，再在 FEAT-004/005 区分 Draft/库保存/run-only 覆盖，不照搬自动安装器。",
+      "limitations": [
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW12",
+      "claim": "KK 已有 CanvasPlugin、PluginNodeContext、Agent 同级 applyOps、storage/AI 以及 pluginStore/loader/runtime；插件管理订阅真实统一状态。",
+      "classification": "FACT",
+      "category": "reuse",
+      "confidence": "high",
+      "feature_ids": ["FEAT-013", "FEAT-030"],
+      "task_ids": ["TASK-AGENT-001"],
+      "kk_evidence": [
+        {
+          "path": "src/features/plugins/pluginTypes.ts",
+          "line": 64,
+          "marker": "CanvasAgentOp as PluginAgentOp"
+        },
+        {
+          "path": "src/features/plugins/pluginTypes.ts",
+          "line": 72,
+          "marker": "interface PluginNodeContext"
+        },
+        {
+          "path": "src/features/plugins/pluginTypes.ts",
+          "line": 86,
+          "marker": "applyOps:"
+        },
+        {
+          "path": "src/features/plugins/pluginTypes.ts",
+          "line": 93,
+          "marker": "storage:"
+        },
+        {
+          "path": "src/features/plugins/pluginTypes.ts",
+          "line": 154,
+          "marker": "interface CanvasPlugin"
+        },
+        {
+          "path": "src/features/plugins/pluginStore.ts",
+          "line": 137,
+          "marker": "pluginStore = createPluginStore"
+        },
+        {
+          "path": "src/components/settings/PluginManagerSettings.tsx",
+          "line": 13,
+          "marker": "pluginStore.subscribe"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 522,
+          "marker": "pluginLoader.setBridge(agentCanvasBridge)"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 548,
+          "marker": "pluginLoader.setAi(pluginAi)"
+        }
+      ],
+      "competitor_finding_ids": ["P01", "P02", "P08"],
+      "recommendation": "在现有协议扩 editor surface、方法 schema、revision/validateOnly、错误码、diagnostics、异步导出；复用 bridge 和资产管线。不要为 3D/剪辑重建独立 Agent、Provider host 或资产库。",
+      "limitations": [
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW13",
+      "claim": "PluginAi 回传契约不完整：image 提交后返回空 images；video 返回空 URL且统一入口不支持 video；signal/references 未传入；text 拒绝。",
+      "classification": "FACT",
+      "category": "integration_risk",
+      "confidence": "high",
+      "feature_ids": ["FEAT-013", "FEAT-031", "FEAT-006"],
+      "task_ids": ["BACKEND-MEDIA-001", "TASK-ORCH-003"],
+      "kk_evidence": [
+        {
+          "path": "src/features/plugins/pluginTypes.ts",
+          "line": 99,
+          "marker": "signal?: AbortSignal; references?:"
+        },
+        {
+          "path": "src/features/plugins/pluginTypes.ts",
+          "line": 100,
+          "marker": "Promise<{ images: string[] }>"
+        },
+        {
+          "path": "src/features/plugins/pluginTypes.ts",
+          "line": 104,
+          "marker": "Promise<{ url: string; mimeType: string }>"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 488,
+          "marker": "attachments: []"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 494,
+          "marker": "return { images: [] }"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 506,
+          "marker": "kind: \"video\""
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 513,
+          "marker": "return { url: \"\", mimeType: \"video/mp4\" }"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 516,
+          "marker": "插件文本生成请通过对话面板执行"
+        },
+        {
+          "path": "src/features/creation/imageTaskCommand.ts",
+          "line": 77,
+          "marker": "input.kind !== \"image\""
+        }
+      ],
+      "competitor_finding_ids": ["P05", "P11"],
+      "recommendation": "明确提交回执与完成结果，按统一任务提供 taskId/status/订阅或终态结果；归档 nodeId/sourceNodeId 回填，验证并传 refs/cancel signal。在现有 FEAT-013 和 BACKEND-MEDIA-001 补齐，不让插件直连 Provider。",
+      "limitations": [
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW14",
+      "claim": "ConnectorCatalog 的硬编码 Prototype 连接器卡片与真实 pluginStore 语义不同；可统一发现导航，不可假装共用安装/运行状态。",
+      "classification": "FACT",
+      "category": "fusion",
+      "confidence": "high",
+      "feature_ids": ["FEAT-013", "FEAT-012"],
+      "task_ids": ["TASK-CAP-001", "BACKEND-MCP-AUTO"],
+      "kk_evidence": [
+        {
+          "path": "src/components/ConnectorCatalog.tsx",
+          "line": 11,
+          "marker": "const CONNECTORS:"
+        },
+        {
+          "path": "src/components/ConnectorCatalog.tsx",
+          "line": 117,
+          "marker": "Prototype"
+        },
+        {
+          "path": "src/components/ConnectorCatalog.tsx",
+          "line": 146,
+          "marker": "连接器未安装"
+        },
+        {
+          "path": "src/features/plugins/pluginStore.ts",
+          "line": 17,
+          "marker": "canvas-plugins"
+        },
+        {
+          "path": "src/components/settings/PluginManagerSettings.tsx",
+          "line": 12,
+          "marker": "useSyncExternalStore"
+        },
+        {
+          "path": "src/components/canvas/AddNodeMenu.tsx",
+          "line": 70,
+          "marker": "pluginStore.subscribe"
+        },
+        {
+          "path": "src/components/canvas/AddNodeMenu.tsx",
+          "line": 78,
+          "marker": "listPluginNodeDefinitions()"
+        }
+      ],
+      "competitor_finding_ids": ["P01"],
+      "recommendation": "FEAT-013 统一发现与跳转，状态分别从真实 adapter/registry 投影。保持画布插件启停和外部账户连接生命周期区别；不再新建静态商店。",
+      "limitations": [
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW15",
+      "claim": "已有资产/交付基础可复用：workItem.assetId、task.outputs、result 连线、节点检查；Web/Rust 项目包均收集计划独占资产。",
+      "classification": "FACT",
+      "category": "reuse",
+      "confidence": "high",
+      "feature_ids": ["FEAT-030", "FEAT-031"],
+      "task_ids": ["TASK-ORCH-001", "TASK-CANVAS-001", "TASK-ORCH-003"],
+      "kk_evidence": [
+        {
+          "path": "src/domain/stagePlan.ts",
+          "line": 67,
+          "marker": "本地资产 id"
+        },
+        {
+          "path": "src/features/creation/model.ts",
+          "line": 43,
+          "marker": "assetId?:"
+        },
+        {
+          "path": "src/features/creation/model.ts",
+          "line": 87,
+          "marker": "attachments:"
+        },
+        {
+          "path": "src/features/agent/agentCanvas.ts",
+          "line": 396,
+          "marker": "function assertCanvasDelivery"
+        },
+        {
+          "path": "src/features/agent/agentCanvas.ts",
+          "line": 413,
+          "marker": "item.result?.source === \"provider\""
+        },
+        {
+          "path": "src/features/agent/agentCanvas.ts",
+          "line": 425,
+          "marker": "function collectRecentOutputs"
+        },
+        {
+          "path": "src/features/projects/projectPackage.ts",
+          "line": 290,
+          "marker": "project.stagePlans?.forEach"
+        },
+        {
+          "path": "src-tauri/src/project_package.rs",
+          "line": 269,
+          "marker": "project.get(\"stagePlans\")"
+        },
+        {
+          "path": "src/features/creation/model.ts",
+          "line": 751,
+          "marker": "normalizeStagePlans("
+        }
+      ],
+      "competitor_finding_ids": [
+        "W06",
+        "W14",
+        "W15",
+        "W16",
+        "P05",
+        "P10",
+        "P11"
+      ],
+      "recommendation": "workItem 依赖产物走现有 asset/node/result 边；提交冻结实际附件，复用 archive/hash/provenance。语义 capsule 与 identity/style/layout 需结构和失效规则，不能靠尺寸/模型名证明含义；媒体交付补真实资产存在检查，文本按既有 text/result 契约处理。",
+      "limitations": [
+        "assertCanvasDelivery 当前查 assetId 非空或 provider src 非空，不是磁盘/资产库存在性证明；定义不等于所有生产调用均已接入。",
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW16",
+      "claim": "随包画布插件仅 HTML/Markdown/Sticky Note/SVG；工作台 Planner、Compositor/Exporter 明确 Prototype。没有当前主线具备竞品级 3D/剪辑 Agent 方法及完整导出的证据。",
+      "classification": "FACT",
+      "category": "deferred_gap",
+      "confidence": "high",
+      "feature_ids": ["FEAT-013", "FEAT-016", "FEAT-006", "FEAT-007"],
+      "task_ids": ["BACKEND-MEDIA-001", "BACKEND-MCP-AUTO"],
+      "kk_evidence": [
+        {
+          "path": "public/plugins/index.json",
+          "line": 2,
+          "marker": "/plugins/html.js"
+        },
+        {
+          "path": "public/plugins/index.json",
+          "line": 5,
+          "marker": "/plugins/svg.js"
+        },
+        {
+          "path": "src/components/TaskWorkbenchReview.tsx",
+          "line": 12,
+          "marker": "Planner"
+        },
+        {
+          "path": "src/components/TaskWorkbenchReview.tsx",
+          "line": 18,
+          "marker": "Compositor / Exporter"
+        },
+        {
+          "path": "src/components/TaskWorkbenchReview.tsx",
+          "line": 78,
+          "marker": "Prototype"
+        },
+        {
+          "path": "docs/features/feat-016-task-workbench.md",
+          "line": 29,
+          "marker": "Prototype"
+        },
+        {
+          "path": "docs/governance/task-ledger.json",
+          "line": 1451,
+          "marker": "视频/音频节点经统一任务宿主"
+        }
+      ],
+      "competitor_finding_ids": [
+        "P02",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P08",
+        "P09",
+        "P10",
+        "P11",
+        "P12",
+        "P13"
+      ],
+      "recommendation": "先补媒体生成/任务/资产闭环，借鉴事务、诊断、预览帧、保存版本、异步导出及画布回填。3D 可输出预演结构和栅格参考；不声称任意视频模型直接消费几何。完整编辑器须后续明确规格，不凭演示 Skill 名移植整套。",
+      "limitations": [
+        "范围限当前随包清单/接口/功能卡；未读用户安装插件或历史实现。",
+        "竞品仅静态实现，未比较运行质量/性能。",
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW17",
+      "claim": "ORCH-003 goal 是图片/文本闭环，却依赖完整 BACKEND-MEDIA-001；实施顺序需要显式澄清范围，不能静默绕过账本。",
+      "classification": "FACT",
+      "category": "planning_dependency",
+      "confidence": "high",
+      "feature_ids": ["FEAT-030", "FEAT-006", "FEAT-007"],
+      "task_ids": ["TASK-ORCH-002", "TASK-ORCH-003", "BACKEND-MEDIA-001"],
+      "kk_evidence": [
+        {
+          "path": "docs/governance/task-ledger.json",
+          "line": 2229,
+          "marker": "图片/文本走统一任务态"
+        },
+        {
+          "path": "docs/governance/task-ledger.json",
+          "line": 2238,
+          "marker": "BACKEND-MEDIA-001"
+        },
+        {
+          "path": "docs/governance/task-ledger.json",
+          "line": 1451,
+          "marker": "视频/音频节点经统一任务宿主"
+        },
+        {
+          "path": "docs/governance/task-ledger.json",
+          "line": 1471,
+          "marker": "\"status\": \"TODO\""
+        },
+        {
+          "path": "src/features/creation/imageTaskCommand.ts",
+          "line": 125,
+          "marker": "input.kind === \"text\""
+        },
+        {
+          "path": "src/features/creation/imageTaskCommand.ts",
+          "line": 77,
+          "marker": "input.kind !== \"image\""
+        }
+      ],
+      "competitor_finding_ids": ["W04", "W05", "W07", "W10", "W12"],
+      "recommendation": "同一 TASK-ORCH-003 记录图片/文本子验收和完整验收；若先交子闭环，先更新该任务 plan/账本依赖说明。完整 DONE 仍按最终认可 acceptance/dependencies，媒体链可并行推进，不另建 feature。",
+      "limitations": [
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    },
+    {
+      "id": "KW18",
+      "claim": "相关功能仍 PARTIAL；UI_INDEX 要求业务状态先于界面、共享组件优先、单一 Primary；静态对照不能声明平台 REAL。",
+      "classification": "FACT",
+      "category": "verification_boundary",
+      "confidence": "high",
+      "feature_ids": [
+        "FEAT-004",
+        "FEAT-005",
+        "FEAT-011",
+        "FEAT-012",
+        "FEAT-013",
+        "FEAT-016",
+        "FEAT-030",
+        "FEAT-031"
+      ],
+      "task_ids": ["TASK-ORCH-002", "TASK-ORCH-003"],
+      "kk_evidence": [
+        {
+          "path": "docs/UI_INDEX.md",
+          "line": 27,
+          "marker": "业务状态先于界面"
+        },
+        {
+          "path": "docs/UI_INDEX.md",
+          "line": 29,
+          "marker": "共享组件先于页面实例"
+        },
+        {
+          "path": "docs/UI_INDEX.md",
+          "line": 30,
+          "marker": "一个页面只有一个一级模板和一个 Primary"
+        },
+        {
+          "path": "docs/UI_INDEX.md",
+          "line": 42,
+          "marker": "390、1099、1920"
+        },
+        {
+          "path": "docs/features/feat-030-agent-orchestration.md",
+          "line": 3,
+          "marker": "PARTIAL"
+        },
+        {
+          "path": "docs/features/feat-031-unified-task-state.md",
+          "line": 3,
+          "marker": "PARTIAL"
+        },
+        {
+          "path": "AI_RULES.md",
+          "line": 27,
+          "marker": "REAL 必须有同态运行证据"
+        }
+      ],
+      "competitor_finding_ids": ["W05", "P11"],
+      "recommendation": "后续实现沿当前 TaskWorkbench/tokens/templates，补空/加载/错误/冲突/unknown；ORCH-002 做受影响单测和 Playwright，ORCH-003 做调度/幂等/局部重试/迟到/恢复以及 Web/Desktop 分别证据，再更新能力状态。",
+      "limitations": [
+        "本次只读源码与文档；未运行 Web/Desktop、竞品或 Provider/MCP/ComfyUI 服务。"
+      ]
+    }
+  ],
+  "sources_of_truth": [
+    {
+      "state": "plan/approval/rework",
+      "source": "CreationProject.stagePlans + createStageOrchestrator",
+      "finding_ids": ["KW01", "KW02", "KW03"],
+      "rule": "共用计划与 revision CAS；UI、Host 工具及执行回写不创建第二份计划。"
+    },
+    {
+      "state": "execution/results/retry",
+      "source": "CreationProject.tasks + submitImageCommand + executeTask/native task host",
+      "finding_ids": ["KW04", "KW05", "KW07", "KW13"],
+      "rule": "任务身份/受理状态/输出是执行权威；Stage 绑定后显示其状态，不另建供应商 queue。"
+    },
+    {
+      "state": "skills",
+      "source": "App skillRegistry → persisted SkillRegistry records",
+      "finding_ids": ["KW08", "KW09"],
+      "rule": "首页/对话/目录/设置统一记录；当前模板与未来可执行流程声明区分。"
+    },
+    {
+      "state": "canvas plugin installation",
+      "source": "pluginStore singleton + pluginLoader + nodeRegistry",
+      "finding_ids": ["KW12", "KW14"],
+      "rule": "真实插件管理与 Prototype 连接器目录分清生命周期，可共用发现导航。"
+    },
+    {
+      "state": "Comfy library",
+      "source": "workflowRegistry + App localWorkflows",
+      "finding_ids": ["KW10", "KW11"],
+      "rule": "库复用；提交保存不可变执行 snapshot，未来 Draft 明确版本/来源绑定。"
+    },
+    {
+      "state": "assets/delivery/portability",
+      "source": "asset/task.outputs/result edges + Web/Rust projectPackage",
+      "finding_ids": ["KW15"],
+      "rule": "归档后回填 node/source/result 边；保留计划独占资产与文本结果契约。"
+    }
+  ],
+  "fusion_points": [
+    {
+      "priority": "P0",
+      "feature_ids": ["FEAT-030", "FEAT-016"],
+      "task_ids": ["TASK-ORCH-002"],
+      "change": "在既有工作台展示 Stage 和审批；共用项目范围编排器实例注入 Host",
+      "reuse": [
+        "approvalSummary",
+        "stagePlanProgress",
+        "decideStage",
+        "retryStage",
+        "commitCreation"
+      ],
+      "finding_ids": ["KW01", "KW02", "KW03", "KW07"],
+      "boundary": "不创建新状态源，不把审批按钮等同自动执行；retryStage 只是计划 requeue，接 UI 时必须说明该边界。"
+    },
+    {
+      "priority": "P0",
+      "feature_ids": ["FEAT-030", "FEAT-012"],
+      "task_ids": ["BACKEND-MCP-AUTO"],
+      "change": "plan 纯函数工具接入现有 Host/bridge/注册与授权流程",
+      "reuse": [
+        "AgentHost.planTools",
+        "canvas-agent tool schema/server",
+        "现有 MCP 客户端基础"
+      ],
+      "finding_ids": ["KW03", "KW09"],
+      "boundary": "内部工具与第三方自动 MCP 完整验收分开；Agent 不能替宿主批准。"
+    },
+    {
+      "priority": "P0",
+      "feature_ids": ["FEAT-030", "FEAT-031"],
+      "task_ids": ["TASK-ORCH-003"],
+      "change": "稳定绑定任务，依赖调度图片/文本、终态 CAS 回写、unknown 阻断及 failed-only 重试",
+      "reuse": [
+        "submitImageCommand",
+        "CreationTask/submissionState/idempotencyKey",
+        "executeTask",
+        "retryOfTaskId/retryOutputIndices",
+        "asset result archive"
+      ],
+      "finding_ids": ["KW04", "KW05", "KW15", "KW17"],
+      "boundary": "受理不等于成功；不另起收费 queue；完整依赖按账本处理。"
+    },
+    {
+      "priority": "P1",
+      "feature_ids": ["FEAT-004", "FEAT-005", "FEAT-031"],
+      "task_ids": ["T6", "EXT-COMFY"],
+      "change": "接既有库 workflow 到本地任务宿主，冻结图与参数 snapshot，补逐任务取消与恢复",
+      "reuse": [
+        "workflowRegistry",
+        "LocalComfyUiAdapter",
+        "现有 Tauri ComfyUI primitives",
+        "T5"
+      ],
+      "finding_ids": ["KW10", "KW11"],
+      "boundary": "不再次开发库 CRUD/独立队列，不照搬模型自动下载；选定真实服务后再验收。"
+    },
+    {
+      "priority": "P1",
+      "feature_ids": ["FEAT-006", "FEAT-007", "FEAT-013", "FEAT-031"],
+      "task_ids": ["BACKEND-MEDIA-001"],
+      "change": "视频/音频统一作业链及插件回执、refs/cancel、asset/node 回传",
+      "reuse": [
+        "pluginLoader",
+        "PluginNodeContext",
+        "统一任务宿主",
+        "归档/result/sourceNodeId"
+      ],
+      "finding_ids": ["KW12", "KW13", "KW16"],
+      "boundary": "不让插件直接发送 Provider 请求，不用空媒体 URL 表示成功。"
+    },
+    {
+      "priority": "P2",
+      "feature_ids": ["FEAT-011", "FEAT-012", "FEAT-030"],
+      "task_ids": ["BACKEND-MCP-AUTO", "TASK-ORCH-003"],
+      "change": "能力就绪后设计 direct/workflow 路由、专用广告/MV模板、语义引用 capsule 与渐进 replan",
+      "reuse": [
+        "single SkillRegistry",
+        "稳定 workItem ID",
+        "已接受阶段前缀",
+        "asset refs"
+      ],
+      "finding_ids": ["KW06", "KW08", "KW09", "KW15"],
+      "boundary": "先现有闭环，后规则/包契约扩展；不硬编码竞品模型池/并发/7000字限制，不把提示词当宿主 enforcement。"
+    },
+    {
+      "priority": "P2",
+      "feature_ids": ["FEAT-013", "FEAT-016"],
+      "task_ids": [],
+      "change": "产品明确完整 3D/剪辑范围后，在已有插件协议内设计事务、诊断、预览、版本保存和异步导出",
+      "reuse": [
+        "PluginNodeContext.storage/applyOps",
+        "统一 asset pipeline",
+        "task identity/revision"
+      ],
+      "finding_ids": ["KW12", "KW16"],
+      "boundary": "暂无对应已认可实现任务；先做既有 feature 规格扩展判断，不盲拷历史/竞品，不为既有缺口新建重复 feature。"
+    }
+  ],
+  "dependency_order": {
+    "current_ledger": [
+      {
+        "task": "TASK-ORCH-001",
+        "status": "DONE",
+        "depends_on": ["TASK-AGENT-001"],
+        "note": "领域基座已在 main，非整个执行闭环 DONE。",
+        "evidence": {
+          "path": "docs/governance/task-ledger.json",
+          "line": 2152,
+          "marker": "\"id\": \"TASK-ORCH-001\""
+        }
+      },
+      {
+        "task": "TASK-ORCH-002",
+        "status": "TODO",
+        "depends_on": ["TASK-ORCH-001"],
+        "evidence": {
+          "path": "docs/governance/task-ledger.json",
+          "line": 2200,
+          "marker": "\"id\": \"TASK-ORCH-002\""
+        }
+      },
+      {
+        "task": "BACKEND-MCP-AUTO",
+        "status": "TODO",
+        "depends_on": ["TASK-CAP-001"],
+        "evidence": {
+          "path": "docs/governance/task-ledger.json",
+          "line": 1482,
+          "marker": "\"id\": \"BACKEND-MCP-AUTO\""
+        }
+      },
+      {
+        "task": "TASK-ORCH-003",
+        "status": "TODO",
+        "depends_on": ["TASK-ORCH-001", "BACKEND-MEDIA-001"],
+        "evidence": {
+          "path": "docs/governance/task-ledger.json",
+          "line": 2227,
+          "marker": "\"id\": \"TASK-ORCH-003\""
+        }
+      },
+      {
+        "task": "BACKEND-MEDIA-001",
+        "status": "TODO",
+        "depends_on": ["T5"],
+        "evidence": {
+          "path": "docs/governance/task-ledger.json",
+          "line": 1449,
+          "marker": "\"id\": \"BACKEND-MEDIA-001\""
+        }
+      },
+      {
+        "task": "T6",
+        "status": "PARTIAL",
+        "depends_on": ["T5"],
+        "evidence": {
+          "path": "docs/governance/task-ledger.json",
+          "line": 302,
+          "marker": "\"id\": \"T6\""
+        }
+      },
+      {
+        "task": "EXT-COMFY",
+        "status": "BLOCKED",
+        "depends_on": ["T6"],
+        "note": "需要用户选定服务/路径/workflow/模型；本次无运行授权或个人数据读取。",
+        "evidence": {
+          "path": "docs/governance/task-ledger.json",
+          "line": 359,
+          "marker": "\"id\": \"EXT-COMFY\""
+        }
+      }
+    ],
+    "recommended_execution_order": [
+      {
+        "step": 1,
+        "task_ids": ["TASK-ORCH-002"],
+        "requires": ["TASK-ORCH-001"],
+        "purpose": "先让已有阶段/审批可见可操作，共用项目范围实例注入 Host。",
+        "validation": "有计划无任务、计划/结果审批、拒绝返工、stale revision、项目切换、retry/requeue 边界的单元和浏览器回归。"
+      },
+      {
+        "step": 2,
+        "task_ids": ["BACKEND-MCP-AUTO"],
+        "requires": ["step1 的共用编排器设计"],
+        "purpose": "有界 plan 工具接现有 Host/bridge/MCP；可和 execution 适配设计并行。",
+        "validation": "discovery→调用→持久化→UI；Agent 不自批；错误/取消/超时/离线。完整任务需第三方实际 MCP 桌面验收。"
+      },
+      {
+        "step": 3,
+        "task_ids": ["TASK-ORCH-003"],
+        "requires": [
+          "step1",
+          "现有图片/文本统一任务链",
+          "对图片/文本子验收与完整 BACKEND-MEDIA-001 依赖的显式 plan/账本记录"
+        ],
+        "purpose": "图片/文本子闭环：稳定 task binding、依赖调度、terminal CAS、局部失败重试、unknown 阻断。",
+        "validation": "不把受理当成功；重复点击/重连不重复计费；迟到结果不跨审批；只有 failed 可普通重试。完整任务依赖未满足不标 DONE。"
+      },
+      {
+        "step": 4,
+        "task_ids": ["BACKEND-MEDIA-001", "T6"],
+        "requires": ["T5 的持久 intent/unknown 恢复基础"],
+        "purpose": "并行补视频/音频作业链及选定 Comfy 的 Desktop 最小执行链。",
+        "validation": "真实参数、终态、archive；逐任务取消、缺模型/断连/重启；Web 不触发原生能力。"
+      },
+      {
+        "step": 5,
+        "task_ids": ["TASK-ORCH-003", "EXT-COMFY"],
+        "requires": ["step3", "对应 step4 与获认可 ledger 依赖"],
+        "purpose": "媒体能力接到计划后完成 ORCH-003 完整验收；按选定环境/授权补 Comfy 实测。",
+        "validation": "Web/Desktop 分别证据；未满足完整 acceptance 维持 PARTIAL/NOT_VERIFIED。"
+      },
+      {
+        "step": 6,
+        "task_ids": ["BACKEND-MCP-AUTO", "TASK-ORCH-003"],
+        "requires": ["step2", "step5", "模板所需生成/merge/export 能力"],
+        "purpose": "既有 feature 范围审查专用流程模板、capsule/一致性和增量 replan。",
+        "validation": "简单请求走 direct；现有素材优先；稳定 ID/已接受前缀保存；有限审核点；参数来自当前能力而非竞品硬编码。"
+      }
+    ],
+    "policy": "仅建议，不修改登记/账本；既有 task/feature 内分子验收，完整 DONE 尊重最终认可范围。完整3D/剪辑不属于首轮 ORCH-002。"
+  },
+  "unknowns": [
+    {
+      "id": "KU01",
+      "question": "竞品提示词/manifest 的宿主强制程度",
+      "related_findings": ["KW01", "KW03", "KW06", "KW09"],
+      "answer": "本子任务只关联打包静态证据；真实 Host enforcement 与运行行为需主线 REA/进一步运行证据。"
+    },
+    {
+      "id": "KU02",
+      "question": "main 的 Web/Desktop 端到端编排和工具注册运行结果",
+      "related_findings": ["KW02", "KW03", "KW04", "KW18"],
+      "answer": "本次未运行；保留 PARTIAL/TODO。"
+    },
+    {
+      "id": "KU03",
+      "question": "选定 Comfy 服务及逐任务取消协议",
+      "related_findings": ["KW10", "KW11"],
+      "answer": "未读用户数据/请求服务；EXT-COMFY仍按既有阻塞范围。"
+    },
+    {
+      "id": "KU04",
+      "question": "任务绑定、reference capsule/source hash 的持久迁移方案",
+      "related_findings": ["KW04", "KW05", "KW06", "KW15"],
+      "answer": "后续在既有规格设计，变化同步 Web/Rust；本次不实现。"
+    },
+    {
+      "id": "KU05",
+      "question": "完整3D/剪辑是否为近期已认可范围",
+      "related_findings": ["KW12", "KW16"],
+      "answer": "当前卡片/清单不足以确认；先补统一媒体和资产闭环。"
+    }
+  ],
+  "verification": {
+    "method": "精确源码/LF 行号及短 marker 校验；当前 main SHA/clean worktree；competitor finding ID 与 feature/task ID 校验",
+    "ran_product_tests": false,
+    "ran_services": false,
+    "test_status": "NOT_RUN_READ_ONLY_ANALYSIS",
+    "claims": "FACT 仅指源码/配置/文档静态观察；recommendation/dependency_order 为建议，不含 live 运行成功声明。",
+    "validated_kk_evidence_refs": 135,
+    "competitor_finding_ids": 30
+  },
+  "feature_state": {
+    "FEAT-004": "PARTIAL",
+    "FEAT-005": "PARTIAL",
+    "FEAT-006": "PROTOTYPE",
+    "FEAT-007": "PARTIAL",
+    "FEAT-011": "PARTIAL",
+    "FEAT-012": "PARTIAL",
+    "FEAT-013": "PARTIAL",
+    "FEAT-016": "PARTIAL",
+    "FEAT-030": "PARTIAL",
+    "FEAT-031": "PARTIAL"
+  },
+  "competitor_evidence_file": "D:\\kk-studio\\output\\minimax-rea-20261008\\evidence\\workflow-findings.json",
+  "competitor_evidence": {
+    "P01": {
+      "claim": "包内三个插件分别为 Director Stage 0.24.10、Clip Studio 0.10.2、ComfyUI 0.2.6。前两者在 manifest 暴露 Agent editorSurface/methods；ComfyUI manifest 无同类方法数组，采用专用 Agent/MCP 加 bootstrap。",
+      "evidence_type": "packaged_configuration",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/manifest.json",
+          "line_or_offset": "L35",
+          "marker": "0.24.10"
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/manifest.json",
+          "line_or_offset": "L33",
+          "marker": "0.10.2"
+        },
+        {
+          "path": "snapshot/bundled-plugins/comfyui/manifest.json",
+          "line_or_offset": "L33",
+          "marker": "0.2.6"
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/manifest.json",
+          "line_or_offset": "L49",
+          "marker": "editorSurface"
+        }
+      ],
+      "limitations": [
+        "打包版本和入口可确定；插件是否已安装启用、依赖就绪及实际 UI 使用未执行检查。"
+      ]
+    },
+    "P02": {
+      "claim": "3D 插件真实 switch 实现 scene.get/edit/history/snapshot/diagnostics、motion.read/campath.read。scene.edit 在克隆 draft 中校验 1–50 操作，成功且 nextComposition存在才写 committed 和 revision；支持 validateOnly、稳定错误码和唯一前缀引用。",
+      "evidence_type": "implementation_code",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-7AMmP-5p.js",
+          "line_or_offset": "char_offset_0:449020",
+          "marker": "function g0("
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-7AMmP-5p.js",
+          "line_or_offset": "char_offset_0:460734",
+          "marker": "case\"scene.edit\""
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-7AMmP-5p.js",
+          "line_or_offset": "char_offset_0:438907",
+          "marker": "INVALID_REFERENCE"
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-7AMmP-5p.js",
+          "line_or_offset": "char_offset_0:438374",
+          "marker": "AMBIGUOUS_ID"
+        }
+      ],
+      "limitations": [
+        "静态读代码确认；未在浏览器运行批量编辑/撤销；模型渲染/WebGL兼容未知。"
+      ]
+    },
+    "P03": {
+      "claim": "3D 程序模型通过 new Function(ctx) 调用 createModel，使用 Three.js；代码校验返回对象、网格、非有限几何/变换，并返回 bbox/parts/partDetails。存在几何布局 warning：断连、X向主轴和轮子侧装；不是仅写在方法说明里。",
+      "evidence_type": "implementation_code",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-7AMmP-5p.js",
+          "line_or_offset": "char_offset_0:149255",
+          "marker": "function Yi("
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-7AMmP-5p.js",
+          "line_or_offset": "char_offset_0:149194",
+          "marker": "contains non-finite values"
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-7AMmP-5p.js",
+          "line_or_offset": "char_offset_0:153448",
+          "marker": "mounted sideways"
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-7AMmP-5p.js",
+          "line_or_offset": "char_offset_0:152321",
+          "marker": "disconnected"
+        }
+      ],
+      "limitations": [
+        "不把提示词中的无fetch/import/DOM要求等同于真实沙箱保证；未执行生成代码或比较模型形状。"
+      ]
+    },
+    "P04": {
+      "claim": "3D model.capture 真正有多视图离屏渲染/暂存，model.compare 真正调用 Python compare_render.py。确定性评价是剪影IoU、颜色直方图相似度、宽高比差和4x4差异；综合分0.55IoU+0.25颜色+0.20(1-比例差)，0.75/0.55划strong/moderate/weak。",
+      "evidence_type": "implementation_code",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-7AMmP-5p.js",
+          "line_or_offset": "char_offset_0:467246",
+          "marker": "case\"model.capture\""
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-7AMmP-5p.js",
+          "line_or_offset": "char_offset_0:468721",
+          "marker": "case\"model.compare\""
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/gates/compare_render.py",
+          "line_or_offset": "L193",
+          "marker": "score = 0.55"
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/gates/compare_render.py",
+          "line_or_offset": "L209",
+          "marker": "2D deterministic metrics only"
+        }
+      ],
+      "limitations": [
+        "比较器明确仅2D、不能判材料或3D形体，最终验收仍视觉检查；依赖Python/PIL且未运行。"
+      ]
+    },
+    "P05": {
+      "claim": "3D UI camera.capture 导出的JPEG和timeline录制视频，通过 Hub insertImageNode/insertVideoNode 落画布并附sourceNodeId。Agent scene.snapshot/model.capture则上传staging=true临时文件。场景composition与view-state通过hub.storage持久化，Agent通过onInvoke/setEditorState交换结构状态。",
+      "evidence_type": "implementation_code",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-BoG959qJ.js",
+          "line_or_offset": "char_offset_0:145433",
+          "marker": "async function xL("
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-BoG959qJ.js",
+          "line_or_offset": "char_offset_0:145596",
+          "marker": "async function SL("
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-BoG959qJ.js",
+          "line_or_offset": "char_offset_0:147896",
+          "marker": "t.append(\"staging\",\"true\")"
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-7AMmP-5p.js",
+          "line_or_offset": "char_offset_0:532306",
+          "marker": "await Uh(B,X)"
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-7AMmP-5p.js",
+          "line_or_offset": "char_offset_0:525428",
+          "marker": "await Bh(Te.blob,Gt)"
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-7AMmP-5p.js",
+          "line_or_offset": "char_offset_0:470098",
+          "marker": "const Kd=\"composition\""
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/assets/index-BoG959qJ.js",
+          "line_or_offset": "char_offset_0:147410",
+          "marker": "e.onInvoke(n)"
+        }
+      ],
+      "limitations": [
+        "范围内可证明传给画布的是图片/视频；没有确认场景几何直接进入外部视频模型。主程序可能另作语义使用，需进一步关联。"
+      ]
+    },
+    "P06": {
+      "claim": "Director Stage 明确定位场景/机位/姿态预演，支持人偶、GLB/GLTF、自定义Three.js模型、运动DSL与运镜DSL；manifest排除平面分镜生成、最终高精渲染和完整电影交付。",
+      "evidence_type": "documentation",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/manifest.json",
+          "line_or_offset": "L13",
+          "marker": "Not for flat storyboard generation"
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/manifest.json",
+          "line_or_offset": "L13",
+          "marker": "custom GLB/GLTF"
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/agent/references/motion-dsl.md",
+          "line_or_offset": "L3",
+          "marker": "motion"
+        },
+        {
+          "path": "snapshot/bundled-plugins/3d-director-stage/agent/references/campath-dsl.md",
+          "line_or_offset": "L1",
+          "marker": "path"
+        }
+      ],
+      "limitations": [
+        "支持DSL的实际编辑方法已由P02证明；GLTF模型兼容、渲染品质/复杂场景性能未测试。"
+      ]
+    },
+    "P08": {
+      "claim": "Clip Studio 的真实 Agent bridge 注册 project.get/edit/view/history/export/snapshot/diagnostics。操作含切割裁切删除区间、移动导入、SRT、字幕样式、速度、转场、效果、色彩等；诊断实现黑帧gap、重叠、缺媒体、微小clip、字幕越界/重叠和空轨检测。",
+      "evidence_type": "implementation_code",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:1157330",
+          "marker": "onInvoke(E8)"
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:1156291",
+          "marker": "case\"project.edit\""
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:1148455",
+          "marker": "function p8("
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:1148648",
+          "marker": "kind:\"timeline_gap\""
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:1150475",
+          "marker": "kind:\"caption_overlap\""
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:1116515",
+          "marker": "\"cut_silences\",\"import_srt\""
+        }
+      ],
+      "limitations": [
+        "静态证明方法实现；阈值和诊断覆盖未跑样例，视觉正确性仍依赖真实快照。"
+      ]
+    },
+    "P09": {
+      "claim": "剪辑 batch 先校验，再以一次history group执行；发生错误有undo和逆序compensation回滚路径。结果显式返回rolledBack与nonUndoable；文字/字幕样式、色彩、marker、速度、导入等部分操作不进入普通用户撤销历史。",
+      "evidence_type": "implementation_code",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:1145888",
+          "marker": "async function u8("
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:1146639",
+          "marker": "Validation failed — nothing was applied"
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:1147494",
+          "marker": "compensation failed"
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:1147681",
+          "marker": "nonUndoable:f?[]"
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:1116733",
+          "marker": "cS=new Set(["
+        }
+      ],
+      "limitations": [
+        "存在回滚代码不等同于所有失败均原子回滚已验证，compensation失败也会记录；未测试失败批次及Ctrl+Z行为。"
+      ]
+    },
+    "P10": {
+      "claim": "剪辑真实项目持久化使用Hub storage，video-editor-project schemaVersion=2；保存时清除blob/fileHandle临时数据，将项目JSON gzip/base64并按220KiB切片及generation manifest保存。恢复按assetId重新取媒体，缺失标placeholder；保存有600ms debounce。",
+      "evidence_type": "implementation_code",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/EditorInterface-C6ia9wPN.js",
+          "line_or_offset": "char_offset_0:704080",
+          "marker": "Xi=\"video-editor-project\""
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/EditorInterface-C6ia9wPN.js",
+          "line_or_offset": "char_offset_0:704124",
+          "marker": "Zo=220*1024,Ji=2"
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/EditorInterface-C6ia9wPN.js",
+          "line_or_offset": "char_offset_0:706291",
+          "marker": "format:\"gzip-base64-chunks\""
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/EditorInterface-C6ia9wPN.js",
+          "line_or_offset": "char_offset_0:706580",
+          "marker": "async function av("
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/EditorInterface-C6ia9wPN.js",
+          "line_or_offset": "char_offset_0:706902",
+          "marker": "function ov("
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/EditorInterface-C6ia9wPN.js",
+          "line_or_offset": "char_offset_0:715052",
+          "marker": "const i=ov();"
+        }
+      ],
+      "limitations": [
+        "未读取任何真实用户项目，不验证崩溃恢复/数据寿命；assetId缺失媒体恢复的实际行为未跑。"
+      ]
+    },
+    "P11": {
+      "claim": "剪辑project.export实现异步running/completed/failed任务，重复start复用运行任务；Agent只支持destination=canvas及mp4/wav且editor须打开。真实编辑器回调渲染项目并通过insertVideoNode或insertAudioNode交画布，附sourceNodeId和退出后选择标志。",
+      "evidence_type": "implementation_code",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:1151156",
+          "marker": "function m8("
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/EditorInterface-C6ia9wPN.js",
+          "line_or_offset": "char_offset_0:136639",
+          "marker": "c.useEffect(()=>Tm(R=>z(R,\"canvas\"))"
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:197303",
+          "marker": "async function yO("
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:197492",
+          "marker": "async function bO("
+        }
+      ],
+      "limitations": [
+        "渲染编码的硬件兼容、最终音画同步、长视频性能和codec支持未运行验证；UI列出的其它输出preset不能当作Agent支持范围。"
+      ]
+    },
+    "P12": {
+      "claim": "剪辑包含真实剪映/CapCut草稿导出入口：UI调用bundled Python probe/导出；脚本拷贝媒体、重写路径、写draft_info/draft_content、根目录元数据，未装客户端时有ZIP fallback。",
+      "evidence_type": "implementation_code",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/EditorInterface-C6ia9wPN.js",
+          "line_or_offset": "char_offset_0:96298",
+          "marker": "script:\"python/export-to-jianying.py\""
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/python/export-to-jianying.py",
+          "line_or_offset": "L137",
+          "marker": "def build_zip_fallback"
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/python/export-to-jianying.py",
+          "line_or_offset": "L356",
+          "marker": "def rewrite_material_paths"
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/python/export-to-jianying.py",
+          "line_or_offset": "L664",
+          "marker": "atomic_write_json(draft_dir / \"draft_info.json\""
+        }
+      ],
+      "limitations": [
+        "未探测本机剪映/CapCut个人目录或运行脚本；应用版本兼容和所有特效/字幕保真度未知。"
+      ]
+    },
+    "P13": {
+      "claim": "剪辑插件声明自己不执行语音识别；字幕从host transcription读取SRT，再import_srt按源clip重映射时间。project.snapshot采样真实合成帧用于可读性和视觉检查，diagnostics机械健康与视觉检查分离。",
+      "evidence_type": "documentation",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/manifest.json",
+          "line_or_offset": "L91",
+          "marker": "this plugin does not run speech recognition"
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:1157017",
+          "marker": "case\"project.snapshot\""
+        },
+        {
+          "path": "snapshot/bundled-plugins/clip-studio/assets/index-8VObL7VW.js",
+          "line_or_offset": "char_offset_0:1153717",
+          "marker": "function T8("
+        }
+      ],
+      "limitations": [
+        "host转写工具的实现不在插件内；SRT重映射和快照可读性未运行样本验证。"
+      ]
+    },
+    "P14": {
+      "claim": "ComfyUI专家按live canvas node Draft优先读取真实graph和draft_parameters，区分持久Draft编辑、单次执行snapshot和保存库Workflow。精确run-only值可跳参数卡；其它修改ToolConfirmCard后才执行，run固定review_mode=auto，N次使用count=N一次请求。",
+      "evidence_type": "prompt_contract",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/comfyui-agent.md",
+          "line_or_offset": "L14",
+          "marker": "use the node Draft as the parameter baseline"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/comfyui-agent.md",
+          "line_or_offset": "L26",
+          "marker": "one run-only snapshot"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/comfyui-agent.md",
+          "line_or_offset": "L28",
+          "marker": "`review_mode=auto`"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/comfyui-agent.md",
+          "line_or_offset": "L54",
+          "marker": "pass `count=N` in one call"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/comfyui-agent.md",
+          "line_or_offset": "L67",
+          "marker": "requires_workflow_save=true"
+        }
+      ],
+      "limitations": [
+        "不可变执行snapshot、保存冲突及headless运行的服务端实现需host证据；不能据提示词判断业务成功。"
+      ]
+    },
+    "P15": {
+      "claim": "ComfyUI bootstrap真实将source_node_id映射到node-workflows详情，而库id映射到workflows；用expected_source_sha256检查来源变化，loadGraphData后graphToPrompt。监听hub.storage Draft更新后同步图；UI队列真实调用api.queuePrompt并要求prompt_id。",
+      "evidence_type": "implementation_code",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/comfyui/hub-bootstrap.js",
+          "line_or_offset": "L638",
+          "marker": "function compileWorkflow("
+        },
+        {
+          "path": "snapshot/bundled-plugins/comfyui/hub-bootstrap.js",
+          "line_or_offset": "L664",
+          "marker": "detail.source_sha256 !== source.expected_source_sha256"
+        },
+        {
+          "path": "snapshot/bundled-plugins/comfyui/hub-bootstrap.js",
+          "line_or_offset": "L834",
+          "marker": "function registerExternalDraftSync("
+        },
+        {
+          "path": "snapshot/bundled-plugins/comfyui/hub-bootstrap.js",
+          "line_or_offset": "L840",
+          "marker": ".get('comfyui.workflow-draft.v1')"
+        },
+        {
+          "path": "snapshot/bundled-plugins/comfyui/hub-bootstrap.js",
+          "line_or_offset": "L448",
+          "marker": "return api.queuePrompt(0, prompt)"
+        }
+      ],
+      "limitations": [
+        "这证明前端桥接/编译/来源检查，不证明host服务完整验证snapshot或所有结构编辑；未启动ComfyUI。"
+      ]
+    },
+    "P16": {
+      "claim": "ComfyUI前端绑定管理型后端清单；本机18188，安装代码有断点下载、SHA-256检验和后台进程，启动采用内嵌Python/venv与main.py独立session。Windows设备路由NVIDIA CUDA12或Blackwell CUDA13/R580、AMD DirectML、Intel XPU并有XPU算子校验。",
+      "evidence_type": "implementation_code",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/comfyui/hub-bootstrap.js",
+          "line_or_offset": "L30",
+          "marker": "var PORT = 18188"
+        },
+        {
+          "path": "snapshot/bundled-plugins/comfyui/hub/install-backend.py",
+          "line_or_offset": "L205",
+          "marker": "def device_target"
+        },
+        {
+          "path": "snapshot/bundled-plugins/comfyui/hub/install-backend.py",
+          "line_or_offset": "L789",
+          "marker": "got = sha256_of(tarball)"
+        },
+        {
+          "path": "snapshot/bundled-plugins/comfyui/hub/install-backend.py",
+          "line_or_offset": "L223",
+          "marker": "def validate_xpu_runtime"
+        },
+        {
+          "path": "snapshot/bundled-plugins/comfyui/hub/start-backend.py",
+          "line_or_offset": "L790",
+          "marker": "start_new_session=True"
+        },
+        {
+          "path": "snapshot/bundled-plugins/comfyui/hub/install-backend.py",
+          "line_or_offset": "L790",
+          "marker": "if got != plat_info[\"sha256\"]:"
+        }
+      ],
+      "limitations": [
+        "清单中的Windows CUDA12/13、AMD有固定bundle，Intel指向candidate清单；未下载、启动、检查本机GPU或模型权重。"
+      ]
+    },
+    "P17": {
+      "claim": "ComfyUI模型权重是额外运行依赖；启动代码复用本机已有ComfyUI模型路径和登记下载目录。无受支持独显的Windows路径返回失败原因，不存在该device_target函数的CPU回退。",
+      "evidence_type": "implementation_code",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/bundled-plugins/comfyui/manifest.json",
+          "line_or_offset": "L13",
+          "marker": "Generating images additionally requires model weights"
+        },
+        {
+          "path": "snapshot/bundled-plugins/comfyui/hub/start-backend.py",
+          "line_or_offset": "L764",
+          "marker": "local_bases = detect_local_comfy_bases"
+        },
+        {
+          "path": "snapshot/bundled-plugins/comfyui/hub/start-backend.py",
+          "line_or_offset": "L27",
+          "marker": "--extra-model-paths-config"
+        },
+        {
+          "path": "snapshot/bundled-plugins/comfyui/hub/install-backend.py",
+          "line_or_offset": "L220",
+          "marker": "未检测到受支持的独立显卡"
+        }
+      ],
+      "limitations": [
+        "设备函数的静态边界，不代表所有平台/其他用户手工后端都不能CPU；未检查已安装权重或用户后端。"
+      ]
+    },
+    "W02": {
+      "claim": "角色按认知职责而非图像/视频模态拆分。主 Agent 管用户意图和阶段推进，Router 分类，Planner 编写计划与文档，Executor 执行单阶段；Planner 用原 task_id 恢复，Executor 在每次尝试间无状态。",
+      "evidence_type": "prompt_contract",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/README.md",
+          "line_or_offset": "L3",
+          "marker": "Cognitive-role topology"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/media-agent.md",
+          "line_or_offset": "L10",
+          "marker": "Resume the same planner session"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/planner.md",
+          "line_or_offset": "L1",
+          "marker": "may resume your session"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/executor.md",
+          "line_or_offset": "L1",
+          "marker": "stateless stage executor"
+        }
+      ],
+      "limitations": [
+        "README L3 泛称子 Agent stateless，具体当前 Planner 提示词允许恢复会话，应以具体角色契约描述该差异；实际 task 上下文行为未运行验证。"
+      ]
+    },
+    "W03": {
+      "claim": "基础配置采取 hub_* 默认关闭后逐工具放行；只有主 Agent 可以 task 委派，四个 subagent 的 task 都关闭。Router 无生成/写画布能力，Planner 能写计划，Executor 能生成/后处理但不能推进计划。",
+      "evidence_type": "packaged_configuration",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/base.json",
+          "line_or_offset": "L38",
+          "marker": "\"hub_*\""
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/base.json",
+          "line_or_offset": "L170",
+          "marker": "\"router\""
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/base.json",
+          "line_or_offset": "L156",
+          "marker": "\"hub_plan_write\""
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/base.json",
+          "line_or_offset": "L73",
+          "marker": "\"hub_plan_update_stage_state\""
+        }
+      ],
+      "limitations": [
+        "这里证明权限配置而非运行时不可绕过性；media-agent/Planner 的 bash 放行仍存在，其提示词限制媒体工作使用 MCP。"
+      ]
+    },
+    "W04": {
+      "claim": "路由优先专用 Skill，其后简单任务走 direct；image-only 批量/一致性图像仍走 direct。共享同一主体的多视频、依赖片段或跨模态组装交 Router，返回 direct/workflow/ask 胶囊。",
+      "evidence_type": "prompt_contract",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/media-agent.md",
+          "line_or_offset": "L6",
+          "marker": "Load a named or matching dedicated Skill"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/workflow.md",
+          "line_or_offset": "L8",
+          "marker": "Image-only generation/editing"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/router.md",
+          "line_or_offset": "L23",
+          "marker": "route_kind: direct | workflow | ask"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/router.md",
+          "line_or_offset": "L35",
+          "marker": "More than one requested video"
+        }
+      ],
+      "limitations": [
+        "专用 Skill 的分发来源及命中实现不在该快照范围；本项不是对真实路由准确率的评测。"
+      ]
+    },
+    "W05": {
+      "claim": "计划采用完整 stage_outline 加逐次只编写一个当前 Stage；Planner 写真实文档节点和 work_items，运行状态、runtime_refs 和审核转换由 Plan 框架/主 Agent 管。交付条件包括所有必要阶段完成且媒体存在 node_id。",
+      "evidence_type": "prompt_contract",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/planner.md",
+          "line_or_offset": "L73",
+          "marker": "Author every workflow plan one Stage at a time"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/planner.md",
+          "line_or_offset": "L75",
+          "marker": "Keep every runtime-owned field out"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/media-agent.md",
+          "line_or_offset": "L106",
+          "marker": "Media-agent owns runtime Stage advancement"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/media-agent.md",
+          "line_or_offset": "L123",
+          "marker": "Deliver only when no required Stage"
+        }
+      ],
+      "limitations": [
+        "提示词宣称工具拥有状态与校验；本调查范围没有 Plan 服务实现，不能据此断言框架硬性强制全部规则。"
+      ]
+    },
+    "W06": {
+      "claim": "work_items 是稳定输出契约而非消费队列；依赖资产通过有序 refs、ref_capsules、直接 depends_on 和 runtime_refs 传递。Replan 保持绑定 workflow 和已接受前缀，以 expected_revision/request_id 提交批次，局部失败只重试缺失/失败 ids。",
+      "evidence_type": "prompt_contract",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/_shared/stage-execution-plan.md",
+          "line_or_offset": "L133",
+          "marker": "`work_items` is append/revision-safe state"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/_shared/stage-execution-plan.md",
+          "line_or_offset": "L134",
+          "marker": "Every ref an item consumes"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/_shared/stage-execution-plan.md",
+          "line_or_offset": "L144",
+          "marker": "Pass the latest `expected_revision`"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/executor.md",
+          "line_or_offset": "L11",
+          "marker": "retry_ids"
+        }
+      ],
+      "limitations": [
+        "稳定标识、版本冲突及原子 Replan 的硬执行待主进程/服务端代码关联；未测试中断恢复。"
+      ]
+    },
+    "W07": {
+      "claim": "Executor 通用视频批处理约定是并行独立 work_items，按 capability 动态并发窗口；H3 提示词硬上限 10 活跃请求。MV 私有流程覆盖为 concurrency_limit=1 严格 sequence_index；图片宫格可并行且默认上限 20。",
+      "evidence_type": "prompt_contract",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/executor.md",
+          "line_or_offset": "L22",
+          "marker": "hard active-generation cap of `10`"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/agents/executor.md",
+          "line_or_offset": "L23",
+          "marker": "or `20` by default"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/mv/workflow.md",
+          "line_or_offset": "L64",
+          "marker": "`concurrency_limit=1`"
+        }
+      ],
+      "limitations": [
+        "这是 Agent 执行策略，未观察调度器/供应商是否硬限制并发，未提交任何生成。"
+      ]
+    },
+    "W09": {
+      "claim": "当前 workflow_match 索引仅 ad-tvc、drama-series、mv；general-video、audio-production、koc-video 归档在 _disabled。KOC 产品种草仍由声明中的专用 koc-video Skill 在 workflow routing 之前承接，因此不能称 KOC 整体禁用。",
+      "evidence_type": "prompt_contract",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/workflow.md",
+          "line_or_offset": "L34",
+          "marker": "`ad-tvc/workflow.md`"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/workflow.md",
+          "line_or_offset": "L35",
+          "marker": "`drama-series/workflow.md`"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/workflow.md",
+          "line_or_offset": "L36",
+          "marker": "`mv/workflow.md`"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/README.md",
+          "line_or_offset": "L16",
+          "marker": "_disabled/"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/workflow.md",
+          "line_or_offset": "L9",
+          "marker": "`koc-video` skill"
+        }
+      ],
+      "limitations": [
+        "只证明该版本文档路由索引及归档位置；声明的 KOC Skill 不在本次 agent-profiles 四类快照文件中，其他分发来源未知。"
+      ]
+    },
+    "W10": {
+      "claim": "TVC 面向明确影视广告/品牌大片且超过 15 秒并存在复杂依赖的请求。骨架为需求简报→视觉调研→按缺口锚点→分镜/生成策略→视频→可选 BGM→后期；已有脚本、Prompt 和稳定素材优先复用。",
+      "evidence_type": "prompt_contract",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/ad-tvc/workflow.md",
+          "line_or_offset": "L8",
+          "marker": "超过 15 秒"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/ad-tvc/workflow.md",
+          "line_or_offset": "L31",
+          "marker": "高信息量 Brief"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/ad-tvc/workflow.md",
+          "line_or_offset": "L62",
+          "marker": "| `intake-brief`"
+        }
+      ],
+      "limitations": [
+        "阶段与阈值是私有工作流规则，并非已运行完成的广告生产能力证明。"
+      ]
+    },
+    "W11": {
+      "claim": "TVC 只在实际新生成锚点结果、一次高成本视频生成前、最终成片三个点允许 Stage review。旁白/对白/文字/Logo/CTA/End Card 要在视频单元原生生成，Post 仅确定性拼接保原音轨、可选 BGM 和导出，不降级补字幕。",
+      "evidence_type": "prompt_contract",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/ad-tvc/workflow.md",
+          "line_or_offset": "L44",
+          "marker": "只有下表三处"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/ad-tvc/workflow.md",
+          "line_or_offset": "L52",
+          "marker": "| Visual Gen |"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/ad-tvc/reference/post-production.md",
+          "line_or_offset": "L5",
+          "marker": "Post 不消费"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/ad-tvc/reference/video-generation-execution.md",
+          "line_or_offset": "L107",
+          "marker": "每个实际成片只做一次 result QC"
+        }
+      ],
+      "limitations": [
+        "原生文字与音频的成功率未知；内部语义 QC 是 Agent 检查要求，不是找到的确定性视觉评分器。"
+      ]
+    },
+    "W12": {
+      "claim": "MV 以最终主音乐为唯一时间轴，七阶段为方向、音乐、制作计划、角色/场景锚点、分镜、视频、后期。分组 4–15 整数秒且总和严格等于主音乐，Stage6固定 H3·2K、每组<=7000字符且串行；Stage7用完整主音乐替换代理音轨。",
+      "evidence_type": "prompt_contract",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/mv/workflow.md",
+          "line_or_offset": "L22",
+          "marker": "| <用 `working_language` 表达 Stage 1"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/mv/workflow.md",
+          "line_or_offset": "L27",
+          "marker": "固定 MiniMax H3 · 2K"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/mv/workflow.md",
+          "line_or_offset": "L60",
+          "marker": "全部 4–15 秒整数组"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/mv/workflow.md",
+          "line_or_offset": "L63",
+          "marker": "每组不得超过 7000 字符"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/mv/workflow.md",
+          "line_or_offset": "L65",
+          "marker": "完整主音乐覆盖代理音轨"
+        }
+      ],
+      "limitations": [
+        "时长一致、口型、音乐同步和文字包装均未运行验证；媒体执行可用性取决于 H3/音频服务。"
+      ]
+    },
+    "W14": {
+      "claim": "共享资产管线仅在复用/一致性或依赖有必要且现有来源不足时创建锚点；通用人物为一图3x2六视图，状态先基图后变体；声线视频参考<=3s，场景/品牌按身份复用。全部依赖锚点先成为画布资产。",
+      "evidence_type": "prompt_contract",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/_shared/asset-pipeline.md",
+          "line_or_offset": "L12",
+          "marker": "Core anchors are downstream inputs"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/_shared/asset-pipeline.md",
+          "line_or_offset": "L27",
+          "marker": "six-view standard character sheet"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/_shared/asset-pipeline.md",
+          "line_or_offset": "L37",
+          "marker": "State changes are dependency chains"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/_shared/asset-pipeline.md",
+          "line_or_offset": "L56",
+          "marker": "All required anchors must be visible"
+        }
+      ],
+      "limitations": [
+        "实际输出身份一致性未评测；具体 workflow 可以覆盖锚点形式。"
+      ]
+    },
+    "W15": {
+      "claim": "素材理解使用 ref_analyses 与 ref_capsules 复用已有语义读取，缺失才 hub_analyse_media type=both；参考拆分 identity/style/design/world/layout/action/medium/ratio。文档明确 metadata 只证尺寸/时长、semantic 才证含义。",
+      "evidence_type": "prompt_contract",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/contracts/semantic-judgment.md",
+          "line_or_offset": "L39",
+          "marker": "ref_analyses[]"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/contracts/semantic-judgment.md",
+          "line_or_offset": "L41",
+          "marker": "assign each input useful dimensions"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/contracts/semantic-judgment.md",
+          "line_or_offset": "L100",
+          "marker": "`metadata` proves dimensions/duration"
+        }
+      ],
+      "limitations": [
+        "已找到的是分析/证据分类提示词；未发现此范围内对自然语言身份/风格一致性的确定性计算。"
+      ]
+    },
+    "W16": {
+      "claim": "通用后期合成契约要求 hub_merge_videos 做视频拼接，hub_ffmpeg 做裁切/转码/混音等；path-only 结果必须 hub_canvas_write_node 后获得 nodeId 才算交付。字幕默认显式选择，TVC私有规则又进一步禁用后期补字。",
+      "evidence_type": "prompt_contract",
+      "confidence": "high",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/_shared/video-merge.md",
+          "line_or_offset": "L24",
+          "marker": "Never put video concat in `hub_ffmpeg`"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/_shared/video-merge.md",
+          "line_or_offset": "L30",
+          "marker": "返回 `nodeId` 才是完成信号"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/_shared/video-merge.md",
+          "line_or_offset": "L21",
+          "marker": "Subtitles/text overlays are explicit opt-in"
+        },
+        {
+          "path": "snapshot/agent-profiles/v2/config/workflows/ad-tvc/reference/post-production.md",
+          "line_or_offset": "L3",
+          "marker": "优先于 `_shared/video-merge.md`"
+        }
+      ],
+      "limitations": [
+        "工具实际媒体写入和画布关联机制待 host 服务代码关联；TVC 私有合同优先于共享默认。"
+      ]
+    },
+    "W17": {
+      "claim": "打包契约描述 LoopGuard 对语义重复调用使用 5 次窗口中同指纹 3 次的拒绝规则；Agent也被要求重复调用前改变实质输入或停止。",
+      "evidence_type": "documentation",
+      "confidence": "medium",
+      "files": [
+        {
+          "path": "snapshot/agent-profiles/v2/config/contracts/anti-loop.md",
+          "line_or_offset": "L28",
+          "marker": "Trip rule: same fingerprint 3 times"
+        }
+      ],
+      "limitations": [
+        "本范围只发现 runtime guard 的文档声明，未找到 LoopGuard 代码；不把这个拒绝阈值作为已验证运行实现。"
+      ]
+    }
+  }
+}

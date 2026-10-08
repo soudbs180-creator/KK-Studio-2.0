@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-10-08 阶段计划工作台恢复点
+
+继续在独立 `codex/TASK-ORCH-002-stage-workbench`，先核对status/HEAD，读[计划](../changes/2026-10-08-stage-workbench/plan.md)、[比较](../changes/2026-10-08-stage-workbench/comparison.md)和[验证](../changes/2026-10-08-stage-workbench/verification.md)。仅更新原TASK-ORCH-002/FEAT-030，无新队列/存储；生产Tauri审批/返工/保存/重启已验，完整verify/最终HEAD独立review待完成。Native证据复制到本轮evidence，不能被browser清理覆盖。下一步ORCH-003需taskId/attempt绑定和unknown映射，Comfy归T6，健康/恢复归T5；计划批准不能替代供应商提交授权。main@21d121d未改，未推送/合并/发布。
+
 ## 2026-10-01 Codex 生图回传恢复点
 
 先核对PR #33真实merged状态、最新origin/main和最终文档head审查/CI；本机TASK-AGENT-008 AC-1–3 DONE不能替代推广收据。[计划](../changes/2026-10-01-agent-image-transport/plan.md)/[验证](../changes/2026-10-01-agent-image-transport/verification.md)保留main@709e51d基线、实现3c63f1e独立PASS与P3文档修正。native result去二进制和提交前幂等均RED→GREEN，2 MiB保护保留；run5真实生图/续聊/重连/重启hash一致且节点/标记唯一，verify632root/172Agent/377browser和Rust97 PASS。run3/run4失败历史及run5脚本设置错误不覆盖。重启先开项目并按入口启动服务，本次未改自动启动。豆包区域限制登录和CLI自动回画布仍未完成，不并行使用其profile。57/16→809/768，附加752恒定。

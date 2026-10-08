@@ -1,0 +1,52 @@
+
+> kk-studio@2.1.4 typecheck
+> tsc --noEmit
+
+✔ upsertPlan persists a plan into the project (idempotent by id) (6.8979ms)
+✔ replaying an existing plan preserves completed stages and assets (3.421ms)
+✔ result rejection requeues selected work for revised output and a second review (2.0351ms)
+✔ reworking an upstream result invalidates succeeded downstream work and review (1.7567ms)
+✔ plan_patch_stage rejects invalid input without persisting a plan (4.0324ms)
+✔ plan_patch_stage rejects duplicate work item IDs without writing (0.1789ms)
+✔ plan_patch_stage is durable and replay cannot reset progress (0.4718ms)
+✔ upsertPlan refuses plans beyond the storage limit (1.9451ms)
+✔ requestStageApproval moves doing to plan_review with CAS (0.4891ms)
+✔ plan-gated work cannot run or enter result review before host approval (0.3216ms)
+✔ queued work cannot be reported as a completed stage (0.1672ms)
+✔ stage tool rejects an old revision after the same status returns (0.2557ms)
+✔ host approval rejects a stale result review after rejection and resubmission (0.2376ms)
+✔ dependent work cannot start before its prerequisite succeeds (0.1421ms)
+✔ decideStage approve plan continues doing; reject blocks (0.2016ms)
+✔ decideStage cannot approve a stage not in review (0.1319ms)
+✔ result gate completes on approve and returns to doing on reject (0.3055ms)
+✔ markStageBlocked and retryStage requeue only failed work items (0.354ms)
+✔ late work results cannot overwrite an approved plan (0.3428ms)
+✔ approvalSummary lists pending gates across plans (0.1712ms)
+✔ planTools expose the four plan tools with working invocations (0.2452ms)
+✔ Agent plan tool cannot approve or unblock its own stages (0.258ms)
+✔ createStagePlan assigns indexes, doing status and revision 0 (4.6162ms)
+✔ createStagePlan rejects empty or oversized stage lists (0.4036ms)
+✔ createStagePlan rejects a plan that storage normalization would discard (1.0783ms)
+✔ stage plans reject duplicate work item IDs across stages (1.1699ms)
+✔ stage plan normalization rejects duplicate stage indexes (0.4796ms)
+✔ stage plan collection keeps only the first duplicate plan ID (6.1436ms)
+✔ stage plans reject missing, self-referential and cyclic dependencies (0.8212ms)
+✔ normalization rejects impossible approval and completion states (0.9967ms)
+✔ casAdvanceStage advances doing to plan_review/result_review/blocked (0.3963ms)
+✔ casAdvanceStage rejects stale expected status (concurrent write) (0.2468ms)
+✔ casAdvanceStage rejects unknown stage and illegal transitions (0.3066ms)
+✔ stageApprovalGateFor maps status to gate and null otherwise (0.831ms)
+✔ pendingStageApprovals lists waiting gates only (0.5092ms)
+✔ stagePlanProgress counts done/blocked/inFlight/pending (0.6455ms)
+✔ retryStageWorkItems requeues only failed/partial items (0.8673ms)
+✔ stageWorkItemCounts aggregates per-status counts (1.0102ms)
+✔ stagePlanSummary includes approval hint and progress (0.5756ms)
+✔ normalizeStagePlan rebuilds valid plans and drops invalid ones (0.5781ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1125.3077

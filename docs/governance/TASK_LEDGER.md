@@ -71,7 +71,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | REL-2.1.0 | root |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | TASK-RULES-004 | root |
 | TASK-ORCH-001 | Agent 编排领域状态机与编排器工具面 | DONE | TASK-AGENT-001 | root |
-| TASK-ORCH-002 | TaskWorkbench 阶段计划视图与审批交互 | TODO | TASK-ORCH-001 | root |
+| TASK-ORCH-002 | TaskWorkbench 阶段计划视图与审批交互 | IN_PROGRESS | TASK-ORCH-001 | root |
 | TASK-ORCH-003 | 编排器驱动生成执行与计划门禁 | TODO | TASK-ORCH-001, BACKEND-MEDIA-001 | root |
 | TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | TASK-ORCH-001 | root |
 | TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | TASK-AGENT-001 | root |
@@ -886,14 +886,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## TASK-ORCH-002 — TaskWorkbench 阶段计划视图与审批交互
 
 - Goal: 任务工作台展示 Stage 计划状态与 plan/result 审批门，审批按钮驱动编排器
-- Scope: src/components/TaskWorkbench.tsx, TaskWorkbenchContent.tsx, src/App.tsx（onStageDecision 回调链）
+- Scope: 现有工作台阶段计划视图、plan/result 审批/返工/解除阻断；原编排器项目范围校验与 App/AgentHost 共用实例；竞品能力比较归入现有 feature/task。
 - Acceptance: 工作台显示各阶段状态徽标与待审批门; plan/result 审批按钮调用编排器 decideStage; 浏览器回归覆盖展示与审批流
-- Branch: `unallocated`
-- Worktree: `unallocated`
-- Modules: src/components/TaskWorkbench.tsx, src/components/TaskWorkbenchContent.tsx, src/App.tsx
-- Verification: NOT_VERIFIED — 未开工。
-- Evidence: NOT VERIFIED
-- Updated: 2026-09-23
+- Branch: `codex/TASK-ORCH-002-stage-workbench`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-ORCH-002-stage-workbench`
+- Modules: src/components/TaskWorkbench.tsx, src/components/StagePlanPanel.tsx, src/components/StagePlanDetail.tsx, src/styles/stage-workbench.css, src/features/agent/orchestrator.ts, src/App.tsx
+- Verification: NOT_VERIFIED — 领域42/42、Stage浏览器10/10无retry、production Tauri审批/返工/重启通过；完整verify与最终HEAD独立review待完成。自动执行/MCP注册未完成，FEAT-030仍PARTIAL。
+- Evidence: [docs/changes/2026-10-08-stage-workbench/intent.md](../../docs/changes/2026-10-08-stage-workbench/intent.md), [docs/changes/2026-10-08-stage-workbench/spec.md](../../docs/changes/2026-10-08-stage-workbench/spec.md), [docs/changes/2026-10-08-stage-workbench/plan.md](../../docs/changes/2026-10-08-stage-workbench/plan.md), [docs/changes/2026-10-08-stage-workbench/comparison.md](../../docs/changes/2026-10-08-stage-workbench/comparison.md), [docs/changes/2026-10-08-stage-workbench/verification.md](../../docs/changes/2026-10-08-stage-workbench/verification.md), [docs/changes/2026-10-08-stage-workbench/review.md](../../docs/changes/2026-10-08-stage-workbench/review.md), [docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance.json](../../docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance.json)
+- Updated: 2026-10-08
 
 ## TASK-ORCH-003 — 编排器驱动生成执行与计划门禁
 

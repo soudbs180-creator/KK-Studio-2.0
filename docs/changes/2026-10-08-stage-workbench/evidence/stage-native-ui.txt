@@ -1,0 +1,19 @@
+tests/browser/stage-workbench.spec.ts 53ms (unchanged)
+tests/fixtures/stage-project.ts 5ms
+tests/desktop/stage-workbench.mjs 67ms
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Isolated desktop process did not stop
+    at stop (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-ORCH-002-stage-workbench/tests/desktop/stage-workbench.mjs:110:5)
+    at async file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-ORCH-002-stage-workbench/tests/desktop/stage-workbench.mjs:188:3 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.20.0

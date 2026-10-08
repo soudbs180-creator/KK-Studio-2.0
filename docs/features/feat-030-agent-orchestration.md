@@ -2,26 +2,27 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-09-26
+- 最近更新：2026-10-08
 - 关联任务：TASK-ORCH-001, TASK-ORCH-002, TASK-ORCH-003, TASK-CANVAS-001
 
 ## 用户可见入口
 
 - 能力：Agent 生成任务按"阶段执行计划"编排：规划（plan）→ 审批（plan_review）→ 执行（doing）→ 结果审批（result_review）→ 完成（done）；失败只重试失败工作项。
-- 当前 UI 入口：任务工作台（TaskWorkbench）展示任务队列；阶段计划状态条（待审批提示）在本功能后续任务（TASK-ORCH-002）接入。
+- 当前 UI 入口：任务工作台 → 阶段计划；查看阶段/工作项/进度，plan/result 人工审批、选项返工与解除阻断共用原编排器。审批不自动提交生成。
 - Desktop / Web 差异：领域层与工具面两端一致；Agent MCP 注册（plan 工具面接入 Codex）在 BACKEND-MCP-AUTO（TASK-MCP-AUTO）完成，当前工具面仅以纯函数形态存在。
 
 ## 代码位置
 
-- 前端：`src/domain/stagePlan.ts`（状态机）、`src/features/agent/orchestrator.ts`（编排器+工具面）、`src/features/agent/agentHost.ts`（宿主注入）、`src/features/agent/agentCanvas.ts`（交付契约）
+- 前端：`src/domain/stagePlan.ts`（状态机）、`src/features/agent/orchestrator.ts`（编排器+工具面）、`src/features/agent/agentHost.ts`（宿主注入）、`src/features/agent/agentCanvas.ts`（交付契约）；`TaskWorkbench.tsx`、`StagePlanPanel.tsx`、`StagePlanDetail.tsx`（阶段 UI），`src/App.tsx` 创建共享实例。
 - 桌面 Rust：`src-tauri/src/project_package_snapshot.rs`（计划字段校验）、`src-tauri/src/project_package.rs`（计划素材原件打包）
 - 服务端：无（阶段计划本地持久化，云端化属平台波次）
 - 数据/存储：`CreationProject.stagePlans` 随 Web 本地快照或 Desktop creation-v2 快照保存，项目包导出/导入保留计划及其引用原件。
 
 ## 测试与证据
 
+- 本轮：领域42/42、Stage浏览器10/10无retry、隔离数据目录的production Tauri审批/返工/重启通过；完整verify/最终HEAD独立review待完成，见[本轮验证](../changes/2026-10-08-stage-workbench/verification.md)。下列数字是历史证据。
 - 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/agentCanvas.test.ts`；当前全量 Node 422/422 通过。
-- 浏览器回归：既有浏览器回归 300/300 通过；Stage UI 交互尚未接入，专项回归由后续任务补充。
+- 浏览器回归：历史300/300；本轮新增 `tests/browser/stage-workbench.spec.ts` 的真实 App/IndexedDB 审批流，Desktop 对应 `tests/desktop/stage-workbench.mjs`。
 - Rust 测试 / 实机验收：项目包导出/导入及重复身份拒绝回归，当前 82/82 Rust 全量通过；Desktop GUI 与正式发布未验收。
 - 变更与验证证据：`docs/changes/2026-09-23-agent-orchestration/verification.md`
 
@@ -37,18 +38,20 @@
   - MCP 风格工具面：plan_get_stage_status / plan_update_stage_state / plan_patch_stage / plan_replan（纯函数形态，供后续 MCP 注册）；Agent 工具不能自行完成 plan/result 审批或解除阻断，阶段操作与宿主审批均须携预期 revision；
   - 交付契约：产物必须携带 node_id 且已注册素材资产，否则拦截；本轮产物按 result 连线收集与摘要。
 - 明确标注未接：
-  - TaskWorkbench 阶段计划 UI（只读/审批交互）未接（TASK-ORCH-002/003）；
+  - 阶段计划自动创建/执行与增量重规划未接（TASK-ORCH-003）；`plan_replan` 仍为摘要占位；
   - 工具面尚未注册到 Agent MCP 服务（BACKEND-MCP-AUTO）；
   - 编排器尚未驱动真实生成执行（依赖 B3 媒体真实链路）。
 
 ## 差距与后端化
 
-- “UI 已显示但后端未接”的点：任务工作台无阶段计划视图；审批仍走现有 TaskExecutionApproval（高成本/远程门），未走 plan/result 门。
+- “UI 已显示但后端未接”的点：阶段 UI 已接本地编排器并等待保存完成；审批不替代现有 TaskExecutionApproval（高成本/远程门），也不自动执行工作项。
 - “已实现但未验证”的点：编排器驱动真实多视频任务未实机验证（媒体链路未闭合）。
-- 变成 REAL 还缺什么：TaskWorkbench 阶段计划视图与审批交互（TASK-ORCH-002/003）、MCP 工具注册（BACKEND-MCP-AUTO）、真实媒体链路（BACKEND-MEDIA-001）、每平台运行证据。
+- 变成 REAL 还缺什么：计划驱动执行（TASK-ORCH-003）、MCP 注册（BACKEND-MCP-AUTO）、真实媒体链路（BACKEND-MEDIA-001）与真实多阶段验收；本地 fixture UI 验收不能替代外部能力。
 - 外部依赖与阻断条件：无外部密钥依赖；媒体真实链路依赖供应商 Key（EXT-PROVIDER）。
 
 ## 变更记录
+
+- 2026-10-08：吸收 MiniMax 阶段审批入口，在原工作台/原项目状态上补 UI 和共享宿主接线；保留严格 revision、项目范围、依赖失效、原提示词及 unknown 围栏。功能仍 PARTIAL，详见[比较与融合顺序](../changes/2026-10-08-stage-workbench/comparison.md)。
 
 - 2026-09-26：`9ddfcb5` 源码独立复审 PASS，Hosted verify/delivery 成功；功能仍为 PARTIAL，Desktop GUI、真实 Provider、MCP 注册与 UI 阶段视图未验收。详情见验证记录。
 
