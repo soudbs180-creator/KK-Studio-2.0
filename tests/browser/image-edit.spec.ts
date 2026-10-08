@@ -329,6 +329,14 @@ test("unified image tools keep original coordinates across zoom, reset and undo/
   await expect(dialog.getByTestId("edit-region-count")).toHaveText(
     "0 个编辑区域",
   );
+  await expect
+    .poll(
+      async () =>
+        (await activeEditProject(page)).items.find(
+          (i: { imageEditDraft?: { regions: unknown[] } }) => i.imageEditDraft,
+        )?.imageEditDraft?.regions.length,
+    )
+    .toBe(0);
   await dialog.getByRole("button", { name: "重做编辑", exact: true }).click();
   await expect
     .poll(
@@ -346,7 +354,12 @@ test("unified image tools keep original coordinates across zoom, reset and undo/
         (i: { imageEditDraft?: unknown }) => i.imageEditDraft,
       )?.imageEditDraft,
   );
-  expect(after).toEqual(before);
+  // Missing counters and an empty record have the same meaning. History keeps
+  // counters monotonic, while dimensions, region IDs and every run stay exact.
+  expect({ ...after, colorCounters: after.colorCounters ?? {} }).toEqual({
+    ...before,
+    colorCounters: before.colorCounters ?? {},
+  });
   await expect(
     dialog.getByRole("button", { name: "开始重绘", exact: true }),
   ).toBeDisabled();

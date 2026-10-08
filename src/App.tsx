@@ -1462,9 +1462,7 @@ export default function App() {
                   ? "unknown"
                   : "failed",
               promptHash,
-              error:
-                mappingFailures.get(output.index) ??
-                "此项尚未归档，可单项重试。",
+              error: mappingFailures.get(output.index) ?? "此项尚未归档。",
             },
       );
       const completed = outputs.filter(

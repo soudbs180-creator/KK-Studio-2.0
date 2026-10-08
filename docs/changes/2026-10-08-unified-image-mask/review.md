@@ -11,14 +11,14 @@ Dirty 预检结论 CHANGES REQUIRED，正式 SHA 审查之前的预检。以下�
 
 | ID     | 严重度 | 问题                                      | 修复和当前证据                                                              | 独立状态   |
 | ------ | ------ | ----------------------------------------- | --------------------------------------------------------------------------- | ---------- |
-| IM-001 | P1     | 色块 pointerdown 即提交，第二触点不能取消 | 正常单指抬起才填充；brush/color 双指 PASS                                   | 待正式复验 |
-| IM-002 | P1     | 拒绝首个裁剪审批留下 queued               | 审批拒绝走整组 cancel；两个 cancelled、0 请求、保留草稿                     | 待正式复验 |
-| IM-003 | P1     | native union 丢失颜色编号定位             | 有色块保留标注图并算参考数；同色 A/B native PASS                            | 待正式复验 |
+| IM-001 | P2     | 色块 pointerdown 即提交，第二触点不能取消 | 正常单指抬起才填充；brush/color 双指 PASS                                   | 待正式复验 |
+| IM-002 | P2     | 拒绝首个裁剪审批留下 queued               | 审批拒绝走整组 cancel；两个 cancelled、0 请求、保留草稿                     | 待正式复验 |
+| IM-003 | P2     | native union 丢失颜色编号定位             | 有色块保留标注图并算参考数；同色 A/B native PASS                            | 待正式复验 |
 | IM-004 | P1     | native 包拒绝/漏收编辑字段与原件          | Rust schema/收集器、Web/native roundtrip 和实际桌面包恢复 PASS              | 待正式复验 |
-| IM-005 | P1     | 删除预览来源节点卸载灯箱                  | App 承载灯箱；Desktop 删除源图、切候选、重新生成 PASS                       | 待正式复验 |
-| IM-006 | P1     | 对账复活用户已删除候选                    | 保留归档输出/resultItemId 发布证据；单测和 EXE 重启 PASS                    | 待正式复验 |
+| IM-005 | P2     | 删除预览来源节点卸载灯箱                  | App 承载灯箱；Desktop 删除源图、切候选、重新生成 PASS                       | 待正式复验 |
+| IM-006 | P2     | 对账复活用户已删除候选                    | 保留归档输出/resultItemId 发布证据；单测和 EXE 重启 PASS                    | 待正式复验 |
 | IM-007 | P2     | 连续编辑 prompt 超过 4000                 | 本轮不截断、有界上下文、过长提前拒绝；单测 PASS                             | 待正式复验 |
-| IM-008 | P1     | retry/resume 绕过区域串行                 | 共用 group/controller/审批保护、finally queued 调度；全套任务/区域重试 PASS | 待正式复验 |
+| IM-008 | P2     | retry/resume 绕过区域串行                 | 共用 group/controller/审批保护、finally queued 调度；全套任务/区域重试 PASS | 待正式复验 |
 
 Self-review 另修 native 缺省 Option 写 null 导致元数据拒绝（RED→GREEN）；TaskHost/IPC 独立实例抢文件锁（真实重复生成 unknown→两次 succeeded）。保持严格文件锁与素材校验，不重复付费请求或生成假成功。
 

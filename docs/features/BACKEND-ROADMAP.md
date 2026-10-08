@@ -35,7 +35,7 @@
 | 功能 | 任务 | 做什么 |
 | --- | --- | --- |
 | FEAT-024 Gateway 与 Rust TaskHost 分工 | T8 | 定 Core 职责边界：桌面是否内置/托管 Node Gateway，统一队列与持久层，避免两套引擎 |
-| FEAT-002 原生 TaskHost 运行态 | T5 | 隔离 Tauri 下进程重启/恢复与 health 回写；文本并发已由原生 jobs 管理，WebView 重载不能释放仍执行的原生任务占用 |
+| FEAT-002 原生 TaskHost 运行态 | T5 / TASK-PROV-005 / TASK-PROV-006 | T5 实際进程恢复/逐槽/文本容量已完成本机验收；供应商配置 durable 恢复与 image 连接/容量/health 统一分别由新任务承载 |
 | FEAT-021 应用内代理 | BACKEND-PLATFORM（桌面部分） | reqwest 代理配置、loopback 例外、凭据安全、连通性校验 |
 | FEAT-015 Web 项目包 / FEAT-019 本地容量 | T9 | Web 容量/离线/跨 origin 项目包，收掉 Web 上的 Desktop 专属失效入口 |
 | FEAT-026 安装包 | T7 | Desktop 安装、恢复、回滚实机验收 |

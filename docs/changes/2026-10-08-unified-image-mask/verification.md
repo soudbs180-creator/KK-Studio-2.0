@@ -1,12 +1,12 @@
 # Verification：统一图片编辑蒙版
 
 - Task ID：TASK-IMAGE-EDIT-001；本地实现与运行检查 PASS，最终独立审查见 [review](review.md)。
-- 日期：2026-10-08，Asia/Shanghai；base 1af0357b088df79dc51e9b309ef310a500722cf8。
+- 日期：2026-10-08，Asia/Shanghai；开工 base 1af0357b088df79dc51e9b309ef310a500722cf8；整合 base 78cea37af9359fd2d9f58f2854525516deee8a06。
 - cwd：本仓库 .worktrees/TASK-IMAGE-EDIT-001；branch codex/TASK-IMAGE-EDIT-001-unified-mask。
-- Node 24.20.0；独立 npm ci 完成；Desktop 2.1.7 / Web 2.1.8 / Mobile 规划 2.1.1。
+- Node 24.20.0；独立 npm ci 完成；初轮 Desktop 2.1.7 / Web 2.1.8；整合后 Desktop 2.1.8 / Web 2.1.9 / Mobile 规划 2.1.1。
 - [intent](intent.md) / [spec](spec.md) / [plan](plan.md)。未推送、合并或发布。
 
-## 当前检查结果
+## 首次实现检查结果（提交前工作树，历史）
 
 | 检查                                                       | 实际结果                                                                                              |
 | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
@@ -33,7 +33,7 @@
 
 Desktop 使用 loopback HTTP fixture 与临时系统凭据，两次发送 PNG Mask；finally 删除测试凭据，不使用用户连接和数据目录。两次返回同一 PNG，覆盖去重与并发。第一候选改变 1071 个 RGBA 分量，Mask 外改变数 **0**。导出包含 4 个实际引用素材，恢复的快照/草稿一致。关闭 EXE 后在同一隔离目录重启，删除的源节点没有复活，仍为两个成功任务、两个候选，请求数保持 2。
 
-## 实际 UI 运行链路
+## 首次实现实际 UI 运行链路（历史）
 
 来源：docs/UI_INDEX.md 指定的当前四页基线与 UI_RULES/DESIGN-SYSTEM/UI_SPEC → src/styles/tokens.css → 既有 Modal、ComposerTextarea、ui-button → src/main.tsx → App → Canvas → CanvasNode/ImageCreationNode → ImageRedrawDialog → ImageEditor → ImageCanvasLayers/EditToolbar/EditComposer。生成图片通过 DemoResultNode 进入同一编辑器。App 稳定承载 ImageLightbox，图片节点删除不会卸载灯箱。App.tsx 统一导入 image-edit.css，没有组件提前导入改变顺序。
 
@@ -41,7 +41,7 @@ Desktop 使用 loopback HTTP fixture 与临时系统凭据，两次发送 PNG Ma
 - Desktop：src-tauri/target/release/kk-studio.exe --data-dir 本次隔离目录；http://tauri.localhost/、route /；实测 data-runtime-mode=production、data-runtime-entry=src/main.tsx。
 - 两端实测加载 /assets/index-DMtJCHmu.js，读取响应并与当前 dist SHA-256 相同：2541249ea7a61808d7dc0ff3fdb844d0ef7d45f0c59847cf7cd354d3889c94e9。
 - CSS：/assets/index-CSF9XnZa.css。Web 实测三层尺寸 1672×941、按钮高 32px/文字 14px、胶囊高 82px；默认/选中/禁用等消费现有语义 tokens。新增工具是工程补充，不声称存在完整编辑器 Figma 同稿。
-- 当前 EXE SHA-256：28f46af0975dd303846eafdd000e63a9c14536827906f8d0e35f5f7aad87e790。
+- 首次 EXE SHA-256：28f46af0975dd303846eafdd000e63a9c14536827906f8d0e35f5f7aad87e790。
 
 收据/截图/日志在本任务 .tmp/image-edit/；交付副本位于本机 D:/kk-studio/output/unified-image-mask-20261008/。包含两端 acceptance JSON、编辑/窄屏/灯箱 PNG、verify/Rust/client 日志。源码不提交测试 profile、用户数据或凭据。
 
@@ -52,6 +52,28 @@ Desktop 使用 loopback HTTP fixture 与临时系统凭据，两次发送 PNG Ma
 首轮请求 fixture 用大型蓝调照片作每次输出，localStorage 恢复副本达到既有配额时不能可靠反映终态；改为 100×80 PNG 作请求/逐像素断言，大图上传交互仍保留。首轮完整 verify 留档：410 PASS/8 FAIL/1 flaky；5 项为端口/CORS 环境不匹配，空指令按钮旧断言、重复 status、持久化等待各有直接证据。更新有效输入并等待实际保存，保留能力/限额/像素断言，后续 419 PASS、0 flaky。
 
 Desktop 脚本的目录 key、summary camelCase、按钮名称及保存等待错误按实际契约纠正，不计为产品缺陷。真实重复生成同时暴露 TaskHost/IPC 分别创建素材仓库导致排他文件锁冲突、产生 unknown；共享同一 Arc/Mutex 后，两次同 PNG 原生请求和重启通过。外部进程文件锁保护没有放宽。
+
+## 承接主线后的组合验证
+
+首次实现提交 ba8806d25ccb35020e2a9dce6baaa1fe4dded57c 后，在本任务分支承接 main@78cea37af9359fd2d9f58f2854525516deee8a06（PR #37）。保留新的原生取消等待、unknown 重试边界、CI/harness 和双方历史记录；同一 multipart 请求支持 PNG Mask。没有合并本任务到 main。
+
+| 检查 | 实际结果 |
+| --- | --- |
+| npm run verify -- -- --workers=4 --retries=0 | exit 0，完整原有流水线；CLI 参数只转发至浏览器并发和重试 |
+| root / Agent | 739/747、172/174 PASS，原有 skip 8/2 保留，无新增 skip |
+| 全套浏览器 | 420/420 PASS，4 workers，0 retry、0 flaky |
+| 撤销/重做定向重复 | 5/5 PASS，2 workers，0 retry |
+| UI / typecheck / lint / format / build | 全部 PASS，UI 207 文件、0 违规 |
+| cargo test / fmt / client:check | 100/100 PASS、fmt/check exit 0 |
+| fresh cargo build --release + tests/desktop/image-edit.mjs | exit 0；2 次实际 Mask 请求、4 素材项目包恢复、删除原图/再生/重启 PASS；Mask 外改变 0 |
+| npm run client:taskhost:test | exit 0，主线原生生命周期 11 组 PASS，credentialCleanupComplete=true |
+| Web production preview 同状态 | 1435、route /；编辑器和 390×844 截图、三层 Canvas、0 pageerror PASS |
+
+两端实际加载 /assets/index-Buq7teU0.js，响应字节 SHA-256 与 dist 相同：c286fc5ef28daf1670aeca408e12a2beae3df0cffdc5cf4ced3471fb6f59a2d9。CSS 仍 index-CSF9XnZa.css；组合 EXE SHA-256 为 3b5e388fe2932ea3bf02576a8c69db9523a75702f2478b4f5b28b02660cb9b22。使用相同生产入口/import 链；Desktop 版本 2.1.8、Web 2.1.9，不代表发布或安装。
+
+本组实测发生在 merge commit 前的整合工作树；native 生命周期 receipt 的 sourceHead 仍为 ba8806d，不能冒充新提交 SHA。source-manifest-integrated.json 明确记录该状态、merge parent、64 个实际源码/配置/测试文件 hash 和 EXE hash；正式提交后独立核对未变源码，再绑定审查 SHA。证据副本在本机 D:/kk-studio/output/unified-image-mask-20261008/run-integrated-78cea37/（web、desktop、taskhost、logs），不含测试 profile、数据目录或系统凭据。
+
+组合首轮 verify exit 0 但有 1 flaky：撤销测试比较缺省 colorCounters 和空记录，并可能读取撤销前的保存副本。保留维度、region ID 和每条 run 的严格断言，只统一空计数器语义，且等待撤销实际落盘；定向 5 次无重试通过。随后 12 workers 全套多处旧页面发生 30 秒 UI 操作超时；当时本机有 178 个 msedge 和 91 个 node 进程，直接因果 UNKNOWN。保留日志，只终止唯一识别的本轮验证进程树；改为 4 workers、0 retry 后完整 420 PASS。没有放宽断言、延长超时或禁用检查。
 
 ## 尚未验收
 

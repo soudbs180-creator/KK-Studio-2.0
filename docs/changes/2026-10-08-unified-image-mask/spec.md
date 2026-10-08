@@ -1,7 +1,7 @@
 # Spec：统一图片编辑蒙版
 
 - Task ID：TASK-IMAGE-EDIT-001；状态 READY；2026-10-08
-- 基线：origin/main 1af0357b；[intent](intent.md)、[UI 规范](../../UI_INDEX.md)。
+- 开工基线：origin/main 1af0357b；整合基线 78cea37（PR #37）；[intent](intent.md)、[UI 规范](../../UI_INDEX.md)。
 - [数据决定](../../architecture/adr/ADR-010-unified-image-mask.md)。
 
 ## 现状审查与取舍

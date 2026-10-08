@@ -444,9 +444,12 @@ impl TaskHost {
         }
         let provider_base = reqwest::Url::parse(&request.base_url)
             .map_err(|_| RunError::failed("invalid_request", "供应商地址无效"))?;
-        let provider_client = pinned_download_client(&provider_base)
-            .await
-            .map_err(|message| RunError::failed("invalid_request", message))?;
+        let provider_client = tokio::select! {
+            biased;
+            _ = text::cancelled(control) => return Err(RunError::failed("cancelled", "任务在发送前已取消")),
+            result = pinned_download_client(&provider_base) => result
+                .map_err(|message| RunError::failed("invalid_request", message))?,
+        };
         if control.cancelled.load(Ordering::Acquire) {
             return Err(RunError::failed("cancelled", "任务在发送前已取消"));
         }
@@ -468,16 +471,13 @@ impl TaskHost {
             .bearer_auth(&secret)
             .header("Idempotency-Key", &request.idempotency_key);
         let count = request.output_indices.len() as u32;
-        let response = if attachments.is_empty() {
+        let send = if attachments.is_empty() {
             let mut payload = json!({"model": request.model, "prompt": request.prompt, "n": count, "response_format": "b64_json"});
             if let Some(size) = request.size.as_ref().filter(|value| !value.is_empty()) {
                 payload["size"] = json!(size);
             }
             builder = builder.json(&payload);
-            builder
-                .send()
-                .await
-                .map_err(|_| RunError::unknown("network", "供应商请求连接中断", vec![]))?
+            builder.send()
         } else {
             let mut form = reqwest::multipart::Form::new()
                 .text("model", request.model.clone())
@@ -528,11 +528,13 @@ impl TaskHost {
                         .map_err(|_| RunError::failed("invalid_request", "编辑蒙版格式无效"))?,
                 );
             }
-            builder
-                .multipart(form)
-                .send()
-                .await
-                .map_err(|_| RunError::unknown("network", "供应商请求连接中断", vec![]))?
+            builder.multipart(form).send()
+        };
+        let response = tokio::select! {
+            biased;
+            _ = text::cancelled(control) => return Err(RunError::unknown("cancelled", "已停止等待图像生成，供应商最终状态需核对", vec![])),
+            result = send => result
+                .map_err(|_| RunError::unknown("network", "供应商请求连接中断", vec![]))?,
         };
         let status = response.status();
         let retry = response
@@ -553,7 +555,11 @@ impl TaskHost {
         }
         let mut body = Vec::new();
         let mut stream = response.bytes_stream();
-        while let Some(chunk) = stream.next().await {
+        while let Some(chunk) = tokio::select! {
+            biased;
+            _ = text::cancelled(control) => return Err(RunError::unknown("cancelled", "已停止等待图像生成，供应商最终状态需核对", vec![])),
+            chunk = stream.next() => chunk,
+        } {
             let chunk =
                 chunk.map_err(|_| RunError::unknown("network", "供应商响应读取中断", vec![]))?;
             if body.len().saturating_add(chunk.len()) > MAX_RESPONSE_BYTES {
@@ -621,9 +627,12 @@ impl TaskHost {
                     }
                 }
             } else if let Some(url) = item.get("url").and_then(Value::as_str) {
-                download_result(&provider_base, url)
-                    .await
-                    .map_err(|e| RunError::unknown("provider_unavailable", e, ids.clone()))?
+                tokio::select! {
+                    biased;
+                    _ = text::cancelled(control) => return Err(RunError::unknown("cancelled", "已停止等待图像结果下载，供应商最终状态需核对", ids)),
+                    result = download_result(&provider_base, url) => result
+                        .map_err(|e| RunError::unknown("provider_unavailable", e, ids.clone()))?,
+                }
             } else {
                 return Err(RunError::unknown(
                     "provider_unavailable",

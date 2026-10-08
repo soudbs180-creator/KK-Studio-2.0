@@ -65,3 +65,5 @@ Interfaces：ImageEditor(document,onChange,onSubmit)；现有 command context �
 ## 开工与恢复记录
 
 原生 worktree 工具因聊天 cwd 是容器目录返回 Not a git repository；按已声明仓库偏好用 git worktree fallback。独立 npm ci，Node24。fetch 的失效本机代理以单次 git -c http.proxy= fetch 成功，未修改代理配置。基线检查运行记录在 verification。
+
+首次实现提交 ba8806d25ccb35020e2a9dce6baaa1fe4dded57c 后，主线前移至 78cea37af9359fd2d9f58f2854525516deee8a06（PR #37）。在本任务分支合并该主线，保留 HTTP/响应流/下载取消、unknown 重试边界和双方历史记录；本任务 Mask multipart 与可选元数据 helper 同时保留。组合版本递增为 Desktop 2.1.8 / Web 2.1.9，Mobile 规划 2.1.1。组合回归及正式 review 以 verification 新记录为准；没有合并本任务到 main。
