@@ -27,7 +27,7 @@
 - [x] 复用 TopBar，加入四项原生操作与状态同步；关闭重复装饰。
 - [x] 定向测试通过，构建真实 Tauri；留存单排截图及窗口操作证据。
 - [x] 执行完整 verify、client:check，核对源码→Web/Desktop 产物链。
-- [ ] 更新版本、账本、PROGRESS/PROJECT_STATE/HANDOFF，提交明确文件并完成独立审查。
+- [x] 更新版本、账本、PROGRESS/PROJECT_STATE/HANDOFF，提交明确文件并完成独立审查。
 
 任务串行执行，无独立子功能；独立 reviewer 只读。原 main 与其他 worktree 不写入。native worktree 工具因调用上下文为非 Git 容器返回 Not a git repository，故回退本仓库 ignored `.worktrees`。首次 fetch 因失效本机代理失败；单次 `git -c http.proxy= fetch origin` 成功，不修改用户 Git 代理设置。
 

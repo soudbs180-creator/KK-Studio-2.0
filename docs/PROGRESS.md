@@ -2,7 +2,7 @@
 
 ## 2026-10-08 桌面单排标题栏候选
 
-TASK-UI-013 已将桌面应用名、菜单与原生窗口控制合并为一排40px。完整 verify（723root/172Agent/411browser，原skip8/2、零失败/零flaky）、client:check、fresh Tauri 单排/真实拖动/最大化还原/最小化关闭及 Web 三档 development 验证通过；初始化错误不再影响设置入口，既有3项回归未放宽。Desktop2.1.7，Web2.1.7/Mobile规划2.1.1保持；FEAT-023仍部分实现。分支 `fix/TASK-UI-013-single-row-titlebar`，base main@1af0357b；原main未修改，独立只读审查与提交收据另绑，未合并/安装器/正式发布。[验证](changes/2026-10-08-single-row-titlebar/verification.md) / [审查](changes/2026-10-08-single-row-titlebar/review.md)。
+TASK-UI-013 已将桌面应用名、菜单与原生窗口控制合并为一排40px。完整 verify（723root/172Agent/411browser，原skip8/2、零失败/零flaky）、client:check、fresh Tauri 单排/真实拖动/最大化还原/最小化关闭及 Web 三档 development 验证通过；初始化错误不再影响设置入口，既有3项回归未放宽。Desktop2.1.7，Web2.1.7/Mobile规划2.1.1保持；FEAT-023仍部分实现。分支 `fix/TASK-UI-013-single-row-titlebar`，base main@1af0357b；原main未修改，独立只读6c37fb5a审查通过（2026-10-08 19:40 Asia/Shanghai），最终治理文档补审另绑，未合并/安装器/正式发布。[验证](changes/2026-10-08-single-row-titlebar/verification.md) / [审查](changes/2026-10-08-single-row-titlebar/review.md)。
 
 ## 2026-10-08 模型能力声明：Hosted日志复核后的增量修正
 
