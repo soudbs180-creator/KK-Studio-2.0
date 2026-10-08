@@ -4,9 +4,9 @@
 
 PR #34 精确候选 `cddacaf19d9cadcd09f9fa500182de56232f9c13` 已 squash 合入 `main@5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3`，候选/合并 tree 相同；合并后 hosted verify/deploy-linux 成功，根 main 已 clean fast-forward。原任务分支和工作树保留。
 
-T5 在独立 `codex/T5-native-lifecycle` / `.worktrees/T5-native-lifecycle` 补完真实 Tauri production 提交、取消、WebView reload、实际进程异常终止/重启、逐 slot/原件 hash 保留、文本容量和 UI unknown 禁普通重试。修复图片请求/响应体/下载等待不响应取消，以及省略可选 promptHash/provider id 被错误编码为 null 导致归档失败。独立 npm ci、完整 verify（root 702/710、Agent 172/174、388 browser；原 skip 保留）、Rust 97、两种 fresh native release 与十组原生验收通过。当前为 REVIEW，精确 committed SHA 独立审查、当前 PR 门禁与合并结果另行补证；详见 [T5 verification](../changes/2026-10-08-taskhost-native-lifecycle/verification.md)。源码 Desktop 2.1.5 / Web 2.1.5 / Mobile 规划 2.1.1，不代表安装或发布。
+PR #35 阶段工作台已合并 main@5dd6e6dddaf00cf2d5c14ae02ef5974c72238232，合并后 verify/deploy-linux PASS；T5 用 fa9da162 承接并保留唯一 Plan 入口。独立 `codex/T5-native-lifecycle` 修复图片请求/响应体/下载取消等待、可选 promptHash/provider id 的 null 归档失败；独立审查额外指出的凭据冲突失败日志和 unknown 矩阵重试提示/按钮已返修。最新 fresh native 十一组 PASS，覆盖真实提交、取消、WebView reload、实际异常终止/重启、逐 slot/原件 hash、文本容量、原值保留和无秘密的凭据冲突。此前完整 verify 与组合 Rust 97/check 通过，最终返修完整回归、精确 HEAD 补审和当前 PR 门禁继续收尾；T5 保持 REVIEW。详见 [T5 verification](../changes/2026-10-08-taskhost-native-lifecycle/verification.md)。源码 Desktop 2.1.6 / Web 2.1.7 / Mobile 规划 2.1.1，不代表安装或发布。
 
-新增 P1 TASK-PROV-005：供应商非秘密配置在立即异常退出时可能未落盘；P1 TASK-PROV-006：既有 native image 连接/容量及结构化 health 统一。这两项、真实 Provider/GPU、ComfyUI、VPS/Mobile、安装/视觉终验保持开放。PR #35 的阶段工作台与 TASK-MODEL-001 由原执行者处理，本轮不覆盖。全部逐项状态及后续顺序见[收尾盘点](../changes/2026-10-08-taskhost-native-lifecycle/status.md)和机器账本；下面为此前迭代记录，不能从其“尚未合并”文字推断当前 PR 状态。
+新增 P1 TASK-PROV-005：供应商非秘密配置在立即异常退出时可能未落盘；P1 TASK-PROV-006：既有 native image 连接/容量及结构化 health 统一。这两项、真实 Provider/GPU、ComfyUI、VPS/Mobile、安装/视觉终验保持开放。TASK-MODEL-001 由原执行者处理，本轮不覆盖。全部逐项状态及后续顺序见[收尾盘点](../changes/2026-10-08-taskhost-native-lifecycle/status.md)和机器账本；下面为此前迭代记录，不能从其“尚未合并”文字推断当前 PR 状态。
 
 ## 2026-10-08 阶段工作台主线融合
 

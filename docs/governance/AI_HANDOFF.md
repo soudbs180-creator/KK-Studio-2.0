@@ -4,7 +4,7 @@
 
 先读 [T5 plan](../changes/2026-10-08-taskhost-native-lifecycle/plan.md)、[verification](../changes/2026-10-08-taskhost-native-lifecycle/verification.md)、[review](../changes/2026-10-08-taskhost-native-lifecycle/review.md)、[状态盘点](../changes/2026-10-08-taskhost-native-lifecycle/status.md)和机器账本。隔离树 `D:/kk-studio/KK-Studio-2.0/.worktrees/T5-native-lifecycle`、分支 `codex/T5-native-lifecycle`、基线 main@5b0eb6a。PR #34 已合并且主线 hosted CI 通过；后续不能重复合并其来源分支。PR #35 与模型能力分支由其他上下文处理，先核对实际 PR/main 和工作树，再承接。
 
-当前 T5 REVIEW：取消等待及可选元数据归档根因已修复；完整 verify、Rust 97、Agent/plain fresh native release 和 `client:taskhost:test` 十组实际原生验收通过。测试使用唯一 OS 合成凭据、独立 profile/dataRoot 和 owned CDP 9349，只终止本轮 PID，cleanup=true。成功项正常退出验证；图片部分输出、文本草稿明确异常终止后恢复 unknown、相同身份无二次 POST。收据绑定源文件/EXE/bundle hash，dirty 基线收据不能冒充最终 head；独立审查、Hosted 和合并后复验需后续实际结果。Desktop/Web 2.1.5，Mobile 规划 2.1.1。
+PR #35 已合并 main@5dd6e6dd 且主线 hosted CI PASS；T5 已在 fa9da162 承接，保留唯一 Plan 工作台。当前 T5 REVIEW：取消等待、可选元数据归档及独立审查指出的安全日志/unknown 矩阵重试门禁已修复；最新 fresh native 十一组 PASS。测试使用唯一 OS 合成凭据、独立 profile/dataRoot 和 owned CDP 9349，只终止本轮 PID，cleanup=true；新增真实凭据冲突拒绝的原值保留/脱敏回归。成功正常退出；部分输出、文本草稿明确异常终止后恢复 unknown、同身份无二次 POST。收据绑定九个源文件/EXE/bundle hash，dirty 基线收据不能冒充最终 head；最终完整 verify、精确 SHA 补审、Hosted 与合并后复验需当前结果。Desktop 2.1.6 / Web 2.1.7，Mobile 规划 2.1.1。
 
 TASK-PROV-005/006 为 P1 TODO，配置 durable 恢复与 native image health/容量分别推进。BACKEND-MEDIA-001 → ORCH-003、报价回执、MCP-AUTO 可以先本地实现；真正付费服务、VPS、ComfyUI、Mobile/安装/视觉验收仍按原任务。原历史失败、源分支、其他工作树和用户数据全部保留。
 

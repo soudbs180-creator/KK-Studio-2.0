@@ -14,4 +14,6 @@
 
 Review focus：fixture 不替代原生宿主；取消 race 不造成安全重试或丢已存输出；journal 先于 POST；异常重启不再次提交；不同身份不能覆盖同名任务；只触及 owned 测试进程/凭据；不覆盖其他任务的源码/端口/证据。验证入口为本目录 [verification](verification.md) 和 [review](review.md)。
 
-执行调整：前端 queued intent 和 native submitted journal 分属 IPC 回执前后的正常阶段；成功项用正常退出，未确认图片/文本明确强杀 owned 进程并恢复。新发现的浏览器配置 durable 与既有 image health 缺口登记 TASK-PROV-005/006，不扩展本分支架构、不升级其能力状态。步骤 1–4 本机已通过，步骤 5–6 按当前 SHA 收尾。
+执行调整：前端 queued intent 和 native submitted journal 分属 IPC 回执前后的正常阶段；成功项用正常退出，未确认图片/文本明确强杀 owned 进程并恢复。新发现的浏览器配置 durable 与既有 image health 缺口登记 TASK-PROV-005/006，不扩展本分支架构、不升级其能力状态。
+
+2026-10-08 独立审查对 b58854c0 提出两项 P2 阻断：凭据 ID 冲突的异常可泄露原值、unknown 批次仍显示单项可重试。两处凭据检查改为布尔断言，真实原生测试使用 owned 合成凭据触发冲突，核对原值保留与异常/JSON 均无原值；BatchMatrix 与实际提交共享 retryableOutputIndices，失败项文字不预先承诺重试。真实 native header RED 与 Web 的 1 success + 1 unknown + 2 failed RED 保留，再构建分别复验。PR #35 已合入 main@5dd6e6dd，候选通过 fa9da162 承接当前主线；步骤 5–6 继续绑定最终提交与实际托管结果。

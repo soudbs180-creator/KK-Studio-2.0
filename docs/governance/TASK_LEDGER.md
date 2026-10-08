@@ -210,7 +210,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/T5-native-lifecycle`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/T5-native-lifecycle`
 - Modules: src/features/generation-server, src-tauri, src/features/creation, deploy
-- Verification: PASS — 2026-10-08：真实隔离 Tauri production 宿主十组本机验收 PASS，journal/项目意图先于 POST、三处及时取消、同身份 reload/进程重启不重复提交、逐槽原件保留及 unknown 禁普通重试、文本并发释放/草稿恢复通过；完整 verify、Rust 97、两种 fresh release 构建通过。当前 committed SHA 独立审查和托管门禁进入收尾。真实付费服务沿用 EXT-PROVIDER，连接状态统一另见 TASK-PROV-005/006。
+- Verification: PASS — 2026-10-08：承接 main@5dd6e6dd 后 fresh Tauri production 十一组 PASS；journal/意图先于 POST、三处及时取消、同身份 reload/进程重启不重复提交、逐槽原件保留、文本并发释放/草稿恢复、凭据冲突拒绝与日志脱敏通过。独立审查 b58854c0 的两项 P2 已返修：凭据检查不打印原值，BatchMatrix 复用实际 retryableOutputIndices，unknown 与 failed 并存不提供普通重试。此前完整 verify、组合 Rust 97/fmt/check 与 fresh release 通过，最终提交完整回归/补审/Hosted 继续收尾。真实付费服务沿用 EXT-PROVIDER，连接状态统一另见 TASK-PROV-005/006。
 - Evidence: [docs/changes/2026-09-19-taskhost-durable-intent/verification.md](../../docs/changes/2026-09-19-taskhost-durable-intent/verification.md), [tests/browser/task-intent.spec.ts](../../tests/browser/task-intent.spec.ts), [tests/unit/nativeTaskHost.test.ts](../../tests/unit/nativeTaskHost.test.ts), [deploy/README.md](../../deploy/README.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md), [tests/desktop/taskhost-lifecycle.mjs](../../tests/desktop/taskhost-lifecycle.mjs)
 - Updated: 2026-10-08
 

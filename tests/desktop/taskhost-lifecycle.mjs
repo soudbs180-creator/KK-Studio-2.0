@@ -46,6 +46,7 @@ for (const file of [
   "src-tauri/src/task_host.rs",
   "src-tauri/src/task_host_text.rs",
   "src/App.tsx",
+  "src/components/BatchMatrix.tsx",
   "src/features/creation/nativeTaskHost.ts",
   "src/features/creation/useCreationStorage.ts",
   "tests/desktop/taskhost-lifecycle.mjs",
@@ -318,8 +319,8 @@ async function stop(graceful = false) {
 }
 async function ownCredential(id) {
   assert.equal(
-    await invoke("credential_get", { providerId: id }),
-    null,
+    (await invoke("credential_get", { providerId: id })) === null,
+    true,
     "Fixture must never overwrite an existing credential",
   );
   await invoke("credential_set", { providerId: id, secret });
@@ -362,6 +363,24 @@ try {
   report.executableSha256 = digest(await fs.readFile(executable));
   await launch();
   await ownCredential(credentialRef);
+  await assert.rejects(
+    () => ownCredential(credentialRef),
+    (cause) => {
+      assert(cause instanceof assert.AssertionError);
+      assert.equal(String(cause).includes(secret), false);
+      assert.equal(JSON.stringify(cause).includes(secret), false);
+      return true;
+    },
+  );
+  assert.equal(
+    (await invoke("credential_get", { providerId: credentialRef })) === secret,
+    true,
+    "Credential conflict must preserve the original value",
+  );
+  report.checks.push({
+    name: "credential-conflict-safe-failure",
+    passed: true,
+  });
   await cancelCase("header-hold", [0]);
   await cancelCase("body-hold", [0]);
   await cancelCase("download-hold", [0, 1]);
@@ -487,7 +506,11 @@ try {
 
   const providerName = `T5-${randomUUID().slice(0, 8)}`;
   const uiRef = credentialId(baseUrl, providerName);
-  assert.equal(await invoke("credential_get", { providerId: uiRef }), null);
+  assert.equal(
+    (await invoke("credential_get", { providerId: uiRef })) === null,
+    true,
+    "UI fixture must never overwrite an existing credential",
+  );
   await page.evaluate(
     ({ key, profile }) => localStorage.setItem(key, JSON.stringify(profile)),
     {
@@ -633,6 +656,9 @@ try {
   ).toHaveCount(0);
   await expect(page.locator(".batch-cell.is-succeeded")).toHaveCount(1);
   await expect(page.locator(".batch-cell.is-unknown")).toHaveCount(3);
+  await expect(page.locator(".batch-matrix-header")).not.toContainText(
+    "单项可重试",
+  );
   await page.screenshot({
     path: path.join(output, "native-unknown-recovery.png"),
   });
