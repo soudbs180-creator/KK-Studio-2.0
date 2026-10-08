@@ -2,7 +2,7 @@
 
 ## 2026-10-08 图片选择动作与新页面规则返修
 
-PR #36 已 squash 合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，合并后 Hosted37756981271 verify/deploy-linux PASS。TASK-UI-011 承接该主线：单击参考/结果图片仅选择，唯一动作栏在卡片上方；保持预览/重绘/对比/收藏/删除、精确模型与原件门禁。顶部拖动和 Escape 后同图重选的三宽度恢复、非空队列/输出/评论共享32px动作已返修。最新24cfca1完整verify723root/172Agent（原skip8/2）、422浏览器无flaky/无实际retry、fresh Native13组及模型能力PASS；独立最终head补审/Hosted仍待满足，任务REVIEW。源码Desktop2.1.7/Web2.1.8/Mobile规划2.1.1；本分支账本100项：DONE57/TODO11/PARTIAL27/BLOCKED4/REVIEW1。T5独立21ac补审PASS、云端尚在运行，未合入；不能将本机或旧source结果当当前Hosted成功。
+PR #36 已 squash 合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，合并后 Hosted37756981271 verify/deploy-linux PASS。TASK-UI-011 承接该主线：单击参考/结果图片仅选择，唯一动作栏在卡片上方；保持预览/重绘/对比/收藏/删除、精确模型与原件门禁。顶部拖动和 Escape 后同图重选的三宽度恢复、非空队列/输出/评论共享32px动作已返修。最新24cfca1完整verify723root/172Agent（原skip8/2）、422浏览器无flaky/无实际retry、fresh Native13组及模型能力PASS；976db独立技术补审PASS、R1/R2 CLOSED；最终文档head/Hosted仍待满足，任务REVIEW。源码Desktop2.1.7/Web2.1.8/Mobile规划2.1.1；本分支账本100项：DONE57/TODO11/PARTIAL27/BLOCKED4/REVIEW1。T5独立21ac补审PASS但Hosted空Registry属性失败、native未启动；26边界返修后新head/CI待满足，未合入；不能将本机或旧source结果当当前Hosted成功。
 
 下面 Model“未合并”等段落保留为当时历史，当前状态以本段与本轮 verification 为准。
 

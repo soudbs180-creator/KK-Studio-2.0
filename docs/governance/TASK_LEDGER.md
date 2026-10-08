@@ -1307,6 +1307,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-UI-011-image-selection-actions`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-011-image-selection-actions`
 - Modules: src/components/nodes, src/components/canvas, src/features/compare, src/styles, tests/browser, docs/UI_RULES.md
-- Verification: PASS — 最新24cfca1完整verify root723/731(8原skip)、Agent172/174(2原skip)、422/422 browser无flaky无实际retry；fresh Tauri13组/385源码hash/同EXE模型能力PASS。顶部实际参考/结果三宽度恢复与非空工作台/评论32px动作已返修，独立新head关闭R1/R2及当前Hosted/主线推广待满足。旧失败/审查保留，不代表全项目或付费Provider验收。
+- Verification: PASS — 24cfca1完整verify root723/731(8原skip)、Agent172/174(2原skip)、422/422 browser无flaky无实际retry；fresh Tauri13组/385源码hash/同EXE模型能力PASS。976db180独立技术补审PASS，顶部参考/结果三宽度恢复、非空工作台与32px共享动作的R1/R2 CLOSED；最终文档head/Hosted及主线推广待满足。旧失败保留，不代表全项目/付费Provider/最终视觉验收。
 - Evidence: [docs/changes/2026-10-08-image-selection-actions/intent.md](../../docs/changes/2026-10-08-image-selection-actions/intent.md), [docs/changes/2026-10-08-image-selection-actions/spec.md](../../docs/changes/2026-10-08-image-selection-actions/spec.md), [docs/changes/2026-10-08-image-selection-actions/plan.md](../../docs/changes/2026-10-08-image-selection-actions/plan.md), [docs/changes/2026-10-08-image-selection-actions/verification.md](../../docs/changes/2026-10-08-image-selection-actions/verification.md), [docs/changes/2026-10-08-image-selection-actions/review.md](../../docs/changes/2026-10-08-image-selection-actions/review.md)
 - Updated: 2026-10-08
