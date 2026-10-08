@@ -236,7 +236,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/T5-native-lifecycle`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/T5-native-lifecycle`
 - Modules: src/features/generation-server, src-tauri, src/features/creation, deploy
-- Verification: PASS — 2026-10-08：已承接 main@1af0357（PR36 merged+post-main CI PASS）；d52142d 组合完整verify409浏览器零flaky、Rust97/fmt/check/fresh release及11组真实native PASS。8399补审PASS但Hosted Runtime154已安装仍CDP启动失败；临时应用专属CI策略的registry Force风险已用23项内存边界返修，当前精确补审/Hosted仍待完成，T5保持REVIEW。真实付费服务沿用EXT-PROVIDER，配置durable/连接health另见TASK-PROV-005/006。
+- Verification: PASS — 最新主线1af组合731root/174Agent（原skip8/2）、409browser零flaky/零实际retry、Rust97/fmt/check/fresh native11组PASS；d521产品/harness9个hash保持一致。21ac独立源码/文档PASS关闭ENV003，但当前Hosted在空Registry Properties.Name严格模式失败、native未启动；正确空对象RED后四处逐项枚举、26边界回归PASS，当前新head补审/Hosted与主线整合待满足。PROV005/006独立开放。
 - Evidence: [docs/changes/2026-09-19-taskhost-durable-intent/verification.md](../../docs/changes/2026-09-19-taskhost-durable-intent/verification.md), [tests/browser/task-intent.spec.ts](../../tests/browser/task-intent.spec.ts), [tests/unit/nativeTaskHost.test.ts](../../tests/unit/nativeTaskHost.test.ts), [deploy/README.md](../../deploy/README.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md), [tests/desktop/taskhost-lifecycle.mjs](../../tests/desktop/taskhost-lifecycle.mjs), [tests/desktop/native-ci-policy.ps1](../../tests/desktop/native-ci-policy.ps1)
 - Updated: 2026-10-08
 

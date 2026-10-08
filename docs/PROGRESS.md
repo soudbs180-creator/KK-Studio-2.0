@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-08 Hosted 空 Registry 属性返修
+
+T5当前本机/源码验收完成、REVIEW。21ac独立补审PASS、ENV003 CLOSED；其Hosted37765011214完整Web/Rust/release/Runtime通过，实际CI包装器在新建空key的Properties.Name严格模式失败，native尚未启动。修正mock空属性集合并复现真实RED；四处逐项枚举后26/26边界回归PASS，产品/harness与d521 native十一组hash不变。新head独立关闭ENV004、Hosted与主线整合仍待满足，未假填High IL。UI976db独立PASS关闭两P2、422browser/fresh Native13组通过，当前Hosted待创建。main仍1af/PR36合并后CI通过；其他执行者任务保留。
+
 ## 2026-10-08 当前合并与托管返修恢复点
 
 PR #34/#35 已合并且合并后 CI PASS。PR #36 精确源 12f5f6ab18fec932e787a729e78994544e822708 已 squash 合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，合并后 hosted run 37756981271 verify/deploy-linux PASS。本 T5 分支正在承接该最新主线，保留模型账号隔离、编辑能力和参考图去重门禁；源码 Desktop2.1.7/Web2.1.8/Mobile规划2.1.1。

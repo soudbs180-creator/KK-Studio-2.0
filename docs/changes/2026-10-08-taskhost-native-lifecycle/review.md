@@ -28,3 +28,7 @@ reviewer 独立运行 53/53 定向单测、原/新凭据 helper 合成复现、�
 ## 提升权限包装器 d521 补审：CHANGES REQUIRED
 
 /root/continuation_review 固定 base1af0357b088df79dc51e9b309ef310a500722cf8 → headd52142d62fd2b19fcbdfbbde750338016bfd53c0：T5-ENV-REVIEW-003，P2/merge blocker，Registry New-Item -Force 会删除共享key及子键，原mock未模拟该行为。实际内存反例 wrapperFailed=false/foreignPolicyPreserved=false/writes2/removes2/children1。既有001/002与signer/runner001/002保持CLOSED；独立82纯单测、19策略/15Runtime mocks、types/lint/version/governance/features/markdown/UI/delivery均PASS，不替代Hosted。root已用无Force逐级创建、写入前冲突复核和23边界回归返修，新head待独立关闭。
+
+## 21ac414 独立PASS及Hosted新阻断返修
+
+[精确独立回执](evidence/review-21ac414.md)：1af0357 →21ac414源码/文档PASS，ENV-003 CLOSED，五项原finding全关闭；独立23/23mocks、旧d521 Force内存RED、9/9 native哈希/409浏览器零实际retry一致。该结论明确当前Hosted未验收，不代填通过。随后Hosted暴露 T5-ENV-REVIEW-004（root发现，P2 merge blocker）：空Registry item没有属性，Properties.Name在严格模式失败，原mock人为添加PSPath遗漏。已以实际脚本+正确空对象RED、四处逐项枚举与26/26GREEN返修；新精确head仍待独立关闭004。

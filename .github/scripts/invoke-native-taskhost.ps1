@@ -33,7 +33,7 @@ try {
         foreach ($policy in $policies) {
             if (Test-Path -LiteralPath $policy.Path) {
                 $properties = Get-ItemProperty -LiteralPath $policy.Path
-                if (@($properties.PSObject.Properties.Name | Where-Object { $_ -notin @("PSPath", "PSParentPath", "PSChildName", "PSDrive", "PSProvider") }).Count) {
+                if (@($properties.PSObject.Properties | Where-Object { $_.Name -notin @("PSPath", "PSParentPath", "PSChildName", "PSDrive", "PSProvider") }).Count) {
                     throw 'Existing WebView2 policy values must remain untouched, including higher-priority AppId overrides.'
                 }
             }
@@ -50,7 +50,7 @@ try {
                 }
             }
             $properties = Get-ItemProperty -LiteralPath $policy.Path
-            if (@($properties.PSObject.Properties.Name | Where-Object { $_ -notin @('PSPath', 'PSParentPath', 'PSChildName', 'PSDrive', 'PSProvider') }).Count) {
+            if (@($properties.PSObject.Properties | Where-Object { $_.Name -notin @('PSPath', 'PSParentPath', 'PSChildName', 'PSDrive', 'PSProvider') }).Count) {
                 throw 'WebView2 policy appeared during preparation; preserve it and fail closed.'
             }
             # Track only successful writes; never claim a failed write as owned.
@@ -72,7 +72,7 @@ try {
     foreach ($policyPath in $owned) {
         try {
             $properties = Get-ItemProperty -LiteralPath $policyPath
-            if ($properties.PSObject.Properties.Name -contains $appName) {
+            if (@($properties.PSObject.Properties | Where-Object { $_.Name -eq $appName }).Count) {
                 $expected = ($policies | Where-Object { $_.Path -eq $policyPath }).Value
                 if ((Get-ItemPropertyValue -LiteralPath $policyPath -Name $appName) -cne $expected) {
                     throw "Owned app policy changed; preserve it for inspection."
@@ -80,7 +80,7 @@ try {
                 Remove-ItemProperty -LiteralPath $policyPath -Name $appName
             }
             $remaining = Get-ItemProperty -LiteralPath $policyPath
-            if ($remaining.PSObject.Properties.Name -contains $appName) {
+            if (@($remaining.PSObject.Properties | Where-Object { $_.Name -eq $appName }).Count) {
                 throw 'Owned app policy was not removed.'
             }
         } catch { $cleanupFailures.Add($_.Exception.Message) }

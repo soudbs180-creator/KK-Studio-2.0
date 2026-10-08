@@ -19,6 +19,10 @@ function Test-NativePolicy {
     $script:ArgumentsPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments'
     $script:ProfilePath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge\WebView2\UserDataFolder'
     $script:ParentPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge'
+    if ($Case.ExistingEmptyKeys) {
+        $script:Policies[$script:ArgumentsPath] = @{}
+        $script:Policies[$script:ProfilePath] = @{}
+    }
     if ($Case.ExistingName) { $script:Policies[$script:ProfilePath] = @{ $Case.ExistingName = $Case.ExistingValue } }
     if ($Case.ExistingSubkey) {
         $script:Policies[$script:ProfilePath] = @{}
@@ -55,7 +59,10 @@ function Test-NativePolicy {
     function Get-ItemProperty {
         param($LiteralPath)
         if (-not $script:Policies.ContainsKey($LiteralPath)) { throw 'Fixture policy key missing.' }
-        $properties = @{ PSPath = $LiteralPath }
+        # The real Registry provider can return an item with no properties
+        # for an empty key. Do not invent PSPath to hide strict-mode failures.
+        $properties = @{}
+        if ($script:Policies[$LiteralPath].Count) { $properties['PSPath'] = $LiteralPath }
         foreach ($name in $script:Policies[$LiteralPath].Keys) { $properties[$name] = $script:Policies[$LiteralPath][$name] }
         return [pscustomobject]$properties
     }
@@ -86,6 +93,10 @@ function Test-NativePolicy {
         if ($script:Fixture.Elevated -and $script:Policies[$script:ProfilePath]['kk-studio.exe'] -cne $env:KK_TASKHOST_PROFILE) { throw 'Harness and WebView2 must use the same profile.' }
         if ($script:Fixture.AddSibling) { $script:Policies[$script:ProfilePath]['other-app.exe'] = 'preserve-sibling' }
         if ($script:Fixture.ChangeOwned) { $script:Policies[$script:ProfilePath]['kk-studio.exe'] = 'concurrent-owner' }
+        if ($script:Fixture.RemoveOwned) {
+            $script:Policies[$script:ArgumentsPath].Remove('kk-studio.exe')
+            $script:Policies[$script:ProfilePath].Remove('kk-studio.exe')
+        }
         $global:LASTEXITCODE = $script:Fixture.ChildExit
         if ($script:Fixture.ChildThrows) { throw 'Fixture child failed.' }
     }
@@ -113,10 +124,13 @@ function Test-NativePolicy {
 $defaults = @{
     Actions = 'true'; Runner = 'github-hosted'; Temp = 'C:\isolated-fixture'; TempExists = $true; ProfileExists = $false
     Sid = 'S-1-5-21-fixture'; Elevated = $true; ExistingName = ''; ExistingValue = ''
-    FailSecondWrite = $false; ReadbackMismatch = $false; CleanupFails = $false; AddSibling = $false; ChangeOwned = $false; ExistingSubkey = $false; CreateRace = $false; ExistingParent = $false; ValueAfterCreate = $false
+    FailSecondWrite = $false; ReadbackMismatch = $false; CleanupFails = $false; AddSibling = $false; ChangeOwned = $false; ExistingSubkey = $false; CreateRace = $false; ExistingParent = $false; ValueAfterCreate = $false; ExistingEmptyKeys = $false; RemoveOwned = $false
     ChildExit = 0; ChildThrows = $false; Fails = $false; Writes = 2; Removes = 2; Children = 1
 }
 $cases = @(
+    @{ Name = 'new-empty-registry-key-before-write' },
+    @{ Name = 'existing-empty-registry-keys'; ExistingEmptyKeys = $true },
+    @{ Name = 'concurrently-removed-owned-values'; RemoveOwned = $true; AddSibling = $true; Removes = 0 },
     @{ Name = 'existing-child-key-preserved'; ExistingSubkey = $true },
     @{ Name = 'pre-create-concurrent-key-preserved'; CreateRace = $true; Fails = $true; Writes = 1; Removes = 1; Children = 0 },
     @{ Name = 'shared-ancestor-values-preserved'; ExistingParent = $true },

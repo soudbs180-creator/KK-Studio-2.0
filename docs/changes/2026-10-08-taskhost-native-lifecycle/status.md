@@ -2,7 +2,7 @@
 
 日期：2026-10-08。
 
-当前：PR #36 已 squash 合入 main@1af0357，合并后 CI PASS；T5承接最新主线，本机组合409浏览器/97Rust/11组native PASS，但Hosted启动返修仍待实测，保持REVIEW。账本101项：DONE 57 / TODO 13 / REVIEW 1 / PARTIAL 26 / BLOCKED 4。源码Desktop2.1.7/Web2.1.8/Mobile规划2.1.1。UI新要求在TASK-UI-011单独分支返修；下表旧source阶段记录保留为历史，现行结论以此段及最新verification为准。任务权威：[task-ledger.json](../../governance/task-ledger.json)；逐项状态：[TASK_LEDGER](../../governance/TASK_LEDGER.md)。本表只收敛当前候选与剩余依赖，不将所有历史分支视为待合并。
+当前：21ac独立补审PASS但Hosted空Registry集合失败，native未启动；已真实RED→26/26GREEN返修，待新head补审/Hosted。下面当时阶段文字保留历史。PR #36 已 squash 合入 main@1af0357，合并后 CI PASS；T5承接最新主线，本机组合409浏览器/97Rust/11组native PASS，但Hosted启动返修仍待实测，保持REVIEW。账本101项：DONE 57 / TODO 13 / REVIEW 1 / PARTIAL 26 / BLOCKED 4。源码Desktop2.1.7/Web2.1.8/Mobile规划2.1.1。UI新要求在TASK-UI-011单独分支返修；下表旧source阶段记录保留为历史，现行结论以此段及最新verification为准。任务权威：[task-ledger.json](../../governance/task-ledger.json)；逐项状态：[TASK_LEDGER](../../governance/TASK_LEDGER.md)。本表只收敛当前候选与剩余依赖，不将所有历史分支视为待合并。
 
 | 项/分支                                | 当前状态                                                    | 处理                                                                     |
 | -------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------ |
