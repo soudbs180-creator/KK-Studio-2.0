@@ -66,7 +66,6 @@ import { assertCanvasDeliveries } from "./features/agent/agentCanvas.ts";
 import {
   createStageOrchestrator,
   type StageOrchestrator,
-  type StageDecisionInput,
 } from "./features/agent/orchestrator.ts";
 import type { AgentCanvasBinding } from "./components/canvas/useAgentCanvasView";
 
@@ -445,6 +444,11 @@ export default function App() {
             (project) => project.id === activeProjectIdRef.current,
           ),
         commit: (project) => {
+          if (
+            saveStateRef.current !== "saved" &&
+            saveStateRef.current !== "saving"
+          )
+            throw new Error("项目尚未保存成功，请先处理项目恢复提示。");
           updateProject(project.id, () => project);
           if (activeProjectIdRef.current === project.id)
             replaceCanvasItems(project.items);
@@ -2764,6 +2768,39 @@ export default function App() {
           ) : modal === "tasks" ? (
             <TaskWorkbench
               project={activeProject}
+              stageWriteDisabledReason={
+                saveState === "saved" || saveState === "saving"
+                  ? undefined
+                  : "项目尚未保存成功，阶段操作暂不可用；请先处理项目恢复提示。"
+              }
+              onStageDecision={async (projectId, input) => {
+                stageOrchestrator.decideStage(input, projectId);
+                await persistence.flush();
+              }}
+              onRetryStage={async (projectId, planId, stageIndex, revision) => {
+                stageOrchestrator.retryStage(
+                  planId,
+                  stageIndex,
+                  revision,
+                  projectId,
+                );
+                await persistence.flush();
+              }}
+              onRequestPlanApproval={async (
+                projectId,
+                planId,
+                stageIndex,
+                revision,
+              ) => {
+                stageOrchestrator.requestStageApproval(
+                  planId,
+                  stageIndex,
+                  "plan",
+                  revision,
+                  projectId,
+                );
+                await persistence.flush();
+              }}
               onCommentsChange={(reviewComments) => {
                 if (activeProject)
                   updateProject(activeProject.id, (project) => ({
@@ -2786,10 +2823,6 @@ export default function App() {
               onRetryOutput={(taskId, index) => {
                 if (activeProject) retryTask(activeProject.id, taskId, index);
               }}
-              stagePlans={activeProject?.stagePlans ?? []}
-              onStageDecision={(input: StageDecisionInput) =>
-                stageOrchestrator.decideStage(input)
-              }
             />
           ) : (
             <InfoPanel
@@ -2808,6 +2841,7 @@ import "./styles/motion.css";
 
 import "./styles/catalog.css";
 import "./styles/task-workbench.css";
+import "./styles/stage-workbench.css";
 
 import "./styles/feature-parity.css";
 // Screen layout is the final owner; imports in components execute earlier.

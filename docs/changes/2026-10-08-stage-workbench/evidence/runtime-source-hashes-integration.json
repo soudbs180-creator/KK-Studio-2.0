@@ -1,0 +1,95 @@
+{
+  "base": "5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3",
+  "capturedAt": "2026-10-08T05:59:04.147Z",
+  "executableSha256": "bd121505f37054f52828e4bb4aea551e22c920338364414f7765fab07fa63b42",
+  "files": [
+    {
+      "path": "src/App.tsx",
+      "sha256": "23a44777e362514175b947805ebccfc401a78b7dee7a7dfaa8e501e3d9c677d2"
+    },
+    {
+      "path": "src/components/StagePlanDetail.tsx",
+      "sha256": "3ce580f2d33025fe9aa74568fa4aaf89c74f999a6ff96f9f618279bd8d13e5b5"
+    },
+    {
+      "path": "src/components/TaskWorkbench.tsx",
+      "sha256": "cce08f72ca157e283a60c200d47853735607bd5dfad8ee6d5e9751f971186920"
+    },
+    {
+      "path": "src/components/TaskWorkbenchContent.tsx",
+      "sha256": "610acdb67e052e8fe32be2d37fb867beaae028801da058913b06459bddf7f3ab"
+    },
+    {
+      "path": "src/components/TaskWorkbenchStages.tsx",
+      "sha256": "554d33492fb363b25376198c506e4fb135d6e8ebb6a01a510aac3466b9050352"
+    },
+    {
+      "path": "src/features/agent/orchestrator.ts",
+      "sha256": "b821463073000ee532c141e2427b05bb491183e654f9ad7df78bccec97433cd5"
+    },
+    {
+      "path": "src/features/creation/useCreationStorage.ts",
+      "sha256": "5191f4af976a3d32ba2cfdbd38c5e80a9cf882b53d41d28288c44dff3349a9c9"
+    },
+    {
+      "path": "src/styles/stage-workbench.css",
+      "sha256": "d5b8653df7b8b02698647fb167cabc1878fbada5da37c853707c52a30f5e9865"
+    },
+    {
+      "path": "src/styles/task-workbench.css",
+      "sha256": "23ee72fbbacb98849f45fa64311c87c6e3cf21b6d5285a643dddd09c974d0ed1"
+    },
+    {
+      "path": "tests/browser/stage-workbench.spec.ts",
+      "sha256": "63c616604d84903b8783874ce5f6e208c763fa7eca18b0a05698c953f5fd8dc6"
+    },
+    {
+      "path": "tests/browser/task-workbench.spec.ts",
+      "sha256": "0618c3966de58a353f733c16c5b07195f8e9f8df27bd7eea5b109f73cb24f4cd"
+    },
+    {
+      "path": "tests/desktop/stage-workbench.mjs",
+      "sha256": "15fb70463d04e69b6aa40459e3b639ac6de2f8c446e0c08d7e67998d19e48865"
+    },
+    {
+      "path": "tests/fixtures/stage-project.ts",
+      "sha256": "03f855bf242e1974c22c277b6106d2bc1852c17d78b100420e5bb701dc32dd88"
+    },
+    {
+      "path": "tests/unit/creationSaveQueue.test.ts",
+      "sha256": "c0029203d27291a50f0196e86a42fba46206cd553aec353754cca5abb97b8df0"
+    },
+    {
+      "path": "tests/unit/orchestrator.test.ts",
+      "sha256": "e9cb7fe124cf11a22871fe13f9a70871798edf5b23768c8a65b49bdc22682069"
+    },
+    {
+      "path": "config/platform-versions.json",
+      "sha256": "53930b6fb2c15cad99c7f93b6f01ce787c19c358df1ca5c5785b63f5bfcc865c"
+    },
+    {
+      "path": "package.json",
+      "sha256": "c808ff2380285134e1d81281c4fd79c06c67b636cd49ade9bcced9baabc70bb2"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "233697cd754b03e5e062c8040e72236dd85270ec5e1a233de263bb203fc05cf2"
+    },
+    {
+      "path": "src-tauri/Cargo.toml",
+      "sha256": "516a65d582fffd302d37e6abe0b3f607b558a7d39b597eadb642fcc8f1f19f33"
+    },
+    {
+      "path": "src-tauri/Cargo.lock",
+      "sha256": "8531d202ac1fa511557cd04fe5fdc4e7e5e2e1d4d123b3fea6d3289a46dfb515"
+    },
+    {
+      "path": "src-tauri/tauri.conf.json",
+      "sha256": "93a7eae31406d29da09b53abf99c247d036fd5f79de6c0ff0260c5224343077d"
+    },
+    {
+      "path": "VERSION",
+      "sha256": "19a00f85e6f2a32901ace7a70ceb9eb39d15a1f9ecee68ad0ea62b46f7e3460c"
+    }
+  ]
+}

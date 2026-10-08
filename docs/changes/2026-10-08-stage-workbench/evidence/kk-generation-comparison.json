@@ -1,0 +1,2625 @@
+{
+  "schema_version": 1,
+  "analysis_date": "2026-10-08",
+  "repository": {
+    "root": "D:\\kk-studio\\KK-Studio-2.0",
+    "expected_head": "21d121d2b884b2b7ced4a98eb0e03c590de5c3cd",
+    "observed_head": "21d121d2b884b2b7ced4a98eb0e03c590de5c3cd",
+    "branch": "main",
+    "git_status_short": "",
+    "line_number_convention": "1-based LF only, bytes.decode(utf-8).split(\\n); CR is retained only in source, not treated as newline"
+  },
+  "scope": {
+    "read_only": [
+      "src/features/creation",
+      "src/features/generation-server",
+      "src/integrations/generation",
+      "src-tauri/src/task_host*.rs",
+      "native assets/storage integration",
+      "generation-related UI/Agent integration",
+      "governance/feature documents"
+    ],
+    "excluded": [
+      "真实用户数据/账户配置/凭据库",
+      "竞品运行与远端请求",
+      "任何付费生成",
+      "产品文件修改",
+      "部署、安装和新队列"
+    ]
+  },
+  "instructions_read": [
+    "AGENTS.md",
+    "AI_RULES.md",
+    "docs/engineering/PROMPTING.md",
+    "docs/engineering/SDLC.md",
+    "docs/engineering/BRANCH-POLICY.md",
+    "docs/engineering/REVIEW.md",
+    "docs/governance/PROJECT_STATE.md:1-20",
+    "docs/features/features.registry.json",
+    "docs/governance/task-ledger.json",
+    "docs/features/feat-002-image-generation.md",
+    "docs/features/feat-006-video-generation.md",
+    "docs/features/feat-007-audio-generation.md",
+    "docs/features/feat-008-text-node.md",
+    "docs/features/feat-014-assets.md",
+    "docs/features/feat-024-gateway.md",
+    "docs/architecture/DATA-STORAGE.md",
+    "docs/architecture/GENERATION-PLATFORM.md"
+  ],
+  "comparison_basis": {
+    "path": "D:\\kk-studio\\output\\minimax-rea-20261008\\evidence\\gateway-findings.json",
+    "sha256": "0b89ed22ee22695ee8c16a8cd7b286d6525f9ad0b69ed2960bee36f3cf4f1eb8",
+    "scope": "MiniMax snapshot static evidence; no runtime availability claim",
+    "findings": [
+      {
+        "id": "GW-010",
+        "claim": "工作区素材索引存储于 .hilo/index.sqlite，使用 better-sqlite3 执行迁移；assets 表为文件建立稳定 ID、相对路径、大小/时间/设备/inode、quick_hash/full_hash、媒体尺寸/时长、MIME 和 JSON metadata，并支持 soft_deleted_at。",
+        "evidence_type": "observation_static_source",
+        "confidence": "high",
+        "files": [
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 218100,
+            "marker": "PROJECT_INTERNAL_DIR_NAME = \".hilo\"",
+            "code_excerpt": "var PROJECT_INTERNAL_DIR_NAME = \".hilo\";",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 10377945
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 218114,
+            "marker": "WORKSPACE_ASSET_INDEX_FILENAME = \"index.sqlite\"",
+            "code_excerpt": "var WORKSPACE_ASSET_INDEX_FILENAME = \"index.sqlite\";",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 10378636
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 219799,
+            "marker": "new Database3(paths.index)",
+            "code_excerpt": "this.db = new Database3(paths.index);",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 10444315
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 219803,
+            "marker": "runMigrations(this.db)",
+            "code_excerpt": "runMigrations(this.db);",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 10444450
+          },
+          {
+            "path": "gateway/dist/0001_init.sql",
+            "line_or_offset": 31,
+            "marker": "CREATE TABLE IF NOT EXISTS assets",
+            "code_excerpt": "CREATE TABLE IF NOT EXISTS assets ("
+          },
+          {
+            "path": "gateway/dist/0001_init.sql",
+            "line_or_offset": 40,
+            "marker": "quick_hash",
+            "code_excerpt": "quick_hash          TEXT,                              -- xxh3(first 4MB), Tier 2 candidate matching"
+          },
+          {
+            "path": "gateway/dist/0001_init.sql",
+            "line_or_offset": 50,
+            "marker": "metadata",
+            "code_excerpt": "metadata            TEXT,                              -- JSON: backend-specific params (prompt, seed, sampl"
+          },
+          {
+            "path": "gateway/dist/0002_soft_delete.sql",
+            "line_or_offset": 33,
+            "marker": "soft_deleted_at",
+            "code_excerpt": "ALTER TABLE assets ADD COLUMN soft_deleted_at INTEGER NULL;"
+          }
+        ],
+        "limitations": [
+          "没有打开真实索引库；迁移文件定义字段，但现有用户数据库版本和内容未知。"
+        ]
+      },
+      {
+        "id": "GW-011",
+        "claim": "素材 lineage 由 asset_dependencies 存储 child_id、parent_id 或跨库 parent_attachment_id、角色、输入顺序、操作及 metadata；项目素材另有 anchors（hardlink/copy）和按 source_hash 保存的 reference snapshots。",
+        "evidence_type": "observation_static_source",
+        "confidence": "high",
+        "files": [
+          {
+            "path": "gateway/dist/0003_entity_parent.sql",
+            "line_or_offset": 49,
+            "marker": "parent_attachment_id",
+            "code_excerpt": "parent_attachment_id  TEXT,                          -- asset-center entity_attachments.id (cross-DB, NO FK; app-layer v"
+          },
+          {
+            "path": "gateway/dist/0003_entity_parent.sql",
+            "line_or_offset": 65,
+            "marker": "CHECK (parent_id IS NULL OR parent_attachment_id IS NULL)",
+            "code_excerpt": "CHECK (parent_id IS NULL OR parent_attachment_id IS NULL),"
+          },
+          {
+            "path": "gateway/dist/0011_project_asset_anchors.sql",
+            "line_or_offset": 40,
+            "marker": "CREATE TABLE project_asset_anchors",
+            "code_excerpt": "CREATE TABLE project_asset_anchors ("
+          },
+          {
+            "path": "gateway/dist/0011_project_asset_anchors.sql",
+            "line_or_offset": 48,
+            "marker": "link_mode IN ('hardlink', 'copy')",
+            "code_excerpt": "     TEXT NOT NULL DEFAULT 'hardlink' CHECK (link_mode IN ('hardlink', 'copy')),"
+          },
+          {
+            "path": "gateway/dist/0013_project_asset_reference_snapshots.sql",
+            "line_or_offset": 21,
+            "marker": "PRIMARY KEY (anchor_rel_path, source_hash)",
+            "code_excerpt": "PRIMARY KEY (anchor_rel_path, source_hash),"
+          }
+        ],
+        "limitations": [
+          "关系表与约束已观察；具体运行中所有后端是否完整填写 lineage 未验证。"
+        ]
+      },
+      {
+        "id": "GW-016",
+        "claim": "全局 Asset Center 使用独立 meta/asset-center.sqlite；数据模型为 entities（character/scene/style_pack/prop/custom）、entity_attachments（image/video/audio/text/document）、workspace_entity_refs 及可审核的 entity_suggestions。",
+        "evidence_type": "observation_static_source",
+        "confidence": "high",
+        "files": [
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 272576,
+            "marker": "\"meta\", \"asset-center.sqlite\"",
+            "code_excerpt": "const dbPath = path68.join(rootPath, \"meta\", \"asset-center.sqlite\");",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 12413620
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 272590,
+            "marker": "new SqliteStore2(dbPath)",
+            "code_excerpt": "store = new SqliteStore2(dbPath);",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 12414160
+          },
+          {
+            "path": "gateway/dist/asset-center/0001_initial.sql",
+            "line_or_offset": 34,
+            "marker": "'character', 'scene', 'style_pack', 'prop', 'custom'",
+            "code_excerpt": "               TEXT NOT NULL CHECK (type IN ('character', 'scene', 'style_pack', 'prop', 'custom')),"
+          },
+          {
+            "path": "gateway/dist/asset-center/0001_initial.sql",
+            "line_or_offset": 63,
+            "marker": "'image', 'video', 'audio', 'text', 'document'",
+            "code_excerpt": "               TEXT NOT NULL CHECK (kind IN ('image', 'video', 'audio', 'text', 'document')),"
+          },
+          {
+            "path": "gateway/dist/asset-center/0001_initial.sql",
+            "line_or_offset": 77,
+            "marker": "CREATE TABLE IF NOT EXISTS workspace_entity_refs",
+            "code_excerpt": "CREATE TABLE IF NOT EXISTS workspace_entity_refs ("
+          },
+          {
+            "path": "gateway/dist/asset-center/0001_initial.sql",
+            "line_or_offset": 90,
+            "marker": "CREATE TABLE IF NOT EXISTS entity_suggestions",
+            "code_excerpt": "CREATE TABLE IF NOT EXISTS entity_suggestions ("
+          }
+        ],
+        "limitations": [
+          "全局素材根由运行配置/环境变量控制，本次未读取真实根目录。"
+        ]
+      },
+      {
+        "id": "GW-017",
+        "claim": "Asset Center drop-to-canvas 的具体实现将附件 blob 复制并导入工作区素材索引，使用 CanvasService.addNodeByAsset 创建可编辑素材节点，并在多个节点时创建分组；出现失败会回滚新节点。",
+        "evidence_type": "observation_static_source",
+        "confidence": "high",
+        "files": [
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 273783,
+            "marker": "fs56.promises.copyFile(blobAbsPath, tmpPath)",
+            "code_excerpt": "await fs56.promises.copyFile(blobAbsPath, tmpPath);",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 12462991
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 273784,
+            "marker": "this.filesImport.importExternal",
+            "code_excerpt": "const imp = await this.filesImport.importExternal([",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 12463065
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 273837,
+            "marker": "this.canvas.addNodeByAsset(asset, pos)",
+            "code_excerpt": "const nodeId = await this.canvas.addNodeByAsset(asset, pos);",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 12464949
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 273850,
+            "marker": "this.canvas.deleteNodes(nodeIds)",
+            "code_excerpt": "await this.canvas.deleteNodes(nodeIds);",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 12465297
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 273858,
+            "marker": "nodeIds.length >= 2",
+            "code_excerpt": "if (nodeIds.length >= 2) {",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 12465620
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 273859,
+            "marker": "this.canvasGroup.groupNodes",
+            "code_excerpt": "groupId = (await this.canvasGroup.groupNodes(nodeIds, {",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 12465666
+          }
+        ],
+        "limitations": [
+          "这是一条明确复制导入路径；不能据此将 Asset Center 的独立 materialize 接口也一概描述成复制。"
+        ]
+      },
+      {
+        "id": "GW-019",
+        "claim": "文件/素材 REST 控制器具有文件列表、改名/移动/复制/删除、外部路径和 URL 导入、上传 staging commit/abort/finalize、文本内容读写、缩略图/视频播放及素材同步接口；控制器将操作委托 FilesService/FilesImportService 等实现。",
+        "evidence_type": "observation_static_source",
+        "confidence": "high",
+        "files": [
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 254269,
+            "marker": "this.files.listFiles(type2, sort3)",
+            "code_excerpt": "return this.files.listFiles(type2, sort3);",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 11772582
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 254446,
+            "marker": "this.files.writeContent(",
+            "code_excerpt": "return this.files.writeContent(body.path, body.content, {",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 11779525
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 255064,
+            "marker": "api/files/import-external",
+            "code_excerpt": "(0, import_common45.Post)(\"api/files/import-external\"),",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 11803575
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 255091,
+            "marker": "api/files/import-url",
+            "code_excerpt": "(0, import_common45.Post)(\"api/files/import-url\"),",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 11804782
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 255167,
+            "marker": "api/upload/commit",
+            "code_excerpt": "(0, import_common45.Post)(\"api/upload/commit\"),",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 11807973
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 255176,
+            "marker": "api/upload/commit/abort",
+            "code_excerpt": "(0, import_common45.Post)(\"api/upload/commit/abort\"),",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 11808359
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 255185,
+            "marker": "api/upload/commit/finalize",
+            "code_excerpt": "(0, import_common45.Post)(\"api/upload/commit/finalize\"),",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 11808763
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 255239,
+            "marker": "api/assets/changes",
+            "code_excerpt": "(0, import_common45.Get)(\"api/assets/changes\"),",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 11810932
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 255464,
+            "marker": "api/asset/video-playback",
+            "code_excerpt": "(0, import_common45.Get)(\"api/asset/video-playback\"),",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 11820113
+          }
+        ],
+        "limitations": [
+          "仅列出源码路由与委托，不把路由存在当作全部格式/设备/失败场景通过验证。"
+        ]
+      },
+      {
+        "id": "GW-024",
+        "claim": "生成服务包含异步 image/video/speech/music submit 和 task query 接口；Cloud V2 模板会添加幂等键、提交后取得 task_id 并轮询；query 将云端完成与本地素材落盘分开，本地物化未完成时保持 processing 并进入可恢复状态。",
+        "evidence_type": "observation_static_source",
+        "confidence": "high",
+        "files": [
+          {
+            "path": "mcp-tools/dist/main.js",
+            "line_or_offset": 36163,
+            "marker": "\"/api/generate/image/submit\"",
+            "code_excerpt": "generateImageSubmit: \"/api/generate/image/submit\","
+          },
+          {
+            "path": "mcp-tools/dist/main.js",
+            "line_or_offset": 36165,
+            "marker": "\"/api/generate/speech/submit\"",
+            "code_excerpt": "generateSpeechSubmit: \"/api/generate/speech/submit\","
+          },
+          {
+            "path": "mcp-tools/dist/main.js",
+            "line_or_offset": 36166,
+            "marker": "\"/api/generate/music/submit\"",
+            "code_excerpt": "generateMusicSubmit: \"/api/generate/music/submit\","
+          },
+          {
+            "path": "mcp-tools/dist/main.js",
+            "line_or_offset": 36167,
+            "marker": "\"/api/generate/tasks/:task_id/query\"",
+            "code_excerpt": "generateTaskQueryPattern: \"/api/generate/tasks/:task_id/query\","
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 339587,
+            "marker": "this.submitGeneric(\"image\"",
+            "code_excerpt": "return this.submitGeneric(\"image\", enriched, this.imageBackends);",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 15151233
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 317701,
+            "marker": "stampIdempotencyKey(opts.body)",
+            "code_excerpt": "const body = stampIdempotencyKey(opts.body);",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14215839
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 317706,
+            "marker": "const taskId = submitResp.task_id",
+            "code_excerpt": "const taskId = submitResp.task_id;",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14216120
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 317708,
+            "marker": "pollCloudV2Until",
+            "code_excerpt": "return pollCloudV2Until(taskId, {",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14216234
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 339865,
+            "marker": "\"local_materialization_pending\"",
+            "code_excerpt": "recoveryPhase: \"local_materialization_pending\",",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 15163471
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 339885,
+            "marker": "status: \"processing\"",
+            "code_excerpt": "status: \"processing\"",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 15164542
+          }
+        ],
+        "limitations": [
+          "各后端不一定全部使用同一个模板；未提交真实生成任务，也未验证计费/取消/轮询效果。"
+        ]
+      },
+      {
+        "id": "GW-025",
+        "claim": "生成恢复账本为工作区 .hilo/active-generations.json，包含媒体类型、backend、taskId、request 等，恢复阶段包含 cloud_pending/local_materialization_pending/needs_user_action；还有 clean shutdown marker 与损坏记录隔离逻辑。",
+        "evidence_type": "observation_static_source",
+        "confidence": "high",
+        "files": [
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 326030,
+            "marker": "ACTIVE_GENERATIONS_FILE2 = \"active-generations.json\"",
+            "code_excerpt": "var ACTIVE_GENERATIONS_FILE2 = \"active-generations.json\";",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14572877
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 326051,
+            "marker": "value === \"video\"",
+            "code_excerpt": "return value === \"video\" || value === \"image\" || value === \"audio\" || value === \"text\";",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14574034
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 326055,
+            "marker": "\"cloud_pending\"",
+            "code_excerpt": "return value === \"cloud_pending\" || value === \"local_materialization_pending\" || value === \"needs_user_action\";",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14574206
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 326065,
+            "marker": "isMediaType(rec.mediaType)",
+            "code_excerpt": " rec.id === \"string\" && rec.id.length > 0 && isMediaType(rec.mediaType) && typeof rec.backend === \"string\" && rec.backend.length > 0 && typeof rec.taskId === \"string\" && r",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14574866
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 326252,
+            "marker": "\".hilo\", SHUTDOWN_MARKER_FILE",
+            "code_excerpt": "urn path121.join(this.workspacePath.baseDir, \".hilo\", SHUTDOWN_MARKER_FILE);",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14585185
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 326640,
+            "marker": "\".hilo\", ACTIVE_GENERATIONS_FILE2",
+            "code_excerpt": "urn path121.join(this.workspacePath.baseDir, \".hilo\", ACTIVE_GENERATIONS_FILE2);",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14599676
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 326669,
+            "marker": "quarantineCorruptLedger",
+            "code_excerpt": "return await this.quarantineCorruptLedger(\"ledger contains invalid records\", activityRevision);",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14600978
+          }
+        ],
+        "limitations": [
+          "持久化恢复路径已观察；恢复完整性、重复提交/计费与断电行为未运行验证。"
+        ]
+      },
+      {
+        "id": "GW-026",
+        "claim": "模型生成并发队列存于应用数据根 .hilo/generation-queue.json，而非每个工作区各一份；使用 generation-queue.lock 的跨进程锁，按模型和排队顺序协调 queued/running 记录，配合云使用量/本地运行数量计算可用槽位。",
+        "evidence_type": "observation_static_source",
+        "confidence": "high",
+        "files": [
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 328659,
+            "marker": "QUEUE_DIR_NAME = \".hilo\"",
+            "code_excerpt": "var QUEUE_DIR_NAME = \".hilo\";",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14682182
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 328660,
+            "marker": "QUEUE_FILE_NAME = \"generation-queue.json\"",
+            "code_excerpt": "var QUEUE_FILE_NAME = \"generation-queue.json\";",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14682212
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 328661,
+            "marker": "QUEUE_LOCK_FILE_NAME = \"generation-queue.lock\"",
+            "code_excerpt": "var QUEUE_LOCK_FILE_NAME = \"generation-queue.lock\";",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14682259
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 328696,
+            "marker": "if (dataRoot2) return dataRoot2",
+            "code_excerpt": "if (dataRoot2) return dataRoot2;",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14683478
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 328678,
+            "marker": "limit - Math.max(cloudUsed, localRunning)",
+            "code_excerpt": "return Math.max(0, limit - Math.max(cloudUsed, localRunning));",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14682855
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 328811,
+            "marker": "item.model === model",
+            "code_excerpt": "modelRecords = file.records.filter((item) => item.model === model && this.isEffectiveQueueRecord(item)).sort((a, b2) => a.enqueuedAt - b2.enqueuedAt);",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14688524
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 329116,
+            "marker": "async withFileLock(fn)",
+            "code_excerpt": "async withFileLock(fn) {",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14700759
+          },
+          {
+            "path": "gateway/dist/main.js",
+            "line_or_offset": 329252,
+            "marker": "appQueueRoot(), QUEUE_DIR_NAME, QUEUE_FILE_NAME",
+            "code_excerpt": "return path123.join(appQueueRoot(), QUEUE_DIR_NAME, QUEUE_FILE_NAME);",
+            "line_numbering": "1-based LF newline counting in original decoded source",
+            "char_offset": 14705395
+          }
+        ],
+        "limitations": [
+          "应用数据根和不同发行通道的实际共享范围取决于运行环境；没有查看真实队列。"
+        ]
+      },
+      {
+        "id": "GW-032",
+        "claim": "MCP 包含 ComfyUI 模板/工作流查询、执行/编辑/保存、run status，以及浏览器、FFmpeg、字幕、媒体分析/转写、图像编辑、素材中心、记忆、知识搜索和插件 Agent 工具注册。记忆路径区分用户 memory 与项目 .hilo/memory。",
+        "evidence_type": "observation_static_source",
+        "confidence": "high",
+        "files": [
+          {
+            "path": "mcp-tools/dist/main.js",
+            "line_or_offset": 72924,
+            "marker": "// src/tools/index.ts",
+            "code_excerpt": "// src/tools/index.ts"
+          },
+          {
+            "path": "mcp-tools/dist/main.js",
+            "line_or_offset": 72931,
+            "marker": "registerSubtitleV2Tools",
+            "code_excerpt": "registerSubtitleV2Tools(server2);"
+          },
+          {
+            "path": "mcp-tools/dist/main.js",
+            "line_or_offset": 72940,
+            "marker": "registerComfyUiTools",
+            "code_excerpt": "registerComfyUiTools(server2, gateway2);"
+          },
+          {
+            "path": "mcp-tools/dist/main.js",
+            "line_or_offset": 72941,
+            "marker": "registerPluginAgentTools",
+            "code_excerpt": "registerPluginAgentTools(server2, gateway2);"
+          },
+          {
+            "path": "mcp-tools/dist/main.js",
+            "line_or_offset": 72944,
+            "marker": "registerBrowserTools",
+            "code_excerpt": "registerBrowserTools(server2, gateway2);"
+          },
+          {
+            "path": "mcp-tools/dist/main.js",
+            "line_or_offset": 68980,
+            "marker": "\"memory\"",
+            "code_excerpt": "return path5.join(hubRoot(), \"memory\");"
+          },
+          {
+            "path": "mcp-tools/dist/main.js",
+            "line_or_offset": 68983,
+            "marker": "\".hilo\", \"memory\"",
+            "code_excerpt": "return path5.join(projectRoot, \".hilo\", \"memory\");"
+          }
+        ],
+        "limitations": [
+          "工具注册证明打包集成边界；具体浏览器/ComfyUI 安装、connector授权、媒体模型及权限可用性仍需其它证据。"
+        ]
+      }
+    ]
+  },
+  "architecture": {
+    "product_submission": "首页/对话/节点/Agent run_generation -> App.submitImageCommand -> persistence.flush -> executeTask -> 单一选定宿主",
+    "desktop": "usesNativeTaskHost -> Tauri task_host_submit/get/list/cancel -> Rust TaskHost journal (tasks/native-host) -> native AssetRepository",
+    "web": "BYOK reserveProviderSubmissionAsync / Web Locks -> imageGeneration or textGeneration -> assetRepository -> IndexedDB 或用户显式启用 companion",
+    "standalone_gateway": "Node HTTP -> SQLite GenerationRepository -> PersistentGenerationWorker -> createHostAdapter -> private objects; GenerationJobClient 尚无产品调用",
+    "recovery": "启动加载 snapshot -> native reconcile -> interrupted recovery；持续 hook 当前仅 text；unknown 禁止普通 retry",
+    "agent_native_images": "Codex/Google 已有事件原件归档入口，按稳定 imageId/agentGeneratedImageIds 去重，区别于 Agent run_generation 命令",
+    "authority_rule": "同一产品任务仅有一个执行宿主和同一组稳定身份；素材经既有 assetRepository 引用，不并行新增 worker/queue/store"
+  },
+  "governance_records": {
+    "features": [
+      {
+        "id": "FEAT-002",
+        "status": "PARTIAL",
+        "summary": "自带 API Key 的浏览器提交门禁 + Desktop 原生 TaskHost；Codex 内置生图已有真实生产归档/恢复证据，BYOK逐家真实出图仍待验收。",
+        "verificationResult": null,
+        "evidence": [
+          {
+            "platform": "web",
+            "path": "docs/changes/2026-09-22-codex-default-agent/verification.md"
+          },
+          {
+            "platform": "desktop",
+            "path": "docs/changes/2026-10-01-agent-image-transport/verification.md"
+          },
+          {
+            "platform": "web",
+            "path": "docs/changes/2026-10-01-agent-image-transport/verification.md"
+          }
+        ],
+        "refs": [
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 85,
+            "marker": "\"id\": \"FEAT-002\""
+          },
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 88,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "FEAT-004",
+        "status": "PARTIAL",
+        "summary": "本地 ComfyUI 适配器与 Rust 命令已写，但前端未接 invoke 桥、未接图片任务命令，当前不能真正出图。",
+        "verificationResult": null,
+        "evidence": [],
+        "refs": [
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 201,
+            "marker": "\"id\": \"FEAT-004\""
+          },
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 204,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "FEAT-005",
+        "status": "PARTIAL",
+        "summary": "ComfyUI 工作流 JSON 的本地解析、starter、导入/导出与收藏管理（只管文件，不执行；执行见 FEAT-004）。",
+        "verificationResult": null,
+        "evidence": [
+          {
+            "platform": "web",
+            "path": "docs/changes/2026-09-22-design-system-pages/verification.md"
+          },
+          {
+            "platform": "desktop",
+            "path": "docs/changes/2026-09-22-design-system-pages/verification.md"
+          }
+        ],
+        "refs": [
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 230,
+            "marker": "\"id\": \"FEAT-005\""
+          },
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 233,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "FEAT-006",
+        "status": "PROTOTYPE",
+        "summary": "视频节点（标注 MiniMax H3）当前只回放固定本地演示素材，提示词/参数不改变结果，无供应商提交链。",
+        "verificationResult": null,
+        "evidence": [],
+        "refs": [
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 274,
+            "marker": "\"id\": \"FEAT-006\""
+          },
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 277,
+            "marker": "\"status\": \"PROTOTYPE\""
+          }
+        ]
+      },
+      {
+        "id": "FEAT-007",
+        "status": "PARTIAL",
+        "summary": "音频节点仍回放本地演示素材；OpenAI 兼容 TTS 请求构造、音频选项规范化与代理拼接（vendor 移植 audioGeneration.ts）已可用。",
+        "verificationResult": null,
+        "evidence": [],
+        "refs": [
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 305,
+            "marker": "\"id\": \"FEAT-007\""
+          },
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 308,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "FEAT-008",
+        "status": "PARTIAL",
+        "summary": "文本节点复用BYOK与TaskHost：流式、取消、离线、编辑保存和重载已通过双端fixture；实际Provider与完整进程恢复仍待验收。",
+        "verificationResult": null,
+        "evidence": [
+          {
+            "platform": "web",
+            "path": "docs/changes/2026-09-21-text-and-rule-audit/verification.md"
+          },
+          {
+            "platform": "desktop",
+            "path": "docs/changes/2026-09-21-text-and-rule-audit/text-desktop-runtime.json"
+          }
+        ],
+        "refs": [
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 338,
+            "marker": "\"id\": \"FEAT-008\""
+          },
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 341,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "FEAT-009",
+        "status": "PARTIAL",
+        "summary": "KK 默认 Codex 已接通 Web/Windows、Agent 本地图片和显式画布原件引用；其他登录适配、参考图编辑与后台网页仍待办。",
+        "verificationResult": null,
+        "evidence": [
+          {
+            "platform": "web",
+            "path": "docs/changes/2026-09-22-codex-default-agent/verification.md"
+          },
+          {
+            "platform": "desktop",
+            "path": "docs/changes/2026-09-22-agent-desktop/verification.md"
+          },
+          {
+            "platform": "web",
+            "path": "docs/changes/2026-09-23-agent-attachments/verification.md"
+          },
+          {
+            "platform": "desktop",
+            "path": "docs/changes/2026-09-23-agent-attachments/verification.md"
+          },
+          {
+            "platform": "desktop",
+            "path": "docs/changes/2026-10-01-agent-image-transport/verification.md"
+          },
+          {
+            "platform": "web",
+            "path": "docs/changes/2026-10-01-agent-image-transport/verification.md"
+          }
+        ],
+        "refs": [
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 386,
+            "marker": "\"id\": \"FEAT-009\""
+          },
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 389,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "FEAT-014",
+        "status": "REAL",
+        "summary": "素材导入、归档、校验、预览、集合与来源追踪；Desktop 走 Rust 原生素材存储（含完整性校验）。",
+        "verificationResult": null,
+        "evidence": [
+          {
+            "platform": "web",
+            "path": "docs/changes/2026-09-20-main-close-002/verification.md"
+          },
+          {
+            "platform": "desktop",
+            "path": "docs/changes/2026-09-20-main-close-002/verification.md"
+          }
+        ],
+        "refs": [
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 674,
+            "marker": "\"id\": \"FEAT-014\""
+          },
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 677,
+            "marker": "\"status\": \"REAL\""
+          }
+        ]
+      },
+      {
+        "id": "FEAT-015",
+        "status": "PARTIAL",
+        "summary": "原生项目快照/项目包与侧栏真实项目创建、打开、改名、确认删除可用；文件夹/置顶为明示会话态，持久分组与 Web 容量/离线仍未完成。",
+        "verificationResult": null,
+        "evidence": [
+          {
+            "platform": "web",
+            "path": "docs/changes/2026-09-22-design-system-pages/verification.md"
+          },
+          {
+            "platform": "desktop",
+            "path": "docs/changes/2026-09-22-design-system-pages/verification.md"
+          },
+          {
+            "platform": "web",
+            "path": "docs/changes/2026-09-29-project-landing/verification.md"
+          },
+          {
+            "platform": "desktop",
+            "path": "docs/changes/2026-09-29-project-landing/verification.md"
+          }
+        ],
+        "refs": [
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 722,
+            "marker": "\"id\": \"FEAT-015\""
+          },
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 725,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "FEAT-016",
+        "status": "PARTIAL",
+        "summary": "真实任务状态、批次矩阵、审批门禁与取消可用；Planner、外部导出（Compositor/Exporter）、外部分享为 Prototype，单价为示例。",
+        "verificationResult": null,
+        "evidence": [
+          {
+            "platform": "web",
+            "path": "docs/changes/2026-09-22-ui-interactions/verification.md"
+          },
+          {
+            "platform": "desktop",
+            "path": "docs/changes/2026-09-22-ui-interactions/verification.md"
+          }
+        ],
+        "refs": [
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 782,
+            "marker": "\"id\": \"FEAT-016\""
+          },
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 785,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "FEAT-022",
+        "status": "PARTIAL",
+        "summary": "设置中心及本地偏好；新增Design System双主题8种强调色。既有能力保留，新版Web/Desktop验收状态分别记录，系统集成仍禁用。",
+        "verificationResult": null,
+        "evidence": [
+          {
+            "platform": "web",
+            "path": "docs/changes/2026-09-22-design-system/verification.md"
+          },
+          {
+            "platform": "desktop",
+            "path": "docs/changes/2026-09-20-main-close-002/verification.md"
+          },
+          {
+            "platform": "web",
+            "path": "docs/changes/2026-09-22-design-system-pages/verification.md"
+          },
+          {
+            "platform": "desktop",
+            "path": "docs/changes/2026-09-22-design-system-pages/verification.md"
+          },
+          {
+            "platform": "web",
+            "path": "docs/changes/2026-09-22-codex-default-agent/verification.md"
+          }
+        ],
+        "refs": [
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 1004,
+            "marker": "\"id\": \"FEAT-022\""
+          },
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 1007,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "FEAT-024",
+        "status": "PARTIAL",
+        "summary": "Node24 独立 HTTP Gateway + SQLite + Worker + Webhook 完整实现并有真实 HTTP 测试；Desktop 不启动它，未公网部署。",
+        "verificationResult": null,
+        "evidence": [],
+        "refs": [
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 1132,
+            "marker": "\"id\": \"FEAT-024\""
+          },
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 1135,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "FEAT-037",
+        "status": "PARTIAL",
+        "summary": "本机 loopback 服务已提供 Web 项目/素材服务优先读写、旧 IndexedDB 用户触发迁移和备份恢复；账号绑定、安装器与 Mobile 仍未完成。",
+        "verificationResult": null,
+        "evidence": [],
+        "refs": [
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 1454,
+            "marker": "\"id\": \"FEAT-037\""
+          },
+          {
+            "path": "docs/features/features.registry.json",
+            "line": 1457,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      }
+    ],
+    "tasks": [
+      {
+        "id": "BACKEND-MEDIA-001",
+        "status": "TODO",
+        "summary": "NOT VERIFIED：代码链路可先于凭据建设；真实出片/出音频验收需要供应商 Key 与额度（EXT-PROVIDER）。",
+        "verificationResult": "NOT_VERIFIED",
+        "evidence": [
+          "docs/features/feat-006-video-generation.md",
+          "docs/features/feat-007-audio-generation.md",
+          "docs/features/feat-025-demo-media.md"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 1449,
+            "marker": "\"id\": \"BACKEND-MEDIA-001\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 1471,
+            "marker": "\"status\": \"TODO\""
+          }
+        ]
+      },
+      {
+        "id": "BACKEND-PLATFORM",
+        "status": "TODO",
+        "summary": "NOT VERIFIED：Desktop 必须保留免登录入口并可选登录，Web/Mobile 目标需登录；账号不默认云存个人数据。身份服务与 VPS/域名等外部部署条件未完成，Gateway 额度逻辑仅在单测覆盖。",
+        "verificationResult": "NOT_VERIFIED",
+        "evidence": [
+          "docs/features/feat-017-account.md",
+          "docs/features/feat-018-credits.md",
+          "docs/features/feat-019-cloud-sync.md",
+          "docs/features/feat-020-memory.md",
+          "docs/features/feat-021-proxy.md"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 1511,
+            "marker": "\"id\": \"BACKEND-PLATFORM\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 1534,
+            "marker": "\"status\": \"TODO\""
+          }
+        ]
+      },
+      {
+        "id": "BACKEND-TEXT-NODE",
+        "status": "PARTIAL",
+        "summary": "Web development/production preview与隔离Tauri release本机HTTP fixture通过流式、取消/未知受理、离线、编辑保存、重载重连和并发释放。完整verify 227/210，Rust74，独立预检PASS。实际Provider、原生进程退出/恢复与health统一仍待T5/EXT-PROVIDER验收，整体PARTIAL。",
+        "verificationResult": "PARTIAL",
+        "evidence": [
+          "docs/features/feat-008-text-node.md",
+          "docs/changes/2026-09-21-text-and-rule-audit/verification.md"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 1417,
+            "marker": "\"id\": \"BACKEND-TEXT-NODE\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 1439,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "EXT-COMFY",
+        "status": "BLOCKED",
+        "summary": "NOT VERIFIED",
+        "verificationResult": "NOT_VERIFIED",
+        "evidence": [
+          "docs/changes/2026-09-16-launch-readiness-audit/verification.md"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 359,
+            "marker": "\"id\": \"EXT-COMFY\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 375,
+            "marker": "\"status\": \"BLOCKED\""
+          }
+        ]
+      },
+      {
+        "id": "EXT-PROVIDER",
+        "status": "BLOCKED",
+        "summary": "NOT VERIFIED",
+        "verificationResult": "NOT_VERIFIED",
+        "evidence": [
+          "docs/changes/2026-09-16-launch-readiness-audit/verification.md"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 332,
+            "marker": "\"id\": \"EXT-PROVIDER\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 349,
+            "marker": "\"status\": \"BLOCKED\""
+          }
+        ]
+      },
+      {
+        "id": "PERF-001",
+        "status": "PARTIAL",
+        "summary": "本轮已完成有界分页/预览和原件校验；永久缩略图、大快照和单件大图瞬时内存/不可抢占IO仍未完成。",
+        "verificationResult": "PARTIAL",
+        "evidence": [
+          "docs/architecture/DATA-STORAGE.md",
+          "docs/architecture/adr/ADR-003-asset-metadata-paging.md",
+          "docs/changes/2026-09-20-main-close-002/verification.md"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 737,
+            "marker": "\"id\": \"PERF-001\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 758,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "T3a",
+        "status": "DONE",
+        "summary": "main@c855881 的 Node 24/Web/Rust/Tauri release 验证通过；隔离数据根目录与三个全新 WebView profile 验证原生素材 SHA-256、快照引用恢复和篡改后读取保护。T3b 项目包仍未完成。",
+        "verificationResult": "PASS",
+        "evidence": [
+          "docs/changes/2026-09-16-native-assets/spec.md",
+          "docs/changes/2026-09-16-native-assets/verification.md",
+          "docs/evidence/native-assets-2026-09-18/native-acceptance.json",
+          "docs/evidence/native-assets-2026-09-18/build-artifacts.json"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 160,
+            "marker": "\"id\": \"T3a\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 182,
+            "marker": "\"status\": \"DONE\""
+          }
+        ]
+      },
+      {
+        "id": "T3b",
+        "status": "DONE",
+        "summary": "源码 main@379b302：129 unit、156 browser、UI117/0、50 Rust、fmt/check/release 通过；全新 WebView/独立 data root 恢复 2 项目/3 节点/图/消息/任务/原件；7 个事务故障点保留源文件。Web 文件适配归 T9，Figma 新入口为工程补充。",
+        "verificationResult": "PASS",
+        "evidence": [
+          "docs/changes/2026-09-18-project-package/intent.md",
+          "docs/changes/2026-09-18-project-package/spec.md",
+          "docs/changes/2026-09-18-project-package/plan.md",
+          "docs/changes/2026-09-18-project-package/verification.md",
+          "src/features/projects/projectPackage.ts",
+          "src/features/projects/nativeProjectPackageAdapter.ts",
+          "tests/unit/projectPackage.test.ts",
+          "src-tauri/src/project_package.rs",
+          "docs/evidence/project-package-2026-09-18/native-acceptance.json",
+          "docs/evidence/project-package-2026-09-18/web-acceptance.json"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 194,
+            "marker": "\"id\": \"T3b\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 215,
+            "marker": "\"status\": \"DONE\""
+          }
+        ]
+      },
+      {
+        "id": "T4",
+        "status": "DONE",
+        "summary": "本地main源码2de3c68：146 unit/164 browser/UI119/0全量verify通过；Rust51/fmt/check/release通过；1421/1423/Tauri三入口与全新WebView原件恢复通过。动画测试改为真实CSS时间点采样后全量无重试通过。真实付费Provider仍属EXT-PROVIDER。",
+        "verificationResult": "PASS",
+        "evidence": [
+          "docs/changes/2026-09-16-launch-readiness-audit/plan.md",
+          "docs/changes/2026-09-18-unified-image-command/verification.md",
+          "docs/evidence/unified-image-command-2026-09-18/native-acceptance.json",
+          "docs/evidence/unified-image-command-2026-09-18/main/native-acceptance.json"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 233,
+            "marker": "\"id\": \"T4\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 256,
+            "marker": "\"status\": \"DONE\""
+          }
+        ]
+      },
+      {
+        "id": "T5",
+        "status": "PARTIAL",
+        "summary": "集成 main 已将 durable intent、稳定幂等身份、unknown 受理保护、原生 TaskHost journal、系统凭据库读取、Desktop IPC、取消竞态和逐 slot 输出提交接入 Tauri 主进程；npm verify 150/169、UI119/0，Rust 58/58，client check/release 通过。隔离 Tauri/WebView 的提交、取消、进程重启和逐 slot 恢复证据尚未完成；部署脚本仅覆盖静态 Web Prototype。",
+        "verificationResult": "PARTIAL",
+        "evidence": [
+          "docs/changes/2026-09-19-taskhost-durable-intent/verification.md",
+          "tests/browser/task-intent.spec.ts",
+          "tests/unit/nativeTaskHost.test.ts",
+          "deploy/README.md"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 268,
+            "marker": "\"id\": \"T5\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 290,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "T6",
+        "status": "PARTIAL",
+        "summary": "只读审计确认：localComfyUiAdapter.ts 具备 /prompt、/history、/view、/interrupt HTTP 原语，但 App/imageTaskCommand 尚未接入，local_only 明确拒绝；Tauri ComfyUI 命令尚无前端 invoke 桥，缺少 Desktop-only workflow/template 持久化、任务 journal、逐任务取消、结果归档与重启恢复。下一步需先接一条显式 workflow 的最小链，不下载模型；EXT-COMFY 仍等待用户选定服务、目录、workflow 和模型。",
+        "verificationResult": "PARTIAL",
+        "evidence": ["docs/changes/2026-09-16-launch-readiness-audit/plan.md"],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 302,
+            "marker": "\"id\": \"T6\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 323,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "T8",
+        "status": "TODO",
+        "summary": "NOT VERIFIED",
+        "verificationResult": "NOT_VERIFIED",
+        "evidence": ["docs/changes/2026-09-16-launch-readiness-audit/plan.md"],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 420,
+            "marker": "\"id\": \"T8\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 441,
+            "marker": "\"status\": \"TODO\""
+          }
+        ]
+      },
+      {
+        "id": "TASK-AGENT-001",
+        "status": "PARTIAL",
+        "summary": "原工程 Web 首批 PASS：351 Node /266 browser，UI153/0，Agent125通过/2跳过；真实 Codex 连续两轮同线程、刷新恢复、MCP/内置生图与额度证据齐全。整体保留PARTIAL：Desktop/其他登录软件/真实付费Provider逐厂商未完成。",
+        "verificationResult": "PARTIAL",
+        "evidence": [
+          "docs/changes/2026-09-22-codex-default-agent/spec.md",
+          "docs/changes/2026-09-22-codex-default-agent/verification.md",
+          "docs/changes/2026-09-22-codex-default-agent/review.md",
+          "docs/changes/2026-09-22-codex-default-agent/usage.md",
+          "docs/changes/2026-09-22-codex-default-agent/remaining.md",
+          "docs/changes/2026-09-22-codex-default-agent/provider-research.md",
+          "docs/changes/2026-09-22-codex-default-agent/port-audit-update.md",
+          "docs/changes/2026-09-22-codex-default-agent/evidence/acceptance.json"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 1800,
+            "marker": "\"id\": \"TASK-AGENT-001\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 1831,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "TASK-AGENT-008",
+        "status": "DONE",
+        "summary": "本机AC-1–3 DONE：两组RED→GREEN，verify632root/172Agent/377browser（原平台skip保留）、Rust97/fmt/clientcheck；真实Tauri生图/续聊/重连/重启hash一致、节点/标记唯一。实现head3c63f1e独立审查PASS（43/9/6定向复验），P3文档意见已修正。PR#33终稿head独立补审、托管CI与推广以实际PR/收据为准；豆包/Web真实账号/其他Provider/Mobile/正式发布未验收。",
+        "verificationResult": "PASS",
+        "evidence": [
+          "docs/changes/2026-10-01-agent-image-transport/intent.md",
+          "docs/changes/2026-10-01-agent-image-transport/spec.md",
+          "docs/changes/2026-10-01-agent-image-transport/verification.md"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 3193,
+            "marker": "\"id\": \"TASK-AGENT-008\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 3217,
+            "marker": "\"status\": \"DONE\""
+          }
+        ]
+      },
+      {
+        "id": "TASK-AUDIT-SEC-001",
+        "status": "DONE",
+        "summary": "历史安全 closeout 已随主线集成；当前完整 Web/Agent/Rust 回归再次通过。真实付费受理恢复仍归 T5/EXT-PROVIDER。",
+        "verificationResult": "PASS",
+        "evidence": [
+          "docs/changes/2026-09-21-security-audit/audit.md",
+          "docs/changes/2026-09-21-security-audit/verification.md",
+          "docs/changes/2026-09-21-security-audit-closeout/intent.md",
+          "docs/changes/2026-09-21-security-audit-closeout/spec.md",
+          "docs/changes/2026-09-21-security-audit-closeout/plan.md",
+          "docs/changes/2026-09-21-security-audit-closeout/verification.md",
+          "docs/changes/2026-09-21-security-audit-closeout/review.md",
+          "docs/changes/2026-09-29-project-landing/verification.md",
+          "docs/changes/2026-09-29-project-landing/audit.md"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 1139,
+            "marker": "\"id\": \"TASK-AUDIT-SEC-001\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 1168,
+            "marker": "\"status\": \"DONE\""
+          }
+        ]
+      },
+      {
+        "id": "TASK-LOCAL-SERVICE-001",
+        "status": "PARTIAL",
+        "summary": "本机 loopback 服务、HttpOnly 配对、项目/素材服务优先读写、旧 IndexedDB 只读迁移、备份恢复、连接/断线 UI 与 production smoke 已通过本地和真实临时服务验收；真实账号登录、安装/更新、Mobile 和 VPS 生产部署仍未完成，因此产品任务保持 PARTIAL。",
+        "verificationResult": "PARTIAL",
+        "evidence": [
+          "docs/changes/2026-09-29-local-companion/intent.md",
+          "docs/changes/2026-09-29-local-companion/spec.md",
+          "docs/changes/2026-09-29-local-companion/plan.md",
+          "docs/changes/2026-09-29-local-companion/verification.md",
+          "docs/changes/2026-09-29-local-companion/review.md",
+          "docs/architecture/adr/ADR-008-platform-versions-and-local-first.md",
+          "docs/features/feat-037-web-local-service.md"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 2465,
+            "marker": "\"id\": \"TASK-LOCAL-SERVICE-001\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 2491,
+            "marker": "\"status\": \"PARTIAL\""
+          }
+        ]
+      },
+      {
+        "id": "TASK-PERF-ASSETS-001",
+        "status": "DONE",
+        "summary": "元数据分页、按需缩略图、原件SHA与错身份/损坏重试、Rust分页与临时文件边界均通过；完整性能边界另由PERF-001跟踪。",
+        "verificationResult": "PASS",
+        "evidence": [
+          "docs/changes/2026-09-20-main-close-002/intent.md",
+          "docs/changes/2026-09-20-main-close-002/spec.md",
+          "docs/changes/2026-09-20-main-close-002/plan.md",
+          "docs/changes/2026-09-20-main-close-002/verification.md",
+          "docs/changes/2026-09-20-main-close-002/review.md",
+          "docs/architecture/adr/ADR-003-asset-metadata-paging.md"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 1065,
+            "marker": "\"id\": \"TASK-PERF-ASSETS-001\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 1085,
+            "marker": "\"status\": \"DONE\""
+          }
+        ]
+      },
+      {
+        "id": "TASK-PROV-001",
+        "status": "DONE",
+        "summary": "源修复、本地main合并和桌面生产复验 PASS：118 unit、151 browser、UI116/0；主线14dbe11加载CBwa_Zj7 bundle并完成隔离Provider提交。",
+        "verificationResult": "PASS",
+        "evidence": [
+          "docs/changes/2026-09-17-provider-submission-gates/verification.md",
+          "docs/evidence/provider-submission-2026-09-18/README.md",
+          "docs/evidence/provider-submission-2026-09-18/native-main-acceptance.json"
+        ],
+        "refs": [
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 69,
+            "marker": "\"id\": \"TASK-PROV-001\""
+          },
+          {
+            "path": "docs/governance/task-ledger.json",
+            "line": 93,
+            "marker": "\"status\": \"DONE\""
+          }
+        ]
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "KK-GEN-001",
+      "category": "preserve",
+      "claim": "统一图片/文本命令已经从节点、首页/对话与 Agent run_generation 汇入 submitImageCommand/executeTask；提交前落盘 intent 与稳定身份，来源节点和逐输出结果可复用。不要为 MiniMax 同类功能另建生成入口或任务模型。",
+      "evidence_type": "observation",
+      "confidence": "high_static",
+      "priority": "keep",
+      "feature_ids": ["FEAT-002", "FEAT-008", "FEAT-016"],
+      "task_ids": ["T4", "T5", "BACKEND-TEXT-NODE"],
+      "files": [
+        {
+          "path": "src/App.tsx",
+          "line": 451,
+          "marker": "submitImageCommand("
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 1715,
+          "marker": "await persistence.flush();"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 1724,
+          "marker": "executeTask("
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 739,
+          "marker": "await persistence.flush();"
+        },
+        {
+          "path": "src/features/agent/agentHost.ts",
+          "line": 198,
+          "marker": "options.generate("
+        },
+        {
+          "path": "src/features/creation/imageTaskCommand.ts",
+          "line": 254,
+          "marker": "providerConnectionId: connection.id"
+        },
+        {
+          "path": "src/features/creation/imageTaskCommand.ts",
+          "line": 287,
+          "marker": "id: `result-${result.id}`"
+        }
+      ],
+      "competitor_finding_ids": ["GW-024", "GW-025"],
+      "minimal_action": "保留现有命令、CreationTask、taskId/idempotencyKey/slot/sourceItemId 和资产归档接口；新增媒体类型只扩展同一路由和宿主协议。",
+      "proposed_verification": [
+        "扩展 tests/unit/imageTaskCommand.test.ts 和现有 unified-image-command 浏览器用例，验证各入口只产生一个任务身份和一次提交。"
+      ],
+      "limitations": [
+        "T4 DONE 不代表所有 Provider 真实验收；T5 PARTIAL。",
+        "Agent 内置生图直接归档与 BYOK run_generation 是不同的已有路径，见 KK-GEN-013。"
+      ],
+      "boundary": {
+        "code": "本次静态源码核对",
+        "configuration": "未读取真实账户、Provider 配置或用户数据",
+        "runtime": "本次未启动产品或调用供应商；历史账本运行证据与当前源码观察分开"
+      }
+    },
+    {
+      "id": "KK-GEN-002",
+      "category": "preserve",
+      "claim": "Web 与 Rust 已有未知受理保护：running/submitted 退出后进入 unknown，普通重试拒绝；Rust 在持久 journal 下检查 taskId/幂等键/请求指纹，逐 slot 归档并保留成功输出。应保留该保守语义。",
+      "evidence_type": "observation",
+      "confidence": "high_static",
+      "priority": "keep",
+      "feature_ids": ["FEAT-002", "FEAT-008", "FEAT-016"],
+      "task_ids": ["T5", "TASK-AUDIT-SEC-001", "BACKEND-TEXT-NODE"],
+      "files": [
+        {
+          "path": "src/features/creation/taskRecovery.ts",
+          "line": 33,
+          "marker": "task.status === \"unknown\""
+        },
+        {
+          "path": "src/features/creation/taskRecovery.ts",
+          "line": 101,
+          "marker": "status: uncertain ?"
+        },
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 214,
+          "marker": "journal.record.status == \"submitted\""
+        },
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 215,
+          "marker": "status = \"unknown\""
+        },
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 237,
+          "marker": "self.read_one(&request.task_id)"
+        },
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 239,
+          "marker": "existing.fingerprint != fingerprint"
+        },
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 285,
+          "marker": "self.write_one_unlocked(&journal)?"
+        },
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 618,
+          "marker": "self.persist_output("
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 1427,
+          "marker": "!canRetryTask(oldTask)"
+        }
+      ],
+      "competitor_finding_ids": ["GW-024", "GW-025"],
+      "minimal_action": "保持 unknown 不自动生成新请求；恢复优先读 journal/已知 provider ID，成功 slot 永不重新生成。",
+      "proposed_verification": [
+        "现有 taskRecovery/nativeTaskHost/Rust 用例补充提交前/提交后/归档后崩溃点，断言供应商调用次数和已成功 slot 不变。"
+      ],
+      "limitations": [
+        "当前 Rust 图片请求是同步 OpenAI 兼容返回；journal 没有保存完整可重新执行请求，不应把安全围栏描述为任意 Provider 自动恢复。",
+        "真实进程退出/受理恢复仍按 T5/EXT-PROVIDER 未完成处理。"
+      ],
+      "boundary": {
+        "code": "本次静态源码核对",
+        "configuration": "未读取真实账户、Provider 配置或用户数据",
+        "runtime": "本次未启动产品或调用供应商；历史账本运行证据与当前源码观察分开"
+      }
+    },
+    {
+      "id": "KK-GEN-003",
+      "category": "code_gap",
+      "claim": "Desktop 图片在执行前跳过 Web reservation，且 nativeConnection 只为 text 读取实时连接；Rust 连接并发检查也仅在 kind=text 分支。图片缺少同等的发送前身份/健康复核和宿主容量门禁，最初 prepareImageTask 的检查不能覆盖 flush 等待期间的连接变化。",
+      "evidence_type": "observation",
+      "confidence": "high_static",
+      "priority": "P1",
+      "feature_ids": ["FEAT-002", "FEAT-008"],
+      "task_ids": ["T5", "TASK-PROV-001"],
+      "files": [
+        {
+          "path": "src/App.tsx",
+          "line": 715,
+          "marker": "if (!nativeTaskHost)"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 743,
+          "marker": "const nativeConnection"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 744,
+          "marker": "task.kind === \"text\""
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 756,
+          "marker": ": undefined;"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 766,
+          "marker": "concurrencyLimit: nativeConnection?.concurrencyLimit"
+        },
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 247,
+          "marker": "request.kind.as_deref() == Some(\"text\")"
+        },
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 256,
+          "marker": "request.concurrency_limit.unwrap_or(1)"
+        },
+        {
+          "path": "src/features/creation/providerSubmission.ts",
+          "line": 96,
+          "marker": "!isConnectionReady(health)"
+        },
+        {
+          "path": "src/features/creation/providerSubmission.ts",
+          "line": 111,
+          "marker": "!options.skipCapacity"
+        }
+      ],
+      "competitor_finding_ids": ["GW-026"],
+      "minimal_action": "在已有 native 分支提交前对图片与文本都调用 assertSubmissionConnection({binding},{skipCapacity:true, explicitRetry}) 并传并发上限；将 Rust jobs map 的容量认领扩展到图片，统一连接身份（必要时增加非秘密 connectionId/baseUrl+credentialRef 组合）。容量权威保留在 Rust，不把 Web Locks 租约叠加成第二份 native 队列。",
+      "proposed_verification": [
+        "Rust 并发上限1的两个图片任务：第二个零 HTTP；完成/失败释放后可提交。",
+        "WebView reload 后原任务继续占宿主容量；flush 等待期间禁用/更改连接后原任务零 HTTP。",
+        "保持文本已有 reload 容量行为及显式 retry degraded 语义。"
+      ],
+      "limitations": [
+        "静态缺口已确认；未运行实机竞争复现。",
+        "不能称 Desktop 全部无门禁：prepareImageTask 在初始准备时已核对绑定/模型/凭据，TaskHost 还校验 URL/输入。"
+      ],
+      "boundary": {
+        "code": "本次静态源码核对",
+        "configuration": "未读取真实账户、Provider 配置或用户数据",
+        "runtime": "本次未启动产品或调用供应商；历史账本运行证据与当前源码观察分开"
+      }
+    },
+    {
+      "id": "KK-GEN-004",
+      "category": "code_gap",
+      "claim": "Rust 失败含 failureClass/status/retryAfterSeconds，但 native adapter 将对象压成 message 字符串；原生记录处理不会走 Web GenerationProviderError + reservation 的连接健康回写，因此 429/401/403 等原生失败无法由该链回写 cooldown/quarantine。",
+      "evidence_type": "observation",
+      "confidence": "high_static",
+      "priority": "P1",
+      "feature_ids": ["FEAT-002", "FEAT-008", "FEAT-022"],
+      "task_ids": ["T5", "BACKEND-TEXT-NODE", "TASK-PROV-001"],
+      "files": [
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 70,
+          "marker": "failure_class: String"
+        },
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 73,
+          "marker": "retry_after_seconds: Option<u64>"
+        },
+        {
+          "path": "src/features/creation/nativeTaskHost.ts",
+          "line": 123,
+          "marker": "(value.failure as { message: string }).message"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 911,
+          "marker": "record.failure"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 969,
+          "marker": "return;"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 1260,
+          "marker": "reservation &&"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 1271,
+          "marker": "markProviderConnectionFailure("
+        },
+        {
+          "path": "src/features/creation/providerRegistry.ts",
+          "line": 205,
+          "marker": "state: \"quarantined\""
+        },
+        {
+          "path": "src/features/creation/providerRegistry.ts",
+          "line": 213,
+          "marker": "state: \"cooldown\""
+        },
+        {
+          "path": "src/features/creation/providerSubmission.ts",
+          "line": 320,
+          "marker": "current.healthRevision === connection.healthRevision"
+        }
+      ],
+      "competitor_finding_ids": ["GW-026"],
+      "minimal_action": "在现有 NativeTaskHostRecord 保留有界结构化 failure，同时兼容旧 string；在 applyNativeRecord/reconcile 处按提交时连接绑定和 healthRevision 写回现有 providerRegistry，成功仅在身份/健康未变化时标记 verified。未知受理只改变健康和说明，不解除重试围栏。",
+      "proposed_verification": [
+        "现有 nativeTaskHost/providerHealth 单测补 429 Retry-After、401/403、网络未知受理与旧 string 记录；连接更换后的旧结果不能覆写新健康。",
+        "Desktop fixture 验证 cooldown/quarantine 后后续图片/文本均零请求。"
+      ],
+      "limitations": [
+        "运行表现未实测。",
+        "Rust 图片 Retry-After 目前仅 parse::<u64> 且最多86400秒；若补 HTTP-date 支持，复用现有 Web/Gateway 解析规范，但不能从字符串 message 还原完整语义。"
+      ],
+      "boundary": {
+        "code": "本次静态源码核对",
+        "configuration": "未读取真实账户、Provider 配置或用户数据",
+        "runtime": "本次未启动产品或调用供应商；历史账本运行证据与当前源码观察分开"
+      }
+    },
+    {
+      "id": "KK-GEN-005",
+      "category": "code_gap_with_inference",
+      "claim": "重载时 useCreationStorage 先 reconcileNativeTasks 再 recoverInterruptedTasks；正在提交的宿主记录会先变 running/submitted 后被转为 unknown。持续恢复 hook 只选择 text；图片缺少同样的后台只读 reconciliation。静态推断：仅 WebView 重载而 Rust 进程仍运行时，图片晚到结果可能停留 unknown 直到再次读取。",
+      "evidence_type": "inference",
+      "confidence": "medium_static_inference",
+      "priority": "P1",
+      "feature_ids": ["FEAT-002", "FEAT-008"],
+      "task_ids": ["T5", "BACKEND-TEXT-NODE"],
+      "files": [
+        {
+          "path": "src/App.tsx",
+          "line": 205,
+          "marker": "useCreationStorage("
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 207,
+          "marker": "reconcileNativeTasks"
+        },
+        {
+          "path": "src/features/creation/useCreationStorage.ts",
+          "line": 63,
+          "marker": "await reconcile(loaded.snapshot)"
+        },
+        {
+          "path": "src/features/creation/useCreationStorage.ts",
+          "line": 65,
+          "marker": "recover(reconciled)"
+        },
+        {
+          "path": "src/features/creation/nativeTaskHost.ts",
+          "line": 387,
+          "marker": "status === \"running\""
+        },
+        {
+          "path": "src/features/creation/taskRecovery.ts",
+          "line": 98,
+          "marker": "task.status === \"running\""
+        },
+        {
+          "path": "src/features/creation/useNativeTextRecovery.ts",
+          "line": 25,
+          "marker": "task.kind === \"text\""
+        },
+        {
+          "path": "src/features/creation/useNativeTextRecovery.ts",
+          "line": 33,
+          "marker": "reconcileNativeTasks(snapshot, ids)"
+        },
+        {
+          "path": "src/features/creation/useNativeTextRecovery.ts",
+          "line": 35,
+          "marker": "creationRef.current === snapshot"
+        }
+      ],
+      "competitor_finding_ids": ["GW-025"],
+      "minimal_action": "把现有恢复 hook 扩为宿主任务只读重连，覆盖图片与文本；仅轮询原 taskId，不调用 submit。保留 snapshot 身份保护、取消过滤和编辑结果保护，区分 WebView reload 与 Rust 进程退出后的 unknown。不要新增恢复队列。",
+      "proposed_verification": [
+        "同一 Rust 进程内重载 WebView，图片晚到结果自动落入原 slot/节点，零再次生成；取消后晚到结果不污染终态。",
+        "真实宿主进程退出后仍 unknown，原生 journal 缺失/损坏仍禁止重发。",
+        "现有文本结果编辑不被恢复正文覆盖。"
+      ],
+      "limitations": [
+        "仅推断重载后的 UI 表现，本次没有运行产品。",
+        "启动 reconciliation 本身已处理图片并能恢复已完成原件；缺口是 ongoing 图片的后续跟踪，不是完全没有恢复。"
+      ],
+      "boundary": {
+        "code": "本次静态源码核对",
+        "configuration": "未读取真实账户、Provider 配置或用户数据",
+        "runtime": "本次未启动产品或调用供应商；历史账本运行证据与当前源码观察分开"
+      }
+    },
+    {
+      "id": "KK-GEN-006",
+      "category": "code_gap",
+      "claim": "视频入口使用 useLocalGeneration 固定样本，音频入口除 text 外也选 demo；Agent run_generation 只允许 image/text；Rust TaskHost 只接受 image/text。现有 Gateway Worker 已有 submit/poll/provider_job_id，但没有接到产品生成入口。真实视频/TTS/音乐执行及异步阶段接线仍缺。",
+      "evidence_type": "observation",
+      "confidence": "high_static",
+      "priority": "P1",
+      "feature_ids": ["FEAT-006", "FEAT-007", "FEAT-002", "FEAT-024"],
+      "task_ids": ["BACKEND-MEDIA-001", "T5", "T8", "EXT-PROVIDER"],
+      "files": [
+        {
+          "path": "src/components/nodes/CreationComposer.tsx",
+          "line": 89,
+          "marker": "video ? localGeneration"
+        },
+        {
+          "path": "src/components/nodes/PromptCreationNode.tsx",
+          "line": 52,
+          "marker": "item.kind === \"text\" ? textGeneration : demoGeneration"
+        },
+        {
+          "path": "src/components/nodes/useLocalGeneration.ts",
+          "line": 57,
+          "marker": "loadLocalDemo(kind"
+        },
+        {
+          "path": "src/domain/localGeneration.ts",
+          "line": 18,
+          "marker": "return { ...sample }"
+        },
+        {
+          "path": "src/features/agent/agentHost.ts",
+          "line": 174,
+          "marker": "[\"image\", \"text\"]"
+        },
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 918,
+          "marker": "None | Some(\"image\" | \"text\")"
+        },
+        {
+          "path": "src/features/generation-server/worker.ts",
+          "line": 91,
+          "marker": "adapter.getStatus(c.output.provider_job_id!"
+        },
+        {
+          "path": "src/features/generation-server/types.ts",
+          "line": 33,
+          "marker": "\"waiting_provider\""
+        }
+      ],
+      "competitor_finding_ids": ["GW-024", "GW-025"],
+      "minimal_action": "按 BACKEND-MEDIA-001 分步扩展现有命令、CreationTask/output 和 TaskHost journal：先一条有明确协议的 TTS，后一个异步视频 Provider；持久化已知 providerJobId 与 provider_pending/materialization_pending/needs_user_action 阶段及 slot，不新建队列。先用合成 HTTP fixture 完成代码；真实凭据/额度验收单列。已知 ID 仅查询；本地落盘失败仅修复归档，不能重新生成。共享 schema/normalizer/Rust validator/project-package 协议随可选字段一起更新。",
+      "proposed_verification": [
+        "TTS 单输出归档与取消测试；视频 submit 得 ID 后进程/连接中断仅恢复 query，输出按原 slot 归档。",
+        "完成云任务但资产写入失败：补本地归档不增加生成调用；未知受理继续围栏。",
+        "旧 image/text journal、旧快照、项目包仍可读取且不扩大输入白名单。"
+      ],
+      "limitations": [
+        "本机未验证任何真实视频/音频供应商。",
+        "不能直接把独立 Gateway 当 Desktop 新 worker；接入宿主选择须遵守 KK-GEN-009。",
+        "音乐协议和厂商模型可用性均未知，静态模型名称不构成接入证明。"
+      ],
+      "boundary": {
+        "code": "本次静态源码核对",
+        "configuration": "未读取真实账户、Provider 配置或用户数据",
+        "runtime": "本次未启动产品或调用供应商；历史账本运行证据与当前源码观察分开"
+      }
+    },
+    {
+      "id": "KK-GEN-007",
+      "category": "integration_risk",
+      "claim": "TTS helper 提供 mp3/wav/opus/aac/flac/pcm，但共享及原生资产白名单只允许 audio/mpeg/wav/ogg；独立 Gateway 私有仓库只接受 PNG。若直接接入现有音频选项，会在部分格式的归档边界失败。",
+      "evidence_type": "observation",
+      "confidence": "high_static",
+      "priority": "P2",
+      "feature_ids": ["FEAT-007", "FEAT-014", "FEAT-024"],
+      "task_ids": ["BACKEND-MEDIA-001", "T3a", "T5"],
+      "files": [
+        {
+          "path": "src/features/creation/audioGeneration.ts",
+          "line": 30,
+          "marker": "value: \"opus\""
+        },
+        {
+          "path": "src/features/creation/audioGeneration.ts",
+          "line": 33,
+          "marker": "value: \"pcm\""
+        },
+        {
+          "path": "src/features/creation/audioGeneration.ts",
+          "line": 109,
+          "marker": "\"/audio/speech\""
+        },
+        {
+          "path": "src/features/creation/audioGeneration.ts",
+          "line": 135,
+          "marker": "response.blob()"
+        },
+        {
+          "path": "src/features/creation/assetRepository.ts",
+          "line": 59,
+          "marker": "audio\\/(mpeg|wav|ogg)"
+        },
+        {
+          "path": "src-tauri/src/asset_validation.rs",
+          "line": 166,
+          "marker": "\"audio/mpeg\""
+        },
+        {
+          "path": "src-tauri/src/asset_validation.rs",
+          "line": 168,
+          "marker": "\"audio/ogg\""
+        },
+        {
+          "path": "src/features/generation-server/assets.ts",
+          "line": 17,
+          "marker": "SUPPORTED_MIME = \"image/png\""
+        }
+      ],
+      "competitor_finding_ids": ["GW-024"],
+      "minimal_action": "最小 TTS 链先仅开放 mp3/wav，复用现有 assetRepository/nativeAssetAdapter；支持其他格式前补有界 MIME/原件校验、预览与导出协议。不要为 TTS 增设第二资产仓库，也不要宽泛允许所有 audio/*。",
+      "proposed_verification": [
+        "mp3/wav 真正归档 fixture，opus/aac 等不支持格式在请求前明确拒绝；旧音频原件、项目包引用和 MIME 校验不回归。"
+      ],
+      "limitations": [
+        "TTS helper 本次没有调用；节点未接线，因此是未来接线兼容风险，不是当前用户已触发的损坏。",
+        "源码 MIME 声明不能证明编码内容或供应商实际响应类型。"
+      ],
+      "boundary": {
+        "code": "本次静态源码核对",
+        "configuration": "未读取真实账户、Provider 配置或用户数据",
+        "runtime": "本次未启动产品或调用供应商；历史账本运行证据与当前源码观察分开"
+      }
+    },
+    {
+      "id": "KK-GEN-008",
+      "category": "code_gap",
+      "claim": "ComfyUI 的 HTTP adapter/工厂与 Rust queue/history 命令已存在，但产品 imageTaskCommand 明确拒绝 local_only；全 src/Rust 调用搜索未发现 createGenerationAdapter 或 ComfyUI invoke 的产品消费。客户端 adapter 的取消是 /interrupt；既有 Gateway 的取消另使用 /queue delete:[id]，取消隔离不能视为已完成。",
+      "evidence_type": "observation",
+      "confidence": "high_static",
+      "priority": "P2",
+      "feature_ids": ["FEAT-004", "FEAT-005", "FEAT-024"],
+      "task_ids": ["T6", "EXT-COMFY", "T8"],
+      "files": [
+        {
+          "path": "src/features/creation/imageTaskCommand.ts",
+          "line": 71,
+          "marker": "input.privacyMode === \"local_only\""
+        },
+        {
+          "path": "src/integrations/generation/providerAdapterFactory.ts",
+          "line": 17,
+          "marker": "new LocalComfyUiAdapter(connection)"
+        },
+        {
+          "path": "src/integrations/generation/localComfyUiAdapter.ts",
+          "line": 89,
+          "marker": "/prompt"
+        },
+        {
+          "path": "src/integrations/generation/localComfyUiAdapter.ts",
+          "line": 138,
+          "marker": "/interrupt"
+        },
+        {
+          "path": "src/features/generation-server/provider.ts",
+          "line": 440,
+          "marker": "\"/queue\""
+        },
+        {
+          "path": "src/features/generation-server/provider.ts",
+          "line": 444,
+          "marker": "delete: [id]"
+        },
+        {
+          "path": "src-tauri/src/main.rs",
+          "line": 1201,
+          "marker": "async fn comfyui_queue_prompt("
+        },
+        {
+          "path": "src-tauri/src/main.rs",
+          "line": 1228,
+          "marker": "async fn comfyui_get_history("
+        }
+      ],
+      "competitor_finding_ids": ["GW-032", "GW-025"],
+      "minimal_action": "按 T6 只接一个用户明确选择的 workflow 到既有 TaskHost，保存 workflow 摘要/稳定任务身份/promptId/slot，复用资产归档和只读恢复；取消以指定任务的 queue 删除为最小实现，已运行任务只能显示真实支持的行为。保留未选工作流时的禁用理由，不下载模型，不迁移 ComfyUI 目录。",
+      "proposed_verification": [
+        "受控 ComfyUI fixture：workflow 提交、同 promptId history 恢复、view 归档；队列取消只带当前 ID，其他作业不受影响。",
+        "无 workflow、未知受理、服务离线均零盲重发。"
+      ],
+      "limitations": [
+        "否定调用结论限当前 src 与 src-tauri 扫描，不代表第三方环境无法自行调用 adapter。",
+        "/interrupt 的实际服务语义与正在运行作业取消能力没有在本次静态范围验证；不据方法名宣称精确取消。",
+        "EXT-COMFY 的真实服务/模型/workflow 尚未验收。"
+      ],
+      "boundary": {
+        "code": "本次静态源码核对",
+        "configuration": "未读取真实账户、Provider 配置或用户数据",
+        "runtime": "本次未启动产品或调用供应商；历史账本运行证据与当前源码观察分开"
+      }
+    },
+    {
+      "id": "KK-GEN-009",
+      "category": "duplicate_execution_risk",
+      "claim": "Desktop 当前选择 Rust TaskHost；独立 Node Gateway 有自己的 generation.sqlite、worker、作业/slot 幂等范围和 objects 仓库，GenerationJobClient 在 src 中只有定义未被调用。两套后端目前不是产品同时执行；若将 Gateway 作为失败自动 fallback，现有幂等边界不能跨宿主阻止再次提交。",
+      "evidence_type": "inference",
+      "confidence": "medium_static_inference",
+      "priority": "P1",
+      "feature_ids": ["FEAT-002", "FEAT-024", "FEAT-014"],
+      "task_ids": ["T5", "T8", "BACKEND-PLATFORM"],
+      "files": [
+        {
+          "path": "src-tauri/src/main.rs",
+          "line": 1648,
+          "marker": "paths.tasks.join(\"native-host\")"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 740,
+          "marker": "if (nativeTaskHost)"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 969,
+          "marker": "return;"
+        },
+        {
+          "path": "src/features/creation/nativeTaskHost.ts",
+          "line": 53,
+          "marker": "未发送浏览器 Provider 请求"
+        },
+        {
+          "path": "src/features/generation-server/main.ts",
+          "line": 68,
+          "marker": "\"generation.sqlite\""
+        },
+        {
+          "path": "src/features/generation-server/main.ts",
+          "line": 112,
+          "marker": "worker.start()"
+        },
+        {
+          "path": "src/features/generation-server/schema.sql",
+          "line": 37,
+          "marker": "UNIQUE(owner_id, idempotency_key)"
+        },
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 237,
+          "marker": "self.read_one(&request.task_id)"
+        },
+        {
+          "path": "src/features/generation-server/worker.ts",
+          "line": 88,
+          "marker": "${c.job.id}:${c.output.output_index}:${c.output.generation}"
+        },
+        {
+          "path": "src/features/generation-server/assets.ts",
+          "line": 421,
+          "marker": "assetId: `asset-${sha256}`"
+        },
+        {
+          "path": "src/features/creation/assetRepository.ts",
+          "line": 310,
+          "marker": "sha256.slice(0, 24)"
+        },
+        {
+          "path": "src/integrations/generation/jobClient.ts",
+          "line": 44,
+          "marker": "class GenerationJobClient"
+        }
+      ],
+      "competitor_finding_ids": ["GW-024", "GW-026"],
+      "minimal_action": "T8 明确并持久化每个任务的执行宿主，Desktop 默认继续 Rust。仅通过同一命令的显式平台适配器选择一个宿主；submit/get/cancel/retry 都跟随原宿主，超时或 unknown 不跨宿主自动重发。Gateway 远程素材通过现有归档接口导入当前资产域，并保留原 provider/job/slot 映射。不能把64位 Gateway assetId 直接写进只接受24位ID的 native快照引用。",
+      "proposed_verification": [
+        "同一命令故障/超时下 Rust 与 Gateway 调用总数<=1；恢复、取消、重试不改变宿主身份。",
+        "远程 Gateway 结果导入后按本地 assetId 恢复，完整 SHA 与来源映射一致。"
+      ],
+      "limitations": [
+        "这是未来并行接线风险，本次未观察到实际重复执行或重复扣费。",
+        "未读取配置或进程，因此 Gateway 是否在别处手动启动未知；源码产品 UI 未调用不等于外部服务未运行。"
+      ],
+      "boundary": {
+        "code": "本次静态源码核对",
+        "configuration": "未读取真实账户、Provider 配置或用户数据",
+        "runtime": "本次未启动产品或调用供应商；历史账本运行证据与当前源码观察分开"
+      }
+    },
+    {
+      "id": "KK-GEN-010",
+      "category": "preserve",
+      "claim": "已有资产仓库具备 SHA-256 内容寻址、原子发布、重复原件合并来源、按需原件验证和元数据分页；Web companion/IndexedDB 与 Desktop native 由同一 assetRepository 调度。应保留这份资产权威，避免复制竞品 Asset Center 再加数据库。",
+      "evidence_type": "observation",
+      "confidence": "high_static",
+      "priority": "keep",
+      "feature_ids": ["FEAT-014", "FEAT-037", "FEAT-015"],
+      "task_ids": [
+        "T3a",
+        "T3b",
+        "TASK-PERF-ASSETS-001",
+        "TASK-LOCAL-SERVICE-001"
+      ],
+      "files": [
+        {
+          "path": "src-tauri/src/asset_storage.rs",
+          "line": 57,
+          "marker": "validation::hash(&bytes) != sha"
+        },
+        {
+          "path": "src-tauri/src/asset_storage.rs",
+          "line": 73,
+          "marker": "let sha = validation::hash(&bytes)"
+        },
+        {
+          "path": "src-tauri/src/asset_storage.rs",
+          "line": 85,
+          "marker": "validation::merge(&old, &metadata)"
+        },
+        {
+          "path": "src-tauri/src/asset_storage.rs",
+          "line": 90,
+          "marker": "io::atomic_write("
+        },
+        {
+          "path": "src-tauri/src/asset_storage.rs",
+          "line": 101,
+          "marker": "io::atomic_write("
+        },
+        {
+          "path": "src/features/creation/assetRepository.ts",
+          "line": 168,
+          "marker": "usesNativeAssets()"
+        },
+        {
+          "path": "src/features/creation/assetRepository.ts",
+          "line": 169,
+          "marker": "companionEnabled()"
+        },
+        {
+          "path": "src/features/creation/assetRepository.ts",
+          "line": 391,
+          "marker": "Math.min(100, requestedLimit)"
+        },
+        {
+          "path": "src/features/creation/useAssetArchive.ts",
+          "line": 13,
+          "marker": "PAGE_SIZE = 40"
+        },
+        {
+          "path": "src/features/creation/storage.ts",
+          "line": 154,
+          "marker": "if (isDesktop())"
+        },
+        {
+          "path": "src/features/creation/storage.ts",
+          "line": 172,
+          "marker": "if (isCompanionEnabled())"
+        }
+      ],
+      "competitor_finding_ids": ["GW-010", "GW-016", "GW-017"],
+      "minimal_action": "新媒体、主体/风格组织和检索以既有 assetId、tags、provenance、集合与项目引用扩展；companion 继续是 Web 数据存储适配器，不承担第二生成队列。缓存派生缩略图不得代替原件。",
+      "proposed_verification": [
+        "保留已有 assetStorage/assets/snapshotAssets/projectPackage 的原件hash、引用身份、损坏读取保护与跨平台存储选择测试。"
+      ],
+      "limitations": [
+        "FEAT-014 REAL/T3a/T3b DONE 是账本当前状态；本次只验证源码存在，不重跑其历史实机证据。",
+        "MIME 白名单与hash校验不能证明所有格式完整解码或语义检索能力。"
+      ],
+      "boundary": {
+        "code": "本次静态源码核对",
+        "configuration": "未读取真实账户、Provider 配置或用户数据",
+        "runtime": "本次未启动产品或调用供应商；历史账本运行证据与当前源码观察分开"
+      }
+    },
+    {
+      "id": "KK-GEN-011",
+      "category": "code_gap",
+      "claim": "Web 图片归档会传 connectionId 和首个 parent assetId；Rust 原生图片 metadata 当前写 sourceJobId/promptHash/provenance，但没有 parentId/connectionId，TaskHostRequest 也无 providerConnectionId。原生编辑生成后的素材级来源链因此比 Web 少字段，尽管 CreationTask 仍保存附件与连接。",
+      "evidence_type": "observation",
+      "confidence": "high_static",
+      "priority": "P2",
+      "feature_ids": ["FEAT-002", "FEAT-014"],
+      "task_ids": ["T5", "T3a", "T4"],
+      "files": [
+        {
+          "path": "src/App.tsx",
+          "line": 1036,
+          "marker": "connectionId: task.providerConnectionId"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 1038,
+          "marker": "parentId: task.attachments.find("
+        },
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 427,
+          "marker": "for attachment in &request.attachments"
+        },
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 613,
+          "marker": "let metadata = json!"
+        },
+        {
+          "path": "src-tauri/src/task_host.rs",
+          "line": 43,
+          "marker": "struct TaskHostRequest"
+        },
+        {
+          "path": "src/features/creation/assetRepository.ts",
+          "line": 30,
+          "marker": "parentId?: string"
+        },
+        {
+          "path": "src/features/creation/assetRepository.ts",
+          "line": 33,
+          "marker": "origins?: Array<"
+        },
+        {
+          "path": "src/App.tsx",
+          "line": 839,
+          "marker": "parentAssetId: asset.parentId"
+        }
+      ],
+      "competitor_finding_ids": ["GW-011"],
+      "minimal_action": "在现有原生 request 增加可选非秘密 providerConnectionId（旧请求省略保持指纹兼容），Rust metadata 写入现有 provenance.connectionId 与首个参考 parentId；保留 task.attachments 的完整多输入顺序。需要完整多父 lineage 时再对现有 metadata 做版本化追加，不另建来源数据库。",
+      "proposed_verification": [
+        "同一参考编辑在 Web/native 的 taskId/parentId/connectionId/provenance 字段对拍；重复内容合并来源不丢既有 AI 来源；旧 journal/请求指纹可读。"
+      ],
+      "limitations": [
+        "是素材级元数据字段差异，不是整个任务引用链消失；CreationTask.attachments/providerConnectionId 已保存。",
+        "本次没有实际生成或读取用户素材。"
+      ],
+      "boundary": {
+        "code": "本次静态源码核对",
+        "configuration": "未读取真实账户、Provider 配置或用户数据",
+        "runtime": "本次未启动产品或调用供应商；历史账本运行证据与当前源码观察分开"
+      }
+    },
+    {
+      "id": "KK-GEN-012",
+      "category": "code_gap",
+      "claim": "分页和24项320px预览缓存已有；缩略图仍在前端读取完整原件后解码，Rust read 返回完整 Base64，list_page 每次枚举并排序 records。永久派生预览、分页索引与大库 IO 是现有 PERF-001 的缺项，应在该模块内补。",
+      "evidence_type": "observation",
+      "confidence": "high_static",
+      "priority": "P2",
+      "feature_ids": ["FEAT-014"],
+      "task_ids": ["PERF-001", "TASK-PERF-ASSETS-001"],
+      "files": [
+        {
+          "path": "src/features/creation/assetPreview.ts",
+          "line": 3,
+          "marker": "MAX_PREVIEWS = 24"
+        },
+        {
+          "path": "src/features/creation/assetPreview.ts",
+          "line": 4,
+          "marker": "MAX_EDGE = 320"
+        },
+        {
+          "path": "src/features/creation/assetPreview.ts",
+          "line": 30,
+          "marker": "loadStoredAsset(assetId)"
+        },
+        {
+          "path": "src/features/creation/assetPreview.ts",
+          "line": 37,
+          "marker": "await image.decode()"
+        },
+        {
+          "path": "src-tauri/src/asset_storage.rs",
+          "line": 111,
+          "marker": "STANDARD.encode(self.verified_blob(&metadata)?)"
+        },
+        {
+          "path": "src-tauri/src/asset_storage.rs",
+          "line": 136,
+          "marker": "fs::read_dir(self.root.join(\"records\"))"
+        },
+        {
+          "path": "src-tauri/src/asset_storage.rs",
+          "line": 140,
+          "marker": "entries.sort_by_key"
+        },
+        {
+          "path": "docs/features/feat-014-assets.md",
+          "line": 30,
+          "marker": "PERF-001"
+        }
+      ],
+      "competitor_finding_ids": ["GW-019"],
+      "minimal_action": "先在现有缓存目录增加按完整SHA+预览版本命名的派生缩略图读取接口，assetPreview 优先用缓存，miss/坏缓存退到有界生成；原件读取、编辑、导出继续走现有验证。随后在同一 AssetRepository 优化元数据索引/分页，保留 source record 权威。",
+      "proposed_verification": [
+        "既有125项素材分页和错身份/坏缓存用例扩展；列表只读可见缩略图、详情/导出仍读取原件；原件变更后旧缓存不能被当真。",
+        "按既有 PERF-001 量化大库 IO 与单件内存，不能只比较函数返回数。"
+      ],
+      "limitations": [
+        "当前性能回归数字仅是历史文档，本次未跑基准。",
+        "这项不应覆盖已完成的有界分页，也不需重建素材管理。"
+      ],
+      "boundary": {
+        "code": "本次静态源码核对",
+        "configuration": "未读取真实账户、Provider 配置或用户数据",
+        "runtime": "本次未启动产品或调用供应商；历史账本运行证据与当前源码观察分开"
+      }
+    },
+    {
+      "id": "KK-GEN-013",
+      "category": "preserve",
+      "claim": "Codex 内置生图回传已将大 Base64 result 从标准化 SSE item 中去除；asset import 在归档前与提交前各检查生成图片身份，并持久化 agentGeneratedImageIds。该已有渠道归档回放无需再包装一次 BYOK 生成任务。",
+      "evidence_type": "observation",
+      "confidence": "high_static",
+      "priority": "keep",
+      "feature_ids": ["FEAT-002", "FEAT-009"],
+      "task_ids": ["TASK-AGENT-008", "TASK-AGENT-001"],
+      "files": [
+        {
+          "path": "vendor/canvas-agent/src/agent/codex-client.ts",
+          "line": 868,
+          "marker": "delete value.result"
+        },
+        {
+          "path": "src/features/agent/agentHost.ts",
+          "line": 74,
+          "marker": "agentGeneratedImageIds?.includes(input.id)"
+        },
+        {
+          "path": "src/features/agent/agentHost.ts",
+          "line": 83,
+          "marker": "storeGeneratedAsset("
+        },
+        {
+          "path": "src/features/agent/agentHost.ts",
+          "line": 96,
+          "marker": "agentGeneratedImageIds?.includes(input.id)"
+        },
+        {
+          "path": "src/features/agent/agentHost.ts",
+          "line": 118,
+          "marker": "agentGeneratedImageIds: ["
+        },
+        {
+          "path": "src/features/creation/model.ts",
+          "line": 120,
+          "marker": "agentGeneratedImageIds?: string[]"
+        },
+        {
+          "path": "docs/governance/PROJECT_STATE.md",
+          "line": 5,
+          "marker": "TASK-AGENT-008"
+        }
+      ],
+      "competitor_finding_ids": ["GW-025"],
+      "minimal_action": "保留 Agent 生成事件→鉴权原件读取→已有资产归档/稳定 imageId 去重的链；对重连/历史回放只补缺失归档。Agent 的 run_generation 调用继续走 KK-GEN-001，内置生成结果归档不触发第二生成。",
+      "proposed_verification": [
+        "保留 TASK-AGENT-008 的大事件、并发归档、重连/重启 hash/节点唯一回归；新媒体回传也采用元数据事件与原件分离。"
+      ],
+      "limitations": [
+        "TASK-AGENT-008 DONE 有当前账本文档，不能扩大为所有 Agent/Provider 真实生图验收。",
+        "本次未调用 Codex 或读取用户生成事件。"
+      ],
+      "boundary": {
+        "code": "本次静态源码核对",
+        "configuration": "未读取真实账户、Provider 配置或用户数据",
+        "runtime": "本次未启动产品或调用供应商；历史账本运行证据与当前源码观察分开"
+      }
+    }
+  ],
+  "implementation_order": [
+    {
+      "order": 1,
+      "ids": ["KK-GEN-003", "KK-GEN-004", "KK-GEN-005"],
+      "existing_tasks": ["T5", "BACKEND-TEXT-NODE"],
+      "reason": "先收口现有原生图片与文本链的发送门禁、健康和只读恢复。"
+    },
+    {
+      "order": 2,
+      "ids": ["KK-GEN-006", "KK-GEN-007"],
+      "existing_tasks": ["BACKEND-MEDIA-001", "T5"],
+      "reason": "先TTS最小链，再单个异步视频适配；原有宿主/资产/身份复用。"
+    },
+    {
+      "order": 3,
+      "ids": ["KK-GEN-008", "KK-GEN-011"],
+      "existing_tasks": ["T6", "T5"],
+      "reason": "显式workflow接线与原生来源字段补齐。"
+    },
+    {
+      "order": 4,
+      "ids": ["KK-GEN-009", "KK-GEN-012"],
+      "existing_tasks": ["T8", "PERF-001"],
+      "reason": "宿主分工先于任何Gateway接入；派生预览在已有仓库优化。"
+    }
+  ],
+  "unknowns": [
+    {
+      "type": "runtime",
+      "item": "T5 原生提交/取消/完整进程退出恢复未有本次实机复验；BACKEND-TEXT-NODE 已有历史 fixture 验收不能替代所有 Provider。",
+      "task_ids": ["T5", "BACKEND-TEXT-NODE", "EXT-PROVIDER"]
+    },
+    {
+      "type": "configuration",
+      "item": "当前真实Provider连接、credentials、ComfyUI安装/模型/workflow、Gateway是否手动启动均未读取。",
+      "task_ids": ["EXT-PROVIDER", "EXT-COMFY", "T8"]
+    },
+    {
+      "type": "runtime",
+      "item": "真实媒体生成、音频Codec响应、供应商幂等/查询/取消语义与模型目录在线可用性未知。",
+      "task_ids": ["BACKEND-MEDIA-001", "EXT-PROVIDER"]
+    },
+    {
+      "type": "documentation",
+      "item": "GENERATION-PLATFORM.md:9仍写图片参数仅草稿，但当前 App/native代码透传imageSize；以该历史文档不能推断无透传，BACKEND-IMAGE-PARAMS仍需Desktop同态真实参数验收。",
+      "task_ids": ["BACKEND-IMAGE-PARAMS"]
+    },
+    {
+      "type": "inference",
+      "item": "图片WebView重载持续跟踪缺口需受控实机复现；未来跨宿主重复执行风险不是当前已发生事实。",
+      "finding_ids": ["KK-GEN-005", "KK-GEN-009"]
+    }
+  ],
+  "verification": {
+    "performed": [
+      "指定HEAD与clean status只读核验",
+      "所有输出文件引用逐条校验LF单行包含marker",
+      "现有feature/task ID及状态回读registry/ledger",
+      "source hashes",
+      "GenerationJobClient/createGenerationAdapter/requestAudioGeneration及ComfyUI invoke消费点全src/src-tauri静态搜索"
+    ],
+    "not_performed": [
+      "运行竞品",
+      "运行KK产品",
+      "产品测试/构建（本次只读对照）",
+      "真实供应商/账户/服务请求"
+    ],
+    "product_files_changed": false,
+    "output_only": "D:\\kk-studio\\output\\minimax-rea-20261008\\evidence\\kk-generation-comparison.json",
+    "historical_runtime_evidence": "以 governance_records 所列原有证据为准；不把历史记录解释成当前HEAD重跑成功"
+  },
+  "source_hashes": [
+    {
+      "path": "docs/features/feat-014-assets.md",
+      "sha256": "7729798ff1710179919f743d48a318b7f1dfdf99142e6e2457c512adf3c67870",
+      "lf_line_count": 35
+    },
+    {
+      "path": "docs/features/features.registry.json",
+      "sha256": "7e29fbbb062811164edc08b3994c7d1cbcff5c8b1f574924c6135e5cd764ff8b",
+      "lf_line_count": 1490
+    },
+    {
+      "path": "docs/governance/PROJECT_STATE.md",
+      "sha256": "accbd6ab7b6b85ea980b058afc2861197611f96afe01aad054978292564c60c8",
+      "lf_line_count": 336
+    },
+    {
+      "path": "docs/governance/task-ledger.json",
+      "sha256": "c9188ef17d904a377e0c8db7d91feb02be46242898d7e0cde31d3f6871e9675e",
+      "lf_line_count": 3228
+    },
+    {
+      "path": "src-tauri/src/asset_storage.rs",
+      "sha256": "678ad19a3b9df35ba6cde93aafcd84b046dc5b263705e32846f7316e1c4f65db",
+      "lf_line_count": 188
+    },
+    {
+      "path": "src-tauri/src/asset_validation.rs",
+      "sha256": "a5c0228a85964630ecd761e2d6dc4f2222c15b31790349d0e2d5c976a27e4845",
+      "lf_line_count": 270
+    },
+    {
+      "path": "src-tauri/src/main.rs",
+      "sha256": "717ded3c29e2993d6d5260301448b3737dbef1b7f50503ddb25153eefa231340",
+      "lf_line_count": 1796
+    },
+    {
+      "path": "src-tauri/src/task_host.rs",
+      "sha256": "24f989c79bd74ab883e376ef7809c791d0355338358808dc73ebea482b18cd1d",
+      "lf_line_count": 1375
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "0566df0fcc66f561b76f1feb0900dc9c683f64257385b07ab17c9787f01a47c2",
+      "lf_line_count": 2562
+    },
+    {
+      "path": "src/components/nodes/CreationComposer.tsx",
+      "sha256": "f92f14d64d279f0562ac59ef07172c70f6dedb8d1c2f10105fb970485870041d",
+      "lf_line_count": 286
+    },
+    {
+      "path": "src/components/nodes/PromptCreationNode.tsx",
+      "sha256": "15b394f2d4e2a07b84804d27b8a75402a2bab2584866a22ec824311ee7efa8bc",
+      "lf_line_count": 197
+    },
+    {
+      "path": "src/components/nodes/useLocalGeneration.ts",
+      "sha256": "a6f98d1215a132ea40f768cfdc44ff720fc0d42baffc4633b31b92d43ffc9c04",
+      "lf_line_count": 93
+    },
+    {
+      "path": "src/domain/localGeneration.ts",
+      "sha256": "a73f3435872c7dd2fbaaa0b592bc000a9c22e698232cbe2f99e7b8d83a9a1eec",
+      "lf_line_count": 20
+    },
+    {
+      "path": "src/features/agent/agentHost.ts",
+      "sha256": "1359a161ab15fa01144a278543db9fe26b82b7bc8e3398681587df2215aa88be",
+      "lf_line_count": 302
+    },
+    {
+      "path": "src/features/creation/assetPreview.ts",
+      "sha256": "a656ece15c6618c123ed7bd62a193fc517e720ef01ceaa778379cbff52cb3cf5",
+      "lf_line_count": 68
+    },
+    {
+      "path": "src/features/creation/assetRepository.ts",
+      "sha256": "1d4ac816a0c3def5a7d6d69aba7c0da59fe56f073c371715cc21a46822079698",
+      "lf_line_count": 463
+    },
+    {
+      "path": "src/features/creation/audioGeneration.ts",
+      "sha256": "4320f05e473bd55253b08cc7b7722be795aad5793f2bbabaa57c8db37ae88d1e",
+      "lf_line_count": 209
+    },
+    {
+      "path": "src/features/creation/imageTaskCommand.ts",
+      "sha256": "07590d672ef0de3ac09e7360651f0663b412b195a461acc3404e0a62eddd58f5",
+      "lf_line_count": 342
+    },
+    {
+      "path": "src/features/creation/model.ts",
+      "sha256": "9e52f91c0f9e25780246c837e9195efbe9a58af1317344ab25040283f95acbbc",
+      "lf_line_count": 923
+    },
+    {
+      "path": "src/features/creation/nativeTaskHost.ts",
+      "sha256": "590404af67ba25a31598a247c99887c359089e29915bebf71bb5a9ce7bdbb425",
+      "lf_line_count": 455
+    },
+    {
+      "path": "src/features/creation/providerRegistry.ts",
+      "sha256": "2ad42d14f881eda411b8acd58293973e91f70d9f77c4f6a0fa169533d575f80a",
+      "lf_line_count": 278
+    },
+    {
+      "path": "src/features/creation/providerSubmission.ts",
+      "sha256": "5385345a048ac9c2a2971181f64ca8af7e4e6552b4eef8e9a3e12082fc72aecb",
+      "lf_line_count": 345
+    },
+    {
+      "path": "src/features/creation/storage.ts",
+      "sha256": "a3d021a0c1e61425330c78942acd39e363fb15c9916fdaa8487421fa1c9d1ac9",
+      "lf_line_count": 323
+    },
+    {
+      "path": "src/features/creation/taskRecovery.ts",
+      "sha256": "f0efd8a38a93594ad4bbb15f157b7a75279f20edc9ce4d8780117661f4a373ca",
+      "lf_line_count": 125
+    },
+    {
+      "path": "src/features/creation/useAssetArchive.ts",
+      "sha256": "38bce5f59a0648756b2b5a270cbd886118ba0d758c874172fc7b06c75c173e7c",
+      "lf_line_count": 124
+    },
+    {
+      "path": "src/features/creation/useCreationStorage.ts",
+      "sha256": "375adc1bfb2b3a7e47734c8e60407e3d88fbe45568befba697c729732c65dafb",
+      "lf_line_count": 207
+    },
+    {
+      "path": "src/features/creation/useNativeTextRecovery.ts",
+      "sha256": "78ff6ece36c36c5e4dc312718881798ba1712ad864662a48c3932892a9eb5d54",
+      "lf_line_count": 51
+    },
+    {
+      "path": "src/features/generation-server/assets.ts",
+      "sha256": "76a9845f907433fcac346eb32d407fba643aa6e4302e35c01deb209d2c10bde2",
+      "lf_line_count": 498
+    },
+    {
+      "path": "src/features/generation-server/main.ts",
+      "sha256": "314b6e9929aecd93f37f78c828a0fb7a243bc77855248b81ec4d6ff409a806e9",
+      "lf_line_count": 129
+    },
+    {
+      "path": "src/features/generation-server/provider.ts",
+      "sha256": "5b80d50f079dd0a45a1623c71dfa4a3977783b27f458f080392f106190a26838",
+      "lf_line_count": 478
+    },
+    {
+      "path": "src/features/generation-server/schema.sql",
+      "sha256": "1f19c9f8d61b1e1e56c37c1ccc67086d2d4b233931648477e11b62b4c6d94486",
+      "lf_line_count": 88
+    },
+    {
+      "path": "src/features/generation-server/types.ts",
+      "sha256": "28c4e7b4184f77f228a86e22d0be330e16b21bcc6a7e75d63a7abc97597a2404",
+      "lf_line_count": 195
+    },
+    {
+      "path": "src/features/generation-server/worker.ts",
+      "sha256": "8f3fe6dc7d34147c7d19de7d0371d49482da1c89f4afa77998de94384ae52736",
+      "lf_line_count": 176
+    },
+    {
+      "path": "src/integrations/generation/jobClient.ts",
+      "sha256": "127e8b129a3047f3722482f89f91727cc8f22f80b96b02735200075ee846389e",
+      "lf_line_count": 115
+    },
+    {
+      "path": "src/integrations/generation/localComfyUiAdapter.ts",
+      "sha256": "1a9bd61ad3ca9f587ed1f845fe3eea6ceedc1cb60c0a2685510350fa6980fb9f",
+      "lf_line_count": 186
+    },
+    {
+      "path": "src/integrations/generation/providerAdapterFactory.ts",
+      "sha256": "2679b58c1087907ffa365a2cfa02d669c66606cd96500918d436f0a828529111",
+      "lf_line_count": 26
+    },
+    {
+      "path": "vendor/canvas-agent/src/agent/codex-client.ts",
+      "sha256": "3c0ce45e9b3da528f46b9c94d9312616fd2a5c2f46f0b15cf0539885a4265970",
+      "lf_line_count": 908
+    }
+  ]
+}

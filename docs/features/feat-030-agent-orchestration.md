@@ -7,18 +7,26 @@
 
 ## 用户可见入口
 
-- 能力：Agent 生成任务按"阶段执行计划"编排：规划（plan）→ 审批（plan_review）→ 执行（doing）→ 结果审批（result_review）→ 完成（done）；失败只重试失败工作项。
-- 当前 UI 入口：任务工作台（TaskWorkbench）展示任务队列，并通过 Plan 标签显示阶段状态、工作项数量及计划/结果审批门；真实生成执行仍由 TASK-ORCH-003 衔接。
-- Desktop / Web 差异：领域层与工具面两端一致；Agent MCP 注册（plan 工具面接入 Codex）在 BACKEND-MCP-AUTO（TASK-MCP-AUTO）完成，当前工具面仅以纯函数形态存在。
+- 能力：已有本地阶段计划采用 plan_review → doing → result_review → done 审批流程，拒绝计划进入 blocked，解除阻断只重置失败工作项；真实生成执行尚未接入。
+- 当前 UI 入口：任务工作台 → Plan（阶段计划）；查看阶段/工作项/进度，plan/result 人工审批、选项返工、空阶段拒绝、解除阻断与重新申请审批共用原编排器。审批不自动提交生成。
+- Desktop / Web 差异：领域层与工具面两端一致；Agent MCP 注册（plan 工具面接入 Codex）由 BACKEND-MCP-AUTO（TASK-MCP-AUTO）负责，当前尚未接入，仅以宿主纯函数形态存在。
 
 ## 代码位置
 
-- 前端：`src/domain/stagePlan.ts`（状态机）、`src/features/agent/orchestrator.ts`（编排器+工具面）、`src/features/agent/agentHost.ts`（宿主注入）、`src/features/agent/agentCanvas.ts`（交付契约）
+- 前端：`src/domain/stagePlan.ts`（状态机）、`src/features/agent/orchestrator.ts`（编排器+工具面）、`src/features/agent/agentHost.ts`（宿主注入）、`src/features/agent/agentCanvas.ts`（交付契约）；`TaskWorkbench.tsx`、`TaskWorkbenchContent.tsx`、`TaskWorkbenchStages.tsx`、`StagePlanDetail.tsx`（阶段 UI），`src/App.tsx` 创建共享实例。
 - 桌面 Rust：`src-tauri/src/project_package_snapshot.rs`（计划字段校验）、`src-tauri/src/project_package.rs`（计划素材原件打包）
 - 服务端：无（阶段计划本地持久化，云端化属平台波次）
 - 数据/存储：`CreationProject.stagePlans` 随 Web 本地快照或 Desktop creation-v2 快照保存，项目包导出/导入保留计划及其引用原件。
 
 ## 测试与证据
+
+- 本轮TASK-ORCH-002本地AC DONE：领域/实际持久hook定向46/46、Stage浏览器12/12，完整verify根638/646、Agent172/174（原skip8/2）、browser389/389零retry；production Tauri审批/返工/重启和真实CAS冲突/草稿恢复通过。源码HEAD 41dd865独立复验PASS，最终文档精确SHA收据另记，见[本轮验证](../changes/2026-10-08-stage-workbench/verification.md)。以下数字是历史证据。
+- 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/creationSaveQueue.test.ts`、`tests/unit/agentCanvas.test.ts`；历史全量 Node 422/422 通过。
+- 浏览器回归：历史300/300；本轮新增 `tests/browser/stage-workbench.spec.ts` 的真实 App/IndexedDB 审批流，Desktop 对应 `tests/desktop/stage-workbench.mjs`。
+- Rust 历史验收：项目包导出/导入及重复身份拒绝回归82/82；本轮Desktop GUI范围为上列本地审批/保存/冲突恢复，真实生成与正式发布未验收。
+- 变更与验证证据：`docs/changes/2026-09-23-agent-orchestration/verification.md`
+
+新主线历史验收：
 
 - 单测：`tests/unit/stagePlan.test.ts`、`tests/unit/orchestrator.test.ts`、`tests/unit/agentCanvas.test.ts`；本轮 Node 全量 710 项（702 pass、0 fail、8 Windows skip）。
 - 浏览器回归：全量 388/388 通过，包含阶段计划 Plan 标签与审批专项回归。
@@ -27,7 +35,7 @@
 
 ## 当前能力
 
-- 已实现的本地领域层能力（尚无端到端运行验收）：
+- 已实现的本地领域与工作台能力（审批和持久化已有本地 fixture 端到端验收）：
   - Stage 状态机：doing / plan_review / blocked / result_review / done，CAS 推进（乐观锁），非法迁移与并发冲突拦截；计划审批前不得执行，全部工作项成功后才能请求结果审批或完成；
   - 编排器：计划物化（同 id 同定义重放保留进度，不同定义拒绝覆盖；写前校验）、审批决策（plan/result 两门）、异常阻断、解除阻断并只重试失败工作项、待审批汇总；
   - 结果审批拒绝由宿主指定返工项及可选新 prompt（省略时整个阶段返工）；关联下游工作项与旧素材引用失效，受影响的结果审批需重新进行；
@@ -37,18 +45,20 @@
   - MCP 风格工具面：plan_get_stage_status / plan_update_stage_state / plan_patch_stage / plan_replan（纯函数形态，供后续 MCP 注册）；Agent 工具不能自行完成 plan/result 审批或解除阻断，阶段操作与宿主审批均须携预期 revision；
   - 交付契约：图片产物必须携带 node_id 且已注册素材资产，文案产物必须带非空 provider 文本，否则在宿主/App 提交边界拦截并标记 unknown；本轮产物按 result 连线收集与摘要。
 - 明确标注未接：
-  - TaskWorkbench 阶段计划 UI 已完成本地只读/审批闭环（TASK-ORCH-002）；真实编排执行仍未接（TASK-ORCH-003）；
+  - TaskWorkbench阶段计划本地审批已接；真实执行仍属TASK-ORCH-003。主线plan_replan已实现增量重规划与接受前缀保护，但真实Agent注册尚未接入。
   - 工具面尚未注册到 Agent MCP 服务（BACKEND-MCP-AUTO）；
   - 编排器尚未驱动真实生成执行（依赖 B3 媒体真实链路）。
 
 ## 差距与后端化
 
-- “UI 已显示但后端未接”的点：阶段计划审批已由本地编排器闭环；真实生成执行仍未由编排器驱动，Agent plan 工具也尚未注册到 MCP 服务。
+- “UI 已显示但后端未接”的点：阶段 UI 已接本地编排器并等待保存完成；审批不替代现有 TaskExecutionApproval（高成本/远程门），也不自动执行工作项。
 - “已实现但未验证”的点：编排器驱动真实多视频任务未实机验证（媒体链路未闭合）。
-- 变成 REAL 还缺什么：编排器驱动真实生成（TASK-ORCH-003）、MCP 工具注册（BACKEND-MCP-AUTO）、真实媒体链路（BACKEND-MEDIA-001）、每平台运行证据。
+- 变成 REAL 还缺什么：计划驱动执行（TASK-ORCH-003）、MCP 注册（BACKEND-MCP-AUTO）、真实媒体链路（BACKEND-MEDIA-001）与真实多阶段验收；本地 fixture UI 验收不能替代外部能力。
 - 外部依赖与阻断条件：无外部密钥依赖；媒体真实链路依赖供应商 Key（EXT-PROVIDER）。
 
 ## 变更记录
+
+- 2026-10-08：吸收 MiniMax 阶段审批入口，在原工作台/原项目状态上补 UI 和共享宿主接线；保留严格 revision、项目范围、依赖失效、原提示词及 unknown 围栏。功能仍 PARTIAL，详见[比较与融合顺序](../changes/2026-10-08-stage-workbench/comparison.md)。
 
 - 2026-09-26：`9ddfcb5` 源码独立复审 PASS，Hosted verify/delivery 成功；功能仍为 PARTIAL，Desktop GUI、真实 Provider、MCP 注册与 UI 阶段视图未验收。详情见验证记录。
 
@@ -67,3 +77,5 @@
 - 2026-09-24：`67ff18fb` 独立复审关闭前两项 P1，同时发现重复工作项 ID 问题；新增 TS/Rust 失败先行测试并补计划级唯一性校验，新 head 仍待复审。跨端决定见 [ADR-006](../architecture/adr/ADR-006-stage-plan-package-contract.md)。
 
 - 2026-10-08：`5cbfe99`/`dc05556` 完成原生回执双重身份、索引一致性和非法类型校验，实时与恢复共用围栏；既有归档、合法子集及缺失 outputs 的旧 assetIds 格式保留。定向原生/恢复53项与完整浏览器388项通过，独立源码复验PASS；真实Provider/Desktop运行与外部门禁仍未完成。
+
+- 2026-10-08 主线融合：保留PR #34的唯一Plan入口与新主线重规划/回执/MCP能力，在TaskWorkbenchStages融合本轮增强审批及保存确认，不保留第二面板。组合本地49/49、708root/172Agent/400browser零retry、Rust97及fresh Desktop2.1.5真实重启/冲突恢复通过；精确新SHA独立补审/当前CI和推广以本轮PR为准，见本轮verification末节。功能仍PARTIAL。

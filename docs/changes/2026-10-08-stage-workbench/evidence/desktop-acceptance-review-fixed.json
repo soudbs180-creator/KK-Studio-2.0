@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "timestamp": "2026-10-08T04:39:45.979Z",
+  "runtime": {
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://tauri.localhost/assets/index-DCiDe2Qa.js"
+    ],
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "dataRoot": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-ORCH-002-stage-workbench\\src-tauri\\target\\stage-workbench-acceptance\\1791434380518\\data",
+  "executableSha256": "896a9a0eeb683dfa79b4f3a4b884d318c273f87c69ade47d91cb4b5a2842242d",
+  "launches": 2,
+  "planRevision": 6,
+  "conflict": {
+    "nativeCAS": true,
+    "queuedApprovalSaved": false,
+    "writes": 1,
+    "durableStage": "result_review",
+    "recoveryDraftAvailable": true
+  },
+  "errors": [],
+  "scope": "Local fixture reject/unblock/resubmit/approve, result rework, native persistence/restart, actual native CAS conflict behind queued approval and retained recovery draft; no provider execution."
+}

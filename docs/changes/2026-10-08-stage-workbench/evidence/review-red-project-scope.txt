@@ -1,0 +1,53 @@
+✔ a stale workbench decision cannot approve the same plan in another project (4.2173ms)
+✔ a stale workbench retry cannot unblock another project's matching plan (0.3093ms)
+✖ a stale workbench approval request cannot target another project's matching plan (0.5978ms)
+✔ upsertPlan persists a plan into the project (idempotent by id) (0.2829ms)
+✔ replaying an existing plan preserves completed stages and assets (1.4663ms)
+✔ result rejection requeues selected work for revised output and a second review (0.8681ms)
+✔ reworking an upstream result invalidates succeeded downstream work and review (0.4648ms)
+✔ plan_patch_stage rejects invalid input without persisting a plan (2.8304ms)
+✔ plan_patch_stage rejects duplicate work item IDs without writing (0.2001ms)
+✔ plan_patch_stage is durable and replay cannot reset progress (0.5294ms)
+✔ upsertPlan refuses plans beyond the storage limit (0.9442ms)
+✔ requestStageApproval moves doing to plan_review with CAS (0.1636ms)
+✔ plan-gated work cannot run or enter result review before host approval (0.1839ms)
+✔ queued work cannot be reported as a completed stage (0.1105ms)
+✔ stage tool rejects an old revision after the same status returns (0.241ms)
+✔ host approval rejects a stale result review after rejection and resubmission (0.3224ms)
+✔ dependent work cannot start before its prerequisite succeeds (0.1374ms)
+✔ decideStage approve plan continues doing; reject blocks (0.2126ms)
+✔ decideStage cannot approve a stage not in review (0.1199ms)
+✔ result gate completes on approve and returns to doing on reject (0.2402ms)
+✔ markStageBlocked and retryStage requeue only failed work items (0.2697ms)
+✔ late work results cannot overwrite an approved plan (0.1719ms)
+✔ approvalSummary lists pending gates across plans (0.1469ms)
+✔ planTools expose the four plan tools with working invocations (0.2679ms)
+✔ Agent plan tool cannot approve or unblock its own stages (0.3352ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 24
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 151.2327
+
+✖ failing tests:
+
+test at tests\unit\orchestrator.test.ts:137:1
+✖ a stale workbench approval request cannot target another project's matching plan (0.5978ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-ORCH-002-stage-workbench/tests/unit/orchestrator.test.ts:148:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /项目已切换/,
+    operator: 'throws',
+    diff: 'simple'
+  }

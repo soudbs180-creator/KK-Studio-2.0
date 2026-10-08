@@ -1,0 +1,119 @@
+src/App.tsx 202ms
+src/components/TaskWorkbench.tsx 10ms
+src/components/StagePlanPanel.tsx 8ms
+src/components/StagePlanDetail.tsx 8ms
+src/features/agent/orchestrator.ts 24ms
+src/styles/stage-workbench.css 112ms
+tests/unit/orchestrator.test.ts 33ms
+tests/browser/stage-workbench.spec.ts 9ms
+docs/changes/2026-10-08-stage-workbench/intent.md 419ms
+docs/changes/2026-10-08-stage-workbench/plan.md 9ms (unchanged)
+docs/changes/2026-10-08-stage-workbench/spec.md 6ms
+
+> kk-studio@2.1.4 build
+> tsc -b && vite build
+
+vite v7.3.6 building client environment for production...
+transforming...
+node_modules/zod/v4/core/util.js (330:0): A comment
+
+"// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
+
+in "node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/zod/v4/core/regexes.js (70:0): A comment
+
+"/** Anchors a pattern source. The interpolation lives here rather than at the call site because
+ * esbuild will not drop a `@__PURE__` call whose own argument interpolates a variable, but it
+ * will drop `anchor(dateSource)`. Keeping it inline pinned `date` into every bundle. */"
+
+in "node_modules/zod/v4/core/regexes.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+✓ 2974 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                      0.57 kB │ gzip:   0.35 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+dist/assets/inter-latin-400-normal-C38fXH4l.woff2   23.66 kB
+dist/assets/inter-latin-500-normal-Cerq10X2.woff2   24.27 kB
+dist/assets/inter-latin-700-normal-Yt3aPRUw.woff2   24.36 kB
+dist/assets/inter-latin-600-normal-LgqL8muc.woff2   24.45 kB
+dist/assets/inter-latin-400-normal-CyCys3Eg.woff    30.70 kB
+dist/assets/inter-latin-600-normal-CiBQ2DWP.woff    31.26 kB
+dist/assets/inter-latin-500-normal-BL9OpVg8.woff    31.28 kB
+dist/assets/inter-latin-700-normal-BLAVimhd.woff    31.32 kB
+dist/assets/index-BCcumWvA.css                     274.53 kB │ gzip:  45.98 kB
+dist/assets/index-CDmgbb9Y.js                      959.01 kB │ gzip: 292.08 kB
+✓ built in 3.01s
+[WebServer] (node:35152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:56736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\browser\stage-workbench.spec.ts:106:1 › 计划批准只推进一次并持久化，不创建生成任务 (6.4s)
+(node:50488) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\browser\stage-workbench.spec.ts:130:1 › 计划拒绝和解除阻断沿用原计划，仍须再次审批 (30.0s)
+(node:66600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 tests\browser\stage-workbench.spec.ts:146:1 › 结果批准完成阶段，结果返工保留原提示词 (1.4s)
+  ok 4 tests\browser\stage-workbench.spec.ts:161:1 › 结果审批通过后显示完成进度 (1.3s)
+  ok 5 tests\browser\stage-workbench.spec.ts:173:1 › 空项目显示明确计划来源且保留单一任务队列 (863ms)
+  ok 6 tests\browser\stage-workbench.spec.ts:184:1 › 窄屏仍可查看计划与提交审批 (1.2s)
+
+
+  1) tests\browser\stage-workbench.spec.ts:106:1 › 计划批准只推进一次并持久化，不创建生成任务 ───────────────────────────
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: '阶段计划' })
+    Expected substring: "自动执行尚未接入"
+    Received string:    "选择阶段计划产品短片计划0 / 3 阶段已完成 · 1 项待审批阶段 1：分镜方案待执行 / 执行中阶段 2：画面结果等待结果审批阶段 3：后续镜头待执行 / 执行中阶段状态已保存到当前项目。画面结果审阅已经完成的画面1 / 1 工作项已成功 · 0 项失败 · 版本 1work-image · image · 已成功保留原始产品提示词批准结果返工结果"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: '阶段计划' }) with timeout 5000ms
+      - waiting for getByRole('region', { name: '阶段计划' })
+        14 × locator resolved to <section aria-label="阶段计划" class="stage-plan-panel">…</section>
+           - unexpected value "选择阶段计划产品短片计划0 / 3 阶段已完成 · 1 项待审批阶段 1：分镜方案待执行 / 执行中阶段 2：画面结果等待结果审批阶段 3：后续镜头待执行 / 执行中阶段状态已保存到当前项目。画面结果审阅已经完成的画面1 / 1 工作项已成功 · 0 项失败 · 版本 1work-image · image · 已成功保留原始产品提示词批准结果返工结果"
+
+
+      116 |   expect((await savedPlan(page)).revision).toBe(1);
+      117 |   await expect(page.locator(".task-queue-item")).toHaveCount(0);
+    > 118 |   await expect(page.getByRole("region", { name: "阶段计划" })).toContainText(
+          |                                                            ^
+      119 |     "自动执行尚未接入",
+      120 |   );
+      121 |   await page.reload();
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-ORCH-002-stage-workbench\tests\browser\stage-workbench.spec.ts:118:60
+
+    Error Context: test-results\stage-workbench-计划批准只推进一次并持久化，不创建生成任务\error-context.md
+
+  2) tests\browser\stage-workbench.spec.ts:130:1 › 计划拒绝和解除阻断沿用原计划，仍须再次审批 ───────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '解除阻断', exact: true })
+
+
+      134 |     .poll(async () => (await savedPlan(page))?.stages[0].status)
+      135 |     .toBe("blocked");
+    > 136 |   await page.getByRole("button", { name: "解除阻断", exact: true }).click();
+          |                                                                 ^
+      137 |   await expect
+      138 |     .poll(async () => (await savedPlan(page))?.stages[0].status)
+      139 |     .toBe("doing");
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-ORCH-002-stage-workbench\tests\browser\stage-workbench.spec.ts:136:65
+
+    Error Context: test-results\stage-workbench-计划拒绝和解除阻断沿用原计划，仍须再次审批\error-context.md
+
+  2 failed
+    tests\browser\stage-workbench.spec.ts:106:1 › 计划批准只推进一次并持久化，不创建生成任务 ────────────────────────────
+    tests\browser\stage-workbench.spec.ts:130:1 › 计划拒绝和解除阻断沿用原计划，仍须再次审批 ────────────────────────────
+  4 passed (43.9s)

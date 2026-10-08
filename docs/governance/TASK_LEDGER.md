@@ -917,13 +917,13 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## TASK-ORCH-002 — TaskWorkbench 阶段计划视图与审批交互
 
 - Goal: 任务工作台展示 Stage 计划状态与 plan/result 审批门，审批按钮驱动编排器
-- Scope: src/components/TaskWorkbench.tsx, TaskWorkbenchContent.tsx, src/App.tsx（onStageDecision 回调链）
-- Acceptance: 工作台显示各阶段状态徽标与待审批门; plan/result 审批按钮调用编排器 decideStage; 浏览器回归覆盖展示与审批流
-- Branch: `codex/TASK-AUDIT-20261003`
-- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`
-- Modules: src/components/TaskWorkbench.tsx, src/components/TaskWorkbenchContent.tsx, src/components/TaskWorkbenchStages.tsx, src/App.tsx, tests/browser/task-workbench.spec.ts
-- Verification: PASS — TaskWorkbench 已显示 Plan 标签、阶段状态、工作项数量和 plan/result 审批；App 通过当前项目编排器执行决定。定向与完整 task-workbench Playwright 7/7 通过，提交 6ebaad8。
-- Evidence: [docs/changes/2026-10-03-incomplete-tasks/verification.md](../../docs/changes/2026-10-03-incomplete-tasks/verification.md)
+- Scope: 现有工作台阶段计划视图、plan/result审批/返工/解除阻断/重新申请；原编排器项目范围校验与App/AgentHost共用实例；原存储队列确认/冲突传播与草稿恢复；竞品能力比较归入现有feature/task。; TaskWorkbenchContent的既有Plan入口整合，保留新主线暂停/重规划/回执/MCP改进。
+- Acceptance: 工作台显示各阶段状态徽标与待审批门; plan/result 审批按钮调用编排器 decideStage; 浏览器回归覆盖展示与审批流; 拒绝计划后可解除阻断并重新申请审批，零工作项结果阶段可拒绝; 排队保存冲突不显示成功，原件与未保存草稿保留；Web和production Desktop分别验收
+- Branch: `codex/TASK-ORCH-002-stage-workbench`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-ORCH-002-stage-workbench`
+- Modules: src/components/TaskWorkbench.tsx, src/components/TaskWorkbenchContent.tsx, src/components/TaskWorkbenchStages.tsx, src/App.tsx, tests/browser/task-workbench.spec.ts, src/components/StagePlanDetail.tsx, src/styles/stage-workbench.css, src/features/agent/orchestrator.ts, src/features/creation/useCreationStorage.ts, src/styles/task-workbench.css
+- Verification: PASS — 本轮本地AC完成：新主线5b0eb6a融合为单一Plan/TaskWorkbenchStages及共享实例，保留主线暂停/重规划/回执/MCP行为；49/49、完整verify708root/172Agent/400browser零retry（原skip8/2）、Rust97、fresh production Tauri审批/重启/真实CAS/恢复草稿与clientcheck通过。精确新SHA独立补审及主线推广以收据和PR当前门禁为准。
+- Evidence: [docs/changes/2026-10-03-incomplete-tasks/verification.md](../../docs/changes/2026-10-03-incomplete-tasks/verification.md), [docs/changes/2026-10-08-stage-workbench/intent.md](../../docs/changes/2026-10-08-stage-workbench/intent.md), [docs/changes/2026-10-08-stage-workbench/spec.md](../../docs/changes/2026-10-08-stage-workbench/spec.md), [docs/changes/2026-10-08-stage-workbench/plan.md](../../docs/changes/2026-10-08-stage-workbench/plan.md), [docs/changes/2026-10-08-stage-workbench/comparison.md](../../docs/changes/2026-10-08-stage-workbench/comparison.md), [docs/changes/2026-10-08-stage-workbench/verification.md](../../docs/changes/2026-10-08-stage-workbench/verification.md), [docs/changes/2026-10-08-stage-workbench/review.md](../../docs/changes/2026-10-08-stage-workbench/review.md), [docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance.json](../../docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance.json), [docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance-review-fixed.json](../../docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance-review-fixed.json), [docs/changes/2026-10-08-stage-workbench/evidence/review-dfd4c12.md](../../docs/changes/2026-10-08-stage-workbench/evidence/review-dfd4c12.md), [docs/changes/2026-10-08-stage-workbench/evidence/verify-review-fixed.txt](../../docs/changes/2026-10-08-stage-workbench/evidence/verify-review-fixed.txt), [docs/changes/2026-10-08-stage-workbench/evidence/review-41dd865.md](../../docs/changes/2026-10-08-stage-workbench/evidence/review-41dd865.md), [docs/changes/2026-10-08-stage-workbench/integration-plan.md](../../docs/changes/2026-10-08-stage-workbench/integration-plan.md), [docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance-integration.json](../../docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance-integration.json), [docs/changes/2026-10-08-stage-workbench/evidence/runtime-source-hashes-integration.json](../../docs/changes/2026-10-08-stage-workbench/evidence/runtime-source-hashes-integration.json)
 - Updated: 2026-10-08
 
 ## TASK-ORCH-003 — 编排器驱动生成执行与计划门禁
