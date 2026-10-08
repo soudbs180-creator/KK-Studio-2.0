@@ -50,3 +50,6 @@
 
 
 - bdb82df 完整 verify-close-final 实际 exit0：root804/812（既有skip8）、Agent172/174（既有skip2）、447/447浏览器，固定1421严格四插件开发 PASS/零错误。Rust102/fmt先前 e3 产品组合通过；e3→bdb产品未变。原生fixture释放锁可重复清理，且锁清理失败不跳过本次自有桌面进程清理；未放宽任何内容/console/正常退出断言。fresh build与native当前证据随后追加。
+
+
+- native-close-final-be5f327 实际 FAIL：新 EXE12009ce4… 首次立即关闭最后编辑保留/exit0，真实重启四正文通过、console/requestfailed均零；真实IO失败与重复关闭留窗已发生，随后 driver 在释放锁之后错误要求主件仍不可变，而恢复后的排队自动保存已正常写入新草稿。该次FAIL完整保留。主件保护断言改为独占锁持有者在释放前读取实际文件句柄字节，backup仍在锁持有期间检查；不删除原件/草稿/留窗/零错误断言，不用等待代替立即关闭。fresh产品源码未变。

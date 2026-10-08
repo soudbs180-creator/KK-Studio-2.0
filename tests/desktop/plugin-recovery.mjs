@@ -72,6 +72,12 @@ async function lockSnapshot() {
         if ([DateTime]::UtcNow -gt $fixtureDeadline) { throw 'Fixture lock timed out' }
         Start-Sleep -Milliseconds 50
       }
+      $fixtureHandle.Position = 0
+      $fixtureCopy = [System.IO.MemoryStream]::new()
+      try {
+        $fixtureHandle.CopyTo($fixtureCopy)
+        [System.IO.File]::WriteAllBytes($env:KK_NATIVE_LOCK_CAPTURE, $fixtureCopy.ToArray())
+      } finally { $fixtureCopy.Dispose() }
     } finally { $fixtureHandle.Dispose() }
   `,
     ],
@@ -83,6 +89,10 @@ async function lockSnapshot() {
         KK_NATIVE_LOCK_PATH: snapshotPath,
         KK_NATIVE_LOCK_READY: readyPath,
         KK_NATIVE_LOCK_RELEASE: releasePath,
+        KK_NATIVE_LOCK_CAPTURE: path.join(
+          evidenceDir,
+          "locked-main-before-release.json",
+        ),
       },
     },
   );
@@ -356,12 +366,17 @@ try {
   await page.screenshot({
     path: path.join(evidenceDir, "save-failure-window-retained.png"),
   });
-  await releaseSnapshotLock();
-  assert.deepEqual(await readFile(snapshotPath), beforeFailure);
+  // Read the backup while IO is still blocked. The lock owner captures the
+  // primary before releasing its handle; resumed autosave after unlock is valid.
   assert.deepEqual(await readFile(backupPath), backupBeforeFailure);
   await recoveredSvg.getByTitle("编辑源码", { exact: true }).click();
   await expect(recoveredSvg.locator("textarea")).toHaveValue(failedEdit);
   await recoveredSvg.locator("textarea").press("Escape");
+  await releaseSnapshotLock();
+  assert.deepEqual(
+    await readFile(path.join(evidenceDir, "locked-main-before-release.json")),
+    beforeFailure,
+  );
   receipt.steps.push(
     "real-native-io-failure-and-duplicate-close-retain-window-draft-and-originals",
   );
