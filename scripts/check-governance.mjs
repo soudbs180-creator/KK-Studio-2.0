@@ -60,6 +60,7 @@ for (const file of [
   "CONTRIBUTING.md",
   ".github/workflows/quality.yml",
   "docs/governance/PROJECT_STATE.md",
+  "docs/governance/PROJECT_GOALS.md",
   "docs/governance/SPEC_BASELINE.md",
   "docs/governance/AI_HANDOFF.md",
 ])

@@ -49,6 +49,17 @@ test("creation snapshots normalize old drafts without losing project content", (
   assert.equal(snapshot?.projects[0]?.composerDraft.approvalMode, "auto");
 });
 
+test("new tasks keep cost unknown until a provider returns a quote", () => {
+  const project = createProject({
+    prompt: "生成一张产品图",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+
+  assert.equal(createTask(project).estimatedCostUsd, undefined);
+});
+
 test("task source item provenance is optional and survives normalization", () => {
   const snapshot = normalizeCreationSnapshot({
     version: 2,
@@ -78,6 +89,34 @@ test("task source item provenance is optional and survives normalization", () =>
   });
   assert.equal(snapshot?.projects[0]?.tasks[0]?.sourceItemId, "item-1");
   assert.equal(snapshot?.projects[0]?.tasks[1]?.sourceItemId, undefined);
+});
+
+test("empty completed slot metadata falls back to the legacy completion count", () => {
+  const snapshot = normalizeCreationSnapshot({
+    version: 2,
+    projects: [
+      {
+        id: "project-legacy-slots",
+        items: [],
+        tasks: [
+          {
+            id: "task-legacy-slots",
+            prompt: "生成",
+            model: "image-test",
+            status: "partial",
+            requestedOutputs: 2,
+            completedOutputs: 1,
+            completedOutputIndices: [],
+          },
+        ],
+      },
+    ],
+  });
+  assert.equal(
+    snapshot?.projects[0]?.tasks[0]?.completedOutputIndices,
+    undefined,
+  );
+  assert.equal(snapshot?.projects[0]?.tasks[0]?.completedOutputs, 1);
 });
 
 test("unknown submissions normalize conservatively and retain the stable identity", () => {

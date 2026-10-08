@@ -119,6 +119,10 @@ test("an external handshake cannot be taken over by the desktop start control", 
   const held = new Promise<void>((resolve) => {
     release = resolve;
   });
+  let markHandshakeStarted!: () => void;
+  const handshakeStarted = new Promise<void>((resolve) => {
+    markHandshakeStarted = resolve;
+  });
   try {
     await page.goto("/");
     await expect(page.getByLabel("创作提示词")).toBeVisible();
@@ -134,16 +138,20 @@ test("an external handshake cannot be taken over by the desktop start control", 
         },
       }),
     );
-    await page.route(agent.url + "/health", async (route) => {
+    await page.route(agent.url + "/config", async (route) => {
+      markHandshakeStarted();
       await held;
-      await route.continue();
+      // Disconnect intentionally aborts this held request.
+      await route.continue().catch(() => undefined);
     });
     const panel = await networkSettings(page);
+    await expect(panel).toContainText("服务已停止");
     await page.getByLabel("Agent 地址").fill(agent.url);
     await page
       .getByLabel("连接 Token", { exact: true })
       .fill("external-session-token");
     await page.getByRole("button", { name: "连接 Agent", exact: true }).click();
+    await handshakeStarted;
     await expect(
       page.getByRole("button", { name: "连接中…", exact: true }),
     ).toBeDisabled();

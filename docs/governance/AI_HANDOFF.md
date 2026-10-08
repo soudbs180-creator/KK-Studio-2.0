@@ -1,5 +1,21 @@
 # AI handoff
 
+## 2026-10-08 未完成任务继续执行恢复点
+
+当前实现工作树为 `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`，分支 `codex/TASK-AUDIT-20261003`。本轮最终业务代码提交为 `dc055566457f8413c8ac7f9cc17778a9958bd5d8`，包含阶段计划工作台、成本未知语义、画布交付边界、不确定重试与重启恢复对账、归档证据保护和恢复错误文案清理。独立复核返修后，原生回执同时核对任务 ID/幂等键，重复、缺失、越界、声明冲突与非法类型均隔离为 unknown，不导入异常结果、不普通重试、不自动重复提交；保留有效归档、合法子集和真正缺失 `outputs` 的旧 `assetIds` 格式。恢复时先读[本轮计划](../changes/2026-10-03-incomplete-tasks/plan.md)、[验证](../changes/2026-10-03-incomplete-tasks/verification.md)、[复核记录](../changes/2026-10-03-incomplete-tasks/review.md)和 `docs/governance/task-ledger.json`，再检查当前 HEAD、工作树与最新 bundle。
+
+账本当前为 97 项；TASK-ORCH-002 已在本地范围 DONE，TASK-CANVAS-001/TASK-TASKSTATE-001 保持 PARTIAL，新增 P1 `TASK-TASKSTATE-002` 等待真实供应商报价回执。继续工作不得把本地 fixture、构建通过或历史证据当作真实 Provider、Mobile、VPS、第三方 MCP 或用户视觉验收。
+
+平台元数据为 `d9f8eab`：Desktop 2.1.4 / Web 2.1.5 / Mobile 规划 2.1.1。收尾源码基准`ef580db`已经按本树lock独立npm ci，API/Dialog/CLI为2.11.1/2.7.3/2.11.4；原共享链接保存在本树`.tmp/dependency-links-before-closeout-20261008/`，主线依赖未动。完整verify及浏览器388/388无flaky通过，当前生产JS为`index-DWwNRuIh.js`；新带Agent的Tauri release、平台版本/项目重启/确认与隔离记忆保护通过，独立收据在外层`.verification/TASK-AUDIT-20261003-closeout/`。这不证明真实TaskHost生成与Provider；继续运行先核对当前HEAD、lock、bundle/EXE和本任务实际PR的当前检查，不能从旧审查或本机构建推断已推广或发布。
+
+后续代码优先级仍按ORCH-003及其MEDIA-001依赖、报价回执、MCP-AUTO推进；代码建设可先于真实凭据，不能把TODO一概当作外部BLOCKED。
+
+## 2026-10-03 项目建设目标恢复入口
+
+先读[项目建设目标](PROJECT_GOALS.md)、[`PROJECT_STATE.md`](PROJECT_STATE.md)、[`TASK_LEDGER.md`](TASK_LEDGER.md)和[本轮变更计划](../changes/2026-10-03-project-goals-baseline/plan.md)。目标门禁为 `node scripts/check-project-goals.mjs`，并已接入 `lint`/`verify`；继续按创作、Agent、能力配置、恢复四条主路径检查 loading/success/error/cancel/offline/unknown 和重启/并发边界。当前任务账本的外部 Provider/GPU、ComfyUI、VPS、Mobile、第三方 MCP 与用户视觉验收仍保持原状态，不要用本地 fixture 或构建通过升级它们。
+
+同轮已修复 `McpSettings.tsx` 的 301 行组件边界问题，表单和服务器列表已拆分并通过当前 head 独立复核；继续改动时先读[组件变更](../changes/2026-10-03-ui-component-boundary/verification.md)，并重新执行 UI、类型和 MCP 设置回归。
+
 ## 2026-10-01 Codex 生图回传恢复点
 
 先核对PR #33真实merged状态、最新origin/main和最终文档head审查/CI；本机TASK-AGENT-008 AC-1–3 DONE不能替代推广收据。[计划](../changes/2026-10-01-agent-image-transport/plan.md)/[验证](../changes/2026-10-01-agent-image-transport/verification.md)保留main@709e51d基线、实现3c63f1e独立PASS与P3文档修正。native result去二进制和提交前幂等均RED→GREEN，2 MiB保护保留；run5真实生图/续聊/重连/重启hash一致且节点/标记唯一，verify632root/172Agent/377browser和Rust97 PASS。run3/run4失败历史及run5脚本设置错误不覆盖。重启先开项目并按入口启动服务，本次未改自动启动。豆包区域限制登录和CLI自动回画布仍未完成，不并行使用其profile。57/16→809/768，附加752恒定。
@@ -17,7 +33,6 @@
 若修改 head，重新独立审查、托管 verify/delivery、构建实际 bundle/客户端并绑定产物 hash。真实凭据/付费生成、安装器/签名、Mobile/VPS 与用户最终视觉验收仍需各自完成。
 
 ## 以下为历史恢复记录
-
 
 ## 2026-09-28 TASK-UI-CANVAS-001 当前恢复入口
 
@@ -46,11 +61,13 @@ PR #21 已合入 `main@7bc7c67`，原 push run `36369533105` 因 390px 对比按
 ## 2026-09-27 图片对比候选恢复点
 
 从 `D:/kk-studio/.worktrees/canvas-compare` 的 `codex/TASK-COMPARE-001-canvas-compare` 恢复；基线 `origin/main@a89792a`，先核对最新远端/main、当前分支 SHA、dirty 状态与任务账本。FEAT-036 的 Web 全量 `verify`（302 浏览器）、Tauri build 和隔离 release GUI 已通过，截图与运行身份见[本轮验证](../changes/2026-09-27-canvas-image-compare/verification.md)。独立最终审查、Hosted PR 检查和用户产品验收未完成；不把候选当成主线或发布版本。根 checkout 的未提交 UI 改动不得混入本任务。
+
 ## 2026-09-27 UI #19 主线同步恢复点
 
 - 远端 `main@a89792ad` 包含 PR #14/#15/#16；本任务 worktree `D:/kk-studio/.worktrees/TASK-UI-010-ui-regression` 正在将 #19 合入该主线，根目录 dirty UI 不参与。六处治理文档冲突已按任务/功能 ID 合并，72 个任务、32 个功能，检查零违规。
 - 两处浏览器偶发失败已定位为侧栏过渡期间断言与图片请求未到 Provider 前取消，定向用例各重复 16 次无重试通过。完整 `verify`、delivery、最终 head 独立审查及 Hosted 检查须在提交后回读，不用旧 `3db7b69` 的结果代替。
 - 未接线的 `tokens.css/json` 仍与运行 UI 的 291px 侧栏、40px 顶栏冲突；PR #20 堆叠在 #19 上且有独立未提交修正。真实媒体、第三方配置消费及正式 Desktop 发布仍为开放工作。
+
 ## 2026-09-25 侧栏真实项目整合恢复入口
 
 - 当前候选 `D:/kk-studio/.worktrees/TASK-UI-009-integration` / `feat/TASK-UI-009-ui010-integration` 基于 UI-010 已提交的 `98c567f`；根工程、旧 UI-009 dirty 工作树与 1423 UI-010 preview 不要覆盖。
@@ -113,6 +130,7 @@ PR #14 `67ff18fb` 独立复审已关闭原两项 P1，新发现重复工作项 I
 ## 2026-09-24 TASK-ORCH-001 候选
 
 `D:/kk-studio/.worktrees/TASK-ORCH-001` 的编排修复已在本地重跑 405 Node 与 300 Web 浏览器测试；最终独立复审仍 NOT VERIFIED，不可据此合并或宣称 Desktop/Provider 验收。恢复时核对任务分支实际 head、`origin/main`、dirty 状态及 [验证记录](../changes/2026-09-23-agent-orchestration/verification.md)。
+
 ## 2026-09-24 MCP 配置上限候选
 
 `D:/kk-studio/.worktrees/TASK-MINIMAX-001-mcp-registry-limit` 在 `origin/main@76339c9f` 上处理第 51 个 MCP 服务器配置的数据丢失缺陷；恢复时核对实际 head、dirty 状态及 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)。`TASK-MCP-PROTO-001` 是另一个未开始的协议协商任务。编排候选在另一 worktree，两个分支的治理文档有重叠，禁止未解决冲突直接合并。
@@ -120,6 +138,7 @@ PR #14 `67ff18fb` 独立复审已关闭原两项 P1，新发现重复工作项 I
 ## 2026-09-23 Google 接入候选（TASK-AGENT-004/005，PARTIAL）
 
 当前候选分支 `feat/TASK-AGENT-004-google-closeout` 位于隔离 worktree `C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0`，叠加 004 API Key Interactions 对话/生图与 005 Gemini CLI 账号文字对话。真实账号、桌面运行与最终独立审查未验收。继续时先读 [004 验证](../changes/2026-09-23-google-interactions/verification.md)、[005 验证](../changes/2026-09-23-google-cli-login/verification.md)和 [ADR-007](../architecture/adr/ADR-007-gemini-cli-bridge.md)，核对当前 Git/PR 与最新校验结果；不得把旧 fixture 结果称为真实 Google 出图。
+
 ## 2026-09-24 当前恢复入口：CodeBuddy 受控委派
 
 - 当前工作树 `D:/kk-studio/.worktrees/TASK-AGENT-007-codebuddy-cli`，分支 `feat/TASK-AGENT-007-codebuddy-cli`，基于尚未合入的 `feat/TASK-MEMORY-001-local-memory`。先回读 Git 状态、[本轮验证](../changes/2026-09-24-codebuddy-delegation/verification.md)、[后续顺序](../changes/2026-09-24-codebuddy-delegation/remaining.md)，再看下方记忆历史。
@@ -314,3 +333,10 @@ TASK-UI-MAIN-001 从 origin/main@8aca3ab 出发，三方整合27项原目录交�
 ## 窄屏关闭优先级补充
 
 TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点击不关闭；同状态三环境专项与191项浏览器回归通过。详见 docs/changes/2026-09-20-ui-main-alignment/followup.md。稳定main提交以Git回读为准，上述旧SHA是阶段记录。UI-004设计来源缺口与PERF-001压力边界继续保留。
+
+## 2026-10-03 早期审计交接点（历史快照）
+
+- 接手入口：先读 `AGENTS.md`、`AI_RULES.md`、本段、`docs/governance/TASK_LEDGER.md`，再核对 `git -C D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003 status`。本轮分支为 `codex/TASK-AUDIT-20261003`，不要把工作树直接快进稳定 main。
+- 早期快照中的任务台账为 94 项：DONE 53、PARTIAL 27、TODO 10、BLOCKED 4；当前台账以本文件顶部和 `docs/governance/task-ledger.json` 为准。
+- 已生成的早期证据包：`docs/changes/2026-10-03-task-audit/{intent,spec,plan,verification,review}.md`；不要用历史 verify 数字替代当前 `docs/changes/2026-10-03-incomplete-tasks/verification.md` 的收据。
+- 下一步按优先级处理：P0 数据保留/冲突回归；P1 真实 MCP 端点和编排器真实执行；P2 T5 TaskHost 原生恢复、T6 ComfyUI、T7 安装恢复及其余平台/发布外部验收。真实凭据、GPU、VPS 或 Mobile 缺失时，保持台账状态并记录阻塞原因。

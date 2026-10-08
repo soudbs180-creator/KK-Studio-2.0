@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import type { ReviewComment } from "../domain/reviewWorkflow";
 import type { CreationProject } from "../features/creation/model";
+import type { StagePlan } from "../domain/stagePlan";
+import type { StageDecisionInput } from "../features/agent/orchestrator";
 import { requiredApprovalGates } from "../domain/agentWorkflow";
 import TaskWorkbenchContent, {
   outputsFor,
@@ -14,20 +16,26 @@ export default function TaskWorkbench({
   onConfigure,
   onCancelTask,
   onPauseTask,
+  canPauseTask,
   onResumeTask,
   onRetryTask,
   onRetryOutput,
   onCommentsChange,
+  stagePlans,
+  onStageDecision,
 }: {
   project?: CreationProject;
   onClose: () => void;
   onConfigure: () => void;
   onCancelTask: (taskId: string) => void;
   onPauseTask: (taskId: string) => void;
+  canPauseTask: (taskId: string) => boolean;
   onResumeTask: (taskId: string) => void;
   onRetryTask: (taskId: string) => void;
   onRetryOutput: (taskId: string, outputIndex: number) => void;
   onCommentsChange: (comments: ReviewComment[]) => void;
+  stagePlans: StagePlan[];
+  onStageDecision: (input: StageDecisionInput) => void;
 }) {
   const [tab, setTab] = useState<WorkbenchTab>("queue");
   const [selectedId, setSelectedId] = useState(project?.tasks.at(-1)?.id ?? "");
@@ -136,6 +144,7 @@ export default function TaskWorkbench({
                 "generate",
                 "review",
                 "export",
+                "plan",
               ] as WorkbenchTab[]
             ).map((value) => (
               <button
@@ -154,7 +163,9 @@ export default function TaskWorkbench({
                       ? "Generate"
                       : value === "review"
                         ? "Review"
-                        : "Export"}
+                        : value === "export"
+                          ? "Export"
+                          : "Plan"}
               </button>
             ))}
           </nav>
@@ -163,6 +174,7 @@ export default function TaskWorkbench({
             outputs={outputs}
             tab={tab}
             onPauseTask={onPauseTask}
+            canPauseTask={canPauseTask}
             onCancelTask={onCancelTask}
             onResumeTask={onResumeTask}
             onRetryTask={onRetryTask}
@@ -170,6 +182,8 @@ export default function TaskWorkbench({
             gates={gates}
             comments={project?.reviewComments ?? []}
             onCommentsChange={onCommentsChange}
+            stagePlans={stagePlans}
+            onStageDecision={onStageDecision}
           />
         </div>
       </div>
