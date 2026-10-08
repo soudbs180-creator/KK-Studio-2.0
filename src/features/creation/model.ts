@@ -90,6 +90,8 @@ export interface CreationTask {
   requestedOutputs: number;
   /** Number of results that were successfully archived. */
   completedOutputs: number;
+  /** Exact completed slots retained for legacy tasks that have no output vector. */
+  completedOutputIndices?: number[];
   /** Stable key used to prevent duplicate provider submissions after restart. */
   idempotencyKey: string;
   /** Optional batch grouping for UI progress and partial success. */
@@ -405,6 +407,21 @@ function safeText(value: unknown, max: number, fallback = ""): string {
   return typeof value === "string" ? value.slice(0, max) : fallback;
 }
 
+function normalizeCompletedOutputIndices(value: unknown): number[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const indices = Array.from(
+    new Set(
+      value.filter(
+        (index): index is number =>
+          typeof index === "number" && Number.isSafeInteger(index),
+      ),
+    ),
+  )
+    .filter((index) => index >= 0 && index < 64)
+    .sort((left, right) => left - right);
+  return indices.length ? indices : undefined;
+}
+
 function safeBaseUrl(value: unknown): string | undefined {
   if (typeof value !== "string") return undefined;
   try {
@@ -645,6 +662,9 @@ function normalizeProject(value: CreationProject): CreationProject {
             : task.status === "succeeded"
               ? 1
               : 0,
+        completedOutputIndices: normalizeCompletedOutputIndices(
+          task.completedOutputIndices,
+        ),
         idempotencyKey:
           typeof task.idempotencyKey === "string" && task.idempotencyKey
             ? task.idempotencyKey.slice(0, 200)
@@ -913,10 +933,5 @@ export function createTask(project: CreationProject): CreationTask {
         createdAt: now,
       }),
     ),
-    estimatedCostUsd:
-      Math.max(
-        1,
-        Math.min(64, Math.floor(project.composerDraft.outputCount || 1)),
-      ) * 0.04,
   };
 }

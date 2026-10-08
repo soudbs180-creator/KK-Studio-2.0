@@ -43,7 +43,7 @@
 | FEAT-009 | 对话与模型聊天 | PARTIAL（部分可用） | [卡片](feat-009-conversation.md) | T4, BACKEND-CONVERSATION, TASK-UI-005, TASK-AGENT-001, TASK-AGENT-002, TASK-AGENT-003, TASK-AGENT-004, TASK-AGENT-005, TASK-AGENT-007, TASK-AGENT-008 |
 | FEAT-010 | 语音输入 | PARTIAL（部分可用） | [卡片](feat-010-voice-input.md) | TASK-CAP-001 |
 | FEAT-029 | 提示词库 | PARTIAL（部分可用） | [卡片](feat-029-prompt-library.md) | TASK-UI-005, BACKEND-PLATFORM |
-| FEAT-031 | 统一任务态契约 | PARTIAL（部分可用） | [卡片](feat-031-unified-task-state.md) | TASK-TASKSTATE-001, BACKEND-MEDIA-001 |
+| FEAT-031 | 统一任务态契约 | PARTIAL（部分可用） | [卡片](feat-031-unified-task-state.md) | TASK-TASKSTATE-001, TASK-TASKSTATE-002, BACKEND-MEDIA-001 |
 
 ## 智能能力
 
@@ -72,7 +72,7 @@
 | --- | --- | --- | --- | --- |
 | FEAT-014 | 素材库与资产管理 | REAL（真实可用） | [卡片](feat-014-assets.md) | T3a, TASK-PERF-ASSETS-001, PERF-001 |
 | FEAT-015 | 项目与项目包 | PARTIAL（部分可用） | [卡片](feat-015-projects.md) | T3a, T3b, T9, TASK-DS-002, TASK-PROJECT-SIDEBAR-001 |
-| FEAT-016 | 任务工作台与审批 | PARTIAL（部分可用） | [卡片](feat-016-task-workbench.md) | T4, T5, UI-003, TASK-UI-006 |
+| FEAT-016 | 任务工作台与审批 | PARTIAL（部分可用） | [卡片](feat-016-task-workbench.md) | T4, T5, UI-003, TASK-UI-006, TASK-ORCH-002, TASK-TASKSTATE-001 |
 | FEAT-022 | 设置中心 | PARTIAL（部分可用） | [卡片](feat-022-settings.md) | TASK-PROV-001, UI-004, TASK-DS-001, TASK-DS-002, TASK-UI-005, TASK-AGENT-001 |
 | FEAT-023 | 导航、侧栏与多创作页 | PARTIAL（部分可用） | [卡片](feat-023-navigation.md) | TASK-UI-DISMISS-002, UI-004, TASK-UI-006, TASK-PROJECT-SIDEBAR-001 |
 | FEAT-025 | 本地演示素材管线（待替换 seam） | PROTOTYPE（仅演示/UI） | [卡片](feat-025-demo-media.md) | UI-003, BACKEND-MEDIA-001, BACKEND-TEXT-NODE |

@@ -3,8 +3,7 @@
 Updated: 2026-09-23 (Design System 1.3 and TASK-RULES-004 rule audit).
 Current policy reconciliation: 2026-09-20, TASK-GOV-002. Read root AI_RULES.md and engineering/SDLC, PROMPTING, BRANCH-POLICY, REVIEW, AI-EVALS alongside AGENTS. Tool-specific entrypoints route to these sources.
 
-These are pointers to the project's existing specifications. The governance index avoids
-creating a second copy of UI or storage rules.
+These are pointers to the project's existing specifications. The project-level outcome and acceptance matrix lives in [PROJECT_GOALS.md](PROJECT_GOALS.md); this index avoids creating a second copy of UI or storage rules.
 
 ## Authority and conflict resolution
 

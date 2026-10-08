@@ -3,6 +3,25 @@
 ## 2026-10-08 模型能力声明候选
 
 TASK-MODEL-001 基线 main/origin/main@21d121d，任务分支 codex/TASK-MODEL-001-capabilities；原 checkout clean、未前移。精确账号图片声明和 Web/Desktop 共享校验已实现，完整 verify645root/172Agent/381browser通过（原8/2skip保留）；最终native/独立审查尚在进行。Desktop2.1.4/Web2.1.5/Mobile规划2.1.1。FEAT-003保持PARTIAL：声明不代表真实服务验收，蒙版/扩图执行未接通。TASK-PLUGIN-DEV-001是原主线开发插件public-import错误，单独登记未修复。实际SHA、runtime与交付以[本轮验证](../changes/2026-10-08-model-capabilities/verification.md)和[review](../changes/2026-10-08-model-capabilities/review.md)为准；未合并/发布。
+## 2026-10-08 未完成任务继续执行与复核返修
+
+本轮隔离工作树 `codex/TASK-AUDIT-20261003` 已完成 TASK-ORCH-002 的阶段计划视图与审批闭环（`6ebaad8`）：任务工作台的 Plan 标签显示阶段状态、工作项数量和审批门，审批通过后进入执行中。TASK-TASKSTATE-001 的本地成本语义已收口（`937b050`）：新建/重试任务在没有供应商报价时保持未知，UI 统一显示未知或带明确口径的估算。TASK-CANVAS-001 已接入 Agent host 与 App 统一发布边界：图片要求资产身份，文案要求非空 provider 文本，契约失败保留为 unknown；混合批次的 unknown 重试会锁定父任务，重启恢复会合并已受理重试子任务并防止重复提交，终态缺回执会关闭 stale waiting 槽，旧格式错误优先采用终态子任务，排队 intent 保持源节点 pending。归档失败、原生提交响应/flush 丢失、缺失文案正文进入 unknown；有效归档结果保留，完整归档证据可解决终态失败汇总冲突，恢复成功后清除旧错误文案。原生成功缺资产/回执进入 unknown，恢复图像结果补回源节点连线。
+
+独立复核返修 `5cbfe99`/`dc05556` 统一实时与恢复回执校验：任务 ID 与幂等键必须同时匹配；逐输出索引无重复、无越界且与声明对应，显式非法 `outputs` 不得回退旧 `assetIds`。异常回执隔离为 unknown，不导入正文/素材、不普通重试、不自动重复提交；合法子集与真正缺失 `outputs` 的旧格式仍可恢复。最终业务代码提交为 `dc055566457f8413c8ac7f9cc17778a9958bd5d8`，完整回归与独立复核结论以本轮 verification/review 为准。
+
+本轮源码版本为 Desktop 2.1.4 / Web 2.1.5 / Mobile 规划 2.1.1（平台元数据 `d9f8eab`）；已重新构建并复验 Web 版本显示、388 项浏览器与 Rust 97 项，不代表新客户端安装或发布完成。
+
+继续收尾以`ef580db`为源码基准，纠正借用主线node_modules的隔离规则违例：保留共享链接、按本树lock独立完整npm ci，主线依赖保持原件。完整verify、带Agent的Desktop release与隔离Tauri基础运行通过；当前JS为`index-DWwNRuIh.js`。原生版本2.1.4、项目保存/重启/确认取消与接受、画布撤销重做和记忆保护均有新收据；这些证据不包含TaskHost真实生成提交/取消/进程恢复或真实Provider。PR、托管CI、最终产品验收与推广以本任务实际PR的当前head和检查为准。
+
+本轮盘点新增 `TASK-TASKSTATE-002`（P1，供应商成本报价回执接入）。TASK-ORCH-003、BACKEND-MEDIA-001、BACKEND-MCP-AUTO、Mobile/VPS 和真实视觉验收仍未完成或受外部条件约束，不因本地 fixture、构建或类型检查升级状态。详见[变更验证](../changes/2026-10-03-incomplete-tasks/verification.md)与[执行计划](../changes/2026-10-03-incomplete-tasks/plan.md)。
+
+其中ORCH-003、MEDIA-001与MCP-AUTO的代码可以先做本地建设，并非都需要等待真实凭据；尚未实施仍保留TODO，只有对应真实验收受外部条件约束。
+
+## 2026-10-03 项目建设目标与验收基线
+
+项目级建设目标、四条核心用户路径、代码/UI/链路/质量/交付验收标准已统一写入[项目建设目标](PROJECT_GOALS.md)，并由 `goals:check` 接入 lint/verify。当前审计工作树的实现和验证边界仍以本文件、任务账本与对应 change verification 为准；该基线不会把外部 Provider、ComfyUI、VPS、Mobile、真实第三方 MCP 或用户最终视觉验收标为已完成。
+
+本轮 `ui:check` 还发现 MCP 设置组件达到 301 行；已拆出表单和列表组件，保持连接/取消/断开/工具调用状态契约，修复后 UI 标准检查为 194/0。
 
 ## 2026-10-01 Codex 生图回传与提示词检查
 
@@ -22,7 +41,6 @@ TASK-AGENT-008 本机AC-1–3 DONE，基线 main@709e51d（安装器 PR #32 已�
 - 独立审查发现并修复画布删除/拖动/取消历史问题；9656011 的返修复审已独立关闭两个阻断，当前完整 Web 377/377 和最新 Tauri 窗口复验通过。来源 PR 勘误及本地候选 DONE 补录后，最终新 HEAD 仍须补审和托管 CI；实际合并/main/分享包以集成 PR 和交付收据为准。启动入口已补 Agent 及平台配置的新鲜度检查，避免只更新源码而继续启动旧运行时。
 
 ## 历史记录（以下不是当前工作区事实）
-
 
 ## 2026-09-28 画布会话分栏修复已完成，外部视觉门禁待验收
 
@@ -61,9 +79,11 @@ TASK-COMPARE-001 源码 `f8d5165` 独立只读复审 PASS，Web preview 完整 `
 ## 2026-09-27 画布图片对比候选待审
 
 TASK-COMPARE-001 在独立 worktree `codex/TASK-COMPARE-001-canvas-compare` 实现 FEAT-036。Web preview 的 1440/1220/390px 操作、完整 `verify`（302 浏览器）以及隔离数据根目录的 Tauri release GUI 已通过；实际 production JS/CSS 同源。独立审查、PR Hosted 门禁、用户产品验收和主线集成仍待完成，主线与正式发布状态不因此改变。根 checkout 未提交 UI 改动保持隔离。证据见[验证记录](../changes/2026-09-27-canvas-image-compare/verification.md)。
+
 ## 2026-09-27 主线及 UI 候选
 
 远端 `main@a89792ad` 已经合入 PR #14 Agent 编排领域层、#15 MCP 50 项写入保护和 #16 Provider Connectivity 配置契约；三者不代表真实生成、第三方配置消费或发布已验收。UI PR #19 的任务工作树已承接该主线，治理/功能登记分别为 72/32 且零违规；当前仍是待最终门禁和独立复审的候选。运行态维持 291px/40px 外壳，未引入的 token 导出 200px/56px 尚待统一。根工程约 75 项未提交 UI 文件、堆叠 PR #20 和 Provider #17/#18 均未因这次同步进入主线。
+
 ## 2026-09-25 真实项目侧栏候选（TASK-PROJECT-SIDEBAR-001）
 
 `feat/TASK-UI-009-ui010-integration` 基于 UI-010 候选承接旧 UI-009 的文件夹交互，并让侧栏与搜索使用 `CreationSnapshot` 的真实项目 ID；空库不再出现固定演示项目。项目创建、打开、改名与确认删除接入现有 App 操作，文件夹/拖放/置顶仍为会话态，刷新后恢复未分组，持久项目 schema 未变。工作树 `D:/kk-studio/.worktrees/TASK-UI-009-integration`；旧 UI-009 和根工作树均未覆盖。完整 verify 通过 370 Node、337 Edge browser，四档视口无溢出；1424 production preview 与隔离数据的 fresh Tauri release 资源哈希一致，原生真实项目创建、改名、刷新和打开通过。独立复核和 PR 待完成，不能把此候选视作主线或已安装桌面版本。见 [整合验证](../changes/2026-09-25-sidebar-real-projects/verification.md)。
@@ -123,6 +143,7 @@ PR #14 的独立审查在旧 head 发现两项 P1：旧 revision 可覆盖已完
 ## 2026-09-24 编排候选（TASK-ORCH-001）
 
 独立预检指出计划同 id 重放丢进度与非法计划写入后丢失；两项已在任务分支修复。实现者又确认 Agent 阶段工具可自行批准或解除阻断，现仅允许 `doing→plan_review/result_review/blocked`，宿主入口保留审批与重试。当前分支 405 Node 与 300 Web 浏览器回归通过，独立最终复审、Desktop 与真实 Provider 未验收；主线和正式发布状态不因此改变。以 [本轮验证](../changes/2026-09-23-agent-orchestration/verification.md)和账本 TASK-ORCH-001 为准。
+
 ## 2026-09-24 MCP 候选与竞品审计遗留
 
 `fix/TASK-MINIMAX-001-mcp-registry-limit` 修复 50 项持久化上限与写入不一致；当前仅为草稿 PR #15 候选，不能据此认定主线已修复。`TASK-MCP-PROTO-001` 登记 2026-07-28 协议协商缺口，真实新版服务器仍未验证。MiniMax 安装目录版本元数据已只读核对，2026-09-21 的 UI 审计维持历史证据含义。以 [本轮验证](../changes/2026-09-24-mcp-registry-limit/verification.md)和账本为准；与编排 PR #14 的 merge-tree 显示 4 个文档内容冲突，按顺序合并前必须解决并重新生成治理视图。
@@ -132,6 +153,7 @@ PR #14 的独立审查在旧 head 发现两项 P1：旧 revision 可覆盖已完
 隔离分支 `feat/TASK-AGENT-004-google-closeout` 组合 Google Interactions API Key 对话/生图与 Gemini CLI Google 账号文字对话。API Key 图片可归档画布；CLI 登录只支持文字。Web fixture 与本地桥安全回归已通过；最终验证见 [004](../changes/2026-09-23-google-interactions/verification.md)、[005](../changes/2026-09-23-google-cli-login/verification.md)。真实 Google 凭据请求、CLI 账号续接、Tauri 同态和最终独立补审尚未完成；主线不因本候选改变。
 
 ## 2026-09-23 KK Studio 2.1.0 源码上传候选（REL-2.1.0）
+
 ## 2026-09-24 CodeBuddy CLI 受控委派候选（TASK-AGENT-007）
 
 - `feat/TASK-AGENT-007-codebuddy-cli` 从记忆候选分支创建，尚未合入 main。Codex 保持默认主 Agent；新增本地设置与 `codebuddy_consult` MCP 工具处理有限短文本。
@@ -337,3 +359,10 @@ TASK-UI-MAIN-001 从 origin/main@8aca3ab 出发，三方整合27项原目录交�
 ## 窄屏关闭优先级补充
 
 TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点击不关闭；同状态三环境专项与191项浏览器回归通过。详见 docs/changes/2026-09-20-ui-main-alignment/followup.md。稳定main提交以Git回读为准，上述旧SHA是阶段记录。UI-004设计来源缺口与PERF-001压力边界继续保留。
+
+## 2026-10-03 早期任务审计快照
+
+- 当前审计候选位于 `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`，分支 `codex/TASK-AUDIT-20261003`，基线 `origin/main@21d121d2b884b2b7ced4a98eb0e03c590de5c3cd`。稳定 main 未被本轮提交直接修改。
+- 早期快照记录 `docs/governance/task-ledger.json` 共 96 项：DONE 55、PARTIAL 27、TODO 10、BLOCKED 4；当前台账以文件顶部和实际账本为准。
+- MCP 注册表现在读取合法超限原件而不清空，写入会重读并检测冲突；现代 MCP 先走 `server/discover`，只对明确不支持发现的响应回退旧握手；编排器 `plan_replan` 会持久化稳定的新计划而不重复成功项。
+- 早期验证记录为 Node 661/653/0/8、Agent 174/172/0/2、Playwright 379/379；当前验证以 `docs/changes/2026-10-03-incomplete-tasks/verification.md` 为准。真实第三方 MCP、Provider/GPU、ComfyUI、VPS、Mobile 和完整 TaskHost 运行态仍未证明。

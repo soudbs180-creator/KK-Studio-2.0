@@ -106,6 +106,72 @@ test("同时到达的生图归档只提交一次，后续重放不会重复标�
   assert.equal(commits, 1);
 });
 
+test("图片归档缺少素材身份时拒绝提交到画布", async (t) => {
+  const previousWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
+  const previousFileReader = Object.getOwnPropertyDescriptor(
+    globalThis,
+    "FileReader",
+  );
+  t.after(() => {
+    if (previousWindow)
+      Object.defineProperty(globalThis, "window", previousWindow);
+    else Reflect.deleteProperty(globalThis, "window");
+    if (previousFileReader)
+      Object.defineProperty(globalThis, "FileReader", previousFileReader);
+    else Reflect.deleteProperty(globalThis, "FileReader");
+  });
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      __TAURI_INTERNALS__: {
+        invoke: async () => ({
+          sha256: "a".repeat(64),
+          mime: "image/png",
+          tags: ["AI生成"],
+          provenance: { generatedAt: new Date().toISOString() },
+        }),
+      },
+    },
+  });
+  Object.defineProperty(globalThis, "FileReader", {
+    configurable: true,
+    value: class {
+      result = "";
+      onload?: () => void;
+      readAsDataURL(blob: Blob) {
+        void blob.arrayBuffer().then((bytes) => {
+          this.result = `data:${blob.type};base64,${Buffer.from(bytes).toString("base64")}`;
+          this.onload?.();
+        });
+      }
+    },
+  });
+  const project = createProject({
+    kind: "image",
+    prompt: "test",
+    model: "",
+    attachments: [],
+  });
+  let commits = 0;
+  const host = createAgentHost({
+    getProject: () => project,
+    commit: () => {
+      commits++;
+    },
+    generate: async () => ({ taskId: "unused" }),
+  });
+  await assert.rejects(
+    host.importGeneratedImage({
+      id: "codex-image-invalid",
+      blob: new Blob([new Uint8Array([1, 2, 3])], { type: "image/png" }),
+      projectId: project.id,
+      signal: new AbortController().signal,
+    }),
+    /尚未注册素材资产/,
+  );
+  assert.equal(commits, 0);
+});
+
 test("视口与多选由真实宿主执行并反映在下一次快照", async () => {
   const { getProject } = harness();
   const ids = getProject().items.map((item) => item.id);

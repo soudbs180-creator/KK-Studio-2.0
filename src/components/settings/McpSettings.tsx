@@ -5,11 +5,12 @@ import {
   type McpServerConfig,
   type McpTool,
 } from "../../features/mcp/mcpClient";
-import McpServerCard from "./McpServerCard";
+import McpServerForm from "./McpServerForm";
+import McpServerList, { type McpConnectionState } from "./McpServerList";
+import McpOverflowNotice from "./McpOverflowNotice";
+import McpProtocolNotice from "./McpProtocolNotice";
 import { z } from "zod";
 import { confirmAction } from "../../runtime/confirmAction";
-
-type ConnectionState = "disconnected" | "connecting" | "connected" | "error";
 
 export default function McpSettings({
   onFeedback,
@@ -26,7 +27,7 @@ export default function McpSettings({
     registry.list(),
   );
   const [tools, setTools] = useState<Record<string, McpTool[]>>({});
-  const [states, setStates] = useState<Record<string, ConnectionState>>({});
+  const [states, setStates] = useState<Record<string, McpConnectionState>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [expanded, setExpanded] = useState<string | null>(null);
   const [name, setName] = useState("");
@@ -50,10 +51,10 @@ export default function McpSettings({
     setServers(registry.list());
   }
 
-  function addServer(): void {
+  async function addServer(): Promise<void> {
     try {
       if (!name.trim()) throw new Error("请填写服务器名称。");
-      registry.add({
+      await registry.add({
         id: crypto.randomUUID(),
         name: name.trim(),
         transport: "streamable_http",
@@ -72,6 +73,47 @@ export default function McpSettings({
           : error instanceof Error
             ? error.message
             : "MCP 服务器设置无效。",
+      );
+    }
+  }
+
+  function exportRegistry(): void {
+    const blob = new Blob([registry.exportRaw()], {
+      type: "application/json;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "kk-studio-mcp-servers.json";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+    onFeedback(
+      "MCP 原始配置已导出；导出文件仍可能包含不可读记录，请妥善保存。",
+    );
+  }
+
+  async function recoverOverflow(): Promise<void> {
+    if (
+      !(await confirmAction(
+        "确认仅保留前 50 个 MCP 服务器并恢复正常编辑吗？请先导出原始配置。",
+      ))
+    )
+      return;
+    try {
+      await registry.recover(
+        registry
+          .list()
+          .slice(0, 50)
+          .map((item) => item.id),
+      );
+      setFormError("");
+      updateServerList();
+      onFeedback("MCP 配置已恢复为前 50 项，可以继续编辑。");
+    } catch (error) {
+      setFormError(
+        error instanceof Error ? error.message : "MCP 配置恢复失败。",
       );
     }
   }
@@ -137,9 +179,9 @@ export default function McpSettings({
     onFeedback(`${server.name} 已断开。`);
   }
 
-  function removeServer(server: McpServerConfig): void {
+  async function removeServer(server: McpServerConfig): Promise<void> {
     try {
-      registry.remove(server.id);
+      await registry.remove(server.id);
       releaseServer(server);
       updateServerList();
       onFeedback(`${server.name} 已移除。`);
@@ -171,87 +213,47 @@ export default function McpSettings({
 
   return (
     <div className="settings-mcp">
-      <p className="settings-section-intro">
-        连接遵循 MCP Streamable
-        HTTP（2025-11-25）握手与工具发现协议。地址只保存名称和
-        endpoint，不保存密钥、OAuth token 或会话 ID。
-      </p>
-      <div className="settings-connection-note">
-        <span className="settings-status-dot" aria-hidden="true" />
-        <div>
-          <strong>支持工具发现和手动确认调用</strong>
-          <p>
-            连接后会执行 initialize → initialized →
-            tools/list，并显示服务器返回的 inputSchema。stdio、OAuth 和 Agent
-            自动调用仍为 Prototype。
-          </p>
-        </div>
-      </div>
-      <section className="settings-mcp-add" aria-labelledby="mcp-add-title">
-        <h3 id="mcp-add-title">添加 MCP 服务器</h3>
-        <label className="settings-field">
-          名称
-          <input
-            aria-label="MCP服务器名称"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder="例如：本地工具"
-          />
-        </label>
-        <label className="settings-field">
-          Streamable HTTP 地址
-          <input
-            aria-label="MCP地址"
-            value={endpoint}
-            onChange={(event) => setEndpoint(event.target.value)}
-            placeholder="https://example.com/mcp 或 http://127.0.0.1:3000/mcp"
-            inputMode="url"
-          />
-        </label>
-        {formError && (
-          <p className="settings-mcp-error" role="alert">
-            {formError}
-          </p>
-        )}
-        <button
-          type="button"
-          className="settings-action"
-          disabled={!name.trim() || !endpoint.trim()}
-          onClick={addServer}
-        >
-          保存服务器
-        </button>
-      </section>
-      <section className="settings-mcp-list" aria-label="MCP服务器列表">
-        <h3>已保存的服务器</h3>
-        {servers.length === 0 ? (
-          <div className="settings-empty-state">
-            <strong>暂无 MCP 服务器</strong>
-            <p>保存一个 HTTP/HTTPS endpoint 后，可以连接并查看真实工具。</p>
-          </div>
-        ) : (
-          servers.map((server) => (
-            <McpServerCard
-              key={server.id}
-              server={server}
-              state={states[server.id] ?? "disconnected"}
-              tools={tools[server.id] ?? []}
-              error={errors[server.id]}
-              expanded={expanded === server.id}
-              onConnect={() => void connectServer(server)}
-              onCancel={() => void cancelConnection(server)}
-              onDisconnect={() => void disconnectServer(server)}
-              onRemove={() => removeServer(server)}
-              onToggleTools={() =>
-                setExpanded(expanded === server.id ? null : server.id)
-              }
-              onCallTool={(tool, arguments_) =>
-                callTool(server, tool, arguments_)
-              }
-            />
-          ))
-        )}
-      </section>
+      <McpProtocolNotice />
+      {(registry.hasOverflow || registry.hasCorruption) && (
+        <McpOverflowNotice
+          warning={registry.persistenceWarning}
+          title={
+            registry.hasCorruption
+              ? "MCP 配置无法读取"
+              : "旧版 MCP 配置超过当前上限"
+          }
+          onExport={exportRegistry}
+          onRecover={
+            registry.hasOverflow && !registry.isReadOnly
+              ? () => void recoverOverflow()
+              : undefined
+          }
+        />
+      )}
+      <McpServerForm
+        name={name}
+        endpoint={endpoint}
+        formError={formError}
+        readOnly={registry.isReadOnly}
+        onNameChange={setName}
+        onEndpointChange={setEndpoint}
+        onSubmit={() => void addServer()}
+      />
+      <McpServerList
+        servers={servers}
+        tools={tools}
+        states={states}
+        errors={errors}
+        expanded={expanded}
+        onConnect={(server) => void connectServer(server)}
+        onCancel={(server) => cancelConnection(server)}
+        onDisconnect={(server) => disconnectServer(server)}
+        onRemove={(server) => void removeServer(server)}
+        onToggleTools={(server) =>
+          setExpanded(expanded === server.id ? null : server.id)
+        }
+        onCallTool={callTool}
+      />
     </div>
   );
 }

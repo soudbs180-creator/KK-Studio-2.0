@@ -2,8 +2,8 @@ import { useEffect, useRef, type MutableRefObject } from "react";
 import type { CreationSnapshot } from "./model";
 import { reconcileNativeTasks, usesNativeTaskHost } from "./nativeTaskHost";
 
-/** Reconnects to the same native journal after a WebView reload, never submits. */
-export function useNativeTextRecovery(
+/** Reconnects every native task to the same journal after a WebView reload. */
+export function useNativeTaskRecovery(
   creationRef: MutableRefObject<CreationSnapshot>,
   controllers: MutableRefObject<Record<string, AbortController>>,
   commit: (snapshot: CreationSnapshot) => void,
@@ -22,7 +22,6 @@ export function useNativeTextRecovery(
         .flatMap((project) => project.tasks)
         .filter(
           (task) =>
-            task.kind === "text" &&
             !controllers.current[task.id] &&
             ["running", "unknown"].includes(task.status),
         )
@@ -48,3 +47,6 @@ export function useNativeTextRecovery(
     };
   }, [ready, creationRef, controllers]);
 }
+
+/** @deprecated Use useNativeTaskRecovery; kept for older integrations. */
+export const useNativeTextRecovery = useNativeTaskRecovery;

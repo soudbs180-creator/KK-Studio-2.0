@@ -201,6 +201,299 @@ async function fulfillPixel(route: Route): Promise<void> {
   await route.fulfill({ json: { data: [{ b64_json: pixel }] } });
 }
 
+for (const scenario of [
+  { mode: "task identity", phase: "submit" },
+  { mode: "key identity", phase: "submit" },
+  { mode: "task identity", phase: "poll" },
+  { mode: "key identity", phase: "poll" },
+  { mode: "duplicate outputs", phase: "submit" },
+  { mode: "unexpected output", phase: "submit" },
+  { mode: "missing output", phase: "submit" },
+]) {
+  test(`native ${scenario.phase} fences ${scenario.mode}, stops live polling and remains fenced after reload`, async ({
+    page,
+  }) => {
+    let providerPosts = 0;
+    await page.route(generationsEndpoint, async (route) => {
+      providerPosts++;
+      await fulfillPixel(route);
+    });
+    await page.addInitScript(({ mode, phase }) => {
+      type Receipt = {
+        taskId: string;
+        idempotencyKey: string;
+        status: string;
+        outputIndices: number[];
+        outputs: Array<{ index: number; status: string; assetId?: string }>;
+        updatedAt: number;
+      };
+      const storageKey = "native-receipt-test";
+      const state = JSON.parse(
+        sessionStorage.getItem(storageKey) ?? "null",
+      ) as {
+        saved: unknown;
+        receipt: Receipt | null;
+        submissions: number;
+        polls: number;
+        livePolls: number;
+        recoveryProbes: number;
+        assetReads: number;
+      } | null;
+      const current = state ?? {
+        saved: null,
+        receipt: null,
+        submissions: 0,
+        polls: 0,
+        livePolls: 0,
+        recoveryProbes: 0,
+        assetReads: 0,
+      };
+      let recoveryProbe = false;
+      const save = () =>
+        sessionStorage.setItem(storageKey, JSON.stringify(current));
+      const invalid = (record: Receipt): Receipt => {
+        if (mode === "task identity")
+          return { ...record, taskId: "foreign-task" };
+        if (mode === "key identity")
+          return { ...record, idempotencyKey: "foreign-key" };
+        if (mode === "duplicate outputs")
+          return {
+            ...record,
+            status: "failed",
+            outputs: [
+              { index: 0, status: "succeeded", assetId: "asset-foreign" },
+              { index: 0, status: "failed" },
+            ],
+          };
+        if (mode === "unexpected output")
+          return {
+            ...record,
+            status: "failed",
+            outputs: [
+              { index: 0, status: "failed" },
+              { index: 1, status: "failed" },
+            ],
+          };
+        return { ...record, status: "failed", outputs: [] };
+      };
+      Object.assign(window, {
+        nativeReceiptTest: current,
+        __TAURI_INTERNALS__: {
+          invoke: async (
+            command: string,
+            args?: {
+              snapshot?: unknown;
+              request?: {
+                taskId: string;
+                idempotencyKey: string;
+                outputIndices: number[];
+              };
+            },
+          ) => {
+            if (command === "read_creation_snapshot")
+              return {
+                status: current.saved ? "loaded" : "missing",
+                snapshot: current.saved,
+              };
+            if (command === "write_creation_snapshot") {
+              current.saved = args!.snapshot!;
+              save();
+              return;
+            }
+            if (command === "credential_get") return null;
+            if (command === "credential_set") return true;
+            if (command === "task_host_list") {
+              // Recovery reads the index before probing a task. Live polling
+              // reads the task directly, while its controller is still active.
+              recoveryProbe = current.receipt != null;
+              return current.receipt ? [invalid(current.receipt)] : [];
+            }
+            if (command === "task_host_submit") {
+              current.submissions++;
+              const request = args!.request!;
+              current.receipt = {
+                taskId: request.taskId,
+                idempotencyKey: request.idempotencyKey,
+                status: "submitted",
+                outputIndices: request.outputIndices,
+                outputs: request.outputIndices.map((index) => ({
+                  index,
+                  status: "pending",
+                })),
+                updatedAt: 42,
+              };
+              save();
+              return phase === "submit"
+                ? invalid(current.receipt)
+                : current.receipt;
+            }
+            if (command === "task_host_get") {
+              current.polls++;
+              if (recoveryProbe) current.recoveryProbes++;
+              else current.livePolls++;
+              recoveryProbe = false;
+              save();
+              return current.receipt ? invalid(current.receipt) : null;
+            }
+            if (command === "asset_read") {
+              current.assetReads++;
+              save();
+              return null;
+            }
+            throw new Error(`Unexpected native receipt IPC: ${command}`);
+          },
+        },
+      });
+    }, scenario);
+    const state = () =>
+      page.evaluate(
+        () =>
+          (
+            window as Window & {
+              nativeReceiptTest: {
+                saved: {
+                  projects: Array<{
+                    items: Array<{ id: string }>;
+                    tasks: StoredTask[];
+                  }>;
+                };
+                submissions: number;
+                polls: number;
+                livePolls: number;
+                recoveryProbes: number;
+                assetReads: number;
+              };
+            }
+          ).nativeReceiptTest,
+      );
+    await configure(page);
+    await submitHome(page);
+    await expect
+      .poll(async () => (await state()).saved.projects[0].tasks[0].status)
+      .toBe("unknown");
+    await page.getByRole("button", { name: "打开任务列表" }).click();
+    await page.getByRole("button", { name: "打开任务工作台" }).click();
+    await expect(page.getByTestId("task-workbench")).toContainText(
+      "受理状态不明",
+    );
+    await expect(page.getByRole("button", { name: "重试剩余" })).toHaveCount(0);
+    // The controller must be released before the background recovery read can
+    // run; this proves the live polling loop has exited after quarantine.
+    await expect
+      .poll(async () => (await state()).recoveryProbes)
+      .toBeGreaterThan(0);
+    const beforeReload = await state();
+    expect(beforeReload.submissions).toBe(1);
+    expect(beforeReload.livePolls).toBe(scenario.phase === "poll" ? 1 : 0);
+    expect(beforeReload.assetReads).toBe(0);
+    expect(beforeReload.saved.projects[0].tasks[0].submissionState).toBe(
+      "unknown",
+    );
+    expect(
+      beforeReload.saved.projects[0].items.filter((item) =>
+        item.id.includes("-result-"),
+      ),
+    ).toHaveLength(0);
+    await page.reload();
+    await openSeededProject(page);
+    await expect(page.getByTestId("task-workbench")).toContainText(
+      "受理状态不明",
+    );
+    await expect(page.getByRole("button", { name: "重试剩余" })).toHaveCount(0);
+    await expect
+      .poll(
+        async () => (await state()).saved.projects[0].tasks[0].submissionState,
+      )
+      .toBe("unknown");
+    expect((await state()).submissions).toBe(1);
+    expect((await state()).assetReads).toBe(0);
+    expect(providerPosts).toBe(0);
+  });
+}
+
+test("reloaded native image task can cancel and exposes no inactive pause", async ({
+  page,
+}) => {
+  const value = task("running", "submitted");
+  await page.addInitScript(
+    ({ seeded, taskId, idempotencyKey }) => {
+      const state = {
+        saved: seeded,
+        cancellations: 0,
+        status: "submitted",
+      };
+      const receipt = () => ({
+        taskId,
+        idempotencyKey,
+        status: state.status,
+        outputIndices: [0],
+        outputs: [{ index: 0, status: "pending" }],
+        failure:
+          state.status === "unknown" ? "取消后供应商状态仍需核对。" : undefined,
+        updatedAt: 42,
+      });
+      Object.assign(window, {
+        nativeTaskTest: state,
+        __TAURI_INTERNALS__: {
+          invoke: async (
+            command: string,
+            args?: { snapshot?: typeof seeded },
+          ) => {
+            if (command === "read_creation_snapshot")
+              return { status: "loaded", snapshot: state.saved };
+            if (command === "write_creation_snapshot") {
+              state.saved = args!.snapshot!;
+              return;
+            }
+            if (command === "task_host_list") return [receipt()];
+            if (command === "task_host_get") return receipt();
+            if (command === "task_host_cancel") {
+              state.cancellations++;
+              state.status = "unknown";
+              return receipt();
+            }
+            if (command === "credential_get") return null;
+            throw new Error(`Unexpected native task IPC: ${command}`);
+          },
+        },
+      });
+    },
+    {
+      seeded: snapshot(value),
+      taskId: value.id,
+      idempotencyKey: value.idempotencyKey,
+    },
+  );
+  await page.goto("/");
+  await openSeededProject(page);
+  await expect(
+    page
+      .getByTestId("task-workbench")
+      .getByText("生成中", { exact: true })
+      .last(),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "暂停", exact: true }),
+  ).toHaveCount(0);
+  await page
+    .getByTestId("task-workbench")
+    .getByRole("button", { name: "取消", exact: true })
+    .click();
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          (window as Window & { nativeTaskTest: { cancellations: number } })
+            .nativeTaskTest.cancellations,
+      ),
+    )
+    .toBe(1);
+  await expect(page.getByTestId("task-workbench")).toContainText(
+    "受理状态不明",
+  );
+  await expect(page.getByRole("button", { name: "重试剩余" })).toHaveCount(0);
+});
+
 test("provider request only arrives after durable submitted intent with stable key", async ({
   page,
 }) => {

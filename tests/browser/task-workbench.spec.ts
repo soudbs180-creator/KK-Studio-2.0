@@ -30,6 +30,126 @@ async function workbench(page: Page) {
   await page.getByRole("button", { name: "打开任务工作台" }).click();
 }
 
+async function injectPlanReview(page: Page) {
+  await page.waitForFunction(() => {
+    const raw = localStorage.getItem("kk-studio-next:creation:v1");
+    try {
+      return Boolean(raw && JSON.parse(raw).projects?.length);
+    } catch {
+      return false;
+    }
+  });
+  await page.evaluate(async () => {
+    type SnapshotProject = { id: string; [key: string]: unknown };
+    type Snapshot = {
+      activeProjectId?: string;
+      revision: number;
+      projects: SnapshotProject[];
+    };
+    const indexedSnapshot = await new Promise<Snapshot | null>(
+      (resolve, reject) => {
+        const request = indexedDB.open("kk-studio-next", 1);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+          const db = request.result;
+          const read = db
+            .transaction("creation", "readonly")
+            .objectStore("creation")
+            .get("snapshot");
+          read.onerror = () => reject(read.error);
+          read.onsuccess = () => {
+            db.close();
+            resolve(read.result ?? null);
+          };
+        };
+      },
+    );
+    const localSnapshot = JSON.parse(
+      localStorage.getItem("kk-studio-next:creation:v1") ?? "null",
+    ) as Snapshot | null;
+    const snapshot = indexedSnapshot ?? localSnapshot;
+    if (!snapshot) throw new Error("creation snapshot missing");
+    const project = snapshot.projects.find(
+      (entry: { id: string }) => entry.id === snapshot.activeProjectId,
+    );
+    if (!project) throw new Error("active project missing");
+    const now = Date.now();
+    project.stagePlans = [
+      {
+        id: "plan-browser",
+        title: "季度宣传计划",
+        projectId: project.id,
+        createdBy: "agent",
+        revision: 0,
+        stages: [
+          {
+            index: 0,
+            name: "草案",
+            goal: "等待用户确认",
+            status: "plan_review",
+            approvalGate: "plan",
+            workItems: [
+              {
+                id: "work-browser",
+                kind: "image",
+                prompt: "产品主视觉",
+                dependencies: [],
+                status: "queued",
+                createdAt: now,
+                updatedAt: now,
+              },
+            ],
+            createdAt: now,
+            updatedAt: now,
+          },
+        ],
+        createdAt: now,
+        updatedAt: now,
+      },
+    ];
+    snapshot.revision += 1;
+    await new Promise<void>((resolve, reject) => {
+      const request = indexedDB.open("kk-studio-next", 1);
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        const db = request.result;
+        const transaction = db.transaction("creation", "readwrite");
+        transaction.objectStore("creation").put(snapshot, "snapshot");
+        transaction.oncomplete = () => {
+          db.close();
+          resolve();
+        };
+        transaction.onerror = () => reject(transaction.error);
+      };
+    });
+  });
+}
+
+test("阶段计划在任务工作台显示并通过编排器审批", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page.getByRole("button", { name: "新建项目", exact: true }).click();
+  await injectPlanReview(page);
+  await page.reload();
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page.locator(".project-library-card").first().click();
+  await workbench(page);
+  await page.getByRole("tab", { name: "Plan" }).click();
+  await expect(page.getByTestId("stage-plan-panel")).toContainText(
+    "季度宣传计划",
+  );
+  await expect(page.getByTestId("stage-plan-panel")).toContainText("计划审批");
+  await page.getByRole("button", { name: "批准计划" }).click();
+  await expect(page.getByTestId("stage-plan-panel")).toContainText("执行中");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.locator(".task-workbench-tabs")).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
+});
+
 test("审批阻断远程请求，部分成功矩阵单项重试回填且审阅任务保留", async ({
   page,
 }) => {
@@ -58,6 +178,9 @@ test("审批阻断远程请求，部分成功矩阵单项重试回填且审阅�
   await expect(
     page.getByRole("dialog", { name: "人工审批任务" }),
   ).toContainText("数据保留");
+  await expect(
+    page.getByRole("dialog", { name: "人工审批任务" }),
+  ).toContainText("尚未取得报价");
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect(page.locator(".project-task-partial")).toBeVisible();
   await workbench(page);

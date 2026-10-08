@@ -1,5 +1,6 @@
 import type { ApprovalGate } from "../domain/agentWorkflow";
 import type { CreationTask } from "../features/creation/model";
+import { formatCostUsd } from "../features/creation/taskState";
 import Modal from "./Modal";
 
 export default function TaskExecutionApproval({
@@ -37,8 +38,8 @@ export default function TaskExecutionApproval({
           <dd>当前连接未声明保留策略，请以供应商服务条款为准。</dd>
           <dt>成本预估</dt>
           <dd>
-            Prototype 示例单价 $0.04/张，合计 $
-            {(task.requestedOutputs * 0.04).toFixed(2)}；未取得供应商报价。
+            {formatCostUsd(task.estimatedCostUsd)}
+            ；供应商实际账单仅在回执中显示。
           </dd>
         </dl>
         <p>审批只适用于本次任务。暂停后恢复仍使用同一任务；重试将重新审批。</p>
