@@ -2,7 +2,7 @@
 
 ## 2026-10-08 统一 Mask 继续审查返修（当前）
 
-TASK-IMAGE-EDIT-001 重新 IN_PROGRESS：用户要求继续检查，7532e94 独立审查 CHANGES REQUIRED，IM-011 P1 恢复保护阻断、IM-010/012/013 P2 有界返修。定向 RED→GREEN 已完成；完整 verify、fresh release 两端运行和已提交 head 独立复验尚未完成，不沿用旧 PASS 关闭新问题。Desktop2.1.9/Web2.1.10；功能仍 PARTIAL、VERIFY-002 TODO。仍在原任务 worktree，本轮没有 main 集成或发布。见[计划](../changes/2026-10-08-unified-image-mask/plan.md)和[审查](../changes/2026-10-08-unified-image-mask/review.md)；下方原 DONE/PASS 是历史范围。
+TASK-IMAGE-EDIT-001 仍 IN_PROGRESS：用户继续审查，82b7490 正式 CHANGES REQUIRED，IM-010/012/013 CLOSED、IM-011旧模板后缀碰撞P1 OPEN。全文编译结构补修先RED后GREEN；91定向、完整verify773root/172Agent/423browser零retry/flaky、Rust102、fresh Tauri及原生11组通过，Mask外0改动；新提交准确SHA独立关闭尚待完成。Desktop2.1.9/Web2.1.10同轮候选返修；功能PARTIAL、VERIFY-002 TODO。原任务worktree保留，无main集成或发布。见[验证](../changes/2026-10-08-unified-image-mask/verification.md)和[审查](../changes/2026-10-08-unified-image-mask/review.md)；下方DONE/PASS保留历史范围。
 
 ## 2026-10-08 统一 Mask 本地实现完成
 

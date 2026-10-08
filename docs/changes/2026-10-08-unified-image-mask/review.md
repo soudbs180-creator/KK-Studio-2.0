@@ -1,11 +1,17 @@
 # Review：统一图片编辑蒙版
 
-- Task ID：TASK-IMAGE-EDIT-001；最新 7532e94 继续审查 CHANGES REQUIRED，IM-010–013 返修待已提交 head 独立复验；IM-001–009 历史 CLOSED 保留。
+- Task ID：TASK-IMAGE-EDIT-001；最新 82b7490 独立复验 CHANGES REQUIRED，IM-010/012/013 CLOSED、IM-011 OPEN；补修待新 head 复验。IM-001–009 历史 CLOSED 保留。
 - 2026-10-08，Asia/Shanghai；开工 base 1af0357b088df79dc51e9b309ef310a500722cf8；正式审查 base 78cea37af9359fd2d9f58f2854525516deee8a06、源码 head dbc88bbd1a3425c04b509730780ff50547788e67。
 - 分支 codex/TASK-IMAGE-EDIT-001-unified-mask；[intent](intent.md)、[spec](spec.md)、[plan](plan.md)、[verification](verification.md)。
 - 独立预检：只读子代理 /root/mask_review，独立上下文从规则、需求、base/diff 开始，不承担实现。Codex collaboration；具体服务端模型版本未知，不虚构。
 
-## 7532e94 继续审查（最新正式结论）
+## 82b7490 独立返修复验（最新正式结论）
+
+独立只读 /root/mask_audit 绑定 base78cea37、重点增量7532e94、head82b7490da6102092fdd240ff2e7dc69cdc1cc9d7，正式 **CHANGES REQUIRED**。IM-010/012/013 CLOSED；IM-011 P1 OPEN。独立 Node86、Rust36、production Web14（0retry）与实际 fresh Tauri 的 marker/重启/清空/原件保护/凭据清理通过，仍发现旧局部色块意见粘贴整图模板后缀可绕过 endsWith。合法快照先通过 decoder，仅删除 imageEdit 后发布 raw4×4，原图8×8未融合。详见[完整收据副本](evidence/review-followup-82b7490.md)；工程外原件 SHA-256 a7e19e47fc13e1823e095578507f9671cea61a12c4e69722b7572f5fd5f306f3，副本仅规范行尾。历史失败结论不覆盖。
+
+IM-011 补修遵循新增 plan：先真实恢复 RED，再验证完整编译结构和最近修改的确定边界。实现者 GREEN 尚不能关闭 blocker；必须绑定新提交独立复验。以下结论保留其各自 SHA 与历史范围。
+
+## 7532e94 继续审查（历史）
 
 独立只读 /root/mask_audit，base78cea37..head7532e949e272784e0684b7ea0383901a8b23eeeb，2026-10-08 21:30:39+08，59/59 定向 Node 通过仍复现四项新问题，结论 CHANGES REQUIRED。参见[原审查副本](evidence/review-audit-7532e94.md)；工程外原始报告和 probes 保留，副本只规范行尾，不改结论。当前实现者定向 RED→GREEN 不是独立关闭。
 

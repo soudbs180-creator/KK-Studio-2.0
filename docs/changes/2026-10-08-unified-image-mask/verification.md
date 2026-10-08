@@ -1,6 +1,6 @@
 # Verification：统一图片编辑蒙版
 
-- Task ID：TASK-IMAGE-EDIT-001；7532e94 后继续审查返修的本地检查 PASS，新已提交 head 独立复验尚待完成，见 [review](review.md)。历史验证保留各自范围。
+- Task ID：TASK-IMAGE-EDIT-001；82b7490 独立复验仍有 IM-011 P1，全文识别补修的完整本地验证已通过，新 SHA 独立复验待完成，见 [review](review.md)。历史验证保留各自范围。
 - 日期：2026-10-08，Asia/Shanghai；开工 base 1af0357b088df79dc51e9b309ef310a500722cf8；整合 base 78cea37af9359fd2d9f58f2854525516deee8a06。
 - cwd：本仓库 .worktrees/TASK-IMAGE-EDIT-001；branch codex/TASK-IMAGE-EDIT-001-unified-mask。
 - Node 24.20.0；独立 npm ci 完成；初轮 Desktop 2.1.7 / Web 2.1.8；整合后 Desktop 2.1.8 / Web 2.1.9 / Mobile 规划 2.1.1。
@@ -113,6 +113,24 @@ IM-011 由 request/receipt/journal 的 imageEditRequired 独立证明融合角�
 本次 Desktop2.1.8→2.1.9、Web2.1.9→2.1.10，Mobile规划2.1.1。沿用上述 UI_INDEX→tokens/shared classes→main/App/Canvas/ImageRedrawDialog/ImageEditor 链路；清空是工程补充控件，32px/14px，selected/disabled使用同一ui-button规则，无新页面样式。实际Web/Desktop同为production入口src/main.tsx，加载/assets/index-BUvutOxY.js；响应/当前dist SHA-256均6b1431869a4b4cafe51150490aa5fcbbc79d16caf7e1527c2f83811629098d6f。CSS仍index-CSF9XnZa.css，EXE SHA-256为4749989f202dc5b35f103d542b1d02635efb4e43eeddca39c22ba051a98503bd。
 
 本机证据 D:/kk-studio/output/unified-image-mask-20261008/run-followup-IM010-013/：RED/GREEN/完整检查日志、Web DOM/截图/423结果、Desktop收据/截图和原生11组收据；不含profile、dataRoot或凭据。source-manifest-followup.json绑定71个实际源码/配置/测试文件和30个工件hash，阶段明确为7532e94之后dirty返修。原生11组收据sourceHead仍7532e94，不冒充新已提交SHA；提交后按未变文件hash另写绑定收据。端口9364/9349/1436结束均无监听，未停止其他任务。
+
+## 82b7490 复验后的全文识别补修（最新本地结果）
+
+独立 82b7490 审查关闭 IM-010/012/013，但合法局部色块意见引用整图模板时，仅 endsWith 判断仍会发布 raw crop。上节所谓“完整 body 精确匹配”只证明尾部一致，不足以证明任务角色；该局限由正式失败收据及新回归纠正，原结果保留。IM-011 仍 OPEN，任务继续 IN_PROGRESS。
+
+新增 5 项真实恢复测试（合计10项）：修实现前3项失败，结果 succeeded 而期望 unknown；其余整图兼容断言通过。修正为已知 root/current 全文重编译、recent 标签确定边界与两种预算、第二正文头歧义隔离后定向 GREEN。测试 raw 使用合法4×4 PNG，局部模板来自真实 compileEditPrompt/formatEditPrompt，编辑快照先通过 decoder，仅删 imageEdit。原件引用/列表保留，无 raw 读取或重发；引用模板的合法 root/current、实际序列化的空白 recent、截断和明确 false marker 继续恢复。
+
+| 检查 | 实际结果 |
+| --- | --- |
+| 相关 Node / 完整 `npm run verify -- -- --workers=4 --retries=0` | 91/91定向；完整exit0：root773/781（原8skip）、Agent172/174（原2skip）、browser423/423、0retry/0flaky；lint/typecheck/UI207/format/build/version/治理/功能/Markdown通过 |
+| Rust fmt / tests / client check | exit0；102/102、0ignored；原5条dead_code提示保留 |
+| 独立失败脚本的作者验证副本 | 保留原完整PNG/crop/透明Mask/标注附件，仅更改结果断言；unknown、无result、无raw读取/重发，原件引用保留，exit0。未修改reviewer原脚本或失败日志 |
+| fresh release + Desktop / 原生生命周期 | 新EXE构建exit0；Desktop两次Mask请求、包4素材、clear undo/redo、删除来源原图/再生/重启通过；1071分量改变、Mask外0；marker重启true、凭据冲突保留及清理true。主线11组通过 |
+| Web同状态 | 本次严格production preview1423、route /、入口src/main.tsx；1099宽清空editor及1920宽四区成功DOM/PNG已查看；实际Web/Desktop均加载index-CufFqG9V.js，SHA一致 |
+
+本次为同一未发布候选的 IM-011 返修，版本保持 Desktop2.1.9/Web2.1.10/Mobile规划2.1.1。新JS SHA-256 63ec6afa3c49e7523c90864b2cfa8462e008165ed5e1e92bb0fa2c1c52353295，CSS仍index-CSF9XnZa.css；新EXE SHA-256 bd7cb954db4cffd16966e620519839d9c88987acfd2c03240185e9b1b485f066。原生编辑收据 .tmp/image-edit/desktop/run-1791470224687-90084/，生命周期 test-results/desktop/taskhost-lifecycle/1791470243665-55df6773-9596-440a-a048-d42e152bc7bc/；后者sourceHead仍82b7490（真实dirty-run起点），不重写为新提交。
+
+新证据目录 D:/kk-studio/output/unified-image-mask-20261008/run-followup-IM011-parser/ 保存 RED/GREEN/完整检查、失败脚本的验证副本、Web DOM/PNG、Desktop收据/截图和11组收据，不含profile/dataRoot/凭据；源码/工件清单及提交绑定单独生成。旧报告、清单、绑定和产物证据保留。结束本次owned1423/9364/9349均无监听，无其他进程终止。本地通过不是独立关闭，仍待新 head 复验。
 
 ## 外部验收边界（保留）
 

@@ -22,6 +22,14 @@
 
 依赖：测试→各自修正→全集及两端运行→提交→独立复审→文档收尾。实现串行；reviewer 只读，禁止共享 dirty worktree 写入。技术决策来自当前请求授权和仓库证据，不要求形式审批。
 
+### 82b7490 独立复验后的 IM-011 补修
+
+82b7490 的正式结论为 CHANGES REQUIRED：IM-010/012/013 CLOSED，IM-011 的新 marker 已通过，但旧无 marker 的局部意见可引用整图模板并通过尾部比较。原报告和失败脚本保留，不将该 head 改写为 PASS。
+
+1. 先添加真实恢复回归：合法局部编译器产生模板后缀，快照先通过 decoder，再仅删除 imageEdit；预期 unknown、无 raw 读取/发布/重发。同时覆盖整图正常恢复、root/current 引用模板、recent 空白预算与截断、旧 recent 正文边界歧义。
+2. 用同一编译器证明完整 prompt：先精确重编译无 recent 的全文；有 recent 时按已知 root/current 推导两种预算前缀，在确定标签边界内提取有界 recent，再精确重编译全文。recent 含第二个完整自动正文头时保守 unknown；显式 false marker 的整图任务仍按确证角色处理。
+3. 在同一未发布候选版本 Desktop2.1.9/Web2.1.10 完成定向与完整 verify，生成新 dist/release 并做实际 Desktop 回归；使用新证据目录、源码/工件清单和新 SHA 独立复验。此次只修同轮尚未通过的恢复候选，不另行增加版本或范围。
+
 ## Global Constraints
 
 - 原图像素坐标；5%每边外扩；ceil偶数；1000/2500阈值；最多3块。
