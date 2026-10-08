@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-10-08 模型能力声明：Hosted日志复核后的增量修正
+
+TASK-MODEL-001 当前为 REVIEW。draft PR#36 第一轮 head2797687c 的 Hosted workflow success，但原始浏览器记录405pass+1flaky；原单次失败唯一根因仍UNKNOWN。受控RED复现无变化provider通知清空未保存草稿，修正移除revision重置并补齐family/variant/aliases真值依赖。新production定向8例×4=32pass且retries=0；标准1423完整verify723/731root(8原skip)、172/174Agent(2原skip)、408/408browser(0flaky)、UI198/0及clientcheck/fresh Tauri隔离运行均PASS。最新源码指纹2ebaab3d/389文件，产物index-D7y589oD.js与EXE匹配。新已提交HEAD独立审查及Hosted待完成；未合并发布，原主checkout未写入，功能仍PARTIAL。下面早先PASS条目保留为当时SHA的历史记录。
+
 ## 2026-10-08 模型能力声明候选
 
 TASK-MODEL-001 已实现精确账号/model 图片操作三态及参考图/任务数量限额，MC-001修正统一归档素材去重和重绘预校验。当前base main@5dd6e6dd的完整verify723root/172Agent/406browser通过，原skip8/2保留且0flaky，UI198/0；client:check、fresh Tauri和隔离运行通过。候选源码Desktop2.1.6/Web2.1.7，Mobile规划2.1.1；本地AC1–5完成，独立6da9920e技术补审PASS、MC-001关闭；最终文档head补审和PR/Hosted交付收据另绑，不代表已合并/发布。FEAT-003保持PARTIAL，真实Provider和蒙版/扩图执行另验；TASK-PLUGIN-DEV-001开发插件既有错误仍TODO。 本任务只写隔离分支codex/TASK-MODEL-001-capabilities；主checkout当前main@5dd6e6dd且clean。当前SHA/产物/交付以[验证](../changes/2026-10-08-model-capabilities/verification.md)与[review](../changes/2026-10-08-model-capabilities/review.md)为准。

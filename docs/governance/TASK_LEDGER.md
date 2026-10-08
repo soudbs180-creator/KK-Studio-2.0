@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
-| TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
+| TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | REVIEW | none | root |
 | TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
 | T0 | 可复现候选源码与主线整合 | DONE | none | root |
 | TASK-GOV-001 | 治理源、ESLint、架构门禁和 CI | DONE | T0 | root |
@@ -114,7 +114,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-MODEL-001-capabilities`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`
 - Modules: src/domain, src/features/models, src/features/creation, src/components, src/App.tsx, tests, docs/features, docs/governance
-- Verification: PASS — 本地AC1–5 DONE：最新main@5dd6e6dd融合，verify723/731root(8skip)、172/174Agent(2skip)、406/406browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行；独立6da9920e补审PASS、MC-001关闭，87/87定向复验和389源码指纹匹配。最终文档head补审/PR/Hosted交付另绑定；真实Provider/蒙版/扩图、开发插件既有问题和Mobile不在此DONE证明范围。
+- Verification: PARTIAL — 首轮PR Hosted405pass+1flaky留档，原单次唯一因果UNKNOWN。草稿通知覆盖/显示依赖两项真实RED后最小修正：32定向无retry、完整verify723/731root(8skip)、172/174Agent(2skip)、408/408browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行PASS；389源码指纹2ebaab3d绑定新产物。新精确HEAD独立补审/Hosted待完成，PR#36仍draft，功能仍PARTIAL。
 - Evidence: [docs/changes/2026-10-08-model-capabilities/intent.md](../../docs/changes/2026-10-08-model-capabilities/intent.md), [docs/changes/2026-10-08-model-capabilities/spec.md](../../docs/changes/2026-10-08-model-capabilities/spec.md), [docs/changes/2026-10-08-model-capabilities/plan.md](../../docs/changes/2026-10-08-model-capabilities/plan.md), [docs/changes/2026-10-08-model-capabilities/verification.md](../../docs/changes/2026-10-08-model-capabilities/verification.md), [docs/changes/2026-10-08-model-capabilities/review.md](../../docs/changes/2026-10-08-model-capabilities/review.md)
 - Updated: 2026-10-08
 

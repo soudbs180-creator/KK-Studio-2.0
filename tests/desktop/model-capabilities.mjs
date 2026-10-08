@@ -77,6 +77,21 @@ try {
     .selectOption("unsupported");
   await page.getByLabel("参考图数量上限", { exact: true }).fill("0");
   await page.getByLabel("单次任务生成数量上限", { exact: true }).fill("2");
+  await page.evaluate(() =>
+    window.dispatchEvent(new Event("kk:model-provider-changed")),
+  );
+  await expect(page.getByLabel("图片生成能力", { exact: true })).toHaveValue(
+    "supported",
+  );
+  await expect(page.getByLabel("参考图编辑能力", { exact: true })).toHaveValue(
+    "unsupported",
+  );
+  await expect(page.getByLabel("参考图数量上限", { exact: true })).toHaveValue(
+    "0",
+  );
+  await expect(
+    page.getByLabel("单次任务生成数量上限", { exact: true }),
+  ).toHaveValue("2");
   await page
     .getByRole("button", { name: "保存此模型能力", exact: true })
     .click();

@@ -1,6 +1,6 @@
 # Verification：模型能力声明
 
-- Task ID：TASK-MODEL-001；状态：PASS（本地AC1–5；交付门禁另记）；日期：2026-10-08（Asia/Shanghai）。
+- Task ID：TASK-MODEL-001；当前增量状态：REVIEW；此前PASS为固定SHA历史；日期：2026-10-08（Asia/Shanghai）。
 - [Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Review](review.md)。
 - branch：codex/TASK-MODEL-001-capabilities；开工base21d121d2b884b2b7ced4a98eb0e03c590de5c3cd；当前base5dd6e6dddaf00cf2d5c14ae02ef5974c72238232。
 - cwd：`D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`；原 checkout clean。
@@ -104,3 +104,19 @@ Web [390](evidence/latest-main5dd/capabilities-settings-390.png)、[1099](eviden
 公开目标已只读核对为soudbs180-creator/KK-Studio-2.0、public、default main，当前Git凭据有push权限；凭据只经既有credential manager在内存交给GitHub，未写入目录或日志。计划仅fast-forward推本任务分支，不推main、不自审批、不合并/部署。待上传证据来自隔离fixture/profile，API地址为example.test、测试key为fixture占位，未包含真实供应商凭据；GitHub辅助脚本及认证数据位于被ignore的.tmp，不加入提交。首次自动审核拒绝及后续用户授权记录保持原文，不以替换接口规避拒绝。
 
 最终文档收口门禁的原始输出见[lint与文档检查](evidence/latest-main5dd/logs/review-final-document-gates.log)和[delivery结构检查](evidence/latest-main5dd/logs/review-final-delivery.log)。仅文档变化没有复用成产品源码复验；最终HEAD增量审查及Hosted检查以PR收据记录。
+
+## 首轮Hosted的非零flaky与新增受控RED
+
+原draft PR#36 head2797687c，两轮workflow结论success；PR run37742566288的verify job113196446265原始记录为405pass+1flaky，本任务“不同素材超限禁用重绘”首次enabled，retry通过。97项Rust测试与客户端/release构建成功。记录：[原始job日志](evidence/draft-refresh5dd/logs/first-pr-ci-verify.log)、[browser JSON](evidence/draft-refresh5dd/logs/first-ci-browser-results.json)、[局部error-context](evidence/draft-refresh5dd/logs/first-ci-error-context.txt)。后者不含原图/目录现场，原flaky唯一根因UNKNOWN。
+
+新增“无变化通知保留草稿”在旧production真实RED，edit由supported变unknown；[1423首尝试](evidence/draft-refresh5dd/logs/review-red-draft-refresh.log)因外部端口占用未运行，不当RED。真实[1425定向RED](evidence/draft-refresh5dd/logs/review-red-draft-refresh-1425.log)不替代全量标准端口验收。修后一次未重新build的[旧bundle尝试](evidence/draft-refresh5dd/logs/stale-bundle-draft-refresh-1425.log)仍失败，明确不是GREEN；重建后[7例×4次定向](evidence/draft-refresh5dd/logs/review-green-draft-refresh2-1425.log)28pass、retries=0。独立预审识别显示字段依赖遗漏，[显示刷新RED](evidence/draft-refresh5dd/logs/review-red-display-refresh-1425.log)保留；补齐依赖后重建production，[最终8例×4次定向](evidence/draft-refresh5dd/logs/review-green-draft-refresh3-1425.log)32pass、retries=0；它只证明定向范围，完整1423与native见下一节。
+
+## 草稿刷新修正的最新本地验收（16:27，独立审查待完成）
+
+[完整verify](evidence/draft-refresh5dd/logs/draft-refresh-verify.log)退出0：root723/731、8个原skip；Agent172/174、2个原skip；browser408/408，unexpected=0/flaky=0/skipped=0；UI198/0，lint/typecheck/format/build及治理/功能/Markdown门禁通过。[browser summary](evidence/draft-refresh5dd/browser-summary.json)记录2026-10-08T08:23:10Z起、标准1423、dirty候选尚未提交；不是首轮Hosted结果。
+
+[clientcheck](evidence/draft-refresh5dd/logs/latest-client-check.log)、[fresh Tauri build](evidence/draft-refresh5dd/logs/latest-desktop-build.log)、[隔离native验收](evidence/draft-refresh5dd/logs/latest-desktop-acceptance.log)均退出0。EXE SHA256为db354e2bbd14f5891a5c1b6e3b5584e2f3576c0525b4aa86f50ebed0be4351c5；实际index-D7y589oD.js/index-C6I0Rp3I.css，JS SHA256为8c39cd503fd883c447769915c20cf1c952e10fd3bb1134015b352c491e227829；[native runtime](evidence/draft-refresh5dd/desktop-acceptance.json)确认与dist字节一致、隔离数据根/profile、errors=[]。原生本轮新增受控provider通知后四个未保存字段保持断言，再保存并重载、限制数量/零参考图、禁用重绘、原图归档和tasks=0。
+
+Web同状态证据来自本轮严格1423：[390设置](evidence/draft-refresh5dd/capabilities-settings-390.png)、[1099设置](evidence/draft-refresh5dd/capabilities-settings-1099.png)、[1920设置](evidence/draft-refresh5dd/capabilities-settings-1920.png)、[1920 runtime](evidence/draft-refresh5dd/capabilities-runtime-1920.json)。根上下文目视抽查390设置与[native参数](evidence/draft-refresh5dd/parameters-native.png)；全部实际DOM/截图来自当前bundle。Development严格1421的[本轮日志](evidence/draft-refresh5dd/logs/latest-development-capability.log)和[runtime](evidence/draft-refresh5dd/development-runtime.json)记录相同通知后字段保持与真实持久化局部PASS；既有public插件遮罩仍FAIL，记录后Esc，仅局部验收，不改称整套开发模式通过。
+
+本轮[源码指纹](evidence/draft-refresh5dd/source-fingerprint.json)为2ebaab3d83bcf31fa33dbd94f8ee817b20baf5f1bf8661447beb64a5ac44735a、389文件（UTF8/LF归一），编译输入在全部检查期间固定。5项既有Rust warning与large-chunk提示保留。新提交正式独立审查、MC-002/MC-003关闭及当前SHA Hosted结果待完成；不以历史PASS或重试替代。

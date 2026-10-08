@@ -33,3 +33,7 @@ INFERENCE：服务可能没有能力扩展字段，所以缺失表示未知，�
 技术决策：沿用 `kk-studio:model-catalog:v1`，增加可选字段；未知的旧生成/编辑沿用连接允许范围；新蒙版/扩图仍须显式声明且本轮不开放执行。`maxGenerationCount` 是一次 KK 任务的数量限制，与连接的每次 HTTP `maxOutputs` 分开。
 
 待用户决定的产品语义：无。真实供应商、Mobile、发布验收不由本轮 fixture 证明，相关既有任务保持开放。
+
+## 后续受控修正
+
+首轮Hosted原始日志含本任务1flaky；继续调查复现真实草稿通知覆盖bug并按预审补齐显示字段依赖。当前本地408/408零flaky、fresh native通过，新提交独立审查及Hosted仍待完成。历史证据保留，本轮准确运行、SHA与状态见[verification](verification.md)和[review](review.md)，不把已发现问题掩盖为完成。

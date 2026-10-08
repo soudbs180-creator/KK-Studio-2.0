@@ -2,7 +2,7 @@
 
 > For agentic workers: execute with superpowers:executing-plans; tests follow superpowers:test-driven-development. The project spec and AGENTS govern approvals and delivery.
 
-- Task ID：TASK-MODEL-001；状态：IMPLEMENTED（本地AC已验）；日期：2026-10-08。
+- Task ID：TASK-MODEL-001；状态：REVIEW（最新本地检查通过，待独立补审）；日期：2026-10-08。
 - Goal：现有目录成为图片参数和已知限制的统一来源。
 - Architecture：domain 白名单 → account-scoped catalog → shared resolver → UI/共享提交校验。
 - Tech Stack：React 18 / TypeScript / Node 24 / Tauri 2；无新增依赖。
@@ -75,3 +75,7 @@ Pre-flight：Task 2/3 消费 Task 1；Task 3 消费 Task 2 的门禁，输出数
 Task 1–3 已实现并完成 RED→GREEN，首轮审查MC-001已定向修正。历史5b轮完整verify/native通过已留档；融合新main@5dd后，Task4候选版本Desktop2.1.6/Web2.1.7的完整verify、client:check、final Tauri/隔离运行已通过，6da9920e独立补审PASS，MC-001关闭；最终文档head/PR/Hosted门禁以准确交付收据为准。CanvasNodeLayer 达到 317 行时触发 UI check，按职责拆出原参考图映射为 canvasReferences.ts；不是额外界面重构。发现的原主线开发插件错误登记 TASK-PLUGIN-DEV-001，本任务不接管插件修复。文本模型和单张重绘兼容缺陷均有失败先行修正，见 verification。
 
 实施/测试/裁决与结果持续记录在 [verification](verification.md)，不得因上下文恢复重做已完成步骤。
+
+## Hosted增量修正计划
+
+第一轮PR浏览器出现本任务用例1flaky，先保存原始证据再调查。新增受控事件RED，修正无变化通知覆盖草稿；按独立预审补齐family/variant/aliases真实值依赖与仅显示字段刷新RED。重新构建production，定向8例重复且禁retry，再完整1423 verify、clientcheck/fresh Tauri/隔离验收、三档Web及development局部证据、源码指纹、已提交HEAD独立补审和PR当前SHA CI。原CI现场仅按钮局部DOM，原单次flaky的唯一因果仍UNKNOWN，不冒称已证实。

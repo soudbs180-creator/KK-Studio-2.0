@@ -26,7 +26,7 @@ export default function ProviderModelCatalog({
   loading: boolean;
 }) {
   const connection = connectionFromModelProfile(profile);
-  const [revision, setRevision] = useState(0);
+  const [, setRevision] = useState(0);
   const models = catalogForConnection(connection);
   const selected = models.find((model) => model.id === profile.model);
   const [kind, setKind] = useState<ModelKind>(selected?.kind ?? "unknown");
@@ -55,9 +55,11 @@ export default function ProviderModelCatalog({
     profile.model,
     profile.baseUrl,
     profile.name,
-    revision,
     selected?.kind,
     selected?.sizes?.join(", "),
+    selected?.family,
+    selected?.variant,
+    JSON.stringify(selected?.aliases),
     JSON.stringify(selected?.image),
   ]);
   useEffect(

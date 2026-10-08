@@ -9,7 +9,7 @@ const pixel =
 for (const duplicate of [true, false]) {
   test(`原图和连线参考图按归档素材去重：${duplicate ? "同素材可编辑" : "不同素材超限禁用重绘"}`, async ({
     page,
-  }) => {
+  }, info) => {
     let requests = 0;
     await page.route(`${api}/images/**`, (route) => {
       requests += 1;
@@ -118,6 +118,23 @@ for (const duplicate of [true, false]) {
     await expect(
       page.locator(".provider-model-catalog").getByRole("status"),
     ).toContainText("已保存此模型");
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const catalogs = JSON.parse(
+            localStorage.getItem("kk-studio:model-catalog:v1")!,
+          );
+          return catalogs
+            .find(
+              (entry: { baseUrl: string }) =>
+                entry.baseUrl === "https://capabilities.example.test/v1",
+            )
+            ?.models.find(
+              (model: { id: string }) => model.id === "image-capability-a",
+            )?.image;
+        }),
+      )
+      .toEqual({ edit: true, maxReferences: 1 });
     await page.getByRole("button", { name: "关闭设置", exact: true }).click();
     await item.getByRole("button", { name: "画布模型", exact: true }).click();
     await page
@@ -130,6 +147,47 @@ for (const duplicate of [true, false]) {
       item.getByRole("button", { name: "画布模型", exact: true }),
     ).toContainText("image-capability-a");
     await expect(item.locator(".composer-ref-thumb")).toHaveCount(1);
+    await expect(item.locator(".uploaded-image")).toBeVisible();
+    const prepared = await page.evaluate((id) => {
+      const snapshot = JSON.parse(
+        localStorage.getItem("kk-studio-next:creation:v1")!,
+      );
+      const project = snapshot.projects.find(
+        (entry: { id: string }) => entry.id === snapshot.activeProjectId,
+      );
+      const source = project.items.find(
+        (entry: { id: string }) => entry.id === id,
+      );
+      const edges = project.canvas.edges.filter(
+        (entry: { target: string; kind: string }) =>
+          entry.target === id && entry.kind !== "result",
+      );
+      const fields = (entry: Record<string, unknown>) => ({
+        id: entry.id,
+        assetId: entry.assetId,
+        model: entry.model,
+        generationSource: entry.generationSource,
+        providerConnectionId: entry.providerConnectionId,
+        referenceOnly: entry.referenceOnly,
+      });
+      return {
+        source: fields(source),
+        references: edges.map((edge: { source: string }) =>
+          fields(
+            project.items.find(
+              (entry: { id: string }) => entry.id === edge.source,
+            ),
+          ),
+        ),
+        catalogs: JSON.parse(
+          localStorage.getItem("kk-studio:model-catalog:v1")!,
+        ),
+      };
+    }, sourceId);
+    await info.attach("prepared-reference-capabilities", {
+      body: JSON.stringify(prepared, null, 2),
+      contentType: "application/json",
+    });
     const generate = item.getByRole("button", {
       name: "生成图片",
       exact: true,
@@ -179,6 +237,90 @@ async function node(page: Page) {
   await item.click();
   return item;
 }
+
+test("仅显示元数据更新时刷新分组、型号和别名草稿", async ({ page }) => {
+  let updated = false;
+  await page.route(`${api}/models`, (route) =>
+    route.fulfill({
+      json: {
+        data: [
+          {
+            id: "image-capability-a",
+            capabilities: { modalities: ["image"], sizes: ["1024x1024"] },
+            display: {
+              family: updated ? "New group" : "Old group",
+              variant: updated ? "New variant" : "Old variant",
+              aliases: [updated ? "new-alias" : "old-alias"],
+            },
+          },
+        ],
+      },
+    }),
+  );
+  await configure(page);
+  await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
+  await page.getByText("型号显示与搜索别名", { exact: true }).click();
+  await expect(page.getByLabel("模型分组名称", { exact: true })).toHaveValue(
+    "Old group",
+  );
+  await expect(page.getByLabel("型号参数名称", { exact: true })).toHaveValue(
+    "Old variant",
+  );
+  await expect(page.getByLabel("搜索别名", { exact: true })).toHaveValue(
+    "old-alias",
+  );
+  updated = true;
+  await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
+  await expect(page.getByLabel("模型分组名称", { exact: true })).toHaveValue(
+    "New group",
+  );
+  await expect(page.getByLabel("型号参数名称", { exact: true })).toHaveValue(
+    "New variant",
+  );
+  await expect(page.getByLabel("搜索别名", { exact: true })).toHaveValue(
+    "new-alias",
+  );
+});
+
+test("供应商刷新通知不覆盖未保存的模型能力草稿", async ({ page }) => {
+  await configure(page);
+  await page.getByLabel("当前模型用途").selectOption("image");
+  await page
+    .getByLabel("参考图编辑能力", { exact: true })
+    .selectOption("supported");
+  await page.getByLabel("参考图数量上限", { exact: true }).fill("1");
+  await page.evaluate(() =>
+    window.dispatchEvent(new Event("kk:model-provider-changed")),
+  );
+  await expect(page.getByLabel("当前模型用途")).toHaveValue("image");
+  await expect(page.getByLabel("参考图编辑能力", { exact: true })).toHaveValue(
+    "supported",
+  );
+  await expect(page.getByLabel("参考图数量上限", { exact: true })).toHaveValue(
+    "1",
+  );
+  await page
+    .getByRole("button", { name: "保存此模型能力", exact: true })
+    .click();
+  await expect(
+    page.locator(".provider-model-catalog").getByRole("status"),
+  ).toContainText("已保存此模型");
+  expect(
+    await page.evaluate(() => {
+      const catalogs = JSON.parse(
+        localStorage.getItem("kk-studio:model-catalog:v1")!,
+      );
+      return catalogs
+        .find(
+          (entry: { baseUrl: string }) =>
+            entry.baseUrl === "https://capabilities.example.test/v1",
+        )
+        ?.models.find(
+          (model: { id: string }) => model.id === "image-capability-a",
+        )?.image;
+    }),
+  ).toEqual({ edit: true, maxReferences: 1 });
+});
 
 test("手动三态声明保存恢复并切模型，不把未知变成支持", async ({
   page,

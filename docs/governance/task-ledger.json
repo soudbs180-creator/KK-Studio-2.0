@@ -25,7 +25,7 @@
       "docs/features",
       "docs/governance"
     ],
-    "status": "DONE",
+    "status": "REVIEW",
     "evidence": [
       "docs/changes/2026-10-08-model-capabilities/intent.md",
       "docs/changes/2026-10-08-model-capabilities/spec.md",
@@ -33,8 +33,8 @@
       "docs/changes/2026-10-08-model-capabilities/verification.md",
       "docs/changes/2026-10-08-model-capabilities/review.md"
     ],
-    "verification": "本地AC1–5 DONE：最新main@5dd6e6dd融合，verify723/731root(8skip)、172/174Agent(2skip)、406/406browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行；独立6da9920e补审PASS、MC-001关闭，87/87定向复验和389源码指纹匹配。最终文档head补审/PR/Hosted交付另绑定；真实Provider/蒙版/扩图、开发插件既有问题和Mobile不在此DONE证明范围。",
-    "verificationResult": "PASS",
+    "verification": "首轮PR Hosted405pass+1flaky留档，原单次唯一因果UNKNOWN。草稿通知覆盖/显示依赖两项真实RED后最小修正：32定向无retry、完整verify723/731root(8skip)、172/174Agent(2skip)、408/408browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行PASS；389源码指纹2ebaab3d绑定新产物。新精确HEAD独立补审/Hosted待完成，PR#36仍draft，功能仍PARTIAL。",
+    "verificationResult": "PARTIAL",
     "updated": "2026-10-08"
   },
   {

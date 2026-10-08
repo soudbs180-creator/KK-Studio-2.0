@@ -1,6 +1,6 @@
 # Review：模型能力声明
 
-- Task ID：TASK-MODEL-001；技术审查状态：PASS（head6da9920e）；最终文档head增量补审另绑；日期：2026-10-08。
+- Task ID：TASK-MODEL-001；当前增量：REVIEW；历史PASS绑定6da9920e/2797687c，不能套用修正源码；日期：2026-10-08。
 - [Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Verification](verification.md)。
 - 当前目标基线：origin/main@5dd6e6dddaf00cf2d5c14ae02ef5974c72238232；集成提交577ed3ee，主checkout目前同一main SHA且clean。本任务仅写隔离候选。
 - 实际 GitHub 审批、用户产品验收、合并与发布分别记录，不由技术检查代填。
@@ -52,3 +52,12 @@
 复验确认普通生成/重绘传完整references、共享assetId只占一次、不同素材超限预禁用，hover和实际connect使用同一总量规则，edit=false没有被去重扩大权限。非图片、未归档、悬空引用继续失败关闭。App相对新main的差异只增加任务输出数量和native图片能力复查；上游intent/回执恢复/保存确认/unknown与显式重试保留。
 
 真实Provider、实际蒙版/扩图和原生Mobile仍未评定；既有开发插件错误另记TASK-PLUGIN-DEV-001，不把Esc局部通过当插件通过。GitHub身份审批、用户产品验收、公开授权、合并/发布不由技术结论代填。此次补写review/状态文件仅为文档，最终head仍需增量补审；最终PR描述和交付收据记录准确SHA及Hosted结果，不能把本收据SHA偷偷替换成后续提交。
+
+## Hosted日志后的追加调查与预审
+
+原head2797687c的push/PR workflow均success，PR verify原始浏览器结果405pass+1flaky。重试通过不等于零flaky；原artifact的error-context只含失败按钮局部DOM，无法直接证明目录或源图状态。旧技术PASS是当时证据下的历史结论，本次增量另绑SHA。
+
+- MC-003，P2，AC-1阻断：真实受控事件证明同账号/模型、持久目录未变时，provider-changed会因revision依赖将未保存edit=supported/maxReferences=1清空为未知。移除事件revision作为草稿重置依据，事件仍触发目录重读；新回归核对字段和实际保存目录。本地新32次定向、完整408及fresh native均通过，等待已提交HEAD的独立正式复验。
+- MC-002，P2，dirty候选预审：删除revision后原reset函数涉及的family/variant/aliases未在依赖中。独立model_capability_review指出该遗漏；仅显示字段更新回归真实RED，随后补齐三项真实值依赖，新32次定向及408全量通过，等待独立正式复验。这个遗漏从未作为最终候选上传。
+
+预审不把草稿覆盖bug冒称原Hosted flaky的唯一根因；本轮加强图用例保存结果、原图存在与非敏感fixture现场信息，保留原禁用断言，不增retry/timeout，不删验收。当前未完成的fresh产物、完整检查、精确提交独立审查与Hosted均不预填PASS。
