@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
+| TASK-IMAGE-RETRY-004 | 修复主线区域重试验收读取旧成功任务 | PARTIAL | TASK-IMAGE-EDIT-001 | root |
 | TASK-DESKTOP-FLUSH-001 | 桌面关闭前耐久保存与失败留窗 | DONE | TASK-PLUGIN-DEV-001 | root |
 | TASK-PLUGIN-MARKDOWN-001 | 随包Markdown去除CDN代码依赖与离线渲染 | DONE | TASK-PLUGIN-DEV-001 | root |
 | TASK-PLUGIN-RECOVERY-001 | 插件节点快照完整恢复与坏数据保护 | DONE | TASK-PLUGIN-DEV-001 | root |
@@ -115,6 +116,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | T2, TASK-UI-GOV-003 | root |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
+
+## TASK-IMAGE-RETRY-004 — 修复主线区域重试验收读取旧成功任务
+
+- Goal: 区域重试必须验证新任务身份和真实完成，延迟时不能提前通过
+- Scope: 只修正已有浏览器验收同步，不修改产品代码或测试重试策略
+- Acceptance: 延迟第四次响应先复现旧任务状态误匹配; 等待全新第四任务再验完成、四POST及原件像素保护; 当前完整verify及独立精确SHA审查和CI通过
+- Branch: `test/TASK-IMAGE-RETRY-004-current-attempt`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-RETRY-004`
+- Modules: tests/browser/image-edit.spec.ts, docs
+- Verification: PARTIAL — 绑定当前主线的真实托管失败已保留；待独立复现及新源码门禁
+- Evidence: [docs/changes/2026-10-09-image-retry-verification/verification.md](../../docs/changes/2026-10-09-image-retry-verification/verification.md), [docs/changes/2026-10-09-image-retry-verification/review.md](../../docs/changes/2026-10-09-image-retry-verification/review.md)
+- Updated: 2026-10-09
 
 ## TASK-DESKTOP-FLUSH-001 — 桌面关闭前耐久保存与失败留窗
 

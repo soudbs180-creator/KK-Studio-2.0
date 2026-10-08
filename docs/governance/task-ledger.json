@@ -1,5 +1,35 @@
 [
   {
+    "id": "TASK-IMAGE-RETRY-004",
+    "title": "修复主线区域重试验收读取旧成功任务",
+    "goal": "区域重试必须验证新任务身份和真实完成，延迟时不能提前通过",
+    "scope": "只修正已有浏览器验收同步，不修改产品代码或测试重试策略",
+    "acceptance": [
+      "延迟第四次响应先复现旧任务状态误匹配",
+      "等待全新第四任务再验完成、四POST及原件像素保护",
+      "当前完整verify及独立精确SHA审查和CI通过"
+    ],
+    "dependencies": [
+      "TASK-IMAGE-EDIT-001"
+    ],
+    "owner": "root",
+    "branch": "test/TASK-IMAGE-RETRY-004-current-attempt",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-RETRY-004",
+    "affectedModules": [
+      "tests/browser/image-edit.spec.ts",
+      "docs"
+    ],
+    "status": "PARTIAL",
+    "priority": "P1",
+    "evidence": [
+      "docs/changes/2026-10-09-image-retry-verification/verification.md",
+      "docs/changes/2026-10-09-image-retry-verification/review.md"
+    ],
+    "verification": "绑定当前主线的真实托管失败已保留；待独立复现及新源码门禁",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-09"
+  },
+  {
     "id": "TASK-DESKTOP-FLUSH-001",
     "title": "桌面关闭前耐久保存与失败留窗",
     "goal": "编辑后立即关闭窗口仍保留最后修改，保存失败保留窗口和草稿",
