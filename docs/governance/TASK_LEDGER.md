@@ -118,7 +118,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-IMAGE-EDIT-001-unified-mask`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-EDIT-001`
 - Modules: src/features/image-edit, src/features/creation, src/components/nodes, src/App.tsx, src-tauri/src/task_host.rs, tests, docs
-- Verification: PASS — 承接main78cea37后的统一Mask/裁剪/请求/融合/灯箱、Web/native包和重启PASS；完整verify exit0：root739/747(原skip8)、Agent172/174(原skip2)、browser420/420零retry、Rust100、fresh EXE Mask及主线原生11组PASS；正式独立SHA复验待完成。
+- Verification: PASS — 承接main78cea37后的统一Mask/裁剪/请求/融合/灯箱、Web/native包和重启PASS；最新完整verify exit0：root741/749(原skip8)、Agent172/174(原skip2)、browser420/420零retry、Rust100、EXE Mask及主线原生11组PASS；1527b48独立关闭IM001–008、新增IM009脚本凭据保护已返修并实际验收，待新SHA复验。
 - Evidence: [docs/changes/2026-10-08-unified-image-mask/intent.md](../../docs/changes/2026-10-08-unified-image-mask/intent.md), [docs/changes/2026-10-08-unified-image-mask/spec.md](../../docs/changes/2026-10-08-unified-image-mask/spec.md), [docs/changes/2026-10-08-unified-image-mask/plan.md](../../docs/changes/2026-10-08-unified-image-mask/plan.md), [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/changes/2026-10-08-unified-image-mask/review.md](../../docs/changes/2026-10-08-unified-image-mask/review.md)
 - Updated: 2026-10-08
 

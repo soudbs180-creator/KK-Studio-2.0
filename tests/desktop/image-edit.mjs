@@ -1,11 +1,15 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import path from "node:path";
 import { chromium, expect } from "@playwright/test";
 import { credentialId } from "../../src/features/creation/providerCredentials.ts";
+import {
+  claimFixtureCredential,
+  releaseFixtureCredential,
+} from "./image-edit-credential.mjs";
 
 const root = process.cwd(),
   executable = path.join(root, "src-tauri/target/release/kk-studio.exe");
@@ -20,7 +24,9 @@ const cdp = "http://127.0.0.1:9364",
   pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const requests = [],
   errors = [];
-let resultBase64, child, browser, page, vaultId;
+const fixtureProvider = `Image edit fixture ${randomUUID()}`;
+let resultBase64, child, browser, page, vaultId, receipt;
+let credentialConflictPreserved = false;
 const server = createServer(async (request, response) => {
   try {
     assert.equal(request.url, "/v1/images/edits");
@@ -64,7 +70,13 @@ const saved = () =>
   page.evaluate(() =>
     window.__TAURI_INTERNALS__.invoke("read_creation_snapshot"),
   );
+const nativeInvoke = (command, args = {}) =>
+  page.evaluate(
+    ({ command, args }) => window.__TAURI_INTERNALS__.invoke(command, args),
+    { command, args },
+  );
 async function closeApp() {
+  const owned = Boolean(child);
   await browser?.close().catch(() => {});
   browser = undefined;
   if (child && child.exitCode === null) {
@@ -73,13 +85,14 @@ async function closeApp() {
     await exited;
   }
   child = undefined;
-  await expect
-    .poll(() =>
-      fetch(`${cdp}/json/version`)
-        .then((r) => r.ok)
-        .catch(() => false),
-    )
-    .toBe(false);
+  if (owned)
+    await expect
+      .poll(() =>
+        fetch(`${cdp}/json/version`)
+          .then((r) => r.ok)
+          .catch(() => false),
+      )
+      .toBe(false);
 }
 async function launch() {
   assert.equal(
@@ -141,9 +154,29 @@ try {
   });
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
-  await page.getByLabel("提供商", { exact: true }).fill("Image edit fixture");
+  await page.getByLabel("提供商", { exact: true }).fill(fixtureProvider);
   await page.getByLabel("接口地址").fill(baseUrl);
-  vaultId = credentialId(baseUrl, "Image edit fixture");
+  const fixtureId = credentialId(baseUrl, fixtureProvider);
+  vaultId = await claimFixtureCredential(nativeInvoke, fixtureId);
+  const conflictValue = "synthetic-image-edit-existing-value";
+  await nativeInvoke("credential_set", {
+    providerId: vaultId,
+    secret: conflictValue,
+  });
+  await assert.rejects(
+    claimFixtureCredential(nativeInvoke, fixtureId),
+    /existing credential/,
+  );
+  assert.equal(
+    (await nativeInvoke("credential_get", { providerId: vaultId })) ===
+      conflictValue,
+    true,
+    "Refused fixture registration must retain the existing value",
+  );
+  credentialConflictPreserved = true;
+  await releaseFixtureCredential(nativeInvoke, vaultId);
+  vaultId = undefined;
+  vaultId = await claimFixtureCredential(nativeInvoke, fixtureId);
   await page.getByLabel("API Key").fill("fixture-image-edit-key");
   await page.getByLabel("模型名称").fill("image-test");
   await page.getByRole("button", { name: "保存", exact: true }).click();
@@ -399,7 +432,7 @@ try {
   );
   assert.equal(requests.length, 2, "restart must not resubmit edits");
   assert.deepEqual(errors, []);
-  const receipt = {
+  receipt = {
     runtime,
     distScripts,
     executableSha256: createHash("sha256")
@@ -409,15 +442,9 @@ try {
     protection,
     packageAssetCount: exported.assetIds.length,
     restart: "PASS",
+    credentialConflictPreserved,
     errors,
   };
-  await writeFile(
-    path.join(evidence, "desktop-acceptance.json"),
-    JSON.stringify(receipt, null, 2) + "\n",
-  );
-  process.stdout.write(
-    JSON.stringify({ desktopImageEdit: "PASS", evidence, ...receipt }) + "\n",
-  );
 } catch (error) {
   if (page && browser) {
     await page
@@ -445,16 +472,34 @@ try {
   }
   throw error;
 } finally {
-  if (vaultId && page && browser)
-    await page
-      .evaluate(
-        (providerId) =>
-          window.__TAURI_INTERNALS__.invoke("credential_delete", {
-            providerId,
-          }),
-        vaultId,
-      )
-      .catch(() => {});
-  await closeApp();
-  await new Promise((resolve) => server.close(resolve));
+  try {
+    if (vaultId) {
+      if (
+        !page ||
+        page.isClosed() ||
+        !browser?.isConnected() ||
+        child?.exitCode !== null
+      ) {
+        await closeApp();
+        await launch();
+      }
+      await releaseFixtureCredential(nativeInvoke, vaultId);
+      vaultId = undefined;
+    }
+  } finally {
+    try {
+      await closeApp();
+    } finally {
+      server.closeAllConnections();
+      await new Promise((resolve) => server.close(resolve));
+    }
+  }
 }
+receipt.credentialCleanupComplete = true;
+await writeFile(
+  path.join(evidence, "desktop-acceptance.json"),
+  JSON.stringify(receipt, null, 2) + "\n",
+);
+process.stdout.write(
+  JSON.stringify({ desktopImageEdit: "PASS", evidence, ...receipt }) + "\n",
+);

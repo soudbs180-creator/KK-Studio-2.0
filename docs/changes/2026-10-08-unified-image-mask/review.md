@@ -22,6 +22,16 @@ Dirty 预检结论 CHANGES REQUIRED，正式 SHA 审查之前的预检。以下�
 
 Self-review 另修 native 缺省 Option 写 null 导致元数据拒绝（RED→GREEN）；TaskHost/IPC 独立实例抢文件锁（真实重复生成 unknown→两次 succeeded）。保持严格文件锁与素材校验，不重复付费请求或生成假成功。
 
+## 1527b48 正式复验（历史）
+
+独立 reviewer 重新读取原需求附件、规则与实际 diff；base 78cea37af9359fd2d9f58f2854525516deee8a06、head 1527b481cf80499ae25f9136ad164dbe1a20f039，工作树 clean。独立 59 个定向 Node、Rust 3 项、typecheck 和 1437 production Web 的 11 个编辑用例无重试通过，IM-001–008 全部 CLOSED。新增 IM-009，使该 head 结论为 CHANGES REQUIRED；不能以初轮 self-review 或测试通过关闭。原独立收据在本机 output/unified-image-mask-20261008/review-1527b48.md。
+
+| ID | 严重度 | 问题和复现 | 实现者修复及证据 | 独立状态 |
+| --- | --- | --- | --- | --- |
+| IM-009 | P2 | native 验收脚本缺少凭据 ownership；固定 provider 名+可复用端口可覆盖/删除已有 ID；吞掉 cleanup 失败且在 finally 前写 PASS | UUID provider、空值检查后认领、只清本轮 ID、删后读回、失败传播和必要重连；PASS 收据延后；2 项拒绝/删除失败单测 RED→GREEN，实际 OS 合成冲突原值保留及 cleanup=true | 待新已提交 head 复验 |
+
+修复限于测试脚本与有意义的凭据安全回归，不改产品源码或版本。最新 Native 收据在 .tmp/image-edit/desktop/run-1791463594856-56968/，Mask 外改变 0、两次请求/包/删除再生/重启继续通过，cleanup 成功读回。完整 verify 741 root / 172 Agent / 420 browser 无重试通过。最终结论需绑定新 head，1527b48 的 CHANGES REQUIRED 保留。
+
 ## 门禁与结论
 
 - 本地 lint/typecheck/root/Agent/UI/format/build/full browser、Rust/client/fresh EXE 与包恢复：PASS，见 verification。

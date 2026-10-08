@@ -75,6 +75,14 @@ Desktop 脚本的目录 key、summary camelCase、按钮名称及保存等待错
 
 组合首轮 verify exit 0 但有 1 flaky：撤销测试比较缺省 colorCounters 和空记录，并可能读取撤销前的保存副本。保留维度、region ID 和每条 run 的严格断言，只统一空计数器语义，且等待撤销实际落盘；定向 5 次无重试通过。随后 12 workers 全套多处旧页面发生 30 秒 UI 操作超时；当时本机有 178 个 msedge 和 91 个 node 进程，直接因果 UNKNOWN。保留日志，只终止唯一识别的本轮验证进程树；改为 4 workers、0 retry 后完整 420 PASS。没有放宽断言、延长超时或禁用检查。
 
+## IM-009 验收脚本返修验证
+
+1527b48 正式 review 为 CHANGES REQUIRED，新增测试脚本凭据 ownership/PASS 时机问题。增加 UUID provider、读为空后认领、只删本轮 ID、删后读回和清理失败传播；收据在全部 finally 成功后写。2 项有意义的拒绝/删除失败测试先 RED 后 GREEN。实际 OS 凭据预置合成值后拒绝再次认领，原值保留；完整测试收据 credentialConflictPreserved=true、credentialCleanupComplete=true。
+
+完整 `npm run verify -- -- --workers=4 --retries=0` 再次 exit 0：root 741/749（原 skip 8）、Agent 172/174（原 skip 2）、browser 420/420，0 retry/0 flaky；lint/typecheck/UI207/format/build 全通过。随后补充 cleanup 的 browser.isConnected 检查，最新 Native 与定向 formatter 再次 exit 0；产品源码、版本、EXE/JS hash 未变，不重复声称新的产品构建。
+
+最新 Native 收据 .tmp/image-edit/desktop/run-1791463594856-56968/desktop-acceptance.json；两次 Mask 请求、包/删除原图/再生/重启、Mask 外 0 改动继续通过。证据副本 D:/kk-studio/output/unified-image-mask-20261008/run-credential-fixed-IM009/，含新脚本 66 文件源清单与故障/完整 verify 日志。旧 64 文件清单、原生收据及 1527b48 的审查失败结论保留；新 head 独立关闭 IM-009 才能完成。
+
 ## 尚未验收
 
 真实付费 Provider 视觉质量、任意模型语义几何位移自动识别、物理手机键盘/触控及最终用户验收未发生。当前拒绝比例偏移大于 2% 的结果；不能声称自动识别所有构图位移。Mobile 原生应用未改，Web 窄屏与合成触控不等于真机验收。功能保持 PARTIAL，外部后续独立登记，不冻结已通过的本地实现。
