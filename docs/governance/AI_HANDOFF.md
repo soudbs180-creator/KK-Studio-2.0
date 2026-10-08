@@ -1,5 +1,13 @@
 # AI handoff
 
+## 2026-10-08 T5 原生收尾恢复入口（最新）
+
+先读 [T5 plan](../changes/2026-10-08-taskhost-native-lifecycle/plan.md)、[verification](../changes/2026-10-08-taskhost-native-lifecycle/verification.md)、[review](../changes/2026-10-08-taskhost-native-lifecycle/review.md)、[状态盘点](../changes/2026-10-08-taskhost-native-lifecycle/status.md)和机器账本。隔离树 `D:/kk-studio/KK-Studio-2.0/.worktrees/T5-native-lifecycle`、分支 `codex/T5-native-lifecycle`、基线 main@5b0eb6a。PR #34 已合并且主线 hosted CI 通过；后续不能重复合并其来源分支。PR #35 与模型能力分支由其他上下文处理，先核对实际 PR/main 和工作树，再承接。
+
+当前 T5 REVIEW：取消等待及可选元数据归档根因已修复；完整 verify、Rust 97、Agent/plain fresh native release 和 `client:taskhost:test` 十组实际原生验收通过。测试使用唯一 OS 合成凭据、独立 profile/dataRoot 和 owned CDP 9349，只终止本轮 PID，cleanup=true。成功项正常退出验证；图片部分输出、文本草稿明确异常终止后恢复 unknown、相同身份无二次 POST。收据绑定源文件/EXE/bundle hash，dirty 基线收据不能冒充最终 head；独立审查、Hosted 和合并后复验需后续实际结果。Desktop/Web 2.1.5，Mobile 规划 2.1.1。
+
+TASK-PROV-005/006 为 P1 TODO，配置 durable 恢复与 native image health/容量分别推进。BACKEND-MEDIA-001 → ORCH-003、报价回执、MCP-AUTO 可以先本地实现；真正付费服务、VPS、ComfyUI、Mobile/安装/视觉验收仍按原任务。原历史失败、源分支、其他工作树和用户数据全部保留。
+
 ## 2026-10-08 未完成任务继续执行恢复点
 
 当前实现工作树为 `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003`，分支 `codex/TASK-AUDIT-20261003`。本轮最终业务代码提交为 `dc055566457f8413c8ac7f9cc17778a9958bd5d8`，包含阶段计划工作台、成本未知语义、画布交付边界、不确定重试与重启恢复对账、归档证据保护和恢复错误文案清理。独立复核返修后，原生回执同时核对任务 ID/幂等键，重复、缺失、越界、声明冲突与非法类型均隔离为 unknown，不导入异常结果、不普通重试、不自动重复提交；保留有效归档、合法子集和真正缺失 `outputs` 的旧 `assetIds` 格式。恢复时先读[本轮计划](../changes/2026-10-03-incomplete-tasks/plan.md)、[验证](../changes/2026-10-03-incomplete-tasks/verification.md)、[复核记录](../changes/2026-10-03-incomplete-tasks/review.md)和 `docs/governance/task-ledger.json`，再检查当前 HEAD、工作树与最新 bundle。

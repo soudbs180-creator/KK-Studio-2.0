@@ -1,5 +1,13 @@
 # 当前进度
 
+## 2026-10-08 合并审计分支与原生生命周期收尾
+
+- PR #34 已从精确 head cddacaf squash 合入 main@5b0eb6a，tree 一致，合并后 hosted CI PASS；根 main clean fast-forward，历史分支/工作树保留。
+- T5 修复图片 HTTP/响应体/结果下载取消等待和可选元数据 null 归档失败；正常成功/幂等、重载、真实异常退出/逐槽恢复、文本容量/草稿、UI unknown 无普通重试与秘密隔离共十组原生验收 PASS。
+- 独立 npm ci；完整 verify：root 702/710、Agent 172/174（原有 8/2 skip）、browser 388/388，无失败/flaky；Rust 97/97、fmt/check、Agent/plain fresh native release PASS。新增 `client:taskhost:test` 接入 Windows CI。源码 Desktop/Web 2.1.5，Mobile 规划 2.1.1。
+- T5 当前 REVIEW，最终精确 head 审查、PR/Hosted 与主线推广以新收据为准。[验证](changes/2026-10-08-taskhost-native-lifecycle/verification.md)与[盘点/优先级](changes/2026-10-08-taskhost-native-lifecycle/status.md)保存当前事实。
+- 新增 P1 TASK-PROV-005（供应商非秘密配置的异常退出 durable 恢复）及 TASK-PROV-006（既有 native image 连接/容量/health 统一）；未实现仍为 TODO。所有 Provider/GPU、ComfyUI、VPS/Mobile 和安装/视觉终验不因本机 fixture 升级。
+
 ## 2026-10-08 未完成任务继续执行与复核返修
 
 - 当前台账共 97 项：DONE 56、PARTIAL 27、TODO 10、BLOCKED 4。

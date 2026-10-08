@@ -1,5 +1,13 @@
 # 当前项目状态
 
+## 2026-10-08 分支合并与 T5 原生收尾（当前事实）
+
+PR #34 精确候选 `cddacaf19d9cadcd09f9fa500182de56232f9c13` 已 squash 合入 `main@5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3`，候选/合并 tree 相同；合并后 hosted verify/deploy-linux 成功，根 main 已 clean fast-forward。原任务分支和工作树保留。
+
+T5 在独立 `codex/T5-native-lifecycle` / `.worktrees/T5-native-lifecycle` 补完真实 Tauri production 提交、取消、WebView reload、实际进程异常终止/重启、逐 slot/原件 hash 保留、文本容量和 UI unknown 禁普通重试。修复图片请求/响应体/下载等待不响应取消，以及省略可选 promptHash/provider id 被错误编码为 null 导致归档失败。独立 npm ci、完整 verify（root 702/710、Agent 172/174、388 browser；原 skip 保留）、Rust 97、两种 fresh native release 与十组原生验收通过。当前为 REVIEW，精确 committed SHA 独立审查、当前 PR 门禁与合并结果另行补证；详见 [T5 verification](../changes/2026-10-08-taskhost-native-lifecycle/verification.md)。源码 Desktop 2.1.5 / Web 2.1.5 / Mobile 规划 2.1.1，不代表安装或发布。
+
+新增 P1 TASK-PROV-005：供应商非秘密配置在立即异常退出时可能未落盘；P1 TASK-PROV-006：既有 native image 连接/容量及结构化 health 统一。这两项、真实 Provider/GPU、ComfyUI、VPS/Mobile、安装/视觉终验保持开放。PR #35 的阶段工作台与 TASK-MODEL-001 由原执行者处理，本轮不覆盖。全部逐项状态及后续顺序见[收尾盘点](../changes/2026-10-08-taskhost-native-lifecycle/status.md)和机器账本；下面为此前迭代记录，不能从其“尚未合并”文字推断当前 PR 状态。
+
 ## 2026-10-08 未完成任务继续执行与复核返修
 
 本轮隔离工作树 `codex/TASK-AUDIT-20261003` 已完成 TASK-ORCH-002 的阶段计划视图与审批闭环（`6ebaad8`）：任务工作台的 Plan 标签显示阶段状态、工作项数量和审批门，审批通过后进入执行中。TASK-TASKSTATE-001 的本地成本语义已收口（`937b050`）：新建/重试任务在没有供应商报价时保持未知，UI 统一显示未知或带明确口径的估算。TASK-CANVAS-001 已接入 Agent host 与 App 统一发布边界：图片要求资产身份，文案要求非空 provider 文本，契约失败保留为 unknown；混合批次的 unknown 重试会锁定父任务，重启恢复会合并已受理重试子任务并防止重复提交，终态缺回执会关闭 stale waiting 槽，旧格式错误优先采用终态子任务，排队 intent 保持源节点 pending。归档失败、原生提交响应/flush 丢失、缺失文案正文进入 unknown；有效归档结果保留，完整归档证据可解决终态失败汇总冲突，恢复成功后清除旧错误文案。原生成功缺资产/回执进入 unknown，恢复图像结果补回源节点连线。

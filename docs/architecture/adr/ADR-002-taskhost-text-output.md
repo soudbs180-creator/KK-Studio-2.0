@@ -9,3 +9,5 @@
 风险是重复提交、截断假成功及 journal 限额；用未知受理门禁、严格终止、文本/响应上限和回归约束。回滚保留含 text 的 journal/项目文件，停用新提交，不删除用户结果。
 
 2026-09-22 补充：Desktop 文本提交重新检查连接身份/健康状态，但不持有 Web Locks lease。原生请求寿命长于 WebView，故并发计数在现有 TaskHost jobs 内按 credentialRef 管理，concurrencyLimit 有界且在 journal 创建前校验；不新建队列。恢复只读取 journal，保留已存在的用户文案/标题。完整原生进程恢复和 image health 统一仍归 T5。
+
+2026-10-08 补充：[T5 原生验收](../../changes/2026-10-08-taskhost-native-lifecycle/verification.md)完成实际进程异常退出后的同身份恢复、草稿 unknown、WebView 重载后容量围栏和取消释放。图片复用现有文本 race-safe 取消通知，存储身份/IPC schema 不变。原生 image health/连接门禁统一独立归 TASK-PROV-006；付费服务仍归 EXT-PROVIDER，不能因本机 fixture 升级。

@@ -70,6 +70,8 @@ jobs:
       - run: cargo test --manifest-path src-tauri/Cargo.toml --no-default-features --locked
       - run: npm run client:check
       - run: npm run client:build -- --no-bundle
+      - name: Verify native TaskHost lifecycle with isolated local fixtures
+        run: npm run client:taskhost:test
       - uses: actions/upload-artifact@v4
         if: always()
         with:

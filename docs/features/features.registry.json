@@ -119,7 +119,8 @@
       "tests/browser/google-agent.spec.ts",
       "tests/unit/googleInteractions.test.ts",
       "vendor/canvas-agent/src/agent/codex-client.test.ts",
-      "tests/unit/agentEventStream.test.ts"
+      "tests/unit/agentEventStream.test.ts",
+      "tests/desktop/taskhost-lifecycle.mjs"
     ],
     "tasks": [
       "T5",
@@ -127,9 +128,11 @@
       "EXT-PROVIDER",
       "TASK-AGENT-001",
       "TASK-AGENT-004",
-      "TASK-AGENT-008"
+      "TASK-AGENT-008",
+      "TASK-PROV-005",
+      "TASK-PROV-006"
     ],
-    "updated": "2026-10-01",
+    "updated": "2026-10-08",
     "platforms": [
       "web",
       "desktop"
@@ -146,6 +149,10 @@
       {
         "platform": "web",
         "path": "docs/changes/2026-10-01-agent-image-transport/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md"
       }
     ]
   },
@@ -340,7 +347,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-008-text-node.md",
-    "summary": "文本节点复用BYOK与TaskHost：流式、取消、离线、编辑保存和重载已通过双端fixture；实际Provider与完整进程恢复仍待验收。",
+    "summary": "文本节点复用 BYOK/TaskHost：流式、取消、离线、编辑、重载、实际进程异常退出恢复与原生容量已通过双端 fixture；真实 Provider/health 统一仍待验收。",
     "entryPoints": [
       "添加节点 › 文本",
       "PromptCreationNode"
@@ -360,13 +367,17 @@
       "tests/browser/demo-results.spec.ts",
       "tests/unit/textGeneration.test.ts",
       "tests/browser/text-generation.spec.ts",
-      "tests/browser/ui-feature-parity.spec.ts"
+      "tests/browser/ui-feature-parity.spec.ts",
+      "tests/desktop/taskhost-lifecycle.mjs"
     ],
     "tasks": [
       "BACKEND-TEXT-NODE",
-      "TASK-UI-005"
+      "TASK-UI-005",
+      "T5",
+      "TASK-PROV-006",
+      "EXT-PROVIDER"
     ],
-    "updated": "2026-09-22",
+    "updated": "2026-10-08",
     "platforms": [
       "web",
       "desktop"
@@ -379,6 +390,10 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-21-text-and-rule-audit/text-desktop-runtime.json"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md"
       }
     ]
   },
