@@ -1,6 +1,6 @@
 # Verification：模型能力声明
 
-- Task ID：TASK-MODEL-001；当前增量状态：REVIEW；此前PASS为固定SHA历史；日期：2026-10-08（Asia/Shanghai）。
+- Task ID：TASK-MODEL-001；本地AC1–5 PASS（技术head71ddb625）；最终文档HEAD/Hosted另绑；此前PASS为固定SHA历史；日期：2026-10-08（Asia/Shanghai）。
 - [Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Review](review.md)。
 - branch：codex/TASK-MODEL-001-capabilities；开工base21d121d2b884b2b7ced4a98eb0e03c590de5c3cd；当前base5dd6e6dddaf00cf2d5c14ae02ef5974c72238232。
 - cwd：`D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`；原 checkout clean。
@@ -120,3 +120,9 @@ Web [390](evidence/latest-main5dd/capabilities-settings-390.png)、[1099](eviden
 Web同状态证据来自本轮严格1423：[390设置](evidence/draft-refresh5dd/capabilities-settings-390.png)、[1099设置](evidence/draft-refresh5dd/capabilities-settings-1099.png)、[1920设置](evidence/draft-refresh5dd/capabilities-settings-1920.png)、[1920 runtime](evidence/draft-refresh5dd/capabilities-runtime-1920.json)。根上下文目视抽查390设置与[native参数](evidence/draft-refresh5dd/parameters-native.png)；全部实际DOM/截图来自当前bundle。Development严格1421的[本轮日志](evidence/draft-refresh5dd/logs/latest-development-capability.log)和[runtime](evidence/draft-refresh5dd/development-runtime.json)记录相同通知后字段保持与真实持久化局部PASS；既有public插件遮罩仍FAIL，记录后Esc，仅局部验收，不改称整套开发模式通过。
 
 本轮[源码指纹](evidence/draft-refresh5dd/source-fingerprint.json)为2ebaab3d83bcf31fa33dbd94f8ee817b20baf5f1bf8661447beb64a5ac44735a、389文件（UTF8/LF归一），编译输入在全部检查期间固定。5项既有Rust warning与large-chunk提示保留。新提交正式独立审查、MC-002/MC-003关闭及当前SHA Hosted结果待完成；不以历史PASS或重试替代。
+
+## 独立复核与交付边界
+
+16:31对实际base5dd6e6dd..head71ddb625正式技术补审PASS，MC-002/MC-003关闭，MC-001保持关闭，无新增finding。独立87/87单测、389源码/产物hash匹配，完整收据见[review](review.md)和[review-product.json](evidence/draft-refresh5dd/review-product.json)。[该技术HEAD delivery结构门禁](evidence/draft-refresh5dd/logs/review-draft-delivery.log)退出0，162文件、0违规；结构检查不代替审查质量。
+
+本地AC完成与线上交付分别记账：最终文档HEAD仍需只读补审，推送后回读新SHA Hosted verify/delivery及浏览器原始结果，不能沿用2797687c的success。最终精确HEAD、补审结论及当前Hosted结果记录于draft PR#36描述与本地忽略的交付收据，避免通过不断回填自己的commit SHA制造循环。未合并发布；真实Provider等后续边界保留。

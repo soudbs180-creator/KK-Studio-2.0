@@ -1,6 +1,6 @@
 # Review：模型能力声明
 
-- Task ID：TASK-MODEL-001；当前增量：REVIEW；历史PASS绑定6da9920e/2797687c，不能套用修正源码；日期：2026-10-08。
+- Task ID：TASK-MODEL-001；技术补审PASS（head71ddb625）；最终文档HEAD增量补审另绑；历史6da9920e/2797687c结果保持原SHA；日期：2026-10-08。
 - [Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Verification](verification.md)。
 - 当前目标基线：origin/main@5dd6e6dddaf00cf2d5c14ae02ef5974c72238232；集成提交577ed3ee，主checkout目前同一main SHA且clean。本任务仅写隔离候选。
 - 实际 GitHub 审批、用户产品验收、合并与发布分别记录，不由技术检查代填。
@@ -61,3 +61,13 @@
 - MC-002，P2，dirty候选预审：删除revision后原reset函数涉及的family/variant/aliases未在依赖中。独立model_capability_review指出该遗漏；仅显示字段更新回归真实RED，随后补齐三项真实值依赖，新32次定向及408全量通过，等待独立正式复验。这个遗漏从未作为最终候选上传。
 
 预审不把草稿覆盖bug冒称原Hosted flaky的唯一根因；本轮加强图用例保存结果、原图存在与非敏感fixture现场信息，保留原禁用断言，不增retry/timeout，不删验收。当前未完成的fresh产物、完整检查、精确提交独立审查与Hosted均不预填PASS。
+
+## 草稿刷新修正正式独立补审：PASS
+
+2026-10-08 16:31，Asia/Shanghai；reviewer为原model_capability_review独立只读Codex/GPT-6上下文。实际base5dd6e6dddaf00cf2d5c14ae02ef5974c72238232、head71ddb625e97f169b392c3903daa38fc26f3d3ae2，工作树clean。审查从本任务规则、需求和实际diff开始，未写候选、启动服务、构建或派子代理。完整结构收据见[review-product.json](evidence/draft-refresh5dd/review-product.json)。
+
+MC-003 CLOSED：通知仍触发目录重读，revision不再充当草稿重置依据，身份/已保存值未变则保留未保存能力。MC-002 CLOSED：family/variant/aliases全部进入真实值依赖，身份/用途/尺寸/image真实变化仍刷新编辑状态。MC-001保持CLOSED：去重、计数、共享门禁与连接权限本次未改，相关单测及浏览器禁用断言继续通过。无新增P0–P3。
+
+独立重跑七文件87/87、0skip；重算389源码hash全部匹配聚合2ebaab3d83bcf31fa33dbd94f8ee817b20baf5f1bf8661447beb64a5ac44735a；实际EXE db354e2bbd14f5891a5c1b6e3b5584e2f3576c0525b4aa86f50ebed0be4351c5、index-D7y589oD.js/8c39cd503fd883c447769915c20cf1c952e10fd3bb1134015b352c491e227829匹配。亲自读取两项RED、32定向无retry、标准1423完整verify及fresh native收据，支持723/731root(8skip)、172/174Agent(2skip)、408/408browser零flaky；没有声称独立重跑全量Web/native。
+
+Declined to judge：原Hosted405pass+1flaky唯一根因仍UNKNOWN，新受控缺陷及本地通过不能倒推其唯一原因；新SHA Hosted待回读；开发插件完整验收、真实Provider、蒙版/扩图、原生Mobile、GitHub身份审批、用户产品验收和合并发布不在此次PASS范围。此后文档收口将单独审查准确新HEAD并在PR收据绑定，旧head不能直接替换为后续提交。

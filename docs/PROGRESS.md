@@ -2,7 +2,7 @@
 
 ## 2026-10-08 模型能力声明：Hosted日志复核后的增量修正
 
-TASK-MODEL-001 当前为 REVIEW。draft PR#36 第一轮 head2797687c 的 Hosted workflow success，但原始浏览器记录405pass+1flaky；原单次失败唯一根因仍UNKNOWN。受控RED复现无变化provider通知清空未保存草稿，修正移除revision重置并补齐family/variant/aliases真值依赖。新production定向8例×4=32pass且retries=0；标准1423完整verify723/731root(8原skip)、172/174Agent(2原skip)、408/408browser(0flaky)、UI198/0及clientcheck/fresh Tauri隔离运行均PASS。最新源码指纹2ebaab3d/389文件，产物index-D7y589oD.js与EXE匹配。新已提交HEAD独立审查及Hosted待完成；未合并发布，原主checkout未写入，功能仍PARTIAL。下面早先PASS条目保留为当时SHA的历史记录。
+TASK-MODEL-001 本地AC1–5 DONE。草稿无变化通知覆盖与显示字段依赖问题已修正：32定向无retry、完整verify723/731root(8原skip)、172/174Agent(2原skip)、408/408browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行PASS。2026-10-08 16:31 独立只读审查base5dd6e6dd..head71ddb625 PASS，MC-002/MC-003关闭，MC-001保持关闭；独立87/87、389源码hash和产物匹配，新指纹2ebaab3d。最终文档HEAD需补审，PR#36当前新SHA Hosted待取得；首轮2797687c的405pass+1flaky留档，唯一因果仍UNKNOWN。未合并发布，原主checkout未写入；FEAT-003仍PARTIAL，真实Provider/蒙版/扩图/Mobile及既有开发插件边界不变。下面早先PASS条目保留为当时SHA的历史记录。
 
 ## 2026-10-08 精确账号图片模型能力声明
 

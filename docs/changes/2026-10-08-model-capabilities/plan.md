@@ -2,7 +2,7 @@
 
 > For agentic workers: execute with superpowers:executing-plans; tests follow superpowers:test-driven-development. The project spec and AGENTS govern approvals and delivery.
 
-- Task ID：TASK-MODEL-001；状态：REVIEW（最新本地检查通过，待独立补审）；日期：2026-10-08。
+- Task ID：TASK-MODEL-001；状态：IMPLEMENTED（本地AC与head71ddb625技术补审通过，PR当前SHA CI另验）；日期：2026-10-08。
 - Goal：现有目录成为图片参数和已知限制的统一来源。
 - Architecture：domain 白名单 → account-scoped catalog → shared resolver → UI/共享提交校验。
 - Tech Stack：React 18 / TypeScript / Node 24 / Tauri 2；无新增依赖。

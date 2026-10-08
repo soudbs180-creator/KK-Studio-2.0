@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
-| TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | REVIEW | none | root |
+| TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
 | TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
 | T0 | 可复现候选源码与主线整合 | DONE | none | root |
 | TASK-GOV-001 | 治理源、ESLint、架构门禁和 CI | DONE | T0 | root |
@@ -114,7 +114,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-MODEL-001-capabilities`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`
 - Modules: src/domain, src/features/models, src/features/creation, src/components, src/App.tsx, tests, docs/features, docs/governance
-- Verification: PARTIAL — 首轮PR Hosted405pass+1flaky留档，原单次唯一因果UNKNOWN。草稿通知覆盖/显示依赖两项真实RED后最小修正：32定向无retry、完整verify723/731root(8skip)、172/174Agent(2skip)、408/408browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行PASS；389源码指纹2ebaab3d绑定新产物。新精确HEAD独立补审/Hosted待完成，PR#36仍draft，功能仍PARTIAL。
+- Verification: PASS — 本地AC1–5 DONE：草稿/显示刷新受控RED后最小修正，32定向无retry、完整verify723/731root(8skip)、172/174Agent(2skip)、408/408browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行PASS；独立71ddb625技术补审PASS，MC-002/MC-003关闭、MC-001保持关闭，87/87及389源码/产物指纹2ebaab3d匹配。最终文档head补审和当前SHA PR/Hosted另绑；首轮405+1flaky唯一因果UNKNOWN，不改历史结果；功能卡仍为部分实现，非整个产品完成证明。
 - Evidence: [docs/changes/2026-10-08-model-capabilities/intent.md](../../docs/changes/2026-10-08-model-capabilities/intent.md), [docs/changes/2026-10-08-model-capabilities/spec.md](../../docs/changes/2026-10-08-model-capabilities/spec.md), [docs/changes/2026-10-08-model-capabilities/plan.md](../../docs/changes/2026-10-08-model-capabilities/plan.md), [docs/changes/2026-10-08-model-capabilities/verification.md](../../docs/changes/2026-10-08-model-capabilities/verification.md), [docs/changes/2026-10-08-model-capabilities/review.md](../../docs/changes/2026-10-08-model-capabilities/review.md)
 - Updated: 2026-10-08
 

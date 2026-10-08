@@ -36,4 +36,4 @@ INFERENCE：服务可能没有能力扩展字段，所以缺失表示未知，�
 
 ## 后续受控修正
 
-首轮Hosted原始日志含本任务1flaky；继续调查复现真实草稿通知覆盖bug并按预审补齐显示字段依赖。当前本地408/408零flaky、fresh native通过，新提交独立审查及Hosted仍待完成。历史证据保留，本轮准确运行、SHA与状态见[verification](verification.md)和[review](review.md)，不把已发现问题掩盖为完成。
+首轮Hosted原始日志含本任务1flaky；继续调查复现真实草稿通知覆盖bug并按预审补齐显示字段依赖。当前本地408/408零flaky、fresh native及head71ddb625独立技术补审通过，最终文档HEAD和新SHA Hosted仍待完成。历史证据保留，本轮准确运行、SHA与状态见[verification](verification.md)和[review](review.md)，不把已发现问题掩盖为完成。
