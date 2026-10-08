@@ -52,6 +52,8 @@ export interface NativeTaskHostRecord {
 
 const DESKTOP_UNAVAILABLE =
   "Desktop TaskHost 尚未接入或不可用（Prototype），本次未发送浏览器 Provider 请求。";
+const INVALID_RECEIPT =
+  "Desktop TaskHost 输出回执缺失、冲突或超出原任务范围，请先核对供应商；不会自动重复提交。";
 
 export function usesNativeTaskHost(): boolean {
   return usesNativeAssets();
@@ -65,9 +67,11 @@ function requireNativeTaskHost(): void {
   if (!usesNativeTaskHost()) throw nativeTaskHostUnavailableError();
 }
 
-function normalizeRecord(
-  value: NativeTaskHostRecord & { assetIds?: unknown; failure?: unknown },
-): NativeTaskHostRecord {
+function normalizeRecord(input: unknown): NativeTaskHostRecord {
+  const value =
+    input && typeof input === "object"
+      ? (input as Record<string, unknown>)
+      : {};
   const rawOutputs = Array.isArray(value.outputs)
     ? value.outputs
     : Array.isArray(value.assetIds)
@@ -80,33 +84,53 @@ function normalizeRecord(
           error: undefined,
         }))
       : [];
-  const outputs = rawOutputs
-    .filter((output) => output && Number.isSafeInteger(output.index))
-    .map((output) => ({
-      index: output.index,
-      status:
-        output.status === "succeeded" ||
-        output.status === "unknown" ||
-        output.status === "failed"
-          ? output.status
-          : ("pending" as const),
-      assetId: typeof output.assetId === "string" ? output.assetId : undefined,
-      text:
-        "text" in output &&
-        typeof output.text === "string" &&
-        new TextEncoder().encode(output.text).length <= 32768
-          ? output.text
-          : undefined,
-      error: typeof output.error === "string" ? output.error : undefined,
-    }));
+  const validOutputs = rawOutputs.filter(
+    (output): output is Record<string, unknown> =>
+      output != null &&
+      typeof output === "object" &&
+      Number.isSafeInteger(output.index) &&
+      output.index >= 0 &&
+      ["pending", "submitted", "succeeded", "unknown", "failed"].includes(
+        output.status,
+      ),
+  );
+  // Do not discard malformed entries and then accept the remaining receipt.
+  const malformed =
+    validOutputs.length !== rawOutputs.length ||
+    (value.outputIndices !== undefined &&
+      (!Array.isArray(value.outputIndices) ||
+        value.outputIndices.some(
+          (index) => !Number.isSafeInteger(index) || index < 0,
+        ))) ||
+    !["submitted", "succeeded", "unknown", "failed"].includes(
+      value.status as string,
+    );
+  const outputs: NativeTaskHostOutput[] = validOutputs.map((output) => ({
+    index: output.index as number,
+    status:
+      output.status === "succeeded" ||
+      output.status === "unknown" ||
+      output.status === "failed"
+        ? output.status
+        : ("pending" as const),
+    assetId: typeof output.assetId === "string" ? output.assetId : undefined,
+    text:
+      "text" in output &&
+      typeof output.text === "string" &&
+      new TextEncoder().encode(output.text).length <= 32768
+        ? output.text
+        : undefined,
+    error: typeof output.error === "string" ? output.error : undefined,
+  }));
   return {
     taskId: typeof value.taskId === "string" ? value.taskId : "",
     idempotencyKey:
       typeof value.idempotencyKey === "string" ? value.idempotencyKey : "",
-    status:
-      value.status === "succeeded" ||
-      value.status === "failed" ||
-      value.status === "unknown"
+    status: malformed
+      ? "unknown"
+      : value.status === "succeeded" ||
+          value.status === "failed" ||
+          value.status === "unknown"
         ? value.status
         : "submitted",
     outputIndices: Array.isArray(value.outputIndices)
@@ -114,9 +138,10 @@ function normalizeRecord(
           Number.isSafeInteger(index),
         )
       : outputs.map((output) => output.index),
-    outputs,
-    failure:
-      typeof value.failure === "string"
+    outputs: malformed ? [] : outputs,
+    failure: malformed
+      ? INVALID_RECEIPT
+      : typeof value.failure === "string"
         ? value.failure
         : value.failure &&
             typeof value.failure === "object" &&
@@ -127,6 +152,53 @@ function normalizeRecord(
       typeof value.updatedAt === "number" && Number.isFinite(value.updatedAt)
         ? value.updatedAt
         : Date.now(),
+  };
+}
+
+/** Quarantine an inconsistent receipt before either live or recovered output is applied. */
+export function validateNativeTaskRecord(
+  record: NativeTaskHostRecord,
+  task: Pick<CreationTask, "id" | "idempotencyKey" | "requestedOutputs">,
+  submittedOutputIndices?: readonly number[],
+): NativeTaskHostRecord {
+  const declared = new Set(record.outputIndices);
+  const received = new Set(record.outputs.map((output) => output.index));
+  const identityMismatch =
+    record.taskId !== task.id || record.idempotencyKey !== task.idempotencyKey;
+  const invalidOutputs =
+    declared.size === 0 ||
+    declared.size !== record.outputIndices.length ||
+    received.size !== record.outputs.length ||
+    declared.size !== received.size ||
+    record.outputIndices.some(
+      (index) =>
+        !Number.isSafeInteger(index) ||
+        index < 0 ||
+        index >= task.requestedOutputs ||
+        !received.has(index),
+    ) ||
+    (submittedOutputIndices !== undefined &&
+      (submittedOutputIndices.length !== declared.size ||
+        submittedOutputIndices.some((index) => !declared.has(index))));
+  if (!identityMismatch && !invalidOutputs) return record;
+  const failure = identityMismatch
+    ? "Desktop TaskHost 回执的任务身份不匹配，请先核对供应商；不会自动重复提交。"
+    : INVALID_RECEIPT;
+  const outputIndices = submittedOutputIndices
+    ? [...submittedOutputIndices]
+    : Array.from({ length: task.requestedOutputs }, (_, index) => index);
+  return {
+    taskId: task.id,
+    idempotencyKey: task.idempotencyKey,
+    status: "unknown",
+    outputIndices,
+    outputs: outputIndices.map((index) => ({
+      index,
+      status: "unknown",
+      error: failure,
+    })),
+    failure,
+    updatedAt: record.updatedAt,
   };
 }
 
@@ -258,8 +330,11 @@ export async function reconcileNativeTasks(
       const tasks = await Promise.all(
         project.tasks.map(async (task) => {
           if (onlyTaskIds && !onlyTaskIds.includes(task.id)) return task;
-          const native =
+          const candidate =
             byTaskId.get(task.id) ?? byIdempotency.get(task.idempotencyKey);
+          const native = candidate
+            ? validateNativeTaskRecord(candidate, task)
+            : undefined;
           const mayHaveBeenSubmitted =
             task.submissionState === "submitted" ||
             task.submissionState === "unknown" ||
@@ -316,11 +391,7 @@ export async function reconcileNativeTasks(
               (output) => output.index === index,
             );
             if (!nativeOutput) {
-              if (
-                prior?.status === "succeeded" &&
-                (task.kind === "text" || Boolean(prior.assetId))
-              )
-                return prior;
+              if (prior && hasArchivedOutputEvidence(task, prior)) return prior;
               return {
                 ...(prior ?? {
                   index,

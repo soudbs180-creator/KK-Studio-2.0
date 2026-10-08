@@ -156,6 +156,7 @@ import {
   getNativeTask,
   reconcileNativeTasks,
   submitNativeTask,
+  validateNativeTaskRecord,
   usesNativeTaskHost,
   type NativeTaskHostRecord,
 } from "./features/creation/nativeTaskHost";
@@ -887,13 +888,23 @@ export default function App() {
           size: task.imageSize,
         });
         durableSubmission = true;
+        nativeRecord = validateNativeTaskRecord(
+          nativeRecord,
+          task,
+          pendingIndices,
+        );
         nativeTaskRecords.current[taskId] = nativeRecord;
         publish("running", undefined, "submitted");
         await persistence.flush();
 
         const applyNativeRecord = async (
-          record: NativeTaskHostRecord,
-        ): Promise<void> => {
+          incoming: NativeTaskHostRecord,
+        ): Promise<NativeTaskHostRecord> => {
+          const record = validateNativeTaskRecord(
+            incoming,
+            task,
+            pendingIndices,
+          );
           nativeTaskRecords.current[taskId] = record;
           const recordOutputs = new Map(
             record.outputs.map((output) => [output.index, output]),
@@ -1141,6 +1152,7 @@ export default function App() {
               : "terminal",
           );
           await persistence.flush();
+          return record;
         };
         if (
           nativeCancelRequested.current.has(taskId) ||
@@ -1164,7 +1176,7 @@ export default function App() {
           await applyNativeRecord(nativeRecord);
           return;
         }
-        await applyNativeRecord(nativeRecord);
+        nativeRecord = await applyNativeRecord(nativeRecord);
         while (nativeRecord.status === "submitted") {
           if (controller.signal.aborted) {
             if (nativeCancelRequested.current.has(taskId)) {
@@ -1185,7 +1197,7 @@ export default function App() {
             failure:
               "Desktop TaskHost 中没有找到原任务记录，请先核对供应商；不会自动重复提交。",
           };
-          await applyNativeRecord(nativeRecord);
+          nativeRecord = await applyNativeRecord(nativeRecord);
         }
         return;
       }

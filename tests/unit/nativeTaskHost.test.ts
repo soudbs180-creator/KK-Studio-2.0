@@ -6,6 +6,7 @@ import {
   listNativeTasks,
   reconcileNativeTasks,
   submitNativeTask,
+  validateNativeTaskRecord,
   type NativeTaskHostRequest,
 } from "../../src/features/creation/nativeTaskHost.ts";
 import {
@@ -168,6 +169,270 @@ function record(overrides: Record<string, unknown> = {}) {
     ...overrides,
   };
 }
+
+for (const identity of [
+  { taskId: "task-1", idempotencyKey: "foreign-key" },
+  { taskId: "foreign-task", idempotencyKey: "stable-1" },
+]) {
+  for (const archived of [false, true]) {
+    test(`native recovery rejects a mismatched identity ${JSON.stringify(identity)} with archived=${archived}`, async () => {
+      const project = createProject({
+        prompt: "生成",
+        model: "test-model",
+        kind: archived ? "image" : "text",
+        attachments: [],
+      });
+      project.tasks = [
+        {
+          ...createTask(project),
+          id: "task-1",
+          idempotencyKey: "stable-1",
+          sourceItemId: project.items[0].id,
+          status: "running",
+          submissionState: "submitted",
+          outputs: [
+            {
+              index: 0,
+              status: archived ? "succeeded" : "running",
+              assetId: archived ? "asset-original" : undefined,
+              model: project.model,
+              createdAt: 1,
+            },
+          ],
+          completedOutputs: archived ? 1 : 0,
+        },
+      ];
+      let assetReads = 0;
+      desktop(async (command) => {
+        if (command === "task_host_list")
+          return [
+            record({
+              ...identity,
+              status: "succeeded",
+              outputs: [
+                {
+                  index: 0,
+                  status: "succeeded",
+                  text: "foreign text",
+                  assetId: "asset-foreign",
+                },
+              ],
+            }),
+          ];
+        if (command === "asset_read") assetReads++;
+        throw new Error(
+          "foreign receipt must not load assets or create results",
+        );
+      });
+      try {
+        const recovered = await reconcileNativeTasks({
+          ...emptySnapshot(),
+          activeProjectId: project.id,
+          projects: [project],
+        });
+        const result = recovered.projects[0].tasks[0];
+        assert.equal(result.status, "unknown");
+        assert.equal(result.submissionState, "unknown");
+        assert.equal(
+          result.outputs?.[0].status,
+          archived ? "succeeded" : "unknown",
+        );
+        assert.equal(
+          result.outputs?.[0].assetId,
+          archived ? "asset-original" : undefined,
+        );
+        assert.equal(result.outputs?.[0].text, undefined);
+        assert.equal(result.completedOutputs, archived ? 1 : 0);
+        assert.equal(recovered.projects[0].items.length, project.items.length);
+        assert.equal(assetReads, 0);
+      } finally {
+        Reflect.deleteProperty(globalThis, "window");
+      }
+    });
+  }
+}
+
+const invalidOutputReceipts = [
+  {
+    name: "conflicting duplicate outputs",
+    outputs: [
+      { index: 0, status: "failed" },
+      { index: 0, status: "unknown" },
+    ],
+  },
+  {
+    name: "duplicate successes",
+    outputs: [
+      { index: 0, status: "succeeded", text: "foreign text" },
+      { index: 0, status: "succeeded", text: "other text" },
+    ],
+  },
+  { name: "duplicate declared indices", outputIndices: [0, 0] },
+  { name: "undeclared output", outputIndices: [] },
+  {
+    name: "unexpected output",
+    outputs: [
+      { index: 0, status: "failed" },
+      { index: 1, status: "failed" },
+    ],
+  },
+  {
+    name: "unexpected declared index",
+    outputIndices: [0, 1],
+    outputs: [
+      { index: 0, status: "failed" },
+      { index: 1, status: "failed" },
+    ],
+  },
+  { name: "missing declared receipt", outputs: [] },
+  { name: "malformed extra index", outputIndices: [0, "invalid"] },
+];
+for (const { name, ...overrides } of invalidOutputReceipts) {
+  test(`native recovery fences ${name} and preserves archived evidence`, async () => {
+    const project = createProject({
+      prompt: "介绍",
+      model: "text-test",
+      kind: "text",
+      attachments: [],
+    });
+    project.tasks = [
+      {
+        ...createTask(project),
+        id: "task-1",
+        idempotencyKey: "stable-1",
+        sourceItemId: project.items[0].id,
+        status: "running",
+        submissionState: "submitted",
+        outputs: [
+          {
+            index: 0,
+            status: "succeeded",
+            text: "已归档文案",
+            model: project.model,
+            createdAt: 1,
+          },
+        ],
+        completedOutputs: 1,
+      },
+    ];
+    desktop(async (command) => {
+      if (command === "task_host_list")
+        return [record({ status: "failed", ...overrides })];
+      throw new Error(
+        "invalid receipts must not import results or submit again",
+      );
+    });
+    try {
+      const recovered = await reconcileNativeTasks({
+        ...emptySnapshot(),
+        activeProjectId: project.id,
+        projects: [project],
+      });
+      const result = recovered.projects[0].tasks[0];
+      assert.equal(result.status, "unknown");
+      assert.equal(result.submissionState, "unknown");
+      assert.equal(result.outputs?.length, 1);
+      assert.equal(result.outputs?.[0].status, "succeeded");
+      assert.equal(result.outputs?.[0].text, "已归档文案");
+      assert.equal(result.completedOutputs, 1);
+      assert.equal(recovered.projects[0].items.length, project.items.length);
+    } finally {
+      Reflect.deleteProperty(globalThis, "window");
+    }
+  });
+}
+
+test("native recovery accepts a consistent subset and preserves other archived slots", async () => {
+  const project = createProject({
+    prompt: "介绍",
+    model: "text-test",
+    kind: "text",
+    attachments: [],
+  });
+  const task = {
+    ...createTask(project),
+    id: "task-1",
+    idempotencyKey: "stable-1",
+    requestedOutputs: 2,
+    sourceItemId: project.items[0].id,
+    status: "running" as const,
+    submissionState: "submitted" as const,
+    outputs: [
+      {
+        index: 0,
+        status: "succeeded" as const,
+        text: "已归档文案",
+        model: project.model,
+        createdAt: 1,
+      },
+    ],
+    completedOutputs: 1,
+  };
+  project.tasks = [task];
+  desktop(async (command) => {
+    if (command === "task_host_list")
+      return [
+        record({
+          status: "succeeded",
+          outputIndices: [1],
+          outputs: [{ index: 1, status: "succeeded", text: "新文案" }],
+        }),
+      ];
+    throw new Error("text recovery must not read assets or submit again");
+  });
+  try {
+    const recovered = await reconcileNativeTasks({
+      ...emptySnapshot(),
+      activeProjectId: project.id,
+      projects: [project],
+    });
+    const result = recovered.projects[0].tasks[0];
+    assert.equal(result.status, "succeeded");
+    assert.equal(result.completedOutputs, 2);
+    assert.deepEqual(
+      result.outputs?.map((output) => output.text),
+      ["已归档文案", "新文案"],
+    );
+    const native = (await listNativeTasks())[0];
+    assert.equal(validateNativeTaskRecord(native, task, [1]), native);
+    assert.equal(validateNativeTaskRecord(native, task, [0]).status, "unknown");
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});
+
+test("legacy assetIds receipts retain their declared output identity", async () => {
+  desktop(async () => [
+    record({
+      status: "succeeded",
+      outputs: undefined,
+      outputIndices: [1],
+      assetIds: ["asset-original"],
+    }),
+  ]);
+  try {
+    const native = (await listNativeTasks())[0];
+    assert.deepEqual(native.outputs, [
+      {
+        index: 1,
+        status: "succeeded",
+        assetId: "asset-original",
+        text: undefined,
+        error: undefined,
+      },
+    ]);
+    assert.equal(
+      validateNativeTaskRecord(
+        native,
+        { id: "task-1", idempotencyKey: "stable-1", requestedOutputs: 2 },
+        [1],
+      ),
+      native,
+    );
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});
 
 test("native TaskHost adapter forwards stable request and command arguments", async () => {
   const calls: Array<{ command: string; args?: Record<string, unknown> }> = [];
@@ -656,6 +921,7 @@ test("native failure preserves already archived output evidence", async () => {
           idempotencyKey: "stable-1",
           status: "failed",
           failure: "provider failed",
+          outputIndices: [0, 1],
           outputs: [
             { index: 0, status: "failed" },
             { index: 1, status: "pending" },
