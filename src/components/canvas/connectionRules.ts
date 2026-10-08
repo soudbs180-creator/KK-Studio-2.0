@@ -1,8 +1,8 @@
-import {
-  maxReferenceCount,
-  type CanvasCollectionItem,
-} from "../../domain/canvasItems";
+import { type CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import type { CanvasConnection } from "../../domain/canvasGraph";
+import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities.ts";
+import { readProviderConnections } from "../../features/creation/providerRegistry.ts";
+import type { ModelSelection } from "../../domain/modelSelection.ts";
 
 /** Whether a hovered card can accept the edge that a pointer drag would make. */
 export function canConnectTarget(
@@ -10,6 +10,7 @@ export function canConnectTarget(
   edges: CanvasConnection[],
   sourceId: string,
   targetId: string,
+  defaultSelection?: ModelSelection,
 ): boolean {
   if (sourceId === targetId) return false;
   const target = items.find((item) => item.id === targetId);
@@ -30,5 +31,12 @@ export function canConnectTarget(
       (items.find((item) => item.id === edge.source)?.kind === "image" ||
         !items.some((item) => item.id === edge.source)),
   ).length;
-  return incoming < maxReferenceCount(target);
+  return (
+    incoming <
+    canvasImageReferenceLimit(
+      target,
+      readProviderConnections(),
+      defaultSelection,
+    )
+  );
 }

@@ -1,17 +1,21 @@
-import type { Dispatch, SetStateAction } from "react";
+import { useContext, type Dispatch, type SetStateAction } from "react";
 import type {
   CanvasCollectionItem,
   CanvasReference,
   DemoResult,
   NodeEditingProps,
 } from "../../domain/canvasItems";
-import { maxReferenceCount } from "../../domain/canvasItems";
+import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities";
+import { readProviderConnections } from "../../features/creation/providerRegistry";
 import type { CanvasConnection } from "../../domain/canvasGraph";
 import type { useCanvasControls } from "./useCanvasControls";
 import type { useCanvasAddMenu } from "./useCanvasAddMenu";
 import CanvasNodeFrame from "./CanvasNodeFrame";
 import CanvasNodeContent from "./CanvasNodeContent";
-import { CanvasImageNodeContext } from "../../features/creation/CanvasImageCommand";
+import {
+  CanvasImageNodeContext,
+  CanvasImageCommandContext,
+} from "../../features/creation/CanvasImageCommand";
 
 type GenerationPhase = Parameters<
   NonNullable<NodeEditingProps["onGenerationState"]>
@@ -62,6 +66,7 @@ export default function CanvasNodeItem({
   onRemoveReference: (id: string) => void;
   onGenerationState: (id: string, phase: GenerationPhase) => void;
 }) {
+  const command = useContext(CanvasImageCommandContext);
   const editing: NodeEditingProps = {
     selected: controls.selectedNode === item.id,
     liked,
@@ -96,7 +101,17 @@ export default function CanvasNodeItem({
         ),
       ),
     references,
-    referenceLimit: maxReferenceCount(item),
+    referenceLimit: canvasImageReferenceLimit(
+      item,
+      readProviderConnections(),
+      command
+        ? {
+            source: "api",
+            model: command.model,
+            connectionId: command.providerConnectionId,
+          }
+        : undefined,
+    ),
     onAddReferences: (entries) => onAddReferences(item.id, entries),
     onRemoveReference,
     onGenerationState: (phase) => onGenerationState(item.id, phase),

@@ -9,7 +9,7 @@ export default function ImageRedrawDialog({
   onClose: () => void;
 }) {
   const [prompt, setPrompt] = useState("");
-  const generation = useCanvasImageGeneration();
+  const generation = useCanvasImageGeneration({ outputCount: 1 });
   const loading = generation.phase === "loading";
   return (
     <Modal title="重绘参考图片" onClose={onClose} className="redraw-modal">

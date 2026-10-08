@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-10-08 TASK-MODEL-001 恢复入口
+
+任务 worktree `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`，分支 codex/TASK-MODEL-001-capabilities，基线 main/origin/main@21d121d；原 checkout clean。先读[本轮计划](../changes/2026-10-08-model-capabilities/plan.md)、[验证](../changes/2026-10-08-model-capabilities/verification.md)、[review](../changes/2026-10-08-model-capabilities/review.md)和账本。完整verify已通过645root/172Agent/381browser，fresh Tauri最终补测/独立审查进行中。固定1421开发plugin错误在原main复现，TASK-PLUGIN-DEV-001待办；Esc后新声明表单已验证。没有以1425上失败的本机服务/图片比较结果放宽测试；1423原配置最终通过。生产/原生证据与构建hash需回读本包evidence，真实Provider/蒙版/扩图、用户验收、托管门禁、合并/发布另计。
+
 ## 2026-10-01 Codex 生图回传恢复点
 
 先核对PR #33真实merged状态、最新origin/main和最终文档head审查/CI；本机TASK-AGENT-008 AC-1–3 DONE不能替代推广收据。[计划](../changes/2026-10-01-agent-image-transport/plan.md)/[验证](../changes/2026-10-01-agent-image-transport/verification.md)保留main@709e51d基线、实现3c63f1e独立PASS与P3文档修正。native result去二进制和提交前幂等均RED→GREEN，2 MiB保护保留；run5真实生图/续聊/重连/重启hash一致且节点/标记唯一，verify632root/172Agent/377browser和Rust97 PASS。run3/run4失败历史及run5脚本设置错误不覆盖。重启先开项目并按入口启动服务，本次未改自动启动。豆包区域限制登录和CLI自动回画布仍未完成，不并行使用其profile。57/16→809/768，附加752恒定。

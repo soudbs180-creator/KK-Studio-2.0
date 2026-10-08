@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-09-29
-- 关联任务：TASK-UI-005、TASK-CAP-001、TASK-MINIMAX-001、PLUGIN-DESKTOP-001
+- 最近更新：2026-10-08
+- 关联任务：TASK-UI-005、TASK-CAP-001、TASK-MINIMAX-001、PLUGIN-DESKTOP-001、TASK-PLUGIN-DEV-001
 
 ## 用户可见入口
 
@@ -33,6 +33,7 @@
 
 ## 差距与后端化
 
+- TASK-PLUGIN-DEV-001：固定 1421 的 Vite development 会因随包 `/plugins/*.js` public-import 错误弹出遮罩；原主线与 TASK-MODEL-001 均复现。Production/Tauri 的既有结果保留，开发加载未完成；见[本轮诊断](../changes/2026-10-08-model-capabilities/verification.md)。
 - 将连接器目录页与插件系统合并为统一“连接器/插件”入口。
 - 插件 `ctx.ai` 生成能力走本项目资产管线（result 入画布），generateText 提示走对话面板。
 - 远程插件仍以应用权限运行，仅允许不含凭据/片段的 HTTPS 地址且禁止自动重定向；本轮不承诺远程代码在 Desktop 中执行。

@@ -1,0 +1,52 @@
+✔ reported image declarations preserve unsupported operations and zero reference allowance (1.134ms)
+✔ malformed capability values stay unknown instead of disabling or authorizing an operation (0.1162ms)
+✔ catalog saves and reloads only whitelisted capability metadata (0.6542ms)
+✔ manual declarations survive reported refresh for the same exact account and model (0.374ms)
+✔ same route in two accounts keeps separate declarations and identity edits invalidate old capabilities (0.3882ms)
+✔ legacy v1 catalogs retain sizes while absent capability declarations remain unknown (0.2756ms)
+✔ explicitly unsupported generate or edit is rejected by the shared submission gate (2.9474ms)
+✔ model zero and tighter reference limits prevent submission without enlarging provider permission (1.4126ms)
+✔ model task output limit rejects excess outputs but does not mistake legacy HTTP limits for task limits (0.5069ms)
+✔ lease recheck observes a late model declaration change before the next request (2.1125ms)
+✔ canvas connection affordance refuses references beyond the exact model limit (0.4436ms)
+✖ image declarations do not restrict a text model on the same account (0.5479ms)
+✔ new canvas nodes without an explicit model use the current command selection for reference limits (0.1867ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 12
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 155.2944
+
+✖ failing tests:
+
+test at tests\unit\imageModelCapabilities.test.ts:398:1
+✖ image declarations do not restrict a text model on the same account (0.5479ms)
+  AssertionError [ERR_ASSERTION]: Got unwanted exception.
+  Actual message: "连接不支持本次操作、模型或参考图数量，请选择支持的连接。"
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities/tests/unit/imageModelCapabilities.test.ts:401:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: Error: 连接不支持本次操作、模型或参考图数量，请选择支持的连接。
+        at assertSubmissionConnection (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities/src/features/creation/providerSubmission.ts:132:11)
+        at file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities/tests/unit/imageModelCapabilities.test.ts:401:29
+        at getActual (node:assert:611:5)
+        at strict.doesNotThrow (node:assert:779:32)
+        at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities/tests/unit/imageModelCapabilities.test.ts:401:10)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19)
+        at Test.run (node:internal/test_runner/test:1447:12),
+    expected: undefined,
+    operator: 'doesNotThrow',
+    diff: 'simple'
+  }

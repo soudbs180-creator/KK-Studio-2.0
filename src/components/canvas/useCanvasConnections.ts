@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useContext,
   useRef,
   useState,
   type Dispatch,
@@ -9,17 +10,18 @@ import {
   INITIAL_CONNECTIONS,
   type CanvasConnection,
 } from "../../domain/canvasGraph";
-import {
-  maxReferenceCount,
-  type CanvasCollectionItem,
-} from "../../domain/canvasItems";
+import { type CanvasCollectionItem } from "../../domain/canvasItems";
 import { reconcileCanvasConnections } from "../../domain/canvasConnections";
+import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities";
+import { readProviderConnections } from "../../features/creation/providerRegistry";
+import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
 
 export function useCanvasConnections(
   items: CanvasCollectionItem[],
   onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>,
   initialEdges: CanvasConnection[] = INITIAL_CONNECTIONS,
 ) {
+  const command = useContext(CanvasImageCommandContext);
   const [edges, setEdges] = useState(initialEdges);
   const [observedEdges, setObservedEdges] = useState(initialEdges);
   // Async provider results arrive through project state while this canvas stays
@@ -104,7 +106,17 @@ export function useCanvasConnections(
       !uploadOnlyTarget &&
       (targetItem.kind === "image" || targetItem.kind === "video");
     const max = limited
-      ? maxReferenceCount(targetItem)
+      ? canvasImageReferenceLimit(
+          targetItem,
+          readProviderConnections(),
+          command
+            ? {
+                source: "api",
+                model: command.model,
+                connectionId: command.providerConnectionId,
+              }
+            : undefined,
+        )
       : Number.POSITIVE_INFINITY;
     const invalidReference =
       limited && Boolean(sourceItem) && sourceItem?.kind !== "image";

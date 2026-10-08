@@ -156,6 +156,7 @@ export async function prepareImageTask(
       baseUrl: selected.baseUrl,
       credentialRef: selected.credentialRef,
       referenceCount: input.attachments.length,
+      outputCount: input.outputCount ?? 1,
       kind: input.kind === "text" ? ("text" as const) : ("image" as const),
       model: input.model,
     };
@@ -197,6 +198,7 @@ export async function prepareImageTask(
         input.attachments.length,
         input.kind === "text" ? "text" : "image",
         input.model,
+        input.outputCount ?? 1,
       ),
     );
   }
@@ -211,6 +213,7 @@ export async function prepareImageTask(
     baseUrl: project.providerBaseUrl,
     credentialRef: project.providerCredentialRef,
     referenceCount: input.attachments.length,
+    outputCount: input.outputCount ?? 1,
     kind: input.kind === "text" ? ("text" as const) : ("image" as const),
     model: input.model,
   };

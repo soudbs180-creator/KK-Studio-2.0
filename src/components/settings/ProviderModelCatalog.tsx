@@ -9,6 +9,10 @@ import {
   modelProviderSchema,
   type ModelProviderProfile,
 } from "../../domain/modelProvider";
+import ImageModelCapabilityFields, {
+  imageCapabilityDraft,
+  imageDeclarationFromDraft,
+} from "./ImageModelCapabilityFields";
 
 export default function ProviderModelCatalog({
   profile,
@@ -30,6 +34,9 @@ export default function ProviderModelCatalog({
   const [family, setFamily] = useState(selected?.family ?? "");
   const [variant, setVariant] = useState(selected?.variant ?? "");
   const [aliases, setAliases] = useState(selected?.aliases?.join(", ") ?? "");
+  const [image, setImage] = useState(() =>
+    imageCapabilityDraft(selected?.image),
+  );
   const [status, setStatus] = useState("");
   useEffect(() => {
     const update = () => setRevision((value) => value + 1);
@@ -43,7 +50,7 @@ export default function ProviderModelCatalog({
     setFamily(selected?.family ?? "");
     setVariant(selected?.variant ?? "");
     setAliases(selected?.aliases?.join(", ") ?? "");
-    setStatus("");
+    setImage(imageCapabilityDraft(selected?.image));
   }, [
     profile.model,
     profile.baseUrl,
@@ -51,7 +58,12 @@ export default function ProviderModelCatalog({
     revision,
     selected?.kind,
     selected?.sizes?.join(", "),
+    JSON.stringify(selected?.image),
   ]);
+  useEffect(
+    () => setStatus(""),
+    [profile.model, profile.baseUrl, profile.name],
+  );
   function save() {
     const valid = modelProviderSchema.safeParse(profile);
     if (!valid.success) {
@@ -65,6 +77,16 @@ export default function ProviderModelCatalog({
       setStatus("尺寸请填写宽x高，例如 1024x1024；多个尺寸用逗号分隔。");
       return;
     }
+    let declaration;
+    try {
+      declaration =
+        kind === "image" ? imageDeclarationFromDraft(image) : undefined;
+    } catch (error) {
+      setStatus(
+        error instanceof Error ? error.message : "请检查模型能力声明。",
+      );
+      return;
+    }
     const model = {
       id: profile.model,
       family: family.trim() || undefined,
@@ -75,6 +97,7 @@ export default function ProviderModelCatalog({
         .filter(Boolean),
       kind,
       sizes: kind === "image" ? [...new Set(values)] : undefined,
+      image: declaration,
       source: "manual" as const,
     };
     try {
@@ -134,6 +157,22 @@ export default function ProviderModelCatalog({
           />
         </label>
       )}
+      {kind === "image" && (
+        <ImageModelCapabilityFields
+          value={image}
+          onChange={setImage}
+          disabled={loading}
+        />
+      )}
+      <p>
+        声明来源：
+        {selected?.source === "manual"
+          ? "手动填写"
+          : selected?.source === "reported"
+            ? "供应商报告"
+            : "未声明"}
+        。能力声明不代表实际生成验证。
+      </p>
       <p>
         按供应商文档填写。模型列表通常不包含尺寸信息；未声明时只使用默认尺寸，不推测
         2K 或 4K 能力。

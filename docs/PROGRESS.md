@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-08 精确账号图片模型能力声明
+
+TASK-MODEL-001 在隔离分支实现 generate/edit/inpaint/outpaint 三态、参考图与单次任务数量白名单，报告/手动保存恢复、精确账号/model 与共享 Web/Desktop 门禁贯通。任务上限 maxGenerationCount 和每次 HTTP maxOutputs 分开；未知兼容、原图和超限草稿保留，单张重绘使用自己的数量。Desktop/Web 源码2.1.4/2.1.5，Mobile规划2.1.1。完整 verify645root/172Agent/381browser通过，原8/2 skip保留；fresh Tauri最终补测和独立审查进行中。开发模式插件遮罩在原main复现，独立入账TASK-PLUGIN-DEV-001；真实Provider、蒙版/扩图执行、合并/发布未完成。见[验证](changes/2026-10-08-model-capabilities/verification.md)。
+
 ## 2026-10-01 KK Codex 原生生图回传/归档验收
 
 TASK-AGENT-008 本机AC-1–3 DONE：Base64事件/并发归档两组RED→GREEN，保护保留；新生产Tauri真实生图1,768,873bytes、自动归档/续聊/重连/重启hash一致、节点/标记唯一，verify632root/172Agent/377browser和Rust97/fmt/clientcheck PASS，原平台skip保留。Desktop2.1.3/Web2.1.4；实现head3c63f1e独立审查PASS，P3文档修正已完成，PR #33最终文档head补审/CI/推广以实际收据为准，不提前写合并。57/16→809/768，附加恒752，上轮长文是root验收说明。豆包区域限制登录与CLI自动回画布仍开放，详见[验证](changes/2026-10-01-agent-image-transport/verification.md)。

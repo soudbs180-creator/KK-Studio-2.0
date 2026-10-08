@@ -72,7 +72,12 @@ export default function ReferenceStrip({
                 className="reference-slot-add"
                 type="button"
                 aria-label={`添加${slot}参考图`}
-                disabled={limit > 0 && references.length >= limit}
+                disabled={references.length >= limit}
+                title={
+                  limit === 0
+                    ? "当前模型没有可用的参考图位置"
+                    : `最多 ${limit} 张参考图`
+                }
                 onClick={() => onAdd(slot)}
               >
                 <UiIcon name="add" size={14} />
@@ -100,8 +105,12 @@ export default function ReferenceStrip({
           className="reference-add"
           type="button"
           aria-label="添加参考图片"
-          disabled={limit > 0 && references.length >= limit}
-          title={limit > 0 ? `最多 ${limit} 张参考图` : "添加参考图片"}
+          disabled={references.length >= limit}
+          title={
+            limit > 0
+              ? `最多 ${limit} 张参考图`
+              : "当前模型没有可用的参考图位置"
+          }
           onClick={() => onAdd()}
         >
           <UiIcon name="add" size={15} />
@@ -111,6 +120,9 @@ export default function ReferenceStrip({
           <span className="reference-limit">
             {references.length}/{limit}
           </span>
+        )}
+        {limit === 0 && (
+          <span className="reference-limit">当前模型没有可用的参考图位置</span>
         )}
       </div>
     </div>
