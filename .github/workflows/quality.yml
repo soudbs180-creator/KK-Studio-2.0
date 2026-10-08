@@ -72,7 +72,9 @@ jobs:
       - run: npm run client:build -- --no-bundle
       - name: Ensure the native WebView2 Runtime is installed
         shell: pwsh
-        run: ./.github/scripts/ensure-webview2.ps1
+        run: |
+          ./tests/desktop/webview2-prerequisite.ps1
+          ./.github/scripts/ensure-webview2.ps1
       - name: Verify native TaskHost lifecycle with isolated local fixtures
         run: npm run client:taskhost:test
       - uses: actions/upload-artifact@v4

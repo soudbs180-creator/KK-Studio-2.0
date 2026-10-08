@@ -1,0 +1,13 @@
+PASS installed-local-runtime
+PASS missing-local-runtime
+PASS missing-self-hosted-runtime
+PASS missing-runner-identity
+PASS official-hosted-install
+PASS zero-version-is-missing
+PASS invalid-signature
+PASS other-publisher
+PASS publisher-prefix-spoof
+PASS publisher-suffix-spoof
+PASS install-nonzero
+PASS install-timeout
+PASS installed-version-still-missing

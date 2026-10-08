@@ -23,11 +23,13 @@ function Get-WebView2Version {
 $installedVersion = Get-WebView2Version
 Write-Output "WebView2 Runtime before setup: $($installedVersion ?? 'MISSING')"
 if (-not $installedVersion) {
-    if (-not $env:RUNNER_TEMP) { throw 'Missing WebView2 Runtime; automatic installation requires an isolated CI runner.' }
+    if ($env:GITHUB_ACTIONS -ne 'true' -or $env:RUNNER_ENVIRONMENT -ne 'github-hosted' -or -not $env:RUNNER_TEMP) {
+        throw 'Missing WebView2 Runtime; automatic installation requires an isolated GitHub-hosted CI runner.'
+    }
     $installerPath = Join-Path $env:RUNNER_TEMP ('webview2-' + [guid]::NewGuid().ToString() + '.exe')
     Invoke-WebRequest -Uri 'https://go.microsoft.com/fwlink/p/?LinkId=2124703' -OutFile $installerPath -TimeoutSec 60
     $signature = Get-AuthenticodeSignature -LiteralPath $installerPath
-    if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'O=Microsoft Corporation') {
+    if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch '(?:^|,\s*)O=Microsoft Corporation(?=,|$)') {
         throw 'WebView2 bootstrapper must have a valid Microsoft signature.'
     }
     $installer = Start-Process -FilePath $installerPath -ArgumentList '/silent', '/install' -WindowStyle Hidden -PassThru
