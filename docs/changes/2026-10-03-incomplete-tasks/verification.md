@@ -47,9 +47,16 @@
 | Prettier、UI、goals、governance、features、Markdown、version | PASS；UI 195 文件/0 违规，governance 97 tasks/0 违规，features 34/0，Markdown 99/0 |
 | Vite production build                                        | PASS；2978 modules transformed，保留依赖注释与 bundle 大小提示                     |
 | `cargo fmt --check`、`cargo test`、`cargo check`             | PASS；Rust 97/97，只有既有 dead-code warnings                                      |
-| `check-delivery`                                             | 最终文档提交后按精确 base/head 复验，见下方交付收据                                |
+| `check-delivery`                                             | PASS；已提交文档 head `643d80a`，76 files / 0 violations，精确范围见下方收据       |
 
 最终 Node、TypeScript、完整 ESLint、Prettier、Vite、完整浏览器及 Rust 均在业务代码 `dc05556` 加平台元数据 `d9f8eab` 对应输入上重新验证。浏览器机器收据：2026-10-08T02:47:03.508Z 启动、expected 388 / unexpected 0 / flaky 0 / skipped 0；Rust 日志编译本项目 v2.1.4，97 passed / 0 failed。Canvas Agent 174 项在 `5cbfe99` 验证，其后未修改 Agent。实现者日志位于工作区外层 `.verification/TASK-AUDIT-20261003/`，浏览器机器收据为工作树 `test-results/browser-results.json`；不提交运行缓存或将 fixture 升级为真实服务验收。
+
+## 交付收据与完成核对
+
+- 完整交付 base `21d121d2b884b2b7ced4a98eb0e03c590de5c3cd` → 已提交文档 head `643d80afa078694a778705ff7f15ab3a4080a1f0`，分支 `codex/TASK-AUDIT-20261003`：`check-delivery` 76 files / 0 violations，完整范围 `git diff --check` 通过；结构门禁不代替独立审查。
+- 独立版本/文档补审 base `dc055566457f8413c8ac7f9cc17778a9958bd5d8` → head `643d80afa078694a778705ff7f15ab3a4080a1f0`：PASS；reviewer 独立重跑 version/governance/features/Markdown/UI/delivery，并抽查全量运行收据及新 bundle，未发现阻断或事实不一致。全量运行仍归属实现者，不冒充 reviewer 独立全量执行。
+- 本轮本地目标已逐项核对：阶段计划与审批、未知成本语义、画布图片/文本交付、原生身份与输出回执、归档保护及重启/重试对账均有实现、失败边界回归和源码复核。任务视图与机器账本一致：97 项，DONE 56 / PARTIAL 27 / TODO 10 / BLOCKED 4；外部验收项与新增报价任务保留开放状态。
+- 主线 `main` 保持 base `21d121d2b884b2b7ced4a98eb0e03c590de5c3cd` 且干净。本轮仅交付任务分支；托管 CI、主线推广、安装/发布和用户最终产品验收未由本地收据证明。后续收据补录只改文档，仍按新 head 做独立增量补审，不将上述旧 head 审查冒充新提交审查。
 
 ## 实际浏览器运行链路
 
