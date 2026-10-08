@@ -52,6 +52,7 @@ export function useCanvasControls({
   const [transform, setTransform] = useState<ViewTransform>(
     () => initialCanvas?.viewport ?? INITIAL_TRANSFORM,
   );
+  const automaticViewport = useRef<ViewTransform | null>(null);
   const [nodes, setNodes] = useState(
     () => initialCanvas?.positions ?? createProjectCanvas(items).positions,
   );
@@ -133,31 +134,33 @@ export function useCanvasControls({
         ? Math.max(0, composerExtraHeight - 60)
         : composerExtraHeight);
     const left = node.x + layout.left;
-    setTransform((current) => {
-      const scale = Math.max(
-        MIN_SCALE,
-        Math.min(
-          current.scale,
-          (viewport.width - 32 - actionSpace) / viewWidth,
-          (viewport.height - 170) / height,
-        ),
-      );
-      let x = current.x;
-      let y = current.y;
-      if (left * scale + x < 16) x = 16 - left * scale;
-      if ((left + viewWidth) * scale + x > viewport.width - 16 - actionSpace)
-        x = viewport.width - 16 - actionSpace - (left + viewWidth) * scale;
-      if (node.y * scale + y < 70) y = 70 - node.y * scale;
-      if ((node.y + height) * scale + y > viewport.height - 100)
-        y = viewport.height - 100 - (node.y + height) * scale;
-      return x === current.x && y === current.y && scale === current.scale
-        ? current
-        : { x, y, scale };
-    });
+    const scale = Math.max(
+      MIN_SCALE,
+      Math.min(
+        transform.scale,
+        (viewport.width - 32 - actionSpace) / viewWidth,
+        (viewport.height - 170) / height,
+      ),
+    );
+    let x = transform.x;
+    let y = transform.y;
+    if (left * scale + x < 16) x = 16 - left * scale;
+    if ((left + viewWidth) * scale + x > viewport.width - 16 - actionSpace)
+      x = viewport.width - 16 - actionSpace - (left + viewWidth) * scale;
+    if (node.y * scale + y < 70) y = 70 - node.y * scale;
+    if ((node.y + height) * scale + y > viewport.height - 100)
+      y = viewport.height - 100 - (node.y + height) * scale;
+    if (x !== transform.x || y !== transform.y || scale !== transform.scale) {
+      const next = { x, y, scale };
+      automaticViewport.current = next;
+      setTransform(next);
+    }
     // Reveal once on selection; dragging a selected node must remain pointer-driven.
   }, [
     items,
+    nodes,
     selectedNode,
+    transform,
     composerExtraHeight,
     viewport.width,
     viewport.height,
@@ -277,6 +280,7 @@ export function useCanvasControls({
     setSelectedNode,
     transform,
     zoomCanvas,
+    automaticViewport,
     setTransform,
     viewport,
   };

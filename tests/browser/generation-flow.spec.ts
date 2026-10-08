@@ -21,12 +21,14 @@ test("图片上传预览和重绘未配置时保留草稿并打开供应商设�
     .first()
     .setInputFiles("public/fixtures/demo/blue-hour.png");
   await expect(source.locator(".uploaded-image")).toBeVisible();
-  await source.getByRole("button", { name: "放大查看参考图片" }).click();
+  await source.locator(".uploaded-image").click();
+  const actions = page.getByRole("toolbar", { name: /^图片操作：/ });
+  await actions.getByRole("button", { name: "放大查看参考图片" }).click();
   await expect(
     page.getByRole("dialog", { name: "预览参考图片" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "关闭素材预览" }).click();
-  await source.getByRole("button", { name: "重绘参考图片" }).click();
+  await actions.getByRole("button", { name: "重绘参考图片" }).click();
   await expect(
     page.getByRole("dialog", { name: "重绘参考图片" }),
   ).toBeVisible();

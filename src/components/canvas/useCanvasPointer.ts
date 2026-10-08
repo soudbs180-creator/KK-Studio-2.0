@@ -22,6 +22,7 @@ type Gesture = {
   nodeId?: string;
   additive: boolean;
   snap: boolean;
+  captureTarget?: Element;
 };
 export const CANVAS_SNAP_GRID = 16;
 
@@ -82,8 +83,8 @@ export function useCanvasPointer({
     dragRef.current = null;
     setDragging(null);
     setMarquee(null);
-    if (drag && containerRef.current?.hasPointerCapture(drag.pointerId))
-      containerRef.current.releasePointerCapture(drag.pointerId);
+    if (drag?.captureTarget?.hasPointerCapture(drag.pointerId))
+      drag.captureTarget.releasePointerCapture(drag.pointerId);
   }
   useEffect(() => {
     const down = (event: KeyboardEvent): void => {
@@ -145,6 +146,12 @@ export function useCanvasPointer({
     event.preventDefault();
     const pan = event.button !== 0 || tool === "hand" || spaceHeld;
     const kind = pan ? "pan" : nodeId ? "node" : "marquee";
+    // Preserve the image's click/double-click target. Its captured pointer
+    // events still bubble to the canvas, including drags outside the card.
+    const captureTarget =
+      kind === "node" && event.target instanceof Element
+        ? event.target
+        : (containerRef.current ?? undefined);
     dragRef.current = {
       kind,
       pointerId: event.pointerId,
@@ -155,12 +162,13 @@ export function useCanvasPointer({
       nodeId,
       additive: event.shiftKey,
       snap: snapEnabled && !event.ctrlKey && !event.metaKey,
+      captureTarget,
     };
     setDragging(kind);
     (kind === "node" ? event.currentTarget : containerRef.current)?.focus({
       preventScroll: true,
     });
-    containerRef.current?.setPointerCapture(event.pointerId);
+    captureTarget?.setPointerCapture(event.pointerId);
   }
   function startCanvasPan(event: PointerEvent<HTMLDivElement>): void {
     start(event);
@@ -267,8 +275,8 @@ export function useCanvasPointer({
     dragRef.current = null;
     setDragging(null);
     setMarquee(null);
-    if (containerRef.current?.hasPointerCapture(event.pointerId))
-      containerRef.current.releasePointerCapture(event.pointerId);
+    if (drag.captureTarget?.hasPointerCapture(event.pointerId))
+      drag.captureTarget.releasePointerCapture(event.pointerId);
   }
   return {
     tool,

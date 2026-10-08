@@ -1,0 +1,26 @@
+/* Selection operations stay outside the stage's pan/zoom transform. */
+.image-selection-toolbar {
+  position: fixed;
+  z-index: var(--kk-z-dropdown);
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-1);
+  width: max-content;
+  padding: var(--kk-space-1);
+  border: var(--kk-border-width) solid var(--kk-border-default);
+  border-radius: var(--kk-radius-menu);
+  background: var(--kk-bg-surface);
+  color: var(--kk-text-primary);
+  box-shadow: var(--kk-elevation-2);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.image-selection-toolbar > .kk-button {
+  flex: 0 0 auto;
+}
+
+.uploaded-image,
+.demo-result-preview.is-image {
+  cursor: inherit;
+}

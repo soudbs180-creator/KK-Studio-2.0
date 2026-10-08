@@ -67,8 +67,34 @@ async function snapshot(page: Page): Promise<{
   }>;
   activeProjectId: string | null;
 }> {
-  return page.evaluate((key) => {
-    const value = JSON.parse(localStorage.getItem(key) ?? "{}");
+  return page.evaluate(async (key) => {
+    // Large projects deliberately stop updating the bounded recovery copy.
+    const local = JSON.parse(localStorage.getItem(key) ?? "null");
+    const indexed = await new Promise<{ revision: number } | null>(
+      (resolve, reject) => {
+        const open = indexedDB.open("kk-studio-next", 1);
+        open.onerror = () => reject(open.error);
+        open.onsuccess = () => {
+          const db = open.result;
+          const read = db
+            .transaction("creation", "readonly")
+            .objectStore("creation")
+            .get("snapshot");
+          read.onsuccess = () => {
+            db.close();
+            resolve(read.result ?? null);
+          };
+          read.onerror = () => {
+            db.close();
+            reject(read.error);
+          };
+        };
+      },
+    );
+    const value =
+      !indexed || (local && local.revision > indexed.revision)
+        ? local
+        : indexed;
     return value as {
       projects: Array<{
         id: string;
@@ -113,6 +139,158 @@ async function routeImageResult(route: Route): Promise<void> {
     },
   });
 }
+
+test("已归档图片结果使用上方选择工具栏，收藏重绘对比删除保留原件", async ({
+  page,
+}, testInfo) => {
+  // Exercise the full photograph and IndexedDB archive, with an explicit I/O budget.
+  test.slow();
+  const network: Array<{
+    event: string;
+    at: number;
+    status?: number;
+    error?: string;
+  }> = [];
+  page.on("response", (response) => {
+    if (response.url() === generationsEndpoint)
+      network.push({
+        event: "response",
+        at: Date.now(),
+        status: response.status(),
+      });
+  });
+  page.on("requestfailed", (request) => {
+    if (request.url() === generationsEndpoint)
+      network.push({
+        event: "failed",
+        at: Date.now(),
+        error: request.failure()?.errorText,
+      });
+  });
+  await configure(page);
+  await page.route(generationsEndpoint, async (route) => {
+    network.push({ event: "fixture-request", at: Date.now() });
+    await route.fulfill({
+      json: {
+        data: [{ b64_json: readFileSync(referencePath).toString("base64") }],
+      },
+    });
+    network.push({ event: "fixture-fulfilled", at: Date.now() });
+  });
+  await openWorkspace(page);
+  const source = await selectImageNode(page);
+  await source.getByLabel("图片提示词").fill("结果图片工具栏验收");
+  await chooseOneOutput(source);
+  await source.getByRole("button", { name: "生成图片", exact: true }).click();
+  await page.getByRole("button", { name: "批准并提交" }).click();
+  try {
+    await expect
+      .poll(async () => (await activeProject(page)).tasks.at(-1)?.status, {
+        timeout: 15000,
+      })
+      .toBe("succeeded");
+  } finally {
+    const task = (await activeProject(page)).tasks.at(-1)!;
+    await testInfo.attach("generation-timing", {
+      body: JSON.stringify({
+        network,
+        status: task.status,
+        error: task.error,
+        count: task.requestedOutputs,
+        completed: task.completedOutputs,
+      }),
+      contentType: "application/json",
+    });
+  }
+  const project = await activeProject(page);
+  const id = project.tasks.at(-1)!.resultItemId as string;
+  const result = project.items.find((item) => item.id === id)!;
+  const node = page.getByTestId(`canvas-node-${id}`);
+  await node.focus();
+  await node.press("Escape");
+  await expect(page.getByRole("toolbar", { name: /^图片操作：/ })).toHaveCount(
+    0,
+  );
+  await node.locator(".demo-result-preview img").click();
+  const actions = page.getByRole("toolbar", { name: /^图片操作：/ });
+  await expect(actions).toBeVisible();
+  await expect(page.getByRole("dialog", { name: /^预览/ })).toHaveCount(0);
+  await expect(node.locator("footer")).toHaveCount(0);
+  const cardBox = (await node.locator(".demo-result-node").boundingBox())!;
+  const toolbarBox = (await actions.boundingBox())!;
+  expect(toolbarBox.y + toolbarBox.height).toBeLessThan(cardBox.y);
+  const favorite = actions.getByRole("button", { name: `收藏${result.title}` });
+  await favorite.click();
+  await expect(
+    actions.getByRole("button", { name: `取消收藏${result.title}` }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await actions.getByRole("button", { name: /加入对比/ }).click();
+  await expect(
+    page.getByRole("region", { name: "图片对比选择" }),
+  ).toContainText("1/4");
+  await actions.getByRole("button", { name: `预览${result.title}` }).click();
+  await expect(
+    page.getByRole("dialog", { name: `预览${result.title}` }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "关闭素材预览" }).click();
+  await expect(
+    actions.getByRole("button", { name: `预览${result.title}` }),
+  ).toBeFocused();
+  await actions.getByRole("button", { name: `重绘${result.title}` }).click();
+  await expect(
+    page.getByRole("dialog", { name: "重绘参考图片" }),
+  ).toBeVisible();
+  let editRequests = 0;
+  await page.route(editsEndpoint, async (route) => {
+    const request = route.request();
+    expect(request.postDataBuffer()).toBeTruthy();
+    expect(
+      request.postDataBuffer()!.includes(readFileSync(referencePath)),
+    ).toBe(true);
+    editRequests++;
+    await routeImageResult(route);
+  });
+  await page.getByLabel("重绘指令").fill("编辑已归档生成结果，原图保留");
+  await page.getByRole("button", { name: "开始重绘", exact: true }).click();
+  await page.getByRole("button", { name: "批准并提交" }).click();
+  await expect
+    .poll(async () => (await activeProject(page)).tasks.at(-1)?.status)
+    .toBe("succeeded");
+  expect(editRequests).toBe(1);
+  expect((await activeProject(page)).tasks.at(-1)?.sourceItemId).toBe(id);
+  await page
+    .getByRole("dialog", { name: "重绘参考图片" })
+    .getByRole("button", { name: "取消", exact: true })
+    .click();
+  await page.screenshot({ path: testInfo.outputPath("selected-result.png") });
+  await actions.getByRole("button", { name: `删除${result.title}` }).click();
+  await expect(node).toHaveCount(0);
+  await expect(actions).toHaveCount(0);
+  await expect(page.getByRole("region", { name: "图片对比选择" })).toHaveCount(
+    0,
+  );
+  expect((await activeProject(page)).tasks.at(-1)?.status).toBe("succeeded");
+  expect(
+    await page.evaluate(async (assetId) => {
+      const request = indexedDB.open("kk-studio-assets", 1);
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+      return new Promise<boolean>((resolve, reject) => {
+        const read = db.transaction("blobs").objectStore("blobs").get(assetId);
+        read.onsuccess = () => {
+          db.close();
+          resolve(Boolean(read.result));
+        };
+        read.onerror = () => {
+          db.close();
+          reject(read.error);
+        };
+      });
+    }, result.assetId as string),
+  ).toBe(true);
+});
 
 test("active project canvas uses the provider command for a non-root source and archives a linked result", async ({
   page,
@@ -331,7 +509,11 @@ test("uploaded image redraw uses edits with the archived reference bytes", async
   await expect(source.locator(".uploaded-image")).toBeVisible({
     timeout: 15000,
   });
-  await source.getByRole("button", { name: "重绘参考图片" }).click();
+  await source.locator(".uploaded-image").click();
+  await page
+    .getByRole("toolbar", { name: /^图片操作：/ })
+    .getByRole("button", { name: "重绘参考图片" })
+    .click();
   const dialog = page.getByRole("dialog", { name: "重绘参考图片" });
   await expect(dialog).toBeVisible();
   await dialog.getByLabel("重绘指令").fill("保留主体并改成蓝调夜景");

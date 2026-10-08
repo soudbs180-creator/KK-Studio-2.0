@@ -4,7 +4,33 @@ import { openWorkspace } from "./helpers";
 async function addNodeFromBlank(page: Page, label: string) {
   const canvas = page.getByTestId("infinite-canvas");
   const bounds = (await canvas.boundingBox())!;
-  await page.mouse.dblclick(bounds.x + 420, bounds.y + 420);
+  const blank = await canvas.evaluate((element) => {
+    const area = element.getBoundingClientRect();
+    const chat = document
+      .querySelector(".conversation-panel")
+      ?.getBoundingClientRect();
+    const right =
+      chat && chat.width > 0 ? Math.min(area.right, chat.left) : area.right;
+    for (let y = area.top + 80; y < area.bottom - 100; y += 40) {
+      for (let x = area.left + 40; x < right - 40; x += 40) {
+        const hit = document.elementFromPoint(x, y);
+        if (
+          hit &&
+          element.contains(hit) &&
+          !hit.closest(
+            ".canvas-node,.canvas-hud,.canvas-top-right,button,input,textarea,[data-no-node-drag]",
+          )
+        )
+          return { x, y };
+      }
+    }
+    return null;
+  });
+  expect(
+    blank,
+    "新增节点必须双击实际画布空白，不能命中已有卡片",
+  ).not.toBeNull();
+  await page.mouse.dblclick(blank!.x, blank!.y);
   await page.getByRole("menuitem", { name: label, exact: true }).click();
   return { canvas, bounds };
 }

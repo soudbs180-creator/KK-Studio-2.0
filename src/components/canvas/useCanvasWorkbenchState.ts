@@ -30,6 +30,7 @@ export function useCanvasWorkbenchState({
     setViewport: controls.setTransform,
     setSelectedNode: controls.setSelectedNode,
     gestureActive: controls.dragging === "node" || controls.dragging === "pan",
+    automaticViewport: controls.automaticViewport,
   });
   return { layersOpen, setLayersOpen, history };
 }
