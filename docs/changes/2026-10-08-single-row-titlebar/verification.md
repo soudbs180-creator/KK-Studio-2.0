@@ -1,6 +1,6 @@
 # Verification：桌面单排标题栏
 
-- Task ID：TASK-UI-013；状态 FINAL（本地验收）；2026-10-08，Asia/Shanghai。
+- Task ID：TASK-UI-013；当前组合 NOT VERIFIED；下列 FINAL 结果仅为旧版本历史；2026-10-08，Asia/Shanghai。
 - [Intent](intent.md) / [Spec](spec.md) / [Plan](plan.md) / [Review](review.md)。
 - Base：1af0357b088df79dc51e9b309ef310a500722cf8；独立工作树与分支见 plan。
 - 本地 AC-1/2/3 PASS。独立 review 与最终提交身份见 [review](review.md)；合并、安装器和正式发布没有执行。

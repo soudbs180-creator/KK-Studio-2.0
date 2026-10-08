@@ -36,3 +36,5 @@
 ## 当前主线集成与依赖收尾
 
 原head535c5fbe6729fc4f136d8b6fe374a6d9cb791474，先merge当前main f922cf8e3e3318c5b01a922eaed424b11ccb2d0a。CSS冲突按实际App统一链保留image-selection.css与desktop-titlebar.css，后者位于所有页面override末端；版本先承接主线再只Desktop patch。原作者已结束，root单一写入。PR38在独立最新head Hosted中；待其普通合入main后再merge最新main、按实际Desktop版本再调配，并执行完整verify/97Rust/fresh带Agent release、原生标题栏drag/min/max/close、UI13/TaskHost11/模型/首屏、Web三宽度及开发态、精确当前source和finaldoc独立review、Hosted verify+delivery，再普通squash PR40，核对tree与mainCI。预备head不推送不冒充最终验收，固定端口串行不停止其他程序；旧535/6c37证据保留历史。
+
+独立预检在 8d 发现 UI013-REVIEW-001/002。按已授权缺陷修复范围，先增加真实 WindowControls 的 7 条乱序/失败/卸载故障回归并记录全 FAIL，再以共享最新请求与操作生命周期、同步/异步清理捕获修复；定向全 PASS、lint/typecheck PASS。仍需最终最新主线组合的完整验证及独立关闭 finding，不以中途 GREEN 代替合并验收。
