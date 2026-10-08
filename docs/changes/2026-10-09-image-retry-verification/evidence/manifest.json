@@ -1,0 +1,166 @@
+{
+  "at": "2026-10-08T21:57:52.567Z",
+  "sourceHead": "43fc6912fcc53d280ac6e97146e4eafba92a3750",
+  "entries": [
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/browser-results-43fc691.json",
+      "originalBytes": 593261,
+      "originalSha256": "9b23321f4666bd63f0fdbb848728ef64adf72cfa5e68a48b069031d3e7c7bdf9",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/browser-results-43fc691.json.gz",
+      "archiveBytes": 50225,
+      "archiveSha256": "718e5e33455dbdd6bbd169ea47eb326c1b6778e6196b6347d1efd516fadc5c98"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/browser-results-green14.json",
+      "originalBytes": 17300,
+      "originalSha256": "f7da2b961914b66707bbbe5f82961e608c10d219b38bc1a4ba3e9bf0cfd07631",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/browser-results-green14.json.gz",
+      "archiveBytes": 2191,
+      "archiveSha256": "e562d397d1bb1506553a68c8ae28583bc92c4a6621b27d165f251ede2da111a2"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/build-baseline.txt",
+      "originalBytes": 3058,
+      "originalSha256": "5a53b994ac03c8ef8766d6a9aa032f5d01c14cf17b8bfe1f8ec473473a9305f3",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/build-baseline.txt.gz",
+      "archiveBytes": 1263,
+      "archiveSha256": "70c718a89acc86bf165b0aafffb12f1fe4d0dbb37355746f1fe8fa78868ab4a1"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/npm-ci.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/npm-ci.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/npm-ci.txt",
+      "originalBytes": 1759,
+      "originalSha256": "60fb0c7c3e837c0c6094f704e42f869e444fa9a5111d53be39bc7ba0ba914d65",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/npm-ci.txt.gz",
+      "archiveBytes": 602,
+      "archiveSha256": "93885cad3d3ec327c8baa1122f710e2b8e002269f64a34d015e95311d586ea73"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/retry-green.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/retry-green.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/retry-green.txt",
+      "originalBytes": 2417,
+      "originalSha256": "dadc8111cb054c80b3026f059eaca5422ecbd1eac9d1daeb7614c6d2053ea5f6",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/retry-green.txt.gz",
+      "archiveBytes": 895,
+      "archiveSha256": "f58e585a42ae55ad772918cdb2360de0c79756d269bd48b6eec186db9eade04d"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/retry-red.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/retry-red.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/retry-red.txt",
+      "originalBytes": 569,
+      "originalSha256": "d443c689e25d352911bb1fb8a4d27c26df125cb7e326574216bd3106c27fa998",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/retry-red.txt.gz",
+      "archiveBytes": 310,
+      "archiveSha256": "602167c69ec53ffd3828d43f5d4d0ff05ed9f2095f058be7f56704c9d52741c9"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/reviewer-static-43fc691.json",
+      "originalBytes": 2941,
+      "originalSha256": "148f27be043d9d1d234df3107a8e7c796ecae3b64cfb571e70b6984aeceaab78",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/reviewer-static-43fc691.json.gz",
+      "archiveBytes": 717,
+      "archiveSha256": "e3c7d0b5b4a287c785c88098fa0da06bc99744f21b57c699a869a9e2b867bb0b"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/reviewer-unit-43fc691.txt",
+      "originalBytes": 3929,
+      "originalSha256": "84bfbdfbffda919692803e39b90df0996920362ba673eed5a4a92c7dd0eb8483",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/reviewer-unit-43fc691.txt.gz",
+      "archiveBytes": 1767,
+      "archiveSha256": "a1f568d8899e737833c065ca1bd6f2882cac5ad8de0ad66031d910e97e0c9c2f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/verify-43fc691.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/verify-43fc691.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/verify-43fc691.txt",
+      "originalBytes": 159992,
+      "originalSha256": "84fc06fff53c59a79fa7f9db269c86e151b95c68d759ce0c05f1db35e49c4a88",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/originals/verify-43fc691.txt.gz",
+      "archiveBytes": 51486,
+      "archiveSha256": "fbe05cbe7b0824b738d98cd252ddbc65cd8bed71edfb398c49d1cb390f371def"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PLUGIN-DEV-001-20261009/main-6a97f45-failed-verify.txt",
+      "originalBytes": 261598,
+      "originalSha256": "357a83eb14f8bb8c5c2bc8a9bd11c220cd8b126b3a74f460b51b3e0d8487e844",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/upstream/main-6a97f45-failed-verify.txt.gz",
+      "archiveBytes": 73803,
+      "archiveSha256": "4eee11768c06c5fc0d4dc4d50669333e754c98b86523ba81e9a8f85c9a699601"
+    },
+    {
+      "original": "test-results/development-plugins/1791496455046/plugins.png",
+      "originalBytes": 130461,
+      "originalSha256": "d948fac6032e2040d88035196f7ddaa7246a86e17636b68e7d2e81df84803ae8",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/development/plugins.png.gz",
+      "archiveBytes": 123998,
+      "archiveSha256": "dc86f314702153b1cda82b9d8fc2e6a7e16236882e1cb22031a595a131277c24"
+    },
+    {
+      "original": "test-results/development-plugins/1791496455046/receipt.json",
+      "originalBytes": 6374,
+      "originalSha256": "f37f8adca89201b0b7af8cf32d62150a1866db539c58254a719159087d27e87f",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/development/receipt.json.gz",
+      "archiveBytes": 693,
+      "archiveSha256": "84a228889b583c97aea78d3f2d42b9674a12fc15a36050bd3080939dd8bf3356"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/review-source-43fc691.md",
+      "originalBytes": 10704,
+      "originalSha256": "3e69a7d7cb9c956b8672fb048caf0b8e705dc3159ce3c0a22bf7c0071d638e21",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/source-review-43fc691.md.gz",
+      "archiveBytes": 5050,
+      "archiveSha256": "4dbf31ca602058f9b63094f127a808d3861b29b031d1cb9d40d19bf144cd1109"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/final-doc-lint.txt",
+      "originalBytes": 501,
+      "originalSha256": "a9f8a42901eb8c8697f3b66a429ecc2ce6ffa56095b27cb1e3a62739b8ace3b4",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/final-doc-lint.txt.gz",
+      "archiveBytes": 300,
+      "archiveSha256": "114e001b73e2aee6586280c66c41e8b2871775332f7e1d8fe37d7df6a2f3d818"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/final-doc-lint.exit.txt",
+      "originalBytes": 2,
+      "originalSha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/final-doc-lint.exit.txt.gz",
+      "archiveBytes": 22,
+      "archiveSha256": "0a9f997d2770133f4b2e974708f7a19036a1bedaecbb1ca99cd88cf899e8a463"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/review-source-43fc691-line-erratum.md",
+      "originalBytes": 513,
+      "originalSha256": "06cd0413ac189e1757ed2f45574469428b553f7aab24ee348686fc64f6f19133",
+      "archive": "docs/changes/2026-10-09-image-retry-verification/evidence/review-source-43fc691-line-erratum.md.gz",
+      "archiveBytes": 403,
+      "archiveSha256": "ceb29ba8119cb7fe7bc9d73e34bd89fbfc3758773a130f8a3ccacc7f01a67cb5"
+    }
+  ]
+}

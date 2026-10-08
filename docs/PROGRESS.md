@@ -855,3 +855,5 @@ TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，�
 - TASK-PLUGIN-DEV-001及RECOVERY/MARKDOWN/DESKTOP-FLUSH三个新P1本地闭合：真实开发/生产/fresh原生正文及恢复、立即关闭/真实IO失败留窗与原件保护、完整447浏览器和同EXE邻接全部通过。原FAIL、来源身份和标题栏第一拖动未知原因保留；最终doc/Hosted/普通集成/main按各自收据，UI012/UI014与43项既有开放能力继续。见[本轮完整状态](changes/2026-10-09-plugin-development/status.md)。
 
 2026-10-09 TASK-IMAGE-RETRY-004：主线6a的托管37845923441真实FAIL，区域重试验收未绑定新任务而读到3条旧结果。新隔离测试任务继续复现与修正，原失败保留，产品正确性与合并后主线验收仍需复验。
+
+2026-10-09 TASK-IMAGE-RETRY-004本地验收：43fc全verify447零retry、14相关、804root/172Agent和development PASS；独立源码无P0/P1、41相关unit PASS，IRV-001文档矛盾已修正，最终精确head复审/托管/main恢复待回执。主线6a的原FAIL、本机未复现PASS均原样保留；运行产品/版本未改。

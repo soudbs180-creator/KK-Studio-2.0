@@ -1,5 +1,12 @@
 # 当前项目状态
 
+## 2026-10-09 主线失败续修候选完成本地验收
+
+PR42已普通落地main6a97f456ab7334f97c604461e8d29789caa754cb、全tree与已审cc相同，但post-main37845923441 verify真实FAIL（446通过/区域重试首次及retry1收到3预期4）；Rust/桌面后续SKIPPED不能当PASS。TASK-IMAGE-RETRY-004仅修验收等待新任务身份，14相关及447全浏览器零实际retry、804root/172Agent（原skip8/2）和严格development已PASS。source独立41单测通过、IRV-001仅文档矛盾由当前收尾更正；最终doc-head补审/托管及普通合并/main仍待回执。110任务DONE67/TODO13/PARTIAL26/BLOCKED4，43开放；Desktop/Web2.1.12、Mobile规划2.1.1。UI012当前8d6已含6a且继续原owner525浏览器验收，尚无最终ready PR；UI014原会话容量失败，bd16及9条dirty已只读保存未验收快照，原件不动。Codex配置及健康任务在独立候选，未合主线，不冒充主线任务状态。
+
+[本轮验证](../changes/2026-10-09-image-retry-verification/verification.md) / [任务报告](../changes/2026-10-09-image-retry-verification/status.md)。以下保留历史时点原义。
+
+
 ## 2026-10-09 随包插件及关闭保存本地验收完成
 
 PR41已普通合入main8c921a5，实际post-main37826264108全部必需检查成功；PR38/39/40亦已合并。root独立插件分支修复开发模块、JSX、完整插件恢复、Markdown离线和立即关闭丢失；804root/172Agent（原skip8/2）、447browser零retry/flaky、严格开发、Rust102/fmt/clientcheck/fresh Agent及原生8步/TaskHost11/上方动作13/CSP和最终标题栏通过，c8独立关闭两阻断。Desktop/Web2.1.12、Mobile规划2.1.1；109任务DONE66/TODO13/PARTIAL26/BLOCKED4，43项开放，105上游无关对象完整保留。本地产品DONE，最终doc review/当前Hosted/普通PR合并、landing全树及post-main CI须分别实际回读。UI012/UI014继续原作者收尾；19条旧健康审计须在当前main复证并承接，不能整合未完成候选。原首轮titlebar拖动FAIL原因UNKNOWN，未改写成PASS；外部live/物理设备/用户视觉与整体UI规范仍开放。恢复入口 [状态报告](../changes/2026-10-09-plugin-development/status.md) / [验证](../changes/2026-10-09-plugin-development/verification.md)。
