@@ -16,7 +16,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | T3a | 原生素材及引用最终验收 | DONE | T1, T2 | root |
 | T3b | 完整项目包导出导入与恢复 | DONE | T3a | root |
 | T4 | 统一实际图片生成入口及健康语义 | DONE | T3b, TASK-PROV-001 | root |
-| T5 | 持久本地 TaskHost 与未知受理恢复 | PARTIAL | T4 | root |
+| T5 | 持久本地 TaskHost 与未知受理恢复 | REVIEW | T4 | root |
 | T6 | Desktop ComfyUI最小链实现 | PARTIAL | T5 | root |
 | EXT-PROVIDER | 真实 Provider/GPU 生成验收 | BLOCKED | T4 | root |
 | EXT-COMFY | 真实 ComfyUI/模型验收 | BLOCKED | T6 | root |
@@ -105,6 +105,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AUDIT-20261003 | 全项目任务盘点与可本地闭环项收口 | DONE | TASK-MCP-REGISTRY-001, TASK-MCP-REGISTRY-002, TASK-MCP-PROTO-001, TASK-ORCH-REPLAN-001 | root |
 | TASK-GOV-GOALS-001 | 项目建设目标与验收基线 | DONE | TASK-AUDIT-20261003 | root |
 | TASK-UI-COMPONENT-BOUNDARY-001 | MCP 设置组件职责拆分 | DONE | TASK-GOV-GOALS-001 | root |
+| TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
+| TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
 
 ## TASK-MODEL-001 — 账号级图片模型能力声明与提交校验
 
@@ -231,12 +233,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 持久本地 TaskHost 与未知受理恢复
 - Scope: src/features/generation-server, src-tauri, src/features/creation, deploy
 - Acceptance: durable intent先于提交; 重启同一身份不重复计费; unknown不可直接普通retry; 本地宿主随包且不依赖VPS
-- Branch: `main`
-- Worktree: `D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001`
+- Branch: `codex/T5-native-lifecycle`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/T5-native-lifecycle`
 - Modules: src/features/generation-server, src-tauri, src/features/creation, deploy
-- Verification: PARTIAL — 集成 main 已将 durable intent、稳定幂等身份、unknown 受理保护、原生 TaskHost journal、系统凭据库读取、Desktop IPC、取消竞态和逐 slot 输出提交接入 Tauri 主进程；npm verify 150/169、UI119/0，Rust 58/58，client check/release 通过。隔离 Tauri/WebView 的提交、取消、进程重启和逐 slot 恢复证据尚未完成；部署脚本仅覆盖静态 Web Prototype。
-- Evidence: [docs/changes/2026-09-19-taskhost-durable-intent/verification.md](../../docs/changes/2026-09-19-taskhost-durable-intent/verification.md), [tests/browser/task-intent.spec.ts](../../tests/browser/task-intent.spec.ts), [tests/unit/nativeTaskHost.test.ts](../../tests/unit/nativeTaskHost.test.ts), [deploy/README.md](../../deploy/README.md)
-- Updated: 2026-09-19
+- Verification: PASS — 最新主线1af组合731root/174Agent（原skip8/2）、409browser零flaky/零实际retry、Rust97/fmt/check/fresh native11组PASS；d521产品/harness9个hash保持一致。21ac独立源码/文档PASS关闭ENV003，但当前Hosted在空Registry Properties.Name严格模式失败、native未启动；正确空对象RED后四处逐项枚举、26边界回归PASS，当前新head补审/Hosted与主线整合待满足。PROV005/006独立开放。
+- Evidence: [docs/changes/2026-09-19-taskhost-durable-intent/verification.md](../../docs/changes/2026-09-19-taskhost-durable-intent/verification.md), [tests/browser/task-intent.spec.ts](../../tests/browser/task-intent.spec.ts), [tests/unit/nativeTaskHost.test.ts](../../tests/unit/nativeTaskHost.test.ts), [deploy/README.md](../../deploy/README.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md), [tests/desktop/taskhost-lifecycle.mjs](../../tests/desktop/taskhost-lifecycle.mjs), [tests/desktop/native-ci-policy.ps1](../../tests/desktop/native-ci-policy.ps1)
+- Updated: 2026-10-08
 
 ## T6 — Desktop ComfyUI最小链实现
 
@@ -658,9 +660,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `chore/TASK-CONSOLIDATE-200`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/components/nodes, src/features/creation, src/App.tsx, src-tauri/src/task_host.rs, src-tauri/src/task_host_text.rs
-- Verification: PARTIAL — Web development/production preview与隔离Tauri release本机HTTP fixture通过流式、取消/未知受理、离线、编辑保存、重载重连和并发释放。完整verify 227/210，Rust74，独立预检PASS。实际Provider、原生进程退出/恢复与health统一仍待T5/EXT-PROVIDER验收，整体PARTIAL。
-- Evidence: [docs/features/feat-008-text-node.md](../../docs/features/feat-008-text-node.md), [docs/changes/2026-09-21-text-and-rule-audit/verification.md](../../docs/changes/2026-09-21-text-and-rule-audit/verification.md)
-- Updated: 2026-09-22
+- Verification: PARTIAL — Web development/preview 与隔离 Tauri release HTTP fixture 已覆盖流式、取消/unknown、离线、编辑保存、重载和原生并发。2026-10-08 T5 十组原生实测补完异常进程退出/同身份恢复、草稿 unknown 与取消后容量释放；真实 Provider 和结构化 health 统一仍由 EXT-PROVIDER/TASK-PROV-006 验收，整体能力保持 PARTIAL。
+- Evidence: [docs/features/feat-008-text-node.md](../../docs/features/feat-008-text-node.md), [docs/changes/2026-09-21-text-and-rule-audit/verification.md](../../docs/changes/2026-09-21-text-and-rule-audit/verification.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md)
+- Updated: 2026-10-08
 
 ## BACKEND-MEDIA-001 — 视频与音频节点真实生成链
 
@@ -1297,3 +1299,27 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — MCP 设置容器已拆为表单和列表职责，UI 标准 194 文件/0 违规；定向 TypeScript、ESLint 和 Prettier 通过，MCP 设置浏览器回归在完整 Playwright 中通过。
 - Evidence: [docs/changes/2026-10-03-ui-component-boundary/intent.md](../../docs/changes/2026-10-03-ui-component-boundary/intent.md), [docs/changes/2026-10-03-ui-component-boundary/spec.md](../../docs/changes/2026-10-03-ui-component-boundary/spec.md), [docs/changes/2026-10-03-ui-component-boundary/plan.md](../../docs/changes/2026-10-03-ui-component-boundary/plan.md), [docs/changes/2026-10-03-ui-component-boundary/verification.md](../../docs/changes/2026-10-03-ui-component-boundary/verification.md), [docs/changes/2026-10-03-ui-component-boundary/review.md](../../docs/changes/2026-10-03-ui-component-boundary/review.md), [src/components/settings/McpSettings.tsx](../../src/components/settings/McpSettings.tsx), [src/components/settings/McpServerForm.tsx](../../src/components/settings/McpServerForm.tsx), [src/components/settings/McpServerList.tsx](../../src/components/settings/McpServerList.tsx)
 - Updated: 2026-10-03
+
+## TASK-PROV-005 — Desktop 供应商非秘密配置 durable 保存与恢复
+
+- Goal: 已保存账号/模型/ref 在立即异常退出后仍可恢复，不使系统凭据变成无法定位的孤立记录
+- Scope: src/components/settings, src/features/creation/providerRegistry.ts, src/features/models/modelCatalog.ts, src-tauri
+- Acceptance: 供应商非秘密配置及目录在成功提示前有原生 durable 落盘; 立即异常终止并重启保留账号/模型/ref，旧浏览器元数据无损迁移; 系统凭据仍仅在 OS vault，文件/localStorage/日志没有秘密; 失败/冲突不假报成功或覆盖原件，真实 Tauri 重启与全量回归通过
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/components/settings, src/features/creation/providerRegistry.ts, src/features/models/modelCatalog.ts, src-tauri
+- Verification: NOT_VERIFIED — 新保存供应商后立即强杀本轮 WebView 进程树，localStorage 供应商元数据曾缺失；原生任务/素材及 OS 凭据保留，正常退出后恢复通过。现场在本轮 provider-abrupt-exit-observation.json；独立后续实现，尚未开始。
+- Evidence: [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/status.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/status.md)
+- Updated: 2026-10-08
+
+## TASK-PROV-006 — Desktop image 提交连接门禁与 health 统一
+
+- Goal: 图片原生提交复查明确绑定账号、禁用/容量，结构化原生错误回写同一连接健康状态
+- Scope: src/App.tsx, src/features/creation/providerSubmission.ts, src/features/creation/nativeTaskHost.ts, src-tauri/src/task_host.rs
+- Acceptance: 同账号 image 提交前复查身份、禁用/隔离与容量，无效连接零 POST; 原生 401/403/429 等结构化失败正确回写当前账号 health，旧身份/迟到回执不污染新配置; 原生进程持有运行容量，reload 不释放；取消/终态释放而不新增任务队列; unknown 保持禁止普通重试，已归档原件保留；真实 Tauri fixture 与全量回归通过
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/App.tsx, src/features/creation/providerSubmission.ts, src/features/creation/nativeTaskHost.ts, src-tauri/src/task_host.rs
+- Verification: NOT_VERIFIED — 旧 FEAT-002 和 T5 描述已有 native image health/连接门禁缺口，本轮明确独立任务承载。T5 的持久 journal/同身份恢复和文本容量已实际验证，不能代替此 image 门禁验收；尚未开始。
+- Evidence: [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/status.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/status.md)
+- Updated: 2026-10-08

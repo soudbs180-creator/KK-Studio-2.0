@@ -1,0 +1,47 @@
+{
+  "startedAt": "2026-10-08T09:19:15.792Z",
+  "sourceHead": "043883baeb69c046af8215927710d58a785de810",
+  "dataRoot": "D:\\a\\KK-Studio-2.0\\KK-Studio-2.0\\src-tauri\\target\\taskhost-acceptance\\1791451155792-0e72e607-a1f3-46d7-9e10-dcf278833008\\data",
+  "profile": "D:\\a\\KK-Studio-2.0\\KK-Studio-2.0\\src-tauri\\target\\taskhost-acceptance\\1791451155792-0e72e607-a1f3-46d7-9e10-dcf278833008\\profile",
+  "checks": [],
+  "launches": [],
+  "startups": [
+    {
+      "startedAt": "2026-10-08T09:19:15.874Z",
+      "runtimeVersion": "154.0.4258.62",
+      "pid": 776,
+      "exitCode": 1,
+      "signalCode": null,
+      "cdpReady": false,
+      "stderr": ""
+    }
+  ],
+  "requests": [],
+  "errors": [],
+  "passed": false,
+  "versions": {
+    "schemaVersion": 1,
+    "desktop": "2.1.6",
+    "web": "2.1.7",
+    "mobile": "2.1.1"
+  },
+  "sourceHashes": {
+    "src-tauri/src/task_host.rs": "de06fb61c592729e6cca334c5a539ff49e24cd87a87aa0be92175be42bb9eec5",
+    "src-tauri/src/task_host_text.rs": "ebd247a2931f0582f48678e8aabd1f84f7307bf1933b472654b2c532d3a92b6e",
+    "src/App.tsx": "5477b38ec1449ed89b2c9209efb77e0cfd5c1e74228805c49a5a2e930c4e8966",
+    "src/components/BatchMatrix.tsx": "14aa9a0a3afc9a7fc77df286cc2a7358a0b3144d6b98b48aee013fab9f22b5c4",
+    "src/features/creation/nativeTaskHost.ts": "adb5992e13b253659f05682a4b24031d122f8fa7330fdb07554416b823e17a8f",
+    "src/features/creation/useCreationStorage.ts": "5191f4af976a3d32ba2cfdbd38c5e80a9cf882b53d41d28288c44dff3349a9c9",
+    "tests/desktop/taskhost-lifecycle.mjs": "e0163289f1ff698244a426cf043d9b0ecf52cdec0039dbcc514603dae419bd77",
+    "config/platform-versions.json": "ecacd67682c7404ef3ffe07d1f921a2c277cf67e85e179d4b8f97266b77c801b",
+    "src-tauri/Cargo.lock": "40a3363ba3475c190622fc9283dae4fbae12b9de372886169460b003330e43df"
+  },
+  "bundleHashes": {
+    "assets/index-C6I0Rp3I.css": "7fa7ac181e2b8bb3a70d690a6f308e354c3984e2fed70c5e382d5e7eb8cc8d0d",
+    "assets/index-DZ6J1_oD.js": "237b8b7d611f8a4741cb3ffb14a7b42a9e1b628b6a48aba85a47809740a3dec8"
+  },
+  "executableSha256": "205c9137502cdc8f72569ab604d2c42e7b3ec8580cd276eda5c3c7a6f239696d",
+  "failure": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: true\nReceived: false\n\nCall Log:\n- Timeout 30000ms exceeded while waiting on the predicate",
+  "finishedAt": "2026-10-08T09:19:45.228Z",
+  "credentialCleanupComplete": true
+}

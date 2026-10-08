@@ -4,6 +4,7 @@ import type {
   CreationTaskOutput,
 } from "../features/creation/model";
 import { loadStoredAsset } from "../features/creation/assetRepository";
+import { retryableOutputIndices } from "../features/creation/taskRecovery";
 
 export default function BatchMatrix({
   task,
@@ -16,6 +17,7 @@ export default function BatchMatrix({
 }) {
   const [previews, setPreviews] = useState<Record<string, string>>({});
   const [loadError, setLoadError] = useState(false);
+  const retryableIndices = new Set(retryableOutputIndices(task, outputs));
   const assetIds = outputs
     .flatMap((output) => (output.assetId ? [output.assetId] : []))
     .join(",");
@@ -49,7 +51,10 @@ export default function BatchMatrix({
     <div className="batch-matrix" aria-label="Batch Matrix">
       <div className="batch-matrix-header">
         <h3>Batch Matrix</h3>
-        <span>{outputs.length} 个输出 · 单项可重试</span>
+        <span>
+          {outputs.length} 个输出
+          {retryableIndices.size > 0 && " · 单项可重试"}
+        </span>
       </div>
       {loadError && <p role="status">本地预览读取失败，素材标识仍保留。</p>}
       <div className="batch-grid">
@@ -97,7 +102,7 @@ export default function BatchMatrix({
               <p>{task.prompt}</p>
             </details>
             {output.error && <small>{output.error}</small>}
-            {(output.status === "failed" || output.status === "cancelled") && (
+            {retryableIndices.has(output.index) && (
               <button
                 type="button"
                 onClick={() => onRetryOutput(task.id, output.index)}

@@ -1,5 +1,23 @@
 # 当前项目状态
 
+## 2026-10-08 Hosted 空 Registry 属性返修
+
+T5当前本机/源码验收完成、REVIEW。21ac独立补审PASS、ENV003 CLOSED；其Hosted37765011214完整Web/Rust/release/Runtime通过，实际CI包装器在新建空key的Properties.Name严格模式失败，native尚未启动。修正mock空属性集合并复现真实RED；四处逐项枚举后26/26边界回归PASS，产品/harness与d521 native十一组hash不变。新head独立关闭ENV004、Hosted与主线整合仍待满足，未假填High IL。UI976db独立PASS关闭两P2、422browser/fresh Native13组通过，当前Hosted待创建。main仍1af/PR36合并后CI通过；其他执行者任务保留。
+
+## 2026-10-08 当前合并与托管返修恢复点
+
+PR #34/#35 已合并且合并后 CI PASS。PR #36 精确源 12f5f6ab18fec932e787a729e78994544e822708 已 squash 合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，合并后 hosted run 37756981271 verify/deploy-linux PASS。本 T5 分支正在承接该最新主线，保留模型账号隔离、编辑能力和参考图去重门禁；源码 Desktop2.1.7/Web2.1.8/Mobile规划2.1.1。
+
+T5 本机产品验收十一组与精确源码 8399 补审 PASS，但其 Hosted native 在 Runtime154.0.4258.62 下 CDP 启动失败，尚不能合并。新 CI 包装器记录实际权限，仅在托管临时 runner 准备并清理应用专属策略；19 项内存边界检查 PASS，实际 Hosted 原因与当前组合验证仍待取得。[最新验证](../changes/2026-10-08-taskhost-native-lifecycle/verification.md)和[逐项盘点](../changes/2026-10-08-taskhost-native-lifecycle/status.md)是当前恢复入口。TASK-PROV-005/006、外部 Provider/GPU/Comfy/VPS/Mobile/安装/视觉验收仍开放；UI 图片选择工具栏在单独任务分支进行，本树不覆盖。以下两侧迭代记录均保留为各自当时事实，历史‘尚未合并’不代表 PR #36 当前状态。
+
+## 2026-10-08 分支合并与 T5 原生收尾（当前事实）
+
+PR #34 精确候选 `cddacaf19d9cadcd09f9fa500182de56232f9c13` 已 squash 合入 `main@5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3`，候选/合并 tree 相同；合并后 hosted verify/deploy-linux 成功，根 main 已 clean fast-forward。原任务分支和工作树保留。
+
+PR #35 阶段工作台已合并 main@5dd6e6dddaf00cf2d5c14ae02ef5974c72238232，合并后 verify/deploy-linux PASS；T5 用 fa9da162 承接并保留唯一 Plan 入口。独立 `codex/T5-native-lifecycle` 修复图片请求/响应体/下载取消等待、可选 promptHash/provider id 的 null 归档失败；独立审查额外指出的凭据冲突失败日志和 unknown 矩阵重试提示/按钮已返修。最新 fresh native 十一组 PASS，覆盖真实提交、取消、WebView reload、实际异常终止/重启、逐 slot/原件 hash、文本容量、原值保留和无秘密的凭据冲突。此前完整 verify 与组合 Rust 97/check 通过，最终返修完整回归、精确 HEAD 补审和当前 PR 门禁继续收尾；T5 保持 REVIEW。详见 [T5 verification](../changes/2026-10-08-taskhost-native-lifecycle/verification.md)。源码 Desktop 2.1.6 / Web 2.1.7 / Mobile 规划 2.1.1，不代表安装或发布。
+
+新增 P1 TASK-PROV-005：供应商非秘密配置在立即异常退出时可能未落盘；P1 TASK-PROV-006：既有 native image 连接/容量及结构化 health 统一。这两项、真实 Provider/GPU、ComfyUI、VPS/Mobile、安装/视觉终验保持开放。TASK-MODEL-001 由原执行者处理，本轮不覆盖。全部逐项状态及后续顺序见[收尾盘点](../changes/2026-10-08-taskhost-native-lifecycle/status.md)和机器账本；下面为此前迭代记录，不能从其“尚未合并”文字推断当前 PR 状态。
+
 ## 2026-10-08 模型能力声明：Hosted日志复核后的增量修正
 
 TASK-MODEL-001 本地AC1–5 DONE。草稿无变化通知覆盖与显示字段依赖问题已修正：32定向无retry、完整verify723/731root(8原skip)、172/174Agent(2原skip)、408/408browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行PASS。2026-10-08 16:31 独立只读审查base5dd6e6dd..head71ddb625 PASS，MC-002/MC-003关闭，MC-001保持关闭；独立87/87、389源码hash和产物匹配，新指纹2ebaab3d。最终文档HEAD需补审，PR#36当前新SHA Hosted待取得；首轮2797687c的405pass+1flaky留档，唯一因果仍UNKNOWN。未合并发布，原主checkout未写入；FEAT-003仍PARTIAL，真实Provider/蒙版/扩图/Mobile及既有开发插件边界不变。下面早先PASS条目保留为当时SHA的历史记录。
