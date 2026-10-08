@@ -37,6 +37,7 @@ const receipt = {
   errors: [],
   resources: [],
   steps: [],
+  processExits: [],
 };
 await mkdir(dataRoot, { recursive: true });
 await mkdir(profile, { recursive: true });
@@ -71,7 +72,7 @@ async function launch() {
   });
   let ready = false;
   for (let attempt = 0; attempt < 120; attempt += 1) {
-    if (child.exitCode !== null)
+    if (child.exitCode !== null || child.signalCode !== null)
       throw new Error(`Desktop exited: ${child.exitCode}`);
     try {
       ready = (await fetch(`http://127.0.0.1:${port}/json/version`)).ok;
@@ -111,13 +112,25 @@ async function stop() {
   await browser?.close();
   browser = undefined;
   page = undefined;
-  if (child && child.exitCode === null) {
+  if (child && child.exitCode === null && child.signalCode === null) {
     const owned = child;
-    const exited = new Promise((resolve) => owned.once("exit", resolve));
+    const exited = new Promise((resolve) =>
+      owned.once("exit", (code, signal) => {
+        receipt.processExits.push({ pid: owned.pid, code, signal });
+        resolve();
+      }),
+    );
     owned.kill();
-    for (let attempt = 0; attempt < 50 && owned.exitCode === null; attempt += 1)
+    for (
+      let attempt = 0;
+      attempt < 50 && owned.exitCode === null && owned.signalCode === null;
+      attempt += 1
+    )
       await Promise.race([exited, pause(200)]);
-    assert.notEqual(owned.exitCode, null, "Owned desktop process did not exit");
+    assert(
+      owned.exitCode !== null || owned.signalCode !== null,
+      "Owned desktop process did not exit",
+    );
   }
   child = undefined;
 }

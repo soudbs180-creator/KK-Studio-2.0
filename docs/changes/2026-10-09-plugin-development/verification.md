@@ -22,3 +22,7 @@
 - marked-version.json/marked-install.txt/plugins-offline-build.txt：实际registry14.1.4/integrity回读、workspace精确锁依赖安装、四插件重新构建 PASS。
 - development-offline-content-working：再次固定1421并阻断CDN，四插件创建/编辑/正确预览、刷新恢复完整内容、启停持久化、unsafe0、4模块200、零console/遮罩实际PASS。
 - 以上是已发生的局部预验收；完整verify、fresh桌面原生重启/坏数据原件保护、最新已提交SHA独立review、Hosted/普通合并/main还须继续。
+
+## Native driver 平台语义修正
+
+精确dc3 source审查独立复现PLUGIN-REVIEW-001：Windows/Node24 own child kill 的 exit code=null / signal=SIGTERM / signalCode=SIGTERM，原stop仅以exitCode会错判已退出。root独立owned-child-exit-probe.json同态复现；未启动真实native验收前修正等待真实exit事件并记录code/signal，以exitCode或signalCode判断退出，保留10秒有界失败。未放宽任何内容/原件/重启断言；runtime实现未变，fresh build实际从dc3来源完成。新的driver提交和实际原生验收随后记录。
