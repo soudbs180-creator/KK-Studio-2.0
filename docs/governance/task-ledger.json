@@ -26,7 +26,7 @@
       "tests",
       "docs"
     ],
-    "status": "IN_PROGRESS",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-10-08-unified-image-mask/intent.md",
       "docs/changes/2026-10-08-unified-image-mask/spec.md",
@@ -39,9 +39,10 @@
       "docs/changes/2026-10-09-unified-mask-main-integration/verification.md",
       "docs/changes/2026-10-09-unified-mask-main-integration/review.md"
     ],
-    "verification": "e7cfd28源码及文档独立PASS为旧78cea基线的本地证据。当前承接1d6f640主线，保留卡片上方操作栏/启动/标题栏；组合完整验证与新SHA独立复审进行中。真实Provider/真机/用户验收继续由VERIFY-002登记。",
-    "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-09"
+    "verification": "最新main1d组合27b/eaa本地实现scope完成：完整verify785Node/172Agent（原skip8/2）、445browser445attempts零retry/flaky、102Rust/fmt/clientcheck/fresh Agent EXE；native Mask外0/重启/包/undo/临时凭据清理，UI13/TaskHost11/模型/titlebar/首屏和生产Web3宽度通过；MASK-INTEGRATION-001定位歧义修复且当前独立关闭。104上游task对象保留，当前源码与运行审查通过并保留后续项。开发插件另归TASK-PLUGIN-DEV-001，开发其余UI只在留证收起遮罩后局部验收；真实效果/手机/用户验收归VERIFY-002。原失败日志与各未验边界详见本task当前verification/review；最终docs/Hosted/普通合并/main CI另按实际回读。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-09",
+    "verificationLimits": "TASK-PLUGIN-DEV-001仍TODO/FAIL，未修；strict-original development FAIL，仅Escape后其他UI局部PASS。primary-main两次开发冷启动NOT VERIFIED。旧native模型driver FAIL后实际修复及独立关闭，原失败和现通过收据不覆盖；最终doc/Hosted/merge/main CI在本地完成scope之后单独实际回读。VERIFY-002真实Provider/手机/用户验收TODO/NOT_VERIFIED。"
   },
   {
     "id": "TASK-IMAGE-EDIT-VERIFY-002",

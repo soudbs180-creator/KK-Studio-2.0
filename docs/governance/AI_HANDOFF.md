@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-10-09 统一Mask最新主线组合本地验收完成
+
+用户授权普通合并已检查分支。PR38/40已正常合并，当前base main1d6f640及其实际post-main37806381609成功；Mask产品27b/driver-eaa承接该主线，完整445browser零retry、102Rust和fresh Agent原生Mask外0/重启/undo/凭据保护、上方操作栏/TaskHost/模型/标题栏/首屏及生产Web3宽度通过，当前独立复审。Desktop/Web2.1.11、Mobile规划2.1.1；104上游对象完整保留，106项DONE62/TODO14/PARTIAL26/BLOCKED4，44项开放。TASK-PLUGIN-DEV-001开发遮罩依然FAIL/TODO，源码与main相同；开发其余UI只在留证后Escape收起遮罩作局部检查，primary-main开发两次超时为NOT VERIFIED。真实效果/手机/用户验收仍VERIFY-002，FEAT035仍PARTIAL。最终docs独立/最新Hosted、普通合并、完整landing tree/主线FF与post-mainCI另外实际回读，不预填成功。UI012仍原执行者在途。恢复入口[本轮验证](../changes/2026-10-09-unified-mask-main-integration/verification.md) / [任务状态报告](../changes/2026-10-09-unified-mask-main-integration/status.md)。保留所有历史/工作树/快捷方式及用户数据，不宣称既有启动入口已换包或已发布。
+
 ## 2026-10-09 统一 Mask 承接最新主线（进行中）
 
 用户已授权合并完成检查的分支。Mask e7cfd28在旧78cea基线独立PASS；当前承接main1d6f640（图片操作栏、静默启动、单排标题栏）。三个产品冲突逐项保留双方行为，Desktop/Web将从当前主线自动递增。当前组合尚未验证，不用历史PASS代填；新源码审查、完整两端检查和Hosted/main CI均须实际完成。FEAT-035保持PARTIAL、真实效果/真机/用户验收任务保持TODO。下方保留各旧SHA的历史事实。

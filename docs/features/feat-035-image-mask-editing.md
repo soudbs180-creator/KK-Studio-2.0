@@ -29,3 +29,5 @@
 ## 差距与后端化
 
 真实付费模型效果、任意语义几何/透视位移自动识别、手机键盘与物理触控、用户最终视觉验收尚未完成，归TASK-IMAGE-EDIT-VERIFY-002。当前按比例检查和人工候选复核处理模型映射风险。Mobile原生应用未改；不以fixture或窄屏截图代替真机证据。保留原有生成服务、权限、归档和unknown边界，无新队列或依赖。
+
+- 2026-10-09：承接main1d后的产品27b/driver-eaa保留选中卡片上方操作栏、App灯箱、lazy首屏及单排标题栏；完整445browser/102Rust和同EXE原生Mask/选择/TaskHost/模型/标题栏/首屏通过，当前独立补审。开发插件既有FAIL不归此次完成，真实Provider/几何偏移/物理手机/用户验收仍VERIFY-002，功能继续PARTIAL；[最新组合验收](../changes/2026-10-09-unified-mask-main-integration/verification.md)。

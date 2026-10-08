@@ -1,0 +1,7 @@
+{
+  "action": "second full npm verify attempt",
+  "outcome": "CreateProcess did not start; automatic approval reviewer exceeded deadline",
+  "toolGuidance": "Not an unsafe-action determination. Retry once allowed.",
+  "recovery": "Identical authorized command retried once; accepted and running as exec session 30418",
+  "checkRelaxed": false
+}

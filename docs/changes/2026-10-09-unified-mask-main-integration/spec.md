@@ -7,3 +7,5 @@
 - AC3：首页不实例化Canvas/Conversation，设置继续按需加载；Desktop40px单排/真实窗口操作与Web三宽度保持。
 - AC4：相关回归、完整verify/Rust/client/fresh release及两端实际DOM/截图、独立新SHA审查、最新Hosted门禁和实际合并后main CI通过。
 - 当前Mobile无原生产物；真实模型效果、任意语义几何漂移、物理手机和用户验收仍由TASK-IMAGE-EDIT-VERIFY-002承载。
+
+当前验收解释：AC4针对本次Mask及相关主线行为；不把已登记且源码未变的开发插件FAIL改成PASS。开发态先保留失败遮罩，再明确收起遮罩验证其余UI；既有TASK-PLUGIN-DEV-001和真实效果VERIFY-002保留开放，不宣称全项目或development插件完成。primary-main两次冷启动未验证记录保持NOT VERIFIED。

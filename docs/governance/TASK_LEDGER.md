@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
-| TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | IN_PROGRESS | TASK-MODEL-001 | root |
+| TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | DONE | TASK-MODEL-001 | root |
 | TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | TASK-IMAGE-EDIT-001 | root |
 | TASK-UI-013 | 桌面标题栏与菜单合并为单排 | DONE | none | root |
 | TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | none | root |
@@ -121,7 +121,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-IMAGE-EDIT-001-unified-mask`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-EDIT-001`
 - Modules: src/features/image-edit, src/features/creation, src/components/nodes, src/App.tsx, src-tauri/src/task_host.rs, tests, docs
-- Verification: NOT_VERIFIED — e7cfd28源码及文档独立PASS为旧78cea基线的本地证据。当前承接1d6f640主线，保留卡片上方操作栏/启动/标题栏；组合完整验证与新SHA独立复审进行中。真实Provider/真机/用户验收继续由VERIFY-002登记。
+- Verification: PASS — 最新main1d组合27b/eaa本地实现scope完成：完整verify785Node/172Agent（原skip8/2）、445browser445attempts零retry/flaky、102Rust/fmt/clientcheck/fresh Agent EXE；native Mask外0/重启/包/undo/临时凭据清理，UI13/TaskHost11/模型/titlebar/首屏和生产Web3宽度通过；MASK-INTEGRATION-001定位歧义修复且当前独立关闭。104上游task对象保留，当前源码与运行审查通过并保留后续项。开发插件另归TASK-PLUGIN-DEV-001，开发其余UI只在留证收起遮罩后局部验收；真实效果/手机/用户验收归VERIFY-002。原失败日志与各未验边界详见本task当前verification/review；最终docs/Hosted/普通合并/main CI另按实际回读。
 - Evidence: [docs/changes/2026-10-08-unified-image-mask/intent.md](../../docs/changes/2026-10-08-unified-image-mask/intent.md), [docs/changes/2026-10-08-unified-image-mask/spec.md](../../docs/changes/2026-10-08-unified-image-mask/spec.md), [docs/changes/2026-10-08-unified-image-mask/plan.md](../../docs/changes/2026-10-08-unified-image-mask/plan.md), [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/changes/2026-10-08-unified-image-mask/review.md](../../docs/changes/2026-10-08-unified-image-mask/review.md), [docs/changes/2026-10-09-unified-mask-main-integration/intent.md](../../docs/changes/2026-10-09-unified-mask-main-integration/intent.md), [docs/changes/2026-10-09-unified-mask-main-integration/spec.md](../../docs/changes/2026-10-09-unified-mask-main-integration/spec.md), [docs/changes/2026-10-09-unified-mask-main-integration/plan.md](../../docs/changes/2026-10-09-unified-mask-main-integration/plan.md), [docs/changes/2026-10-09-unified-mask-main-integration/verification.md](../../docs/changes/2026-10-09-unified-mask-main-integration/verification.md), [docs/changes/2026-10-09-unified-mask-main-integration/review.md](../../docs/changes/2026-10-09-unified-mask-main-integration/review.md)
 - Updated: 2026-10-09
 
