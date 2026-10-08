@@ -31,3 +31,9 @@ R1 结果恢复锚点已改为整张 article，与实际 Toolbar 一致；新增
 ## bcc8d34文档PASS与新主线组合待补审
 
 [完整只读审查](evidence/review-bcc8d34.md)确认bcc8仅文档变化，R1/R2保持CLOSED，产品976db技术PASS有效。PR37落地main78cea37后，当前UI011承接双方历史与实际重试门禁、自动bumpDesktop2.1.8/Web2.1.9；新的组合完整验收与精确提交补审尚待完成，不让bcc8结论代替新组合审查。
+
+## 7d27265 组合源码与实际原生证据：PASS
+
+[完整收到的只读补审](evidence/review-7d27265-native.md)，2026-10-08 20:21–20:27（Asia/Shanghai），固定base78cea37 → head7d27265，无P0/P1/P2/P3。上一轮组合源码检查确认33个UI独有及3个T5独有文件原样保留，App/BatchMatrix/任务浏览器交集同时保留实际retryableOutputIndices与UI32px控件；账本按ID字段合并无丢失，PROV005/006继续TODO。补审核验385+9源hash、同EXE/model/bundle及真实非空任务截图，R1/R2继续CLOSED。
+
+PR39产品7d的当前Hosted已SUCCESS，T5 PR37合并后main37773335548也SUCCESS。TaskDONE以这些实际证据为依据；本轮最终文档提交独立补审和精确Hosted/主线推广另绑，旧PASS不会自动代替新head门禁。

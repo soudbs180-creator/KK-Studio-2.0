@@ -15,3 +15,5 @@ Rollback：revert 本任务；保留历史证据、原件与其他分支，不�
 独立审查返修增加两个验收：顶部手势结束/取消重选恢复及390px双排HUD碰撞；六阶段必须含非空任务与失败输出。共享DOM几何用于定位和自动reveal，遵守手势/undo与空卡片连线语义；评论/任务动作消费同一32px按钮类，不放宽采样。原失败日志保留，修复后重新绑定full/Web/native/精确SHA证据。
 
 主线前移收尾：承接已验收PR37/main78cea37，逐项保留T5重试/取消/归档门禁与UI标准控件，合并账本后按真实平台bump，完整Web与fresh native组合验收、精确复审、当前Hosted，再普通squash并核对落地tree与主线CI。
+
+收尾验收：7d27265完整423浏览器/97Rust/fresh UI13+TaskHost11+模型能力、精确独立补审及产品当前Hosted均PASS。任务DONE；本次只补文档证据，完成相关治理/格式/交付检查，再绑定最终文档head补审/Hosted，通过后按授权普通squash，核对落地完整tree和主线CI。

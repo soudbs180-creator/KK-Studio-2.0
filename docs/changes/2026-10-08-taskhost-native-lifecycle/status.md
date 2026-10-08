@@ -2,7 +2,7 @@
 
 ## 最新：已合入主线
 
-T5 source04260ad精确独立PASS，ENV004 CLOSED；Hosted37770000879/37769995909全部SUCCESS，实际native11组及策略清理通过。PR37已合入main@78cea37，完整tree一致；T5 DONE、PROV005/006 TODO。主线合并后CI另绑，UI011组合候选另验。权威账本现在102项：DONE58/TODO13/PARTIAL26/BLOCKED4/REVIEW1。
+T5 source04260ad精确独立PASS，ENV004 CLOSED；Hosted37770000879/37769995909全部SUCCESS，实际native11组及策略清理通过。PR37已合入main@78cea37，完整tree一致；T5 DONE、PROV005/006 TODO。主线合并后37773335548 verify/deploy-linux SUCCESS，真实Hosted原始merge-ref收据与完整tree已核验。UI011组合423browser/97Rust/Native13+11+模型门禁、独立及产品当前HostedPASS；最终文档推广另绑。权威账本现在102项：DONE59/TODO13/PARTIAL26/BLOCKED4。
 
 ## 以下为此前阶段历史
 

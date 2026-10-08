@@ -1,6 +1,6 @@
 # Verification：T5 原生生命周期
 
-- Task ID：T5；状态：本机验收与独立源码审查 PASS，Hosted 原生启动失败待复验；2026-10-08。
+- Task ID：T5；状态：DONE，精确独立/Hosted/普通主线落地及合并后CI全部通过；2026-10-08。历史失败如下保留。
 - [Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Review](review.md)
 - Base：`5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3`。
 - 环境：Windows，Node 24.21.0 / npm 11.19，独立根/Agent/plugin npm ci，未借用 node_modules。
@@ -89,3 +89,9 @@ PR #36 已合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，[合并后 CI](
 2026-10-08：[只读独立补审](evidence/review-04260ad.md)技术PASS，T5-ENV-REVIEW-004 CLOSED；正确空对象替身回放旧21ac失败，26/26当前策略及额外9/9边界检查通过，ENV003保持关闭。当前source04260ad的Hosted37770000879/37769995909全部SUCCESS，Runtime154.0.4258.62、真实原生11组passed、应用专属策略清理通过。完整日志按原始字节保存于[编码原件](evidence/hosted-04260ad-pass-log.json)；旧21ac完整artifact已核验[长度与SHA](evidence/hosted-21ac414-artifact-integrity.json)，未启动native的旧失败不改写。
 
 [PR37普通squash回执](evidence/pr37-merge-receipt.json)已确认合入main@78cea37af9359fd2d9f58f2854525516deee8a06，[完整tree一致](evidence/pr37-landing-integrity.json)。T5 DONE；合并后main CI另绑，PROV005/006仍TODO。UI011承接该主线另做组合回归，Desktop2.1.8/Web2.1.9只对应UI新候选，不回写T5旧Runtime收据。
+
+## 合并后主线CI与Hosted身份核验 PASS
+
+[main78cea37合并后37773335548](evidence/pr37-main-ci.json) verify/deploy-linux SUCCESS；delivery在push事件预期skip。PR37原生[原始收据](evidence/hosted-04260ad-receipt.json) sourceHead为7849310fc8049ed90cfbda2c0c23091e19d8d250，actions/checkout默认PR merge ref；不是042的伪造收据。[完整核验](evidence/hosted-04260ad-integrity.json)证明其parents为base1af+candidate042、完整tree与042/landing78一致，9/9源hash、11组/5次真实elevated/CDP/Runtime154启动及完整ZIP SHA均匹配。四次exit1发生在owned cleanup请求之后，不能称为自行崩溃。本机not-recorded权限字段不据此改写为true。
+
+T5 DONE，PROV005/006独立TODO。UI7d组合另有423browser/97Rust/fresh UI13+TaskHost11+模型能力及独立/HostedPASS；两个任务原生收据与源码版本分别绑定。

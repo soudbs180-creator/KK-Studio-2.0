@@ -1,6 +1,6 @@
 # Verification：TASK-UI-011
 
-- 日期：2026-10-08；状态：REVIEW；本地最新源码回归通过，精确补审与当前 Hosted 待满足；[Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Review](review.md)。
+- 日期：2026-10-08；状态：DONE；7d27265完整组合验收、独立补审和当前Hosted通过；最终文档提交的推广门禁另绑；[Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Review](review.md)。
 - 起始 main@5dd6e6dd；独立 npm ci 完成（root 244 / Agent / plugins 自有安装）。
 - 已只读确认偏差：ImageCreationNode 的 image-preview-actions 位于 image-preview 内部，单击 uploaded-image 打开预览；DemoResultNode 的图片结果操作常驻 footer。
 - 模型任务已提交到 2797687c、原工作树 clean；本任务不编辑其工作树，后续集成复核其能力/参考图门禁。
@@ -45,3 +45,13 @@ UI011-R2：非空队列按钮27px、单项重试22px；补入真实createTask的
 ## 承接已验收T5主线78cea37
 
 bcc8d34最终文档[独立只读审查](evidence/review-bcc8d34.md)PASS，976db180产品结论保持有效。PR37的04260ad已完成Hosted并合入main78cea37；UI011普通任务分支现保留双方历史、按task ID合并102项账本，保留BatchMatrix真实retryableOutputIndices和共享32px样式，候选自动递增Desktop2.1.8/Web2.1.9/Mobile规划2.1.1。组合后的完整verify/fresh Tauri/UI13/TaskHost11/模型门禁、精确新head补审与Hosted尚待实际完成；旧422/24cf收据不当作新组合验收。
+
+## 7d27265 最新主线组合：完整验收与独立补审 PASS
+
+固定产品 source 7d2726526ab7eabe3ce96c08dbfbf365473876d7，base main@78cea37af9359fd2d9f58f2854525516deee8a06；Desktop2.1.8 / Web2.1.9 / Mobile规划2.1.1。完整 npm run verify exit0：root723/731（8既有skip）、Agent172/174（2既有skip）；423/423 browser、423 attempts、12 actual workers、0flaky/0unexpected/0skipped/maxRetry0。实际[reporter](evidence/web-7d27265/browser-results.json)、[summary](evidence/web-7d27265/summary.json)、相关页面截图和[完整原日志](evidence/web-7d27265/verify-t5-integration-7d27265-log.json)按真实字节保留，历史失败不改写。
+
+Rust fmt、97/97 tests、client:check、fresh client:build -- --no-bundle全部PASS（30.13s）。同一EXE SHA256 03025c1a3aa66a9a06cea6b8447fa570d9f3e7b278dee746e9278f4da6780f22，真实production URL http://tauri.localhost/，JS index-MojSS4Ox.js / CSS index-B2nRDpHV.css。独立数据/profile下[UI13组/385指纹](evidence/native-ui-7d27265/receipt.json)、[TaskHost11组/9指纹/5次CDP启动](evidence/native-taskhost-7d27265/receipt.json)及[模型能力门禁](evidence/native-model-7d27265/desktop-acceptance.json)全部PASS；errors=[]、各自owned cleanup完成。当前本机TaskHost未记录提升权限，不能升级为High IL结论。
+
+[独立只读精确补审](evidence/review-7d27265-native.md)PASS，无P0–P3，UI011-R1/R2保持CLOSED；分别核对组合源码、423浏览器和上述实际native/source/EXE/bundle。PR39当前产品[Hosted37776187321](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37776187321)及push37776180456全部必需检查SUCCESS，见[当前head门禁回执](evidence/hosted-7d27265-checks.json)与[原日志](evidence/hosted-7d27265-pass-log.json)。Hosted默认checkout的合成merge ref与PR head分别保留，不能擅改原生receipt sourceHead。
+
+任务声明范围验收完成，账本UI011 DONE；本次随后仅补文档和证据，产品/tests/scripts/构建配置不得改变。最终文档head仍需独立补审、精确Hosted/普通squash/落地tree与主线CI；未提前声称这些未来门禁通过。本机fixture与CI均不代表真实付费Provider、Mobile/安装发布或用户最终Figma视觉批准。

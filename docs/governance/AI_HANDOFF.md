@@ -1,5 +1,13 @@
 # AI handoff
 
+## 2026-10-08 图片操作栏与T5组合验收完成
+
+TASK-UI-011 产品7d27265/base78cea37完整423browser（零flaky/零实际retry）、97Rust、fresh UI13+TaskHost11+同EXE模型能力PASS；精确独立补审PASS关闭R1/R2，当前PR39 Hosted37776187321及push37776180456全部必需检查SUCCESS。图片单击仅选择，上方显示唯一标准32px动作栏；顶部/390pxHUD/重选与真实非空工作台规则均核验。任务DONE；随后仅补文档与证据，最终文档head独立/Hosted及普通合并/落地tree/主线CI另绑，不能让旧提交门禁替代新提交。
+
+T5 PR37已合入main78cea37，source042完整tree相同；合并后main37773335548 verify/deploy-linux SUCCESS。当前本分支权威102项：DONE59/TODO13/PARTIAL26/BLOCKED4。源码Desktop2.1.8/Web2.1.9/Mobile规划2.1.1；静默启动/单排标题栏/UI012/蒙版由原执行者继续维护并分别验收，不能从本轮源码构建推断用户现有快捷方式已换包。PROV005/006、媒体/编排执行、报价回执、工具/开发插件及外部/移动/安装/最终视觉验收仍开放。
+
+当前恢复入口：[本轮验证](../changes/2026-10-08-image-selection-actions/verification.md)、[状态报告](../changes/2026-10-08-image-selection-actions/status.md)、机器账本与实际PR39/main。以下各轮段落保留为当时历史，当前事实以上述精确证据及后续交付回执为准。
+
 ## 2026-10-08 T5落地与图片操作栏组合候选
 
 PR #37 已按授权普通squash合入 main@78cea37af9359fd2d9f58f2854525516deee8a06；source04260ad精确独立PASS关闭ENV004，Hosted37770000879/37769995909全部SUCCESS、真实原生11组和策略清理通过，source/landing完整tree一致。T5 DONE，PROV005/006 TODO；合并后main CI另绑。
