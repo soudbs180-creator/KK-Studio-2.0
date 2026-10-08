@@ -5,3 +5,5 @@
 - 无效输入、合并冲突或未通过验证时，config/catalog原件及目录不写入；catalog在合并与凭据检查成功后才落盘。正常旧连接、模型窗口/catalog、CLI apply/check与安全边界保持。
 - 使用锁定的TOML解析器校验输入/结果并读取配置语义，原文仍按行局部合并；不把全文重新序列化。新增依赖不升级其他包，按现有Agent白名单打包。
 - 局部RED→GREEN、独立参考TOML解析、CLI真实隔离文件、全量verify、Agent build/package与delivery、独立精确head review、实际托管门禁与main回归分别验证。
+
+- 用户profile仍引用待删受管provider时也拒绝删除，保留profile原文；root active不冒充已调整所有用户profile。附带当前健康审计19条的可追溯任务安排，不把这些TODO纳入已完成声明。

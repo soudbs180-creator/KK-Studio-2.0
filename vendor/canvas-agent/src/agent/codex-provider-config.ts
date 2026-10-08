@@ -279,6 +279,25 @@ export function mergeCodexConfigToml(
     !patch.active
   )
     throw new Error("当前 provider 将被删除；请通过 active 显式选择有效连接");
+  if (
+    parsed.profiles &&
+    typeof parsed.profiles === "object" &&
+    !Array.isArray(parsed.profiles)
+  ) {
+    for (const profile of Object.values(parsed.profiles)) {
+      if (!profile || typeof profile !== "object" || Array.isArray(profile))
+        continue;
+      const selected = profile.model_provider;
+      if (
+        typeof selected === "string" &&
+        PROVIDER_KEY_PATTERN.test(selected) &&
+        !keys.has(selected)
+      )
+        throw new Error(
+          "用户 profile 仍引用将被删除的 provider；请先明确调整该 profile 的选择",
+        );
+    }
+  }
   const eol = existing.includes("\r\n") ? "\r\n" : "\n";
   const lines = existing === "" ? [] : existing.split(/\r\n|\n/);
   const hasTrailingEol = lines.length > 0 && lines[lines.length - 1] === "";

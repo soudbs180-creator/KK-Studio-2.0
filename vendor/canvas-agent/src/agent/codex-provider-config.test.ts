@@ -385,6 +385,23 @@ test("与Object原型同名的用户顶层键仍按原文保留", () => {
   assert.equal(mergeCodexConfigToml(result, samplePatch), result);
 });
 
+test("用户profile仍引用旧受管provider时不能删除它或改写profile选择", () => {
+  const original =
+    '[profiles.work]\nmodel_provider = "kk_old"\nmodel = "profile-model"\n[model_providers.kk_old]\nname = "Old"\n';
+  assert.throws(
+    () => mergeCodexConfigToml(original, samplePatch),
+    /profile.*provider/i,
+  );
+  const result = mergeCodexConfigToml(original, {
+    ...samplePatch,
+    providers: [
+      ...samplePatch.providers,
+      { ...samplePatch.providers[0], providerKey: "kk_old" },
+    ],
+  });
+  assert.deepEqual(parseToml(result).profiles, parseToml(original).profiles);
+});
+
 function isolatedConfig(t: test.TestContext, original: string) {
   const dir = fs.mkdtempSync(
     path.join(os.tmpdir(), "kk-safe-provider-config-"),

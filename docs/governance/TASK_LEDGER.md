@@ -113,6 +113,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
 | TASK-PROV-CONFIG-004 | Codex受管TOML表头与当前选择的安全合并 | PARTIAL | TASK-PROV-003 | root |
+| TASK-LOCAL-ASSET-002 | 伴随服务跨源素材元数据响应头 | TODO | TASK-LOCAL-SERVICE-001 | root |
+| TASK-COMPANION-RECOVERY-003 | 伴随服务未知版本与坏快照原件保护 | TODO | TASK-LOCAL-SERVICE-001 | root |
+| TASK-WEB-IMAGE-UNKNOWN-002 | Web成功HTTP但坏输出的未知受理边界 | TODO | T4 | root |
+| TASK-GATEWAY-BUDGET-002 | Gateway提交同伴任务的未知费用隔离 | TODO | T5 | root |
+| TASK-MODEL-BATCH-002 | Desktop与模型批量数量契约一致性 | TODO | TASK-MODEL-001 | root |
+| TASK-IMAGE-REF-003 | 异步参考图上传与删除乱序保护 | TODO | TASK-IMAGE-EDIT-001 | root |
+| TASK-WORKBUDDY-SAFE-002 | 旧WorkBuddy Gateway安全承接 | TODO | T8 | root |
+| TASK-CANVAS-KAWORKAI-002 | 旧画布版本能力安全承接 | TODO | TASK-CANVAS-KAWORKAI-001 | root |
+| TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | TODO | TASK-GOV-001 | root |
+| TASK-DOC-CURRENT-002 | README与已知问题的当前入口一致性 | TODO | TASK-GOV-001 | root |
+| TASK-GIT-HEALTH-002 | 分支准入与未提交工作持续盘点 | TODO | TASK-GOV-001 | root |
+| TASK-UI-014-RESUME-001 | 接续因模型容量错误中断的UI审计 | TODO | UI-001 | root |
 
 ## TASK-IMAGE-EDIT-001 — 统一图片编辑蒙版与连续重绘
 
@@ -1400,4 +1412,148 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: vendor/canvas-agent/src/agent/codex-provider-config.ts, vendor/canvas-agent/src/agent/codex-provider-config.test.ts, vendor/canvas-agent/package.json, vendor/canvas-agent/package-lock.json, docs
 - Verification: PARTIAL — 旧25项provider/CLI基线通过，当前仍需故障复现、修复、组合回归与独立审查。
 - Evidence: [docs/changes/2026-10-09-provider-config-recovery/spec.md](../../docs/changes/2026-10-09-provider-config-recovery/spec.md), [docs/changes/2026-10-09-provider-config-recovery/verification.md](../../docs/changes/2026-10-09-provider-config-recovery/verification.md), [docs/changes/2026-10-09-provider-config-recovery/review.md](../../docs/changes/2026-10-09-provider-config-recovery/review.md)
+- Updated: 2026-10-09
+
+## TASK-LOCAL-ASSET-002 — 伴随服务跨源素材元数据响应头
+
+- Goal: 已配对浏览器可以读取X-KK-Asset-Metadata并恢复素材
+- Scope: 健康审计CORE-001；当前main重新复现后在独立任务分支收尾
+- Acceptance: 已配对浏览器可以读取X-KK-Asset-Metadata并恢复素材; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/local-service/server.ts, src/features/local-service/client.ts
+- Verification: NOT_VERIFIED — 当前8c缺Expose-Headers；旧1d真实浏览器200字节正常但metadata不可读。先复核最新main，然后真实双端口浏览器验收；仅允许的origin暴露头，认证边界保持。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-COMPANION-RECOVERY-003 — 伴随服务未知版本与坏快照原件保护
+
+- Goal: 读失败不会当成空存储并覆盖未知版本或坏原件
+- Scope: 健康审计CORE-004；当前main重新复现后在独立任务分支收尾
+- Acceptance: 读失败不会当成空存储并覆盖未知版本或坏原件; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/local-service/store.ts
+- Verification: NOT_VERIFIED — 当前catch-all读取语义仍存在；风险为INFERENCE，先隔离future/主坏备好/IO/保存重试复现，原字节与备份保护再实现。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-WEB-IMAGE-UNKNOWN-002 — Web成功HTTP但坏输出的未知受理边界
+
+- Goal: 已可能受理的生图请求不会按确定失败普通重试
+- Scope: 健康审计CORE-003；当前main重新复现后在独立任务分支收尾
+- Acceptance: 已可能受理的生图请求不会按确定失败普通重试; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/creation/imageGeneration.ts
+- Verification: NOT_VERIFIED — INFERENCE；先用200坏JSON/空/部分输出fixture复现，核对unknown、零自动第二POST及费用保留，不声称已产生真实费用。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-GATEWAY-BUDGET-002 — Gateway提交同伴任务的未知费用隔离
+
+- Goal: 未取得jobId但可能已受理的任务不能被零成本释放预算
+- Scope: 健康审计CORE-005；当前main重新复现后在独立任务分支收尾
+- Acceptance: 未取得jobId但可能已受理的任务不能被零成本释放预算; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/generation-server/repository.ts
+- Verification: NOT_VERIFIED — INFERENCE；先复现连接隔离中submitting无jobId路径，保留未知受理与预算，零真实付费请求。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-MODEL-BATCH-002 — Desktop与模型批量数量契约一致性
+
+- Goal: 界面接受数量与原生TaskHost/模型限制一致且提交前拒绝非法数量
+- Scope: 健康审计CORE-002；当前main重新复现后在独立任务分支收尾
+- Acceptance: 界面接受数量与原生TaskHost/模型限制一致且提交前拒绝非法数量; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/creation/imageTaskCommand.ts, src-tauri/src/task_host.rs
+- Verification: NOT_VERIFIED — 当前源码前端1–64/原生10存在契约差异；大于10原生运行尚未验证。先核对UI012最新候选是否已处理，再做零POST和真实Rust边界验收，避免重复。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-IMAGE-REF-003 — 异步参考图上传与删除乱序保护
+
+- Goal: 上传晚完成不会复活已删除引用或覆盖新草稿
+- Scope: 健康审计UI-MASK-001；当前main重新复现后在独立任务分支收尾
+- Acceptance: 上传晚完成不会复活已删除引用或覆盖新草稿; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/image-edit/EditComposer.tsx
+- Verification: NOT_VERIFIED — 当前8c仍捕获旧references；延迟上传与删除同态RED后修最新列表/生命周期，重复操作与切换编辑对象回归。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-WORKBUDDY-SAFE-002 — 旧WorkBuddy Gateway安全承接
+
+- Goal: 引入前完成凭据边界和无终止SSE的失败语义
+- Scope: 健康审计LEG-003/LEG-004；当前main重新复现后在独立任务分支收尾
+- Acceptance: 引入前完成凭据边界和无终止SSE的失败语义; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: vendor/canvas-agent/src/agent
+- Verification: NOT_VERIFIED — 仅旧分支存在，保留源分支及dirty工作区；不得整支合并。新的承接只带审核过的独有功能，凭据进入系统库/请求内存，EOF无completed不假成功；真实平台联调另验。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-CANVAS-KAWORKAI-002 — 旧画布版本能力安全承接
+
+- Goal: 损坏历史不变空覆盖、恢复严格校验并承接独有产品能力
+- Scope: 健康审计LEG-005/LEG-006/LEG-007；当前main重新复现后在独立任务分支收尾
+- Acceptance: 损坏历史不变空覆盖、恢复严格校验并承接独有产品能力; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/creation, src/components/canvas
+- Verification: NOT_VERIFIED — main尚无该版本模块；旧13d5源码保留，不整支merge。新任务先严格snapshot schema/主备保护/坏输入/深克隆/真实恢复，再按用户已有范围引入独有能力。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-VERIFY-CONCURRENCY-002 — 浏览器并发失败原因与隔离复核
+
+- Goal: 保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败
+- Scope: 健康审计QA-001；当前main重新复现后在独立任务分支收尾
+- Acceptance: 保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: tests/browser, playwright.config.ts
+- Verification: NOT_VERIFIED — 旧默认并发失败及受控零重试PASS保留，争用原因INFERENCE。当前插件447/12workers零实际retry不是旧原因已关闭证据；新增失败应具体诊断。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-DOC-CURRENT-002 — README与已知问题的当前入口一致性
+
+- Goal: 现行入口采用版本源及UI_INDEX，不用历史发布段落冒充当前版本
+- Scope: 健康审计DOC-001；当前main重新复现后在独立任务分支收尾
+- Acceptance: 现行入口采用版本源及UI_INDEX，不用历史发布段落冒充当前版本; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: README.md, docs/governance/KNOWN_ISSUES.md
+- Verification: NOT_VERIFIED — 当前README仍写2.1.0；已知问题需逐项以新main账本/唯一UI_INDEX裁决，保留历史发布来源。同步UI014候选文档后最小纠正。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-GIT-HEALTH-002 — 分支准入与未提交工作持续盘点
+
+- Goal: 逐分支区分已集成/新提交/待审/历史/dirty并保留恢复能力
+- Scope: 健康审计GIT-001；当前main重新复现后在独立任务分支收尾
+- Acceptance: 逐分支区分已集成/新提交/待审/历史/dirty并保留恢复能力; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: docs/governance
+- Verification: NOT_VERIFIED — 当前53本地分支/41worktree分类实证已生成，8非当前owner dirty单独保留；不能凭squash的branch --merged或任务DONE清理。只普通PR集成，无删除授权则不删。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-UI-014-RESUME-001 — 接续因模型容量错误中断的UI审计
+
+- Goal: 保存原候选后完成当前main组合、Web/新Desktop验收与独立复审
+- Scope: 健康审计UI014运行中断；当前main重新复现后在独立任务分支收尾
+- Acceptance: 保存原候选后完成当前main组合、Web/新Desktop验收与独立复审; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/components, src/styles, docs/UI_INDEX.md
+- Verification: NOT_VERIFIED — 原会话审计并完善UI规范于2026-10-08T21:06:47Z模型容量错误中断，最后菜单27定向通过、布局变量门禁曾失败后已补定义但最终结果未知。保留原worktree，独立候选续验；不能当成产品已验收或偷偷改变会话模型。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
 - Updated: 2026-10-09

@@ -11,3 +11,5 @@
 - packaged-working实际运行包内node.exe及agent/dist/index.js，不使用tsx或开发node_modules；2次移除当前provider明确exit1，config/prior catalog原件不变、不创建new catalog；显式有效active两次exit0，用户profile和CRLF保留、输出幂等。独立Python tomllib解析通过；仅隔离目录、无真实Provider请求。
 - 新依赖为显式锁定smol-toml1.9.0/BSD-3-Clause，registry integrity实证在toml-dependency-metadata.json。输入/结果解析异常不带原config行；root模型选择只由显式active改变。catalog延后到合并及原secret检查通过后写入。
 - 这些为当前工作区预验收；PR42落地后的组合main、Desktop版本递增、完整verify/新原生包/精确head独立review与托管/main gate仍待执行。TASK-PROV-CONFIG-004继续PARTIAL，TASK-PROV-003整体不变。
+
+- profile-reference-red实际复现profile残留受管引用，修复后35/35；原型同名用户键保留。新的19条承接/53分支时点分类及12项缺口任务见health-followup.md；UI014容量中断已登记续验，旧候选原件未动。
