@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-08 桌面与网页启动体验
+
+TASK-LAUNCH-001 在独立任务树修复 Windows 批处理弹窗与快捷方式旧图标路径；增加当前内嵌 Logo 的 GUI 入口、后台日志、进度、取消和构建互斥。Web 首次首页不挂载隐藏工作区，进入后保留实例与撤销历史；设置/素材/项目库等页面按需下载，内置 Skill 模板和 CSS 顺序保持原契约。首屏 JS 988,373→801,552 bytes（减18.9%），CSS 字节/hash一致；相同模拟网络5次冷启动中位数1571→1370 ms，不能外推线上。完整 verify 为711/719 Node与172/174 Agent通过（既有skip8/2）、405/405 browser无retry；client:check、带Agent新Tauri及实际版本/首页/设置/焦点验收通过。独立预检的百分号路径和失败焦点已RED→GREEN修复，精确SHA复审与桌面快捷方式收尾见[本轮验证](changes/2026-10-08-startup-experience/verification.md)。候选Desktop2.1.6/Web2.1.7/Mobile2.1.1，main/线上未推进。
+
 ## 2026-10-08 阶段工作台主线融合
 
 用户已授权“合并主线”。原候选ca6bc52在推送前遇到主线PR #34/5b0eb6a前移；本轮在既有TASK-ORCH-002分支融合为唯一Plan入口、TaskWorkbenchStages和共享编排器，保留主线的暂停/重规划/回执/MCP改进。候选Desktop2.1.5/Web2.1.6/Mobile规划2.1.1；97tasks/34features不新增重复登记，FEAT-030仍PARTIAL。组合本地AC完成：49/49、完整verify708root/172Agent/400browser零retry（原skip8/2）、Rust97及fresh Tauri审批/重启/真实CAS/恢复草稿通过；精确SHA独立补审和Hosted门禁另验；实际集成以本轮PR merged及merge SHA为准。下方首轮未推送/main不变等描述保留为历史，不代替当前进度。

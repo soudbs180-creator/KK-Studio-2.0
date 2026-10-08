@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-10-08 启动体验候选
+
+TASK-LAUNCH-001 基于 main/origin/main@5dd6e6dd，在登记 worktree 修复 GUI 启动/Logo并降低首屏依赖；Desktop2.1.6/Web2.1.7/Mobile2.1.1。完整verify（711 Node/172 Agent/405browser，既有skip8/2，0flaky）、client:check、带Agent新Tauri与production同态验收通过。Web主JS减18.9%、CSS完全一致；本机模拟网络5次中位数1571→1370ms。Windows3项与新鲜度12项通过，独立预检两项P2已RED→GREEN修复，精确SHA复审/实际桌面入口待收尾，见[本轮验证](../changes/2026-10-08-startup-experience/verification.md)。main未改、线上未部署，FEAT-026/T7外部边界保留。
+
 ## 2026-10-08 阶段工作台主线融合
 
 用户已授权“合并主线”。原候选ca6bc52在推送前遇到主线PR #34/5b0eb6a前移；本轮在既有TASK-ORCH-002分支融合为唯一Plan入口、TaskWorkbenchStages和共享编排器，保留主线的暂停/重规划/回执/MCP改进。候选Desktop2.1.5/Web2.1.6/Mobile规划2.1.1；97tasks/34features不新增重复登记，FEAT-030仍PARTIAL。组合本地AC完成：49/49、完整verify708root/172Agent/400browser零retry（原skip8/2）、Rust97及fresh Tauri审批/重启/真实CAS/恢复草稿通过；精确SHA独立补审和Hosted门禁另验；实际集成以本轮PR merged及merge SHA为准。下方首轮未推送/main不变等描述保留为历史，不代替当前进度。

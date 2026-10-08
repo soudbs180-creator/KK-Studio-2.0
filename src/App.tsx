@@ -1,4 +1,5 @@
 import React, {
+  lazy,
   useEffect,
   useMemo,
   useRef,
@@ -14,23 +15,19 @@ import type { ModelSelection } from "./features/models/modelSelection";
 import { useSidebarLayout } from "./components/useSidebarLayout";
 import Canvas from "./components/Canvas";
 import ConversationPanel from "./components/ConversationPanel";
-import PromptLibraryPanel from "./components/PromptLibraryPanel";
+import DeferredPanelBoundary from "./components/DeferredPanelBoundary";
 import Modal from "./components/Modal";
 import TaskExecutionApproval from "./components/TaskExecutionApproval";
 import {
   requiredApprovalGates,
   type ApprovalGate,
 } from "./domain/agentWorkflow";
-import AssetPanel from "./components/assets/AssetPanel";
-import SettingsPanel from "./components/settings/SettingsPanel";
 import {
   SETTINGS_SECTIONS,
   type SettingsSection,
 } from "./components/settings/SettingsSectionData";
-import LibraryPage from "./components/LibraryPage";
-import CatalogPanel from "./components/CatalogPanel";
 import StartPage from "./components/StartPage";
-import SkillsPage, { ensureTemplates } from "./components/SkillsPage";
+import { ensureTemplates } from "./features/skills/templateSkills";
 import {
   createSkillRegistry,
   applySkillInstructions,
@@ -160,9 +157,6 @@ import {
   type NativeTaskHostRecord,
 } from "./features/creation/nativeTaskHost";
 
-import ShortcutsPanel from "./components/ShortcutsPanel";
-import InfoPanel from "./components/InfoPanel";
-import TaskWorkbench from "./components/TaskWorkbench";
 import { initialAssets, initialSubjects, type Asset } from "./domain/assets";
 import {
   BASE_CANVAS_ITEMS,
@@ -179,6 +173,11 @@ import {
   writeLocalWorkflows,
   type WorkflowRecord,
 } from "./features/comfyui/workflowRegistry";
+// App owns lazy panel styles before the final screen overrides.
+import "./components/assets/assets.css";
+import "./components/settings/plugin-manager.css";
+import "./components/settings/settings.css";
+import "./styles/shortcuts.css";
 import "./styles/workspace.css";
 import "./styles/sidebar.css";
 import "./styles/account-popup.css";
@@ -187,8 +186,25 @@ import "./styles/catalog-pages.css";
 import "./styles/conversation-panel.css";
 import "./styles/model-picker.css";
 import "./styles/design-surface.css";
+
+const PromptLibraryPanel = lazy(
+  () => import("./components/PromptLibraryPanel"),
+);
+const AssetPanel = lazy(() => import("./components/assets/AssetPanel"));
+const SettingsPanel = lazy(() => import("./components/settings/SettingsPanel"));
+const LibraryPage = lazy(() => import("./components/LibraryPage"));
+const CatalogPanel = lazy(() => import("./components/CatalogPanel"));
+const SkillsPage = lazy(() => import("./components/SkillsPage"));
+const ShortcutsPanel = lazy(() => import("./components/ShortcutsPanel"));
+const InfoPanel = lazy(() => import("./components/InfoPanel"));
+const TaskWorkbench = lazy(() => import("./components/TaskWorkbench"));
+
 export default function App() {
   const [active, setActive] = useState("landing");
+  const [workspaceVisited, setWorkspaceVisited] = useState(false);
+  useEffect(() => {
+    if (active === "workspace") setWorkspaceVisited(true);
+  }, [active]);
   const [modal, setModal] = useState("");
   const [settingsSection, setSettingsSection] =
     useState<SettingsSection>("general");
@@ -2408,264 +2424,272 @@ export default function App() {
               defaultModel={homeModelConfig.model}
             />
           )}
-          <div className="workspace-content" hidden={active !== "workspace"}>
-            <CanvasImageCommandContext.Provider
-              value={{
-                submit: (input) =>
-                  submitImageCommand({ origin: "canvas", input }),
-                cancel: cancelTask,
-                tasks: activeProject?.tasks ?? [],
-                model: activeProject?.model ?? "",
-                providerConnectionId:
-                  activeProject?.composerDraft.providerConnectionId ??
-                  activeProject?.tasks.at(-1)?.providerConnectionId ??
-                  readProviderConnections().find(
-                    (connection) =>
-                      connection.baseUrl === activeProject?.providerBaseUrl &&
-                      connection.credentialRef ===
-                        activeProject?.providerCredentialRef,
-                  )?.id,
-                textModel:
-                  readProviderConnections().find(
-                    (connection) =>
-                      connection.capabilities.modalities.includes("text") &&
-                      (!activeProject?.providerCredentialRef ||
+          {(active === "workspace" || workspaceVisited) && (
+            <div className="workspace-content" hidden={active !== "workspace"}>
+              <CanvasImageCommandContext.Provider
+                value={{
+                  submit: (input) =>
+                    submitImageCommand({ origin: "canvas", input }),
+                  cancel: cancelTask,
+                  tasks: activeProject?.tasks ?? [],
+                  model: activeProject?.model ?? "",
+                  providerConnectionId:
+                    activeProject?.composerDraft.providerConnectionId ??
+                    activeProject?.tasks.at(-1)?.providerConnectionId ??
+                    readProviderConnections().find(
+                      (connection) =>
+                        connection.baseUrl === activeProject?.providerBaseUrl &&
                         connection.credentialRef ===
-                          activeProject.providerCredentialRef),
-                  )?.model ?? "",
-                models: [
-                  ...new Set(
-                    [
-                      activeProject?.model,
-                      ...readProviderConnections().map(
-                        (connection) => connection.model,
-                      ),
-                    ].filter((model): model is string => Boolean(model)),
-                  ),
-                ],
-                disabledReason: activeProject
-                  ? undefined
-                  : "请先新建或打开项目，再提交图片生成。",
-                imageConfigured: homeModelConfig.configured,
-                configure: () => open("settings/providers"),
-              }}
-            >
-              <Canvas
-                projectStatus={
-                  activeProject && (
-                    <div className="project-task-status" aria-live="polite">
-                      <strong title={activeProject.name}>
-                        {activeProject.name}
-                      </strong>
-                      {activeProject.tasks.slice(-1).map((task) => (
-                        <span
-                          key={task.id}
-                          className={`project-task-${task.status}`}
-                        >
-                          {task.status === "queued"
-                            ? "排队中"
-                            : task.status === "running"
-                              ? "正在生成"
-                              : task.status === "unknown"
-                                ? "受理状态不明 · 请核对供应商"
-                                : task.status === "partial"
-                                  ? `部分完成（${task.completedOutputs}/${task.requestedOutputs}）`
-                                  : task.status === "succeeded"
-                                    ? "已完成"
-                                    : task.status === "offline"
-                                      ? "网络断开"
-                                      : task.status === "cancelled"
-                                        ? "已取消"
-                                        : task.status === "interrupted"
-                                          ? "上次任务未完成"
-                                          : `失败：${task.error ?? "请重试"}`}
-                          {task.status === "running" && (
-                            <button
-                              className="ui-button"
-                              type="button"
-                              onClick={() => cancelTask(task.id)}
-                            >
-                              取消
-                            </button>
-                          )}
-                          {(task.status === "partial" ||
-                            task.status === "failed" ||
-                            task.status === "offline" ||
-                            task.status === "cancelled" ||
-                            task.status === "interrupted") && (
-                            <button
-                              className="ui-button"
-                              type="button"
-                              onClick={() =>
-                                retryTask(activeProject.id, task.id)
-                              }
-                            >
-                              重试
-                            </button>
-                          )}
+                          activeProject?.providerCredentialRef,
+                    )?.id,
+                  textModel:
+                    readProviderConnections().find(
+                      (connection) =>
+                        connection.capabilities.modalities.includes("text") &&
+                        (!activeProject?.providerCredentialRef ||
+                          connection.credentialRef ===
+                            activeProject.providerCredentialRef),
+                    )?.model ?? "",
+                  models: [
+                    ...new Set(
+                      [
+                        activeProject?.model,
+                        ...readProviderConnections().map(
+                          (connection) => connection.model,
+                        ),
+                      ].filter((model): model is string => Boolean(model)),
+                    ),
+                  ],
+                  disabledReason: activeProject
+                    ? undefined
+                    : "请先新建或打开项目，再提交图片生成。",
+                  imageConfigured: homeModelConfig.configured,
+                  configure: () => open("settings/providers"),
+                }}
+              >
+                <Canvas
+                  projectStatus={
+                    activeProject && (
+                      <div className="project-task-status" aria-live="polite">
+                        <strong title={activeProject.name}>
+                          {activeProject.name}
+                        </strong>
+                        {activeProject.tasks.slice(-1).map((task) => (
+                          <span
+                            key={task.id}
+                            className={`project-task-${task.status}`}
+                          >
+                            {task.status === "queued"
+                              ? "排队中"
+                              : task.status === "running"
+                                ? "正在生成"
+                                : task.status === "unknown"
+                                  ? "受理状态不明 · 请核对供应商"
+                                  : task.status === "partial"
+                                    ? `部分完成（${task.completedOutputs}/${task.requestedOutputs}）`
+                                    : task.status === "succeeded"
+                                      ? "已完成"
+                                      : task.status === "offline"
+                                        ? "网络断开"
+                                        : task.status === "cancelled"
+                                          ? "已取消"
+                                          : task.status === "interrupted"
+                                            ? "上次任务未完成"
+                                            : `失败：${task.error ?? "请重试"}`}
+                            {task.status === "running" && (
+                              <button
+                                className="ui-button"
+                                type="button"
+                                onClick={() => cancelTask(task.id)}
+                              >
+                                取消
+                              </button>
+                            )}
+                            {(task.status === "partial" ||
+                              task.status === "failed" ||
+                              task.status === "offline" ||
+                              task.status === "cancelled" ||
+                              task.status === "interrupted") && (
+                              <button
+                                className="ui-button"
+                                type="button"
+                                onClick={() =>
+                                  retryTask(activeProject.id, task.id)
+                                }
+                              >
+                                重试
+                              </button>
+                            )}
+                          </span>
+                        ))}
+                        <span className="project-save-state">
+                          {saveState === "loading"
+                            ? "读取中…"
+                            : saveState === "saving"
+                              ? "保存中…"
+                              : saveState === "saved"
+                                ? "已保存"
+                                : "未保存 · 请查看恢复提示"}
                         </span>
-                      ))}
-                      <span className="project-save-state">
-                        {saveState === "loading"
-                          ? "读取中…"
-                          : saveState === "saving"
-                            ? "保存中…"
-                            : saveState === "saved"
-                              ? "已保存"
-                              : "未保存 · 请查看恢复提示"}
-                      </span>
-                    </div>
-                  )
-                }
-                key={`${activeProject?.id ?? "demo-canvas"}:${persistence.loadEpoch}`}
-                initialCanvas={activeProject?.canvas}
-                projectId={activeProject?.id}
-                agentViewRef={agentViewRef}
-                onAgentViewChange={() => agentConnection.pushState()}
-                onCanvasChange={
-                  activeProject
-                    ? (canvas) =>
-                        updateProject(activeProject.id, (project) => ({
-                          ...project,
-                          canvas,
-                          updatedAt: Date.now(),
-                        }))
-                    : undefined
-                }
-                onOpen={open}
-                onOpenTasks={() => setModal("tasks")}
-                tasks={activeProject?.tasks}
-                onCancelTask={cancelTask}
-                onRetryTask={(taskId) => {
-                  if (activeProject) retryTask(activeProject.id, taskId);
-                }}
-                chatOpen={chat}
-                covered={chatCoversCanvas && mobileChat && chat}
-                onOpenChat={() => {
-                  setChat(true);
-                  setMobileChat(true);
-                }}
-                items={activeProject?.items ?? canvasItems}
-                onItemsChange={updateCanvasItems}
-                favoriteIds={favoriteIds}
-                likedIds={likedIds}
-                onToggleLike={toggleLike}
-                onToggleFavorite={toggleFavorite}
-              />
-            </CanvasImageCommandContext.Provider>
-            <div className={"chat-container " + (!chat ? "chat-hidden" : "")}>
-              <ConversationPanel
-                overlay={sidebar.narrow && mobileChat && chat}
-                onOpen={open}
-                project={activeProject}
-                currentModel={activeProject?.model}
-                modelOptions={[
-                  ...new Set(
-                    [
-                      activeProject?.model,
-                      parseModelProvider(
-                        localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
-                      ).profile.model,
-                    ].filter((model): model is string => Boolean(model)),
-                  ),
-                ]}
-                modelConfigured={homeModelConfig.configured}
-                onModelChange={handleProjectModelChange}
-                composerDraft={activeProject?.composerDraft}
-                onDraftChange={handleProjectDraftChange}
-                onSend={activeProject ? handleSendMessage : undefined}
-                onDeleteMessage={
-                  activeProject ? handleDeleteMessage : undefined
-                }
-                skills={skillRegistry.listRecords()}
-                onApplySkill={applySkillToProject}
-                voiceEnabled={active === "workspace" && chat}
-                agent={
-                  activeProject
-                    ? {
-                        connected: agentState.status === "connected",
-                        connectionRevision: agentState.connectionRevision,
-                        conversation: agentState.conversation,
-                        preparing: agentState.preparing,
-                        connecting: agentState.status === "connecting",
-                        error: agentState.error,
-                        usage: agentState.usage,
-                        usageError: agentState.usageError,
-                        onRefreshUsage: () => {
-                          void agentConnection.refreshUsage();
-                        },
-                        models: agentState.models.map(
-                          (model) => model.model || model.id,
-                        ),
-                        onConnect: (fresh) => {
-                          void agentConnection.connect(fresh);
-                        },
-                        sending: agentState.sending,
-                        activity: agentState.activity,
-                        messages: agentState.messages,
-                        pendingApproval: agentState.pendingApproval,
-                        permissionMode: agentPermission,
-                        onPermissionModeChange: (mode) =>
-                          agentConnection.setPermissionMode(mode),
-                        canvasImages: activeProject.items.filter(
-                          (item) => item.kind === "image" && item.assetId,
-                        ),
-                        onSend: (message, attachments) =>
-                          // 不传 model：Codex 使用其账号默认模型（如 gpt-6-astra）。
-                          // 项目模型是本地生成链路的模型，与 Codex 账号支持的模型集不同，
-                          // 传过去会导致 ChatGPT 账号报 "model is not supported"。
-                          agentConnection.sendMessage(message, { attachments }),
-                        onInterrupt: () => agentConnection.interrupt(),
-                        onDecision: (decision) =>
-                          agentConnection.resolveApproval(decision),
-                      }
-                    : undefined
-                }
-                onClose={() => {
-                  const focusAtClose = document.activeElement;
-                  setChat(false);
-                  setMobileChat(false);
-                  requestAnimationFrame(() => {
-                    // Do not steal focus if the user has already moved into
-                    // the canvas while React was closing the panel.
-                    if (
-                      document.activeElement === focusAtClose ||
-                      document.activeElement === document.body
+                      </div>
                     )
-                      document
-                        .querySelector<HTMLButtonElement>(".chat-reopen")
-                        ?.focus({ preventScroll: true });
-                  });
-                }}
-              />
+                  }
+                  key={`${activeProject?.id ?? "demo-canvas"}:${persistence.loadEpoch}`}
+                  initialCanvas={activeProject?.canvas}
+                  projectId={activeProject?.id}
+                  agentViewRef={agentViewRef}
+                  onAgentViewChange={() => agentConnection.pushState()}
+                  onCanvasChange={
+                    activeProject
+                      ? (canvas) =>
+                          updateProject(activeProject.id, (project) => ({
+                            ...project,
+                            canvas,
+                            updatedAt: Date.now(),
+                          }))
+                      : undefined
+                  }
+                  onOpen={open}
+                  onOpenTasks={() => setModal("tasks")}
+                  tasks={activeProject?.tasks}
+                  onCancelTask={cancelTask}
+                  onRetryTask={(taskId) => {
+                    if (activeProject) retryTask(activeProject.id, taskId);
+                  }}
+                  chatOpen={chat}
+                  covered={chatCoversCanvas && mobileChat && chat}
+                  onOpenChat={() => {
+                    setChat(true);
+                    setMobileChat(true);
+                  }}
+                  items={activeProject?.items ?? canvasItems}
+                  onItemsChange={updateCanvasItems}
+                  favoriteIds={favoriteIds}
+                  likedIds={likedIds}
+                  onToggleLike={toggleLike}
+                  onToggleFavorite={toggleFavorite}
+                />
+              </CanvasImageCommandContext.Provider>
+              <div className={"chat-container " + (!chat ? "chat-hidden" : "")}>
+                <ConversationPanel
+                  overlay={sidebar.narrow && mobileChat && chat}
+                  onOpen={open}
+                  project={activeProject}
+                  currentModel={activeProject?.model}
+                  modelOptions={[
+                    ...new Set(
+                      [
+                        activeProject?.model,
+                        parseModelProvider(
+                          localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
+                        ).profile.model,
+                      ].filter((model): model is string => Boolean(model)),
+                    ),
+                  ]}
+                  modelConfigured={homeModelConfig.configured}
+                  onModelChange={handleProjectModelChange}
+                  composerDraft={activeProject?.composerDraft}
+                  onDraftChange={handleProjectDraftChange}
+                  onSend={activeProject ? handleSendMessage : undefined}
+                  onDeleteMessage={
+                    activeProject ? handleDeleteMessage : undefined
+                  }
+                  skills={skillRegistry.listRecords()}
+                  onApplySkill={applySkillToProject}
+                  voiceEnabled={active === "workspace" && chat}
+                  agent={
+                    activeProject
+                      ? {
+                          connected: agentState.status === "connected",
+                          connectionRevision: agentState.connectionRevision,
+                          conversation: agentState.conversation,
+                          preparing: agentState.preparing,
+                          connecting: agentState.status === "connecting",
+                          error: agentState.error,
+                          usage: agentState.usage,
+                          usageError: agentState.usageError,
+                          onRefreshUsage: () => {
+                            void agentConnection.refreshUsage();
+                          },
+                          models: agentState.models.map(
+                            (model) => model.model || model.id,
+                          ),
+                          onConnect: (fresh) => {
+                            void agentConnection.connect(fresh);
+                          },
+                          sending: agentState.sending,
+                          activity: agentState.activity,
+                          messages: agentState.messages,
+                          pendingApproval: agentState.pendingApproval,
+                          permissionMode: agentPermission,
+                          onPermissionModeChange: (mode) =>
+                            agentConnection.setPermissionMode(mode),
+                          canvasImages: activeProject.items.filter(
+                            (item) => item.kind === "image" && item.assetId,
+                          ),
+                          onSend: (message, attachments) =>
+                            // 不传 model：Codex 使用其账号默认模型（如 gpt-6-astra）。
+                            // 项目模型是本地生成链路的模型，与 Codex 账号支持的模型集不同，
+                            // 传过去会导致 ChatGPT 账号报 "model is not supported"。
+                            agentConnection.sendMessage(message, {
+                              attachments,
+                            }),
+                          onInterrupt: () => agentConnection.interrupt(),
+                          onDecision: (decision) =>
+                            agentConnection.resolveApproval(decision),
+                        }
+                      : undefined
+                  }
+                  onClose={() => {
+                    const focusAtClose = document.activeElement;
+                    setChat(false);
+                    setMobileChat(false);
+                    requestAnimationFrame(() => {
+                      // Do not steal focus if the user has already moved into
+                      // the canvas while React was closing the panel.
+                      if (
+                        document.activeElement === focusAtClose ||
+                        document.activeElement === document.body
+                      )
+                        document
+                          .querySelector<HTMLButtonElement>(".chat-reopen")
+                          ?.focus({ preventScroll: true });
+                    });
+                  }}
+                />
+              </div>
             </div>
-          </div>
+          )}
           {active === "skills" && (
-            <SkillsPage
-              registry={skillRegistry}
-              onApply={applySkillToHome}
-              onOpenMcp={() => open("settings/mcp")}
-            />
+            <DeferredPanelBoundary key="skills">
+              <SkillsPage
+                registry={skillRegistry}
+                onApply={applySkillToHome}
+                onOpenMcp={() => open("settings/mcp")}
+              />
+            </DeferredPanelBoundary>
           )}
           {["projects", "comfyui"].includes(active) && (
-            <LibraryPage
-              key={active}
-              view={active as "projects" | "comfyui"}
-              onOpen={open}
-              projects={creation.projects}
-              localWorkflows={localWorkflows}
-              onSaveWorkflow={saveWorkflow}
-              onDeleteWorkflow={deleteWorkflow}
-              onRunWorkflow={(workflow) => {
-                setModal("tasks");
-                window.dispatchEvent(
-                  new CustomEvent("kk:comfyui-workflow-requested", {
-                    detail: workflow.id,
-                  }),
-                );
-              }}
-              onOpenProject={openSavedProject}
-            />
+            <DeferredPanelBoundary key={active}>
+              <LibraryPage
+                key={active}
+                view={active as "projects" | "comfyui"}
+                onOpen={open}
+                projects={creation.projects}
+                localWorkflows={localWorkflows}
+                onSaveWorkflow={saveWorkflow}
+                onDeleteWorkflow={deleteWorkflow}
+                onRunWorkflow={(workflow) => {
+                  setModal("tasks");
+                  window.dispatchEvent(
+                    new CustomEvent("kk:comfyui-workflow-requested", {
+                      detail: workflow.id,
+                    }),
+                  );
+                }}
+                onOpenProject={openSavedProject}
+              />
+            </DeferredPanelBoundary>
           )}
         </main>
       </div>
@@ -2696,139 +2720,150 @@ export default function App() {
           }
           onClose={() => setModal("")}
         >
-          {["search", "favorites", "likes"].includes(modal) ? (
-            <CatalogPanel
-              initialTab={modal === "search" ? "全部" : "喜欢收藏"}
-              items={canvasItems}
-              assets={[...assets, ...subjects]}
-              favoriteIds={favoriteIds}
-              likedIds={likedIds}
-              onClose={() => setModal("")}
-              onOpen={open}
-              projects={creation.projects}
-              onOpenProject={openSavedProject}
-              onLocate={locate}
-              onToggleFavorite={toggleFavorite}
-              onToggleLike={toggleLike}
-              onRename={renameCanvasItem}
-            />
-          ) : modal === "prompts" ? (
-            <PromptLibraryPanel
-              target={
-                active === "workspace" && activeProject
-                  ? "图片对话草稿"
-                  : "首页草稿"
-              }
-              onClose={() => setModal("")}
-              onApply={(text) => {
-                const project =
-                  active === "workspace" ? activeProject : undefined;
-                const draft =
-                  project?.composerDraft ?? creationRef.current.homeDraft;
-                const prompt = [draft.prompt.trimEnd(), text]
-                  .filter(Boolean)
-                  .join("\n\n");
-                if (prompt.length > 4000)
-                  return "加入后超过 4,000 字符，请先精简草稿或选择更短的提示词。";
-                if (project)
-                  updateProject(project.id, (current) => ({
-                    ...current,
-                    composerDraft: {
-                      ...current.composerDraft,
+          <DeferredPanelBoundary key={modal} onClose={() => setModal("")}>
+            {["search", "favorites", "likes"].includes(modal) ? (
+              <CatalogPanel
+                initialTab={modal === "search" ? "全部" : "喜欢收藏"}
+                items={canvasItems}
+                assets={[...assets, ...subjects]}
+                favoriteIds={favoriteIds}
+                likedIds={likedIds}
+                onClose={() => setModal("")}
+                onOpen={open}
+                projects={creation.projects}
+                onOpenProject={openSavedProject}
+                onLocate={locate}
+                onToggleFavorite={toggleFavorite}
+                onToggleLike={toggleLike}
+                onRename={renameCanvasItem}
+              />
+            ) : modal === "prompts" ? (
+              <PromptLibraryPanel
+                target={
+                  active === "workspace" && activeProject
+                    ? "图片对话草稿"
+                    : "首页草稿"
+                }
+                onClose={() => setModal("")}
+                onApply={(text) => {
+                  const project =
+                    active === "workspace" ? activeProject : undefined;
+                  const draft =
+                    project?.composerDraft ?? creationRef.current.homeDraft;
+                  const prompt = [draft.prompt.trimEnd(), text]
+                    .filter(Boolean)
+                    .join("\n\n");
+                  if (prompt.length > 4000)
+                    return "加入后超过 4,000 字符，请先精简草稿或选择更短的提示词。";
+                  if (project)
+                    updateProject(project.id, (current) => ({
+                      ...current,
+                      composerDraft: {
+                        ...current.composerDraft,
+                        prompt,
+                        updatedAt: Date.now(),
+                      },
+                      updatedAt: Date.now(),
+                    }));
+                  else
+                    updateHomeDraft({
+                      ...draft,
                       prompt,
                       updatedAt: Date.now(),
-                    },
-                    updatedAt: Date.now(),
-                  }));
-                else
-                  updateHomeDraft({ ...draft, prompt, updatedAt: Date.now() });
-              }}
-            />
-          ) : modal === "shortcuts" ? (
-            <ShortcutsPanel onClose={() => setModal("")} />
-          ) : modal === "settings" ? (
-            <SettingsPanel
-              key={settingsSection}
-              initialSection={settingsSection}
-              saveState={saveState}
-              revision={creation.revision}
-              registry={skillRegistry}
-              onClose={() => setModal("")}
-            />
-          ) : modal === "assets" ? (
-            <AssetPanel
-              onClose={() => setModal("")}
-              archive={assetArchive}
-              assets={assets}
-              subjects={subjects}
-              onAdd={add}
-            />
-          ) : modal === "tasks" ? (
-            <TaskWorkbench
-              project={activeProject}
-              stageWriteDisabledReason={
-                saveState === "saved" || saveState === "saving"
-                  ? undefined
-                  : "项目尚未保存成功，阶段操作暂不可用；请先处理项目恢复提示。"
-              }
-              onStageDecision={async (projectId, input) => {
-                stageOrchestrator.decideStage(input, projectId);
-                await persistence.flush();
-              }}
-              onRetryStage={async (projectId, planId, stageIndex, revision) => {
-                stageOrchestrator.retryStage(
+                    });
+                }}
+              />
+            ) : modal === "shortcuts" ? (
+              <ShortcutsPanel onClose={() => setModal("")} />
+            ) : modal === "settings" ? (
+              <SettingsPanel
+                key={settingsSection}
+                initialSection={settingsSection}
+                saveState={saveState}
+                revision={creation.revision}
+                registry={skillRegistry}
+                onClose={() => setModal("")}
+              />
+            ) : modal === "assets" ? (
+              <AssetPanel
+                onClose={() => setModal("")}
+                archive={assetArchive}
+                assets={assets}
+                subjects={subjects}
+                onAdd={add}
+              />
+            ) : modal === "tasks" ? (
+              <TaskWorkbench
+                project={activeProject}
+                stageWriteDisabledReason={
+                  saveState === "saved" || saveState === "saving"
+                    ? undefined
+                    : "项目尚未保存成功，阶段操作暂不可用；请先处理项目恢复提示。"
+                }
+                onStageDecision={async (projectId, input) => {
+                  stageOrchestrator.decideStage(input, projectId);
+                  await persistence.flush();
+                }}
+                onRetryStage={async (
+                  projectId,
                   planId,
                   stageIndex,
                   revision,
+                ) => {
+                  stageOrchestrator.retryStage(
+                    planId,
+                    stageIndex,
+                    revision,
+                    projectId,
+                  );
+                  await persistence.flush();
+                }}
+                onRequestPlanApproval={async (
                   projectId,
-                );
-                await persistence.flush();
-              }}
-              onRequestPlanApproval={async (
-                projectId,
-                planId,
-                stageIndex,
-                revision,
-              ) => {
-                stageOrchestrator.requestStageApproval(
                   planId,
                   stageIndex,
-                  "plan",
                   revision,
-                  projectId,
-                );
-                await persistence.flush();
-              }}
-              onCommentsChange={(reviewComments) => {
-                if (activeProject)
-                  updateProject(activeProject.id, (project) => ({
-                    ...project,
-                    reviewComments,
-                    updatedAt: Date.now(),
-                  }));
-              }}
-              onClose={() => setModal("")}
-              onConfigure={() => open("settings/providers")}
-              onCancelTask={cancelTask}
-              onPauseTask={pauseTask}
-              canPauseTask={(taskId) =>
-                Boolean(taskControllers.current[taskId])
-              }
-              onResumeTask={resumeTask}
-              onRetryTask={(taskId) => {
-                if (activeProject) retryTask(activeProject.id, taskId);
-              }}
-              onRetryOutput={(taskId, index) => {
-                if (activeProject) retryTask(activeProject.id, taskId, index);
-              }}
-            />
-          ) : (
-            <InfoPanel
-              view={modal}
-              onClose={() => setModal("")}
-              onConfigure={() => open("settings/providers")}
-            />
-          )}
+                ) => {
+                  stageOrchestrator.requestStageApproval(
+                    planId,
+                    stageIndex,
+                    "plan",
+                    revision,
+                    projectId,
+                  );
+                  await persistence.flush();
+                }}
+                onCommentsChange={(reviewComments) => {
+                  if (activeProject)
+                    updateProject(activeProject.id, (project) => ({
+                      ...project,
+                      reviewComments,
+                      updatedAt: Date.now(),
+                    }));
+                }}
+                onClose={() => setModal("")}
+                onConfigure={() => open("settings/providers")}
+                onCancelTask={cancelTask}
+                onPauseTask={pauseTask}
+                canPauseTask={(taskId) =>
+                  Boolean(taskControllers.current[taskId])
+                }
+                onResumeTask={resumeTask}
+                onRetryTask={(taskId) => {
+                  if (activeProject) retryTask(activeProject.id, taskId);
+                }}
+                onRetryOutput={(taskId, index) => {
+                  if (activeProject) retryTask(activeProject.id, taskId, index);
+                }}
+              />
+            ) : (
+              <InfoPanel
+                view={modal}
+                onClose={() => setModal("")}
+                onConfigure={() => open("settings/providers")}
+              />
+            )}
+          </DeferredPanelBoundary>
         </Modal>
       )}
     </div>

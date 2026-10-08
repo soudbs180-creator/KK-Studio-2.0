@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-10-08 启动体验
+
+恢复入口：[intent](../changes/2026-10-08-startup-experience/intent.md)、[plan](../changes/2026-10-08-startup-experience/plan.md)、[verification](../changes/2026-10-08-startup-experience/verification.md)。TASK-LAUNCH-001 在 codex/TASK-LAUNCH-001-quiet-start（canonical 仓库登记 worktree）修复无控制台启动/Logo及 Web 首屏按需加载；后续推广核对当前 base/head、完整 verify、实际 EXE/shortcut 图标、同态运行证据和独立审查，不能从旧 main release 或过期 worktree 启动。用户请求已授权普通修复，不重复索取阶段批准；main 合并、线上部署及正式发布另按真实授权和门禁执行。
+
 ## 2026-10-08 阶段工作台主线融合
 
 用户已授权“合并主线”。原候选ca6bc52在推送前遇到主线PR #34/5b0eb6a前移；本轮在既有TASK-ORCH-002分支融合为唯一Plan入口、TaskWorkbenchStages和共享编排器，保留主线的暂停/重规划/回执/MCP改进。候选Desktop2.1.5/Web2.1.6/Mobile规划2.1.1；97tasks/34features不新增重复登记，FEAT-030仍PARTIAL。组合本地AC完成：49/49、完整verify708root/172Agent/400browser零retry（原skip8/2）、Rust97及fresh Tauri审批/重启/真实CAS/恢复草稿通过；精确SHA独立补审和Hosted门禁另验；实际集成以本轮PR merged及merge SHA为准。下方首轮未推送/main不变等描述保留为历史，不代替当前进度。

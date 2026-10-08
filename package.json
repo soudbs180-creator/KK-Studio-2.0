@@ -1,7 +1,7 @@
 {
   "name": "kk-studio",
   "private": true,
-  "version": "2.1.6",
+  "version": "2.1.7",
   "type": "module",
   "scripts": {
     "postinstall": "npm run agent:install && npm run agent:build && npm run plugins:install && npm run plugins:build",
@@ -39,6 +39,7 @@
     "client:installer:receipt": "node scripts/windows/installer-receipt.mjs",
     "client:installer:test": "node tests/desktop/installer.mjs",
     "client:check": "cargo check --manifest-path src-tauri/Cargo.toml",
+    "client:shortcut": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/windows/install-shortcut.ps1 -Desktop",
     "governance:check": "node scripts/check-governance.mjs",
     "governance:write": "node scripts/check-governance.mjs --write",
     "goals:check": "node scripts/check-project-goals.mjs",

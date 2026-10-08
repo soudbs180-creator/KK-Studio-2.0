@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
+| TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | IN_PROGRESS | none | root |
 | T0 | 可复现候选源码与主线整合 | DONE | none | root |
 | TASK-GOV-001 | 治理源、ESLint、架构门禁和 CI | DONE | T0 | root |
 | TASK-PROV-001 | 冷却恢复与产品调度入口边界 | DONE | TASK-GOV-001 | root |
@@ -103,6 +104,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AUDIT-20261003 | 全项目任务盘点与可本地闭环项收口 | DONE | TASK-MCP-REGISTRY-001, TASK-MCP-REGISTRY-002, TASK-MCP-PROTO-001, TASK-ORCH-REPLAN-001 | root |
 | TASK-GOV-GOALS-001 | 项目建设目标与验收基线 | DONE | TASK-AUDIT-20261003 | root |
 | TASK-UI-COMPONENT-BOUNDARY-001 | MCP 设置组件职责拆分 | DONE | TASK-GOV-GOALS-001 | root |
+
+## TASK-LAUNCH-001 — 桌面与网页启动体验及图标修复
+
+- Goal: 双击直接启动无控制台，恢复桌面图标，减少 Web 首屏负担
+- Scope: Windows launcher, shortcuts, Web first load
+- Acceptance: 无可见命令窗口且可取消失败可诊断; 当前图标与 release 新鲜度正确; Web 首屏按需加载且工作区历史保留
+- Branch: `codex/TASK-LAUNCH-001-quiet-start`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-LAUNCH-001`
+- Modules: scripts/windows, start-kk-studio.bat, src/App.tsx, FEAT-026
+- Verification: NOT_VERIFIED — 完整verify711Node/172Agent/405browser、clientcheck、新Tauri及production首屏同态通过；Windows3/3、新鲜度12/12。精确SHA审查与实际用户快捷方式安装待收尾。
+- Evidence: [docs/changes/2026-10-08-startup-experience/verification.md](../../docs/changes/2026-10-08-startup-experience/verification.md)
+- Updated: 2026-10-08
 
 ## T0 — 可复现候选源码与主线整合
 

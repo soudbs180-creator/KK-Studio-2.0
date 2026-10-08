@@ -1,5 +1,33 @@
 [
   {
+    "id": "TASK-LAUNCH-001",
+    "title": "桌面与网页启动体验及图标修复",
+    "goal": "双击直接启动无控制台，恢复桌面图标，减少 Web 首屏负担",
+    "scope": "Windows launcher, shortcuts, Web first load",
+    "acceptance": [
+      "无可见命令窗口且可取消失败可诊断",
+      "当前图标与 release 新鲜度正确",
+      "Web 首屏按需加载且工作区历史保留"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "codex/TASK-LAUNCH-001-quiet-start",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-LAUNCH-001",
+    "affectedModules": [
+      "scripts/windows",
+      "start-kk-studio.bat",
+      "src/App.tsx",
+      "FEAT-026"
+    ],
+    "status": "IN_PROGRESS",
+    "evidence": [
+      "docs/changes/2026-10-08-startup-experience/verification.md"
+    ],
+    "verification": "完整verify711Node/172Agent/405browser、clientcheck、新Tauri及production首屏同态通过；Windows3/3、新鲜度12/12。精确SHA审查与实际用户快捷方式安装待收尾。",
+    "updated": "2026-10-08",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
     "id": "T0",
     "title": "可复现候选源码与主线整合",
     "goal": "可复现候选源码与主线整合",
