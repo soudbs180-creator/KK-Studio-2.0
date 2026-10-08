@@ -1,0 +1,26 @@
+{
+  "sourceHead": "24cfca17abc6a786e5130496097d4db18343e1d0",
+  "capturedAt": "2026-10-08T10:52:24.015Z",
+  "stats": {
+    "startTime": "2026-10-08T10:48:33.891Z",
+    "duration": 104312.405,
+    "expected": 422,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "configuredWorkers": 12,
+  "actualWorkers": 12,
+  "configuredRetries": [
+    {
+      "name": "",
+      "retries": 1
+    }
+  ],
+  "testCount": 422,
+  "attempts": 422,
+  "maxRetry": 0,
+  "retriedAttempts": 0,
+  "reporterSha256": "1d6df8e91e7d8be241ff5bd5837bdfbc344e31d33cfc376c864b33171276e5e6",
+  "completeRunPreserved": "D:/kk-studio/.verification/TASK-UI-011-image-selection-actions/web-24cfca1"
+}

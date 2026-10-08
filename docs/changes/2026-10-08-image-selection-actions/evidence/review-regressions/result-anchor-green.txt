@@ -1,0 +1,124 @@
+[WebServer] (node:80708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 26 tests using 1 worker
+
+(node:61400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\browser\canvas-history-layers.spec.ts:38:1 › 画布右键撤销和重做会恢复新增节点 (1.8s)
+  ok  2 tests\browser\canvas-history-layers.spec.ts:74:1 › 画布菜单可以切换吸附并打开图层搜索定位 (1.9s)
+  ok  3 tests\browser\canvas-history-layers.spec.ts:118:1 › 删除带连线节点后一次撤销恢复节点和连线，重做后仍能继续编辑 (1.4s)
+  ok  4 tests\browser\canvas-history-layers.spec.ts:157:1 › 超过80帧的连续拖动只撤销一次且保留拖动前的编辑历史 (2.7s)
+  ok  5 tests\browser\canvas-history-layers.spec.ts:190:3 › Escape取消手势恢复起点且不清空已有重做 (1.4s)
+  ok  6 tests\browser\canvas-history-layers.spec.ts:190:3 › pointercancel取消手势恢复起点且不清空已有重做 (1.4s)
+  ok  7 tests\browser\canvas-history-layers.spec.ts:190:3 › blur取消手势恢复起点且不清空已有重做 (1.4s)
+  ok  8 tests\browser\canvas-history-layers.spec.ts:190:3 › pan取消手势恢复起点且不清空已有重做 (1.4s)
+  ok  9 tests\browser\image-selection-actions.spec.ts:77:1 › 单击参考图片只选中，上方工具栏复用预览重绘对比并可关闭 (2.3s)
+  ok 10 tests\browser\image-selection-actions.spec.ts:129:1 › 键盘工具栏、双击预览与切换卡片保留唯一选择和焦点 (2.2s)
+  ok 11 tests\browser\image-selection-actions.spec.ts:167:1 › 工具栏随图片拖动和平移移动，缩放不缩小操作命中区 (2.4s)
+  ok 12 tests\browser\image-selection-actions.spec.ts:201:3 › 图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 390 (1.6s)
+  ok 13 tests\browser\image-selection-actions.spec.ts:201:3 › 图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 1099 (1.5s)
+  ok 14 tests\browser\image-selection-actions.spec.ts:201:3 › 图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 1920 (2.2s)
+  ok 15 tests\browser\image-selection-actions.spec.ts:232:3 › 图片选择工具栏在 390 屏幕内可触达且保持标准尺寸 (993ms)
+  ok 16 tests\browser\image-selection-actions.spec.ts:232:3 › 图片选择工具栏在 1099 屏幕内可触达且保持标准尺寸 (1.0s)
+  ok 17 tests\browser\image-selection-actions.spec.ts:232:3 › 图片选择工具栏在 1920 屏幕内可触达且保持标准尺寸 (1.8s)
+  x  18 tests\browser\unified-image-command.spec.ts:143:1 › 已归档图片结果使用上方选择工具栏，收藏重绘对比删除保留原件 (1.5m)
+(node:65888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 19 tests\browser\unified-image-command.spec.ts:337:1 › active project canvas uses the provider command for a non-root source and archives a linked result (2.9s)
+  ok 20 tests\browser\unified-image-command.spec.ts:454:1 › provider image cancellation cannot publish a late success (2.2s)
+  ok 21 tests\browser\unified-image-command.spec.ts:502:3 › canvas cooldown rejects submission while preserving the draft (1.6s)
+  ok 22 tests\browser\unified-image-command.spec.ts:502:3 › canvas quarantined rejects submission while preserving the draft (1.6s)
+  ok 23 tests\browser\unified-image-command.spec.ts:532:1 › uploaded image redraw uses edits with the archived reference bytes (2.9s)
+  ok 24 tests\browser\unified-image-command.spec.ts:577:1 › unconfigured canvas generation opens provider settings and keeps the prompt (833ms)
+  ok 25 tests\browser\unified-image-command.spec.ts:600:1 › declining canvas approval clears only its source status and sends no request (2.2s)
+  ok 26 tests\browser\unified-image-command.spec.ts:637:1 › actual long model identifiers remain readable without covering canvas controls (1.6s)
+
+
+  1) tests\browser\unified-image-command.spec.ts:143:1 › 已归档图片结果使用上方选择工具栏，收藏重绘对比删除保留原件 ─────────────
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.click: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByTestId('canvas-node-project-muzegyrn-6niluchf-project-muzegyrn-6niluchf-task-muzegzew-xvowd7-result-1').locator('.demo-result-preview img')
+        - locator resolved to <img alt="图片结果 1" draggable="false" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABogAAAOtCAIAAAA95HBeAABVVGNhQlgAAFVUanVtYgAAAB5qdW1kYzJwYQARABCAAACqADibcQNjMnBhAAAAVS5qdW1iAAAAR2p1bWRjMm1hABEAEIAAAKoAOJtxA3VybjpjMnBhOjdlNDhiYzY2LTU1YTEtNDQ5Ni05ZWE1LTQ0MzY4ZDQzZDk2OQAAAAxXanVtYgAAAClqdW1kYzJhcwARABCAAACqADibcQNjMnBhLmFzc2VydGlvbnMAAAAJ0Wp1bWIAAAA7anVtZEDLDDK7ikidpwsq1vR/Q2kTYzJwYS5pY29uAAAAABhjMnNo7VJOYTJKStLtrUOIyqhhzgAAABdiZmRiAGltYWdlL3N2Zyt4bWwAAAAJd2JpZGI8c3ZnIHdpZHRoPSI3MTYiIGhlaWdodD0i…/>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <div role="group" aria-label="画布导航" class="canvas-top-right" data-node-id="100:16335">…</div> from <div class="canvas-hud">…</div> subtree intercepts pointer events
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <button title="画布缩放" aria-label="画布缩放" aria-haspopup="menu" aria-expanded="false" data-node-id="100:16337" class="canvas-zoom-trigger">…</button> from <div class="canvas-hud">…</div> subtree intercepts pointer events
+      - retrying click action
+        - waiting 20ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <button title="画布缩放" aria-label="画布缩放" aria-haspopup="menu" aria-expanded="false" data-node-id="100:16337" class="canvas-zoom-trigger">…</button> from <div class="canvas-hud">…</div> subtree intercepts pointer events
+      2 × retrying click action
+          - waiting 100ms
+          - waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div role="group" aria-label="画布导航" class="canvas-top-right" data-node-id="100:16335">…</div> from <div class="canvas-hud">…</div> subtree intercepts pointer events
+      41 × retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <button title="画布缩放" aria-label="画布缩放" aria-haspopup="menu" aria-expanded="false" data-node-id="100:16337" class="canvas-zoom-trigger">…</button> from <div class="canvas-hud">…</div> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <button title="画布缩放" aria-label="画布缩放" aria-haspopup="menu" aria-expanded="false" data-node-id="100:16337" class="canvas-zoom-trigger">…</button> from <div class="canvas-hud">…</div> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <div role="group" aria-label="画布导航" class="canvas-top-right" data-node-id="100:16335">…</div> from <div class="canvas-hud">…</div> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <div role="group" aria-label="画布导航" class="canvas-top-right" data-node-id="100:16335">…</div> from <div class="canvas-hud">…</div> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <button title="画布缩放" aria-label="画布缩放" aria-haspopup="menu" aria-expanded="false" data-node-id="100:16337" class="canvas-zoom-trigger">…</button> from <div class="canvas-hud">…</div> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+
+
+      252 |     });
+      253 |     await page.mouse.up({ button: "middle" });
+    > 254 |     await node.locator(".demo-result-preview img").click();
+          |                                                    ^
+      255 |     await expect(actions).toBeVisible();
+      256 |     await expect
+      257 |       .poll(async () => {
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-UI-011-image-selection-actions\tests\browser\unified-image-command.spec.ts:254:52
+
+    Error Context: test-results\unified-image-command-已归档图片结果使用上方选择工具栏，收藏重绘对比删除保留原件\error-context.md
+
+  1 failed
+    tests\browser\unified-image-command.spec.ts:143:1 › 已归档图片结果使用上方选择工具栏，收藏重绘对比删除保留原件 ──────────────
+  25 passed (2.3m)

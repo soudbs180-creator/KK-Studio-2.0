@@ -31,6 +31,7 @@ interface CanvasHistoryOptions {
   setViewport: Dispatch<SetStateAction<ViewTransform>>;
   setSelectedNode?: Dispatch<SetStateAction<string | null>>;
   gestureActive?: boolean;
+  automaticViewport?: { readonly current: ViewTransform | null };
   limit?: number;
 }
 
@@ -74,6 +75,7 @@ export function useCanvasHistory({
   setViewport,
   setSelectedNode,
   gestureActive = false,
+  automaticViewport,
   limit = 80,
 }: CanvasHistoryOptions) {
   const [, setRevision] = useState(0);
@@ -107,10 +109,25 @@ export function useCanvasHistory({
     if (gestureActive) return;
     if (canvasHistoryFingerprint(present) === fingerprint) return;
     const history = historyRef.current ?? createCanvasHistory(present, limit);
+    if (
+      automaticViewport?.current === snapshot.viewport &&
+      canvasHistoryFingerprint({ ...snapshot, viewport: present.viewport }) ===
+        canvasHistoryFingerprint(present)
+    ) {
+      // Revealing a selected card is part of that action, rather than a new
+      // user pan/zoom. Keep the actual viewport without consuming undo/redo.
+      historyRef.current = {
+        ...history,
+        present: cloneCanvasHistorySnapshot(snapshot),
+      };
+      presentRef.current = cloneCanvasHistorySnapshot(snapshot);
+      setRevision((value) => value + 1);
+      return;
+    }
     historyRef.current = commitCanvasHistory(history, snapshot);
     presentRef.current = cloneCanvasHistorySnapshot(snapshot);
     setRevision((value) => value + 1);
-  }, [gestureActive, limit, snapshot]);
+  }, [automaticViewport, gestureActive, limit, snapshot]);
 
   const apply = useCallback(
     (next: CanvasHistorySnapshot): void => {

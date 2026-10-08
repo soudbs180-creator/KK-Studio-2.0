@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：creation
-- 最近更新：2026-09-22
-- 关联任务：TASK-UI-005、BACKEND-TEXT-NODE
+- 最近更新：2026-10-08
+- 关联任务：TASK-UI-005、BACKEND-TEXT-NODE、T5、TASK-PROV-006、EXT-PROVIDER
 
 ## 用户可见入口
 
@@ -32,7 +32,7 @@
 
 ## 差距与后端化
 
-- 已有 Web development、production preview、Desktop release 的本机 HTTP fixture 证据；真实付费 Provider、完整 T5 进程退出/恢复与原生 health 回写仍保留后续验收，整体保持 PARTIAL。
+- 已有 Web development、production preview、Desktop release 的本机 HTTP fixture 证据；[T5 新验证](../changes/2026-10-08-taskhost-native-lifecycle/verification.md)补完实际进程异常终止/恢复、草稿 unknown 和原生容量释放。真实付费 Provider 与 health 统一仍保留开放任务，整体保持 PARTIAL。
 - 自定义未知模型标识需明确能力；当前沿用常见 GPT/Claude/Qwen/DeepSeek/Gemini 等本地模型能力判定，不把 models 列表读取当生成验证。
 
 ## 变更记录

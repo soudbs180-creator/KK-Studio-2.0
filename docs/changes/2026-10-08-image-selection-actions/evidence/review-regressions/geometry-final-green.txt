@@ -1,0 +1,25 @@
+[WebServer] (node:56220) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 1 worker
+
+(node:49044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\browser\connection-drag.spec.ts:63:1 › 不同缩放下图片和两张视频连接均落在可见侧边正中 (1.4s)
+  ok  2 tests\browser\connection-drag.spec.ts:97:1 › 加号区域磁吸，拖动只预览，释放后选类型才创建并连线 (1.6s)
+  ok  3 tests\browser\connection-drag.spec.ts:167:1 › 新增节点同事件连线仍遵守参考图能力限制 (1.3s)
+  ok  4 tests\browser\connection-drag.spec.ts:183:1 › 拖出取消和无效区域释放无残留，键盘随后仍能打开菜单 (1.9s)
+  ok  5 tests\browser\connection-drag.spec.ts:210:1 › 底栏、空白双击与下游共用菜单；窄屏和减弱动态可用 (728ms)
+  ok  6 tests\browser\connection-drag.spec.ts:256:1 › 平移缩放后按释放点创建文本，结果连线居中并保留原草稿 (1.8s)
+  ok  7 tests\browser\connection-drag.spec.ts:315:1 › 触屏加号可拖出释放，菜单保持44px以上行高并可点选 (830ms)
+  ok  8 tests\browser\image-selection-actions.spec.ts:77:1 › 单击参考图片只选中，上方工具栏复用预览重绘对比并可关闭 (2.2s)
+  ok  9 tests\browser\image-selection-actions.spec.ts:129:1 › 键盘工具栏、双击预览与切换卡片保留唯一选择和焦点 (2.2s)
+  ok 10 tests\browser\image-selection-actions.spec.ts:167:1 › 工具栏随图片拖动和平移移动，缩放不缩小操作命中区 (2.4s)
+  ok 11 tests\browser\image-selection-actions.spec.ts:201:3 › 图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 390 (1.5s)
+  ok 12 tests\browser\image-selection-actions.spec.ts:201:3 › 图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 1099 (1.4s)
+  ok 13 tests\browser\image-selection-actions.spec.ts:201:3 › 图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 1920 (2.2s)
+  ok 14 tests\browser\image-selection-actions.spec.ts:232:3 › 图片选择工具栏在 390 屏幕内可触达且保持标准尺寸 (943ms)
+  ok 15 tests\browser\image-selection-actions.spec.ts:232:3 › 图片选择工具栏在 1099 屏幕内可触达且保持标准尺寸 (1.0s)
+  ok 16 tests\browser\image-selection-actions.spec.ts:232:3 › 图片选择工具栏在 1920 屏幕内可触达且保持标准尺寸 (1.7s)
+
+  16 passed (26.9s)

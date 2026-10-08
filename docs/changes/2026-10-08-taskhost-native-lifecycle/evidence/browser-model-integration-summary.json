@@ -1,0 +1,13 @@
+{
+  "head": "d52142d62fd2b19fcbdfbbde750338016bfd53c0",
+  "stats": {
+    "startTime": "2026-10-08T10:23:01.815Z",
+    "duration": 77150.648,
+    "expected": 409,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "workers": 12,
+  "retries": [1]
+}

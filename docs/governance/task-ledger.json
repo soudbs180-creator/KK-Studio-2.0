@@ -21,7 +21,7 @@
       "tests",
       "docs"
     ],
-    "status": "DONE",
+    "status": "REVIEW",
     "evidence": [
       "docs/changes/2026-10-08-single-row-titlebar/intent.md",
       "docs/changes/2026-10-08-single-row-titlebar/spec.md",
@@ -29,8 +29,8 @@
       "docs/changes/2026-10-08-single-row-titlebar/verification.md",
       "docs/changes/2026-10-08-single-row-titlebar/review.md"
     ],
-    "verification": "本地AC1–3通过：旧release真窗口RED、初始化边界3项既有回归修正、定向8/8、完整verify723root/172Agent/411browser零失败与零flaky、clientcheck/fresh Tauri真窗口与三档development通过。Desktop2.1.7、Web2.1.7保持，独立只读6c37fb5a审查通过，四项边界探针通过；原main未写入，未合并或发布。",
-    "verificationResult": "PASS",
+    "verification": "原535/6c37本地审查及旧Hosted成功保留；本轮已授权PR40集成，先承接main f922，待启动PR38落地后承接最终main，新组合完整/fresh native/精确独立/Hosted仍待验证，不复用旧SHA。",
+    "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-08"
   },
   {
@@ -378,24 +378,27 @@
       "T4"
     ],
     "owner": "root",
-    "branch": "main",
-    "worktree": "D:/kk-studio-next/.worktrees/TASK-INTEGRATION-001",
+    "branch": "codex/T5-native-lifecycle",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/T5-native-lifecycle",
     "affectedModules": [
       "src/features/generation-server",
       "src-tauri",
       "src/features/creation",
       "deploy"
     ],
-    "status": "PARTIAL",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-09-19-taskhost-durable-intent/verification.md",
       "tests/browser/task-intent.spec.ts",
       "tests/unit/nativeTaskHost.test.ts",
-      "deploy/README.md"
+      "deploy/README.md",
+      "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md",
+      "tests/desktop/taskhost-lifecycle.mjs",
+      "tests/desktop/native-ci-policy.ps1"
     ],
-    "verification": "集成 main 已将 durable intent、稳定幂等身份、unknown 受理保护、原生 TaskHost journal、系统凭据库读取、Desktop IPC、取消竞态和逐 slot 输出提交接入 Tauri 主进程；npm verify 150/169、UI119/0，Rust 58/58，client check/release 通过。隔离 Tauri/WebView 的提交、取消、进程重启和逐 slot 恢复证据尚未完成；部署脚本仅覆盖静态 Web Prototype。",
-    "updated": "2026-09-19",
-    "verificationResult": "PARTIAL"
+    "verification": "04260ad精确独立补审PASS关闭ENV004；26策略及额外9边界回归通过；Hosted37770000879/37769995909全部SUCCESS，native11组/5CDP启动与策略清理通过。PR37普通squash合入main78cea37，完整tree一致；合并后main37773335548 verify/deploy-linux SUCCESS。Hosted实际checkout source7849310为base1af+candidate042合成merge，完整tree等同042/78，9/9源码hash核验；原收据身份不改写。PROV005/006继续TODO。",
+    "updated": "2026-10-08",
+    "verificationResult": "PASS"
   },
   {
     "id": "T6",
@@ -1560,11 +1563,12 @@
     "status": "PARTIAL",
     "evidence": [
       "docs/features/feat-008-text-node.md",
-      "docs/changes/2026-09-21-text-and-rule-audit/verification.md"
+      "docs/changes/2026-09-21-text-and-rule-audit/verification.md",
+      "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md"
     ],
-    "verification": "Web development/production preview与隔离Tauri release本机HTTP fixture通过流式、取消/未知受理、离线、编辑保存、重载重连和并发释放。完整verify 227/210，Rust74，独立预检PASS。实际Provider、原生进程退出/恢复与health统一仍待T5/EXT-PROVIDER验收，整体PARTIAL。",
+    "verification": "Web development/preview 与隔离 Tauri release HTTP fixture 已覆盖流式、取消/unknown、离线、编辑保存、重载和原生并发。2026-10-08 T5 十组原生实测补完异常进程退出/同身份恢复、草稿 unknown 与取消后容量释放；真实 Provider 和结构化 health 统一仍由 EXT-PROVIDER/TASK-PROV-006 验收，整体能力保持 PARTIAL。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-22"
+    "updated": "2026-10-08"
   },
   {
     "id": "BACKEND-MEDIA-001",
@@ -3560,5 +3564,111 @@
     "verification": "MCP 设置容器已拆为表单和列表职责，UI 标准 194 文件/0 违规；定向 TypeScript、ESLint 和 Prettier 通过，MCP 设置浏览器回归在完整 Playwright 中通过。",
     "verificationResult": "PASS",
     "updated": "2026-10-03"
+  },
+  {
+    "id": "TASK-UI-011",
+    "title": "图片选择工具栏与新增页面 UI 规则回归",
+    "goal": "点击图片卡片后在上方显示共享操作栏，消除图片内部动作与新页面的实际规范偏差",
+    "scope": "参考图片与结果卡片选择、操作、缩放/拖动定位以及模型设置/阶段工作台/资源页面回归",
+    "acceptance": [
+      "单击图片只选中，未选中时无工具栏，选中后动作在卡片上方",
+      "参考与结果图片复用共享操作，预览/重绘/对比/收藏/删除保持真实行为和原门禁",
+      "工具栏随拖动、平移、缩放定位并保持标准控件尺寸，不遮挡图片或对话",
+      "Escape/空白/切换选中关闭，键盘与窄屏操作可用",
+      "Web 与 fresh Desktop 分别具有真实页面、DOM、截图证据，相关及完整验证通过"
+    ],
+    "dependencies": [
+      "T2",
+      "TASK-UI-GOV-003"
+    ],
+    "owner": "root",
+    "branch": "codex/TASK-UI-011-image-selection-actions",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-011-image-selection-actions",
+    "affectedModules": [
+      "src/components/nodes",
+      "src/components/canvas",
+      "src/features/compare",
+      "src/styles",
+      "tests/browser",
+      "docs/UI_RULES.md"
+    ],
+    "status": "DONE",
+    "priority": "P1",
+    "evidence": [
+      "docs/changes/2026-10-08-image-selection-actions/intent.md",
+      "docs/changes/2026-10-08-image-selection-actions/spec.md",
+      "docs/changes/2026-10-08-image-selection-actions/plan.md",
+      "docs/changes/2026-10-08-image-selection-actions/verification.md",
+      "docs/changes/2026-10-08-image-selection-actions/review.md"
+    ],
+    "verification": "精确产品7d27265承接main78cea37：完整verify root723/731(8原skip)、Agent172/174(2原skip)、423/423browser零flaky/零实际retry；Rust97/fmt/clientcheck/fresh UI13(385hash)+TaskHost11(9hash/5CDP)+同EXE模型能力PASS。独立补审PASS、R1/R2 CLOSED，当前PR Hosted37776187321及push37776180456必需检查SUCCESS。Task声明范围完成；最终文档head精确补审/Hosted与普通主线推广另绑。历史失败保留；不代表全项目/付费Provider/Mobile/安装/最终视觉验收。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-08"
+  },
+  {
+    "id": "TASK-PROV-005",
+    "title": "Desktop 供应商非秘密配置 durable 保存与恢复",
+    "goal": "已保存账号/模型/ref 在立即异常退出后仍可恢复，不使系统凭据变成无法定位的孤立记录",
+    "scope": "src/components/settings, src/features/creation/providerRegistry.ts, src/features/models/modelCatalog.ts, src-tauri",
+    "acceptance": [
+      "供应商非秘密配置及目录在成功提示前有原生 durable 落盘",
+      "立即异常终止并重启保留账号/模型/ref，旧浏览器元数据无损迁移",
+      "系统凭据仍仅在 OS vault，文件/localStorage/日志没有秘密",
+      "失败/冲突不假报成功或覆盖原件，真实 Tauri 重启与全量回归通过"
+    ],
+    "affectedModules": [
+      "src/components/settings",
+      "src/features/creation/providerRegistry.ts",
+      "src/features/models/modelCatalog.ts",
+      "src-tauri"
+    ],
+    "verification": "新保存供应商后立即强杀本轮 WebView 进程树，localStorage 供应商元数据曾缺失；原生任务/素材及 OS 凭据保留，正常退出后恢复通过。现场在本轮 provider-abrupt-exit-observation.json；独立后续实现，尚未开始。",
+    "priority": "P1",
+    "dependencies": [
+      "T5"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "status": "TODO",
+    "evidence": [
+      "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md",
+      "docs/changes/2026-10-08-taskhost-native-lifecycle/status.md"
+    ],
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-08"
+  },
+  {
+    "id": "TASK-PROV-006",
+    "title": "Desktop image 提交连接门禁与 health 统一",
+    "goal": "图片原生提交复查明确绑定账号、禁用/容量，结构化原生错误回写同一连接健康状态",
+    "scope": "src/App.tsx, src/features/creation/providerSubmission.ts, src/features/creation/nativeTaskHost.ts, src-tauri/src/task_host.rs",
+    "acceptance": [
+      "同账号 image 提交前复查身份、禁用/隔离与容量，无效连接零 POST",
+      "原生 401/403/429 等结构化失败正确回写当前账号 health，旧身份/迟到回执不污染新配置",
+      "原生进程持有运行容量，reload 不释放；取消/终态释放而不新增任务队列",
+      "unknown 保持禁止普通重试，已归档原件保留；真实 Tauri fixture 与全量回归通过"
+    ],
+    "affectedModules": [
+      "src/App.tsx",
+      "src/features/creation/providerSubmission.ts",
+      "src/features/creation/nativeTaskHost.ts",
+      "src-tauri/src/task_host.rs"
+    ],
+    "verification": "旧 FEAT-002 和 T5 描述已有 native image health/连接门禁缺口，本轮明确独立任务承载。T5 的持久 journal/同身份恢复和文本容量已实际验证，不能代替此 image 门禁验收；尚未开始。",
+    "priority": "P1",
+    "dependencies": [
+      "T5"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "status": "TODO",
+    "evidence": [
+      "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md",
+      "docs/changes/2026-10-08-taskhost-native-lifecycle/status.md"
+    ],
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-08"
   }
 ]

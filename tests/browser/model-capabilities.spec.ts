@@ -194,7 +194,9 @@ for (const duplicate of [true, false]) {
     });
     if (duplicate) await expect(generate).toBeEnabled();
     else await expect(generate).toBeDisabled();
-    await item
+    await item.locator(".uploaded-image").click();
+    await page
+      .getByRole("toolbar")
       .getByRole("button", { name: "重绘参考图片", exact: true })
       .click();
     const redraw = page.getByRole("dialog", { name: "重绘参考图片" });
@@ -469,7 +471,11 @@ test("明确编辑限制禁用重绘和参考图并保留原图，不发送请�
       buffer: Buffer.from(pixel, "base64"),
     });
   await expect(item.locator(".uploaded-image")).toBeVisible();
-  await item.getByRole("button", { name: "重绘参考图片", exact: true }).click();
+  await item.locator(".uploaded-image").click();
+  await page
+    .getByRole("toolbar")
+    .getByRole("button", { name: "重绘参考图片", exact: true })
+    .click();
   const redraw = page.getByRole("dialog", { name: "重绘参考图片" });
   await redraw.getByLabel("重绘指令").fill("保留主体，更换背景");
   await expect(
@@ -550,7 +556,11 @@ test("单张重绘使用自己的数量，不被原节点超限草稿阻止", as
       mimeType: "image/png",
       buffer: Buffer.from(pixel, "base64"),
     });
-  await item.getByRole("button", { name: "重绘参考图片", exact: true }).click();
+  await item.locator(".uploaded-image").click();
+  await page
+    .getByRole("toolbar")
+    .getByRole("button", { name: "重绘参考图片", exact: true })
+    .click();
   const redraw = page.getByRole("dialog", { name: "重绘参考图片" });
   await redraw.getByLabel("重绘指令").fill("调整背景");
   await expect(

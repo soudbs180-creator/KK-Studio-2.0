@@ -32,3 +32,7 @@
 任务串行执行，无独立子功能；独立 reviewer 只读。原 main 与其他 worktree 不写入。native worktree 工具因调用上下文为非 Git 容器返回 Not a git repository，故回退本仓库 ignored `.worktrees`。首次 fetch 因失效本机代理失败；单次 `git -c http.proxy= fetch origin` 成功，不修改用户 Git 代理设置。
 
 恢复：revert 本任务提交，重新构建；不迁移或删除数据。当前请求没有合并/正式发布授权。实际日志与结果见 [verification](verification.md)，审查见 [review](review.md)。
+
+## 当前主线集成与依赖收尾
+
+原head535c5fbe6729fc4f136d8b6fe374a6d9cb791474，先merge当前main f922cf8e3e3318c5b01a922eaed424b11ccb2d0a。CSS冲突按实际App统一链保留image-selection.css与desktop-titlebar.css，后者位于所有页面override末端；版本先承接主线再只Desktop patch。原作者已结束，root单一写入。PR38在独立最新head Hosted中；待其普通合入main后再merge最新main、按实际Desktop版本再调配，并执行完整verify/97Rust/fresh带Agent release、原生标题栏drag/min/max/close、UI13/TaskHost11/模型/首屏、Web三宽度及开发态、精确当前source和finaldoc独立review、Hosted verify+delivery，再普通squash PR40，核对tree与mainCI。预备head不推送不冒充最终验收，固定端口串行不停止其他程序；旧535/6c37证据保留历史。

@@ -1,0 +1,34 @@
+{
+  "startedAt": "2026-10-08T05:56:36.939Z",
+  "sourceHead": "5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3",
+  "dataRoot": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\T5-native-lifecycle\\src-tauri\\target\\taskhost-acceptance\\1791438996939-9e75b257-0f6a-40b3-a89c-cd4ccdefcefa\\data",
+  "profile": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\T5-native-lifecycle\\src-tauri\\target\\taskhost-acceptance\\1791438996939-9e75b257-0f6a-40b3-a89c-cd4ccdefcefa\\profile",
+  "checks": [],
+  "launches": [
+    {
+      "url": "http://tauri.localhost/",
+      "scripts": [
+        "http://tauri.localhost/assets/index-DWwNRuIh.js"
+      ],
+      "styles": [
+        "http://tauri.localhost/assets/index-CBRGzoZu.css"
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/v1/images/generations",
+      "prompt": "header-hold",
+      "key": "taskhost-07a5152c-1fb5-44cb-a000-cb5c549ec034",
+      "taskId": "taskhost-61b611dd-b77e-4b27-9578-66f9bbf661d5",
+      "durableJournal": true
+    }
+  ],
+  "errors": [],
+  "passed": false,
+  "executableSha256": "e76dd117315397893ee733f60134e8d4a978f9150bb530efb0f870206294baa0",
+  "failure": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"unknown\"\nReceived: \"submitted\"\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
+  "finishedAt": "2026-10-08T05:56:42.917Z",
+  "credentialCleanupComplete": true
+}
