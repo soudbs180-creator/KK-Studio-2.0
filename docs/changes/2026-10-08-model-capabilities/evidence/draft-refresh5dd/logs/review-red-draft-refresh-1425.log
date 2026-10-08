@@ -1,0 +1,39 @@
+[WebServer] (node:16692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:55236) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\browser\model-capabilities.spec.ts:183:1 › 供应商刷新通知不覆盖未保存的模型能力草稿 (5.8s)
+
+
+  1) tests\browser\model-capabilities.spec.ts:183:1 › 供应商刷新通知不覆盖未保存的模型能力草稿 ─────────────────────────
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByLabel('参考图编辑能力', { exact: true })
+    Expected: "supported"
+    Received: "unknown"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" getByLabel('参考图编辑能力', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('参考图编辑能力', { exact: true })
+        14 × locator resolved to <select aria-label="参考图编辑能力">…</select>
+           - unexpected value "unknown"
+
+
+      190 |   );
+      191 |   await expect(page.getByLabel("当前模型用途")).toHaveValue("image");
+    > 192 |   await expect(page.getByLabel("参考图编辑能力", { exact: true })).toHaveValue("supported");
+          |                                                             ^
+      193 |   await expect(page.getByLabel("参考图数量上限", { exact: true })).toHaveValue("1");
+      194 |   await page.getByRole("button", { name: "保存此模型能力", exact: true }).click();
+      195 |   await expect(page.locator(".provider-model-catalog").getByRole("status")).toContainText("已保存此模型");
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-MODEL-001-capabilities\tests\browser\model-capabilities.spec.ts:192:61
+
+    Error Context: test-results\model-capabilities-供应商刷新通知不覆盖未保存的模型能力草稿\error-context.md
+
+  1 failed
+    tests\browser\model-capabilities.spec.ts:183:1 › 供应商刷新通知不覆盖未保存的模型能力草稿 ──────────────────────────

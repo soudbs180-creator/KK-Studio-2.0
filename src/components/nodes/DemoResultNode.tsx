@@ -146,6 +146,7 @@ export default function DemoResultNode({
           favorite={favorite}
           onFavorite={onFavorite}
           onDelete={onDelete}
+          references={editing?.references}
         />
       )}
       {hasReferenceComposer && editing && (

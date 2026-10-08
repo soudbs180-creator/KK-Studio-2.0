@@ -1,0 +1,92 @@
+✔ reported image declarations preserve unsupported operations and zero reference allowance (1.0084ms)
+✔ malformed capability values stay unknown instead of disabling or authorizing an operation (0.1067ms)
+✔ catalog saves and reloads only whitelisted capability metadata (0.6552ms)
+✔ manual declarations survive reported refresh for the same exact account and model (0.3811ms)
+✔ same route in two accounts keeps separate declarations and identity edits invalidate old capabilities (0.4191ms)
+✔ legacy v1 catalogs retain sizes while absent capability declarations remain unknown (0.3249ms)
+✖ explicitly unsupported generate or edit is rejected by the shared submission gate (3.1036ms)
+✖ model zero and tighter reference limits prevent submission without enlarging provider permission (0.4644ms)
+✖ model task output limit rejects excess outputs but does not mistake legacy HTTP limits for task limits (0.4245ms)
+✖ lease recheck observes a late model declaration change before the next request (3.078ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 6
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 158.9776
+
+✖ failing tests:
+
+test at tests\unit\imageModelCapabilities.test.ts:164:1
+✖ explicitly unsupported generate or edit is rejected by the shared submission gate (3.1036ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities/tests/unit/imageModelCapabilities.test.ts:167:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /不支持/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tests\unit\imageModelCapabilities.test.ts:173:1
+✖ model zero and tighter reference limits prevent submission without enlarging provider permission (0.4644ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities/tests/unit/imageModelCapabilities.test.ts:175:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /参考|不支持/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tests\unit\imageModelCapabilities.test.ts:185:1
+✖ model task output limit rejects excess outputs but does not mistake legacy HTTP limits for task limits (0.4245ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities/tests/unit/imageModelCapabilities.test.ts:188:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /数量|最多/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tests\unit\imageModelCapabilities.test.ts:194:1
+✖ lease recheck observes a late model declaration change before the next request (3.078ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities/tests/unit/imageModelCapabilities.test.ts:199:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /不支持/,
+    operator: 'throws',
+    diff: 'simple'
+  }

@@ -1,0 +1,20 @@
+✔ reported image declarations preserve unsupported operations and zero reference allowance (0.9395ms)
+✔ malformed capability values stay unknown instead of disabling or authorizing an operation (0.1122ms)
+✔ catalog saves and reloads only whitelisted capability metadata (0.771ms)
+✔ manual declarations survive reported refresh for the same exact account and model (0.8787ms)
+✔ same route in two accounts keeps separate declarations and identity edits invalidate old capabilities (0.4057ms)
+✔ legacy v1 catalogs retain sizes while absent capability declarations remain unknown (0.2721ms)
+✔ 模型目录只接收非敏感元数据，未知模型不虚构能力 (1.047ms)
+✔ 同名模型保留账号身份，换地址或凭据后旧目录失效 (0.1336ms)
+✔ 尺寸与比例来自明确规格，不把 16:9 任意换算为供应商尺寸 (0.1318ms)
+✔ suffixes group display only, preserve versions/namespaces/exact available routes (1.0009ms)
+✔ searches provider, exact suffix, declared sizes/ratio; fuzzy words never change numbers or ratio orientation (0.7043ms)
+✔ 显式模型选择绑定具体账号；旧项目不覆盖新选择，尺寸必须属于所选模型 (4.6478ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 166.3766

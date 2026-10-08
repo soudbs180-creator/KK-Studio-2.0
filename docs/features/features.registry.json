@@ -156,7 +156,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-003-image-parameters.md",
-    "summary": "图片卡片按所选 API 账号和模型目录显示明确支持的尺寸及比例；目录未声明时只用默认尺寸。刷新目录、手动能力声明、持久化与提交校验已接入；新协议和桌面同态验收待办。",
+    "summary": "图片参数与生成/编辑三态、参考图/任务数量限额按精确账号模型目录生效；手动/报告声明、恢复和Web/Desktop提交校验已接入。声明不代表真实Provider验收；蒙版/扩图执行待接通。",
     "entryPoints": [
       "图片节点参数弹层 CreationParameters",
       "图片卡片模型/参数菜单",
@@ -173,20 +173,29 @@
       "src/features/models/modelFamilies.ts",
       "src/features/models/modelSearch.ts",
       "src/components/ModelVariantControl.tsx",
-      "src/features/models/modelMenuEntries.ts"
+      "src/features/models/modelMenuEntries.ts",
+      "src/domain/imageModelCapabilities.ts",
+      "src/features/models/imageModelCapabilities.ts",
+      "src/features/models/useImageModelCapabilities.ts",
+      "src/components/settings/ImageModelCapabilityFields.tsx",
+      "src/components/canvas/canvasReferences.ts"
     ],
     "tests": [
       "tests/unit/imageParameters.test.ts",
       "tests/unit/modelCatalog.test.ts",
       "tests/unit/modelRouting.test.ts",
       "tests/browser/model-picker.spec.ts",
-      "tests/unit/modelDiscovery.test.ts"
+      "tests/unit/modelDiscovery.test.ts",
+      "tests/unit/imageModelCapabilities.test.ts",
+      "tests/browser/model-capabilities.spec.ts",
+      "tests/desktop/model-capabilities.mjs"
     ],
     "tasks": [
       "BACKEND-IMAGE-PARAMS",
-      "TASK-AGENT-001"
+      "TASK-AGENT-001",
+      "TASK-MODEL-001"
     ],
-    "updated": "2026-09-22",
+    "updated": "2026-10-08",
     "platforms": [
       "web",
       "desktop"
@@ -195,6 +204,14 @@
       {
         "platform": "web",
         "path": "docs/changes/2026-09-22-codex-default-agent/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-08-model-capabilities/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-08-model-capabilities/verification.md"
       }
     ]
   },
@@ -663,9 +680,10 @@
       "TASK-CAP-001",
       "TASK-MINIMAX-001",
       "TASK-UI-005",
-      "PLUGIN-DESKTOP-001"
+      "PLUGIN-DESKTOP-001",
+      "TASK-PLUGIN-DEV-001"
     ],
-    "updated": "2026-09-29",
+    "updated": "2026-10-08",
     "platforms": [
       "web",
       "desktop"

@@ -1,0 +1,32 @@
+✔ reported image declarations preserve unsupported operations and zero reference allowance (1.0749ms)
+✔ malformed capability values stay unknown instead of disabling or authorizing an operation (0.1217ms)
+✔ catalog saves and reloads only whitelisted capability metadata (0.6509ms)
+✔ manual declarations survive reported refresh for the same exact account and model (0.3685ms)
+✔ same route in two accounts keeps separate declarations and identity edits invalidate old capabilities (0.4508ms)
+✔ legacy v1 catalogs retain sizes while absent capability declarations remain unknown (0.2999ms)
+✔ explicitly unsupported generate or edit is rejected by the shared submission gate (3.1739ms)
+✔ model zero and tighter reference limits prevent submission without enlarging provider permission (0.8179ms)
+✔ model task output limit rejects excess outputs but does not mistake legacy HTTP limits for task limits (1.231ms)
+✔ lease recheck observes a late model declaration change before the next request (2.318ms)
+✔ text cannot submit a deleted source, cancelled task or changed identity (1.0336ms)
+✔ text input cannot exceed the durable snapshot prompt limit (0.2185ms)
+✔ archived results connect to the originating node and tolerate a deleted source (0.5894ms)
+✔ image task input rejects oversized prompts, invalid counts and unsupported modes (0.4286ms)
+✔ appendImageTask binds the source node and preserves the unsubmitted draft (0.3952ms)
+✔ appendImageTask rejects a deleted source before creating a task (0.2118ms)
+✔ canvasImageAttachments reads each archived self or incoming asset once without downloading previews (0.3802ms)
+✔ 画布文本提示词连线不被当作未归档图片附件 (0.1121ms)
+✔ canvasImageAttachments fails closed for missing or invalid archived originals (0.2553ms)
+✔ 显式模型选择绑定具体账号；旧项目不覆盖新选择，尺寸必须属于所选模型 (5.2046ms)
+✔ submission gates preserve identity, capacity and health across reserve/release (7.8629ms)
+✔ stale leases cannot release a connection re-added with the same id (0.4585ms)
+✔ coordinated reservations serialize browser windows and reclaim orphaned leases (1.4043ms)
+✔ batch rechecks the bound connection before the next HTTP request and retains completed results (14.8816ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 188.2112

@@ -1,0 +1,34 @@
+✔ reported image declarations preserve unsupported operations and zero reference allowance (1.0556ms)
+✔ malformed capability values stay unknown instead of disabling or authorizing an operation (0.1059ms)
+✔ catalog saves and reloads only whitelisted capability metadata (0.6727ms)
+✔ manual declarations survive reported refresh for the same exact account and model (0.4155ms)
+✔ same route in two accounts keeps separate declarations and identity edits invalidate old capabilities (0.3907ms)
+✔ legacy v1 catalogs retain sizes while absent capability declarations remain unknown (0.2772ms)
+✔ explicitly unsupported generate or edit is rejected by the shared submission gate (3.0995ms)
+✔ model zero and tighter reference limits prevent submission without enlarging provider permission (1.5496ms)
+✔ model task output limit rejects excess outputs but does not mistake legacy HTTP limits for task limits (0.4887ms)
+✔ lease recheck observes a late model declaration change before the next request (2.2147ms)
+✔ canvas connection affordance refuses references beyond the exact model limit (0.4632ms)
+✔ image declarations do not restrict a text model on the same account (0.2412ms)
+✔ new canvas nodes without an explicit model use the current command selection for reference limits (0.1716ms)
+✔ text cannot submit a deleted source, cancelled task or changed identity (1.0572ms)
+✔ text input cannot exceed the durable snapshot prompt limit (0.2233ms)
+✔ archived results connect to the originating node and tolerate a deleted source (0.7043ms)
+✔ image task input rejects oversized prompts, invalid counts and unsupported modes (0.4626ms)
+✔ appendImageTask binds the source node and preserves the unsubmitted draft (0.4596ms)
+✔ appendImageTask rejects a deleted source before creating a task (0.2047ms)
+✔ canvasImageAttachments reads each archived self or incoming asset once without downloading previews (0.3666ms)
+✔ 画布文本提示词连线不被当作未归档图片附件 (0.1207ms)
+✔ canvasImageAttachments fails closed for missing or invalid archived originals (0.4076ms)
+✔ submission gates preserve identity, capacity and health across reserve/release (8.3654ms)
+✔ stale leases cannot release a connection re-added with the same id (0.4246ms)
+✔ coordinated reservations serialize browser windows and reclaim orphaned leases (1.1987ms)
+✔ batch rechecks the bound connection before the next HTTP request and retains completed results (14.5405ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 186.4929

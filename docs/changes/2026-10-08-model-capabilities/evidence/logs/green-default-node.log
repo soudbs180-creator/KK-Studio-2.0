@@ -1,0 +1,20 @@
+✔ reported image declarations preserve unsupported operations and zero reference allowance (1.0019ms)
+✔ malformed capability values stay unknown instead of disabling or authorizing an operation (0.1067ms)
+✔ catalog saves and reloads only whitelisted capability metadata (0.6351ms)
+✔ manual declarations survive reported refresh for the same exact account and model (0.3938ms)
+✔ same route in two accounts keeps separate declarations and identity edits invalidate old capabilities (0.3918ms)
+✔ legacy v1 catalogs retain sizes while absent capability declarations remain unknown (0.2727ms)
+✔ explicitly unsupported generate or edit is rejected by the shared submission gate (3.0431ms)
+✔ model zero and tighter reference limits prevent submission without enlarging provider permission (1.7295ms)
+✔ model task output limit rejects excess outputs but does not mistake legacy HTTP limits for task limits (0.4975ms)
+✔ lease recheck observes a late model declaration change before the next request (2.1376ms)
+✔ canvas connection affordance refuses references beyond the exact model limit (0.4397ms)
+✔ new canvas nodes without an explicit model use the current command selection for reference limits (0.1933ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 149.4543

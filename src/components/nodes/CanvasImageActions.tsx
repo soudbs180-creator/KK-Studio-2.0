@@ -1,5 +1,8 @@
 import { useState, type RefObject } from "react";
-import type { CanvasCollectionItem } from "../../domain/canvasItems";
+import type {
+  CanvasCollectionItem,
+  CanvasReference,
+} from "../../domain/canvasItems";
 import CompareImageButton from "../../features/compare/CompareImageButton";
 import UiIcon from "../UiIcon";
 import ImageSelectionToolbar from "../canvas/ImageSelectionToolbar";
@@ -13,6 +16,7 @@ export default function CanvasImageActions({
   favorite,
   onFavorite,
   onDelete,
+  references,
 }: {
   item: CanvasCollectionItem;
   anchor: RefObject<HTMLElement>;
@@ -21,6 +25,7 @@ export default function CanvasImageActions({
   favorite?: boolean;
   onFavorite?: () => void;
   onDelete?: () => void;
+  references?: CanvasReference[];
 }) {
   const [redrawOpen, setRedrawOpen] = useState(false);
   const reference = !item.result;
@@ -86,7 +91,12 @@ export default function CanvasImageActions({
           </button>
         )}
       </ImageSelectionToolbar>
-      {redrawOpen && <ImageRedrawDialog onClose={() => setRedrawOpen(false)} />}
+      {redrawOpen && (
+        <ImageRedrawDialog
+          references={references}
+          onClose={() => setRedrawOpen(false)}
+        />
+      )}
     </>
   );
 }

@@ -1,0 +1,84 @@
+[WebServer] (node:25000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:47888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 (30.0s)
+(node:49840) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 (30.0s)
+
+
+  1) tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 ────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId(/^canvas-node-added-image-/).first()
+        - locator resolved to <div role="group" tabindex="0" data-selected="false" aria-expanded="false" data-canvas-node="true" aria-describedby="canvas-drag-help" class="canvas-node canvas-node-image     " aria-label="original.png，点击或按回车选择，拖动可移动，方向键可微调，按删除键可移除" data-node-id="added-image-3d3806ce-e372-4b80-95c4-26825b0795c3" data-testid="canvas-node-added-image-3d3806ce-e372-4b80-95c4-26825b0795c3">…</div>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is not visible
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is not visible
+        - retrying click action
+          - waiting 100ms
+        54 × waiting for element to be visible, enabled and stable
+           - element is not visible
+         - retrying click action
+           - waiting 500ms
+
+
+      61 |     }, sourceId);
+      62 |     await page.reload();
+    > 63 |     await item.click();
+         |                ^
+      64 |     await item
+      65 |       .locator('input[type="file"]')
+      66 |       .nth(1)
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-MODEL-001-capabilities\tests\browser\model-capabilities.spec.ts:63:16
+
+    Error Context: test-results\model-capabilities-原图和连线参考图按归档素材去重：同素材可编辑\error-context.md
+
+  2) tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 ────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId(/^canvas-node-added-image-/).first()
+        - locator resolved to <div role="group" tabindex="0" data-selected="false" aria-expanded="false" data-canvas-node="true" aria-describedby="canvas-drag-help" class="canvas-node canvas-node-image     " aria-label="original.png，点击或按回车选择，拖动可移动，方向键可微调，按删除键可移除" data-node-id="added-image-f5307d89-4f57-4c5a-a149-dd47b0e41bc9" data-testid="canvas-node-added-image-f5307d89-4f57-4c5a-a149-dd47b0e41bc9">…</div>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is not visible
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is not visible
+        - retrying click action
+          - waiting 100ms
+        54 × waiting for element to be visible, enabled and stable
+           - element is not visible
+         - retrying click action
+           - waiting 500ms
+
+
+      61 |     }, sourceId);
+      62 |     await page.reload();
+    > 63 |     await item.click();
+         |                ^
+      64 |     await item
+      65 |       .locator('input[type="file"]')
+      66 |       .nth(1)
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-MODEL-001-capabilities\tests\browser\model-capabilities.spec.ts:63:16
+
+    Error Context: test-results\model-capabilities-原图和连线参考图按归档素材去重：不同素材超限禁用重绘\error-context.md
+
+  2 failed
+    tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 ─────────────────────────
+    tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 ─────────────────────

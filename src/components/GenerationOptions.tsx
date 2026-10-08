@@ -1,4 +1,5 @@
 import type { CreationDraft } from "../features/creation/model";
+import { useImageModelCapabilities } from "../features/models/useImageModelCapabilities";
 
 /** Creation options shared by the start composer and future task detail panel. */
 export default function GenerationOptions({
@@ -8,6 +9,17 @@ export default function GenerationOptions({
   draft: CreationDraft;
   onChange: (patch: Partial<CreationDraft>) => void;
 }) {
+  const capabilities = useImageModelCapabilities({
+    source: "api",
+    model: draft.model,
+    connectionId: draft.providerConnectionId,
+  });
+  const maximum =
+    draft.kind === "image" ? capabilities.maxGenerationCount : undefined;
+  const counts = [1, 4, 8, 16, 32].filter(
+    (count) => maximum === undefined || count <= maximum,
+  );
+  if (maximum !== undefined && !counts.includes(maximum)) counts.push(maximum);
   return (
     <>
       <label className="start-count-picker">
@@ -19,11 +31,18 @@ export default function GenerationOptions({
             onChange({ outputCount: Number(event.target.value) })
           }
         >
-          {[1, 4, 8, 16, 32].map((count) => (
-            <option key={count} value={count}>
-              {count} 张
+          {!counts.includes(draft.outputCount) && (
+            <option value={draft.outputCount} disabled>
+              {draft.outputCount} 张（超出当前模型上限）
             </option>
-          ))}
+          )}
+          {counts
+            .sort((a, b) => a - b)
+            .map((count) => (
+              <option key={count} value={count}>
+                {count} 张
+              </option>
+            ))}
         </select>
       </label>
       <label className="start-count-picker">

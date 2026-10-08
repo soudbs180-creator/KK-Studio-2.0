@@ -157,6 +157,7 @@ export default function ImageCreationNode({
           anchor={preview}
           selected={selected}
           onPreview={() => setPreviewOpen(true)}
+          references={references}
         />
       )}
       {!selected && error && (
