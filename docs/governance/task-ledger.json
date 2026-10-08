@@ -19,13 +19,13 @@
       "src/App.tsx",
       "FEAT-026"
     ],
-    "status": "REVIEW",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-10-08-startup-experience/verification.md"
     ],
-    "verification": "历史 e050 本地独立PASS、当前旧source Hosted成功；本轮承接 main f922 后组合源码/产物/回归/独立审查/Hosted 待执行，不复用旧SHA。原历史验证详见本任务verification，PR38普通集成由root按用户明确授权执行。",
+    "verification": "精确组合5ecf77b/basef922：AC1–5 PASS，verify726Node/172Agent（既有skip8/2）、428browser428attempts零flaky/实际retry/skip、97Rust/fmt/clientcheck/fresh带Agent release；原生UI13/TaskHost11/模型/首屏与三宽度Web PASS，独立复审PASS且102上游task完整保留。同EXE1a943...c76e；本地elevation/runtime not-recorded。最终doc head补审/Hosted与PR38普通main推广须独立回读，不代填历史失败或真实Provider/安装/线上能力。",
     "updated": "2026-10-08",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "PASS"
   },
   {
     "id": "TASK-MODEL-001",

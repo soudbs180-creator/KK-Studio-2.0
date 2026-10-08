@@ -88,3 +88,17 @@ LAUNCH-R4（P2）：仅将原测试路径增强为中文+🌐+空格+`&`，本�
 夹具创建前使用`fs.realpathSync.native(os.tmpdir())`取得实际临时目录，清理guard核对同一captured目录；目标/cwd/icon/console/args的严格断言均保留，产品脚本未变。独立reviewer核读两个失败与两行修改，确认这是有依据的测试维护。当前本机GetShortPathName(Temp)未提供8.3别名，探针`short-temp-no-alias.log`只记GREEN，不能声称本地重现该Hosted RED。
 
 本次native3/3与完整verify再次退出0，仍726/734Node、172/174Agent（既有skip8/2）、413/413browser且0retry/flaky；日志`canonical-temp-native.log`及`D:/kk-studio/output/startup-canonical-temp-full-verify-20261008.log`。最终精确SHA补审改由`D:/kk-studio/output/startup-review-canonical-temp-20261008.md`绑定；6fe收据保留历史。最新Hosted必须回读，不将历史失败或本地结果冒称当前远端PASS；main/线上未推广。
+
+## PR38 最新主线组合验收
+
+用户本轮授权合并已完成检查的分支；原 e050 clean 作者工作已结束，由 root 在原 task tree 串行承接 main@f922cf8e3e3318c5b01a922eaed424b11ccb2d0a。精确产品提交 5ecf77b5200b268f4867ee6abde988044d2cc4fb，Desktop2.1.9 / Web2.1.10 / Mobile规划2.1.1。版本取最新主线后按真实影响 patch，治理冲突保留双方历史；App 自动合并经独立 AST 对照确认状态/处理语句与核心 props 完整保留。
+
+完整 verify PASS：root726/734（8既有skip）、Agent172/174（2既有skip）、428/428browser、428attempts、12实际workers、0flaky/0实际retry/0skip；lint/typecheck/UI/format/build/版本/功能/治理/链接门禁全部通过。首轮仅在固定1423被占用而未开始浏览器，原失败日志保留；端口释放后完整重跑，不复用外部服务、不放宽 strictPort。Rustfmt与97/97 Rust、clientcheck、fresh带Agent no-bundle release通过（既有5条dead-code warning保留）。生成schema逐字节和JSON均等于committed源，只恢复本轮工具生成stat变化。
+
+Fresh native UI13（387源码hash）+TaskHost11（9源码hash/5启动）+模型能力/首屏均PASS，errors=[]，UI cleanupComplete与TaskHost credentialCleanupComplete=true；同EXE SHA256 1a94325c4a9e21dac839042d1279439336244ee3d4785a334c71e48da803c76e，JS index-hVSQX4JP.js / CSS index-B2nRDpHV.css。Tauri URL http://tauri.localhost/，production / src/main.tsx，首页Canvas/Conversation未挂载，设置加载/焦点/Escape正常。runtimeVersion与hostElevated仍实际not-recorded，不推断本轮High IL。
+
+Web实际 node node_modules/vite/bin/vite.js preview --host127.0.0.1 --port1423 --strictPort，route /，index.html→src/main.tsx→App→StartPage及DeferredPanelBoundary→SettingsPanel；390/1099/1920真实DOM/截图零溢出/pageerror，首屏entry811556bytes。原生HomeReady2302ms是独立profile/CDP可见首页观测，不与旧GUI304ms或旧Web性能中位数混比，不将旧性能保证扩大至新组合。Launcher3项真实.NET/COM/lnk/失败/取消回归由完整Node suite运行，严格Unicode/TEMP断言保留。
+
+[完整report](evidence/main-integration-5ecf77b/browser-results-5ecf77b.json)、[零retry摘要](evidence/main-integration-5ecf77b/browser-summary-5ecf77b.json)、[原生UI](evidence/main-integration-5ecf77b/native-ui-5ecf77b/receipt.json)、[TaskHost](evidence/main-integration-5ecf77b/native-taskhost-5ecf77b/receipt.json)、[当前独立复核原文](evidence/main-integration-5ecf77b/review-5ecf77b.md)；原始日志以lossless base64/SHA/字节数保存，失败仍在。所有102项主线task逐项deepEqual保留，本task加入后103项。
+
+本地AC1–5与当前独立技术审查PASS。随后仅补这些文档证据；最终doc head独立补审/当前Hosted verify+delivery、普通squash、完整landing tree及主线Hosted必须回读[PR38](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/38)与实际远端，不在此提交预先填写成功。UI012与蒙版仍在原执行者维护中；被快捷方式引用的Launch树及历史分支保留，未强制停止用户程序或改用户数据/真实Provider/线上服务/正式安装器。

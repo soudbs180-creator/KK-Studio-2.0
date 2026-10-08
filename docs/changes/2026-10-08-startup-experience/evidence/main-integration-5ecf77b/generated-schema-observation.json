@@ -1,0 +1,14 @@
+[
+  {
+    "file": "src-tauri/gen/schemas/desktop-schema.json",
+    "exact": true,
+    "normalizedEqual": true,
+    "jsonEqual": true
+  },
+  {
+    "file": "src-tauri/gen/schemas/windows-schema.json",
+    "exact": true,
+    "normalizedEqual": true,
+    "jsonEqual": true
+  }
+]

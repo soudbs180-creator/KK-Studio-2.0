@@ -1,0 +1,12 @@
+{
+  "base": "f922cf8e3e3318c5b01a922eaed424b11ccb2d0a",
+  "head": "5ecf77b5200b268f4867ee6abde988044d2cc4fb",
+  "upstreamTasksPreserved": 102,
+  "currentTasks": 103,
+  "protectedFiles": [
+    "src-tauri/src/task_host.rs",
+    "src/features/creation/nativeTaskHost.ts",
+    "src/components/BatchMatrix.tsx",
+    "src/components/TaskWorkbench.tsx"
+  ]
+}

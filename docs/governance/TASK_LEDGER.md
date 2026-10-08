@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
-| TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | REVIEW | none | root |
+| TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | none | root |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
 | TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
 | T0 | 可复现候选源码与主线整合 | DONE | none | root |
@@ -118,7 +118,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-LAUNCH-001-quiet-start`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-LAUNCH-001`
 - Modules: scripts/windows, start-kk-studio.bat, src/App.tsx, FEAT-026
-- Verification: NOT_VERIFIED — 历史 e050 本地独立PASS、当前旧source Hosted成功；本轮承接 main f922 后组合源码/产物/回归/独立审查/Hosted 待执行，不复用旧SHA。原历史验证详见本任务verification，PR38普通集成由root按用户明确授权执行。
+- Verification: PASS — 精确组合5ecf77b/basef922：AC1–5 PASS，verify726Node/172Agent（既有skip8/2）、428browser428attempts零flaky/实际retry/skip、97Rust/fmt/clientcheck/fresh带Agent release；原生UI13/TaskHost11/模型/首屏与三宽度Web PASS，独立复审PASS且102上游task完整保留。同EXE1a943...c76e；本地elevation/runtime not-recorded。最终doc head补审/Hosted与PR38普通main推广须独立回读，不代填历史失败或真实Provider/安装/线上能力。
 - Evidence: [docs/changes/2026-10-08-startup-experience/verification.md](../../docs/changes/2026-10-08-startup-experience/verification.md)
 - Updated: 2026-10-08
 

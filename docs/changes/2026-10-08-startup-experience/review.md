@@ -26,3 +26,7 @@
 
 - 独立6fe7ccb Unicode审查PASS/R4关闭；后续Hosted仅在Target严格比较8.3短名RUNNER~1与长名runneradmin时失败。reviewer核读两份原日志，确认fixture创建前原生realpath及同一目录cleanup guard两行修改合理；全部产品断言保留，未修改产品源码。
 - 本次native3/3和完整verify726Node/172Agent/413browser零flaky PASS。本机无TEMP短名别名，额外探针只记GREEN；真实RED来自Hosted。最终已提交SHA需补审并写`D:/kk-studio/output/startup-review-canonical-temp-20261008.md`，旧6fe审查留档；Hosted与用户/发布门禁单列。
+
+## 最新主线组合独立复审
+
+独立只读上下文 task_audit_reviewer 对 base f922cf8e3e3318c5b01a922eaed424b11ccb2d0a → head 5ecf77b5200b268f4867ee6abde988044d2cc4fb 正式审查PASS，无未关闭finding。原文存[当前收据](evidence/main-integration-5ecf77b/review-5ecf77b.md)，包含独立源码/AST/102项账本/387+9指纹及实际动态证据核对；未伪造GitHub账号审批，当前Hosted仍独立门禁。最终doc head仅补证据后再次精确补审，PR38与实际主线交付另回读。

@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-08T14:08:08.720Z",
+  "executable": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-LAUNCH-001\\src-tauri\\target\\release\\kk-studio.exe",
+  "executableSha256": "1a94325c4a9e21dac839042d1279439336244ee3d4785a334c71e48da803c76e",
+  "entrySha256": "407eb605c8a9b8df81de71cfc6f08e86333937ca5c6369af6780d9046bd81bc1",
+  "pid": 92084,
+  "observedHomeReadyMs": 2302.388,
+  "dataRoot": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-LAUNCH-001\\src-tauri\\target\\startup-acceptance\\1791468485774\\data",
+  "profile": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-LAUNCH-001\\src-tauri\\target\\startup-acceptance\\1791468485774\\webview-profile",
+  "home": {
+    "url": "http://tauri.localhost/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://tauri.localhost/assets/index-hVSQX4JP.js"
+    ],
+    "native": true,
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "sheets": [
+      "http://tauri.localhost/assets/index-B2nRDpHV.css"
+    ]
+  },
+  "deferredSettings": "loaded, focused General, Escape returned trigger",
+  "errors": []
+}
