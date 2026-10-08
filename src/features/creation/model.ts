@@ -458,6 +458,9 @@ function normalizeCanvasItem(
 ): CanvasCollectionItem {
   const result = value.result;
   return {
+    // Plugin content is durable project data, independently editable after a read.
+    plugin:
+      value.plugin === undefined ? undefined : structuredClone(value.plugin),
     imageEditDraft:
       value.imageEditDraft === undefined
         ? undefined

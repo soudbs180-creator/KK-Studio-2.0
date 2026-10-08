@@ -5,17 +5,16 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { chromium, expect } from "@playwright/test";
 import { createServer } from "vite";
+import {
+  bundledPlugins as plugins,
+  addAndEditBundledPlugins,
+  expectBundledPluginContents,
+} from "../support/pluginFlow.mjs";
 
 const root = process.cwd();
 const evidenceDir =
   process.env.KK_PLUGIN_EVIDENCE_DIR ??
   path.join(root, "test-results", "development-plugins", String(Date.now()));
-const plugins = [
-  { title: "HTML", type: "html:render", file: "html.js" },
-  { title: "Markdown", type: "markdown:doc", file: "markdown.js" },
-  { title: "便利贴", type: "sticky-note:note", file: "sticky-note.js" },
-  { title: "SVG", type: "svg:vector", file: "svg.js" },
-];
 const receipt = {
   runtime: "Vite development",
   sourceHead: execFileSync("git", ["rev-parse", "HEAD"], {
@@ -68,6 +67,8 @@ try {
         status: response.status(),
       });
   });
+  // Bundled nodes must work without loading executable code from a CDN.
+  await page.route("https://esm.sh/**", (route) => route.abort());
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto(receipt.url);
   const entry = page.locator('[data-runtime-entry="src/main.tsx"]');
@@ -93,16 +94,8 @@ try {
   await page.getByRole("button", { name: "新建项目", exact: true }).click();
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
   const menu = page.locator(".add-node-menu");
-  for (const plugin of plugins) {
-    await page.getByRole("button", { name: "添加资源", exact: true }).click();
-    await menu
-      .getByRole("menuitem", { name: plugin.title, exact: true })
-      .click();
-    await expect(
-      page.locator(`[data-plugin-type="${plugin.type}"]`),
-    ).toBeVisible();
-  }
-  receipt.steps.push("add-and-render-four-plugin-nodes");
+  await addAndEditBundledPlugins(page);
+  receipt.steps.push("add-edit-and-render-four-plugin-nodes-without-cdn");
   settings = await openPluginSettings();
   const svgRow = settings
     .locator(".plugin-manager-row")
@@ -142,10 +135,7 @@ try {
   await expect(savedProject).toHaveCount(1);
   await savedProject.click();
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
-  for (const plugin of plugins)
-    await expect(
-      page.locator(`[data-plugin-type="${plugin.type}"]`),
-    ).toBeVisible();
+  await expectBundledPluginContents(page);
   await page.getByRole("button", { name: "添加资源", exact: true }).click();
   await expect(
     menu.getByRole("menuitem", { name: "SVG", exact: true }),

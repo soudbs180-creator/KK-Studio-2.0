@@ -7,3 +7,5 @@
 - 现有事实：账本记录 /plugins/*.js public import FAIL；源码 @vite-ignore 动态导入 root-relative URL。安装的 Vite 会为该动态值注入 import query，其 public middleware 跳过带此 query 的请求。绝对同源 URL 是否修复必须由真实开发运行确认。
 - 约束：沿用插件store、同源边界、HTTPS远程限制和 Tauri CSP；不关闭HMR遮罩、不新增权限/依赖、不覆盖已有失败证据。
 - 对应 [spec](spec.md)、[plan](plan.md)、[verification](verification.md)、[review](review.md)。
+
+- 运行追加范围：TASK-PLUGIN-RECOVERY-001 保存/重启插件负载，TASK-PLUGIN-MARKDOWN-001 随包Markdown离线渲染；均为四插件完整可用的直接验收失败。Desktop/Web共享运行行为版本2.1.11 → 2.1.12；Mobile规划保持2.1.1。

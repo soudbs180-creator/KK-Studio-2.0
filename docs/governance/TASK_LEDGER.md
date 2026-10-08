@@ -6,6 +6,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
+| TASK-PLUGIN-MARKDOWN-001 | 随包Markdown去除CDN代码依赖与离线渲染 | PARTIAL | TASK-PLUGIN-DEV-001 | root |
+| TASK-PLUGIN-RECOVERY-001 | 插件节点快照完整恢复与坏数据保护 | PARTIAL | TASK-PLUGIN-DEV-001 | root |
 | TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | DONE | TASK-MODEL-001 | root |
 | TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | TASK-IMAGE-EDIT-001 | root |
 | TASK-UI-013 | 桌面标题栏与菜单合并为单排 | DONE | none | root |
@@ -113,6 +115,30 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
 
+## TASK-PLUGIN-MARKDOWN-001 — 随包Markdown去除CDN代码依赖与离线渲染
+
+- Goal: 四个随包插件在固定开发、生产和严格同源CSP桌面中编辑及重启恢复完整内容
+- Scope: 现有Markdown解析器从隐式marked@14 CDN导入转为锁定版本随包；不扩大CSP或远程权限
+- Acceptance: 阻断CDN时真实Markdown正文正确渲染且零页面错误; 原解析器主版本和语义保留，构建产物不请求外部可执行代码; 完整verify及fresh Tauri四插件重启验收与独立审查
+- Branch: `fix/TASK-PLUGIN-DEV-001-same-origin-modules`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001`
+- Modules: vendor/canvas-plugins/markdown, vendor/canvas-plugins/package-lock.json, tests/support, tests/development, tests/browser, tests/desktop, docs
+- Verification: FAIL — PRE-EXISTING FAILURE：共享4插件编辑flow在真实开发阻断esm.sh时Markdown标题为空，页面console net::ERR_FAILED及dynamic import pageerror；原receipt/PNG/日志保留FAIL。当前尚未修复。 当前预验收快照10/10和固定1421四插件编辑/正文/刷新恢复/启停/零错误通过，仍需完整verify、fresh Tauri和当前独立审查；历史FAIL保留。 实现及局部复验完成，最终验收未完成；作为同一逻辑目标的关联缺陷串行由唯一active任务TASK-PLUGIN-DEV-001执行，不创建第二个并行写入者。
+- Evidence: [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md)
+- Updated: 2026-10-09
+
+## TASK-PLUGIN-RECOVERY-001 — 插件节点快照完整恢复与坏数据保护
+
+- Goal: 保存及重新读取后保留插件类型、尺寸和完整JSON元数据，坏数据不成为可写空卡片
+- Scope: 现有CanvasCollectionItem.plugin的共享归一化与快照codec；不改变schema版本、存储身份或用户数据
+- Acceptance: 现有插件负载及长内容经过存储编码/解码完整保留，普通节点兼容; 非法负载/尺寸/非JSON元数据和嵌套秘密拒绝，原件不变; 真实development和production/Tauri重启插件项目后节点及编辑内容完整，相关回归和独立审查
+- Branch: `fix/TASK-PLUGIN-DEV-001-same-origin-modules`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001`
+- Modules: src/features/creation/model.ts, src/features/creation/snapshotCodec.ts, tests/unit, tests/development, tests/desktop, docs
+- Verification: FAIL — PRE-EXISTING FAILURE：最新main8c组合的真实开发回归创建四插件成功，重启并打开唯一保存项目后找不到HTML插件节点；页面零错误/无遮罩。源码normalizeCanvasItem未返回plugin字段，当前尚未修复和独立验收。 当前预验收快照10/10和固定1421四插件编辑/正文/刷新恢复/启停/零错误通过，仍需完整verify、fresh Tauri和当前独立审查；历史FAIL保留。 实现及局部复验完成，最终验收未完成；作为同一逻辑目标的关联缺陷串行由唯一active任务TASK-PLUGIN-DEV-001执行，不创建第二个并行写入者。
+- Evidence: [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md)
+- Updated: 2026-10-09
+
 ## TASK-IMAGE-EDIT-001 — 统一图片编辑蒙版与连续重绘
 
 - Goal: 框选、画笔、色块共享坐标、裁剪、请求及融合，保护原图与未选像素
@@ -181,7 +207,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-PLUGIN-DEV-001-same-origin-modules`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001`
 - Modules: src/features/plugins/pluginLoader.ts, vite.config.ts, tests/browser
-- Verification: FAIL — PRE-EXISTING FAILURE：main@21d121d和本任务1421均出现/plugins/*.js public-import错误；本任务只诊断登记。Esc后能力表单可保存，插件加载仍未修复。
+- Verification: FAIL — PRE-EXISTING FAILURE：main@21d121d和本任务1421均出现/plugins/*.js public-import错误；本任务只诊断登记。Esc后能力表单可保存，插件加载仍未修复。 当前预验收快照10/10和固定1421四插件编辑/正文/刷新恢复/启停/零错误通过，仍需完整verify、fresh Tauri和当前独立审查；历史FAIL保留。
 - Evidence: [docs/changes/2026-10-08-model-capabilities/verification.md](../../docs/changes/2026-10-08-model-capabilities/verification.md), [docs/changes/2026-10-09-plugin-development/intent.md](../../docs/changes/2026-10-09-plugin-development/intent.md), [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/plan.md](../../docs/changes/2026-10-09-plugin-development/plan.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md), [docs/changes/2026-10-09-plugin-development/review.md](../../docs/changes/2026-10-09-plugin-development/review.md)
 - Updated: 2026-10-09
 

@@ -22,12 +22,25 @@ const draft = z
     updatedAt: number.optional(),
   })
   .passthrough();
+const plugin = z
+  .object({
+    type: z.string().min(1),
+    version: z.string().optional(),
+    width: number.positive().optional(),
+    height: number.positive().optional(),
+    metadata: z
+      .object({ content: z.string().optional() })
+      .catchall(z.json())
+      .optional(),
+  })
+  .catchall(z.json());
 const item = z
   .object({
     id,
     title: z.string(),
     description: z.string(),
     kind,
+    plugin: plugin.optional(),
     result: z
       .object({
         id,
