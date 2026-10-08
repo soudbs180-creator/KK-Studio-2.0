@@ -42,7 +42,7 @@
 | ------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
 | `node --test tests/unit/*.test.ts tests/deploy/*.test.mjs`   | PASS，710 项：702 pass、0 fail、8 Windows skip                                     |
 | Canvas Agent suite                                           | PASS，174 项：172 pass、0 fail、2 Windows skip                                     |
-| `node node_modules/@playwright/test/cli.js test --retries=0` | PASS，388/388；0 flaky                                                             |
+| `npm run test:ui`（完整verify内调用）                        | PASS，388/388；配置允许1次重试，实际388次执行均为retry 0，0 flaky                  |
 | ESLint（`--max-warnings 0`）                                 | PASS                                                                               |
 | TypeScript `--noEmit` 与 `tsc -b`                            | PASS                                                                               |
 | Prettier、UI、goals、governance、features、Markdown、version | PASS；UI 195 文件/0 违规，governance 97 tasks/0 违规，features 34/0，Markdown 99/0 |
@@ -53,7 +53,7 @@
 | `cargo fmt --check`、`cargo test`、`cargo check`             | PASS；Rust 97/97，只有既有 dead-code warnings                                      |
 | `check-delivery`                                             | PASS；已提交文档 head `643d80a`，76 files / 0 violations，精确范围见下方收据       |
 
-最新完整 `npm run verify` 在 `ef580db` 源码基准与独立锁定安装上通过：Node 710 项（702 pass / 8 skip / 0 fail）、Agent 174 项（172 pass / 2 skip / 0 fail），以及全部静态门禁与388项浏览器。最新浏览器机器收据为2026-10-08T03:39:04.029Z启动、expected 388 / unexpected 0 / flaky 0 / skipped 0；Rust locked test/check及fmt复验97/97通过。收尾日志单独位于工作区外层 `.verification/TASK-AUDIT-20261003-closeout/`。此前 `dc05556`/`d9f8eab` 和 `5cbfe99` 的通过记录保留为对应环境的历史；旧浏览器JSON另存 `browser-before-locked.json`，没有修改旧次数或hash。
+最新完整 `npm run verify` 在 `ef580db` 源码基准与独立锁定安装上通过：Node 710 项（702 pass / 8 skip / 0 fail）、Agent 174 项（172 pass / 2 skip / 0 fail），以及全部静态门禁与388项浏览器。最新浏览器机器收据为2026-10-08T03:39:04.029Z启动、expected 388 / unexpected 0 / flaky 0 / skipped 0；默认配置retries=1，实际388次执行均为retry 0，未发生重试。此前02:47:03.508Z的显式`--retries=0`运行属于旧共享安装环境，另存`browser-before-locked.json`；两次命令/配置分别归属原报告，不能互换。Rust locked test/check及fmt复验97/97通过。收尾日志单独位于工作区外层 `.verification/TASK-AUDIT-20261003-closeout/`。此前 `dc05556`/`d9f8eab` 和 `5cbfe99` 的通过记录保留为对应环境的历史，没有修改旧次数或hash。
 
 ## 交付收据与完成核对
 
