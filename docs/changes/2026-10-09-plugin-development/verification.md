@@ -30,3 +30,7 @@
 ## 首次真实native与关闭链路修正
 
 836 driver实际native-recovery-83639e7 FAIL：四插件编辑/正确正文/原生保存通过、零错误；父进程SIGTERM已退出，但旧WebView CDP短暂未关闭，立即重启被正确拒绝“port occupied”。该raw/PNG/JSON保持FAIL。运行停止后9359实际自动释放，未停止其他owner。改为正常验收点击真实“关闭窗口”并等待原生exitCode0、旧CDP消失后再启动；信号退出仅用于自身失败清理，10秒有界失败不放宽。独立审查保存建议落实：变异前wx归档pristine主件/backup和corrupt输入原始字节，失败也可复核还原。产品源码与fresh EXE未变。
+
+## 原生备份fixture生命周期修正
+
+19fb真实native-recovery-graceful仍FAIL：四插件编辑/原生保存/真实关闭exit0/重开恢复内容已经通过且零错误；backup读取ENOENT。实际独立目录只有第一次完整保存，Rust契约首次写入没有上一版可备份；并非产品丢失backup。新增真实SVG编辑并等待耐久提交、恢复正文并等待第二次耐久提交，确保先存在实际上一版backup再进行坏数据断言，不手造成功backup。旧FAIL保持原始含义；fresh EXE/runtime不变。

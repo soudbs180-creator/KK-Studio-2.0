@@ -197,6 +197,23 @@ try {
       }
     })
     .toEqual(bundledPlugins.map((plugin) => plugin.content));
+  // A first native save has no previous revision to back up. Commit and
+  // restore one real content edit so the corruption test has an actual backup.
+  const svg = bundledPlugins.find((plugin) => plugin.type === "svg:vector");
+  const svgNode = page.locator('[data-plugin-type="svg:vector"]');
+  for (const content of [svg.content + "\n", svg.content]) {
+    await svgNode.getByTitle("编辑源码", { exact: true }).click();
+    await svgNode.locator("textarea").fill(content);
+    await svgNode.locator("textarea").press("Escape");
+    await expect
+      .poll(async () => {
+        const saved = JSON.parse(await readFile(snapshotPath, "utf8"));
+        return saved.projects[0].items.find(
+          (item) => item.plugin?.type === svg.type,
+        )?.plugin.metadata.content;
+      })
+      .toBe(content);
+  }
   receipt.steps.push("four-plugins-edit-render-and-native-durable-save");
   await page.screenshot({ path: path.join(evidenceDir, "before-restart.png") });
   await stop(true);
