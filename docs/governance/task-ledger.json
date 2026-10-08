@@ -110,21 +110,26 @@
       "production preview和Tauri插件回归通过，不关闭HMR遮罩或放宽CSP"
     ],
     "dependencies": [],
-    "owner": "unallocated",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "owner": "root",
+    "branch": "fix/TASK-PLUGIN-DEV-001-same-origin-modules",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001",
     "affectedModules": [
       "src/features/plugins/pluginLoader.ts",
       "vite.config.ts",
       "tests/browser"
     ],
-    "status": "TODO",
+    "status": "IN_PROGRESS",
     "evidence": [
-      "docs/changes/2026-10-08-model-capabilities/verification.md"
+      "docs/changes/2026-10-08-model-capabilities/verification.md",
+      "docs/changes/2026-10-09-plugin-development/intent.md",
+      "docs/changes/2026-10-09-plugin-development/spec.md",
+      "docs/changes/2026-10-09-plugin-development/plan.md",
+      "docs/changes/2026-10-09-plugin-development/verification.md",
+      "docs/changes/2026-10-09-plugin-development/review.md"
     ],
     "verification": "PRE-EXISTING FAILURE：main@21d121d和本任务1421均出现/plugins/*.js public-import错误；本任务只诊断登记。Esc后能力表单可保存，插件加载仍未修复。",
     "verificationResult": "FAIL",
-    "updated": "2026-10-08"
+    "updated": "2026-10-09"
   },
   {
     "id": "T0",

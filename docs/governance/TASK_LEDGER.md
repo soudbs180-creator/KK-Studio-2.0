@@ -9,7 +9,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-013 | 桌面标题栏与菜单合并为单排 | DONE | none | root |
 | TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | none | root |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
-| TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
+| TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | IN_PROGRESS | none | root |
 | T0 | 可复现候选源码与主线整合 | DONE | none | root |
 | TASK-GOV-001 | 治理源、ESLint、架构门禁和 CI | DONE | T0 | root |
 | TASK-PROV-001 | 冷却恢复与产品调度入口边界 | DONE | TASK-GOV-001 | root |
@@ -152,12 +152,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 在严格固定1421的开发模式中正常发现插件，不弹出阻断界面的Vite错误遮罩
 - Scope: 随包插件开发模块加载与回归，保持production/Tauri同源加载和CSP边界
 - Acceptance: 原主线已复现的public插件import错误在fresh development关闭; 固定1421开发设置/插件可操作且无新页面错误; production preview和Tauri插件回归通过，不关闭HMR遮罩或放宽CSP
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `fix/TASK-PLUGIN-DEV-001-same-origin-modules`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PLUGIN-DEV-001`
 - Modules: src/features/plugins/pluginLoader.ts, vite.config.ts, tests/browser
 - Verification: FAIL — PRE-EXISTING FAILURE：main@21d121d和本任务1421均出现/plugins/*.js public-import错误；本任务只诊断登记。Esc后能力表单可保存，插件加载仍未修复。
-- Evidence: [docs/changes/2026-10-08-model-capabilities/verification.md](../../docs/changes/2026-10-08-model-capabilities/verification.md)
-- Updated: 2026-10-08
+- Evidence: [docs/changes/2026-10-08-model-capabilities/verification.md](../../docs/changes/2026-10-08-model-capabilities/verification.md), [docs/changes/2026-10-09-plugin-development/intent.md](../../docs/changes/2026-10-09-plugin-development/intent.md), [docs/changes/2026-10-09-plugin-development/spec.md](../../docs/changes/2026-10-09-plugin-development/spec.md), [docs/changes/2026-10-09-plugin-development/plan.md](../../docs/changes/2026-10-09-plugin-development/plan.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md), [docs/changes/2026-10-09-plugin-development/review.md](../../docs/changes/2026-10-09-plugin-development/review.md)
+- Updated: 2026-10-09
 
 ## T0 — 可复现候选源码与主线整合
 
