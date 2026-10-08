@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useContext,
   useRef,
   useState,
   type CSSProperties,
@@ -11,13 +12,18 @@ import type {
   CanvasCollectionItem,
   DemoResult,
 } from "../../domain/canvasItems";
-import { maxReferenceCount } from "../../domain/canvasItems";
+import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities";
+import { readProviderConnections } from "../../features/creation/providerRegistry";
 import { cardLayout, type CanvasConnection } from "../../domain/canvasGraph";
 import type { useCanvasControls } from "./useCanvasControls";
 import type { useCanvasAddMenu } from "./useCanvasAddMenu";
 import CanvasNodeItem from "./CanvasNodeItem";
 import CanvasConnections from "./CanvasConnections";
 import { canConnectTarget } from "./connectionRules";
+import { canvasReferencesFor } from "./canvasReferences";
+import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
+import type { ModelSelection } from "../../domain/modelSelection";
+import { imageReferenceCount } from "../../domain/imageReferences";
 
 interface CanvasNodeLayerProps {
   controls: ReturnType<typeof useCanvasControls>;
@@ -57,6 +63,14 @@ export default function CanvasNodeLayer({
   onConnectionNotice,
   onDeleteConnection,
 }: CanvasNodeLayerProps) {
+  const command = useContext(CanvasImageCommandContext);
+  const defaultSelection: ModelSelection | undefined = command
+    ? {
+        source: "api",
+        model: command.model,
+        connectionId: command.providerConnectionId,
+      }
+    : undefined;
   const { nodes, transform, selectedNode, addNode } = controls;
   const [pendingResultIds, setPendingResultIds] = useState<string[]>([]);
   const [connectionTarget, setConnectionTarget] = useState<string | null>(null);
@@ -165,25 +179,7 @@ export default function CanvasNodeLayer({
     pendingByParent.current[parentId] = [];
   }
   function referencesFor(parentId: string): CanvasReference[] {
-    return edges
-      .filter((edge) => edge.target === parentId && edge.kind !== "result")
-      .map((edge) => ({
-        edge,
-        source: items.find((item) => item.id === edge.source),
-      }))
-      .filter(
-        (
-          entry,
-        ): entry is { edge: CanvasConnection; source: CanvasCollectionItem } =>
-          entry.source?.kind === "image",
-      )
-      .map(({ edge, source }) => ({
-        id: edge.id,
-        assetId: source.assetId,
-        title: source.title,
-        preview: source.preview ?? source.result?.poster ?? source.result?.src,
-        slot: source.referenceSlot,
-      }));
+    return canvasReferencesFor(items, edges, parentId);
   }
   function addReferences(
     parentId: string,
@@ -192,18 +188,22 @@ export default function CanvasNodeLayer({
     const parent = nodes[parentId];
     const source = items.find((item) => item.id === parentId);
     if (!parent || !source) return;
-    const incoming = edges.filter(
-      (edge) =>
-        edge.target === parentId &&
-        edge.kind !== "result" &&
-        items.find((item) => item.id === edge.source)?.kind === "image",
-    ).length;
-    const available = Math.max(0, maxReferenceCount(source) - incoming);
+    const incoming =
+      source.kind === "image"
+        ? imageReferenceCount(source, referencesFor(parentId)) -
+          imageReferenceCount(source)
+        : referencesFor(parentId).length;
+    const limit = canvasImageReferenceLimit(
+      source,
+      readProviderConnections(),
+      defaultSelection,
+    );
+    const available = Math.max(0, limit - incoming);
     if (references.length > available) {
       onConnectionNotice(
         available > 0
           ? `当前模型还可接收 ${available} 张参考图，已添加前 ${available} 张。`
-          : `当前模型最多接收 ${maxReferenceCount(source)} 张参考图，请先移除已有连接。`,
+          : `当前模型最多接收 ${limit} 张新增参考图，请先移除已有连接。`,
       );
     }
     const startX = parent.x - 520;
@@ -255,7 +255,14 @@ export default function CanvasNodeLayer({
           onConnect={onConnect}
           onConnectionTargetChange={(sourceId, targetId) =>
             setConnectionTarget(
-              targetId && canConnectTarget(items, edges, sourceId, targetId)
+              targetId &&
+                canConnectTarget(
+                  items,
+                  edges,
+                  sourceId,
+                  targetId,
+                  defaultSelection,
+                )
                 ? targetId
                 : null,
             )

@@ -1,0 +1,70 @@
+[WebServer] (node:45896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:56032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 (6.8s)
+(node:44192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 (6.7s)
+
+
+  1) tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 ────────────────────────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId(/^canvas-node-added-image-/).first().locator('.composer-ref-thumb')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId(/^canvas-node-added-image-/).first().locator('.composer-ref-thumb') with timeout 5000ms
+      - waiting for getByTestId(/^canvas-node-added-image-/).first().locator('.composer-ref-thumb')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      33 |         duplicate ? original : "public/fixtures/demo/blue-hour.png",
+      34 |       );
+    > 35 |     await expect(item.locator(".composer-ref-thumb")).toHaveCount(1);
+         |                                                       ^
+      36 |     await settings(page);
+      37 |     await page.getByLabel("当前模型用途").selectOption("image");
+      38 |     await page
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-MODEL-001-capabilities\tests\browser\model-capabilities.spec.ts:35:55
+
+    Error Context: test-results\model-capabilities-原图和连线参考图按归档素材去重：同素材可编辑\error-context.md
+
+  2) tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 ────────────────────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId(/^canvas-node-added-image-/).first().locator('.composer-ref-thumb')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId(/^canvas-node-added-image-/).first().locator('.composer-ref-thumb') with timeout 5000ms
+      - waiting for getByTestId(/^canvas-node-added-image-/).first().locator('.composer-ref-thumb')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      33 |         duplicate ? original : "public/fixtures/demo/blue-hour.png",
+      34 |       );
+    > 35 |     await expect(item.locator(".composer-ref-thumb")).toHaveCount(1);
+         |                                                       ^
+      36 |     await settings(page);
+      37 |     await page.getByLabel("当前模型用途").selectOption("image");
+      38 |     await page
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-MODEL-001-capabilities\tests\browser\model-capabilities.spec.ts:35:55
+
+    Error Context: test-results\model-capabilities-原图和连线参考图按归档素材去重：不同素材超限禁用重绘\error-context.md
+
+  2 failed
+    tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 ─────────────────────────
+    tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 ─────────────────────

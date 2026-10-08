@@ -34,7 +34,7 @@
 | ID | 功能 | 状态 | 卡片 | 关联任务 |
 | --- | --- | --- | --- | --- |
 | FEAT-002 | BYOK 图片生成与持久任务宿主 | PARTIAL（部分可用） | [卡片](feat-002-image-generation.md) | T5, TASK-PROV-001, EXT-PROVIDER, TASK-AGENT-001, TASK-AGENT-004, TASK-AGENT-008 |
-| FEAT-003 | 图片比例与清晰度参数 | PARTIAL（部分可用） | [卡片](feat-003-image-parameters.md) | BACKEND-IMAGE-PARAMS, TASK-AGENT-001 |
+| FEAT-003 | 图片比例与清晰度参数 | PARTIAL（部分可用） | [卡片](feat-003-image-parameters.md) | BACKEND-IMAGE-PARAMS, TASK-AGENT-001, TASK-MODEL-001 |
 | FEAT-004 | ComfyUI 本地出图链 | PARTIAL（部分可用） | [卡片](feat-004-comfyui.md) | T6, EXT-COMFY |
 | FEAT-005 | ComfyUI 工作流库（本地管理） | PARTIAL（部分可用） | [卡片](feat-005-comfyui-workflows.md) | T6, TASK-CAP-001, TASK-DS-002 |
 | FEAT-006 | 视频生成节点 | PROTOTYPE（仅演示/UI） | [卡片](feat-006-video-generation.md) | BACKEND-MEDIA-001, TASK-MINIMAX-001, EXT-PROVIDER |
@@ -51,7 +51,7 @@
 | --- | --- | --- | --- | --- |
 | FEAT-011 | 本地技能 Skills | PARTIAL（部分可用） | [卡片](feat-011-skills.md) | TASK-CAP-001, TASK-DS-002 |
 | FEAT-012 | MCP 客户端 | PARTIAL（部分可用） | [卡片](feat-012-mcp.md) | TASK-CAP-001, BACKEND-MCP-AUTO, TASK-AGENT-001, TASK-AGENT-003, TASK-MINIMAX-001, TASK-MCP-PROTO-001, TASK-MCP-REGISTRY-001, TASK-MCP-REGISTRY-002 |
-| FEAT-013 | 连接器目录 | PARTIAL（部分可用） | [卡片](feat-013-connectors.md) | TASK-CAP-001, TASK-MINIMAX-001, TASK-UI-005, PLUGIN-DESKTOP-001 |
+| FEAT-013 | 连接器目录 | PARTIAL（部分可用） | [卡片](feat-013-connectors.md) | TASK-CAP-001, TASK-MINIMAX-001, TASK-UI-005, PLUGIN-DESKTOP-001, TASK-PLUGIN-DEV-001 |
 | FEAT-030 | Agent 编排与画布交付契约 | PARTIAL（部分可用） | [卡片](feat-030-agent-orchestration.md) | TASK-ORCH-001, TASK-ORCH-002, TASK-ORCH-003, TASK-CANVAS-001 |
 | FEAT-032 | 多供应商接入与多目标配置 | PARTIAL（部分可用） | [卡片](feat-032-provider-connectivity.md) | TASK-PROV-002, TASK-PROV-003, TASK-PROV-004 |
 

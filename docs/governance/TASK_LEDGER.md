@@ -6,7 +6,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
-| TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | IN_PROGRESS | none | root |
+| TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | none | root |
+| TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
+| TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
 | T0 | 可复现候选源码与主线整合 | DONE | none | root |
 | TASK-GOV-001 | 治理源、ESLint、架构门禁和 CI | DONE | T0 | root |
 | TASK-PROV-001 | 冷却恢复与产品调度入口边界 | DONE | TASK-GOV-001 | root |
@@ -113,8 +115,32 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-LAUNCH-001-quiet-start`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-LAUNCH-001`
 - Modules: scripts/windows, start-kk-studio.bat, src/App.tsx, FEAT-026
-- Verification: NOT_VERIFIED — 完整verify711Node/172Agent/405browser、clientcheck、新Tauri及production首屏同态通过；Windows3/3、新鲜度12/12。精确SHA审查与实际用户快捷方式安装待收尾。
+- Verification: PASS — 本地AC1–5 DONE：融合最新main1af0357b，verify726/734Node(8原skip)、172/174Agent(2原skip)、413/413browser零flaky、clientcheck/新Tauri/原生能力PASS。实际桌面/canonical入口GUI退出0、免编译窗口304ms、无新增可见控制台/Logo正确。R1/R2/R3独立关闭，694a237/f74548d源码PASS；最终组合SHA收据与PR/Hosted另绑，main和线上未推广。
 - Evidence: [docs/changes/2026-10-08-startup-experience/verification.md](../../docs/changes/2026-10-08-startup-experience/verification.md)
+- Updated: 2026-10-08
+
+## TASK-MODEL-001 — 账号级图片模型能力声明与提交校验
+
+- Goal: 让图片参数、编辑操作与限额按精确账号模型声明解析、保存恢复和执行校验
+- Scope: 现有模型目录、设置与图片控件、Web/Desktop 共享提交门禁；蒙版实际执行后续
+- Acceptance: 报告和手动声明白名单持久化，未知与false/zero正确区分; 精确账号/模型隔离，变更地址或凭据后旧目录失效; 明确操作/参考图/任务数量限制在提交前阻断并说明原因，旧模型兼容; 参数与参考图/数量入口共用目录，Web和fresh Tauri同状态验证; 完整检查、独立上下文审查与文档同步
+- Branch: `codex/TASK-MODEL-001-capabilities`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`
+- Modules: src/domain, src/features/models, src/features/creation, src/components, src/App.tsx, tests, docs/features, docs/governance
+- Verification: PASS — 本地AC1–5 DONE：草稿/显示刷新受控RED后最小修正，32定向无retry、完整verify723/731root(8skip)、172/174Agent(2skip)、408/408browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行PASS；独立71ddb625技术补审PASS，MC-002/MC-003关闭、MC-001保持关闭，87/87及389源码/产物指纹2ebaab3d匹配。最终文档head补审和当前SHA PR/Hosted另绑；首轮405+1flaky唯一因果UNKNOWN，不改历史结果；功能卡仍为部分实现，非整个产品完成证明。
+- Evidence: [docs/changes/2026-10-08-model-capabilities/intent.md](../../docs/changes/2026-10-08-model-capabilities/intent.md), [docs/changes/2026-10-08-model-capabilities/spec.md](../../docs/changes/2026-10-08-model-capabilities/spec.md), [docs/changes/2026-10-08-model-capabilities/plan.md](../../docs/changes/2026-10-08-model-capabilities/plan.md), [docs/changes/2026-10-08-model-capabilities/verification.md](../../docs/changes/2026-10-08-model-capabilities/verification.md), [docs/changes/2026-10-08-model-capabilities/review.md](../../docs/changes/2026-10-08-model-capabilities/review.md)
+- Updated: 2026-10-08
+
+## TASK-PLUGIN-DEV-001 — 修复 Vite development 随包插件 public import 错误
+
+- Goal: 在严格固定1421的开发模式中正常发现插件，不弹出阻断界面的Vite错误遮罩
+- Scope: 随包插件开发模块加载与回归，保持production/Tauri同源加载和CSP边界
+- Acceptance: 原主线已复现的public插件import错误在fresh development关闭; 固定1421开发设置/插件可操作且无新页面错误; production preview和Tauri插件回归通过，不关闭HMR遮罩或放宽CSP
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/plugins/pluginLoader.ts, vite.config.ts, tests/browser
+- Verification: FAIL — PRE-EXISTING FAILURE：main@21d121d和本任务1421均出现/plugins/*.js public-import错误；本任务只诊断登记。Esc后能力表单可保存，插件加载仍未修复。
+- Evidence: [docs/changes/2026-10-08-model-capabilities/verification.md](../../docs/changes/2026-10-08-model-capabilities/verification.md)
 - Updated: 2026-10-08
 
 ## T0 — 可复现候选源码与主线整合

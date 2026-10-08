@@ -1,0 +1,43 @@
+✔ reported image declarations preserve unsupported operations and zero reference allowance (1.6543ms)
+✔ malformed capability values stay unknown instead of disabling or authorizing an operation (0.2036ms)
+✔ catalog saves and reloads only whitelisted capability metadata (0.7027ms)
+✔ manual declarations survive reported refresh for the same exact account and model (0.3764ms)
+✔ same route in two accounts keeps separate declarations and identity edits invalidate old capabilities (0.4058ms)
+✔ legacy v1 catalogs retain sizes while absent capability declarations remain unknown (0.3349ms)
+✔ explicitly unsupported generate or edit is rejected by the shared submission gate (3.032ms)
+✔ model zero and tighter reference limits prevent submission without enlarging provider permission (1.6363ms)
+✔ model task output limit rejects excess outputs but does not mistake legacy HTTP limits for task limits (0.496ms)
+✔ lease recheck observes a late model declaration change before the next request (2.1783ms)
+✔ canvas connection affordance refuses references beyond the exact model limit (0.4558ms)
+✖ new canvas nodes without an explicit model use the current command selection for reference limits (0.6922ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 11
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 154.9254
+
+✖ failing tests:
+
+test at tests\unit\imageModelCapabilities.test.ts:398:1
+✖ new canvas nodes without an explicit model use the current command selection for reference limits (0.6922ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities/tests/unit/imageModelCapabilities.test.ts:404:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

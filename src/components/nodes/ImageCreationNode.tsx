@@ -212,7 +212,12 @@ export default function ImageCreationNode({
           onTextChange={() => undefined}
         />
       )}
-      {redrawOpen && <ImageRedrawDialog onClose={() => setRedrawOpen(false)} />}
+      {redrawOpen && (
+        <ImageRedrawDialog
+          references={references}
+          onClose={() => setRedrawOpen(false)}
+        />
+      )}
     </div>
   );
 }

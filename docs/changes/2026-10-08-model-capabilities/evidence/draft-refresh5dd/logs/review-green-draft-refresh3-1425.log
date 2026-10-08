@@ -1,0 +1,47 @@
+[WebServer] (node:62932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 32 tests using 4 workers
+
+(node:72840) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:65800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:31116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  3 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 (4.0s)
+  ok  1 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 (4.0s)
+  ok  2 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 (4.1s)
+  ok  4 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑 (4.1s)
+  ok  5 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 (3.9s)
+  ok  6 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 (3.8s)
+  ok  8 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 (4.1s)
+  ok  7 tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 (4.2s)
+  ok  9 tests\browser\model-capabilities.spec.ts:241:1 › 仅显示元数据更新时刷新分组、型号和别名草稿 (789ms)
+  ok 10 tests\browser\model-capabilities.spec.ts:241:1 › 仅显示元数据更新时刷新分组、型号和别名草稿 (804ms)
+  ok 11 tests\browser\model-capabilities.spec.ts:241:1 › 仅显示元数据更新时刷新分组、型号和别名草稿 (774ms)
+  ok 12 tests\browser\model-capabilities.spec.ts:241:1 › 仅显示元数据更新时刷新分组、型号和别名草稿 (809ms)
+  ok 14 tests\browser\model-capabilities.spec.ts:285:1 › 供应商刷新通知不覆盖未保存的模型能力草稿 (684ms)
+  ok 13 tests\browser\model-capabilities.spec.ts:285:1 › 供应商刷新通知不覆盖未保存的模型能力草稿 (700ms)
+  ok 15 tests\browser\model-capabilities.spec.ts:285:1 › 供应商刷新通知不覆盖未保存的模型能力草稿 (681ms)
+  ok 16 tests\browser\model-capabilities.spec.ts:285:1 › 供应商刷新通知不覆盖未保存的模型能力草稿 (714ms)
+  ok 18 tests\browser\model-capabilities.spec.ts:325:1 › 手动三态声明保存恢复并切模型，不把未知变成支持 (1.5s)
+  ok 17 tests\browser\model-capabilities.spec.ts:325:1 › 手动三态声明保存恢复并切模型，不把未知变成支持 (1.5s)
+  ok 19 tests\browser\model-capabilities.spec.ts:325:1 › 手动三态声明保存恢复并切模型，不把未知变成支持 (1.5s)
+  ok 20 tests\browser\model-capabilities.spec.ts:325:1 › 手动三态声明保存恢复并切模型，不把未知变成支持 (1.5s)
+  ok 21 tests\browser\model-capabilities.spec.ts:433:1 › 明确编辑限制禁用重绘和参考图并保留原图，不发送请求 (2.0s)
+  ok 22 tests\browser\model-capabilities.spec.ts:433:1 › 明确编辑限制禁用重绘和参考图并保留原图，不发送请求 (2.0s)
+  ok 23 tests\browser\model-capabilities.spec.ts:433:1 › 明确编辑限制禁用重绘和参考图并保留原图，不发送请求 (1.9s)
+  ok 24 tests\browser\model-capabilities.spec.ts:433:1 › 明确编辑限制禁用重绘和参考图并保留原图，不发送请求 (1.9s)
+  ok 26 tests\browser\model-capabilities.spec.ts:484:1 › 报告能力限制数量且 unknown 蒙版只显示未接通说明 (1.6s)
+  ok 25 tests\browser\model-capabilities.spec.ts:484:1 › 报告能力限制数量且 unknown 蒙版只显示未接通说明 (1.6s)
+  ok 27 tests\browser\model-capabilities.spec.ts:484:1 › 报告能力限制数量且 unknown 蒙版只显示未接通说明 (1.6s)
+  ok 28 tests\browser\model-capabilities.spec.ts:484:1 › 报告能力限制数量且 unknown 蒙版只显示未接通说明 (1.7s)
+  ok 29 tests\browser\model-capabilities.spec.ts:530:1 › 单张重绘使用自己的数量，不被原节点超限草稿阻止 (2.0s)
+  ok 30 tests\browser\model-capabilities.spec.ts:530:1 › 单张重绘使用自己的数量，不被原节点超限草稿阻止 (2.0s)
+  ok 31 tests\browser\model-capabilities.spec.ts:530:1 › 单张重绘使用自己的数量，不被原节点超限草稿阻止 (1.9s)
+  ok 32 tests\browser\model-capabilities.spec.ts:530:1 › 单张重绘使用自己的数量，不被原节点超限草稿阻止 (2.0s)
+
+  32 passed (18.4s)

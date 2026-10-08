@@ -1,0 +1,43 @@
+
+[WebServer] (node:62880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+
+(node:54312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/2] tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：同素材可编辑
+[2/2] tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘
+  1) tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 ────────────────────
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator:  getByTestId('canvas-node-added-image-08cf0c68-12ff-42b0-a595-6d9849abe85e').getByRole('button', { name: '生成图片', exact: true })
+    Expected: disabled
+    Received: enabled
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeDisabled" getByTestId('canvas-node-added-image-08cf0c68-12ff-42b0-a595-6d9849abe85e').getByRole('button', { name: '生成图片', exact: true }) with timeout 5000ms
+      - waiting for getByTestId('canvas-node-added-image-08cf0c68-12ff-42b0-a595-6d9849abe85e').getByRole('button', { name: '生成图片', exact: true })
+        14 × locator resolved to <button aria-label="生成图片" title="使用已配置连接生成并保存图片" class="generate-button">…</button>
+           - unexpected value "enabled"
+
+
+      108 |     });
+      109 |     if (duplicate) await expect(generate).toBeEnabled();
+    > 110 |     else await expect(generate).toBeDisabled();
+          |                                 ^
+      111 |     await item
+      112 |       .getByRole("button", { name: "重绘参考图片", exact: true })
+      113 |       .click();
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-MODEL-001-capabilities\tests\browser\model-capabilities.spec.ts:110:33
+
+    Error Context: test-results\model-capabilities-原图和连线参考图按归档素材去重：不同素材超限禁用重绘\error-context.md
+
+
+  1 failed
+    tests\browser\model-capabilities.spec.ts:10:3 › 原图和连线参考图按归档素材去重：不同素材超限禁用重绘 ─────────────────────
+  1 passed (13.7s)

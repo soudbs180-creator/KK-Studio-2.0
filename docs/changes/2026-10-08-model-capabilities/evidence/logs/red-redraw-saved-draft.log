@@ -1,0 +1,38 @@
+[WebServer] (node:66400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:41008) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\browser\model-capabilities.spec.ts:201:1 › 单张重绘使用自己的数量，不被原节点超限草稿阻止 (7.2s)
+
+
+  1) tests\browser\model-capabilities.spec.ts:201:1 › 单张重绘使用自己的数量，不被原节点超限草稿阻止 ──────────────────────
+
+    Error: expect(locator).toBeEnabled() failed
+
+    Locator:  getByRole('dialog', { name: '重绘参考图片' }).getByRole('button', { name: '开始重绘', exact: true })
+    Expected: enabled
+    Received: disabled
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeEnabled" getByRole('dialog', { name: '重绘参考图片' }).getByRole('button', { name: '开始重绘', exact: true }) with timeout 5000ms
+      - waiting for getByRole('dialog', { name: '重绘参考图片' }).getByRole('button', { name: '开始重绘', exact: true })
+        14 × locator resolved to <button disabled type="button" class="primary-button">开始重绘</button>
+           - unexpected value "disabled"
+
+
+      214 |   const redraw = page.getByRole("dialog", { name: "重绘参考图片" });
+      215 |   await redraw.getByLabel("重绘指令").fill("调整背景");
+    > 216 |   await expect(redraw.getByRole("button", { name: "开始重绘", exact: true })).toBeEnabled();
+          |                                                                           ^
+      217 | });
+      218 |
+        at D:\kk-studio\KK-Studio-2.0\.worktrees\TASK-MODEL-001-capabilities\tests\browser\model-capabilities.spec.ts:216:75
+
+    Error Context: test-results\model-capabilities-单张重绘使用自己的数量，不被原节点超限草稿阻止\error-context.md
+
+  1 failed
+    tests\browser\model-capabilities.spec.ts:201:1 › 单张重绘使用自己的数量，不被原节点超限草稿阻止 ───────────────────────
