@@ -15,7 +15,7 @@ function isLegacyWholeEdit(prompt: string, context: ImageEditContext): boolean {
     instructions: [],
   };
   const body = formatEditPrompt({ ...options, originalPrompt: undefined });
-  if (prompt === formatEditPrompt(options)) return true;
+  if (!prompt.endsWith(body)) return false;
   const bodyHeads = [true, false].map(
     (local) =>
       formatEditPrompt({ current: "", local, instructions: [] })
@@ -23,6 +23,17 @@ function isLegacyWholeEdit(prompt: string, context: ImageEditContext): boolean {
         .slice(0, 2)
         .join("\n") + "\n本轮修改：",
   );
+  // User-authored root/recent text can absorb a local body when budgets differ.
+  // Inspect the entire prefix before the bound whole body, including the root.
+  // Text quoted inside the known current instruction is part of that body.
+  const leading = prompt.slice(0, -body.length);
+  if (
+    bodyHeads.some(
+      (head) => leading.startsWith(head) || leading.includes(`\n${head}`),
+    )
+  )
+    return false;
+  if (prompt === formatEditPrompt(options)) return true;
   // The compiler budgets the root differently for trimmed/non-trimmed recent
   // text. Derive both exact prefixes from it, then recompile the entire prompt.
   for (const sample of ["x", " "]) {
@@ -32,15 +43,7 @@ function isLegacyWholeEdit(prompt: string, context: ImageEditContext): boolean {
     const prefix = example.slice(0, -tail.length);
     if (!prompt.startsWith(prefix) || !prompt.endsWith(`\n${body}`)) continue;
     const previous = prompt.slice(prefix.length, -body.length - 1);
-    // A second compiler body in recent text makes the legacy boundary
-    // ambiguous. A quoted body in the known root/current text is still valid.
-    if (
-      previous.length > 600 ||
-      bodyHeads.some(
-        (head) => previous.startsWith(head) || previous.includes(`\n${head}`),
-      )
-    )
-      continue;
+    if (previous.length > 600) continue;
     if (prompt === formatEditPrompt({ ...options, previous })) return true;
   }
   return false;

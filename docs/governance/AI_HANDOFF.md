@@ -2,7 +2,7 @@
 
 ## 2026-10-08 统一 Mask 继续审查返修入口（当前）
 
-复用 .worktrees/TASK-IMAGE-EDIT-001 / codex/TASK-IMAGE-EDIT-001-unified-mask，基线78cea37。82b7490正式CHANGES REQUIRED关闭010/012/013，011旧模板suffix仍P1；dirty全文识别补修91定向、完整773root/172Agent/423browser、Rust102、fresh Tauri及原生11组通过。原件/Mask外0/凭据清理通过；Desktop2.1.9/Web2.1.10同轮候选返修，任务仍IN_PROGRESS，下一步提交并绑定准确SHA独立复验011，不能用作者GREEN关闭。先读本任务[计划](../changes/2026-10-08-unified-image-mask/plan.md)、[验证](../changes/2026-10-08-unified-image-mask/verification.md)、[审查](../changes/2026-10-08-unified-image-mask/review.md)和账本；新证据在本机output/unified-image-mask-20261008/run-followup-IM011-parser，旧报告/绑定保留。保留VERIFY-002真实Provider/真机后续，不操作其他worktree或用户数据，不推送/合并/发布。
+复用 .worktrees/TASK-IMAGE-EDIT-001 / codex/TASK-IMAGE-EDIT-001-unified-mask，base78cea37。17ef724正式CHANGES REQUIRED，011旧root预算歧义仍P1，010/012/013保持CLOSED；dirty整个prefix补修93定向、完整775root/172Agent/423browser零retry、Rust102、fresh Tauri/原生11组通过，Mask外0/凭据清理true。任务仍IN_PROGRESS，下一步新提交准确SHA独立关闭011，不能用作者GREEN关闭。Desktop2.1.9/Web2.1.10同轮候选；先读[计划](../changes/2026-10-08-unified-image-mask/plan.md)、[验证](../changes/2026-10-08-unified-image-mask/verification.md)、[审查](../changes/2026-10-08-unified-image-mask/review.md)和账本；最新证据本机output/unified-image-mask-20261008/run-followup-IM011-prefix，旧失败/平台中止/superseded/绑定保留。VERIFY-002仍TODO；不操作其他worktree/用户数据，不推送/合并/发布。
 
 ## 2026-10-08 统一 Mask 已完成的本地分支
 

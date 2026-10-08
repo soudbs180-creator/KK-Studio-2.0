@@ -270,13 +270,13 @@ test("a real local compiler's quoted whole-image suffix cannot publish its raw c
   }
 });
 
-test("legacy whole-image recovery accepts template text in its known root and current instruction", async () => {
+test("a confirmed whole-image role accepts template text in its known root and current instruction", async () => {
   const quoted = formatEditPrompt({
     current: "示例文字",
     local: true,
     instructions: [],
   });
-  const { recovered, calls } = await restore(false, undefined, (snapshot) => {
+  const { recovered, calls } = await restore(false, false, (snapshot) => {
     const task = snapshot.projects[0].tasks[0];
     task.imageEditContext!.originalPrompt = `照原样保留教程\n${quoted}`;
     task.imageEditContext!.lastInstruction = `保留以下引用\n${quoted}`;
@@ -327,29 +327,33 @@ test("legacy whole-image recovery preserves both recent-instruction budgets and 
     }
 });
 
-test("legacy ambiguous recent compiler bodies are quarantined while an explicit whole-image role is accepted", async () => {
+test("legacy ambiguous root or recent compiler bodies are quarantined while an explicit whole-image role is accepted", async () => {
   const quoted = formatEditPrompt({
     current: "示例文字",
     local: false,
     instructions: [],
   });
-  for (const marker of [undefined, false]) {
-    const { recovered, calls } = await restore(false, marker, (snapshot) => {
-      const task = snapshot.projects[0].tasks[0];
-      task.prompt = formatEditPrompt({
-        current: task.imageEditContext!.lastInstruction!,
-        originalPrompt: task.imageEditContext!.originalPrompt,
-        previous: `用户保存的教程\n${quoted}`,
-        local: false,
-        instructions: [],
+  for (const location of ["root", "recent"])
+    for (const marker of [undefined, false]) {
+      const { recovered, calls } = await restore(false, marker, (snapshot) => {
+        const task = snapshot.projects[0].tasks[0];
+        if (location === "root")
+          task.imageEditContext!.originalPrompt = `用户保存的教程\n${quoted}`;
+        task.prompt = formatEditPrompt({
+          current: task.imageEditContext!.lastInstruction!,
+          originalPrompt: task.imageEditContext!.originalPrompt,
+          previous:
+            location === "recent" ? `用户保存的教程\n${quoted}` : undefined,
+          local: false,
+          instructions: [],
+        });
       });
-    });
-    assert.equal(
-      recovered.projects[0].tasks[0].status,
-      marker === false ? "succeeded" : "unknown",
-    );
-    assert.equal(calls.includes("asset_read"), marker === false);
-  }
+      assert.equal(
+        recovered.projects[0].tasks[0].status,
+        marker === false ? "succeeded" : "unknown",
+      );
+      assert.equal(calls.includes("asset_read"), marker === false);
+    }
 });
 
 test("legacy whole-image recovery rejects an unbound prefix or missing current instruction", async () => {
@@ -363,4 +367,171 @@ test("legacy whole-image recovery rejects an unbound prefix or missing current i
     assert.equal(recovered.projects[0].tasks[0].resultItemId, undefined);
     assert.ok(!calls.includes("asset_read"));
   }
+});
+
+test("legacy whole-image recovery accepts ordinary root wording and a bound current template quote", async () => {
+  const quote = formatEditPrompt({
+    current: "示例",
+    local: true,
+    instructions: [],
+  });
+  const { recovered, calls } = await restore(false, undefined, (snapshot) => {
+    const task = snapshot.projects[0].tasks[0];
+    task.imageEditContext!.originalPrompt = `保留教程中的文字\n${quote.split("\n")[1]}`;
+    task.imageEditContext!.lastInstruction = `保留以下引用\n${quote}`;
+    task.prompt = formatEditPrompt({
+      current: task.imageEditContext!.lastInstruction,
+      originalPrompt: task.imageEditContext!.originalPrompt,
+      previous: "上次已完成",
+      local: false,
+      instructions: [],
+    });
+  });
+  assert.equal(recovered.projects[0].tasks[0].status, "succeeded");
+  assert.equal(recovered.projects[0].items.at(-1)?.assetId, rawId);
+  assert.ok(calls.includes("asset_read"));
+});
+
+test("a local edit whose truncated root also fits the whole compiler cannot publish raw output", async () => {
+  const rootLabel = "初始设计约束：";
+  const recentLabel = "最近已完成的修改（当前原图已体现）：";
+  const root = "根".repeat(4000);
+  const localOptions = (current: string) => {
+    const whole = formatEditPrompt({ current, local: false, instructions: [] });
+    return {
+      current,
+      originalPrompt: root,
+      previous: "x",
+      instructions: [
+        {
+          regionId: "area",
+          label: "红色-A",
+          text: "教程引用\n" + whole.slice(0, whole.lastIndexOf("\n")),
+        },
+      ],
+    };
+  };
+  let current = "改".repeat(1580);
+  let options = localOptions(current);
+  const localLength = formatEditPrompt({ ...options, local: true })
+    .split("\n")[0]
+    .slice(rootLabel.length).length;
+  const wholeLength = formatEditPrompt({
+    ...options,
+    local: false,
+    instructions: [],
+  })
+    .split("\n")[0]
+    .slice(rootLabel.length).length;
+  const difference = wholeLength - localLength;
+  const afterRoot =
+    "\n" +
+    recentLabel +
+    "x\n" +
+    formatEditPrompt({
+      ...options,
+      originalPrompt: undefined,
+      previous: undefined,
+      local: true,
+    });
+  const offset = difference - afterRoot.indexOf(current);
+  const delimiter = "\n" + recentLabel;
+  current =
+    "改".repeat(offset) +
+    delimiter +
+    "改".repeat(1580 - offset - delimiter.length);
+  options = localOptions(current);
+  const localBody = formatEditPrompt({
+    ...options,
+    originalPrompt: undefined,
+    previous: undefined,
+    local: true,
+  });
+  const originalPrompt =
+    "根".repeat(localLength) +
+    ("\n" + recentLabel + "x\n" + localBody).slice(0, difference) +
+    "根".repeat(4000 - wholeLength);
+  assert.equal(originalPrompt.length, 4000);
+  const { recovered, calls, snapshot } = await restore(
+    true,
+    undefined,
+    (snapshot) => {
+      const task = snapshot.projects[0].tasks[0];
+      task.imageEditContext!.originalPrompt = originalPrompt;
+      task.imageEditContext!.lastInstruction = current;
+      task.imageEdit = {
+        sourceAssetId: sourceId,
+        maskAssetId: "asset-" + "d".repeat(24),
+        groupId: "legacy-root-budget",
+        document: {
+          width: 8,
+          height: 8,
+          regions: [
+            {
+              id: "area",
+              runs: [
+                [3, 3, 5],
+                [4, 3, 5],
+              ],
+              color: "#ff0000",
+              colorName: "红色",
+              number: 1,
+              instruction: options.instructions[0].text,
+            },
+          ],
+        },
+        crop: { x: 2, y: 2, width: 4, height: 4, regionIds: ["area"] },
+        nativeMask: true,
+      };
+      const compiled = compileEditPrompt(current, task.imageEdit.document);
+      task.prompt = formatEditPrompt({
+        ...options,
+        originalPrompt,
+        current: compiled.prompt,
+        instructions: compiled.instructions,
+        local: true,
+      });
+      const wholeBody = formatEditPrompt({
+        current,
+        local: false,
+        instructions: [],
+      });
+      const prefix = formatEditPrompt({
+        current,
+        originalPrompt,
+        previous: "x",
+        local: false,
+        instructions: [],
+      }).slice(0, -wholeBody.length - 2);
+      const apparentRecent = task.prompt.slice(
+        prefix.length,
+        -wholeBody.length - 1,
+      );
+      // Both compilers can produce exactly the same text. Its role needs evidence
+      // independent of user-authored root/current/region text.
+      assert.equal(
+        task.prompt,
+        formatEditPrompt({
+          current,
+          originalPrompt,
+          previous: apparentRecent,
+          local: false,
+          instructions: [],
+        }),
+      );
+      assert.equal(task.prompt.length, 3822);
+      assert.ok(decodeSnapshot(snapshot).projects[0].tasks[0].imageEdit);
+      delete task.imageEdit;
+    },
+  );
+  const task = recovered.projects[0].tasks[0];
+  assert.equal(task.status, "unknown");
+  assert.equal(task.resultItemId, undefined);
+  assert.equal(task.outputs?.[0].assetId, undefined);
+  assert.deepEqual(
+    recovered.projects[0].items.map((i) => [i.id, i.assetId]),
+    snapshot.projects[0].items.map((i) => [i.id, i.assetId]),
+  );
+  assert.ok(!calls.includes("asset_read"));
+  assert.ok(!calls.includes("task_host_submit"));
 });

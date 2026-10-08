@@ -2,7 +2,7 @@
 
 ## 2026-10-08 统一 Mask 继续审查返修
 
-用户要求继续检查合理性和合规性；7532e94 发现 IM-010–013，82b7490 独立复验关闭010/012/013但011旧提示模板后缀碰撞仍P1。本轮已先复现再补完整编译结构识别；91定向、完整verify773root/172Agent/423browser零retry/flaky、Rust102、fresh Tauri两次Mask/重启和原生11组通过，Mask外0改动。任务仍 IN_PROGRESS，需新提交准确SHA独立关闭011；历史失败/PASS保留各自范围。Desktop2.1.9/Web2.1.10/Mobile规划2.1.1，同一未发布候选返修。见[验证](changes/2026-10-08-unified-image-mask/verification.md)和[审查](changes/2026-10-08-unified-image-mask/review.md)，未推送/合入main/发布。
+继续审查关闭IM-010/012/013；17ef724独立复验仍发现011旧文本root预算歧义，P1 OPEN。整个prefix补修先RED后GREEN，93定向、完整verify775root/172Agent/423browser零retry/flaky、Rust102、fresh Tauri/原生11组通过，Mask外0、凭据保护/清理通过。当前IN_PROGRESS，待新提交准确SHA独立关闭011；旧失败/平台中止/superseded及历史PASS保留。Desktop2.1.9/Web2.1.10/Mobile规划2.1.1同轮未发布候选；见[验证](changes/2026-10-08-unified-image-mask/verification.md)和[审查](changes/2026-10-08-unified-image-mask/review.md)，未推送/合入main/发布。
 
 ## 2026-10-08 统一 Mask 本地实现完成
 

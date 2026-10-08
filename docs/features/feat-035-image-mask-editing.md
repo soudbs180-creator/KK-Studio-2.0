@@ -18,7 +18,7 @@
 
 ## 测试与证据
 
-继续审查7532e94发现IM-010–013；82b7490正式关闭010/012/013，011旧模板后缀碰撞仍P1。全文识别补修先RED后GREEN，91定向、完整verify root773/781（原8skip）、Agent172/174（原2skip）、browser423/423零retry/flaky、Rust102、fresh Tauri与原生11组通过。跨端vectors、快照缺失隔离、可撤销清空及空输入意见隔离覆盖；新head独立关闭011待完成，不沿用历史PASS。Desktop2.1.9/Web2.1.10，仍PARTIAL。
+IM-010/012/013正式CLOSED；17ef724独立复验011旧root预算歧义仍P1，整个prefix补修先RED后GREEN。93定向、完整root775/783（原8skip）、Agent172/174（原2skip）、browser423/423零retry/flaky、Rust102、fresh Tauri/原生11组通过，Mask外0。跨端vectors/快照缺失保护/清空/色块意见隔离覆盖，待新head独立关闭011；旧证据保留。Desktop2.1.9/Web2.1.10，仍PARTIAL。
 
 [本轮验证](../changes/2026-10-08-unified-image-mask/verification.md) / [独立审查](../changes/2026-10-08-unified-image-mask/review.md)。本地完整verify root741/749、Agent172/174（原skip8/2）、browser420/420零重试，100 Rust、两端production bundle与原生重启/包恢复通过。源码head dbc88bb独立PASS、IM-001–009关闭；reviewer另跑61定向单测和实际Tauri验收，原件保护/凭据清理通过。具体范围和fixture错误勘误见验证记录。
 

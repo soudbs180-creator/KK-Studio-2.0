@@ -118,7 +118,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-IMAGE-EDIT-001-unified-mask`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-EDIT-001`
 - Modules: src/features/image-edit, src/features/creation, src/components/nodes, src/App.tsx, src-tauri/src/task_host.rs, tests, docs
-- Verification: NOT_VERIFIED — 82b7490独立复验CHANGES REQUIRED：010/012/013 CLOSED，011旧模板suffix碰撞P1 OPEN。全文识别补修先RED后GREEN，91定向/完整773root+172Agent+423browser零重试/Rust102/fresh Tauri/原生11组通过，Mask外0；待新已提交head独立关闭011。历史失败/PASS保留，真实Provider/真机归VERIFY-002。
+- Verification: NOT_VERIFIED — 17ef724独立CHANGES REQUIRED：010/012/013 CLOSED，011旧root预算歧义P1 OPEN。整个prefix补修先RED后GREEN，93定向/完整775root+172Agent+423browser零重试/Rust102/fresh Tauri/原生11组通过，Mask外0；待新已提交head独立关闭。历史失败/平台中止/superseded保留，真实Provider/真机归VERIFY-002。
 - Evidence: [docs/changes/2026-10-08-unified-image-mask/intent.md](../../docs/changes/2026-10-08-unified-image-mask/intent.md), [docs/changes/2026-10-08-unified-image-mask/spec.md](../../docs/changes/2026-10-08-unified-image-mask/spec.md), [docs/changes/2026-10-08-unified-image-mask/plan.md](../../docs/changes/2026-10-08-unified-image-mask/plan.md), [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/changes/2026-10-08-unified-image-mask/review.md](../../docs/changes/2026-10-08-unified-image-mask/review.md)
 - Updated: 2026-10-08
 

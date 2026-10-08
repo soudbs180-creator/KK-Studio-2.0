@@ -1,11 +1,17 @@
 # Review：统一图片编辑蒙版
 
-- Task ID：TASK-IMAGE-EDIT-001；最新 82b7490 独立复验 CHANGES REQUIRED，IM-010/012/013 CLOSED、IM-011 OPEN；补修待新 head 复验。IM-001–009 历史 CLOSED 保留。
+- Task ID：TASK-IMAGE-EDIT-001；最新 17ef724 独立复验 CHANGES REQUIRED，IM-010/012/013 CLOSED、IM-011 OPEN；prefix补修待新head复验。IM-001–009 历史 CLOSED 保留。
 - 2026-10-08，Asia/Shanghai；开工 base 1af0357b088df79dc51e9b309ef310a500722cf8；正式审查 base 78cea37af9359fd2d9f58f2854525516deee8a06、源码 head dbc88bbd1a3425c04b509730780ff50547788e67。
 - 分支 codex/TASK-IMAGE-EDIT-001-unified-mask；[intent](intent.md)、[spec](spec.md)、[plan](plan.md)、[verification](verification.md)。
 - 独立预检：只读子代理 /root/mask_review，独立上下文从规则、需求、base/diff 开始，不承担实现。Codex collaboration；具体服务端模型版本未知，不虚构。
 
-## 82b7490 独立返修复验（最新正式结论）
+## 17ef724 独立复验（最新正式结论）
+
+独立只读 /root/mask_review 绑定 head17ef724e14a1b2924d6f8f7dbd12fb25f6443e8d，2026-10-08 23:08:50+08，正式 **CHANGES REQUIRED**。IM-011 P1仍OPEN：4000字root/1580字current/3822字合法prompt可由两个编译结构生成，已知root吸收local正文，仅删除imageEdit后reconcile发布raw4×4（原图8×8）；保护断言exit1。独立91定向与type/format通过，71源码/23工件匹配，不能代替该失败路径。IM-010/012/013保持CLOSED。见[正式收据副本](evidence/review-followup-17ef724.md)，外部原件SHA-256 72616f75bf7b0fcdd8bf869f58ab84f4fcf06b8776a91b1d5b152ae16a575d6f；初步PASS另存superseded，不作为当前结论。
+
+/root/mask_audit 对17ef的前次尝试被平台内容风险检查中止（possible cybersecurity risk），未产生正式结论；外部review-followup-17ef724-platform-interruption.json和其partial Node日志保留，未代填PASS。后续只读审查由/root/mask_review独立完成。本次prefix补修按新plan先RED，仍需新提交独立关闭。
+
+## 82b7490 独立返修复验（历史）
 
 独立只读 /root/mask_audit 绑定 base78cea37、重点增量7532e94、head82b7490da6102092fdd240ff2e7dc69cdc1cc9d7，正式 **CHANGES REQUIRED**。IM-010/012/013 CLOSED；IM-011 P1 OPEN。独立 Node86、Rust36、production Web14（0retry）与实际 fresh Tauri 的 marker/重启/清空/原件保护/凭据清理通过，仍发现旧局部色块意见粘贴整图模板后缀可绕过 endsWith。合法快照先通过 decoder，仅删除 imageEdit 后发布 raw4×4，原图8×8未融合。详见[完整收据副本](evidence/review-followup-82b7490.md)；工程外原件 SHA-256 a7e19e47fc13e1823e095578507f9671cea61a12c4e69722b7572f5fd5f306f3，副本仅规范行尾。历史失败结论不覆盖。
 

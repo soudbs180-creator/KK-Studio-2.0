@@ -30,6 +30,14 @@
 2. 用同一编译器证明完整 prompt：先精确重编译无 recent 的全文；有 recent 时按已知 root/current 推导两种预算前缀，在确定标签边界内提取有界 recent，再精确重编译全文。recent 含第二个完整自动正文头时保守 unknown；显式 false marker 的整图任务仍按确证角色处理。
 3. 在同一未发布候选版本 Desktop2.1.9/Web2.1.10 完成定向与完整 verify，生成新 dist/release 并做实际 Desktop 回归；使用新证据目录、源码/工件清单和新 SHA 独立复验。此次只修同轮尚未通过的恢复候选，不另行增加版本或范围。
 
+## 17ef724 独立复验后的前缀歧义补修
+
+17ef724 正式 CHANGES REQUIRED：完整合法PNG恢复证明同一字符串能由 local/whole 两种编译结构产生；预算截断把局部正文吸收进已知 root，只检查 recent 仍不可靠。IM-011 保持 P1 OPEN，初步 PASS 已另存 superseded。
+
+1. 新增实际双编译结构恢复回归：4000字root、1580字current、3822字prompt，完整decoder后只删imageEdit；先观察 succeeded/raw，再修为unknown/无读取重发。原先“root完整模板引用成功”测试保留原输入和成功断言，明确适用于原生false确证整图角色；另补旧root/recent完整正文歧义unknown、普通root措辞/current引用兼容。依据独立失败证据修正不成立的旧兼容假设，不放宽数据保护断言。
+2. 在全文重编译前，对末尾已知whole body之前的整个prefix检查完整自动正文头，包含root及recent；头由原formatter派生，要求开头/换行边界。真实local自动头必在该prefix，不能被root预算截断隐藏；current内绑定引用在body内部。新角色标志沿用确证逻辑。
+3. 同一未发布版本重新完整verify、fresh dist/release/实际Desktop及原生回归；新证据目录run-followup-IM011-prefix，提交后独立准确SHA复验，保留17ef失败及平台中止记录。
+
 ## Global Constraints
 
 - 原图像素坐标；5%每边外扩；ceil偶数；1000/2500阈值；最多3块。
