@@ -92,6 +92,18 @@ test(
       `${exe},0`,
       "shortcut should use the launcher's embedded icon",
     );
+    const reinstall = spawnSync(
+      "powershell.exe",
+      [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        path.join(root, "scripts", "windows", "install-shortcut.ps1"),
+      ],
+      { windowsHide: true, encoding: "utf8", timeout: 15000 },
+    );
+    assert.equal(reinstall.status, 0, reinstall.stdout + reinstall.stderr);
     const launch = spawnSync(exe, [], {
       cwd: parent,
       encoding: "utf8",

@@ -18,7 +18,7 @@ $staging = Join-Path $projectRoot '.tmp\launcher'
 $candidate = Join-Path $staging (([Guid]::NewGuid().ToString()) + '.exe')
 & $compiler /nologo /codepage:65001 /target:winexe /r:System.Windows.Forms.dll /r:System.Drawing.dll "/win32icon:$icon" "/out:$candidate" $source
 if ($LASTEXITCODE -ne 0) { throw 'The GUI launcher could not be compiled. Existing shortcuts were preserved.' }
-if ([IO.File]::Exists($executable)) { [IO.File]::Replace($candidate, $executable, $null) }
+if ([IO.File]::Exists($executable)) { [IO.File]::Replace($candidate, $executable, [NullString]::Value) }
 else { [IO.File]::Move($candidate, $executable) }
 
 $shell = New-Object -ComObject WScript.Shell
