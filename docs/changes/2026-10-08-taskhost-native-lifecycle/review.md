@@ -24,3 +24,7 @@
 reviewer 独立运行 53/53 定向单测、原/新凭据 helper 合成复现、实际组件/selector SSR 的 unknown/混合/安全 partial/运行/成功场景，以及版本、账本、功能、Markdown、格式和交付检查；9/9 source hashes 按 checkout 换行核对精确 Git 内容，实际 EXE/bundle/PNG 与收据一致。完整 verify、Rust 和十一组 native 为执行者证据抽查，不称为 reviewer 全量重跑。
 
 源码与本机验收审查 PASS；当前提交 Hosted verify/delivery 与最终合并仍待真实门禁。这份审查记录进入新文档提交后需要对文档差异补审，不让源代码审查冒充最终 HEAD。
+
+## 提升权限包装器 d521 补审：CHANGES REQUIRED
+
+/root/continuation_review 固定 base1af0357b088df79dc51e9b309ef310a500722cf8 → headd52142d62fd2b19fcbdfbbde750338016bfd53c0：T5-ENV-REVIEW-003，P2/merge blocker，Registry New-Item -Force 会删除共享key及子键，原mock未模拟该行为。实际内存反例 wrapperFailed=false/foreignPolicyPreserved=false/writes2/removes2/children1。既有001/002与signer/runner001/002保持CLOSED；独立82纯单测、19策略/15Runtime mocks、types/lint/version/governance/features/markdown/UI/delivery均PASS，不替代Hosted。root已用无Force逐级创建、写入前冲突复核和23边界回归返修，新head待独立关闭。

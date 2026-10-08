@@ -12,12 +12,19 @@ function Test-NativePolicy {
     param($Case)
     $script:Fixture = $Case
     $script:Policies = @{}
+    $script:Subkeys = @{}
     $script:Writes = 0
     $script:Removes = 0
     $script:Children = 0
     $script:ArgumentsPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments'
     $script:ProfilePath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge\WebView2\UserDataFolder'
+    $script:ParentPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Edge'
     if ($Case.ExistingName) { $script:Policies[$script:ProfilePath] = @{ $Case.ExistingName = $Case.ExistingValue } }
+    if ($Case.ExistingSubkey) {
+        $script:Policies[$script:ProfilePath] = @{}
+        $script:Subkeys[$script:ProfilePath] = 'preserve-child-key'
+    }
+    if ($Case.ExistingParent) { $script:Policies[$script:ParentPath] = @{ 'existing-parent-value' = 'preserve-parent' } }
     $saved = @{}
     foreach ($name in @('GITHUB_ACTIONS', 'RUNNER_ENVIRONMENT', 'RUNNER_TEMP', 'KK_TASKHOST_PROFILE', 'KK_TASKHOST_ELEVATED')) {
         $saved[$name] = [Environment]::GetEnvironmentVariable($name)
@@ -33,7 +40,18 @@ function Test-NativePolicy {
         if ($LiteralPath.StartsWith('HKLM:')) { return $script:Policies.ContainsKey($LiteralPath) }
         return $script:Fixture.ProfileExists
     }
-    function New-Item { param($Path, [switch]$Force); if (-not $script:Policies.ContainsKey($Path)) { $script:Policies[$Path] = @{} } }
+    function New-Item {
+        param($Path, [switch]$Force, $ErrorAction)
+        if ($script:Fixture.CreateRace -and $Path -eq $script:ProfilePath) {
+            $script:Policies[$Path] = @{ 'other-app.exe' = 'preserve-create-race' }
+        }
+        if ($script:Policies.ContainsKey($Path) -and -not $Force) { throw 'Fixture concurrent registry key already exists.' }
+        # Registry provider -Force replaces the key and its values/children.
+        # It is deliberately not mocked as the filesystem ensure-directory behavior.
+        $script:Policies[$Path] = @{}
+        $script:Subkeys.Remove($Path)
+        if ($script:Fixture.ValueAfterCreate -and $Path -eq $script:ProfilePath) { $script:Policies[$Path]['other-app.exe'] = 'preserve-late-value' }
+    }
     function Get-ItemProperty {
         param($LiteralPath)
         if (-not $script:Policies.ContainsKey($LiteralPath)) { throw 'Fixture policy key missing.' }
@@ -84,6 +102,10 @@ function Test-NativePolicy {
     if ($Case.ExistingName -and $script:Policies[$script:ProfilePath][$Case.ExistingName] -cne $Case.ExistingValue) { throw 'Existing policy was changed.' }
     if ($Case.AddSibling -and $script:Policies[$script:ProfilePath]['other-app.exe'] -ne 'preserve-sibling') { throw 'Sibling policy was removed.' }
     if ($Case.ChangeOwned -and $script:Policies[$script:ProfilePath]['kk-studio.exe'] -ne 'concurrent-owner') { throw 'Concurrent policy was removed.' }
+    if ($Case.ExistingSubkey -and $script:Subkeys[$script:ProfilePath] -ne 'preserve-child-key') { throw 'Existing child registry key was removed.' }
+    if ($Case.CreateRace -and $script:Policies[$script:ProfilePath]['other-app.exe'] -ne 'preserve-create-race') { throw 'Concurrent key/value was removed during creation.' }
+    if ($Case.ExistingParent -and $script:Policies[$script:ParentPath]['existing-parent-value'] -ne 'preserve-parent') { throw 'Existing ancestor value was removed.' }
+    if ($Case.ValueAfterCreate -and $script:Policies[$script:ProfilePath]['other-app.exe'] -ne 'preserve-late-value') { throw 'Late policy value was removed.' }
     if ($failure -and $failure.Contains('fixture-private-policy-value')) { throw 'An existing policy value leaked into diagnostics.' }
     Write-Output "PASS $($Case.Name)"
 }
@@ -91,10 +113,14 @@ function Test-NativePolicy {
 $defaults = @{
     Actions = 'true'; Runner = 'github-hosted'; Temp = 'C:\isolated-fixture'; TempExists = $true; ProfileExists = $false
     Sid = 'S-1-5-21-fixture'; Elevated = $true; ExistingName = ''; ExistingValue = ''
-    FailSecondWrite = $false; ReadbackMismatch = $false; CleanupFails = $false; AddSibling = $false; ChangeOwned = $false
+    FailSecondWrite = $false; ReadbackMismatch = $false; CleanupFails = $false; AddSibling = $false; ChangeOwned = $false; ExistingSubkey = $false; CreateRace = $false; ExistingParent = $false; ValueAfterCreate = $false
     ChildExit = 0; ChildThrows = $false; Fails = $false; Writes = 2; Removes = 2; Children = 1
 }
 $cases = @(
+    @{ Name = 'existing-child-key-preserved'; ExistingSubkey = $true },
+    @{ Name = 'pre-create-concurrent-key-preserved'; CreateRace = $true; Fails = $true; Writes = 1; Removes = 1; Children = 0 },
+    @{ Name = 'shared-ancestor-values-preserved'; ExistingParent = $true },
+    @{ Name = 'post-create-pre-write-values-preserved'; ValueAfterCreate = $true; Fails = $true; Writes = 1; Removes = 1; Children = 0 },
     @{ Name = 'hosted-elevated-own-policy-and-profile' },
     @{ Name = 'local-rejected-before-effects'; Actions = ''; Runner = ''; Fails = $true; Writes = 0; Removes = 0; Children = 0 },
     @{ Name = 'self-hosted-rejected'; Runner = 'self-hosted'; Fails = $true; Writes = 0; Removes = 0; Children = 0 },

@@ -71,3 +71,9 @@ FACT：CI 只安装 Edge，未检测或准备 WebView2 Runtime；原启动脚本
 [微软官方文档](https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/security#for-an-elevated-host-app-use-appropriate-override-flags) 说明 High IL 宿主忽略 WEBVIEW2 环境变量及 HKCU、接受 HKLM 策略。此前未记录真实 token，故它仍是机制支持的待实测原因。CI 包装器只在 GitHub-hosted 身份、64-bit 进程和现有 RUNNER_TEMP 下运行，拒绝 SYSTEM；提升权限时创建 kk-studio.exe 专属 HKLM 调试端口/唯一 profile，任何既有值均失败关闭，不覆盖或删除其他 AppId/空值/通配符。finally 仅移除仍匹配本次值的成功写入，保留并报告并发变化，清理失败使 job 失败；本机及自托管不做策略修改。Native 收据增加真实提升权限布尔值、退出与清理请求时间。产品代码、沙箱设置和 30 秒 CDP 门禁保持现有安全边界。
 
 [19 项内存副作用替身检查](evidence/native-ci-policy-mocks.txt) PASS：本机/自托管/缺 temp/SYSTEM/重复 profile 拒绝；非提升零机器策略；成功、既有私密/空/通配符/AppId 值、部分写入、读回失败、子进程失败、清理失败、并发 sibling 与 ownership 变化。它们不访问真实注册表、不运行 native、不代表 Hosted High IL 验收。最新主线组合、当前源码复审和实际 Hosted 仍待完成；AC-6 保持未完成。
+
+## PR #36 主线组合与 registry provider 返修
+
+PR #36 已合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，[合并后 CI](evidence/pr36-main-ci.json) verify/deploy-linux PASS。T5 用 d52142d62fd2b19fcbdfbbde750338016bfd53c0 承接，保留双方文档和唯一共享模型/提交门禁；没有覆盖模型执行者工作树。源码 Desktop2.1.7/Web2.1.8/Mobile规划2.1.1。该精确source的[完整 verify](evidence/verify-model-integration.txt) exit0，[浏览器409/409](evidence/browser-model-integration-summary.json)且默认12workers无flaky/0retry；root/Agent原skip不隐藏。Rust97/fmt/clientcheck和fresh client:build -- --no-bundle PASS；[实际native十一组](evidence/native-model-integration.json) passed=true、5次启动、errors=[]、owned cleanup完整，退出/清理请求时间可核对。该本机直接native未走Hosted包装器，hostElevated=not-recorded明确保留，不能称为High IL验证。
+
+独立补审指出 d521 包装器使用 Registry provider 的 New-Item -Force 可递归删除已有key和值；此前mock将其错当文件夹ensure。依据[PowerShell官方文档](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.5)，用内存替身模拟真实语义取得[existing child key丢失RED](evidence/native-policy-force-red.json)，而非修改本机注册表。现逐级只在key不存在时无Force创建；并发key使创建失败关闭，写入前再次核对策略为空。既有空key/子键/ancestor值、创建竞态及创建后写入前sibling均保留，清理仍只触及本次owned值。[23项边界检查](evidence/native-policy-registry-green.txt) PASS；新head精确补审与Hosted仍待完成。

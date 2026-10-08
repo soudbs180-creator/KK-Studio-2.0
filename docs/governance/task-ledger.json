@@ -359,9 +359,10 @@
       "tests/unit/nativeTaskHost.test.ts",
       "deploy/README.md",
       "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md",
-      "tests/desktop/taskhost-lifecycle.mjs"
+      "tests/desktop/taskhost-lifecycle.mjs",
+      "tests/desktop/native-ci-policy.ps1"
     ],
-    "verification": "2026-10-08：承接 main@5dd6e6dd 后 fresh Tauri production 十一组 PASS；journal/意图先于 POST、三处及时取消、同身份 reload/进程重启不重复提交、逐槽原件保留、文本并发释放/草稿恢复、凭据冲突拒绝与日志脱敏通过。独立审查 b58854c0 的两项 P2 已返修：凭据检查不打印原值，BatchMatrix 复用实际 retryableOutputIndices，unknown 与 failed 并存不提供普通重试。此前完整 verify、组合 Rust 97/fmt/check 与 fresh release 通过，最终提交完整回归/补审/Hosted 继续收尾。真实付费服务沿用 EXT-PROVIDER，连接状态统一另见 TASK-PROV-005/006。",
+    "verification": "2026-10-08：已承接 main@1af0357（PR36 merged+post-main CI PASS）；d52142d 组合完整verify409浏览器零flaky、Rust97/fmt/check/fresh release及11组真实native PASS。8399补审PASS但Hosted Runtime154已安装仍CDP启动失败；临时应用专属CI策略的registry Force风险已用23项内存边界返修，当前精确补审/Hosted仍待完成，T5保持REVIEW。真实付费服务沿用EXT-PROVIDER，配置durable/连接health另见TASK-PROV-005/006。",
     "updated": "2026-10-08",
     "verificationResult": "PASS"
   },

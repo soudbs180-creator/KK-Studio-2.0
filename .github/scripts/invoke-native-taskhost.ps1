@@ -39,7 +39,20 @@ try {
             }
         }
         foreach ($policy in $policies) {
-            New-Item -Path $policy.Path -Force | Out-Null
+            # Registry New-Item -Force deletes an existing key recursively.
+            # Create missing ancestors individually without Force; a race
+            # fails closed and never replaces another writer's key/values.
+            $currentPath = 'HKLM:'
+            foreach ($segment in $policy.Path.Substring('HKLM:\'.Length).Split('\')) {
+                $currentPath += '\' + $segment
+                if (-not (Test-Path -LiteralPath $currentPath)) {
+                    New-Item -Path $currentPath -ErrorAction Stop | Out-Null
+                }
+            }
+            $properties = Get-ItemProperty -LiteralPath $policy.Path
+            if (@($properties.PSObject.Properties.Name | Where-Object { $_ -notin @('PSPath', 'PSParentPath', 'PSChildName', 'PSDrive', 'PSProvider') }).Count) {
+                throw 'WebView2 policy appeared during preparation; preserve it and fail closed.'
+            }
             # Track only successful writes; never claim a failed write as owned.
             New-ItemProperty -LiteralPath $policy.Path -Name $appName -Value $policy.Value -PropertyType String | Out-Null
             $owned.Add($policy.Path)
