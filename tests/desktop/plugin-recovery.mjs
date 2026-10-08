@@ -35,6 +35,8 @@ const receipt = {
   dataRoot,
   profile,
   errors: [],
+  consoleErrorDetails: [],
+  requestFailures: [],
   resources: [],
   steps: [],
   processExits: [],
@@ -88,8 +90,25 @@ async function launch() {
   assert(page, "Desktop WebView2 page missing");
   page.on("pageerror", (error) => receipt.errors.push(String(error)));
   page.on("console", (message) => {
-    if (message.type() === "error") receipt.errors.push(message.text());
+    if (message.type() === "error") {
+      receipt.errors.push(message.text());
+      receipt.consoleErrorDetails.push({
+        text: message.text(),
+        location: message.location(),
+        time: new Date().toISOString(),
+        closing: receipt.closing === true,
+      });
+    }
   });
+  page.on("requestfailed", (request) =>
+    receipt.requestFailures.push({
+      url: request.url(),
+      failure: request.failure(),
+      time: new Date().toISOString(),
+      closing: receipt.closing === true,
+    }),
+  );
+  receipt.closing = false;
   await page.waitForURL("http://tauri.localhost/");
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(
@@ -117,9 +136,10 @@ async function stop(graceful = false) {
         resolve();
       }),
     );
-    if (graceful)
+    if (graceful) {
+      receipt.closing = true;
       await page.getByRole("button", { name: "关闭窗口", exact: true }).click();
-    else owned.kill();
+    } else owned.kill();
     for (
       let attempt = 0;
       attempt < 50 && owned.exitCode === null && owned.signalCode === null;
