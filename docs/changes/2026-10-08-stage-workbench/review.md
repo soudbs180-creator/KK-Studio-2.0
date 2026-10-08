@@ -21,3 +21,9 @@
 GitHub PR/托管 CI/他人批准、用户最终 UI 产品验收、推送/合并/发布均未发生。后续发现和修复逐项保留，不用最终 PASS 覆盖失败历史。
 
 最终文档补录不改产品/测试源；按REVIEW.md对精确新SHA补审，最新收据在本机 `D:/kk-studio/output/minimax-rea-20261008/evidence/stage-workbench-review-final.md`。本文件中的PASS绑定上述已审源码SHA，最终补审只以收据的真实SHA/结论为准。任务DONE限于本轮本地AC，不代替用户最终产品验收或Hosted门禁。
+
+## 新主线融合补审
+
+主线前移至5b0eb6a（PR #34）后，旧ca6bc52审查不自动覆盖组合版本。实现者已自审origin/main差异：仅既有Plan入口/TaskWorkbenchStages增强；App保留单一实例、activeProjectIdRef/画布刷新；新主线暂停、重规划、回执和MCP改进保留。当前本地49/49、完整708root/172Agent/400browser零retry、Rust97及新production Tauri真实重启/冲突恢复通过，原证据保留。
+
+组合版本独立补审：NOT VERIFIED，待committed HEAD的只读reviewer；收据在D:/kk-studio/output/minimax-rea-20261008/evidence/stage-workbench-review-integration.md，必须核对真实SHA/PASS，不把自审当独立审查。用户本次“合并主线”提供本轮结果集成授权；当前CI/实际规则满足后才squash，不自批PR、不直推main、不部署或清理分支。旧未推送/未合并段落是首轮历史，本次推广记录以实际PR merged/merge SHA为准。

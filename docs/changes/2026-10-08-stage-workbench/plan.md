@@ -74,3 +74,7 @@
 2026-10-08 独立 review 后统一修复：requestStageApproval 增加同样的项目范围校验并在原面板提供重新提交入口；空工作项结果拒绝沿用现有领域契约。审查同时发现旧持久层的排队跳过写入分支会使新增审批误报保存成功，因此修复 useCreationStorage 的执行时可写性检查；新增真实源码存储队列测试，保留 acknowledged revision 的幂等保存，不新建存储模块或任务。修复后重跑完整 verify，并在隔离 release 中覆盖原生 CAS 冲突与恢复草稿，再按新 committed HEAD 复验三项 finding。
 
 2026-10-08 完成：独立 reviewer 对修复源码HEAD `41dd86587ad7996eb76f2ba40c416b5d0b077e2f` 判定PASS，三项finding关闭；46项独立定向测试、14项源码/测试hash及release EXE hash一致。最新完整verify/原生故障恢复证据通过，记录见review/verification。按本轮计划和分支政策保留独立worktree与本地提交；最终文档HEAD再作精确补审。未推送/合并/发布，未把该技术PASS提升为完整产品或外部服务已完成。
+
+## 主线前移后的融合计划
+
+用户后续要求合并主线。原候选ca6bc52准备推送前发现main已合入PR #34（5b0eb6a），包含同类Plan视图和共享编排器。融合方案见[integration-plan](integration-plan.md)：只保留既有Plan入口及TaskWorkbenchStages，将本轮增强审批/返工/恢复融入；保留新主线暂停、增量重规划、原生回执和MCP改进。组合产物与精确新SHA必须重新验证/审查；原COMPLETE仅指首轮本地交付。

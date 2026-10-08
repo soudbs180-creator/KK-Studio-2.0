@@ -52,3 +52,7 @@
 ## 风险和决策
 
 审批 UI 先完整暴露已存在的计划契约；计划创建/重排、媒体执行和 MCP 远端注册继续归属原任务。FEAT-030 保持 PARTIAL，不能因为新增 tab 提升 REAL。用户授权的持续完善按证据逐项推进，本轮交付不代表所有外部能力已经完成。
+
+## 集成补充约束
+
+当前基线推进为origin/main@5b0eb6a；保持既有Plan标签，仅一个阶段审批面板、一个共享编排器。TaskWorkbenchContent→TaskWorkbenchStages→StagePlanDetail承载阶段内容，project.stagePlans仍为唯一权威；保留主线canPauseTask、activeProjectIdRef/画布刷新及重规划/回执/MCP行为。本轮新增与主线原阶段/任务回归均须通过；自动执行、MCP自动编排、真实媒体不因合并而提升状态。

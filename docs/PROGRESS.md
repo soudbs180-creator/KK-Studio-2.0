@@ -1,8 +1,28 @@
 # 当前进度
 
+## 2026-10-08 阶段工作台主线融合
+
+用户已授权“合并主线”。原候选ca6bc52在推送前遇到主线PR #34/5b0eb6a前移；本轮在既有TASK-ORCH-002分支融合为唯一Plan入口、TaskWorkbenchStages和共享编排器，保留主线的暂停/重规划/回执/MCP改进。候选Desktop2.1.5/Web2.1.6/Mobile规划2.1.1；97tasks/34features不新增重复登记，FEAT-030仍PARTIAL。组合本地AC完成：49/49、完整verify708root/172Agent/400browser零retry（原skip8/2）、Rust97及fresh Tauri审批/重启/真实CAS/恢复草稿通过；精确SHA独立补审和Hosted门禁另验；实际集成以本轮PR merged及merge SHA为准。下方首轮未推送/main不变等描述保留为历史，不代替当前进度。
+
 ## 2026-10-08 竞品学习与阶段计划工作台
 
 REA拆解与KK对照形成31项结论、311条定位，映射原feature/task。TASK-ORCH-002本轮本地AC DONE：既有工作台阶段查看、plan/result审批、返工、解除/重新申请、共享宿主及保存确认/恢复已验；源码41dd865独立复验PASS，3项finding关闭。完整verify根638/646、Agent172/174（原skip8/2）、browser389/389零retry；production Tauri重启/真实CAS冲突/恢复草稿及clientcheck PASS。最终文档精确SHA补审收据另记。Desktop2.1.4/Web2.1.5/Mobile2.1.1；独立分支保留，main未改、未推送合并发布；FEAT-030仍PARTIAL，真实执行/MCP/媒体未接。见[比较](changes/2026-10-08-stage-workbench/comparison.md)、[验证](changes/2026-10-08-stage-workbench/verification.md)及[审查](changes/2026-10-08-stage-workbench/review.md)。
+## 2026-10-08 未完成任务继续执行与复核返修
+
+- 当前台账共 97 项：DONE 56、PARTIAL 27、TODO 10、BLOCKED 4。
+- 已完成本轮本地闭环：`TASK-ORCH-002` 阶段计划视图与 plan/result 审批；`TASK-TASKSTATE-001` 的本地成本语义清理；`TASK-CANVAS-001` 的 Agent host/App 画布交付校验。
+- 新增 `TASK-TASKSTATE-002`（P1）：等待供应商可验证报价/账单回执，定义 schema、来源和回归证据。
+- 本轮源码版本：Desktop 2.1.4 / Web 2.1.5 / Mobile 规划 2.1.1；新生产 bundle 与浏览器版本显示已复验，未发布或安装新客户端。
+- 继续收尾：纠正共享node_modules偏离本树lock的问题，保留原链接并建立独立npm ci安装；完整verify再次通过（Node702/710、Agent172/174，其余既有skip；浏览器388/388无flaky）。带Agent的新Desktop2.1.4 release已构建并通过隔离原生版本、项目保存/重启、确认取消/接受、画布历史与记忆保护；当前锁定产物为`index-DWwNRuIh.js`，实际TaskHost生成/Provider、安装和发布仍未验收。交付将通过本任务PR，托管检查与主线推广须回读实际head，不预写成功。
+- 证据：`docs/changes/2026-10-03-incomplete-tasks/`；最终业务代码提交 `dc055566457f8413c8ac7f9cc17778a9958bd5d8`。在阶段计划、未知报价和画布交付闭环上，补齐归档失败、原生提交不确定、缺失文案正文、完整归档证据与恢复错误文案清理，并按独立复核返修原生回执身份、重复/缺失/越界输出和非法类型回退边界。全量 Node 710、Canvas Agent 174、浏览器 388、Rust 97 及静态门禁以本轮最终收据为准。
+- 真实环境待验收项保持原状态：Provider/GPU/ComfyUI、Mobile、VPS、第三方 MCP 与用户视觉验收。
+- TASK-ORCH-003、BACKEND-MEDIA-001和BACKEND-MCP-AUTO的代码待办可先于真实凭据实施；它们仍是TODO，真实执行验收与代码建设分开排期。
+
+## 2026-10-03 项目建设目标与验收基线
+
+新增 [`PROJECT_GOALS.md`](governance/PROJECT_GOALS.md)，统一记录创作、Agent、能力配置和恢复四条核心用户路径，以及代码、UI、状态链路、质量和交付标准。`scripts/check-project-goals.mjs` 已接入 lint/verify；本任务只补治理和可执行门禁，不提升外部 Provider、ComfyUI、VPS、Mobile、第三方 MCP 或用户视觉验收的状态。详见[变更验证](changes/2026-10-03-project-goals-baseline/verification.md)。
+
+同轮 UI 门禁发现 `McpSettings.tsx` 超过 300 行，已拆为 `McpServerForm` 与 `McpServerList`，保留父组件的异步状态 owner；修复后 UI 标准检查为 194 文件/0 违规，详见[组件边界验证](changes/2026-10-03-ui-component-boundary/verification.md)。
 
 ## 2026-10-01 KK Codex 原生生图回传/归档验收
 
@@ -24,14 +44,13 @@ TASK-DESKTOP-INSTALLER-001 在本机AC1–4范围DONE：currentUser Windows x64 
 
 历史记录中的分支、端口、尺寸、版本及待验收描述仅代表当时状态；当前事实以上述入口为准。
 
-
 ## 2026-09-29 Kaworkai 无限画布研究与本地增强（TASK-CANVAS-KAWORKAI-001，PARTIAL）
+
 ## 2026-09-24 Claude Code settings.json 落盘（TASK-PROV-004，REVIEW，待推送）
 
 接续 003，把 Provider 渲染产物落进 Claude Code：agent 侧新增 `claude-provider-config.ts`——`~/.claude/settings.json` 保守 JSON 合并（只写受管键 `env.ANTHROPIC_BASE_URL` 与顶层 `model`，permissions/hooks/其余 env 逐字段保留、幂等、非法 JSON 不覆盖、baseUrl 内嵌 userinfo 拒绝）、原子写盘 0600、密钥永不落盘（认证走宿主 env 注入 → claude.ts 子进程继承）；`providers apply-claude <json> [--config-dir <dir>] [--dry-run]` CLI。
 
 验证：test:agent 150/150（测试抓出并修复 2 处 Windows UTF-8 BOM 缺口：CLI 读配置、既有 settings.json 入口；另隔离单测目录避免与真实验证目录冲突）；真实 CLAUDE_CONFIG_DIR 验证通过——dry-run/apply、slug 剥离（`deepseek-v4-pro[1M]`→`deepseek-v4-pro`）、用户设置保留、真实文件幂等（哈希一致）；根门禁全绿（typecheck / lint 64-0、30-0、82-0 / 394 单测 / ui 159-0 / format）。HTTP 端点与宿主 env 注入仍依赖 TASK-AGENT-006 合入后接线（remaining）；Claude Code 真实消费对拍待装有该 CLI 的机器。详见 [验证](changes/2026-09-24-claude-landing/verification.md) 与 [遗留清单](changes/2026-09-24-claude-landing/remaining.md)。
-
 
 ## 2026-09-24 Codex Provider 配置注入与 catalog 落盘（TASK-PROV-003，REVIEW，待推送）
 
@@ -78,6 +97,7 @@ TASK-COMPARE-001 的源码 `f8d5165` 已经独立只读上下文复审 PASS，�
 ## 2026-09-27 画布图片对比候选（TASK-COMPARE-001）
 
 独立 worktree `codex/TASK-COMPARE-001-canvas-compare` 已实现图片卡片加入/移除对比、2–4 张并排与两张滑块、同步缩放滚动及错误重试。`npm run verify` 通过（302 条浏览器）；Tauri `client:check`、`client:build` 和隔离数据目录的 release GUI 对比操作均通过。1440/1220/390px Web 与桌面截图、运行元数据见[本轮验证](changes/2026-09-27-canvas-image-compare/verification.md)。独立最终审查、PR Hosted 检查、用户产品验收与主线集成待完成；FEAT-036 保持 PARTIAL。
+
 ## 2026-09-27 UI #19 模型菜单补查
 
 独立只读补查发现首页在没有图片连接时仍显示可选的静态 `kk-image-2`，选择后没有连接 ID，与本轮“只列真实 BYOK 图片模型”规范冲突。已先用浏览器用例复现，再移除未绑定的菜单行；空配置显示配置入口，已保存的两个图片连接仍可键盘选择并保留连接身份。修复后 456 项 Node、320 项 Edge 浏览器及类型、UI、ESLint、治理/功能/Markdown、构建检查通过；最新提交的独立复审、Hosted 检查、fresh Desktop 和用户产品验收仍待完成。主线和正式入口未因此更新。
@@ -85,6 +105,7 @@ TASK-COMPARE-001 的源码 `f8d5165` 已经独立只读上下文复审 PASS，�
 ## 2026-09-27 UI #19 与最新主线同步候选
 
 远端 `main@a89792ad` 已顺序合入 PR #14/#15/#16；#19 的独立工作树以普通 merge 承接该提交。六处冲突均为进度、功能登记与任务账本，按任务 ID 保留双方记录，治理检查为 72 项/0 违规，功能检查为 32 项/0 违规。运行 UI 保持已验证的 291px 侧栏与 40px 顶栏；未接线的 `tokens.css/json` 仍有 200px/56px 冲突，不能把它算作统一 token 已完成。两项浏览器偶发失败经复现定位为侧栏宽度动画中的断言和图片请求到达 Provider 前的取消，测试改为等待对应真实状态，定向重复 32/32 无重试通过。完整门禁、当前 head 的独立复审与 Hosted CI 仍需以最终提交核对；PR #20 及根工程未提交 UI 工作继续独立保留。
+
 ## 2026-09-25 真实项目侧栏整合（TASK-PROJECT-SIDEBAR-001，进行中）
 
 在独立 `feat/TASK-UI-009-ui010-integration` 工作树，以 UI-010 已验证候选为基线承接旧 UI-009 的项目文件夹设计，同时让侧栏与搜索读取同一份真实 `CreationSnapshot`。空项目库不再显示固定演示行；创建、打开、改名和确认删除接入 App 项目操作；拖放、文件夹与置顶明确为会话态。原 UI-009 工作树未改动，1423 的 UI-010 预览保持原样。完整 `npm run verify` 已通过 370 Node、337 Edge browser；390/768/1440/1920 响应式核对无整页溢出，1424 production preview 与隔离数据的 fresh Tauri release 加载同一 JS/CSS，原生新建→改名→刷新→打开真实项目通过。独立复核和 PR 待完成；持久文件夹仍是开放验收项。证据与边界见 [本轮验证](changes/2026-09-25-sidebar-real-projects/verification.md)。
@@ -92,6 +113,7 @@ TASK-COMPARE-001 的源码 `f8d5165` 已经独立只读上下文复审 PASS，�
 ## 2026-09-24 现行 UI 与真实操作回归（TASK-UI-010，进行中）
 
 在独立 `fix/TASK-UI-010-ui-regression` worktree 中承接新 `UI_INDEX / UI_RULES / UI_ARCHETYPES / DESIGN_TOKENS`，核对 Figma 四节点和六条浏览器批注，修复首页创作输入、搜索底部选线、持久对话、画布 HUD、设置与窄屏入口。资产管理按 A1 画廊修复 6px 文件名、22px 筛选和旧网格；提示词库按 A2+A4 调整卡片与空态。独立 reviewer 对[草稿 PR #19](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/19) 初审未发现 P0/P1，提出五项 P2；修复提交 `3db7b69` 已推送，复审确认五项均关闭、无新增 P0/P1/P2，代码审查 PASS。1440/390 共 42 个页面状态已重新截图；完整 `npm run verify` 通过 370 Node、319 browser，Web production preview 与隔离数据的 fresh Tauri release 加载同一 JS/CSS，页面错误 0。新建项目与项目库保持真实空态。侧栏静态演示项目另列 `TASK-PROJECT-SIDEBAR-001`；新增 token 导出与已验证 291/40 外壳及颜色仍冲突，在线 Ardot 未回读，用户当前 1421/旧桌面入口整合尚未完成。WorkBuddy/豆包真实接管、共享记忆与模型调度不由 UI 验收升级。证据见 [本轮 verification](changes/2026-09-24-ui-regression/verification.md) 和 [架构核对](changes/2026-09-24-ui-regression/architecture-audit.md)。
+
 ## 2026-09-27 Provider #17 承接主线候选
 
 PR #16 已合入 `main@a89792ad`。TASK-PROV-003 的原堆叠分支仍保留供追溯；当前从主线新建 `feat/TASK-PROV-003-provider-wiring-main`，只承接此任务的 Agent 配置落盘与 CLI 代码。Codex 已要求 Responses 协议、根级模型与 catalog 配置；原堆叠实现仍使用旧 `chat` 默认值，当前正在修正并补当前主线回归。新 PR、Hosted 检查和独立复审均以新候选精确 head 为准，真实 Codex 会话消费仍未验收。
@@ -171,6 +193,7 @@ PR #14 的 `67ff18fb` 独立复审确认旧计划覆写与项目包漏同步两�
 - 治理：功能卡 feat-030/031（PARTIAL）、registry +2、账本 +5（TASK-ORCH-001 IN_PROGRESS 唯一活动任务，TASK-ORCH-002/003 TODO，TASK-CANVAS-001/TASK-TASKSTATE-001 PARTIAL）、交付包五件套 `docs/changes/2026-09-23-agent-orchestration/`。
 - 分支 `feat/TASK-ORCH-001-agent-orchestration-closure` @ `D:/kk-studio/.worktrees/TASK-ORCH-001` 已推送 origin（commit 1863ea8，base origin/main @ 9f04bfc）。能力按 PARTIAL 标注，不冒充 REAL。
 - 后续：TaskWorkbench 阶段计划视图与审批交互（TASK-ORCH-002）、编排器驱动真实生成（TASK-ORCH-003）、plan 工具 MCP 注册（BACKEND-MCP-AUTO）、媒体真实链路（BACKEND-MEDIA-001）。
+
 ## 2026-09-24 竞品对标后的 MCP 配置一致性
 
 `TASK-MINIMAX-001` 分支修复手动 MCP 服务器列表第 51 项可写、重启后整表被判损坏的问题：写入前使用与读取相同的 50 项上限，同 id 更新仍可进行。补齐新工作树的 Agent/插件构建前置后，371 Node 与 300 Web 浏览器回归、类型/Lint/格式/构建/治理检查通过；初次环境失败及恢复见 [本轮验证](changes/2026-09-24-mcp-registry-limit/verification.md)。对照当前 MCP 官方协议说明又发现客户端仅固定 2025-11-25，2026-07-28 modern 协商缺口已列 `TASK-MCP-PROTO-001`。历史 MiniMax UI 审计仅保持原时点含义；真实第三方服务器、Tauri release 和付费能力未在本轮验收。
@@ -180,6 +203,7 @@ PR #14 的 `67ff18fb` 独立复审确认旧计划覆写与项目包漏同步两�
 Google API Key 通道已接入官方 Interactions：连续文字对话、图片结果归档画布、刷新后会话恢复；另接入用户自行启动的本地 Gemini CLI 桥，支持 Google 账号登录后的文字对话和会话续接。CLI 模式不提供图片生成，图片需使用 API Key 通道。设置页已修复密钥输入和两种登录方式切换，桥限定本机地址/可信 Origin、传入 CLI 的参数边界与取消后子进程回收；结果不确定时阻止自动重试。
 
 Web 生产预览与 fixture 浏览器流程、单元测试、Windows Rust `client:check` 已有本地证据；最终全量验证与交付状态见 [004 验证](changes/2026-09-23-google-interactions/verification.md)和 [005 验证](changes/2026-09-23-google-cli-login/verification.md)。本机没有 Google API Key 或已安装/登录的 Gemini CLI，因此未作真实 Google 请求，也未验证本轮 Tauri 桌面运行或获得最终独立补审。上述两任务保持 IN_PROGRESS/PARTIAL，不将 fixture 图片当作真实出图。
+
 ## 2026-09-24 CodeBuddy CLI 受控委派
 
 - Codex 主 Agent 现在有 `codebuddy_consult` MCP 短文本工具；本地设置可保存 CLI 绝对路径并执行真实连通测试。子进程固定禁用工具/会话持久化，限制文本、输出、时长与并发，不继承 KK Token/Provider Key。
@@ -319,6 +343,7 @@ TASK-DS-001、UI-001、UI-004保持PARTIAL：在线Ardot未写入，新样式Tau
 - `TASK-AUDIT-SEC-001-CLOSEOUT` 在 `fix/TASK-AUDIT-SEC-001-boundaries` 完成三项剩余修复：Web Locks 长生命周期连接租约与崩溃元数据重建；Gateway 初始额度 provisioning 记录、额度漂移 fail closed 和并发策略更新；TaskHost 结果 URL 同源、HTTPS/loopback、DNS/IP pinning、取消窗口和 IPv6 边界。
 - 验证：178/178 Node 单测、TypeScript、lint、format、UI119/0、Rust63/63、fmt/check、production build、production preview 191/191 和隔离 Tauri WebView2 均通过；closeout 五份变更记录见 `docs/changes/2026-09-21-security-audit-closeout/`。
 - 固定 development 端口 1421 被另一工作树的 Vite 进程占用，未终止并未把该进程结果归给本分支；除此之外的最终 head 证据已记录。
+
 ## 2026-09-21 安全边界与异常任务状态审计（PARTIAL）
 
 - `TASK-AUDIT-SEC-001` 在独立 worktree `fix/TASK-AUDIT-SEC-001-boundaries` 完成一轮证据驱动审计。已修复：Provider 请求发出后取消/暂停的 unknown fencing、远程明文 HTTP API Key 外泄、Gateway 重启旧配置/ACL 静默保留、token collision 权限覆盖、TaskHost 无长度响应全量缓冲，以及 journal delete-first 丢失窗口。
@@ -647,6 +672,7 @@ TASK-UI-MAIN-001 已完成并同步到目标仓库：PR #3（https://github.com/
 TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点击不关闭；同状态三环境专项与191项浏览器回归通过。详见 docs/changes/2026-09-20-ui-main-alignment/followup.md。稳定main提交以Git回读为准，上述旧SHA是阶段记录。UI-004设计来源缺口与PERF-001压力边界继续保留。
 
 - 补充云端大图重绘失败调查：优化归档/请求的逐字节转换，route提前捕获请求、点击后开始I/O预算。unknown用例的瞬时审批检查已改为等待异步审批；最终完整verify通过（浏览器191项、0失败/重试），unknown/音频定向10次通过，大图20倍CPU连续3次通过；新bundle index-Be6XJzPc.js已在dev/preview/隔离Desktop核对。PERF-001大规模素材库工作保持未完成。
+
 ## 2026-09-20 AI自主开发、分支和规则一致性（TASK-GOV-002）
 
 - 最新治理规则已合入本候选；TASK-GOV-002 仍由独立 owner 维护，远端保护 API403 继续记录为 BLOCKED，不由本任务代替其 PR/审批。
@@ -655,3 +681,11 @@ TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点
 
 - `origin/main` now includes the governance closeout at `3c4d012`; TASK-GOV-002 remains PARTIAL because hosted branch protection is still blocked by the GitHub billing/API403 boundary. Its closeout package and current ledger entry were retained when preparing this candidate.
 - This candidate keeps the UI/asset work scoped to TASK-MAIN-CLOSE-002; it does not re-own the governance worktree or claim remote rules are active.
+
+## 2026-10-03 早期任务盘点与本地收口（历史快照）
+
+- 早期同日快照曾记录 96 项：DONE 55、PARTIAL 27、TODO 10、BLOCKED 4；当前台账以本文件顶部、`docs/governance/task-ledger.json` 和本轮 verification 为准。
+- 本轮新增并完成：MCP 多标签页注册表 reread/rebase 与冲突保护（TASK-MCP-REGISTRY-001）、旧版 51+ 配置原件导出/显式恢复（TASK-MCP-REGISTRY-002）、编排器失败项依赖闭包重排（TASK-ORCH-REPLAN-001）。MCP modern/legacy 协商（TASK-MCP-PROTO-001）本地实现与回归完成，真实第三方及 Desktop 实机仍待外部验收。
+- 实际回归：Node 661（653 pass/0 fail/8 skipped）、Canvas Agent 174（172 pass/0 fail/2 skipped）、Playwright 379/379、TypeScript/lint/format/build、Vite build、Cargo check 均通过；Vite 只留已有依赖注释与 bundle 大小 warning。
+- 后续优先级：P0 先保护注册表数据不丢失；P1 完成真实 MCP 端点验收并推进编排器真实生成执行；P2 继续 T5/T6/T7、平台服务、VPS、Mobile、Figma 完整验收。证据见 [本轮 verification](changes/2026-10-03-task-audit/verification.md) 和 [review](changes/2026-10-03-task-audit/review.md)。
+- 本轮补充：项目建设目标与验收入口已接入 `goals:check`；UI 门禁发现的 301 行 MCP 设置组件已拆分，相关任务已通过当前 head 的独立技术复核。

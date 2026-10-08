@@ -1,15 +1,20 @@
 import type { ReviewComment } from "../domain/reviewWorkflow";
 import type { ApprovalGate } from "../domain/agentWorkflow";
 import type {
+  CreationProject,
   CreationTask,
   CreationTaskOutput,
 } from "../features/creation/model";
 import TaskWorkbenchExport from "./TaskWorkbenchExport";
 import BatchMatrix from "./BatchMatrix";
 import TaskWorkbenchReview from "./TaskWorkbenchReview";
+import TaskWorkbenchStages, {
+  type StagePlanActions,
+} from "./TaskWorkbenchStages";
+import { formatCostUsd } from "../features/creation/taskState";
 
 export type WorkbenchTab =
-  "queue" | "prompt" | "generate" | "review" | "export";
+  "queue" | "prompt" | "generate" | "review" | "export" | "plan";
 
 export function statusLabel(task: CreationTask): string {
   return task.status === "queued"
@@ -36,20 +41,29 @@ export function statusLabel(task: CreationTask): string {
 }
 
 export function outputsFor(task: CreationTask): CreationTaskOutput[] {
+  const completed = new Set(
+    task.completedOutputIndices?.length
+      ? task.completedOutputIndices
+      : Array.from(
+          {
+            length: Math.min(task.completedOutputs, task.requestedOutputs),
+          },
+          (_, index) => index,
+        ),
+  );
   return task.outputs?.length
     ? task.outputs
     : Array.from({ length: task.requestedOutputs }, (_, index) => ({
         index,
-        status:
-          task.status === "succeeded"
-            ? ("succeeded" as const)
-            : task.status === "failed"
-              ? ("failed" as const)
-              : task.status === "cancelled"
-                ? ("cancelled" as const)
-                : task.status === "unknown"
-                  ? ("unknown" as const)
-                  : ("waiting" as const),
+        status: completed.has(index)
+          ? ("succeeded" as const)
+          : task.status === "failed"
+            ? ("failed" as const)
+            : task.status === "cancelled"
+              ? ("cancelled" as const)
+              : task.status === "unknown"
+                ? ("unknown" as const)
+                : ("waiting" as const),
         model: task.model,
         provider: task.providerName,
         createdAt: task.createdAt,
@@ -61,6 +75,7 @@ export default function TaskWorkbenchContent({
   outputs,
   tab,
   onPauseTask,
+  canPauseTask,
   onCancelTask,
   onResumeTask,
   onRetryTask,
@@ -68,11 +83,17 @@ export default function TaskWorkbenchContent({
   gates,
   comments,
   onCommentsChange,
+  project,
+  onStageDecision,
+  onRetryStage,
+  onRequestPlanApproval,
+  stageWriteDisabledReason,
 }: {
   selected?: CreationTask;
   outputs: CreationTaskOutput[];
   tab: WorkbenchTab;
   onPauseTask: (taskId: string) => void;
+  canPauseTask: (taskId: string) => boolean;
   onCancelTask: (taskId: string) => void;
   onResumeTask: (taskId: string) => void;
   onRetryTask: (taskId: string) => void;
@@ -80,7 +101,19 @@ export default function TaskWorkbenchContent({
   gates: ApprovalGate[];
   comments: ReviewComment[];
   onCommentsChange: (comments: ReviewComment[]) => void;
-}) {
+  project?: CreationProject;
+} & StagePlanActions) {
+  if (tab === "plan")
+    return (
+      <TaskWorkbenchStages
+        key={project?.id ?? "no-project"}
+        project={project}
+        onStageDecision={onStageDecision}
+        onRetryStage={onRetryStage}
+        onRequestPlanApproval={onRequestPlanApproval}
+        stageWriteDisabledReason={stageWriteDisabledReason}
+      />
+    );
   if (!selected)
     return (
       <div className="task-workbench-empty">选择一个任务查看批量矩阵。</div>
@@ -98,9 +131,11 @@ export default function TaskWorkbenchContent({
         <div className="task-workbench-actions">
           {selected.status === "running" && (
             <>
-              <button type="button" onClick={() => onPauseTask(selected.id)}>
-                暂停
-              </button>
+              {canPauseTask(selected.id) && (
+                <button type="button" onClick={() => onPauseTask(selected.id)}>
+                  暂停
+                </button>
+              )}
               <button type="button" onClick={() => onCancelTask(selected.id)}>
                 取消
               </button>
@@ -133,12 +168,8 @@ export default function TaskWorkbenchContent({
         <div className="task-overview-grid">
           <div>
             <span>预计成本</span>
-            <strong>
-              {selected.estimatedCostUsd
-                ? `$${selected.estimatedCostUsd.toFixed(2)}`
-                : "未估算"}
-            </strong>
-            <small>Prototype 示例单价 $0.04/张 · 尚未取得供应商报价</small>
+            <strong>{formatCostUsd(selected.estimatedCostUsd)}</strong>
+            <small>供应商未回报价时只显示未知状态</small>
           </div>
           <div>
             <span>实际消耗</span>

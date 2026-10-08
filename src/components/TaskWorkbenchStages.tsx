@@ -36,7 +36,7 @@ export interface StagePlanActions {
   stageWriteDisabledReason?: string;
 }
 
-export default function StagePlanPanel({
+export default function TaskWorkbenchStages({
   project,
   onStageDecision,
   onRetryStage,
@@ -85,7 +85,11 @@ export default function StagePlanPanel({
   }
 
   return (
-    <section className="stage-plan-panel" aria-label="阶段计划">
+    <section
+      className="stage-plan-panel"
+      aria-label="阶段计划"
+      data-testid="stage-plan-panel"
+    >
       {!project || !plan || !stage || !progress ? (
         <div className="stage-plan-empty">
           <h3>暂无阶段计划</h3>

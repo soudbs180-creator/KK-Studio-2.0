@@ -7,7 +7,7 @@ import TaskWorkbenchContent, {
   statusLabel,
   type WorkbenchTab,
 } from "./TaskWorkbenchContent";
-import StagePlanPanel, { type StagePlanActions } from "./StagePlanPanel";
+import type { StagePlanActions } from "./TaskWorkbenchStages";
 
 export default function TaskWorkbench({
   project,
@@ -15,6 +15,7 @@ export default function TaskWorkbench({
   onConfigure,
   onCancelTask,
   onPauseTask,
+  canPauseTask,
   onResumeTask,
   onRetryTask,
   onRetryOutput,
@@ -29,12 +30,13 @@ export default function TaskWorkbench({
   onConfigure: () => void;
   onCancelTask: (taskId: string) => void;
   onPauseTask: (taskId: string) => void;
+  canPauseTask: (taskId: string) => boolean;
   onResumeTask: (taskId: string) => void;
   onRetryTask: (taskId: string) => void;
   onRetryOutput: (taskId: string, outputIndex: number) => void;
   onCommentsChange: (comments: ReviewComment[]) => void;
 } & StagePlanActions) {
-  const [tab, setTab] = useState<WorkbenchTab | "stages">("queue");
+  const [tab, setTab] = useState<WorkbenchTab>("queue");
   const [selectedId, setSelectedId] = useState(project?.tasks.at(-1)?.id ?? "");
   const tasks = project?.tasks ?? [];
   const selected = tasks.find((task) => task.id === selectedId) ?? tasks.at(-1);
@@ -93,7 +95,7 @@ export default function TaskWorkbench({
               暂无任务。连接模型后可从画布提交。
             </p>
           )}
-          {!tasks.length && tab !== "stages" && (
+          {!tasks.length && tab !== "plan" && (
             <button
               type="button"
               className="primary-button"
@@ -137,12 +139,12 @@ export default function TaskWorkbench({
             {(
               [
                 "queue",
-                "stages",
                 "prompt",
                 "generate",
                 "review",
                 "export",
-              ] as Array<WorkbenchTab | "stages">
+                "plan",
+              ] as WorkbenchTab[]
             ).map((value) => (
               <button
                 type="button"
@@ -154,42 +156,37 @@ export default function TaskWorkbench({
               >
                 {value === "queue"
                   ? "Queue"
-                  : value === "stages"
-                    ? "阶段计划"
-                    : value === "prompt"
-                      ? "Prompt"
-                      : value === "generate"
-                        ? "Generate"
-                        : value === "review"
-                          ? "Review"
-                          : "Export"}
+                  : value === "prompt"
+                    ? "Prompt"
+                    : value === "generate"
+                      ? "Generate"
+                      : value === "review"
+                        ? "Review"
+                        : value === "export"
+                          ? "Export"
+                          : "Plan"}
               </button>
             ))}
           </nav>
-          {tab === "stages" ? (
-            <StagePlanPanel
-              key={project?.id ?? "no-project"}
-              project={project}
-              onStageDecision={onStageDecision}
-              onRetryStage={onRetryStage}
-              onRequestPlanApproval={onRequestPlanApproval}
-              stageWriteDisabledReason={stageWriteDisabledReason}
-            />
-          ) : (
-            <TaskWorkbenchContent
-              selected={selected}
-              outputs={outputs}
-              tab={tab}
-              onPauseTask={onPauseTask}
-              onCancelTask={onCancelTask}
-              onResumeTask={onResumeTask}
-              onRetryTask={onRetryTask}
-              onRetryOutput={onRetryOutput}
-              gates={gates}
-              comments={project?.reviewComments ?? []}
-              onCommentsChange={onCommentsChange}
-            />
-          )}
+          <TaskWorkbenchContent
+            selected={selected}
+            outputs={outputs}
+            tab={tab}
+            onPauseTask={onPauseTask}
+            canPauseTask={canPauseTask}
+            onCancelTask={onCancelTask}
+            onResumeTask={onResumeTask}
+            onRetryTask={onRetryTask}
+            onRetryOutput={onRetryOutput}
+            gates={gates}
+            comments={project?.reviewComments ?? []}
+            onCommentsChange={onCommentsChange}
+            project={project}
+            onStageDecision={onStageDecision}
+            onRetryStage={onRetryStage}
+            onRequestPlanApproval={onRequestPlanApproval}
+            stageWriteDisabledReason={stageWriteDisabledReason}
+          />
         </div>
       </div>
       <footer className="task-workbench-footer">

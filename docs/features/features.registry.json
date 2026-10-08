@@ -784,7 +784,7 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-016-task-workbench.md",
-    "summary": "真实任务状态、批次矩阵、审批门禁与取消可用；Planner、外部导出（Compositor/Exporter）、外部分享为 Prototype，单价为示例。",
+    "summary": "真实任务状态、批次矩阵、Plan 阶段审批、取消与重试可用；未取得供应商报价时显示未知，Planner、外部导出与分享为 Prototype。",
     "entryPoints": [
       "任务工作台 TaskWorkbench",
       "任务执行审批 TaskExecutionApproval"
@@ -795,7 +795,8 @@
       "src/components/TaskWorkbenchReview.tsx",
       "src/components/TaskWorkbenchExport.tsx",
       "src/components/TaskExecutionApproval.tsx",
-      "src/features/creation/generationQueue.ts"
+      "src/features/creation/generationQueue.ts",
+      "src/components/TaskWorkbenchStages.tsx"
     ],
     "tests": [
       "tests/browser/task-workbench.spec.ts",
@@ -809,9 +810,11 @@
       "T4",
       "T5",
       "UI-003",
-      "TASK-UI-006"
+      "TASK-UI-006",
+      "TASK-ORCH-002",
+      "TASK-TASKSTATE-001"
     ],
-    "updated": "2026-09-22",
+    "updated": "2026-10-08",
     "platforms": [
       "web",
       "desktop"
@@ -1319,7 +1322,7 @@
     "card": "docs/features/feat-030-agent-orchestration.md",
     "summary": "Stage 状态机、工作台阶段计划及 plan/result 人工审批、严格项目范围/revision 校验、原计划工具面和画布交付契约；自动执行与 MCP 注册仍待接入。",
     "entryPoints": [
-      "任务工作台 → 阶段计划（查看、plan/result审批、返工、解除阻断与重新申请审批）",
+      "任务工作台 → Plan（阶段查看、plan/result审批、返工、解除阻断与重新申请审批）",
       "Agent plan 工具面（MCP 注册待 BACKEND-MCP-AUTO）"
     ],
     "code": [
@@ -1328,11 +1331,12 @@
       "src/features/agent/agentHost.ts",
       "src/features/agent/agentCanvas.ts",
       "src/components/TaskWorkbench.tsx",
-      "src/components/StagePlanPanel.tsx",
+      "src/components/TaskWorkbenchStages.tsx",
       "src/components/StagePlanDetail.tsx",
       "src/styles/stage-workbench.css",
       "src/App.tsx",
-      "src/features/creation/useCreationStorage.ts"
+      "src/features/creation/useCreationStorage.ts",
+      "src/components/TaskWorkbenchContent.tsx"
     ],
     "tests": [
       "tests/unit/stagePlan.test.ts",
@@ -1340,7 +1344,8 @@
       "tests/unit/agentCanvas.test.ts",
       "tests/browser/stage-workbench.spec.ts",
       "tests/desktop/stage-workbench.mjs",
-      "tests/unit/creationSaveQueue.test.ts"
+      "tests/unit/creationSaveQueue.test.ts",
+      "tests/browser/task-workbench.spec.ts"
     ],
     "tasks": [
       "TASK-ORCH-001",
@@ -1356,7 +1361,7 @@
     "area": "creation",
     "status": "PARTIAL",
     "card": "docs/features/feat-031-unified-task-state.md",
-    "summary": "图片/文本（未来视频/音频）共用同一任务模型：9 态状态机、幂等、失败只重试失败输出、成本估算（估算标注非实际扣费）。",
+    "summary": "图片/文本共用9态任务契约：幂等、未知状态防重、失败子项重试、原生回执一致性校验；无供应商报价时成本保持未知，视频/音频链路仍待接入。",
     "entryPoints": [
       "任务工作台队列与批量矩阵",
       "任务审批成本估算显示"
@@ -1364,16 +1369,22 @@
     "code": [
       "src/features/creation/taskState.ts",
       "src/features/creation/model.ts",
-      "src/features/creation/imageTaskCommand.ts"
+      "src/features/creation/imageTaskCommand.ts",
+      "src/features/creation/nativeTaskHost.ts",
+      "src/features/creation/taskRecovery.ts"
     ],
     "tests": [
-      "tests/unit/taskState.test.ts"
+      "tests/unit/taskState.test.ts",
+      "tests/unit/nativeTaskHost.test.ts",
+      "tests/unit/taskRecovery.test.ts",
+      "tests/browser/task-intent.spec.ts"
     ],
     "tasks": [
       "TASK-TASKSTATE-001",
+      "TASK-TASKSTATE-002",
       "BACKEND-MEDIA-001"
     ],
-    "updated": "2026-09-23"
+    "updated": "2026-10-08"
   },
   {
     "id": "FEAT-032",

@@ -79,3 +79,20 @@
 ## 当前结论
 
 TASK-ORCH-002本轮本地AC已完成：审批UI与共享编排器接线、重新申请/空结果拒绝、保存确认与恢复均通过。修复源码HEAD 41dd865独立复验PASS，三项finding关闭；完整verify根638/646、Agent172/174（原skip8/2）、browser389/389零retry，Desktop真实保存/重启/原生冲突/草稿恢复及clientcheck通过。最终文档精确SHA补审另记。本地任务DONE不代表FEAT-030已REAL；真实执行/MCP/媒体仍未接。未推送、合并或发布，main不变。
+
+## 5b0eb6a主线融合后的独立产物复验
+
+原表及ca6bc52/41dd865证据均为首轮历史，不覆盖本节新结果。当前组合基线为5b0eb6a；代码合并保留单一Plan与TaskWorkbenchStages，原StagePlanPanel已去重；唯一App实例保留activeProjectIdRef和画布刷新，阶段动作等待flush。
+
+| 实际命令 | 退出码 | 结果 | 新证据 |
+| --- | --- | --- | --- |
+| node --test stagePlan/orchestrator/creationSaveQueue | 0 | 49/49，含新主线重规划与原跨项目/持久回归 | evidence/integration-domain-tests.txt |
+| npm run verify -- -- --workers=2 --retries=0 | 0 | 根708/716、Agent172/174（原skip8/2）；browser400/400，零retry/flaky；lint/types/UI/format/治理通过 | evidence/integration-full-verify.txt |
+| cargo fmt --check；cargo test --no-default-features --locked | 0 | 97/97，0fail/skip | evidence/integration-rust-tests.txt；工具实际fmt结果 |
+| npm run client:check | 0 | PASS，原5项warning保留 | evidence/integration-client-check.txt |
+| npm run client:build -- --no-bundle | 0 | fresh production release，Desktop2.1.5/Web2.1.6；Mobile规划2.1.1未改 | evidence/integration-client-build.txt |
+| node tests/desktop/stage-workbench.mjs | 0 | 2次真实进程；拒绝/解除/重新申请/批准、返工、重启持久化；真实Rust CAS导致排队审批拒绝、无成功提示、草稿保留 | evidence/integration-native-ui.txt；evidence/desktop-acceptance-integration.json |
+
+新release EXE SHA-256：`bd121505f37054f52828e4bb4aea551e22c920338364414f7765fab07fa63b42`；入口production/src/main.tsx，bundle `http://tauri.localhost/assets/index-DPLpeUr7.js`，1920×1080无pageerror。页面仍为/的项目workspace→tasks modal→唯一Plan tab；导入链src/main.tsx→App→TaskWorkbench→TaskWorkbenchContent→TaskWorkbenchStages→StagePlanDetail。截图在evidence/*-integration.png，已人工查看390与原生冲突；版本/源码身份见runtime-source-hashes-integration.json（22项）。
+
+97tasks/34features继承主线新增登记，本轮不新增同功能ID。FEAT-030仍PARTIAL，真实执行/MCP自动注册/媒体未接。上述是作者实际本地验证；新committed HEAD的独立补审与当前Hosted检查/合并状态以精确收据和本轮PR为准，不能沿用旧SHA PASS。最终独立收据路径D:/kk-studio/output/minimax-rea-20261008/evidence/stage-workbench-review-integration.md。

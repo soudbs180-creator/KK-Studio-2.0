@@ -62,18 +62,31 @@ import {
 } from "./features/plugins/pluginRuntime.ts";
 import type { PluginAi } from "./features/plugins/pluginTypes.ts";
 import { createAgentHost } from "./features/agent/agentHost.ts";
-import { createStageOrchestrator } from "./features/agent/orchestrator.ts";
+import { assertCanvasDeliveries } from "./features/agent/agentCanvas.ts";
+import {
+  createStageOrchestrator,
+  type StageOrchestrator,
+} from "./features/agent/orchestrator.ts";
 import type { AgentCanvasBinding } from "./components/canvas/useAgentCanvasView";
 
 function outputsForTask(task: CreationTask): CreationTaskOutput[] {
+  const completed = new Set(
+    task.completedOutputIndices?.length
+      ? task.completedOutputIndices
+      : Array.from(
+          {
+            length: Math.min(task.completedOutputs, task.requestedOutputs),
+          },
+          (_, index) => index,
+        ),
+  );
   return task.outputs?.length
     ? task.outputs
     : Array.from({ length: task.requestedOutputs }, (_, index) => ({
         index,
-        status:
-          task.status === "succeeded"
-            ? ("succeeded" as const)
-            : ("waiting" as const),
+        status: completed.has(index)
+          ? ("succeeded" as const)
+          : ("waiting" as const),
         model: task.model,
         provider: task.providerName,
         createdAt: task.createdAt,
@@ -102,7 +115,7 @@ import {
 } from "./features/creation/CanvasImageCommand";
 import { generateText } from "./features/creation/textGeneration";
 import { textTaskResult } from "./features/creation/textTaskResult";
-import { useNativeTextRecovery } from "./features/creation/useNativeTextRecovery";
+import { useNativeTaskRecovery } from "./features/creation/useNativeTextRecovery";
 import { useCreationStorage } from "./features/creation/useCreationStorage";
 import { useAssetArchive } from "./features/creation/useAssetArchive";
 import CreationStorageNotice from "./components/CreationStorageNotice";
@@ -129,13 +142,20 @@ import { getDisabledReason, getGenerationUiState } from "./domain/uiGovernance";
 import {
   abortedAfterProviderSubmission,
   canRetryTask,
+  mergeRetryTaskState,
+  markArchiveFailuresUnknown,
+  preserveAcceptedOutputsOnDeliveryFailure,
   recoverInterruptedTasks,
+  retryBlockedOutputIndices,
+  retryableOutputIndices,
+  submissionMayHaveBeenAccepted,
 } from "./features/creation/taskRecovery";
 import {
   cancelNativeTask,
   getNativeTask,
   reconcileNativeTasks,
   submitNativeTask,
+  validateNativeTaskRecord,
   usesNativeTaskHost,
   type NativeTaskHostRecord,
 } from "./features/creation/nativeTaskHost";
@@ -241,6 +261,18 @@ export default function App() {
       return next;
     });
   }
+
+  function hasArchivedOutputEvidence(
+    task: Pick<CreationTask, "kind">,
+    output: Pick<CreationTaskOutput, "assetId" | "text" | "status">,
+  ): boolean {
+    if (output.status !== "succeeded") return false;
+    if (task.kind !== "text") return Boolean(output.assetId);
+    return Boolean(
+      output.text?.trim() &&
+      new TextEncoder().encode(output.text).length <= 32768,
+    );
+  }
   function deleteWorkflow(workflow: WorkflowRecord): void {
     setLocalWorkflows((current) => {
       const next = current.filter((item) => item.id !== workflow.id);
@@ -249,7 +281,7 @@ export default function App() {
     });
   }
   const taskControllers = useRef<Record<string, AbortController>>({});
-  useNativeTextRecovery(
+  useNativeTaskRecovery(
     creationRef,
     taskControllers,
     commitCreation,
@@ -404,20 +436,12 @@ export default function App() {
     );
   }
 
-  const agentSubmitRef = useRef<
-    (
-      node: CanvasCollectionItem,
-      prompt: string,
-      signal?: AbortSignal,
-    ) => Promise<{ taskId?: string; error?: string }>
-  >(async () => ({ error: "生成入口未就绪" }));
-  const agentViewRef = useRef<AgentCanvasBinding | null>(null);
-  const stageOrchestrator = useMemo(
+  const stageOrchestrator = useMemo<StageOrchestrator>(
     () =>
       createStageOrchestrator({
         getProject: () =>
           creationRef.current.projects.find(
-            (project) => project.id === creationRef.current.activeProjectId,
+            (project) => project.id === activeProjectIdRef.current,
           ),
         commit: (project) => {
           if (
@@ -426,14 +450,24 @@ export default function App() {
           )
             throw new Error("项目尚未保存成功，请先处理项目恢复提示。");
           updateProject(project.id, () => project);
+          if (activeProjectIdRef.current === project.id)
+            replaceCanvasItems(project.items);
         },
       }),
     [],
   );
+
+  const agentSubmitRef = useRef<
+    (
+      node: CanvasCollectionItem,
+      prompt: string,
+      signal?: AbortSignal,
+    ) => Promise<{ taskId?: string; error?: string }>
+  >(async () => ({ error: "生成入口未就绪" }));
+  const agentViewRef = useRef<AgentCanvasBinding | null>(null);
   const agentCanvasBridge = useMemo<AgentBridge>(
     () =>
       createAgentHost({
-        orchestrator: stageOrchestrator,
         getView: () =>
           agentViewRef.current?.projectId === activeProjectIdRef.current
             ? agentViewRef.current.view
@@ -449,8 +483,9 @@ export default function App() {
         },
         generate: (node, prompt, signal) =>
           agentSubmitRef.current(node, prompt, signal),
+        orchestrator: stageOrchestrator,
       }),
-    [],
+    [stageOrchestrator],
   );
   agentSubmitRef.current = async (node, prompt, signal) => {
     const project = creationRef.current.projects.find(
@@ -614,90 +649,149 @@ export default function App() {
       .map((output) => output.index);
     const createdItems: CanvasCollectionItem[] = [];
     const publishedItems = new Set<string>();
+    const rejectedDeliveryIds = new Set<string>();
+    const archiveFailureIndices = new Set<number>();
+    let deliveryErrorMessage: string | undefined;
     let durableSubmission = false;
     let providerRequestStarted = false;
+    let nativeSubmissionStarted = false;
     const publish = (
       status: CreationTask["status"],
       error?: string,
       submissionState?: CreationTask["submissionState"],
     ): void => {
       if (taskControllers.current[taskId] !== controller) return;
-      updateProject(projectId, (current) => ({
-        ...appendImageTaskResults(
+      let acceptedResults: CanvasCollectionItem[] = [];
+      updateProject(projectId, (current) => {
+        const pendingResults = createdItems.filter(
+          (item) =>
+            !publishedItems.has(item.id) && !rejectedDeliveryIds.has(item.id),
+        );
+        const withResults = appendImageTaskResults(
           current,
-          createdItems.filter((item) => !publishedItems.has(item.id)),
+          pendingResults,
           task.sourceItemId ?? rootItemId(current),
-        ),
-        tasks: current.tasks.map((item) => {
+        );
+        acceptedResults = [];
+        for (const result of pendingResults) {
+          try {
+            assertCanvasDeliveries({
+              items: [result],
+              project: withResults,
+              label: "生成产物",
+              requireAssetId: result.kind !== "text",
+            });
+            acceptedResults.push(result);
+          } catch (validationError) {
+            rejectedDeliveryIds.add(result.id);
+            deliveryErrorMessage =
+              validationError instanceof Error
+                ? validationError.message
+                : "生成产物未通过画布交付校验。";
+          }
+        }
+        if (deliveryErrorMessage) {
+          outputs = preserveAcceptedOutputsOnDeliveryFailure(
+            outputs,
+            projectId,
+            taskId,
+            rejectedDeliveryIds,
+            deliveryErrorMessage,
+          );
+        }
+        const publishedStatus = deliveryErrorMessage ? "unknown" : status;
+        const publishedError = deliveryErrorMessage ?? error;
+        const publishedSubmissionState = deliveryErrorMessage
+          ? ("unknown" as const)
+          : submissionState;
+        const sourceItemId = task.sourceItemId ?? rootItemId(current);
+        const nextProject = appendImageTaskResults(
+          current,
+          acceptedResults,
+          sourceItemId,
+        );
+        const nextTasks = current.tasks.map((item) => {
           if (item.id === taskId)
             return {
               ...item,
-              status,
-              error,
-              submissionState: submissionState ?? item.submissionState,
+              status: publishedStatus,
+              error: publishedError,
+              submissionState: publishedSubmissionState ?? item.submissionState,
               submittedAt:
-                submissionState === "submitted"
+                publishedSubmissionState === "submitted"
                   ? (item.submittedAt ?? Date.now())
                   : item.submittedAt,
               outputs: [...outputs],
               completedOutputs: outputs.filter(
                 (output) => output.status === "succeeded",
               ).length,
-              resultItemId: createdItems[0]?.id ?? item.resultItemId,
+              resultItemId: acceptedResults[0]?.id ?? item.resultItemId,
               updatedAt: Date.now(),
             };
           if (item.id !== task.retryOfTaskId) return item;
-          const merged = outputsForTask(item).map((original) => {
-            const index =
-              task.retryOutputIndices?.indexOf(original.index) ?? -1;
-            const replacement = index >= 0 ? outputs[index] : undefined;
-            return replacement?.status === "succeeded"
-              ? { ...replacement, index: original.index }
-              : original;
+          const merged = mergeRetryTaskState({
+            parent: { ...item, outputs: outputsForTask(item) },
+            retry: {
+              outputs,
+              retryOutputIndices: task.retryOutputIndices,
+              status: publishedStatus,
+              submissionState: publishedSubmissionState,
+              error: publishedError,
+            },
           });
-          const completed = merged.filter(
-            (output) => output.status === "succeeded",
-          ).length;
           return {
             ...item,
-            outputs: merged,
-            completedOutputs: completed,
-            status:
-              completed === item.requestedOutputs
-                ? "succeeded"
-                : completed > 0
-                  ? "partial"
-                  : item.status,
-            error:
-              completed === item.requestedOutputs
-                ? undefined
-                : `${completed}/${item.requestedOutputs} 张已归档，可重试未归档结果。`,
+            ...merged,
             updatedAt: Date.now(),
           };
-        }),
-        items: [
-          ...current.items.map((item) =>
-            item.id === (task.sourceItemId ?? rootItemId(current))
-              ? {
-                  ...item,
-                  generationStatus:
-                    status === "running"
-                      ? ("pending" as const)
-                      : status === "failed" || status === "offline"
-                        ? ("error" as const)
-                        : undefined,
-                }
-              : item,
-          ),
-          ...createdItems.filter(
-            (result) =>
-              !publishedItems.has(result.id) &&
-              !current.items.some((item) => item.id === result.id),
-          ),
-        ],
-        updatedAt: Date.now(),
-      }));
-      createdItems.forEach((item) => publishedItems.add(item.id));
+        });
+        const sourceTasks = nextTasks.filter(
+          (candidate) =>
+            (candidate.sourceItemId ?? rootItemId(current)) === sourceItemId,
+        );
+        const sourceUncertain = sourceTasks.some(
+          (candidate) =>
+            candidate.status === "unknown" ||
+            candidate.submissionState === "unknown" ||
+            candidate.outputs?.some((output) => output.status === "unknown"),
+        );
+        const sourceRunning = sourceTasks.some(
+          (candidate) =>
+            candidate.status === "queued" ||
+            candidate.status === "running" ||
+            candidate.submissionState === "submitted",
+        );
+        const sourceFailed = sourceTasks.some(
+          (candidate) =>
+            candidate.status === "failed" || candidate.status === "offline",
+        );
+        const sourceGenerationStatus = sourceUncertain
+          ? ("error" as const)
+          : sourceRunning
+            ? ("pending" as const)
+            : sourceFailed
+              ? ("error" as const)
+              : undefined;
+        return {
+          ...nextProject,
+          tasks: nextTasks,
+          items: [
+            ...current.items.map((item) =>
+              item.id === sourceItemId
+                ? {
+                    ...item,
+                    generationStatus: sourceGenerationStatus,
+                  }
+                : item,
+            ),
+            ...acceptedResults.filter(
+              (result) => !current.items.some((item) => item.id === result.id),
+            ),
+          ],
+          updatedAt: Date.now(),
+        };
+      });
+      acceptedResults.forEach((item) => publishedItems.add(item.id));
       if (activeProjectIdRef.current === projectId) {
         const latest = creationRef.current.projects.find(
           (item) => item.id === projectId,
@@ -781,6 +875,7 @@ export default function App() {
             );
           return { assetId: attachment.assetId, name: attachment.name };
         });
+        nativeSubmissionStarted = true;
         let nativeRecord = await submitNativeTask({
           kind: task.kind === "text" ? "text" : undefined,
           concurrencyLimit: nativeConnection?.concurrencyLimit,
@@ -796,14 +891,24 @@ export default function App() {
           promptHash,
           size: task.imageSize,
         });
+        durableSubmission = true;
+        nativeRecord = validateNativeTaskRecord(
+          nativeRecord,
+          task,
+          pendingIndices,
+        );
         nativeTaskRecords.current[taskId] = nativeRecord;
         publish("running", undefined, "submitted");
         await persistence.flush();
-        durableSubmission = true;
 
         const applyNativeRecord = async (
-          record: NativeTaskHostRecord,
-        ): Promise<void> => {
+          incoming: NativeTaskHostRecord,
+        ): Promise<NativeTaskHostRecord> => {
+          const record = validateNativeTaskRecord(
+            incoming,
+            task,
+            pendingIndices,
+          );
           nativeTaskRecords.current[taskId] = record;
           const recordOutputs = new Map(
             record.outputs.map((output) => [output.index, output]),
@@ -811,19 +916,125 @@ export default function App() {
           for (const output of outputs) {
             const nativeOutput = recordOutputs.get(output.index);
             if (!nativeOutput) {
+              if (hasArchivedOutputEvidence(task, output)) continue;
               if (record.status === "succeeded") {
                 output.status = "unknown";
                 output.error = "原生任务完成但未返回该输出的素材标识。";
+              } else if (record.status === "failed") {
+                output.status = "failed";
+                output.error =
+                  record.failure ?? "原生任务失败但未返回该输出回执。";
               }
+              continue;
+            }
+            const priorOutput = { ...output };
+            if (
+              nativeOutput.status === "unknown" &&
+              hasArchivedOutputEvidence(task, priorOutput)
+            ) {
+              output.status = "succeeded";
+              output.assetId = priorOutput.assetId;
+              output.text = priorOutput.text;
+              output.error = undefined;
+              continue;
+            }
+            const missingText =
+              task.kind === "text" &&
+              nativeOutput.status === "succeeded" &&
+              !nativeOutput.text?.trim();
+            if (missingText && hasArchivedOutputEvidence(task, priorOutput)) {
+              output.status = "succeeded";
+              output.assetId = priorOutput.assetId;
+              output.text = priorOutput.text;
+              output.error = undefined;
               continue;
             }
             output.status =
               nativeOutput.status === "pending"
                 ? "running"
-                : nativeOutput.status;
+                : missingText
+                  ? "unknown"
+                  : nativeOutput.status;
             output.assetId = nativeOutput.assetId;
-            output.text = nativeOutput.text;
+            output.text = nativeOutput.text ?? priorOutput.text;
             output.error = nativeOutput.error;
+            if (missingText) {
+              output.error = "原生任务完成但未返回文案正文。";
+              continue;
+            }
+            if (
+              nativeOutput.status === "failed" &&
+              hasArchivedOutputEvidence(task, priorOutput)
+            ) {
+              output.status = "succeeded";
+              output.assetId = priorOutput.assetId;
+              output.text = priorOutput.text;
+              output.error = undefined;
+              continue;
+            }
+            if (
+              task.kind !== "text" &&
+              nativeOutput.status === "succeeded" &&
+              !nativeOutput.assetId
+            ) {
+              if (hasArchivedOutputEvidence(task, priorOutput)) {
+                output.status = "succeeded";
+                output.assetId = priorOutput.assetId;
+                output.text = priorOutput.text;
+                output.error = undefined;
+                continue;
+              }
+              output.status = "unknown";
+              output.error = "原生任务完成但未返回该输出的素材标识。";
+              continue;
+            }
+            if (
+              record.status === "succeeded" &&
+              nativeOutput.status === "pending"
+            ) {
+              if (hasArchivedOutputEvidence(task, priorOutput)) {
+                output.status = "succeeded";
+                output.assetId = priorOutput.assetId;
+                output.text = priorOutput.text;
+                output.error = undefined;
+                continue;
+              }
+              output.status = "unknown";
+              output.error = "原生任务完成但该输出没有终态回执。";
+              continue;
+            }
+            if (
+              record.status === "failed" &&
+              nativeOutput.status === "pending"
+            ) {
+              if (hasArchivedOutputEvidence(task, priorOutput)) {
+                output.status = "succeeded";
+                output.assetId = priorOutput.assetId;
+                output.text = priorOutput.text;
+                output.error = undefined;
+                continue;
+              }
+              output.status = "failed";
+              output.error =
+                record.failure ?? "原生任务失败但该输出没有终态回执。";
+              continue;
+            }
+            if (
+              record.status === "unknown" &&
+              nativeOutput.status === "pending"
+            ) {
+              if (hasArchivedOutputEvidence(task, priorOutput)) {
+                output.status = "succeeded";
+                output.assetId = priorOutput.assetId;
+                output.text = priorOutput.text;
+                output.error = undefined;
+                continue;
+              }
+              output.status = "unknown";
+              output.error =
+                record.failure ?? "原生任务输出回执状态不明，请先核对供应商。";
+              continue;
+            }
             if (task.kind === "text") {
               if (nativeOutput.status === "succeeded") {
                 try {
@@ -914,21 +1125,26 @@ export default function App() {
           ).length;
           const terminal =
             record.status === "succeeded" || record.status === "failed";
+          const completeArchivedEvidence =
+            completed === task.requestedOutputs && terminal;
           const status = uncertain
             ? ("unknown" as const)
-            : record.status === "succeeded"
-              ? completed === task.requestedOutputs
-                ? "succeeded"
-                : "partial"
-              : record.status === "failed"
-                ? completed > 0
-                  ? "partial"
-                  : "failed"
-                : "running";
+            : completeArchivedEvidence
+              ? "succeeded"
+              : record.status === "succeeded"
+                ? completed === task.requestedOutputs
+                  ? "succeeded"
+                  : "partial"
+                : record.status === "failed"
+                  ? completed > 0
+                    ? "partial"
+                    : "failed"
+                  : "running";
           publish(
             status,
             uncertain
-              ? (record.failure ??
+              ? (outputs.find((output) => output.status === "unknown")?.error ??
+                  record.failure ??
                   "原生任务受理状态不明，请先核对供应商；不会自动重复提交。")
               : terminal && status === "failed"
                 ? (record.failure ?? "原生任务失败，可检查供应商后重试。")
@@ -940,6 +1156,7 @@ export default function App() {
               : "terminal",
           );
           await persistence.flush();
+          return record;
         };
         if (
           nativeCancelRequested.current.has(taskId) ||
@@ -963,7 +1180,7 @@ export default function App() {
           await applyNativeRecord(nativeRecord);
           return;
         }
-        await applyNativeRecord(nativeRecord);
+        nativeRecord = await applyNativeRecord(nativeRecord);
         while (nativeRecord.status === "submitted") {
           if (controller.signal.aborted) {
             if (nativeCancelRequested.current.has(taskId)) {
@@ -984,7 +1201,7 @@ export default function App() {
             failure:
               "Desktop TaskHost 中没有找到原任务记录，请先核对供应商；不会自动重复提交。",
           };
-          await applyNativeRecord(nativeRecord);
+          nativeRecord = await applyNativeRecord(nativeRecord);
         }
         return;
       }
@@ -1046,7 +1263,7 @@ export default function App() {
           const archived = await mapWithConcurrency(
             sources,
             2,
-            async (source) => {
+            async (source, sourceIndex) => {
               try {
                 return await storeGeneratedAsset({
                   source,
@@ -1062,6 +1279,8 @@ export default function App() {
                   signal: controller.signal,
                 });
               } catch {
+                const target = pendingIndices[offset + sourceIndex];
+                if (target != null) archiveFailureIndices.add(target);
                 return null;
               }
             },
@@ -1146,8 +1365,12 @@ export default function App() {
         },
       });
       if (controller.signal.aborted) throw new Error("任务已停止。");
-      outputs = outputs.map((output) =>
-        output.status === "succeeded"
+      outputs = markArchiveFailuresUnknown(
+        outputs,
+        archiveFailureIndices,
+        "供应商结果已返回，但本地素材归档失败；请先核对素材库，不会自动重复提交。",
+      ).map((output) =>
+        output.status === "succeeded" || output.status === "unknown"
           ? output
           : {
               ...output,
@@ -1174,17 +1397,25 @@ export default function App() {
         durableSubmission &&
         generated.failure instanceof GenerationProviderError &&
         generated.failure.failureClass === "network";
-      const finalStatus = generatedUncertain ? ("unknown" as const) : status;
+      const archiveUncertain = outputs.some(
+        (output) =>
+          output.status === "unknown" &&
+          archiveFailureIndices.has(output.index),
+      );
+      const finalStatus =
+        generatedUncertain || archiveUncertain ? ("unknown" as const) : status;
       publish(
         finalStatus,
-        generatedUncertain
-          ? "供应商受理状态不明，请先核对供应商；为避免重复扣费，当前不会普通重试。"
-          : status === "succeeded"
-            ? undefined
-            : generated.failure instanceof ProviderSubmissionError
-              ? generated.failure.message
-              : `${completed}/${task.requestedOutputs} 张已归档，可重试未归档结果。`,
-        generatedUncertain ? "unknown" : "terminal",
+        archiveUncertain
+          ? "供应商结果已返回，但本地素材归档失败；请先核对素材库，不会自动重复提交。"
+          : generatedUncertain
+            ? "供应商受理状态不明，请先核对供应商；为避免重复扣费，当前不会普通重试。"
+            : status === "succeeded"
+              ? undefined
+              : generated.failure instanceof ProviderSubmissionError
+                ? generated.failure.message
+                : `${completed}/${task.requestedOutputs} 张已归档，可重试未归档结果。`,
+        generatedUncertain || archiveUncertain ? "unknown" : "terminal",
       );
       await persistence.flush();
       if (task.providerConnectionId) {
@@ -1208,7 +1439,11 @@ export default function App() {
               | "network",
             retryAfterSeconds: failure.retryAfterSeconds,
           });
-        else if (!failure && reservation?.healthUnchanged())
+        else if (
+          !failure &&
+          !archiveUncertain &&
+          reservation?.healthUnchanged()
+        )
           markProviderConnectionHealthy(task.providerConnectionId);
       }
     } catch (error) {
@@ -1219,6 +1454,13 @@ export default function App() {
           nativeTaskHost,
           aborted: controller.signal.aborted,
         }) ||
+        (nativeTaskHost &&
+          submissionMayHaveBeenAccepted({
+            durableSubmission,
+            providerRequestStarted,
+            nativeTaskHost,
+            nativeSubmissionStarted,
+          })) ||
         (durableSubmission &&
           (providerRequestStarted || nativeTaskHost) &&
           (error instanceof GenerationProviderError
@@ -1326,7 +1568,6 @@ export default function App() {
       .find(
         (task) =>
           task.id === taskId &&
-          task.kind === "text" &&
           (task.submissionState === "submitted" ||
             task.submissionState === "unknown"),
       );
@@ -1446,13 +1687,11 @@ export default function App() {
     if (!project || !oldTask || taskControllers.current[oldTaskId]) return;
     if (!canRetryTask(oldTask)) return;
     let rootTask = oldTask;
-    let targetIndices = outputsForTask(oldTask)
-      .filter(
-        (output) =>
-          output.status !== "succeeded" &&
-          (outputIndex == null || output.index === outputIndex),
-      )
-      .map((output) => output.index);
+    let targetIndices = retryableOutputIndices(
+      oldTask,
+      outputsForTask(oldTask),
+      outputIndex,
+    );
     const visited = new Set<string>();
     while (rootTask.retryOfTaskId && !visited.has(rootTask.id)) {
       visited.add(rootTask.id);
@@ -1465,19 +1704,12 @@ export default function App() {
       );
       rootTask = parent;
     }
-    targetIndices = targetIndices.filter(
-      (index) =>
-        outputsForTask(rootTask).find((output) => output.index === index)
-          ?.status !== "succeeded",
+    const rootOutputs = outputsForTask(rootTask);
+    targetIndices = targetIndices.filter((index) =>
+      retryableOutputIndices(rootTask, rootOutputs, index).includes(index),
     );
     const busyIndices = new Set(
-      project.tasks
-        .filter(
-          (candidate) =>
-            candidate.retryOfTaskId === rootTask.id &&
-            (candidate.status === "queued" || candidate.status === "running"),
-        )
-        .flatMap((candidate) => candidate.retryOutputIndices ?? []),
+      retryBlockedOutputIndices(project.tasks, rootTask.id),
     );
     targetIndices = targetIndices.filter((index) => !busyIndices.has(index));
     if (!targetIndices.length) return;
@@ -1513,7 +1745,7 @@ export default function App() {
       submissionState: "intent" as const,
       submittedAt: undefined,
       requestedOutputs: targetIndices.length,
-      estimatedCostUsd: targetIndices.length * 0.04,
+      estimatedCostUsd: undefined,
       outputs: Array.from(
         {
           length: targetIndices.length,
@@ -2579,6 +2811,9 @@ export default function App() {
               onConfigure={() => open("settings/providers")}
               onCancelTask={cancelTask}
               onPauseTask={pauseTask}
+              canPauseTask={(taskId) =>
+                Boolean(taskControllers.current[taskId])
+              }
               onResumeTask={resumeTask}
               onRetryTask={(taskId) => {
                 if (activeProject) retryTask(activeProject.id, taskId);

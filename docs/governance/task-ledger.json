@@ -1271,22 +1271,29 @@
       "TASK-CAP-001"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
     "affectedModules": [
       "src/features/mcp/mcpClient.ts",
       "src/components/settings/McpSettings.tsx",
       "tests/unit/mcpClient.test.ts",
       "tests/browser/mcp-settings.spec.ts"
     ],
-    "status": "TODO",
+    "status": "PARTIAL",
     "evidence": [
-      "docs/changes/2026-09-24-mcp-registry-limit/spec.md",
-      "docs/features/feat-012-mcp.md"
+      "docs/changes/2026-10-03-task-audit/intent.md",
+      "docs/changes/2026-10-03-task-audit/spec.md",
+      "docs/changes/2026-10-03-task-audit/plan.md",
+      "docs/changes/2026-10-03-task-audit/verification.md",
+      "docs/changes/2026-10-03-task-audit/review.md",
+      "src/features/mcp/mcpClient.ts",
+      "src/components/settings/McpProtocolNotice.tsx",
+      "tests/unit/mcpClient.test.ts",
+      "tests/browser/mcp-settings.spec.ts"
     ],
-    "verification": "NOT VERIFIED：当前客户端固定 2025-11-25 initialize；官方 2026-07-28 文档定义 server/discover。尚未运行现代协议真实服务器，兼容失败为静态推断。",
-    "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-24"
+    "verification": "本地 modern/legacy 协商、发现、列表/调用、错误分类、认证错误不回退、超时/取消、2 MB 响应、500 工具、32 页/重复游标、凭据边界已通过 25 项 MCP 单测和浏览器握手回归；真实第三方服务器及 Desktop 实机验收仍待外部环境。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-03"
   },
   {
     "id": "TASK-MCP-REGISTRY-001",
@@ -1300,20 +1307,26 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
     "affectedModules": [
       "src/features/mcp/mcpClient.ts",
       "src/components/settings/McpSettings.tsx",
       "tests/unit/mcpClient.test.ts"
     ],
-    "status": "TODO",
+    "status": "DONE",
     "evidence": [
-      "docs/changes/2026-09-24-mcp-registry-limit/review.md"
+      "docs/changes/2026-10-03-task-audit/intent.md",
+      "docs/changes/2026-10-03-task-audit/spec.md",
+      "docs/changes/2026-10-03-task-audit/plan.md",
+      "docs/changes/2026-10-03-task-audit/verification.md",
+      "docs/changes/2026-10-03-task-audit/review.md",
+      "src/features/mcp/mcpClient.ts",
+      "tests/unit/mcpClient.test.ts"
     ],
-    "verification": "独立审查在基线复现：两个实例各基于 49 项新增时，后写者覆盖先写者；修复及跨标签页验收未执行。",
-    "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-26"
+    "verification": "MCP 多实例写入在支持 Web Locks 时使用统一 exclusive lock 包住重读、冲突检查和写入并做写后校验；不支持时拒绝写入并显示只读原因，原始配置仍可查看和导出；定向单测覆盖两条默认存储路径及并发、stale add/remove、删除/更新冲突、容量和凭据边界。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-03"
   },
   {
     "id": "TASK-MCP-REGISTRY-002",
@@ -1327,21 +1340,30 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
     "affectedModules": [
       "src/features/mcp/mcpClient.ts",
       "src/components/settings/McpSettings.tsx",
       "tests/unit/mcpClient.test.ts",
       "tests/browser/mcp-settings.spec.ts"
     ],
-    "status": "TODO",
+    "status": "DONE",
     "evidence": [
-      "docs/changes/2026-09-24-mcp-registry-limit/review.md"
+      "docs/changes/2026-10-03-task-audit/intent.md",
+      "docs/changes/2026-10-03-task-audit/spec.md",
+      "docs/changes/2026-10-03-task-audit/plan.md",
+      "docs/changes/2026-10-03-task-audit/verification.md",
+      "docs/changes/2026-10-03-task-audit/review.md",
+      "src/features/mcp/mcpClient.ts",
+      "src/components/settings/McpSettings.tsx",
+      "src/components/settings/McpOverflowNotice.tsx",
+      "tests/unit/mcpClient.test.ts",
+      "tests/browser/mcp-settings.spec.ts"
     ],
-    "verification": "独立审查在基线复现：旧版 51 项存储仍在但当前界面列表为 0，registry 拒绝后续增删；恢复流程未实现。",
-    "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-26"
+    "verification": "51+ 合法旧配置保持原始字节，可导出并显式恢复；损坏 JSON 暴露 hasCorruption、停止覆盖且设置页提供导出入口；超限与损坏单测和浏览器回归通过，正常写入仍限制 50 项。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-03"
   },
   {
     "id": "FEATURE-SYSTEM",
@@ -2200,7 +2222,7 @@
     "id": "TASK-ORCH-002",
     "title": "TaskWorkbench 阶段计划视图与审批交互",
     "goal": "任务工作台展示 Stage 计划状态与 plan/result 审批门，审批按钮驱动编排器",
-    "scope": "现有工作台阶段计划视图、plan/result审批/返工/解除阻断/重新申请；原编排器项目范围校验与App/AgentHost共用实例；原存储队列确认/冲突传播与草稿恢复；竞品能力比较归入现有feature/task。",
+    "scope": "现有工作台阶段计划视图、plan/result审批/返工/解除阻断/重新申请；原编排器项目范围校验与App/AgentHost共用实例；原存储队列确认/冲突传播与草稿恢复；竞品能力比较归入现有feature/task。; TaskWorkbenchContent的既有Plan入口整合，保留新主线暂停/重规划/回执/MCP改进。",
     "acceptance": [
       "工作台显示各阶段状态徽标与待审批门",
       "plan/result 审批按钮调用编排器 decideStage",
@@ -2216,15 +2238,19 @@
     "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-ORCH-002-stage-workbench",
     "affectedModules": [
       "src/components/TaskWorkbench.tsx",
-      "src/components/StagePlanPanel.tsx",
+      "src/components/TaskWorkbenchContent.tsx",
+      "src/components/TaskWorkbenchStages.tsx",
+      "src/App.tsx",
+      "tests/browser/task-workbench.spec.ts",
       "src/components/StagePlanDetail.tsx",
       "src/styles/stage-workbench.css",
       "src/features/agent/orchestrator.ts",
-      "src/App.tsx",
-      "src/features/creation/useCreationStorage.ts"
+      "src/features/creation/useCreationStorage.ts",
+      "src/styles/task-workbench.css"
     ],
     "status": "DONE",
     "evidence": [
+      "docs/changes/2026-10-03-incomplete-tasks/verification.md",
       "docs/changes/2026-10-08-stage-workbench/intent.md",
       "docs/changes/2026-10-08-stage-workbench/spec.md",
       "docs/changes/2026-10-08-stage-workbench/plan.md",
@@ -2235,9 +2261,12 @@
       "docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance-review-fixed.json",
       "docs/changes/2026-10-08-stage-workbench/evidence/review-dfd4c12.md",
       "docs/changes/2026-10-08-stage-workbench/evidence/verify-review-fixed.txt",
-      "docs/changes/2026-10-08-stage-workbench/evidence/review-41dd865.md"
+      "docs/changes/2026-10-08-stage-workbench/evidence/review-41dd865.md",
+      "docs/changes/2026-10-08-stage-workbench/integration-plan.md",
+      "docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance-integration.json",
+      "docs/changes/2026-10-08-stage-workbench/evidence/runtime-source-hashes-integration.json"
     ],
-    "verification": "本轮本地AC DONE：源码41dd865独立复验PASS，3项finding关闭，独立46/46及14项hash/EXE一致；完整verify根638/646、Agent172/174（原skip8/2）、browser389/389零retry，production Tauri审批/重启/真实CAS冲突/恢复草稿及clientcheck PASS。本任务验收范围及功能后续接入见FEAT-030卡片；未推送/合并/发布。",
+    "verification": "本轮本地AC完成：新主线5b0eb6a融合为单一Plan/TaskWorkbenchStages及共享实例，保留主线暂停/重规划/回执/MCP行为；49/49、完整verify708root/172Agent/400browser零retry（原skip8/2）、Rust97、fresh production Tauri审批/重启/真实CAS/恢复草稿与clientcheck通过。精确新SHA独立补审及主线推广以收据和PR当前门禁为准。",
     "updated": "2026-10-08",
     "verificationResult": "PASS"
   },
@@ -2292,17 +2321,18 @@
     ],
     "status": "PARTIAL",
     "evidence": [
-      "docs/changes/2026-09-23-agent-orchestration/verification.md"
+      "docs/changes/2026-09-23-agent-orchestration/verification.md",
+      "docs/changes/2026-10-03-incomplete-tasks/verification.md"
     ],
-    "verification": "契约纯函数与单测完成；宿主强制接入（所有生成路径统一走 assertCanvasDelivery）未全量覆盖。",
-    "updated": "2026-09-23",
+    "verification": "契约现在覆盖图片与非空文案 provider 结果；Agent 图片导入要求 assetId，App 统一发布路径在 commit 前校验并把契约失败保留为 unknown。定向 agentCanvas/agentHost 23/23 通过；真实 Provider 与 Desktop 运行验收仍未完成。",
+    "updated": "2026-10-08",
     "verificationResult": "PARTIAL"
   },
   {
     "id": "TASK-TASKSTATE-001",
     "title": "统一任务态契约定稿",
     "goal": "把 9 态任务模型、可重试判定、失败只重试失败输出、成本估算收口为可复用契约模块",
-    "scope": "src/features/creation/taskState.ts, src/features/creation/taskRecovery.ts, tests/unit/taskState.test.ts",
+    "scope": "src/features/creation/taskState.ts, src/features/creation/taskRecovery.ts, tests/unit/taskState.test.ts, src/features/creation/nativeTaskHost.ts, src/App.tsx, tests/unit/nativeTaskHost.test.ts, tests/browser/task-intent.spec.ts",
     "acceptance": [
       "unifiedTaskStatuses 覆盖 9 态",
       "canRetryTask/retryFailedOutputIndices 语义正确",
@@ -2319,15 +2349,48 @@
       "src/features/creation/taskState.ts",
       "src/features/creation/taskRecovery.ts",
       "src/features/creation/model.ts",
-      "tests/unit/taskState.test.ts"
+      "tests/unit/taskState.test.ts",
+      "src/features/creation/nativeTaskHost.ts",
+      "src/App.tsx",
+      "tests/unit/nativeTaskHost.test.ts",
+      "tests/browser/task-intent.spec.ts"
     ],
     "status": "PARTIAL",
     "evidence": [
-      "docs/changes/2026-09-23-agent-orchestration/verification.md"
+      "docs/changes/2026-09-23-agent-orchestration/verification.md",
+      "docs/changes/2026-10-03-incomplete-tasks/verification.md"
     ],
-    "verification": "统一任务态复用既有普通重试门禁；unknown/已提交任务与 unknown 输出不进入失败子项重试，定向及全量 Node 单测通过。UI 硬编码示例单价未全部收口，真实 Provider 回执丢失仍需运行验收。",
-    "updated": "2026-09-23",
+    "verification": "统一普通重试门禁、重启父子对账与归档证据保护；dc05556统一原生回执任务ID/幂等键、逐输出索引与类型校验，非法回执为unknown且无重复提交。原生/恢复53项与全量Node710项（702pass/8Windows skip/0fail）、浏览器388项无重试通过；未取得供应商报价时成本未知，真实Provider/每平台运行仍待验收，保持PARTIAL。",
+    "updated": "2026-10-08",
     "verificationResult": "PARTIAL"
+  },
+  {
+    "id": "TASK-TASKSTATE-002",
+    "title": "供应商成本报价回执接入",
+    "goal": "把可验证的供应商报价或账单回执接入统一任务态，避免成本长期停留在未知状态",
+    "scope": "src/features/creation/taskState.ts, src/features/creation/model.ts, provider adapters, tests, docs/changes/2026-10-03-incomplete-tasks",
+    "acceptance": [
+      "供应商回执中的成本字段经过 schema 与非负有限边界校验",
+      "任务快照保留报价来源、币种和回执身份，未知/缺失报价仍安全显示未知",
+      "Provider fixture 与真实运行证据分别记录，不以示例单价代替实际账单"
+    ],
+    "dependencies": [
+      "TASK-TASKSTATE-001"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "src/features/creation/taskState.ts",
+      "src/features/creation/model.ts",
+      "src/features/creation/provider adapters",
+      "tests/unit"
+    ],
+    "status": "TODO",
+    "evidence": [],
+    "verification": "已在 2026-10-03 盘点中新增并排为 P1；等待供应商回执契约与真实运行条件。",
+    "updated": "2026-10-03",
+    "verificationResult": "NOT_VERIFIED"
   },
   {
     "id": "TASK-PROV-002",
@@ -3241,5 +3304,162 @@
     "verification": "本机AC-1–3 DONE：两组RED→GREEN，verify632root/172Agent/377browser（原平台skip保留）、Rust97/fmt/clientcheck；真实Tauri生图/续聊/重连/重启hash一致、节点/标记唯一。实现head3c63f1e独立审查PASS（43/9/6定向复验），P3文档意见已修正。PR#33终稿head独立补审、托管CI与推广以实际PR/收据为准；豆包/Web真实账号/其他Provider/Mobile/正式发布未验收。",
     "verificationResult": "PASS",
     "updated": "2026-10-01"
+  },
+  {
+    "id": "TASK-ORCH-REPLAN-001",
+    "title": "编排计划失败项重排与依赖闭包",
+    "goal": "在不重复成功工作项的前提下，将失败项及其下游依赖物化为可恢复的新计划",
+    "scope": "src/features/agent/orchestrator.ts, tests/unit/orchestrator.test.ts",
+    "acceptance": [
+      "失败和部分失败工作项进入新计划 queued 状态",
+      "失败项的依赖下游一并重排，已成功项和原计划保留",
+      "重复请求返回同一新计划且持久化通过 stagePlans",
+      "审批门与 revision 语义合法，不触发真实 Provider 执行"
+    ],
+    "dependencies": [
+      "TASK-ORCH-001"
+    ],
+    "owner": "root",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "affectedModules": [
+      "src/features/agent/orchestrator.ts",
+      "tests/unit/orchestrator.test.ts"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-10-03-task-audit/intent.md",
+      "docs/changes/2026-10-03-task-audit/spec.md",
+      "docs/changes/2026-10-03-task-audit/plan.md",
+      "docs/changes/2026-10-03-task-audit/verification.md",
+      "docs/changes/2026-10-03-task-audit/review.md",
+      "src/features/agent/orchestrator.ts",
+      "tests/unit/orchestrator.test.ts"
+    ],
+    "verification": "失败/部分失败项与下游依赖会生成稳定幂等的新计划，成功项和原计划保留，审批门状态合法，确定性 ID 冲突会拒绝写入；25 项 orchestrator 单测通过。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-03"
+  },
+  {
+    "id": "TASK-AUDIT-20261003",
+    "title": "全项目任务盘点与可本地闭环项收口",
+    "goal": "盘点全部任务和功能卡，完成本地可验证缺陷并同步真实状态",
+    "scope": "docs/governance, docs/features, src/features/mcp, src/features/agent, tests, src/features/creation, src/components/TaskWorkbench*.tsx, src/App.tsx",
+    "acceptance": [
+      "全部任务有状态、依赖、优先级或外部阻塞说明",
+      "本地可闭环的 MCP 注册表、协议和计划重排缺陷有实现与回归证据",
+      "治理视图和最终状态报告与实际命令输出一致",
+      "继续收口阶段审批、未知报价、画布交付及原生任务恢复的本地边界，不升级外部待验收项"
+    ],
+    "dependencies": [
+      "TASK-MCP-REGISTRY-001",
+      "TASK-MCP-REGISTRY-002",
+      "TASK-MCP-PROTO-001",
+      "TASK-ORCH-REPLAN-001"
+    ],
+    "owner": "root",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "affectedModules": [
+      "docs/governance",
+      "docs/features",
+      "src/features/mcp",
+      "src/features/agent",
+      "tests",
+      "src/features/creation",
+      "src/components/TaskWorkbenchStages.tsx",
+      "src/App.tsx"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-10-03-task-audit/intent.md",
+      "docs/changes/2026-10-03-task-audit/spec.md",
+      "docs/changes/2026-10-03-task-audit/plan.md",
+      "docs/changes/2026-10-03-task-audit/inventory.md",
+      "docs/changes/2026-10-03-task-audit/verification.md",
+      "docs/changes/2026-10-03-task-audit/review.md",
+      "docs/governance/task-ledger.json",
+      "docs/governance/TASK_LEDGER.md",
+      "docs/features/features.registry.json",
+      "docs/changes/2026-10-03-incomplete-tasks/intent.md",
+      "docs/changes/2026-10-03-incomplete-tasks/spec.md",
+      "docs/changes/2026-10-03-incomplete-tasks/plan.md",
+      "docs/changes/2026-10-03-incomplete-tasks/verification.md",
+      "docs/changes/2026-10-03-incomplete-tasks/review.md"
+    ],
+    "verification": "当前97项任务已盘点并保留真实状态、依赖与外部条件；本地注册表、协议、计划重排、阶段审批、未知报价、交付与恢复边界有实现及回归。最终业务代码dc05556独立复验PASS；最新ef580db基准独立锁定npm ci后完整verify通过：Node710项（702pass/8Windows skip/0fail）、Agent174项（172pass/2Windows skip/0fail）、浏览器388项无flaky、Rust97项。带Agent的新Desktop2.1.4 release及隔离版本/项目重启/确认/画布与记忆保护通过；真实TaskHost生成/Provider和PR/CI/推广范围以本轮verification/review及实际PR收据为准。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-08"
+  },
+  {
+    "id": "TASK-GOV-GOALS-001",
+    "title": "项目建设目标与验收基线",
+    "goal": "把核心用户路径、代码/UI/链路/质量/交付标准统一为可执行且受门禁保护的项目基线",
+    "scope": "docs/governance/PROJECT_GOALS.md, scripts/check-project-goals.mjs, package.json, docs/governance",
+    "acceptance": [
+      "明确创作、Agent、能力配置和恢复四条核心用户路径及完成证据",
+      "明确范围、非目标、Desktop/Web/Mobile边界、错误/取消/离线/未知受理和数据安全标准",
+      "项目目标检查接入 lint/verify，任务与变更证据同步"
+    ],
+    "dependencies": [
+      "TASK-AUDIT-20261003"
+    ],
+    "owner": "root",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "affectedModules": [
+      "docs/governance",
+      "scripts/check-project-goals.mjs",
+      "package.json"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-10-03-project-goals-baseline/intent.md",
+      "docs/changes/2026-10-03-project-goals-baseline/spec.md",
+      "docs/changes/2026-10-03-project-goals-baseline/plan.md",
+      "docs/changes/2026-10-03-project-goals-baseline/verification.md",
+      "docs/changes/2026-10-03-project-goals-baseline/review.md",
+      "docs/governance/PROJECT_GOALS.md",
+      "scripts/check-project-goals.mjs"
+    ],
+    "verification": "项目建设目标、四条用户主路径和六类验收门禁已落盘；目标检查通过并接入 lint/verify，外部能力继续由原任务和外部条件管理。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-03"
+  },
+  {
+    "id": "TASK-UI-COMPONENT-BOUNDARY-001",
+    "title": "MCP 设置组件职责拆分",
+    "goal": "消除 MCP 设置组件超过 300 行的职责堆叠并保持设置行为完整",
+    "scope": "src/components/settings/McpSettings.tsx, src/components/settings/McpServerForm.tsx, src/components/settings/McpServerList.tsx",
+    "acceptance": [
+      "McpSettings、表单和列表组件均符合 300 行职责边界",
+      "保存、只读禁用、连接/取消/断开、移除、工具展开和显式调用行为保持一致",
+      "类型、Lint、UI 标准和 MCP 设置浏览器回归通过"
+    ],
+    "dependencies": [
+      "TASK-GOV-GOALS-001"
+    ],
+    "owner": "root",
+    "branch": "codex/TASK-AUDIT-20261003",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+    "affectedModules": [
+      "src/components/settings/McpSettings.tsx",
+      "src/components/settings/McpServerForm.tsx",
+      "src/components/settings/McpServerList.tsx"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-10-03-ui-component-boundary/intent.md",
+      "docs/changes/2026-10-03-ui-component-boundary/spec.md",
+      "docs/changes/2026-10-03-ui-component-boundary/plan.md",
+      "docs/changes/2026-10-03-ui-component-boundary/verification.md",
+      "docs/changes/2026-10-03-ui-component-boundary/review.md",
+      "src/components/settings/McpSettings.tsx",
+      "src/components/settings/McpServerForm.tsx",
+      "src/components/settings/McpServerList.tsx"
+    ],
+    "verification": "MCP 设置容器已拆为表单和列表职责，UI 标准 194 文件/0 违规；定向 TypeScript、ESLint 和 Prettier 通过，MCP 设置浏览器回归在完整 Playwright 中通过。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-03"
   }
 ]

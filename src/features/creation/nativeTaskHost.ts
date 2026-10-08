@@ -7,6 +7,7 @@ import type {
 import { readNativeAsset, usesNativeAssets } from "./nativeAssetAdapter.ts";
 import { textTaskResult } from "./textTaskResult.ts";
 import { reconcileProjectCanvas } from "../../domain/projectCanvas.ts";
+import { reconcileRetryTaskParents } from "./taskRecovery.ts";
 
 /** The request crossing the Desktop TaskHost IPC boundary. It contains no API key. */
 export interface NativeTaskHostRequest {
@@ -51,6 +52,8 @@ export interface NativeTaskHostRecord {
 
 const DESKTOP_UNAVAILABLE =
   "Desktop TaskHost 尚未接入或不可用（Prototype），本次未发送浏览器 Provider 请求。";
+const INVALID_RECEIPT =
+  "Desktop TaskHost 输出回执缺失、冲突或超出原任务范围，请先核对供应商；不会自动重复提交。";
 
 export function usesNativeTaskHost(): boolean {
   return usesNativeAssets();
@@ -64,12 +67,14 @@ function requireNativeTaskHost(): void {
   if (!usesNativeTaskHost()) throw nativeTaskHostUnavailableError();
 }
 
-function normalizeRecord(
-  value: NativeTaskHostRecord & { assetIds?: unknown; failure?: unknown },
-): NativeTaskHostRecord {
+function normalizeRecord(input: unknown): NativeTaskHostRecord {
+  const value =
+    input && typeof input === "object"
+      ? (input as Record<string, unknown>)
+      : {};
   const rawOutputs = Array.isArray(value.outputs)
     ? value.outputs
-    : Array.isArray(value.assetIds)
+    : value.outputs === undefined && Array.isArray(value.assetIds)
       ? value.assetIds.map((assetId, index) => ({
           index: Array.isArray(value.outputIndices)
             ? (value.outputIndices[index] ?? index)
@@ -79,33 +84,54 @@ function normalizeRecord(
           error: undefined,
         }))
       : [];
-  const outputs = rawOutputs
-    .filter((output) => output && Number.isSafeInteger(output.index))
-    .map((output) => ({
-      index: output.index,
-      status:
-        output.status === "succeeded" ||
-        output.status === "unknown" ||
-        output.status === "failed"
-          ? output.status
-          : ("pending" as const),
-      assetId: typeof output.assetId === "string" ? output.assetId : undefined,
-      text:
-        "text" in output &&
-        typeof output.text === "string" &&
-        new TextEncoder().encode(output.text).length <= 32768
-          ? output.text
-          : undefined,
-      error: typeof output.error === "string" ? output.error : undefined,
-    }));
+  const validOutputs = rawOutputs.filter(
+    (output): output is Record<string, unknown> =>
+      output != null &&
+      typeof output === "object" &&
+      Number.isSafeInteger(output.index) &&
+      output.index >= 0 &&
+      ["pending", "submitted", "succeeded", "unknown", "failed"].includes(
+        output.status,
+      ),
+  );
+  // Do not discard malformed entries and then accept the remaining receipt.
+  const malformed =
+    (value.outputs !== undefined && !Array.isArray(value.outputs)) ||
+    validOutputs.length !== rawOutputs.length ||
+    (value.outputIndices !== undefined &&
+      (!Array.isArray(value.outputIndices) ||
+        value.outputIndices.some(
+          (index) => !Number.isSafeInteger(index) || index < 0,
+        ))) ||
+    !["submitted", "succeeded", "unknown", "failed"].includes(
+      value.status as string,
+    );
+  const outputs: NativeTaskHostOutput[] = validOutputs.map((output) => ({
+    index: output.index as number,
+    status:
+      output.status === "succeeded" ||
+      output.status === "unknown" ||
+      output.status === "failed"
+        ? output.status
+        : ("pending" as const),
+    assetId: typeof output.assetId === "string" ? output.assetId : undefined,
+    text:
+      "text" in output &&
+      typeof output.text === "string" &&
+      new TextEncoder().encode(output.text).length <= 32768
+        ? output.text
+        : undefined,
+    error: typeof output.error === "string" ? output.error : undefined,
+  }));
   return {
     taskId: typeof value.taskId === "string" ? value.taskId : "",
     idempotencyKey:
       typeof value.idempotencyKey === "string" ? value.idempotencyKey : "",
-    status:
-      value.status === "succeeded" ||
-      value.status === "failed" ||
-      value.status === "unknown"
+    status: malformed
+      ? "unknown"
+      : value.status === "succeeded" ||
+          value.status === "failed" ||
+          value.status === "unknown"
         ? value.status
         : "submitted",
     outputIndices: Array.isArray(value.outputIndices)
@@ -113,9 +139,10 @@ function normalizeRecord(
           Number.isSafeInteger(index),
         )
       : outputs.map((output) => output.index),
-    outputs,
-    failure:
-      typeof value.failure === "string"
+    outputs: malformed ? [] : outputs,
+    failure: malformed
+      ? INVALID_RECEIPT
+      : typeof value.failure === "string"
         ? value.failure
         : value.failure &&
             typeof value.failure === "object" &&
@@ -126,6 +153,53 @@ function normalizeRecord(
       typeof value.updatedAt === "number" && Number.isFinite(value.updatedAt)
         ? value.updatedAt
         : Date.now(),
+  };
+}
+
+/** Quarantine an inconsistent receipt before either live or recovered output is applied. */
+export function validateNativeTaskRecord(
+  record: NativeTaskHostRecord,
+  task: Pick<CreationTask, "id" | "idempotencyKey" | "requestedOutputs">,
+  submittedOutputIndices?: readonly number[],
+): NativeTaskHostRecord {
+  const declared = new Set(record.outputIndices);
+  const received = new Set(record.outputs.map((output) => output.index));
+  const identityMismatch =
+    record.taskId !== task.id || record.idempotencyKey !== task.idempotencyKey;
+  const invalidOutputs =
+    declared.size === 0 ||
+    declared.size !== record.outputIndices.length ||
+    received.size !== record.outputs.length ||
+    declared.size !== received.size ||
+    record.outputIndices.some(
+      (index) =>
+        !Number.isSafeInteger(index) ||
+        index < 0 ||
+        index >= task.requestedOutputs ||
+        !received.has(index),
+    ) ||
+    (submittedOutputIndices !== undefined &&
+      (submittedOutputIndices.length !== declared.size ||
+        submittedOutputIndices.some((index) => !declared.has(index))));
+  if (!identityMismatch && !invalidOutputs) return record;
+  const failure = identityMismatch
+    ? "Desktop TaskHost 回执的任务身份不匹配，请先核对供应商；不会自动重复提交。"
+    : INVALID_RECEIPT;
+  const outputIndices = submittedOutputIndices
+    ? [...submittedOutputIndices]
+    : Array.from({ length: task.requestedOutputs }, (_, index) => index);
+  return {
+    taskId: task.id,
+    idempotencyKey: task.idempotencyKey,
+    status: "unknown",
+    outputIndices,
+    outputs: outputIndices.map((index) => ({
+      index,
+      status: "unknown",
+      error: failure,
+    })),
+    failure,
+    updatedAt: record.updatedAt,
   };
 }
 
@@ -185,11 +259,16 @@ function outputStatus(
   return "running";
 }
 
-function taskStatus(record: NativeTaskHostRecord): CreationTask["status"] {
-  if (record.status === "succeeded") return "succeeded";
-  if (record.status === "failed") return "failed";
-  if (record.status === "unknown") return "unknown";
-  return "running";
+function hasArchivedOutputEvidence(
+  task: Pick<CreationTask, "kind">,
+  output: Pick<CreationTaskOutput, "assetId" | "text" | "status">,
+): boolean {
+  if (output.status !== "succeeded") return false;
+  if (task.kind !== "text") return Boolean(output.assetId);
+  return Boolean(
+    output.text?.trim() &&
+    new TextEncoder().encode(output.text).length <= 32768,
+  );
 }
 
 /**
@@ -252,8 +331,11 @@ export async function reconcileNativeTasks(
       const tasks = await Promise.all(
         project.tasks.map(async (task) => {
           if (onlyTaskIds && !onlyTaskIds.includes(task.id)) return task;
-          const native =
+          const candidate =
             byTaskId.get(task.id) ?? byIdempotency.get(task.idempotencyKey);
+          const native = candidate
+            ? validateNativeTaskRecord(candidate, task)
+            : undefined;
           const mayHaveBeenSubmitted =
             task.submissionState === "submitted" ||
             task.submissionState === "unknown" ||
@@ -267,6 +349,16 @@ export async function reconcileNativeTasks(
               task.error?.includes("Desktop TaskHost")
             )
               return task;
+            const outputs = task.outputs?.map((output) =>
+              hasArchivedOutputEvidence(task, output)
+                ? output
+                : {
+                    ...output,
+                    status: "unknown" as const,
+                    error:
+                      "Desktop TaskHost 中没有找到原任务输出回执，请先核对供应商。",
+                  },
+            );
             projectChanged = changed = true;
             return {
               ...task,
@@ -274,36 +366,155 @@ export async function reconcileNativeTasks(
               submissionState: "unknown" as const,
               error:
                 "Desktop TaskHost 中没有找到原任务记录，请先核对供应商；不会自动重复提交。",
+              outputs,
+              completedOutputs:
+                outputs?.filter((output) => output.status === "succeeded")
+                  .length ?? task.completedOutputs,
               updatedAt: Date.now(),
             };
           }
           const existing = task.outputs ?? [];
-          const outputs = native.outputs.length
-            ? native.outputs.map((output) => {
-                const prior = existing.find(
-                  (item) => item.index === output.index,
-                );
-                return {
-                  index: output.index,
-                  status: outputStatus(output.status),
-                  model: prior?.model ?? task.model,
-                  provider: prior?.provider ?? task.providerName,
-                  promptHash: prior?.promptHash,
-                  assetId: output.assetId,
-                  text: output.text,
-                  error: output.error,
-                  createdAt: prior?.createdAt ?? task.createdAt,
-                } satisfies CreationTaskOutput;
-              })
-            : existing.map((output) => ({
-                ...output,
+          const expectedOutputIndices = Array.from(
+            new Set(
+              Array.from(
+                { length: task.requestedOutputs },
+                (_, index) => index,
+              ).concat(
+                native.outputIndices,
+                native.outputs.map((output) => output.index),
+                existing.map((output) => output.index),
+              ),
+            ),
+          ).sort((left, right) => left - right);
+          const outputs = expectedOutputIndices.map((index) => {
+            const prior = existing.find((item) => item.index === index);
+            const nativeOutput = native.outputs.find(
+              (output) => output.index === index,
+            );
+            if (!nativeOutput) {
+              if (prior && hasArchivedOutputEvidence(task, prior)) return prior;
+              return {
+                ...(prior ?? {
+                  index,
+                  status: "waiting" as const,
+                  model: task.model,
+                  provider: task.providerName,
+                  createdAt: task.createdAt,
+                }),
                 status:
-                  native.status === "submitted"
-                    ? ("running" as const)
-                    : output.status,
-              }));
+                  native.status === "succeeded"
+                    ? ("unknown" as const)
+                    : native.status === "failed"
+                      ? ("failed" as const)
+                      : native.status === "unknown"
+                        ? ("unknown" as const)
+                        : native.status === "submitted"
+                          ? ("running" as const)
+                          : (prior?.status ?? ("waiting" as const)),
+                error:
+                  native.status === "succeeded"
+                    ? "原生任务完成但未返回该输出回执。"
+                    : native.status === "failed"
+                      ? (native.failure ?? "原生任务失败但未返回该输出回执。")
+                      : native.status === "unknown"
+                        ? (native.failure ??
+                          "原生任务输出回执状态不明，请先核对供应商。")
+                        : prior?.error,
+              } satisfies CreationTaskOutput;
+            }
+            const outputStatusValue = outputStatus(nativeOutput.status);
+            const missingImageAsset =
+              task.kind !== "text" &&
+              outputStatusValue === "succeeded" &&
+              !nativeOutput.assetId;
+            const missingText =
+              task.kind === "text" &&
+              outputStatusValue === "succeeded" &&
+              !nativeOutput.text?.trim();
+            const terminalPendingOutput =
+              native.status === "succeeded" && outputStatusValue === "running";
+            const uncertainPendingOutput =
+              native.status === "unknown" && outputStatusValue === "running";
+            const failedTerminalOutput =
+              native.status === "failed" && outputStatusValue === "running";
+            if (
+              missingImageAsset &&
+              prior &&
+              hasArchivedOutputEvidence(task, prior)
+            )
+              return prior;
+            if (missingText && prior && hasArchivedOutputEvidence(task, prior))
+              return prior;
+            if (
+              terminalPendingOutput &&
+              prior &&
+              hasArchivedOutputEvidence(task, prior)
+            )
+              return prior;
+            if (
+              uncertainPendingOutput &&
+              prior &&
+              hasArchivedOutputEvidence(task, prior)
+            )
+              return prior;
+            if (
+              failedTerminalOutput &&
+              prior &&
+              hasArchivedOutputEvidence(task, prior)
+            )
+              return prior;
+            if (
+              outputStatusValue === "failed" &&
+              prior &&
+              hasArchivedOutputEvidence(task, prior)
+            )
+              return prior;
+            if (
+              outputStatusValue === "unknown" &&
+              prior &&
+              hasArchivedOutputEvidence(task, prior)
+            )
+              return prior;
+            return {
+              index,
+              status:
+                missingImageAsset ||
+                missingText ||
+                terminalPendingOutput ||
+                uncertainPendingOutput
+                  ? ("unknown" as const)
+                  : failedTerminalOutput
+                    ? ("failed" as const)
+                    : outputStatusValue,
+              model: prior?.model ?? task.model,
+              provider: prior?.provider ?? task.providerName,
+              promptHash: prior?.promptHash,
+              assetId: nativeOutput.assetId ?? prior?.assetId,
+              text: nativeOutput.text ?? prior?.text,
+              error: missingImageAsset
+                ? "原生任务完成但未返回该输出的素材标识。"
+                : missingText
+                  ? "原生任务完成但未返回文案正文。"
+                  : terminalPendingOutput
+                    ? "原生任务完成但该输出没有终态回执。"
+                    : uncertainPendingOutput
+                      ? (native.failure ??
+                        "原生任务输出回执状态不明，请先核对供应商。")
+                      : failedTerminalOutput
+                        ? (native.failure ??
+                          "原生任务失败但该输出没有终态回执。")
+                        : nativeOutput.error,
+              createdAt: prior?.createdAt ?? task.createdAt,
+            } satisfies CreationTaskOutput;
+          });
           const succeeded = outputs.filter(
-            (output) => output.status === "succeeded",
+            (output) =>
+              output.status === "succeeded" &&
+              native.outputs.some(
+                (candidate) =>
+                  candidate.index === output.index &&
+                  candidate.status === "succeeded",
+              ),
           );
           for (const output of succeeded) {
             if (task.kind === "text") {
@@ -376,7 +587,33 @@ export async function reconcileNativeTasks(
           const hasUnknown =
             native.status === "unknown" ||
             outputs.some((output) => output.status === "unknown");
-          const status = hasUnknown ? "unknown" : taskStatus(native);
+          const completed = outputs.filter(
+            (output) => output.status === "succeeded",
+          ).length;
+          const hasFailed = outputs.some(
+            (output) =>
+              output.status === "failed" || output.status === "cancelled",
+          );
+          const completeArchivedEvidence =
+            completed === task.requestedOutputs &&
+            (native.status === "succeeded" || native.status === "failed");
+          const status = hasUnknown
+            ? "unknown"
+            : completeArchivedEvidence
+              ? "succeeded"
+              : native.status === "succeeded"
+                ? completed === task.requestedOutputs
+                  ? "succeeded"
+                  : hasFailed
+                    ? completed > 0
+                      ? "partial"
+                      : "failed"
+                    : "unknown"
+                : native.status === "failed"
+                  ? completed > 0
+                    ? "partial"
+                    : "failed"
+                  : "running";
           const firstSucceeded = outputs.find(
             (output) => output.status === "succeeded",
           );
@@ -391,16 +628,19 @@ export async function reconcileNativeTasks(
                   : ("terminal" as const),
             submittedAt: task.submittedAt ?? native.updatedAt,
             outputs,
-            completedOutputs: outputs.filter(
-              (output) => output.status === "succeeded",
-            ).length,
+            completedOutputs: completed,
             resultItemId: firstSucceeded
               ? `${project.id}-${task.id}-result-${firstSucceeded.index + 1}`
               : task.resultItemId,
-            error: hasUnknown
-              ? (native.failure ??
-                "原生任务受理状态不明，请先核对供应商；不会自动重复提交。")
-              : native.failure,
+            error:
+              status === "succeeded"
+                ? undefined
+                : hasUnknown
+                  ? (outputs.find((output) => output.status === "unknown")
+                      ?.error ??
+                    native.failure ??
+                    "原生任务受理状态不明，请先核对供应商；不会自动重复提交。")
+                  : native.failure,
             updatedAt: native.updatedAt,
           };
           if (
@@ -417,38 +657,109 @@ export async function reconcileNativeTasks(
           return nextTask;
         }),
       );
-      if (!projectChanged) return project;
+      const sourceStates = new Map<string, "clear" | "pending" | "error">();
+      for (const task of tasks) {
+        const uncertain =
+          task.status === "unknown" ||
+          task.submissionState === "unknown" ||
+          task.outputs?.some((output) => output.status === "unknown");
+        const sourceItemId =
+          task.sourceItemId !== undefined
+            ? items.some((item) => item.id === task.sourceItemId)
+              ? task.sourceItemId
+              : undefined
+            : (items.find((item) => item.id === `${project.id}-prompt`)?.id ??
+              items.find((item) => item.kind === "image" && !item.result)?.id);
+        if (!sourceItemId) continue;
+        if (!items.some((item) => item.id === sourceItemId)) continue;
+        const state =
+          uncertain || task.status === "failed" || task.status === "offline"
+            ? ("error" as const)
+            : task.status === "running" || task.status === "queued"
+              ? ("pending" as const)
+              : ("clear" as const);
+        const currentState = sourceStates.get(sourceItemId);
+        const priority = { clear: 0, pending: 1, error: 2 } as const;
+        if (!currentState || priority[state] > priority[currentState])
+          sourceStates.set(sourceItemId, state);
+      }
+      for (const [sourceItemId, sourceState] of sourceStates) {
+        const sourceIndex = items.findIndex((item) => item.id === sourceItemId);
+        if (sourceIndex < 0) continue;
+        const nextGenerationStatus =
+          sourceState === "error"
+            ? ("error" as const)
+            : sourceState === "pending"
+              ? ("pending" as const)
+              : undefined;
+        if (items[sourceIndex].generationStatus === nextGenerationStatus)
+          continue;
+        items[sourceIndex] = {
+          ...items[sourceIndex],
+          generationStatus: nextGenerationStatus,
+        };
+        projectChanged = changed = true;
+      }
       const canvas = reconcileProjectCanvas(project.canvas, items);
       for (const task of tasks) {
-        if (
-          task.kind !== "text" ||
-          !task.sourceItemId ||
-          !items.some((item) => item.id === task.sourceItemId)
-        )
+        const sourceItemId =
+          task.sourceItemId !== undefined
+            ? items.some((item) => item.id === task.sourceItemId)
+              ? task.sourceItemId
+              : undefined
+            : (items.find((item) => item.id === `${project.id}-prompt`)?.id ??
+              items.find((item) => item.kind === "image" && !item.result)?.id);
+        if (!sourceItemId || !items.some((item) => item.id === sourceItemId))
           continue;
         for (const output of task.outputs ?? []) {
           if (output.status !== "succeeded") continue;
           const target = `${project.id}-${task.id}-result-${output.index + 1}`;
-          if (
-            items.some((item) => item.id === target) &&
-            !canvas.edges.some(
-              (edge) =>
-                edge.source === task.sourceItemId && edge.target === target,
+          if (!items.some((item) => item.id === target)) continue;
+          const existingEdgeIndex = canvas.edges.findIndex(
+            (edge) => edge.target === target && edge.kind === "result",
+          );
+          if (existingEdgeIndex >= 0) {
+            const existingEdge = canvas.edges[existingEdgeIndex];
+            if (existingEdge.source === sourceItemId) continue;
+            const preferredId = `result-${target}`;
+            const edgeId = canvas.edges.some(
+              (edge, index) =>
+                index !== existingEdgeIndex &&
+                edge.id === preferredId &&
+                edge.target !== target,
             )
-          ) {
-            canvas.edges.push({
-              id: `result-${target}`,
-              source: task.sourceItemId,
+              ? `result-${sourceItemId}-${target}`
+              : preferredId;
+            canvas.edges[existingEdgeIndex] = {
+              ...existingEdge,
+              id: edgeId,
+              source: sourceItemId,
               target,
               kind: "result",
-            });
+            };
+            projectChanged = changed = true;
+            continue;
           }
+          const preferredId = `result-${target}`;
+          const edgeId = canvas.edges.some((edge) => edge.id === preferredId)
+            ? `result-${sourceItemId}-${target}`
+            : preferredId;
+          canvas.edges.push({
+            id: edgeId,
+            source: sourceItemId,
+            target,
+            kind: "result",
+          });
+          projectChanged = changed = true;
         }
       }
+      if (!projectChanged) return project;
       return { ...project, items, tasks, canvas, updatedAt: Date.now() };
     }),
   );
-  return changed
-    ? { ...snapshot, projects, revision: snapshot.revision + 1 }
-    : snapshot;
+  return reconcileRetryTaskParents(
+    changed
+      ? { ...snapshot, projects, revision: snapshot.revision + 1 }
+      : snapshot,
+  );
 }

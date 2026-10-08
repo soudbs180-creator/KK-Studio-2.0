@@ -35,7 +35,7 @@ async function openPlans(
     .click();
   await page.getByRole("button", { name: "打开任务列表" }).click();
   await page.getByRole("button", { name: "打开任务工作台" }).click();
-  await page.getByRole("tab", { name: /^阶段计划/ }).click();
+  await page.getByRole("tab", { name: "Plan", exact: true }).click();
 }
 
 async function savedPlan(page: Page) {
@@ -68,7 +68,7 @@ test("计划批准只推进一次并持久化，不创建生成任务", async ({
     .click();
   await page.getByRole("button", { name: "打开任务列表" }).click();
   await page.getByRole("button", { name: "打开任务工作台" }).click();
-  await page.getByRole("tab", { name: /^阶段计划/ }).click();
+  await page.getByRole("tab", { name: "Plan", exact: true }).click();
   await expect
     .poll(async () => (await savedPlan(page))?.stages[0].status)
     .toBe("doing");

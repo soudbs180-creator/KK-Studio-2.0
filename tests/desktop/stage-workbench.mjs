@@ -95,7 +95,7 @@ async function launch() {
     .click();
   await page.getByRole("button", { name: "打开任务列表" }).click();
   await page.getByRole("button", { name: "打开任务工作台" }).click();
-  await page.getByRole("tab", { name: /^阶段计划/ }).click();
+  await page.getByRole("tab", { name: "Plan", exact: true }).click();
 }
 
 async function saved() {
@@ -252,7 +252,7 @@ try {
   );
   await page.getByRole("button", { name: "打开任务列表" }).click();
   await page.getByRole("button", { name: "打开任务工作台" }).click();
-  await page.getByRole("tab", { name: /^阶段计划/ }).click();
+  await page.getByRole("tab", { name: "Plan", exact: true }).click();
   await page.getByRole("button", { name: /阶段 4：阶段摘要/ }).click();
   await page.evaluate(async () => {
     const boundary = window.__stageSaveConflict;

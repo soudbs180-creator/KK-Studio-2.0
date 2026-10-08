@@ -1,7 +1,11 @@
 import type { CanvasCollectionItem } from "../../domain/canvasItems.ts";
 import { reconcileProjectCanvas } from "../../domain/projectCanvas.ts";
 import type { CreationProject } from "../creation/model.ts";
-import { applyAgentOpsToItems, buildAgentSnapshot } from "./agentCanvas.ts";
+import {
+  applyAgentOpsToItems,
+  assertCanvasDelivery,
+  buildAgentSnapshot,
+} from "./agentCanvas.ts";
 import type { AgentOpResult } from "./agentConnection.ts";
 import type { CanvasAgentOp } from "./agentTypes.ts";
 import { storeGeneratedAsset } from "../creation/assetRepository.ts";
@@ -113,8 +117,19 @@ export function createAgentHost(options: AgentHostOptions) {
           source: "provider",
         },
       };
+      const nextProject = appendImageTaskResults(
+        current,
+        [item],
+        input.sourceNodeId,
+      );
+      assertCanvasDelivery({
+        nodeId: item.id,
+        project: nextProject,
+        label: "Agent 图片产物",
+        requireAssetId: true,
+      });
       options.commit({
-        ...appendImageTaskResults(current, [item], input.sourceNodeId),
+        ...nextProject,
         agentGeneratedImageIds: [
           ...(current.agentGeneratedImageIds ?? []),
           input.id,

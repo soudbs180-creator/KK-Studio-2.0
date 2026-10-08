@@ -41,3 +41,7 @@
 - 必须由用户决定的产品语义/范围事项：无新增必须决定事项。
 - 外部条件、费用或不可逆动作：npm 依赖安装和本地验证；不调用真实供应商。
 - 不在本次范围的问题与账本 ID：TASK-ORCH-003、BACKEND-MCP-AUTO、BACKEND-MEDIA-001、TASK-ORCH-004。
+
+## 后续主线集成授权
+
+用户在本地候选交付后明确要求“合并主线”。按当前BRANCH-POLICY推送本任务分支、创建PR并在当前CI/独立审查门禁满足后squash；无部署、付费调用或分支清理授权。准备推送时主线前移至5b0eb6a（PR #34），因此先在本任务worktree融合并重新验收，不能直接沿用旧SHA审查。具体方案见[integration-plan](integration-plan.md)。上文无推送授权及初始main不变描述是首轮历史范围。
