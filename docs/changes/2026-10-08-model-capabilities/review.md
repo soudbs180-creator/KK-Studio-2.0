@@ -1,6 +1,6 @@
 # Review：模型能力声明
 
-- Task ID：TASK-MODEL-001；当前状态：CHANGES REQUIRED，修正候选待提交后补审；日期：2026-10-08。
+- Task ID：TASK-MODEL-001；技术审查状态：PASS（head6da9920e）；最终文档head增量补审另绑；日期：2026-10-08。
 - [Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Verification](verification.md)。
 - 当前目标基线：origin/main@5dd6e6dddaf00cf2d5c14ae02ef5974c72238232；集成提交577ed3ee，主checkout目前同一main SHA且clean。本任务仅写隔离候选。
 - 实际 GitHub 审批、用户产品验收、合并与发布分别记录，不由技术检查代填。
@@ -22,7 +22,7 @@
 - 位置（首轮 head）：CreationComposer.tsx:89、CanvasImageCommand.tsx:59、ImageRedrawDialog.tsx:12；对照 imageTaskCommand.ts:321。
 - 条件：原图与一个连线节点共用 assetId，限额 1 时实际附件去重为一张，而普通 UI 会重复计数；原图加另一张连线参考图、限额收紧至 1 时，重绘窗口遗漏 incoming，直到 prepare 才拒绝。
 - 影响：合法编辑被误禁，或超限编辑未提前给出正确禁用说明。底层门禁有效，未发现超限 HTTP 或任务受理绕过。
-- 负责人：TASK-MODEL-001 实现者；当前状态：修正已写入，定向单测通过，最终候选独立复验待完成。
+- 负责人：TASK-MODEL-001 实现者；当前状态：CLOSED，2026-10-08 15:02由同一独立上下文对新base/head复验关闭，见下方收据。
 
 接收审查后先核对实际归档逻辑。图边单测确实复现了同素材误拒；浏览器准备先修正恢复时卸载保存竞争、动态 first 定位器和未知模型绑定，保留这些失败记录。稳定真实控件回归复现了不同素材超限时重绘仍 enabled，未删验收断言。修正将归档素材去重、源图存在判定用于普通生成、重绘、连线和附件读取；非图片、未归档与悬空引用保留失败关闭保护。参见 verification 的 RED/GREEN 与最终集成记录。
 
@@ -38,4 +38,17 @@
 
 账号/完整 model、false/zero/未知、文本/Codex隔离及任务数量与 HTTP 分块契约保留。最新主线的 native intent/回执恢复和显式重试逻辑保留；本修正不迁移项目/素材/凭据、不复制 ArtCraft 产品代码或目录，不新增依赖/CSS。
 
-定向单测 28/28、六项 capability 浏览器诊断通过；该浏览器诊断明确使用 1425，只证明本文件的 fixture 范围，不能替代仓库规定的 1423 全量验收。标准端口自然释放后，5b集成轮完整verify已通过；又融合新main@5dd6e6dd，最后源码完整verify723/731root、172/174Agent（原skip保留）、406browser无flaky、clientcheck、fresh Tauri/隔离运行全部通过。新head正式独立复核待完成，旧review不套用新SHA。
+定向单测 28/28、六项 capability 浏览器诊断通过；该浏览器诊断明确使用 1425，只证明本文件的 fixture 范围，不能替代仓库规定的 1423 全量验收。标准端口自然释放后，5b集成轮完整verify已通过；又融合新main@5dd6e6dd，最后源码完整verify723/731root、172/174Agent（原skip保留）、406browser无flaky、clientcheck、fresh Tauri/隔离运行全部通过。上述实现者自审当时尚待新head独立复核，随后取得下方固定SHA收据，旧review不套用新SHA。
+
+## 最新集成提交的独立复验
+
+- Base：5dd6e6dddaf00cf2d5c14ae02ef5974c72238232。
+- Head：6da9920e77bb569cd0041dc0c65727292025fb61。
+- 时间：2026-10-08 15:02，Asia/Shanghai；reviewer：原独立只读model_capability_review上下文，调度指定gpt-6-astra；自报Codex/GPT-6、部署型号未暴露。
+- 结论：PASS；MC-001 CLOSED，无新增P0–P3 finding。工作树保持clean，未启动服务、构建、派二级代理或修改源码。
+
+独立重跑七个相关单测文件87/87 PASS、0 skip，包含归档去重、非法原件、租约迟到变化、native回执恢复/unknown重试和保存队列。重算389个源码文件，全部匹配聚合指纹8e58bd273069b7f578f52943107f1d648a75593060d55f59cc698267fa1f2373；EXE及实际index-ByBcWj1e.js与native记录一致。抽查最新原始日志及六项capability浏览器记录，支持723/731root、172/174Agent（原skip保留）、406browser/0flaky与fresh Tauri结果；目视抽查390设置/native参数。本次浏览器与native是已提交证据复核，没有声称独立重跑全量。
+
+复验确认普通生成/重绘传完整references、共享assetId只占一次、不同素材超限预禁用，hover和实际connect使用同一总量规则，edit=false没有被去重扩大权限。非图片、未归档、悬空引用继续失败关闭。App相对新main的差异只增加任务输出数量和native图片能力复查；上游intent/回执恢复/保存确认/unknown与显式重试保留。
+
+真实Provider、实际蒙版/扩图和原生Mobile仍未评定；既有开发插件错误另记TASK-PLUGIN-DEV-001，不把Esc局部通过当插件通过。GitHub身份审批、用户产品验收、公开授权、合并/发布不由技术结论代填。此次补写review/状态文件仅为文档，最终head仍需增量补审；最终PR描述和交付收据记录准确SHA及Hosted结果，不能把本收据SHA偷偷替换成后续提交。

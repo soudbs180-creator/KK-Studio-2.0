@@ -2,7 +2,7 @@
 
 > For agentic workers: execute with superpowers:executing-plans; tests follow superpowers:test-driven-development. The project spec and AGENTS govern approvals and delivery.
 
-- Task ID：TASK-MODEL-001；状态：REVIEW；日期：2026-10-08。
+- Task ID：TASK-MODEL-001；状态：IMPLEMENTED（本地AC已验）；日期：2026-10-08。
 - Goal：现有目录成为图片参数和已知限制的统一来源。
 - Architecture：domain 白名单 → account-scoped catalog → shared resolver → UI/共享提交校验。
 - Tech Stack：React 18 / TypeScript / Node 24 / Tauri 2；无新增依赖。
@@ -72,6 +72,6 @@
 
 Pre-flight：Task 2/3 消费 Task 1；Task 3 消费 Task 2 的门禁，输出数量使用 maxGenerationCount（任务级），不得替换 maxOutputs（HTTP 级）。暂无契约冲突。
 
-Task 1–3 已实现并完成 RED→GREEN，首轮审查MC-001已定向修正。历史5b轮完整verify/native通过已留档；融合新main@5dd后，Task4候选版本Desktop2.1.6/Web2.1.7的完整verify、client:check、final Tauri/隔离运行已通过，新head独立补审/PR门禁待完成。CanvasNodeLayer 达到 317 行时触发 UI check，按职责拆出原参考图映射为 canvasReferences.ts；不是额外界面重构。发现的原主线开发插件错误登记 TASK-PLUGIN-DEV-001，本任务不接管插件修复。文本模型和单张重绘兼容缺陷均有失败先行修正，见 verification。
+Task 1–3 已实现并完成 RED→GREEN，首轮审查MC-001已定向修正。历史5b轮完整verify/native通过已留档；融合新main@5dd后，Task4候选版本Desktop2.1.6/Web2.1.7的完整verify、client:check、final Tauri/隔离运行已通过，6da9920e独立补审PASS，MC-001关闭；最终文档head/PR/Hosted门禁以准确交付收据为准。CanvasNodeLayer 达到 317 行时触发 UI check，按职责拆出原参考图映射为 canvasReferences.ts；不是额外界面重构。发现的原主线开发插件错误登记 TASK-PLUGIN-DEV-001，本任务不接管插件修复。文本模型和单张重绘兼容缺陷均有失败先行修正，见 verification。
 
 实施/测试/裁决与结果持续记录在 [verification](verification.md)，不得因上下文恢复重做已完成步骤。

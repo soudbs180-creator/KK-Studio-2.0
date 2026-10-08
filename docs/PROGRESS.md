@@ -2,7 +2,7 @@
 
 ## 2026-10-08 精确账号图片模型能力声明
 
-TASK-MODEL-001 已实现精确账号/model 图片操作三态及参考图/任务数量限额，MC-001修正统一归档素材去重和重绘预校验。当前base main@5dd6e6dd的完整verify723root/172Agent/406browser通过，原skip8/2保留且0flaky，UI198/0；client:check、fresh Tauri和隔离运行通过。候选源码Desktop2.1.6/Web2.1.7，Mobile规划2.1.1；独立新head补审与draft PR/Hosted门禁待完成。FEAT-003保持PARTIAL，真实Provider和蒙版/扩图执行另验；TASK-PLUGIN-DEV-001开发插件既有错误仍TODO。见[验证](changes/2026-10-08-model-capabilities/verification.md)。
+TASK-MODEL-001 已实现精确账号/model 图片操作三态及参考图/任务数量限额，MC-001修正统一归档素材去重和重绘预校验。当前base main@5dd6e6dd的完整verify723root/172Agent/406browser通过，原skip8/2保留且0flaky，UI198/0；client:check、fresh Tauri和隔离运行通过。候选源码Desktop2.1.6/Web2.1.7，Mobile规划2.1.1；本地AC1–5完成，独立6da9920e技术补审PASS、MC-001关闭；最终文档head补审和PR/Hosted交付收据另绑，不代表已合并/发布。FEAT-003保持PARTIAL，真实Provider和蒙版/扩图执行另验；TASK-PLUGIN-DEV-001开发插件既有错误仍TODO。见[验证](changes/2026-10-08-model-capabilities/verification.md)。
 
 ## 2026-10-08 阶段工作台主线融合
 

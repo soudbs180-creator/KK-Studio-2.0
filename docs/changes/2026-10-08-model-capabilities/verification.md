@@ -1,6 +1,6 @@
 # Verification：模型能力声明
 
-- Task ID：TASK-MODEL-001；状态：REVIEW；日期：2026-10-08（Asia/Shanghai）。
+- Task ID：TASK-MODEL-001；状态：PASS（本地AC1–5；交付门禁另记）；日期：2026-10-08（Asia/Shanghai）。
 - [Intent](intent.md) · [Spec](spec.md) · [Plan](plan.md) · [Review](review.md)。
 - branch：codex/TASK-MODEL-001-capabilities；开工base21d121d2b884b2b7ced4a98eb0e03c590de5c3cd；当前base5dd6e6dddaf00cf2d5c14ae02ef5974c72238232。
 - cwd：`D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`；原 checkout clean。
@@ -96,3 +96,11 @@ full verify 完成后的 fetch 发现 main 已更新至 5dd6e6dd（阶段计划�
 Web [390](evidence/latest-main5dd/capabilities-settings-390.png)、[1099](evidence/latest-main5dd/capabilities-settings-1099.png)、[1920](evidence/latest-main5dd/capabilities-settings-1920.png)与各runtime JSON来自这次严格1423 preview。根/独立review抽查同状态截图，不把工程补充字段冒充新增Figma设计。Development严格1421再次[运行](evidence/latest-main5dd/logs/latest-development-capability.log)：既有插件遮罩仍存在，记录后按官方Esc操作退出，真实能力字段/持久化局部通过；[runtime](evidence/latest-main5dd/development-runtime.json)明确pluginLoading=PRE-EXISTING FAILURE。
 
 当前[源码指纹](evidence/latest-main5dd/source-fingerprint.json)为`8e58bd273069b7f578f52943107f1d648a75593060d55f59cc698267fa1f2373`，包含前端、原生源码/manifest、版本源与npm锁；正式实现提交后独立复核需重算匹配。后续仅文档/收据变化时复验文档门禁并补审新head，产品源码或构建输入变化则重新生成相应产物。独立修正关闭、draft PR/Hosted检查、用户产品验收及实际发布按事实追加，当前不预写PASS。
+
+## 独立审查闭环与交付范围
+
+2026-10-08 15:02 独立上下文对base5dd6e6dd..head6da9920e补审PASS，MC-001关闭，没有新增finding；独立87/87定向单测、389源码hash与最新Web/native证据复核通过，完整收据见review。该结论没有代填公开授权、GitHub身份审批、用户最终验收或合并发布。最终文档/状态收口后，将对新head只读增量补审，再以准确head建立本任务draft PR并回读Hosted checks；实际结果保存在PR描述及交付收据。本地技术AC完成，功能卡仍PARTIAL，外部Provider/蒙版/扩图、开发插件独立问题与Mobile边界不变。
+
+公开目标已只读核对为soudbs180-creator/KK-Studio-2.0、public、default main，当前Git凭据有push权限；凭据只经既有credential manager在内存交给GitHub，未写入目录或日志。计划仅fast-forward推本任务分支，不推main、不自审批、不合并/部署。待上传证据来自隔离fixture/profile，API地址为example.test、测试key为fixture占位，未包含真实供应商凭据；GitHub辅助脚本及认证数据位于被ignore的.tmp，不加入提交。首次自动审核拒绝及后续用户授权记录保持原文，不以替换接口规避拒绝。
+
+最终文档收口门禁的原始输出见[lint与文档检查](evidence/latest-main5dd/logs/review-final-document-gates.log)和[delivery结构检查](evidence/latest-main5dd/logs/review-final-delivery.log)。仅文档变化没有复用成产品源码复验；最终HEAD增量审查及Hosted检查以PR收据记录。

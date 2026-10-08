@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
-| TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | REVIEW | none | root |
+| TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
 | TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
 | T0 | 可复现候选源码与主线整合 | DONE | none | root |
 | TASK-GOV-001 | 治理源、ESLint、架构门禁和 CI | DONE | T0 | root |
@@ -114,7 +114,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-MODEL-001-capabilities`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MODEL-001-capabilities`
 - Modules: src/domain, src/features/models, src/features/creation, src/components, src/App.tsx, tests, docs/features, docs/governance
-- Verification: PARTIAL — 最新main@5dd6e6dd融合后：完整verify723/731root(8skip)、172/174Agent(2skip)、406/406browser零flaky、UI198/0；clientcheck/fresh Tauri及隔离运行通过。MC-001定向修正已GREEN；精确提交独立补审、draft PR与Hosted门禁待完成，真实Provider/蒙版/扩图不在本地证明范围。
+- Verification: PASS — 本地AC1–5 DONE：最新main@5dd6e6dd融合，verify723/731root(8skip)、172/174Agent(2skip)、406/406browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行；独立6da9920e补审PASS、MC-001关闭，87/87定向复验和389源码指纹匹配。最终文档head补审/PR/Hosted交付另绑定；真实Provider/蒙版/扩图、开发插件既有问题和Mobile不在此DONE证明范围。
 - Evidence: [docs/changes/2026-10-08-model-capabilities/intent.md](../../docs/changes/2026-10-08-model-capabilities/intent.md), [docs/changes/2026-10-08-model-capabilities/spec.md](../../docs/changes/2026-10-08-model-capabilities/spec.md), [docs/changes/2026-10-08-model-capabilities/plan.md](../../docs/changes/2026-10-08-model-capabilities/plan.md), [docs/changes/2026-10-08-model-capabilities/verification.md](../../docs/changes/2026-10-08-model-capabilities/verification.md), [docs/changes/2026-10-08-model-capabilities/review.md](../../docs/changes/2026-10-08-model-capabilities/review.md)
 - Updated: 2026-10-08
 
