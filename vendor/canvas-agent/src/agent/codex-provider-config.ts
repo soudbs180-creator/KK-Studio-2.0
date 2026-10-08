@@ -156,11 +156,15 @@ interface TomlLexState {
   quote: "'" | '"' | null;
   multiline: boolean;
   arrayDepth: number;
+  inlineTableDepth: number;
 }
 
-/** Locate structural lines without interpreting text inside strings/arrays. */
+/** Locate structural lines outside strings, arrays and inline tables. */
 function scanTomlLine(line: string, state: TomlLexState) {
-  const structural = state.quote === null && state.arrayDepth === 0;
+  const structural =
+    state.quote === null &&
+    state.arrayDepth === 0 &&
+    state.inlineTableDepth === 0;
   let equal = -1;
   let comment = -1;
   for (let i = 0; i < line.length; i++) {
@@ -192,7 +196,16 @@ function scanTomlLine(line: string, state: TomlLexState) {
       state.arrayDepth++;
     } else if (ch === "]") {
       state.arrayDepth--;
-    } else if (ch === "=" && state.arrayDepth === 0 && equal < 0) {
+    } else if (ch === "{") {
+      state.inlineTableDepth++;
+    } else if (ch === "}") {
+      state.inlineTableDepth--;
+    } else if (
+      ch === "=" &&
+      state.arrayDepth === 0 &&
+      state.inlineTableDepth === 0 &&
+      equal < 0
+    ) {
       equal = i;
     }
   }
@@ -231,7 +244,12 @@ export function splitTrailingComment(value: string): {
   value: string;
   comment?: string;
 } {
-  const state: TomlLexState = { quote: null, multiline: false, arrayDepth: 0 };
+  const state: TomlLexState = {
+    quote: null,
+    multiline: false,
+    arrayDepth: 0,
+    inlineTableDepth: 0,
+  };
   let offset = 0;
   for (const line of value.split(/\r\n|\n/)) {
     const { comment } = scanTomlLine(line, state);
@@ -306,7 +324,12 @@ export function mergeCodexConfigToml(
   // 1. 分节：顶层区 + sections
   const sections: TomlSection[] = [];
   const lexical: ReturnType<typeof scanTomlLine>[] = [];
-  const state: TomlLexState = { quote: null, multiline: false, arrayDepth: 0 };
+  const state: TomlLexState = {
+    quote: null,
+    multiline: false,
+    arrayDepth: 0,
+    inlineTableDepth: 0,
+  };
   let topLevelEnd = lines.length;
   for (let i = 0; i < lines.length; i++) {
     const trimmed = lines[i].trim();

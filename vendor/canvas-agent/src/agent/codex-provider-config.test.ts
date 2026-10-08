@@ -377,6 +377,39 @@ test("解析错误不暴露配置行或敏感原文", () => {
   );
 });
 
+test("多行内联表与嵌套数组中的同名用户键保留，active只更新顶层", () => {
+  const minimal = 'user_settings = {\n model_provider = "user-only-value"\n}\n';
+  const minimalResult = mergeCodexConfigToml(minimal, samplePatch);
+  assert.ok(minimalResult.startsWith(minimal));
+  assert.deepEqual(
+    parseToml(minimalResult).user_settings,
+    parseToml(minimal).user_settings,
+  );
+  assert.equal(
+    parseToml(minimalResult).model_provider,
+    samplePatch.active.providerKey,
+  );
+  const original = [
+    "user_settings = {",
+    '  model_provider = "user-only-value",',
+    "  nested = {",
+    '    model = "user-only-model",',
+    '    model_catalog_json = "user-only-catalog",',
+    '    braces = "[{}] # literal",',
+    "  },",
+    '  list = [{ model_provider = "array-only" }],',
+    "}",
+    "",
+  ].join("\r\n");
+  const result = mergeCodexConfigToml(original, samplePatch);
+  assert.ok(result.startsWith(original));
+  const parsed = parseToml(result);
+  assert.deepEqual(parsed.user_settings, parseToml(original).user_settings);
+  assert.equal(parsed.model_provider, samplePatch.active.providerKey);
+  assert.equal(parsed.model, samplePatch.active.model);
+  assert.equal(mergeCodexConfigToml(result, samplePatch), result);
+});
+
 test("与Object原型同名的用户顶层键仍按原文保留", () => {
   const original =
     'toString = "user-value"\nconstructor = "user-constructor"\n__proto__ = "user-proto"\n';

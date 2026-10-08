@@ -17,3 +17,5 @@
 ## 最新主线组合准备
 
 PR42已普通落地6a97f45，整个tree与已审cc相同；本分支merge814f2b27已纳入该main，仅PROGRESS发生真实冲突，双方历史逐段保留，122任务生成视图重建。Desktop仅递增2.1.13、Web2.1.12；npm ci按组合锁重新安装/编译Agent与四插件通过。新增P3原生拖动诊断后123任务，13个后续项仍TODO，当前任务仍PARTIAL。合并前health-lint-pre-merge因修改源码路径未重建TaskLedger而FAIL，原日志保留，生成视图后corrected通过；未放宽门禁。完整verify/fresh桌面组合/精确head审查随后执行。
+
+独立408复审真实发现多行inline table作用域误判（P1），新增回归先35/36 FAIL；只补词法{}深度后36/36 PASS。408全verify真实PASS：root804/812与原skip8、Agent182/184与原skip2、浏览器447项/447attempts/0实际retry或flaky、4插件development通过。合并后主线6a托管37845923441真实FAIL：image-edit区域重试读取3条旧任务却先匹配旧最后succeeded；原失败日志完整保留，单独续修，不冒充主线PASS。新源码head及fresh包验收待完成。
