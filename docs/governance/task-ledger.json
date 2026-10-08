@@ -3774,5 +3774,40 @@
     ],
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-08"
+  },
+  {
+    "id": "TASK-PROV-CONFIG-004",
+    "title": "Codex受管TOML表头与当前选择的安全合并",
+    "goal": "合法注释表头不会生成重复表，删除当前受管provider不会落盘失效选择",
+    "scope": "健康审计LEG-001/LEG-002；当前main的codex-provider-config合并、写入前校验与隔离CLI回归",
+    "acceptance": [
+      "注释/引号/多行内容兼容且用户非受管设置原文保留、幂等",
+      "默认不切换用户模型；无显式有效active删除当前provider时拒绝",
+      "无效配置或合并失败不写config/catalog、原件保护",
+      "全量验证、Agent打包、独立审查与实际PR/main门禁"
+    ],
+    "dependencies": [
+      "TASK-PROV-003"
+    ],
+    "owner": "root",
+    "branch": "fix/TASK-PROV-CONFIG-004-safe-toml",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-CONFIG-004",
+    "affectedModules": [
+      "vendor/canvas-agent/src/agent/codex-provider-config.ts",
+      "vendor/canvas-agent/src/agent/codex-provider-config.test.ts",
+      "vendor/canvas-agent/package.json",
+      "vendor/canvas-agent/package-lock.json",
+      "docs"
+    ],
+    "status": "PARTIAL",
+    "priority": "P1",
+    "evidence": [
+      "docs/changes/2026-10-09-provider-config-recovery/spec.md",
+      "docs/changes/2026-10-09-provider-config-recovery/verification.md",
+      "docs/changes/2026-10-09-provider-config-recovery/review.md"
+    ],
+    "verification": "旧25项provider/CLI基线通过，当前仍需故障复现、修复、组合回归与独立审查。",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-09"
   }
 ]

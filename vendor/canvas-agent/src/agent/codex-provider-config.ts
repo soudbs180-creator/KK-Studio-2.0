@@ -17,6 +17,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { parse as parseToml } from "smol-toml";
 import { z } from "zod";
 
 // ── 密钥防线（镜像 app 侧，源文件为权威）───────────────────────────────
@@ -143,14 +144,86 @@ export interface CodexTomlPatch {
   modelCatalogJson?: string;
 }
 
-const OWNED_TABLE = /^\[model_providers\.kk_[a-z0-9_]+\]$/;
-const TOP_LEVEL_KEY = /^\s*([A-Za-z_][A-Za-z0-9_-]*)\s*=/;
 const PROVIDER_KEY_PATTERN = /^kk_[a-z0-9_]+$/;
 
 interface TomlSection {
   headerIndex: number;
   bodyEnd: number;
-  header: string;
+  providerKey?: string;
+}
+
+interface TomlLexState {
+  quote: "'" | '"' | null;
+  multiline: boolean;
+  arrayDepth: number;
+}
+
+/** Locate structural lines without interpreting text inside strings/arrays. */
+function scanTomlLine(line: string, state: TomlLexState) {
+  const structural = state.quote === null && state.arrayDepth === 0;
+  let equal = -1;
+  let comment = -1;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (state.quote) {
+      if (state.quote === '"' && ch === "\\") {
+        i++;
+      } else if (ch === state.quote) {
+        if (state.multiline) {
+          let count = 1;
+          while (line[i + count] === ch) count++;
+          if (count >= 3) {
+            state.quote = null;
+            state.multiline = false;
+          }
+          i += count - 1;
+        } else {
+          state.quote = null;
+        }
+      }
+    } else if (ch === "#") {
+      comment = i;
+      break;
+    } else if (ch === '"' || ch === "'") {
+      state.quote = ch;
+      state.multiline = line.slice(i, i + 3) === ch.repeat(3);
+      if (state.multiline) i += 2;
+    } else if (ch === "[") {
+      state.arrayDepth++;
+    } else if (ch === "]") {
+      state.arrayDepth--;
+    } else if (ch === "=" && state.arrayDepth === 0 && equal < 0) {
+      equal = i;
+    }
+  }
+  return { structural, equal, comment };
+}
+
+function parseConfigToml(value: string, label: string) {
+  try {
+    return parseToml(value);
+  } catch {
+    // Parser diagnostics can contain the original config (including secrets).
+    throw new Error(`${label} TOML 无效；未写入配置，请先修复原文件`);
+  }
+}
+
+function sectionProviderKey(header: string): string | undefined {
+  const marker = "__kk_section_marker__";
+  const parsed = parseConfigToml(`${header}\n${marker} = true\n`, "配置表头");
+  const providers = parsed.model_providers;
+  if (!providers || typeof providers !== "object" || Array.isArray(providers))
+    return;
+  for (const [key, table] of Object.entries(providers)) {
+    if (
+      PROVIDER_KEY_PATTERN.test(key) &&
+      table &&
+      typeof table === "object" &&
+      !Array.isArray(table) &&
+      Object.hasOwn(table, marker)
+    )
+      return key;
+  }
 }
 
 /** 从值文本中剥离行尾注释（跳过引号内的 #）。 */
@@ -158,15 +231,20 @@ export function splitTrailingComment(value: string): {
   value: string;
   comment?: string;
 } {
-  let inQuote = false;
-  for (let i = 0; i < value.length; i++) {
-    const ch = value[i];
-    if (ch === '"' && value[i - 1] !== "\\") inQuote = !inQuote;
-    else if (ch === "#" && !inQuote)
+  const state: TomlLexState = { quote: null, multiline: false, arrayDepth: 0 };
+  let offset = 0;
+  for (const line of value.split(/\r\n|\n/)) {
+    const { comment } = scanTomlLine(line, state);
+    if (comment >= 0) {
+      const i = offset + comment;
       return {
         value: value.slice(0, i).trimEnd(),
         comment: value.slice(i).trimEnd(),
       };
+    }
+    offset +=
+      line.length +
+      (value.slice(offset + line.length).startsWith("\r\n") ? 2 : 1);
   }
   return { value: value.trimEnd() };
 }
@@ -180,26 +258,48 @@ export function mergeCodexConfigToml(
   existing: string,
   patch: CodexTomlPatch,
 ): string {
+  const keys = new Set<string>();
   for (const block of patch.providers) {
     if (!PROVIDER_KEY_PATTERN.test(block.providerKey))
       throw new Error(`非法 providerKey: ${block.providerKey}`);
+    if (keys.has(block.providerKey)) throw new Error("重复 providerKey");
+    keys.add(block.providerKey);
   }
+  if (
+    patch.active &&
+    (!keys.has(patch.active.providerKey) || !patch.active.model?.trim())
+  )
+    throw new Error("active 必须指定本次配置中的有效 provider 和 model");
+  const parsed = parseConfigToml(existing, "原配置");
+  const currentProvider = parsed.model_provider;
+  if (
+    typeof currentProvider === "string" &&
+    PROVIDER_KEY_PATTERN.test(currentProvider) &&
+    !keys.has(currentProvider) &&
+    !patch.active
+  )
+    throw new Error("当前 provider 将被删除；请通过 active 显式选择有效连接");
   const eol = existing.includes("\r\n") ? "\r\n" : "\n";
   const lines = existing === "" ? [] : existing.split(/\r\n|\n/);
   const hasTrailingEol = lines.length > 0 && lines[lines.length - 1] === "";
+  if (hasTrailingEol) lines.pop();
 
   // 1. 分节：顶层区 + sections
   const sections: TomlSection[] = [];
+  const lexical: ReturnType<typeof scanTomlLine>[] = [];
+  const state: TomlLexState = { quote: null, multiline: false, arrayDepth: 0 };
   let topLevelEnd = lines.length;
   for (let i = 0; i < lines.length; i++) {
     const trimmed = lines[i].trim();
-    if (
-      trimmed.startsWith("[") &&
-      trimmed.endsWith("]") &&
-      !trimmed.includes("=")
-    ) {
+    const info = scanTomlLine(lines[i], state);
+    lexical.push(info);
+    if (info.structural && trimmed.startsWith("[")) {
       if (sections.length === 0) topLevelEnd = i;
-      sections.push({ headerIndex: i, bodyEnd: i + 1, header: trimmed });
+      sections.push({
+        headerIndex: i,
+        bodyEnd: i + 1,
+        providerKey: sectionProviderKey(trimmed),
+      });
     } else if (sections.length > 0) {
       sections[sections.length - 1].bodyEnd = i + 1;
     }
@@ -223,20 +323,35 @@ export function mergeCodexConfigToml(
   if (patch.modelCatalogJson !== undefined)
     topKeys.model_catalog_json = patch.modelCatalogJson;
   const replaced = new Set<string>();
+  const omitted = new Set<number>();
   for (let i = 0; i < topLevelEnd; i++) {
-    const match = TOP_LEVEL_KEY.exec(lines[i]);
-    if (!match) continue;
-    const key = match[1];
-    if (topKeys[key] === undefined || replaced.has(key)) continue;
-    const eq = lines[i].indexOf("=");
+    const { structural, equal: eq } = lexical[i];
+    if (!structural || eq < 0) continue;
+    const keyValue = parseConfigToml(
+      `${lines[i].slice(0, eq)}= true`,
+      "配置键",
+    );
+    const [key] = Object.keys(keyValue);
+    if (keyValue[key] !== true) continue;
+    if (!Object.hasOwn(topKeys, key) || replaced.has(key)) continue;
     const before = lines[i].slice(0, eq).trimEnd();
-    const after = lines[i].slice(eq + 1);
+    let end = i + 1;
+    while (end < topLevelEnd && !lexical[end].structural) {
+      omitted.add(end);
+      end++;
+    }
+    const after = lines
+      .slice(i, end)
+      .join(eol)
+      .slice(eq + 1);
     const { comment } = splitTrailingComment(after);
     lines[i] =
       `${before} = ${tomlQuote(topKeys[key])}${comment ? ` ${comment}` : ""}`;
     replaced.add(key);
   }
-  const out: string[] = lines.slice(0, topLevelEnd);
+  const out: string[] = lines
+    .slice(0, topLevelEnd)
+    .filter((_, index) => !omitted.has(index));
   for (const [key, value] of Object.entries(topKeys)) {
     if (!replaced.has(key)) out.push(`${key} = ${tomlQuote(value)}`);
   }
@@ -244,12 +359,11 @@ export function mergeCodexConfigToml(
   // 4. 各 section：自有表按 patch 替换/删除，其余原样
   const consumed = new Set<string>();
   for (const section of sections) {
-    const isOwned = OWNED_TABLE.test(section.header);
-    if (!isOwned) {
+    if (!section.providerKey) {
       out.push(...lines.slice(section.headerIndex, section.bodyEnd));
       continue;
     }
-    const key = section.header.slice("[model_providers.".length, -1);
+    const key = section.providerKey;
     const block = rendered.get(key);
     if (block) {
       // 自有表统一布局：上一行非空时补一个空行分隔（保证幂等）
@@ -269,6 +383,7 @@ export function mergeCodexConfigToml(
 
   let result = out.join(eol);
   if (hasTrailingEol || existing === "") result += eol;
+  parseConfigToml(result, "合并结果");
   return result;
 }
 
@@ -420,6 +535,7 @@ export function applyCodexProviderConfig(
 
   let catalogPath: string | undefined;
   let modelCatalogJson: string | undefined;
+  let catalogJson: string | undefined;
   if (options.catalogProfileId) {
     const catalog = buildModelCatalogJson(
       options.catalogProfileId,
@@ -431,7 +547,7 @@ export function applyCodexProviderConfig(
     if (catalog.json !== "[]") {
       catalogPath = path.join(configDir, catalog.path);
       modelCatalogJson = catalog.path;
-      if (!options.dryRun) writeFileAtomic(catalogPath, catalog.json, 0o600);
+      catalogJson = catalog.json;
     } else {
       warnings.push(
         "catalogProfileId 已指定但没有带 model 的连接，跳过 catalog 落盘",
@@ -449,7 +565,11 @@ export function applyCodexProviderConfig(
   });
   assertNoSecrets(configToml, "Codex config.toml 合并结果");
 
-  if (!options.dryRun) writeFileAtomic(configPath, configToml, 0o600);
+  if (!options.dryRun) {
+    if (catalogPath && catalogJson)
+      writeFileAtomic(catalogPath, catalogJson, 0o600);
+    writeFileAtomic(configPath, configToml, 0o600);
+  }
 
   return {
     configPath,

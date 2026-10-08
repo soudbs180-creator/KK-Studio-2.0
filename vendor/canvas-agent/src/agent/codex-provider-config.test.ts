@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import test from "node:test";
+import { parse as parseToml } from "smol-toml";
 
 import {
   assertNoSecrets,
@@ -246,6 +250,196 @@ test("自有 provider 表后面的数组表仍完整保留", () => {
   assert.match(result, /\[\[agents\]\]\nname = "user-agent"/);
 });
 
+test("合法注释、引号和空白表头只替换一个受管表，其他表保留", () => {
+  for (const header of [
+    "[model_providers.kk_deepseek] # managed = old",
+    "[model_providers . 'kk_deepseek'] # managed",
+    "['model_providers'.\"kk_deepseek\"] # managed",
+    '["model_providers"."kk_\\u0064eepseek"] # managed',
+  ]) {
+    const user = '["user#=table"] # preserve = yes\nvalue = "untouched"\n';
+    const existing = `${header}\nname = "Old"\n\n${user}[[agents]] # keep\nname = "user-agent"\n`;
+    parseToml(existing);
+    const result = mergeCodexConfigToml(existing, samplePatch);
+    const decoded = parseToml(result);
+    assert.equal(
+      (decoded.model_providers as Record<string, { name: string }>).kk_deepseek
+        .name,
+      "DeepSeek",
+    );
+    assert.ok(result.includes(user), "非受管表及注释逐字保留");
+    assert.ok(result.includes('[[agents]] # keep\nname = "user-agent"\n'));
+    assert.equal(mergeCodexConfigToml(result, samplePatch), result);
+  }
+});
+
+test("多行字符串中的表头和顶层键不是可修改配置", () => {
+  const prefix = [
+    'notes = """',
+    "[model_providers.kk_old] # inside string",
+    'model_provider = "kk_fake"',
+    '"""',
+    "literal = '''",
+    "[model_providers.kk_old]",
+    "# literal comment text",
+    "'''",
+    "",
+  ].join("\n");
+  const existing = `${prefix}[model_providers.kk_old] # remove real table\nname = "Old"\n`;
+  const before = parseToml(existing);
+  const result = mergeCodexConfigToml(existing, samplePatch);
+  const after = parseToml(result);
+  assert.equal(after.notes, before.notes);
+  assert.equal(after.literal, before.literal);
+  assert.ok(result.startsWith(prefix));
+  assert.equal(
+    (after.model_providers as Record<string, unknown>).kk_old,
+    undefined,
+  );
+  assert.equal(mergeCodexConfigToml(result, samplePatch), result);
+});
+
+test("删除当前受管provider必须显式选择有效连接，不能留下悬空指向", () => {
+  for (const selection of [
+    'model_provider = "kk_old"',
+    "'model_provider' = 'kk_old' # selected",
+    '"model_provider" = "kk_\\u006fld"',
+  ]) {
+    const existing = `${selection}\nmodel = "keep-model"\n[model_providers.kk_old]\nname = "Old"\n`;
+    assert.throws(
+      () =>
+        mergeCodexConfigToml(existing, { providers: samplePatch.providers }),
+      /当前.*provider|active/i,
+    );
+    const result = mergeCodexConfigToml(existing, samplePatch);
+    assert.equal(parseToml(result).model_provider, "kk_deepseek");
+    assert.equal(parseToml(result).model, "deepseek-v4-pro");
+  }
+});
+
+test("patch拒绝不存在的active和重复provider身份", () => {
+  assert.throws(() =>
+    mergeCodexConfigToml("", {
+      providers: samplePatch.providers,
+      active: { providerKey: "kk_missing", model: "missing" },
+    }),
+  );
+  assert.throws(() =>
+    mergeCodexConfigToml("", {
+      providers: [samplePatch.providers[0], samplePatch.providers[0]],
+    }),
+  );
+});
+
+test("数组与多行当前选择安全处理，受管键不是字符串时拒绝落盘", () => {
+  const original = [
+    "list = [",
+    '  "[model_providers.kk_fake]",',
+    '  "# value",',
+    "]",
+    '"model_provider" = """kk_deepseek""" # keep selection comment',
+    "'model' = '''",
+    "old-model",
+    "''' # keep model comment",
+    "[model_providers.kk_deepseek]",
+    'name = "Old"',
+    "",
+  ].join("\r\n");
+  const result = mergeCodexConfigToml(original, samplePatch);
+  assert.equal(parseToml(result).model_provider, "kk_deepseek");
+  assert.equal(parseToml(result).model, "deepseek-v4-pro");
+  assert.deepEqual(parseToml(result).list, parseToml(original).list);
+  assert.ok(result.includes("# keep selection comment"));
+  assert.ok(result.includes("# keep model comment"));
+  assert.ok(!result.replace(/\r\n/g, "").includes("\n"));
+  assert.equal(mergeCodexConfigToml(result, samplePatch), result);
+  assert.throws(() =>
+    mergeCodexConfigToml(
+      'model_provider.nested = "unsupported"\n',
+      samplePatch,
+    ),
+  );
+});
+
+test("解析错误不暴露配置行或敏感原文", () => {
+  const original = 'private_note = "sensitive-local-fixture"\ninvalid =\n';
+  assert.throws(
+    () => mergeCodexConfigToml(original, samplePatch),
+    (error: unknown) => {
+      assert.ok(error instanceof Error);
+      assert.match(error.message, /TOML 无效/);
+      assert.doesNotMatch(
+        error.message,
+        /sensitive-local-fixture|private_note|invalid =/,
+      );
+      return true;
+    },
+  );
+});
+
+test("与Object原型同名的用户顶层键仍按原文保留", () => {
+  const original =
+    'toString = "user-value"\nconstructor = "user-constructor"\n__proto__ = "user-proto"\n';
+  const result = mergeCodexConfigToml(original, samplePatch);
+  assert.ok(result.startsWith(original));
+  assert.equal(mergeCodexConfigToml(result, samplePatch), result);
+});
+
+function isolatedConfig(t: test.TestContext, original: string) {
+  const dir = fs.mkdtempSync(
+    path.join(os.tmpdir(), "kk-safe-provider-config-"),
+  );
+  const config = path.join(dir, "config.toml");
+  fs.writeFileSync(config, original);
+  t.after(() => {
+    assert.ok(
+      path.resolve(dir).startsWith(path.resolve(os.tmpdir()) + path.sep),
+    );
+    fs.rmSync(dir, { recursive: true, force: true });
+  });
+  return { dir, config };
+}
+
+const recoveryConnection = {
+  id: "replacement",
+  provider: "Replacement",
+  baseUrl: "https://replacement.example.test/v1",
+  model: "replacement-model[256k]",
+};
+
+test("合并失败时config和已有catalog字节不变，也不创建新catalog", (t) => {
+  for (const original of [
+    'model_provider = "kk_old"\n[model_providers.kk_old]\nname = "Old"\n',
+    'model = "a"\nmodel = "duplicate"\n',
+    'password = "synthetic-for-rejection"\n',
+  ]) {
+    const f = isolatedConfig(t, original);
+    fs.mkdirSync(path.join(f.dir, "model-catalogs"));
+    const priorCatalog = Buffer.from('[{"slug":"prior-model"}]\r\n');
+    fs.writeFileSync(
+      path.join(f.dir, "model-catalogs", "prior.json"),
+      priorCatalog,
+    );
+    for (const catalogProfileId of ["prior", "new"]) {
+      assert.throws(() =>
+        applyCodexProviderConfig([recoveryConnection], {
+          configDir: f.dir,
+          catalogProfileId,
+        }),
+      );
+      assert.equal(fs.readFileSync(f.config, "utf8"), original);
+      assert.deepEqual(
+        fs.readFileSync(path.join(f.dir, "model-catalogs", "prior.json")),
+        priorCatalog,
+      );
+      assert.equal(
+        fs.existsSync(path.join(f.dir, "model-catalogs", "new.json")),
+        false,
+      );
+    }
+  }
+});
+
 // ── model catalog ────────────────────────────────────────────────────────
 
 test("parseModelWindow 解析后缀", () => {
@@ -309,7 +503,8 @@ test("assertNoSecrets 拒绝密钥形态文本", () => {
 
 // ── 编排（dry-run 不写盘）────────────────────────────────────────────────
 
-test("applyCodexProviderConfig dry-run 返回合并结果且不写盘", () => {
+test("applyCodexProviderConfig dry-run 返回合并结果且不写盘", (t) => {
+  const f = isolatedConfig(t, "");
   const result = applyCodexProviderConfig(
     [
       {
@@ -329,8 +524,7 @@ test("applyCodexProviderConfig dry-run 返回合并结果且不写盘", () => {
     {
       dryRun: true,
       catalogProfileId: "kk-default",
-      configDir:
-        "D:/kk-studio/.worktrees/TASK-PROV-003-provider-wiring/.tmp-codex-test",
+      configDir: f.dir,
     },
   );
   assert.equal(result.dryRun, true);
@@ -348,15 +542,17 @@ test("applyCodexProviderConfig dry-run 返回合并结果且不写盘", () => {
     [{ id: "bare", provider: "Bare", baseUrl: "https://bare.example.com" }],
     {
       dryRun: true,
-      configDir:
-        "D:/kk-studio/.worktrees/TASK-PROV-003-provider-wiring/.tmp-codex-test",
+      configDir: f.dir,
     },
   );
   assert.ok(noModel.warnings.some((w) => w.includes("没有连接带 model")));
   assert.equal(noModel.configToml.includes("model_provider ="), false);
+  assert.equal(fs.readFileSync(f.config, "utf8"), "");
+  assert.equal(fs.existsSync(path.join(f.dir, "model-catalogs")), false);
 });
 
-test("显式指定 active 连接才切换 Codex 默认模型", () => {
+test("显式指定 active 连接才切换 Codex 默认模型", (t) => {
+  const f = isolatedConfig(t, "");
   const connections = [
     {
       id: "deepseek",
@@ -368,6 +564,7 @@ test("显式指定 active 连接才切换 Codex 默认模型", () => {
   const result = applyCodexProviderConfig(connections, {
     dryRun: true,
     activeConnectionId: "deepseek",
+    configDir: f.dir,
   });
   assert.match(
     result.configToml,
@@ -378,6 +575,7 @@ test("显式指定 active 连接才切换 Codex 默认模型", () => {
     applyCodexProviderConfig(connections, {
       dryRun: true,
       activeConnectionId: "missing",
+      configDir: f.dir,
     }),
   );
 });

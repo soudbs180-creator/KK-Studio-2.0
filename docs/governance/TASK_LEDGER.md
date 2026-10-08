@@ -112,6 +112,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | T2, TASK-UI-GOV-003 | root |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
+| TASK-PROV-CONFIG-004 | Codex受管TOML表头与当前选择的安全合并 | PARTIAL | TASK-PROV-003 | root |
 
 ## TASK-IMAGE-EDIT-001 — 统一图片编辑蒙版与连续重绘
 
@@ -1388,3 +1389,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — 旧 FEAT-002 和 T5 描述已有 native image health/连接门禁缺口，本轮明确独立任务承载。T5 的持久 journal/同身份恢复和文本容量已实际验证，不能代替此 image 门禁验收；尚未开始。
 - Evidence: [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/status.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/status.md)
 - Updated: 2026-10-08
+
+## TASK-PROV-CONFIG-004 — Codex受管TOML表头与当前选择的安全合并
+
+- Goal: 合法注释表头不会生成重复表，删除当前受管provider不会落盘失效选择
+- Scope: 健康审计LEG-001/LEG-002；当前main的codex-provider-config合并、写入前校验与隔离CLI回归
+- Acceptance: 注释/引号/多行内容兼容且用户非受管设置原文保留、幂等; 默认不切换用户模型；无显式有效active删除当前provider时拒绝; 无效配置或合并失败不写config/catalog、原件保护; 全量验证、Agent打包、独立审查与实际PR/main门禁
+- Branch: `fix/TASK-PROV-CONFIG-004-safe-toml`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-CONFIG-004`
+- Modules: vendor/canvas-agent/src/agent/codex-provider-config.ts, vendor/canvas-agent/src/agent/codex-provider-config.test.ts, vendor/canvas-agent/package.json, vendor/canvas-agent/package-lock.json, docs
+- Verification: PARTIAL — 旧25项provider/CLI基线通过，当前仍需故障复现、修复、组合回归与独立审查。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/spec.md](../../docs/changes/2026-10-09-provider-config-recovery/spec.md), [docs/changes/2026-10-09-provider-config-recovery/verification.md](../../docs/changes/2026-10-09-provider-config-recovery/verification.md), [docs/changes/2026-10-09-provider-config-recovery/review.md](../../docs/changes/2026-10-09-provider-config-recovery/review.md)
+- Updated: 2026-10-09

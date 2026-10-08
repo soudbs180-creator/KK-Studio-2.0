@@ -839,3 +839,8 @@ TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点
 - 实际回归：Node 661（653 pass/0 fail/8 skipped）、Canvas Agent 174（172 pass/0 fail/2 skipped）、Playwright 379/379、TypeScript/lint/format/build、Vite build、Cargo check 均通过；Vite 只留已有依赖注释与 bundle 大小 warning。
 - 后续优先级：P0 先保护注册表数据不丢失；P1 完成真实 MCP 端点验收并推进编排器真实生成执行；P2 继续 T5/T6/T7、平台服务、VPS、Mobile、Figma 完整验收。证据见 [本轮 verification](changes/2026-10-03-task-audit/verification.md) 和 [review](changes/2026-10-03-task-audit/review.md)。
 - 本轮补充：项目建设目标与验收入口已接入 `goals:check`；UI 门禁发现的 301 行 MCP 设置组件已拆分，相关任务已通过当前 head 的独立技术复核。
+
+
+## 2026-10-09：Codex配置健康缺陷承接（进行中）
+
+TASK-PROV-CONFIG-004在独立任务分支承接LEG-001/002。旧25项回归通过；本次故障修复及验收尚未完成。真实用户配置未修改，TASK-PROV-003范围保持PARTIAL。
