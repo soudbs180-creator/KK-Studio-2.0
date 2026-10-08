@@ -1,0 +1,77 @@
+{
+  "sourceHead": "86e712f2c6b94e24267e3468ee667c8e91feb2d3",
+  "url": "http://127.0.0.1:1423/",
+  "mode": "production preview",
+  "pages": [
+    {
+      "width": 390,
+      "runtime": {
+        "mode": "production",
+        "entry": "src/main.tsx",
+        "scripts": [
+          "http://127.0.0.1:1423/assets/index-CZNs9Itz.js"
+        ],
+        "styles": [
+          "http://127.0.0.1:1423/assets/index-DB0YxkTv.css",
+          null
+        ],
+        "overflow": false,
+        "viewport": {
+          "width": 390,
+          "height": 1080
+        }
+      },
+      "entryBytes": 833749,
+      "entrySha256": "a336da91fc0c1e96740ac519337c0d33e42b21ad03b7b12799c6efbaf06ea5e2",
+      "deferredSettings": "loaded, focus and Escape returned",
+      "errors": []
+    },
+    {
+      "width": 1099,
+      "runtime": {
+        "mode": "production",
+        "entry": "src/main.tsx",
+        "scripts": [
+          "http://127.0.0.1:1423/assets/index-CZNs9Itz.js"
+        ],
+        "styles": [
+          "http://127.0.0.1:1423/assets/index-DB0YxkTv.css",
+          null
+        ],
+        "overflow": false,
+        "viewport": {
+          "width": 1099,
+          "height": 1080
+        }
+      },
+      "entryBytes": 833749,
+      "entrySha256": "a336da91fc0c1e96740ac519337c0d33e42b21ad03b7b12799c6efbaf06ea5e2",
+      "deferredSettings": "loaded, focus and Escape returned",
+      "errors": []
+    },
+    {
+      "width": 1920,
+      "runtime": {
+        "mode": "production",
+        "entry": "src/main.tsx",
+        "scripts": [
+          "http://127.0.0.1:1423/assets/index-CZNs9Itz.js"
+        ],
+        "styles": [
+          "http://127.0.0.1:1423/assets/index-DB0YxkTv.css",
+          null
+        ],
+        "overflow": false,
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      "entryBytes": 833749,
+      "entrySha256": "a336da91fc0c1e96740ac519337c0d33e42b21ad03b7b12799c6efbaf06ea5e2",
+      "deferredSettings": "loaded, focus and Escape returned",
+      "errors": []
+    }
+  ],
+  "passed": true
+}

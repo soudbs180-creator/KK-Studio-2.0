@@ -1,0 +1,39 @@
+{
+  "sourceHead": "86e712f2c6b94e24267e3468ee667c8e91feb2d3",
+  "reporterSha256": "cd1b2260c754751677888533bda70697b6436384323bbbd1228f4e92796617c9",
+  "stats": {
+    "startTime": "2026-10-08T15:08:04.063Z",
+    "duration": 81790.616,
+    "expected": 431,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "tests": 431,
+  "attempts": 431,
+  "workersConfigured": 12,
+  "actualWorkers": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "retriesConfigured": [
+    {
+      "name": "",
+      "retries": 1
+    }
+  ],
+  "maxActualRetry": 0,
+  "statusCounts": {
+    "expected": 431
+  }
+}

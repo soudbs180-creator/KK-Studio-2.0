@@ -1,0 +1,195 @@
+{
+  "sourceHead": "86e712f2c6b94e24267e3468ee667c8e91feb2d3",
+  "files": [
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-ui-86e712f\\asset-actions.png",
+      "copied": "evidence/main-integration-86e712f/native-ui/asset-actions.png",
+      "sha256": "c3522b039e503fa6639a056bead60f7bcb178c01da9090dd8fee359c0af7cc52"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-ui-86e712f\\asset-library.png",
+      "copied": "evidence/main-integration-86e712f/native-ui/asset-library.png",
+      "sha256": "f8b6451cadf1e58fe6b0a839ce4a70a3f710c64ae0de8dd54266099ad236fc8b"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-ui-86e712f\\google-cli.png",
+      "copied": "evidence/main-integration-86e712f/native-ui/google-cli.png",
+      "sha256": "bbaaecdd91ab595d01020ca48330ccba01a3fd7a55260e2d0fd3cb67b577ba6e"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-ui-86e712f\\model-actions.png",
+      "copied": "evidence/main-integration-86e712f/native-ui/model-actions.png",
+      "sha256": "5f19f088e99b41bda603787940585e0a75d52c255113f6ef76eced5eecdff41a"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-ui-86e712f\\model-settings.png",
+      "copied": "evidence/main-integration-86e712f/native-ui/model-settings.png",
+      "sha256": "b84adebb17416c78ba26e3f955ee3a7ae15621f6b732821ac627553452d47000"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-ui-86e712f\\receipt.json",
+      "copied": "evidence/main-integration-86e712f/native-ui/receipt.json",
+      "sha256": "433eb3b71aa9610254644095652fabcfce40eb9110bd19961feb2a738604a1fc"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-ui-86e712f\\selected-reference.png",
+      "copied": "evidence/main-integration-86e712f/native-ui/selected-reference.png",
+      "sha256": "914679733566a279d0541b9b732d5f420c86607c08584dce11f2cdaafab63a84"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-ui-86e712f\\workbench-export.png",
+      "copied": "evidence/main-integration-86e712f/native-ui/workbench-export.png",
+      "sha256": "5f4cf03f1ba6e36c34f67bf5f1f955d34ce31dad20043fd992d9e82a971f242e"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-ui-86e712f\\workbench-generate.png",
+      "copied": "evidence/main-integration-86e712f/native-ui/workbench-generate.png",
+      "sha256": "910a5c1578a9bb46e6d6303406b3d6b95e60a0ec639ca27799819c1cd0851772"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-ui-86e712f\\workbench-plan.png",
+      "copied": "evidence/main-integration-86e712f/native-ui/workbench-plan.png",
+      "sha256": "d9f427d5812ea1657803964caee540ca4ed4d84744fa828b7bfdef1c28d9ff4c"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-ui-86e712f\\workbench-prompt.png",
+      "copied": "evidence/main-integration-86e712f/native-ui/workbench-prompt.png",
+      "sha256": "40c7f87fef12c7e8f08aac7679d356e3583865ccdfe177c5665bbc3c61cc7c92"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-ui-86e712f\\workbench-queue.png",
+      "copied": "evidence/main-integration-86e712f/native-ui/workbench-queue.png",
+      "sha256": "62e233fa60f391742eb7f5990e594d7f7c4496389afa49bb89c3bfeab5f50115"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-ui-86e712f\\workbench-review.png",
+      "copied": "evidence/main-integration-86e712f/native-ui/workbench-review.png",
+      "sha256": "5884cab8826f46b23353b3926dc231cf8a3bf0b5d694fb921c294a59e7d236b7"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-taskhost-86e712f\\native-ui-success.png",
+      "copied": "evidence/main-integration-86e712f/native-taskhost/native-ui-success.png",
+      "sha256": "ddbb8bb05e29b06c88d70487344bb93aa490ba6e20da44b654914df71794c4ec"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-taskhost-86e712f\\native-unknown-recovery.png",
+      "copied": "evidence/main-integration-86e712f/native-taskhost/native-unknown-recovery.png",
+      "sha256": "261440bf74a2c21e77d5eb6eeda85623ea5c51d15bc09052c527e9b77ff13a72"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-taskhost-86e712f\\receipt.json",
+      "copied": "evidence/main-integration-86e712f/native-taskhost/receipt.json",
+      "sha256": "08c67ea265e522f91425a576cc521c91ed2bd00abbf5868624c475105aabb1f8"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-startup-86e712f\\native-landing.png",
+      "copied": "evidence/main-integration-86e712f/native-startup/native-landing.png",
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-startup-86e712f\\native-runtime.json",
+      "copied": "evidence/main-integration-86e712f/native-startup/native-runtime.json",
+      "sha256": "63d198a8cdf068e729ea63399af081f718c39b9d234503a4ff66938995d4e207"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\native-startup-86e712f\\native-settings.png",
+      "copied": "evidence/main-integration-86e712f/native-startup/native-settings.png",
+      "sha256": "18219e4ee8a71272c9a0f03ec161ef51c513d0e77db32e0fa820cbba33144333"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\web-86e712f\\landing-1099.png",
+      "copied": "evidence/main-integration-86e712f/web-production/landing-1099.png",
+      "sha256": "551d1381c71b6a34fed178286e668856e97c39c240995f038a0ad04f7d6b27f1"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\web-86e712f\\landing-1920.png",
+      "copied": "evidence/main-integration-86e712f/web-production/landing-1920.png",
+      "sha256": "4d74c186af936c9ebb8e36ce96b36ca6c2a2d113d1d40eb91b0eb6f5688e13fa"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\web-86e712f\\landing-390.png",
+      "copied": "evidence/main-integration-86e712f/web-production/landing-390.png",
+      "sha256": "e42bc1c6835f252e916f45c7dfb2c82835a0881859bc9fad4a43f79f99bb5d6a"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\web-86e712f\\receipt.json",
+      "copied": "evidence/main-integration-86e712f/web-production/receipt.json",
+      "sha256": "7e8ea20ec1c0129e8ab5b60cb4c9eb1ec5d0ec7aa6f6af6051f6c9a2bca86652"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\web-86e712f\\settings-1099.png",
+      "copied": "evidence/main-integration-86e712f/web-production/settings-1099.png",
+      "sha256": "280b4269dd804614e7f870336feb9790f7020ed201334d5538be88b8af881e91"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\web-86e712f\\settings-1920.png",
+      "copied": "evidence/main-integration-86e712f/web-production/settings-1920.png",
+      "sha256": "9edfb6841b187fd3fd54bda40bfbba79ac0dddeec3434067b52a5e2964e8787b"
+    },
+    {
+      "original": "D:\\kk-studio\\.verification\\TASK-UI-013-integration\\web-86e712f\\settings-390.png",
+      "copied": "evidence/main-integration-86e712f/web-production/settings-390.png",
+      "sha256": "9087886111afbfe8485c8b728c85f5b6f397b9e9de3cd5f123eb114f8a0c2bc2"
+    },
+    {
+      "original": ".tmp\\titlebar\\desktop-1791472362976\\initial.png",
+      "copied": "evidence/main-integration-86e712f/native-titlebar/initial.png",
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849"
+    },
+    {
+      "original": ".tmp\\titlebar\\desktop-1791472362976\\receipt.json",
+      "copied": "evidence/main-integration-86e712f/native-titlebar/receipt.json",
+      "sha256": "afd7a6e2f0263c2e3e6429ea99f09cf86df7f54077e18d01c147db339b440a0d"
+    },
+    {
+      "original": ".tmp\\titlebar\\desktop-1791472362976\\single-row.png",
+      "copied": "evidence/main-integration-86e712f/native-titlebar/single-row.png",
+      "sha256": "a6e4edc2887311beed02c0c426adec0c3edad8d02158329f4f6cdbd33def3849"
+    },
+    {
+      "original": ".tmp\\titlebar\\desktop-1791472362976\\titlebar.png",
+      "copied": "evidence/main-integration-86e712f/native-titlebar/titlebar.png",
+      "sha256": "de22ab5c362d38b8bf949079fea219f760794f6059e5b95a480508e26037383e"
+    },
+    {
+      "original": ".tmp\\model-capabilities\\desktop\\run-1791472383313-66888\\desktop-acceptance.json",
+      "copied": "evidence/main-integration-86e712f/native-model/desktop-acceptance.json",
+      "sha256": "0544ea6cb4801436876e520d4f10b51351d186ebfa8b733cfeeddc5cf4b3b9d4"
+    },
+    {
+      "original": ".tmp\\model-capabilities\\desktop\\run-1791472383313-66888\\parameters-native.png",
+      "copied": "evidence/main-integration-86e712f/native-model/parameters-native.png",
+      "sha256": "93908b1985005ad9f15b59ce2b9a4ac178224aa8b68d5898e74f9a54d36c4c97"
+    },
+    {
+      "original": ".tmp\\model-capabilities\\desktop\\run-1791472383313-66888\\redraw-disabled-native.png",
+      "copied": "evidence/main-integration-86e712f/native-model/redraw-disabled-native.png",
+      "sha256": "1e47ba298acae3fb08caf2bd64ac8017224db4385c444ecfec509ebe0812b804"
+    },
+    {
+      "original": ".tmp\\model-capabilities\\desktop\\run-1791472383313-66888\\settings-native.png",
+      "copied": "evidence/main-integration-86e712f/native-model/settings-native.png",
+      "sha256": "7134cab6c020a6f764b3adbbdee43b631c60694fb94edcccd88e548fcd08c037"
+    },
+    {
+      "original": ".tmp\\titlebar\\development-1791472407651\\receipt.json",
+      "copied": "evidence/main-integration-86e712f/web-development/receipt.json",
+      "sha256": "e33ee5a581163acf0cddc78f1bffa24e2cf9e2df91a98dd741244d14befc6c29"
+    },
+    {
+      "original": ".tmp\\titlebar\\development-1791472407651\\topbar-1099.png",
+      "copied": "evidence/main-integration-86e712f/web-development/topbar-1099.png",
+      "sha256": "be1959c06b0a32d544d920e59e42d579f33aaf24619a8b1a45357dd91bc679cd"
+    },
+    {
+      "original": ".tmp\\titlebar\\development-1791472407651\\topbar-1920.png",
+      "copied": "evidence/main-integration-86e712f/web-development/topbar-1920.png",
+      "sha256": "94954a9edcba479b4854d3acf0d11ae80771c33a64410c75d1e6eb02024f8f05"
+    },
+    {
+      "original": ".tmp\\titlebar\\development-1791472407651\\topbar-390.png",
+      "copied": "evidence/main-integration-86e712f/web-development/topbar-390.png",
+      "sha256": "6a7e1a69deef3b800f57b68d5fc300151b7bc392281ce0008d3478294d2df1c6"
+    }
+  ]
+}

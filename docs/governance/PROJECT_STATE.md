@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-10-08 单排标题栏最新主线组合验收完成
+
+PR38 已普通合入main2cb73d，source a550f31与landing完整tree相同，当前Hosted成功；PR38 合并后 main37797150560 verify/deploy-linux SUCCESS，delivery 按 main push 条件 skipped；实际收据已归档。 TASK-UI-013产品86e712f承接该主线，7条故障先RED后GREEN，001/002当前独立CLOSED，完整431browser（431attempts零flaky/retry）、97Rust、fresh带Agent titlebar/UI13/T511/模型/首屏及Web两态3宽度全部PASS。Desktop2.1.10/Web2.1.10/Mobile规划2.1.1；104项DONE61/TODO13/PARTIAL26/BLOCKED4，103上游对象完整保留。最终doc head补审/当前Hosted、普通PR40合并与main CI另按实际回读，不能用旧门禁代替。当前恢复入口[最新验收](../changes/2026-10-08-single-row-titlebar/verification.md)及[PR40](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/40)。UI012/蒙版仍原执行者维护；保留历史、工作树、快捷方式引用和用户数据，不推断既有快捷方式已切到最终稳定包。
+
 ## 2026-10-08 标题栏承接静默启动主线
 
 PR38 source a550f31 经独立审查与最新 Hosted37792689982/37792680207 全部SUCCESS，普通squash落地main2cb73d，完整tree相同；合并后main37797150560仍在运行。TASK-UI-013保留静默启动/首页按需加载、图片上方动作和T5生命周期；预检发现001乱序状态及002异步监听清理，真实组件7条先RED后GREEN，独立关闭和完整新组合验收待完成。当前账本104项（DONE60/TODO13/PARTIAL26/BLOCKED4/REVIEW1），UI012/蒙版原在途执行者保留。以下两侧记录按各自时间保留；不能将旧证据或中途GREEN当最终合并通过。

@@ -1,0 +1,171 @@
+{
+  "sha": "2cb73d237927afd68ea492394a76f1beac468369",
+  "checks": [
+    {
+      "name": "delivery",
+      "status": "completed",
+      "conclusion": "skipped",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37797150560/job/113379467926"
+    },
+    {
+      "name": "verify",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37797150560/job/113379465732"
+    },
+    {
+      "name": "deploy-linux",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37797150560/job/113379464456"
+    }
+  ],
+  "runs": [
+    {
+      "id": 37797150560,
+      "head": "2cb73d237927afd68ea492394a76f1beac468369",
+      "branch": "main",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37797150560",
+      "jobs": [
+        {
+          "name": "deploy-linux",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node --test tests/deploy/*.test.mjs",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "name": "verify",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run node node_modules/@playwright/test/cli.js install msedge",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run repository verification",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run cargo fmt --manifest-path src-tauri/Cargo.toml --check",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run cargo test --manifest-path src-tauri/Cargo.toml --no-default-features --locked",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run client:check",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run client:build -- --no-bundle",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Ensure the native WebView2 Runtime is installed",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify native TaskHost lifecycle with isolated local fixtures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "name": "delivery",
+          "status": "completed",
+          "conclusion": "skipped",
+          "steps": []
+        }
+      ]
+    }
+  ]
+}

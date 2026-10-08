@@ -19,7 +19,7 @@
 ## 测试与证据
 
 - 浏览器：`sidebar`、`sidebar-real-projects`、`sidebar-project-groups`、`menu-boundaries`、`catalog-pages`、`composer-menu-audit`、`topbar-popup-lifecycle`
-- 单排标题栏：`tests/browser/titlebar.spec.ts`、`tests/desktop/titlebar.mjs`；[本轮验证](../changes/2026-10-08-single-row-titlebar/verification.md)。
+- 单排标题栏：`tests/browser/titlebar.spec.ts`、`tests/desktop/titlebar.mjs`、`tests/unit/windowControls.test.ts`；[本轮验证](../changes/2026-10-08-single-row-titlebar/verification.md)。
 
 ## 当前能力
 
@@ -40,3 +40,5 @@
 - 2026-09-30：集成版本当前验证与剩余边界见 [落地验证](../changes/2026-09-29-project-landing/verification.md)。
 
 - 2026-10-08：TASK-UI-013 关闭重复原生标题栏，复用 40px 菜单栏与真实窗口控制；Web 导航不变。新 Tauri 的单排、菜单、拖动、最大化/还原、最小化和关闭通过；能力状态仍 PARTIAL，合并与正式发布另记。
+
+- 2026-10-08：最新主线组合86e712f保留首页按需加载、图片上方操作栏与T5；窗口乱序状态及同步/异步监听清理故障回归先RED后GREEN，当前独立关闭001/002，fresh带Agent原生与Web两态回归通过。最终PR40 Hosted/普通合并/主线CI独立回读，功能状态仍PARTIAL。
