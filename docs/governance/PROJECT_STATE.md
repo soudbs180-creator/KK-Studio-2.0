@@ -2,6 +2,8 @@
 
 ## 2026-10-08 启动体验候选
 
+最新追加：6fe的Unicode独立审查PASS/R4关闭；Hosted展开TEMP的8.3短名导致fixture严格路径比较失败，创建前原生realpath后本次native3/3和完整verify726Node/172Agent/413browser零flaky PASS，产品源码未变。最终精确SHA收据改为`startup-review-canonical-temp-20261008.md`；当前Hosted按PR38新HEAD回读，不能代填PASS。
+
 当前草稿PR#38：7a1c3358首轮Hosted的WSH路径失败已本地RED→Unicode接口GREEN，native3/3及完整verify726Node/172Agent/413browser再次PASS；实际桌面已重装，产物哈希不变。最终Unicode增量收据`startup-review-unicode-20261008.md`与PR当前SHA独立回读，不能用旧本地PASS覆盖旧CI失败。main/线上仍未推广。
 
 TASK-LAUNCH-001 最终融合main@1af0357b，在登记worktree本地AC完成；候选Desktop2.1.7/Web2.1.8/Mobile2.1.1。完整verify726Node/172Agent/413browser（既有skip8/2，0flaky）、clientcheck、GUI带Agent新Tauri和原生能力回归PASS。当前桌面及canonical忽略的lnk引用本任务树GUI，正常窗口304ms、退出0/无新增可见控制台、实际窗口Logo正确；原目标与raw备份保留。Web entry减19.0%、CSS一致，受控5次中位数1656→1405ms。R1/R2/R3独立复验关闭、源码694a237/f74548d PASS，最终组合SHA补审/PR与主线推广按实际收据，见[验证](../changes/2026-10-08-startup-experience/verification.md)。main尚未集成本任务，线上未部署，禁止清理被入口引用的worktree；FEAT-026/T7外部边界保留。

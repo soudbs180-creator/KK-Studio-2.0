@@ -21,3 +21,8 @@
 - 7a1c3358首次精确本地审查PASS后，PR#38的Hosted verify在WSH TargetPath失败；独立ACP936探针与本地emoji路径RED确认新P2 LAUNCH-R4，旧结论不能作为当前可合并门禁。原收据和失败日志保留。
 - root用显式IShellLinkW/IPersistFile修复写入和before-metadata的Unicode边界；测试独立Shell.Application读回，保留原断言，增加二次安装metadata检查并真实执行lnk。native3/3、完整verify726Node/172Agent/413browser零flaky再次PASS；实际桌面宽接口重装/图标目标收据齐全。
 - 修复后正式独立补审需绑定新提交，收据`D:/kk-studio/output/startup-review-unicode-20261008.md`；不得改旧收据SHA或用dirty预检代替。Hosted/人工GitHub审批/用户最终验收与发布授权分别记录；草稿PR不合入main或部署Web。
+
+## 临时目录别名与最终收据
+
+- 独立6fe7ccb Unicode审查PASS/R4关闭；后续Hosted仅在Target严格比较8.3短名RUNNER~1与长名runneradmin时失败。reviewer核读两份原日志，确认fixture创建前原生realpath及同一目录cleanup guard两行修改合理；全部产品断言保留，未修改产品源码。
+- 本次native3/3和完整verify726Node/172Agent/413browser零flaky PASS。本机无TEMP短名别名，额外探针只记GREEN；真实RED来自Hosted。最终已提交SHA需补审并写`D:/kk-studio/output/startup-review-canonical-temp-20261008.md`，旧6fe审查留档；Hosted与用户/发布门禁单列。

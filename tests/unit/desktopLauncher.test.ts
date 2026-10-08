@@ -9,10 +9,11 @@ test(
   "Windows icon installer creates a GUI launcher with no console and current icon",
   { skip: process.platform !== "win32" },
   (t) => {
-    const parent = fs.mkdtempSync(path.join(os.tmpdir(), "kk-gui-launcher-"));
+    const temporaryRoot = fs.realpathSync.native(os.tmpdir());
+    const parent = fs.mkdtempSync(path.join(temporaryRoot, "kk-gui-launcher-"));
     const root = path.join(parent, "KK 测试 🌐 & launch");
     t.after(() => {
-      assert.equal(path.dirname(parent), path.resolve(os.tmpdir()));
+      assert.equal(path.dirname(parent), temporaryRoot);
       assert.ok(path.basename(parent).startsWith("kk-gui-launcher-"));
       fs.rmSync(parent, { recursive: true, force: true });
     });

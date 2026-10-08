@@ -2,6 +2,8 @@
 
 ## 2026-10-08 启动体验
 
+最后两行fixture维护归一化TEMP的8.3别名，全部严格断言保留，产品源码未变；native3/3及完整verify726Node/172Agent/413browser零flaky PASS。最终收据以`D:/kk-studio/output/startup-review-canonical-temp-20261008.md`匹配当前HEAD；6fe Unicode收据仍真实PASS/R4关闭，但该SHA的Hosted短名误断言失败已保留。新Hosted另回读，不批准/合入main或部署Web。
+
 PR#38当前追加Unicode快捷方式修复：旧7a1c3358 Hosted失败与ACP936独立探针均确认R4；新接口已native3/3和完整verify726Node/172Agent/413browser PASS，实际桌面重装、前端/native哈希不变。最终收据改以`D:/kk-studio/output/startup-review-unicode-20261008.md`匹配当前SHA；旧final收据仅对应7a1c3358历史，Hosted结果另回读。保留被快捷方式引用的任务树与原链接备份。
 
 恢复入口：[intent](../changes/2026-10-08-startup-experience/intent.md)、[plan](../changes/2026-10-08-startup-experience/plan.md)、[verification](../changes/2026-10-08-startup-experience/verification.md)。TASK-LAUNCH-001 在 codex/TASK-LAUNCH-001-quiet-start（canonical 仓库登记 worktree）修复无控制台启动/Logo及 Web 首屏按需加载；后续推广核对当前 base/head、完整 verify、实际 EXE/shortcut 图标、同态运行证据和独立审查，不能从旧 main release 或过期 worktree 启动。用户请求已授权普通修复，不重复索取阶段批准；main 合并、线上部署及正式发布另按真实授权和门禁执行。

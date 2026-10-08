@@ -80,3 +80,11 @@ LAUNCH-R4（P2）：仅将原测试路径增强为中文+🌐+空格+`&`，本�
 该增量完整`npm run verify`退出0：726/734Node（8既有skip）、172/174Agent（2既有skip）、413/413browser、0retry/flaky，UI199/0及所有静态/构建门禁PASS；日志`D:/kk-studio/output/startup-unicode-full-verify-20261008.log`。前端JS/CSS哈希与最终组合完全一致，Tauri源码/产物未变化，无需将旧native产物冒称重建。实际桌面已用宽接口重装成功，两个链接的宽接口metadata收据`unicode-actual-shortcuts.json`、安装日志`unicode-actual-install.log`均在最终目录；原raw备份保留，已打开的72244未关闭。
 
 7a1c3358的原独立收据留作历史；R4修复后的精确HEAD审查以`D:/kk-studio/output/startup-review-unicode-20261008.md`回读，Hosted结果以对应PR当前SHA为准。当前尚未合入main、部署Web或正式发布。
+
+## Hosted 的临时目录别名断言维护
+
+6fe7ccb的独立Unicode补审PASS/R4关闭后，两份Hosted日志均已成功越过installer，在test:92比较`C:/Users/runneradmin/`与`C:/Users/RUNNER~1/`时失败；emoji与其余路径完全相同。原日志`hosted-job-113272719486.log`/`hosted-job-113272699687.log`保留。Windows展开了8.3目录别名，测试误把原始TEMP表示当成唯一目录名称。
+
+夹具创建前使用`fs.realpathSync.native(os.tmpdir())`取得实际临时目录，清理guard核对同一captured目录；目标/cwd/icon/console/args的严格断言均保留，产品脚本未变。独立reviewer核读两个失败与两行修改，确认这是有依据的测试维护。当前本机GetShortPathName(Temp)未提供8.3别名，探针`short-temp-no-alias.log`只记GREEN，不能声称本地重现该Hosted RED。
+
+本次native3/3与完整verify再次退出0，仍726/734Node、172/174Agent（既有skip8/2）、413/413browser且0retry/flaky；日志`canonical-temp-native.log`及`D:/kk-studio/output/startup-canonical-temp-full-verify-20261008.log`。最终精确SHA补审改由`D:/kk-studio/output/startup-review-canonical-temp-20261008.md`绑定；6fe收据保留历史。最新Hosted必须回读，不将历史失败或本地结果冒称当前远端PASS；main/线上未推广。

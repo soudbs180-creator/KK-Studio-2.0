@@ -2,6 +2,8 @@
 
 ## 2026-10-08 桌面与网页启动体验
 
+6fe7ccb Unicode独立补审PASS后，Hosted暴露临时目录8.3别名的测试误断言；fixture创建前用原生realpath，全部严格产品断言保留，产品源码未再改。本次native3/3及完整verify726Node/172Agent/413browser零flaky PASS；最终精确SHA收据为`startup-review-canonical-temp-20261008.md`，当前Hosted按新HEAD回读，旧失败与审查留档。
+
 PR#38首轮7a1c3358的Hosted verify发现LAUNCH-R4：WSH快捷方式接口不能处理系统ACP无法表示的路径字符。本地增强中文+emoji路径复现RED，改为Unicode Shell Link后真实lnk/重复安装native3/3 GREEN，完整verify726Node/172Agent/413browser再次PASS；实际桌面宽接口重装成功，前端/native产物哈希不变。旧CI失败保留；新HEAD独立补审及Hosted结果分别绑定，见本轮验证追加段。
 
 TASK-LAUNCH-001 本地AC完成：桌面/canonical快捷方式使用内嵌Logo GUI入口，实际最新release免编译窗口304ms，冷重建与正常启动均GUI退出0/无新增可见控制台；窗口Logo与原icon逐像素一致。Web首屏延后隐藏工作区并按需加载页面，历史/焦点/错误恢复保留。推送前融合最新main@1af0357b的模型能力，最终候选Desktop2.1.7/Web2.1.8/Mobile2.1.1；完整verify726/734Node（8原skip）、172/174Agent（2原skip）、413/413browser零flaky，clientcheck/newTauri与原生能力回归PASS。最新main首屏JS995,957→806,571（减19.0%）、CSS完全一致；受控5次cold中位数1656→1405ms，非线上保证。独立694a237/f74548d审查PASS、R1/R2/R3关闭，最终组合精确SHA收据见[本轮验证](changes/2026-10-08-startup-experience/verification.md)。本轮main/线上尚未推广；实际快捷方式引用本任务树，须保留至稳定产物推广。
