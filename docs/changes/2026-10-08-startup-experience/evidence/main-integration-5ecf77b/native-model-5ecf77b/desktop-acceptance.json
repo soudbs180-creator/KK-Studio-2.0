@@ -1,0 +1,36 @@
+{
+  "runtime": {
+    "url": "http://tauri.localhost/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://tauri.localhost/assets/index-hVSQX4JP.js"
+    ],
+    "styles": [
+      "http://tauri.localhost/assets/index-B2nRDpHV.css"
+    ],
+    "control": {
+      "fontSize": "14px"
+    }
+  },
+  "dataRoot": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-LAUNCH-001\\.tmp\\model-capabilities\\desktop\\run-1791468489082-42256\\isolated-1791468489082\\data",
+  "profile": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-LAUNCH-001\\.tmp\\model-capabilities\\desktop\\run-1791468489082-42256\\isolated-1791468489082\\webview-profile",
+  "executableSha256": "1a94325c4a9e21dac839042d1279439336244ee3d4785a334c71e48da803c76e",
+  "distScripts": [
+    {
+      "file": "/assets/index-hVSQX4JP.js",
+      "sha256": "407eb605c8a9b8df81de71cfc6f08e86333937ca5c6369af6780d9046bd81bc1"
+    }
+  ],
+  "errors": [],
+  "assertions": [
+    "fresh production bundle",
+    "isolated native data",
+    "declaration reload",
+    "count cap",
+    "zero reference allowance",
+    "unsupported redraw",
+    "original archived",
+    "no task created"
+  ]
+}

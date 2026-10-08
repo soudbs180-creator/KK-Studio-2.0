@@ -7,6 +7,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
 | TASK-UI-013 | 桌面标题栏与菜单合并为单排 | REVIEW | none | root |
+| TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | none | root |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | none | root |
 | TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | TODO | none | unallocated |
 | T0 | 可复现候选源码与主线整合 | DONE | none | root |
@@ -114,12 +115,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 应用名、菜单和真实窗口控制共用一排，保留窗口与Web导航行为
 - Scope: Desktop TopBar/window controls/Tauri config；Web相邻回归
-- Acceptance: 单排40px与同状态原生DOM截图; 菜单、拖动、双击、最小化、最大化/还原、关闭真实操作; Web三断点及完整verify、clientcheck、独立审查
+- Acceptance: 单排40px与同状态原生DOM截图; 菜单、拖动、双击、最小化、最大化/还原、关闭真实操作；乱序读/旧错误/卸载/异步清理故障覆盖; Web三断点及完整verify、clientcheck、独立审查
 - Branch: `fix/TASK-UI-013-single-row-titlebar`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-013-single-row-titlebar`
 - Modules: src/components/TopBar.tsx, src/components/WindowControls.tsx, src/styles/desktop-titlebar.css, src-tauri, tests, docs
-- Verification: NOT_VERIFIED — 原535/6c37本地审查及旧Hosted成功保留；本轮已授权PR40集成，先承接main f922，待启动PR38落地后承接最终main，新组合完整/fresh native/精确独立/Hosted仍待验证，不复用旧SHA。
+- Verification: NOT_VERIFIED — 当前main PR38@2cb73d已合入；统一状态序号和异步监听清理修复定向7 PASS（旧7 FAIL），完整新组合/fresh Agent native/精确独立/Hosted门禁仍待执行。历史535验收不替代当前source。
 - Evidence: [docs/changes/2026-10-08-single-row-titlebar/intent.md](../../docs/changes/2026-10-08-single-row-titlebar/intent.md), [docs/changes/2026-10-08-single-row-titlebar/spec.md](../../docs/changes/2026-10-08-single-row-titlebar/spec.md), [docs/changes/2026-10-08-single-row-titlebar/plan.md](../../docs/changes/2026-10-08-single-row-titlebar/plan.md), [docs/changes/2026-10-08-single-row-titlebar/verification.md](../../docs/changes/2026-10-08-single-row-titlebar/verification.md), [docs/changes/2026-10-08-single-row-titlebar/review.md](../../docs/changes/2026-10-08-single-row-titlebar/review.md)
+- Updated: 2026-10-08
+
+## TASK-LAUNCH-001 — 桌面与网页启动体验及图标修复
+
+- Goal: 双击直接启动无控制台，恢复桌面图标，减少 Web 首屏负担
+- Scope: Windows launcher, shortcuts, Web first load
+- Acceptance: 无可见命令窗口且可取消失败可诊断; 当前图标与 release 新鲜度正确; Web 首屏按需加载且工作区历史保留
+- Branch: `codex/TASK-LAUNCH-001-quiet-start`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-LAUNCH-001`
+- Modules: scripts/windows, start-kk-studio.bat, src/App.tsx, FEAT-026
+- Verification: PASS — 精确组合5ecf77b/basef922：AC1–5 PASS，verify726Node/172Agent（既有skip8/2）、428browser428attempts零flaky/实际retry/skip、97Rust/fmt/clientcheck/fresh带Agent release；原生UI13/TaskHost11/模型/首屏与三宽度Web PASS，独立复审PASS且102上游task完整保留。同EXE1a943...c76e；本地elevation/runtime not-recorded。最终doc head补审/Hosted与PR38普通main推广须独立回读，不代填历史失败或真实Provider/安装/线上能力。
+- Evidence: [docs/changes/2026-10-08-startup-experience/verification.md](../../docs/changes/2026-10-08-startup-experience/verification.md)
 - Updated: 2026-10-08
 
 ## TASK-MODEL-001 — 账号级图片模型能力声明与提交校验
