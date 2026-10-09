@@ -26,9 +26,9 @@
     ],
     "branch": "test/TASK-IMAGE-RETRY-004-current-attempt",
     "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-RETRY-004",
-    "status": "PARTIAL",
-    "verification": "实施前，IRV-DIAG-002由本任务承接；根因恢复另记TASK-WINDOWS-ENTRY-RECOVERY-003。",
-    "verificationResult": "PARTIAL"
+    "status": "DONE",
+    "verification": "source105已独立源码PASS，入口12/12且实际ENOENT/ETIMEDOUT故障仍失败并分类；原断言和10s限制保持。完整verify出口0但9 flaky原件保留；默认1423补充447/447零重试通过。旧Hosted原因UNKNOWN继续Recovery003；最终docs/当前Hosted/主线另验。",
+    "verificationResult": "PASS"
   },
   {
     "dependencies": [
@@ -3978,5 +3978,64 @@
     ],
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-08"
+  },
+  {
+    "id": "TASK-VERIFY-CONCURRENCY-002",
+    "title": "浏览器并发失败原因与隔离复核",
+    "goal": "保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败",
+    "scope": "健康审计QA-001；当前main重新复现后在独立任务分支收尾",
+    "acceptance": [
+      "保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败",
+      "保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过",
+      "按普通PR集成并回读当前main；外部条件如实分开"
+    ],
+    "dependencies": [
+      "TASK-GOV-001"
+    ],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "tests/browser",
+      "playwright.config.ts"
+    ],
+    "status": "TODO",
+    "priority": "P2",
+    "evidence": [
+      "docs/changes/2026-10-09-windows-entry-diagnostics/verification.md"
+    ],
+    "verification": "同source105默认并发完整verify实际9 flaky，default1423 workers4/retries0实际447/447通过；原因仍UNKNOWN，须可控反例确定同步/资源边界，不将降并发称根因修复。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-09"
+  },
+  {
+    "id": "TASK-VERIFY-ORIGIN-003",
+    "title": "浏览器验收端口与服务来源契约一致性",
+    "goal": "配置和实际验收端口契约一致，不运行不支持的端口后误判产品",
+    "scope": "playwright KK_TEST_PORT与7处固定1423断言、3处默认来源契约",
+    "acceptance": [
+      "保留105 preview1431真实437PASS/10FAIL反例及默认1423零重试447PASS原件",
+      "根据固定端口规范提供明确早期配置拒绝或合法测试fixture契约，不能弱化产品端口断言和来源白名单",
+      "相关回归与精确提交独立审查通过"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "affectedModules": [
+      "playwright.config.ts",
+      "tests/browser/image-selection-actions.spec.ts",
+      "tests/browser/ui-page-rules.spec.ts",
+      "tests/browser/local-service-connection.spec.ts",
+      "tests/browser/local-service-migration.spec.ts"
+    ],
+    "status": "TODO",
+    "priority": "P2",
+    "evidence": [
+      "docs/changes/2026-10-09-windows-entry-diagnostics/verification.md"
+    ],
+    "verification": "本次1431反例为运行配置不满足既有验收条件，7处明确port!=1423、3处实际来源白名单不认可。当前固定默认1423已447/447零retry，后续配置一致性未实施；不影响生产默认端口行为。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-09"
   }
 ]

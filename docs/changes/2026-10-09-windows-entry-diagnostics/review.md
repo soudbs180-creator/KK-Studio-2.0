@@ -1,3 +1,5 @@
 # Review：Windows入口诊断
 
 Self与新源码独立审查待提交后执行。正式只读diagnosis-push-fa36d35-desktop-entry.md指出IRV-DIAG-002/P2，原Hosted根因UNKNOWN/恢复NOT VERIFIED。本任务关闭诊断丢失时必须依据新受控实际失败输出；不把补diagnostic声称原失败根因已解决。当前Hosted、普通merge/main与正式最终doc审查均分别待回执。
+
+source105独立SOURCE PASS，IRV-DIAG-002关闭；报告12127字节SHA256394e179743a7e86c2595998746245bc737e864538c836164258d7d487c40122a。旧Hosted原因、同步/并发与端口配置的明确后续任务不被该源码审查代填。最终doc-head补审待执行；作者不伪造审批、Hosted或主线结果。

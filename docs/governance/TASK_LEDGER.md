@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
-| TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | PARTIAL | TASK-LAUNCH-001 | root |
+| TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | TASK-LAUNCH-001 | root |
 | TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | TASK-LAUNCH-001 | root |
 | TASK-IMAGE-RETRY-004 | 修复主线区域重试验收读取旧成功任务 | DONE | TASK-IMAGE-EDIT-001 | root |
 | TASK-DESKTOP-FLUSH-001 | 桌面关闭前耐久保存与失败留窗 | DONE | TASK-PLUGIN-DEV-001 | root |
@@ -118,6 +118,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | T2, TASK-UI-GOV-003 | root |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
+| TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | TODO | TASK-GOV-001 | root |
+| TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | TODO | none | root |
 
 ## TASK-WINDOWS-ENTRY-DIAG-002 — 补齐Windows入口子进程失败诊断
 
@@ -127,7 +129,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `test/TASK-IMAGE-RETRY-004-current-attempt`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-RETRY-004`
 - Modules: tests/unit/desktopRelease.test.ts, start-kk-studio.bat, docs
-- Verification: PARTIAL — 实施前，IRV-DIAG-002由本任务承接；根因恢复另记TASK-WINDOWS-ENTRY-RECOVERY-003。
+- Verification: PASS — source105已独立源码PASS，入口12/12且实际ENOENT/ETIMEDOUT故障仍失败并分类；原断言和10s限制保持。完整verify出口0但9 flaky原件保留；默认1423补充447/447零重试通过。旧Hosted原因UNKNOWN继续Recovery003；最终docs/当前Hosted/主线另验。
 - Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-09-windows-entry-diagnostics/review.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/review.md)
 - Updated: 2026-10-09
 
@@ -1466,3 +1468,27 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — 旧 FEAT-002 和 T5 描述已有 native image health/连接门禁缺口，本轮明确独立任务承载。T5 的持久 journal/同身份恢复和文本容量已实际验证，不能代替此 image 门禁验收；尚未开始。
 - Evidence: [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/status.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/status.md)
 - Updated: 2026-10-08
+
+## TASK-VERIFY-CONCURRENCY-002 — 浏览器并发失败原因与隔离复核
+
+- Goal: 保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败
+- Scope: 健康审计QA-001；当前main重新复现后在独立任务分支收尾
+- Acceptance: 保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: tests/browser, playwright.config.ts
+- Verification: NOT_VERIFIED — 同source105默认并发完整verify实际9 flaky，default1423 workers4/retries0实际447/447通过；原因仍UNKNOWN，须可控反例确定同步/资源边界，不将降并发称根因修复。
+- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md)
+- Updated: 2026-10-09
+
+## TASK-VERIFY-ORIGIN-003 — 浏览器验收端口与服务来源契约一致性
+
+- Goal: 配置和实际验收端口契约一致，不运行不支持的端口后误判产品
+- Scope: playwright KK_TEST_PORT与7处固定1423断言、3处默认来源契约
+- Acceptance: 保留105 preview1431真实437PASS/10FAIL反例及默认1423零重试447PASS原件; 根据固定端口规范提供明确早期配置拒绝或合法测试fixture契约，不能弱化产品端口断言和来源白名单; 相关回归与精确提交独立审查通过
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: playwright.config.ts, tests/browser/image-selection-actions.spec.ts, tests/browser/ui-page-rules.spec.ts, tests/browser/local-service-connection.spec.ts, tests/browser/local-service-migration.spec.ts
+- Verification: NOT_VERIFIED — 本次1431反例为运行配置不满足既有验收条件，7处明确port!=1423、3处实际来源白名单不认可。当前固定默认1423已447/447零retry，后续配置一致性未实施；不影响生产默认端口行为。
+- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md)
+- Updated: 2026-10-09

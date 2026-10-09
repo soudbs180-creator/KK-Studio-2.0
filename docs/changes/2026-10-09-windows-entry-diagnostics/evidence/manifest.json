@@ -1,0 +1,449 @@
+{
+  "task": "TASK-WINDOWS-ENTRY-DIAG-002",
+  "source": "10577c1225ef2a93b1e74265027050c7f5e8bd6a",
+  "date": "2026-10-09",
+  "policy": "Raw bytes preserved, old failures and mislabeled file not rewritten, scope per original receipt",
+  "entries": [
+    {
+      "path": "evidence/source-10577c1/diagnosis-push-fa36d35-desktop-entry.md.gz",
+      "original": "diagnosis-push-fa36d35-desktop-entry.md",
+      "bytes": 10591,
+      "sha256": "be907cdcfc6bb3edc159b5b43e21a0d9bfb4a754df67858bb7fbdb389e663205",
+      "compressedBytes": 4797,
+      "compressedSha256": "e0d4ccd107896f9055712751224d0c147e12ba239aa0b61178192b7889e06ba0",
+      "scope": "Historical fa36 exact source"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-diagnostic-complete-green.txt.gz",
+      "original": "desktop-diagnostic-complete-green.txt",
+      "bytes": 3072,
+      "sha256": "f46f4a7b9ce8d583f8777a1c2affabde15cdc5e1b7c49fab880d2d1fcecf110a",
+      "compressedBytes": 1036,
+      "compressedSha256": "efb32697008d57e6304f0172ce28fecee601b44deea74e905ae5d32484d05fc0",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-diagnostic-complete-green.exit.txt.gz",
+      "original": "desktop-diagnostic-complete-green.exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "compressedBytes": 23,
+      "compressedSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-diagnostic-green.txt.gz",
+      "original": "desktop-diagnostic-green.txt",
+      "bytes": 2000,
+      "sha256": "25c435c0d4a5ac5f5916d406aed8c22af90edb369893f1df1bb48c27d48fca8d",
+      "compressedBytes": 756,
+      "compressedSha256": "9403d0685dcef4243635bc0b20779a0fc0f419df90e96ba12b6976c7f7a174a2",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-diagnostic-green.exit.txt.gz",
+      "original": "desktop-diagnostic-green.exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "compressedBytes": 23,
+      "compressedSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-fault-probe.mjs.gz",
+      "original": "desktop-fault-probe.mjs",
+      "bytes": 3632,
+      "sha256": "ac54b35208fdeee7f61e3cee642cfc911ca66b913da56d964959c17268bdec1d",
+      "compressedBytes": 1563,
+      "compressedSha256": "2d369f6e33f2aa0b4de0c52e64617d4b8811dc4037711459c8240d8247c556b8",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/push-fa36d35-failed-verify.txt.gz",
+      "original": "push-fa36d35-failed-verify.txt",
+      "bytes": 129083,
+      "sha256": "8bf775dfa5a5060ff51c0828081af37b3c5f60f46b6db90e3a40b3aff2d6c9a9",
+      "compressedBytes": 39396,
+      "compressedSha256": "2e53ef652a3728b927e0d4576e833b9db9adcab1a171248b1c892e63d616bfe2",
+      "scope": "Historical fa36 exact source"
+    },
+    {
+      "path": "evidence/source-10577c1/pr-fa36d35-success-verify.txt.gz",
+      "original": "pr-fa36d35-success-verify.txt",
+      "bytes": 350144,
+      "sha256": "d311b39484316a9544a985214e1a41783a4f23e1ab547e394c9d7b37055571be",
+      "compressedBytes": 95987,
+      "compressedSha256": "72cb6d20b994f431908cd785b322f6540494f942e77fd57c64243050e56c51b6",
+      "scope": "Historical fa36 exact source"
+    },
+    {
+      "path": "evidence/source-10577c1/review-final-fa36d35.md.gz",
+      "original": "review-final-fa36d35.md",
+      "bytes": 9340,
+      "sha256": "31141541bf8215f4bf3c2abfcde676ee6adf3c69aaa0e78e77e68deda06e09fd",
+      "compressedBytes": 4427,
+      "compressedSha256": "a462c48ceef1532f72465be9f7e909a290e25082c8f15cd6c0220729d7577f74",
+      "scope": "Historical fa36 exact source"
+    },
+    {
+      "path": "evidence/source-10577c1/review-source-10577c1.md.gz",
+      "original": "review-source-10577c1.md",
+      "bytes": 12127,
+      "sha256": "394e179743a7e86c2595998746245bc737e864538c836164258d7d487c40122a",
+      "compressedBytes": 5334,
+      "compressedSha256": "26fc185f97ab8d182ca9d89c2bedea651f3f1d2c6f72088f463f623048d3a45d",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/reviewer-unit-10577c1.txt.gz",
+      "original": "reviewer-unit-10577c1.txt",
+      "bytes": 3050,
+      "sha256": "3aee47e64d6782088956ed99b3c24e03cac6cfa55907d8e9505488a384dcb1b7",
+      "compressedBytes": 1040,
+      "compressedSha256": "b069bdb2c2a9506b81e1841930f456ad9fd9f2d44e27cf2898b21f0ffadcde81",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/reviewer-unit-10577c1.json.gz",
+      "original": "reviewer-unit-10577c1.json",
+      "bytes": 4055,
+      "sha256": "d5558bb5d13ce85be6829396971564ca191f3c3b18ee81361edfab98d838c2c6",
+      "compressedBytes": 1337,
+      "compressedSha256": "5f5f354d9ce2d33e8d71e8a7817cd347a56c6977becc0113660b79c143a9ada1",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/reviewer-integrity-10577c1.json.gz",
+      "original": "reviewer-integrity-10577c1.json",
+      "bytes": 3096,
+      "sha256": "0286979f70fc96585b595f79d03d510b53957e6deccbad5dd4245c394c54c065",
+      "compressedBytes": 1270,
+      "compressedSha256": "87c1bc39edf623fb369e67edb50f10f6e129b7054d52e376c0069f54ddd84f53",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/reviewer-static-10577c1.json.gz",
+      "original": "reviewer-static-10577c1.json",
+      "bytes": 3313,
+      "sha256": "bd42cabfa3215800e4bf34c8ac8607d63ecc386c8d9c142f8fb1abec2062da35",
+      "compressedBytes": 782,
+      "compressedSha256": "ee3c18e8dc8dcf60d009d00d4628c5ce6e6c89c4ddbc038dc3a3443f08d3f4a4",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/reviewer-evidence-binding-10577c1.json.gz",
+      "original": "reviewer-evidence-binding-10577c1.json",
+      "bytes": 6138,
+      "sha256": "62c46e71654e9a2bd59f76915545e6d6b3667613ffa8fc64c1f28dc2731171c4",
+      "compressedBytes": 1932,
+      "compressedSha256": "3fcf4a833d87ab17178700c9aad9f5a20aecc523ded39c5305b95c77b0eab876",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/verify-10577c1.txt.gz",
+      "original": "verify-10577c1.txt",
+      "bytes": 181866,
+      "sha256": "c38a1c7fd3fd182734eca73851b1c172f6bb9d3b97082373ac12b14a2e5961c5",
+      "compressedBytes": 55388,
+      "compressedSha256": "cf32f217e87638e424cf295b295e39eeec99ca38224c4471eb024d50508aefb5",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/verify-10577c1.exit.txt.gz",
+      "original": "verify-10577c1.exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "compressedBytes": 23,
+      "compressedSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/browser-results-10577c1-default-workers.json.gz",
+      "original": "browser-results-10577c1-default-workers.json",
+      "bytes": 626173,
+      "sha256": "75ee6f18902608ed1157db019ca69a5fcfb48a97543dbbcf6177831708dc317f",
+      "compressedBytes": 55425,
+      "compressedSha256": "7f074ab4f6cf16c84d1b881c0b5ff0b8caa3aa9bc0b6ac8641b17a3f8212d244",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/browser-10577c1-workers4-zero-retry.txt.gz",
+      "original": "browser-10577c1-workers4-zero-retry.txt",
+      "bytes": 74724,
+      "sha256": "2e484498ba5e6b4b3276ca8c40c2ef268cf10cab1b6705db170279e6d8b9b6c8",
+      "compressedBytes": 19806,
+      "compressedSha256": "51a6bf1b0322e25008420f3b8cd3758ea4a4cd0cce684b74d54e18ebf98f062c",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/browser-10577c1-workers4-zero-retry.exit.txt.gz",
+      "original": "browser-10577c1-workers4-zero-retry.exit.txt",
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "compressedBytes": 23,
+      "compressedSha256": "baf0683e1103b94b68d94e8a12d7e144b4e0571e9948de7fb0d85103b045460e",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/browser-results-10577c1-workers4-zero-retry.json.gz",
+      "original": "browser-results-10577c1-workers4-zero-retry.json",
+      "bytes": 546681,
+      "sha256": "bb430f3522803bd94a3ad072a60afcb7086773ed831ad32beeb25e85bcb1fa47",
+      "compressedBytes": 43444,
+      "compressedSha256": "08dba628f49b53b5d2f188374beb2c7209bfe731cfcbb8116e8a628b74001822",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/browser-workers4-preview1431-failure-receipt.json.gz",
+      "original": "browser-workers4-preview1431-failure-receipt.json",
+      "bytes": 14777,
+      "sha256": "73db7802c48465bea1ccce93742ee056cb54e6093a1339d6136dceda2706005b",
+      "compressedBytes": 2203,
+      "compressedSha256": "201b31ef1b3ef1a51514e81c34075f47fbf8bb09910ab575c52ab9223639b510",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/browser-10577c1-default1423-workers4-zero-retry.txt.gz",
+      "original": "browser-10577c1-default1423-workers4-zero-retry.txt",
+      "bytes": 59810,
+      "sha256": "1a47e6b66b770e38738a24b5a8d4d528eda6fab5654197330b1f8b6cd97f5c0b",
+      "compressedBytes": 18122,
+      "compressedSha256": "59a5ecdaea191a0c9845174adc047c790328a74b1d14975881a338bbd52bd261",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/browser-10577c1-default1423-workers4-zero-retry.exit.txt.gz",
+      "original": "browser-10577c1-default1423-workers4-zero-retry.exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "compressedBytes": 23,
+      "compressedSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/browser-results-10577c1-default1423-workers4-zero-retry.json.gz",
+      "original": "browser-results-10577c1-default1423-workers4-zero-retry.json",
+      "bytes": 592797,
+      "sha256": "d86b6ddc4cb27af100305f11380976c509d153b9c5a3917a55aef11f89ea2c47",
+      "compressedBytes": 49963,
+      "compressedSha256": "6722ac2a2a637b278b1ae774e0248b5512ff1057f0d3c3e44bdebad86702fe0d",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/browser-default1423-strict-10577c1-receipt.json.gz",
+      "original": "browser-default1423-strict-10577c1-receipt.json",
+      "bytes": 822,
+      "sha256": "005c8c293ca0bfdedd559b2f72f3286b7544bc2b2ecef69ff496d0700a3aea0d",
+      "compressedBytes": 518,
+      "compressedSha256": "d2561fe7fb6a8b70c15f6041944ba9a2bc738f5d0dd7977ad37c743f1855d021",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/browser-results-10577c1-actual.json.gz",
+      "original": "browser-results-10577c1-actual.json",
+      "bytes": 17504,
+      "sha256": "77593f24139558cd51a5bd94d0e7ee2bb635aec4ca9e3dfd94759696508d1b2b",
+      "compressedBytes": 2410,
+      "compressedSha256": "cbdc578f86b500c4eddc7d1f7e6d1af0196fd93988eebc82cdaeef50408cc9f5",
+      "scope": "MISIDENTIFIED Sep29 historical report; DO_NOT_USE for105; see path correction"
+    },
+    {
+      "path": "evidence/source-10577c1/browser-report-path-correction-10577c1.json.gz",
+      "original": "browser-report-path-correction-10577c1.json",
+      "bytes": 646,
+      "sha256": "755c95b703c32fa0ad15173f656febe267061e40f771915a8dd4fe8562abc7dd",
+      "compressedBytes": 410,
+      "compressedSha256": "f0e16e68fec37e7d482c4d74b2850bf36371346b6090b77ba279c6ed4a318e5b",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/diagnostic-source-lint-112.txt.gz",
+      "original": "diagnostic-source-lint-112.txt",
+      "bytes": 591,
+      "sha256": "2735df404e2baaedc9e95595bdf4328321299051ee86cc9895a1187e2d4b6a31",
+      "compressedBytes": 324,
+      "compressedSha256": "54316a2dff4dde73b2d15de1a46355148e322906c4f4b3f57176cc542373e443",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/diagnostic-source-lint-112.exit.txt.gz",
+      "original": "diagnostic-source-lint-112.exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "compressedBytes": 23,
+      "compressedSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/final-doc-lint-corrected.txt.gz",
+      "original": "final-doc-lint-corrected.txt",
+      "bytes": 591,
+      "sha256": "d27b5cd87a20aaf883776bcede4ba62cf4b5269834a0e7d7c70249b4eb004e7a",
+      "compressedBytes": 324,
+      "compressedSha256": "d83e16271f6d510e3fc018193a732cafe1236468e4643a3995ad8be808bea9c6",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/final-doc-lint-corrected.exit.txt.gz",
+      "original": "final-doc-lint-corrected.exit.txt",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "compressedBytes": 23,
+      "compressedSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-diagnostic-controlled-faults/ENOENT.json.gz",
+      "original": "desktop-diagnostic-controlled-faults/ENOENT.json",
+      "bytes": 568,
+      "sha256": "e7e151b918d39ede442faf0a6a6a6bccdc76aed28e2b0923705de9d98044e2ff",
+      "compressedBytes": 345,
+      "compressedSha256": "44cdce4d0eb02ca7e635d104c9fc5b53d33a4eec85025dbda98426d11645acb7",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-diagnostic-controlled-faults/ENOENT.stderr.txt.gz",
+      "original": "desktop-diagnostic-controlled-faults/ENOENT.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedBytes": 20,
+      "compressedSha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-diagnostic-controlled-faults/ENOENT.stdout.txt.gz",
+      "original": "desktop-diagnostic-controlled-faults/ENOENT.stdout.txt",
+      "bytes": 5037,
+      "sha256": "9fd8cd1d25f7ff1d6e0c193d0079aaba1a0805105299701cc6a19470bad6210e",
+      "compressedBytes": 1256,
+      "compressedSha256": "3a547e7aeff19a3c369201046d88e58eeeabc9d0cb21a2d7785c7c394e060acc",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-diagnostic-controlled-faults/ETIMEDOUT.json.gz",
+      "original": "desktop-diagnostic-controlled-faults/ETIMEDOUT.json",
+      "bytes": 529,
+      "sha256": "189e207eaecaa816bee492657ef8df0ebf0364580b06aa0b79e1b37335b8538a",
+      "compressedBytes": 347,
+      "compressedSha256": "f2dad38cd4b73c58efa0efaa8c15d8dc58511a4e6790368f968e291e8d81c5fb",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-diagnostic-controlled-faults/ETIMEDOUT.stderr.txt.gz",
+      "original": "desktop-diagnostic-controlled-faults/ETIMEDOUT.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedBytes": 20,
+      "compressedSha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-diagnostic-controlled-faults/ETIMEDOUT.stdout.txt.gz",
+      "original": "desktop-diagnostic-controlled-faults/ETIMEDOUT.stdout.txt",
+      "bytes": 4774,
+      "sha256": "5af3d8c0b11e3d059b2f25a8f15863245037403e255067cd195a2bc6466a02fd",
+      "compressedBytes": 1253,
+      "compressedSha256": "d51d300ea7b6331eea85f8470f19c06595a4311c06f1d16cd8b626834e65f21d",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-diagnostic-controlled-faults/fault-preload.cjs.gz",
+      "original": "desktop-diagnostic-controlled-faults/fault-preload.cjs",
+      "bytes": 1245,
+      "sha256": "526cd76ff927a33aebfb721b3b7e82bdeec0a314fc2c4343cebf824a2aac2b4a",
+      "compressedBytes": 668,
+      "compressedSha256": "363c043fac7957cb933b3c340ae6351d28b3584577070aab40445e53c8baef68",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-diagnostic-controlled-faults/receipt.json.gz",
+      "original": "desktop-diagnostic-controlled-faults/receipt.json",
+      "bytes": 788,
+      "sha256": "90f362f21de078a77b78e9d909454e0344151a7465bae8c58cfec0dcf4d6b0a8",
+      "compressedBytes": 409,
+      "compressedSha256": "51d597e0da9b6ed05176c4906b9042648c2e5b15c082edb50f515e6f59640e2b",
+      "scope": "Source105 or precommit actual-byte-bound probe; inspect original receipt"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/original-targeted-test.txt.gz",
+      "original": "desktop-entry-diagnostic-1791509030330/original-targeted-test.txt",
+      "bytes": 200,
+      "sha256": "e62e08839f7827bc13f9e8cf973abcfdc9d04ee06ebf9e3e2fa23e5dd039659e",
+      "compressedBytes": 164,
+      "compressedSha256": "ded319b72f0d31243ffaaaac9eced1072e18a78c855000020b027e18b6538660",
+      "scope": "Historical fa36 instrumented trace; local PASS not reproduction"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/process-trace.jsonl.gz",
+      "original": "desktop-entry-diagnostic-1791509030330/process-trace.jsonl",
+      "bytes": 3155,
+      "sha256": "5dcaf65727d1e571019ea2671a2535a5c183e4259d0a968d39a6c9107710a5cd",
+      "compressedBytes": 773,
+      "compressedSha256": "d3acc9cc7cab7bb71b1924c809f8f07cdb85921f1c3886639c067398e6321543",
+      "scope": "Historical fa36 instrumented trace; local PASS not reproduction"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/receipt.json.gz",
+      "original": "desktop-entry-diagnostic-1791509030330/receipt.json",
+      "bytes": 6213,
+      "sha256": "524e6dfd2d265844852f9d7d9a27f14df16fdcabf68d81934ccc5e8166dfb523",
+      "compressedBytes": 1413,
+      "compressedSha256": "f4b86be8a5b1eb8dbf6c6fa82aa3535812e30a509dc508716dcbd232b6637786",
+      "scope": "Historical fa36 instrumented trace; local PASS not reproduction"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/source-identity.json.gz",
+      "original": "desktop-entry-diagnostic-1791509030330/source-identity.json",
+      "bytes": 971,
+      "sha256": "1c7dfb62d296cd79804b49ba026755b4b6e55af93736a81fe2f2958fcfee8d3a",
+      "compressedBytes": 401,
+      "compressedSha256": "e0de8791fa3900fb6d29b9454d2a3df8e361afb59f3e3d404afa0248ca69b14b",
+      "scope": "Historical fa36 instrumented trace; local PASS not reproduction"
+    },
+    {
+      "path": "evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/trace-preload.cjs.gz",
+      "original": "desktop-entry-diagnostic-1791509030330/trace-preload.cjs",
+      "bytes": 1102,
+      "sha256": "f2989416befa6ca9cb1ce947a603ff511da93e88fab50da24cf6bcdba4f25d3e",
+      "compressedBytes": 594,
+      "compressedSha256": "5c6cb3ade23bb65e2df1b9c00b1c8c46ed649239d9e69ab1376230a74c6e1a9e",
+      "scope": "Historical fa36 instrumented trace; local PASS not reproduction"
+    },
+    {
+      "path": "evidence/source-10577c1/final105-governance114.txt.gz",
+      "original": "final105-governance114.txt",
+      "bytes": 37,
+      "sha256": "068e41725f243a8f4ac541415ffb806f6a3119e10514ebb76a05d7b8299f3034",
+      "compressedBytes": 57,
+      "compressedSha256": "36713c363c6e1bf9cd3026534414c2e307733ca9eb8aa74944784d27541f7feb",
+      "scope": "Final114-doc working-tree gates, product/test source105 unchanged"
+    },
+    {
+      "path": "evidence/source-10577c1/final105-governance114.exit.txt.gz",
+      "original": "final105-governance114.exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "compressedBytes": 22,
+      "compressedSha256": "8afc61325213625995e1de8b0d2df70f01b1d5304993484a41cc9df249f00fad",
+      "scope": "Final114-doc working-tree gates, product/test source105 unchanged"
+    },
+    {
+      "path": "evidence/source-10577c1/final105-lint114.txt.gz",
+      "original": "final105-lint114.txt",
+      "bytes": 578,
+      "sha256": "94a8f6d9a645bb9783097a93b50e1b3f55c0ff7b5dcc5ce03167356eea6e3d43",
+      "compressedBytes": 316,
+      "compressedSha256": "4829d97f97916264960431a2efe9534815ae278383d15873eee677c54b7163ae",
+      "scope": "Final114-doc working-tree gates, product/test source105 unchanged"
+    },
+    {
+      "path": "evidence/source-10577c1/final105-lint114.exit.txt.gz",
+      "original": "final105-lint114.exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "compressedBytes": 22,
+      "compressedSha256": "8afc61325213625995e1de8b0d2df70f01b1d5304993484a41cc9df249f00fad",
+      "scope": "Final114-doc working-tree gates, product/test source105 unchanged"
+    }
+  ]
+}

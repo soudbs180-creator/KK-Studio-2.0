@@ -4,3 +4,5 @@
 2. 最小补tests/unit/desktopRelease.test.ts三段安全诊断及隔离checker实际runtime receipt；产品BAT不改。
 3. 独立受控ENOENT/ETIMEDOUT证明真实失败输出分类，定向正常unit/完整verify、独立精确SHA review。
 4. 当前push与PR须全部通过，真实旧失败/原因UNKNOWN不覆盖；仍失败按新实证修复。普通merge/main另回读。
+
+实施12/12及受控故障分类、完整verify与默认1423补充447零重试完成。旧失败/9 flaky/误配置10FAIL和误读历史report全部保留。最终docs/Hosted及普通合并/新main待实际完成。

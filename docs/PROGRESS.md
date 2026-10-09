@@ -1,5 +1,10 @@
 # 当前进度
 
+## 2026-10-09 失败任务 source105 本地复验
+
+主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。
+
+
 ## 2026-10-09 统一Mask最新主线组合本地验收完成
 
 用户授权普通合并已检查分支。PR38/40已正常合并，当前base main1d6f640及其实际post-main37806381609成功；Mask产品27b/driver-eaa承接该主线，完整445browser零retry、102Rust和fresh Agent原生Mask外0/重启/undo/凭据保护、上方操作栏/TaskHost/模型/标题栏/首屏及生产Web3宽度通过，当前独立复审。Desktop/Web2.1.11、Mobile规划2.1.1；104上游对象完整保留，106项DONE62/TODO14/PARTIAL26/BLOCKED4，44项开放。TASK-PLUGIN-DEV-001开发遮罩依然FAIL/TODO，源码与main相同；开发其余UI只在留证后Escape收起遮罩作局部检查，primary-main开发两次超时为NOT VERIFIED。真实效果/手机/用户验收仍VERIFY-002，FEAT035仍PARTIAL。最终docs独立/最新Hosted、普通合并、完整landing tree/主线FF与post-mainCI另外实际回读，不预填成功。UI012仍原执行者在途。恢复入口[本轮验证](changes/2026-10-09-unified-mask-main-integration/verification.md) / [任务状态报告](changes/2026-10-09-unified-mask-main-integration/status.md)。保留所有历史/工作树/快捷方式及用户数据，不宣称既有启动入口已换包或已发布。

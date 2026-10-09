@@ -1,5 +1,10 @@
 # AI handoff
 
+## 2026-10-09 失败任务 source105 本地复验
+
+主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](../changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](../changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。
+
+
 ## 2026-10-09 主线失败续修候选完成本地验收
 
 PR42已普通落地main6a97f456ab7334f97c604461e8d29789caa754cb、全tree与已审cc相同，但post-main37845923441 verify真实FAIL（446通过/区域重试首次及retry1收到3预期4）；Rust/桌面后续SKIPPED不能当PASS。TASK-IMAGE-RETRY-004仅修验收等待新任务身份，14相关及447全浏览器零实际retry、804root/172Agent（原skip8/2）和严格development已PASS。source独立41单测通过、IRV-001仅文档矛盾由当前收尾更正；最终doc-head补审/托管及普通合并/main仍待回执。110任务DONE67/TODO13/PARTIAL26/BLOCKED4，43开放；Desktop/Web2.1.12、Mobile规划2.1.1。UI012当前8d6已含6a且继续原owner525浏览器验收，尚无最终ready PR；UI014原会话容量失败，bd16及9条dirty已只读保存未验收快照，原件不动。Codex配置及健康任务在独立候选，未合主线，不冒充主线任务状态。
