@@ -2,7 +2,7 @@
 
 ## 2026-10-10 当前主线恢复入口
 
-当前 canonical 本地 checkout 为 `D:/kk-studio/KK-Studio-2.0`、分支 `main`、HEAD `c56bda65`（仅 handoff 元数据跟进，产品验证提交为 `4b4ceb93`），工作树 clean；`origin/main` 仍为独立远端快照 `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`。本轮 `TASK-AGENT-001` Web 回归修复已合入 main，交付包和账本绑定在 `docs/changes/2026-10-10-remaining-verification/`，本地 Node/Agent/browser/UI/development 证据已保存，开发态 receipt 位于该包 `evidence/development-plugins-receipt.json`。若继续工作，先读该包、`docs/governance/PROJECT_STATE.md` 与 `task-ledger.json`，再确认 117 项账本状态；不要把本地 fixture 当真实 Provider、Hosted、Tauri 或 Mobile 验收。根 checkout 的一次合并后 development 重试曾在 Edge 启动阶段挂起，保留为未验证现象；隔离工作树 receipt 为 PASS。未关闭重点包括 `TASK-PROV-005`、`TASK-PROV-006`、`TASK-VERIFY-CONCURRENCY-002`、`TASK-VERIFY-ORIGIN-003`、`TASK-WINDOWS-ENTRY-RECOVERY-003`、`TASK-DOCS-HISTORY-001` 及真实 Provider/GPU、Hosted、Desktop/Mobile 验收。
+当前 canonical 本地 checkout 为 `D:/kk-studio/KK-Studio-2.0`、分支 `main`、当前本地 `HEAD`（用 `git rev-parse HEAD` 回读），工作树 clean；`origin/main` 仍为独立远端快照 `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`。本轮 `TASK-AGENT-001` Web 回归修复和 Codex 测试清理已合入 main，交付包和账本绑定在 `docs/changes/2026-10-10-remaining-verification/`，本地 Node/Agent/browser/UI/development 证据已保存，开发态 receipt 位于该包 `evidence/development-plugins-receipt.json`。若继续工作，先读该包、`docs/governance/PROJECT_STATE.md` 与 `task-ledger.json`，再确认 117 项账本状态；不要把本地 fixture 当真实 Provider、Hosted、Tauri 或 Mobile 验收。根 checkout 的一次合并后 development 重试曾在 Edge 启动阶段挂起，保留为未验证现象；隔离工作树 receipt 为 PASS。未关闭重点包括 `TASK-PROV-005`、`TASK-PROV-006`、`TASK-VERIFY-CONCURRENCY-002`、`TASK-VERIFY-ORIGIN-003`、`TASK-WINDOWS-ENTRY-RECOVERY-003`、`TASK-DOCS-HISTORY-001` 及真实 Provider/GPU、Hosted、Desktop/Mobile 验收。
 
 ## 2026-10-09 失败任务 source105 本地复验
 
