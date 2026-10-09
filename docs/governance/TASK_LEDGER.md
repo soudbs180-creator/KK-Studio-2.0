@@ -115,6 +115,21 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | T2, TASK-UI-GOV-003 | root |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
+| TASK-PROV-CONFIG-004 | Codex受管TOML表头与当前选择的安全合并 | REVIEW | TASK-PROV-003 | root |
+| TASK-LOCAL-ASSET-002 | 伴随服务跨源素材元数据响应头 | TODO | TASK-LOCAL-SERVICE-001 | root |
+| TASK-COMPANION-RECOVERY-003 | 伴随服务未知版本与坏快照原件保护 | TODO | TASK-LOCAL-SERVICE-001 | root |
+| TASK-WEB-IMAGE-UNKNOWN-002 | Web成功HTTP但坏输出的未知受理边界 | TODO | T4 | root |
+| TASK-GATEWAY-BUDGET-002 | Gateway提交同伴任务的未知费用隔离 | TODO | T5 | root |
+| TASK-MODEL-BATCH-002 | Desktop与模型批量数量契约一致性 | TODO | TASK-MODEL-001 | root |
+| TASK-IMAGE-REF-003 | 异步参考图上传与删除乱序保护 | TODO | TASK-IMAGE-EDIT-001 | root |
+| TASK-WORKBUDDY-SAFE-002 | 旧WorkBuddy Gateway安全承接 | TODO | T8 | root |
+| TASK-CANVAS-KAWORKAI-002 | 旧画布版本能力安全承接 | TODO | TASK-CANVAS-KAWORKAI-001 | root |
+| TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | TODO | TASK-GOV-001 | root |
+| TASK-DOC-CURRENT-002 | README与已知问题的当前入口一致性 | TODO | TASK-GOV-001 | root |
+| TASK-GIT-HEALTH-002 | 分支准入与未提交工作持续盘点 | TODO | TASK-GOV-001 | root |
+| TASK-UI-014-RESUME-001 | 接续因模型容量错误中断的UI审计 | PARTIAL | UI-001 | root |
+| TASK-NATIVE-GESTURE-002 | 原生标题栏拖动首轮失败的环境诊断 | TODO | TASK-UI-013 | root |
+| TASK-UI-012-RESUME-001 | 接续容量中断的UI核心交互交付 | PARTIAL | UI-001 | root |
 
 ## TASK-DESKTOP-FLUSH-001 — 桌面关闭前耐久保存与失败留窗
 
@@ -1427,3 +1442,183 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: NOT_VERIFIED — 旧 FEAT-002 和 T5 描述已有 native image health/连接门禁缺口，本轮明确独立任务承载。T5 的持久 journal/同身份恢复和文本容量已实际验证，不能代替此 image 门禁验收；尚未开始。
 - Evidence: [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/status.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/status.md)
 - Updated: 2026-10-08
+
+## TASK-PROV-CONFIG-004 — Codex受管TOML表头与当前选择的安全合并
+
+- Goal: 合法注释表头不会生成重复表，删除当前受管provider不会落盘失效选择
+- Scope: 健康审计LEG-001/LEG-002；当前main的codex-provider-config合并、写入前校验与隔离CLI回归
+- Acceptance: 注释/引号/多行内容兼容且用户非受管设置原文保留、幂等; 默认不切换用户模型；无显式有效active删除当前provider时拒绝; 无效配置或合并失败不写config/catalog、原件保护; 全量验证、Agent打包、独立审查与实际PR/main门禁
+- Branch: `fix/TASK-PROV-CONFIG-004-safe-toml`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-CONFIG-004`
+- Modules: vendor/canvas-agent/src/agent/codex-provider-config.ts, vendor/canvas-agent/src/agent/codex-provider-config.test.ts, vendor/canvas-agent/package.json, vendor/canvas-agent/package-lock.json, docs
+- Verification: PASS — a3源码36/36、804root/183Agent（原skip8/2）、447browser447attempts零retry、Rust102、生产4296文件包内CLI六命令及fresh EXE/TaskHost11通过；精确a3独立源码审查PASS，P1 inline作用域关闭。最终文档/当前Hosted/普通PR与main回归单独待验。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/spec.md](../../docs/changes/2026-10-09-provider-config-recovery/spec.md), [docs/changes/2026-10-09-provider-config-recovery/verification.md](../../docs/changes/2026-10-09-provider-config-recovery/verification.md), [docs/changes/2026-10-09-provider-config-recovery/review.md](../../docs/changes/2026-10-09-provider-config-recovery/review.md)
+- Updated: 2026-10-09
+
+## TASK-LOCAL-ASSET-002 — 伴随服务跨源素材元数据响应头
+
+- Goal: 已配对浏览器可以读取X-KK-Asset-Metadata并恢复素材
+- Scope: 健康审计CORE-001；当前main重新复现后在独立任务分支收尾
+- Acceptance: 已配对浏览器可以读取X-KK-Asset-Metadata并恢复素材; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/local-service/server.ts, src/features/local-service/client.ts
+- Verification: NOT_VERIFIED — 当前8c缺Expose-Headers；旧1d真实浏览器200字节正常但metadata不可读。先复核最新main，然后真实双端口浏览器验收；仅允许的origin暴露头，认证边界保持。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-COMPANION-RECOVERY-003 — 伴随服务未知版本与坏快照原件保护
+
+- Goal: 读失败不会当成空存储并覆盖未知版本或坏原件
+- Scope: 健康审计CORE-004；当前main重新复现后在独立任务分支收尾
+- Acceptance: 读失败不会当成空存储并覆盖未知版本或坏原件; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/local-service/store.ts
+- Verification: NOT_VERIFIED — 当前catch-all读取语义仍存在；风险为INFERENCE，先隔离future/主坏备好/IO/保存重试复现，原字节与备份保护再实现。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-WEB-IMAGE-UNKNOWN-002 — Web成功HTTP但坏输出的未知受理边界
+
+- Goal: 已可能受理的生图请求不会按确定失败普通重试
+- Scope: 健康审计CORE-003；当前main重新复现后在独立任务分支收尾
+- Acceptance: 已可能受理的生图请求不会按确定失败普通重试; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/creation/imageGeneration.ts
+- Verification: NOT_VERIFIED — INFERENCE；先用200坏JSON/空/部分输出fixture复现，核对unknown、零自动第二POST及费用保留，不声称已产生真实费用。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-GATEWAY-BUDGET-002 — Gateway提交同伴任务的未知费用隔离
+
+- Goal: 未取得jobId但可能已受理的任务不能被零成本释放预算
+- Scope: 健康审计CORE-005；当前main重新复现后在独立任务分支收尾
+- Acceptance: 未取得jobId但可能已受理的任务不能被零成本释放预算; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/generation-server/repository.ts
+- Verification: NOT_VERIFIED — INFERENCE；先复现连接隔离中submitting无jobId路径，保留未知受理与预算，零真实付费请求。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-MODEL-BATCH-002 — Desktop与模型批量数量契约一致性
+
+- Goal: 界面接受数量与原生TaskHost/模型限制一致且提交前拒绝非法数量
+- Scope: 健康审计CORE-002；当前main重新复现后在独立任务分支收尾
+- Acceptance: 界面接受数量与原生TaskHost/模型限制一致且提交前拒绝非法数量; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/creation/imageTaskCommand.ts, src-tauri/src/task_host.rs
+- Verification: NOT_VERIFIED — 当前源码前端1–64/原生10存在契约差异；大于10原生运行尚未验证。先核对UI012最新候选是否已处理，再做零POST和真实Rust边界验收，避免重复。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-IMAGE-REF-003 — 异步参考图上传与删除乱序保护
+
+- Goal: 上传晚完成不会复活已删除引用或覆盖新草稿
+- Scope: 健康审计UI-MASK-001；当前main重新复现后在独立任务分支收尾
+- Acceptance: 上传晚完成不会复活已删除引用或覆盖新草稿; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/image-edit/EditComposer.tsx
+- Verification: NOT_VERIFIED — 当前8c仍捕获旧references；延迟上传与删除同态RED后修最新列表/生命周期，重复操作与切换编辑对象回归。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-WORKBUDDY-SAFE-002 — 旧WorkBuddy Gateway安全承接
+
+- Goal: 引入前完成凭据边界和无终止SSE的失败语义
+- Scope: 健康审计LEG-003/LEG-004；当前main重新复现后在独立任务分支收尾
+- Acceptance: 引入前完成凭据边界和无终止SSE的失败语义; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: vendor/canvas-agent/src/agent
+- Verification: NOT_VERIFIED — 仅旧分支存在，保留源分支及dirty工作区；不得整支合并。新的承接只带审核过的独有功能，凭据进入系统库/请求内存，EOF无completed不假成功；真实平台联调另验。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-CANVAS-KAWORKAI-002 — 旧画布版本能力安全承接
+
+- Goal: 损坏历史不变空覆盖、恢复严格校验并承接独有产品能力
+- Scope: 健康审计LEG-005/LEG-006/LEG-007；当前main重新复现后在独立任务分支收尾
+- Acceptance: 损坏历史不变空覆盖、恢复严格校验并承接独有产品能力; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/creation, src/components/canvas
+- Verification: NOT_VERIFIED — main尚无该版本模块；旧13d5源码保留，不整支merge。新任务先严格snapshot schema/主备保护/坏输入/深克隆/真实恢复，再按用户已有范围引入独有能力。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-VERIFY-CONCURRENCY-002 — 浏览器并发失败原因与隔离复核
+
+- Goal: 保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败
+- Scope: 健康审计QA-001；当前main重新复现后在独立任务分支收尾
+- Acceptance: 保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: tests/browser, playwright.config.ts
+- Verification: NOT_VERIFIED — 旧默认并发失败及受控零重试PASS保留，争用原因INFERENCE。当前插件447/12workers零实际retry不是旧原因已关闭证据；新增失败应具体诊断。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-DOC-CURRENT-002 — README与已知问题的当前入口一致性
+
+- Goal: 现行入口采用版本源及UI_INDEX，不用历史发布段落冒充当前版本
+- Scope: 健康审计DOC-001；当前main重新复现后在独立任务分支收尾
+- Acceptance: 现行入口采用版本源及UI_INDEX，不用历史发布段落冒充当前版本; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: README.md, docs/governance/KNOWN_ISSUES.md
+- Verification: NOT_VERIFIED — 当前README仍写2.1.0；已知问题需逐项以新main账本/唯一UI_INDEX裁决，保留历史发布来源。同步UI014候选文档后最小纠正。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-GIT-HEALTH-002 — 分支准入与未提交工作持续盘点
+
+- Goal: 逐分支区分已集成/新提交/待审/历史/dirty并保留恢复能力
+- Scope: 健康审计GIT-001；当前main重新复现后在独立任务分支收尾
+- Acceptance: 逐分支区分已集成/新提交/待审/历史/dirty并保留恢复能力; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: docs/governance
+- Verification: NOT_VERIFIED — 当前53本地分支/41worktree分类实证已生成，8非当前owner dirty单独保留；不能凭squash的branch --merged或任务DONE清理。只普通PR集成，无删除授权则不删。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-UI-014-RESUME-001 — 接续因模型容量错误中断的UI审计
+
+- Goal: 保存原候选后完成当前main组合、Web/新Desktop验收与独立复审
+- Scope: 健康审计UI014运行中断；当前main重新复现后在独立任务分支收尾
+- Acceptance: 保存原候选后完成当前main组合、Web/新Desktop验收与独立复审; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
+- Branch: `fix/TASK-UI-014-RESUME-001-current-main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-014-RESUME-001`
+- Modules: src/components, src/styles, docs/UI_INDEX.md
+- Verification: PARTIAL — 原会话容量中断；bd16及已知9条dirty已只读保存准确hash/patch（18653字节），原件不动。新隔离main6a承接工作树已登记，最新UI012组合及Web/新Desktop全验收尚需执行；未接受旧DONE宣告。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09
+
+## TASK-NATIVE-GESTURE-002 — 原生标题栏拖动首轮失败的环境诊断
+
+- Goal: 复核标题栏首轮失败的焦点/宿主条件，保留真实输入而不依赖无解释重复通过
+- Scope: PLUGIN-REVIEW-003/P3；同EXE首轮drag FAIL与下一次完整PASS，当前原因UNKNOWN
+- Acceptance: 使用真实原生鼠标输入和窗口位置取证，确认前置焦点/宿主条件; 原FAIL与PASS保留，不用改弱阈值或过滤错误消除失败
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: tests/desktop/titlebar.mjs
+- Verification: NOT_VERIFIED — 当前仅复核同一EXE真实首轮失败与完整第二轮PASS，未确认原因；不阻断已验收的插件源码范围，后续诊断独立执行。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md)
+- Updated: 2026-10-09
+
+## TASK-UI-012-RESUME-001 — 接续容量中断的UI核心交互交付
+
+- Goal: 保留原候选并完成最新main组合、证据归档、精确复审与普通PR
+- Scope: UI012原8d6实施/验收已保留；新独立任务分支完成正式交付和最新基线补验
+- Acceptance: 原8d6源码/525零retry和八Native原件与身份保留，容量错误不等于产品失败; 新组合freshWeb/Desktop与有效门禁、独立精确head审查及文档完成; 只在currentCI/实际保护通过后普通PR集成、回读main
+- Branch: `fix/TASK-UI-012-RESUME-001-current-main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-012-RESUME-001`
+- Modules: src/components, src/features/models, src/styles, docs
+- Verification: PARTIAL — 原会话修复错误的展示逻辑和 UI容量中断；已独立取回原525项/525attempts/0retry（hash142c0971…）及8d6同EXE八Native成功。新隔离工作树继承8d6，原clean checkout未写。最终最新main组合、文档/证据、正式审查和Hosted仍待，不把capacity中断冒充全部验收完成。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
+- Updated: 2026-10-09

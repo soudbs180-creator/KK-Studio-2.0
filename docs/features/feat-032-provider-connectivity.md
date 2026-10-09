@@ -2,12 +2,12 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-09-30
-- 关联任务：TASK-PROV-002（已合入）、TASK-PROV-003/004（PARTIAL）
+- 最近更新：2026-10-09
+- 关联任务：TASK-PROV-002（已合入）、TASK-PROV-003/004（PARTIAL）、TASK-PROV-CONFIG-004（本轮故障收尾中）
 
 ## 用户可见入口
 
-- 本批为纯逻辑能力模块，暂无 UI/运行时入口；用户可观察效果由接线任务提供：Agent 配置生成（Codex/Claude）、设置页导入导出、模型上下文窗口选择、MCP 管理页 stdio 服务器。
+- 前端配置能力仍为逻辑模块，App配置UI/HTTP尚未接线；Agent CLI已有显式apply/check入口。后续用户界面包括：Agent 配置生成（Codex/Claude）、设置页导入导出、模型上下文窗口选择、MCP 管理页 stdio 服务器。
 - Desktop / Web / Mobile 差异：逻辑层全平台可复用；MCP stdio 执行仅限 Node 侧（后续接线），浏览器保持 streamable_http。
 
 - Agent CLI 入口：`node vendor/canvas-agent/dist/index.js providers apply/check <config.json>`；仅在显式运行时写入指定的 Codex 配置目录。
@@ -51,3 +51,8 @@
 - 2026-09-24：创建卡片，状态 PARTIAL（TASK-PROV-002）。
 
 - 2026-09-30：集成版本当前验证与剩余边界见 [落地验证](../changes/2026-09-29-project-landing/verification.md)。
+
+
+- 2026-10-09：TASK-PROV-CONFIG-004承接LEG-001/002，35项provider/CLI相关回归通过；注释/引号/多行值、根选择/profile引用、无效输入时config/catalog原件及诊断脱敏已覆盖，包内Node生产CLI与独立Python tomllib预验收通过。当前最新main组合/完整检查/独立审查/Hosted还须执行，功能保持PARTIAL；见[本轮验证](../changes/2026-10-09-provider-config-recovery/verification.md)。
+
+- 2026-10-09最新a3：36项provider/CLI、完整804root/183Agent/447零retry、生产4296文件包内CLI与fresh Native11通过；独立001/P1关闭。当前配置任务REVIEW、最终doc/Hosted/PR/main待验，真实会话/App UI未完成，FEAT-032仍PARTIAL；前面的35项记录属于更早预验收时点。

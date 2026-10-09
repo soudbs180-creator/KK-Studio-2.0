@@ -1845,7 +1845,7 @@ dependencies = [
 
 [[package]]
 name = "kk-studio"
-version = "2.1.12"
+version = "2.1.13"
 dependencies = [
  "anyhow",
  "base64 0.22.1",

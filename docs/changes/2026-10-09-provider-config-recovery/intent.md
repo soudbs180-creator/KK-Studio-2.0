@@ -1,0 +1,5 @@
+# Intent：Codex受管配置安全合并
+
+用户要求继续检查、合并完整分支，并继续处理未完成及失败任务。本次承接健康审计LEG-001/LEG-002，在当前main修复合法TOML表头注释导致的重复表，以及删除仍被选择的受管provider后留下失效指向的问题。当前任务TASK-PROV-CONFIG-004，初始base8c921a525ae505a558b0efee641830f1d61166fa，Owner root；保留TASK-PROV-003整体PARTIAL及原历史分支。只对隔离配置运行验收，不修改用户真实Codex目录、不发付费请求。
+
+本轮已普通承接main6a97f456ab7334f97c604461e8d29789caa754cb，精确a3源码及生产包独立PASS；最终docs/Hosted/普通PR/main仍待实证，任务REVIEW，范围没有扩为真实用户配置或外部服务验收。健康19项映射与容量中断两UI继续任务分别登记，不混作已完成。
