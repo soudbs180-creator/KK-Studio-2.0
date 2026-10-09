@@ -20,15 +20,14 @@
 - `src/features/ai-gateway/scheduler.ts`：调度层（分档降级、冷却、粘性会话）
 - `src/features/ai-gateway/chat.ts`：OpenAI 兼容端点逻辑
 - `src/features/generation-server/http.ts`：`/v1/chat/completions` 路由挂载点
-- 方案文档：`docs/ai-integration/kk-ai-gateway-architecture.md`
+- 方案与交付包：[`docs/changes/2026-10-09-doubao-integration/spec.md`](../changes/2026-10-09-doubao-integration/spec.md)
 
 ## 测试与证据
 
-- 单测 47 项：`aiGatewayCredentials`(8) / `aiGatewayChannels`(11) / `aiGatewayScheduler`(15) / `aiGatewayChat`(9) / `aiGatewayChatEndpoint`(4)
+- 单测 49 项：`aiGatewayCredentials`(8) / `aiGatewayChannels`(11) / `aiGatewayScheduler`(15) / `aiGatewayChat`(9) / `aiGatewayChatEndpoint`(4) / `generationServerChatRoute`(2)
 - 连跑 3 轮零抖动（调度器测试注入固定 `random` 与 `now`）
 - `tsc --noEmit` exit 0；`eslint` exit 0
-- 回归验证：基线 814 tests / 20 fail → 加入后 861 tests / 20 fail，**零回归**
-- 20 项基线失败为 git hook 与 Windows 安装器依赖项，与本功能无关
+- 当前回归验证：`node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` 共 891 项，883 通过、0 失败、8 跳过；网关定向测试 49 项全通过
 
 ## 当前能力
 
@@ -66,4 +65,5 @@
 
 ## 变更记录
 
-- 2026-10-09：创建卡片。P0 凭证存取 + P1 调度层 + `/v1/chat/completions` 端点建成，47 项单测全绿，状态 PROTOTYPE（未接真实上游，不可标 DONE）。
+- 2026-10-09：创建卡片。P0 凭证存取 + P1 调度层 + `/v1/chat/completions` 端点建成。
+- 2026-10-10：补充真实 HTTP 路由的鉴权、幂等键和未注入依赖的 404 门禁测试；定向测试 49 项全绿，状态仍为 PROTOTYPE（未接真实上游，不可标 DONE）。

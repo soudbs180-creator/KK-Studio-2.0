@@ -15,7 +15,10 @@ import {
 } from "../../src/features/ai-gateway/chat.ts";
 import { MemoryCredentialStore } from "../../src/features/ai-gateway/credentials.ts";
 import type { NormalizedError } from "../../src/features/ai-gateway/errors.ts";
-import { extractNormalized, Scheduler } from "../../src/features/ai-gateway/scheduler.ts";
+import {
+  extractNormalized,
+  Scheduler,
+} from "../../src/features/ai-gateway/scheduler.ts";
 
 /**
  * Completion-path coverage for the chat endpoint. The generation server needs a
@@ -36,7 +39,8 @@ function chatDeps(behavior: NormalizedError | null): ChatDeps {
     ...doubaoAdapter,
     provider: "httpprobe",
     async submit() {
-      if (behavior) throw Object.assign(new Error("upstream"), { normalized: behavior });
+      if (behavior)
+        throw Object.assign(new Error("upstream"), { normalized: behavior });
       return {
         kind: "inline",
         assetBase64: Buffer.from("a cat", "utf8").toString("base64"),
@@ -65,7 +69,10 @@ function chatDeps(behavior: NormalizedError | null): ChatDeps {
   registry.replace({ registrations: [registration], states: new Map() });
   const credentials = new MemoryCredentialStore({ "conn.chat": "secret" });
   return {
-    scheduler: new Scheduler(registry, { random: () => 0, now: () => 1_700_000_000_000 }),
+    scheduler: new Scheduler(registry, {
+      random: () => 0,
+      now: () => 1_700_000_000_000,
+    }),
     resolveSecret: async (ref) => credentials.read(ref ?? ""),
   };
 }
@@ -120,7 +127,8 @@ test("streaming is refused with an actionable status rather than a truncated bod
         "idem-3",
       ),
     (error: unknown) =>
-      (error as { normalized?: { httpStatus?: number } }).normalized?.httpStatus === 501,
+      (error as { normalized?: { httpStatus?: number } }).normalized
+        ?.httpStatus === 501,
   );
 });
 
@@ -154,7 +162,10 @@ test("an async channel is redirected to the jobs surface", async () => {
   });
   const credentials = new MemoryCredentialStore({ "conn.async": "secret" });
   const deps: ChatDeps = {
-    scheduler: new Scheduler(registry, { random: () => 0, now: () => 1_700_000_000_000 }),
+    scheduler: new Scheduler(registry, {
+      random: () => 0,
+      now: () => 1_700_000_000_000,
+    }),
     resolveSecret: async (ref) => credentials.read(ref ?? ""),
   };
   await assert.rejects(
@@ -165,6 +176,7 @@ test("an async channel is redirected to the jobs surface", async () => {
         "idem-4",
       ),
     (error: unknown) =>
-      (error as { normalized?: { httpStatus?: number } }).normalized?.httpStatus === 409,
+      (error as { normalized?: { httpStatus?: number } }).normalized
+        ?.httpStatus === 409,
   );
 });

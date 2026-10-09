@@ -41,7 +41,8 @@ export function isArkEndpointId(value: string): boolean {
 
 /** Ark wraps errors as `{ error: { message, code, ... } }`; 400 covers two causes. */
 function readErrorEnvelope(body: unknown): string {
-  if (typeof body !== "object" || body === null) return typeof body === "string" ? body : "";
+  if (typeof body !== "object" || body === null)
+    return typeof body === "string" ? body : "";
   const envelope = (body as { error?: unknown }).error;
   if (typeof envelope === "string") return envelope;
   if (typeof envelope === "object" && envelope !== null) {
@@ -60,7 +61,10 @@ async function readJson(response: Response): Promise<unknown> {
   }
 }
 
-function authHeaders(secret: string | undefined, idempotencyKey: string): Record<string, string> {
+function authHeaders(
+  secret: string | undefined,
+  idempotencyKey: string,
+): Record<string, string> {
   const headers: Record<string, string> = {
     "content-type": "application/json",
     // Ark honours this to deduplicate retries of the same logical job.
@@ -146,8 +150,7 @@ export const doubaoAdapter: ChannelAdapter = {
       });
     }
     const body = (await readJson(response)) as
-      | { data?: Array<{ b64_json?: string }> }
-      | undefined;
+      { data?: Array<{ b64_json?: string }> } | undefined;
     const encoded = body?.data?.[0]?.b64_json;
     if (!encoded)
       throw Object.assign(new Error("Ark response contained no image data"), {

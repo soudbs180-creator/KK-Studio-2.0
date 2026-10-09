@@ -38,11 +38,20 @@ test("secret detection covers the common provider prefixes", () => {
 
 test("malformed references are rejected with their own error code", () => {
   assert.throws(() => assertCredentialRef(""), /CREDENTIAL_REF_REQUIRED/);
-  assert.throws(() => assertCredentialRef("has space"), /CREDENTIAL_REF_MALFORMED/);
-  assert.throws(() => assertCredentialRef("bad!chars$here"), /CREDENTIAL_REF_MALFORMED/);
+  assert.throws(
+    () => assertCredentialRef("has space"),
+    /CREDENTIAL_REF_MALFORMED/,
+  );
+  assert.throws(
+    () => assertCredentialRef("bad!chars$here"),
+    /CREDENTIAL_REF_MALFORMED/,
+  );
   // A 200-character unpunctuated run is key material, so the secret check wins
   // over the length check; reporting "malformed" would hide the real mistake.
-  assert.throws(() => assertCredentialRef("x".repeat(200)), /CREDENTIAL_REF_IS_SECRET/);
+  assert.throws(
+    () => assertCredentialRef("x".repeat(200)),
+    /CREDENTIAL_REF_IS_SECRET/,
+  );
   assert.throws(
     () => assertCredentialRef(`conn.${"y".repeat(200)}`),
     /CREDENTIAL_REF_MALFORMED/,
@@ -67,14 +76,16 @@ function xorProtector(): SecretProtector {
       return Uint8Array.from(bytes.map((byte) => byte ^ mask)).reverse();
     },
     async unprotect(ciphertext: Uint8Array): Promise<string> {
-      return Buffer.from([...ciphertext].reverse().map((byte) => byte ^ 0x5a)).toString(
-        "utf8",
-      );
+      return Buffer.from(
+        [...ciphertext].reverse().map((byte) => byte ^ 0x5a),
+      ).toString("utf8");
     },
   };
 }
 
-function memoryBlobs(): CiphertextStoragePort & { blobs: Map<string, Uint8Array> } {
+function memoryBlobs(): CiphertextStoragePort & {
+  blobs: Map<string, Uint8Array>;
+} {
   const blobs = new Map<string, Uint8Array>();
   return {
     blobs,
@@ -100,7 +111,10 @@ test("protected store keeps plaintext out of storage", async () => {
   await store.write("conn.primary", "super-secret-value");
   const blob = storage.blobs.get("conn.primary")!;
   // A reversible-but-echoing fake would make this assertion meaningless.
-  assert.equal(Buffer.from(blob).toString("utf8").includes("super-secret-value"), false);
+  assert.equal(
+    Buffer.from(blob).toString("utf8").includes("super-secret-value"),
+    false,
+  );
   assert.equal(await store.read("conn.primary"), "super-secret-value");
   assert.equal(await store.read("conn.missing"), undefined);
 });
@@ -115,7 +129,10 @@ test("protected store refuses to key a vault entry by a secret", async () => {
 
 test("layered store prefers the durable side so rotation takes effect", async () => {
   const durable = new MemoryCredentialStore({ "conn.a": "durable" });
-  const legacy = new MemoryCredentialStore({ "conn.a": "stale", "conn.b": "only-legacy" });
+  const legacy = new MemoryCredentialStore({
+    "conn.a": "stale",
+    "conn.b": "only-legacy",
+  });
   const layered = new LayeredCredentialStore(durable, legacy);
   assert.equal(await layered.read("conn.a"), "durable");
   assert.equal(await layered.read("conn.b"), "only-legacy");
@@ -135,8 +152,14 @@ test("every store rejects secret-shaped references on read", async () => {
   for (const store of [
     new MemoryCredentialStore(),
     new ProtectedCredentialStore(xorProtector(), memoryBlobs()),
-    new LayeredCredentialStore(new MemoryCredentialStore(), new MemoryCredentialStore()),
+    new LayeredCredentialStore(
+      new MemoryCredentialStore(),
+      new MemoryCredentialStore(),
+    ),
   ]) {
-    await assert.rejects(() => store.read(secretish), /CREDENTIAL_REF_IS_SECRET/);
+    await assert.rejects(
+      () => store.read(secretish),
+      /CREDENTIAL_REF_IS_SECRET/,
+    );
   }
 });

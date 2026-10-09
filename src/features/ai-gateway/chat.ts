@@ -53,7 +53,9 @@ export type ChatRequest = z.infer<typeof chatRequestSchema>;
 
 export interface ChatDeps {
   readonly scheduler: Scheduler;
-  readonly resolveSecret: (credentialRef?: string) => Promise<string | undefined>;
+  readonly resolveSecret: (
+    credentialRef?: string,
+  ) => Promise<string | undefined>;
   readonly defaultModel?: string;
 }
 
@@ -107,7 +109,10 @@ export function toOpenAiError(normalized: NormalizedError): {
  * without touching the scheduler.
  */
 export function buildPrompt(
-  messages: ReadonlyArray<{ role: "system" | "user" | "assistant"; content: string }>,
+  messages: ReadonlyArray<{
+    role: "system" | "user" | "assistant";
+    content: string;
+  }>,
 ): string {
   const system = messages
     .filter((message) => message.role === "system")
@@ -128,7 +133,8 @@ export function buildInput(request: ChatRequest): GenerationInput {
   // Build `extra` first, then spread conditionally: assigning it twice would let
   // the second branch drop `temperature`.
   const extra: Record<string, string | number | boolean> = {};
-  if (request.temperature !== undefined) extra.temperature = request.temperature;
+  if (request.temperature !== undefined)
+    extra.temperature = request.temperature;
   if (request.max_tokens !== undefined) extra.maxTokens = request.max_tokens;
   return {
     model: request.model,
@@ -155,14 +161,17 @@ export function parseChatRequest(value: unknown): ChatRequest {
   rejectSecretsDeep(value);
   const parsed = chatRequestSchema.safeParse(value);
   if (!parsed.success)
-    throw Object.assign(new Error(parsed.error.issues[0]?.message ?? "invalid request"), {
-      normalized: {
-        errorClass: "BAD_REQUEST",
-        httpStatus: 400,
-        retryable: false,
-        detail: parsed.error.issues[0]?.message,
-      } satisfies NormalizedError,
-    });
+    throw Object.assign(
+      new Error(parsed.error.issues[0]?.message ?? "invalid request"),
+      {
+        normalized: {
+          errorClass: "BAD_REQUEST",
+          httpStatus: 400,
+          retryable: false,
+          detail: parsed.error.issues[0]?.message,
+        } satisfies NormalizedError,
+      },
+    );
   return parsed.data;
 }
 
@@ -177,24 +186,30 @@ function rejectSecretsDeep(value: unknown, depth = 0): void {
   }
   if (typeof value === "string") {
     if (SECRET_PATTERN.test(value))
-      throw Object.assign(new Error("Request payload appears to contain a credential"), {
-        normalized: {
-          errorClass: "BAD_REQUEST",
-          httpStatus: 400,
-          retryable: false,
-          detail: "payload contains credential-shaped text",
-        } satisfies NormalizedError,
-      });
+      throw Object.assign(
+        new Error("Request payload appears to contain a credential"),
+        {
+          normalized: {
+            errorClass: "BAD_REQUEST",
+            httpStatus: 400,
+            retryable: false,
+            detail: "payload contains credential-shaped text",
+          } satisfies NormalizedError,
+        },
+      );
     return;
   }
   if (typeof value === "object" && value !== null)
-    for (const entry of Object.values(value)) rejectSecretsDeep(entry, depth + 1);
+    for (const entry of Object.values(value))
+      rejectSecretsDeep(entry, depth + 1);
 }
 
 export function newCompletionId(): string {
   const bytes = new Uint8Array(16);
   crypto.getRandomValues(bytes);
-  const hex = [...bytes].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+  const hex = [...bytes]
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
   return `chatcmpl-${hex}`;
 }
 
@@ -210,14 +225,17 @@ export function runChatCompletion(
 ): Promise<{ readonly channelId: string; readonly text: string }> {
   if (request.stream)
     return Promise.reject(
-      Object.assign(new Error("Streaming is not implemented for this gateway yet"), {
-        normalized: {
-          errorClass: "BAD_REQUEST",
-          httpStatus: 501,
-          retryable: false,
-          detail: "stream=true is not supported yet; retry with stream=false",
-        } satisfies NormalizedError,
-      }),
+      Object.assign(
+        new Error("Streaming is not implemented for this gateway yet"),
+        {
+          normalized: {
+            errorClass: "BAD_REQUEST",
+            httpStatus: 501,
+            retryable: false,
+            detail: "stream=true is not supported yet; retry with stream=false",
+          } satisfies NormalizedError,
+        },
+      ),
     );
 
   return (async () => {

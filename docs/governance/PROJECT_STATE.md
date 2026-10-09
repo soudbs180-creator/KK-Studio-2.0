@@ -1,14 +1,14 @@
 <!-- CURRENT_FACTS_BEGIN -->
 ## CURRENT_FACTS (machine-readable current snapshot)
 
-- `snapshotDate`: 2026-10-09
+- `snapshotDate`: 2026-10-10
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`
 - `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the primary checkout
-- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is currently on `docs/TASK-DOCS-STRUCT-001` at `33950d803019585932e6e7a2c53ae8226725a00b`, with concurrent uncommitted product/UI changes and feature-gateway files restored for separate review; it is not a clean main checkout and must not be reset or used as a disposable worktree.
+- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `docs/TASK-DOCS-STRUCT-001` at `4bf87c42b1d12c8ec1a73539ca4f3c59abfe8720`; the canonical AI gateway commit is present, governance/docs and route-test changes are staged for the current commit, and this checkout must not be reset or used as a disposable worktree.
 - `taskLedger`: 117 records; 68 DONE, 26 PARTIAL, 18 TODO, 4 BLOCKED, 1 REVIEW; 49 open records.
-- `workspaceWorktrees`: 47 registered worktrees, with 24 under the approved root after removing the merged governance checkout; dirty, active, nested, and external worktrees remain protected and are listed in `worktree-reclamation.json`.
+- `workspaceWorktrees`: 46 registered worktrees, with 23 under the approved root after removing the merged AI gateway checkout; dirty, active, nested, and external worktrees remain protected and are listed in `worktree-reclamation.json`.
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree; source changes and locked paths are protected.
 - `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.

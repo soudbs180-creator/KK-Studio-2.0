@@ -8,7 +8,10 @@ import {
   type ChannelRegistration,
 } from "../../src/features/ai-gateway/channels/registry.ts";
 import type { NormalizedError } from "../../src/features/ai-gateway/errors.ts";
-import { extractNormalized, Scheduler } from "../../src/features/ai-gateway/scheduler.ts";
+import {
+  extractNormalized,
+  Scheduler,
+} from "../../src/features/ai-gateway/scheduler.ts";
 
 const capabilities: CapabilityManifest = {
   modalities: ["image"],
@@ -80,7 +83,8 @@ function scriptedAdapter(
     async submit() {
       const index = calls++;
       const step = behavior[Math.min(index, behavior.length - 1)]!;
-      if (step.ok) return { kind: "inline", assetBase64: "aGk=", mime: "text/plain" };
+      if (step.ok)
+        return { kind: "inline", assetBase64: "aGk=", mime: "text/plain" };
       throw Object.assign(new Error(step.normalized?.errorClass ?? "fail"), {
         normalized: step.normalized,
       });
@@ -107,7 +111,9 @@ test("a successful dispatch reports the channel that served it", async () => {
 });
 
 test("a retryable failure moves to the next tier, never the same account", async () => {
-  const failing = scriptedAdapter("failprov", [{ ok: false, normalized: rateLimited }]);
+  const failing = scriptedAdapter("failprov", [
+    { ok: false, normalized: rateLimited },
+  ]);
   const scheduler = schedulerWith([
     // Distinct tiers so the attempt order is deterministic.
     registration("bad", { adapter: failing.adapter, priority: 100 }),
@@ -115,7 +121,11 @@ test("a retryable failure moves to the next tier, never the same account", async
   ]);
   const outcome = await scheduler.dispatch(request);
   assert.equal(outcome.channelId, "good");
-  assert.equal(failing.calls(), 1, "the failing account must be tried exactly once");
+  assert.equal(
+    failing.calls(),
+    1,
+    "the failing account must be tried exactly once",
+  );
 });
 
 test("a non-retryable error aborts the whole dispatch", async () => {
@@ -138,9 +148,14 @@ test("a non-retryable error aborts the whole dispatch", async () => {
   ]);
   await assert.rejects(
     () => scheduler.dispatch(request),
-    (error: unknown) => extractNormalized(error).errorClass === "CONTENT_BLOCKED",
+    (error: unknown) =>
+      extractNormalized(error).errorClass === "CONTENT_BLOCKED",
   );
-  assert.equal(healthy.calls(), 0, "a rejected prompt must not reach other accounts");
+  assert.equal(
+    healthy.calls(),
+    0,
+    "a rejected prompt must not reach other accounts",
+  );
 });
 
 test("nothing is retried once the first chunk reached the client", async () => {
@@ -151,7 +166,11 @@ test("nothing is retried once the first chunk reached the client", async () => {
     async submit() {
       started = true;
       throw Object.assign(new Error("late failure"), {
-        normalized: { errorClass: "UPSTREAM_ERROR", httpStatus: 502, retryable: true },
+        normalized: {
+          errorClass: "UPSTREAM_ERROR",
+          httpStatus: 502,
+          retryable: true,
+        },
       });
     },
   };
@@ -162,9 +181,14 @@ test("nothing is retried once the first chunk reached the client", async () => {
   ]);
   await assert.rejects(
     () => scheduler.dispatch({ ...request, streamStarted: () => started }),
-    (error: unknown) => extractNormalized(error).errorClass === "UPSTREAM_ERROR",
+    (error: unknown) =>
+      extractNormalized(error).errorClass === "UPSTREAM_ERROR",
   );
-  assert.equal(fallback.calls(), 0, "retrying would duplicate output the client already has");
+  assert.equal(
+    fallback.calls(),
+    0,
+    "retrying would duplicate output the client already has",
+  );
 });
 
 test("a sticky session stays on its account across turns", async () => {
@@ -185,7 +209,12 @@ test("a failing pinned account is released so the conversation cannot stall", as
     async submit() {
       if (failNext)
         throw Object.assign(new Error("down"), {
-          normalized: { errorClass: "UPSTREAM_ERROR", httpStatus: 502, retryable: true, cooldownMs: 0 },
+          normalized: {
+            errorClass: "UPSTREAM_ERROR",
+            httpStatus: 502,
+            retryable: true,
+            cooldownMs: 0,
+          },
         });
       return { kind: "inline", assetBase64: "aGk=", mime: "text/plain" };
     },
@@ -205,7 +234,9 @@ test("a failing pinned account is released so the conversation cannot stall", as
 test("an account in cooldown is skipped until it recovers", async () => {
   const scheduler = schedulerWith([
     registration("bad", {
-      adapter: scriptedAdapter("coolprov", [{ ok: false, normalized: rateLimited }]).adapter,
+      adapter: scriptedAdapter("coolprov", [
+        { ok: false, normalized: rateLimited },
+      ]).adapter,
       priority: 100,
     }),
     registration("good", { priority: 50 }),
@@ -243,7 +274,15 @@ test("repeated failures quarantine an account", async () => {
   const scheduler = schedulerWith([
     registration("bad", {
       adapter: scriptedAdapter("alwaysprov", [
-        { ok: false, normalized: { errorClass: "UPSTREAM_ERROR", httpStatus: 502, retryable: true, cooldownMs: 0 } },
+        {
+          ok: false,
+          normalized: {
+            errorClass: "UPSTREAM_ERROR",
+            httpStatus: 502,
+            retryable: true,
+            cooldownMs: 0,
+          },
+        },
       ]).adapter,
       priority: 100,
     }),
@@ -264,7 +303,8 @@ test("an unservable model rejects with NO_CHANNEL_AVAILABLE", async () => {
   const scheduler = schedulerWith([registration("a")]);
   await assert.rejects(
     () => scheduler.dispatch({ ...request, model: "kk-unknown" }),
-    (error: unknown) => extractNormalized(error).errorClass === "NO_CHANNEL_AVAILABLE",
+    (error: unknown) =>
+      extractNormalized(error).errorClass === "NO_CHANNEL_AVAILABLE",
   );
 });
 
@@ -276,7 +316,8 @@ test("polling an unknown channel is a routing error, not a transient 503", async
         idempotencyKey: "k",
         resolveSecret: async () => "secret",
       }),
-    (error: unknown) => extractNormalized(error).errorClass === "NO_CHANNEL_AVAILABLE",
+    (error: unknown) =>
+      extractNormalized(error).errorClass === "NO_CHANNEL_AVAILABLE",
   );
 });
 
@@ -311,18 +352,32 @@ test("the attempt plan steps down tiers and stops at the last one", async () => 
     registration("top", { priority: 100 }),
     registration("mid", { priority: 50 }),
   ]);
-  assert.equal(scheduler.plan("kk-default", "generate", 0)[0]!.channelId, "top");
-  assert.equal(scheduler.plan("kk-default", "generate", 1)[0]!.channelId, "mid");
+  assert.equal(
+    scheduler.plan("kk-default", "generate", 0)[0]!.channelId,
+    "top",
+  );
+  assert.equal(
+    scheduler.plan("kk-default", "generate", 1)[0]!.channelId,
+    "mid",
+  );
   // A single-account setup must still be able to retry its own account.
-  assert.equal(scheduler.plan("kk-default", "generate", 9)[0]!.channelId, "mid");
+  assert.equal(
+    scheduler.plan("kk-default", "generate", 9)[0]!.channelId,
+    "mid",
+  );
   assert.deepEqual(scheduler.plan("kk-none", "generate", 0), []);
 });
 
 test("extractNormalized always yields a usable classification", () => {
-  assert.equal(extractNormalized(new Error("plain")).errorClass, "UPSTREAM_ERROR");
+  assert.equal(
+    extractNormalized(new Error("plain")).errorClass,
+    "UPSTREAM_ERROR",
+  );
   assert.equal(extractNormalized("string").errorClass, "UPSTREAM_ERROR");
   assert.equal(
-    extractNormalized(Object.assign(new Error("x"), { normalized: rateLimited })).errorClass,
+    extractNormalized(
+      Object.assign(new Error("x"), { normalized: rateLimited }),
+    ).errorClass,
     "RATE_LIMITED",
   );
 });

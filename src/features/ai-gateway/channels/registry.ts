@@ -7,11 +7,7 @@
  * which keeps the scheduler off the database on the hot path.
  */
 import type { CapabilityManifest } from "../../../domain/providerConnections.ts";
-import type {
-  ChannelAdapter,
-  ChannelContext,
-  ChannelKind,
-} from "./adapter.ts";
+import type { ChannelAdapter, ChannelContext, ChannelKind } from "./adapter.ts";
 import { noChannelAvailable } from "../errors.ts";
 
 export interface ChannelRegistration {
@@ -49,11 +45,7 @@ export interface ChannelIndexEntry {
 
 /** States mirrored from providerConnections so the index stays authoritative-free. */
 export type IndexableState =
-  | "active"
-  | "degraded"
-  | "cooldown"
-  | "quarantined"
-  | "disabled";
+  "active" | "degraded" | "cooldown" | "quarantined" | "disabled";
 
 export interface ModelIndexSnapshot {
   readonly registrations: readonly ChannelRegistration[];

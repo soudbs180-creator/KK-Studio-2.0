@@ -2323,14 +2323,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: FEAT-038
 - Owner role: repository-maintainer
 - Acceptance: 四方法适配器契约（submit/poll/probe/normalizeError）完整，normalizeError 必填 retryable; 失败按信号优先级分类：Ark 同一个 400 必须能区分参数非法与内容审核拒绝; 调度器分优先级档位降级，重试绝不落在同一账号；不可重试错误中止整个 dispatch; 流式请求发出首个 chunk 后禁止任何重试; 配置只存 credential_ref，明文仅经 resolveSecret() 闭包取用; 凭证引用校验先判 secret 再判格式，避免藏起「把密钥写进配置」的真问题; 轮询经 credentialRefFor 取凭证，不得误传 channelId; 厂商 cooldownMs 不被本地 maxCooldownMs 截断; 全部新增单测通过且对既有全量单测零回归
-- Branch: `feat/TASK-AI-GATEWAY-001`
-- Worktree: `D:/kk-studio/.worktrees/TASK-AI-GATEWAY-001`
-- Modules: src/features/ai-gateway/credentials.ts, src/features/ai-gateway/errors.ts, src/features/ai-gateway/channels/adapter.ts, src/features/ai-gateway/channels/registry.ts, src/features/ai-gateway/channels/doubao.ts, src/features/ai-gateway/scheduler.ts, src/features/ai-gateway/chat.ts, src/features/generation-server/http.ts, tests/unit/aiGatewayCredentials.test.ts, tests/unit/aiGatewayChannels.test.ts, tests/unit/aiGatewayScheduler.test.ts, tests/unit/aiGatewayChat.test.ts, tests/unit/aiGatewayChatEndpoint.test.ts, docs/features/feat-038-ai-model-gateway.md
-- Verification: NOT_VERIFIED — 代码与单测已建成：47 项新增单测全绿、连跑 3 轮零抖动，tsc 与 eslint exit 0，全量回归 861 tests / 20 fail 与基线 814 tests / 20 fail 完全一致（零回归）。按「DONE 需要验证证据」口径，未接真实上游与真实凭证，不得标 DONE。
+- Branch: `docs/TASK-DOCS-STRUCT-001`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: src/features/ai-gateway/credentials.ts, src/features/ai-gateway/errors.ts, src/features/ai-gateway/channels/adapter.ts, src/features/ai-gateway/channels/registry.ts, src/features/ai-gateway/channels/doubao.ts, src/features/ai-gateway/scheduler.ts, src/features/ai-gateway/chat.ts, src/features/generation-server/http.ts, tests/unit/aiGatewayCredentials.test.ts, tests/unit/aiGatewayChannels.test.ts, tests/unit/aiGatewayScheduler.test.ts, tests/unit/aiGatewayChat.test.ts, tests/unit/aiGatewayChatEndpoint.test.ts, tests/unit/generationServerChatRoute.test.ts, docs/features/feat-038-ai-model-gateway.md
+- Verification: NOT_VERIFIED — 代码与单测已建成：49 项定向单测全绿；当前全量回归 891 项，883 通过、0 失败、8 跳过；tsc 与 eslint 通过。真实上游与真实凭证仍未接入，按 DONE 需要当前运行证据的口径不得标 DONE。
 - Evidence: [docs/features/feat-038-ai-model-gateway.md](../../docs/features/feat-038-ai-model-gateway.md)
 - Next action: 实现真实 DPAPI SecretProtector（需 Rust 侧或 PowerShell 桥）并接入一个真实火山方舟账号，取得上游证据后方可转 DONE；随后接调度层持久化仓储与 sub2api-client。
-- Last verified: 2026-10-09
-- Updated: 2026-10-09
+- Last verified: 2026-10-10
+- Updated: 2026-10-10
 
 ## TASK-PROV-BYOK-001 — 用户自有 API 产品化接入
 

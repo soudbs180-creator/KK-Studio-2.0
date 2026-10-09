@@ -120,7 +120,9 @@ export class ProtectedCredentialStore implements CredentialStore {
   async write(ref: string, secret: string): Promise<void> {
     const key = assertCredentialRef(ref);
     if (looksLikeSecret(ref))
-      throw new Error("CREDENTIAL_REF_IS_SECRET: refusing to key a vault entry by a secret");
+      throw new Error(
+        "CREDENTIAL_REF_IS_SECRET: refusing to key a vault entry by a secret",
+      );
     await this.#storage.write(key, await this.#protector.protect(secret));
   }
 
@@ -183,7 +185,10 @@ export class LayeredCredentialStore implements CredentialStore {
   }
 
   async list(): Promise<string[]> {
-    const merged = new Set([...(await this.#primary.list()), ...(await this.#fallback.list())]);
+    const merged = new Set([
+      ...(await this.#primary.list()),
+      ...(await this.#fallback.list()),
+    ]);
     return [...merged].sort();
   }
 }

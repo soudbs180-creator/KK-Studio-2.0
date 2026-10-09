@@ -43,7 +43,10 @@ test("only real endpoint ids are accepted, never bare model names", () => {
   // as a stale endpoint and rotate healthy accounts chasing a config mistake.
   assert.throws(
     () =>
-      doubaoAdapter.resolveModel(contextFor({ "kk-default": "doubao-pro-32k" }), "kk-default"),
+      doubaoAdapter.resolveModel(
+        contextFor({ "kk-default": "doubao-pro-32k" }),
+        "kk-default",
+      ),
     /not an Ark endpoint id/,
   );
   assert.throws(
@@ -61,16 +64,25 @@ test("content policy refusals outrank the shared 400 status", () => {
   });
   assert.equal(blocked.errorClass, "CONTENT_BLOCKED");
   assert.equal(blocked.retryable, false);
-  const badParam = normalizeHttpFailure({ status: 400, signalText: "missing field: prompt" });
+  const badParam = normalizeHttpFailure({
+    status: 400,
+    signalText: "missing field: prompt",
+  });
   assert.equal(badParam.errorClass, "BAD_REQUEST");
   assert.equal(badParam.retryable, false);
 });
 
 test("quota and rate limit are separated by cooldown length", () => {
-  const quota = normalizeHttpFailure({ status: 429, signalText: "insufficient balance" });
+  const quota = normalizeHttpFailure({
+    status: 429,
+    signalText: "insufficient balance",
+  });
   assert.equal(quota.errorClass, "QUOTA_EXHAUSTED");
   assert.ok((quota.cooldownMs ?? 0) >= 6 * 60 * 60 * 1000, "quota needs hours");
-  const throttled = normalizeHttpFailure({ status: 429, signalText: "rate limit exceeded" });
+  const throttled = normalizeHttpFailure({
+    status: 429,
+    signalText: "rate limit exceeded",
+  });
   assert.equal(throttled.errorClass, "RATE_LIMITED");
   assert.ok((throttled.cooldownMs ?? 0) <= 60_000, "throttling needs a minute");
 });
@@ -91,8 +103,14 @@ test("a vendor retry-after hint wins over our default cooldown", () => {
 });
 
 test("unmapped 4xx stays non-retryable and unmapped 5xx retries", () => {
-  assert.equal(normalizeHttpFailure({ status: 418, signalText: "" }).retryable, false);
-  assert.equal(normalizeHttpFailure({ status: 503, signalText: "" }).retryable, true);
+  assert.equal(
+    normalizeHttpFailure({ status: 418, signalText: "" }).retryable,
+    false,
+  );
+  assert.equal(
+    normalizeHttpFailure({ status: 503, signalText: "" }).retryable,
+    true,
+  );
 });
 
 test("alreadyNormalized preserves a classification made deeper in the stack", () => {
@@ -108,27 +126,40 @@ test("alreadyNormalized preserves a classification made deeper in the stack", ()
   // account would never be quarantined.
   assert.deepEqual(alreadyNormalized(wrapped), authInvalid);
   assert.equal(alreadyNormalized(new Error("plain")), undefined);
-  assert.equal(alreadyNormalized({ normalized: { errorClass: "X" } }), undefined);
-  assert.equal(normalizeUnknownFailure(new Error("boom")).errorClass, "TIMEOUT");
+  assert.equal(
+    alreadyNormalized({ normalized: { errorClass: "X" } }),
+    undefined,
+  );
+  assert.equal(
+    normalizeUnknownFailure(new Error("boom")).errorClass,
+    "TIMEOUT",
+  );
 });
 
 test("a synchronous adapter refuses async polling instead of looping", async () => {
   await assert.rejects(
     () =>
-      doubaoAdapter.poll(contextFor({ "kk-default": "ep-20260101abcdef" }), "job-1", {
-        idempotencyKey: "k",
-        resolveSecret: async () => "secret",
-      }),
+      doubaoAdapter.poll(
+        contextFor({ "kk-default": "ep-20260101abcdef" }),
+        "job-1",
+        {
+          idempotencyKey: "k",
+          resolveSecret: async () => "secret",
+        },
+      ),
     (error: unknown) =>
-      (error as { normalized?: { errorClass?: string } }).normalized?.errorClass ===
-      "BAD_REQUEST",
+      (error as { normalized?: { errorClass?: string } }).normalized
+        ?.errorClass === "BAD_REQUEST",
   );
 });
 
 test("registry refuses duplicate adapters and unknown providers", () => {
   const registry = new ChannelRegistry();
   registry.registerAdapter(doubaoAdapter);
-  assert.throws(() => registry.registerAdapter(doubaoAdapter), /already registered/);
+  assert.throws(
+    () => registry.registerAdapter(doubaoAdapter),
+    /already registered/,
+  );
   const rogue: ChannelAdapter = { ...doubaoAdapter, provider: "rogue" };
   assert.throws(
     () =>
@@ -175,7 +206,14 @@ test("candidate filtering honours model, operation and channel state", () => {
         baseUrl: ARK_BASE_URL,
         modelMapping: { "kk-other": "ep-20260101abcdef" },
       },
-      { ...base, id: "off", priority: 99, weight: 99, baseUrl: ARK_BASE_URL, enabled: false },
+      {
+        ...base,
+        id: "off",
+        priority: 99,
+        weight: 99,
+        baseUrl: ARK_BASE_URL,
+        enabled: false,
+      },
     ],
     states: new Map([["ok", "quarantined"]]),
   });
@@ -194,7 +232,9 @@ test("candidate filtering honours model, operation and channel state", () => {
     states: new Map([["disabled", "disabled"]]),
   });
   assert.deepEqual(
-    registry.candidates("kk-default", "generate").map((entry) => entry.channelId),
+    registry
+      .candidates("kk-default", "generate")
+      .map((entry) => entry.channelId),
     ["ok"],
   );
   // An unmapped operation must not silently fall back to a generate channel.
@@ -245,7 +285,11 @@ test("tiers order by descending priority for deterministic failover", () => {
     timeoutMs: 1000,
   });
   registry.replace({
-    registrations: [make("top", 100, 5), make("mid", 50, 5), make("low", 10, 5)],
+    registrations: [
+      make("top", 100, 5),
+      make("mid", 50, 5),
+      make("low", 10, 5),
+    ],
     states: new Map(),
   });
   const tiers = registry.tiers(registry.candidates("kk-default", "generate"));

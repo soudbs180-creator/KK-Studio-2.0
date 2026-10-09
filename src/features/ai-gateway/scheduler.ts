@@ -19,7 +19,10 @@ import type {
   SubmitResult,
 } from "./channels/adapter.ts";
 import { ChannelNotApplicable } from "./channels/adapter.ts";
-import type { ChannelIndexEntry, ChannelRegistry } from "./channels/registry.ts";
+import type {
+  ChannelIndexEntry,
+  ChannelRegistry,
+} from "./channels/registry.ts";
 import type { NormalizedError } from "./errors.ts";
 import { noChannelAvailable } from "./errors.ts";
 
@@ -30,7 +33,9 @@ export interface DispatchRequest {
   readonly idempotencyKey: string;
   /** Sticky conversations keep talking to the same account for context quality. */
   readonly sessionId?: string;
-  readonly resolveSecret: (credentialRef?: string) => Promise<string | undefined>;
+  readonly resolveSecret: (
+    credentialRef?: string,
+  ) => Promise<string | undefined>;
   readonly signal?: AbortSignal;
   /** Set by the caller once the first chunk reached the client. */
   readonly streamStarted?: () => boolean;
@@ -72,14 +77,19 @@ export class ChannelHealthTracker {
 
   constructor(options: SchedulerOptions = {}) {
     this.#now = options.now ?? Date.now;
-    this.#threshold = options.quarantineThreshold ?? DEFAULT_QUARANTINE_THRESHOLD;
+    this.#threshold =
+      options.quarantineThreshold ?? DEFAULT_QUARANTINE_THRESHOLD;
     this.#maxCooldownMs = options.maxCooldownMs ?? DEFAULT_MAX_COOLDOWN_MS;
   }
 
   state(channelId: string): ChannelHealth {
     const existing = this.#health.get(channelId);
     if (existing) return existing;
-    const fresh: ChannelHealth = { consecutiveFailures: 0, cooldownUntil: 0, quarantined: false };
+    const fresh: ChannelHealth = {
+      consecutiveFailures: 0,
+      cooldownUntil: 0,
+      quarantined: false,
+    };
     this.#health.set(channelId, fresh);
     return fresh;
   }
@@ -123,10 +133,16 @@ export class ChannelHealthTracker {
 }
 
 /** Wraps a normalized error in a real Error so stacks survive the throw. */
-export function channelError(normalized: NormalizedError, message?: string): Error {
-  return Object.assign(new Error(message ?? normalized.detail ?? normalized.errorClass), {
-    normalized,
-  });
+export function channelError(
+  normalized: NormalizedError,
+  message?: string,
+): Error {
+  return Object.assign(
+    new Error(message ?? normalized.detail ?? normalized.errorClass),
+    {
+      normalized,
+    },
+  );
 }
 
 /** Recovers the classification from a throwable that crossed an adapter boundary. */
@@ -146,7 +162,8 @@ export function extractNormalized(error: unknown): NormalizedError {
     errorClass: "UPSTREAM_ERROR",
     httpStatus: 502,
     retryable: false,
-    detail: error instanceof Error ? error.message.slice(0, 200) : "unknown failure",
+    detail:
+      error instanceof Error ? error.message.slice(0, 200) : "unknown failure",
   };
 }
 
@@ -171,8 +188,14 @@ export class Scheduler {
    * priority tier, so repeated failures degrade service quality instead of
    * hammering the same failing account. Within a tier, selection is weighted.
    */
-  plan(model: string, operation: string, generation: number): ChannelIndexEntry[] {
-    const tiers = this.#registry.tiers(this.#registry.candidates(model, operation));
+  plan(
+    model: string,
+    operation: string,
+    generation: number,
+  ): ChannelIndexEntry[] {
+    const tiers = this.#registry.tiers(
+      this.#registry.candidates(model, operation),
+    );
     if (!tiers.length) return [];
     // The last tier is reused once exhausted: a single-account setup must still
     // be able to retry its own account rather than fail with no attempt at all.
@@ -181,7 +204,10 @@ export class Scheduler {
   }
 
   async dispatch(request: DispatchRequest): Promise<DispatchOutcome> {
-    const candidates = this.#registry.candidates(request.model, request.operation);
+    const candidates = this.#registry.candidates(
+      request.model,
+      request.operation,
+    );
     const pinnedId = request.sessionId
       ? this.#sticky.get(request.sessionId)
       : undefined;
@@ -190,7 +216,8 @@ export class Scheduler {
       : undefined;
 
     const ordered: ChannelIndexEntry[] = [];
-    if (pinned && this.#health.isAvailable(pinned.channelId)) ordered.push(pinned);
+    if (pinned && this.#health.isAvailable(pinned.channelId))
+      ordered.push(pinned);
     // Attempt 0 targets the top tier. When a pin is active it already is that
     // account, so the second slot starts at the next tier to avoid a duplicate.
     const generationOffset = ordered.length;
@@ -198,9 +225,14 @@ export class Scheduler {
     const limit = Math.max(tiers.length, 1);
     for (let index = 0; index < limit; index += 1) {
       const generation = index + generationOffset;
-      const attempt = this.plan(request.model, request.operation, generation)[0];
+      const attempt = this.plan(
+        request.model,
+        request.operation,
+        generation,
+      )[0];
       if (!attempt) break;
-      if (ordered.some((entry) => entry.channelId === attempt.channelId)) continue;
+      if (ordered.some((entry) => entry.channelId === attempt.channelId))
+        continue;
       ordered.push(attempt);
     }
 
@@ -213,11 +245,15 @@ export class Scheduler {
       try {
         const result = await this.#attempt(entry, context, request);
         this.#health.recordSuccess(entry.channelId);
-        if (request.sessionId) this.#sticky.set(request.sessionId, entry.channelId);
+        if (request.sessionId)
+          this.#sticky.set(request.sessionId, entry.channelId);
         return { ...result, channelId: entry.channelId };
       } catch (error) {
         if (error instanceof ChannelNotApplicable) continue;
-        lastError = error instanceof Error ? error : channelError(extractNormalized(error));
+        lastError =
+          error instanceof Error
+            ? error
+            : channelError(extractNormalized(error));
         const normalized = extractNormalized(error);
         this.#health.recordFailure(entry.channelId, normalized);
         // A pin that fails must be released even when the request then fails,
@@ -229,7 +265,10 @@ export class Scheduler {
         if (this.#streamStarted(request)) throw lastError;
       }
     }
-    throw lastError ?? channelError(noChannelAvailable(`No channel serves ${request.model}`));
+    throw (
+      lastError ??
+      channelError(noChannelAvailable(`No channel serves ${request.model}`))
+    );
   }
 
   /**
@@ -247,7 +286,9 @@ export class Scheduler {
       throw channelError(noChannelAvailable(`Unknown channel ${channelId}`));
     const adapter = this.#registry.adapterForContext(channelId);
     if (!adapter)
-      throw channelError(noChannelAvailable(`No adapter for channel ${channelId}`));
+      throw channelError(
+        noChannelAvailable(`No adapter for channel ${channelId}`),
+      );
     const requestContext: ChannelRequestContext = {
       idempotencyKey: request.idempotencyKey,
       ...(request.signal ? { signal: request.signal } : {}),
@@ -282,7 +323,10 @@ export class Scheduler {
     if (entries.length === 1) return entries[0]!;
     // Smooth weighted round-robin: total weight is offset by a constant so a
     // single-entry tier still receives traffic proportional to its weight.
-    const total = entries.reduce((sum, entry) => sum + Math.max(entry.weight, 0) + 10, 0);
+    const total = entries.reduce(
+      (sum, entry) => sum + Math.max(entry.weight, 0) + 10,
+      0,
+    );
     let cursor = this.#random() * total;
     for (const entry of entries) {
       cursor -= Math.max(entry.weight, 0) + 10;
@@ -293,7 +337,8 @@ export class Scheduler {
 
   #forgetPin(sessionId: string | undefined, channelId: string): void {
     if (!sessionId) return;
-    if (this.#sticky.get(sessionId) === channelId) this.#sticky.delete(sessionId);
+    if (this.#sticky.get(sessionId) === channelId)
+      this.#sticky.delete(sessionId);
   }
 
   #streamStarted(request: DispatchRequest): boolean {

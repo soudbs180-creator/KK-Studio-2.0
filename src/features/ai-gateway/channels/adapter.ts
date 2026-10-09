@@ -101,7 +101,10 @@ export interface ChannelAdapter {
     request: ChannelRequestContext,
   ): Promise<PollState>;
   /** Must stay cheap: `maxTokens=1`, no artifacts, no side effects. */
-  probe(context: ChannelContext, request: ChannelRequestContext): Promise<ProbeResult>;
+  probe(
+    context: ChannelContext,
+    request: ChannelRequestContext,
+  ): Promise<ProbeResult>;
   /** Must always return `retryable`; the scheduler branches on it. */
   normalizeError(raw: unknown): NormalizedError;
   /** Virtual policy endpoint; omit when the platform has none. */
@@ -122,7 +125,8 @@ export class ChannelNotApplicable extends Error {
  */
 export function normalizeUnknownFailure(error: unknown): NormalizedError {
   if (error instanceof Error) {
-    if (error.name === "AbortError") return normalizeTransportFailure("aborted");
+    if (error.name === "AbortError")
+      return normalizeTransportFailure("aborted");
     return normalizeTransportFailure(error.message.slice(0, 200));
   }
   return normalizeTransportFailure("unknown failure");

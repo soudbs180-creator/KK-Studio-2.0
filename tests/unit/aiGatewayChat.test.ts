@@ -17,7 +17,10 @@ import {
 } from "../../src/features/ai-gateway/chat.ts";
 import { MemoryCredentialStore } from "../../src/features/ai-gateway/credentials.ts";
 import { errorClasses } from "../../src/features/ai-gateway/errors.ts";
-import { extractNormalized, Scheduler } from "../../src/features/ai-gateway/scheduler.ts";
+import {
+  extractNormalized,
+  Scheduler,
+} from "../../src/features/ai-gateway/scheduler.ts";
 
 const capabilities: CapabilityManifest = {
   modalities: ["text"],
@@ -38,17 +41,29 @@ test("prompt flattening keeps system text ahead of the turns", () => {
   assert.ok(prompt.includes("draw a cat"));
   assert.ok(prompt.indexOf("hi") < prompt.indexOf("draw a cat"));
   assert.ok(prompt.indexOf("hello") < prompt.indexOf("draw a cat"));
-  assert.equal(buildPrompt([{ role: "user", content: "only" }]), "[User]\nonly");
+  assert.equal(
+    buildPrompt([{ role: "user", content: "only" }]),
+    "[User]\nonly",
+  );
 });
 
 test("the request schema rejects unknown fields and bad roles", () => {
-  assert.throws(() => chatRequestSchema.parse({ model: "m", messages: [], nope: 1 }));
   assert.throws(() =>
-    chatRequestSchema.parse({ model: "m", messages: [{ role: "x", content: "a" }] }),
+    chatRequestSchema.parse({ model: "m", messages: [], nope: 1 }),
+  );
+  assert.throws(() =>
+    chatRequestSchema.parse({
+      model: "m",
+      messages: [{ role: "x", content: "a" }],
+    }),
   );
   assert.throws(() => chatRequestSchema.parse({ model: "m", messages: [] }));
   assert.throws(() =>
-    chatRequestSchema.parse({ model: "m", messages: [{ role: "user", content: "a" }], stream: "yes" }),
+    chatRequestSchema.parse({
+      model: "m",
+      messages: [{ role: "user", content: "a" }],
+      stream: "yes",
+    }),
   );
 });
 
@@ -58,7 +73,9 @@ test("a client cannot smuggle a credential into a prompt", () => {
     () =>
       parseChatRequest({
         model: "kk-default",
-        messages: [{ role: "user", content: "Bearer sk-abcdefghijklmnopqrstuvwxyz" }],
+        messages: [
+          { role: "user", content: "Bearer sk-abcdefghijklmnopqrstuvwxyz" },
+        ],
       }),
     /credential/i,
   );
@@ -66,7 +83,9 @@ test("a client cannot smuggle a credential into a prompt", () => {
     () =>
       parseChatRequest({
         model: "kk-default",
-        messages: [{ role: "user", content: "see https://x.io/a?api_key=abcdefghijkl" }],
+        messages: [
+          { role: "user", content: "see https://x.io/a?api_key=abcdefghijkl" },
+        ],
       }),
     /credential/i,
   );
@@ -87,14 +106,21 @@ test("buildInput merges both sampling parameters", () => {
   assert.equal(input.extra?.maxTokens, 128);
   assert.deepEqual(input.attachments, []);
   const bare = buildInput(
-    chatRequestSchema.parse({ model: "m", messages: [{ role: "user", content: "x" }] }),
+    chatRequestSchema.parse({
+      model: "m",
+      messages: [{ role: "user", content: "x" }],
+    }),
   );
   assert.equal(bare.extra, undefined);
 });
 
 test("every error class maps to an OpenAI error type", () => {
   for (const errorClass of errorClasses) {
-    const mapped = toOpenAiError({ errorClass, httpStatus: 502, retryable: false });
+    const mapped = toOpenAiError({
+      errorClass,
+      httpStatus: 502,
+      retryable: false,
+    });
     assert.ok(mapped.body.error.type, `${errorClass} needs an error type`);
     assert.equal(mapped.body.error.code, errorClass);
     assert.equal(mapped.body.kk_meta.errorClass, errorClass);
@@ -107,7 +133,9 @@ test("completion ids look like OpenAI ids and do not repeat", () => {
   assert.notEqual(newCompletionId(), newCompletionId());
 });
 
-function chatHarness(behavior: { ok: boolean; normalized?: object } = { ok: true }) {
+function chatHarness(
+  behavior: { ok: boolean; normalized?: object } = { ok: true },
+) {
   const offline: ChannelAdapter = {
     ...doubaoAdapter,
     provider: "chatprobe",
@@ -116,7 +144,9 @@ function chatHarness(behavior: { ok: boolean; normalized?: object } = { ok: true
     async submit(_context, _input, request) {
       await request.resolveSecret();
       if (!behavior.ok)
-        throw Object.assign(new Error("upstream"), { normalized: behavior.normalized });
+        throw Object.assign(new Error("upstream"), {
+          normalized: behavior.normalized,
+        });
       return {
         kind: "inline",
         assetBase64: Buffer.from("a cat", "utf8").toString("base64"),

@@ -19,6 +19,7 @@
 | 格式 | `prettier --check` | 格式偏差 |
 | Markdown 链接 | `node scripts/check-markdown.mjs` | 断链、跨仓库链接 |
 | 任务账本 | `node scripts/check-governance.mjs` | 账本与 `TASK_LEDGER.md` 不同步、状态字段缺失 |
+| 平台交付与最小 AI 链路 | 人工评审：`AGENTS.md`、`PROJECT_GOALS.md`、`ADR-011` 与功能卡证据 | 当前没有自动 guardrail；检查 Desktop → Web → Mobile 顺序、UI/交互与文本/图片链路、Mobile 目录隔离、VPS 控制面状态，不能仅凭 lint/verify 宣称通过 |
 
 **ESLint 实际覆盖范围小于命令字面**：`eslint.config.mjs` 的 `files` 为 `src/**/*.{ts,tsx}`、`tests/**/*.ts`、`scripts/**/*.mjs`、`*.config.{ts,mjs}`。因此：
 
@@ -198,6 +199,7 @@ src/features/local-service/store.ts
 | 新增/移除功能 | `docs/features/features.registry.json` + 对应 `docs/features/feat-*.md`，再跑 `npm run features:write` |
 | 数据结构、存储、协议、依赖变化 | `docs/architecture/adr/` 新增 ADR |
 | 跨模块契约、领域规则 | 本文件与 `AI_RULES.md` 对应章节 |
+| 平台顺序与跨端边界 | `AGENTS.md` + `docs/governance/PROJECT_GOALS.md` + `docs/architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md`；当前靠人工评审，无自动 guardrail |
 | 新增门禁或放宽既有门禁 | 对应 `scripts/` 脚本 + 本文「门禁映射」表 |
 | UI 令牌、组件契约 | [`../UI_INDEX.md`](../UI_INDEX.md) 指向的唯一承载文件 |
 

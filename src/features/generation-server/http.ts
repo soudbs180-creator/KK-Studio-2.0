@@ -145,9 +145,15 @@ export function createGenerationServer(options: {
           // Required so a client retry cannot bill the same prompt twice.
           if (typeof key !== "string" || !key.trim())
             throw new PlatformError("IDEMPOTENCY_KEY_REQUIRED");
-          const body = parseChatRequest(JSON.parse((await readBody(req)).toString("utf8")));
+          const body = parseChatRequest(
+            JSON.parse((await readBody(req)).toString("utf8")),
+          );
           try {
-            const completion = await runChatCompletion(options.chat, body, key.trim());
+            const completion = await runChatCompletion(
+              options.chat,
+              body,
+              key.trim(),
+            );
             json(res, 200, {
               id: newCompletionId(),
               object: "chat.completion",
@@ -160,7 +166,11 @@ export function createGenerationServer(options: {
                   finish_reason: "stop",
                 },
               ],
-              usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
+              usage: {
+                prompt_tokens: 0,
+                completion_tokens: 0,
+                total_tokens: 0,
+              },
               kk_meta: { channelId: completion.channelId },
             });
           } catch (error) {

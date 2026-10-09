@@ -100,7 +100,9 @@ const CLASSIFICATION_RULES: ReadonlyArray<{
   },
 ];
 
-const STATUS_DEFAULTS: Readonly<Record<number, { errorClass: ErrorClass; retryable: boolean }>> = {
+const STATUS_DEFAULTS: Readonly<
+  Record<number, { errorClass: ErrorClass; retryable: boolean }>
+> = {
   400: { errorClass: "BAD_REQUEST", retryable: false },
   401: { errorClass: "AUTH_INVALID", retryable: false },
   403: { errorClass: "AUTH_FORBIDDEN", retryable: false },
@@ -124,7 +126,8 @@ function vendorRetryAfterMs(body: unknown): number | undefined {
     const raw = record.retry_after ?? record.retryAfter ?? record.retryAfterMs;
     // Milliseconds are passed through; bare numbers are seconds.
     const value = typeof raw === "string" ? Number(raw) : raw;
-    if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) continue;
+    if (typeof value !== "number" || !Number.isFinite(value) || value <= 0)
+      continue;
     const ms = record.retryAfterMs === value ? value : value * 1000;
     if (Number.isFinite(ms) && ms > 0) return Math.round(ms);
   }
