@@ -18,7 +18,7 @@ import type { useCanvasAddMenu } from "./useCanvasAddMenu";
 import CanvasNodeItem from "./CanvasNodeItem";
 import CanvasConnections from "./CanvasConnections";
 import { canConnectTarget } from "./connectionRules";
-import { canvasReferencesFor } from "./canvasReferences";
+import { canvasOccupiedRects, canvasReferencesFor } from "./canvasReferences";
 import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
 import type { ModelSelection } from "../../domain/modelSelection";
 import { addCanvasReferences } from "./addCanvasReferences";
@@ -71,6 +71,11 @@ export default function CanvasNodeLayer({
     : undefined;
   const { nodes, transform, selectedNode, addNode } = controls;
   const [pendingResultIds, setPendingResultIds] = useState<string[]>([]);
+  const [pendingReferenceFocus, setPendingReferenceFocus] = useState<{
+    parentId: string;
+    ids: string[];
+    restoreSelection: string | null;
+  } | null>(null);
   const [connectionTarget, setConnectionTarget] = useState<string | null>(null);
   const pendingByParent = useRef<Record<string, string[]>>({});
   useEffect(() => {
@@ -81,6 +86,20 @@ export default function CanvasNodeLayer({
     if (preservedSelection) controls.setSelectedNode(preservedSelection);
     setPendingResultIds([]);
   }, [pendingResultIds, nodes, items, selectedNode]);
+  useEffect(() => {
+    if (
+      !pendingReferenceFocus ||
+      !pendingReferenceFocus.ids.every((id) => nodes[id])
+    )
+      return;
+    controls.focusNodes([
+      pendingReferenceFocus.parentId,
+      ...pendingReferenceFocus.ids,
+    ]);
+    if (pendingReferenceFocus.restoreSelection)
+      controls.setSelectedNode(pendingReferenceFocus.restoreSelection);
+    setPendingReferenceFocus(null);
+  }, [pendingReferenceFocus, nodes, items, selectedNode]);
   function reserveGeneratedResults(parentId: string, count: number): void {
     const parent = nodes[parentId];
     const source = items.find((item) => item.id === parentId);
@@ -186,7 +205,7 @@ export default function CanvasNodeLayer({
     const parent = nodes[parentId];
     const source = items.find((item) => item.id === parentId);
     if (!parent || !source) return;
-    addCanvasReferences({
+    const addedIds = addCanvasReferences({
       parentId,
       parent,
       source,
@@ -196,14 +215,18 @@ export default function CanvasNodeLayer({
       addNode,
       onConnect,
       onConnectionNotice,
-      visibleWorldLeft: Math.max(
-        0,
-        (16 - controls.transform.x) / controls.transform.scale,
-      ),
+      occupiedRects: canvasOccupiedRects(items, nodes),
+      visibleWorldLeft: (16 - controls.transform.x) / controls.transform.scale,
       visibleWorldRight:
         (controls.viewport.width - 16 - controls.transform.x) /
         controls.transform.scale,
     });
+    if (addedIds.length)
+      setPendingReferenceFocus({
+        parentId,
+        ids: addedIds,
+        restoreSelection: selectedNode,
+      });
   }
 
   return (

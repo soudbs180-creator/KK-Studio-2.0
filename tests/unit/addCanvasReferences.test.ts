@@ -62,7 +62,7 @@ test("canvas batch upload skips rejected slots and fills later valid capacity", 
   assert.ok(notices.some((message) => message.includes("风格槽已有参考图")));
 });
 
-test("canvas reference nodes stay inside the visible world bounds", () => {
+test("canvas reference nodes avoid the target card when the viewport is tight", () => {
   const source = {
     id: "target",
     title: "目标",
@@ -89,6 +89,35 @@ test("canvas reference nodes stay inside the visible world bounds", () => {
   });
 
   assert.equal(added.length, 1);
-  assert.ok((added[0]?.position.x ?? -1) >= 16);
-  assert.ok((added[0]?.position.x ?? Number.POSITIVE_INFINITY) + 590 <= 900);
+  const referenceX = added[0]?.position.x ?? 0;
+  assert.ok(referenceX + 590 + 32 <= 200 || 200 + 590 + 32 <= referenceX);
+});
+
+test("canvas reference placement preserves negative visible world coordinates", () => {
+  const source = {
+    id: "target",
+    title: "目标",
+    description: "",
+    kind: "image",
+  } as CanvasCollectionItem;
+  const added: CanvasCollectionItem[] = [];
+
+  addCanvasReferences({
+    parentId: source.id,
+    parent: { x: -500, y: 240 },
+    source,
+    references: [{ title: "主体", slot: "主体", assetId: "asset-subject" }],
+    existingReferences: [],
+    visibleWorldLeft: -984,
+    visibleWorldRight: -16,
+    addNode: (_kind, item) => {
+      const id = `added-${added.length}`;
+      added.push({ id, ...item } as CanvasCollectionItem);
+      return id;
+    },
+    onConnect: () => undefined,
+    onConnectionNotice: () => undefined,
+  });
+
+  assert.equal(added[0]?.position.x, -1122);
 });
