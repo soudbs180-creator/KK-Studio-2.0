@@ -10,8 +10,10 @@ export const REQUIRED_MEMORY_SYNC = Object.freeze({
   governance: "docs/MEMORY-GOVERNANCE.md",
 });
 
-const MEMORY_IMPLEMENTATION = /^(?:src\/features\/memory\/|src-tauri\/src\/(?:main\.rs|storage_paths\.rs|.*memory))/i;
-const MEMORY_TEST = /^(?:tests\/(?:unit|browser)\/.*memory|src-tauri\/src\/main\.rs$)/i;
+const MEMORY_IMPLEMENTATION =
+  /^(?:src\/features\/memory\/|src-tauri\/src\/(?:main\.rs|storage_paths\.rs|.*memory))/i;
+const MEMORY_TEST =
+  /^(?:tests\/(?:unit|browser)\/.*memory|src-tauri\/src\/main\.rs$)/i;
 
 /**
  * Return policy-sync violations for a git changed-path list.
@@ -19,14 +21,13 @@ const MEMORY_TEST = /^(?:tests\/(?:unit|browser)\/.*memory|src-tauri\/src\/main\
  * contract without creating commits or depending on a particular repository.
  */
 export function checkMemoryContractSync(changedPaths) {
-  const paths = new Set(
-    changedPaths.map((path) => path.replaceAll("\\", "/")),
-  );
+  const paths = new Set(changedPaths.map((path) => path.replaceAll("\\", "/")));
   if (!paths.has(MEMORY_CONTRACT)) return [];
 
   const issues = [];
   for (const [label, path] of Object.entries(REQUIRED_MEMORY_SYNC)) {
-    if (!paths.has(path)) issues.push(`MEMORY-CONTRACT sync missing ${label}: ${path}`);
+    if (!paths.has(path))
+      issues.push(`MEMORY-CONTRACT sync missing ${label}: ${path}`);
   }
   if (![...paths].some((path) => MEMORY_IMPLEMENTATION.test(path))) {
     issues.push(

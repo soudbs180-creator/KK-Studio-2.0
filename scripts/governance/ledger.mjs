@@ -41,7 +41,13 @@ export function validateLedger(tasks) {
       if (typeof task[key] !== "string" || !task[key].trim())
         issues.push(`${task.id ?? "?"}: missing ${key}`);
     if (hasGovernanceFields) {
-      for (const key of ["displayStatus", "priority", "nextAction", "lastVerified", "ownerRole"])
+      for (const key of [
+        "displayStatus",
+        "priority",
+        "nextAction",
+        "lastVerified",
+        "ownerRole",
+      ])
         if (typeof task[key] !== "string" || !task[key].trim())
           issues.push(`${task.id}: missing ${key}`);
       for (const key of ["requirementRefs", "featureIds"])
@@ -172,7 +178,9 @@ export function renderLedger(tasks) {
           task.dependencies.join(", ") || "none",
           task.owner,
           task.nextAction ?? "待补充",
-        ].map(cell).join(" | ")} |`,
+        ]
+          .map(cell)
+          .join(" | ")} |`,
     ),
     "",
     ...tasks.flatMap((task) => [

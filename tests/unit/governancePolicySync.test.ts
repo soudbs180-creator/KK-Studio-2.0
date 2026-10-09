@@ -46,8 +46,5 @@ test("the CLI requires full base and accepts HEAD as the default head", () => {
     base: "a".repeat(40),
     head: "HEAD",
   });
-  assert.throws(
-    () => parseArgs(["--base", "short"]),
-    /full-base-sha/,
-  );
+  assert.throws(() => parseArgs(["--base", "short"]), /full-base-sha/);
 });

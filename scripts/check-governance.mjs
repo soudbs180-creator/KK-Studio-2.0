@@ -24,9 +24,18 @@ try {
 try {
   const changedFromBase = execFileSync(
     "git",
-    ["diff", "--name-only", "--diff-filter=ACDMRT", "-z", `${governanceBaseSha}...HEAD`, "--"],
+    [
+      "diff",
+      "--name-only",
+      "--diff-filter=ACDMRT",
+      "-z",
+      `${governanceBaseSha}...HEAD`,
+      "--",
+    ],
     { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
-  ).split("\0").filter(Boolean);
+  )
+    .split("\0")
+    .filter(Boolean);
   issues.push(...checkMemoryContractSync(changedFromBase));
 } catch {
   issues.push(`Cannot inspect governance diff against ${governanceBase}`);

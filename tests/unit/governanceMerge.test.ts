@@ -41,10 +41,28 @@ function fixture(overrides = {}) {
   const head = "a".repeat(40);
   const config = readRulesetConfig({ ruleset: ruleSet });
   return {
-    pullRequest: { state: "open", draft: false, base: { ref: "main" }, head: { sha: head }, user: { login: "author" } },
+    pullRequest: {
+      state: "open",
+      draft: false,
+      base: { ref: "main" },
+      head: { sha: head },
+      user: { login: "author" },
+    },
     rulesetConfig: config,
-    checks: REQUIRED_CHECKS.map((name) => ({ name, status: "completed", conclusion: "success", head_sha: head })),
-    reviews: [{ user: { login: "independent" }, state: "APPROVED", commit_id: head, submitted_at: "2026-10-09T00:00:00Z" }],
+    checks: REQUIRED_CHECKS.map((name) => ({
+      name,
+      status: "completed",
+      conclusion: "success",
+      head_sha: head,
+    })),
+    reviews: [
+      {
+        user: { login: "independent" },
+        state: "APPROVED",
+        commit_id: head,
+        submitted_at: "2026-10-09T00:00:00Z",
+      },
+    ],
     threads: [{ isResolved: true }],
     mainHealthy: true,
     baseMatchesMain: true,
@@ -57,18 +75,52 @@ test("ruleset readback requires active main merge queue, squash, strict checks a
   const config = readRulesetConfig({ ruleset: ruleSet });
   assert.equal(rulesetReadbackPass(config), true);
   assert.equal(rulesetReadbackPass({ ...config, squash: false }), false);
-  assert.equal(rulesetReadbackPass({ ...config, staleReviewDismissal: false }), false);
-  assert.equal(rulesetReadbackPass({ ...config, requiredChecks: false }), false);
+  assert.equal(
+    rulesetReadbackPass({ ...config, staleReviewDismissal: false }),
+    false,
+  );
+  assert.equal(
+    rulesetReadbackPass({ ...config, requiredChecks: false }),
+    false,
+  );
 });
 
 test("auto-merge gate fails closed for missing, stale or unresolved evidence", () => {
   assert.equal(evaluateMergeEligibility(fixture()).ok, true);
-  assert.match(evaluateMergeEligibility(fixture({ activation: false })).reasons.join(), /activation/);
-  assert.match(evaluateMergeEligibility(fixture({ threads: [{ isResolved: false }] })).reasons.join(), /threads/);
-  assert.match(evaluateMergeEligibility(fixture({ reviews: [] })).reasons.join(), /independent review/);
-  assert.match(evaluateMergeEligibility(fixture({ checks: [{ name: "verify", status: "completed", conclusion: "success" }] })).reasons.join(), /required checks/);
-  assert.match(evaluateMergeEligibility(fixture({ mainHealthy: false })).reasons.join(), /main health/);
-  assert.match(evaluateMergeEligibility(fixture({ baseMatchesMain: false })).reasons.join(), /base SHA/);
+  assert.match(
+    evaluateMergeEligibility(fixture({ activation: false })).reasons.join(),
+    /activation/,
+  );
+  assert.match(
+    evaluateMergeEligibility(
+      fixture({ threads: [{ isResolved: false }] }),
+    ).reasons.join(),
+    /threads/,
+  );
+  assert.match(
+    evaluateMergeEligibility(fixture({ reviews: [] })).reasons.join(),
+    /independent review/,
+  );
+  assert.match(
+    evaluateMergeEligibility(
+      fixture({
+        checks: [
+          { name: "verify", status: "completed", conclusion: "success" },
+        ],
+      }),
+    ).reasons.join(),
+    /required checks/,
+  );
+  assert.match(
+    evaluateMergeEligibility(fixture({ mainHealthy: false })).reasons.join(),
+    /main health/,
+  );
+  assert.match(
+    evaluateMergeEligibility(
+      fixture({ baseMatchesMain: false }),
+    ).reasons.join(),
+    /base SHA/,
+  );
 });
 
 test("native mutation is impossible when a gate is incomplete and uses exact head SHA", async () => {
@@ -80,10 +132,25 @@ test("native mutation is impossible when a gate is incomplete and uses exact hea
     },
   };
   const state = fixture();
-  const result = await enablePullRequestAutoMerge({ api, pullRequest: { ...state.pullRequest, node_id: "PR_node" }, gate: evaluateMergeEligibility(state) });
+  const result = await enablePullRequestAutoMerge({
+    api,
+    pullRequest: { ...state.pullRequest, node_id: "PR_node" },
+    gate: evaluateMergeEligibility(state),
+  });
   assert.equal(result.number, 7);
-  assert.deepEqual(variables, { id: "PR_node", expectedHeadOid: "a".repeat(40) });
-  await assert.rejects(() => enablePullRequestAutoMerge({ api, pullRequest: state.pullRequest, gate: { ok: false, reasons: ["bad"] } }), /Refusing auto-merge/);
+  assert.deepEqual(variables, {
+    id: "PR_node",
+    expectedHeadOid: "a".repeat(40),
+  });
+  await assert.rejects(
+    () =>
+      enablePullRequestAutoMerge({
+        api,
+        pullRequest: state.pullRequest,
+        gate: { ok: false, reasons: ["bad"] },
+      }),
+    /Refusing auto-merge/,
+  );
 });
 
 test("main guard identifies failed checks and records rollback evidence", async () => {
@@ -93,24 +160,64 @@ test("main guard identifies failed checks and records rollback evidence", async 
     expectedSha: "b".repeat(40),
   });
   assert.equal(health.ok, false);
-  const body = incidentBody({ source: "refs/heads/main", previousHead: "c".repeat(40), currentHead: "b".repeat(40), currentTree: "tree", checks: ["verify"], health });
+  const body = incidentBody({
+    source: "refs/heads/main",
+    previousHead: "c".repeat(40),
+    currentHead: "b".repeat(40),
+    currentTree: "tree",
+    checks: ["verify"],
+    health,
+  });
   assert.match(body, /Previous main head/);
   assert.match(body, /ROLLBACK.md/);
   const calls: string[] = [];
   const api = {
     repository: "o/r",
-    request: async (route: string) => { calls.push(route); return { html_url: "https://github.com/o/r/issues/1" }; },
+    request: async (route: string) => {
+      calls.push(route);
+      return { html_url: "https://github.com/o/r/issues/1" };
+    },
   };
   const result = await pauseAfterMainFailure({ api, evidence: {}, health });
   assert.equal(result.paused, true);
-  assert.deepEqual(calls, ["/repos/o/r/actions/variables/AUTO_MERGE_PAUSED", "/repos/o/r/issues"]);
+  assert.deepEqual(calls, [
+    "/repos/o/r/actions/variables/AUTO_MERGE_PAUSED",
+    "/repos/o/r/issues",
+  ]);
 });
 
 test("merge queue gate rejects base drift and ancestry failures", () => {
   const base = "a".repeat(40);
   const head = "b".repeat(40);
   const checkout = "c".repeat(40);
-  assert.equal(validateMergeGroup({ baseSha: base, headSha: head, checkoutSha: checkout, mainSha: base, isAncestor: true }).ok, true);
-  assert.match(validateMergeGroup({ baseSha: base, headSha: head, checkoutSha: checkout, mainSha: "d".repeat(40), isAncestor: true }).reasons.join(), /origin\/main/);
-  assert.match(validateMergeGroup({ baseSha: base, headSha: head, checkoutSha: checkout, mainSha: base, isAncestor: false }).reasons.join(), /based on/);
+  assert.equal(
+    validateMergeGroup({
+      baseSha: base,
+      headSha: head,
+      checkoutSha: checkout,
+      mainSha: base,
+      isAncestor: true,
+    }).ok,
+    true,
+  );
+  assert.match(
+    validateMergeGroup({
+      baseSha: base,
+      headSha: head,
+      checkoutSha: checkout,
+      mainSha: "d".repeat(40),
+      isAncestor: true,
+    }).reasons.join(),
+    /origin\/main/,
+  );
+  assert.match(
+    validateMergeGroup({
+      baseSha: base,
+      headSha: head,
+      checkoutSha: checkout,
+      mainSha: base,
+      isAncestor: false,
+    }).reasons.join(),
+    /based on/,
+  );
 });

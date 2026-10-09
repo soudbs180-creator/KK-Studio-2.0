@@ -17,11 +17,15 @@ function asLogin(value) {
 }
 
 function branchMatchesMain(ruleset) {
-  const includes = ruleset?.target === "branch"
-    ? ruleset.conditions?.ref_name?.include
-    : ruleset?.conditions?.ref_name?.include;
+  const includes =
+    ruleset?.target === "branch"
+      ? ruleset.conditions?.ref_name?.include
+      : ruleset?.conditions?.ref_name?.include;
   if (!Array.isArray(includes)) return false;
-  return includes.some((ref) => ref === "refs/heads/main" || ref === "main" || ref === "~DEFAULT_BRANCH");
+  return includes.some(
+    (ref) =>
+      ref === "refs/heads/main" || ref === "main" || ref === "~DEFAULT_BRANCH",
+  );
 }
 
 function rules(ruleset) {
@@ -43,15 +47,22 @@ export function readRulesetConfig({ ruleset, branchProtection } = {}) {
   const queueParameters = queue?.parameters ?? {};
   const statusParameters = statusRule?.parameters ?? {};
   const reviewParameters = reviewRule?.parameters ?? {};
-  const contexts = statusParameters.required_status_checks?.map((item) => item.context)
-    ?? branchProtection?.required_status_checks?.contexts;
-  const requiredChecks = Array.isArray(contexts) ? [...new Set(contexts)].sort() : [];
+  const contexts =
+    statusParameters.required_status_checks?.map((item) => item.context) ??
+    branchProtection?.required_status_checks?.contexts;
+  const requiredChecks = Array.isArray(contexts)
+    ? [...new Set(contexts)].sort()
+    : [];
   const expectedChecks = [...REQUIRED_CHECKS].sort();
-  const mergeMethod = queueParameters.merge_method ?? ruleset?.merge_queue?.merge_method;
-  const staleDismissal = reviewParameters.dismiss_stale_reviews_on_push
-    ?? branchProtection?.required_pull_request_reviews?.dismiss_stale_reviews;
-  const approvals = reviewParameters.required_approving_review_count
-    ?? branchProtection?.required_pull_request_reviews?.required_approving_review_count;
+  const mergeMethod =
+    queueParameters.merge_method ?? ruleset?.merge_queue?.merge_method;
+  const staleDismissal =
+    reviewParameters.dismiss_stale_reviews_on_push ??
+    branchProtection?.required_pull_request_reviews?.dismiss_stale_reviews;
+  const approvals =
+    reviewParameters.required_approving_review_count ??
+    branchProtection?.required_pull_request_reviews
+      ?.required_approving_review_count;
   const target = branchMatchesMain(ruleset) || Boolean(branchProtection);
   return {
     active: ruleset?.enforcement === "active" || Boolean(branchProtection),
@@ -59,29 +70,34 @@ export function readRulesetConfig({ ruleset, branchProtection } = {}) {
     mergeQueue: Boolean(queue),
     squash: mergeMethod === "SQUASH" || mergeMethod === "squash",
     requiredChecks: requiredChecks.join(",") === expectedChecks.join(","),
-    strictChecks: statusParameters.strict_required_status_checks_policy
-      ?? branchProtection?.required_status_checks?.strict
-      ?? false,
+    strictChecks:
+      statusParameters.strict_required_status_checks_policy ??
+      branchProtection?.required_status_checks?.strict ??
+      false,
     staleReviewDismissal: staleDismissal === true,
     independentReviewRequired: Number.isInteger(approvals) && approvals >= 1,
-    requireLastPushApproval: reviewParameters.require_last_push_approval === true,
+    requireLastPushApproval:
+      reviewParameters.require_last_push_approval === true,
     checks: requiredChecks,
     mergeMethod: mergeMethod ?? null,
   };
 }
 
 export function rulesetReadbackPass(config) {
-  return Boolean(config?.active
-    && config.targetMain
-    && config.mergeQueue
-    && config.squash
-    && config.requiredChecks
-    && config.strictChecks
-    && config.staleReviewDismissal);
+  return Boolean(
+    config?.active &&
+    config.targetMain &&
+    config.mergeQueue &&
+    config.squash &&
+    config.requiredChecks &&
+    config.strictChecks &&
+    config.staleReviewDismissal,
+  );
 }
 
 function checkResults(checks, headSha) {
-  if (!Array.isArray(checks)) return { ok: false, missing: [...REQUIRED_CHECKS], wrongHead: true };
+  if (!Array.isArray(checks))
+    return { ok: false, missing: [...REQUIRED_CHECKS], wrongHead: true };
   const byName = new Map();
   for (const check of checks) {
     const name = check?.name ?? check?.context;
@@ -91,33 +107,53 @@ function checkResults(checks, headSha) {
   }
   const missing = REQUIRED_CHECKS.filter((name) => {
     const check = byName.get(name);
-    return !check || (check.status && check.status !== "completed") || check.conclusion !== "success";
+    return (
+      !check ||
+      (check.status && check.status !== "completed") ||
+      check.conclusion !== "success"
+    );
   });
-  return { ok: missing.length === 0, missing, wrongHead: checks.length > 0 && byName.size === 0 };
+  return {
+    ok: missing.length === 0,
+    missing,
+    wrongHead: checks.length > 0 && byName.size === 0,
+  };
 }
 
 function reviewPass(reviews, { headSha, author }) {
-  if (!Array.isArray(reviews)) return { ok: false, reason: "reviews unavailable" };
+  if (!Array.isArray(reviews))
+    return { ok: false, reason: "reviews unavailable" };
   const latest = new Map();
   for (const review of reviews) {
     const login = asLogin(review);
     if (!login) continue;
     const previous = latest.get(login);
-    const time = Date.parse(review.submitted_at ?? review.updated_at ?? "") || 0;
-    const previousTime = Date.parse(previous?.submitted_at ?? previous?.updated_at ?? "") || 0;
+    const time =
+      Date.parse(review.submitted_at ?? review.updated_at ?? "") || 0;
+    const previousTime =
+      Date.parse(previous?.submitted_at ?? previous?.updated_at ?? "") || 0;
     if (!previous || time >= previousTime) latest.set(login, review);
   }
-  const independent = [...latest.values()].some((review) =>
-    String(review.state).toUpperCase() === "APPROVED"
-      && asLogin(review) !== author
-      && review.commit_id === headSha,
+  const independent = [...latest.values()].some(
+    (review) =>
+      String(review.state).toUpperCase() === "APPROVED" &&
+      asLogin(review) !== author &&
+      review.commit_id === headSha,
   );
-  return { ok: independent, reason: independent ? null : "independent review is not approved on exact head" };
+  return {
+    ok: independent,
+    reason: independent
+      ? null
+      : "independent review is not approved on exact head",
+  };
 }
 
 function threadsPass(threads) {
-  if (!Array.isArray(threads)) return { ok: false, reason: "review threads unavailable" };
-  const unresolved = threads.filter((thread) => thread?.isResolved !== true && thread?.resolved !== true);
+  if (!Array.isArray(threads))
+    return { ok: false, reason: "review threads unavailable" };
+  const unresolved = threads.filter(
+    (thread) => thread?.isResolved !== true && thread?.resolved !== true,
+  );
   return { ok: unresolved.length === 0, unresolved: unresolved.length };
 }
 
@@ -133,19 +169,30 @@ export function evaluateMergeEligibility({
   activation = false,
 } = {}) {
   const headSha = pullRequest?.head?.sha ?? pullRequest?.headSha;
-  const author = asLogin(pullRequest?.user ?? pullRequest?.author) ?? pullRequest?.author;
+  const author =
+    asLogin(pullRequest?.user ?? pullRequest?.author) ?? pullRequest?.author;
   const checkGate = checkResults(checks, headSha);
   const reviewGate = reviewPass(reviews, { headSha, author });
   const threadGate = threadsPass(threads);
   const reasons = [];
-  if (pullRequest?.state !== "open" || pullRequest?.draft === true) reasons.push("pull request is not an open ready-for-review PR");
-  if (pullRequest?.base?.ref !== "main") reasons.push("pull request does not target main");
+  if (pullRequest?.state !== "open" || pullRequest?.draft === true)
+    reasons.push("pull request is not an open ready-for-review PR");
+  if (pullRequest?.base?.ref !== "main")
+    reasons.push("pull request does not target main");
   if (!headSha) reasons.push("pull request head SHA is unavailable");
-  if (!rulesetReadbackPass(rulesetConfig)) reasons.push("ruleset readback does not prove the required merge queue policy");
-  if (!checkGate.ok) reasons.push(`required checks are not successful: ${checkGate.missing.join(", ")}`);
+  if (!rulesetReadbackPass(rulesetConfig))
+    reasons.push(
+      "ruleset readback does not prove the required merge queue policy",
+    );
+  if (!checkGate.ok)
+    reasons.push(
+      `required checks are not successful: ${checkGate.missing.join(", ")}`,
+    );
   if (!reviewGate.ok) reasons.push(reviewGate.reason);
-  if (!threadGate.ok) reasons.push(threadGate.reason ?? "unresolved review threads remain");
-  if (baseMatchesMain !== true) reasons.push("pull request base SHA is not the current origin/main SHA");
+  if (!threadGate.ok)
+    reasons.push(threadGate.reason ?? "unresolved review threads remain");
+  if (baseMatchesMain !== true)
+    reasons.push("pull request base SHA is not the current origin/main SHA");
   if (mainHealthy !== true) reasons.push("main health is not proven");
   if (activation !== true) reasons.push("auto-merge activation is disabled");
   return {
@@ -160,7 +207,8 @@ export function evaluateMergeEligibility({
 }
 
 export function createGitHubApi({ token, repository, fetchImpl = fetch } = {}) {
-  if (!token || !repository) throw new Error("GITHUB_TOKEN and GITHUB_REPOSITORY are required");
+  if (!token || !repository)
+    throw new Error("GITHUB_TOKEN and GITHUB_REPOSITORY are required");
   const headers = {
     accept: "application/vnd.github+json",
     authorization: `Bearer ${token}`,
@@ -172,7 +220,10 @@ export function createGitHubApi({ token, repository, fetchImpl = fetch } = {}) {
       headers: { ...headers, ...(options.headers ?? {}) },
     });
     const body = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(`GitHub ${response.status} ${route}: ${body.message ?? "request failed"}`);
+    if (!response.ok)
+      throw new Error(
+        `GitHub ${response.status} ${route}: ${body.message ?? "request failed"}`,
+      );
     return body;
   };
   return {
@@ -184,7 +235,10 @@ export function createGitHubApi({ token, repository, fetchImpl = fetch } = {}) {
         body: JSON.stringify({ query, variables }),
       });
       const body = await response.json();
-      if (!response.ok || body.errors?.length) throw new Error(`GitHub GraphQL request failed: ${body.errors?.[0]?.message ?? response.status}`);
+      if (!response.ok || body.errors?.length)
+        throw new Error(
+          `GitHub GraphQL request failed: ${body.errors?.[0]?.message ?? response.status}`,
+        );
       return body.data;
     },
     repository,
@@ -202,37 +256,56 @@ async function loadRemoteState(api, number) {
   ]);
   let matchingRuleset = null;
   for (const summary of rulesets) {
-    const detail = summary?.id ? await api.request(`${base}/rulesets/${summary.id}`).catch(() => null) : summary;
+    const detail = summary?.id
+      ? await api.request(`${base}/rulesets/${summary.id}`).catch(() => null)
+      : summary;
     if (detail?.enforcement === "active" && branchMatchesMain(detail)) {
       matchingRuleset = detail;
       break;
     }
   }
-  const threadsData = await api.graphql(`query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){reviewThreads(first:100){totalCount nodes{isResolved}}}}}`, (() => {
-    const [owner, name] = api.repository.split("/");
-    return { owner, name, number };
-  })());
+  const threadsData = await api.graphql(
+    `query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){reviewThreads(first:100){totalCount nodes{isResolved}}}}}`,
+    (() => {
+      const [owner, name] = api.repository.split("/");
+      return { owner, name, number };
+    })(),
+  );
   const [owner, name] = api.repository.split("/");
   const branch = await api.request(`${base}/branches/main`);
   const mainRuns = branch?.commit?.sha
-    ? await api.request(`${base}/commits/${branch.commit.sha}/check-runs`).catch(() => ({ check_runs: [] }))
+    ? await api
+        .request(`${base}/commits/${branch.commit.sha}/check-runs`)
+        .catch(() => ({ check_runs: [] }))
     : { check_runs: [] };
-  const activation = await api.request(`${base}/actions/variables/AUTO_MERGE_ACTIVATION`).catch(() => null);
-  const paused = await api.request(`${base}/actions/variables/AUTO_MERGE_PAUSED`).catch(() => null);
+  const activation = await api
+    .request(`${base}/actions/variables/AUTO_MERGE_ACTIVATION`)
+    .catch(() => null);
+  const paused = await api
+    .request(`${base}/actions/variables/AUTO_MERGE_PAUSED`)
+    .catch(() => null);
   const threadConnection = threadsData?.repository?.pullRequest?.reviewThreads;
   const threads = threadConnection ? [...(threadConnection.nodes ?? [])] : null;
-  if (threads && Number.isInteger(threadConnection?.totalCount) && threadConnection.totalCount > threads.length)
+  if (
+    threads &&
+    Number.isInteger(threadConnection?.totalCount) &&
+    threadConnection.totalCount > threads.length
+  )
     threads.push({ isResolved: false });
   return {
     pullRequest,
-    rulesetConfig: readRulesetConfig({ ruleset: matchingRuleset, branchProtection }),
+    rulesetConfig: readRulesetConfig({
+      ruleset: matchingRuleset,
+      branchProtection,
+    }),
     checks: checkRuns.check_runs ?? [],
     reviews,
     threads,
     baseMatchesMain: pullRequest.base?.sha === branch?.commit?.sha,
-    mainHealthy: branch?.name === "main"
-      && Boolean(branch?.commit?.sha)
-      && checkResults(mainRuns.check_runs ?? [], branch.commit.sha).ok,
+    mainHealthy:
+      branch?.name === "main" &&
+      Boolean(branch?.commit?.sha) &&
+      checkResults(mainRuns.check_runs ?? [], branch.commit.sha).ok,
     activation: activation?.value === "enabled" && paused?.value !== "true",
     owner,
     name,
@@ -240,27 +313,47 @@ async function loadRemoteState(api, number) {
 }
 
 export async function enablePullRequestAutoMerge({ api, pullRequest, gate }) {
-  if (!gate?.ok) throw new Error(`Refusing auto-merge: ${gate?.reasons?.join("; ") ?? "gate failed"}`);
-  const data = await api.graphql(`mutation($id:ID!,$expectedHeadOid:GitObjectID!){enablePullRequestAutoMerge(input:{pullRequestId:$id,expectedHeadOid:$expectedHeadOid,mergeMethod:SQUASH}){pullRequest{number,autoMergeRequest{enabledAt,mergeMethod}}}}`, {
-    id: pullRequest.node_id,
-    expectedHeadOid: gate.headSha,
-  });
+  if (!gate?.ok)
+    throw new Error(
+      `Refusing auto-merge: ${gate?.reasons?.join("; ") ?? "gate failed"}`,
+    );
+  const data = await api.graphql(
+    `mutation($id:ID!,$expectedHeadOid:GitObjectID!){enablePullRequestAutoMerge(input:{pullRequestId:$id,expectedHeadOid:$expectedHeadOid,mergeMethod:SQUASH}){pullRequest{number,autoMergeRequest{enabledAt,mergeMethod}}}}`,
+    {
+      id: pullRequest.node_id,
+      expectedHeadOid: gate.headSha,
+    },
+  );
   return data.enablePullRequestAutoMerge.pullRequest;
 }
 
 async function main() {
-  const payload = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, "utf8"));
+  const payload = JSON.parse(
+    fs.readFileSync(process.env.GITHUB_EVENT_PATH, "utf8"),
+  );
   const number = payload.pull_request?.number;
-  if (!number) throw new Error("auto-merge workflow requires a pull_request event");
-  const api = createGitHubApi({ token: process.env.GITHUB_TOKEN, repository: process.env.GITHUB_REPOSITORY });
+  if (!number)
+    throw new Error("auto-merge workflow requires a pull_request event");
+  const api = createGitHubApi({
+    token: process.env.GITHUB_TOKEN,
+    repository: process.env.GITHUB_REPOSITORY,
+  });
   const state = await loadRemoteState(api, number);
   const gate = evaluateMergeEligibility(state);
   console.log(JSON.stringify({ gate }, null, 2));
   if (!gate.ok) process.exitCode = 0;
-  else await enablePullRequestAutoMerge({ api, pullRequest: state.pullRequest, gate });
+  else
+    await enablePullRequestAutoMerge({
+      api,
+      pullRequest: state.pullRequest,
+      gate,
+    });
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href
+) {
   main().catch((error) => {
     console.error(`[KK Studio auto-merge] ${error.message}`);
     process.exitCode = 1;

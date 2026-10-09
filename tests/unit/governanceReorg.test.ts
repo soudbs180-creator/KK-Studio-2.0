@@ -48,10 +48,16 @@ test("normalizes a task without inventing a product owner or feature", () => {
 
 test("classifies workspace entries without deleting or moving them", () => {
   assert.equal(classifyWorkspacePath("KK-Studio-2.0"), "PRIMARY_REPOSITORY");
-  assert.equal(classifyWorkspacePath(".worktrees/TASK-1"), "ACTIVE_WORKTREE_ROOT");
+  assert.equal(
+    classifyWorkspacePath(".worktrees/TASK-1"),
+    "ACTIVE_WORKTREE_ROOT",
+  );
   assert.equal(classifyWorkspacePath("output/run-1"), "EVIDENCE_CANDIDATE");
   assert.equal(classifyWorkspacePath(".tmp/session"), "TEMPORARY_CANDIDATE");
-  assert.equal(classifyWorkspacePath("ai_group_chat_study"), "INDEPENDENT_PROJECT");
+  assert.equal(
+    classifyWorkspacePath("ai_group_chat_study"),
+    "INDEPENDENT_PROJECT",
+  );
 });
 
 test("workspace entries retain absolute path and preservation action", () => {
@@ -69,9 +75,33 @@ test("worktree reclamation only targets rebuildable paths in clean worktrees", (
   assert.equal(canPruneWorktree({ exists: true, dirty: 0 }), true);
   assert.equal(canPruneWorktree({ exists: true, dirty: 1 }), false);
   assert.equal(canPruneWorktree({ exists: false, dirty: 0 }), false);
-  assert.equal(canPruneGeneratedContent({ exists: true, dirty: 0, inWorkspace: true, primary: false }), true);
-  assert.equal(canPruneGeneratedContent({ exists: true, dirty: 4, inWorkspace: true, primary: false }), false);
-  assert.equal(canPruneGeneratedContent({ exists: true, dirty: 4, inWorkspace: true, primary: true }), false);
+  assert.equal(
+    canPruneGeneratedContent({
+      exists: true,
+      dirty: 0,
+      inWorkspace: true,
+      primary: false,
+    }),
+    true,
+  );
+  assert.equal(
+    canPruneGeneratedContent({
+      exists: true,
+      dirty: 4,
+      inWorkspace: true,
+      primary: false,
+    }),
+    false,
+  );
+  assert.equal(
+    canPruneGeneratedContent({
+      exists: true,
+      dirty: 4,
+      inWorkspace: true,
+      primary: true,
+    }),
+    false,
+  );
   assert.deepEqual(generatedPathCandidates("D:/repo"), [
     "D:/repo/node_modules",
     "D:/repo/dist",

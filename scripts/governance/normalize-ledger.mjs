@@ -25,7 +25,8 @@ const HIGH_PRIORITY = new Set([
 ]);
 
 export function displayStatusFor(status, verificationResult) {
-  if (status === "DONE") return verificationResult === "PASS" ? "已完成" : "未完成";
+  if (status === "DONE")
+    return verificationResult === "PASS" ? "已完成" : "未完成";
   return DISPLAY_STATUS.get(status) ?? "未完成";
 }
 
@@ -41,36 +42,45 @@ function defaultPriority(task) {
 function defaultNextAction(task) {
   if (task.nextAction) return task.nextAction;
   if (task.status === "DONE") return "保留当前证据，合并后按原验收范围回读主线";
-  if (task.status === "BLOCKED") return "复核阻塞条件，解除后重新验证并保留原失败证据";
+  if (task.status === "BLOCKED")
+    return "复核阻塞条件，解除后重新验证并保留原失败证据";
   if (task.branch === "unallocated" || task.worktree === "unallocated")
     return "补充负责人、优先级、分支和下一步验收证据";
   return "按验收条件完成实现、验证、独立审查和文档同步";
 }
 
 function ownerRoleFor(owner) {
-  return {
-    root: "repository-maintainer",
-    MainAgent: "repository-maintainer",
-    finish_figma_pages: "design-maintainer",
-    finish_asset_performance: "performance-maintainer",
-  }[owner] ?? (owner ? `task-owner:${owner}` : "unallocated");
+  return (
+    {
+      root: "repository-maintainer",
+      MainAgent: "repository-maintainer",
+      finish_figma_pages: "design-maintainer",
+      finish_asset_performance: "performance-maintainer",
+    }[owner] ?? (owner ? `task-owner:${owner}` : "unallocated")
+  );
 }
 
 export function normalizeTask(task, featureIds = []) {
   const normalized = {
     ...task,
-    branch: task.branch === "UNASSIGNED" ? "unallocated" : pathWithForwardSlashes(task.branch),
+    branch:
+      task.branch === "UNASSIGNED"
+        ? "unallocated"
+        : pathWithForwardSlashes(task.branch),
     worktree:
       task.worktree === "UNASSIGNED"
         ? "unallocated"
         : pathWithForwardSlashes(task.worktree),
     dependencies: Array.isArray(task.dependencies) ? task.dependencies : [],
     evidence: Array.isArray(task.evidence) ? task.evidence : [],
-    requirementRefs: Array.isArray(task.requirementRefs) && task.requirementRefs.length
-      ? task.requirementRefs
-      : [`ledger:${task.id}`],
+    requirementRefs:
+      Array.isArray(task.requirementRefs) && task.requirementRefs.length
+        ? task.requirementRefs
+        : [`ledger:${task.id}`],
     featureIds: Array.isArray(task.featureIds) ? task.featureIds : featureIds,
-    priority: HIGH_PRIORITY.has(task.id) ? "P1" : task.priority || defaultPriority(task),
+    priority: HIGH_PRIORITY.has(task.id)
+      ? "P1"
+      : task.priority || defaultPriority(task),
     priorityRationale:
       task.priorityRationale ||
       (HIGH_PRIORITY.has(task.id)
@@ -82,7 +92,10 @@ export function normalizeTask(task, featureIds = []) {
     nextAction: defaultNextAction(task),
     lastVerified: task.lastVerified || task.updated,
     ownerRole:
-      task.ownerRole && !["MainAgent", "finish_figma_pages", "finish_asset_performance"].includes(task.ownerRole)
+      task.ownerRole &&
+      !["MainAgent", "finish_figma_pages", "finish_asset_performance"].includes(
+        task.ownerRole,
+      )
         ? task.ownerRole
         : ownerRoleFor(task.owner),
   };
@@ -100,12 +113,17 @@ export function normalizeLedger(tasks, registry = []) {
       featureMap.set(taskId, ids);
     }
   }
-  return tasks.map((task) => normalizeTask(task, featureMap.get(task.id) ?? []));
+  return tasks.map((task) =>
+    normalizeTask(task, featureMap.get(task.id) ?? []),
+  );
 }
 
 export function writeNormalizedLedger(repoRoot = process.cwd()) {
   const ledgerPath = path.join(repoRoot, "docs/governance/task-ledger.json");
-  const registryPath = path.join(repoRoot, "docs/features/features.registry.json");
+  const registryPath = path.join(
+    repoRoot,
+    "docs/features/features.registry.json",
+  );
   const tasks = JSON.parse(fs.readFileSync(ledgerPath, "utf8"));
   const registry = JSON.parse(fs.readFileSync(registryPath, "utf8"));
   const normalized = normalizeLedger(tasks, registry);
