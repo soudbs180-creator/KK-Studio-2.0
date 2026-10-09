@@ -42,11 +42,11 @@
 - 图片调用：Codex 内置图片生成返回 PNG，并实际回写当前画布；图片卡片显示 `图片模型未报告`，来源显示 `Codex 内置生图`，没有把 `Codex` 冒充为图片模型名。
 - 画布操作：通过 `canvas_apply_ops` 新增文本节点，内容为 `Codex 画布操作验证`；随后再次通过 Codex 只读读取当前画布并确认该节点存在。
 - 账号与模型发现：本机 Agent 返回六个可用 Codex 模型，包含 GPT-6-Astra、GPT-6-Sol、GPT-6-Luna、GPT-5.6-Sol、GPT-5.6-Terra、GPT-5.6-Luna。
-- 发现并保留的问题：不显式选择模型时，KK 会沿用本机旧配置 `gpt-6.1-sol`，ChatGPT 账号返回 400 `model is not supported`；因此默认路径当前不能算通过，需在后续修复中按 Agent 可用模型列表选择/回退安全默认值。
+- 首次联调发现的问题已修复并复验：不显式选择模型时，KK 原先会沿用本机旧配置 `gpt-6.1-sol` 并返回 400；现在发送前会按 Agent `/models` 列表校验，实测自动回退到 `gpt-6-astra`，默认文本调用成功。无效的项目图片模型也不会再传给 Codex 推理接口。
 
 ## 未验证和范围
 
 - 未使用真实方舟 API key，未做真实出图/聊天联调；外部结果保持 `NOT VERIFIED`。
 - 未实现网页 headless 登录、自动切号、绕过 CAPTCHA 或反爬；未接 sub2api 外部网关。
 - SSE 当前为网关完成后的单帧 buffered SSE，不代表供应商 token 级流式传输。
-- 本次使用本机已登录 Codex 账号完成了真实 KK 联调；DPAPI SecretProtector、远端 ruleset、生产发布以及默认模型修复仍未验证。
+- 本次使用本机已登录 Codex 账号完成了真实 KK 联调；DPAPI SecretProtector、远端 ruleset 和生产发布仍未验证。运行时仍提示 bundled Codex `0.155.1` 与本机 `0.162.0` 版本不一致。

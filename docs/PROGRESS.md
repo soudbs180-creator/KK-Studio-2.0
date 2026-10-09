@@ -881,4 +881,4 @@ TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，�
 
 - 本地已登录 Codex 账号经 KK 浏览器工作区真实验证：文本调用成功、Codex 内置图片生成成功并回写画布、`canvas_apply_ops` 新增文本节点成功，随后由 Codex 只读读取并确认节点存在。
 - 图片卡片按要求显示 `图片模型未报告` 与 `来源：Codex 内置生图`，没有把 Codex 名称误当成图片模型名。
-- 发现默认模型遗留问题：不显式选模型时沿用 `gpt-6.1-sol`，ChatGPT 账号返回 400；显式选择 `gpt-6-astra` 可用。详见 [kk 模型能力验证](changes/2026-10-10-kk-model-capability/verification.md)。
+- 首次联调发现的默认模型问题已修复并复验：旧缓存 `gpt-6.1-sol` 会按 Agent `/models` 列表回退到 `gpt-6-astra`，不显式选模型的 KK 文本调用已成功；项目图片模型也不会传给 Codex 推理接口。详见 [kk 模型能力验证](changes/2026-10-10-kk-model-capability/verification.md)。
