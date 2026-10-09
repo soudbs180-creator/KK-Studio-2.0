@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-09 P0 evidence refs 修复
+
+三个 P0 TODO 的 evidence 已绑定到当前树中的登记验证与 FEAT-038/039 卡片；任务仍 TODO/NOT_VERIFIED，Hosted 门禁待本 PR 验证。
+
 ## 2026-10-09 P0 立项登记：push 守卫修复 / 画布千张性能 / 批量生成防护
 
 功能台账（`docs/plans/KK-Studio-功能台账与四向推进-2026-10-09.md`）P0 项正式登记。新增功能卡 FEAT-038（画布千张画面性能，PLANNED）与 FEAT-039（批量生成防护与资源回收，PLANNED）；账本新增 TASK-FIX-PUSH-GUARD-SPACES-001（push 守卫空格路径缺陷，09-25 审计 §2.1 确认未修）、TASK-PERF-CANVAS-1000-001（视口裁剪+节点memo+缩略图懒加载）、TASK-PROTECT-BATCH-GEN-001（提交节流+running上限+结果分批入画布），均为 TODO/P0。features:check 37 项 0 违规、validateLedger 117 项 0 issues，README/TASK_LEDGER 视图已重新生成。本包仅登记不实现；实现走后续独立 worktree + PR，验收须带千节点 fixture 与节流行为测试。[登记包验证](changes/2026-10-09-p0-registry/verification.md)。
