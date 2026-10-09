@@ -706,8 +706,9 @@ fn delete_conversation(state: State<AppState>, id: String) -> Result<bool, Strin
 
 // ========== 记忆管理命令（本地长期记忆，本机共享、仅存本地） ==========
 //
-// 共享契约（TASK-MEMORY-002）：所有产品（Codex 桌面/Web、豆包 Agent、
-// WorkBuddy）读写同一份共享文件 ~/.kk-memory/memory.json；绝不上云。
+// 共享契约（TASK-MEMORY-002）：兼容客户端约定同一份本机文件
+// ~/.kk-memory/memory.json；当前 KK Desktop 负责读写，Web 共享目录只读。
+// 豆包和 WorkBuddy 原生客户端尚未完成该契约的适配与真实联调；绝不上云。
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 struct MemoryRecord {

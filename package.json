@@ -51,7 +51,11 @@
     "version:check": "node scripts/platform-versions.mjs check",
     "version:bump": "node scripts/platform-versions.mjs bump",
     "git:guards": "node scripts/install-git-guards.mjs",
-    "delivery:check": "node scripts/check-delivery.mjs"
+    "delivery:check": "node scripts/check-delivery.mjs",
+    "governance:normalize": "node scripts/governance/normalize-ledger.mjs --write",
+    "workspace:inventory": "node scripts/governance/workspace-inventory.mjs --write",
+    "worktree:reclaim": "node scripts/governance/worktree-reclaim.mjs",
+    "worktree:check": "node scripts/governance/worktree-policy.mjs --check-create"
   },
   "engines": {
     "node": ">=24"

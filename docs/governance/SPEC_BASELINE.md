@@ -1,42 +1,44 @@
-# Specification baseline
+# 规范基线
 
-Updated: 2026-09-23 (Design System 1.3 and TASK-RULES-004 rule audit).
-Current policy reconciliation: 2026-09-20, TASK-GOV-002. Read root AI_RULES.md and engineering/SDLC, PROMPTING, BRANCH-POLICY, REVIEW, AI-EVALS alongside AGENTS. Tool-specific entrypoints route to these sources.
+更新：2026-10-09。本文是现行规范的入口，不复制各模块的完整规则。冲突路由和领域事实归属见 [`AUTHORITY_MAP.md`](AUTHORITY_MAP.md)。
 
-These are pointers to the project's existing specifications. The project-level outcome and acceptance matrix lives in [PROJECT_GOALS.md](PROJECT_GOALS.md); this index avoids creating a second copy of UI or storage rules.
+## 规则解释顺序
 
-## Authority and conflict resolution
+规则冲突按固定顺序解释：用户意图 → [`AGENTS.md`](../../AGENTS.md) → [`AI_RULES.md`](../../AI_RULES.md) → [`PROMPTING.md`](../engineering/PROMPTING.md) → 本基线 → 当前源码/测试/运行证据 → 架构、数据和 UI 契约 → 带日期的 change package → 功能 registry。这里的“当前源码/证据”描述实际行为；它不自动批准与契约相矛盾的行为。功能 registry 只描述能力成熟度，不能覆盖任务账本或任何契约。
 
-Current code/runtime/test output proves what the implementation does; it does not override an approved specification. Compare source date, scope, user intent and acceptance evidence before deciding whether implementation or specification drifted. An unresolved conflict remains CONFLICT rather than a fabricated behavior decision.
+无法消解的差异保留 `CONFLICT`；没有直接证据写 `UNKNOWN`；推断必须标为 `INFERENCE`。旧验证记录的 PASS 只对其记录的提交、运行模式和范围有效。
 
-1. Current user intent and `AGENTS.md` for applicable operating constraints; nested rules apply within their declared module.
-2. `docs/DESIGN-SYSTEM.md` owns colors, type tiers and basic components (user Ardot `728457371665311 / 0:1`, 2026-09-22 PDF, audited corrections). Existing Figma `0nU0A7pq6eyjwfwm1TtWkO` nodes `404:28667`, `410:67357`, `410:59708` retain page-layout/asset authority; historical palettes and `1:2` cannot override newer sources.
-3. Current source, tests and actual runtime evidence for implemented reality; historical verification covers only its recorded source and scope.
-4. `docs/architecture/ARCHITECTURE.md`, `DATA-STORAGE.md`, and `GENERATION-PLATFORM.md` for module and data boundaries.
-5. `docs/UI_INDEX.md` is the single UI entry: `UI_RULES.md` (parts/interaction rules), `UI_ARCHETYPES.md` (page types), `DESIGN_TOKENS.md` (values), `DESIGN-SYSTEM.md` (color and basic components), `UI_SPEC.md` (runtime and verification), `FRONTEND-SPEC.md` (engineering constraints). Historical UI records live in `docs/archive/ui-history/` and are read-only.
-6. A dated `docs/changes/<date>-<task>/spec.md` for task-specific acceptance criteria, with its `verification.md` as the evidence record.
-7. `docs/features/features.registry.json` is the machine-readable authority for how real each product feature is (REAL/PARTIAL/PROTOTYPE/PLANNED); `docs/features/feat-*.md` cards are the human entry, `docs/features/README.md` is a generated board, and `docs/features/BACKEND-ROADMAP.md` orders demo-to-backend work. Feature status is orthogonal to task status and never overrides items 1-6.
+## 当前规范入口
 
-## Non-negotiable contracts
+| 主题 | 唯一入口 | 约束 |
+| --- | --- | --- |
+| 工程流程与分支 | [`docs/engineering/SDLC.md`](../engineering/SDLC.md)、`BRANCH-POLICY.md`、`REVIEW.md`、`AI-EVALS.md` | 需求、证据、审查和交付顺序 |
+| 架构与模块 | [`docs/architecture/ARCHITECTURE.md`](../architecture/ARCHITECTURE.md)、[`DATA-STORAGE.md`](../architecture/DATA-STORAGE.md)、`GENERATION-PLATFORM.md` | 模块边界、数据根、凭据和生成状态 |
+| UI | [`docs/UI_INDEX.md`](../UI_INDEX.md) | 由索引路由到 `UI_RULES.md`、`UI_ARCHETYPES.md`、`DESIGN_TOKENS.md`、`DESIGN-SYSTEM.md`、`UI_SPEC.md`；历史 UI 文件只作证据 |
+| 记忆 | [`docs/MEMORY-CONTRACT.md`](../MEMORY-CONTRACT.md) 与 [`docs/MEMORY-GOVERNANCE.md`](../MEMORY-GOVERNANCE.md) | 共享文件、注入、隐私、失败保护和同步门禁 |
+| 产品目标 | [`PROJECT_GOALS.md`](PROJECT_GOALS.md) | 用户路径和项目级验收矩阵 |
+| 功能能力 | [`docs/features/features.registry.json`](../features/features.registry.json) 与 `feat-*.md` | REAL/PARTIAL/PROTOTYPE/PLANNED；README 为生成文件 |
+| 任务状态 | [`task-ledger.json`](task-ledger.json) | 任务、负责人、依赖、证据；TASK_LEDGER.md 为生成文件 |
 
-- Secrets remain in the OS credential vault or request memory; metadata and snapshots contain only opaque references.
-- A failed read, validation, write, or asset lookup cannot silently become an empty project or a successful generation.
-- `Prototype`, `Mock`, `UI Only`, and `NOT VERIFIED` remain visible whenever the backing service or evidence is absent.
-- Desktop, Web, and Mobile capabilities are explicit; a browser test of a shared 390px layout does not prove a native mobile application.
-- UI controls must have real behavior or a visible disabled reason and must preserve loading, error, cancellation, offline, focus, Escape, and stale-async protections where applicable.
-- Production claims require the relevant source build, runtime mode/entry, route/import chain, and same-state browser or desktop evidence.
-- A feature card marked REAL requires that same-form runtime evidence and at least one DONE/PASS ledger task and explicit platforms/runtimeEvidence records; PARTIAL/PROTOTYPE/PLANNED features must link an open ledger task, and every card must reference code/test paths that actually exist. Turning a local-demo seam into a real backend follows the waves in `docs/features/BACKEND-ROADMAP.md`; demo and real results must never be presented as the same state.
+## 不可降低的契约
 
-## Executable enforcement
+- 密钥、OAuth token 和代理凭据只进入系统凭据库或请求内存；不得写入 localStorage、项目包、URL、日志、记忆文件或导出包。
+- 读取、校验、写入或素材查找失败不能静默变成空项目或成功生成；未知受理、取消、迟到结果和冲突必须保留可区分状态。
+- `Prototype`、`Mock`、`UI Only` 和 `NOT VERIFIED` 在缺少服务或证据时必须继续可见。Web 窄屏证据不能替代原生 Mobile 验收；Web 证据也不能替代 Tauri release 验收。
+- 可见控件必须有真实行为或禁用原因；异步路径覆盖 loading、success、error、cancel、offline、focus、Escape 与过期响应边界。
+- 生产能力声明必须能回到当前源码、构建入口、运行模式、route/import 链和同状态运行证据。静态对比、旧截图和构建通过不单独证明 REAL。
+- FEAT-020 的共享记忆路径是 `~/.kk-memory/memory.json`（Windows 为 `%USERPROFILE%\\.kk-memory\\memory.json`）。豆包、WorkBuddy 原生客户端在有适配器和真实联调前不得标为共享消费者。
 
-- TypeScript strict checking: `npm run typecheck`.
-- ESLint recommended JS/TypeScript rules and ledger/import-boundary checks: `npm run lint`.
-- Feature registry/card/board consistency: `npm run features:check` (regenerate with `npm run features:write`); already chained into `npm run lint`.
-- Ledger consistency: `npm run governance:check` (regenerate `TASK_LEDGER.md` with `npm run governance:write`).
-- Current Markdown relative file links: `npm run markdown:check` (included in `npm run lint`; historical snapshots and external URLs require separate review).
-- Unit and browser regression: `npm run test` and `npm run test:ui`.
-- UI token/component guard: `npm run ui:check`.
-- Formatting: `npm run format:check`.
-- Build: `npm run build`.
-- Desktop compile: `npm run client:check`.
-- CI runs the checks that do not require provider credentials or a live ComfyUI installation; those external capabilities remain separate acceptance gates.
+## 可执行检查与记忆同步门禁
+
+日常检查包括 `npm run typecheck`、`npm run test`、`npm run ui:check`、`npm run format:check`、`npm run build`、`npm run client:check`、`npm run features:check`、`npm run governance:check` 和 `npm run markdown:check`；交付按项目脚本运行 `npm run verify`。
+
+当 `MEMORY-CONTRACT.md` 相对 git base 发生变化，必须在同一 diff 中出现：
+
+1. `docs/architecture/DATA-STORAGE.md`；
+2. `docs/features/feat-020-memory.md` 和 `docs/features/features.registry.json`；
+3. 与记忆契约对应的实现（`src/features/memory/` 或 `src-tauri/src/`）；
+4. 对应单测/浏览器或 Tauri 测试；
+5. `docs/MEMORY-GOVERNANCE.md`（必要时同步 `scripts/governance/check-policy-sync.mjs`）。
+
+执行 `node scripts/governance/check-policy-sync.mjs --base <full-base-sha> [--head <full-head-sha>]`。它只验证同步文件集合与 base/head 关系；测试必须验证用户契约、故障、恢复和跨端边界，不能写只复述脚本实现的假测试。

@@ -28,14 +28,23 @@
     "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-RETRY-004",
     "status": "DONE",
     "verification": "source105已独立源码PASS，入口12/12且实际ENOENT/ETIMEDOUT故障仍失败并分类；原断言和10s限制保持。完整verify出口0但9 flaky原件保留；默认1423补充447/447零重试通过。旧Hosted原因UNKNOWN继续Recovery003；最终docs/当前Hosted/主线另验。",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-WINDOWS-ENTRY-DIAG-002"
+    ],
+    "featureIds": [],
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-09",
+    "ownerRole": "repository-maintainer"
   },
   {
     "dependencies": [
       "TASK-LAUNCH-001"
     ],
     "owner": "root",
-    "priority": "P2",
+    "priority": "P1",
     "updated": "2026-10-09",
     "affectedModules": [
       "tests/unit/desktopRelease.test.ts",
@@ -59,7 +68,16 @@
     "worktree": "unallocated",
     "status": "TODO",
     "verification": "实际失败根因UNKNOWN；独立本机未复现，P2跟进不能代填关闭。",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "NOT_VERIFIED",
+    "requirementRefs": [
+      "ledger:TASK-WINDOWS-ENTRY-RECOVERY-003"
+    ],
+    "featureIds": [],
+    "priorityRationale": "当前治理或验证阻断项",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-10-09",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-IMAGE-RETRY-004",
@@ -89,7 +107,16 @@
     ],
     "verification": "本地验收：43fc完整verify root804/812、Agent172/174（原skip8/2）、447browser/447attempts零实际retry/flaky与严格四插件development PASS；全图片14零retry。source独立审查产品无P0/P1、41相关unit及门禁PASS，仅IRV-001文档矛盾由本提交修正，最终精确head补审与Hosted/main为推广门禁待实际回执。原主线失败及本机未复现PASS原件完整保留。",
     "verificationResult": "PASS",
-    "updated": "2026-10-09"
+    "updated": "2026-10-09",
+    "requirementRefs": [
+      "ledger:TASK-IMAGE-RETRY-004"
+    ],
+    "featureIds": [],
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-09",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-DESKTOP-FLUSH-001",
@@ -125,7 +152,18 @@
     ],
     "verification": "本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。",
     "verificationResult": "PASS",
-    "updated": "2026-10-09"
+    "updated": "2026-10-09",
+    "requirementRefs": [
+      "ledger:TASK-DESKTOP-FLUSH-001"
+    ],
+    "featureIds": [
+      "FEAT-013"
+    ],
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-09",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-PLUGIN-MARKDOWN-001",
@@ -161,7 +199,18 @@
     ],
     "verification": "本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。",
     "verificationResult": "PASS",
-    "updated": "2026-10-09"
+    "updated": "2026-10-09",
+    "requirementRefs": [
+      "ledger:TASK-PLUGIN-MARKDOWN-001"
+    ],
+    "featureIds": [
+      "FEAT-013"
+    ],
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-09",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-PLUGIN-RECOVERY-001",
@@ -196,7 +245,18 @@
     ],
     "verification": "本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。",
     "verificationResult": "PASS",
-    "updated": "2026-10-09"
+    "updated": "2026-10-09",
+    "requirementRefs": [
+      "ledger:TASK-PLUGIN-RECOVERY-001"
+    ],
+    "featureIds": [
+      "FEAT-013"
+    ],
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-09",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-IMAGE-EDIT-001",
@@ -241,7 +301,19 @@
     "verification": "最新main1d组合27b/eaa本地实现scope完成：完整verify785Node/172Agent（原skip8/2）、445browser445attempts零retry/flaky、102Rust/fmt/clientcheck/fresh Agent EXE；native Mask外0/重启/包/undo/临时凭据清理，UI13/TaskHost11/模型/titlebar/首屏和生产Web3宽度通过；MASK-INTEGRATION-001定位歧义修复且当前独立关闭。104上游task对象保留，当前源码与运行审查通过并保留后续项。开发插件另归TASK-PLUGIN-DEV-001，开发其余UI只在留证收起遮罩后局部验收；真实效果/手机/用户验收归VERIFY-002。原失败日志与各未验边界详见本task当前verification/review；最终docs/Hosted/普通合并/main CI另按实际回读。",
     "verificationResult": "PASS",
     "updated": "2026-10-09",
-    "verificationLimits": "TASK-PLUGIN-DEV-001仍TODO/FAIL，未修；strict-original development FAIL，仅Escape后其他UI局部PASS。primary-main两次开发冷启动NOT VERIFIED。旧native模型driver FAIL后实际修复及独立关闭，原失败和现通过收据不覆盖；最终doc/Hosted/merge/main CI在本地完成scope之后单独实际回读。VERIFY-002真实Provider/手机/用户验收TODO/NOT_VERIFIED。"
+    "verificationLimits": "TASK-PLUGIN-DEV-001仍TODO/FAIL，未修；strict-original development FAIL，仅Escape后其他UI局部PASS。primary-main两次开发冷启动NOT VERIFIED。旧native模型driver FAIL后实际修复及独立关闭，原失败和现通过收据不覆盖；最终doc/Hosted/merge/main CI在本地完成scope之后单独实际回读。VERIFY-002真实Provider/手机/用户验收TODO/NOT_VERIFIED。",
+    "requirementRefs": [
+      "ledger:TASK-IMAGE-EDIT-001"
+    ],
+    "featureIds": [
+      "FEAT-035"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-09",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-IMAGE-EDIT-VERIFY-002",
@@ -257,8 +329,8 @@
       "TASK-IMAGE-EDIT-001"
     ],
     "owner": "root",
-    "branch": "UNASSIGNED",
-    "worktree": "UNASSIGNED",
+    "branch": "unallocated",
+    "worktree": "unallocated",
     "affectedModules": [
       "src/features/image-edit",
       "src/features/creation",
@@ -272,7 +344,19 @@
     ],
     "verification": "本轮未使用真实付费连接、物理手机或用户视觉验收；比例异常已自动拒绝，任意语义几何位移仍需人工确认。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-08"
+    "updated": "2026-10-08",
+    "requirementRefs": [
+      "ledger:TASK-IMAGE-EDIT-VERIFY-002"
+    ],
+    "featureIds": [
+      "FEAT-035"
+    ],
+    "priority": "P1",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "未完成",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-10-08",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-013",
@@ -306,7 +390,19 @@
     ],
     "verification": "最新2cb主线组合86e：AC1–3 PASS、7条故障RED→GREEN、verify733Node/172Agent（原skip8/2）、431browser431attempts零flaky/retry/skip、97Rust/fmt/clientcheck/fresh带Agent release；真实titlebar drag/min/max/restore/close0，UI13/T511/模型/首屏及Web两态3宽度PASS，独立关闭001/002。103上游task保留；同EXE2e69...1a5f，环境not-recorded。最终doc/Hosted/PR40合并/mainCI须独立回读，不冒充签名安装/真实Provider/Mobile能力。",
     "verificationResult": "PASS",
-    "updated": "2026-10-08"
+    "updated": "2026-10-08",
+    "requirementRefs": [
+      "ledger:TASK-UI-013"
+    ],
+    "featureIds": [
+      "FEAT-023"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-08",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-LAUNCH-001",
@@ -334,7 +430,19 @@
     ],
     "verification": "精确组合5ecf77b/basef922：AC1–5 PASS，verify726Node/172Agent（既有skip8/2）、428browser428attempts零flaky/实际retry/skip、97Rust/fmt/clientcheck/fresh带Agent release；原生UI13/TaskHost11/模型/首屏与三宽度Web PASS，独立复审PASS且102上游task完整保留。同EXE1a943...c76e；本地elevation/runtime not-recorded。最终doc head补审/Hosted与PR38普通main推广须独立回读，不代填历史失败或真实Provider/安装/线上能力。",
     "updated": "2026-10-08",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-LAUNCH-001"
+    ],
+    "featureIds": [
+      "FEAT-026"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-08",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-MODEL-001",
@@ -372,7 +480,19 @@
     ],
     "verification": "本地AC1–5 DONE：草稿/显示刷新受控RED后最小修正，32定向无retry、完整verify723/731root(8skip)、172/174Agent(2skip)、408/408browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行PASS；独立71ddb625技术补审PASS，MC-002/MC-003关闭、MC-001保持关闭，87/87及389源码/产物指纹2ebaab3d匹配。最终文档head补审和当前SHA PR/Hosted另绑；首轮405+1flaky唯一因果UNKNOWN，不改历史结果；功能卡仍为部分实现，非整个产品完成证明。",
     "verificationResult": "PASS",
-    "updated": "2026-10-08"
+    "updated": "2026-10-08",
+    "requirementRefs": [
+      "ledger:TASK-MODEL-001"
+    ],
+    "featureIds": [
+      "FEAT-003"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-08",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-PLUGIN-DEV-001",
@@ -404,7 +524,19 @@
     ],
     "verification": "本地产品验收：固定1421严格四插件编辑/离线正文/刷新恢复，804root与172Agent（既有skip8/2）、447browser零实际重试，Rust102/fmt/clientcheck/fresh Agent Tauri均通过。c8原生8步立即关闭、真实IO失败与重复关闭留窗/草稿/主备保护、重启恢复零错误；同EXE CSP、TaskHost11和上方动作13及最终标题栏通过。独立上下文已在c8关闭PLUGIN-REVIEW-001/002，完整原始失败保留并注明首轮标题栏拖动原因未知。PR/托管/主线推广按独立交付回执验证。",
     "verificationResult": "PASS",
-    "updated": "2026-10-09"
+    "updated": "2026-10-09",
+    "requirementRefs": [
+      "ledger:TASK-PLUGIN-DEV-001"
+    ],
+    "featureIds": [
+      "FEAT-013"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-09",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T0",
@@ -434,7 +566,17 @@
     ],
     "verification": "本地main整合 PASS：从609f524快进86c40d0并合入14dbe11；原checkout dirty/index保留；main执行npm ci/verify、Rust检查、Tauri release和隔离桌面运行。",
     "updated": "2026-09-18",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:T0"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-18",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-GOV-001",
@@ -470,7 +612,17 @@
     ],
     "verification": "治理本地验收 PASS：干净提交 npm ci/verify，115 Node、139 Edge、UI116/0、lint/typecheck/format/build；Rust36/fmt/check/release build；1421与Tauri隔离运行检查通过。远端整合另见 EXT-GIT/T0，产品验收另见后续任务。",
     "updated": "2026-09-17",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-GOV-001"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-17",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-PROV-001",
@@ -505,7 +657,20 @@
     ],
     "verification": "源修复、本地main合并和桌面生产复验 PASS：118 unit、151 browser、UI116/0；主线14dbe11加载CBwa_Zj7 bundle并完成隔离Provider提交。",
     "updated": "2026-09-18",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-PROV-001"
+    ],
+    "featureIds": [
+      "FEAT-002",
+      "FEAT-022"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-18",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T1",
@@ -533,7 +698,17 @@
     ],
     "verification": "2026-09-16 原生及Web验收记录，仅该记录范围；不证明断电、未提交编辑或完整产品就绪",
     "updated": "2026-09-17",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:T1"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-17",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T2",
@@ -561,7 +736,19 @@
     ],
     "verification": "2026-09-16 原生及Web验收记录，仅该记录范围；不证明断电、未提交编辑或完整产品就绪",
     "updated": "2026-09-17",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:T2"
+    ],
+    "featureIds": [
+      "FEAT-001"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-17",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T3a",
@@ -595,7 +782,20 @@
     ],
     "verification": "main@c855881 的 Node 24/Web/Rust/Tauri release 验证通过；隔离数据根目录与三个全新 WebView profile 验证原生素材 SHA-256、快照引用恢复和篡改后读取保护。T3b 项目包仍未完成。",
     "updated": "2026-09-18",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:T3a"
+    ],
+    "featureIds": [
+      "FEAT-014",
+      "FEAT-015"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-18",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T3b",
@@ -634,7 +834,19 @@
     ],
     "verification": "源码 main@379b302：129 unit、156 browser、UI117/0、50 Rust、fmt/check/release 通过；全新 WebView/独立 data root 恢复 2 项目/3 节点/图/消息/任务/原件；7 个事务故障点保留源文件。Web 文件适配归 T9，Figma 新入口为工程补充。",
     "updated": "2026-09-18",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:T3b"
+    ],
+    "featureIds": [
+      "FEAT-015"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-18",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T4",
@@ -669,7 +881,20 @@
     ],
     "verification": "本地main源码2de3c68：146 unit/164 browser/UI119/0全量verify通过；Rust51/fmt/check/release通过；1421/1423/Tauri三入口与全新WebView原件恢复通过。动画测试改为真实CSS时间点采样后全量无重试通过。真实付费Provider仍属EXT-PROVIDER。",
     "updated": "2026-09-18",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:T4"
+    ],
+    "featureIds": [
+      "FEAT-009",
+      "FEAT-016"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-18",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T5",
@@ -706,7 +931,22 @@
     ],
     "verification": "04260ad精确独立补审PASS关闭ENV004；26策略及额外9边界回归通过；Hosted37770000879/37769995909全部SUCCESS，native11组/5CDP启动与策略清理通过。PR37普通squash合入main78cea37，完整tree一致；合并后main37773335548 verify/deploy-linux SUCCESS。Hosted实际checkout source7849310为base1af+candidate042合成merge，完整tree等同042/78，9/9源码hash核验；原收据身份不改写。PROV005/006继续TODO。",
     "updated": "2026-10-08",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:T5"
+    ],
+    "featureIds": [
+      "FEAT-002",
+      "FEAT-008",
+      "FEAT-016",
+      "FEAT-024"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-08",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T6",
@@ -736,7 +976,20 @@
     ],
     "verification": "只读审计确认：localComfyUiAdapter.ts 具备 /prompt、/history、/view、/interrupt HTTP 原语，但 App/imageTaskCommand 尚未接入，local_only 明确拒绝；Tauri ComfyUI 命令尚无前端 invoke 桥，缺少 Desktop-only workflow/template 持久化、任务 journal、逐任务取消、结果归档与重启恢复。下一步需先接一条显式 workflow 的最小链，不下载模型；EXT-COMFY 仍等待用户选定服务、目录、workflow 和模型。",
     "updated": "2026-09-17",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PARTIAL",
+    "requirementRefs": [
+      "ledger:T6"
+    ],
+    "featureIds": [
+      "FEAT-004",
+      "FEAT-005"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-09-17",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "EXT-PROVIDER",
@@ -763,7 +1016,22 @@
     "verification": "NOT VERIFIED",
     "updated": "2026-09-17",
     "blocker": "缺少本轮授权可用的Provider凭据、服务与模型；本地mock不能替代",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "NOT_VERIFIED",
+    "requirementRefs": [
+      "ledger:EXT-PROVIDER"
+    ],
+    "featureIds": [
+      "FEAT-002",
+      "FEAT-006",
+      "FEAT-007",
+      "FEAT-008"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "未完成",
+    "nextAction": "复核阻塞条件，解除后重新验证并保留原失败证据",
+    "lastVerified": "2026-09-17",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "EXT-COMFY",
@@ -789,7 +1057,19 @@
     "verification": "NOT VERIFIED",
     "updated": "2026-09-17",
     "blocker": "尚无已确认的用户选择ComfyUI目录、运行服务、workflow与模型",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "NOT_VERIFIED",
+    "requirementRefs": [
+      "ledger:EXT-COMFY"
+    ],
+    "featureIds": [
+      "FEAT-004"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "未完成",
+    "nextAction": "复核阻塞条件，解除后重新验证并保留原失败证据",
+    "lastVerified": "2026-09-17",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T7",
@@ -824,7 +1104,19 @@
     ],
     "verification": "portable Desktop2.1.2 与 NSIS 本机隔离安装/启动/Agent/4279文件、重装、损坏修复、卸载再装项目保留通过；干净 Windows/真实断网/低版本回滚/签名及真实服务依赖仍未验收。",
     "updated": "2026-09-30",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PARTIAL",
+    "requirementRefs": [
+      "ledger:T7"
+    ],
+    "featureIds": [
+      "FEAT-026"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T8",
@@ -854,7 +1146,19 @@
     ],
     "verification": "NOT VERIFIED",
     "updated": "2026-09-17",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "NOT_VERIFIED",
+    "requirementRefs": [
+      "ledger:T8"
+    ],
+    "featureIds": [
+      "FEAT-024"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-09-17",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T9",
@@ -885,7 +1189,20 @@
     ],
     "verification": "NOT VERIFIED",
     "updated": "2026-09-17",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "NOT_VERIFIED",
+    "requirementRefs": [
+      "ledger:T9"
+    ],
+    "featureIds": [
+      "FEAT-015",
+      "FEAT-019"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-09-17",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T10-PREP",
@@ -921,7 +1238,17 @@
     ],
     "verification": "静态包整包 hash、指定离机包恢复与共享锁版本回滚已形成主线准备产物；PR #23 精确 head abe1e99 的 delivery、deploy-linux、verify 与独立复审均 PASS，并已合入 main@45fdc14，合并后 deploy-linux/verify 也 PASS。真实 VPS 离机备份/恢复演练未完成，部署配置、权限和资源限制需实际主机盘点。",
     "updated": "2026-09-28",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PARTIAL",
+    "requirementRefs": [
+      "ledger:T10-PREP"
+    ],
+    "featureIds": [],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-28",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T10",
@@ -951,7 +1278,22 @@
     "verification": "NOT VERIFIED",
     "updated": "2026-09-17",
     "blocker": "缺少本轮生产写入授权、正式/staging域名和DNS权限；先完成可审阅部署产物",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "NOT_VERIFIED",
+    "requirementRefs": [
+      "ledger:T10"
+    ],
+    "featureIds": [
+      "FEAT-017",
+      "FEAT-018",
+      "FEAT-019",
+      "FEAT-020"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "未完成",
+    "nextAction": "复核阻塞条件，解除后重新验证并保留原失败证据",
+    "lastVerified": "2026-09-17",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T11",
@@ -981,7 +1323,17 @@
     "verification": "NOT VERIFIED",
     "updated": "2026-09-17",
     "blocker": "需外部旧部署权限、切换授权与回滚窗口",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "NOT_VERIFIED",
+    "requirementRefs": [
+      "ledger:T11"
+    ],
+    "featureIds": [],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "未完成",
+    "nextAction": "复核阻塞条件，解除后重新验证并保留原失败证据",
+    "lastVerified": "2026-09-17",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "T12",
@@ -1010,7 +1362,19 @@
     ],
     "verification": "当前只有响应式 Web；用户已确定功能顺序和登录/本地数据目标，独立 runtime 与真机验收未实现。",
     "updated": "2026-09-28",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "NOT_VERIFIED",
+    "requirementRefs": [
+      "ledger:T12"
+    ],
+    "featureIds": [
+      "FEAT-028"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-09-28",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "UI-001",
@@ -1042,7 +1406,17 @@
     ],
     "verification": "Design System 1.1共享控件已建立；目录/Skill字段/筛选、图标按钮、设置局部覆盖继续迁移并取得双端证据。其余历史专项页面与来源例外继续按实际组件验收，保留PARTIAL。",
     "updated": "2026-09-22",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PARTIAL",
+    "requirementRefs": [
+      "ledger:UI-001"
+    ],
+    "featureIds": [],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-09-22",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "UI-002",
@@ -1073,7 +1447,17 @@
     ],
     "verification": "已选择性整合原root UI候选；最终verify150 Node/190浏览器/UI119/0、Rust60与dev/preview/桌面34页面矩阵均通过。",
     "updated": "2026-09-20",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:UI-002"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-20",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "UI-003",
@@ -1104,7 +1488,20 @@
     ],
     "verification": "交互和真实服务说明已在origin/main候选完成整合，定向浏览器回归通过；最终主线同步见TASK-UI-MAIN-001。",
     "updated": "2026-09-20",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PARTIAL",
+    "requirementRefs": [
+      "ledger:UI-003"
+    ],
+    "featureIds": [
+      "FEAT-016",
+      "FEAT-025"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-20",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "UI-004",
@@ -1141,7 +1538,22 @@
     ],
     "verification": "已取得当前项目库、Skills、ComfyUI目录与设置分区的Web/新版Tauri证据，包含长分类/浅色图标、16色主题矩阵、偏好Skill重启。缺失页面Frame与用户最终视觉验收仍未完成。",
     "updated": "2026-09-22",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PARTIAL",
+    "requirementRefs": [
+      "ledger:UI-004"
+    ],
+    "featureIds": [
+      "FEAT-001",
+      "FEAT-022",
+      "FEAT-023",
+      "FEAT-036"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-22",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "PERF-001",
@@ -1173,7 +1585,19 @@
     ],
     "verification": "本轮已完成有界分页/预览和原件校验；永久缩略图、大快照和单件大图瞬时内存/不可抢占IO仍未完成。",
     "updated": "2026-09-21",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PARTIAL",
+    "requirementRefs": [
+      "ledger:PERF-001"
+    ],
+    "featureIds": [
+      "FEAT-014"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-09-21",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "EXT-GIT",
@@ -1203,7 +1627,17 @@
       "docs/changes/2026-09-20-gpt-6-astra/branch-rules-audit.md",
       "docs/changes/2026-09-20-gpt-6-astra/verification.md",
       "docs/changes/2026-09-23-rules-audit-main/verification.md"
-    ]
+    ],
+    "requirementRefs": [
+      "ledger:EXT-GIT"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-23",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TEST-PROV-001",
@@ -1232,7 +1666,17 @@
     ],
     "verification": "12项浏览器回归和3项submission gate单元测试 PASS；主线verify及桌面运行证据已复验。",
     "verificationResult": "PASS",
-    "updated": "2026-09-18"
+    "updated": "2026-09-18",
+    "requirementRefs": [
+      "ledger:TEST-PROV-001"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-18",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-ASTRA-001",
@@ -1264,7 +1708,19 @@
     "branch": "codex/TASK-KK2-main-integration",
     "worktree": "C:/Users/Administrator/.codex/worktrees/task-astra-001/kk-studio-next",
     "verification": "迁移计划、规则审计、目录清理、本地验证和目标仓库 PR 同步均完成；Astra 应用功能本身仍按计划待实施。",
-    "updated": "2026-09-20"
+    "updated": "2026-09-20",
+    "requirementRefs": [
+      "ledger:TASK-ASTRA-001"
+    ],
+    "featureIds": [
+      "FEAT-027"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-20",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-KK2-MAIN-SYNC",
@@ -1300,7 +1756,17 @@
       "docs/changes/2026-09-20-gpt-6-astra/verification.md",
       "docs/changes/2026-09-20-gpt-6-astra/sync-manifest.md",
       "docs/changes/2026-09-20-gpt-6-astra/source-sync-audit.md"
-    ]
+    ],
+    "requirementRefs": [
+      "ledger:TASK-KK2-MAIN-SYNC"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-20",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-UNMERGED-001",
@@ -1334,7 +1800,17 @@
     ],
     "verification": "已选择性整合原root UI候选；最终verify150 Node/190浏览器/UI119/0、Rust60与dev/preview/桌面34页面矩阵均通过。",
     "updated": "2026-09-20",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-UI-UNMERGED-001"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-20",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-MAIN-001",
@@ -1369,7 +1845,17 @@
     ],
     "verification": "PR #3 已 squash 合并；双 CI 通过（npm verify、Rust fmt/60 tests、client check/build）；远端 main 与本地 main 均为 fb57529c；409项原工作逐项备份并归档，根目录工作树干净。UI-004 的独立设计来源缺口另行记录，不改变本任务已验证范围。",
     "verificationResult": "PASS",
-    "updated": "2026-09-20"
+    "updated": "2026-09-20",
+    "requirementRefs": [
+      "ledger:TASK-UI-MAIN-001"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-20",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-DISMISS-002",
@@ -1402,7 +1888,19 @@
     ],
     "verification": "最终完整verify通过：150 Node、191浏览器、0失败/重试；三运行模式专项通过；2.35MB重绘20倍CPU连续3次通过，完整原图字节断言保留。中途unknown用例重试已定位并修正异步审批等待。",
     "verificationResult": "PASS",
-    "updated": "2026-09-20"
+    "updated": "2026-09-20",
+    "requirementRefs": [
+      "ledger:TASK-UI-DISMISS-002"
+    ],
+    "featureIds": [
+      "FEAT-023"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-20",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-MAIN-CLOSE-002",
@@ -1436,7 +1934,17 @@
     ],
     "verification": "历史候选 bb96dad 的本地 verify 为 172 Node、197 browser、UI121/0，Rust61/61、fmt、client check 通过；三模式 runtime 证据源为 8369185。PR #8 最终 head dac81ec 是 PR #9 head da811283 的祖先；PR #9 当前候选 hosted verify/delivery 成功并 squash 合入 main@b45c5bc7，完整树回读一致。PR #8 因内容被吸收已关闭而未重复合并；旧分支和历史证据保留。",
     "verificationResult": "PASS",
-    "updated": "2026-09-23"
+    "updated": "2026-09-23",
+    "requirementRefs": [
+      "ledger:TASK-MAIN-CLOSE-002"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-23",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-CLOSE-003",
@@ -1469,7 +1977,17 @@
     ],
     "verification": "现行可取得Figma节点回读、快捷键边框修复、typecheck与整合三模式运行证据通过；Landing及若干缺失Frame不冒称完成。",
     "verificationResult": "PASS",
-    "updated": "2026-09-21"
+    "updated": "2026-09-21",
+    "requirementRefs": [
+      "ledger:TASK-UI-CLOSE-003"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-21",
+    "ownerRole": "design-maintainer"
   },
   {
     "id": "TASK-PERF-ASSETS-001",
@@ -1503,7 +2021,19 @@
     ],
     "verification": "元数据分页、按需缩略图、原件SHA与错身份/损坏重试、Rust分页与临时文件边界均通过；完整性能边界另由PERF-001跟踪。",
     "verificationResult": "PASS",
-    "updated": "2026-09-21"
+    "updated": "2026-09-21",
+    "requirementRefs": [
+      "ledger:TASK-PERF-ASSETS-001"
+    ],
+    "featureIds": [
+      "FEAT-014"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-21",
+    "ownerRole": "performance-maintainer"
   },
   {
     "id": "TASK-GOV-002",
@@ -1543,7 +2073,17 @@
     ],
     "verification": "PR #4、#7 已合入 main；当次 hosted delivery/verify、Rust fmt/test、client check、Tauri no-bundle build、治理35tasks/0、push9/9、delivery12/12、AI场景12/12、基线正反例2/2 均通过。先前 private 仓库的 ruleset API403 已由用户确认公开后解决；2026-09-23 三套 active ruleset 和 main 有效规则已回读，PR #9 当前 head 检查通过并合入 main。管理员仍可修改设置，模型实际读懂规则须另行演练；产品代码和旧证据不由本任务改写。",
     "verificationResult": "PASS",
-    "updated": "2026-09-23"
+    "updated": "2026-09-23",
+    "requirementRefs": [
+      "ledger:TASK-GOV-002"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-23",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-AUDIT-SEC-001",
@@ -1589,7 +2129,17 @@
     ],
     "verification": "历史安全 closeout 已随主线集成；当前完整 Web/Agent/Rust 回归再次通过。真实付费受理恢复仍归 T5/EXT-PROVIDER。",
     "verificationResult": "PASS",
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "requirementRefs": [
+      "ledger:TASK-AUDIT-SEC-001"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-CAP-001",
@@ -1627,7 +2177,23 @@
     ],
     "verification": "最终 npm run verify 通过：187 Node、193 production browser、UI 127/0、lint/typecheck/format/build；MCP/Catalog 定向 9/9；client:check 与 client:build -- --no-bundle 通过并生成 release exe。MiniMax 仅完成安装包静态审计，桌面控制 RPC 不可用，1421 开发态、Tauri 窗口交互和真实 ComfyUI 提交待后续验收。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-21"
+    "updated": "2026-09-21",
+    "requirementRefs": [
+      "ledger:TASK-CAP-001"
+    ],
+    "featureIds": [
+      "FEAT-005",
+      "FEAT-010",
+      "FEAT-011",
+      "FEAT-012",
+      "FEAT-013"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-21",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-MINIMAX-001",
@@ -1665,7 +2231,21 @@
     ],
     "verification": "2026-09-21 历史 MiniMax 只读审计和 KK Web Skill/Connector/MCP 验证仍按原证据解释；当前修复 MCP 配置超过 50 项会造成下次读取整表失败的问题。新工作树补齐构建前置后本地 371 Node、300 Web 浏览器回归及静态检查通过。完整生成、付费提交、桌面 Tauri release、真实第三方连接器安装、现代协议及独立复审仍未验证，保持 PARTIAL。旧分支 codex/feat/minimax-deep-replica-root 与 D:/kk-studio-next 仅为历史证据位置。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-24"
+    "updated": "2026-09-24",
+    "requirementRefs": [
+      "ledger:TASK-MINIMAX-001"
+    ],
+    "featureIds": [
+      "FEAT-006",
+      "FEAT-012",
+      "FEAT-013"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-24",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-MCP-PROTO-001",
@@ -1703,7 +2283,19 @@
     ],
     "verification": "本地 modern/legacy 协商、发现、列表/调用、错误分类、认证错误不回退、超时/取消、2 MB 响应、500 工具、32 页/重复游标、凭据边界已通过 25 项 MCP 单测和浏览器握手回归；真实第三方服务器及 Desktop 实机验收仍待外部环境。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-03"
+    "updated": "2026-10-03",
+    "requirementRefs": [
+      "ledger:TASK-MCP-PROTO-001"
+    ],
+    "featureIds": [
+      "FEAT-012"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-10-03",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-MCP-REGISTRY-001",
@@ -1736,7 +2328,19 @@
     ],
     "verification": "MCP 多实例写入在支持 Web Locks 时使用统一 exclusive lock 包住重读、冲突检查和写入并做写后校验；不支持时拒绝写入并显示只读原因，原始配置仍可查看和导出；定向单测覆盖两条默认存储路径及并发、stale add/remove、删除/更新冲突、容量和凭据边界。",
     "verificationResult": "PASS",
-    "updated": "2026-10-03"
+    "updated": "2026-10-03",
+    "requirementRefs": [
+      "ledger:TASK-MCP-REGISTRY-001"
+    ],
+    "featureIds": [
+      "FEAT-012"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-03",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-MCP-REGISTRY-002",
@@ -1773,7 +2377,19 @@
     ],
     "verification": "51+ 合法旧配置保持原始字节，可导出并显式恢复；损坏 JSON 暴露 hasCorruption、停止覆盖且设置页提供导出入口；超限与损坏单测和浏览器回归通过，正常写入仍限制 50 项。",
     "verificationResult": "PASS",
-    "updated": "2026-10-03"
+    "updated": "2026-10-03",
+    "requirementRefs": [
+      "ledger:TASK-MCP-REGISTRY-002"
+    ],
+    "featureIds": [
+      "FEAT-012"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-03",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "FEATURE-SYSTEM",
@@ -1807,7 +2423,17 @@
     ],
     "verification": "28 张功能卡片与 registry 一致；features:check 零违规并接入 lint；看板由 registry 生成；规则入口与账本任务已更新；typecheck、212 项单测与 200 项浏览器回归通过。",
     "verificationResult": "PASS",
-    "updated": "2026-09-21"
+    "updated": "2026-09-21",
+    "requirementRefs": [
+      "ledger:FEATURE-SYSTEM"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-21",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "BACKEND-IMAGE-PARAMS",
@@ -1843,7 +2469,19 @@
     ],
     "verification": "代码透传与旧212/200/65测试记录保留；勘误：缺 Desktop 参数实机 HTTP及同状态证据，不能 DONE/REAL；供应商尺寸枚举和像素限制需按模型适配。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-22"
+    "updated": "2026-09-22",
+    "requirementRefs": [
+      "ledger:BACKEND-IMAGE-PARAMS"
+    ],
+    "featureIds": [
+      "FEAT-003"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-22",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "BACKEND-TEXT-NODE",
@@ -1876,7 +2514,20 @@
     ],
     "verification": "Web development/preview 与隔离 Tauri release HTTP fixture 已覆盖流式、取消/unknown、离线、编辑保存、重载和原生并发。2026-10-08 T5 十组原生实测补完异常进程退出/同身份恢复、草稿 unknown 与取消后容量释放；真实 Provider 和结构化 health 统一仍由 EXT-PROVIDER/TASK-PROV-006 验收，整体能力保持 PARTIAL。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-10-08"
+    "updated": "2026-10-08",
+    "requirementRefs": [
+      "ledger:BACKEND-TEXT-NODE"
+    ],
+    "featureIds": [
+      "FEAT-008",
+      "FEAT-025"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-10-08",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "BACKEND-MEDIA-001",
@@ -1909,7 +2560,22 @@
     ],
     "verification": "NOT VERIFIED：代码链路可先于凭据建设；真实出片/出音频验收需要供应商 Key 与额度（EXT-PROVIDER）。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-21"
+    "updated": "2026-09-21",
+    "requirementRefs": [
+      "ledger:BACKEND-MEDIA-001"
+    ],
+    "featureIds": [
+      "FEAT-006",
+      "FEAT-007",
+      "FEAT-025",
+      "FEAT-031"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-09-21",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "BACKEND-MCP-AUTO",
@@ -1938,7 +2604,19 @@
     ],
     "verification": "NOT VERIFIED：手动客户端真实可用，自动调用仍为 Prototype。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-21"
+    "updated": "2026-09-21",
+    "requirementRefs": [
+      "ledger:BACKEND-MCP-AUTO"
+    ],
+    "featureIds": [
+      "FEAT-012"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-09-21",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "BACKEND-PLATFORM",
@@ -1974,7 +2652,24 @@
     ],
     "verification": "NOT VERIFIED：Desktop 必须保留免登录入口并可选登录，Web/Mobile 目标需登录；账号不默认云存个人数据。身份服务与 VPS/域名等外部部署条件未完成，Gateway 额度逻辑仅在单测覆盖。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-21"
+    "updated": "2026-09-21",
+    "requirementRefs": [
+      "ledger:BACKEND-PLATFORM"
+    ],
+    "featureIds": [
+      "FEAT-017",
+      "FEAT-018",
+      "FEAT-019",
+      "FEAT-020",
+      "FEAT-021",
+      "FEAT-029"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-09-21",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "BACKEND-ASTRA-001",
@@ -2001,7 +2696,19 @@
     ],
     "verification": "NOT VERIFIED：仅有计划与 Git 同步，零实现。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-21"
+    "updated": "2026-09-21",
+    "requirementRefs": [
+      "ledger:BACKEND-ASTRA-001"
+    ],
+    "featureIds": [
+      "FEAT-027"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-09-21",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "UI-SKILL-POPOVER-001",
@@ -2029,7 +2736,17 @@
     ],
     "verification": "390px 几何实测弹层与提示词/按钮无重叠；两个定向用例文件 16/16 通过，全量浏览器回归 200/200 通过。",
     "verificationResult": "PASS",
-    "updated": "2026-09-21"
+    "updated": "2026-09-21",
+    "requirementRefs": [
+      "ledger:UI-SKILL-POPOVER-001"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-21",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-RULES-003",
@@ -2057,7 +2774,17 @@
     ],
     "verification": "8项隔离fixture门禁测试；28功能/48任务0违规；完整verify 227单测/210浏览器；独立dirty-diff预检无未关闭blocker。未commit/push，非正式SHA绑定PR审批。",
     "verificationResult": "PASS",
-    "updated": "2026-09-22"
+    "updated": "2026-09-22",
+    "requirementRefs": [
+      "ledger:TASK-RULES-003"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-22",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "BACKEND-CONVERSATION",
@@ -2084,7 +2811,19 @@
     ],
     "verification": "Web 已通过 TASK-AGENT-001 实现并留真实证据；Desktop 尚未验收。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-22"
+    "updated": "2026-09-22",
+    "requirementRefs": [
+      "ledger:BACKEND-CONVERSATION"
+    ],
+    "featureIds": [
+      "FEAT-009"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-09-22",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-DS-001",
@@ -2120,7 +2859,19 @@
     ],
     "verification": "Design System 1.1与双主题8色已落实；TASK-DS-002补目录/设置、原工程完整verify309/229及新Tauri资源包/重启验证。在线Ardot写入与用户视觉验收仍未完成。",
     "updated": "2026-09-22",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PARTIAL",
+    "requirementRefs": [
+      "ledger:TASK-DS-001"
+    ],
+    "featureIds": [
+      "FEAT-022"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-22",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-DS-002",
@@ -2156,7 +2907,22 @@
     ],
     "verification": "当前工程完整verify通过：309 Node、229浏览器、0失败/0flaky；lint/typecheck/UI137/0/format/build均PASS。原工程重新Tauri no-bundle build与16组合、2次启动、偏好及Skill保留复验PASS；独立预检修正复核PASS。仅关闭本批工程契约；在线Ardot、页面Frame和用户视觉验收由原任务保留。",
     "verificationResult": "PASS",
-    "updated": "2026-09-22"
+    "updated": "2026-09-22",
+    "requirementRefs": [
+      "ledger:TASK-DS-002"
+    ],
+    "featureIds": [
+      "FEAT-005",
+      "FEAT-011",
+      "FEAT-015",
+      "FEAT-022"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-22",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-005",
@@ -2192,7 +2958,25 @@
     ],
     "verification": "原工程verify327 Node/241 browser、UI142/0、lint/typecheck/format/build通过；独立38文件预检PASS。新Tauri资源/16组合/2启动、草稿缓存保留及Token清空通过。仅关闭本批UI契约，真实服务/外部验收与追加交互专项继续。",
     "verificationResult": "PASS",
-    "updated": "2026-09-22"
+    "updated": "2026-09-22",
+    "requirementRefs": [
+      "ledger:TASK-UI-005"
+    ],
+    "featureIds": [
+      "FEAT-007",
+      "FEAT-008",
+      "FEAT-009",
+      "FEAT-013",
+      "FEAT-021",
+      "FEAT-022",
+      "FEAT-029"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-22",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-006",
@@ -2227,7 +3011,21 @@
     ],
     "verification": "原工程verify327 Node/261 browser、UI144/0、lint/typecheck/format/build通过；独立23文件预检PASS，fresh Tauri实际JS/CSS、16组合和原生交互验收通过。12处缺陷已关闭；外部服务与视觉源边界仍开放。",
     "verificationResult": "PASS",
-    "updated": "2026-09-22"
+    "updated": "2026-09-22",
+    "requirementRefs": [
+      "ledger:TASK-UI-006"
+    ],
+    "featureIds": [
+      "FEAT-001",
+      "FEAT-016",
+      "FEAT-023"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-22",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-AGENT-001",
@@ -2274,7 +3072,23 @@
     ],
     "verification": "原工程 Web 首批 PASS：351 Node /266 browser，UI153/0，Agent125通过/2跳过；真实 Codex 连续两轮同线程、刷新恢复、MCP/内置生图与额度证据齐全。整体保留PARTIAL：Desktop/其他登录软件/真实付费Provider逐厂商未完成。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-22"
+    "updated": "2026-09-22",
+    "requirementRefs": [
+      "ledger:TASK-AGENT-001"
+    ],
+    "featureIds": [
+      "FEAT-002",
+      "FEAT-003",
+      "FEAT-009",
+      "FEAT-012",
+      "FEAT-022"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-22",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-AGENT-002",
@@ -2309,7 +3123,19 @@
     ],
     "verification": "Windows Agent 托管子项 PASS：356 Node/270 browser/78 Rust，真实Tauri8项与空会话7项、独立预检与干净npm ci/build通过。Proxy、其他软件/网页并发/非兼容协议及外部真实验收仍待完成；未commit/push。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-22"
+    "updated": "2026-09-22",
+    "requirementRefs": [
+      "ledger:TASK-AGENT-002"
+    ],
+    "featureIds": [
+      "FEAT-009"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-22",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-007",
@@ -2345,7 +3171,17 @@
     ],
     "verification": "原工程356 Node/286 browser、UI157/0、55任务/29功能0违规；独立R1–R3补审PASS；带Agent资源fresh Tauri实际JS/CSS匹配、16组合和原生交互通过。三档及短屏、图标/换行、跨档草稿/焦点/菜单已修复；实机与在线设计边界保留。",
     "verificationResult": "PASS",
-    "updated": "2026-09-23"
+    "updated": "2026-09-23",
+    "requirementRefs": [
+      "ledger:TASK-UI-007"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-23",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-008",
@@ -2382,7 +3218,17 @@
     ],
     "verification": "原工程356 Node/295 browser、UI159/0、56任务/29功能0违规；独立R1–R3及断点补审PASS；fresh Tauri实际JS/CSS匹配、32组合与原生输入交互通过。DS1.3契约与三档输入流已落实，实机/在线设计及服务边界保留。",
     "verificationResult": "PASS",
-    "updated": "2026-09-23"
+    "updated": "2026-09-23",
+    "requirementRefs": [
+      "ledger:TASK-UI-008"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-23",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-AGENT-003",
@@ -2414,7 +3260,20 @@
     ],
     "verification": "原工程完整 verify：363 Node/299 browser，UI159/0；fresh Tauri真实识图与原件哈希、随包MCP选择/视口、重开恢复通过；26文件独立dirty增量预检PASS，未commit/push。",
     "verificationResult": "PASS",
-    "updated": "2026-09-23"
+    "updated": "2026-09-23",
+    "requirementRefs": [
+      "ledger:TASK-AGENT-003"
+    ],
+    "featureIds": [
+      "FEAT-009",
+      "FEAT-012"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-23",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "PLUGIN-DESKTOP-001",
@@ -2452,7 +3311,19 @@
     ],
     "verification": "12 项插件单测、TypeScript、Web build、Tauri client build 通过；fresh Tauri 隔离运行完成随包插件发现、添加、渲染、停用和恢复，资源走 tauri.localhost/plugins/*.js 同源 URL，严格 CSP 未放宽，页面错误为空。独立只读 review 对代码 head 91396c6 给出 PASS、无 P0–P3 findings；PR #28 Hosted verify/delivery/deploy-linux 与 push verify 均成功，已 squash 合入 main@e27e209。",
     "verificationResult": "PASS",
-    "updated": "2026-09-29"
+    "updated": "2026-09-29",
+    "requirementRefs": [
+      "ledger:PLUGIN-DESKTOP-001"
+    ],
+    "featureIds": [
+      "FEAT-013"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-29",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "REL-2.1.0",
@@ -2503,7 +3374,17 @@
     ],
     "verification": "历史 2.1.0 源码上传与 PR #9/main@b45c5bc7、合并后 CI 已完成；正式安装包/签名/tag 未完成，归 T7。当前三端版本另见版本源。",
     "verificationResult": "PASS",
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "requirementRefs": [
+      "ledger:REL-2.1.0"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-RULES-004",
@@ -2550,7 +3431,17 @@
     ],
     "verification": "原堆叠 PR #10 两轮失败审查及第三轮 d8e12c0 PASS 保留；从 PR #9 后的 main 仅承接本任务四个提交，tree 与原 #10 head 相同。承接分支干净 npm ci 与完整 verify 通过：370 Node、300 browser、治理61/0、功能29/0、Markdown81/0、UI159/0、类型/格式/Web build；旧生成证据定向恢复。独立 AI 审查覆盖最终 dfed074，PR #11 当前 head 的 hosted verify/delivery 与 push verify 均成功，已 squash 合入 main@9f04bfce，合并树与候选树一致；旧 PR #10 已关联关闭未重复合并，本地根 main 已快进。合并后 main 工作流 35841965161 verify success；正式版本 tag、安装包和发布验收属于 REL-2.1.0，不由本任务关闭。",
     "verificationResult": "PASS",
-    "updated": "2026-09-23"
+    "updated": "2026-09-23",
+    "requirementRefs": [
+      "ledger:TASK-RULES-004"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-23",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-DOCS-HISTORY-001",
@@ -2579,7 +3470,17 @@
     ],
     "verification": "2026-09-23 扫描 365 个已跟踪 Markdown，历史范围共 37 处文件目标问题；原始日志来源和可恢复性待核对。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-09-23"
+    "updated": "2026-09-23",
+    "requirementRefs": [
+      "ledger:TASK-DOCS-HISTORY-001"
+    ],
+    "featureIds": [],
+    "priority": "P1",
+    "priorityRationale": "当前治理或验证阻断项",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-09-23",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-ORCH-001",
@@ -2627,7 +3528,19 @@
     ],
     "verification": "主线已含 08b5ae1 的阶段领域状态机、CAS、审批与项目包契约；当前单元与 Rust 回归通过。阶段计划 UI/真实生成仍属 TASK-ORCH-002/003，未被升级。",
     "updated": "2026-09-30",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-ORCH-001"
+    ],
+    "featureIds": [
+      "FEAT-030"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-ORCH-002",
@@ -2679,7 +3592,20 @@
     ],
     "verification": "本轮本地AC完成：新主线5b0eb6a融合为单一Plan/TaskWorkbenchStages及共享实例，保留主线暂停/重规划/回执/MCP行为；49/49、完整verify708root/172Agent/400browser零retry（原skip8/2）、Rust97、fresh production Tauri审批/重启/真实CAS/恢复草稿与clientcheck通过。精确新SHA独立补审及主线推广以收据和PR当前门禁为准。",
     "updated": "2026-10-08",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-ORCH-002"
+    ],
+    "featureIds": [
+      "FEAT-016",
+      "FEAT-030"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-08",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-ORCH-003",
@@ -2707,7 +3633,19 @@
     "evidence": [],
     "verification": "未开工。",
     "updated": "2026-09-23",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "NOT_VERIFIED",
+    "requirementRefs": [
+      "ledger:TASK-ORCH-003"
+    ],
+    "featureIds": [
+      "FEAT-030"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-09-23",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-CANVAS-001",
@@ -2737,7 +3675,19 @@
     ],
     "verification": "契约现在覆盖图片与非空文案 provider 结果；Agent 图片导入要求 assetId，App 统一发布路径在 commit 前校验并把契约失败保留为 unknown。定向 agentCanvas/agentHost 23/23 通过；真实 Provider 与 Desktop 运行验收仍未完成。",
     "updated": "2026-10-08",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PARTIAL",
+    "requirementRefs": [
+      "ledger:TASK-CANVAS-001"
+    ],
+    "featureIds": [
+      "FEAT-030"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-10-08",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-TASKSTATE-001",
@@ -2773,7 +3723,20 @@
     ],
     "verification": "统一普通重试门禁、重启父子对账与归档证据保护；dc05556统一原生回执任务ID/幂等键、逐输出索引与类型校验，非法回执为unknown且无重复提交。原生/恢复53项与全量Node710项（702pass/8Windows skip/0fail）、浏览器388项无重试通过；未取得供应商报价时成本未知，真实Provider/每平台运行仍待验收，保持PARTIAL。",
     "updated": "2026-10-08",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PARTIAL",
+    "requirementRefs": [
+      "ledger:TASK-TASKSTATE-001"
+    ],
+    "featureIds": [
+      "FEAT-016",
+      "FEAT-031"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-10-08",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-TASKSTATE-002",
@@ -2801,7 +3764,19 @@
     "evidence": [],
     "verification": "已在 2026-10-03 盘点中新增并排为 P1；等待供应商回执契约与真实运行条件。",
     "updated": "2026-10-03",
-    "verificationResult": "NOT_VERIFIED"
+    "verificationResult": "NOT_VERIFIED",
+    "requirementRefs": [
+      "ledger:TASK-TASKSTATE-002"
+    ],
+    "featureIds": [
+      "FEAT-031"
+    ],
+    "priority": "P1",
+    "priorityRationale": "当前治理或验证阻断项",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-10-03",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-PROV-002",
@@ -2840,7 +3815,19 @@
     ],
     "verification": "PR #16 已合入的无密钥多目标渲染、导入导出、模型 catalog 和 stdio 校验契约在当前完整回归通过。真实目标 CLI 消费仍属 003/004。",
     "updated": "2026-09-30",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-PROV-002"
+    ],
+    "featureIds": [
+      "FEAT-032"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-COMPARE-001",
@@ -2880,7 +3867,19 @@
     ],
     "verification": "PR #21 已合入；当前生产 preview 与 fresh Tauri release 两图/滑块/键盘/Escape 实测通过，无 page error。",
     "updated": "2026-09-30",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-COMPARE-001"
+    ],
+    "featureIds": [
+      "FEAT-036"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-COMPARE-002",
@@ -2916,7 +3915,19 @@
     ],
     "verification": "PR #22 与合并后主线检查已有历史成功记录；当前 390px 命中区与完整浏览器、fresh Desktop 图片比较复验通过，原断言未放宽。",
     "updated": "2026-09-30",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-COMPARE-002"
+    ],
+    "featureIds": [
+      "FEAT-036"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-VERSION-001",
@@ -2951,7 +3962,17 @@
     ],
     "verification": "版本脚本与配置已实现；最终树本地 482 项 Node（474 通过、8 项 Windows 跳过 Linux 文件系统用例）、303 浏览器、Web 版本专项、Desktop check/build 与隔离 release GUI 通过。精确 head 9d55857 的独立复审、PR delivery/deploy-linux/verify、main@799efc5 合并及 postmerge verify/deploy-linux 均通过，合并树一致。账号/本地伴随服务/Mobile 仍为开放任务。",
     "updated": "2026-09-28",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-VERSION-001"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-28",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-LOCAL-SERVICE-001",
@@ -2992,7 +4013,19 @@
     ],
     "verification": "本机 loopback 服务、HttpOnly 配对、项目/素材服务优先读写、旧 IndexedDB 只读迁移、备份恢复、连接/断线 UI 与 production smoke 已通过本地和真实临时服务验收；真实账号登录、安装/更新、Mobile 和 VPS 生产部署仍未完成，因此产品任务保持 PARTIAL。",
     "updated": "2026-09-29",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PARTIAL",
+    "requirementRefs": [
+      "ledger:TASK-LOCAL-SERVICE-001"
+    ],
+    "featureIds": [
+      "FEAT-037"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-29",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-CLOSEOUT-2026-09-28",
@@ -3026,7 +4059,17 @@
     ],
     "verification": "PR #23/#24 与合并后 main 的 Hosted 门禁、tree 回读和状态文档同步均完成；本收口 PR #25 精确 head 981a24b 的独立复审、delivery、deploy-linux、verify 也通过；本机 VPS、离机备份、Web 本机服务、真实登录和 Mobile 仍未验收。",
     "updated": "2026-09-28",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-CLOSEOUT-2026-09-28"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-28",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-POSTMERGE-MIGRATION-2026-09-28",
@@ -3067,7 +4110,17 @@
     ],
     "verification": "本地文档/治理检查 PASS（治理 76/0、Markdown 90/0、delivery 9 文件/0 违规）；PR #26 精确 head d2485db 的独立复审、delivery、deploy-linux、verify 与合并后 main@be46ad6 的 verify/deploy-linux 均通过；VPS、备份、恢复、DNS/TLS 和生产写入仍未验收。",
     "updated": "2026-09-28",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-POSTMERGE-MIGRATION-2026-09-28"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-28",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-CANVAS-001",
@@ -3108,7 +4161,17 @@
     ],
     "verification": "目标 Web 定向回归通过：composer 2、sidebar 2、responsive-layout 3、desktop toolbar 1，Node 456、typecheck/build/diff check 通过；完整 canvas-layout 的 connector-video1 fixture 失败与本轮布局改动无关，Tauri/Figma/真实设备仍未验证。",
     "updated": "2026-09-28",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-UI-CANVAS-001"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-28",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-HOME-002",
@@ -3161,7 +4224,17 @@
     ],
     "verification": "按当前四页 Figma 保留 652×170/299×170、六个 24px 动作、70(平板72)/291 侧栏、设置滑块和可达应用菜单；当前 production Web 与 fresh Desktop 分别取证。",
     "updated": "2026-09-30",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-UI-HOME-002"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-GOV-003",
@@ -3206,7 +4279,17 @@
     ],
     "verification": "Figma 四页、tokens.css、模板与状态门禁完成当前基线收口，完整自动化与受影响真实桌面验证通过；全历史页面迁移仍属 UI-001/UI-004。",
     "updated": "2026-09-30",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-UI-GOV-003"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-CANVAS-KAWORKAI-001",
@@ -3249,7 +4332,19 @@
     ],
     "verification": "本地画布历史、吸附和图层验收完成。R1/R2先由真实UI复现失败，返修后24项相关回归、完整Web377/377及最新Tauri窗口通过；9656011独立复审从实际pointer/hooks链复验三轮相连删除/恢复、90帧单次撤销、取消redo与异步节点/边协调并关闭两项阻断。最终文档HEAD补审、Hosted及主线推广由集成PR/交付收据承载。远程竞品服务未纳入验收。",
     "updated": "2026-09-30",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-CANVAS-KAWORKAI-001"
+    ],
+    "featureIds": [
+      "FEAT-001"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-PROJECT-001",
@@ -3305,7 +4400,17 @@
     ],
     "verification": "本地可运行候选范围完成：承接13个历史包，完整Web377/377、根623/631、Agent169/171（其余原平台skip）、Rust97/97与最新Desktop/compare/plugin/version通过。9656011独立复审关闭R1/R2并通过39项单测、delivery618/0；来源PR17/18已勘误。最终文档HEAD补审、托管门禁、实际main推广与分享包验证以集成PR/最终收据为准；本条DONE不代表外部服务、Installer、Mobile或生产发布完成。",
     "updated": "2026-09-30",
-    "verificationResult": "PASS"
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-PROJECT-001"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-010",
@@ -3345,7 +4450,17 @@
     ],
     "verification": "承接 33ac5b3 并按最新四页规则裁决旧 token 冲突；真实入口、禁用反馈、焦点/短高/窄屏、当前 production Web 与 fresh Desktop 复验通过。用户最终视觉验收归 UI-004。",
     "verificationResult": "PASS",
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "requirementRefs": [
+      "ledger:TASK-UI-010"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-PROJECT-SIDEBAR-001",
@@ -3380,7 +4495,20 @@
     ],
     "verification": "真实项目的创建/打开/改名/确认删除与项目库统一；Web 刷新及 fresh Tauri 重启通过。修复原生连续保存 CAS 和异步确认。文件夹/置顶仍是明示会话态，持久快照/项目包迁移未完成。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "requirementRefs": [
+      "ledger:TASK-PROJECT-SIDEBAR-001"
+    ],
+    "featureIds": [
+      "FEAT-015",
+      "FEAT-023"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-PROV-003",
@@ -3421,7 +4549,19 @@
     ],
     "verification": "Codex Responses/TOML/catalog 指针和 CLI apply/check 已接入集成树；稳定 ID、非法 URL/目录穿越/参数不完整/幂等回归通过。真实 CODEX_HOME 消费对拍与 App UI 尚未完成。",
     "updated": "2026-09-30",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PARTIAL",
+    "requirementRefs": [
+      "ledger:TASK-PROV-003"
+    ],
+    "featureIds": [
+      "FEAT-032"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-PROV-004",
@@ -3462,7 +4602,19 @@
     ],
     "verification": "Claude settings.json 保守合并和 apply-claude 已进入集成树，当前 Agent 回归通过；旧真实目录 dry-run/apply/幂等证据保留。真实 Claude CLI 消费和设置入口未完成。",
     "updated": "2026-09-30",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PARTIAL",
+    "requirementRefs": [
+      "ledger:TASK-PROV-004"
+    ],
+    "featureIds": [
+      "FEAT-032"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-AGENT-004",
@@ -3494,7 +4646,20 @@
     ],
     "verification": "13671d7 的 Google/CLI 接线已承接，当前连续对话/图片归档/取消与项目切换 fixture 回归通过。真实 Google 凭据、CLI 登录和完整原生生成未验收。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "requirementRefs": [
+      "ledger:TASK-AGENT-004"
+    ],
+    "featureIds": [
+      "FEAT-002",
+      "FEAT-009"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-AGENT-005",
@@ -3525,7 +4690,19 @@
     ],
     "verification": "Superseded for review by combined 004 closeout candidate: local CLI bridge/adapter fixture tests, browser flow and security regression checks pass there. Full verify rerun green after main merge. Real Gemini CLI install/login/bridge, desktop runtime and final independent review pending.",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-23"
+    "updated": "2026-09-23",
+    "requirementRefs": [
+      "ledger:TASK-AGENT-005"
+    ],
+    "featureIds": [
+      "FEAT-009"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-23",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-MEMORY-001",
@@ -3562,7 +4739,19 @@
     ],
     "verification": "当前 Web 记忆开关/存储/注入单测与 fresh Desktop 私有读写、重启保留及取消/确认删除通过；关闭时不创建记忆文件。真实 Codex 提炼/引用待联调。",
     "updated": "2026-09-30",
-    "verificationResult": "PARTIAL"
+    "verificationResult": "PARTIAL",
+    "requirementRefs": [
+      "ledger:TASK-MEMORY-001"
+    ],
+    "featureIds": [
+      "FEAT-020"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-MEMORY-002",
@@ -3571,7 +4760,7 @@
     "verificationResult": "PARTIAL",
     "owner": "MainAgent",
     "branch": "feat/TASK-MEMORY-001-local-memory",
-    "worktree": "D:\\\\kk-studio\\\\.worktrees\\\\TASK-MEMORY-001",
+    "worktree": "D://kk-studio//.worktrees//TASK-MEMORY-001",
     "affectedModules": [
       "src/features/memory",
       "src/components/settings/MemorySettingsSection.tsx",
@@ -3604,7 +4793,19 @@
     ],
     "goal": "跨产品共享本地记忆：Codex/豆包/WorkBuddy 读写同一份 ~/.kk-memory/memory.json（本机默认共享），Web 授权目录降级 IndexedDB，旧文件一次性种子迁移；记忆仍不上云，换账号手动清空",
     "scope": "src/features/memory, src/components/settings/MemorySettingsSection.tsx, src-tauri main.rs/storage_paths.rs, docs/MEMORY-CONTRACT.md, AGENTS.md, docs/architecture/DATA-STORAGE.md, docs/features feat-020, docs/changes/2026-09-24-local-memory",
-    "verification": "默认共享契约保留；--data-dir 隔离记忆，启动不迁移，损坏旧文件/锁/备份失败保持原件；fresh Desktop 验证共享文件 hash 未变。豆包/WorkBuddy 与 Web 目录授权仍未联调。"
+    "verification": "默认共享契约保留；--data-dir 隔离记忆，启动不迁移，损坏旧文件/锁/备份失败保持原件；fresh Desktop 验证共享文件 hash 未变。豆包/WorkBuddy 与 Web 目录授权仍未联调。",
+    "requirementRefs": [
+      "ledger:TASK-MEMORY-002"
+    ],
+    "featureIds": [
+      "FEAT-020"
+    ],
+    "priority": "P2",
+    "priorityRationale": "开放任务默认待治理排序",
+    "displayStatus": "进行中",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-AGENT-007",
@@ -3642,7 +4843,19 @@
     ],
     "verification": "受限 CLI、真实 MCP、随包 MCP、Web 1920/390、最终新 Tauri UI 和 KK 内真实 Codex 工具调用与可见回复均通过；416 Node/310 browser、Agent 135 通过/2 Windows 跳过，最终 MSI/NSIS 构建成功。首次 120 秒超时、最终新包约 145 秒成功；WorkBuddy OAuth/豆包和自动路由不属于本子任务。",
     "verificationResult": "PASS",
-    "updated": "2026-09-24"
+    "updated": "2026-09-24",
+    "requirementRefs": [
+      "ledger:TASK-AGENT-007"
+    ],
+    "featureIds": [
+      "FEAT-009"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-24",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-DESKTOP-INSTALLER-001",
@@ -3679,7 +4892,19 @@
     ],
     "verification": "本机AC1–4已验收：NSIS、四次4279文件、启动/Agent/重装/修复/卸载再装保留项目、已有注册/进程保护通过；8项定向、无retry160项、完整verify631root/169Agent/377browser（原skip保留）、Rust97/clientcheck、独立技术/运行证据审查至2cf5249通过。",
     "verificationResult": "PASS",
-    "updated": "2026-09-30"
+    "updated": "2026-09-30",
+    "requirementRefs": [
+      "ledger:TASK-DESKTOP-INSTALLER-001"
+    ],
+    "featureIds": [
+      "FEAT-026"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-09-30",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-AGENT-008",
@@ -3714,7 +4939,20 @@
     ],
     "verification": "本机AC-1–3 DONE：两组RED→GREEN，verify632root/172Agent/377browser（原平台skip保留）、Rust97/fmt/clientcheck；真实Tauri生图/续聊/重连/重启hash一致、节点/标记唯一。实现head3c63f1e独立审查PASS（43/9/6定向复验），P3文档意见已修正。PR#33终稿head独立补审、托管CI与推广以实际PR/收据为准；豆包/Web真实账号/其他Provider/Mobile/正式发布未验收。",
     "verificationResult": "PASS",
-    "updated": "2026-10-01"
+    "updated": "2026-10-01",
+    "requirementRefs": [
+      "ledger:TASK-AGENT-008"
+    ],
+    "featureIds": [
+      "FEAT-002",
+      "FEAT-009"
+    ],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-01",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-ORCH-REPLAN-001",
@@ -3749,7 +4987,17 @@
     ],
     "verification": "失败/部分失败项与下游依赖会生成稳定幂等的新计划，成功项和原计划保留，审批门状态合法，确定性 ID 冲突会拒绝写入；25 项 orchestrator 单测通过。",
     "verificationResult": "PASS",
-    "updated": "2026-10-03"
+    "updated": "2026-10-03",
+    "requirementRefs": [
+      "ledger:TASK-ORCH-REPLAN-001"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-03",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-AUDIT-20261003",
@@ -3800,7 +5048,17 @@
     ],
     "verification": "当前97项任务已盘点并保留真实状态、依赖与外部条件；本地注册表、协议、计划重排、阶段审批、未知报价、交付与恢复边界有实现及回归。最终业务代码dc05556独立复验PASS；最新ef580db基准独立锁定npm ci后完整verify通过：Node710项（702pass/8Windows skip/0fail）、Agent174项（172pass/2Windows skip/0fail）、浏览器388项无flaky、Rust97项。带Agent的新Desktop2.1.4 release及隔离版本/项目重启/确认/画布与记忆保护通过；真实TaskHost生成/Provider和PR/CI/推广范围以本轮verification/review及实际PR收据为准。",
     "verificationResult": "PASS",
-    "updated": "2026-10-08"
+    "updated": "2026-10-08",
+    "requirementRefs": [
+      "ledger:TASK-AUDIT-20261003"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-08",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-GOV-GOALS-001",
@@ -3835,7 +5093,17 @@
     ],
     "verification": "项目建设目标、四条用户主路径和六类验收门禁已落盘；目标检查通过并接入 lint/verify，外部能力继续由原任务和外部条件管理。",
     "verificationResult": "PASS",
-    "updated": "2026-10-03"
+    "updated": "2026-10-03",
+    "requirementRefs": [
+      "ledger:TASK-GOV-GOALS-001"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-03",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-COMPONENT-BOUNDARY-001",
@@ -3871,7 +5139,17 @@
     ],
     "verification": "MCP 设置容器已拆为表单和列表职责，UI 标准 194 文件/0 违规；定向 TypeScript、ESLint 和 Prettier 通过，MCP 设置浏览器回归在完整 Playwright 中通过。",
     "verificationResult": "PASS",
-    "updated": "2026-10-03"
+    "updated": "2026-10-03",
+    "requirementRefs": [
+      "ledger:TASK-UI-COMPONENT-BOUNDARY-001"
+    ],
+    "featureIds": [],
+    "priority": "P3",
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-03",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-UI-011",
@@ -3911,7 +5189,18 @@
     ],
     "verification": "精确产品7d27265承接main78cea37：完整verify root723/731(8原skip)、Agent172/174(2原skip)、423/423browser零flaky/零实际retry；Rust97/fmt/clientcheck/fresh UI13(385hash)+TaskHost11(9hash/5CDP)+同EXE模型能力PASS。独立补审PASS、R1/R2 CLOSED，当前PR Hosted37776187321及push37776180456必需检查SUCCESS。Task声明范围完成；最终文档head精确补审/Hosted与普通主线推广另绑。历史失败保留；不代表全项目/付费Provider/Mobile/安装/最终视觉验收。",
     "verificationResult": "PASS",
-    "updated": "2026-10-08"
+    "updated": "2026-10-08",
+    "requirementRefs": [
+      "ledger:TASK-UI-011"
+    ],
+    "featureIds": [
+      "FEAT-001"
+    ],
+    "priorityRationale": "历史已完成范围",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-08",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-PROV-005",
@@ -3944,7 +5233,18 @@
       "docs/changes/2026-10-08-taskhost-native-lifecycle/status.md"
     ],
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-08"
+    "updated": "2026-10-08",
+    "requirementRefs": [
+      "ledger:TASK-PROV-005"
+    ],
+    "featureIds": [
+      "FEAT-002"
+    ],
+    "priorityRationale": "当前治理或验证阻断项",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-10-08",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-PROV-006",
@@ -3977,7 +5277,19 @@
       "docs/changes/2026-10-08-taskhost-native-lifecycle/status.md"
     ],
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-08"
+    "updated": "2026-10-08",
+    "requirementRefs": [
+      "ledger:TASK-PROV-006"
+    ],
+    "featureIds": [
+      "FEAT-002",
+      "FEAT-008"
+    ],
+    "priorityRationale": "当前治理或验证阻断项",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-10-08",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-VERIFY-CONCURRENCY-002",
@@ -4000,13 +5312,22 @@
       "playwright.config.ts"
     ],
     "status": "TODO",
-    "priority": "P2",
+    "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-09-windows-entry-diagnostics/verification.md"
     ],
     "verification": "同source105默认并发完整verify实际9 flaky，default1423 workers4/retries0实际447/447通过；原因仍UNKNOWN，须可控反例确定同步/资源边界，不将降并发称根因修复。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-09"
+    "updated": "2026-10-09",
+    "requirementRefs": [
+      "ledger:TASK-VERIFY-CONCURRENCY-002"
+    ],
+    "featureIds": [],
+    "priorityRationale": "当前治理或验证阻断项",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-10-09",
+    "ownerRole": "repository-maintainer"
   },
   {
     "id": "TASK-VERIFY-ORIGIN-003",
@@ -4030,12 +5351,21 @@
       "tests/browser/local-service-migration.spec.ts"
     ],
     "status": "TODO",
-    "priority": "P2",
+    "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-09-windows-entry-diagnostics/verification.md"
     ],
     "verification": "本次1431反例为运行配置不满足既有验收条件，7处明确port!=1423、3处实际来源白名单不认可。当前固定默认1423已447/447零retry，后续配置一致性未实施；不影响生产默认端口行为。",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-09"
+    "updated": "2026-10-09",
+    "requirementRefs": [
+      "ledger:TASK-VERIFY-ORIGIN-003"
+    ],
+    "featureIds": [],
+    "priorityRationale": "当前治理或验证阻断项",
+    "displayStatus": "未完成",
+    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
+    "lastVerified": "2026-10-09",
+    "ownerRole": "repository-maintainer"
   }
 ]
