@@ -56,9 +56,7 @@ function imageDetail(item: AgentChatItem): { effectiveModel?: unknown } {
     : {};
 }
 
-export function reportedImageModel(
-  item: AgentChatItem,
-): string | undefined {
+export function reportedImageModel(item: AgentChatItem): string | undefined {
   const value = imageDetail(item).effectiveModel;
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }

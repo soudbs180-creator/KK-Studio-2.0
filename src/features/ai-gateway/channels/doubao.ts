@@ -170,15 +170,18 @@ export const doubaoAdapter: ChannelAdapter = {
         | undefined;
       const text = body?.choices?.[0]?.message?.content;
       if (typeof text !== "string" || !text.trim())
-        throw Object.assign(new Error("Ark response contained no assistant text"), {
-          normalized: {
-            errorClass: "UPSTREAM_ERROR",
-            httpStatus: 502,
-            retryable: true,
-            channelId: context.channelId,
-            detail: "missing assistant content",
-          } satisfies NormalizedError,
-        });
+        throw Object.assign(
+          new Error("Ark response contained no assistant text"),
+          {
+            normalized: {
+              errorClass: "UPSTREAM_ERROR",
+              httpStatus: 502,
+              retryable: true,
+              channelId: context.channelId,
+              detail: "missing assistant content",
+            } satisfies NormalizedError,
+          },
+        );
       const usage = body?.usage;
       return {
         kind: "text",

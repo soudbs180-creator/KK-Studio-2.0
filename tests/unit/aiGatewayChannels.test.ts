@@ -128,7 +128,10 @@ test("Ark chat rejects a successful response with no assistant text", async () =
             prompt: "say hello",
             attachments: [],
           },
-          { idempotencyKey: "ark-chat-empty", resolveSecret: async () => "secret" },
+          {
+            idempotencyKey: "ark-chat-empty",
+            resolveSecret: async () => "secret",
+          },
         ),
       (error: unknown) =>
         (error as { normalized?: { errorClass?: string } }).normalized
@@ -361,8 +364,14 @@ test("public model projection omits channel secrets and quarantined models", () 
       },
     },
   ]);
-  assert.equal(JSON.stringify(registry.publicModels()).includes("vault-ref"), false);
-  assert.equal(JSON.stringify(registry.publicModels()).includes("ep-private"), false);
+  assert.equal(
+    JSON.stringify(registry.publicModels()).includes("vault-ref"),
+    false,
+  );
+  assert.equal(
+    JSON.stringify(registry.publicModels()).includes("ep-private"),
+    false,
+  );
 });
 
 test("credentialRefFor resolves the vault reference, not the channel id", () => {

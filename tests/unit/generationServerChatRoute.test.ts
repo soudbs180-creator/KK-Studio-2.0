@@ -222,7 +222,10 @@ test("chat route returns a buffered OpenAI SSE stream", async () => {
       }),
     });
     assert.equal(response.status, 200);
-    assert.match(response.headers.get("content-type") ?? "", /text\/event-stream/);
+    assert.match(
+      response.headers.get("content-type") ?? "",
+      /text\/event-stream/,
+    );
     const body = await response.text();
     assert.match(body, /data: /);
     assert.match(body, /route answer/);

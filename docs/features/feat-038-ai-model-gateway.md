@@ -2,12 +2,12 @@
 
 - 状态：PROTOTYPE
 - 领域：backend
-- 最近更新：2026-10-09
+- 最近更新：2026-10-10
 - 关联任务：TASK-AI-GATEWAY-001
 
 ## 用户可见入口
 
-- 无 UI 入口。`/v1/chat/completions` 仅在 `createGenerationServer({ chat })` 注入依赖时挂载，未注入时返回 404，既有部署行为不变。
+- 无独立网关管理页。`/v1/models`、`/v1/chat/completions` 仅在 `createGenerationServer({ chat })` 注入依赖时挂载，未注入时保持 404；模型选择继续复用现有 ModelPickerMenu 与 Provider 设置页。
 - 豆包在 `ModelPickerMenu` 中**仍为置灰**：调度层可用了，但未接真实上游凭证，按「点了就报错」原则不解锁。
 - **BYOK 官方通道已就绪（P1，浏览器直连，与网关通道分离）**：设置 → 模型供应商 → 预置「豆包（火山方舟）」一键填入 `https://ark.cn-beijing.volces.com/api/v3`，填 Key 后画布图片节点可选 `doubao-seedream-*` 出图；真实出图需用户方舟 Key 实测（NOT VERIFIED）。
 
@@ -20,15 +20,17 @@
 - `src/features/ai-gateway/channels/doubao.ts`：火山方舟适配器
 - `src/features/ai-gateway/scheduler.ts`：调度层（分档降级、冷却、粘性会话）
 - `src/features/ai-gateway/chat.ts`：OpenAI 兼容端点逻辑
-- `src/features/generation-server/http.ts`：`/v1/chat/completions` 路由挂载点
+- `src/features/generation-server/http.ts`：`/v1/models`、`/v1/chat/completions` 路由挂载点
+- `src/features/agent/agentImages.ts`、`src/features/agent/agentHost.ts`：Codex 图片 effectiveModel 与资产归档
+- `src/features/models/modelMenuEntries.ts`、`src/features/models/modelPresentation.ts`：图片模型精确 ID 展示
 - 方案与交付包：[`docs/changes/2026-10-09-doubao-integration/spec.md`](../changes/2026-10-09-doubao-integration/spec.md)
 
 ## 测试与证据
 
-- 单测 49 项：`aiGatewayCredentials`(8) / `aiGatewayChannels`(11) / `aiGatewayScheduler`(15) / `aiGatewayChat`(9) / `aiGatewayChatEndpoint`(4) / `generationServerChatRoute`(2)
+- 网关与 provenance 定向单测 30 项全绿，覆盖 Ark 文本、图片兼容性、SSE、`/v1/models`、模型菜单和 Codex 图片归档；既有 gateway/model/agent 回归保持通过
 - 连跑 3 轮零抖动（调度器测试注入固定 `random` 与 `now`）
 - `tsc --noEmit` exit 0；`eslint` exit 0
-- 当前回归验证：`node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` 共 895 项，885 通过、2 失败、8 跳过；2 个失败均为 `desktopAgentRuntime.test.ts`（worktree 无 dist 构建产物所致，主仓基线 `6d4c25eb` 复跑同文件 2/2 通过，与本包无 import 依赖）
+- 当前回归验证：`node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` 共 903 项，893 通过、2 失败、8 跳过；2 个失败均为 `desktopAgentRuntime.test.ts`（worktree 无 dist 构建产物所致，和本包无 import 依赖）
 - P1 官方通道定向测试 21 项全通过：`modelProvider.test.ts`(3，预置常量) + `creation.test.ts` doubao 判定(1 用例 6 断言) + 既有 creation 判定用例（未删减）
 
 ## 当前能力
@@ -37,6 +39,9 @@
 - 失败分类：按信号优先级而非状态码分类。Ark 用同一个 400 同时表示「参数非法」与「内容审核拒绝」，只有响应体能区分
 - 调度：分优先级档位降级、厂商冷却提示优先于本地退避、粘性会话、连续失败隔离
 - 凭证：配置只存引用，明文由 vault 持有；适配器仅通过 `resolveSecret()` 闭包取用
+- 文本：`chat` operation 使用独立 `kind:"text"` 结果，Ark 调用官方 `/chat/completions`，`stream:true` 以单次 buffered SSE 返回并保留 `[DONE]`
+- 图片：旧 `generate`/`inline` 图片契约保持兼容；API 图片菜单主文案显示完整模型 ID，Codex 上游未返回图片型号时明确显示“图片模型未报告”并把执行器作为次级来源
+- 模型发现：`/v1/models` 只投影启用通道的模型、提供方和能力，过滤 disabled/quarantined，绝不返回 baseUrl、credentialRef 或 vendor endpoint mapping
 
 ## 三条不可违背约束
 
@@ -54,7 +59,7 @@
 - **未接真实上游**：无 DPAPI `SecretProtector` 实现（需 Rust 侧或 PowerShell 桥），无真实凭证，任务保持 `TODO` / `NOT_VERIFIED`
 - 调度层为纯内存状态，未接 generation-server 的 lease / dead-letter 持久化仓储
 - 未接 sub2api-client（传 `session_id` header；注意 Nginx 需 `underscores_in_headers on;`）
-- `stream: true` 返回 501，未实现 SSE
+- `stream: true` 目前是单次 buffered SSE，不是供应商 token 级增量流；后续可在 `ChannelAdapter` 增加可选 stream 方法
 - 异步通道走 `/v1/jobs`，chat 端点遇 `submitted` 返回 409
 
 ## 已知陷阱（重建时踩过）
@@ -70,3 +75,4 @@
 - 2026-10-09：创建卡片。P0 凭证存取 + P1 调度层 + `/v1/chat/completions` 端点建成。
 - 2026-10-10：补充真实 HTTP 路由的鉴权、幂等键和未注入依赖的 404 门禁测试；定向测试 49 项全绿，状态仍为 PROTOTYPE（未接真实上游，不可标 DONE）。
 - 2026-10-10（P1 官方通道）：BYOK 浏览器直连豆包（火山方舟）落地——设置页预置 `PROVIDER_PRESETS`（doubao-ark）、`modelSupportsKind` 修正 doubao 文本/seedream 图片判定（修复 doubao 文本模型被误判为图片的缺陷）；新增 `tests/unit/modelProvider.test.ts` 与 doubao 判定用例；交付包 `docs/changes/2026-10-10-doubao-official-channel/`。真实出图仍待用户方舟 Key（NOT VERIFIED），状态保持 PROTOTYPE。
+- 2026-10-10（能力闭环增量）：通道增加 `chat` operation 与文本结果联合类型；Ark 接入官方文本端点；网关提供安全 `/v1/models` 和兼容 SSE；图片选择器、Codex 图片归档和资产 provenance 传递 `effectiveModel`，缺失时显示“图片模型未报告”。真实方舟/Codex 外部联调仍 NOT VERIFIED，状态保持 PROTOTYPE。
