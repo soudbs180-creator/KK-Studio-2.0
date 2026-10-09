@@ -73,7 +73,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DS-002 | Design System逐页迁移与桌面验收 | DONE | 已完成 | P3 | TASK-DS-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-005 | 新增功能 UI 入口与能力展示对齐 | DONE | 已完成 | P3 | TASK-DS-002 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-006 | 折叠与弹层交互、画布重叠和缩放背景修复 | DONE | 已完成 | P3 | TASK-UI-005 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-AGENT-001 | 默认 Codex 主 Agent 与 KK 生成任务接入 | PARTIAL | 进行中 | P2 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
+| TASK-AGENT-001 | 默认 Codex 主 Agent 与 KK 生成任务接入 | PARTIAL | 进行中 | P2 | none | root | 补独立审查并分别完成 Desktop、真实 Provider 和其他登录软件验收 |
 | TASK-AGENT-002 | 桌面本地 Agent 托管与其他登录软件适配 | PARTIAL | 进行中 | P2 | TASK-AGENT-001 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
 | TASK-UI-007 | 手机平板电脑三档尺寸与图标对齐 | DONE | 已完成 | P3 | TASK-UI-006, TASK-AGENT-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-008 | 重新制定创作输入框规范并统一三档实现 | DONE | 已完成 | P3 | TASK-UI-007, TASK-AGENT-002 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -1411,14 +1411,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: FEAT-002, FEAT-003, FEAT-009, FEAT-012, FEAT-022
 - Owner role: repository-maintainer
 - Acceptance: KK 输入框真实 Codex 回复; 命名 SSE 和项目线程恢复; 画布增改连线持久化; 生成任务真实受理/状态回传; 全量门禁与独立审查; 真实 Codex 内置生图归档; 账号级模型目录、明确尺寸、分级/全部/记忆页/置顶; 工具回执未知阻断自动重试; 桌面托管/其他软件按后续待办记录，不虚构完成; 连续发送/换模型/重连沿用已有线程，显式新建才创建线程; 同账号模型前缀分组/后缀变体精确 ID、厂商/参数/比例搜索和非数字模糊匹配
-- Branch: `feat/TASK-AGENT-001-codex`
-- Worktree: `C:/Users/Administrator/.codex/worktrees/kk-agent-codex/KK-Studio-2.0`
+- Branch: `codex/TASK-AGENT-001-remaining-verification`
+- Worktree: `D:/kk-studio/.worktrees/remaining-verification`
 - Modules: src/features/agent, src/App.tsx, src/components/ConversationPanel.tsx, tests, src/features/models, src/components/ModelPickerMenu.tsx, src/components/settings, vendor/canvas-agent
-- Verification: PARTIAL — 原工程 Web 首批 PASS：351 Node /266 browser，UI153/0，Agent125通过/2跳过；真实 Codex 连续两轮同线程、刷新恢复、MCP/内置生图与额度证据齐全。整体保留PARTIAL：Desktop/其他登录软件/真实付费Provider逐厂商未完成。
-- Evidence: [docs/changes/2026-09-22-codex-default-agent/spec.md](../../docs/changes/2026-09-22-codex-default-agent/spec.md), [docs/changes/2026-09-22-codex-default-agent/verification.md](../../docs/changes/2026-09-22-codex-default-agent/verification.md), [docs/changes/2026-09-22-codex-default-agent/review.md](../../docs/changes/2026-09-22-codex-default-agent/review.md), [docs/changes/2026-09-22-codex-default-agent/usage.md](../../docs/changes/2026-09-22-codex-default-agent/usage.md), [docs/changes/2026-09-22-codex-default-agent/remaining.md](../../docs/changes/2026-09-22-codex-default-agent/remaining.md), [docs/changes/2026-09-22-codex-default-agent/provider-research.md](../../docs/changes/2026-09-22-codex-default-agent/provider-research.md), [docs/changes/2026-09-22-codex-default-agent/port-audit-update.md](../../docs/changes/2026-09-22-codex-default-agent/port-audit-update.md), [docs/changes/2026-09-22-codex-default-agent/evidence/acceptance.json](../../docs/changes/2026-09-22-codex-default-agent/evidence/acceptance.json)
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步
-- Last verified: 2026-09-22
-- Updated: 2026-09-22
+- Verification: PARTIAL — 当前工作树完整 npm run verify PASS：Node 911（903通过、8跳过）、Agent 172/174（2跳过）、生产浏览器455/455、Vite development插件PASS。真实 Codex/Provider、Desktop、Hosted和Mobile边界仍未完成，保持PARTIAL。
+- Evidence: [docs/changes/2026-09-22-codex-default-agent/spec.md](../../docs/changes/2026-09-22-codex-default-agent/spec.md), [docs/changes/2026-09-22-codex-default-agent/verification.md](../../docs/changes/2026-09-22-codex-default-agent/verification.md), [docs/changes/2026-09-22-codex-default-agent/review.md](../../docs/changes/2026-09-22-codex-default-agent/review.md), [docs/changes/2026-09-22-codex-default-agent/usage.md](../../docs/changes/2026-09-22-codex-default-agent/usage.md), [docs/changes/2026-09-22-codex-default-agent/remaining.md](../../docs/changes/2026-09-22-codex-default-agent/remaining.md), [docs/changes/2026-09-22-codex-default-agent/provider-research.md](../../docs/changes/2026-09-22-codex-default-agent/provider-research.md), [docs/changes/2026-09-22-codex-default-agent/port-audit-update.md](../../docs/changes/2026-09-22-codex-default-agent/port-audit-update.md), [docs/changes/2026-09-22-codex-default-agent/evidence/acceptance.json](../../docs/changes/2026-09-22-codex-default-agent/evidence/acceptance.json), [docs/changes/2026-10-10-remaining-verification/verification.md](../../docs/changes/2026-10-10-remaining-verification/verification.md), [docs/changes/2026-10-10-remaining-verification/review.md](../../docs/changes/2026-10-10-remaining-verification/review.md)
+- Next action: 补独立审查并分别完成 Desktop、真实 Provider 和其他登录软件验收
+- Last verified: 2026-10-10
+- Updated: 2026-10-10
 
 ## TASK-AGENT-002 — 桌面本地 Agent 托管与其他登录软件适配
 

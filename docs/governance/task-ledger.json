@@ -3047,8 +3047,8 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "feat/TASK-AGENT-001-codex",
-    "worktree": "C:/Users/Administrator/.codex/worktrees/kk-agent-codex/KK-Studio-2.0",
+    "branch": "codex/TASK-AGENT-001-remaining-verification",
+    "worktree": "D:/kk-studio/.worktrees/remaining-verification",
     "affectedModules": [
       "src/features/agent",
       "src/App.tsx",
@@ -3068,11 +3068,13 @@
       "docs/changes/2026-09-22-codex-default-agent/remaining.md",
       "docs/changes/2026-09-22-codex-default-agent/provider-research.md",
       "docs/changes/2026-09-22-codex-default-agent/port-audit-update.md",
-      "docs/changes/2026-09-22-codex-default-agent/evidence/acceptance.json"
+      "docs/changes/2026-09-22-codex-default-agent/evidence/acceptance.json",
+      "docs/changes/2026-10-10-remaining-verification/verification.md",
+      "docs/changes/2026-10-10-remaining-verification/review.md"
     ],
-    "verification": "原工程 Web 首批 PASS：351 Node /266 browser，UI153/0，Agent125通过/2跳过；真实 Codex 连续两轮同线程、刷新恢复、MCP/内置生图与额度证据齐全。整体保留PARTIAL：Desktop/其他登录软件/真实付费Provider逐厂商未完成。",
+    "verification": "当前工作树完整 npm run verify PASS：Node 911（903通过、8跳过）、Agent 172/174（2跳过）、生产浏览器455/455、Vite development插件PASS。真实 Codex/Provider、Desktop、Hosted和Mobile边界仍未完成，保持PARTIAL。",
     "verificationResult": "PARTIAL",
-    "updated": "2026-09-22",
+    "updated": "2026-10-10",
     "requirementRefs": [
       "ledger:TASK-AGENT-001"
     ],
@@ -3086,8 +3088,8 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
-    "lastVerified": "2026-09-22",
+    "nextAction": "补独立审查并分别完成 Desktop、真实 Provider 和其他登录软件验收",
+    "lastVerified": "2026-10-10",
     "ownerRole": "repository-maintainer"
   },
   {

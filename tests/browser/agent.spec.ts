@@ -563,7 +563,11 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     await source.getByRole("button", { name: "画布模型", exact: true }).click();
     const menu = source.getByRole("menu", { name: "选择模型" });
     await menu.getByRole("menuitem", { name: "Codex ›", exact: false }).click();
-    await menu.getByRole("menuitemradio", { name: /Fixture Codex/ }).click();
+    await menu.getByRole("menuitemradio", { name: /图片模型未报告/ }).click();
+    await expect(
+      source.getByText("图片模型未报告", { exact: true }),
+    ).toBeVisible();
+    await page.waitForTimeout(250);
     await page.getByLabel("图片提示词").fill("用内置工具生成蓝色球");
     await source.getByRole("button", { name: "生成图片", exact: true }).click();
     await expect.poll(() => agent.received.turns.length).toBe(1);

@@ -120,7 +120,7 @@ test("Google key configuration, dialogue continuity, image archive and restored 
     page.getByText("已将 1 张 Google 图片归档到当前画布。", { exact: false }),
   ).toBeVisible();
   await expect(
-    page.locator(".canvas-node").filter({ hasText: "Google 生成图片" }),
+    page.locator(".canvas-node").filter({ hasText: "gemini-3.1-flash-image" }),
   ).toHaveCount(1);
   expect(requests[2].response_format).toEqual([
     { type: "text" },
@@ -137,7 +137,7 @@ test("Google key configuration, dialogue continuity, image archive and restored 
     page.getByText("Google fixture reply 2", { exact: true }),
   ).toBeVisible();
   await expect(
-    page.locator(".canvas-node").filter({ hasText: "Google 生成图片" }),
+    page.locator(".canvas-node").filter({ hasText: "gemini-3.1-flash-image" }),
   ).toHaveCount(1);
   await input.fill("Without key");
   await page.getByRole("button", { name: "发送消息", exact: true }).click();

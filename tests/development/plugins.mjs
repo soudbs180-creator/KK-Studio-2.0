@@ -81,7 +81,7 @@ try {
     const settings = page.getByRole("dialog", { name: "设置" });
     await settings
       .getByRole("navigation", { name: "设置分类" })
-      .getByRole("button", { name: "MCP", exact: true })
+      .getByRole("button", { name: "扩展", exact: true })
       .click();
     await expect(settings.locator(".plugin-manager-row")).toHaveCount(4);
     return settings;

@@ -1,0 +1,37 @@
+# Review：当前主线剩余回归验证与修复
+
+- Task ID：TASK-AGENT-001
+- 时间与时区：2026-10-10，Asia/Shanghai
+- Reviewer/context/工具或模型：主代理独立于历史候选分支，基于当前 `edda6157e47c644cd073f52a57e3c31a86e40397` 工作树复核；Git diff、静态门禁和完整 verify。
+- 独立于实现上下文：否；这是实现者 self-review，后续仍需独立 review。
+- Base SHA / head SHA：base `edda6157e47c644cd073f52a57e3c31a86e40397`；head 为提交本包后的当前分支提交。
+- PR / branch / worktree：本地 branch `codex/TASK-AGENT-001-remaining-verification` / `D:/kk-studio/.worktrees/remaining-verification`
+
+## 评审范围和方式
+
+- 读取了 `App.tsx` 的画布提交门禁、设置 CSS、相关浏览器/开发态测试和本目录验证证据。
+- 检查了 Codex 来源条件不会改变普通 API 请求，且生产 455 项和 development receipt 均通过。
+- 未覆盖真实 Provider、Tauri release、Hosted CI、Mobile；这些边界已在 verification 中保留。
+
+## Findings
+
+| ID | P0–P3 | Pass | merge/release blocker | 文件/证据 | 处理/复验 |
+| --- | --- | --- | --- | --- | --- |
+| R-1 | P2 | PASS | 否 | `src/App.tsx` Codex canvas gate | 定向 Agent 与全量浏览器通过 |
+| R-2 | P2 | PASS | 否 | 设置 `input/select` 公共样式 | 390/1920 页面和 UI 标准通过 |
+| R-3 | P2 | PASS | 否 | 过时的测试入口/模型文案 | production 455/455、development PASS |
+
+## 适用门禁
+
+| 门禁 | 真实结果 | 未满足的影响 |
+| --- | --- | --- |
+| Self-review | PASS（当前工作树） | 新 head 仍需复审 |
+| CI / 定向回归 | 本地完整 `npm run verify` PASS | Hosted 未运行 |
+| 用户 UI/交互验收 | 未发生 | 不能替代用户最终验收 |
+| 推送/合并/发布授权 | 未执行 | 不代表已发布 |
+
+## 结论
+
+- PASS WITH FOLLOW-UPS：本地 Web/Vite 回归完成；外部和跨平台任务保留开放状态。
+- 未关闭 blocker：真实 Provider/GPU、Hosted Windows 原因、Tauri 和 Mobile 验收。
+- 新 head SHA 发生后本 review 对新提交失效；合并前需要独立审查和重新验证。

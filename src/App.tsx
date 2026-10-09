@@ -1993,6 +1993,13 @@ export default function App() {
     const activeTask = original?.tasks.find(
       (task) => task.status === "queued" || task.status === "running",
     );
+    const codexCanvas =
+      request.origin === "canvas" &&
+      original?.items.some(
+        (item) =>
+          item.id === request.input.sourceItemId &&
+          item.generationSource === "codex",
+      );
     const requestModel =
       request.origin === "canvas" ? request.input.model : request.input.model;
     let effectivePrompt = request.input.prompt;
@@ -2011,11 +2018,13 @@ export default function App() {
     const uiState = getGenerationUiState({
       prompt: effectivePrompt,
       inputValid: Boolean(effectivePrompt.trim()),
-      modelConfigured: request.origin === "agent" || homeModelConfig.configured,
+      modelConfigured:
+        request.origin === "agent" || codexCanvas || homeModelConfig.configured,
       quotaAvailable: true,
       online: typeof navigator === "undefined" ? true : navigator.onLine,
       serviceConfigured:
         request.origin === "agent" ||
+        codexCanvas ||
         (homeModelConfig.configured && Boolean(requestModel.trim())),
       taskStatus: activeTask
         ? activeTask.status === "queued"

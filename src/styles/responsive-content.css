@@ -175,7 +175,8 @@
     white-space: nowrap;
   }
   .settings-select,
-  .settings-field input {
+  .settings-field input,
+  .settings-field select {
     min-height: 40px;
   }
   .settings-row {

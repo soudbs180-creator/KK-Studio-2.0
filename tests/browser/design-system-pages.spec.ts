@@ -156,10 +156,16 @@ for (const width of [390, 1920]) {
           await dialog.getByRole("tab", { name: /伙伴/ }).click();
           await expect(dialog.getByRole("tabpanel")).toContainText("Agent");
           await dialog.getByRole("tab", { name: /插件/ }).click();
-          await expect(dialog.locator(".plugin-manager-row").first()).toHaveCSS(
-            "border-radius",
-            "20px",
-          );
+          const pluginRow = dialog.locator(".plugin-manager-row").first();
+          if (await pluginRow.count()) {
+            await expect(pluginRow).toHaveCSS("border-radius", "20px");
+          } else {
+            await expect(
+              dialog
+                .locator(".settings-empty-state")
+                .filter({ hasText: "暂无插件" }),
+            ).toBeVisible();
+          }
           await page.screenshot({
             path: info.outputPath(`settings-plugins-${theme}-${width}.png`),
             animations: "disabled",

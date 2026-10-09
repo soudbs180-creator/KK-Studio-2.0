@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-10 当前主线剩余回归验证（TASK-AGENT-001，PARTIAL）
+
+基于当前主线 `edda6157` 的隔离工作树修复并验证四类本地回归：Codex 画布来源项进入内置生图时不再被通用 API 模型门禁误拦；设置供应商下拉框与输入框共享控件几何和窄屏命中区；Google 图片归档、插件空态及开发态设置入口断言对齐当前产品语义。完整 `npm run verify` 退出码 0：Node 911（903 通过、8 跳过）、Agent 172/174（2 跳过）、UI 215/0、生产浏览器 455/455、Vite development 插件 receipt PASS。改动保存在 `codex/remaining-verification-20261010`，证据见[交付包](changes/2026-10-10-remaining-verification/verification.md)。真实 Provider/GPU、Hosted Windows 原因、Tauri release、Mobile 和用户产品验收仍未发生，`TASK-AGENT-001` 保持 PARTIAL，其他剩余 TODO/BLOCKED 任务不因本地回归自动关闭。
+
 ## 2026-10-10 多平台模型能力闭环增量（TASK-AI-GATEWAY-001）
 
 在既有网关与 Codex Agent 链路上完成可插拔能力闭环：新增 `chat` operation 和独立文本结果，Ark 官方通道调用 `/chat/completions`；generation-server 增加安全 `/v1/models`，`stream:true` 返回单次 buffered SSE；图片模型选择器优先显示完整已验证模型 ID，Codex 图片事件沿归档、画布结果和 asset provenance 传递 `effectiveModel`，上游缺失时显示“图片模型未报告”。复用现有 credentialRef、Registry/Scheduler、ProviderConnection 和 UI Design System，不引入 headless、第二队列或第二套账号状态源。验证：gateway/Agent/model 定向回归 69 项全绿，Agent 模型选择定向回归 26 项全绿；当前主工作区全量回归为 911 项 903 通过、0 失败、8 跳过，前端冒烟 16/16，连接拖拽 7/7。真实 Ark/Codex 联调需要用户凭据，保持 NOT VERIFIED。
