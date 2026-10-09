@@ -1197,16 +1197,12 @@
 .creation-composer-actions .like-node,
 .creation-composer-actions .expand-composer {
   position: static;
-  width: 28px;
-  height: 28px;
+  width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
   display: grid;
   place-items: center;
   border-radius: var(--ui-radius-control);
   color: var(--text-secondary);
-}
-.creation-composer-actions .expand-composer {
-  width: 22px;
-  height: 22px;
 }
 .creation-composer-actions button:hover,
 .creation-composer-actions button:focus-visible {

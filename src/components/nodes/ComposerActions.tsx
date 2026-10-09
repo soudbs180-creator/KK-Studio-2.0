@@ -21,7 +21,7 @@ export default function ComposerActions({
         aria-pressed={liked}
         onClick={onToggleLike}
       >
-        <UiIcon name="favorite" size={16} />
+        <UiIcon name="favorite" size={20} />
       </button>
       <button
         className="expand-composer"

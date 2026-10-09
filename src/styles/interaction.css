@@ -105,8 +105,8 @@
   z-index: 2;
   display: grid;
   place-items: center;
-  width: 17px;
-  height: 17px;
+  width: var(--kk-control-h-sm);
+  height: var(--kk-control-h-sm);
   padding: 0;
   border: 1px solid var(--border-default);
   border-radius: 50%;
@@ -200,10 +200,10 @@
   place-items: center;
 }
 .reference-slot .reference-remove {
-  top: -5px;
-  right: -5px;
-  width: 14px;
-  height: 14px;
+  top: -6px;
+  right: -6px;
+  width: var(--kk-control-h-sm);
+  height: var(--kk-control-h-sm);
 }
 .reference-slot:hover .reference-remove,
 .reference-slot .reference-remove:focus-visible {

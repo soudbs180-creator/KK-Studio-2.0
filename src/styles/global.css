@@ -412,15 +412,20 @@ button[aria-pressed="true"] {
 }
 .composer-ref-thumb button {
   position: absolute;
-  top: -4px;
-  right: -4px;
-  width: 14px;
-  height: 14px;
+  top: -6px;
+  right: -6px;
+  width: var(--kk-control-h-sm);
+  height: var(--kk-control-h-sm);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border-default);
   border-radius: 999px;
   background: var(--bg-surface);
   color: var(--text-primary);
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
   line-height: 1;
+  z-index: 2;
 }
 
 .conversation-panel > .resize-handle {
