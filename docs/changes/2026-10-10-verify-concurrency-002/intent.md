@@ -46,4 +46,4 @@
 
 - 2026-10-10，用户进一步明确要求“检验并且合并提交”，授权将候选分支推送、创建 PR 并在所有规则门禁满足时合并；该授权不覆盖绕过独立 review 或隐藏未完成项。
 - 2026-10-10 勘误：前述 `9b023969` 与 run `37966523539` 仅为历史 Hosted 回执；后续 substantive head `872ba917f8cae15a27455a5948cd19b7abd7c508` 的 PR/push Hosted 回执已分别在 run `37971288430` / `37971283525` 成功。AC-4 允许保留 PARTIAL/UNKNOWN；历史根因是 DONE/根因声明的 P2 follow-up，合并后 main 回读是 squash 后的收口动作，均不得被绿灯伪装成已解决。
-- PR #46 head `9b023969fad8a29ef33702d7ae3674bba9b82714` 的 Hosted `verify`、`delivery`、`deploy-linux` 已成功，但历史 source105 根因仍 UNKNOWN，合并后 main 尚未回读；任务继续保持 PARTIAL。
+- 历史回执（prior）：PR #46 head `9b023969fad8a29ef33702d7ae3674bba9b82714` 的 Hosted `verify`、`delivery`、`deploy-linux` 已成功；历史 source105 根因仍 UNKNOWN，合并后 main 尚未回读。当前事实以本节勘误、最终 PR head 和 Hosted 回执为准，任务继续保持 PARTIAL。
