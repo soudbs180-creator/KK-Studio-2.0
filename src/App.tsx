@@ -875,6 +875,9 @@ export default function App() {
         task.kind === "text" || task.imageEdit || task.imageEditContext
           ? task.prompt
           : compileDesignPrompt(task.prompt, {
+              referenceRoles: task.attachments.map(
+                (attachment) => attachment.role,
+              ),
               referenceCount: task.attachments.length,
               outputCount: task.requestedOutputs,
             });
@@ -2519,9 +2522,11 @@ export default function App() {
       const requestedSection = view.split("/")[1];
       const sectionAlias: Record<string, SettingsSection> = {
         plugins: "mcp",
-        extensions: "mcp",
+        extensions: "extensions",
         partners: "partners",
         skills: "skill",
+        skill: "skill",
+        mcp: "mcp",
       };
       setSettingsSection(
         sectionAlias[requestedSection] ??

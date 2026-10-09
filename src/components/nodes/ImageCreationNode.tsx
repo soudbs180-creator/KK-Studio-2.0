@@ -52,15 +52,31 @@ export default function ImageCreationNode({
   useEffect(() => {
     if (item.referenceOnly) onExtraHeightChange(0);
   }, [item.referenceOnly, onExtraHeightChange]);
+  const incomingReferences = references ?? [];
+  const composerReferences: CanvasReference[] =
+    item.referenceSlot === "主体" && item.assetId
+      ? [
+          {
+            assetId: item.assetId,
+            title: item.title,
+            preview: image || item.preview,
+            slot: "主体",
+          },
+          ...incomingReferences.filter(
+            (reference) => reference.assetId !== item.assetId,
+          ),
+        ]
+      : incomingReferences;
   function upload(value?: File): void {
     if (!value) return;
     if (
       !["image/png", "image/jpeg", "image/webp", "image/gif"].includes(
         value.type,
       ) ||
+      value.size === 0 ||
       value.size > 10 * 1024 * 1024
     ) {
-      setError("请选择 10 MB 以内的 PNG、JPG、WebP 或 GIF 图片。");
+      setError("请选择 10 MB 以内且不为空的 PNG、JPG、WebP 或 GIF 图片。");
       return;
     }
     const version = ++uploadVersion.current;
@@ -73,7 +89,11 @@ export default function ImageCreationNode({
           preview: asset.preview,
           assetId: asset.assetId,
           title: value.name,
-          referenceOnly: true,
+          referenceSlot: "主体",
+          // A top-level upload is the generation source (主体), so keep the
+          // composer mounted for prompt/edit actions. Reference-only cards
+          // are created exclusively by the composer slot upload flow.
+          referenceOnly: false,
         });
         setError("");
       })
@@ -163,7 +183,7 @@ export default function ImageCreationNode({
           anchor={preview}
           selected={selected}
           onPreview={openPreview}
-          references={references}
+          references={incomingReferences}
         />
       )}
       {!selected && error && (
@@ -184,7 +204,7 @@ export default function ImageCreationNode({
           referenceSlot.current = slot;
           referenceFile.current?.click();
         }}
-        references={references}
+        references={composerReferences}
         referenceLimit={referenceLimit}
         prompt={item.prompt}
         model={model}

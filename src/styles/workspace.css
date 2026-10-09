@@ -162,6 +162,9 @@
   border-color: var(--border-default);
 }
 .project-groups {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
   padding-top: 75px;
 }
 .project-groups-header {
@@ -217,7 +220,7 @@
 .project-menu-section-label {
   padding: 6px 8px 3px;
   color: var(--text-tertiary);
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
 }
 .project-groups-menu button {
   width: 100%;
@@ -324,7 +327,7 @@
   border-radius: 6px;
   text-align: left;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
 }
 .project-menu button:hover,
 .project-menu button:focus-visible {
@@ -388,8 +391,12 @@
   display: block;
   padding: 3px 4px;
   color: var(--text-tertiary);
-  font-size: 10px;
-  line-height: 1.4;
+  font-size: var(--kk-font-caption);
+  line-height: 16px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 .account-row {
   display: flex;
@@ -1178,10 +1185,38 @@
 .creation-composer.expanded textarea {
   height: 193px;
 }
-.expand-composer {
+.creation-composer-actions {
   position: absolute;
-  right: 23px;
-  top: 22px;
+  top: 20px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 2;
+}
+.creation-composer-actions .like-node,
+.creation-composer-actions .expand-composer {
+  position: static;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--ui-radius-control);
+  color: var(--text-secondary);
+}
+.creation-composer-actions .expand-composer {
+  width: 22px;
+  height: 22px;
+}
+.creation-composer-actions button:hover,
+.creation-composer-actions button:focus-visible {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+.creation-composer-actions .like-node[aria-pressed="true"] {
+  color: var(--text-danger);
+}
+.expand-composer {
   color: var(--border-default);
 }
 .expand-composer img {

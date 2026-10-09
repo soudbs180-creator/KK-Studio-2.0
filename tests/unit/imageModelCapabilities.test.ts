@@ -17,7 +17,11 @@ import {
 } from "../../src/features/creation/providerRegistry.ts";
 import type { ImageModelCapabilities } from "../../src/domain/imageModelCapabilities.ts";
 import { canConnectTarget } from "../../src/components/canvas/connectionRules.ts";
-import type { CanvasCollectionItem } from "../../src/domain/canvasItems.ts";
+import { availableCanvasReferenceSlots } from "../../src/domain/canvasReferenceLimits.ts";
+import type {
+  CanvasCollectionItem,
+  CanvasReference,
+} from "../../src/domain/canvasItems.ts";
 
 const catalogKey = "kk-studio:model-catalog:v1";
 const connection = {
@@ -31,6 +35,54 @@ const connection = {
     maxReferences: 4,
   },
 };
+
+test("canvas upload capacity subtracts existing incoming assets once", () => {
+  const source = {
+    id: "source",
+    title: "主体",
+    description: "",
+    kind: "image",
+    assetId: "asset-source",
+  } as CanvasCollectionItem;
+  const reference = (id: string, assetId: string): CanvasReference => ({
+    id,
+    assetId,
+    title: id,
+  });
+
+  assert.equal(
+    availableCanvasReferenceSlots(source, [reference("edge-b", "asset-b")], 3),
+    2,
+  );
+  assert.equal(
+    availableCanvasReferenceSlots(
+      source,
+      [reference("edge-source", "asset-source")],
+      3,
+    ),
+    3,
+  );
+  assert.equal(
+    availableCanvasReferenceSlots(
+      source,
+      [
+        reference("edge-b", "asset-b"),
+        reference("edge-c", "asset-c"),
+        reference("edge-d", "asset-d"),
+      ],
+      3,
+    ),
+    0,
+  );
+  assert.equal(
+    availableCanvasReferenceSlots(
+      { ...source, assetId: undefined },
+      [reference("edge-a", "asset-a"), reference("edge-b", "asset-b")],
+      4,
+    ),
+    2,
+  );
+});
 
 function browserStorage(t: TestContext) {
   const values = new Map<string, string>();

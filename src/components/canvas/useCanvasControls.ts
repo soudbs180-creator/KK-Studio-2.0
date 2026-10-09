@@ -13,6 +13,7 @@ import { useCanvasView } from "./useCanvasView";
 import { useCanvasViewport } from "./useCanvasViewport";
 import { surfaceScale, toSurfacePoint } from "./canvasSurface";
 import { getImageSelectionPosition } from "./imageSelectionPosition";
+import { visibleComposerExtraHeight } from "./composerLayout";
 import { useCanvasPreferences } from "./useCanvasPreferences";
 import type {
   KeyboardEvent as ReactKeyboardEvent,
@@ -172,10 +173,7 @@ export function useCanvasControls({
     const viewWidth = layout.width;
     const actionSpace = compact ? 52 : 0;
     const height =
-      layout.height +
-      (item.result
-        ? Math.max(0, composerExtraHeight - 60)
-        : composerExtraHeight);
+      layout.height + visibleComposerExtraHeight(composerExtraHeight);
     const left = node.x + layout.left;
     const scale = Math.max(
       MIN_SCALE,

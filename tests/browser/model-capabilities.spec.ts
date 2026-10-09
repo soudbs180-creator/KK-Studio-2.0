@@ -46,7 +46,6 @@ for (const duplicate of [true, false]) {
       )
       .toBeTruthy();
     // Restore an editable archived node, as a generated or legacy image can be.
-    // Upload-only nodes deliberately reject incoming edges in the current UI.
     const restored = await page.evaluate((id) => {
       const key = "kk-studio-next:creation:v1";
       const snapshot = JSON.parse(localStorage.getItem(key)!);
@@ -73,7 +72,9 @@ for (const duplicate of [true, false]) {
       .setInputFiles(
         duplicate ? original : "public/fixtures/demo/blue-hour.png",
       );
-    await expect(item.locator(".composer-ref-thumb")).toHaveCount(1);
+    await expect(item.locator(".composer-ref-thumb")).toHaveCount(
+      duplicate ? 1 : 2,
+    );
     await expect
       .poll(() =>
         page.evaluate(
@@ -146,7 +147,9 @@ for (const duplicate of [true, false]) {
     await expect(
       item.getByRole("button", { name: "画布模型", exact: true }),
     ).toContainText("image-capability-a");
-    await expect(item.locator(".composer-ref-thumb")).toHaveCount(1);
+    await expect(item.locator(".composer-ref-thumb")).toHaveCount(
+      duplicate ? 1 : 2,
+    );
     await expect(item.locator(".uploaded-image")).toBeVisible();
     const prepared = await page.evaluate((id) => {
       const snapshot = JSON.parse(

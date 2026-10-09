@@ -89,7 +89,7 @@ for (const width of [390, 1920]) {
         "网络",
         "记忆",
         "模型供应商",
-        "MCP",
+        "扩展",
         "Comfy UI",
         "高级",
         "软件更新",
@@ -143,7 +143,10 @@ for (const width of [390, 1920]) {
             ["16px", "16px"],
           ]);
         }
-        if (section === "MCP") {
+        if (section === "扩展") {
+          await expect(
+            dialog.locator(".settings-nav").locator('[aria-current="page"]'),
+          ).toHaveCount(1);
           await expect(dialog.locator(".settings-mcp-add")).toHaveCSS(
             "border-radius",
             "20px",

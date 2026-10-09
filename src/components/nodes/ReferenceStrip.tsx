@@ -1,7 +1,8 @@
-import type { CanvasReference } from "../../domain/canvasItems";
+import {
+  CANVAS_REFERENCE_SLOTS,
+  type CanvasReference,
+} from "../../domain/canvasItems";
 import UiIcon from "../UiIcon";
-
-const REFERENCE_SLOTS = ["主体", "风格", "材质", "构图", "Mask"] as const;
 
 /** Five semantic slots while keeping the node-owned file picker contract. */
 export default function ReferenceStrip({
@@ -18,7 +19,7 @@ export default function ReferenceStrip({
   onRemove?: (connectionId: string) => void;
 }) {
   const used = new Set<CanvasReference>();
-  const bySlot = REFERENCE_SLOTS.map((slot) => {
+  const bySlot = CANVAS_REFERENCE_SLOTS.map((slot) => {
     const entry = references.find(
       (reference) => reference.slot === slot && !used.has(reference),
     );
@@ -71,16 +72,24 @@ export default function ReferenceStrip({
               </span>
             ) : (
               <button
-                className="reference-slot-add"
+                className={`reference-slot-add ${slot === "Mask" ? "is-unavailable" : ""}`}
                 type="button"
-                aria-label={`添加${slot}参考图`}
-                disabled={referenceCount >= limit}
-                title={
-                  limit === 0
-                    ? "当前模型没有可用的参考图位置"
-                    : `最多 ${limit} 张参考图`
+                aria-label={
+                  slot === "Mask"
+                    ? "Mask 需要在图像编辑器中绘制"
+                    : `添加${slot}参考图`
                 }
-                onClick={() => onAdd(slot)}
+                disabled={slot === "Mask" || referenceCount >= limit}
+                title={
+                  slot === "Mask"
+                    ? "Mask 需要通过图像编辑器绘制，不能上传普通参考图"
+                    : limit === 0
+                      ? "当前模型没有可用的参考图位置"
+                      : `最多 ${limit} 张参考图`
+                }
+                onClick={() => {
+                  if (slot !== "Mask") onAdd(slot);
+                }}
               >
                 <UiIcon name="add" size={14} />
               </button>

@@ -428,7 +428,7 @@
   }
   .sidebar .project-groups {
     overflow-x: clip;
-    overflow-y: visible;
+    overflow-y: auto;
   }
   .sidebar .project-groups-header,
   .sidebar .project-groups > section {
@@ -478,7 +478,7 @@
     padding-right: 5px;
   }
   .sidebar .project-link {
-    font-size: 10px;
+    font-size: var(--kk-font-caption);
     font-weight: 400;
     color: var(--ui-sidebar-settings-icon);
     background: var(--bg-card);
