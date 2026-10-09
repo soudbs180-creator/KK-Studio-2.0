@@ -54,6 +54,10 @@ test("主图上传保留同节点编辑器，主体槽预览且操作区不遮�
   expect(slotBox).not.toBeNull();
   expect(likeBox).not.toBeNull();
   expect(expandBox).not.toBeNull();
+  expect(likeBox!.width).toBe(32);
+  expect(likeBox!.height).toBe(32);
+  expect(expandBox!.width).toBe(32);
+  expect(expandBox!.height).toBe(32);
   expect(intersects(slotBox!, likeBox!)).toBe(false);
   expect(intersects(slotBox!, expandBox!)).toBe(false);
   expect(intersects(likeBox!, expandBox!)).toBe(false);

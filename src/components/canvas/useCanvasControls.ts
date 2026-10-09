@@ -96,9 +96,11 @@ export function useCanvasControls({
     nodes,
     setNodes,
     transform,
+    selectedNode,
     setTransform,
     setSelectedNode,
     usableViewport,
+    composerExtraHeight,
   });
   const pointer = useCanvasPointer({
     containerRef,
@@ -299,6 +301,7 @@ export function useCanvasControls({
   return {
     ...view,
     setComposerExtraHeight,
+    composerExtraHeight,
     ...actions,
     ...canvasPreferences,
     containerRef,
