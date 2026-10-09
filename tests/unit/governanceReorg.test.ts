@@ -103,6 +103,7 @@ test("worktree reclamation only targets rebuildable paths in clean worktrees", (
     false,
   );
   assert.deepEqual(generatedPathCandidates("D:/repo"), [
+    "D:/repo/.tmp",
     "D:/repo/node_modules",
     "D:/repo/dist",
     "D:/repo/test-results",

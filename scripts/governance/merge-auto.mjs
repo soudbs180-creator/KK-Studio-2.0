@@ -10,6 +10,10 @@ export const REQUIRED_CHECKS = Object.freeze([
   "governance",
 ]);
 
+export function activationReadbackPass({ activation, paused } = {}) {
+  return activation?.value === "enabled" && paused?.value === "false";
+}
+
 const GRAPHQL_ENDPOINT = "https://api.github.com/graphql";
 
 function asLogin(value) {
@@ -22,10 +26,7 @@ function branchMatchesMain(ruleset) {
       ? ruleset.conditions?.ref_name?.include
       : ruleset?.conditions?.ref_name?.include;
   if (!Array.isArray(includes)) return false;
-  return includes.some(
-    (ref) =>
-      ref === "refs/heads/main" || ref === "main" || ref === "~DEFAULT_BRANCH",
-  );
+  return includes.some((ref) => ref === "refs/heads/main" || ref === "main");
 }
 
 function rules(ruleset) {
@@ -102,7 +103,9 @@ function checkResults(checks, headSha) {
   for (const check of checks) {
     const name = check?.name ?? check?.context;
     if (!name) continue;
-    if (headSha && check.head_sha && check.head_sha !== headSha) continue;
+    // A check without an exact head SHA is ambiguous. It may be a stale
+    // status from another commit, so it cannot satisfy an exact-head gate.
+    if (headSha && check.head_sha !== headSha) continue;
     byName.set(name, check);
   }
   const missing = REQUIRED_CHECKS.filter((name) => {
@@ -123,6 +126,10 @@ function checkResults(checks, headSha) {
 function reviewPass(reviews, { headSha, author }) {
   if (!Array.isArray(reviews))
     return { ok: false, reason: "reviews unavailable" };
+  // The REST endpoint is requested with per_page=100 below. A full page is
+  // still ambiguous without a Link-header walk, so refuse to trust it.
+  if (reviews.length >= 100)
+    return { ok: false, reason: "review history may be paginated" };
   const latest = new Map();
   for (const review of reviews) {
     const login = asLogin(review);
@@ -249,7 +256,7 @@ async function loadRemoteState(api, number) {
   const base = `/repos/${api.repository}`;
   const pullRequest = await api.request(`${base}/pulls/${number}`);
   const [reviews, checkRuns, branchProtection, rulesets] = await Promise.all([
-    api.request(`${base}/pulls/${number}/reviews`),
+    api.request(`${base}/pulls/${number}/reviews?per_page=100`),
     api.request(`${base}/commits/${pullRequest.head.sha}/check-runs`),
     api.request(`${base}/branches/main/protection`).catch(() => null),
     api.request(`${base}/rulesets?includes_parents=true`).catch(() => []),
@@ -306,7 +313,9 @@ async function loadRemoteState(api, number) {
       branch?.name === "main" &&
       Boolean(branch?.commit?.sha) &&
       checkResults(mainRuns.check_runs ?? [], branch.commit.sha).ok,
-    activation: activation?.value === "enabled" && paused?.value !== "true",
+    // Both variables must be read successfully. Missing/ambiguous pause state
+    // fails closed instead of treating a readback error as "not paused".
+    activation: activationReadbackPass({ activation, paused }),
     owner,
     name,
   };
@@ -327,6 +336,32 @@ export async function enablePullRequestAutoMerge({ api, pullRequest, gate }) {
   return data.enablePullRequestAutoMerge.pullRequest;
 }
 
+const AUTO_MERGE_STATE_QUERY = `query($id:ID!){node(id:$id){... on PullRequest {autoMergeRequest {enabledAt}}}}`;
+
+/** Disable native auto-merge and verify the setting is actually gone. */
+export async function disablePullRequestAutoMerge({ api, pullRequest }) {
+  const id = pullRequest?.node_id;
+  if (!id) throw new Error("Pull request node id is unavailable");
+  const readState = async () => {
+    const data = await api.graphql(AUTO_MERGE_STATE_QUERY, { id });
+    if (
+      !data?.node ||
+      !Object.prototype.hasOwnProperty.call(data.node, "autoMergeRequest")
+    )
+      throw new Error("Native auto-merge state readback is unavailable");
+    return data.node.autoMergeRequest;
+  };
+  if ((await readState()) !== null) {
+    await api.graphql(
+      `mutation($id:ID!){disablePullRequestAutoMerge(input:{pullRequestId:$id}){pullRequest{number}}}`,
+      { id },
+    );
+  }
+  if ((await readState()) !== null)
+    throw new Error("Native auto-merge remains enabled after disable request");
+  return { disabled: true };
+}
+
 async function main() {
   const payload = JSON.parse(
     fs.readFileSync(process.env.GITHUB_EVENT_PATH, "utf8"),
@@ -341,8 +376,20 @@ async function main() {
   const state = await loadRemoteState(api, number);
   const gate = evaluateMergeEligibility(state);
   console.log(JSON.stringify({ gate }, null, 2));
-  if (!gate.ok) process.exitCode = 0;
-  else
+  if (!gate.ok) {
+    try {
+      const autoMerge = await disablePullRequestAutoMerge({
+        api,
+        pullRequest: state.pullRequest,
+      });
+      console.log(JSON.stringify({ gate, autoMerge }, null, 2));
+    } catch (error) {
+      console.error(
+        `[KK Studio auto-merge] gate denied and disable failed: ${error.message}`,
+      );
+      process.exitCode = 1;
+    }
+  } else
     await enablePullRequestAutoMerge({
       api,
       pullRequest: state.pullRequest,

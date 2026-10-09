@@ -1,7 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { REQUIRED_CHECKS, createGitHubApi } from "./merge-auto.mjs";
+import {
+  REQUIRED_CHECKS,
+  createGitHubApi,
+  disablePullRequestAutoMerge,
+} from "./merge-auto.mjs";
 
 function checkResults(checks, sha) {
   if (!Array.isArray(checks))
@@ -9,8 +13,7 @@ function checkResults(checks, sha) {
   const missing = REQUIRED_CHECKS.filter((name) => {
     const matching = checks.find(
       (check) =>
-        (check.name ?? check.context) === name &&
-        (!check.head_sha || check.head_sha === sha),
+        (check.name ?? check.context) === name && check.head_sha === sha,
     );
     return !matching || matching.conclusion !== "success";
   });
@@ -65,25 +68,57 @@ export async function pauseAfterMainFailure({ api, evidence, health }) {
   if (health.ok) return { paused: false, incident: null };
   const variablePath = `/repos/${api.repository}/actions/variables/AUTO_MERGE_PAUSED`;
   const variableBody = {
-    method: "PUT",
+    method: "PATCH",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ name: "AUTO_MERGE_PAUSED", value: "true" }),
   };
   let pauseError = null;
   try {
     await api.request(variablePath, variableBody);
+    const readback = await api.request(variablePath);
+    if (readback?.value !== "true")
+      throw new Error("AUTO_MERGE_PAUSED readback is not true");
   } catch (error) {
-    // PUT updates an existing variable; POST creates it on first failure.
+    // PATCH updates an existing variable; POST creates it on first failure.
     try {
       await api.request(`/repos/${api.repository}/actions/variables`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ name: "AUTO_MERGE_PAUSED", value: "true" }),
       });
+      const readback = await api.request(variablePath);
+      if (readback?.value !== "true")
+        throw new Error("AUTO_MERGE_PAUSED readback is not true");
     } catch (createError) {
       pauseError = `${error?.message ?? "update failed"}; ${createError?.message ?? "create failed"}`;
     }
   }
+  const disableErrors = [];
+  try {
+    const openPulls = await api.request(
+      `/repos/${api.repository}/pulls?state=open&base=main&per_page=100`,
+    );
+    if (!Array.isArray(openPulls))
+      throw new Error("open PR readback is unavailable");
+    for (const pullRequest of openPulls) {
+      if (
+        pullRequest?.head?.repo?.full_name &&
+        pullRequest.head.repo.full_name !== api.repository
+      )
+        continue;
+      try {
+        await disablePullRequestAutoMerge({ api, pullRequest });
+      } catch (error) {
+        disableErrors.push(error?.message ?? "disable failed");
+      }
+    }
+  } catch (error) {
+    disableErrors.push(error?.message ?? "open PR readback failed");
+  }
+  if (disableErrors.length)
+    pauseError = [pauseError, `auto-merge disable: ${disableErrors.join("; ")}`]
+      .filter(Boolean)
+      .join("; ");
   const incidentPayload = {
     title: "[auto-merge incident] main guard failed",
     body: incidentBody({ ...evidence, health }),
@@ -108,7 +143,7 @@ export async function pauseAfterMainFailure({ api, evidence, health }) {
     });
   }
   return {
-    paused: true,
+    paused: !pauseError,
     incident: incident.html_url ?? incident.number ?? null,
     pauseError,
   };
@@ -147,7 +182,15 @@ async function main() {
     })),
   };
   console.log(JSON.stringify({ health, evidence }, null, 2));
-  if (!health.ok) await pauseAfterMainFailure({ api, evidence, health });
+  if (!health.ok) {
+    const result = await pauseAfterMainFailure({ api, evidence, health });
+    if (!result.paused) {
+      console.error(
+        `[KK Studio main guard] failed to pause auto-merge: ${result.pauseError}`,
+      );
+      process.exitCode = 1;
+    }
+  }
 }
 
 if (

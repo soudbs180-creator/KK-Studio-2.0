@@ -4,6 +4,7 @@ import path from "node:path";
 import { execFileSync } from "node:child_process";
 
 export const STATIC_GENERATED = [
+  ".tmp",
   "node_modules",
   "dist",
   "test-results",

@@ -16,6 +16,7 @@ import {
   DEFAULT_WORKTREE_POLICY,
   checkWorktreeCreation,
   loadWorktreePolicy,
+  measureGeneratedBytes,
 } from "../../scripts/governance/worktree-policy.mjs";
 
 test("worktree removal requires every task DONE and a main-reachable commit", () => {
@@ -207,4 +208,15 @@ test("worktree creation enforces the active and generated budgets while reusing 
   });
   assert.equal(denied.allowed, false);
   assert.match(denied.reason, /budget/i);
+});
+
+test("worktree storage accounting includes temporary agent output", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "kk-worktree-policy-"));
+  fs.mkdirSync(path.join(root, ".tmp"));
+  fs.writeFileSync(
+    path.join(root, ".tmp", "agent-runtime-previous.bin"),
+    "12345",
+  );
+  assert.equal(measureGeneratedBytes(root), 5);
+  fs.rmSync(root, { recursive: true, force: true });
 });

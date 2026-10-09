@@ -7,6 +7,7 @@ export const DEFAULT_WORKTREE_POLICY = Object.freeze({
   maxActiveWorktrees: 4,
   maxGeneratedBytes: 20 * 1024 ** 3,
   generatedDirectories: [
+    ".tmp",
     "node_modules",
     "dist",
     "test-results",

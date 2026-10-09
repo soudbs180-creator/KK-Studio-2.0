@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   REQUIRED_CHECKS,
+  activationReadbackPass,
+  disablePullRequestAutoMerge,
   evaluateMergeEligibility,
   enablePullRequestAutoMerge,
   readRulesetConfig,
@@ -85,6 +87,17 @@ test("ruleset readback requires active main merge queue, squash, strict checks a
   );
 });
 
+test("ruleset readback does not treat an unknown default branch as main", () => {
+  const config = readRulesetConfig({
+    ruleset: {
+      ...ruleSet,
+      conditions: { ref_name: { include: ["~DEFAULT_BRANCH"] } },
+    },
+  });
+  assert.equal(config.targetMain, false);
+  assert.equal(rulesetReadbackPass(config), false);
+});
+
 test("auto-merge gate fails closed for missing, stale or unresolved evidence", () => {
   assert.equal(evaluateMergeEligibility(fixture()).ok, true);
   assert.match(
@@ -112,6 +125,18 @@ test("auto-merge gate fails closed for missing, stale or unresolved evidence", (
     /required checks/,
   );
   assert.match(
+    evaluateMergeEligibility(
+      fixture({
+        checks: REQUIRED_CHECKS.map((name) => ({
+          name,
+          status: "completed",
+          conclusion: "success",
+        })),
+      }),
+    ).reasons.join(),
+    /required checks/,
+  );
+  assert.match(
     evaluateMergeEligibility(fixture({ mainHealthy: false })).reasons.join(),
     /main health/,
   );
@@ -120,6 +145,27 @@ test("auto-merge gate fails closed for missing, stale or unresolved evidence", (
       fixture({ baseMatchesMain: false }),
     ).reasons.join(),
     /base SHA/,
+  );
+});
+
+test("activation requires explicit successful readback of both variables", () => {
+  assert.equal(
+    activationReadbackPass({
+      activation: { value: "enabled" },
+      paused: { value: "false" },
+    }),
+    true,
+  );
+  assert.equal(
+    activationReadbackPass({ activation: { value: "enabled" }, paused: null }),
+    false,
+  );
+  assert.equal(
+    activationReadbackPass({
+      activation: { value: "enabled" },
+      paused: { value: "true" },
+    }),
+    false,
   );
 });
 
@@ -153,6 +199,29 @@ test("native mutation is impossible when a gate is incomplete and uses exact hea
   );
 });
 
+test("native auto-merge denial disables an existing exact PR setting", async () => {
+  const states = [
+    { node: { autoMergeRequest: { enabledAt: "2026-10-09T00:00:00Z" } } },
+    { node: { autoMergeRequest: null } },
+  ];
+  const mutations: string[] = [];
+  const api = {
+    graphql: async (query: string) => {
+      if (query.includes("disablePullRequestAutoMerge")) {
+        mutations.push(query);
+        return { disablePullRequestAutoMerge: { pullRequest: { number: 7 } } };
+      }
+      return states.shift();
+    },
+  };
+  const result = await disablePullRequestAutoMerge({
+    api,
+    pullRequest: { node_id: "PR_node" },
+  });
+  assert.deepEqual(result, { disabled: true });
+  assert.equal(mutations.length, 1);
+});
+
 test("main guard identifies failed checks and records rollback evidence", async () => {
   const health = evaluateMainHealth({
     branch: { name: "main", commit: { sha: "b".repeat(40) } },
@@ -173,8 +242,13 @@ test("main guard identifies failed checks and records rollback evidence", async 
   const calls: string[] = [];
   const api = {
     repository: "o/r",
-    request: async (route: string) => {
+    request: async (route: string, options?: { method?: string }) => {
       calls.push(route);
+      if (route.endsWith("AUTO_MERGE_PAUSED") && !options?.method)
+        return { value: "true" };
+      if (route.endsWith("AUTO_MERGE_PAUSED") && options?.method === "PATCH")
+        return { value: "true" };
+      if (route.includes("/pulls?")) return [];
       return { html_url: "https://github.com/o/r/issues/1" };
     },
   };
@@ -182,8 +256,26 @@ test("main guard identifies failed checks and records rollback evidence", async 
   assert.equal(result.paused, true);
   assert.deepEqual(calls, [
     "/repos/o/r/actions/variables/AUTO_MERGE_PAUSED",
+    "/repos/o/r/actions/variables/AUTO_MERGE_PAUSED",
+    "/repos/o/r/pulls?state=open&base=main&per_page=100",
     "/repos/o/r/issues",
   ]);
+  assert.equal(result.pauseError, null);
+});
+
+test("main guard rejects successful checks without an exact head SHA", () => {
+  const sha = "b".repeat(40);
+  const health = evaluateMainHealth({
+    branch: { name: "main", commit: { sha } },
+    checks: REQUIRED_CHECKS.map((name) => ({
+      name,
+      status: "completed",
+      conclusion: "success",
+    })),
+    expectedSha: sha,
+  });
+  assert.equal(health.ok, false);
+  assert.match(health.reasons.join(), /required main checks/);
 });
 
 test("merge queue gate rejects base drift and ancestry failures", () => {
