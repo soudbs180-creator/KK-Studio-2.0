@@ -1,5 +1,67 @@
 [
   {
+    "dependencies": [
+      "TASK-LAUNCH-001"
+    ],
+    "owner": "root",
+    "priority": "P2",
+    "updated": "2026-10-09",
+    "affectedModules": [
+      "tests/unit/desktopRelease.test.ts",
+      "start-kk-studio.bat",
+      "docs"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-09-windows-entry-diagnostics/verification.md",
+      "docs/changes/2026-10-09-windows-entry-diagnostics/review.md"
+    ],
+    "id": "TASK-WINDOWS-ENTRY-DIAG-002",
+    "title": "补齐Windows入口子进程失败诊断",
+    "goal": "编译/启动/拒绝失败保留实际error/signal/timing与checker Node身份",
+    "scope": "仅测试fixture诊断、实际失败分类与同分支恢复门禁收尾，不改产品或timeout",
+    "acceptance": [
+      "三段完整安全诊断与实际Node marker，秘密和环境变量不输出",
+      "受控ENOENT/ETIMEDOUT仍真实失败且可区分，正常及no fallback断言保持",
+      "本地完整检查和精确source独立审查，当前Hosted/merge/main另凭回执"
+    ],
+    "branch": "test/TASK-IMAGE-RETRY-004-current-attempt",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-RETRY-004",
+    "status": "PARTIAL",
+    "verification": "实施前，IRV-DIAG-002由本任务承接；根因恢复另记TASK-WINDOWS-ENTRY-RECOVERY-003。",
+    "verificationResult": "PARTIAL"
+  },
+  {
+    "dependencies": [
+      "TASK-LAUNCH-001"
+    ],
+    "owner": "root",
+    "priority": "P2",
+    "updated": "2026-10-09",
+    "affectedModules": [
+      "tests/unit/desktopRelease.test.ts",
+      "start-kk-studio.bat",
+      "docs"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-09-windows-entry-diagnostics/verification.md",
+      "docs/changes/2026-10-09-windows-entry-diagnostics/review.md"
+    ],
+    "id": "TASK-WINDOWS-ENTRY-RECOVERY-003",
+    "title": "继续定位Hosted Windows入口未正常退出的原始原因",
+    "goal": "区分启动错误/终止/运行时与争用原因，不能凭null或选绿声称恢复",
+    "scope": "PR43 fa36推送37851173715失败原因仍UNKNOWN；原件保留，依新diagnostic继续",
+    "acceptance": [
+      "原失败和未复现/两个null故障原件保留",
+      "出现新分类时按证据给根因和最小修复，所有有效门禁保持",
+      "当前推广CI和main回归各自实际读取，不凭旧成功覆盖原失败"
+    ],
+    "branch": "unallocated",
+    "worktree": "unallocated",
+    "status": "TODO",
+    "verification": "实际失败根因UNKNOWN；独立本机未复现，P2跟进不能代填关闭。",
+    "verificationResult": "NOT_VERIFIED"
+  },
+  {
     "id": "TASK-IMAGE-RETRY-004",
     "title": "修复主线区域重试验收读取旧成功任务",
     "goal": "区域重试必须验证新任务身份和真实完成，延迟时不能提前通过",

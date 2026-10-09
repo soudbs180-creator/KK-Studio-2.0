@@ -1,0 +1,3 @@
+# Verification：Windows入口诊断
+
+Base6a，实施前head fa36d3512af1344cd28961bfbfad3f7aee1c9193。真实push37851173715 root803/812、fail1、skip8：入口started.status null≠0；未记录error/signal，原因UNKNOWN。独立一次本机带外部trace定向PASS且实际Node被BAT选为D工具v24.20，父v24.21；未称已复现或修复。相同null可以分别来自ENOENT与ETIMEDOUT，不能将整个22.49s误认为单cmd用时。当前新诊断实现/受控失败和新全量/Hosted待执行；旧完整PR37851243837成功不消除同headpush失败。

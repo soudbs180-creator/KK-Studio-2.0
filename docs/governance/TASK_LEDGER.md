@@ -6,6 +6,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
+| TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | PARTIAL | TASK-LAUNCH-001 | root |
+| TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | TASK-LAUNCH-001 | root |
 | TASK-IMAGE-RETRY-004 | 修复主线区域重试验收读取旧成功任务 | DONE | TASK-IMAGE-EDIT-001 | root |
 | TASK-DESKTOP-FLUSH-001 | 桌面关闭前耐久保存与失败留窗 | DONE | TASK-PLUGIN-DEV-001 | root |
 | TASK-PLUGIN-MARKDOWN-001 | 随包Markdown去除CDN代码依赖与离线渲染 | DONE | TASK-PLUGIN-DEV-001 | root |
@@ -116,6 +118,30 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | T2, TASK-UI-GOV-003 | root |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
+
+## TASK-WINDOWS-ENTRY-DIAG-002 — 补齐Windows入口子进程失败诊断
+
+- Goal: 编译/启动/拒绝失败保留实际error/signal/timing与checker Node身份
+- Scope: 仅测试fixture诊断、实际失败分类与同分支恢复门禁收尾，不改产品或timeout
+- Acceptance: 三段完整安全诊断与实际Node marker，秘密和环境变量不输出; 受控ENOENT/ETIMEDOUT仍真实失败且可区分，正常及no fallback断言保持; 本地完整检查和精确source独立审查，当前Hosted/merge/main另凭回执
+- Branch: `test/TASK-IMAGE-RETRY-004-current-attempt`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-IMAGE-RETRY-004`
+- Modules: tests/unit/desktopRelease.test.ts, start-kk-studio.bat, docs
+- Verification: PARTIAL — 实施前，IRV-DIAG-002由本任务承接；根因恢复另记TASK-WINDOWS-ENTRY-RECOVERY-003。
+- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-09-windows-entry-diagnostics/review.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/review.md)
+- Updated: 2026-10-09
+
+## TASK-WINDOWS-ENTRY-RECOVERY-003 — 继续定位Hosted Windows入口未正常退出的原始原因
+
+- Goal: 区分启动错误/终止/运行时与争用原因，不能凭null或选绿声称恢复
+- Scope: PR43 fa36推送37851173715失败原因仍UNKNOWN；原件保留，依新diagnostic继续
+- Acceptance: 原失败和未复现/两个null故障原件保留; 出现新分类时按证据给根因和最小修复，所有有效门禁保持; 当前推广CI和main回归各自实际读取，不凭旧成功覆盖原失败
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: tests/unit/desktopRelease.test.ts, start-kk-studio.bat, docs
+- Verification: NOT_VERIFIED — 实际失败根因UNKNOWN；独立本机未复现，P2跟进不能代填关闭。
+- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-09-windows-entry-diagnostics/review.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/review.md)
+- Updated: 2026-10-09
 
 ## TASK-IMAGE-RETRY-004 — 修复主线区域重试验收读取旧成功任务
 
