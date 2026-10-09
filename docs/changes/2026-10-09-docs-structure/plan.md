@@ -39,7 +39,7 @@
 
 | 风险 | 规避 |
 | --- | --- |
-| 工作区有 4 个 `src/styles/*.css` 未提交改动 | 只 `git add` 明确的文档文件；不 reset、不clean、不 checkout覆盖 |
+| 工作区有 3 个 `src/styles/*.css` 未提交改动（`canvas-navigation.css`、`ui-tokens.css`、`workspace.css`） | 只 `git add` 明确的文档文件；不 reset、不clean、不 checkout覆盖 |
 | 文档与实际门禁不符 | 每条规则都从脚本源码提取报错原文，不凭记忆 |
 | 引入断链 | 每批改动后跑 `check-markdown.mjs`；跨仓库引用写纯文本路径 |
 | 重复定义 | 每份新文档先检查是否已有承载者，确认后才动手 |

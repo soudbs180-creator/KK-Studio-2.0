@@ -77,7 +77,7 @@ Playwright 契约逐字段取自 `playwright.config.ts`：`testDir ./tests/brows
 
 - 文档改动同样受门禁：markdown 链接、账本同步、交付包完整。
 - 不手改生成文件：`TASK_LEDGER.md`、`features/README.md`。
-- 工作区已有 4 个 `src/styles/*.css` 未提交改动（画布 token 化，非本次范围），严格不add、不reset、不覆盖。
+- 会话开始时工作区有 3 个 `src/styles/*.css` 未提交改动（`canvas-navigation.css`、`ui-tokens.css`、`workspace.css`，属画布 token 化，非本次范围），严格不add、不reset、不覆盖。
 
 ## 9. 未决与后续
 

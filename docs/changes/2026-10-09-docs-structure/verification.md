@@ -18,10 +18,10 @@
 | ESLint 实际 `files` | `eslint.config.mjs` | `src/**/*.{ts,tsx}`、`tests/**/*.ts`、`scripts/**/*.mjs`、`*.config.{ts,mjs}`。**`tests/` 下 `.mjs`/`.ps1` 与任何目录的 `.tsx` 不被覆盖**（实测见下） |
 | UI 标准门禁 | `scripts/check-ui-standards.mjs` 全文 111 行 | 扫描 `src/**` 的 `.css`/`.tsx`（实测 214 文件）；`main.tsx` 必须含 `./styles/tokens.css`；未定义令牌；新增颜色字面量（例外 `global.css`/`ui-tokens.css`/`tokens.css`）；新增 Lucide 直连；`^src/components/.+\.tsx$` 且 >300 行；Iconsax 仅 `UiIcon.tsx` |
 | 架构边界 | `scripts/governance/import-boundaries.mjs` 全文 | `src/domain` 禁 components/features/integrations/styles/react/react-dom/@tauri-apps/Node 内置；**禁令列表不含 `runtime`**；server-only 为 `generation-server/**` 与 local-service 五个文件 |
-| 实际依赖边 | `grep` 统计 | `components → features` 约 97 处、`components → runtime` 2 处、`domain → runtime` 2 处（`modelProvider.ts`、`settings.ts`）。**依赖方向表已按此实测数据重写** |
+| 实际依赖边 | `grep -rn` 统计 | `components → features` **178 处 / 101 文件**、`components → runtime` **7 处**、`domain → runtime` 2 处（`modelProvider.ts`、`settings.ts`）。`components ⇄ features` 为双向。**依赖方向表已按此实测数据重写** |
 | Token 实况 | `grep -c` | `tokens.css` 254 条声明全部 `--kk-*`，`--ui-*` 定义 **0**；`--ui-*` 实际定义在 `ui-tokens.css`（127 条）与 `responsive-content.css` |
 | baseline 台账 | `node` 读取 `config/ui-legacy-baseline.json` | 19 个文件、28 个颜色键、46 个 Lucide 符号、13 个文件含 Lucide |
-| 超限文件 | 行数统计 | `src/App.tsx` 3152；`generation-server/repository.ts` 1063；`creation/model.ts` 972；`agent/agentConnection.ts` 942；`creation/taskRecovery.ts` 835；`creation/nativeTaskHost.ts` 824；`mcp/mcpClient.ts` 821；`agent/orchestrator.ts` 819；`local-service/store.ts` 775；`prompts/promptLibrary.ts` 644 |
+| 超限文件 | Node 脚本按门禁同口径（`trimEnd().split(/\r?\n/).length`）统计 | `src/` 下 `.ts`/`.tsx` 超 300 行共 **32 个，被门禁覆盖 0 个**。前十：`App.tsx` 3152、`generation-server/repository.ts` 1063、`creation/model.ts` 972、`agent/agentConnection.ts` 942、`creation/taskRecovery.ts` 835、`creation/nativeTaskHost.ts` 824、`mcp/mcpClient.ts` 821、`agent/orchestrator.ts` 819、`local-service/store.ts` 775、`prompts/promptLibrary.ts` 644 |
 | 自动合并脚本 | `ls scripts/governance/` | 仅 `delivery.mjs`、`import-boundaries.mjs`、`ledger.mjs`、`markdown-links.mjs`、`push-policy.mjs`。**无 auto-merge 脚本** |
 | 本地记忆位置 | 目录检查 | `D:\kk-studio\.workbuddy\memory\`，在 git 仓库 `D:\kk-studio\KK-Studio-2.0` **之外**，不受版本管理 |
 | worktree 数量 | `git worktree list \| wc -l` | **47**（含主仓）。此前记录的「83」为旧口径，未复核 |
@@ -40,7 +40,7 @@
 
 修改：
 
-- `docs/README.md`：26 行 → 索引（工程 11、架构 7、UI 5、治理 7 四类表）、阅读顺序、五层权威优先级与裁决细则、文档与代码同步表、本地记忆四层模型、仓库外工作区结构。
+- `docs/README.md`：26 行 → 索引（工程 11、架构 5 份文档 + `adr/` 目录、UI 5、治理 7 四类表）、阅读顺序、五层权威优先级与裁决细则、文档与代码同步表、本地记忆四层模型、仓库外工作区结构。
 - `docs/engineering/BRANCH-POLICY.md`：新增「提交信息规范」「worktree 落点与生命周期」「自动合并」「回滚触发条件与执行」四节；修正「自动合并尚未落地」的表述。
 - `docs/UI_RULES.md`：新增 3.4 Token 化纪律（禁止事项表、允许做法、新增 token 验收、幽灵数值、命名）。
 - `AGENTS.md`：新增三方边界表、技术边界补编码规范与 domain 依赖禁令、文档与验证补新文档指引。

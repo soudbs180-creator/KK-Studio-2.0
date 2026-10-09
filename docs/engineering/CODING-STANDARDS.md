@@ -35,7 +35,7 @@
 | 目录 | 职责 | 门禁强制的依赖约束 | 当前实际依赖（实测） |
 | --- | --- | --- | --- |
 | `src/domain` | 纯领域模型与规则 | 禁React、Tauri、`components`、`features`、`integrations`、`styles`、Node 内置 | 存在 2 处导入 `runtime/storage-contract.ts`（`modelProvider.ts`、`settings.ts`），门禁**允许**（禁令列表不含 runtime） |
-| `src/components` | 展示组件 | 无 | 约 97 处导入 `features`，2 处导入 `runtime` |
+| `src/components` | 展示组件 | 无 | 178 处导入 `features`（涉及 101 个文件）、7 处导入 `runtime`（`AccountPopup`、`TopBar`、4 个 settings 文件、`useAssetCollections`）。与 features 为**双向**依赖 |
 | `src/features` | 业务能力（agent、creation、mcp、local-service、generation-server、prompts 等） | `generation-server/**` 与 local-service 五个 server 文件不得被浏览器侧导入 | 导入 `components`、`domain`、`integrations`、`runtime` |
 | `src/integrations` | 外部系统适配 | 无 | 少量导入 `features` |
 | `src/runtime` | 宿主运行时桥接 | 无 | 被 domain、components、features 导入 |
@@ -75,7 +75,9 @@ src/features/local-service/store.ts
 
 ### 尚未被门禁覆盖的存量
 
-以下文件已超出 300 行，但当前门禁规则不匹配（`src/App.tsx` 不匹配 `src/components/**`；`src/features/**` 非 `.tsx`），属于已知技术债，只能靠评审约束：
+实测：`src/` 下 `.ts`/`.tsx` 超过 300 行的文件共 **32 个，其中 0 个被门禁覆盖**（当前 `src/components/**/*.tsx` 无一超限，说明该规则已被遵守）。全部属已知技术债，只能靠评审约束。
+
+排名前十：
 
 | 文件 | 行数 |
 | --- | --- |
@@ -90,6 +92,10 @@ src/features/local-service/store.ts
 | `src/features/local-service/store.ts` | 775 |
 | `src/features/prompts/promptLibrary.ts` | 644 |
 
+其余 22 个（300–635 行）：`features/local-service/client.ts` 635、`features/skills/skillRegistry.ts` 581、`features/projects/projectPackage.ts` 567、`features/agent/googleAgentConnection.ts` 548、`features/generation-server/assets.ts` 497、`features/agent/agentCanvas.ts` 485、`features/generation-server/provider.ts` 477、`domain/stagePlan.ts` 467、`features/creation/assetRepository.ts` 462、`features/memory/storage.ts` 460、`features/local-service/migration.ts` 419、`features/creation/imageGeneration.ts` 416、`features/plugins/pluginLoader.ts` 399、`features/local-service/server.ts` 385、`features/creation/providerSubmission.ts` 376、`features/creation/imageTaskCommand.ts` 363、`features/creation/useSpeechInput.ts` 335、`features/creation/storage.ts` 322、`features/memory/memoryService.ts` 321、`components/canvas/useCanvasControls.ts` 320、`features/agent/agentHost.ts` 316、`features/generation-server/http.ts` 306。
+
+注意 `src/components/canvas/useCanvasControls.ts`（320 行）与 `src/App.tsx` 同样**不匹配** `^src/components/.+\.tsx$`——前者因路径匹配成立但扩展名是 `.ts`，后者因不在 `components/` 下。这说明规则的扩展名与目录两个条件都很窄。
+
 约定（评审执行，无门禁）：
 
 - 改动这些文件时不做无关重写；若本次改动能自然切出独立模块，允许在本次 diff 内拆分。
@@ -99,7 +105,7 @@ src/features/local-service/store.ts
 
 ## 命名规范
 
-约定（评审执行，无门禁）。ESLint 不检查文件名与多数命名约定；`import-boundaries.mjs` 会解析 import 路径但不管命名。
+以「约定（评审执行，无门禁）」为主，**两处例外受 `check-ui-standards.mjs` 强制**：图标映射与 CSS 令牌位置（见下方「标识符」末两条）。ESLint 不检查文件名与多数命名约定；`import-boundaries.mjs` 会解析 import 路径但不管命名。
 
 ### 文件
 
@@ -121,8 +127,8 @@ src/features/local-service/store.ts
 - React 组件、类型、接口：`PascalCase`。
 - 函数、变量、模块内常量：`camelCase`。
 - 真正全局不可变的常量：`UPPER_SNAKE_CASE`（如 `KK_STUDIO_ROOT`）。局部常量用 `camelCase`，不滥用全大写。
-- CSS 令牌：`--kk-*` 为语义源，`--ui-*` 为兼容别名。`--kk-*` 定义只写在 `src/styles/tokens.css`；`--ui-*` 兼容别名定义在 `src/styles/ui-tokens.css`（实测 127 条）与 `src/styles/responsive-content.css`。职责划分见 [`../UI_RULES.md`](../UI_RULES.md) 3.1。
-- 图标：通过 `src/components/UiIcon.tsx` 映射使用。禁止直接 `import` 新增 `lucide-react` 符号；`iconsax-react` 只允许出现在 `UiIcon.tsx` 内。
+- CSS 令牌：`--kk-*` 为语义源，`--ui-*` 为兼容别名。`--kk-*` 定义只写在 `src/styles/tokens.css`；`--ui-*` 兼容别名定义在 `src/styles/ui-tokens.css`（实测 127 条）与 `src/styles/responsive-content.css`（媒体查询内 4 条覆盖）。职责划分见 [`../UI_RULES.md`](../UI_RULES.md) 3.1。**受门禁约束**：使用未定义令牌会被 `check-ui-standards.mjs` 拦截（`未定义的 CSS 令牌`）。
+- 图标：通过 `src/components/UiIcon.tsx` 映射使用。禁止直接 `import` 新增 `lucide-react` 符号；`iconsax-react` 只允许出现在 `UiIcon.tsx` 内。**受门禁约束**：新增 Lucide 导入会报 `新增 Lucide 导入`，Iconsax 绕过报 `Iconsax 必须通过 UiIcon 映射使用`。
 
 ### 导入别名
 

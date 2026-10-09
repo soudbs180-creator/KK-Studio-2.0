@@ -46,8 +46,12 @@
 
 ### 3.1 唯一来源
 
-- `src/styles/tokens.css`：`--kk-*` 语义 token 的唯一源。
-- `src/styles/ui-tokens.css`：旧 `--ui-*` 名称的兼容映射，只能引用 `--kk-*`。
+- `src/styles/tokens.css`：`--kk-*` 语义 token 的唯一源（实测 254 条，
+  `--ui-*` 定义为 0）。
+- `src/styles/ui-tokens.css`：旧 `--ui-*` 名称的兼容映射，只能引用 `--kk-*`
+  （实测 127 条定义）。
+- `src/styles/responsive-content.css`：媒体查询内的响应式覆盖，只覆盖
+  `--ui-input-height` / `--ui-button-height` 等少数高度别名，不新增语义。
 - `src/styles/ui-governance.css`：文字、按钮、图标槽、命中区和截断工具类。
 - `src/components/UiIcon.tsx`：工程补充图标的唯一映射；Figma 导出的 SVG
   从 `public/design/figma/` 直接使用。
