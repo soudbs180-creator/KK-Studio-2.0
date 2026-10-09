@@ -36,4 +36,4 @@
 
 - PASS WITH FOLLOW-UPS：本地 Web/Vite 回归完成；外部和跨平台任务保留开放状态。
 - 未关闭 blocker：真实 Provider/GPU、Hosted Windows 原因、Tauri 和 Mobile 验收。
-- `dcb6ff3dad0d4f364241d8ebc4d22182ae957548` 之后只有证据、账本和交接文档提交；没有新的产品源码或测试逻辑。当前本地 `main` 的文档提交为 `deaef64ee195bf7fbfc129d0b14a4f72a339af9f`，交付门禁已用该完整 head 重跑。
+- `dcb6ff3dad0d4f364241d8ebc4d22182ae957548` 之后只有证据、账本和交接文档提交；没有新的产品源码或测试逻辑。当前本地 `main` 的文档提交为 `6201f537`（用 `git rev-parse HEAD` 回读完整 SHA），交付门禁已用该完整 head 重跑。
