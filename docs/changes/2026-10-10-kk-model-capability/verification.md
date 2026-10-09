@@ -17,7 +17,7 @@
 | `node scripts/check-ui-standards.mjs` | PASS，215 文件、0 违规 |
 | `node scripts/check-governance.mjs` | PASS，117 tasks、0 violations |
 | `node node_modules/prettier/bin/prettier.cjs --check`（受影响源码/测试） | PASS |
-| `node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` | 903 项：893 PASS、2 FAIL、8 SKIP |
+| `node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` | 905 项：895 PASS、2 FAIL、8 SKIP |
 
 全量中的 2 个失败均为 `tests/unit/desktopAgentRuntime.test.ts`，原因是该隔离 worktree 没有已构建的 Agent `dist` 运行产物，失败发生在桌面 Agent 启动环境准备，与本次改动无 import 依赖；不能把它们记为全量通过。
 

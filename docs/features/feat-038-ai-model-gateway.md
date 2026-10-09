@@ -30,7 +30,7 @@
 - 网关与 provenance 定向回归 69 项全绿，覆盖 Ark 文本、图片兼容性、SSE、`/v1/models`、模型菜单、画布模型标签和 Codex 图片归档
 - 连跑 3 轮零抖动（调度器测试注入固定 `random` 与 `now`）
 - `tsc --noEmit` exit 0；`eslint` exit 0
-- 当前回归验证：`node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` 共 903 项，893 通过、2 失败、8 跳过；2 个失败均为 `desktopAgentRuntime.test.ts`（worktree 无 dist 构建产物所致，和本包无 import 依赖）
+- 当前回归验证：`node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` 共 905 项，895 通过、2 失败、8 跳过；2 个失败均为 `desktopAgentRuntime.test.ts`（worktree 无 dist 构建产物所致，和本包无 import 依赖）
 - P1 官方通道定向测试 21 项全通过：`modelProvider.test.ts`(3，预置常量) + `creation.test.ts` doubao 判定(1 用例 6 断言) + 既有 creation 判定用例（未删减）
 
 ## 当前能力
