@@ -3911,15 +3911,15 @@
       "vendor/canvas-agent/package-lock.json",
       "docs"
     ],
-    "status": "PARTIAL",
+    "status": "REVIEW",
     "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-09-provider-config-recovery/spec.md",
       "docs/changes/2026-10-09-provider-config-recovery/verification.md",
       "docs/changes/2026-10-09-provider-config-recovery/review.md"
     ],
-    "verification": "旧25项provider/CLI基线通过，当前仍需故障复现、修复、组合回归与独立审查。",
-    "verificationResult": "PARTIAL",
+    "verification": "a3源码36/36、804root/183Agent（原skip8/2）、447browser447attempts零retry、Rust102、生产4296文件包内CLI六命令及fresh EXE/TaskHost11通过；精确a3独立源码审查PASS，P1 inline作用域关闭。最终文档/当前Hosted/普通PR与main回归单独待验。",
+    "verificationResult": "PASS",
     "updated": "2026-10-09"
   },
   {
@@ -4249,20 +4249,20 @@
       "UI-001"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
+    "branch": "fix/TASK-UI-014-RESUME-001-current-main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-014-RESUME-001",
     "affectedModules": [
       "src/components",
       "src/styles",
       "docs/UI_INDEX.md"
     ],
-    "status": "TODO",
+    "status": "PARTIAL",
     "priority": "P1",
     "evidence": [
       "docs/changes/2026-10-09-provider-config-recovery/health-followup.md"
     ],
-    "verification": "原会话审计并完善UI规范于2026-10-08T21:06:47Z模型容量错误中断，最后菜单27定向通过、布局变量门禁曾失败后已补定义但最终结果未知。保留原worktree，独立候选续验；不能当成产品已验收或偷偷改变会话模型。",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "原会话容量中断；bd16及已知9条dirty已只读保存准确hash/patch（18653字节），原件不动。新隔离main6a承接工作树已登记，最新UI012组合及Web/新Desktop全验收尚需执行；未接受旧DONE宣告。",
+    "verificationResult": "PARTIAL",
     "updated": "2026-10-09"
   },
   {
@@ -4291,6 +4291,37 @@
     ],
     "verification": "当前仅复核同一EXE真实首轮失败与完整第二轮PASS，未确认原因；不阻断已验收的插件源码范围，后续诊断独立执行。",
     "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-09"
+  },
+  {
+    "id": "TASK-UI-012-RESUME-001",
+    "title": "接续容量中断的UI核心交互交付",
+    "goal": "保留原候选并完成最新main组合、证据归档、精确复审与普通PR",
+    "scope": "UI012原8d6实施/验收已保留；新独立任务分支完成正式交付和最新基线补验",
+    "acceptance": [
+      "原8d6源码/525零retry和八Native原件与身份保留，容量错误不等于产品失败",
+      "新组合freshWeb/Desktop与有效门禁、独立精确head审查及文档完成",
+      "只在currentCI/实际保护通过后普通PR集成、回读main"
+    ],
+    "dependencies": [
+      "UI-001"
+    ],
+    "owner": "root",
+    "branch": "fix/TASK-UI-012-RESUME-001-current-main",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-012-RESUME-001",
+    "affectedModules": [
+      "src/components",
+      "src/features/models",
+      "src/styles",
+      "docs"
+    ],
+    "status": "PARTIAL",
+    "priority": "P1",
+    "evidence": [
+      "docs/changes/2026-10-09-provider-config-recovery/health-followup.md"
+    ],
+    "verification": "原会话修复错误的展示逻辑和 UI容量中断；已独立取回原525项/525attempts/0retry（hash142c0971…）及8d6同EXE八Native成功。新隔离工作树继承8d6，原clean checkout未写。最终最新main组合、文档/证据、正式审查和Hosted仍待，不把capacity中断冒充全部验收完成。",
+    "verificationResult": "PARTIAL",
     "updated": "2026-10-09"
   }
 ]

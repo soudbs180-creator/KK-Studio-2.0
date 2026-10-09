@@ -1,5 +1,32 @@
 # Verification：Codex配置恢复
 
+## 2026-10-09 当前精确源码验收（a3）
+
+TASK-PROV-CONFIG-004源码为a3bcb031b48b57421123e51bfa6a1d9508558152，已普通合入main6a；Desktop2.1.13/Web2.1.12/Mobile规划2.1.1。下方保留历史阶段的失败与待验描述，其“当前”仅指记录时点。
+
+| 检查 | 真实结果 |
+| --- | --- |
+| 当前相关provider/CLI | 36/36，含最小及嵌套多行inline table、profile失效引用、原型同名键、幂等与诊断脱敏 |
+| 完整npm run verify | exit0；root804/812、Agent183/185，原skip8/2；447browser/447attempts、actual retry0/flaky0/unexpected0/skip0；四插件strict development通过 |
+| Rust/桌面构建 | fmt、102tests、client check与fresh带Agent Tauri --no-bundle均exit0 |
+| fresh桌面TaskHost | 同EXE11/11，errors[]，隔离凭据清理完成；19571712 bytes，SHA256 5cd7d6acc3e77d898644ab97f9edbacff257fa6b378da01e1eda41b02dc97f00 |
+| 实际生产运行时 | 全4296 manifest路径/bytes/hash通过；包内node.exe+agent/dist/index.js六命令exit1,1,1,1,0,0；没有tsx或开发依赖替代 |
+| 隔离文件与独立parser | root/profile/坏输入拒绝时原config/prior catalog不变，不创建new catalog；显式有效active幂等，用户profile/CRLF保留；Python tomllib独立解析实际TOML1.0配置通过 |
+| 精确源码独立review | /root/mask_final_doc_review补审a3 PASS，PROV-CONFIG-REVIEW-001/P1 CLOSED；正式报告SHA256 f1238cccf8ffb51baea2d18f04a1bd89104d136bda2f81382cd2d7c8ee81a76a |
+
+smol-toml1.9.0精确锁定/BSD-3-Clause，许可证随包。原408审查为真实CHANGES REQUIRED：TOML1.1多行inline对象内部键曾误作根选择；35/36 RED后加入词法{}深度，当前36/36与生产包验证通过。Python参考只覆盖本次实际1.0输入，不冒称校验所有1.1语法。校验前不写入；原子文件写入沿用现有helper，不声称跨config/catalog多文件IO完全事务。
+
+fresh-artifact原receipt的sourceDirty=true保留；实际Cargo/schema生成行尾已另做blob/JSON核对及生成元数据勘误。没有将旧receipt改成false。
+
+当前主线为PR42落地6a97f456ab7334f97c604461e8d29789caa754cb，source cc28d8c与landing完整tree相同。实际post-main37845923441 verify失败（区域重试预期4收到3），原FAIL保留。PR43 fa36d35的pull_request37851243837全部成功，但同head push37851173715 Windows入口单测失败（status null，原日志缺error/signal，原因UNKNOWN），因此PR43仍draft、未合并；不能称主线已恢复。
+
+当前候选账本124项：DONE66/TODO25/PARTIAL28/BLOCKED4/REVIEW1，开放58项。本任务REVIEW表示源码及本地验收完成、最终文档与交付待验；TASK-PROV-003与FEAT-032整体仍PARTIAL。新UI012/UI014继续任务已独立分配工作树，原owner checkout不动。真实用户Codex/Claude消费、App配置UI/HTTP、真实Provider费用、物理手机、安装/发布与用户视觉仍未由本任务验收。
+
+证据见[无损归档清单](evidence/manifest.json)。归档包含原RED、review408失败、a3通过与主线/PR43实际失败；压缩字节、解压原字节及提交后的Git blob必须分别核对。最终文档提交、Hosted、普通PR、landing全树与post-main分别待实际回执，旧PASS不能换成新SHA。
+
+## 历史阶段记录（原文保留）
+
+
 - Base8c921a525ae505a558b0efee641830f1d61166fa，工作区D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-CONFIG-004。
 - 独立npm ci/Agent npm ci完成；当前main旧25项provider/CLI回归PASS。原件日志D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009。
 - 新故障RED、实现、组合main、完整检查与独立review、Hosted/merge/main尚未完成；不把旧健康报告或基线当成修复完成。

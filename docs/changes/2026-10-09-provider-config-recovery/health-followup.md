@@ -1,5 +1,18 @@
 # 健康审计继续执行清单
 
+## 最新事实与执行顺序
+
+当前主线为PR42落地6a97f456ab7334f97c604461e8d29789caa754cb，source cc28d8c与landing完整tree相同。实际post-main37845923441 verify失败（区域重试预期4收到3），原FAIL保留。PR43 fa36d35的pull_request37851243837全部成功，但同head push37851173715 Windows入口单测失败（status null，原日志缺error/signal，原因UNKNOWN），因此PR43仍draft、未合并；不能称主线已恢复。
+
+配置源码a3与生产4296文件/447零retry/fresh Native已独立PASS；LEG-001/002源码问题已关闭，最终交付待验。UI012原8d6确有525零retry及同EXE八Native通过，容量中断发生在交付收尾；新独立继续任务负责最新main组合，原件不动。UI014 bd16九条dirty及patch/hash已保存，旧DONE声明不足以合并，新继续任务串行承接UI012。
+
+最新只读盘点2026-10-09T01:22:38.785Z：56分支/44工作树；26条Hosted source/merge身份匹配、5条提交祖先关系成立。祖先已集成只描述已提交HEAD，不能证明其未提交工作已验收。其余候选按精确状态见[完整状态报告](status.md)，所有dirty保留，没有删除、reset或force。旧53/41分类仅保留时点含义。
+
+执行优先级：P1先恢复当前CI，再完成配置安全交付、UI012/014最新组合、素材CORS和存储原件保护；未知费用/凭据问题按隔离fixture继续。P2数量契约、异步乱序、历史分支承接和文档随后，P3拖动失败原因另查。124项：DONE66/TODO25/PARTIAL28/BLOCKED4/REVIEW1，开放58项。
+
+## 历史审计映射与排队依据
+
+
 本表承接工程外branch-health-20261009的19条原记录，以main8c921a525ae505a558b0efee641830f1d61166fa和2026-10-08T21:02:00Z的新分支盘点区分当前事实与历史推断。任务状态仍以task-ledger为权威；TODO不代表已复现或实现。本轮TASK-PROV-CONFIG-004已承接LEG-001/002，相关34→35回归通过，但最终组合门禁尚未完成。UI012候选1844fcf已包含main8c（实际ancestry exit0），原9冲突报告保留历史含义；新最终合并/运行仍待其owner交付。原UI014会话因容量错误失败，已经另登记续验而未当成完成。
 
 当前53本地分支：25条实际托管squash head/merge身份匹配、3条Git ancestry已集成、2条UI owner验收、1条PR42当前head CI、1条本任务进行中、8条其他dirty保留、12条历史或待审保留及1条稳定main。未清理、重置或强合任何候选；报告是时点快照，不把之后的新提交当成此时已验收。
@@ -44,3 +57,7 @@
 - **TASK-UI-014-RESUME-001 · P1 · TODO**：接续因模型容量错误中断的UI审计。原会话审计并完善UI规范于2026-10-08T21:06:47Z模型容量错误中断，最后菜单27定向通过、布局变量门禁曾失败后已补定义但最终结果未知。保留原worktree，独立候选续验；不能当成产品已验收或偷偷改变会话模型。
 
 - **TASK-NATIVE-GESTURE-002 · P3 · TODO**：承接PLUGIN-REVIEW-003，首轮真实drag失败原因UNKNOWN，保留同EXE下一轮完整PASS，独立诊断焦点/宿主条件，不弱化输入或阈值。
+
+## 容量中断任务继续承接
+
+最新取回实证：UI012原8d6已包含main6a，525/525attempts、0实际retry/flaky，实际同EXE4ad07151…的八套Native均exit0；随后会话容量中断，最终交付仍未完成。新TASK-UI-012-RESUME-001在独立继承8d6工作树继续正式组合/文档/证据/复审，不编辑原checkout。UI014原bd16九条dirty已只读保存18653字节patch及各file hash，新TASK-UI-014-RESUME-001从main6a登记独立工作树，待串行承接UI012与审计候选。两个容量错误/旧源码PASS都不替代新组合门禁。当前provider账本124项：DONE66/TODO25/PARTIAL28/BLOCKED4/REVIEW1，开放58项（源码完成的本任务进入REVIEW，交付待验）。

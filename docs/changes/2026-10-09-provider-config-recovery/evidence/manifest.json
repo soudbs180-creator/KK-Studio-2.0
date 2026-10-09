@@ -1,0 +1,687 @@
+{
+  "at": "2026-10-09T01:26:00.902Z",
+  "sourceHead": "a3bcb031b48b57421123e51bfa6a1d9508558152",
+  "note": "Raw originals retained; gzip decompressed bytes must match original. Final document SHA and Hosted/main gates are separate.",
+  "entries": [
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/agent-build-profile.txt",
+      "originalBytes": 68,
+      "originalSha256": "bfb9be5a7fdb20dffdbd5dc0a93fb8cb995aaa9520c6df916ba9bf9ff64f8e40",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/agent-build-profile.txt.gz",
+      "archiveBytes": 85,
+      "archiveSha256": "a22b445184e6d3b89abb8261da2568759fc57a420eba40c76511bbd583139f29"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/agent-build-working.txt",
+      "originalBytes": 68,
+      "originalSha256": "bfb9be5a7fdb20dffdbd5dc0a93fb8cb995aaa9520c6df916ba9bf9ff64f8e40",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/agent-build-working.txt.gz",
+      "archiveBytes": 85,
+      "archiveSha256": "a22b445184e6d3b89abb8261da2568759fc57a420eba40c76511bbd583139f29"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/agent-npm-ci.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/agent-npm-ci.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/agent-npm-ci.txt",
+      "originalBytes": 332,
+      "originalSha256": "4178f8022c9d2238885a8d9f68919e38b3d14a2e1f8295765d10214874e3d419",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/agent-npm-ci.txt.gz",
+      "archiveBytes": 183,
+      "archiveSha256": "6867b9344bf05c6185ede4a6fdcfc8f44f9e1a1e0bdbd3702fdbc0212e4779b3"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/all-agent-working.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/all-agent-working.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/all-agent-working.txt",
+      "originalBytes": 27534,
+      "originalSha256": "be97400ab4aeed8f05f7865942cdf0b36b6ef545a796b859839db946008f3740",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/all-agent-working.txt.gz",
+      "archiveBytes": 8241,
+      "archiveSha256": "9c82a1836573eefea29786324a51002829a5d1be229f4c2c5e426aa28a4f624e"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/baseline-provider.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/baseline-provider.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/baseline-provider.txt",
+      "originalBytes": 2411,
+      "originalSha256": "4592b81684d2019a75073fc365bc5d9f8de8cf999bd8a54b6cb8351e31a83cae",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/baseline-provider.txt.gz",
+      "archiveBytes": 1423,
+      "archiveSha256": "4cb3aa066b95e117746ba7c4e73d7913d2e10789f4adf44aa5d9a46806da6718"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/branch-inventory-20261009-0132.json",
+      "originalBytes": 46842,
+      "originalSha256": "34e2548387ac2e943ab40f7366646e00afcf54ada9fd6a4e79d8bf827f722b6f",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/branch-inventory-20261009-0132.json.gz",
+      "archiveBytes": 8025,
+      "archiveSha256": "d5368104c4377e44b1650938b083d60130072c3edb451f07a774ec17e95d4c7c"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/branch-inventory-current.json",
+      "originalBytes": 29671,
+      "originalSha256": "23adbe0b107405f6d34114277ab529d62e41eb2e96bb16fbdadbfc2e5484e677",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/branch-inventory-current.json.gz",
+      "archiveBytes": 5888,
+      "archiveSha256": "484287726e3be763bfe066a67f1b1b60cc3e5c7d16b29eb126d5e9916544caa4"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/browser-results-4088745.json",
+      "originalBytes": 592982,
+      "originalSha256": "7dc7f3df8f75332b13d093a22139efe78f28fac2468d02dc48572e7babc7a23e",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/browser-results-4088745.json.gz",
+      "archiveBytes": 50234,
+      "archiveSha256": "16f4c014c866e7138ca86abf1b0207db1f8f2301d7cda590f5108615b73a0899"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/browser-results-a3bcb03.json",
+      "originalBytes": 592990,
+      "originalSha256": "10141243a7a632127525774c2f007266eeea1a7232f04c1d847a6a7c1fd3a59a",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/browser-results-a3bcb03.json.gz",
+      "archiveBytes": 50303,
+      "archiveSha256": "29e88cc26ae48ba7c0d1795d8b9dd32c17c9727c00fea4fd43b0ace2ebe94e6f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/client-check-a3bcb03.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/client-check-a3bcb03.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/client-check-a3bcb03.txt",
+      "originalBytes": 9157,
+      "originalSha256": "8cbbdea9785e7c5888ff79cacc3707d8ab960dc62ba2557ab8101b2854c11143",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/client-check-a3bcb03.txt.gz",
+      "archiveBytes": 2773,
+      "archiveSha256": "446e829830c2e0441f6b888b5f71ff0b1eacc97591cf474d63ccd130b685f78e"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/fresh-agent-desktop-a3bcb03.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/fresh-agent-desktop-a3bcb03.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/fresh-agent-desktop-a3bcb03.txt",
+      "originalBytes": 15157,
+      "originalSha256": "fb54cb94bdc19a82c62d5b1a4b2e0404d5753754e7e34fe24713da3290e690f0",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/fresh-agent-desktop-a3bcb03.txt.gz",
+      "archiveBytes": 4768,
+      "archiveSha256": "3fdef264562f194f24b97d5a1c8ffce8f1d84b0008371fd35c0bde2125dc97a4"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/fresh-artifact-a3bcb03.json",
+      "originalBytes": 354,
+      "originalSha256": "c008b484c5021be9d869270388b8cabe787d9e62a1e046da15661f0ff07f6cdd",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/fresh-artifact-a3bcb03.json.gz",
+      "archiveBytes": 253,
+      "archiveSha256": "0353b90c41cb63f1e72c5f457307617d7e502104c973a87df2c5a413d2cc773b"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/fresh-runtime-a3bcb03.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/fresh-runtime-a3bcb03.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/fresh-runtime-a3bcb03.txt",
+      "originalBytes": 471,
+      "originalSha256": "4455744d43bc1c34c251374f0372e131627f5456cae479bd0117f81af3f250e5",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/fresh-runtime-a3bcb03.txt.gz",
+      "archiveBytes": 267,
+      "archiveSha256": "73b98ebec8265069faddf2bfd860483cbc9ebc0d06b11ebd42b9f8a210fd47dd"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/fresh-runtime-working.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/fresh-runtime-working.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/fresh-runtime-working.txt",
+      "originalBytes": 471,
+      "originalSha256": "b6ba213ed2d03ebd990d96b2eef80afa81daeeb892d931e1261da1d4dcdcf31c",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/fresh-runtime-working.txt.gz",
+      "archiveBytes": 267,
+      "archiveSha256": "62101bdd440c171070eb73984f15d2836698972499880e2ed5e90c34c2a46001"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/generated-metadata-correction-a3bcb03.json",
+      "originalBytes": 266,
+      "originalSha256": "fdafc30905a5498ca48adcda1ee0f5266801de7f9a8c94c6cf08a5090d52ad19",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/generated-metadata-correction-a3bcb03.json.gz",
+      "archiveBytes": 225,
+      "archiveSha256": "0de9fb94ba050e477b831159c51fb1b83d64f1ac47d9fc620d0525c7daba7220"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/health-lint-pre-merge-corrected.txt",
+      "originalBytes": 591,
+      "originalSha256": "86e342d6ea643f3e1fc5efaf1aea5360dbebd963a82dd4d8e4e3aaa9f4c4709b",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/health-lint-pre-merge-corrected.txt.gz",
+      "archiveBytes": 325,
+      "archiveSha256": "124d65debb70529b49140f2fd954d3e4ddfff8cedc429e147156350360009f89"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/health-lint-pre-merge.txt",
+      "originalBytes": 489,
+      "originalSha256": "b88ad13b243c077237bcb22b27e2c88232899f577b288ca93d825f822202e627",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/health-lint-pre-merge.txt.gz",
+      "archiveBytes": 271,
+      "archiveSha256": "5ce884a8f85f6d833fbb24007b766434e0954fe34f5e3a2596fe1dd91367d996"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/inline-table-green.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/inline-table-green.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/inline-table-green.txt",
+      "originalBytes": 3974,
+      "originalSha256": "ee71690ce18d3b0f3ca74b929ea5e5071e1fabcf74a701251922c5b46a583369",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/inline-table-green.txt.gz",
+      "archiveBytes": 1969,
+      "archiveSha256": "82e9d0da966d953039c063420dd79b19a1d178edc61373d764678ac46cd587f4"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/inline-table-red.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/inline-table-red.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "baf0683e1103b94b68d94e8a12d7e144b4e0571e9948de7fb0d85103b045460e"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/inline-table-red.txt",
+      "originalBytes": 5098,
+      "originalSha256": "d4cde42ef40351043460dc150f96cd064144186728ae7e12ddcabafb46d8bc63",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/inline-table-red.txt.gz",
+      "archiveBytes": 2327,
+      "archiveSha256": "33b784063636b9f964b12eda00ad1b03b88ac53b0d56ee253eaeb5ca965a82ac"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/lint-main-combination.txt",
+      "originalBytes": 591,
+      "originalSha256": "364835698196b7a40e04ec876d6db4c18f61a5a06f19695233d4f941a0f2da38",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/lint-main-combination.txt.gz",
+      "archiveBytes": 324,
+      "archiveSha256": "f3890cee4b10f6f4a4d61830e7cbeb621525f57639b03a186038ae25c4569e57"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/native-taskhost-a3bcb03.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/native-taskhost-a3bcb03.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/native-taskhost-a3bcb03.txt",
+      "originalBytes": 139,
+      "originalSha256": "619c837ccd9ed3c4463b56495002343bde14417eb5bd7aa87d27e07cc6a19051",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/native-taskhost-a3bcb03.txt.gz",
+      "archiveBytes": 148,
+      "archiveSha256": "f77d311ee3e096dec01c1dc833e93b44282710aa8e4fb236a6b927ff0f2cd4bf"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/npm-ci-main-6a97f45.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/npm-ci-main-6a97f45.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/npm-ci-main-6a97f45.txt",
+      "originalBytes": 1756,
+      "originalSha256": "c14dff7872c42d988b4c8be9e4b622fcbd883b0b51be88e0b3807ab92d9a73e1",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/npm-ci-main-6a97f45.txt.gz",
+      "archiveBytes": 598,
+      "archiveSha256": "6cb09100f423a06dd4ea2a0794948be5e324c606d577c227aa64c11ee0807b42"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/npm-ci.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/npm-ci.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/npm-ci.txt",
+      "originalBytes": 1759,
+      "originalSha256": "b1f0d941114b429f4f486f3ade081b00e28d96bacb019f3671ca8bdddd91ff8f",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/npm-ci.txt.gz",
+      "archiveBytes": 602,
+      "archiveSha256": "e3f585b317ab47208a73229da259354351a0fb36fcfee1c541667676431a2ddd"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/packaged-a3bcb03-strict.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/packaged-a3bcb03-strict.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/packaged-a3bcb03-strict.txt",
+      "originalBytes": 1549,
+      "originalSha256": "77cc3c7f4cd680748e50fb8208cefb462bdc2cbaddb27f6bc230c201d0f24dc5",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/packaged-a3bcb03-strict.txt.gz",
+      "archiveBytes": 570,
+      "archiveSha256": "134b085d024640b4e45bd7c9ef7797b54096c5e5023c251ec3c8c3f9ae3d7881"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/packaged-a3bcb03.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/packaged-a3bcb03.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/packaged-a3bcb03.txt",
+      "originalBytes": 1549,
+      "originalSha256": "8b992e7f7b415d67b161a6c5070c3dcb0239070aa43bb1c3ca72d5d9d010aecb",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/packaged-a3bcb03.txt.gz",
+      "archiveBytes": 570,
+      "archiveSha256": "9b52b96023780f03b323ee4e110e1701cc4bf5545d1c472a25ef010e6aa833ea"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/packaged-provider-final-probe.mjs",
+      "originalBytes": 5021,
+      "originalSha256": "0be2d92a552848235caf98982d6a6e9fe05688594e181a74e0854aafa3d98197",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/packaged-provider-final-probe.mjs.gz",
+      "archiveBytes": 1733,
+      "archiveSha256": "8b7eb1a2e6e54c624e16c52d201d8fb4099b5a094c74c8d62bc4c3b7a10a26fa"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/packaged-provider-probe.mjs",
+      "originalBytes": 4185,
+      "originalSha256": "bab1de41370530436aeddafb4687f7e984aa40c43b8866f1b1359ce5af7199e0",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/packaged-provider-probe.mjs.gz",
+      "archiveBytes": 1612,
+      "archiveSha256": "a166bc80061c4923b537fd49bca34d20047cbcc684283336f99b357557b4f621"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/packaged-provider-strict-probe.mjs",
+      "originalBytes": 5225,
+      "originalSha256": "6939e8c637362603167b8fb1557978246bee94a6679d9a94fdb9bb9bb33cfeab",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/packaged-provider-strict-probe.mjs.gz",
+      "archiveBytes": 1784,
+      "archiveSha256": "f3fd5896f85c915fb2778673a9f46ac92c11719be3cc93fed369ed598cd8a01e"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/packaged-working.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/packaged-working.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/packaged-working.txt",
+      "originalBytes": 1254,
+      "originalSha256": "7028ea844a2d931495817e953664dd9d5da91a28a7f3efef978f8b3a9e298007",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/packaged-working.txt.gz",
+      "archiveBytes": 566,
+      "archiveSha256": "c77524a4670dc155072a4616de7e58856b1d4e5d8d17661d958461dfcfc94010"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/profile-reference-red.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/profile-reference-red.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "baf0683e1103b94b68d94e8a12d7e144b4e0571e9948de7fb0d85103b045460e"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/profile-reference-red.txt",
+      "originalBytes": 3115,
+      "originalSha256": "4222a3cc7a1690ebe56b0c6f08b25ed56fdec9081e186da82bd619abe58bcd82",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/profile-reference-red.txt.gz",
+      "archiveBytes": 1741,
+      "archiveSha256": "30374a84e6275d2ff6da9b3514f988fd25cab4f9d1ecf1940cf78d52981dc010"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/provider-boundary-green.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/provider-boundary-green.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "baf0683e1103b94b68d94e8a12d7e144b4e0571e9948de7fb0d85103b045460e"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/provider-boundary-green.txt",
+      "originalBytes": 5121,
+      "originalSha256": "e8d41ab4341bbed3db0572c52461bf54b94803f6f64084d9d91edbc4211e1982",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/provider-boundary-green.txt.gz",
+      "archiveBytes": 2335,
+      "archiveSha256": "5f0c756a0dc9f00efbf67dfe27b052abff5178f26350dcc2c305c63f701acae4"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/provider-final-working.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/provider-final-working.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/provider-final-working.txt",
+      "originalBytes": 3789,
+      "originalSha256": "89edbfeb7c78564059304713e6663f3d05e14cbe4cc5131a936b06f12a4d8b8b",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/provider-final-working.txt.gz",
+      "archiveBytes": 1898,
+      "archiveSha256": "9d83f1bfaeb20adce96ed7209bd15dcd43f36cecb743a28a07754322255527cc"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/provider-green-working.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/provider-green-working.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/provider-green-working.txt",
+      "originalBytes": 2886,
+      "originalSha256": "966078115dddfe41325a174f8dcf1b53981cf2fc21df10eabec0e716b2967ff5",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/provider-green-working.txt.gz",
+      "archiveBytes": 1686,
+      "archiveSha256": "286907c66cca7097812435ea7f7ed6aa1cb06c210857ce38f4e38e15f884f40b"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/provider-idempotence-green.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/provider-idempotence-green.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/provider-idempotence-green.txt",
+      "originalBytes": 3714,
+      "originalSha256": "6cd005b2bbbd7487da8e1db1030abd2278ecaa2166f361a24adf080719b18966",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/provider-idempotence-green.txt.gz",
+      "archiveBytes": 1852,
+      "archiveSha256": "145aa1fed89fb9a6bc729693bf854baaf5210b5dcdb6f41febf02ff0df84c9d7"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/provider-profile-green.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/provider-profile-green.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/provider-profile-green.txt",
+      "originalBytes": 3881,
+      "originalSha256": "3619edd62aa447f5a10206048ac45533b54ab4a94a5eb314286062b9485f325d",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/provider-profile-green.txt.gz",
+      "archiveBytes": 1923,
+      "archiveSha256": "d11e4ba43276fe96b3734485a5b6da15253964627f4e1dc8f928a7de0add7819"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/provider-red.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/provider-red.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "baf0683e1103b94b68d94e8a12d7e144b4e0571e9948de7fb0d85103b045460e"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/provider-red.txt",
+      "originalBytes": 8800,
+      "originalSha256": "a375199950f76e801d3d5df08ed0014dfc9efb1d3d209efbfc17dc0f7659d115",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/provider-red.txt.gz",
+      "archiveBytes": 2583,
+      "archiveSha256": "92680ea99ea0f495acdca8f5be90e495e605dd01d22433dc6d446394075cb549"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/review-source-4088745.md",
+      "originalBytes": 41138,
+      "originalSha256": "33045795c37cbd07861616aedbda51d3a4ad62af2b0a4251cf4fac3be0519993",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/review-source-4088745.md.gz",
+      "archiveBytes": 15423,
+      "archiveSha256": "42721969b650204c3863cdcfa37eda975bfb266fd3169bacbb470aa8163995d1"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/review-source-a3bcb03.md",
+      "originalBytes": 23453,
+      "originalSha256": "f1238cccf8ffb51baea2d18f04a1bd89104d136bda2f81382cd2d7c8ee81a76a",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/review-source-a3bcb03.md.gz",
+      "archiveBytes": 10402,
+      "archiveSha256": "85db1bc355ec5e90b9bf3177d510a7eb3fd1068a2222eb435dc7aac181bb1849"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/rust-test-a3bcb03.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/rust-test-a3bcb03.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/rust-test-a3bcb03.txt",
+      "originalBytes": 20517,
+      "originalSha256": "9fcf015c21abd3b2951c7b40b53b6879c1aa3f2902415837cf3ec91ae6e7ff50",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/rust-test-a3bcb03.txt.gz",
+      "archiveBytes": 5741,
+      "archiveSha256": "637145979f81887481bdabdc445a9ee9e951618fd03228e71eb424f7714d4a7e"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/rustfmt-a3bcb03.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/rustfmt-a3bcb03.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/rustfmt-a3bcb03.txt",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/rustfmt-a3bcb03.txt.gz",
+      "archiveBytes": 20,
+      "archiveSha256": "46b50c321b39e89a491b6727a01628c34245605a30beb3e7414c5e01cff90e6e"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/source-lint-preparation.txt",
+      "originalBytes": 591,
+      "originalSha256": "670b189a40ca7ee44f0b44a720a94978996cd6075dd19f49a73b9c2401a4b535",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/source-lint-preparation.txt.gz",
+      "archiveBytes": 323,
+      "archiveSha256": "1de6bed630ec20d9ca9ad3b08cf7d0547ca2f728792b0c0ad9a0411918a5fe42"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/toml-dependency-metadata.json",
+      "originalBytes": 173,
+      "originalSha256": "203f564a1de8b69109c733ca60965ded10a12824da1a270fc2613629a47e38b0",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/toml-dependency-metadata.json.gz",
+      "archiveBytes": 179,
+      "archiveSha256": "04a7384724e02462d015d075b4781a463fc548a2b7e0c88a7df72579b9e97f71"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/toml-install.txt",
+      "originalBytes": 332,
+      "originalSha256": "4928f590d6a8c1386288a284aae37ca445a4afd004a42a5859cdb8b36869d8e2",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/toml-install.txt.gz",
+      "archiveBytes": 182,
+      "archiveSha256": "d2601b9ac9f90972bcdb2707484d8cdfd11b57e935bc2462062eb735fe62ae52"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/verify-a3bcb03.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/verify-a3bcb03.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/verify-a3bcb03.txt",
+      "originalBytes": 161527,
+      "originalSha256": "d25e7f5e922b49a7c98f791341e5d9bf062c9a3e3b96c04ccb505c17c7d66fd2",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/verify-a3bcb03.txt.gz",
+      "archiveBytes": 52077,
+      "archiveSha256": "05f677d2cac39f5177a500cea7f533a6119f94b9e716f7b292f4081a8c3537a0"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/verify-main-combination.exit.txt",
+      "originalBytes": 3,
+      "originalSha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/verify-main-combination.exit.txt.gz",
+      "archiveBytes": 23,
+      "archiveSha256": "7f636460b48b02e48ffda30b26e6cf24cebee6b983bfd77e79a2f7205a71497f"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/verify-main-combination.txt",
+      "originalBytes": 161417,
+      "originalSha256": "abc0941f2dbd307d37868f20b225bc9f3dd512d3bf8a945914f43d3ef6d9a096",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/verify-main-combination.txt.gz",
+      "archiveBytes": 51968,
+      "archiveSha256": "6cb7f5d083ef0feb1173281c007d0ac990e2e86f5ac99fadd252a034f8a51fb6"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/packaged-working/receipt.json",
+      "originalBytes": 2647,
+      "originalSha256": "a9a9b51766d9780a156f57e5e824a9e8cf766dfd197a74045b12bdaaad7c9bb3",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/packaged-working--receipt.json.gz",
+      "archiveBytes": 1014,
+      "archiveSha256": "909e174bd948c245bfa2af625c5da24301bde228decc31be1f6d0e6083472df1"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/packaged-a3bcb03/receipt.json",
+      "originalBytes": 3209,
+      "originalSha256": "8218717c4031cff6b0be1b19fe616ac751414ba0d4208077889bbe66f8037cbc",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/packaged-a3bcb03--receipt.json.gz",
+      "archiveBytes": 1130,
+      "archiveSha256": "c127c9f6886fd51591235812f395a25ee9d8cb4a5093de9537a94346acf4107b"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/packaged-a3bcb03-strict/receipt.json",
+      "originalBytes": 3237,
+      "originalSha256": "d9b156142b4b42ace2de2c2e64a80f239a03c686edc16d10b2fa67a347feb549",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/packaged-a3bcb03-strict--receipt.json.gz",
+      "archiveBytes": 1136,
+      "archiveSha256": "32cf252a19556aaee2839571e28ed88d384d5d0fdde3849148fee6d0ac18f11d"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/native-taskhost-a3bcb03/receipt.json",
+      "originalBytes": 13519,
+      "originalSha256": "705fee591399d5082ceb9a93be90d97b668294a3854b74cde843976712822f79",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/native-taskhost-a3bcb03--receipt.json.gz",
+      "archiveBytes": 2973,
+      "archiveSha256": "fdb3a0848fb5a0a0a9173e08283e6d65103ad638f757a46b37b62842c2b1e753"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/native-taskhost-a3bcb03/native-unknown-recovery.png",
+      "originalBytes": 153698,
+      "originalSha256": "2345492212bb672486530f5e81cdbb73863d09ea6d2ba19c5c7100a9fd319bac",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/native-taskhost-a3bcb03--native-unknown-recovery.png.gz",
+      "archiveBytes": 146818,
+      "archiveSha256": "2fc8ea753f401726921466ae036c2935d49a526cf0bb1cb5a5fb15adc6f85634"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PROV-CONFIG-004-20261009/native-taskhost-a3bcb03/native-ui-success.png",
+      "originalBytes": 222036,
+      "originalSha256": "f00ef4fd6e2d9e08fdc54b2479b00ab2bb506b75185fd92afdbc28760bd92b1e",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/native-taskhost-a3bcb03--native-ui-success.png.gz",
+      "archiveBytes": 214646,
+      "archiveSha256": "e077b1ac7078e31debee4e353e03814be044c5633410a4f970185b0472b73f38"
+    },
+    {
+      "original": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-CONFIG-004/src-tauri/agent-runtime/runtime-manifest.json",
+      "originalBytes": 812982,
+      "originalSha256": "f62f39d274a49c9533916bc4cab85ae808247ee94b3ec3d8801582ffb3295857",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/runtime-manifest-a3bcb03.json.gz",
+      "archiveBytes": 194101,
+      "archiveSha256": "1b59b34110fd1225989bdb07bcbc2f91c4872fa497da6355a3ba39541947f67e"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PLUGIN-DEV-001-20261009/review-final-a5ee57e.md",
+      "originalBytes": 23256,
+      "originalSha256": "7f8364487822d85e8b4915a29305086523dc423a7b4f3b1a9d40a81b0bd0f9b0",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/plugin-closure--review-final-a5ee57e.md.gz",
+      "archiveBytes": 8124,
+      "archiveSha256": "c930b6c31d6c56a9da9d739e790b766ee7873ed0b94194b1f0f87137c0bea084"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PLUGIN-DEV-001-20261009/review-final-cc28d8c.md",
+      "originalBytes": 21693,
+      "originalSha256": "165a98c8d66934d99fe3c70dbe498c313b639f037433be9bcfd3da65d06e9c99",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/plugin-closure--review-final-cc28d8c.md.gz",
+      "archiveBytes": 8017,
+      "archiveSha256": "3c1f9eba2a9a7f834a57c6a8f8672a175f9b71a5af0938cbc046dc745010a93e"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PLUGIN-DEV-001-20261009/landing-main-6a97f45.json",
+      "originalBytes": 572,
+      "originalSha256": "78f25cd631d4b1ff405efc429568a770ebd5b9524d8505ca0a90f17e62c404b9",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/plugin-closure--landing-main-6a97f45.json.gz",
+      "archiveBytes": 297,
+      "archiveSha256": "d47b07c17672da0a2530d894247027d5f80fd1afb126b952802dd7259b8ea710"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-PLUGIN-DEV-001-20261009/main-6a97f45-failed-verify.txt",
+      "originalBytes": 261598,
+      "originalSha256": "357a83eb14f8bb8c5c2bc8a9bd11c220cd8b126b3a74f460b51b3e0d8487e844",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/plugin-closure--main-6a97f45-failed-verify.txt.gz",
+      "archiveBytes": 73803,
+      "archiveSha256": "4eee11768c06c5fc0d4dc4d50669333e754c98b86523ba81e9a8f85c9a699601"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/review-final-fa36d35.md",
+      "originalBytes": 9340,
+      "originalSha256": "31141541bf8215f4bf3c2abfcde676ee6adf3c69aaa0e78e77e68deda06e09fd",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/retry-current--review-final-fa36d35.md.gz",
+      "archiveBytes": 4427,
+      "archiveSha256": "a462c48ceef1532f72465be9f7e909a290e25082c8f15cd6c0220729d7577f74"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/push-fa36d35-failed-verify.txt",
+      "originalBytes": 129083,
+      "originalSha256": "8bf775dfa5a5060ff51c0828081af37b3c5f60f46b6db90e3a40b3aff2d6c9a9",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/retry-current--push-fa36d35-failed-verify.txt.gz",
+      "archiveBytes": 39396,
+      "archiveSha256": "2e53ef652a3728b927e0d4576e833b9db9adcab1a171248b1c892e63d616bfe2"
+    },
+    {
+      "original": "D:/kk-studio/.verification/TASK-IMAGE-RETRY-004-20261009/pr-fa36d35-success-verify.txt",
+      "originalBytes": 350144,
+      "originalSha256": "d311b39484316a9544a985214e1a41783a4f23e1ab547e394c9d7b37055571be",
+      "archive": "docs/changes/2026-10-09-provider-config-recovery/evidence/originals/retry-current--pr-fa36d35-success-verify.txt.gz",
+      "archiveBytes": 95987,
+      "archiveSha256": "72cb6d20b994f431908cd785b322f6540494f942e77fd57c64243050e56c51b6"
+    }
+  ]
+}

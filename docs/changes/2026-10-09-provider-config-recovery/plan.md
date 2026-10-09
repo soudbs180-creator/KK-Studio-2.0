@@ -7,3 +7,5 @@
 5. 相关与全量检查、fresh Agent打包、独立精确head审查；只在当前verify/delivery及实际保护要求通过后普通PR squash，再回读真实main。
 
 TOML规范依据：[TOML 1.0](https://toml.io/en/v1.0.0)；解析器依据：[smol-toml官方源码](https://github.com/squirrelchat/smol-toml)。此为既有故障修复，不改变产品默认模型决策。
+
+6. 独立408审查发现inline作用域P1后，先真实35/36 RED，最小lexer修复并用36/36、完整verify/fresh包及a3正式复审关闭。继续独立处理主线区域重试和Windows CI失败；有失败门禁时先诊断，不抢合。最终docs与本地任务审查随后，精确最终head Hosted及post-main仍需实际回读。

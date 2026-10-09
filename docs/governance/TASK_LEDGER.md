@@ -115,7 +115,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | T2, TASK-UI-GOV-003 | root |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
-| TASK-PROV-CONFIG-004 | Codex受管TOML表头与当前选择的安全合并 | PARTIAL | TASK-PROV-003 | root |
+| TASK-PROV-CONFIG-004 | Codex受管TOML表头与当前选择的安全合并 | REVIEW | TASK-PROV-003 | root |
 | TASK-LOCAL-ASSET-002 | 伴随服务跨源素材元数据响应头 | TODO | TASK-LOCAL-SERVICE-001 | root |
 | TASK-COMPANION-RECOVERY-003 | 伴随服务未知版本与坏快照原件保护 | TODO | TASK-LOCAL-SERVICE-001 | root |
 | TASK-WEB-IMAGE-UNKNOWN-002 | Web成功HTTP但坏输出的未知受理边界 | TODO | T4 | root |
@@ -127,8 +127,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | TODO | TASK-GOV-001 | root |
 | TASK-DOC-CURRENT-002 | README与已知问题的当前入口一致性 | TODO | TASK-GOV-001 | root |
 | TASK-GIT-HEALTH-002 | 分支准入与未提交工作持续盘点 | TODO | TASK-GOV-001 | root |
-| TASK-UI-014-RESUME-001 | 接续因模型容量错误中断的UI审计 | TODO | UI-001 | root |
+| TASK-UI-014-RESUME-001 | 接续因模型容量错误中断的UI审计 | PARTIAL | UI-001 | root |
 | TASK-NATIVE-GESTURE-002 | 原生标题栏拖动首轮失败的环境诊断 | TODO | TASK-UI-013 | root |
+| TASK-UI-012-RESUME-001 | 接续容量中断的UI核心交互交付 | PARTIAL | UI-001 | root |
 
 ## TASK-DESKTOP-FLUSH-001 — 桌面关闭前耐久保存与失败留窗
 
@@ -1450,7 +1451,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-PROV-CONFIG-004-safe-toml`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-CONFIG-004`
 - Modules: vendor/canvas-agent/src/agent/codex-provider-config.ts, vendor/canvas-agent/src/agent/codex-provider-config.test.ts, vendor/canvas-agent/package.json, vendor/canvas-agent/package-lock.json, docs
-- Verification: PARTIAL — 旧25项provider/CLI基线通过，当前仍需故障复现、修复、组合回归与独立审查。
+- Verification: PASS — a3源码36/36、804root/183Agent（原skip8/2）、447browser447attempts零retry、Rust102、生产4296文件包内CLI六命令及fresh EXE/TaskHost11通过；精确a3独立源码审查PASS，P1 inline作用域关闭。最终文档/当前Hosted/普通PR与main回归单独待验。
 - Evidence: [docs/changes/2026-10-09-provider-config-recovery/spec.md](../../docs/changes/2026-10-09-provider-config-recovery/spec.md), [docs/changes/2026-10-09-provider-config-recovery/verification.md](../../docs/changes/2026-10-09-provider-config-recovery/verification.md), [docs/changes/2026-10-09-provider-config-recovery/review.md](../../docs/changes/2026-10-09-provider-config-recovery/review.md)
 - Updated: 2026-10-09
 
@@ -1591,10 +1592,10 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 保存原候选后完成当前main组合、Web/新Desktop验收与独立复审
 - Scope: 健康审计UI014运行中断；当前main重新复现后在独立任务分支收尾
 - Acceptance: 保存原候选后完成当前main组合、Web/新Desktop验收与独立复审; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `fix/TASK-UI-014-RESUME-001-current-main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-014-RESUME-001`
 - Modules: src/components, src/styles, docs/UI_INDEX.md
-- Verification: NOT_VERIFIED — 原会话审计并完善UI规范于2026-10-08T21:06:47Z模型容量错误中断，最后菜单27定向通过、布局变量门禁曾失败后已补定义但最终结果未知。保留原worktree，独立候选续验；不能当成产品已验收或偷偷改变会话模型。
+- Verification: PARTIAL — 原会话容量中断；bd16及已知9条dirty已只读保存准确hash/patch（18653字节），原件不动。新隔离main6a承接工作树已登记，最新UI012组合及Web/新Desktop全验收尚需执行；未接受旧DONE宣告。
 - Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
 - Updated: 2026-10-09
 
@@ -1608,4 +1609,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: tests/desktop/titlebar.mjs
 - Verification: NOT_VERIFIED — 当前仅复核同一EXE真实首轮失败与完整第二轮PASS，未确认原因；不阻断已验收的插件源码范围，后续诊断独立执行。
 - Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md), [docs/changes/2026-10-09-plugin-development/verification.md](../../docs/changes/2026-10-09-plugin-development/verification.md)
+- Updated: 2026-10-09
+
+## TASK-UI-012-RESUME-001 — 接续容量中断的UI核心交互交付
+
+- Goal: 保留原候选并完成最新main组合、证据归档、精确复审与普通PR
+- Scope: UI012原8d6实施/验收已保留；新独立任务分支完成正式交付和最新基线补验
+- Acceptance: 原8d6源码/525零retry和八Native原件与身份保留，容量错误不等于产品失败; 新组合freshWeb/Desktop与有效门禁、独立精确head审查及文档完成; 只在currentCI/实际保护通过后普通PR集成、回读main
+- Branch: `fix/TASK-UI-012-RESUME-001-current-main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-012-RESUME-001`
+- Modules: src/components, src/features/models, src/styles, docs
+- Verification: PARTIAL — 原会话修复错误的展示逻辑和 UI容量中断；已独立取回原525项/525attempts/0retry（hash142c0971…）及8d6同EXE八Native成功。新隔离工作树继承8d6，原clean checkout未写。最终最新main组合、文档/证据、正式审查和Hosted仍待，不把capacity中断冒充全部验收完成。
+- Evidence: [docs/changes/2026-10-09-provider-config-recovery/health-followup.md](../../docs/changes/2026-10-09-provider-config-recovery/health-followup.md)
 - Updated: 2026-10-09

@@ -7,3 +7,6 @@
 - 局部RED→GREEN、独立参考TOML解析、CLI真实隔离文件、全量verify、Agent build/package与delivery、独立精确head review、实际托管门禁与main回归分别验证。
 
 - 用户profile仍引用待删受管provider时也拒绝删除，保留profile原文；root active不冒充已调整所有用户profile。附带当前健康审计19条的可追溯任务安排，不把这些TODO纳入已完成声明。
+
+- 多行inline table及嵌套array/string内的model_provider是用户内部键，不可修改为根选择；跟踪[]与{}作用域，TOML1.1合法输入先由实际parser确认。新增回归覆盖最小原问题与嵌套引号/braces。
+- 当前源码技术验收与普通交付分别判定：本地完整及独立源码通过进入REVIEW，当前doc/Hosted/merge/main未过不得声称已落地。

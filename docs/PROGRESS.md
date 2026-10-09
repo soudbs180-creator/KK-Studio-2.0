@@ -1,5 +1,14 @@
 # 当前进度
 
+## 2026-10-09 配置源码已审与失败门禁继续收尾
+
+当前主线为PR42落地6a97f456ab7334f97c604461e8d29789caa754cb，source cc28d8c与landing完整tree相同。实际post-main37845923441 verify失败（区域重试预期4收到3），原FAIL保留。PR43 fa36d35的pull_request37851243837全部成功，但同head push37851173715 Windows入口单测失败（status null，原日志缺error/signal，原因UNKNOWN），因此PR43仍draft、未合并；不能称主线已恢复。
+
+TASK-PROV-CONFIG-004精确a3源码36/36、完整804root/183Agent（原skip8/2）、447零retry、Rust102、4296生产包及fresh EXE/TaskHost11通过，独立PASS关闭inline作用域P1。本任务REVIEW，最终docs/Hosted/PR/main待验；Desktop2.1.13/Web2.1.12/Mobile规划2.1.1。当前候选124项：DONE66/TODO25/PARTIAL28/BLOCKED4/REVIEW1，开放58项，TASK-PROV-003/FEAT-032整体PARTIAL。最新56分支/44工作树只读实证，历史与dirty全部保留。UI012/014原会话容量错误已建独立继续工作树，原UI012525/八Native通过和UI014九条dirty分别保留；最新组合交付尚待。
+
+恢复入口：[本轮验证](changes/2026-10-09-provider-config-recovery/verification.md)、[完整任务与分支状态](changes/2026-10-09-provider-config-recovery/status.md)、[健康19项承接](changes/2026-10-09-provider-config-recovery/health-followup.md)。下面保留各时点历史。
+
+
 ## 2026-10-09 统一Mask最新主线组合本地验收完成
 
 用户授权普通合并已检查分支。PR38/40已正常合并，当前base main1d6f640及其实际post-main37806381609成功；Mask产品27b/driver-eaa承接该主线，完整445browser零retry、102Rust和fresh Agent原生Mask外0/重启/undo/凭据保护、上方操作栏/TaskHost/模型/标题栏/首屏及生产Web3宽度通过，当前独立复审。Desktop/Web2.1.11、Mobile规划2.1.1；104上游对象完整保留，106项DONE62/TODO14/PARTIAL26/BLOCKED4，44项开放。TASK-PLUGIN-DEV-001开发遮罩依然FAIL/TODO，源码与main相同；开发其余UI只在留证后Escape收起遮罩作局部检查，primary-main开发两次超时为NOT VERIFIED。真实效果/手机/用户验收仍VERIFY-002，FEAT035仍PARTIAL。最终docs独立/最新Hosted、普通合并、完整landing tree/主线FF与post-mainCI另外实际回读，不预填成功。UI012仍原执行者在途。恢复入口[本轮验证](changes/2026-10-09-unified-mask-main-integration/verification.md) / [任务状态报告](changes/2026-10-09-unified-mask-main-integration/status.md)。保留所有历史/工作树/快捷方式及用户数据，不宣称既有启动入口已换包或已发布。

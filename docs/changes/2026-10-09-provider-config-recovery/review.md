@@ -1,3 +1,11 @@
 # Review：Codex配置安全合并
 
-当前为实施前计划；self-review、独立精确base/head审查及平台CI/审批分别待实际执行。原LEG-001/002由本任务承接，不伪造当前修复结论。
+任务TASK-PROV-CONFIG-004。Self-review核对语义parser/保留用户原文、root及profile引用拒绝、inline/table/字符串作用域、所有验证前置、脱敏与生产依赖白名单；实际回归与原件保护见[verification](verification.md)。
+
+独立上下文/root/mask_final_doc_review以base6a97f456ab7334f97c604461e8d29789caa754cb/head4088745408ac255548a621e2c584f3328d20430c审查，真实CHANGES REQUIRED，稳定P1 PROV-CONFIG-REVIEW-001：多行inline table用户内部键被当根键处理。原报告不覆盖。最小{}深度修复及35/36 RED→36/36后，精确heada3bcb031b48b57421123e51bfa6a1d9508558152正式补审PASS，001 CLOSED；报告SHA256 f1238cccf8ffb51baea2d18f04a1bd89104d136bda2f81382cd2d7c8ee81a76a，4296生产包、447零retry和fresh EXE/TaskHost身份由reviewer独立核对。
+
+a3源码报告排除了当时未提交的三份收尾文档，只覆盖Git中123任务历史范围。本轮新增UI012继续任务/更新UI014归属与最终124任务文档要按实际提交再补审，不把a3 PASS直接套到新SHA。当前无新增源码阻断；最终doc review、Hosted、普通PR及main gate尚待。
+
+当前主线为PR42落地6a97f456ab7334f97c604461e8d29789caa754cb，source cc28d8c与landing完整tree相同。实际post-main37845923441 verify失败（区域重试预期4收到3），原FAIL保留。PR43 fa36d35的pull_request37851243837全部成功，但同head push37851173715 Windows入口单测失败（status null，原日志缺error/signal，原因UNKNOWN），因此PR43仍draft、未合并；不能称主线已恢复。
+
+实际托管保护/审批另读取，不作者自批、不替用户虚构approval、不绕过有效检查；真实用户配置、Provider服务、安装/发布与用户UI验收不在本次隔离技术验收范围。历史失败与正式两次审查归档见[evidence manifest](evidence/manifest.json)。
