@@ -1,5 +1,11 @@
 # 当前进度
 
+## 2026-10-09 AI 协作规则文档结构收敛（TASK-DOCS-STRUCT-001）
+
+文档层变更，未改动 `src/**` 与 `scripts/**`。新增 `docs/engineering/CODING-STANDARDS.md`（门禁映射、依赖方向、文件规模边界、命名、错误处理）与 `docs/engineering/TESTING.md`（测试分层、Playwright 运行契约、覆盖要求、证据保存）；`docs/README.md` 升级为索引含五层权威优先级、冲突裁决细则与本地记忆四层模型；`BRANCH-POLICY.md` 补提交信息规范、worktree 落点、自动合并现状、回滚触发条件四节；`UI_RULES.md` 加 3.4 Token 化纪律；`AGENTS.md` 与 `AI_RULES.md` 明确边界。未新建 `ui-guidelines.md`、`git-workflow.md`、`UI-TOKEN-GOVERNANCE.md`，避免第二来源。
+
+自检修正一处事实错误：`BRANCH-POLICY.md` 原文称已新增 `scripts/governance/auto-merge.mjs`，核对 `ls scripts/governance/` 确认该脚本不存在于仓库，已改为按实际记录「尚未落地」并说明阻塞原因（固定 1421/1423 端口串行验证）。10 个超限文件（含 `src/App.tsx` 3152 行）登记为技术债，未加门禁——加门禁会立即阻塞所有 PR，属需授权的结构性变更。门禁：markdown:check 104 files 0 violations，lint exit 0，governance 115 tasks 0 violations。工作区既有 3 个 `src/styles/*.css` 改动与未跟踪 `docs/decisions/` 属画布 token 化遗留，未纳入本次提交。缺独立上下文 AI review，合并条件未满足。当前 115 项任务。[本轮验证](changes/2026-10-09-docs-structure/verification.md)
+
 ## 2026-10-09 失败任务 source105 本地复验
 
 主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。
