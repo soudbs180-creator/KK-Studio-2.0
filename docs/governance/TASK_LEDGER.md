@@ -118,7 +118,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | T2, TASK-UI-GOV-003 | root |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
-| TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | TODO | TASK-GOV-001 | root |
+| TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | TASK-GOV-001 | root |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | TODO | none | root |
 
 ## TASK-WINDOWS-ENTRY-DIAG-002 — 补齐Windows入口子进程失败诊断
@@ -1474,12 +1474,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败
 - Scope: 健康审计QA-001；当前main重新复现后在独立任务分支收尾
 - Acceptance: 保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `codex/TASK-VERIFY-CONCURRENCY-002`
+- Worktree: `D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002`
 - Modules: tests/browser, playwright.config.ts
-- Verification: NOT_VERIFIED — 同source105默认并发完整verify实际9 flaky，default1423 workers4/retries0实际447/447通过；原因仍UNKNOWN，须可控反例确定同步/资源边界，不将降并发称根因修复。
-- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md)
-- Updated: 2026-10-09
+- Verification: PARTIAL — 当前 clean source 8090475958f1a0bdd1b4b36ada7f2aba1e4e6264、同一 production dist、固定 preview 1423/retries0 下，workers 1/2/4/8/12 均 447/447 PASS；进程树资源峰值随 workers 增长并已留 receipt。历史 source105 的 9 个首轮 flaky 原件保留，当前未复现，资源压力仅支持假设；substantive head 872ba917 的 Hosted PR/push verify、delivery、deploy-linux 均成功。历史根因仍 UNKNOWN；普通 PR 合并后 main 回读待 squash 后执行，不能称根因修复。
+- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-10-verify-concurrency-002/verification.md](../../docs/changes/2026-10-10-verify-concurrency-002/verification.md), [docs/changes/2026-10-10-verify-concurrency-002/review.md](../../docs/changes/2026-10-10-verify-concurrency-002/review.md)
+- Updated: 2026-10-10
 
 ## TASK-VERIFY-ORIGIN-003 — 浏览器验收端口与服务来源契约一致性
 
