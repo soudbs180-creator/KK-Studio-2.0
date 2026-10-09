@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-09T11:07:40.298Z",
+  "generatedAt": "2026-10-09T13:03:48.252Z",
   "primaryRepository": "D:/kk-studio/KK-Studio-2.0",
   "destructiveActionsPerformed": false,
   "entries": [
@@ -14,8 +14,8 @@
       "owner": "workspace-maintainer",
       "kindOnDisk": "directory",
       "bytes": 0,
-      "modified": "2026-10-09T10:59:39.826Z",
-      "sha256": "14c6a844839efa8d3d73a6b2d56fa956117b4e4937b85e9b32de967563eb1fe3",
+      "modified": "2026-10-09T12:03:19.185Z",
+      "sha256": "19913d68863856d725f5e73d752b6deb6dd320e8d3b784184ba8670483a83915",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "NOT_GIT_ROOT"
@@ -78,8 +78,8 @@
       "owner": "task-owner",
       "kindOnDisk": "directory",
       "bytes": 0,
-      "modified": "2026-10-09T10:51:14.200Z",
-      "sha256": "651015951f8c7d172ae5df69bbe5d3af99d5a302b7f030f7dd65e037fe0b641e",
+      "modified": "2026-10-09T13:03:19.530Z",
+      "sha256": "3d63dd877b929b9e9a824e1b4dede558beda6864e70f38e00df1a5f611428464",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "WORKTREE_CONTAINER"
@@ -126,8 +126,8 @@
       "owner": "repository-maintainer",
       "kindOnDisk": "directory",
       "bytes": 0,
-      "modified": "2026-10-09T10:03:58.707Z",
-      "sha256": "7b61c325a41599c3691ce1de5f7acf31829a07134f0acf12489acd84137f0175",
+      "modified": "2026-10-09T12:55:06.882Z",
+      "sha256": "2e56aef5b7f02cf8d88a00ae25d729a126a0927e46d0247308a28fcce17ff29d",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "PRIMARY_REPOSITORY"
@@ -146,6 +146,22 @@
       "sha256": "24d911d89bc6f1d15f725bca2ce72468aeb40a8cf7725e5ad390b825843ec783",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
+      "gitOwnership": "NOT_GIT_ROOT"
+    },
+    {
+      "path": "D:/kk-studio/pnpm-lock.yaml.ignored-2026-10-09",
+      "relativePath": "pnpm-lock.yaml.ignored-2026-10-09",
+      "kind": "REVIEW_REQUIRED",
+      "action": "REVIEW_REQUIRED",
+      "deletable": false,
+      "sensitivity": "REVIEW_REQUIRED",
+      "owner": "governance-maintainer",
+      "kindOnDisk": "file",
+      "bytes": 94704,
+      "modified": "2026-10-09T11:14:07.340Z",
+      "sha256": "ec2cddc668da3e825d96ff51ad25cd79d2365de327d816ba13955cbaae6a085c",
+      "shaMode": "exact-or-null-over-50MiB",
+      "sizeMode": "exact-or-null-over-50MiB",
       "gitOwnership": "NOT_GIT_ROOT"
     },
     {
@@ -184,7 +200,7 @@
   "gitWorktrees": [
     {
       "path": "D:/kk-studio/KK-Studio-2.0",
-      "head": "656b32f12ab13c9d6ebece414e05d1951650ef2d",
+      "head": "1d27d38fdb6c8eefe4d894e5c94edbbdb3b0c542",
       "branch": "refs/heads/docs/TASK-DOCS-STRUCT-001"
     },
     {
@@ -231,11 +247,6 @@
       "path": "D:/kk-studio/.worktrees/TASK-AGENT-007-codebuddy-cli",
       "head": "c9ebd9036cc7e51ccfa96e5b74cba04903888996",
       "branch": "refs/heads/feat/TASK-AGENT-007-codebuddy-cli"
-    },
-    {
-      "path": "D:/kk-studio/.worktrees/TASK-GOV-20261009-reorg",
-      "head": "8090475958f1a0bdd1b4b36ada7f2aba1e4e6264",
-      "branch": "refs/heads/docs/TASK-GOV-20261009-reorg"
     },
     {
       "path": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
