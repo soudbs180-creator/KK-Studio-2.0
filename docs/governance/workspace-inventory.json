@@ -1,0 +1,421 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-09T11:07:40.298Z",
+  "primaryRepository": "D:/kk-studio/KK-Studio-2.0",
+  "destructiveActionsPerformed": false,
+  "entries": [
+    {
+      "path": "D:/kk-studio/.tmp",
+      "relativePath": ".tmp",
+      "kind": "TEMPORARY_CANDIDATE",
+      "action": "MANIFEST_THEN_CLEAN",
+      "deletable": false,
+      "sensitivity": "REGENERABLE",
+      "owner": "workspace-maintainer",
+      "kindOnDisk": "directory",
+      "bytes": 0,
+      "modified": "2026-10-09T10:59:39.826Z",
+      "sha256": "14c6a844839efa8d3d73a6b2d56fa956117b4e4937b85e9b32de967563eb1fe3",
+      "shaMode": "top-level-directory-metadata",
+      "sizeMode": "filesystem-entry-metadata",
+      "gitOwnership": "NOT_GIT_ROOT"
+    },
+    {
+      "path": "D:/kk-studio/.tools",
+      "relativePath": ".tools",
+      "kind": "REGENERABLE_CACHE",
+      "action": "MANIFEST_THEN_CLEAN",
+      "deletable": false,
+      "sensitivity": "REGENERABLE",
+      "owner": "workspace-maintainer",
+      "kindOnDisk": "directory",
+      "bytes": 0,
+      "modified": "2026-10-09T07:08:26.448Z",
+      "sha256": "479f3b7e51e37ef8e5fb9e591cee50b328fe0522684c68127ae8baa66cc99c00",
+      "shaMode": "top-level-directory-metadata",
+      "sizeMode": "filesystem-entry-metadata",
+      "gitOwnership": "NOT_GIT_ROOT"
+    },
+    {
+      "path": "D:/kk-studio/.verification",
+      "relativePath": ".verification",
+      "kind": "EVIDENCE_CANDIDATE",
+      "action": "MANIFEST_THEN_ARCHIVE",
+      "deletable": false,
+      "sensitivity": "EVIDENCE_READ_ONLY",
+      "owner": "evidence-maintainer",
+      "kindOnDisk": "directory",
+      "bytes": 0,
+      "modified": "2026-10-09T04:08:24.679Z",
+      "sha256": "01ee6f361578d25f4b1039bd7666d69885ad6e62f686e9a0b5e4f4a99f23dda2",
+      "shaMode": "top-level-directory-metadata",
+      "sizeMode": "filesystem-entry-metadata",
+      "gitOwnership": "NOT_GIT_ROOT"
+    },
+    {
+      "path": "D:/kk-studio/.workbuddy",
+      "relativePath": ".workbuddy",
+      "kind": "ROOT_SCRATCH_CANDIDATE",
+      "action": "MANIFEST_THEN_CLEAN",
+      "deletable": false,
+      "sensitivity": "REVIEW_REQUIRED",
+      "owner": "workspace-maintainer",
+      "kindOnDisk": "directory",
+      "bytes": 0,
+      "modified": "2026-09-22T08:41:35.587Z",
+      "sha256": "d92aedcec747783d8168012870ff8c641fa853da7461ad53ad54d29b9fe42c87",
+      "shaMode": "top-level-directory-metadata",
+      "sizeMode": "filesystem-entry-metadata",
+      "gitOwnership": "NOT_GIT_ROOT"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees",
+      "relativePath": ".worktrees",
+      "kind": "ACTIVE_WORKTREE_ROOT",
+      "action": "KEEP_GIT_LINKED",
+      "deletable": false,
+      "sensitivity": "SOURCE_TREE",
+      "owner": "task-owner",
+      "kindOnDisk": "directory",
+      "bytes": 0,
+      "modified": "2026-10-09T10:51:14.200Z",
+      "sha256": "651015951f8c7d172ae5df69bbe5d3af99d5a302b7f030f7dd65e037fe0b641e",
+      "shaMode": "top-level-directory-metadata",
+      "sizeMode": "filesystem-entry-metadata",
+      "gitOwnership": "WORKTREE_CONTAINER"
+    },
+    {
+      "path": "D:/kk-studio/ai_group_chat_study",
+      "relativePath": "ai_group_chat_study",
+      "kind": "INDEPENDENT_PROJECT",
+      "action": "KEEP_SEPARATE_PROJECT",
+      "deletable": false,
+      "sensitivity": "SEPARATE_PROJECT",
+      "owner": "independent-project-owner",
+      "kindOnDisk": "directory",
+      "bytes": 0,
+      "modified": "2026-09-24T03:02:18.716Z",
+      "sha256": "905434b942ae540d3817853edc67ba3adaca9f95b6739f52aa786aa986c16886",
+      "shaMode": "top-level-directory-metadata",
+      "sizeMode": "filesystem-entry-metadata",
+      "gitOwnership": "INDEPENDENT_GIT_PROJECT"
+    },
+    {
+      "path": "D:/kk-studio/docs",
+      "relativePath": "docs",
+      "kind": "REVIEW_REQUIRED",
+      "action": "REVIEW_REQUIRED",
+      "deletable": false,
+      "sensitivity": "REVIEW_REQUIRED",
+      "owner": "governance-maintainer",
+      "kindOnDisk": "directory",
+      "bytes": 0,
+      "modified": "2026-10-09T10:54:28.162Z",
+      "sha256": "b3054fe0789e24f25428ad20c8389f43d8cfbc804ca0a9427aad82d8bc8331f5",
+      "shaMode": "top-level-directory-metadata",
+      "sizeMode": "filesystem-entry-metadata",
+      "gitOwnership": "NOT_GIT_ROOT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0",
+      "relativePath": "KK-Studio-2.0",
+      "kind": "PRIMARY_REPOSITORY",
+      "action": "KEEP_PRIMARY",
+      "deletable": false,
+      "sensitivity": "SOURCE_TREE",
+      "owner": "repository-maintainer",
+      "kindOnDisk": "directory",
+      "bytes": 0,
+      "modified": "2026-10-09T10:03:58.707Z",
+      "sha256": "7b61c325a41599c3691ce1de5f7acf31829a07134f0acf12489acd84137f0175",
+      "shaMode": "top-level-directory-metadata",
+      "sizeMode": "filesystem-entry-metadata",
+      "gitOwnership": "PRIMARY_REPOSITORY"
+    },
+    {
+      "path": "D:/kk-studio/output",
+      "relativePath": "output",
+      "kind": "EVIDENCE_CANDIDATE",
+      "action": "MANIFEST_THEN_ARCHIVE",
+      "deletable": false,
+      "sensitivity": "EVIDENCE_READ_ONLY",
+      "owner": "evidence-maintainer",
+      "kindOnDisk": "directory",
+      "bytes": 0,
+      "modified": "2026-10-09T04:00:24.851Z",
+      "sha256": "24d911d89bc6f1d15f725bca2ce72468aeb40a8cf7725e5ad390b825843ec783",
+      "shaMode": "top-level-directory-metadata",
+      "sizeMode": "filesystem-entry-metadata",
+      "gitOwnership": "NOT_GIT_ROOT"
+    },
+    {
+      "path": "D:/kk-studio/README.md",
+      "relativePath": "README.md",
+      "kind": "REVIEW_REQUIRED",
+      "action": "REVIEW_REQUIRED",
+      "deletable": false,
+      "sensitivity": "REVIEW_REQUIRED",
+      "owner": "governance-maintainer",
+      "kindOnDisk": "file",
+      "bytes": 3084,
+      "modified": "2026-10-09T08:36:14.698Z",
+      "sha256": "38301caea75e0a99be12f21989420f9765af48696033408169ddca963d005eb7",
+      "shaMode": "exact-or-null-over-50MiB",
+      "sizeMode": "exact-or-null-over-50MiB",
+      "gitOwnership": "NOT_GIT_ROOT"
+    },
+    {
+      "path": "D:/kk-studio/references",
+      "relativePath": "references",
+      "kind": "REVIEW_REQUIRED",
+      "action": "REVIEW_REQUIRED",
+      "deletable": false,
+      "sensitivity": "REVIEW_REQUIRED",
+      "owner": "governance-maintainer",
+      "kindOnDisk": "directory",
+      "bytes": 0,
+      "modified": "2026-10-09T08:33:01.551Z",
+      "sha256": "02d7384b3930397f875ebd1f1e1d154740fb9ff52114eabc06c51b48201d1331",
+      "shaMode": "top-level-directory-metadata",
+      "sizeMode": "filesystem-entry-metadata",
+      "gitOwnership": "NOT_GIT_ROOT"
+    }
+  ],
+  "gitWorktrees": [
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0",
+      "head": "656b32f12ab13c9d6ebece414e05d1951650ef2d",
+      "branch": "refs/heads/docs/TASK-DOCS-STRUCT-001"
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/worktrees/google-cli-login/KK-Studio-2.0",
+      "head": "9c5fafd0f3ab871e2bf6ecf9c9ca03853a4ebf9e",
+      "branch": "refs/heads/feat/TASK-AGENT-005-google-cli-login"
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0",
+      "head": "13671d7a2e40c5c435684ac23b3836cdef737afd",
+      "branch": "refs/heads/feat/TASK-AGENT-004-google-closeout"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/canvas-compare",
+      "head": "abe1e99a7f2b9846623c8f36657a284d93ae2ccb",
+      "branch": "refs/heads/codex/T10-PREP-vps-migration"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/fix-canvas-composer-overlay",
+      "head": "8090475958f1a0bdd1b4b36ada7f2aba1e4e6264",
+      "branch": "refs/heads/fix/TASK-UI-017-composer-overlay"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/google-conversation-boundary",
+      "head": "48bfd97fbb30259950741a2d48959e77af2b7174",
+      "branch": "refs/heads/fix/TASK-AGENT-004-conversation-boundary"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/google-conversation-verify",
+      "head": "59d333346c5af277000d0a370b1bbcd22a9ca6b0",
+      "branch": null
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/platform-versioning",
+      "head": "cf95b4ab06522264835005709a105b685947d3e6",
+      "branch": "refs/heads/feat/TASK-LOCAL-SERVICE-001-companion"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-AGENT-006-workbuddy-gateway",
+      "head": "cef927ebe9b898e3bbb3cb71460454f2ba1f29ee",
+      "branch": "refs/heads/feat/TASK-AGENT-006-workbuddy-gateway"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-AGENT-007-codebuddy-cli",
+      "head": "c9ebd9036cc7e51ccfa96e5b74cba04903888996",
+      "branch": "refs/heads/feat/TASK-AGENT-007-codebuddy-cli"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-GOV-20261009-reorg",
+      "head": "8090475958f1a0bdd1b4b36ada7f2aba1e4e6264",
+      "branch": "refs/heads/docs/TASK-GOV-20261009-reorg"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
+      "head": "f0a385fd4d4836cf107d0d3d350a03139d97ec78",
+      "branch": "refs/heads/codex/TASK-GOV-PHASE0-governance-baseline"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-MEMORY-001",
+      "head": "0a88916dbf8e736a12e2fb23124fcf94b65154ae",
+      "branch": "refs/heads/feat/TASK-MEMORY-001-local-memory"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-MINIMAX-001-mcp-registry-limit",
+      "head": "381383d33e1c5eb7a50463cb4d4e6231c56dde95",
+      "branch": "refs/heads/fix/TASK-MINIMAX-001-mcp-registry-limit"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-ORCH-003-agent-roles-schema",
+      "head": "67d34fd750f2cbcde32e2a0f7f0466d7133192b0",
+      "branch": "refs/heads/feat/TASK-ORCH-003-agent-roles-schema"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-P0-REGISTRY-20261009",
+      "head": "3d358f0ae41f5de4ba9ca0bddfef07a941b4b064",
+      "branch": "refs/heads/docs/TASK-P0-REGISTRY-20261009"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-PROV-003-provider-wiring",
+      "head": "a913daedd5fab3e80b03f05c8938d56ef5a2ae63",
+      "branch": "refs/heads/feat/TASK-PROV-003-provider-wiring-main"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-PROV-004-claude-landing",
+      "head": "dbeee9d6f8a55c0b67669c0325182da8fedd78ea",
+      "branch": "refs/heads/feat/TASK-PROV-004-claude-landing"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-REPO-TIDY-001",
+      "head": "66e0ee504be51f89bca783f6f736807c341c1364",
+      "branch": "refs/heads/chore/TASK-REPO-TIDY-001-workspace-cleanup"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-UI-009-integration",
+      "head": "76be5c3b9ee805696a1c7c2df6c2587b289306ff",
+      "branch": "refs/heads/feat/TASK-UI-009-ui010-integration"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-UI-009-sidebar-project-groups",
+      "head": "76339c9f5cd1a1b2affea6b4c3d247de7188da18",
+      "branch": "refs/heads/feat/TASK-UI-009-sidebar-project-groups"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-UI-012-core-interactions",
+      "head": "36eb8f65745f4f1c5928635607ec00d441e88315",
+      "branch": "refs/heads/codex/TASK-UI-012-core-interactions"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-UI-012-model-menu",
+      "head": "1af0357b088df79dc51e9b309ef310a500722cf8",
+      "branch": "refs/heads/codex/TASK-UI-012-model-menu"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-UI-EXT-001-settings-split",
+      "head": "3b4e950030ce3170ac7b887e186730269aa53819",
+      "branch": "refs/heads/feat/TASK-UI-EXT-001-settings-split"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-VERIFY-001",
+      "head": "76339c9f5cd1a1b2affea6b4c3d247de7188da18",
+      "branch": "refs/heads/fix/TASK-VERIFY-001-cross-platform-tests"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002",
+      "head": "8090475958f1a0bdd1b4b36ada7f2aba1e4e6264",
+      "branch": "refs/heads/codex/TASK-VERIFY-CONCURRENCY-002"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-WINDOWS-ENTRY-RECOVERY-003",
+      "head": "05ee53c95d20c9c75aa0eef1b2faf64ba5277088",
+      "branch": "refs/heads/codex/TASK-WINDOWS-ENTRY-RECOVERY-003"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/kaworkai-capability-map",
+      "head": "13d5a693d828ab69710fbac35e34f9673c62eeea",
+      "branch": "refs/heads/codex/kaworkai-capability-map"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+      "head": "cddacaf19d9cadcd09f9fa500182de56232f9c13",
+      "branch": "refs/heads/codex/TASK-AUDIT-20261003"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-COMPANION-RECOVERY-003",
+      "head": "004e7149d258af5f83f71029a9612e240ce90bbb",
+      "branch": "refs/heads/fix/TASK-COMPANION-RECOVERY-003-preserve-originals"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-GOV-20261009-ledger-closeout",
+      "head": "e75c128f5db58239ba8c05bcaf14d1fac19efb6b",
+      "branch": "refs/heads/docs/TASK-GOV-20261009-ledger-closeout"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-HEALTH-20261009",
+      "head": "1d6f640ac6f3a1e7af32c38d85596527704dc54a",
+      "branch": "refs/heads/docs/TASK-HEALTH-20261009-branch-audit"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-HEALTH-20261009-mask",
+      "head": "df857ce9104c335bafd650cb6ed29c97acbb5ee6",
+      "branch": "refs/heads/docs/TASK-HEALTH-20261009-mask-check"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-HEALTH-20261009-ui012",
+      "head": "99204c7b7ab33fb1eb1705bbe420ee465ac7fd07",
+      "branch": "refs/heads/docs/TASK-HEALTH-20261009-ui012-check"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-INTEGRATE-20261008",
+      "head": "5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3",
+      "branch": "refs/heads/codex/TASK-INTEGRATE-20261008-stage-workbench"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-LOCAL-ASSET-002",
+      "head": "4a9481ec81d675bd6d9760467cee458dacc1df18",
+      "branch": "refs/heads/fix/TASK-LOCAL-ASSET-002-expose-metadata"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MINIMAX-001-reverse-audit",
+      "head": "c0f930ce61082fecddcb772f0bae2d5d160ff2a3",
+      "branch": "refs/heads/codex/TASK-MINIMAX-001-reverse-audit"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-005",
+      "head": "29e629ec94a07a58871b2f7f19322389427f7983",
+      "branch": "refs/heads/fix/TASK-PROV-005-provider-durable-config"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-006",
+      "head": "512c40a670846e6e637b89eabb4a9af15520ea60",
+      "branch": "refs/heads/fix/TASK-PROV-006-provider-gates"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-007",
+      "head": "6ae3408e7110cb70b75431355c5dbb1289b17634",
+      "branch": "refs/heads/fix/TASK-PROV-007-capacity-errors"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-CONFIG-004",
+      "head": "b4be4660235a6c1dc9ca3fb479baf97866401347",
+      "branch": "refs/heads/fix/TASK-PROV-CONFIG-004-safe-toml"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-012-RESUME-001",
+      "head": "9a17dbb1ea74feb616475d387a275fd2372349aa",
+      "branch": "refs/heads/fix/TASK-UI-012-RESUME-001-current-main"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-014-audit",
+      "head": "890289f97c38caf5ec3eb1752a65bca8be0046e1",
+      "branch": "refs/heads/fix/TASK-UI-014-ui-audit"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-014-RESUME-001",
+      "head": "6a97f456ab7334f97c604461e8d29789caa754cb",
+      "branch": "refs/heads/fix/TASK-UI-014-RESUME-001-current-main"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-015-project-drag",
+      "head": "e2bebc96976d8d276043a5522405aa9cca33cb6d",
+      "branch": "refs/heads/fix/TASK-UI-015-project-drag"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-016-canvas-upload",
+      "head": "8090475958f1a0bdd1b4b36ada7f2aba1e4e6264",
+      "branch": "refs/heads/fix/TASK-UI-016-canvas-upload"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-VERIFY-ORIGIN-003",
+      "head": "d45fe3a597015e0d6bd55ed8042f4d8c97253790",
+      "branch": "refs/heads/fix/TASK-VERIFY-ORIGIN-003-strict-origin"
+    }
+  ]
+}

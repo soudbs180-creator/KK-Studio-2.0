@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "updated": "2026-10-09",
+  "purpose": "External index for retained historical documents. The indexed files are not deleted or rewritten.",
+  "entries": [
+    {
+      "kind": "exact_duplicate_archive",
+      "path": "docs/archive/progress-before-consolidation-latest.md",
+      "sha256": "b8ab637b313248373b11cf8ae55588bf80b1a7400271d60f835e8c8f67a8f3fd",
+      "status": "duplicate_retained",
+      "owner": "governance maintainers",
+      "supersededBy": "docs/archive/progress-before-consolidation-2026-09-09.md",
+      "lastVerified": "2026-10-09",
+      "note": "Exact byte duplicate of the dated archive; this index supplies the canonical dated navigation without deleting either file."
+    },
+    {
+      "kind": "exact_duplicate_archive",
+      "path": "docs/archive/progress-before-consolidation-2026-09-09.md",
+      "sha256": "b8ab637b313248373b11cf8ae55588bf80b1a7400271d60f835e8c8f67a8f3fd",
+      "status": "canonical_retained",
+      "owner": "governance maintainers",
+      "supersededBy": null,
+      "lastVerified": "2026-10-09",
+      "note": "Dated archive retained as the canonical target for the exact duplicate mapping."
+    },
+    {
+      "kind": "legacy_superpowers_plan",
+      "path": "docs/superpowers/plans/2026-09-06-frontend.md",
+      "status": "historical_plan",
+      "owner": "frontend task owner (historical)",
+      "supersededBy": "docs/superpowers/plans/2026-09-07-frontend-standards.md",
+      "lastVerified": null
+    },
+    {
+      "kind": "legacy_superpowers_plan",
+      "path": "docs/superpowers/plans/2026-09-07-frontend-standards.md",
+      "status": "historical_plan",
+      "owner": "frontend task owner (historical)",
+      "supersededBy": "docs/UI_INDEX.md",
+      "lastVerified": null
+    },
+    {
+      "kind": "legacy_superpowers_plan",
+      "path": "docs/superpowers/plans/2026-09-07-ui-motion-continuation.md",
+      "status": "historical_plan",
+      "owner": "frontend task owner (historical)",
+      "supersededBy": "docs/UI_SPEC.md",
+      "lastVerified": null
+    },
+    {
+      "kind": "legacy_superpowers_plan",
+      "path": "docs/superpowers/plans/2026-09-08-ui-interaction-corrections.md",
+      "status": "historical_plan",
+      "owner": "frontend task owner (historical)",
+      "supersededBy": "docs/UI_INDEX.md",
+      "lastVerified": null
+    },
+    {
+      "kind": "legacy_superpowers_plan",
+      "path": "docs/superpowers/plans/2026-09-24-memory-closure.md",
+      "status": "historical_plan",
+      "owner": "memory task owner (historical)",
+      "supersededBy": "docs/MEMORY-CONTRACT.md",
+      "lastVerified": null
+    },
+    {
+      "kind": "legacy_superpowers_plan",
+      "path": "docs/superpowers/plans/2026-09-29-figma-ui-governance-plan.md",
+      "status": "historical_plan",
+      "owner": "design task owner (historical)",
+      "supersededBy": "docs/UI_INDEX.md",
+      "lastVerified": null
+    },
+    {
+      "kind": "legacy_superpowers_plan",
+      "path": "docs/superpowers/plans/2026-09-29-project-landing-integration.md",
+      "status": "historical_plan",
+      "owner": "integration task owner (historical)",
+      "supersededBy": "docs/changes/2026-09-29-project-landing/verification.md",
+      "lastVerified": null
+    },
+    {
+      "kind": "legacy_superpowers_plan",
+      "path": "docs/superpowers/plans/2026-09-29-web-local-companion.md",
+      "status": "historical_plan",
+      "owner": "platform task owner (historical)",
+      "supersededBy": "docs/architecture/DATA-STORAGE.md",
+      "lastVerified": null
+    },
+    {
+      "kind": "legacy_superpowers_plan",
+      "path": "docs/superpowers/plans/2026-10-03-incomplete-tasks-continuation.md",
+      "status": "historical_plan",
+      "owner": "task audit owner (historical)",
+      "supersededBy": "docs/changes/2026-10-03-task-audit/inventory.md",
+      "lastVerified": null
+    },
+    {
+      "kind": "legacy_superpowers_plan",
+      "path": "docs/superpowers/plans/2026-10-03-task-audit.md",
+      "status": "historical_plan",
+      "owner": "task audit owner (historical)",
+      "supersededBy": "docs/governance/task-ledger.json",
+      "lastVerified": null
+    }
+  ],
+  "lastVerifiedMeaning": "null means this index did not re-audit the plan's claims; status and supersededBy are navigation metadata only."
+}

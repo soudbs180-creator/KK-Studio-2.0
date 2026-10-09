@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "updated": "2026-10-09",
+  "owner_policy": "Ledger owner is the accountable task owner; domain ownership below is a routing map, not evidence of completion.",
+  "default_owner": "root",
+  "owner_role_map": {
+    "root": "repository-maintainer",
+    "MainAgent": "repository-maintainer",
+    "finish_figma_pages": "design-maintainer",
+    "finish_asset_performance": "performance-maintainer"
+  },
+  "domains": [
+    {"domain": "project_state_and_integration", "owner": "root", "authority": "docs/governance/PROJECT_STATE.md", "open_ledger_statuses": ["TODO", "PARTIAL", "BLOCKED"]},
+    {"domain": "task_governance", "owner": "root", "authority": "docs/governance/task-ledger.json"},
+    {"domain": "feature_capability_registry", "owner": "root", "authority": "docs/features/features.registry.json"},
+    {"domain": "architecture_and_storage", "owner": "root", "authority": "docs/architecture/"},
+    {"domain": "ui_and_design_system", "owner": "root", "authority": "docs/UI_INDEX.md"},
+    {"domain": "memory_contract", "owner": "root", "authority": "docs/MEMORY-CONTRACT.md", "related_tasks": ["TASK-MEMORY-001", "TASK-MEMORY-002"]},
+    {"domain": "competitor_research", "owner": "root", "authority": "docs/reference/competitor/INDEX.md", "status": "historical_read_only"}
+  ],
+  "ledger_snapshot": {"source": "docs/governance/task-ledger.json", "as_of": "2026-10-09", "counts": {"DONE": 68, "TODO": 16, "PARTIAL": 26, "BLOCKED": 4, "total": 114}},
+  "unallocated_rule": "Tasks with branch/worktree unallocated remain unallocated; this map does not assign them or change the ledger.",
+  "owner_rule": "owner preserves the historical accountable identity; ownerRole is the routing role used for new work and review. Do not infer a human identity from a role."
+}

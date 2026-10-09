@@ -1,3 +1,21 @@
+<!-- CURRENT_FACTS_BEGIN -->
+## CURRENT_FACTS (machine-readable current snapshot)
+
+- `snapshotDate`: 2026-10-09
+- `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
+- `canonicalRef`: `origin/main`
+- `canonicalHead`: `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`
+- `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the governance worktree
+- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is currently on `docs/TASK-DOCS-STRUCT-001` at `6f6bd6336468c8c2697cae694a4bb9010cb56a1c` with an untracked concurrent `docs/decisions/` directory; it is not a clean main checkout and must not be reset or used as the governance worktree.
+- `taskLedger`: 114 records; 68 DONE, 26 PARTIAL, 16 TODO, 4 BLOCKED; 46 open records.
+- `workspaceWorktrees`: 47 registered worktrees after reclaiming 16 clean DONE checkouts; dirty, active, nested, and external worktrees remain protected and are listed in `worktree-reclamation.json`.
+- `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree; source changes and locked paths are protected.
+- `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
+- `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
+
+<!-- CURRENT_FACTS_END -->
+<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
 # 当前项目状态
 
 ## 2026-10-09 失败任务 source105 本地复验
