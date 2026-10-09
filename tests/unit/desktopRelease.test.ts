@@ -141,6 +141,7 @@ test("current desktop release launches without another rebuild", (t) => {
 });
 
 for (const input of [
+  "dist/index.css",
   "vendor/canvas-agent/src/index.ts",
   "vendor/canvas-agent/agent-instructions.md",
   "scripts/agent/desktop-entry.mjs",

@@ -156,3 +156,33 @@ test("风格参考在收起和展开提示词后保持语义槽位", async ({ pa
     animations: "disabled",
   });
 });
+
+test("底部工具栏各图标使用统一的 40px 视觉槽位", async ({ page }) => {
+  await openWorkspace(page);
+  const toolbar = page.locator(".canvas-toolbar");
+  await expect(toolbar).toBeVisible();
+
+  const slots = await Promise.all(
+    [
+      ".toolbar-icon-select",
+      ".toolbar-icon-assets",
+      ".toolbar-icon-favorite",
+    ].map((selector) => toolbar.locator(selector).boundingBox()),
+  );
+  for (const box of slots) {
+    expect(box).not.toBeNull();
+    expect(box!.width).toBe(40);
+    expect(box!.height).toBe(40);
+  }
+
+  const buttons = await Promise.all(
+    [".toolbar-current-tool", ".toolbar-assets", ".toolbar-save"].map(
+      (selector) => toolbar.locator(selector).boundingBox(),
+    ),
+  );
+  for (const box of buttons) {
+    expect(box).not.toBeNull();
+    expect(box!.width).toBe(40);
+    expect(box!.height).toBe(40);
+  }
+});
