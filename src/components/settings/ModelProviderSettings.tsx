@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { checkModelProvider } from "../../integrations/modelProvider";
 import {
   deleteApiKey,
@@ -27,6 +27,7 @@ import {
   readProviderConnections,
 } from "../../features/creation/providerRegistry";
 import type { ProviderConnection } from "../../domain/providerConnections";
+import { useProviderCredentialState } from "./useProviderCredentialState";
 
 type ConnectionState =
   | { kind: "idle"; message: string }
@@ -53,7 +54,6 @@ export default function ModelProviderSettings({
 }) {
   const [profile, setProfile] = useState(readProfile);
   const [apiKey, setApiKey] = useState("");
-  const [hasStoredKey, setHasStoredKey] = useState(false);
   const [credentialRef, setCredentialRef] = useState(() =>
     credentialId(readProfile().baseUrl, readProfile().name),
   );
@@ -64,27 +64,11 @@ export default function ModelProviderSettings({
     message: "填写 API 地址后可保存；测试连接仅在你点击时发起。",
   });
   const requestRef = useRef<AbortController | null>(null);
-
-  useEffect(
-    () => () => {
-      requestRef.current?.abort("closed");
-      requestRef.current = null;
-    },
-    [],
+  const { hasStoredKey, setHasStoredKey } = useProviderCredentialState(
+    profile.baseUrl,
+    credentialRef,
+    requestRef,
   );
-  useEffect(() => {
-    let active = true;
-    void loadApiKey(profile.baseUrl, credentialRef)
-      .then((value) => {
-        if (active) setHasStoredKey(Boolean(value));
-      })
-      .catch(() => {
-        if (active) setHasStoredKey(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [profile.baseUrl, credentialRef]);
 
   function cancelRequest(): void {
     requestRef.current?.abort("user");
@@ -95,6 +79,17 @@ export default function ModelProviderSettings({
     cancelRequest();
     const nextProfile = { ...profile, [field]: value };
     if (field === "baseUrl" || field === "name") {
+      setApiKey("");
+      setCredentialRef(credentialId(nextProfile.baseUrl, nextProfile.name));
+    }
+    setProfile(nextProfile);
+    setConnection({ kind: "idle", message: "有尚未测试的更改。" });
+  }
+
+  function updateMany(patch: Partial<ModelProviderProfile>): void {
+    cancelRequest();
+    const nextProfile = { ...profile, ...patch };
+    if ("baseUrl" in patch || "name" in patch) {
       setApiKey("");
       setCredentialRef(credentialId(nextProfile.baseUrl, nextProfile.name));
     }
@@ -261,6 +256,7 @@ export default function ModelProviderSettings({
         apiKey={apiKey}
         hasStoredKey={hasStoredKey}
         onUpdate={update}
+        onUpdateMany={updateMany}
         onApiKeyChange={(value) => {
           cancelRequest();
           setApiKey(value);

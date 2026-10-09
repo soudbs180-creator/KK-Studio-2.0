@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-10 豆包（火山方舟）BYOK 官方通道 P1
+
+在现有 OpenAI 兼容 BYOK 链路上新增「豆包（火山方舟）」预置，选择预置会一次性填入名称与 `https://ark.cn-beijing.volces.com/api/v3`；修正 `doubao-*` 文本模型与 `doubao-seedream-*` 图片模型的能力判定，并保留网关通道置灰和真实上游未验证边界。补充模型预置单测、设置页浏览器冒烟和官方通道交付包。当前回归为 897 项（889 通过、0 失败、8 跳过），相关网关与画布回归通过；真实方舟 Key、Web/Desktop 真实联调和 DPAPI 仍待外部条件。
+
 ## 2026-10-09 AI 协作规则文档结构收敛（TASK-DOCS-STRUCT-001）
 
 文档层变更，未改动 `src/**` 与 `scripts/**`。新增 `docs/engineering/CODING-STANDARDS.md`（门禁映射、依赖方向、文件规模边界、命名、错误处理）与 `docs/engineering/TESTING.md`（测试分层、Playwright 运行契约、覆盖要求、证据保存）；`docs/README.md` 升级为索引含五层权威优先级、冲突裁决细则与本地记忆四层模型；`BRANCH-POLICY.md` 补提交信息规范、worktree 落点、自动合并现状、回滚触发条件四节；`UI_RULES.md` 加 3.4 Token 化纪律；`AGENTS.md` 与 `AI_RULES.md` 明确边界。未新建 `ui-guidelines.md`、`git-workflow.md`、`UI-TOKEN-GOVERNANCE.md`，避免第二来源。

@@ -40,6 +40,33 @@ export const DEFAULT_MODEL_PROVIDER: ModelProviderProfile = {
   model: "",
 };
 
+export interface ProviderPreset {
+  readonly id: string;
+  readonly label: string;
+  readonly name: string;
+  readonly baseUrl: string;
+}
+
+/**
+ * One-click presets for the model provider settings form. Presets fill only
+ * name/baseUrl; model ids are left to the model catalog refreshed by the
+ * connection test so vendor model names do not go stale in source.
+ */
+export const PROVIDER_PRESETS: readonly ProviderPreset[] = [
+  {
+    id: "doubao-ark",
+    label: "豆包（火山方舟）",
+    name: "豆包（火山方舟）",
+    baseUrl: "https://ark.cn-beijing.volces.com/api/v3",
+  },
+];
+
+export function findProviderPreset(
+  id: string | undefined,
+): ProviderPreset | undefined {
+  return PROVIDER_PRESETS.find((preset) => preset.id === id);
+}
+
 export function parseModelProvider(raw: string | null): {
   profile: ModelProviderProfile;
   recovered: boolean;

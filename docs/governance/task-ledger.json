@@ -5426,6 +5426,7 @@
       "凭证引用校验先判 secret 再判格式，避免藏起「把密钥写进配置」的真问题",
       "轮询经 credentialRefFor 取凭证，不得误传 channelId",
       "厂商 cooldownMs 不被本地 maxCooldownMs 截断",
+      "设置页提供豆包（火山方舟）BYOK 预置，doubao 文本模型与 doubao-seedream 图片模型能力判定正确",
       "全部新增单测通过且对既有全量单测零回归"
     ],
     "dependencies": [],
@@ -5447,16 +5448,24 @@
       "tests/unit/aiGatewayChat.test.ts",
       "tests/unit/aiGatewayChatEndpoint.test.ts",
       "tests/unit/generationServerChatRoute.test.ts",
-      "docs/features/feat-038-ai-model-gateway.md"
+      "docs/features/feat-038-ai-model-gateway.md",
+      "src/domain/modelProvider.ts",
+      "src/features/creation/model.ts",
+      "src/components/settings/ProviderProfileFields.tsx",
+      "tests/unit/modelProvider.test.ts",
+      "tests/browser/frontend.spec.ts",
+      "docs/changes/2026-10-10-doubao-official-channel/"
     ],
     "status": "TODO",
     "priority": "P1",
     "evidence": [
       "docs/features/feat-038-ai-model-gateway.md",
       "docs/changes/2026-10-09-doubao-integration/verification.md",
-      "docs/changes/2026-10-09-doubao-integration/review.md"
+      "docs/changes/2026-10-09-doubao-integration/review.md",
+      "docs/changes/2026-10-10-doubao-official-channel/verification.md",
+      "docs/changes/2026-10-10-doubao-official-channel/review.md"
     ],
-    "verification": "代码与单测已建成：49 项定向单测全绿；当前全量回归 891 项，883 通过、0 失败、8 跳过；tsc 与 eslint 通过。真实上游与真实凭证仍未接入，按 DONE 需要当前运行证据的口径不得标 DONE。",
+    "verification": "代码与单测已建成：网关 49 项定向全绿；P1 BYOK 官方通道（豆包火山方舟预置、modelSupportsKind doubao 判定修正、相关单测与设置页冒烟）已落地；全量回归 897 项，889 通过、0 失败、8 跳过；tsc、eslint、格式、构建和 UI 门禁通过。真实上游、真实凭证和 Desktop 运行态仍未接入，按 DONE 需要当前运行证据的口径不得标 DONE。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-10",
     "requirementRefs": [
@@ -5467,7 +5476,7 @@
     ],
     "priorityRationale": "调度层填补的是真实能力空洞（既有 generation-server 的 job.connection_id 建单时一次写入、从不重新赋值，根本没有换号能力），但未接真实上游前不产生用户价值。",
     "displayStatus": "未完成",
-    "nextAction": "实现真实 DPAPI SecretProtector（需 Rust 侧或 PowerShell 桥）并接入一个真实火山方舟账号，取得上游证据后方可转 DONE；随后接调度层持久化仓储与 sub2api-client。",
+    "nextAction": "由用户提供方舟 Key 后在当前主仓分别完成 Web/Desktop 设置页冒烟与 /images/generations 实测；同时实现真实 DPAPI SecretProtector（需 Rust 侧或 PowerShell 桥），取得上游和原生证据后再考虑转 DONE；随后接调度层持久化仓储与 sub2api-client。",
     "lastVerified": "2026-10-10",
     "ownerRole": "repository-maintainer"
   },

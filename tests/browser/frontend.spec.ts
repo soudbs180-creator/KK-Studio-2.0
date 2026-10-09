@@ -89,7 +89,7 @@ test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", 
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
-  await page.getByLabel("提供商").fill("测试供应商");
+  await page.getByRole("textbox", { name: "提供商" }).fill("测试供应商");
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key").fill("session-key");
   await page.getByLabel("模型名称").fill("image-model-v2");
@@ -113,12 +113,25 @@ test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", 
   await expect(page.getByLabel("API Key")).toHaveValue("");
 });
 
+test("豆包预置一次性填入名称和方舟地址", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByLabel("预置提供商").selectOption("doubao-ark");
+  await expect(page.getByRole("textbox", { name: "提供商" })).toHaveValue(
+    "豆包（火山方舟）",
+  );
+  await expect(page.getByLabel("接口地址")).toHaveValue(
+    "https://ark.cn-beijing.volces.com/api/v3",
+  );
+});
+
 test("模型供应商可以登记多个非敏感连接并切换当前配置", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
   const save = async (name: string, baseUrl: string, model: string) => {
-    await page.getByLabel("提供商").fill(name);
+    await page.getByRole("textbox", { name: "提供商" }).fill(name);
     await page.getByLabel("接口地址").fill(baseUrl);
     await page.getByLabel("模型名称").fill(model);
     await page.getByRole("button", { name: "保存", exact: true }).click();

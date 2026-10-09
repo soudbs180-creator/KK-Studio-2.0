@@ -211,15 +211,24 @@ export interface CreateProjectInput {
 
 export const CREATION_STORAGE_KEY = "kk-studio-next:creation:v1";
 
+const TEXT_MODEL_PATTERN =
+  /\b(gpt|claude|llama|qwen|mistral|deepseek|gemini|doubao|chat|text|o[134])\b/i;
+/** Vendors reuse a shared prefix across text and image models; these terms mark an image model. */
+const IMAGE_ONLY_MODEL_PATTERN =
+  /(image|seedream|dall[-_ ]?e|video|audio|tts|speech|embed)/i;
+/** Common chat/text model prefixes that are not image endpoints by default. */
+const TEXT_PREFIXED_MODEL_PATTERN =
+  /\b(gpt|claude|llama|qwen|mistral|deepseek|doubao)\b/i;
+const IMAGE_HINT_PATTERN = /(image|vision|seedream|dall[-_ ]?e)/i;
+
 export function modelSupportsKind(
   model: string,
   kind: CanvasItemKind,
 ): boolean {
   if (kind === "text")
     return (
-      /\b(gpt|claude|llama|qwen|mistral|deepseek|gemini|chat|text|o[134])\b/i.test(
-        model.trim(),
-      ) && !/(image|dall[-_ ]?e|video|audio|tts|speech|embed)/i.test(model)
+      TEXT_MODEL_PATTERN.test(model.trim()) &&
+      !IMAGE_ONLY_MODEL_PATTERN.test(model.trim())
     );
   if (kind !== "image") return false;
   const normalized = model.trim();
@@ -227,10 +236,11 @@ export function modelSupportsKind(
   if (/(video|h3|audio|tts|speech|text[-_ ]?only|embed)/i.test(normalized))
     return false;
   // Common chat/text model IDs are not image endpoints. Explicit image IDs
-  // remain allowed even when a vendor includes a shared "gpt" prefix.
+  // remain allowed even when a vendor includes a shared "gpt"/"doubao" prefix
+  // (e.g. gpt-image-1, doubao-seedream-*).
   if (
-    /\b(gpt|claude|llama|qwen|mistral|deepseek)\b/i.test(normalized) &&
-    !/(image|vision|dall[-_ ]?e)/i.test(normalized)
+    TEXT_PREFIXED_MODEL_PATTERN.test(normalized) &&
+    !IMAGE_HINT_PATTERN.test(normalized)
   )
     return false;
   return true;

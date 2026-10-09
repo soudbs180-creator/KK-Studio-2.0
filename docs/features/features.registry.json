@@ -1623,13 +1623,16 @@
     "area": "backend",
     "status": "PROTOTYPE",
     "card": "docs/features/feat-038-ai-model-gateway.md",
-    "summary": "可插拔通道适配器 + 11 类失败分类 + 分档降级调度 + OpenAI 兼容 chat 端点；49 项定向单测全绿，当前回归 891 项（883 通过、0 失败、8 跳过），但未接真实上游与 DPAPI，豆包在 UI 中仍置灰。",
+    "summary": "可插拔通道适配器 + 11 类失败分类 + 分档降级调度 + OpenAI 兼容 chat 端点；49 项网关定向单测全绿，P1 BYOK 官方通道（豆包火山方舟预置与 doubao 能力判定）已落地，当前回归 897 项（889 通过、0 失败、8 跳过），但未接真实上游与 DPAPI，豆包网关通道仍置灰。",
     "entryPoints": [
       "无 UI 入口；/v1/chat/completions 仅在注入 chat 依赖时挂载，未注入返回 404"
     ],
     "code": [
       "src/features/ai-gateway",
-      "src/features/generation-server/http.ts"
+      "src/features/generation-server/http.ts",
+      "src/domain/modelProvider.ts",
+      "src/features/creation/model.ts",
+      "src/components/settings/ProviderProfileFields.tsx"
     ],
     "tests": [
       "tests/unit/aiGatewayCredentials.test.ts",
@@ -1637,7 +1640,9 @@
       "tests/unit/aiGatewayScheduler.test.ts",
       "tests/unit/aiGatewayChat.test.ts",
       "tests/unit/aiGatewayChatEndpoint.test.ts",
-      "tests/unit/generationServerChatRoute.test.ts"
+      "tests/unit/generationServerChatRoute.test.ts",
+      "tests/unit/modelProvider.test.ts",
+      "tests/browser/frontend.spec.ts"
     ],
     "tasks": [
       "TASK-AI-GATEWAY-001"
