@@ -6,7 +6,7 @@
 - Intent / Spec / Plan / AC：本目录 `intent.md`、`spec.md`、`plan.md`、AC-1–AC-4
 - cwd / branch：`D:/kk-studio/.worktrees/remaining-verification` / `codex/TASK-AGENT-001-remaining-verification`
 - 被验证 base SHA：`edda6157e47c644cd073f52a57e3c31a86e40397`
-- 被验证 head SHA：`dcb6ff3d`（源码/测试提交；随后仅补本文档元数据）
+- 被验证源码/测试 head SHA：`dcb6ff3dad0d4f364241d8ebc4d22182ae957548`（随后仅补本文档元数据；如需复核当前文档提交，使用 `git rev-parse HEAD`）
 - dirty 状态及 patch：验证针对该 base 加本目录所述工作树改动；提交前工作树包含 7 个源码/测试文件和本交付包。
 - Node/npm/Rust/浏览器/OS/工具版本：Node 24.20.0、npm、Vite 7.3.6、Playwright 12 workers、Microsoft Edge、Windows；Rust 检查沿用当前主线基线。
 
@@ -23,7 +23,7 @@
 | `npm run test:ui` | 455 passed | PASS | production build + preview，12 workers |
 | `npm run test:development` | receipt `result: PASS`；四个步骤完成，errors 为空 | PASS | Vite development；归档 receipt 为 [`evidence/development-plugins-receipt.json`](evidence/development-plugins-receipt.json)，sourceHead=`dd6cf598ce2bc8a4755aef64c5c3c86147bdb4f4` |
 | `npm run test:ui -- tests/browser/agent.spec.ts` | 7 passed | PASS | 去除固定等待后的 Codex Agent 回归 |
-| `npm run verify` | 退出码 0 | PASS | 当前工作树完整本地门禁 |
+| `npm run verify` | 退出码 0 | PASS | 隔离工作树的源码/测试 head；根 checkout 合并后 development 重试在 Edge 启动阶段挂起，未另计 PASS |
 
 ## 验收覆盖
 
@@ -51,6 +51,6 @@
 - 实现：完成本次本地回归范围。
 - 验证：PASS（本地 Web/Vite 范围）。
 - 产品能力：Codex/Google/插件页面仍按现有真实程度；真实 Provider 和 Desktop/Mobile 外部能力未改变。
-- 独立 review：当前任务由主代理完成 self-review；提交后需按当前 head 复审。
+- 独立 review：`/root/repo_audit` 已在实现 head `5331c16b7bddf2e7b9cc02e897bc06d8c7ec5204` 完成源码/测试审查并给出 PASS WITH FOLLOW-UPS；随后仅删除固定等待并以 7/7 Agent 定向测试复验。最终 `dcb6ff3dad0d4f364241d8ebc4d22182ae957548` 只包含该测试清理，后续提交仅更新证据和交接文档。
 - 用户产品验收和发布授权：未发生。
 - 未关闭风险与账本 ID：`TASK-PROV-005`、`TASK-PROV-006`、`TASK-VERIFY-CONCURRENCY-002`、`TASK-VERIFY-ORIGIN-003`、`TASK-WINDOWS-ENTRY-RECOVERY-003`、`TASK-DOCS-HISTORY-001` 等继续开放。

@@ -2,9 +2,9 @@
 
 - Task ID：TASK-AGENT-001
 - 时间与时区：2026-10-10，Asia/Shanghai
-- Reviewer/context/工具或模型：主代理独立于历史候选分支，基于当前 `edda6157e47c644cd073f52a57e3c31a86e40397` 工作树复核；Git diff、静态门禁和完整 verify。
-- 独立于实现上下文：否；这是实现者 self-review，后续仍需独立 review。
-- Base SHA / head SHA：base `edda6157e47c644cd073f52a57e3c31a86e40397`；源码/测试 head `dcb6ff3d`。
+- Reviewer/context/工具或模型：`/root/repo_audit` 独立于实现代理，在 `5331c16b7bddf2e7b9cc02e897bc06d8c7ec5204` 上复核源码、测试、账本和交付门禁；随后对 `dcb6ff3dad0d4f364241d8ebc4d22182ae957548` 的测试清理执行定向复验。
+- 独立于实现上下文：是；独立审查结论为 PASS WITH FOLLOW-UPS，无 P0–P2 blocker。
+- Base SHA / head SHA：base `edda6157e47c644cd073f52a57e3c31a86e40397`；实现审查 head `5331c16b7bddf2e7b9cc02e897bc06d8c7ec5204`；最终源码/测试 head `dcb6ff3dad0d4f364241d8ebc4d22182ae957548`。
 - PR / branch / worktree：本地 branch `codex/TASK-AGENT-001-remaining-verification` / `D:/kk-studio/.worktrees/remaining-verification`
 
 ## 评审范围和方式
@@ -27,7 +27,7 @@
 
 | 门禁 | 真实结果 | 未满足的影响 |
 | --- | --- | --- |
-| Self-review | PASS（当前工作树） | 新 head 仍需复审 |
+| Independent review | PASS WITH FOLLOW-UPS | 真实 Provider、Hosted、Tauri 和 Mobile 仍未覆盖 |
 | CI / 定向回归 | 本地完整 `npm run verify` PASS | Hosted 未运行 |
 | 用户 UI/交互验收 | 未发生 | 不能替代用户最终验收 |
 | 推送/合并/发布授权 | 未执行 | 不代表已发布 |
@@ -36,4 +36,4 @@
 
 - PASS WITH FOLLOW-UPS：本地 Web/Vite 回归完成；外部和跨平台任务保留开放状态。
 - 未关闭 blocker：真实 Provider/GPU、Hosted Windows 原因、Tauri 和 Mobile 验收。
-- 新 head SHA 发生后本 review 对新提交失效；合并前需要独立审查和重新验证。
+- `dcb6ff3dad0d4f364241d8ebc4d22182ae957548` 之后只有证据、账本和交接文档提交；没有新的产品源码或测试逻辑。当前本地 `main` 的文档提交为 `deaef64ee195bf7fbfc129d0b14a4f72a339af9f`，交付门禁已用该完整 head 重跑。
