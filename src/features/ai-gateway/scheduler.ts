@@ -22,6 +22,7 @@ import { ChannelNotApplicable } from "./channels/adapter.ts";
 import type {
   ChannelIndexEntry,
   ChannelRegistry,
+  PublicModelDescriptor,
 } from "./channels/registry.ts";
 import type { NormalizedError } from "./errors.ts";
 import { noChannelAvailable } from "./errors.ts";
@@ -181,6 +182,10 @@ export class Scheduler {
 
   health(): ChannelHealthTracker {
     return this.#health;
+  }
+
+  publicModels(): PublicModelDescriptor[] {
+    return this.#registry.publicModels();
   }
 
   /**

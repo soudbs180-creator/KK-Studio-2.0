@@ -140,6 +140,14 @@ export function createGenerationServer(options: {
         }
         const principal = options.authenticate(req);
         if (!principal) throw new PlatformError("UNAUTHENTICATED", 401);
+        if (path === "/v1/models" && req.method === "GET") {
+          if (!options.chat) throw new PlatformError("CHAT_NOT_ENABLED", 404);
+          json(res, 200, {
+            object: "list",
+            data: options.chat.scheduler.publicModels(),
+          });
+          return;
+        }
         if (path === "/v1/chat/completions" && req.method === "POST") {
           // Optional dependency: a deployment without a configured gateway keeps
           // its existing surface, so this only 404s when chat is genuinely absent.

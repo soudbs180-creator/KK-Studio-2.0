@@ -327,6 +327,44 @@ test("candidate filtering honours model, operation and channel state", () => {
   assert.equal(supportsOperation(capabilities, "video"), false);
 });
 
+test("public model projection omits channel secrets and quarantined models", () => {
+  const registry = new ChannelRegistry();
+  registry.registerAdapter(doubaoAdapter);
+  const base = {
+    adapter: doubaoAdapter,
+    kind: "official_api" as const,
+    enabled: true,
+    priority: 10,
+    weight: 1,
+    baseUrl: "https://secret.example.test/api/v3",
+    credentialRef: "vault-ref",
+    capabilities,
+    modelMapping: { "kk-default": "ep-private-endpoint" },
+    timeoutMs: 1000,
+  };
+  registry.replace({
+    registrations: [
+      { ...base, id: "visible" },
+      { ...base, id: "hidden", modelMapping: { "kk-hidden": "ep-hidden" } },
+    ],
+    states: new Map([["hidden", "quarantined"]]),
+  });
+  assert.deepEqual(registry.publicModels(), [
+    {
+      id: "kk-default",
+      owned_by: "doubao",
+      capabilities: {
+        modalities: ["image"],
+        operations: ["generate"],
+        maxOutputs: 1,
+        async: false,
+      },
+    },
+  ]);
+  assert.equal(JSON.stringify(registry.publicModels()).includes("vault-ref"), false);
+  assert.equal(JSON.stringify(registry.publicModels()).includes("ep-private"), false);
+});
+
 test("credentialRefFor resolves the vault reference, not the channel id", () => {
   const registry = new ChannelRegistry();
   registry.registerAdapter(doubaoAdapter);

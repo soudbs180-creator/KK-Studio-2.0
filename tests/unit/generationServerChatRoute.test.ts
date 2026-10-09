@@ -156,6 +156,30 @@ test("chat route validates auth and idempotency before dispatching", async () =>
   }
 });
 
+test("models route exposes safe model and capability metadata", async () => {
+  const { server, repository, worker } = createChatServer();
+  const url = await listen(server);
+  try {
+    const response = await fetch(`${url}/v1/models`, {
+      headers: { Authorization: "Bearer route-token" },
+    });
+    assert.equal(response.status, 200);
+    const body = (await response.json()) as {
+      object: string;
+      data: Array<Record<string, unknown>>;
+    };
+    assert.equal(body.object, "list");
+    assert.equal(body.data[0]?.id, "kk-default");
+    assert.equal(body.data[0]?.owned_by, "route-test");
+    assert.equal("baseUrl" in (body.data[0] ?? {}), false);
+    assert.equal("credentialRef" in (body.data[0] ?? {}), false);
+  } finally {
+    await worker.stop();
+    await close(server);
+    repository.close();
+  }
+});
+
 test("chat route stays disabled when no gateway dependency is injected", async () => {
   const { server, repository, worker } = createChatServer(false);
   const url = await listen(server);
