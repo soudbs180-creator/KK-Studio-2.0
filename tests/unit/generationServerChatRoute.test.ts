@@ -19,7 +19,7 @@ import { PersistentGenerationWorker } from "../../src/features/generation-server
 
 const capabilities: CapabilityManifest = {
   modalities: ["text"],
-  operations: ["generate"],
+  operations: ["generate", "chat"],
   maxOutputs: 1,
   async: false,
 };
@@ -49,9 +49,8 @@ function createChatServer(withChat = true) {
     async submit(_context, _input, request) {
       assert.equal(await request.resolveSecret(), "route-secret");
       return {
-        kind: "inline",
-        assetBase64: Buffer.from("route answer", "utf8").toString("base64"),
-        mime: "text/plain",
+        kind: "text",
+        text: "route answer",
       };
     },
   };

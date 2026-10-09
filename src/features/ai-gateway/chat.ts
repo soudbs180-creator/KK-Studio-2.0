@@ -138,6 +138,7 @@ export function buildInput(request: ChatRequest): GenerationInput {
   if (request.max_tokens !== undefined) extra.maxTokens = request.max_tokens;
   return {
     model: request.model,
+    operation: "chat",
     prompt: buildPrompt(request.messages),
     attachments: request.attachments ?? [],
     ...(Object.keys(extra).length ? { extra } : {}),
@@ -222,7 +223,15 @@ export function runChatCompletion(
   deps: ChatDeps,
   request: ChatRequest,
   idempotencyKey: string,
-): Promise<{ readonly channelId: string; readonly text: string }> {
+): Promise<{
+  readonly channelId: string;
+  readonly text: string;
+  readonly usage?: {
+    readonly promptTokens?: number;
+    readonly completionTokens?: number;
+    readonly totalTokens?: number;
+  };
+}> {
   if (request.stream)
     return Promise.reject(
       Object.assign(
@@ -262,8 +271,24 @@ export function runChatCompletion(
           } satisfies NormalizedError,
         },
       );
-    const bytes = Buffer.from(outcome.assetBase64, "base64");
-    return { channelId: outcome.channelId, text: bytes.toString("utf8") };
+    if (outcome.kind !== "text")
+      throw Object.assign(
+        new Error("Channel returned a non-text result for chat completion"),
+        {
+          normalized: {
+            errorClass: "UPSTREAM_ERROR",
+            httpStatus: 502,
+            retryable: false,
+            detail: "channel result kind does not match chat operation",
+            channelId: outcome.channelId,
+          } satisfies NormalizedError,
+        },
+      );
+    return {
+      channelId: outcome.channelId,
+      text: outcome.text,
+      ...(outcome.usage ? { usage: outcome.usage } : {}),
+    };
   })();
 }
 

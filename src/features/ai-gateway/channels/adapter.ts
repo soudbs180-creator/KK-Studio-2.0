@@ -22,6 +22,8 @@ export interface AttachmentInput {
 export interface GenerationInput {
   /** kk-level model name. Adapters map it to a vendor model id or endpoint id. */
   readonly model: string;
+  /** Selects the vendor operation while keeping the legacy generate default. */
+  readonly operation?: "chat" | "generate";
   readonly prompt: string;
   readonly negativePrompt?: string;
   readonly attachments: readonly AttachmentInput[];
@@ -48,6 +50,16 @@ export interface InlineResult {
   readonly mime: string;
 }
 
+export interface InlineTextResult {
+  readonly kind: "text";
+  readonly text: string;
+  readonly usage?: {
+    readonly promptTokens?: number;
+    readonly completionTokens?: number;
+    readonly totalTokens?: number;
+  };
+}
+
 export interface SubmittedJob {
   readonly kind: "submitted";
   readonly providerJobId: string;
@@ -55,7 +67,7 @@ export interface SubmittedJob {
   readonly pollAfterMs?: number;
 }
 
-export type SubmitResult = InlineResult | SubmittedJob;
+export type SubmitResult = InlineResult | InlineTextResult | SubmittedJob;
 
 export interface PollState {
   readonly status: "pending" | "running" | "succeeded" | "failed";
