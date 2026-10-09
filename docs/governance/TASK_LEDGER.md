@@ -121,7 +121,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | TODO | 未完成 | P1 | TASK-GOV-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | TODO | 未完成 | P1 | none | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-DOCS-STRUCT-001 | AI 协作规则文档结构收敛 | REVIEW | 进行中 | P1 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
-| TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | TODO | 未完成 | P0 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
+| TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | TODO | 未完成 | P1 | none | root | 实现真实 DPAPI SecretProtector（需 Rust 侧或 PowerShell 桥）并接入一个真实火山方舟账号，取得上游证据后方可转 DONE；随后接调度层持久化仓储与 sub2api-client。 |
 | TASK-PROV-BYOK-001 | 用户自有 API 产品化接入 | TODO | 未完成 | P1 | TASK-AI-GATEWAY-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 
 ## TASK-WINDOWS-ENTRY-DIAG-002 — 补齐Windows入口子进程失败诊断
@@ -2316,19 +2316,19 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## TASK-AI-GATEWAY-001 — 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器
 
 - Goal: 为豆包为首的多平台接入落地凭证存储、通道抽象契约与错误映射，使 kk 客户端具备可插拔的多厂商接入底座
-- Scope: 新增 src/features/ai-gateway/{credentials.ts,errors.ts,channels/{adapter.ts,registry.ts,doubao.ts}}；不动既有 generation-server 运行时；只作为内部通道抽象/凭证底座，不开放用户自有 API 产品化 onboarding、跨端代理或账号复用；docs/features 与台账登记
+- Scope: 通道适配器契约、11 类失败分类、分档降级调度、凭证端口注入、/v1/chat/completions 端点。不含真实 DPAPI 实现、不含 sub2api 对接、不含 UI 解锁。
 - Display status: 未完成
-- Priority: P0 — 开放任务默认待治理排序
+- Priority: P1 — 调度层填补的是真实能力空洞（既有 generation-server 的 job.connection_id 建单时一次写入、从不重新赋值，根本没有换号能力），但未接真实上游前不产生用户价值。
 - Requirement refs: ledger:TASK-AI-GATEWAY-001
 - Feature IDs: FEAT-038
 - Owner role: repository-maintainer
-- Acceptance: credential_ref 仅存引用，明文凭证不落库不进日志，提供 DPAPI 与内存回退两种实现; 通道适配器契约覆盖 submit/poll/probe/normalizeError 四方法，normalizeError 必填 retryable; 豆包 Ark 适配器覆盖 Endpoint ID 映射、SSE 流式解析与 Endpoint ID 失效识别; 统一 errorClass 映射表覆盖方案第 3.4 节全部错误码，含内容审核不重试判定; 不把内部适配器/凭证底座宣称为用户自有 API 产品化接入；后者由 TASK-PROV-BYOK-001 独立跟踪并保持 TODO; 新增单测全部通过，且 lint/typecheck/features:check/governance:check 0 violations
-- Branch: `feat/ai-gateway-foundation`
-- Worktree: `D:/kk-studio/KK-Studio-2.0`
-- Modules: src/features/ai-gateway/credentials.ts, src/features/ai-gateway/errors.ts, src/features/ai-gateway/channels/adapter.ts, src/features/ai-gateway/channels/registry.ts, src/features/ai-gateway/channels/doubao.ts, tests/unit/aiGatewayCredentials.test.ts, tests/unit/aiGatewayChannels.test.ts, src/features/ai-gateway/scheduler.ts, tests/unit/aiGatewayScheduler.test.ts
-- Verification: NOT_VERIFIED — 调度层与通道契约已落地，新增单测 44 项全通过（含流式重试铁律、内容审核不换号、粘性会话降级、冷却升级与熔断）；仍未接真实上游与 HTTP 端点，故未验证。
-- Evidence: NOT VERIFIED
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步
+- Acceptance: 四方法适配器契约（submit/poll/probe/normalizeError）完整，normalizeError 必填 retryable; 失败按信号优先级分类：Ark 同一个 400 必须能区分参数非法与内容审核拒绝; 调度器分优先级档位降级，重试绝不落在同一账号；不可重试错误中止整个 dispatch; 流式请求发出首个 chunk 后禁止任何重试; 配置只存 credential_ref，明文仅经 resolveSecret() 闭包取用; 凭证引用校验先判 secret 再判格式，避免藏起「把密钥写进配置」的真问题; 轮询经 credentialRefFor 取凭证，不得误传 channelId; 厂商 cooldownMs 不被本地 maxCooldownMs 截断; 全部新增单测通过且对既有全量单测零回归
+- Branch: `feat/TASK-AI-GATEWAY-001`
+- Worktree: `D:/kk-studio/.worktrees/TASK-AI-GATEWAY-001`
+- Modules: src/features/ai-gateway/credentials.ts, src/features/ai-gateway/errors.ts, src/features/ai-gateway/channels/adapter.ts, src/features/ai-gateway/channels/registry.ts, src/features/ai-gateway/channels/doubao.ts, src/features/ai-gateway/scheduler.ts, src/features/ai-gateway/chat.ts, src/features/generation-server/http.ts, tests/unit/aiGatewayCredentials.test.ts, tests/unit/aiGatewayChannels.test.ts, tests/unit/aiGatewayScheduler.test.ts, tests/unit/aiGatewayChat.test.ts, tests/unit/aiGatewayChatEndpoint.test.ts, docs/features/feat-038-ai-model-gateway.md
+- Verification: NOT_VERIFIED — 代码与单测已建成：47 项新增单测全绿、连跑 3 轮零抖动，tsc 与 eslint exit 0，全量回归 861 tests / 20 fail 与基线 814 tests / 20 fail 完全一致（零回归）。按「DONE 需要验证证据」口径，未接真实上游与真实凭证，不得标 DONE。
+- Evidence: [docs/features/feat-038-ai-model-gateway.md](../../docs/features/feat-038-ai-model-gateway.md)
+- Next action: 实现真实 DPAPI SecretProtector（需 Rust 侧或 PowerShell 桥）并接入一个真实火山方舟账号，取得上游证据后方可转 DONE；随后接调度层持久化仓储与 sub2api-client。
 - Last verified: 2026-10-09
 - Updated: 2026-10-09
 

@@ -10,6 +10,14 @@ import type { PrivateAssetStore } from "./assets.ts";
 import type { PersistentGenerationWorker } from "./worker.ts";
 import { PlatformError, rejectSecrets, type ArchivedAsset } from "./types.ts";
 import { receiveWebhook } from "./webhook.ts";
+import type { ChatDeps } from "../ai-gateway/chat.ts";
+import {
+  newCompletionId,
+  parseChatRequest,
+  runChatCompletion,
+  toOpenAiError,
+} from "../ai-gateway/chat.ts";
+import { extractNormalized } from "../ai-gateway/scheduler.ts";
 
 export interface Principal {
   ownerId: string;
@@ -77,6 +85,8 @@ export function createGenerationServer(options: {
   authenticate: (req: IncomingMessage) => Principal | undefined;
   webhookSecret: (connectionId: string) => Promise<string | undefined>;
   allowedOrigins?: string[];
+  /** Omitted deployments keep the existing surface and answer 404 on chat. */
+  chat?: ChatDeps;
 }) {
   const { repository: r, worker, assets } = options;
   return createServer((req, res) => {
@@ -127,6 +137,40 @@ export function createGenerationServer(options: {
         }
         const principal = options.authenticate(req);
         if (!principal) throw new PlatformError("UNAUTHENTICATED", 401);
+        if (path === "/v1/chat/completions" && req.method === "POST") {
+          // Optional dependency: a deployment without a configured gateway keeps
+          // its existing surface, so this only 404s when chat is genuinely absent.
+          if (!options.chat) throw new PlatformError("CHAT_NOT_ENABLED", 404);
+          const key = req.headers["idempotency-key"];
+          // Required so a client retry cannot bill the same prompt twice.
+          if (typeof key !== "string" || !key.trim())
+            throw new PlatformError("IDEMPOTENCY_KEY_REQUIRED");
+          const body = parseChatRequest(JSON.parse((await readBody(req)).toString("utf8")));
+          try {
+            const completion = await runChatCompletion(options.chat, body, key.trim());
+            json(res, 200, {
+              id: newCompletionId(),
+              object: "chat.completion",
+              created: Math.floor(Date.now() / 1000),
+              model: body.model,
+              choices: [
+                {
+                  index: 0,
+                  message: { role: "assistant", content: completion.text },
+                  finish_reason: "stop",
+                },
+              ],
+              usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
+              kk_meta: { channelId: completion.channelId },
+            });
+          } catch (error) {
+            // Adapter failures already carry a classification; anything else is
+            // treated as an opaque upstream fault rather than leaking a message.
+            const mapped = toOpenAiError(extractNormalized(error));
+            json(res, mapped.status, mapped.body);
+          }
+          return;
+        }
         if (path === "/v1/session" && req.method === "POST") {
           const token = req.headers.authorization?.slice(7);
           if (!token || !/^[A-Za-z0-9_-]{32,}$/.test(token))

@@ -1616,5 +1616,31 @@
       "TASK-LOCAL-SERVICE-001"
     ],
     "updated": "2026-09-29"
+  },
+  {
+    "id": "FEAT-038",
+    "title": "多平台 AI 模型网关",
+    "area": "backend",
+    "status": "PROTOTYPE",
+    "card": "docs/features/feat-038-ai-model-gateway.md",
+    "summary": "可插拔通道适配器 + 11 类失败分类 + 分档降级调度 + OpenAI 兼容 chat 端点；47 项单测全绿、零回归，但未接真实上游与 DPAPI，豆包在 UI 中仍置灰。",
+    "entryPoints": [
+      "无 UI 入口；/v1/chat/completions 仅在注入 chat 依赖时挂载，未注入返回 404"
+    ],
+    "code": [
+      "src/features/ai-gateway",
+      "src/features/generation-server/http.ts"
+    ],
+    "tests": [
+      "tests/unit/aiGatewayCredentials.test.ts",
+      "tests/unit/aiGatewayChannels.test.ts",
+      "tests/unit/aiGatewayScheduler.test.ts",
+      "tests/unit/aiGatewayChat.test.ts",
+      "tests/unit/aiGatewayChatEndpoint.test.ts"
+    ],
+    "tasks": [
+      "TASK-AI-GATEWAY-001"
+    ],
+    "updated": "2026-10-09"
   }
 ]
