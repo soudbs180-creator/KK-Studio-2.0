@@ -6,7 +6,7 @@ Updated 2026-10-09. Paths are local audit locations; they are not portable runti
 | --- | --- | --- |
 | Repository source | `D:/kk-studio/KK-Studio-2.0` | Canonical repository named by project rules. |
 | Parent container | `D:/kk-studio` | Container only; do not treat it as a second repository. |
-| This documentation worktree | `D:/kk-studio/.worktrees/TASK-GOV-20261009-reorg` | Current isolated governance worktree; it is intentionally dirty until review and commit. |
+| This documentation worktree | `D:/kk-studio/.worktrees/TASK-GOV-20261009-reorg` | Current isolated governance worktree for this committed governance change; keep it available for review until integration. |
 | Product source | `src/`, `src-tauri/`, `vendor/`, `config/` | Current implementation inputs. |
 | Tests | `tests/` | Current verification inputs; test output remains scoped to its command/source. |
 | Governance | `docs/governance/` | Current maps, state, ledger, and handoff. |
