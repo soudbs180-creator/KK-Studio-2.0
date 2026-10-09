@@ -13,7 +13,7 @@
 | `node node_modules/typescript/bin/tsc --noEmit` | PASS |
 | `node --test tests/unit/aiGatewayChannels.test.ts tests/unit/aiGatewayChatEndpoint.test.ts tests/unit/generationServerChatRoute.test.ts` | PASS，21 项 |
 | `node --test tests/unit/agentImages.test.ts tests/unit/agentHost.test.ts tests/unit/modelMenuEntries.test.ts` | PASS，12 项 |
-| 以上四组网关/Agent/模型回归合并执行 | PASS，30 项 |
+| gateway/Agent/model 相关回归（10 个 unit 文件） | PASS，69 项 |
 | `node scripts/check-ui-standards.mjs` | PASS，215 文件、0 违规 |
 | `node scripts/check-governance.mjs` | PASS，117 tasks、0 violations |
 | `node node_modules/prettier/bin/prettier.cjs --check`（受影响源码/测试） | PASS |

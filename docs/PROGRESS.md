@@ -874,5 +874,5 @@ TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，�
 2026-10-09 TASK-IMAGE-RETRY-004本地验收：43fc全verify447零retry、14相关、804root/172Agent和development PASS；独立源码无P0/P1、41相关unit PASS，IRV-001文档矛盾已修正，最终精确head复审/托管/main恢复待回执。主线6a的原FAIL、本机未复现PASS均原样保留；运行产品/版本未改。
 ## 2026-10-10 多平台模型能力闭环增量（TASK-AI-GATEWAY-001）
 
-在既有网关与 Codex Agent 链路上完成可插拔能力闭环：新增 `chat` operation 和独立文本结果，Ark 官方通道调用 `/chat/completions`；generation-server 增加安全 `/v1/models`，`stream:true` 返回单次 buffered SSE；图片模型选择器优先显示完整已验证模型 ID，Codex 图片事件沿归档、画布结果和 asset provenance 传递 `effectiveModel`，上游缺失时显示“图片模型未报告”。复用现有 credentialRef、Registry/Scheduler、ProviderConnection 和 UI Design System，不引入 headless、第二队列或第二套账号状态源。验证：定向 30 项全绿，类型检查、UI 标准检查、格式检查通过；全量 903 项 893 通过、2 个 `desktopAgentRuntime` 环境性失败、8 跳过。真实 Ark/Codex 联调需要用户凭据，保持 NOT VERIFIED。
+在既有网关与 Codex Agent 链路上完成可插拔能力闭环：新增 `chat` operation 和独立文本结果，Ark 官方通道调用 `/chat/completions`；generation-server 增加安全 `/v1/models`，`stream:true` 返回单次 buffered SSE；图片模型选择器优先显示完整已验证模型 ID，Codex 图片事件沿归档、画布结果和 asset provenance 传递 `effectiveModel`，上游缺失时显示“图片模型未报告”。复用现有 credentialRef、Registry/Scheduler、ProviderConnection 和 UI Design System，不引入 headless、第二队列或第二套账号状态源。验证：gateway/Agent/model 定向回归 69 项全绿，类型检查、UI 标准检查、格式检查通过；全量 903 项 893 通过、2 个 `desktopAgentRuntime` 环境性失败、8 跳过。真实 Ark/Codex 联调需要用户凭据，保持 NOT VERIFIED。
 
