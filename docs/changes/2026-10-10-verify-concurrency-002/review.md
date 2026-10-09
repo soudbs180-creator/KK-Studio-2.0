@@ -4,8 +4,8 @@
 - 时间与时区：2026-10-10，Hosted 回执完成后追加复核
 - Reviewer/context/工具或模型（已知时）：独立只读审计上下文；PowerShell、Git、Node JSON 解析
 - 独立于实现上下文：是；reviewer 未参与矩阵运行或文档编写，仅读取最终 diff、规则、任务账本和压缩证据。
-- Base SHA / reviewed head / 规则版本：base `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`；此前独立复核绑定 `c46cdeb4a31957f474523f2f8254afaeaf34b804`。本次追加把 PR/Hosted 外部回执写入交付包，当前工作区仍待形成新 head；新增提交完成后必须重新独立复核。规则为仓库当前 `AGENTS.md` / `AI_RULES.md`。
-- PR / branch / worktree：PR #46（当前 open，head `9b023969fad8a29ef33702d7ae3674bba9b82714`，base `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`）；`codex/TASK-VERIFY-CONCURRENCY-002`；`D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002`
+- Base SHA / reviewed head / 规则版本：base `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`；此前独立复核绑定 `c46cdeb4a31957f474523f2f8254afaeaf34b804`；本次独立复核绑定 substantive head `872ba917f8cae15a27455a5948cd19b7abd7c508`。后续文档元数据提交不改 source/config/evidence，但必须取得其新 head Hosted 回执。规则为仓库当前 `AGENTS.md` / `AI_RULES.md`。
+- PR / branch / worktree：PR #46（substantive head `872ba917f8cae15a27455a5948cd19b7abd7c508` 的 Hosted 回执已成功；本次提交为文档勘误 follow-up，实际 PR head 以 push 后 API 回读为准，base `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`）；`codex/TASK-VERIFY-CONCURRENCY-002`；`D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002`
 - Intent / Spec / Plan / Verification：本目录四份文档。
 
 ## 评审范围和方式
@@ -19,36 +19,36 @@
 
 | ID | P0–P3 | Pass | merge/release blocker | 文件/行或证据 | 重现与影响 | 处理/负责人 | 状态/复验 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| IRV-CONC-001 | P2 | 否 | 是（对 DONE/merge 声明） | 历史 source105 9 flaky 与当前五档证据 | 当前矩阵未复现历史首轮失败；资源压力只能支持假设，不能证明 Hosted 根因已解决 | root / 后续 Hosted 与 main 回读 | OPEN，保持 PARTIAL |
-| IRV-CONC-002 | P2 | 否 | 是（对普通 PR/main 关闭） | verification 外部能力段、PR #46 | Hosted/PR 当前回执已取得，但 PR 尚未合并，合并后 main 仍没有收据 | root / 合并后 main 回读可用后复验 | OPEN，Hosted/PR 当前部分已验证；main NOT VERIFIED |
+| IRV-CONC-001 | P2 | 否 | 否（阻断 DONE/根因已确定声明，不阻断当前诊断 PR） | 历史 source105 9 flaky 与当前五档证据 | 当前矩阵未复现历史首轮失败；资源压力只能支持假设，不能证明 Hosted 根因已解决 | root / 后续根因调查 | OPEN，有界 follow-up，任务保持 PARTIAL |
+| IRV-CONC-002 | P2 | 否 | 否（合并后收口项） | verification 外部能力段、PR #46 | 当前 Hosted/PR 回执已取得；分支规则要求 squash 后回读 main，不能在合并前填充 | root / squash 后立即 fetch/readback | OPEN，当前 PR 门禁不阻断；main NOT VERIFIED until post-merge |
 | IRV-CONC-003 | P3 | 是 | 否 | evidence manifest、各档 receipt | 证据固定 source、port、retries、hash，资源采样边界清楚 | root | CLOSED，本地证据复核通过 |
 | IRV-CONC-004 | P1 | 是（经本次精确 head 绑定） | 是（已解除） | verification/review 的 reviewed head | c46 独立复核发现旧文档仍指向 6600/ff；本提交把 review 精确绑定到 c46，且未改变被复核内容 | root | CLOSED，后续 source/config/evidence/ledger 变化需重审 |
 | IRV-CONC-005 | P2 | 是 | 是（已解除） | `ff195ed358296b47c903b23dc90fb2dd68c5ffd4` 与 delivery check | 6600 的 `docs/PROGRESS.md` 结构缺口已由后续 docs-only 同步提交补齐；当前 c46 delivery 为 0 violations | root | CLOSED，本地交付结构复核通过 |
 | IRV-CONC-006 | P2 | 是（经本次边界勘误） | 否 | 各档 `receipt.json.gz` 的 `resourceBefore/resourceAfter` 与 `resources.jsonl.gz` | receipt 字段原先容易被误读为 runner subtree；现已明确为全机 node/msedge census，runner subtree 峰值只取 `resources.jsonl.gz`，并保留原始值 | root | CLOSED，边界说明已补齐；若改动采样脚本需重审 |
 
-没有发现仍开放的 P0/P1 finding；IRV-CONC-004 的精确 head 问题已由本次元数据提交关闭。降低并发不会被记录为修复。
+没有发现仍开放的 P0/P1 或当前 PR acceptance blocker；IRV-CONC-001/002 保持为 P2 follow-up，分别约束 DONE/根因声明和合并后 main 收口。降低并发不会被记录为修复。
 
 ## 适用门禁
 
 | 门禁 | 真实结果 | 证据与 SHA/时间 | 未满足的影响 |
 | --- | --- | --- | --- |
 | Self-review | PASS | verification/plan 与五档原件 | 无 |
-| 独立 AI review | PASS WITH FOLLOW-UPS（此前 head）/ 当前追加待复核 | 本文件；此前绑定 `c46cdeb4a31957f474523f2f8254afaeaf34b804` | 根因和合并后 main 仍开放，新增外部回执后需复核新 head |
-| CI / 定向回归 | PASS（本地与 Hosted） | 本地 1/2/4/8/12，447/447，retries=0；PR #46 workflow run `37966523539` 的 `verify`、`delivery`、`deploy-linux` 均 success，head 精确为 `9b023969` | 当前 Hosted 绿灯仍不等价于历史根因已确定 |
-| GitHub 实际审批数量/身份 | PASS（平台要求 0，实际 0） | PR #46 状态 open、mergeable clean；规则回读显示 required approvals 0 | 独立 AI review 仍需按本次 head 复核，不能用作者自批代替 |
+| 独立 AI review | PASS WITH FOLLOW-UPS（substantive head） | 本文件；本次绑定 `872ba917f8cae15a27455a5948cd19b7abd7c508` | 根因和合并后 main 仍是有界 follow-up，不把它们写成已解决 |
+| CI / 定向回归 | PASS（本地与 Hosted substantive head） | 本地 1/2/4/8/12，447/447，retries=0；PR run `37971288430` 与 push run `37971283525` 的 `verify`、`delivery`、`deploy-linux` 均 success，head 精确为 `872ba917` | Hosted 绿灯仍不等价于历史根因已确定 |
+| GitHub 实际审批数量/身份 | PASS（平台要求 0，实际 0） | PR #46 状态 open、mergeable clean；规则回读显示 required approvals 0 | AI review 已独立完成，不能用作者自批代替 |
 | 用户 UI/交互/产品验收 | NOT RUN | 用户授权了继续验证与合并准备；本任务没有产品行为变更或独立 UI 验收 | 不能把技术授权扩展为已完成产品验收 |
-| 推送/合并/发布授权 | 推送已授权并完成；合并未执行 | 用户明确要求“检验并且合并提交”；分支已推送并创建 PR #46，但 IRV-CONC-001/002 仍阻断合并 | 保持 PR open，待阻断项清零 |
+| 推送/合并/发布授权 | 推送已授权并完成；合并待新 docs-only head Hosted 回读 | 用户明确要求“检验并且合并提交”；AC-1–AC-3 与当前 substantive head 门禁通过，IRV-CONC-001/002 为不阻断当前 PR 的有界 follow-up | 新 head checks clean 后按默认 squash；合并后立即 main readback |
 | 恢复/回滚实证（适用） | N/A | 无产品改动 | 无 |
 
 ## 结论
 
-- PASS WITH FOLLOW-UPS（此前本地诊断复核；本次 Hosted/PR 回执追加后待新 head 独立复核）；任务不满足 DONE。
-- 未关闭 blocker：历史 Hosted 根因 UNKNOWN；PR 尚未合并，合并后 main 回读缺失。当前 Hosted `verify` 默认沿用 Playwright 配置的 `retries: 1`，不能覆盖历史首轮失败的根因问题。
-- 非阻断后续任务与理由：当前候选的 Hosted 检查已取得并成功；只有合并后取得 main 的真实回执、且不改变“根因 UNKNOWN”边界后，才能复验 IRV-CONC-002。若要将任务标为 DONE，需另有证据解决或明确收敛 IRV-CONC-001，不能把绿灯本身当作根因修复。
-- 后续 source/config/evidence/ledger 变化会使本 review 失效并要求重审；本次追加补写外部回执和授权边界，形成新 head 后必须重新绑定独立复核，即使产品 source/config 未改变。
+- PASS WITH FOLLOW-UPS（substantive head `872ba917`）；任务保持 PARTIAL，不把根因或 main 回读写成 DONE。
+- 当前 PR 的 P0/P1 与 acceptance blockers 为零。IRV-CONC-001 仍阻断根因已确定/DONE 声明；IRV-CONC-002 是合并后 main readback 收口项；二者均不阻断当前技术诊断 PR 的 squash merge。
+- 当前 Hosted `verify` 默认沿用 Playwright 配置的 `retries: 1`，不能覆盖历史首轮失败的根因问题；AC-4 要求显式保留这一边界。
+- 后续 source/config/evidence/ledger 变化会使本 review 失效并要求重审；本次文档 follow-up 不改被测 source/config/evidence，形成新 head 后仍须取得新 Hosted 回执。
 - 本结论不代替合并、发布或用户最终验收。
 
 ## 追加勘误
 
-- 2026-10-10：PR #46 head `9b023969fad8a29ef33702d7ae3674bba9b82714` 的 Hosted workflow run `37966523539` 中，`verify`、`delivery`、`deploy-linux` 均 completed/success；PR 状态为 open、mergeable clean。该回执关闭“当前 Hosted 缺失”的事实空白，但不关闭历史 source105 根因未知或合并后 main 回读阻断。
+- 2026-10-10：`9b023969` / `37966523539` 标记为 prior；substantive head `872ba917` 的 PR/push runs `37971288430` / `37971283525` 均 completed/success。按 `spec.md` 勘误，IRV-CONC-001 是 DONE/根因声明 follow-up，IRV-CONC-002 是 post-merge main readback follow-up；不能把二者默认为当前 PR merge blocker。
 - 后台采集异常已在 verification 的追加勘误中说明，未被当作正式 PASS/FAIL。

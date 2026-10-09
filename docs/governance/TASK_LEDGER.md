@@ -1477,7 +1477,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-VERIFY-CONCURRENCY-002`
 - Worktree: `D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002`
 - Modules: tests/browser, playwright.config.ts
-- Verification: PARTIAL — 当前 clean source 8090475958f1a0bdd1b4b36ada7f2aba1e4e6264、同一 production dist、固定 preview 1423/retries0 下，workers 1/2/4/8/12 均 447/447 PASS；进程树资源峰值随 workers 增长并已留 receipt。历史 source105 的 9 个首轮 flaky 原件保留，当前未复现，资源压力仅支持假设；Hosted/PR/普通合并/main 回读仍未验证，不能称根因修复。
+- Verification: PARTIAL — 当前 clean source 8090475958f1a0bdd1b4b36ada7f2aba1e4e6264、同一 production dist、固定 preview 1423/retries0 下，workers 1/2/4/8/12 均 447/447 PASS；进程树资源峰值随 workers 增长并已留 receipt。历史 source105 的 9 个首轮 flaky 原件保留，当前未复现，资源压力仅支持假设；substantive head 872ba917 的 Hosted PR/push verify、delivery、deploy-linux 均成功。历史根因仍 UNKNOWN；普通 PR 合并后 main 回读待 squash 后执行，不能称根因修复。
 - Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-10-verify-concurrency-002/verification.md](../../docs/changes/2026-10-10-verify-concurrency-002/verification.md), [docs/changes/2026-10-10-verify-concurrency-002/review.md](../../docs/changes/2026-10-10-verify-concurrency-002/review.md)
 - Updated: 2026-10-10
 

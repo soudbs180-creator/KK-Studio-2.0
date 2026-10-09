@@ -49,7 +49,7 @@
 - 独立 reviewer 与当前 SHA 审查：由独立上下文读取最终 docs/evidence 后记录在 `review.md`。
 - 文档、账本、PROJECT_STATE/HANDOFF/PROGRESS 更新：更新本任务 docs 与 task ledger；根目录 dirty checkout 不直接修改。
 - PR、用户产品验收、发布和回滚记录：未执行，保持未验证。
-- 暂不可验证项及准确状态：Hosted/PR/普通合并/main 回读、历史 Hosted 根因均 UNKNOWN/BLOCKED 外部回执，任务 PARTIAL。
+- 暂不可验证项及准确状态：历史 Hosted 根因仍 UNKNOWN；合并后 main 回读必须在 squash 后执行。当前 PR 的 Hosted/独立 review 门禁按最终候选 head 重新回读后，允许技术范围内保持 PARTIAL 并合并，不能把这些 follow-up 写成已解决。
 
 ## 计划变更记录
 

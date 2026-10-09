@@ -2,7 +2,7 @@
 
 ## 2026-10-10 浏览器并发失败原因与隔离复核
 
-`TASK-VERIFY-CONCURRENCY-002` 在独立 worktree 从 clean `origin/main@8090475` 复验：同一 production dist、固定 preview `1423`、`retries=0` 下 workers 1/2/4/8/12 均为 `447/447`，并保存每档 JSON、console、进程树 RSS/空闲内存和端口收据。历史 source105 的 9 个首轮 flaky 原件继续保留；当前未复现，资源压力仅支持假设，不能称根因修复。任务更新为 `PARTIAL`；Hosted/PR/普通合并/main 回读仍待真实回执。详见 [并发复核](changes/2026-10-10-verify-concurrency-002/verification.md) 与 [独立审查](changes/2026-10-10-verify-concurrency-002/review.md)。
+`TASK-VERIFY-CONCURRENCY-002` 在独立 worktree 从 clean `origin/main@8090475` 复验：同一 production dist、固定 preview `1423`、`retries=0` 下 workers 1/2/4/8/12 均为 `447/447`，并保存每档 JSON、console、进程树 RSS/空闲内存和端口收据。历史 source105 的 9 个首轮 flaky 原件继续保留；当前未复现，资源压力仅支持假设，不能称根因修复。substantive head `872ba917` 的 PR/push Hosted verify、delivery、deploy-linux 均成功；任务保持 `PARTIAL`，合并后 main 回读按规则在 squash 后执行。详见 [并发复核](changes/2026-10-10-verify-concurrency-002/verification.md) 与 [独立审查](changes/2026-10-10-verify-concurrency-002/review.md)。
 
 ## 2026-10-09 失败任务 source105 本地复验
 
