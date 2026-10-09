@@ -34,7 +34,10 @@ const capabilities: CapabilityManifest = {
   async: false,
 };
 
-function chatDeps(behavior: NormalizedError | null): ChatDeps {
+function chatDeps(
+  behavior: NormalizedError | null,
+  operations: CapabilityManifest["operations"] = capabilities.operations,
+): ChatDeps {
   const adapter: ChannelAdapter = {
     ...doubaoAdapter,
     provider: "httpprobe",
@@ -60,7 +63,7 @@ function chatDeps(behavior: NormalizedError | null): ChatDeps {
     weight: 10,
     baseUrl: "https://ark.cn-beijing.volces.com/api/v3",
     credentialRef: "conn.chat",
-    capabilities,
+    capabilities: { ...capabilities, operations },
     modelMapping: { "kk-default": "ep-20260101abcdef" },
     timeoutMs: 30_000,
   };
@@ -92,6 +95,15 @@ test("a successful completion returns an OpenAI-shaped envelope", async () => {
     totalTokens: 5,
   });
   assert.match(newCompletionId(), /^chatcmpl-[a-f0-9]{32}$/);
+});
+
+test("chat dispatch selects a channel that declares only the chat operation", async () => {
+  const completion = await runChatCompletion(
+    chatDeps(null, ["chat"]),
+    { model: "kk-default", messages: [{ role: "user", content: "x" }] },
+    "idem-chat-only",
+  );
+  assert.equal(completion.text, "a cat");
 });
 
 test("a chat completion rejects an inline image result instead of decoding it", async () => {

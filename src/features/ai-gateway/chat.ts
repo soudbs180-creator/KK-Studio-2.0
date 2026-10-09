@@ -230,7 +230,7 @@ export function runChatCompletion(
   return (async () => {
     const outcome = await deps.scheduler.dispatch({
       model: request.model,
-      operation: "generate",
+      operation: "chat",
       input: buildInput(request),
       idempotencyKey,
       ...(request.session_id ? { sessionId: request.session_id } : {}),
