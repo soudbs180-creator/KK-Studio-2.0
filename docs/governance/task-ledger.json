@@ -4050,7 +4050,7 @@
   ],
   "dependencies": [],
   "owner": "root",
-  "branch": "docs/TASK-P0-REGISTRY-20261009",
+  "branch": "docs/TASK-P0-EVIDENCE-REFS-20261009",
   "worktree": "unallocated",
   "affectedModules": [
    ".git/hooks/pre-push",
@@ -4060,6 +4060,7 @@
   "status": "TODO",
   "priority": "P0",
   "evidence": [
+   "docs/changes/2026-10-09-p0-evidence-refs/verification.md",
    "docs/changes/2026-10-09-p0-registry/verification.md"
   ],
   "verification": "NOT VERIFIED：钩子仍为 v1 旧版（hook_dir POSIX 路径直接 exec node），空格路径缺陷未修复。",

@@ -1501,11 +1501,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 修复 pre-push 钩子在安装路径含空格时向 node 传递 POSIX 路径失败，导致合法推送被误杀的问题
 - Scope: .git/hooks/pre-push, scripts/governance/push-policy.mjs, 空格/长路径 fixture
 - Acceptance: 路径含空格、多级空格、长路径三类 fixture 下策略可读提示而非 node 崩溃栈; 允许性用例通过（合法 topic 分支可推送），拒绝用例仍返回可读拒绝; 对应单元测试 6 例全绿，npm run verify 通过
-- Branch: `docs/TASK-P0-REGISTRY-20261009`
+- Branch: `docs/TASK-P0-EVIDENCE-REFS-20261009`
 - Worktree: `unallocated`
 - Modules: .git/hooks/pre-push, scripts/governance/push-policy.mjs, tests/unit
 - Verification: NOT_VERIFIED — NOT VERIFIED：钩子仍为 v1 旧版（hook_dir POSIX 路径直接 exec node），空格路径缺陷未修复。
-- Evidence: [docs/changes/2026-10-09-p0-registry/verification.md](../../docs/changes/2026-10-09-p0-registry/verification.md)
+- Evidence: [docs/changes/2026-10-09-p0-evidence-refs/verification.md](../../docs/changes/2026-10-09-p0-evidence-refs/verification.md), [docs/changes/2026-10-09-p0-registry/verification.md](../../docs/changes/2026-10-09-p0-registry/verification.md)
 - Updated: 2026-10-09
 
 ## TASK-PERF-CANVAS-1000-001 — 画布千张画面性能三件套（视口裁剪/节点memo/缩略图懒加载）
