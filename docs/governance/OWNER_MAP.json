@@ -18,7 +18,7 @@
     {"domain": "memory_contract", "owner": "root", "authority": "docs/MEMORY-CONTRACT.md", "related_tasks": ["TASK-MEMORY-001", "TASK-MEMORY-002"]},
     {"domain": "competitor_research", "owner": "root", "authority": "docs/reference/competitor/INDEX.md", "status": "historical_read_only"}
   ],
-  "ledger_snapshot": {"source": "docs/governance/task-ledger.json", "as_of": "2026-10-09", "counts": {"DONE": 68, "TODO": 16, "PARTIAL": 26, "BLOCKED": 4, "total": 114}},
+  "ledger_snapshot": {"source": "docs/governance/task-ledger.json", "as_of": "2026-10-09", "counts": {"DONE": 68, "TODO": 18, "PARTIAL": 26, "BLOCKED": 4, "REVIEW": 1, "total": 117, "open": 49}},
   "unallocated_rule": "Tasks with branch/worktree unallocated remain unallocated; this map does not assign them or change the ledger.",
   "owner_rule": "owner preserves the historical accountable identity; ownerRole is the routing role used for new work and review. Do not infer a human identity from a role."
 }

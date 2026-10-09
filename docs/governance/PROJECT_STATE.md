@@ -5,10 +5,10 @@
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`
-- `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the governance worktree
-- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is currently on `docs/TASK-DOCS-STRUCT-001` at `6f6bd6336468c8c2697cae694a4bb9010cb56a1c` with an untracked concurrent `docs/decisions/` directory; it is not a clean main checkout and must not be reset or used as the governance worktree.
-- `taskLedger`: 114 records; 68 DONE, 26 PARTIAL, 16 TODO, 4 BLOCKED; 46 open records.
-- `workspaceWorktrees`: 47 registered worktrees after reclaiming 16 clean DONE checkouts; dirty, active, nested, and external worktrees remain protected and are listed in `worktree-reclamation.json`.
+- `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the primary checkout
+- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is currently on `docs/TASK-DOCS-STRUCT-001` at `1aa486882e43015632a7403532267d09dcc64c7d`, with concurrent uncommitted product/UI changes and feature-gateway files restored for separate review; it is not a clean main checkout and must not be reset or used as a disposable worktree.
+- `taskLedger`: 117 records; 68 DONE, 26 PARTIAL, 18 TODO, 4 BLOCKED, 1 REVIEW; 49 open records.
+- `workspaceWorktrees`: 46 registered worktrees, with 23 under the approved root after removing the merged governance checkout; dirty, active, nested, and external worktrees remain protected and are listed in `worktree-reclamation.json`.
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree; source changes and locked paths are protected.
 - `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
