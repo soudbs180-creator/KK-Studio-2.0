@@ -1171,7 +1171,7 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-023-navigation.md",
-    "summary": "真实快照驱动项目列表与搜索，固定宽度侧栏、应用菜单和窄屏导航可用；文件夹/置顶为会话态，多创作页/持久分组未接入。",
+    "summary": "真实快照驱动项目列表与搜索，侧栏、应用菜单和窄屏导航可用；支持拖入空组自动建文件夹及已有文件夹收纳，分组/置顶仍为会话态。",
     "entryPoints": [
       "左侧栏 Sidebar",
       "搜索/收藏（Ctrl/⌘+K）",
@@ -1180,6 +1180,9 @@
     "code": [
       "src/components/Sidebar.tsx",
       "src/components/SidebarProjectEntry.tsx",
+      "src/components/SidebarProjectHeader.tsx",
+      "src/components/SidebarProjectGroups.tsx",
+      "src/components/SidebarFolderGroup.tsx",
       "src/components/CatalogPanel.tsx",
       "src/components/SavedPane.tsx",
       "src/App.tsx",
@@ -1189,6 +1192,8 @@
     ],
     "tests": [
       "tests/browser/sidebar.spec.ts",
+      "tests/browser/sidebar-project-groups.spec.ts",
+      "tests/desktop/sidebar-project-drag.mjs",
       "tests/browser/menu-boundaries.spec.ts",
       "tests/browser/catalog-pages.spec.ts",
       "tests/browser/ui-interactions.spec.ts",
@@ -1203,9 +1208,10 @@
       "UI-004",
       "TASK-UI-006",
       "TASK-PROJECT-SIDEBAR-001",
-      "TASK-UI-013"
+      "TASK-UI-013",
+      "TASK-UI-015"
     ],
-    "updated": "2026-10-08",
+    "updated": "2026-10-09",
     "platforms": [
       "web",
       "desktop"
@@ -1234,6 +1240,14 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-10-08-single-row-titlebar/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-09-sidebar-project-drag/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-09-sidebar-project-drag/verification.md"
       }
     ]
   },

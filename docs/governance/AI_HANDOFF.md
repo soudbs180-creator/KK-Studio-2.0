@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-10-09 侧栏项目拖放完成恢复入口
+
+工作树 .worktrees/TASK-UI-015-project-drag、分支 fix/TASK-UI-015-project-drag、base8090475958f1a0bdd1b4b36ada7f2aba1e4e6264。先读[plan](../changes/2026-10-09-sidebar-project-drag/plan.md)、[verification](../changes/2026-10-09-sidebar-project-drag/verification.md)、[review](../changes/2026-10-09-sidebar-project-drag/review.md)并核对Git。新包在本机 D:/kk-studio/.verification/TASK-UI-015-project-drag/rust-target/release/kk-studio.exe，sha2568c7491d19da2804f3ef1c2c68f1d88d8830f9fc749914000a87c26a3d3f0fb84；四条真实鼠标路径、35条定向、451条完整浏览器和标准1423证据已通过，Hosted quality #303完整门禁成功；原始证据在任务 .tmp/project-drag，关键JSON/截图归档于change/evidence。未替换当前入口/数据/其他工作树。持久分组仍由TASK-PROJECT-SIDEBAR-001负责，不能用本次修复升级其状态。
+
 ## 2026-10-09 失败任务 source105 本地复验
 
 主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](../changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](../changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。

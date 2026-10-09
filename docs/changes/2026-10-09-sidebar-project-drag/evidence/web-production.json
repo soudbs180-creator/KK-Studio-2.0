@@ -1,0 +1,30 @@
+{
+  "runtime": {
+    "url": "http://127.0.0.1:1473/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://127.0.0.1:1473/assets/index-CiRlpbQ8.js"
+    ],
+    "styles": [
+      "http://127.0.0.1:1473/assets/index-E4140dGy.css",
+      null
+    ],
+    "sidebar": "<div class=\"project-groups\"><div class=\"project-groups-header \"><button type=\"button\" class=\"project-groups-title\" aria-expanded=\"true\">项目 <img class=\"sidebar-heading-chevron\" src=\"/design/figma/project-chevron.svg\" alt=\"\"></button><div class=\"project-groups-actions\"><button type=\"button\" class=\"project-groups-action\" aria-label=\"项目显示与排序\" aria-expanded=\"false\" title=\"项目显示与排序\"><img class=\"sidebar-action-glyph sidebar-action-ellipsis\" src=\"/design/figma/project-ellipsis-glyph.svg\" alt=\"\"></button><button type=\"button\" class=\"project-groups-action\" aria-label=\"创建项目文件夹\" title=\"创建项目文件夹（会话内 Prototype）\"><img class=\"sidebar-action-glyph sidebar-action-plus\" src=\"/design/figma/project-plus-glyph.svg\" alt=\"\"></button></div></div><section class=\"\"><div class=\"project-folder-group \"><div class=\"folder-heading-row \"><button type=\"button\" class=\"folder-heading-toggle\" aria-expanded=\"true\" title=\"点击收起/展开文件夹；可把未分组项目拖到这里收纳（会话内 Prototype）\"><span class=\"project-folder\"><img src=\"/design/figma/project-folder-glyph.svg\" width=\"13\" height=\"11\" alt=\"\"></span><span class=\"folder-heading-title\">桌面空组收纳</span><img class=\"sidebar-heading-chevron\" src=\"/design/figma/project-chevron.svg\" alt=\"\"></button><button type=\"button\" class=\"project-pin\" aria-label=\"打开 桌面空组收纳 工作台\" title=\"打开文件夹中的首个项目\"><img class=\"project-action-container\" src=\"/design/figma/project-open-container.svg\" alt=\"\"></button><button type=\"button\" class=\"project-more\" aria-label=\"桌面空组收纳 设置\" aria-expanded=\"false\" title=\"项目文件夹设置\"><img class=\"project-action-container\" src=\"/design/figma/project-more-container.svg\" alt=\"\"></button></div><div class=\"project-nested-entry\"><div class=\"project-entry \" draggable=\"false\"><button class=\"project-link \"><span class=\"project-thumb project-thumb-color\" style=\"background: rgb(217, 123, 44);\"></span><span>桌面空组收纳</span></button><button class=\"project-pin\" aria-label=\"置顶项目\" aria-pressed=\"false\" title=\"会话内置顶，刷新恢复原顺序\"><img class=\"project-action-container\" src=\"/design/figma/project-pin-container.svg\" alt=\"\"></button><button class=\"project-more\" aria-label=\"更多项目设置\" aria-expanded=\"false\" title=\"更多项目设置\"><img class=\"project-action-container\" src=\"/design/figma/project-more-container.svg\" alt=\"\"></button></div><div class=\"project-entry \" draggable=\"false\"><button class=\"project-link \"><span class=\"project-thumb project-thumb-color\" style=\"background: rgb(58, 124, 165);\"></span><span>桌面已有文件夹</span></button><button class=\"project-pin\" aria-label=\"置顶项目\" aria-pressed=\"false\" title=\"会话内置顶，刷新恢复原顺序\"><img class=\"project-action-container\" src=\"/design/figma/project-pin-container.svg\" alt=\"\"></button><button class=\"project-more\" aria-label=\"更多项目设置\" aria-expanded=\"false\" title=\"更多项目设置\"><img class=\"project-action-container\" src=\"/design/figma/project-more-container.svg\" alt=\"\"></button></div><div class=\"project-entry \" draggable=\"false\"><button class=\"project-link \"><span class=\"project-thumb project-thumb-color\" style=\"background: rgb(58, 124, 165);\"></span><span>桌面内容区子项</span></button><button class=\"project-pin\" aria-label=\"置顶项目\" aria-pressed=\"false\" title=\"会话内置顶，刷新恢复原顺序\"><img class=\"project-action-container\" src=\"/design/figma/project-pin-container.svg\" alt=\"\"></button><button class=\"project-more\" aria-label=\"更多项目设置\" aria-expanded=\"false\" title=\"更多项目设置\"><img class=\"project-action-container\" src=\"/design/figma/project-more-container.svg\" alt=\"\"></button></div></div></div></section><section class=\"\"><div class=\"group-heading-row\"><button class=\"group-heading\" aria-expanded=\"true\">未分组<img class=\"sidebar-heading-chevron\" src=\"/design/figma/project-chevron.svg\" alt=\"\"></button><div class=\"project-groups-actions\"><button class=\"project-groups-action\" aria-label=\"打开未分组项目库\"><img src=\"/design/figma/project-open-container.svg\" width=\"20\" height=\"21\" alt=\"\"></button><button class=\"project-groups-action\" aria-label=\"创建未分组项目\" title=\"创建本地项目\"><img src=\"/design/figma/project-add-container.svg\" width=\"20\" height=\"21\" alt=\"\"></button></div></div><div class=\"project-group-content\"><div class=\"project-entry \" draggable=\"true\"><button class=\"project-link is-selected\" aria-current=\"page\"><span class=\"project-thumb project-thumb-color\" style=\"background: rgb(78, 138, 60);\"></span><span>桌面保留未分组</span></button><button class=\"project-pin\" aria-label=\"置顶项目\" aria-pressed=\"false\" title=\"会话内置顶，刷新恢复原顺序\"><img class=\"project-action-container\" src=\"/design/figma/project-pin-container.svg\" alt=\"\"></button><button class=\"project-more\" aria-label=\"更多项目设置\" aria-expanded=\"false\" title=\"更多项目设置\"><img class=\"project-action-container\" src=\"/design/figma/project-more-container.svg\" alt=\"\"></button></div></div></section></div>"
+  },
+  "viewports": [
+    {
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "width": 1099,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "overflow": false
+    }
+  ],
+  "passed": true
+}

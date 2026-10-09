@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
+| TASK-UI-015 | 修复桌面侧栏项目拖拽与空分组收纳 | DONE | none | root |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | TASK-LAUNCH-001 | root |
 | TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | TASK-LAUNCH-001 | root |
 | TASK-IMAGE-RETRY-004 | 修复主线区域重试验收读取旧成功任务 | DONE | TASK-IMAGE-EDIT-001 | root |
@@ -120,6 +121,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
 | TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | TODO | TASK-GOV-001 | root |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | TODO | none | root |
+
+## TASK-UI-015 — 修复桌面侧栏项目拖拽与空分组收纳
+
+- Goal: 未分组项目可拖入空项目组自动建文件夹或已有文件夹成为子项
+- Scope: 侧栏HTML5拖放命中区域与Tauri窗口事件配置
+- Acceptance: 空项目组标题投放自动按项目名称建立文件夹并展开; 已有文件夹标题及内容区域投放收纳为子项且不创建额外文件夹; 浏览器与隔离Tauri实际拖放通过，取消和无关拖放不改项目
+- Branch: `fix/TASK-UI-015-project-drag`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-015-project-drag`
+- Modules: src/components/SidebarProjectHeader.tsx, src/components/SidebarProjectGroups.tsx, src/components/SidebarFolderGroup.tsx, src/styles/sidebar.css, src-tauri/tauri.conf.json, tests/browser/sidebar-project-groups.spec.ts, tests/desktop/sidebar-project-drag.mjs
+- Verification: PASS — 35条侧栏定向与451条完整浏览器测试零重试通过；旧/新EXE同一Win32鼠标驱动RED/GREEN；Hosted quality #303完整verify、delivery、deploy-linux成功。
+- Evidence: [docs/changes/2026-10-09-sidebar-project-drag/verification.md](../../docs/changes/2026-10-09-sidebar-project-drag/verification.md), [docs/changes/2026-10-09-sidebar-project-drag/review.md](../../docs/changes/2026-10-09-sidebar-project-drag/review.md)
+- Updated: 2026-10-09
 
 ## TASK-WINDOWS-ENTRY-DIAG-002 — 补齐Windows入口子进程失败诊断
 

@@ -1,5 +1,9 @@
 # 当前项目状态
 
+## 2026-10-09 侧栏项目拖放修复完成本地验收
+
+本任务实测基线 origin/main8090475958f1a0bdd1b4b36ada7f2aba1e4e6264（PR43后），分支 fix/TASK-UI-015-project-drag；Desktop/Web候选2.1.13、Mobile规划2.1.1。修复原生拖放接管与标题/文件夹内容命中，Web35条侧栏定向、451条完整浏览器、新桌面真实鼠标四路径、标准1423证据以及 Hosted quality #303 完整门禁通过；独立审查无P0–P3。现有上游账本与全部功能保留，TASK-UI-015 DONE；FEAT-023 PARTIAL、持久分组任务仍开放。未合并/发布、未切换原快捷方式或用户数据。当前恢复依据[验证](../changes/2026-10-09-sidebar-project-drag/verification.md)与实际Git；下方保留历史状态。
+
 ## 2026-10-09 失败任务 source105 本地复验
 
 主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](../changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](../changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。

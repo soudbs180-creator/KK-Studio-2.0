@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-09 侧栏项目拖放修复完成本地验收
+
+TASK-UI-015 基于实际 origin/main80904759，在独立任务分支修复 Windows 拖放事件接管、空项目标题投放和文件夹内容投放。未分组项目拖入空组自动建同名文件夹，拖入已有文件夹成为子项；旧桌面真实鼠标 RED、新 2.1.13 带 Agent 桌面包四条路径 GREEN。35 条侧栏定向、451 条完整浏览器零重试、标准1423证据和 Hosted quality #303 均通过；独立审查无P0–P3。PR仍为草稿，未合并/发布或替换用户入口。文件夹仍为会话态 Prototype，FEAT-023 PARTIAL、持久分组 TASK-PROJECT-SIDEBAR-001 保持开放；Mobile 规划2.1.1。见[本轮验证](changes/2026-10-09-sidebar-project-drag/verification.md)。以下段落保留其历史时点。
+
 ## 2026-10-09 失败任务 source105 本地复验
 
 主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。

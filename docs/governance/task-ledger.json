@@ -1,5 +1,37 @@
 [
   {
+    "id": "TASK-UI-015",
+    "title": "修复桌面侧栏项目拖拽与空分组收纳",
+    "goal": "未分组项目可拖入空项目组自动建文件夹或已有文件夹成为子项",
+    "scope": "侧栏HTML5拖放命中区域与Tauri窗口事件配置",
+    "acceptance": [
+      "空项目组标题投放自动按项目名称建立文件夹并展开",
+      "已有文件夹标题及内容区域投放收纳为子项且不创建额外文件夹",
+      "浏览器与隔离Tauri实际拖放通过，取消和无关拖放不改项目"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "fix/TASK-UI-015-project-drag",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-015-project-drag",
+    "affectedModules": [
+      "src/components/SidebarProjectHeader.tsx",
+      "src/components/SidebarProjectGroups.tsx",
+      "src/components/SidebarFolderGroup.tsx",
+      "src/styles/sidebar.css",
+      "src-tauri/tauri.conf.json",
+      "tests/browser/sidebar-project-groups.spec.ts",
+      "tests/desktop/sidebar-project-drag.mjs"
+    ],
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-10-09-sidebar-project-drag/verification.md",
+      "docs/changes/2026-10-09-sidebar-project-drag/review.md"
+    ],
+    "verification": "35条侧栏定向与451条完整浏览器测试零重试通过；旧/新EXE同一Win32鼠标驱动RED/GREEN；Hosted quality #303完整verify、delivery、deploy-linux成功。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-09"
+  },
+  {
     "dependencies": [
       "TASK-LAUNCH-001"
     ],

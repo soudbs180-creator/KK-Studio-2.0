@@ -1,4 +1,5 @@
-import type { RefObject } from "react";
+import { useState, type RefObject } from "react";
+import { SIDEBAR_PROJECT_DRAG_TYPE } from "../features/projects/sidebarProjectModel";
 
 /**
  * 侧栏"项目"区标题行：标题（点击整体折叠/展开）+ 右侧筛选排序与
@@ -15,6 +16,7 @@ export default function SidebarProjectHeader({
   onToggleMenu,
   onCloseMenu,
   onCreateFolder,
+  onDropProject,
   onFilterChange,
   onSortChange,
 }: {
@@ -28,11 +30,37 @@ export default function SidebarProjectHeader({
   onToggleMenu: () => void;
   onCloseMenu: () => void;
   onCreateFolder: () => void;
+  onDropProject: (projectId: string) => void;
   onFilterChange: (value: "all" | "ungrouped") => void;
   onSortChange: (value: "manual" | "recent" | "priority") => void;
 }) {
+  const [dragOver, setDragOver] = useState(false);
   return (
-    <div className="project-groups-header">
+    <div
+      className={`project-groups-header ${dragOver ? "is-drag-target" : ""}`}
+      onDragOver={(event) => {
+        if (!event.dataTransfer.types.includes(SIDEBAR_PROJECT_DRAG_TYPE))
+          return;
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+        setDragOver(true);
+      }}
+      onDragLeave={(event) => {
+        if (
+          !(event.relatedTarget instanceof Node) ||
+          !event.currentTarget.contains(event.relatedTarget)
+        )
+          setDragOver(false);
+      }}
+      onDrop={(event) => {
+        if (!event.dataTransfer.types.includes(SIDEBAR_PROJECT_DRAG_TYPE))
+          return;
+        event.preventDefault();
+        setDragOver(false);
+        const projectId = event.dataTransfer.getData(SIDEBAR_PROJECT_DRAG_TYPE);
+        if (projectId) onDropProject(projectId);
+      }}
+    >
       <button
         type="button"
         className="project-groups-title"
