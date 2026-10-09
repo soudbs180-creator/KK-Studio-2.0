@@ -13,6 +13,10 @@ const RELEASE_EXECUTABLE = path.join(
 const RELEASE_INPUTS = [
   "src",
   "public",
+  // Tauri embeds Vite's output into the release executable. Track the
+  // generated bundle as well as its source so a successful web build cannot
+  // leave the launcher starting an older embedded asset set.
+  "dist",
   "index.html",
   "package.json",
   "package-lock.json",

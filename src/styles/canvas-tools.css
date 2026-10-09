@@ -103,8 +103,8 @@
   color: var(--text-primary);
 }
 .canvas-toolbar > .toolbar-save .toolbar-icon-favorite {
-  width: 24px;
-  height: 24px;
+  width: var(--ui-control-h-toolbar);
+  height: var(--ui-control-h-toolbar);
 }
 .tool-hand-current {
   width: 18px;
