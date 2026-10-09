@@ -5,7 +5,7 @@
 - 执行时间与时区：2026-10-09 23:46–2026-10-10 00:13 Asia/Shanghai（UTC 收据见 evidence）
 - Intent / Spec / Plan / AC：本目录 `intent.md`、`spec.md`、`plan.md`；AC-1–AC-4
 - cwd / branch：`D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002` / `codex/TASK-VERIFY-CONCURRENCY-002`
-- 被验证 base SHA / tested source head / tree SHA：base 与 tested source head 均为 `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`；tested source tree 为 `ede7a1b181b01e84cf49f89621ca265ea62e1d4b`。诊断证据与五件套的实质提交为 `6600c40d29e239f914471722e8267bbce5e7143d`；其后 `ff195ed358296b47c903b23dc90fb2dd68c5ffd4` 只同步 `docs/PROGRESS.md`，未改 source/config/evidence/ledger。当前分支 head 为 `ff195ed358296b47c903b23dc90fb2dd68c5ffd4`；review 绑定实质提交及该 docs-only successor，避免用自引用的当前提交哈希伪造可验证 head。
+- 被验证 base SHA / tested source head / tree SHA：base 与 tested source head 均为 `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`；tested source tree 为 `ede7a1b181b01e84cf49f89621ca265ea62e1d4b`。独立复核绑定的最新证据/文档 head 为 `c46cdeb4a31957f474523f2f8254afaeaf34b804`；该 head 只包含边界勘误，未改 source/config/evidence。当前提交仅补写本绑定说明，未改变被复核内容。
 - dirty 状态及 patch/文件指纹：运行矩阵前 source worktree clean；生产 dist、node_modules 和 `.tmp` 收据为 ignored runtime artifacts；源代码/config 无修改。
 - Node/npm/Rust/浏览器/OS/工具版本：Node `v24.20.0`、npm `11.19.0`、Vite `7.3.6`、Playwright `@playwright/test`（lockfile）、Windows x64、Edge channel `msedge`；Rust 不适用。
 - 规则版本或 commit：仓库当前 `AGENTS.md` / `AI_RULES.md` 及 `docs/engineering/{SDLC,BRANCH-POLICY,REVIEW}.md`；规则未改。
@@ -58,7 +58,7 @@
 - 实现：PARTIAL（诊断证据与文档完成；无产品修复）
 - 验证：PARTIAL（本地矩阵 PASS；外部推广和历史根因 NOT VERIFIED）
 - 产品能力：Web 本地 production browser regression 已按五档验证；Desktop/Mobile/真实 Provider 未涉及。
-- 独立 review 记录与审查 SHA：本目录 `review.md`；review 绑定实质提交 `6600c40d29e239f914471722e8267bbce5e7143d` 及其后仅改 `docs/PROGRESS.md` 的 `ff195ed358296b47c903b23dc90fb2dd68c5ffd4`。
+- 独立 review 记录与审查 SHA：本目录 `review.md`；独立复核绑定 `c46cdeb4a31957f474523f2f8254afaeaf34b804`，本提交只记录该已完成复核结果。
 - 用户产品验收和发布授权：未发生；用户授权的是继续技术工作，不包含发布/合并。
 - 未关闭风险与账本 ID：`TASK-VERIFY-CONCURRENCY-002`（根因 UNKNOWN、Hosted/main 未回读）、`TASK-VERIFY-ORIGIN-003`（端口/来源契约）、`TASK-WINDOWS-ENTRY-RECOVERY-003`（Hosted Windows 原因）。
 - 新 SHA 或配置变化后需要的复验：任何 `tests/browser`、`playwright.config.ts`、Vite、Edge/Node 版本变化都必须重跑受影响矩阵；合并后必须在新 main 重新读取结果。

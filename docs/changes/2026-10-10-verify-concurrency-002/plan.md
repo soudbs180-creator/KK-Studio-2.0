@@ -5,7 +5,7 @@
 - 日期：2026-10-10
 - Intent / Spec / ADR：本目录 `intent.md`、`spec.md`；无新增 ADR
 - Owner / branch / worktree：root / `codex/TASK-VERIFY-CONCURRENCY-002` / `D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002`
-- Base / reviewed HEAD SHA 与远端目标：base/source `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`；实质证据/文档提交 `6600c40d29e239f914471722e8267bbce5e7143d`，随后仅同步进度文档的 `ff195ed358296b47c903b23dc90fb2dd68c5ffd4` 已在 verification/review 中绑定；远端目标为普通 PR 后回读 main，未执行。
+- Base / reviewed HEAD SHA 与远端目标：base/source `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`；独立复核绑定文档/证据 head `c46cdeb4a31957f474523f2f8254afaeaf34b804`；本提交只记录复核结果；远端目标为普通 PR 后回读 main，未执行。
 - Git dirty/index 状态、并行任务与文件归属：代码基线干净；证据先写 `.tmp` 再复制到本目录；只读审计 agent 未修改文件。
 
 ## 开工证据
