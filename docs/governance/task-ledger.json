@@ -5452,7 +5452,9 @@
     "status": "TODO",
     "priority": "P1",
     "evidence": [
-      "docs/features/feat-038-ai-model-gateway.md"
+      "docs/features/feat-038-ai-model-gateway.md",
+      "docs/changes/2026-10-09-doubao-integration/verification.md",
+      "docs/changes/2026-10-09-doubao-integration/review.md"
     ],
     "verification": "代码与单测已建成：49 项定向单测全绿；当前全量回归 891 项，883 通过、0 失败、8 跳过；tsc 与 eslint 通过。真实上游与真实凭证仍未接入，按 DONE 需要当前运行证据的口径不得标 DONE。",
     "verificationResult": "NOT_VERIFIED",

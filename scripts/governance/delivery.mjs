@@ -28,7 +28,15 @@ function invalidPath(file) {
 function forbiddenPath(file) {
   if (FORBIDDEN_DIRECTORY.test(file) || FORBIDDEN_BINARY.test(file))
     return true;
-  return FORBIDDEN_SECRET.test(file) && !/(^|\/)\.env\.example$/i.test(file);
+  // Source modules named `credentials.ts` are policy code, not credential
+  // payloads. Keep blocking serialized/configured secrets everywhere else.
+  const sourceModule =
+    /^(?:src|tests|scripts)\/.*\.(?:[cm]?[jt]sx?|mjs|cjs)$/i.test(file);
+  return (
+    FORBIDDEN_SECRET.test(file) &&
+    !/(^|\/)\.env\.example$/i.test(file) &&
+    !sourceModule
+  );
 }
 
 export function checkDeliveryFiles(

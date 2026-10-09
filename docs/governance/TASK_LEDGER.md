@@ -2327,7 +2327,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/features/ai-gateway/credentials.ts, src/features/ai-gateway/errors.ts, src/features/ai-gateway/channels/adapter.ts, src/features/ai-gateway/channels/registry.ts, src/features/ai-gateway/channels/doubao.ts, src/features/ai-gateway/scheduler.ts, src/features/ai-gateway/chat.ts, src/features/generation-server/http.ts, tests/unit/aiGatewayCredentials.test.ts, tests/unit/aiGatewayChannels.test.ts, tests/unit/aiGatewayScheduler.test.ts, tests/unit/aiGatewayChat.test.ts, tests/unit/aiGatewayChatEndpoint.test.ts, tests/unit/generationServerChatRoute.test.ts, docs/features/feat-038-ai-model-gateway.md
 - Verification: NOT_VERIFIED — 代码与单测已建成：49 项定向单测全绿；当前全量回归 891 项，883 通过、0 失败、8 跳过；tsc 与 eslint 通过。真实上游与真实凭证仍未接入，按 DONE 需要当前运行证据的口径不得标 DONE。
-- Evidence: [docs/features/feat-038-ai-model-gateway.md](../../docs/features/feat-038-ai-model-gateway.md)
+- Evidence: [docs/features/feat-038-ai-model-gateway.md](../../docs/features/feat-038-ai-model-gateway.md), [docs/changes/2026-10-09-doubao-integration/verification.md](../../docs/changes/2026-10-09-doubao-integration/verification.md), [docs/changes/2026-10-09-doubao-integration/review.md](../../docs/changes/2026-10-09-doubao-integration/review.md)
 - Next action: 实现真实 DPAPI SecretProtector（需 Rust 侧或 PowerShell 桥）并接入一个真实火山方舟账号，取得上游证据后方可转 DONE；随后接调度层持久化仓储与 sub2api-client。
 - Last verified: 2026-10-10
 - Updated: 2026-10-10
