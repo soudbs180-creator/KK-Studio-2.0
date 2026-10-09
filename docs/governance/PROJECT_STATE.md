@@ -6,7 +6,7 @@
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`
 - `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the primary checkout
-- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is currently on `docs/TASK-DOCS-STRUCT-001` at `ab77b3a88ca0597ecaa14f6f47cb583116374351`, with concurrent uncommitted product/UI changes and feature-gateway files restored for separate review; it is not a clean main checkout and must not be reset or used as a disposable worktree.
+- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is currently on `docs/TASK-DOCS-STRUCT-001` at `2118624b`, with concurrent uncommitted product/UI changes and feature-gateway files restored for separate review; it is not a clean main checkout and must not be reset or used as a disposable worktree.
 - `taskLedger`: 117 records; 68 DONE, 26 PARTIAL, 18 TODO, 4 BLOCKED, 1 REVIEW; 49 open records.
 - `workspaceWorktrees`: 47 registered worktrees, with 24 under the approved root after removing the merged governance checkout; dirty, active, nested, and external worktrees remain protected and are listed in `worktree-reclamation.json`.
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree; source changes and locked paths are protected.
