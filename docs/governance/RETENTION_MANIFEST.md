@@ -1,6 +1,6 @@
 # Retention manifest
 
-Updated 2026-10-09. This manifest records retention intent; it does not authorize deletion or move operations.
+Updated 2026-10-10. This manifest records retention intent; it does not authorize deletion or move operations.
 
 | Class | Examples | Retention rule |
 | --- | --- | --- |
@@ -13,5 +13,7 @@ Updated 2026-10-09. This manifest records retention intent; it does not authoriz
 | Recovery material | `D:/KK-Studio-recovery-20260921` | Keep external and read-only; restore only to a new verified directory. |
 | Loose parent Markdown | `D:/kk-studio/*.md` such as `KK-豆包集成设计方案.md` | Review provenance and references before moving into `KK-Studio-2.0/docs/reference/` or `docs/archive/`; no automatic move. |
 | Excluded from commits | API keys, OAuth tokens, credential stores, complete memory files, node_modules, build caches, `dist/`, `target/`, transient logs | Never add to source or evidence packages. |
+
+Large file-level recovery inventories may be kept in `D:/kk-studio/.verification/governance/` rather than committed to the source repository; the committed apply result and immutable plan pointer remain the audit entry points.
 
 Completed-worktree checkout removal is recorded in `worktree-reclamation-plan-*.json`; branch refs and commits remain. No source, evidence, user data, or dirty worktree is removed by this governance change. Retention decisions must preserve rollback and user data.
