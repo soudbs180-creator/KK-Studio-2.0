@@ -678,7 +678,8 @@
   outline: 1px dashed var(--focus-ring);
   outline-offset: 1px;
 }
-.sidebar .project-groups section.is-drag-target {
+.sidebar .project-groups section.is-drag-target,
+.sidebar .project-groups-header.is-drag-target {
   background: var(--bg-elevated);
   outline: 1px dashed var(--focus-ring);
   outline-offset: 1px;

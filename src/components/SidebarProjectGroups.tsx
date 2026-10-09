@@ -260,6 +260,7 @@ export default function SidebarProjectGroups({
         onToggleMenu={onToggleProjectMenu}
         onCloseMenu={onCloseMenu}
         onCreateFolder={createFolder}
+        onDropProject={dropToSection}
         onFilterChange={setProjectFilter}
         onSortChange={setSortMode}
       />

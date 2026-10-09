@@ -1,0 +1,1704 @@
+{
+  "mode": "Tauri release",
+  "executable": "D:\\kk-studio\\.verification\\TASK-UI-015-project-drag\\rust-target\\release\\kk-studio.exe",
+  "sha256": "8c7491d19da2804f3ef1c2c68f1d88d8830f9fc749914000a87c26a3d3f0fb84",
+  "checks": [
+    "empty section creates folder",
+    "closed folder heading accepts and expands",
+    "folder contents accept without duplicate folder",
+    "drop outside grouping preserves the ungrouped project"
+  ],
+  "passed": true,
+  "runtime": {
+    "url": "http://tauri.localhost/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://tauri.localhost/assets/index-CiRlpbQ8.js"
+    ],
+    "folders": 1,
+    "children": 3
+  },
+  "dragEvents": [
+    {
+      "type": "pointerdown",
+      "target": "",
+      "x": 262,
+      "y": 427.5
+    },
+    {
+      "type": "pointerup",
+      "target": "",
+      "x": 262,
+      "y": 427.5
+    },
+    {
+      "type": "pointerdown",
+      "target": "",
+      "x": 74,
+      "y": 457.3333435058594
+    },
+    {
+      "type": "dragstart",
+      "target": "project-entry ",
+      "x": 74,
+      "y": 457
+    },
+    {
+      "type": "dragenter",
+      "target": "",
+      "x": 72,
+      "y": 454
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 72,
+      "y": 454
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 71,
+      "y": 452
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 71,
+      "y": 452
+    },
+    {
+      "type": "dragenter",
+      "target": "project-link is-selected",
+      "x": 70,
+      "y": 450
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 69,
+      "y": 449
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 69,
+      "y": 449
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 68,
+      "y": 448
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 67,
+      "y": 446
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 67,
+      "y": 446
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 66,
+      "y": 444
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 65,
+      "y": 443
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 65,
+      "y": 443
+    },
+    {
+      "type": "dragenter",
+      "target": "",
+      "x": 64,
+      "y": 441
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 63,
+      "y": 440
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 63,
+      "y": 440
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 62,
+      "y": 438
+    },
+    {
+      "type": "dragenter",
+      "target": "group-heading",
+      "x": 61,
+      "y": 436
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 61,
+      "y": 436
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 61,
+      "y": 436
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 60,
+      "y": 435
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 59,
+      "y": 433
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 59,
+      "y": 433
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 58,
+      "y": 432
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 58,
+      "y": 432
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 57,
+      "y": 430
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 56,
+      "y": 428
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 56,
+      "y": 428
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 55,
+      "y": 427
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 54,
+      "y": 425
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 53,
+      "y": 424
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 53,
+      "y": 424
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 53,
+      "y": 424
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 52,
+      "y": 422
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 52,
+      "y": 422
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 52,
+      "y": 422
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 51,
+      "y": 420
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 50,
+      "y": 419
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 50,
+      "y": 419
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 49,
+      "y": 418
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading",
+      "x": 49,
+      "y": 418
+    },
+    {
+      "type": "dragenter",
+      "target": "project-groups",
+      "x": 48,
+      "y": 416
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 48,
+      "y": 416
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 47,
+      "y": 414
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 47,
+      "y": 414
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 45,
+      "y": 411
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 45,
+      "y": 411
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 45,
+      "y": 411
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 44,
+      "y": 410
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 44,
+      "y": 410
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 43,
+      "y": 408
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 43,
+      "y": 408
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 42,
+      "y": 406
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 41,
+      "y": 405
+    },
+    {
+      "type": "dragenter",
+      "target": "project-groups-header ",
+      "x": 40,
+      "y": 403
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-header ",
+      "x": 39,
+      "y": 402
+    },
+    {
+      "type": "dragenter",
+      "target": "project-groups-title",
+      "x": 38,
+      "y": 400
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-title",
+      "x": 38,
+      "y": 400
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-title",
+      "x": 37,
+      "y": 398
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-title",
+      "x": 36,
+      "y": 397
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-title",
+      "x": 35,
+      "y": 395
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-title",
+      "x": 34,
+      "y": 394
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-title",
+      "x": 34,
+      "y": 394
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-title",
+      "x": 34,
+      "y": 394
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-title",
+      "x": 34,
+      "y": 394
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-title",
+      "x": 34,
+      "y": 394
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-title",
+      "x": 34,
+      "y": 394
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-title",
+      "x": 34,
+      "y": 394
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-title",
+      "x": 34,
+      "y": 394
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-title",
+      "x": 34,
+      "y": 394
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-title",
+      "x": 34,
+      "y": 394
+    },
+    {
+      "type": "drop",
+      "target": "project-groups-title",
+      "x": 34,
+      "y": 394
+    },
+    {
+      "type": "pointerdown",
+      "target": "folder-heading-toggle",
+      "x": 145.5,
+      "y": 423.5
+    },
+    {
+      "type": "pointerup",
+      "target": "folder-heading-toggle",
+      "x": 145.5,
+      "y": 423.5
+    },
+    {
+      "type": "pointerdown",
+      "target": "",
+      "x": 262,
+      "y": 461.5
+    },
+    {
+      "type": "pointerup",
+      "target": "",
+      "x": 262,
+      "y": 461.5
+    },
+    {
+      "type": "pointerdown",
+      "target": "",
+      "x": 74,
+      "y": 490.66668701171875
+    },
+    {
+      "type": "dragstart",
+      "target": "project-entry ",
+      "x": 74,
+      "y": 490
+    },
+    {
+      "type": "dragenter",
+      "target": "",
+      "x": 79,
+      "y": 485
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 79,
+      "y": 485
+    },
+    {
+      "type": "dragenter",
+      "target": "project-link is-selected",
+      "x": 81,
+      "y": 484
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 81,
+      "y": 484
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 83,
+      "y": 482
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 83,
+      "y": 482
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 84,
+      "y": 480
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 86,
+      "y": 478
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 86,
+      "y": 478
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 88,
+      "y": 477
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 88,
+      "y": 477
+    },
+    {
+      "type": "dragenter",
+      "target": "",
+      "x": 90,
+      "y": 476
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 90,
+      "y": 476
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 92,
+      "y": 474
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 94,
+      "y": 472
+    },
+    {
+      "type": "dragenter",
+      "target": "group-heading-row",
+      "x": 95,
+      "y": 470
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 95,
+      "y": 470
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 95,
+      "y": 470
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 97,
+      "y": 469
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 97,
+      "y": 469
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 99,
+      "y": 467
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 99,
+      "y": 467
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 100,
+      "y": 465
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 100,
+      "y": 465
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 102,
+      "y": 464
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 102,
+      "y": 464
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 104,
+      "y": 462
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 106,
+      "y": 460
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 108,
+      "y": 458
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 108,
+      "y": 458
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 108,
+      "y": 458
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 110,
+      "y": 457
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 110,
+      "y": 457
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 112,
+      "y": 456
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 112,
+      "y": 456
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 113,
+      "y": 454
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 115,
+      "y": 452
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 115,
+      "y": 452
+    },
+    {
+      "type": "dragenter",
+      "target": "project-groups",
+      "x": 117,
+      "y": 450
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 119,
+      "y": 449
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 119,
+      "y": 449
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 120,
+      "y": 447
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 120,
+      "y": 447
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 122,
+      "y": 445
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 124,
+      "y": 444
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 124,
+      "y": 444
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 124,
+      "y": 444
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 126,
+      "y": 442
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 126,
+      "y": 442
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 128,
+      "y": 440
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 128,
+      "y": 440
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 130,
+      "y": 438
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 130,
+      "y": 438
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 130,
+      "y": 438
+    },
+    {
+      "type": "dragenter",
+      "target": "folder-heading-toggle",
+      "x": 133,
+      "y": 436
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 133,
+      "y": 436
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 135,
+      "y": 434
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 136,
+      "y": 432
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 138,
+      "y": 430
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 140,
+      "y": 429
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 142,
+      "y": 427
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 144,
+      "y": 425
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 144,
+      "y": 425
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 146,
+      "y": 424
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 146,
+      "y": 424
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 146,
+      "y": 424
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 146,
+      "y": 424
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 146,
+      "y": 424
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 146,
+      "y": 424
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 146,
+      "y": 424
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 146,
+      "y": 424
+    },
+    {
+      "type": "drop",
+      "target": "folder-heading-toggle",
+      "x": 146,
+      "y": 424
+    },
+    {
+      "type": "pointerdown",
+      "target": "",
+      "x": 262,
+      "y": 524.5
+    },
+    {
+      "type": "pointerup",
+      "target": "",
+      "x": 262,
+      "y": 524.5
+    },
+    {
+      "type": "pointerdown",
+      "target": "",
+      "x": 74,
+      "y": 554
+    },
+    {
+      "type": "dragstart",
+      "target": "project-entry ",
+      "x": 74,
+      "y": 554
+    },
+    {
+      "type": "dragenter",
+      "target": "",
+      "x": 80,
+      "y": 548
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 80,
+      "y": 548
+    },
+    {
+      "type": "dragenter",
+      "target": "project-link is-selected",
+      "x": 82,
+      "y": 546
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 84,
+      "y": 544
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 84,
+      "y": 544
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 87,
+      "y": 542
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 87,
+      "y": 542
+    },
+    {
+      "type": "dragover",
+      "target": "project-link is-selected",
+      "x": 87,
+      "y": 542
+    },
+    {
+      "type": "dragenter",
+      "target": "",
+      "x": 89,
+      "y": 539
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 91,
+      "y": 537
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 91,
+      "y": 537
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 91,
+      "y": 537
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 94,
+      "y": 535
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 94,
+      "y": 535
+    },
+    {
+      "type": "dragenter",
+      "target": "group-heading-row",
+      "x": 96,
+      "y": 533
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 98,
+      "y": 531
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 102,
+      "y": 527
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 104,
+      "y": 525
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 107,
+      "y": 523
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 109,
+      "y": 521
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 111,
+      "y": 519
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 113,
+      "y": 517
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 116,
+      "y": 515
+    },
+    {
+      "type": "dragover",
+      "target": "group-heading-row",
+      "x": 116,
+      "y": 515
+    },
+    {
+      "type": "dragenter",
+      "target": "project-groups",
+      "x": 118,
+      "y": 513
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 120,
+      "y": 510
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 120,
+      "y": 510
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 124,
+      "y": 506
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 126,
+      "y": 504
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 126,
+      "y": 504
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 128,
+      "y": 502
+    },
+    {
+      "type": "dragenter",
+      "target": "project-link ",
+      "x": 131,
+      "y": 500
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 133,
+      "y": 498
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 133,
+      "y": 498
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 135,
+      "y": 496
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 138,
+      "y": 494
+    },
+    {
+      "type": "dragenter",
+      "target": "",
+      "x": 140,
+      "y": 492
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 142,
+      "y": 490
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 142,
+      "y": 490
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 144,
+      "y": 488
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 146,
+      "y": 486
+    },
+    {
+      "type": "dragenter",
+      "target": "project-link ",
+      "x": 148,
+      "y": 484
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 151,
+      "y": 482
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 151,
+      "y": 482
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 153,
+      "y": 480
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 155,
+      "y": 478
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 155,
+      "y": 478
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 155,
+      "y": 478
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 157,
+      "y": 476
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 160,
+      "y": 474
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 162,
+      "y": 472
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 162,
+      "y": 472
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 162,
+      "y": 472
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 162,
+      "y": 472
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 162,
+      "y": 472
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 162,
+      "y": 472
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 162,
+      "y": 472
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 162,
+      "y": 472
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 162,
+      "y": 472
+    },
+    {
+      "type": "drop",
+      "target": "project-link ",
+      "x": 162,
+      "y": 472
+    },
+    {
+      "type": "pointerdown",
+      "target": "",
+      "x": 262,
+      "y": 553.5
+    },
+    {
+      "type": "pointerup",
+      "target": "",
+      "x": 262,
+      "y": 553.5
+    },
+    {
+      "type": "pointerdown",
+      "target": "",
+      "x": 74,
+      "y": 582.6666870117188
+    },
+    {
+      "type": "dragstart",
+      "target": "project-entry ",
+      "x": 74,
+      "y": 582
+    },
+    {
+      "type": "dragenter",
+      "target": "",
+      "x": 77,
+      "y": 565
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 77,
+      "y": 565
+    },
+    {
+      "type": "dragenter",
+      "target": "group-heading-row",
+      "x": 81,
+      "y": 548
+    },
+    {
+      "type": "dragenter",
+      "target": "project-groups",
+      "x": 84,
+      "y": 530
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 84,
+      "y": 530
+    },
+    {
+      "type": "dragenter",
+      "target": "",
+      "x": 86,
+      "y": 522
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 86,
+      "y": 522
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 88,
+      "y": 513
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 88,
+      "y": 513
+    },
+    {
+      "type": "dragenter",
+      "target": "project-link ",
+      "x": 90,
+      "y": 504
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 90,
+      "y": 504
+    },
+    {
+      "type": "dragenter",
+      "target": "project-link ",
+      "x": 92,
+      "y": 496
+    },
+    {
+      "type": "dragover",
+      "target": "project-link ",
+      "x": 92,
+      "y": 496
+    },
+    {
+      "type": "dragenter",
+      "target": "",
+      "x": 94,
+      "y": 488
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 94,
+      "y": 488
+    },
+    {
+      "type": "dragenter",
+      "target": "project-link ",
+      "x": 95,
+      "y": 479
+    },
+    {
+      "type": "dragenter",
+      "target": "project-link ",
+      "x": 97,
+      "y": 470
+    },
+    {
+      "type": "dragenter",
+      "target": "",
+      "x": 99,
+      "y": 462
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 100,
+      "y": 453
+    },
+    {
+      "type": "dragenter",
+      "target": "project-link ",
+      "x": 102,
+      "y": 444
+    },
+    {
+      "type": "dragenter",
+      "target": "folder-heading-toggle",
+      "x": 104,
+      "y": 436
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 104,
+      "y": 436
+    },
+    {
+      "type": "dragover",
+      "target": "folder-heading-toggle",
+      "x": 104,
+      "y": 436
+    },
+    {
+      "type": "dragenter",
+      "target": "folder-heading-title",
+      "x": 106,
+      "y": 427
+    },
+    {
+      "type": "dragenter",
+      "target": "folder-heading-toggle",
+      "x": 110,
+      "y": 410
+    },
+    {
+      "type": "dragenter",
+      "target": "project-groups-header ",
+      "x": 112,
+      "y": 401
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-header ",
+      "x": 113,
+      "y": 392
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-header is-drag-target",
+      "x": 115,
+      "y": 384
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups-header is-drag-target",
+      "x": 115,
+      "y": 384
+    },
+    {
+      "type": "dragenter",
+      "target": "project-groups",
+      "x": 117,
+      "y": 375
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 117,
+      "y": 375
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 119,
+      "y": 366
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 119,
+      "y": 366
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 120,
+      "y": 358
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 122,
+      "y": 349
+    },
+    {
+      "type": "dragover",
+      "target": "project-groups",
+      "x": 122,
+      "y": 349
+    },
+    {
+      "type": "dragenter",
+      "target": "primary-nav",
+      "x": 124,
+      "y": 340
+    },
+    {
+      "type": "dragenter",
+      "target": "",
+      "x": 126,
+      "y": 332
+    },
+    {
+      "type": "dragenter",
+      "target": "nav-label",
+      "x": 130,
+      "y": 315
+    },
+    {
+      "type": "dragover",
+      "target": "nav-label",
+      "x": 130,
+      "y": 315
+    },
+    {
+      "type": "dragenter",
+      "target": "",
+      "x": 133,
+      "y": 298
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 133,
+      "y": 298
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 133,
+      "y": 298
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 135,
+      "y": 289
+    },
+    {
+      "type": "dragenter",
+      "target": "",
+      "x": 136,
+      "y": 280
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 136,
+      "y": 280
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 138,
+      "y": 272
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 138,
+      "y": 272
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 140,
+      "y": 263
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 140,
+      "y": 263
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 142,
+      "y": 254
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 142,
+      "y": 254
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 144,
+      "y": 246
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 146,
+      "y": 237
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 146,
+      "y": 237
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 146,
+      "y": 237
+    },
+    {
+      "type": "dragover",
+      "target": "",
+      "x": 146,
+      "y": 237
+    },
+    {
+      "type": "dragend",
+      "target": "project-entry ",
+      "x": 146,
+      "y": 237
+    }
+  ]
+}

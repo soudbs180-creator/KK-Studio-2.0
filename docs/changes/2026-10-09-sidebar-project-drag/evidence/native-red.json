@@ -1,0 +1,65 @@
+{
+  "mode": "Tauri release",
+  "executable": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+  "sha256": "5de00a4d0679a359422388fc1be9f4024075f5a1a495667e15d97a8b44c3a3ec",
+  "checks": [],
+  "passed": false,
+  "runtime": {
+    "url": "http://tauri.localhost/",
+    "mode": "production",
+    "entry": "src/main.tsx",
+    "scripts": [
+      "http://tauri.localhost/assets/index-DP4RQQ71.js"
+    ],
+    "devicePixelRatio": 1.5,
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "error": "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: true\nReceived: false\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
+  "dragEvents": [
+    {
+      "type": "pointerdown",
+      "target": "sidebar-action-glyph sidebar-action-plus",
+      "x": 262,
+      "y": 393.5
+    },
+    {
+      "type": "pointerup",
+      "target": "sidebar-action-glyph sidebar-action-plus",
+      "x": 262,
+      "y": 393.5
+    },
+    {
+      "type": "pointerdown",
+      "target": "",
+      "x": 262,
+      "y": 500.5
+    },
+    {
+      "type": "pointerup",
+      "target": "",
+      "x": 262,
+      "y": 500.5
+    },
+    {
+      "type": "pointerdown",
+      "target": "",
+      "x": 74,
+      "y": 530
+    },
+    {
+      "type": "dragstart",
+      "target": "project-entry ",
+      "x": 74,
+      "y": 530
+    },
+    {
+      "type": "dragend",
+      "target": "project-entry ",
+      "x": 145,
+      "y": 423
+    }
+  ]
+}

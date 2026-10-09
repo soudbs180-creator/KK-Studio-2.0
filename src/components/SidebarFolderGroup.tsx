@@ -123,29 +123,31 @@ export default function SidebarFolderGroup({
     <div
       className={`project-folder-group ${pinned ? "is-pinned" : ""}`}
       hidden={!visible}
-    >
-      <div
-        className={`folder-heading-row ${dragOver ? "is-drag-target" : ""}`}
-        onDragOver={(event) => {
-          if (!acceptProject(event)) return;
-          event.preventDefault();
-          event.stopPropagation();
-          event.dataTransfer.dropEffect = "move";
-          setDragOver(true);
-        }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={(event) => {
-          if (!acceptProject(event)) return;
-          event.preventDefault();
-          event.stopPropagation();
+      onDragOver={(event) => {
+        if (!acceptProject(event)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        event.dataTransfer.dropEffect = "move";
+        setDragOver(true);
+      }}
+      onDragLeave={(event) => {
+        if (
+          !(event.relatedTarget instanceof Node) ||
+          !event.currentTarget.contains(event.relatedTarget)
+        )
           setDragOver(false);
-          const projectId = event.dataTransfer.getData(
-            SIDEBAR_PROJECT_DRAG_TYPE,
-          );
-          const title = event.dataTransfer.getData(SIDEBAR_PROJECT_TITLE_TYPE);
-          if (projectId) onDropProject(folder.id, projectId, title);
-        }}
-      >
+      }}
+      onDrop={(event) => {
+        if (!acceptProject(event)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        setDragOver(false);
+        const projectId = event.dataTransfer.getData(SIDEBAR_PROJECT_DRAG_TYPE);
+        const title = event.dataTransfer.getData(SIDEBAR_PROJECT_TITLE_TYPE);
+        if (projectId) onDropProject(folder.id, projectId, title);
+      }}
+    >
+      <div className={`folder-heading-row ${dragOver ? "is-drag-target" : ""}`}>
         {editing ? (
           <div className="folder-heading-toggle is-editing">
             <span className="project-folder">

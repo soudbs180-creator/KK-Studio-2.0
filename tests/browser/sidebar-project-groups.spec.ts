@@ -37,6 +37,92 @@ async function createUngrouped(sidebar: Page, title: string): Promise<void> {
   await input.press("Enter");
 }
 
+test("空项目组标题接收拖放：自动建文件夹并保留真实项目", async ({ page }) => {
+  const sidebar = await openSidebar(page);
+  await createUngrouped(sidebar, "空组收纳");
+  await expect(sidebar.locator(".project-folder-group")).toHaveCount(0);
+  const source = ungroupedSection(sidebar).locator(".project-entry", {
+    hasText: "空组收纳",
+  });
+  await source.dragTo(sidebar.locator(".project-groups-title"), {
+    sourcePosition: { x: 60, y: 14 },
+  });
+  const folder = sidebar.locator(".project-folder-group");
+  await expect(folder).toHaveCount(1);
+  await expect(folder.locator(".folder-heading-toggle")).toHaveText("空组收纳");
+  await expect(folder.locator(".folder-heading-toggle")).toHaveAttribute(
+    "aria-expanded",
+    "true",
+  );
+  await expect(
+    folder.locator(".project-nested-entry .project-link"),
+  ).toHaveText("空组收纳");
+  await expect(source).toHaveCount(0);
+});
+
+test("文件夹内容区接收拖放：成为子项且不创建额外文件夹", async ({ page }) => {
+  const sidebar = await openSidebar(page);
+  await sidebar.getByRole("button", { name: "创建项目文件夹" }).click();
+  await createUngrouped(sidebar, "内容区收纳");
+  const source = ungroupedSection(sidebar).locator(".project-entry", {
+    hasText: "内容区收纳",
+  });
+  await source.dragTo(sidebar.locator(".project-folder-empty"), {
+    sourcePosition: { x: 60, y: 14 },
+  });
+  const folder = sidebar.locator(".project-folder-group");
+  await expect(folder).toHaveCount(1);
+  await expect(folder.locator(".folder-heading-toggle")).toHaveText(
+    "新建文件夹",
+  );
+  await expect(
+    folder.locator(".project-nested-entry .project-link"),
+  ).toHaveText("内容区收纳");
+  await expect(source).toHaveCount(0);
+});
+
+test("拖到分组以外取消收纳：项目保持未分组", async ({ page }) => {
+  const sidebar = await openSidebar(page);
+  await createUngrouped(sidebar, "保留未分组");
+  const source = ungroupedSection(sidebar).locator(".project-entry", {
+    hasText: "保留未分组",
+  });
+  await source.dragTo(sidebar.locator(".primary-nav"), {
+    sourcePosition: { x: 60, y: 14 },
+  });
+  await expect(source).toBeVisible();
+  await expect(sidebar.locator(".project-folder-group")).toHaveCount(0);
+  await expect(sidebar.locator(".is-drag-target")).toHaveCount(0);
+});
+
+test("外部文本和文件投放不改变项目收纳", async ({ page }) => {
+  const sidebar = await openSidebar(page);
+  await sidebar.getByRole("button", { name: "创建项目文件夹" }).click();
+  await createUngrouped(sidebar, "保持原项目");
+  const dataTransfer = await page.evaluateHandle(() => {
+    const data = new DataTransfer();
+    data.setData("text/plain", "保持原项目");
+    data.items.add(new File(["fixture"], "note.txt", { type: "text/plain" }));
+    return data;
+  });
+  for (const target of [
+    sidebar.locator(".project-groups-header"),
+    sidebar.locator(".project-folder-empty"),
+  ]) {
+    await target.dispatchEvent("dragover", { dataTransfer });
+    await target.dispatchEvent("drop", { dataTransfer });
+  }
+  await expect(sidebar.locator(".project-folder-group")).toHaveCount(1);
+  await expect(
+    sidebar.locator(".project-nested-entry .project-entry"),
+  ).toHaveCount(0);
+  await expect(ungroupedSection(sidebar).locator(".project-entry")).toHaveCount(
+    1,
+  );
+  await expect(sidebar.locator(".is-drag-target")).toHaveCount(0);
+  await dataTransfer.dispose();
+});
+
 test("创建未分组项目：出现新行并可改名", async ({ page }) => {
   const sidebar = await openSidebar(page);
   await sidebar
@@ -143,15 +229,33 @@ test("拖未分组项目到「项目」区空白处：自动创建以项目命�
   await sidebar
     .getByRole("button", { name: "创建项目文件夹", exact: true })
     .click();
+  await sidebar
+    .getByRole("button", { name: "创建项目文件夹", exact: true })
+    .click();
   await createUngrouped(sidebar, "协同设计");
   const source = ungroupedSection(sidebar).locator(".project-entry", {
     hasText: "协同设计",
   });
   const target = groupedSection(sidebar);
   const box = (await target.boundingBox())!;
+  const secondFolder = (await target
+    .locator(".project-folder-group")
+    .nth(1)
+    .boundingBox())!;
+  // The gap between folders belongs to the section; an empty folder's content
+  // is now a folder target, so it must not stand in for section whitespace.
+  const targetPosition = { x: 40, y: secondFolder.y - box.y - 2 };
+  expect(
+    await page.evaluate(
+      ({ x, y }) =>
+        document.elementFromPoint(x, y)?.closest(".project-folder-group") ===
+        null,
+      { x: box.x + targetPosition.x, y: box.y + targetPosition.y },
+    ),
+  ).toBe(true);
   await source.dragTo(target, {
     sourcePosition: { x: 60, y: 14 },
-    targetPosition: { x: 40, y: Math.max(10, box.height - 8) },
+    targetPosition,
   });
   const folder = groupedSection(sidebar).locator(".folder-heading-toggle", {
     hasText: "协同设计",
