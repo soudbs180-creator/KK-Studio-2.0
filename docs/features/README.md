@@ -13,7 +13,7 @@
 | PROTOTYPE | 只有 UI、本地 fixture 或固定演示素材，无真实后端；界面必须显式标注 Prototype |
 | PLANNED | 只有计划/设计，无实现或无 UI |
 
-当前共 **35** 个功能：REAL（真实可用）2、PARTIAL（部分可用）27、PROTOTYPE（仅演示/UI）4、PLANNED（仅计划）2。
+当前共 **37** 个功能：REAL（真实可用）2、PARTIAL（部分可用）27、PROTOTYPE（仅演示/UI）4、PLANNED（仅计划）4。
 
 ## 如何新增一个功能（任何 AI 照此执行）
 
@@ -28,6 +28,7 @@
 | --- | --- | --- | --- | --- |
 | FEAT-001 | 创作画布（节点/连线/编辑） | REAL（真实可用） | [卡片](feat-001-canvas-workbench.md) | T2, UI-004, TASK-UI-006, TASK-CANVAS-KAWORKAI-001, TASK-UI-011 |
 | FEAT-036 | 画布图片对比 | PARTIAL（部分可用） | [卡片](feat-036-image-compare.md) | TASK-COMPARE-001, TASK-COMPARE-002, UI-004 |
+| FEAT-038 | 画布千张画面性能 | PLANNED（仅计划） | [卡片](feat-038-canvas-scale.md) | TASK-PERF-CANVAS-1000-001 |
 
 ## 创作生成
 
@@ -45,6 +46,7 @@
 | FEAT-029 | 提示词库 | PARTIAL（部分可用） | [卡片](feat-029-prompt-library.md) | TASK-UI-005, BACKEND-PLATFORM |
 | FEAT-031 | 统一任务态契约 | PARTIAL（部分可用） | [卡片](feat-031-unified-task-state.md) | TASK-TASKSTATE-001, TASK-TASKSTATE-002, BACKEND-MEDIA-001 |
 | FEAT-035 | 图片蒙版编辑 | PARTIAL（部分可用） | [卡片](feat-035-image-mask-editing.md) | TASK-IMAGE-EDIT-001, TASK-IMAGE-EDIT-VERIFY-002 |
+| FEAT-039 | 批量生成防护与资源回收 | PLANNED（仅计划） | [卡片](feat-039-batch-guard.md) | TASK-PROTECT-BATCH-GEN-001 |
 
 ## 智能能力
 

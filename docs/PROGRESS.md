@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-09 P0 立项登记：push 守卫修复 / 画布千张性能 / 批量生成防护
+
+功能台账（`docs/plans/KK-Studio-功能台账与四向推进-2026-10-09.md`）P0 项正式登记。新增功能卡 FEAT-038（画布千张画面性能，PLANNED）与 FEAT-039（批量生成防护与资源回收，PLANNED）；账本新增 TASK-FIX-PUSH-GUARD-SPACES-001（push 守卫空格路径缺陷，09-25 审计 §2.1 确认未修）、TASK-PERF-CANVAS-1000-001（视口裁剪+节点memo+缩略图懒加载）、TASK-PROTECT-BATCH-GEN-001（提交节流+running上限+结果分批入画布），均为 TODO/P0。features:check 37 项 0 违规、validateLedger 117 项 0 issues，README/TASK_LEDGER 视图已重新生成。本包仅登记不实现；实现走后续独立 worktree + PR，验收须带千节点 fixture 与节流行为测试。[登记包验证](changes/2026-10-09-p0-registry/verification.md)。
+
 ## 2026-10-09 失败任务 source105 本地复验
 
 主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。

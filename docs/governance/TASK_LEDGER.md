@@ -120,6 +120,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
 | TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | TODO | TASK-GOV-001 | root |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | TODO | none | root |
+| TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 git push 守卫空格路径缺陷 | TODO | none | root |
+| TASK-PERF-CANVAS-1000-001 | 画布千张画面性能三件套（视口裁剪/节点memo/缩略图懒加载） | TODO | none | root |
+| TASK-PROTECT-BATCH-GEN-001 | 批量生成防护两件套（提交节流/结果分批入画布） | TODO | none | root |
 
 ## TASK-WINDOWS-ENTRY-DIAG-002 — 补齐Windows入口子进程失败诊断
 
@@ -1491,4 +1494,40 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: playwright.config.ts, tests/browser/image-selection-actions.spec.ts, tests/browser/ui-page-rules.spec.ts, tests/browser/local-service-connection.spec.ts, tests/browser/local-service-migration.spec.ts
 - Verification: NOT_VERIFIED — 本次1431反例为运行配置不满足既有验收条件，7处明确port!=1423、3处实际来源白名单不认可。当前固定默认1423已447/447零retry，后续配置一致性未实施；不影响生产默认端口行为。
 - Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md)
+- Updated: 2026-10-09
+
+## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 git push 守卫空格路径缺陷
+
+- Goal: 修复 pre-push 钩子在安装路径含空格时向 node 传递 POSIX 路径失败，导致合法推送被误杀的问题
+- Scope: .git/hooks/pre-push, scripts/governance/push-policy.mjs, 空格/长路径 fixture
+- Acceptance: 路径含空格、多级空格、长路径三类 fixture 下策略可读提示而非 node 崩溃栈; 允许性用例通过（合法 topic 分支可推送），拒绝用例仍返回可读拒绝; 对应单元测试 6 例全绿，npm run verify 通过
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: .git/hooks/pre-push, scripts/governance/push-policy.mjs, tests/unit
+- Verification: NOT_VERIFIED — NOT VERIFIED：钩子仍为 v1 旧版（hook_dir POSIX 路径直接 exec node），空格路径缺陷未修复。
+- Evidence: [docs/audits/KK-Studio-功能状态审计-2026-09-25.md](../../docs/audits/KK-Studio-功能状态审计-2026-09-25.md)
+- Updated: 2026-10-09
+
+## TASK-PERF-CANVAS-1000-001 — 画布千张画面性能三件套（视口裁剪/节点memo/缩略图懒加载）
+
+- Goal: 单画布上千张画面时的渲染/内存/响应性能：视口裁剪 + 节点 memo + 缩略图懒加载与 LRU，提前防范而非事后补救
+- Scope: CanvasNodeLayer 视口裁剪, CanvasNodeItem memo+useCallback, 缩略图降采样/LRU, 对象URL回收
+- Acceptance: 千节点 fixture 下 DOM 数从数千降到几十（仅视口内）; 拖拽/框选/缩放帧率回升，无白屏; 图片节点缩略图 ≤256px 懒加载 + LRU，对象 URL 统一回收; 新增单测/浏览器回归通过，npm run verify 全绿
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/components/canvas/CanvasNodeLayer.tsx, src/components/canvas/CanvasNodeItem.tsx, src/components/canvas/CanvasConnections.tsx, src/features/creation/useCreationStorage.ts, src/features/creation/assetRepository.ts
+- Verification: NOT_VERIFIED — NOT VERIFIED：现状为全量 items.map 渲染，无虚拟化；FEAT-038 登记为 PLANNED。
+- Evidence: [docs/plans/KK-Studio-功能台账与四向推进-2026-10-09.md](../../docs/plans/KK-Studio-功能台账与四向推进-2026-10-09.md)
+- Updated: 2026-10-09
+
+## TASK-PROTECT-BATCH-GEN-001 — 批量生成防护两件套（提交节流/结果分批入画布）
+
+- Goal: 批量生成与无限刷新场景不崩溃：提交侧全局节流 + 单画布 running 上限 + 结果分批入画布，复用既有队列原语
+- Scope: 提交侧节流, running上限, reserveGeneratedResults/addGeneratedResults 分批, 队列容量, 对象URL即时回收, 重试节流
+- Acceptance: 连续触发生成时提交节流生效，满载/冷却时按钮禁用并给原因; 单画布 running 任务数有上限（如 20），超出走队列不发请求; 批量结果分批（≤5）入画布 + rAF 间隔，避免渲染风暴; 新增单测/浏览器回归通过，npm run verify 全绿
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/creation/generationQueue.ts, src/features/creation/providerSubmission.ts, src/components/canvas/CanvasNodeLayer.tsx, src/features/creation/useCreationStorage.ts, src/features/creation/taskRecovery.ts
+- Verification: NOT_VERIFIED — NOT VERIFIED：底层原语已有（冷却/并发门禁/退避/有界池），UI 提交侧防护未实现；FEAT-039 登记为 PLANNED。
+- Evidence: [docs/plans/KK-Studio-功能台账与四向推进-2026-10-09.md](../../docs/plans/KK-Studio-功能台账与四向推进-2026-10-09.md)
 - Updated: 2026-10-09
