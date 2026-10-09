@@ -120,6 +120,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | 未完成 | P1 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | TODO | 未完成 | P1 | TASK-GOV-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | TODO | 未完成 | P1 | none | root | 补充负责人、优先级、分支和下一步验收证据 |
+| TASK-DOCS-STRUCT-001 | AI 协作规则文档结构收敛 | REVIEW | 进行中 | P1 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
+| TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | TODO | 未完成 | P0 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
+| TASK-PROV-BYOK-001 | 用户自有 API 产品化接入 | TODO | 未完成 | P1 | TASK-AI-GATEWAY-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 
 ## TASK-WINDOWS-ENTRY-DIAG-002 — 补齐Windows入口子进程失败诊断
 
@@ -259,7 +262,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 验证真实模型局部重绘质量、映射偏移和物理手机手势/键盘，补齐本地fixture之外的证据
 - Scope: FEAT-035真实Provider质量与移动验收；不将fixture当作真实效果
 - Display status: 未完成
-- Priority: P1 — 开放任务默认待治理排序
+- Priority: P1 — 当前治理或验证阻断项
 - Requirement refs: ledger:TASK-IMAGE-EDIT-VERIFY-002
 - Feature IDs: FEAT-035
 - Owner role: repository-maintainer
@@ -2287,6 +2290,63 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: playwright.config.ts, tests/browser/image-selection-actions.spec.ts, tests/browser/ui-page-rules.spec.ts, tests/browser/local-service-connection.spec.ts, tests/browser/local-service-migration.spec.ts
 - Verification: NOT_VERIFIED — 本次1431反例为运行配置不满足既有验收条件，7处明确port!=1423、3处实际来源白名单不认可。当前固定默认1423已447/447零retry，后续配置一致性未实施；不影响生产默认端口行为。
 - Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md)
+- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Last verified: 2026-10-09
+- Updated: 2026-10-09
+
+## TASK-DOCS-STRUCT-001 — AI 协作规则文档结构收敛
+
+- Goal: 建立单一文档入口与权威优先级，补齐编码与测试规范缺口，消除同一规则多处定义
+- Scope: docs/README.md 索引与裁决、新建 engineering/CODING-STANDARDS.md 与 engineering/TESTING.md、BRANCH-POLICY.md 补四节、UI_RULES.md 加 3.4 Token 化纪律、AGENTS.md 与 AI_RULES.md 边界
+- Display status: 进行中
+- Priority: P1 — 开放任务默认待治理排序
+- Requirement refs: ledger:TASK-DOCS-STRUCT-001
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: docs/README.md 含四类索引表、五层权威优先级与冲突裁决细则、本地记忆四层模型; CODING-STANDARDS.md 门禁表每条对应实际脚本源码，含 domain 依赖禁令与 300 行边界适用范围; TESTING.md 的 Playwright 参数与 playwright.config.ts 逐字段一致，含 KK_TEST_PORT 与 retries 纪律; 未新建 ui-guidelines.md / git-workflow.md / UI-TOKEN-GOVERNANCE.md，避免第二来源; markdown:check 0 violations 且 npm run lint exit 0
+- Branch: `docs/TASK-DOCS-STRUCT-001`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: docs/README.md, docs/engineering/CODING-STANDARDS.md, docs/engineering/TESTING.md, docs/engineering/BRANCH-POLICY.md, docs/UI_RULES.md, AGENTS.md, AI_RULES.md
+- Verification: PASS — markdown:check 104 active files 0 violations；lint exit 0；governance 115 tasks 0 violations；delivery 15 files 0 violations。独立上下文AI review（第二轮）发现2个P1+6个P2+9个P3，全部已核实修复并复跑门禁。P1：依赖方向表与实际矛盾（components→features 97处、domain→runtime 2处门禁却允许）、--ui-*定义位置与UI_RULES 3.1冲突。P2：交付包内CSS改动数4vs3矛盾、ESLint files仅tests/**/*.ts致19个desktop .mjs不受检、开篇门禁承诺失实、docs/decisions未入库却索引、evidence命名规范与现状不符、verification证据链不闭合。
+- Evidence: [docs/changes/2026-10-09-docs-structure/verification.md](../../docs/changes/2026-10-09-docs-structure/verification.md), [docs/changes/2026-10-09-docs-structure/review.md](../../docs/changes/2026-10-09-docs-structure/review.md)
+- Next action: 按验收条件完成实现、验证、独立审查和文档同步
+- Last verified: 2026-10-09
+- Updated: 2026-10-09
+
+## TASK-AI-GATEWAY-001 — 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器
+
+- Goal: 为豆包为首的多平台接入落地凭证存储、通道抽象契约与错误映射，使 kk 客户端具备可插拔的多厂商接入底座
+- Scope: 新增 src/features/ai-gateway/{credentials.ts,errors.ts,channels/{adapter.ts,registry.ts,doubao.ts}}；不动既有 generation-server 运行时；只作为内部通道抽象/凭证底座，不开放用户自有 API 产品化 onboarding、跨端代理或账号复用；docs/features 与台账登记
+- Display status: 未完成
+- Priority: P0 — 开放任务默认待治理排序
+- Requirement refs: ledger:TASK-AI-GATEWAY-001
+- Feature IDs: FEAT-038
+- Owner role: repository-maintainer
+- Acceptance: credential_ref 仅存引用，明文凭证不落库不进日志，提供 DPAPI 与内存回退两种实现; 通道适配器契约覆盖 submit/poll/probe/normalizeError 四方法，normalizeError 必填 retryable; 豆包 Ark 适配器覆盖 Endpoint ID 映射、SSE 流式解析与 Endpoint ID 失效识别; 统一 errorClass 映射表覆盖方案第 3.4 节全部错误码，含内容审核不重试判定; 不把内部适配器/凭证底座宣称为用户自有 API 产品化接入；后者由 TASK-PROV-BYOK-001 独立跟踪并保持 TODO; 新增单测全部通过，且 lint/typecheck/features:check/governance:check 0 violations
+- Branch: `feat/ai-gateway-foundation`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: src/features/ai-gateway/credentials.ts, src/features/ai-gateway/errors.ts, src/features/ai-gateway/channels/adapter.ts, src/features/ai-gateway/channels/registry.ts, src/features/ai-gateway/channels/doubao.ts, tests/unit/aiGatewayCredentials.test.ts, tests/unit/aiGatewayChannels.test.ts, src/features/ai-gateway/scheduler.ts, tests/unit/aiGatewayScheduler.test.ts
+- Verification: NOT_VERIFIED — 调度层与通道契约已落地，新增单测 44 项全通过（含流式重试铁律、内容审核不换号、粘性会话降级、冷却升级与熔断）；仍未接真实上游与 HTTP 端点，故未验证。
+- Evidence: NOT VERIFIED
+- Next action: 按验收条件完成实现、验证、独立审查和文档同步
+- Last verified: 2026-10-09
+- Updated: 2026-10-09
+
+## TASK-PROV-BYOK-001 — 用户自有 API 产品化接入
+
+- Goal: 在 Desktop 最小 AI 链路和 Web VPS 身份/会话契约稳定后，提供可审计、可隔离、跨平台可持续的用户自有 API 接入
+- Scope: 后续产品化 onboarding、凭据引用与安全存储、连接健康、服务端代理边界及 Desktop/Web/Mobile 能力声明；当前只登记任务，不实现
+- Display status: 未完成
+- Priority: P1 — 开放任务默认待治理排序
+- Requirement refs: ledger:TASK-PROV-BYOK-001
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: Desktop 本地账号/API Key 直连与产品化用户自有 API 接入明确区分，未完成前不得宣称跨端能力已支持; 完成 Desktop 最小文本/图片生成链路与 Web VPS 账号/会话控制面后，补齐凭据不落日志/普通存储、租户隔离、撤销与审计契约; 明确 Web VPS 代理、Desktop 本地直连、Mobile 独立目录的边界，并为真实 provider、失败、取消、离线与 unknown 状态提供证据; 实现前完成独立 intent/spec/plan；实现后通过相关平台的 UI/交互双门、最小 AI 链路和安全回归
+- Branch: `unallocated`
+- Worktree: `unallocated`
+- Modules: src/features/creation, src/features/agent, src-tauri, docs
+- Verification: NOT_VERIFIED — 当前按规则保留为高优先级 TODO，尚未实现或验收；不得以 Desktop 本地 API Key 直连证据替代产品化接入。
+- Evidence: [docs/architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md](../../docs/architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md), [docs/features/BACKEND-ROADMAP.md](../../docs/features/BACKEND-ROADMAP.md)
 - Next action: 补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-10-09
 - Updated: 2026-10-09

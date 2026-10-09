@@ -1,6 +1,6 @@
 # 规范基线
 
-更新：2026-10-09。本文是现行规范的入口，不复制各模块的完整规则。冲突路由和领域事实归属见 [`AUTHORITY_MAP.md`](AUTHORITY_MAP.md)。
+更新：2026-10-09。本文是现行规范的入口，不复制各模块的完整规则。冲突路由和领域事实归属见 [`AUTHORITY_MAP.md`](AUTHORITY_MAP.md)。项目级目标和平台交付门禁见 [`PROJECT_GOALS.md`](PROJECT_GOALS.md) 与 [`ADR-011`](../architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md)。
 
 ## 规则解释顺序
 
@@ -28,6 +28,8 @@
 - 可见控件必须有真实行为或禁用原因；异步路径覆盖 loading、success、error、cancel、offline、focus、Escape 与过期响应边界。
 - 生产能力声明必须能回到当前源码、构建入口、运行模式、route/import 链和同状态运行证据。静态对比、旧截图和构建通过不单独证明 REAL。
 - FEAT-020 的共享记忆路径是 `~/.kk-memory/memory.json`（Windows 为 `%USERPROFILE%\\.kk-memory\\memory.json`）。豆包、WorkBuddy 原生客户端在有适配器和真实联调前不得标为共享消费者。
+- 平台交付顺序为 Desktop → Web → Mobile。每个平台必须先通过 UI/交互门禁和最小 AI 链路（连接健康、一次文本生成、一次图片生成、结果持久化/重载），再扩展功能；Web 必须证明与 Desktop 的任务/结果语义一致，Mobile 保持独立顶层项目。
+- Web 账号、会话、积分、会员、用量和权限控制属于 VPS 控制平面；VPS 发布本身不证明云端项目/素材同步，必须另有存储和恢复证据。
 
 ## 可执行检查与记忆同步门禁
 

@@ -50,5 +50,8 @@
 - `TASK-PROV-006` — Desktop image 提交连接门禁与 health 统一
 - `TASK-VERIFY-CONCURRENCY-002` — 浏览器并发失败原因与隔离复核
 - `TASK-VERIFY-ORIGIN-003` — 浏览器验收端口与服务来源契约一致性
+- `TASK-DOCS-STRUCT-001` — AI 协作规则文档结构收敛
+- `TASK-AI-GATEWAY-001` — 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器
+- `TASK-PROV-BYOK-001` — 用户自有 API 产品化接入
 
 新增问题必须先登记唯一任务 ID，再补充证据和验收；不得只在本页添加第二套状态。
