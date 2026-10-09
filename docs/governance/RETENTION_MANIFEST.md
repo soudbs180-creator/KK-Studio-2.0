@@ -14,7 +14,8 @@ Updated 2026-10-10. This manifest records retention intent; it does not authoriz
 | Loose parent Markdown | `D:/kk-studio/*.md` such as `KK-豆包集成设计方案.md` | Review provenance and references before moving into `KK-Studio-2.0/docs/reference/` or `docs/archive/`; no automatic move. |
 | Excluded from commits | API keys, OAuth tokens, credential stores, complete memory files, node_modules, build caches, `dist/`, `target/`, transient logs | Never add to source or evidence packages. |
 | Package-manager artifact quarantined 2026-10-10 | `D:/kk-studio/.verification/governance/pnpm-lock.yaml.20261010` | Generated ignored lockfile moved out of the primary checkout; SHA-256 `EC2CDDC668DA3E825D96FF51AD25CD79D2365DE327D816BA13955CBAAE6A085C`; restore only if an owner explicitly selects pnpm. |
+| Worktree generated evidence backup 2026-10-10 | `D:/kk-studio/.verification/governance/TASK-VERIFY-CONCURRENCY-002-tmp-4a990be8c98c54bd` | 27 files / 4.05 MB copied with per-file SHA-256 manifest before pruning the generated `.tmp` directory from the clean, inactive worktree; restore only through the matching immutable plan and apply result. |
 
 Large file-level recovery inventories may be kept in `D:/kk-studio/.verification/governance/` rather than committed to the source repository; the committed apply result and immutable plan pointer remain the audit entry points.
 
-Completed-worktree checkout removal is recorded in `worktree-reclamation-plan-*.json`; branch refs and commits remain. No source, evidence, user data, or dirty worktree is removed by this governance change. Retention decisions must preserve rollback and user data.
+Completed-worktree checkout removal is recorded in `worktree-reclamation-plan-*.json`; branch refs and commits remain. No source, user data, or dirty worktree is removed by this governance change; generated evidence is only pruned after a recoverable copy and SHA manifest. Retention decisions must preserve rollback and user data.

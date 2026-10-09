@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-09T15:00:13.997Z",
+  "generatedAt": "2026-10-09T19:00:17.648Z",
   "primaryRepository": "D:/kk-studio/KK-Studio-2.0",
   "destructiveActionsPerformed": false,
   "entries": [
@@ -14,8 +14,8 @@
       "owner": "workspace-maintainer",
       "kindOnDisk": "directory",
       "bytes": 0,
-      "modified": "2026-10-09T13:46:57.935Z",
-      "sha256": "a24934a1e1bab7f462cd20f200e03790bd181cb743de8106b098a5932e74288c",
+      "modified": "2026-10-09T18:59:41.232Z",
+      "sha256": "1557c3e52cdd45ce728cc348b1109ee300964fe5394fe9424fe663dfe3c39e4e",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "NOT_GIT_ROOT"
@@ -46,8 +46,8 @@
       "owner": "evidence-maintainer",
       "kindOnDisk": "directory",
       "bytes": 0,
-      "modified": "2026-10-09T14:39:43.950Z",
-      "sha256": "43c96d7897571a8f4a8add2b1be260909d494438dc559aeb1d8c0010f6cd055e",
+      "modified": "2026-10-09T18:34:58.572Z",
+      "sha256": "e916daa807246f142c0417ab9509c3c31acc5e09cb10aac347ed1245b984eb20",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "NOT_GIT_ROOT"
@@ -78,8 +78,8 @@
       "owner": "task-owner",
       "kindOnDisk": "directory",
       "bytes": 0,
-      "modified": "2026-10-09T13:16:32.572Z",
-      "sha256": "e2b4a5c11980a94ef9b255929fb77d9e4db2f5f1d6d9a5465f6a83b982d8383c",
+      "modified": "2026-10-09T18:52:04.759Z",
+      "sha256": "d350eb132dbeb604661b817ddc401568178955a77646b9e8961e216bec7a31a9",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "WORKTREE_CONTAINER"
@@ -111,7 +111,23 @@
       "kindOnDisk": "directory",
       "bytes": 0,
       "modified": "2026-10-09T10:54:28.162Z",
-      "sha256": "b3054fe0789e24f25428ad20c8389f43d8cfbc804ca0a9427aad82d8bc8331f5",
+      "sha256": "298f610ee60f081b5203e97ded4e1fae302f44507db1406da106efe2f43e8c2e",
+      "shaMode": "top-level-directory-metadata",
+      "sizeMode": "filesystem-entry-metadata",
+      "gitOwnership": "NOT_GIT_ROOT"
+    },
+    {
+      "path": "D:/kk-studio/kk-inspector-mcp",
+      "relativePath": "kk-inspector-mcp",
+      "kind": "REVIEW_REQUIRED",
+      "action": "REVIEW_REQUIRED",
+      "deletable": false,
+      "sensitivity": "REVIEW_REQUIRED",
+      "owner": "governance-maintainer",
+      "kindOnDisk": "directory",
+      "bytes": 0,
+      "modified": "2026-10-09T18:13:35.373Z",
+      "sha256": "455a25447ba9070b495363faf3c6a48e96c5578e4d8de630ee4373fc5058aad1",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "NOT_GIT_ROOT"
@@ -126,11 +142,27 @@
       "owner": "repository-maintainer",
       "kindOnDisk": "directory",
       "bytes": 0,
-      "modified": "2026-10-09T14:52:15.940Z",
-      "sha256": "26a6def4dd434cdbb29cdaf87c469258f6bda5436381a146e52974d82a46b057",
+      "modified": "2026-10-09T18:54:20.280Z",
+      "sha256": "4d3ef4b4067196aadeb8876ed9bea8d5b7c46c680551d267c4baa115b06e84f5",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "PRIMARY_REPOSITORY"
+    },
+    {
+      "path": "D:/kk-studio/merge-inspect",
+      "relativePath": "merge-inspect",
+      "kind": "REVIEW_REQUIRED",
+      "action": "REVIEW_REQUIRED",
+      "deletable": false,
+      "sensitivity": "REVIEW_REQUIRED",
+      "owner": "governance-maintainer",
+      "kindOnDisk": "directory",
+      "bytes": 0,
+      "modified": "2026-10-09T18:33:37.351Z",
+      "sha256": "10d72af8f499d17ac26361b189cb4a4edf038f0ac85b8a0369e38fef0da3a0be",
+      "shaMode": "top-level-directory-metadata",
+      "sizeMode": "filesystem-entry-metadata",
+      "gitOwnership": "NOT_GIT_ROOT"
     },
     {
       "path": "D:/kk-studio/output",
@@ -142,8 +174,8 @@
       "owner": "evidence-maintainer",
       "kindOnDisk": "directory",
       "bytes": 0,
-      "modified": "2026-10-09T04:00:24.851Z",
-      "sha256": "24d911d89bc6f1d15f725bca2ce72468aeb40a8cf7725e5ad390b825843ec783",
+      "modified": "2026-10-09T17:36:25.621Z",
+      "sha256": "328cc21a7a5217fcc582f7fab19fdc87d07ae1f5d210c843a2b5d0c3bf5f31b6",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "NOT_GIT_ROOT"
@@ -173,9 +205,9 @@
       "sensitivity": "REVIEW_REQUIRED",
       "owner": "governance-maintainer",
       "kindOnDisk": "file",
-      "bytes": 3084,
-      "modified": "2026-10-09T08:36:14.698Z",
-      "sha256": "38301caea75e0a99be12f21989420f9765af48696033408169ddca963d005eb7",
+      "bytes": 3033,
+      "modified": "2026-10-09T18:10:51.617Z",
+      "sha256": "7ec23d2fa9536b491b1693b9943ddc35ca301213d5862083b5b5db1783f97e13",
       "shaMode": "exact-or-null-over-50MiB",
       "sizeMode": "exact-or-null-over-50MiB",
       "gitOwnership": "NOT_GIT_ROOT"
@@ -200,7 +232,7 @@
   "gitWorktrees": [
     {
       "path": "D:/kk-studio/KK-Studio-2.0",
-      "head": "33950d803019585932e6e7a2c53ae8226725a00b",
+      "head": "697cdb3cdcb09b57c81409f51f300bfedcc16979",
       "branch": "refs/heads/docs/TASK-DOCS-STRUCT-001"
     },
     {
@@ -249,9 +281,14 @@
       "branch": "refs/heads/feat/TASK-AGENT-007-codebuddy-cli"
     },
     {
-      "path": "D:/kk-studio/.worktrees/TASK-AI-GATEWAY-001",
-      "head": "75ec33f00628b5ef999d6a64cc787c29d2cc3d15",
-      "branch": "refs/heads/feat/TASK-AI-GATEWAY-001"
+      "path": "D:/kk-studio/.worktrees/TASK-AI-GATEWAY-001-doubao-p1",
+      "head": "cfbb9d1fe3cd0a6e3e7bca918c61daca85e3d471",
+      "branch": "refs/heads/feat/TASK-AI-GATEWAY-001-doubao-p1"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-GOV-INTEGRITY",
+      "head": "9c9e5fa4a43ab660f0a1342cc06024ebf0d40f41",
+      "branch": "refs/heads/fix/TASK-GOV-INTEGRITY-audit-remediation"
     },
     {
       "path": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
@@ -325,7 +362,7 @@
     },
     {
       "path": "D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002",
-      "head": "8090475958f1a0bdd1b4b36ada7f2aba1e4e6264",
+      "head": "3ff4ed49161177109fd0bf42e7a0f19e40019d1c",
       "branch": "refs/heads/codex/TASK-VERIFY-CONCURRENCY-002"
     },
     {
@@ -334,9 +371,19 @@
       "branch": "refs/heads/codex/TASK-WINDOWS-ENTRY-RECOVERY-003"
     },
     {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/agent-capacity-classification",
+      "head": "8826ece7e83f5a50700b718c8a44cf513578d713",
+      "branch": "refs/heads/fix/TASK-AGENT-009-capacity-classification"
+    },
+    {
       "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/kaworkai-capability-map",
       "head": "13d5a693d828ab69710fbac35e34f9673c62eeea",
       "branch": "refs/heads/codex/kaworkai-capability-map"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/kk-debug-mcp",
+      "head": "2da627e7dbae302de31f07ef00697dd8372c8dda",
+      "branch": "refs/heads/codex/feat-kk-debug-mcp"
     },
     {
       "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
@@ -379,9 +426,29 @@
       "branch": "refs/heads/fix/TASK-LOCAL-ASSET-002-expose-metadata"
     },
     {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-LOCAL-SERVICE-001-local-hardening",
+      "head": "8826ece7e83f5a50700b718c8a44cf513578d713",
+      "branch": "refs/heads/fix/TASK-LOCAL-SERVICE-001-local-hardening"
+    },
+    {
       "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MINIMAX-001-reverse-audit",
       "head": "c0f930ce61082fecddcb772f0bae2d5d160ff2a3",
       "branch": "refs/heads/codex/TASK-MINIMAX-001-reverse-audit"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MINIMAX-UI-ALIGN-20261010",
+      "head": "fd2234a0a026b491aff7e89bddfa6b47e77ec899",
+      "branch": "refs/heads/task/minimax-ui-align-20261010"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-P2-UI-BUTTON-ASSETS",
+      "head": "38cf940ac58f862058c02044351a5e98cd5d7eb2",
+      "branch": "refs/heads/fix/TASK-P2-UI-BUTTON-ASSETS"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-P2-UI-CONTROLS",
+      "head": "38cf940ac58f862058c02044351a5e98cd5d7eb2",
+      "branch": "refs/heads/fix/TASK-P2-UI-CONTROLS"
     },
     {
       "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-005",
