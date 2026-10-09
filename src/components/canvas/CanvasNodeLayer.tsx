@@ -196,6 +196,13 @@ export default function CanvasNodeLayer({
       addNode,
       onConnect,
       onConnectionNotice,
+      visibleWorldLeft: Math.max(
+        0,
+        (16 - controls.transform.x) / controls.transform.scale,
+      ),
+      visibleWorldRight:
+        (controls.viewport.width - 16 - controls.transform.x) /
+        controls.transform.scale,
     });
   }
 

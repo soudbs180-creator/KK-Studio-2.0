@@ -5,6 +5,7 @@ import {
   type CanvasCollectionItem,
   type CanvasReference,
 } from "../../domain/canvasItems.ts";
+import { cardLayout } from "../../domain/canvasGraph.ts";
 import { availableCanvasReferenceSlots } from "../../domain/canvasReferenceLimits.ts";
 import type { ModelSelection } from "../../domain/modelSelection";
 import type { useCanvasNodeActions } from "./useCanvasNodeActions";
@@ -24,6 +25,8 @@ interface AddCanvasReferencesOptions {
     kind?: "reference" | "result",
   ) => void;
   onConnectionNotice: (message: string) => void;
+  visibleWorldLeft?: number;
+  visibleWorldRight?: number;
 }
 
 export function addCanvasReferences({
@@ -36,6 +39,8 @@ export function addCanvasReferences({
   addNode,
   onConnect,
   onConnectionNotice,
+  visibleWorldLeft = 0,
+  visibleWorldRight = Number.POSITIVE_INFINITY,
 }: AddCanvasReferencesOptions): void {
   const limit = canvasImageReferenceLimit(
     source,
@@ -47,7 +52,18 @@ export function addCanvasReferences({
     existingReferences,
     limit,
   );
-  const startX = parent.x - 520;
+  const referenceWidth = cardLayout({
+    ...source,
+    referenceOnly: true,
+  }).width;
+  const maxStartX = Math.max(
+    visibleWorldLeft,
+    visibleWorldRight - referenceWidth,
+  );
+  const startX = Math.min(
+    maxStartX,
+    Math.max(visibleWorldLeft, parent.x - 520),
+  );
   const occupied = new Set(
     existingReferences.map((reference) => reference.slot),
   );
@@ -90,7 +106,10 @@ export function addCanvasReferences({
       referenceOnly: true,
       select: false,
       position: {
-        x: startX - (added % 2) * 24,
+        x: Math.min(
+          maxStartX,
+          Math.max(visibleWorldLeft, startX + (added % 2) * 24),
+        ),
         y: parent.y + Math.floor(added / 2) * 430,
       },
     });
