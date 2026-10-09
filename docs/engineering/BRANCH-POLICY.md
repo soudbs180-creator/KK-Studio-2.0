@@ -27,6 +27,72 @@
 
 已推送或共享的任务分支不 rebase、不 amend 已发布提交；更新用新提交。普通 PR 前将最新 origin/main merge 入任务分支；堆叠 PR 在上游未合入时核对其最新 head，若前移则将上游分支 merge 入下游，逐项解决冲突，不使用无差别 ours/theirs。无共同祖先时停止自动合并，使用已记录的迁移方案，不能重做首次 tree 替换。
 
+## 提交信息规范
+
+所有提交与 PR 标题使用中文Conventional Commits 前缀，作用域用真实模块名：
+
+```
+<type>(<scope>): <祈使摘要>
+```
+
+| type | 用途 |
+| --- | --- |
+| `feat` | 新功能 |
+| `fix` | 缺陷修复 |
+| `docs` | 文档、注释、规则 |
+| `refactor` | 不改变外部行为的重构 |
+| `test` | 测试新增或修正 |
+| `perf` | 性能 |
+| `chore` | 构建、依赖、脚本 |
+
+`scope` 用模块或领域名（如 `canvas`、`agent`、`creation`、`governance`、`ui`），不使用 `misc`、`stuff`、`update`。摘要用祈使句、不加句号、不写「修改了」「修复了」这类无信息前缀。
+
+一个提交只做一件事。格式类改动（`format:`）与功能改动不混在同一提交。涉及多模块的提交在 PR 描述中拆分说明，不用 `misc` 掩盖范围。
+
+示例：
+
+```
+feat(canvas): 统一图片编辑蒙版与连续重绘
+fix(agent): 修复随包插件加载失败
+docs(governance): 收敛 AI 协作文档结构
+test(browser): 补充侧栏窄屏关闭优先级回归
+```
+
+## worktree 落点与生命周期
+
+- 新任务 worktree 统一落`D:\kk-studio\.worktrees\TASK-ID-slug`（容器级），避免散落到 `C:\Users\Administrator\.codex\worktrees\` 或仓库内部。落点规范是本机实例约定，不是跨设备契约。
+- 历史遗留 worktree 分布在容器级、仓库内、codex 目录三处。清理是独立任务，需先核对分支是否已合并、worktree 是否 dirty，再逐个处理，不批量删除。
+- 创建 worktree 后必须把主仓 `node_modules` 以目录联接（junction）挂到新 worktree 下，否则 `eslint` 不是命令、`typescript` 模块解析失败。junction 可能在重新创建 worktree 后丢失，需重新建立。
+- 同一仓库登记多个 worktree 合法。`git worktree list` 是发现当前实例的唯一准确来源。
+- 所有 git 命令在仓库根 `D:\kk-studio\KK-Studio-2.0` 执行。`D:\kk-studio` 不是 git 仓库，在容器根执行 git 命令会报 `not a git repository`。
+
+## 自动合并
+
+- 目标：分支门禁全绿后无需人工再执行合并动作。
+- 当前状态：**仓库内尚无自动合并脚本**。`scripts/governance/` 下只有 `delivery.mjs`、`import-boundaries.mjs`、`ledger.mjs`、`markdown-links.mjs`、`push-policy.mjs`。本文档此前的相关表述已按实际落地情况修正，不得声称自动合并已生效。
+- 固定运行端口（1421 / 1423）的串行验证要求，使「全量verify 后直接合并」无法在并行任务下无条件成立，这是自动合并未落地的主要技术原因。
+- 未来实现时必须满足：默认 dry-run，`--apply` 才执行；依次执行治理、交付、lint、typecheck、test 门禁，任一失败不写入 ref；合并前核对目标分支基线是否前移；本地 squash 合并，不代替 GitHub 侧 PR 与 ruleset。
+- 不因自动合并而降低 [PR 与审核](#pr-与审核) 的四条合并条件。用户产品验收与独立 AI review 不能被脚本代替。
+
+## 回滚触发条件与执行
+
+出现以下任一情况，不在原分支上继续修，而是执行回滚：
+
+| 触发条件 | 回滚动作 |
+| --- | --- |
+| 合并后发现 P0/P1 缺陷且修复风险高于撤回 | `git revert` 合并提交，或将发布指针退回上一 tag |
+| 数据结构迁移导致既有数据不可读 | revert 迁移代码，按 `DATA-STORAGE.md` 的备份恢复 |
+| 依赖大版本升级引发不可控回归 | revert 升级提交，回到上一可用 lockfile |
+| 门禁在某环境持续失败且短期无法定位 | 撤回该次合并，登记账本任务再排查 |
+
+回滚要求：
+
+1. 回滚前确认目标 tag/提交的实际存在，`git cat-file -t <sha>` 核对，不用记忆中的 SHA。
+2. 已发布的 `v*` tag 不可更新或删除（见唯一主线表）。回滚通过新提交或新版本实现，不改历史 tag。
+3. 回滚后必须重跑 `npm run verify` 并记录失败原因，不允许「先回滚再说」。
+4. 回滚本身也要走 PR 与交付包，在 `review.md` 写明触发条件与恢复验证。
+5. 至少保留上一可用产物与必要备份；不得为「只留最新」删除恢复能力。
+
 ## PR 与审核
 
 所有代码、文档、配置和治理规则改变通过 PR。默认 squash merge，任务原提交与审查保留在 PR。不能直接 push main，也不能使用 `--force`、`--force-with-lease`、`--mirror`、强制 refspec 或关闭 hook 来绕开规则。
@@ -58,6 +124,6 @@ PR 必须包含验收、风险/回滚、base/head SHA、影响平台及未完成
 - `npm run governance:check` 校验文档入口、账本和架构边界；`npm run markdown:check` 校验现行 Markdown 的相对文件链接；`npm run delivery:check -- --base <SHA>` 校验 PR 变更包；CI 跑完整 verify/Rust/desktop build。结构检查不能保证文档事实正确，也不能证明 AI 实际阅读。
 - `config/github-rulesets/` 是可审阅的服务器配置，不是自动生效目录。分支 all-refs safety 禁 force/deletion，main/release 要求 PR/current checks，v* 禁更新/删除。无 bypass actors；管理员仍可修改设置，AI 不得利用此能力绕过审核。
 - 真正远端强制需托管平台支持并成功写入、回读 active rules。用户已确认将此仓库公开；2026-09-23 回读三套 ruleset 为 active，`main` 的有效规则包含 PR、必需检查、禁止删除与非快进。管理员仍可修改配置，后续须定期回读；不能把本地 hook 当服务端保护。若将来改回不支持规则的套餐或可见性，应将 EXT-GIT 重新标为未验证或阻断。
-- 本次尚未配置自动合并、自动生产发布或付费 AI review 服务。功能不可用要明确记录，后续接入有预算的独立 reviewer 身份与受限凭据。
+- 本次尚未配置自动合并、自动生产发布或付费 AI review 服务。自动合并的落地条件见上文「自动合并」章节。功能不可用要明确记录，后续接入有预算的独立 reviewer 身份与受限凭据。
 
 参考：[GitHub 分支保护](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches)、[Rulesets API](https://docs.github.com/en/rest/repos/rules)、[PR reviews](https://docs.github.com/en/pull-requests/reference/pull-request-reviews)。

@@ -1,6 +1,8 @@
 # AI 开发总规则
 
-本文件适用于所有开发本项目的 AI。必须先读 [AGENTS.md](AGENTS.md)，再读本文件、[流程](docs/engineering/SDLC.md)、[分支规则](docs/engineering/BRANCH-POLICY.md)、[评审规则](docs/engineering/REVIEW.md)、[当前状态](docs/governance/PROJECT_STATE.md)和相关实现。规则与代码一起版本管理；不依赖聊天记忆或特定模型。兼容入口只引用这些文件，不复制另一套政策。
+本文件适用于所有开发本项目的 AI。必须先读 [AGENTS.md](AGENTS.md)，再读本文件、[流程](docs/engineering/SDLC.md)、[编码规范](docs/engineering/CODING-STANDARDS.md)、[测试规范](docs/engineering/TESTING.md)、[分支规则](docs/engineering/BRANCH-POLICY.md)、[评审规则](docs/engineering/REVIEW.md)、[当前状态](docs/governance/PROJECT_STATE.md)和相关实现。文档索引与冲突裁决见 [docs/README.md](docs/README.md)。规则与代码一起版本管理；不依赖聊天记忆或特定模型。兼容入口只引用这些文件，不复制另一套政策。
+
+本文件只承载「协作契约」：用户与 AI 分工、事实纪律、审核与交付。技术边界与硬约束在 `AGENTS.md`，具体编码与测试规则在专项文档，三者不重复承载同类条目。
 
 ## 用户与 AI 的分工
 

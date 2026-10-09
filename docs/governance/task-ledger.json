@@ -4037,5 +4037,40 @@
     "verification": "本次1431反例为运行配置不满足既有验收条件，7处明确port!=1423、3处实际来源白名单不认可。当前固定默认1423已447/447零retry，后续配置一致性未实施；不影响生产默认端口行为。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-09"
+  },
+  {
+    "id": "TASK-DOCS-STRUCT-001",
+    "title": "AI 协作规则文档结构收敛",
+    "goal": "建立单一文档入口与权威优先级，补齐编码与测试规范缺口，消除同一规则多处定义",
+    "scope": "docs/README.md 索引与裁决、新建 engineering/CODING-STANDARDS.md 与 engineering/TESTING.md、BRANCH-POLICY.md 补四节、UI_RULES.md 加 3.4 Token 化纪律、AGENTS.md 与 AI_RULES.md 边界",
+    "acceptance": [
+      "docs/README.md 含四类索引表、五层权威优先级与冲突裁决细则、本地记忆四层模型",
+      "CODING-STANDARDS.md 门禁表每条对应实际脚本源码，含 domain 依赖禁令与 300 行边界适用范围",
+      "TESTING.md 的 Playwright 参数与 playwright.config.ts 逐字段一致，含 KK_TEST_PORT 与 retries 纪律",
+      "未新建 ui-guidelines.md / git-workflow.md / UI-TOKEN-GOVERNANCE.md，避免第二来源",
+      "markdown:check 0 violations 且 npm run lint exit 0"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "docs/TASK-DOCS-STRUCT-001",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "affectedModules": [
+      "docs/README.md",
+      "docs/engineering/CODING-STANDARDS.md",
+      "docs/engineering/TESTING.md",
+      "docs/engineering/BRANCH-POLICY.md",
+      "docs/UI_RULES.md",
+      "AGENTS.md",
+      "AI_RULES.md"
+    ],
+    "status": "REVIEW",
+    "priority": "P1",
+    "evidence": [
+      "docs/changes/2026-10-09-docs-structure/verification.md",
+      "docs/changes/2026-10-09-docs-structure/review.md"
+    ],
+    "verification": "markdown:check 104 active files 0 violations；npm run lint exit 0；delivery:check 0 violations。规则条目逐条从check-ui-standards.mjs、import-boundaries.mjs、playwright.config.ts、eslint.config.mjs、package.json 源码核对，非凭记忆。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-09"
   }
 ]
