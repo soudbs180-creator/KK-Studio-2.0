@@ -15,7 +15,9 @@
 | 测试分层规模 | `ls tests/*` | unit 105 / browser 76 / desktop 19 / deploy 2 / local-service 2 / development 1；另有 helpers(2) / support(1) / fixtures(3项) / evals(1) |
 | Playwright 配置 | `playwright.config.ts` | `testDir ./tests/browser`、`KK_TEST_PORT ?? "1423"`、`channel msedge`、1920×1080、`timeout 30000`、`retries 1`、`reuseExistingServer false`、json → `test-results/browser-results.json` |
 | ESLint 范围与规则 | `eslint.config.mjs` | `src tests scripts *.config.{ts,mjs}`、`--max-warnings 0`、`no-unused-vars`（`^_` 豁免）、`no-debugger`；ignore 含 `docs/`、`src-tauri/`、`test-results/`、`.worktrees/` |
+| TS 规则实测 | `npx eslint` 探针 | `any` 报 `@typescript-eslint/no-explicit-any`（exit 1）；`// @ts-ignore` 报 `ban-ts-comment`（exit 1）；`as unknown as` 与 `import type` **不报**（`no-unnecessary-type-assertion` / `consistent-type-imports` 未启用）；`catch {}` 报 `no-empty`（exit 1） |
 | ESLint 实际 `files` | `eslint.config.mjs` | `src/**/*.{ts,tsx}`、`tests/**/*.ts`、`scripts/**/*.mjs`、`*.config.{ts,mjs}`。**`tests/` 下 `.mjs`/`.ps1` 与任何目录的 `.tsx` 不被覆盖**（实测见下） |
+| 令牌门禁边界 | `src/styles/__probe.css` 定义新 token | `ui:check` 仍 0 违规 → 门禁**不校验定义位置**，只校验 `var()` 引用是否已定义 |
 | UI 标准门禁 | `scripts/check-ui-standards.mjs` 全文 111 行 | 扫描 `src/**` 的 `.css`/`.tsx`（实测 214 文件）；`main.tsx` 必须含 `./styles/tokens.css`；未定义令牌；新增颜色字面量（例外 `global.css`/`ui-tokens.css`/`tokens.css`）；新增 Lucide 直连；`^src/components/.+\.tsx$` 且 >300 行；Iconsax 仅 `UiIcon.tsx` |
 | 架构边界 | `scripts/governance/import-boundaries.mjs` 全文 | `src/domain` 禁 components/features/integrations/styles/react/react-dom/@tauri-apps/Node 内置；**禁令列表不含 `runtime`**；server-only 为 `generation-server/**` 与 local-service 五个文件 |
 | 实际依赖边 | `grep -rn` 统计 | `components → features` **178 处 / 101 文件**、`components → runtime` **7 处**、`domain → runtime` 2 处（`modelProvider.ts`、`settings.ts`）。`components ⇄ features` 为双向。**依赖方向表已按此实测数据重写** |

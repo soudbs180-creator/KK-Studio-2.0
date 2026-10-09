@@ -105,7 +105,9 @@ src/features/local-service/store.ts
 
 ## 命名规范
 
-以「约定（评审执行，无门禁）」为主，**两处例外受 `check-ui-standards.mjs` 强制**：图标映射与 CSS 令牌位置（见下方「标识符」末两条）。ESLint 不检查文件名与多数命名约定；`import-boundaries.mjs` 会解析 import 路径但不管命名。
+以「约定（评审执行，无门禁）」为主，**一处例外受 `check-ui-standards.mjs` 强制**：图标映射（见下方「标识符」最后一条）。
+
+关于 CSS 令牌需分清：门禁只校验 `var(--x)` 引用的令牌**是否已定义**（报 `未定义的 CSS 令牌`），**不校验定义写在哪个文件**——把 `--kk-*` 定义写到 `tokens.css` 之外不会被拦。因此「定义位置」属约定，「引用未定义」属门禁。ESLint 不检查文件名与多数命名约定；`import-boundaries.mjs` 会解析 import 路径但不管命名。
 
 ### 文件
 
@@ -127,7 +129,7 @@ src/features/local-service/store.ts
 - React 组件、类型、接口：`PascalCase`。
 - 函数、变量、模块内常量：`camelCase`。
 - 真正全局不可变的常量：`UPPER_SNAKE_CASE`（如 `KK_STUDIO_ROOT`）。局部常量用 `camelCase`，不滥用全大写。
-- CSS 令牌：`--kk-*` 为语义源，`--ui-*` 为兼容别名。`--kk-*` 定义只写在 `src/styles/tokens.css`；`--ui-*` 兼容别名定义在 `src/styles/ui-tokens.css`（实测 127 条）与 `src/styles/responsive-content.css`（媒体查询内 4 条覆盖）。职责划分见 [`../UI_RULES.md`](../UI_RULES.md) 3.1。**受门禁约束**：使用未定义令牌会被 `check-ui-standards.mjs` 拦截（`未定义的 CSS 令牌`）。
+- CSS 令牌：`--kk-*` 为语义源，`--ui-*` 为兼容别名。`--kk-*` 定义只写在 `src/styles/tokens.css`；`--ui-*` 兼容别名定义在 `src/styles/ui-tokens.css`（实测 127 条）与 `src/styles/responsive-content.css`（媒体查询内 4 条覆盖）。职责划分见 [`../UI_RULES.md`](../UI_RULES.md) 3.1。**定义位置属约定；引用未定义属门禁**——使用未定义令牌会报 `未定义的 CSS 令牌`，但把定义写到 `tokens.css` 之外不会被拦。
 - 图标：通过 `src/components/UiIcon.tsx` 映射使用。禁止直接 `import` 新增 `lucide-react` 符号；`iconsax-react` 只允许出现在 `UiIcon.tsx` 内。**受门禁约束**：新增 Lucide 导入会报 `新增 Lucide 导入`，Iconsax 绕过报 `Iconsax 必须通过 UiIcon 映射使用`。
 
 ### 导入别名
@@ -179,12 +181,13 @@ src/features/local-service/store.ts
 
 ## TypeScript
 
-约定（评审执行，无门禁）。`tsc --noEmit` 只检查类型正确性，不禁止 `any`、不检查 `import type`、不管类型文件位置。
+部分条目**有门禁**（来自 `tseslint.configs.recommended`，在 ESLint 覆盖的 `src/**`、`tests/**/*.ts` 范围内生效），其余为约定。
 
-- `strict` 下不允许 `any` 逃逸业务边界；外部输入用类型守卫或 schema 校验后再使用。
-- 类型定义跟随使用者就近放置，不建全局 `types.ts` 垃圾桶。只有两个以上模块共享时才提升到 `domain`。
-- 不为绕过类型错误使用 `as` 双重断言或 `@ts-ignore`。真实修法是补类型或修数据流。
-- 导入类型用 `import type`，避免运行时循环依赖。
+- `strict` 下不允许 `any` 逃逸业务边界；外部输入用类型守卫或 schema 校验后再使用。**有门禁**：`@typescript-eslint/no-explicit-any`，报 `Unexpected any. Specify a different type`。
+- 类型定义跟随使用者就近放置，不建全局 `types.ts` 垃圾桶。只有两个以上模块共享时才提升到 `domain`。**约定**（无门禁）。
+- 不为绕过类型错误使用 `@ts-ignore`。**有门禁**：`@typescript-eslint/ban-ts-comment`，报 `Use "@ts-expect-error" instead of "@ts-ignore"`。
+- 不使用 `as` 双重断言绕过类型错误。真实修法是补类型或修数据流。**约定**（`no-unnecessary-type-assertion` 未启用，实测 `as unknown as` 可通过）。
+- 导入类型用 `import type`，避免运行时循环依赖。**约定**（`consistent-type-imports` 未启用）。
 
 ## 文档与代码同步
 

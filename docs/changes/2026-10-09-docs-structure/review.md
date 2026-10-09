@@ -26,8 +26,8 @@
 ### P2：需知悉但不阻塞
 
 1. **`PROJECT_STATE.md` 与 `AI_HANDOFF.md` 仍有 36 个同名二级章节重复**。本次未处理（需单独授权）。已在 `docs/README.md` 的「治理文档」小节显式说明「以 `PROJECT_STATE.md` 为当前事实，`AI_HANDOFF.md` 仅作交接线索」，避免下次会话又踩同一坑。
-2. **`CODING-STANDARDS.md` 中 10 个超限文件未被门禁覆盖**。已在文档中明确标为「已知技术债，靠评审约束」，并写明不得加入白名单绕过。
-3. **部分条目为约定而非门禁**。600 行新文件上限、重复 3 处即提取 token、`catch {}` 视为违规等条目在文中已标注「约定（评审执行，无门禁）」，不谎称有强制检查。
+2. **`CODING-STADARDS.md` 中 32 个超限文件未被门禁覆盖**。已在文档中给出总数、前十表格与其余 22 个逐一列出，明确标为「已知技术债，靠评审约束」，并写明不得加入白名单绕过。
+3. **部分条目为约定而非门禁**。600 行新文件上限、重复 3 处即提取 token、`as` 双重断言、`import type`、CSS 令牌定义位置等条目标注为「约定」；`catch {}`（`no-empty`）、`any`（`no-explicit-any`）、`@ts-ignore`（`ban-ts-comment`）、图标映射、300 行组件边界等条目标注为「有门禁」并给出实测报错原文。
 4. **`docs/README.md` 记录的 worktree 落点 `D:\kk-studio\.worktrees\TASK-ID-slug` 属本机约定**，与 `BRANCH-POLICY.md` 的表述一致，均声明「不是跨设备运行契约」。
 
 ## 3. 第一轮自检发现并修正的问题
@@ -97,7 +97,22 @@ P1-2 token 位置、P2-2 ESLint 覆盖说明（复核者实测 `.mjs` 探针 exi
 
 复核者声明其创建的 3 个探针文件（`src/__probe_p23.ts`、`tests/desktop/__probe_p22.mjs`、`src/components/__ProbeIcon.tsx`）已全部删除，`ui:check` 恢复 214 文件 0 违规。我创建的探针亦已删除并复验。
 
-## 6. 环境事件（非本次 diff 造成，需用户确认）
+## 6. 第三轮独立复核（数字与标注逐条比对）
+
+第三位复核者只验证数字与门禁标注是否与实际一致，不做风格评论。结论：**PASS_WITH_COMMENTS**。
+
+### 确认已修好（17 项逐条核对一致）
+
+依赖边数字 178/101 与 7 处runtime（文件名逐个核对全对）、CSS 改动数 5 文件全部为 3 且列全文件名、图标报错原文逐字一致、令牌报错原文一致、`catch {}`/文件名/`import type`/`as` 双重断言/600 行上限/300 行边界的标注全部正确、超限32 个总数与前十表格逐个精确、「其余 22 个」无遗漏无多余、`useCanvasControls.ts` 320 行 `.ts` 确认、`responsive-content.css` 恰好 4 处且全在媒体查询内、README 架构表 6 数据行表述一致、无`src/`+`scripts/` 改动。
+
+### 复核新发现并已修复（3 项）
+
+1. **【P1】我上一轮修复引入的事实错误**：为让命名规范节的两条例外成立，我把整个 TypeScript 节归入「无门禁」，并写「`tsc` 不禁止 `any`」。复核者实测 `any` 会被 `@typescript-eslint/no-explicit-any` 拦截；我自行复验同样得到 `error Unexpected any. Specify a different type`，exit 1。已改为逐条标注：`any`（`no-explicit-any`）与 `@ts-ignore`（`ban-ts-comment`）**有门禁**，`as` 双重断言（`no-unnecessary-type-assertion` 未启用）与 `import type`（`consistent-type-imports` 未启用）**无门禁**。
+2. **【P2】节标题把「CSS 令牌位置」列为受门禁例外，实测位置无门禁**。复核者建 `src/styles/__tmp_probe.css` 定义新token 后 `ui:check` 仍 0 违规——门禁只校验 `var()` 引用是否已定义（反向探针确认报 `未定义的 CSS 令牌`），不校验定义写在哪个文件。已把节标题例外收敛为「图标映射」一项，并在正文写清「定义位置属约定；引用未定义属门禁」。
+3. **【P3】`review.md` 自身的统计表与矛盾转述**。第二轮复核的 P3 计数写成 5（实际 1），合计行14 与正文「16 个 P3」自相矛盾；第2 节仍写「`catch {}` 视为违规…已标注约定」，与后文已修正的「**有门禁。**」冲突。已重算为四轮 5 P1 / 9 P2 / 15 P3，并改写该条为按门禁规则名分类的完整表述；另把「10 个超限文件」同步为 32 个。
+
+## 7. 环境事件（非本次 diff 造成，需用户确认）
+
 
 独立 reviewer 在审查期间发现：会话开始时工作区的 3 个 `src/styles/*.css` 未提交改动已消失，`git reflog` 显示 `reset: moving to HEAD`（mixed reset，HEAD@{0}，17:41提交之后）。
 
@@ -106,22 +121,23 @@ P1-2 token 位置、P2-2 ESLint 覆盖说明（复核者实测 `.mjs` 探针 exi
 - 本次 diff 本身不含 `src/`，`git diff --name-only` 无 `src/` 匹配，「未越权」结论不受影响。
 - **建议用户确认是否需要重建**。本次未尝试重建：ADR 描述的是重写级工作量（`canvas-navigation.css` 整个文件重写 + `workspace.css` 20 个 hex 逐个回灌 + `CanvasNodeLayer.tsx` 布局改造），属需单独授权的代码变更。
 
-## 7. 无法验证项
+## 8. 无法验证项
 
 - `docs/changes/` 不在 `markdown-links.mjs` 的 `activeDirectories` 内，5 个交付包文件的链接不受门禁约束。已按同规则独立校验，0 missing，但证据来自独立补验而非门禁。已在 `verification.md` §6 如实标注。
 - `npm run verify` 未全量运行，理由已记录。
 - `config/ui-legacy-baseline.json` 的门禁效果为静态核对，未穷举验证每条 baseline 条目是否仍必要。
 
-## 8. 结论
+## 9. 结论
 
-三轮审查共发现并修复 **4 个 P1、9 个 P2、16 个 P3**：
+四轮审查共发现并修复 **5 个 P1、9 个 P2、15 个 P3**：
 
 | 轮次 | P1 | P2 | P3 |
 | --- | --- | --- | --- |
 | 第一轮自检 | 1 | 1 | — |
 | 独立 review | 2 | 6 | 9 |
-| 第二轮复核 | 1 | 2 | 5 |
-| 合计 | 4 | 9 | 14 |
+| 第二轮复核 | 1 | 2 | 1 |
+| 第三轮复核 | 1 | 0 | 2 |
+| 合计 | 5 | 9 | 15 |
 
 最严重的三类问题都已修掉：依赖方向表与实际代码矛盾、token 定义位置与 UI_RULES 冲突、以及我自己在修复时引入并标注为「实测」的错数字（97/2 → 178/7）。
 
