@@ -5,7 +5,7 @@
 - 日期：2026-10-10
 - Intent / Spec / ADR：本目录 `intent.md`、`spec.md`；无新增 ADR
 - Owner / branch / worktree：root / `codex/TASK-VERIFY-CONCURRENCY-002` / `D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002`
-- Base / HEAD SHA 与远端目标：base/source `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`；文档提交后的最终 head 记录在 `verification.md`/`review.md`；远端目标为普通 PR 后回读 main，未执行。
+- Base / reviewed HEAD SHA 与远端目标：base/source `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`；实质证据/文档提交 `6600c40d29e239f914471722e8267bbce5e7143d`，随后仅同步进度文档的 `ff195ed358296b47c903b23dc90fb2dd68c5ffd4` 已在 verification/review 中绑定；远端目标为普通 PR 后回读 main，未执行。
 - Git dirty/index 状态、并行任务与文件归属：代码基线干净；证据先写 `.tmp` 再复制到本目录；只读审计 agent 未修改文件。
 
 ## 开工证据
@@ -24,7 +24,7 @@
 | 1 | worktree/dependencies | 安装锁定依赖并构建一次 production dist | clean source | npm ci/build exit 0 |
 | 2 | Playwright 运行器 | 固定 1423、同 dist、retries=0，执行 workers 1/2/4/8/12 | 步骤 1 | 每档 447 用例报告、exit code |
 | 3 | evidence 收据 | 保存 JSON、console、receipt、进程树资源与哈希 | 步骤 2 | manifest、资源峰值、端口前后为空 |
-| 4 | docs/ledger | 写 intent/spec/plan/verification/review，更新任务为 PARTIAL | 步骤 3 | 精确 final head、独立 review、无 DONE 越界 |
+| 4 | docs/ledger | 写 intent/spec/plan/verification/review，更新任务为 PARTIAL | 步骤 3 | 精确 tested source 与 reviewed docs head、独立 review、无 DONE 越界 |
 
 ## 并行与冲突
 

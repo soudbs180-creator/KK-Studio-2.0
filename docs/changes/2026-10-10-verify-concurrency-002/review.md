@@ -4,7 +4,7 @@
 - 时间与时区：2026-10-10，最终文档提交后
 - Reviewer/context/工具或模型（已知时）：独立只读审计上下文；PowerShell、Git、Node JSON 解析
 - 独立于实现上下文：是；reviewer 未参与矩阵运行或文档编写，仅读取最终 diff、规则、任务账本和压缩证据。
-- Base SHA / head SHA / 规则版本：base `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`；最终 head 在提交后补写；规则为仓库当前 `AGENTS.md` / `AI_RULES.md`。
+- Base SHA / reviewed head / 规则版本：base `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`；实质证据与文档提交为 `6600c40d29e239f914471722e8267bbce5e7143d`，其后 `ff195ed358296b47c903b23dc90fb2dd68c5ffd4` 仅修改 `docs/PROGRESS.md`，当前分支 head 为该 docs-only successor；规则为仓库当前 `AGENTS.md` / `AI_RULES.md`。
 - PR / branch / worktree：无 PR；`codex/TASK-VERIFY-CONCURRENCY-002`；`D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002`
 - Intent / Spec / Plan / Verification：本目录四份文档。
 
@@ -22,6 +22,7 @@
 | IRV-CONC-001 | P2 | 否 | 是（对 DONE/merge 声明） | 历史 source105 9 flaky 与当前五档证据 | 当前矩阵未复现历史首轮失败；资源压力只能支持假设，不能证明 Hosted 根因已解决 | root / 后续 Hosted 与 main 回读 | OPEN，保持 PARTIAL |
 | IRV-CONC-002 | P2 | 否 | 是（对普通 PR/main 关闭） | verification 外部能力段 | 当前没有 Hosted/PR/合并后 main 收据 | root / 外部回执可用后复验 | OPEN，NOT VERIFIED |
 | IRV-CONC-003 | P3 | 是 | 否 | evidence manifest、各档 receipt | 证据固定 source、port、retries、hash，资源采样边界清楚 | root | CLOSED，本地证据复核通过 |
+| IRV-CONC-006 | P2 | 是（经本次边界勘误） | 否 | 各档 `receipt.json.gz` 的 `resourceBefore/resourceAfter` 与 `resources.jsonl.gz` | receipt 字段原先容易被误读为 runner subtree；现已明确为全机 node/msedge census，runner subtree 峰值只取 `resources.jsonl.gz`，并保留原始值 | root | CLOSED，边界说明已补齐；若改动采样脚本需重审 |
 
 没有发现应修改产品或测试断言的 P0/P1 finding；降低并发不会被记录为修复。
 
@@ -39,10 +40,10 @@
 
 ## 结论
 
-- PASS WITH FOLLOW-UPS（本地诊断证据）；任务不满足 DONE。
+- PASS WITH FOLLOW-UPS（本地诊断证据，审查范围为 `6600c40d29e239f914471722e8267bbce5e7143d` 及其 docs-only successor `ff195ed358296b47c903b23dc90fb2dd68c5ffd4`）；任务不满足 DONE。
 - 未关闭 blocker：历史 Hosted 根因 UNKNOWN；Hosted/PR/普通合并/main 回读缺失。
 - 非阻断后续任务与理由：可在远端回执可用后用同一 source/head 重跑并更新 ledger；若新 main 或 Hosted 失败，再按实际失败做最小修复。
-- 新 head SHA 发生后本 review 对新提交失效；复审记录：最终文档提交后补写精确 head，后续 source/config 变化必须重审。
+- 后续 source/config/evidence/ledger 变化会使本 review 失效并要求重审；`ff195ed358296b47c903b23dc90fb2dd68c5ffd4` 已核对为仅同步 `docs/PROGRESS.md` 的 docs-only successor。
 - 本结论不代替合并、发布或用户最终验收。
 
 ## 追加勘误
