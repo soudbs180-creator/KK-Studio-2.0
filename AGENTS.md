@@ -23,6 +23,7 @@
 - `kk-studio-next` 和旧 archive/backup 已由 TASK-CONSOLIDATE-200 收敛；不要重新建立重复工程或从历史路径启动。当前融合分支和验证状态先读 `docs/governance/PROJECT_STATE.md`。
 - 历史源码、未提交候选、Git 和用户数据的恢复归档位于工程外 `D:/KK-Studio-recovery-20260921`。恢复必须到新目录并校验，不得自动覆盖当前用户数据。工程内 `releases/` 只放最新分享产物，禁止把恢复归档、凭据、开发 node_modules 或编译缓存打入分享包；Agent 生产运行时仅按已审阅 `runtime-manifest.json` 白名单包含其运行依赖。
 - `2.0.0` 是历史融合基线；三端版本以 `config/platform-versions.json` 为源，本轮桌面/Web 源码及 Mobile 规划版本均从 `2.1.1` 开始，正式安装包、Mobile 包和 tag 另行验收。按[版本管理规则](docs/engineering/VERSIONING.md)由任务作者自动选择受影响平台并递增版本，运行 `npm run version:check`；不要让用户逐次指定数字。保留原有存储 key/identifier，不能随目录或包名改动用户数据身份。
+- 平台交付顺序固定为 **Desktop → Web → Mobile**。Desktop 的最小可用链路和稳定性验收完成前，不启动 Web 的同等能力交付；Web 从共享核心蒸馏为轻量版本，只能裁剪平台专属能力，核心生成链、任务/结果语义和基本交互必须与 Desktop 保持一致，并以双端切换同态证据验收；Web 的共享协议和基本链路稳定前，不启动 Mobile 的实现。Mobile 的性能与体验优化排在三端最小链路之后。
 
 ## 技术边界
 
@@ -31,12 +32,14 @@
 - `public/design/figma` 是 Figma 导出资源，`public/fixtures/demo` 是固定本地演示素材，`design/figma-plugin` 是可编辑插件源。
 - 新功能优先按 `src/features/<feature>` 拆分；组件超过 300 行按职责拆分。完整的编码约束（命名、文件规模边界、模块依赖方向、错误处理、门禁映射）见 [`docs/engineering/CODING-STANDARDS.md`](docs/engineering/CODING-STANDARDS.md)。
 - `src/domain` 是纯领域层，不得依赖 React、Tauri、`components`、`features`、`integrations`、`styles` 或 Node 内置模块，由 `scripts/governance/import-boundaries.mjs` 强制。
+- Desktop 与 Web 共用根 `src/` 的领域、功能、Provider、任务和 UI 逻辑；`src-tauri/` 只承载 Desktop 原生壳、IPC、凭据库和本地文件能力。未来 Mobile 必须使用独立顶层 `mobile/` 工程，不得把 Mobile 页面、平台 runtime 或原生依赖放入 `src/` 或 `src-tauri/`；跨端共享必须经过明确抽出的、与平台无关且可版本化的契约或核心包。
 
 ## 数据与安全
 
 - 桌面数据根目录为 `%APPDATA%\\kk-studio`（跨平台规则见 `docs/architecture/DATA-STORAGE.md`）。模型权重留在用户选择的 ComfyUI 根目录，仓库只放适配器和索引契约。
 - API key、OAuth token 和代理凭据只进系统凭据库（service `com.kkstudio.provider`）或请求内存，禁止进入 localStorage、项目文件、导出包、URL 和日志。
-- 当前 Web 的项目/任务/消息和素材仍在 IndexedDB 本地持久化，localStorage 保存非敏感设置、provider 元数据与恢复副本；Desktop 创作快照及素材使用原生仓库。目标 Web 数据落在用户设备上安装的本机伴随服务，浏览器承担 UI；Desktop 可免登录或选择登录，Web/Mobile 需登录，Mobile 本地持久化。具体现状与目标以 `docs/architecture/DATA-STORAGE.md` 为准。本地持久化不代表云端保存；账号、积分、记忆、云端保存或 Provider 生成未接真实服务时必须明确标为 Prototype 或禁用。
+- 当前 Web 的项目/任务/消息和素材仍在 IndexedDB 本地持久化，localStorage 保存非敏感设置、provider 元数据与恢复副本；Desktop 创作快照及素材使用原生仓库。Web 的目标部署与账号、会话、积分、会员和用量控制面位于 VPS；项目/素材是否云端保存或同步仍由独立数据契约决定，本机伴随服务仍是当前本地持久化路径。Desktop 可免登录或选择登录，Web/Mobile 需登录，Mobile 使用设备本地持久化。本地持久化不代表云端保存；账号、积分、记忆、云端保存或 Provider 生成未接真实服务时必须明确标为 Prototype 或禁用。具体现状与目标以 `docs/architecture/DATA-STORAGE.md` 与相关 ADR 为准。
+- Desktop 当前优先支持用户自带 AI 账号登录或本机 API Key 的本地直接使用。产品化的“用户自有 API 接入”是后续高优先级 TODO；在 Desktop 最小文本/图片链路和 Web VPS 身份/会话契约完成前，不实现新的跨端 onboarding、服务端代理或账号复用功能。
 - 用户记忆的存储契约是本机共享文件（`~/.kk-memory/memory.json`）：完整文件不进同步/localStorage/日志/导出包；开启记忆时，相关片段可随当前请求发送给所选模型用于推理。豆包、WorkBuddy 原生客户端只有完成适配并经真实联调后才可标为已共享。任何 Agent 遵循 `docs/MEMORY-CONTRACT.md` 的读取/写入/隐私规则。
 
 ## 设计与交互
@@ -44,6 +47,7 @@
 - **UI 规范唯一入口是 [`docs/UI_INDEX.md`](docs/UI_INDEX.md)**。任何 UI 改动先读索引，再读该主题的唯一承载文件，不要在多份规范里各取一份。分工：`UI_RULES.md`（零件/交互规则）· `UI_ARCHETYPES.md`（页面类型）· `DESIGN_TOKENS.md`（数值）· `DESIGN-SYSTEM.md`（颜色与基础组件）· `UI_SPEC.md`（运行与验证）。旧 `UI-STANDARDS.md` / `UI-ALIGNMENT.md` 已合并，仅作历史溯源，不再更新。
 - 现行设计以 `docs/UI_INDEX.md` 指定的 Figma 四页 `505:13071/13430/13731/14180` 为最高基线，数值以 `src/styles/tokens.css` 为唯一运行时源；`DESIGN_TOKENS.md` 是索引，`DESIGN-SYSTEM.md` 承载主题和基础组件用法。Ardot 2026-09-22 PDF、旧页面 Frame 与 `tokens.json` 保留历史含义，不能覆盖新版规则；外壳几何必须注册，通用控件采用 24/32/40 高度、16/20/24 图标和不小于 12px 的文字。
 - 每个可见控件必须有真实行为，或显示禁用原因；异步操作必须覆盖 loading、success、error、cancel 和离线状态。
+- UI/交互与功能链路是每个平台的最高优先级双门。平台最小链路必须先通过“连接健康检查 → 一次文本生成 → 一次图片生成 → 结果/原件回写 → 保存或重载恢复”，并在同一版本提供 UI 状态证据；静态 UI、fixture、mock 或单一平台证据不能替代真实 API 回执。性能优化与 Mobile 体验优化只能在对应平台最小链路通过后进行。
 - 视觉验收必须有相同状态的浏览器截图/DOM 证据；构建通过不等于 Figma 一致。
 
 ## 文档与验证

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "planId": "b510466b-263b-4a31-b026-d5c04d017e96",
+  "removed": [
+    "D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002/vendor/canvas-plugins/markdown/node_modules",
+    "D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002/vendor/canvas-plugins/sdk/node_modules",
+    "D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002/vendor/canvas-plugins/sticky-note/dist",
+    "D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002/vendor/canvas-plugins/sticky-note/node_modules",
+    "D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002/vendor/canvas-plugins/svg/dist",
+    "D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002/vendor/canvas-plugins/svg/node_modules"
+  ],
+  "failed": [],
+  "removedWorktrees": [],
+  "appliedAt": "2026-10-09T18:24:14.621Z"
+}

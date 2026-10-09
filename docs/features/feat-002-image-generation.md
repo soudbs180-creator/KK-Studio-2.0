@@ -10,6 +10,8 @@
 - 图片节点“生成”、开始页与对话的图片提交、任务状态/取消/重试。
 - 自带供应商 Key（BYOK），OpenAI 兼容图片接口（`/images/generations`、`/images/edits`）。
 
+这里的 BYOK 指现有 Desktop/Web 本地或会话内直连 seam；它不等同于 `TASK-PROV-BYOK-001` 所跟踪的跨端产品化 onboarding、服务端代理或账号复用。
+
 ## 代码位置
 
 - 浏览器链路：`src/features/creation/imageGeneration.ts`（HTTP、分块、超时、错误分级）、`providerSubmission.ts`（navigator.locks 租约/容量/健康门禁）、`imageTaskCommand.ts`

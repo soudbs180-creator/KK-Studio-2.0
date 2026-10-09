@@ -3,6 +3,7 @@ import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { validateLedger, renderLedger } from "./governance/ledger.mjs";
 import { checkImportBoundaries } from "./governance/import-boundaries.mjs";
+import { checkMemoryContractSync } from "./governance/check-policy-sync.mjs";
 
 const issues = [];
 const root = process.cwd();
@@ -19,6 +20,25 @@ try {
     `Cannot resolve governance baseline ${governanceBase}. Fetch the required base commit and retry; do not change existing tests to resolve this error.`,
   );
   process.exit(1);
+}
+try {
+  const changedFromBase = execFileSync(
+    "git",
+    [
+      "diff",
+      "--name-only",
+      "--diff-filter=ACDMRT",
+      "-z",
+      `${governanceBaseSha}...HEAD`,
+      "--",
+    ],
+    { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
+  )
+    .split("\0")
+    .filter(Boolean);
+  issues.push(...checkMemoryContractSync(changedFromBase));
+} catch {
+  issues.push(`Cannot inspect governance diff against ${governanceBase}`);
 }
 
 function baselineContent(file) {

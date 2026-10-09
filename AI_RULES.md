@@ -24,7 +24,7 @@
 
 ## 架构和实现质量
 
-先读相关实现再设计；复用现有组件/服务/契约，不新增第二套状态源、队列或工程。新功能提供端到端验收，明确 Desktop/Web/Mobile 分工；共享领域层不得依赖 UI、原生宿主或系统密钥库。
+先读相关实现再设计；复用现有组件/服务/契约，不新增第二套状态源、队列或工程。新功能提供端到端验收，明确 Desktop/Web/Mobile 分工；共享领域层不得依赖 UI、原生宿主或系统密钥库。跨平台技术约束与交付顺序以 `AGENTS.md`、`docs/governance/PROJECT_GOALS.md` 和 `docs/architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md` 为准，本文件不重复定义产品规则。
 
 每个功能必须在 `docs/features/features.registry.json` 登记并对应一张 `docs/features/feat-*.md` 卡片：新功能先建卡、在账本建任务，再写代码；功能做完按证据把状态从 PROTOTYPE/PLANNED/PARTIAL 推进到 REAL，并运行 `npm run features:write` 刷新看板。REAL 必须有同态运行证据（Web 与 Desktop 分别验证），证据不足只能保持 PARTIAL/PROTOTYPE；非 REAL 功能必须挂开放账本任务（排除 DONE/OBSOLETE）。把本地演示接入真实后端时，按 `docs/features/BACKEND-ROADMAP.md` 的波次推进，逐模态替换 `useLocalGeneration` 演示 seam，不允许演示结果与真实结果混作同一状态。该门禁已并入 `npm run lint`/`verify`，漏登卡片、路径失效、看板过期或状态与任务矛盾都会失败。
 

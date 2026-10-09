@@ -90,6 +90,7 @@ test("同时到达的生图归档只提交一次，后续重放不会重复标�
     blob: new Blob([new Uint8Array([1, 2, 3])], { type: "image/png" }),
     projectId: project.id,
     signal: new AbortController().signal,
+    effectiveModel: "doubao-seedream-4-5-250828",
   };
   const imports = [
     host.importGeneratedImage(input),
@@ -100,6 +101,14 @@ test("同时到达的生图归档只提交一次，后续重放不会重复标�
   await Promise.all(imports);
   assert.equal(commits, 1);
   assert.equal(project.items.filter((item) => item.id === input.id).length, 1);
+  assert.equal(
+    project.items.find((item) => item.id === input.id)?.model,
+    input.effectiveModel,
+  );
+  assert.equal(
+    project.items.find((item) => item.id === input.id)?.result?.model,
+    input.effectiveModel,
+  );
   assert.deepEqual(project.agentGeneratedImageIds, [input.id]);
   await host.importGeneratedImage(input);
   assert.equal(writes, 2);

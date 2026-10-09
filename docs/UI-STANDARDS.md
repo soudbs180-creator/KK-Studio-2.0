@@ -7,7 +7,7 @@
 > **请勿再更新本文**——更新会漏改，因为现行规则只读上面的文件。
 >
 > 原文快照（只读，仅供溯源）：[`archive/ui-history/UI-STANDARDS-2026-09.md`](./archive/ui-history/UI-STANDARDS-2026-09.md)
-> 整合记录与冲突裁决：[`UI_INDEX.md`](./UI_INDEX.md) §1.2 / §2.1
+> 整合记录与冲突裁决：[`UI_INDEX.md`](./UI_INDEX.md) §1 当前唯一承载文件 / §2 冲突裁决
 
 ---
 
@@ -29,7 +29,7 @@
 | §10 指针手势与复用契约 | [`UI_RULES.md`](./UI_RULES.md) §1.6 |
 | §11 侧栏尺寸与响应式契约 | [`UI_RULES.md`](./UI_RULES.md) §1.7 |
 | §12 连接拖出与共享添加菜单 | [`UI_RULES.md`](./UI_RULES.md) §1.5 / §1.6 |
-| 已被取代的旧规则（61px 手机常驻轨道、801–1200 挤压对话、所有控件固定单行、桌面 letterbox 整页缩放） | **已废止**，见 [`UI_INDEX.md`](./UI_INDEX.md) §2.1 |
+| 已被取代的旧规则（61px 手机常驻轨道、801–1200 挤压对话、所有控件固定单行、桌面 letterbox 整页缩放） | **已废止**，见 [`UI_INDEX.md`](./UI_INDEX.md) §2 冲突裁决 |
 
 ---
 

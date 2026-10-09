@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   generatedImageItems,
   generatedImageSource,
+  generatedImageModel,
   canvasGenerationMetadata,
 } from "../../src/features/agent/agentImages.ts";
 import type { AgentChatItem } from "../../src/features/agent/agentTypes.ts";
@@ -75,4 +76,25 @@ test("只导入服务确认完成的内置生图，不把任意文本路径当�
     items.map((item) => item.id),
     ["a"],
   );
+});
+
+test("图片归档使用上游 effectiveModel，缺失时显示明确未知状态", () => {
+  const reported: AgentChatItem = {
+    id: "reported",
+    role: "tool",
+    text: "image",
+    detail: {
+      kind: "image",
+      status: "completed",
+      savedPath: "C:/output.png",
+      effectiveModel: "doubao-seedream-4-5-250828",
+    },
+  };
+  const unknown: AgentChatItem = {
+    ...reported,
+    id: "unknown",
+    detail: { ...reported.detail, effectiveModel: undefined },
+  };
+  assert.equal(generatedImageModel(reported), "doubao-seedream-4-5-250828");
+  assert.equal(generatedImageModel(unknown), "图片模型未报告");
 });

@@ -1,3 +1,21 @@
+<!-- CURRENT_FACTS_BEGIN -->
+## CURRENT_FACTS (machine-readable current snapshot)
+
+- `snapshotDate`: 2026-10-10
+- `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
+- `canonicalRef`: `origin/main`
+- `canonicalHead`: `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`
+- `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the primary checkout
+- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `docs/TASK-DOCS-STRUCT-001` at the current local `HEAD` (resolve with `git rev-parse HEAD`); Canvas viewport, Doubao Ark BYOK, UI hit-target, model capability, desktop bundle and governance evidence commits are present. The checkout is clean.
+- `taskLedger`: 117 records; 68 DONE, 26 PARTIAL, 18 TODO, 4 BLOCKED, 1 REVIEW; 49 open records.
+- `workspaceWorktrees`: 54 registered worktrees, with 25 under the approved root, 26 nested under the primary checkout, 2 external Codex checkouts, and the primary checkout; the current audit pointer is `worktree-reclamation-plan-0a6ec084-93e8-471d-aaeb-098b79b9d767.json`. Fourteen generated dependency/build directories and one additional `.tmp` directory (27 files, 4.05 MB) were reclaimed only after immutable SHA inventory and an external recovery copy. Dirty, active, nested, external, and the duplicate Doubao source worktree remain protected.
+- `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
+- `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
+- `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
+
+<!-- CURRENT_FACTS_END -->
+<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
 # 当前项目状态
 
 ## 2026-10-09 失败任务 source105 本地复验

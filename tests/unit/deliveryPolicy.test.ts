@@ -159,6 +159,21 @@ test("delivery blocks secret/generated payloads and competing locks but permits 
     result.filter((message: string) => message.endsWith(".env.example")).length,
     1,
   );
+  const sourceCredentialModule = "src/features/ai-gateway/credentials.ts";
+  const sourceResult = checkDeliveryFiles(
+    [...changed, sourceCredentialModule],
+    (file: string) =>
+      manifest.includes(file) ||
+      file === sourceCredentialModule ||
+      file === "docs/PROGRESS.md" ||
+      file === "docs/governance/task-ledger.json",
+  );
+  assert.equal(
+    sourceResult.some((message: string) =>
+      message.includes(sourceCredentialModule),
+    ),
+    false,
+  );
 });
 test("deleting a secret/generated file or competing lock is allowed, but deleting required governance files is not", () => {
   const deleted = [

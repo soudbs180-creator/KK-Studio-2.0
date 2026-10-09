@@ -64,16 +64,32 @@ export default function ModelPickerMenu({
   );
   const codex = agent.models.map((model) =>
     entry(
-      { source: "codex", model: model.model || model.id },
+      { source: "codex", model: model.model || model.id, kind: "text" },
       model.displayName || model.model,
       "Codex · 已登录账号",
-      kind === "video" || kind === "audio"
+      kind === "image" || kind === "video" || kind === "audio"
         ? "Codex 当前未接入此生成模式"
         : agent.status !== "connected"
           ? "请先连接 Codex"
           : undefined,
     ),
   );
+  const codexImage =
+    kind === "image"
+      ? [
+          entry(
+            {
+              source: "codex",
+              model: "",
+              kind: "image",
+              displayName: "图片模型未报告",
+            },
+            "图片模型未报告",
+            "Codex 内置能力 · 上游未返回型号",
+            agent.status !== "connected" ? "请先连接 Codex" : undefined,
+          ),
+        ]
+      : [];
   const apis = apiMenuEntries(connections, current, kind, query);
   const defaults =
     scope === "conversation"
@@ -88,11 +104,11 @@ export default function ModelPickerMenu({
   const { page, all } = memory;
   const visible: Entry[] =
     query.trim() || all
-      ? [...defaults, ...codex, ...apis]
+      ? [...defaults, ...codexImage, ...codex, ...apis]
       : page === "root"
         ? [...defaults, ...roots]
         : page === "codex"
-          ? codex
+          ? [...codexImage, ...codex]
           : page === "api"
             ? connections.map((connection) => ({
                 id: connection.id,

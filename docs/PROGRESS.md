@@ -1,5 +1,13 @@
 # 当前进度
 
+## 2026-10-10 多平台模型能力闭环增量（TASK-AI-GATEWAY-001）
+
+在既有网关与 Codex Agent 链路上完成可插拔能力闭环：新增 `chat` operation 和独立文本结果，Ark 官方通道调用 `/chat/completions`；generation-server 增加安全 `/v1/models`，`stream:true` 返回单次 buffered SSE；图片模型选择器优先显示完整已验证模型 ID，Codex 图片事件沿归档、画布结果和 asset provenance 传递 `effectiveModel`，上游缺失时显示“图片模型未报告”。复用现有 credentialRef、Registry/Scheduler、ProviderConnection 和 UI Design System，不引入 headless、第二队列或第二套账号状态源。验证：gateway/Agent/model 定向回归 69 项全绿，Agent 模型选择定向回归 26 项全绿；当前主工作区全量回归为 911 项 903 通过、0 失败、8 跳过，前端冒烟 16/16，连接拖拽 7/7。真实 Ark/Codex 联调需要用户凭据，保持 NOT VERIFIED。
+
+## 2026-10-10 豆包（火山方舟）BYOK 官方通道 P1
+
+在现有 OpenAI 兼容 BYOK 链路上新增「豆包（火山方舟）」预置，选择预置会一次性填入名称与 `https://ark.cn-beijing.volces.com/api/v3`；修正 `doubao-*` 文本模型与 `doubao-seedream-*` 图片模型的能力判定，并保留网关通道置灰和真实上游未验证边界。补充模型预置单测、设置页浏览器冒烟和官方通道交付包。当前回归为 897 项（889 通过、0 失败、8 跳过），相关网关与画布回归通过；真实方舟 Key、Web/Desktop 真实联调和 DPAPI 仍待外部条件。
+
 ## 2026-10-09 AI 协作规则文档结构收敛（TASK-DOCS-STRUCT-001）
 
 文档层变更，未改动 `src/**` 与 `scripts/**`。新增 `docs/engineering/CODING-STANDARDS.md`（门禁映射、依赖方向、文件规模边界、命名、错误处理）与 `docs/engineering/TESTING.md`（测试分层、Playwright 运行契约、覆盖要求、证据保存）；`docs/README.md` 升级为索引含五层权威优先级、冲突裁决细则与本地记忆四层模型；`BRANCH-POLICY.md` 补提交信息规范、worktree 落点、自动合并现状、回滚触发条件四节；`UI_RULES.md` 加 3.4 Token 化纪律；`AGENTS.md` 与 `AI_RULES.md` 明确边界。未新建 `ui-guidelines.md`、`git-workflow.md`、`UI-TOKEN-GOVERNANCE.md`，避免第二来源。
@@ -868,3 +876,9 @@ TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，�
 2026-10-09 TASK-IMAGE-RETRY-004：主线6a的托管37845923441真实FAIL，区域重试验收未绑定新任务而读到3条旧结果。新隔离测试任务继续复现与修正，原失败保留，产品正确性与合并后主线验收仍需复验。
 
 2026-10-09 TASK-IMAGE-RETRY-004本地验收：43fc全verify447零retry、14相关、804root/172Agent和development PASS；独立源码无P0/P1、41相关unit PASS，IRV-001文档矛盾已修正，最终精确head复审/托管/main恢复待回执。主线6a的原FAIL、本机未复现PASS均原样保留；运行产品/版本未改。
+
+## 2026-10-10 KK → Codex 真实联调
+
+- 本地已登录 Codex 账号经 KK 浏览器工作区真实验证：文本调用成功、Codex 内置图片生成成功并回写画布、`canvas_apply_ops` 新增文本节点成功，随后由 Codex 只读读取并确认节点存在。
+- 图片卡片按要求显示 `图片模型未报告` 与 `来源：Codex 内置生图`，没有把 Codex 名称误当成图片模型名。
+- 发现默认模型遗留问题：不显式选模型时沿用 `gpt-6.1-sol`，ChatGPT 账号返回 400；显式选择 `gpt-6-astra` 可用。详见 [kk 模型能力验证](changes/2026-10-10-kk-model-capability/verification.md)。
