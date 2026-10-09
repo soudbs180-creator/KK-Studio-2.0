@@ -2,7 +2,7 @@
 
 - 日期：2026-10-10
 - 当前分支：`docs/TASK-DOCS-STRUCT-001`
-- 当前 HEAD：`2da627e7dbae302de31f07ef00697dd8372c8dda`
+- 验证代码 HEAD：`fb749157c91f06d11bda0f3faf5062805d2b8f9d`
 - 合并提交：`1c244bb34a5f82cd1d4b608fa8cefcf915501bc4`
 - 远端基线：`origin/main`=`8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`
 
@@ -10,7 +10,7 @@
 
 | 命令 | 结果 |
 | --- | --- |
-| `node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` | PASS，908 项：900 PASS、0 FAIL、8 SKIP |
+| `node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` | PASS，911 项：903 PASS、0 FAIL、8 SKIP |
 | `node node_modules/typescript/bin/tsc --noEmit` | PASS |
 | `node node_modules/eslint/bin/eslint.js src tests scripts --max-warnings 0` | PASS |
 | Prettier `--check` | PASS |
@@ -28,6 +28,7 @@
 - `/v1/models` 只输出 `id`、`owned_by`、`capabilities`，disabled/quarantined 通道不会出现在列表中，且不泄露 baseUrl、credentialRef 或 vendor endpoint mapping。
 - API 图片菜单显示完整模型 ID；Codex 图片场景不把文本模型当成图片模型，原生图片事件缺型号时显示“图片模型未报告”。
 - 归档资产 provenance、CanvasCollectionItem 和 DemoResult 均保存有效 `model`。
+- Codex 发送前会把持久化选择器和项目模型名过滤到当前 Agent 返回的模型列表，未知值回退默认模型；模型选择定向回归 26/26。
 
 ## 浏览器证据
 

@@ -36,7 +36,7 @@
 - P1 官方通道定向：`tests/unit/modelProvider.test.ts`(3) 与 `creation.test.ts` doubao 判定(1)，设置页预置浏览器冒烟(1)
 - 连跑 3 轮零抖动（调度器测试注入固定 `random` 与 `now`）
 - `tsc --noEmit` exit 0；`eslint` exit 0
-- 当前回归验证：`node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` 共 908 项，900 通过、0 失败、8 跳过
+- 当前回归验证：`node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` 共 911 项，903 通过、0 失败、8 跳过
 
 ## 当前能力
 
