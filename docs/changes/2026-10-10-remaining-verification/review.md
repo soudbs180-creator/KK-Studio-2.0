@@ -4,7 +4,7 @@
 - 时间与时区：2026-10-10，Asia/Shanghai
 - Reviewer/context/工具或模型：主代理独立于历史候选分支，基于当前 `edda6157e47c644cd073f52a57e3c31a86e40397` 工作树复核；Git diff、静态门禁和完整 verify。
 - 独立于实现上下文：否；这是实现者 self-review，后续仍需独立 review。
-- Base SHA / head SHA：base `edda6157e47c644cd073f52a57e3c31a86e40397`；源码/测试 head 5331c16b7bddf2e7b9cc02e897bc06d8c7ec5204。
+- Base SHA / head SHA：base `edda6157e47c644cd073f52a57e3c31a86e40397`；源码/测试 head `dcb6ff3d`。
 - PR / branch / worktree：本地 branch `codex/TASK-AGENT-001-remaining-verification` / `D:/kk-studio/.worktrees/remaining-verification`
 
 ## 评审范围和方式
@@ -13,7 +13,7 @@
 - 检查了 Codex 来源条件不会改变普通 API 请求，且生产 455 项和 development receipt 均通过。
 - 未覆盖真实 Provider、Tauri release、Hosted CI、Mobile；这些边界已在 verification 中保留。
 
-独立 AI review：`/root/repo_audit` 在源码/测试 head `5331c16b7bddf2e7b9cc02e897bc06d8c7ec5204` 上复核了 App 门禁、Agent 连接调用、样式、浏览器断言、账本和 delivery check；结论为 PASS WITH FOLLOW-UPS，无 P0–P2 blocker。其复核确认普通 API 画布项仍受 `homeModelConfig` 门禁，Codex 项只进入已有 Agent 链路；真实 Provider、Hosted、Tauri 和 Mobile 仍未覆盖。
+独立 AI review：`/root/repo_audit` 在源码/测试 head `5331c16b7bddf2e7b9cc02e897bc06d8c7ec5204` 上复核了 App 门禁、Agent 连接调用、样式、浏览器断言、账本和 delivery check；结论为 PASS WITH FOLLOW-UPS，无 P0–P2 blocker。随后仅删除固定等待并以 `npm run test:ui -- tests/browser/agent.spec.ts` 复验 7/7；该测试性清理没有改变产品逻辑。其复核确认普通 API 画布项仍受 `homeModelConfig` 门禁，Codex 项只进入已有 Agent 链路；真实 Provider、Hosted、Tauri 和 Mobile 仍未覆盖。
 
 ## Findings
 
