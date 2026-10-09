@@ -13,6 +13,8 @@
 - 检查了 Codex 来源条件不会改变普通 API 请求，且生产 455 项和 development receipt 均通过。
 - 未覆盖真实 Provider、Tauri release、Hosted CI、Mobile；这些边界已在 verification 中保留。
 
+独立 AI review：`/root/repo_audit` 在源码/测试 head `5331c16b7bddf2e7b9cc02e897bc06d8c7ec5204` 上复核了 App 门禁、Agent 连接调用、样式、浏览器断言、账本和 delivery check；结论为 PASS WITH FOLLOW-UPS，无 P0–P2 blocker。其复核确认普通 API 画布项仍受 `homeModelConfig` 门禁，Codex 项只进入已有 Agent 链路；真实 Provider、Hosted、Tauri 和 Mobile 仍未覆盖。
+
 ## Findings
 
 | ID | P0–P3 | Pass | merge/release blocker | 文件/证据 | 处理/复验 |
