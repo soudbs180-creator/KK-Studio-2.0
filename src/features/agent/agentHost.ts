@@ -69,6 +69,7 @@ export function createAgentHost(options: AgentHostOptions) {
       sourceNodeId?: string;
       provider?: "Google Gemini";
       model?: string;
+      effectiveModel?: string;
     }): Promise<void> {
       const project = options.getProject();
       if (!project || project.id !== input.projectId || input.signal.aborted)
@@ -84,10 +85,13 @@ export function createAgentHost(options: AgentHostOptions) {
         reader.onerror = () => reject(reader.error);
         reader.readAsDataURL(input.blob);
       });
+      const imageModel =
+        input.effectiveModel?.trim() || input.model?.trim() || "图片模型未报告";
+      const executor = input.provider ?? "Codex 内置生图";
       const asset = await storeGeneratedAsset({
         source,
-        provider: input.provider ?? "Codex 内置生图",
-        model: input.model,
+        provider: executor,
+        model: imageModel,
         sourceJobId: input.id,
         signal: input.signal,
       });
@@ -103,16 +107,18 @@ export function createAgentHost(options: AgentHostOptions) {
       const item: CanvasCollectionItem = {
         id: input.id,
         kind: "image",
-        title: input.provider ? "Google 生成图片" : "Codex 生成图片",
-        description: `${input.provider ?? "Codex 内置生图"} · 已归档`,
+        title: imageModel,
+        description: `${imageModel} · 来源：${executor}`,
+        model: imageModel,
         assetId: asset.assetId,
         preview: asset.preview,
         generationStatus: "ready",
         result: {
           id: input.id,
           kind: "image",
-          title: input.provider ? "Google 生成图片" : "Codex 生成图片",
-          description: `${input.provider ?? "Codex 内置生图"} · 已归档`,
+          title: imageModel,
+          description: `${imageModel} · 来源：${executor}`,
+          model: imageModel,
           src: asset.preview,
           source: "provider",
         },

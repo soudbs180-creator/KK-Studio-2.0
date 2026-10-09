@@ -13,7 +13,10 @@ export function selectedModelLabel(selection?: ModelSelection, fallback = "") {
     catalogForConnection(connection).find(
       (model) => model.id === selection.model,
     );
+  if (selection.kind === "image")
+    return model?.id || selection.effectiveModel || selection.model || "模型";
   return (
+    selection.displayName ||
     modelDisplay(model || { id: selection.model, kind: "unknown" }).family ||
     fallback ||
     "模型"

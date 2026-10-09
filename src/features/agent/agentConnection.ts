@@ -41,6 +41,7 @@ import {
   generatedImageItems,
   generatedImageId,
   generatedImageSource,
+  reportedImageModel,
   canvasGenerationMetadata,
 } from "./agentImages.ts";
 import {
@@ -68,6 +69,7 @@ export interface AgentBridge {
     sourceNodeId?: string;
     provider?: "Google Gemini";
     model?: string;
+    effectiveModel?: string;
   }): Promise<void>;
   getSnapshot(): CanvasAgentSnapshot | null;
   applyOps(
@@ -389,6 +391,9 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         projectId: boundProject,
         signal,
         sourceNodeId: generatedImageSource(history, item, boundProject),
+        ...(reportedImageModel(item)
+          ? { effectiveModel: reportedImageModel(item) }
+          : {}),
       });
     }
   }
