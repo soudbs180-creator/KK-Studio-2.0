@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-10 浏览器并发失败原因与隔离复核
+
+`TASK-VERIFY-CONCURRENCY-002` 在独立 worktree 从 clean `origin/main@8090475` 复验：同一 production dist、固定 preview `1423`、`retries=0` 下 workers 1/2/4/8/12 均为 `447/447`，并保存每档 JSON、console、进程树 RSS/空闲内存和端口收据。历史 source105 的 9 个首轮 flaky 原件继续保留；当前未复现，资源压力仅支持假设，不能称根因修复。任务更新为 `PARTIAL`；Hosted/PR/普通合并/main 回读仍待真实回执。详见 [并发复核](changes/2026-10-10-verify-concurrency-002/verification.md) 与 [独立审查](changes/2026-10-10-verify-concurrency-002/review.md)。
+
 ## 2026-10-09 失败任务 source105 本地复验
 
 主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。
