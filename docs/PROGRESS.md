@@ -2,7 +2,7 @@
 
 ## 2026-10-10 浏览器并发失败原因与隔离复核
 
-`TASK-VERIFY-CONCURRENCY-002` 在独立 worktree 从 clean `origin/main@8090475` 复验：同一 production dist、固定 preview `1423`、`retries=0` 下 workers 1/2/4/8/12 均为 `447/447`，并保存每档 JSON、console、进程树 RSS/空闲内存和端口收据。历史 source105 的 9 个首轮 flaky 原件继续保留；当前未复现，资源压力仅支持假设，不能称根因修复。substantive head `872ba917` 的 PR/push Hosted verify、delivery、deploy-linux 均成功；任务保持 `PARTIAL`，合并后 main 回读按规则在 squash 后执行。详见 [并发复核](changes/2026-10-10-verify-concurrency-002/verification.md) 与 [独立审查](changes/2026-10-10-verify-concurrency-002/review.md)。
+`TASK-VERIFY-CONCURRENCY-002` 已按默认 squash 合并到 `origin/main@2b6c0ba`，合并后 run `37983272823` 的 verify、deploy-linux、upload-artifact 均成功，delivery 按 push 条件跳过；PR head `9ae856ea`、merge SHA、landing tree 已实际回读。IRV-CONC-002 已关闭。历史 source105 的 9 个首轮 flaky 原件继续保留，当前未复现，资源压力仅支持假设，不能称根因修复；IRV-CONC-001 保持有界 P2，任务仍为 `PARTIAL`。详见 [合并后收口验证](changes/2026-10-10-verify-concurrency-002-closeout/verification.md) 与 [收口审查](changes/2026-10-10-verify-concurrency-002-closeout/review.md)。
 
 ## 2026-10-09 失败任务 source105 本地复验
 

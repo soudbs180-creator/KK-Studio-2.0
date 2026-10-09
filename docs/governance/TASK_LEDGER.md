@@ -1474,11 +1474,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败
 - Scope: 健康审计QA-001；当前main重新复现后在独立任务分支收尾
 - Acceptance: 保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
-- Branch: `codex/TASK-VERIFY-CONCURRENCY-002`
+- Branch: `codex/TASK-VERIFY-CONCURRENCY-002-closeout`
 - Worktree: `D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002`
 - Modules: tests/browser, playwright.config.ts
-- Verification: PARTIAL — 当前 clean source 8090475958f1a0bdd1b4b36ada7f2aba1e4e6264、同一 production dist、固定 preview 1423/retries0 下，workers 1/2/4/8/12 均 447/447 PASS；进程树资源峰值随 workers 增长并已留 receipt。历史 source105 的 9 个首轮 flaky 原件保留，当前未复现，资源压力仅支持假设；substantive head 872ba917 的 Hosted PR/push verify、delivery、deploy-linux 均成功。历史根因仍 UNKNOWN；普通 PR 合并后 main 回读待 squash 后执行，不能称根因修复。
-- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-10-verify-concurrency-002/verification.md](../../docs/changes/2026-10-10-verify-concurrency-002/verification.md), [docs/changes/2026-10-10-verify-concurrency-002/review.md](../../docs/changes/2026-10-10-verify-concurrency-002/review.md)
+- Verification: PARTIAL — 当前 clean source 8090475958f1a0bdd1b4b36ada7f2aba1e4e6264、同一 production dist、固定 preview 1423/retries0 下，workers 1/2/4/8/12 均 447/447 PASS；历史 source105 的 9 个首轮 flaky 原件保留，当前未复现，资源压力仅支持假设。PR #46 已以 squash merge 2b6c0ba10e17b873d5a38d85b2d38fb8848149cc 合并，origin/main 与候选/落地 tree 已回读一致；合并后 run 37983272823 的 verify、deploy-linux、upload-artifact 成功，delivery 按 push 条件跳过。IRV-CONC-002 已关闭；历史根因仍 UNKNOWN，不能称根因修复。
+- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-10-verify-concurrency-002/verification.md](../../docs/changes/2026-10-10-verify-concurrency-002/verification.md), [docs/changes/2026-10-10-verify-concurrency-002/review.md](../../docs/changes/2026-10-10-verify-concurrency-002/review.md), [docs/changes/2026-10-10-verify-concurrency-002-closeout/verification.md](../../docs/changes/2026-10-10-verify-concurrency-002-closeout/verification.md), [docs/changes/2026-10-10-verify-concurrency-002-closeout/review.md](../../docs/changes/2026-10-10-verify-concurrency-002-closeout/review.md)
 - Updated: 2026-10-10
 
 ## TASK-VERIFY-ORIGIN-003 — 浏览器验收端口与服务来源契约一致性
