@@ -2,6 +2,10 @@
 
 KK Studio 是一个 Figma-first 的 React/Vite 工作台，桌面发布由 Tauri 承载。浏览器开发模式用于快速验证 UI；桌面数据和凭据只有在 IPC 接线后才成为真实数据源。
 
+> **本文件是「应该怎样做」的规范。** 当前代码「实际是怎样的」由源码实证分析承载：
+> `D:\kk-studio\docs\architecture-ref\KK-Studio-系统架构设计文档.md`（含运行时拓扑、数据流、Tauri 命令清单、存储契约与安全边界）。
+> 两者定位不同、互为补充；**冲突时以本文件为准**（见 `docs/README.md` §权威优先级与冲突裁决）。改动本规范时无需同步那份分析，但若代码事实已变，应更新它。
+
 ```text
 src/App.tsx
   ├─ components/          页面、画布、侧栏、设置和节点 UI

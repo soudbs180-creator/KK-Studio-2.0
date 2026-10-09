@@ -44,7 +44,7 @@ kk-studio/
 
 ## 当前代码中的实际形状
 
-当前 KK Studio 2.1.1 源码的浏览器端保存主题偏好、供应商元数据和创作快照恢复副本；完整创作快照在 Web 使用 IndexedDB，在 Tauri 使用 `projects/creation-v2.json` IPC 命令。历史 `kk-studio-next:*` 存储 key 继续保留以兼容已有数据。浏览器端 API Key 只在当前会话内存中，Windows 桌面端通过 `com.kkstudio.provider` 凭据命令读写系统凭据库：
+当前 KK Studio 2.1.12 源码的浏览器端保存主题偏好、供应商元数据和创作快照恢复副本；完整创作快照在 Web 使用 IndexedDB，在 Tauri 使用 `projects/creation-v2.json` IPC 命令。历史 `kk-studio-next:*` 存储 key 继续保留以兼容已有数据。浏览器端 API Key 只在当前会话内存中，Windows 桌面端通过 `com.kkstudio.provider` 凭据命令读写系统凭据库：
 
 ## Web 本机伴随服务（2026-09-29，当前为 PARTIAL）
 
@@ -89,7 +89,10 @@ Web 控制面未验收前，账号、余额、会员状态和用量显示必须�
 | ---------------------------------- | ------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
 | `kk-studio-next:settings:v1`       | `src/domain/settings.ts`，version=1         | 主题、语言、浮动布局、水印偏好                       | 只允许非敏感偏好                                           |
 | `kk-studio-next:model-provider:v1` | `src/domain/modelProvider.ts`，version=1    | 供应商名称、Base URL、默认模型                       | API Key 只在当前 React state                               |
-| `kk-studio-next:creation:v1`       | `src/features/creation/model.ts`，version=2 | 小型恢复副本；项目、任务、消息、附件草稿不含 API Key | 大附件优先以 IndexedDB 为耐久源，localStorage 仅作恢复副本 |
+| `kk-studio-next:provider-connections:v1` | `src/domain/providerConnections.ts` | 供应商连接元数据（不含凭据）                         | 凭据只存系统凭据库，此处仅引用                              |
+| `kk-studio-next:asset-collections:v1` | `src/domain/assets.ts`                    | 素材集合与筛选偏好                                   | 只允许非敏感偏好                                           |
+| `kk-studio-next:companion:v1`      | `src/features/local-service/protocol.ts`    | 本机伴随服务配对与授权状态                           | 只存配对码引用，不存服务凭据                                |
+| `kk-studio-next:creation:v1`       | `src/features/creation/model.ts`，version=2 | 小型恢复副本；项目、任务、消息、附件草稿不含 API Key | **不在 `BROWSER_STORAGE_KEYS` 白名单内**：属存储通道内部恢复机制，大附件以 IndexedDB 为耐久源 |
 
 ## 创作快照与画布契约（2026-09-16）
 
