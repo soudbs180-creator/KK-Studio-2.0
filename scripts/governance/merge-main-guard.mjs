@@ -88,7 +88,9 @@ export async function pauseAfterMainFailure({ api, evidence, health }) {
       });
       const readback = await api.request(variablePath);
       if (readback?.value !== "true")
-        throw new Error("AUTO_MERGE_PAUSED readback is not true");
+        throw new Error("AUTO_MERGE_PAUSED readback is not true", {
+          cause: error,
+        });
     } catch (createError) {
       pauseError = `${error?.message ?? "update failed"}; ${createError?.message ?? "create failed"}`;
     }
