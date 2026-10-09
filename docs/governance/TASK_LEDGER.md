@@ -120,6 +120,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
 | TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | TODO | TASK-GOV-001 | root |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | TODO | none | root |
+| TASK-DOCS-STRUCT-001 | AI 协作规则文档结构收敛 | REVIEW | none | root |
 
 ## TASK-WINDOWS-ENTRY-DIAG-002 — 补齐Windows入口子进程失败诊断
 
@@ -1491,4 +1492,16 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: playwright.config.ts, tests/browser/image-selection-actions.spec.ts, tests/browser/ui-page-rules.spec.ts, tests/browser/local-service-connection.spec.ts, tests/browser/local-service-migration.spec.ts
 - Verification: NOT_VERIFIED — 本次1431反例为运行配置不满足既有验收条件，7处明确port!=1423、3处实际来源白名单不认可。当前固定默认1423已447/447零retry，后续配置一致性未实施；不影响生产默认端口行为。
 - Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md)
+- Updated: 2026-10-09
+
+## TASK-DOCS-STRUCT-001 — AI 协作规则文档结构收敛
+
+- Goal: 建立单一文档入口与权威优先级，补齐编码与测试规范缺口，消除同一规则多处定义
+- Scope: docs/README.md 索引与裁决、新建 engineering/CODING-STANDARDS.md 与 engineering/TESTING.md、BRANCH-POLICY.md 补四节、UI_RULES.md 加 3.4 Token 化纪律、AGENTS.md 与 AI_RULES.md 边界
+- Acceptance: docs/README.md 含四类索引表、五层权威优先级与冲突裁决细则、本地记忆四层模型; CODING-STANDARDS.md 门禁表每条对应实际脚本源码，含 domain 依赖禁令与 300 行边界适用范围; TESTING.md 的 Playwright 参数与 playwright.config.ts 逐字段一致，含 KK_TEST_PORT 与 retries 纪律; 未新建 ui-guidelines.md / git-workflow.md / UI-TOKEN-GOVERNANCE.md，避免第二来源; markdown:check 0 violations 且 npm run lint exit 0
+- Branch: `docs/TASK-DOCS-STRUCT-001`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: docs/README.md, docs/engineering/CODING-STANDARDS.md, docs/engineering/TESTING.md, docs/engineering/BRANCH-POLICY.md, docs/UI_RULES.md, AGENTS.md, AI_RULES.md
+- Verification: PASS — markdown:check 104 active files 0 violations；lint exit 0；governance 115 tasks 0 violations；delivery 15 files 0 violations。独立上下文AI review（第二轮）发现2个P1+6个P2+9个P3，全部已核实修复并复跑门禁。P1：依赖方向表与实际矛盾（components→features 97处、domain→runtime 2处门禁却允许）、--ui-*定义位置与UI_RULES 3.1冲突。P2：交付包内CSS改动数4vs3矛盾、ESLint files仅tests/**/*.ts致19个desktop .mjs不受检、开篇门禁承诺失实、docs/decisions未入库却索引、evidence命名规范与现状不符、verification证据链不闭合。
+- Evidence: [docs/changes/2026-10-09-docs-structure/verification.md](../../docs/changes/2026-10-09-docs-structure/verification.md), [docs/changes/2026-10-09-docs-structure/review.md](../../docs/changes/2026-10-09-docs-structure/review.md)
 - Updated: 2026-10-09

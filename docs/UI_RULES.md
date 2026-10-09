@@ -46,8 +46,12 @@
 
 ### 3.1 唯一来源
 
-- `src/styles/tokens.css`：`--kk-*` 语义 token 的唯一源。
-- `src/styles/ui-tokens.css`：旧 `--ui-*` 名称的兼容映射，只能引用 `--kk-*`。
+- `src/styles/tokens.css`：`--kk-*` 语义 token 的唯一源（实测 254 条，
+  `--ui-*` 定义为 0）。
+- `src/styles/ui-tokens.css`：旧 `--ui-*` 名称的兼容映射，只能引用 `--kk-*`
+  （实测 127 条定义）。
+- `src/styles/responsive-content.css`：媒体查询内的响应式覆盖，只覆盖
+  `--ui-input-height` / `--ui-button-height` 等少数高度别名，不新增语义。
 - `src/styles/ui-governance.css`：文字、按钮、图标槽、命中区和截断工具类。
 - `src/components/UiIcon.tsx`：工程补充图标的唯一映射；Figma 导出的 SVG
   从 `public/design/figma/` 直接使用。
@@ -69,6 +73,43 @@
 Subtitle `16/24/600`、Title `20/28/700`、Display `26/32/700`。任何可见产品
 文字不得低于 12px。单行超长使用省略号，多行说明最多三行并在详情页或提示中
 提供完整内容。
+
+### 3.4 Token 化纪律
+
+本节只讲「怎么用token」，数值索引见 [DESIGN_TOKENS](DESIGN_TOKENS.md)，颜色与基础组件见 [DESIGN-SYSTEM](DESIGN-SYSTEM.md)。
+
+**禁止事项**（由 `npm run ui:check` 拦截）：
+
+| 禁止 | 报错形式 | 例外 |
+| --- | --- | --- |
+| 组件 CSS 写颜色字面量 | `新增颜色字面量 #xxx` | 仅 `global.css`、`ui-tokens.css`、`tokens.css` |
+| 使用未定义令牌 | `未定义的 CSS 令牌 --xxx` | 无 |
+| 直接 import 新 `lucide-react` 符号 | `新增 Lucide 导入` | 存量白名单 46 个符号（13 个文件），见下|
+| Iconsax 绕过 `UiIcon` | `Iconsax 必须通过 UiIcon 映射使用` | 仅 `UiIcon.tsx` |
+| 组件超300 行 | `超过 300 行组件边界` | 无 |
+
+`scripts/check-ui-standards.mjs` 同时扫描 `src/**` 下全部 `.css` 与 `.tsx`，`src/main.tsx` 必须加载 `./styles/tokens.css`，否则直接报错。
+
+存量豁免台账是 `config/ui-legacy-baseline.json`（19 个文件、28 个颜色键、46 个 Lucide 符号），脚本按「计数超出 baseline 即报错」消费。**该文件同时承载颜色与 Lucide 两类白名单，不得新增条目来给新代码放行。**
+
+**允许的做法**：
+
+1. 需要新数值时，先在 `tokens.css` 注册语义 token，再在组件里 `var()` 消费。不允许「先写死、以后再抽」。
+2. 组件优先消费语义 token（`--kk-color-*`、尺寸轴），其次才用兼容别名 `--ui-*`。新代码不写 `--ui-*`。
+3. 组件 CSS 里只写布局与结构（间距用 4px 网格、flex/grid、对齐），颜色、字号、圆角一律 `var()`。
+4. 同一数值在 3 处以上重复出现即应提取为 token；重复本身就是待提取信号。
+5. 数值语义要能回答「为什么是这个值」。说不出来源的数值不进 `tokens.css`。
+
+**新增 token 的验收要求**：
+
+- 写明语义名称、取值、设计来源（Figma 节点或既有页面实测值）、实际使用者。
+- 说明为什么现有 token 不适用。语义相近的 token 必须复用，不新增近义项。
+- 通过 `npm run ui:check`，并在浏览器或Desktop 实测截图，不能只凭静态检查通过。
+- 同步更新 [DESIGN_TOKENS](DESIGN_TOKENS.md) 的索引表。
+
+**幽灵数值**：不接受 `13.7px`、`7.031px` 这类从Figma 直接抄来的非网格小数。Figma 导出值先归整到最近的封闭轴（间距 4px、控件 24/32/40、图标 16/20/24），归整后才允许进入 token。`ui-tokens.css` 中现存的小数阴影值属存量，新代码不得沿用这种写法。
+
+**命名**：语义 token 用 `--kk-<类别>-<角色>-<变体>`（如 `--kk-radius-panel`）；兼容别名保留旧 `--ui-*` 名不动，只改指向，不重命名。新增时不为了「统一」而批量重命名存量 token。
 
 ## 4. 颜色、层级和反馈
 

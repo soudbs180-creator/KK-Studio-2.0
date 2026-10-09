@@ -1,5 +1,15 @@
 # KK Studio 工作台协作规范
 
+本文件是全部 AI 的**最高规则入口**，定义技术边界、禁止事项与验证要求。本文件与 `AI_RULES.md` 的分工：
+
+| 文件 | 承载内容 | 性质 |
+| --- | --- | --- |
+| `AGENTS.md`（本文件） | 技术边界、数据安全、UI 门禁、Git 与交付约束 | 硬约束清单 |
+| [`AI_RULES.md`](AI_RULES.md) | 用户与 AI 分工、事实纪律、审核与交付流程 | 协作契约 |
+| [`docs/README.md`](docs/README.md) | 全部文档索引、权威优先级与冲突裁决 | 导航与裁决 |
+
+两者不重复承载同类条目。发现同一规则在两处都出现时，以本文件为准并删除另一处。文档索引与冲突裁决规则见 `docs/README.md`。
+
 ## 所有 AI 必须先理解意图
 
 - 先读根目录 `AI_RULES.md` 和 `docs/engineering/PROMPTING.md`。用户不必提供专业提示词，AI 负责将自然语言转换成有范围、约束、验收与失败边界的工程任务；允许中英术语混用，最终回复简洁、通俗、中文。
@@ -19,7 +29,8 @@
 - React 18 + TypeScript strict + Vite；桌面壳为 Tauri 2；Node 24；npm lockfile 是唯一锁文件。
 - `src/components`：页面与组件；`src/domain`：Zod schema、领域模型、demo fixture；`src/integrations`：模型/API/provider 适配器；`src/runtime`：浏览器存储契约和运行时边界；`src-tauri`：桌面命令与文件系统。
 - `public/design/figma` 是 Figma 导出资源，`public/fixtures/demo` 是固定本地演示素材，`design/figma-plugin` 是可编辑插件源。
-- 新功能优先按 `src/features/<feature>` 拆分；组件超过 300 行按职责拆分。
+- 新功能优先按 `src/features/<feature>` 拆分；组件超过 300 行按职责拆分。完整的编码约束（命名、文件规模边界、模块依赖方向、错误处理、门禁映射）见 [`docs/engineering/CODING-STANDARDS.md`](docs/engineering/CODING-STANDARDS.md)。
+- `src/domain` 是纯领域层，不得依赖 React、Tauri、`components`、`features`、`integrations`、`styles` 或 Node 内置模块，由 `scripts/governance/import-boundaries.mjs` 强制。
 
 ## 数据与安全
 
@@ -40,6 +51,7 @@
 - 当前需求按 `docs/templates/` 创建 intent、spec、plan、verification、review，放入对应日期的 `docs/changes/<date>-<task>/`；旧整合记录是历史依据，不是后续任务的默认目录。
 - 功能以 `docs/features/` 为唯一功能入口：每个功能一张 `feat-*.md` 卡片（用户入口、代码位置、测试证据、当前能力、差距与后端化），`features.registry.json` 是机器可读权威，`README.md` 看板由 `npm run features:write` 生成、禁止手改；新增功能先建卡并在账本建任务，再实现。演示功能后端化顺序见 `docs/features/BACKEND-ROADMAP.md`。功能状态（REAL/PARTIAL/PROTOTYPE/PLANNED）描述产品能力真实程度，与任务状态正交，REAL 必须有同态运行证据，非 REAL 必须挂开放任务（排除 DONE/OBSOLETE）。
 - 代码、数据契约或行为改变时同步 `docs/PROGRESS.md`。
+- 改代码前先读 [`docs/engineering/CODING-STANDARDS.md`](docs/engineering/CODING-STANDARDS.md)；加测试前先读 [`docs/engineering/TESTING.md`](docs/engineering/TESTING.md)（测试分层、Playwright 端口契约、覆盖要求、证据保存）。
 - 常用命令：`npm run typecheck`、`npm run test`、`npm run ui:check`、`npm run format:check`、`npm run build`、`npm run client:check`、`npm run features:check`、`npm run governance:check`、`npm run markdown:check`；交付前执行 `npm run verify`（已含功能、账本和现行 Markdown 链接门禁）。
 - 验证不足不得标为 `REAL`，按已有能力标为 `PARTIAL` 或 `PROTOTYPE`；不能把占位 UI、硬编码账号或本地 demo 描述为真实服务。
 
