@@ -175,7 +175,7 @@
   color: var(--settings-muted);
 }
 .settings-system-label span {
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
   opacity: 0.85;
 }
 .settings-system-label + .settings-row .settings-row-control {
@@ -280,8 +280,9 @@
 .settings-feedback button {
   display: grid;
   place-items: center;
-  flex: 0 0 22px;
-  height: 22px;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
   margin-left: auto;
   color: inherit;
 }
@@ -325,7 +326,7 @@
   gap: 6px;
   height: 32px;
   padding: 0 14px;
-  border-radius: 7px;
+  border-radius: var(--ui-radius-control);
   color: var(--settings-muted);
   font-size: var(--kk-font-body);
   line-height: 18px;
@@ -377,8 +378,8 @@
   right: 8px;
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
   transform: translateY(-50%);
   border-radius: var(--ui-radius-control);
   color: var(--settings-muted);
@@ -1495,22 +1496,6 @@
   .settings-toggle span {
     transition: none;
   }
-}
-
-/* Sidebar grouping (设置 / 功能 / 数据与安全 / 系统). */
-.settings-nav-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.settings-nav-group + .settings-nav-group {
-  margin-top: 18px;
-}
-.settings-nav-group-label {
-  padding: 0 12px;
-  font-size: var(--ui-font-caption);
-  line-height: 1.4;
-  color: var(--text-tertiary);
 }
 
 /* Figma 399:27506 uses one continuous 11-item navigation rail. Keep the

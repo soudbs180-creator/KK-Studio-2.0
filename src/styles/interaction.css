@@ -137,7 +137,8 @@
 .reference-slots {
   position: absolute;
   left: 22px;
-  right: 56px;
+  /* Reserve a stable action gutter for Like + expand at every state. */
+  right: 100px;
   top: 15px;
   display: grid;
   gap: 6px;
@@ -221,6 +222,10 @@
 .reference-slot-add:focus-visible {
   color: var(--text-primary);
   border-color: var(--ui-selected);
+}
+.reference-slot-add.is-unavailable {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 .reference-slots-footer {
   display: flex;

@@ -1,4 +1,4 @@
-import { useContext, useLayoutEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand.tsx";
 import {
   CANVAS_KIND_LABELS,
@@ -52,10 +52,6 @@ export default function DemoResultNode({
   );
   const referenceFile = useRef<HTMLInputElement>(null);
   const referenceSlot = useRef<CanvasReference["slot"]>();
-  useLayoutEffect(() => {
-    if (editing?.selected && hasReferenceComposer)
-      editing.onExtraHeightChange(60);
-  }, [hasReferenceComposer, editing?.selected, editing?.onExtraHeightChange]);
   return (
     <>
       <article

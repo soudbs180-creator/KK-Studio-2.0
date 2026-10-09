@@ -401,12 +401,14 @@ button[aria-pressed="true"] {
   width: 36px;
   height: 36px;
   border-radius: var(--ui-radius-control);
-  overflow: hidden;
+  overflow: visible;
 }
 .composer-ref-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  overflow: hidden;
+  border-radius: inherit;
 }
 .composer-ref-thumb button {
   position: absolute;

@@ -256,6 +256,49 @@ test("canvasImageAttachments reads each archived self or incoming asset once wit
   }
 });
 
+test("canvas image attachments retain explicit roles and reject ordinary Mask references", async () => {
+  const project = createProject(input);
+  const source = sourceItem("source", "asset-subject", {
+    referenceSlot: "主体",
+  });
+  const style = sourceItem("style", "asset-style", { referenceSlot: "风格" });
+  const withReference = {
+    ...project,
+    items: [source, style],
+    canvas: {
+      ...project.canvas,
+      edges: [
+        {
+          id: "style-edge",
+          source: style.id,
+          target: source.id,
+          kind: "reference" as const,
+        },
+      ],
+    },
+  };
+  const attachments = await canvasImageAttachments(
+    withReference,
+    source,
+    async (id) => asset(id),
+  );
+  assert.deepEqual(
+    attachments.map((attachment) => attachment.role),
+    ["主体", "风格"],
+  );
+  await assert.rejects(
+    canvasImageAttachments(
+      {
+        ...withReference,
+        items: [source, { ...style, referenceSlot: "Mask" }],
+      },
+      source,
+      async (id) => asset(id),
+    ),
+    /蒙版.*专用编辑/,
+  );
+});
+
 test("画布文本提示词连线不被当作未归档图片附件", async () => {
   const project = createProject(input);
   const source = {

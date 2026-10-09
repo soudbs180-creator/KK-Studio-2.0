@@ -349,19 +349,6 @@
   background: var(--bg-card);
   font-family: inherit;
 }
-.like-node {
-  position: absolute;
-  top: 20px;
-  right: 60px;
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  color: var(--text-secondary);
-}
-.like-node[aria-pressed="true"] {
-  color: #ef6d6d;
-}
 @media (max-width: 600px) {
   .catalog-panel {
     border-radius: var(--ui-radius-panel);

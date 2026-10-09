@@ -1,7 +1,9 @@
 import type {
   CanvasCollectionItem,
   CanvasItemKind,
+  CanvasReferenceSlot,
 } from "../../domain/canvasItems";
+import { CANVAS_REFERENCE_SLOTS } from "../../domain/canvasItems.ts";
 import {
   normalizeGoogleConversation,
   type GoogleConversation,
@@ -63,6 +65,8 @@ export interface CreationAttachment {
   name: string;
   mime: string;
   size: number;
+  /** Semantic canvas role preserved through task preparation and persistence. */
+  role?: CanvasReferenceSlot;
   /** Data URLs are used only for user selected, non-sensitive local assets. */
   dataUrl?: string;
 }
@@ -378,6 +382,9 @@ function isAttachment(value: unknown): value is CreationAttachment {
     typeof item.name === "string" &&
     typeof item.mime === "string" &&
     typeof item.size === "number" &&
+    (!item.role ||
+      (typeof item.role === "string" &&
+        (CANVAS_REFERENCE_SLOTS as readonly string[]).includes(item.role))) &&
     (!item.dataUrl ||
       (typeof item.dataUrl === "string" &&
         (isAssetReference(item.dataUrl) ||
@@ -520,14 +527,11 @@ function normalizeCanvasItem(
       typeof value.updatedAt === "number" ? value.updatedAt : undefined,
     referenceMode: value.referenceMode === true ? true : undefined,
     referenceOnly: value.referenceOnly === true ? true : undefined,
-    referenceSlot:
-      value.referenceSlot === "主体" ||
-      value.referenceSlot === "风格" ||
-      value.referenceSlot === "材质" ||
-      value.referenceSlot === "构图" ||
-      value.referenceSlot === "Mask"
-        ? value.referenceSlot
-        : undefined,
+    referenceSlot: (CANVAS_REFERENCE_SLOTS as readonly string[]).includes(
+      value.referenceSlot as string,
+    )
+      ? (value.referenceSlot as CanvasCollectionItem["referenceSlot"])
+      : undefined,
     generationStatus:
       value.generationStatus === "pending" ||
       value.generationStatus === "ready" ||

@@ -5,7 +5,7 @@ async function networkSettings(page: Page) {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
     .getByRole("navigation", { name: "设置分类" })
-    .getByRole("button", { name: "MCP", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .click();
   await page.getByRole("tab", { name: /伙伴/ }).click();
   return page.getByRole("region", { name: "桌面 Agent 服务" });

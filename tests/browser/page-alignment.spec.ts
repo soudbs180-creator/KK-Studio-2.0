@@ -58,7 +58,7 @@ test("unconnected account and memory controls do not advertise working services"
   await expect(page.locator(".settings-content")).toContainText(
     "npm run proxy",
   );
-  await page.getByRole("button", { name: "MCP", exact: true }).click();
+  await page.getByRole("button", { name: "扩展", exact: true }).click();
   await page.getByRole("tab", { name: /伙伴/ }).click();
   await expect(page.locator(".settings-content")).toContainText(
     "npm run dev:agent",

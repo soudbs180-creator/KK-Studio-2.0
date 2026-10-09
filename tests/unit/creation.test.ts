@@ -291,6 +291,18 @@ test("prompt compiler keeps designer wording and explicit constraints", () => {
   assert.match(compiled, /4 个相互独立的变体/);
 });
 
+test("prompt compiler sends explicit image roles in attachment order without guessing generic roles", () => {
+  const compiled = compileDesignPrompt("保留人物，改为水彩插画", {
+    referenceCount: 3,
+    referenceRoles: ["主体", "风格", undefined],
+    operation: "edit",
+  });
+  assert.match(compiled, /图片 1：主体/);
+  assert.match(compiled, /图片 2：风格/);
+  assert.match(compiled, /图片 3：通用参考/);
+  assert.match(compiled, /风格.*不替换主体/);
+});
+
 test("approval gates cover remote transfer and expensive batches", () => {
   assert.deepEqual(
     requiredApprovalGates({
