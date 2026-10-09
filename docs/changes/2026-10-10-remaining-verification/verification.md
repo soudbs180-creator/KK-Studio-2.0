@@ -21,7 +21,7 @@
 | `npm run ui:check` | 215 文件、0 违规 | PASS | UI 规则 |
 | `npm run format:check` | 所有文件匹配 | PASS | Prettier |
 | `npm run test:ui` | 455 passed | PASS | production build + preview，12 workers |
-| `npm run test:development` | receipt `result: PASS`；四个步骤完成，errors 为空 | PASS | Vite development，工作树内依赖 |
+| `npm run test:development` | receipt `result: PASS`；四个步骤完成，errors 为空 | PASS | Vite development；归档 receipt 为 [`evidence/development-plugins-receipt.json`](evidence/development-plugins-receipt.json)，sourceHead=`dd6cf598ce2bc8a4755aef64c5c3c86147bdb4f4` |
 | `npm run verify` | 退出码 0 | PASS | 当前工作树完整本地门禁 |
 
 ## 验收覆盖
@@ -36,7 +36,7 @@
 ## UI / 运行态证据
 
 - production：`npm run test:ui` 自动构建并运行 Playwright preview；全量 455/455。
-- development：`tests/development/plugins.mjs` 在 `http://127.0.0.1:1421/` 验证 `data-runtime-mode=development`、四个插件、禁用/重载恢复和不安全远程地址拦截，receipt 为 PASS。
+- development：`tests/development/plugins.mjs` 在 `http://127.0.0.1:1421/` 验证 `data-runtime-mode=development`、四个插件、禁用/重载恢复和不安全远程地址拦截，receipt 为 PASS；原始 JSON 已归档到本交付包的 `evidence/`。
 - 本次没有修改 Figma 源或 Tauri 原生包；Desktop/Mobile 运行态不适用。
 
 ## 外部能力与真实性
