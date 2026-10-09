@@ -35,3 +35,9 @@
 - 未实现网页 headless 登录、自动切号、绕过 CAPTCHA 或反爬；未接 sub2api 外部网关。
 - SSE 当前为网关完成后的单帧 buffered SSE，不代表上游 token 级流式传输。
 - 未新增顶层 UI 或账号管理台，继续复用 kk 的 ProviderConnection、模型目录、ModelPickerMenu 和 Design System。
+
+## 合并后主工作区复验
+
+- 合并提交：`1c244bb3`，主工作区 `docs/TASK-DOCS-STRUCT-001`，工作树复验为 clean。
+- 类型检查、gateway/Agent/model 相关 69 项回归、UI 标准、治理、Markdown、Feature 检查均通过。
+- 主工作区完整回归：907 项，898 PASS、1 FAIL、8 SKIP。唯一失败为 `tests/unit/geminiBridge.test.ts` 的“status detects installed and logged-in gemini”：本机 Gemini CLI 探测返回 `login:false`，属于外部登录环境条件；本次合并未修改 Gemini bridge。
