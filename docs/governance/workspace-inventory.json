@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-09T19:00:17.648Z",
+  "generatedAt": "2026-10-09T19:12:13.288Z",
   "primaryRepository": "D:/kk-studio/KK-Studio-2.0",
   "destructiveActionsPerformed": false,
   "entries": [
@@ -14,8 +14,8 @@
       "owner": "workspace-maintainer",
       "kindOnDisk": "directory",
       "bytes": 0,
-      "modified": "2026-10-09T18:59:41.232Z",
-      "sha256": "1557c3e52cdd45ce728cc348b1109ee300964fe5394fe9424fe663dfe3c39e4e",
+      "modified": "2026-10-09T19:04:07.303Z",
+      "sha256": "30d9b3a10650c445fbf40cc6ccc4d96bbced2612108462e5a4a1ee3f8c896a0e",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "NOT_GIT_ROOT"
@@ -142,8 +142,8 @@
       "owner": "repository-maintainer",
       "kindOnDisk": "directory",
       "bytes": 0,
-      "modified": "2026-10-09T18:54:20.280Z",
-      "sha256": "4d3ef4b4067196aadeb8876ed9bea8d5b7c46c680551d267c4baa115b06e84f5",
+      "modified": "2026-10-09T19:09:03.276Z",
+      "sha256": "da81093c327b905bac180f6372d54b53265bf1f533ea98b7615328d5d81c70ad",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "PRIMARY_REPOSITORY"
@@ -232,8 +232,8 @@
   "gitWorktrees": [
     {
       "path": "D:/kk-studio/KK-Studio-2.0",
-      "head": "697cdb3cdcb09b57c81409f51f300bfedcc16979",
-      "branch": "refs/heads/docs/TASK-DOCS-STRUCT-001"
+      "head": "7b7e2d3f14153d0f8f0687f26b16354e62ec19f5",
+      "branch": "refs/heads/main"
     },
     {
       "path": "C:/Users/Administrator/.codex/worktrees/google-cli-login/KK-Studio-2.0",
@@ -437,7 +437,7 @@
     },
     {
       "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MINIMAX-UI-ALIGN-20261010",
-      "head": "fd2234a0a026b491aff7e89bddfa6b47e77ec899",
+      "head": "e3a251c23e536b94000cfb4bef04bfa17537f3d9",
       "branch": "refs/heads/task/minimax-ui-align-20261010"
     },
     {
