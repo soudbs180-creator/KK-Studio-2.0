@@ -169,23 +169,18 @@ test("an upstream failure surfaces as an OpenAI error body", async () => {
   );
 });
 
-test("streaming is refused with an actionable status rather than a truncated body", async () => {
+test("streaming completion dispatches the same buffered text result", async () => {
   const deps = chatDeps(null);
-  await assert.rejects(
-    () =>
-      runChatCompletion(
-        deps,
-        {
-          model: "kk-default",
-          messages: [{ role: "user", content: "x" }],
-          stream: true,
-        },
-        "idem-3",
-      ),
-    (error: unknown) =>
-      (error as { normalized?: { httpStatus?: number } }).normalized
-        ?.httpStatus === 501,
+  const result = await runChatCompletion(
+    deps,
+    {
+      model: "kk-default",
+      messages: [{ role: "user", content: "x" }],
+      stream: true,
+    },
+    "idem-3",
   );
+  assert.equal(result.text, "a cat");
 });
 
 test("an async channel is redirected to the jobs surface", async () => {

@@ -66,6 +66,9 @@ function json(res: ServerResponse, status: number, value: unknown) {
   });
   res.end(JSON.stringify(value));
 }
+function sse(res: ServerResponse, value: unknown): void {
+  res.write(`data: ${JSON.stringify(value)}\n\n`);
+}
 const controlsSchema = z
   .object({
     platformEnabled: z.boolean().optional(),
@@ -154,8 +157,34 @@ export function createGenerationServer(options: {
               body,
               key.trim(),
             );
+            const completionId = newCompletionId();
+            if (body.stream) {
+              res.writeHead(200, {
+                "Content-Type": "text/event-stream",
+                "Cache-Control": "no-cache",
+                Connection: "keep-alive",
+                "X-Content-Type-Options": "nosniff",
+              });
+              sse(res, {
+                id: completionId,
+                object: "chat.completion.chunk",
+                created: Math.floor(Date.now() / 1000),
+                model: body.model,
+                choices: [
+                  {
+                    index: 0,
+                    delta: { role: "assistant", content: completion.text },
+                    finish_reason: null,
+                  },
+                ],
+                kk_meta: { channelId: completion.channelId },
+              });
+              res.write("data: [DONE]\n\n");
+              res.end();
+              return;
+            }
             json(res, 200, {
-              id: newCompletionId(),
+              id: completionId,
               object: "chat.completion",
               created: Math.floor(Date.now() / 1000),
               model: body.model,
@@ -167,9 +196,9 @@ export function createGenerationServer(options: {
                 },
               ],
               usage: {
-                prompt_tokens: 0,
-                completion_tokens: 0,
-                total_tokens: 0,
+                prompt_tokens: completion.usage?.promptTokens ?? 0,
+                completion_tokens: completion.usage?.completionTokens ?? 0,
+                total_tokens: completion.usage?.totalTokens ?? 0,
               },
               kk_meta: { channelId: completion.channelId },
             });

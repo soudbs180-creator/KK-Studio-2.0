@@ -55,6 +55,90 @@ test("only real endpoint ids are accepted, never bare model names", () => {
   );
 });
 
+test("Ark chat operation calls the OpenAI-compatible chat endpoint", async () => {
+  const originalFetch = globalThis.fetch;
+  let requestUrl = "";
+  let requestBody: Record<string, unknown> | undefined;
+  globalThis.fetch = async (input, init) => {
+    requestUrl = String(input);
+    requestBody = JSON.parse(String(init?.body)) as Record<string, unknown>;
+    return new Response(
+      JSON.stringify({
+        choices: [{ message: { content: "hello from Ark" } }],
+        usage: { prompt_tokens: 4, completion_tokens: 3, total_tokens: 7 },
+      }),
+      { status: 200, headers: { "content-type": "application/json" } },
+    );
+  };
+  try {
+    const result = await doubaoAdapter.submit(
+      {
+        ...contextFor({ "kk-default": "ep-20260101abcdef" }),
+        capabilities: {
+          modalities: ["text"],
+          operations: ["chat"],
+          async: false,
+        },
+      },
+      {
+        operation: "chat",
+        model: "kk-default",
+        prompt: "say hello",
+        attachments: [],
+      },
+      { idempotencyKey: "ark-chat", resolveSecret: async () => "secret" },
+    );
+    assert.deepEqual(result, {
+      kind: "text",
+      text: "hello from Ark",
+      usage: { promptTokens: 4, completionTokens: 3, totalTokens: 7 },
+    });
+    assert.equal(requestUrl, `${ARK_BASE_URL}/chat/completions`);
+    assert.deepEqual(requestBody, {
+      model: "ep-20260101abcdef",
+      messages: [{ role: "user", content: "say hello" }],
+    });
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("Ark chat rejects a successful response with no assistant text", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(JSON.stringify({ choices: [{ message: {} }] }), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    });
+  try {
+    await assert.rejects(
+      () =>
+        doubaoAdapter.submit(
+          {
+            ...contextFor({ "kk-default": "ep-20260101abcdef" }),
+            capabilities: {
+              modalities: ["text"],
+              operations: ["chat"],
+              async: false,
+            },
+          },
+          {
+            operation: "chat",
+            model: "kk-default",
+            prompt: "say hello",
+            attachments: [],
+          },
+          { idempotencyKey: "ark-chat-empty", resolveSecret: async () => "secret" },
+        ),
+      (error: unknown) =>
+        (error as { normalized?: { errorClass?: string } }).normalized
+          ?.errorClass === "UPSTREAM_ERROR",
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test("content policy refusals outrank the shared 400 status", () => {
   // Ark reports a content rejection as 400, the same status as a malformed
   // parameter, so only the body can tell them apart.

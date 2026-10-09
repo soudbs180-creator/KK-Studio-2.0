@@ -179,3 +179,33 @@ test("chat route stays disabled when no gateway dependency is injected", async (
     repository.close();
   }
 });
+
+test("chat route returns a buffered OpenAI SSE stream", async () => {
+  const { server, repository, worker } = createChatServer();
+  const url = await listen(server);
+  try {
+    const response = await fetch(`${url}/v1/chat/completions`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer route-token",
+        "Content-Type": "application/json",
+        "Idempotency-Key": "route-stream",
+      },
+      body: JSON.stringify({
+        model: "kk-default",
+        messages: [{ role: "user", content: "hello" }],
+        stream: true,
+      }),
+    });
+    assert.equal(response.status, 200);
+    assert.match(response.headers.get("content-type") ?? "", /text\/event-stream/);
+    const body = await response.text();
+    assert.match(body, /data: /);
+    assert.match(body, /route answer/);
+    assert.match(body, /data: \[DONE\]/);
+  } finally {
+    await worker.stop();
+    await close(server);
+    repository.close();
+  }
+});

@@ -214,11 +214,6 @@ export function newCompletionId(): string {
   return `chatcmpl-${hex}`;
 }
 
-/**
- * Streaming is not implemented yet. Returning 501 keeps a client that already
- * sends `stream: true` on a clear, actionable error instead of a truncated
- * non-streaming body it would try to parse as SSE.
- */
 export function runChatCompletion(
   deps: ChatDeps,
   request: ChatRequest,
@@ -232,21 +227,6 @@ export function runChatCompletion(
     readonly totalTokens?: number;
   };
 }> {
-  if (request.stream)
-    return Promise.reject(
-      Object.assign(
-        new Error("Streaming is not implemented for this gateway yet"),
-        {
-          normalized: {
-            errorClass: "BAD_REQUEST",
-            httpStatus: 501,
-            retryable: false,
-            detail: "stream=true is not supported yet; retry with stream=false",
-          } satisfies NormalizedError,
-        },
-      ),
-    );
-
   return (async () => {
     const outcome = await deps.scheduler.dispatch({
       model: request.model,
