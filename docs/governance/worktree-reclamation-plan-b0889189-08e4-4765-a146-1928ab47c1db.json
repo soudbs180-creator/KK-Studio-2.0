@@ -1,0 +1,1331 @@
+{
+  "schemaVersion": 2,
+  "planId": "b0889189-08e4-4765-a146-1928ab47c1db",
+  "generatedAt": "2026-10-09T15:00:19.132Z",
+  "immutable": true,
+  "workspaceRoot": "D:/kk-studio",
+  "allowedWorktreeRoot": "D:/kk-studio/.worktrees",
+  "primaryRepository": "D:/kk-studio/KK-Studio-2.0",
+  "currentWorktree": "D:/kk-studio/KK-Studio-2.0",
+  "applyPerformed": false,
+  "worktrees": [
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0",
+      "head": "33950d803019585932e6e7a2c53ae8226725a00b",
+      "branch": "docs/TASK-DOCS-STRUCT-001",
+      "exists": true,
+      "dirty": 70,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": true,
+      "current": true,
+      "external": true,
+      "taskStatuses": [
+        "REVIEW"
+      ],
+      "active": true,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "PRIMARY_WORKTREE",
+          "DIRTY_WORKTREE",
+          "ACTIVE_TASK",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/worktrees/google-cli-login/KK-Studio-2.0",
+      "head": "9c5fafd0f3ab871e2bf6ecf9c9ca03853a4ebf9e",
+      "branch": "feat/TASK-AGENT-005-google-cli-login",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "C:/Users/Administrator/.codex/worktrees/google-closeout/KK-Studio-2.0",
+      "head": "13671d7a2e40c5c435684ac23b3836cdef737afd",
+      "branch": "feat/TASK-AGENT-004-google-closeout",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [
+        "PARTIAL",
+        "PARTIAL"
+      ],
+      "active": true,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "ACTIVE_TASK",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/canvas-compare",
+      "head": "abe1e99a7f2b9846623c8f36657a284d93ae2ccb",
+      "branch": "codex/T10-PREP-vps-migration",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [
+        "PARTIAL"
+      ],
+      "active": true,
+      "reachableFromMain": false,
+      "generatedPaths": [
+        {
+          "path": "D:/kk-studio/.worktrees/canvas-compare/.tmp",
+          "ignored": false,
+          "tracked": false,
+          "submodule": false,
+          "evidence": false,
+          "assessment": {
+            "allowed": true,
+            "reasons": [],
+            "path": "D:/kk-studio/.worktrees/canvas-compare/.tmp"
+          }
+        }
+      ],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "ACTIVE_TASK",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/fix-canvas-composer-overlay",
+      "head": "8090475958f1a0bdd1b4b36ada7f2aba1e4e6264",
+      "branch": "fix/TASK-UI-017-composer-overlay",
+      "exists": true,
+      "dirty": 3,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": true,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "DIRTY_WORKTREE",
+          "TASK_NOT_DONE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/google-conversation-boundary",
+      "head": "48bfd97fbb30259950741a2d48959e77af2b7174",
+      "branch": "fix/TASK-AGENT-004-conversation-boundary",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/google-conversation-verify",
+      "head": "59d333346c5af277000d0a370b1bbcd22a9ca6b0",
+      "branch": null,
+      "exists": true,
+      "dirty": 41,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "DIRTY_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/platform-versioning",
+      "head": "cf95b4ab06522264835005709a105b685947d3e6",
+      "branch": "feat/TASK-LOCAL-SERVICE-001-companion",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [
+        "PARTIAL"
+      ],
+      "active": true,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "ACTIVE_TASK",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-AGENT-006-workbuddy-gateway",
+      "head": "cef927ebe9b898e3bbb3cb71460454f2ba1f29ee",
+      "branch": "feat/TASK-AGENT-006-workbuddy-gateway",
+      "exists": true,
+      "dirty": 1,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "DIRTY_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-AGENT-007-codebuddy-cli",
+      "head": "c9ebd9036cc7e51ccfa96e5b74cba04903888996",
+      "branch": "feat/TASK-AGENT-007-codebuddy-cli",
+      "exists": true,
+      "dirty": 30,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [
+        "DONE"
+      ],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [
+        {
+          "path": "D:/kk-studio/.worktrees/TASK-AGENT-007-codebuddy-cli/.tmp",
+          "ignored": false,
+          "tracked": false,
+          "submodule": false,
+          "evidence": false,
+          "assessment": {
+            "allowed": true,
+            "reasons": [],
+            "path": "D:/kk-studio/.worktrees/TASK-AGENT-007-codebuddy-cli/.tmp"
+          }
+        }
+      ],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "DIRTY_WORKTREE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-AI-GATEWAY-001",
+      "head": "75ec33f00628b5ef999d6a64cc787c29d2cc3d15",
+      "branch": "feat/TASK-AI-GATEWAY-001",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [
+        {
+          "path": "D:/kk-studio/.worktrees/TASK-AI-GATEWAY-001/node_modules",
+          "ignored": false,
+          "tracked": false,
+          "submodule": false,
+          "evidence": false,
+          "assessment": {
+            "allowed": false,
+            "reasons": [
+              "REALPATH_ESCAPE",
+              "SYMLINK_OR_REPARSE"
+            ],
+            "path": "D:/kk-studio/.worktrees/TASK-AI-GATEWAY-001/node_modules"
+          }
+        }
+      ],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-GOV-PHASE0",
+      "head": "f0a385fd4d4836cf107d0d3d350a03139d97ec78",
+      "branch": "codex/TASK-GOV-PHASE0-governance-baseline",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-MEMORY-001",
+      "head": "0a88916dbf8e736a12e2fb23124fcf94b65154ae",
+      "branch": "feat/TASK-MEMORY-001-local-memory",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [
+        "PARTIAL",
+        "PARTIAL"
+      ],
+      "active": true,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "ACTIVE_TASK",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-MINIMAX-001-mcp-registry-limit",
+      "head": "381383d33e1c5eb7a50463cb4d4e6231c56dde95",
+      "branch": "fix/TASK-MINIMAX-001-mcp-registry-limit",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [
+        "PARTIAL"
+      ],
+      "active": true,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "ACTIVE_TASK",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-ORCH-003-agent-roles-schema",
+      "head": "67d34fd750f2cbcde32e2a0f7f0466d7133192b0",
+      "branch": "feat/TASK-ORCH-003-agent-roles-schema",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-P0-REGISTRY-20261009",
+      "head": "3d358f0ae41f5de4ba9ca0bddfef07a941b4b064",
+      "branch": "docs/TASK-P0-REGISTRY-20261009",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-PROV-003-provider-wiring",
+      "head": "a913daedd5fab3e80b03f05c8938d56ef5a2ae63",
+      "branch": "feat/TASK-PROV-003-provider-wiring-main",
+      "exists": true,
+      "dirty": 2,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [
+        "PARTIAL"
+      ],
+      "active": true,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "DIRTY_WORKTREE",
+          "ACTIVE_TASK",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-PROV-004-claude-landing",
+      "head": "dbeee9d6f8a55c0b67669c0325182da8fedd78ea",
+      "branch": "feat/TASK-PROV-004-claude-landing",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [
+        "PARTIAL"
+      ],
+      "active": true,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "ACTIVE_TASK",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-REPO-TIDY-001",
+      "head": "66e0ee504be51f89bca783f6f736807c341c1364",
+      "branch": "chore/TASK-REPO-TIDY-001-workspace-cleanup",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-UI-009-integration",
+      "head": "76be5c3b9ee805696a1c7c2df6c2587b289306ff",
+      "branch": "feat/TASK-UI-009-ui010-integration",
+      "exists": true,
+      "dirty": 6,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [
+        {
+          "path": "D:/kk-studio/.worktrees/TASK-UI-009-integration/.tmp",
+          "ignored": false,
+          "tracked": false,
+          "submodule": false,
+          "evidence": false,
+          "assessment": {
+            "allowed": true,
+            "reasons": [],
+            "path": "D:/kk-studio/.worktrees/TASK-UI-009-integration/.tmp"
+          }
+        }
+      ],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "DIRTY_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-UI-009-sidebar-project-groups",
+      "head": "76339c9f5cd1a1b2affea6b4c3d247de7188da18",
+      "branch": "feat/TASK-UI-009-sidebar-project-groups",
+      "exists": true,
+      "dirty": 26,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": true,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "DIRTY_WORKTREE",
+          "TASK_NOT_DONE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-UI-012-core-interactions",
+      "head": "36eb8f65745f4f1c5928635607ec00d441e88315",
+      "branch": "codex/TASK-UI-012-core-interactions",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-UI-012-model-menu",
+      "head": "1af0357b088df79dc51e9b309ef310a500722cf8",
+      "branch": "codex/TASK-UI-012-model-menu",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": true,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "TASK_NOT_DONE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-UI-EXT-001-settings-split",
+      "head": "3b4e950030ce3170ac7b887e186730269aa53819",
+      "branch": "feat/TASK-UI-EXT-001-settings-split",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-VERIFY-001",
+      "head": "76339c9f5cd1a1b2affea6b4c3d247de7188da18",
+      "branch": "fix/TASK-VERIFY-001-cross-platform-tests",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": true,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "TASK_NOT_DONE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002",
+      "head": "8090475958f1a0bdd1b4b36ada7f2aba1e4e6264",
+      "branch": "codex/TASK-VERIFY-CONCURRENCY-002",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": true,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "TASK_NOT_DONE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/.worktrees/TASK-WINDOWS-ENTRY-RECOVERY-003",
+      "head": "05ee53c95d20c9c75aa0eef1b2faf64ba5277088",
+      "branch": "codex/TASK-WINDOWS-ENTRY-RECOVERY-003",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": true,
+      "primary": false,
+      "current": false,
+      "external": false,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [
+        {
+          "path": "D:/kk-studio/.worktrees/TASK-WINDOWS-ENTRY-RECOVERY-003/node_modules",
+          "ignored": false,
+          "tracked": false,
+          "submodule": false,
+          "evidence": false,
+          "assessment": {
+            "allowed": false,
+            "reasons": [
+              "SYMLINK_OR_REPARSE"
+            ],
+            "path": "D:/kk-studio/.worktrees/TASK-WINDOWS-ENTRY-RECOVERY-003/node_modules"
+          }
+        }
+      ],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT_WORKTREE"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/kaworkai-capability-map",
+      "head": "13d5a693d828ab69710fbac35e34f9673c62eeea",
+      "branch": "codex/kaworkai-capability-map",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-AUDIT-20261003",
+      "head": "cddacaf19d9cadcd09f9fa500182de56232f9c13",
+      "branch": "codex/TASK-AUDIT-20261003",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [
+        "PARTIAL",
+        "DONE",
+        "DONE",
+        "DONE",
+        "DONE",
+        "DONE",
+        "DONE"
+      ],
+      "active": true,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "ACTIVE_TASK",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-COMPANION-RECOVERY-003",
+      "head": "004e7149d258af5f83f71029a9612e240ce90bbb",
+      "branch": "fix/TASK-COMPANION-RECOVERY-003-preserve-originals",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-GOV-20261009-ledger-closeout",
+      "head": "e75c128f5db58239ba8c05bcaf14d1fac19efb6b",
+      "branch": "docs/TASK-GOV-20261009-ledger-closeout",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-HEALTH-20261009",
+      "head": "1d6f640ac6f3a1e7af32c38d85596527704dc54a",
+      "branch": "docs/TASK-HEALTH-20261009-branch-audit",
+      "exists": true,
+      "dirty": 2,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": true,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "DIRTY_WORKTREE",
+          "TASK_NOT_DONE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-HEALTH-20261009-mask",
+      "head": "df857ce9104c335bafd650cb6ed29c97acbb5ee6",
+      "branch": "docs/TASK-HEALTH-20261009-mask-check",
+      "exists": true,
+      "dirty": 2,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "DIRTY_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-HEALTH-20261009-ui012",
+      "head": "99204c7b7ab33fb1eb1705bbe420ee465ac7fd07",
+      "branch": "docs/TASK-HEALTH-20261009-ui012-check",
+      "exists": true,
+      "dirty": 2,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "DIRTY_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-INTEGRATE-20261008",
+      "head": "5b0eb6a341335c6bcdefcadf59be3ae4c2e4cdb3",
+      "branch": "codex/TASK-INTEGRATE-20261008-stage-workbench",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": true,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-LOCAL-ASSET-002",
+      "head": "4a9481ec81d675bd6d9760467cee458dacc1df18",
+      "branch": "fix/TASK-LOCAL-ASSET-002-expose-metadata",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-MINIMAX-001-reverse-audit",
+      "head": "c0f930ce61082fecddcb772f0bae2d5d160ff2a3",
+      "branch": "codex/TASK-MINIMAX-001-reverse-audit",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-005",
+      "head": "29e629ec94a07a58871b2f7f19322389427f7983",
+      "branch": "fix/TASK-PROV-005-provider-durable-config",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-006",
+      "head": "512c40a670846e6e637b89eabb4a9af15520ea60",
+      "branch": "fix/TASK-PROV-006-provider-gates",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-007",
+      "head": "6ae3408e7110cb70b75431355c5dbb1289b17634",
+      "branch": "fix/TASK-PROV-007-capacity-errors",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-CONFIG-004",
+      "head": "b4be4660235a6c1dc9ca3fb479baf97866401347",
+      "branch": "fix/TASK-PROV-CONFIG-004-safe-toml",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-012-RESUME-001",
+      "head": "9a17dbb1ea74feb616475d387a275fd2372349aa",
+      "branch": "fix/TASK-UI-012-RESUME-001-current-main",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-014-audit",
+      "head": "890289f97c38caf5ec3eb1752a65bca8be0046e1",
+      "branch": "fix/TASK-UI-014-ui-audit",
+      "exists": true,
+      "dirty": 9,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "DIRTY_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-014-RESUME-001",
+      "head": "6a97f456ab7334f97c604461e8d29789caa754cb",
+      "branch": "fix/TASK-UI-014-RESUME-001-current-main",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": true,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-015-project-drag",
+      "head": "e2bebc96976d8d276043a5522405aa9cca33cb6d",
+      "branch": "fix/TASK-UI-015-project-drag",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-016-canvas-upload",
+      "head": "8090475958f1a0bdd1b4b36ada7f2aba1e4e6264",
+      "branch": "fix/TASK-UI-016-canvas-upload",
+      "exists": true,
+      "dirty": 55,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": true,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "DIRTY_WORKTREE",
+          "TASK_NOT_DONE"
+        ]
+      },
+      "action": "PROTECT"
+    },
+    {
+      "path": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-VERIFY-ORIGIN-003",
+      "head": "d45fe3a597015e0d6bd55ed8042f4d8c97253790",
+      "branch": "fix/TASK-VERIFY-ORIGIN-003-strict-origin",
+      "exists": true,
+      "dirty": 0,
+      "locked": false,
+      "prunable": false,
+      "inWorkspace": false,
+      "primary": false,
+      "current": false,
+      "external": true,
+      "taskStatuses": [],
+      "active": false,
+      "reachableFromMain": false,
+      "generatedPaths": [],
+      "removal": {
+        "allowed": false,
+        "reasons": [
+          "EXTERNAL_WORKTREE",
+          "TASK_NOT_DONE",
+          "COMMIT_NOT_RECOVERABLE"
+        ]
+      },
+      "action": "PROTECT"
+    }
+  ],
+  "candidates": [],
+  "summary": {
+    "total": 47,
+    "cleanInWorkspace": 17,
+    "dirtyInWorkspace": 7,
+    "generatedDirectories": 0,
+    "cleanCompletedWorktrees": 0
+  },
+  "writtenAt": "2026-10-09T15:00:19.133Z"
+}

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-09T14:32:15.150Z",
-  "planId": "f888e235-8646-4cf3-b0dd-c0f22c1e6e8e",
-  "immutablePlan": "worktree-reclamation-plan-f888e235-8646-4cf3-b0dd-c0f22c1e6e8e.json",
+  "generatedAt": "2026-10-09T15:00:19.132Z",
+  "planId": "b0889189-08e4-4765-a146-1928ab47c1db",
+  "immutablePlan": "worktree-reclamation-plan-b0889189-08e4-4765-a146-1928ab47c1db.json",
   "summary": {
     "total": 47,
     "cleanInWorkspace": 17,

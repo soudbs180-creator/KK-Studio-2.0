@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-09T14:32:15.267Z",
+  "generatedAt": "2026-10-09T15:00:13.997Z",
   "primaryRepository": "D:/kk-studio/KK-Studio-2.0",
   "destructiveActionsPerformed": false,
   "entries": [
@@ -46,8 +46,8 @@
       "owner": "evidence-maintainer",
       "kindOnDisk": "directory",
       "bytes": 0,
-      "modified": "2026-10-09T04:08:24.679Z",
-      "sha256": "01ee6f361578d25f4b1039bd7666d69885ad6e62f686e9a0b5e4f4a99f23dda2",
+      "modified": "2026-10-09T14:39:43.950Z",
+      "sha256": "43c96d7897571a8f4a8add2b1be260909d494438dc559aeb1d8c0010f6cd055e",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "NOT_GIT_ROOT"
@@ -126,8 +126,8 @@
       "owner": "repository-maintainer",
       "kindOnDisk": "directory",
       "bytes": 0,
-      "modified": "2026-10-09T14:01:47.291Z",
-      "sha256": "dd63ebf893c6b3a0082a2a97f15a285c0a3d5df76420cb64cb8e5fc6f7d6f943",
+      "modified": "2026-10-09T14:52:15.940Z",
+      "sha256": "26a6def4dd434cdbb29cdaf87c469258f6bda5436381a146e52974d82a46b057",
       "shaMode": "top-level-directory-metadata",
       "sizeMode": "filesystem-entry-metadata",
       "gitOwnership": "PRIMARY_REPOSITORY"
@@ -200,7 +200,7 @@
   "gitWorktrees": [
     {
       "path": "D:/kk-studio/KK-Studio-2.0",
-      "head": "ab77b3a88ca0597ecaa14f6f47cb583116374351",
+      "head": "33950d803019585932e6e7a2c53ae8226725a00b",
       "branch": "refs/heads/docs/TASK-DOCS-STRUCT-001"
     },
     {
