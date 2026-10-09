@@ -1623,7 +1623,7 @@
     "area": "backend",
     "status": "PROTOTYPE",
     "card": "docs/features/feat-038-ai-model-gateway.md",
-    "summary": "可插拔通道适配器 + 11 类失败分类 + 分档降级调度 + OpenAI 兼容模型发现/文本/SSE 端点；P1 BYOK 官方通道（豆包火山方舟预置 + doubao 判定修正）与文本/图片能力元数据闭环已落地，定向 gateway/provenance 回归 69 项全绿，当前回归 907 项（899 通过、0 失败、8 跳过），但未接真实上游与 DPAPI。",
+    "summary": "可插拔通道适配器 + 11 类失败分类 + 分档降级调度 + OpenAI 兼容模型发现/文本/SSE 端点；P1 BYOK 官方通道（豆包火山方舟预置 + doubao 判定修正）与文本/图片能力元数据闭环已落地，定向 gateway/provenance 回归 69 项全绿，当前回归 908 项（900 通过、0 失败、8 跳过），但未接真实上游与 DPAPI。",
     "entryPoints": [
       "无 UI 入口；/v1/chat/completions 仅在注入 chat 依赖时挂载，未注入返回 404"
     ],
