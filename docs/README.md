@@ -81,8 +81,7 @@
 | `features/` | 功能卡与注册表看板，功能状态的唯一来源 |
 | `templates/` | 交付包与功能卡模板 |
 | `reference/` | Figma、截图与外部参考索引 |
-| `evidence/` | 按 `YYYY-MM-DD-<主题>/` 组织的运行证据 |
-| `decisions/` | 决策记录 |
+| `evidence/` | 运行证据。新证据按 `YYYY-MM-DD-<主题>/` 组织（约定）；现存历史条目含早期裸文件，尚未迁移 |
 | `archive/` | 只读历史材料，不作为当前状态 |
 
 ## 权威优先级与冲突裁决
@@ -126,7 +125,7 @@
 | --- | --- | --- | --- |
 | 项目日记 | `D:\kk-studio\.workbuddy\memory\YYYY-MM-DD.md` | 当日实际做了什么、遇到什么坑 | 追加式，不覆写；不记录搜索结果、临时路径等瞬时信息 |
 | 项目长期约定 | `D:\kk-studio\.workbuddy\memory\MEMORY.md` | 跨会话仍有效的项目约定 | 每次实质工作后提炼更新 |
-| 用户个人记忆 | `C:\Users\Administrator\.workbuddy\user-<id>\MEMORY.md` | 用户跨项目偏好与本机环境事实 | 只在用户明确要求长期记住时写入 |
+| 用户个人记忆 | AI 客户端的用户级记忆目录（各客户端不同，本机为 `%USERPROFILE%\.workbuddy\user-<id>\MEMORY.md`） | 用户跨项目偏好与本机环境事实 | 只在用户明确要求长期记住时写入 |
 | 任务账本 | 仓库内 `docs/governance/task-ledger.json` | 任务状态 | 走门禁 `npm run governance:check` |
 
 作用边界（重要）：

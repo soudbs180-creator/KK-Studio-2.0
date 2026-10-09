@@ -18,7 +18,7 @@
 目标：让接手者能通过单一入口在5 分钟内定位任意规则，并保证每条规则都能对应到可执行门禁或明确的评审约定。
 
 具体动作：
-1. 把 `docs/README.md` 从 27 行的散列升级为完整索引 + 五层权威优先级 + 冲突裁决细则 + 本地记忆四层模型。
+1. 把 `docs/README.md` 从 26 行的散列升级为完整索引 + 五层权威优先级 + 冲突裁决细则 + 本地记忆四层模型。
 2. 补齐真实缺口文档 `docs/engineering/CODING-STANDARDS.md` 与 `docs/engineering/TESTING.md`。
 3. 补 `BRANCH-POLICY.md` 的四个真实缺口：提交信息规范、worktree 落点与生命周期、自动合并现状、回滚触发条件。
 4. 在 `UI_RULES.md` 补 3.4 Token 化纪律，不新建第六份 UI 文档。
@@ -31,8 +31,8 @@
 - 明确不包含：
   - 不新建 `ui-guidelines.md` 与 `git-workflow.md`（内容已存在，另建即制造第二来源）。
   - 不瘦身在 `PROJECT_STATE.md` 与 `AI_HANDOFF.md` 中的 36 个重复章节——影响面大，需单独授权。
-  - 不治理 83 个 worktree、约 123 GB；不移除 `docs/changes` 中已跟踪的 760 PNG 与 108 log；不处理 `output/` 下 5 个外部嵌套仓库；不处理画布token 化遗留。
-  - 不改动任何 `src/` 或 `scripts/` 代码。工作区已有 4 个未提交的 `src/styles/*.css` 改动（画布 token 化，非本次范围），本次严格避开不add。
+  - 不治理 47 个注册 worktree（`git worktree list` 实测，另有多处已删除磁盘目录的历史残留）；不移除 `docs/changes` 中已跟踪的 760 PNG 与 108 log；不处理 `output/` 下 5 个外部嵌套仓库；不处理画布 token 化遗留。
+  - 不改动任何 `src/` 或 `scripts/` 代码。会话开始时工作区有 3 个未提交的 `src/styles/*.css` 改动（`canvas-navigation.css`、`ui-tokens.css`、`workspace.css`，属画布 token 化，非本次范围），本次严格避开不add、不reset、不覆盖。
 - 受影响平台/模块：仅文档层。
 - 已有实现和规范来源：`scripts/check-ui-standards.mjs`、`scripts/governance/import-boundaries.mjs`、`playwright.config.ts`、`eslint.config.mjs`、`package.json`。
 

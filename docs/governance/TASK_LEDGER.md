@@ -1502,6 +1502,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `docs/TASK-DOCS-STRUCT-001`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: docs/README.md, docs/engineering/CODING-STANDARDS.md, docs/engineering/TESTING.md, docs/engineering/BRANCH-POLICY.md, docs/UI_RULES.md, AGENTS.md, AI_RULES.md
-- Verification: PASS — markdown:check 104 active files 0 violations；npm run lint exit 0；delivery:check 0 violations。规则条目逐条从check-ui-standards.mjs、import-boundaries.mjs、playwright.config.ts、eslint.config.mjs、package.json 源码核对，非凭记忆。
+- Verification: PASS — markdown:check 104 active files 0 violations；lint exit 0；governance 115 tasks 0 violations；delivery 15 files 0 violations。独立上下文AI review（第二轮）发现2个P1+6个P2+9个P3，全部已核实修复并复跑门禁。P1：依赖方向表与实际矛盾（components→features 97处、domain→runtime 2处门禁却允许）、--ui-*定义位置与UI_RULES 3.1冲突。P2：交付包内CSS改动数4vs3矛盾、ESLint files仅tests/**/*.ts致19个desktop .mjs不受检、开篇门禁承诺失实、docs/decisions未入库却索引、evidence命名规范与现状不符、verification证据链不闭合。
 - Evidence: [docs/changes/2026-10-09-docs-structure/verification.md](../../docs/changes/2026-10-09-docs-structure/verification.md), [docs/changes/2026-10-09-docs-structure/review.md](../../docs/changes/2026-10-09-docs-structure/review.md)
 - Updated: 2026-10-09

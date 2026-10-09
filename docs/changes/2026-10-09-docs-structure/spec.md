@@ -35,11 +35,11 @@
 
 | 初拟 | 实际情况 | 裁决 |
 | --- | --- | --- |
-| `AGENTS.md` | 已存在，76 行 9 章节，内容充实 | 保留，升级为 L0唯一入口 |
+| `AGENTS.md` | 已存在，75 行 9 章节，内容充实 | 保留，升级为 L0唯一入口 |
 | `docs/architecture.md` | 已有 `architecture/ARCHITECTURE.md` | 不新建，纳入索引 |
 | `docs/ui-guidelines.md` | UI 规范已有成熟唯一承载机制（`UI_INDEX.md`） | **不新建**，会制造第二来源 |
 | `docs/coding-standards.md` | **不存在**，真实缺口 | 新建 `engineering/CODING-STANDARDS.md` |
-| `docs/git-workflow.md` | 已有 `engineering/BRANCH-POLICY.md` 64 行 5 章节 | **不新建**，改为补缺口 |
+| `docs/git-workflow.md` | 已有 `engineering/BRANCH-POLICY.md` 63 行 5 章节 | **不新建**，改为补缺口 |
 | `docs/testing.md` | **不存在**，真实缺口 | 新建 `engineering/TESTING.md` |
 
 命名裁决：工程文档主要使用 UPPER-CASE.kebab（`BRANCH-POLICY.md`、`UI_RULES.md`、`DESIGN_TOKENS.md`），不引入第二套 kebab-case 小写风格。
@@ -81,4 +81,4 @@ Playwright 契约逐字段取自 `playwright.config.ts`：`testDir ./tests/brows
 
 ## 9. 未决与后续
 
-以下均需用户单独授权，不在本次范围：治理文档 36 个重复章节瘦身、83 个 worktree 收敛、`docs/changes` 大文件处理、`output/` 嵌套仓库归置、画布 token 化遗留（3 CSS + `decisions/0001`）、`src/App.tsx` 3152 行是否纳入自动门禁、三个受凭据阻塞分支的推送。
+以下均需用户单独授权，不在本次范围：治理文档 36 个重复章节瘦身、47 个注册 worktree 收敛、`docs/changes` 大文件处理、`output/` 嵌套仓库归置、画布 token 化遗留（3 个 CSS + `decisions/0001`）、`src/App.tsx` 3152 行是否纳入自动门禁、三个受凭据阻塞分支的推送。

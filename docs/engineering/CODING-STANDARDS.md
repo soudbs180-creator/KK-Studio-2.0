@@ -1,6 +1,8 @@
 # 编码规范
 
-本文件定义 KK Studio 的源码约束：命名、文件边界、模块依赖、错误处理和状态管理。规则条目全部对应可执行门禁；没有门禁支撑的条目标注为「约定」，靠评审执行。
+本文件定义 KK Studio 的源码约束：命名、文件边界、模块依赖、错误处理和状态管理。
+
+本文分两类条目：**有门禁的**在下表与各节「硬约束」中列出，**靠评审执行的**在正文中显式标注「约定（评审执行，无门禁）」。未标注即视为有门禁，发现标注与实际不符时以脚本为准并修正本文。
 
 结构与命令见 [DEVELOPMENT](DEVELOPMENT.md)，流程门禁见 [SDLC](SDLC.md)，UI 视觉与组件契约见 [`../UI_INDEX.md`](../UI_INDEX.md)。
 
@@ -18,20 +20,26 @@
 | Markdown 链接 | `node scripts/check-markdown.mjs` | 断链、跨仓库链接 |
 | 任务账本 | `node scripts/check-governance.mjs` | 账本与 `TASK_LEDGER.md` 不同步、状态字段缺失 |
 
+**ESLint 实际覆盖范围小于命令字面**：`eslint.config.mjs` 的 `files` 为 `src/**/*.{ts,tsx}`、`tests/**/*.ts`、`scripts/**/*.mjs`、`*.config.{ts,mjs}`。因此：
+
+- `tests/` 下的 `.mjs` 与 `.ps1` **不受 ESLint 约束**——实测 `tests/desktop/` 19 个、`tests/local-service/` 2 个、`tests/support/` 1 个、`tests/deploy/` 2 个文件全部未被检查。给这些文件加未使用变量不会报错。
+- `.tsx` 只在 `src/` 下生效，`tests/` 中的 `.tsx` 不被覆盖。
+- 调整 `files` glob 属代码改动，需单独授权；在此之前，改动上述不受检文件要靠自检与评审。
+
 `eslint.config.mjs` 当前 ignore：`node_modules/`、`dist/`、`.worktrees/`、`src-tauri/`、`docs/`、`.tmp/`、`tmp/`、`test-results/`、`design/`、`public/`。`docs/` 不参与 lint，Markdown 由 `check-markdown.mjs` 单独校验。
 
 ## 目录职责与依赖方向
 
-`src/` 六个一级目录各自职责固定，依赖只能单向向下。
+`src/` 六个一级目录各自职责固定。下表「当前实际依赖」一列是**实测存量现状**，不是门禁，也不是推荐目标。
 
-| 目录 | 职责 | 允许依赖 |
-| --- | --- | --- |
-| `src/domain` | 纯领域模型与规则 | 自身、`src/domain` 内部。禁止 React、Tauri、`components`、`features`、`integrations`、`styles` |
-| `src/components` | 展示组件 | `domain`、`components` 内部 |
-| `src/features` | 业务能力（agent、creation、mcp、local-service、generation-server、prompts 等） | `domain`、`components` |
-| `src/integrations` | 外部系统适配 | `domain` |
-| `src/runtime` | 宿主运行时桥接 | `domain`、`integrations` |
-| `src/styles` | token 与全局样式 | 无业务依赖 |
+| 目录 | 职责 | 门禁强制的依赖约束 | 当前实际依赖（实测） |
+| --- | --- | --- | --- |
+| `src/domain` | 纯领域模型与规则 | 禁React、Tauri、`components`、`features`、`integrations`、`styles`、Node 内置 | 存在 2 处导入 `runtime/storage-contract.ts`（`modelProvider.ts`、`settings.ts`），门禁**允许**（禁令列表不含 runtime） |
+| `src/components` | 展示组件 | 无 | 约 97 处导入 `features`，2 处导入 `runtime` |
+| `src/features` | 业务能力（agent、creation、mcp、local-service、generation-server、prompts 等） | `generation-server/**` 与 local-service 五个 server 文件不得被浏览器侧导入 | 导入 `components`、`domain`、`integrations`、`runtime` |
+| `src/integrations` | 外部系统适配 | 无 | 少量导入 `features` |
+| `src/runtime` | 宿主运行时桥接 | 无 | 被 domain、components、features 导入 |
+| `src/styles` | token 与全局样式 | 无业务依赖（CSS 无 import） | 不适用 |
 
 ### 硬约束：领域层纯净
 
@@ -40,6 +48,8 @@
 - `src/components`、`src/features`、`src/integrations`、`src/styles` 下任何路径
 - `react`、`react-dom`、`@tauri-apps/*`
 - Node 内置模块（`node:*`、`fs`、`path` 等）
+
+**注意**：禁令列表**不含 `src/runtime`**。`src/domain/modelProvider.ts` 与 `src/domain/settings.ts` 当前导入 `runtime/storage-contract.ts` 是门禁允许的既有做法，不是违规。新增 domain → runtime 依赖不会报错，但也应保持克制——runtime 属宿主边界，只有存储契约这类纯常量级内容适合下沉到 domain 可消费的位置。
 
 领域逻辑必须能在无 DOM、无宿主环境下被单元测试直接执行。需要平台能力时用参数注入，不在领域层调用宿主 API。
 
@@ -89,6 +99,8 @@ src/features/local-service/store.ts
 
 ## 命名规范
 
+约定（评审执行，无门禁）。ESLint 不检查文件名与多数命名约定；`import-boundaries.mjs` 会解析 import 路径但不管命名。
+
 ### 文件
 
 | 类型 | 风格 | 示例 |
@@ -109,7 +121,7 @@ src/features/local-service/store.ts
 - React 组件、类型、接口：`PascalCase`。
 - 函数、变量、模块内常量：`camelCase`。
 - 真正全局不可变的常量：`UPPER_SNAKE_CASE`（如 `KK_STUDIO_ROOT`）。局部常量用 `camelCase`，不滥用全大写。
-- CSS 令牌：`--kk-*` 为语义源，`--ui-*` 为兼容别名。定义只写在 `src/styles/tokens.css`。
+- CSS 令牌：`--kk-*` 为语义源，`--ui-*` 为兼容别名。`--kk-*` 定义只写在 `src/styles/tokens.css`；`--ui-*` 兼容别名定义在 `src/styles/ui-tokens.css`（实测 127 条）与 `src/styles/responsive-content.css`。职责划分见 [`../UI_RULES.md`](../UI_RULES.md) 3.1。
 - 图标：通过 `src/components/UiIcon.tsx` 映射使用。禁止直接 `import` 新增 `lucide-react` 符号；`iconsax-react` 只允许出现在 `UiIcon.tsx` 内。
 
 ### 导入别名
@@ -117,6 +129,8 @@ src/features/local-service/store.ts
 `@/` 映射到 `src/`。`import-boundaries.mjs` 同时解析相对路径和 `@/` 前缀，写边界的判断不能只靠肉眼看 import 字符串。
 
 ## 组件化与复用
+
+约定（评审执行，无门禁）。唯一有门禁的相关项是 `src/components/**/*.tsx` 的 300 行上限（见「文件规模边界」）；拆分粒度、复用判定、props 设计均靠评审。
 
 ### 拆分原则
 
@@ -139,6 +153,8 @@ src/features/local-service/store.ts
 
 ## 状态与数据流
 
+约定（评审执行，无门禁）。无脚本检查状态重复或派生数据。
+
 - 单一事实源：同一份状态不允许同时存在 React state、模块级变量和 store 三处副本。发现第二处来源视为缺陷。
 - 派生数据用计算得出，不额外存一份可同步的副本。
 - 跨端共享的业务规则放 `src/domain`，不下沉到组件。
@@ -146,14 +162,18 @@ src/features/local-service/store.ts
 
 ## 错误处理
 
-1. 错误必须可定位：保留原始 message 与上下文（任务 ID、provider、阶段），不只返回布尔。
-2. 不吞异常。`catch` 后要么处理并记录，要么原样抛出；空 `catch {}` 视为违规。
-3. 用户可见失败与内部日志分离。用户界面展示可行动的提示（如「重试」「检查凭据」），不展示堆栈。
-4. 失败路径与成功路径同等测试：重复提交、迟到响应、取消、超时、离线恢复都要有覆盖。
-5. 不为通过测试而删减有效断言。可以修正被证实过时的断言，但要在 `docs/changes/` 记录契约依据与前后差异。
-6. 网络与宿主调用必须有超时和取消路径，不允许无界等待。
+第2 条有空 `catch {}` 检查（来自 `js.configs.recommended` 的 `no-empty`，在 ESLint 覆盖范围内），其余为约定。
+
+1. 错误必须可定位：保留原始 message 与上下文（任务 ID、provider、阶段），不只返回布尔。**约定。**
+2. 不吞异常。`catch` 后要么处理并记录，要么原样抛出；空 `catch {}` 会被 ESLint `no-empty` 拦截。**有门禁。**
+3. 用户可见失败与内部日志分离。用户界面展示可行动的提示（如「重试」「检查凭据」），不展示堆栈。**约定。**
+4. 失败路径与成功路径同等测试：重复提交、迟到响应、取消、超时、离线恢复都要有覆盖。**约定**（覆盖充分性靠评审，见 [`TESTING.md`](TESTING.md)）。
+5. 不为通过测试而删减有效断言。可以修正被证实过时的断言，但要在 `docs/changes/` 记录契约依据与前后差异。**约定。**
+6. 网络与宿主调用必须有超时和取消路径，不允许无界等待。**约定。**
 
 ## TypeScript
+
+约定（评审执行，无门禁）。`tsc --noEmit` 只检查类型正确性，不禁止 `any`、不检查 `import type`、不管类型文件位置。
 
 - `strict` 下不允许 `any` 逃逸业务边界；外部输入用类型守卫或 schema 校验后再使用。
 - 类型定义跟随使用者就近放置，不建全局 `types.ts` 垃圾桶。只有两个以上模块共享时才提升到 `domain`。

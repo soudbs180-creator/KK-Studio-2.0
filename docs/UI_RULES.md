@@ -80,11 +80,13 @@ Subtitle `16/24/600`、Title `20/28/700`、Display `26/32/700`。任何可见产
 | --- | --- | --- |
 | 组件 CSS 写颜色字面量 | `新增颜色字面量 #xxx` | 仅 `global.css`、`ui-tokens.css`、`tokens.css` |
 | 使用未定义令牌 | `未定义的 CSS 令牌 --xxx` | 无 |
-| 直接 import 新 `lucide-react` 符号 | `新增 Lucide 导入` | 无（须经 `UiIcon`） |
+| 直接 import 新 `lucide-react` 符号 | `新增 Lucide 导入` | 存量白名单 46 个符号（13 个文件），见下|
 | Iconsax 绕过 `UiIcon` | `Iconsax 必须通过 UiIcon 映射使用` | 仅 `UiIcon.tsx` |
 | 组件超300 行 | `超过 300 行组件边界` | 无 |
 
-`scripts/check-ui-standards.mjs` 同时扫描 `src/**` 下全部 `.css` 与 `.tsx`，`src/main.tsx` 必须加载 `./styles/tokens.css`，否则直接报错。存量颜色字面量记录在 `config/ui-legacy-baseline.json`，该文件是豁免台账，**不得新增条目来给新代码放行**。
+`scripts/check-ui-standards.mjs` 同时扫描 `src/**` 下全部 `.css` 与 `.tsx`，`src/main.tsx` 必须加载 `./styles/tokens.css`，否则直接报错。
+
+存量豁免台账是 `config/ui-legacy-baseline.json`（19 个文件、28 个颜色键、46 个 Lucide 符号），脚本按「计数超出 baseline 即报错」消费。**该文件同时承载颜色与 Lucide 两类白名单，不得新增条目来给新代码放行。**
 
 **允许的做法**：
 

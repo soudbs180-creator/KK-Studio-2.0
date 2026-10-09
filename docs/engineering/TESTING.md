@@ -40,7 +40,11 @@
 | `npm run client:installer:test` / `client:taskhost:test` | 安装器 / 任务宿主生命周期 |
 | `npm run verify` | lint + typecheck + test + test:agent + ui:check + format:check + test:ui + test:development |
 
-`npm run verify` 是合并前的完整闸门。只跑 `npm test` 不构成完整验证；只通过构建也不构成验收。
+`npm run verify` 是合并前的**主闸门**，串联 lint、typecheck、test、test:agent、ui:check、format:check、test:ui、test:development 共 8 步。
+
+它**不包含**：Rust/cargo 检查、`tests/desktop/`（19 个 `.mjs`/`.ps1`）、`tests/local-service/`、`tests/proxy`、`test:gateway`。涉及 Desktop、Rust、本地服务或真实外部服务的改动必须按本文件「桌面与 Rust 测试」与 [DEVELOPMENT](DEVELOPMENT.md) 单独补跑相应检查。
+
+只跑 `npm test` 不构成完整验证；只通过构建也不构成验收。
 
 ## Playwright 运行契约
 
