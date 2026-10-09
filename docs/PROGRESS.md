@@ -876,3 +876,9 @@ TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，�
 2026-10-09 TASK-IMAGE-RETRY-004：主线6a的托管37845923441真实FAIL，区域重试验收未绑定新任务而读到3条旧结果。新隔离测试任务继续复现与修正，原失败保留，产品正确性与合并后主线验收仍需复验。
 
 2026-10-09 TASK-IMAGE-RETRY-004本地验收：43fc全verify447零retry、14相关、804root/172Agent和development PASS；独立源码无P0/P1、41相关unit PASS，IRV-001文档矛盾已修正，最终精确head复审/托管/main恢复待回执。主线6a的原FAIL、本机未复现PASS均原样保留；运行产品/版本未改。
+
+## 2026-10-10 KK → Codex 真实联调
+
+- 本地已登录 Codex 账号经 KK 浏览器工作区真实验证：文本调用成功、Codex 内置图片生成成功并回写画布、`canvas_apply_ops` 新增文本节点成功，随后由 Codex 只读读取并确认节点存在。
+- 图片卡片按要求显示 `图片模型未报告` 与 `来源：Codex 内置生图`，没有把 Codex 名称误当成图片模型名。
+- 发现默认模型遗留问题：不显式选模型时沿用 `gpt-6.1-sol`，ChatGPT 账号返回 400；显式选择 `gpt-6-astra` 可用。详见 [kk 模型能力验证](changes/2026-10-10-kk-model-capability/verification.md)。
