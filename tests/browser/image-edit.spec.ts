@@ -162,6 +162,9 @@ test("three crops retain partial success, allow a region retry and keep the orig
     "https://models.example.test/v1/images/edits",
     async (route) => {
       requests++;
+      // Hold the retried output so an older success cannot satisfy its wait.
+      if (requests === 4)
+        await new Promise((resolve) => setTimeout(resolve, 750));
       if (requests === 2)
         await route.fulfill({
           status: 400,
@@ -186,14 +189,33 @@ test("three crops retain partial success, allow a region retry and keep the orig
   await expect(
     dialog.getByRole("button", { name: "重试该区域", exact: true }),
   ).toHaveCount(1);
+  const originalTaskIds = new Set(
+    (await activeEditProject(page)).tasks.map(
+      (task: { id: string }) => task.id,
+    ),
+  );
   await dialog.getByRole("button", { name: "重试该区域", exact: true }).click();
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect
-    .poll(async () => (await activeEditProject(page)).tasks.at(-1)?.status)
+    .poll(async () => (await activeEditProject(page)).tasks.length)
+    .toBe(4);
+  const retryTasks = (await activeEditProject(page)).tasks.filter(
+    (task: { id: string }) => !originalTaskIds.has(task.id),
+  );
+  expect(retryTasks).toHaveLength(1);
+  const retryTaskId = retryTasks[0].id;
+  await expect
+    .poll(
+      async () =>
+        (await activeEditProject(page)).tasks.find(
+          (task: { id: string }) => task.id === retryTaskId,
+        )?.status,
+    )
     .toBe("succeeded");
   const project = await activeEditProject(page),
     tasks = project.tasks;
   expect(tasks).toHaveLength(4);
+  expect(tasks.at(-1).id).toBe(retryTaskId);
   expect(
     new Set(
       tasks.map((t: { imageEdit: { groupId: string } }) => t.imageEdit.groupId),

@@ -33,6 +33,47 @@ function fixture(t: { after: (cleanup: () => void) => void }) {
   return { root, source, executable };
 }
 
+function processDiagnostic(
+  phase: string,
+  result: ReturnType<typeof spawnSync>,
+  startedAt: number,
+  context: {
+    command: string;
+    args: string[];
+    cwd: string;
+    checkerReceipt: string;
+  },
+) {
+  const error = result.error as NodeJS.ErrnoException | undefined;
+  const diagnostic = JSON.stringify({
+    phase,
+    command: context.command,
+    args: context.args,
+    cwd: context.cwd,
+    parentNode: { executable: process.execPath, version: process.version },
+    elapsedMs: Math.round(performance.now() - startedAt),
+    pid: result.pid,
+    status: result.status,
+    signal: result.signal,
+    error: error
+      ? {
+          name: error.name,
+          message: error.message,
+          code: error.code,
+          errno: error.errno,
+          syscall: error.syscall,
+        }
+      : null,
+    stdout: result.stdout,
+    stderr: result.stderr,
+    checker: fs.existsSync(context.checkerReceipt)
+      ? fs.readFileSync(context.checkerReceipt, "utf8")
+      : null,
+  });
+  console.log(`Windows entry fixture: ${diagnostic}`);
+  return diagnostic;
+}
+
 test("stale desktop release is rebuilt before it can launch", (t) => {
   const { root, executable } = fixture(t);
   assert.equal(inspectDesktopRelease(root).reason, "stale");
@@ -128,6 +169,7 @@ test(
   },
   (t) => {
     const { root, executable } = fixture(t);
+    const checkerReceipt = path.join(root, "freshness-checked.txt");
     const compiler = path.join(
       process.env.WINDIR ?? "C:\\Windows",
       "Microsoft.NET",
@@ -140,33 +182,62 @@ test(
       stub,
       'class ReleaseStub { static void Main() { System.IO.File.WriteAllText("previous-release-started.txt", "old"); } }',
     );
-    const compiled = spawnSync(
-      compiler,
-      ["/nologo", "/target:winexe", `/out:${executable}`, stub],
-      { windowsHide: true, encoding: "utf8" },
+    const compilerArguments = [
+      "/nologo",
+      "/target:winexe",
+      `/out:${executable}`,
+      stub,
+    ];
+    const compilationStartedAt = performance.now();
+    const compiled = spawnSync(compiler, compilerArguments, {
+      windowsHide: true,
+      encoding: "utf8",
+    });
+    const compilationDiagnostic = processDiagnostic(
+      "compile-existing-executable",
+      compiled,
+      compilationStartedAt,
+      {
+        command: compiler,
+        args: compilerArguments,
+        cwd: process.cwd(),
+        checkerReceipt,
+      },
     );
-    assert.equal(compiled.status, 0, compiled.stdout + compiled.stderr);
+    assert.equal(compiled.error, undefined, compilationDiagnostic);
+    assert.equal(compiled.status, 0, compilationDiagnostic);
     fs.mkdirSync(path.join(root, "scripts", "windows"), { recursive: true });
     fs.writeFileSync(
       path.join(root, "scripts", "windows", "desktop-release.mjs"),
-      'import fs from "node:fs"; fs.writeFileSync("freshness-checked.txt", "checked");',
+      'import fs from "node:fs"; fs.writeFileSync("freshness-checked.txt", JSON.stringify({phase:"freshness-success",node:process.execPath,version:process.version}));',
     );
     fs.copyFileSync(
       new URL("../../start-kk-studio.bat", import.meta.url),
       path.join(root, "start-kk-studio.bat"),
     );
-    const started = spawnSync(
-      process.env.ComSpec ?? "cmd.exe",
-      ["/d", "/c", "start-kk-studio.bat"],
+    const launcherCommand = process.env.ComSpec ?? "cmd.exe";
+    const launcherArguments = ["/d", "/c", "start-kk-studio.bat"];
+    const launchStartedAt = performance.now();
+    const started = spawnSync(launcherCommand, launcherArguments, {
+      cwd: root,
+      windowsHide: true,
+      encoding: "utf8",
+      input: "\r\n",
+      timeout: 10000,
+    });
+    const launchDiagnostic = processDiagnostic(
+      "freshness-success",
+      started,
+      launchStartedAt,
       {
+        command: launcherCommand,
+        args: launcherArguments,
         cwd: root,
-        windowsHide: true,
-        encoding: "utf8",
-        input: "\r\n",
-        timeout: 10000,
+        checkerReceipt,
       },
     );
-    assert.equal(started.status, 0, started.stdout + started.stderr);
+    assert.equal(started.error, undefined, launchDiagnostic);
+    assert.equal(started.status, 0, launchDiagnostic);
     assert.equal(
       fs.existsSync(path.join(root, "freshness-checked.txt")),
       true,
@@ -179,20 +250,29 @@ test(
 
     fs.writeFileSync(
       path.join(root, "scripts", "windows", "desktop-release.mjs"),
-      "process.exitCode = 23;",
+      'import fs from "node:fs"; fs.writeFileSync("freshness-checked.txt", JSON.stringify({phase:"freshness-rejected",node:process.execPath,version:process.version})); process.exitCode = 23;',
     );
-    const failed = spawnSync(
-      process.env.ComSpec ?? "cmd.exe",
-      ["/d", "/c", "start-kk-studio.bat"],
+    const rejectionStartedAt = performance.now();
+    const failed = spawnSync(launcherCommand, launcherArguments, {
+      cwd: root,
+      windowsHide: true,
+      encoding: "utf8",
+      input: "\r\n",
+      timeout: 10000,
+    });
+    const rejectionDiagnostic = processDiagnostic(
+      "freshness-rejected",
+      failed,
+      rejectionStartedAt,
       {
+        command: launcherCommand,
+        args: launcherArguments,
         cwd: root,
-        windowsHide: true,
-        encoding: "utf8",
-        input: "\r\n",
-        timeout: 10000,
+        checkerReceipt,
       },
     );
-    assert.equal(failed.status, 1, failed.stdout + failed.stderr);
+    assert.equal(failed.error, undefined, rejectionDiagnostic);
+    assert.equal(failed.status, 1, rejectionDiagnostic);
     assert.equal(
       fs.existsSync(path.join(root, "previous-release-started.txt")),
       false,
