@@ -207,6 +207,16 @@ test("image capability rejects common text models and accepts image variants", (
   assert.equal(modelSupportsKind("image-test", "video"), false);
 });
 
+test("doubao/Ark text models are text, seedream models are image", () => {
+  assert.equal(modelSupportsKind("doubao-seed-1-6-250615", "text"), true);
+  assert.equal(modelSupportsKind("doubao-seed-1-6-250615", "image"), false);
+  assert.equal(modelSupportsKind("doubao-1-5-pro-32k", "text"), true);
+  assert.equal(modelSupportsKind("doubao-1-5-pro-32k", "image"), false);
+  assert.equal(modelSupportsKind("doubao-seedream-4-5-250828", "text"), false);
+  assert.equal(modelSupportsKind("doubao-seedream-4-5-250828", "image"), true);
+  assert.equal(modelSupportsKind("doubao-seedream-5-0-250907", "image"), true);
+});
+
 test("provider credentials use one canonical URL identity without exposing the key", () => {
   assert.equal(
     credentialId("HTTPS://Example.test/v1/?unused=1"),

@@ -9,6 +9,7 @@
 
 - 无 UI 入口。`/v1/chat/completions` 仅在 `createGenerationServer({ chat })` 注入依赖时挂载，未注入时返回 404，既有部署行为不变。
 - 豆包在 `ModelPickerMenu` 中**仍为置灰**：调度层可用了，但未接真实上游凭证，按「点了就报错」原则不解锁。
+- **BYOK 官方通道已就绪（P1，浏览器直连，与网关通道分离）**：设置 → 模型供应商 → 预置「豆包（火山方舟）」一键填入 `https://ark.cn-beijing.volces.com/api/v3`，填 Key 后画布图片节点可选 `doubao-seedream-*` 出图；真实出图需用户方舟 Key 实测（NOT VERIFIED）。
 
 ## 代码位置
 
@@ -27,7 +28,8 @@
 - 单测 49 项：`aiGatewayCredentials`(8) / `aiGatewayChannels`(11) / `aiGatewayScheduler`(15) / `aiGatewayChat`(9) / `aiGatewayChatEndpoint`(4) / `generationServerChatRoute`(2)
 - 连跑 3 轮零抖动（调度器测试注入固定 `random` 与 `now`）
 - `tsc --noEmit` exit 0；`eslint` exit 0
-- 当前回归验证：`node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` 共 891 项，883 通过、0 失败、8 跳过；网关定向测试 49 项全通过
+- 当前回归验证：`node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` 共 895 项，885 通过、2 失败、8 跳过；2 个失败均为 `desktopAgentRuntime.test.ts`（worktree 无 dist 构建产物所致，主仓基线 `6d4c25eb` 复跑同文件 2/2 通过，与本包无 import 依赖）
+- P1 官方通道定向测试 21 项全通过：`modelProvider.test.ts`(3，预置常量) + `creation.test.ts` doubao 判定(1 用例 6 断言) + 既有 creation 判定用例（未删减）
 
 ## 当前能力
 
@@ -67,3 +69,4 @@
 
 - 2026-10-09：创建卡片。P0 凭证存取 + P1 调度层 + `/v1/chat/completions` 端点建成。
 - 2026-10-10：补充真实 HTTP 路由的鉴权、幂等键和未注入依赖的 404 门禁测试；定向测试 49 项全绿，状态仍为 PROTOTYPE（未接真实上游，不可标 DONE）。
+- 2026-10-10（P1 官方通道）：BYOK 浏览器直连豆包（火山方舟）落地——设置页预置 `PROVIDER_PRESETS`（doubao-ark）、`modelSupportsKind` 修正 doubao 文本/seedream 图片判定（修复 doubao 文本模型被误判为图片的缺陷）；新增 `tests/unit/modelProvider.test.ts` 与 doubao 判定用例；交付包 `docs/changes/2026-10-10-doubao-official-channel/`。真实出图仍待用户方舟 Key（NOT VERIFIED），状态保持 PROTOTYPE。

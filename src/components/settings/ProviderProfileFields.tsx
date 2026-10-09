@@ -1,5 +1,9 @@
 import { isTauri } from "@tauri-apps/api/core";
-import type { ModelProviderProfile } from "../../domain/modelProvider";
+import {
+  PROVIDER_PRESETS,
+  findProviderPreset,
+  type ModelProviderProfile,
+} from "../../domain/modelProvider";
 import ProviderApiKeyField from "./ProviderApiKeyField";
 
 export default function ProviderProfileFields({
@@ -17,6 +21,25 @@ export default function ProviderProfileFields({
 }) {
   return (
     <>
+      <label className="settings-field">
+        <span>预置提供商</span>
+        <select
+          value=""
+          onChange={(event) => {
+            const preset = findProviderPreset(event.target.value);
+            if (!preset) return;
+            onUpdate("name", preset.name);
+            onUpdate("baseUrl", preset.baseUrl);
+          }}
+        >
+          <option value="">选择预置（可选）</option>
+          {PROVIDER_PRESETS.map((preset) => (
+            <option key={preset.id} value={preset.id}>
+              {preset.label}
+            </option>
+          ))}
+        </select>
+      </label>
       <label className="settings-field">
         <span>提供商</span>
         <input

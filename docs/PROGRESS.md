@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-10 豆包（火山方舟）官方通道 P1 落地（TASK-AI-GATEWAY-001）
+
+承接 2026-10-09 豆包集成交付包，在独立 worktree `feat/TASK-AI-GATEWAY-001-doubao-p1`（基线 5d4c9551）落地 P1 官方通道：设置 → 模型供应商新增「豆包（火山方舟）」预置（`PROVIDER_PRESETS`，一键填入 `https://ark.cn-beijing.volces.com/api/v3`）；`modelSupportsKind` 修正 doubao 文本/seedream 图片判定（修复 doubao 文本模型被误判为图片的缺陷，既有模型行为不变）。新增 `tests/unit/modelProvider.test.ts`（3 例）与 doubao 判定用例（6 断言）。验证：定向 21 项全绿、全量 895 项（885 通过、2 为 desktopAgentRuntime 环境性失败——worktree 无 dist 产物，主仓基线复跑 2/2 通过）、`tsc`/`eslint` exit 0。交付包 [本轮验证](changes/2026-10-10-doubao-official-channel/verification.md)。真实方舟出图仍需用户 Key（NOT VERIFIED），网关通道豆包置灰状态不变（P3 网页通道另跟踪）。未推送、未合并、未发布。
+
 ## 2026-10-09 AI 协作规则文档结构收敛（TASK-DOCS-STRUCT-001）
 
 文档层变更，未改动 `src/**` 与 `scripts/**`。新增 `docs/engineering/CODING-STANDARDS.md`（门禁映射、依赖方向、文件规模边界、命名、错误处理）与 `docs/engineering/TESTING.md`（测试分层、Playwright 运行契约、覆盖要求、证据保存）；`docs/README.md` 升级为索引含五层权威优先级、冲突裁决细则与本地记忆四层模型；`BRANCH-POLICY.md` 补提交信息规范、worktree 落点、自动合并现状、回滚触发条件四节；`UI_RULES.md` 加 3.4 Token 化纪律；`AGENTS.md` 与 `AI_RULES.md` 明确边界。未新建 `ui-guidelines.md`、`git-workflow.md`、`UI-TOKEN-GOVERNANCE.md`，避免第二来源。
