@@ -2,7 +2,7 @@
 
 ## 2026-10-10 多平台模型能力闭环增量（TASK-AI-GATEWAY-001）
 
-在既有网关与 Codex Agent 链路上完成可插拔能力闭环：新增 `chat` operation 和独立文本结果，Ark 官方通道调用 `/chat/completions`；generation-server 增加安全 `/v1/models`，`stream:true` 返回单次 buffered SSE；图片模型选择器优先显示完整已验证模型 ID，Codex 图片事件沿归档、画布结果和 asset provenance 传递 `effectiveModel`，上游缺失时显示“图片模型未报告”。复用现有 credentialRef、Registry/Scheduler、ProviderConnection 和 UI Design System，不引入 headless、第二队列或第二套账号状态源。验证：gateway/Agent/model 定向回归 69 项全绿，类型检查、UI 标准检查通过；功能分支验证为全量 905 项 895 通过、2 个 `desktopAgentRuntime` 环境性失败、8 跳过；合并后主工作区复验为 907 项 898 通过、1 个现有 Gemini CLI 登录环境失败、8 跳过。真实 Ark/Codex 联调需要用户凭据，保持 NOT VERIFIED。
+在既有网关与 Codex Agent 链路上完成可插拔能力闭环：新增 `chat` operation 和独立文本结果，Ark 官方通道调用 `/chat/completions`；generation-server 增加安全 `/v1/models`，`stream:true` 返回单次 buffered SSE；图片模型选择器优先显示完整已验证模型 ID，Codex 图片事件沿归档、画布结果和 asset provenance 传递 `effectiveModel`，上游缺失时显示“图片模型未报告”。复用现有 credentialRef、Registry/Scheduler、ProviderConnection 和 UI Design System，不引入 headless、第二队列或第二套账号状态源。验证：gateway/Agent/model 定向回归 69 项全绿，类型检查、UI 标准检查通过；功能分支验证为全量 907 项 899 通过、0 失败、8 跳过；合并后主工作区复验为 907 项 899 通过、0 失败、8 跳过。真实 Ark/Codex 联调需要用户凭据，保持 NOT VERIFIED。
 
 ## 2026-10-10 豆包（火山方舟）BYOK 官方通道 P1
 

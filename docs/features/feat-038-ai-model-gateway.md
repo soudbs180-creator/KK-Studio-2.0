@@ -27,7 +27,7 @@
 - `src/features/creation/model.ts`：doubao 文本与 Seedream 图片能力判定
 - `src/components/settings/ProviderProfileFields.tsx`：预置选择器
 - 方案与交付包：[`docs/changes/2026-10-09-doubao-integration/spec.md`](../changes/2026-10-09-doubao-integration/spec.md)
-- P1 官方通道交付包：[`docs/changes/2026-10-10-doubao-official-channel/spec.md`](../changes/2026-10-10-doubao-official-channel/spec.md)
+- P1 官方通道交付包：[`docs/changes/2026-10-10-doubao-official-channel/spec.md`](../changes/2026-10-10-doubao-official-channel/spec.md)`n- 多平台能力闭环交付包：[`docs/changes/2026-10-10-kk-model-capability/spec.md`](../changes/2026-10-10-kk-model-capability/spec.md)
 
 ## 测试与证据
 
@@ -35,7 +35,7 @@
 - P1 官方通道定向：`tests/unit/modelProvider.test.ts`(3) 与 `creation.test.ts` doubao 判定(1)，设置页预置浏览器冒烟(1)
 - 连跑 3 轮零抖动（调度器测试注入固定 `random` 与 `now`）
 - `tsc --noEmit` exit 0；`eslint` exit 0
-- 当前回归验证：`node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` 共 905 项，895 通过、2 个 `desktopAgentRuntime` 环境性失败、8 跳过；失败来自 worktree 缺少 `vendor/canvas-agent/dist`，并非本包改动
+- 当前回归验证：`node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` 共 907 项，899 通过、0 失败、8 跳过
 
 ## 当前能力
 

@@ -5466,9 +5466,11 @@
       "docs/features/feat-038-ai-model-gateway.md",
       "docs/changes/2026-10-10-kk-model-capability/verification.md",
       "docs/superpowers/specs/2026-10-10-kk-model-capability-design.md",
-      "docs/superpowers/plans/2026-10-10-kk-model-capability.md"
+      "docs/superpowers/plans/2026-10-10-kk-model-capability.md",
+      "docs/changes/2026-10-09-doubao-integration/verification.md",
+      "docs/changes/2026-10-10-doubao-official-channel/verification.md"
     ],
-    "verification": "网关/Agent/model 定向回归 69 项全绿；类型检查、UI 标准、治理、Markdown、功能登记检查通过。全量 905 项 895 通过、2 个 desktopAgentRuntime 环境性失败、8 跳过；真实 Ark/Codex 联调与 DPAPI 仍未验证。",
+    "verification": "网关与多平台模型能力闭环已落地：gateway/Agent/model 定向回归 69 项全绿；全量回归 907 项，899 通过、0 失败、8 跳过；TypeScript、ESLint、格式、UI 标准、治理、功能、Markdown 和构建通过。真实 Ark/Codex 凭据、DPAPI、token 级上游流式及 Desktop 运行态仍未验证，按当前规则继续保持未完成。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-10",
     "requirementRefs": [
