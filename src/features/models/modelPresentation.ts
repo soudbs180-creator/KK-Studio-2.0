@@ -3,8 +3,16 @@ import { readProviderConnections } from "../creation/providerRegistry.ts";
 import { catalogForConnection } from "./modelCatalog.ts";
 import { modelDisplay } from "./modelFamilies.ts";
 export function selectedModelLabel(selection?: ModelSelection, fallback = "") {
-  if (selection?.source !== "api")
+  if (selection?.source !== "api") {
+    if (selection?.kind === "image")
+      return (
+        selection.displayName ||
+        selection.effectiveModel ||
+        selection.model ||
+        "图片模型未报告"
+      );
     return fallback || selection?.model || "模型";
+  }
   const connection = readProviderConnections().find(
     (connection) => connection.id === selection.connectionId,
   );
