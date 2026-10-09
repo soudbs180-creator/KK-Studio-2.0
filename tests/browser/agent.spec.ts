@@ -567,7 +567,6 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     await expect(
       source.getByText("图片模型未报告", { exact: true }),
     ).toBeVisible();
-    await page.waitForTimeout(250);
     await page.getByLabel("图片提示词").fill("用内置工具生成蓝色球");
     await source.getByRole("button", { name: "生成图片", exact: true }).click();
     await expect.poll(() => agent.received.turns.length).toBe(1);
