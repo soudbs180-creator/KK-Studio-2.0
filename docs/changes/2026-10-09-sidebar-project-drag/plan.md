@@ -11,8 +11,8 @@
 
 - [x] 在 tests/browser/sidebar-project-groups.spec.ts 补空组标题及文件夹内容投放测试，保存两项 RED。新增隔离 native 脚本和 Win32 鼠标助手；CDP dragTo 会绕过旧桌面故障，改用真实系统鼠标验证，保存旧包缺少 dragover/drop 的 RED。
 - [x] src-tauri/tauri.conf.json 主窗口设置 dragDropEnabled=false；SidebarProjectHeader 新增 onDropProject(id:string) 并接收已有项目 MIME；SidebarProjectGroups 透传 dropToSection；SidebarFolderGroup 将投放事件提升到文件夹容器，保留标题高亮与 stopPropagation；sidebar.css 沿用同一拖放反馈 tokens。
-- [ ] 相关测试 GREEN，运行 npm run verify；重建 production dist 与隔离 Tauri release，执行 native 脚本；运行 client:check，保留任何既有失败原件。
-- [ ] 更新 Desktop/Web 版本、功能卡/账本/PROGRESS/PROJECT_STATE/HANDOFF；提交本地候选，独立上下文审查绑定 base/head，修复实际阻断。
+- [x] 相关定向/完整浏览器测试 GREEN；重建 production dist 与隔离 Tauri release，执行 native 脚本；运行 client:check，保留任何既有失败原件。`npm run verify` 的本机最终出口仍受其他任务固定端口占用影响，CI verify正在运行。
+- [x] 更新 Desktop/Web 版本、功能卡/账本/PROGRESS/PROJECT_STATE/HANDOFF；候选已提交并建草稿PR，独立上下文已审查源代码与原生证据；补充标准1423证据文档后需对新head短补审。
 
 ## 边界与恢复
 

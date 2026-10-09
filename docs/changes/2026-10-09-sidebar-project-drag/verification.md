@@ -22,8 +22,8 @@
 
 - 设计/来源：用户项目区截图 + 现行 [UI_INDEX](../../UI_INDEX.md)、[UI_RULES](../../UI_RULES.md)；复用 sidebar既有拖放 `--bg-elevated` / `--focus-ring`，不改变外壳几何。入口 `/`：main.tsx → App.tsx → Sidebar.tsx → SidebarProjectGroups → Header/Sections → FolderGroup/Entry；sidebar.css 由 App统一加载。
 - Vite development：`node node_modules/vite/bin/vite.js --host 127.0.0.1`，1421 strictPort，加载 `/src/main.tsx`。
-- Production preview：`node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 1423 --strictPort`，加载 `/assets/index-CiRlpbQ8.js`；production入口及bundle与新Tauri相同，JS sha256 `83af8c99dec7d59831b2bb9f2725bc4191d9a13fbc9260f7cfc05e55466922db`。
-- 两态使用同一空组/已有标题/内容/取消流程，取 DOM outerHTML、script/style顺序和1920/1099/390窗口截图。证据：[development](evidence/web-development.json)、[production](evidence/web-production.json)、[1920](evidence/web-production-1920.png)、[1099](evidence/web-production-1099.png)、[390](evidence/web-production-390.png)。窄屏只证明现有响应式Web，没有物理手机/触屏拖拽验收。
+- Production preview：`node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 1423 --strictPort`，加载 `/assets/index-CiRlpbQ8.js`；production入口及bundle与新Tauri相同，JS sha256 `83af8c99dec7d59831b2bb9f2725bc4191d9a13fbc9260f7cfc05e55466922db`。标准1423补验 `errors: []`、`passed: true`。
+- 两态使用同一空组/已有标题/内容/取消流程，取 DOM outerHTML、script/style顺序和1920/1099/390窗口截图。证据：[development（早期通过收据）](evidence/web-development.json)、[production1473原收据](evidence/web-production.json)、[production1423收据](evidence/web-production-1423.json)、[1423-1920](evidence/web-production-1423-1920.png)、[1423-1099](evidence/web-production-1423-1099.png)、[1423-390](evidence/web-production-1423-390.png)。窄屏只证明现有响应式Web，没有物理手机/触屏拖拽验收。
 
 ## 项目门禁及真实失败记录
 
@@ -35,13 +35,14 @@
 | 标准verify的lint/typecheck/root/Agent/UI/format/build | PASS；root804pass/8skip，Agent172pass/2skip | `.tmp/project-drag/verify-1423.log` |
 | 标准1423全浏览器首轮 | 450pass/1flaky，零unexpected；既有几何动画捕获289预期291，retry通过 | `.tmp/project-drag/browser-full-1423-first.json` |
 | 1423全浏览器补充，workers1/retries0 | 451/451，零skip/flaky/unexpected，exit0 | `.tmp/project-drag/browser-full-1423-serial.log` / `.json` |
-| 严格development恢复 | IN PROGRESS | `.tmp/project-drag/development-recheck.log`保留字体403失败 |
+| 严格development恢复 | 代码/依赖已恢复；本机运行尚因另一个任务占用1421未启动 | `.tmp/project-drag/development-recheck.log` / `development-local-deps.log` |
 | 本地依赖恢复后的完整verify | lint/typecheck/root/Agent/UI/format/build通过；preview1423被其他任务占用，整体exit1 | `.tmp/project-drag/verify-local-deps.log` |
+| 标准1423 Web 证据补验 | PASS；三视口、errors=[] | `evidence/web-production-1423.json` 及对应截图 |
 
 - 首轮 `KK_TEST_PORT=1473 npm run verify` exit1：440pass/11fail（固定1423地址断言、伴随服务CORS及一项既有几何动画竞态）；保存 `verify.log`、`browser-failed-1473.json`，不能写成产品已通过。
 - 第二轮默认1423 `npm run verify` 浏览器阶段完成（上述一项flaky），但完整命令exit1：本任务独立Vite占1421阻止development。自有进程已关闭，不停止其他任务进程；失败保留。
 - development独立复验正确拦截16条字体403：初始node_modules junction指向主checkout，Vite默认fs边界不允许外部字体。四步插件生命周期已完成，但严格console断言仍失败；按原lockfile安装任务本地依赖恢复，不改Vite权限/测试断言、不写用户配置。原件 `development-recheck.log`。
-- 依赖恢复：原lockfile在任务临时目录 `npm ci --ignore-scripts --no-audit --no-fund`（244packages/exit0）；核对junction目标后只删除任务链接，移入本地真实node_modules，主checkout的Vite文件hash保持一致。随后development1421与完整verify1423被另一任务验证占用；CIM父进程指向 `output/ui016-canvas-upload-20261009`，不停止或复用其进程。保存 `development-local-deps.log`、`verify-local-deps.log`，等待端口协调后重验。
+- 依赖恢复：原lockfile在任务临时目录 `npm ci --ignore-scripts --no-audit --no-fund`（244packages/exit0）；核对junction目标后只删除任务链接，移入本地真实node_modules，主checkout的Vite文件hash保持一致。随后development1421与完整verify1423被另一任务验证占用；CIM父进程指向 `output/ui016-canvas-upload-20261009`，不停止或复用其进程。保存 `development-local-deps.log`、`verify-local-deps.log`，已发送协调消息等待端口释放。
 - 测试维护：原section空白投放fixture实际在空文件夹内容内，新用户契约要求那里成为子项；改为两个文件夹之间的真实section间隙并断言elementFromPoint，不弱化自动建文件夹验收。外部text/File混合拖放仍不改变分组，取消无残留高亮。
 - native早期CDP dragTo绕过旧故障；早期助手DPI、前台和光标恢复时序误差均保存原件，只以最终配对Win32 RED/GREEN作为原生结论。
 
