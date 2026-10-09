@@ -41,3 +41,8 @@
 - 必须由用户决定的产品语义/范围事项（无则写无）：无；本轮只做已授权工程诊断。
 - 外部条件、费用或不可逆动作及已有授权：无外部写入；网络/Hosted 读取未执行或不可用，不推断成功。
 - 不在本次范围的问题与账本 ID：Hosted/main 推广、端口来源契约 `TASK-VERIFY-ORIGIN-003`、Windows Hosted 恢复 `TASK-WINDOWS-ENTRY-RECOVERY-003`。
+
+## 追加授权与外部回执勘误
+
+- 2026-10-10，用户进一步明确要求“检验并且合并提交”，授权将候选分支推送、创建 PR 并在所有规则门禁满足时合并；该授权不覆盖绕过独立 review 或隐藏未完成项。
+- PR #46 head `9b023969fad8a29ef33702d7ae3674bba9b82714` 的 Hosted `verify`、`delivery`、`deploy-linux` 已成功，但历史 source105 根因仍 UNKNOWN，合并后 main 尚未回读；任务继续保持 PARTIAL。
