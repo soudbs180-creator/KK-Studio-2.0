@@ -6,9 +6,9 @@
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`
 - `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the primary checkout
-- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `docs/TASK-DOCS-STRUCT-001` at `651bb68ddf45731819805e345c516827f0cd9913`; local Canvas viewport, Doubao Ark BYOK, UI hit-target, delivery and governance evidence commits are present. The checkout is clean before restoring separately preserved concurrent work.
+- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `docs/TASK-DOCS-STRUCT-001` at `a875f24e33d6f0dfde0de75b6e2cb846e1e1526a`; local Canvas viewport, Doubao Ark BYOK, UI hit-target, delivery and governance evidence commits are present. The checkout is clean before restoring separately preserved concurrent work.
 - `taskLedger`: 117 records; 68 DONE, 26 PARTIAL, 18 TODO, 4 BLOCKED, 1 REVIEW; 49 open records.
-- `workspaceWorktrees`: 51 registered worktrees, with 25 under the approved root, 23 nested under the primary checkout, and 3 external; the current audit pointer is `worktree-reclamation-plan-fb688f6e-896c-4933-9bcf-aedfeea297e3.json`. Fourteen generated dependency/build directories were reclaimed from the clean concurrency worktree; its evidence `.tmp` remains protected. Dirty, active, nested, external, and the duplicate Doubao source worktree remain protected.
+- `workspaceWorktrees`: 51 registered worktrees, with 25 under the approved root, 23 nested under the primary checkout, and 3 external; the current audit pointer is `worktree-reclamation-plan-4ed1d2e6-d1f1-426d-aae2-26769e2adad3.json`. Fourteen generated dependency/build directories were reclaimed from the clean concurrency worktree; its evidence `.tmp` remains protected. Dirty, active, nested, external, and the duplicate Doubao source worktree remain protected.
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.

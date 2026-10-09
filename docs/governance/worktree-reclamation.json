@@ -1,12 +1,12 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-09T18:24:28.553Z",
-  "planId": "fb688f6e-896c-4933-9bcf-aedfeea297e3",
-  "immutablePlan": "worktree-reclamation-plan-fb688f6e-896c-4933-9bcf-aedfeea297e3.json",
+  "generatedAt": "2026-10-09T18:28:18.386Z",
+  "planId": "4ed1d2e6-d1f1-426d-aae2-26769e2adad3",
+  "immutablePlan": "worktree-reclamation-plan-4ed1d2e6-d1f1-426d-aae2-26769e2adad3.json",
   "summary": {
     "total": 51,
-    "cleanInWorkspace": 17,
-    "dirtyInWorkspace": 8,
+    "cleanInWorkspace": 18,
+    "dirtyInWorkspace": 7,
     "generatedDirectories": 1,
     "cleanCompletedWorktrees": 0
   },
