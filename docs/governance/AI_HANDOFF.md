@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-10-10 当前主线恢复入口
+
+当前 canonical 本地 checkout 为 `D:/kk-studio/KK-Studio-2.0`、分支 `main`、HEAD `4b4ceb934bcb82039442d0678f3f80c5954b4c2a`，工作树 clean；`origin/main` 仍为独立远端快照 `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`。本轮 `TASK-AGENT-001` Web 回归修复已合入 main，交付包和账本绑定在 `docs/changes/2026-10-10-remaining-verification/`，本地 Node/Agent/browser/UI/development 证据已保存，开发态 receipt 位于该包 `evidence/development-plugins-receipt.json`。若继续工作，先读该包、`docs/governance/PROJECT_STATE.md` 与 `task-ledger.json`，再确认 117 项账本状态；不要把本地 fixture 当真实 Provider、Hosted、Tauri 或 Mobile 验收。根 checkout 的一次合并后 development 重试曾在 Edge 启动阶段挂起，保留为未验证现象；隔离工作树 receipt 为 PASS。未关闭重点包括 `TASK-PROV-005`、`TASK-PROV-006`、`TASK-VERIFY-CONCURRENCY-002`、`TASK-VERIFY-ORIGIN-003`、`TASK-WINDOWS-ENTRY-RECOVERY-003`、`TASK-DOCS-HISTORY-001` 及真实 Provider/GPU、Hosted、Desktop/Mobile 验收。
+
 ## 2026-10-09 失败任务 source105 本地复验
 
 主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](../changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](../changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。

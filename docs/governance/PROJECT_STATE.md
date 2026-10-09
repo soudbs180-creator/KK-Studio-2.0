@@ -6,7 +6,7 @@
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`
 - `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the primary checkout
-- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `docs/TASK-DOCS-STRUCT-001` at the current local `HEAD` (resolve with `git rev-parse HEAD`); Canvas viewport, Doubao Ark BYOK, UI hit-target, model capability, desktop bundle and governance evidence commits are present. The checkout is clean.
+- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on local `main@4b4ceb934bcb82039442d0678f3f80c5954b4c2a`; the remaining Web verification regression fix and its governance package are fast-forwarded into main. `origin/main` remains the separately read-back remote ref at `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`. The checkout is clean.
 - `taskLedger`: 117 records; 68 DONE, 26 PARTIAL, 18 TODO, 4 BLOCKED, 1 REVIEW; 49 open records.
 - `workspaceWorktrees`: 54 registered worktrees, with 25 under the approved root, 26 nested under the primary checkout, 2 external Codex checkouts, and the primary checkout; the current audit pointer is `worktree-reclamation-plan-fd8ff85b-610d-4e80-909f-6b4b45c88acf.json`. The final audit has zero generated-directory candidates and zero whole-worktree removal candidates. Fourteen generated dependency/build directories and one additional `.tmp` directory (27 files, 4.05 MB) were reclaimed only after immutable SHA inventory and an external recovery copy. Dirty, active, nested, external, and the duplicate Doubao source worktree remain protected.
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
@@ -15,6 +15,10 @@
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
+## 2026-10-10 当前主线剩余回归验证
+
+本地 `main@4b4ceb93` 已承接 `TASK-AGENT-001` 的 Web 回归修复：Codex 画布生图门禁、设置选择器几何、Google 图片归档和插件开发态断言均已修复。隔离工作树的完整 `npm run verify` 通过（Node 911、Agent 172/174、生产浏览器 455/455、UI 215/0、development receipt PASS）；开发态 receipt 已归档在 `docs/changes/2026-10-10-remaining-verification/evidence/development-plugins-receipt.json`。根 checkout 的合并后 development 重试在 Edge 启动阶段无输出挂起，未计为新 PASS；隔离 receipt 与生产 455/455 仍是本轮证据。`TASK-AGENT-001` 保持 PARTIAL；Provider/GPU、Hosted、Tauri、Mobile 和用户产品验收继续开放。详见 [验证](../changes/2026-10-10-remaining-verification/verification.md)、[审查](../changes/2026-10-10-remaining-verification/review.md)。
 
 # 当前项目状态
 
