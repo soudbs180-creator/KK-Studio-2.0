@@ -6,6 +6,7 @@
 - Intent / Spec / Plan / AC：本目录 `intent.md`、`spec.md`、`plan.md`、AC-1–AC-4
 - cwd / branch：`D:/kk-studio/.worktrees/remaining-verification` / `codex/TASK-AGENT-001-remaining-verification`
 - 被验证 base SHA：`edda6157e47c644cd073f52a57e3c31a86e40397`
+- 被验证 head SHA：`5331c16b7bddf2e7b9cc02e897bc06d8c7ec5204`（源码与测试提交；随后仅补本文档元数据）
 - dirty 状态及 patch：验证针对该 base 加本目录所述工作树改动；提交前工作树包含 7 个源码/测试文件和本交付包。
 - Node/npm/Rust/浏览器/OS/工具版本：Node 24.20.0、npm、Vite 7.3.6、Playwright 12 workers、Microsoft Edge、Windows；Rust 检查沿用当前主线基线。
 

@@ -4,7 +4,7 @@
 - 时间与时区：2026-10-10，Asia/Shanghai
 - Reviewer/context/工具或模型：主代理独立于历史候选分支，基于当前 `edda6157e47c644cd073f52a57e3c31a86e40397` 工作树复核；Git diff、静态门禁和完整 verify。
 - 独立于实现上下文：否；这是实现者 self-review，后续仍需独立 review。
-- Base SHA / head SHA：base `edda6157e47c644cd073f52a57e3c31a86e40397`；head 为提交本包后的当前分支提交。
+- Base SHA / head SHA：base `edda6157e47c644cd073f52a57e3c31a86e40397`；源码/测试 head 5331c16b7bddf2e7b9cc02e897bc06d8c7ec5204。
 - PR / branch / worktree：本地 branch `codex/TASK-AGENT-001-remaining-verification` / `D:/kk-studio/.worktrees/remaining-verification`
 
 ## 评审范围和方式
