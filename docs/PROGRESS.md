@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-10 多平台模型能力闭环增量（TASK-AI-GATEWAY-001）
+
+在既有网关与 Codex Agent 链路上完成可插拔能力闭环：新增 `chat` operation 和独立文本结果，Ark 官方通道调用 `/chat/completions`；generation-server 增加安全 `/v1/models`，`stream:true` 返回单次 buffered SSE；图片模型选择器优先显示完整已验证模型 ID，Codex 图片事件沿归档、画布结果和 asset provenance 传递 `effectiveModel`，上游缺失时显示“图片模型未报告”。复用现有 credentialRef、Registry/Scheduler、ProviderConnection 和 UI Design System，不引入 headless、第二队列或第二套账号状态源。验证：gateway/Agent/model 定向回归 69 项全绿，类型检查、UI 标准检查通过；全量 905 项 895 通过、2 个 `desktopAgentRuntime` 环境性失败、8 跳过。真实 Ark/Codex 联调需要用户凭据，保持 NOT VERIFIED。
+
 ## 2026-10-10 豆包（火山方舟）BYOK 官方通道 P1
 
 在现有 OpenAI 兼容 BYOK 链路上新增「豆包（火山方舟）」预置，选择预置会一次性填入名称与 `https://ark.cn-beijing.volces.com/api/v3`；修正 `doubao-*` 文本模型与 `doubao-seedream-*` 图片模型的能力判定，并保留网关通道置灰和真实上游未验证边界。补充模型预置单测、设置页浏览器冒烟和官方通道交付包。当前回归为 897 项（889 通过、0 失败、8 跳过），相关网关与画布回归通过；真实方舟 Key、Web/Desktop 真实联调和 DPAPI 仍待外部条件。

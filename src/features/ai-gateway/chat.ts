@@ -138,6 +138,7 @@ export function buildInput(request: ChatRequest): GenerationInput {
   if (request.max_tokens !== undefined) extra.maxTokens = request.max_tokens;
   return {
     model: request.model,
+    operation: "chat",
     prompt: buildPrompt(request.messages),
     attachments: request.attachments ?? [],
     ...(Object.keys(extra).length ? { extra } : {}),
@@ -213,35 +214,23 @@ export function newCompletionId(): string {
   return `chatcmpl-${hex}`;
 }
 
-/**
- * Streaming is not implemented yet. Returning 501 keeps a client that already
- * sends `stream: true` on a clear, actionable error instead of a truncated
- * non-streaming body it would try to parse as SSE.
- */
 export function runChatCompletion(
   deps: ChatDeps,
   request: ChatRequest,
   idempotencyKey: string,
-): Promise<{ readonly channelId: string; readonly text: string }> {
-  if (request.stream)
-    return Promise.reject(
-      Object.assign(
-        new Error("Streaming is not implemented for this gateway yet"),
-        {
-          normalized: {
-            errorClass: "BAD_REQUEST",
-            httpStatus: 501,
-            retryable: false,
-            detail: "stream=true is not supported yet; retry with stream=false",
-          } satisfies NormalizedError,
-        },
-      ),
-    );
-
+): Promise<{
+  readonly channelId: string;
+  readonly text: string;
+  readonly usage?: {
+    readonly promptTokens?: number;
+    readonly completionTokens?: number;
+    readonly totalTokens?: number;
+  };
+}> {
   return (async () => {
     const outcome = await deps.scheduler.dispatch({
       model: request.model,
-      operation: "generate",
+      operation: "chat",
       input: buildInput(request),
       idempotencyKey,
       ...(request.session_id ? { sessionId: request.session_id } : {}),
@@ -262,8 +251,24 @@ export function runChatCompletion(
           } satisfies NormalizedError,
         },
       );
-    const bytes = Buffer.from(outcome.assetBase64, "base64");
-    return { channelId: outcome.channelId, text: bytes.toString("utf8") };
+    if (outcome.kind !== "text")
+      throw Object.assign(
+        new Error("Channel returned a non-text result for chat completion"),
+        {
+          normalized: {
+            errorClass: "UPSTREAM_ERROR",
+            httpStatus: 502,
+            retryable: false,
+            detail: "channel result kind does not match chat operation",
+            channelId: outcome.channelId,
+          } satisfies NormalizedError,
+        },
+      );
+    return {
+      channelId: outcome.channelId,
+      text: outcome.text,
+      ...(outcome.usage ? { usage: outcome.usage } : {}),
+    };
   })();
 }
 

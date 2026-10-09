@@ -24,7 +24,7 @@ import {
 
 const capabilities: CapabilityManifest = {
   modalities: ["text"],
-  operations: ["generate"],
+  operations: ["generate", "chat"],
   maxOutputs: 1,
   async: false,
 };
@@ -148,9 +148,8 @@ function chatHarness(
           normalized: behavior.normalized,
         });
       return {
-        kind: "inline",
-        assetBase64: Buffer.from("a cat", "utf8").toString("base64"),
-        mime: "text/plain",
+        kind: "text",
+        text: "a cat",
       };
     },
     // Stubbed explicitly: the inherited implementation would issue a real
@@ -191,7 +190,7 @@ test("credentials reach the vault through the channel reference", async () => {
   const seen: Array<string | undefined> = [];
   await scheduler.dispatch({
     model: "kk-default",
-    operation: "generate",
+    operation: "chat",
     input: { model: "kk-default", prompt: "cat", attachments: [] },
     idempotencyKey: "job-1",
     resolveSecret: async (ref) => {

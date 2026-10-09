@@ -66,6 +66,9 @@ function json(res: ServerResponse, status: number, value: unknown) {
   });
   res.end(JSON.stringify(value));
 }
+function sse(res: ServerResponse, value: unknown): void {
+  res.write(`data: ${JSON.stringify(value)}\n\n`);
+}
 const controlsSchema = z
   .object({
     platformEnabled: z.boolean().optional(),
@@ -137,6 +140,14 @@ export function createGenerationServer(options: {
         }
         const principal = options.authenticate(req);
         if (!principal) throw new PlatformError("UNAUTHENTICATED", 401);
+        if (path === "/v1/models" && req.method === "GET") {
+          if (!options.chat) throw new PlatformError("CHAT_NOT_ENABLED", 404);
+          json(res, 200, {
+            object: "list",
+            data: options.chat.scheduler.publicModels(),
+          });
+          return;
+        }
         if (path === "/v1/chat/completions" && req.method === "POST") {
           // Optional dependency: a deployment without a configured gateway keeps
           // its existing surface, so this only 404s when chat is genuinely absent.
@@ -154,8 +165,34 @@ export function createGenerationServer(options: {
               body,
               key.trim(),
             );
+            const completionId = newCompletionId();
+            if (body.stream) {
+              res.writeHead(200, {
+                "Content-Type": "text/event-stream",
+                "Cache-Control": "no-cache",
+                Connection: "keep-alive",
+                "X-Content-Type-Options": "nosniff",
+              });
+              sse(res, {
+                id: completionId,
+                object: "chat.completion.chunk",
+                created: Math.floor(Date.now() / 1000),
+                model: body.model,
+                choices: [
+                  {
+                    index: 0,
+                    delta: { role: "assistant", content: completion.text },
+                    finish_reason: null,
+                  },
+                ],
+                kk_meta: { channelId: completion.channelId },
+              });
+              res.write("data: [DONE]\n\n");
+              res.end();
+              return;
+            }
             json(res, 200, {
-              id: newCompletionId(),
+              id: completionId,
               object: "chat.completion",
               created: Math.floor(Date.now() / 1000),
               model: body.model,
@@ -167,9 +204,9 @@ export function createGenerationServer(options: {
                 },
               ],
               usage: {
-                prompt_tokens: 0,
-                completion_tokens: 0,
-                total_tokens: 0,
+                prompt_tokens: completion.usage?.promptTokens ?? 0,
+                completion_tokens: completion.usage?.completionTokens ?? 0,
+                total_tokens: completion.usage?.totalTokens ?? 0,
               },
               kk_meta: { channelId: completion.channelId },
             });

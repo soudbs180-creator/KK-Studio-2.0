@@ -49,6 +49,21 @@ export function generatedImageItems(
     );
   });
 }
+
+function imageDetail(item: AgentChatItem): { effectiveModel?: unknown } {
+  return item.detail && typeof item.detail === "object"
+    ? (item.detail as { effectiveModel?: unknown })
+    : {};
+}
+
+export function reportedImageModel(item: AgentChatItem): string | undefined {
+  const value = imageDetail(item).effectiveModel;
+  return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+export function generatedImageModel(item: AgentChatItem): string {
+  return reportedImageModel(item) ?? "图片模型未报告";
+}
 export function generatedImageId(threadId: string, itemId: string): string {
   return `codex-${threadId}-${itemId}`;
 }

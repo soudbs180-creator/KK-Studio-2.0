@@ -29,12 +29,15 @@ import {
 
 const capabilities: CapabilityManifest = {
   modalities: ["text"],
-  operations: ["generate"],
+  operations: ["generate", "chat"],
   maxOutputs: 1,
   async: false,
 };
 
-function chatDeps(behavior: NormalizedError | null): ChatDeps {
+function chatDeps(
+  behavior: NormalizedError | null,
+  operations: CapabilityManifest["operations"] = capabilities.operations,
+): ChatDeps {
   const adapter: ChannelAdapter = {
     ...doubaoAdapter,
     provider: "httpprobe",
@@ -42,9 +45,9 @@ function chatDeps(behavior: NormalizedError | null): ChatDeps {
       if (behavior)
         throw Object.assign(new Error("upstream"), { normalized: behavior });
       return {
-        kind: "inline",
-        assetBase64: Buffer.from("a cat", "utf8").toString("base64"),
-        mime: "text/plain",
+        kind: "text",
+        text: "a cat",
+        usage: { promptTokens: 3, completionTokens: 2, totalTokens: 5 },
       };
     },
     async poll() {
@@ -60,7 +63,7 @@ function chatDeps(behavior: NormalizedError | null): ChatDeps {
     weight: 10,
     baseUrl: "https://ark.cn-beijing.volces.com/api/v3",
     credentialRef: "conn.chat",
-    capabilities,
+    capabilities: { ...capabilities, operations },
     modelMapping: { "kk-default": "ep-20260101abcdef" },
     timeoutMs: 30_000,
   };
@@ -86,7 +89,72 @@ test("a successful completion returns an OpenAI-shaped envelope", async () => {
   const completion = await runChatCompletion(deps, request, "idem-1");
   assert.equal(completion.channelId, "chat");
   assert.equal(completion.text, "a cat");
+  assert.deepEqual(completion.usage, {
+    promptTokens: 3,
+    completionTokens: 2,
+    totalTokens: 5,
+  });
   assert.match(newCompletionId(), /^chatcmpl-[a-f0-9]{32}$/);
+});
+
+test("chat dispatch selects a channel that declares only the chat operation", async () => {
+  const completion = await runChatCompletion(
+    chatDeps(null, ["chat"]),
+    { model: "kk-default", messages: [{ role: "user", content: "x" }] },
+    "idem-chat-only",
+  );
+  assert.equal(completion.text, "a cat");
+});
+
+test("a chat completion rejects an inline image result instead of decoding it", async () => {
+  const deps = chatDeps(null);
+  const imageAdapter: ChannelAdapter = {
+    ...doubaoAdapter,
+    provider: "image-result",
+    async submit() {
+      return {
+        kind: "inline",
+        assetBase64: Buffer.from("not text", "utf8").toString("base64"),
+        mime: "image/png",
+      };
+    },
+  };
+  const registry = new ChannelRegistry();
+  registry.registerAdapter(imageAdapter);
+  registry.replace({
+    registrations: [
+      {
+        id: "image-result",
+        adapter: imageAdapter,
+        kind: "official_api",
+        enabled: true,
+        priority: 100,
+        weight: 10,
+        baseUrl: "https://example.test",
+        capabilities,
+        modelMapping: { "kk-default": "ep-20260101abcdef" },
+        timeoutMs: 30_000,
+      },
+    ],
+    states: new Map(),
+  });
+  const imageDeps: ChatDeps = {
+    ...deps,
+    scheduler: new Scheduler(registry, { random: () => 0 }),
+  };
+  await assert.rejects(
+    () =>
+      runChatCompletion(
+        imageDeps,
+        { model: "kk-default", messages: [{ role: "user", content: "x" }] },
+        "idem-image-result",
+      ),
+    (error: unknown) =>
+      (error as { normalized?: { errorClass?: string; httpStatus?: number } })
+        .normalized?.errorClass === "UPSTREAM_ERROR" &&
+      (error as { normalized?: { httpStatus?: number } }).normalized
+        ?.httpStatus === 502,
+  );
 });
 
 test("an upstream failure surfaces as an OpenAI error body", async () => {
@@ -113,23 +181,18 @@ test("an upstream failure surfaces as an OpenAI error body", async () => {
   );
 });
 
-test("streaming is refused with an actionable status rather than a truncated body", async () => {
+test("streaming completion dispatches the same buffered text result", async () => {
   const deps = chatDeps(null);
-  await assert.rejects(
-    () =>
-      runChatCompletion(
-        deps,
-        {
-          model: "kk-default",
-          messages: [{ role: "user", content: "x" }],
-          stream: true,
-        },
-        "idem-3",
-      ),
-    (error: unknown) =>
-      (error as { normalized?: { httpStatus?: number } }).normalized
-        ?.httpStatus === 501,
+  const result = await runChatCompletion(
+    deps,
+    {
+      model: "kk-default",
+      messages: [{ role: "user", content: "x" }],
+      stream: true,
+    },
+    "idem-3",
   );
+  assert.equal(result.text, "a cat");
 });
 
 test("an async channel is redirected to the jobs surface", async () => {

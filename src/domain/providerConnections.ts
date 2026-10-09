@@ -38,6 +38,7 @@ export const capabilityManifestSchema = z.object({
   operations: z.array(
     z.enum([
       "generate",
+      "chat",
       "edit",
       "inpaint",
       "outpaint",

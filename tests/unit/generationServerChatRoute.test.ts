@@ -19,7 +19,7 @@ import { PersistentGenerationWorker } from "../../src/features/generation-server
 
 const capabilities: CapabilityManifest = {
   modalities: ["text"],
-  operations: ["generate"],
+  operations: ["generate", "chat"],
   maxOutputs: 1,
   async: false,
 };
@@ -49,9 +49,8 @@ function createChatServer(withChat = true) {
     async submit(_context, _input, request) {
       assert.equal(await request.resolveSecret(), "route-secret");
       return {
-        kind: "inline",
-        assetBase64: Buffer.from("route answer", "utf8").toString("base64"),
-        mime: "text/plain",
+        kind: "text",
+        text: "route answer",
       };
     },
   };
@@ -157,6 +156,30 @@ test("chat route validates auth and idempotency before dispatching", async () =>
   }
 });
 
+test("models route exposes safe model and capability metadata", async () => {
+  const { server, repository, worker } = createChatServer();
+  const url = await listen(server);
+  try {
+    const response = await fetch(`${url}/v1/models`, {
+      headers: { Authorization: "Bearer route-token" },
+    });
+    assert.equal(response.status, 200);
+    const body = (await response.json()) as {
+      object: string;
+      data: Array<Record<string, unknown>>;
+    };
+    assert.equal(body.object, "list");
+    assert.equal(body.data[0]?.id, "kk-default");
+    assert.equal(body.data[0]?.owned_by, "route-test");
+    assert.equal("baseUrl" in (body.data[0] ?? {}), false);
+    assert.equal("credentialRef" in (body.data[0] ?? {}), false);
+  } finally {
+    await worker.stop();
+    await close(server);
+    repository.close();
+  }
+});
+
 test("chat route stays disabled when no gateway dependency is injected", async () => {
   const { server, repository, worker } = createChatServer(false);
   const url = await listen(server);
@@ -174,6 +197,39 @@ test("chat route stays disabled when no gateway dependency is injected", async (
       }),
     });
     assert.equal(response.status, 404);
+  } finally {
+    await worker.stop();
+    await close(server);
+    repository.close();
+  }
+});
+
+test("chat route returns a buffered OpenAI SSE stream", async () => {
+  const { server, repository, worker } = createChatServer();
+  const url = await listen(server);
+  try {
+    const response = await fetch(`${url}/v1/chat/completions`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer route-token",
+        "Content-Type": "application/json",
+        "Idempotency-Key": "route-stream",
+      },
+      body: JSON.stringify({
+        model: "kk-default",
+        messages: [{ role: "user", content: "hello" }],
+        stream: true,
+      }),
+    });
+    assert.equal(response.status, 200);
+    assert.match(
+      response.headers.get("content-type") ?? "",
+      /text\/event-stream/,
+    );
+    const body = await response.text();
+    assert.match(body, /data: /);
+    assert.match(body, /route answer/);
+    assert.match(body, /data: \[DONE\]/);
   } finally {
     await worker.stop();
     await close(server);

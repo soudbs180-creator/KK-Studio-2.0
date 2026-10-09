@@ -27,6 +27,7 @@ export interface DemoResult {
   poster?: string;
   text?: string;
   description: string;
+  model?: string;
   source: "demo" | "provider";
 }
 

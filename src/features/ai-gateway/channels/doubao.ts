@@ -102,6 +102,15 @@ function mapExtra(input: GenerationInput): Record<string, unknown> {
   return { ...extra, ...(input.extra ?? {}) };
 }
 
+function mapChatExtra(input: GenerationInput): Record<string, unknown> {
+  const extra = mapExtra(input);
+  if ("maxTokens" in extra) {
+    extra.max_tokens = extra.maxTokens;
+    delete extra.maxTokens;
+  }
+  return extra;
+}
+
 export const doubaoAdapter: ChannelAdapter = {
   provider: "doubao",
   kind: "official_api",
@@ -127,6 +136,73 @@ export const doubaoAdapter: ChannelAdapter = {
   ): Promise<SubmitResult> {
     const secret = await requireSecret(request);
     const endpointId = this.resolveModel(context, input.model);
+    if (input.operation === "chat") {
+      const response = await fetch(`${context.baseUrl}/chat/completions`, {
+        method: "POST",
+        headers: authHeaders(secret, request.idempotencyKey),
+        body: JSON.stringify({
+          model: endpointId,
+          messages: [{ role: "user", content: input.prompt }],
+          ...mapChatExtra(input),
+        }),
+        ...(request.signal ? { signal: request.signal } : {}),
+      });
+      if (!response.ok) {
+        const body = await readJson(response);
+        throw Object.assign(new Error(`Ark chat failed: ${response.status}`), {
+          normalized: normalizeHttpFailure({
+            status: response.status,
+            body,
+            signalText: readErrorEnvelope(body),
+            channelId: context.channelId,
+          }),
+        });
+      }
+      const body = (await readJson(response)) as
+        | {
+            choices?: Array<{ message?: { content?: unknown } }>;
+            usage?: {
+              prompt_tokens?: unknown;
+              completion_tokens?: unknown;
+              total_tokens?: unknown;
+            };
+          }
+        | undefined;
+      const text = body?.choices?.[0]?.message?.content;
+      if (typeof text !== "string" || !text.trim())
+        throw Object.assign(
+          new Error("Ark response contained no assistant text"),
+          {
+            normalized: {
+              errorClass: "UPSTREAM_ERROR",
+              httpStatus: 502,
+              retryable: true,
+              channelId: context.channelId,
+              detail: "missing assistant content",
+            } satisfies NormalizedError,
+          },
+        );
+      const usage = body?.usage;
+      return {
+        kind: "text",
+        text,
+        ...(usage
+          ? {
+              usage: {
+                ...(typeof usage.prompt_tokens === "number"
+                  ? { promptTokens: usage.prompt_tokens }
+                  : {}),
+                ...(typeof usage.completion_tokens === "number"
+                  ? { completionTokens: usage.completion_tokens }
+                  : {}),
+                ...(typeof usage.total_tokens === "number"
+                  ? { totalTokens: usage.total_tokens }
+                  : {}),
+              },
+            }
+          : {}),
+      };
+    }
     const response = await fetch(`${context.baseUrl}/images/generations`, {
       method: "POST",
       headers: authHeaders(secret, request.idempotencyKey),

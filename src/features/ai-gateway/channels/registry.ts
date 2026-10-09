@@ -52,6 +52,12 @@ export interface ModelIndexSnapshot {
   readonly states: ReadonlyMap<string, IndexableState>;
 }
 
+export interface PublicModelDescriptor {
+  readonly id: string;
+  readonly owned_by: string;
+  readonly capabilities: CapabilityManifest;
+}
+
 export function supportsOperation(
   capabilities: CapabilityManifest,
   operation: string,
@@ -100,6 +106,33 @@ export class ChannelRegistry {
 
   snapshot(): ModelIndexSnapshot {
     return this.#index;
+  }
+
+  /**
+   * Returns the non-sensitive model projection used by `/v1/models`. A model
+   * may be mapped by several channels; the first eligible registration owns the
+   * public capability declaration and duplicate ids are collapsed.
+   */
+  publicModels(): PublicModelDescriptor[] {
+    const models = new Map<string, PublicModelDescriptor>();
+    for (const registration of this.#index.registrations) {
+      if (!registration.enabled) continue;
+      const state = this.#index.states.get(registration.id);
+      if (state === "disabled" || state === "quarantined") continue;
+      for (const model of Object.keys(registration.modelMapping)) {
+        if (models.has(model)) continue;
+        models.set(model, {
+          id: model,
+          owned_by: registration.adapter.provider,
+          capabilities: {
+            ...registration.capabilities,
+            modalities: [...registration.capabilities.modalities],
+            operations: [...registration.capabilities.operations],
+          },
+        });
+      }
+    }
+    return [...models.values()].sort((a, b) => a.id.localeCompare(b.id));
   }
 
   /**
