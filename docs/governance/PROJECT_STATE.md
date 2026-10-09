@@ -1,8 +1,8 @@
 # 当前项目状态
 
-## 2026-10-09 侧栏项目拖放修复候选
+## 2026-10-09 侧栏项目拖放修复完成本地验收
 
-本任务实测基线 origin/main8090475958f1a0bdd1b4b36ada7f2aba1e4e6264（PR43后），分支 fix/TASK-UI-015-project-drag；Desktop/Web候选2.1.13、Mobile规划2.1.1。修复原生拖放接管与标题/文件夹内容命中，Web35条侧栏定向、新桌面真实鼠标四路径通过；完整门禁及独立审查收尾中。现有114条上游账本与全部功能保留，新增TASK-UI-015；FEAT-023 PARTIAL、持久分组任务仍开放。未合并/发布、未切换原快捷方式或用户数据。当前恢复依据[验证](../changes/2026-10-09-sidebar-project-drag/verification.md)与实际Git；下方保留历史状态，不作为本任务当前主线断言。
+本任务实测基线 origin/main8090475958f1a0bdd1b4b36ada7f2aba1e4e6264（PR43后），分支 fix/TASK-UI-015-project-drag；Desktop/Web候选2.1.13、Mobile规划2.1.1。修复原生拖放接管与标题/文件夹内容命中，Web35条侧栏定向、451条完整浏览器、新桌面真实鼠标四路径、标准1423证据以及 Hosted quality #303 完整门禁通过；独立审查无P0–P3。现有上游账本与全部功能保留，TASK-UI-015 DONE；FEAT-023 PARTIAL、持久分组任务仍开放。未合并/发布、未切换原快捷方式或用户数据。当前恢复依据[验证](../changes/2026-10-09-sidebar-project-drag/verification.md)与实际Git；下方保留历史状态。
 
 ## 2026-10-09 失败任务 source105 本地复验
 

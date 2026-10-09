@@ -22,13 +22,13 @@
       "tests/browser/sidebar-project-groups.spec.ts",
       "tests/desktop/sidebar-project-drag.mjs"
     ],
-    "status": "IN_PROGRESS",
+    "status": "DONE",
     "evidence": [
       "docs/changes/2026-10-09-sidebar-project-drag/verification.md",
       "docs/changes/2026-10-09-sidebar-project-drag/review.md"
     ],
-    "verification": "完成现有实现与规范调查，准备失败复现；未宣称修复或桌面验收通过。",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "35条侧栏定向与451条完整浏览器测试零重试通过；旧/新EXE同一Win32鼠标驱动RED/GREEN；Hosted quality #303完整verify、delivery、deploy-linux成功。",
+    "verificationResult": "PASS",
     "updated": "2026-10-09"
   },
   {

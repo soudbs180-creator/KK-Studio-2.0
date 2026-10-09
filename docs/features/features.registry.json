@@ -1171,7 +1171,7 @@
     "area": "system",
     "status": "PARTIAL",
     "card": "docs/features/feat-023-navigation.md",
-    "summary": "真实快照驱动项目列表与搜索，侧栏、应用菜单和窄屏导航可用；候选支持拖入空组自动建文件夹及已有文件夹收纳，分组/置顶仍为会话态。",
+    "summary": "真实快照驱动项目列表与搜索，侧栏、应用菜单和窄屏导航可用；支持拖入空组自动建文件夹及已有文件夹收纳，分组/置顶仍为会话态。",
     "entryPoints": [
       "左侧栏 Sidebar",
       "搜索/收藏（Ctrl/⌘+K）",

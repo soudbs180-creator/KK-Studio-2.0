@@ -1,8 +1,8 @@
 # 当前进度
 
-## 2026-10-09 侧栏项目拖放修复候选
+## 2026-10-09 侧栏项目拖放修复完成本地验收
 
-TASK-UI-015 基于实际 origin/main80904759，在独立任务分支修复 Windows 拖放事件接管、空项目标题投放和文件夹内容投放。未分组项目拖入空组自动建同名文件夹，拖入已有文件夹成为子项；旧桌面真实鼠标 RED、新 2.1.13 带 Agent 桌面包四条路径 GREEN。35 条侧栏定向检查通过，全量与严格开发检查及独立审查正在收尾，当前不声明合并/发布或替换用户启动入口。文件夹仍为会话态 Prototype，FEAT-023 PARTIAL、持久分组 TASK-PROJECT-SIDEBAR-001 保持开放；Mobile 规划2.1.1。见[本轮验证](changes/2026-10-09-sidebar-project-drag/verification.md)。以下段落保留其历史时点。
+TASK-UI-015 基于实际 origin/main80904759，在独立任务分支修复 Windows 拖放事件接管、空项目标题投放和文件夹内容投放。未分组项目拖入空组自动建同名文件夹，拖入已有文件夹成为子项；旧桌面真实鼠标 RED、新 2.1.13 带 Agent 桌面包四条路径 GREEN。35 条侧栏定向、451 条完整浏览器零重试、标准1423证据和 Hosted quality #303 均通过；独立审查无P0–P3。PR仍为草稿，未合并/发布或替换用户入口。文件夹仍为会话态 Prototype，FEAT-023 PARTIAL、持久分组 TASK-PROJECT-SIDEBAR-001 保持开放；Mobile 规划2.1.1。见[本轮验证](changes/2026-10-09-sidebar-project-drag/verification.md)。以下段落保留其历史时点。
 
 ## 2026-10-09 失败任务 source105 本地复验
 

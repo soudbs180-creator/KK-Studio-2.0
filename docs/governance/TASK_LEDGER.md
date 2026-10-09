@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
-| TASK-UI-015 | 修复桌面侧栏项目拖拽与空分组收纳 | IN_PROGRESS | none | root |
+| TASK-UI-015 | 修复桌面侧栏项目拖拽与空分组收纳 | DONE | none | root |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | TASK-LAUNCH-001 | root |
 | TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | TASK-LAUNCH-001 | root |
 | TASK-IMAGE-RETRY-004 | 修复主线区域重试验收读取旧成功任务 | DONE | TASK-IMAGE-EDIT-001 | root |
@@ -130,7 +130,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-UI-015-project-drag`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-UI-015-project-drag`
 - Modules: src/components/SidebarProjectHeader.tsx, src/components/SidebarProjectGroups.tsx, src/components/SidebarFolderGroup.tsx, src/styles/sidebar.css, src-tauri/tauri.conf.json, tests/browser/sidebar-project-groups.spec.ts, tests/desktop/sidebar-project-drag.mjs
-- Verification: NOT_VERIFIED — 完成现有实现与规范调查，准备失败复现；未宣称修复或桌面验收通过。
+- Verification: PASS — 35条侧栏定向与451条完整浏览器测试零重试通过；旧/新EXE同一Win32鼠标驱动RED/GREEN；Hosted quality #303完整verify、delivery、deploy-linux成功。
 - Evidence: [docs/changes/2026-10-09-sidebar-project-drag/verification.md](../../docs/changes/2026-10-09-sidebar-project-drag/verification.md), [docs/changes/2026-10-09-sidebar-project-drag/review.md](../../docs/changes/2026-10-09-sidebar-project-drag/review.md)
 - Updated: 2026-10-09
 

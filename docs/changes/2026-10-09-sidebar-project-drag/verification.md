@@ -1,6 +1,6 @@
 # Verification：修复侧栏项目拖拽
 
-- Task ID：TASK-UI-015；状态：IN PROGRESS；[intent](intent.md)、[spec](spec.md)、[plan](plan.md)、[review](review.md)。
+- Task ID：TASK-UI-015；状态：PASS（本地端口受并发任务占用，GitHub quality #303 的完整 verify、delivery、deploy-linux 均成功）；[intent](intent.md)、[spec](spec.md)、[plan](plan.md)、[review](review.md)。
 - Base：8090475958f1a0bdd1b4b36ada7f2aba1e4e6264；任务树 `.worktrees/TASK-UI-015-project-drag`；Node24.21.0/npm、Windows/WebView2、Playwright Edge。以下运行发生于提交前的任务候选，构建身份由实际 hash 绑定；独立审查另绑定已提交 SHA。
 
 ## 用户契约与根因
@@ -35,18 +35,18 @@
 | 标准verify的lint/typecheck/root/Agent/UI/format/build | PASS；root804pass/8skip，Agent172pass/2skip | `.tmp/project-drag/verify-1423.log` |
 | 标准1423全浏览器首轮 | 450pass/1flaky，零unexpected；既有几何动画捕获289预期291，retry通过 | `.tmp/project-drag/browser-full-1423-first.json` |
 | 1423全浏览器补充，workers1/retries0 | 451/451，零skip/flaky/unexpected，exit0 | `.tmp/project-drag/browser-full-1423-serial.log` / `.json` |
-| 严格development恢复 | 代码/依赖已恢复；本机运行尚因另一个任务占用1421未启动 | `.tmp/project-drag/development-recheck.log` / `development-local-deps.log` |
-| 本地依赖恢复后的完整verify | lint/typecheck/root/Agent/UI/format/build通过；preview1423被其他任务占用，整体exit1 | `.tmp/project-drag/verify-local-deps.log` |
+| 严格development恢复 | GitHub quality #303 完整 verify 内含固定1421 development，job success；本机同阶段因另一个任务占用1421未启动 | `.tmp/project-drag/development-recheck.log` / `development-local-deps.log`；[quality #303](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37885498868) |
+| 完整verify | GitHub quality #303 success；delivery/deploy-linux 同 run success | [quality #303](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/37885498868) |
 | 标准1423 Web 证据补验 | PASS；三视口、errors=[] | `evidence/web-production-1423.json` 及对应截图 |
 
 - 首轮 `KK_TEST_PORT=1473 npm run verify` exit1：440pass/11fail（固定1423地址断言、伴随服务CORS及一项既有几何动画竞态）；保存 `verify.log`、`browser-failed-1473.json`，不能写成产品已通过。
 - 第二轮默认1423 `npm run verify` 浏览器阶段完成（上述一项flaky），但完整命令exit1：本任务独立Vite占1421阻止development。自有进程已关闭，不停止其他任务进程；失败保留。
 - development独立复验正确拦截16条字体403：初始node_modules junction指向主checkout，Vite默认fs边界不允许外部字体。四步插件生命周期已完成，但严格console断言仍失败；按原lockfile安装任务本地依赖恢复，不改Vite权限/测试断言、不写用户配置。原件 `development-recheck.log`。
-- 依赖恢复：原lockfile在任务临时目录 `npm ci --ignore-scripts --no-audit --no-fund`（244packages/exit0）；核对junction目标后只删除任务链接，移入本地真实node_modules，主checkout的Vite文件hash保持一致。随后development1421与完整verify1423被另一任务验证占用；CIM父进程指向 `output/ui016-canvas-upload-20261009`，不停止或复用其进程。保存 `development-local-deps.log`、`verify-local-deps.log`，已发送协调消息等待端口释放。
+- 依赖恢复：原lockfile在任务临时目录 `npm ci --ignore-scripts --no-audit --no-fund`（244packages/exit0）；核对junction目标后只删除任务链接，移入本地真实node_modules，主checkout的Vite文件hash保持一致。随后development1421与完整verify1423被另一任务验证占用；CIM父进程指向 `output/ui016-canvas-upload-20261009`，不停止或复用其进程。保存失败原件；GitHub quality #303 在干净CI环境补完相同门禁并成功。
 - 测试维护：原section空白投放fixture实际在空文件夹内容内，新用户契约要求那里成为子项；改为两个文件夹之间的真实section间隙并断言elementFromPoint，不弱化自动建文件夹验收。外部text/File混合拖放仍不改变分组，取消无残留高亮。
 - native早期CDP dragTo绕过旧故障；早期助手DPI、前台和光标恢复时序误差均保存原件，只以最终配对Win32 RED/GREEN作为原生结论。
 
 ## 交付边界
 
 - Desktop/Web候选2.1.13、Mobile规划2.1.1，平台版本检查通过；数据identifier/key/schema未变。文件夹仍为当前会话Prototype，FEAT-023 PARTIAL、TASK-PROJECT-SIDEBAR-001持续开放。
-- 本轮未合入main、未发布、未替换用户当前EXE/快捷方式或数据。独立review、当前Hosted与用户最终体验分别记录，不由本地结果代填。
+- 本轮未合入main、未发布、未替换用户当前EXE/快捷方式或数据。Hosted quality #303 已成功；PR仍为草稿，用户最终体验和发布范围仍由后续验收决定。
