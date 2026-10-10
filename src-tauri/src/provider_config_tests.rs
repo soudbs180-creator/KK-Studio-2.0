@@ -61,7 +61,9 @@ fn missing_then_roundtrip() {
     assert_eq!(read.revision, Some(1));
     assert_eq!(read.connections, connections);
 
-    let next = repo.write(connections.clone(), Some(1)).expect("write again");
+    let next = repo
+        .write(connections.clone(), Some(1))
+        .expect("write again");
     assert_eq!(next, 2);
 }
 
@@ -103,20 +105,21 @@ fn corrupt_main_recovers_from_backup() {
 #[test]
 fn secret_fields_are_rejected_before_write() {
     let (_root, repo) = temp_repository("secrets");
-    let leaked = json!([connection(serde_json::from_str(
-        r#"{"apiKey":"sk-abcdef1234567890"}"#
-    )
-    .expect("override"))]);
+    let leaked = json!([connection(
+        serde_json::from_str(r#"{"apiKey":"sk-abcdef1234567890"}"#).expect("override")
+    )]);
     let error = repo
         .write(leaked, None)
         .expect_err("secret field must be rejected");
-    assert!(error.starts_with("unsupported:"), "unexpected error: {error}");
+    assert!(
+        error.starts_with("unsupported:"),
+        "unexpected error: {error}"
+    );
     assert!(!repo.path.exists(), "no file may be written");
 
-    let lowercase = json!([connection(serde_json::from_str(
-        r#"{"token":"t-1"}"#
-    )
-    .expect("override"))]);
+    let lowercase = json!([connection(
+        serde_json::from_str(r#"{"token":"t-1"}"#).expect("override")
+    )]);
     let error = repo
         .write(lowercase, None)
         .expect_err("token field must be rejected");
@@ -138,15 +141,17 @@ fn malformed_shape_is_rejected() {
 fn credential_ref_and_metadata_pass_through() {
     let (_root, repo) = temp_repository("metadata");
     let mut map = serde_json::Map::new();
-    map.insert(
-        "credentialRef".to_string(),
-        json!("provider-abc123"),
-    );
+    map.insert("credentialRef".to_string(), json!("provider-abc123"));
     let connections = json!([connection(map)]);
     let revision = repo.write(connections.clone(), None).expect("write");
     assert_eq!(revision, 1);
     let read = repo.read().expect("read");
-    let saved = read.connections.as_array().expect("array").first().expect("entry");
+    let saved = read
+        .connections
+        .as_array()
+        .expect("array")
+        .first()
+        .expect("entry");
     assert_eq!(
         saved.get("credentialRef").and_then(Value::as_str),
         Some("provider-abc123")

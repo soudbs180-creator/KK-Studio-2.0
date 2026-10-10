@@ -73,7 +73,10 @@ test("failure：baseUrl 已变更的迟到回执不污染新配置", () => {
     markProviderConnectionFailure(
       CONNECTION.id,
       { kind: "rate_limited" },
-      { baseUrl: "https://old.example.com/v1", credentialRef: CONNECTION.credentialRef },
+      {
+        baseUrl: "https://old.example.com/v1",
+        credentialRef: CONNECTION.credentialRef,
+      },
     );
     const updated = readProviderConnections().find(
       (item) => item.id === CONNECTION.id,

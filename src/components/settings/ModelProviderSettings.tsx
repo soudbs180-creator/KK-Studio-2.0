@@ -7,10 +7,8 @@ import {
   saveApiKey,
 } from "../../features/creation/providerCredentials";
 import {
-  DEFAULT_MODEL_PROVIDER,
   MODEL_PROVIDER_STORAGE_KEY,
   modelProviderSchema,
-  parseModelProvider,
   serializeModelProvider,
   type ModelProviderProfile,
 } from "../../domain/modelProvider";
@@ -30,34 +28,23 @@ import {
 } from "../../features/creation/providerRegistry";
 import type { ProviderConnection } from "../../domain/providerConnections";
 import { useProviderCredentialState } from "./useProviderCredentialState";
-
-type ConnectionState =
-  | { kind: "idle"; message: string }
-  | { kind: "loading"; message: string }
-  | { kind: "success"; message: string }
-  | { kind: "error"; message: string }
-  | { kind: "cancelled"; message: string }
-  | { kind: "offline"; message: string };
-
-function readProfile(): ModelProviderProfile {
-  try {
-    return parseModelProvider(
-      window.localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
-    ).profile;
-  } catch {
-    return { ...DEFAULT_MODEL_PROVIDER };
-  }
-}
+import {
+  readModelProviderProfile,
+  type ConnectionState,
+} from "./modelProviderSettingsState";
 
 export default function ModelProviderSettings({
   onFeedback,
 }: {
   onFeedback: (message: string) => void;
 }) {
-  const [profile, setProfile] = useState(readProfile);
+  const [profile, setProfile] = useState(readModelProviderProfile);
   const [apiKey, setApiKey] = useState("");
   const [credentialRef, setCredentialRef] = useState(() =>
-    credentialId(readProfile().baseUrl, readProfile().name),
+    credentialId(
+      readModelProviderProfile().baseUrl,
+      readModelProviderProfile().name,
+    ),
   );
   const [saving, setSaving] = useState(false);
   const [connections, setConnections] = useState(readProviderConnections);

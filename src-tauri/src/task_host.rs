@@ -1409,10 +1409,8 @@ mod tests {
     #[test]
     fn upstream_error_detail_preserves_provider_message() {
         assert_eq!(
-            upstream_error_detail(
-                br#"{"error":{"message":"Selected model is at capacity"}}"#,
-            )
-            .as_deref(),
+            upstream_error_detail(br#"{"error":{"message":"Selected model is at capacity"}}"#,)
+                .as_deref(),
             Some("Selected model is at capacity")
         );
         assert_eq!(upstream_error_detail(br#"{}"#), None);
@@ -1422,15 +1420,13 @@ mod tests {
             None
         );
         assert_eq!(
-            upstream_error_detail(r#"{"error":{"message":"一二三"}}"#.as_bytes())
-                .as_deref(),
+            upstream_error_detail(r#"{"error":{"message":"一二三"}}"#.as_bytes()).as_deref(),
             Some("一二三")
         );
         let long = "x".repeat(600);
-        let detail = upstream_error_detail(
-            format!(r#"{{"error":{{"message":"{}"}}}}"#, long).as_bytes(),
-        )
-        .unwrap();
+        let detail =
+            upstream_error_detail(format!(r#"{{"error":{{"message":"{}"}}}}"#, long).as_bytes())
+                .unwrap();
         assert_eq!(detail.chars().count(), 400);
     }
     fn root() -> PathBuf {

@@ -1607,13 +1607,10 @@ export default function App() {
           !archiveUncertain &&
           reservation?.healthUnchanged()
         )
-          markProviderConnectionHealthy(
-            task.providerConnectionId,
-            {
-              baseUrl: task.providerBaseUrl,
-              credentialRef: task.providerCredentialRef,
-            },
-          );
+          markProviderConnectionHealthy(task.providerConnectionId, {
+            baseUrl: task.providerBaseUrl,
+            credentialRef: task.providerCredentialRef,
+          });
       }
     } catch (error) {
       const uncertain =

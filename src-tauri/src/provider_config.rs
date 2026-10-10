@@ -51,9 +51,7 @@ fn validate_connections(value: &Value) -> Result<(), String> {
             .ok_or("corrupt: 供应商配置条目必须是对象".to_string())?;
         for key in object.keys() {
             if is_secret_key(key) {
-                return Err(
-                    "unsupported: 供应商配置不能包含秘密字段，请改用系统凭据库".to_string(),
-                );
+                return Err("unsupported: 供应商配置不能包含秘密字段，请改用系统凭据库".to_string());
             }
         }
     }
@@ -136,7 +134,10 @@ impl ProviderConfigRepository {
     }
 
     pub fn read(&self) -> Result<ProviderConfigRead, String> {
-        let _guard = self.lock.lock().map_err(|_| io_error("供应商配置锁不可用"))?;
+        let _guard = self
+            .lock
+            .lock()
+            .map_err(|_| io_error("供应商配置锁不可用"))?;
         let _file_lock = self.file_lock()?;
         let (revision, connections, _, recovered) = self.current()?;
         Ok(ProviderConfigRead {
@@ -154,13 +155,12 @@ impl ProviderConfigRepository {
 
     /// Durable commit. Returns the new revision; the caller must surface the
     /// error to the UI instead of reporting a fake success.
-    pub fn write(
-        &self,
-        connections: Value,
-        expected_revision: Option<u64>,
-    ) -> Result<u64, String> {
+    pub fn write(&self, connections: Value, expected_revision: Option<u64>) -> Result<u64, String> {
         validate_connections(&connections)?;
-        let _guard = self.lock.lock().map_err(|_| io_error("供应商配置锁不可用"))?;
+        let _guard = self
+            .lock
+            .lock()
+            .map_err(|_| io_error("供应商配置锁不可用"))?;
         let _file_lock = self.file_lock()?;
         let (revision, _, main_raw, recovered) = self.current()?;
         if revision != expected_revision {

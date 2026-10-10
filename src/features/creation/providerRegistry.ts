@@ -69,7 +69,9 @@ export function isDesktopProviderDurable(): boolean {
  * cache. Returns null when no native record exists so the caller can migrate
  * older browser metadata; a recovered backup is honored, not overwritten.
  */
-export async function loadProviderConnectionsDurable(): Promise<ProviderConnection[] | null> {
+export async function loadProviderConnectionsDurable(): Promise<
+  ProviderConnection[] | null
+> {
   if (!isDesktopProviderDurable()) return null;
   const result = await invoke<{
     status: "loaded" | "missing" | "recovered";

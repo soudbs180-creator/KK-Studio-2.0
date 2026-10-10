@@ -14,13 +14,19 @@ const output = path.resolve(
 const executable =
   process.env.KK_PROVIDER_EXE ??
   path.join(root, "src-tauri/target/debug/kk-studio.exe");
-const isolated = path.join(root, "src-tauri/target/provider-durable-acceptance", runId);
+const isolated = path.join(
+  root,
+  "src-tauri/target/provider-durable-acceptance",
+  runId,
+);
 const dataRoot = path.join(isolated, "data");
 const profile = path.join(isolated, "profile");
 const cdp = "http://127.0.0.1:9349";
 const report = {
   startedAt: new Date().toISOString(),
-  sourceHead: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(),
+  sourceHead: execFileSync("git", ["rev-parse", "HEAD"], {
+    encoding: "utf8",
+  }).trim(),
   dataRoot,
   profile,
   checks: [],
@@ -45,7 +51,9 @@ const CONNECTION = {
   concurrencyLimit: 2,
   verificationStatus: "unverified",
 };
-report.versions = JSON.parse(await fs.readFile("config/platform-versions.json", "utf8"));
+report.versions = JSON.parse(
+  await fs.readFile("config/platform-versions.json", "utf8"),
+);
 report.sourceHashes = {};
 for (const file of [
   "src-tauri/src/provider_config.rs",
@@ -111,14 +119,20 @@ async function startApp(tag) {
   }
   assert(page.url().includes("tauri.localhost"), `app URL ${page.url()}`);
   page.on("pageerror", (cause) => report.errors.push(cause.message));
-  report.checks.push({ name: `start-${tag}`, passed: true, detail: `pid=${startup.pid}` });
+  report.checks.push({
+    name: `start-${tag}`,
+    passed: true,
+    detail: `pid=${startup.pid}`,
+  });
   return startup;
 }
 
 function killTree() {
   if (!app?.pid) return;
   try {
-    execFileSync("taskkill", ["/PID", String(app.pid), "/T", "/F"], { stdio: "ignore" });
+    execFileSync("taskkill", ["/PID", String(app.pid), "/T", "/F"], {
+      stdio: "ignore",
+    });
   } catch {
     /* Already exited */
   }
@@ -141,7 +155,10 @@ try {
   const filePath = path.join(dataRoot, "providers", "connections.json");
   const raw = await fs.readFile(filePath, "utf8");
   const parsed = JSON.parse(raw);
-  record("file-exists-with-connection", parsed.connections?.[0]?.id === CONNECTION.id);
+  record(
+    "file-exists-with-connection",
+    parsed.connections?.[0]?.id === CONNECTION.id,
+  );
   record(
     "file-has-no-secrets",
     !raw.includes("sk-") && !raw.includes("apiKey") && !raw.includes("secret"),
@@ -186,9 +203,13 @@ await fs.writeFile(
   JSON.stringify(report, null, 2),
   "utf8",
 );
-const summary = report.checks.map((check) => `${check.passed ? "PASS" : "FAIL"} ${check.name}`).join("\n");
+const summary = report.checks
+  .map((check) => `${check.passed ? "PASS" : "FAIL"} ${check.name}`)
+  .join("\n");
 console.log(summary);
-console.log(report.errors.length ? `ERRORS:\n${report.errors.join("\n")}` : "no errors");
+console.log(
+  report.errors.length ? `ERRORS:\n${report.errors.join("\n")}` : "no errors",
+);
 if (report.passed) {
   console.log(`evidence: ${output}`);
   process.exit(0);

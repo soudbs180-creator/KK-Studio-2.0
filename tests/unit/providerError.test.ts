@@ -2,10 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { providerError } from "../../src/features/creation/imageGeneration.ts";
 
-function response(
-  status: number,
-  headers?: Record<string, string>,
-): Response {
+function response(status: number, headers?: Record<string, string>): Response {
   return new Response(null, { status, headers });
 }
 
@@ -32,20 +29,14 @@ test("429：无 Retry-After 时不标记可重试且提示冷却后手动重试"
 });
 
 test("401：保留原始错误并分类为 unauthorized 不可重试", () => {
-  const error = providerError(
-    response(401),
-    "Incorrect API key provided",
-  );
+  const error = providerError(response(401), "Incorrect API key provided");
   assert.equal(error.failureClass, "unauthorized");
   assert.equal(error.retryable, false);
   assert.ok(error.message.includes("Incorrect API key provided"));
 });
 
 test("500：保留原始错误并分类为 provider_unavailable", () => {
-  const error = providerError(
-    response(503),
-    "The server is overloaded",
-  );
+  const error = providerError(response(503), "The server is overloaded");
   assert.equal(error.failureClass, "provider_unavailable");
   assert.ok(error.message.includes("The server is overloaded"));
 });
