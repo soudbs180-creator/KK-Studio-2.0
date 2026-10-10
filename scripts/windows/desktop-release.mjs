@@ -95,6 +95,20 @@ function packagePath(packageName) {
   return path.join("node_modules", ...packageName.split("/"), "package.json");
 }
 
+function isLinkedPath(filePath) {
+  try {
+    const stats = fs.lstatSync(filePath);
+    if (stats.isSymbolicLink()) return true;
+    const absolute = path.resolve(filePath);
+    const resolved = path.resolve(fs.realpathSync.native(filePath));
+    return process.platform === "win32"
+      ? resolved.toLowerCase() !== absolute.toLowerCase()
+      : resolved !== absolute;
+  } catch {
+    return false;
+  }
+}
+
 export function inspectDesktopDependencies(projectRoot) {
   const lockfile = readJson(path.join(projectRoot, "package-lock.json"));
   if (!lockfile?.packages) {
@@ -110,8 +124,36 @@ export function inspectDesktopDependencies(projectRoot) {
     };
   }
 
+  const nodeModulesPath = path.join(projectRoot, "node_modules");
+  if (isLinkedPath(nodeModulesPath)) {
+    return {
+      needsInstall: true,
+      mismatches: [
+        {
+          name: "node_modules",
+          expected: "local directory",
+          actual: "linked directory",
+        },
+      ],
+    };
+  }
+
   const mismatches = DESKTOP_TOOLCHAIN_PACKAGES.flatMap((name) => {
     const expected = lockfile.packages[`node_modules/${name}`]?.version;
+    const packageRoot = path.join(
+      projectRoot,
+      "node_modules",
+      ...name.split("/"),
+    );
+    if (isLinkedPath(packageRoot)) {
+      return [
+        {
+          name,
+          expected: expected ?? "local package",
+          actual: "linked package",
+        },
+      ];
+    }
     const installed = readJson(path.join(projectRoot, packagePath(name)));
     const actual = installed?.version ?? null;
     if (actual === expected) return [];
@@ -184,13 +226,19 @@ function resolveNpmCliPath(projectRoot) {
 
 function installDesktopDependencies(projectRoot) {
   const nodeModulesPath = path.join(projectRoot, "node_modules");
-  if (
-    fs.existsSync(nodeModulesPath) &&
-    fs.lstatSync(nodeModulesPath).isSymbolicLink()
-  ) {
+  if (isLinkedPath(nodeModulesPath)) {
     throw new Error(
       "Desktop dependency repair requires a local node_modules directory; linked dependencies must be repaired in their owner checkout.",
     );
+  }
+  for (const name of DESKTOP_TOOLCHAIN_PACKAGES) {
+    if (
+      isLinkedPath(path.join(projectRoot, "node_modules", ...name.split("/")))
+    ) {
+      throw new Error(
+        `Desktop dependency repair requires a local ${name} package; linked dependencies must be repaired in their owner checkout.`,
+      );
+    }
   }
   const result = spawnSync(
     process.execPath,

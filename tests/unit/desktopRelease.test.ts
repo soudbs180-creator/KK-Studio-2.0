@@ -247,6 +247,59 @@ test("desktop launch does not treat a missing lockfile as aligned", (t) => {
   assert.equal(launched, false);
 });
 
+test("desktop dependencies do not treat a linked node_modules directory as aligned", (t) => {
+  const root = fs.mkdtempSync(
+    path.join(os.tmpdir(), "kk-desktop-linked-deps-"),
+  );
+  const target = fs.mkdtempSync(
+    path.join(os.tmpdir(), "kk-desktop-linked-target-"),
+  );
+  t.after(() => {
+    assert.equal(path.dirname(root), path.resolve(os.tmpdir()));
+    assert.equal(path.dirname(target), path.resolve(os.tmpdir()));
+    fs.rmSync(root, { recursive: true, force: true });
+    fs.rmSync(target, { recursive: true, force: true });
+  });
+  fs.writeFileSync(
+    path.join(root, "package-lock.json"),
+    JSON.stringify({
+      packages: {
+        "node_modules/@tauri-apps/api": { version: "2.11.1" },
+        "node_modules/@tauri-apps/plugin-dialog": { version: "2.7.3" },
+        "node_modules/@tauri-apps/cli": { version: "2.11.4" },
+      },
+    }),
+  );
+  try {
+    fs.symlinkSync(target, path.join(root, "node_modules"), "junction");
+  } catch (error) {
+    t.skip(`junction creation unavailable: ${error}`);
+    return;
+  }
+  assert.equal(inspectDesktopDependencies(root).needsInstall, true);
+  assert.match(
+    inspectDesktopDependencies(root).mismatches[0].actual,
+    /linked directory/,
+  );
+});
+
+test("desktop release identity rejects linked runtime inputs", (t) => {
+  const { root } = fixture(t);
+  const target = path.join(path.dirname(root), "kk-desktop-input-target.txt");
+  fs.writeFileSync(target, "outside input");
+  t.after(() => fs.rmSync(target, { force: true }));
+  try {
+    fs.symlinkSync(target, path.join(root, "src", "linked.ts"), "file");
+  } catch (error) {
+    t.skip(`symbolic link creation unavailable: ${error}`);
+    return;
+  }
+  assert.throws(
+    () => inspectDesktopRelease(root),
+    /cannot be verified through a symbolic link/,
+  );
+});
+
 test("desktop release fingerprint changes when a tracked input changes", (t) => {
   const { root, source } = fixture(t);
   const original = fingerprintDesktopInputs(root);

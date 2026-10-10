@@ -67,8 +67,9 @@ function appendInputEntries(projectRoot, relativePath, entries) {
 
   const normalized = normalizedPath(relativePath);
   if (stats.isSymbolicLink()) {
-    entries.push(`link\0${normalized}\0${fs.readlinkSync(absolutePath)}`);
-    return;
+    throw new Error(
+      `Desktop release input cannot be verified through a symbolic link: ${normalized}`,
+    );
   }
   if (stats.isFile()) {
     entries.push(
