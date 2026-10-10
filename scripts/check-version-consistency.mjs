@@ -27,7 +27,18 @@ function findPackageLocks(root) {
   const result = [];
   const visit = (directory) => {
     for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-      if (entry.name === "node_modules" || entry.name === ".git") continue;
+      if (
+        [
+          "node_modules",
+          ".git",
+          ".worktrees",
+          ".tmp",
+          "dist",
+          "target",
+          "build",
+        ].includes(entry.name)
+      )
+        continue;
       const absolute = path.join(directory, entry.name);
       if (entry.isDirectory()) visit(absolute);
       else if (entry.isFile() && entry.name === "package-lock.json") {
