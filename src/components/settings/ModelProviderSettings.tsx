@@ -23,7 +23,9 @@ import { saveModelCatalog } from "../../features/models/modelCatalog";
 import {
   addProviderConnection,
   connectionFromModelProfile,
+  isDesktopProviderDurable,
   markProviderConnectionUnverified,
+  persistProviderConnectionsDurable,
   readProviderConnections,
 } from "../../features/creation/providerRegistry";
 import type { ProviderConnection } from "../../domain/providerConnections";
@@ -124,7 +126,12 @@ export default function ModelProviderSettings({
         serializeModelProvider(valid),
       );
       setProfile(valid);
-      setConnections(addProviderConnection(savedConnection));
+      const next = addProviderConnection(savedConnection);
+      if (isDesktopProviderDurable()) {
+        // Desktop: the success hint appears only after the native durable commit.
+        await persistProviderConnectionsDurable(next);
+      }
+      setConnections(next);
       setConnection({
         kind: "idle",
         message: "连接信息已保存。API Key 不会写入浏览器存储或项目快照。",
@@ -168,7 +175,12 @@ export default function ModelProviderSettings({
     setSaving(true);
     try {
       await deleteApiKey(profile.baseUrl, credentialRef);
-      markProviderConnectionUnverified(connectionFromModelProfile(profile).id);
+      const next = markProviderConnectionUnverified(
+        connectionFromModelProfile(profile).id,
+      );
+      if (isDesktopProviderDurable()) {
+        await persistProviderConnectionsDurable(next);
+      }
       setApiKey("");
       setHasStoredKey(false);
       setConnection({ kind: "idle", message: "已清除当前供应商的密钥。" });

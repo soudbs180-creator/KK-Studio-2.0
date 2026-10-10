@@ -116,7 +116,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GOV-GOALS-001 | 项目建设目标与验收基线 | DONE | 已完成 | P3 | TASK-AUDIT-20261003 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-COMPONENT-BOUNDARY-001 | MCP 设置组件职责拆分 | DONE | 已完成 | P3 | TASK-GOV-GOALS-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | 已完成 | P1 | T2, TASK-UI-GOV-003 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | 未完成 | P1 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | DONE | 未完成 | P1 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | 未完成 | P1 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | 未完成 | P2 | TASK-GOV-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | TODO | 未完成 | P1 | none | root | 补充负责人、优先级、分支和下一步验收证据 |
@@ -2228,14 +2228,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: FEAT-002
 - Owner role: repository-maintainer
 - Acceptance: 供应商非秘密配置及目录在成功提示前有原生 durable 落盘; 立即异常终止并重启保留账号/模型/ref，旧浏览器元数据无损迁移; 系统凭据仍仅在 OS vault，文件/localStorage/日志没有秘密; 失败/冲突不假报成功或覆盖原件，真实 Tauri 重启与全量回归通过
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `fix/TASK-PROV-005-provider-durable-config`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-005`
 - Modules: src/components/settings, src/features/creation/providerRegistry.ts, src/features/models/modelCatalog.ts, src-tauri
-- Verification: NOT_VERIFIED — 新保存供应商后立即强杀本轮 WebView 进程树，localStorage 供应商元数据曾缺失；原生任务/素材及 OS 凭据保留，正常退出后恢复通过。现场在本轮 provider-abrupt-exit-observation.json；独立后续实现，尚未开始。
-- Evidence: [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/status.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/status.md)
+- Verification: PASS — 原生 durable 落盘实现并验收：Rust provider_config.rs（文件锁+revision 冲突+atomic write+sync+bak+损坏恢复+秘密键拒绝），命令 read/write_provider_config 接入 main.rs；TS providerRegistry 新增 isDesktopProviderDurable/load/persistProviderConnectionsDurable，ModelProviderSettings save/clearKey 成功提示前 await durable 提交，App 启动原生加载并迁移 localStorage 旧元数据。验证：Rust 单测 6/6、TS 单测 6/6、provider 相关回归 47/47、tsc/build 通过；桌面强杀重启验收 8/8 PASS（保存→杀进程树→重启连接与 credentialRef 完整恢复，落盘文件无秘密）。限制：完整 npm run verify 与 push/PR 留网络/CI 门禁。
+- Evidence: [docs/changes/2026-10-09-provider-durable-config/intent.md](../../docs/changes/2026-10-09-provider-durable-config/intent.md), [docs/changes/2026-10-09-provider-durable-config/spec.md](../../docs/changes/2026-10-09-provider-durable-config/spec.md), [docs/changes/2026-10-09-provider-durable-config/plan.md](../../docs/changes/2026-10-09-provider-durable-config/plan.md), [docs/changes/2026-10-09-provider-durable-config/verification.md](../../docs/changes/2026-10-09-provider-durable-config/verification.md), [docs/changes/2026-10-09-provider-durable-config/review.md](../../docs/changes/2026-10-09-provider-durable-config/review.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/provider-abrupt-exit-observation.json](../../docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/provider-abrupt-exit-observation.json)
 - Next action: 补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-10-08
-- Updated: 2026-10-08
+- Updated: 2026-10-09
 
 ## TASK-PROV-006 — Desktop image 提交连接门禁与 health 统一
 

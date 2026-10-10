@@ -133,8 +133,10 @@ import {
   MODEL_PROVIDER_STORAGE_KEY,
 } from "./domain/modelProvider";
 import {
+  loadProviderConnectionsDurable,
   markProviderConnectionFailure,
   markProviderConnectionHealthy,
+  persistProviderConnectionsDurable,
   readProviderConnections,
 } from "./features/creation/providerRegistry";
 import {
@@ -260,6 +262,30 @@ export default function App() {
   saveStateRef.current = saveState;
   const submitLock = useRef(false);
   const [providerVersion, setProviderVersion] = useState(0);
+  useEffect(() => {
+    let active = true;
+    void (async () => {
+      try {
+        const native = await loadProviderConnectionsDurable();
+        if (!active) return;
+        if (native) {
+          // Native durable config is authoritative; refresh derived views.
+          setProviderVersion((value) => value + 1);
+        } else {
+          // First desktop run: migrate existing browser metadata untouched.
+          const local = readProviderConnections();
+          if (local.length > 0) {
+            await persistProviderConnectionsDurable(local);
+          }
+        }
+      } catch {
+        // Keep the browser view on native failure; settings surface the error.
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
   const homeModelConfig = useMemo(() => {
     void providerVersion;
     try {
