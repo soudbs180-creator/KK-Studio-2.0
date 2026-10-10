@@ -54,9 +54,9 @@ function fixture(t: test.TestContext, segments: string[]) {
   const remote = path.join(root, "remote with spaces.git");
   fs.mkdirSync(repo, { recursive: true });
   git(root, "init", "--bare", "-q", remote);
-  // Git for Windows cannot initialize an existing >260-character directory
-  // when the full path is passed as an argument from a short cwd. Run init
-  // from the already-created target directory instead.
+  // Keep the process cwd below Win32's limit while the installed policy path
+  // remains >260 characters; initialize from the existing target directory
+  // so Git never receives the full long path as an init target argument.
   git(repo, "init", "-q", "-b", "main");
   git(repo, "config", "core.longpaths", "true");
   git(repo, "config", "user.email", "test@example.invalid");
@@ -97,7 +97,10 @@ for (const [name, segments] of [
   ],
   [
     "long path over 260 characters",
-    Array.from({ length: 12 }, (_, i) => `nested directory ${i} with spaces`),
+    Array.from(
+      { length: 5 },
+      (_, i) => `nested directory ${i} with spaces long`,
+    ),
   ],
 ] as const) {
   test(`real Git hook permits topic creation and fast-forward: ${name}`, (t) => {

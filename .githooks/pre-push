@@ -14,5 +14,15 @@ command -v node >/dev/null 2>&1 || deny "Node is unavailable on PATH"
 if command -v cygpath >/dev/null 2>&1; then
   policy_path=$(cygpath -w -- "$policy_path") || deny "Cannot convert policy path"
   [ -n "$policy_path" ] || deny "Converted policy path is empty"
+  # cygpath emits an extended-length prefix for paths over MAX_PATH. Node's
+  # Windows module loader accepts the ordinary drive/UNC spelling here, but
+  # treats the extended prefix as a module named `C:`.
+  prefix8=$(printf '%s' "$policy_path" | cut -c1-8)
+  prefix4=$(printf '%s' "$policy_path" | cut -c1-4)
+  if [ "$prefix8" = '\\?\UNC\' ]; then
+    policy_path=$(printf '\\\\%s' "$(printf '%s' "$policy_path" | cut -c9-)")
+  elif [ "$prefix4" = '\\?\' ]; then
+    policy_path=$(printf '%s' "$policy_path" | cut -c5-)
+  fi
 fi
 exec node "$policy_path" "$@"
