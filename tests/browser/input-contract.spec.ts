@@ -153,7 +153,20 @@ for (const [width, height] of [
         path: `${evidence}/${width}-${kind}-focused.png`,
       });
       await expect(input).toHaveCSS("outline-style", "none");
-      await expect(form).toHaveCSS("outline-width", "2px");
+      await expect(form).toHaveCSS("outline-width", "1px");
+      const focus = await form.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return {
+          outlineColor: style.outlineColor,
+          subtleColor: style.getPropertyValue("--ui-focus-subtle").trim(),
+        };
+      });
+      expect(focus.subtleColor).not.toBe("");
+      const normalizeColor = (value: string) =>
+        value.replace(/\s+/g, "").replace(/,\./g, ",0.");
+      expect(normalizeColor(focus.outlineColor)).toBe(
+        normalizeColor(focus.subtleColor),
+      );
       const initial = (await input.boundingBox())!.height;
       expect(
         (await form.locator(".composer-toolbar").boundingBox())!.height,

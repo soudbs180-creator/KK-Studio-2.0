@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-10 输入焦点与次级选中态收敛
+
+根据用户对首页/对话输入框紫色外圈过强的反馈，新增主题中性的弱焦点 token（深色浅灰白、浅色中性灰，1px/1px），并将 Composer、搜索、设置、对话和阶段表单的输入焦点统一到该层级；按钮和关键操作继续使用醒目 focus token。Provider 连接项、任务评论区选择、插件节点选中及连接目标叠加态改为更轻的中性边界，保留关键连接状态的文字和颜色语义。浏览器回归补充 Composer 的 1px 与 token 绑定断言，设计系统和目录页检查覆盖搜索/设置状态。当前分支验证：输入契约 9/9、目录/设置页面 10/10、设计系统基础 6/8（另有 2 个插件卸载 fixture 超时），Node 单测 929/939 通过、8 跳过、2 个既有 desktopAgentRuntime 失败；typecheck、UI 标准、lint、governance、features、markdown、格式和 diff check 通过。Desktop/Web 生产包与用户最终视觉验收未在本轮宣称完成。
+
 ## 2026-10-10 画布点状/网状背景缩放插值修正
 
 背景格距改为在 50%~400% 之间线性插值，不再按 2 的幂次粗化。原实现 `24 * scale * 2 ** ceil(log2(12 / pitch))` 在 49%→50% 之间把格距从 23.52px 突降到 12.00px（近 2 倍跳变），且透明度存在 `Math.max(0.2, …)` 下限，导致任何缩放下背景都不会真正隐藏。现改为：格距 12px→96px、点径 1px→8px、网格线宽 0.5px→1.5px 随缩放同步线性变化，透明度在 50% 为 0、100%（默认工作缩放）即达完全不透明并保持到 400%；低于 50% 时各项钳制在最小值且保持透明。`background-repeat: repeat` 显式声明，配合单一 pitch 变量保证任意格距下均完整平铺、无缝隙无重叠。新增 `tests/unit/canvasViewport.test.ts`（7 项）锁定上下界、连续性、单调性、点径小于格距与非有限输入契约。门禁：typecheck exit 0、lint 与 governance/features/markdown 全 0 violations、format:check 通过、单测 926 通过 / 8 跳过 / 0 失败，单 worker 浏览器回归 455/455 PASS。多分辨率浏览器交互已覆盖 390/768/1280/1440/1920，未验证 Desktop WebView2。

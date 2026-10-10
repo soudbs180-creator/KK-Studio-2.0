@@ -242,9 +242,13 @@
   cursor: not-allowed;
   opacity: var(--ui-disabled-opacity);
 }
-.settings-panel :is(button, input, select):focus-visible {
-  outline: 2px solid var(--ui-focus);
-  outline-offset: 3px;
+.settings-panel button:focus-visible {
+  outline: var(--ui-focus-width) solid var(--ui-focus);
+  outline-offset: var(--ui-focus-offset);
+}
+.settings-panel :is(input, select):focus-visible {
+  outline: var(--ui-focus-subtle-width) solid var(--ui-focus-subtle);
+  outline-offset: var(--ui-focus-subtle-offset);
 }
 .settings-visually-hidden {
   position: absolute;
@@ -1025,8 +1029,8 @@
   accent-color: var(--focus-ring);
 }
 .settings-radio input[type="radio"]:focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 2px;
+  outline: var(--ui-focus-subtle-width) solid var(--ui-focus-subtle);
+  outline-offset: var(--ui-focus-subtle-offset);
 }
 @media (max-width: 720px) {
   .settings-radio {
@@ -1303,7 +1307,7 @@
 }
 .provider-connection-list button:hover,
 .provider-connection-list button.is-active {
-  border-color: var(--ui-selected);
+  border-color: var(--border-control);
   background: var(--settings-selected);
 }
 .provider-connection-list button span {

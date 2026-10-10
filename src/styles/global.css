@@ -32,6 +32,7 @@
   --text-tertiary: #9e9e9e;
   --text-accent: var(--accent-text-dark);
   --focus-ring: var(--accent-focus-dark);
+  --focus-ring-subtle: rgba(255, 255, 255, 0.58);
   --text-danger: #f48181;
   --text-success: #79cda8;
   --text-warning: #e6b96a;
@@ -68,6 +69,7 @@
   --text-tertiary: #636363;
   --text-accent: var(--accent-text-light);
   --focus-ring: var(--accent-focus-light);
+  --focus-ring-subtle: rgba(0, 0, 0, 0.4);
   --text-danger: #aa263b;
   --text-success: #216947;
   --text-warning: #805209;
@@ -163,6 +165,7 @@
   --accent-text-light: var(--kk-text-accent);
   --accent-focus-dark: var(--kk-focus-ring);
   --accent-focus-light: var(--kk-focus-ring);
+  --focus-ring-subtle: var(--kk-focus-ring-subtle);
   --border-default: var(--kk-border-default);
   --border-subtle: var(--kk-border-subtle);
   --border-control: var(--kk-border-control);
@@ -200,6 +203,7 @@
   --accent-text-light: var(--kk-text-accent);
   --accent-focus-dark: var(--kk-focus-ring);
   --accent-focus-light: var(--kk-focus-ring);
+  --focus-ring-subtle: var(--kk-focus-ring-subtle);
   --border-default: var(--kk-border-default);
   --border-subtle: var(--kk-border-subtle);
   --border-control: var(--kk-border-control);
@@ -257,12 +261,15 @@ button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
 }
-button:focus-visible,
+button:focus-visible {
+  outline: var(--ui-focus-width) solid var(--ui-focus);
+  outline-offset: var(--ui-focus-offset);
+}
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: var(--ui-focus-width) solid var(--ui-focus);
-  outline-offset: var(--ui-focus-offset);
+  outline: var(--ui-focus-subtle-width) solid var(--ui-focus-subtle);
+  outline-offset: var(--ui-focus-subtle-offset);
 }
 input,
 textarea {

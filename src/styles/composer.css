@@ -30,8 +30,8 @@
   margin: 0;
 }
 .composer-surface:has(> .composer-textarea:focus) {
-  outline: var(--ui-focus-width) solid var(--focus-ring);
-  outline-offset: var(--ui-focus-offset);
+  outline: var(--ui-focus-subtle-width) solid var(--ui-focus-subtle);
+  outline-offset: var(--ui-focus-subtle-offset);
 }
 .composer-surface > .composer-textarea {
   display: block;

@@ -23,6 +23,7 @@
   --ui-project-thumbnail: #d98a00;
   --sidebar-compact-width: 61px;
   --ui-focus: var(--focus-ring);
+  --ui-focus-subtle: var(--focus-ring-subtle);
   --ui-disabled-opacity: 0.45;
   --ui-danger: var(--text-danger);
   --ui-danger-surface: var(--bg-danger-soft);
@@ -68,6 +69,8 @@
   --ui-border-width: 1px;
   --ui-focus-width: 2px;
   --ui-focus-offset: 3px;
+  --ui-focus-subtle-width: var(--kk-focus-width-subtle);
+  --ui-focus-subtle-offset: var(--kk-focus-offset-subtle);
   /* Existing generic button geometry; source-specific controls retain their
      measured Figma tiers rather than being stretched to this default. */
   --ui-button-height: var(--kk-button-h-standard);
