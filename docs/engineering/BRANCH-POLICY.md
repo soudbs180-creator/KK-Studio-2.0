@@ -11,6 +11,14 @@
 | feat/fix/docs/chore/test/perf/refactor/hotfix/TASK-ID-slug | 兼容既有任务命名；不能在同一分支处理无关需求                     |
 | vMAJOR.MINOR.PATCH 或 -rc.N                                | 发布标签创建后不可更新或删除                                     |
 
+## 版本变更与合并门禁
+
+版本变更只在任务分支完成，并随同功能代码通过 PR 合入 `main`。作者先从最新 `origin/main` fetch，确认当前 base/head 和 dirty 文件，再按真实受影响平台运行 `npm run version:bump -- --platform ...`；禁止直接编辑镜像版本或为了“看起来最新”只改 `VERSION`。PR 必须写明各平台旧值/新值、目标 commit、实际构建工件及未发布边界。
+
+合并前的最低门禁是 `npm run version:check`、`npm run version:consistency`、`npm run lint`、`npm run typecheck`、相关测试和 `npm run delivery:check -- --base <base-sha> --head <head-sha>`。桌面变更还要从本任务 checkout 通过 GUI 启动器或 `start-kk-studio.bat` 生成当前 EXE，并记录 receipt、源码输入 hash、EXE hash、实际路径和进程；Web 运行态单独记录实际 bundle。旧分支、旧 worktree、旧快捷方式或旧安装包即使“能打开”也不能作为当前候选的证据。
+
+合并后由 CI 从合并候选 SHA 重建并上传带 receipt 的不可变工件；部署或其他环境只消费该 SHA/tag 的工件，并在启动时回读产品版本、commit/tree、文件 hash 和进程路径。没有当前 SHA 绑定的 CI/工件回执时，状态保持 `NOT_VERIFIED`，不能称为“所有环境已更新”。
+
 现有旧分支名可保留；禁止为命名整齐批量重命名/删除。没有删除授权时不清理分支；用户明确“验收并清理已合并分支”后，可将核对过的具体短期分支列入待清理清单，无需反复确认授权，但稳定线和 tag 不在清理范围。当前 pre-push 默认拒绝所有远端 ref 删除，仓库尚无已审阅的远端清理流程；有授权也不能绕过 hook 执行删除。先完成单独的清理方案、核对和门禁，再按方案处理。
 
 本地分支也默认保留，禁止直接 `git branch -D` 丢弃未整合工作。本地清理必须核对对应 PR、当前 head、远端备份及 worktree 登记；仍被使用、有独有提交或未提交改动时不得删除。pre-push 不能拦截本地删除，依靠执行前规则、审查和备份约束，不能夸称 Git 原生不存在的本地删分支 hook 已生效。
@@ -35,15 +43,15 @@
 <type>(<scope>): <祈使摘要>
 ```
 
-| type | 用途 |
-| --- | --- |
-| `feat` | 新功能 |
-| `fix` | 缺陷修复 |
-| `docs` | 文档、注释、规则 |
+| type       | 用途                 |
+| ---------- | -------------------- |
+| `feat`     | 新功能               |
+| `fix`      | 缺陷修复             |
+| `docs`     | 文档、注释、规则     |
 | `refactor` | 不改变外部行为的重构 |
-| `test` | 测试新增或修正 |
-| `perf` | 性能 |
-| `chore` | 构建、依赖、脚本 |
+| `test`     | 测试新增或修正       |
+| `perf`     | 性能                 |
+| `chore`    | 构建、依赖、脚本     |
 
 `scope` 用模块或领域名（如 `canvas`、`agent`、`creation`、`governance`、`ui`），不使用 `misc`、`stuff`、`update`。摘要用祈使句、不加句号、不写「修改了」「修复了」这类无信息前缀。
 
@@ -78,12 +86,12 @@ test(browser): 补充侧栏窄屏关闭优先级回归
 
 出现以下任一情况，不在原分支上继续修，而是执行回滚：
 
-| 触发条件 | 回滚动作 |
-| --- | --- |
-| 合并后发现 P0/P1 缺陷且修复风险高于撤回 | `git revert` 合并提交，或将发布指针退回上一 tag |
-| 数据结构迁移导致既有数据不可读 | revert 迁移代码，按 `DATA-STORAGE.md` 的备份恢复 |
-| 依赖大版本升级引发不可控回归 | revert 升级提交，回到上一可用 lockfile |
-| 门禁在某环境持续失败且短期无法定位 | 撤回该次合并，登记账本任务再排查 |
+| 触发条件                                | 回滚动作                                         |
+| --------------------------------------- | ------------------------------------------------ |
+| 合并后发现 P0/P1 缺陷且修复风险高于撤回 | `git revert` 合并提交，或将发布指针退回上一 tag  |
+| 数据结构迁移导致既有数据不可读          | revert 迁移代码，按 `DATA-STORAGE.md` 的备份恢复 |
+| 依赖大版本升级引发不可控回归            | revert 升级提交，回到上一可用 lockfile           |
+| 门禁在某环境持续失败且短期无法定位      | 撤回该次合并，登记账本任务再排查                 |
 
 回滚要求：
 

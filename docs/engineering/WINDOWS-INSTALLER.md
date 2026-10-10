@@ -5,7 +5,7 @@
 ```powershell
 npm ci
 npm run client:installer
-npm run client:installer:receipt -- "src-tauri/target/release/bundle/nsis/KK Studio_2.1.2_x64-setup.exe" "releases/installer-<commit>"
+npm run client:installer:receipt -- "src-tauri/target/release/bundle/nsis/KK Studio_<desktop-version>_x64-setup.exe" "releases/installer-<commit>"
 npm run client:installer:test -- "releases/installer-<commit>/installer-receipt.json"
 ```
 

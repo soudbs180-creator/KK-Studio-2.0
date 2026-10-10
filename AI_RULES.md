@@ -43,3 +43,5 @@ AI 不得使用作者身份伪造 GitHub approval。单用户仓库采用 PR + �
 交付必须更新 ledger/PROGRESS/verification；只完成实现、只通过构建、只在 Web 验证都不能替代完整能力验收。规则/提示词改动也需要 [AI 场景回归](docs/engineering/AI-EVALS.md)。没有模型调用凭据/预算时保留场景和人工独立复核，不能把静态检查说成 live 模型评估。
 
 桌面源码更新必须经过当前 checkout 的 GUI 启动器或 `start-kk-studio.bat`：先检查 release 新鲜度、源码内容指纹/构建收据和 `node_modules` 与 `package-lock.json` 的 Tauri 依赖一致性，再构建并核对实际 EXE 路径、mtime/hash 与运行进程。缺少或不匹配收据、锁文件异常、依赖修复或构建失败时不得启动旧包；自动依赖修复使用 `npm ci --ignore-scripts`，不得在启动时触碰随包 Agent 目录。直接运行已有 `kk-studio.exe` 不算更新验收；修改 GUI 启动器源码还必须重新运行 `npm run client:shortcut`，不能把应用 release 验收当成启动器自身已更新。相关实现与证据规则见 [Windows 启动与分享](docs/engineering/LAUNCHER.md)。
+
+产品版本变更还必须从 `config/platform-versions.json` 出发，并运行 `npm run version:check` 与 `npm run version:consistency`。后者检查根/嵌套 lock、Tauri 依赖和活动源码中的应用版本硬编码；警告必须说明它是协议/schema、插件/供应商版本还是误用的产品版本。分支合并必须绑定当前 base/head SHA 和 receipt；旧 worktree、旧快捷方式、旧 EXE、mtime 或构建缓存不能证明其他环境已经更新。

@@ -85,6 +85,8 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - run: npm run version:check
+      - run: npm run version:consistency
       - run: node node_modules/@playwright/test/cli.js install msedge
       - name: Run repository verification
         env:
