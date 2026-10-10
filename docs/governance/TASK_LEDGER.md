@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Dependencies | Owner |
 | --- | --- | --- | --- | --- |
+| TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | REVIEW | none | root |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | TASK-LAUNCH-001 | root |
 | TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | TASK-LAUNCH-001 | root |
 | TASK-IMAGE-RETRY-004 | 修复主线区域重试验收读取旧成功任务 | DONE | TASK-IMAGE-EDIT-001 | root |
@@ -120,6 +121,18 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
 | TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | TASK-GOV-001 | root |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | PARTIAL | none | root |
+
+## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
+
+- Goal: Git Bash/MSYS 下的 pre-push guard 能处理空格和超过 260 字符的策略路径，同时保留所有拒绝保护。
+- Scope: 仅 hook 路径转换、Windows 长路径真实回归夹具和相关交付证据；不改远端保护、不合并 main、不修改共享主工作树。
+- Acceptance: Windows 真实 Git hook 通过单级空格、多级空格和策略路径超过 260 字符的合法快进与非法保护分支回归。; cygpath 转换失败、缺少策略、未知 ancestry、非快进、删除和受保护 ref 仍 fail closed，断言不放宽。; 基于当前 origin/main 的独立分支提交、Windows/Ubuntu hook CI、npm verify、构建和 delivery 结果均有当前 SHA 证据。
+- Branch: `fix/TASK-FIX-PUSH-GUARD-SPACES-001-main-replay`
+- Worktree: `D:/kk-studio/.worktrees/TASK-FIX-PUSH-GUARD-SPACES-001-windows`
+- Modules: .githooks/pre-push, scripts/install-git-guards.mjs, scripts/governance/push-policy.mjs, tests/unit/gitPushGuardPaths.test.ts, tests/unit/gitPushPolicy.test.ts, docs/changes/2026-10-10-push-guard-spaces
+- Verification: NOT_VERIFIED — Current main replay at 3a7467825b85f66a7f4e409f8296e16ca2249516: local Windows hook 22 PASS/0 FAIL/5 SKIP; Hosted Windows and Ubuntu hook jobs PASS; build PASS; Hosted delivery/deploy-linux PASS; npm verify has two unrelated desktop Agent environment failures and Hosted verify is pending.
+- Evidence: [docs/changes/2026-10-10-push-guard-spaces/verification.md](../../docs/changes/2026-10-10-push-guard-spaces/verification.md), [docs/changes/2026-10-10-push-guard-spaces/review.md](../../docs/changes/2026-10-10-push-guard-spaces/review.md)
+- Updated: 2026-10-10
 
 ## TASK-WINDOWS-ENTRY-DIAG-002 — 补齐Windows入口子进程失败诊断
 

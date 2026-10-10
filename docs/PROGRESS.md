@@ -1,8 +1,13 @@
-## 2026-10-10 TASK-VERIFY-ORIGIN-003 治理包收口（PR #51）
+## 2026-10-10 TASK-FIX-PUSH-GUARD-SPACES-001 Windows long-path guard replay (REVIEW / NOT VERIFIED)
 
-PR #51 候选分支 `fix/TASK-VERIFY-ORIGIN-003-main-7ebf143`（source HEAD `4949b3db9471113c7e70b7f78a0a35c457e30cca`，base `main@7ebf143b`）已补齐 dated change package。候选证据严格限制为：真实 `KK_TEST_PORT` 配置矩阵（1431/1421 启动前拒绝；1423/未设置解析为 `http://127.0.0.1:1423`）、`npm run build`、`npm run typecheck`、四个目标 browser specs `--retries=0` 共 16/16。
+- Replayed the scoped PR49 fix onto current origin/main 7736c99bd5e900e7c5cd8a36663aadcb45326143; final pushed candidate is 3a7467825b85f66a7f4e409f8296e16ca2249516.
+- Root cause and fix: keep the Windows process cwd below MAX_PATH while the installed policy path remains over 260; normalize cygpath \?\ drive and UNC prefixes before invoking Node.
+- Focused Windows regression is 27 tests, 22 pass, 0 fail, 5 existing platform skips. Hosted git-guards run 38075547186 has Windows and Ubuntu success; quality run 38075547255 has delivery/deploy-linux success and verify pending.
+- Local npm verify reaches 830 tests with two unrelated desktop Agent environment failures; independent npm run build succeeds.
 
-完整 browser suite、完整 npm verify、Hosted CI 结果和独立 review 仍 PENDING；任务与验证结果保持 PARTIAL。未合并、未自动合并、未发布，不复用或改写 PR47/PR44 历史记录。
+## 2026-10-10 TASK-VERIFY-ORIGIN-003 governance closeout (PR #51)
+
+PR #51 current-main governance evidence remains retained below.
 
 # 当前进度
 

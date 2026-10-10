@@ -1,0 +1,26 @@
+name: git-guards
+
+on:
+  push:
+    branches: [main, "fix/**", "codex/**", "test/**", "chore/**"]
+  pull_request:
+  merge_group:
+
+permissions:
+  contents: read
+
+jobs:
+  hook-regression:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Exercise real Git hooks and reviewed v1 upgrade
+        run: node --test tests/unit/gitPushPolicy.test.ts tests/unit/gitPushGuardPaths.test.ts
