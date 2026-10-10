@@ -9,6 +9,10 @@ import {
   inspectDesktopRelease,
   runDesktopRelease,
 } from "../../scripts/windows/desktop-release.mjs";
+import {
+  fingerprintDesktopInputs,
+  writeDesktopReleaseReceipt,
+} from "../../scripts/windows/desktop-release-identity.mjs";
 
 function fixture(t: { after: (cleanup: () => void) => void }) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "kk-desktop-release-"));
@@ -29,6 +33,33 @@ function fixture(t: { after: (cleanup: () => void) => void }) {
   fs.mkdirSync(path.dirname(executable), { recursive: true });
   fs.writeFileSync(source, "current source");
   fs.writeFileSync(executable, "previous release");
+  fs.writeFileSync(
+    path.join(root, "package-lock.json"),
+    JSON.stringify({
+      packages: {
+        "node_modules/@tauri-apps/api": { version: "2.11.1" },
+        "node_modules/@tauri-apps/plugin-dialog": { version: "2.7.3" },
+        "node_modules/@tauri-apps/cli": { version: "2.11.4" },
+      },
+    }),
+  );
+  fs.utimesSync(
+    path.join(root, "package-lock.json"),
+    new Date(500),
+    new Date(500),
+  );
+  for (const [name, version] of [
+    ["@tauri-apps/api", "2.11.1"],
+    ["@tauri-apps/plugin-dialog", "2.7.3"],
+    ["@tauri-apps/cli", "2.11.4"],
+  ]) {
+    const packageRoot = path.join(root, "node_modules", name);
+    fs.mkdirSync(packageRoot, { recursive: true });
+    fs.writeFileSync(
+      path.join(packageRoot, "package.json"),
+      JSON.stringify({ name, version }),
+    );
+  }
   fs.utimesSync(executable, new Date(1000), new Date(1000));
   fs.utimesSync(source, new Date(2000), new Date(2000));
   return { root, source, executable };
@@ -120,7 +151,7 @@ test("a build that leaves the executable stale cannot launch it", (t) => {
           launched = true;
         },
       }),
-    /did not produce a current executable/,
+    /did not produce a (replaced executable|current executable)/,
   );
   assert.equal(launched, false);
 });
@@ -128,6 +159,7 @@ test("a build that leaves the executable stale cannot launch it", (t) => {
 test("current desktop release launches without another rebuild", (t) => {
   const { root, executable } = fixture(t);
   fs.utimesSync(executable, new Date(3000), new Date(3000));
+  writeDesktopReleaseReceipt(root);
   let launched = "";
   const result = runDesktopRelease(root, {
     buildRelease: () => {
@@ -139,6 +171,87 @@ test("current desktop release launches without another rebuild", (t) => {
   });
   assert.equal(launched, executable);
   assert.equal(result.rebuilt, false);
+});
+
+test("desktop launch rebuilds when input content changes without a newer mtime", (t) => {
+  const { root, executable, source } = fixture(t);
+  fs.utimesSync(executable, new Date(3000), new Date(3000));
+  writeDesktopReleaseReceipt(root);
+  const originalMtime = fs.statSync(source).mtimeMs;
+  fs.writeFileSync(source, "changed source with preserved timestamp");
+  fs.utimesSync(source, originalMtime / 1000, originalMtime / 1000);
+  let rebuilt = false;
+  const result = runDesktopRelease(root, {
+    buildRelease: () => {
+      rebuilt = true;
+      fs.writeFileSync(executable, "rebuilt release");
+      fs.utimesSync(executable, new Date(4000), new Date(4000));
+    },
+    launchRelease: () => {},
+  });
+  assert.equal(rebuilt, true);
+  assert.equal(result.rebuilt, true);
+});
+
+test("desktop launch rebuilds when a tracked input is deleted", (t) => {
+  const { root, executable, source } = fixture(t);
+  fs.utimesSync(executable, new Date(3000), new Date(3000));
+  writeDesktopReleaseReceipt(root);
+  fs.rmSync(source);
+  let rebuilt = false;
+  const result = runDesktopRelease(root, {
+    buildRelease: () => {
+      rebuilt = true;
+      fs.writeFileSync(executable, "rebuilt after deletion");
+      fs.utimesSync(executable, new Date(4000), new Date(4000));
+    },
+    launchRelease: () => {},
+  });
+  assert.equal(rebuilt, true);
+  assert.equal(result.rebuilt, true);
+});
+
+test("desktop launch rejects a missing receipt until a build replaces the executable", (t) => {
+  const { root, executable } = fixture(t);
+  fs.utimesSync(executable, new Date(3000), new Date(3000));
+  let rebuilt = false;
+  const result = runDesktopRelease(root, {
+    buildRelease: () => {
+      rebuilt = true;
+      fs.writeFileSync(executable, "rebuilt without prior receipt");
+      fs.utimesSync(executable, new Date(4000), new Date(4000));
+    },
+    launchRelease: () => {},
+  });
+  assert.equal(rebuilt, true);
+  assert.equal(result.rebuilt, true);
+  assert.equal(inspectDesktopRelease(root).reason, "current");
+});
+
+test("desktop launch does not treat a missing lockfile as aligned", (t) => {
+  const { root, executable } = fixture(t);
+  fs.utimesSync(executable, new Date(3000), new Date(3000));
+  writeDesktopReleaseReceipt(root);
+  fs.rmSync(path.join(root, "package-lock.json"));
+  let launched = false;
+  assert.throws(
+    () =>
+      runDesktopRelease(root, {
+        buildRelease: () => {},
+        launchRelease: () => {
+          launched = true;
+        },
+      }),
+    /replaced executable with aligned dependencies/,
+  );
+  assert.equal(launched, false);
+});
+
+test("desktop release fingerprint changes when a tracked input changes", (t) => {
+  const { root, source } = fixture(t);
+  const original = fingerprintDesktopInputs(root);
+  fs.writeFileSync(source, "another source");
+  assert.notEqual(fingerprintDesktopInputs(root), original);
 });
 
 test("desktop launch detects node_modules drift from the lockfile", (t) => {
@@ -189,6 +302,60 @@ test("desktop launch detects node_modules drift from the lockfile", (t) => {
       { name: "@tauri-apps/cli", expected: "2.11.4", actual: "2.12.1" },
     ],
   );
+});
+
+test("desktop launch rebuilds when dependencies drift even if the release is current", (t) => {
+  const { root, executable } = fixture(t);
+  fs.utimesSync(executable, new Date(3000), new Date(3000));
+  fs.writeFileSync(
+    path.join(root, "package-lock.json"),
+    JSON.stringify({
+      packages: {
+        "node_modules/@tauri-apps/api": { version: "2.11.1" },
+        "node_modules/@tauri-apps/plugin-dialog": { version: "2.7.3" },
+        "node_modules/@tauri-apps/cli": { version: "2.11.4" },
+      },
+    }),
+  );
+  fs.utimesSync(
+    path.join(root, "package-lock.json"),
+    new Date(2000),
+    new Date(2000),
+  );
+  writeDesktopReleaseReceipt(root);
+  for (const [name, version] of [
+    ["@tauri-apps/api", "2.12.1"],
+    ["@tauri-apps/plugin-dialog", "2.8.1"],
+    ["@tauri-apps/cli", "2.12.1"],
+  ]) {
+    const packageRoot = path.join(root, "node_modules", name);
+    fs.mkdirSync(packageRoot, { recursive: true });
+    fs.writeFileSync(
+      path.join(packageRoot, "package.json"),
+      JSON.stringify({ name, version }),
+    );
+  }
+  let rebuilt = false;
+  const result = runDesktopRelease(root, {
+    buildRelease: () => {
+      rebuilt = true;
+      fs.writeFileSync(executable, "rebuilt after dependency repair");
+      fs.utimesSync(executable, new Date(4000), new Date(4000));
+      for (const [name, version] of [
+        ["@tauri-apps/api", "2.11.1"],
+        ["@tauri-apps/plugin-dialog", "2.7.3"],
+        ["@tauri-apps/cli", "2.11.4"],
+      ]) {
+        fs.writeFileSync(
+          path.join(root, "node_modules", name, "package.json"),
+          JSON.stringify({ name, version }),
+        );
+      }
+    },
+    launchRelease: () => {},
+  });
+  assert.equal(rebuilt, true);
+  assert.equal(result.rebuilt, true);
 });
 
 test("desktop launch accepts node_modules aligned with the lockfile", (t) => {
