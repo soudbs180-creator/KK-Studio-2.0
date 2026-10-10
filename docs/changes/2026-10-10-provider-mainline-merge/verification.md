@@ -14,7 +14,7 @@
 
 | 检查 | 结果 |
 | --- | --- |
-| `npm run lint` | PASS；governance 118 tasks / 0 violations，features 36 / 0，Markdown 114 / 0 |
+| `npm run lint` | PASS；governance 119 tasks / 0 violations，features 36 / 0，Markdown 114 / 0 |
 | `npm run typecheck` | PASS |
 | `npm run format:check` | PASS |
 | `node scripts/check-ui-standards.mjs` | PASS；215 files / 0 violations |
