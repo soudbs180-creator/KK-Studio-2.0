@@ -41,6 +41,12 @@ const RELEASE_INPUTS = [
   path.join("src-tauri", "tauri.agent.conf.json"),
 ];
 
+const DESKTOP_TOOLCHAIN_PACKAGES = [
+  "@tauri-apps/api",
+  "@tauri-apps/plugin-dialog",
+  "@tauri-apps/cli",
+];
+
 function findNewestFile(candidatePath, current) {
   if (!fs.existsSync(candidatePath)) return current;
   const stats = fs.lstatSync(candidatePath);
@@ -90,6 +96,33 @@ export function inspectDesktopRelease(projectRoot) {
   };
 }
 
+function readJson(filePath) {
+  if (!fs.existsSync(filePath)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function packagePath(packageName) {
+  return path.join("node_modules", ...packageName.split("/"), "package.json");
+}
+
+export function inspectDesktopDependencies(projectRoot) {
+  const lockfile = readJson(path.join(projectRoot, "package-lock.json"));
+  if (!lockfile?.packages) return { needsInstall: false, mismatches: [] };
+
+  const mismatches = DESKTOP_TOOLCHAIN_PACKAGES.flatMap((name) => {
+    const expected = lockfile.packages[`node_modules/${name}`]?.version;
+    const installed = readJson(path.join(projectRoot, packagePath(name)));
+    const actual = installed?.version ?? null;
+    if (!expected || actual === expected) return [];
+    return [{ name, expected, actual }];
+  });
+  return { needsInstall: mismatches.length > 0, mismatches };
+}
+
 export function ensureDesktopRelease(projectRoot, buildRelease) {
   const before = inspectDesktopRelease(projectRoot);
   if (!before.needsBuild) return { ...before, rebuilt: false };
@@ -113,9 +146,10 @@ export function runDesktopRelease(
   return release;
 }
 
-function resolveNpmCliPath() {
+function resolveNpmCliPath(projectRoot) {
   const candidates = [
     process.env.npm_execpath,
+    path.join(projectRoot, "node_modules", "npm", "bin", "npm-cli.js"),
     path.join(
       path.dirname(process.execPath),
       "node_modules",
@@ -131,10 +165,48 @@ function resolveNpmCliPath() {
   return npmCliPath;
 }
 
-function buildDesktopRelease(projectRoot) {
+function installDesktopDependencies(projectRoot) {
   const result = spawnSync(
     process.execPath,
-    [resolveNpmCliPath(), "run", "client:build:agent", "--", "--no-bundle"],
+    [resolveNpmCliPath(projectRoot), "ci", "--no-audit", "--no-fund"],
+    { cwd: projectRoot, stdio: "inherit", windowsHide: true },
+  );
+  if (result.error) throw result.error;
+  if (result.status !== 0) {
+    throw new Error(
+      `Desktop dependency repair failed with exit code ${result.status}.`,
+    );
+  }
+  const after = inspectDesktopDependencies(projectRoot);
+  if (after.needsInstall) {
+    throw new Error(
+      "Desktop dependency repair completed but node_modules is still out of sync with package-lock.json.",
+    );
+  }
+}
+
+function buildDesktopRelease(projectRoot) {
+  const dependencies = inspectDesktopDependencies(projectRoot);
+  if (dependencies.needsInstall) {
+    console.log(
+      `[KK Studio] Repairing desktop dependencies from package-lock.json: ${dependencies.mismatches
+        .map(
+          ({ name, expected, actual }) =>
+            `${name} ${actual ?? "missing"} -> ${expected}`,
+        )
+        .join(", ")}`,
+    );
+    installDesktopDependencies(projectRoot);
+  }
+  const result = spawnSync(
+    process.execPath,
+    [
+      resolveNpmCliPath(projectRoot),
+      "run",
+      "client:build:agent",
+      "--",
+      "--no-bundle",
+    ],
     { cwd: projectRoot, stdio: "inherit", windowsHide: true },
   );
   if (result.error) throw result.error;

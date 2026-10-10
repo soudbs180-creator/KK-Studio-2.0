@@ -5,6 +5,7 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
 import {
+  inspectDesktopDependencies,
   inspectDesktopRelease,
   runDesktopRelease,
 } from "../../scripts/windows/desktop-release.mjs";
@@ -138,6 +139,92 @@ test("current desktop release launches without another rebuild", (t) => {
   });
   assert.equal(launched, executable);
   assert.equal(result.rebuilt, false);
+});
+
+test("desktop launch detects node_modules drift from the lockfile", (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "kk-desktop-deps-"));
+  t.after(() => {
+    assert.equal(path.dirname(root), path.resolve(os.tmpdir()));
+    assert.ok(path.basename(root).startsWith("kk-desktop-deps-"));
+    fs.rmSync(root, { recursive: true, force: true });
+  });
+  fs.writeFileSync(
+    path.join(root, "package-lock.json"),
+    JSON.stringify({
+      packages: {
+        "": {},
+        "node_modules/@tauri-apps/api": { version: "2.11.1" },
+        "node_modules/@tauri-apps/plugin-dialog": { version: "2.7.3" },
+        "node_modules/@tauri-apps/cli": { version: "2.11.4" },
+      },
+    }),
+  );
+  for (const [name, version] of [
+    ["@tauri-apps/api", "2.12.1"],
+    ["@tauri-apps/plugin-dialog", "2.8.1"],
+    ["@tauri-apps/cli", "2.12.1"],
+  ]) {
+    const packageRoot = path.join(root, "node_modules", name);
+    fs.mkdirSync(packageRoot, { recursive: true });
+    fs.writeFileSync(
+      path.join(packageRoot, "package.json"),
+      JSON.stringify({ name, version }),
+    );
+  }
+  const inspection = inspectDesktopDependencies(root);
+  assert.equal(inspection.needsInstall, true);
+  assert.deepEqual(
+    inspection.mismatches.map(({ name, expected, actual }) => ({
+      name,
+      expected,
+      actual,
+    })),
+    [
+      { name: "@tauri-apps/api", expected: "2.11.1", actual: "2.12.1" },
+      {
+        name: "@tauri-apps/plugin-dialog",
+        expected: "2.7.3",
+        actual: "2.8.1",
+      },
+      { name: "@tauri-apps/cli", expected: "2.11.4", actual: "2.12.1" },
+    ],
+  );
+});
+
+test("desktop launch accepts node_modules aligned with the lockfile", (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "kk-desktop-deps-"));
+  t.after(() => {
+    assert.equal(path.dirname(root), path.resolve(os.tmpdir()));
+    assert.ok(path.basename(root).startsWith("kk-desktop-deps-"));
+    fs.rmSync(root, { recursive: true, force: true });
+  });
+  fs.writeFileSync(
+    path.join(root, "package-lock.json"),
+    JSON.stringify({
+      packages: {
+        "": {},
+        "node_modules/@tauri-apps/api": { version: "2.11.1" },
+        "node_modules/@tauri-apps/plugin-dialog": { version: "2.7.3" },
+        "node_modules/@tauri-apps/cli": { version: "2.11.4" },
+      },
+    }),
+  );
+  for (const [name, version] of [
+    ["@tauri-apps/api", "2.11.1"],
+    ["@tauri-apps/plugin-dialog", "2.7.3"],
+    ["@tauri-apps/cli", "2.11.4"],
+  ]) {
+    const packageRoot = path.join(root, "node_modules", name);
+    fs.mkdirSync(packageRoot, { recursive: true });
+    fs.writeFileSync(
+      path.join(packageRoot, "package.json"),
+      JSON.stringify({ name, version }),
+    );
+  }
+  assert.deepEqual(inspectDesktopDependencies(root), {
+    needsInstall: false,
+    mismatches: [],
+  });
 });
 
 for (const input of [
