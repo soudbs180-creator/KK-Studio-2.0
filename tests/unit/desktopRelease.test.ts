@@ -108,7 +108,7 @@ function processDiagnostic(
 
 test("stale desktop release is rebuilt before it can launch", (t) => {
   const { root, executable } = fixture(t);
-  assert.equal(inspectDesktopRelease(root).reason, "stale");
+  assert.equal(inspectDesktopRelease(root).reason, "unverified");
   const result = runDesktopRelease(root, {
     buildRelease: () => {
       fs.writeFileSync(executable, "current release");
@@ -307,6 +307,38 @@ test("desktop release fingerprint changes when a tracked input changes", (t) => 
   assert.notEqual(fingerprintDesktopInputs(root), original);
 });
 
+test("desktop release fingerprint ignores package scripts but tracks runtime metadata", (t) => {
+  const { root } = fixture(t);
+  const manifest = path.join(root, "package.json");
+  fs.writeFileSync(
+    manifest,
+    JSON.stringify({
+      scripts: { build: "old" },
+      dependencies: { runtime: "1.0.0" },
+      type: "module",
+    }),
+  );
+  const original = fingerprintDesktopInputs(root);
+  fs.writeFileSync(
+    manifest,
+    JSON.stringify({
+      scripts: { build: "new" },
+      dependencies: { runtime: "1.0.0" },
+      type: "module",
+    }),
+  );
+  assert.equal(fingerprintDesktopInputs(root), original);
+  fs.writeFileSync(
+    manifest,
+    JSON.stringify({
+      scripts: { build: "new" },
+      dependencies: { runtime: "2.0.0" },
+      type: "module",
+    }),
+  );
+  assert.notEqual(fingerprintDesktopInputs(root), original);
+});
+
 test("desktop launch detects node_modules drift from the lockfile", (t) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "kk-desktop-deps-"));
   t.after(() => {
@@ -465,7 +497,7 @@ for (const input of [
     fs.writeFileSync(changed, "newer runtime input");
     fs.utimesSync(changed, new Date(4000), new Date(4000));
     const release = inspectDesktopRelease(root);
-    assert.equal(release.reason, "stale");
+    assert.equal(release.reason, "unverified");
     assert.equal(release.newestInputPath, changed);
   });
 }

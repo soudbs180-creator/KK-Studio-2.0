@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { inspectDesktopRelease } from "./desktop-release.mjs";
+import { writeDesktopReleaseReceipt } from "./desktop-release-identity.mjs";
 
 export async function fileIdentity(filename) {
   const bytes = await fs.readFile(filename);
@@ -143,8 +144,13 @@ export function nsisExecutableIdentity(bytes) {
 }
 
 export async function recordInstallerInputs(root) {
+  // Tauri invokes this hook after it has built the release executable and just
+  // before bundling. Refresh the desktop receipt here so a first build or a
+  // source change is accepted only after the new executable is present.
+  writeDesktopReleaseReceipt(root);
   const releaseInspection = inspectDesktopRelease(root);
-  if (releaseInspection.needsBuild) throw new Error("Desktop build is stale");
+  if (releaseInspection.needsBuild)
+    throw new Error("Desktop build is not aligned with current inputs");
   const release = path.join(root, "src-tauri/target/release");
   const exe = path.join(release, "kk-studio.exe");
   const inputs = {

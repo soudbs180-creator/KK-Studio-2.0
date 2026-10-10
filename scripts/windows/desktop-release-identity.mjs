@@ -72,6 +72,27 @@ function appendInputEntries(projectRoot, relativePath, entries) {
     );
   }
   if (stats.isFile()) {
+    if (path.basename(relativePath) === "package.json") {
+      const manifest = JSON.parse(fs.readFileSync(absolutePath, "utf8"));
+      const runtimeManifest = {
+        type: manifest.type,
+        main: manifest.main,
+        module: manifest.module,
+        exports: manifest.exports,
+        bin: manifest.bin,
+        files: manifest.files,
+        engines: manifest.engines,
+        dependencies: manifest.dependencies,
+        devDependencies: manifest.devDependencies,
+        optionalDependencies: manifest.optionalDependencies,
+        peerDependencies: manifest.peerDependencies,
+        bundledDependencies: manifest.bundledDependencies,
+      };
+      entries.push(
+        `manifest\0${normalized}\0${sha256(JSON.stringify(runtimeManifest))}`,
+      );
+      return;
+    }
     entries.push(
       `file\0${normalized}\0${sha256(fs.readFileSync(absolutePath))}`,
     );

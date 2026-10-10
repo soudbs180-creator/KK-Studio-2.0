@@ -52,13 +52,11 @@ export function inspectDesktopRelease(projectRoot) {
   const reason =
     releaseMtimeMs === null
       ? "missing"
-      : newestInput.mtimeMs > releaseMtimeMs
-        ? "stale"
-        : !receipt ||
-            receipt.inputSha256 !== inputSha256 ||
-            receipt.executableSha256 !== executableSha256
-          ? "unverified"
-          : "current";
+      : !receipt ||
+          receipt.inputSha256 !== inputSha256 ||
+          receipt.executableSha256 !== executableSha256
+        ? "unverified"
+        : "current";
 
   return {
     releaseExePath,
@@ -322,11 +320,7 @@ if (isMainModule()) {
   );
   try {
     const initial = inspectDesktopRelease(projectRoot);
-    if (initial.reason === "stale") {
-      console.log(
-        `[KK Studio] Desktop release is older than ${initial.newestInputPath}; rebuilding...`,
-      );
-    } else if (initial.reason === "missing") {
+    if (initial.reason === "missing") {
       console.log("[KK Studio] Desktop release is missing; building...");
     } else if (initial.reason === "unverified") {
       console.log(
