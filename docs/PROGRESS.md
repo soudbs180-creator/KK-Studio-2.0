@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-10 浏览器并发失败原因与隔离复核（TASK-VERIFY-CONCURRENCY-002，PARTIAL）
+
+该任务已由 PR #46 合并到 `origin/main@2b6c0ba`，合并后 run `37983272823` 的 verify、deploy-linux、upload-artifact 均成功；当前 workers 1/2/4/8/12 在固定 1423、retries=0 下均为 447/447。历史 source105 的 9 个首轮 flaky 原件继续保留，根因仍 UNKNOWN，不能把并发复现通过写成根因已修复。详见 [并发收口验证](changes/2026-10-10-verify-concurrency-002-closeout/verification.md)。
+
 ## 2026-10-10 当前主线剩余回归验证（TASK-AGENT-001，PARTIAL）
 
 基于当前主线 `edda6157` 的隔离工作树修复并验证四类本地回归：Codex 画布来源项进入内置生图时不再被通用 API 模型门禁误拦；设置供应商下拉框与输入框共享控件几何和窄屏命中区；Google 图片归档、插件空态及开发态设置入口断言对齐当前产品语义。完整 `npm run verify` 退出码 0：Node 911（903 通过、8 跳过）、Agent 172/174（2 跳过）、UI 215/0、生产浏览器 455/455、Vite development 插件 receipt PASS。改动保存在 `codex/remaining-verification-20261010`，证据见[交付包](changes/2026-10-10-remaining-verification/verification.md)。真实 Provider/GPU、Hosted Windows 原因、Tauri release、Mobile 和用户产品验收仍未发生，`TASK-AGENT-001` 保持 PARTIAL，其他剩余 TODO/BLOCKED 任务不因本地回归自动关闭。

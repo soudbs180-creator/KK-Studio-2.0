@@ -1,0 +1,19 @@
+{
+  "taskId": "TASK-VERIFY-CONCURRENCY-002",
+  "baseSha": "8090475958f1a0bdd1b4b36ada7f2aba1e4e6264",
+  "testedSourceHead": "8090475958f1a0bdd1b4b36ada7f2aba1e4e6264",
+  "testedSourceTree": "ede7a1b181b01e84cf49f89621ca265ea62e1d4b",
+  "branch": "codex/TASK-VERIFY-CONCURRENCY-002",
+  "worktree": "D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002",
+  "sourceDirtyBeforeMatrix": false,
+  "sourceChangesDuringMatrix": false,
+  "conditions": {
+    "node": "24.20.0",
+    "npm": "11.19.0",
+    "os": "Windows x64",
+    "logicalCpu": 24,
+    "memoryGiB": 68,
+    "port": 1423,
+    "retries": 0
+  }
+}

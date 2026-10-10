@@ -118,7 +118,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | 已完成 | P1 | T2, TASK-UI-GOV-003 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | 未完成 | P1 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | 未完成 | P1 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | TODO | 未完成 | P1 | TASK-GOV-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | 未完成 | P2 | TASK-GOV-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | TODO | 未完成 | P1 | none | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-DOCS-STRUCT-001 | AI 协作规则文档结构收敛 | REVIEW | 进行中 | P1 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
 | TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | TODO | 未完成 | P1 | none | root | 实现真实 DPAPI SecretProtector（需 Rust 侧或 PowerShell 桥），接入一个真实火山方舟账号取得上游证据后再转 DONE；随后接调度层持久化仓储与 sub2api-client。 |
@@ -2261,19 +2261,19 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败
 - Scope: 健康审计QA-001；当前main重新复现后在独立任务分支收尾
 - Display status: 未完成
-- Priority: P1 — 当前治理或验证阻断项
+- Priority: P2 — 当前治理或验证阻断项
 - Requirement refs: ledger:TASK-VERIFY-CONCURRENCY-002
 - Feature IDs: none
 - Owner role: repository-maintainer
 - Acceptance: 保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败; 保留原始失败与来源，相关回归/完整门禁及独立精确head审查通过; 按普通PR集成并回读当前main；外部条件如实分开
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `codex/TASK-VERIFY-CONCURRENCY-002-closeout`
+- Worktree: `D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002`
 - Modules: tests/browser, playwright.config.ts
-- Verification: NOT_VERIFIED — 同source105默认并发完整verify实际9 flaky，default1423 workers4/retries0实际447/447通过；原因仍UNKNOWN，须可控反例确定同步/资源边界，不将降并发称根因修复。
-- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md)
+- Verification: PARTIAL — 当前 clean source 8090475958f1a0bdd1b4b36ada7f2aba1e4e6264、同一 production dist、固定 preview 1423/retries0 下，workers 1/2/4/8/12 均 447/447 PASS；历史 source105 的 9 个首轮 flaky 原件保留，当前未复现，资源压力仅支持假设。PR #46 已以 squash merge 2b6c0ba10e17b873d5a38d85b2d38fb8848149cc 合并，origin/main 与候选/落地 tree 已回读一致；合并后 run 37983272823 的 verify、deploy-linux、upload-artifact 成功，delivery 按 push 条件跳过。IRV-CONC-002 已关闭；历史根因仍 UNKNOWN，不能称根因修复。
+- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-10-verify-concurrency-002/verification.md](../../docs/changes/2026-10-10-verify-concurrency-002/verification.md), [docs/changes/2026-10-10-verify-concurrency-002/review.md](../../docs/changes/2026-10-10-verify-concurrency-002/review.md), [docs/changes/2026-10-10-verify-concurrency-002-closeout/verification.md](../../docs/changes/2026-10-10-verify-concurrency-002-closeout/verification.md), [docs/changes/2026-10-10-verify-concurrency-002-closeout/review.md](../../docs/changes/2026-10-10-verify-concurrency-002-closeout/review.md)
 - Next action: 补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-10-09
-- Updated: 2026-10-09
+- Updated: 2026-10-10
 
 ## TASK-VERIFY-ORIGIN-003 — 浏览器验收端口与服务来源契约一致性
 
