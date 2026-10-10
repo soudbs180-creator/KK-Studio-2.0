@@ -168,7 +168,13 @@ function resolveNpmCliPath(projectRoot) {
 function installDesktopDependencies(projectRoot) {
   const result = spawnSync(
     process.execPath,
-    [resolveNpmCliPath(projectRoot), "ci", "--no-audit", "--no-fund"],
+    [
+      resolveNpmCliPath(projectRoot),
+      "ci",
+      "--ignore-scripts",
+      "--no-audit",
+      "--no-fund",
+    ],
     { cwd: projectRoot, stdio: "inherit", windowsHide: true },
   );
   if (result.error) throw result.error;
