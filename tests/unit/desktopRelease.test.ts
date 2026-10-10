@@ -43,6 +43,16 @@ function fixture(t: { after: (cleanup: () => void) => void }) {
       },
     }),
   );
+  fs.mkdirSync(path.join(root, "config"), { recursive: true });
+  fs.writeFileSync(
+    path.join(root, "config/platform-versions.json"),
+    JSON.stringify({ desktop: "2.1.13" }),
+  );
+  fs.utimesSync(
+    path.join(root, "config/platform-versions.json"),
+    new Date(500),
+    new Date(500),
+  );
   fs.utimesSync(
     path.join(root, "package-lock.json"),
     new Date(500),

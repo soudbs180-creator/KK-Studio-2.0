@@ -43,12 +43,17 @@ export function inspectDesktopRelease(projectRoot) {
   const inputSha256 = fingerprintDesktopInputs(projectRoot);
   const executableSha256 = hashDesktopExecutable(projectRoot);
   const receipt = readDesktopReleaseReceipt(projectRoot);
+  const configuredDesktopVersion = readJson(
+    path.join(projectRoot, "config", "platform-versions.json"),
+  )?.desktop;
   const reason =
     releaseMtimeMs === null
       ? "missing"
       : !receipt ||
           receipt.inputSha256 !== inputSha256 ||
-          receipt.executableSha256 !== executableSha256
+          receipt.executableSha256 !== executableSha256 ||
+          (configuredDesktopVersion &&
+            receipt.desktopVersion !== configuredDesktopVersion)
         ? "unverified"
         : "current";
 
@@ -62,6 +67,7 @@ export function inspectDesktopRelease(projectRoot) {
         : newestInput.mtimeMs,
     inputSha256,
     executableSha256,
+    desktopVersion: configuredDesktopVersion ?? null,
     receiptPath: path.join(
       projectRoot,
       "src-tauri",

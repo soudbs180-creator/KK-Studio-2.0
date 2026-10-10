@@ -46,9 +46,24 @@ export const RELEASE_INPUTS = [
 
 const RECEIPT_SCHEMA_VERSION = 1;
 const SHA256_PATTERN = /^[a-f0-9]{64}$/;
+const SEMVER_PATTERN = /^\d+\.\d+\.\d+$/;
 
 function sha256(value) {
   return crypto.createHash("sha256").update(value).digest("hex");
+}
+
+function configuredDesktopVersion(projectRoot) {
+  try {
+    const config = JSON.parse(
+      fs.readFileSync(
+        path.join(projectRoot, "config", "platform-versions.json"),
+        "utf8",
+      ),
+    );
+    return typeof config.desktop === "string" ? config.desktop : null;
+  } catch {
+    return null;
+  }
 }
 
 function normalizedPath(relativePath) {
@@ -134,6 +149,8 @@ export function readDesktopReleaseReceipt(projectRoot) {
       receipt?.schemaVersion !== RECEIPT_SCHEMA_VERSION ||
       !SHA256_PATTERN.test(receipt.inputSha256 ?? "") ||
       !SHA256_PATTERN.test(receipt.executableSha256 ?? "") ||
+      (receipt.desktopVersion !== undefined &&
+        !SEMVER_PATTERN.test(receipt.desktopVersion)) ||
       receipt.executableRelativePath !== normalizedPath(RELEASE_EXECUTABLE)
     ) {
       return null;
@@ -152,6 +169,7 @@ export function writeDesktopReleaseReceipt(projectRoot) {
     );
   }
   const receiptPath = path.join(projectRoot, RELEASE_RECEIPT);
+  const desktopVersion = configuredDesktopVersion(projectRoot);
   fs.mkdirSync(path.dirname(receiptPath), { recursive: true });
   fs.writeFileSync(
     receiptPath,
@@ -159,6 +177,7 @@ export function writeDesktopReleaseReceipt(projectRoot) {
       {
         schemaVersion: RECEIPT_SCHEMA_VERSION,
         executableRelativePath: normalizedPath(RELEASE_EXECUTABLE),
+        ...(desktopVersion ? { desktopVersion } : {}),
         inputSha256: fingerprintDesktopInputs(projectRoot),
         executableSha256,
       },
