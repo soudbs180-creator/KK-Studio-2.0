@@ -1,3 +1,9 @@
+## 2026-10-10 TASK-VERIFY-ORIGIN-003 治理包收口（PR #51）
+
+PR #51 候选分支 `fix/TASK-VERIFY-ORIGIN-003-main-7ebf143`（source HEAD `4949b3db9471113c7e70b7f78a0a35c457e30cca`，base `main@7ebf143b`）已补齐 dated change package。候选证据严格限制为：真实 `KK_TEST_PORT` 配置矩阵（1431/1421 启动前拒绝；1423/未设置解析为 `http://127.0.0.1:1423`）、`npm run build`、`npm run typecheck`、四个目标 browser specs `--retries=0` 共 16/16。
+
+完整 browser suite、完整 npm verify、Hosted CI 结果和独立 review 仍 PENDING；任务与验证结果保持 PARTIAL。未合并、未自动合并、未发布，不复用或改写 PR47/PR44 历史记录。
+
 # 当前进度
 
 ## 2026-10-10 浏览器并发失败原因与隔离复核

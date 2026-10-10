@@ -4,6 +4,8 @@ import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
+const productionOrigin = "http://127.0.0.1:1423";
+
 type RunningService = {
   process: ChildProcessWithoutNullStreams;
   endpoint: string;
@@ -124,6 +126,7 @@ test("Web 迁移预检/导入不删除旧 IndexedDB", async ({ page }) => {
   const service = await startService();
   try {
     await page.goto("/");
+    expect(new URL(page.url()).origin).toBe(productionOrigin);
     await page.evaluate(
       async ({ endpoint, pairingCode }) => {
         const paired = await fetch(`${endpoint}/v1/pair`, {

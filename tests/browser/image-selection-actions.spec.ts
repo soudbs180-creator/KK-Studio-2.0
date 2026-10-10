@@ -1,6 +1,8 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { openWorkspace, showCanvasNavigation } from "./helpers";
 
+const productionOrigin = "http://127.0.0.1:1423";
+
 const toolbar = (page: Page) =>
   page.getByRole("toolbar", { name: /^图片操作：/ });
 
@@ -257,7 +259,7 @@ for (const width of [390, 1099, 1920]) {
     await expect(
       page.locator('[data-runtime-entry="src/main.tsx"]'),
     ).toHaveAttribute("data-runtime-mode", "production");
-    expect(new URL(page.url()).port).toBe("1423");
+    expect(new URL(page.url()).origin).toBe(productionOrigin);
     await testInfo.attach("runtime", {
       body: JSON.stringify(
         await page.evaluate(() => ({
