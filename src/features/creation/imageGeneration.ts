@@ -120,11 +120,17 @@ function retryAfterSeconds(value: string | null): number | undefined {
   return Math.max(0, (timestamp - Date.now()) / 1000);
 }
 
-function providerError(response: Response): GenerationProviderError {
+export function providerError(
+  response: Response,
+  detail?: string,
+): GenerationProviderError {
   const status = response.status;
+  const reason = detail ? `：${detail}` : "";
   if (status === 401 || status === 403)
     return new GenerationProviderError(
-      `图片生成失败（HTTP ${status}），连接权限已失效，请重新验证 API Key 或项目权限。`,
+      detail
+        ? `图片生成失败（HTTP ${status}）：${detail}`
+        : `图片生成失败（HTTP ${status}），连接权限已失效，请重新验证 API Key 或项目权限。`,
       {
         status,
         failureClass: status === 401 ? "unauthorized" : "forbidden",
@@ -135,23 +141,27 @@ function providerError(response: Response): GenerationProviderError {
     const retryAfter = retryAfterSeconds(response.headers.get("Retry-After"));
     return new GenerationProviderError(
       retryAfter === undefined
-        ? "图片生成请求过于频繁，连接已进入冷却，请稍后重试。"
-        : `图片生成请求过于频繁，请在 ${Math.ceil(retryAfter)} 秒后重试。`,
+        ? detail
+          ? `所选模型请求过频或暂不可用（HTTP 429）：${detail}；连接已进入冷却，恢复后需手动重试。`
+          : "所选模型请求过频或暂不可用（HTTP 429），连接已进入冷却，恢复后需手动重试。"
+        : `所选模型请求过频（HTTP 429）${reason}，请在 ${Math.ceil(retryAfter)} 秒后重试。`,
       {
         status,
         retryAfterSeconds: retryAfter,
         failureClass: "rate_limited",
-        retryable: true,
+        // Without a Retry-After hint the model availability is unknown: the
+        // connection cools down instead of blindly retrying against capacity.
+        retryable: retryAfter !== undefined,
       },
     );
   }
   if (status >= 500 && status <= 599)
     return new GenerationProviderError(
-      `图片生成服务暂时不可用（HTTP ${status}），稍后可重试。`,
+      `图片生成服务暂时不可用（HTTP ${status}）${reason}，稍后可重试。`,
       { status, failureClass: "provider_unavailable", retryable: true },
     );
   return new GenerationProviderError(
-    `图片生成请求无效（HTTP ${status}），请检查模型、输入和服务权限。`,
+    `图片生成请求无效（HTTP ${status}）${reason}，请检查模型、输入和服务权限。`,
     { status, failureClass: "invalid_request", retryable: false },
   );
 }
@@ -239,7 +249,21 @@ async function requestImageChunk(options: {
           redirect: "error",
           signal: linked.controller.signal,
         });
-    if (!response.ok) throw providerError(response);
+    if (!response.ok) {
+      // Preserve the provider's own error payload (e.g. "Selected model is at
+      // capacity") and HTTP status instead of collapsing them into a template.
+      let detail: string | undefined;
+      try {
+        const raw = await response.text();
+        const payload = JSON.parse(raw) as { error?: { message?: unknown } };
+        const message = payload.error?.message;
+        if (typeof message === "string" && message.trim())
+          detail = message.trim().slice(0, 400);
+      } catch {
+        // The failure body is not JSON; fall back to the status classification.
+      }
+      throw providerError(response, detail);
+    }
     let payload: unknown;
     try {
       payload = await response.json();

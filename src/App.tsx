@@ -149,6 +149,25 @@ import { mapWithConcurrency } from "./features/creation/generationQueue";
 import { compileDesignPrompt } from "./features/creation/promptCompiler";
 import { getDisabledReason, getGenerationUiState } from "./domain/uiGovernance";
 
+/** Capacity failure hint: name connections the user can switch to right away. */
+function capacitySwitchHint(currentId: string | undefined): string {
+  const available = readProviderConnections().filter(
+    (connection) =>
+      connection.id !== currentId &&
+      connection.state !== "disabled" &&
+      connection.state !== "quarantined" &&
+      connection.state !== "cooldown",
+  );
+  if (available.length === 0)
+    return "当前没有其他可用连接，请稍后在设置中核对连接或模型。";
+  return `当前可用连接：${available
+    .slice(0, 3)
+    .map((item) => item.displayName || item.provider)
+    .join("、")}${
+    available.length > 3 ? " 等" : ""
+  }；可在设置中切换连接或模型后重试。`;
+}
+
 import {
   abortedAfterProviderSubmission,
   canRetryTask,
@@ -1545,8 +1564,13 @@ export default function App() {
               ? undefined
               : generated.failure instanceof ProviderSubmissionError
                 ? generated.failure.message
-                : (mappingFailures.values().next().value ??
-                  `${completed}/${task.requestedOutputs} 张已归档，可重试未归档结果。`),
+                : generated.failure instanceof GenerationProviderError &&
+                    generated.failure.failureClass === "rate_limited"
+                  ? `${generated.failure.message} ${capacitySwitchHint(
+                      task.providerConnectionId,
+                    )}`
+                  : (mappingFailures.values().next().value ??
+                    `${completed}/${task.requestedOutputs} 张已归档，可重试未归档结果。`),
         generatedUncertain || archiveUncertain ? "unknown" : "terminal",
       );
       await persistence.flush();
@@ -1634,7 +1658,12 @@ export default function App() {
             : controller.signal.aborted
               ? "已取消任务，已归档结果保留。"
               : error instanceof Error
-                ? error.message
+                ? error instanceof GenerationProviderError &&
+                  error.failureClass === "rate_limited"
+                  ? `${error.message} ${capacitySwitchHint(
+                      task.providerConnectionId,
+                    )}`
+                  : error.message
                 : "任务失败，请重试。";
       outputs = outputs.map((output) =>
         output.status === "succeeded"

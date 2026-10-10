@@ -116,8 +116,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GOV-GOALS-001 | 项目建设目标与验收基线 | DONE | 已完成 | P3 | TASK-AUDIT-20261003 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-COMPONENT-BOUNDARY-001 | MCP 设置组件职责拆分 | DONE | 已完成 | P3 | TASK-GOV-GOALS-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | 已完成 | P1 | T2, TASK-UI-GOV-003 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | DONE | 未完成 | P1 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | DONE | 未完成 | P1 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
+| TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
+| TASK-PROV-007 | Selected model is at capacity 错误分类与可用模型切换 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | 未完成 | P2 | TASK-GOV-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | TODO | 未完成 | P1 | none | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-DOCS-STRUCT-001 | AI 协作规则文档结构收敛 | REVIEW | 进行中 | P1 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
@@ -2222,7 +2223,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 已保存账号/模型/ref 在立即异常退出后仍可恢复，不使系统凭据变成无法定位的孤立记录
 - Scope: src/components/settings, src/features/creation/providerRegistry.ts, src/features/models/modelCatalog.ts, src-tauri
-- Display status: 未完成
+- Display status: 已完成
 - Priority: P1 — 当前治理或验证阻断项
 - Requirement refs: ledger:TASK-PROV-005
 - Feature IDs: FEAT-002
@@ -2233,15 +2234,15 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/settings, src/features/creation/providerRegistry.ts, src/features/models/modelCatalog.ts, src-tauri
 - Verification: PASS — 原生 durable 落盘实现并验收：Rust provider_config.rs（文件锁+revision 冲突+atomic write+sync+bak+损坏恢复+秘密键拒绝），命令 read/write_provider_config 接入 main.rs；TS providerRegistry 新增 isDesktopProviderDurable/load/persistProviderConnectionsDurable，ModelProviderSettings save/clearKey 成功提示前 await durable 提交，App 启动原生加载并迁移 localStorage 旧元数据。验证：Rust 单测 6/6、TS 单测 6/6、provider 相关回归 47/47、tsc/build 通过；桌面强杀重启验收 8/8 PASS（保存→杀进程树→重启连接与 credentialRef 完整恢复，落盘文件无秘密）。限制：完整 npm run verify 与 push/PR 留网络/CI 门禁。
 - Evidence: [docs/changes/2026-10-09-provider-durable-config/intent.md](../../docs/changes/2026-10-09-provider-durable-config/intent.md), [docs/changes/2026-10-09-provider-durable-config/spec.md](../../docs/changes/2026-10-09-provider-durable-config/spec.md), [docs/changes/2026-10-09-provider-durable-config/plan.md](../../docs/changes/2026-10-09-provider-durable-config/plan.md), [docs/changes/2026-10-09-provider-durable-config/verification.md](../../docs/changes/2026-10-09-provider-durable-config/verification.md), [docs/changes/2026-10-09-provider-durable-config/review.md](../../docs/changes/2026-10-09-provider-durable-config/review.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/provider-abrupt-exit-observation.json](../../docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/provider-abrupt-exit-observation.json)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
-- Last verified: 2026-10-08
-- Updated: 2026-10-09
+- Next action: 保留当前证据，合并后按原验收范围回读主线
+- Last verified: 2026-10-10
+- Updated: 2026-10-10
 
 ## TASK-PROV-006 — Desktop image 提交连接门禁与 health 统一
 
 - Goal: 图片原生提交复查明确绑定账号、禁用/容量，结构化原生错误回写同一连接健康状态
 - Scope: src/App.tsx, src/features/creation/providerSubmission.ts, src/features/creation/nativeTaskHost.ts, src-tauri/src/task_host.rs
-- Display status: 未完成
+- Display status: 已完成
 - Priority: P1 — 当前治理或验证阻断项
 - Requirement refs: ledger:TASK-PROV-006
 - Feature IDs: FEAT-002, FEAT-008
@@ -2252,9 +2253,28 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/App.tsx, src/features/creation/providerSubmission.ts, src/features/creation/nativeTaskHost.ts, src-tauri/src/task_host.rs
 - Verification: PASS — 原生 image 容量门禁与 health 回执身份保护已实现并验证：task_host.rs submit 容量检查覆盖全部请求（text/image/legacy，运行中 jobs 按 credential_ref 计数，journal 前拒绝零 POST，jobs 终态移除/reload 不清空）；markProviderConnectionFailure/Healthy 增加 expected 身份校验，App.tsx 两处回执传任务绑定身份，baseUrl/credentialRef 变更的迟到回执不污染新配置。验证：Rust cargo test task_host 21/21、TS providerHealthIdentity 5/5、provider 相关回归 15/15、tsc 通过。限制：完整 npm run verify、真实 Tauri fixture 端到端、push/PR 留网络/CI 门禁。
 - Evidence: [docs/changes/2026-10-09-provider-gates/intent.md](../../docs/changes/2026-10-09-provider-gates/intent.md), [docs/changes/2026-10-09-provider-gates/spec.md](../../docs/changes/2026-10-09-provider-gates/spec.md), [docs/changes/2026-10-09-provider-gates/plan.md](../../docs/changes/2026-10-09-provider-gates/plan.md), [docs/changes/2026-10-09-provider-gates/verification.md](../../docs/changes/2026-10-09-provider-gates/verification.md), [docs/changes/2026-10-09-provider-gates/review.md](../../docs/changes/2026-10-09-provider-gates/review.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
-- Last verified: 2026-10-08
-- Updated: 2026-10-09
+- Next action: 保留当前证据，合并后按原验收范围回读主线
+- Last verified: 2026-10-10
+- Updated: 2026-10-10
+
+## TASK-PROV-007 — Selected model is at capacity 错误分类与可用模型切换
+
+- Goal: 上游容量/429 拒绝时保留原始错误与状态，分类为容量状态而非普通 Error，刷新 models/usage 实时可用性，明确展示可用模型并提供降级选择与切换入口，无 retry-after 时不盲目重试
+- Scope: src/features/creation/providerSubmission.ts, src/features/models/modelCatalog.ts, src/features/creation/nativeTaskHost.ts, 模型选择 UI, tests
+- Display status: 已完成
+- Priority: P1 — 未记录
+- Requirement refs: ledger:TASK-PROV-007
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: 上游 capacity/429 响应分类为容量状态而非普通 Error，原始错误与状态完整保留; 刷新 models/usage 实时可用性，界面明确显示可用模型与禁用原因; 提供降级选择与明确切换入口，无 retry-after 时不盲目重试; 与 PROV-006 提交门禁互不冲突，相关回归与完整 verify 通过
+- Branch: `fix/TASK-PROV-007-capacity-errors`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-007`
+- Modules: src/features/creation/providerSubmission.ts, src/features/models/modelCatalog.ts, src/features/creation/nativeTaskHost.ts, src/components/models, tests
+- Verification: PASS — 已实现并验证：上游 429/capacity 失败保留原始 error.message 与 HTTP 状态（Rust task_host upstream_error_detail 注入 failure message；TS imageGeneration providerError 读取响应 body），429 无 Retry-After 不再标记可重试（连接冷却后手动重试），失败提示明确显示当前可用连接并引导切换。验证：Rust cargo test task_host 21/21、TS providerError 5/5、provider 相关回归 15/15、tsc 通过。限制：可用性展示为失败提示级（连接健康派生），未新增独立 usage 命令；完整 npm run verify 与 push/PR 留网络/CI 门禁。
+- Evidence: [docs/changes/2026-10-09-capacity-errors/intent.md](../../docs/changes/2026-10-09-capacity-errors/intent.md), [docs/changes/2026-10-09-capacity-errors/spec.md](../../docs/changes/2026-10-09-capacity-errors/spec.md), [docs/changes/2026-10-09-capacity-errors/plan.md](../../docs/changes/2026-10-09-capacity-errors/plan.md), [docs/changes/2026-10-09-capacity-errors/verification.md](../../docs/changes/2026-10-09-capacity-errors/verification.md), [docs/changes/2026-10-09-capacity-errors/review.md](../../docs/changes/2026-10-09-capacity-errors/review.md)
+- Next action: 保留当前证据，合并后按原验收范围回读主线
+- Last verified: 2026-10-10
+- Updated: 2026-10-10
 
 ## TASK-VERIFY-CONCURRENCY-002 — 浏览器并发失败原因与隔离复核
 

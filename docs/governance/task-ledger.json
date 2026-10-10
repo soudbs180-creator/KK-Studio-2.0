@@ -5239,7 +5239,7 @@
       "docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/provider-abrupt-exit-observation.json"
     ],
     "verificationResult": "PASS",
-    "updated": "2026-10-09",
+    "updated": "2026-10-10",
     "requirementRefs": [
       "ledger:TASK-PROV-005"
     ],
@@ -5247,9 +5247,9 @@
       "FEAT-002"
     ],
     "priorityRationale": "当前治理或验证阻断项",
-    "displayStatus": "未完成",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
-    "lastVerified": "2026-10-08",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-10",
     "ownerRole": "repository-maintainer"
   },
   {
@@ -5287,7 +5287,7 @@
       "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md"
     ],
     "verificationResult": "PASS",
-    "updated": "2026-10-09",
+    "updated": "2026-10-10",
     "requirementRefs": [
       "ledger:TASK-PROV-006"
     ],
@@ -5296,10 +5296,55 @@
       "FEAT-008"
     ],
     "priorityRationale": "当前治理或验证阻断项",
-    "displayStatus": "未完成",
-    "nextAction": "补充负责人、优先级、分支和下一步验收证据",
-    "lastVerified": "2026-10-08",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-10",
     "ownerRole": "repository-maintainer"
+  },
+  {
+    "id": "TASK-PROV-007",
+    "title": "Selected model is at capacity 错误分类与可用模型切换",
+    "goal": "上游容量/429 拒绝时保留原始错误与状态，分类为容量状态而非普通 Error，刷新 models/usage 实时可用性，明确展示可用模型并提供降级选择与切换入口，无 retry-after 时不盲目重试",
+    "scope": "src/features/creation/providerSubmission.ts, src/features/models/modelCatalog.ts, src/features/creation/nativeTaskHost.ts, 模型选择 UI, tests",
+    "acceptance": [
+      "上游 capacity/429 响应分类为容量状态而非普通 Error，原始错误与状态完整保留",
+      "刷新 models/usage 实时可用性，界面明确显示可用模型与禁用原因",
+      "提供降级选择与明确切换入口，无 retry-after 时不盲目重试",
+      "与 PROV-006 提交门禁互不冲突，相关回归与完整 verify 通过"
+    ],
+    "affectedModules": [
+      "src/features/creation/providerSubmission.ts",
+      "src/features/models/modelCatalog.ts",
+      "src/features/creation/nativeTaskHost.ts",
+      "src/components/models",
+      "tests"
+    ],
+    "verification": "已实现并验证：上游 429/capacity 失败保留原始 error.message 与 HTTP 状态（Rust task_host upstream_error_detail 注入 failure message；TS imageGeneration providerError 读取响应 body），429 无 Retry-After 不再标记可重试（连接冷却后手动重试），失败提示明确显示当前可用连接并引导切换。验证：Rust cargo test task_host 21/21、TS providerError 5/5、provider 相关回归 15/15、tsc 通过。限制：可用性展示为失败提示级（连接健康派生），未新增独立 usage 命令；完整 npm run verify 与 push/PR 留网络/CI 门禁。",
+    "priority": "P1",
+    "dependencies": [
+      "T5"
+    ],
+    "owner": "root",
+    "branch": "fix/TASK-PROV-007-capacity-errors",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-007",
+    "status": "DONE",
+    "evidence": [
+      "docs/changes/2026-10-09-capacity-errors/intent.md",
+      "docs/changes/2026-10-09-capacity-errors/spec.md",
+      "docs/changes/2026-10-09-capacity-errors/plan.md",
+      "docs/changes/2026-10-09-capacity-errors/verification.md",
+      "docs/changes/2026-10-09-capacity-errors/review.md"
+    ],
+    "verificationResult": "PASS",
+    "updated": "2026-10-10",
+    "displayStatus": "已完成",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "lastVerified": "2026-10-10",
+    "ownerRole": "repository-maintainer",
+    "requirementRefs": [
+      "ledger:TASK-PROV-007"
+    ],
+    "featureIds": []
   },
   {
     "id": "TASK-VERIFY-CONCURRENCY-002",

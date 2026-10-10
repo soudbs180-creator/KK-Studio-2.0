@@ -585,12 +585,25 @@ impl TaskHost {
             body.extend_from_slice(&chunk);
         }
         if !status.is_success() {
+            // Preserve the provider's own error (e.g. "Selected model is at
+            // capacity") so the UI can show the real reason and its status,
+            // instead of collapsing it into a generic failure.
+            let detail = upstream_error_detail(&body);
             return Err(RunError {
                 failure: failure(
                     class_for_status(status),
                     status.as_u16(),
                     retry,
-                    "供应商返回了失败响应",
+                    detail
+                        .map(|message| {
+                            format!(
+                                "供应商返回了失败响应（HTTP {}）：{}",
+                                status.as_u16(),
+                                message
+                            )
+                        })
+                        .as_deref()
+                        .unwrap_or("供应商返回了失败响应"),
                 ),
                 request_started: true,
                 asset_ids: vec![],
@@ -769,6 +782,22 @@ fn class_for_status(status: StatusCode) -> &'static str {
         StatusCode::BAD_REQUEST | StatusCode::UNPROCESSABLE_ENTITY => "invalid_request",
         _ => "provider_unavailable",
     }
+}
+
+/// Extract the provider's own error message (e.g. "Selected model is at
+/// capacity") from a failure body, capped at 400 chars; None when absent.
+fn upstream_error_detail(body: &[u8]) -> Option<String> {
+    serde_json::from_slice::<Value>(body)
+        .ok()
+        .and_then(|payload| {
+            payload
+                .pointer("/error/message")
+                .and_then(Value::as_str)
+                .map(str::to_string)
+        })
+        .map(|message| message.trim().to_string())
+        .filter(|message| !message.is_empty())
+        .map(|message| message.chars().take(400).collect::<String>())
 }
 
 async fn download_result(
@@ -1375,6 +1404,34 @@ mod tests {
             fingerprint(&original).unwrap(),
             fingerprint(&explicit).unwrap()
         );
+    }
+
+    #[test]
+    fn upstream_error_detail_preserves_provider_message() {
+        assert_eq!(
+            upstream_error_detail(
+                br#"{"error":{"message":"Selected model is at capacity"}}"#,
+            )
+            .as_deref(),
+            Some("Selected model is at capacity")
+        );
+        assert_eq!(upstream_error_detail(br#"{}"#), None);
+        assert_eq!(upstream_error_detail(b"not json"), None);
+        assert_eq!(
+            upstream_error_detail(br#"{"error":{"message":"   "}}"#),
+            None
+        );
+        assert_eq!(
+            upstream_error_detail(r#"{"error":{"message":"一二三"}}"#.as_bytes())
+                .as_deref(),
+            Some("一二三")
+        );
+        let long = "x".repeat(600);
+        let detail = upstream_error_detail(
+            format!(r#"{{"error":{{"message":"{}"}}}}"#, long).as_bytes(),
+        )
+        .unwrap();
+        assert_eq!(detail.chars().count(), 400);
     }
     fn root() -> PathBuf {
         let path = std::env::temp_dir().join(format!(
