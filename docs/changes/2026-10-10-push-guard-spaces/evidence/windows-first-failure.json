@@ -1,0 +1,16 @@
+{
+  "head": "72e2b84a7e34f8f7ee4195b74f4f80ca4c8a9125",
+  "runId": 38022126249,
+  "jobId": 114125177436,
+  "os": "Windows Server2025",
+  "node": "24.21.0",
+  "git": "2.55.0.windows.5",
+  "result": {
+    "pass": 15,
+    "fail": 7,
+    "skipped": 5
+  },
+  "rootCause": "New fixture used os.devNull (\\\\.\\nul) instead of NUL for Git global config. Seven failures occurred at git init before hook execution. Existing policy suite15passed.",
+  "fix": "Use platform-specific NUL, same as existing policy fixture; no assertions weakened.",
+  "uncompressedSha256": "dae3e94c6667ee9e9d25df95a3cae016e0daf84285341f13d0b2eabd15ae455b"
+}

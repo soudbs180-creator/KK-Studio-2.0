@@ -11,7 +11,7 @@ const zero = "0".repeat(40);
 const testEnv = {
   ...process.env,
   GIT_CONFIG_NOSYSTEM: "1",
-  GIT_CONFIG_GLOBAL: os.devNull,
+  GIT_CONFIG_GLOBAL: process.platform === "win32" ? "NUL" : os.devNull,
   GIT_TERMINAL_PROMPT: "0",
   // Do not let Git Bash's implicit conversion hide a broken launcher.
   MSYS_NO_PATHCONV: "1",

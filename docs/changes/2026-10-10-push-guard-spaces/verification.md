@@ -37,3 +37,7 @@ Agent loader 尝试三项失败均在未修改模块内：`only an existing abso
 ## 独立审查后修复
 
 原候选4712d5a独立审查发现PUSH-REVIEW-001/P1：umask剥离升级钩子执行权限。[RED](evidence/red-umask.log.gz)真实main推送意外成功；修复后[27/27 hook](evidence/green-umask.log.gz)、[824 root PASS/0 FAIL/6 skip](evidence/test-final.log.gz)、[lint](evidence/lint-final.log.gz)及typecheck通过。此前26/26、823/0/6属于原候选，保留原义；最终源码指纹见[manifest-final](evidence/manifest-final.json)。原完整verify/浏览器环境边界不变，未声称全绿。
+
+## Windows首轮失败及夹具修正
+
+当前72e2b84a的[Hosted首轮](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38022126249)为Windows15 PASS/7 FAIL/5 skip，Linux27/27 PASS。新增fixture用Node `os.devNull` 的Windows设备路径作为Git配置路径，Git init拒绝该路径，七项都未执行到hook；[原日志](evidence/windows-first-failure.log.gz)、[失败元数据](evidence/windows-first-failure.json)保留。改用现有policy fixture同款 `NUL`，不删减或放宽任何断言；修正后本地Linux27/27 PASS，新Windows结果待当前head回执，不能将首轮标为通过。
