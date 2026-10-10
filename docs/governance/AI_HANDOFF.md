@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-10-10 IRV-CONC-001 恢复入口
+
+从codex/TASK-VERIFY-CONCURRENCY-002-root-cause及最新main回读。先读新包，核对Windows诊断CI与artifact；全量4/12、历史9项1/12两轮，retries0；只有确认因果才修产品。保留失败/原件，根因UNKNOWN，任务PARTIAL。 [本轮验收](../changes/2026-10-10-concurrency-root-cause/verification.md)。
+
 ## 2026-10-09 失败任务 source105 本地复验
 
 主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](../changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](../changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。

@@ -1,0 +1,34 @@
+name: concurrency-diagnostics
+on:
+  push:
+    branches: [codex/TASK-VERIFY-CONCURRENCY-002-root-cause]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  experiments:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: node node_modules/@playwright/test/cli.js install msedge
+      - run: npm run build
+      - name: Full suite with 4 and 12 workers, zero retries
+        id: full
+        run: node scripts/diagnostics/browser-concurrency.mjs --suite full --workers 4,12 --rounds 1 --out .tmp/concurrency-full
+      - name: Historical cases in counterbalanced independent rounds
+        if: always() && steps.full.outcome != 'skipped'
+        run: node scripts/diagnostics/browser-concurrency.mjs --suite historical --workers 1,12 --rounds 2 --out .tmp/concurrency-historical
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: concurrency-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .tmp/concurrency-*/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30

@@ -3993,11 +3993,13 @@
       "TASK-GOV-001"
     ],
     "owner": "root",
-    "branch": "codex/TASK-VERIFY-CONCURRENCY-002-closeout",
-    "worktree": "D:/kk-studio/.worktrees/TASK-VERIFY-CONCURRENCY-002",
+    "branch": "codex/TASK-VERIFY-CONCURRENCY-002-root-cause",
+    "worktree": "/workspace/scratch/13a43572b27b/KK-Studio-2.0/.worktrees/TASK-VERIFY-CONCURRENCY-002-root-cause",
     "affectedModules": [
       "tests/browser",
-      "playwright.config.ts"
+      "playwright.config.ts",
+      "scripts/diagnostics",
+      ".github/workflows/concurrency-diagnostics.yml"
     ],
     "status": "PARTIAL",
     "priority": "P2",
@@ -4006,9 +4008,11 @@
       "docs/changes/2026-10-10-verify-concurrency-002/verification.md",
       "docs/changes/2026-10-10-verify-concurrency-002/review.md",
       "docs/changes/2026-10-10-verify-concurrency-002-closeout/verification.md",
-      "docs/changes/2026-10-10-verify-concurrency-002-closeout/review.md"
+      "docs/changes/2026-10-10-verify-concurrency-002-closeout/review.md",
+      "docs/changes/2026-10-10-concurrency-root-cause/verification.md",
+      "docs/changes/2026-10-10-concurrency-root-cause/review.md"
     ],
-    "verification": "当前 clean source 8090475958f1a0bdd1b4b36ada7f2aba1e4e6264、同一 production dist、固定 preview 1423/retries0 下，workers 1/2/4/8/12 均 447/447 PASS；历史 source105 的 9 个首轮 flaky 原件保留，当前未复现，资源压力仅支持假设。PR #46 已以 squash merge 2b6c0ba10e17b873d5a38d85b2d38fb8848149cc 合并，origin/main 与候选/落地 tree 已回读一致；合并后 run 37983272823 的 verify、deploy-linux、upload-artifact 成功，delivery 按 push 条件跳过。IRV-CONC-002 已关闭；历史根因仍 UNKNOWN，不能称根因修复。",
+    "verification": "当前 clean source 8090475958f1a0bdd1b4b36ada7f2aba1e4e6264、同一 production dist、固定 preview 1423/retries0 下，workers 1/2/4/8/12 均 447/447 PASS；历史 source105 的 9 个首轮 flaky 原件保留，当前未复现，资源压力仅支持假设。PR #46 已以 squash merge 2b6c0ba10e17b873d5a38d85b2d38fb8848149cc 合并，origin/main 与候选/落地 tree 已回读一致；合并后 run 37983272823 的 verify、deploy-linux、upload-artifact 成功，delivery 按 push 条件跳过。IRV-CONC-002 已关闭；历史根因仍 UNKNOWN，不能称根因修复。 本轮IRV-CONC-001继续：69原件hash一致；9首轮异常跨9workers共用23.753秒执行窗口，不能认定停顿根因。重算旧峰值12workers为10.749GB/10.011GiB；初段采样盲区20-226秒。已准备不改timeout/断言的Windows零retry实验与独立证据目录；新CI/审查未验收，根因仍UNKNOWN。",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-10"
   },

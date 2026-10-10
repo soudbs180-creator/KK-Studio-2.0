@@ -6,6 +6,10 @@ PR #51 候选分支 `fix/TASK-VERIFY-ORIGIN-003-main-7ebf143`（source HEAD `494
 
 # 当前进度
 
+## 2026-10-10 IRV-CONC-001 定向调查
+
+历史69份原件hash全部一致；9首轮异常跨9workers具有23.753秒共同执行窗口，另3项PASS亦耗时较长，尚不能确定共享停顿或产品异步根因。已准备Windows零retry实验；旧资源单位和采样初段盲区见新验收。 [本轮验收](changes/2026-10-10-concurrency-root-cause/verification.md)。
+
 ## 2026-10-10 浏览器并发失败原因与隔离复核
 
 `TASK-VERIFY-CONCURRENCY-002` 已按默认 squash 合并到 `origin/main@2b6c0ba`，合并后 run `37983272823` 的 verify、deploy-linux、upload-artifact 均成功，delivery 按 push 条件跳过；PR head `9ae856ea`、merge SHA、landing tree 已实际回读。IRV-CONC-002 已关闭。历史 source105 的 9 个首轮 flaky 原件继续保留，当前未复现，资源压力仅支持假设，不能称根因修复；IRV-CONC-001 保持有界 P2，任务仍为 `PARTIAL`。详见 [合并后收口验证](changes/2026-10-10-verify-concurrency-002-closeout/verification.md) 与 [收口审查](changes/2026-10-10-verify-concurrency-002-closeout/review.md)。
