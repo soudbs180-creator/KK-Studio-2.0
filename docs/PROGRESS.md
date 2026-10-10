@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-10 画布点状/网状背景缩放插值修正
+
+背景格距改为在 50%~400% 之间线性插值，不再按 2 的幂次粗化。原实现 `24 * scale * 2 ** ceil(log2(12 / pitch))` 在 49%→50% 之间把格距从 23.52px 突降到 12.00px（近 2 倍跳变），且透明度存在 `Math.max(0.2, …)` 下限，导致任何缩放下背景都不会真正隐藏。现改为：格距 12px→96px、点径 1px→8px、网格线宽 0.5px→1.5px 随缩放同步线性变化，透明度在 50% 为 0、100%（默认工作缩放）即达完全不透明并保持到 400%；低于 50% 时各项钳制在最小值且保持透明。`background-repeat: repeat` 显式声明，配合单一 pitch 变量保证任意格距下均完整平铺、无缝隙无重叠。新增 `tests/unit/canvasViewport.test.ts`（7 项）锁定上下界、连续性、单调性、点径小于格距与非有限输入契约。门禁：typecheck exit 0、lint 与 governance/features/markdown 全 0 violations、format:check 通过、单测 901 通过 / 25 失败（失败项均为 deploy/git-hook/Windows 安装器类环境性既有失败，与本次改动无关，基线为 26）。未做浏览器渲染层像素复核，`npm run test:ui` 未在本轮执行。
+
 ## 2026-10-10 浏览器并发失败原因与隔离复核（TASK-VERIFY-CONCURRENCY-002，PARTIAL）
 
 该任务已由 PR #46 合并到 `origin/main@2b6c0ba`，合并后 run `37983272823` 的 verify、deploy-linux、upload-artifact 均成功；当前 workers 1/2/4/8/12 在固定 1423、retries=0 下均为 447/447。历史 source105 的 9 个首轮 flaky 原件继续保留，根因仍 UNKNOWN，不能把并发复现通过写成根因已修复。详见 [并发收口验证](changes/2026-10-10-verify-concurrency-002-closeout/verification.md)。

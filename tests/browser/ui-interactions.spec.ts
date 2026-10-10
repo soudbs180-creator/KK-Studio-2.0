@@ -22,40 +22,99 @@ test("project status and task entry do not cover each other", async ({
   expect(overlap, JSON.stringify({ status: a, tasks: b })).toBe(0);
 });
 
-test("minimum zoom keeps background dots separated and grid visible", async ({
+test("background pattern scales smoothly and hides at the 50% floor", async ({
   page,
 }, info) => {
   await openWorkspace(page);
   await showCanvasNavigation(page);
   const canvas = page.getByRole("region", { name: "无限画布" });
   await canvas.focus();
-  for (let i = 0; i < 20; i++) await page.keyboard.press("Control+-");
-  await expect(
-    page.getByRole("button", { name: "画布缩放", exact: true }),
-  ).toHaveText("20%");
-  const pitch = await canvas.evaluate((el) =>
-    parseFloat(getComputedStyle(el).backgroundSize),
-  );
+
+  const readPattern = () =>
+    canvas.evaluate((el) => {
+      const style = getComputedStyle(el);
+      const size = style.backgroundSize.split(" ").map(parseFloat);
+      return {
+        pitch: Math.max(...size),
+        width: size[0],
+        height: size[1],
+        opacity: Number(style.getPropertyValue("--canvas-pattern-opacity")),
+        repeat: style.backgroundRepeat,
+        image: style.backgroundImage,
+      };
+    });
+
+  const setZoom = async (percent: number) => {
+    await page.getByRole("button", { name: "画布缩放", exact: true }).click();
+    await page.getByRole("menuitemradio", { name: `${percent}%` }).click();
+    await expect(
+      page.getByRole("button", { name: "画布缩放", exact: true }),
+    ).toHaveText(`${percent}%`);
+  };
+
+  await setZoom(400);
+  const max = await readPattern();
   await page.screenshot({
-    path: info.outputPath("dots-20.png"),
+    path: info.outputPath("dots-400.png"),
     animations: "disabled",
   });
+
+  await setZoom(50);
+  const min = await readPattern();
+  await page.screenshot({
+    path: info.outputPath("dots-50.png"),
+    animations: "disabled",
+  });
+
+  expect(max.opacity, "pattern must be fully opaque at 400%").toBe(1);
+  expect(min.opacity, "pattern must read as hidden at the 50% floor").toBe(0);
+  expect(max.pitch, "400% must reach the largest pitch").toBeGreaterThan(
+    min.pitch,
+  );
+
+  // The tile must stay square and repeat so the lattice always covers the
+  // viewport: no gaps, no overlap into a solid field.
+  expect(min.width, "tile must stay square").toBe(min.height);
+  expect(max.width, "tile must stay square").toBe(max.height);
+  expect(min.repeat, "pattern must repeat to cover the viewport").toBe(
+    "repeat",
+  );
+  expect(max.repeat, "pattern must repeat to cover the viewport").toBe(
+    "repeat",
+  );
+  expect(min.pitch, "tile must never collapse to zero").toBeGreaterThan(0);
+  expect(max.pitch, "tile must never collapse to zero").toBeGreaterThan(0);
+
+  // Interpolation must be continuous: consecutive zoom steps may only move
+  // the pitch slightly, never by a visible jump.
+  const samples: number[] = [];
+  for (const percent of [50, 100, 200, 300, 400]) {
+    await setZoom(percent);
+    samples.push((await readPattern()).pitch);
+  }
+  for (let index = 1; index < samples.length; index += 1) {
+    expect(
+      samples[index],
+      `pitch must not jump between step ${index - 1} and ${index}`,
+    ).toBeGreaterThan(samples[index - 1]);
+  }
+  expect(
+    new Set(samples).size,
+    "each zoom step must produce a distinct pitch",
+  ).toBe(samples.length);
+
+  await setZoom(50);
   await page
     .getByRole("button", { name: "切换为网格背景", exact: true })
     .click();
-  const opacity = await canvas.evaluate((el) =>
-    Number(getComputedStyle(el).getPropertyValue("--canvas-pattern-opacity")),
-  );
+  const grid = await readPattern();
   await page.screenshot({
-    path: info.outputPath("grid-20.png"),
+    path: info.outputPath("grid-50.png"),
     animations: "disabled",
   });
-  expect(
-    pitch,
-    "small dots must not merge into a nearly solid field",
-  ).toBeGreaterThanOrEqual(12);
-  expect(opacity, "grid must not become fully transparent").toBeGreaterThan(
-    0.1,
+  expect(grid.opacity, "grid must hide at the 50% floor too").toBe(0);
+  expect(grid.repeat, "grid must repeat to cover the viewport").toBe(
+    "repeat, repeat",
   );
 });
 

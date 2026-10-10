@@ -7,9 +7,7 @@ import {
 
 const openWorkspace = openSeededProject;
 
-test("画布背景在点和网格之间切换，缩放到最小时降低点阵密度", async ({
-  page,
-}) => {
+test("画布背景在点和网格之间切换，且不污染对话面板", async ({ page }) => {
   await openWorkspace(page);
   await showCanvasNavigation(page);
   const canvas = page.getByTestId("infinite-canvas");

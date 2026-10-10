@@ -579,9 +579,17 @@
   background-color: var(--ui-canvas-bg);
   background-image: radial-gradient(
     circle,
-    var(--ui-canvas-dot) 2px,
-    transparent 2px
+    color-mix(
+        in srgb,
+        var(--ui-canvas-dot) calc(var(--canvas-pattern-opacity, 1) * 100%),
+        transparent
+      )
+      var(--canvas-dot-size, 2px),
+    transparent var(--canvas-dot-size, 2px)
   );
+  /* The pitch is driven inline from the zoom transform; repeat keeps the
+     lattice tiling the whole viewport with no gaps or overlap. */
+  background-repeat: repeat;
   background-size: 24px 24px;
   background-position: calc(var(--canvas-pan-x, 0px) + 10px)
     calc(var(--canvas-pan-y, 0px) + 14px);
@@ -594,6 +602,7 @@
   user-select: none;
 }
 .canvas-pattern-grid {
+  background-repeat: repeat;
   background-image:
     linear-gradient(
       color-mix(
@@ -601,8 +610,8 @@
           var(--ui-connection) calc(var(--canvas-pattern-opacity, 1) * 100%),
           transparent
         )
-        1px,
-      transparent 1px
+        var(--canvas-grid-line, 1px),
+      transparent var(--canvas-grid-line, 1px)
     ),
     linear-gradient(
       90deg,
@@ -611,8 +620,8 @@
           var(--ui-connection) calc(var(--canvas-pattern-opacity, 1) * 100%),
           transparent
         )
-        1px,
-      transparent 1px
+        var(--canvas-grid-line, 1px),
+      transparent var(--canvas-grid-line, 1px)
     );
 }
 .canvas.has-chat {
