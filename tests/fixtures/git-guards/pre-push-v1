@@ -1,0 +1,5 @@
+#!/bin/sh
+# KK Studio guard v1; installed together with its reviewed policy by the installer.
+# Copies in the common Git hooks directory survive task worktree removal.
+hook_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd) || exit 1
+exec node "$hook_dir/kk-studio-push-policy.mjs" "$@"

@@ -120,7 +120,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
 | TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | TODO | TASK-GOV-001 | root |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | TODO | none | root |
-| TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 git push 守卫空格路径缺陷 | TODO | none | root |
+| TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 git push 守卫空格路径缺陷 | PARTIAL | none | root |
 | TASK-PERF-CANVAS-1000-001 | 画布千张画面性能三件套（视口裁剪/节点memo/缩略图懒加载） | TODO | none | root |
 | TASK-PROTECT-BATCH-GEN-001 | 批量生成防护两件套（提交节流/结果分批入画布） | TODO | none | root |
 
@@ -1501,12 +1501,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 修复 pre-push 钩子在安装路径含空格时向 node 传递 POSIX 路径失败，导致合法推送被误杀的问题
 - Scope: .git/hooks/pre-push, scripts/governance/push-policy.mjs, 空格/长路径 fixture
 - Acceptance: 路径含空格、多级空格、长路径三类 fixture 下策略可读提示而非 node 崩溃栈; 允许性用例通过（合法 topic 分支可推送），拒绝用例仍返回可读拒绝; 对应单元测试 6 例全绿，npm run verify 通过
-- Branch: `docs/TASK-P0-EVIDENCE-REFS-20261009`
-- Worktree: `unallocated`
+- Branch: `fix/TASK-FIX-PUSH-GUARD-SPACES-001-paths`
+- Worktree: `/workspace/scratch/f250cb3946cc/KK-Studio-push-guard`
 - Modules: .git/hooks/pre-push, scripts/governance/push-policy.mjs, tests/unit
-- Verification: NOT_VERIFIED — NOT VERIFIED：钩子仍为 v1 旧版（hook_dir POSIX 路径直接 exec node），空格路径缺陷未修复。
-- Evidence: [docs/changes/2026-10-09-p0-evidence-refs/verification.md](../../docs/changes/2026-10-09-p0-evidence-refs/verification.md), [docs/changes/2026-10-09-p0-registry/verification.md](../../docs/changes/2026-10-09-p0-registry/verification.md)
-- Updated: 2026-10-09
+- Verification: PARTIAL — v2路径转换与官方v1精确备份升级已实现；Linux真实hook27/27、root824 PASS/0 FAIL/6原有skip。完整verify因tsx IPC EPERM未通过，浏览器缺少Edge；Windows Hosted、独立审查和最终主线承接尚待完成。
+- Evidence: [docs/changes/2026-10-09-p0-evidence-refs/verification.md](../../docs/changes/2026-10-09-p0-evidence-refs/verification.md), [docs/changes/2026-10-09-p0-registry/verification.md](../../docs/changes/2026-10-09-p0-registry/verification.md), [docs/changes/2026-10-10-push-guard-spaces/verification.md](../../docs/changes/2026-10-10-push-guard-spaces/verification.md)
+- Updated: 2026-10-10
 
 ## TASK-PERF-CANVAS-1000-001 — 画布千张画面性能三件套（视口裁剪/节点memo/缩略图懒加载）
 

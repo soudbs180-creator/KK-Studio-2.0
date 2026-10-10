@@ -55,6 +55,7 @@ PR 必须包含验收、风险/回滚、base/head SHA、影响平台及未完成
 ## 执行层及限制
 
 - `npm run git:guards` 安装本仓库共有的 pre-push 防线，拒绝稳定线直推、非 fast-forward、已有 tag 更新及默认所有远端删除；不覆盖第三方 hook。它覆盖本机本仓库 worktree，不会传播到其他 clone，其他设备必须安装。它不能阻止本地 `git branch -D` 或管理员绕过，只是补充防护。
+- 路径兼容 v2 在 Git Bash/MSYS 使用 `cygpath` 显式传递 Windows 原生策略路径，其他 POSIX 环境保持原路径。已有官方 v1 使用 `npm run git:guards -- --upgrade-reviewed-v1` 升级：仅接受精确匹配的已审阅 hook/policy，旧 hook 保存在 common hooks 的 `pre-push.kk-studio-v1.bak`；未知/改动/缺失文件、已占用备份或自定义 `core.hooksPath` 均拒绝。不要删除旧 hook、设置 `--no-verify` 或修改保护来完成升级。升级中断时旧钩子仍在，保留备份/临时文件供审查后恢复，不盲目覆盖。回退必须保留配套策略与完整保护；恢复 v1 会重新引入 Windows 路径限制。
 - `npm run governance:check` 校验文档入口、账本和架构边界；`npm run markdown:check` 校验现行 Markdown 的相对文件链接；`npm run delivery:check -- --base <SHA>` 校验 PR 变更包；CI 跑完整 verify/Rust/desktop build。结构检查不能保证文档事实正确，也不能证明 AI 实际阅读。
 - `config/github-rulesets/` 是可审阅的服务器配置，不是自动生效目录。分支 all-refs safety 禁 force/deletion，main/release 要求 PR/current checks，v* 禁更新/删除。无 bypass actors；管理员仍可修改设置，AI 不得利用此能力绕过审核。
 - 真正远端强制需托管平台支持并成功写入、回读 active rules。用户已确认将此仓库公开；2026-09-23 回读三套 ruleset 为 active，`main` 的有效规则包含 PR、必需检查、禁止删除与非快进。管理员仍可修改配置，后续须定期回读；不能把本地 hook 当服务端保护。若将来改回不支持规则的套餐或可见性，应将 EXT-GIT 重新标为未验证或阻断。

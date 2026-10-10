@@ -1,0 +1,78 @@
+{
+  "recordedAt": "2026-10-10T03:39:28.213200+00:00",
+  "platform": "linux",
+  "node": "v24.19.0",
+  "base": "0f663222addc22b08dc083c8cfd506e22ebe7971",
+  "mainObserved": "7ebf143b291e344b243e1ef396d510bb91730bd3",
+  "logs": [
+    {
+      "file": "red.log.gz",
+      "exitCode": 1,
+      "note": "26 predecessor cases: 25 total, 18 pass, 7 fail",
+      "uncompressedSha256": "2f25c9853e15b2ca650f5cff3a251a9ff123fc75ab97d8e66359492833eaaeeb"
+    },
+    {
+      "file": "red-symlink.log.gz",
+      "exitCode": 1,
+      "note": "symlink upgrade regression failed before lstat guard",
+      "uncompressedSha256": "5c08a1136f58606889f736ec8c0b79c58a6cd5681890b5937fb90ead2ccd1bc3"
+    },
+    {
+      "file": "green-final.log.gz",
+      "exitCode": 0,
+      "note": "26/26 hook tests, no skip",
+      "uncompressedSha256": "d5a6e6731f7d36282649ef19b550cefd823794ee6fe058deeda53beaa32d5fdf"
+    },
+    {
+      "file": "verify.log.gz",
+      "exitCode": 1,
+      "note": "lint/typecheck/root tests pass; tsx CLI IPC EPERM stops Agent suite",
+      "uncompressedSha256": "ec87a2807d6876b8ee3fa2ff863f7c3a449faef9a5750a93840999c245ebdc4c"
+    },
+    {
+      "file": "browser.log.gz",
+      "exitCode": 1,
+      "note": "build passes; Edge executable missing, 4 launch failures, 443 did not run",
+      "uncompressedSha256": "409fe7390c1dea401d024c4e969e4e090a63501bd30c1e8d3050ff97c1f9242f"
+    },
+    {
+      "file": "agent-test-loader.log.gz",
+      "exitCode": 1,
+      "note": "174 total / 171 pass / 3 fail; CodeBuddy path wording on Linux and two child tsx IPC EPERM failures",
+      "uncompressedSha256": "850a422dbfdb095a0dc63d30df27113ae062ee92d10afef42cebb6c7ece631d5"
+    },
+    {
+      "file": "format.log.gz",
+      "exitCode": 0,
+      "note": "format check",
+      "uncompressedSha256": "ed55d984cab52cc7db02e3e2a76195d764c8edfd5add135d5155ddd72287ef38"
+    },
+    {
+      "file": "lint.log.gz",
+      "exitCode": 0,
+      "note": "lint/governance/features/links/version",
+      "uncompressedSha256": "83f3f9629d38c8197277a4ce056a41198ab455c953370536ade3f878d99e5fdc"
+    },
+    {
+      "file": "typecheck.log.gz",
+      "exitCode": 0,
+      "note": "typecheck",
+      "uncompressedSha256": "3df478e24363742d0ffd0bdc605ff4ea817b129e7b65d6b2796b8db4bbd33f0a"
+    },
+    {
+      "file": "baseline-test.log.gz",
+      "exitCode": 1,
+      "note": "before guard source edits, missing Agent dist: 804 pass / 2 fail / 6 skipped",
+      "uncompressedSha256": "670e54da900d386fc31e7f83e731db8281de0f057860753ccd502ac0989f11f9"
+    }
+  ],
+  "sourceSha256": {
+    ".githooks/pre-push": "13f493cf7c2ad6256fb351d8947d87d4d4597b5c634c29b6fd16b9d280236341",
+    "scripts/install-git-guards.mjs": "3bce72113bcfc725b96053803f22e725b430aee552c5ad489d9e02fc9ea83d47",
+    "scripts/governance/push-policy.mjs": "2d595c0063121910526a92259de75611c47bddffa58ac7160be695b08b8dafd7",
+    "tests/unit/gitPushPolicy.test.ts": "eb985d98bfdadf7231dfadad66c231a76ea3aef7426dee6aafff51821eb307ea",
+    "tests/unit/gitPushGuardPaths.test.ts": "202cbf7c3f33b6aa6450c12d3536be1f6c4686d64788d364125a15d410a1c39c",
+    ".github/workflows/git-guards.yml": "fded7971a3da5125fbe431353cb51daecc20cfe1e6b136b038af7c52128e9374"
+  },
+  "candidateSha": "4712d5aaa132066e0b936e3d306998cf414edb6c"
+}

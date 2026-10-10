@@ -1,0 +1,35 @@
+{
+  "recordedAt": "2026-10-10T03:44:59.298051+00:00",
+  "platform": "linux",
+  "reviewedPredecessor": "4712d5aaa132066e0b936e3d306998cf414edb6c",
+  "logs": [
+    {
+      "file": "red-umask.log.gz",
+      "exitCode": 1,
+      "uncompressedSha256": "57f174d95ab864a00fa9b663b5bd7245f4b1ca1bba59d03024de443ef8334db9"
+    },
+    {
+      "file": "green-umask.log.gz",
+      "exitCode": 0,
+      "uncompressedSha256": "e193cf2b5301af0297ca3190ee56ca5270a812fbe880aaf39c5d04c1abbd9db2"
+    },
+    {
+      "file": "test-final.log.gz",
+      "exitCode": 0,
+      "uncompressedSha256": "108772fe752fbb805793b0daac1a18182d676b680adcea68c9b32e097f758a2c"
+    },
+    {
+      "file": "lint-final.log.gz",
+      "exitCode": 0,
+      "uncompressedSha256": "83f3f9629d38c8197277a4ce056a41198ab455c953370536ade3f878d99e5fdc"
+    }
+  ],
+  "sourceSha256": {
+    ".githooks/pre-push": "13f493cf7c2ad6256fb351d8947d87d4d4597b5c634c29b6fd16b9d280236341",
+    "scripts/install-git-guards.mjs": "a1205eccd6f09ef44a63e4b5b4d0db2067e2d8d943540eef17c3513cd170f9f4",
+    "scripts/governance/push-policy.mjs": "2d595c0063121910526a92259de75611c47bddffa58ac7160be695b08b8dafd7",
+    "tests/unit/gitPushPolicy.test.ts": "dd2598da1fa914d54dd13b1032f5a31ac3ba847239766c2ba6be84b106e4e931",
+    "tests/unit/gitPushGuardPaths.test.ts": "202cbf7c3f33b6aa6450c12d3536be1f6c4686d64788d364125a15d410a1c39c",
+    ".github/workflows/git-guards.yml": "fded7971a3da5125fbe431353cb51daecc20cfe1e6b136b038af7c52128e9374"
+  }
+}
