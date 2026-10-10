@@ -5611,7 +5611,7 @@
     "evidence": [
       "docs/changes/2026-10-10-canvas-background-zoom/verification.md"
     ],
-    "verification": "domain 插值单测 7/7 PASS；20 万步扫描最大单步 pitch 变化 0.00042px、严格单调；typecheck、lint、governance/features/markdown、format:check 全部通过；npm test 为 919 PASS / 8 SKIP（927 tests）；浏览器回归 455/455 PASS（单 worker），覆盖 50% 隐藏、400% 最大尺寸、连续插值与平铺契约。",
+    "verification": "domain 插值单测 7/7 PASS；20 万步扫描最大单步 pitch 变化 0.00042px、严格单调；typecheck、lint、governance/features/markdown、format:check 全部通过；npm test 为 926 PASS / 8 SKIP（934 tests）；浏览器回归 455/455 PASS（单 worker），覆盖 50% 隐藏、400% 最大尺寸、连续插值与平铺契约。",
     "verificationResult": "PASS",
     "updated": "2026-10-10",
     "requirementRefs": [

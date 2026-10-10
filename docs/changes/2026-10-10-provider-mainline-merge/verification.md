@@ -18,7 +18,7 @@
 | `npm run typecheck` | PASS |
 | `npm run format:check` | PASS |
 | `node scripts/check-ui-standards.mjs` | PASS；215 files / 0 violations |
-| `npm test` | 919 PASS / 8 SKIP / 0 FAIL（927 tests） |
+| `npm test` | 926 PASS / 8 SKIP / 0 FAIL（934 tests） |
 | `npm run test:agent` | 172 PASS / 2 SKIP / 0 FAIL（174 tests） |
 | `cargo fmt --check` | PASS |
 | `cargo check` | PASS |

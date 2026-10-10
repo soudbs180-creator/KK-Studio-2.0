@@ -2385,7 +2385,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-UI-015-canvas-background-zoom-scale`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/domain, src/components, src/styles, tests/unit
-- Verification: PASS — domain 插值单测 7/7 PASS；20 万步扫描最大单步 pitch 变化 0.00042px、严格单调；typecheck、lint、governance/features/markdown、format:check 全部通过；npm test 为 919 PASS / 8 SKIP（927 tests）；浏览器回归 455/455 PASS（单 worker），覆盖 50% 隐藏、400% 最大尺寸、连续插值与平铺契约。
+- Verification: PASS — domain 插值单测 7/7 PASS；20 万步扫描最大单步 pitch 变化 0.00042px、严格单调；typecheck、lint、governance/features/markdown、format:check 全部通过；npm test 为 926 PASS / 8 SKIP（934 tests）；浏览器回归 455/455 PASS（单 worker），覆盖 50% 隐藏、400% 最大尺寸、连续插值与平铺契约。
 - Evidence: [docs/changes/2026-10-10-canvas-background-zoom/verification.md](../../docs/changes/2026-10-10-canvas-background-zoom/verification.md)
 - Next action: 保留当前证据；主线回读完成
 - Last verified: 2026-10-10

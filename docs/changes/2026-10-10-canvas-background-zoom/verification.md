@@ -56,8 +56,8 @@ CSS 平铺按 pitch 周期对齐，天然无缝；点径恒小于格距（已由
 | `npm run typecheck` | exit 0 |
 | `npm run lint`（含 governance/features/markdown） | 0 violations |
 | `npm run format:check` | 通过 |
-| `npm test` 全量 | 919 PASS / 8 SKIP / 0 FAIL（927 tests） |
-| `npm run test:ui --workers=1` | 455 PASS / 0 FAIL |
+| `npm test` 全量 | 926 PASS / 8 SKIP / 0 FAIL（934 tests） |
+| `npm run build && node node_modules/@playwright/test/cli.js test --workers=1` | 455 PASS / 0 FAIL |
 
 ### PRE-EXISTING FAILURE
 
