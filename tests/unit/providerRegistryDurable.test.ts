@@ -128,7 +128,7 @@ test("桌面 load：recovered 备份被采用并刷新缓存", async () => {
 test("桌面 persist：先 load 后写，携带 expectedRevision，成功后刷新缓存", async () => {
   await withTauriStorage(async () => {
     invokeCalls.length = 0;
-    invokeImpl = async (command, args) => {
+    invokeImpl = async (command, _args) => {
       if (command === "read_provider_config")
         return { status: "loaded", revision: 7, connections: [] };
       if (command === "write_provider_config") return 8;
@@ -150,7 +150,7 @@ test("桌面 persist：先 load 后写，携带 expectedRevision，成功后刷�
 test("桌面 persist：conflict/失败时抛错且浏览器缓存不更新", async () => {
   await withTauriStorage(async () => {
     invokeCalls.length = 0;
-    invokeImpl = async (command, args) => {
+    invokeImpl = async (command, _args) => {
       if (command === "read_provider_config")
         return { status: "loaded", revision: 7, connections: [] };
       if (command === "write_provider_config")
