@@ -11,12 +11,6 @@ import {
   writeDesktopReleaseReceipt,
 } from "./desktop-release-identity.mjs";
 
-const DESKTOP_TOOLCHAIN_PACKAGES = [
-  "@tauri-apps/api",
-  "@tauri-apps/plugin-dialog",
-  "@tauri-apps/cli",
-];
-
 function findNewestFile(candidatePath, current) {
   if (!fs.existsSync(candidatePath)) return current;
   const stats = fs.lstatSync(candidatePath);
@@ -89,10 +83,6 @@ function readJson(filePath) {
   }
 }
 
-function packagePath(packageName) {
-  return path.join("node_modules", ...packageName.split("/"), "package.json");
-}
-
 function isLinkedPath(filePath) {
   try {
     const stats = fs.lstatSync(filePath);
@@ -136,27 +126,24 @@ export function inspectDesktopDependencies(projectRoot) {
     };
   }
 
-  const mismatches = DESKTOP_TOOLCHAIN_PACKAGES.flatMap((name) => {
-    const expected = lockfile.packages[`node_modules/${name}`]?.version;
-    const packageRoot = path.join(
-      projectRoot,
-      "node_modules",
-      ...name.split("/"),
-    );
-    if (isLinkedPath(packageRoot)) {
-      return [
-        {
-          name,
-          expected: expected ?? "local package",
-          actual: "linked package",
-        },
-      ];
-    }
-    const installed = readJson(path.join(projectRoot, packagePath(name)));
-    const actual = installed?.version ?? null;
-    if (actual === expected) return [];
-    return [{ name, expected, actual }];
-  });
+  const mismatches = Object.entries(lockfile.packages).flatMap(
+    ([packagePath, lockEntry]) => {
+      if (!packagePath.startsWith("node_modules/") || !lockEntry?.version) {
+        return [];
+      }
+      const packageRoot = path.join(projectRoot, ...packagePath.split("/"));
+      const name = packagePath.slice("node_modules/".length);
+      const expected = lockEntry.version;
+      if (!fs.existsSync(packageRoot) && lockEntry.optional) return [];
+      if (isLinkedPath(packageRoot)) {
+        return [{ name, expected, actual: "linked package" }];
+      }
+      const installed = readJson(path.join(packageRoot, "package.json"));
+      const actual = installed?.version ?? null;
+      if (actual === expected) return [];
+      return [{ name, expected, actual }];
+    },
+  );
   return { needsInstall: mismatches.length > 0, mismatches };
 }
 
@@ -228,15 +215,6 @@ function installDesktopDependencies(projectRoot) {
     throw new Error(
       "Desktop dependency repair requires a local node_modules directory; linked dependencies must be repaired in their owner checkout.",
     );
-  }
-  for (const name of DESKTOP_TOOLCHAIN_PACKAGES) {
-    if (
-      isLinkedPath(path.join(projectRoot, "node_modules", ...name.split("/")))
-    ) {
-      throw new Error(
-        `Desktop dependency repair requires a local ${name} package; linked dependencies must be repaired in their owner checkout.`,
-      );
-    }
   }
   const result = spawnSync(
     process.execPath,

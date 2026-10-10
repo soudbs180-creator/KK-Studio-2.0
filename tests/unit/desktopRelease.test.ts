@@ -389,6 +389,33 @@ test("desktop launch detects node_modules drift from the lockfile", (t) => {
   );
 });
 
+test("desktop dependency inspection catches non-toolchain lockfile drift", (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "kk-desktop-deps-all-"));
+  t.after(() => {
+    assert.equal(path.dirname(root), path.resolve(os.tmpdir()));
+    fs.rmSync(root, { recursive: true, force: true });
+  });
+  fs.writeFileSync(
+    path.join(root, "package-lock.json"),
+    JSON.stringify({
+      packages: {
+        "": {},
+        "node_modules/runtime-only": { version: "1.0.0" },
+      },
+    }),
+  );
+  const packageRoot = path.join(root, "node_modules/runtime-only");
+  fs.mkdirSync(packageRoot, { recursive: true });
+  fs.writeFileSync(
+    path.join(packageRoot, "package.json"),
+    JSON.stringify({ name: "runtime-only", version: "2.0.0" }),
+  );
+  assert.deepEqual(inspectDesktopDependencies(root), {
+    needsInstall: true,
+    mismatches: [{ name: "runtime-only", expected: "1.0.0", actual: "2.0.0" }],
+  });
+});
+
 test("desktop launch rebuilds when dependencies drift even if the release is current", (t) => {
   const { root, executable } = fixture(t);
   fs.utimesSync(executable, new Date(3000), new Date(3000));
