@@ -1,5 +1,37 @@
 [
   {
+    "id": "TASK-FIX-PUSH-GUARD-SPACES-001",
+    "title": "修复 Windows Git pre-push 空格及长路径启动",
+    "goal": "Git Bash/MSYS 下的 pre-push guard 能处理空格和超过 260 字符的策略路径，同时保留所有拒绝保护。",
+    "scope": "仅 hook 路径转换、Windows 长路径真实回归夹具和相关交付证据；不改远端保护、不合并 main、不修改共享主工作树。",
+    "acceptance": [
+      "Windows 真实 Git hook 通过单级空格、多级空格和策略路径超过 260 字符的合法快进与非法保护分支回归。",
+      "cygpath 转换失败、缺少策略、未知 ancestry、非快进、删除和受保护 ref 仍 fail closed，断言不放宽。",
+      "基于当前 origin/main 的独立分支提交、Windows/Ubuntu hook CI、npm verify、构建和 delivery 结果均有当前 SHA 证据。"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "fix/TASK-FIX-PUSH-GUARD-SPACES-001-main-replay",
+    "worktree": "D:/kk-studio/.worktrees/TASK-FIX-PUSH-GUARD-SPACES-001-windows",
+    "affectedModules": [
+      ".githooks/pre-push",
+      "scripts/install-git-guards.mjs",
+      "scripts/governance/push-policy.mjs",
+      "tests/unit/gitPushGuardPaths.test.ts",
+      "tests/unit/gitPushPolicy.test.ts",
+      "docs/changes/2026-10-10-push-guard-spaces"
+    ],
+    "status": "REVIEW",
+    "priority": "P1",
+    "evidence": [
+      "docs/changes/2026-10-10-push-guard-spaces/verification.md",
+      "docs/changes/2026-10-10-push-guard-spaces/review.md"
+    ],
+    "verification": "PR49 head 的 Windows 20/22 通过、2 个 long-path mkdir/File exists 失败已复现；main replay 当前本地 Windows hook regression 22 PASS/0 FAIL/5 SKIP，Hosted Windows/Ubuntu、npm verify、build 和 delivery 仍绑定新 head 待回读。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-10"
+  },
+  {
     "dependencies": [
       "TASK-LAUNCH-001"
     ],

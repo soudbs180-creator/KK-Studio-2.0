@@ -1,3 +1,10 @@
+## 2026-10-10 TASK-FIX-PUSH-GUARD-SPACES-001 Windows long-path guard replay（REVIEW / NOT VERIFIED）
+
+- PR49 head b46daae7 在 Windows Git 2.55 / Node 24.21.0 真实复现两个 long-path mkdir/File exists 失败；失败发生于把完整 >260 repo 路径传给 git init，尚未进入 hook。
+- 最小修复保留真实 hook 与保护断言：fixture 将 process cwd 控制在 Win32 限制内、仍让 installed policy path 超过 260；pre-push 对 cygpath 为长路径产生的 \\?\ 扩展前缀做 Node 可接受的 drive/UNC 归一化。
+- 当前 replay 分支 fix/TASK-FIX-PUSH-GUARD-SPACES-001-main-replay 基于 origin/main@7ebf143，最新 head 为 f4197ec；本机 Windows hook regression 27 cases：22 PASS / 0 FAIL / 5 SKIP。
+- Hosted PR53 的旧 head 仍记录 Windows spawnSync git ENOENT / Ubuntu PASS；新 head 的 Windows/Ubuntu、quality verify、npm verify、build 与 delivery 需重新回读，未以历史结果替代。
+
 # 当前进度
 
 ## 2026-10-10 浏览器并发失败原因与隔离复核
