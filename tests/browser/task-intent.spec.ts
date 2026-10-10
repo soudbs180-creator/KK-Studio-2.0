@@ -10,6 +10,7 @@ type StoredTask = {
   id: string;
   status: string;
   submissionState?: string;
+  error?: string;
   submittedAt?: number;
   idempotencyKey: string;
   retryOfTaskId?: string;
@@ -723,5 +724,28 @@ test("queued intent recovers as interrupted and retry keeps its original identit
   const retried = (await storedSnapshot(page)).projects[0].tasks.at(-1)!;
   expect(retried.idempotencyKey).toBe(value.idempotencyKey);
   expect(retried.retryOfTaskId).toBe(value.id);
+  expect(requests).toBe(0);
+});
+
+test("paused queued intent stays resumable after refresh", async ({ page }) => {
+  const value = task("queued", "intent", "paused-task");
+  value.error = "任务已暂停，已归档当前结果；恢复只提交剩余输出";
+  await seed(page, value);
+  let requests = 0;
+  await page.route(generationsEndpoint, async (route) => {
+    requests++;
+    await fulfillPixel(route);
+  });
+  await page.goto("/");
+  await expect
+    .poll(async () => (await storedSnapshot(page)).projects[0].tasks[0]?.status)
+    .toBe("queued");
+  await openSeededProject(page);
+  await expect(
+    page.getByRole("button", { name: "恢复", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "重试剩余", exact: true }),
+  ).toHaveCount(0);
   expect(requests).toBe(0);
 });
