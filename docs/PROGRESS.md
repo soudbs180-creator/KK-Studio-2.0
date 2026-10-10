@@ -2,7 +2,7 @@
 
 ## 2026-10-10 画布点状/网状背景缩放插值修正
 
-背景格距改为在 50%~400% 之间线性插值，不再按 2 的幂次粗化。原实现 `24 * scale * 2 ** ceil(log2(12 / pitch))` 在 49%→50% 之间把格距从 23.52px 突降到 12.00px（近 2 倍跳变），且透明度存在 `Math.max(0.2, …)` 下限，导致任何缩放下背景都不会真正隐藏。现改为：格距 12px→96px、点径 1px→8px、网格线宽 0.5px→1.5px 随缩放同步线性变化，透明度在 50% 为 0、100%（默认工作缩放）即达完全不透明并保持到 400%；低于 50% 时各项钳制在最小值且保持透明。`background-repeat: repeat` 显式声明，配合单一 pitch 变量保证任意格距下均完整平铺、无缝隙无重叠。新增 `tests/unit/canvasViewport.test.ts`（7 项）锁定上下界、连续性、单调性、点径小于格距与非有限输入契约。门禁：typecheck exit 0、lint 与 governance/features/markdown 全 0 violations、format:check 通过、单测 901 通过 / 25 失败（失败项均为 deploy/git-hook/Windows 安装器类环境性既有失败，与本次改动无关，基线为 26）。未做浏览器渲染层像素复核，`npm run test:ui` 未在本轮执行。
+背景格距改为在 50%~400% 之间线性插值，不再按 2 的幂次粗化。原实现 `24 * scale * 2 ** ceil(log2(12 / pitch))` 在 49%→50% 之间把格距从 23.52px 突降到 12.00px（近 2 倍跳变），且透明度存在 `Math.max(0.2, …)` 下限，导致任何缩放下背景都不会真正隐藏。现改为：格距 12px→96px、点径 1px→8px、网格线宽 0.5px→1.5px 随缩放同步线性变化，透明度在 50% 为 0、100%（默认工作缩放）即达完全不透明并保持到 400%；低于 50% 时各项钳制在最小值且保持透明。`background-repeat: repeat` 显式声明，配合单一 pitch 变量保证任意格距下均完整平铺、无缝隙无重叠。新增 `tests/unit/canvasViewport.test.ts`（7 项）锁定上下界、连续性、单调性、点径小于格距与非有限输入契约。门禁：typecheck exit 0、lint 与 governance/features/markdown 全 0 violations、format:check 通过、单测 926 通过 / 8 跳过 / 0 失败，单 worker 浏览器回归 455/455 PASS。多分辨率浏览器交互已覆盖 390/768/1280/1440/1920，未验证 Desktop WebView2。
 
 ## 2026-10-10 浏览器并发失败原因与隔离复核（TASK-VERIFY-CONCURRENCY-002，PARTIAL）
 
