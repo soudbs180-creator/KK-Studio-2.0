@@ -130,7 +130,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-FIX-PUSH-GUARD-SPACES-001-main-replay`
 - Worktree: `D:/kk-studio/.worktrees/TASK-FIX-PUSH-GUARD-SPACES-001-windows`
 - Modules: .githooks/pre-push, scripts/install-git-guards.mjs, scripts/governance/push-policy.mjs, tests/unit/gitPushGuardPaths.test.ts, tests/unit/gitPushPolicy.test.ts, docs/changes/2026-10-10-push-guard-spaces
-- Verification: NOT_VERIFIED — PR49 head 的 Windows 20/22 通过、2 个 long-path mkdir/File exists 失败已复现；main replay 当前本地 Windows hook regression 22 PASS/0 FAIL/5 SKIP，Hosted Windows/Ubuntu、npm verify、build 和 delivery 仍绑定新 head 待回读。
+- Verification: NOT_VERIFIED — Current main replay at 3a7467825b85f66a7f4e409f8296e16ca2249516: local Windows hook 22 PASS/0 FAIL/5 SKIP; Hosted Windows and Ubuntu hook jobs PASS; build PASS; Hosted delivery/deploy-linux PASS; npm verify has two unrelated desktop Agent environment failures and Hosted verify is pending.
 - Evidence: [docs/changes/2026-10-10-push-guard-spaces/verification.md](../../docs/changes/2026-10-10-push-guard-spaces/verification.md), [docs/changes/2026-10-10-push-guard-spaces/review.md](../../docs/changes/2026-10-10-push-guard-spaces/review.md)
 - Updated: 2026-10-10
 

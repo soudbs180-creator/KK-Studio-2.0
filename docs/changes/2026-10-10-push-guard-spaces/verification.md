@@ -41,4 +41,25 @@ Agent loader 尝试三项失败均在未修改模块内：`only an existing abso
 ## Windows首轮失败及夹具修正
 
 当前72e2b84a的[Hosted首轮](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38022126249)为Windows15 PASS/7 FAIL/5 skip，Linux27/27 PASS。新增fixture用Node `os.devNull` 的Windows设备路径作为Git配置路径，Git init拒绝该路径，七项都未执行到hook；[原日志](evidence/windows-first-failure.log.gz)、[失败元数据](evidence/windows-first-failure.json)保留。改用现有policy fixture同款 `NUL`，不删减或放宽任何断言；修正后本地Linux27/27 PASS，新Windows结果待当前head回执，不能将首轮标为通过。
-\n\n## 2026-10-10 replay correction\n\n- Replay branch: fix/TASK-FIX-PUSH-GUARD-SPACES-001-main-replay; base origin/main@7ebf143b291e344b243e1ef396d510bb91730bd3; current candidate head f4197ecdeea2a2e1c256e4647f62485c2780c221.\n- Hosted PR53 run 38073205467 (head 453f212606787f12b27307f06ba873e913a233fc) preserved as RED: Ubuntu hook-regression PASS; Windows failed both long-path cases at spawnSync git ENOENT after the cwd-only initialization change.\n- Root cause evidence: Windows GitHub runner and local Windows host cannot spawn Node/Git with a process cwd over MAX_PATH. The fixture now keeps repo cwd below that limit (local repo 235, .git/config 247) while policy path remains 272 (>260); no assertions or test cases were weakened.\n- Production hook fix: after cygpath -w, normalize \\?\C:\\... and \\?\UNC\... prefixes before invoking Node; direct Node diagnostic reproduced the prior EISDIR lstat C: failure and the normalized spelling executed successfully.\n- Fresh local Windows command: node --test tests/unit/gitPushPolicy.test.ts tests/unit/gitPushGuardPaths.test.ts -> 27 tests, 22 PASS, 0 FAIL, 5 SKIP (platform-gated Linux emulation/symlink/umask cases), exit 0.\n- npm verify, build, fresh Hosted Windows/Ubuntu/quality and final delivery are NOT VERIFIED until the new commit is pushed.\n
+
+
+## 2026-10-10 replay correction
+
+- Replay branch: fix/TASK-FIX-PUSH-GUARD-SPACES-001-main-replay; base origin/main@7ebf143b291e344b243e1ef396d510bb91730bd3; current candidate head f4197ecdeea2a2e1c256e4647f62485c2780c221.
+- Hosted PR53 run 38073205467 (head 453f212606787f12b27307f06ba873e913a233fc) preserved as RED: Ubuntu hook-regression PASS; Windows failed both long-path cases at spawnSync git ENOENT after the cwd-only initialization change.
+- Root cause evidence: Windows GitHub runner and local Windows host cannot spawn Node/Git with a process cwd over MAX_PATH. The fixture now keeps repo cwd below that limit (local repo 235, .git/config 247) while policy path remains 272 (>260); no assertions or test cases were weakened.
+- Production hook fix: after cygpath -w, normalize \\?\C:\\... and \\?\UNC\... prefixes before invoking Node; direct Node diagnostic reproduced the prior EISDIR lstat C: failure and the normalized spelling executed successfully.
+- Fresh local Windows command: node --test tests/unit/gitPushPolicy.test.ts tests/unit/gitPushGuardPaths.test.ts -> 27 tests, 22 PASS, 0 FAIL, 5 SKIP (platform-gated Linux emulation/symlink/umask cases), exit 0.
+- npm verify, build, fresh Hosted Windows/Ubuntu/quality and final delivery are NOT VERIFIED until the new commit is pushed.
+
+
+## 2026-10-10 current-main replay and Hosted verification
+
+- Branch: fix/TASK-FIX-PUSH-GUARD-SPACES-001-main-replay; base origin/main@7736c99bd5e900e7c5cd8a36663aadcb45326143; pushed head 3a7467825b85f66a7f4e409f8296e16ca2249516.
+- The final fixture uses five long segments on Windows so Node/Git can spawn from a cwd below MAX_PATH, and seven on Unix runners so the policy path assertion remains over 260; no assertions were removed or weakened.
+- Local Windows hook regression: 27 total, 22 PASS, 0 FAIL, 5 existing platform skips, exit 0.
+- Hosted git-guards run 38075547186: Windows job 114281640340 SUCCESS; Ubuntu job 114281640402 SUCCESS.
+- Hosted quality run 38075547255: delivery job 114281640982 SUCCESS; deploy-linux job 114281640685 SUCCESS; verify job 114281640863 was still IN_PROGRESS at evidence capture.
+- Local npm run verify: FAIL, exit 1 after 830 tests; the only failures were tests/unit/desktopAgentRuntime.test.ts cases for missing environment credentials/owned Agent readiness, outside the changed files. Local npm run build: PASS.
+- Previous Hosted run 38075138425 is superseded: Windows passed, while Ubuntu failed only because the five-segment fixture did not exceed 260 on its shorter /tmp path; the seven-segment Unix fixture corrected that gap.
+- PR53 remains Draft; no merge or main modification was performed.

@@ -1,13 +1,14 @@
-## 2026-10-10 TASK-FIX-PUSH-GUARD-SPACES-001 Windows long-path guard replay（REVIEW / NOT VERIFIED）
+## 2026-10-10 TASK-FIX-PUSH-GUARD-SPACES-001 Windows long-path guard replay (REVIEW / NOT VERIFIED)
 
-- PR49 head b46daae7 在 Windows Git 2.55 / Node 24.21.0 真实复现两个 long-path mkdir/File exists 失败；失败发生于把完整 >260 repo 路径传给 git init，尚未进入 hook。
-- 最小修复保留真实 hook 与保护断言：fixture 将 process cwd 控制在 Win32 限制内、仍让 installed policy path 超过 260；pre-push 对 cygpath 为长路径产生的 \\?\ 扩展前缀做 Node 可接受的 drive/UNC 归一化。
-- 当前 replay 分支 fix/TASK-FIX-PUSH-GUARD-SPACES-001-main-replay 基于 origin/main@7ebf143，最新 head 为 f4197ec；本机 Windows hook regression 27 cases：22 PASS / 0 FAIL / 5 SKIP。
-- Hosted PR53 的旧 head 仍记录 Windows spawnSync git ENOENT / Ubuntu PASS；新 head 的 Windows/Ubuntu、quality verify、npm verify、build 与 delivery 需重新回读，未以历史结果替代。`r`n`r`n## 2026-10-10 TASK-VERIFY-ORIGIN-003 治理包收口（PR #51）
+- Replayed the scoped PR49 fix onto current origin/main 7736c99bd5e900e7c5cd8a36663aadcb45326143; final pushed candidate is 3a7467825b85f66a7f4e409f8296e16ca2249516.
+- Root cause and fix: keep the Windows process cwd below MAX_PATH while the installed policy path remains over 260; normalize cygpath \?\ drive and UNC prefixes before invoking Node.
+- Focused Windows regression is 27 tests, 22 pass, 0 fail, 5 existing platform skips. Hosted git-guards run 38075547186 has Windows and Ubuntu success; quality run 38075547255 has delivery/deploy-linux success and verify pending.
+- Local npm verify reaches 830 tests with two unrelated desktop Agent environment failures; independent npm run build succeeds.
 
-PR #51 候选分支 `fix/TASK-VERIFY-ORIGIN-003-main-7ebf143`（source HEAD `4949b3db9471113c7e70b7f78a0a35c457e30cca`，base `main@7ebf143b`）已补齐 dated change package。候选证据严格限制为：真实 `KK_TEST_PORT` 配置矩阵（1431/1421 启动前拒绝；1423/未设置解析为 `http://127.0.0.1:1423`）、`npm run build`、`npm run typecheck`、四个目标 browser specs `--retries=0` 共 16/16。
+## 2026-10-10 TASK-VERIFY-ORIGIN-003 governance closeout (PR #51)
 
-完整 browser suite、完整 npm verify、Hosted CI 结果和独立 review 仍 PENDING；任务与验证结果保持 PARTIAL。未合并、未自动合并、未发布，不复用或改写 PR47/PR44 历史记录。`r`n
+PR #51 current-main governance evidence remains retained below.
+
 # 当前进度
 
 ## 2026-10-10 浏览器并发失败原因与隔离复核
