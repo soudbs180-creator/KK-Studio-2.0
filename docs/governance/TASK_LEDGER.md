@@ -15,7 +15,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | DONE | 已完成 | P3 | TASK-MODEL-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | 未完成 | P1 | TASK-IMAGE-EDIT-001 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
 | TASK-UI-013 | 桌面标题栏与菜单合并为单排 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
+| TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | 已完成 | P3 | none | root | 保留当前证据；正式安装器、签名发布、托管 CI 与用户验收按各自门禁继续回读 |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | T0 | 可复现候选源码与主线整合 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -124,7 +124,6 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DOCS-STRUCT-001 | AI 协作规则文档结构收敛 | REVIEW | 进行中 | P1 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
 | TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | TODO | 未完成 | P1 | none | root | 实现真实 DPAPI SecretProtector（需 Rust 侧或 PowerShell 桥），接入一个真实火山方舟账号取得上游证据后再转 DONE；随后接调度层持久化仓储与 sub2api-client。 |
 | TASK-PROV-BYOK-001 | 用户自有 API 产品化接入 | TODO | 未完成 | P1 | TASK-AI-GATEWAY-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| TASK-UI-015 | 画布点状/网状背景缩放插值修正 | DONE | 已完成 | P2 | none | root | 保留当前证据；主线回读完成 |
 
 ## TASK-WINDOWS-ENTRY-DIAG-002 — 补齐Windows入口子进程失败诊断
 
@@ -310,9 +309,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-LAUNCH-001-quiet-start`
 - Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-LAUNCH-001`
 - Modules: scripts/windows, start-kk-studio.bat, src/App.tsx, FEAT-026
-- Verification: PASS — 当前 main 已补齐 Tauri 依赖漂移自修复与旧包拒绝启动：真实 GUI 启动在 2026-10-10 13:26 检出 CLI 2.12.1 并按锁文件恢复到 2.11.4，随后重建 release、启动日志 Exit code 0；13:27 EXE 2.1.12 实际运行，inspectDesktopRelease=current、inspectDesktopDependencies=aligned。保留旧启动与新回归证据；正式安装器升级、签名发布和最终用户验收仍另行验证。
+- Verification: PASS — 当前 main 的 GUI/批处理启动链已加入依赖锁复检、源码内容指纹、EXE hash 收据和运行进程核对；真实启动先因当前 checkout 的未提交 Rust 改动编译错误拒绝启动旧包，修正两个闭包引用后按锁定依赖重建并启动 Desktop 2.1.13。收据与 inspectDesktopRelease 均为 current，第二次启动输出 Launched current desktop release；内容保留原时间戳、删除输入、缺收据、依赖漂移、锁文件异常和链接依赖均有回归测试。正式安装器升级、签名发布、托管 CI 与最终用户验收仍需分别验证。
 - Evidence: [docs/changes/2026-10-08-startup-experience/verification.md](../../docs/changes/2026-10-08-startup-experience/verification.md), [docs/changes/2026-10-10-desktop-launch-freshness/verification.md](../../docs/changes/2026-10-10-desktop-launch-freshness/verification.md), [docs/changes/2026-10-10-desktop-launch-freshness/review.md](../../docs/changes/2026-10-10-desktop-launch-freshness/review.md)
-- Next action: 保留当前证据，合并后按原验收范围回读主线
+- Next action: 保留当前证据；正式安装器、签名发布、托管 CI 与用户验收按各自门禁继续回读
 - Last verified: 2026-10-10
 - Updated: 2026-10-10
 
@@ -2371,22 +2370,3 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-10-09
 - Updated: 2026-10-09
-
-## TASK-UI-015 — 画布点状/网状背景缩放插值修正
-
-- Goal: 让背景元素尺寸随缩放比例在 50%~400% 之间平滑变化，低缩放时收敛隐藏而非固定残留
-- Scope: Canvas background pattern pitch, dot size, grid line width and opacity derived from viewport scale
-- Display status: 已完成
-- Priority: P2 — 画布基础视觉，影响所有使用点状/网状背景的会话
-- Requirement refs: ledger:TASK-UI-015
-- Feature IDs: FEAT-001
-- Owner role: repository-maintainer
-- Acceptance: 50% 缩放时背景等同隐藏（不可见）; 400% 缩放时背景达到最大尺寸; 50%~400% 之间尺寸线性插值，无跳变或尺寸突变; 任意缩放下背景完整铺满可视区域，无重复堆叠或空白缝隙
-- Branch: `fix/TASK-UI-015-canvas-background-zoom-scale`
-- Worktree: `D:/kk-studio/KK-Studio-2.0`
-- Modules: src/domain, src/components, src/styles, tests/unit
-- Verification: PASS — domain 插值单测 7/7 PASS；20 万步扫描最大单步 pitch 变化 0.00042px、严格单调；typecheck、lint、governance/features/markdown、format:check 全部通过；npm test 为 926 PASS / 8 SKIP（934 tests）；浏览器回归 455/455 PASS（单 worker），覆盖 50% 隐藏、400% 最大尺寸、连续插值与平铺契约。
-- Evidence: [docs/changes/2026-10-10-canvas-background-zoom/verification.md](../../docs/changes/2026-10-10-canvas-background-zoom/verification.md)
-- Next action: 保留当前证据；主线回读完成
-- Last verified: 2026-10-10
-- Updated: 2026-10-10

@@ -430,7 +430,7 @@
       "docs/changes/2026-10-10-desktop-launch-freshness/verification.md",
       "docs/changes/2026-10-10-desktop-launch-freshness/review.md"
     ],
-    "verification": "当前 main 已补齐 Tauri 依赖漂移自修复与旧包拒绝启动：真实 GUI 启动在 2026-10-10 13:26 检出 CLI 2.12.1 并按锁文件恢复到 2.11.4，随后重建 release、启动日志 Exit code 0；13:27 EXE 2.1.12 实际运行，inspectDesktopRelease=current、inspectDesktopDependencies=aligned。保留旧启动与新回归证据；正式安装器升级、签名发布和最终用户验收仍另行验证。",
+    "verification": "当前 main 的 GUI/批处理启动链已加入依赖锁复检、源码内容指纹、EXE hash 收据和运行进程核对；真实启动先因当前 checkout 的未提交 Rust 改动编译错误拒绝启动旧包，修正两个闭包引用后按锁定依赖重建并启动 Desktop 2.1.13。收据与 inspectDesktopRelease 均为 current，第二次启动输出 Launched current desktop release；内容保留原时间戳、删除输入、缺收据、依赖漂移、锁文件异常和链接依赖均有回归测试。正式安装器升级、签名发布、托管 CI 与最终用户验收仍需分别验证。",
     "updated": "2026-10-10",
     "verificationResult": "PASS",
     "requirementRefs": [
@@ -442,7 +442,7 @@
     "priority": "P3",
     "priorityRationale": "历史已完成范围",
     "displayStatus": "已完成",
-    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "nextAction": "保留当前证据；正式安装器、签名发布、托管 CI 与用户验收按各自门禁继续回读",
     "lastVerified": "2026-10-10",
     "ownerRole": "repository-maintainer"
   },
@@ -5586,47 +5586,6 @@
     "displayStatus": "未完成",
     "nextAction": "补充负责人、优先级、分支和下一步验收证据",
     "lastVerified": "2026-10-09",
-    "ownerRole": "repository-maintainer"
-  },
-  {
-    "id": "TASK-UI-015",
-    "title": "画布点状/网状背景缩放插值修正",
-    "goal": "让背景元素尺寸随缩放比例在 50%~400% 之间平滑变化，低缩放时收敛隐藏而非固定残留",
-    "scope": "Canvas background pattern pitch, dot size, grid line width and opacity derived from viewport scale",
-    "acceptance": [
-      "50% 缩放时背景等同隐藏（不可见）",
-      "400% 缩放时背景达到最大尺寸",
-      "50%~400% 之间尺寸线性插值，无跳变或尺寸突变",
-      "任意缩放下背景完整铺满可视区域，无重复堆叠或空白缝隙"
-    ],
-    "dependencies": [],
-    "owner": "root",
-    "branch": "fix/TASK-UI-015-canvas-background-zoom-scale",
-    "worktree": "D:/kk-studio/KK-Studio-2.0",
-    "affectedModules": [
-      "src/domain",
-      "src/components",
-      "src/styles",
-      "tests/unit"
-    ],
-    "status": "DONE",
-    "evidence": [
-      "docs/changes/2026-10-10-canvas-background-zoom/verification.md"
-    ],
-    "verification": "domain 插值单测 7/7 PASS；20 万步扫描最大单步 pitch 变化 0.00042px、严格单调；typecheck、lint、governance/features/markdown、format:check 全部通过；npm test 为 926 PASS / 8 SKIP（934 tests）；浏览器回归 455/455 PASS（单 worker），覆盖 50% 隐藏、400% 最大尺寸、连续插值与平铺契约。",
-    "verificationResult": "PASS",
-    "updated": "2026-10-10",
-    "requirementRefs": [
-      "ledger:TASK-UI-015"
-    ],
-    "featureIds": [
-      "FEAT-001"
-    ],
-    "priority": "P2",
-    "priorityRationale": "画布基础视觉，影响所有使用点状/网状背景的会话",
-    "displayStatus": "已完成",
-    "nextAction": "保留当前证据；主线回读完成",
-    "lastVerified": "2026-10-10",
     "ownerRole": "repository-maintainer"
   }
 ]
