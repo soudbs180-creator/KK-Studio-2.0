@@ -83,6 +83,12 @@ function assertReceiptProvenance(receipt) {
   ) {
     throw new Error("Installer receipt is missing source provenance");
   }
+  if (receipt.platform !== "windows-x64") {
+    throw new Error("Installer receipt platform is not windows-x64");
+  }
+  if (!/^\d+\.\d+\.\d+$/.test(receipt.versions?.desktop ?? "")) {
+    throw new Error("Installer receipt is missing the desktop version");
+  }
 }
 
 export async function verifyInstallerReceipt({ receipt, receiptDirectory }) {

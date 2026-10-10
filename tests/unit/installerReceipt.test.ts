@@ -109,6 +109,8 @@ test("installed release verification requires provenance and checks package plus
     schemaVersion: 1,
     commit: "a".repeat(40),
     sourceTree: "b".repeat(40),
+    platform: "windows-x64",
+    versions: { desktop: "2.1.13" },
     installer: {
       path: "setup.exe",
       ...(await fileIdentity(path.join(packageRoot, "setup.exe"))),
