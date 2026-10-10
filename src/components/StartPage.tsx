@@ -35,6 +35,8 @@ const INSPIRATIONS = [
 export default function StartPage({
   onCreateProject,
   onOpenModel,
+  agentConnected,
+  onOpenAgent,
   onOpenSkills,
   defaultModel = "",
   modelConfigured = false,
@@ -49,6 +51,8 @@ export default function StartPage({
     input: CreateProjectInput,
   ) => string | undefined | Promise<string | undefined>;
   onOpenModel: () => void;
+  agentConnected: boolean;
+  onOpenAgent: () => void;
   onOpenSkills: () => void;
   defaultModel?: string;
   modelConfigured?: boolean;
@@ -92,6 +96,8 @@ export default function StartPage({
           setStatus={setStatus}
           onSubmit={create}
           onOpenModel={onOpenModel}
+          agentConnected={agentConnected}
+          onOpenAgent={onOpenAgent}
           onOpenSkills={onOpenSkills}
           defaultModel={defaultModel}
           modelConfigured={modelConfigured}

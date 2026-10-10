@@ -3,6 +3,7 @@ import type { CreationDraft } from "../features/creation/model";
 import { readProviderConnections } from "../features/creation/providerRegistry";
 import { catalogForConnection } from "../features/models/modelCatalog";
 import GenerationOptions from "./GenerationOptions";
+import { getStartModelSetupMessage } from "./startModelPickerState";
 
 interface StartModelChoice {
   key: string;
@@ -40,6 +41,8 @@ export default function StartModelPicker({
   onToggle,
   onSelect,
   onConfigure,
+  agentConnected,
+  onOpenAgent,
   onOptionsChange,
 }: {
   draft: CreationDraft;
@@ -49,6 +52,8 @@ export default function StartModelPicker({
   onToggle: () => void;
   onSelect: (choice: Pick<StartModelChoice, "model" | "connectionId">) => void;
   onConfigure: () => void;
+  agentConnected: boolean;
+  onOpenAgent: () => void;
   onOptionsChange: (patch: Partial<CreationDraft>) => void;
 }) {
   const [query, setQuery] = useState("");
@@ -57,6 +62,10 @@ export default function StartModelPicker({
     `${choice.model} ${choice.detail}`.toLocaleLowerCase().includes(needle),
   );
   const visible = matches.slice(0, 100);
+  const setupMessage = getStartModelSetupMessage({
+    providerModelCount: matches.length,
+    agentConnected,
+  });
   function onMenuKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
     const target = event.target as HTMLElement;
@@ -112,7 +121,7 @@ export default function StartModelPicker({
               onChange={(event) => setQuery(event.target.value)}
             />
           </div>
-          <div className="start-model-menu-subtitle">选择当前可用模型</div>
+          <div className="start-model-menu-subtitle">选择供应商图片模型</div>
           <div className="start-model-menu-list">
             {visible.map((choice) => {
               const selected =
@@ -136,7 +145,20 @@ export default function StartModelPicker({
                 </button>
               );
             })}
-            {!visible.length && <p>没有匹配的图片模型，请配置供应商。</p>}
+            {!visible.length && setupMessage && (
+              <div className="start-model-empty-state">
+                <p>{setupMessage.message}</p>
+                <button
+                  type="button"
+                  className="start-model-configure"
+                  onClick={() => {
+                    onOpenAgent();
+                  }}
+                >
+                  {setupMessage.actionLabel}
+                </button>
+              </div>
+            )}
             {matches.length > visible.length && (
               <p>只显示前 100 项，请搜索模型或供应商。</p>
             )}

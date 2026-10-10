@@ -97,6 +97,14 @@
   background: var(--ui-composer-surface);
   color: var(--text-primary);
 }
+.start-model-empty-state {
+  padding: 8px 10px;
+}
+.start-model-empty-state p {
+  margin: 0;
+  color: var(--text-secondary);
+  white-space: normal;
+}
 .start-model-popover .start-model-configure {
   margin-top: 4px;
   border-top: 1px solid var(--border-default);

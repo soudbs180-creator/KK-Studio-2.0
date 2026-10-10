@@ -21,6 +21,8 @@ export default function StartComposer({
   setStatus,
   onSubmit,
   onOpenModel,
+  agentConnected,
+  onOpenAgent,
   onOpenSkills,
   defaultModel = "",
   modelConfigured = false,
@@ -32,6 +34,8 @@ export default function StartComposer({
   setStatus: (status: string) => void;
   onSubmit: (input: CreationDraft) => void;
   onOpenModel: () => void;
+  agentConnected: boolean;
+  onOpenAgent: () => void;
   onOpenSkills: () => void;
   defaultModel?: string;
   modelConfigured?: boolean;
@@ -160,6 +164,11 @@ export default function StartComposer({
               model={model}
               defaultModel={defaultModel}
               onOptionsChange={commit}
+              agentConnected={agentConnected}
+              onOpenAgent={() => {
+                closeMenus();
+                onOpenAgent();
+              }}
               open={modelMenuOpen}
               onToggle={() => toggleMenu("model")}
               onSelect={(choice) => {

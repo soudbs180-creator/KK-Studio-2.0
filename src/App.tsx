@@ -2734,6 +2734,8 @@ export default function App() {
               draft={creation.homeDraft}
               onDraftChange={updateHomeDraft}
               onOpenModel={() => open("settings/providers")}
+              agentConnected={agentState.status === "connected"}
+              onOpenAgent={() => open("chat")}
               onOpenSkills={() => open("skills")}
               modelConfigured={homeModelConfig.configured}
               skills={skillRegistry.listRecords()}
