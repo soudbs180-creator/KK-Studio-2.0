@@ -54,7 +54,10 @@ function fixture(t: test.TestContext, segments: string[]) {
   const remote = path.join(root, "remote with spaces.git");
   fs.mkdirSync(repo, { recursive: true });
   git(root, "init", "--bare", "-q", remote);
-  git(root, "init", "-q", "-b", "main", repo);
+  // Git for Windows cannot initialize an existing >260-character directory
+  // when the full path is passed as an argument from a short cwd. Run init
+  // from the already-created target directory instead.
+  git(repo, "init", "-q", "-b", "main");
   git(repo, "config", "core.longpaths", "true");
   git(repo, "config", "user.email", "test@example.invalid");
   git(repo, "config", "user.name", "Path Test");
