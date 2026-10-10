@@ -63,3 +63,12 @@
 ## 追加勘误（无则留空）
 
 - 设计系统完整 spec 的 2 个插件卸载超时不是本次样式代码引起，不能写成全量浏览器通过。
+
+## 主线整合追加记录（2026-10-10）
+
+- 候选提交 `80c331453c5e6d97a36542a70c4bdb962e2bb987` 已在当前本地主线 `main` 上以 `d1bdc62c2d4183fc0e36d4c076393cedb2ef91a0` 应用；主工作区原有未提交 Tauri、治理和审计文件保持原样。
+- 主线重建：`node node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/bin/tsc -b` 与 `node node_modules/vite/bin/vite.js build` 退出码 0；Vite 仅有依赖注释和大 chunk 警告。
+- 主线新鲜浏览器证据：`tests/browser/input-contract.spec.ts` 9/9、`tests/browser/design-system-pages.spec.ts` 10/10；运行于 `http://127.0.0.1:1423` 的 Vite preview，截图位于 `docs/changes/2026-09-23-input-contract/evidence/1440-start-focused.png`。
+- 主线完整浏览器回归为 448/455，通过项未见本次焦点样式回归；7 个失败集中在连接菜单、无图片模型文案、插件夹具和设计系统插件卸载夹具，保留为当前仓库未解决的 PARTIAL/NOT VERIFIED。
+- 主线 Node 单测为 936/947 通过、9 跳过、2 个 `desktopAgentRuntime.test.ts` 失败；Agent 子项目测试因 `vendor/canvas-agent` 依赖未安装未运行，开发态插件检查因嵌套 worktree 字体路径超出 Vite allow-list 失败。
+- 独立 review 仍为 NOT VERIFIED：独立审查调度遇到模型容量限制；用户已授权本地合并，最终视觉验收仍由用户在当前主线版本完成。
