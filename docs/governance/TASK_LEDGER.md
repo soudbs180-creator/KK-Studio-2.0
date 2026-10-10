@@ -124,6 +124,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DOCS-STRUCT-001 | AI 协作规则文档结构收敛 | REVIEW | 进行中 | P1 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
 | TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | TODO | 未完成 | P1 | none | root | 实现真实 DPAPI SecretProtector（需 Rust 侧或 PowerShell 桥），接入一个真实火山方舟账号取得上游证据后再转 DONE；随后接调度层持久化仓储与 sub2api-client。 |
 | TASK-PROV-BYOK-001 | 用户自有 API 产品化接入 | TODO | 未完成 | P1 | TASK-AI-GATEWAY-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| TASK-UI-015 | 画布点状/网状背景缩放插值修正 | DONE | 已完成 | P2 | none | root | 保留当前证据；主线回读完成 |
 
 ## TASK-WINDOWS-ENTRY-DIAG-002 — 补齐Windows入口子进程失败诊断
 
@@ -2370,3 +2371,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-10-09
 - Updated: 2026-10-09
+
+## TASK-UI-015 — 画布点状/网状背景缩放插值修正
+
+- Goal: 让背景元素尺寸随缩放比例在 50%~400% 之间平滑变化，低缩放时收敛隐藏而非固定残留
+- Scope: Canvas background pattern pitch, dot size, grid line width and opacity derived from viewport scale
+- Display status: 已完成
+- Priority: P2 — 画布基础视觉，影响所有使用点状/网状背景的会话
+- Requirement refs: ledger:TASK-UI-015
+- Feature IDs: FEAT-001
+- Owner role: repository-maintainer
+- Acceptance: 50% 缩放时背景等同隐藏（不可见）; 400% 缩放时背景达到最大尺寸; 50%~400% 之间尺寸线性插值，无跳变或尺寸突变; 任意缩放下背景完整铺满可视区域，无重复堆叠或空白缝隙
+- Branch: `fix/TASK-UI-015-canvas-background-zoom-scale`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: src/domain, src/components, src/styles, tests/unit
+- Verification: PASS — domain 插值单测 7/7 PASS；20 万步扫描最大单步 pitch 变化 0.00042px、严格单调；typecheck、lint、governance/features/markdown、format:check 全部通过；npm test 为 926 PASS / 8 SKIP（934 tests）；浏览器回归 455/455 PASS（单 worker），覆盖 50% 隐藏、400% 最大尺寸、连续插值与平铺契约。
+- Evidence: [docs/changes/2026-10-10-canvas-background-zoom/verification.md](../../docs/changes/2026-10-10-canvas-background-zoom/verification.md)
+- Next action: 保留当前证据；主线回读完成
+- Last verified: 2026-10-10
+- Updated: 2026-10-10
