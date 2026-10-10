@@ -1,0 +1,1166 @@
+{
+  "sourceReport": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-results-10577c1-default-workers.json.gz",
+  "evidenceChecks": [
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/diagnosis-push-fa36d35-desktop-entry.md.gz",
+      "valid": true,
+      "sha256": "be907cdcfc6bb3edc159b5b43e21a0d9bfb4a754df67858bb7fbdb389e663205"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-complete-green.txt.gz",
+      "valid": true,
+      "sha256": "f46f4a7b9ce8d583f8777a1c2affabde15cdc5e1b7c49fab880d2d1fcecf110a"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-complete-green.exit.txt.gz",
+      "valid": true,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-green.txt.gz",
+      "valid": true,
+      "sha256": "25c435c0d4a5ac5f5916d406aed8c22af90edb369893f1df1bb48c27d48fca8d"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-green.exit.txt.gz",
+      "valid": true,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-fault-probe.mjs.gz",
+      "valid": true,
+      "sha256": "ac54b35208fdeee7f61e3cee642cfc911ca66b913da56d964959c17268bdec1d"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/push-fa36d35-failed-verify.txt.gz",
+      "valid": true,
+      "sha256": "8bf775dfa5a5060ff51c0828081af37b3c5f60f46b6db90e3a40b3aff2d6c9a9"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/pr-fa36d35-success-verify.txt.gz",
+      "valid": true,
+      "sha256": "d311b39484316a9544a985214e1a41783a4f23e1ab547e394c9d7b37055571be"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/review-final-fa36d35.md.gz",
+      "valid": true,
+      "sha256": "31141541bf8215f4bf3c2abfcde676ee6adf3c69aaa0e78e77e68deda06e09fd"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/review-source-10577c1.md.gz",
+      "valid": true,
+      "sha256": "394e179743a7e86c2595998746245bc737e864538c836164258d7d487c40122a"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-unit-10577c1.txt.gz",
+      "valid": true,
+      "sha256": "3aee47e64d6782088956ed99b3c24e03cac6cfa55907d8e9505488a384dcb1b7"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-unit-10577c1.json.gz",
+      "valid": true,
+      "sha256": "d5558bb5d13ce85be6829396971564ca191f3c3b18ee81361edfab98d838c2c6"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-integrity-10577c1.json.gz",
+      "valid": true,
+      "sha256": "0286979f70fc96585b595f79d03d510b53957e6deccbad5dd4245c394c54c065"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-static-10577c1.json.gz",
+      "valid": true,
+      "sha256": "bd42cabfa3215800e4bf34c8ac8607d63ecc386c8d9c142f8fb1abec2062da35"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/reviewer-evidence-binding-10577c1.json.gz",
+      "valid": true,
+      "sha256": "62c46e71654e9a2bd59f76915545e6d6b3667613ffa8fc64c1f28dc2731171c4"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/verify-10577c1.txt.gz",
+      "valid": true,
+      "sha256": "c38a1c7fd3fd182734eca73851b1c172f6bb9d3b97082373ac12b14a2e5961c5"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/verify-10577c1.exit.txt.gz",
+      "valid": true,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-results-10577c1-default-workers.json.gz",
+      "valid": true,
+      "sha256": "75ee6f18902608ed1157db019ca69a5fcfb48a97543dbbcf6177831708dc317f"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-10577c1-workers4-zero-retry.txt.gz",
+      "valid": true,
+      "sha256": "2e484498ba5e6b4b3276ca8c40c2ef268cf10cab1b6705db170279e6d8b9b6c8"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-10577c1-workers4-zero-retry.exit.txt.gz",
+      "valid": true,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-results-10577c1-workers4-zero-retry.json.gz",
+      "valid": true,
+      "sha256": "bb430f3522803bd94a3ad072a60afcb7086773ed831ad32beeb25e85bcb1fa47"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-workers4-preview1431-failure-receipt.json.gz",
+      "valid": true,
+      "sha256": "73db7802c48465bea1ccce93742ee056cb54e6093a1339d6136dceda2706005b"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-10577c1-default1423-workers4-zero-retry.txt.gz",
+      "valid": true,
+      "sha256": "1a47e6b66b770e38738a24b5a8d4d528eda6fab5654197330b1f8b6cd97f5c0b"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-10577c1-default1423-workers4-zero-retry.exit.txt.gz",
+      "valid": true,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-results-10577c1-default1423-workers4-zero-retry.json.gz",
+      "valid": true,
+      "sha256": "d86b6ddc4cb27af100305f11380976c509d153b9c5a3917a55aef11f89ea2c47"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-default1423-strict-10577c1-receipt.json.gz",
+      "valid": true,
+      "sha256": "005c8c293ca0bfdedd559b2f72f3286b7544bc2b2ecef69ff496d0700a3aea0d"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-results-10577c1-actual.json.gz",
+      "valid": true,
+      "sha256": "77593f24139558cd51a5bd94d0e7ee2bb635aec4ca9e3dfd94759696508d1b2b"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/browser-report-path-correction-10577c1.json.gz",
+      "valid": true,
+      "sha256": "755c95b703c32fa0ad15173f656febe267061e40f771915a8dd4fe8562abc7dd"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/diagnostic-source-lint-112.txt.gz",
+      "valid": true,
+      "sha256": "2735df404e2baaedc9e95595bdf4328321299051ee86cc9895a1187e2d4b6a31"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/diagnostic-source-lint-112.exit.txt.gz",
+      "valid": true,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final-doc-lint-corrected.txt.gz",
+      "valid": true,
+      "sha256": "d27b5cd87a20aaf883776bcede4ba62cf4b5269834a0e7d7c70249b4eb004e7a"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final-doc-lint-corrected.exit.txt.gz",
+      "valid": true,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ENOENT.json.gz",
+      "valid": true,
+      "sha256": "e7e151b918d39ede442faf0a6a6a6bccdc76aed28e2b0923705de9d98044e2ff"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ENOENT.stderr.txt.gz",
+      "valid": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ENOENT.stdout.txt.gz",
+      "valid": true,
+      "sha256": "9fd8cd1d25f7ff1d6e0c193d0079aaba1a0805105299701cc6a19470bad6210e"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ETIMEDOUT.json.gz",
+      "valid": true,
+      "sha256": "189e207eaecaa816bee492657ef8df0ebf0364580b06aa0b79e1b37335b8538a"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ETIMEDOUT.stderr.txt.gz",
+      "valid": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/ETIMEDOUT.stdout.txt.gz",
+      "valid": true,
+      "sha256": "5af3d8c0b11e3d059b2f25a8f15863245037403e255067cd195a2bc6466a02fd"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/fault-preload.cjs.gz",
+      "valid": true,
+      "sha256": "526cd76ff927a33aebfb721b3b7e82bdeec0a314fc2c4343cebf824a2aac2b4a"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-diagnostic-controlled-faults/receipt.json.gz",
+      "valid": true,
+      "sha256": "90f362f21de078a77b78e9d909454e0344151a7465bae8c58cfec0dcf4d6b0a8"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/original-targeted-test.txt.gz",
+      "valid": true,
+      "sha256": "e62e08839f7827bc13f9e8cf973abcfdc9d04ee06ebf9e3e2fa23e5dd039659e"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/process-trace.jsonl.gz",
+      "valid": true,
+      "sha256": "5dcaf65727d1e571019ea2671a2535a5c183e4259d0a968d39a6c9107710a5cd"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/receipt.json.gz",
+      "valid": true,
+      "sha256": "524e6dfd2d265844852f9d7d9a27f14df16fdcabf68d81934ccc5e8166dfb523"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/source-identity.json.gz",
+      "valid": true,
+      "sha256": "1c7dfb62d296cd79804b49ba026755b4b6e55af93736a81fe2f2958fcfee8d3a"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/desktop-entry-diagnostic-1791509030330/trace-preload.cjs.gz",
+      "valid": true,
+      "sha256": "f2989416befa6ca9cb1ce947a603ff511da93e88fab50da24cf6bcdba4f25d3e"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final105-governance114.txt.gz",
+      "valid": true,
+      "sha256": "068e41725f243a8f4ac541415ffb806f6a3119e10514ebb76a05d7b8299f3034"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final105-governance114.exit.txt.gz",
+      "valid": true,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final105-lint114.txt.gz",
+      "valid": true,
+      "sha256": "94a8f6d9a645bb9783097a93b50e1b3f55c0ff7b5dcc5ce03167356eea6e3d43"
+    },
+    {
+      "path": "docs/changes/2026-10-09-windows-entry-diagnostics/evidence/source-10577c1/final105-lint114.exit.txt.gz",
+      "valid": true,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-1/browser-results.json.gz",
+      "valid": true,
+      "sha256": "1b1543390908827d7991647538c403c44e3bd305f2934502d1d17166c3f87844"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-1/console.log.gz",
+      "valid": true,
+      "sha256": "6f275af94e9c95f214c2f94cdb73afb5f5457d978438e152680bde7ac3a09dc3"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-1/receipt.json.gz",
+      "valid": true,
+      "sha256": "7cc719634ea6db462fcd7479bdc02b60e7d48e310aaf11f95370ee07186a060c"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-1/resources.jsonl.gz",
+      "valid": true,
+      "sha256": "ded456703acb931c9dc27fcc51b8d3ff8c4f19dc00d1dcd78cab0c42ab28d2e6"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-2/browser-results.json.gz",
+      "valid": true,
+      "sha256": "57a604537a41d4264743e670f14fd54d6c57c00c4838bbcb8afee708a868038a"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-2/console.log.gz",
+      "valid": true,
+      "sha256": "cb3af63610406fb3acb73239e2f0af3c4caf4c6a35136c25df43592e71b0ad3d"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-2/receipt.json.gz",
+      "valid": true,
+      "sha256": "1e2f47b1efdc76e2d1dc8d2fe4e7af556b11c14b01301e1f889ffb16dac403ae"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-2/resources.jsonl.gz",
+      "valid": true,
+      "sha256": "31d2475fab5b67da086179a250f9fad19221a565e5f731b649b8cb415dac6498"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-4/browser-results.json.gz",
+      "valid": true,
+      "sha256": "965b8640c5bcf95e723fbdad15f3b2ff46b859342d030aff2a8afcdbe0c7fa3b"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-4/console.log.gz",
+      "valid": true,
+      "sha256": "1b1a3661c64e44ccb8a305a7d3d6e74a4e5e2a18b8441123b0ba8f2d10066057"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-4/receipt.json.gz",
+      "valid": true,
+      "sha256": "4879da66aa174f576528c6d564e1a0168e935c3af419d813450f553cef07d1b7"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-4/resources.jsonl.gz",
+      "valid": true,
+      "sha256": "0c8619017f99a3949b33bbdd411010a35b8bbc613fad01e9ba1830d028b946bc"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-8/browser-results.json.gz",
+      "valid": true,
+      "sha256": "1f5c320fb961aca01300eb40c602877b0114887a1aba6270528395ec2499233d"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-8/console.log.gz",
+      "valid": true,
+      "sha256": "dca14df95f360101e1bc8e259b50cf48124a607c674e4dcd11f2333b02760162"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-8/receipt.json.gz",
+      "valid": true,
+      "sha256": "42250330d7fc92137c1e639c8614c077c48851cb565470ce4abe6b7bd9792e6b"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-8/resources.jsonl.gz",
+      "valid": true,
+      "sha256": "3d6fd3cae9ba7a38edb171e0fb709a8f3fc585ff346bf29b2600b807008eb601"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-12/browser-results.json.gz",
+      "valid": true,
+      "sha256": "17e990a94946ab311b97780314bdb844ea31c7af1670e8dad8acdf7e8c297a6d"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-12/console.log.gz",
+      "valid": true,
+      "sha256": "963a1096a4718e8485418bdd2218cd22f70a53bba8d234cc743493dddab3e37a"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-12/receipt.json.gz",
+      "valid": true,
+      "sha256": "f07f043eae232e24f8b024f2772074681bc1bcf070e8723912aecc1d458077fa"
+    },
+    {
+      "path": "docs/changes/2026-10-10-verify-concurrency-002/evidence/workers-12/resources.jsonl.gz",
+      "valid": true,
+      "sha256": "409e1cd2267b1a5e21837154c249577f7574ea43dc064f50aded3c276ada7052"
+    }
+  ],
+  "historical": {
+    "stats": {
+      "startTime": "2026-10-09T01:37:44.425Z",
+      "duration": 228116.163,
+      "expected": 438,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 9
+    },
+    "tests": 447,
+    "attempts": 456,
+    "actualRetries": 9,
+    "nodeExecutable": "D:\\kk-studio\\.tools\\node24\\node-v24.21.0-win-x64\\node.exe",
+    "playwright": "1.63.0",
+    "workers": 12,
+    "actualWorkers": 12,
+    "webServer": {
+      "command": "node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 1423 --strictPort",
+      "url": "http://127.0.0.1:1423",
+      "reuseExistingServer": false
+    },
+    "firstFailures": [
+      {
+        "file": "design-system-pages.spec.ts",
+        "line": 316,
+        "title": "Skill editor fields, save, cancel and focus at 390",
+        "status": "timedOut",
+        "retry": 0,
+        "workerIndex": 5,
+        "startTime": "2026-10-09T01:39:23.931Z",
+        "duration": 30438,
+        "errors": [
+          {
+            "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+          },
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts",
+              "column": 32,
+              "line": 332
+            },
+            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCSS\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('dialog', { name: '编辑本地 Skill' }).locator('input').nth(2)\nExpected: \u001b[32m\"8px\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"soft toHaveCSS\" getByRole('dialog', { name: '编辑本地 Skill' }).locator('input').nth(2) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('dialog', { name: '编辑本地 Skill' }).locator('input').nth(2)\u001b[22m\n\u001b[2m  - Protocol error (Runtime.callFunctionOn): Internal server error, session closed.\u001b[22m\n\n\n  330 |     for (const input of await dialog.locator(\"input\").all()) {\n  331 |       await expect.soft(input).toHaveCSS(\"height\", \"32px\");\n> 332 |       await expect.soft(input).toHaveCSS(\"border-radius\", \"8px\");\n      |                                ^\n  333 |     }\n  334 |     await dialog\n  335 |       .getByLabel(\"ID\", { exact: true })\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts:332:32"
+          },
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts",
+              "column": 32,
+              "line": 331
+            },
+            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCSS\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('dialog', { name: '编辑本地 Skill' }).locator('input').nth(3)\nExpected: \u001b[32m\"32px\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\n\n\n  329 |     await expect.soft(dialog).toHaveCSS(\"border-radius\", \"20px\");\n  330 |     for (const input of await dialog.locator(\"input\").all()) {\n> 331 |       await expect.soft(input).toHaveCSS(\"height\", \"32px\");\n      |                                ^\n  332 |       await expect.soft(input).toHaveCSS(\"border-radius\", \"8px\");\n  333 |     }\n  334 |     await dialog\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts:331:32"
+          },
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts",
+              "column": 32,
+              "line": 332
+            },
+            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCSS\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('dialog', { name: '编辑本地 Skill' }).locator('input').nth(3)\nExpected: \u001b[32m\"8px\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\n\n\n  330 |     for (const input of await dialog.locator(\"input\").all()) {\n  331 |       await expect.soft(input).toHaveCSS(\"height\", \"32px\");\n> 332 |       await expect.soft(input).toHaveCSS(\"border-radius\", \"8px\");\n      |                                ^\n  333 |     }\n  334 |     await dialog\n  335 |       .getByLabel(\"ID\", { exact: true })\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts:332:32"
+          },
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts",
+              "column": 32,
+              "line": 331
+            },
+            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCSS\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('dialog', { name: '编辑本地 Skill' }).locator('input').nth(4)\nExpected: \u001b[32m\"32px\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\n\n\n  329 |     await expect.soft(dialog).toHaveCSS(\"border-radius\", \"20px\");\n  330 |     for (const input of await dialog.locator(\"input\").all()) {\n> 331 |       await expect.soft(input).toHaveCSS(\"height\", \"32px\");\n      |                                ^\n  332 |       await expect.soft(input).toHaveCSS(\"border-radius\", \"8px\");\n  333 |     }\n  334 |     await dialog\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts:331:32"
+          },
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts",
+              "column": 32,
+              "line": 332
+            },
+            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCSS\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('dialog', { name: '编辑本地 Skill' }).locator('input').nth(4)\nExpected: \u001b[32m\"8px\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\n\n\n  330 |     for (const input of await dialog.locator(\"input\").all()) {\n  331 |       await expect.soft(input).toHaveCSS(\"height\", \"32px\");\n> 332 |       await expect.soft(input).toHaveCSS(\"border-radius\", \"8px\");\n      |                                ^\n  333 |     }\n  334 |     await dialog\n  335 |       .getByLabel(\"ID\", { exact: true })\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts:332:32"
+          },
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts",
+              "column": 32,
+              "line": 331
+            },
+            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCSS\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('dialog', { name: '编辑本地 Skill' }).locator('input').nth(5)\nExpected: \u001b[32m\"32px\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\n\n\n  329 |     await expect.soft(dialog).toHaveCSS(\"border-radius\", \"20px\");\n  330 |     for (const input of await dialog.locator(\"input\").all()) {\n> 331 |       await expect.soft(input).toHaveCSS(\"height\", \"32px\");\n      |                                ^\n  332 |       await expect.soft(input).toHaveCSS(\"border-radius\", \"8px\");\n  333 |     }\n  334 |     await dialog\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts:331:32"
+          },
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts",
+              "column": 32,
+              "line": 332
+            },
+            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCSS\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('dialog', { name: '编辑本地 Skill' }).locator('input').nth(5)\nExpected: \u001b[32m\"8px\"\u001b[39m\nReceived: \u001b[31m\"\"\u001b[39m\n\n\n  330 |     for (const input of await dialog.locator(\"input\").all()) {\n  331 |       await expect.soft(input).toHaveCSS(\"height\", \"32px\");\n> 332 |       await expect.soft(input).toHaveCSS(\"border-radius\", \"8px\");\n      |                                ^\n  333 |     }\n  334 |     await dialog\n  335 |       .getByLabel(\"ID\", { exact: true })\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts:332:32"
+          },
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts",
+              "column": 8,
+              "line": 336
+            },
+            "message": "Error: locator.fill: Target page, context or browser has been closed\n\n  334 |     await dialog\n  335 |       .getByLabel(\"ID\", { exact: true })\n> 336 |       .fill(`design-system-${width}`);\n      |        ^\n  337 |     await dialog\n  338 |       .getByLabel(\"名称\", { exact: true })\n  339 |       .fill(\"设计系统测试：长中文名称与英文-identifier\");\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system-pages.spec.ts:336:8"
+          }
+        ]
+      },
+      {
+        "file": "design-system.spec.ts",
+        "line": 206,
+        "title": "light: asset primary and plugin danger consumers keep paired colors in all presets",
+        "status": "timedOut",
+        "retry": 0,
+        "workerIndex": 7,
+        "startTime": "2026-10-09T01:39:15.794Z",
+        "duration": 32426,
+        "errors": [
+          {
+            "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+          },
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system.spec.ts",
+              "column": 8,
+              "line": 252
+            },
+            "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('dialog', { name: '设置' }).getByRole('button', { name: 'MCP', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" class=\"settings-nav-item\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\n\n  250 |       .getByRole(\"dialog\", { name: \"设置\" })\n  251 |       .getByRole(\"button\", { name: \"MCP\", exact: true })\n> 252 |       .click();\n      |        ^\n  253 |     const uninstall = page\n  254 |       .getByRole(\"button\", { name: \"卸载\", exact: true })\n  255 |       .first();\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\design-system.spec.ts:252:8"
+          }
+        ]
+      },
+      {
+        "file": "frontend.spec.ts",
+        "line": 481,
+        "title": "布局 390×844 无页面溢出，资产与设置可用",
+        "status": "timedOut",
+        "retry": 0,
+        "workerIndex": 1,
+        "startTime": "2026-10-09T01:39:23.813Z",
+        "duration": 30465,
+        "errors": [
+          {
+            "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+          },
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\helpers.ts",
+              "column": 6,
+              "line": 83
+            },
+            "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.project-library-card').filter({ hasText: 'Agent 验证项目' })\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"project-library-card\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is visible, enabled and stable\u001b[22m\n\u001b[2m    - scrolling into view if needed\u001b[22m\n\u001b[2m    - done scrolling\u001b[22m\n\n\n   at helpers.ts:83\n\n  81 |     .locator(\".project-library-card\")\n  82 |     .filter({ hasText: \"Agent 验证项目\" })\n> 83 |     .click();\n     |      ^\n  84 |   await expect(page.getByRole(\"region\", { name: \"无限画布\" })).toBeVisible();\n  85 |   await expect(page.getByTestId(\"canvas-node-image\")).toBeVisible();\n  86 |   // The conversation panel is intentionally collapsed on compact screens.\n    at openSeededProject (D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\helpers.ts:83:6)\n    at openWorkspace (D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\helpers.ts:15:3)\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\frontend.spec.ts:485:5"
+          }
+        ]
+      },
+      {
+        "file": "image-edit.spec.ts",
+        "line": 515,
+        "title": "empty composer compiles 2 color instructions once and keeps crop opinions separate",
+        "status": "failed",
+        "retry": 0,
+        "workerIndex": 11,
+        "startTime": "2026-10-09T01:39:18.328Z",
+        "duration": 29646,
+        "errors": [
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\image-edit.spec.ts",
+              "column": 8,
+              "line": 576
+            },
+            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    \"succeeded\",\u001b[22m\n\u001b[32m-   \"succeeded\",\u001b[39m\n\u001b[31m+   \"running\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n\n  574 |         ),\n  575 |       )\n> 576 |       .toEqual(Array(taskCount).fill(\"succeeded\"));\n      |        ^\n  577 |     const tasks = (await activeEditProject(page)).tasks;\n  578 |     expect(requests).toBe(taskCount);\n  579 |     for (const [i, task] of tasks.entries()) {\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\image-edit.spec.ts:576:8"
+          }
+        ]
+      },
+      {
+        "file": "image-selection-actions.spec.ts",
+        "line": 201,
+        "title": "图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 1920",
+        "status": "failed",
+        "retry": 0,
+        "workerIndex": 2,
+        "startTime": "2026-10-09T01:39:19.668Z",
+        "duration": 28233,
+        "errors": [
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\image-selection-actions.spec.ts",
+              "column": 6,
+              "line": 63
+            },
+            "message": "Error: Timeout 5000ms exceeded while waiting on the predicate\n\n  61 |       );\n  62 |     })\n> 63 |     .toBe(true);\n     |      ^\n  64 |   const canvas = await page.getByTestId(\"infinite-canvas\").boundingBox();\n  65 |   const actions = (await toolbar(page).boundingBox())!;\n  66 |   expect(actions.x).toBeGreaterThanOrEqual(canvas!.x);\n    at expectAboveImage (D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\image-selection-actions.spec.ts:63:6)\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\image-selection-actions.spec.ts:216:11"
+          }
+        ]
+      },
+      {
+        "file": "input-contract.spec.ts",
+        "line": 194,
+        "title": "attachments occupy space and stay removable at 1440",
+        "status": "timedOut",
+        "retry": 0,
+        "workerIndex": 0,
+        "startTime": "2026-10-09T01:39:24.148Z",
+        "duration": 30417,
+        "errors": [
+          {
+            "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+          },
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\input-contract.spec.ts",
+              "column": 48,
+              "line": 10
+            },
+            "message": "Error: locator.boundingBox: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.start-composer').locator('textarea')\u001b[22m\n\u001b[2m    - locator resolved to visible <textarea rows=\"3\" maxlength=\"4000\" aria-label=\"创作提示词\" placeholder=\"描述你想要生成的内容\" class=\"composer-textarea\">保留多行草稿↵保留多行草稿↵保留多行草稿↵保留多行草稿↵保留多行草稿↵</textarea>\u001b[22m\n\n\n   8 | );\n   9 | async function assertFlow(form: Locator) {\n> 10 |   const input = await form.locator(\"textarea\").boundingBox();\n     |                                                ^\n  11 |   const attachments = await form.locator(\".start-attachment-row\").boundingBox();\n  12 |   const actions = await form\n  13 |     .locator(\"[data-node-id='407:29315'], .start-composer-footer\")\n    at assertFlow (D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\input-contract.spec.ts:10:48)\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\input-contract.spec.ts:228:13"
+          }
+        ]
+      },
+      {
+        "file": "model-capabilities.spec.ts",
+        "line": 10,
+        "title": "原图和连线参考图按归档素材去重：不同素材超限禁用重绘",
+        "status": "timedOut",
+        "retry": 0,
+        "workerIndex": 3,
+        "startTime": "2026-10-09T01:39:16.064Z",
+        "duration": 32084,
+        "errors": [
+          {
+            "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+          },
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\model-capabilities.spec.ts",
+              "column": 8,
+              "line": 117
+            },
+            "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '保存此模型能力', exact: true })\u001b[22m\n\n\n  115 |     await page\n  116 |       .getByRole(\"button\", { name: \"保存此模型能力\", exact: true })\n> 117 |       .click();\n      |        ^\n  118 |     await expect(\n  119 |       page.locator(\".provider-model-catalog\").getByRole(\"status\"),\n  120 |     ).toContainText(\"已保存此模型\");\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\model-capabilities.spec.ts:117:8"
+          }
+        ]
+      },
+      {
+        "file": "model-picker.spec.ts",
+        "line": 160,
+        "title": "分级菜单保留页面、返回、全部和置顶；同名模型使用明确选择的 API 账号",
+        "status": "timedOut",
+        "retry": 0,
+        "workerIndex": 8,
+        "startTime": "2026-10-09T01:39:19.823Z",
+        "duration": 31141,
+        "errors": [
+          {
+            "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+          },
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\model-picker.spec.ts",
+              "column": 53,
+              "line": 230
+            },
+            "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('menu', { name: '选择模型' }).getByRole('button', { name: '返回上一级' })\u001b[22m\n\n\n  228 |     menu.getByRole(\"button\", { name: \"取消置顶 image-same\", exact: true }),\n  229 |   ).toHaveAttribute(\"aria-pressed\", \"true\");\n> 230 |   await menu.getByRole(\"button\", { name: \"返回上一级\" }).click();\n      |                                                     ^\n  231 |   await expect(menu.locator(\".kk-model-menu-head strong\")).toHaveText(\n  232 |     \"API 供应商\",\n  233 |   );\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\model-picker.spec.ts:230:53"
+          }
+        ]
+      },
+      {
+        "file": "plugin-recovery.spec.ts",
+        "line": 34,
+        "title": "四个随包插件离线编辑并刷新恢复完整内容和负载",
+        "status": "timedOut",
+        "retry": 0,
+        "workerIndex": 6,
+        "startTime": "2026-10-09T01:39:19.781Z",
+        "duration": 32590,
+        "errors": [
+          {
+            "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+          },
+          {
+            "location": {
+              "file": "D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\plugin-recovery.spec.ts",
+              "column": 64,
+              "line": 59
+            },
+            "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '项目库', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <button title=\"项目库\" aria-label=\"项目库\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is visible, enabled and stable\u001b[22m\n\u001b[2m    - scrolling into view if needed\u001b[22m\n\u001b[2m    - done scrolling\u001b[22m\n\n\n  57 |   });\n  58 |   await page.reload();\n> 59 |   await page.getByRole(\"button\", { name: \"项目库\", exact: true }).click();\n     |                                                                ^\n  60 |   await expect(page.locator(\".project-library-card\")).toHaveCount(1);\n  61 |   await page.locator(\".project-library-card\").click();\n  62 |   await expectBundledPluginContents(page);\n    at D:\\kk-studio\\KK-Studio-2.0\\.worktrees\\TASK-IMAGE-RETRY-004\\tests\\browser\\plugin-recovery.spec.ts:59:64"
+          }
+        ]
+      }
+    ],
+    "commonExecutionOverlap": {
+      "start": "2026-10-09T01:39:24.148Z",
+      "end": "2026-10-09T01:39:47.901Z",
+      "durationMs": 23753,
+      "activeWorkers": 12,
+      "cases": [
+        {
+          "file": "design-system-pages.spec.ts",
+          "title": "Skill editor fields, save, cancel and focus at 390",
+          "status": "timedOut",
+          "durationMs": 30438,
+          "workerIndex": 5
+        },
+        {
+          "file": "design-system.spec.ts",
+          "title": "light: asset primary and plugin danger consumers keep paired colors in all presets",
+          "status": "timedOut",
+          "durationMs": 32426,
+          "workerIndex": 7
+        },
+        {
+          "file": "frontend.spec.ts",
+          "title": "布局 390×844 无页面溢出，资产与设置可用",
+          "status": "timedOut",
+          "durationMs": 30465,
+          "workerIndex": 1
+        },
+        {
+          "file": "image-edit.spec.ts",
+          "title": "empty composer compiles 2 color instructions once and keeps crop opinions separate",
+          "status": "failed",
+          "durationMs": 29646,
+          "workerIndex": 11
+        },
+        {
+          "file": "image-selection-actions.spec.ts",
+          "title": "图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 1920",
+          "status": "failed",
+          "durationMs": 28233,
+          "workerIndex": 2
+        },
+        {
+          "file": "input-contract.spec.ts",
+          "title": "attachments occupy space and stay removable at 1440",
+          "status": "timedOut",
+          "durationMs": 30417,
+          "workerIndex": 0
+        },
+        {
+          "file": "model-capabilities.spec.ts",
+          "title": "原图和连线参考图按归档素材去重：不同素材超限禁用重绘",
+          "status": "timedOut",
+          "durationMs": 32084,
+          "workerIndex": 3
+        },
+        {
+          "file": "model-picker.spec.ts",
+          "title": "分级菜单保留页面、返回、全部和置顶；同名模型使用明确选择的 API 账号",
+          "status": "timedOut",
+          "durationMs": 31141,
+          "workerIndex": 8
+        },
+        {
+          "file": "panel-resize.spec.ts",
+          "title": "侧栏只使用固定展开与收起宽度，键盘切换保持焦点",
+          "status": "passed",
+          "durationMs": 29621,
+          "workerIndex": 9
+        },
+        {
+          "file": "plugin-recovery.spec.ts",
+          "title": "四个随包插件离线编辑并刷新恢复完整内容和负载",
+          "status": "timedOut",
+          "durationMs": 32590,
+          "workerIndex": 6
+        },
+        {
+          "file": "plugins.spec.ts",
+          "title": "插件管理拒绝明文地址并说明远程代码权限",
+          "status": "passed",
+          "durationMs": 30362,
+          "workerIndex": 4
+        },
+        {
+          "file": "project-package.spec.ts",
+          "title": "Web 项目包入口禁用并解释 Desktop 支持范围",
+          "status": "passed",
+          "durationMs": 25395,
+          "workerIndex": 10
+        }
+      ]
+    }
+  },
+  "matrix": [
+    {
+      "worker": 1,
+      "durationMs": 601184.1089999999,
+      "tests": 447,
+      "attempts": 447,
+      "actualRetries": 0,
+      "firstFailures": 0,
+      "port": 1423,
+      "portBefore": [],
+      "portAfter": [],
+      "webServer": {
+        "command": "node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 1423 --strictPort",
+        "url": "http://127.0.0.1:1423",
+        "reuseExistingServer": false
+      },
+      "resources": {
+        "samples": 60,
+        "samplingErrors": 0,
+        "peakProcesses": 16,
+        "peakWorkingSetBytes": 2065588224,
+        "peakWorkingSetGB": 2.065588224,
+        "peakWorkingSetGiB": 1.9237289428710938,
+        "minimumFreePhysicalMemoryBytes": 21374869504,
+        "maxSampleGapMs": 6491
+      },
+      "sampleCoverage": {
+        "firstSampleAt": "2026-10-09T15:50:10.5087561Z",
+        "lastSampleAt": "2026-10-09T15:56:27.5015868Z",
+        "initialUnobservedMs": 225755,
+        "finalUnobservedMs": 0,
+        "root": {
+          "pid": 57396,
+          "parentPid": 96564,
+          "name": "powershell.exe",
+          "workingSetBytes": 161992704,
+          "cpuTime100ns": 6406250
+        }
+      },
+      "p50Ms": 1194,
+      "p95Ms": 2697,
+      "historicalCases": [
+        {
+          "file": "design-system-pages.spec.ts",
+          "title": "Skill editor fields, save, cancel and focus at 390",
+          "durationMs": 794
+        },
+        {
+          "file": "design-system.spec.ts",
+          "title": "light: asset primary and plugin danger consumers keep paired colors in all presets",
+          "durationMs": 6123
+        },
+        {
+          "file": "frontend.spec.ts",
+          "title": "布局 390×844 无页面溢出，资产与设置可用",
+          "durationMs": 626
+        },
+        {
+          "file": "image-edit.spec.ts",
+          "title": "empty composer compiles 2 color instructions once and keeps crop opinions separate",
+          "durationMs": 2348
+        },
+        {
+          "file": "image-selection-actions.spec.ts",
+          "title": "图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 1920",
+          "durationMs": 2252
+        },
+        {
+          "file": "input-contract.spec.ts",
+          "title": "attachments occupy space and stay removable at 1440",
+          "durationMs": 1070
+        },
+        {
+          "file": "model-capabilities.spec.ts",
+          "title": "原图和连线参考图按归档素材去重：不同素材超限禁用重绘",
+          "durationMs": 4259
+        },
+        {
+          "file": "model-picker.spec.ts",
+          "title": "分级菜单保留页面、返回、全部和置顶；同名模型使用明确选择的 API 账号",
+          "durationMs": 2745
+        },
+        {
+          "file": "plugin-recovery.spec.ts",
+          "title": "四个随包插件离线编辑并刷新恢复完整内容和负载",
+          "durationMs": 1595
+        }
+      ]
+    },
+    {
+      "worker": 2,
+      "durationMs": 322601.791,
+      "tests": 447,
+      "attempts": 447,
+      "actualRetries": 0,
+      "firstFailures": 0,
+      "port": 1423,
+      "portBefore": [],
+      "portAfter": [],
+      "webServer": {
+        "command": "node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 1423 --strictPort",
+        "url": "http://127.0.0.1:1423",
+        "reuseExistingServer": false
+      },
+      "resources": {
+        "samples": 47,
+        "samplingErrors": 0,
+        "peakProcesses": 24,
+        "peakWorkingSetBytes": 2955497472,
+        "peakWorkingSetGB": 2.955497472,
+        "peakWorkingSetGiB": 2.752521514892578,
+        "minimumFreePhysicalMemoryBytes": 20606873600,
+        "maxSampleGapMs": 6741
+      },
+      "sampleCoverage": {
+        "firstSampleAt": "2026-10-09T15:58:09.4511186Z",
+        "lastSampleAt": "2026-10-09T16:03:09.1730464Z",
+        "initialUnobservedMs": 25126,
+        "finalUnobservedMs": 0,
+        "root": {
+          "pid": 75872,
+          "parentPid": 92340,
+          "name": "powershell.exe",
+          "workingSetBytes": 162607104,
+          "cpuTime100ns": 5781250
+        }
+      },
+      "p50Ms": 1237,
+      "p95Ms": 2756,
+      "historicalCases": [
+        {
+          "file": "design-system-pages.spec.ts",
+          "title": "Skill editor fields, save, cancel and focus at 390",
+          "durationMs": 850
+        },
+        {
+          "file": "design-system.spec.ts",
+          "title": "light: asset primary and plugin danger consumers keep paired colors in all presets",
+          "durationMs": 6148
+        },
+        {
+          "file": "frontend.spec.ts",
+          "title": "布局 390×844 无页面溢出，资产与设置可用",
+          "durationMs": 724
+        },
+        {
+          "file": "image-edit.spec.ts",
+          "title": "empty composer compiles 2 color instructions once and keeps crop opinions separate",
+          "durationMs": 2482
+        },
+        {
+          "file": "image-selection-actions.spec.ts",
+          "title": "图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 1920",
+          "durationMs": 2362
+        },
+        {
+          "file": "input-contract.spec.ts",
+          "title": "attachments occupy space and stay removable at 1440",
+          "durationMs": 1108
+        },
+        {
+          "file": "model-capabilities.spec.ts",
+          "title": "原图和连线参考图按归档素材去重：不同素材超限禁用重绘",
+          "durationMs": 4240
+        },
+        {
+          "file": "model-picker.spec.ts",
+          "title": "分级菜单保留页面、返回、全部和置顶；同名模型使用明确选择的 API 账号",
+          "durationMs": 2688
+        },
+        {
+          "file": "plugin-recovery.spec.ts",
+          "title": "四个随包插件离线编辑并刷新恢复完整内容和负载",
+          "durationMs": 1697
+        }
+      ]
+    },
+    {
+      "worker": 4,
+      "durationMs": 192521.198,
+      "tests": 447,
+      "attempts": 447,
+      "actualRetries": 0,
+      "firstFailures": 0,
+      "port": 1423,
+      "portBefore": [],
+      "portAfter": [],
+      "webServer": {
+        "command": "node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 1423 --strictPort",
+        "url": "http://127.0.0.1:1423",
+        "reuseExistingServer": false
+      },
+      "resources": {
+        "samples": 27,
+        "samplingErrors": 0,
+        "peakProcesses": 43,
+        "peakWorkingSetBytes": 4673515520,
+        "peakWorkingSetGB": 4.67351552,
+        "peakWorkingSetGiB": 4.352550506591797,
+        "minimumFreePhysicalMemoryBytes": 19685769216,
+        "maxSampleGapMs": 6837
+      },
+      "sampleCoverage": {
+        "firstSampleAt": "2026-10-09T16:04:55.7432813Z",
+        "lastSampleAt": "2026-10-09T16:07:46.8743465Z",
+        "initialUnobservedMs": 24082,
+        "finalUnobservedMs": 0,
+        "root": {
+          "pid": 72712,
+          "parentPid": 24680,
+          "name": "powershell.exe",
+          "workingSetBytes": 162598912,
+          "cpuTime100ns": 5468750
+        }
+      },
+      "p50Ms": 1373,
+      "p95Ms": 2915,
+      "historicalCases": [
+        {
+          "file": "design-system-pages.spec.ts",
+          "title": "Skill editor fields, save, cancel and focus at 390",
+          "durationMs": 1172
+        },
+        {
+          "file": "design-system.spec.ts",
+          "title": "light: asset primary and plugin danger consumers keep paired colors in all presets",
+          "durationMs": 5982
+        },
+        {
+          "file": "frontend.spec.ts",
+          "title": "布局 390×844 无页面溢出，资产与设置可用",
+          "durationMs": 899
+        },
+        {
+          "file": "image-edit.spec.ts",
+          "title": "empty composer compiles 2 color instructions once and keeps crop opinions separate",
+          "durationMs": 2500
+        },
+        {
+          "file": "image-selection-actions.spec.ts",
+          "title": "图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 1920",
+          "durationMs": 2553
+        },
+        {
+          "file": "input-contract.spec.ts",
+          "title": "attachments occupy space and stay removable at 1440",
+          "durationMs": 1238
+        },
+        {
+          "file": "model-capabilities.spec.ts",
+          "title": "原图和连线参考图按归档素材去重：不同素材超限禁用重绘",
+          "durationMs": 4555
+        },
+        {
+          "file": "model-picker.spec.ts",
+          "title": "分级菜单保留页面、返回、全部和置顶；同名模型使用明确选择的 API 账号",
+          "durationMs": 2910
+        },
+        {
+          "file": "plugin-recovery.spec.ts",
+          "title": "四个随包插件离线编辑并刷新恢复完整内容和负载",
+          "durationMs": 1691
+        }
+      ]
+    },
+    {
+      "worker": 8,
+      "durationMs": 135828.408,
+      "tests": 447,
+      "attempts": 447,
+      "actualRetries": 0,
+      "firstFailures": 0,
+      "port": 1423,
+      "portBefore": [],
+      "portAfter": [],
+      "webServer": {
+        "command": "node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 1423 --strictPort",
+        "url": "http://127.0.0.1:1423",
+        "reuseExistingServer": false
+      },
+      "resources": {
+        "samples": 18,
+        "samplingErrors": 0,
+        "peakProcesses": 78,
+        "peakWorkingSetBytes": 7818887168,
+        "peakWorkingSetGB": 7.818887168,
+        "peakWorkingSetGiB": 7.2819061279296875,
+        "minimumFreePhysicalMemoryBytes": 17947066368,
+        "maxSampleGapMs": 7123
+      },
+      "sampleCoverage": {
+        "firstSampleAt": "2026-10-09T16:08:43.9938074Z",
+        "lastSampleAt": "2026-10-09T16:10:41.0542390Z",
+        "initialUnobservedMs": 22330,
+        "finalUnobservedMs": 0,
+        "root": {
+          "pid": 54260,
+          "parentPid": 75412,
+          "name": "powershell.exe",
+          "workingSetBytes": 162627584,
+          "cpuTime100ns": 6562500
+        }
+      },
+      "p50Ms": 1855,
+      "p95Ms": 4053,
+      "historicalCases": [
+        {
+          "file": "design-system-pages.spec.ts",
+          "title": "Skill editor fields, save, cancel and focus at 390",
+          "durationMs": 1448
+        },
+        {
+          "file": "design-system.spec.ts",
+          "title": "light: asset primary and plugin danger consumers keep paired colors in all presets",
+          "durationMs": 7064
+        },
+        {
+          "file": "frontend.spec.ts",
+          "title": "布局 390×844 无页面溢出，资产与设置可用",
+          "durationMs": 1294
+        },
+        {
+          "file": "image-edit.spec.ts",
+          "title": "empty composer compiles 2 color instructions once and keeps crop opinions separate",
+          "durationMs": 3022
+        },
+        {
+          "file": "image-selection-actions.spec.ts",
+          "title": "图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 1920",
+          "durationMs": 3454
+        },
+        {
+          "file": "input-contract.spec.ts",
+          "title": "attachments occupy space and stay removable at 1440",
+          "durationMs": 2226
+        },
+        {
+          "file": "model-capabilities.spec.ts",
+          "title": "原图和连线参考图按归档素材去重：不同素材超限禁用重绘",
+          "durationMs": 5653
+        },
+        {
+          "file": "model-picker.spec.ts",
+          "title": "分级菜单保留页面、返回、全部和置顶；同名模型使用明确选择的 API 账号",
+          "durationMs": 3620
+        },
+        {
+          "file": "plugin-recovery.spec.ts",
+          "title": "四个随包插件离线编辑并刷新恢复完整内容和负载",
+          "durationMs": 2575
+        }
+      ]
+    },
+    {
+      "worker": 12,
+      "durationMs": 130327.299,
+      "tests": 447,
+      "attempts": 447,
+      "actualRetries": 0,
+      "firstFailures": 0,
+      "port": 1423,
+      "portBefore": [],
+      "portAfter": [],
+      "webServer": {
+        "command": "node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 1423 --strictPort",
+        "url": "http://127.0.0.1:1423",
+        "reuseExistingServer": false
+      },
+      "resources": {
+        "samples": 16,
+        "samplingErrors": 0,
+        "peakProcesses": 114,
+        "peakWorkingSetBytes": 10749300736,
+        "peakWorkingSetGB": 10.749300736,
+        "peakWorkingSetGiB": 10.011066436767578,
+        "minimumFreePhysicalMemoryBytes": 16494440448,
+        "maxSampleGapMs": 7475
+      },
+      "sampleCoverage": {
+        "firstSampleAt": "2026-10-09T16:11:35.3023832Z",
+        "lastSampleAt": "2026-10-09T16:13:23.0667723Z",
+        "initialUnobservedMs": 20498,
+        "finalUnobservedMs": 2373,
+        "root": {
+          "pid": 100564,
+          "parentPid": 70832,
+          "name": "powershell.exe",
+          "workingSetBytes": 163000320,
+          "cpuTime100ns": 5937500
+        }
+      },
+      "p50Ms": 2718,
+      "p95Ms": 5762,
+      "historicalCases": [
+        {
+          "file": "design-system-pages.spec.ts",
+          "title": "Skill editor fields, save, cancel and focus at 390",
+          "durationMs": 3201
+        },
+        {
+          "file": "design-system.spec.ts",
+          "title": "light: asset primary and plugin danger consumers keep paired colors in all presets",
+          "durationMs": 9727
+        },
+        {
+          "file": "frontend.spec.ts",
+          "title": "布局 390×844 无页面溢出，资产与设置可用",
+          "durationMs": 2490
+        },
+        {
+          "file": "image-edit.spec.ts",
+          "title": "empty composer compiles 2 color instructions once and keeps crop opinions separate",
+          "durationMs": 5100
+        },
+        {
+          "file": "image-selection-actions.spec.ts",
+          "title": "图片移到顶部或取消后重新选择时，上方工具栏仍可恢复操作 1920",
+          "durationMs": 4883
+        },
+        {
+          "file": "input-contract.spec.ts",
+          "title": "attachments occupy space and stay removable at 1440",
+          "durationMs": 3431
+        },
+        {
+          "file": "model-capabilities.spec.ts",
+          "title": "原图和连线参考图按归档素材去重：不同素材超限禁用重绘",
+          "durationMs": 6938
+        },
+        {
+          "file": "model-picker.spec.ts",
+          "title": "分级菜单保留页面、返回、全部和置顶；同名模型使用明确选择的 API 账号",
+          "durationMs": 6198
+        },
+        {
+          "file": "plugin-recovery.spec.ts",
+          "title": "四个随包插件离线编辑并刷新恢复完整内容和负载",
+          "durationMs": 3623
+        }
+      ]
+    }
+  ],
+  "conclusion": "UNKNOWN: clustered execution is consistent with shared scheduling pressure, but historical CPU/memory/step/trace telemetry and exact Edge version are absent. No causal attribution from later PASS or timeout-cleanup session errors."
+}
