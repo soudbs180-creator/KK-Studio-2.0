@@ -209,17 +209,29 @@ export function releaseProviderLease(
 
 export function markProviderConnectionHealthy(
   id: string,
+  expected?: { baseUrl?: string; credentialRef?: string },
 ): ProviderConnection[] {
   const validatedAt = new Date().toISOString();
-  return updateProviderConnection(id, (connection) => ({
-    ...connection,
-    state: "active",
-    cooldownUntil: undefined,
-    lastHealthCheckAt: validatedAt,
-    healthRevision: (connection.healthRevision ?? 0) + 1,
-    verificationStatus: "verified",
-    lastSuccessfulGenerationAt: validatedAt,
-  }));
+  return updateProviderConnection(id, (connection) => {
+    if (
+      expected &&
+      ((expected.baseUrl !== undefined &&
+        connection.baseUrl !== expected.baseUrl) ||
+        (expected.credentialRef !== undefined &&
+          connection.credentialRef !== expected.credentialRef))
+    )
+      // A late receipt bound to an old identity must not reset the new config.
+      return connection;
+    return {
+      ...connection,
+      state: "active",
+      cooldownUntil: undefined,
+      lastHealthCheckAt: validatedAt,
+      healthRevision: (connection.healthRevision ?? 0) + 1,
+      verificationStatus: "verified",
+      lastSuccessfulGenerationAt: validatedAt,
+    };
+  });
 }
 
 /** A key or connection identity change invalidates prior image verification. */
@@ -247,9 +259,19 @@ export function markProviderConnectionFailure(
       | "network";
     retryAfterSeconds?: number;
   },
+  expected?: { baseUrl?: string; credentialRef?: string },
 ): ProviderConnection[] {
   const now = Date.now();
   return updateProviderConnection(id, (connection) => {
+    if (
+      expected &&
+      ((expected.baseUrl !== undefined &&
+        connection.baseUrl !== expected.baseUrl) ||
+        (expected.credentialRef !== undefined &&
+          connection.credentialRef !== expected.credentialRef))
+    )
+      // A late receipt bound to an old identity must not degrade the new config.
+      return connection;
     if (connection.state === "disabled" || connection.state === "quarantined")
       return connection;
     if (

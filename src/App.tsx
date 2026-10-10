@@ -1562,21 +1562,34 @@ export default function App() {
             "network",
           ].includes(failure.failureClass)
         )
-          markProviderConnectionFailure(task.providerConnectionId, {
-            kind: failure.failureClass as
-              | "rate_limited"
-              | "unauthorized"
-              | "forbidden"
-              | "provider_unavailable"
-              | "network",
-            retryAfterSeconds: failure.retryAfterSeconds,
-          });
+          markProviderConnectionFailure(
+            task.providerConnectionId,
+            {
+              kind: failure.failureClass as
+                | "rate_limited"
+                | "unauthorized"
+                | "forbidden"
+                | "provider_unavailable"
+                | "network",
+              retryAfterSeconds: failure.retryAfterSeconds,
+            },
+            {
+              baseUrl: task.providerBaseUrl,
+              credentialRef: task.providerCredentialRef,
+            },
+          );
         else if (
           !failure &&
           !archiveUncertain &&
           reservation?.healthUnchanged()
         )
-          markProviderConnectionHealthy(task.providerConnectionId);
+          markProviderConnectionHealthy(
+            task.providerConnectionId,
+            {
+              baseUrl: task.providerBaseUrl,
+              credentialRef: task.providerCredentialRef,
+            },
+          );
       }
     } catch (error) {
       const uncertain =
@@ -1662,15 +1675,22 @@ export default function App() {
           "network",
         ].includes(error.failureClass)
       ) {
-        markProviderConnectionFailure(task.providerConnectionId, {
-          kind: error.failureClass as
-            | "rate_limited"
-            | "unauthorized"
-            | "forbidden"
-            | "provider_unavailable"
-            | "network",
-          retryAfterSeconds: error.retryAfterSeconds,
-        });
+        markProviderConnectionFailure(
+          task.providerConnectionId,
+          {
+            kind: error.failureClass as
+              | "rate_limited"
+              | "unauthorized"
+              | "forbidden"
+              | "provider_unavailable"
+              | "network",
+            retryAfterSeconds: error.retryAfterSeconds,
+          },
+          {
+            baseUrl: task.providerBaseUrl,
+            credentialRef: task.providerCredentialRef,
+          },
+        );
       }
     } finally {
       try {

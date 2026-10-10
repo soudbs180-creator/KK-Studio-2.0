@@ -5269,21 +5269,25 @@
       "src/features/creation/nativeTaskHost.ts",
       "src-tauri/src/task_host.rs"
     ],
-    "verification": "旧 FEAT-002 和 T5 描述已有 native image health/连接门禁缺口，本轮明确独立任务承载。T5 的持久 journal/同身份恢复和文本容量已实际验证，不能代替此 image 门禁验收；尚未开始。",
+    "verification": "原生 image 容量门禁与 health 回执身份保护已实现并验证：task_host.rs submit 容量检查覆盖全部请求（text/image/legacy，运行中 jobs 按 credential_ref 计数，journal 前拒绝零 POST，jobs 终态移除/reload 不清空）；markProviderConnectionFailure/Healthy 增加 expected 身份校验，App.tsx 两处回执传任务绑定身份，baseUrl/credentialRef 变更的迟到回执不污染新配置。验证：Rust cargo test task_host 21/21、TS providerHealthIdentity 5/5、provider 相关回归 15/15、tsc 通过。限制：完整 npm run verify、真实 Tauri fixture 端到端、push/PR 留网络/CI 门禁。",
     "priority": "P1",
     "dependencies": [
       "T5"
     ],
     "owner": "root",
-    "branch": "unallocated",
-    "worktree": "unallocated",
-    "status": "TODO",
+    "branch": "fix/TASK-PROV-006-provider-gates",
+    "worktree": "D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-006",
+    "status": "DONE",
     "evidence": [
-      "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md",
-      "docs/changes/2026-10-08-taskhost-native-lifecycle/status.md"
+      "docs/changes/2026-10-09-provider-gates/intent.md",
+      "docs/changes/2026-10-09-provider-gates/spec.md",
+      "docs/changes/2026-10-09-provider-gates/plan.md",
+      "docs/changes/2026-10-09-provider-gates/verification.md",
+      "docs/changes/2026-10-09-provider-gates/review.md",
+      "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md"
     ],
-    "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-08",
+    "verificationResult": "PASS",
+    "updated": "2026-10-09",
     "requirementRefs": [
       "ledger:TASK-PROV-006"
     ],

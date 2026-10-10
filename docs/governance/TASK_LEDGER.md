@@ -117,7 +117,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-COMPONENT-BOUNDARY-001 | MCP 设置组件职责拆分 | DONE | 已完成 | P3 | TASK-GOV-GOALS-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | 已完成 | P1 | T2, TASK-UI-GOV-003 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | DONE | 未完成 | P1 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | 未完成 | P1 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | DONE | 未完成 | P1 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | 未完成 | P2 | TASK-GOV-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | TODO | 未完成 | P1 | none | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-DOCS-STRUCT-001 | AI 协作规则文档结构收敛 | REVIEW | 进行中 | P1 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
@@ -2247,14 +2247,14 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Feature IDs: FEAT-002, FEAT-008
 - Owner role: repository-maintainer
 - Acceptance: 同账号 image 提交前复查身份、禁用/隔离与容量，无效连接零 POST; 原生 401/403/429 等结构化失败正确回写当前账号 health，旧身份/迟到回执不污染新配置; 原生进程持有运行容量，reload 不释放；取消/终态释放而不新增任务队列; unknown 保持禁止普通重试，已归档原件保留；真实 Tauri fixture 与全量回归通过
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `fix/TASK-PROV-006-provider-gates`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/TASK-PROV-006`
 - Modules: src/App.tsx, src/features/creation/providerSubmission.ts, src/features/creation/nativeTaskHost.ts, src-tauri/src/task_host.rs
-- Verification: NOT_VERIFIED — 旧 FEAT-002 和 T5 描述已有 native image health/连接门禁缺口，本轮明确独立任务承载。T5 的持久 journal/同身份恢复和文本容量已实际验证，不能代替此 image 门禁验收；尚未开始。
-- Evidence: [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/status.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/status.md)
+- Verification: PASS — 原生 image 容量门禁与 health 回执身份保护已实现并验证：task_host.rs submit 容量检查覆盖全部请求（text/image/legacy，运行中 jobs 按 credential_ref 计数，journal 前拒绝零 POST，jobs 终态移除/reload 不清空）；markProviderConnectionFailure/Healthy 增加 expected 身份校验，App.tsx 两处回执传任务绑定身份，baseUrl/credentialRef 变更的迟到回执不污染新配置。验证：Rust cargo test task_host 21/21、TS providerHealthIdentity 5/5、provider 相关回归 15/15、tsc 通过。限制：完整 npm run verify、真实 Tauri fixture 端到端、push/PR 留网络/CI 门禁。
+- Evidence: [docs/changes/2026-10-09-provider-gates/intent.md](../../docs/changes/2026-10-09-provider-gates/intent.md), [docs/changes/2026-10-09-provider-gates/spec.md](../../docs/changes/2026-10-09-provider-gates/spec.md), [docs/changes/2026-10-09-provider-gates/plan.md](../../docs/changes/2026-10-09-provider-gates/plan.md), [docs/changes/2026-10-09-provider-gates/verification.md](../../docs/changes/2026-10-09-provider-gates/verification.md), [docs/changes/2026-10-09-provider-gates/review.md](../../docs/changes/2026-10-09-provider-gates/review.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md)
 - Next action: 补充负责人、优先级、分支和下一步验收证据
 - Last verified: 2026-10-08
-- Updated: 2026-10-08
+- Updated: 2026-10-09
 
 ## TASK-VERIFY-CONCURRENCY-002 — 浏览器并发失败原因与隔离复核
 

@@ -255,8 +255,10 @@ impl TaskHost {
             return Ok(existing.record);
         }
         // The native request survives a WebView reload, so its capacity must
-        // live with this jobs map, not with browser-lock metadata.
-        if request.kind.as_deref() == Some("text") {
+        // live with this jobs map, not with browser-lock metadata. Image and
+        // text both hold one live slot per running job per credential; legacy
+        // requests without a kind are image requests and count the same.
+        {
             let jobs = self
                 .jobs
                 .lock()
@@ -1336,6 +1338,28 @@ mod tests {
         assert!(host.get(&pending.task_id).unwrap().is_none());
         pending.concurrency_limit = Some(0);
         assert!(validate_request(&pending).is_err());
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn image_capacity_rejects_with_live_native_jobs() {
+        let root = root();
+        let assets = Arc::new(AssetRepository::new(root.join("assets")));
+        let host = Arc::new(TaskHost::new(root.join("jobs"), assets).unwrap());
+        let mut pending = request("native-image-capacity");
+        pending.kind = Some("image".into());
+        pending.concurrency_limit = Some(1);
+        host.jobs.lock().unwrap().insert(
+            "other".into(),
+            JobControl {
+                cancelled: Arc::new(AtomicBool::new(false)),
+                wake: Arc::new(Notify::new()),
+                credential_ref: pending.credential_ref.clone(),
+            },
+        );
+        let result = tauri::async_runtime::block_on(Arc::clone(&host).submit(pending.clone()));
+        assert!(result.unwrap_err().starts_with("capacity:"));
+        assert!(host.get(&pending.task_id).unwrap().is_none());
         fs::remove_dir_all(root).unwrap();
     }
 
