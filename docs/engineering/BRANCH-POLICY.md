@@ -17,7 +17,7 @@
 
 合并前的最低门禁是 `npm run version:check`、`npm run version:consistency`、`npm run lint`、`npm run typecheck`、相关测试和 `npm run delivery:check -- --base <base-sha> --head <head-sha>`。桌面变更还要从本任务 checkout 通过 GUI 启动器或 `start-kk-studio.bat` 生成当前 EXE，并记录 receipt、源码输入 hash、EXE hash、实际路径和进程；Web 运行态单独记录实际 bundle。旧分支、旧 worktree、旧快捷方式或旧安装包即使“能打开”也不能作为当前候选的证据。
 
-合并后由 CI 从合并候选 SHA 重建并上传带 receipt 的不可变工件；部署或其他环境只消费该 SHA/tag 的工件，并在启动时回读产品版本、commit/tree、文件 hash 和进程路径。没有当前 SHA 绑定的 CI/工件回执时，状态保持 `NOT_VERIFIED`，不能称为“所有环境已更新”。
+合并后先由 quality CI 验证合并候选 SHA；只有从通过门禁的 `main` 提交创建不可变 `vMAJOR.MINOR.PATCH` tag，`windows-release` 才会重建并上传绑定该 SHA 的安装器与 receipt 工件。部署或其他环境只消费该 SHA/tag 的工件，并在启动时回读产品版本、commit/tree、文件 hash 和进程路径。没有当前 SHA 绑定的 CI/工件回执时，状态保持 `NOT_VERIFIED`，不能称为“所有环境已更新”。
 
 现有旧分支名可保留；禁止为命名整齐批量重命名/删除。没有删除授权时不清理分支；用户明确“验收并清理已合并分支”后，可将核对过的具体短期分支列入待清理清单，无需反复确认授权，但稳定线和 tag 不在清理范围。当前 pre-push 默认拒绝所有远端 ref 删除，仓库尚无已审阅的远端清理流程；有授权也不能绕过 hook 执行删除。先完成单独的清理方案、核对和门禁，再按方案处理。
 

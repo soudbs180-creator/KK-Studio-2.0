@@ -47,3 +47,5 @@ npm run version:consistency
 源码合入后，构建机必须从目标 commit 的干净 checkout 执行 `npm ci`、版本门禁和对应平台构建。桌面启动器再用源码内容指纹、依赖锁定结果、EXE SHA-256 和 build receipt 校验；时间戳只能用于诊断，不能作为“最新”唯一依据。收据缺失、输入 hash 不一致、缓存/依赖漂移或构建失败时拒绝启动旧 EXE。发布物的 receipt 必须记录 commit、tree、平台版本和文件 hash；其他环境只接受带 receipt 的不可变 tag/commit 工件，不能从旧快捷方式、旧 worktree 或“文件修改时间较新”推断已更新。
 
 推荐的跨环境更新顺序是：`fetch` → 核对目标 commit/tag 与分支 → 干净 checkout → `npm ci` → 运行两个版本门禁 → 构建 → 生成并校验 receipt → 发布不可变工件 → 目标环境安装后回读版本、commit/hash 和实际进程路径。任一步失败都保留旧版本并报告失败原因，不能静默回退到旧包继续运行。
+
+仓库的 `.github/workflows/windows-release.yml` 只响应不可变 `vMAJOR.MINOR.PATCH` tag。它先确认 tag 与 `config/platform-versions.json` 的 Desktop 版本相等，再从该 tag 的干净 checkout 安装锁定依赖、构建 NSIS 安装器、生成 receipt，并把 `installer-<commit>` 上传为带 SHA 的 CI 工件。工件生成后可用 `npm run client:installer:verify` 校验安装器；安装到目标环境后再用 `npm run client:installed:verify` 校验已安装文件。workflow 尚未在本轮远端 tag 上执行，不能把本地检查当成发布成功。

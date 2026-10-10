@@ -6,12 +6,15 @@
 npm ci
 npm run client:installer
 npm run client:installer:receipt -- "src-tauri/target/release/bundle/nsis/KK Studio_<desktop-version>_x64-setup.exe" "releases/installer-<commit>"
+npm run client:installer:verify -- "releases/installer-<commit>/installer-receipt.json"
 npm run client:installer:test -- "releases/installer-<commit>/installer-receipt.json"
 # 在目标环境安装后，按收据校验安装器和已安装文件的内容身份
 npm run client:installed:verify -- "releases/installer-<commit>/installer-receipt.json" "<install-directory>"
 ```
 
 文件名版本取自 config/platform-versions.json；不要以本文示例硬编码未来版本。收据必须在 source clean 后创建，输出目录必须不存在。收据校验安装器、EXE、全部随包 Agent 文件，并记录 commit、source tree、构建输入哈希；损坏字节不能继续验收。收据/hash 可被改写，不能代替可信分发和 Authenticode 签名。
+
+正式 Windows 工件只从通过门禁的 `main` 提交创建不可变 `vMAJOR.MINOR.PATCH` tag；`.github/workflows/windows-release.yml` 会在 Windows runner 上从该 tag 重建、生成并校验 receipt，再上传以 commit SHA 命名的 CI 工件。没有对应 tag、receipt 和 SHA 的安装包不能作为其他环境的当前版本。
 
 安装器以当前用户安装，含 Agent 运行时及 WebView2 离线安装器，普通用户无需 Node/Rust。配置依据 [Tauri 官方 Windows 文档](https://v2.tauri.app/distribute/windows-installer/)；不改变原应用/用户数据身份。项目保存在 APPDATA/kk-studio，安装路径移动不会迁移项目。
 
