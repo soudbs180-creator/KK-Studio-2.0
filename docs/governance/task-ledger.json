@@ -4056,7 +4056,7 @@
     ],
     "dependencies": [],
     "owner": "root",
-    "branch": "unallocated",
+    "branch": "fix/TASK-VERIFY-ORIGIN-003-main-7ebf143",
     "worktree": "unallocated",
     "affectedModules": [
       "playwright.config.ts",
@@ -4065,13 +4065,17 @@
       "tests/browser/local-service-connection.spec.ts",
       "tests/browser/local-service-migration.spec.ts"
     ],
-    "status": "TODO",
+    "status": "PARTIAL",
     "priority": "P2",
     "evidence": [
-      "docs/changes/2026-10-09-windows-entry-diagnostics/verification.md"
+      "docs/changes/2026-10-10-verify-origin-003/intent.md",
+      "docs/changes/2026-10-10-verify-origin-003/spec.md",
+      "docs/changes/2026-10-10-verify-origin-003/plan.md",
+      "docs/changes/2026-10-10-verify-origin-003/verification.md",
+      "docs/changes/2026-10-10-verify-origin-003/review.md"
     ],
-    "verification": "本次1431反例为运行配置不满足既有验收条件，7处明确port!=1423、3处实际来源白名单不认可。当前固定默认1423已447/447零retry，后续配置一致性未实施；不影响生产默认端口行为。",
-    "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-09"
+    "verification": "Partial candidate evidence only: real KK_TEST_PORT matrix rejects 1431 and 1421 before Playwright starts and resolves unset/1423 to http://127.0.0.1:1423; Vite build and TypeScript typecheck passed; four target browser specs passed 16/16 with retries=0. Full browser suite/npm verify, hosted CI result, and independent review remain pending.",
+    "verificationResult": "PARTIAL",
+    "updated": "2026-10-10"
   }
 ]

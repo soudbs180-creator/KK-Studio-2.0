@@ -1,5 +1,13 @@
 import { defineConfig } from "@playwright/test";
-const port = process.env.KK_TEST_PORT ?? "1423";
+
+if (
+  process.env.KK_TEST_PORT !== undefined &&
+  process.env.KK_TEST_PORT !== "1423"
+)
+  throw new Error(
+    "Production browser verification requires fixed port 1423; unsupported KK_TEST_PORT rejected before starting tests.",
+  );
+const port = "1423";
 const baseURL = `http://127.0.0.1:${port}`;
 export default defineConfig({
   testDir: "./tests/browser",

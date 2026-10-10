@@ -120,7 +120,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | TODO | T5 | root |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | TODO | T5 | root |
 | TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | TASK-GOV-001 | root |
-| TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | TODO | none | root |
+| TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | PARTIAL | none | root |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -1499,9 +1499,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 配置和实际验收端口契约一致，不运行不支持的端口后误判产品
 - Scope: playwright KK_TEST_PORT与7处固定1423断言、3处默认来源契约
 - Acceptance: 保留105 preview1431真实437PASS/10FAIL反例及默认1423零重试447PASS原件; 根据固定端口规范提供明确早期配置拒绝或合法测试fixture契约，不能弱化产品端口断言和来源白名单; 相关回归与精确提交独立审查通过
-- Branch: `unallocated`
+- Branch: `fix/TASK-VERIFY-ORIGIN-003-main-7ebf143`
 - Worktree: `unallocated`
 - Modules: playwright.config.ts, tests/browser/image-selection-actions.spec.ts, tests/browser/ui-page-rules.spec.ts, tests/browser/local-service-connection.spec.ts, tests/browser/local-service-migration.spec.ts
-- Verification: NOT_VERIFIED — 本次1431反例为运行配置不满足既有验收条件，7处明确port!=1423、3处实际来源白名单不认可。当前固定默认1423已447/447零retry，后续配置一致性未实施；不影响生产默认端口行为。
-- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md)
-- Updated: 2026-10-09
+- Verification: PARTIAL — Partial candidate evidence only: real KK_TEST_PORT matrix rejects 1431 and 1421 before Playwright starts and resolves unset/1423 to http://127.0.0.1:1423; Vite build and TypeScript typecheck passed; four target browser specs passed 16/16 with retries=0. Full browser suite/npm verify, hosted CI result, and independent review remain pending.
+- Evidence: [docs/changes/2026-10-10-verify-origin-003/intent.md](../../docs/changes/2026-10-10-verify-origin-003/intent.md), [docs/changes/2026-10-10-verify-origin-003/spec.md](../../docs/changes/2026-10-10-verify-origin-003/spec.md), [docs/changes/2026-10-10-verify-origin-003/plan.md](../../docs/changes/2026-10-10-verify-origin-003/plan.md), [docs/changes/2026-10-10-verify-origin-003/verification.md](../../docs/changes/2026-10-10-verify-origin-003/verification.md), [docs/changes/2026-10-10-verify-origin-003/review.md](../../docs/changes/2026-10-10-verify-origin-003/review.md)
+- Updated: 2026-10-10
