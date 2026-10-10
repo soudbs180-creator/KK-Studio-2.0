@@ -4050,22 +4050,23 @@
   ],
   "dependencies": [],
   "owner": "root",
-  "branch": "docs/TASK-P0-EVIDENCE-REFS-20261009",
-  "worktree": "unallocated",
+  "branch": "fix/TASK-FIX-PUSH-GUARD-SPACES-001-paths",
+  "worktree": "/workspace/scratch/f250cb3946cc/KK-Studio-push-guard",
   "affectedModules": [
    ".git/hooks/pre-push",
    "scripts/governance/push-policy.mjs",
    "tests/unit"
   ],
-  "status": "TODO",
+  "status": "PARTIAL",
   "priority": "P0",
   "evidence": [
    "docs/changes/2026-10-09-p0-evidence-refs/verification.md",
-   "docs/changes/2026-10-09-p0-registry/verification.md"
+   "docs/changes/2026-10-09-p0-registry/verification.md",
+   "docs/changes/2026-10-10-push-guard-spaces/verification.md"
   ],
-  "verification": "NOT VERIFIED：钩子仍为 v1 旧版（hook_dir POSIX 路径直接 exec node），空格路径缺陷未修复。",
-  "verificationResult": "NOT_VERIFIED",
-  "updated": "2026-10-09"
+  "verification": "v2路径转换与官方v1精确备份升级已实现；Linux真实hook27/27、root824 PASS/0 FAIL/6原有skip。完整verify因tsx IPC EPERM未通过，浏览器缺少Edge；Windows Hosted、独立审查和最终主线承接尚待完成。",
+  "verificationResult": "PARTIAL",
+  "updated": "2026-10-10"
  },
  {
   "id": "TASK-PERF-CANVAS-1000-001",

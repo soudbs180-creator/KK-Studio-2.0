@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-10 Git pre-push 路径兼容候选
+
+TASK-FIX-PUSH-GUARD-SPACES-001 在依赖PR #47的独立分支实现v2原生路径转换、可读失败及精确官方v1备份升级，策略规则保持原文件。Linux hook27/27、root824 PASS/0 FAIL/6原有skip、lint/typecheck/format/build通过；完整verify受tsx IPC EPERM及缺少Edge限制，不标全绿。Windows Hosted、独立审查及正式合并待回执，任务PARTIAL。[验证](changes/2026-10-10-push-guard-spaces/verification.md)。
+
 ## 2026-10-09 P0 evidence refs 修复
 
 三个 P0 TODO 的 evidence 已绑定到当前树中的登记验证与 FEAT-038/039 卡片；任务仍 TODO/NOT_VERIFIED，Hosted 门禁待本 PR 验证。

@@ -1,5 +1,18 @@
 #!/bin/sh
-# KK Studio guard v1; installed together with its reviewed policy by the installer.
+# KK Studio guard v2; installed together with its reviewed policy by the installer.
 # Copies in the common Git hooks directory survive task worktree removal.
-hook_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd) || exit 1
-exec node "$hook_dir/kk-studio-push-policy.mjs" "$@"
+deny() {
+  printf '%s\n' "[KK Studio push guard] $1; push denied." >&2
+  exit 1
+}
+hook_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd) || deny "Cannot resolve hook path"
+policy_path="$hook_dir/kk-studio-push-policy.mjs"
+[ -f "$policy_path" ] && [ -r "$policy_path" ] || deny "Installed policy is missing or unreadable"
+command -v node >/dev/null 2>&1 || deny "Node is unavailable on PATH"
+# Windows Node does not understand /c/... paths when MSYS conversion is disabled.
+# Convert explicitly, keeping the complete path as one argument and cwd intact.
+if command -v cygpath >/dev/null 2>&1; then
+  policy_path=$(cygpath -w -- "$policy_path") || deny "Cannot convert policy path"
+  [ -n "$policy_path" ] || deny "Converted policy path is empty"
+fi
+exec node "$policy_path" "$@"

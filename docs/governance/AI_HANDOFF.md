@@ -1,5 +1,9 @@
 # AI handoff
 
+## 2026-10-10 pre-push路径修复
+
+本任务独立分支 `fix/TASK-FIX-PUSH-GUARD-SPACES-001-paths`，base PR #47/0f663222，main核对7ebf143b。升级命令 `npm run git:guards -- --upgrade-reviewed-v1` 只接受完整官方v1并保留备份。Linux27/27；Windows/完整Hosted/精确独立审查/合并仍待回执，任务PARTIAL。不得覆盖未知hook、绕过保护或改写旧失败。[恢复与验证](../changes/2026-10-10-push-guard-spaces/verification.md)。
+
 ## 2026-10-09 失败任务 source105 本地复验
 
 主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](../changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](../changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。
