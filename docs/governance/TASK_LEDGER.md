@@ -125,6 +125,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | TODO | 未完成 | P1 | none | root | 实现真实 DPAPI SecretProtector（需 Rust 侧或 PowerShell 桥），接入一个真实火山方舟账号取得上游证据后再转 DONE；随后接调度层持久化仓储与 sub2api-client。 |
 | TASK-PROV-BYOK-001 | 用户自有 API 产品化接入 | TODO | 未完成 | P1 | TASK-AI-GATEWAY-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-UI-015 | 画布点状/网状背景缩放插值修正 | DONE | 已完成 | P2 | none | root | 保留当前证据；主线回读完成 |
+| TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | REVIEW | 进行中 | P1 | TASK-LAUNCH-001 | root | 在合并候选 SHA 上回读 hosted CI、发布 receipt，并在第二环境安装后校验版本/commit/hash/进程路径 |
 
 ## TASK-WINDOWS-ENTRY-DIAG-002 — 补齐Windows入口子进程失败诊断
 
@@ -2388,5 +2389,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — domain 插值单测 7/7 PASS；20 万步扫描最大单步 pitch 变化 0.00042px、严格单调；typecheck、lint、governance/features/markdown、format:check 全部通过；npm test 为 926 PASS / 8 SKIP（934 tests）；浏览器回归 455/455 PASS（单 worker），覆盖 50% 隐藏、400% 最大尺寸、连续插值与平铺契约。
 - Evidence: [docs/changes/2026-10-10-canvas-background-zoom/verification.md](../../docs/changes/2026-10-10-canvas-background-zoom/verification.md)
 - Next action: 保留当前证据；主线回读完成
+- Last verified: 2026-10-10
+- Updated: 2026-10-10
+
+## TASK-AGENT-010 — 统一版本一致性与跨环境启动新鲜度
+
+- Goal: 让产品版本源、依赖锁、构建身份和跨环境工件可验证，避免本地最新而其他环境启动旧包
+- Scope: 版本镜像审计、嵌套 lock/Tauri 依赖检查、活动源码硬编码提示、启动器 receipt 规则和分支发布流程
+- Display status: 进行中
+- Priority: P1 — 跨环境启动旧版本会让已合入功能对其他使用者不可见
+- Requirement refs: ledger:TASK-AGENT-010
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: 平台版本源与根/嵌套 package lock 一致性可由命令检测; Tauri 依赖锁定、活动源码产品版本硬编码和运行时版本源纳入审计; 版本检查进入本地 lint 与 Windows quality workflow; 分支/合并/发布规则要求当前 SHA、receipt、文件 hash 和安装后回读; 本地启动继续在源码指纹、依赖、receipt 或构建失败时拒绝旧 EXE
+- Branch: `fix/TASK-AGENT-010-provider-entry`
+- Worktree: `D:/kk-studio/.worktrees/TASK-AGENT-010-provider-entry`
+- Modules: scripts/check-version-consistency.mjs, package.json, .github/workflows/quality.yml, docs/engineering, docs/changes/2026-10-10-version-coherence
+- Verification: PARTIAL — 本地版本门禁、嵌套 lock 漂移测试和启动器 fail-closed 证据通过；远端 CI、发布工件和第二环境安装回读待合并候选 SHA 实际验证。
+- Evidence: [docs/changes/2026-10-10-version-coherence/intent.md](../../docs/changes/2026-10-10-version-coherence/intent.md), [docs/changes/2026-10-10-version-coherence/spec.md](../../docs/changes/2026-10-10-version-coherence/spec.md), [docs/changes/2026-10-10-version-coherence/verification.md](../../docs/changes/2026-10-10-version-coherence/verification.md), [docs/changes/2026-10-10-version-coherence/review.md](../../docs/changes/2026-10-10-version-coherence/review.md)
+- Next action: 在合并候选 SHA 上回读 hosted CI、发布 receipt，并在第二环境安装后校验版本/commit/hash/进程路径
 - Last verified: 2026-10-10
 - Updated: 2026-10-10
