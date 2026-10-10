@@ -70,6 +70,38 @@ export async function verifyInstalledFiles(receipt, installDirectory) {
   return receipt.installedFiles.length;
 }
 
+const GIT_OBJECT_ID = /^[a-f0-9]{40,64}$/;
+
+/**
+ * Verify an installed tree against a published installer receipt. The receipt
+ * is treated as untrusted input: every path is contained and every file is
+ * checked by size and SHA-256 before the caller can use the installation.
+ */
+export async function verifyInstalledRelease({
+  receipt,
+  receiptDirectory,
+  installDirectory,
+}) {
+  if (!receipt || receipt.schemaVersion !== 1) {
+    throw new Error("Unsupported installer receipt schema");
+  }
+  if (
+    !GIT_OBJECT_ID.test(receipt.commit ?? "") ||
+    !GIT_OBJECT_ID.test(receipt.sourceTree ?? "")
+  ) {
+    throw new Error("Installer receipt is missing source provenance");
+  }
+  const installer = await verifyInstaller(receipt, receiptDirectory);
+  const installedFiles = await verifyInstalledFiles(receipt, installDirectory);
+  return {
+    commit: receipt.commit,
+    sourceTree: receipt.sourceTree,
+    installer,
+    installedFiles,
+    versions: receipt.versions ?? null,
+  };
+}
+
 export async function assertInstallerFresh(installer, inputs) {
   const installerTime = (await fs.stat(installer)).mtimeMs;
   for (const input of inputs) {
@@ -97,7 +129,8 @@ export function nsisExecutableIdentity(bytes) {
 }
 
 export async function recordInstallerInputs(root) {
-  if (inspectDesktopRelease(root).needsBuild)
+  const releaseInspection = inspectDesktopRelease(root);
+  if (releaseInspection.needsBuild)
     throw new Error("Desktop build is stale");
   const release = path.join(root, "src-tauri/target/release");
   const exe = path.join(release, "kk-studio.exe");
@@ -107,6 +140,12 @@ export async function recordInstallerInputs(root) {
       cwd: root,
       encoding: "utf8",
     }).trim(),
+    sourceTree: execFileSync("git", ["rev-parse", "HEAD^{tree}"], {
+      cwd: root,
+      encoding: "utf8",
+    }).trim(),
+    releaseInputSha256: releaseInspection.inputSha256,
+    releaseExecutableSha256: releaseInspection.executableSha256,
     executable: await fileIdentity(exe),
     bundledExecutable: nsisExecutableIdentity(await fs.readFile(exe)),
     installerConfig: await fileIdentity(
@@ -136,7 +175,8 @@ export async function writeInstallerReceipt({ root, installer, output }) {
   const versions = JSON.parse(
     await fs.readFile(path.join(root, "config/platform-versions.json"), "utf8"),
   );
-  if (inspectDesktopRelease(root).needsBuild) {
+  const releaseInspection = inspectDesktopRelease(root);
+  if (releaseInspection.needsBuild) {
     throw new Error(
       "Desktop executable is missing or older than source inputs",
     );
@@ -161,6 +201,12 @@ export async function writeInstallerReceipt({ root, installer, output }) {
   const inputSnapshot = JSON.parse(
     await fs.readFile(inputSnapshotPath, "utf8"),
   );
+  if (
+    inputSnapshot.releaseInputSha256 !== releaseInspection.inputSha256 ||
+    inputSnapshot.releaseExecutableSha256 !== releaseInspection.executableSha256
+  ) {
+    throw new Error("Installer inputs do not match the current desktop release");
+  }
   await checkIdentity(exe, inputSnapshot.executable);
   await checkIdentity(
     path.join(root, "src-tauri/tauri.installer.conf.json"),
