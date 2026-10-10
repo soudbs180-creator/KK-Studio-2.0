@@ -98,7 +98,9 @@ for (const [name, segments] of [
   [
     "long path over 260 characters",
     Array.from(
-      { length: 5 },
+      // Windows keeps the process cwd below MAX_PATH so Node can spawn Git;
+      // Unix runners need two more segments because their temp root is shorter.
+      { length: process.platform === "win32" ? 5 : 7 },
       (_, i) => `nested directory ${i} with spaces long`,
     ),
   ],
