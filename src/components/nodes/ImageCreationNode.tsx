@@ -135,11 +135,12 @@ export default function ImageCreationNode({
             <button
               type="button"
               className="image-card-like"
-              aria-label={liked ? `取消喜欢${item.title}` : `喜欢${item.title}`}
+              aria-label={liked ? "取消喜欢当前卡片" : "喜欢当前卡片"}
+              title={liked ? `取消喜欢${item.title}` : `喜欢${item.title}`}
               aria-pressed={liked}
               onClick={onToggleLike}
             >
-              <UiIcon name="favorite" size={18} />
+              <UiIcon name="favorite" size={20} />
             </button>
           )}
           {!image && (
@@ -235,7 +236,6 @@ export default function ImageCreationNode({
           anchor={preview}
           selected={selected}
           onPreview={openPreview}
-          liked={liked}
           references={incomingReferences}
         />
       )}

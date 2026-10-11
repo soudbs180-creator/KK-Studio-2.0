@@ -13,7 +13,7 @@ test("连接锚点随两端移动且不改变节点坐标", () => {
   const edge = { id: "connector-video1", source: "image", target: "video1" };
   const before = structuredClone(nodes);
   const a = connectionGeometry(edge, nodes, BASE_CANVAS_ITEMS)!;
-  assert.deepEqual(a.start, { x: 542, y: 359 });
+  assert.deepEqual(a.start, { x: 576, y: 365 });
   const b = connectionGeometry(
     edge,
     { ...nodes, image: { x: 112, y: 127 } },

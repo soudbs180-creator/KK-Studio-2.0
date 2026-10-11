@@ -12,6 +12,35 @@ async function addImageNode(page: Page): Promise<Locator> {
   return node;
 }
 
+test("空态图片卡片的标题在左上角且上传按钮居中", async ({ page }) => {
+  const node = await addImageNode(page);
+  const card = node.locator(".image-creation");
+  const preview = node.locator(".image-preview");
+  const caption = node.locator(".image-caption");
+  const upload = node.getByRole("button", { name: "上传图片", exact: true });
+  const [cardBox, previewBox, captionBox, uploadBox] = await Promise.all([
+    card.boundingBox(),
+    preview.boundingBox(),
+    caption.boundingBox(),
+    upload.boundingBox(),
+  ]);
+  expect(cardBox).not.toBeNull();
+  expect(previewBox).not.toBeNull();
+  expect(captionBox).not.toBeNull();
+  expect(uploadBox).not.toBeNull();
+  expect(captionBox!.x).toBeGreaterThanOrEqual(cardBox!.x);
+  expect(captionBox!.x).toBeLessThanOrEqual(previewBox!.x + 24);
+  expect(captionBox!.y).toBeLessThan(previewBox!.y);
+  await expect(preview).toHaveCSS("border-radius", "20px");
+  expect(
+    Math.abs(
+      uploadBox!.x +
+        uploadBox!.width / 2 -
+        (previewBox!.x + previewBox!.width / 2),
+    ),
+  ).toBeLessThanOrEqual(1);
+});
+
 async function uploadMainImage(node: Locator): Promise<void> {
   await node.locator('input[type="file"]').first().setInputFiles(imageFixture);
   await expect(node.locator(".uploaded-image")).toBeVisible();

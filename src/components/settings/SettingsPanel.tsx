@@ -151,8 +151,8 @@ export default function SettingsPanel({
                     className="settings-nav-icon"
                     src={`/design/figma/settings-nav-${item.id === "skill" || item.id === "extensions" ? "mcp" : item.id}.svg`}
                     alt=""
-                    width="22"
-                    height="22"
+                    width="20"
+                    height="20"
                   />
                   <span>{item.label}</span>
                 </button>

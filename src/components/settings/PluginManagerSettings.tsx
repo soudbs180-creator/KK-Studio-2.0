@@ -1,6 +1,7 @@
 import { useState, useSyncExternalStore } from "react";
 import { pluginLoader } from "../../features/plugins/pluginLoader";
 import { pluginStore } from "../../features/plugins/pluginStore";
+import { confirmAction } from "../../runtime/confirmAction";
 import "./plugin-manager.css";
 
 /** 设置中心 · 插件管理：安装（URL）、更新、卸载、启停。 */
@@ -69,6 +70,9 @@ export default function PluginManagerSettings({
   }
 
   async function uninstall(pluginId: string): Promise<void> {
+    const record = state.plugins.find((item) => item.id === pluginId);
+    if (!record || !(await confirmAction(`确认卸载插件 ${record.name} 吗？`)))
+      return;
     pluginLoader.uninstallPlugin(pluginId);
     onFeedback("插件已卸载");
   }
