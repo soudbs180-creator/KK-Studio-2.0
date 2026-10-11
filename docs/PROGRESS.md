@@ -1,3 +1,14 @@
+## 2026-10-10 TASK-FIX-PUSH-GUARD-SPACES-001 Windows long-path guard replay (REVIEW / NOT VERIFIED)
+
+- Replayed the scoped PR49 fix onto current origin/main 7736c99bd5e900e7c5cd8a36663aadcb45326143; final pushed candidate is 3a7467825b85f66a7f4e409f8296e16ca2249516.
+- Root cause and fix: keep the Windows process cwd below MAX_PATH while the installed policy path remains over 260; normalize cygpath \?\ drive and UNC prefixes before invoking Node.
+- Focused Windows regression is 27 tests, 22 pass, 0 fail, 5 existing platform skips. Hosted git-guards run 38075547186 has Windows and Ubuntu success; quality run 38075547255 has delivery/deploy-linux success and verify pending.
+- Local npm verify reaches 830 tests with two unrelated desktop Agent environment failures; independent npm run build succeeds.
+
+## 2026-10-10 TASK-VERIFY-ORIGIN-003 governance closeout (PR #51)
+
+PR #51 current-main governance evidence remains retained below.
+
 # 当前进度
 
 ## 2026-10-11 MiniMax 对照的首页、画布与会话助手重做（本地候选）
