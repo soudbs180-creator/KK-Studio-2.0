@@ -20,4 +20,8 @@
 
 逐项机器清单：[docs-history-audit.json](docs-history-audit.json)。检查脚本：[check-docs-history.mjs](check-docs-history.mjs)。
 
-当前结论是本地 `PASS_WITH_DECLARED_EVIDENCE_LIMITATIONS`。独立 reviewer 已完成当前 dirty 工作树预检，结论为 `PASS WITH FOLLOW-UPS`；账本已同步。提交后的 exact-SHA 正式复审和历史日志恢复仍未完成，不能把 TASK-DOCS-HISTORY-001 标为 DONE。
+当前结论是本地 `PASS_WITH_DECLARED_EVIDENCE_LIMITATIONS`。独立 reviewer 已完成当前 dirty 工作树预检，结论为 `PASS WITH FOLLOW-UPS`。
+
+## Exact-SHA 审查补录
+
+文档限定提交 `dc53317b36cb604b77db10fdebc56666c662e215` 已由 `docs_history_exact_review` 以基线 `5199557752f14438407b966e07fc8a965bdb9671` 独立复核，结论为 `PASS WITH FOLLOW-UPS`。该收据确认 29 个 tracked 链接修复、8 个原始日志保持未验证、历史正文 exact-compare、Markdown 115/0 与治理 120/0；收据见 [exact-independent-review.md](exact-independent-review.md)。此前 `full-check-receipt.json` 仍是提交前 dirty 快照，只保留为历史证据。

@@ -13,4 +13,8 @@
 
 ## 独立只读复核
 
-2026-10-11 由独立 reviewer 在当前共享 dirty 工作树复核，未发现 P0/P1/P2 代码或安全缺陷；文档历史审计、链接修复边界和不补造 8 条日志的结论可接受。正式审查结论为 `PASS WITH FOLLOW-UPS`：当前 dirty 工作树只能作为预检，需在提交后绑定 exact SHA 重新复核；8 条原始日志继续保持 `NOT_VERIFIED`，因此任务仍为 `PARTIAL`。
+2026-10-11 由独立 reviewer 在当前共享 dirty 工作树复核，未发现 P0/P1/P2 代码或安全缺陷；文档历史审计、链接修复边界和不补造 8 条日志的结论可接受。正式审查结论为 `PASS WITH FOLLOW-UPS`。
+
+## Exact-SHA 独立审查补录
+
+`docs_history_exact_review` 在基线 `5199557752f14438407b966e07fc8a965bdb9671` 与文档限定提交 `dc53317b36cb604b77db10fdebc56666c662e215` 上复核了 16 个文件。结论为 `PASS WITH FOLLOW-UPS`，无 P0-P2 发现；37/37 分类、29 个 tracked 修复、8 个无 Git 不可变来源的原始日志、Markdown 115/0、治理 120/0 和历史正文 exact-compare 均通过。完整收据见 [exact-independent-review.md](exact-independent-review.md)。
