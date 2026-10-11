@@ -124,7 +124,7 @@ export default function ImageCreationNode({
       className="image-creation"
       style={
         {
-          "--media-height": `${520 / aspectRatioForDimensions(item.mediaWidth ?? 1, item.mediaHeight ?? 1)}px`,
+          "--media-height": `${400 / aspectRatioForDimensions(item.mediaWidth ?? 1, item.mediaHeight ?? 1)}px`,
         } as CSSProperties
       }
     >
@@ -145,10 +145,11 @@ export default function ImageCreationNode({
           <button
             type="button"
             className="upload-image"
+            aria-label="上传图片"
             onClick={() => file.current?.click()}
           >
             <Upload size={16} />
-            添加图片
+            上传图片
           </button>
         </div>
       </div>

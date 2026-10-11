@@ -290,23 +290,26 @@
 .image-node-header {
   position: absolute;
   top: 0;
-  left: 50px;
+  left: 60px;
   right: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   min-height: 36px;
   gap: var(--kk-space-3);
+  z-index: var(--kk-z-sticky);
 }
 
 .image-caption {
-  position: static;
+  position: absolute;
+  top: 0;
+  right: 160px;
   min-width: 0;
   max-width: 360px;
   color: var(--text-primary);
   font-size: var(--kk-font-body);
   font-weight: var(--kk-font-weight-body-strong);
-  text-align: left;
+  text-align: right;
 }
 
 .image-node-header-actions {
@@ -332,6 +335,9 @@
 .image-card-like {
   width: var(--kk-control-h-lg);
   padding: 0;
+  position: absolute;
+  top: 64px;
+  left: 360px;
 }
 
 .image-card-like:hover,
@@ -342,7 +348,9 @@
 }
 
 .upload-image {
-  position: static;
+  position: absolute;
+  top: -68px;
+  right: 160px;
   width: auto;
   padding-inline: var(--kk-space-4);
   gap: var(--kk-space-2);
@@ -350,16 +358,16 @@
 }
 
 .image-preview {
-  left: 50px;
+  left: 60px;
   top: 52px;
-  width: 520px;
-  height: var(--media-height, 520px);
+  width: 400px;
+  height: var(--media-height, 400px);
   border-radius: var(--kk-radius-card);
 }
 
 .creation-composer {
-  left: 50px;
-  top: calc(52px + var(--media-height, 520px) + var(--kk-space-4));
+  left: 0;
+  top: calc(52px + var(--media-height, 400px) + var(--kk-space-4));
   width: 520px;
   min-height: 188px;
   height: auto;
@@ -539,6 +547,12 @@
   min-height: 340px;
   padding: var(--kk-space-4);
   border-radius: var(--kk-radius-panel);
+  position: absolute;
+  z-index: var(--kk-z-popover);
+}
+
+.canvas-hud:has(.task-panel) {
+  z-index: var(--kk-z-popover);
 }
 
 @media (max-width: 767px) {

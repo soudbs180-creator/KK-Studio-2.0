@@ -13,7 +13,7 @@ test("连接锚点随两端移动且不改变节点坐标", () => {
   const edge = { id: "connector-video1", source: "image", target: "video1" };
   const before = structuredClone(nodes);
   const a = connectionGeometry(edge, nodes, BASE_CANVAS_ITEMS)!;
-  assert.deepEqual(a.start, { x: 652, y: 419 });
+  assert.deepEqual(a.start, { x: 542, y: 359 });
   const b = connectionGeometry(
     edge,
     { ...nodes, image: { x: 112, y: 127 } },
@@ -92,6 +92,6 @@ test("媒体自然比例进入画布可见边界", () => {
       source: "demo" as const,
     },
   };
-  assert.equal(cardVisualBounds(source).height, 292.5);
+  assert.equal(cardVisualBounds(source).height, 225);
   assert.ok(Math.abs(cardVisualBounds(result).height - 227.75) < 0.001);
 });

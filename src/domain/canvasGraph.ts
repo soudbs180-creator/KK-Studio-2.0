@@ -57,11 +57,11 @@ export function cardVisualBounds(item: CanvasCollectionItem): {
      endpoints land on the media surface rather than its controls. */
   if (item.kind === "image")
     return {
-      x: 50,
+      x: 60,
       y: 52,
-      width: 520,
+      width: 400,
       height:
-        520 /
+        400 /
         aspectRatioForDimensions(item.mediaWidth ?? 1, item.mediaHeight ?? 1),
     };
   /* Both Figma video modules use a 16px label slot before the 208px body. */
