@@ -1,0 +1,78 @@
+{
+  "observedAt": "2026-10-11T08:24:55Z",
+  "repository": "D:/kk-studio/KK-Studio-2.0",
+  "worktree": "D:/kk-studio/KK-Studio-2.0",
+  "headSha": "5199557752f14438407b966e07fc8a965bdb9671",
+  "originMain": "7736c99bd5e900e7c5cd8a36663aadcb45326143",
+  "workingTree": {
+    "dirty": true,
+    "dirtyPathCountObserved": 101,
+    "port": null,
+    "commitOrPush": "not performed"
+  },
+  "postCheckSnapshot": {
+    "observedAt": "2026-10-11T08:38:40Z",
+    "dirtyPathCount": 106,
+    "headSha": "5199557752f14438407b966e07fc8a965bdb9671",
+    "originMain": "7736c99bd5e900e7c5cd8a36663aadcb45326143"
+  },
+  "environment": {
+    "node": "v24.19.0",
+    "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+    "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)"
+  },
+  "commands": [
+    {
+      "command": "node --test tests/unit/taskCostReceipt.test.ts tests/unit/taskState.test.ts tests/unit/creation.test.ts",
+      "exitCode": 0,
+      "tests": 30,
+      "passed": 30,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "node --test tests/unit/*.test.ts tests/deploy/*.test.mjs",
+      "exitCode": 0,
+      "tests": 966,
+      "passed": 957,
+      "failed": 0,
+      "skipped": 9
+    },
+    {
+      "command": "node_modules/.bin/tsc.cmd --noEmit",
+      "exitCode": 0
+    },
+    {
+      "command": "node_modules/.bin/eslint.cmd src tests scripts *.config.ts *.config.mjs --max-warnings 0",
+      "exitCode": 0
+    },
+    {
+      "command": "node node_modules/vite/bin/vite.js build",
+      "exitCode": 0
+    },
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml project_package -- --nocapture",
+      "exitCode": 0,
+      "tests": 22,
+      "passed": 22,
+      "failed": 0,
+      "warnings": "existing dead_code warnings"
+    },
+    {
+      "command": "cargo fmt --manifest-path src-tauri/Cargo.toml -- --check",
+      "exitCode": 0
+    },
+    {
+      "command": "node docs/changes/2026-10-11-taskstate-docs-closeout/check-docs-history.mjs --write",
+      "exitCode": 0,
+      "classified": 37,
+      "trackedLinksRepaired": 29,
+      "originalLogsNotVerified": 8,
+      "unexpectedFailures": 0
+    }
+  ],
+  "limitations": [
+    "shared dirty worktree is a pre-review snapshot, not a submitted exact-SHA review target",
+    "real provider billing receipt, platform runtime, hosted checks, release, and user acceptance remain NOT_VERIFIED"
+  ]
+}

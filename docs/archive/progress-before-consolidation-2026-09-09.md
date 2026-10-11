@@ -6,20 +6,20 @@
 - 开始创作入口固定回到默认落地页；点击已建立项目才进入无限画布，项目区新增 `…` 显示/排序菜单与 `+` 新建文件夹入口，支持显示全部/仅未分组及手动、最近打开、优先级排序（优先级入口说明需输入和未读任务优先）。项目库移除标记的装饰串，补齐新建文件夹/上传文件资源卡；Skill 卡片统一悬浮高亮和操作层。
 - 连线命中层收窄，取消粗白焦点框；连线保持原色和 2px 宽度，仅沿路径显示 3 个慢速带拖影粒子。鼠标靠近中点出现 30px 白色剪刀圆钮，悬浮变红并显示「剪开连线」胶囊。卡片选中高亮合并为单层。
 - 账号弹层的切换/退出保留可读默认框并增强悬浮高亮；版本「检测」可进入软件更新，更新页按参考图提供版本就绪、重启、更新详情和自动安装状态卡；账号、网络、记忆等设置补齐截图结构并保持未接入能力明确。
-- 验证：`tsc --noEmit`、Vite 生产构建、`scripts/check-ui-standards.mjs`（74 个文件、0 违规）通过；完整 Edge 回归 91/91 通过。证据见 [`ui-geometry-1115.png`](evidence/release-2026-09-09/ui-geometry-1115.png) 与 [`ui-geometry-1115-closed.png`](evidence/release-2026-09-09/ui-geometry-1115-closed.png)。
+- 验证：`tsc --noEmit`、Vite 生产构建、`scripts/check-ui-standards.mjs`（74 个文件、0 违规）通过；完整 Edge 回归 91/91 通过。证据见 [`ui-geometry-1115.png`](../evidence/release-2026-09-09/ui-geometry-1115.png) 与 [`ui-geometry-1115-closed.png`](../evidence/release-2026-09-09/ui-geometry-1115-closed.png)。
 
 ## 2026-09-09 红框区域尺寸令牌二次收口
 
 - **本单元Prototype，整体Repairing**。从丢失会话中恢复“红框区域的文字、图标、框高和距离需要统一且可复用”的要求，并重新核对 Figma 导航节点 `100:16335`。新增侧栏 22px 图形槽、导航 10px 图形槽、导航条 26px 高度、工具栏 40/50px 高度等共享令牌；侧栏主导航、项目操作、画布导航、画布工具、会话标题与输入区均消费令牌，不再让通用选择器把加号图标压缩到 16px。
 - 会话标题的记录/收起图形统一为 20px，输入区加号与发送图形为 20px，模型/Skill/插件/语音图形为 16px；所有命中按钮继续保持 30px。右上角仍为缩放 63px、功能组 164px、组间 8px，窄屏展开会话入口固定在导航最右侧，打开后收起按钮回到会话标题行并保持同一 30px 控件尺寸。
 - 输入区改为始终单行，模型、Skill、插件、模式、语音和发送控件共享 4px 间距；自动/询问合并为一个 46px 模式按钮，菜单在按钮上方展开，菜单外点击和 Escape 可关闭。缩放菜单放大到可读尺寸，任务列表和底部工具菜单统一 12px 文字与 30px 级别的命中区域。
-- 验证：`node node_modules/typescript/bin/tsc --noEmit`、`node scripts/check-ui-standards.mjs`（73 个文件、0 违规）、`composer-fidelity.spec.ts`（3/3）、`canvas-navigation.spec.ts`（7/7）、`canvas-actions.spec.ts` 与 `ui-motion.spec.ts`（15/15）、`demo-results.spec.ts`（2/2）通过；证据见 [`ui-geometry-1115.png`](evidence/release-2026-09-09/ui-geometry-1115.png)。
+- 验证：`node node_modules/typescript/bin/tsc --noEmit`、`node scripts/check-ui-standards.mjs`（73 个文件、0 违规）、`composer-fidelity.spec.ts`（3/3）、`canvas-navigation.spec.ts`（7/7）、`canvas-actions.spec.ts` 与 `ui-motion.spec.ts`（15/15）、`demo-results.spec.ts`（2/2）通过；证据见 [`ui-geometry-1115.png`](../evidence/release-2026-09-09/ui-geometry-1115.png)。
 
 ## 2026-09-09 红框区域尺寸层级与聊天/画布布局复测
 
 - **本单元Prototype，整体Repairing**。针对最新批注统一红框区域的尺寸层级和复用入口：新增 `ui-tokens.css` 的文字（11/12/14/16px）、图标（14/16/20px）、控件高度（30/40px）和间距（4/8/12px）令牌；侧栏品牌、主导航、项目行、会话标题和输入区改为消费同一层级，避免页面局部字号漂移。
 - 会话面板在窄屏打开时由 `useCanvasViewport` 动态扣除实际面板宽度，面板宽度限制为 360px；画布底部工具栏按剩余可用宽度居中，实测 1071×698 时工具栏右边界 594.5、会话面板左边界 676，无交叠。输入区按钮在可用宽度不足时换行，模型/Skill/插件保持 30px 高度和可读字号，不再溢出面板。
-- 右上角缩放组、导航组和会话收起开关统一放在同一视觉基线，组间固定 8px；会话收起按钮保留 `收起对话` 语义和原 DOM 入口，视觉位置锚定到导航组右侧，窗口尺寸变化不缩放、不漂移。1440×900 和 1071×698 的矩形与截图证据见 [`ui-geometry.json`](evidence/release-2026-09-09/ui-geometry.json)、[`ui-geometry-1071.png`](evidence/release-2026-09-09/ui-geometry-1071.png)、[`ui-geometry-1440.png`](evidence/release-2026-09-09/ui-geometry-1440.png)。
+- 右上角缩放组、导航组和会话收起开关统一放在同一视觉基线，组间固定 8px；会话收起按钮保留 `收起对话` 语义和原 DOM 入口，视觉位置锚定到导航组右侧，窗口尺寸变化不缩放、不漂移。1440×900 和 1071×698 的矩形与截图证据见 [`ui-geometry.json`](../evidence/release-2026-09-09/ui-geometry.json)、[`ui-geometry-1071.png`](../evidence/release-2026-09-09/ui-geometry-1071.png)、[`ui-geometry-1440.png`](../evidence/release-2026-09-09/ui-geometry-1440.png)。
 - 实现与验证文件：`src/components/canvas/useCanvasViewport.ts`、`src/components/canvas/CanvasHud.tsx`、`src/styles/ui-tokens.css`、`src/styles/canvas-hud.css`、`src/styles/canvas-navigation.css`、`src/styles/workspace.css`、`tests/browser/composer-fidelity.spec.ts`、`tests/browser/canvas-layout.spec.ts`。`npm run typecheck`、`npm run ui:check` 通过；相关 Edge 回归 14/14 通过。完整浏览器套件仍有已撤出的旧 `DemoLibrary` 断言，未冒充 `npm run verify` 全部通过。
 
 ## 2026-09-09 图片参考图预览与重绘入口
@@ -48,7 +48,7 @@
 - **本单元Prototype，整体Repairing**。将当前工程固定为 KK Studio 2.0.0 客户端基线：补回 Tauri 2 壳和 Windows 打包配置，版本号与安装包同步为 2.0.0；实现“开始创作”落地页、项目库、Skill、ComfyUI 工作流四个可切换入口，目录卡片、搜索、分类、教程/导入等按钮均有本地前端状态反馈，未冒充远端服务或生成接口。
 - 首页默认显示创作落地页，只有用户点击“新建项目”后才进入无限画布；项目库、Skill、ComfyUI 工作流按 MiniMax Design 参考图的深色目录布局补齐标题、操作区、标签、搜索和卡片网格。实现文件为 `src/components/StartPage.tsx`、`src/components/LibraryPage.tsx`、`src/components/CatalogPageBody.tsx`、`src/styles/catalog-pages.css` 以及 `src/App.tsx` 的路由壳。
 - 读取并按用户授权观察本机 MiniMax Design 客户端 `C:\Users\Administrator\AppData\Local\com.minimax.hub\current` 的菜单、拖动、设置、节点和目录页交互；没有生成、上传、删除或改写用户数据。对开源目录与 API 规范的研究只作为后续契约输入，本单元没有连接供应商。
-- 完成旧版本目录的有界 consumer-scan、用户数据备份与可回滚归档：历史工程内容已移动至 `D:\KK-Studio-legacy-archive-20260909`，46 个用户数据文件备份至 `D:\KK-Studio-user-data-backup-20260909\data`，临时 junction 检查目录 `D:\kk-studio-r2-index-check` 已移除。由于当前 Codex 宿主仍以 `D:\kk-studio` 作为工作目录，Windows 暂时拒绝删除空的旧根目录；根目录已确认 0 个子项，待宿主释放后可直接删除。证据与恢复命令见 [`docs/evidence/release-2026-09-09/cleanup-result.json`](evidence/release-2026-09-09/cleanup-result.json) 和 [`legacy-cleanup-manifest.json`](evidence/release-2026-09-09/legacy-cleanup-manifest.json)。
+- 完成旧版本目录的有界 consumer-scan、用户数据备份与可回滚归档：历史工程内容已移动至 `D:\KK-Studio-legacy-archive-20260909`，46 个用户数据文件备份至 `D:\KK-Studio-user-data-backup-20260909\data`，临时 junction 检查目录 `D:\kk-studio-r2-index-check` 已移除。由于当前 Codex 宿主仍以 `D:\kk-studio` 作为工作目录，Windows 暂时拒绝删除空的旧根目录；根目录已确认 0 个子项，待宿主释放后可直接删除。证据与恢复命令见 [`docs/evidence/release-2026-09-09/cleanup-result.json`](../evidence/release-2026-09-09/cleanup-result.json) 和 [`legacy-cleanup-manifest.json`](../evidence/release-2026-09-09/legacy-cleanup-manifest.json)。
 - 客户端构建产物已生成：`src-tauri/target/release/bundle/msi/KK Studio_2.0.0_x64_zh-CN.msi`、`src-tauri/target/release/bundle/nsis/KK Studio_2.0.0_x64-setup.exe` 与 `src-tauri/target/release/kk-studio.exe`。本轮只完成 `cargo check` 和打包构建，尚未宣称安装后运行验收。
 - 验证：Node 24.20.0 下 `npm run typecheck`、`npm run ui:check`（73 文件、0 违规）、`npm run format:check`、`npm run build`、`npm run client:check` 与 `npm run client:build` 已通过；Vite 仍有依赖注释位置警告。真实 Edge 预览已手动切换首页、项目库、Skill、ComfyUI，并验证“新建项目 → 无限画布”路径，页面错误日志为空。尚未把旧的 DemoLibrary 回归契约或供应商后端接入算作完成。
 - 下一小交付：继续按评论逐项补齐侧栏项目置顶/更多语义、个人信息弹层、聊天自动/询问权限按钮、画布连接剪断与参考图保留、图片放大/重绘入口和节点状态演示；随后再设计本地数据 schema 与主流 API 适配层。
