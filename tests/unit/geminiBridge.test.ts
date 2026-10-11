@@ -45,10 +45,14 @@ function stubChild({
       );
     },
   };
+  // A real ChildProcess emits its `close` event after stdout/stderr have
+  // flushed. Keep the fixture ordering deterministic under the parallel test
+  // runner; scheduling close only a few milliseconds after listener setup can
+  // otherwise make login probes observe an empty stdout buffer.
   setTimeout(() => {
     if (spawnError) child.emitError();
     else child.emitClose();
-  }, 3);
+  }, 10);
   return child;
 }
 
