@@ -1,5 +1,25 @@
 # 当前进度
 
+## 2026-10-11 收口增量：来源契约、模型禁用态与媒体尺寸回载
+
+- `TASK-VERIFY-ORIGIN-003` 已按来源契约升级为 `DONE/PASS`：生产浏览器固定 `127.0.0.1:1423`、端口契约和六组来源/fixture 规格已通过，exact-SHA 独立审查收据已绑定；Hosted delivery、发布与用户验收仍由其他任务负责。
+- 新增 `tests/browser/model-picker.spec.ts` 的视频/音频模型禁用态验收：真实设置页创建供应商、刷新目录、键盘阅读禁用原因、Enter 不提交、Escape 关闭并恢复焦点，1/1 通过。
+- 新增 `tests/browser/media-dimensions.spec.ts`：上传图片写入原始尺寸，刷新后重新打开项目并验证布局比例保持，1/1 通过；该证据只收口本地 Web 回载，Desktop/真实 Provider 仍保持开放。
+- `TASK-AI-GATEWAY-001` 已由误标 `TODO` 勘正为 `PARTIAL`，保留本地实现与回归证据；真实 Ark/Codex 凭据、DPAPI、token 级上游流和 Desktop 运行态未验，不能升级 `DONE`。`TASK-TASKSTATE-002` 已补齐有界报价回执 schema、身份/冲突/快照测试，仍缺真实 Provider 回执；当前账本 120 项：75 DONE、29 PARTIAL、11 TODO、4 BLOCKED、1 REVIEW，45 项开放。
+- 本轮门禁：governance 120/0、features 36/0、markdown 115/0、project goals/version consistency/platform versions 全通过；TypeScript、ESLint、UI standards、Prettier、生产构建及新增浏览器规格通过。实时 Git 快照为本地 `main@6bc45cad`、`origin/main@7736c99b`（PR #51 merge），实时 worktree 为 87 个、dirty path 为 102；工作树仍有并发改动，未推送。
+
+## 2026-10-11 最小任务集收口：文档历史与 TaskState 001/002
+
+- `TASK-DOCS-HISTORY-001` 已同步到权威账本并按 `dc53317b` exact-SHA 独立收据标为 `DONE/PASS`：文档历史审计修复 29 条可追踪链接，保留 8 条 `NOT_VERIFIED` 原始日志；`TASK-TASKSTATE-001`、`TASK-TASKSTATE-002` 仍为 `PARTIAL`，已补齐有界成本回执、来源/币种、任务与幂等身份绑定、重复/冲突和快照回读边界。
+- 本轮证据已保存到 `docs/changes/2026-10-11-taskstate-docs-closeout/`：定向测试 30/30、全量 Node 966（957 通过、9 跳过、0 失败）、Tauri `project_package` 22/22、TypeScript、ESLint、生产构建、治理、Markdown、features、project goals、格式与文档历史审计均通过；文档历史 exact-SHA 正式审查已绑定 `dc53317b` 并为 `PASS WITH FOLLOW-UPS`，真实 Provider 回执、平台运行态与用户验收仍未验证。
+- 当前账本 120 项：75 `DONE`、29 `PARTIAL`、11 `TODO`、4 `BLOCKED`、1 `REVIEW`，45 项开放。Mobile、VPS、Astra、MCP 暂不扩展；下一步只处理剩余 P1 的真实 Provider/Hosted/平台证据，避免范围蔓延。
+
+## 2026-10-10 开发协作流程落地
+
+- 已延续 `TASK-DOCS-STRUCT-001`，状态为 `DONE`；新增统一流程入口，覆盖任务领取、需求/验收确认、状态流转、开发笔记、成果说明、边界验证、根因闭环和竞品观察节奏。
+- 最小扩展 `intent/plan/verification/review/incident` 模板，并在文档入口和 SDLC 中建立链接；产品源码、运行数据和并发中的 Tauri 改动未触碰。
+- JSON、diff check、Markdown、features、project goals、governance 和 delivery equivalent 已通过；独立 review 已在 exact HEAD `8933692e` 得到 PASS/ACCEPTABLE，R-1/R-2/R-3 修正后复跑通过且无 P0–P2。重新生成的 `pnpm-lock.yaml` 已按 SHA 隔离到 `.verification/governance/`，默认包管理器仍为 npm。`TASK_LEDGER.md` 已用同一 `renderLedger` 实现重建。
+
 ## 2026-10-10 输入焦点与次级选中态收敛
 
 根据用户对首页/对话输入框紫色外圈过强的反馈，新增主题中性的弱焦点 token（深色浅灰白、浅色中性灰，1px/1px），并将 Composer、搜索、设置、对话和阶段表单的输入焦点统一到该层级；按钮和关键操作继续使用醒目 focus token。Provider 连接项、任务评论区选择、插件节点选中及连接目标叠加态改为更轻的中性边界，保留关键连接状态的文字和颜色语义。浏览器回归补充 Composer 的 1px 与 token 绑定断言，设计系统和目录页检查覆盖搜索/设置状态。当前分支验证：输入契约 9/9、目录/设置页面 10/10、设计系统基础 6/8（另有 2 个插件卸载 fixture 超时），Node 单测 929/939 通过、8 跳过、2 个既有 desktopAgentRuntime 失败；typecheck、UI 标准、lint、governance、features、markdown、格式和 diff check 通过。Desktop/Web 生产包与用户最终视觉验收未在本轮宣称完成。
@@ -34,7 +54,6 @@
 
 主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。
 
-
 ## 2026-10-09 统一Mask最新主线组合本地验收完成
 
 用户授权普通合并已检查分支。PR38/40已正常合并，当前base main1d6f640及其实际post-main37806381609成功；Mask产品27b/driver-eaa承接该主线，完整445browser零retry、102Rust和fresh Agent原生Mask外0/重启/undo/凭据保护、上方操作栏/TaskHost/模型/标题栏/首屏及生产Web3宽度通过，当前独立复审。Desktop/Web2.1.11、Mobile规划2.1.1；104上游对象完整保留，106项DONE62/TODO14/PARTIAL26/BLOCKED4，44项开放。TASK-PLUGIN-DEV-001开发遮罩依然FAIL/TODO，源码与main相同；开发其余UI只在留证后Escape收起遮罩作局部检查，primary-main开发两次超时为NOT VERIFIED。真实效果/手机/用户验收仍VERIFY-002，FEAT035仍PARTIAL。最终docs独立/最新Hosted、普通合并、完整landing tree/主线FF与post-mainCI另外实际回读，不预填成功。UI012仍原执行者在途。恢复入口[本轮验证](changes/2026-10-09-unified-mask-main-integration/verification.md) / [任务状态报告](changes/2026-10-09-unified-mask-main-integration/status.md)。保留所有历史/工作树/快捷方式及用户数据，不宣称既有启动入口已换包或已发布。
@@ -50,7 +69,6 @@ PR38 已普通合入main2cb73d，source a550f31与landing完整tree相同，当�
 ## 2026-10-08 标题栏承接静默启动主线
 
 PR38 source a550f31 经独立审查与最新 Hosted37792689982/37792680207 全部SUCCESS，普通squash落地main2cb73d，完整tree相同；合并后main37797150560仍在运行。TASK-UI-013保留静默启动/首页按需加载、图片上方动作和T5生命周期；预检发现001乱序状态及002异步监听清理，真实组件7条先RED后GREEN，独立关闭和完整新组合验收待完成。当前账本104项（DONE60/TODO13/PARTIAL26/BLOCKED4/REVIEW1），UI012/蒙版原在途执行者保留。以下两侧记录按各自时间保留；不能将旧证据或中途GREEN当最终合并通过。
-
 
 ## 2026-10-08 启动分支最新主线组合验收完成
 
@@ -99,6 +117,7 @@ TASK-IMAGE-EDIT-001 在独立任务分支承接 main@78cea37（PR #37），保�
 ## 2026-10-08 统一图片编辑蒙版本地候选
 
 框选、画笔、色块产生原像素Mask，共用扩边/合并/裁剪、能力校验、Web/native模型请求、Mask内融合；保存/导出/恢复与连续编辑保持原件不可变。完整verify739root/172Agent/419browser（原skip8/2、0flaky）、Rust100、fresh Tauri两次Mask请求/包恢复/删除再生/重启通过，Web/Desktop实际bundle同hash。候选Desktop2.1.7/Web2.1.8；正式独立head复验待补，未推送/合并/发布。FEAT-035仍PARTIAL，真实Provider/语义几何偏移/真机/用户视觉归TASK-IMAGE-EDIT-VERIFY-002。[验证](changes/2026-10-08-unified-image-mask/verification.md)。
+
 ## 2026-10-08 Hosted 空 Registry 属性返修
 
 T5当前本机/源码验收完成、REVIEW。21ac独立补审PASS、ENV003 CLOSED；其Hosted37765011214完整Web/Rust/release/Runtime通过，实际CI包装器在新建空key的Properties.Name严格模式失败，native尚未启动。修正mock空属性集合并复现真实RED；四处逐项枚举后26/26边界回归PASS，产品/harness与d521 native十一组hash不变。新head独立关闭ENV004、Hosted与主线整合仍待满足，未假填High IL。UI976db独立PASS关闭两P2、422browser/fresh Native13组通过，当前Hosted待创建。main仍1af/PR36合并后CI通过；其他执行者任务保留。
@@ -125,6 +144,7 @@ T5 本机产品验收十一组与精确源码 8399 补审 PASS，但其 Hosted n
 PR#38首轮7a1c3358的Hosted verify发现LAUNCH-R4：WSH快捷方式接口不能处理系统ACP无法表示的路径字符。本地增强中文+emoji路径复现RED，改为Unicode Shell Link后真实lnk/重复安装native3/3 GREEN，完整verify726Node/172Agent/413browser再次PASS；实际桌面宽接口重装成功，前端/native产物哈希不变。旧CI失败保留；新HEAD独立补审及Hosted结果分别绑定，见本轮验证追加段。
 
 TASK-LAUNCH-001 本地AC完成：桌面/canonical快捷方式使用内嵌Logo GUI入口，实际最新release免编译窗口304ms，冷重建与正常启动均GUI退出0/无新增可见控制台；窗口Logo与原icon逐像素一致。Web首屏延后隐藏工作区并按需加载页面，历史/焦点/错误恢复保留。推送前融合最新main@1af0357b的模型能力，最终候选Desktop2.1.7/Web2.1.8/Mobile2.1.1；完整verify726/734Node（8原skip）、172/174Agent（2原skip）、413/413browser零flaky，clientcheck/newTauri与原生能力回归PASS。最新main首屏JS995,957→806,571（减19.0%）、CSS完全一致；受控5次cold中位数1656→1405ms，非线上保证。独立694a237/f74548d审查PASS、R1/R2/R3关闭，最终组合精确SHA收据见[本轮验证](changes/2026-10-08-startup-experience/verification.md)。本轮main/线上尚未推广；实际快捷方式引用本任务树，须保留至稳定产物推广。
+
 ## 2026-10-08 单排标题栏主线集成准备
 
 用户明确授权合并已检查分支，TASK-UI-013原535 clean且原作者已结束，由root单一写入承接main f922。保留UI011图片上方动作及T5生命周期，App CSS按统一末端顺序合并。当前为预备组合REVIEW；启动PR38落地后再承接最新main并做最终当前source/fresh native/独立review/Hosted和普通合并，不把旧535的验收冒充新组合。历史双方段落保留其时间含义；UI012/蒙版仍由原在途执行者维护。
@@ -883,9 +903,7 @@ TASK-PLUGIN-DEV-001在独立任务树认领，固定1421复现四个public模块
 
 TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，回归新发现TASK-PLUGIN-RECOVERY-001 P1（归一化遗漏现有plugin）与TASK-PLUGIN-MARKDOWN-001 P1（CDN离线正文为空/模块错误）。已登记并做RED→GREEN预验收：快照10/10、固定1421实际4插件编辑/预览/内容刷新恢复零错误。共享Desktop/Web源码版本递增2.1.12，Mobile保持规划2.1.1；解析器原marked14改为精确14.1.4随包，不扩大CSP。完整验证、fresh原生、独立review和Hosted/合并仍未完成，当前任务不标DONE。见[验证](changes/2026-10-09-plugin-development/verification.md)。
 
-
 - TASK-DESKTOP-FLUSH-001：本轮插件原生立即关闭实际复现最后编辑丢失（P1）；已登记并实现 CloseRequested 耐久队列守卫，重复关闭/最新revision/失败及读保护留窗/卸载单元 7 PASS。fresh 原生与当前提交独立验收仍未完成，原 FAIL 保留。
-
 
 - TASK-PLUGIN-DEV-001及RECOVERY/MARKDOWN/DESKTOP-FLUSH三个新P1本地闭合：真实开发/生产/fresh原生正文及恢复、立即关闭/真实IO失败留窗与原件保护、完整447浏览器和同EXE邻接全部通过。原FAIL、来源身份和标题栏第一拖动未知原因保留；最终doc/Hosted/普通集成/main按各自收据，UI012/UI014与43项既有开放能力继续。见[本轮完整状态](changes/2026-10-09-plugin-development/status.md)。
 

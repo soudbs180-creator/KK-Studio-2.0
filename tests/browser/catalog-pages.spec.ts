@@ -95,22 +95,26 @@ test("开始创作首次打开即可选择内置 Skill", async ({ page }) => {
   await page.goto("/");
   await page
     .getByRole("region", { name: "开始创作" })
-    .getByRole("button", { name: "Skill", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .click();
+  const menu = page.getByRole("menu", { name: "扩展" });
+  await menu.getByRole("tab", { name: "Skill", exact: true }).click();
   await expect(
-    page
-      .getByRole("menu", { name: "选择 Skill" })
-      .getByRole("menuitem", { name: "镜头规划助手", exact: true }),
+    menu.getByRole("menuitem", { name: "镜头规划助手", exact: true }),
   ).toBeVisible();
 });
 
-test("开始创作页的插件入口打开设置分类而不是 Skill 页面", async ({ page }) => {
+test("开始创作页的扩展入口打开插件设置分类而不是 Skill 页面", async ({
+  page,
+}) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
-    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("region", { name: "开始创作" })
     .getByRole("button", { name: "扩展", exact: true })
     .click();
+  const menu = page.getByRole("menu", { name: "扩展" });
+  await menu.getByRole("tab", { name: "插件/MCP", exact: true }).click();
+  await menu.getByRole("menuitem", { name: "管理画布插件" }).click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "设置分类" }).getByRole("button", {
@@ -140,10 +144,14 @@ test("开始创作页的插件入口打开设置分类而不是 Skill 页面", a
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
   await page
     .locator(".conversation-panel")
-    .getByRole("button", { name: "插件", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .click();
   await page
-    .getByRole("menu", { name: "选择插件" })
+    .getByRole("menu", { name: "扩展" })
+    .getByRole("tab", { name: "插件/MCP", exact: true })
+    .click();
+  await page
+    .getByRole("menu", { name: "扩展" })
     .getByRole("menuitem", {
       name: "管理画布插件",
     })

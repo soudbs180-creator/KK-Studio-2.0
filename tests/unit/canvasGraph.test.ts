@@ -74,3 +74,24 @@ test("删除和撤销只影响目标连接，节点缺失时不恢复悬空连�
   );
   assert.deepEqual(restoreConnection([edge], edge, BASE_CANVAS_ITEMS), [edge]);
 });
+
+test("媒体自然比例进入画布可见边界", () => {
+  const source = {
+    ...BASE_CANVAS_ITEMS[0],
+    mediaWidth: 1600,
+    mediaHeight: 900,
+  };
+  const result = {
+    ...source,
+    id: "result",
+    result: {
+      id: "result",
+      kind: "image" as const,
+      title: "宽图",
+      description: "",
+      source: "demo" as const,
+    },
+  };
+  assert.equal(cardVisualBounds(source).height, 225);
+  assert.ok(Math.abs(cardVisualBounds(result).height - 227.75) < 0.001);
+});

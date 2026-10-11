@@ -56,7 +56,10 @@ test("手机扩展标签保持单行和触屏命中区", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "扩展", exact: true }).click();
+  await page
+    .getByRole("dialog", { name: "设置" })
+    .getByRole("button", { name: "扩展", exact: true })
+    .click();
   const tabs = page.getByRole("tablist", { name: "插件、技能与伙伴" });
   const bounds = (await tabs.boundingBox())!;
   for (const tab of await tabs.getByRole("tab").all()) {
@@ -106,10 +109,14 @@ test("Skill、插件和伙伴旧入口都归一到扩展并保持唯一选中项
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
   await page
     .locator(".conversation-panel")
-    .getByRole("button", { name: "插件", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .click();
   await page
-    .getByRole("menu", { name: "选择插件" })
+    .getByRole("menu", { name: "扩展" })
+    .getByRole("tab", { name: "插件/MCP", exact: true })
+    .click();
+  await page
+    .getByRole("menu", { name: "扩展" })
     .getByRole("menuitem", { name: "管理画布插件" })
     .click();
   await expectExtensionTab(/插件/);

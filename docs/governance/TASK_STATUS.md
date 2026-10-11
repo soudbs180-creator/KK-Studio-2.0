@@ -1,8 +1,8 @@
 # Task status snapshot
 
-Updated 2026-10-09. The machine-readable source remains [`task-ledger.json`](task-ledger.json); this document is a dated routing snapshot and does not change task state.
+Updated 2026-10-11. The machine-readable source remains [`task-ledger.json`](task-ledger.json); this document is a dated routing snapshot and does not change task state.
 
-The audited ledger contains 117 tasks: 68 `DONE`, 18 `TODO`, 26 `PARTIAL`, 4 `BLOCKED`, and 1 `REVIEW`. The default accountable owner is the historical `root` identity, routed as `repository-maintainer`; entries with `unallocated` branch/worktree remain unallocated. `TASK_LEDGER.md` is the generated reading view.
+The audited ledger contains 120 tasks: 75 `DONE`, 11 `TODO`, 29 `PARTIAL`, 4 `BLOCKED`, and 1 `REVIEW` (45 open). The default accountable owner is the historical `root` identity, routed as `repository-maintainer`; entries with `unallocated` branch/worktree remain unallocated. `TASK_LEDGER.md` is the generated reading view.
 
 Current work that matters for governance includes the Windows entry recovery TODO, the remaining image-edit/mobile verification TODO, Provider/Desktop gate TODOs, concurrency/origin verification TODOs, the memory tasks (`TASK-MEMORY-001` and `TASK-MEMORY-002`, both `PARTIAL`), and the open orchestration/media/platform tasks recorded in the ledger. This sentence is a pointer, not a second status source; always read the ledger before acting.
 

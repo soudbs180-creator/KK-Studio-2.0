@@ -112,7 +112,7 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
   );
   await expect(
     page.getByRole("button", { name: "模型", exact: true }),
-  ).toHaveCSS("height", "24px");
+  ).toHaveCSS("height", "32px");
   const headerIcons = await page
     .locator(
       ".conversation-panel > header > button img, .conversation-panel > header > button svg",
@@ -139,7 +139,6 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
     );
   expect(composerIcons).toEqual([
     { width: 20, height: 20 },
-    { width: 16, height: 16 },
     { width: 16, height: 16 },
     { width: 16, height: 16 },
     { width: 20, height: 20 },

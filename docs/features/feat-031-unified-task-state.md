@@ -2,7 +2,7 @@
 
 - 状态：PARTIAL
 - 领域：creation
-- 最近更新：2026-10-08
+- 最近更新：2026-10-11
 - 关联任务：TASK-TASKSTATE-001, TASK-TASKSTATE-002, BACKEND-MEDIA-001
 
 ## 用户可见入口
@@ -32,6 +32,7 @@
   - 普通重试统一沿用 `taskRecovery.canRetryTask`：`unknown` 或已提交的任务不可普通重试；
   - `retryFailedOutputIndices` 仅在任务安全可重试时选取确定失败的输出，不包含 `unknown` 输出；
   - 成本估算函数与展示文案（estimateTaskCostUsd / formatCostUsd，估算口径标注）；新建和重试任务在没有供应商报价时保持未知，不写入示例单价；
+- 成本回执的本地契约已补齐：`TaskCostReceipt` 严格校验金额、币种、来源、回执身份、任务 ID 与幂等键；重复/冲突回执有明确结果，fixture 或非 USD 记录不会投影为美元账单。`estimatedCostQuote` / `actualCostReceipt` 可随 Web 与 portable package 快照回载。
   - 画布交付失败或供应商受理不明时，重试子任务的 unknown 状态会传播到父任务并关闭普通重试入口。
 - 明确标注未接：
   - 供应商实际报价/账单回执尚未接入（TASK-TASKSTATE-002），因此没有报价时 UI 只显示未知；
@@ -52,3 +53,4 @@
 - 2026-09-23 补充：候选审查发现新辅助函数将 `unknown` 选入普通重试，已改为复用既有恢复门禁，并用确定失败/受理不明场景回归。
 
 - 2026-10-08：`5cbfe99`/`dc05556` 完成原生回执双重身份、索引一致性和非法类型校验，实时与恢复共用围栏；既有归档、合法子集及缺失 outputs 的旧 assetIds 格式保留。定向原生/恢复53项与完整浏览器388项通过，独立源码复验PASS；真实Provider/Desktop运行与外部门禁仍未完成。
+- 2026-10-11：补充成本报价回执 schema、任务/幂等键绑定、快照和 portable package 校验及 fixture 回归；真实 Provider adapter/webhook、账单回执和每平台运行仍保持 `NOT_VERIFIED`，TASK-TASKSTATE-001/002 保持 `PARTIAL`。详见 `docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md`。

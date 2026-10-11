@@ -1100,3 +1100,10 @@
     font-size: 14px;
   }
 }
+
+.start-model-popover {
+  min-width: 360px;
+  width: min(420px, calc(100vw - 32px));
+  padding: 12px;
+  border-radius: 16px;
+}

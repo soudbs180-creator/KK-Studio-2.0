@@ -27,6 +27,7 @@ import {
   type ImageEditSnapshot,
   type ImageEditContext,
 } from "../image-edit/snapshot.ts";
+import { normalizeTaskCostReceipt, type TaskCostReceipt } from "./taskState.ts";
 
 export type CreationTaskStatus =
   | "queued"
@@ -125,6 +126,9 @@ export interface CreationTask {
   /** Estimate only; an actual amount is shown only when a provider reports it. */
   estimatedCostUsd?: number;
   actualCostUsd?: number;
+  /** Traceable quote evidence; fixture/non-USD receipts do not become USD claims. */
+  estimatedCostQuote?: TaskCostReceipt;
+  actualCostReceipt?: TaskCostReceipt;
   approvedGates?: ApprovalGate[];
   retryOfTaskId?: string;
   retryOutputIndices?: number[];
@@ -533,6 +537,20 @@ function normalizeCanvasItem(
       typeof value.preview === "string"
         ? value.preview.slice(0, 16 * 1024 * 1024)
         : undefined,
+    mediaWidth:
+      typeof value.mediaWidth === "number" &&
+      Number.isFinite(value.mediaWidth) &&
+      value.mediaWidth > 1 &&
+      value.mediaWidth <= 100_000
+        ? Math.round(value.mediaWidth)
+        : undefined,
+    mediaHeight:
+      typeof value.mediaHeight === "number" &&
+      Number.isFinite(value.mediaHeight) &&
+      value.mediaHeight > 1 &&
+      value.mediaHeight <= 100_000
+        ? Math.round(value.mediaHeight)
+        : undefined,
     updatedAt:
       typeof value.updatedAt === "number" ? value.updatedAt : undefined,
     referenceMode: value.referenceMode === true ? true : undefined,
@@ -790,15 +808,76 @@ function normalizeProject(value: CreationProject): CreationProject {
               ];
             })
           : undefined,
-        estimatedCostUsd:
-          typeof task.estimatedCostUsd === "number" &&
-          task.estimatedCostUsd >= 0
+        estimatedCostUsd: (() => {
+          const quote = normalizeTaskCostReceipt(
+            task.estimatedCostQuote,
+            {
+              id: safeText(task.id, 160),
+              idempotencyKey:
+                typeof task.idempotencyKey === "string" && task.idempotencyKey
+                  ? task.idempotencyKey.slice(0, 200)
+                  : "",
+            },
+            "estimate",
+          );
+          if (quote) {
+            return quote.source === "provider" && quote.currency === "USD"
+              ? quote.amount
+              : undefined;
+          }
+          return typeof task.estimatedCostUsd === "number" &&
+            Number.isFinite(task.estimatedCostUsd) &&
+            task.estimatedCostUsd >= 0 &&
+            task.estimatedCostUsd <= 1_000_000_000
             ? task.estimatedCostUsd
-            : undefined,
-        actualCostUsd:
-          typeof task.actualCostUsd === "number" && task.actualCostUsd >= 0
+            : undefined;
+        })(),
+        actualCostUsd: (() => {
+          const receipt = normalizeTaskCostReceipt(
+            task.actualCostReceipt,
+            {
+              id: safeText(task.id, 160),
+              idempotencyKey:
+                typeof task.idempotencyKey === "string" && task.idempotencyKey
+                  ? task.idempotencyKey.slice(0, 200)
+                  : "",
+            },
+            "actual",
+          );
+          if (receipt) {
+            return receipt.source === "provider" && receipt.currency === "USD"
+              ? receipt.amount
+              : undefined;
+          }
+          return typeof task.actualCostUsd === "number" &&
+            Number.isFinite(task.actualCostUsd) &&
+            task.actualCostUsd >= 0 &&
+            task.actualCostUsd <= 1_000_000_000
             ? task.actualCostUsd
-            : undefined,
+            : undefined;
+        })(),
+        estimatedCostQuote: normalizeTaskCostReceipt(
+          task.estimatedCostQuote,
+          {
+            id: safeText(task.id, 160),
+            idempotencyKey:
+              typeof task.idempotencyKey === "string" && task.idempotencyKey
+                ? task.idempotencyKey.slice(0, 200)
+                : "",
+          },
+          "estimate",
+        ),
+        actualCostReceipt: normalizeTaskCostReceipt(
+          task.actualCostReceipt,
+          {
+            id: safeText(task.id, 160),
+            idempotencyKey:
+              typeof task.idempotencyKey === "string" && task.idempotencyKey
+                ? task.idempotencyKey.slice(0, 200)
+                : "",
+          },
+          "actual",
+        ),
         approvedGates: Array.isArray(task.approvedGates)
           ? task.approvedGates.filter(
               (gate): gate is ApprovalGate =>

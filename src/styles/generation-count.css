@@ -1,93 +1,93 @@
 .count-trigger {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  width: 34px;
-  height: 34px;
+  gap: 5px;
+  width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
   color: var(--text-primary);
-  font-size: 11px;
-  border-radius: 8px;
+  font-size: var(--ui-font-body);
+  border-radius: var(--kk-radius-full);
 }
 .count-trigger img {
-  width: 5px;
-  height: 5px;
+  width: 8px;
+  height: 8px;
 }
 .generation-count-panel {
   position: absolute;
   z-index: 10;
-  bottom: 42px;
+  bottom: calc(var(--kk-control-h-md) + 8px);
   right: 0;
-  width: 116px;
-  height: 47px;
+  width: 220px;
+  min-height: 92px;
+  padding: 14px 16px;
   border: 1px solid var(--border-default);
-  border-radius: 10px;
+  border-radius: var(--kk-radius-menu);
   background: var(--bg-card);
+  box-sizing: border-box;
 }
 .count-heading {
-  position: absolute;
-  top: 8px;
-  left: 11px;
-  font-size: 8px;
-  color: var(--text-tertiary);
+  position: static;
+  font-size: var(--ui-font-body);
+  color: var(--text-secondary);
 }
 .count-current {
   position: absolute;
-  top: 6px;
-  right: 11px;
-  font-size: 11px;
+  top: 14px;
+  right: 16px;
+  font-size: var(--ui-font-title);
+  font-weight: 600;
 }
 .generation-count-panel input {
   appearance: none;
-  position: absolute;
-  top: 18px;
-  left: 11px;
-  width: 92px;
-  height: 16px;
-  margin: 0;
+  position: static;
+  display: block;
+  width: 100%;
+  height: 24px;
+  margin: 10px 0 4px;
   padding: 0;
   background: transparent;
   cursor: pointer;
 }
 .generation-count-panel input::-webkit-slider-runnable-track {
-  height: 2px;
+  height: 4px;
   border-radius: 10px;
   background: var(--border-default);
 }
 .generation-count-panel input::-webkit-slider-thumb {
   appearance: none;
-  width: 8px;
-  height: 4px;
-  margin-top: -1px;
-  border-radius: 20px;
-  background: #d9d9d9;
+  width: 16px;
+  height: 16px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: var(--text-primary);
 }
 .generation-count-panel input::-moz-range-track {
-  height: 2px;
+  height: 4px;
   border-radius: 10px;
   background: var(--border-default);
 }
 .generation-count-panel input::-moz-range-thumb {
-  width: 8px;
-  height: 4px;
+  width: 16px;
+  height: 16px;
   border: 0;
-  border-radius: 20px;
-  background: #d9d9d9;
+  border-radius: 50%;
+  background: var(--text-primary);
 }
 .count-stops {
-  position: absolute;
-  top: 30px;
-  left: 11px;
-  right: 11px;
+  position: static;
   display: flex;
   justify-content: space-between;
+  gap: 6px;
 }
 .count-stops button {
-  min-width: 8px;
-  height: 9px;
-  font-size: 5px;
+  min-width: 24px;
+  height: 24px;
+  border-radius: var(--kk-radius-full);
+  font-size: var(--ui-font-caption);
   color: var(--text-tertiary);
 }
 .count-stops button[aria-pressed="true"] {
   color: var(--text-primary);
+  background: var(--ui-neutral-selected);
 }

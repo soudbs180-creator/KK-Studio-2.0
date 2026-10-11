@@ -2734,9 +2734,8 @@ export default function App() {
               draft={creation.homeDraft}
               onDraftChange={updateHomeDraft}
               onOpenModel={() => open("settings/providers")}
-              agentConnected={agentState.status === "connected"}
-              onOpenAgent={() => open("chat")}
               onOpenSkills={() => open("skills")}
+              onOpenExtension={open}
               modelConfigured={homeModelConfig.configured}
               skills={skillRegistry.listRecords()}
               onApplySkill={applySkillToHome}
@@ -2815,9 +2814,11 @@ export default function App() {
                   projectStatus={
                     activeProject && (
                       <div className="project-task-status" aria-live="polite">
-                        <strong title={activeProject.name}>
-                          {activeProject.name}
-                        </strong>
+                        {activeProject.name !== "未命名项目" && (
+                          <strong title={activeProject.name}>
+                            {activeProject.name}
+                          </strong>
+                        )}
                         {activeProject.tasks.slice(-1).map((task) => (
                           <span
                             key={task.id}

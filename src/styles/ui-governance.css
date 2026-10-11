@@ -76,8 +76,9 @@
 }
 
 .kk-button--danger {
-  border-color: var(--kk-danger);
-  color: var(--kk-text-danger);
+  border-color: transparent;
+  color: var(--kk-text-primary);
+  background: transparent;
 }
 
 .kk-button:not(:disabled):not([aria-disabled="true"]):hover {
@@ -88,6 +89,13 @@
 .kk-button--primary:not(:disabled):not([aria-disabled="true"]):hover {
   border-color: var(--kk-accent-hover);
   background: var(--kk-accent-hover);
+}
+.kk-button--danger:not(:disabled):hover,
+.kk-button--danger:focus-visible,
+.kk-button--danger:not(:disabled):active {
+  border-color: var(--kk-danger);
+  color: var(--kk-text-danger);
+  background: var(--ui-danger-surface);
 }
 
 .kk-button:not(:disabled):not([aria-disabled="true"]):active,
@@ -160,4 +168,10 @@
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+/* Global control contract: text actions are pills; square hit areas remain circles. */
+.kk-button,
+.ui-button,
+.primary-button {
+  border-radius: var(--kk-radius-full);
 }

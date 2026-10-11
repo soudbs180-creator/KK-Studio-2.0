@@ -1,37 +1,6 @@
-import { useState, type KeyboardEvent } from "react";
 import type { CreationDraft } from "../features/creation/model";
-import { readProviderConnections } from "../features/creation/providerRegistry";
-import { catalogForConnection } from "../features/models/modelCatalog";
 import GenerationOptions from "./GenerationOptions";
-import { getStartModelSetupMessage } from "./startModelPickerState";
-
-interface StartModelChoice {
-  key: string;
-  model: string;
-  connectionId?: string;
-  detail: string;
-  disabled?: string;
-}
-
-function modelChoices(): StartModelChoice[] {
-  return readProviderConnections()
-    .filter((connection) => connection.kind === "user_byok")
-    .flatMap((connection) =>
-      catalogForConnection(connection)
-        .filter((model) => model.kind === "image")
-        .map((model): StartModelChoice => ({
-          key: `${connection.id}:${model.id}`,
-          model: model.id,
-          connectionId: connection.id,
-          detail: connection.displayName,
-          disabled:
-            connection.state === "disabled" ||
-            connection.state === "quarantined"
-              ? "连接已禁用或隔离，请检查设置"
-              : undefined,
-        })),
-    );
-}
+import ModelPickerMenu from "./ModelPickerMenu";
 
 export default function StartModelPicker({
   draft,
@@ -41,8 +10,6 @@ export default function StartModelPicker({
   onToggle,
   onSelect,
   onConfigure,
-  agentConnected,
-  onOpenAgent,
   onOptionsChange,
 }: {
   draft: CreationDraft;
@@ -50,46 +17,10 @@ export default function StartModelPicker({
   model: string;
   open: boolean;
   onToggle: () => void;
-  onSelect: (choice: Pick<StartModelChoice, "model" | "connectionId">) => void;
+  onSelect: (choice: { model: string; connectionId?: string }) => void;
   onConfigure: () => void;
-  agentConnected: boolean;
-  onOpenAgent: () => void;
   onOptionsChange: (patch: Partial<CreationDraft>) => void;
 }) {
-  const [query, setQuery] = useState("");
-  const needle = query.trim().toLocaleLowerCase();
-  const matches = modelChoices().filter((choice) =>
-    `${choice.model} ${choice.detail}`.toLocaleLowerCase().includes(needle),
-  );
-  const visible = matches.slice(0, 100);
-  const setupMessage = getStartModelSetupMessage({
-    providerModelCount: matches.length,
-    agentConnected,
-  });
-  function onMenuKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
-    const target = event.target as HTMLElement;
-    if (target.closest("input, textarea, [contenteditable='true']")) return;
-    const items = Array.from(
-      event.currentTarget.querySelectorAll<HTMLButtonElement>(
-        '[role="menuitemradio"]:not(:disabled)',
-      ),
-    );
-    const current = target.closest<HTMLButtonElement>('[role="menuitemradio"]');
-    const index = current ? items.indexOf(current) : -1;
-    if (index < 0 || !items.length) return;
-    event.preventDefault();
-    event.stopPropagation();
-    const next =
-      event.key === "Home"
-        ? 0
-        : event.key === "End"
-          ? items.length - 1
-          : (index + (event.key === "ArrowDown" ? 1 : -1) + items.length) %
-            items.length;
-    items[next]?.focus();
-    items[next]?.scrollIntoView({ block: "nearest", inline: "nearest" });
-  }
   return (
     <div className="start-model-picker">
       <button
@@ -102,79 +33,25 @@ export default function StartModelPicker({
         onClick={onToggle}
       >
         <img src="/design/figma/composer-package.svg" alt="" />
-        <span>{draft.model || defaultModel ? model : "模型"}</span>
+        <span>{draft.model || defaultModel ? model : "选择图片模型"}</span>
       </button>
       {open && (
-        <div
-          className="start-model-popover"
-          role="menu"
-          aria-label="选择模型"
-          onKeyDown={onMenuKeyDown}
-        >
-          <div className="start-model-menu-top">
-            <strong>模型</strong>
-            <input
-              type="search"
-              aria-label="搜索模型"
-              placeholder="搜索模型"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-            />
-          </div>
-          <div className="start-model-menu-subtitle">选择供应商图片模型</div>
-          <div className="start-model-menu-list">
-            {visible.map((choice) => {
-              const selected =
-                model === choice.model &&
-                draft.providerConnectionId === choice.connectionId;
-              return (
-                <button
-                  key={choice.key}
-                  type="button"
-                  role="menuitemradio"
-                  aria-checked={selected}
-                  disabled={Boolean(choice.disabled)}
-                  title={choice.disabled ?? choice.detail}
-                  onClick={() => onSelect(choice)}
-                >
-                  <span className="start-model-choice">
-                    <span>{choice.model}</span>
-                    <small>{choice.disabled ?? choice.detail}</small>
-                  </span>
-                  {selected && <span aria-hidden="true">✓</span>}
-                </button>
-              );
-            })}
-            {!visible.length && setupMessage && (
-              <div className="start-model-empty-state">
-                <p>{setupMessage.message}</p>
-                <button
-                  type="button"
-                  className="start-model-configure"
-                  onClick={() => {
-                    onOpenAgent();
-                  }}
-                >
-                  {setupMessage.actionLabel}
-                </button>
-              </div>
-            )}
-            {matches.length > visible.length && (
-              <p>只显示前 100 项，请搜索模型或供应商。</p>
-            )}
-          </div>
-          <section className="start-model-options" aria-label="生成设置">
-            <strong>生成设置</strong>
+        <ModelPickerMenu
+          scope="canvas-image"
+          kind="image"
+          apiOnly
+          current={{
+            source: "api",
+            model,
+            connectionId: draft.providerConnectionId,
+            kind: "image",
+          }}
+          onSelect={onSelect}
+          onConfigure={onConfigure}
+          options={
             <GenerationOptions draft={draft} onChange={onOptionsChange} />
-          </section>
-          <button
-            type="button"
-            className="start-model-configure"
-            onClick={onConfigure}
-          >
-            配置供应商与模型…
-          </button>
-        </div>
+          }
+        />
       )}
     </div>
   );

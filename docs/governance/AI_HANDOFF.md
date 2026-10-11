@@ -1,5 +1,13 @@
 # AI handoff
 
+## 2026-10-11 当前收口快照
+
+当前 canonical checkout 为 `D:/kk-studio/KK-Studio-2.0`、分支 `main`；本地 `HEAD` 为 `6bc45cada7966531452d6826be5fe731ad0918d8`，`origin/main` 为实时回读远端快照 `7736c99bd5e900e7c5cd8a36663aadcb45326143`（PR #51 合并）。实时 Git worktree 为 87 个、dirty path 为 102 个。工作树含并发 dirty 改动，不能按 clean checkout 或单一任务分支处理；权威账本为 120 项：75 `DONE`、29 `PARTIAL`、11 `TODO`、4 `BLOCKED`、1 `REVIEW`（45 项开放）。`PROJECT_STATE.md`、`task-ledger.json` 和生成的 `TASK_LEDGER.md` 已按此快照同步。
+
+本轮已收口本地来源契约和 UI 证据：生产浏览器固定 `127.0.0.1:1423`，`TASK-VERIFY-ORIGIN-003` 的六组来源规格 25/25 通过；模型选择器视频/音频禁用态 1/1、媒体原始尺寸刷新回载 1/1 通过。`TASK-AI-GATEWAY-001` 已从误标 `TODO` 修正为 `PARTIAL`。Hosted/PR/独立精确提交、真实 Provider/DPAPI/Gemini、Tauri WebView、Windows 签名安装和用户验收仍未验证，不能升级相应任务为 DONE。继续工作前先读 [PROJECT_STATE](PROJECT_STATE.md)、[task-ledger](task-ledger.json) 和 [本轮收口验证](../changes/2026-10-11-closeout/verification.md)。
+
+本轮最小收口范围为 `TASK-DOCS-HISTORY-001`、`TASK-TASKSTATE-001`、`TASK-TASKSTATE-002`：文档历史链接审计已绑定 `dc53317b` exact-SHA 独立收据并标为 `DONE/PASS`；TaskState 001/002 的成本回执 schema、身份/冲突/快照边界和对应测试已落盘并保持 `PARTIAL`。8 条原始历史日志仍为 `NOT_VERIFIED`，真实 Provider 回执、平台运行态和用户验收仍未宣称完成。Mobile、VPS、Astra、MCP 不在本轮范围内。
+
 ## 2026-10-10 当前主线恢复入口
 
 当前 canonical 本地 checkout 为 `D:/kk-studio/KK-Studio-2.0`、分支 `main`、当前本地 `HEAD`（用 `git rev-parse HEAD` 回读），工作树 clean；`origin/main` 仍为独立远端快照 `8090475958f1a0bdd1b4b36ada7f2aba1e4e6264`。本轮 `TASK-AGENT-001` Web 回归修复和 Codex 测试清理已合入 main，交付包和账本绑定在 `docs/changes/2026-10-10-remaining-verification/`，本地 Node/Agent/browser/UI/development 证据已保存，开发态 receipt 位于该包 `evidence/development-plugins-receipt.json`。若继续工作，先读该包、`docs/governance/PROJECT_STATE.md` 与 `task-ledger.json`，再确认 117 项账本状态；不要把本地 fixture 当真实 Provider、Hosted、Tauri 或 Mobile 验收。根 checkout 的一次合并后 development 重试曾在 Edge 启动阶段挂起，保留为未验证现象；隔离工作树 receipt 为 PASS。未关闭重点包括 `TASK-PROV-005`、`TASK-PROV-006`、`TASK-VERIFY-CONCURRENCY-002`、`TASK-VERIFY-ORIGIN-003`、`TASK-WINDOWS-ENTRY-RECOVERY-003`、`TASK-DOCS-HISTORY-001` 及真实 Provider/GPU、Hosted、Desktop/Mobile 验收。
@@ -8,18 +16,15 @@
 
 主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](../changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](../changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。
 
-
 ## 2026-10-09 主线失败续修候选完成本地验收
 
 PR42已普通落地main6a97f456ab7334f97c604461e8d29789caa754cb、全tree与已审cc相同，但post-main37845923441 verify真实FAIL（446通过/区域重试首次及retry1收到3预期4）；Rust/桌面后续SKIPPED不能当PASS。TASK-IMAGE-RETRY-004仅修验收等待新任务身份，14相关及447全浏览器零实际retry、804root/172Agent（原skip8/2）和严格development已PASS。source独立41单测通过、IRV-001仅文档矛盾由当前收尾更正；最终doc-head补审/托管及普通合并/main仍待回执。110任务DONE67/TODO13/PARTIAL26/BLOCKED4，43开放；Desktop/Web2.1.12、Mobile规划2.1.1。UI012当前8d6已含6a且继续原owner525浏览器验收，尚无最终ready PR；UI014原会话容量失败，bd16及9条dirty已只读保存未验收快照，原件不动。Codex配置及健康任务在独立候选，未合主线，不冒充主线任务状态。
 
 [本轮验证](../changes/2026-10-09-image-retry-verification/verification.md) / [任务报告](../changes/2026-10-09-image-retry-verification/status.md)。以下保留历史时点原义。
 
-
 ## 2026-10-09 随包插件及关闭保存本地验收完成
 
 PR41已普通合入main8c921a5，实际post-main37826264108全部必需检查成功；PR38/39/40亦已合并。root独立插件分支修复开发模块、JSX、完整插件恢复、Markdown离线和立即关闭丢失；804root/172Agent（原skip8/2）、447browser零retry/flaky、严格开发、Rust102/fmt/clientcheck/fresh Agent及原生8步/TaskHost11/上方动作13/CSP和最终标题栏通过，c8独立关闭两阻断。Desktop/Web2.1.12、Mobile规划2.1.1；109任务DONE66/TODO13/PARTIAL26/BLOCKED4，43项开放，105上游无关对象完整保留。本地产品DONE，最终doc review/当前Hosted/普通PR合并、landing全树及post-main CI须分别实际回读。UI012/UI014继续原作者收尾；19条旧健康审计须在当前main复证并承接，不能整合未完成候选。原首轮titlebar拖动FAIL原因UNKNOWN，未改写成PASS；外部live/物理设备/用户视觉与整体UI规范仍开放。恢复入口 [状态报告](../changes/2026-10-09-plugin-development/status.md) / [验证](../changes/2026-10-09-plugin-development/verification.md)。
-
 
 ## 2026-10-09 统一Mask最新主线组合本地验收完成
 
@@ -36,7 +41,6 @@ PR38 已普通合入main2cb73d，source a550f31与landing完整tree相同，当�
 ## 2026-10-08 标题栏承接静默启动主线
 
 PR38 source a550f31 经独立审查与最新 Hosted37792689982/37792680207 全部SUCCESS，普通squash落地main2cb73d，完整tree相同；合并后main37797150560仍在运行。TASK-UI-013保留静默启动/首页按需加载、图片上方动作和T5生命周期；预检发现001乱序状态及002异步监听清理，真实组件7条先RED后GREEN，独立关闭和完整新组合验收待完成。当前账本104项（DONE60/TODO13/PARTIAL26/BLOCKED4/REVIEW1），UI012/蒙版原在途执行者保留。以下两侧记录按各自时间保留；不能将旧证据或中途GREEN当最终合并通过。
-
 
 ## 2026-10-08 启动分支最新主线组合验收完成
 
@@ -87,6 +91,7 @@ PR #36 已 squash 合入 main@1af0357b088df79dc51e9b309ef310a500722cf8，合并�
 框选、画笔、色块产生原像素Mask，共用扩边/合并/裁剪、能力校验、Web/native模型请求、Mask内融合；保存/导出/恢复与连续编辑保持原件不可变。完整verify739root/172Agent/419browser（原skip8/2、0flaky）、Rust100、fresh Tauri两次Mask请求/包恢复/删除再生/重启通过，Web/Desktop实际bundle同hash。候选Desktop2.1.7/Web2.1.8；正式独立head复验待补，未推送/合并/发布。FEAT-035仍PARTIAL，真实Provider/语义几何偏移/真机/用户视觉归TASK-IMAGE-EDIT-VERIFY-002。[验证](../changes/2026-10-08-unified-image-mask/verification.md)。
 
 恢复入口：本仓库 .worktrees/TASK-IMAGE-EDIT-001，分支 codex/TASK-IMAGE-EDIT-001-unified-mask、base1af0357b；先核对Git状态和verification/review。不要操作其他worktree或原checkout的main-after-PR36-latest.json。运行证据在本任务.tmp/image-edit及本机output/unified-image-mask-20261008，重启前核对实际EXE与dist指纹。
+
 ## 2026-10-08 Hosted 空 Registry 属性返修
 
 T5当前本机/源码验收完成、REVIEW。21ac独立补审PASS、ENV003 CLOSED；其Hosted37765011214完整Web/Rust/release/Runtime通过，实际CI包装器在新建空key的Properties.Name严格模式失败，native尚未启动。修正mock空属性集合并复现真实RED；四处逐项枚举后26/26边界回归PASS，产品/harness与d521 native十一组hash不变。新head独立关闭ENV004、Hosted与主线整合仍待满足，未假填High IL。UI976db独立PASS关闭两P2、422browser/fresh Native13组通过，当前Hosted待创建。main仍1af/PR36合并后CI通过；其他执行者任务保留。
@@ -114,6 +119,7 @@ PR#38当前追加Unicode快捷方式修复：旧7a1c3358 Hosted失败与ACP936�
 恢复入口：[intent](../changes/2026-10-08-startup-experience/intent.md)、[plan](../changes/2026-10-08-startup-experience/plan.md)、[verification](../changes/2026-10-08-startup-experience/verification.md)。TASK-LAUNCH-001 在 codex/TASK-LAUNCH-001-quiet-start（canonical 仓库登记 worktree）修复无控制台启动/Logo及 Web 首屏按需加载；后续推广核对当前 base/head、完整 verify、实际 EXE/shortcut 图标、同态运行证据和独立审查，不能从旧 main release 或过期 worktree 启动。用户请求已授权普通修复，不重复索取阶段批准；main 合并、线上部署及正式发布另按真实授权和门禁执行。
 
 最终本地AC完成，已融合最新main@1af0357b，Desktop2.1.7/Web2.1.8/Mobile2.1.1，verify726Node/172Agent/413browser和clientcheck/新Tauri/实际入口/Logo均PASS。桌面与canonical的lnk正在引用此任务树，禁止归档/删除它；待PR集成及新稳定产物复验后再切换。工程外最终独立收据`D:/kk-studio/output/startup-review-final-20261008.md`需与当前HEAD核对；上游历史记录保持，真实Provider/发布/Mobile范围不变。
+
 ## 2026-10-08 单排标题栏主线集成准备
 
 用户明确授权合并已检查分支，TASK-UI-013原535 clean且原作者已结束，由root单一写入承接main f922。保留UI011图片上方动作及T5生命周期，App CSS按统一末端顺序合并。当前为预备组合REVIEW；启动PR38落地后再承接最新main并做最终当前source/fresh native/独立review/Hosted和普通合并，不把旧535的验收冒充新组合。历史双方段落保留其时间含义；UI012/蒙版仍由原在途执行者维护。

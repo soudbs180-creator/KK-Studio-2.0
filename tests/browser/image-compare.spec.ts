@@ -1,6 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
 import { openWorkspace, showCanvasNavigation } from "./helpers";
 
+const productionOrigin = "http://127.0.0.1:1423";
+
 async function uploadImage(page: Page, node: ReturnType<Page["getByTestId"]>) {
   await node
     .locator('input[type="file"]')
@@ -33,7 +35,7 @@ test("two canvas images open a comparison and the slider supports keyboard steps
   await expect(
     page.locator('[data-runtime-entry="src/main.tsx"]'),
   ).toHaveAttribute("data-runtime-mode", "production");
-  expect(new URL(page.url()).port).toBe(process.env.KK_TEST_PORT ?? "1423");
+  expect(new URL(page.url()).origin).toBe(productionOrigin);
   const styles = await page.evaluate(() =>
     [...document.styleSheets].map((sheet) => sheet.href).filter(Boolean),
   );
@@ -167,7 +169,7 @@ test("narrow canvas keeps the comparison controls reachable and slider draggable
   browser,
 }) => {
   const context = await browser.newContext({
-    baseURL: `http://127.0.0.1:${process.env.KK_TEST_PORT ?? "1423"}`,
+    baseURL: productionOrigin,
     viewport: { width: 390, height: 844 },
     hasTouch: true,
   });

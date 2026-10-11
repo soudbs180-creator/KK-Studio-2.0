@@ -101,8 +101,7 @@ test("对话空态在消息区垂直居中，语音输入默认关闭且可用",
   await expect(voice).toBeEnabled();
   await expect(voice).toHaveAttribute("aria-pressed", "false");
   await expect(voice).toHaveCSS("opacity", "1");
-  // The current compact composer uses the registered 24px control tier.
-  await expect(voice).toHaveCSS("height", "24px");
+  await expect(voice).toHaveCSS("height", "32px");
   await expect(voice.locator("img")).toHaveAttribute(
     "src",
     "/design/figma/mic-off.svg",

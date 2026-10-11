@@ -13,6 +13,8 @@ export default function CanvasImageActions({
   anchor,
   selected,
   onPreview,
+  liked,
+  onToggleLike,
   favorite,
   onFavorite,
   onDelete,
@@ -22,6 +24,8 @@ export default function CanvasImageActions({
   anchor: RefObject<HTMLElement>;
   selected: boolean;
   onPreview: () => void;
+  liked?: boolean;
+  onToggleLike?: () => void;
   favorite?: boolean;
   onFavorite?: () => void;
   onDelete?: () => void;
@@ -68,6 +72,18 @@ export default function CanvasImageActions({
           item={item}
           className="kk-button kk-button--tertiary"
         />
+        {onToggleLike && (
+          <button
+            type="button"
+            className="kk-button kk-button--tertiary"
+            aria-label={liked ? `取消喜欢${item.title}` : `喜欢${item.title}`}
+            aria-pressed={liked}
+            onClick={onToggleLike}
+          >
+            <UiIcon name="favorite" />
+            {liked ? "已喜欢" : "喜欢"}
+          </button>
+        )}
         {onFavorite && (
           <button
             type="button"

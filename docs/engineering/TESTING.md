@@ -53,8 +53,8 @@
 | 项 | 值 |
 | --- | --- |
 | `testDir` | `./tests/browser` |
-| 端口 | `process.env.KK_TEST_PORT ?? "1423"` |
-| `baseURL` | `http://127.0.0.1:<port>` |
+| 端口 | 固定 `1423`；显式 `KK_TEST_PORT` 仅接受 `1423` |
+| `baseURL` | `http://127.0.0.1:1423` |
 | 浏览器 | `channel: "msedge"`（真实 Edge，不用 Chromium 替身） |
 | 视口 | 1920 × 1080 |
 | `timeout` | 30000 |
@@ -64,7 +64,7 @@
 
 ### 端口
 
-- Playwright 自己拉起 preview，端口来自 `KK_TEST_PORT`，默认 `1423`，`--strictPort`。
+- Playwright 自己拉起 preview，生产验收固定使用 `1423`，`--strictPort`；若显式 `KK_TEST_PORT` 不是 `1423`，配置在启动测试前直接拒绝。
 - `reuseExistingServer: false` 是刻意设置：复用旧进程会让测试跑到过期 bundle 上，产生假绿。端口被占用时应先清理占用进程，**不得**改成随机端口或 `reuseExistingServer: true` 绕过。
 - 固定占用 `1421`（Vite dev）与 `1423`（Playwright preview）的运行验证必须串行，不能为跑测试杀掉其他任务的进程。
 - 证据里必须写明实际端口。旧端口、旧窗口的截图不能作为当前源码的验证依据。

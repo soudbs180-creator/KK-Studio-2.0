@@ -8,6 +8,7 @@ mod asset_storage;
 mod creation_storage;
 mod project_package;
 mod provider_config;
+mod secret_filter;
 mod storage_paths;
 mod task_host;
 

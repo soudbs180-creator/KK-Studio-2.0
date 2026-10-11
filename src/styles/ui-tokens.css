@@ -183,9 +183,12 @@
   background: var(--ui-control-active);
 }
 .ui-button.is-danger {
-  color: var(--ui-danger);
+  color: var(--ui-text);
 }
-.ui-button.is-danger:not(:disabled):not([aria-disabled="true"]):hover {
+.ui-button.is-danger:not(:disabled):not([aria-disabled="true"]):hover,
+.ui-button.is-danger:focus-visible,
+.ui-button.is-danger:not(:disabled):active {
+  color: var(--ui-danger);
   background: var(--ui-danger-surface);
 }
 .ui-button:focus-visible {

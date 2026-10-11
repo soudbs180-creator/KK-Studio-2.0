@@ -1106,8 +1106,8 @@
   align-items: center;
   gap: 7px;
   position: absolute;
-  left: 227px;
-  top: 0;
+  right: 96px;
+  top: 10px;
   border: 1px solid var(--border-default);
   border-radius: 25px;
   background: var(--bg-card);
@@ -1118,11 +1118,22 @@
 }
 .image-caption {
   position: absolute;
-  left: 96px;
-  top: 44px;
+  right: 96px;
+  top: 36px;
   display: flex;
   gap: 3px;
-  font-size: 10px;
+  max-width: 250px;
+  justify-content: flex-end;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--ui-font-body);
+}
+.image-caption svg {
+  display: none;
+}
+.image-creation:has(.upload-image:not(:disabled)) .image-caption {
+  top: -18px;
 }
 .canvas-node-image.is-reference-only .image-caption {
   max-width: 400px;
@@ -1135,7 +1146,7 @@
   left: 94px;
   top: 58px;
   width: 400px;
-  height: 400px;
+  height: var(--media-height, 400px);
   display: grid;
   place-items: center;
   border: 1px solid transparent;
@@ -1166,7 +1177,7 @@
 .creation-composer {
   position: absolute;
   /* Figma input frame y471 minus the image module's y3 origin. */
-  top: 468px;
+  top: calc(68px + var(--media-height, 400px));
   width: 590px;
   height: 237px;
   border: 1px solid var(--border-default);
@@ -1210,7 +1221,7 @@
   height: var(--kk-control-h-md);
   display: grid;
   place-items: center;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--kk-radius-full);
   color: var(--text-secondary);
 }
 .creation-composer-actions button:hover,
@@ -1260,8 +1271,8 @@
 .param-button,
 .generate-button {
   border: 1px solid var(--border-default);
-  border-radius: 11px;
-  height: 34px;
+  border-radius: var(--kk-radius-full);
+  height: var(--kk-control-h-md);
   padding: 0 9px;
   display: flex;
   align-items: center;
@@ -2442,4 +2453,177 @@
   background: transparent;
   text-decoration: underline;
   cursor: pointer;
+}
+
+/* UI review: readable task popover with room for status and previews. */
+.task-panel {
+  width: min(360px, calc(100vw - 32px));
+  height: min(420px, calc(100dvh - 96px));
+  min-height: 300px;
+  padding: 16px;
+  border-radius: var(--kk-radius-panel);
+  box-sizing: border-box;
+}
+.task-panel-heading,
+.canvas-hud .task-panel-heading {
+  position: static;
+  width: 100%;
+  height: 32px;
+  font-size: var(--ui-font-body);
+  line-height: 20px;
+}
+.task-panel-close {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--kk-radius-full);
+}
+.task-panel-tabs,
+.canvas-hud .task-panel-tabs {
+  position: static;
+  width: 100%;
+  height: 34px;
+  margin: 8px 0 12px;
+  gap: 6px;
+  align-items: stretch;
+}
+.task-tab,
+.canvas-hud .task-tab {
+  flex: 1 1 0;
+  width: auto !important;
+  height: 34px;
+  min-height: 34px;
+  padding: 0 10px;
+  border-radius: var(--kk-radius-full);
+  font-size: var(--ui-font-caption);
+  line-height: 34px;
+}
+.task-tab.active::before,
+.canvas-hud .task-tab.active::before {
+  height: 34px;
+  border-radius: inherit;
+}
+.task-grid,
+.canvas-hud .task-grid {
+  position: static;
+  width: 100%;
+  height: auto;
+  max-height: calc(100% - 136px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: auto;
+  gap: 12px;
+  overflow-y: auto;
+}
+.task-card {
+  width: auto;
+  height: auto;
+  min-height: 132px;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--kk-radius-menu);
+  background: var(--bg-input);
+}
+.task-card-thumb {
+  width: 100%;
+  height: 84px;
+  flex-basis: 84px;
+  border-radius: var(--kk-radius-control);
+}
+.task-card-image {
+  position: static;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.task-card-info {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  gap: 4px;
+  line-height: 16px;
+}
+.task-card-title,
+.task-card-status,
+.task-card.is-running .task-card-status {
+  width: auto;
+  flex: 1 1 auto;
+  font-size: var(--ui-font-caption);
+  line-height: 16px;
+}
+.task-filter-empty {
+  position: static;
+  width: 100%;
+  height: auto;
+  min-height: 180px;
+  font-size: var(--ui-font-caption);
+}
+.task-panel > .task-empty {
+  position: static;
+  width: 100%;
+  min-height: 180px;
+  padding: 24px 12px;
+}
+.task-workbench-link,
+.canvas-hud .task-workbench-link {
+  position: static;
+  width: 100%;
+  height: 36px;
+  margin-top: 12px;
+  padding: 0 12px;
+  border-radius: var(--kk-radius-full);
+  font-size: var(--ui-font-caption);
+}
+.task-detail {
+  padding: 16px;
+}
+
+/* Card toolbar and controls use the same hit size and pill geometry. */
+.model-button,
+.param-button,
+.generate-button,
+.voice-button {
+  min-height: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  border-radius: var(--kk-radius-full);
+}
+.parameter-capability-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 12px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: var(--ui-font-caption);
+}
+.parameter-capability-grid strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.task-button {
+  border-radius: var(--kk-radius-full);
+}
+.reference-add,
+.composer-ref-add {
+  border-radius: var(--kk-radius-full);
+}
+/* Node frames now expose the measured graph layout; the child shell follows it
+   so dynamic media bounds do not clip a portrait or landscape asset. */
+.canvas-node-image > .image-creation {
+  height: 100%;
+}
+.canvas-node-image.is-selected > .image-creation,
+.canvas-node-image.is-reference-only > .image-creation,
+.canvas-node-image.is-reference-only.is-selected > .image-creation {
+  height: 100%;
+}
+.canvas-node-result[data-kind="image"] {
+  height: auto;
+}
+.canvas-node-result[data-kind="image"] .demo-result-node {
+  height: auto;
+}
+.canvas-node-result.has-reference-composer[data-kind="image"]
+  > .creation-composer {
+  top: calc(100% + 10px);
 }

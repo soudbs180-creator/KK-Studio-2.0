@@ -1,5 +1,6 @@
 import type { CanvasCollectionItem } from "./canvasItems.ts";
 import type { Point } from "./canvasViewport.ts";
+import { aspectRatioForDimensions } from "./mediaDimensions.ts";
 
 export interface CanvasConnection {
   id: string;
@@ -12,6 +13,16 @@ export const INITIAL_CONNECTIONS: CanvasConnection[] = [
   { id: "connector-video1", source: "image", target: "video1" },
   { id: "connector-video2", source: "image", target: "video2" },
 ];
+
+function resultCardHeight(item: CanvasCollectionItem): number {
+  const ratio = aspectRatioForDimensions(
+    item.mediaWidth ?? 1,
+    item.mediaHeight ?? 1,
+  );
+  // Result cards keep 16px inner padding on both sides; size the shell around
+  // the content width so a wide image does not clip the preview.
+  return Math.max(222, 32 + 348 / ratio);
+}
 
 /** Visible card body, excluding labels, upload buttons and the optional composer. */
 export function cardVisualBounds(item: CanvasCollectionItem): {
@@ -27,6 +38,14 @@ export function cardVisualBounds(item: CanvasCollectionItem): {
       width: item.plugin.width ?? 380,
       height: item.plugin.height ?? 300,
     };
+  if (item.kind === "image" && item.result) {
+    return {
+      x: 0,
+      y: 0,
+      width: 380,
+      height: resultCardHeight(item),
+    };
+  }
   if (
     item.result ||
     (item.generationStatus && item.generationIndex !== undefined) ||
@@ -36,7 +55,15 @@ export function cardVisualBounds(item: CanvasCollectionItem): {
     return { x: 0, y: 0, width: 380, height: 380 };
   /* Keep the label/upload slot outside this visual bound so connection
      endpoints land on the 400px Figma card rather than its controls. */
-  if (item.kind === "image") return { x: 94, y: 58, width: 400, height: 400 };
+  if (item.kind === "image")
+    return {
+      x: 94,
+      y: 58,
+      width: 400,
+      height:
+        400 /
+        aspectRatioForDimensions(item.mediaWidth ?? 1, item.mediaHeight ?? 1),
+    };
   /* Both Figma video modules use a 16px label slot before the 208px body. */
   return { x: 0, y: 16, width: 370, height: 208 };
 }
@@ -64,9 +91,9 @@ export function cardLayout(item: CanvasCollectionItem): {
   if (item.referenceOnly)
     return {
       width: 590,
-      height: 458,
+      height: visual.y + visual.height,
       left: 0,
-      collapsedHeight: 458,
+      collapsedHeight: visual.y + visual.height,
       anchor,
     };
   if (
@@ -80,9 +107,9 @@ export function cardLayout(item: CanvasCollectionItem): {
     );
     return {
       width: hasReferenceComposer ? 590 : 380,
-      height: hasReferenceComposer ? 627 : 380,
+      height: hasReferenceComposer ? visual.height + 247 : visual.height,
       left: hasReferenceComposer ? -105 : 0,
-      collapsedHeight: 380,
+      collapsedHeight: visual.height,
       anchor,
     };
   }
@@ -97,9 +124,9 @@ export function cardLayout(item: CanvasCollectionItem): {
   if (item.kind === "image")
     return {
       width: 590,
-      height: 705,
+      height: visual.y + visual.height + 247,
       left: 0,
-      collapsedHeight: 458,
+      collapsedHeight: visual.y + visual.height,
       anchor,
     };
   return {

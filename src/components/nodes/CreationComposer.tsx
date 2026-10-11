@@ -25,8 +25,6 @@ interface CreationComposerProps {
   onReference: (slot?: CanvasReference["slot"]) => void;
   error?: string;
   onPromptChange: (value: string) => void;
-  liked: boolean;
-  onToggleLike: () => void;
   onExtraHeightChange: (height: number) => void;
   onDemoResults?: (results: DemoResult[]) => void;
   onGenerationStart?: (count: number) => void;
@@ -47,8 +45,6 @@ export default function CreationComposer({
   onReference,
   error,
   onPromptChange,
-  liked,
-  onToggleLike,
   onExtraHeightChange,
   onDemoResults,
   onGenerationStart,
@@ -143,9 +139,7 @@ export default function CreationComposer({
       }}
     >
       <ComposerActions
-        liked={liked}
         expanded={expanded}
-        onToggleLike={onToggleLike}
         onToggleExpanded={() => setExpanded(!expanded)}
       />
       {expanded ? (

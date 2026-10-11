@@ -13,6 +13,8 @@ import {
 import { stageProject } from "../fixtures/stage-project";
 import { expandSidebar, openSettingsSection } from "./helpers";
 
+const productionOrigin = "http://127.0.0.1:1423";
+
 async function inspectPage(
   page: Page,
   root: Locator,
@@ -109,7 +111,7 @@ async function inspectPage(
   await expect(
     page.locator('[data-runtime-entry="src/main.tsx"]'),
   ).toHaveAttribute("data-runtime-mode", "production");
-  expect(new URL(page.url()).port).toBe("1423");
+  expect(new URL(page.url()).origin).toBe(productionOrigin);
 }
 
 for (const width of [390, 1920]) {

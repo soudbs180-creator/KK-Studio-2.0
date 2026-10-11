@@ -21,8 +21,6 @@ export default function VideoNode({
   selected,
   onConfigure,
   onChange,
-  liked,
-  onToggleLike,
   onExtraHeightChange,
   onDemoResults,
   onGenerationStart,
@@ -234,8 +232,6 @@ export default function VideoNode({
         onModelChange={onModelChange}
         error={error}
         onPromptChange={(prompt) => onChange({ prompt })}
-        liked={liked}
-        onToggleLike={onToggleLike}
         onExtraHeightChange={onExtraHeightChange}
         onRemoveReference={onRemoveReference}
       />

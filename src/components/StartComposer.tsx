@@ -3,7 +3,7 @@ import type { CreationDraft } from "../features/creation/model";
 import StartAttachmentList from "./StartAttachmentList";
 import ComposerTextarea from "./ComposerTextarea";
 import useConversationAttachments from "./useConversationAttachments";
-import StartResourcePopover from "./StartResourcePopover";
+import ComposerExtensionsMenu from "./ComposerExtensionsMenu";
 import StartModelPicker from "./StartModelPicker";
 import { StartApproval, StartModePicker } from "./StartComposerModes";
 import VoiceInputButton from "./VoiceInputButton";
@@ -21,9 +21,8 @@ export default function StartComposer({
   setStatus,
   onSubmit,
   onOpenModel,
-  agentConnected,
-  onOpenAgent,
   onOpenSkills,
+  onOpenExtension,
   defaultModel = "",
   modelConfigured = false,
   skills = [],
@@ -34,9 +33,8 @@ export default function StartComposer({
   setStatus: (status: string) => void;
   onSubmit: (input: CreationDraft) => void;
   onOpenModel: () => void;
-  agentConnected: boolean;
-  onOpenAgent: () => void;
   onOpenSkills: () => void;
+  onOpenExtension: (id: string) => void;
   defaultModel?: string;
   modelConfigured?: boolean;
   skills?: SkillRecord[];
@@ -164,11 +162,6 @@ export default function StartComposer({
               model={model}
               defaultModel={defaultModel}
               onOptionsChange={commit}
-              agentConnected={agentConnected}
-              onOpenAgent={() => {
-                closeMenus();
-                onOpenAgent();
-              }}
               open={modelMenuOpen}
               onToggle={() => toggleMenu("model")}
               onSelect={(choice) => {
@@ -193,24 +186,24 @@ export default function StartComposer({
                 className="start-tool-button"
                 aria-haspopup="menu"
                 aria-expanded={skillMenuOpen}
-                title="技能（Skill）"
+                title="扩展"
                 onClick={() => toggleMenu("skill")}
               >
                 <img src="/design/figma/composer-puzzle.svg" alt="" />
-                <span>Skill</span>
+                <span>扩展</span>
               </button>
               {skillMenuOpen && (
-                <StartResourcePopover
-                  kind="skill"
+                <ComposerExtensionsMenu
                   skills={skills}
                   onApplySkill={(record) => {
                     const message = onApplySkill?.(record);
                     closeMenus();
                     setStatus(message ?? "当前草稿不可用，未应用技能。");
                   }}
-                  onOpen={() => {
+                  onOpen={(id) => {
                     closeMenus();
-                    onOpenSkills();
+                    if (id === "skills") onOpenSkills();
+                    else onOpenExtension(id);
                   }}
                 />
               )}

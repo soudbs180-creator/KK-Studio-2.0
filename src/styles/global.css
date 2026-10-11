@@ -418,6 +418,8 @@ button[aria-pressed="true"] {
   border-radius: inherit;
 }
 .composer-ref-thumb button {
+  opacity: 0;
+  pointer-events: none;
   position: absolute;
   top: -6px;
   right: -6px;
@@ -433,6 +435,11 @@ button[aria-pressed="true"] {
   font-size: var(--kk-font-caption);
   line-height: 1;
   z-index: 2;
+}
+.composer-ref-thumb:hover button,
+.composer-ref-thumb:focus-within button {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .conversation-panel > .resize-handle {

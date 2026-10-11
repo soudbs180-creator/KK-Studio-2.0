@@ -4,7 +4,7 @@
 
 ## 纳入标准
 
-材料必须能回答“研究了哪个外部对象、何时、用什么模式、留下什么证据”。同一研究包的 intent/spec/plan/review/verification 作为研究包索引，但只有明确的外部观察或静态比较才是研究结论；本地实现计划和本地回归仍标为 change evidence。仅因文件出现“豆包、WorkBuddy、CodeBuddy、MiniMax、竞品”等关键词，不会自动进入研究目录。
+材料必须能回答“研究了哪个外部对象、何时、用什么模式、留下什么证据”。同一研究包的 intent/spec/plan/review/verification 作为研究包索引，但只有明确的外部观察或静态比较才是研究结论；本地实现计划和本地回归仍标为 change evidence。仅因文件出现“豆包、WorkBuddy、CodeBuddy、MiniMax、竞品”等关键词，不会自动进入研究目录。日常观察、差距筛选和每周/双周复盘按 [`DEVELOPMENT-WORKFLOW.md`](../../engineering/DEVELOPMENT-WORKFLOW.md) 执行。
 
 ## MiniMax Design：2026-09-21 深度审计（五份锚定文档）
 

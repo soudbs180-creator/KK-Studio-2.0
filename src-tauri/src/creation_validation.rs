@@ -1,3 +1,4 @@
+use crate::secret_filter;
 use serde_json::{Map, Value};
 use std::collections::HashSet;
 
@@ -253,33 +254,5 @@ fn validate_canvas(canvas: &Value, node_ids: &HashSet<&str>) -> Result<(), Strin
     Ok(())
 }
 fn reject_secrets(value: &Value) -> Result<(), String> {
-    match value {
-        Value::Object(map) => {
-            for (key, child) in map {
-                if [
-                    "api_key",
-                    "apikey",
-                    "access_token",
-                    "accesstoken",
-                    "oauth_token",
-                    "oauthtoken",
-                    "refresh_token",
-                    "refreshtoken",
-                ]
-                .iter()
-                .any(|secret| key.eq_ignore_ascii_case(secret))
-                {
-                    return Err(corrupt("快照不能包含 API Key 或访问令牌"));
-                }
-                reject_secrets(child)?;
-            }
-        }
-        Value::Array(values) => {
-            for child in values {
-                reject_secrets(child)?;
-            }
-        }
-        _ => (),
-    }
-    Ok(())
+    secret_filter::reject_secrets(value, &|| corrupt("快照不能包含 API Key 或访问令牌"))
 }

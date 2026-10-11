@@ -62,6 +62,9 @@ export interface CanvasCollectionItem {
   assetId?: string;
   parentAssetId?: string;
   preview?: string;
+  /** Natural media dimensions used to keep image cards proportional. */
+  mediaWidth?: number;
+  mediaHeight?: number;
   updatedAt?: number;
   result?: DemoResult;
   /** A generated image keeps its editor when it is used as a reference. */

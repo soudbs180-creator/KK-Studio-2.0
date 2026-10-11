@@ -415,3 +415,10 @@
   font-size: var(--ui-font-caption);
   margin: 0;
 }
+
+.conversation-panel .composer-extensions-menu {
+  width: min(320px, calc(100vw - 48px));
+}
+.conversation-panel .chat-skill-trigger {
+  border-radius: 999px;
+}

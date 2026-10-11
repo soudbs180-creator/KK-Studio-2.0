@@ -7,13 +7,13 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 等待Hosted Windows带启动阶段/退出码/运行时日志的重跑；保留PR43原失败和本机未复现原件，未取得新分类前保持TODO。 |
 | TASK-IMAGE-RETRY-004 | 修复主线区域重试验收读取旧成功任务 | DONE | 已完成 | P1 | TASK-IMAGE-EDIT-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-DESKTOP-FLUSH-001 | 桌面关闭前耐久保存与失败留窗 | DONE | 已完成 | P1 | TASK-PLUGIN-DEV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PLUGIN-MARKDOWN-001 | 随包Markdown去除CDN代码依赖与离线渲染 | DONE | 已完成 | P1 | TASK-PLUGIN-DEV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PLUGIN-RECOVERY-001 | 插件节点快照完整恢复与坏数据保护 | DONE | 已完成 | P1 | TASK-PLUGIN-DEV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | DONE | 已完成 | P3 | TASK-MODEL-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | 未完成 | P1 | TASK-IMAGE-EDIT-001 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
+| TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | 未完成 | P1 | TASK-IMAGE-EDIT-001 | root | 冻结新增实现，等待明确供应商/账号授权与物理手机；条件满足后先做单张Mask原件保护和映射边界，再做手机手势/键盘与用户视觉验收。 |
 | TASK-UI-013 | 桌面标题栏与菜单合并为单排 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | 已完成 | P3 | none | root | 保留当前证据；正式安装器、签名发布、托管 CI 与用户验收按各自门禁继续回读 |
 | TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -81,13 +81,13 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | PLUGIN-DESKTOP-001 | 修复桌面画布插件的 CSP 加载路径 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | 已完成 | P3 | REL-2.1.0 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | TODO | 未完成 | P1 | TASK-RULES-004 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | DONE | 已完成 | P1 | TASK-RULES-004 | root | 保留dc53317b exact review收据与8个未验证日志边界；如后续获得原始日志，再以新证据包单独勘误。 |
 | TASK-ORCH-001 | Agent 编排领域状态机与编排器工具面 | DONE | 已完成 | P3 | TASK-AGENT-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-ORCH-002 | TaskWorkbench 阶段计划视图与审批交互 | DONE | 已完成 | P3 | TASK-ORCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-ORCH-003 | 编排器驱动生成执行与计划门禁 | TODO | 未完成 | P2 | TASK-ORCH-001, BACKEND-MEDIA-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | 进行中 | P2 | TASK-ORCH-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | 进行中 | P2 | TASK-AGENT-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| TASK-TASKSTATE-002 | 供应商成本报价回执接入 | TODO | 未完成 | P1 | TASK-TASKSTATE-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | 进行中 | P2 | TASK-AGENT-001 | root | 提交后绑定 exact SHA 完成正式独立复审；随后补真实 Provider/每平台运行证据，不能用 fixture 或示例单价升级 DONE。 |
+| TASK-TASKSTATE-002 | 供应商成本报价回执接入 | PARTIAL | 进行中 | P1 | TASK-TASKSTATE-001 | root | 提交后绑定 exact SHA 完成正式独立 review；再由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。 |
 | TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-COMPARE-001 | 画布图片对比操作 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | DONE | 已完成 | P3 | TASK-COMPARE-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -119,11 +119,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PROV-007 | Selected model is at capacity 错误分类与可用模型切换 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | 未完成 | P2 | TASK-GOV-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
-| TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | TODO | 未完成 | P1 | none | root | 补充负责人、优先级、分支和下一步验收证据 |
-| TASK-DOCS-STRUCT-001 | AI 协作规则文档结构收敛 | REVIEW | 进行中 | P1 | none | root | 按验收条件完成实现、验证、独立审查和文档同步 |
-| TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | TODO | 未完成 | P1 | none | root | 实现真实 DPAPI SecretProtector（需 Rust 侧或 PowerShell 桥），接入一个真实火山方舟账号取得上游证据后再转 DONE；随后接调度层持久化仓储与 sub2api-client。 |
-| TASK-PROV-BYOK-001 | 用户自有 API 产品化接入 | TODO | 未完成 | P1 | TASK-AI-GATEWAY-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
+| TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | 未完成 | P2 | TASK-GOV-001 | root | 保留source105的9个首轮flaky原件；当前固定1423、retries=0的并发矩阵仅证明未复现，不宣称根因已修复。若要关闭，补同一exact SHA的Hosted与独立复审；否则保持PARTIAL。 |
+| TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | DONE | 已完成 | P1 | none | root | 保留exact-SHA与独立review收据；Hosted delivery、Windows安装、第二环境、发布和用户验收继续由TASK-AGENT-010及发布门禁承担。 |
+| TASK-DOCS-STRUCT-001 | AI 协作规则文档结构收敛 | DONE | 已完成 | P1 | none | root | 保留当前证据；合并或发布前按本任务原验收范围回读主线，不重新引入 pnpm 锁文件。 |
+| TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | PARTIAL | 进行中 | P1 | none | root | 保留本地网关/模型能力实现和回归证据；下一步只补真实 DPAPI、Ark/Codex 凭据、token 级上游流和 Desktop 运行态，外部证据齐全后再转 DONE。 |
+| TASK-PROV-BYOK-001 | 用户自有 API 产品化接入 | TODO | 未完成 | P1 | TASK-AI-GATEWAY-001 | root | 依赖TASK-AI-GATEWAY-001与Web VPS控制面；先补intent/spec/plan和Desktop/Web/Mobile边界，外部契约稳定前不扩展产品实现。 |
 | TASK-UI-015 | 画布点状/网状背景缩放插值修正 | DONE | 已完成 | P2 | none | root | 保留当前证据；主线回读完成 |
 | TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | REVIEW | 进行中 | P1 | TASK-LAUNCH-001 | root | 在合并候选 SHA 上回读 hosted CI、发布 receipt，并在第二环境安装后校验版本/commit/hash/进程路径 |
 
@@ -161,7 +161,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: tests/unit/desktopRelease.test.ts, start-kk-studio.bat, docs
 - Verification: NOT_VERIFIED — 实际失败根因UNKNOWN；独立本机未复现，P2跟进不能代填关闭。
 - Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-09-windows-entry-diagnostics/review.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/review.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: 等待Hosted Windows带启动阶段/退出码/运行时日志的重跑；保留PR43原失败和本机未复现原件，未取得新分类前保持TODO。
 - Last verified: 2026-10-09
 - Updated: 2026-10-09
 
@@ -275,7 +275,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/image-edit, src/features/creation, tests, docs/features/feat-035-image-mask-editing.md
 - Verification: NOT_VERIFIED — 本轮未使用真实付费连接、物理手机或用户视觉验收；比例异常已自动拒绝，任意语义几何位移仍需人工确认。
 - Evidence: [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/features/feat-035-image-mask-editing.md](../../docs/features/feat-035-image-mask-editing.md)
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步
+- Next action: 冻结新增实现，等待明确供应商/账号授权与物理手机；条件满足后先做单张Mask原件保护和映射边界，再做手机手势/键盘与用户视觉验收。
 - Last verified: 2026-10-08
 - Updated: 2026-10-08
 
@@ -1170,11 +1170,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `chore/TASK-CONSOLIDATE-200`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/domain/imageParameters.ts, src/features/creation/imageGeneration.ts, src/features/creation/nativeTaskHost.ts, src/features/creation/model.ts, src/features/creation/imageTaskCommand.ts, src/App.tsx, src/components/nodes/CreationParameters.tsx, src-tauri/src/task_host.rs, tests/unit/imageParameters.test.ts
-- Verification: PARTIAL — 代码透传与旧212/200/65测试记录保留；勘误：缺 Desktop 参数实机 HTTP及同状态证据，不能 DONE/REAL；供应商尺寸枚举和像素限制需按模型适配。
-- Evidence: [docs/changes/2026-09-21-feature-system/verification.md](../../docs/changes/2026-09-21-feature-system/verification.md), [tests/unit/imageParameters.test.ts](../../tests/unit/imageParameters.test.ts), [docs/changes/2026-09-21-text-and-rule-audit/verification.md](../../docs/changes/2026-09-21-text-and-rule-audit/verification.md)
+- Verification: PARTIAL — 代码透传与旧212/200/65测试记录保留；新增浏览器证据覆盖图片原始尺寸写入快照、刷新后回载和比例保持；仍缺 Desktop 参数实机 HTTP及同状态证据，不能 DONE/REAL；供应商尺寸枚举和像素限制需按模型适配。
+- Evidence: [docs/changes/2026-09-21-feature-system/verification.md](../../docs/changes/2026-09-21-feature-system/verification.md), [tests/unit/imageParameters.test.ts](../../tests/unit/imageParameters.test.ts), [docs/changes/2026-09-21-text-and-rule-audit/verification.md](../../docs/changes/2026-09-21-text-and-rule-audit/verification.md), [docs/changes/2026-10-11-closeout/verification.md](../../docs/changes/2026-10-11-closeout/verification.md), [tests/browser/media-dimensions.spec.ts](../../tests/browser/media-dimensions.spec.ts)
 - Next action: 按验收条件完成实现、验证、独立审查和文档同步
-- Last verified: 2026-09-22
-- Updated: 2026-09-22
+- Last verified: 2026-10-11
+- Updated: 2026-10-11
 
 ## BACKEND-TEXT-NODE — 文本节点接入统一任务宿主
 
@@ -1560,8 +1560,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 逐项核对历史快照的 37 处链接问题并在有原始证据时添加可追溯勘误
 - Scope: docs/archive、历史 docs/changes 和 docs/evidence 的链接及产物归属
-- Display status: 未完成
-- Priority: P1 — 当前治理或验证阻断项
+- Display status: 已完成
+- Priority: P1 — 历史链接勘误与审计边界已完成；外部日志恢复不属于本任务验收
 - Requirement refs: ledger:TASK-DOCS-HISTORY-001
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -1569,11 +1569,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: docs/archive, docs/changes, docs/evidence
-- Verification: NOT_VERIFIED — 2026-09-23 扫描 365 个已跟踪 Markdown，历史范围共 37 处文件目标问题；原始日志来源和可恢复性待核对。
-- Evidence: [docs/governance/MARKDOWN_AUDIT.md](../../docs/governance/MARKDOWN_AUDIT.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
-- Last verified: 2026-09-23
-- Updated: 2026-09-23
+- Verification: PASS — 37项历史问题已逐项复核：29个可追溯文件入口修复，8个原始日志因无Git tracked来源保持未验证；定向保护脚本、历史目标检查和Markdown检查通过。文档限定提交dc53317b36cb604b77db10fdebc56666c662e215已由docs_history_exact_review以基线5199557752f14438407b966e07fc8a965bdb9671独立复核，结论PASS WITH FOLLOW-UPS，无P0-P2缺陷；Hosted、发布、用户验收和外部日志恢复不在本任务范围。
+- Evidence: [docs/governance/MARKDOWN_AUDIT.md](../../docs/governance/MARKDOWN_AUDIT.md), [docs/changes/2026-10-11-taskstate-docs-closeout/docs-history-audit.json](../../docs/changes/2026-10-11-taskstate-docs-closeout/docs-history-audit.json), [docs/changes/2026-10-11-taskstate-docs-closeout/verification.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/verification.md), [docs/changes/2026-10-11-taskstate-docs-closeout/review.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/review.md), [docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json](../../docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json), [docs/changes/2026-10-11-taskstate-docs-closeout/exact-independent-review.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/exact-independent-review.md)
+- Next action: 保留dc53317b exact review收据与8个未验证日志边界；如后续获得原始日志，再以新证据包单独勘误。
+- Last verified: 2026-10-11
+- Updated: 2026-10-11
 
 ## TASK-ORCH-001 — Agent 编排领域状态机与编排器工具面
 
@@ -1664,30 +1664,30 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/features/creation/taskState.ts, src/features/creation/taskRecovery.ts, src/features/creation/model.ts, tests/unit/taskState.test.ts, src/features/creation/nativeTaskHost.ts, src/App.tsx, tests/unit/nativeTaskHost.test.ts, tests/browser/task-intent.spec.ts
-- Verification: PARTIAL — 统一普通重试门禁、重启父子对账与归档证据保护；dc05556统一原生回执任务ID/幂等键、逐输出索引与类型校验，非法回执为unknown且无重复提交。原生/恢复53项与全量Node710项（702pass/8Windows skip/0fail）、浏览器388项无重试通过；未取得供应商报价时成本未知，真实Provider/每平台运行仍待验收，保持PARTIAL。
-- Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md), [docs/changes/2026-10-03-incomplete-tasks/verification.md](../../docs/changes/2026-10-03-incomplete-tasks/verification.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
-- Last verified: 2026-10-08
-- Updated: 2026-10-08
+- Verification: PARTIAL — 9态、可重试边界和未知成本语义保持通过；新增成本回执的有限金额、来源/币种/身份绑定、重复/冲突保护、快照读回和 native package 回归通过。独立 dirty 预检未发现P0-P2缺陷，结论为PASS WITH FOLLOW-UPS；真实 Provider、每平台运行和用户验收仍未验证，保持PARTIAL。
+- Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md), [docs/changes/2026-10-03-incomplete-tasks/verification.md](../../docs/changes/2026-10-03-incomplete-tasks/verification.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md), [tests/unit/taskState.test.ts](../../tests/unit/taskState.test.ts), [tests/unit/taskCostReceipt.test.ts](../../tests/unit/taskCostReceipt.test.ts), [docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json](../../docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json)
+- Next action: 提交后绑定 exact SHA 完成正式独立复审；随后补真实 Provider/每平台运行证据，不能用 fixture 或示例单价升级 DONE。
+- Last verified: 2026-10-11
+- Updated: 2026-10-11
 
 ## TASK-TASKSTATE-002 — 供应商成本报价回执接入
 
 - Goal: 把可验证的供应商报价或账单回执接入统一任务态，避免成本长期停留在未知状态
 - Scope: src/features/creation/taskState.ts, src/features/creation/model.ts, provider adapters, tests, docs/changes/2026-10-03-incomplete-tasks
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P1 — 当前治理或验证阻断项
 - Requirement refs: ledger:TASK-TASKSTATE-002
 - Feature IDs: FEAT-031
 - Owner role: repository-maintainer
 - Acceptance: 供应商回执中的成本字段经过 schema 与非负有限边界校验; 任务快照保留报价来源、币种和回执身份，未知/缺失报价仍安全显示未知; Provider fixture 与真实运行证据分别记录，不以示例单价代替实际账单
-- Branch: `unallocated`
-- Worktree: `unallocated`
+- Branch: `main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/features/creation/taskState.ts, src/features/creation/model.ts, src/features/creation/provider adapters, tests/unit
-- Verification: NOT_VERIFIED — 已在 2026-10-03 盘点中新增并排为 P1；等待供应商回执契约与真实运行条件。
-- Evidence: NOT VERIFIED
-- Next action: 补充负责人、优先级、分支和下一步验收证据
-- Last verified: 2026-10-03
-- Updated: 2026-10-03
+- Verification: PARTIAL — 已实现有界报价回执 schema、任务/幂等身份校验、重复与冲突保护、快照恢复和 fixture/非 USD 隔离；当前 HEAD 的定向成本/任务测试30/30、全量 unit/deploy 966（957 pass、9 skip、0 fail）、native project_package 22/22 通过。独立 dirty 预检未发现P0-P2缺陷，结论为PASS WITH FOLLOW-UPS；真实 Provider 报价回执和提交后exact-SHA正式审查仍未取得，保持PARTIAL。
+- Evidence: [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-intent.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-intent.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-spec.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-spec.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md), [tests/unit/taskCostReceipt.test.ts](../../tests/unit/taskCostReceipt.test.ts), [tests/unit/taskState.test.ts](../../tests/unit/taskState.test.ts), [docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json](../../docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json)
+- Next action: 提交后绑定 exact SHA 完成正式独立 review；再由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。
+- Last verified: 2026-10-11
+- Updated: 2026-10-11
 
 ## TASK-PROV-002 — 多供应商接入与多目标配置（Provider Connectivity）
 
@@ -2061,7 +2061,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Owner role: repository-maintainer
 - Acceptance: 共享文件 ~/.kk-memory/memory.json 在 KK Studio 中可安全读写；豆包和 WorkBuddy 需完成受支持的适配器并真实联调; Web 未授权时降级 IndexedDB 并明示; 旧隔离文件一次性种子迁移，不覆盖已有共享文件; 完整记忆文件不进同步/localStorage/日志/导出；开启后选中片段用于模型推理; 清空/重置对读取同一文件的已接入客户端生效; Agent 遵循 docs/MEMORY-CONTRACT.md
 - Branch: `feat/TASK-MEMORY-001-local-memory`
-- Worktree: `D://kk-studio//.worktrees//TASK-MEMORY-001`
+- Worktree: `D:/kk-studio/.worktrees/TASK-MEMORY-001`
 - Modules: src/features/memory, src/components/settings/MemorySettingsSection.tsx, src-tauri/src/main.rs, src-tauri/src/storage_paths.rs, AGENTS.md, docs/MEMORY-CONTRACT.md, docs/architecture/DATA-STORAGE.md
 - Verification: PARTIAL — 默认共享契约保留；--data-dir 隔离记忆，启动不迁移，损坏旧文件/锁/备份失败保持原件；fresh Desktop 验证共享文件 hash 未变。豆包/WorkBuddy 与 Web 目录授权仍未联调。
 - Evidence: [docs/MEMORY-CONTRACT.md](../../docs/MEMORY-CONTRACT.md), [docs/changes/2026-09-24-local-memory/intent.md](../../docs/changes/2026-09-24-local-memory/intent.md), [docs/changes/2026-09-24-local-memory/spec.md](../../docs/changes/2026-09-24-local-memory/spec.md), [docs/changes/2026-09-24-local-memory/verification.md](../../docs/changes/2026-09-24-local-memory/verification.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
@@ -2293,7 +2293,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: tests/browser, playwright.config.ts
 - Verification: PARTIAL — 当前 clean source 8090475958f1a0bdd1b4b36ada7f2aba1e4e6264、同一 production dist、固定 preview 1423/retries0 下，workers 1/2/4/8/12 均 447/447 PASS；历史 source105 的 9 个首轮 flaky 原件保留，当前未复现，资源压力仅支持假设。PR #46 已以 squash merge 2b6c0ba10e17b873d5a38d85b2d38fb8848149cc 合并，origin/main 与候选/落地 tree 已回读一致；合并后 run 37983272823 的 verify、deploy-linux、upload-artifact 成功，delivery 按 push 条件跳过。IRV-CONC-002 已关闭；历史根因仍 UNKNOWN，不能称根因修复。
 - Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-10-verify-concurrency-002/verification.md](../../docs/changes/2026-10-10-verify-concurrency-002/verification.md), [docs/changes/2026-10-10-verify-concurrency-002/review.md](../../docs/changes/2026-10-10-verify-concurrency-002/review.md), [docs/changes/2026-10-10-verify-concurrency-002-closeout/verification.md](../../docs/changes/2026-10-10-verify-concurrency-002-closeout/verification.md), [docs/changes/2026-10-10-verify-concurrency-002-closeout/review.md](../../docs/changes/2026-10-10-verify-concurrency-002-closeout/review.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: 保留source105的9个首轮flaky原件；当前固定1423、retries=0的并发矩阵仅证明未复现，不宣称根因已修复。若要关闭，补同一exact SHA的Hosted与独立复审；否则保持PARTIAL。
 - Last verified: 2026-10-09
 - Updated: 2026-10-10
 
@@ -2301,45 +2301,45 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 配置和实际验收端口契约一致，不运行不支持的端口后误判产品
 - Scope: playwright KK_TEST_PORT与7处固定1423断言、3处默认来源契约
-- Display status: 未完成
-- Priority: P1 — 当前治理或验证阻断项
+- Display status: 已完成
+- Priority: P1 — 来源契约验收已完成；外部交付继续由对应P1任务负责
 - Requirement refs: ledger:TASK-VERIFY-ORIGIN-003
 - Feature IDs: none
 - Owner role: repository-maintainer
 - Acceptance: 保留105 preview1431真实437PASS/10FAIL反例及默认1423零重试447PASS原件; 根据固定端口规范提供明确早期配置拒绝或合法测试fixture契约，不能弱化产品端口断言和来源白名单; 相关回归与精确提交独立审查通过
-- Branch: `unallocated`
-- Worktree: `unallocated`
-- Modules: playwright.config.ts, tests/browser/image-selection-actions.spec.ts, tests/browser/ui-page-rules.spec.ts, tests/browser/local-service-connection.spec.ts, tests/browser/local-service-migration.spec.ts
-- Verification: NOT_VERIFIED — 本次1431反例为运行配置不满足既有验收条件，7处明确port!=1423、3处实际来源白名单不认可。当前固定默认1423已447/447零retry，后续配置一致性未实施；不影响生产默认端口行为。
-- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
-- Last verified: 2026-10-09
-- Updated: 2026-10-09
+- Branch: `main`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: playwright.config.ts, docs/engineering/TESTING.md, tests/browser/image-selection-actions.spec.ts, tests/browser/ui-page-rules.spec.ts, tests/browser/local-service-connection.spec.ts, tests/browser/local-service-migration.spec.ts, tests/browser/image-compare.spec.ts, tests/browser/agent.spec.ts, tests/unit/verificationOrigins.test.ts
+- Verification: PASS — 来源契约范围已完成：冻结树1f6cbd37091326a899fa600baba53bf6efd9cf16上KK_TEST_PORT=1431在Playwright加载前拒绝，固定1423可列出447项，六组生产browser spec fresh preview/Edge/workers=1/retries=0为25/25，Vite build通过，冻结树治理115任务/35功能/102 Markdown均0 violations。GitHub exact tree Hosted quality run 38080705770 的 verify/deploy-linux成功，git-guards run 38080705741存在；delivery跳过。任务实现提交为4949b3db，合入7736c99后由1f6cbd3承载。独立review `/root/origin_exact_review3` 已绑定 base 7ebf143b291e344b243e1ef396d510bb91730bd3、实现提交4949b3db与承载树1f6cbd3，结论PASS（scoped），无P0/P1发现。Hosted delivery、Windows安装/签名、第二环境、真实Provider、Tauri、移动设备与用户验收由其他任务继续承担。
+- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-11-verify-origin-003/intent.md](../../docs/changes/2026-10-11-verify-origin-003/intent.md), [docs/changes/2026-10-11-verify-origin-003/spec.md](../../docs/changes/2026-10-11-verify-origin-003/spec.md), [docs/changes/2026-10-11-verify-origin-003/plan.md](../../docs/changes/2026-10-11-verify-origin-003/plan.md), [docs/changes/2026-10-11-verify-origin-003/verification.md](../../docs/changes/2026-10-11-verify-origin-003/verification.md), [docs/changes/2026-10-11-verify-origin-003/review.md](../../docs/changes/2026-10-11-verify-origin-003/review.md), [docs/changes/2026-10-11-closeout/verification.md](../../docs/changes/2026-10-11-closeout/verification.md), [docs/changes/2026-10-11-p1-exact-sha-closeout/intent.md](../../docs/changes/2026-10-11-p1-exact-sha-closeout/intent.md), [docs/changes/2026-10-11-p1-exact-sha-closeout/plan.md](../../docs/changes/2026-10-11-p1-exact-sha-closeout/plan.md), [docs/changes/2026-10-11-p1-exact-sha-closeout/verification.md](../../docs/changes/2026-10-11-p1-exact-sha-closeout/verification.md), [docs/changes/2026-10-11-p1-exact-sha-closeout/review.md](../../docs/changes/2026-10-11-p1-exact-sha-closeout/review.md), [docs/changes/2026-10-11-p1-exact-sha-closeout/exact-independent-review.md](../../docs/changes/2026-10-11-p1-exact-sha-closeout/exact-independent-review.md)
+- Next action: 保留exact-SHA与独立review收据；Hosted delivery、Windows安装、第二环境、发布和用户验收继续由TASK-AGENT-010及发布门禁承担。
+- Last verified: 2026-10-11
+- Updated: 2026-10-11
 
 ## TASK-DOCS-STRUCT-001 — AI 协作规则文档结构收敛
 
 - Goal: 建立单一文档入口与权威优先级，补齐编码与测试规范缺口，消除同一规则多处定义
-- Scope: docs/README.md 索引与裁决、新建 engineering/CODING-STANDARDS.md 与 engineering/TESTING.md、BRANCH-POLICY.md 补四节、UI_RULES.md 加 3.4 Token 化纪律、AGENTS.md 与 AI_RULES.md 边界
-- Display status: 进行中
+- Scope: docs/README.md 索引与裁决、新建 engineering/CODING-STANDARDS.md 与 engineering/TESTING.md、BRANCH-POLICY.md 补四节、UI_RULES.md 加 3.4 Token 化纪律、AGENTS.md 与 AI_RULES.md 边界；本次延续补齐 DEVELOPMENT-WORKFLOW.md、开发笔记/成果说明模板、根因闭环和竞品观察节奏。
+- Display status: 已完成
 - Priority: P1 — 开放任务默认待治理排序
 - Requirement refs: ledger:TASK-DOCS-STRUCT-001
 - Feature IDs: none
 - Owner role: repository-maintainer
-- Acceptance: docs/README.md 含四类索引表、五层权威优先级与冲突裁决细则、本地记忆四层模型; CODING-STANDARDS.md 门禁表每条对应实际脚本源码，含 domain 依赖禁令与 300 行边界适用范围; TESTING.md 的 Playwright 参数与 playwright.config.ts 逐字段一致，含 KK_TEST_PORT 与 retries 纪律; 未新建 ui-guidelines.md / git-workflow.md / UI-TOKEN-GOVERNANCE.md，避免第二来源; markdown:check 0 violations 且 npm run lint exit 0
+- Acceptance: docs/README.md 含四类索引表、五层权威优先级与冲突裁决细则、本地记忆四层模型; CODING-STANDARDS.md 门禁表每条对应实际脚本源码，含 domain 依赖禁令与 300 行边界适用范围; TESTING.md 的 Playwright 参数与 playwright.config.ts 逐字段一致，含 KK_TEST_PORT 与 retries 纪律; 未新建 ui-guidelines.md / git-workflow.md / UI-TOKEN-GOVERNANCE.md，避免第二来源; markdown:check 0 violations 且 npm run lint exit 0; DEVELOPMENT-WORKFLOW.md 明确任务领取、需求/验收确认、TODO/IN_PROGRESS/REVIEW/DONE/BLOCKED/REGRESSION 流转和成果说明; intent/plan/verification/review/incident 模板记录负责人、依赖、状态笔记、边界验证、根因和遗留问题; 竞品观察记录来源、证据和静态/运行边界，不提升本地产品完成度; 新 dated change package、账本、docs/PROGRESS.md 与治理/Markdown/delivery 门禁结果可追溯
 - Branch: `docs/TASK-DOCS-STRUCT-001`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
-- Modules: docs/README.md, docs/engineering/CODING-STANDARDS.md, docs/engineering/TESTING.md, docs/engineering/BRANCH-POLICY.md, docs/UI_RULES.md, AGENTS.md, AI_RULES.md
-- Verification: PASS — markdown:check 104 active files 0 violations；lint exit 0；governance 115 tasks 0 violations；delivery 15 files 0 violations。独立上下文AI review（第二轮）发现2个P1+6个P2+9个P3，全部已核实修复并复跑门禁。P1：依赖方向表与实际矛盾（components→features 97处、domain→runtime 2处门禁却允许）、--ui-*定义位置与UI_RULES 3.1冲突。P2：交付包内CSS改动数4vs3矛盾、ESLint files仅tests/**/*.ts致19个desktop .mjs不受检、开篇门禁承诺失实、docs/decisions未入库却索引、evidence命名规范与现状不符、verification证据链不闭合。
-- Evidence: [docs/changes/2026-10-09-docs-structure/verification.md](../../docs/changes/2026-10-09-docs-structure/verification.md), [docs/changes/2026-10-09-docs-structure/review.md](../../docs/changes/2026-10-09-docs-structure/review.md)
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步
-- Last verified: 2026-10-09
-- Updated: 2026-10-09
+- Modules: docs/README.md, docs/engineering/CODING-STANDARDS.md, docs/engineering/TESTING.md, docs/engineering/BRANCH-POLICY.md, docs/UI_RULES.md, AGENTS.md, AI_RULES.md, docs/engineering/DEVELOPMENT-WORKFLOW.md, docs/templates/intent.md, docs/templates/plan.md, docs/templates/verification.md, docs/templates/review.md, docs/templates/incident.md, docs/reference/competitor/INDEX.md, docs/PROGRESS.md
+- Verification: PASS — 文档流程入口、模板、竞品边界和变更包已落地；JSON、diff check、Markdown、features、project goals、renderLedger 视图一致性、delivery equivalent、等价 lint 与 governance 均 PASS。独立上下文 AI review（review_workflow_docs_fast）已在 exact HEAD 8933692e326af6f1989efae6d8a9dfe5c192e7e4 完成，结论 PASS/ACCEPTABLE，无 P0–P2；R-1/R-2/R-3 已修正并复跑通过。重新生成的 pnpm-lock.yaml 已按 SHA 隔离并写入 retention manifest，治理结果为 120 tasks、0 violations；本任务完成标准已满足。
+- Evidence: [docs/changes/2026-10-09-docs-structure/verification.md](../../docs/changes/2026-10-09-docs-structure/verification.md), [docs/changes/2026-10-09-docs-structure/review.md](../../docs/changes/2026-10-09-docs-structure/review.md), [docs/changes/2026-10-10-development-workflow/verification.md](../../docs/changes/2026-10-10-development-workflow/verification.md), [docs/changes/2026-10-10-development-workflow/review.md](../../docs/changes/2026-10-10-development-workflow/review.md)
+- Next action: 保留当前证据；合并或发布前按本任务原验收范围回读主线，不重新引入 pnpm 锁文件。
+- Last verified: 2026-10-10
+- Updated: 2026-10-10
 
 ## TASK-AI-GATEWAY-001 — 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器
 
 - Goal: 为豆包为首的多平台接入落地凭证存储、通道抽象契约与错误映射，使 kk 客户端具备可插拔的多厂商接入底座
 - Scope: 通道适配器契约、11 类失败分类、分档降级调度、凭证端口注入、/v1/chat/completions 端点。不含真实 DPAPI 实现、不含 sub2api 对接、不含 UI 解锁。
-- Display status: 未完成
+- Display status: 进行中
 - Priority: P1 — 调度层填补的是真实能力空洞（既有 generation-server 的 job.connection_id 建单时一次写入、从不重新赋值，根本没有换号能力），但未接真实上游前不产生用户价值。
 - Requirement refs: ledger:TASK-AI-GATEWAY-001
 - Feature IDs: FEAT-038
@@ -2348,11 +2348,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `docs/TASK-DOCS-STRUCT-001`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/features/ai-gateway/credentials.ts, src/features/ai-gateway/errors.ts, src/features/ai-gateway/channels/adapter.ts, src/features/ai-gateway/channels/registry.ts, src/features/ai-gateway/channels/doubao.ts, src/features/ai-gateway/scheduler.ts, src/features/ai-gateway/chat.ts, src/features/generation-server/http.ts, tests/unit/aiGatewayCredentials.test.ts, tests/unit/aiGatewayChannels.test.ts, tests/unit/aiGatewayScheduler.test.ts, tests/unit/aiGatewayChat.test.ts, tests/unit/aiGatewayChatEndpoint.test.ts, tests/unit/generationServerChatRoute.test.ts, docs/features/feat-038-ai-model-gateway.md, src/domain/modelProvider.ts, src/features/creation/model.ts, src/components/settings/ProviderProfileFields.tsx, tests/unit/modelProvider.test.ts, docs/changes/2026-10-10-doubao-official-channel/, src/features/agent/agentImages.ts, src/features/agent/agentHost.ts, src/features/models/modelMenuEntries.ts, src/features/models/modelPresentation.ts, tests/unit/modelMenuEntries.test.ts, tests/unit/modelPresentation.test.ts
-- Verification: NOT_VERIFIED — 网关与多平台模型能力闭环已落地：gateway/Agent/model 定向回归 69 项全绿，Agent 模型选择定向回归 26 项全绿；当前主工作区全量回归 911 项，903 通过、0 失败、8 跳过；TypeScript、ESLint、格式、UI 标准、治理、功能、Markdown、版本和构建通过，前端冒烟 16/16、连接拖拽 7/7。真实 Ark/Codex 凭据、DPAPI、token 级上游流式及 Desktop 运行态仍未验证，按当前规则继续保持未完成。
-- Evidence: [docs/features/feat-038-ai-model-gateway.md](../../docs/features/feat-038-ai-model-gateway.md), [docs/changes/2026-10-10-kk-model-capability/verification.md](../../docs/changes/2026-10-10-kk-model-capability/verification.md), [docs/superpowers/specs/2026-10-10-kk-model-capability-design.md](../../docs/superpowers/specs/2026-10-10-kk-model-capability-design.md), [docs/superpowers/plans/2026-10-10-kk-model-capability.md](../../docs/superpowers/plans/2026-10-10-kk-model-capability.md), [docs/changes/2026-10-09-doubao-integration/verification.md](../../docs/changes/2026-10-09-doubao-integration/verification.md), [docs/changes/2026-10-10-doubao-official-channel/verification.md](../../docs/changes/2026-10-10-doubao-official-channel/verification.md)
-- Next action: 实现真实 DPAPI SecretProtector（需 Rust 侧或 PowerShell 桥），接入一个真实火山方舟账号取得上游证据后再转 DONE；随后接调度层持久化仓储与 sub2api-client。
-- Last verified: 2026-10-10
-- Updated: 2026-10-10
+- Verification: PARTIAL — 网关与多平台模型能力闭环已落地：gateway/Agent/model 定向回归 69 项全绿，Agent 模型选择定向回归 26 项全绿；当前主工作区全量回归 911 项，903 通过、0 失败、8 跳过；TypeScript、ESLint、格式、UI 标准、治理、功能、Markdown、版本和构建通过，前端冒烟 16/16、连接拖拽 7/7。真实 Ark/Codex 凭据、DPAPI、token 级上游流式及 Desktop 运行态仍未验证，按当前规则继续保持未完成。
+- Evidence: [docs/features/feat-038-ai-model-gateway.md](../../docs/features/feat-038-ai-model-gateway.md), [docs/changes/2026-10-10-kk-model-capability/verification.md](../../docs/changes/2026-10-10-kk-model-capability/verification.md), [docs/superpowers/specs/2026-10-10-kk-model-capability-design.md](../../docs/superpowers/specs/2026-10-10-kk-model-capability-design.md), [docs/superpowers/plans/2026-10-10-kk-model-capability.md](../../docs/superpowers/plans/2026-10-10-kk-model-capability.md), [docs/changes/2026-10-09-doubao-integration/verification.md](../../docs/changes/2026-10-09-doubao-integration/verification.md), [docs/changes/2026-10-10-doubao-official-channel/verification.md](../../docs/changes/2026-10-10-doubao-official-channel/verification.md), [docs/changes/2026-10-11-closeout/verification.md](../../docs/changes/2026-10-11-closeout/verification.md), [tests/browser/model-picker.spec.ts](../../tests/browser/model-picker.spec.ts)
+- Next action: 保留本地网关/模型能力实现和回归证据；下一步只补真实 DPAPI、Ark/Codex 凭据、token 级上游流和 Desktop 运行态，外部证据齐全后再转 DONE。
+- Last verified: 2026-10-11
+- Updated: 2026-10-11
 
 ## TASK-PROV-BYOK-001 — 用户自有 API 产品化接入
 
@@ -2369,7 +2369,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/creation, src/features/agent, src-tauri, docs
 - Verification: NOT_VERIFIED — 当前按规则保留为高优先级 TODO，尚未实现或验收；不得以 Desktop 本地 API Key 直连证据替代产品化接入。
 - Evidence: [docs/architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md](../../docs/architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md), [docs/features/BACKEND-ROADMAP.md](../../docs/features/BACKEND-ROADMAP.md)
-- Next action: 补充负责人、优先级、分支和下一步验收证据
+- Next action: 依赖TASK-AI-GATEWAY-001与Web VPS控制面；先补intent/spec/plan和Desktop/Web/Mobile边界，外部契约稳定前不扩展产品实现。
 - Last verified: 2026-10-09
 - Updated: 2026-10-09
 

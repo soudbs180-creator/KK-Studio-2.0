@@ -1,6 +1,6 @@
 # AI-native SDLC
 
-本项目由 AI 承担需求整理、架构分析、实现、测试、技术审查、文档和交付准备。用户只需用自然语言描述目标，参与 UI、交互取舍和最终产品验收。普通且已经授权的任务按完整流程自主推进，不新增 intent、spec、plan 的逐阶段人工审批。统一规则见 [AI_RULES.md](../../AI_RULES.md)，需求转译见 [PROMPTING.md](PROMPTING.md)，Git 门禁见 [BRANCH-POLICY.md](BRANCH-POLICY.md)。
+本项目由 AI 承担需求整理、架构分析、实现、测试、技术审查、文档和交付准备。用户只需用自然语言描述目标，参与 UI、交互取舍和最终产品验收。普通且已经授权的任务按完整流程自主推进，不新增 intent、spec、plan 的逐阶段人工审批。日常领取、状态流转和验证清单见 [DEVELOPMENT-WORKFLOW.md](DEVELOPMENT-WORKFLOW.md)。统一规则见 [AI_RULES.md](../../AI_RULES.md)，需求转译见 [PROMPTING.md](PROMPTING.md)，Git 门禁见 [BRANCH-POLICY.md](BRANCH-POLICY.md)。
 
 本文参考 [Claude AI-native SDLC playbook](https://claude.com/blog/the-ai-native-sdlc-playbook) 的版本化产物、反馈验证、独立审查和确定性门禁原则，并按本项目的个人仓库与多 AI 协作方式调整。可执行约束由 Git 托管规则、CI 和实际权限承担；Markdown 文件只能指导 AI，不能保证任意工具必然读取或不可绕过。
 
