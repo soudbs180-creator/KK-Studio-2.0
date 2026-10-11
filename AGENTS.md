@@ -83,7 +83,7 @@
 
 ## Git、并行与交付
 
-- 默认稳定主线为 main；历史 master 未经过审阅迁移前不自动重命名、不假设为新 main。主线禁止直接开发、普通 direct push 和 force push。
+- 默认稳定主线为 master；历史 main 只能作为迁移快照，未经一次性基线迁移不得把它当作 master 的替代品。master 禁止直接开发、普通 direct push 和 force push。
 - 使用 `<type>/<TASK-ID>-<description>` 短期分支（codex/feat/fix/perf/refactor/test/docs/chore/hotfix）。先列任务依赖图，只有独立且低冲突任务并行；多代理不得同时改同一 dirty worktree。原 checkout 的无关改动不可 reset、clean、覆盖或悄悄提交。
 - 进入 task worktree 后记录依赖安装、lint/typecheck/相关测试基线，已有失败记 PRE-EXISTING FAILURE。需捕获未提交实现时只创建明确标为未验收的候选快照，不移动主线、不改变原 checkout/index；排除 secrets、运行数据、临时文件和生成证据。
 - 合并前 self-review、lint/typecheck/test/build、相关 regression、文档与验收全部通过；UI/runtime 适用时必须完成上述运行链路门禁。冲突在源分支解决，解决后重新验证。
