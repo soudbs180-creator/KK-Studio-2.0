@@ -180,6 +180,8 @@ export default function McpSettings({
   }
 
   async function removeServer(server: McpServerConfig): Promise<void> {
+    if (!(await confirmAction(`确认移除 MCP 服务器 ${server.name} 吗？`)))
+      return;
     try {
       await registry.remove(server.id);
       releaseServer(server);

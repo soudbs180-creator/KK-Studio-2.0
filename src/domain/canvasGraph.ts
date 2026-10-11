@@ -130,9 +130,9 @@ export function cardLayout(item: CanvasCollectionItem): {
       anchor,
     };
   return {
-    width: 590,
-    height: 471,
-    left: -110,
+    width: 370,
+    height: 224,
+    left: 0,
     collapsedHeight: 224,
     anchor,
   };

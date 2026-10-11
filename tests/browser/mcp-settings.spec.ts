@@ -113,6 +113,19 @@ test("MCP 设置保存 endpoint，完成真实握手并展示 tools/list 返回�
   await expect(dialog.locator(".settings-mcp-tool-result")).toContainText(
     "canvas-ready",
   );
+  page.once("dialog", (browserDialog) => {
+    expect(browserDialog.message()).toContain("Browser fixture");
+    void browserDialog.dismiss();
+  });
+  await dialog.getByRole("button", { name: "移除", exact: true }).click();
+  await expect(
+    dialog.getByText("Browser fixture", { exact: true }),
+  ).toBeVisible();
+  page.once("dialog", (browserDialog) => void browserDialog.accept());
+  await dialog.getByRole("button", { name: "移除", exact: true }).click();
+  await expect(
+    dialog.getByText("Browser fixture", { exact: true }),
+  ).toHaveCount(0);
 });
 
 test("MCP 设置显示并显式恢复旧版超限配置", async ({ page }) => {

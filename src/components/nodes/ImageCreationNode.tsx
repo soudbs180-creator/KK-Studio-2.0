@@ -6,7 +6,7 @@ import {
   type CSSProperties,
 } from "react";
 import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand.tsx";
-import { Upload, Image as ImageIcon } from "lucide-react";
+import { Upload } from "lucide-react";
 import CreationComposer from "./CreationComposer";
 import type {
   CanvasCollectionItem,
@@ -18,6 +18,7 @@ import { readReferenceImages } from "./referenceUpload";
 import CanvasImageActions from "./CanvasImageActions";
 import { readImageDimensions } from "../../features/creation/mediaDimensions";
 import { aspectRatioForDimensions } from "../../domain/mediaDimensions";
+import UiIcon from "../UiIcon";
 
 export default function ImageCreationNode({
   item,
@@ -127,10 +128,34 @@ export default function ImageCreationNode({
         } as CSSProperties
       }
     >
-      <button className="upload-image" onClick={() => file.current?.click()}>
-        <Upload size={23} />
-        上传图片
-      </button>
+      <div className="image-node-header">
+        <span className="image-caption">{item.title}</span>
+        <div className="image-node-header-actions">
+          {onToggleLike && (
+            <button
+              type="button"
+              className="image-card-like"
+              aria-label={liked ? "取消喜欢当前卡片" : "喜欢当前卡片"}
+              title={liked ? `取消喜欢${item.title}` : `喜欢${item.title}`}
+              aria-pressed={liked}
+              onClick={onToggleLike}
+            >
+              <UiIcon name="favorite" size={20} />
+            </button>
+          )}
+          {!image && (
+            <button
+              type="button"
+              className="upload-image"
+              aria-label="上传图片"
+              onClick={() => file.current?.click()}
+            >
+              <Upload size={16} />
+              上传图片
+            </button>
+          )}
+        </div>
+      </div>
       <input
         ref={file}
         hidden
@@ -162,10 +187,6 @@ export default function ImageCreationNode({
             );
         }}
       />
-      <span className="image-caption">
-        <ImageIcon size={13} />
-        {item.title}
-      </span>
       <div
         ref={preview}
         className="image-preview"
@@ -215,8 +236,6 @@ export default function ImageCreationNode({
           anchor={preview}
           selected={selected}
           onPreview={openPreview}
-          liked={liked}
-          onToggleLike={onToggleLike}
           references={incomingReferences}
         />
       )}

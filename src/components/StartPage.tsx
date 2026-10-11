@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useState, type KeyboardEvent } from "react";
 import BrandLogo from "./BrandLogo";
 import StartComposer from "./StartComposer";
+import { useHorizontalScrollHint } from "./useHorizontalScrollHint";
 import {
   emptyDraft,
   type CreateProjectInput,
   type CreationDraft,
 } from "../features/creation/model";
 import type { SkillRecord } from "../features/skills/skillRegistry";
-
 const INSPIRATIONS = [
   {
     id: "blue-hour",
@@ -68,6 +68,34 @@ export default function StartPage({
   );
   const [status, setStatus] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("H3 精选");
+  const { ref: chipRowRef, ...chipScroll } = useHorizontalScrollHint(activeTab);
+  const filteredInspirations = INSPIRATIONS.filter(
+    (item) =>
+      selectedCategory === "H3 精选" ||
+      item.tag === selectedCategory ||
+      (selectedCategory === "MV" && item.id === "mv-board"),
+  );
+  function handleDiscoveryTabKeyDown(
+    event: KeyboardEvent<HTMLButtonElement>,
+  ): void {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    const next =
+      event.key === "Home"
+        ? 0
+        : event.key === "End"
+          ? 1
+          : event.currentTarget.dataset.tab === "inspiration"
+            ? event.key === "ArrowRight"
+              ? 1
+              : 0
+            : event.key === "ArrowLeft"
+              ? 0
+              : 1;
+    const nextTab = next === 0 ? "inspiration" : "skill";
+    setActiveTab(nextTab);
+    document.getElementById(`start-tab-${nextTab}`)?.focus();
+  }
   function updateDraft(next: CreationDraft): void {
     if (onDraftChange) onDraftChange(next);
     else setLocalDraft(next);
@@ -122,7 +150,12 @@ export default function StartPage({
           <button
             type="button"
             role="tab"
+            id="start-tab-inspiration"
+            data-tab="inspiration"
+            aria-controls="start-panel-inspiration"
             aria-selected={activeTab === "inspiration"}
+            tabIndex={activeTab === "inspiration" ? 0 : -1}
+            onKeyDown={handleDiscoveryTabKeyDown}
             onClick={() => setActiveTab("inspiration")}
           >
             创作灵感
@@ -130,39 +163,25 @@ export default function StartPage({
           <button
             type="button"
             role="tab"
+            id="start-tab-skill"
+            data-tab="skill"
+            aria-controls="start-panel-skill"
             aria-selected={activeTab === "skill"}
+            tabIndex={activeTab === "skill" ? 0 : -1}
+            onKeyDown={handleDiscoveryTabKeyDown}
             onClick={() => setActiveTab("skill")}
           >
             技能
           </button>
         </div>
-        {activeTab === "inspiration" && (
-          <div className="start-chip-row" aria-label="灵感分类">
-            {[
-              "H3 精选",
-              "特效包装",
-              "品牌广告",
-              "影视片头",
-              "MV",
-              "二次元 PV",
-            ].map((chip) => (
-              <button
-                type="button"
-                className={selectedCategory === chip ? "is-selected" : ""}
-                aria-pressed={selectedCategory === chip}
-                key={chip}
-                onClick={() => {
-                  setSelectedCategory(chip);
-                  setStatus(`已选择「${chip}」创作方向。`);
-                }}
-              >
-                {chip}
-              </button>
-            ))}
-          </div>
-        )}
         {activeTab === "skill" ? (
-          <div className="start-skill-callout">
+          <div
+            id="start-panel-skill"
+            className="start-discovery-panel start-skill-callout"
+            role="tabpanel"
+            aria-labelledby="start-tab-skill"
+            tabIndex={0}
+          >
             <div>
               <strong>从精选技能开始</strong>
               <p>把成熟的分镜、广告和提示词流程加入你的项目。</p>
@@ -172,39 +191,97 @@ export default function StartPage({
             </button>
           </div>
         ) : (
-          <div className="start-inspiration-grid">
-            {INSPIRATIONS.filter(
-              (item) =>
-                selectedCategory === "H3 精选" ||
-                item.tag === selectedCategory ||
-                (selectedCategory === "MV" && item.id === "mv-board"),
-            ).map((item) => (
-              <button
-                type="button"
-                className="start-inspiration-card"
-                key={item.id}
-                onClick={() => {
-                  updateDraft({
-                    ...draft,
-                    prompt: `${item.title}\n${item.description}`,
-                  });
-                  setStatus("模板内容已放入提示词，可以继续编辑后创建项目。");
-                }}
-              >
-                <img
-                  src={item.image}
-                  alt=""
-                  draggable={false}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div>
-                  <span>{item.tag}</span>
-                  <strong>{item.title}</strong>
-                  <p>{item.description}</p>
+          <div
+            id="start-panel-inspiration"
+            className="start-discovery-panel"
+            role="tabpanel"
+            aria-labelledby="start-tab-inspiration"
+            tabIndex={0}
+          >
+            <div
+              ref={chipRowRef}
+              className="start-chip-row"
+              aria-label={
+                chipScroll.left && chipScroll.right
+                  ? "灵感分类，可左右横向滚动查看更多"
+                  : chipScroll.left
+                    ? "灵感分类，可向左横向滚动查看更多"
+                    : chipScroll.right
+                      ? "灵感分类，可横向滚动查看更多"
+                      : "灵感分类"
+              }
+              data-can-scroll-left={chipScroll.left}
+              data-can-scroll-right={chipScroll.right}
+            >
+              {[
+                "H3 精选",
+                "特效包装",
+                "品牌广告",
+                "影视片头",
+                "MV",
+                "二次元 PV",
+              ].map((chip) => (
+                <button
+                  type="button"
+                  className={selectedCategory === chip ? "is-selected" : ""}
+                  aria-pressed={selectedCategory === chip}
+                  key={chip}
+                  onClick={() => setSelectedCategory(chip)}
+                >
+                  {chip}
+                </button>
+              ))}
+            </div>
+            <div
+              className="start-inspiration-grid"
+              role="region"
+              aria-label={`${selectedCategory}灵感`}
+            >
+              {filteredInspirations.length === 0 ? (
+                <div className="start-inspiration-empty" role="status">
+                  <strong>该方向暂时没有精选灵感</strong>
+                  <p>可以先从提示词开始创作，或返回精选方向。</p>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCategory("H3 精选")}
+                  >
+                    返回 H3 精选
+                  </button>
                 </div>
-              </button>
-            ))}
+              ) : (
+                filteredInspirations.map((item) => (
+                  <button
+                    type="button"
+                    className="start-inspiration-card"
+                    key={item.id}
+                    onClick={() => {
+                      updateDraft({
+                        ...draft,
+                        prompt: `${item.title}\n${item.description}`,
+                      });
+                      setStatus(
+                        modelConfigured
+                          ? "模板内容已放入提示词，可以继续编辑后创建项目。"
+                          : "",
+                      );
+                    }}
+                  >
+                    <img
+                      src={item.image}
+                      alt=""
+                      draggable={false}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div>
+                      <span>{item.tag}</span>
+                      <strong>{item.title}</strong>
+                      <p>{item.description}</p>
+                    </div>
+                  </button>
+                ))
+              )}
+            </div>
           </div>
         )}
       </div>

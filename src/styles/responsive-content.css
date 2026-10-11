@@ -218,7 +218,8 @@
     grid-template-columns: 96px minmax(0, 1fr);
   }
   .start-inspiration-card img {
-    height: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
   }
   .start-chip-row {
@@ -226,6 +227,40 @@
     overflow-x: auto;
     padding: 4px 0;
     gap: 8px;
+  }
+  .start-chip-row::after {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 28px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--bg-surface) 94%, transparent)
+    );
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--motion-fast) var(--motion-ease);
+  }
+  .start-chip-row[data-can-scroll-right="true"]::after {
+    opacity: 1;
+  }
+  .start-chip-row::before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 28px;
+    background: linear-gradient(
+      270deg,
+      transparent,
+      color-mix(in srgb, var(--bg-surface) 94%, transparent)
+    );
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--motion-fast) var(--motion-ease);
+  }
+  .start-chip-row[data-can-scroll-left="true"]::before {
+    opacity: 1;
   }
   .start-chip-row button {
     flex-shrink: 0;

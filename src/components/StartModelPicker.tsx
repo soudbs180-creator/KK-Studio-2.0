@@ -33,7 +33,7 @@ export default function StartModelPicker({
         onClick={onToggle}
       >
         <img src="/design/figma/composer-package.svg" alt="" />
-        <span>{draft.model || defaultModel ? model : "选择图片模型"}</span>
+        <span>{draft.model || defaultModel ? model : "选模型"}</span>
       </button>
       {open && (
         <ModelPickerMenu

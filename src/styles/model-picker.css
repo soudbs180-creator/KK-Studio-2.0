@@ -280,7 +280,7 @@
   background: transparent;
   color: var(--text-secondary);
 }
-.composer-extension-sections button[aria-checked="true"] {
+.composer-extension-sections button[aria-selected="true"] {
   background: var(--ui-neutral-selected);
   color: var(--text-primary);
 }
@@ -315,6 +315,9 @@
   border-radius: var(--kk-radius-full);
 }
 .composer-extensions-menu button {
+  border-radius: var(--kk-radius-control);
+}
+.composer-extensions-menu .composer-extension-sections button {
   border-radius: var(--kk-radius-full);
 }
 .kk-model-parameter-summary {

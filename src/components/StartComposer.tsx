@@ -120,9 +120,10 @@ export default function StartComposer({
           value={draft.prompt}
           onChange={(event) => {
             commit({ prompt: event.target.value });
-            setStatus(
-              event.target.value.trim() && disabledReason ? disabledReason : "",
-            );
+            // The inline feedback below is the single visible source for a
+            // disabled generation reason. Clear transient submit/status text
+            // while editing so the page does not render the same reason twice.
+            setStatus("");
           }}
           placeholder="描述你想要生成的内容"
           rows={3}

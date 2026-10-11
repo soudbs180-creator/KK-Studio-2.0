@@ -1109,31 +1109,75 @@
   right: 96px;
   top: 10px;
   border: 1px solid var(--border-default);
-  border-radius: 25px;
+  border-radius: var(--ui-radius-pill);
   background: var(--bg-card);
   font-size: 16px;
 }
 .canvas-node-image.is-reference-only .upload-image {
   display: none;
 }
-.image-caption {
+.image-node-header {
   position: absolute;
-  right: 96px;
   top: 36px;
+  left: 94px;
+  width: 400px;
+  min-height: 24px;
   display: flex;
-  gap: 3px;
-  max-width: 250px;
-  justify-content: flex-end;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  z-index: var(--kk-z-sticky);
+  pointer-events: none;
+}
+.image-caption {
+  position: static;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 280px;
+  display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: var(--ui-font-body);
+  font-weight: 400;
+  line-height: 20px;
+  text-align: left;
+  pointer-events: none;
 }
 .image-caption svg {
   display: none;
 }
-.image-creation:has(.upload-image:not(:disabled)) .image-caption {
-  top: -18px;
+.image-node-header-actions {
+  position: static;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+.image-card-like {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-default);
+  border-radius: var(--ui-radius-pill);
+  background: var(--bg-card);
+}
+.image-node-header .upload-image {
+  position: absolute;
+  top: -34px;
+  left: 50%;
+  right: auto;
+  height: 32px;
+  padding: 0 12px;
+  gap: 8px;
+  transform: translateX(-50%);
+  border-radius: var(--ui-radius-pill);
+  font-size: 14px;
+  white-space: nowrap;
 }
 .canvas-node-image.is-reference-only .image-caption {
   max-width: 400px;
@@ -1150,7 +1194,7 @@
   display: grid;
   place-items: center;
   border: 1px solid transparent;
-  border-radius: 28px;
+  border-radius: var(--ui-radius-card);
   background: var(--bg-card);
   overflow: hidden;
 }

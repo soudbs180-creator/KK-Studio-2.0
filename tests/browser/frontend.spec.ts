@@ -81,6 +81,38 @@ test("设置主题保存重载、键盘关闭及导航", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("未接入的通用设置明确禁用原因", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "设置" });
+  const watermark = dialog.getByRole("switch", {
+    name: "去除水印",
+    exact: true,
+  });
+  await expect(watermark).toBeDisabled();
+  await expect(
+    dialog.getByText("当前模型协议未提供水印参数，暂不能影响生成结果。", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveAttribute(
+    "width",
+    "20",
+  );
+  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveAttribute(
+    "height",
+    "20",
+  );
+  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveCSS(
+    "width",
+    "20px",
+  );
+  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveCSS(
+    "height",
+    "20px",
+  );
+});
+
 test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", async ({ page }) => {
   await page.route("https://models.example.test/v1/models", async (route) => {
     expect(route.request().headers().authorization).toBe("Bearer session-key");
@@ -431,10 +463,12 @@ test("画布新增卡片可拖动删除，喜欢内容同步到搜索", async ({
   await expect(added).toHaveCount(1);
   await expect(page.getByTestId("image-composer")).toBeVisible();
   await page.screenshot({ path: "test-results/runtime/canvas-added-card.png" });
-  await page.getByRole("button", { name: "喜欢当前卡片" }).click();
+  await added.getByRole("button", { name: "喜欢当前卡片" }).click();
   await page.getByRole("button", { name: "搜索", exact: true }).click();
   await page.getByRole("tab", { name: "喜欢收藏" }).click();
-  await expect(page.getByText("新图片卡片")).toBeVisible();
+  await expect(
+    page.locator(".saved-like-card").getByText("新图片卡片"),
+  ).toBeVisible();
   await page.screenshot({
     path: "test-results/runtime/collection-from-canvas.png",
   });

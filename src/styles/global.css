@@ -418,8 +418,8 @@ button[aria-pressed="true"] {
   border-radius: inherit;
 }
 .composer-ref-thumb button {
-  opacity: 0;
-  pointer-events: none;
+  opacity: 1;
+  pointer-events: auto;
   position: absolute;
   top: -6px;
   right: -6px;
