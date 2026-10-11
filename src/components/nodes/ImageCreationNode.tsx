@@ -142,15 +142,17 @@ export default function ImageCreationNode({
               <UiIcon name="favorite" size={18} />
             </button>
           )}
-          <button
-            type="button"
-            className="upload-image"
-            aria-label="上传图片"
-            onClick={() => file.current?.click()}
-          >
-            <Upload size={16} />
-            上传图片
-          </button>
+          {!image && (
+            <button
+              type="button"
+              className="upload-image"
+              aria-label="上传图片"
+              onClick={() => file.current?.click()}
+            >
+              <Upload size={16} />
+              上传图片
+            </button>
+          )}
         </div>
       </div>
       <input
