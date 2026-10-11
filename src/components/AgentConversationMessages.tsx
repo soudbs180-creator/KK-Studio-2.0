@@ -127,12 +127,22 @@ export default function AgentConversationMessages({
         </p>
       )}
       {messages.length === 0 && (
-        <p className="chat-agent-empty">
-          {agent.intro ??
-            (agent.connected
-              ? "输入任务，让 Codex 优化提示词、修改画布或调用已配置的图片生成。"
-              : "使用已登录的 Codex 账号，无需填写对话 API Key。")}
-        </p>
+        <div className="chat-agent-empty">
+          <strong>
+            {agent.connected ? "从画布任务开始" : "连接 Agent 开始"}
+          </strong>
+          <p>
+            {agent.intro ??
+              (agent.connected
+                ? "输入任务，让 Agent 优化提示词、修改画布或调用已配置的图片生成。"
+                : "使用已登录的 Agent 账号，无需填写对话 API Key。")}
+          </p>
+          <div className="chat-agent-suggestions" aria-label="Agent 能做什么">
+            <span>优化提示词</span>
+            <span>整理画布</span>
+            <span>继续生成</span>
+          </div>
+        </div>
       )}
       {agent.error && (
         <p className="chat-status" role="alert">

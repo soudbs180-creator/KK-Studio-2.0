@@ -85,8 +85,11 @@ export default function StartPage({
       <div className="start-hero">
         <div className="start-brand">
           <BrandLogo variant="hero" />
-          <h1>KK Studio</h1>
-          <p>属于你的多模态 Agent 团队</p>
+          <div className="start-brand-copy">
+            <p className="start-eyebrow">多模态创作工作台</p>
+            <h1>从一句话开始，进入你的创作工作流</h1>
+            <p>描述灵感、加入参考图，选择模型后继续在画布里生成和精修。</p>
+          </div>
         </div>
         <StartComposer
           draft={draft}
@@ -101,6 +104,23 @@ export default function StartPage({
           skills={skills}
           onApplySkill={onApplySkill}
         />
+        <div className="start-workflow-steps" aria-label="创作流程">
+          <div className="start-workflow-step">
+            <span>01</span>
+            <strong>描述灵感</strong>
+            <small>输入文字或参考图</small>
+          </div>
+          <div className="start-workflow-step">
+            <span>02</span>
+            <strong>选择模型</strong>
+            <small>按图片、视频或 Agent</small>
+          </div>
+          <div className="start-workflow-step">
+            <span>03</span>
+            <strong>生成并精修</strong>
+            <small>结果回到可编辑画布</small>
+          </div>
+        </div>
         {status && (
           <p className="start-status" role="status">
             {status}
@@ -125,7 +145,7 @@ export default function StartPage({
             aria-selected={activeTab === "inspiration"}
             onClick={() => setActiveTab("inspiration")}
           >
-            创作灵感
+            工作流模板
           </button>
           <button
             type="button"
@@ -133,7 +153,7 @@ export default function StartPage({
             aria-selected={activeTab === "skill"}
             onClick={() => setActiveTab("skill")}
           >
-            技能
+            Skill
           </button>
         </div>
         {activeTab === "inspiration" && (

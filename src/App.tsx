@@ -3239,3 +3239,4 @@ import "./styles/canvas-compare.css";
 import "./styles/image-edit.css";
 import "./styles/image-selection.css";
 import "./styles/desktop-titlebar.css";
+import "./styles/competitor-ui.css";

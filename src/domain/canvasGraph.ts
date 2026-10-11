@@ -54,14 +54,14 @@ export function cardVisualBounds(item: CanvasCollectionItem): {
   )
     return { x: 0, y: 0, width: 380, height: 380 };
   /* Keep the label/upload slot outside this visual bound so connection
-     endpoints land on the 400px Figma card rather than its controls. */
+     endpoints land on the media surface rather than its controls. */
   if (item.kind === "image")
     return {
-      x: 94,
-      y: 58,
-      width: 400,
+      x: 50,
+      y: 52,
+      width: 520,
       height:
-        400 /
+        520 /
         aspectRatioForDimensions(item.mediaWidth ?? 1, item.mediaHeight ?? 1),
     };
   /* Both Figma video modules use a 16px label slot before the 208px body. */
@@ -123,8 +123,8 @@ export function cardLayout(item: CanvasCollectionItem): {
     };
   if (item.kind === "image")
     return {
-      width: 590,
-      height: visual.y + visual.height + 247,
+      width: 620,
+      height: visual.y + visual.height + 270,
       left: 0,
       collapsedHeight: visual.y + visual.height,
       anchor,

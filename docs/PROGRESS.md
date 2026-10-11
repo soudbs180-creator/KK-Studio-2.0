@@ -1,5 +1,12 @@
 # 当前进度
 
+## 2026-10-11 MiniMax 对照的首页、画布与会话助手重做（本地候选）
+
+- 以 MiniMax Design 官方首页和 AI 图片生成器的真实页面为参照，将首页主入口收敛为“描述灵感 → 选择模型 → 生成并精修”的连续流程；画布图片节点拆出媒体面板、卡片上方名称/爱心/上传动作和独立输入 dock；会话助手空态改为 Agent 任务入口与建议动作。
+- 图片节点使用 520px 媒体基准宽度，并按上传图片原始比例计算可见高度；任务弹层统一为 380×420 的可读尺寸；删除按钮默认中性，仅 hover/focus/选中时显示危险色；输入框取消输入时的发光外圈。
+- Tauri release 已用当前 `dist` 重建并通过隔离数据目录逐项截图：首页、上传图片画布、任务列表、会话助手、首页/画布模型菜单。证据位于 `test-results/desktop/competitor-ui/`；Agent 未连接和模型未配置是该隔离环境的真实状态，未冒充 Provider 能力完成。
+- 当前仍是本地候选，未做 Hosted、真实 Provider、正式发布或用户最终验收；定向 canvasGraph/imageParameters/model capability 单测 26/26，TypeScript、UI 标准、Prettier、Vite build 和 Tauri no-bundle build 通过。
+
 ## 2026-10-11 收口增量：来源契约、模型禁用态与媒体尺寸回载
 
 - `TASK-VERIFY-ORIGIN-003` 已按来源契约升级为 `DONE/PASS`：生产浏览器固定 `127.0.0.1:1423`、端口契约和六组来源/fixture 规格已通过，exact-SHA 独立审查收据已绑定；Hosted delivery、发布与用户验收仍由其他任务负责。

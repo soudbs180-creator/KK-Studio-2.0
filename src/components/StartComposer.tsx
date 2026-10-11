@@ -120,9 +120,9 @@ export default function StartComposer({
           value={draft.prompt}
           onChange={(event) => {
             commit({ prompt: event.target.value });
-            setStatus(
-              event.target.value.trim() && disabledReason ? disabledReason : "",
-            );
+            // Keep provider feedback in the composer so the page does not
+            // duplicate the same message while the user is editing.
+            setStatus("");
           }}
           placeholder="描述你想要生成的内容"
           rows={3}
