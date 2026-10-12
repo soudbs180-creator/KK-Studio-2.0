@@ -207,6 +207,16 @@ test("image capability rejects common text models and accepts image variants", (
   assert.equal(modelSupportsKind("image-test", "video"), false);
 });
 
+test("doubao/Ark text models are text, seedream models are image", () => {
+  assert.equal(modelSupportsKind("doubao-seed-1-6-250615", "text"), true);
+  assert.equal(modelSupportsKind("doubao-seed-1-6-250615", "image"), false);
+  assert.equal(modelSupportsKind("doubao-1-5-pro-32k", "text"), true);
+  assert.equal(modelSupportsKind("doubao-1-5-pro-32k", "image"), false);
+  assert.equal(modelSupportsKind("doubao-seedream-4-5-250828", "text"), false);
+  assert.equal(modelSupportsKind("doubao-seedream-4-5-250828", "image"), true);
+  assert.equal(modelSupportsKind("doubao-seedream-5-0-250907", "image"), true);
+});
+
 test("provider credentials use one canonical URL identity without exposing the key", () => {
   assert.equal(
     credentialId("HTTPS://Example.test/v1/?unused=1"),
@@ -289,6 +299,18 @@ test("prompt compiler keeps designer wording and explicit constraints", () => {
   assert.match(compiled, /白色风扇放在海边窗台/);
   assert.match(compiled, /2 张参考图/);
   assert.match(compiled, /4 个相互独立的变体/);
+});
+
+test("prompt compiler sends explicit image roles in attachment order without guessing generic roles", () => {
+  const compiled = compileDesignPrompt("保留人物，改为水彩插画", {
+    referenceCount: 3,
+    referenceRoles: ["主体", "风格", undefined],
+    operation: "edit",
+  });
+  assert.match(compiled, /图片 1：主体/);
+  assert.match(compiled, /图片 2：风格/);
+  assert.match(compiled, /图片 3：通用参考/);
+  assert.match(compiled, /风格.*不替换主体/);
 });
 
 test("approval gates cover remote transfer and expensive batches", () => {

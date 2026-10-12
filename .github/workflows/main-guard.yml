@@ -1,0 +1,34 @@
+name: main-health-guard
+
+on:
+  workflow_run:
+    workflows: [quality]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  checks: read
+  pull-requests: write
+  actions: write
+  issues: write
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check main and pause auto-merge on failure
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+        run: node scripts/governance/merge-main-guard.mjs

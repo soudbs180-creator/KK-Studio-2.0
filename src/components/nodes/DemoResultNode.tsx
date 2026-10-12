@@ -1,4 +1,4 @@
-import { useContext, useLayoutEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand.tsx";
 import {
   CANVAS_KIND_LABELS,
@@ -52,10 +52,6 @@ export default function DemoResultNode({
   );
   const referenceFile = useRef<HTMLInputElement>(null);
   const referenceSlot = useRef<CanvasReference["slot"]>();
-  useLayoutEffect(() => {
-    if (editing?.selected && hasReferenceComposer)
-      editing.onExtraHeightChange(60);
-  }, [hasReferenceComposer, editing?.selected, editing?.onExtraHeightChange]);
   return (
     <>
       <article
@@ -65,7 +61,7 @@ export default function DemoResultNode({
         data-source={result?.source}
         data-generation-state={item.generationStatus}
       >
-        <header>
+        <header className={imageResult ? "image-card-caption" : undefined}>
           <span className="demo-type">
             <UiIcon name={item.kind} />
             {CANVAS_KIND_LABELS[item.kind]}
@@ -80,7 +76,9 @@ export default function DemoResultNode({
                 : "前端草稿"}
           </span>
         </header>
-        <h3>{item.title}</h3>
+        <h3 className={imageResult ? "image-card-name" : undefined}>
+          {item.title}
+        </h3>
         {item.generationStatus === "pending" && !result ? (
           <div className="demo-result-pending" role="status">
             <span className="demo-pending-spinner" aria-hidden="true" />
@@ -97,8 +95,15 @@ export default function DemoResultNode({
               result={result}
               title={item.title}
               onPreview={openPreview}
+              mediaWidth={item.mediaWidth}
+              mediaHeight={item.mediaHeight}
+              onDimensions={(mediaWidth, mediaHeight) =>
+                onChange({ mediaWidth, mediaHeight })
+              }
             />
-            <p className="demo-description">{result.description}</p>
+            {!imageResult && (
+              <p className="demo-description">{result.description}</p>
+            )}
           </>
         ) : (
           <>
@@ -198,8 +203,6 @@ export default function DemoResultNode({
             references={editing.references}
             referenceLimit={editing.referenceLimit}
             onPromptChange={(prompt) => onChange({ prompt })}
-            liked={editing.liked}
-            onToggleLike={editing.onToggleLike}
             onExtraHeightChange={editing.onExtraHeightChange}
             onDemoResults={editing.onDemoResults}
             onGenerationStart={editing.onGenerationStart}

@@ -1,5 +1,8 @@
+import type { CanvasReferenceSlot } from "../../domain/canvasItems.ts";
+
 export interface PromptCompileOptions {
   referenceCount?: number;
+  referenceRoles?: (CanvasReferenceSlot | undefined)[];
   operation?: "generate" | "edit" | "inpaint" | "outpaint";
   outputCount?: number;
   locale?: "zh-CN" | "en-US";
@@ -22,6 +25,14 @@ export function compileDesignPrompt(
     1,
     Math.min(64, Math.floor(options.outputCount ?? 1)),
   );
+  const roles = options.referenceRoles?.slice(0, references);
+  const roleHints: Record<CanvasReferenceSlot, string> = {
+    主体: "保持主体身份和关键形态",
+    风格: "仅参考视觉风格，不替换主体",
+    材质: "仅参考表面材质，不替换主体或构图",
+    构图: "仅参考布局和视角，不替换主体",
+    Mask: "蒙版通过专用编辑流程提供",
+  };
   if (options.locale === "en-US")
     return [
       "Task: create a production-ready visual.",
@@ -30,6 +41,12 @@ export function compileDesignPrompt(
       references
         ? `References: use ${references} supplied reference image(s) for consistency; do not copy unrelated content.`
         : "References: none supplied.",
+      ...(roles?.some(Boolean)
+        ? roles.map(
+            (role, index) =>
+              `Image ${index + 1} role: ${role ?? "general reference"}${role ? ` (${roleHints[role]})` : ""}.`,
+          )
+        : []),
       `Deliverables: ${outputs} independent variation(s). Preserve subject identity, composition intent, and readable details from the brief.`,
     ].join("\n");
   return [
@@ -39,6 +56,12 @@ export function compileDesignPrompt(
     references
       ? `参考图：使用设计师提供的 ${references} 张参考图保持一致性，不引入无关内容。`
       : "参考图：本次未提供参考图。",
+    ...(roles?.some(Boolean)
+      ? roles.map(
+          (role, index) =>
+            `图片 ${index + 1}：${role ?? "通用参考"}${role ? `；${roleHints[role]}` : "；用途以设计师原始需求为准"}。`,
+        )
+      : []),
     `交付：${outputs} 个相互独立的变体；保持主体、构图意图和原始需求中的可读细节。`,
   ].join("\n");
 }

@@ -1,0 +1,261 @@
+/*
+ * Agent panel hierarchy.
+ * The state text and controls remain owned by their existing components; this
+ * layer only gives the upper panel a shared rhythm and reading order.
+ */
+.conversation-panel > .chat-agent-controls:has(select[aria-label="执行方式"]) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: var(--kk-space-2) 0;
+  border: 0;
+  color: var(--kk-text-secondary);
+}
+
+.conversation-panel
+  > .chat-agent-controls:has(select[aria-label="执行方式"])
+  label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--kk-space-2);
+  width: min(100%, 360px);
+  color: var(--kk-text-secondary);
+  font: var(--kk-font-weight-body) var(--kk-font-body) / var(--kk-line-body)
+    var(--kk-font-sans);
+  text-align: center;
+}
+
+.conversation-panel
+  > .chat-agent-controls:has(select[aria-label="执行方式"])
+  select {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: var(--kk-control-h-md);
+  border-radius: var(--kk-radius-full);
+  padding-inline: var(--kk-space-3);
+}
+
+.conversation-panel .chat-agent-messages {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--kk-space-2);
+  padding: var(--kk-space-1) 0 var(--kk-space-2);
+}
+
+.conversation-panel .chat-agent-messages > .chat-agent-banner {
+  order: 1;
+  position: relative;
+  justify-content: center;
+  min-height: var(--kk-control-h-md);
+  margin: 0;
+  padding: var(--kk-space-2) 44px;
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-full);
+  background: var(--kk-bg-card);
+  color: var(--kk-text-secondary);
+  text-align: center;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+
+.conversation-panel .chat-agent-messages > .chat-agent-banner .chat-agent-stop {
+  position: absolute;
+  inset-inline-end: var(--kk-space-2);
+  margin: 0;
+  min-height: var(--kk-control-h-sm);
+  padding-inline: var(--kk-space-2);
+  border-radius: var(--kk-radius-full);
+}
+
+.conversation-panel .chat-agent-messages > .chat-agent-usage {
+  order: 2;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--kk-space-2) var(--kk-space-3);
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-menu);
+  background: var(--kk-bg-surface);
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+  text-align: center;
+}
+
+.conversation-panel .chat-agent-messages > .chat-agent-usage summary {
+  color: var(--kk-text-primary);
+  font-weight: var(--kk-font-weight-body-strong);
+  text-align: center;
+}
+
+.conversation-panel .chat-agent-messages > .chat-agent-usage p {
+  margin: var(--kk-space-2) 0 0;
+}
+
+.conversation-panel .chat-agent-messages > .chat-agent-usage button {
+  min-height: var(--kk-control-h-sm);
+  margin-top: var(--kk-space-2);
+  padding-inline: var(--kk-space-3);
+  border-radius: var(--kk-radius-full);
+  color: var(--kk-text-primary);
+  background: var(--kk-bg-elevated);
+}
+
+.conversation-panel .chat-agent-messages > .chat-agent-empty {
+  order: 4;
+  max-width: 36ch;
+  margin: 0 auto;
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-body);
+  text-align: center;
+}
+
+.conversation-panel
+  .chat-agent-messages
+  > :is(.agent-action-error, .chat-status),
+.conversation-panel .chat-agent-messages > p[role="status"] {
+  order: 3;
+  margin: 0;
+  padding: var(--kk-space-2) var(--kk-space-3);
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-menu);
+  color: var(--kk-text-danger);
+  background: var(--kk-bg-surface);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-body);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.conversation-panel .chat-agent-messages > .chat-agent-controls {
+  order: 5;
+  justify-content: center;
+  gap: var(--kk-space-2);
+  margin: 0;
+  padding: var(--kk-space-1) 0;
+}
+
+.conversation-panel .chat-agent-messages > .chat-agent-controls button {
+  min-height: var(--kk-control-h-md);
+  border-radius: var(--kk-radius-full);
+  padding-inline: var(--kk-space-3);
+  font-size: var(--kk-font-caption);
+}
+
+.conversation-panel .chat-agent-messages > .chat-agent-item {
+  order: 6;
+}
+
+.conversation-panel .chat-agent-messages > .chat-approval {
+  order: 7;
+}
+
+.agent-composer-region {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--kk-space-2);
+  width: 100%;
+  min-width: 0;
+}
+
+.agent-composer-feedback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--kk-space-2);
+  flex-wrap: wrap;
+  width: 100%;
+  min-width: 0;
+}
+
+.agent-composer-feedback .agent-action-error {
+  margin: 0;
+  color: var(--kk-text-danger);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.agent-composer-feedback .ui-button {
+  min-height: var(--kk-control-h-sm);
+  border-radius: var(--kk-radius-full);
+  padding-inline: var(--kk-space-3);
+}
+
+.agent-reference-region {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-1);
+  width: 100%;
+  min-width: 0;
+}
+
+.agent-reference-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--kk-space-2);
+  padding-inline: var(--kk-space-1);
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+
+.agent-reference-heading span:last-child {
+  color: var(--kk-text-tertiary);
+  text-align: end;
+}
+
+.agent-reference-picker {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+}
+
+.agent-reference-picker select {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--kk-control-h-md);
+  border-radius: var(--kk-radius-full);
+  padding-inline: var(--kk-space-3);
+}
+
+@media (max-width: 600px) {
+  .conversation-panel
+    > .chat-agent-controls:has(select[aria-label="执行方式"])
+    label {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .conversation-panel .chat-agent-messages > .chat-agent-banner {
+    padding-inline: var(--kk-space-2);
+  }
+
+  .conversation-panel
+    .chat-agent-messages
+    > .chat-agent-banner
+    .chat-agent-stop {
+    position: static;
+    margin-inline-start: var(--kk-space-1);
+  }
+
+  .agent-reference-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .agent-reference-heading span:last-child {
+    text-align: start;
+  }
+}

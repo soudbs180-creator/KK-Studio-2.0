@@ -19,21 +19,23 @@ npm ci
 
 ## 命令与证明范围
 
-| 命令                                                     | 能证明什么                                                          |
-| -------------------------------------------------------- | ------------------------------------------------------------------- |
+| 命令                                                     | 能证明什么                                                            |
+| -------------------------------------------------------- | --------------------------------------------------------------------- |
 | `npm run lint`                                           | ESLint、治理/架构、功能和现行 Markdown 文件链接检查；不是全部安全审查 |
-| `npm run typecheck`                                      | TypeScript 类型检查                                                 |
-| `npm test`                                               | 当前 Node 单测；fixture 与 live 分开                                |
-| `npm run ui:check`                                       | 静态 UI 规则；不是视觉/交互验收                                     |
-| `npm run markdown:check`                                 | 现行 Markdown 相对文件目标；不检查外部网址或事实语义                 |
-| `npm run format:check`                                   | package script 实际覆盖范围的格式；Markdown 格式仍需定向检查         |
-| `npm run build`                                          | 当前 Web production 构建                                            |
-| `npm run test:ui`                                        | 构建后运行 Playwright production preview 回归                       |
-| `npm run client:check`                                   | Rust/Tauri 编译检查；不是原生运行验收                               |
-| `cargo test --manifest-path src-tauri/Cargo.toml`        | Rust 单测                                                           |
-| `cargo fmt --manifest-path src-tauri/Cargo.toml --check` | Rust 格式                                                           |
-| `npm run client:build -- --no-bundle`                    | Tauri release 可执行文件；不是安装/升级验收                         |
-| `npm run verify`                                         | package.json 定义的组合检查；不能暗示包含全部 Rust/native/live 门禁 |
+| `npm run typecheck`                                      | TypeScript 类型检查                                                   |
+| `npm test`                                               | 当前 Node 单测；fixture 与 live 分开                                  |
+| `npm run ui:check`                                       | 静态 UI 规则；不是视觉/交互验收                                       |
+| `npm run markdown:check`                                 | 现行 Markdown 相对文件目标；不检查外部网址或事实语义                  |
+| `npm run format:check`                                   | package script 实际覆盖范围的格式；Markdown 格式仍需定向检查          |
+| `npm run build`                                          | 当前 Web production 构建                                              |
+| `npm run test:ui`                                        | 构建后运行 Playwright production preview 回归                         |
+| `npm run client:check`                                   | Rust/Tauri 编译检查；不是原生运行验收                                 |
+| `cargo test --manifest-path src-tauri/Cargo.toml`        | Rust 单测                                                             |
+| `cargo fmt --manifest-path src-tauri/Cargo.toml --check` | Rust 格式                                                             |
+| `npm run client:build -- --no-bundle`                    | Tauri release 可执行文件；不是安装/升级验收                           |
+| `npm run version:check`                                  | 平台版本源与镜像文件一致性                                            |
+| `npm run version:consistency`                            | 嵌套 lock、Tauri 依赖、运行时版本源和活动源码版本硬编码审计           |
+| `npm run verify`                                         | package.json 定义的组合检查；不能暗示包含全部 Rust/native/live 门禁   |
 
 以当前 `package.json`、Playwright 和 CI 配置核对上述含义。改脚本时同步本表；没有命令、依赖或真实服务时报告失败/未运行，不写预测结果。
 

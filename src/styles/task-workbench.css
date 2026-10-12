@@ -474,6 +474,7 @@
 }
 .comment-region-picker button {
   padding: 5px 8px;
+  border: var(--ui-border-width) solid var(--border-default);
   border-radius: var(--kk-radius-menu);
   background: var(--bg-input);
   color: var(--text-secondary);
@@ -481,8 +482,9 @@
   line-height: var(--kk-line-caption);
 }
 .comment-region-picker button.is-selected {
-  background: var(--bg-accent);
-  color: var(--text-on-accent);
+  border-color: var(--border-control);
+  background: var(--neutral-selected);
+  color: var(--text-primary);
 }
 .comment-card textarea {
   width: 100%;

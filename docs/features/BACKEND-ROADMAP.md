@@ -1,21 +1,32 @@
 # 本地演示后端化路线图
 
 - 状态：现行
-- 最近更新：2026-09-28
-- 关联任务：BACKEND-IMAGE-PARAMS（透传已实现，双端验收未完成）、BACKEND-TEXT-NODE、BACKEND-MEDIA-001、T6、BACKEND-MCP-AUTO、T8、BACKEND-PLATFORM、T9、T10、T12、BACKEND-ASTRA-001
+- 最近更新：2026-10-09
+- 关联任务：BACKEND-IMAGE-PARAMS（透传已实现，双端验收未完成）、BACKEND-TEXT-NODE、BACKEND-MEDIA-001、T6、BACKEND-MCP-AUTO、T8、BACKEND-PLATFORM、T9、T10、T12、BACKEND-ASTRA-001、TASK-PROV-BYOK-001
 - 功能状态看板：[`README.md`](README.md)；任务权威：[`../governance/task-ledger.json`](../governance/task-ledger.json)
 
 ## 目标
 
-把所有“UI 已显示但只有本地演示”的能力，逐波次接入真实后端，达到 REAL。原则：
+把所有“UI 已显示但只有本地演示”的能力，逐波次接入真实后端，达到 REAL。当前交付先以 Desktop 为主线，Web 从共享代码逻辑蒸馏，Mobile 最后独立落地。每个平台都必须同时通过 UI/交互门和最小 AI 链路门，才能继续扩展或声明完成；P0 的 UI 状态壳与 AI/API 接线可以并行准备，但必须共同通过双门。原则：
 
-平台交付顺序为 Desktop → Web → Mobile。Desktop 必须可免登录离线使用，也可选择登录；Web/Mobile 的目标为登录后使用。个人项目/素材以设备本地为目标，Web 由安装在本机的伴随服务持久化，账号不默认开启云同步。当前 Web IndexedDB、演示账号和无 Mobile 包仍是现状；`TASK-LOCAL-SERVICE-001`、`BACKEND-PLATFORM`、`T12` 分别跟踪差距。
+平台交付顺序为 Desktop → Web → Mobile。Desktop 必须可免登录离线使用，也可选择登录；Web/Mobile 的目标为登录后使用。个人项目/素材以设备本地为目标，Web 的账号、会话、积分、会员与用量控制面部署在 VPS，项目/素材云同步另行验收。当前 Web IndexedDB、演示账号和无 Mobile 包仍是现状；`TASK-LOCAL-SERVICE-001`、`BACKEND-PLATFORM`、`T12` 分别跟踪差距。
 
 1. **先打通链路，再接付费服务**：不依赖外部 Key/服务器的先做；需要 Key 的，代码链路先就绪、用户填 Key 即可用；需要部署的平台服务放最后。
 2. **复用，不新建第二套**：所有模态统一走 FEAT-002 的任务宿主、连接门禁、journal、幂等、取消、素材归档；不得为视频/音频另起队列。
 3. **替换 seam，不混用状态**：每接通一个模态，就从 `useLocalGeneration`（FEAT-025）移除该模态的演示分支，真实与演示结果不得同态展示。
 4. **Web 与 Desktop 分别验收**：浏览器验证不替代 Tauri/WebView 运行态；证据不足只能标 PARTIAL。
 5. **每个功能一张卡 + 一个账本任务**：状态变化先改代码与证据，再更新 registry/卡片/账本。
+
+### Wave 0 — 产品双门与 Desktop 最小 AI 链路（P0）
+
+这是所有后续平台和功能的硬前置。先完成真实 UI/交互证据，再完成最简单的一条本地生成链路；静态页面、fixture、mock 或单平台截图不能替代验收。
+
+| 顺序 | 工作项 | 做什么 | 依赖/出口 |
+| --- | --- | --- | --- |
+| 0.1 | UI/交互双门 | 真实入口、配置/连接健康、加载、成功、失败、取消、离线/未知态、结果回填与保存重载；同一版本留存运行证据 | 无；未通过不得扩展平台 |
+| 0.2 | Desktop 最小文本链路 | 本地账号或用户 API Key → 连接健康 → 一次文本生成 → 结果回填/原始记录写入 → 保存并重载 | 可与 0.1 UI 状态壳并行；真实 provider 运行证据 |
+| 0.3 | Desktop 最小图片链路 | 沿用同一任务宿主/幂等/取消/归档规则，完成一次图片生成并写回原始资产 | 0.2；真实 provider 运行证据 |
+| 0.4 | 规则与证据登记 | 把链路、UI 状态、平台版本和未完成项登记到功能卡/账本；“用户自有 API 产品化接入”保持 P1 TODO，当前不实现 | 0.1–0.3 |
 
 ## 波次
 
@@ -45,7 +56,7 @@
 
 | 功能 | 任务 | 前置 |
 | --- | --- | --- |
-| FEAT-017 账号与登录、FEAT-018 积分计费 | BACKEND-PLATFORM、T10/T10-PREP | VPS、域名/DNS、身份服务、HTTPS、计费集成 |
+| FEAT-017 账号与登录、FEAT-018 积分计费 | BACKEND-PLATFORM、T10/T10-PREP | VPS、域名/DNS、身份服务、HTTPS、计费集成；账号、会话、积分、会员、用量控制面必须在 VPS 验收 |
 | FEAT-019 云端保存/同步、FEAT-020 长期记忆 | BACKEND-PLATFORM、T9/T10 | 身份体系、云存储、隐私与保留策略 |
 | 旧 Web/Vercel 退役切换 | T11 | 旧部署权限 |
 | FEAT-027 Astra | BACKEND-ASTRA-001 | 产品定义 + 平台后端 |
@@ -54,7 +65,7 @@
 
 | 功能 | 任务 | 前置 |
 | --- | --- | --- |
-| FEAT-028 Mobile | T12 | 运行形态产品决策、共享 Core 契约（T8） |
+| FEAT-028 Mobile | T12 | Desktop/Web 双门通过、运行形态产品决策、版本化契约或核心包（T8）；代码必须位于独立顶层 `mobile/` |
 
 ## 推进规则（任何 AI 照做）
 
@@ -62,6 +73,7 @@
 - 任务分支命名 `<type>/<TASK-ID>-<desc>`；main 禁直推；未获授权不提交不推送（当前整合分支保持用户控制的提交节奏）。
 - 每完成一个模态，更新 `features.registry.json` 状态并 `npm run features:write`；门禁会拦截“标 REAL 但无对应平台运行证据或 DONE/PASS 任务”的造假。
 - 外部条件未具备时，本地可完成部分照做并标 PARTIAL + NOT VERIFIED，不得整体标 BLOCKED 后停摆。
+- P0 双门未通过时，不做平台优化或大规模功能扩展；Web 先复用 `src/` 的共享逻辑，再接入 VPS 控制面；Mobile 不得直接混入或依赖 Desktop 的 `src-tauri/`，先在独立 `mobile/` 目录打通文本/图片最小链路。
 
 ## 依赖口径勘误（2026-09-22）
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { checkModelProvider } from "../../integrations/modelProvider";
 import {
   deleteApiKey,
@@ -7,10 +7,8 @@ import {
   saveApiKey,
 } from "../../features/creation/providerCredentials";
 import {
-  DEFAULT_MODEL_PROVIDER,
   MODEL_PROVIDER_STORAGE_KEY,
   modelProviderSchema,
-  parseModelProvider,
   serializeModelProvider,
   type ModelProviderProfile,
 } from "../../domain/modelProvider";
@@ -23,39 +21,30 @@ import { saveModelCatalog } from "../../features/models/modelCatalog";
 import {
   addProviderConnection,
   connectionFromModelProfile,
+  isDesktopProviderDurable,
   markProviderConnectionUnverified,
+  persistProviderConnectionsDurable,
   readProviderConnections,
 } from "../../features/creation/providerRegistry";
 import type { ProviderConnection } from "../../domain/providerConnections";
-
-type ConnectionState =
-  | { kind: "idle"; message: string }
-  | { kind: "loading"; message: string }
-  | { kind: "success"; message: string }
-  | { kind: "error"; message: string }
-  | { kind: "cancelled"; message: string }
-  | { kind: "offline"; message: string };
-
-function readProfile(): ModelProviderProfile {
-  try {
-    return parseModelProvider(
-      window.localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
-    ).profile;
-  } catch {
-    return { ...DEFAULT_MODEL_PROVIDER };
-  }
-}
+import { useProviderCredentialState } from "./useProviderCredentialState";
+import {
+  readModelProviderProfile,
+  type ConnectionState,
+} from "./modelProviderSettingsState";
 
 export default function ModelProviderSettings({
   onFeedback,
 }: {
   onFeedback: (message: string) => void;
 }) {
-  const [profile, setProfile] = useState(readProfile);
+  const [profile, setProfile] = useState(readModelProviderProfile);
   const [apiKey, setApiKey] = useState("");
-  const [hasStoredKey, setHasStoredKey] = useState(false);
   const [credentialRef, setCredentialRef] = useState(() =>
-    credentialId(readProfile().baseUrl, readProfile().name),
+    credentialId(
+      readModelProviderProfile().baseUrl,
+      readModelProviderProfile().name,
+    ),
   );
   const [saving, setSaving] = useState(false);
   const [connections, setConnections] = useState(readProviderConnections);
@@ -64,27 +53,11 @@ export default function ModelProviderSettings({
     message: "填写 API 地址后可保存；测试连接仅在你点击时发起。",
   });
   const requestRef = useRef<AbortController | null>(null);
-
-  useEffect(
-    () => () => {
-      requestRef.current?.abort("closed");
-      requestRef.current = null;
-    },
-    [],
+  const { hasStoredKey, setHasStoredKey } = useProviderCredentialState(
+    profile.baseUrl,
+    credentialRef,
+    requestRef,
   );
-  useEffect(() => {
-    let active = true;
-    void loadApiKey(profile.baseUrl, credentialRef)
-      .then((value) => {
-        if (active) setHasStoredKey(Boolean(value));
-      })
-      .catch(() => {
-        if (active) setHasStoredKey(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [profile.baseUrl, credentialRef]);
 
   function cancelRequest(): void {
     requestRef.current?.abort("user");
@@ -95,6 +68,17 @@ export default function ModelProviderSettings({
     cancelRequest();
     const nextProfile = { ...profile, [field]: value };
     if (field === "baseUrl" || field === "name") {
+      setApiKey("");
+      setCredentialRef(credentialId(nextProfile.baseUrl, nextProfile.name));
+    }
+    setProfile(nextProfile);
+    setConnection({ kind: "idle", message: "有尚未测试的更改。" });
+  }
+
+  function updateMany(patch: Partial<ModelProviderProfile>): void {
+    cancelRequest();
+    const nextProfile = { ...profile, ...patch };
+    if ("baseUrl" in patch || "name" in patch) {
       setApiKey("");
       setCredentialRef(credentialId(nextProfile.baseUrl, nextProfile.name));
     }
@@ -129,7 +113,12 @@ export default function ModelProviderSettings({
         serializeModelProvider(valid),
       );
       setProfile(valid);
-      setConnections(addProviderConnection(savedConnection));
+      const next = addProviderConnection(savedConnection);
+      if (isDesktopProviderDurable()) {
+        // Desktop: the success hint appears only after the native durable commit.
+        await persistProviderConnectionsDurable(next);
+      }
+      setConnections(next);
       setConnection({
         kind: "idle",
         message: "连接信息已保存。API Key 不会写入浏览器存储或项目快照。",
@@ -173,7 +162,12 @@ export default function ModelProviderSettings({
     setSaving(true);
     try {
       await deleteApiKey(profile.baseUrl, credentialRef);
-      markProviderConnectionUnverified(connectionFromModelProfile(profile).id);
+      const next = markProviderConnectionUnverified(
+        connectionFromModelProfile(profile).id,
+      );
+      if (isDesktopProviderDurable()) {
+        await persistProviderConnectionsDurable(next);
+      }
       setApiKey("");
       setHasStoredKey(false);
       setConnection({ kind: "idle", message: "已清除当前供应商的密钥。" });
@@ -261,6 +255,7 @@ export default function ModelProviderSettings({
         apiKey={apiKey}
         hasStoredKey={hasStoredKey}
         onUpdate={update}
+        onUpdateMany={updateMany}
         onApiKeyChange={(value) => {
           cancelRequest();
           setApiKey(value);

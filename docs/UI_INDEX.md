@@ -12,15 +12,37 @@
 
 ## 1. 当前唯一承载文件
 
+本表是 UI 规则的**完整**映射。列出的每一份现行文件都在本表内；新增 UI 规范文件必须同步本表，否则以本表为准视为未生效。
+
+### 1.1 文档层（规范性 Markdown）
+
 | 主题 | 唯一文件 | 说明 |
 | --- | --- | --- |
-| 业务状态、事务、审查问题、验证范围 | [`docs/changes/2026-09-29-figma-ui-governance/spec.md`](./changes/2026-09-29-figma-ui-governance/spec.md) | 本次治理的业务和验收基线 |
 | 零件规则、操作约束、对齐和反馈 | [`UI_RULES.md`](./UI_RULES.md) | 不定义页面类型 |
 | 五种页面模板和选型 | [`UI_ARCHETYPES.md`](./UI_ARCHETYPES.md) | 不重复定义零件尺寸 |
+| 数值（尺寸/字阶/间距/圆角）索引 | [`DESIGN_TOKENS.md`](./DESIGN_TOKENS.md) | 索引层，数值真值在 `tokens.css` |
+| 颜色、主题与基础组件 | [`DESIGN-SYSTEM.md`](./DESIGN-SYSTEM.md) | 主题与基础组件用法 |
+| 运行与验证（改动后如何确认生效） | [`UI_SPEC.md`](./UI_SPEC.md) | 浏览器验证与完成标准 |
+| 前端工程基线（技术栈、弹窗、供应商连接） | [`FRONTEND-SPEC.md`](./FRONTEND-SPEC.md) | 只管工程约束，不管外观 |
+| 业务状态、事务、审查问题、验证范围 | [`changes/2026-09-29-figma-ui-governance/spec.md`](./changes/2026-09-29-figma-ui-governance/spec.md) | 本次治理的业务和验收基线 |
+| 浏览器验证证据 | [`changes/2026-09-29-figma-ui-governance/verification.md`](./changes/2026-09-29-figma-ui-governance/verification.md) | 只记录可复现证据 |
+
+### 1.2 运行层（唯一真值在代码）
+
+| 主题 | 唯一文件 | 说明 |
+| --- | --- | --- |
 | 运行时 token | [`src/styles/tokens.css`](../src/styles/tokens.css) | `--kk-*` 唯一语义源 |
 | 兼容别名和共享状态类 | [`src/styles/ui-tokens.css`](../src/styles/ui-tokens.css)、[`src/styles/ui-governance.css`](../src/styles/ui-governance.css) | 不得新增第二套规则 |
 | 运行时模板注册表 | [`src/domain/pageTemplates.ts`](../src/domain/pageTemplates.ts)、[`src/styles/archetypes.json`](../src/styles/archetypes.json) | 只有 list/grid/detail/timeline/gallery |
-| 浏览器验证 | [`docs/changes/2026-09-29-figma-ui-governance/verification.md`](./changes/2026-09-29-figma-ui-governance/verification.md) | 只记录可复现证据 |
+
+### 1.3 已合并存根（不承载现行规则，禁止更新）
+
+| 文件 | 已并入 | 原文快照 |
+| --- | --- | --- |
+| [`UI-STANDARDS.md`](./UI-STANDARDS.md) | `UI_RULES.md` + `DESIGN_TOKENS.md` + `DESIGN-SYSTEM.md` | [`archive/ui-history/UI-STANDARDS-2026-09.md`](./archive/ui-history/UI-STANDARDS-2026-09.md) |
+| [`UI-ALIGNMENT.md`](./UI-ALIGNMENT.md) | `UI_RULES.md` + `DESIGN-SYSTEM.md` | [`archive/ui-history/UI-ALIGNMENT-2026-09.md`](./archive/ui-history/UI-ALIGNMENT-2026-09.md) |
+
+这两份只保留章节去向表供历史引用跳转。**不要更新它们**——更新会漏改，因为现行规则只读 1.1 表中的文件。
 
 ## 2. 冲突裁决
 
@@ -46,3 +68,6 @@
 `docs/archive/`、`docs/archive/ui-history/` 和历史 changes 目录仅用于追溯。若
 历史文件与四页治理基线冲突，以本索引和治理 spec 为准，并在新变更记录中写明
 裁决原因。
+
+1.3 表中的两份存根属于本节范畴：它们留在原路径只为让历史章节引用不失效，
+权威正文一律回到 1.1 表。

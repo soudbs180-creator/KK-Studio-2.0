@@ -115,6 +115,7 @@
   --kk-success: #79cda8;
   --kk-warning: #e6b96a;
   --kk-focus-ring: #aaa3ff;
+  --kk-focus-ring-subtle: rgba(255, 255, 255, 0.58);
   --kk-shadow-color: rgba(0, 0, 0, 0.5);
   --kk-shadow-color-strong: rgba(0, 0, 0, 0.7);
   --kk-overlay: rgba(10, 10, 10, 0.72);
@@ -127,6 +128,8 @@
   --kk-border-none: 0;
   --kk-border-width: 1px;
   --kk-border-width-focus: 2px;
+  --kk-focus-width-subtle: 1px;
+  --kk-focus-offset-subtle: 1px;
 
   /* --- 2.3 层级 z-index（7 档，禁止 9999 之类魔法值） --- */
   --kk-z-base: 0;
@@ -272,6 +275,7 @@
   --kk-warning: #8a590c;
   --kk-on-accent: #ffffff;
   --kk-focus-ring: #594acc;
+  --kk-focus-ring-subtle: rgba(0, 0, 0, 0.4);
   --kk-shadow-color: rgba(0, 0, 0, 0.12);
   --kk-shadow-color-strong: rgba(0, 0, 0, 0.2);
   --kk-overlay: rgba(237, 237, 237, 0.72);

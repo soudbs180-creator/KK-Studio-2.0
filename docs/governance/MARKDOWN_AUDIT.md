@@ -11,3 +11,9 @@
 | 旧导航/重计划评审                                                               | [导航评审](../evidence/navigation-review-2026-09-07/review.md) 1 处、[重计划评审](../evidence/replan-2026-09-07/review.md) 3 处日志链接缺失 | 不补造日志；对应结论只保留原记录范围                                                                                                 |
 
 全库扫描为 365 个已跟踪 Markdown、37 处上述链接目标问题；当前新增的任务交付包尚未提交时不计入“已跟踪”数量。`markdown:check` 只检测现行文档的相对文件目标是否存在；它不验证章节锚点、外部网址、Figma 节点、文档事实、历史快照或未入库的证据。后续如果找到原始日志，应通过新证据和勘误说明来源、SHA 与时间，再决定是否修复旧链接；详见账本 `TASK-DOCS-HISTORY-001`。
+
+## 2026-10-11 勘误与定向复核
+
+在保留上述 2026-09-23 原始审计结论的前提下，`TASK-DOCS-HISTORY-001` 对 37 项逐项复核：两份归档进度页的 16 个入口和 UI 审计的 13 个源码/脚本入口已修复为当前仓库内可追溯的文件链接；旧源码行号保留为正文中的历史位置，不再伪装成当前行号。输入契约的 4 个日志、导航复查的 1 个日志和重规划的 3 个日志没有 Git tracked 来源；工作树中的 `*.log` 副本不视为不可变证据，均保持 `NOT_VERIFIED`，没有补造内容。
+
+定向复核及逐项清单见 [`2026-10-11-taskstate-docs-closeout/verification.md`](../changes/2026-10-11-taskstate-docs-closeout/verification.md)、[`docs-history-audit.json`](../changes/2026-10-11-taskstate-docs-closeout/docs-history-audit.json) 和 [`check-docs-history.mjs`](../changes/2026-10-11-taskstate-docs-closeout/check-docs-history.mjs)。结果：37 项分类、29 个 tracked links repaired、8 个 original logs `NOT_VERIFIED`、0 个非预期链接失败；独立审阅仍是账本验收的剩余条件。

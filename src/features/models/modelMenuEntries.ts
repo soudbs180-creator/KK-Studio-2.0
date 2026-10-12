@@ -53,6 +53,15 @@ export function apiMenuEntries(
             match.item.model.id === current?.model &&
             current.connectionId === connection.id,
         )?.item.model ?? matches[0].item.model;
+      const primaryLabel = kind === "image" ? model.id : group.name;
+      const detailParts = [
+        connection.displayName,
+        kind === "image" ? group.name : undefined,
+        group.models.length > 1
+          ? `${group.models.length} 种型号参数`
+          : undefined,
+        modelDisplay(model).variant || undefined,
+      ].filter(Boolean);
       return [
         {
           ...entry(
@@ -62,14 +71,8 @@ export function apiMenuEntries(
               connectionId: connection.id,
               kind: model.kind,
             },
-            group.name,
-            connection.displayName +
-              (group.models.length > 1
-                ? ` · ${group.models.length} 种型号参数`
-                : "") +
-              (modelDisplay(model).variant
-                ? " · " + modelDisplay(model).variant
-                : ""),
+            primaryLabel,
+            detailParts.join(" · "),
             connection.state === "disabled" ||
               connection.state === "quarantined"
               ? "连接已禁用或隔离，请检查设置"

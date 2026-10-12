@@ -2,6 +2,16 @@ import type { ModelSelection } from "./modelSelection.ts";
 import type { MaskDocument, ImageEditContext } from "./imageEdit.ts";
 export type CanvasItemKind = "image" | "video" | "audio" | "text";
 
+/** Stable semantic roles shared by upload, preview and canvas connections. */
+export const CANVAS_REFERENCE_SLOTS = [
+  "主体",
+  "风格",
+  "材质",
+  "构图",
+  "Mask",
+] as const;
+export type CanvasReferenceSlot = (typeof CANVAS_REFERENCE_SLOTS)[number];
+
 export const CANVAS_KIND_LABELS: Record<CanvasItemKind, string> = {
   image: "图片",
   video: "视频",
@@ -17,6 +27,7 @@ export interface DemoResult {
   poster?: string;
   text?: string;
   description: string;
+  model?: string;
   source: "demo" | "provider";
 }
 
@@ -51,13 +62,16 @@ export interface CanvasCollectionItem {
   assetId?: string;
   parentAssetId?: string;
   preview?: string;
+  /** Natural media dimensions used to keep image cards proportional. */
+  mediaWidth?: number;
+  mediaHeight?: number;
   updatedAt?: number;
   result?: DemoResult;
   /** A generated image keeps its editor when it is used as a reference. */
   referenceMode?: boolean;
   /** Upload-only reference cards intentionally have no prompt editor. */
   referenceOnly?: boolean;
-  referenceSlot?: "主体" | "风格" | "材质" | "构图" | "Mask";
+  referenceSlot?: CanvasReferenceSlot;
   /** A reserved result card is visible while the local demo is loading. */
   generationStatus?: "pending" | "ready" | "error";
   generationIndex?: number;
@@ -161,7 +175,7 @@ export interface CanvasReference {
   title: string;
   preview?: string;
   /** Semantic slot from the five-slot reference workflow. */
-  slot?: "主体" | "风格" | "材质" | "构图" | "Mask";
+  slot?: CanvasReferenceSlot;
 }
 
 export interface NodeEditingProps {

@@ -110,9 +110,13 @@
   align-items: center;
   min-height: var(--kk-control-h-md);
 }
-.stage-plan-panel :is(button, select, input):focus-visible {
-  outline: 2px solid var(--border-accent);
-  outline-offset: 2px;
+.stage-plan-panel button:focus-visible {
+  outline: var(--ui-focus-width) solid var(--ui-focus);
+  outline-offset: var(--ui-focus-offset);
+}
+.stage-plan-panel :is(select, input):focus-visible {
+  outline: var(--ui-focus-subtle-width) solid var(--ui-focus-subtle);
+  outline-offset: var(--ui-focus-subtle-offset);
 }
 
 @media (max-width: 767px) {

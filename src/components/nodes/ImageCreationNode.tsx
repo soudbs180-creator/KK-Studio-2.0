@@ -1,6 +1,12 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand.tsx";
-import { Upload, Image as ImageIcon } from "lucide-react";
+import { Upload } from "lucide-react";
 import CreationComposer from "./CreationComposer";
 import type {
   CanvasCollectionItem,
@@ -10,6 +16,9 @@ import type {
 import DemoMediaPreview from "./DemoMediaPreview";
 import { readReferenceImages } from "./referenceUpload";
 import CanvasImageActions from "./CanvasImageActions";
+import { readImageDimensions } from "../../features/creation/mediaDimensions";
+import { aspectRatioForDimensions } from "../../domain/mediaDimensions";
+import UiIcon from "../UiIcon";
 
 export default function ImageCreationNode({
   item,
@@ -52,28 +61,52 @@ export default function ImageCreationNode({
   useEffect(() => {
     if (item.referenceOnly) onExtraHeightChange(0);
   }, [item.referenceOnly, onExtraHeightChange]);
+  const incomingReferences = references ?? [];
+  const composerReferences: CanvasReference[] =
+    item.referenceSlot === "主体" && item.assetId
+      ? [
+          {
+            assetId: item.assetId,
+            title: item.title,
+            preview: image || item.preview,
+            slot: "主体",
+          },
+          ...incomingReferences.filter(
+            (reference) => reference.assetId !== item.assetId,
+          ),
+        ]
+      : incomingReferences;
   function upload(value?: File): void {
     if (!value) return;
     if (
       !["image/png", "image/jpeg", "image/webp", "image/gif"].includes(
         value.type,
       ) ||
+      value.size === 0 ||
       value.size > 10 * 1024 * 1024
     ) {
-      setError("请选择 10 MB 以内的 PNG、JPG、WebP 或 GIF 图片。");
+      setError("请选择 10 MB 以内且不为空的 PNG、JPG、WebP 或 GIF 图片。");
       return;
     }
     const version = ++uploadVersion.current;
     setError("正在读取并归档本地图片…");
     void readReferenceImages([value])
-      .then(([asset]) => {
+      .then(async ([asset]) => {
         if (version !== uploadVersion.current) return;
         setImage(asset.preview ?? "");
+        const dimensions = await readImageDimensions(asset.preview ?? "");
+        if (version !== uploadVersion.current) return;
         onChange({
           preview: asset.preview,
           assetId: asset.assetId,
+          mediaWidth: dimensions.width,
+          mediaHeight: dimensions.height,
           title: value.name,
-          referenceOnly: true,
+          referenceSlot: "主体",
+          // A top-level upload is the generation source (主体), so keep the
+          // composer mounted for prompt/edit actions. Reference-only cards
+          // are created exclusively by the composer slot upload flow.
+          referenceOnly: false,
         });
         setError("");
       })
@@ -87,11 +120,42 @@ export default function ImageCreationNode({
       });
   }
   return (
-    <div className="image-creation">
-      <button className="upload-image" onClick={() => file.current?.click()}>
-        <Upload size={23} />
-        上传图片
-      </button>
+    <div
+      className="image-creation"
+      style={
+        {
+          "--media-height": `${400 / aspectRatioForDimensions(item.mediaWidth ?? 1, item.mediaHeight ?? 1)}px`,
+        } as CSSProperties
+      }
+    >
+      <div className="image-node-header">
+        <span className="image-caption">{item.title}</span>
+        <div className="image-node-header-actions">
+          {onToggleLike && (
+            <button
+              type="button"
+              className="image-card-like"
+              aria-label={liked ? "取消喜欢当前卡片" : "喜欢当前卡片"}
+              title={liked ? `取消喜欢${item.title}` : `喜欢${item.title}`}
+              aria-pressed={liked}
+              onClick={onToggleLike}
+            >
+              <UiIcon name="favorite" size={20} />
+            </button>
+          )}
+          {!image && (
+            <button
+              type="button"
+              className="upload-image"
+              aria-label="上传图片"
+              onClick={() => file.current?.click()}
+            >
+              <Upload size={16} />
+              上传图片
+            </button>
+          )}
+        </div>
+      </div>
       <input
         ref={file}
         hidden
@@ -123,10 +187,6 @@ export default function ImageCreationNode({
             );
         }}
       />
-      <span className="image-caption">
-        <ImageIcon size={13} />
-        {item.referenceOnly ? item.title : "图片"}
-      </span>
       <div
         ref={preview}
         className="image-preview"
@@ -143,6 +203,19 @@ export default function ImageCreationNode({
               src={image}
               alt="参考图片"
               draggable={false}
+              onLoad={(event) => {
+                const { naturalWidth, naturalHeight } = event.currentTarget;
+                if (
+                  naturalWidth > 1 &&
+                  naturalHeight > 1 &&
+                  (item.mediaWidth !== naturalWidth ||
+                    item.mediaHeight !== naturalHeight)
+                )
+                  onChange({
+                    mediaWidth: naturalWidth,
+                    mediaHeight: naturalHeight,
+                  });
+              }}
               onDoubleClick={(event) => {
                 event.stopPropagation();
                 openPreview();
@@ -163,7 +236,7 @@ export default function ImageCreationNode({
           anchor={preview}
           selected={selected}
           onPreview={openPreview}
-          references={references}
+          references={incomingReferences}
         />
       )}
       {!selected && error && (
@@ -184,15 +257,13 @@ export default function ImageCreationNode({
           referenceSlot.current = slot;
           referenceFile.current?.click();
         }}
-        references={references}
+        references={composerReferences}
         referenceLimit={referenceLimit}
         prompt={item.prompt}
         model={model}
         onModelChange={onModelChange}
         error={error}
         onPromptChange={(prompt) => onChange({ prompt })}
-        liked={liked}
-        onToggleLike={onToggleLike}
         onExtraHeightChange={onExtraHeightChange}
         onRemoveReference={onRemoveReference}
       />

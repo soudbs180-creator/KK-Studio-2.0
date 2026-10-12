@@ -255,8 +255,10 @@ impl TaskHost {
             return Ok(existing.record);
         }
         // The native request survives a WebView reload, so its capacity must
-        // live with this jobs map, not with browser-lock metadata.
-        if request.kind.as_deref() == Some("text") {
+        // live with this jobs map, not with browser-lock metadata. Image and
+        // text both hold one live slot per running job per credential; legacy
+        // requests without a kind are image requests and count the same.
+        {
             let jobs = self
                 .jobs
                 .lock()
@@ -583,12 +585,25 @@ impl TaskHost {
             body.extend_from_slice(&chunk);
         }
         if !status.is_success() {
+            // Preserve the provider's own error (e.g. "Selected model is at
+            // capacity") so the UI can show the real reason and its status,
+            // instead of collapsing it into a generic failure.
+            let detail = upstream_error_detail(&body);
             return Err(RunError {
                 failure: failure(
                     class_for_status(status),
                     status.as_u16(),
                     retry,
-                    "供应商返回了失败响应",
+                    detail
+                        .map(|message| {
+                            format!(
+                                "供应商返回了失败响应（HTTP {}）：{}",
+                                status.as_u16(),
+                                message
+                            )
+                        })
+                        .as_deref()
+                        .unwrap_or("供应商返回了失败响应"),
                 ),
                 request_started: true,
                 asset_ids: vec![],
@@ -767,6 +782,22 @@ fn class_for_status(status: StatusCode) -> &'static str {
         StatusCode::BAD_REQUEST | StatusCode::UNPROCESSABLE_ENTITY => "invalid_request",
         _ => "provider_unavailable",
     }
+}
+
+/// Extract the provider's own error message (e.g. "Selected model is at
+/// capacity") from a failure body, capped at 400 chars; None when absent.
+fn upstream_error_detail(body: &[u8]) -> Option<String> {
+    serde_json::from_slice::<Value>(body)
+        .ok()
+        .and_then(|payload| {
+            payload
+                .pointer("/error/message")
+                .and_then(Value::as_str)
+                .map(str::to_string)
+        })
+        .map(|message| message.trim().to_string())
+        .filter(|message| !message.is_empty())
+        .map(|message| message.chars().take(400).collect::<String>())
 }
 
 async fn download_result(
@@ -1340,6 +1371,28 @@ mod tests {
     }
 
     #[test]
+    fn image_capacity_rejects_with_live_native_jobs() {
+        let root = root();
+        let assets = Arc::new(AssetRepository::new(root.join("assets")));
+        let host = Arc::new(TaskHost::new(root.join("jobs"), assets).unwrap());
+        let mut pending = request("native-image-capacity");
+        pending.kind = Some("image".into());
+        pending.concurrency_limit = Some(1);
+        host.jobs.lock().unwrap().insert(
+            "other".into(),
+            JobControl {
+                cancelled: Arc::new(AtomicBool::new(false)),
+                wake: Arc::new(Notify::new()),
+                credential_ref: pending.credential_ref.clone(),
+            },
+        );
+        let result = tauri::async_runtime::block_on(Arc::clone(&host).submit(pending.clone()));
+        assert!(result.unwrap_err().starts_with("capacity:"));
+        assert!(host.get(&pending.task_id).unwrap().is_none());
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
     fn omitted_text_fields_preserve_image_identity() {
         let original = request("legacy-image");
         let original_json = serde_json::to_value(&original).unwrap();
@@ -1351,6 +1404,30 @@ mod tests {
             fingerprint(&original).unwrap(),
             fingerprint(&explicit).unwrap()
         );
+    }
+
+    #[test]
+    fn upstream_error_detail_preserves_provider_message() {
+        assert_eq!(
+            upstream_error_detail(br#"{"error":{"message":"Selected model is at capacity"}}"#,)
+                .as_deref(),
+            Some("Selected model is at capacity")
+        );
+        assert_eq!(upstream_error_detail(br#"{}"#), None);
+        assert_eq!(upstream_error_detail(b"not json"), None);
+        assert_eq!(
+            upstream_error_detail(br#"{"error":{"message":"   "}}"#),
+            None
+        );
+        assert_eq!(
+            upstream_error_detail(r#"{"error":{"message":"一二三"}}"#.as_bytes()).as_deref(),
+            Some("一二三")
+        );
+        let long = "x".repeat(600);
+        let detail =
+            upstream_error_detail(format!(r#"{{"error":{{"message":"{}"}}}}"#, long).as_bytes())
+                .unwrap();
+        assert_eq!(detail.chars().count(), 400);
     }
     fn root() -> PathBuf {
         let path = std::env::temp_dir().join(format!(

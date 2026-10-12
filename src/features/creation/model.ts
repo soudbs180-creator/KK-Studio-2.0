@@ -1,7 +1,9 @@
 import type {
   CanvasCollectionItem,
   CanvasItemKind,
+  CanvasReferenceSlot,
 } from "../../domain/canvasItems";
+import { CANVAS_REFERENCE_SLOTS } from "../../domain/canvasItems.ts";
 import {
   normalizeGoogleConversation,
   type GoogleConversation,
@@ -25,6 +27,7 @@ import {
   type ImageEditSnapshot,
   type ImageEditContext,
 } from "../image-edit/snapshot.ts";
+import { normalizeTaskCostReceipt, type TaskCostReceipt } from "./taskState.ts";
 
 export type CreationTaskStatus =
   | "queued"
@@ -63,6 +66,8 @@ export interface CreationAttachment {
   name: string;
   mime: string;
   size: number;
+  /** Semantic canvas role preserved through task preparation and persistence. */
+  role?: CanvasReferenceSlot;
   /** Data URLs are used only for user selected, non-sensitive local assets. */
   dataUrl?: string;
 }
@@ -121,6 +126,9 @@ export interface CreationTask {
   /** Estimate only; an actual amount is shown only when a provider reports it. */
   estimatedCostUsd?: number;
   actualCostUsd?: number;
+  /** Traceable quote evidence; fixture/non-USD receipts do not become USD claims. */
+  estimatedCostQuote?: TaskCostReceipt;
+  actualCostReceipt?: TaskCostReceipt;
   approvedGates?: ApprovalGate[];
   retryOfTaskId?: string;
   retryOutputIndices?: number[];
@@ -207,15 +215,24 @@ export interface CreateProjectInput {
 
 export const CREATION_STORAGE_KEY = "kk-studio-next:creation:v1";
 
+const TEXT_MODEL_PATTERN =
+  /\b(gpt|claude|llama|qwen|mistral|deepseek|gemini|doubao|chat|text|o[134])\b/i;
+/** Vendors reuse a shared prefix across text and image models; these terms mark an image model. */
+const IMAGE_ONLY_MODEL_PATTERN =
+  /(image|seedream|dall[-_ ]?e|video|audio|tts|speech|embed)/i;
+/** Common chat/text model prefixes that are not image endpoints by default. */
+const TEXT_PREFIXED_MODEL_PATTERN =
+  /\b(gpt|claude|llama|qwen|mistral|deepseek|doubao)\b/i;
+const IMAGE_HINT_PATTERN = /(image|vision|seedream|dall[-_ ]?e)/i;
+
 export function modelSupportsKind(
   model: string,
   kind: CanvasItemKind,
 ): boolean {
   if (kind === "text")
     return (
-      /\b(gpt|claude|llama|qwen|mistral|deepseek|gemini|chat|text|o[134])\b/i.test(
-        model.trim(),
-      ) && !/(image|dall[-_ ]?e|video|audio|tts|speech|embed)/i.test(model)
+      TEXT_MODEL_PATTERN.test(model.trim()) &&
+      !IMAGE_ONLY_MODEL_PATTERN.test(model.trim())
     );
   if (kind !== "image") return false;
   const normalized = model.trim();
@@ -223,10 +240,11 @@ export function modelSupportsKind(
   if (/(video|h3|audio|tts|speech|text[-_ ]?only|embed)/i.test(normalized))
     return false;
   // Common chat/text model IDs are not image endpoints. Explicit image IDs
-  // remain allowed even when a vendor includes a shared "gpt" prefix.
+  // remain allowed even when a vendor includes a shared "gpt"/"doubao" prefix
+  // (e.g. gpt-image-1, doubao-seedream-*).
   if (
-    /\b(gpt|claude|llama|qwen|mistral|deepseek)\b/i.test(normalized) &&
-    !/(image|vision|dall[-_ ]?e)/i.test(normalized)
+    TEXT_PREFIXED_MODEL_PATTERN.test(normalized) &&
+    !IMAGE_HINT_PATTERN.test(normalized)
   )
     return false;
   return true;
@@ -378,6 +396,9 @@ function isAttachment(value: unknown): value is CreationAttachment {
     typeof item.name === "string" &&
     typeof item.mime === "string" &&
     typeof item.size === "number" &&
+    (!item.role ||
+      (typeof item.role === "string" &&
+        (CANVAS_REFERENCE_SLOTS as readonly string[]).includes(item.role))) &&
     (!item.dataUrl ||
       (typeof item.dataUrl === "string" &&
         (isAssetReference(item.dataUrl) ||
@@ -516,18 +537,29 @@ function normalizeCanvasItem(
       typeof value.preview === "string"
         ? value.preview.slice(0, 16 * 1024 * 1024)
         : undefined,
+    mediaWidth:
+      typeof value.mediaWidth === "number" &&
+      Number.isFinite(value.mediaWidth) &&
+      value.mediaWidth > 1 &&
+      value.mediaWidth <= 100_000
+        ? Math.round(value.mediaWidth)
+        : undefined,
+    mediaHeight:
+      typeof value.mediaHeight === "number" &&
+      Number.isFinite(value.mediaHeight) &&
+      value.mediaHeight > 1 &&
+      value.mediaHeight <= 100_000
+        ? Math.round(value.mediaHeight)
+        : undefined,
     updatedAt:
       typeof value.updatedAt === "number" ? value.updatedAt : undefined,
     referenceMode: value.referenceMode === true ? true : undefined,
     referenceOnly: value.referenceOnly === true ? true : undefined,
-    referenceSlot:
-      value.referenceSlot === "主体" ||
-      value.referenceSlot === "风格" ||
-      value.referenceSlot === "材质" ||
-      value.referenceSlot === "构图" ||
-      value.referenceSlot === "Mask"
-        ? value.referenceSlot
-        : undefined,
+    referenceSlot: (CANVAS_REFERENCE_SLOTS as readonly string[]).includes(
+      value.referenceSlot as string,
+    )
+      ? (value.referenceSlot as CanvasCollectionItem["referenceSlot"])
+      : undefined,
     generationStatus:
       value.generationStatus === "pending" ||
       value.generationStatus === "ready" ||
@@ -776,15 +808,76 @@ function normalizeProject(value: CreationProject): CreationProject {
               ];
             })
           : undefined,
-        estimatedCostUsd:
-          typeof task.estimatedCostUsd === "number" &&
-          task.estimatedCostUsd >= 0
+        estimatedCostUsd: (() => {
+          const quote = normalizeTaskCostReceipt(
+            task.estimatedCostQuote,
+            {
+              id: safeText(task.id, 160),
+              idempotencyKey:
+                typeof task.idempotencyKey === "string" && task.idempotencyKey
+                  ? task.idempotencyKey.slice(0, 200)
+                  : "",
+            },
+            "estimate",
+          );
+          if (quote) {
+            return quote.source === "provider" && quote.currency === "USD"
+              ? quote.amount
+              : undefined;
+          }
+          return typeof task.estimatedCostUsd === "number" &&
+            Number.isFinite(task.estimatedCostUsd) &&
+            task.estimatedCostUsd >= 0 &&
+            task.estimatedCostUsd <= 1_000_000_000
             ? task.estimatedCostUsd
-            : undefined,
-        actualCostUsd:
-          typeof task.actualCostUsd === "number" && task.actualCostUsd >= 0
+            : undefined;
+        })(),
+        actualCostUsd: (() => {
+          const receipt = normalizeTaskCostReceipt(
+            task.actualCostReceipt,
+            {
+              id: safeText(task.id, 160),
+              idempotencyKey:
+                typeof task.idempotencyKey === "string" && task.idempotencyKey
+                  ? task.idempotencyKey.slice(0, 200)
+                  : "",
+            },
+            "actual",
+          );
+          if (receipt) {
+            return receipt.source === "provider" && receipt.currency === "USD"
+              ? receipt.amount
+              : undefined;
+          }
+          return typeof task.actualCostUsd === "number" &&
+            Number.isFinite(task.actualCostUsd) &&
+            task.actualCostUsd >= 0 &&
+            task.actualCostUsd <= 1_000_000_000
             ? task.actualCostUsd
-            : undefined,
+            : undefined;
+        })(),
+        estimatedCostQuote: normalizeTaskCostReceipt(
+          task.estimatedCostQuote,
+          {
+            id: safeText(task.id, 160),
+            idempotencyKey:
+              typeof task.idempotencyKey === "string" && task.idempotencyKey
+                ? task.idempotencyKey.slice(0, 200)
+                : "",
+          },
+          "estimate",
+        ),
+        actualCostReceipt: normalizeTaskCostReceipt(
+          task.actualCostReceipt,
+          {
+            id: safeText(task.id, 160),
+            idempotencyKey:
+              typeof task.idempotencyKey === "string" && task.idempotencyKey
+                ? task.idempotencyKey.slice(0, 200)
+                : "",
+          },
+          "actual",
+        ),
         approvedGates: Array.isArray(task.approvedGates)
           ? task.approvedGates.filter(
               (gate): gate is ApprovalGate =>

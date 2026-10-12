@@ -40,7 +40,7 @@ test("插件、技能、伙伴标签可用方向键切换并显示对应内容",
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
     .getByRole("navigation", { name: "设置分类" })
-    .getByRole("button", { name: "MCP", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .click();
   const tabs = page.getByRole("tablist", { name: "插件、技能与伙伴" });
   const skills = tabs.getByRole("tab", { name: /技能/ });
@@ -49,14 +49,19 @@ test("插件、技能、伙伴标签可用方向键切换并显示对应内容",
   await skills.press("ArrowRight");
   await expect(partners).toBeFocused();
   await expect(partners).toHaveAttribute("aria-selected", "true");
-  await expect(page.getByRole("tabpanel")).toContainText("Agent");
+  await expect(
+    page.getByRole("tabpanel", { name: "伙伴 智能体" }),
+  ).toContainText("Agent");
 });
 
 test("手机扩展标签保持单行和触屏命中区", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "MCP", exact: true }).click();
+  await page
+    .getByRole("dialog", { name: "设置" })
+    .getByRole("button", { name: "扩展", exact: true })
+    .click();
   const tabs = page.getByRole("tablist", { name: "插件、技能与伙伴" });
   const bounds = (await tabs.boundingBox())!;
   for (const tab of await tabs.getByRole("tab").all()) {
@@ -68,29 +73,60 @@ test("手机扩展标签保持单行和触屏命中区", async ({ page }) => {
   }
 });
 
-test("首页伙伴和插件管理入口到达对应设置标签", async ({ page }) => {
+test("Skill、插件和伙伴旧入口都归一到扩展并保持唯一选中项", async ({
+  page,
+}) => {
+  async function expectExtensionTab(tab: RegExp) {
+    const dialog = page.getByRole("dialog", { name: "设置" });
+    const nav = dialog.getByRole("navigation", { name: "设置分类" });
+    await expect(nav.locator('[aria-current="page"]')).toHaveCount(1);
+    await expect(
+      nav.getByRole("button", { name: "扩展", exact: true }),
+    ).toHaveAttribute("aria-current", "page");
+    await expect(dialog.getByRole("tab", { name: tab })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+  }
+
+  // Skill catalog connector management keeps the legacy settings/mcp route.
   await page.goto("/");
-  await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
-    .getByRole("navigation", { name: "设置分类" })
-    .getByRole("button", { name: "MCP", exact: true })
+    .getByRole("navigation", { name: "主导航" })
+    .getByRole("button", { name: "技能", exact: true })
     .click();
-  await page.getByRole("tab", { name: /伙伴/ }).click();
-  await expect(page.getByRole("tab", { name: /伙伴/ })).toHaveAttribute(
-    "aria-selected",
-    "true",
-  );
-  await page.getByRole("button", { name: "关闭设置" }).click();
-  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await page.getByRole("tab", { name: "连接器", exact: true }).click();
+  await page.getByRole("button", { name: "自定义连接器", exact: true }).click();
+  await expectExtensionTab(/插件/);
   await page
-    .getByRole("navigation", { name: "设置分类" })
-    .getByRole("button", { name: "MCP", exact: true })
+    .getByRole("tablist", { name: "插件、技能与伙伴" })
+    .getByRole("tab", { name: /技能/ })
     .click();
-  await page.getByRole("tab", { name: /插件/ }).click();
-  await expect(page.getByRole("tab", { name: /插件/ })).toHaveAttribute(
-    "aria-selected",
-    "true",
-  );
+  await expectExtensionTab(/技能/);
+
+  // Canvas plugin management keeps the legacy settings/plugins route.
+  await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page.getByRole("button", { name: "新建项目", exact: true }).click();
+  await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
+  await page
+    .locator(".conversation-panel")
+    .getByRole("button", { name: "扩展", exact: true })
+    .click();
+  await page
+    .getByRole("menu", { name: "扩展" })
+    .getByRole("tab", { name: "插件/MCP", exact: true })
+    .click();
+  await page
+    .getByRole("menu", { name: "扩展" })
+    .getByRole("menuitem", { name: "管理画布插件" })
+    .click();
+  await expectExtensionTab(/插件/);
+
+  // The Agent panel keeps the legacy settings/partners route.
+  await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await page.getByRole("button", { name: "连接设置", exact: true }).click();
+  await expectExtensionTab(/伙伴/);
 });
 
 for (const viewport of [

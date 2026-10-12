@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { inspectDesktopRelease } from "./desktop-release.mjs";
+import { writeDesktopReleaseReceipt } from "./desktop-release-identity.mjs";
 
 export async function fileIdentity(filename) {
   const bytes = await fs.readFile(filename);
@@ -70,6 +71,58 @@ export async function verifyInstalledFiles(receipt, installDirectory) {
   return receipt.installedFiles.length;
 }
 
+const GIT_OBJECT_ID = /^[a-f0-9]{40,64}$/;
+
+function assertReceiptProvenance(receipt) {
+  if (!receipt || receipt.schemaVersion !== 1) {
+    throw new Error("Unsupported installer receipt schema");
+  }
+  if (
+    !GIT_OBJECT_ID.test(receipt.commit ?? "") ||
+    !GIT_OBJECT_ID.test(receipt.sourceTree ?? "")
+  ) {
+    throw new Error("Installer receipt is missing source provenance");
+  }
+  if (receipt.platform !== "windows-x64") {
+    throw new Error("Installer receipt platform is not windows-x64");
+  }
+  if (!/^\d+\.\d+\.\d+$/.test(receipt.versions?.desktop ?? "")) {
+    throw new Error("Installer receipt is missing the desktop version");
+  }
+}
+
+export async function verifyInstallerReceipt({ receipt, receiptDirectory }) {
+  assertReceiptProvenance(receipt);
+  const installer = await verifyInstaller(receipt, receiptDirectory);
+  return {
+    commit: receipt.commit,
+    sourceTree: receipt.sourceTree,
+    installer,
+    versions: receipt.versions ?? null,
+  };
+}
+
+/**
+ * Verify an installed tree against a published installer receipt. The receipt
+ * is treated as untrusted input: every path is contained and every file is
+ * checked by size and SHA-256 before the caller can use the installation.
+ */
+export async function verifyInstalledRelease({
+  receipt,
+  receiptDirectory,
+  installDirectory,
+}) {
+  const packageIdentity = await verifyInstallerReceipt({
+    receipt,
+    receiptDirectory,
+  });
+  const installedFiles = await verifyInstalledFiles(receipt, installDirectory);
+  return {
+    ...packageIdentity,
+    installedFiles,
+  };
+}
+
 export async function assertInstallerFresh(installer, inputs) {
   const installerTime = (await fs.stat(installer)).mtimeMs;
   for (const input of inputs) {
@@ -97,8 +150,13 @@ export function nsisExecutableIdentity(bytes) {
 }
 
 export async function recordInstallerInputs(root) {
-  if (inspectDesktopRelease(root).needsBuild)
-    throw new Error("Desktop build is stale");
+  // Tauri invokes this hook after it has built the release executable and just
+  // before bundling. Refresh the desktop receipt here so a first build or a
+  // source change is accepted only after the new executable is present.
+  writeDesktopReleaseReceipt(root);
+  const releaseInspection = inspectDesktopRelease(root);
+  if (releaseInspection.needsBuild)
+    throw new Error("Desktop build is not aligned with current inputs");
   const release = path.join(root, "src-tauri/target/release");
   const exe = path.join(release, "kk-studio.exe");
   const inputs = {
@@ -107,6 +165,12 @@ export async function recordInstallerInputs(root) {
       cwd: root,
       encoding: "utf8",
     }).trim(),
+    sourceTree: execFileSync("git", ["rev-parse", "HEAD^{tree}"], {
+      cwd: root,
+      encoding: "utf8",
+    }).trim(),
+    releaseInputSha256: releaseInspection.inputSha256,
+    releaseExecutableSha256: releaseInspection.executableSha256,
     executable: await fileIdentity(exe),
     bundledExecutable: nsisExecutableIdentity(await fs.readFile(exe)),
     installerConfig: await fileIdentity(
@@ -136,7 +200,8 @@ export async function writeInstallerReceipt({ root, installer, output }) {
   const versions = JSON.parse(
     await fs.readFile(path.join(root, "config/platform-versions.json"), "utf8"),
   );
-  if (inspectDesktopRelease(root).needsBuild) {
+  const releaseInspection = inspectDesktopRelease(root);
+  if (releaseInspection.needsBuild) {
     throw new Error(
       "Desktop executable is missing or older than source inputs",
     );
@@ -161,6 +226,14 @@ export async function writeInstallerReceipt({ root, installer, output }) {
   const inputSnapshot = JSON.parse(
     await fs.readFile(inputSnapshotPath, "utf8"),
   );
+  if (
+    inputSnapshot.releaseInputSha256 !== releaseInspection.inputSha256 ||
+    inputSnapshot.releaseExecutableSha256 !== releaseInspection.executableSha256
+  ) {
+    throw new Error(
+      "Installer inputs do not match the current desktop release",
+    );
+  }
   await checkIdentity(exe, inputSnapshot.executable);
   await checkIdentity(
     path.join(root, "src-tauri/tauri.installer.conf.json"),

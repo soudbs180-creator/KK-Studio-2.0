@@ -51,15 +51,10 @@ export default function SettingsSections({
   }
 
   const active = SETTINGS_SECTIONS.find((item) => item.id === section);
-  const extensionsSection =
-    section === "extensions" || section === "skill" || section === "mcp";
-  const defaultExtensionTab =
-    extensionsTab ??
-    (section === "skill"
-      ? "skills"
-      : section === "mcp"
-        ? "plugins"
-        : undefined);
+  // SettingsPanel resolves legacy deep links before this renderer. Keeping a
+  // single section here prevents the rail and page from drifting apart.
+  const extensionsSection = section === "extensions";
+  const defaultExtensionTab = extensionsTab;
 
   return (
     <>

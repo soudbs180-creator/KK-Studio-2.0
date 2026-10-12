@@ -7,9 +7,7 @@ import {
 
 const openWorkspace = openSeededProject;
 
-test("画布背景在点和网格之间切换，缩放到最小时降低点阵密度", async ({
-  page,
-}) => {
+test("画布背景在点和网格之间切换，且不污染对话面板", async ({ page }) => {
   await openWorkspace(page);
   await showCanvasNavigation(page);
   const canvas = page.getByTestId("infinite-canvas");
@@ -103,8 +101,7 @@ test("对话空态在消息区垂直居中，语音输入默认关闭且可用",
   await expect(voice).toBeEnabled();
   await expect(voice).toHaveAttribute("aria-pressed", "false");
   await expect(voice).toHaveCSS("opacity", "1");
-  // The current compact composer uses the registered 24px control tier.
-  await expect(voice).toHaveCSS("height", "24px");
+  await expect(voice).toHaveCSS("height", "32px");
   await expect(voice.locator("img")).toHaveAttribute(
     "src",
     "/design/figma/mic-off.svg",

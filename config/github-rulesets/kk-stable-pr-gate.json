@@ -25,6 +25,12 @@
       }
     },
     {
+      "type": "merge_queue",
+      "parameters": {
+        "merge_method": "SQUASH"
+      }
+    },
+    {
       "type": "required_status_checks",
       "parameters": {
         "required_status_checks": [
@@ -34,6 +40,14 @@
           },
           {
             "context": "delivery",
+            "integration_id": 15368
+          },
+          {
+            "context": "deploy-linux",
+            "integration_id": 15368
+          },
+          {
+            "context": "governance",
             "integration_id": 15368
           }
         ],

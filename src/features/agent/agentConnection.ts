@@ -41,12 +41,14 @@ import {
   generatedImageItems,
   generatedImageId,
   generatedImageSource,
+  reportedImageModel,
   canvasGenerationMetadata,
 } from "./agentImages.ts";
 import {
   prepareAgentAttachments,
   type AgentDraftAttachment,
 } from "./agentAttachments.ts";
+import { resolveCodexModel } from "./agentModelSelection.ts";
 export interface AgentOpResult {
   applied: CanvasAgentOp[];
   rejected: Array<{ op: CanvasAgentOp; reason: string }>;
@@ -68,6 +70,7 @@ export interface AgentBridge {
     sourceNodeId?: string;
     provider?: "Google Gemini";
     model?: string;
+    effectiveModel?: string;
   }): Promise<void>;
   getSnapshot(): CanvasAgentSnapshot | null;
   applyOps(
@@ -389,6 +392,9 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         projectId: boundProject,
         signal,
         sourceNodeId: generatedImageSource(history, item, boundProject),
+        ...(reportedImageModel(item)
+          ? { effectiveModel: reportedImageModel(item) }
+          : {}),
       });
     }
   }
@@ -773,6 +779,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
           : await memoryService.buildInjection(text.trim());
       if (version !== epoch || toolController.signal.aborted)
         throw new Error("发送已取消");
+      const requestedModel = input?.model ?? readAgentModel();
       const response = await activeApi.postTurn({
         prompt:
           KK_INSTRUCTIONS +
@@ -789,7 +796,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         conversationId: conversation.conversationId,
         expectedRevision: conversation.revision,
         permissionMode: readPermissionMode(),
-        model: input?.model ?? readAgentModel(),
+        model: resolveCodexModel(state.models, requestedModel),
         effort: input?.effort ?? readAgentEffort(),
         attachments,
         messageMetadata: input?.canvasSource

@@ -7,23 +7,21 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import type {
-  CanvasReference,
-  CanvasCollectionItem,
-  DemoResult,
+import {
+  type CanvasReference,
+  type CanvasCollectionItem,
+  type DemoResult,
 } from "../../domain/canvasItems";
-import { canvasImageReferenceLimit } from "../../features/models/imageModelCapabilities";
-import { readProviderConnections } from "../../features/creation/providerRegistry";
 import { cardLayout, type CanvasConnection } from "../../domain/canvasGraph";
 import type { useCanvasControls } from "./useCanvasControls";
 import type { useCanvasAddMenu } from "./useCanvasAddMenu";
 import CanvasNodeItem from "./CanvasNodeItem";
 import CanvasConnections from "./CanvasConnections";
 import { canConnectTarget } from "./connectionRules";
-import { canvasReferencesFor } from "./canvasReferences";
+import { canvasOccupiedRects, canvasReferencesFor } from "./canvasReferences";
 import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
 import type { ModelSelection } from "../../domain/modelSelection";
-import { imageReferenceCount } from "../../domain/imageReferences";
+import { addCanvasReferences } from "./addCanvasReferences";
 
 interface CanvasNodeLayerProps {
   controls: ReturnType<typeof useCanvasControls>;
@@ -73,6 +71,11 @@ export default function CanvasNodeLayer({
     : undefined;
   const { nodes, transform, selectedNode, addNode } = controls;
   const [pendingResultIds, setPendingResultIds] = useState<string[]>([]);
+  const [pendingReferenceFocus, setPendingReferenceFocus] = useState<{
+    parentId: string;
+    ids: string[];
+    restoreSelection: string | null;
+  } | null>(null);
   const [connectionTarget, setConnectionTarget] = useState<string | null>(null);
   const pendingByParent = useRef<Record<string, string[]>>({});
   useEffect(() => {
@@ -83,6 +86,20 @@ export default function CanvasNodeLayer({
     if (preservedSelection) controls.setSelectedNode(preservedSelection);
     setPendingResultIds([]);
   }, [pendingResultIds, nodes, items, selectedNode]);
+  useEffect(() => {
+    if (
+      !pendingReferenceFocus ||
+      !pendingReferenceFocus.ids.every((id) => nodes[id])
+    )
+      return;
+    controls.focusNodes([
+      pendingReferenceFocus.parentId,
+      ...pendingReferenceFocus.ids,
+    ]);
+    if (pendingReferenceFocus.restoreSelection)
+      controls.setSelectedNode(pendingReferenceFocus.restoreSelection);
+    setPendingReferenceFocus(null);
+  }, [pendingReferenceFocus, nodes, items, selectedNode]);
   function reserveGeneratedResults(parentId: string, count: number): void {
     const parent = nodes[parentId];
     const source = items.find((item) => item.id === parentId);
@@ -188,48 +205,28 @@ export default function CanvasNodeLayer({
     const parent = nodes[parentId];
     const source = items.find((item) => item.id === parentId);
     if (!parent || !source) return;
-    const incoming =
-      source.kind === "image"
-        ? imageReferenceCount(source, referencesFor(parentId)) -
-          imageReferenceCount(source)
-        : referencesFor(parentId).length;
-    const limit = canvasImageReferenceLimit(
+    const addedIds = addCanvasReferences({
+      parentId,
+      parent,
       source,
-      readProviderConnections(),
+      references,
+      existingReferences: referencesFor(parentId),
       defaultSelection,
-    );
-    const available = Math.max(0, limit - incoming);
-    if (references.length > available) {
-      onConnectionNotice(
-        available > 0
-          ? `当前模型还可接收 ${available} 张参考图，已添加前 ${available} 张。`
-          : `当前模型最多接收 ${limit} 张新增参考图，请先移除已有连接。`,
-      );
-    }
-    const startX = parent.x - 520;
-    const slots = ["主体", "风格", "材质", "构图", "Mask"] as const;
-    const occupied = new Set(
-      referencesFor(parentId).map((reference) => reference.slot),
-    );
-    references.slice(0, available).forEach((reference, index) => {
-      const slot =
-        reference.slot ?? slots.find((value) => !occupied.has(value));
-      if (slot) occupied.add(slot);
-      const id = addNode("image", {
-        title: reference.title,
-        description: "上传的参考图片",
-        preview: reference.preview,
-        assetId: reference.assetId,
-        referenceSlot: slot,
-        referenceOnly: true,
-        select: false,
-        position: {
-          x: startX - (index % 2) * 24,
-          y: parent.y + Math.floor(index / 2) * 430,
-        },
-      });
-      onConnect(id, parentId, "reference");
+      addNode,
+      onConnect,
+      onConnectionNotice,
+      occupiedRects: canvasOccupiedRects(items, nodes),
+      visibleWorldLeft: (16 - controls.transform.x) / controls.transform.scale,
+      visibleWorldRight:
+        (controls.viewport.width - 16 - controls.transform.x) /
+        controls.transform.scale,
     });
+    if (addedIds.length)
+      setPendingReferenceFocus({
+        parentId,
+        ids: addedIds,
+        restoreSelection: selectedNode,
+      });
   }
 
   return (

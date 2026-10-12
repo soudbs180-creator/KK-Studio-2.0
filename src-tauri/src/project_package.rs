@@ -7,6 +7,7 @@
 use crate::asset_storage::validation as asset_validation;
 use crate::asset_storage::AssetRepository;
 use crate::creation_storage::SnapshotRepository;
+use crate::secret_filter;
 use base64::{engine::general_purpose::STANDARD, Engine};
 use serde::Serialize;
 use serde_json::{Map, Value};
@@ -396,36 +397,9 @@ fn manifest_checksum(manifest: &Map<String, Value>) -> Result<String, String> {
 }
 
 fn reject_secrets(value: &Value) -> Result<(), String> {
-    match value {
-        Value::Object(object) => {
-            for (key, child) in object {
-                let lower = key.to_ascii_lowercase().replace(['_', '-'], "");
-                if lower.contains("api_key")
-                    || lower.contains("apikey")
-                    || lower.contains("bearer_token")
-                    || lower.contains("bearertoken")
-                    || lower.contains("access_token")
-                    || lower.contains("accesstoken")
-                    || lower.contains("oauthtoken")
-                    || lower.contains("refreshtoken")
-                    || lower.contains("client_secret")
-                    || lower.contains("clientsecret")
-                    || lower.contains("authorization")
-                    || lower.contains("secret")
-                {
-                    return Err(failure("secret-present", "项目包不能包含凭据或授权秘密"));
-                }
-                reject_secrets(child)?;
-            }
-        }
-        Value::Array(values) => {
-            for child in values {
-                reject_secrets(child)?;
-            }
-        }
-        _ => {}
-    }
-    Ok(())
+    secret_filter::reject_secrets(value, &|| {
+        failure("secret-present", "项目包不能包含凭据或授权秘密")
+    })
 }
 
 fn validate_metadata(metadata: &Value) -> Result<(String, usize), String> {
@@ -1044,6 +1018,44 @@ mod tests {
         let package_path = source.join("empty-plans.kkproject");
         export_package(&snapshots, &assets, &package_path).unwrap();
         preflight_package(&package_path).unwrap();
+        let _ = fs::remove_dir_all(source);
+    }
+
+    #[test]
+    fn task_cost_receipts_round_trip_with_bound_identity() {
+        let source = fixture_root();
+        let (snapshots, assets, _, _) = seed(&source);
+        let mut current = snapshots.read().unwrap().snapshot.unwrap();
+        current["revision"] = Value::from(2);
+        current["projects"][0]["tasks"][0]["idempotencyKey"] = json!("intent-1");
+        current["projects"][0]["tasks"][0]["estimatedCostQuote"] = json!({
+            "kind": "estimate", "amount": 0.08, "currency": "USD", "source": "provider",
+            "providerId": "test-provider", "receiptId": "quote-1", "receivedAt": 1,
+            "taskId": "t1", "idempotencyKey": "intent-1"
+        });
+        current["projects"][0]["tasks"][0]["actualCostReceipt"] = json!({
+            "kind": "actual", "amount": 0.06, "currency": "USD", "source": "provider",
+            "providerId": "test-provider", "receiptId": "bill-1", "receivedAt": 2,
+            "taskId": "t1", "idempotencyKey": "intent-1"
+        });
+        snapshots.write(current.clone(), Some(1)).unwrap();
+        let package = source.join("cost-receipts.kkproject");
+        export_package(&snapshots, &assets, &package).unwrap();
+        let target = source.join("restored-cost-receipts");
+        import_package(&package, &target).unwrap();
+        let restored = SnapshotRepository::new(target.join("projects").join("creation-v2.json"));
+        assert_eq!(restored.read().unwrap().snapshot.unwrap(), current);
+
+        current["projects"][0]["tasks"][0]["estimatedCostQuote"]["taskId"] = json!("other-task");
+        current["revision"] = Value::from(3);
+        snapshots.write(current, Some(2)).unwrap();
+        assert!(export_package(
+            &snapshots,
+            &assets,
+            &source.join("invalid-cost-receipt.kkproject")
+        )
+        .unwrap_err()
+        .starts_with("corrupt:"));
         let _ = fs::remove_dir_all(source);
     }
 

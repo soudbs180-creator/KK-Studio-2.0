@@ -7,6 +7,8 @@ mod agent_runtime;
 mod asset_storage;
 mod creation_storage;
 mod project_package;
+mod provider_config;
+mod secret_filter;
 mod storage_paths;
 mod task_host;
 
@@ -136,6 +138,7 @@ struct AppState {
     memory_path: PathBuf,
     legacy_memory_path: Option<PathBuf>,
     creation: Arc<creation_storage::SnapshotRepository>,
+    providers: Arc<provider_config::ProviderConfigRepository>,
     assets: Arc<asset_storage::AssetRepository>,
     task_host: Arc<task_host::TaskHost>,
     restored_roots: Mutex<std::collections::HashSet<PathBuf>>,
@@ -508,6 +511,28 @@ fn write_creation_snapshot(
 }
 
 #[tauri::command(rename_all = "camelCase")]
+async fn read_provider_config(
+    state: State<'_, AppState>,
+) -> Result<provider_config::ProviderConfigRead, String> {
+    let providers = Arc::clone(&state.providers);
+    tauri::async_runtime::spawn_blocking(move || providers.read())
+        .await
+        .map_err(|_| "io: 供应商配置读取任务中断".to_string())?
+}
+
+#[tauri::command(rename_all = "camelCase")]
+async fn write_provider_config(
+    state: State<'_, AppState>,
+    connections: serde_json::Value,
+    expected_revision: Option<u64>,
+) -> Result<u64, String> {
+    let providers = Arc::clone(&state.providers);
+    tauri::async_runtime::spawn_blocking(move || providers.write(connections, expected_revision))
+        .await
+        .map_err(|_| "io: 供应商配置保存任务中断".to_string())?
+}
+
+#[tauri::command(rename_all = "camelCase")]
 async fn export_project_package(
     state: State<'_, AppState>,
     destination: String,
@@ -706,8 +731,9 @@ fn delete_conversation(state: State<AppState>, id: String) -> Result<bool, Strin
 
 // ========== 记忆管理命令（本地长期记忆，本机共享、仅存本地） ==========
 //
-// 共享契约（TASK-MEMORY-002）：所有产品（Codex 桌面/Web、豆包 Agent、
-// WorkBuddy）读写同一份共享文件 ~/.kk-memory/memory.json；绝不上云。
+// 共享契约（TASK-MEMORY-002）：兼容客户端约定同一份本机文件
+// ~/.kk-memory/memory.json；当前 KK Desktop 负责读写，Web 共享目录只读。
+// 豆包和 WorkBuddy 原生客户端尚未完成该契约的适配与真实联调；绝不上云。
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 struct MemoryRecord {
@@ -1676,6 +1702,9 @@ fn main() {
                 .join("agent"),
         ))
         .manage(AppState {
+            providers: Arc::new(provider_config::ProviderConfigRepository::new(
+                config_path.with_file_name("connections.json"),
+            )),
             config: Mutex::new(config),
             config_path,
             conversations_path,
@@ -1697,6 +1726,8 @@ fn main() {
             get_config,
             set_config,
             read_creation_snapshot,
+            read_provider_config,
+            write_provider_config,
             asset_store,
             asset_read,
             asset_list,

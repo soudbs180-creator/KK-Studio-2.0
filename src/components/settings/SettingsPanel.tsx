@@ -17,10 +17,11 @@ import type { SaveState } from "../../features/creation/useCreationStorage";
 import type { SkillRegistry } from "../../features/skills/skillRegistry";
 import "./settings.css";
 
-/** Keep old deep links working while exposing Skill and MCP as separate rail items. */
+/** Keep old deep links working while exposing one consolidated extensions rail item. */
 const LEGACY_EXTENSION_TAB: Record<string, ExtensionsTab> = {
   mcp: "plugins",
   plugins: "plugins",
+  skill: "skills",
   skills: "skills",
   partners: "partners",
 };
@@ -32,12 +33,12 @@ function resolveInitialSection(initial: SettingsSection): {
   const legacyTab = LEGACY_EXTENSION_TAB[initial];
   if (legacyTab) {
     return {
-      section: initial === "mcp" || initial === "partners" ? "mcp" : "skill",
+      section: "extensions",
       extensionsTab: legacyTab,
     };
   }
   if (initial === "extensions")
-    return { section: "mcp", extensionsTab: "plugins" };
+    return { section: "extensions", extensionsTab: "plugins" };
   return { section: initial };
 }
 
@@ -148,10 +149,10 @@ export default function SettingsPanel({
                 >
                   <img
                     className="settings-nav-icon"
-                    src={`/design/figma/settings-nav-${item.id === "skill" ? "skills" : item.id}.svg`}
+                    src={`/design/figma/settings-nav-${item.id === "skill" || item.id === "extensions" ? "mcp" : item.id}.svg`}
                     alt=""
-                    width="22"
-                    height="22"
+                    width="20"
+                    height="20"
                   />
                   <span>{item.label}</span>
                 </button>

@@ -8,6 +8,7 @@ import {
   type ViewTransform,
   type ViewportRect,
 } from "../../domain/canvasViewport";
+import { visibleComposerExtraHeight } from "./composerLayout";
 
 interface CanvasViewOptions {
   nodes: Record<string, Point>;
@@ -65,7 +66,7 @@ export function useCanvasView({
                 ? 590
                 : 370,
           height: selected
-            ? layout.height + (item.result ? 0 : composerExtraHeight)
+            ? layout.height + visibleComposerExtraHeight(composerExtraHeight)
             : layout.collapsedHeight,
         },
       ];

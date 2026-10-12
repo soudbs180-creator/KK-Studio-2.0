@@ -40,7 +40,7 @@ test("插件管理拒绝明文地址并说明远程代码权限", async ({ page 
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
     .getByRole("navigation", { name: "设置分类" })
-    .getByRole("button", { name: "MCP", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .click();
   await expect(
     page.getByText(

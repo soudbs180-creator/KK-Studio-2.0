@@ -2,7 +2,7 @@
 
 - Task ID：T10-PREP
 - 状态：READY
-- 基线：`origin/main@7bc7c67`；[现行部署说明](../../../deploy/README.md)、[T10 路线](../2026-09-16-launch-readiness-audit/plan.md)、[ADR-007](../../architecture/adr/ADR-007-vps-portability.md)
+- 基线：`origin/main@7bc7c67`；[现行部署说明](../../../deploy/README.md)、[T10 路线](../2026-09-16-launch-readiness-audit/plan.md)、[ADR-014](../../architecture/adr/ADR-014-vps-portability.md)
 
 ## 契约
 

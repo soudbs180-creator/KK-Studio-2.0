@@ -333,6 +333,10 @@ export async function canvasImageAttachments(
   const sources = hasImageReferenceSource(source)
     ? [source, ...incoming]
     : incoming;
+  if (sources.some((item) => item?.referenceSlot === "Mask"))
+    throw new ImageTaskCommandError(
+      "蒙版必须通过专用编辑流程绘制，不能作为普通参考图片提交。",
+    );
   const attachments: CreationAttachment[] = [];
   for (const item of uniqueImageReferences(sources)) {
     if (!item || item.kind !== "image" || !item.assetId)
@@ -356,6 +360,7 @@ export async function canvasImageAttachments(
       name: item.title,
       mime: asset.mime,
       size,
+      ...(item.referenceSlot ? { role: item.referenceSlot } : {}),
       dataUrl: `kk-asset:${item.assetId}`,
     });
   }

@@ -28,7 +28,11 @@ export default function CanvasImageActions({
   references?: CanvasReference[];
 }) {
   const [redrawOpen, setRedrawOpen] = useState(false);
-  const reference = !item.result;
+  // An uploaded generation source is still an original/reference for the
+  // preview and redraw actions. `referenceOnly` controls whether the prompt
+  // composer is mounted; it must not make those actions disappear.
+  const reference =
+    !item.result && (item.referenceOnly || item.referenceSlot === "主体");
   const redrawReason = item.assetId
     ? undefined
     : "请先导入归档原件，再使用重绘。";

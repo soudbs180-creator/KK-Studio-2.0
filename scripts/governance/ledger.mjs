@@ -15,6 +15,9 @@ export const statuses = new Set([
 export function validateLedger(tasks) {
   const issues = [];
   if (!Array.isArray(tasks)) return ["Task ledger must be an array"];
+  const hasGovernanceFields = tasks.some(
+    (task) => task && typeof task === "object" && "displayStatus" in task,
+  );
   const ids = new Set();
   const activeWorktrees = new Map();
   const activeBranches = new Map();
@@ -37,6 +40,27 @@ export function validateLedger(tasks) {
     ])
       if (typeof task[key] !== "string" || !task[key].trim())
         issues.push(`${task.id ?? "?"}: missing ${key}`);
+    if (hasGovernanceFields) {
+      for (const key of [
+        "displayStatus",
+        "priority",
+        "nextAction",
+        "lastVerified",
+        "ownerRole",
+      ])
+        if (typeof task[key] !== "string" || !task[key].trim())
+          issues.push(`${task.id}: missing ${key}`);
+      for (const key of ["requirementRefs", "featureIds"])
+        if (
+          !Array.isArray(task[key]) ||
+          task[key].some((value) => typeof value !== "string" || !value.trim())
+        )
+          issues.push(`${task.id}: invalid ${key}`);
+      if (!["P0", "P1", "P2", "P3"].includes(task.priority))
+        issues.push(`${task.id}: invalid priority`);
+      if (!["已完成", "进行中", "未完成"].includes(task.displayStatus))
+        issues.push(`${task.id}: invalid display status`);
+    }
     for (const key of [
       "acceptance",
       "dependencies",
@@ -141,11 +165,22 @@ export function renderLedger(tasks) {
     "",
     "Historical DONE applies only to the linked verification scope. The full-project objective remains open until every applicable task and integration gate is verified.",
     "",
-    "| ID | Title | Status | Dependencies | Owner |",
-    "| --- | --- | --- | --- | --- |",
+    "| ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |",
+    "| --- | --- | --- | --- | --- | --- | --- | --- |",
     ...tasks.map(
       (task) =>
-        `| ${[task.id, task.title, task.status, task.dependencies.join(", ") || "none", task.owner].map(cell).join(" | ")} |`,
+        `| ${[
+          task.id,
+          task.title,
+          task.status,
+          task.displayStatus ?? "未完成",
+          task.priority ?? "P2",
+          task.dependencies.join(", ") || "none",
+          task.owner,
+          task.nextAction ?? "待补充",
+        ]
+          .map(cell)
+          .join(" | ")} |`,
     ),
     "",
     ...tasks.flatMap((task) => [
@@ -153,6 +188,11 @@ export function renderLedger(tasks) {
       "",
       `- Goal: ${task.goal}`,
       `- Scope: ${task.scope}`,
+      `- Display status: ${task.displayStatus ?? "未完成"}`,
+      `- Priority: ${task.priority ?? "P2"} — ${task.priorityRationale ?? "未记录"}`,
+      `- Requirement refs: ${(task.requirementRefs ?? []).join(", ") || "none"}`,
+      `- Feature IDs: ${(task.featureIds ?? []).join(", ") || "none"}`,
+      `- Owner role: ${task.ownerRole ?? task.owner}`,
       `- Acceptance: ${task.acceptance.join("; ")}`,
       `- Branch: \`${task.branch}\``,
       `- Worktree: \`${task.worktree}\``,
@@ -160,6 +200,8 @@ export function renderLedger(tasks) {
       `- Verification: ${task.verificationResult} — ${task.verification}`,
       `- Evidence: ${task.evidence.length ? task.evidence.map((file) => `[${file}](../../${file})`).join(", ") : "NOT VERIFIED"}`,
       ...(task.blocker ? [`- External condition: ${task.blocker}`] : []),
+      `- Next action: ${task.nextAction ?? "待补充"}`,
+      `- Last verified: ${task.lastVerified ?? task.updated}`,
       `- Updated: ${task.updated}`,
       "",
     ]),

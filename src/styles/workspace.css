@@ -162,6 +162,9 @@
   border-color: var(--border-default);
 }
 .project-groups {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
   padding-top: 75px;
 }
 .project-groups-header {
@@ -217,7 +220,7 @@
 .project-menu-section-label {
   padding: 6px 8px 3px;
   color: var(--text-tertiary);
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
 }
 .project-groups-menu button {
   width: 100%;
@@ -324,7 +327,7 @@
   border-radius: 6px;
   text-align: left;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
 }
 .project-menu button:hover,
 .project-menu button:focus-visible {
@@ -388,8 +391,12 @@
   display: block;
   padding: 3px 4px;
   color: var(--text-tertiary);
-  font-size: 10px;
-  line-height: 1.4;
+  font-size: var(--kk-font-caption);
+  line-height: 16px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 .account-row {
   display: flex;
@@ -572,9 +579,17 @@
   background-color: var(--ui-canvas-bg);
   background-image: radial-gradient(
     circle,
-    var(--ui-canvas-dot) 2px,
-    transparent 2px
+    color-mix(
+        in srgb,
+        var(--ui-canvas-dot) calc(var(--canvas-pattern-opacity, 1) * 100%),
+        transparent
+      )
+      var(--canvas-dot-size, 2px),
+    transparent var(--canvas-dot-size, 2px)
   );
+  /* The pitch is driven inline from the zoom transform; repeat keeps the
+     lattice tiling the whole viewport with no gaps or overlap. */
+  background-repeat: repeat;
   background-size: 24px 24px;
   background-position: calc(var(--canvas-pan-x, 0px) + 10px)
     calc(var(--canvas-pan-y, 0px) + 14px);
@@ -587,6 +602,7 @@
   user-select: none;
 }
 .canvas-pattern-grid {
+  background-repeat: repeat;
   background-image:
     linear-gradient(
       color-mix(
@@ -594,8 +610,8 @@
           var(--ui-connection) calc(var(--canvas-pattern-opacity, 1) * 100%),
           transparent
         )
-        1px,
-      transparent 1px
+        var(--canvas-grid-line, 1px),
+      transparent var(--canvas-grid-line, 1px)
     ),
     linear-gradient(
       90deg,
@@ -604,8 +620,8 @@
           var(--ui-connection) calc(var(--canvas-pattern-opacity, 1) * 100%),
           transparent
         )
-        1px,
-      transparent 1px
+        var(--canvas-grid-line, 1px),
+      transparent var(--canvas-grid-line, 1px)
     );
 }
 .canvas.has-chat {
@@ -1090,23 +1106,78 @@
   align-items: center;
   gap: 7px;
   position: absolute;
-  left: 227px;
-  top: 0;
+  right: 96px;
+  top: 10px;
   border: 1px solid var(--border-default);
-  border-radius: 25px;
+  border-radius: var(--ui-radius-pill);
   background: var(--bg-card);
   font-size: 16px;
 }
 .canvas-node-image.is-reference-only .upload-image {
   display: none;
 }
-.image-caption {
+.image-node-header {
   position: absolute;
-  left: 96px;
-  top: 44px;
+  top: 36px;
+  left: 94px;
+  width: 400px;
+  min-height: 24px;
   display: flex;
-  gap: 3px;
-  font-size: 10px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  z-index: var(--kk-z-sticky);
+  pointer-events: none;
+}
+.image-caption {
+  position: static;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 280px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--ui-font-body);
+  font-weight: 400;
+  line-height: 20px;
+  text-align: left;
+  pointer-events: none;
+}
+.image-caption svg {
+  display: none;
+}
+.image-node-header-actions {
+  position: static;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+.image-card-like {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-default);
+  border-radius: var(--ui-radius-pill);
+  background: var(--bg-card);
+}
+.image-node-header .upload-image {
+  position: absolute;
+  top: -34px;
+  left: 50%;
+  right: auto;
+  height: 32px;
+  padding: 0 12px;
+  gap: 8px;
+  transform: translateX(-50%);
+  border-radius: var(--ui-radius-pill);
+  font-size: 14px;
+  white-space: nowrap;
 }
 .canvas-node-image.is-reference-only .image-caption {
   max-width: 400px;
@@ -1119,11 +1190,11 @@
   left: 94px;
   top: 58px;
   width: 400px;
-  height: 400px;
+  height: var(--media-height, 400px);
   display: grid;
   place-items: center;
   border: 1px solid transparent;
-  border-radius: 28px;
+  border-radius: var(--ui-radius-card);
   background: var(--bg-card);
   overflow: hidden;
 }
@@ -1150,7 +1221,7 @@
 .creation-composer {
   position: absolute;
   /* Figma input frame y471 minus the image module's y3 origin. */
-  top: 468px;
+  top: calc(68px + var(--media-height, 400px));
   width: 590px;
   height: 237px;
   border: 1px solid var(--border-default);
@@ -1178,10 +1249,34 @@
 .creation-composer.expanded textarea {
   height: 193px;
 }
-.expand-composer {
+.creation-composer-actions {
   position: absolute;
-  right: 23px;
-  top: 22px;
+  top: 20px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 2;
+}
+.creation-composer-actions .like-node,
+.creation-composer-actions .expand-composer {
+  position: static;
+  width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  display: grid;
+  place-items: center;
+  border-radius: var(--kk-radius-full);
+  color: var(--text-secondary);
+}
+.creation-composer-actions button:hover,
+.creation-composer-actions button:focus-visible {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+.creation-composer-actions .like-node[aria-pressed="true"] {
+  color: var(--text-danger);
+}
+.expand-composer {
   color: var(--border-default);
 }
 .expand-composer img {
@@ -1220,8 +1315,8 @@
 .param-button,
 .generate-button {
   border: 1px solid var(--border-default);
-  border-radius: 11px;
-  height: 34px;
+  border-radius: var(--kk-radius-full);
+  height: var(--kk-control-h-md);
   padding: 0 9px;
   display: flex;
   align-items: center;
@@ -2402,4 +2497,55 @@
   background: transparent;
   text-decoration: underline;
   cursor: pointer;
+}
+
+/* Card toolbar and controls use the same hit size and pill geometry. */
+.model-button,
+.param-button,
+.generate-button,
+.voice-button {
+  min-height: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  border-radius: var(--kk-radius-full);
+}
+.parameter-capability-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 12px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: var(--ui-font-caption);
+}
+.parameter-capability-grid strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.task-button {
+  border-radius: var(--kk-radius-full);
+}
+.reference-add,
+.composer-ref-add {
+  border-radius: var(--kk-radius-full);
+}
+/* Node frames now expose the measured graph layout; the child shell follows it
+   so dynamic media bounds do not clip a portrait or landscape asset. */
+.canvas-node-image > .image-creation {
+  height: 100%;
+}
+.canvas-node-image.is-selected > .image-creation,
+.canvas-node-image.is-reference-only > .image-creation,
+.canvas-node-image.is-reference-only.is-selected > .image-creation {
+  height: 100%;
+}
+.canvas-node-result[data-kind="image"] {
+  height: auto;
+}
+.canvas-node-result[data-kind="image"] .demo-result-node {
+  height: auto;
+}
+.canvas-node-result.has-reference-composer[data-kind="image"]
+  > .creation-composer {
+  top: calc(100% + 10px);
 }

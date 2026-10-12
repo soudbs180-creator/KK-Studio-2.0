@@ -133,8 +133,10 @@ import {
   MODEL_PROVIDER_STORAGE_KEY,
 } from "./domain/modelProvider";
 import {
+  loadProviderConnectionsDurable,
   markProviderConnectionFailure,
   markProviderConnectionHealthy,
+  persistProviderConnectionsDurable,
   readProviderConnections,
 } from "./features/creation/providerRegistry";
 import {
@@ -146,6 +148,25 @@ import {
 import { mapWithConcurrency } from "./features/creation/generationQueue";
 import { compileDesignPrompt } from "./features/creation/promptCompiler";
 import { getDisabledReason, getGenerationUiState } from "./domain/uiGovernance";
+
+/** Capacity failure hint: name connections the user can switch to right away. */
+function capacitySwitchHint(currentId: string | undefined): string {
+  const available = readProviderConnections().filter(
+    (connection) =>
+      connection.id !== currentId &&
+      connection.state !== "disabled" &&
+      connection.state !== "quarantined" &&
+      connection.state !== "cooldown",
+  );
+  if (available.length === 0)
+    return "当前没有其他可用连接，请稍后在设置中核对连接或模型。";
+  return `当前可用连接：${available
+    .slice(0, 3)
+    .map((item) => item.displayName || item.provider)
+    .join("、")}${
+    available.length > 3 ? " 等" : ""
+  }；可在设置中切换连接或模型后重试。`;
+}
 
 import {
   abortedAfterProviderSubmission,
@@ -260,6 +281,30 @@ export default function App() {
   saveStateRef.current = saveState;
   const submitLock = useRef(false);
   const [providerVersion, setProviderVersion] = useState(0);
+  useEffect(() => {
+    let active = true;
+    void (async () => {
+      try {
+        const native = await loadProviderConnectionsDurable();
+        if (!active) return;
+        if (native) {
+          // Native durable config is authoritative; refresh derived views.
+          setProviderVersion((value) => value + 1);
+        } else {
+          // First desktop run: migrate existing browser metadata untouched.
+          const local = readProviderConnections();
+          if (local.length > 0) {
+            await persistProviderConnectionsDurable(local);
+          }
+        }
+      } catch {
+        // Keep the browser view on native failure; settings surface the error.
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
   const homeModelConfig = useMemo(() => {
     void providerVersion;
     try {
@@ -875,6 +920,9 @@ export default function App() {
         task.kind === "text" || task.imageEdit || task.imageEditContext
           ? task.prompt
           : compileDesignPrompt(task.prompt, {
+              referenceRoles: task.attachments.map(
+                (attachment) => attachment.role,
+              ),
               referenceCount: task.attachments.length,
               outputCount: task.requestedOutputs,
             });
@@ -1516,8 +1564,13 @@ export default function App() {
               ? undefined
               : generated.failure instanceof ProviderSubmissionError
                 ? generated.failure.message
-                : (mappingFailures.values().next().value ??
-                  `${completed}/${task.requestedOutputs} 张已归档，可重试未归档结果。`),
+                : generated.failure instanceof GenerationProviderError &&
+                    generated.failure.failureClass === "rate_limited"
+                  ? `${generated.failure.message} ${capacitySwitchHint(
+                      task.providerConnectionId,
+                    )}`
+                  : (mappingFailures.values().next().value ??
+                    `${completed}/${task.requestedOutputs} 张已归档，可重试未归档结果。`),
         generatedUncertain || archiveUncertain ? "unknown" : "terminal",
       );
       await persistence.flush();
@@ -1533,21 +1586,31 @@ export default function App() {
             "network",
           ].includes(failure.failureClass)
         )
-          markProviderConnectionFailure(task.providerConnectionId, {
-            kind: failure.failureClass as
-              | "rate_limited"
-              | "unauthorized"
-              | "forbidden"
-              | "provider_unavailable"
-              | "network",
-            retryAfterSeconds: failure.retryAfterSeconds,
-          });
+          markProviderConnectionFailure(
+            task.providerConnectionId,
+            {
+              kind: failure.failureClass as
+                | "rate_limited"
+                | "unauthorized"
+                | "forbidden"
+                | "provider_unavailable"
+                | "network",
+              retryAfterSeconds: failure.retryAfterSeconds,
+            },
+            {
+              baseUrl: task.providerBaseUrl,
+              credentialRef: task.providerCredentialRef,
+            },
+          );
         else if (
           !failure &&
           !archiveUncertain &&
           reservation?.healthUnchanged()
         )
-          markProviderConnectionHealthy(task.providerConnectionId);
+          markProviderConnectionHealthy(task.providerConnectionId, {
+            baseUrl: task.providerBaseUrl,
+            credentialRef: task.providerCredentialRef,
+          });
       }
     } catch (error) {
       const uncertain =
@@ -1592,7 +1655,12 @@ export default function App() {
             : controller.signal.aborted
               ? "已取消任务，已归档结果保留。"
               : error instanceof Error
-                ? error.message
+                ? error instanceof GenerationProviderError &&
+                  error.failureClass === "rate_limited"
+                  ? `${error.message} ${capacitySwitchHint(
+                      task.providerConnectionId,
+                    )}`
+                  : error.message
                 : "任务失败，请重试。";
       outputs = outputs.map((output) =>
         output.status === "succeeded"
@@ -1633,15 +1701,22 @@ export default function App() {
           "network",
         ].includes(error.failureClass)
       ) {
-        markProviderConnectionFailure(task.providerConnectionId, {
-          kind: error.failureClass as
-            | "rate_limited"
-            | "unauthorized"
-            | "forbidden"
-            | "provider_unavailable"
-            | "network",
-          retryAfterSeconds: error.retryAfterSeconds,
-        });
+        markProviderConnectionFailure(
+          task.providerConnectionId,
+          {
+            kind: error.failureClass as
+              | "rate_limited"
+              | "unauthorized"
+              | "forbidden"
+              | "provider_unavailable"
+              | "network",
+            retryAfterSeconds: error.retryAfterSeconds,
+          },
+          {
+            baseUrl: task.providerBaseUrl,
+            credentialRef: task.providerCredentialRef,
+          },
+        );
       }
     } finally {
       try {
@@ -1990,6 +2065,13 @@ export default function App() {
     const activeTask = original?.tasks.find(
       (task) => task.status === "queued" || task.status === "running",
     );
+    const codexCanvas =
+      request.origin === "canvas" &&
+      original?.items.some(
+        (item) =>
+          item.id === request.input.sourceItemId &&
+          item.generationSource === "codex",
+      );
     const requestModel =
       request.origin === "canvas" ? request.input.model : request.input.model;
     let effectivePrompt = request.input.prompt;
@@ -2008,11 +2090,13 @@ export default function App() {
     const uiState = getGenerationUiState({
       prompt: effectivePrompt,
       inputValid: Boolean(effectivePrompt.trim()),
-      modelConfigured: request.origin === "agent" || homeModelConfig.configured,
+      modelConfigured:
+        request.origin === "agent" || codexCanvas || homeModelConfig.configured,
       quotaAvailable: true,
       online: typeof navigator === "undefined" ? true : navigator.onLine,
       serviceConfigured:
         request.origin === "agent" ||
+        codexCanvas ||
         (homeModelConfig.configured && Boolean(requestModel.trim())),
       taskStatus: activeTask
         ? activeTask.status === "queued"
@@ -2519,9 +2603,11 @@ export default function App() {
       const requestedSection = view.split("/")[1];
       const sectionAlias: Record<string, SettingsSection> = {
         plugins: "mcp",
-        extensions: "mcp",
+        extensions: "extensions",
         partners: "partners",
         skills: "skill",
+        skill: "skill",
+        mcp: "mcp",
       };
       setSettingsSection(
         sectionAlias[requestedSection] ??
@@ -2649,6 +2735,7 @@ export default function App() {
               onDraftChange={updateHomeDraft}
               onOpenModel={() => open("settings/providers")}
               onOpenSkills={() => open("skills")}
+              onOpenExtension={open}
               modelConfigured={homeModelConfig.configured}
               skills={skillRegistry.listRecords()}
               onApplySkill={applySkillToHome}
@@ -2727,9 +2814,11 @@ export default function App() {
                   projectStatus={
                     activeProject && (
                       <div className="project-task-status" aria-live="polite">
-                        <strong title={activeProject.name}>
-                          {activeProject.name}
-                        </strong>
+                        {activeProject.name !== "未命名项目" && (
+                          <strong title={activeProject.name}>
+                            {activeProject.name}
+                          </strong>
+                        )}
                         {activeProject.tasks.slice(-1).map((task) => (
                           <span
                             key={task.id}

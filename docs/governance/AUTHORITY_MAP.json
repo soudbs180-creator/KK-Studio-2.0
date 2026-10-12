@@ -1,0 +1,429 @@
+{
+  "schema_version": 2,
+  "updated": "2026-10-09",
+  "scope": "KK Studio 2.0 governance source routing",
+  "rule_hierarchy": {
+    "description": "This ordered list resolves conflicting instructions or claims. It is separate from domain ownership: a lower-order domain source can still be the only source allowed to state its own kind of fact.",
+    "entries": [
+      {
+        "order": 1,
+        "authority": "user_intent",
+        "paths": [
+          "user request / accepted clarification"
+        ],
+        "owner": "user",
+        "lastReviewed": "2026-10-09",
+        "supersedes": null,
+        "nextReview": "when user intent changes",
+        "status": "current"
+      },
+      {
+        "order": 2,
+        "authority": "repository_operating_rules",
+        "paths": [
+          "AGENTS.md"
+        ],
+        "owner": "repository maintainers",
+        "lastReviewed": "2026-10-09",
+        "supersedes": null,
+        "nextReview": "when AGENTS.md changes",
+        "status": "current"
+      },
+      {
+        "order": 3,
+        "authority": "ai_policy",
+        "paths": [
+          "AI_RULES.md"
+        ],
+        "owner": "repository maintainers",
+        "lastReviewed": "2026-10-09",
+        "supersedes": null,
+        "nextReview": "when AI_RULES.md changes",
+        "status": "current"
+      },
+      {
+        "order": 4,
+        "authority": "prompt_translation_rules",
+        "paths": [
+          "docs/engineering/PROMPTING.md"
+        ],
+        "owner": "engineering maintainers",
+        "lastReviewed": "2026-10-09",
+        "supersedes": null,
+        "nextReview": "when PROMPTING.md changes",
+        "status": "current"
+      },
+      {
+        "order": 5,
+        "authority": "approved_specification_baseline",
+        "paths": [
+          "docs/governance/SPEC_BASELINE.md"
+        ],
+        "owner": "governance maintainers",
+        "lastReviewed": "2026-10-09",
+        "supersedes": null,
+        "nextReview": "when the approved baseline changes",
+        "status": "current"
+      },
+      {
+        "order": 6,
+        "authority": "current_source_and_runtime_evidence",
+        "paths": [
+          "src/",
+          "src-tauri/",
+          "vendor/",
+          "config/",
+          "tests/",
+          "docs/evidence/"
+        ],
+        "owner": "module owners",
+        "lastReviewed": "2026-10-09",
+        "supersedes": null,
+        "nextReview": "when the affected implementation or evidence changes",
+        "status": "current_scoped"
+      },
+      {
+        "order": 7,
+        "authority": "architecture_data_and_ui_specs",
+        "paths": [
+          "docs/architecture/",
+          "docs/architecture/DATA-STORAGE.md",
+          "docs/UI_INDEX.md",
+          "docs/UI_RULES.md",
+          "docs/UI_ARCHETYPES.md",
+          "docs/DESIGN_TOKENS.md",
+          "docs/DESIGN-SYSTEM.md",
+          "docs/UI_SPEC.md"
+        ],
+        "owner": "architecture and design maintainers",
+        "lastReviewed": "2026-10-09",
+        "supersedes": null,
+        "nextReview": "when the relevant contract changes",
+        "status": "current_scoped"
+      },
+      {
+        "order": 8,
+        "authority": "dated_change_records",
+        "paths": [
+          "docs/changes/*/intent.md",
+          "docs/changes/*/spec.md",
+          "docs/changes/*/plan.md",
+          "docs/changes/*/verification.md",
+          "docs/changes/*/review.md"
+        ],
+        "owner": "change owner",
+        "lastReviewed": "2026-10-09",
+        "supersedes": null,
+        "nextReview": "when a new change record supersedes the package",
+        "status": "historical_scoped"
+      },
+      {
+        "order": 9,
+        "authority": "feature_capability_registry",
+        "paths": [
+          "docs/features/features.registry.json",
+          "docs/features/feat-*.md"
+        ],
+        "owner": "feature owners",
+        "lastReviewed": "2026-10-09",
+        "supersedes": null,
+        "nextReview": "when capability evidence or feature status changes",
+        "status": "current_capability_only"
+      }
+    ]
+  },
+  "domain_authority": [
+    {
+      "domain": "task_state",
+      "paths": [
+        "docs/governance/task-ledger.json"
+      ],
+      "generatedView": "docs/governance/TASK_LEDGER.md",
+      "rule": "Task status, owner, dependencies and task evidence live here. This is orthogonal to feature capability status.",
+      "owner": "task owner",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "on every task state change",
+      "status": "current_machine_authority"
+    },
+    {
+      "domain": "project_state",
+      "paths": [
+        "docs/governance/PROJECT_STATE.md",
+        "docs/governance/AI_HANDOFF.md"
+      ],
+      "rule": "Current project facts and restart context are dated; older segments retain historical meaning and require source re-check.",
+      "owner": "governance maintainers",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when project facts or restart guidance changes",
+      "status": "current_dated"
+    },
+    {
+      "domain": "feature_capability",
+      "paths": [
+        "docs/features/features.registry.json",
+        "docs/features/feat-*.md"
+      ],
+      "generatedView": "docs/features/README.md",
+      "rule": "REAL/PARTIAL/PROTOTYPE/PLANNED describes product capability evidence; it never changes task state or rule precedence.",
+      "owner": "feature owners",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when feature evidence changes",
+      "status": "current_capability_only"
+    },
+    {
+      "domain": "architecture_and_data",
+      "paths": [
+        "docs/architecture/",
+        "docs/MEMORY-CONTRACT.md",
+        "docs/architecture/DATA-STORAGE.md"
+      ],
+      "rule": "Storage, security and module boundaries are owned by their contracts; implementation drift is recorded as CONFLICT until resolved.",
+      "owner": "architecture maintainers",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when a contract or related implementation changes",
+      "status": "current_scoped"
+    },
+    {
+      "domain": "ui",
+      "paths": [
+        "docs/UI_INDEX.md",
+        "docs/UI_RULES.md",
+        "docs/UI_ARCHETYPES.md",
+        "docs/DESIGN_TOKENS.md",
+        "docs/DESIGN-SYSTEM.md",
+        "docs/UI_SPEC.md"
+      ],
+      "rule": "UI_INDEX.md routes each UI question to its current owner. Historical UI files are evidence only.",
+      "owner": "design and frontend maintainers",
+      "lastReviewed": "2026-10-09",
+      "supersedes": [
+        "docs/UI-STANDARDS.md",
+        "docs/UI-ALIGNMENT.md"
+      ],
+      "nextReview": "when UI source or Figma baseline changes",
+      "status": "current_routed"
+    },
+    {
+      "domain": "source_evidence",
+      "paths": [
+        "src/",
+        "src-tauri/",
+        "vendor/",
+        "config/",
+        "tests/",
+        "docs/changes/*/verification.md",
+        "docs/evidence/"
+      ],
+      "rule": "Evidence proves only its recorded source, date, mode and runtime boundary; it does not silently rewrite a contract.",
+      "owner": "evidence author",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when the referenced source or runtime changes",
+      "status": "scoped_read_only"
+    },
+    {
+      "domain": "competitor_research",
+      "paths": [
+        "docs/reference/competitor/INDEX.md",
+        "docs/reference/competitor/COMPETITOR_CONCLUSIONS.md"
+      ],
+      "rule": "Read-only research input with provenance. It cannot establish KK capability, provider integration, or runtime success.",
+      "owner": "research owner",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when a new dated research package is added",
+      "status": "historical_read_only"
+    }
+  ],
+  "conflict_policy": {
+    "labels": [
+      "FACT",
+      "INFERENCE",
+      "UNKNOWN",
+      "CONFLICT"
+    ],
+    "rule": "Record the source and date, preserve historical evidence, and do not infer a provider integration or product capability from a keyword, prototype, static comparison, or build-only result.",
+    "domain_rule": "Domain authority determines which source owns a fact; rule hierarchy determines which instruction wins when sources prescribe incompatible behavior."
+  },
+  "generated_files": [
+    "docs/governance/TASK_LEDGER.md",
+    "docs/features/README.md"
+  ],
+  "do_not_edit_generated": true,
+  "precedence": [
+    {
+      "order": 1,
+      "authority": "user_intent",
+      "paths": [
+        "user request / accepted clarification"
+      ],
+      "owner": "user",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when user intent changes",
+      "status": "current"
+    },
+    {
+      "order": 2,
+      "authority": "repository_operating_rules",
+      "paths": [
+        "AGENTS.md"
+      ],
+      "owner": "repository maintainers",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when AGENTS.md changes",
+      "status": "current"
+    },
+    {
+      "order": 3,
+      "authority": "ai_policy",
+      "paths": [
+        "AI_RULES.md"
+      ],
+      "owner": "repository maintainers",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when AI_RULES.md changes",
+      "status": "current"
+    },
+    {
+      "order": 4,
+      "authority": "prompt_translation_rules",
+      "paths": [
+        "docs/engineering/PROMPTING.md"
+      ],
+      "owner": "engineering maintainers",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when PROMPTING.md changes",
+      "status": "current"
+    },
+    {
+      "order": 5,
+      "authority": "approved_specification_baseline",
+      "paths": [
+        "docs/governance/SPEC_BASELINE.md"
+      ],
+      "owner": "governance maintainers",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when the approved baseline changes",
+      "status": "current"
+    },
+    {
+      "order": 6,
+      "authority": "current_source_and_runtime_evidence",
+      "paths": [
+        "src/",
+        "src-tauri/",
+        "vendor/",
+        "config/",
+        "tests/",
+        "docs/evidence/"
+      ],
+      "owner": "module owners",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when the affected implementation or evidence changes",
+      "status": "current_scoped"
+    },
+    {
+      "order": 7,
+      "authority": "architecture_data_and_ui_specs",
+      "paths": [
+        "docs/architecture/",
+        "docs/architecture/DATA-STORAGE.md",
+        "docs/UI_INDEX.md",
+        "docs/UI_RULES.md",
+        "docs/UI_ARCHETYPES.md",
+        "docs/DESIGN_TOKENS.md",
+        "docs/DESIGN-SYSTEM.md",
+        "docs/UI_SPEC.md"
+      ],
+      "owner": "architecture and design maintainers",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when the relevant contract changes",
+      "status": "current_scoped"
+    },
+    {
+      "order": 8,
+      "authority": "dated_change_records",
+      "paths": [
+        "docs/changes/*/intent.md",
+        "docs/changes/*/spec.md",
+        "docs/changes/*/plan.md",
+        "docs/changes/*/verification.md",
+        "docs/changes/*/review.md"
+      ],
+      "owner": "change owner",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when a new change record supersedes the package",
+      "status": "historical_scoped"
+    },
+    {
+      "order": 9,
+      "authority": "feature_capability_registry",
+      "paths": [
+        "docs/features/features.registry.json",
+        "docs/features/feat-*.md"
+      ],
+      "owner": "feature owners",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when capability evidence or feature status changes",
+      "status": "current_capability_only"
+    }
+  ],
+  "special_cases": [
+    {
+      "topic": "ui",
+      "authority": "docs/UI_INDEX.md",
+      "currentSources": [
+        "docs/UI_RULES.md",
+        "docs/UI_ARCHETYPES.md",
+        "docs/DESIGN_TOKENS.md",
+        "docs/DESIGN-SYSTEM.md",
+        "docs/UI_SPEC.md"
+      ],
+      "owner": "design and frontend maintainers",
+      "lastReviewed": "2026-10-09",
+      "supersedes": [
+        "docs/UI-STANDARDS.md",
+        "docs/UI-ALIGNMENT.md"
+      ],
+      "nextReview": "when UI source or Figma baseline changes",
+      "status": "current_routed"
+    },
+    {
+      "topic": "memory",
+      "authority": "docs/MEMORY-CONTRACT.md",
+      "governance": "docs/MEMORY-GOVERNANCE.md",
+      "implementation": [
+        "src/features/memory/",
+        "src-tauri/src/"
+      ],
+      "owner": "architecture and memory maintainers",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when the memory contract or implementation changes",
+      "status": "current_contract"
+    },
+    {
+      "topic": "competitor_research",
+      "authority": "docs/reference/competitor/INDEX.md",
+      "classification": "historical_read_only_evidence",
+      "owner": "research owner",
+      "lastReviewed": "2026-10-09",
+      "supersedes": null,
+      "nextReview": "when a dated research package is added",
+      "status": "historical_read_only"
+    }
+  ]
+}

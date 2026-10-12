@@ -1,4 +1,4 @@
-import ComposerPluginSummary from "./ComposerPluginSummary";
+import ComposerExtensionsMenu from "./ComposerExtensionsMenu";
 import type { ModelSelection } from "../features/models/modelSelection";
 import type { RefObject, ReactNode } from "react";
 import ConversationModelPicker from "./ConversationModelPicker";
@@ -24,8 +24,6 @@ export default function ConversationActions({
   onOpen,
   skillMenuOpen,
   onToggleSkill,
-  pluginMenuOpen,
-  onTogglePlugin,
   modeMenuRef,
   modeMenuOpen,
   approvalMode,
@@ -115,7 +113,7 @@ export default function ConversationActions({
         className="chat-footer-separator chat-model-separator"
         aria-hidden="true"
       />
-      <div className="chat-resource-picker chat-skill-picker">
+      <div className="chat-resource-picker chat-skill-picker composer-extensions-anchor">
         <button
           type="button"
           className="chat-skill-trigger"
@@ -123,101 +121,18 @@ export default function ConversationActions({
           aria-expanded={skillMenuOpen}
           onClick={onToggleSkill}
         >
-          <img
-            src="/design/figma/composer-puzzle.svg"
-            width="12"
-            height="12"
-            alt=""
-          />
-          Skill
+          <img src="/design/figma/composer-puzzle.svg" alt="" />
+          扩展
         </button>
         {skillMenuOpen && (
-          <div
-            className="chat-resource-popover"
-            role="menu"
-            aria-label="选择 Skill"
-          >
-            {skills.filter((record) => record.installed && record.enabled)
-              .length ? (
-              <>
-                <p>选择一个本地 Skill，把明确指令加入对话草稿：</p>
-                {skills
-                  .filter((record) => record.installed && record.enabled)
-                  .map((record) => (
-                    <button
-                      key={record.manifest.id}
-                      type="button"
-                      role="menuitem"
-                      onClick={() => onApplySkill?.(record)}
-                    >
-                      {record.manifest.name}
-                    </button>
-                  ))}
-              </>
-            ) : (
-              <p>当前项目还没有可用的本地 Skill。</p>
-            )}
-            <button
-              type="button"
-              role="menuitem"
-              onClick={() => {
-                onToggleSkill();
-                onOpen("skills");
-              }}
-            >
-              浏览 Skill 目录
-            </button>
-          </div>
-        )}
-      </div>
-      <span
-        className="chat-footer-separator chat-skill-separator"
-        aria-hidden="true"
-      />
-      <div className="chat-resource-picker chat-plugin-picker">
-        <button
-          type="button"
-          className="chat-plugin-trigger"
-          aria-haspopup="menu"
-          aria-expanded={pluginMenuOpen}
-          onClick={onTogglePlugin}
-        >
-          <img
-            src="/design/figma/composer-unplug.svg"
-            width="12"
-            height="12"
-            alt=""
+          <ComposerExtensionsMenu
+            skills={skills}
+            onApplySkill={onApplySkill}
+            onOpen={(id) => {
+              onToggleSkill();
+              onOpen(id);
+            }}
           />
-          插件
-        </button>
-        {pluginMenuOpen && (
-          <div
-            className="chat-resource-popover chat-plugin-popover"
-            role="menu"
-            aria-label="选择插件"
-          >
-            <ComposerPluginSummary />
-            <button
-              type="button"
-              role="menuitem"
-              onClick={() => {
-                onTogglePlugin();
-                onOpen("settings/plugins");
-              }}
-            >
-              管理画布插件
-            </button>
-            <button
-              type="button"
-              role="menuitem"
-              onClick={() => {
-                onTogglePlugin();
-                onOpen("settings/mcp");
-              }}
-            >
-              管理 MCP 工具
-            </button>
-          </div>
         )}
       </div>
       <div className="chat-mode-menu" ref={modeMenuRef}>

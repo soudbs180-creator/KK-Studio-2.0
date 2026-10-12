@@ -100,12 +100,16 @@ test("estimateTaskCostUsd bounds inputs and returns finite estimates", () => {
   assert.equal(estimateTaskCostUsd(2, 0), undefined);
   assert.equal(estimateTaskCostUsd(2, -1), undefined);
   assert.equal(estimateTaskCostUsd(2.5, 0.04), undefined);
+  assert.equal(estimateTaskCostUsd(65, 0.04), undefined);
+  assert.equal(estimateTaskCostUsd(2, Infinity), undefined);
+  assert.equal(estimateTaskCostUsd(64, Number.MAX_VALUE), undefined);
 });
 
 test("formatCostUsd labels estimates as estimates", () => {
   assert.equal(formatCostUsd(0.08), "约 $0.08（估算，非实际扣费）");
   assert.equal(formatCostUsd(undefined), "尚未取得报价");
   assert.equal(formatCostUsd(Number.NaN), "尚未取得报价");
+  assert.equal(formatCostUsd(-1), "尚未取得报价");
 });
 
 test("taskStateRank orders states for UI", () => {

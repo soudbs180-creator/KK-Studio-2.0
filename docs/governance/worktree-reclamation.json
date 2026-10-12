@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-10T07:28:14.466Z",
+  "planId": "a32b6b9e-3ff4-402b-913f-d04b64a3de56",
+  "immutablePlan": "worktree-reclamation-plan-a32b6b9e-3ff4-402b-913f-d04b64a3de56.json",
+  "summary": {
+    "total": 68,
+    "cleanInWorkspace": 23,
+    "dirtyInWorkspace": 12,
+    "generatedDirectories": 0,
+    "cleanCompletedWorktrees": 0
+  },
+  "note": "Stable pointer only; immutable plans are never overwritten."
+}

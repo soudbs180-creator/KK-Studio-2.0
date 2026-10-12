@@ -81,6 +81,38 @@ test("设置主题保存重载、键盘关闭及导航", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("未接入的通用设置明确禁用原因", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "设置" });
+  const watermark = dialog.getByRole("switch", {
+    name: "去除水印",
+    exact: true,
+  });
+  await expect(watermark).toBeDisabled();
+  await expect(
+    dialog.getByText("当前模型协议未提供水印参数，暂不能影响生成结果。", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveAttribute(
+    "width",
+    "20",
+  );
+  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveAttribute(
+    "height",
+    "20",
+  );
+  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveCSS(
+    "width",
+    "20px",
+  );
+  await expect(dialog.locator("img.settings-nav-icon").first()).toHaveCSS(
+    "height",
+    "20px",
+  );
+});
+
 test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", async ({ page }) => {
   await page.route("https://models.example.test/v1/models", async (route) => {
     expect(route.request().headers().authorization).toBe("Bearer session-key");
@@ -89,7 +121,7 @@ test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", 
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
-  await page.getByLabel("提供商").fill("测试供应商");
+  await page.getByRole("textbox", { name: "提供商" }).fill("测试供应商");
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key").fill("session-key");
   await page.getByLabel("模型名称").fill("image-model-v2");
@@ -113,12 +145,25 @@ test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", 
   await expect(page.getByLabel("API Key")).toHaveValue("");
 });
 
+test("豆包预置一次性填入名称和方舟地址", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByLabel("预置提供商").selectOption("doubao-ark");
+  await expect(page.getByRole("textbox", { name: "提供商" })).toHaveValue(
+    "豆包（火山方舟）",
+  );
+  await expect(page.getByLabel("接口地址")).toHaveValue(
+    "https://ark.cn-beijing.volces.com/api/v3",
+  );
+});
+
 test("模型供应商可以登记多个非敏感连接并切换当前配置", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page.getByRole("button", { name: "模型供应商", exact: true }).click();
   const save = async (name: string, baseUrl: string, model: string) => {
-    await page.getByLabel("提供商").fill(name);
+    await page.getByRole("textbox", { name: "提供商" }).fill(name);
     await page.getByLabel("接口地址").fill(baseUrl);
     await page.getByLabel("模型名称").fill(model);
     await page.getByRole("button", { name: "保存", exact: true }).click();
@@ -418,10 +463,12 @@ test("画布新增卡片可拖动删除，喜欢内容同步到搜索", async ({
   await expect(added).toHaveCount(1);
   await expect(page.getByTestId("image-composer")).toBeVisible();
   await page.screenshot({ path: "test-results/runtime/canvas-added-card.png" });
-  await page.getByRole("button", { name: "喜欢当前卡片" }).click();
+  await added.getByRole("button", { name: "喜欢当前卡片" }).click();
   await page.getByRole("button", { name: "搜索", exact: true }).click();
   await page.getByRole("tab", { name: "喜欢收藏" }).click();
-  await expect(page.getByText("新图片卡片")).toBeVisible();
+  await expect(
+    page.locator(".saved-like-card").getByText("新图片卡片"),
+  ).toBeVisible();
   await page.screenshot({
     path: "test-results/runtime/collection-from-canvas.png",
   });

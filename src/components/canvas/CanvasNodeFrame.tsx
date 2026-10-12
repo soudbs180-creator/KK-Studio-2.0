@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
+import { cardLayout } from "../../domain/canvasGraph";
 import type { useCanvasControls } from "./useCanvasControls";
 import type { AddMenuRequest } from "./useCanvasAddMenu";
 import NodeActions from "./NodeActions";
@@ -43,11 +44,14 @@ export default function CanvasNodeFrame({
         : ["video1", "video2"].includes(id)
           ? id
           : "video";
+  const layout = cardLayout(item);
+  const expanded = controls.selectedNode === id;
   return (
     <div
       className={`canvas-node canvas-node-${variant} ${item.referenceOnly ? "is-reference-only" : ""} ${hasResultComposer ? "has-reference-composer" : ""} ${controls.selectedNode === id ? "is-selected" : ""} ${controls.dragging === "node" && controls.dragRef.current?.nodeId === id ? "is-dragging" : ""} ${connectionTarget ? "is-connection-target" : ""}`}
       data-canvas-node
       data-node-id={id}
+      data-kind={item.kind}
       data-selected={controls.selectedIds.has(id)}
       data-testid={`canvas-node-${id}`}
       role="group"
@@ -62,12 +66,8 @@ export default function CanvasNodeFrame({
       style={{
         left: controls.nodes[id]?.x ?? 0,
         top: controls.nodes[id]?.y ?? 0,
-        ...(item.plugin
-          ? {
-              width: item.plugin.width ?? 380,
-              height: item.plugin.height ?? 300,
-            }
-          : {}),
+        width: layout.width,
+        height: expanded ? layout.height : layout.collapsedHeight,
       }}
       onDragStart={(event) => event.preventDefault()}
       onPointerDown={(event) => controls.startNodeDrag(event, id)}

@@ -5,6 +5,7 @@ import {
   type ProviderConnection,
 } from "../../domain/providerConnections.ts";
 import type { ModelProviderProfile } from "../../domain/modelProvider.ts";
+import { invoke } from "@tauri-apps/api/core";
 import { credentialId } from "./providerCredentials.ts";
 import { BROWSER_STORAGE_KEYS } from "../../runtime/storage-contract.ts";
 import { modelSupportsKind } from "./model.ts";
@@ -39,6 +40,69 @@ function safeConnections(value: unknown): ProviderConnection[] {
   });
 }
 
+function sanitizeConnections(
+  connections: readonly ProviderConnection[],
+): ProviderConnection[] {
+  return connections.map((connection) => {
+    const normalized = normalizeProviderConnection(connection);
+    if (!normalized) throw new Error("无效的供应商连接记录");
+    return normalized;
+  });
+}
+
+let nativeRevision: number | null = null;
+
+export function isDesktopProviderDurable(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    (window.location.protocol === "tauri:" ||
+      window.location.hostname === "tauri.localhost" ||
+      Boolean(
+        (window as Window & { __TAURI_INTERNALS__?: unknown })
+          .__TAURI_INTERNALS__,
+      ))
+  );
+}
+
+/**
+ * Desktop: hydrate the durable native provider config and refresh the browser
+ * cache. Returns null when no native record exists so the caller can migrate
+ * older browser metadata; a recovered backup is honored, not overwritten.
+ */
+export async function loadProviderConnectionsDurable(): Promise<
+  ProviderConnection[] | null
+> {
+  if (!isDesktopProviderDurable()) return null;
+  const result = await invoke<{
+    status: "loaded" | "missing" | "recovered";
+    revision: number | null;
+    connections: unknown;
+  }>("read_provider_config");
+  if (result.status === "missing") return null;
+  const connections = safeConnections(result.connections);
+  nativeRevision = result.revision;
+  if (connections.length > 0 || result.status === "recovered") {
+    writeProviderConnections(connections);
+  }
+  return connections;
+}
+
+/**
+ * Desktop: durable commit before the UI reports success. A stale revision or
+ * a failed write throws so callers fail closed instead of faking success.
+ */
+export async function persistProviderConnectionsDurable(
+  connections: readonly ProviderConnection[],
+): Promise<void> {
+  if (!isDesktopProviderDurable()) return;
+  const sanitized = sanitizeConnections(connections);
+  nativeRevision = await invoke<number>("write_provider_config", {
+    connections: sanitized,
+    expectedRevision: nativeRevision,
+  });
+  writeProviderConnections(sanitized);
+}
+
 /** Browser-persisted metadata only. Credentials are never part of this record. */
 export function readProviderConnections(): ProviderConnection[] {
   if (typeof window === "undefined") return [];
@@ -57,11 +121,7 @@ export function writeProviderConnections(
   connections: readonly ProviderConnection[],
 ): boolean {
   if (typeof window === "undefined") return false;
-  const sanitized = connections.map((connection) => {
-    const normalized = normalizeProviderConnection(connection);
-    if (!normalized) throw new Error("无效的供应商连接记录");
-    return normalized;
-  });
+  const sanitized = sanitizeConnections(connections);
   try {
     window.localStorage.setItem(
       PROVIDER_CONNECTIONS_STORAGE_KEY,
@@ -151,17 +211,29 @@ export function releaseProviderLease(
 
 export function markProviderConnectionHealthy(
   id: string,
+  expected?: { baseUrl?: string; credentialRef?: string },
 ): ProviderConnection[] {
   const validatedAt = new Date().toISOString();
-  return updateProviderConnection(id, (connection) => ({
-    ...connection,
-    state: "active",
-    cooldownUntil: undefined,
-    lastHealthCheckAt: validatedAt,
-    healthRevision: (connection.healthRevision ?? 0) + 1,
-    verificationStatus: "verified",
-    lastSuccessfulGenerationAt: validatedAt,
-  }));
+  return updateProviderConnection(id, (connection) => {
+    if (
+      expected &&
+      ((expected.baseUrl !== undefined &&
+        connection.baseUrl !== expected.baseUrl) ||
+        (expected.credentialRef !== undefined &&
+          connection.credentialRef !== expected.credentialRef))
+    )
+      // A late receipt bound to an old identity must not reset the new config.
+      return connection;
+    return {
+      ...connection,
+      state: "active",
+      cooldownUntil: undefined,
+      lastHealthCheckAt: validatedAt,
+      healthRevision: (connection.healthRevision ?? 0) + 1,
+      verificationStatus: "verified",
+      lastSuccessfulGenerationAt: validatedAt,
+    };
+  });
 }
 
 /** A key or connection identity change invalidates prior image verification. */
@@ -189,9 +261,19 @@ export function markProviderConnectionFailure(
       | "network";
     retryAfterSeconds?: number;
   },
+  expected?: { baseUrl?: string; credentialRef?: string },
 ): ProviderConnection[] {
   const now = Date.now();
   return updateProviderConnection(id, (connection) => {
+    if (
+      expected &&
+      ((expected.baseUrl !== undefined &&
+        connection.baseUrl !== expected.baseUrl) ||
+        (expected.credentialRef !== undefined &&
+          connection.credentialRef !== expected.credentialRef))
+    )
+      // A late receipt bound to an old identity must not degrade the new config.
+      return connection;
     if (connection.state === "disabled" || connection.state === "quarantined")
       return connection;
     if (

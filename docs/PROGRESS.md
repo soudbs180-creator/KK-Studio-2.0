@@ -1,24 +1,106 @@
-## 2026-10-10 TASK-FIX-PUSH-GUARD-SPACES-001 Windows long-path guard replay (REVIEW / NOT VERIFIED)
-
-- Replayed the scoped PR49 fix onto current origin/main 7736c99bd5e900e7c5cd8a36663aadcb45326143; final pushed candidate is 3a7467825b85f66a7f4e409f8296e16ca2249516.
-- Root cause and fix: keep the Windows process cwd below MAX_PATH while the installed policy path remains over 260; normalize cygpath \?\ drive and UNC prefixes before invoking Node.
-- Focused Windows regression is 27 tests, 22 pass, 0 fail, 5 existing platform skips. Hosted git-guards run 38075547186 has Windows and Ubuntu success; quality run 38075547255 has delivery/deploy-linux success and verify pending.
-- Local npm verify reaches 830 tests with two unrelated desktop Agent environment failures; independent npm run build succeeds.
-
-## 2026-10-10 TASK-VERIFY-ORIGIN-003 governance closeout (PR #51)
-
-PR #51 current-main governance evidence remains retained below.
-
 # 当前进度
 
-## 2026-10-10 浏览器并发失败原因与隔离复核
+## 2026-10-12 PR #55 历史快照集成修复（REVIEW）
 
-`TASK-VERIFY-CONCURRENCY-002` 已按默认 squash 合并到 `origin/main@2b6c0ba`，合并后 run `37983272823` 的 verify、deploy-linux、upload-artifact 均成功，delivery 按 push 条件跳过；PR head `9ae856ea`、merge SHA、landing tree 已实际回读。IRV-CONC-002 已关闭。历史 source105 的 9 个首轮 flaky 原件继续保留，当前未复现，资源压力仅支持假设，不能称根因修复；IRV-CONC-001 保持有界 P2，任务仍为 `PARTIAL`。详见 [合并后收口验证](changes/2026-10-10-verify-concurrency-002-closeout/verification.md) 与 [收口审查](changes/2026-10-10-verify-concurrency-002-closeout/review.md)。
+- `TASK-GOV-005` 已登记为一次性历史快照修复任务：保留 PR #55 的 128 提交/424 文件逐项证据，不把跨任务历史成果伪装成新的单任务交付。
+- 历史交付包仅在包内明确写入 `legacy-incomplete.md` 时获得有限豁免；同一变更中的新修复包仍必须具备五件套并绑定当前台账任务。
+- Windows `desktopRelease` 的链接判定改为直接读取 `lstat().isSymbolicLink()`，避免 hosted runner 的 8.3/realpath 等价路径误报普通 `node_modules`；真实 symlink/junction 仍拒绝。
+- 本节在本地定向测试、独立 exact-SHA review 和 Hosted `verify`/`delivery` 回执完成前保持 `REVIEW/NOT_VERIFIED`；不代表 PR #55 已合并、客户端已发布或 Hermes 已集成。
+
+## 2026-10-12 分支收敛 P0-P1：规则门禁入主线 + 100 分支全量分类
+
+- P0 完成：`c8807d3e` 提交规则收敛（31 文件）经 `77d42c7b` 同步基线后合入 main `8915b6ae`；TASK-GOV-003 登记 DONE；`pnpm-lock.yaml` 移出 output/；merge-ui-main 工作区在途的 CSS 清理与 test 基建保全至 `wip/ui-governance-css-cleanup-20261012`（未登记，待处置）。
+- P1 完成：100 个未合并分支逐项只读核验，分类表 `docs/changes/2026-10-12-branch-consolidation/branch-classification.md`——**已完成 27 · 完成一半 68 · 未完成 4 · 无法判定 1**；测量工具 `scripts/governance/branch-audit.mjs` 可复现。
+- 关键判定：10 个 PR 已集成分支登记禁合并（台账已加注释）；2 组同树孪生分支；1 个无共同祖先历史备份；58 个分支无远端副本。
+- 门禁：governance 122 tasks 0 violations；lint/typecheck/delivery:check 全绿；npm test 8 失败为已记录的 symlink 环境性既有失败（PRE-EXISTING）。
+- 下一步：P2 家族收敛 ×11 → B2/B3/B4 合并 → B5 UI-012 两步收敛（已授权）；合并停在本地 main 不推远端。
+
+## 2026-10-12 分支收敛启动：规则门禁提交与 B1+B2 绑定
+
+- `TASK-GOV-003`（B1+B2 规则体系收敛）登记为 DONE/PASS：UI_INDEX 覆盖补齐、ADR 编号去重归并至唯一目录、3 个文档门禁中 2 个接入 lint；交付包 `2026-10-11-rules-restructure` 五件套随本次提交进入版本控制。
+- 移出仓库根被 ignore 的 `pnpm-lock.yaml`（governance 门禁阻断项，归档至 output/）。
+- 启动 100 个未合并分支全量核验与收敛合并：分类表格与处置计划见 `docs/changes/2026-10-12-branch-consolidation/`；合并停在本地 main，不推远端。
+- 本轮门禁：governance 121 tasks 0 violations。
+
+## 2026-10-12 P0-P1 UI 收口（当前候选）
+
+- 撤回上一条首页整体重做候选：移除全局 `competitor-ui.css` 及其营销式首页、Agent 空态和画布整体尺寸覆盖，恢复 Figma/工作台基线。
+- 保留统一“扩展”入口；Skill、插件/MCP、智能体继续在同一菜单内管理。MCP 未移除。
+- 图片卡片仅保留局部修正：卡片名称左上、上传按钮居中、喜欢状态保留在卡片头部；修正视频卡 370×224 布局契约、参考图删除按钮命中区和生成数量面板遮挡提示词的问题。
+- 设置页保留真实行为：未接入水印能力显示禁用原因，MCP/插件删除与卸载要求确认，设置图标按 20px 统一。
+- 首页 P0 局部收口：模型入口保留工作台结构但改为可读的“选模型”，扩展菜单选中态与动作项圆角对齐 token；桌面端扩展菜单向上展开且不遮挡发现区，窄屏按可用空间展开并保持输入区可关闭；修正模型未配置时重复状态提示与工具栏分组溢出。
+- 首页 P1 局部收口：发现区筛选无结果时显示真实空态并可返回精选，tabs 补齐 panel 关联与方向键切换，灵感卡片增加 hover/focus 层级；扩展/模型/模式弹层按首页表单边界碰撞定位，避免覆盖提示词和窄屏发现区。未改工作台外壳或扩展入口职责。
+- P1 窄屏复核：修正后置 CSS 规则覆盖导致的模型入口截断，≤1200px 恢复可读的“模型”紧凑标签；分类 chips 保持现有横向滚动规则。目录页、输入契约、弹层、响应式屏幕控件回归通过。
+- P2 首页滚动后菜单定位：修正桌面首页滚动导致模型、扩展、模式弹层被压成 0px 的碰撞分支；补充滚动后菜单可见与可操作回归。
+- P2 窄屏工具栏边界：≤1200px 将首页动作行收缩到 composer 内容盒，手机端隐藏不必要的分隔线，保证 360/390/768px 的操作命中区不越过卡片边界。
+- P2 分类 chips 可发现性：实测 390px 首页存在 207px 横向溢出，补充基于真实滚动位置的左右渐隐提示和可访问名称；滚到末端后右提示自动收起，桌面端无溢出时不显示。
+- P2 灵感卡片媒体比例：修正 390px 下缩略图被拉成近竖图的问题，统一使用源素材对应的 16:9 媒体框；补充 390/768/1280px 比例回归。
+- P2 窄屏发现区可达性：补充滚动到底部后最后一张灵感卡片仍完整落在首页滚动容器内的回归，避免后续底部导航或断点调整造成遮挡。
+- P2 演示卡片素材复核：当前 Figma 治理页只规定稳定媒体比例、标题/元信息/操作槽，未指定首页三张独立封面；仓库也无对应素材，保留现有本地 demo 映射，不以占位图或伪造裁剪替代，并将素材缺口留待有明确来源时处理。
+- 本地验证：前端/MCP/红框 27/27，画布导航/连接/拖动/状态/数量 33/33；TypeScript、定向 ESLint、Prettier、Vite build 和 canvasGraph 单测通过。当前仍未宣称 Hosted、正式发布或用户最终验收。
+
+## 2026-10-11 MiniMax 对照的首页、画布与会话助手重做（本地候选）
+
+> 已于 2026-10-12 撤回，保留本节作为历史候选记录。
+
+- 以用户提供的 MiniMax Design 桌面客户端截图为参照，将首页主入口收敛为“描述灵感 → 选择模型 → 生成并精修”的连续流程；画布图片节点拆出媒体面板、卡片上方名称/爱心/空卡片上传动作和独立输入 dock；会话助手空态改为 Agent 任务入口与建议动作。
+- 图片媒体面板使用 400px 基准宽度并按上传图片原始比例计算可见高度，输入 dock 保持 520px 宽度；空图片卡片的上传入口悬在卡片外上方，已有图片只保留卡片操作；任务弹层统一为 380×420 的可读尺寸；删除按钮默认中性，仅 hover/focus/选中时显示危险色；输入框取消输入时的发光外圈。
+- Tauri release 已用当前 `dist` 重建并通过隔离数据目录逐项截图：首页、空图片卡片、上传图片画布、任务列表、会话助手、首页/画布模型菜单。证据位于 `test-results/desktop/competitor-ui/`；Agent 未连接和模型未配置是该隔离环境的真实状态，未冒充 Provider 能力完成。
+- 当前仍是本地候选，未做 Hosted、真实 Provider、正式发布或用户最终验收；定向 canvasGraph/imageParameters/model capability 单测 26/26，TypeScript、UI 标准、Prettier、Vite build 和 Tauri no-bundle build 通过。
+
+## 2026-10-11 收口增量：来源契约、模型禁用态与媒体尺寸回载
+
+- `TASK-VERIFY-ORIGIN-003` 已按来源契约升级为 `DONE/PASS`：生产浏览器固定 `127.0.0.1:1423`、端口契约和六组来源/fixture 规格已通过，exact-SHA 独立审查收据已绑定；Hosted delivery、发布与用户验收仍由其他任务负责。
+- 新增 `tests/browser/model-picker.spec.ts` 的视频/音频模型禁用态验收：真实设置页创建供应商、刷新目录、键盘阅读禁用原因、Enter 不提交、Escape 关闭并恢复焦点，1/1 通过。
+- 新增 `tests/browser/media-dimensions.spec.ts`：上传图片写入原始尺寸，刷新后重新打开项目并验证布局比例保持，1/1 通过；该证据只收口本地 Web 回载，Desktop/真实 Provider 仍保持开放。
+- `TASK-AI-GATEWAY-001` 已由误标 `TODO` 勘正为 `PARTIAL`，保留本地实现与回归证据；真实 Ark/Codex 凭据、DPAPI、token 级上游流和 Desktop 运行态未验，不能升级 `DONE`。`TASK-TASKSTATE-002` 已补齐有界报价回执 schema、身份/冲突/快照测试，仍缺真实 Provider 回执；当前账本 120 项：75 DONE、29 PARTIAL、11 TODO、4 BLOCKED、1 REVIEW，45 项开放。
+- 本轮门禁：governance 120/0、features 36/0、markdown 115/0、project goals/version consistency/platform versions 全通过；TypeScript、ESLint、UI standards、Prettier、生产构建及新增浏览器规格通过。实时 Git 快照为本地 `main@6bc45cad`、`origin/main@7736c99b`（PR #51 merge），实时 worktree 为 87 个、dirty path 为 102；工作树仍有并发改动，未推送。
+
+## 2026-10-11 最小任务集收口：文档历史与 TaskState 001/002
+
+- `TASK-DOCS-HISTORY-001` 已同步到权威账本并按 `dc53317b` exact-SHA 独立收据标为 `DONE/PASS`：文档历史审计修复 29 条可追踪链接，保留 8 条 `NOT_VERIFIED` 原始日志；`TASK-TASKSTATE-001`、`TASK-TASKSTATE-002` 仍为 `PARTIAL`，已补齐有界成本回执、来源/币种、任务与幂等身份绑定、重复/冲突和快照回读边界。
+- 本轮证据已保存到 `docs/changes/2026-10-11-taskstate-docs-closeout/`：定向测试 30/30、全量 Node 966（957 通过、9 跳过、0 失败）、Tauri `project_package` 22/22、TypeScript、ESLint、生产构建、治理、Markdown、features、project goals、格式与文档历史审计均通过；文档历史 exact-SHA 正式审查已绑定 `dc53317b` 并为 `PASS WITH FOLLOW-UPS`，真实 Provider 回执、平台运行态与用户验收仍未验证。
+- 当前账本 120 项：75 `DONE`、29 `PARTIAL`、11 `TODO`、4 `BLOCKED`、1 `REVIEW`，45 项开放。Mobile、VPS、Astra、MCP 暂不扩展；下一步只处理剩余 P1 的真实 Provider/Hosted/平台证据，避免范围蔓延。
+
+## 2026-10-10 开发协作流程落地
+
+- 已延续 `TASK-DOCS-STRUCT-001`，状态为 `DONE`；新增统一流程入口，覆盖任务领取、需求/验收确认、状态流转、开发笔记、成果说明、边界验证、根因闭环和竞品观察节奏。
+- 最小扩展 `intent/plan/verification/review/incident` 模板，并在文档入口和 SDLC 中建立链接；产品源码、运行数据和并发中的 Tauri 改动未触碰。
+- JSON、diff check、Markdown、features、project goals、governance 和 delivery equivalent 已通过；独立 review 已在 exact HEAD `8933692e` 得到 PASS/ACCEPTABLE，R-1/R-2/R-3 修正后复跑通过且无 P0–P2。重新生成的 `pnpm-lock.yaml` 已按 SHA 隔离到 `.verification/governance/`，默认包管理器仍为 npm。`TASK_LEDGER.md` 已用同一 `renderLedger` 实现重建。
+
+## 2026-10-10 输入焦点与次级选中态收敛
+
+根据用户对首页/对话输入框紫色外圈过强的反馈，新增主题中性的弱焦点 token（深色浅灰白、浅色中性灰，1px/1px），并将 Composer、搜索、设置、对话和阶段表单的输入焦点统一到该层级；按钮和关键操作继续使用醒目 focus token。Provider 连接项、任务评论区选择、插件节点选中及连接目标叠加态改为更轻的中性边界，保留关键连接状态的文字和颜色语义。浏览器回归补充 Composer 的 1px 与 token 绑定断言，设计系统和目录页检查覆盖搜索/设置状态。当前分支验证：输入契约 9/9、目录/设置页面 10/10、设计系统基础 6/8（另有 2 个插件卸载 fixture 超时），Node 单测 929/939 通过、8 跳过、2 个既有 desktopAgentRuntime 失败；typecheck、UI 标准、lint、governance、features、markdown、格式和 diff check 通过。Desktop/Web 生产包与用户最终视觉验收未在本轮宣称完成。
+
+## 2026-10-10 画布点状/网状背景缩放插值修正
+
+背景格距改为在 50%~400% 之间线性插值，不再按 2 的幂次粗化。原实现 `24 * scale * 2 ** ceil(log2(12 / pitch))` 在 49%→50% 之间把格距从 23.52px 突降到 12.00px（近 2 倍跳变），且透明度存在 `Math.max(0.2, …)` 下限，导致任何缩放下背景都不会真正隐藏。现改为：格距 12px→96px、点径 1px→8px、网格线宽 0.5px→1.5px 随缩放同步线性变化，透明度在 50% 为 0、100%（默认工作缩放）即达完全不透明并保持到 400%；低于 50% 时各项钳制在最小值且保持透明。`background-repeat: repeat` 显式声明，配合单一 pitch 变量保证任意格距下均完整平铺、无缝隙无重叠。新增 `tests/unit/canvasViewport.test.ts`（7 项）锁定上下界、连续性、单调性、点径小于格距与非有限输入契约。门禁：typecheck exit 0、lint 与 governance/features/markdown 全 0 violations、format:check 通过、单测 926 通过 / 8 跳过 / 0 失败，单 worker 浏览器回归 455/455 PASS。多分辨率浏览器交互已覆盖 390/768/1280/1440/1920，未验证 Desktop WebView2。
+
+## 2026-10-10 浏览器并发失败原因与隔离复核（TASK-VERIFY-CONCURRENCY-002，PARTIAL）
+
+该任务已由 PR #46 合并到 `origin/main@2b6c0ba`，合并后 run `37983272823` 的 verify、deploy-linux、upload-artifact 均成功；当前 workers 1/2/4/8/12 在固定 1423、retries=0 下均为 447/447。历史 source105 的 9 个首轮 flaky 原件继续保留，根因仍 UNKNOWN，不能把并发复现通过写成根因已修复。详见 [并发收口验证](changes/2026-10-10-verify-concurrency-002-closeout/verification.md)。
+
+## 2026-10-10 当前主线剩余回归验证（TASK-AGENT-001，PARTIAL）
+
+基于当前主线 `edda6157` 的隔离工作树修复并验证四类本地回归：Codex 画布来源项进入内置生图时不再被通用 API 模型门禁误拦；设置供应商下拉框与输入框共享控件几何和窄屏命中区；Google 图片归档、插件空态及开发态设置入口断言对齐当前产品语义。完整 `npm run verify` 退出码 0：Node 911（903 通过、8 跳过）、Agent 172/174（2 跳过）、UI 215/0、生产浏览器 455/455、Vite development 插件 receipt PASS。改动保存在 `codex/remaining-verification-20261010`，证据见[交付包](changes/2026-10-10-remaining-verification/verification.md)。真实 Provider/GPU、Hosted Windows 原因、Tauri release、Mobile 和用户产品验收仍未发生，`TASK-AGENT-001` 保持 PARTIAL，其他剩余 TODO/BLOCKED 任务不因本地回归自动关闭。
+
+## 2026-10-10 多平台模型能力闭环增量（TASK-AI-GATEWAY-001）
+
+在既有网关与 Codex Agent 链路上完成可插拔能力闭环：新增 `chat` operation 和独立文本结果，Ark 官方通道调用 `/chat/completions`；generation-server 增加安全 `/v1/models`，`stream:true` 返回单次 buffered SSE；图片模型选择器优先显示完整已验证模型 ID，Codex 图片事件沿归档、画布结果和 asset provenance 传递 `effectiveModel`，上游缺失时显示“图片模型未报告”。复用现有 credentialRef、Registry/Scheduler、ProviderConnection 和 UI Design System，不引入 headless、第二队列或第二套账号状态源。验证：gateway/Agent/model 定向回归 69 项全绿，Agent 模型选择定向回归 26 项全绿；当前主工作区全量回归为 911 项 903 通过、0 失败、8 跳过，前端冒烟 16/16，连接拖拽 7/7。真实 Ark/Codex 联调需要用户凭据，保持 NOT VERIFIED。
+
+## 2026-10-10 豆包（火山方舟）BYOK 官方通道 P1
+
+在现有 OpenAI 兼容 BYOK 链路上新增「豆包（火山方舟）」预置，选择预置会一次性填入名称与 `https://ark.cn-beijing.volces.com/api/v3`；修正 `doubao-*` 文本模型与 `doubao-seedream-*` 图片模型的能力判定，并保留网关通道置灰和真实上游未验证边界。补充模型预置单测、设置页浏览器冒烟和官方通道交付包。当前回归为 897 项（889 通过、0 失败、8 跳过），相关网关与画布回归通过；真实方舟 Key、Web/Desktop 真实联调和 DPAPI 仍待外部条件。
+
+## 2026-10-09 AI 协作规则文档结构收敛（TASK-DOCS-STRUCT-001）
+
+文档层变更，未改动 `src/**` 与 `scripts/**`。新增 `docs/engineering/CODING-STANDARDS.md`（门禁映射、依赖方向、文件规模边界、命名、错误处理）与 `docs/engineering/TESTING.md`（测试分层、Playwright 运行契约、覆盖要求、证据保存）；`docs/README.md` 升级为索引含五层权威优先级、冲突裁决细则与本地记忆四层模型；`BRANCH-POLICY.md` 补提交信息规范、worktree 落点、自动合并现状、回滚触发条件四节；`UI_RULES.md` 加 3.4 Token 化纪律；`AGENTS.md` 与 `AI_RULES.md` 明确边界。未新建 `ui-guidelines.md`、`git-workflow.md`、`UI-TOKEN-GOVERNANCE.md`，避免第二来源。
+
+自检修正一处事实错误：`BRANCH-POLICY.md` 原文称已新增 `scripts/governance/auto-merge.mjs`，核对 `ls scripts/governance/` 确认该脚本不存在于仓库，已改为按实际记录「尚未落地」并说明阻塞原因（固定 1421/1423 端口串行验证）。10 个超限文件（含 `src/App.tsx` 3152 行）登记为技术债，未加门禁——加门禁会立即阻塞所有 PR，属需授权的结构性变更。门禁：markdown:check 104 files 0 violations，lint exit 0，governance 115 tasks 0 violations。工作区既有 3 个 `src/styles/*.css` 改动与未跟踪 `docs/decisions/` 属画布 token 化遗留，未纳入本次提交。缺独立上下文 AI review，合并条件未满足。当前 115 项任务。[本轮验证](changes/2026-10-09-docs-structure/verification.md)
 
 ## 2026-10-09 失败任务 source105 本地复验
 
 主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。
-
 
 ## 2026-10-09 统一Mask最新主线组合本地验收完成
 
@@ -35,7 +117,6 @@ PR38 已普通合入main2cb73d，source a550f31与landing完整tree相同，当�
 ## 2026-10-08 标题栏承接静默启动主线
 
 PR38 source a550f31 经独立审查与最新 Hosted37792689982/37792680207 全部SUCCESS，普通squash落地main2cb73d，完整tree相同；合并后main37797150560仍在运行。TASK-UI-013保留静默启动/首页按需加载、图片上方动作和T5生命周期；预检发现001乱序状态及002异步监听清理，真实组件7条先RED后GREEN，独立关闭和完整新组合验收待完成。当前账本104项（DONE60/TODO13/PARTIAL26/BLOCKED4/REVIEW1），UI012/蒙版原在途执行者保留。以下两侧记录按各自时间保留；不能将旧证据或中途GREEN当最终合并通过。
-
 
 ## 2026-10-08 启动分支最新主线组合验收完成
 
@@ -84,6 +165,7 @@ TASK-IMAGE-EDIT-001 在独立任务分支承接 main@78cea37（PR #37），保�
 ## 2026-10-08 统一图片编辑蒙版本地候选
 
 框选、画笔、色块产生原像素Mask，共用扩边/合并/裁剪、能力校验、Web/native模型请求、Mask内融合；保存/导出/恢复与连续编辑保持原件不可变。完整verify739root/172Agent/419browser（原skip8/2、0flaky）、Rust100、fresh Tauri两次Mask请求/包恢复/删除再生/重启通过，Web/Desktop实际bundle同hash。候选Desktop2.1.7/Web2.1.8；正式独立head复验待补，未推送/合并/发布。FEAT-035仍PARTIAL，真实Provider/语义几何偏移/真机/用户视觉归TASK-IMAGE-EDIT-VERIFY-002。[验证](changes/2026-10-08-unified-image-mask/verification.md)。
+
 ## 2026-10-08 Hosted 空 Registry 属性返修
 
 T5当前本机/源码验收完成、REVIEW。21ac独立补审PASS、ENV003 CLOSED；其Hosted37765011214完整Web/Rust/release/Runtime通过，实际CI包装器在新建空key的Properties.Name严格模式失败，native尚未启动。修正mock空属性集合并复现真实RED；四处逐项枚举后26/26边界回归PASS，产品/harness与d521 native十一组hash不变。新head独立关闭ENV004、Hosted与主线整合仍待满足，未假填High IL。UI976db独立PASS关闭两P2、422browser/fresh Native13组通过，当前Hosted待创建。main仍1af/PR36合并后CI通过；其他执行者任务保留。
@@ -110,6 +192,7 @@ T5 本机产品验收十一组与精确源码 8399 补审 PASS，但其 Hosted n
 PR#38首轮7a1c3358的Hosted verify发现LAUNCH-R4：WSH快捷方式接口不能处理系统ACP无法表示的路径字符。本地增强中文+emoji路径复现RED，改为Unicode Shell Link后真实lnk/重复安装native3/3 GREEN，完整verify726Node/172Agent/413browser再次PASS；实际桌面宽接口重装成功，前端/native产物哈希不变。旧CI失败保留；新HEAD独立补审及Hosted结果分别绑定，见本轮验证追加段。
 
 TASK-LAUNCH-001 本地AC完成：桌面/canonical快捷方式使用内嵌Logo GUI入口，实际最新release免编译窗口304ms，冷重建与正常启动均GUI退出0/无新增可见控制台；窗口Logo与原icon逐像素一致。Web首屏延后隐藏工作区并按需加载页面，历史/焦点/错误恢复保留。推送前融合最新main@1af0357b的模型能力，最终候选Desktop2.1.7/Web2.1.8/Mobile2.1.1；完整verify726/734Node（8原skip）、172/174Agent（2原skip）、413/413browser零flaky，clientcheck/newTauri与原生能力回归PASS。最新main首屏JS995,957→806,571（减19.0%）、CSS完全一致；受控5次cold中位数1656→1405ms，非线上保证。独立694a237/f74548d审查PASS、R1/R2/R3关闭，最终组合精确SHA收据见[本轮验证](changes/2026-10-08-startup-experience/verification.md)。本轮main/线上尚未推广；实际快捷方式引用本任务树，须保留至稳定产物推广。
+
 ## 2026-10-08 单排标题栏主线集成准备
 
 用户明确授权合并已检查分支，TASK-UI-013原535 clean且原作者已结束，由root单一写入承接main f922。保留UI011图片上方动作及T5生命周期，App CSS按统一末端顺序合并。当前为预备组合REVIEW；启动PR38落地后再承接最新main并做最终当前source/fresh native/独立review/Hosted和普通合并，不把旧535的验收冒充新组合。历史双方段落保留其时间含义；UI012/蒙版仍由原在途执行者维护。
@@ -868,12 +951,16 @@ TASK-PLUGIN-DEV-001在独立任务树认领，固定1421复现四个public模块
 
 TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，回归新发现TASK-PLUGIN-RECOVERY-001 P1（归一化遗漏现有plugin）与TASK-PLUGIN-MARKDOWN-001 P1（CDN离线正文为空/模块错误）。已登记并做RED→GREEN预验收：快照10/10、固定1421实际4插件编辑/预览/内容刷新恢复零错误。共享Desktop/Web源码版本递增2.1.12，Mobile保持规划2.1.1；解析器原marked14改为精确14.1.4随包，不扩大CSP。完整验证、fresh原生、独立review和Hosted/合并仍未完成，当前任务不标DONE。见[验证](changes/2026-10-09-plugin-development/verification.md)。
 
-
 - TASK-DESKTOP-FLUSH-001：本轮插件原生立即关闭实际复现最后编辑丢失（P1）；已登记并实现 CloseRequested 耐久队列守卫，重复关闭/最新revision/失败及读保护留窗/卸载单元 7 PASS。fresh 原生与当前提交独立验收仍未完成，原 FAIL 保留。
-
 
 - TASK-PLUGIN-DEV-001及RECOVERY/MARKDOWN/DESKTOP-FLUSH三个新P1本地闭合：真实开发/生产/fresh原生正文及恢复、立即关闭/真实IO失败留窗与原件保护、完整447浏览器和同EXE邻接全部通过。原FAIL、来源身份和标题栏第一拖动未知原因保留；最终doc/Hosted/普通集成/main按各自收据，UI012/UI014与43项既有开放能力继续。见[本轮完整状态](changes/2026-10-09-plugin-development/status.md)。
 
 2026-10-09 TASK-IMAGE-RETRY-004：主线6a的托管37845923441真实FAIL，区域重试验收未绑定新任务而读到3条旧结果。新隔离测试任务继续复现与修正，原失败保留，产品正确性与合并后主线验收仍需复验。
 
 2026-10-09 TASK-IMAGE-RETRY-004本地验收：43fc全verify447零retry、14相关、804root/172Agent和development PASS；独立源码无P0/P1、41相关unit PASS，IRV-001文档矛盾已修正，最终精确head复审/托管/main恢复待回执。主线6a的原FAIL、本机未复现PASS均原样保留；运行产品/版本未改。
+
+## 2026-10-10 KK → Codex 真实联调
+
+- 本地已登录 Codex 账号经 KK 浏览器工作区真实验证：文本调用成功、Codex 内置图片生成成功并回写画布、`canvas_apply_ops` 新增文本节点成功，随后由 Codex 只读读取并确认节点存在。
+- 图片卡片按要求显示 `图片模型未报告` 与 `来源：Codex 内置生图`，没有把 Codex 名称误当成图片模型名。
+- 首次联调发现的默认模型问题已修复并复验：旧缓存 `gpt-6.1-sol` 会按 Agent `/models` 列表回退到 `gpt-6-astra`，不显式选模型的 KK 文本调用已成功；项目图片模型也不会传给 Codex 推理接口。详见 [kk 模型能力验证](changes/2026-10-10-kk-model-capability/verification.md)。

@@ -103,6 +103,13 @@
   white-space: nowrap;
   pointer-events: none;
 }
+
+.canvas-node.is-selected.is-connection-target .image-preview,
+.canvas-node.is-selected.is-connection-target .video-placeholder,
+.canvas-node.is-selected.is-connection-target .demo-result-node,
+.canvas-node.is-selected.is-connection-target .creation-composer {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ui-selected) 22%, transparent);
+}
 .node-action-menu {
   position: absolute;
   top: calc(100% + 6px);

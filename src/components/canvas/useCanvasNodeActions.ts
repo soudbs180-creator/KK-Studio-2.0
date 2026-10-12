@@ -14,6 +14,7 @@ import {
 import { cardLayout } from "../../domain/canvasGraph";
 import { MIN_SCALE, type Point, type ViewTransform } from "./canvasModel";
 import { fitRects } from "../../domain/canvasViewport";
+import { visibleComposerExtraHeight } from "./composerLayout";
 
 export interface AddNodeOptions {
   parentId?: string;
@@ -40,9 +41,11 @@ interface Options {
   nodes: Record<string, Point>;
   setNodes: Dispatch<SetStateAction<Record<string, Point>>>;
   transform: ViewTransform;
+  selectedNode: string | null;
   setTransform: Dispatch<SetStateAction<ViewTransform>>;
   setSelectedNode: Dispatch<SetStateAction<string | null>>;
   usableViewport: () => { width: number; height: number };
+  composerExtraHeight: number;
 }
 export function useCanvasNodeActions({
   items,
@@ -50,9 +53,11 @@ export function useCanvasNodeActions({
   nodes,
   setNodes,
   transform,
+  selectedNode,
   setTransform,
   setSelectedNode,
   usableViewport,
+  composerExtraHeight,
 }: Options) {
   const pendingFocus = useRef<string | null>(null);
   useLayoutEffect(() => {
@@ -188,7 +193,11 @@ export function useCanvasNodeActions({
           x: nodes[item.id].x + layout.left,
           y: nodes[item.id].y,
           width: layout.width,
-          height: layout.height,
+          height:
+            layout.height +
+            (item.id === selectedNode
+              ? visibleComposerExtraHeight(composerExtraHeight)
+              : 0),
         };
       });
     setTransform(

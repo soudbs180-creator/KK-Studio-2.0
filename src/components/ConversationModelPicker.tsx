@@ -33,7 +33,7 @@ export default function ConversationModelPicker({
           height="13.85"
           alt=""
         />
-        <span className="chat-model-name">模型</span>
+        <span className="chat-model-name">{currentModel || "主 Agent"}</span>
       </button>
       {open && (
         <ModelPickerMenu
