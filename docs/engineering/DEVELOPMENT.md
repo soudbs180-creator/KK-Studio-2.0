@@ -19,23 +19,35 @@ npm ci
 
 ## 命令与证明范围
 
-| 命令                                                     | 能证明什么                                                          |
-| -------------------------------------------------------- | ------------------------------------------------------------------- |
-| `npm run lint`                                           | ESLint、治理/架构、功能和现行 Markdown 文件链接检查；不是全部安全审查 |
-| `npm run typecheck`                                      | TypeScript 类型检查                                                 |
-| `npm test`                                               | 当前 Node 单测；fixture 与 live 分开                                |
-| `npm run ui:check`                                       | 静态 UI 规则；不是视觉/交互验收                                     |
-| `npm run markdown:check`                                 | 现行 Markdown 相对文件目标；不检查外部网址或事实语义                 |
-| `npm run format:check`                                   | package script 实际覆盖范围的格式；Markdown 格式仍需定向检查         |
-| `npm run build`                                          | 当前 Web production 构建                                            |
-| `npm run test:ui`                                        | 构建后运行 Playwright production preview 回归                       |
-| `npm run client:check`                                   | Rust/Tauri 编译检查；不是原生运行验收                               |
-| `cargo test --manifest-path src-tauri/Cargo.toml`        | Rust 单测                                                           |
-| `cargo fmt --manifest-path src-tauri/Cargo.toml --check` | Rust 格式                                                           |
-| `npm run client:build -- --no-bundle`                    | Tauri release 可执行文件；不是安装/升级验收                         |
-| `npm run verify`                                         | package.json 定义的组合检查；不能暗示包含全部 Rust/native/live 门禁 |
+| 命令                                                     | 能证明什么                                                                                                                                            |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run lint`                                           | ESLint、治理/架构、功能和现行 Markdown 文件链接检查，以及代码健康棘轮与 Windows 不安全模式扫描（后两者当前 advisory，只打印不失败）；不是全部安全审查 |
+| `npm run typecheck`                                      | TypeScript 类型检查                                                                                                                                   |
+| `npm test`                                               | 当前 Node 单测；fixture 与 live 分开                                                                                                                  |
+| `npm run ui:check`                                       | 静态 UI 规则；不是视觉/交互验收                                                                                                                       |
+| `npm run health:check`                                   | 代码健康棘轮：只评 base..head 间变化的文件；advisory 模式退出码为 0                                                                                   |
+| `npm run footguns:check`                                 | Windows 不安全模式扫描：只扫变化的文件；advisory 模式退出码为 0                                                                                       |
+| `npm run markdown:check`                                 | 现行 Markdown 相对文件目标；不检查外部网址或事实语义                                                                                                  |
+| `npm run format:check`                                   | package script 实际覆盖范围的格式；Markdown 格式仍需定向检查                                                                                          |
+| `npm run build`                                          | 当前 Web production 构建                                                                                                                              |
+| `npm run test:ui`                                        | 构建后运行 Playwright production preview 回归                                                                                                         |
+| `npm run client:check`                                   | Rust/Tauri 编译检查；不是原生运行验收                                                                                                                 |
+| `cargo test --manifest-path src-tauri/Cargo.toml`        | Rust 单测                                                                                                                                             |
+| `cargo fmt --manifest-path src-tauri/Cargo.toml --check` | Rust 格式                                                                                                                                             |
+| `npm run client:build -- --no-bundle`                    | Tauri release 可执行文件；不是安装/升级验收                                                                                                           |
+| `npm run verify`                                         | package.json 定义的组合检查；不能暗示包含全部 Rust/native/live 门禁                                                                                   |
 
 以当前 `package.json`、Playwright 和 CI 配置核对上述含义。改脚本时同步本表；没有命令、依赖或真实服务时报告失败/未运行，不写预测结果。
+
+## 代码健康棘轮与 Windows 不安全模式扫描
+
+两个静态检查移植自 [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) 的工程实践（MIT），配置与规则在 `scripts/governance/`，入口为 `scripts/check-code-health.mjs` 与 `scripts/check-windows-footguns.mjs`。
+
+**代码健康棘轮**（`npm run health:check`）：每个函数和文件有自己的上限——圈复杂度 ≤20、函数 ≤300 行、嵌套深度 ≤6、文件 ≤2000 行。已超标单元取其在 base 修订上的实测值为上限，只许变小；新单元必须达标。base 默认为 HEAD 与 `origin/main` 的 merge-base（CI 用 `GOVERNANCE_BASE` 指定），只评变化的文件；解析失败按度量缺口失败，不读作"无发现"。`npm run health:check -- --report` 输出全库存量清单。行内豁免写在违规行或上一行的真实注释里：`// health: allow <RULE> -- 理由`。总开关 `ENFORCEMENT`（blocking/advisory/off）从 `origin/main` 的配置读取，分支不能自我放宽；当前为 advisory，存量清零节奏由维护者决定后改 blocking。
+
+**Windows 不安全模式扫描**（`npm run footguns:check`）：规则表在 `scripts/governance/footgun-rules.mjs`，覆盖硬编码 POSIX 临时目录、硬编码用户目录、shebang 启动 node、无确认递归删除、生成 Windows 脚本未用 CRLF、schtasks 引号、OneDrive 已知文件夹假设、单反斜杠路径字面量、curl/irm 管道进 shell。只扫变化文件，`--all` 出全库清单；总开关 `FOOTGUNS_ENFORCEMENT` 同为 advisory。
+
+GitHub Actions 统一固定到 commit SHA 并附版本注释；新增 action 时同样处理，不用可变 tag。
 
 修改期间运行与影响相关的定向检查。交付前执行仓库要求的 `npm run verify`，涉及 Desktop/Rust 时加对应检查、构建和原生运行；安装/升级、数据恢复和真实外部服务按验收计划额外执行。文档修改需检查当前 Markdown 文件格式、链接及治理一致性；专用校验不替代仓库要求的交付检查。
 

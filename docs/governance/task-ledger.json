@@ -4077,5 +4077,47 @@
     "verification": "Partial candidate evidence only: real KK_TEST_PORT matrix rejects 1431 and 1421 before Playwright starts and resolves unset/1423 to http://127.0.0.1:1423; Vite build and TypeScript typecheck passed; four target browser specs passed 16/16 with retries=0. Full browser suite/npm verify, hosted CI result, and independent review remain pending.",
     "verificationResult": "PARTIAL",
     "updated": "2026-10-10"
+  },
+  {
+    "id": "TASK-ENG-001",
+    "title": "引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定",
+    "goal": "把 hermes-agent（MIT）的 ratchet 与 footgun 扫描语义移植到本仓库 TypeScript 栈：新代码必须达标、存量只许变小、初始 advisory 不阻断 CI；同时把 workflow action 从可变 tag 固定到 commit SHA。",
+    "scope": "scripts/check-code-health.mjs、scripts/check-windows-footguns.mjs、scripts/governance/{code-health.config,code-health-measure,code-health-compare,diff-scope,footgun-rules}.mjs、package.json 脚本注册与 lint 接线、.github/workflows/{git-guards,quality}.yml SHA 固定、docs/engineering/DEVELOPMENT.md 门禁章节、docs/changes/2026-10-12-TASK-ENG-001-code-health 五件套；不含产品功能变更与存量超标代码重写。",
+    "acceptance": [
+      "超标新代码被棘轮捕获并给出文件/行/指标/上限来源；health: allow 行内豁免生效（CC、FILE_LINES、AS_ANY、EMPTY_CATCH 四类自测覆盖）",
+      "advisory 模式下 npm run lint 退出码不变；--report 输出全库存量清单",
+      "footgun 扫描只覆盖变化文件并给出 fix 指引；规则元数据目录排除后不自匹配",
+      "workflow 中 GitHub Actions 全部固定到 commit SHA 并附版本注释",
+      "DEVELOPMENT.md 记录命令表、棘轮语义、豁免语法与总开关行为；markdown:check 与治理门禁通过",
+      "账本登记、五件套齐全，governance:check 与 delivery 门禁在本 SHA 上通过"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "feat/TASK-ENG-001-code-health",
+    "worktree": "D:/kk-studio/.worktrees/TASK-ENG-001-code-health",
+    "affectedModules": [
+      "scripts/check-code-health.mjs",
+      "scripts/check-windows-footguns.mjs",
+      "scripts/governance/code-health.config.mjs",
+      "scripts/governance/code-health-measure.mjs",
+      "scripts/governance/code-health-compare.mjs",
+      "scripts/governance/diff-scope.mjs",
+      "scripts/governance/footgun-rules.mjs",
+      "package.json",
+      ".github/workflows/git-guards.yml",
+      ".github/workflows/quality.yml",
+      "docs/engineering/DEVELOPMENT.md",
+      "docs/changes/2026-10-12-TASK-ENG-001-code-health"
+    ],
+    "status": "REVIEW",
+    "priority": "P1",
+    "evidence": [
+      "docs/changes/2026-10-12-TASK-ENG-001-code-health/verification.md",
+      "docs/changes/2026-10-12-TASK-ENG-001-code-health/review.md"
+    ],
+    "verification": "本地：lint/typecheck/test/format/governance/markdown 与棘轮、footgun 自测在 worktree 基线 1f6cbd37 上 PASS；存量清单 App.tsx 3153 行、CC>20=69、EMPTY_CATCH=41（只出清单不失败）。Hosted CI 与 ui-redesign 合并后 CODING-STANDARDS 门禁表补齐为 NOT VERIFIED / 后续。",
+    "verificationResult": "PASS",
+    "updated": "2026-10-12",
+    "notes": "后续：① codex/ui-redesign-20261011 合并后把两个新门禁补进 CODING-STANDARDS.md 门禁映射表；② windows-release.yml 的 dtolnay/rust-toolchain@stable 需 SHA 固定（不在本 base）；③ advisory→blocking 翻转时机由维护者在存量 burn-down 后决定；④ hermes 功能层思路（FTS5 会话搜索、cron、subagent RPC、Honcho 用户建模）另行评估，不在本任务实现。"
   }
 ]
