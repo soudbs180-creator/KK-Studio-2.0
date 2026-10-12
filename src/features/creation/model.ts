@@ -261,32 +261,6 @@ export function emptySnapshot(): CreationSnapshot {
   };
 }
 
-export function readCreationSnapshot(): CreationSnapshot {
-  if (typeof window === "undefined") return emptySnapshot();
-  try {
-    const raw = window.localStorage.getItem(CREATION_STORAGE_KEY);
-    if (!raw) return emptySnapshot();
-    const parsed = JSON.parse(raw) as {
-      version?: number;
-      projects?: unknown[];
-      activeProjectId?: unknown;
-      revision?: number;
-      homeDraft?: unknown;
-    };
-    if (parsed.version === 1 && Array.isArray(parsed.projects)) {
-      return migrateV1(parsed);
-    }
-    if (parsed.version !== 2 || !Array.isArray(parsed.projects)) {
-      return emptySnapshot();
-    }
-    return normalizeCreationSnapshot(parsed) ?? emptySnapshot();
-  } catch {
-    // Preserve malformed data. The UI can keep working in memory and saving is
-    // deliberately attempted only after the user creates or edits a project.
-    return emptySnapshot();
-  }
-}
-
 /**
  * Normalizes snapshots at every storage boundary. IndexedDB and Tauri data do
  * not pass through localStorage migration, so accepting a shallow cast there
@@ -840,42 +814,6 @@ function normalizeProject(value: CreationProject): CreationProject {
         ? candidate.updatedAt
         : Date.now(),
   };
-}
-
-function migrateV1(parsed: {
-  projects?: unknown[];
-  activeProjectId?: unknown;
-}): CreationSnapshot {
-  const projects = (parsed.projects ?? [])
-    .filter((project): project is CreationProject =>
-      Boolean(
-        project &&
-        typeof project === "object" &&
-        typeof (project as { id?: unknown }).id === "string" &&
-        Array.isArray((project as { items?: unknown }).items),
-      ),
-    )
-    .map((project) => normalizeProject(project));
-  return {
-    version: 2,
-    revision: 0,
-    activeProjectId:
-      typeof parsed.activeProjectId === "string"
-        ? parsed.activeProjectId
-        : null,
-    projects,
-    homeDraft: emptyDraft(),
-  };
-}
-
-export function persistCreationSnapshot(snapshot: CreationSnapshot): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(CREATION_STORAGE_KEY, JSON.stringify(snapshot));
-  } catch {
-    // Quota errors are surfaced by the caller's status state. A full UI reload
-    // must never replace a valid in-memory project with an empty one.
-  }
 }
 
 export function createProject(input: CreateProjectInput): CreationProject {

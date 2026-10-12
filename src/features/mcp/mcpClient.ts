@@ -106,8 +106,12 @@ interface RpcResponse {
   error?: { code: number; message: string; data?: unknown };
 }
 
+/** Monotonic per-tab sequence: unique ids with no collision risk, so a late
+ * response can never be matched to the wrong request. */
+let jsonRpcSequence = 0;
 function jsonRpcId(): number {
-  return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+  jsonRpcSequence = (jsonRpcSequence + 1) % Number.MAX_SAFE_INTEGER;
+  return jsonRpcSequence;
 }
 
 function parseSseMessages(text: string): unknown[] {

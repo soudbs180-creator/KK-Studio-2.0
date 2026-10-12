@@ -22,6 +22,28 @@ export type ProviderFailureClass =
   | "network"
   | "cancelled";
 
+/** Failure classes that mean the connection itself is unhealthy, so task
+ * endings report them to the provider registry. Kept in one place because the
+ * success and error paths of task execution must classify identically. */
+export const UNHEALTHY_PROVIDER_FAILURE_CLASSES = [
+  "rate_limited",
+  "unauthorized",
+  "forbidden",
+  "provider_unavailable",
+  "network",
+] as const;
+
+export type UnhealthyProviderFailureClass =
+  (typeof UNHEALTHY_PROVIDER_FAILURE_CLASSES)[number];
+
+export function isUnhealthyProviderFailure(
+  failureClass: ProviderFailureClass,
+): failureClass is UnhealthyProviderFailureClass {
+  return (UNHEALTHY_PROVIDER_FAILURE_CLASSES as readonly string[]).includes(
+    failureClass,
+  );
+}
+
 /** A safe, structured provider error. Response bodies are intentionally not retained. */
 export class GenerationProviderError extends Error {
   readonly status: number;

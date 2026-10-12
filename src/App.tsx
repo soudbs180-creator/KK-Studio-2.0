@@ -66,6 +66,11 @@ import {
 } from "./features/agent/orchestrator.ts";
 import type { AgentCanvasBinding } from "./components/canvas/useAgentCanvasView";
 
+/** Native TaskHost requests time out on the Rust side; this bound only stops
+ * the UI from polling forever if a record somehow stays "submitted". Exceeding
+ * it downgrades to the same "unknown" state used for lost receipts. */
+const NATIVE_POLL_MAX_MS = 10 * 60 * 1000;
+
 function outputsForTask(task: CreationTask): CreationTaskOutput[] {
   const completed = new Set(
     task.completedOutputIndices?.length
@@ -92,6 +97,7 @@ function outputsForTask(task: CreationTask): CreationTaskOutput[] {
 import {
   generateImages,
   GenerationProviderError,
+  isUnhealthyProviderFailure,
 } from "./features/creation/imageGeneration";
 import {
   storeGeneratedAsset,
@@ -220,9 +226,22 @@ export default function App() {
   const [settingsSection, setSettingsSection] =
     useState<SettingsSection>("general");
   const sidebar = useSidebarLayout();
+  // Track the 960px threshold with its own media query: useSidebarLayout only
+  // re-renders at the 767/1200 surface breakpoints, so resizing inside the
+  // tablet band would otherwise leave the cover decision stale.
+  const [narrowTablet, setNarrowTablet] = useState(
+    () =>
+      typeof window !== "undefined" && matchMedia("(max-width: 959px)").matches,
+  );
+  useEffect(() => {
+    const media = matchMedia("(max-width: 959px)");
+    const change = (): void => setNarrowTablet(media.matches);
+    media.addEventListener("change", change);
+    return () => media.removeEventListener("change", change);
+  }, []);
   const chatCoversCanvas =
     sidebar.surface === "phone" ||
-    (sidebar.surface === "tablet" && window.innerWidth < 960);
+    (sidebar.surface === "tablet" && narrowTablet);
   const [chat, setChat] = useState(true);
   const [mobileChat, setMobileChat] = useState(false);
   const [assets, setAssets] = useState(initialAssets);
@@ -981,6 +1000,20 @@ export default function App() {
           const recordOutputs = new Map(
             record.outputs.map((output) => [output.index, output]),
           );
+          // A durable archive copy outranks a missing or failed receipt: the
+          // provider result already reached local storage, so restore the
+          // succeeded state instead of reporting the receipt gap.
+          const restoreFromEvidence = (
+            output: CreationTaskOutput,
+            priorOutput: CreationTaskOutput,
+          ): boolean => {
+            if (!hasArchivedOutputEvidence(task, priorOutput)) return false;
+            output.status = "succeeded";
+            output.assetId = priorOutput.assetId;
+            output.text = priorOutput.text;
+            output.error = undefined;
+            return true;
+          };
           for (const output of outputs) {
             const nativeOutput = recordOutputs.get(output.index);
             if (!nativeOutput) {
@@ -998,25 +1031,15 @@ export default function App() {
             const priorOutput = { ...output };
             if (
               nativeOutput.status === "unknown" &&
-              hasArchivedOutputEvidence(task, priorOutput)
-            ) {
-              output.status = "succeeded";
-              output.assetId = priorOutput.assetId;
-              output.text = priorOutput.text;
-              output.error = undefined;
+              restoreFromEvidence(output, priorOutput)
+            )
               continue;
-            }
             const missingText =
               task.kind === "text" &&
               nativeOutput.status === "succeeded" &&
               !nativeOutput.text?.trim();
-            if (missingText && hasArchivedOutputEvidence(task, priorOutput)) {
-              output.status = "succeeded";
-              output.assetId = priorOutput.assetId;
-              output.text = priorOutput.text;
-              output.error = undefined;
+            if (missingText && restoreFromEvidence(output, priorOutput))
               continue;
-            }
             output.status =
               nativeOutput.status === "pending"
                 ? "running"
@@ -1032,26 +1055,15 @@ export default function App() {
             }
             if (
               nativeOutput.status === "failed" &&
-              hasArchivedOutputEvidence(task, priorOutput)
-            ) {
-              output.status = "succeeded";
-              output.assetId = priorOutput.assetId;
-              output.text = priorOutput.text;
-              output.error = undefined;
+              restoreFromEvidence(output, priorOutput)
+            )
               continue;
-            }
             if (
               task.kind !== "text" &&
               nativeOutput.status === "succeeded" &&
               !nativeOutput.assetId
             ) {
-              if (hasArchivedOutputEvidence(task, priorOutput)) {
-                output.status = "succeeded";
-                output.assetId = priorOutput.assetId;
-                output.text = priorOutput.text;
-                output.error = undefined;
-                continue;
-              }
+              if (restoreFromEvidence(output, priorOutput)) continue;
               output.status = "unknown";
               output.error = "原生任务完成但未返回该输出的素材标识。";
               continue;
@@ -1060,13 +1072,7 @@ export default function App() {
               record.status === "succeeded" &&
               nativeOutput.status === "pending"
             ) {
-              if (hasArchivedOutputEvidence(task, priorOutput)) {
-                output.status = "succeeded";
-                output.assetId = priorOutput.assetId;
-                output.text = priorOutput.text;
-                output.error = undefined;
-                continue;
-              }
+              if (restoreFromEvidence(output, priorOutput)) continue;
               output.status = "unknown";
               output.error = "原生任务完成但该输出没有终态回执。";
               continue;
@@ -1075,13 +1081,7 @@ export default function App() {
               record.status === "failed" &&
               nativeOutput.status === "pending"
             ) {
-              if (hasArchivedOutputEvidence(task, priorOutput)) {
-                output.status = "succeeded";
-                output.assetId = priorOutput.assetId;
-                output.text = priorOutput.text;
-                output.error = undefined;
-                continue;
-              }
+              if (restoreFromEvidence(output, priorOutput)) continue;
               output.status = "failed";
               output.error =
                 record.failure ?? "原生任务失败但该输出没有终态回执。";
@@ -1091,13 +1091,7 @@ export default function App() {
               record.status === "unknown" &&
               nativeOutput.status === "pending"
             ) {
-              if (hasArchivedOutputEvidence(task, priorOutput)) {
-                output.status = "succeeded";
-                output.assetId = priorOutput.assetId;
-                output.text = priorOutput.text;
-                output.error = undefined;
-                continue;
-              }
+              if (restoreFromEvidence(output, priorOutput)) continue;
               output.status = "unknown";
               output.error =
                 record.failure ?? "原生任务输出回执状态不明，请先核对供应商。";
@@ -1265,6 +1259,7 @@ export default function App() {
           return;
         }
         nativeRecord = await applyNativeRecord(nativeRecord);
+        const pollDeadline = Date.now() + NATIVE_POLL_MAX_MS;
         while (nativeRecord.status === "submitted") {
           if (controller.signal.aborted) {
             if (nativeCancelRequested.current.has(taskId)) {
@@ -1277,6 +1272,15 @@ export default function App() {
               return;
             }
             throw new Error("任务已停止。");
+          }
+          if (Date.now() > pollDeadline) {
+            await applyNativeRecord({
+              ...nativeRecord,
+              status: "unknown",
+              failure:
+                "原生任务等待回执已超过上限，请先核对供应商；不会自动重复提交。",
+            });
+            return;
           }
           await new Promise((resolve) => window.setTimeout(resolve, 500));
           nativeRecord = (await getNativeTask(task.id)) ?? {
@@ -1525,21 +1529,10 @@ export default function App() {
         const failure = generated.failure;
         if (
           failure instanceof GenerationProviderError &&
-          [
-            "rate_limited",
-            "unauthorized",
-            "forbidden",
-            "provider_unavailable",
-            "network",
-          ].includes(failure.failureClass)
+          isUnhealthyProviderFailure(failure.failureClass)
         )
           markProviderConnectionFailure(task.providerConnectionId, {
-            kind: failure.failureClass as
-              | "rate_limited"
-              | "unauthorized"
-              | "forbidden"
-              | "provider_unavailable"
-              | "network",
+            kind: failure.failureClass,
             retryAfterSeconds: failure.retryAfterSeconds,
           });
         else if (
@@ -1625,21 +1618,10 @@ export default function App() {
         reservation &&
         !controller.signal.aborted &&
         error instanceof GenerationProviderError &&
-        [
-          "rate_limited",
-          "unauthorized",
-          "forbidden",
-          "provider_unavailable",
-          "network",
-        ].includes(error.failureClass)
+        isUnhealthyProviderFailure(error.failureClass)
       ) {
         markProviderConnectionFailure(task.providerConnectionId, {
-          kind: error.failureClass as
-            | "rate_limited"
-            | "unauthorized"
-            | "forbidden"
-            | "provider_unavailable"
-            | "network",
+          kind: error.failureClass,
           retryAfterSeconds: error.retryAfterSeconds,
         });
       }
@@ -1652,6 +1634,9 @@ export default function App() {
       }
       if (taskControllers.current[taskId] === controller)
         delete taskControllers.current[taskId];
+      // The record only guards in-flight cancellation; drop it at termination
+      // so the map cannot grow with every task of a long session.
+      delete nativeTaskRecords.current[taskId];
       if (task.imageEdit && !controller.signal.aborted) {
         const latest = creationRef.current.projects.find(
           (p) => p.id === projectId,
@@ -1990,8 +1975,7 @@ export default function App() {
     const activeTask = original?.tasks.find(
       (task) => task.status === "queued" || task.status === "running",
     );
-    const requestModel =
-      request.origin === "canvas" ? request.input.model : request.input.model;
+    const requestModel = request.input.model;
     let effectivePrompt = request.input.prompt;
     if (request.origin === "canvas" && request.input.imageEdit) {
       try {

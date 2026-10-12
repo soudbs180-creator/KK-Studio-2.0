@@ -110,6 +110,24 @@ fn safe_provider_request_error() -> String {
     "请求失败：无法连接模型服务，请检查地址和网络。".to_string()
 }
 
+/// Provider endpoints must not be able to hang a desktop command forever.
+/// Streaming uses its own client because reqwest's total-request timeout
+/// would cut long streams; non-streaming calls get a hard total bound here.
+fn provider_http_client(total_timeout: std::time::Duration) -> reqwest::Client {
+    reqwest::Client::builder()
+        .connect_timeout(std::time::Duration::from_secs(10))
+        .timeout(total_timeout)
+        .build()
+        .unwrap_or_default()
+}
+
+fn streaming_http_client() -> reqwest::Client {
+    reqwest::Client::builder()
+        .connect_timeout(std::time::Duration::from_secs(10))
+        .build()
+        .unwrap_or_default()
+}
+
 // ========== 对话结构 ==========
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -616,7 +634,13 @@ async fn test_connection(
     api_key: String,
     model: Option<String>,
 ) -> Result<TestResult, String> {
-    test_connection_with_client(reqwest::Client::new(), base_url, api_key, model).await
+    test_connection_with_client(
+        provider_http_client(std::time::Duration::from_secs(60)),
+        base_url,
+        api_key,
+        model,
+    )
+    .await
 }
 
 async fn test_connection_with_client(
@@ -972,7 +996,7 @@ async fn chat_completion(
         return Err("API Key 未配置，请在设置中填写".to_string());
     }
 
-    let client = reqwest::Client::new();
+    let client = provider_http_client(std::time::Duration::from_secs(120));
     let response = client
         .post(format!("{}/chat/completions", base_url))
         .header("Content-Type", "application/json")
@@ -1040,7 +1064,9 @@ async fn chat_completion_stream(
         return Err("API Key 未配置".to_string());
     }
 
-    let client = reqwest::Client::new();
+    // No total-request timeout: a stream may run for minutes. Idle gaps are
+    // bounded per chunk below instead.
+    let client = streaming_http_client();
 
     let response = client
         .post(format!("{}/chat/completions", base_url))
@@ -1079,8 +1105,28 @@ async fn chat_completion_stream(
     // would permanently replace streamed Chinese text with replacement glyphs.
     let mut buffer: Vec<u8> = Vec::new();
     let mut full_content = String::new();
+    // A silent provider must not hang the desktop session forever: bound the
+    // gap between chunks, not the total stream duration.
+    let stream_idle_timeout = std::time::Duration::from_secs(120);
 
-    while let Some(chunk_result) = stream.next().await {
+    while let Some(chunk_result) =
+        match tokio::time::timeout(stream_idle_timeout, stream.next()).await {
+            Ok(item) => item,
+            Err(_) => {
+                let err_msg = "流式响应超时，请重试。".to_string();
+                let _ = app.emit(
+                    "chat_chunk",
+                    ChatChunkEvent {
+                        conversation_id: conversation_id.clone(),
+                        content: String::new(),
+                        done: true,
+                        error: Some(err_msg),
+                    },
+                );
+                return Err("流读取超时".to_string());
+            }
+        }
+    {
         let chunk = match chunk_result {
             Ok(c) => c,
             Err(_) => {
@@ -1204,7 +1250,7 @@ async fn comfyui_queue_prompt(
 ) -> Result<String, String> {
     let config = state.config.lock().unwrap().clone();
     let url = format!("{}/prompt", config.comfyui_url.trim_end_matches('/'));
-    let client = reqwest::Client::new();
+    let client = provider_http_client(std::time::Duration::from_secs(30));
     let response = client
         .post(&url)
         .json(&serde_json::json!({ "prompt": workflow }))
@@ -1235,7 +1281,7 @@ async fn comfyui_get_history(
         config.comfyui_url.trim_end_matches('/'),
         prompt_id
     );
-    let client = reqwest::Client::new();
+    let client = provider_http_client(std::time::Duration::from_secs(30));
     let response = client
         .get(&url)
         .send()

@@ -1,3 +1,14 @@
+## 2026-10-12 代码审查问题清单第一批修复（Web/Desktop 2.1.13）
+
+- 依据全库静态审查清单实施第一批低风险修复，行为语义保持不变：
+  - `src/features/creation/model.ts`：删除被 `storage.ts` 取代的死代码 `readCreationSnapshot` / `persistCreationSnapshot` / `migrateV1`（无调用方，且旧写路径绕过 revision 冲突检测）。
+  - `src/App.tsx`：修复 `submitImageCommand` 中两分支相同的死三元（原 L1994）；`applyNativeRecord` 内 7 处重复的“按已归档证据恢复”块提取为 `restoreFromEvidence`；原生任务轮询增加 10 分钟上限，超时降级为既有“受理状态不明”语义；任务终态清理 `nativeTaskRecords` 条目；平板区间 960px 判断改为独立 `matchMedia` 监听，修复仅拖动窗口宽度时聊天覆盖判断不刷新。
+  - `src/features/creation/imageGeneration.ts`：导出 `UNHEALTHY_PROVIDER_FAILURE_CLASSES` 与 `isUnhealthyProviderFailure`，消除 `App.tsx` 两处重复的失败类列表与类型断言。
+  - `src/features/mcp/mcpClient.ts`：JSON-RPC 请求 ID 由 `Math.random()` 改为单调计数器，消除碰撞错配响应的隐患。
+  - `src-tauri/src/main.rs`：`test_connection`/`chat_completion` 增加连接与总超时；`chat_completion_stream` 增加连接超时与 120 秒块间空闲超时（不限总时长）；`comfyui_queue_prompt`/`comfyui_get_history` 增加 30 秒超时，与既有 `comfyui_check_connection` 对齐。
+- 验证：`npx tsc --noEmit` 通过；`node --test tests/unit/*.test.ts tests/deploy/*.test.mjs` 830 项（824 pass / 0 fail / 6 平台跳过）；`npm run lint`（含 version:check、治理、功能账本、Markdown 门禁）与 `prettier --check` 通过。Rust 侧沙箱无法访问 crates.io，未运行 `cargo check`，改动为局部超时包装，需在有 Rust 工具链的环境补验。
+- 范围外保持原状：`App.tsx` 拆分（建议按项目 SDLC 单独立任务）、非 Windows 凭据支持、`Math.random()` 任务 ID 统一等，见审查清单后续批次。
+
 ## 2026-10-10 TASK-FIX-PUSH-GUARD-SPACES-001 Windows long-path guard replay (REVIEW / NOT VERIFIED)
 
 - Replayed the scoped PR49 fix onto current origin/main 7736c99bd5e900e7c5cd8a36663aadcb45326143; final pushed candidate is 3a7467825b85f66a7f4e409f8296e16ca2249516.
