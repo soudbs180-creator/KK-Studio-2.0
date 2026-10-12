@@ -43,7 +43,7 @@ export function checkDeliveryFiles(
   changed,
   exists,
   baseExists = () => false,
-  { headLedger, baseLedger, branch } = {},
+  { headLedger, baseLedger, branch, isLegacyExempt = () => false } = {},
 ) {
   const issues = [];
   const normalized = [...new Set(changed)];
@@ -73,12 +73,13 @@ export function checkDeliveryFiles(
   for (const name of packages) {
     const prefix = `docs/changes/${name}/`;
     const isNew = newPackages.includes(name);
-    if (isNew) {
+    const isExempt = isNew && isLegacyExempt(name);
+    if (isNew && !isExempt) {
       for (const requiredUpdate of REQUIRED_ARTIFACTS)
         if (!normalized.includes(`${prefix}${requiredUpdate}`))
           issues.push(`New change package ${name} must add ${requiredUpdate}.`);
     }
-    if (isNew) {
+    if (isNew && !isExempt) {
       const missing = REQUIRED_ARTIFACTS.filter(
         (file) => !exists(`${prefix}${file}`),
       );
@@ -97,7 +98,9 @@ export function checkDeliveryFiles(
         JSON.stringify(task),
       ]),
     );
-    for (const name of newPackages) {
+    for (const name of newPackages.filter(
+      (packageName) => !isLegacyExempt(packageName),
+    )) {
       const evidence = `docs/changes/${name}/verification.md`;
       const bound = (Array.isArray(headTasks) ? headTasks : []).some((task) => {
         if (!task || !task.id || previous.get(task.id) === JSON.stringify(task))

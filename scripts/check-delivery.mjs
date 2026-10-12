@@ -51,26 +51,29 @@ try {
   } catch {
     ledgerError = "Cannot read task ledger at both base and HEAD.";
   }
-  const issues = checkDeliveryFiles(
-    changed,
-    (file) => {
-      try {
-        git(["cat-file", "-e", `${head}:${file}`]);
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    (file) => {
-      try {
-        git(["cat-file", "-e", `${base}:${file}`]);
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    { headLedger, baseLedger, branch },
-  );
+  const headExists = (file) => {
+    try {
+      git(["cat-file", "-e", `${head}:${file}`]);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+  const baseExists = (file) => {
+    try {
+      git(["cat-file", "-e", `${base}:${file}`]);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+  const issues = checkDeliveryFiles(changed, headExists, baseExists, {
+    isLegacyExempt: (name) =>
+      headExists(`docs/changes/${name}/legacy-incomplete.md`),
+    headLedger,
+    baseLedger,
+    branch,
+  });
   if (ledgerError) issues.push(ledgerError);
   issues.forEach((issue) => console.error(issue));
   console.log(

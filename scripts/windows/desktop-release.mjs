@@ -91,13 +91,11 @@ function readJson(filePath) {
 
 function isLinkedPath(filePath) {
   try {
-    const stats = fs.lstatSync(filePath);
-    if (stats.isSymbolicLink()) return true;
-    const absolute = path.resolve(filePath);
-    const resolved = path.resolve(fs.realpathSync.native(filePath));
-    return process.platform === "win32"
-      ? resolved.toLowerCase() !== absolute.toLowerCase()
-      : resolved !== absolute;
+    // realpath() may return a different but equivalent spelling on Windows
+    // (for example an 8.3 path). Only lstat() tells us whether the directory
+    // entry itself is a symlink/junction; comparing path spellings creates
+    // false positives for ordinary directories on hosted runners.
+    return fs.lstatSync(filePath).isSymbolicLink();
   } catch {
     return false;
   }

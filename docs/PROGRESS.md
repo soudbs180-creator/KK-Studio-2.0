@@ -1,5 +1,12 @@
 # 当前进度
 
+## 2026-10-12 PR #55 历史快照集成修复（REVIEW）
+
+- `TASK-GOV-005` 已登记为一次性历史快照修复任务：保留 PR #55 的 128 提交/424 文件逐项证据，不把跨任务历史成果伪装成新的单任务交付。
+- 历史交付包仅在包内明确写入 `legacy-incomplete.md` 时获得有限豁免；同一变更中的新修复包仍必须具备五件套并绑定当前台账任务。
+- Windows `desktopRelease` 的链接判定改为直接读取 `lstat().isSymbolicLink()`，避免 hosted runner 的 8.3/realpath 等价路径误报普通 `node_modules`；真实 symlink/junction 仍拒绝。
+- 本节在本地定向测试、独立 exact-SHA review 和 Hosted `verify`/`delivery` 回执完成前保持 `REVIEW/NOT_VERIFIED`；不代表 PR #55 已合并、客户端已发布或 Hermes 已集成。
+
 ## 2026-10-12 分支收敛 P0-P1：规则门禁入主线 + 100 分支全量分类
 
 - P0 完成：`c8807d3e` 提交规则收敛（31 文件）经 `77d42c7b` 同步基线后合入 main `8915b6ae`；TASK-GOV-003 登记 DONE；`pnpm-lock.yaml` 移出 output/；merge-ui-main 工作区在途的 CSS 清理与 test 基建保全至 `wip/ui-governance-css-cleanup-20261012`（未登记，待处置）。
