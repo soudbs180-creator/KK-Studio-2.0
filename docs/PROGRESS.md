@@ -1,5 +1,13 @@
 # 当前进度
 
+## 2026-10-12 分支收敛 P0-P1：规则门禁入主线 + 100 分支全量分类
+
+- P0 完成：`c8807d3e` 提交规则收敛（31 文件）经 `77d42c7b` 同步基线后合入 main `8915b6ae`；TASK-GOV-003 登记 DONE；`pnpm-lock.yaml` 移出 output/；merge-ui-main 工作区在途的 CSS 清理与 test 基建保全至 `wip/ui-governance-css-cleanup-20261012`（未登记，待处置）。
+- P1 完成：100 个未合并分支逐项只读核验，分类表 `docs/changes/2026-10-12-branch-consolidation/branch-classification.md`——**已完成 27 · 完成一半 68 · 未完成 4 · 无法判定 1**；测量工具 `scripts/governance/branch-audit.mjs` 可复现。
+- 关键判定：10 个 PR 已集成分支登记禁合并（台账已加注释）；2 组同树孪生分支；1 个无共同祖先历史备份；58 个分支无远端副本。
+- 门禁：governance 122 tasks 0 violations；lint/typecheck/delivery:check 全绿；npm test 8 失败为已记录的 symlink 环境性既有失败（PRE-EXISTING）。
+- 下一步：P2 家族收敛 ×11 → B2/B3/B4 合并 → B5 UI-012 两步收敛（已授权）；合并停在本地 main 不推远端。
+
 ## 2026-10-12 分支收敛启动：规则门禁提交与 B1+B2 绑定
 
 - `TASK-GOV-003`（B1+B2 规则体系收敛）登记为 DONE/PASS：UI_INDEX 覆盖补齐、ADR 编号去重归并至唯一目录、3 个文档门禁中 2 个接入 lint；交付包 `2026-10-11-rules-restructure` 五件套随本次提交进入版本控制。

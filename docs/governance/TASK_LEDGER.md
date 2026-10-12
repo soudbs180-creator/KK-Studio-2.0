@@ -13,11 +13,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-DESKTOP-FLUSH-001 | 桌面关闭前耐久保存与失败留窗 | DONE | 已完成 | P1 | TASK-PLUGIN-DEV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PLUGIN-MARKDOWN-001 | 随包Markdown去除CDN代码依赖与离线渲染 | DONE | 已完成 | P1 | TASK-PLUGIN-DEV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PLUGIN-RECOVERY-001 | 插件节点快照完整恢复与坏数据保护 | DONE | 已完成 | P1 | TASK-PLUGIN-DEV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | DONE | 已完成 | P3 | TASK-MODEL-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
+| TASK-IMAGE-EDIT-001 | 统一图片编辑蒙版与连续重绘 | DONE | 已完成 | P3 | TASK-MODEL-001 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-IMAGE-EDIT-001-unified-mask 已通过 PR#41 8c921a52 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-IMAGE-EDIT-VERIFY-002 | 图片编辑真实模型与移动设备效果验收 | TODO | 未完成 | P1 | TASK-IMAGE-EDIT-001 | root | 冻结新增实现，等待明确供应商/账号授权与物理手机；条件满足后先做单张Mask原件保护和映射边界，再做手机手势/键盘与用户视觉验收。 |
-| TASK-UI-013 | 桌面标题栏与菜单合并为单排 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
+| TASK-UI-013 | 桌面标题栏与菜单合并为单排 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线；分支 fix/TASK-UI-013-single-row-titlebar 已通过 PR#40 1d6f640a 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-LAUNCH-001 | 桌面与网页启动体验及图标修复 | DONE | 已完成 | P3 | none | root | 保留当前证据；正式安装器、签名发布、托管 CI 与用户验收按各自门禁继续回读 |
-| TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
+| TASK-MODEL-001 | 账号级图片模型能力声明与提交校验 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-MODEL-001-capabilities 已通过 PR#36 1af0357b 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-PLUGIN-DEV-001 | 修复 Vite development 随包插件 public import 错误 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | T0 | 可复现候选源码与主线整合 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-GOV-001 | 治理源、ESLint、架构门禁和 CI | DONE | 已完成 | P3 | T0 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -27,7 +27,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | T3a | 原生素材及引用最终验收 | DONE | 已完成 | P3 | T1, T2 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | T3b | 完整项目包导出导入与恢复 | DONE | 已完成 | P3 | T3a | root | 保留当前证据，合并后按原验收范围回读主线 |
 | T4 | 统一实际图片生成入口及健康语义 | DONE | 已完成 | P3 | T3b, TASK-PROV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| T5 | 持久本地 TaskHost 与未知受理恢复 | DONE | 已完成 | P3 | T4 | root | 保留当前证据，合并后按原验收范围回读主线 |
+| T5 | 持久本地 TaskHost 与未知受理恢复 | DONE | 已完成 | P3 | T4 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/T5-native-lifecycle 已通过 PR#37 78cea37a 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | T6 | Desktop ComfyUI最小链实现 | PARTIAL | 进行中 | P2 | T5 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | EXT-PROVIDER | 真实 Provider/GPU 生成验收 | BLOCKED | 未完成 | P2 | T4 | root | 复核阻塞条件，解除后重新验证并保留原失败证据 |
 | EXT-COMFY | 真实 ComfyUI/模型验收 | BLOCKED | 未完成 | P2 | T6 | root | 复核阻塞条件，解除后重新验证并保留原失败证据 |
@@ -83,13 +83,13 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | REL-2.1.0 | 2.1.0 本地集成与源码上传 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-RULES-004 | 现行规则与 Markdown 一致性审计 | DONE | 已完成 | P3 | REL-2.1.0 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-DOCS-HISTORY-001 | 历史 Markdown 链接与缺失日志勘误 | DONE | 已完成 | P1 | TASK-RULES-004 | root | 保留dc53317b exact review收据与8个未验证日志边界；如后续获得原始日志，再以新证据包单独勘误。 |
-| TASK-ORCH-001 | Agent 编排领域状态机与编排器工具面 | DONE | 已完成 | P3 | TASK-AGENT-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-ORCH-002 | TaskWorkbench 阶段计划视图与审批交互 | DONE | 已完成 | P3 | TASK-ORCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
+| TASK-ORCH-001 | Agent 编排领域状态机与编排器工具面 | DONE | 已完成 | P3 | TASK-AGENT-001 | root | 保留当前证据，合并后按原验收范围回读主线；分支 feat/TASK-ORCH-001-agent-orchestration-closure 已通过 PR#14 f6264385 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
+| TASK-ORCH-002 | TaskWorkbench 阶段计划视图与审批交互 | DONE | 已完成 | P3 | TASK-ORCH-001 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-ORCH-002-stage-workbench 已通过 PR#35 5dd6e6dd 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-ORCH-003 | 编排器驱动生成执行与计划门禁 | TODO | 未完成 | P2 | TASK-ORCH-001, BACKEND-MEDIA-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | 进行中 | P2 | TASK-ORCH-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | 进行中 | P2 | TASK-AGENT-001 | root | 提交后绑定 exact SHA 完成正式独立复审；随后补真实 Provider/每平台运行证据，不能用 fixture 或示例单价升级 DONE。 |
 | TASK-TASKSTATE-002 | 供应商成本报价回执接入 | PARTIAL | 进行中 | P1 | TASK-TASKSTATE-001 | root | 提交后绑定 exact SHA 完成正式独立 review；再由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。 |
-| TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
+| TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线；分支 feat/TASK-PROV-002-provider-connectivity 已通过 PR#16 a89792ad 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-COMPARE-001 | 画布图片对比操作 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | DONE | 已完成 | P3 | TASK-COMPARE-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-VERSION-001 | 桌面/Web/Mobile 独立版本源与自动递增 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -100,9 +100,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-HOME-002 | 首页与对话输入区剩余设计反馈收口 | DONE | 已完成 | P3 | TASK-UI-CANVAS-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-GOV-003 | 新版 Figma 四页治理基线与 UI 模板收口 | DONE | 已完成 | P3 | TASK-UI-HOME-002 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-CANVAS-KAWORKAI-001 | Kaworkai 无限画布交互研究与本地画布增强 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-PROJECT-001 | 项目落地与分支收敛 | DONE | 已完成 | P3 | TASK-UI-GOV-003, TASK-CANVAS-KAWORKAI-001, TASK-LOCAL-SERVICE-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
+| TASK-PROJECT-001 | 项目落地与分支收敛 | DONE | 已完成 | P3 | TASK-UI-GOV-003, TASK-CANVAS-KAWORKAI-001, TASK-LOCAL-SERVICE-001 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-PROJECT-001-landing-integration 已通过 PR#31 bd3bc668 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-UI-010 | 现行 UI 规则与真实操作回归 | DONE | 已完成 | P3 | TASK-UI-008, TASK-AGENT-003 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | PARTIAL | 进行中 | P2 | TASK-UI-010 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
+| TASK-PROJECT-SIDEBAR-001 | 侧栏项目列表与真实项目数据统一 | PARTIAL | 进行中 | P2 | TASK-UI-010 | root | 按验收条件完成实现、验证、独立审查和文档同步；分支 codex/TASK-PROJECT-001-landing-integration 已通过 PR#31 bd3bc668 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-PROV-003 | Codex Provider 配置注入与 model catalog 落盘（agent 侧接线） | PARTIAL | 进行中 | P2 | TASK-PROV-002 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
 | TASK-PROV-004 | Claude Code settings.json 落盘（agent 侧接线） | PARTIAL | 进行中 | P2 | TASK-PROV-002, TASK-PROV-003 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
 | TASK-AGENT-004 | Google Interactions 对话和生图 | PARTIAL | 进行中 | P2 | TASK-AGENT-003 | root | 按验收条件完成实现、验证、独立审查和文档同步 |
@@ -111,12 +111,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-MEMORY-002 | 跨产品共享本地记忆（本机共享） | PARTIAL | 进行中 | P2 | TASK-MEMORY-001 | MainAgent | 按验收条件完成实现、验证、独立审查和文档同步 |
 | TASK-AGENT-007 | Codex 通过本机 CodeBuddy CLI 受限委派短文本 | DONE | 已完成 | P3 | TASK-AGENT-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-DESKTOP-INSTALLER-001 | Windows NSIS 安装器及隔离恢复验收 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-AGENT-008 | Codex 原生生图事件传输与短提示词审计 | DONE | 已完成 | P3 | TASK-AGENT-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
+| TASK-AGENT-008 | Codex 原生生图事件传输与短提示词审计 | DONE | 已完成 | P3 | TASK-AGENT-001 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-AGENT-008-image-transport 已通过 PR#33 21d121d2 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-ORCH-REPLAN-001 | 编排计划失败项重排与依赖闭包 | DONE | 已完成 | P3 | TASK-ORCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-AUDIT-20261003 | 全项目任务盘点与可本地闭环项收口 | DONE | 已完成 | P3 | TASK-MCP-REGISTRY-001, TASK-MCP-REGISTRY-002, TASK-MCP-PROTO-001, TASK-ORCH-REPLAN-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-GOV-GOALS-001 | 项目建设目标与验收基线 | DONE | 已完成 | P3 | TASK-AUDIT-20261003 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-UI-COMPONENT-BOUNDARY-001 | MCP 设置组件职责拆分 | DONE | 已完成 | P3 | TASK-GOV-GOALS-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | 已完成 | P1 | T2, TASK-UI-GOV-003 | root | 保留当前证据，合并后按原验收范围回读主线 |
+| TASK-UI-011 | 图片选择工具栏与新增页面 UI 规则回归 | DONE | 已完成 | P1 | T2, TASK-UI-GOV-003 | root | 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-UI-011-image-selection-actions 已通过 PR#39 f922cf8e 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PROV-007 | Selected model is at capacity 错误分类与可用模型切换 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -128,6 +128,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-UI-015 | 画布点状/网状背景缩放插值修正 | DONE | 已完成 | P2 | none | root | 保留当前证据；主线回读完成 |
 | TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | REVIEW | 进行中 | P1 | TASK-LAUNCH-001 | root | 在合并候选 SHA 上回读 hosted CI、发布 receipt，并在第二环境安装后校验版本/commit/hash/进程路径 |
 | TASK-GOV-003 | 规则体系收敛与文档同步门禁（B1+B2） | DONE | 已完成 | P1 | none | root | B3（AI_HANDOFF 瘦身）、B4（worktree/二进制收敛）、B5（交付包补齐）待用户授权后按批次执行 |
+| TASK-GOV-004 | 未合并分支全量核验、分类与收敛合并 | PARTIAL | 进行中 | P1 | TASK-GOV-003 | root | P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -277,7 +278,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/image-edit, src/features/creation, src/components/nodes, src/App.tsx, src-tauri/src/task_host.rs, tests, docs
 - Verification: PASS — 最新main1d组合27b/eaa本地实现scope完成：完整verify785Node/172Agent（原skip8/2）、445browser445attempts零retry/flaky、102Rust/fmt/clientcheck/fresh Agent EXE；native Mask外0/重启/包/undo/临时凭据清理，UI13/TaskHost11/模型/titlebar/首屏和生产Web3宽度通过；MASK-INTEGRATION-001定位歧义修复且当前独立关闭。104上游task对象保留，当前源码与运行审查通过并保留后续项。开发插件另归TASK-PLUGIN-DEV-001，开发其余UI只在留证收起遮罩后局部验收；真实效果/手机/用户验收归VERIFY-002。原失败日志与各未验边界详见本task当前verification/review；最终docs/Hosted/普通合并/main CI另按实际回读。
 - Evidence: [docs/changes/2026-10-08-unified-image-mask/intent.md](../../docs/changes/2026-10-08-unified-image-mask/intent.md), [docs/changes/2026-10-08-unified-image-mask/spec.md](../../docs/changes/2026-10-08-unified-image-mask/spec.md), [docs/changes/2026-10-08-unified-image-mask/plan.md](../../docs/changes/2026-10-08-unified-image-mask/plan.md), [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/changes/2026-10-08-unified-image-mask/review.md](../../docs/changes/2026-10-08-unified-image-mask/review.md), [docs/changes/2026-10-09-unified-mask-main-integration/intent.md](../../docs/changes/2026-10-09-unified-mask-main-integration/intent.md), [docs/changes/2026-10-09-unified-mask-main-integration/spec.md](../../docs/changes/2026-10-09-unified-mask-main-integration/spec.md), [docs/changes/2026-10-09-unified-mask-main-integration/plan.md](../../docs/changes/2026-10-09-unified-mask-main-integration/plan.md), [docs/changes/2026-10-09-unified-mask-main-integration/verification.md](../../docs/changes/2026-10-09-unified-mask-main-integration/verification.md), [docs/changes/2026-10-09-unified-mask-main-integration/review.md](../../docs/changes/2026-10-09-unified-mask-main-integration/review.md)
-- Next action: 保留当前证据，合并后按原验收范围回读主线
+- Next action: 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-IMAGE-EDIT-001-unified-mask 已通过 PR#41 8c921a52 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）
 - Last verified: 2026-10-09
 - Updated: 2026-10-09
 
@@ -315,7 +316,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/TopBar.tsx, src/components/WindowControls.tsx, src/styles/desktop-titlebar.css, src-tauri, tests, docs
 - Verification: PASS — 最新2cb主线组合86e：AC1–3 PASS、7条故障RED→GREEN、verify733Node/172Agent（原skip8/2）、431browser431attempts零flaky/retry/skip、97Rust/fmt/clientcheck/fresh带Agent release；真实titlebar drag/min/max/restore/close0，UI13/T511/模型/首屏及Web两态3宽度PASS，独立关闭001/002。103上游task保留；同EXE2e69...1a5f，环境not-recorded。最终doc/Hosted/PR40合并/mainCI须独立回读，不冒充签名安装/真实Provider/Mobile能力。
 - Evidence: [docs/changes/2026-10-08-single-row-titlebar/intent.md](../../docs/changes/2026-10-08-single-row-titlebar/intent.md), [docs/changes/2026-10-08-single-row-titlebar/spec.md](../../docs/changes/2026-10-08-single-row-titlebar/spec.md), [docs/changes/2026-10-08-single-row-titlebar/plan.md](../../docs/changes/2026-10-08-single-row-titlebar/plan.md), [docs/changes/2026-10-08-single-row-titlebar/verification.md](../../docs/changes/2026-10-08-single-row-titlebar/verification.md), [docs/changes/2026-10-08-single-row-titlebar/review.md](../../docs/changes/2026-10-08-single-row-titlebar/review.md)
-- Next action: 保留当前证据，合并后按原验收范围回读主线
+- Next action: 保留当前证据，合并后按原验收范围回读主线；分支 fix/TASK-UI-013-single-row-titlebar 已通过 PR#40 1d6f640a 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）
 - Last verified: 2026-10-08
 - Updated: 2026-10-08
 
@@ -353,7 +354,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/domain, src/features/models, src/features/creation, src/components, src/App.tsx, tests, docs/features, docs/governance
 - Verification: PASS — 本地AC1–5 DONE：草稿/显示刷新受控RED后最小修正，32定向无retry、完整verify723/731root(8skip)、172/174Agent(2skip)、408/408browser零flaky、UI198/0、clientcheck/fresh Tauri隔离运行PASS；独立71ddb625技术补审PASS，MC-002/MC-003关闭、MC-001保持关闭，87/87及389源码/产物指纹2ebaab3d匹配。最终文档head补审和当前SHA PR/Hosted另绑；首轮405+1flaky唯一因果UNKNOWN，不改历史结果；功能卡仍为部分实现，非整个产品完成证明。
 - Evidence: [docs/changes/2026-10-08-model-capabilities/intent.md](../../docs/changes/2026-10-08-model-capabilities/intent.md), [docs/changes/2026-10-08-model-capabilities/spec.md](../../docs/changes/2026-10-08-model-capabilities/spec.md), [docs/changes/2026-10-08-model-capabilities/plan.md](../../docs/changes/2026-10-08-model-capabilities/plan.md), [docs/changes/2026-10-08-model-capabilities/verification.md](../../docs/changes/2026-10-08-model-capabilities/verification.md), [docs/changes/2026-10-08-model-capabilities/review.md](../../docs/changes/2026-10-08-model-capabilities/review.md)
-- Next action: 保留当前证据，合并后按原验收范围回读主线
+- Next action: 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-MODEL-001-capabilities 已通过 PR#36 1af0357b 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）
 - Last verified: 2026-10-08
 - Updated: 2026-10-08
 
@@ -543,7 +544,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/generation-server, src-tauri, src/features/creation, deploy
 - Verification: PASS — 04260ad精确独立补审PASS关闭ENV004；26策略及额外9边界回归通过；Hosted37770000879/37769995909全部SUCCESS，native11组/5CDP启动与策略清理通过。PR37普通squash合入main78cea37，完整tree一致；合并后main37773335548 verify/deploy-linux SUCCESS。Hosted实际checkout source7849310为base1af+candidate042合成merge，完整tree等同042/78，9/9源码hash核验；原收据身份不改写。PROV005/006继续TODO。
 - Evidence: [docs/changes/2026-09-19-taskhost-durable-intent/verification.md](../../docs/changes/2026-09-19-taskhost-durable-intent/verification.md), [tests/browser/task-intent.spec.ts](../../tests/browser/task-intent.spec.ts), [tests/unit/nativeTaskHost.test.ts](../../tests/unit/nativeTaskHost.test.ts), [deploy/README.md](../../deploy/README.md), [docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md](../../docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md), [tests/desktop/taskhost-lifecycle.mjs](../../tests/desktop/taskhost-lifecycle.mjs), [tests/desktop/native-ci-policy.ps1](../../tests/desktop/native-ci-policy.ps1)
-- Next action: 保留当前证据，合并后按原验收范围回读主线
+- Next action: 保留当前证据，合并后按原验收范围回读主线；分支 codex/T5-native-lifecycle 已通过 PR#37 78cea37a 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）
 - Last verified: 2026-10-08
 - Updated: 2026-10-08
 
@@ -1611,7 +1612,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/domain/stagePlan.ts, src/features/agent/orchestrator.ts, src/features/agent/agentHost.ts, src/features/creation/model.ts, src/features/projects/projectPackage.ts, src-tauri/src/project_package.rs, src-tauri/src/project_package_snapshot.rs, docs/architecture/adr/ADR-006-stage-plan-package-contract.md, tests/unit/stagePlan.test.ts, tests/unit/orchestrator.test.ts
 - Verification: PASS — 主线已含 08b5ae1 的阶段领域状态机、CAS、审批与项目包契约；当前单元与 Rust 回归通过。阶段计划 UI/真实生成仍属 TASK-ORCH-002/003，未被升级。
 - Evidence: [docs/changes/2026-09-23-agent-orchestration/verification.md](../../docs/changes/2026-09-23-agent-orchestration/verification.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
-- Next action: 保留当前证据，合并后按原验收范围回读主线
+- Next action: 保留当前证据，合并后按原验收范围回读主线；分支 feat/TASK-ORCH-001-agent-orchestration-closure 已通过 PR#14 f6264385 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）
 - Last verified: 2026-09-30
 - Updated: 2026-09-30
 
@@ -1630,7 +1631,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/TaskWorkbench.tsx, src/components/TaskWorkbenchContent.tsx, src/components/TaskWorkbenchStages.tsx, src/App.tsx, tests/browser/task-workbench.spec.ts, src/components/StagePlanDetail.tsx, src/styles/stage-workbench.css, src/features/agent/orchestrator.ts, src/features/creation/useCreationStorage.ts, src/styles/task-workbench.css
 - Verification: PASS — 本轮本地AC完成：新主线5b0eb6a融合为单一Plan/TaskWorkbenchStages及共享实例，保留主线暂停/重规划/回执/MCP行为；49/49、完整verify708root/172Agent/400browser零retry（原skip8/2）、Rust97、fresh production Tauri审批/重启/真实CAS/恢复草稿与clientcheck通过。精确新SHA独立补审及主线推广以收据和PR当前门禁为准。
 - Evidence: [docs/changes/2026-10-03-incomplete-tasks/verification.md](../../docs/changes/2026-10-03-incomplete-tasks/verification.md), [docs/changes/2026-10-08-stage-workbench/intent.md](../../docs/changes/2026-10-08-stage-workbench/intent.md), [docs/changes/2026-10-08-stage-workbench/spec.md](../../docs/changes/2026-10-08-stage-workbench/spec.md), [docs/changes/2026-10-08-stage-workbench/plan.md](../../docs/changes/2026-10-08-stage-workbench/plan.md), [docs/changes/2026-10-08-stage-workbench/comparison.md](../../docs/changes/2026-10-08-stage-workbench/comparison.md), [docs/changes/2026-10-08-stage-workbench/verification.md](../../docs/changes/2026-10-08-stage-workbench/verification.md), [docs/changes/2026-10-08-stage-workbench/review.md](../../docs/changes/2026-10-08-stage-workbench/review.md), [docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance.json](../../docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance.json), [docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance-review-fixed.json](../../docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance-review-fixed.json), [docs/changes/2026-10-08-stage-workbench/evidence/review-dfd4c12.md](../../docs/changes/2026-10-08-stage-workbench/evidence/review-dfd4c12.md), [docs/changes/2026-10-08-stage-workbench/evidence/verify-review-fixed.txt](../../docs/changes/2026-10-08-stage-workbench/evidence/verify-review-fixed.txt), [docs/changes/2026-10-08-stage-workbench/evidence/review-41dd865.md](../../docs/changes/2026-10-08-stage-workbench/evidence/review-41dd865.md), [docs/changes/2026-10-08-stage-workbench/integration-plan.md](../../docs/changes/2026-10-08-stage-workbench/integration-plan.md), [docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance-integration.json](../../docs/changes/2026-10-08-stage-workbench/evidence/desktop-acceptance-integration.json), [docs/changes/2026-10-08-stage-workbench/evidence/runtime-source-hashes-integration.json](../../docs/changes/2026-10-08-stage-workbench/evidence/runtime-source-hashes-integration.json)
-- Next action: 保留当前证据，合并后按原验收范围回读主线
+- Next action: 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-ORCH-002-stage-workbench 已通过 PR#35 5dd6e6dd 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）
 - Last verified: 2026-10-08
 - Updated: 2026-10-08
 
@@ -1725,7 +1726,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/features/providers, src/features/models, src/features/mcp, tests/unit, docs/changes, docs/features, docs/governance
 - Verification: PASS — PR #16 已合入的无密钥多目标渲染、导入导出、模型 catalog 和 stdio 校验契约在当前完整回归通过。真实目标 CLI 消费仍属 003/004。
 - Evidence: [docs/changes/2026-09-24-provider-connectivity/intent.md](../../docs/changes/2026-09-24-provider-connectivity/intent.md), [docs/changes/2026-09-24-provider-connectivity/spec.md](../../docs/changes/2026-09-24-provider-connectivity/spec.md), [docs/changes/2026-09-24-provider-connectivity/plan.md](../../docs/changes/2026-09-24-provider-connectivity/plan.md), [docs/changes/2026-09-24-provider-connectivity/verification.md](../../docs/changes/2026-09-24-provider-connectivity/verification.md), [docs/changes/2026-09-24-provider-connectivity/remaining.md](../../docs/changes/2026-09-24-provider-connectivity/remaining.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
-- Next action: 保留当前证据，合并后按原验收范围回读主线
+- Next action: 保留当前证据，合并后按原验收范围回读主线；分支 feat/TASK-PROV-002-provider-connectivity 已通过 PR#16 a89792ad 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）
 - Last verified: 2026-09-30
 - Updated: 2026-09-30
 
@@ -1934,7 +1935,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: Git, src/App.tsx, src/components, src/styles, src/domain, docs/governance, docs/PROGRESS.md
 - Verification: PASS — 本地可运行候选范围完成：承接13个历史包，完整Web377/377、根623/631、Agent169/171（其余原平台skip）、Rust97/97与最新Desktop/compare/plugin/version通过。9656011独立复审关闭R1/R2并通过39项单测、delivery618/0；来源PR17/18已勘误。最终文档HEAD补审、托管门禁、实际main推广与分享包验证以集成PR/最终收据为准；本条DONE不代表外部服务、Installer、Mobile或生产发布完成。
 - Evidence: [docs/changes/2026-09-29-project-landing/intent.md](../../docs/changes/2026-09-29-project-landing/intent.md), [docs/changes/2026-09-29-project-landing/spec.md](../../docs/changes/2026-09-29-project-landing/spec.md), [docs/superpowers/plans/2026-09-29-project-landing-integration.md](../../docs/superpowers/plans/2026-09-29-project-landing-integration.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md), [docs/changes/2026-09-23-google-cli-login/verification.md](../../docs/changes/2026-09-23-google-cli-login/verification.md), [docs/changes/2026-09-23-google-interactions/verification.md](../../docs/changes/2026-09-23-google-interactions/verification.md), [docs/changes/2026-09-24-claude-landing/verification.md](../../docs/changes/2026-09-24-claude-landing/verification.md), [docs/changes/2026-09-24-codebuddy-delegation/verification.md](../../docs/changes/2026-09-24-codebuddy-delegation/verification.md), [docs/changes/2026-09-24-local-memory/verification.md](../../docs/changes/2026-09-24-local-memory/verification.md), [docs/changes/2026-09-24-provider-wiring/verification.md](../../docs/changes/2026-09-24-provider-wiring/verification.md), [docs/changes/2026-09-24-sidebar-project-groups/verification.md](../../docs/changes/2026-09-24-sidebar-project-groups/verification.md), [docs/changes/2026-09-24-ui-regression/verification.md](../../docs/changes/2026-09-24-ui-regression/verification.md), [docs/changes/2026-09-25-sidebar-real-projects/verification.md](../../docs/changes/2026-09-25-sidebar-real-projects/verification.md), [docs/changes/2026-09-28-canvas-chat-layout/verification.md](../../docs/changes/2026-09-28-canvas-chat-layout/verification.md), [docs/changes/2026-09-29-figma-ui-governance/verification.md](../../docs/changes/2026-09-29-figma-ui-governance/verification.md), [docs/changes/2026-09-29-home-composer-fidelity/verification.md](../../docs/changes/2026-09-29-home-composer-fidelity/verification.md), [docs/changes/2026-09-29-kaworkai-canvas/verification.md](../../docs/changes/2026-09-29-kaworkai-canvas/verification.md), [docs/changes/2026-09-29-project-landing/review.md](../../docs/changes/2026-09-29-project-landing/review.md), [docs/changes/2026-09-29-project-landing/evidence/history-fix/desktop/runtime.json](../../docs/changes/2026-09-29-project-landing/evidence/history-fix/desktop/runtime.json), [docs/changes/2026-09-29-project-landing/evidence/independent-review-9656011.md](../../docs/changes/2026-09-29-project-landing/evidence/independent-review-9656011.md)
-- Next action: 保留当前证据，合并后按原验收范围回读主线
+- Next action: 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-PROJECT-001-landing-integration 已通过 PR#31 bd3bc668 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）
 - Last verified: 2026-09-30
 - Updated: 2026-09-30
 
@@ -1972,7 +1973,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/SidebarProjectEntry.tsx, src/components/SidebarProjectGroup.tsx, src/features/creation, tests/browser, docs
 - Verification: PARTIAL — 真实项目的创建/打开/改名/确认删除与项目库统一；Web 刷新及 fresh Tauri 重启通过。修复原生连续保存 CAS 和异步确认。文件夹/置顶仍是明示会话态，持久快照/项目包迁移未完成。
 - Evidence: [docs/changes/2026-09-24-ui-regression/review.md](../../docs/changes/2026-09-24-ui-regression/review.md), [docs/features/feat-015-projects.md](../../docs/features/feat-015-projects.md), [docs/features/feat-023-navigation.md](../../docs/features/feat-023-navigation.md), [docs/changes/2026-09-29-project-landing/verification.md](../../docs/changes/2026-09-29-project-landing/verification.md), [docs/changes/2026-09-29-project-landing/audit.md](../../docs/changes/2026-09-29-project-landing/audit.md)
-- Next action: 按验收条件完成实现、验证、独立审查和文档同步
+- Next action: 按验收条件完成实现、验证、独立审查和文档同步；分支 codex/TASK-PROJECT-001-landing-integration 已通过 PR#31 bd3bc668 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）
 - Last verified: 2026-09-30
 - Updated: 2026-09-30
 
@@ -2143,7 +2144,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: vendor/canvas-agent/src/agent/codex-client.ts, vendor/canvas-agent/src/agent/codex-client.test.ts, config/platform-versions.json, docs/governance, src/features/agent/agentHost.ts, tests/unit/agentHost.test.ts
 - Verification: PASS — 本机AC-1–3 DONE：两组RED→GREEN，verify632root/172Agent/377browser（原平台skip保留）、Rust97/fmt/clientcheck；真实Tauri生图/续聊/重连/重启hash一致、节点/标记唯一。实现head3c63f1e独立审查PASS（43/9/6定向复验），P3文档意见已修正。PR#33终稿head独立补审、托管CI与推广以实际PR/收据为准；豆包/Web真实账号/其他Provider/Mobile/正式发布未验收。
 - Evidence: [docs/changes/2026-10-01-agent-image-transport/intent.md](../../docs/changes/2026-10-01-agent-image-transport/intent.md), [docs/changes/2026-10-01-agent-image-transport/spec.md](../../docs/changes/2026-10-01-agent-image-transport/spec.md), [docs/changes/2026-10-01-agent-image-transport/verification.md](../../docs/changes/2026-10-01-agent-image-transport/verification.md)
-- Next action: 保留当前证据，合并后按原验收范围回读主线
+- Next action: 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-AGENT-008-image-transport 已通过 PR#33 21d121d2 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）
 - Last verified: 2026-10-01
 - Updated: 2026-10-01
 
@@ -2238,7 +2239,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Modules: src/components/nodes, src/components/canvas, src/features/compare, src/styles, tests/browser, docs/UI_RULES.md
 - Verification: PASS — 精确产品7d27265承接main78cea37：完整verify root723/731(8原skip)、Agent172/174(2原skip)、423/423browser零flaky/零实际retry；Rust97/fmt/clientcheck/fresh UI13(385hash)+TaskHost11(9hash/5CDP)+同EXE模型能力PASS。独立补审PASS、R1/R2 CLOSED，当前PR Hosted37776187321及push37776180456必需检查SUCCESS。Task声明范围完成；最终文档head精确补审/Hosted与普通主线推广另绑。历史失败保留；不代表全项目/付费Provider/Mobile/安装/最终视觉验收。
 - Evidence: [docs/changes/2026-10-08-image-selection-actions/intent.md](../../docs/changes/2026-10-08-image-selection-actions/intent.md), [docs/changes/2026-10-08-image-selection-actions/spec.md](../../docs/changes/2026-10-08-image-selection-actions/spec.md), [docs/changes/2026-10-08-image-selection-actions/plan.md](../../docs/changes/2026-10-08-image-selection-actions/plan.md), [docs/changes/2026-10-08-image-selection-actions/verification.md](../../docs/changes/2026-10-08-image-selection-actions/verification.md), [docs/changes/2026-10-08-image-selection-actions/review.md](../../docs/changes/2026-10-08-image-selection-actions/review.md)
-- Next action: 保留当前证据，合并后按原验收范围回读主线
+- Next action: 保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-UI-011-image-selection-actions 已通过 PR#39 f922cf8e 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）
 - Last verified: 2026-10-08
 - Updated: 2026-10-08
 
@@ -2449,4 +2450,23 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Evidence: [docs/changes/2026-10-11-rules-restructure/verification.md](../../docs/changes/2026-10-11-rules-restructure/verification.md), [docs/changes/2026-10-11-rules-restructure/review.md](../../docs/changes/2026-10-11-rules-restructure/review.md)
 - Next action: B3（AI_HANDOFF 瘦身）、B4（worktree/二进制收敛）、B5（交付包补齐）待用户授权后按批次执行
 - Last verified: 2026-10-11
+- Updated: 2026-10-12
+
+## TASK-GOV-004 — 未合并分支全量核验、分类与收敛合并
+
+- Goal: 100 个未合并分支逐项核验并按完成状态分类；同功能多分支收敛为单一分支后合并主线
+- Scope: 本轮完成 P0 止血、P1 全量分类表、B1 登记；P2 家族收敛与 B2-B5 合并在后续批次；worktree/分支清理与远端推送不在范围
+- Display status: 进行中
+- Priority: P1 — 治理收敛前置：分支不收敛则所有合并冲突面持续扩大
+- Requirement refs: ledger:TASK-GOV-004
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: 分类表覆盖全部未合并分支，逐项含核验结果与处置决策; 已集成/PR 残留类分支零合并登记，台账加防误合并注释; 同功能家族先收敛为单一分支再合并主线; 每个合并单元过最低门禁与 delivery:check，全部可回滚
+- Branch: `codex/ui-redesign-20261011`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: scripts/governance/branch-audit.mjs, docs/changes/2026-10-12-branch-consolidation
+- Verification: PASS — P0/P1/B1 已完成：main 8915b6ae；分类表 100 行（已完成 27/完成一半 68/未完成 4/无法判定 1）；10 个 PR 集成分支的 11 个任务已加禁合并注释；门禁全绿（npm test 8 失败为已记录环境性既有失败）。P2-P3 家族收敛与 B2-B5 合并待执行。
+- Evidence: [docs/changes/2026-10-12-branch-consolidation/verification.md](../../docs/changes/2026-10-12-branch-consolidation/verification.md), [docs/changes/2026-10-12-branch-consolidation/review.md](../../docs/changes/2026-10-12-branch-consolidation/review.md)
+- Next action: P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包
+- Last verified: 2026-10-12
 - Updated: 2026-10-12

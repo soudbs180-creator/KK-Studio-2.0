@@ -352,7 +352,7 @@
     "priority": "P3",
     "priorityRationale": "历史已完成范围",
     "displayStatus": "已完成",
-    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-IMAGE-EDIT-001-unified-mask 已通过 PR#41 8c921a52 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）",
     "lastVerified": "2026-10-09",
     "ownerRole": "repository-maintainer"
   },
@@ -441,7 +441,7 @@
     "priority": "P3",
     "priorityRationale": "历史已完成范围",
     "displayStatus": "已完成",
-    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线；分支 fix/TASK-UI-013-single-row-titlebar 已通过 PR#40 1d6f640a 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）",
     "lastVerified": "2026-10-08",
     "ownerRole": "repository-maintainer"
   },
@@ -533,7 +533,7 @@
     "priority": "P3",
     "priorityRationale": "历史已完成范围",
     "displayStatus": "已完成",
-    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-MODEL-001-capabilities 已通过 PR#36 1af0357b 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）",
     "lastVerified": "2026-10-08",
     "ownerRole": "repository-maintainer"
   },
@@ -987,7 +987,7 @@
     "priority": "P3",
     "priorityRationale": "历史已完成范围",
     "displayStatus": "已完成",
-    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线；分支 codex/T5-native-lifecycle 已通过 PR#37 78cea37a 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）",
     "lastVerified": "2026-10-08",
     "ownerRole": "repository-maintainer"
   },
@@ -3590,7 +3590,7 @@
     "priority": "P3",
     "priorityRationale": "历史已完成范围",
     "displayStatus": "已完成",
-    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线；分支 feat/TASK-ORCH-001-agent-orchestration-closure 已通过 PR#14 f6264385 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）",
     "lastVerified": "2026-09-30",
     "ownerRole": "repository-maintainer"
   },
@@ -3655,7 +3655,7 @@
     "priority": "P3",
     "priorityRationale": "历史已完成范围",
     "displayStatus": "已完成",
-    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-ORCH-002-stage-workbench 已通过 PR#35 5dd6e6dd 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）",
     "lastVerified": "2026-10-08",
     "ownerRole": "repository-maintainer"
   },
@@ -3890,7 +3890,7 @@
     "priority": "P3",
     "priorityRationale": "历史已完成范围",
     "displayStatus": "已完成",
-    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线；分支 feat/TASK-PROV-002-provider-connectivity 已通过 PR#16 a89792ad 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）",
     "lastVerified": "2026-09-30",
     "ownerRole": "repository-maintainer"
   },
@@ -4473,7 +4473,7 @@
     "priority": "P3",
     "priorityRationale": "历史已完成范围",
     "displayStatus": "已完成",
-    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-PROJECT-001-landing-integration 已通过 PR#31 bd3bc668 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）",
     "lastVerified": "2026-09-30",
     "ownerRole": "repository-maintainer"
   },
@@ -4571,7 +4571,7 @@
     "priority": "P2",
     "priorityRationale": "开放任务默认待治理排序",
     "displayStatus": "进行中",
-    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步",
+    "nextAction": "按验收条件完成实现、验证、独立审查和文档同步；分支 codex/TASK-PROJECT-001-landing-integration 已通过 PR#31 bd3bc668 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）",
     "lastVerified": "2026-09-30",
     "ownerRole": "repository-maintainer"
   },
@@ -5015,7 +5015,7 @@
     "priority": "P3",
     "priorityRationale": "历史已完成范围",
     "displayStatus": "已完成",
-    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-AGENT-008-image-transport 已通过 PR#33 21d121d2 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）",
     "lastVerified": "2026-10-01",
     "ownerRole": "repository-maintainer"
   },
@@ -5263,7 +5263,7 @@
     ],
     "priorityRationale": "历史已完成范围",
     "displayStatus": "已完成",
-    "nextAction": "保留当前证据，合并后按原验收范围回读主线",
+    "nextAction": "保留当前证据，合并后按原验收范围回读主线；分支 codex/TASK-UI-011-image-selection-actions 已通过 PR#39 f922cf8e 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线）",
     "lastVerified": "2026-10-08",
     "ownerRole": "repository-maintainer"
   },
@@ -5824,6 +5824,46 @@
     "displayStatus": "已完成",
     "nextAction": "B3（AI_HANDOFF 瘦身）、B4（worktree/二进制收敛）、B5（交付包补齐）待用户授权后按批次执行",
     "lastVerified": "2026-10-11",
+    "ownerRole": "repository-maintainer"
+  },
+  {
+    "dependencies": [
+      "TASK-GOV-003"
+    ],
+    "owner": "root",
+    "priority": "P1",
+    "updated": "2026-10-12",
+    "affectedModules": [
+      "scripts/governance/branch-audit.mjs",
+      "docs/changes/2026-10-12-branch-consolidation"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-12-branch-consolidation/verification.md",
+      "docs/changes/2026-10-12-branch-consolidation/review.md"
+    ],
+    "id": "TASK-GOV-004",
+    "title": "未合并分支全量核验、分类与收敛合并",
+    "goal": "100 个未合并分支逐项核验并按完成状态分类；同功能多分支收敛为单一分支后合并主线",
+    "scope": "本轮完成 P0 止血、P1 全量分类表、B1 登记；P2 家族收敛与 B2-B5 合并在后续批次；worktree/分支清理与远端推送不在范围",
+    "acceptance": [
+      "分类表覆盖全部未合并分支，逐项含核验结果与处置决策",
+      "已集成/PR 残留类分支零合并登记，台账加防误合并注释",
+      "同功能家族先收敛为单一分支再合并主线",
+      "每个合并单元过最低门禁与 delivery:check，全部可回滚"
+    ],
+    "branch": "codex/ui-redesign-20261011",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "status": "PARTIAL",
+    "verification": "P0/P1/B1 已完成：main 8915b6ae；分类表 100 行（已完成 27/完成一半 68/未完成 4/无法判定 1）；10 个 PR 集成分支的 11 个任务已加禁合并注释；门禁全绿（npm test 8 失败为已记录环境性既有失败）。P2-P3 家族收敛与 B2-B5 合并待执行。",
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-GOV-004"
+    ],
+    "featureIds": [],
+    "priorityRationale": "治理收敛前置：分支不收敛则所有合并冲突面持续扩大",
+    "displayStatus": "进行中",
+    "nextAction": "P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包",
+    "lastVerified": "2026-10-12",
     "ownerRole": "repository-maintainer"
   }
 ]
