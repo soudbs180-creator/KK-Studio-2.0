@@ -1,5 +1,46 @@
 [
   {
+    "id": "TASK-FIX-PUSH-GUARD-SPACES-001",
+    "title": "修复 Windows Git pre-push 空格及长路径启动",
+    "goal": "Git Bash/MSYS 下的 pre-push guard 能处理空格和超过 260 字符的策略路径，同时保留所有拒绝保护。",
+    "scope": "仅 hook 路径转换、Windows 长路径真实回归夹具和相关交付证据；不改远端保护、不合并 main、不修改共享主工作树。",
+    "acceptance": [
+      "Windows 真实 Git hook 通过单级空格、多级空格和策略路径超过 260 字符的合法快进与非法保护分支回归。",
+      "cygpath 转换失败、缺少策略、未知 ancestry、非快进、删除和受保护 ref 仍 fail closed，断言不放宽。",
+      "基于当前 origin/main 的独立分支提交、Windows/Ubuntu hook CI、npm verify、构建和 delivery 结果均有当前 SHA 证据。"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "fix/TASK-FIX-PUSH-GUARD-SPACES-001-main-replay",
+    "worktree": "D:/kk-studio/.worktrees/TASK-FIX-PUSH-GUARD-SPACES-001-windows",
+    "affectedModules": [
+      ".githooks/pre-push",
+      "scripts/install-git-guards.mjs",
+      "scripts/governance/push-policy.mjs",
+      "tests/unit/gitPushGuardPaths.test.ts",
+      "tests/unit/gitPushPolicy.test.ts",
+      "docs/changes/2026-10-10-push-guard-spaces"
+    ],
+    "status": "REVIEW",
+    "priority": "P1",
+    "evidence": [
+      "docs/changes/2026-10-10-push-guard-spaces/verification.md",
+      "docs/changes/2026-10-10-push-guard-spaces/review.md"
+    ],
+    "verification": "Current main replay at 3a7467825b85f66a7f4e409f8296e16ca2249516: local Windows hook 22 PASS/0 FAIL/5 SKIP; Hosted Windows and Ubuntu hook jobs PASS; build PASS; Hosted delivery/deploy-linux PASS; npm verify has two unrelated desktop Agent environment failures and Hosted verify is pending.",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-10",
+    "displayStatus": "进行中",
+    "nextAction": "在当前合并候选上复核 Windows/Ubuntu hook、npm verify 与 delivery 的 exact-SHA 结果；Hosted verify 未完成前保持 REVIEW。",
+    "lastVerified": "2026-10-10",
+    "ownerRole": "repository-maintainer",
+    "requirementRefs": [
+      "ledger:TASK-FIX-PUSH-GUARD-SPACES-001"
+    ],
+    "featureIds": [],
+    "priorityRationale": "Windows 推送门禁的路径与长路径回归，影响主线保护。"
+  },
+  {
     "dependencies": [
       "TASK-LAUNCH-001"
     ],
@@ -5258,7 +5299,9 @@
       "docs/changes/2026-10-09-provider-durable-config/plan.md",
       "docs/changes/2026-10-09-provider-durable-config/verification.md",
       "docs/changes/2026-10-09-provider-durable-config/review.md",
-      "docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/provider-abrupt-exit-observation.json"
+      "docs/changes/2026-10-08-taskhost-native-lifecycle/evidence/provider-abrupt-exit-observation.json",
+      "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md",
+      "docs/changes/2026-10-08-taskhost-native-lifecycle/status.md"
     ],
     "verificationResult": "PASS",
     "updated": "2026-10-10",
@@ -5306,7 +5349,8 @@
       "docs/changes/2026-10-09-provider-gates/plan.md",
       "docs/changes/2026-10-09-provider-gates/verification.md",
       "docs/changes/2026-10-09-provider-gates/review.md",
-      "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md"
+      "docs/changes/2026-10-08-taskhost-native-lifecycle/verification.md",
+      "docs/changes/2026-10-08-taskhost-native-lifecycle/status.md"
     ],
     "verificationResult": "PASS",
     "updated": "2026-10-10",
@@ -5449,7 +5493,12 @@
       "docs/changes/2026-10-11-p1-exact-sha-closeout/plan.md",
       "docs/changes/2026-10-11-p1-exact-sha-closeout/verification.md",
       "docs/changes/2026-10-11-p1-exact-sha-closeout/review.md",
-      "docs/changes/2026-10-11-p1-exact-sha-closeout/exact-independent-review.md"
+      "docs/changes/2026-10-11-p1-exact-sha-closeout/exact-independent-review.md",
+      "docs/changes/2026-10-10-verify-origin-003/intent.md",
+      "docs/changes/2026-10-10-verify-origin-003/spec.md",
+      "docs/changes/2026-10-10-verify-origin-003/plan.md",
+      "docs/changes/2026-10-10-verify-origin-003/verification.md",
+      "docs/changes/2026-10-10-verify-origin-003/review.md"
     ],
     "verification": "来源契约范围已完成：冻结树1f6cbd37091326a899fa600baba53bf6efd9cf16上KK_TEST_PORT=1431在Playwright加载前拒绝，固定1423可列出447项，六组生产browser spec fresh preview/Edge/workers=1/retries=0为25/25，Vite build通过，冻结树治理115任务/35功能/102 Markdown均0 violations。GitHub exact tree Hosted quality run 38080705770 的 verify/deploy-linux成功，git-guards run 38080705741存在；delivery跳过。任务实现提交为4949b3db，合入7736c99后由1f6cbd3承载。独立review `/root/origin_exact_review3` 已绑定 base 7ebf143b291e344b243e1ef396d510bb91730bd3、实现提交4949b3db与承载树1f6cbd3，结论PASS（scoped），无P0/P1发现。Hosted delivery、Windows安装/签名、第二环境、真实Provider、Tauri、移动设备与用户验收由其他任务继续承担。",
     "verificationResult": "PASS",

@@ -38,8 +38,13 @@ function commit(repo: string, text: string) {
   return git(repo, "rev-parse", "HEAD");
 }
 
-function install(repo: string, env = testEnv) {
-  return run(repo, process.execPath, ["scripts/install-git-guards.mjs"], env);
+function install(repo: string, env = testEnv, args: string[] = []) {
+  return run(
+    repo,
+    process.execPath,
+    ["scripts/install-git-guards.mjs", ...args],
+    env,
+  );
 }
 
 function copyGuards(repo: string) {
@@ -283,3 +288,148 @@ test("installed common hook runs in another worktree even without policy source 
   assert.equal(remoteRef(remote, "refs/heads/main"), initial);
   assert.equal(remoteRef(remote, "refs/heads/feat/linked"), tip);
 });
+
+function installLegacyPair(repo: string) {
+  const hooks = path.join(repo, ".git", "hooks");
+  for (const [source, target] of [
+    ["pre-push-v1", "pre-push"],
+    ["push-policy-v1.mjs", "kk-studio-push-policy.mjs"],
+  ]) {
+    fs.copyFileSync(
+      path.join(projectRoot, "tests/fixtures/git-guards", source),
+      path.join(hooks, target),
+    );
+    fs.chmodSync(path.join(hooks, target), 0o755);
+  }
+  return hooks;
+}
+
+test(
+  "reviewed v1 upgrade refuses symlinked hooks and policies",
+  { skip: process.platform === "win32" },
+  (t) => {
+    const { repo } = fixture(t, false);
+    const hooks = installLegacyPair(repo);
+    const target = path.join(hooks, "pre-push");
+    const external = path.join(repo, "user-owned-hook");
+    fs.renameSync(target, external);
+    fs.symlinkSync(external, target);
+    const original = fs.readFileSync(external);
+    assert.notEqual(
+      install(repo, testEnv, ["--upgrade-reviewed-v1"]).status,
+      0,
+    );
+    assert.equal(fs.lstatSync(target).isSymbolicLink(), true);
+    assert.deepEqual(fs.readFileSync(external), original);
+    fs.unlinkSync(target);
+    fs.copyFileSync(external, target);
+    fs.chmodSync(target, 0o755);
+    const policy = path.join(hooks, "kk-studio-push-policy.mjs");
+    const externalPolicy = path.join(repo, "user-owned-policy");
+    fs.renameSync(policy, externalPolicy);
+    fs.symlinkSync(externalPolicy, policy);
+    assert.notEqual(
+      install(repo, testEnv, ["--upgrade-reviewed-v1"]).status,
+      0,
+    );
+    assert.equal(fs.lstatSync(policy).isSymbolicLink(), true);
+    assert.deepEqual(fs.readFileSync(target), original);
+  },
+);
+
+test("explicit reviewed v1 upgrade preserves backup, config and other hooks, then runs real pushes", (t) => {
+  const { repo, remote, initial } = fixture(t, false);
+  const hooks = installLegacyPair(repo);
+  const legacy = fs.readFileSync(path.join(hooks, "pre-push"));
+  const config = fs.readFileSync(path.join(repo, ".git/config"));
+  fs.writeFileSync(path.join(hooks, "pre-commit"), "#!/bin/sh\nexit 0\n", {
+    mode: 0o755,
+  });
+  assert.notEqual(
+    install(repo).status,
+    0,
+    "default install must not replace older hooks",
+  );
+  const result = install(repo, testEnv, ["--upgrade-reviewed-v1"]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(
+    fs.readFileSync(path.join(hooks, "pre-push.kk-studio-v1.bak")),
+    legacy,
+  );
+  assert.deepEqual(fs.readFileSync(path.join(repo, ".git/config")), config);
+  assert.equal(
+    fs.readFileSync(path.join(hooks, "pre-commit"), "utf8"),
+    "#!/bin/sh\nexit 0\n",
+  );
+  assert.equal(install(repo, testEnv, ["--upgrade-reviewed-v1"]).status, 0);
+  git(repo, "switch", "-qc", "fix/upgraded");
+  const tip = commit(repo, "after upgrade");
+  git(repo, "push", "-q", "origin", "HEAD");
+  rejected(repo, ["origin", "HEAD:refs/heads/main"], /Direct push/);
+  assert.equal(remoteRef(remote, "refs/heads/main"), initial);
+  assert.equal(remoteRef(remote, "refs/heads/fix/upgraded"), tip);
+});
+
+test(
+  "reviewed v1 upgrade preserves an executable guard under restrictive umask",
+  { skip: process.platform === "win32" },
+  (t) => {
+    const { repo, remote, initial } = fixture(t, false);
+    const hooks = installLegacyPair(repo);
+    const result = run(repo, process.execPath, [
+      "--input-type=module",
+      "-e",
+      "process.umask(0o111); const { installGitGuards } = await import('./scripts/install-git-guards.mjs'); installGitGuards(process.cwd(), { upgradeReviewedV1: true });",
+    ]);
+    assert.equal(result.status, 0, result.stderr);
+    const tip = commit(repo, "after restrictive upgrade");
+    rejected(repo, ["origin", "HEAD:refs/heads/main"], /Direct push/);
+    assert.equal(remoteRef(remote, "refs/heads/main"), initial);
+    git(repo, "push", "-q", "origin", "HEAD:refs/heads/fix/upgraded-mode");
+    assert.equal(remoteRef(remote, "refs/heads/fix/upgraded-mode"), tip);
+    for (const name of ["pre-push", "pre-push.kk-studio-v1.bak"])
+      assert.equal(fs.statSync(path.join(hooks, name)).mode & 0o777, 0o755);
+  },
+);
+
+for (const changed of [
+  "pre-push",
+  "kk-studio-push-policy.mjs",
+  "missing policy",
+  "backup occupied",
+  "temporary occupied",
+]) {
+  test(`reviewed v1 upgrade refuses ${changed} without changing existing files`, (t) => {
+    const { repo } = fixture(t, false);
+    const hooks = installLegacyPair(repo);
+    if (changed === "missing policy")
+      fs.unlinkSync(path.join(hooks, "kk-studio-push-policy.mjs"));
+    else if (changed.endsWith("occupied"))
+      fs.writeFileSync(
+        path.join(
+          hooks,
+          changed.startsWith("backup")
+            ? "pre-push.kk-studio-v1.bak"
+            : "pre-push.kk-studio-v2.tmp",
+        ),
+        "user owned\n",
+      );
+    else fs.appendFileSync(path.join(hooks, changed), "\n// modified\n");
+    const before = new Map(
+      fs
+        .readdirSync(hooks)
+        .map((name) => [name, fs.readFileSync(path.join(hooks, name))]),
+    );
+    const result = install(repo, testEnv, ["--upgrade-reviewed-v1"]);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /KK Studio git guards/);
+    assert.deepEqual(
+      new Map(
+        fs
+          .readdirSync(hooks)
+          .map((name) => [name, fs.readFileSync(path.join(hooks, name))]),
+      ),
+      before,
+    );
+  });
+}

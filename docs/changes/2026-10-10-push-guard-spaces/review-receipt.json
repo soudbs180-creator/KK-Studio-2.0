@@ -1,0 +1,27 @@
+{
+  "task": "TASK-FIX-PUSH-GUARD-SPACES-001",
+  "independentReviewer": "review_push_guard",
+  "localReviewedSha": "5e71e844932d0a550c1e02edfacb5b6590d4dc7b",
+  "publishedCodeSha": "0decdca082fe08f7b855b08756cae3fc9994d261",
+  "reviewedAndPublishedCodeTree": "436424558a31010b025f9758eb9103917adf806b",
+  "outcome": "CODE_REVIEW_PASS",
+  "finding": {
+    "id": "PUSH-REVIEW-001",
+    "severity": "P1",
+    "status": "CLOSED",
+    "evidence": "Independent real Git umask 0111 reproduction: hook and backup0755, protected main denied;27/27 suites PASS"
+  },
+  "finalRootTests": {
+    "pass": 824,
+    "fail": 0,
+    "skipped": 6
+  },
+  "publication": "CLI had no write credentials. GitHub connector creates a new task branch; installed guard executed explicitly with the candidate protocol before publication. Blob and tree identities match local reviewed candidate. No existing protected ref or ruleset changed.",
+  "mergeGates": [
+    "Windows native Hosted result",
+    "current full Hosted verify and delivery",
+    "PR47 dependency and latest-main integration",
+    "final identity readback"
+  ],
+  "parentCodeTreeUnchanged": true
+}
