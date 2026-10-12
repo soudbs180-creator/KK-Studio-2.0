@@ -5885,6 +5885,13 @@
       "scripts/check-delivery.mjs",
       "scripts/windows/desktop-release.mjs",
       "tests/unit/deliveryPolicy.test.ts",
+      "scripts/governance/branch-audit.mjs",
+      "src/styles/ui-governance.css",
+      "src/styles/workspace.css",
+      "src/styles/canvas-hud.css",
+      "tests/browser/settings-scroll.spec.ts",
+      "tests/browser/ui-motion.spec.ts",
+      "tests/browser/unified-image-command.spec.ts",
       "docs/changes/2026-10-12-pr55-historical-integration"
     ],
     "status": "REVIEW",
@@ -5893,12 +5900,12 @@
       "docs/changes/2026-10-12-pr55-historical-integration/verification.md",
       "docs/changes/2026-10-12-pr55-historical-integration/review.md"
     ],
-    "verification": "Repair evidence is pending final pushed head: local desktopRelease/policy tests and hosted verify/delivery must be read back by exact SHA. Original PR #55 failures remain open until those checks pass.",
+    "verification": "Hosted 38271663391 at 81226e02 passed desktopAgentRuntime/unit/Agent and delivery; verify stopped at branch-audit Prettier. The 2026-10-13 repair diff passed full local npm run verify (475 browser tests). Final pushed-head independent review and Hosted verify/delivery remain pending; no merge/release claim.",
     "verificationResult": "NOT_VERIFIED",
-    "updated": "2026-10-12",
+    "updated": "2026-10-13",
     "displayStatus": "进行中",
     "nextAction": "完成独立 exact-SHA review，fast-forward update PR #55 branch，回读 Hosted verify/delivery；不要直接推送 main。",
-    "lastVerified": "2026-10-12",
+    "lastVerified": "2026-10-13",
     "ownerRole": "repository-maintainer",
     "requirementRefs": [
       "ledger:TASK-GOV-005"

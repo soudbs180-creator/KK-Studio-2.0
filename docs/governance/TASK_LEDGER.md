@@ -2484,9 +2484,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Acceptance: 历史包仅通过包内 legacy-incomplete.md 显式标记豁免，未来无标记新包仍强制五件套和当前任务绑定。; Windows 普通 node_modules 目录不因 8.3/realpath 拼写差异被判为 linked，真实 symlink/junction 仍被拒绝。; 最终 PR 头 SHA 具有本地定向测试、独立 exact-SHA review 和 Hosted verify/delivery 回执；在此之前保持 REVIEW/NOT_VERIFIED。
 - Branch: `codex/TASK-GOV-005-publish-main-20261012`
 - Worktree: `D:/kk-studio/.worktrees/pr55-delivery-repair`
-- Modules: scripts/governance/delivery.mjs, scripts/check-delivery.mjs, scripts/windows/desktop-release.mjs, tests/unit/deliveryPolicy.test.ts, docs/changes/2026-10-12-pr55-historical-integration
-- Verification: NOT_VERIFIED — Repair evidence is pending final pushed head: local desktopRelease/policy tests and hosted verify/delivery must be read back by exact SHA. Original PR #55 failures remain open until those checks pass.
+- Modules: scripts/governance/delivery.mjs, scripts/check-delivery.mjs, scripts/windows/desktop-release.mjs, tests/unit/deliveryPolicy.test.ts, scripts/governance/branch-audit.mjs, src/styles/ui-governance.css, src/styles/workspace.css, src/styles/canvas-hud.css, tests/browser/settings-scroll.spec.ts, tests/browser/ui-motion.spec.ts, tests/browser/unified-image-command.spec.ts, docs/changes/2026-10-12-pr55-historical-integration
+- Verification: NOT_VERIFIED — Hosted 38271663391 at 81226e02 passed desktopAgentRuntime/unit/Agent and delivery; verify stopped at branch-audit Prettier. The 2026-10-13 repair diff passed full local npm run verify (475 browser tests). Final pushed-head independent review and Hosted verify/delivery remain pending; no merge/release claim.
 - Evidence: [docs/changes/2026-10-12-pr55-historical-integration/verification.md](../../docs/changes/2026-10-12-pr55-historical-integration/verification.md), [docs/changes/2026-10-12-pr55-historical-integration/review.md](../../docs/changes/2026-10-12-pr55-historical-integration/review.md)
 - Next action: 完成独立 exact-SHA review，fast-forward update PR #55 branch，回读 Hosted verify/delivery；不要直接推送 main。
-- Last verified: 2026-10-12
-- Updated: 2026-10-12
+- Last verified: 2026-10-13
+- Updated: 2026-10-13

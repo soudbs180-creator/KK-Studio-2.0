@@ -659,7 +659,6 @@ test("actual long model identifiers remain readable without covering canvas cont
   const params = await source.locator(".image-params").boundingBox();
   expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(params!.x);
   await button.click();
-  await source.getByRole("button", { name: "切换全部模型" }).click();
   await expect(
     source.getByRole("menuitemradio", { name: model, exact: false }),
   ).toContainText(model);
