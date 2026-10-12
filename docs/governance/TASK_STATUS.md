@@ -1,5 +1,7 @@
 # Task status snapshot
 
+> 快照日期：2026-10-11 · 数据源：`docs/governance/task-ledger.json` · 本文不替代权威账本。
+
 Updated 2026-10-11. The machine-readable source remains [`task-ledger.json`](task-ledger.json); this document is a dated routing snapshot and does not change task state.
 
 The audited ledger contains 120 tasks: 75 `DONE`, 11 `TODO`, 29 `PARTIAL`, 4 `BLOCKED`, and 1 `REVIEW` (45 open). The default accountable owner is the historical `root` identity, routed as `repository-maintainer`; entries with `unallocated` branch/worktree remain unallocated. `TASK_LEDGER.md` is the generated reading view.

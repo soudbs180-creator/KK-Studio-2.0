@@ -21,6 +21,16 @@ export const ADR_DIRECTORY = "docs/architecture/adr";
 /** 已废止的 ADR 目录，2026-10-11 归并后不应再出现。 */
 export const RETIRED_ADR_DIRECTORIES = Object.freeze(["docs/decisions"]);
 
+/** 当前仍承载任务状态快照的文档，必须声明来源、日期和非权威性。 */
+export const SNAPSHOT_DOCUMENTS = Object.freeze([
+  "docs/governance/TASK_STATUS.md",
+]);
+
+/** 容器层仍承载任务/功能快照的文档，由 snapshot:check 跨仓检查。 */
+export const CONTAINER_SNAPSHOT_DOCUMENTS = Object.freeze([
+  "docs/plans/KK-Studio-功能台账与四向推进-2026-10-09.md",
+]);
+
 /** ADR 文件名格式：ADR-NNN-kebab-title.md */
 const ADR_FILE_PATTERN = /^ADR-(\d{3})-[a-z0-9]+(?:-[a-z0-9]+)*\.md$/;
 
@@ -116,5 +126,41 @@ export function checkRetiredAdrDirectories(existingDirectories) {
         `${retired}/: 第二处 ADR 目录已于 2026-10-11 归并至 ${ADR_DIRECTORY}/，不得重建或写入`,
       );
   }
+  return issues;
+}
+
+/**
+ * 校验任务快照头部是否包含三要素：数据源、快照日期、非权威声明。
+ *
+ * @param {string} source Markdown 文档内容
+ * @param {string} filePath 用于错误信息的仓库相对路径
+ * @returns {string[]}
+ */
+export function checkSnapshotHeader(source, filePath, now = new Date()) {
+  const issues = [];
+  const header = source.split(/\r?\n/).slice(0, 20).join("\n");
+  const dateMatch = header.match(/快照日期\s*[:：]?\s*(\d{4}-\d{2}-\d{2})/i);
+  if (!dateMatch) issues.push(`${filePath}: 缺少快照日期声明`);
+  else {
+    const snapshotDate = new Date(`${dateMatch[1]}T00:00:00Z`);
+    if (
+      Number.isNaN(snapshotDate.getTime()) ||
+      dateMatch[1] !== snapshotDate.toISOString().slice(0, 10)
+    )
+      issues.push(`${filePath}: 快照日期不是有效的 YYYY-MM-DD 日期`);
+    else if (
+      now.getTime() - snapshotDate.getTime() > 14 * 24 * 60 * 60 * 1000 &&
+      !/superseded|已被取代|已过期/i.test(header)
+    )
+      issues.push(`${filePath}: 快照超过 14 天且未标记 superseded/已被取代`);
+  }
+  if (!/数据源\s*[:：]\s*\S+|data(?:\s|-)?source\s*[:：]\s*\S+/i.test(header))
+    issues.push(`${filePath}: 缺少数据源声明`);
+  if (
+    !/本文不替代权威账本|不替代权威|does not replace the authoritative/i.test(
+      header,
+    )
+  )
+    issues.push(`${filePath}: 缺少“本文不替代权威账本”声明`);
   return issues;
 }

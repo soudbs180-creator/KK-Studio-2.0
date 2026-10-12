@@ -4,6 +4,7 @@ import {
   checkAdrNumbering,
   checkIndexCoverage,
   checkRetiredAdrDirectories,
+  checkSnapshotHeader,
 } from "../../scripts/governance/doc-index.mjs";
 
 /**
@@ -90,5 +91,58 @@ test("checkRetiredAdrDirectories 放行归并后的目录结构", () => {
       "governance",
     ]),
     [],
+  );
+});
+
+test("checkSnapshotHeader 要求数据源、日期和非权威声明", () => {
+  const incomplete = "# Snapshot\n\n数据源：task-ledger.json\n";
+  const issues = checkSnapshotHeader(
+    incomplete,
+    "docs/governance/TASK_STATUS.md",
+  );
+  assert.equal(issues.length, 2);
+  assert.match(issues[0], /快照日期/);
+  assert.match(issues[1], /不替代权威账本/);
+});
+
+test("checkSnapshotHeader 放行完整快照头", () => {
+  const complete = [
+    "> 快照日期：2026-10-12",
+    "> 数据源：docs/governance/task-ledger.json",
+    "> 本文不替代权威账本。",
+  ].join("\n");
+  assert.deepEqual(
+    checkSnapshotHeader(complete, "docs/governance/TASK_STATUS.md"),
+    [],
+  );
+});
+
+test("checkSnapshotHeader 拒绝无效日期和过期未标注快照", () => {
+  const stale = [
+    "> 快照日期：2025-99-40",
+    "> 数据源：docs/governance/task-ledger.json",
+    "> 本文不替代权威账本。",
+  ].join("\n");
+  assert.match(
+    checkSnapshotHeader(
+      stale,
+      "docs/governance/TASK_STATUS.md",
+      new Date("2026-10-12T00:00:00Z"),
+    ).join("\n"),
+    /有效的 YYYY-MM-DD/,
+  );
+
+  const old = [
+    "> 快照日期：2025-01-01",
+    "> 数据源：docs/governance/task-ledger.json",
+    "> 本文不替代权威账本。",
+  ].join("\n");
+  assert.match(
+    checkSnapshotHeader(
+      old,
+      "docs/governance/TASK_STATUS.md",
+      new Date("2026-10-12T00:00:00Z"),
+    ).join("\n"),
+    /超过 14 天/,
   );
 });
