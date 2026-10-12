@@ -127,6 +127,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-BYOK-001 | 用户自有 API 产品化接入 | TODO | 未完成 | P1 | TASK-AI-GATEWAY-001 | root | 依赖TASK-AI-GATEWAY-001与Web VPS控制面；先补intent/spec/plan和Desktop/Web/Mobile边界，外部契约稳定前不扩展产品实现。 |
 | TASK-UI-015 | 画布点状/网状背景缩放插值修正 | DONE | 已完成 | P2 | none | root | 保留当前证据；主线回读完成 |
 | TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | REVIEW | 进行中 | P1 | TASK-LAUNCH-001 | root | 在合并候选 SHA 上回读 hosted CI、发布 receipt，并在第二环境安装后校验版本/commit/hash/进程路径 |
+| TASK-GOV-003 | 规则体系收敛与文档同步门禁（B1+B2） | DONE | 已完成 | P1 | none | root | B3（AI_HANDOFF 瘦身）、B4（worktree/二进制收敛）、B5（交付包补齐）待用户授权后按批次执行 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2430,3 +2431,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 在合并候选 SHA 上回读 hosted CI、发布 receipt，并在第二环境安装后校验版本/commit/hash/进程路径
 - Last verified: 2026-10-10
 - Updated: 2026-10-10
+
+## TASK-GOV-003 — 规则体系收敛与文档同步门禁（B1+B2）
+
+- Goal: 收敛 UI 入口覆盖、ADR 编号与索引唯一性，新增文档索引/命令/交付完整度三个门禁
+- Scope: 仅文档修正与新增只读门禁脚本，不改产品行为；B3-B5（AI_HANDOFF 瘦身、worktree 收敛、交付包补齐）不在本轮
+- Display status: 已完成
+- Priority: P1 — 治理收敛，门禁已接入 lint
+- Requirement refs: ledger:TASK-GOV-003
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: UI_INDEX.md 完整列出全部现行 UI 承载文件，docs/README.md 补齐 engineering 与 governance 索引; ADR 编号去重归并至 docs/architecture/adr 唯一目录并留映射记录; check-doc-index 与 check-doc-commands 接入 lint 且全绿; 新增 20 个单测通过，ui:check 与 markdown:check 0 违规
+- Branch: `codex/ui-redesign-20261011`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: docs/UI_INDEX.md, docs/README.md, docs/architecture/adr, docs/engineering/CODING-STANDARDS.md, docs/governance/UNIFIED-PROJECT-RULES.md, scripts/check-doc-index.mjs, scripts/check-doc-commands.mjs, scripts/check-delivery-completeness.mjs, scripts/governance/doc-index.mjs, scripts/governance/doc-commands.mjs, scripts/governance/delivery-completeness.mjs, tests/unit/docIndex.test.ts, tests/unit/docCommands.test.ts, tests/unit/deliveryCompleteness.test.ts, package.json
+- Verification: PASS — B1+B2 于 2026-10-11 执行：lint 全绿（含 2 个新门禁）、typecheck exit 0、ui:check 219 文件 0 违规、markdown:check 117 文件 0 违规、新增单测 20/20；交付包 docs/changes/2026-10-11-rules-restructure/ 五件套齐全，本轮提交进入版本控制。B3-B5 待授权未执行。
+- Evidence: [docs/changes/2026-10-11-rules-restructure/verification.md](../../docs/changes/2026-10-11-rules-restructure/verification.md), [docs/changes/2026-10-11-rules-restructure/review.md](../../docs/changes/2026-10-11-rules-restructure/review.md)
+- Next action: B3（AI_HANDOFF 瘦身）、B4（worktree/二进制收敛）、B5（交付包补齐）待用户授权后按批次执行
+- Last verified: 2026-10-11
+- Updated: 2026-10-12
