@@ -1,0 +1,8 @@
+﻿
+> kk-studio@2.1.12 governance:write
+> node scripts/check-governance.mjs --write
+
+Governance: 116 tasks, 0 violations.
+GOV_EXIT=0
+Checking formatting...
+All matched files use Prettier code style!

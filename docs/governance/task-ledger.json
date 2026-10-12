@@ -4115,9 +4115,9 @@
       "docs/changes/2026-10-12-TASK-ENG-001-code-health/verification.md",
       "docs/changes/2026-10-12-TASK-ENG-001-code-health/review.md"
     ],
-    "verification": "本地：lint/typecheck/test/format/governance/markdown 与棘轮、footgun 自测在 worktree 基线 1f6cbd37 上 PASS；存量清单 App.tsx 3153 行、CC>20=69、EMPTY_CATCH=41（只出清单不失败）。Hosted CI 与 ui-redesign 合并后 CODING-STANDARDS 门禁表补齐为 NOT VERIFIED / 后续。",
+    "verification": "本地（worktree 基线 1f6cbd37，head ae72d61f）：typecheck/eslint/format:check/ui:check/markdown:check/governance(116 tasks, 0 violations)/lint 全链 exit 0；棘轮四类规则 + allow 豁免 + 退出码 0/1/2 自测通过；footgun 全库 0 findings。npm test 830 项中 3 项失败，均在 detached 基线 worktree 复现（desktopAgentRuntime 需真实二进制 2/2 fail；gitPushGuardPaths 单独跑基线与本分支一致 10/7/0，仅并发时偶发），与本改动无因果关系。存量清单：App.tsx 3152 行（唯一超 2000 行文件）、CC>20=69、函数>300 行=2、nesting>6=0、EMPTY_CATCH=41（只出清单不失败）。PR #56 已建未合并。Hosted CI 与 ui-redesign 合并后 CODING-STANDARDS 门禁表补齐为 NOT VERIFIED / 后续。",
     "verificationResult": "PASS",
     "updated": "2026-10-12",
-    "notes": "后续：① codex/ui-redesign-20261011 合并后把两个新门禁补进 CODING-STANDARDS.md 门禁映射表；② windows-release.yml 的 dtolnay/rust-toolchain@stable 需 SHA 固定（不在本 base）；③ advisory→blocking 翻转时机由维护者在存量 burn-down 后决定；④ hermes 功能层思路（FTS5 会话搜索、cron、subagent RPC、Honcho 用户建模）另行评估，不在本任务实现。"
+    "notes": "PR #56 https://github.com/soudbs180-creator/KK-Studio-2.0/pull/56（未合并）。后续：① codex/ui-redesign-20261011 合并后把两个新门禁补进 CODING-STANDARDS.md 门禁映射表；② windows-release.yml 的 dtolnay/rust-toolchain@stable 需 SHA 固定（不在本 base）；③ advisory→blocking 翻转时机由维护者在存量 burn-down 后决定，翻转前需用真实历史 diff 校准相似度阈值 0.6；④ hermes 功能层思路（FTS5 会话搜索、cron、subagent RPC、Honcho 用户建模）另行评估，不在本任务实现。"
   }
 ]
