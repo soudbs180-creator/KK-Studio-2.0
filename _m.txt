@@ -1,0 +1,5 @@
+﻿
+> kk-studio@2.1.12 markdown:check
+> node scripts/check-markdown.mjs
+
+Markdown links: 102 active files, 0 violations. File targets only; not historical snapshots or external URLs.

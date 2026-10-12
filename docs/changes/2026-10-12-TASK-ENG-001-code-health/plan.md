@@ -1,7 +1,7 @@
 # Plan：引入 hermes-agent 工程实践——代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定
 
 - Task ID：TASK-ENG-001
-- 状态：IMPLEMENTED
+- 状态：IMPLEMENTED（PR 已建，未合并）
 - 日期：2026-10-12
 - Intent / Spec / ADR：intent.md / spec.md；无 ADR（工具链内部实现）
 - Owner / branch / worktree：root / `feat/TASK-ENG-001-code-health` / `D:/kk-studio/.worktrees/TASK-ENG-001-code-health`
@@ -67,7 +67,7 @@
 - UI 的 Figma/DOM/截图证据：不适用（无 UI 改动）。
 - 独立 reviewer 与当前 SHA 审查：review.md（AI 独立上下文复核本 diff）。
 - 文档、账本、PROJECT_STATE/HANDOFF/PROGRESS 更新：DEVELOPMENT.md + ledger + 本交付包；PROGRESS 由迭代收口时更新。
-- PR、用户产品验收、发布和回滚记录：PR 建后记录链接；发布不适用。
+- PR、用户产品验收、发布和回滚记录：PR #56 https://github.com/soudbs180-creator/KK-Studio-2.0/pull/56（head `ae72d61f` → base `main`，**未合并**）；用户仅授权实施，无产品验收需求；发布不适用。
 - 暂不可验证项及准确状态：CI 实跑（推送后由 GitHub Actions 执行，本地记 NOT RUN）；ui-redesign 合并后的 CODING-STANDARDS 补齐（后续任务）。
 
 ## 计划变更记录
