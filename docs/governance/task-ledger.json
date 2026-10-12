@@ -5725,5 +5725,56 @@
     "lastVerified": "2026-10-10",
     "updated": "2026-10-10",
     "ownerRole": "repository-maintainer"
+  },
+  {
+    "dependencies": [],
+    "owner": "root",
+    "priority": "P1",
+    "updated": "2026-10-12",
+    "affectedModules": [
+      "docs/UI_INDEX.md",
+      "docs/README.md",
+      "docs/architecture/adr",
+      "docs/engineering/CODING-STANDARDS.md",
+      "docs/governance/UNIFIED-PROJECT-RULES.md",
+      "scripts/check-doc-index.mjs",
+      "scripts/check-doc-commands.mjs",
+      "scripts/check-delivery-completeness.mjs",
+      "scripts/governance/doc-index.mjs",
+      "scripts/governance/doc-commands.mjs",
+      "scripts/governance/delivery-completeness.mjs",
+      "tests/unit/docIndex.test.ts",
+      "tests/unit/docCommands.test.ts",
+      "tests/unit/deliveryCompleteness.test.ts",
+      "package.json"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-11-rules-restructure/verification.md",
+      "docs/changes/2026-10-11-rules-restructure/review.md"
+    ],
+    "id": "TASK-GOV-003",
+    "title": "规则体系收敛与文档同步门禁（B1+B2）",
+    "goal": "收敛 UI 入口覆盖、ADR 编号与索引唯一性，新增文档索引/命令/交付完整度三个门禁",
+    "scope": "仅文档修正与新增只读门禁脚本，不改产品行为；B3-B5（AI_HANDOFF 瘦身、worktree 收敛、交付包补齐）不在本轮",
+    "acceptance": [
+      "UI_INDEX.md 完整列出全部现行 UI 承载文件，docs/README.md 补齐 engineering 与 governance 索引",
+      "ADR 编号去重归并至 docs/architecture/adr 唯一目录并留映射记录",
+      "check-doc-index 与 check-doc-commands 接入 lint 且全绿",
+      "新增 20 个单测通过，ui:check 与 markdown:check 0 违规"
+    ],
+    "branch": "codex/ui-redesign-20261011",
+    "worktree": "D:/kk-studio/KK-Studio-2.0",
+    "status": "DONE",
+    "verification": "B1+B2 于 2026-10-11 执行：lint 全绿（含 2 个新门禁）、typecheck exit 0、ui:check 219 文件 0 违规、markdown:check 117 文件 0 违规、新增单测 20/20；交付包 docs/changes/2026-10-11-rules-restructure/ 五件套齐全，本轮提交进入版本控制。B3-B5 待授权未执行。",
+    "verificationResult": "PASS",
+    "requirementRefs": [
+      "ledger:TASK-GOV-003"
+    ],
+    "featureIds": [],
+    "priorityRationale": "治理收敛，门禁已接入 lint",
+    "displayStatus": "已完成",
+    "nextAction": "B3（AI_HANDOFF 瘦身）、B4（worktree/二进制收敛）、B5（交付包补齐）待用户授权后按批次执行",
+    "lastVerified": "2026-10-11",
+    "ownerRole": "repository-maintainer"
   }
 ]

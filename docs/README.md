@@ -30,6 +30,11 @@
 | [VERSIONING](engineering/VERSIONING.md) | 版本号策略 |
 | [LAUNCHER](engineering/LAUNCHER.md) | 启动器行为 |
 | [WINDOWS-INSTALLER](engineering/WINDOWS-INSTALLER.md) | Windows 安装器 |
+| [WORKTREE-LIFECYCLE](engineering/WORKTREE-LIFECYCLE.md) | worktree 创建、登记、回收与落点 |
+| [AUTO-MERGE](engineering/AUTO-MERGE.md) | 自动合并工作流与其未启用边界 |
+| [ROLLBACK](engineering/ROLLBACK.md) | 回滚触发条件与执行 |
+
+> 本表必须完整覆盖 `docs/engineering/` 下的全部 `.md`。新增工程文档必须同步本表，`npm run index:check` 会校验。
 
 ## 架构文档
 
@@ -46,7 +51,7 @@
 
 ## UI 文档
 
-[UI_INDEX.md](UI_INDEX.md) 是 **UI 规范唯一入口**，含现行文件分层表、冲突裁决规则和新增功能改病例。各文件分工：
+[UI_INDEX.md](UI_INDEX.md) 是 **UI 规范唯一入口**，含现行文件分层表、冲突裁决规则和新增功能改病例。该索引的 §1 表是完整映射，新增 UI 文档须同步它。各文件分工：
 
 | 文档 | 承载内容 |
 | --- | --- |
@@ -55,8 +60,9 @@
 | [DESIGN_TOKENS](DESIGN_TOKENS.md) | token 数值索引 |
 | [DESIGN-SYSTEM](DESIGN-SYSTEM.md) | 颜色与基础组件 |
 | [UI_SPEC](UI_SPEC.md) | UI 运行与验证规范 |
+| [FRONTEND-SPEC](FRONTEND-SPEC.md) | 前端工程基线：技术栈、弹窗、供应商连接 |
 
-`UI-STANDARDS.md` 与 `UI-ALIGNMENT.md` 已合并，保留为重定向存根，**不承载现行规则，也不要更新它们**。历史正文在 `archive/ui-history/`。
+`UI-STANDARDS.md` 与 `UI-ALIGNMENT.md` 已合并，保留为重定向存根，**不承载现行规则，也不要更新它们**；二者同样登记在 `UI_INDEX.md` §1.3。历史正文在 `archive/ui-history/`。
 
 ## 治理文档
 
@@ -66,11 +72,19 @@
 | --- | --- |
 | [task-ledger.json](governance/task-ledger.json) | **任务状态唯一事实源** |
 | [TASK_LEDGER.md](governance/TASK_LEDGER.md) | 账本生成视图，由 `npm run governance:write` 产出，不手改 |
+| [TASK_STATUS](governance/TASK_STATUS.md) | 任务状态日期快照（只读路由用，不改状态） |
 | [PROJECT_STATE.md](governance/PROJECT_STATE.md) | 当前项目事实 |
 | [AI_HANDOFF.md](governance/AI_HANDOFF.md) | AI 交接上下文 |
 | [PROJECT_GOALS](governance/PROJECT_GOALS.md) | 项目目标 |
 | [SPEC_BASELINE](governance/SPEC_BASELINE.md) | 各类状态的唯一来源映射 |
+| [AUTHORITY_MAP](governance/AUTHORITY_MAP.md) | 权威来源地图与冲突处理顺序（机器可读版 `AUTHORITY_MAP.json`） |
 | [KNOWN_ISSUES](governance/KNOWN_ISSUES.md) | 已知问题清单 |
+| [WORKSPACE_MAP](governance/WORKSPACE_MAP.md) | 本机审计路径分布（非跨设备契约） |
+| [RETENTION_MANIFEST](governance/RETENTION_MANIFEST.md) | 保留意图声明（不授权删除或移动） |
+| [MARKDOWN_AUDIT](governance/MARKDOWN_AUDIT.md) | Markdown 链接审计与历史勘误索引 |
+| [UNIFIED-PROJECT-RULES](governance/UNIFIED-PROJECT-RULES.md) | 跨主题统一规则、目录/命名、编码流程、冲突裁决与规则变更机制 |
+
+> 本表必须完整覆盖 `docs/engineering/`、`docs/architecture/`、`docs/governance/` 下的全部 `.md`。`npm run index:check` 会校验覆盖率、ADR 编号唯一性与单一 ADR 目录。
 
 `PROJECT_STATE.md` 与 `AI_HANDOFF.md` 存在大量同名二级章节（历史累积，尚未拆分）。读到重复内容时以 `PROJECT_STATE.md` 为当前事实，`AI_HANDOFF.md` 仅作交接线索。
 
@@ -114,7 +128,7 @@
 | 任务状态变化 | `governance/task-ledger.json`，再跑 `npm run governance:write` |
 | UI 令牌或组件契约变化 | `UI_INDEX.md` 指向的唯一承载文件 |
 
-文档改动同样受门禁约束：`npm run markdown:check` 校验相对链接（跨仓库链接会失败，跨仓库引用写纯文本路径）；`npm run delivery:check` 校验交付包完整性。
+文档改动同样受门禁约束：`npm run markdown:check` 校验相对链接（跨仓库链接会失败，跨仓库引用写纯文本路径）；`npm run index:check` 校验本索引覆盖率、ADR 编号唯一性与单一 ADR 目录；`npm run doc:commands:check` 校验文档中 `npm run` 脚本真实存在；`npm run delivery:check` 校验交付包完整性。
 
 ## 本地记忆机制
 

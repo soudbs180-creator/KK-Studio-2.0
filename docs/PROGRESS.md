@@ -1,5 +1,12 @@
 # 当前进度
 
+## 2026-10-12 分支收敛启动：规则门禁提交与 B1+B2 绑定
+
+- `TASK-GOV-003`（B1+B2 规则体系收敛）登记为 DONE/PASS：UI_INDEX 覆盖补齐、ADR 编号去重归并至唯一目录、3 个文档门禁中 2 个接入 lint；交付包 `2026-10-11-rules-restructure` 五件套随本次提交进入版本控制。
+- 移出仓库根被 ignore 的 `pnpm-lock.yaml`（governance 门禁阻断项，归档至 output/）。
+- 启动 100 个未合并分支全量核验与收敛合并：分类表格与处置计划见 `docs/changes/2026-10-12-branch-consolidation/`；合并停在本地 main，不推远端。
+- 本轮门禁：governance 121 tasks 0 violations。
+
 ## 2026-10-12 P0-P1 UI 收口（当前候选）
 
 - 撤回上一条首页整体重做候选：移除全局 `competitor-ui.css` 及其营销式首页、Agent 空态和画布整体尺寸覆盖，恢复 Figma/工作台基线。
