@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "readAt": "2026-10-12",
+  "repository": "soudbs180-creator/KK-Studio-2.0",
+  "pullRequest": {
+    "number": 53,
+    "state": "closed",
+    "merged": true,
+    "head": "cc3fad9695827c7545f7b7675870a65347f7358e",
+    "base": "7736c99bd5e900e7c5cd8a36663aadcb45326143",
+    "mergeCommit": "1f6cbd37091326a899fa600baba53bf6efd9cf16",
+    "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/pull/53"
+  },
+  "checkRuns": [
+    {
+      "name": "hook-regression (windows-latest)",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38080705741/job/114296851442"
+    },
+    {
+      "name": "hook-regression (ubuntu-latest)",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38080705741/job/114296851374"
+    },
+    {
+      "name": "verify",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38080705770/job/114296851399"
+    },
+    {
+      "name": "deploy-linux",
+      "conclusion": "success",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38080705770/job/114296851332"
+    },
+    {
+      "name": "delivery",
+      "conclusion": "skipped",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38080705770/job/114296852027"
+    }
+  ],
+  "limitations": [
+    "No merged-SHA independent review receipt was found in the primary checkout.",
+    "No raw Hosted artifact manifest was copied into this evidence package.",
+    "This is not signing, installation, second-environment, or user-acceptance evidence."
+  ]
+}

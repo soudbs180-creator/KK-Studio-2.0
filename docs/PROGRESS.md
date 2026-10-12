@@ -1,5 +1,13 @@
 # 当前进度
 
+## 2026-10-12 P1 审计收口与当前证据边界
+
+- 当前事实已刷新：primary `codex/ui-redesign-20261011@ac5e6a4a` 在本轮开始时 clean，当前包含本轮 5 个 tracked 文件改动和 1 个新证据目录；本地 `origin/main` ref `1f6cbd37`；实时台账 123 条（76 DONE / 30 PARTIAL / 11 TODO / 4 BLOCKED / 2 REVIEW）；94 个 worktree。旧 `PROJECT_STATE` 快照不再作为当前事实。
+- 修复 `scripts/governance/branch-audit.mjs` 的 Prettier 门禁失败；逻辑未改。当前 unit/deploy 现场重跑为 1004 项、990 pass、0 fail、14 skip。
+- PR #53 已合并至 `1f6cbd37`，Windows/Ubuntu hook、verify、deploy-linux 为 Hosted SUCCESS，delivery 为 SKIPPED；merged-SHA 独立 review receipt、原始 artifact、签名、安装和用户验收仍未补齐。
+- `TASK-WINDOWS-ENTRY-RECOVERY-003`、`TASK-AGENT-010`、`TASK-TASKSTATE-002`、`TASK-AI-GATEWAY-001` 和 `TASK-IMAGE-EDIT-VERIFY-002` 保持未完成/未验证边界；本轮未推送、合并、触发 CI、读取凭据或调用真实 Provider。
+- 证据包：`docs/changes/2026-10-12-p1-audit-closeout/`。
+
 ## 2026-10-12 分支收敛 P0-P1：规则门禁入主线 + 100 分支全量分类
 
 - P0 完成：`c8807d3e` 提交规则收敛（31 文件）经 `77d42c7b` 同步基线后合入 main `8915b6ae`；TASK-GOV-003 登记 DONE；`pnpm-lock.yaml` 移出 output/；merge-ui-main 工作区在途的 CSS 清理与 test 基建保全至 `wip/ui-governance-css-cleanup-20261012`（未登记，待处置）。

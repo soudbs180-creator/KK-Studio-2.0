@@ -2,14 +2,14 @@
 
 ## CURRENT_FACTS (machine-readable current snapshot)
 
-- `snapshotDate`: 2026-10-11
+- `snapshotDate`: 2026-10-12
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
-- `canonicalHead`: `7736c99bd5e900e7c5cd8a36663aadcb45326143`
-- `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the primary checkout
-- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on local `main` at `6bc45cada7966531452d6826be5fe731ad0918d8`; `origin/main` is the separately read-back remote ref at `7736c99bd5e900e7c5cd8a36663aadcb45326143` (PR #51 merge). The checkout currently has 102 dirty paths across concurrent governance, UI, tests, and Tauri changes; this snapshot preserves unrelated paths while this turn is limited to the scoped docs-history and TaskState closeout evidence/source/test files.
-- `taskLedger`: 120 records; 75 DONE, 29 PARTIAL, 11 TODO, 4 BLOCKED, 1 REVIEW; 45 open records.
-- `workspaceWorktrees`: 87 registered worktrees, with 49 under `D:/kk-studio/.worktrees`, 34 nested under the primary checkout, 2 external Codex checkouts under `C:/Users/Administrator/.codex/worktrees`, 1 external sibling checkout at `D:/kk-studio/KK-Studio-2.0-taskstate`, and the primary checkout; the current audit pointer is `worktree-reclamation-plan-a32b6b9e-3ff4-402b-913f-d04b64a3de56.json`. The audit has zero generated-directory candidates and zero whole-worktree removal candidates. Previously reclaimed generated output remains covered by immutable SHA inventories; dirty, active, nested, external, and duplicate-source worktrees remain protected.
+- `canonicalHead`: `1f6cbd37091326a899fa600baba53bf6efd9cf16`
+- `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the primary checkout; this is the local remote-tracking ref and was not refreshed with `git fetch` in this audit.
+- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `codex/ui-redesign-20261011` at `ac5e6a4a5c963577fe4252312b1e2fc0550d70ee`; the checkout was clean at the start of this audit and now contains this audit's 5 modified tracked files plus the new `docs/changes/2026-10-12-p1-audit-closeout/` directory. The current branch is an audit/consolidation candidate and is not claimed to be the published `origin/main` tree.
+- `taskLedger`: 123 records; 76 DONE, 30 PARTIAL, 11 TODO, 4 BLOCKED, 2 REVIEW; 47 open records.
+- `workspaceWorktrees`: 94 registered worktrees, including nested and external checkouts; the worktree creation policy currently reports 54 active worktrees against a default budget of 4, so this turn does not create another checkout. Existing dirty, active, nested, external, and duplicate-source worktrees remain protected. The current audit pointer is `D:/kk-studio/output/2026-10-10-worktree-reclamation/worktree-reclamation-plan-a32b6b9e-3ff4-402b-913f-d04b64a3de56.json`, relocated out of the repository on 2026-10-12.
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.

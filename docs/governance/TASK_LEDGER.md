@@ -6,9 +6,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | REVIEW | 进行中 | P1 | none | root | 在当前合并候选上复核 Windows/Ubuntu hook、npm verify 与 delivery 的 exact-SHA 结果；Hosted verify 未完成前保持 REVIEW。 |
+| TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | REVIEW | 进行中 | P1 | none | root | 补 merged-SHA 独立 review receipt、原始 Hosted artifact manifest 及当前 SHA 的 delivery 结果；本任务验收补齐前保持 REVIEW，签名/安装/用户验收仍属独立发布边界。 |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 等待Hosted Windows带启动阶段/退出码/运行时日志的重跑；保留PR43原失败和本机未复现原件，未取得新分类前保持TODO。 |
+| TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。 |
 | TASK-IMAGE-RETRY-004 | 修复主线区域重试验收读取旧成功任务 | DONE | 已完成 | P1 | TASK-IMAGE-EDIT-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-DESKTOP-FLUSH-001 | 桌面关闭前耐久保存与失败留窗 | DONE | 已完成 | P1 | TASK-PLUGIN-DEV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PLUGIN-MARKDOWN-001 | 随包Markdown去除CDN代码依赖与离线渲染 | DONE | 已完成 | P1 | TASK-PLUGIN-DEV-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -88,7 +88,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-ORCH-003 | 编排器驱动生成执行与计划门禁 | TODO | 未完成 | P2 | TASK-ORCH-001, BACKEND-MEDIA-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-CANVAS-001 | 画布交付契约与当轮产物收集 | PARTIAL | 进行中 | P2 | TASK-ORCH-001 | root | 补充负责人、优先级、分支和下一步验收证据 |
 | TASK-TASKSTATE-001 | 统一任务态契约定稿 | PARTIAL | 进行中 | P2 | TASK-AGENT-001 | root | 提交后绑定 exact SHA 完成正式独立复审；随后补真实 Provider/每平台运行证据，不能用 fixture 或示例单价升级 DONE。 |
-| TASK-TASKSTATE-002 | 供应商成本报价回执接入 | PARTIAL | 进行中 | P1 | TASK-TASKSTATE-001 | root | 提交后绑定 exact SHA 完成正式独立 review；再由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。 |
+| TASK-TASKSTATE-002 | 供应商成本报价回执接入 | PARTIAL | 进行中 | P1 | TASK-TASKSTATE-001 | root | 在统一 Provider→task 归档边界接入 applyTaskCostReceipt 并补调用路径测试；随后由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。 |
 | TASK-PROV-002 | 多供应商接入与多目标配置（Provider Connectivity） | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线；分支 feat/TASK-PROV-002-provider-connectivity 已通过 PR#16 a89792ad 集成 main，保留作历史追溯，禁止再次合并（会以旧内容回滚主线） |
 | TASK-COMPARE-001 | 画布图片对比操作 | DONE | 已完成 | P3 | none | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-COMPARE-002 | 对比控件窄屏命中区主线回归 | DONE | 已完成 | P3 | TASK-COMPARE-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
@@ -120,13 +120,13 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-005 | Desktop 供应商非秘密配置 durable 保存与恢复 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PROV-006 | Desktop image 提交连接门禁与 health 统一 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-PROV-007 | Selected model is at capacity 错误分类与可用模型切换 | DONE | 已完成 | P1 | T5 | root | 保留当前证据，合并后按原验收范围回读主线 |
-| TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | 未完成 | P2 | TASK-GOV-001 | root | 保留source105的9个首轮flaky原件；当前固定1423、retries=0的并发矩阵仅证明未复现，不宣称根因已修复。若要关闭，补同一exact SHA的Hosted与独立复审；否则保持PARTIAL。 |
+| TASK-VERIFY-CONCURRENCY-002 | 浏览器并发失败原因与隔离复核 | PARTIAL | 进行中 | P1 | TASK-GOV-001 | root | 保留source105的9个首轮flaky原件；当前固定1423、retries=0的并发矩阵仅证明未复现，不宣称根因已修复。若要关闭，补同一exact SHA的Hosted与独立复审；否则保持PARTIAL。 |
 | TASK-VERIFY-ORIGIN-003 | 浏览器验收端口与服务来源契约一致性 | DONE | 已完成 | P1 | none | root | 保留exact-SHA与独立review收据；Hosted delivery、Windows安装、第二环境、发布和用户验收继续由TASK-AGENT-010及发布门禁承担。 |
 | TASK-DOCS-STRUCT-001 | AI 协作规则文档结构收敛 | DONE | 已完成 | P1 | none | root | 保留当前证据；合并或发布前按本任务原验收范围回读主线，不重新引入 pnpm 锁文件。 |
-| TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | PARTIAL | 进行中 | P1 | none | root | 保留本地网关/模型能力实现和回归证据；下一步只补真实 DPAPI、Ark/Codex 凭据、token 级上游流和 Desktop 运行态，外部证据齐全后再转 DONE。 |
+| TASK-AI-GATEWAY-001 | 统一多平台 AI 模型接入：凭证、通道契约与豆包 Ark 适配器 | PARTIAL | 进行中 | P1 | none | root | 先补本地 upstream ReadableStream/token callback 契约和 Windows DPAPI/Tauri protector 的受控测试；随后才补真实 Ark/Codex 凭据与 Desktop 运行态，外部证据齐全后再转 DONE。 |
 | TASK-PROV-BYOK-001 | 用户自有 API 产品化接入 | TODO | 未完成 | P1 | TASK-AI-GATEWAY-001 | root | 依赖TASK-AI-GATEWAY-001与Web VPS控制面；先补intent/spec/plan和Desktop/Web/Mobile边界，外部契约稳定前不扩展产品实现。 |
 | TASK-UI-015 | 画布点状/网状背景缩放插值修正 | DONE | 已完成 | P2 | none | root | 保留当前证据；主线回读完成 |
-| TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | REVIEW | 进行中 | P1 | TASK-LAUNCH-001 | root | 在合并候选 SHA 上回读 hosted CI、发布 receipt，并在第二环境安装后校验版本/commit/hash/进程路径 |
+| TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | REVIEW | 进行中 | P1 | TASK-LAUNCH-001 | root | 先收窄并同步候选到当前 origin/main，再取得 Hosted CI、不可变发布 receipt 和第二环境版本/commit/hash/进程路径回读；当前候选范围过宽，保持 REVIEW。 |
 | TASK-GOV-003 | 规则体系收敛与文档同步门禁（B1+B2） | DONE | 已完成 | P1 | none | root | B3（AI_HANDOFF 瘦身）、B4（worktree/二进制收敛）、B5（交付包补齐）待用户授权后按批次执行 |
 | TASK-GOV-004 | 未合并分支全量核验、分类与收敛合并 | PARTIAL | 进行中 | P1 | TASK-GOV-003 | root | P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包 |
 
@@ -143,11 +143,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-FIX-PUSH-GUARD-SPACES-001-main-replay`
 - Worktree: `D:/kk-studio/.worktrees/TASK-FIX-PUSH-GUARD-SPACES-001-windows`
 - Modules: .githooks/pre-push, scripts/install-git-guards.mjs, scripts/governance/push-policy.mjs, tests/unit/gitPushGuardPaths.test.ts, tests/unit/gitPushPolicy.test.ts, docs/changes/2026-10-10-push-guard-spaces
-- Verification: NOT_VERIFIED — Current main replay at 3a7467825b85f66a7f4e409f8296e16ca2249516: local Windows hook 22 PASS/0 FAIL/5 SKIP; Hosted Windows and Ubuntu hook jobs PASS; build PASS; Hosted delivery/deploy-linux PASS; npm verify has two unrelated desktop Agent environment failures and Hosted verify is pending.
-- Evidence: [docs/changes/2026-10-10-push-guard-spaces/verification.md](../../docs/changes/2026-10-10-push-guard-spaces/verification.md), [docs/changes/2026-10-10-push-guard-spaces/review.md](../../docs/changes/2026-10-10-push-guard-spaces/review.md)
-- Next action: 在当前合并候选上复核 Windows/Ubuntu hook、npm verify 与 delivery 的 exact-SHA 结果；Hosted verify 未完成前保持 REVIEW。
-- Last verified: 2026-10-10
-- Updated: 2026-10-10
+- Verification: NOT_VERIFIED — PR #53 merged head cc3fad9695827c7545f7b7675870a65347f7358e into merge 1f6cbd37091326a899fa600baba53bf6efd9cf16. Current merge commit check-runs: Windows/Ubuntu hook, verify and deploy-linux SUCCESS; delivery SKIPPED. Merged-SHA independent review receipt and raw Hosted artifact manifest are still absent.
+- Evidence: [docs/changes/2026-10-10-push-guard-spaces/verification.md](../../docs/changes/2026-10-10-push-guard-spaces/verification.md), [docs/changes/2026-10-10-push-guard-spaces/review.md](../../docs/changes/2026-10-10-push-guard-spaces/review.md), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md), [docs/changes/2026-10-12-p1-audit-closeout/evidence/push-guard-pr53-readback.json](../../docs/changes/2026-10-12-p1-audit-closeout/evidence/push-guard-pr53-readback.json)
+- Next action: 补 merged-SHA 独立 review receipt、原始 Hosted artifact manifest 及当前 SHA 的 delivery 结果；本任务验收补齐前保持 REVIEW，签名/安装/用户验收仍属独立发布边界。
+- Last verified: 2026-10-12
+- Updated: 2026-10-12
 
 ## TASK-WINDOWS-ENTRY-DIAG-002 — 补齐Windows入口子进程失败诊断
 
@@ -182,10 +182,10 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `unallocated`
 - Modules: tests/unit/desktopRelease.test.ts, start-kk-studio.bat, docs
 - Verification: NOT_VERIFIED — 实际失败根因UNKNOWN；独立本机未复现，P2跟进不能代填关闭。
-- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-09-windows-entry-diagnostics/review.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/review.md)
-- Next action: 等待Hosted Windows带启动阶段/退出码/运行时日志的重跑；保留PR43原失败和本机未复现原件，未取得新分类前保持TODO。
-- Last verified: 2026-10-09
-- Updated: 2026-10-09
+- Evidence: [docs/changes/2026-10-09-windows-entry-diagnostics/verification.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/verification.md), [docs/changes/2026-10-09-windows-entry-diagnostics/review.md](../../docs/changes/2026-10-09-windows-entry-diagnostics/review.md), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md)
+- Next action: 将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。
+- Last verified: 2026-10-12
+- Updated: 2026-10-12
 
 ## TASK-IMAGE-RETRY-004 — 修复主线区域重试验收读取旧成功任务
 
@@ -295,11 +295,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/features/image-edit, src/features/creation, tests, docs/features/feat-035-image-mask-editing.md
-- Verification: NOT_VERIFIED — 本轮未使用真实付费连接、物理手机或用户视觉验收；比例异常已自动拒绝，任意语义几何位移仍需人工确认。
-- Evidence: [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/features/feat-035-image-mask-editing.md](../../docs/features/feat-035-image-mask-editing.md)
+- Verification: NOT_VERIFIED — 本轮复核确认：比例异常已自动拒绝，但仍未使用真实付费连接、物理手机或用户视觉验收，任意语义几何位移仍需人工确认。
+- Evidence: [docs/changes/2026-10-08-unified-image-mask/verification.md](../../docs/changes/2026-10-08-unified-image-mask/verification.md), [docs/features/feat-035-image-mask-editing.md](../../docs/features/feat-035-image-mask-editing.md), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md)
 - Next action: 冻结新增实现，等待明确供应商/账号授权与物理手机；条件满足后先做单张Mask原件保护和映射边界，再做手机手势/键盘与用户视觉验收。
-- Last verified: 2026-10-08
-- Updated: 2026-10-08
+- Last verified: 2026-10-12
+- Updated: 2026-10-12
 
 ## TASK-UI-013 — 桌面标题栏与菜单合并为单排
 
@@ -1705,11 +1705,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `main`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/features/creation/taskState.ts, src/features/creation/model.ts, src/features/creation/provider adapters, tests/unit
-- Verification: PARTIAL — 已实现有界报价回执 schema、任务/幂等身份校验、重复与冲突保护、快照恢复和 fixture/非 USD 隔离；当前 HEAD 的定向成本/任务测试30/30、全量 unit/deploy 966（957 pass、9 skip、0 fail）、native project_package 22/22 通过。独立 dirty 预检未发现P0-P2缺陷，结论为PASS WITH FOLLOW-UPS；真实 Provider 报价回执和提交后exact-SHA正式审查仍未取得，保持PARTIAL。
-- Evidence: [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-intent.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-intent.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-spec.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-spec.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md), [tests/unit/taskCostReceipt.test.ts](../../tests/unit/taskCostReceipt.test.ts), [tests/unit/taskState.test.ts](../../tests/unit/taskState.test.ts), [docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json](../../docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json)
-- Next action: 提交后绑定 exact SHA 完成正式独立 review；再由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。
-- Last verified: 2026-10-11
-- Updated: 2026-10-11
+- Verification: PARTIAL — 有界报价回执 schema、任务/幂等身份校验、重复与冲突保护和快照恢复通过；但当前生产 Provider→task 归档路径没有消费 applyTaskCostReceipt，只有 helper/schema 与 fixture 测试。真实 Provider 报价回执和提交后 exact-SHA 正式审查仍未取得，保持 PARTIAL。
+- Evidence: [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-intent.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-intent.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-spec.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-spec.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-verification.md), [docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md](../../docs/changes/2026-10-11-taskstate-docs-closeout/taskstate-review.md), [tests/unit/taskCostReceipt.test.ts](../../tests/unit/taskCostReceipt.test.ts), [tests/unit/taskState.test.ts](../../tests/unit/taskState.test.ts), [docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json](../../docs/evidence/2026-10-11-taskstate-docs-closeout/full-check-receipt.json), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md)
+- Next action: 在统一 Provider→task 归档边界接入 applyTaskCostReceipt 并补调用路径测试；随后由 provider adapter owner 接入真实回执并保存 receipt/source/currency/identity 证据，继续保持 fixture 与真实账单分离。
+- Last verified: 2026-10-12
+- Updated: 2026-10-12
 
 ## TASK-PROV-002 — 多供应商接入与多目标配置（Provider Connectivity）
 
@@ -2286,7 +2286,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Goal: 上游容量/429 拒绝时保留原始错误与状态，分类为容量状态而非普通 Error，刷新 models/usage 实时可用性，明确展示可用模型并提供降级选择与切换入口，无 retry-after 时不盲目重试
 - Scope: src/features/creation/providerSubmission.ts, src/features/models/modelCatalog.ts, src/features/creation/nativeTaskHost.ts, 模型选择 UI, tests
 - Display status: 已完成
-- Priority: P1 — 未记录
+- Priority: P1 — 历史已完成范围
 - Requirement refs: ledger:TASK-PROV-007
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -2304,8 +2304,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 保留首轮失败并查明资源/超时条件，不能用重复跑隐藏失败
 - Scope: 健康审计QA-001；当前main重新复现后在独立任务分支收尾
-- Display status: 未完成
-- Priority: P2 — 当前治理或验证阻断项
+- Display status: 进行中
+- Priority: P1 — 当前治理或验证阻断项
 - Requirement refs: ledger:TASK-VERIFY-CONCURRENCY-002
 - Feature IDs: none
 - Owner role: repository-maintainer
@@ -2370,11 +2370,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `docs/TASK-DOCS-STRUCT-001`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: src/features/ai-gateway/credentials.ts, src/features/ai-gateway/errors.ts, src/features/ai-gateway/channels/adapter.ts, src/features/ai-gateway/channels/registry.ts, src/features/ai-gateway/channels/doubao.ts, src/features/ai-gateway/scheduler.ts, src/features/ai-gateway/chat.ts, src/features/generation-server/http.ts, tests/unit/aiGatewayCredentials.test.ts, tests/unit/aiGatewayChannels.test.ts, tests/unit/aiGatewayScheduler.test.ts, tests/unit/aiGatewayChat.test.ts, tests/unit/aiGatewayChatEndpoint.test.ts, tests/unit/generationServerChatRoute.test.ts, docs/features/feat-038-ai-model-gateway.md, src/domain/modelProvider.ts, src/features/creation/model.ts, src/components/settings/ProviderProfileFields.tsx, tests/unit/modelProvider.test.ts, docs/changes/2026-10-10-doubao-official-channel/, src/features/agent/agentImages.ts, src/features/agent/agentHost.ts, src/features/models/modelMenuEntries.ts, src/features/models/modelPresentation.ts, tests/unit/modelMenuEntries.test.ts, tests/unit/modelPresentation.test.ts
-- Verification: PARTIAL — 网关与多平台模型能力闭环已落地：gateway/Agent/model 定向回归 69 项全绿，Agent 模型选择定向回归 26 项全绿；当前主工作区全量回归 911 项，903 通过、0 失败、8 跳过；TypeScript、ESLint、格式、UI 标准、治理、功能、Markdown、版本和构建通过，前端冒烟 16/16、连接拖拽 7/7。真实 Ark/Codex 凭据、DPAPI、token 级上游流式及 Desktop 运行态仍未验证，按当前规则继续保持未完成。
-- Evidence: [docs/features/feat-038-ai-model-gateway.md](../../docs/features/feat-038-ai-model-gateway.md), [docs/changes/2026-10-10-kk-model-capability/verification.md](../../docs/changes/2026-10-10-kk-model-capability/verification.md), [docs/superpowers/specs/2026-10-10-kk-model-capability-design.md](../../docs/superpowers/specs/2026-10-10-kk-model-capability-design.md), [docs/superpowers/plans/2026-10-10-kk-model-capability.md](../../docs/superpowers/plans/2026-10-10-kk-model-capability.md), [docs/changes/2026-10-09-doubao-integration/verification.md](../../docs/changes/2026-10-09-doubao-integration/verification.md), [docs/changes/2026-10-10-doubao-official-channel/verification.md](../../docs/changes/2026-10-10-doubao-official-channel/verification.md), [docs/changes/2026-10-11-closeout/verification.md](../../docs/changes/2026-10-11-closeout/verification.md), [tests/browser/model-picker.spec.ts](../../tests/browser/model-picker.spec.ts)
-- Next action: 保留本地网关/模型能力实现和回归证据；下一步只补真实 DPAPI、Ark/Codex 凭据、token 级上游流和 Desktop 运行态，外部证据齐全后再转 DONE。
-- Last verified: 2026-10-11
-- Updated: 2026-10-11
+- Verification: PARTIAL — gateway/Agent/model 本地回归仍通过；当前实现缺少真实 DPAPI protector，Ark 通道在 response.json() 后才产生最终文本，generation-server 只把完整文本包装为单个 SSE delta，尚未实现 upstream token-level stream。真实 Ark/Codex 凭据和 Desktop 运行态仍未验证，保持 PARTIAL。
+- Evidence: [docs/features/feat-038-ai-model-gateway.md](../../docs/features/feat-038-ai-model-gateway.md), [docs/changes/2026-10-10-kk-model-capability/verification.md](../../docs/changes/2026-10-10-kk-model-capability/verification.md), [docs/superpowers/specs/2026-10-10-kk-model-capability-design.md](../../docs/superpowers/specs/2026-10-10-kk-model-capability-design.md), [docs/superpowers/plans/2026-10-10-kk-model-capability.md](../../docs/superpowers/plans/2026-10-10-kk-model-capability.md), [docs/changes/2026-10-09-doubao-integration/verification.md](../../docs/changes/2026-10-09-doubao-integration/verification.md), [docs/changes/2026-10-10-doubao-official-channel/verification.md](../../docs/changes/2026-10-10-doubao-official-channel/verification.md), [docs/changes/2026-10-11-closeout/verification.md](../../docs/changes/2026-10-11-closeout/verification.md), [tests/browser/model-picker.spec.ts](../../tests/browser/model-picker.spec.ts), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md)
+- Next action: 先补本地 upstream ReadableStream/token callback 契约和 Windows DPAPI/Tauri protector 的受控测试；随后才补真实 Ark/Codex 凭据与 Desktop 运行态，外部证据齐全后再转 DONE。
+- Last verified: 2026-10-12
+- Updated: 2026-10-12
 
 ## TASK-PROV-BYOK-001 — 用户自有 API 产品化接入
 
@@ -2389,11 +2389,11 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `unallocated`
 - Worktree: `unallocated`
 - Modules: src/features/creation, src/features/agent, src-tauri, docs
-- Verification: NOT_VERIFIED — 当前按规则保留为高优先级 TODO，尚未实现或验收；不得以 Desktop 本地 API Key 直连证据替代产品化接入。
-- Evidence: [docs/architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md](../../docs/architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md), [docs/features/BACKEND-ROADMAP.md](../../docs/features/BACKEND-ROADMAP.md)
+- Verification: NOT_VERIFIED — 本轮复核确认仍按规则保留为高优先级 TODO，尚未实现或验收；不得以 Desktop 本地 API Key 直连证据替代产品化接入。
+- Evidence: [docs/architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md](../../docs/architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md), [docs/features/BACKEND-ROADMAP.md](../../docs/features/BACKEND-ROADMAP.md), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md)
 - Next action: 依赖TASK-AI-GATEWAY-001与Web VPS控制面；先补intent/spec/plan和Desktop/Web/Mobile边界，外部契约稳定前不扩展产品实现。
-- Last verified: 2026-10-09
-- Updated: 2026-10-09
+- Last verified: 2026-10-12
+- Updated: 2026-10-12
 
 ## TASK-UI-015 — 画布点状/网状背景缩放插值修正
 
@@ -2428,10 +2428,10 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Worktree: `D:/kk-studio/.worktrees/TASK-AGENT-010-provider-entry`
 - Modules: scripts/check-version-consistency.mjs, package.json, .github/workflows/quality.yml, docs/engineering, docs/changes/2026-10-10-version-coherence
 - Verification: PARTIAL — 本地版本门禁、嵌套 lock 漂移测试和启动器 fail-closed 证据通过；远端 CI、发布工件和第二环境安装回读待合并候选 SHA 实际验证。
-- Evidence: [docs/changes/2026-10-10-version-coherence/intent.md](../../docs/changes/2026-10-10-version-coherence/intent.md), [docs/changes/2026-10-10-version-coherence/spec.md](../../docs/changes/2026-10-10-version-coherence/spec.md), [docs/changes/2026-10-10-version-coherence/verification.md](../../docs/changes/2026-10-10-version-coherence/verification.md), [docs/changes/2026-10-10-version-coherence/review.md](../../docs/changes/2026-10-10-version-coherence/review.md)
-- Next action: 在合并候选 SHA 上回读 hosted CI、发布 receipt，并在第二环境安装后校验版本/commit/hash/进程路径
-- Last verified: 2026-10-10
-- Updated: 2026-10-10
+- Evidence: [docs/changes/2026-10-10-version-coherence/intent.md](../../docs/changes/2026-10-10-version-coherence/intent.md), [docs/changes/2026-10-10-version-coherence/spec.md](../../docs/changes/2026-10-10-version-coherence/spec.md), [docs/changes/2026-10-10-version-coherence/verification.md](../../docs/changes/2026-10-10-version-coherence/verification.md), [docs/changes/2026-10-10-version-coherence/review.md](../../docs/changes/2026-10-10-version-coherence/review.md), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md)
+- Next action: 先收窄并同步候选到当前 origin/main，再取得 Hosted CI、不可变发布 receipt 和第二环境版本/commit/hash/进程路径回读；当前候选范围过宽，保持 REVIEW。
+- Last verified: 2026-10-12
+- Updated: 2026-10-12
 
 ## TASK-GOV-003 — 规则体系收敛与文档同步门禁（B1+B2）
 
