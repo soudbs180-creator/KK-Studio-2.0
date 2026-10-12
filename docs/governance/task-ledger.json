@@ -5164,4 +5164,44 @@
     "featureIds": [],
     "priorityRationale": "一次性历史快照与现行一任务一PR门禁冲突，且 Windows desktopRelease 门禁存在真实路径误判。"
   }
+  {
+    "id": "TASK-GOV-005",
+    "title": "PR #55 历史快照合法集成与门禁修复",
+    "goal": "保留 PR #55 的逐项追溯，在不伪造交付证据的前提下修复 Windows desktopRelease 误判并为历史快照提供有限、显式的交付门禁例外。",
+    "scope": "仅限 PR #55 的 delivery/verify 根因、历史包标记和独立审查；不合并 main、不处理 PR #56、不集成 Hermes、不删除分支或工作树。",
+    "acceptance": [
+      "历史包仅通过包内 legacy-incomplete.md 显式标记豁免，未来无标记新包仍强制五件套和当前任务绑定。",
+      "Windows 普通 node_modules 目录不因 8.3/realpath 拼写差异被判为 linked，真实 symlink/junction 仍被拒绝。",
+      "最终 PR 头 SHA 具有本地定向测试、独立 exact-SHA review 和 Hosted verify/delivery 回执；在此之前保持 REVIEW/NOT_VERIFIED。"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "branch": "codex/TASK-GOV-005-publish-main-20261012",
+    "worktree": "D:/kk-studio/.worktrees/pr55-delivery-repair",
+    "affectedModules": [
+      "scripts/governance/delivery.mjs",
+      "scripts/check-delivery.mjs",
+      "scripts/windows/desktop-release.mjs",
+      "tests/unit/deliveryPolicy.test.ts",
+      "docs/changes/2026-10-12-pr55-historical-integration"
+    ],
+    "status": "REVIEW",
+    "priority": "P1",
+    "evidence": [
+      "docs/changes/2026-10-12-pr55-historical-integration/verification.md",
+      "docs/changes/2026-10-12-pr55-historical-integration/review.md"
+    ],
+    "verification": "Repair evidence is pending final pushed head: local desktopRelease/policy tests and hosted verify/delivery must be read back by exact SHA. Original PR #55 failures remain open until those checks pass.",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-12",
+    "displayStatus": "进行中",
+    "nextAction": "完成独立 exact-SHA review，fast-forward update PR #55 branch，回读 Hosted verify/delivery；不要直接推送 main。",
+    "lastVerified": "2026-10-12",
+    "ownerRole": "repository-maintainer",
+    "requirementRefs": [
+      "ledger:TASK-GOV-005"
+    ],
+    "featureIds": [],
+    "priorityRationale": "一次性历史快照与现行一任务一PR门禁冲突，且 Windows desktopRelease 门禁存在真实路径误判。"
+  }
 ]
