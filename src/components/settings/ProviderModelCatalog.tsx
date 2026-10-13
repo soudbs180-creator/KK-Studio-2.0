@@ -4,7 +4,13 @@ import {
   saveModelCatalog,
   type ModelKind,
 } from "../../features/models/modelCatalog";
-import { connectionFromModelProfile } from "../../features/creation/providerRegistry";
+import {
+  connectionFromModelProfile,
+  newModelProfileConnection,
+  readProviderConnections,
+} from "../../features/creation/providerRegistry";
+import { requiresModelProviderSelection } from "./modelProviderSettingsState";
+import type { ProviderConnection } from "../../domain/providerConnections";
 import {
   modelProviderSchema,
   type ModelProviderProfile,
@@ -19,13 +25,23 @@ export default function ProviderModelCatalog({
   onSelect,
   onRefresh,
   loading,
+  connection: selectedConnection,
 }: {
   profile: ModelProviderProfile;
   onSelect: (id: string) => void;
   onRefresh: () => void;
   loading: boolean;
+  connection?: ProviderConnection;
 }) {
-  const connection = connectionFromModelProfile(profile);
+  const selectionRequired = requiresModelProviderSelection(
+    profile,
+    readProviderConnections(),
+  );
+  const connection =
+    selectedConnection ??
+    (selectionRequired
+      ? newModelProfileConnection(profile)
+      : connectionFromModelProfile(profile));
   const [, setRevision] = useState(0);
   const models = catalogForConnection(connection);
   const selected = models.find((model) => model.id === profile.model);
@@ -52,6 +68,8 @@ export default function ProviderModelCatalog({
     setAliases(selected?.aliases?.join(", ") ?? "");
     setImage(imageCapabilityDraft(selected?.image));
   }, [
+    connection.id,
+    connection.credentialRef,
     profile.model,
     profile.baseUrl,
     profile.name,
@@ -64,9 +82,13 @@ export default function ProviderModelCatalog({
   ]);
   useEffect(
     () => setStatus(""),
-    [profile.model, profile.baseUrl, profile.name],
+    [profile.model, profile.baseUrl, profile.name, connection.id],
   );
   function save() {
+    if (requiresModelProviderSelection(profile, readProviderConnections())) {
+      setStatus("请先选择已登记账号，再保存此模型能力。");
+      return;
+    }
     const valid = modelProviderSchema.safeParse(profile);
     if (!valid.success) {
       setStatus(valid.error.issues[0]?.message ?? "请检查供应商配置。");
@@ -114,8 +136,11 @@ export default function ProviderModelCatalog({
     }
   }
   return (
-    <fieldset className="provider-model-catalog">
+    <fieldset className="provider-model-catalog" disabled={selectionRequired}>
       <legend>模型与参数</legend>
+      {selectionRequired && (
+        <p role="status">请先在已登记连接中选择账号，再编辑或刷新模型能力。</p>
+      )}
       <button type="button" disabled={loading} onClick={onRefresh}>
         {loading ? "刷新中…" : "刷新模型列表"}
       </button>

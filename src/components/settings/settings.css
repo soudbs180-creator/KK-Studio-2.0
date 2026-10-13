@@ -1531,3 +1531,46 @@
     height: 84px;
   }
 }
+
+.model-access-methods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kk-space-2);
+  margin-bottom: var(--kk-space-5);
+}
+.model-access-methods button[aria-pressed="true"] {
+  background: var(--kk-neutral-selected);
+  border-color: var(--kk-text-accent);
+}
+.model-access-settings [hidden] {
+  display: none;
+}
+.model-access-settings section {
+  min-width: 0;
+}
+.model-access-manual {
+  margin: var(--kk-space-4) 0;
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-body);
+}
+.model-access-manual summary {
+  cursor: pointer;
+}
+.model-access-manual[open] summary {
+  margin-bottom: var(--kk-space-3);
+}
+.model-access-settings .provider-form {
+  margin-top: 0;
+}
+.model-access-config-heading h3 {
+  font-size: var(--kk-font-subtitle);
+}
+
+.provider-edit-fields {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+  display: grid;
+  gap: var(--kk-space-4);
+}

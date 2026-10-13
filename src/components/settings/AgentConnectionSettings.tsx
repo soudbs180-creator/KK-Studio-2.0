@@ -7,7 +7,6 @@ import {
 } from "../../features/agent/agentConnection.ts";
 import type { AgentPermissionMode } from "../../features/agent/agentTypes.ts";
 import DesktopAgentControl from "./DesktopAgentControl.tsx";
-import CodeBuddyConnectionSettings from "./CodeBuddyConnectionSettings.tsx";
 
 const PERMISSION_LABELS: Record<AgentPermissionMode, string> = {
   request: "每次询问",
@@ -70,50 +69,60 @@ export default function AgentConnectionSettings({
         />
         <h3>
           Codex 主 Agent
-          <span className="settings-version-tag">本地连接</span>
+          <span className="settings-version-tag">
+            {state.status === "connected"
+              ? "已连接"
+              : state.status === "connecting"
+                ? "连接中"
+                : state.status === "error"
+                  ? "连接失败"
+                  : "未连接"}
+          </span>
         </h3>
       </div>
       <p>
-        使用 Codex 已登录账号完成对话，无需对话 API Key。主 Agent
-        可操作画布并调用 KK 已配置的生成服务。选择 Codex
-        图片入口使用账号内置生图；选择 API 使用对应供应商连接。
+        使用本机已登录的 Codex 账号，负责对话、任务规划与画布操作。
+        图片任务可使用账号内置能力或你配置的 API。
       </p>
       <DesktopAgentControl
         onFeedback={onFeedback}
         onBusyChange={setRuntimePending}
       />
-      <div className="settings-network-field">
-        <label htmlFor="agent-endpoint">Agent 地址</label>
-        <input
-          id="agent-endpoint"
-          aria-label="Agent 地址"
-          value={endpoint}
-          disabled={
-            runtimePending ||
-            state.status === "connecting" ||
-            state.status === "connected"
-          }
-          onChange={(e) => setEndpoint(e.target.value)}
-          placeholder="http://127.0.0.1:17371"
-        />
-      </div>
-      <div className="settings-network-field">
-        <label htmlFor="agent-token">本地连接 Token（仅本次会话）</label>
-        <input
-          id="agent-token"
-          type="password"
-          autoComplete="off"
-          aria-label="连接 Token"
-          value={token}
-          disabled={
-            runtimePending ||
-            state.status === "connecting" ||
-            state.status === "connected"
-          }
-          onChange={(e) => setToken(e.target.value)}
-          placeholder="外部服务的本次连接 Token"
-        />
-      </div>
+      <details className="model-access-manual">
+        <summary>手动连接本地服务</summary>
+        <div className="settings-network-field">
+          <label htmlFor="agent-endpoint">Agent 地址</label>
+          <input
+            id="agent-endpoint"
+            aria-label="Agent 地址"
+            value={endpoint}
+            disabled={
+              runtimePending ||
+              state.status === "connecting" ||
+              state.status === "connected"
+            }
+            onChange={(e) => setEndpoint(e.target.value)}
+            placeholder="http://127.0.0.1:17371"
+          />
+        </div>
+        <div className="settings-network-field">
+          <label htmlFor="agent-token">本地连接 Token（仅本次会话）</label>
+          <input
+            id="agent-token"
+            type="password"
+            autoComplete="off"
+            aria-label="连接 Token"
+            value={token}
+            disabled={
+              runtimePending ||
+              state.status === "connecting" ||
+              state.status === "connected"
+            }
+            onChange={(e) => setToken(e.target.value)}
+            placeholder="外部服务的本次连接 Token"
+          />
+        </div>
+      </details>
       <div className="settings-network-field">
         <label htmlFor="agent-permission">权限模式</label>
         <select
@@ -176,10 +185,6 @@ export default function AgentConnectionSettings({
           断开
         </button>
       </div>
-      <p className="settings-network-code">
-        本地开发可用 npm run dev:agent 一起启动 KK 与 Codex 连接服务。
-      </p>
-      <CodeBuddyConnectionSettings onFeedback={onFeedback} />
     </div>
   );
 }

@@ -5,7 +5,7 @@ test.use({ reducedMotion: "reduce" });
 test("A2 目录卡在桌面和手机共用页面类型几何", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
-  for (const name of ["技能", "ComfyUI 工作流"]) {
+  for (const name of ["扩展", "ComfyUI 工作流"]) {
     await page
       .locator(".sidebar")
       .getByRole("button", { name, exact: true })

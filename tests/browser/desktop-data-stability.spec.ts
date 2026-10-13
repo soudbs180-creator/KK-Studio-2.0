@@ -484,7 +484,10 @@ test("两个窗口并发保存时保留先提交的原件和冲突草稿", async
 test("画布参数不会在重开项目后回到默认值", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("模型名称").fill("image-test");
   await page.getByRole("button", { name: "保存", exact: true }).click();

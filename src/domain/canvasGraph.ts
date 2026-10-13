@@ -138,6 +138,25 @@ export function cardLayout(item: CanvasCollectionItem): {
   };
 }
 
+/** Bounds used to reveal a selected node, including its optional editor. */
+export function cardSelectionLayout(
+  item: CanvasCollectionItem,
+): ReturnType<typeof cardLayout> {
+  const layout = cardLayout(item);
+  if (
+    item.kind === "video" &&
+    !item.plugin &&
+    !item.referenceOnly &&
+    !item.result &&
+    !(item.generationStatus && item.generationIndex !== undefined)
+  ) {
+    // The 370px video body has a 590px editor extending 110px to its left.
+    // Reserve the full 234 + 237px editor height without changing body/anchors.
+    return { ...layout, width: 590, height: 471, left: -110 };
+  }
+  return layout;
+}
+
 export function connectionGeometry(
   edge: CanvasConnection,
   nodes: Record<string, Point>,

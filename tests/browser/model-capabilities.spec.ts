@@ -106,7 +106,7 @@ for (const duplicate of [true, false]) {
       )
       .toBe(true);
     await settings(page);
-    await page.getByLabel("API Key").fill("fixture-key");
+    await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
     await page.getByRole("button", { name: "保存", exact: true }).click();
     await page.getByLabel("当前模型用途").selectOption("image");
     await page
@@ -221,14 +221,17 @@ for (const duplicate of [true, false]) {
 
 async function settings(page: Page) {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
 }
 async function configure(page: Page) {
   await page.goto("/");
   await settings(page);
   await page.getByLabel("提供商", { exact: true }).fill("Capability fixture");
   await page.getByLabel("接口地址").fill(api);
-  await page.getByLabel("API Key").fill("fixture-key");
+  await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-capability-a");
   await page.getByRole("button", { name: "保存", exact: true }).click();
 }

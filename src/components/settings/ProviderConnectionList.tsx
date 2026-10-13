@@ -7,11 +7,13 @@ export default function ProviderConnectionList({
   connections,
   activeBaseUrl,
   activeCredentialRef,
+  activeConnectionId,
   onSelect,
 }: {
   connections: ProviderConnection[];
   activeBaseUrl: string;
   activeCredentialRef?: string;
+  activeConnectionId?: string;
   onSelect: (connection: ProviderConnection) => void;
 }) {
   if (!connections.length) return null;
@@ -24,6 +26,7 @@ export default function ProviderConnectionList({
       <div role="list">
         {connections.map((connection) => {
           const active =
+            (!activeConnectionId || connection.id === activeConnectionId) &&
             connection.baseUrl === activeBaseUrl &&
             (!activeCredentialRef ||
               !connection.credentialRef ||

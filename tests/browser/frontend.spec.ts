@@ -74,10 +74,10 @@ test("设置主题保存重载、键盘关闭及导航", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "项目库" })).toBeVisible();
   await page
     .getByRole("navigation", { name: "主导航" })
-    .getByRole("button", { name: "技能", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Skill", exact: true }),
+    page.getByRole("heading", { name: "扩展", exact: true }),
   ).toBeVisible();
 });
 
@@ -113,17 +113,20 @@ test("未接入的通用设置明确禁用原因", async ({ page }) => {
   );
 });
 
-test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", async ({ page }) => {
+test("模型接入使用 API 地址，连接状态真实且密钥不落盘", async ({ page }) => {
   await page.route("https://models.example.test/v1/models", async (route) => {
     expect(route.request().headers().authorization).toBe("Bearer session-key");
     await route.fulfill({ status: 200, json: { data: [] } });
   });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await page.getByRole("textbox", { name: "提供商" }).fill("测试供应商");
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
-  await page.getByLabel("API Key").fill("session-key");
+  await page.getByLabel("API Key", { exact: true }).fill("session-key");
   await page.getByLabel("模型名称").fill("image-model-v2");
   await page.getByRole("button", { name: "保存", exact: true }).click();
   const saved = await page.evaluate(() =>
@@ -138,17 +141,23 @@ test("模型供应商使用 API 地址，连接状态真实且密钥不落盘", 
     .screenshot({ path: "test-results/runtime/settings-model-provider.png" });
   await page.reload();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await expect(page.getByLabel("接口地址")).toHaveValue(
     "https://models.example.test/v1",
   );
-  await expect(page.getByLabel("API Key")).toHaveValue("");
+  await expect(page.getByLabel("API Key", { exact: true })).toHaveValue("");
 });
 
 test("豆包预置一次性填入名称和方舟地址", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await page.getByLabel("预置提供商").selectOption("doubao-ark");
   await expect(page.getByRole("textbox", { name: "提供商" })).toHaveValue(
     "豆包（火山方舟）",
@@ -158,10 +167,13 @@ test("豆包预置一次性填入名称和方舟地址", async ({ page }) => {
   );
 });
 
-test("模型供应商可以登记多个非敏感连接并切换当前配置", async ({ page }) => {
+test("模型接入可以登记多个非敏感连接并切换当前配置", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   const save = async (name: string, baseUrl: string, model: string) => {
     await page.getByRole("textbox", { name: "提供商" }).fill(name);
     await page.getByLabel("接口地址").fill(baseUrl);
@@ -235,7 +247,7 @@ test("本地导入成功与错误恢复，不伪造生成和回复", async ({ pa
     .click();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "模型供应商", exact: true }),
+    page.getByRole("button", { name: "模型接入", exact: true }),
   ).toBeVisible();
   await expect(page.getByLabel("图片提示词")).toHaveValue("一个白色风扇");
   await expect(
@@ -249,7 +261,10 @@ test("本地导入成功与错误恢复，不伪造生成和回复", async ({ pa
     .locator(".conversation-panel")
     .getByRole("button", { name: "前往模型设置", exact: true })
     .click();
-  await expect(page.getByLabel("API Key")).toBeVisible();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
+  await expect(page.getByLabel("API Key", { exact: true })).toBeVisible();
   await expect(page.getByLabel("对话内容")).toHaveValue("你好");
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
 });
@@ -566,7 +581,10 @@ test("未配置连接时工作台草稿在收起对话及页面切换后保留",
     .locator(".conversation-panel")
     .getByRole("button", { name: "前往模型设置", exact: true })
     .click();
-  await expect(page.getByLabel("API Key")).toBeVisible();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
+  await expect(page.getByLabel("API Key", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "收起对话", exact: true }).click();
   await page.getByRole("button", { name: "打开对话", exact: true }).click();

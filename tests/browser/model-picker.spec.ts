@@ -35,10 +35,13 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
   );
   await openSeededProject(page);
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await page.getByLabel("提供商", { exact: true }).fill("星河 API");
   await page.getByLabel("接口地址").fill("https://variants.example/v1");
-  await page.getByLabel("API Key").fill("fixture-key");
+  await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("aurora-1-2k-low");
   await page.getByRole("button", { name: "保存", exact: true }).click();
   await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
@@ -48,7 +51,6 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型" });
-  await menu.getByRole("tab", { name: "图片", exact: true }).click();
   const search = menu.getByRole("searchbox", { name: "搜索模型、厂商或参数" });
   await search.fill("auorra");
   await expect(
@@ -158,7 +160,7 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
   ).toHaveCount(0);
   await page.screenshot({ path: info.outputPath("model-variants-search.png") });
 });
-test("场景化菜单展示同名 API 图片模型、未知用途原因并保留账号选择", async ({
+test("分级菜单展示同名 API 图片模型、未知用途原因并保留账号选择", async ({
   page,
 }) => {
   const sent: string[] = [];
@@ -187,14 +189,17 @@ test("场景化菜单展示同名 API 图片模型、未知用途原因并保留
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
     .getByRole("menu")
-    .getByRole("button", { name: /配置供应商与账号/ })
+    .getByRole("button", { name: "模型接入…", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
   for (const name of ["A", "B"]) {
     await page.getByLabel("提供商", { exact: true }).fill(name);
     await page
       .getByLabel("接口地址")
       .fill("https://" + name.toLowerCase() + ".example/v1");
-    await page.getByLabel("API Key").fill("fixture-" + name);
+    await page.getByLabel("API Key", { exact: true }).fill("fixture-" + name);
     await page.getByLabel("模型名称").fill("image-same");
     await page.getByRole("button", { name: "保存", exact: true }).click();
     await page
@@ -211,15 +216,18 @@ test("场景化菜单展示同名 API 图片模型、未知用途原因并保留
   await trigger.click();
   const menu = page.getByRole("menu", { name: "选择模型" });
   await expect(menu.getByRole("menuitemradio", { name: /默认/ })).toBeVisible();
-  await menu.getByRole("tab", { name: "图片", exact: true }).click();
-  const enabledImageOptions = menu.locator(
-    'button[role="menuitemradio"]:not([aria-disabled="true"])',
-  );
+  await menu.getByRole("button", { name: "切换全部模型", exact: true }).click();
+  const enabledImageOptions = menu.getByRole("menuitemradio", {
+    name: /image-same/,
+  });
   await expect(enabledImageOptions).toHaveCount(2);
   await enabledImageOptions.first().focus();
   await enabledImageOptions.first().press("End");
   await expect(enabledImageOptions.last()).toBeFocused();
   await enabledImageOptions.last().press("ArrowDown");
+  const defaultModel = menu.getByRole("menuitemradio", { name: /^默认/ });
+  await expect(defaultModel).toBeFocused();
+  await defaultModel.press("ArrowDown");
   await expect(enabledImageOptions.first()).toBeFocused();
   await expect(
     menu.getByRole("menuitemradio", { name: /brand-new-model/ }).first(),
@@ -243,7 +251,6 @@ test("场景化菜单展示同名 API 图片模型、未知用途原因并保留
   await page.keyboard.press("Escape");
   await expect(menu).toBeHidden();
   await trigger.click();
-  await menu.getByRole("tab", { name: "图片", exact: true }).click();
   await expect(
     menu.getByRole("menuitemradio", { name: /brand-new-model/ }).first(),
   ).toHaveAttribute("aria-disabled", "true");
@@ -302,24 +309,25 @@ test("视频和音频模型明确保持禁用并可键盘阅读原因", async ({
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
     .getByRole("menu", { name: "选择模型" })
-    .getByRole("button", { name: /配置供应商与账号/ })
+    .getByRole("button", { name: "模型接入…", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
   await page.getByLabel("提供商", { exact: true }).fill("Media API");
   await page.getByLabel("接口地址").fill("https://media.example/v1");
-  await page.getByLabel("API Key").fill("fixture-media");
+  await page.getByLabel("API Key", { exact: true }).fill("fixture-media");
   await page.getByLabel("模型名称").fill("media-video");
   await page.getByRole("button", { name: "保存", exact: true }).click();
   await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
-
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  await page.getByRole("button", { name: "新建项目", exact: true }).click();
   const trigger = page.getByRole("button", { name: "模型", exact: true });
   const menu = page.getByRole("menu", { name: "选择模型" });
-  for (const [scene, model] of [
-    ["视频", "media-video"],
-    ["音频", "media-audio"],
-  ] as const) {
+  for (const model of ["media-video", "media-audio"]) {
     await trigger.click();
-    await menu.getByRole("tab", { name: scene, exact: true }).click();
+    await menu.getByRole("searchbox").fill(model);
     const option = menu.getByRole("menuitemradio", { name: model });
     await expect(option).toHaveAttribute("aria-disabled", "true");
     await expect(option).toHaveAttribute("title", "此生成执行器尚未接入");

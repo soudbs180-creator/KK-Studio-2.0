@@ -7,7 +7,7 @@ import {
 } from "react";
 import { useCanvasPointer, isInteractiveTarget } from "./useCanvasPointer";
 import { zoomAtPoint } from "../../domain/canvasViewport";
-import { cardLayout } from "../../domain/canvasGraph";
+import { cardLayout, cardSelectionLayout } from "../../domain/canvasGraph";
 import { useCanvasNodeActions } from "./useCanvasNodeActions";
 import { useCanvasView } from "./useCanvasView";
 import { useCanvasViewport } from "./useCanvasViewport";
@@ -170,7 +170,7 @@ export function useCanvasControls({
     )
       return;
     revealBaselineHeight.current = composerExtraHeight;
-    const layout = cardLayout(item);
+    const layout = cardSelectionLayout(item);
     const compact = item.result || ["audio", "text"].includes(item.kind);
     const viewWidth = layout.width;
     const actionSpace = compact ? 52 : 0;

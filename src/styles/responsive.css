@@ -368,12 +368,12 @@
     margin: 0 2px;
   }
   .canvas-hud .task-panel-tabs {
-    height: 40px;
+    height: var(--kk-control-h-md);
     align-items: stretch;
   }
   .canvas-hud .task-tab {
-    height: 40px;
-    min-height: 40px;
+    height: var(--kk-control-h-md);
+    min-height: var(--kk-control-h-md);
     font-size: var(--ui-font-body);
     line-height: 20px;
   }
@@ -382,7 +382,7 @@
   }
   .canvas-hud .task-workbench-link {
     font-size: var(--ui-font-body);
-    min-height: 36px;
+    min-height: var(--kk-control-h-md);
     width: calc(100% - 24px);
   }
   .compact-app-popover {
@@ -654,7 +654,7 @@
   .canvas-hud .task-panel {
     width: min(300px, calc(100vw - 48px));
     height: auto;
-    min-height: 240px;
+    min-height: min(240px, var(--task-panel-available-height));
   }
 }
 

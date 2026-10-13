@@ -94,6 +94,8 @@ test("首页语音可以开启、识别并关闭，结果写入提示词", async
   await prompt.fill("夜晚的城市");
   const voice = page.locator(".start-mic-button");
   await expect(voice).toHaveAttribute("aria-label", "开启语音输入");
+  await expect(voice.locator("img")).toHaveCSS("width", "14px");
+  await expect(voice.locator("img")).toHaveCSS("height", "14px");
 
   await voice.click();
   await expect(voice).toHaveAttribute("aria-label", "关闭语音输入");

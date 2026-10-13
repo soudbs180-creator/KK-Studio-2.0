@@ -48,6 +48,7 @@ export default function ProviderSettingsActions({
           type="button"
           className="settings-action secondary"
           onClick={onTest}
+          disabled={saving}
         >
           测试连接
         </button>

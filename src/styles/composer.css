@@ -706,8 +706,8 @@
 }
 
 .start-composer .start-footer-right [data-voice-state] > img {
-  width: var(--kk-icon-glyph-md);
-  height: var(--kk-icon-glyph-md);
+  width: 14px;
+  height: 14px;
 }
 
 .start-composer .start-mode-picker {
@@ -947,8 +947,8 @@
 }
 
 .conversation-panel .chat-composer [data-voice-state] > img {
-  width: var(--kk-icon-glyph-md);
-  height: var(--kk-icon-glyph-md);
+  width: 14px;
+  height: 14px;
 }
 
 .conversation-panel .chat-composer .chat-footer-separator-right {

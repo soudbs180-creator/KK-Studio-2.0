@@ -141,7 +141,7 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
     { width: 20, height: 20 },
     { width: 16, height: 16 },
     { width: 16, height: 16 },
-    { width: 20, height: 20 },
+    { width: 14, height: 14 },
     { width: 20, height: 20 },
   ]);
 });
