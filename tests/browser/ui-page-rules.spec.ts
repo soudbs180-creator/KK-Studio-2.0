@@ -118,13 +118,16 @@ for (const width of [390, 1920]) {
   test(`模型设置与资源页遵循现行 UI 规则 ${width}`, async ({ page }, info) => {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1080 });
     await page.goto("/");
-    await openSettingsSection(page, "模型供应商");
+    await openSettingsSection(page, "模型接入");
     await inspectPage(
       page,
       page.getByRole("dialog", { name: "设置" }),
       "model-settings",
       info,
     );
+    await page
+      .getByRole("button", { name: "API Key（官方）", exact: true })
+      .click();
     await page
       .getByRole("button", { name: "保存", exact: true })
       .scrollIntoViewIfNeeded();
@@ -134,7 +137,7 @@ for (const width of [390, 1920]) {
       "model-actions",
       info,
     );
-    await page.getByRole("radio", { name: /Gemini CLI 账号/ }).check();
+    await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
     await inspectPage(
       page,
       page.getByRole("dialog", { name: "设置" }),

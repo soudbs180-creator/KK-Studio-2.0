@@ -1,7 +1,7 @@
 import { appVersion } from "../../runtime/appInfo";
 import type { SettingsSection } from "./SettingsSectionData";
-import ModelProviderSettings from "./ModelProviderSettings";
-import GoogleConnectionSettings from "./GoogleConnectionSettings";
+import ModelAccessSettings from "./ModelAccessSettings";
+
 import MemorySettingsSection from "./MemorySettingsSection";
 import AiWebsiteLinks from "./AiWebsiteLinks";
 
@@ -36,8 +36,7 @@ export default function ConnectionSettings({
   if (section === "providers")
     return (
       <>
-        <ModelProviderSettings onFeedback={onFeedback} />
-        <GoogleConnectionSettings onFeedback={onFeedback} />
+        <ModelAccessSettings onFeedback={onFeedback} />
         <AiWebsiteLinks onFeedback={onFeedback} />
       </>
     );
@@ -145,7 +144,7 @@ export default function ConnectionSettings({
           </div>
         </div>
         <p className="settings-section-intro">
-          需要连接本地 Agent 时，请到「插件·技能·伙伴」的伙伴（智能体）页配置。
+          需要连接 Codex 主 Agent 时，请到「模型接入」配置。
         </p>
       </div>
     );

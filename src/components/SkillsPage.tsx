@@ -10,7 +10,8 @@ import {
 import SkillEditor from "./SkillEditor";
 import ConnectorCatalog from "./ConnectorCatalog";
 import SkillCollection from "./SkillCollection";
-import SkillPageControls from "./SkillPageControls";
+import SkillPageControls, { type ExtensionView } from "./SkillPageControls";
+import PartnerRoles from "../features/partners/PartnerRoles";
 import { ensureTemplates } from "../features/skills/templateSkills";
 export { ensureTemplates } from "../features/skills/templateSkills";
 
@@ -40,16 +41,22 @@ export default function SkillsPage({
   registry: providedRegistry,
   onApply,
   onOpenMcp,
+  onOpenModels,
+  onApplyPartner,
+  defaultView = "skills",
 }: {
   registry?: SkillRegistry;
   onApply?: (record: SkillRecord) => string | void;
   onOpenMcp?: () => void;
+  onOpenModels?: () => void;
+  onApplyPartner?: (instructions: string) => string | void;
+  defaultView?: ExtensionView;
 }) {
   const [localRegistry] = useState(createSkillRegistry);
   const registry = providedRegistry ?? localRegistry;
   const [, refresh] = useState(0);
   const [tab, setTab] = useState<"catalog" | "mine">("catalog");
-  const [view, setView] = useState<"skills" | "connectors">("skills");
+  const [view, setView] = useState<ExtensionView>(defaultView);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("全部");
   const [status, setStatus] = useState("");
@@ -58,6 +65,10 @@ export default function SkillsPage({
   const fileInput = useRef<HTMLInputElement>(null);
   const importSequence = useRef(0);
   const activeReader = useRef<FileReader | null>(null);
+  useEffect(() => {
+    setView(defaultView);
+    setQuery("");
+  }, [defaultView]);
   useEffect(() => {
     try {
       if (registry.persistenceWarning) {
@@ -141,7 +152,7 @@ export default function SkillsPage({
     reader.readAsText(file);
   }
   return (
-    <section className="catalog-page catalog-page-skills" aria-label="Skill">
+    <section className="catalog-page catalog-page-skills" aria-label="扩展">
       <SkillPageControls
         view={view}
         tab={tab}
@@ -151,69 +162,85 @@ export default function SkillsPage({
         onView={(next) => {
           setView(next);
           setQuery("");
+          setStatus("");
         }}
         onTab={setTab}
         onQuery={setQuery}
         onCreate={openCreate}
         onImport={importFile}
         onOpenMcp={onOpenMcp}
+        onOpenModels={onOpenModels}
       />
-      {view === "skills" ? (
-        <>
-          {tab === "catalog" && !query.trim() && (
-            <>
-              <h2 className="catalog-section-title">精选示例</h2>
-              <p className="catalog-page-subtitle">
-                本地演示 Prototype；没有联网目录、官方安装或下载统计。
-              </p>
-              <div className="catalog-card-grid">
-                {OFFICIAL_SKILLS.map(([name, description]) => (
-                  <button
-                    className="catalog-card"
-                    key={name}
-                    type="button"
-                    onClick={() => setStatus(`已选择Skill：${name}。`)}
-                  >
-                    <div className="catalog-card-image">
-                      <img
-                        src="/fixtures/demo/blue-hour.png"
-                        alt=""
-                        draggable={false}
-                      />
-                      <span>H3</span>
-                    </div>
-                    <div className="catalog-card-body">
-                      <strong>{name}</strong>
-                      <p>{description}</p>
-                      <small>KK Studio 本地演示 · Prototype · 仅本地预览</small>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-          <SkillCollection
-            records={visible}
-            category={category}
-            tab={tab}
-            registry={registry}
-            onCategory={setCategory}
-            onApply={onApply}
-            onEdit={(value) => {
-              setEditing(value);
-              setEditorOpen(true);
-            }}
-            onExport={(value) => downloadSkill(value, "markdown")}
-            onStatus={redraw}
+      <div
+        id="extensions-catalog-panel"
+        role="tabpanel"
+        aria-labelledby={`extensions-catalog-tab-${view}`}
+      >
+        {view === "skills" ? (
+          <>
+            {tab === "catalog" && !query.trim() && (
+              <>
+                <h2 className="catalog-section-title">精选示例</h2>
+                <p className="catalog-page-subtitle">
+                  本地演示 Prototype；没有联网目录、官方安装或下载统计。
+                </p>
+                <div className="catalog-card-grid">
+                  {OFFICIAL_SKILLS.map(([name, description]) => (
+                    <button
+                      className="catalog-card"
+                      key={name}
+                      type="button"
+                      onClick={() => setStatus(`已选择Skill：${name}。`)}
+                    >
+                      <div className="catalog-card-image">
+                        <img
+                          src="/fixtures/demo/blue-hour.png"
+                          alt=""
+                          draggable={false}
+                        />
+                        <span>H3</span>
+                      </div>
+                      <div className="catalog-card-body">
+                        <strong>{name}</strong>
+                        <p>{description}</p>
+                        <small>
+                          KK Studio 本地演示 · Prototype · 仅本地预览
+                        </small>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+            <SkillCollection
+              records={visible}
+              category={category}
+              tab={tab}
+              registry={registry}
+              onCategory={setCategory}
+              onApply={onApply}
+              onEdit={(value) => {
+                setEditing(value);
+                setEditorOpen(true);
+              }}
+              onExport={(value) => downloadSkill(value, "markdown")}
+              onStatus={redraw}
+            />
+          </>
+        ) : view === "connectors" ? (
+          <ConnectorCatalog
+            query={query}
+            onOpenMcp={onOpenMcp}
+            onStatus={setStatus}
           />
-        </>
-      ) : (
-        <ConnectorCatalog
-          query={query}
-          onOpenMcp={onOpenMcp}
-          onStatus={setStatus}
-        />
-      )}
+        ) : (
+          <PartnerRoles
+            query={query}
+            onApply={onApplyPartner}
+            onStatus={setStatus}
+          />
+        )}
+      </div>
       {editorOpen && (
         <SkillEditor
           record={editing}

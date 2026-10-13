@@ -84,6 +84,7 @@ test("Agent controls match the vendor protocol fixture, with error feedback and 
     const panel = page.locator(".conversation-panel");
     await panel.getByLabel("执行方式").selectOption("codex");
     await panel.getByRole("button", { name: "连接设置", exact: true }).click();
+    await page.getByText("手动连接本地服务", { exact: true }).click();
     await page.getByLabel("Agent 地址").fill(server.url);
     await page.getByLabel("连接 Token", { exact: true }).fill("fixture-token");
     await expect(
@@ -198,6 +199,7 @@ for (const status of ["idle", "warning"] as const) {
       await panel
         .getByRole("button", { name: "连接设置", exact: true })
         .click();
+      await page.getByText("手动连接本地服务", { exact: true }).click();
       await page.getByLabel("Agent 地址").fill(server.url);
       await page
         .getByLabel("连接 Token", { exact: true })
@@ -268,6 +270,7 @@ for (const action of ["interrupt", "turn"] as const) {
       await panel
         .getByRole("button", { name: "连接设置", exact: true })
         .click();
+      await page.getByText("手动连接本地服务", { exact: true }).click();
       await page.getByLabel("Agent 地址").fill(server.url);
       await page
         .getByLabel("连接 Token", { exact: true })
@@ -414,6 +417,7 @@ test("plugin menu reflects installed canvas plugins and opens their manager", as
     .getByRole("navigation", { name: "设置分类" })
     .getByRole("button", { name: "扩展", exact: true })
     .click();
+  await page.getByRole("tab", { name: "MCP 工具", exact: true }).click();
   await expect(page.getByRole("heading", { name: "已安装插件" })).toBeVisible();
 });
 

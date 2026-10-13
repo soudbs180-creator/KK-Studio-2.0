@@ -46,8 +46,7 @@ export default function ProviderConversationPanel({
   const [remoteApproved, setRemoteApproved] = useState(false);
   const connections = readProviderConnections().filter(
     (connection) =>
-      connection.state !== "disabled" &&
-      connection.capabilities.modalities.includes("text"),
+      connection.state !== "disabled" && connection.kind === "user_byok",
   );
   const available = connections.flatMap((connection) =>
     catalogForConnection(connection)

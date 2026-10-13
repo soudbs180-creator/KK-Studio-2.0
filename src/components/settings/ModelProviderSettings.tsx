@@ -8,9 +8,7 @@ import {
 } from "../../features/creation/providerCredentials";
 import {
   MODEL_PROVIDER_STORAGE_KEY,
-  modelProviderSchema,
   serializeModelProvider,
-  type ModelProviderProfile,
   isStrictLoopbackProviderUrl,
 } from "../../domain/modelProvider";
 import ProviderConnectionStatus from "./ProviderConnectionStatus";
@@ -21,7 +19,6 @@ import ProviderModelCatalog from "./ProviderModelCatalog";
 import { saveModelCatalog } from "../../features/models/modelCatalog";
 import {
   addProviderConnection,
-  connectionFromModelProfile,
   isDesktopProviderDurable,
   markProviderConnectionUnverified,
   persistProviderConnectionsDurable,
@@ -30,23 +27,29 @@ import {
 import type { ProviderConnection } from "../../domain/providerConnections";
 import { useProviderCredentialState } from "./useProviderCredentialState";
 import {
-  readModelProviderProfile,
+  resolveModelProviderConnection,
+  validateModelProviderProfile,
   type ConnectionState,
 } from "./modelProviderSettingsState";
+import useScopedModelProviderDraft, {
+  readModelProviderDraft,
+} from "./useScopedModelProviderDraft";
 
 export default function ModelProviderSettings({
   onFeedback,
+  scope = "official",
+  active = true,
+  onBusyChange,
 }: {
   onFeedback: (message: string) => void;
+  scope?: "official" | "relay";
+  active?: boolean;
+  onBusyChange?: (busy: boolean) => void;
 }) {
-  const [profile, setProfile] = useState(readModelProviderProfile);
+  const [initial] = useState(readModelProviderDraft);
+  const [profile, setProfile] = useState(initial.profile);
   const [apiKey, setApiKey] = useState("");
-  const [credentialRef, setCredentialRef] = useState(() =>
-    credentialId(
-      readModelProviderProfile().baseUrl,
-      readModelProviderProfile().name,
-    ),
-  );
+  const [credentialRef, setCredentialRef] = useState(initial.credentialRef);
   const [saving, setSaving] = useState(false);
   const [connections, setConnections] = useState(readProviderConnections);
   const [connection, setConnection] = useState<ConnectionState>({
@@ -59,51 +62,39 @@ export default function ModelProviderSettings({
     credentialRef,
     requestRef,
   );
-
   function cancelRequest(): void {
     requestRef.current?.abort("user");
     requestRef.current = null;
   }
-
-  function update(field: keyof ModelProviderProfile, value: string): void {
-    cancelRequest();
-    const nextProfile = { ...profile, [field]: value };
-    if (field === "baseUrl" || field === "name") {
-      setApiKey("");
-      setCredentialRef(credentialId(nextProfile.baseUrl, nextProfile.name));
-    }
-    setProfile(nextProfile);
-    setConnection({ kind: "idle", message: "有尚未测试的更改。" });
-  }
-
-  function updateMany(patch: Partial<ModelProviderProfile>): void {
-    cancelRequest();
-    const nextProfile = { ...profile, ...patch };
-    if ("baseUrl" in patch || "name" in patch) {
-      setApiKey("");
-      setCredentialRef(credentialId(nextProfile.baseUrl, nextProfile.name));
-    }
-    setProfile(nextProfile);
-    setConnection({ kind: "idle", message: "有尚未测试的更改。" });
-  }
-
-  function validate(): ModelProviderProfile | null {
-    const result = modelProviderSchema.safeParse(profile);
-    if (result.success) return result.data;
-    setConnection({
-      kind: "error",
-      message: result.error.issues[0]?.message ?? "请检查供应商配置。",
-    });
-    return null;
-  }
-
+  const updateMany = useScopedModelProviderDraft({
+    scope,
+    profile,
+    apiKey,
+    credentialRef,
+    active,
+    saving,
+    onBusyChange,
+    cancelRequest,
+    setProfile,
+    setApiKey,
+    setCredentialRef,
+    setConnection,
+  });
+  const validate = () =>
+    validateModelProviderProfile(profile, setConnection, connections);
   async function save(): Promise<void> {
+    if (!active || saving) return;
     cancelRequest();
     const valid = validate();
     if (!valid) return;
     setSaving(true);
     try {
-      const savedConnection = connectionFromModelProfile(valid);
+      const savedConnection = resolveModelProviderConnection(
+        valid,
+        credentialRef,
+        connections,
+      );
+      valid.connectionId = savedConnection.id;
       if (valid.authMode !== "none" && apiKey.trim()) {
         await saveApiKey(valid.baseUrl, apiKey, credentialRef);
         markProviderConnectionUnverified(savedConnection.id);
@@ -116,7 +107,6 @@ export default function ModelProviderSettings({
       setProfile(valid);
       const next = addProviderConnection(savedConnection);
       if (isDesktopProviderDurable()) {
-        // Desktop: the success hint appears only after the native durable commit.
         await persistProviderConnectionsDurable(next);
       }
       setConnections(next);
@@ -126,7 +116,7 @@ export default function ModelProviderSettings({
       });
       window.dispatchEvent(new CustomEvent("kk:model-provider-changed"));
       onFeedback(
-        "模型供应商连接信息已保存；API Key 未写入浏览器存储或项目快照。",
+        "模型接入连接信息已保存；API Key 未写入浏览器存储或项目快照。",
       );
     } catch {
       setConnection({
@@ -137,12 +127,12 @@ export default function ModelProviderSettings({
       setSaving(false);
     }
   }
-
   function selectConnection(connection: ProviderConnection): void {
-    if (!connection.baseUrl) return;
+    if (saving || !connection.baseUrl) return;
     cancelRequest();
     setProfile({
       version: 1,
+      connectionId: connection.id,
       name: connection.provider,
       baseUrl: connection.baseUrl,
       model: connection.model ?? "",
@@ -159,14 +149,15 @@ export default function ModelProviderSettings({
       message: "已切换连接；请测试或保存后使用。",
     });
   }
-
   async function clearKey(): Promise<void> {
+    if (!active || saving) return;
+    if (!validate()) return;
     cancelRequest();
     setSaving(true);
     try {
       await deleteApiKey(profile.baseUrl, credentialRef);
       const next = markProviderConnectionUnverified(
-        connectionFromModelProfile(profile).id,
+        resolveModelProviderConnection(profile, credentialRef, connections).id,
       );
       if (isDesktopProviderDurable()) {
         await persistProviderConnectionsDurable(next);
@@ -183,9 +174,8 @@ export default function ModelProviderSettings({
       setSaving(false);
     }
   }
-
   async function testConnection(): Promise<void> {
-    if (requestRef.current) return;
+    if (!active || saving || requestRef.current) return;
     const valid = validate();
     if (!valid) return;
     if (!navigator.onLine && !isStrictLoopbackProviderUrl(valid.baseUrl)) {
@@ -207,6 +197,7 @@ export default function ModelProviderSettings({
         valid.authMode === "none"
           ? ""
           : apiKey.trim() || (await loadApiKey(valid.baseUrl, credentialRef));
+      if (requestRef.current !== controller) return;
       const models = await checkModelProvider(
         valid.baseUrl,
         key,
@@ -214,7 +205,10 @@ export default function ModelProviderSettings({
         valid,
       );
       if (requestRef.current !== controller) return;
-      saveModelCatalog(connectionFromModelProfile(valid), models);
+      saveModelCatalog(
+        resolveModelProviderConnection(valid, credentialRef, connections),
+        models,
+      );
       setConnection({
         kind: "success",
         message: `连接成功，已刷新 ${models.length} 个模型；这不代表全部生成能力已验证。`,
@@ -246,7 +240,6 @@ export default function ModelProviderSettings({
       if (requestRef.current === controller) requestRef.current = null;
     }
   }
-
   return (
     <form
       className="provider-form"
@@ -256,33 +249,46 @@ export default function ModelProviderSettings({
         kind={connection.kind}
         message={connection.message}
       />
-      <ProviderProfileFields
-        profile={profile}
-        apiKey={apiKey}
-        hasStoredKey={hasStoredKey}
-        onUpdate={update}
-        onUpdateMany={updateMany}
-        onApiKeyChange={(value) => {
-          cancelRequest();
-          setApiKey(value);
-          setConnection({
-            kind: "idle",
-            message: "密钥已更改，请重新测试连接。",
-          });
-        }}
-      />
-      <ProviderConnectionList
-        connections={connections}
-        activeBaseUrl={profile.baseUrl}
-        activeCredentialRef={credentialRef}
-        onSelect={selectConnection}
-      />
-      <ProviderModelCatalog
-        profile={profile}
-        onSelect={(model) => update("model", model)}
-        onRefresh={() => void testConnection()}
-        loading={connection.kind === "loading"}
-      />
+      <fieldset
+        disabled={saving}
+        className="provider-edit-fields"
+        aria-label="API 连接信息"
+      >
+        <ProviderProfileFields
+          profile={profile}
+          apiKey={apiKey}
+          hasStoredKey={hasStoredKey}
+          onUpdate={(field, value) => updateMany({ [field]: value })}
+          onUpdateMany={updateMany}
+          onApiKeyChange={(value) => {
+            if (saving) return;
+            cancelRequest();
+            setApiKey(value);
+            setConnection({
+              kind: "idle",
+              message: "密钥已更改，请重新测试连接。",
+            });
+          }}
+        />
+        <ProviderConnectionList
+          connections={connections}
+          activeBaseUrl={profile.baseUrl}
+          activeCredentialRef={credentialRef}
+          activeConnectionId={profile.connectionId}
+          onSelect={selectConnection}
+        />
+        <ProviderModelCatalog
+          connection={resolveModelProviderConnection(
+            profile,
+            credentialRef,
+            connections,
+          )}
+          profile={profile}
+          onSelect={(model) => updateMany({ model })}
+          onRefresh={() => void testConnection()}
+          loading={connection.kind === "loading"}
+        />
+      </fieldset>
       <ProviderSettingsActions
         saving={saving}
         hasKey={Boolean(hasStoredKey || apiKey)}

@@ -5,6 +5,8 @@ import {
   PROVIDER_PRESETS,
   findProviderPreset,
   modelProviderSchema,
+  parseModelProvider,
+  serializeModelProvider,
 } from "../../src/domain/modelProvider.ts";
 
 test("provider presets expose the Doubao Ark preset with a valid HTTPS base url", () => {
@@ -34,4 +36,16 @@ test("default provider profile remains OpenAI-compatible for existing users", ()
   assert.equal(DEFAULT_MODEL_PROVIDER.name, "OpenAI 兼容 API");
   assert.equal(DEFAULT_MODEL_PROVIDER.baseUrl, "https://api.openai.com/v1");
   assert.equal(DEFAULT_MODEL_PROVIDER.model, "");
+});
+
+test("provider profile round-trip preserves a selected opaque account identity", () => {
+  const profile = { ...DEFAULT_MODEL_PROVIDER, connectionId: "account-b" };
+  assert.deepEqual(parseModelProvider(serializeModelProvider(profile)), {
+    profile,
+    recovered: false,
+  });
+  assert.deepEqual(
+    parseModelProvider(serializeModelProvider(DEFAULT_MODEL_PROVIDER)).profile,
+    DEFAULT_MODEL_PROVIDER,
+  );
 });

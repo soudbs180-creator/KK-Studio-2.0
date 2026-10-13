@@ -11,15 +11,16 @@
 [`ui-governance.css`](../src/styles/ui-governance.css) 提供共享状态类。
 `tokens.json` 是历史导出快照，未被应用加载，不作为现行数值依据。
 
-| 角色 | 当前 token |
-| --- | --- |
-| 控件高度 | `--kk-control-h-sm/md/lg`：24 / 32 / 40 |
-| 图标图形 | `--kk-icon-glyph-sm/md/lg`：16 / 20 / 24 |
-| 标准控件圆角 | `--kk-radius-control`：8 |
-| 弱焦点边界 | `--kk-focus-ring-subtle`：主题中性浅色，宽度/偏移 1px |
-| 菜单圆角 | `--kk-radius-menu`：10 |
-| 已注册面板外壳 | `--kk-radius-panel`：20 |
-| 字体 | Caption 12/16；Body 14/20；Subtitle 16/24；Title 20/28；Display 26/32 |
+| 角色           | 当前 token                                                                                                                                    |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| 控件高度       | `--kk-control-h-sm/md/lg`：24 / 32 / 40                                                                                                       |
+| 图标图形       | `--kk-icon-glyph-sm/md/lg`：16 / 20 / 24                                                                                                      |
+| 标准控件圆角   | `--kk-radius-control`：8                                                                                                                      |
+| 弱焦点边界     | `--kk-focus-ring-subtle`：主题中性浅色，宽度/偏移 1px                                                                                         |
+| 菜单圆角       | `--kk-radius-menu`：10                                                                                                                        |
+| 已注册面板外壳 | `--kk-radius-panel`：20                                                                                                                       |
+| 任务弹层外壳   | `--kk-task-popover-width/height/min-height`：360 / 420 / 300；来源为 2026-10-10 可读性修复，由 workspace/HUD 共用，实际高度受窗口剩余空间限制 |
+| 字体           | Caption 12/16；Body 14/20；Subtitle 16/24；Title 20/28；Display 26/32                                                                         |
 
 页面实例消费语义或组件 token。外壳几何必须先注册；断点只改变布局和容器宽度。
 交互规则见 [UI_RULES](UI_RULES.md)，页面选型见 [UI_ARCHETYPES](UI_ARCHETYPES.md)。

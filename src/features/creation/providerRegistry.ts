@@ -144,6 +144,9 @@ export function addProviderConnection(
     (previous.baseUrl !== connection.baseUrl ||
       previous.credentialRef !== connection.credentialRef ||
       previous.model !== connection.model ||
+      (previous.protocol ?? "openai-compatible") !==
+        (connection.protocol ?? "openai-compatible") ||
+      (previous.authMode ?? "api_key") !== (connection.authMode ?? "api_key") ||
       previous.kind !== connection.kind);
   // Saving edited metadata must not reset a provider that the worker already
   // cooled down or quarantined. A changed generation identity is separately
@@ -154,7 +157,9 @@ export function addProviderConnection(
         state: previous.state,
         activeJobs: previous.activeJobs,
         cooldownUntil: previous.cooldownUntil,
-        lastHealthCheckAt: previous.lastHealthCheckAt,
+        lastHealthCheckAt: identityChanged
+          ? undefined
+          : previous.lastHealthCheckAt,
         healthRevision: identityChanged
           ? (previous.healthRevision ?? 0) + 1
           : previous.healthRevision,
@@ -335,8 +340,23 @@ export function managedConnections(
   return connections.filter(canEnterManagedPool);
 }
 
-/** Bridges the existing single-provider settings into the connection registry. */
-export function connectionFromModelProfile(
+/** Legacy profiles are safe to restore only when their account is unique. */
+export function findModelProfileConnection(
+  profile: ModelProviderProfile,
+  connections: ProviderConnection[],
+): ProviderConnection | undefined {
+  const matches = connections.filter(
+    (item) =>
+      item.baseUrl === profile.baseUrl && item.provider === profile.name,
+  );
+  if (profile.connectionId)
+    return matches.find((item) => item.id === profile.connectionId);
+  if (matches.length === 1) return matches[0];
+  return undefined;
+}
+
+/** Build a new account without borrowing another account's opaque identity. */
+export function newModelProfileConnection(
   profile: ModelProviderProfile,
 ): ProviderConnection {
   const credentialRef = credentialId(profile.baseUrl, profile.name);
@@ -364,4 +384,34 @@ export function connectionFromModelProfile(
     concurrencyLimit: 2,
     verificationStatus: "unverified",
   };
+}
+
+/** Bridges a selected settings profile into its exact registered account. */
+export function connectionFromModelProfile(
+  profile: ModelProviderProfile,
+): ProviderConnection {
+  const connections = readProviderConnections();
+  const existing = findModelProfileConnection(profile, connections);
+  if (
+    !existing &&
+    (profile.connectionId ||
+      connections.filter(
+        (item) =>
+          item.baseUrl === profile.baseUrl && item.provider === profile.name,
+      ).length > 1)
+  )
+    throw new Error("请在模型接入中明确选择并保存要使用的账号。");
+  const connection = newModelProfileConnection(profile);
+  return existing
+    ? {
+        ...existing,
+        model: profile.model,
+        protocol: profile.protocol,
+        authMode: profile.authMode,
+        capabilities:
+          existing.model === profile.model
+            ? existing.capabilities
+            : connection.capabilities,
+      }
+    : connection;
 }

@@ -544,9 +544,12 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     );
     await page.goto("/");
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
-    await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+    await page.getByRole("button", { name: "模型接入", exact: true }).click();
+    await page
+      .getByRole("button", { name: "API Key（官方）", exact: true })
+      .click();
     await page.getByLabel("接口地址").fill(agent.url + "/v1");
-    await page.getByLabel("API Key").fill("fixture-key");
+    await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
     await page.getByLabel("模型名称").fill("image-fixture");
     await page.getByRole("button", { name: "保存", exact: true }).click();
     await page.getByRole("button", { name: "关闭设置", exact: true }).click();
@@ -560,6 +563,7 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     await source.press("Enter");
     await source.getByRole("button", { name: "画布模型", exact: true }).click();
     const menu = source.getByRole("menu", { name: "选择模型" });
+    await menu.getByRole("menuitem", { name: /^Codex/ }).click();
     await menu.getByRole("menuitemradio", { name: /图片模型未报告/ }).click();
     await expect(
       source.getByText("图片模型未报告", { exact: true }),
@@ -595,7 +599,7 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     expect(agent.received.images).toHaveLength(0);
     await page.getByRole("button", { name: "模型", exact: true }).click();
     const chatMenu = page.getByRole("menu", { name: "选择模型" });
-    await chatMenu.getByRole("tab", { name: "图片", exact: true }).click();
+    await chatMenu.getByRole("searchbox").fill("image-fixture");
     await chatMenu
       .getByRole("menuitemradio", { name: /image-fixture/ })
       .click();
@@ -629,10 +633,13 @@ test("KK 输入框 → 命名 SSE → MCP → 已配置图片 API，重复工具
     await page.getByRole("button", { name: "模型", exact: true }).click();
     await page
       .getByRole("menu")
-      .getByRole("button", { name: /配置供应商/ })
+      .getByRole("button", { name: "模型接入…", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "API Key（官方）", exact: true })
       .click();
     await page.getByLabel("接口地址").fill(agent.url + "/v1");
-    await page.getByLabel("API Key").fill("fixture-key");
+    await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
     await page.getByLabel("模型名称").fill("image-fixture");
     await page.getByRole("button", { name: "保存", exact: true }).click();
     await page.getByRole("button", { name: "关闭设置", exact: true }).click();

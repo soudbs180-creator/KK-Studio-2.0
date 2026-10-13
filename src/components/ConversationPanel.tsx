@@ -182,7 +182,7 @@ export default function ConversationPanel({
         messages={visibleMessages}
         onDelete={deleteMessage}
         onStatus={setStatus}
-        onConfigure={() => onOpen("settings/partners")}
+        onConfigure={() => onOpen("settings/providers")}
         onConfigureDirect={
           directState === "service-unconfigured"
             ? () => onOpen("settings/providers")

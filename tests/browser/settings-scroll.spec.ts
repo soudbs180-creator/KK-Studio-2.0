@@ -35,25 +35,30 @@ test("窄屏设置分类的同组入口保持在底部导航内", async ({ page 
   );
 });
 
-test("插件、技能、伙伴标签可用方向键切换并显示对应内容", async ({ page }) => {
+test("Skill、MCP、协作伙伴标签可用方向键切换并显示对应内容", async ({
+  page,
+}) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
     .getByRole("navigation", { name: "设置分类" })
     .getByRole("button", { name: "扩展", exact: true })
     .click();
-  const tabs = page.getByRole("tablist", { name: "插件、技能与伙伴" });
-  const skills = tabs.getByRole("tab", { name: /技能/ });
+  const tabs = page.getByRole("tablist", { name: "Skill、MCP 与协作伙伴" });
+  const skills = tabs.getByRole("tab", { name: /Skill/ });
   const partners = tabs.getByRole("tab", { name: /伙伴/ });
   await skills.click();
   await skills.press("ArrowRight");
+  const mcp = tabs.getByRole("tab", { name: /MCP/ });
+  await expect(mcp).toBeFocused();
+  await mcp.press("ArrowRight");
   await expect(partners).toBeFocused();
   await expect(partners).toHaveAttribute("aria-selected", "true");
   await expect(
     page
       .getByRole("dialog", { name: "设置", exact: true })
       .getByRole("tabpanel", { name: /伙伴/ }),
-  ).toContainText("Agent");
+  ).toContainText("策划伙伴");
 });
 
 test("手机扩展标签保持单行和触屏命中区", async ({ page }) => {
@@ -64,7 +69,7 @@ test("手机扩展标签保持单行和触屏命中区", async ({ page }) => {
     .getByRole("dialog", { name: "设置" })
     .getByRole("button", { name: "扩展", exact: true })
     .click();
-  const tabs = page.getByRole("tablist", { name: "插件、技能与伙伴" });
+  const tabs = page.getByRole("tablist", { name: "Skill、MCP 与协作伙伴" });
   const bounds = (await tabs.boundingBox())!;
   for (const tab of await tabs.getByRole("tab").all()) {
     const box = (await tab.boundingBox())!;
@@ -75,7 +80,7 @@ test("手机扩展标签保持单行和触屏命中区", async ({ page }) => {
   }
 });
 
-test("Skill、插件和伙伴旧入口都归一到扩展并保持唯一选中项", async ({
+test("Skill 与 MCP 入口归一到扩展，Agent 连接属于模型接入", async ({
   page,
 }) => {
   async function expectExtensionTab(tab: RegExp) {
@@ -95,16 +100,16 @@ test("Skill、插件和伙伴旧入口都归一到扩展并保持唯一选中项
   await page.goto("/");
   await page
     .getByRole("navigation", { name: "主导航" })
-    .getByRole("button", { name: "技能", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .click();
-  await page.getByRole("tab", { name: "连接器", exact: true }).click();
-  await page.getByRole("button", { name: "自定义连接器", exact: true }).click();
-  await expectExtensionTab(/插件/);
+  await page.getByRole("tab", { name: "MCP", exact: true }).click();
+  await page.getByRole("button", { name: "配置 MCP", exact: true }).click();
+  await expectExtensionTab(/MCP/);
   await page
-    .getByRole("tablist", { name: "插件、技能与伙伴" })
-    .getByRole("tab", { name: /技能/ })
+    .getByRole("tablist", { name: "Skill、MCP 与协作伙伴" })
+    .getByRole("tab", { name: /Skill/ })
     .click();
-  await expectExtensionTab(/技能/);
+  await expectExtensionTab(/Skill/);
 
   // Canvas plugin management keeps the legacy settings/plugins route.
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
@@ -117,18 +122,24 @@ test("Skill、插件和伙伴旧入口都归一到扩展并保持唯一选中项
     .click();
   await page
     .getByRole("menu", { name: "扩展" })
-    .getByRole("tab", { name: "插件/MCP", exact: true })
+    .getByRole("tab", { name: "MCP", exact: true })
     .click();
   await page
     .getByRole("menu", { name: "扩展" })
     .getByRole("menuitem", { name: "管理画布插件" })
     .click();
-  await expectExtensionTab(/插件/);
+  await expectExtensionTab(/MCP/);
 
-  // The Agent panel keeps the legacy settings/partners route.
+  // The Agent panel opens model access rather than specialist task roles.
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "连接设置", exact: true }).click();
-  await expectExtensionTab(/伙伴/);
+  const models = page
+    .getByRole("navigation", { name: "设置分类" })
+    .getByRole("button", { name: "模型接入", exact: true });
+  await expect(models).toHaveAttribute("aria-current", "page");
+  await expect(
+    page.getByRole("region", { name: "Codex 主 Agent 接入" }),
+  ).toBeVisible();
 });
 
 for (const viewport of [

@@ -3,9 +3,9 @@ import { openSeededProject } from "./helpers";
 import { PROVIDER_CONNECTIONS_STORAGE_KEY } from "../../src/features/creation/providerRegistry";
 import { CREATION_STORAGE_KEY } from "../../src/features/creation/model";
 
-async function openConversation(page: Page) {
+async function openConversation(page: Page, declaredOnly = false) {
   await page.addInitScript(
-    ({ key }) => {
+    ({ key, declaredOnly }) => {
       localStorage.setItem(
         key,
         JSON.stringify([
@@ -21,7 +21,7 @@ async function openConversation(page: Page) {
             model: "chat-a",
             state: "active",
             capabilities: {
-              modalities: ["text"],
+              modalities: [declaredOnly ? "image" : "text"],
               operations: ["chat", "generate"],
               async: false,
             },
@@ -45,7 +45,7 @@ async function openConversation(page: Page) {
         ]),
       );
     },
-    { key: PROVIDER_CONNECTIONS_STORAGE_KEY },
+    { key: PROVIDER_CONNECTIONS_STORAGE_KEY, declaredOnly },
   );
   await openSeededProject(page);
   await page.getByLabel("执行方式").selectOption("models");
@@ -58,6 +58,17 @@ async function openConversation(page: Page) {
 }
 const sse = (text: string) =>
   `data: ${JSON.stringify({ choices: [{ index: 0, delta: { content: text }, finish_reason: null }] })}\n\ndata: ${JSON.stringify({ choices: [{ index: 0, delta: {}, finish_reason: "stop" }] })}\n\ndata: [DONE]\n\n`;
+test("explicit text declarations remain selectable on a connection with an older image default", async ({
+  page,
+}) => {
+  await openConversation(page, true);
+  await expect(page.getByLabel("对话模型 1", { exact: true })).toHaveValue(
+    JSON.stringify(["local-chat", "chat-a"]),
+  );
+  await expect(page.getByLabel("对话模型 2", { exact: true })).toHaveValue(
+    JSON.stringify(["local-chat", "chat-b"]),
+  );
+});
 test("two model replies use frozen routes, independent multi-turn history and existing durable tasks", async ({
   page,
 }) => {

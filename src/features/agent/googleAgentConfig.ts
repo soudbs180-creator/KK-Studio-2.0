@@ -85,7 +85,6 @@ export async function saveGoogleApiKeyConnection(
     ])
   )
     throw new Error("Google provider metadata could not be saved.");
-  writeGoogleCliPreference("api-key", GEMINI_BRIDGE_DEFAULT_URL);
 }
 export async function getGoogleCredential() {
   const connection = readProviderConnections().find(
@@ -97,11 +96,11 @@ export async function getGoogleCredential() {
     connection.baseUrl !== GOOGLE_API_BASE ||
     connection.credentialRef !== GOOGLE_CREDENTIAL_REF
   )
-    throw new Error("请先在设置 → 模型供应商中保存 Google API Key。");
+    throw new Error("请先在设置 → 模型接入中保存 Google API Key。");
   const apiKey = await loadApiKey(GOOGLE_API_BASE, GOOGLE_CREDENTIAL_REF);
   if (!apiKey)
     throw new Error(
-      "请在模型供应商设置中填写 Google API Key；网页版刷新后需要重新填写。",
+      "请在模型接入设置中填写 Google API Key；网页版刷新后需要重新填写。",
     );
   return {
     apiKey,

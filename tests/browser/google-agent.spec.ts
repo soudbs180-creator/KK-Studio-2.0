@@ -49,10 +49,15 @@ test("Google key configuration, dialogue continuity, image archive and restored 
   );
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
-  await page.getByRole("radio", { name: /Gemini CLI 账号/ }).check();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
+  await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
   await page.getByRole("button", { name: "保存登录方式", exact: true }).click();
-  await page.getByRole("radio", { name: /密钥登录/ }).check();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await page
     .getByLabel("Google 密钥", { exact: true })
     .fill("fixture-google-key");
@@ -68,12 +73,14 @@ test("Google key configuration, dialogue continuity, image archive and restored 
       exact: true,
     }),
   ).toBeVisible();
-  await page.getByRole("radio", { name: /Gemini CLI 账号/ }).check();
+  await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
   await page.getByRole("button", { name: "保存登录方式", exact: true }).click();
   expect(
     await page.evaluate(() => localStorage.getItem("kk-google-login-mode")),
   ).toBe("cli");
-  await page.getByRole("radio", { name: /密钥登录/ }).check();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await expect(page.getByLabel("Google 密钥", { exact: true })).toHaveValue("");
   await expect(
     page.getByRole("button", { name: "保存 Google", exact: true }),
