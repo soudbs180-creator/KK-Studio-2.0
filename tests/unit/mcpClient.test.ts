@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { appVersion } from "../../src/runtime/appInfo.ts";
+import { scanMcpHeaderSchema } from "../../src/features/mcp/mcpHttpHeaders.ts";
 import {
   McpHttpClient,
   McpServerRegistry,
@@ -17,6 +18,42 @@ const server = {
   endpoint: "http://127.0.0.1:3000/mcp",
   enabled: true,
 };
+
+test("modern MCP rejects deeply nested schemas below the response byte limit", () => {
+  const wire =
+    '{"properties":{"n":'.repeat(40000) +
+    '{"type":"string"}' +
+    "}}".repeat(40000);
+  assert(Buffer.byteLength(wire) < 2 * 1024 * 1024);
+  assert.deepEqual(scanMcpHeaderSchema(JSON.parse(wire)), {
+    valid: false,
+    declarations: [],
+  });
+  const nonPropertyWire =
+    '{"allOf":['.repeat(40000) + '{"type":"string"}' + "]}".repeat(40000);
+  assert(Buffer.byteLength(nonPropertyWire) < 2 * 1024 * 1024);
+  assert.equal(scanMcpHeaderSchema(JSON.parse(nonPropertyWire)).valid, false);
+});
+
+test("modern MCP bounds wide schema scans and retains ordinary header declarations", () => {
+  const properties = Object.fromEntries(
+    Array.from({ length: 10000 }, (_, index) => [
+      `value${index}`,
+      { type: "string" },
+    ]),
+  );
+  assert(Buffer.byteLength(JSON.stringify({ properties })) < 2 * 1024 * 1024);
+  assert.equal(scanMcpHeaderSchema({ properties }).valid, false);
+  assert.deepEqual(
+    scanMcpHeaderSchema({
+      properties: { region: { type: "string", "x-mcp-header": "Region" } },
+    }),
+    {
+      valid: true,
+      declarations: [{ path: ["region"], name: "Region", type: "string" }],
+    },
+  );
+});
 
 class MemoryStorage implements McpServerStorage {
   values = new Map<string, string>();

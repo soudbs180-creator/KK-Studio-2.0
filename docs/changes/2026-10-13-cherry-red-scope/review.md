@@ -84,3 +84,9 @@ root 正在重跑这些修复后的完整 verify，尚无可填写的最新最�
 独立上下文 `cherry_mainline_review` 于 2026-10-13T15:37:03Z 正式审查 `694a00607f6f63de1b8c43d0ebb117adf5d34f67 → 7daeba25db511652dbd73833c21b3066f428d7f2`，规范轴/需求轴均 PASS，确认 open P0/P1/P2=0，MR001–003 保持关闭。147 项原审测试仍绑定 b141，不重标为 7da。7da 独立运行 package12/12、真实 Edge 延迟列表1/1（clicks=[expected]）、安全 guards26+26+14、八个原安装生命周期函数一致、四 Node syntax 与 committed diffcheck。六增量文件与冻结 Git blob 一致，产品 source/input 未变。
 
 审查者独立重算 Root 7da Native6 回执的 sourceHead/buildReceipt/input/EXE/manifest hashes 全匹配；实际 GUI 由 Root 运行，不标为 reviewer 实跑。工作树当时仅 Root 新增证据，审查者未写文件。共享60秒是轮询预算，driver 单次 HTTP 超时仍180秒，不能声称严格60秒端到端截止。此审查不构成 GitHub human approval；后续文档/工件提交须增量补审，Hosted/四包/安装/primary GUI/真实云与用户验收各按实际 proof 判定。
+
+## CHERRY-MR-004：不可信 MCP schema CPU 预算
+
+独立预审确认 P2：新增现代工具 header schema 扫描无深度/节点上限，每层 path 复制导致深层输入平方级同步扫描。实际840017字节/40000层无header schema仍返回valid=true且约4750ms，未超2MiB响应边界。c527f421已冻结但尚未push/构建；正在为现有循环添加fail-closed深度及总节点预算并验证深/宽RED→GREEN。关闭需要独立复核与新冻结SHA，不用旧34项通过冒充覆盖。
+
+MR004 root接管后补64层/4096总queued nodes预算，两种schema边在复制path/排队前拒绝。实际40000层property/allOf及10000宽property低于2MiB的RED→GREEN，正常Region保留；[RED](evidence/mainline-final/mcp-schema-budget-red.log)、[41项GREEN](evidence/mainline-final/mcp41-budget-green.log)。源码修复已完成；正式独立新SHA复核待完成。

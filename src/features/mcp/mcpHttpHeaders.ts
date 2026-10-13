@@ -11,6 +11,8 @@ type HeaderSchema =
   | { valid: false; declarations: [] };
 
 const HTTP_TOKEN = /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/;
+const MAX_SCHEMA_DEPTH = 64;
+const MAX_SCHEMA_NODES = 4096;
 const HEADER_TYPES = new Set(["string", "integer", "boolean"]);
 const NON_PROPERTY_SCHEMAS = new Set([
   "items",
@@ -46,11 +48,12 @@ export function scanMcpHeaderSchema(inputSchema: unknown): HeaderSchema {
   const declarations: HeaderDeclaration[] = [];
   const names = new Set<string>();
   const visited = new WeakSet<object>();
+  let queuedNodes = 1;
   const pending = [
-    { node: inputSchema, path: [] as string[], reachable: true },
+    { node: inputSchema, path: [] as string[], reachable: true, depth: 0 },
   ];
   while (pending.length) {
-    const { node, path, reachable } = pending.pop()!;
+    const { node, path, reachable, depth } = pending.pop()!;
     if (!node || typeof node !== "object") continue;
     // Wire schemas are JSON trees; cycles cannot be a valid received schema.
     if (visited.has(node)) return { valid: false, declarations: [] };
@@ -65,16 +68,24 @@ export function scanMcpHeaderSchema(inputSchema: unknown): HeaderSchema {
     }
     const properties = schema.properties;
     if (properties && typeof properties === "object") {
-      for (const [key, child] of Object.entries(properties))
+      for (const [key, child] of Object.entries(properties)) {
+        // Bound untrusted work before copying a path or growing the queue.
+        if (depth >= MAX_SCHEMA_DEPTH || ++queuedNodes > MAX_SCHEMA_NODES)
+          return { valid: false, declarations: [] };
         pending.push({
           node: child,
           path: [...path, key],
           reachable: reachable && !Array.isArray(properties),
+          depth: depth + 1,
         });
+      }
     }
     for (const keyword of NON_PROPERTY_SCHEMAS) {
-      for (const child of schemaChildren(keyword, schema[keyword]))
-        pending.push({ node: child, path, reachable: false });
+      for (const child of schemaChildren(keyword, schema[keyword])) {
+        if (depth >= MAX_SCHEMA_DEPTH || ++queuedNodes > MAX_SCHEMA_NODES)
+          return { valid: false, declarations: [] };
+        pending.push({ node: child, path, reachable: false, depth: depth + 1 });
+      }
     }
   }
   return { valid: true, declarations };

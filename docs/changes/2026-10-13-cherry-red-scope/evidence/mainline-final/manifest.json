@@ -174,7 +174,55 @@
       "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\mainline-final\\sdk130-native-7da-red.json",
       "bytes": 46807,
       "sha256": "e949b683035f045c72b218c919ffbb44e7523f4bd1b9db43e52144443ede1c5e"
+    },
+    {
+      "source": ".tmp/cherry-red/mcp-schema-budget-red.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/mcp-schema-budget-red.log",
+      "bytes": 2169,
+      "sha256": "cc6a3a5157ba975464ea983d652142eea692f073212fd25eb4cfd703720e1c50"
+    },
+    {
+      "source": ".tmp/cherry-red/mcp41-budget-green.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/mcp41-budget-green.log",
+      "bytes": 3870,
+      "sha256": "e5ffde5ba3c5ac16439c227cc56bc8567cc05d1530438abcc20348b2bbc7e126"
+    },
+    {
+      "source": ".tmp/cherry-red/verify-218-budget-final.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/verify-218-budget-port-busy.log",
+      "bytes": 132217,
+      "sha256": "ba77471ada28f79510c4f711a4813f0b34ee4bb785a8ab6717a9077e7c72aa1a"
+    },
+    {
+      "source": ".tmp/cherry-red/primary-current-readback.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/primary-current-readback.json",
+      "bytes": 20086,
+      "sha256": "0a0c7b9032fd044fb5bdd91d2704ff6556910b6cf671e42688f9897d2609acd0"
+    },
+    {
+      "source": ".tmp/cherry-red/quality-38422396911-final.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/quality-38422396911-final.json",
+      "bytes": 13389,
+      "sha256": "892f28f87d2a623d066e1bd8b6fedcd2ba680f0159d3f49160f661c63fd3b79e"
+    },
+    {
+      "source": ".tmp/cherry-red/quality-38422389843-final.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/quality-38422389843-final.json",
+      "bytes": 10385,
+      "sha256": "5a1a5db88b687c87c7a366703f4ef68739a21150856923fcadb476028ff95246"
+    },
+    {
+      "source": ".tmp/cherry-red/native-38422396951-final.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/native-38422396951-final.json",
+      "bytes": 15743,
+      "sha256": "d216765b8a340c9de48807734b4658774192f5f77b3fc1b468d6a61f3472b437"
+    },
+    {
+      "source": ".tmp/cherry-red/native-38422389807-final.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/native-38422389807-final.json",
+      "bytes": 15743,
+      "sha256": "91194cf7d0cc2ad9fe639c27db015a1ebd5eb0bed94c5d745cecba844aa53f03"
     }
   ],
-  "appendedAt": "2026-10-13T16:47:02.107Z"
+  "appendedAt": "2026-10-13T17:00:56.080Z"
 }

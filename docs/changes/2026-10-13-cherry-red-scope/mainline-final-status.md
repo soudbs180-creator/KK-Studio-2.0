@@ -53,3 +53,13 @@ ddacf Native：Mac push 的原始 app/dmg 两包和 optional Native6 全 PASS，
 MCP39项回归通过；官方SDK2 server2.3.1/node2.1.1在独立临时依赖中实测HTTP/SSE control成功：自动现代发现、参数头/metadata/body一致、无效工具过滤、400/-32020不执行错误调用。[实际control](evidence/mainline-final/sdk2-source-control-218.json)明确记录sourceDirty，它不证明production Native UI。SDK1.30真实旧production auto失败[原件](evidence/mainline-final/sdk130-native-7da-red.json)保留；新版默认EXE的两个实际SDK Native UI仍待复测。产品未引入SDK依赖；协议实现独立编写，固定官方规范及源码见[来源](evidence/mainline-final/mcp-primary-references.json)，临时SDK2 Apache-2.0与SDK1.30 MIT不混同。
 
 Linux producer的10项文件/真实子进程委托契约通过，[身份](evidence/mainline-final/producer-218-contract.json)；仍须Linux Hosted实际AppImage。Windows真实8.3 identity旧比较失败、新双边realpath通过且错误目录拒绝，[原件](evidence/mainline-final/installer-realpath-218.log)。新版冻结SHA独立审查、默认release/optional driver/NSIS实际验收与三平台Hosted仍未完成；不标DONE。
+
+独立新候选预审发现CHERRY-MR-004，现阻止将c527f421当作已通过正式审查的发行候选。不可信schema深度/节点扫描预算修复与独立复核进行中；此前1157项verify仍准确绑定修复前候选。
+
+## MR004修复与新候选冻结前检查
+
+现有扫描补64层/4096总排队节点预算，property及其他schema关键词均受限。实际深/宽RED→GREEN，MCP41/41通过。随后verify静态/类型/1159unit(1145 PASS/14 SKIP)/174Agent(172 PASS/2 SKIP)/UI/格式/production build通过，但浏览器启动前1423被另一个preview进程占用而退出1，[原始失败](evidence/mainline-final/verify-218-budget-port-busy.log)保留；该进程随后自行退出，无kill/改端口/reuse，受阻browser与development继续重跑。正式独立复核仍待新SHA。
+
+7da PR quality七job全SUCCESS；push applicable verify/deploy/snapshot均SUCCESS，push delivery/governance按事件规则SKIPPED。7da两个Native运行三平台均实际FAIL，分别Linux严格vendor hash、Win8.3路径夹具、Mac根URL夹具；[PR quality](evidence/mainline-final/quality-38422396911-final.json)、[push quality](evidence/mainline-final/quality-38422389843-final.json)、[PR Native](evidence/mainline-final/native-38422396951-final.json)、[push Native](evidence/mainline-final/native-38422389807-final.json)，不把历史失败改为PASS。
+
+[primary读回](evidence/mainline-final/primary-current-readback.json)：51fccfc7/原分支，捕获111文件100相同/11后续改变/0missing，暂存为空。原index当前字节hash不同于捕获时，原因尚未归因，不宣称跨时刻index bytes相同，也不restore别人的index；本任务只在独立工作树提交。
