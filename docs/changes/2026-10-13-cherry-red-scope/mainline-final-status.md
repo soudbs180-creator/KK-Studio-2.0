@@ -95,3 +95,5 @@ cc184 [Hosted原包](evidence/mainline-final/hosted-packages-cc184e59.json)和[c
 最后关联验证只在现有Native fixture增加window_appearance_get/set/get，开启后读回并关闭恢复；unsupported必须如实返回reason。Win production UI已有13组含透明恢复实跑；Mac/Linux原生背景接口的此项新断言尚待新冻结head三平台实跑，不能提前报Native7 PASS。产品src/src-tauri/scripts/config/package/version没有新改动。最终门禁将继续跟随[PR #58](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/58)最新SHA的Actions与独立补审。
 
 本轮采用范围：保留KK Tauri/React18、默认Codex/Google及单一Registry/任务/存储；独立实现三协议/严格本地免密、五原创助手与自定义、2–3文本模型独立多轮、安全Markdown/本地分享，融合既有MCP与三平台runtime/透明能力，局部修复来源身份/保存竞态/协议及打包根因。没有复制Cherry AGPL源码、增加付费调用或另一套底层。许可与不采用项目见research/decisions；真实LM Studio及收费云服务、图片视频生成、通用自动工具/OAuth、Mobile和生产发布仍属分别验收的能力。
+
+7abc冻结后的snapshot真实FAIL：文档头按北京时间写2026-10-14，但检查器严格按UTC日期（当时2026-10-13）拒绝future header。已仅将PROJECT_STATE/AI_HANDOFF的updatedAt及snapshotDate校准为实际UTC13，不改检查器、阈值或其他事实；正文2026-10-14指本地日期，raw证据继续精确UTC。[本机RED](evidence/mainline-final/snapshot-date-7abc7ced-red.log)2violations与[GREEN](evidence/mainline-final/snapshot-date-7abc7ced-green.log)0violations均原样保留。新head仍须完整Hosted，不重跑旧失败以掩盖它。

@@ -1,6 +1,6 @@
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-10-14
+- updatedAt: 2026-10-13
 - source: docs/governance/task-ledger.json
 - supersededBy: null
 
@@ -8,7 +8,7 @@
 
 ## CURRENT_FACTS
 
-- snapshotDate: 2026-10-14
+- snapshotDate: 2026-10-13
 - canonicalRepository: D:/kk-studio/KK-Studio-2.0
 - canonicalRef: origin/main
 - canonicalHead: 694a00607f6f63de1b8c43d0ebb117adf5d34f67

@@ -786,7 +786,19 @@
       "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-88740c5b-artifact-11837797562-native-installer--release--installer-receipt.json",
       "bytes": 871597,
       "sha256": "d65b940419af08754b5cedf62c4272b301faf506bf54a952fe9317ad2b8bf1cd"
+    },
+    {
+      "source": ".tmp/cherry-red/snapshot-date-7abc7ced-red.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/snapshot-date-7abc7ced-red.log",
+      "bytes": 369,
+      "sha256": "7b412558e495e1c971cc861d3a1a6b5ed9be76c39bdde4223b9fd950fa3ae198"
+    },
+    {
+      "source": ".tmp/cherry-red/snapshot-date-7abc7ced-green.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/snapshot-date-7abc7ced-green.log",
+      "bytes": 232,
+      "sha256": "a6e97da016f15afe123fed0a9d8400a9eadf620e03f9b9dfc2d1c25c1056aeb9"
     }
   ],
-  "appendedAt": "2026-10-13T18:18:26.376Z"
+  "appendedAt": "2026-10-13T18:23:27.381Z"
 }

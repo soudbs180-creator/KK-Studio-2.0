@@ -2,7 +2,7 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-14
+- updatedAt: 2026-10-13
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 

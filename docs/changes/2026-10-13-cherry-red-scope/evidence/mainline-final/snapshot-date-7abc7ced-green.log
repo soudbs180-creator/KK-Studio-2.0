@@ -1,0 +1,6 @@
+
+> kk-studio@2.1.18 snapshot:check
+> node scripts/check-snapshot-header.mjs
+
+Snapshot scope: repository; container not requested (external documents NOT VERIFIED).
+Snapshot/lifecycle headers: 3 unique documents, 0 violations.
