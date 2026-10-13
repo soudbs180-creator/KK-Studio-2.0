@@ -195,7 +195,7 @@ export function checkSnapshotHeader(source, filePath, now = new Date()) {
  *
  * @param {string} source Markdown 文档全文
  * @param {string} filePath 用于错误信息的仓库相对路径
- * @param {{documentId?: string, source?: string, now?: Date}} options
+ * @param {{documentId?: string, source?: string, now?: Date, timeZone?: string}} options
  * @returns {string[]}
  */
 export function checkDocumentLifecycleHeader(
@@ -207,6 +207,7 @@ export function checkDocumentLifecycleHeader(
     expectedStatus,
     knownSupersededTargets,
     now = new Date(),
+    timeZone = "Asia/Shanghai",
   } = {},
 ) {
   const issues = [];
@@ -228,8 +229,23 @@ export function checkDocumentLifecycleHeader(
       updatedAt !== parsed.toISOString().slice(0, 10)
     )
       issues.push(`${filePath}: updatedAt 不是有效的 YYYY-MM-DD 日期`);
-    else if (parsed.getTime() > now.getTime())
-      issues.push(`${filePath}: updatedAt 不能晚于当前日期`);
+    else {
+      // Metadata is a project calendar date, not a UTC instant. Raw receipts
+      // retain their timestamps; this comparison must also work on UTC CI.
+      const parts = Object.fromEntries(
+        new Intl.DateTimeFormat("en", {
+          timeZone,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        })
+          .formatToParts(now)
+          .map(({ type, value }) => [type, value]),
+      );
+      const today = `${parts.year}-${parts.month}-${parts.day}`;
+      if (updatedAt > today)
+        issues.push(`${filePath}: updatedAt 不能晚于当前日期`);
+    }
   }
   if (!status)
     issues.push(`${filePath}: 缺少 status=current|superseded|historical`);

@@ -1,5 +1,7 @@
 # 文档入口
 
+现行文档的 `updatedAt`/`snapshotDate` 使用项目日历日期（`Asia/Shanghai`）；原始运行回执保留带时区的时间戳。日期门禁在 UTC CI 也按同一项目时区判断，不把本地凌晨误判为未来，不以改旧日期或关闭检查规避失败。
+
 本文件是 KK Studio 全部工程文档的索引与冲突裁决入口。找规则先查这里，不要凭记忆猜文件位置。
 
 所有 AI 的共同规则见仓库根的 [AGENTS.md](../AGENTS.md) 与 [AI_RULES.md](../AI_RULES.md)。Claude/Gemini/Copilot/Cursor 等工具入口只引用这两份，不复制另一套政策。
