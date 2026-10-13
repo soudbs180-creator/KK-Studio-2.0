@@ -59,3 +59,21 @@ jobs:
         run: cargo check --manifest-path src-tauri/Cargo.toml --locked
       - name: Build the platform-bound desktop with Agent resources
         run: npm run client:build:agent -- --no-bundle
+      - name: Build the isolated Windows installer candidate
+        if: runner.os == 'Windows'
+        run: npm run client:installer
+      - name: Verify and exercise the Windows installer without a user's existing application
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $taskDesktopVersion = (Get-Content config/platform-versions.json -Raw | ConvertFrom-Json).desktop
+          $taskInstaller = Join-Path $PWD "src-tauri/target/release/bundle/nsis/KK Studio_$($taskDesktopVersion)_x64-setup.exe"
+          $taskRelease = Join-Path $PWD ".tmp/native-installer/release"
+          npm run client:installer:receipt -- "$taskInstaller" "$taskRelease"
+          if ($LASTEXITCODE -ne 0) { throw "Installer receipt failed" }
+          npm run client:installer:verify -- "$taskRelease/installer-receipt.json"
+          if ($LASTEXITCODE -ne 0) { throw "Installer verification failed" }
+          $env:KK_DESKTOP_AUDIT_OUTPUT = Join-Path $PWD ".tmp/native-installer/evidence"
+          npm run client:installer:test -- "$taskRelease/installer-receipt.json"
+          if ($LASTEXITCODE -ne 0) { throw "Installer runtime failed" }
+          Get-Content "$env:KK_DESKTOP_AUDIT_OUTPUT/runtime.json" -Raw

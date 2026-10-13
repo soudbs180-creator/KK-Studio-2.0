@@ -19,18 +19,18 @@
 
 环境：Windows、Node `v24.20.0`、npm `11.19.0`；工作区 `D:/kk-studio/.worktrees/TASK-CHERRY-RED-001`。本专项没有启动 1421、1423 或 9349。
 
-| 实跑 | 结果 |
-| --- | --- |
-| 原脚本，无 `KK_CONTAINER_ROOT` | RED，exit 1；4 个目标、1 个外部文档缺失 |
-| 新 CLI 回归在原脚本上 | RED，10 项中 6 PASS、4 FAIL；失败为独立 checkout、显式 CLI root、参数拒绝诊断、空 env 拒绝诊断 |
-| `node --test tests/unit/docIndex.test.ts tests/unit/docIndexSnapshotCli.test.ts` | GREEN，28/28 PASS、0 SKIP、0 FAIL |
-| 上述两文件加 `tests/unit/governanceMerge.test.ts` | 37/37 PASS，activation 缺失/暂停、错误 SHA/审查/线程、merge queue 与禁用回读负例保留 |
-| 新脚本，无外部范围 | exit 0；3 个仓库目标、0 违规；外部 NOT VERIFIED 明示 |
-| 真实 `KK_CONTAINER_ROOT=D:/kk-studio` | exit 0；4 个目标、0 违规 |
-| 真实 `--container-root D:/kk-studio` | exit 0；4 个目标、0 违规 |
-| 显式不存在的容器 root | exit 1；外部快照缺失，未转成通过 |
-| `npm test` | 1117 tests，1103 PASS、14 SKIP、0 FAIL；约 31.8s |
-| 定向 ESLint、Prettier check、两个脚本 `node --check`、`git diff --check` | PASS |
+| 实跑                                                                             | 结果                                                                                           |
+| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| 原脚本，无 `KK_CONTAINER_ROOT`                                                   | RED，exit 1；4 个目标、1 个外部文档缺失                                                        |
+| 新 CLI 回归在原脚本上                                                            | RED，10 项中 6 PASS、4 FAIL；失败为独立 checkout、显式 CLI root、参数拒绝诊断、空 env 拒绝诊断 |
+| `node --test tests/unit/docIndex.test.ts tests/unit/docIndexSnapshotCli.test.ts` | GREEN，28/28 PASS、0 SKIP、0 FAIL                                                              |
+| 上述两文件加 `tests/unit/governanceMerge.test.ts`                                | 37/37 PASS，activation 缺失/暂停、错误 SHA/审查/线程、merge queue 与禁用回读负例保留           |
+| 新脚本，无外部范围                                                               | exit 0；3 个仓库目标、0 违规；外部 NOT VERIFIED 明示                                           |
+| 真实 `KK_CONTAINER_ROOT=D:/kk-studio`                                            | exit 0；4 个目标、0 违规                                                                       |
+| 真实 `--container-root D:/kk-studio`                                             | exit 0；4 个目标、0 违规                                                                       |
+| 显式不存在的容器 root                                                            | exit 1；外部快照缺失，未转成通过                                                               |
+| `npm test`                                                                       | 1117 tests，1103 PASS、14 SKIP、0 FAIL；约 31.8s                                               |
+| 定向 ESLint、Prettier check、两个脚本 `node --check`、`git diff --check`         | PASS                                                                                           |
 
 新 CLI 10 项覆盖独立范围、缺失仓库快照、错误 lifecycle source、额外重复 docId、CLI/env 正常容器、显式缺失文档、坏外部头部、缺参数/空值/未知参数。测试复制本次真实门禁脚本与纯函数模块至唯一临时目录，实际运行子进程并断言退出码和诊断；只清理本测试自建目录。
 
@@ -53,3 +53,11 @@
 ## 当前边界
 
 本机 Windows 脚本与单测证据已取得。新 workflow 的实际三 OS Hosted 结果、最终提交 SHA 的完整 `verify`/Delivery 与独立审核由总体收口继续回读；这里不预填 SUCCESS。静态/YAML 格式通过不等于 GitHub 已接受或执行 workflow。live 模型规则 eval 未调用，记 NOT RUN；本专项是确定性 guardrail 验证，不是模型语义 benchmark。产品、UI、版本、真实 Provider、系统 vault、安装签名和用户验收不由本专项结论替代。
+
+## f8ead4fa 的实际 Hosted 与短路径修复
+
+[quality 38393324923](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38393324923) 三OS snapshot-portability与deploy-linux均SUCCESS，原独立clone路径失败已消除；Windows verify在unit阶段实际9 FAIL，后续步骤不能称PASS。失败涉及desktopRelease.test的真实临时目录，runner的`RUNNER~1`祖先被展开为完整用户名后，旧realpath比较错误地把正常node_modules判成junction。
+
+本机使用Win32 GetShortPathName生成真实NTFS别名，新增测试实际RED，随后以projectRoot的物理位置比较其相对路径GREEN。直接联接和中间目录联接仍须拒绝，未删除依赖校验或使用宽松版本。desktopRelease定向26项：25 PASS、1既有SKIP；新短路径与原junction拒绝项都实际PASS。原Hosted日志和本机RED/GREEN留存，后续Hosted必须用新HEAD复验。
+
+Windows2.1.17安装器已实际构建并通过收据校验（f8ead4fa，4,280随包文件）；本机同时有canonical正在运行的客户端，不得终止该程序来执行安装测试。因此native-crossplatform追加仅Windows标准runner上的真实安装、重装、损坏修复、卸载/恢复流程，沿原installer脚本和随机独立数据目录，不修改跳过保护。此处是新增执行配置，未预填安装PASS。

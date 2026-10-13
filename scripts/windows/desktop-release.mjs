@@ -89,11 +89,14 @@ function readJson(filePath) {
   }
 }
 
-function isLinkedPath(filePath) {
+function isLinkedPath(filePath, projectRoot) {
   try {
     const stats = fs.lstatSync(filePath);
     if (stats.isSymbolicLink()) return true;
-    const absolute = path.resolve(filePath);
+    const absolute = path.resolve(
+      fs.realpathSync.native(projectRoot),
+      path.relative(path.resolve(projectRoot), path.resolve(filePath)),
+    );
     const resolved = path.resolve(fs.realpathSync.native(filePath));
     return process.platform === "win32"
       ? resolved.toLowerCase() !== absolute.toLowerCase()
@@ -119,7 +122,7 @@ export function inspectDesktopDependencies(projectRoot) {
   }
 
   const nodeModulesPath = path.join(projectRoot, "node_modules");
-  if (isLinkedPath(nodeModulesPath)) {
+  if (isLinkedPath(nodeModulesPath, projectRoot)) {
     return {
       needsInstall: true,
       mismatches: [
@@ -141,7 +144,7 @@ export function inspectDesktopDependencies(projectRoot) {
       const name = packagePath.slice("node_modules/".length);
       const expected = lockEntry.version;
       if (!fs.existsSync(packageRoot) && lockEntry.optional) return [];
-      if (isLinkedPath(packageRoot)) {
+      if (isLinkedPath(packageRoot, projectRoot)) {
         return [{ name, expected, actual: "linked package" }];
       }
       const installed = readJson(path.join(packageRoot, "package.json"));
