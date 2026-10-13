@@ -1,0 +1,57 @@
+name: native-crossplatform
+
+on:
+  push:
+    branches: [codex/TASK-CHERRY-RED-001]
+    paths:
+      - "src-tauri/**"
+      - "scripts/agent/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/native-crossplatform.yml"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "src-tauri/**"
+      - "scripts/agent/**"
+      - "tests/unit/agentPackage.test.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/native-crossplatform.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-22.04, macos-14]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install Linux native build prerequisites
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential libssl-dev libayatana-appindicator3-dev librsvg2-dev patchelf pkg-config
+      - name: Install existing locked application dependencies
+        run: npm ci
+      - name: Verify platform-bound Agent packaging fixtures
+        run: node --test tests/unit/agentPackage.test.ts
+      - name: Build frontend assets needed by Tauri
+        run: npm run build
+      - name: Check native formatting
+        run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
+      - name: Run native tests including Unix guardian ownership and parent SIGKILL
+        run: cargo test --manifest-path src-tauri/Cargo.toml --no-default-features --locked
+      - name: Check the native host
+        run: cargo check --manifest-path src-tauri/Cargo.toml --locked
+      - name: Build the platform-bound desktop with Agent resources
+        run: npm run client:build:agent -- --no-bundle

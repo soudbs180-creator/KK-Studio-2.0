@@ -1,5 +1,11 @@
 # 当前进度
 
+## 2026-10-13 Cherry 红框融合候选
+
+`TASK-CHERRY-RED-001` 在隔离分支实施少量原创助手/自定义、三文本协议/本机免密、多模型对话、安全Markdown/本地分享、跨平台vault/runtime/guardian及原生透明读回。复用KK已有TaskHost、项目/账号身份和MCP，不引入Cherry许可矛盾包、不调用付费服务。候选Desktop/Web2.1.16，保留primary2.1.15并发改动。
+
+当前完整unit1103/1089PASS/14skip、10定向浏览器、Windows136Rust及实际TaskHost11步PASS；新fixture、最新构建/最终静态检查与Mac/Linux标准Hosted待完成。独立dirty预检136单测通过并关闭已复现账号/恢复/取消等问题；不是最终提交或三平台安装验收。详见[验证](changes/2026-10-13-cherry-red-scope/verification.md)、[取舍](changes/2026-10-13-cherry-red-scope/decisions.md)。任务仍PARTIAL。
+
 ## 2026-10-13 审查 P1/P2 修复与运行时边界拆分
 
 - `TASK-REVIEW-REMEDIATION-001` 已完成定向修复：生命周期门禁、日志脱敏、插件同步/异步失败隔离和交付模板规则均有回归证据；治理、运行时、版本一致性改动分别落在独立提交 `057a5d84`、`44195097`、`f0a6b0c4`，格式和 lint 修复随后单独提交。

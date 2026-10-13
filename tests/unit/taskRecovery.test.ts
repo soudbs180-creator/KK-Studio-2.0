@@ -40,6 +40,32 @@ function task(
     privacyMode: "byok_local",
   };
 }
+test("interrupted conversation tasks do not mark an unrelated canvas source as failed", () => {
+  const project = createProject({
+    prompt: "existing",
+    model: "image-test",
+    kind: "image",
+    attachments: [],
+  });
+  project.tasks = [
+    {
+      ...task("conversation-task", "running"),
+      kind: "text",
+      conversationRoundId: "round-1",
+      conversationUserMessageId: "message-1",
+      conversationMessages: [{ role: "user", content: "hello" }],
+    },
+  ];
+  const recovered = recoverInterruptedTasks({
+    version: 2,
+    revision: 1,
+    activeProjectId: project.id,
+    projects: [project],
+    homeDraft: project.composerDraft,
+  });
+  assert.equal(recovered.projects[0].tasks[0].status, "unknown");
+  assert.deepEqual(recovered.projects[0].items, project.items);
+});
 
 function project(
   items: CreationProject["items"],

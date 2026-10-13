@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| TASK-CHERRY-RED-001 | Cherry 红框能力选择性融合与三桌面平台补齐 | PARTIAL | 进行中 | P1 | none | root | 运行三平台免费标准CI与最终Windowsfixture，复核提交并仅整合自有改动；不预填外部/安装/签名验收。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | REVIEW | 进行中 | P1 | none | root | 补 merged-SHA 独立 review receipt、原始 Hosted artifact manifest 及当前 SHA 的 delivery 结果；本任务验收补齐前保持 REVIEW，签名/安装/用户验收仍属独立发布边界。 |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。 |
@@ -130,6 +131,25 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GOV-003 | 规则体系收敛与文档同步门禁（B1+B2+R+B3-1+B3-2） | PARTIAL | 进行中 | P1 | none | root | 待用户授权后处理 B3-3 TASKSTATE 分支审查；随后按独立批次处理 B4 worktree/二进制、B5 交付包补齐 |
 | TASK-GOV-004 | 未合并分支全量核验、分类与收敛合并 | PARTIAL | 进行中 | P1 | TASK-GOV-003 | root | P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包 |
 | TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | REVIEW | 进行中 | P1 | TASK-GOV-003 | root | 单独修复并验证 5 个 UI 失败项；补齐开发态 receipt 后再评估是否可标记 DONE。 |
+
+## TASK-CHERRY-RED-001 — Cherry 红框能力选择性融合与三桌面平台补齐
+
+- Goal: 以 KK 为主体补齐近期模型/助手/MCP/桌面体验，保留已有行为并完成实际实现和相应验证。
+- Scope: 免费开源、本地模型、多协议、精选自定义助手与文本比较、共享安全 Markdown/本地分享、原生凭据/runtime/平台能力；框外功能保持后续可选。
+- Display status: 进行中
+- Priority: P1 — 用户以红框确定近期范围并明确授权实际实施。
+- Requirement refs: ledger:TASK-CHERRY-RED-001
+- Feature IDs: FEAT-009, FEAT-011, FEAT-012, FEAT-022, FEAT-032
+- Owner role: repository-maintainer
+- Acceptance: 旧数据/账号/模型/任务身份保留，故障/取消/迟到恢复回归通过。; 采纳项有源码接线、类型检查、测试、构建和相应运行证据。; 外部能力、Mac/Linux实际设备缺口与Windows本地验证分别记录，不假升级REAL。
+- Branch: `codex/TASK-CHERRY-RED-001`
+- Worktree: `D:/kk-studio/.worktrees/TASK-CHERRY-RED-001`
+- Modules: src/components, src/domain, src/features/creation, src/features/agent, src/features/models, src/integrations, src-tauri, tests, docs/changes/2026-10-13-cherry-red-scope
+- Verification: NOT_VERIFIED — 本地基线及实现完整unit1103/1089PASS14skip、10浏览器PASS、Windows136Rust及实际TaskHost11步PASS；独立dirty预检136PASS。候选2.1.16仍须最终检查、Windows新fixture及Mac/Linux Hosted/设备验收。
+- Evidence: [docs/changes/2026-10-13-cherry-red-scope/verification.md](../../docs/changes/2026-10-13-cherry-red-scope/verification.md), [docs/changes/2026-10-13-cherry-red-scope/review.md](../../docs/changes/2026-10-13-cherry-red-scope/review.md)
+- Next action: 运行三平台免费标准CI与最终Windowsfixture，复核提交并仅整合自有改动；不预填外部/安装/签名验收。
+- Last verified: 2026-10-13
+- Updated: 2026-10-13
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 

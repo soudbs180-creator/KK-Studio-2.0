@@ -1,6 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod agent_owner;
 #[cfg(windows)]
 mod agent_process;
 mod agent_runtime;
@@ -8,9 +9,12 @@ mod asset_storage;
 mod creation_storage;
 mod project_package;
 mod provider_config;
+mod runtime_resources;
 mod secret_filter;
 mod storage_paths;
+mod system_credentials;
 mod task_host;
+mod window_appearance;
 
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
@@ -18,7 +22,6 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use tauri::{AppHandle, Emitter, Manager, State};
-use zeroize::Zeroize;
 
 // ========== 配置结构 ==========
 
@@ -336,81 +339,20 @@ fn scan_comfyui_path(root: &Path) -> Result<ComfyUIScanResult, String> {
 
 // ========== 系统凭据命令 ==========
 
-const CREDENTIAL_SERVICE: &str = "com.kkstudio.provider";
-
-fn validate_credential_provider_id(provider_id: &str) -> Result<(), String> {
-    if provider_id.is_empty()
-        || provider_id.len() > 128
-        || !provider_id
-            .chars()
-            .all(|value| value.is_ascii_alphanumeric() || value == '_' || value == '-')
-    {
-        return Err("凭据提供商 ID 无效".to_string());
-    }
-    Ok(())
-}
-
-#[cfg(target_os = "windows")]
-fn system_credential_entry(provider_id: &str) -> Result<keyring::Entry, String> {
-    keyring::Entry::new(CREDENTIAL_SERVICE, provider_id)
-        .map_err(|_| "无法访问 Windows 凭据管理器".to_string())
-}
-
 #[tauri::command(rename_all = "camelCase")]
-fn credential_set(provider_id: String, mut secret: String) -> Result<bool, String> {
-    validate_credential_provider_id(&provider_id)?;
-    if secret.trim().is_empty() || secret.len() > 64 * 1024 {
-        secret.zeroize();
-        return Err("凭据内容为空或过长".to_string());
-    }
-
-    #[cfg(target_os = "windows")]
-    let result = system_credential_entry(&provider_id)
-        .and_then(|entry| {
-            entry
-                .set_password(secret.trim())
-                .map_err(|_| "无法写入 Windows 凭据管理器".to_string())
-        })
-        .map(|_| true);
-    #[cfg(not(target_os = "windows"))]
-    let result = Err("当前桌面平台不支持系统凭据库".to_string());
-
-    secret.zeroize();
-    result
+fn credential_set(provider_id: String, secret: String) -> Result<bool, String> {
+    system_credentials::set(&provider_id, secret)
 }
 
 #[tauri::command(rename_all = "camelCase")]
 fn credential_get(provider_id: String) -> Result<Option<String>, String> {
-    validate_credential_provider_id(&provider_id)?;
-    #[cfg(target_os = "windows")]
-    {
-        let entry = system_credential_entry(&provider_id)?;
-        return match entry.get_password() {
-            Ok(secret) => Ok(Some(secret)),
-            Err(keyring::Error::NoEntry) => Ok(None),
-            Err(_) => Err("无法读取 Windows 凭据管理器".to_string()),
-        };
-    }
-    #[cfg(not(target_os = "windows"))]
-    Err("当前桌面平台不支持系统凭据库".to_string())
+    system_credentials::get(&provider_id)
 }
 
 #[tauri::command(rename_all = "camelCase")]
 fn credential_delete(provider_id: String) -> Result<bool, String> {
-    validate_credential_provider_id(&provider_id)?;
-    #[cfg(target_os = "windows")]
-    {
-        let entry = system_credential_entry(&provider_id)?;
-        return match entry.delete_credential() {
-            Ok(()) => Ok(true),
-            Err(keyring::Error::NoEntry) => Ok(false),
-            Err(_) => Err("无法删除 Windows 凭据".to_string()),
-        };
-    }
-    #[cfg(not(target_os = "windows"))]
-    Err("当前桌面平台不支持系统凭据库".to_string())
+    system_credentials::delete(&provider_id)
 }
-
 // ========== 配置命令 ==========
 
 #[tauri::command]
@@ -1693,6 +1635,10 @@ fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
+        .setup(|app| {
+            window_appearance::initialize_opaque(app)?;
+            Ok(())
+        })
         .manage(agent_runtime::AgentRuntime::new(
             paths
                 .tasks
@@ -1720,6 +1666,8 @@ fn main() {
             agent_runtime::agent_runtime_start,
             agent_runtime::agent_runtime_status,
             agent_runtime::agent_runtime_stop,
+            window_appearance::window_appearance_get,
+            window_appearance::window_appearance_set,
             credential_set,
             credential_get,
             credential_delete,

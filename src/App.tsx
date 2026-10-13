@@ -15,6 +15,18 @@ import type { ModelSelection } from "./features/models/modelSelection";
 import { useSidebarLayout } from "./components/useSidebarLayout";
 import Canvas from "./components/Canvas";
 import ConversationPanel from "./components/ConversationPanel";
+import "./styles/message-content.css";
+import "./styles/assistant-picker.css";
+import "./styles/provider-conversation.css";
+import "./styles/window-appearance.css";
+import { restoreWindowAppearance } from "./integrations/windowAppearance";
+import type { ProviderConversationInput } from "./components/ProviderConversationPanel";
+import { prepareProviderConversationRound } from "./features/conversation/providerConversationRound";
+import {
+  composeAssistantPrompt,
+  isAssistant,
+} from "./features/assistants/assistantProfiles";
+import { catalogForConnection } from "./features/models/modelCatalog";
 import DeferredPanelBoundary from "./components/DeferredPanelBoundary";
 import Modal from "./components/Modal";
 import TaskExecutionApproval from "./components/TaskExecutionApproval";
@@ -105,6 +117,7 @@ import {
   canvasImageAttachments,
   prepareImageTask,
   ImageTaskCommandError,
+  originalProjectBinding,
 } from "./features/creation/imageTaskCommand";
 import {
   CanvasImageCommandContext,
@@ -131,6 +144,7 @@ import { createProjectCanvas } from "./domain/projectCanvas";
 import {
   parseModelProvider,
   MODEL_PROVIDER_STORAGE_KEY,
+  isStrictLoopbackProviderUrl,
 } from "./domain/modelProvider";
 import {
   loadProviderConnectionsDurable,
@@ -166,6 +180,16 @@ function capacitySwitchHint(currentId: string | undefined): string {
     .join("、")}${
     available.length > 3 ? " 等" : ""
   }；可在设置中切换连接或模型后重试。`;
+}
+function projectConnectionId(project?: CreationProject): string | undefined {
+  if (!project) return undefined;
+  if (project.composerDraft.providerConnectionId)
+    return project.composerDraft.providerConnectionId;
+  try {
+    return originalProjectBinding(project).id;
+  } catch {
+    return undefined;
+  }
 }
 
 import {
@@ -693,6 +717,7 @@ export default function App() {
       creationRef.current.projects.find((item) => item.id === projectId);
     const task = project?.tasks.find((item) => item.id === taskId);
     if (!project || !task || taskControllers.current[taskId]) return;
+    if (!["queued", "running"].includes(task.status)) return;
     if (task.imageEdit) {
       const live =
         creationRef.current.projects.find((p) => p.id === projectId) ?? project;
@@ -803,7 +828,9 @@ export default function App() {
         const publishedSubmissionState = deliveryErrorMessage
           ? ("unknown" as const)
           : submissionState;
-        const sourceItemId = task.sourceItemId ?? rootItemId(current);
+        const sourceItemId = task.conversationRoundId
+          ? undefined
+          : (task.sourceItemId ?? rootItemId(current));
         const nextProject = appendImageTaskResults(
           current,
           acceptedResults,
@@ -901,12 +928,17 @@ export default function App() {
     let reservation: ProviderSubmissionReservation | undefined;
     const nativeTaskHost = usesNativeTaskHost();
     const assertTextCurrent = () => {
-      if (task.kind === "text" && !navigator.onLine)
+      if (
+        task.kind === "text" &&
+        !navigator.onLine &&
+        !isStrictLoopbackProviderUrl(task.providerBaseUrl ?? "")
+      )
         throw new Error("当前离线，未提交文本任务；草稿已保留。");
       if (task.kind === "text")
         assertLiveTextTask(
           creationRef.current.projects.find((item) => item.id === projectId),
           task,
+          projectId,
         );
     };
     try {
@@ -934,6 +966,8 @@ export default function App() {
             id: task.providerConnectionId,
             baseUrl: task.providerBaseUrl,
             credentialRef: task.providerCredentialRef,
+            protocol: task.providerProtocol,
+            authMode: task.providerAuthMode,
             referenceCount: task.attachments.length,
             kind: task.kind === "text" ? "text" : "image",
             model: task.model,
@@ -964,6 +998,8 @@ export default function App() {
             id: task.providerConnectionId,
             baseUrl: task.providerBaseUrl,
             credentialRef: task.providerCredentialRef,
+            protocol: task.providerProtocol,
+            authMode: task.providerAuthMode,
             referenceCount: task.attachments.length,
             kind: task.kind === "text" ? "text" : "image",
             model: task.model,
@@ -991,6 +1027,9 @@ export default function App() {
               ? false
               : undefined,
           kind: task.kind === "text" ? "text" : undefined,
+          protocol: task.kind === "text" ? task.providerProtocol : undefined,
+          authMode: task.kind === "text" ? task.providerAuthMode : undefined,
+          messages: task.conversationMessages,
           concurrencyLimit: nativeConnection?.concurrencyLimit,
           taskId: task.id,
           idempotencyKey: task.idempotencyKey,
@@ -1347,6 +1386,9 @@ export default function App() {
           providerBaseUrl: task.providerBaseUrl,
           credentialRef: task.providerCredentialRef,
           idempotencyKey: task.idempotencyKey,
+          protocol: task.providerProtocol,
+          authMode: task.providerAuthMode,
+          messages: task.conversationMessages,
           signal: controller.signal,
           beforeRequest: () => {
             assertTextCurrent();
@@ -2074,6 +2116,26 @@ export default function App() {
       );
     const requestModel =
       request.origin === "canvas" ? request.input.model : request.input.model;
+    const requestSource =
+      request.origin === "canvas"
+        ? original?.items.find((item) => item.id === request.input.sourceItemId)
+        : undefined;
+    const textRequest =
+      request.origin === "canvas"
+        ? requestSource?.kind === "text"
+        : request.input.kind === "text";
+    const requestConnectionId =
+      request.origin === "canvas"
+        ? (requestSource?.providerConnectionId ??
+          original?.composerDraft.providerConnectionId)
+        : request.input.providerConnectionId;
+    const requestEndpoint =
+      readProviderConnections().find(
+        (connection) => connection.id === requestConnectionId,
+      )?.baseUrl ??
+      (request.origin === "canvas"
+        ? original?.providerBaseUrl
+        : (request.input.providerBaseUrl ?? original?.providerBaseUrl));
     let effectivePrompt = request.input.prompt;
     if (request.origin === "canvas" && request.input.imageEdit) {
       try {
@@ -2093,7 +2155,10 @@ export default function App() {
       modelConfigured:
         request.origin === "agent" || codexCanvas || homeModelConfig.configured,
       quotaAvailable: true,
-      online: typeof navigator === "undefined" ? true : navigator.onLine,
+      online:
+        typeof navigator === "undefined" ||
+        navigator.onLine ||
+        (textRequest && isStrictLoopbackProviderUrl(requestEndpoint ?? "")),
       serviceConfigured:
         request.origin === "agent" ||
         codexCanvas ||
@@ -2322,6 +2387,112 @@ export default function App() {
     input: CreateProjectInput,
   ): Promise<string | undefined> {
     return submitImageCommand({ origin: "home", input });
+  }
+  async function handleProviderConversation(
+    input: ProviderConversationInput,
+  ): Promise<string | { notice: string } | undefined> {
+    const project = creationRef.current.projects.find(
+      (item) => item.id === input.projectId,
+    );
+    if (!project || activeProjectIdRef.current !== project.id)
+      return "项目已切换，请在当前项目重新提交。";
+    if (
+      project.tasks.some(
+        (task) =>
+          task.conversationRoundId &&
+          (["queued", "running", "unknown"].includes(task.status) ||
+            task.submissionState === "unknown"),
+      )
+    )
+      return "上一轮尚未结束或需核对，请先处理任务状态。";
+    try {
+      const assistant = input.assistantId
+        ? skillRegistry.getRecord(input.assistantId)
+        : undefined;
+      if (input.assistantId && !assistant)
+        return "所选助手不存在，请重新选择。";
+      composeAssistantPrompt(input.prompt, assistant);
+      const connections = readProviderConnections();
+      if (
+        !navigator.onLine &&
+        input.routes.some(
+          (route) =>
+            !isStrictLoopbackProviderUrl(
+              connections.find(
+                (connection) => connection.id === route.connectionId,
+              )?.baseUrl ?? "",
+            ),
+        )
+      )
+        return "当前离线，远程连接未发送；草稿已保留。";
+      const now = Date.now(),
+        roundId = `conversation-${crypto.randomUUID()}`,
+        userMessageId = `message-${crypto.randomUUID()}`;
+      const round = prepareProviderConversationRound({
+        roundId,
+        projectId: project.id,
+        userMessageId,
+        prompt: input.prompt,
+        history: project.messages,
+        historyTasks: project.tasks,
+        assistantInstructions: assistant?.instructions,
+        routes: input.routes,
+        connections,
+        catalogs: Object.fromEntries(
+          connections.map((connection) => [
+            connection.id,
+            catalogForConnection(connection),
+          ]),
+        ),
+        createdAt: now,
+      });
+      const tasks = round.tasks.map((task) => ({
+        ...task,
+        approvedGates: requiredApprovalGates({
+          privacyMode: task.privacyMode,
+          requestedOutputs: 1,
+          providerBaseUrl: task.providerBaseUrl,
+        }),
+      }));
+      if (
+        tasks.some((task) => task.approvedGates.includes("remote_transfer")) &&
+        !input.remoteApproved
+      )
+        return "请确认允许发送至所选远程连接。";
+      updateProject(project.id, (current) => ({
+        ...current,
+        messages: [
+          ...current.messages,
+          {
+            id: userMessageId,
+            roundId,
+            role: "user",
+            content: input.prompt,
+            createdAt: now,
+          },
+        ],
+        tasks: [...current.tasks, ...tasks],
+        updatedAt: now,
+      }));
+      await persistence.flush();
+      const live = creationRef.current.projects.find(
+        (item) => item.id === project.id,
+      );
+      if (!live) return "项目已不可用，未发送请求。";
+      tasks
+        .filter(
+          (task) =>
+            live.tasks.find((item) => item.id === task.id)?.status === "queued",
+        )
+        .forEach((task) => void executeTask(project.id, task.id, live));
+      return round.truncatedRouteIds.length
+        ? { notice: "已提交；较长历史已按完整轮次裁剪，各模型历史保持独立。" }
+        : undefined;
+    } catch (error) {
+      return error instanceof Error
+        ? error.message
+        : "无法创建对话任务，未自动重试。";
+    }
   }
   async function handleSendMessage(message: string): Promise<boolean | string> {
     const project = creationRef.current.projects.find(
@@ -2558,6 +2729,7 @@ export default function App() {
         preferences.floatingLayout,
       );
     };
+    void restoreWindowAppearance(preferences.transparentWindow);
     const listener = (event: Event) => {
       preferences = (event as CustomEvent<SettingsPreferences>).detail;
       apply();
@@ -2776,15 +2948,7 @@ export default function App() {
                   cancel: cancelTask,
                   tasks: activeProject?.tasks ?? [],
                   model: activeProject?.model ?? "",
-                  providerConnectionId:
-                    activeProject?.composerDraft.providerConnectionId ??
-                    activeProject?.tasks.at(-1)?.providerConnectionId ??
-                    readProviderConnections().find(
-                      (connection) =>
-                        connection.baseUrl === activeProject?.providerBaseUrl &&
-                        connection.credentialRef ===
-                          activeProject?.providerCredentialRef,
-                    )?.id,
+                  providerConnectionId: projectConnectionId(activeProject),
                   textModel:
                     readProviderConnections().find(
                       (connection) =>
@@ -2947,7 +3111,12 @@ export default function App() {
                   onDeleteMessage={
                     activeProject ? handleDeleteMessage : undefined
                   }
-                  skills={skillRegistry.listRecords()}
+                  skills={skillRegistry
+                    .listRecords()
+                    .filter((record) => !isAssistant(record))}
+                  assistantRegistry={skillRegistry}
+                  onProviderConversation={handleProviderConversation}
+                  onCancelTask={cancelTask}
                   onApplySkill={applySkillToProject}
                   voiceEnabled={active === "workspace" && chat}
                   agent={

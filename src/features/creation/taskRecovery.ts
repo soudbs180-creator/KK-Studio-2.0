@@ -703,6 +703,7 @@ function reconcileSourceGenerationStatuses(
   const states = new Map<string, "clear" | "pending" | "error">();
   const priority = { clear: 0, pending: 1, error: 2 } as const;
   for (const task of project.tasks) {
+    if (task.conversationRoundId && !task.sourceItemId) continue;
     const sourceItemId =
       task.sourceItemId !== undefined
         ? project.items.some((item) => item.id === task.sourceItemId)
@@ -766,6 +767,7 @@ function interruptedSourceIds(project: CreationProject): Set<string> {
   const ids = new Set<string>();
   const fallback = historicalSourceItemId(project);
   for (const task of project.tasks) {
+    if (task.conversationRoundId && !task.sourceItemId) continue;
     if (!isInterruptible(task.status)) continue;
     if (task.sourceItemId !== undefined && task.sourceItemId !== "") {
       // An explicit but deleted source must not fall back to an unrelated node.

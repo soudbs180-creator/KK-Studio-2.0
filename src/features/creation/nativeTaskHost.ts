@@ -1,4 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
+import type { ProviderProtocolOptions } from "../../domain/modelProvider.ts";
+import type { ProviderTextMessage } from "../../integrations/providerTextProtocol.ts";
 import type {
   CreationSnapshot,
   CreationTask,
@@ -14,7 +16,8 @@ import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
 import { editReceiptReason } from "../image-edit/recovery.ts";
 
 /** The request crossing the Desktop TaskHost IPC boundary. It contains no API key. */
-export interface NativeTaskHostRequest {
+export interface NativeTaskHostRequest extends ProviderProtocolOptions {
+  messages?: readonly ProviderTextMessage[];
   imageEditRequired?: boolean;
   maskAssetId?: string;
   kind?: "image" | "text";
@@ -718,6 +721,7 @@ export async function reconcileNativeTasks(
       );
       const sourceStates = new Map<string, "clear" | "pending" | "error">();
       for (const task of tasks) {
+        if (task.conversationRoundId && !task.sourceItemId) continue;
         const uncertain =
           task.status === "unknown" ||
           task.submissionState === "unknown" ||
@@ -761,6 +765,7 @@ export async function reconcileNativeTasks(
       }
       const canvas = reconcileProjectCanvas(project.canvas, items);
       for (const task of tasks) {
+        if (task.conversationRoundId && !task.sourceItemId) continue;
         const sourceItemId =
           task.sourceItemId !== undefined
             ? items.some((item) => item.id === task.sourceItemId)

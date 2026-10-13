@@ -1,4 +1,5 @@
 import type { SkillRegistry } from "./skillRegistry";
+import { ASSISTANT_TEMPLATES } from "../assistants/assistantProfiles.ts";
 
 const TEMPLATE_SKILLS = [
   {
@@ -36,7 +37,7 @@ const TEMPLATE_SKILLS = [
 ] as const;
 
 export function ensureTemplates(registry: SkillRegistry, persist = true): void {
-  for (const template of TEMPLATE_SKILLS) {
+  for (const template of [...TEMPLATE_SKILLS, ...ASSISTANT_TEMPLATES]) {
     if (!registry.getRecord(template.manifest.id)) {
       if (persist) registry.importSkill(template);
       else registry.seedSkill(template);

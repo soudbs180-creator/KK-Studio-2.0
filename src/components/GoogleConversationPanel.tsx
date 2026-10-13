@@ -11,6 +11,10 @@ import ConversationHeader from "./ConversationHeader";
 import ConversationChannelSelector from "./ConversationChannelSelector";
 import GoogleAgentControls from "./GoogleAgentControls";
 import { useConversationOverlay } from "./useConversationOverlay";
+import AssistantPicker from "./AssistantPicker";
+import type { SkillRegistry } from "../features/skills/skillRegistry";
+import { composeAssistantPrompt } from "../features/assistants/assistantProfiles";
+import { downloadConversationMarkdown } from "../features/conversation/conversationShare";
 
 export default function GoogleConversationPanel({
   project,
@@ -19,6 +23,9 @@ export default function GoogleConversationPanel({
   onChannelChange,
   overlay,
   codexBusy,
+  assistantRegistry,
+  assistantId,
+  onAssistantChange,
 }: {
   project: CreationProject;
   onClose: () => void;
@@ -26,6 +33,9 @@ export default function GoogleConversationPanel({
   onChannelChange: (channel: string) => void;
   overlay?: boolean;
   codexBusy: boolean;
+  assistantRegistry?: SkillRegistry;
+  assistantId?: string;
+  onAssistantChange: (id: string | undefined) => void;
 }) {
   const state = useSyncExternalStore(
     googleAgentConnection.subscribe,
@@ -66,7 +76,24 @@ export default function GoogleConversationPanel({
     canvasImages: project.items.filter(
       (item) => item.kind === "image" && item.assetId,
     ),
-    onSend: googleAgentConnection.sendMessage,
+    onSend: async (message, attachments) => {
+      try {
+        const record = assistantId
+          ? assistantRegistry?.getRecord(assistantId)
+          : undefined;
+        if (assistantId && !record)
+          throw new Error("所选助手不可用，请重新选择。");
+        return await googleAgentConnection.sendMessage(
+          composeAssistantPrompt(message, record),
+          attachments,
+        );
+      } catch (error) {
+        return {
+          ok: false,
+          error: error instanceof Error ? error.message : "助手不可用",
+        };
+      }
+    },
     onInterrupt: googleAgentConnection.interrupt,
     onDecision: googleAgentConnection.resolveApproval,
   };
@@ -82,6 +109,20 @@ export default function GoogleConversationPanel({
         messageCount={state.messages.length}
         onStatus={setStatus}
         onClose={onClose}
+        exportDisabled={
+          !state.messages.some((item) =>
+            ["user", "assistant"].includes(item.role),
+          )
+        }
+        onExport={() => {
+          try {
+            setStatus(
+              `已导出 ${downloadConversationMarkdown({ title: project.name, messages: state.messages.map((item) => ({ role: item.role, content: item.text })) })}`,
+            );
+          } catch (error) {
+            setStatus(error instanceof Error ? error.message : "导出失败");
+          }
+        }}
       />
       <ConversationChannelSelector
         value="google"
@@ -100,6 +141,15 @@ export default function GoogleConversationPanel({
           </p>
         )}
       </div>
+      {assistantRegistry && (
+        <AssistantPicker
+          registry={assistantRegistry}
+          selectedId={assistantId}
+          onSelect={onAssistantChange}
+          onStatus={setStatus}
+          disabled={state.sending || state.status === "connecting"}
+        />
+      )}
       <AgentComposer
         agent={agent}
         draftKey={`google-${project.id}`}

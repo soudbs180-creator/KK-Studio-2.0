@@ -2,7 +2,7 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-12
+- updatedAt: 2026-10-13
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
@@ -12,11 +12,13 @@
 
 - canonical repository：`D:/kk-studio/KK-Studio-2.0`
 - branch：`codex/ui-redesign-20261011`
-- HEAD：`7f29db98a00a9f0662c9a0dd8909337a988a4baa`
-- local `origin/main`：`1f6cbd37091326a899fa600baba53bf6efd9cf16`；本入口不声称已重新 fetch
-- worktrees：94 个注册项，包含 nested、external、dirty 和 active checkout；不得由本入口推断可回收
-- task ledger：123 条，75 `DONE`、31 `PARTIAL`、11 `TODO`、4 `BLOCKED`、2 `REVIEW`；47 条未关闭
+- HEAD：`51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c`
+- local `origin/main`：`bcf55851d296c753d9610e86f1e32bf8db333a41`；本入口不声称已重新 fetch
+- worktrees：102 个注册项，包含 nested、external、dirty 和 active checkout；不得由本入口推断可回收
+- task ledger：125 条，75 `DONE`、32 `PARTIAL`、11 `TODO`、4 `BLOCKED`、3 `REVIEW`；50 条未关闭
 - 当前分支是治理候选分支，不是已发布的 `origin/main` 树；任何 Hosted、Provider、Tauri、签名、安装和用户验收都必须重新取得当前 head 证据
+
+Cherry当前任务：`TASK-CHERRY-RED-001`，`D:/kk-studio/.worktrees/TASK-CHERRY-RED-001`，`codex/TASK-CHERRY-RED-001`，候选Desktop/Web2.1.16；primary并发dirty保留。恢复与实际平台证据见[verification](../changes/2026-10-13-cherry-red-scope/verification.md)。
 
 ## 权威顺序
 

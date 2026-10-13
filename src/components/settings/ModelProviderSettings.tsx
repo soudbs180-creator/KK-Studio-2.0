@@ -11,6 +11,7 @@ import {
   modelProviderSchema,
   serializeModelProvider,
   type ModelProviderProfile,
+  isStrictLoopbackProviderUrl,
 } from "../../domain/modelProvider";
 import ProviderConnectionStatus from "./ProviderConnectionStatus";
 import ProviderConnectionList from "./ProviderConnectionList";
@@ -103,7 +104,7 @@ export default function ModelProviderSettings({
     setSaving(true);
     try {
       const savedConnection = connectionFromModelProfile(valid);
-      if (apiKey.trim()) {
+      if (valid.authMode !== "none" && apiKey.trim()) {
         await saveApiKey(valid.baseUrl, apiKey, credentialRef);
         markProviderConnectionUnverified(savedConnection.id);
         setHasStoredKey(true);
@@ -145,6 +146,8 @@ export default function ModelProviderSettings({
       name: connection.provider,
       baseUrl: connection.baseUrl,
       model: connection.model ?? "",
+      ...(connection.protocol ? { protocol: connection.protocol } : {}),
+      ...(connection.authMode ? { authMode: connection.authMode } : {}),
     });
     setCredentialRef(
       connection.credentialRef ??
@@ -185,7 +188,7 @@ export default function ModelProviderSettings({
     if (requestRef.current) return;
     const valid = validate();
     if (!valid) return;
-    if (!navigator.onLine) {
+    if (!navigator.onLine && !isStrictLoopbackProviderUrl(valid.baseUrl)) {
       setConnection({
         kind: "offline",
         message: "设备处于离线状态，请联网后重试。",
@@ -201,11 +204,14 @@ export default function ModelProviderSettings({
     );
     try {
       const key =
-        apiKey.trim() || (await loadApiKey(valid.baseUrl, credentialRef));
+        valid.authMode === "none"
+          ? ""
+          : apiKey.trim() || (await loadApiKey(valid.baseUrl, credentialRef));
       const models = await checkModelProvider(
         valid.baseUrl,
         key,
         controller.signal,
+        valid,
       );
       if (requestRef.current !== controller) return;
       saveModelCatalog(connectionFromModelProfile(valid), models);

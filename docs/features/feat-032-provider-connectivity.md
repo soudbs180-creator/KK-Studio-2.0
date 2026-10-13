@@ -1,5 +1,7 @@
 # 多供应商接入与多目标配置（FEAT-032）
 
+2026-10-13：已有Provider身份/目录沿用，增量支持OpenAI兼容、Anthropic Messages、Gemini文本协议及Ollama/LM Studio显式loopback免密，Web/Native同任务快照传递协议/认证/历史。网站账号入口独立，不复用订阅与cookies；未调用付费云服务或新增Cherry依赖。见[取舍](../changes/2026-10-13-cherry-red-scope/decisions.md)与[验证](../changes/2026-10-13-cherry-red-scope/verification.md)，真实服务/多平台缺口不升级REAL。
+
 - 状态：PARTIAL
 - 领域：intelligence
 - 最近更新：2026-09-30

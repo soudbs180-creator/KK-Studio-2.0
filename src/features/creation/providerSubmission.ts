@@ -8,11 +8,16 @@ import {
   updateProviderConnection,
 } from "./providerRegistry.ts";
 import { hasApiKey } from "./providerCredentials.ts";
+import {
+  resolveProviderAuthMode,
+  resolveProviderProtocol,
+  type ProviderProtocolOptions,
+} from "../../domain/modelProvider.ts";
 import { catalogForConnection } from "../models/modelCatalog.ts";
 import { resolveImageModelCapabilities } from "../models/imageModelCapabilities.ts";
 
 export class ProviderSubmissionError extends Error {}
-export interface SubmissionBinding {
+export interface SubmissionBinding extends ProviderProtocolOptions {
   operation?: "generate" | "edit" | "inpaint";
   localEdit?: boolean;
   id?: string;
@@ -74,10 +79,14 @@ export function assertSubmissionConnection(
     throw new ProviderSubmissionError(
       "原绑定连接已移除或未登记，请重新配置后创建任务；当前内容已保留。",
     );
+  const keylessText =
+    binding.kind === "text" &&
+    resolveProviderAuthMode(connection.baseUrl ?? "", connection) === "none";
   if (
     connection.kind !== "user_byok" ||
     !connection.baseUrl ||
-    !connection.credentialRef
+    (!keylessText && !connection.credentialRef) ||
+    (connection.authMode === "none" && !keylessText)
   )
     throw new ProviderSubmissionError("此入口只支持已配置凭据的 BYOK 连接。");
   const selectedModel = catalogForConnection(connection).find(
@@ -91,6 +100,9 @@ export function assertSubmissionConnection(
   if (
     endpoint(connection.baseUrl) !== endpoint(binding.baseUrl) ||
     connection.credentialRef !== binding.credentialRef ||
+    resolveProviderProtocol(connection) !== resolveProviderProtocol(binding) ||
+    resolveProviderAuthMode(connection.baseUrl, connection) !==
+      resolveProviderAuthMode(binding.baseUrl ?? "", binding) ||
     (binding.kind === "text" &&
       connection.model !== binding.model &&
       selectedModel?.kind !== "text")
@@ -176,6 +188,8 @@ export async function selectSubmissionConnection(
       id: candidate.id,
       baseUrl: candidate.baseUrl,
       credentialRef: candidate.credentialRef,
+      protocol: candidate.protocol,
+      authMode: candidate.authMode,
       referenceCount,
       kind,
       model,
@@ -184,7 +198,13 @@ export async function selectSubmissionConnection(
     };
     try {
       assertSubmissionConnection(binding);
-      if (!(await hasApiKey(candidate.baseUrl!, candidate.credentialRef)))
+      if (
+        !(
+          kind === "text" &&
+          resolveProviderAuthMode(candidate.baseUrl!, candidate) === "none"
+        ) &&
+        !(await hasApiKey(candidate.baseUrl!, candidate.credentialRef))
+      )
         continue;
       return assertSubmissionConnection(binding);
     } catch (error) {

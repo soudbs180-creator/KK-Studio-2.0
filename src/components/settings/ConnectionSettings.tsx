@@ -3,6 +3,7 @@ import type { SettingsSection } from "./SettingsSectionData";
 import ModelProviderSettings from "./ModelProviderSettings";
 import GoogleConnectionSettings from "./GoogleConnectionSettings";
 import MemorySettingsSection from "./MemorySettingsSection";
+import AiWebsiteLinks from "./AiWebsiteLinks";
 
 const PENDING_SETTINGS: Partial<
   Record<SettingsSection, { title: string; description: string }>
@@ -37,6 +38,7 @@ export default function ConnectionSettings({
       <>
         <ModelProviderSettings onFeedback={onFeedback} />
         <GoogleConnectionSettings onFeedback={onFeedback} />
+        <AiWebsiteLinks onFeedback={onFeedback} />
       </>
     );
   if (section === "updates")

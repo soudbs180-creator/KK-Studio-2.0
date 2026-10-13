@@ -4,6 +4,7 @@ import {
   DEFAULT_MODEL_PROVIDER,
   PROVIDER_PRESETS,
   findProviderPreset,
+  modelProviderSchema,
 } from "../../src/domain/modelProvider.ts";
 
 test("provider presets expose the Doubao Ark preset with a valid HTTPS base url", () => {
@@ -20,7 +21,12 @@ test("unknown preset id resolves to undefined and every preset id is unique", ()
   assert.equal(new Set(ids).size, ids.length);
   for (const preset of PROVIDER_PRESETS) {
     assert.ok(preset.name.length > 0, "preset name must not be empty");
-    assert.match(preset.baseUrl, /^https:\/\//i, "preset url must be https");
+    assert.equal(
+      modelProviderSchema.safeParse({ version: 1, ...preset, model: "" })
+        .success,
+      true,
+      "preset URL and explicit local authentication must obey the provider contract",
+    );
   }
 });
 

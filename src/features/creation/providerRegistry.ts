@@ -342,6 +342,8 @@ export function connectionFromModelProfile(
     baseUrl: profile.baseUrl,
     credentialRef,
     model: profile.model,
+    ...(profile.protocol ? { protocol: profile.protocol } : {}),
+    ...(profile.authMode ? { authMode: profile.authMode } : {}),
     capabilities: {
       modalities: [modelSupportsKind(profile.model, "text") ? "text" : "image"],
       operations: ["generate", "edit", "inpaint", "outpaint", "batch"],
