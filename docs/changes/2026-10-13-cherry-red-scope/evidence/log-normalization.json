@@ -39,8 +39,11 @@
     },
     {
       "path": "rust-windows-81cfd11f.log",
-      "originalSha256": "27bcbbdc81c4293c7e2f757999c42f24632238353415b08b873117009337af96",
-      "storedSha256": "96a8ffc8847dd7cc1d81713dfa9508f62ecc16a1043826085d06ba2d897ee8a6"
+      "originalSha256": "3c2a2409091e4cb632f3e8e688e3df747b012cbaf6c0c21113047a8c076e47ce",
+      "storedSha256": "508dae4f0f5938e5d5561c4921d5cd23b0cde27e11474b92507a684a82390b78",
+      "originalPath": ".tmp/cherry-red/rust-proof-raw.log",
+      "executedHead": "74eeae947470149d5f3739b4c697c8d131a5e79f",
+      "note": "Re-ran identical Rust source to retain the actual original locally; older normalized receipt remains in commit 74eeae94."
     },
     {
       "path": "unit-1105.log",

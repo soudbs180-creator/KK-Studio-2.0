@@ -69,3 +69,5 @@ Native input SHA256：`9a4cd9f624d1f698799e7b2e9892ce0baa49c3b0da68c3305807deb93
 当前任务保持PARTIAL：主工作区HEAD仍51fccfc7、实际配置2.1.15且有并发UI/模型设置/角色等未提交改动；源码候选仅在任务分支，未移入主工作区、未合并main或发布。真实Provider/Ollama/LM Studio、第三方MCP、三系统GUI/安装/系统vault持久化、用户验收仍NOT VERIFIED；本轮没有收费服务请求、付费依赖或签名采购。
 
 为仓库diff规范，上述console文本只整理CRLF、行尾水平空白和多余末尾空行；原本机输出仍保留，原始/存储SHA256在[规范化清单](evidence/log-normalization.json)，没有改变测试内容、结果或失败记录。JSON原始收据和报告未作结果改写。
+
+独立补审核对时发现，最初Windows138 Rust输出直接生成在evidence目录，规范化前没有另外保留原件。随后对完全相同的Rust源码重新执行完整138项并通过，真实原始输出保存到 `.tmp/cherry-red/rust-proof-raw.log`，更新该项原始/存储hash及执行HEAD；旧规范化记录仍留在74eeae94提交中，没有用重建或推测内容冒充原始输出。
