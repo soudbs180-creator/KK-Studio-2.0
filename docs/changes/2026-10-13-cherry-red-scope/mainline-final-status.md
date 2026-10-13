@@ -1,6 +1,6 @@
 # 主线候选最终验收记录
 
-当前产品源码：2.1.18 `cc184e5928f8cc67a84864822cc3b246e8cb51f0`；后续只调整原生导出测试同步与事实记录。上一冻结提交 `7daeba25db511652dbd73833c21b3066f428d7f2`，base `694a00607f6f63de1b8c43d0ebb117adf5d34f67`，[PR #58](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/58) 为 draft。任务仍为 PARTIAL：本机实现与验收有证据，最终三平台 Hosted、补审和用户产品验收分别判定。原 primary/index、11 项后续并发源文件和 125 项原任务均保留，没有合并 main、更新官方快捷方式或发布。
+当前最近完成验收的候选为 `88740c5b23f1cf5f0896d471b4339d9db39f4b9b`，产品源码与 `cc184e59` 相同；Desktop/Web 2.1.18、Mobile 2.1.1。四个 exact-head Hosted quality/Native 运行全部 SUCCESS，独立源码补审及 Windows 原包证据审计 PASS。最后新增三平台真实原生背景读回/恢复检查尚待冻结提交和实跑。任务保持 PARTIAL，最终用户产品结果/发布范围确认仍按 BRANCH-POLICY 单列；没有合并 main、发布或更新 primary 快捷方式。primary 并发源码与暂存内容保留；不宣称原 index 原始字节跨时刻不变。
 
 ## 前一冻结版本的实际本机验证
 
@@ -79,3 +79,19 @@ cc184 [Hosted原包](evidence/mainline-final/hosted-packages-cc184e59.json)和[c
 已定位原生fixture在两路task成功后没有等180ms autosave，read_revision与export之间仍有合法写入；现在只让测试在UI实际“已保存”且连续两次Native durable revision一致后导出，记录packageExportRevision并保留严格expectedRevision，只有一次export，冲突仍失败。未修改storage、export guard、产品行为、timeout或跳过断言；该同步改动等待新版exact-SHA实跑。
 
 关于旧包措辞：producer自身不额外删除产物，上游锁定[Tauri2.11.4](https://github.com/tauri-apps/tauri/blob/tauri-cli-v2.11.4/crates/tauri-bundler/src/bundle/linux/appimage/linuxdeploy.rs#L38)仍重建bundle/appimage；旧证据原件单独归档保留。mock callback的旧文件断言只证明producer自身不清理，不证明上游CLI保留同目录旧包。
+
+## 2026-10-14 最终技术收拢（已完成 887 验证）
+
+[四个 Hosted 最终原件](evidence/mainline-final/hosted-88740c5b-summary-final.json)绑定 head887、base694a：PR quality38440294429七job全PASS，push quality38440285384五PASS与两event skip；PR Native38440294448与push Native38440285848三OS均PASS，六个Native6均完成真实双模型/持久化/包导出，packageExportRevision=17。PR实际构建merge e9822e9642d321d852cf5322e9a7a65f7bcd91be，其tree c1ab0640d08bea64f4e57692df90c41f22a181bb等于本地887 tree。quality两原始输出均Rust154/154与Native TaskHost11/11。不同平台input和不同feature EXE分别记录；不把PR merge或测试driver冒充push/默认发行。
+
+[Linux](evidence/mainline-final/hosted-88740c5b-linux-proof-summary.json)真实AppImage/deb各2checks PASS，每格式4316runtime文件和14存储marker，实际bundled Node24.21 linux/x64及own进程退出；66次RPATH保护的原始资源hash/size逐项一致，actual AppRun启动。[Mac](evidence/mainline-final/hosted-88740c5b-mac-proof-summary.json)真实app/dmg各2checks PASS、4314文件、Node24.20 darwin/arm64与同样的marker/退出验证。两OS实际默认包与optional-driver Native6分别完成；Mac仅免费ad-hoc签名，不能声称notarization或下载后的Gatekeeper验收。
+
+[Windows 独立原包审计](evidence/mainline-final/hosted-88740c5b-windows-proof-summary.json)：PR/push各4次严格4280文件校验、4次shipping EXE/production页面启动、Agent healthy、损坏包拒绝、同版本重装/修复/卸载再装数据保留及2次卸载全PASS；真实elevated=true、独立GUID profile与清理policy有raw证明。small ZIP官方metadata/digest与提取JSON逐一核对，quality约22MB ZIP只保存metadata，未下载且不冒充已核对其内容。独立审计核验与source review分开记录。
+
+本机887 [Native6](evidence/mainline-final/native6-88740c5b.json)全PASS，输入f2fdcc3fbdc54fc7b3122bcd50dbf46d4da2d699eae38fe6696904ab07b7f124、driver EXEc9d5f5b84223f207283daac3fd323aed880b139e787612384b71d32f1dbe5e57。[NSIS原始回执](evidence/mainline-final/installer-88740c5b-receipt.json)与[实际生命周期](evidence/mainline-final/installer-88740c5b-local.json)通过：345846704字节安装器SHA a198b2c501c4b7f17d8646b23bdd10d9d30cbd7292de0ff11f73690d879995a1，安装后EXE831910aa95573b2b4cef41d837e7e1dd8a5fec7c765952007e5295f00922e4d1，包前EXEde7a75fe827130b21b1c50ec9a8f19e8851a637b54ff4b42617eef5ff04ad9d9，均保持准确身份。本机是已有WebView2的Windows；未测cleanVM首次WebView2引导、跨版本升级/回滚、Authenticode。
+
+[887正式增量review](evidence/mainline-final/review-88740c5b.json)2026-10-13T17:33:21.926Z PASS：11个独立状态时序检查、59证据hash、125旧任务原样保留，openP0/P1/P2=0；产品源码与cc184 byte-identical。导出saved/revision前置由本机和六个Hosted Native6实际证明，不放宽strict expectedRevision、不重试导出、不增加timeout。旧7da失败、cc184 Linuxpush conflict与第一次SDK确认夹具失败仍保存。早期17:39/17:42 Hosted jobs未落盘的[归档错误](evidence/mainline-final/hosted-88740c5b-archive-integrity-incident.json)如实记录；最终raw/metadata/JSON均已重新实际取得及readback，未伪造缺失快照。
+
+最后关联验证只在现有Native fixture增加window_appearance_get/set/get，开启后读回并关闭恢复；unsupported必须如实返回reason。Win production UI已有13组含透明恢复实跑；Mac/Linux原生背景接口的此项新断言尚待新冻结head三平台实跑，不能提前报Native7 PASS。产品src/src-tauri/scripts/config/package/version没有新改动。最终门禁将继续跟随[PR #58](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/58)最新SHA的Actions与独立补审。
+
+本轮采用范围：保留KK Tauri/React18、默认Codex/Google及单一Registry/任务/存储；独立实现三协议/严格本地免密、五原创助手与自定义、2–3文本模型独立多轮、安全Markdown/本地分享，融合既有MCP与三平台runtime/透明能力，局部修复来源身份/保存竞态/协议及打包根因。没有复制Cherry AGPL源码、增加付费调用或另一套底层。许可与不采用项目见research/decisions；真实LM Studio及收费云服务、图片视频生成、通用自动工具/OAuth、Mobile和生产发布仍属分别验收的能力。

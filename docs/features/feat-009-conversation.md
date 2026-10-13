@@ -60,3 +60,5 @@ TASK-AGENT-005: Gemini CLI 登录文字对话及续接的本地/fixture 验证�
 TASK-AGENT-007：CodeBuddy CLI 受控短文本委派；后续设计师全链路按 [剩余顺序](../changes/2026-09-24-codebuddy-delegation/remaining.md) 推进。
 
 2026-10-13 7da 主线候选：正式 production Tauri Native6、真实 Ollama13、严格隔离NSIS生命周期已通过相关链路；不同源码/产物和 Hosted/用户验收边界见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。功能总体仍PARTIAL，不据此关闭其他开放任务或真实云/图片/视频能力。
+
+2026-10-14 最新验收：安全Markdown/本地复制导出、2–3独立文本模型的三平台Native6及本机真实Ollama13已PASS；不把文字助手当真实图像/视频生成服务。 完整身份与许可见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。保留功能整体PARTIAL及其他开放任务。

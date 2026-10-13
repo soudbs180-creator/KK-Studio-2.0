@@ -1,6 +1,6 @@
 # 功能与融合规格
 
-当前产品源码已冻结 `cc184e59`，本机正式 Native6、真实 Ollama13 和隔离 NSIS 生命周期已有 PASS；最新完整验证、不同产物身份、Hosted 及最终验收的状态以 [最终记录](mainline-final-status.md) 为准。以下旧阶段保留执行时边界，不提前标 DONE。
+当前最近完成验收的候选为 `88740c5b23f1cf5f0896d471b4339d9db39f4b9b`，产品源码与 `cc184e59` 相同；Desktop/Web 2.1.18、Mobile 2.1.1。四个 exact-head Hosted quality/Native 运行全部 SUCCESS，独立源码补审及 Windows 原包证据审计 PASS。最后新增三平台真实原生背景读回/恢复检查尚待冻结提交和实跑。任务保持 PARTIAL，最终用户产品结果/发布范围确认仍按 BRANCH-POLICY 单列；没有合并 main、发布或更新 primary 快捷方式。primary 并发源码与暂存内容保留；不宣称原 index 原始字节跨时刻不变。
 
 任务：TASK-CHERRY-RED-001。日期：2026-10-13。
 

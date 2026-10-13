@@ -1,0 +1,8 @@
+{
+  "sourceHead": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+  "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+  "sourceDirty": "?? src-tauri/gen/schemas/linux-schema.json",
+  "generatedDocuments": [
+    "?? src-tauri/gen/schemas/linux-schema.json"
+  ]
+}

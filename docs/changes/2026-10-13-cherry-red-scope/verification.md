@@ -143,3 +143,7 @@ MR003 增加两条健康围栏后，当前 code-health 实跑 exit 0：App FILE_
 三项独立审查修复后，主线 dirty 候选完整 `npm run verify` 退出码 0：1138 unit（1124 PASS、14 SKIP）、174 Agent（172 PASS、2 SKIP）、UI 237/0、格式/类型/lint/build 通过、开发插件四步 PASS。528 项浏览器中 527 首试通过，一项双窗口保存测试首次 5 秒等待超时、重试通过；原日志完整保留，不能称为零重试全绿。随后相同测试执行 8 次、禁用重试，8/8 PASS；没有修改保存源码、测试断言、超时或检查标准。首次紧接完整验证运行复查时，1423 仍在清理并报告占用；确认端口释放后执行实际复查，没有停止其他进程。
 
 对应原件：[最新完整日志](evidence/resumed-closeout/verify-mainline-final-dirty.log)、[八次复查](evidence/resumed-closeout/concurrent-save-recheck.log)。这组结果继续明确是当前未提交集成源码，最终 Native/原包/Hosted 与正式 SHA 审查需分别绑定冻结提交。
+
+## 2026-10-14 当前验证覆盖
+
+887 四exact-head Hosted全部SUCCESS、六Native6、Linux/Mac四种默认包、Windows严格NSIS与同版本生命周期、独立source及Windows artifact审计已完成。各source/feature/input/EXE/ZIP身份、历史失败、原件hash与未验项以[最终记录](mainline-final-status.md)为准。当前只新增Native原生背景get/set/readback/restoration测试，尚待新head实跑；不以旧PASS冒充新Native7。

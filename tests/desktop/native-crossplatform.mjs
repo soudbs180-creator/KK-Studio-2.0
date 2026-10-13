@@ -287,6 +287,26 @@ try {
   vaultWritten = true;
   assert.equal(await invoke("credential_get", { providerId: key }), secret);
   report.checks.push({ name: "real-synthetic-system-vault", passed: true });
+  const appearance = await invoke("window_appearance_get");
+  assert.equal(appearance.enabled, false);
+  assert.equal(typeof appearance.supported, "boolean");
+  const appearanceTransitions = [];
+  for (const enabled of [true, false]) {
+    const applied = await invoke("window_appearance_set", { enabled });
+    const actual = await invoke("window_appearance_get");
+    assert.equal(actual.supported, appearance.supported);
+    assert.equal(applied.supported, actual.supported);
+    assert.equal(actual.enabled, appearance.supported && enabled);
+    assert.equal(applied.enabled, actual.enabled);
+    if (!appearance.supported) assert(actual.reason);
+    appearanceTransitions.push({ requested: enabled, applied, actual });
+  }
+  report.checks.push({
+    name: "real-native-window-background-readback-and-restoration",
+    initial: appearance,
+    transitions: appearanceTransitions,
+    passed: true,
+  });
   const models = await invoke("provider_models_read", {
     requestId: "model-page-native-e2e",
     url: baseUrl + "/models",

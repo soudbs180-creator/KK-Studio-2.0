@@ -1,0 +1,41 @@
+{
+  "requestedHead": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+  "sha": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+  "node_id": "C_kwDOUh_nStoAKGU5ODIyZTk2NDJkMzIxZDg1MmNmNTMyMmU5YTdhNjVmN2JjZDkxYmU",
+  "url": "https://api.github.com/repos/soudbs180-creator/KK-Studio-2.0/git/commits/e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+  "html_url": "https://github.com/soudbs180-creator/KK-Studio-2.0/commit/e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+  "author": {
+    "name": "soudbs180-creator",
+    "email": "soudbs180@gmail.com",
+    "date": "2026-10-13T17:38:30Z"
+  },
+  "committer": {
+    "name": "GitHub",
+    "email": "noreply@github.com",
+    "date": "2026-10-13T17:38:30Z"
+  },
+  "tree": {
+    "sha": "c1ab0640d08bea64f4e57692df90c41f22a181bb",
+    "url": "https://api.github.com/repos/soudbs180-creator/KK-Studio-2.0/git/trees/c1ab0640d08bea64f4e57692df90c41f22a181bb"
+  },
+  "message": "Merge 88740c5b23f1cf5f0896d471b4339d9db39f4b9b into 694a00607f6f63de1b8c43d0ebb117adf5d34f67",
+  "parents": [
+    {
+      "sha": "694a00607f6f63de1b8c43d0ebb117adf5d34f67",
+      "url": "https://api.github.com/repos/soudbs180-creator/KK-Studio-2.0/git/commits/694a00607f6f63de1b8c43d0ebb117adf5d34f67",
+      "html_url": "https://github.com/soudbs180-creator/KK-Studio-2.0/commit/694a00607f6f63de1b8c43d0ebb117adf5d34f67"
+    },
+    {
+      "sha": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+      "url": "https://api.github.com/repos/soudbs180-creator/KK-Studio-2.0/git/commits/88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+      "html_url": "https://github.com/soudbs180-creator/KK-Studio-2.0/commit/88740c5b23f1cf5f0896d471b4339d9db39f4b9b"
+    }
+  ],
+  "verification": {
+    "verified": true,
+    "reason": "valid",
+    "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqzmyWCRC1aQ7uu5UhlAAAYAIQAIQOzA53jjFJJKcfjG8xkaJJ\nz4jv16BhDa8KHWlEeLhC/PPoWN+43okrkYZVmmrxwTEKgHsqUAz/UTGLfJ8RaAT4\nKchT2HEHc+KoMkH7MysnFlhXPdqpZUDgBGkGCE21wljKiF5GCOLgRL7UZCFt0XOG\npG3QzHseuVlxrW+UGxLXBbh/4o+Vik7rbzY04C0SkC9wyuC9gJCRcjriU+hXZeoq\nF/cXJKngxRbD7hIHqEivuf8mnouWcbCzDgqyeP/IEF61xJb83BUWIhhytBlNFMD+\nyFhidtbveLsHXJH8d5412di6hHBUfgqbUpcQmvEmYPlbCaoMxxs8zUdK20CVY9ex\njDEt3LgNlnRjxP8NHU9WssZr9R4I4htgDdJHGnMVyDOQD6svXKKaVuPgbcs4CP9g\n0630D98cWRA2kRLAkYR/FYTYRgeBIzs2MBZMIH5gK/D2BZoK9sstKioE/wnbHmBr\nZV5i5/6GLotpOeed4xKP4TaUuuiLWyzsbfP6xFJebh240GaZSc+jxzTmzjOzrRBk\n4Z7ADgGJUBTuE5mUBAJfrqRO06VlsEdZxhmcqy+tSthVfSFOxzMB/2nAlm67eW7e\nSOMRbW1oAZHlwnShY0WvfCLbm4+uiJeJ52piudjFfWXBuJELPf0CmBpIg8JKhwVW\n+rt6n2R0jSSk3LOL/4Ax\n=WZNR\n-----END PGP SIGNATURE-----\n",
+    "payload": "tree c1ab0640d08bea64f4e57692df90c41f22a181bb\nparent 694a00607f6f63de1b8c43d0ebb117adf5d34f67\nparent 88740c5b23f1cf5f0896d471b4339d9db39f4b9b\nauthor soudbs180-creator <soudbs180@gmail.com> 1791913110 +0000\ncommitter GitHub <noreply@github.com> 1791913110 +0000\n\nMerge 88740c5b23f1cf5f0896d471b4339d9db39f4b9b into 694a00607f6f63de1b8c43d0ebb117adf5d34f67\n",
+    "verified_at": "2026-10-13T17:38:31Z"
+  }
+}

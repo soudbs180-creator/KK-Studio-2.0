@@ -1,0 +1,240 @@
+[
+  {
+    "artifactId": 11835342721,
+    "sourceHead": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+    "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+    "beforeAfterSame": true,
+    "packagePassed": true,
+    "errors": [],
+    "signing": "Ad-hoc identity '-'; Apple notarization and downloaded Gatekeeper acceptance NOT VERIFIED",
+    "packages": [
+      {
+        "format": "app",
+        "passed": true,
+        "package": {
+          "kind": "directory",
+          "executableSha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "manifestSha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f"
+        },
+        "exe": {
+          "path": "../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-P1968u/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 818918,
+          "sha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.20.0",
+          "platform": "darwin",
+          "arch": "arm64"
+        },
+        "files": 4314,
+        "filesSha256": "433284e476a4b698b9455a0ed73fce39ba17453609597e5413ddecf81386c3f5",
+        "markers": 14,
+        "ownPid": 16027,
+        "termination": {
+          "pid": 16027,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        }
+      },
+      {
+        "format": "dmg",
+        "passed": true,
+        "package": {
+          "size": 176344764,
+          "sha256": "f75b9feefe8512217ca74f910379528d6ccc765a42de2e2d3c681189f6ef72bf",
+          "mode": 420
+        },
+        "exe": {
+          "path": "../../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-u51Q8M/mount/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 818918,
+          "sha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.20.0",
+          "platform": "darwin",
+          "arch": "arm64"
+        },
+        "files": 4314,
+        "filesSha256": "433284e476a4b698b9455a0ed73fce39ba17453609597e5413ddecf81386c3f5",
+        "markers": 14,
+        "ownPid": 16316,
+        "termination": {
+          "pid": 16316,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        }
+      }
+    ],
+    "twoFormatsResourcesEqual": true,
+    "nativePassed": true,
+    "nativeChecks": [
+      "real-synthetic-system-vault",
+      "real-local-model-discovery",
+      "real-ui-two-model-round-native-journal-markdown",
+      "real-native-package-roundtrip",
+      "real-bundled-agent-start",
+      "real-app-restart-vault-and-project"
+    ],
+    "nativeErrors": [],
+    "nativeHead": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+    "nativeInput": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+    "nativeScope": "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build",
+    "otherNativeKeys": [
+      "buildReceipt",
+      "startedAt",
+      "platform",
+      "arch",
+      "sourceHead",
+      "sourceDirty",
+      "executableSha256",
+      "buildScope",
+      "data",
+      "checks",
+      "startupSignals",
+      "errors",
+      "passed",
+      "packageExportRevision",
+      "resourceDirectory",
+      "runtimeManifestSha256",
+      "finishedAt",
+      "requests"
+    ],
+    "urls": [
+      "tauri://localhost",
+      "tauri://localhost"
+    ],
+    "packageExportRevision": 17,
+    "exportRevisionSafeInteger": true
+  },
+  {
+    "artifactId": 11837160039,
+    "sourceHead": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+    "inputSha256": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+    "beforeAfterSame": true,
+    "packagePassed": true,
+    "errors": [],
+    "signing": "Ad-hoc identity '-'; Apple notarization and downloaded Gatekeeper acceptance NOT VERIFIED",
+    "packages": [
+      {
+        "format": "app",
+        "passed": true,
+        "package": {
+          "kind": "directory",
+          "executableSha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "manifestSha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f"
+        },
+        "exe": {
+          "path": "../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-cd2WMB/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 818918,
+          "sha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.20.0",
+          "platform": "darwin",
+          "arch": "arm64"
+        },
+        "files": 4314,
+        "filesSha256": "433284e476a4b698b9455a0ed73fce39ba17453609597e5413ddecf81386c3f5",
+        "markers": 14,
+        "ownPid": 15888,
+        "termination": {
+          "pid": 15888,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        }
+      },
+      {
+        "format": "dmg",
+        "passed": true,
+        "package": {
+          "size": 176344643,
+          "sha256": "f674a3cc05a4e727e39d83d59f592239bb1af143b74817800fb69e3bba786f01",
+          "mode": 420
+        },
+        "exe": {
+          "path": "../../../../../../../../private/var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/kk-package-t8BZmR/mount/KK Studio.app/Contents/MacOS/kk-studio",
+          "size": 21549440,
+          "sha256": "36804156f60b0ef916d0b775fb26473798ef93a790e63f726feb19f3729b6e4f",
+          "mode": 493
+        },
+        "manifest": {
+          "size": 818918,
+          "sha256": "8f76ebec42a0f056d3417f3edd25c6d630726970df69dafc6365017ab75bdb1f",
+          "mode": 420
+        },
+        "node": {
+          "version": "v24.20.0",
+          "platform": "darwin",
+          "arch": "arm64"
+        },
+        "files": 4314,
+        "filesSha256": "433284e476a4b698b9455a0ed73fce39ba17453609597e5413ddecf81386c3f5",
+        "markers": 14,
+        "ownPid": 16315,
+        "termination": {
+          "pid": 16315,
+          "exitCode": null,
+          "signalCode": "SIGTERM"
+        }
+      }
+    ],
+    "twoFormatsResourcesEqual": true,
+    "nativePassed": true,
+    "nativeChecks": [
+      "real-synthetic-system-vault",
+      "real-local-model-discovery",
+      "real-ui-two-model-round-native-journal-markdown",
+      "real-native-package-roundtrip",
+      "real-bundled-agent-start",
+      "real-app-restart-vault-and-project"
+    ],
+    "nativeErrors": [],
+    "nativeHead": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+    "nativeInput": "05354b9505bb68965bc4ec3ddcc3a2847e35c1d5df0672db7664a62e06d5e655",
+    "nativeScope": "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build",
+    "otherNativeKeys": [
+      "buildReceipt",
+      "startedAt",
+      "platform",
+      "arch",
+      "sourceHead",
+      "sourceDirty",
+      "executableSha256",
+      "buildScope",
+      "data",
+      "checks",
+      "startupSignals",
+      "errors",
+      "passed",
+      "packageExportRevision",
+      "resourceDirectory",
+      "runtimeManifestSha256",
+      "finishedAt",
+      "requests"
+    ],
+    "urls": [
+      "tauri://localhost",
+      "tauri://localhost"
+    ],
+    "packageExportRevision": 17,
+    "exportRevisionSafeInteger": true
+  }
+]

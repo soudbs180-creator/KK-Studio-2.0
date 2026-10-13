@@ -1,6 +1,6 @@
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-10-13
+- updatedAt: 2026-10-14
 - source: docs/governance/task-ledger.json
 - supersededBy: null
 
@@ -8,13 +8,13 @@
 
 ## CURRENT_FACTS
 
-- snapshotDate: 2026-10-13
+- snapshotDate: 2026-10-14
 - canonicalRepository: D:/kk-studio/KK-Studio-2.0
 - canonicalRef: origin/main
 - canonicalHead: 694a00607f6f63de1b8c43d0ebb117adf5d34f67
 - primaryCheckoutState: primary on codex/ui-redesign-20261011@51fccfc7 with concurrent uncommitted work, preserved
 - taskLedger: 126 records; 76 DONE, 31 PARTIAL, 11 TODO, 4 BLOCKED, 4 REVIEW
-- integrationCandidate: codex/TASK-CHERRY-RED-001-mainline@7daeba25; draft PR #58; Native6/Ollama13/isolated NSIS PASS; current Hosted/product acceptance remain separate
+- integrationCandidate: codex/TASK-CHERRY-RED-001-mainline; latest verified88740c5b, product cc184e59; draft PR58; four Hosted runs/all3OS Native6/strict default packages+NSIS/source and artifact review PASS; new native appearance assertion and final user acceptance pending
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->

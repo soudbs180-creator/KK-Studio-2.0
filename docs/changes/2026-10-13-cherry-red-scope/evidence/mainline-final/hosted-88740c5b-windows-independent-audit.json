@@ -1,0 +1,21 @@
+{
+  "agent": "/root/cherry_ci_portability/hosted_windows_evidence",
+  "head": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+  "actualPushHead": "88740c5b23f1cf5f0896d471b4339d9db39f4b9b",
+  "actualPrMerge": "e9822e9642d321d852cf5322e9a7a65f7bcd91be",
+  "sourceTree": "c1ab0640d08bea64f4e57692df90c41f22a181bb",
+  "releaseInputSha256": "ac99d0036998e2efc07cd3f02fc8732643ec1cc82ff0be8526cf0fa19a9fc754",
+  "result": "PASS",
+  "checks": [
+    "Both raw files match supplied SHA",
+    "Four saved JSON/diff entries per artifact independently match metadata bytes/SHA",
+    "Actual GitHub artifact metadata GET independently confirms 679306bytes SHA1da7913017bcc851d825033695c9689a46a76a47b1f7ae75e941a57ad447f978 and 679299bytes SHA24476a3767aedbf5f1fa8edb0b4985624373d4655b1544ed682baef4f4a5bf3d; exact887 head",
+    "Each job has four4280-file installs,CurrentUser32/64-owned registry entries/version2.1.18",
+    "Four correct shipping launch labels,tauri compiled assets,owned Native-storage root,and NSS EXE binding",
+    "Bundled Agent healthy,damaged-package refused,repair/reinstall/data-retention,two uninstall",
+    "Actual elevated=true and unique GUID profile match raw/receipt",
+    "Raw explicitly records policy removal PR18:02:48/push18:03:47;no cleanup/shutdownError",
+    "Separate Native-e2e6PASS/0errors each,actual packageExportRevision17;generated ACL only"
+  ],
+  "limitations": "Windows host with existing WebView2; cleanWindowsWebView2bootstrap,realversionupgrade,Authenticode,publicreleaseanduseracceptance NOT VERIFIED; shippingNSSexe separatelyboundfrombareUNKeXe"
+}

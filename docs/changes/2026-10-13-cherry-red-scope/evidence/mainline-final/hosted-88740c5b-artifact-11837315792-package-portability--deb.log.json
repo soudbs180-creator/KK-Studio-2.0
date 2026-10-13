@@ -1,0 +1,68 @@
+[
+  {
+    "command": "dpkg-deb",
+    "args": [
+      "--info",
+      "/home/runner/work/KK-Studio-2.0/KK-Studio-2.0/src-tauri/target/release/bundle/deb/KK Studio_2.1.18_amd64.deb"
+    ],
+    "status": 0,
+    "signal": null,
+    "stdout": " new Debian package, version 2.0.\n size 203624260 bytes: control archive=108840 bytes.\n     365 bytes,     9 lines      control              \n  532069 bytes,  4322 lines      md5sums              \n Package: kk-studio\n Version: 2.1.18\n Architecture: amd64\n Installed-Size: 532329\n Maintainer: kk Studio\n Priority: optional\n Depends: libwebkit2gtk-4.1-0, libgtk-3-0\n Description: KK Studio - AI 无限画布工作台\n  KK Studio 2.1 是以无限画布为中心的 AI 创作工作台，支持多模态生成、本地服务接入、资产管理和可恢复创作工作流。\n",
+    "stderr": ""
+  },
+  {
+    "command": "dpkg-deb",
+    "args": [
+      "--field",
+      "/home/runner/work/KK-Studio-2.0/KK-Studio-2.0/src-tauri/target/release/bundle/deb/KK Studio_2.1.18_amd64.deb",
+      "Version"
+    ],
+    "status": 0,
+    "signal": null,
+    "stdout": "2.1.18\n",
+    "stderr": ""
+  },
+  {
+    "command": "dpkg-deb",
+    "args": [
+      "--field",
+      "/home/runner/work/KK-Studio-2.0/KK-Studio-2.0/src-tauri/target/release/bundle/deb/KK Studio_2.1.18_amd64.deb",
+      "Architecture"
+    ],
+    "status": 0,
+    "signal": null,
+    "stdout": "amd64\n",
+    "stderr": ""
+  },
+  {
+    "command": "dpkg-deb",
+    "args": [
+      "--extract",
+      "/home/runner/work/KK-Studio-2.0/KK-Studio-2.0/src-tauri/target/release/bundle/deb/KK Studio_2.1.18_amd64.deb",
+      "/tmp/kk-package-CF5Tq5/deb"
+    ],
+    "status": 0,
+    "signal": null,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": "node",
+    "args": [
+      "-p",
+      "JSON.stringify({version:process.version,platform:process.platform,arch:process.arch})"
+    ],
+    "status": 0,
+    "signal": null,
+    "stdout": "{\"version\":\"v24.21.0\",\"platform\":\"linux\",\"arch\":\"x64\"}\n",
+    "stderr": ""
+  },
+  {
+    "defaultProcessLog": "\n(kk-studio:31299): dbind-WARNING **: 17:53:53.452: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files\n",
+    "termination": {
+      "pid": 31299,
+      "exitCode": null,
+      "signalCode": "SIGTERM"
+    }
+  }
+]

@@ -2,11 +2,11 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-13
+- updatedAt: 2026-10-14
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
-当前 Cherry 候选为 codex/TASK-CHERRY-RED-001-mainline@7daeba25，draft PR #58，base694a；primary/index及11项后续源文件保留。账本126条：76 DONE、31 PARTIAL、11 TODO、4 BLOCKED、4 REVIEW。正式源码独立review PASS，Native6/Ollama13/隔离NSIS已PASS；本次Hosted/最终产品验收继续见[最新记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)，不改写历史失败。
+当前Cherry已验证88740c5b、产品源码cc184e59，draft PR58/base694a；四Hosted和三OS Native6/默认包/严格NSIS及source/artifact独立审计PASS。新增原生背景读回/恢复检查待冻结新head实跑与补审，用户最终产品结果/发布范围待确认；primary并发源码及暂存内容保留，原index bytes跨时刻不变未宣称。账本126条且125旧任务保留，完整身份/历史失败见[最新记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。
 
 ## 2026-10-11 当前收口快照
 

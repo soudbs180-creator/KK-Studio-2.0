@@ -92,3 +92,5 @@ root 正在重跑这些修复后的完整 verify，尚无可填写的最新最�
 MR004 root接管后补64层/4096总queued nodes预算，两种schema边在复制path/排队前拒绝。实际40000层property/allOf及10000宽property低于2MiB的RED→GREEN，正常Region保留；[RED](evidence/mainline-final/mcp-schema-budget-red.log)、[41项GREEN](evidence/mainline-final/mcp41-budget-green.log)。源码修复已完成；正式独立新SHA复核待完成。
 
 cc184 exact-SHA独立审查已PASS，见[source review](evidence/mainline-final/review-cc184e59.json)。随后Linuxpush真实export revision冲突已定位为fixture未等autosave，产品guard正确拒绝且不修改；只补UI真实saved/连续durable revision稳定前置，并保留expectedRevision/单次export/原timeout。新冻结SHA正式增量审查和三平台重跑仍待完成。旧AppImage同目录保留按锁定上游CLI重建目录事实校准，见最终记录。
+
+887正式exact-SHA增量review于2026-10-13T17:33:21.926Z PASS，11项独立时序检查、59证据hash与125旧任务保留；[原件](evidence/mainline-final/review-88740c5b.json)。四Hosted与独立Windows artifact审计另见最终记录。当前Native原生背景读回/恢复20行新增及本次文档归档仍须冻结head正式补审，不能使用887审核替代。
