@@ -129,7 +129,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | REVIEW | 进行中 | P1 | TASK-LAUNCH-001 | root | 先收窄并同步候选到当前 origin/main，再取得 Hosted CI、不可变发布 receipt 和第二环境版本/commit/hash/进程路径回读；当前候选范围过宽，保持 REVIEW。 |
 | TASK-GOV-003 | 规则体系收敛与文档同步门禁（B1+B2+R+B3-1+B3-2） | PARTIAL | 进行中 | P1 | none | root | 待用户授权后处理 B3-3 TASKSTATE 分支审查；随后按独立批次处理 B4 worktree/二进制、B5 交付包补齐 |
 | TASK-GOV-004 | 未合并分支全量核验、分类与收敛合并 | PARTIAL | 进行中 | P1 | TASK-GOV-003 | root | P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包 |
-| TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | REVIEW | 进行中 | P1 | TASK-GOV-003 | root | 完成最终提交、运行完整验证并追加精确 base/head/tree 证据。 |
+| TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | REVIEW | 进行中 | P1 | TASK-GOV-003 | root | 单独修复并验证 5 个 UI 失败项；补齐开发态 receipt 后再评估是否可标记 DONE。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2475,7 +2475,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## TASK-REVIEW-REMEDIATION-001 — 修复审查发现的治理生命周期与交付边界问题
 
 - Goal: 让 current 治理入口、supersededBy 关系和 dated change package 规则 fail closed 且可追溯。
-- Scope: 仅治理生命周期脚本、模板、交付包勘误和账本记录；不改产品运行时、远端设置或其他 worktree。
+- Scope: 治理生命周期脚本、模板、交付包勘误和账本记录；相关运行时修复以独立提交交付，不改远端设置或其他 worktree。
 - Display status: 进行中
 - Priority: P1 — 治理门禁 fail-open 会让错误 current 入口进入合并候选。
 - Requirement refs: ledger:TASK-REVIEW-REMEDIATION-001
@@ -2485,8 +2485,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/ui-redesign-20261011`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
 - Modules: scripts/governance/doc-index.mjs, scripts/check-snapshot-header.mjs, tests/unit/docIndex.test.ts, docs/templates, docs/changes/2026-10-13-review-remediation, docs/governance/task-ledger.json
-- Verification: NOT_VERIFIED — 修复已完成，完整验证与最终 head 绑定待记录。
+- Verification: PARTIAL — 定向 43/43 通过；snapshot 4/0、governance 124/0、lint/typecheck/npm test/test:agent/ui:check/format/test:ui 构建通过。npm run verify 因 5 个未触及 UI 测试失败退出 1；test:development 无 receipt。最终 head 62d067fd，tree 8b22bede。
 - Evidence: [docs/changes/2026-10-13-review-remediation/verification.md](../../docs/changes/2026-10-13-review-remediation/verification.md), [docs/changes/2026-10-13-review-remediation/review.md](../../docs/changes/2026-10-13-review-remediation/review.md)
-- Next action: 完成最终提交、运行完整验证并追加精确 base/head/tree 证据。
+- Next action: 单独修复并验证 5 个 UI 失败项；补齐开发态 receipt 后再评估是否可标记 DONE。
 - Last verified: 2026-10-13
 - Updated: 2026-10-13

@@ -1,5 +1,11 @@
 # 当前进度
 
+## 2026-10-13 审查 P1/P2 修复与运行时边界拆分
+
+- `TASK-REVIEW-REMEDIATION-001` 已完成定向修复：生命周期门禁、日志脱敏、插件同步/异步失败隔离和交付模板规则均有回归证据；治理、运行时、版本一致性改动分别落在独立提交 `057a5d84`、`44195097`、`f0a6b0c4`，格式和 lint 修复随后单独提交。
+- `snapshot:check` 为 4/0，`governance:check` 为 124/0；定向 `docIndex`、`runtimeLogger`、`pluginLoader` 测试 43/43 通过。完整 `npm run verify` 的前置阶段和生产构建通过，但 Playwright 475 项有 5 项既有 UI 失败；`test:development` 在 Vite 启动阶段未产生 receipt，任务保持 `REVIEW/PARTIAL`。
+- 工作树仅保留既有无关 `src/components/WindowControls.tsx` 注释改动；未推送、合并、发布，也未改变其他 worktree。Hosted、Provider、Tauri、签名、安装和用户验收继续保持未验证。
+
 ## 2026-10-12 规则生命周期与治理入口收敛
 
 按用户确认继续 TASK-GOV-003：同一任务使用稳定 `taskId`，同一治理文档使用稳定 `docId`；更新时刷新 `updated`/`updatedAt`，旧入口用 `supersededBy` 退出 current 路由。`TASK_STATUS` 已刷新为 123 条账本快照（75 `DONE` / 31 `PARTIAL` / 11 `TODO` / 4 `BLOCKED` / 2 `REVIEW`，47 项开放），`AI_HANDOFF` 已收敛为当前恢复入口，`PROJECT_STATE` 补齐生命周期元数据；`snapshot:check` 现在检查身份、来源、更新时间、替代关系和重复 current。B3-3、B4、B5 未执行。

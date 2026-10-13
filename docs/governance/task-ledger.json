@@ -5890,7 +5890,7 @@
     "id": "TASK-REVIEW-REMEDIATION-001",
     "title": "修复审查发现的治理生命周期与交付边界问题",
     "goal": "让 current 治理入口、supersededBy 关系和 dated change package 规则 fail closed 且可追溯。",
-    "scope": "仅治理生命周期脚本、模板、交付包勘误和账本记录；不改产品运行时、远端设置或其他 worktree。",
+    "scope": "治理生命周期脚本、模板、交付包勘误和账本记录；相关运行时修复以独立提交交付，不改远端设置或其他 worktree。",
     "acceptance": [
       "snapshot:check 精确校验 current docId/source/status，并拒绝重复、伪元数据和无效 supersededBy。",
       "新交付包完整且绑定本次 taskId；旧包保留原始结论并追加勘误。",
@@ -5916,11 +5916,11 @@
       "docs/changes/2026-10-13-review-remediation/verification.md",
       "docs/changes/2026-10-13-review-remediation/review.md"
     ],
-    "verification": "修复已完成，完整验证与最终 head 绑定待记录。",
-    "verificationResult": "NOT_VERIFIED",
+    "verification": "定向 43/43 通过；snapshot 4/0、governance 124/0、lint/typecheck/npm test/test:agent/ui:check/format/test:ui 构建通过。npm run verify 因 5 个未触及 UI 测试失败退出 1；test:development 无 receipt。最终 head 62d067fd，tree 8b22bede。",
+    "verificationResult": "PARTIAL",
     "updated": "2026-10-13",
     "displayStatus": "进行中",
-    "nextAction": "完成最终提交、运行完整验证并追加精确 base/head/tree 证据。",
+    "nextAction": "单独修复并验证 5 个 UI 失败项；补齐开发态 receipt 后再评估是否可标记 DONE。",
     "lastVerified": "2026-10-13",
     "ownerRole": "repository-maintainer",
     "requirementRefs": [
