@@ -60,18 +60,90 @@ pub fn inherit_for_guardian(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::path::PathBuf;
 
-    #[test]
-    fn owner_lock_excludes_other_open_files_and_recovers_after_drop() {
-        let directory = std::env::temp_dir().join(format!(
-            "kk-agent-owner-{}-{}",
+    fn fixture_namespace() -> String {
+        format!(
+            "kk-agent-owner-lock-test-{}-{}",
             std::process::id(),
             std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
                 .unwrap()
                 .as_nanos()
-        ));
-        std::fs::create_dir(&directory).unwrap();
+        )
+    }
+
+    fn reserve_fixture_directory(parent: &Path, namespace: &str) -> std::io::Result<PathBuf> {
+        for suffix in 0u64.. {
+            let name = if suffix == 0 {
+                namespace.to_string()
+            } else {
+                format!("{namespace}-{suffix}")
+            };
+            let directory = parent.join(name);
+            match std::fs::create_dir(&directory) {
+                Ok(()) => return Ok(directory),
+                Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => continue,
+                Err(error) => return Err(error),
+            }
+        }
+        unreachable!("fixture directory reservation exhausted")
+    }
+
+    #[test]
+    fn existing_fixture_directory_is_preserved_and_a_new_directory_is_reserved() {
+        let root = reserve_fixture_directory(&std::env::temp_dir(), &fixture_namespace()).unwrap();
+        let existing = root.join("existing-fixture");
+        std::fs::create_dir(&existing).unwrap();
+        std::fs::write(existing.join("marker"), b"previous fixture").unwrap();
+
+        let reserved = reserve_fixture_directory(&root, "existing-fixture");
+        let marker = std::fs::read(existing.join("marker")).unwrap();
+        if let Ok(directory) = &reserved {
+            if directory != &existing {
+                std::fs::remove_dir(directory).unwrap();
+            }
+        }
+        std::fs::remove_file(existing.join("marker")).unwrap();
+        std::fs::remove_dir(&existing).unwrap();
+        std::fs::remove_dir(&root).unwrap();
+
+        assert_ne!(
+            reserved.expect("an existing fixture must not block a fresh reservation"),
+            existing
+        );
+        assert_eq!(marker, b"previous fixture");
+    }
+
+    #[test]
+    fn owner_lock_excludes_other_open_files_and_recovers_after_drop() {
+        #[cfg(unix)]
+        {
+            const CHILD: &str = "KK_AGENT_OWNER_LOCK_TEST_CHILD";
+            if std::env::var(CHILD).as_deref() != Ok("yes") {
+                // Other parallel tests fork while holding their own guardian leases.
+                // Even CLOEXEC descriptors are copied until those children exec, so
+                // an immediate drop/relock contract needs a process with no other forks.
+                let output = std::process::Command::new(std::env::current_exe().unwrap())
+                    .args([
+                        "--exact",
+                        "agent_owner::tests::owner_lock_excludes_other_open_files_and_recovers_after_drop",
+                        "--nocapture",
+                    ])
+                    .env(CHILD, "yes")
+                    .output()
+                    .unwrap();
+                assert!(
+                    output.status.success(),
+                    "isolated owner lifecycle failed:\n{}\n{}",
+                    String::from_utf8_lossy(&output.stdout),
+                    String::from_utf8_lossy(&output.stderr)
+                );
+                return;
+            }
+        }
+        let directory =
+            reserve_fixture_directory(&std::env::temp_dir(), &fixture_namespace()).unwrap();
         let first = lock(&directory).unwrap();
         assert!(lock(&directory).is_err());
         drop(first);

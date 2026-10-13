@@ -97,7 +97,7 @@ fn native_snapshot(webview: tauri::webview::PlatformWebview) -> Result<Appearanc
     #[cfg(target_os = "linux")]
     {
         use gtk::prelude::WidgetExt;
-        use webkit2gtk::prelude::WebViewExt;
+        use webkit2gtk::WebViewExt;
         let view = webview.inner();
         let Some(screen) = view.screen() else {
             return Ok(unsupported("当前桌面没有可用的窗口合成环境。"));
