@@ -236,10 +236,9 @@ async function launch() {
   const pageUrl = await poll(
     () => driver("GET", `/session/${session}/url`),
     (value) =>
-      value ===
-      (process.platform === "win32"
-        ? "http://tauri.localhost/"
-        : "tauri://localhost/"),
+      process.platform === "win32"
+        ? value === "http://tauri.localhost/"
+        : ["tauri://localhost", "tauri://localhost/"].includes(value),
     remaining(),
   );
   record("production-url", pageUrl);

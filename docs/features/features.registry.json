@@ -475,7 +475,7 @@
       "TASK-AGENT-008",
       "TASK-CHERRY-RED-001"
     ],
-    "updated": "2026-10-13",
+    "updated": "2026-10-14",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -505,6 +505,10 @@
       {
         "platform": "web",
         "path": "docs/changes/2026-10-13-cherry-red-scope/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md"
       }
     ]
   },
@@ -553,7 +557,7 @@
       "tests/browser/assistant-profiles.spec.ts"
     ],
     "tasks": ["TASK-CAP-001", "TASK-DS-002", "TASK-CHERRY-RED-001"],
-    "updated": "2026-10-13",
+    "updated": "2026-10-14",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -567,6 +571,10 @@
       {
         "platform": "web",
         "path": "docs/changes/2026-10-13-cherry-red-scope/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md"
       }
     ]
   },
@@ -609,7 +617,7 @@
       "TASK-MCP-REGISTRY-002",
       "TASK-CHERRY-RED-001"
     ],
-    "updated": "2026-10-13",
+    "updated": "2026-10-14",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -627,6 +635,10 @@
       {
         "platform": "web",
         "path": "docs/changes/2026-10-13-cherry-red-scope/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md"
       }
     ]
   },
@@ -990,7 +1002,7 @@
       "TASK-AGENT-001",
       "TASK-CHERRY-RED-001"
     ],
-    "updated": "2026-10-13",
+    "updated": "2026-10-14",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -1016,6 +1028,10 @@
       {
         "platform": "web",
         "path": "docs/changes/2026-10-13-cherry-red-scope/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md"
       }
     ]
   },
@@ -1327,11 +1343,15 @@
       "TASK-PROV-004",
       "TASK-CHERRY-RED-001"
     ],
-    "updated": "2026-10-13",
+    "updated": "2026-10-14",
     "runtimeEvidence": [
       {
         "platform": "web",
         "path": "docs/changes/2026-10-13-cherry-red-scope/verification.md"
+      },
+      {
+        "platform": "desktop",
+        "path": "docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md"
       }
     ],
     "platforms": ["web", "desktop"]

@@ -206,7 +206,7 @@ async function launch(label) {
     root: await window.__TAURI_INTERNALS__.invoke("get_storage_root"),
   }));
   assert.equal(
-    path.resolve(identity.root).toLowerCase(),
+    (await fs.realpath(identity.root)).toLowerCase(),
     (await fs.realpath(dataRoot)).toLowerCase(),
   );
   report.launches.push({

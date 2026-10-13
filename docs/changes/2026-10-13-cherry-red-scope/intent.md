@@ -1,5 +1,7 @@
 # Cherry Studio 红框功能融合
 
+当前执行至冻结源码 `7daeba25`，本机正式 Native6、真实 Ollama13 和隔离 NSIS 生命周期已有 PASS；最新完整验证、不同产物身份、Hosted 及最终验收的状态以 [最终记录](mainline-final-status.md) 为准。以下旧阶段保留执行时边界，不提前标 DONE。
+
 日期：2026-10-13。任务：TASK-CHERRY-RED-001。
 
 用户授权实际实施，以 KK 为唯一主体。近期范围为多供应商/本地模型、少量编程/图片/视频助手与自定义、多模型对话、MCP、Windows/macOS/Linux、即装即用、既有主题、透明窗口、Markdown 与本地内容分享。框外 OCR、知识库、WebDAV、语音、市场与 Mobile 保留后续可选。

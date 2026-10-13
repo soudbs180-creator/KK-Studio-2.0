@@ -1,5 +1,7 @@
 # 当前主线承接与证据边界
 
+当前执行至冻结源码 `7daeba25`，本机正式 Native6、真实 Ollama13 和隔离 NSIS 生命周期已有 PASS；最新完整验证、不同产物身份、Hosted 及最终验收的状态以 [最终记录](mainline-final-status.md) 为准。以下旧阶段保留执行时边界，不提前标 DONE。
+
 任务：TASK-CHERRY-RED-001。当前 base/HEAD 为 `694a00607f6f63de1b8c43d0ebb117adf5d34f67`，Cherry 净变更仍是未提交候选；本节记录承接与当前本地证据，不是已经合入 main、primary 或发布的声明。任务保持 PARTIAL/NOT_VERIFIED。
 
 新分支 `codex/TASK-CHERRY-RED-001-mainline` 从实际 `origin/main@694a00607f6f63de1b8c43d0ebb117adf5d34f67` 创建，包含 PR56 的代码健康规则、固定 Actions 与现行交付门禁。保留旧 Cherry 分支的全部提交，没有 rebase、reset、force push 或直接推送 main。

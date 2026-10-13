@@ -1,5 +1,7 @@
 # Cherry 红框融合实施计划
 
+当前执行至冻结源码 `7daeba25`，本机正式 Native6、真实 Ollama13 和隔离 NSIS 生命周期已有 PASS；最新完整验证、不同产物身份、Hosted 及最终验收的状态以 [最终记录](mainline-final-status.md) 为准。以下旧阶段保留执行时边界，不提前标 DONE。
+
 > 执行方式：subagent-driven-development；共用一个隔离 worktree，分配唯一文件写入者，root 负责公共接口、App 接线、治理与整合。
 
 **Goal:** 完成红框范围可安全落地的功能接入，保留 KK 已有能力并以证据收口。
@@ -10,7 +12,7 @@
 
 **Spec:** [功能规格](spec.md)。
 
-**当前执行身份：** `codex/TASK-CHERRY-RED-001-mainline`，base/HEAD 为 `694a00607f6f63de1b8c43d0ebb117adf5d34f67`，Cherry 承接内容仍为未提交候选。任务状态为 PARTIAL，最终提交、Hosted、工件及产品验收尚未完成。以下 DONE 只表示列出的实施或检查步骤完成，不提升整项任务或功能真实程度。
+**当前执行身份：** `codex/TASK-CHERRY-RED-001-mainline`，base 为 `694a00607f6f63de1b8c43d0ebb117adf5d34f67`，首轮主线源码已冻结到 `7daeba25`；其后实际 SDK 与安装包暴露的关联问题在 2.1.18 修复中。任务保持 PARTIAL，最新证据见 [最终记录](mainline-final-status.md)。以下 DONE 只表示列出的实施或检查步骤完成，不提升整项任务或功能真实程度。
 
 ## Global Constraints
 
@@ -90,3 +92,13 @@
 | 修复后完整 verify、冻结提交、Hosted/Delivery/正式独立审查 | NOT VERIFIED | root 正在重跑完整门禁；App 当前3246/395 vs base3241/388两项 advisory，未放宽阈值。回收真实结果后冻结 head，再构建与审查。                                                             |
 
 已保存定向输出及来源见 [verification](verification.md) 的本轮增量表；最终用户产品验收和 primary 后续依赖保护继续保持原边界。
+
+## 2.1.18 实际验收收尾依赖
+
+1. SDK真实RED→MCP最小协议修复；Linux原包资源mismatch→正式producer保护（两作者文件独占，源码已释放）。
+2. Mac根URL、Windows真实8.3物理身份修复；版本/原命令入口与小report上传接线。
+3. 同一候选完整verify/Rust/格式/类型/health/footguns；冻结新提交，正式independent exact-SHA review。
+4. 当前默认release/optional driver/NSIS重建并分别核hash；真实SDK1.30/SDK2服务器、Ollama、Native与安装验证；实际三平台Hosted和原包验收。
+5. 回写实际proof/许可/feature/ledger/PR；用户最终产品验收之后才决定main合并或DONE。
+
+本次新增helper/测试/source guards不能替代第四步实跑，旧失败、不同source SHA与产物回执各自保留。

@@ -1,0 +1,26 @@
+[
+  {
+    "scope": "legacy initialize vs modern discover; unusable2xx/auth/5xx not era evidence",
+    "url": "https://ts.sdk.modelcontextprotocol.io/v2/protocol-versions"
+  },
+  {
+    "scope": "HTTP400 modern-probe rejection and legacy initialization lifecycle",
+    "url": "https://csharp.sdk.modelcontextprotocol.io/v2/concepts/stateless/stateless.html"
+  },
+  {
+    "scope": "params._meta envelope; modern SEP2243 body-derived standard headers",
+    "url": "https://ts.sdk.modelcontextprotocol.io/v2/migration/support-2026-07-28.html"
+  },
+  {
+    "scope": "fixed official classifier source; our authorization failures remain stricter than broad conservative default",
+    "url": "https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/9bc40e903fde15534ec06ff4c1347d47000dbe16/packages/client/src/client/probeClassifier.ts"
+  },
+  {
+    "scope": "494-523 body-derived Mcp-Method/Mcp-Name only modern",
+    "url": "https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/9bc40e903fde15534ec06ff4c1347d47000dbe16/packages/client/src/client/streamableHttp.ts"
+  },
+  {
+    "scope": "206-245 UTF8 Base64 sentinel rules",
+    "url": "https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/9bc40e903fde15534ec06ff4c1347d47000dbe16/packages/core-internal/src/shared/mcpParamHeaders.ts"
+  }
+]

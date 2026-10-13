@@ -1,5 +1,7 @@
 # 独立审查记录
 
+当前执行至冻结源码 `7daeba25`，本机正式 Native6、真实 Ollama13 和隔离 NSIS 生命周期已有 PASS；最新完整验证、不同产物身份、Hosted 及最终验收的状态以 [最终记录](mainline-final-status.md) 为准。以下旧阶段保留执行时边界，不提前标 DONE。
+
 任务：TASK-CHERRY-RED-001。已完成历史独立 dirty 预检及下列两段不可变源码审查；这些结论保留其原 base/head。当前 `codex/TASK-CHERRY-RED-001-mainline` 的 base/HEAD 为 `694a00607f6f63de1b8c43d0ebb117adf5d34f67`，Cherry 承接仍未提交；本轮最终 fresh 独立审查尚未完成，不能把旧结论或作者自检提升为当前全树 PASS。
 
 最终审查须绑定本任务实际 base/head 或工作区快照，覆盖新增协议与免密边界、Markdown、助手/比较身份和原生生命周期。实现者自检不替代独立审查。
@@ -76,3 +78,9 @@ fresh-context `cherry_mainline_review` 已开始只读主线 dirty 预检，交�
 默认四种包的 workflow/校验器已实施，self-test 9/9 PASS；actual app/dmg/AppImage/deb 仍待 Hosted。Native receipt 新增当前 packaged runtime manifest hash，并对实际 target 的 manifest 再比对；reviewer 当时核对两个 hash 一致，但最终新 head 的 Native/默认包仍需实跑。默认 shipping 不含测试 driver。
 
 root 正在重跑这些修复后的完整 verify，尚无可填写的最新最终结果。MR003 后当前 App 3246 vs base 3241、FUNC_LINES 395 vs 388，2 项 advisory、0 allowed；前轮 3244 是历史值，阈值和模式未改变。最终独立审查继续绑定冻结 base/head，并覆盖本轮所有修复、包装及收据增量。
+
+## 正式 7da 源码独立审查
+
+独立上下文 `cherry_mainline_review` 于 2026-10-13T15:37:03Z 正式审查 `694a00607f6f63de1b8c43d0ebb117adf5d34f67 → 7daeba25db511652dbd73833c21b3066f428d7f2`，规范轴/需求轴均 PASS，确认 open P0/P1/P2=0，MR001–003 保持关闭。147 项原审测试仍绑定 b141，不重标为 7da。7da 独立运行 package12/12、真实 Edge 延迟列表1/1（clicks=[expected]）、安全 guards26+26+14、八个原安装生命周期函数一致、四 Node syntax 与 committed diffcheck。六增量文件与冻结 Git blob 一致，产品 source/input 未变。
+
+审查者独立重算 Root 7da Native6 回执的 sourceHead/buildReceipt/input/EXE/manifest hashes 全匹配；实际 GUI 由 Root 运行，不标为 reviewer 实跑。工作树当时仅 Root 新增证据，审查者未写文件。共享60秒是轮询预算，driver 单次 HTTP 超时仍180秒，不能声称严格60秒端到端截止。此审查不构成 GitHub human approval；后续文档/工件提交须增量补审，Hosted/四包/安装/primary GUI/真实云与用户验收各按实际 proof 判定。

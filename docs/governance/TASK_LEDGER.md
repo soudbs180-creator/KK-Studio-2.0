@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-CHERRY-RED-001 | Cherry 红框能力选择性融合与三桌面平台补齐 | PARTIAL | 进行中 | P1 | none | root | 冻结当前mainline候选，重建默认发行/测试驱动与安装器，实际重跑Native/Hosted并补审；保留primary的11项后续并发改动，最终产品验收待确认。 |
+| TASK-CHERRY-RED-001 | Cherry 红框能力选择性融合与三桌面平台补齐 | PARTIAL | 进行中 | P1 | none | root | 完成2.1.18统一验证与冻结SHA、独立补审、SDK真实production UI、默认发行与三平台原始包/安装实跑；保留primary并发改动及所有原任务，最终产品验收后才合并或DONE。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | REVIEW | 进行中 | P1 | none | root | 在当前合并候选上复核 Windows/Ubuntu hook、npm verify 与 delivery 的 exact-SHA 结果；Hosted verify 未完成前保持 REVIEW。 |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 等待Hosted Windows带启动阶段/退出码/运行时日志的重跑；保留PR43原失败和本机未复现原件，未取得新分类前保持TODO。 |
@@ -145,12 +145,12 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Acceptance: 旧数据/账号/模型/任务身份保留，故障/取消/迟到恢复回归通过。; 采纳项有源码接线、类型检查、测试、构建和相应运行证据。; 外部能力、Mac/Linux实际设备缺口与Windows本地验证分别记录，不假升级REAL。
 - Branch: `codex/TASK-CHERRY-RED-001-mainline`
 - Worktree: `D:/kk-studio/.worktrees/TASK-CHERRY-RED-001`
-- Modules: src/components, src/domain, src/features/creation, src/features/agent, src/features/models, src/integrations, src-tauri, tests, docs/changes/2026-10-13-cherry-red-scope
-- Verification: NOT_VERIFIED — 主线694a dirty候选最新完整verify退出0：unit1138/1124PASS14SKIP，Agent174/172PASS2SKIP，browser528含一次并发保存首试超时后重试成功，development四步PASS；NativeRust154通过。独立MR001-003预检关闭，账号保存、完整目录身份和迟到401/429已RED/GREEN。源码0e77旧review及历史失败保留，最终mainline工件/Hosted/正式补审/产品验收仍待完成。
-- Evidence: [docs/changes/2026-10-13-cherry-red-scope/verification.md](../../docs/changes/2026-10-13-cherry-red-scope/verification.md), [docs/changes/2026-10-13-cherry-red-scope/review.md](../../docs/changes/2026-10-13-cherry-red-scope/review.md), [docs/changes/2026-10-13-cherry-red-scope/native-runtime-closeout.md](../../docs/changes/2026-10-13-cherry-red-scope/native-runtime-closeout.md), [docs/changes/2026-10-13-cherry-red-scope/mainline-integration.md](../../docs/changes/2026-10-13-cherry-red-scope/mainline-integration.md)
-- Next action: 冻结当前mainline候选，重建默认发行/测试驱动与安装器，实际重跑Native/Hosted并补审；保留primary的11项后续并发改动，最终产品验收待确认。
-- Last verified: 2026-10-13
-- Updated: 2026-10-13
+- Modules: src/components, src/domain, src/features/creation, src/features/agent, src/features/models, src/integrations, src-tauri, tests, docs/changes/2026-10-13-cherry-red-scope, scripts/agent, config/platform-versions.json, .github/workflows/native-crossplatform.yml
+- Verification: NOT_VERIFIED — 冻结7da源码正式独立review PASS/open P0/P1/P2=0；完整verify1138unit/1124PASS14SKIP、Agent174/172PASS2SKIP、browser528含一次首试超时retryPASS，随后同保存场景8次零重试PASS；Rust154。7da正式Native6/真实Ollama13全PASS。ddacf strictNSIS4280files+实际隔离install/restart/reinstall/resource-repair/uninstall-reinstall/offline保留数据PASS。新三平台Hosted和最终产品验收分别待证据；旧失败/不同产物SHA保留。 7da Hosted实际失败另定位：Mac根URL尾斜线、Win8.3别名、Linuxdeploy重写vendor字节；SDK1.30真实auto握手400也已RED。2.1.18源码修复已实施，完整验证/新正式review/新版工件与三平台重跑待证据。 2.1.18完整候选verify exit0：1157 unit(1143/14)、174 Agent(172/2)、528 browser零重试全部PASS，Rust154/fmt PASS；SDK2真实source HTTP/SSE control PASS，新冻结Native/Hosted仍待验证。
+- Evidence: [docs/changes/2026-10-13-cherry-red-scope/verification.md](../../docs/changes/2026-10-13-cherry-red-scope/verification.md), [docs/changes/2026-10-13-cherry-red-scope/review.md](../../docs/changes/2026-10-13-cherry-red-scope/review.md), [docs/changes/2026-10-13-cherry-red-scope/native-runtime-closeout.md](../../docs/changes/2026-10-13-cherry-red-scope/native-runtime-closeout.md), [docs/changes/2026-10-13-cherry-red-scope/mainline-integration.md](../../docs/changes/2026-10-13-cherry-red-scope/mainline-integration.md), [docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md](../../docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md)
+- Next action: 完成2.1.18统一验证与冻结SHA、独立补审、SDK真实production UI、默认发行与三平台原始包/安装实跑；保留primary并发改动及所有原任务，最终产品验收后才合并或DONE。
+- Last verified: 2026-10-14
+- Updated: 2026-10-14
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 

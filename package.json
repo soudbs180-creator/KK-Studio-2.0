@@ -1,7 +1,7 @@
 {
   "name": "kk-studio",
   "private": true,
-  "version": "2.1.17",
+  "version": "2.1.18",
   "type": "module",
   "scripts": {
     "postinstall": "npm run agent:install && npm run agent:build && npm run plugins:install && npm run plugins:build",
@@ -35,7 +35,7 @@
     "tauri": "tauri",
     "client:dev": "tauri dev",
     "client:build": "tauri build",
-    "client:build:agent": "npm run agent:package && tauri build --config src-tauri/tauri.agent.conf.json",
+    "client:build:agent": "npm run agent:package && node scripts/agent/build-desktop.mjs --config src-tauri/tauri.agent.conf.json",
     "client:installer": "npm run agent:package && tauri build --config src-tauri/tauri.installer.conf.json",
     "client:installer:receipt": "node scripts/windows/installer-receipt.mjs",
     "client:installer:verify": "node scripts/windows/verify-installer-receipt.mjs",

@@ -972,7 +972,10 @@ TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，�
 - 图片卡片按要求显示 `图片模型未报告` 与 `来源：Codex 内置生图`，没有把 Codex 名称误当成图片模型名。
 - 首次联调发现的默认模型问题已修复并复验：旧缓存 `gpt-6.1-sol` 会按 Agent `/models` 列表回退到 `gpt-6-astra`，不显式选模型的 KK 文本调用已成功；项目图片模型也不会传给 Codex 推理接口。详见 [kk 模型能力验证](changes/2026-10-10-kk-model-capability/verification.md)。
 
-
 ## 2026-10-13 Cherry 融合集成候选
 
 基于 origin/main@694a0060 承接已验证净改动；保留现行治理和全部原账本任务。完整本地 verify 520 浏览器通过，154 Rust通过，真实 Ollama Native13组通过。最终 mainline 构建、Hosted、独立补审和用户验收继续以本次 [验证](changes/2026-10-13-cherry-red-scope/verification.md) 为准，任务未标 DONE。
+
+## 2026-10-13 Cherry 7da 原生与安装闭环
+
+冻结源码 7daeba25、draft PR #58；完整 verify1138/174/528（浏览器1次首试超时重试成功，另8次零重试复核全通过），Rust154；7da正式 Native6、默认发行真实 Ollama13及ddacf严格4280文件NSIS实际安装/重装/资源修复/卸载后恢复均 PASS。Linux/Mac/Hosted Windows 的新验收与最终产品验收继续独立判定，主线/primary未覆盖，任务PARTIAL。详见 [当前记录](changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。

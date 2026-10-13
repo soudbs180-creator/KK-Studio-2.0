@@ -1,0 +1,76 @@
+PASS Installer PowerShell parser
+PASS Actual local rejection before token/registry/installer effects
+Original TaskHost wrapper 26-case regression:
+PASS new-empty-registry-key-before-write
+PASS existing-empty-registry-keys
+PASS concurrently-removed-owned-values
+PASS existing-child-key-preserved
+PASS pre-create-concurrent-key-preserved
+PASS shared-ancestor-values-preserved
+PASS post-create-pre-write-values-preserved
+PASS hosted-elevated-own-policy-and-profile
+PASS local-rejected-before-effects
+PASS self-hosted-rejected
+PASS missing-runner-temp
+PASS missing-temp-directory
+PASS system-rejected
+PASS existing-profile-rejected
+PASS non-elevated-no-machine-policy
+PASS existing-app-policy-preserved
+PASS existing-empty-policy-preserved
+PASS existing-wildcard-policy-preserved
+PASS existing-app-id-policy-preserved
+PASS partial-write-cleaned
+PASS readback-mismatch-fails-closed
+PASS child-nonzero-propagated-and-cleaned
+PASS child-throw-propagated-and-cleaned
+PASS cleanup-failure-fails-job
+PASS new-sibling-preserved
+PASS concurrent-app-policy-preserved-and-failed
+Installer wrapper 26-case policy ownership regression:
+PASS new-empty-registry-key-before-write
+PASS existing-empty-registry-keys
+PASS concurrently-removed-owned-values
+PASS existing-child-key-preserved
+PASS pre-create-concurrent-key-preserved
+PASS shared-ancestor-values-preserved
+PASS post-create-pre-write-values-preserved
+PASS hosted-elevated-own-policy-and-profile
+PASS local-rejected-before-effects
+PASS self-hosted-rejected
+PASS missing-runner-temp
+PASS missing-temp-directory
+PASS system-rejected
+PASS existing-profile-rejected
+PASS non-elevated-no-machine-policy
+PASS existing-app-policy-preserved
+PASS existing-empty-policy-preserved
+PASS existing-wildcard-policy-preserved
+PASS existing-app-id-policy-preserved
+PASS partial-write-cleaned
+PASS readback-mismatch-fails-closed
+PASS child-nonzero-propagated-and-cleaned
+PASS child-throw-propagated-and-cleaned
+PASS cleanup-failure-fails-job
+PASS new-sibling-preserved
+PASS concurrent-app-policy-preserved-and-failed
+PASS default local isolation
+PASS fresh hosted profile
+PASS local override rejected
+PASS self-hosted override rejected
+PASS missing runner temp rejected
+PASS relative runner temp rejected
+PASS relative profile rejected
+PASS existing profile rejected
+PASS parent alias outside temp rejected
+PASS nested profile rejected
+PASS temp prefix collision rejected
+PASS non-run-specific profile rejected
+PASS empty override rejected
+PASS access error fails closed
+PASS 8 unchanged installer lifecycle functions; exact CDP/offline arguments and receipt forwarding
+Checking formatting...
+All matched files use Prettier code style!
+D:\kk-studio\.worktrees\TASK-CHERRY-RED-001\.github\scripts\invoke-native-installer.ps1 SHA256=1387a940ef3db21edb56bff7de2c52a1ec09f730cce2068ac17e2ebe4d60ec27
+D:\kk-studio\.worktrees\TASK-CHERRY-RED-001\tests\desktop\installer.mjs SHA256=6b8249acd63c6fc039024ae86ad45d217f0a78858add67cd9af2445c677d00ac
+PASS Local static and in-memory installer guards; Hosted installer/CDP runtime remains NOT VERIFIED

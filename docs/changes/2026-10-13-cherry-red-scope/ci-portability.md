@@ -1,5 +1,7 @@
 # Standalone checkout 快照门禁与 Actions 修复
 
+当前执行至冻结源码 `7daeba25`，本机正式 Native6、真实 Ollama13 和隔离 NSIS 生命周期已有 PASS；最新完整验证、不同产物身份、Hosted 及最终验收的状态以 [最终记录](mainline-final-status.md) 为准。以下旧阶段保留执行时边界，不提前标 DONE。
+
 任务：TASK-CHERRY-RED-001。日期：2026-10-13。实现前 HEAD：`20cb90c060b7499da06e7eb6177245140cb3e790`；下述本机结果绑定该 HEAD 加本次未提交脚本/测试/workflow diff，不代替最终提交的 Hosted 回执。
 
 ## 根因与契约

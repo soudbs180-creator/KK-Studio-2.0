@@ -2,7 +2,7 @@
 
 任务：TASK-CHERRY-RED-001。初始基线 HEAD：51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c。
 
-当前执行在 `codex/TASK-CHERRY-RED-001-mainline`，base/HEAD 为 `694a00607f6f63de1b8c43d0ebb117adf5d34f67`，Cherry 承接仍为未提交候选。主线承接首轮本地 verify 与 Windows Rust 已通过；其后 MR001–MR003、默认包装及 runtime receipt 增量的完整 verify 正在重跑，尚不预填 PASS。最终提交的 Native/Hosted/工件、fresh 独立复审及用户产品验收继续 NOT VERIFIED，任务保持 PARTIAL。下文各阶段均保留其执行时身份。
+当前执行在 `codex/TASK-CHERRY-RED-001-mainline`，base `694a00607f6f63de1b8c43d0ebb117adf5d34f67`，冻结源码 HEAD `7daeba25db511652dbd73833c21b3066f428d7f2`。完整 verify 与 Windows Rust、正式 Native6、真实 Ollama13 和隔离 NSIS 生命周期均有实际记录；[最终记录](mainline-final-status.md) 统一最新证据/身份和剩余 Hosted/最终验收门禁。任务保持 PARTIAL，旧阶段保留执行时含义。
 
 ## 初始隔离基线记录
 

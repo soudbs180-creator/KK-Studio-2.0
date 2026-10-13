@@ -1,5 +1,7 @@
 # 功能与融合规格
 
+当前执行至冻结源码 `7daeba25`，本机正式 Native6、真实 Ollama13 和隔离 NSIS 生命周期已有 PASS；最新完整验证、不同产物身份、Hosted 及最终验收的状态以 [最终记录](mainline-final-status.md) 为准。以下旧阶段保留执行时边界，不提前标 DONE。
+
 任务：TASK-CHERRY-RED-001。日期：2026-10-13。
 
 ## 采用与保留
@@ -25,3 +27,9 @@ Cherry 固定源码 2e2e2e1b32a1eb2c796a843cae67148c5eb53269，仅学习协议�
 ## 必须形成的证据
 
 定向单测、类型/静态检查、构建、受影响浏览器流程；原生修改另跑 Rust 与 Windows lifecycle。macOS/Linux 无实际设备或 runner 时标 NOT VERIFIED，配置文件不能证明安装成功。真实付费 Provider 不在本轮验证范围。
+
+## 实际验收触发的 2.1.18 关联修复
+
+默认 MCP auto 首次及重启后均被官方 SDK1.30 stateful server HTTP400拒绝，而官方 SDK control 与 KK explicit legacy 路径成功。修正握手 transport rejection 分类；标准现代请求补同源 metadata/headers、supportedVersions、x-mcp-header 映射与无效 schema 工具过滤，版本拒绝仅在明确可用 legacy 时转一次 initialize。认证、限流、服务故障、坏成功响应、错误ID、取消和重定向继续失败关闭；不引入SDK2产品依赖，也不扩展OAuth/MRTR/通用自动工具。SDK1.30控制是MIT，临时SDK2控制包为Apache-2.0，许可按各自准确版本记录。协议源码按固定官方规范独立实现，未复制SDK函数体。
+
+Linux AppImage producer 利用官方 linuxdeploy 的 PATCHELF override，仅保护本次manifest列明且source/target size/hash/mode完全等同的opaque运行资源，应用与GTK ELF仍委托真实工具。before/after sourceHEAD/input、private session ownership/sealed config、实际最终包hash绑定；无法验证即失败。保持严格package checker及原manifest，不改hash掩盖打包突变；按当前产品名/版本/架构选精确包，旧包保留。Windows路径使用双侧realpath，Mac允许两等价根URL，均不扩大数据/协议边界。Desktop/Web按现行规则共同递增2.1.18，Mobile2.1.1；重跑完整verify、Native与三平台安装/包门禁。

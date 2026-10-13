@@ -1,0 +1,238 @@
+{
+  "startedAt": "2026-10-13T15:31:18.216Z",
+  "sourceHead": "7daeba25db511652dbd73833c21b3066f428d7f2",
+  "release": {
+    "releaseExePath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791903720903.5686,
+    "newestInputPath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\dist\\assets\\index-ClDT8V-t.js",
+    "newestInputMtimeMs": 1791903195565.7717,
+    "inputSha256": "ee212123aa3684a501259f4969e7cdd789ab2747ac4dbc2e32538df729b5ecfc",
+    "executableSha256": "a2e2756ac78a179031e3d072cdf3bfdfafc79d43e3649edae645e79b000dc5fe",
+    "desktopVersion": "2.1.17",
+    "receiptPath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current"
+  },
+  "endpoint": "http://127.0.0.1:11434/v1",
+  "models": [
+    "qwen2.5:0.5b",
+    "smollm2:135m"
+  ],
+  "profile": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\b2d67160-d0d0-4a89-9e6e-19bc98696249\\profile",
+  "dataRoot": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\b2d67160-d0d0-4a89-9e6e-19bc98696249\\data",
+  "restoredRoot": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\b2d67160-d0d0-4a89-9e6e-19bc98696249\\restored",
+  "checks": [
+    {
+      "name": "owned-cpu-model-service",
+      "pid": 98256,
+      "executable": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\ollama-real\\runtime-v0.40.3\\ollama.exe",
+      "executableSha256": "61b44cfb6d3aa2393a4a731af33c9329bedd58b1c454bdebd185d4a607d0303d",
+      "originStatus": 403,
+      "cors": null
+    },
+    {
+      "name": "launch",
+      "data": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\b2d67160-d0d0-4a89-9e6e-19bc98696249\\data",
+      "pid": 74328,
+      "loadedScripts": [
+        "http://tauri.localhost/assets/index-ClDT8V-t.js"
+      ]
+    },
+    {
+      "name": "synthetic-vault-write-read",
+      "providerId": "kk-cherry-synthetic-b2d67160-d0d0-4a89-9e6e-19bc98696249",
+      "passed": true
+    },
+    {
+      "name": "real-ui-local-configuration",
+      "connection": {
+        "authMode": "none",
+        "baseUrl": "http://127.0.0.1:11434/v1",
+        "capabilities": {
+          "async": false,
+          "estimatedLatencyClass": "interactive",
+          "maxOutputs": 10,
+          "maxReferences": 4,
+          "modalities": [
+            "image"
+          ],
+          "operations": [
+            "generate",
+            "edit",
+            "inpaint",
+            "outpaint",
+            "batch"
+          ]
+        },
+        "concurrencyLimit": 2,
+        "credentialRef": "provider-d2af021546ce5a2d",
+        "displayName": "Ollama",
+        "id": "byok-provider-d2af021546ce5a2d",
+        "kind": "user_byok",
+        "model": "qwen2.5:0.5b",
+        "protocol": "openai-compatible",
+        "provider": "Ollama",
+        "state": "active",
+        "verificationStatus": "unverified"
+      },
+      "localMetadataCount": 1
+    },
+    {
+      "name": "real-ui-round",
+      "prompt": "What is 2 plus 2? Answer briefly.",
+      "tasks": [
+        {
+          "id": "conversation-0dd1aed0-2785-4e30-9d37-f99e5049b40d-route-0",
+          "model": "qwen2.5:0.5b",
+          "status": "succeeded",
+          "text": "4",
+          "messages": [
+            {
+              "content": "Reply in one short line. Use no tools.",
+              "role": "system"
+            },
+            {
+              "content": "What is 2 plus 2? Answer briefly.",
+              "role": "user"
+            }
+          ]
+        },
+        {
+          "id": "conversation-0dd1aed0-2785-4e30-9d37-f99e5049b40d-route-1",
+          "model": "smollm2:135m",
+          "status": "succeeded",
+          "text": "Two plus two, also written as 2 + 2 . A double zero is used to indicate that there are two instances of a negative or zero, resulting in a double precision (DSP) number.",
+          "messages": [
+            {
+              "content": "Reply in one short line. Use no tools.",
+              "role": "system"
+            },
+            {
+              "content": "What is 2 plus 2? Answer briefly.",
+              "role": "user"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "launch",
+      "data": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\b2d67160-d0d0-4a89-9e6e-19bc98696249\\data",
+      "pid": 91644,
+      "loadedScripts": [
+        "http://tauri.localhost/assets/index-ClDT8V-t.js"
+      ]
+    },
+    {
+      "name": "synthetic-vault-real-restart",
+      "passed": true
+    },
+    {
+      "name": "real-ui-round",
+      "prompt": "Summarize your previous answer in one short line.",
+      "tasks": [
+        {
+          "id": "conversation-88932d9d-c80d-47e9-af63-803c350c289c-route-0",
+          "model": "qwen2.5:0.5b",
+          "status": "succeeded",
+          "text": "2 plus 2 equals 4.",
+          "messages": [
+            {
+              "content": "Reply in one short line. Use no tools.",
+              "role": "system"
+            },
+            {
+              "content": "What is 2 plus 2? Answer briefly.",
+              "role": "user"
+            },
+            {
+              "content": "4",
+              "role": "assistant"
+            },
+            {
+              "content": "Summarize your previous answer in one short line.",
+              "role": "user"
+            }
+          ]
+        },
+        {
+          "id": "conversation-88932d9d-c80d-47e9-af63-803c350c289c-route-1",
+          "model": "smollm2:135m",
+          "status": "succeeded",
+          "text": "Two plus two, also 2 + 2.",
+          "messages": [
+            {
+              "content": "Reply in one short line. Use no tools.",
+              "role": "system"
+            },
+            {
+              "content": "What is 2 plus 2? Answer briefly.",
+              "role": "user"
+            },
+            {
+              "content": "Two plus two, also written as 2 + 2 . A double zero is used to indicate that there are two instances of a negative or zero, resulting in a double precision (DSP) number.",
+              "role": "assistant"
+            },
+            {
+              "content": "Summarize your previous answer in one short line.",
+              "role": "user"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "real-native-package-export-preflight-import",
+      "exported": {
+        "checksum": "15dc90dcc2d50a7c0f8dc21b14e1de4136bdff57a0e4994143bc3f90344f711e",
+        "projectIds": [
+          "project-mv6u9e07-wz6914nx"
+        ],
+        "assetIds": []
+      },
+      "preflight": {
+        "checksum": "15dc90dcc2d50a7c0f8dc21b14e1de4136bdff57a0e4994143bc3f90344f711e",
+        "projectIds": [
+          "project-mv6u9e07-wz6914nx"
+        ],
+        "assetIds": []
+      },
+      "imported": {
+        "checksum": "15dc90dcc2d50a7c0f8dc21b14e1de4136bdff57a0e4994143bc3f90344f711e",
+        "projectIds": [
+          "project-mv6u9e07-wz6914nx"
+        ],
+        "assetIds": []
+      },
+      "packageSha256": "cb1d9234b80624a438e0dca320cca23426c7e89615f265fa2d0cb396b91c6f0f"
+    },
+    {
+      "name": "launch",
+      "data": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\b2d67160-d0d0-4a89-9e6e-19bc98696249\\restored",
+      "pid": 79112,
+      "loadedScripts": [
+        "http://tauri.localhost/assets/index-ClDT8V-t.js"
+      ]
+    },
+    {
+      "name": "real-restored-directory-reopen",
+      "taskCount": 4,
+      "passed": true
+    },
+    {
+      "name": "owned-synthetic-vault-cleanup",
+      "passed": true
+    },
+    {
+      "name": "owned-model-process-tree-cleanup",
+      "pid": 98256,
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "exeHashBefore": "a2e2756ac78a179031e3d072cdf3bfdfafc79d43e3649edae645e79b000dc5fe",
+  "discoveryScope": "Real Native loopback GET; the unchanged local server may reject the WebView origin",
+  "exeHashAfter": "a2e2756ac78a179031e3d072cdf3bfdfafc79d43e3649edae645e79b000dc5fe",
+  "finishedAt": "2026-10-13T15:31:40.048Z"
+}

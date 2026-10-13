@@ -3,6 +3,7 @@ docs/changes/**/evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-bef
 # Verbatim failure transcripts are immutable data, including diagnostic spaces.
 # Keep their original bytes and hashes instead of formatting the captured output.
 docs/changes/2026-10-13-cherry-red-scope/evidence/resumed-closeout/*.log -diff
+docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/*.log -diff
 docs/changes/2026-10-13-cherry-red-scope/evidence/resumed-closeout/cargo-cli-probe/*.log -diff
 docs/changes/2026-10-13-cherry-red-scope/evidence/resumed-closeout/concurrent-save-original-error-context.md -diff
 # Immutable reviewed v1 bytes used to verify safe guard upgrades on Windows.

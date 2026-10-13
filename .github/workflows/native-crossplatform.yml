@@ -160,4 +160,5 @@ jobs:
             .tmp/native-installer/release/installer-inputs.json
             .tmp/native-installer/evidence/
             .tmp/package-portability/*.json
+            .tmp/appimage-runtime-patchelf/*.json
           if-no-files-found: ignore

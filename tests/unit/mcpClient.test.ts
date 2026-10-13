@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { appVersion } from "../../src/runtime/appInfo.ts";
 import {
   McpHttpClient,
   McpServerRegistry,
@@ -374,22 +375,27 @@ test("legacy over-limit MCP persistence remains viewable, exportable, and explic
 });
 
 test("MCP auto negotiation uses modern discover and keeps modern calls sessionless", async () => {
-  const calls: Array<{ method?: string; headers: Headers }> = [];
+  const calls: Array<{
+    method?: string;
+    headers: Headers;
+    params?: Record<string, unknown>;
+  }> = [];
   const originalFetch = globalThis.fetch;
   globalThis.fetch = (async (_input, init) => {
     const body = JSON.parse(String(init?.body ?? "{}")) as {
       method?: string;
       id?: number;
+      params?: Record<string, unknown>;
     };
     const headers = new Headers(init?.headers);
-    calls.push({ method: body.method, headers });
+    calls.push({ method: body.method, headers, params: body.params });
     if (body.method === "server/discover")
       return new Response(
         JSON.stringify({
           jsonrpc: "2.0",
           id: body.id,
           result: {
-            protocolVersions: ["2026-07-28"],
+            supportedVersions: ["2026-07-28"],
             serverInfo: { name: "modern", version: "1.0.0" },
           },
         }),
@@ -431,12 +437,375 @@ test("MCP auto negotiation uses modern discover and keeps modern calls sessionle
       content: [{ type: "text", text: "modern-ok" }],
     });
     await client.disconnect();
+    for (const call of calls) {
+      assert.deepEqual(call.params?._meta, {
+        "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+        "io.modelcontextprotocol/clientInfo": {
+          name: "kk-studio",
+          version: appVersion,
+        },
+        "io.modelcontextprotocol/clientCapabilities": {},
+      });
+      assert.equal(call.headers.get("MCP-Protocol-Version"), "2026-07-28");
+      assert.equal(call.headers.has("MCP-Session-Id"), false);
+      assert.equal(call.headers.get("Mcp-Method"), call.method);
+      assert.equal(
+        call.headers.get("Mcp-Name"),
+        call.method === "tools/call" ? "modern_tool" : null,
+      );
+    }
+    assert.equal(calls.at(-1)?.params?.name, "modern_tool");
+    assert.deepEqual(calls.at(-1)?.params?.arguments, {});
     assert.equal(
       calls.some((call) => call.method === "DELETE"),
       false,
     );
   } finally {
     globalThis.fetch = originalFetch;
+  }
+});
+
+test("MCP modern tool-name headers preserve Unicode, whitespace and sentinel values without header injection", async () => {
+  const originalFetch = globalThis.fetch;
+  const names = [
+    "plain_tool",
+    "中文工具",
+    " leading",
+    "trailing ",
+    "line\r\nbreak",
+    "=?base64?YQ==?=",
+  ];
+  const calls: Array<{ name: string; header: string | null }> = [];
+  globalThis.fetch = (async (_input, init) => {
+    const body = JSON.parse(String(init?.body ?? "{}"));
+    let result: unknown = { supportedVersions: ["2026-07-28"] };
+    if (body.method === "tools/list")
+      result = {
+        tools: names.map((name) => ({ name, inputSchema: { type: "object" } })),
+      };
+    if (body.method === "tools/call") {
+      const headers = new Headers(init?.headers);
+      calls.push({ name: body.params.name, header: headers.get("Mcp-Name") });
+      assert.equal(headers.has("Injected"), false);
+      result = { content: [{ type: "text", text: "ok" }] };
+    }
+    return new Response(
+      JSON.stringify({ jsonrpc: "2.0", id: body.id, result }),
+      { headers: { "Content-Type": "application/json" } },
+    );
+  }) as typeof fetch;
+  try {
+    const client = new McpHttpClient(server);
+    await client.connect();
+    for (const name of names) await client.callTool(name, {}, true);
+    assert.equal(calls[0].header, "plain_tool");
+    for (const call of calls.slice(1)) {
+      assert.match(call.header ?? "", /^=\?base64\?[A-Za-z0-9+/=]+\?=$/);
+      assert.equal(
+        Buffer.from(call.header!.slice(9, -2), "base64").toString("utf8"),
+        call.name,
+      );
+    }
+    await client.disconnect();
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("MCP modern mirrors valid x-mcp-header declarations from exact body paths and rejects wrong primitive values", async () => {
+  const originalFetch = globalThis.fetch;
+  const calls: Array<{ arguments: Record<string, unknown>; headers: Headers }> =
+    [];
+  globalThis.fetch = (async (_input, init) => {
+    const body = JSON.parse(String(init?.body ?? "{}"));
+    let result: unknown = { supportedVersions: ["2026-07-28"] };
+    if (body.method === "tools/list")
+      result = {
+        tools: [
+          {
+            name: "header_tool",
+            inputSchema: {
+              type: "object",
+              properties: {
+                region: { type: "string", "x-mcp-header": "Region" },
+                count: { type: "integer", "x-mcp-header": "Count" },
+                enabled: { type: "boolean", "x-mcp-header": "Enabled" },
+                nested: {
+                  type: "object",
+                  properties: {
+                    greeting: { type: "string", "x-mcp-header": "Greeting" },
+                  },
+                },
+                auth: { type: "string", "x-mcp-header": "Authorization" },
+              },
+            },
+          },
+        ],
+      };
+    if (body.method === "tools/call") {
+      calls.push({
+        arguments: body.params.arguments,
+        headers: new Headers(init?.headers),
+      });
+      result = { content: [{ type: "text", text: "ok" }] };
+    }
+    return new Response(
+      JSON.stringify({ jsonrpc: "2.0", id: body.id, result }),
+      { headers: { "Content-Type": "application/json" } },
+    );
+  }) as typeof fetch;
+  try {
+    const client = new McpHttpClient(server);
+    await client.connect();
+    const args = {
+      region: " padded ",
+      count: Number.MAX_SAFE_INTEGER,
+      enabled: false,
+      nested: { greeting: "Hello, 世界\r\n" },
+      auth: "synthetic-value",
+      unrelated: "unchanged",
+    };
+    await client.callTool("header_tool", args, true);
+    assert.deepEqual(calls[0].arguments, args);
+    assert.equal(
+      calls[0].headers.get("Mcp-Param-Count"),
+      String(Number.MAX_SAFE_INTEGER),
+    );
+    assert.equal(calls[0].headers.get("Mcp-Param-Enabled"), "false");
+    assert.equal(
+      calls[0].headers.get("Mcp-Param-Region"),
+      "=?base64?IHBhZGRlZCA=?=",
+    );
+    const greeting = calls[0].headers.get("Mcp-Param-Greeting")!;
+    assert.equal(
+      Buffer.from(greeting.slice(9, -2), "base64").toString("utf8"),
+      args.nested.greeting,
+    );
+    assert.equal(calls[0].headers.get("Authorization"), null);
+    assert.equal(calls[0].headers.get("Mcp-Param-Authorization"), args.auth);
+    assert.equal(calls[0].headers.get("Mcp-Param-unrelated"), null);
+    await client.callTool("header_tool", { region: null }, true);
+    assert.equal(
+      [...calls[1].headers.keys()].some((key) => key.startsWith("mcp-param-")),
+      false,
+    );
+    for (const invalid of [
+      { region: {} },
+      { count: 1.5 },
+      { count: Number.MAX_SAFE_INTEGER + 1 },
+      { count: "2" },
+      { enabled: 1 },
+    ]) {
+      await assert.rejects(
+        () => client.callTool("header_tool", invalid, true),
+        /MCP.*参数/,
+      );
+      assert.equal(
+        calls.length,
+        2,
+        "Invalid primitive arguments must not reach the server",
+      );
+    }
+    const longValue = "界".repeat(50_000);
+    await client.callTool("header_tool", { region: longValue }, true);
+    const longHeader = calls[2].headers.get("Mcp-Param-Region")!;
+    assert.equal(calls[2].arguments.region, longValue);
+    assert.equal(
+      Buffer.from(longHeader.slice(9, -2), "base64").toString("utf8"),
+      longValue,
+    );
+    await client.disconnect();
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("MCP modern excludes invalid header-annotated schemas while legacy retains its original tools and headers", async () => {
+  const originalFetch = globalThis.fetch;
+  const annotation = { type: "string", "x-mcp-header": "Region" };
+  const invalid = [
+    { properties: { region: { type: "string", "x-mcp-header": true } } },
+    ...["", "Region\r\nInjected", "Bad:Name", "中文"].map((name) => ({
+      properties: { region: { type: "string", "x-mcp-header": name } },
+    })),
+    ...["number", "object", "array", undefined].map((type) => ({
+      properties: { region: { type, "x-mcp-header": "Region" } },
+    })),
+    {
+      properties: {
+        a: annotation,
+        b: { type: "string", "x-mcp-header": "rEGION" },
+      },
+    },
+    annotation,
+    ...["anyOf", "oneOf", "allOf", "prefixItems"].map((keyword) => ({
+      [keyword]: [{ properties: { region: annotation } }],
+    })),
+    ...[
+      "not",
+      "if",
+      "then",
+      "else",
+      "items",
+      "contains",
+      "additionalProperties",
+      "propertyNames",
+    ].map((keyword) => ({ [keyword]: { properties: { region: annotation } } })),
+    ...["$defs", "definitions", "patternProperties", "dependentSchemas"].map(
+      (keyword) => ({
+        [keyword]: { definition: { properties: { region: annotation } } },
+      }),
+    ),
+  ];
+  const tools = [
+    {
+      name: "valid_header",
+      inputSchema: { type: "object", properties: { region: annotation } },
+    },
+    ...invalid.map((inputSchema, index) => ({
+      name: `invalid_${index}`,
+      inputSchema,
+    })),
+  ];
+  for (const protocolMode of ["modern", "legacy"] as const) {
+    const legacy = legacyFixture(() => new Response(null, { status: 404 }));
+    globalThis.fetch = (async (input, init) => {
+      const body = JSON.parse(String(init?.body ?? "{}"));
+      if (
+        body.method === "initialize" ||
+        body.method === "notifications/initialized"
+      )
+        return legacy(input, init);
+      const result =
+        body.method === "server/discover"
+          ? { supportedVersions: ["2026-07-28"] }
+          : body.method === "tools/list"
+            ? { tools }
+            : { content: [{ type: "text", text: "ok" }] };
+      if (body.method === "tools/call" && protocolMode === "legacy") {
+        const headers = new Headers(init?.headers);
+        assert.equal(
+          [...headers.keys()].some((key) => key.startsWith("mcp-param-")),
+          false,
+        );
+        assert.equal(headers.has("Mcp-Method"), false);
+      }
+      return new Response(
+        JSON.stringify({ jsonrpc: "2.0", id: body.id, result }),
+        { headers: { "Content-Type": "application/json" } },
+      );
+    }) as typeof fetch;
+    try {
+      const client = new McpHttpClient(server, { protocolMode });
+      const discovered = await client.connect();
+      assert.deepEqual(
+        discovered.map((tool) => tool.name),
+        protocolMode === "modern"
+          ? ["valid_header"]
+          : tools.map((tool) => tool.name),
+      );
+      if (protocolMode === "modern")
+        await assert.rejects(
+          () => client.callTool("invalid_0", {}, true),
+          /未被发现/,
+        );
+      else await client.callTool("invalid_0", { region: "value" }, true);
+      await client.disconnect();
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  }
+});
+
+test("MCP legacy fallback preserves original headers, payload and redirect/credential boundaries", async () => {
+  const originalFetch = globalThis.fetch;
+  const calls: Array<{
+    method?: string;
+    headers: Headers;
+    params?: Record<string, unknown>;
+  }> = [];
+  const legacy = legacyFixture(
+    (method, body) =>
+      new Response(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: body.id,
+          result: method === "tools/list" ? { tools: [] } : {},
+        }),
+        { headers: { "Content-Type": "application/json" } },
+      ),
+  );
+  globalThis.fetch = (async (input, init) => {
+    const body = JSON.parse(String(init?.body ?? "{}"));
+    calls.push({
+      method: body.method,
+      headers: new Headers(init?.headers),
+      params: body.params,
+    });
+    assert.equal(init?.credentials, "omit");
+    assert.equal(init?.redirect, "error");
+    return legacy(input, init);
+  }) as typeof fetch;
+  try {
+    const client = new McpHttpClient(server);
+    await client.connect();
+    for (const call of calls.slice(1)) {
+      assert.equal(call.params?._meta, undefined);
+      assert.equal(call.headers.has("Mcp-Method"), false);
+      assert.equal(call.headers.has("Mcp-Name"), false);
+      assert.equal(
+        call.headers.get("MCP-Protocol-Version"),
+        call.method === "initialize" ? null : "2025-11-25",
+      );
+      assert.equal(
+        call.headers.get("Accept"),
+        "application/json, text/event-stream",
+      );
+    }
+    assert.deepEqual(calls[1].params, {
+      protocolVersion: "2025-11-25",
+      capabilities: {},
+      clientInfo: { name: "kk-studio", version: appVersion },
+    });
+    await client.disconnect();
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("MCP malformed HTTP discovery bodies fail closed without legacy retries", async () => {
+  const originalFetch = globalThis.fetch;
+  for (const [status, body, contentType] of [
+    [200, "not-json", "application/json"],
+    [204, null, "application/json"],
+    [400, "not-json", "application/json"],
+    [
+      400,
+      JSON.stringify({
+        jsonrpc: "2.0",
+        id: null,
+        error: {
+          code: -32000,
+          message: "Bad Request: No valid session ID provided",
+        },
+      }),
+      "text/html",
+    ],
+  ] as const) {
+    const methods: string[] = [];
+    globalThis.fetch = (async (_input, init) => {
+      methods.push(JSON.parse(String(init?.body ?? "{}")).method);
+      return new Response(body, {
+        status,
+        headers: { "Content-Type": contentType },
+      });
+    }) as typeof fetch;
+    try {
+      await assert.rejects(() => new McpHttpClient(server).connect());
+      assert.deepEqual(methods, ["server/discover"]);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
   }
 });
 
@@ -492,14 +861,232 @@ test("MCP auto negotiation falls back to legacy only when discovery is unsupport
 
 test("MCP discovery authentication and service failures never masquerade as legacy support", async () => {
   const originalFetch = globalThis.fetch;
-  for (const status of [401, 403, 500]) {
-    globalThis.fetch = (async () =>
-      new Response(null, { status })) as typeof fetch;
+  for (const status of [401, 403, 429, 500, 501, 502, 503]) {
+    const methods: string[] = [];
+    globalThis.fetch = (async (_input, init) => {
+      methods.push(JSON.parse(String(init?.body ?? "{}")).method);
+      return new Response(null, { status });
+    }) as typeof fetch;
     try {
       await assert.rejects(
         () => new McpHttpClient(server).connect(),
         new RegExp(`HTTP ${status}`),
       );
+      assert.deepEqual(methods, ["server/discover"]);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  }
+});
+
+test("MCP auto recognizes SDK legacy transport 400 without accepting null-id RPC results", async () => {
+  const originalFetch = globalThis.fetch;
+  const messages = [
+    "Bad Request: No valid session ID provided",
+    "Bad Request: Server not initialized",
+    "Bad Request: Mcp-Session-Id header is required",
+    "Bad Request: Unsupported protocol version: 2026-07-28 (supported versions: 2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05, 2024-10-07)",
+  ];
+  for (const message of messages) {
+    const methods: string[] = [];
+    const legacy = legacyFixture((method, body) => {
+      if (method === "tools/list")
+        return new Response(
+          JSON.stringify({
+            jsonrpc: "2.0",
+            id: body.id,
+            result: {
+              tools: [{ name: "sdk_echo", inputSchema: { type: "object" } }],
+            },
+          }),
+          { headers: { "Content-Type": "application/json" } },
+        );
+      return new Response(null, { status: 404 });
+    });
+    globalThis.fetch = (async (input, init) => {
+      const body = JSON.parse(String(init?.body ?? "{}"));
+      methods.push(body.method);
+      if (body.method === "server/discover")
+        return new Response(
+          JSON.stringify({
+            jsonrpc: "2.0",
+            id: null,
+            error: { code: -32000, message },
+          }),
+          { status: 400, headers: { "Content-Type": "application/json" } },
+        );
+      return legacy(input, init);
+    }) as typeof fetch;
+    try {
+      const client = new McpHttpClient(server);
+      assert.deepEqual(
+        (await client.connect()).map((tool) => tool.name),
+        ["sdk_echo"],
+      );
+      assert.deepEqual(methods, [
+        "server/discover",
+        "initialize",
+        "notifications/initialized",
+        "tools/list",
+      ]);
+      assert.equal(client.isConnected, true);
+      await client.disconnect();
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  }
+});
+
+test("MCP structured unsupported-version offers select only the available legacy revision without retry loops", async () => {
+  const originalFetch = globalThis.fetch;
+  const cases = [
+    {
+      supported: ["2025-11-25", "2025-06-18"],
+      requested: "2026-07-28",
+      accepted: true,
+    },
+    { supported: ["2025-06-18"], requested: "2026-07-28", accepted: false },
+    {
+      supported: ["2026-07-28", "2025-11-25"],
+      requested: "2026-07-28",
+      accepted: false,
+    },
+    {
+      supported: ["2027-01-01", "2025-11-25"],
+      requested: "2026-07-28",
+      accepted: false,
+    },
+    { supported: ["2025-11-25"], requested: "wrong-version", accepted: false },
+  ];
+  for (const item of cases) {
+    const methods: string[] = [];
+    const legacy = legacyFixture(
+      (_method, body) =>
+        new Response(
+          JSON.stringify({
+            jsonrpc: "2.0",
+            id: body.id,
+            result: { tools: [] },
+          }),
+          { headers: { "Content-Type": "application/json" } },
+        ),
+    );
+    globalThis.fetch = (async (input, init) => {
+      const body = JSON.parse(String(init?.body ?? "{}"));
+      methods.push(body.method);
+      if (body.method === "server/discover")
+        return new Response(
+          JSON.stringify({
+            jsonrpc: "2.0",
+            id: null,
+            error: {
+              code: -32022,
+              message: "Unsupported protocol version",
+              data: { requested: item.requested, supported: item.supported },
+            },
+          }),
+          { status: 400, headers: { "Content-Type": "application/json" } },
+        );
+      return legacy(input, init);
+    }) as typeof fetch;
+    try {
+      const client = new McpHttpClient(server);
+      if (item.accepted) {
+        await client.connect();
+        assert.deepEqual(methods, [
+          "server/discover",
+          "initialize",
+          "notifications/initialized",
+          "tools/list",
+        ]);
+        await client.disconnect();
+      } else {
+        await assert.rejects(() => client.connect());
+        assert.deepEqual(methods, ["server/discover"]);
+      }
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  }
+});
+
+test("MCP transport 400 still rejects auth, modern protocol errors and unrelated RPC IDs", async () => {
+  const originalFetch = globalThis.fetch;
+  const cases = [
+    {
+      id: null,
+      error: { code: -32001, message: "unsupported authentication" },
+    },
+    { id: null, error: { code: -32000, message: "Database unavailable" } },
+    ...[-32020, -32021, -32022].map((code) => ({
+      id: null,
+      error: { code, message: "Modern request rejected" },
+    })),
+    { id: null, result: { protocolVersions: ["2026-07-28"] } },
+    {
+      id: "unrelated",
+      error: {
+        code: -32000,
+        message: "Bad Request: No valid session ID provided",
+      },
+    },
+    { id: "unrelated", error: { code: -32601, message: "Method not found" } },
+    {
+      id: null,
+      error: {
+        code: -32000,
+        message: "Bad Request: No valid session ID provided",
+      },
+      result: {},
+    },
+  ];
+  for (const shape of cases) {
+    const methods: string[] = [];
+    globalThis.fetch = (async (_input, init) => {
+      methods.push(JSON.parse(String(init?.body ?? "{}")).method);
+      return new Response(JSON.stringify({ jsonrpc: "2.0", ...shape }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }) as typeof fetch;
+    try {
+      await assert.rejects(
+        () => new McpHttpClient(server).connect(),
+        /HTTP 400/,
+      );
+      assert.deepEqual(methods, ["server/discover"]);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  }
+});
+
+test("MCP pinned modern and successful null-id replies never initialize a legacy session", async () => {
+  const originalFetch = globalThis.fetch;
+  for (const [status, protocolMode] of [
+    [400, "modern"],
+    [200, "auto"],
+  ] as const) {
+    const methods: string[] = [];
+    globalThis.fetch = (async (_input, init) => {
+      methods.push(JSON.parse(String(init?.body ?? "{}")).method);
+      return new Response(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: null,
+          error: {
+            code: -32000,
+            message: "Bad Request: No valid session ID provided",
+          },
+        }),
+        { status, headers: { "Content-Type": "application/json" } },
+      );
+    }) as typeof fetch;
+    try {
+      await assert.rejects(() =>
+        new McpHttpClient(server, { protocolMode }).connect(),
+      );
+      assert.deepEqual(methods, ["server/discover"]);
     } finally {
       globalThis.fetch = originalFetch;
     }

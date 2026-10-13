@@ -1,0 +1,20 @@
+✔ accepts the bounded platform-specific runtime manifest (1.2279ms)
+✔ rejects mismatched platform, architecture and Node major (1.1397ms)
+✔ rejects traversal, alternate separators and absolute resources (0.4258ms)
+✔ rejects duplicates, oversized files, bad hashes and missing entry points (0.266ms)
+✔ keeps real source dirt blocking and preserves porcelain columns (0.2464ms)
+✔ rejects source HEAD or input hash changes (0.2117ms)
+✔ hashes actual contained bytes and rejects linked resource parents (14.7173ms)
+✔ reads actual AppImage and Debian product-name resource layouts (19.1883ms)
+✔ rejects unsafe product-name path segments without fallback (0.5161ms)
+✔ keeps the Mac app and dmg layout independent of the host platform (8.9146ms)
+✔ bounded Node fixture exercises owned PID cleanup and absent storage markers (2227.493ms)
+✔ bounded Node fixture exiting early cannot pass default startup smoke (121.9116ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2401.0648

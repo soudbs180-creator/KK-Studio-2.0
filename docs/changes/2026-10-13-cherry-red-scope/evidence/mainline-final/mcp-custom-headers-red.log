@@ -1,0 +1,124 @@
+✔ MCP endpoint accepts loopback HTTP and remote HTTPS only (2.8594ms)
+✔ server registry persists endpoint metadata without credentials or session state (1.0681ms)
+✔ server registry never writes more servers than it can read back (11.0923ms)
+✔ MCP server labels reject credential-like text before persistence (0.3717ms)
+✔ corrupted MCP persistence is reported and cannot be overwritten (0.2083ms)
+✔ MCP registry serializes concurrent writers without losing either entry (0.2427ms)
+✔ default browser MCP storage delegates all mutations to the same exclusive Web Lock (0.4118ms)
+✔ default browser MCP storage rejects mutations without Web Locks and preserves readable export (0.8692ms)
+✔ MCP registry rebases independent instances instead of overwriting newer entries (6.8657ms)
+✔ MCP registry reports a capacity conflict instead of hiding the first writer (6.4619ms)
+✔ MCP registry rejects stale same-id updates and preserves the newer value (0.2443ms)
+✔ MCP registry rejects stale deletes after another tab removes or adds the id (0.1894ms)
+✔ MCP registry rejects stale adds after another tab removes the id (0.2703ms)
+✔ legacy over-limit MCP persistence remains viewable, exportable, and explicitly recoverable (1.8329ms)
+✔ MCP auto negotiation uses modern discover and keeps modern calls sessionless (16.1379ms)
+✔ MCP modern tool-name headers preserve Unicode, whitespace and sentinel values without header injection (1.5098ms)
+✖ MCP modern mirrors valid x-mcp-header declarations from exact body paths and rejects wrong primitive values (1.095ms)
+✖ MCP modern excludes invalid header-annotated schemas while legacy retains its original tools and headers (1.5245ms)
+✔ MCP legacy fallback preserves original headers, payload and redirect/credential boundaries (0.5977ms)
+✔ MCP malformed HTTP discovery bodies fail closed without legacy retries (0.7658ms)
+✔ MCP auto negotiation falls back to legacy only when discovery is unsupported (0.3477ms)
+✔ MCP discovery authentication and service failures never masquerade as legacy support (0.438ms)
+✔ MCP auto recognizes SDK legacy transport 400 without accepting null-id RPC results (0.9992ms)
+✔ MCP transport 400 still rejects auth, modern protocol errors and unrelated RPC IDs (0.7573ms)
+✔ MCP pinned modern and successful null-id replies never initialize a legacy session (0.2626ms)
+✔ MCP auto negotiation fails closed on a malformed successful discovery response (0.1744ms)
+✔ MCP discovery errors mentioning unsupported auth never fall back to legacy (0.1983ms)
+✔ Streamable HTTP performs initialize, initialized, paginated tools/list, and SSE parsing (1.2172ms)
+✔ unknown MCP tool and malformed tool list fail closed (0.5816ms)
+✔ MCP request timeout and caller cancellation abort safely (6.521ms)
+✔ MCP response size limit rejects bodies larger than 2 MB (2.5906ms)
+✔ MCP tool discovery rejects more than 500 tools (1.4202ms)
+✔ MCP tool pagination rejects repeated cursors and more than 32 pages (1.8516ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 31
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 221.0199
+
+✖ failing tests:
+
+test at tests\unit\mcpClient.test.ts:515:1
+✖ MCP modern mirrors valid x-mcp-header declarations from exact body paths and rejects wrong primitive values (1.095ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + null
+  - '9007199254740991'
+  
+      at TestContext.<anonymous> (file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/tests/unit/mcpClient.test.ts:540:12)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: '9007199254740991',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit\mcpClient.test.ts:560:1
+✖ MCP modern excludes invalid header-annotated schemas while legacy retains its original tools and headers (1.5245ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'valid_header',
+  +   'invalid_0',
+  +   'invalid_1',
+  +   'invalid_2',
+  +   'invalid_3',
+  +   'invalid_4',
+  +   'invalid_5',
+  +   'invalid_6',
+  +   'invalid_7',
+  +   'invalid_8',
+  +   'invalid_9',
+  +   'invalid_10',
+  +   'invalid_11',
+  +   'invalid_12',
+  +   'invalid_13',
+  +   'invalid_14',
+  +   'invalid_15',
+  +   'invalid_16',
+  +   'invalid_17',
+  +   'invalid_18',
+  +   'invalid_19',
+  +   'invalid_20',
+  +   'invalid_21',
+  +   'invalid_22',
+  +   'invalid_23',
+  +   'invalid_24',
+  +   'invalid_25',
+  +   'invalid_26'
+    ]
+  
+      at TestContext.<anonymous> (file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/tests/unit/mcpClient.test.ts:590:14)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [
+      'valid_header', 'invalid_0',
+      'invalid_1',    'invalid_2',
+      'invalid_3',    'invalid_4',
+      'invalid_5',    'invalid_6',
+      'invalid_7',    'invalid_8',
+      'invalid_9',    'invalid_10',
+      'invalid_11',   'invalid_12',
+      'invalid_13',   'invalid_14',
+      'invalid_15',   'invalid_16',
+      'invalid_17',   'invalid_18',
+      'invalid_19',   'invalid_20',
+      'invalid_21',   'invalid_22',
+      'invalid_23',   'invalid_24',
+      'invalid_25',   'invalid_26'
+    ],
+    expected: [ 'valid_header' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

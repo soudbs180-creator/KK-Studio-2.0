@@ -1,5 +1,7 @@
 # Native 验收修复与测试边界
 
+当前执行至冻结源码 `7daeba25`，本机正式 Native6、真实 Ollama13 和隔离 NSIS 生命周期已有 PASS；最新完整验证、不同产物身份、Hosted 及最终验收的状态以 [最终记录](mainline-final-status.md) 为准。以下旧阶段保留执行时边界，不提前标 DONE。
+
 任务：TASK-CHERRY-RED-001。2026-10-13，Desktop/Web `2.1.17`、Mobile `2.1.1`。当前 `codex/TASK-CHERRY-RED-001-mainline` 的 base/HEAD 为 `694a00607f6f63de1b8c43d0ebb117adf5d34f67`，Cherry 承接仍未提交。Windows 本地 Rust 通过；最终 Native、默认发行包/安装、三平台 Hosted 与用户验收仍 NOT VERIFIED，任务继续 PARTIAL。
 
 ## 已复现并修正

@@ -1,0 +1,31 @@
+[WebServer] (node:15236) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 8 workers
+
+(node:89660) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:40840) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:62932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:77320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:79600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:57960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 tests\browser\desktop-data-stability.spec.ts:435:1 › 两个窗口并发保存时保留先提交的原件和冲突草稿 (3.6s)
+  ok 5 tests\browser\desktop-data-stability.spec.ts:435:1 › 两个窗口并发保存时保留先提交的原件和冲突草稿 (4.6s)
+  ok 1 tests\browser\desktop-data-stability.spec.ts:435:1 › 两个窗口并发保存时保留先提交的原件和冲突草稿 (5.0s)
+  ok 4 tests\browser\desktop-data-stability.spec.ts:435:1 › 两个窗口并发保存时保留先提交的原件和冲突草稿 (5.5s)
+  ok 3 tests\browser\desktop-data-stability.spec.ts:435:1 › 两个窗口并发保存时保留先提交的原件和冲突草稿 (5.5s)
+  ok 6 tests\browser\desktop-data-stability.spec.ts:435:1 › 两个窗口并发保存时保留先提交的原件和冲突草稿 (5.5s)
+  ok 8 tests\browser\desktop-data-stability.spec.ts:435:1 › 两个窗口并发保存时保留先提交的原件和冲突草稿 (6.3s)
+  ok 7 tests\browser\desktop-data-stability.spec.ts:435:1 › 两个窗口并发保存时保留先提交的原件和冲突草稿 (6.4s)
+
+  8 passed (11.2s)
