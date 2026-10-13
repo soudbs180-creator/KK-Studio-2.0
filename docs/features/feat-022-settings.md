@@ -53,6 +53,6 @@ TASK-AGENT-RECOVERY-20261013：模型接入将普通桌面连接合为一个入�
 
 ## 2026-10-14 源码候选与验收边界
 
-设置分组与公共预设已接入源码；默认绿、中性动作和弱焦点按UI_INDEX消费。目录有官网/密钥/文档，协议未接入时禁用，不自动联网。UsageSettings派生本机项目/任务与有效provider实际USD回执；Token未报告，demo/估算/冲突/其他币种不计。StorageOverview读取原生get_storage_root、伴随服务地址或浏览器位置；storage.estimate仅浏览器估算，项目引用数不是全库大小，Desktop/伴随服务字节未报告且错误有重试。源码补充ProviderPresetSelector/providerPresets/UsageSettings/usageSummary/StorageOverview；完整两端与安装包证据仍待补。
+设置分组与公共预设已接入源码；默认绿、中性动作和弱焦点按UI_INDEX消费。目录有官网/密钥/文档，协议未接入时禁用，不自动联网。UsageSettings派生本机项目/任务与有效provider实际USD回执；Token未报告，demo/估算/冲突/其他币种不计。StorageOverview读取原生get_storage_root、伴随服务地址或浏览器位置；storage.estimate仅浏览器估算，项目引用数不是全库大小，Desktop/伴随服务字节未报告且错误有重试。源码补充ProviderPresetSelector/providerPresets/UsageSettings/usageSummary/StorageOverview；当前完整Web验证、官方Desktop构建及实际窗口2.1.18版本通过，新原生功能链路与安装包继续分别验收。
 
 新结果见[本轮验证](../changes/2026-10-14-ui-consolidation/verification.md)，未完成的平台/外部服务不由源码或fixture推导PASS。

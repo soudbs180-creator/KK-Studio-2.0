@@ -53,3 +53,11 @@ Rust `cargo check` 和 `cargo fmt -- --check` exit0，5个既有warnings保留�
 相同Python gzip level6/mtime0量测冻结Web zip与当前dist：主入口279510→285940字节，增加6430字节，低于16384预算；全JS gzip368208→377867，CSS51272→52556；150文件、总字节5050790→5092262。新依赖0；没有通过漏构建插件或移除Agent功能凑指标。详见输出 `web-footprint.json`，此量测不含Native/Agent包或运行内存。
 
 健康门禁沿用origin/main的advisory配置：相对539fe0bb仍5项（App体量/复杂度4项、PR55交付函数1项）；新统计函数与卡片操作已按职责分开，函数CC不超20。主线比较44项和Windows2项advisory未冒充零发现，未提高阈值或添加豁免。真实Desktop、安装/Hosted、Native Mobile、用户视觉验收及其他在途分支的稳定集成分别记录，不由Web PASS推导。
+
+## 已提交候选与复审修正
+
+UI候选提交ff454541；官方 `client:build:agent -- --no-bundle` exit0，实际Tauri和工程外portable窗口都加载2.1.18、index-DincjUra，EXE SHA256 ea81c00ffed171308babe49f8b3da8a20f60df697e17f889d83020518207773e。4269个Agent生产白名单文件111924259字节保留；Native包不作安装器/签名/真实Provider验收。
+
+独立审查ff454541发现USAGE-001/002两项P2：编辑文本少计、部分完成/离线被显示为运行。原报告保留工程外independent-review-ff454541.md；先复现旧统计/旧界面失败，再按稳定卡片绑定和有效原始回执计数、使用“其他任务状态”及范围说明。10个统计单测通过。修复后verify exit0：Node1119pass/14skip、Agent172pass/2skip、UI235/0；533 browser为532首试通过、1flaky（sidebar-real-projects折叠分组创建后展开状态首试超时），开发5步骤PASS。原首试/重试结果不覆盖；该flaky根因仍待核对，不宣称本次零flaky。
+
+收敛期间主目录新增已完成的凭据状态恢复和Agent执行展示，最新一致恢复输入f2b0466ad4069ef74306752ed9be3a9319c94b2f的Desktop/Web已为2.1.20。新版必须逐项携带这些代码和对应测试，再升版本验证；ff2.1.18保留为中间候选，不再称最新日常源码。刷新盘点107登记树/39dirty、39一致快照、原index变动0，872源路径与313排除路径可溯源；all-refs-current-ff454541.bundle校验通过，原工作区保持。后续在途变化按时间边界另列。

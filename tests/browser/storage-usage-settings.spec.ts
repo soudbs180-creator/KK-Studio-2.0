@@ -1,5 +1,36 @@
 import { expect, test } from "@playwright/test";
 import { openSettingsSection, openWorkspace } from "./helpers";
+import { createTask } from "../../src/features/creation/model";
+
+test("部分完成和离线终态不会显示为仍在处理中", async ({ page }) => {
+  await openWorkspace(page);
+  const snapshot = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("kk-studio-next:creation:v1")!),
+  );
+  const project = snapshot.projects[0];
+  project.tasks = [
+    { ...createTask(project), status: "partial", completedOutputs: 1 },
+    { ...createTask(project), status: "offline" },
+  ];
+  snapshot.revision = Date.now() + 1;
+  await page.evaluate(
+    (value) => localStorage.setItem("kk-studio-next:creation:v1", value),
+    JSON.stringify(snapshot),
+  );
+  await page.reload();
+  await openSettingsSection(page, "使用记录");
+  const usage = page.locator("[data-usage-state]");
+  await expect(
+    usage.getByText("任务记录", { exact: true }).locator(".."),
+  ).toContainText("2 个");
+  await expect(
+    usage.getByText("其他任务状态", { exact: true }).locator(".."),
+  ).toContainText("2 个");
+  await expect(usage).toContainText("部分完成不表示仍在运行");
+  await expect(usage.getByText("处理中或待处理", { exact: true })).toHaveCount(
+    0,
+  );
+});
 
 test("使用记录只展示当前项目和真实回执，浏览器占用注明估算", async ({
   page,

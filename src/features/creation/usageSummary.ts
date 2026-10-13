@@ -43,8 +43,12 @@ function matchesOutput(
   output: CreationTaskOutput,
 ): boolean {
   if (!item || !archivedResult(item)) return false;
+  // The task/card binding survives user edits; the original receipt stays valid.
   return item.kind === "text"
-    ? item.result?.text === output.text
+    ? Boolean(
+        output.text?.trim() &&
+        new TextEncoder().encode(output.text).length <= 32768,
+      )
     : item.assetId === output.assetId;
 }
 

@@ -12,6 +12,7 @@ import {
   type CreationTaskOutput,
 } from "../../src/features/creation/model.ts";
 import { summarizeUsage } from "../../src/features/creation/usageSummary.ts";
+import { textTaskResult } from "../../src/features/creation/textTaskResult.ts";
 import type { TaskCostReceipt } from "../../src/features/creation/taskState.ts";
 
 const assetId = "asset-0123456789abcdef01234567";
@@ -156,7 +157,7 @@ test("missing archive evidence, running drafts and completion counters cannot in
   };
   const text = {
     ...task(value, "text", "text"),
-    outputs: [{ ...output(), text: "a different text" }],
+    outputs: [{ ...output(), assetId: undefined, text: undefined }],
   };
   const draft = {
     ...task(value, "draft", "text"),
@@ -183,6 +184,36 @@ test("missing archive evidence, running drafts and completion counters cannot in
     video: true,
     text: true,
   });
+});
+
+test("edited text cards retain successful usage through canonical and legacy task bindings", () => {
+  const value = project();
+  const outputs: CreationTaskOutput[] = [
+    { ...output(), assetId: undefined, text: "archived text" },
+  ];
+  const target = {
+    ...task(value, "edited", "text"),
+    status: "succeeded" as const,
+    resultItemId: "",
+    outputs,
+  };
+  const item = textTaskResult(value.id, target, 0, "archived text");
+  value.tasks = [target];
+  value.items = [item];
+  assert.equal(summarizeUsage([value]).outputs.text, 1);
+  item.result = { ...item.result!, text: "user edited text" };
+  assert.equal(summarizeUsage([value]).outputs.text, 1);
+  assert.equal(outputs[0].text, "archived text");
+
+  item.id = "legacy-text-card";
+  item.result.id = "legacy-result-payload";
+  target.resultItemId = item.id;
+  assert.equal(summarizeUsage([value]).outputs.text, 1);
+  target.resultItemId = "unbound-card";
+  assert.equal(summarizeUsage([value]).outputs.text, 0);
+  target.resultItemId = item.id;
+  outputs[0].text = undefined;
+  assert.equal(summarizeUsage([value]).outputs.text, 0);
 });
 
 test("successful task state without a successful output receipt stays unreported", () => {

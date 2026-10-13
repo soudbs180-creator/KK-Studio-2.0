@@ -53,7 +53,7 @@ export default function UsageSettings({
           <strong>{usage.failedTasks} 个</strong>
         </div>
         <div>
-          <span>处理中或待处理</span>
+          <span>其他任务状态</span>
           <strong>{usage.unfinishedTasks} 个</strong>
         </div>
         <div>
@@ -61,6 +61,9 @@ export default function UsageSettings({
           <strong>{usage.cancelledTasks} 个</strong>
         </div>
       </div>
+      <p className="settings-section-intro">
+        包括待处理、处理中、部分完成、离线和待核对记录；部分完成不表示仍在运行。
+      </p>
       <h3 className="settings-detail-label">已存成功结果</h3>
       <div className="settings-detail-card">
         <div>
