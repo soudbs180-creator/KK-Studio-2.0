@@ -26,7 +26,7 @@ export const SNAPSHOT_DOCUMENTS = Object.freeze([
   "docs/governance/TASK_STATUS.md",
 ]);
 
-/** 容器层仍承载任务/功能快照的文档，由 snapshot:check 跨仓检查。 */
+/** 容器层任务/功能快照；仅显式选择 container root 时跨仓严格检查。 */
 export const CONTAINER_SNAPSHOT_DOCUMENTS = Object.freeze([
   "docs/plans/KK-Studio-功能台账与四向推进-2026-10-09.md",
 ]);

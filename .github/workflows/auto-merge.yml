@@ -5,8 +5,11 @@ on:
     types: [opened, reopened, synchronize, ready_for_review]
   pull_request_review:
     types: [submitted, edited, dismissed]
-  pull_request_review_thread:
-    types: [resolved, unresolved]
+  pull_request_review_comment:
+    types: [created, edited, deleted]
+
+# Thread resolution is a webhook event, not an Actions trigger. Resolution-only
+# changes are re-evaluated on the next supported PR/review/comment event.
 
 # The workflow is deliberately inert until the repository variable
 # AUTO_MERGE_ACTIVATION=enabled is read back by the script. No local default
