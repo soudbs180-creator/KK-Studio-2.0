@@ -131,11 +131,13 @@
   --kk-focus-width-subtle: 1px;
   --kk-focus-offset-subtle: 1px;
 
-  /* --- 2.3 层级 z-index（7 档，禁止 9999 之类魔法值） --- */
+  /* --- 2.3 层级 z-index（语义层级，禁止 9999 之类魔法值） --- */
   --kk-z-base: 0;
   --kk-z-sticky: 10;
   --kk-z-sticky-header: 20;
   --kk-z-dropdown: 100;
+  --kk-z-floating-panel: calc(var(--kk-z-dropdown) + 1);
+  --kk-z-floating-panel-active: calc(var(--kk-z-floating-panel) + 1);
   --kk-z-overlay: 200;
   --kk-z-modal: 300;
   --kk-z-popover: 400;

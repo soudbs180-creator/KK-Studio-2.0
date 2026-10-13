@@ -18,6 +18,7 @@
 | 菜单与面板 | --kk-radius-menu、--kk-radius-panel；不复制局部圆角 |
 | 设置外壳 | --kk-settings-width、--kk-settings-nav-width；分组导航、列表与详情 |
 | 喜欢/标签面板 | --kk-collection-panel-width/height：360 / 480；FloatingCollectionPanel，受可视窗口限制、不随画布缩放 |
+| 浮动面板层级 | --kk-z-floating-panel/active：高于画布工具栏的 dropdown，低于 overlay、modal、popover；活动面板在同类面板之上 |
 | 任务弹层 | --kk-task-popover-width/height/min-height；任务浮层与 HUD |
 | 字体与间距 | --kk-font-*、--kk-line-*、--kk-space-*；文字层级与 4px 间距网格 |
 

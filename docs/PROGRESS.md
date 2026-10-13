@@ -2,7 +2,7 @@
 
 ## 2026-10-14 UI源码候选与当前验收（PARTIAL）
 
-默认绿、中性动作/胶囊/上传方角/弱焦点、独立固定大小喜欢/标签面板、收藏兼容、分类搜索、分组设置/预设、CLI子页及使用/存储概览已接入。2.1.18中间候选532browser零flaky、开发及预算通过，复审修正后533含1分组flaky，原件均保留。主目录随后推进2.1.20，凭据恢复/Agent展示/画布同步及51限定路径已逐项承接，当前Desktop/Web2.1.21组合验证中；随包Gemini桥和绝对路径命令已修正。实际Desktop、最终SHA审查及发布分别收口。Native Mobile2.1.1仍规划，窄屏为响应式Web。[本轮验证](changes/2026-10-14-ui-consolidation/verification.md)、[兼容决定](architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md)。
+默认绿、中性动作/胶囊/上传方角/弱焦点、独立固定大小喜欢/标签面板、收藏兼容、分类搜索、分组设置/预设、CLI子页及使用/存储概览已接入。2.1.18中间候选532browser零flaky、开发及预算通过，复审修正后533含1分组flaky，原件均保留。主目录随后推进2.1.20，凭据恢复/Agent展示/画布同步及51限定路径已逐项承接，当前Desktop/Web2.1.21组合验证中；随包Gemini桥和绝对路径命令已修正。0e5087e6的完整verify通过（544browser零flaky），实际桌面确认视频坐标和原件保存后，发现图片工具栏遮挡面板关闭按钮；共享层级修正先browser RED再8场景零重试GREEN，当前修正组合仍待完整复验和新桌面回执。最终SHA审查及发布分别收口。Native Mobile2.1.1仍规划，窄屏为响应式Web。[本轮验证](changes/2026-10-14-ui-consolidation/verification.md)、[兼容决定](architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md)。
 
 ## 2026-10-14 历史冻结阶段（保留原时点与收据）
 

@@ -73,3 +73,9 @@ Gemini桥脚本列入Agent生产白名单和release输入指纹；桌面使用re
 第二次组合前置全部通过：Node1156项1142pass/14既有skip、Agent174项172pass/2skip、UI236/0、lint/type/format/build通过。production544 expected、0unexpected/flaky/skipped；原件browser-221-pass2-results.json，入口index-F03Lyd2x（SHA256 06fe9210c5b3f7233bd9fa046ed236a1e273a0f134db2d08cd673ad203c7b71f）。compound在development失败：首次懒加载新path依赖触发Vite优化重载、设置弹窗状态丢失。只预优化已安装@tauri-apps/api/path，未扩大fs.allow，随后实际开发5步骤PASS/errors0/父目录AGENTS403。旧FAIL与后续PASS分别留存；最终已提交compound和Native仍分别取得回执。
 
 同算法预算当前主入口gzip289127字节，较冻结279510增加9617，低于16384；Web150文件/5105123字节，生产插件保持齐全。Node真实启动桥入口在含#和单引号路径下工作，只请求未知路径、可信Native Origin回404，没有/status/chat、CLI探测、登录或Provider请求。Native安装器、Hosted、真实供应商、Native Mobile与用户视觉验收仍开放。
+
+## 实际桌面发现与共享层级修正
+
+已提交0e5087e6的完整verify退出0：Node1142pass/14skip、Agent172pass/2skip、UI236/0，production544 expected且unexpected/flaky/skipped均0，development5步骤PASS。当前真实Tauri原件在工程外native-candidate/runs留存：首轮driver把CSSOM六位舍入与原生完整精度直接比较导致FAIL，改为原生上传前后坐标精确比较、DOM与原生容许0.001显示舍入；原driver和失败receipt保留。后续真实桌面确认喜欢/标签/收藏写入、固定面板独立移动与缩放、视频卡片移动后上传保持世界坐标及视频原件hash，但重载后图片工具栏挡住喜欢面板关闭按钮，真实点击被重绘按钮截获。
+
+共享层级原为面板sticky-header+1/+2（21/22）而图片工具栏dropdown（100）。新增语义floating-panel/active token（dropdown+1、panel+1），两类面板均使用，保持低于overlay200/modal300/popover400。新增浏览器通过真实拖动使关闭按钮中心与图片工具栏重叠、elementFromPoint命中与正常关闭断言，旧dist RED，修正后面板和风险8场景零重试GREEN。不使用force click或隐藏图片工具栏绕过。后续完整组合、实际新EXE及独立最终review待新回执。

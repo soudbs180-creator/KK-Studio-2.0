@@ -1,6 +1,47 @@
 import { expect, test } from "@playwright/test";
 import { openWorkspace } from "./helpers";
 
+test("喜欢面板覆盖图片工具栏时关闭按钮仍可点击", async ({ page }, testInfo) => {
+  await openWorkspace(page);
+  await page.getByTestId("canvas-node-image").locator(".image-preview").click();
+  const toolbar = page.getByRole("toolbar", { name: /^图片操作/ });
+  await page.getByRole("button", { name: "喜欢与标签", exact: true }).click();
+  await page.getByRole("menuitem", { name: "我喜欢的", exact: true }).click();
+  const likes = page.getByTestId("canvas-likes-panel");
+  const close = likes.getByRole("button", { name: "关闭喜欢面板" });
+  const actions = (await toolbar.boundingBox())!;
+  const button = (await close.boundingBox())!;
+  const handle = (await likes
+    .getByRole("button", { name: "移动喜欢面板" })
+    .boundingBox())!;
+  const dx = actions.x + actions.width / 2 - button.x - button.width / 2;
+  const dy = actions.y + actions.height / 2 - button.y - button.height / 2;
+  await page.mouse.move(handle.x + 20, handle.y + 16);
+  await page.mouse.down();
+  await page.mouse.move(handle.x + 20 + dx, handle.y + 16 + dy, { steps: 5 });
+  await page.mouse.up();
+  await expect(toolbar).toBeVisible();
+  await expect
+    .poll(() =>
+      close.evaluate((element) => {
+        const box = element.getBoundingClientRect();
+        return element.contains(
+          document.elementFromPoint(
+            box.x + box.width / 2,
+            box.y + box.height / 2,
+          ),
+        );
+      }),
+    )
+    .toBe(true);
+  await page.screenshot({
+    path: testInfo.outputPath("panel-above-image-toolbar.png"),
+    animations: "disabled",
+  });
+  await close.click();
+  await expect(likes).toBeHidden();
+});
+
 test("顶部喜欢与独立收藏面板保持固定屏幕尺寸", async ({ page }, testInfo) => {
   await openWorkspace(page);
   await page.getByTestId("canvas-node-image").locator(".image-preview").click();
