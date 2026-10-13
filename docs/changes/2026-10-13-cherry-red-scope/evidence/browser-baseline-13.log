@@ -1,0 +1,350 @@
+[WebServer] (node:14028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 13 tests using 1 worker
+
+(node:62668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\browser\composer-fidelity.spec.ts:37:1 › 平板会话分栏时画布控件左移且标题和输入控件尺寸稳定 (1.8s)
+  ok  2 tests\browser\interaction-regressions.spec.ts:93:1 › 模型测试拒绝 HTML 假成功并可从 HTTP 错误恢复 (777ms)
+  ok  3 tests\browser\interaction-regressions.spec.ts:118:1 › 取消、编辑配置与离线状态不会留下过期的连接成功提示 (721ms)
+  ok  4 tests\browser\page-alignment.spec.ts:4:1 › current Figma modal shells keep dimensions and settings content origin (814ms)
+  ok  5 tests\browser\project-package.spec.ts:96:1 › Desktop 取消导出文件选择不会调用项目包写入 (1.6s)
+  ok  6 tests\browser\project-package.spec.ts:112:1 › 项目包预检失败显示错误且不允许恢复 (1.6s)
+  ok  7 tests\browser\responsive-layout.spec.ts:217:3 › short viewport 390x480 retains reachable chat and settings controls (795ms)
+  ok  8 tests\browser\responsive-layout.spec.ts:217:3 › short viewport 844x390 retains reachable chat and settings controls (1.1s)
+  x   9 tests\browser\settings-scroll.spec.ts:38:1 › 插件、技能、伙伴标签可用方向键切换并显示对应内容 (596ms)
+(node:98316) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  10 tests\browser\settings-scroll.spec.ts:38:1 › 插件、技能、伙伴标签可用方向键切换并显示对应内容 (retry #1) (764ms)
+(node:14888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  11 tests\browser\ui-governance-visual.spec.ts:3:1 › Figma governance primitives keep one rendered geometry contract (318ms)
+(node:56720) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  12 tests\browser\ui-governance-visual.spec.ts:3:1 › Figma governance primitives keep one rendered geometry contract (retry #1) (309ms)
+(node:48012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  13 tests\browser\ui-motion.spec.ts:47:1 › 视频编辑器只在选中时出现，参数与提示词在切换后保留 (30.0s)
+(node:75764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  14 tests\browser\ui-motion.spec.ts:47:1 › 视频编辑器只在选中时出现，参数与提示词在切换后保留 (retry #1) (30.1s)
+(node:59864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  15 tests\browser\ui-motion.spec.ts:83:1 › 任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响画布 (6.3s)
+(node:99688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  16 tests\browser\ui-motion.spec.ts:83:1 › 任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响画布 (retry #1) (6.4s)
+(node:18640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  17 tests\browser\unified-image-command.spec.ts:641:1 › actual long model identifiers remain readable without covering canvas controls (30.1s)
+(node:96552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  18 tests\browser\unified-image-command.spec.ts:641:1 › actual long model identifiers remain readable without covering canvas controls (retry #1) (30.1s)
+
+
+  1) tests\browser\settings-scroll.spec.ts:38:1 › 插件、技能、伙伴标签可用方向键切换并显示对应内容 ─────────────────────────
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('tabpanel')
+    Expected substring: "Agent"
+    Error: strict mode violation: getByRole('tabpanel') resolved to 2 elements:
+        1) <div tabindex="0" role="tabpanel" id="start-panel-inspiration" class="start-discovery-panel" aria-labelledby="start-tab-inspiration">…</div> aka getByRole('tabpanel', { name: '创作灵感' })
+        2) <div role="tabpanel" id="settings-ext-panel" aria-labelledby="settings-ext-tab-partners">…</div> aka getByRole('tabpanel', { name: '伙伴 智能体' })
+
+    Call log:
+      - Expect "toContainText" getByRole('tabpanel') with timeout 5000ms
+      - waiting for getByRole('tabpanel')
+
+
+      50 |   await expect(partners).toBeFocused();
+      51 |   await expect(partners).toHaveAttribute("aria-selected", "true");
+    > 52 |   await expect(page.getByRole("tabpanel")).toContainText("Agent");
+         |                                            ^
+      53 | });
+      54 |
+      55 | test("手机扩展标签保持单行和触屏命中区", async ({ page }) => {
+        at D:\kk-studio\.worktrees\TASK-CHERRY-RED-001\.tmp\cherry-red\baseline-source\tests\browser\settings-scroll.spec.ts:52:44
+
+    Error Context: test-results\settings-scroll-插件、技能、伙伴标签可用方向键切换并显示对应内容\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('tabpanel')
+    Expected substring: "Agent"
+    Error: strict mode violation: getByRole('tabpanel') resolved to 2 elements:
+        1) <div tabindex="0" role="tabpanel" id="start-panel-inspiration" class="start-discovery-panel" aria-labelledby="start-tab-inspiration">…</div> aka getByRole('tabpanel', { name: '创作灵感' })
+        2) <div role="tabpanel" id="settings-ext-panel" aria-labelledby="settings-ext-tab-partners">…</div> aka getByRole('tabpanel', { name: '伙伴 智能体' })
+
+    Call log:
+      - Expect "toContainText" getByRole('tabpanel') with timeout 5000ms
+      - waiting for getByRole('tabpanel')
+
+
+      50 |   await expect(partners).toBeFocused();
+      51 |   await expect(partners).toHaveAttribute("aria-selected", "true");
+    > 52 |   await expect(page.getByRole("tabpanel")).toContainText("Agent");
+         |                                            ^
+      53 | });
+      54 |
+      55 | test("手机扩展标签保持单行和触屏命中区", async ({ page }) => {
+        at D:\kk-studio\.worktrees\TASK-CHERRY-RED-001\.tmp\cherry-red\baseline-source\tests\browser\settings-scroll.spec.ts:52:44
+
+    Error Context: test-results\settings-scroll-插件、技能、伙伴标签可用方向键切换并显示对应内容-retry1\error-context.md
+
+  2) tests\browser\ui-governance-visual.spec.ts:3:1 › Figma governance primitives keep one rendered geometry contract
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -6,7 +6,7 @@
+        ],
+        "primaryHeight": "40px",
+        "secondaryFontSize": "14px",
+        "secondaryHeight": "32px",
+        "secondaryLineHeight": "20px",
+    -   "secondaryRadius": "8px",
+    +   "secondaryRadius": "999px",
+      }
+
+      30 |   });
+      31 |
+    > 32 |   expect(geometry).toMatchObject({
+         |                    ^
+      33 |     secondaryHeight: "32px",
+      34 |     primaryHeight: "40px",
+      35 |     secondaryRadius: "8px",
+        at D:\kk-studio\.worktrees\TASK-CHERRY-RED-001\.tmp\cherry-red\baseline-source\tests\browser\ui-governance-visual.spec.ts:32:20
+
+    Error Context: test-results\ui-governance-visual-Figma-b9ef0--rendered-geometry-contract\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -6,7 +6,7 @@
+        ],
+        "primaryHeight": "40px",
+        "secondaryFontSize": "14px",
+        "secondaryHeight": "32px",
+        "secondaryLineHeight": "20px",
+    -   "secondaryRadius": "8px",
+    +   "secondaryRadius": "999px",
+      }
+
+      30 |   });
+      31 |
+    > 32 |   expect(geometry).toMatchObject({
+         |                    ^
+      33 |     secondaryHeight: "32px",
+      34 |     primaryHeight: "40px",
+      35 |     secondaryRadius: "8px",
+        at D:\kk-studio\.worktrees\TASK-CHERRY-RED-001\.tmp\cherry-red\baseline-source\tests\browser\ui-governance-visual.spec.ts:32:20
+
+    Error Context: test-results\ui-governance-visual-Figma-b9ef0--rendered-geometry-contract-retry1\error-context.md
+
+  3) tests\browser\ui-motion.spec.ts:47:1 › 视频编辑器只在选中时出现，参数与提示词在切换后保留 ──────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '生成视频', exact: true })
+        - locator resolved to <button aria-label="生成视频" class="generate-button" title="加载固定本地测试素材，不消耗积分">…</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <aside data-overlay="false" data-node-id="407:29265" class="conversation-panel">…</aside> from <div class="chat-container ">…</div> subtree intercepts pointer events
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <aside data-overlay="false" data-node-id="407:29265" class="conversation-panel">…</aside> from <div class="chat-container ">…</div> subtree intercepts pointer events
+        - retrying click action
+          - waiting 100ms
+        52 × waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <aside data-overlay="false" data-node-id="407:29265" class="conversation-panel">…</aside> from <div class="chat-container ">…</div> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+
+
+      72 |   await page.keyboard.press("Home");
+      73 |   await page.keyboard.press("Escape");
+    > 74 |   await page.getByRole("button", { name: "生成视频", exact: true }).click();
+         |                                                                 ^
+      75 |   await expect(
+      76 |     page.locator('.demo-result-node[data-kind="video"][data-source="demo"]'),
+      77 |   ).toHaveCount(1);
+        at D:\kk-studio\.worktrees\TASK-CHERRY-RED-001\.tmp\cherry-red\baseline-source\tests\browser\ui-motion.spec.ts:74:65
+
+    Error Context: test-results\ui-motion-视频编辑器只在选中时出现，参数与提示词在切换后保留\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '生成视频', exact: true })
+        - locator resolved to <button aria-label="生成视频" class="generate-button" title="加载固定本地测试素材，不消耗积分">…</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <aside data-overlay="false" data-node-id="407:29265" class="conversation-panel">…</aside> from <div class="chat-container ">…</div> subtree intercepts pointer events
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <aside data-overlay="false" data-node-id="407:29265" class="conversation-panel">…</aside> from <div class="chat-container ">…</div> subtree intercepts pointer events
+        - retrying click action
+          - waiting 100ms
+        52 × waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <aside data-overlay="false" data-node-id="407:29265" class="conversation-panel">…</aside> from <div class="chat-container ">…</div> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+
+
+      72 |   await page.keyboard.press("Home");
+      73 |   await page.keyboard.press("Escape");
+    > 74 |   await page.getByRole("button", { name: "生成视频", exact: true }).click();
+         |                                                                 ^
+      75 |   await expect(
+      76 |     page.locator('.demo-result-node[data-kind="video"][data-source="demo"]'),
+      77 |   ).toHaveCount(1);
+        at D:\kk-studio\.worktrees\TASK-CHERRY-RED-001\.tmp\cherry-red\baseline-source\tests\browser\ui-motion.spec.ts:74:65
+
+    Error Context: test-results\ui-motion-视频编辑器只在选中时出现，参数与提示词在切换后保留-retry1\error-context.md
+
+  4) tests\browser\ui-motion.spec.ts:83:1 › 任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响画布 ────────────
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "height": 240,
+    -   "width": 196,
+    +   "height": 420,
+    +   "width": 360,
+        "x": 321,
+        "y": 108,
+      }
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      93 |   await expect
+      94 |     .poll(() => panel.boundingBox())
+    > 95 |     .toEqual({
+         |      ^
+      96 |       x: 321,
+      97 |       y: 108,
+      98 |       width: 196,
+        at D:\kk-studio\.worktrees\TASK-CHERRY-RED-001\.tmp\cherry-red\baseline-source\tests\browser\ui-motion.spec.ts:95:6
+
+    Error Context: test-results\ui-motion-任务面板按-Runtime-Tasks-展示卡片，滚轮和-Escape-不影响画布\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "height": 240,
+    -   "width": 196,
+    +   "height": 420,
+    +   "width": 360,
+        "x": 321,
+        "y": 108,
+      }
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      93 |   await expect
+      94 |     .poll(() => panel.boundingBox())
+    > 95 |     .toEqual({
+         |      ^
+      96 |       x: 321,
+      97 |       y: 108,
+      98 |       width: 196,
+        at D:\kk-studio\.worktrees\TASK-CHERRY-RED-001\.tmp\cherry-red\baseline-source\tests\browser\ui-motion.spec.ts:95:6
+
+    Error Context: test-results\ui-motion-任务面板按-Runtime-Tasks-展示卡片，滚轮和-Escape-不影响画布-retry1\error-context.md
+
+  5) tests\browser\unified-image-command.spec.ts:641:1 › actual long model identifiers remain readable without covering canvas controls
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('.canvas-node-image').first().getByRole('button', { name: '切换全部模型' })
+
+
+      660 |   expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(params!.x);
+      661 |   await button.click();
+    > 662 |   await source.getByRole("button", { name: "切换全部模型" }).click();
+          |                                                        ^
+      663 |   await expect(
+      664 |     source.getByRole("menuitemradio", { name: model, exact: false }),
+      665 |   ).toContainText(model);
+        at D:\kk-studio\.worktrees\TASK-CHERRY-RED-001\.tmp\cherry-red\baseline-source\tests\browser\unified-image-command.spec.ts:662:56
+
+    Error Context: test-results\unified-image-command-actu-a3ca7-ut-covering-canvas-controls\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('.canvas-node-image').first().getByRole('button', { name: '切换全部模型' })
+
+
+      660 |   expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(params!.x);
+      661 |   await button.click();
+    > 662 |   await source.getByRole("button", { name: "切换全部模型" }).click();
+          |                                                        ^
+      663 |   await expect(
+      664 |     source.getByRole("menuitemradio", { name: model, exact: false }),
+      665 |   ).toContainText(model);
+        at D:\kk-studio\.worktrees\TASK-CHERRY-RED-001\.tmp\cherry-red\baseline-source\tests\browser\unified-image-command.spec.ts:662:56
+
+    Error Context: test-results\unified-image-command-actu-a3ca7-ut-covering-canvas-controls-retry1\error-context.md
+
+  5 failed
+    tests\browser\settings-scroll.spec.ts:38:1 › 插件、技能、伙伴标签可用方向键切换并显示对应内容 ──────────────────────────
+    tests\browser\ui-governance-visual.spec.ts:3:1 › Figma governance primitives keep one rendered geometry contract
+    tests\browser\ui-motion.spec.ts:47:1 › 视频编辑器只在选中时出现，参数与提示词在切换后保留 ───────────────────────────────
+    tests\browser\ui-motion.spec.ts:83:1 › 任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响画布 ─────────────
+    tests\browser\unified-image-command.spec.ts:641:1 › actual long model identifiers remain readable without covering canvas controls
+  8 passed (2.6m)

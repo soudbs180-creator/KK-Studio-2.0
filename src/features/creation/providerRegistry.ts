@@ -134,16 +134,19 @@ export function writeProviderConnections(
   }
 }
 
-export function addProviderConnection(
+export function mergeProviderConnection(
+  current: readonly ProviderConnection[],
   connection: ProviderConnection,
 ): ProviderConnection[] {
-  const current = readProviderConnections();
   const previous = current.find((item) => item.id === connection.id);
   const identityChanged =
     previous !== undefined &&
     (previous.baseUrl !== connection.baseUrl ||
       previous.credentialRef !== connection.credentialRef ||
       previous.model !== connection.model ||
+      (previous.protocol ?? "openai-compatible") !==
+        (connection.protocol ?? "openai-compatible") ||
+      (previous.authMode ?? "api_key") !== (connection.authMode ?? "api_key") ||
       previous.kind !== connection.kind);
   // Saving edited metadata must not reset a provider that the worker already
   // cooled down or quarantined. A changed generation identity is separately
@@ -154,7 +157,9 @@ export function addProviderConnection(
         state: previous.state,
         activeJobs: previous.activeJobs,
         cooldownUntil: previous.cooldownUntil,
-        lastHealthCheckAt: previous.lastHealthCheckAt,
+        lastHealthCheckAt: identityChanged
+          ? undefined
+          : previous.lastHealthCheckAt,
         healthRevision: identityChanged
           ? (previous.healthRevision ?? 0) + 1
           : previous.healthRevision,
@@ -171,6 +176,13 @@ export function addProviderConnection(
     ...current.filter((item) => item.id !== nextConnection.id),
     normalizeProviderConnection(nextConnection)!,
   ];
+  return next;
+}
+
+export function addProviderConnection(
+  connection: ProviderConnection,
+): ProviderConnection[] {
+  const next = mergeProviderConnection(readProviderConnections(), connection);
   writeProviderConnections(next);
   return next;
 }
@@ -209,9 +221,11 @@ export function releaseProviderLease(
   });
 }
 
+/** Text success proves health; only image success records image verification. */
 export function markProviderConnectionHealthy(
   id: string,
   expected?: { baseUrl?: string; credentialRef?: string },
+  generationKind: "image" | "text" = "image",
 ): ProviderConnection[] {
   const validatedAt = new Date().toISOString();
   return updateProviderConnection(id, (connection) => {
@@ -230,8 +244,12 @@ export function markProviderConnectionHealthy(
       cooldownUntil: undefined,
       lastHealthCheckAt: validatedAt,
       healthRevision: (connection.healthRevision ?? 0) + 1,
-      verificationStatus: "verified",
-      lastSuccessfulGenerationAt: validatedAt,
+      ...(generationKind === "image"
+        ? {
+            verificationStatus: "verified" as const,
+            lastSuccessfulGenerationAt: validatedAt,
+          }
+        : {}),
     };
   });
 }
@@ -329,8 +347,23 @@ export function managedConnections(
   return connections.filter(canEnterManagedPool);
 }
 
-/** Bridges the existing single-provider settings into the connection registry. */
-export function connectionFromModelProfile(
+/** Legacy profiles are safe to restore only when their account is unique. */
+export function findModelProfileConnection(
+  profile: ModelProviderProfile,
+  connections: ProviderConnection[],
+): ProviderConnection | undefined {
+  const matches = connections.filter(
+    (item) =>
+      item.baseUrl === profile.baseUrl && item.provider === profile.name,
+  );
+  if (profile.connectionId)
+    return matches.find((item) => item.id === profile.connectionId);
+  if (matches.length === 1) return matches[0];
+  return undefined;
+}
+
+/** Build a new account without borrowing another account's opaque identity. */
+export function newModelProfileConnection(
   profile: ModelProviderProfile,
 ): ProviderConnection {
   const credentialRef = credentialId(profile.baseUrl, profile.name);
@@ -342,6 +375,8 @@ export function connectionFromModelProfile(
     baseUrl: profile.baseUrl,
     credentialRef,
     model: profile.model,
+    ...(profile.protocol ? { protocol: profile.protocol } : {}),
+    ...(profile.authMode ? { authMode: profile.authMode } : {}),
     capabilities: {
       modalities: [modelSupportsKind(profile.model, "text") ? "text" : "image"],
       operations: ["generate", "edit", "inpaint", "outpaint", "batch"],
@@ -356,4 +391,34 @@ export function connectionFromModelProfile(
     concurrencyLimit: 2,
     verificationStatus: "unverified",
   };
+}
+
+/** Bridges a selected settings profile into its exact registered account. */
+export function connectionFromModelProfile(
+  profile: ModelProviderProfile,
+): ProviderConnection {
+  const connections = readProviderConnections();
+  const existing = findModelProfileConnection(profile, connections);
+  if (
+    !existing &&
+    (profile.connectionId ||
+      connections.filter(
+        (item) =>
+          item.baseUrl === profile.baseUrl && item.provider === profile.name,
+      ).length > 1)
+  )
+    throw new Error("请在模型接入中明确选择并保存要使用的账号。");
+  const connection = newModelProfileConnection(profile);
+  return existing
+    ? {
+        ...existing,
+        model: profile.model,
+        protocol: profile.protocol,
+        authMode: profile.authMode,
+        capabilities:
+          existing.model === profile.model
+            ? existing.capabilities
+            : connection.capabilities,
+      }
+    : connection;
 }

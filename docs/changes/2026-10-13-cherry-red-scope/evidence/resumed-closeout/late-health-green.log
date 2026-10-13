@@ -1,0 +1,32 @@
+[WebServer] (node:65176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 21 tests using 2 workers
+
+(node:63616) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\browser\provider-scheduling.spec.ts:63:3 › 首页cooldown不创建任务且草稿保留 (1.2s)
+  ok  3 tests\browser\provider-scheduling.spec.ts:63:3 › 首页quarantined不创建任务且草稿保留 (921ms)
+  ok  2 tests\browser\provider-conversation.spec.ts:65:5 › late 401 leaves the saved protocol connection healthy (2.5s)
+  ok  4 tests\browser\provider-scheduling.spec.ts:63:3 › 首页disabled不创建任务且草稿保留 (1.1s)
+  ok  6 tests\browser\provider-scheduling.spec.ts:63:3 › 首页capacity不创建任务且草稿保留 (1.9s)
+  ok  5 tests\browser\provider-conversation.spec.ts:65:5 › late 401 leaves the saved auth connection healthy (3.1s)
+  ok  7 tests\browser\provider-scheduling.spec.ts:63:3 › 首页capability不创建任务且草稿保留 (913ms)
+  ok  9 tests\browser\provider-scheduling.spec.ts:96:3 › 审批等待期间quarantined阻止HTTP且不释放其他任务槽位 (1.3s)
+  ok  8 tests\browser\provider-conversation.spec.ts:65:5 › late 401 leaves the saved revision connection healthy (2.1s)
+  ok 10 tests\browser\provider-scheduling.spec.ts:96:3 › 审批等待期间capacity阻止HTTP且不释放其他任务槽位 (1.3s)
+  ok 11 tests\browser\provider-conversation.spec.ts:65:5 › late 429 leaves the saved protocol connection healthy (2.0s)
+  ok 12 tests\browser\provider-scheduling.spec.ts:121:1 › 429重试等待deadline且403隔离后不再提交 (3.1s)
+  ok 13 tests\browser\provider-conversation.spec.ts:65:5 › late 429 leaves the saved auth connection healthy (2.4s)
+  ok 14 tests\browser\provider-scheduling.spec.ts:164:3 › 对话固定连接quarantined不回退且保留草稿 (1.3s)
+  ok 15 tests\browser\provider-conversation.spec.ts:65:5 › late 429 leaves the saved revision connection healthy (2.1s)
+  ok 16 tests\browser\provider-scheduling.spec.ts:164:3 › 对话固定连接removed不回退且保留草稿 (1.5s)
+  ok 17 tests\browser\provider-conversation.spec.ts:119:1 › explicit text declarations remain selectable on a connection with an older image default (1.5s)
+  ok 18 tests\browser\provider-scheduling.spec.ts:208:1 › 新建未绑定空项目可以首次使用可用连接 (1.6s)
+  ok 19 tests\browser\provider-conversation.spec.ts:130:1 › two model replies use frozen routes, independent multi-turn history and existing durable tasks (2.5s)
+  ok 20 tests\browser\provider-scheduling.spec.ts:224:1 › 5xx退化连接仅显式重试恢复并保留原绑定 (2.6s)
+  ok 21 tests\browser\provider-conversation.spec.ts:196:1 › one explicit rejection preserves the other reply and does not retry (2.5s)
+
+  21 passed (48.6s)

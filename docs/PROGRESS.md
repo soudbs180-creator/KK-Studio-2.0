@@ -2,7 +2,7 @@
 
 ## 2026-10-13 TASK-ENG-001 PR #56 主线承接（REVIEW / NOT_VERIFIED）
 
-- 基于 `origin/main@bcf55851d296c753d9610e86f1e32bf8db333a41` 重建承接提交；候选精确 HEAD 以本 checkout 的 `git rev-parse HEAD` 与对应 delivery 日志为准；PR #56 原 HEAD、主线历史和 `TASK-ENG-001` 独立交付包均保留。
+- 基于 `origin/main@694a0060d296c753d9610e86f1e32bf8db333a41` 重建承接提交；候选精确 HEAD 以本 checkout 的 `git rev-parse HEAD` 与对应 delivery 日志为准；PR #56 原 HEAD、主线历史和 `TASK-ENG-001` 独立交付包均保留。
 - 已解决 `package.json`、`docs/engineering/DEVELOPMENT.md`、`docs/governance/task-ledger.json`、`docs/governance/TASK_LEDGER.md` 四处冲突；主线版本/治理命令保留，代码健康与 Windows footgun 检查追加，账本从主线 124 条记录加上当前 schema 的 `TASK-ENG-001`。
 - 修复 `**/` glob 的零层/多层目录匹配并补回归测试；补齐所有当前 workflow action 的 commit SHA 固定（含 `dtolnay/rust-toolchain` 与 stable 输入）；最终复审修复工作区的本地 lint、typecheck、1019 项 Node 测试（1005 pass、14 skipped、0 fail）、版本、治理、文档和 footgun 检查均已通过。基线缺少治理配置时工具按 fail-closed 回退 blocking，未声称 advisory。
 - `9c849aa2ac640a3db4a05335a537247fbe1b2a4d` 的 Hosted quality/git-guards 全部成功；用户随后授权合并。最终独立复审仍发现 Rust action 输入、门禁映射、开关串读、重复模式豁免及清单 revision 五项阻断，因此继续在原 PR 修复并等待新 HEAD 的独立复审与 Hosted CI；本记录不表示 PR #56 已合并 main 或已发布。
@@ -971,3 +971,8 @@ TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，�
 - 本地已登录 Codex 账号经 KK 浏览器工作区真实验证：文本调用成功、Codex 内置图片生成成功并回写画布、`canvas_apply_ops` 新增文本节点成功，随后由 Codex 只读读取并确认节点存在。
 - 图片卡片按要求显示 `图片模型未报告` 与 `来源：Codex 内置生图`，没有把 Codex 名称误当成图片模型名。
 - 首次联调发现的默认模型问题已修复并复验：旧缓存 `gpt-6.1-sol` 会按 Agent `/models` 列表回退到 `gpt-6-astra`，不显式选模型的 KK 文本调用已成功；项目图片模型也不会传给 Codex 推理接口。详见 [kk 模型能力验证](changes/2026-10-10-kk-model-capability/verification.md)。
+
+
+## 2026-10-13 Cherry 融合集成候选
+
+基于 origin/main@694a0060 承接已验证净改动；保留现行治理和全部原账本任务。完整本地 verify 520 浏览器通过，154 Rust通过，真实 Ollama Native13组通过。最终 mainline 构建、Hosted、独立补审和用户验收继续以本次 [验证](changes/2026-10-13-cherry-red-scope/verification.md) 为准，任务未标 DONE。

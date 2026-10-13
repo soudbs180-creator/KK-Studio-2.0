@@ -1,0 +1,51 @@
+[WebServer] (node:93584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:87808) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\browser\capability-model-access.spec.ts:22:1 › 原生配置写入失败不发布新配置，也不轮换已验证账号的密钥 (714ms)
+(node:48648) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\browser\capability-model-access.spec.ts:22:1 › 原生配置写入失败不发布新配置，也不轮换已验证账号的密钥 (retry #1) (817ms)
+
+
+  1) tests\browser\capability-model-access.spec.ts:22:1 › 原生配置写入失败不发布新配置，也不轮换已验证账号的密钥 ──────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "image-test"
+    Received: "replacement-model"
+
+      51 |     calls: (window as Window & { __failedSaveCalls: string[] }).__failedSaveCalls,
+      52 |   }), BROWSER_STORAGE_KEYS);
+    > 53 |   expect(observed.profile.model).toBe(original.model);
+         |                                  ^
+      54 |   expect(observed.connections[0].model).toBe(original.model);
+      55 |   expect(observed.calls).not.toContain("credential_set");
+      56 |   expect(observed.connections[0].verificationStatus).toBe("verified");
+        at D:\kk-studio\.worktrees\TASK-CHERRY-RED-001\tests\browser\capability-model-access.spec.ts:53:34
+
+    Error Context: test-results\capability-model-access-原生配置写入失败不发布新配置，也不轮换已验证账号的密钥\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "image-test"
+    Received: "replacement-model"
+
+      51 |     calls: (window as Window & { __failedSaveCalls: string[] }).__failedSaveCalls,
+      52 |   }), BROWSER_STORAGE_KEYS);
+    > 53 |   expect(observed.profile.model).toBe(original.model);
+         |                                  ^
+      54 |   expect(observed.connections[0].model).toBe(original.model);
+      55 |   expect(observed.calls).not.toContain("credential_set");
+      56 |   expect(observed.connections[0].verificationStatus).toBe("verified");
+        at D:\kk-studio\.worktrees\TASK-CHERRY-RED-001\tests\browser\capability-model-access.spec.ts:53:34
+
+    Error Context: test-results\capability-model-access-原生配置写入失败不发布新配置，也不轮换已验证账号的密钥-retry1\error-context.md
+
+  1 failed
+    tests\browser\capability-model-access.spec.ts:22:1 › 原生配置写入失败不发布新配置，也不轮换已验证账号的密钥 ───────────────

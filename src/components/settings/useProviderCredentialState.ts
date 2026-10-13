@@ -5,6 +5,7 @@ export function useProviderCredentialState(
   baseUrl: string,
   credentialRef: string,
   requestRef: MutableRefObject<AbortController | null>,
+  enabled = true,
 ) {
   const [hasStoredKey, setHasStoredKey] = useState(false);
 
@@ -16,6 +17,10 @@ export function useProviderCredentialState(
     [requestRef],
   );
   useEffect(() => {
+    if (!enabled) {
+      setHasStoredKey(false);
+      return;
+    }
     let active = true;
     void loadApiKey(baseUrl, credentialRef)
       .then((value) => {
@@ -27,7 +32,7 @@ export function useProviderCredentialState(
     return () => {
       active = false;
     };
-  }, [baseUrl, credentialRef]);
+  }, [baseUrl, credentialRef, enabled]);
 
   return { hasStoredKey, setHasStoredKey };
 }

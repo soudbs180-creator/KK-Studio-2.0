@@ -1,3 +1,14 @@
+import { useWorkspaceNavigation } from "./components/useWorkspaceNavigation";
+import { useSkillRegistry } from "./features/skills/useSkillRegistry";
+import {
+  nativeRequestForTask,
+  compileTaskPrompt,
+} from "./features/creation/nativeTaskRequest";
+import {
+  prepareImageSubmissionUi,
+  readHomeModelConfiguration,
+} from "./features/creation/submissionUiState";
+import { submitProviderConversation } from "./features/conversation/providerConversationSubmission";
 import React, {
   lazy,
   useEffect,
@@ -15,6 +26,13 @@ import type { ModelSelection } from "./features/models/modelSelection";
 import { useSidebarLayout } from "./components/useSidebarLayout";
 import Canvas from "./components/Canvas";
 import ConversationPanel from "./components/ConversationPanel";
+import "./styles/message-content.css";
+import "./styles/assistant-picker.css";
+import "./styles/provider-conversation.css";
+import "./styles/window-appearance.css";
+import { restoreWindowAppearance } from "./integrations/windowAppearance";
+import type { ProviderConversationInput } from "./components/ProviderConversationPanel";
+import { isAssistant } from "./features/assistants/assistantProfiles";
 import DeferredPanelBoundary from "./components/DeferredPanelBoundary";
 import Modal from "./components/Modal";
 import TaskExecutionApproval from "./components/TaskExecutionApproval";
@@ -27,11 +45,8 @@ import {
   type SettingsSection,
 } from "./components/settings/SettingsSectionData";
 import StartPage from "./components/StartPage";
-import { ensureTemplates } from "./features/skills/templateSkills";
 import {
-  createSkillRegistry,
   applySkillInstructions,
-  SKILLS_CHANGED_EVENT,
   type SkillRecord,
 } from "./features/skills/skillRegistry";
 import {
@@ -51,6 +66,7 @@ import {
   type AgentBridge,
 } from "./features/agent/agentConnection.ts";
 import { googleAgentConnection } from "./features/agent/googleAgentConnection.ts";
+import { appendToActiveAgentDraft } from "./features/agent/agentDraftActions";
 
 import { pluginLoader } from "./features/plugins/pluginLoader.ts";
 import {
@@ -105,6 +121,8 @@ import {
   canvasImageAttachments,
   prepareImageTask,
   ImageTaskCommandError,
+  rootItemId,
+  projectConnectionId,
 } from "./features/creation/imageTaskCommand";
 import {
   CanvasImageCommandContext,
@@ -115,7 +133,6 @@ import {
   composeEditResult,
   composeNativeEditAsset,
 } from "./features/image-edit/editTasks.ts";
-import { compileEditPrompt } from "./features/image-edit/prompt.ts";
 import { imageResultContext } from "./features/image-edit/context.ts";
 import { ImageEditMappingError } from "./features/image-edit/imageProcessing.ts";
 import { imageRegeneration } from "./features/image-edit/regeneration.ts";
@@ -131,6 +148,7 @@ import { createProjectCanvas } from "./domain/projectCanvas";
 import {
   parseModelProvider,
   MODEL_PROVIDER_STORAGE_KEY,
+  isStrictLoopbackProviderUrl,
 } from "./domain/modelProvider";
 import {
   loadProviderConnectionsDurable,
@@ -146,8 +164,7 @@ import {
   ProviderSubmissionError,
 } from "./features/creation/providerSubmission";
 import { mapWithConcurrency } from "./features/creation/generationQueue";
-import { compileDesignPrompt } from "./features/creation/promptCompiler";
-import { getDisabledReason, getGenerationUiState } from "./domain/uiGovernance";
+import { getDisabledReason } from "./domain/uiGovernance";
 
 /** Capacity failure hint: name connections the user can switch to right away. */
 function capacitySwitchHint(currentId: string | undefined): string {
@@ -167,7 +184,6 @@ function capacitySwitchHint(currentId: string | undefined): string {
     available.length > 3 ? " 等" : ""
   }；可在设置中切换连接或模型后重试。`;
 }
-
 import {
   abortedAfterProviderSubmission,
   canRetryTask,
@@ -183,6 +199,7 @@ import {
   cancelNativeTask,
   getNativeTask,
   reconcileNativeTasks,
+  hasArchivedOutputEvidence,
   submitNativeTask,
   validateNativeTaskRecord,
   usesNativeTaskHost,
@@ -214,6 +231,7 @@ import "./styles/workspace.css";
 import "./styles/sidebar.css";
 import "./styles/account-popup.css";
 import "./styles/catalog-pages.css";
+import "./styles/extensions.css";
 // Keep Figma-scoped conversation geometry after the legacy workspace rules.
 import "./styles/conversation-panel.css";
 import "./styles/model-picker.css";
@@ -232,11 +250,7 @@ const InfoPanel = lazy(() => import("./components/InfoPanel"));
 const TaskWorkbench = lazy(() => import("./components/TaskWorkbench"));
 
 export default function App() {
-  const [active, setActive] = useState("landing");
-  const [workspaceVisited, setWorkspaceVisited] = useState(false);
-  useEffect(() => {
-    if (active === "workspace") setWorkspaceVisited(true);
-  }, [active]);
+  const nav = useWorkspaceNavigation();
   const [modal, setModal] = useState("");
   const [settingsSection, setSettingsSection] =
     useState<SettingsSection>("general");
@@ -247,25 +261,7 @@ export default function App() {
   const [chat, setChat] = useState(true);
   const [mobileChat, setMobileChat] = useState(false);
   const [assets, setAssets] = useState(initialAssets);
-  const [skillRegistry] = useState(() => {
-    const registry = createSkillRegistry();
-    if (!registry.persistenceWarning) ensureTemplates(registry, false);
-    return registry;
-  });
-  const [, refreshSkills] = useState(0);
-  useEffect(() => {
-    try {
-      if (!skillRegistry.persistenceWarning) ensureTemplates(skillRegistry);
-      skillRegistry.persistPending();
-    } catch {
-      // The Skill page will surface a storage error without blocking the shell.
-    }
-  }, [skillRegistry]);
-  useEffect(() => {
-    const syncSkills = () => refreshSkills((value) => value + 1);
-    window.addEventListener(SKILLS_CHANGED_EVENT, syncSkills);
-    return () => window.removeEventListener(SKILLS_CHANGED_EVENT, syncSkills);
-  }, []);
+  const { registry: skillRegistry } = useSkillRegistry();
   const assetArchive = useAssetArchive(setAssets);
   const [subjects, setSubjects] = useState(initialSubjects);
   const [localWorkflows, setLocalWorkflows] = useState<WorkflowRecord[]>(() =>
@@ -299,30 +295,18 @@ export default function App() {
         }
       } catch {
         // Keep the browser view on native failure; settings surface the error.
+        console.warn(
+          "Native provider configuration was unavailable; cached metadata remains unconfirmed.",
+        );
       }
     })();
     return () => {
       active = false;
     };
   }, []);
-  const homeModelConfig = useMemo(() => {
-    void providerVersion;
-    try {
-      const profile = parseModelProvider(
-        localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
-      ).profile;
-      const connection = readProviderConnections().find(
-        (item) =>
-          Boolean(item.model?.trim()) &&
-          item.state !== "disabled" &&
-          item.capabilities.modalities.includes("image"),
-      );
-      const model = profile.model.trim() || connection?.model?.trim() || "";
-      return { model, configured: Boolean(model) };
-    } catch {
-      return { model: "", configured: false };
-    }
-  }, [providerVersion]);
+  const homeModelConfig = useMemo(readHomeModelConfiguration, [
+    providerVersion,
+  ]);
   function saveWorkflow(workflow: WorkflowRecord): void {
     setLocalWorkflows((current) => {
       const next = [
@@ -334,17 +318,6 @@ export default function App() {
     });
   }
 
-  function hasArchivedOutputEvidence(
-    task: Pick<CreationTask, "kind">,
-    output: Pick<CreationTaskOutput, "assetId" | "text" | "status">,
-  ): boolean {
-    if (output.status !== "succeeded") return false;
-    if (task.kind !== "text") return Boolean(output.assetId);
-    return Boolean(
-      output.text?.trim() &&
-      new TextEncoder().encode(output.text).length <= 32768,
-    );
-  }
   function deleteWorkflow(workflow: WorkflowRecord): void {
     setLocalWorkflows((current) => {
       const next = current.filter((item) => item.id !== workflow.id);
@@ -398,13 +371,6 @@ export default function App() {
   canvasItemsRef.current = canvasItems;
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(() => new Set());
   const [likedIds, setLikedIds] = useState<Set<string>>(() => new Set());
-  function rootItemId(project: CreationProject): string | null {
-    return (
-      project.items.find((item) => item.id === `${project.id}-prompt`)?.id ??
-      project.items.find((item) => item.kind === "image")?.id ??
-      null
-    );
-  }
   useEffect(() => {
     const ids = new Set(canvasItems.map((item) => item.id));
     const removeMissing = (current: Set<string>): Set<string> => {
@@ -458,6 +424,46 @@ export default function App() {
     } catch {
       return "应用失败：Skill 指令与当前草稿合计超过 4000 字，原草稿未改变。";
     }
+  }
+  function applyPartnerToHome(instructions: string): string {
+    const project = nav.partnerProjectId
+      ? creationRef.current.projects.find(
+          (item) => item.id === nav.partnerProjectId,
+        )
+      : undefined;
+    if (nav.partnerProjectId && !project) return "原项目已不可用，未修改草稿。";
+    if (project && creationRef.current.activeProjectId !== project.id)
+      return "原项目已不是当前项目，未修改草稿。";
+    if (project) {
+      // The active composer acknowledges its source; inactive Agent drafts
+      // cannot receive instructions or redirect them into the API draft.
+      for (const draftKey of [project.id, `google-${project.id}`]) {
+        const result = appendToActiveAgentDraft(draftKey, instructions);
+        if (result.handled) {
+          if (result.applied) nav.setActive("workspace");
+          return result.message;
+        }
+      }
+    }
+    const draft = project?.composerDraft ?? creationRef.current.homeDraft;
+    const prompt = [draft.prompt.trim(), instructions]
+      .filter(Boolean)
+      .join("\n\n");
+    if (prompt.length > 4000)
+      return "应用失败：角色说明与草稿合计超过 4000 字，原草稿未改变。";
+    if (project)
+      updateProject(project.id, (current) => ({
+        ...current,
+        composerDraft: {
+          ...current.composerDraft,
+          prompt,
+          updatedAt: Date.now(),
+        },
+        updatedAt: Date.now(),
+      }));
+    else updateHomeDraft({ ...draft, prompt, updatedAt: Date.now() });
+    nav.setActive(project ? "workspace" : "landing");
+    return "协作角色已加入草稿，请选择本次任务的模型。";
   }
   function applySkillToProject(record: SkillRecord): string {
     const project = creationRef.current.projects.find(
@@ -693,6 +699,7 @@ export default function App() {
       creationRef.current.projects.find((item) => item.id === projectId);
     const task = project?.tasks.find((item) => item.id === taskId);
     if (!project || !task || taskControllers.current[taskId]) return;
+    if (!["queued", "running"].includes(task.status)) return;
     if (task.imageEdit) {
       const live =
         creationRef.current.projects.find((p) => p.id === projectId) ?? project;
@@ -803,7 +810,9 @@ export default function App() {
         const publishedSubmissionState = deliveryErrorMessage
           ? ("unknown" as const)
           : submissionState;
-        const sourceItemId = task.sourceItemId ?? rootItemId(current);
+        const sourceItemId = task.conversationRoundId
+          ? undefined
+          : (task.sourceItemId ?? rootItemId(current));
         const nextProject = appendImageTaskResults(
           current,
           acceptedResults,
@@ -901,12 +910,17 @@ export default function App() {
     let reservation: ProviderSubmissionReservation | undefined;
     const nativeTaskHost = usesNativeTaskHost();
     const assertTextCurrent = () => {
-      if (task.kind === "text" && !navigator.onLine)
+      if (
+        task.kind === "text" &&
+        !navigator.onLine &&
+        !isStrictLoopbackProviderUrl(task.providerBaseUrl ?? "")
+      )
         throw new Error("当前离线，未提交文本任务；草稿已保留。");
       if (task.kind === "text")
         assertLiveTextTask(
           creationRef.current.projects.find((item) => item.id === projectId),
           task,
+          projectId,
         );
     };
     try {
@@ -916,16 +930,7 @@ export default function App() {
         publish("succeeded");
         return;
       }
-      const compiledPrompt =
-        task.kind === "text" || task.imageEdit || task.imageEditContext
-          ? task.prompt
-          : compileDesignPrompt(task.prompt, {
-              referenceRoles: task.attachments.map(
-                (attachment) => attachment.role,
-              ),
-              referenceCount: task.attachments.length,
-              outputCount: task.requestedOutputs,
-            });
+      const compiledPrompt = compileTaskPrompt(task);
       const promptHash = await hashPrompt(compiledPrompt);
       if (controller.signal.aborted) throw new Error("任务已停止。");
       if (!nativeTaskHost)
@@ -934,6 +939,8 @@ export default function App() {
             id: task.providerConnectionId,
             baseUrl: task.providerBaseUrl,
             credentialRef: task.providerCredentialRef,
+            protocol: task.providerProtocol,
+            authMode: task.providerAuthMode,
             referenceCount: task.attachments.length,
             kind: task.kind === "text" ? "text" : "image",
             model: task.model,
@@ -964,6 +971,8 @@ export default function App() {
             id: task.providerConnectionId,
             baseUrl: task.providerBaseUrl,
             credentialRef: task.providerCredentialRef,
+            protocol: task.providerProtocol,
+            authMode: task.providerAuthMode,
             referenceCount: task.attachments.length,
             kind: task.kind === "text" ? "text" : "image",
             model: task.model,
@@ -976,37 +985,16 @@ export default function App() {
             explicitRetry: explicitRetry || Boolean(task.retryOfTaskId),
           },
         );
-        const attachments = task.attachments.map((attachment) => {
-          if (!attachment.assetId)
-            throw new Error(
-              "Desktop 参考图尚未归档到原生素材库，当前未提交原生任务。",
-            );
-          return { assetId: attachment.assetId, name: attachment.name };
-        });
-        nativeSubmissionStarted = true;
-        let nativeRecord = await submitNativeTask({
-          imageEditRequired: task.imageEdit
-            ? true
-            : task.imageEditContext
-              ? false
-              : undefined,
-          kind: task.kind === "text" ? "text" : undefined,
-          concurrencyLimit: nativeConnection?.concurrencyLimit,
-          taskId: task.id,
-          idempotencyKey: task.idempotencyKey,
-          baseUrl: task.providerBaseUrl,
-          credentialRef: task.providerCredentialRef ?? "",
-          model: task.model,
-          prompt: compiledPrompt,
-          outputIndices: pendingIndices,
-          attachments,
-          providerName: task.providerName,
+        const request = nativeRequestForTask(
+          task,
+          compiledPrompt,
+          pendingIndices,
+          nativeConnection?.concurrencyLimit,
           promptHash,
-          size: task.imageSize,
-          maskAssetId: task.imageEdit?.nativeMask
-            ? task.imageEdit.maskAssetId
-            : undefined,
-        });
+          task.providerBaseUrl,
+        );
+        nativeSubmissionStarted = true;
+        let nativeRecord = await submitNativeTask(request);
         durableSubmission = true;
         nativeRecord = validateNativeTaskRecord(
           nativeRecord,
@@ -1347,6 +1335,9 @@ export default function App() {
           providerBaseUrl: task.providerBaseUrl,
           credentialRef: task.providerCredentialRef,
           idempotencyKey: task.idempotencyKey,
+          protocol: task.providerProtocol,
+          authMode: task.providerAuthMode,
+          messages: task.conversationMessages,
           signal: controller.signal,
           beforeRequest: () => {
             assertTextCurrent();
@@ -1374,7 +1365,14 @@ export default function App() {
         publish("succeeded", undefined, "terminal");
         await persistence.flush();
         if (task.providerConnectionId && reservation?.healthUnchanged())
-          markProviderConnectionHealthy(task.providerConnectionId);
+          markProviderConnectionHealthy(
+            task.providerConnectionId,
+            {
+              baseUrl: task.providerBaseUrl,
+              credentialRef: task.providerCredentialRef,
+            },
+            "text",
+          );
         return;
       }
       const generated = await generateImages({
@@ -1578,6 +1576,7 @@ export default function App() {
         const failure = generated.failure;
         if (
           failure instanceof GenerationProviderError &&
+          reservation?.healthUnchanged() &&
           [
             "rate_limited",
             "unauthorized",
@@ -1691,6 +1690,7 @@ export default function App() {
       if (
         task.providerConnectionId &&
         reservation &&
+        reservation.healthUnchanged() &&
         !controller.signal.aborted &&
         error instanceof GenerationProviderError &&
         [
@@ -2062,48 +2062,17 @@ export default function App() {
       (project) => project.id === projectId,
     );
     if (request.origin !== "home" && !original) return "请先新建或打开项目。";
-    const activeTask = original?.tasks.find(
-      (task) => task.status === "queued" || task.status === "running",
-    );
-    const codexCanvas =
-      request.origin === "canvas" &&
-      original?.items.some(
-        (item) =>
-          item.id === request.input.sourceItemId &&
-          item.generationSource === "codex",
+    let preparation: ReturnType<typeof prepareImageSubmissionUi>;
+    try {
+      preparation = prepareImageSubmissionUi(
+        request,
+        original,
+        homeModelConfig.configured,
       );
-    const requestModel =
-      request.origin === "canvas" ? request.input.model : request.input.model;
-    let effectivePrompt = request.input.prompt;
-    if (request.origin === "canvas" && request.input.imageEdit) {
-      try {
-        const compiled = compileEditPrompt(
-          effectivePrompt,
-          request.input.imageEdit.document,
-        );
-        if (!effectivePrompt.trim() && compiled.instructions.length)
-          effectivePrompt = "按已确认的区域修改意见编辑图片。";
-      } catch (error) {
-        return error instanceof Error ? error.message : "区域引用无效。";
-      }
+    } catch (error) {
+      return error instanceof Error ? error.message : "区域引用无效。";
     }
-    const uiState = getGenerationUiState({
-      prompt: effectivePrompt,
-      inputValid: Boolean(effectivePrompt.trim()),
-      modelConfigured:
-        request.origin === "agent" || codexCanvas || homeModelConfig.configured,
-      quotaAvailable: true,
-      online: typeof navigator === "undefined" ? true : navigator.onLine,
-      serviceConfigured:
-        request.origin === "agent" ||
-        codexCanvas ||
-        (homeModelConfig.configured && Boolean(requestModel.trim())),
-      taskStatus: activeTask
-        ? activeTask.status === "queued"
-          ? "queued"
-          : "running"
-        : undefined,
-    });
+    const { state: uiState, prompt: effectivePrompt } = preparation;
     if (uiState !== "ready" && request.origin !== "agent")
       return getDisabledReason(uiState) ?? "当前任务暂不可提交。";
     const signal =
@@ -2292,7 +2261,7 @@ export default function App() {
       });
       if (!current || activeProjectIdRef.current === projectId)
         replaceCanvasItems(nextProject.items);
-      if (!current) setActive("workspace");
+      if (!current) nav.setActive("workspace");
       // The queued task and its stable idempotency key must survive a crash
       // before any provider request is allowed to start.
       await persistence.flush();
@@ -2322,6 +2291,16 @@ export default function App() {
     input: CreateProjectInput,
   ): Promise<string | undefined> {
     return submitImageCommand({ origin: "home", input });
+  }
+  function handleProviderConversation(input: ProviderConversationInput) {
+    return submitProviderConversation(input, {
+      creationRef,
+      activeProjectIdRef,
+      updateProject,
+      flush: persistence.flush,
+      executeTask,
+      skillRegistry,
+    });
   }
   async function handleSendMessage(message: string): Promise<boolean | string> {
     const project = creationRef.current.projects.find(
@@ -2473,14 +2452,14 @@ export default function App() {
       activeProjectId: nextProject.id,
     });
     replaceCanvasItems(nextProject.items);
-    setActive("workspace");
+    nav.setActive("workspace");
     return nextProject.id;
   }
   function openSavedProject(id: string): void {
     if (!creationRef.current.projects.some((project) => project.id === id))
       return;
     commitCreation({ ...creationRef.current, activeProjectId: id });
-    setActive("workspace");
+    nav.setActive("workspace");
     setModal("");
   }
   function renameSavedProject(id: string, title: string): void {
@@ -2518,7 +2497,7 @@ export default function App() {
       activeProjectId:
         current.activeProjectId === id ? null : current.activeProjectId,
     });
-    if (current.activeProjectId === id) setActive("projects");
+    if (current.activeProjectId === id) nav.setActive("projects");
   }
   useEffect(() => {
     const shortcut = (event: KeyboardEvent): void => {
@@ -2545,6 +2524,7 @@ export default function App() {
       ).preferences;
     } catch {
       // Browser storage can be denied; retain the default theme preferences.
+      console.warn("Local theme preferences were unavailable; using defaults.");
     }
     const apply = () => {
       document.documentElement.dataset.accent = preferences.accent;
@@ -2558,6 +2538,7 @@ export default function App() {
         preferences.floatingLayout,
       );
     };
+    void restoreWindowAppearance(preferences.transparentWindow);
     const listener = (event: Event) => {
       preferences = (event as CustomEvent<SettingsPreferences>).detail;
       apply();
@@ -2571,12 +2552,32 @@ export default function App() {
     };
   }, []);
   function open(view: string): void {
+    if (view === "skills" || view.startsWith("skills/")) {
+      nav.setPartnerProjectId(
+        nav.active === "workspace" ? creationRef.current.activeProjectId : null,
+      );
+      const requestedView = view.split("/")[1];
+      nav.setExtensionView(
+        requestedView === "partners"
+          ? "partners"
+          : requestedView === "connectors"
+            ? "connectors"
+            : "skills",
+      );
+      nav.setActive("skills");
+      setModal("");
+      return;
+    }
     if (view === "new-project") {
       handleNewBlankProject();
       return;
     }
     if (view === "chat") {
-      if (active === "workspace" && chat && (!sidebar.narrow || mobileChat)) {
+      if (
+        nav.active === "workspace" &&
+        chat &&
+        (!sidebar.narrow || mobileChat)
+      ) {
         setChat(false);
         setMobileChat(false);
         return;
@@ -2588,7 +2589,7 @@ export default function App() {
       ) {
         handleNewBlankProject();
       } else {
-        setActive("workspace");
+        nav.setActive("workspace");
       }
       setChat(true);
       setMobileChat(sidebar.narrow);
@@ -2604,7 +2605,8 @@ export default function App() {
       const sectionAlias: Record<string, SettingsSection> = {
         plugins: "mcp",
         extensions: "extensions",
-        partners: "partners",
+        partners: "providers",
+        codex: "providers",
         skills: "skill",
         skill: "skill",
         mcp: "mcp",
@@ -2633,7 +2635,7 @@ export default function App() {
         ["landing", "workspace", "projects", "skills", "comfyui"].includes(view)
       )
         setMobileChat(false);
-      setActive(view);
+      nav.setActive(view);
       setModal("");
     } else setModal(view);
   }
@@ -2700,11 +2702,11 @@ export default function App() {
         <Sidebar
           active={
             sidebar.surface === "phone" &&
-            active === "workspace" &&
+            nav.active === "workspace" &&
             mobileChat &&
             chat
               ? "chat"
-              : active
+              : nav.active
           }
           onNavigate={open}
           collapsed={sidebar.collapsed}
@@ -2728,7 +2730,7 @@ export default function App() {
             onSave={persistence.retrySave}
             onDownload={persistence.downloadDraft}
           />
-          {active === "landing" && (
+          {nav.active === "landing" && (
             <StartPage
               onCreateProject={handleCreateProject}
               draft={creation.homeDraft}
@@ -2742,8 +2744,11 @@ export default function App() {
               defaultModel={homeModelConfig.model}
             />
           )}
-          {(active === "workspace" || workspaceVisited) && (
-            <div className="workspace-content" hidden={active !== "workspace"}>
+          {(nav.active === "workspace" || nav.workspaceVisited) && (
+            <div
+              className="workspace-content"
+              hidden={nav.active !== "workspace"}
+            >
               <CanvasImageCommandContext.Provider
                 value={{
                   items: activeProject?.items,
@@ -2776,15 +2781,7 @@ export default function App() {
                   cancel: cancelTask,
                   tasks: activeProject?.tasks ?? [],
                   model: activeProject?.model ?? "",
-                  providerConnectionId:
-                    activeProject?.composerDraft.providerConnectionId ??
-                    activeProject?.tasks.at(-1)?.providerConnectionId ??
-                    readProviderConnections().find(
-                      (connection) =>
-                        connection.baseUrl === activeProject?.providerBaseUrl &&
-                        connection.credentialRef ===
-                          activeProject?.providerCredentialRef,
-                    )?.id,
+                  providerConnectionId: projectConnectionId(activeProject),
                   textModel:
                     readProviderConnections().find(
                       (connection) =>
@@ -2947,9 +2944,14 @@ export default function App() {
                   onDeleteMessage={
                     activeProject ? handleDeleteMessage : undefined
                   }
-                  skills={skillRegistry.listRecords()}
+                  skills={skillRegistry
+                    .listRecords()
+                    .filter((record) => !isAssistant(record))}
+                  assistantRegistry={skillRegistry}
+                  onProviderConversation={handleProviderConversation}
+                  onCancelTask={cancelTask}
                   onApplySkill={applySkillToProject}
-                  voiceEnabled={active === "workspace" && chat}
+                  voiceEnabled={nav.active === "workspace" && chat}
                   agent={
                     activeProject
                       ? {
@@ -3013,20 +3015,23 @@ export default function App() {
               </div>
             </div>
           )}
-          {active === "skills" && (
+          {nav.active === "skills" && (
             <DeferredPanelBoundary key="skills">
               <SkillsPage
                 registry={skillRegistry}
                 onApply={applySkillToHome}
                 onOpenMcp={() => open("settings/mcp")}
+                onOpenModels={() => open("settings/providers")}
+                onApplyPartner={applyPartnerToHome}
+                defaultView={nav.extensionView}
               />
             </DeferredPanelBoundary>
           )}
-          {["projects", "comfyui"].includes(active) && (
-            <DeferredPanelBoundary key={active}>
+          {["projects", "comfyui"].includes(nav.active) && (
+            <DeferredPanelBoundary key={nav.active}>
               <LibraryPage
-                key={active}
-                view={active as "projects" | "comfyui"}
+                key={nav.active}
+                view={nav.active as "projects" | "comfyui"}
                 onOpen={open}
                 projects={creation.projects}
                 localWorkflows={localWorkflows}
@@ -3093,14 +3098,14 @@ export default function App() {
             ) : modal === "prompts" ? (
               <PromptLibraryPanel
                 target={
-                  active === "workspace" && activeProject
+                  nav.active === "workspace" && activeProject
                     ? "图片对话草稿"
                     : "首页草稿"
                 }
                 onClose={() => setModal("")}
                 onApply={(text) => {
                   const project =
-                    active === "workspace" ? activeProject : undefined;
+                    nav.active === "workspace" ? activeProject : undefined;
                   const draft =
                     project?.composerDraft ?? creationRef.current.homeDraft;
                   const prompt = [draft.prompt.trimEnd(), text]

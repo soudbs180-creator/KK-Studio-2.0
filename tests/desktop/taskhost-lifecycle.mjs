@@ -560,23 +560,59 @@ try {
       },
     },
   );
-  await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page
-    .getByRole("menu")
-    .getByRole("button", { name: /配置供应商/ })
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const settings = page.getByRole("dialog", { name: "设置" });
+  await settings.getByRole("button", { name: "模型接入", exact: true }).click();
+  await settings
+    .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
-  await page.getByLabel("提供商", { exact: true }).fill(providerName);
-  await page.getByLabel("接口地址").fill(baseUrl);
-  await page.getByLabel("API Key").fill(secret);
-  await page.getByLabel("模型名称").fill("image-test");
+  const fields = settings.getByRole("region", { name: "官方 API Key 配置" });
+  await fields.getByLabel("提供商", { exact: true }).fill(providerName);
+  await fields.getByLabel("接口地址").fill(baseUrl);
+  await fields.getByLabel("API Key", { exact: true }).fill(secret);
+  await fields.getByLabel("模型名称").fill("image-test");
   ownedCredentials.add(uiRef);
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await fields.getByRole("button", { name: "保存", exact: true }).click();
+  await expect(
+    fields.getByText("连接信息已保存。API Key 不会写入浏览器存储或项目快照。", {
+      exact: true,
+    }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page.getByLabel("生成数量").selectOption("4");
-  await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page.getByLabel("创作提示词").fill("ui-success");
-  await page.getByRole("button", { name: "开始创建项目" }).click();
+  async function createUiImageBatch(prompt) {
+    await page.getByRole("button", { name: "项目库", exact: true }).click();
+    await page.getByRole("button", { name: "新建项目", exact: true }).click();
+    await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
+    await page.getByRole("button", { name: "添加资源", exact: true }).click();
+    await page.getByRole("menuitem", { name: "图片", exact: true }).click();
+    const source = page.locator(".canvas-node-image").first();
+    await source.click();
+    await source.getByRole("button", { name: "画布模型", exact: true }).click();
+    const menu = source.getByRole("menu", { name: "选择模型", exact: true });
+    await menu.getByRole("searchbox").fill("image-test");
+    await expect(menu.getByRole("menuitemradio")).toHaveCount(1);
+    await menu.getByRole("menuitemradio").click();
+    await source.getByRole("button", { name: "生成数量", exact: true }).click();
+    await source
+      .getByRole("button", { name: "生成 4 个", exact: true })
+      .click();
+    await source.getByLabel("图片提示词").fill(prompt);
+    const sourceId = await source.getAttribute("data-node-id");
+    assert(sourceId, "The UI source must expose its exact saved identity");
+    await expect
+      .poll(async () => {
+        const state = await snapshot();
+        return state.projects
+          .find((project) => project.id === state.activeProjectId)
+          ?.items.find((item) => item.id === sourceId)?.parameters?.count;
+      })
+      .toBe("4");
+    await source.getByRole("button", { name: "生成图片", exact: true }).click();
+    const gate = page.getByRole("dialog", { name: "人工审批任务" });
+    if (await gate.isVisible())
+      await gate.getByRole("button", { name: "批准并提交" }).click();
+  }
+  await createUiImageBatch("ui-success");
   const approval = page.getByRole("dialog", { name: "人工审批任务" });
   if (await approval.isVisible())
     await approval.getByRole("button", { name: "批准并提交" }).click();
@@ -622,21 +658,9 @@ try {
     true,
     "The saved fixture credential must survive a native process restart",
   );
-  // Creating a project clears the Home draft. Select the persisted connection
-  // through the real menu rather than rewriting settings or credentials.
-  await page.getByRole("button", { name: "模型", exact: true }).click();
-  const modelMenu = page.getByRole("menu", { name: "选择模型" });
-  await modelMenu.getByRole("searchbox").fill("image-test");
-  await expect(modelMenu.getByRole("menuitemradio")).toHaveCount(1);
-  await modelMenu.getByRole("menuitemradio").click();
-  await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page.getByLabel("生成数量").selectOption("4");
-  await expect
-    .poll(async () => (await snapshot()).homeDraft.outputCount)
-    .toBe(4);
-  await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page.getByLabel("创作提示词").fill("ui-partial-restart");
-  await page.getByRole("button", { name: "开始创建项目" }).click();
+  // Four-output control is on image nodes in the current UI; keep the same
+  // real settings/menu/batch/restart evidence instead of altering batch size.
+  await createUiImageBatch("ui-partial-restart");
   await expect
     .poll(() => posts("ui-partial-restart"), { timeout: 10000 })
     .toBe(1);
@@ -674,10 +698,19 @@ try {
   assert.equal(unknown.idempotencyKey, uiPartial.idempotencyKey);
   assert.equal(posts("ui-partial-restart"), 1);
   await page.getByRole("button", { name: "项目库", exact: true }).click();
-  await page
-    .locator(".project-library-card")
-    .filter({ hasText: "ui-partial-restart" })
-    .click();
+  const expectedProject = (await snapshot()).projects.find((project) =>
+    project.tasks.some((task) => task.id === uiPartial.id),
+  );
+  for (
+    let index = 0;
+    index < (await page.locator(".project-library-card").count());
+    index++
+  ) {
+    await page.locator(".project-library-card").nth(index).click();
+    if ((await snapshot()).activeProjectId === expectedProject.id) break;
+    await page.getByRole("button", { name: "项目库", exact: true }).click();
+  }
+  assert.equal((await snapshot()).activeProjectId, expectedProject.id);
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
   await page.getByRole("button", { name: "打开任务列表" }).click();
   await page.getByRole("button", { name: "打开任务工作台" }).click();

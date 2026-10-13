@@ -9,6 +9,8 @@ import AgentUsageStatus from "./AgentUsageStatus";
 import type { AgentUsageWindow } from "../features/agent/agentUsage";
 import type { AgentDraftAttachment } from "../features/agent/agentAttachments";
 import type { CanvasCollectionItem } from "../domain/canvasItems";
+import MessageMarkdown from "./MessageMarkdown";
+import MessageActions from "./MessageActions";
 
 /** 本地 Agent 会话通道（画布旁对话面板与 canvas-agent 的桥）。 */
 export interface AgentConversationProps {
@@ -167,7 +169,14 @@ export default function AgentConversationMessages({
           {item.role === "tool" && (
             <span className="chat-agent-tool-tag">工具</span>
           )}
-          <span>{item.text}</span>
+          {item.role === "user" || item.role === "assistant" ? (
+            <>
+              <MessageMarkdown content={item.text} />
+              <MessageActions content={item.text} />
+            </>
+          ) : (
+            <span>{item.text}</span>
+          )}
         </div>
       ))}
       {pendingApproval && (

@@ -1,5 +1,14 @@
 # AI handoff
 
+- docId: AI_HANDOFF
+- status: current
+- updatedAt: 2026-10-13
+- source: `docs/governance/PROJECT_STATE.md`
+- supersededBy: null
+
+当前 Cherry 候选从 origin/main@694a0060 新分支承接，primary 并发源文件保留。任务账本126条，76 DONE、31 PARTIAL、11 TODO、4 BLOCKED、4 REVIEW。本次最终发布/验收尚待门禁，不覆盖历史结果。
+
+
 ## 2026-10-11 当前收口快照
 
 当前 canonical checkout 为 `D:/kk-studio/KK-Studio-2.0`、分支 `main`；本地 `HEAD` 为 `6bc45cada7966531452d6826be5fe731ad0918d8`，`origin/main` 为实时回读远端快照 `7736c99bd5e900e7c5cd8a36663aadcb45326143`（PR #51 合并）。实时 Git worktree 为 87 个、dirty path 为 102 个。工作树含并发 dirty 改动，不能按 clean checkout 或单一任务分支处理；权威账本为 120 项：75 `DONE`、29 `PARTIAL`、11 `TODO`、4 `BLOCKED`、1 `REVIEW`（45 项开放）。`PROJECT_STATE.md`、`task-ledger.json` 和生成的 `TASK_LEDGER.md` 已按此快照同步。

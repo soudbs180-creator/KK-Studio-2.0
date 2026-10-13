@@ -19,7 +19,7 @@ const ITEMS: NavItem[] = [
     phoneOnly: true,
   },
   { id: "projects", label: "项目库", compact: "项目", icon: "archive" },
-  { id: "skills", label: "技能", compact: "技能", icon: "skill" },
+  { id: "skills", label: "扩展", compact: "扩展", icon: "skill" },
   {
     id: "comfyui",
     label: "ComfyUI 工作流",

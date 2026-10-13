@@ -19,9 +19,9 @@ export default function InfoPanel({
       {view === "tasks" ? (
         <div className="library-empty">
           <h3>还没有生成任务</h3>
-          <p>连接模型供应商后，可从画布提交生成任务。</p>
+          <p>连接模型接入后，可从画布提交生成任务。</p>
           <button className="primary-button" onClick={onConfigure}>
-            配置模型供应商
+            配置模型接入
           </button>
         </div>
       ) : (
@@ -42,7 +42,7 @@ export default function InfoPanel({
             点左下角设置调整主题与布局偏好。按 Escape 关闭弹窗，Tab 切换控件。
           </p>
           <p>
-            项目、对话与素材保存在当前设备；连接并验证模型供应商后可提交图片任务。演示结果标为本地演示；账号与云端同步仍为
+            项目、对话与素材保存在当前设备；连接并验证模型接入后可提交图片任务。演示结果标为本地演示；账号与云端同步仍为
             Prototype，不代表云端保存。
           </p>
         </div>

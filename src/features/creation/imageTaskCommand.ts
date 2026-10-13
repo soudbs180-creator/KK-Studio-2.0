@@ -8,7 +8,10 @@ import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import {
   MODEL_PROVIDER_STORAGE_KEY,
   parseModelProvider,
+  resolveProviderAuthMode,
+  resolveProviderProtocol,
 } from "../../domain/modelProvider.ts";
+import { assertLiveProviderConversationTask } from "../conversation/providerConversationRound.ts";
 import {
   createTask,
   modelSupportsKind,
@@ -31,6 +34,7 @@ import {
 import {
   assertSubmissionConnection,
   selectSubmissionConnection,
+  type SubmissionBinding,
 } from "./providerSubmission.ts";
 
 export class ImageTaskCommandError extends Error {
@@ -45,7 +49,23 @@ export class ImageTaskCommandError extends Error {
 export function assertLiveTextTask(
   project: CreationProject | undefined,
   expected: CreationTask,
+  expectedProjectId?: string,
 ): void {
+  if (
+    expected.conversationRoundId ||
+    expected.conversationUserMessageId ||
+    expected.conversationMessages
+  ) {
+    try {
+      if (!expectedProjectId) throw new Error("缺少冻结的项目身份");
+      assertLiveProviderConversationTask(project, expected, expectedProjectId);
+      return;
+    } catch {
+      throw new ImageTaskCommandError(
+        "对话项目、轮次、消息或模型绑定已变化，本次未提交。",
+      );
+    }
+  }
   const task = project?.tasks.find((item) => item.id === expected.id);
   if (
     !task ||
@@ -55,6 +75,10 @@ export function assertLiveTextTask(
     task.prompt !== expected.prompt ||
     task.providerBaseUrl !== expected.providerBaseUrl ||
     task.providerCredentialRef !== expected.providerCredentialRef ||
+    task.providerConnectionId !== expected.providerConnectionId ||
+    task.providerProtocol !== expected.providerProtocol ||
+    task.providerAuthMode !== expected.providerAuthMode ||
+    task.sourceItemId !== expected.sourceItemId ||
     !task.sourceItemId ||
     !project?.items.some((item) => item.id === task.sourceItemId)
   )
@@ -113,6 +137,101 @@ function withValidSize(
   return connection;
 }
 
+export function originalProjectBinding(
+  project: CreationProject,
+): Pick<SubmissionBinding, "id" | "protocol" | "authMode"> {
+  const endpoint = (value: string | undefined) => value?.replace(/\/$/, "");
+  const matchesProject = (
+    baseUrl: string | undefined,
+    credentialRef: string | undefined,
+    model: string | undefined,
+  ) =>
+    Boolean(project.providerBaseUrl) &&
+    endpoint(baseUrl) === endpoint(project.providerBaseUrl) &&
+    credentialRef === project.providerCredentialRef &&
+    model === project.model;
+  const task = [...project.tasks]
+    .reverse()
+    .find(
+      (item) =>
+        item.conversationRoundId === undefined &&
+        item.conversationUserMessageId === undefined &&
+        item.conversationMessages === undefined &&
+        matchesProject(
+          item.providerBaseUrl,
+          item.providerCredentialRef,
+          item.model,
+        ),
+    );
+  // A frozen identity must remain authoritative even if that account is gone.
+  if (task?.providerConnectionId)
+    return {
+      id: task.providerConnectionId,
+      protocol: task.providerProtocol,
+      authMode: task.providerAuthMode,
+    };
+  const matches = readProviderConnections().filter(
+    (item) =>
+      matchesProject(item.baseUrl, item.credentialRef, item.model) &&
+      (!task ||
+        (resolveProviderProtocol(item) ===
+          resolveProviderProtocol({ protocol: task.providerProtocol }) &&
+          resolveProviderAuthMode(item.baseUrl ?? "", item) ===
+            resolveProviderAuthMode(task.providerBaseUrl ?? "", {
+              authMode: task.providerAuthMode,
+            }))),
+  );
+  if (matches.length !== 1)
+    throw new ImageTaskCommandError(
+      "原项目的模型连接绑定缺失或不唯一，请明确选择连接后创建任务；当前草稿已保留。",
+      true,
+    );
+  return {
+    id: matches[0].id,
+    protocol: matches[0].protocol,
+    authMode: matches[0].authMode,
+  };
+}
+
+export function projectConnectionId(
+  project?: CreationProject,
+): string | undefined {
+  if (!project) return undefined;
+  if (project.composerDraft.providerConnectionId)
+    return project.composerDraft.providerConnectionId;
+  try {
+    return originalProjectBinding(project).id;
+  } catch {
+    return undefined;
+  }
+}
+
+export function rootItemId(project: CreationProject): string | null {
+  return (
+    project.items.find((item) => item.id === `${project.id}-prompt`)?.id ??
+    project.items.find((item) => item.kind === "image")?.id ??
+    null
+  );
+}
+
+function validateTextTaskInput(input: CreateProjectInput): void {
+  if (!input.prompt.trim() || input.prompt.length > 4000)
+    throw new ImageTaskCommandError("请填写不超过 4000 字的文案描述。");
+  if (input.privacyMode && input.privacyMode !== "byok_local")
+    throw new ImageTaskCommandError(
+      "文案生成当前仅支持 BYOK 本地模式，草稿已保留。",
+    );
+  if (!supportsSelectedModel(input))
+    throw new ImageTaskCommandError(
+      "请在设置中配置文本模型连接，草稿已保留。",
+      true,
+    );
+  if (input.attachments.length || (input.outputCount ?? 1) !== 1)
+    throw new ImageTaskCommandError(
+      "文案生成仅支持单份纯文本，不接收图片附件。",
+    );
+}
+
 /** Every entry uses this binding check; an existing project never swaps accounts. */
 export async function prepareImageTask(
   input: CreateProjectInput,
@@ -126,23 +245,8 @@ export async function prepareImageTask(
       ...input,
       providerConnectionId: project.composerDraft.providerConnectionId,
     };
-  if (input.kind === "text") {
-    if (!input.prompt.trim() || input.prompt.length > 4000)
-      throw new ImageTaskCommandError("请填写不超过 4000 字的文案描述。");
-    if (input.privacyMode && input.privacyMode !== "byok_local")
-      throw new ImageTaskCommandError(
-        "文案生成当前仅支持 BYOK 本地模式，草稿已保留。",
-      );
-    if (!supportsSelectedModel(input))
-      throw new ImageTaskCommandError(
-        "请在设置中配置文本模型连接，草稿已保留。",
-        true,
-      );
-    if (input.attachments.length || (input.outputCount ?? 1) !== 1)
-      throw new ImageTaskCommandError(
-        "文案生成仅支持单份纯文本，不接收图片附件。",
-      );
-  } else validateImageTaskInput(input);
+  if (input.kind === "text") validateTextTaskInput(input);
+  else validateImageTaskInput(input);
   if (input.providerConnectionId) {
     const selected = readProviderConnections().find(
       (item) => item.id === input.providerConnectionId,
@@ -159,6 +263,8 @@ export async function prepareImageTask(
       id: selected.id,
       baseUrl: selected.baseUrl,
       credentialRef: selected.credentialRef,
+      protocol: selected.protocol,
+      authMode: selected.authMode,
       referenceCount: input.attachments.length,
       operation:
         input.imageEdit?.nativeMask || input.imageOperation === "inpaint"
@@ -170,7 +276,13 @@ export async function prepareImageTask(
       model: input.model,
     };
     assertSubmissionConnection(binding);
-    if (!(await hasApiKey(selected.baseUrl!, selected.credentialRef)))
+    if (
+      !(
+        input.kind === "text" &&
+        resolveProviderAuthMode(selected.baseUrl!, selected) === "none"
+      ) &&
+      !(await hasApiKey(selected.baseUrl!, selected.credentialRef))
+    )
       throw new ImageTaskCommandError(
         "选择的连接缺少密钥，请配置后重试。",
         true,
@@ -182,7 +294,13 @@ export async function prepareImageTask(
       localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY),
     ).profile;
     const connection = connectionFromModelProfile(profile);
-    if (!(await hasApiKey(profile.baseUrl, connection.credentialRef)))
+    if (
+      !(
+        input.kind === "text" &&
+        resolveProviderAuthMode(profile.baseUrl, connection) === "none"
+      ) &&
+      !(await hasApiKey(profile.baseUrl, connection.credentialRef))
+    )
       throw new ImageTaskCommandError(
         "请先配置模型连接；当前草稿已保留，配置后再次提交。",
         true,
@@ -219,13 +337,7 @@ export async function prepareImageTask(
     );
   }
   const binding = {
-    id:
-      project.tasks.at(-1)?.providerConnectionId ??
-      readProviderConnections().find(
-        (item) =>
-          item.baseUrl === project.providerBaseUrl &&
-          item.credentialRef === project.providerCredentialRef,
-      )?.id,
+    ...originalProjectBinding(project),
     baseUrl: project.providerBaseUrl,
     credentialRef: project.providerCredentialRef,
     referenceCount: input.attachments.length,
@@ -239,7 +351,13 @@ export async function prepareImageTask(
     model: input.model,
   };
   const connection = assertSubmissionConnection(binding);
-  if (!(await hasApiKey(connection.baseUrl!, connection.credentialRef)))
+  if (
+    !(
+      input.kind === "text" &&
+      resolveProviderAuthMode(connection.baseUrl!, connection) === "none"
+    ) &&
+    !(await hasApiKey(connection.baseUrl!, connection.credentialRef))
+  )
     throw new ImageTaskCommandError(
       "原绑定连接缺少密钥，请配置后重试；当前草稿已保留。",
       true,
@@ -276,6 +394,8 @@ export function appendImageTask(
     }),
     sourceItemId,
     providerConnectionId: connection.id,
+    ...(connection.protocol ? { providerProtocol: connection.protocol } : {}),
+    ...(connection.authMode ? { providerAuthMode: connection.authMode } : {}),
     imageSize: input.imageSize,
     imageEdit: input.imageEdit,
     imageEditContext: input.imageEditContext,

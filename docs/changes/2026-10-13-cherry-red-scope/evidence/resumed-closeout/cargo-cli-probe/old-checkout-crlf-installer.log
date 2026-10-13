@@ -1,0 +1,6 @@
+PROBE_RUNNER_NO_COMPILATION
+
+        Info Looking up installed tauri packages to check mismatched versions...
+        Warn The bundle identifier "com.kkstudio.app" set in `"tauri.conf.json" identifier` ends with `.app`. This is not recommended because it conflicts with the application bundle extension on macOS.
+failed to build app: failed to build app
+       Error failed to build app: failed to build app

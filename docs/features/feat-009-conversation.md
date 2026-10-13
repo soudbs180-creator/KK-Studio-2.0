@@ -1,5 +1,9 @@
 # 对话与创作消息面板（FEAT-009）
 
+## 2026-10-13 Cherry 红框补齐
+
+共享安全Markdown、原文复制/本地导出，新增2–3个文本模型独立多轮对话，复用既有项目/CreationTask与Native journal；单路失败不丢成功结果，比较不更改原画布账号。五个常用助手与自定义沿用SkillRegistry，Codex默认、Google与API各通道保持。状态仍PARTIAL；[实现与证据](../changes/2026-10-13-cherry-red-scope/verification.md)分别记录本地、真实服务和跨平台缺口。
+
 - 状态：PARTIAL
 - 领域：creation
 - 最近更新：2026-10-01

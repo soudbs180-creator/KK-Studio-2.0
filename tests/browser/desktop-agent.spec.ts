@@ -5,9 +5,9 @@ async function networkSettings(page: Page) {
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await page
     .getByRole("navigation", { name: "设置分类" })
-    .getByRole("button", { name: "扩展", exact: true })
+    .getByRole("button", { name: "模型接入", exact: true })
     .click();
-  await page.getByRole("tab", { name: /伙伴/ }).click();
+  await page.getByText("手动连接本地服务", { exact: true }).click();
   return page.getByRole("region", { name: "桌面 Agent 服务" });
 }
 
@@ -57,14 +57,19 @@ test("CodeBuddy delegation distinguishes disconnected, saved and verified states
     });
     await page.goto("/");
     await networkSettings(page);
+    await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
     const pathInput = page.getByRole("textbox", { name: "CodeBuddy CLI 路径" });
     await expect(pathInput).toBeDisabled();
+    await page
+      .getByRole("button", { name: "Codex 主 Agent", exact: true })
+      .click();
     await page.getByLabel("Agent 地址").fill(agent.url);
     await page.getByLabel("连接 Token", { exact: true }).fill("fixture-token");
     await page.getByRole("button", { name: "连接 Agent", exact: true }).click();
     await expect(
       page.getByRole("button", { name: "已连接", exact: true }),
     ).toBeVisible();
+    await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
     await pathInput.fill("C:/WorkBuddy/cli/bin/codebuddy");
     await page.getByRole("button", { name: "保存 CodeBuddy 路径" }).click();
     await expect(
@@ -109,6 +114,96 @@ test("a desktop package without runtime shows its actual unavailable state", asy
   await expect(
     panel.getByRole("button", { name: "启动并连接" }),
   ).toBeDisabled();
+});
+
+test("CodeBuddy 配置回读未完成时不能编辑或保存，完成后保存真实新路径", async ({
+  page,
+}) => {
+  const agent = await startAgentServer("idle");
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let started!: () => void;
+  const reading = new Promise<void>((resolve) => {
+    started = resolve;
+  });
+  let path = "C:/WorkBuddy/previous-cli";
+  try {
+    await page.route(agent.url + "/agent/codebuddy/config", async (route) => {
+      if (route.request().method() === "GET") {
+        const previous = path;
+        started();
+        await held;
+        await route.fulfill({
+          contentType: "application/json",
+          body: JSON.stringify({
+            ok: true,
+            configured: true,
+            cliPath: previous,
+          }),
+        });
+      } else {
+        path = route.request().postDataJSON().cliPath;
+        await route.fulfill({
+          contentType: "application/json",
+          body: JSON.stringify({ ok: true, configured: true, cliPath: path }),
+        });
+      }
+    });
+    await page.goto("/");
+    await networkSettings(page);
+    await page.getByLabel("Agent 地址").fill(agent.url);
+    await page.getByLabel("连接 Token", { exact: true }).fill("fixture-token");
+    await page.getByRole("button", { name: "连接 Agent", exact: true }).click();
+    await expect(
+      page.getByRole("button", { name: "已连接", exact: true }),
+    ).toBeVisible();
+    const firstFrame = await page.evaluateHandle(() => {
+      const observed = { disabled: null as boolean | null };
+      const observer = new MutationObserver(() => {
+        const input = document.querySelector<HTMLInputElement>(
+          "#codebuddy-cli-path",
+        );
+        if (!input) return;
+        observed.disabled = input.disabled;
+        observer.disconnect();
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+      return observed;
+    });
+    await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await reading;
+    expect(await firstFrame.evaluate((observed) => observed.disabled)).toBe(
+      true,
+    );
+    const input = page.getByRole("textbox", {
+      name: "CodeBuddy CLI 路径",
+      exact: true,
+    });
+    await expect(input).toBeDisabled();
+    await expect(
+      page.getByRole("button", { name: "保存 CodeBuddy 路径", exact: true }),
+    ).toBeDisabled();
+    await expect(
+      page.getByRole("button", { name: "测试 CodeBuddy 连接", exact: true }),
+    ).toBeDisabled();
+    release();
+    await expect(input).toHaveValue("C:/WorkBuddy/previous-cli");
+    await expect(input).toBeEditable();
+    await input.fill("C:/WorkBuddy/new-cli");
+    await page
+      .getByRole("button", { name: "保存 CodeBuddy 路径", exact: true })
+      .click();
+    await expect(
+      page.getByRole("status", { name: "CodeBuddy 状态", exact: true }),
+    ).toContainText("已保存，尚未测试");
+    expect(path).toBe("C:/WorkBuddy/new-cli");
+    await expect(input).toHaveValue(path);
+  } finally {
+    release();
+    await agent.close();
+  }
 });
 
 test("an external handshake cannot be taken over by the desktop start control", async ({

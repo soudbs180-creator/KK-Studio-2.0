@@ -15,6 +15,7 @@ test("current Figma modal shells keep dimensions and settings content origin", a
   expect(title.x - panelBox.x).toBe(364);
   expect(title.y - panelBox.y).toBe(38);
   expect(await panel.locator(".settings-row h3").allTextContents()).toEqual([
+    "透明窗口",
     "语言",
     "主题",
     "强调色",
@@ -60,11 +61,13 @@ test("unconnected account and memory controls do not advertise working services"
   );
   await page
     .getByRole("navigation", { name: "设置分类" })
-    .getByRole("button", { name: "扩展", exact: true })
+    .getByRole("button", { name: "模型接入", exact: true })
     .click();
-  await page.getByRole("tab", { name: /伙伴/ }).click();
+  await expect(
+    page.getByRole("button", { name: "Codex 主 Agent", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator(".settings-content")).toContainText(
-    "npm run dev:agent",
+    "Codex 主 Agent",
   );
   await page.getByRole("button", { name: "记忆", exact: true }).click();
   // 记忆是本地能力，开关不依赖 Codex 连接；未连接时仅"让 Codex 提炼"禁用。

@@ -285,7 +285,7 @@ test("手机对话入口建立独立项目，未连接时保留草稿并提供�
   await expect(page.locator(".chat-status")).toContainText("配置模型服务");
   await page.getByRole("button", { name: "前往模型设置", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "模型供应商", exact: true }),
+    page.getByRole("heading", { name: "模型接入", exact: true }),
   ).toBeVisible();
 });
 

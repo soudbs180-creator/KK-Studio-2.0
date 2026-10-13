@@ -1,4 +1,12 @@
 # Preserve verification originals and lossless archives across Windows checkouts.
 docs/changes/**/evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Verbatim failure transcripts are immutable data, including diagnostic spaces.
+# Keep their original bytes and hashes instead of formatting the captured output.
+docs/changes/2026-10-13-cherry-red-scope/evidence/resumed-closeout/*.log -diff
+docs/changes/2026-10-13-cherry-red-scope/evidence/resumed-closeout/cargo-cli-probe/*.log -diff
+docs/changes/2026-10-13-cherry-red-scope/evidence/resumed-closeout/concurrent-save-original-error-context.md -diff
 # Immutable reviewed v1 bytes used to verify safe guard upgrades on Windows.
 tests/fixtures/git-guards/** -text
+# Tauri CLI serializes this manifest as LF even on Windows. Keep its checkout
+# bytes stable so a build cannot invalidate the strict source/installer receipt.
+src-tauri/Cargo.toml text eol=lf

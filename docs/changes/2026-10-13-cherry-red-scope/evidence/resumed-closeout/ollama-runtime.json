@@ -1,0 +1,194 @@
+{
+  "sourceHead": "c37f251fcf2b29912189e80cf44448e5ae9da620",
+  "observedUtc": "2026-10-13T10:27:26.665234Z",
+  "task": "TASK-CHERRY-RED-001",
+  "runtime": "Ollama",
+  "version": "0.40.3",
+  "releaseUrl": "https://github.com/ollama/ollama/releases/tag/v0.40.3",
+  "assetUrl": "https://github.com/ollama/ollama/releases/download/v0.40.3/ollama-windows-amd64.zip",
+  "assetSize": 1468053171,
+  "officialAssetDigest": "sha256:e5ecff02dfc7cae8ddf6d6b7a7ac5f727ffeedf4491f44ae75ff5b0820dbbbd5",
+  "assetVerified": true,
+  "exeSha256": "61b44cfb6d3aa2393a4a731af33c9329bedd58b1c454bdebd185d4a607d0303d",
+  "owner": {
+    "pid": 43124,
+    "startTimeUtc": "2026-10-13T10:24:02.8085096Z",
+    "executable": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\ollama-real\\runtime-v0.40.3\\ollama.exe",
+    "executableSha256": "61b44cfb6d3aa2393a4a731af33c9329bedd58b1c454bdebd185d4a607d0303d",
+    "arguments": [
+      "serve"
+    ],
+    "host": "127.0.0.1:11434",
+    "endpoint": "http://127.0.0.1:11434",
+    "modelsDirectory": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\ollama-real\\models",
+    "profileDirectory": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\ollama-real\\profile",
+    "tempDirectory": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\ollama-real\\temp",
+    "cloudDisabled": true,
+    "originatingTask": "TASK-CHERRY-RED-001",
+    "cleanup": "held for root product UI verification; only exact owned process identity may be stopped",
+    "startTimeUtcTicks": 639274838428085096,
+    "cpuOnly": true
+  },
+  "models": [
+    {
+      "name": "smollm2:135m",
+      "digest": "9077fe9d2ae1a4a41a868836b56b8163731a8fe16621397028c2c76f838c6907",
+      "size": 270898672,
+      "details": {
+        "parent_model": "/Users/administrator/.ollama/models/blobs/sha256-f535f83ec568d040f88ddc04a199fa6da90923bbb41d4dcaed02caa924d6ef57",
+        "format": "gguf",
+        "family": "llama",
+        "families": [
+          "llama"
+        ],
+        "parameter_size": "134.52M",
+        "quantization_level": "F16",
+        "context_length": 8192,
+        "embedding_length": 576,
+        "runner": "ggml"
+      }
+    },
+    {
+      "name": "qwen2.5:0.5b",
+      "digest": "a8b0c51577010a279d933d14c2a8ab4b268079d44c5c8830c0a93900f1827c67",
+      "size": 397821319,
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "qwen2",
+        "families": [
+          "qwen2"
+        ],
+        "parameter_size": "494.03M",
+        "quantization_level": "Q4_K_M",
+        "context_length": 32768,
+        "embedding_length": 896,
+        "runner": "ggml"
+      }
+    }
+  ],
+  "inference": "real CPU-only local model API; not intercepted fixture",
+  "publicSyntheticPrompt": "Answer this public test question in one short sentence: What is 2 + 2?",
+  "cloudDisabled": true,
+  "authorizationHeaderPresent": false,
+  "systemInstallation": false,
+  "persistentPathChanges": false,
+  "currentState": "held running for root Native/UI verification",
+  "evidence": [
+    {
+      "path": "official-release-v0.40.3.json",
+      "sha256": "71c301521e38b88675d1f24405bd5cf7561232093b289b4d349d6608e798ca11",
+      "bytes": 36844
+    },
+    {
+      "path": "official-sha256sum.txt",
+      "sha256": "efe3861780df1fd53a79a82fbc3c06fad5076fecd47c0d04218ea74317d7fbbd",
+      "bytes": 1472
+    },
+    {
+      "path": "archive-verification.json",
+      "sha256": "36d0a82fd38d3492d312bca5e08038d45ec41efabff4359b0da4ebc2778550f1",
+      "bytes": 318
+    },
+    {
+      "path": "registry-manifest.json",
+      "sha256": "a8b0c51577010a279d933d14c2a8ab4b268079d44c5c8830c0a93900f1827c67",
+      "bytes": 857
+    },
+    {
+      "path": "official-blob-verification.json",
+      "sha256": "17c7029955c0179a2753d6d47005d1517309602ec2a421eb866d81f3f3586ff8",
+      "bytes": 2621
+    },
+    {
+      "path": "smollm2-registry-manifest.json",
+      "sha256": "9077fe9d2ae1a4a41a868836b56b8163731a8fe16621397028c2c76f838c6907",
+      "bytes": 1124
+    },
+    {
+      "path": "smollm2-official-blob-verification.json",
+      "sha256": "0434c070e44f7fbaf15e038e759c82f681216352da38d50926dd8c3b14f804fa",
+      "bytes": 3390
+    },
+    {
+      "path": "pull-first-attempt.json",
+      "sha256": "7ebccc60ee62d6e40b84c79dcbc6f7444c883dfe85c8a619d1a5846e0d326b34",
+      "bytes": 134
+    },
+    {
+      "path": "api-pull-after-verified-download.json",
+      "sha256": "912d0c07da7bdb22cdae025b96da26d01523aaab7362edb28544e3949deb369d",
+      "bytes": 20
+    },
+    {
+      "path": "api-version.json",
+      "sha256": "390eeacbb33026a8ac714dd132b267c54afe570bef37e0cc313e0de45a779945",
+      "bytes": 20
+    },
+    {
+      "path": "api-tags.json",
+      "sha256": "6c259bfb0bf27c2c58821e8f64c0fe71400d0550777f62c43ecf84ebc325d8ed",
+      "bytes": 975
+    },
+    {
+      "path": "openai-models.json",
+      "sha256": "b9e3e88d7ba7ccebe5be3abdd9f15f6996c152c6c21cf5a6019fe0ba5690c9a0",
+      "bytes": 189
+    },
+    {
+      "path": "qwen-model-show.json",
+      "sha256": "a950c3b4cbda533dbf0dd21c22514c6cb9222c8325981dc6dd90804f81ecf12e",
+      "bytes": 28819
+    },
+    {
+      "path": "smollm2-model-show.json",
+      "sha256": "62be3cacf05933fa7042603cfd851b31a6e42776634bb250d8fe58e8012a2ab5",
+      "bytes": 26967
+    },
+    {
+      "path": "qwen-openai-chat-response.json",
+      "sha256": "fb7cf9cf6ade6cecdf6ac0e4138f601b839987c7eb259e07c9001a48a6dacaa6",
+      "bytes": 345
+    },
+    {
+      "path": "qwen-openai-stream-response.json",
+      "sha256": "9ea2db5c62703d6d052cb07e36f5991217a3fcac6514756145da3facdcc3f923",
+      "bytes": 1901
+    },
+    {
+      "path": "smollm2-openai-chat-response.json",
+      "sha256": "8ca1f7486b953380e54e6b9093f6565bf58399e24cdd63c0a48b66da2d209b4e",
+      "bytes": 379
+    },
+    {
+      "path": "smollm2-openai-stream-response.json",
+      "sha256": "7fe57ffde382296c30f491b4d61540f63213bee8b49634f322872c5923aa4932",
+      "bytes": 2544
+    },
+    {
+      "path": "openai-probe-http-proof.json",
+      "sha256": "1ca8e63bdff5e256122c27e7f5cdce7ab5013d438ae1bb57187fd77b6f69bf62",
+      "bytes": 2051
+    },
+    {
+      "path": "cpu-loaded-models.json",
+      "sha256": "f079d0e2855befc8e1d1a4070a134a9e9f8cf07788d7270698a8598edbbbdaae",
+      "bytes": 781
+    },
+    {
+      "path": "cpu-restart-proof.json",
+      "sha256": "595d2ea5106e06253eaef3d4c4a7395ba5bbc1fa1a2cb8767f43103f0e2166fb",
+      "bytes": 236
+    },
+    {
+      "path": "owner.json",
+      "sha256": "8f763097990ec4839132b8ac00df390bb460656fae45d0845bee95b68668cc10",
+      "bytes": 970
+    },
+    {
+      "path": "cpu-startup-proof.log",
+      "sha256": "2715f03e5ce6cff71467ee2efa8b04d1d64d53a8e1fdb1167f4f4346e7f05f74",
+      "bytes": 226
+    }
+  ]
+}

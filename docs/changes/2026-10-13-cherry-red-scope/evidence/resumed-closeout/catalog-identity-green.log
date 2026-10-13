@@ -1,0 +1,22 @@
+✔ 模型目录只接收非敏感元数据，未知模型不虚构能力 (1.6605ms)
+✔ 同名模型保留账号身份，换地址或凭据后旧目录失效 (0.6309ms)
+✔ 尺寸与比例来自明确规格，不把 16:9 任意换算为供应商尺寸 (0.2272ms)
+✔ changing protocol makes the previous reported catalog unavailable (0.8652ms)
+✔ changing protocol makes the previous manual catalog unavailable (0.2261ms)
+✔ saving a changed protocol cannot inherit a same-named model's old manual declaration (0.4246ms)
+✔ changing authMode makes the previous reported catalog unavailable (0.3684ms)
+✔ changing authMode makes the previous manual catalog unavailable (0.2472ms)
+✔ saving a changed authMode cannot inherit a same-named model's old manual declaration (0.3105ms)
+✔ omitted legacy protocol and authentication remain compatible with explicit defaults (0.3409ms)
+✔ refreshing the same protocol and authentication retains manual declarations (0.3592ms)
+✔ catalog persistence restores protocol and authentication without copying secrets (0.2759ms)
+✔ invalid persisted protocol and authentication do not fall back to legacy defaults (0.5274ms)
+✔ invalid save identity leaves the previously stored catalog untouched (0.2501ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 196.3477

@@ -1,0 +1,32 @@
+✔ a single-output text request rejects another output index or multiple choices (19.083ms)
+✔ explicit loopback authentication and protocol survive profile and registry mapping (2.6212ms)
+✔ remote and noncanonical hosts cannot opt into keyless authentication (0.7185ms)
+✔ legacy profiles retain their stored object without adding defaults (0.7068ms)
+✔ keyless local Anthropic retains the protocol-version header without exposing a key (0.2081ms)
+✔ Ollama and LM Studio presets select only an explicit local OpenAI-compatible interface (0.1071ms)
+✔ local discovery and generation omit authentication rather than using a fake key (3.8023ms)
+✔ an empty key never silently enables local or remote requests (0.5466ms)
+✔ Anthropic discovery and Messages use native headers and preserve multi-turn content (1.3073ms)
+✔ Gemini discovery and SSE use model resources and header-only credentials (1.2711ms)
+✔ HTTP 401 is not retried and does not leak the response body (0.7737ms)
+✔ HTTP 429 is not retried and does not leak the response body (0.5791ms)
+✔ anthropic-messages requires an actual success terminal and rejects tool/error/oversized output (0.9115ms)
+✔ gemini requires an actual success terminal and rejects tool/error/oversized output (0.5524ms)
+✔ a text submission freezes its model and messages before reading credentials (0.5696ms)
+✔ Anthropic includes text from content-block start as well as deltas (0.2185ms)
+✔ openai-compatible preserves UTF-8 splits and cancels the source at terminal (1.5406ms)
+✔ openai-compatible aborts a stalled stream and enforces a 2 MiB wire limit (2.458ms)
+✔ anthropic-messages preserves UTF-8 splits and cancels the source at terminal (2.0515ms)
+✔ anthropic-messages aborts a stalled stream and enforces a 2 MiB wire limit (2.3698ms)
+✔ gemini preserves UTF-8 splits and cancels the source at terminal (0.799ms)
+✔ gemini aborts a stalled stream and enforces a 2 MiB wire limit (2.5928ms)
+✔ native discovery follows bounded pages without changing host or authentication (1.3174ms)
+✔ discovery cannot hang after cancellation or loop forever on repeated page tokens (5.8313ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 278.4352

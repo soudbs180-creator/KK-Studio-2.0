@@ -1,5 +1,57 @@
 [
   {
+    "id": "TASK-CHERRY-RED-001",
+    "title": "Cherry 红框能力选择性融合与三桌面平台补齐",
+    "goal": "以 KK 为主体补齐近期模型/助手/MCP/桌面体验，保留已有行为并完成实际实现和相应验证。",
+    "scope": "免费开源、本地模型、多协议、精选自定义助手与文本比较、共享安全 Markdown/本地分享、原生凭据/runtime/平台能力；框外功能保持后续可选。",
+    "acceptance": [
+      "旧数据/账号/模型/任务身份保留，故障/取消/迟到恢复回归通过。",
+      "采纳项有源码接线、类型检查、测试、构建和相应运行证据。",
+      "外部能力、Mac/Linux实际设备缺口与Windows本地验证分别记录，不假升级REAL。"
+    ],
+    "dependencies": [],
+    "owner": "root",
+    "ownerRole": "repository-maintainer",
+    "branch": "codex/TASK-CHERRY-RED-001-mainline",
+    "worktree": "D:/kk-studio/.worktrees/TASK-CHERRY-RED-001",
+    "affectedModules": [
+      "src/components",
+      "src/domain",
+      "src/features/creation",
+      "src/features/agent",
+      "src/features/models",
+      "src/integrations",
+      "src-tauri",
+      "tests",
+      "docs/changes/2026-10-13-cherry-red-scope"
+    ],
+    "status": "PARTIAL",
+    "priority": "P1",
+    "priorityRationale": "用户以红框确定近期范围并明确授权实际实施。",
+    "requirementRefs": [
+      "ledger:TASK-CHERRY-RED-001"
+    ],
+    "featureIds": [
+      "FEAT-009",
+      "FEAT-011",
+      "FEAT-012",
+      "FEAT-022",
+      "FEAT-032"
+    ],
+    "evidence": [
+      "docs/changes/2026-10-13-cherry-red-scope/verification.md",
+      "docs/changes/2026-10-13-cherry-red-scope/review.md",
+      "docs/changes/2026-10-13-cherry-red-scope/native-runtime-closeout.md",
+      "docs/changes/2026-10-13-cherry-red-scope/mainline-integration.md"
+    ],
+    "verification": "主线694a dirty候选最新完整verify退出0：unit1138/1124PASS14SKIP，Agent174/172PASS2SKIP，browser528含一次并发保存首试超时后重试成功，development四步PASS；NativeRust154通过。独立MR001-003预检关闭，账号保存、完整目录身份和迟到401/429已RED/GREEN。源码0e77旧review及历史失败保留，最终mainline工件/Hosted/正式补审/产品验收仍待完成。",
+    "verificationResult": "NOT_VERIFIED",
+    "displayStatus": "进行中",
+    "nextAction": "冻结当前mainline候选，重建默认发行/测试驱动与安装器，实际重跑Native/Hosted并补审；保留primary的11项后续并发改动，最终产品验收待确认。",
+    "updated": "2026-10-13",
+    "lastVerified": "2026-10-13"
+  },
+  {
     "id": "TASK-FIX-PUSH-GUARD-SPACES-001",
     "title": "修复 Windows Git pre-push 空格及长路径启动",
     "goal": "Git Bash/MSYS 下的 pre-push guard 能处理空格和超过 260 字符的策略路径，同时保留所有拒绝保护。",

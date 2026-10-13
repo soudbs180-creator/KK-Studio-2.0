@@ -1,0 +1,163 @@
+{
+  "archivedAt": "2026-10-13T13:41:39.967Z",
+  "files": [
+    {
+      "source": ".tmp/cherry-red/verify-217-native-discovery-final.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\verify-f8.log",
+      "bytes": 220146,
+      "sha256": "ba136faded3eb21f7b844044f1dcada16d740ce55eed49bbcbb43c481ea15b6d"
+    },
+    {
+      "source": ".tmp/cherry-red/verify-native-final.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\verify-688-dirty.log",
+      "bytes": 220419,
+      "sha256": "f7c7e9c8f0e5643cb3ab93bab69b0259828d07d4ab481e30e3fa66ef9e13b1a6"
+    },
+    {
+      "source": ".tmp/cherry-red/provider-save-failure-red-actual.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\provider-save-red.log",
+      "bytes": 3307,
+      "sha256": "d31debe6e7c649947766b011ff1ec3a08a194b8d19fbbc832b130197330a7985"
+    },
+    {
+      "source": ".tmp/cherry-red/save-recovery-browser.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\provider-save-stage-green.log",
+      "bytes": 2059,
+      "sha256": "e1744e07b3eaccba3584640d9756cdaef6b78d3d732bc8088b7ef11d0bb783e1"
+    },
+    {
+      "source": ".tmp/cherry-red/native-journal-lock-red.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\journal-lock-red.log",
+      "bytes": 2427,
+      "sha256": "3086595410241ae40305b4a1993e6c127c1befd3ba154412d25aa6f285ddec8a"
+    },
+    {
+      "source": ".tmp/cherry-red/runtime-size-red.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\runtime-size-red.log",
+      "bytes": 2166,
+      "sha256": "620391a88a1f05ad60edaf6be5c3bed9e363e3c37bb66c0b8285e713b23d9299"
+    },
+    {
+      "source": ".tmp/cherry-red/rust-native-runtime-green.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\rust154-688-dirty.log",
+      "bytes": 15480,
+      "sha256": "dfe1f9e21688be0386be301b96c7441584491ce9f6cab8e37b028193e249ce43"
+    },
+    {
+      "source": ".tmp/cherry-red/native-e2e/windows-twelfth/receipt.json",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\native-driver-688-dirty.json",
+      "bytes": 3386,
+      "sha256": "dee76a281d3346cd8ef38e9f88b15da57d9e3c0b6c377c125395cf55c29ecc2d"
+    },
+    {
+      "source": ".tmp/cherry-red/native-e2e/windows-twelfth/two-model-round.png",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\native-driver-688-dirty.png",
+      "bytes": 173106,
+      "sha256": "bf5429ffd1fcbe52bc4fd2cfb1bb854c16c71c0a0e284641ae198dba6f561649"
+    },
+    {
+      "source": ".tmp/cherry-red/local-native-real/195ddaea-b7e5-4efc-a15a-3a96e01dc31e/receipt.json",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\ollama-native-f8.json",
+      "bytes": 8020,
+      "sha256": "815b355e8e6632fab048c245088c7b951b2c4653f73ce600245ed54593ee1cb8"
+    },
+    {
+      "source": ".tmp/cherry-red/local-native-real/77c294b9-2d50-4720-87da-974bd027b60c/receipt.json",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\ollama-native-first-failure.json",
+      "bytes": 4671,
+      "sha256": "211672fc7f6e4efc04db55f6adbe7b10b7154eb4f33144b287954da19bf173e4"
+    },
+    {
+      "source": ".tmp/cherry-red/local-native-real.mjs",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\real-ollama-helper.mjs",
+      "bytes": 15873,
+      "sha256": "4830dd3c0c33baa21918d7f9e5dbd6837950536d44bc0b7a6b02dc9ef2fcb9f9"
+    },
+    {
+      "source": ".tmp/cherry-red/ollama-real/runtime-receipt.json",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\ollama-runtime.json",
+      "bytes": 6940,
+      "sha256": "b1fc4e6b1343caf816ca15615c7669af17947cb2a5b49711d944f19320864d98"
+    },
+    {
+      "source": ".tmp/cherry-red/installer-release-f8ead4fa/installer-receipt.json",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\installer-f8-files.json",
+      "bytes": 871597,
+      "sha256": "fac9c9800a58673c4a3a8b29af6b25d62e903f5f1c96e4ca5b218a19b9ac51b5"
+    },
+    {
+      "source": ".tmp/cherry-red/ui-candidate/manifest.json",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\primary-ui-c79-manifest.json",
+      "bytes": 19738,
+      "sha256": "c81c66ecef7842d8376345d09fe7177089f23c8b645a74fdcd0c6e553047dd98"
+    },
+    {
+      "source": ".tmp/cherry-red/mainline-verify-second.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\verify-mainline-dirty.log",
+      "bytes": 200597,
+      "sha256": "f705ea0c2664e9d9f314141ddd3fa2cf10cfc28589558fa98e8ef4b3e594d88f"
+    },
+    {
+      "source": ".tmp/cherry-red/mainline-rust-final.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\rust154-mainline-dirty.log",
+      "bytes": 15661,
+      "sha256": "31d4cb69b06e8f2653fe6a1799def8679d61d11f6e936a10d0a32428eda8c031"
+    },
+    {
+      "source": ".tmp/cherry-red/anthropic-browser-header-red.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\anthropic-browser-header-red.log",
+      "bytes": 937,
+      "sha256": "4ac726945067be60f49b1fb0430569d0494ab92edf11f6368c4f4022dc5a2220"
+    },
+    {
+      "source": ".tmp/cherry-red/anthropic-browser-header-green.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\anthropic-browser-header-green.log",
+      "bytes": 2301,
+      "sha256": "164efd26eb02e90ac5bbf804b13293e313b5a7ceaee041cf681aa9876fe70e74"
+    },
+    {
+      "source": ".tmp/cherry-red/catalog-identity-green.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\catalog-identity-green.log",
+      "bytes": 1388,
+      "sha256": "0087a082b656f86dd7ae320ed3734b6cba1086b5c1991a93e157862cacd53cce"
+    },
+    {
+      "source": ".tmp/cherry-red/late-health-red.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\late-health-red.log",
+      "bytes": 2774,
+      "sha256": "713eb37af5db35e03456ffcfd41d122f6c9acd5ee529264e9f0fb591bc9a4471"
+    },
+    {
+      "source": ".tmp/cherry-red/late-health-green.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\late-health-green.log",
+      "bytes": 3218,
+      "sha256": "8c039ac39cb864c13a73721d4c2d3fd016dbeecd56813c04843da3727b5267d0"
+    },
+    {
+      "source": ".tmp/cherry-red/package-portability-selftest.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\package-portability-selftest.log",
+      "bytes": 836,
+      "sha256": "00f2a5ae507261fe529ab4575f97c6d3a5e8abf8000a74b93e96eaabf69b8df0"
+    },
+    {
+      "source": ".tmp/cherry-red/mainline-verify-final.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\verify-mainline-final-dirty.log",
+      "bytes": 203860,
+      "sha256": "a4eaa66149d1873fdb4f2414b163d70ea47793b9b0e63a8f0c689d6bd13e1fb5"
+    },
+    {
+      "source": ".tmp/cherry-red/concurrent-save-recheck-actual.log",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\concurrent-save-recheck.log",
+      "bytes": 2673,
+      "sha256": "865e0491bae70282f9ad9c10cd1f46b6e7bc11e09ed6401710f54613a10eb6d7"
+    },
+    {
+      "source": ".tmp/cherry-red/mainline-flaky/original-error-context.md",
+      "target": "docs\\changes\\2026-10-13-cherry-red-scope\\evidence\\resumed-closeout\\concurrent-save-original-error-context.md",
+      "bytes": 14671,
+      "sha256": "13f9e7bcadc4a769871ab37227fb1199909867768470eb51a550a9cf030950bc"
+    }
+  ],
+  "missing": [],
+  "note": "Byte-preserving copies. Dirty/test-only, earlier-source, formal installer and current candidate scopes remain distinct; no secret or binary artifact copied."
+}

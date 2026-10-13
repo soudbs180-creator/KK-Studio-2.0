@@ -1,6 +1,9 @@
 import { invoke } from "@tauri-apps/api/core";
+import type { ProviderProtocolOptions } from "../../domain/modelProvider.ts";
+import type { ProviderTextMessage } from "../../integrations/providerTextProtocol.ts";
 import type {
   CreationSnapshot,
+  CreationProject,
   CreationTask,
   CreationTaskOutput,
 } from "./model.ts";
@@ -14,7 +17,8 @@ import { ImageEditMappingError } from "../image-edit/imageProcessing.ts";
 import { editReceiptReason } from "../image-edit/recovery.ts";
 
 /** The request crossing the Desktop TaskHost IPC boundary. It contains no API key. */
-export interface NativeTaskHostRequest {
+export interface NativeTaskHostRequest extends ProviderProtocolOptions {
+  messages?: readonly ProviderTextMessage[];
   imageEditRequired?: boolean;
   maskAssetId?: string;
   kind?: "image" | "text";
@@ -278,7 +282,7 @@ function outputStatus(
   return "running";
 }
 
-function hasArchivedOutputEvidence(
+export function hasArchivedOutputEvidence(
   task: Pick<CreationTask, "kind">,
   output: Pick<CreationTaskOutput, "assetId" | "text" | "status">,
 ): boolean {
@@ -288,6 +292,19 @@ function hasArchivedOutputEvidence(
     output.text?.trim() &&
     new TextEncoder().encode(output.text).length <= 32768,
   );
+}
+
+function nativeTaskSourceItemId(
+  task: CreationTask,
+  projectId: string,
+  items: CreationProject["items"],
+): string | undefined {
+  return task.sourceItemId !== undefined
+    ? items.some((item) => item.id === task.sourceItemId)
+      ? task.sourceItemId
+      : undefined
+    : (items.find((item) => item.id === `${projectId}-prompt`)?.id ??
+        items.find((item) => item.kind === "image" && !item.result)?.id);
 }
 
 /**
@@ -718,17 +735,12 @@ export async function reconcileNativeTasks(
       );
       const sourceStates = new Map<string, "clear" | "pending" | "error">();
       for (const task of tasks) {
+        if (task.conversationRoundId && !task.sourceItemId) continue;
         const uncertain =
           task.status === "unknown" ||
           task.submissionState === "unknown" ||
           task.outputs?.some((output) => output.status === "unknown");
-        const sourceItemId =
-          task.sourceItemId !== undefined
-            ? items.some((item) => item.id === task.sourceItemId)
-              ? task.sourceItemId
-              : undefined
-            : (items.find((item) => item.id === `${project.id}-prompt`)?.id ??
-              items.find((item) => item.kind === "image" && !item.result)?.id);
+        const sourceItemId = nativeTaskSourceItemId(task, project.id, items);
         if (!sourceItemId) continue;
         if (!items.some((item) => item.id === sourceItemId)) continue;
         const state =
@@ -761,13 +773,8 @@ export async function reconcileNativeTasks(
       }
       const canvas = reconcileProjectCanvas(project.canvas, items);
       for (const task of tasks) {
-        const sourceItemId =
-          task.sourceItemId !== undefined
-            ? items.some((item) => item.id === task.sourceItemId)
-              ? task.sourceItemId
-              : undefined
-            : (items.find((item) => item.id === `${project.id}-prompt`)?.id ??
-              items.find((item) => item.kind === "image" && !item.result)?.id);
+        if (task.conversationRoundId && !task.sourceItemId) continue;
+        const sourceItemId = nativeTaskSourceItemId(task, project.id, items);
         if (!sourceItemId || !items.some((item) => item.id === sourceItemId))
           continue;
         for (const output of task.outputs ?? []) {

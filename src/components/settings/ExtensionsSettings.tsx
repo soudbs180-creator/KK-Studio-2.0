@@ -3,7 +3,7 @@ import type { SkillRegistry } from "../../features/skills/skillRegistry";
 import McpSettings from "./McpSettings";
 import PluginManagerSettings from "./PluginManagerSettings";
 import SkillsSettings from "./SkillsSettings";
-import AgentConnectionSettings from "./AgentConnectionSettings";
+import PartnerRoles from "../../features/partners/PartnerRoles";
 
 export type ExtensionsTab = "plugins" | "skills" | "partners";
 
@@ -14,33 +14,33 @@ const EXTENSION_TABS: {
   icon: string;
 }[] = [
   {
-    id: "plugins",
-    label: "插件",
-    hint: "MCP",
-    icon: "/design/figma/settings-nav-mcp.svg",
-  },
-  {
     id: "skills",
-    label: "技能",
-    hint: "Skill",
+    label: "Skill",
+    hint: "指令",
     icon: "/design/figma/settings-nav-skills.svg",
   },
   {
+    id: "plugins",
+    label: "MCP",
+    hint: "工具",
+    icon: "/design/figma/settings-nav-mcp.svg",
+  },
+  {
     id: "partners",
-    label: "伙伴",
-    hint: "智能体",
+    label: "协作伙伴",
+    hint: "角色",
     icon: "/design/figma/settings-nav-account.svg",
   },
 ];
 
 /**
- * 设置中心合并页：插件（MCP）· 技能（Skill）· 伙伴（智能体）。
+ * Extensions describe instructions, tools and specialist roles, not model connections.
  * Skill/MCP 深链接共享同一组件，页内分段控件支持键盘切换。
  */
 export default function ExtensionsSettings({
   registry,
   onFeedback,
-  defaultTab = "plugins",
+  defaultTab = "skills",
 }: {
   registry: SkillRegistry;
   onFeedback: (message: string) => void;
@@ -53,7 +53,7 @@ export default function ExtensionsSettings({
       <div
         className="settings-ext-tabs"
         role="tablist"
-        aria-label="插件、技能与伙伴"
+        aria-label="Skill、MCP 与协作伙伴"
       >
         {EXTENSION_TABS.map((item, index) => {
           return (
@@ -114,9 +114,7 @@ export default function ExtensionsSettings({
           </div>
         )}
         {tab === "skills" && <SkillsSettings registry={registry} />}
-        {tab === "partners" && (
-          <AgentConnectionSettings onFeedback={onFeedback} />
-        )}
+        {tab === "partners" && <PartnerRoles onStatus={onFeedback} />}
       </div>
     </div>
   );

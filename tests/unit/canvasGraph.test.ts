@@ -2,11 +2,64 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   connectionGeometry,
+  cardLayout,
+  cardSelectionLayout,
   cardVisualBounds,
   deleteConnection,
   restoreConnection,
 } from "../../src/domain/canvasGraph.ts";
 import { BASE_CANVAS_ITEMS } from "../../src/domain/canvasItems.ts";
+
+test("选中视频的可见范围包含编辑器而不改变卡片和连接锚点", () => {
+  for (const id of ["video1", "video2"]) {
+    const item = BASE_CANVAS_ITEMS.find((item) => item.id === id)!;
+    assert.deepEqual(cardSelectionLayout(item), {
+      width: 590,
+      height: 471,
+      left: -110,
+      collapsedHeight: 224,
+      anchor: { x: 370, y: 120 },
+    });
+    assert.deepEqual(cardLayout(item), {
+      width: 370,
+      height: 224,
+      left: 0,
+      collapsedHeight: 224,
+      anchor: { x: 370, y: 120 },
+    });
+    assert.deepEqual(cardVisualBounds(item), {
+      x: 0,
+      y: 16,
+      width: 370,
+      height: 208,
+    });
+  }
+});
+
+test("视频引用和生成占位不预留不存在的编辑器", () => {
+  const video = BASE_CANVAS_ITEMS.find((item) => item.id === "video1")!;
+  assert.deepEqual(cardSelectionLayout({ ...video, referenceOnly: true }), {
+    width: 590,
+    height: 224,
+    left: 0,
+    collapsedHeight: 224,
+    anchor: { x: 370, y: 120 },
+  });
+  assert.deepEqual(
+    cardSelectionLayout({
+      ...video,
+      generationStatus: "pending",
+      generationIndex: 0,
+    }),
+    {
+      width: 380,
+      height: 380,
+      left: 0,
+      collapsedHeight: 380,
+      anchor: { x: 380, y: 190 },
+    },
+  );
+});
 
 test("连接锚点随两端移动且不改变节点坐标", () => {
   const nodes = { image: { x: 82, y: 107 }, video1: { x: 709, y: 50 } };

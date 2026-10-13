@@ -1,0 +1,20 @@
+[WebServer] (node:64844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 11 tests using 1 worker
+
+(node:34164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\browser\capability-model-access.spec.ts:27:3 › 原生保存失败保持配置与验证状态一致 first-write (921ms)
+  ok  2 tests\browser\capability-model-access.spec.ts:27:3 › 原生保存失败保持配置与验证状态一致 key-write (745ms)
+  ok  3 tests\browser\capability-model-access.spec.ts:27:3 › 原生保存失败保持配置与验证状态一致 final-write (786ms)
+  ok  4 tests\browser\capability-model-access.spec.ts:124:1 › 隐藏或免密的提供商不读取凭据，切回 API Key 才读取精确引用 (742ms)
+  ok  5 tests\browser\capability-model-access.spec.ts:206:1 › Codex 主 Agent 在模型接入，手动字段折叠且状态真实 (717ms)
+  ok  6 tests\browser\capability-model-access.spec.ts:226:1 › 官方和中转站草稿隔离，切换不保存密钥或发起连接 (1.2s)
+  ok  7 tests\browser\capability-model-access.spec.ts:268:1 › 官方与中转站切换保留已有连接的 opaque 引用、保存身份和会话密钥 (979ms)
+  ok  8 tests\browser\capability-model-access.spec.ts:373:1 › 同地址同模型多账号重开设置保留所选身份，保存和清除只影响当前账号 (1.5s)
+  ok  9 tests\browser\capability-model-access.spec.ts:508:1 › 旧配置同地址多账号没有明确身份时，保存测试清除均要求先选择账号 (956ms)
+  ok 10 tests\browser\capability-model-access.spec.ts:621:1 › 离开 API 接入会取消连接测试，迟到目录不覆盖隐藏草稿 (772ms)
+  ok 11 tests\browser\capability-model-access.spec.ts:686:1 › 原生凭据保存等待期间禁止切换接入方式，完成后恢复选择 (814ms)
+
+  11 passed (12.4s)

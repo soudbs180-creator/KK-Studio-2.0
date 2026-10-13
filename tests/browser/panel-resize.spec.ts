@@ -22,13 +22,18 @@ test("桌面宽度可用鼠标和键盘调整，平板不出现无效拖拽柄",
   await expect
     .poll(async () => (await panel.boundingBox())!.width)
     .toBeGreaterThan(initialWidth + 180);
-  const history = (await panel
-    .getByRole("button", { name: "对话记录" })
-    .boundingBox())!;
-  const close = (await panel
-    .getByRole("button", { name: "收起对话" })
-    .boundingBox())!;
-  expect(close.x - (history.x + history.width)).toBeLessThanOrEqual(40);
+  const headerControls = await Promise.all(
+    ["对话记录", "导出对话 Markdown", "收起对话"].map((name) =>
+      panel.getByRole("button", { name, exact: true }).boundingBox(),
+    ),
+  );
+  for (let index = 1; index < headerControls.length; index++) {
+    const previous = headerControls[index - 1]!;
+    const current = headerControls[index]!;
+    const gap = current.x - (previous.x + previous.width);
+    expect(gap).toBeGreaterThanOrEqual(0);
+    expect(gap).toBeLessThanOrEqual(40);
+  }
   const hud = (await page.locator(".canvas-hud-right").boundingBox())!;
   const expandedPanel = (await panel.boundingBox())!;
   expect(hud.x + hud.width).toBeLessThanOrEqual(expandedPanel.x);

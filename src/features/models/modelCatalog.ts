@@ -1,6 +1,13 @@
 /** Non-secret, account-scoped discovery. A model list is not generation verification. */
 import type { ModelKind } from "../../domain/modelSelection.ts";
 import {
+  isStrictLoopbackProviderUrl,
+  providerProtocolSchema,
+  providerAuthModeSchema,
+  type ProviderProtocol,
+  type ProviderAuthMode,
+} from "../../domain/modelProvider.ts";
+import {
   parseImageModelCapabilities,
   type ImageModelCapabilities,
 } from "../../domain/imageModelCapabilities.ts";
@@ -20,6 +27,8 @@ export interface ModelCatalog {
   id: string;
   baseUrl?: string;
   credentialRef?: string;
+  protocol?: ProviderProtocol;
+  authMode?: ProviderAuthMode;
   fetchedAt: number;
   models: CatalogModel[];
 }
@@ -27,6 +36,8 @@ type Connection = {
   id: string;
   baseUrl?: string;
   credentialRef?: string;
+  protocol?: ProviderProtocol;
+  authMode?: ProviderAuthMode;
   model?: string;
   capabilities?: { modalities: string[] };
 };
@@ -35,6 +46,27 @@ const sizePattern = /^(?:[1-9]\d{1,4})x(?:[1-9]\d{1,4})$/;
 const kinds = ["text", "image", "video", "audio"];
 const record = (value: unknown): Record<string, unknown> =>
   value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+
+function catalogIdentity(value: {
+  baseUrl?: unknown;
+  protocol?: unknown;
+  authMode?: unknown;
+}): { protocol: ProviderProtocol; authMode: ProviderAuthMode } | null {
+  const protocol = providerProtocolSchema.optional().safeParse(value.protocol);
+  const authMode = providerAuthModeSchema.optional().safeParse(value.authMode);
+  if (!protocol.success || !authMode.success) return null;
+  if (
+    authMode.data === "none" &&
+    (typeof value.baseUrl !== "string" ||
+      !isStrictLoopbackProviderUrl(value.baseUrl))
+  )
+    return null;
+  return {
+    protocol: protocol.data ?? "openai-compatible",
+    authMode: authMode.data ?? "api_key",
+  };
+}
+
 function displayMetadata(value: Record<string, unknown>) {
   const text = (key: string) =>
     typeof value[key] === "string"
@@ -126,6 +158,8 @@ export function readModelCatalogs(): ModelCatalog[] {
     return raw.slice(0, 200).flatMap((value) => {
       const item = record(value);
       if (typeof item.id !== "string" || !Array.isArray(item.models)) return [];
+      const identity = catalogIdentity(item);
+      if (!identity) return [];
       const models = item.models.slice(0, 5000).flatMap((value) => {
         const model = storedModel(value);
         return model ? [model] : [];
@@ -138,6 +172,7 @@ export function readModelCatalogs(): ModelCatalog[] {
             typeof item.credentialRef === "string"
               ? item.credentialRef
               : undefined,
+          ...identity,
           fetchedAt: typeof item.fetchedAt === "number" ? item.fetchedAt : 0,
           models,
         },
@@ -148,10 +183,16 @@ export function readModelCatalogs(): ModelCatalog[] {
   }
 }
 function matches(connection: Connection, catalog: ModelCatalog) {
+  const connectionIdentity = catalogIdentity(connection);
+  const savedIdentity = catalogIdentity(catalog);
   return (
+    connectionIdentity !== null &&
+    savedIdentity !== null &&
     connection.id === catalog.id &&
     connection.baseUrl === catalog.baseUrl &&
-    connection.credentialRef === catalog.credentialRef
+    connection.credentialRef === catalog.credentialRef &&
+    connectionIdentity.protocol === savedIdentity.protocol &&
+    connectionIdentity.authMode === savedIdentity.authMode
   );
 }
 export function catalogForConnection(
@@ -178,6 +219,8 @@ export function saveModelCatalog(
   models: CatalogModel[],
   manual = false,
 ): void {
+  const identity = catalogIdentity(connection);
+  if (!identity) throw new Error("模型目录的协议或认证方式无效。");
   const current = readModelCatalogs();
   const previous = current.find((item) => matches(connection, item));
   const next = manual
@@ -196,6 +239,7 @@ export function saveModelCatalog(
         id: connection.id,
         baseUrl: connection.baseUrl,
         credentialRef: connection.credentialRef,
+        ...identity,
         fetchedAt: Date.now(),
         models: next.slice(0, 5000).flatMap((value) => {
           const model = storedModel(value);

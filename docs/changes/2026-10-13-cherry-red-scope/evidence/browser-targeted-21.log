@@ -1,0 +1,30 @@
+[WebServer] (node:64724) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 21 tests using 1 worker
+
+(node:63812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\browser\assistant-profiles.spec.ts:25:1 › curated programming/image/video assistants are selectable and bundled prompts are read-only (1.4s)
+  ok  2 tests\browser\assistant-profiles.spec.ts:54:1 › a custom assistant is selected only after save and survives project/registry reload and edit (3.1s)
+  ok  3 tests\browser\assistant-profiles.spec.ts:108:1 › disabled and uninstalled assistants remain visible with a reason and cannot be selected (2.3s)
+  ok  4 tests\browser\assistant-profiles.spec.ts:154:1 › the Skills entry keeps bundled assistant editing read-only and rejects an import overwrite (1.4s)
+  ok  5 tests\browser\assistant-profiles.spec.ts:218:1 › validation/persistence failures preserve the editor and do not create a false saved selection (1.6s)
+  ok  6 tests\browser\composer-fidelity.spec.ts:37:1 › 平板会话分栏时画布控件左移且标题和输入控件尺寸稳定 (1.7s)
+  ok  7 tests\browser\interaction-regressions.spec.ts:93:1 › 模型测试拒绝 HTML 假成功并可从 HTTP 错误恢复 (809ms)
+  ok  8 tests\browser\interaction-regressions.spec.ts:119:1 › 取消、编辑配置与离线状态不会留下过期的连接成功提示 (722ms)
+  ok  9 tests\browser\message-content.spec.ts:66:3 › safe message Markdown and original copy remain usable in dark (2.1s)
+  ok 10 tests\browser\message-content.spec.ts:66:3 › safe message Markdown and original copy remain usable in light (2.1s)
+  ok 11 tests\browser\message-content.spec.ts:123:1 › local Markdown export includes originals and excludes internal status objects (2.2s)
+  ok 12 tests\browser\page-alignment.spec.ts:4:1 › current Figma modal shells keep dimensions and settings content origin (890ms)
+  ok 13 tests\browser\project-package.spec.ts:85:1 › Web 项目包入口禁用并解释 Desktop 支持范围 (588ms)
+  ok 14 tests\browser\project-package.spec.ts:102:1 › Desktop 取消导出文件选择不会调用项目包写入 (1.6s)
+  ok 15 tests\browser\project-package.spec.ts:118:1 › 项目包预检失败显示错误且不允许恢复 (1.6s)
+  ok 16 tests\browser\project-package.spec.ts:140:1 › 原生恢复完成前不报告成功，完成后可明确打开独立副本 (1.7s)
+  ok 17 tests\browser\project-package.spec.ts:223:1 › 恢复失败保留重试入口并且不会出现成功或打开按钮 (1.7s)
+  ok 18 tests\browser\provider-conversation.spec.ts:61:1 › two model replies use frozen routes, independent multi-turn history and existing durable tasks (1.8s)
+  ok 19 tests\browser\provider-conversation.spec.ts:127:1 › one explicit rejection preserves the other reply and does not retry (1.6s)
+  ok 20 tests\browser\responsive-layout.spec.ts:217:3 › short viewport 390x480 retains reachable chat and settings controls (789ms)
+  ok 21 tests\browser\responsive-layout.spec.ts:217:3 › short viewport 844x390 retains reachable chat and settings controls (1.1s)
+
+  21 passed (35.3s)

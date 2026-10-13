@@ -2499,6 +2499,197 @@
   cursor: pointer;
 }
 
+/* UI review: readable task popover with room for status and previews. */
+.task-panel {
+  --task-panel-available-height: calc(100dvh - 96px);
+  width: min(var(--kk-task-popover-width), calc(100vw - 32px));
+  height: min(
+    var(--kk-task-popover-height),
+    var(--task-panel-available-height)
+  );
+  min-height: min(
+    var(--kk-task-popover-min-height),
+    var(--task-panel-available-height)
+  );
+  max-height: var(--task-panel-available-height);
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border-radius: var(--kk-radius-panel);
+  box-sizing: border-box;
+}
+.task-panel-heading,
+.canvas-hud .task-panel-heading {
+  position: static;
+  width: 100%;
+  height: var(--kk-control-h-md);
+  flex-shrink: 0;
+  font-size: var(--ui-font-body);
+  line-height: 20px;
+}
+.task-panel-close {
+  width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  border-radius: var(--kk-radius-full);
+}
+.task-panel-close img {
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
+  transform: none;
+}
+.task-panel-tabs,
+.canvas-hud .task-panel-tabs {
+  position: static;
+  width: 100%;
+  height: var(--kk-control-h-md);
+  flex-shrink: 0;
+  margin: 8px 0 12px;
+  gap: 6px;
+  align-items: stretch;
+}
+.task-tab,
+.canvas-hud .task-tab {
+  flex: 1 1 0;
+  width: auto !important;
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
+  padding: 0 10px;
+  border-radius: var(--kk-radius-full);
+  font-size: var(--ui-font-caption);
+  line-height: var(--kk-control-h-md);
+}
+.task-tab.active::before,
+.canvas-hud .task-tab.active::before {
+  height: var(--kk-control-h-md);
+  border-radius: inherit;
+}
+.task-grid,
+.canvas-hud .task-grid {
+  position: static;
+  width: 100%;
+  height: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: auto;
+  gap: 12px;
+  overflow-y: auto;
+}
+.task-card {
+  width: auto;
+  height: auto;
+  min-height: 132px;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--kk-radius-menu);
+  background: var(--bg-input);
+}
+.task-card-thumb {
+  width: 100%;
+  height: 84px;
+  flex-basis: 84px;
+  border-radius: var(--kk-radius-control);
+}
+.task-card-image {
+  position: static;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.task-card-info {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  gap: 4px;
+  line-height: 16px;
+}
+.task-card-title,
+.task-card-status,
+.task-card.is-running .task-card-status {
+  width: auto;
+  flex: 1 1 auto;
+  font-size: var(--ui-font-caption);
+  line-height: 16px;
+}
+.task-filter-empty {
+  position: static;
+  width: 100%;
+  height: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  font-size: var(--ui-font-caption);
+}
+.task-panel > .task-empty {
+  position: static;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 24px 12px;
+}
+.task-workbench-link,
+.canvas-hud .task-workbench-link {
+  position: static;
+  width: 100%;
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
+  flex-shrink: 0;
+  margin-top: 12px;
+  padding: 0 12px;
+  border-radius: var(--kk-radius-full);
+  font-size: var(--ui-font-caption);
+}
+.task-detail {
+  padding: 16px;
+  overflow-y: auto;
+}
+.task-detail-heading {
+  height: var(--kk-control-h-md);
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
+}
+.task-detail-heading button {
+  width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  padding: 0;
+  border: 0;
+  border-radius: var(--kk-radius-full);
+}
+.task-detail-heading button::before {
+  inset: 0;
+}
+.task-detail-heading img {
+  width: var(--kk-icon-glyph-sm);
+  height: var(--kk-icon-glyph-sm);
+  transform: none;
+}
+.task-detail-body > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.task-detail-body strong {
+  font-size: var(--kk-font-body-strong);
+  line-height: var(--kk-line-body-strong);
+}
+.task-detail-body span,
+.task-detail > p {
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+.task-detail-action,
+.canvas-hud .task-detail-action {
+  width: auto;
+  min-height: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  padding: 0 var(--kk-space-3);
+  border-radius: var(--kk-radius-control);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+}
+
 /* Card toolbar and controls use the same hit size and pill geometry. */
 .model-button,
 .param-button,
@@ -2547,5 +2738,8 @@
 }
 .canvas-node-result.has-reference-composer[data-kind="image"]
   > .creation-composer {
-  top: calc(100% + 10px);
+  position: relative;
+  top: auto;
+  margin-top: 10px;
+  z-index: var(--kk-z-sticky);
 }

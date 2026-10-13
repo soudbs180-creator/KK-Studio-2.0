@@ -162,7 +162,6 @@ export default function StartComposer({
               draft={draft}
               model={model}
               defaultModel={defaultModel}
-              onOptionsChange={commit}
               open={modelMenuOpen}
               onToggle={() => toggleMenu("model")}
               onSelect={(choice) => {

@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import UiIcon from "./UiIcon";
 
+// 依赖契约见 tests/unit/windowControls.test.ts：本组件只允许 React / UiIcon /
+// @tauri-apps/api/window，新增依赖前先在测试中显式登记。
 function releaseListener(stop: () => void) {
   const report = () => console.warn("窗口状态监听清理失败。");
   try {

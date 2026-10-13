@@ -1,0 +1,12 @@
+[WebServer] (node:90968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:87180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\browser\message-content.spec.ts:66:3 › safe message Markdown and original copy remain usable in dark (2.3s)
+  ok 2 tests\browser\message-content.spec.ts:66:3 › safe message Markdown and original copy remain usable in light (2.2s)
+  ok 3 tests\browser\message-content.spec.ts:123:1 › local Markdown export includes originals and excludes internal status objects (2.3s)
+
+  3 passed (9.3s)

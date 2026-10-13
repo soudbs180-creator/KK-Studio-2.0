@@ -1021,6 +1021,314 @@ mod tests {
         let _ = fs::remove_dir_all(source);
     }
 
+    fn cherry_snapshot(asset_id: &str) -> Value {
+        let mut current = snapshot(asset_id);
+        current["homeDraft"]["assistantId"] = json!("assistant-code-builder");
+        current["homeDraft"]["providerConnectionId"] = json!("opaque-home");
+        current["homeDraft"]["conversationRoutes"] = json!([]);
+        current["projects"][0]["composerDraft"] = json!({
+            "prompt": "next", "model": "chat", "kind": "text", "attachments": [],
+            "updatedAt": 1, "assistantId": "assistant-custom-1", "providerConnectionId": "opaque-a",
+            "conversationRoutes": [
+                {"connectionId":"opaque-a", "modelId":"chat"},
+                {"connectionId":"opaque-b", "modelId":"other-chat"}
+            ]
+        });
+        current
+    }
+
+    fn assert_cherry_package_round_trip(current: Value, source: &Path) {
+        let (snapshots, assets, asset_id, original) = seed(source);
+        let mut current = current;
+        current["revision"] = json!(2);
+        snapshots.write(current.clone(), Some(1)).unwrap();
+        let source_path = source.join("projects").join("creation-v2.json");
+        let source_bytes = fs::read(&source_path).unwrap();
+        let package_path = source.join("cherry.kkproject");
+        let exported = export_package(&snapshots, &assets, &package_path).unwrap();
+        let preflight = preflight_package(&package_path).unwrap();
+        assert_eq!(preflight.checksum, exported.checksum);
+        assert_eq!(preflight.asset_ids, vec![asset_id.clone()]);
+        let restore_root = fixture_root();
+        let target = restore_root.join("isolated-restored");
+        let imported = import_package(&package_path, &target).unwrap();
+        assert_eq!(imported.checksum, exported.checksum);
+        let restored = SnapshotRepository::new(target.join("projects").join("creation-v2.json"));
+        assert_eq!(restored.read().unwrap().snapshot.unwrap(), current);
+        assert_eq!(fs::read(source_path).unwrap(), source_bytes);
+        let restored_assets = AssetRepository::new(target.join("assets"));
+        let record = restored_assets.read(&asset_id).unwrap().unwrap();
+        assert_eq!(STANDARD.decode(record.data_base64).unwrap(), original);
+        let _ = fs::remove_dir_all(restore_root);
+    }
+
+    fn cherry_asset_id() -> String {
+        format!(
+            "asset-{}",
+            &asset_validation::hash(b"portable-original")[..24]
+        )
+    }
+
+    fn cherry_conversation_task(protocol: &str, auth: &str) -> Value {
+        json!({
+            "id":"round-1-route-0", "prompt":"next", "model":"chat", "kind":"text",
+            "status":"succeeded", "submissionState":"terminal", "createdAt":1, "updatedAt":2,
+            "attachments":[], "attempt":1, "requestedOutputs":1, "completedOutputs":1,
+            "idempotencyKey":"round-1-submission-0", "batchId":"round-1", "privacyMode":"byok_local",
+            "providerConnectionId":"opaque-a", "providerCredentialRef":"vault_a",
+            "providerBaseUrl": if auth == "none" { "http://127.0.0.1:11434/v1" } else { "https://api.example.com/v1" },
+            "providerName":"Synthetic", "providerProtocol":protocol, "providerAuthMode":auth,
+            "conversationRoundId":"round-1", "conversationUserMessageId":"user-1",
+            "conversationMessages":[
+                {"role":"system", "content":"Preserve originals; task instructions only."},
+                {"role":"user", "content":"first"},
+                {"role":"assistant", "content":"回答 🟦"},
+                {"role":"user", "content":"next"}
+            ],
+            "outputs":[{"index":0, "status":"succeeded", "model":"chat", "provider":"Synthetic", "text":"结果 🟦", "createdAt":2}]
+        })
+    }
+
+    #[test]
+    fn cherry_assistant_drafts_round_trip_with_legacy_projects() {
+        let source = fixture_root();
+        let asset_id = cherry_asset_id();
+        let mut current = cherry_snapshot(&asset_id);
+        let mut legacy = snapshot(&asset_id)["projects"][0].clone();
+        legacy["id"] = json!("legacy-project");
+        current["projects"].as_array_mut().unwrap().push(legacy);
+        assert_cherry_package_round_trip(current, &source);
+        let _ = fs::remove_dir_all(source);
+    }
+
+    #[test]
+    fn cherry_conversations_round_trip_protocols_history_and_text_results() {
+        for (protocol, auth) in [
+            ("openai-compatible", "api_key"),
+            ("anthropic-messages", "api_key"),
+            ("gemini", "api_key"),
+            ("openai-compatible", "none"),
+        ] {
+            let source = fixture_root();
+            let mut current = snapshot(&cherry_asset_id());
+            current["projects"][0]["messages"] = json!([{
+                "id":"user-1", "role":"user", "content":"next", "roundId":"round-1", "createdAt":1
+            }]);
+            current["projects"][0]["tasks"]
+                .as_array_mut()
+                .unwrap()
+                .push(cherry_conversation_task(protocol, auth));
+            assert_cherry_package_round_trip(current, &source);
+            let _ = fs::remove_dir_all(source);
+        }
+    }
+
+    #[test]
+    fn cherry_conversation_bounds_preserve_utf8_text_and_utf16_identities() {
+        let source = fixture_root();
+        let mut current = cherry_snapshot(&cherry_asset_id());
+        current["homeDraft"]["assistantId"] = json!(format!("assistant-{}", "a".repeat(140)));
+        current["homeDraft"]["providerConnectionId"] = json!("🟦".repeat(60));
+        current["homeDraft"]["conversationRoutes"] = json!([
+            {"connectionId":"🟦".repeat(80), "modelId":"🟦".repeat(60)},
+            {"connectionId":"b", "modelId":"chat"},
+            {"connectionId":"c", "modelId":"chat"}
+        ]);
+        let mut task = cherry_conversation_task("openai-compatible", "api_key");
+        let mut messages = vec![json!({"role":"assistant", "content":"🟦".repeat(16376)})];
+        messages.extend((0..30).map(|_| json!({"role":"user", "content":"x"})));
+        messages.push(json!({"role":"user", "content":"ab"}));
+        task["prompt"] = json!("ab");
+        task["conversationMessages"] = json!(messages);
+        task["outputs"][0]["text"] = json!("🟦".repeat(8192));
+        current["projects"][0]["tasks"]
+            .as_array_mut()
+            .unwrap()
+            .push(task);
+        assert_cherry_package_round_trip(current, &source);
+        let _ = fs::remove_dir_all(source);
+    }
+
+    #[test]
+    fn cherry_legacy_completed_slots_round_trip_without_an_output_vector() {
+        let source = fixture_root();
+        let mut current = snapshot(&cherry_asset_id());
+        current["projects"][0]["tasks"][0]["completedOutputIndices"] = json!([0, 2, 63]);
+        assert_cherry_package_round_trip(current, &source);
+        let _ = fs::remove_dir_all(source);
+    }
+
+    #[test]
+    fn cherry_image_tasks_preserve_optional_provider_protocol_metadata() {
+        let source = fixture_root();
+        let mut current = snapshot(&cherry_asset_id());
+        current["projects"][0]["tasks"][0]["kind"] = json!("image");
+        current["projects"][0]["tasks"][0]["providerProtocol"] = json!("openai-compatible");
+        current["projects"][0]["tasks"][0]["providerAuthMode"] = json!("api_key");
+        assert_cherry_package_round_trip(current, &source);
+        let _ = fs::remove_dir_all(source);
+    }
+
+    #[test]
+    fn cherry_nonblank_context_matches_frontend_javascript_whitespace() {
+        let source = fixture_root();
+        let mut current = snapshot(&cherry_asset_id());
+        let mut task = cherry_conversation_task("openai-compatible", "api_key");
+        // JavaScript trim preserves U+0085; Rust trim alone would erase this context.
+        task["conversationMessages"] = json!([{"role":"user", "content":"\u{0085}"}]);
+        current["projects"][0]["tasks"]
+            .as_array_mut()
+            .unwrap()
+            .push(task);
+        assert_cherry_package_round_trip(current, &source);
+        let _ = fs::remove_dir_all(source);
+    }
+
+    #[test]
+    fn cherry_export_rejects_malformed_or_lossy_additive_fields() {
+        for (pointer, invalid) in [
+            ("/homeDraft/assistantId", json!("not-an-assistant")),
+            ("/homeDraft/assistantId", json!("assistant-")),
+            ("/homeDraft/assistantId", json!("assistant-非ASCII")),
+            (
+                "/homeDraft/assistantId",
+                json!(format!("assistant-{}", "a".repeat(141))),
+            ),
+            ("/homeDraft/providerConnectionId", json!("🟦".repeat(61))),
+            (
+                "/homeDraft/conversationRoutes",
+                json!([{"connectionId":"a"}]),
+            ),
+            (
+                "/homeDraft/conversationRoutes",
+                json!([{"connectionId":"a", "modelId":"b", "permissions":["tools"]}]),
+            ),
+            (
+                "/homeDraft/conversationRoutes",
+                json!([{"connectionId":"🟦".repeat(81), "modelId":"b"}]),
+            ),
+            (
+                "/homeDraft/conversationRoutes",
+                json!([{"connectionId":"a", "modelId":"🟦".repeat(61)}]),
+            ),
+            (
+                "/homeDraft/conversationRoutes",
+                json!(vec![json!({"connectionId":"a", "modelId":"b"}); 4]),
+            ),
+            ("/projects/0/tasks/1/providerProtocol", json!("unsupported")),
+            ("/projects/0/tasks/1/providerAuthMode", json!("oauth")),
+            ("/projects/0/tasks/1/providerAuthMode", json!("none")),
+            ("/projects/0/tasks/1/kind", json!("image")),
+            ("/projects/0/tasks/1/conversationRoundId", json!("")),
+            (
+                "/projects/0/tasks/1/conversationRoundId",
+                json!("r".repeat(161)),
+            ),
+            (
+                "/projects/0/tasks/1/conversationUserMessageId",
+                json!("m".repeat(161)),
+            ),
+            ("/projects/0/messages/0/roundId", json!("")),
+            ("/projects/0/messages/0/roundId", json!("r".repeat(161))),
+            ("/projects/0/tasks/1/conversationMessages", json!([])),
+            (
+                "/projects/0/tasks/1/conversationMessages",
+                json!(vec![json!({"role":"user", "content":"x"}); 33]),
+            ),
+            (
+                "/projects/0/tasks/1/conversationMessages",
+                json!([{"role":"tool", "content":"x"}]),
+            ),
+            (
+                "/projects/0/tasks/1/conversationMessages",
+                json!([{"role":"user", "content":" \n\t "}]),
+            ),
+            (
+                "/projects/0/tasks/1/conversationMessages",
+                json!([{"role":"user", "content":"\u{feff}"}]),
+            ),
+            (
+                "/projects/0/tasks/1/conversationMessages",
+                json!([{"role":"system", "content":"task instructions", "permissionMode":"automatic"}]),
+            ),
+            (
+                "/projects/0/tasks/1/conversationMessages",
+                json!([{"role":"user", "content":format!("{}a", "🟦".repeat(16384))}]),
+            ),
+            (
+                "/projects/0/tasks/1/outputs/0/text",
+                json!(format!("{}a", "🟦".repeat(8192))),
+            ),
+            ("/projects/0/tasks/0/completedOutputIndices", json!([])),
+            ("/projects/0/tasks/0/completedOutputIndices", json!([0, 0])),
+            ("/projects/0/tasks/0/completedOutputIndices", json!([2, 0])),
+            ("/projects/0/tasks/0/completedOutputIndices", json!([64])),
+            ("/projects/0/tasks/0/completedOutputIndices", json!([-1])),
+            ("/projects/0/tasks/0/completedOutputIndices", json!([0.5])),
+        ] {
+            let source = fixture_root();
+            let (snapshots, assets, asset_id, _) = seed(&source);
+            let mut current = cherry_snapshot(&asset_id);
+            current["homeDraft"]["conversationRoutes"] = json!([]);
+            current["projects"][0]["messages"] = json!([{
+                "id":"user-1", "role":"user", "content":"next", "roundId":"round-1", "createdAt":1
+            }]);
+            current["projects"][0]["tasks"]
+                .as_array_mut()
+                .unwrap()
+                .push(cherry_conversation_task("openai-compatible", "api_key"));
+            current["projects"][0]["tasks"][0]["completedOutputIndices"] = json!([0]);
+            *current.pointer_mut(pointer).expect(pointer) = invalid.clone();
+            current["revision"] = json!(2);
+            snapshots.write(current, Some(1)).unwrap();
+            let source_path = source.join("projects").join("creation-v2.json");
+            let source_bytes = fs::read(&source_path).unwrap();
+            let package = source.join("invalid.kkproject");
+            let error = export_package(&snapshots, &assets, &package).unwrap_err();
+            assert!(error.starts_with("corrupt:"), "{pointer}: {error}");
+            assert!(!package.exists(), "{pointer}");
+            assert_eq!(fs::read(source_path).unwrap(), source_bytes, "{pointer}");
+            let _ = fs::remove_dir_all(source);
+        }
+    }
+
+    #[test]
+    fn cherry_preflight_and_import_reject_secret_or_permission_fields() {
+        for (field, expected) in [
+            ("authorization", "secret-present:"),
+            ("permissions", "corrupt:"),
+        ] {
+            let source = fixture_root();
+            let current = cherry_snapshot(&cherry_asset_id());
+            assert_cherry_package_round_trip(current, &source);
+            let package = source.join("cherry.kkproject");
+            let mut entries = read_zip(&fs::read(&package).unwrap()).unwrap();
+            let manifest_entry = entries
+                .iter_mut()
+                .find(|(name, _)| name == MANIFEST_NAME)
+                .unwrap();
+            let mut manifest: Value = serde_json::from_slice(&manifest_entry.1).unwrap();
+            manifest["snapshot"]["homeDraft"]["conversationRoutes"] = json!([
+                {"connectionId":"a", "modelId":"chat", field:"synthetic-value"}
+            ]);
+            let map = manifest.as_object_mut().unwrap();
+            let checksum = manifest_checksum(map).unwrap();
+            map.insert("checksum".into(), json!(checksum));
+            manifest_entry.1 = serde_json::to_vec(&manifest).unwrap();
+            let untrusted = source.join("untrusted.kkproject");
+            fs::write(&untrusted, make_zip(&entries).unwrap()).unwrap();
+            assert!(preflight_package(&untrusted)
+                .unwrap_err()
+                .starts_with(expected));
+            let target = source.join("untrusted-restored");
+            assert!(import_package(&untrusted, &target)
+                .unwrap_err()
+                .starts_with(expected));
+            assert!(!target.exists());
+            let _ = fs::remove_dir_all(source);
+        }
+    }
+
     #[test]
     fn task_cost_receipts_round_trip_with_bound_identity() {
         let source = fixture_root();

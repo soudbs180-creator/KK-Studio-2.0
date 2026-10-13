@@ -89,13 +89,18 @@ function readJson(filePath) {
   }
 }
 
-function isLinkedPath(filePath) {
+function isLinkedPath(filePath, projectRoot) {
   try {
-    // realpath() may return a different but equivalent spelling on Windows
-    // (for example an 8.3 path). Only lstat() tells us whether the directory
-    // entry itself is a symlink/junction; comparing path spellings creates
-    // false positives for ordinary directories on hosted runners.
-    return fs.lstatSync(filePath).isSymbolicLink();
+    const stats = fs.lstatSync(filePath);
+    if (stats.isSymbolicLink()) return true;
+    const absolute = path.resolve(
+      fs.realpathSync.native(projectRoot),
+      path.relative(path.resolve(projectRoot), path.resolve(filePath)),
+    );
+    const resolved = path.resolve(fs.realpathSync.native(filePath));
+    return process.platform === "win32"
+      ? resolved.toLowerCase() !== absolute.toLowerCase()
+      : resolved !== absolute;
   } catch {
     return false;
   }
@@ -117,7 +122,7 @@ export function inspectDesktopDependencies(projectRoot) {
   }
 
   const nodeModulesPath = path.join(projectRoot, "node_modules");
-  if (isLinkedPath(nodeModulesPath)) {
+  if (isLinkedPath(nodeModulesPath, projectRoot)) {
     return {
       needsInstall: true,
       mismatches: [
@@ -139,7 +144,7 @@ export function inspectDesktopDependencies(projectRoot) {
       const name = packagePath.slice("node_modules/".length);
       const expected = lockEntry.version;
       if (!fs.existsSync(packageRoot) && lockEntry.optional) return [];
-      if (isLinkedPath(packageRoot)) {
+      if (isLinkedPath(packageRoot, projectRoot)) {
         return [{ name, expected, actual: "linked package" }];
       }
       const installed = readJson(path.join(packageRoot, "package.json"));
@@ -215,7 +220,7 @@ function resolveNpmCliPath(projectRoot) {
 
 function installDesktopDependencies(projectRoot) {
   const nodeModulesPath = path.join(projectRoot, "node_modules");
-  if (isLinkedPath(nodeModulesPath)) {
+  if (isLinkedPath(nodeModulesPath, projectRoot)) {
     throw new Error(
       "Desktop dependency repair requires a local node_modules directory; linked dependencies must be repaired in their owner checkout.",
     );

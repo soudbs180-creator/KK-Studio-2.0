@@ -1,0 +1,12 @@
+{
+  "createdAt": "2026-10-13T13:49:53.814Z",
+  "scope": "Private LF attribute control only; original source/index untouched; Node runner exits before Rust compilation",
+  "coreAutocrlf": "true",
+  "attributes": "src-tauri/Cargo.toml: text: set\nsrc-tauri/Cargo.toml: eol: lf",
+  "eol": "i/lf    w/lf    attr/text eol=lf      \tsrc-tauri/Cargo.toml",
+  "beforeSha256": "ee5f2755b83bead307d9de10588530e4847153b25082fdc6c8e7b994288a850d",
+  "afterSha256": "ee5f2755b83bead307d9de10588530e4847153b25082fdc6c8e7b994288a850d",
+  "privateIndexStatus": "A  .gitattributes\nA  src-tauri/Cargo.toml",
+  "modifiedWorktreeColumn": false,
+  "runnerMarker": true
+}

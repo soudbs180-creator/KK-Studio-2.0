@@ -105,6 +105,18 @@ export const skillRecordSchema = z
   .strict();
 export type SkillRecord = z.infer<typeof skillRecordSchema>;
 
+function assertRecordEditable(record: SkillRecord | undefined): void {
+  if (
+    record?.manifest.source === "bundled" &&
+    record.manifest.id.startsWith("assistant-")
+  )
+    throw new Error("内置助手为只读，请新建自定义助手。");
+}
+function assertAssistantLength(id: string, instructions: string): void {
+  if (id.startsWith("assistant-") && instructions.length > 3000)
+    throw new Error("助手指令最多 3000 字符，请精简指令以保留任务输入空间。");
+}
+
 export const SKILL_REGISTRY_STORAGE_KEY = "kk-studio-next:skills:v1";
 export const SKILL_RECORDS_STORAGE_KEY = "kk-studio-next:skills:records:v2";
 export const SKILLS_CHANGED_EVENT = "kk:skills-changed";
@@ -267,6 +279,7 @@ function createRecord(input: SkillImportInput): SkillRecord {
     dependencies: input.manifest.dependencies ?? [],
   });
   const now = Date.now();
+  assertAssistantLength(manifest.id, input.instructions);
   return {
     manifest,
     instructions: instructionsSchema.parse(input.instructions),
@@ -431,6 +444,7 @@ export class SkillRegistry {
   registerManifest(value: unknown): SkillManifest {
     const manifest = parseSkillManifest(value);
     const current = this.records.get(manifest.id);
+    assertRecordEditable(current);
     const next = new Map(this.records);
     if (current)
       next.set(manifest.id, {
@@ -492,6 +506,7 @@ export class SkillRegistry {
   importSkill(value: unknown): SkillRecord {
     const incoming = parseSkillImport(value);
     const current = this.records.get(incoming.manifest.id);
+    assertRecordEditable(current);
     const record = current
       ? { ...incoming, createdAt: current.createdAt, updatedAt: Date.now() }
       : incoming;
@@ -525,6 +540,7 @@ export class SkillRegistry {
   ): SkillRecord {
     const current = this.records.get(id);
     if (!current) throw new Error("Skill 不存在。");
+    assertRecordEditable(current);
     const manifest = patch.manifest
       ? parseSkillManifest({ ...current.manifest, ...patch.manifest })
       : current.manifest;
@@ -537,6 +553,7 @@ export class SkillRegistry {
       enabled: patch.enabled ?? current.enabled,
       updatedAt: Date.now(),
     });
+    assertAssistantLength(id, record.instructions);
     const next = new Map(this.records);
     next.set(id, record);
     if (!this.persist(next)) throw new Error("Skill 保存失败，未覆盖原记录。");

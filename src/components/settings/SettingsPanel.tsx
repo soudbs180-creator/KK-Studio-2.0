@@ -23,13 +23,13 @@ const LEGACY_EXTENSION_TAB: Record<string, ExtensionsTab> = {
   plugins: "plugins",
   skill: "skills",
   skills: "skills",
-  partners: "partners",
 };
 
 function resolveInitialSection(initial: SettingsSection): {
   section: SettingsSection;
   extensionsTab?: ExtensionsTab;
 } {
+  if (initial === "partners") return { section: "providers" };
   const legacyTab = LEGACY_EXTENSION_TAB[initial];
   if (legacyTab) {
     return {

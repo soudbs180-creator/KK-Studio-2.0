@@ -20,7 +20,7 @@ Dark / Light 通过根节点 `data-theme` 切换，强调色通过 `data-accent`
 - 输入区复用 [`ComposerTextarea`](../src/components/ComposerTextarea.tsx)，保留 IME、增长高度、语音和附件行为。
 - 弹层使用真实 Escape、外部点击与回焦路径；手机设置分类位于底部横向 rail。
 - 生成入口复用 [`uiGovernance`](../src/domain/uiGovernance.ts) 的状态谓词；未配置、离线和输入无效时有可读原因及恢复入口。
-- 首页模型菜单保存批量数量与数据模式；上传按钮直接选择文件，插件与伙伴从设置访问。
+- 模型菜单只选择来源、供应商和型号；生成数量在图片/视频节点控制。上传按钮直接选择文件，Skill、MCP 和协作伙伴从扩展访问，Codex 主 Agent 从模型接入访问。
 
 尺寸源见 [DESIGN_TOKENS](DESIGN_TOKENS.md)，交互见 [UI_RULES](UI_RULES.md)，
 页面模板见 [UI_ARCHETYPES](UI_ARCHETYPES.md)。

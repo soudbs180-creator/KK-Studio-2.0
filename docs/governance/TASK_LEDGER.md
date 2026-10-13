@@ -6,6 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| TASK-CHERRY-RED-001 | Cherry 红框能力选择性融合与三桌面平台补齐 | PARTIAL | 进行中 | P1 | none | root | 冻结当前mainline候选，重建默认发行/测试驱动与安装器，实际重跑Native/Hosted并补审；保留primary的11项后续并发改动，最终产品验收待确认。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | REVIEW | 进行中 | P1 | none | root | 在当前合并候选上复核 Windows/Ubuntu hook、npm verify 与 delivery 的 exact-SHA 结果；Hosted verify 未完成前保持 REVIEW。 |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 等待Hosted Windows带启动阶段/退出码/运行时日志的重跑；保留PR43原失败和本机未复现原件，未取得新分类前保持TODO。 |
@@ -131,6 +132,25 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GOV-004 | 未合并分支全量核验、分类与收敛合并 | PARTIAL | 进行中 | P1 | TASK-GOV-003 | root | P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包 |
 | TASK-GOV-005 | PR #55 历史快照合法集成与门禁修复 | REVIEW | 进行中 | P1 | none | root | 完成独立 exact-SHA review，fast-forward update PR #55 branch，回读 Hosted verify/delivery；不要直接推送 main。 |
 | TASK-ENG-001 | 引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定 | REVIEW | 进行中 | P1 | none | root | 基于最新 origin/main 完成冲突承接、独立 exact-SHA review 和 Hosted verify；未完成前保持 REVIEW。 |
+
+## TASK-CHERRY-RED-001 — Cherry 红框能力选择性融合与三桌面平台补齐
+
+- Goal: 以 KK 为主体补齐近期模型/助手/MCP/桌面体验，保留已有行为并完成实际实现和相应验证。
+- Scope: 免费开源、本地模型、多协议、精选自定义助手与文本比较、共享安全 Markdown/本地分享、原生凭据/runtime/平台能力；框外功能保持后续可选。
+- Display status: 进行中
+- Priority: P1 — 用户以红框确定近期范围并明确授权实际实施。
+- Requirement refs: ledger:TASK-CHERRY-RED-001
+- Feature IDs: FEAT-009, FEAT-011, FEAT-012, FEAT-022, FEAT-032
+- Owner role: repository-maintainer
+- Acceptance: 旧数据/账号/模型/任务身份保留，故障/取消/迟到恢复回归通过。; 采纳项有源码接线、类型检查、测试、构建和相应运行证据。; 外部能力、Mac/Linux实际设备缺口与Windows本地验证分别记录，不假升级REAL。
+- Branch: `codex/TASK-CHERRY-RED-001-mainline`
+- Worktree: `D:/kk-studio/.worktrees/TASK-CHERRY-RED-001`
+- Modules: src/components, src/domain, src/features/creation, src/features/agent, src/features/models, src/integrations, src-tauri, tests, docs/changes/2026-10-13-cherry-red-scope
+- Verification: NOT_VERIFIED — 主线694a dirty候选最新完整verify退出0：unit1138/1124PASS14SKIP，Agent174/172PASS2SKIP，browser528含一次并发保存首试超时后重试成功，development四步PASS；NativeRust154通过。独立MR001-003预检关闭，账号保存、完整目录身份和迟到401/429已RED/GREEN。源码0e77旧review及历史失败保留，最终mainline工件/Hosted/正式补审/产品验收仍待完成。
+- Evidence: [docs/changes/2026-10-13-cherry-red-scope/verification.md](../../docs/changes/2026-10-13-cherry-red-scope/verification.md), [docs/changes/2026-10-13-cherry-red-scope/review.md](../../docs/changes/2026-10-13-cherry-red-scope/review.md), [docs/changes/2026-10-13-cherry-red-scope/native-runtime-closeout.md](../../docs/changes/2026-10-13-cherry-red-scope/native-runtime-closeout.md), [docs/changes/2026-10-13-cherry-red-scope/mainline-integration.md](../../docs/changes/2026-10-13-cherry-red-scope/mainline-integration.md)
+- Next action: 冻结当前mainline候选，重建默认发行/测试驱动与安装器，实际重跑Native/Hosted并补审；保留primary的11项后续并发改动，最终产品验收待确认。
+- Last verified: 2026-10-13
+- Updated: 2026-10-13
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 

@@ -1,5 +1,6 @@
 import BrandLogo from "./BrandLogo";
-import UiIcon from "./UiIcon";
+import MessageMarkdown from "./MessageMarkdown";
+import MessageActions from "./MessageActions";
 
 export interface ConversationMessageView {
   id: string;
@@ -36,28 +37,13 @@ export default function ConversationMessages({
     );
   return messages.map((message) => (
     <div key={message.id}>
-      <p className="message-bubble">{message.content}</p>
-      <div className="message-actions">
-        <button
-          aria-label="复制消息"
-          onClick={() => {
-            void navigator.clipboard.writeText(message.content).then(
-              () => onStatus("已复制消息"),
-              () => onStatus("复制失败，请手动选择文本复制。"),
-            );
-          }}
-        >
-          <UiIcon name="copy" size={14} />
-        </button>
-        <button
-          aria-label="删除消息"
-          onClick={() => onDelete?.(message.id)}
-          disabled={!onDelete}
-          title={onDelete ? undefined : "本地对话消息由当前面板管理"}
-        >
-          <UiIcon name="delete" size={14} />
-        </button>
-      </div>
+      <MessageMarkdown className="message-bubble" content={message.content} />
+      <MessageActions
+        content={message.content}
+        onStatus={onStatus}
+        showDelete
+        onDelete={onDelete ? () => onDelete(message.id) : undefined}
+      />
     </div>
   ));
 }

@@ -1,0 +1,919 @@
+{
+  "startedAt": "2026-10-13T09:10:46.297Z",
+  "sourceHead": "81cfd11fe79279df2379e402ddefa00a908099a8",
+  "workingTreeStatus": "M src-tauri/gen/schemas/desktop-schema.json\n M src-tauri/gen/schemas/windows-schema.json",
+  "release": {
+    "releaseExePath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791882627773.6252,
+    "newestInputPath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\dist\\assets\\index-BS6d6bUq.js",
+    "newestInputMtimeMs": 1791882590350.5022,
+    "inputSha256": "9a4cd9f624d1f698799e7b2e9892ce0baa49c3b0da68c3305807deb93545c392",
+    "executableSha256": "90301e27389e4b1a2055fdae24a111e14fd470908f24481ef3cb234e9358d62d",
+    "desktopVersion": "2.1.16",
+    "receiptPath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current"
+  },
+  "dataRoot": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\cherry-red-acceptance\\1791882646297-ca2a6459-2259-45d7-b920-4d3b17d6e01d\\data",
+  "profile": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\cherry-red-acceptance\\1791882646297-ca2a6459-2259-45d7-b920-4d3b17d6e01d\\profile",
+  "cdp": "http://127.0.0.1:9349",
+  "providerTrafficScope": "Explicit keyless requests to this run's loopback fixture only",
+  "invocations": [
+    "get_storage_root",
+    "task_host_submit",
+    "task_host_get",
+    "task_host_get",
+    "task_host_submit",
+    "task_host_submit",
+    "task_host_get",
+    "task_host_get",
+    "task_host_submit",
+    "task_host_submit",
+    "task_host_cancel",
+    "task_host_get",
+    "task_host_get",
+    "task_host_submit",
+    "task_host_submit",
+    "task_host_get",
+    "task_host_get",
+    "task_host_submit",
+    "task_host_submit",
+    "task_host_get",
+    "task_host_get",
+    "task_host_submit",
+    "task_host_submit",
+    "task_host_get",
+    "task_host_get",
+    "task_host_submit",
+    "task_host_submit",
+    "task_host_cancel",
+    "task_host_get",
+    "task_host_get",
+    "task_host_get",
+    "task_host_submit",
+    "task_host_submit",
+    "task_host_get",
+    "task_host_get",
+    "task_host_submit",
+    "task_host_submit",
+    "task_host_get",
+    "task_host_get",
+    "task_host_submit",
+    "task_host_submit",
+    "task_host_get",
+    "task_host_get",
+    "task_host_submit",
+    "task_host_submit",
+    "task_host_cancel",
+    "task_host_get",
+    "task_host_get",
+    "task_host_get",
+    "task_host_submit",
+    "task_host_submit",
+    "task_host_get",
+    "task_host_get",
+    "task_host_submit",
+    "window_appearance_get",
+    "window_appearance_set",
+    "window_appearance_get",
+    "window_appearance_set",
+    "window_appearance_get",
+    "window_appearance_get",
+    "window_appearance_get",
+    "window_appearance_get",
+    "window_appearance_get",
+    "window_appearance_set"
+  ],
+  "checks": [
+    {
+      "name": "openai-compatible-complete",
+      "passed": true,
+      "record": {
+        "taskId": "cherry-native-611efc62-5553-44d8-9515-97b62be9ad8c",
+        "idempotencyKey": "cherry-native-48ed3ba8-6064-4c4a-a8a5-176a47cea5e7",
+        "outputIndices": [
+          0
+        ],
+        "status": "succeeded",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "succeeded",
+            "text": "原生 fixture 确认结果 🌍 openai-compatible"
+          }
+        ],
+        "updatedAt": 1791882647677
+      }
+    },
+    {
+      "name": "openai-compatible-partial",
+      "passed": true,
+      "record": {
+        "taskId": "cherry-native-37dc6716-d434-43c6-a2a8-e25d41398bf7",
+        "idempotencyKey": "cherry-native-f25769d9-b5f7-4b7c-9b27-4b5ee0073356",
+        "outputIndices": [
+          0
+        ],
+        "status": "unknown",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "unknown",
+            "text": "原生 fixture 未确认草稿 🌍 openai-compatible"
+          }
+        ],
+        "failure": {
+          "failureClass": "provider_unavailable",
+          "status": 0,
+          "message": "文本流提前结束，生成结果尚未确认"
+        },
+        "updatedAt": 1791882647844
+      }
+    },
+    {
+      "name": "openai-compatible-cancel",
+      "passed": true,
+      "record": {
+        "taskId": "cherry-native-315179a2-d0ca-46ad-8463-f7a0675009ce",
+        "idempotencyKey": "cherry-native-1259b8dc-fb13-4639-a9b3-6b67cfa832f0",
+        "outputIndices": [
+          0
+        ],
+        "status": "unknown",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "unknown",
+            "text": "原生 fixture 未确认草稿 🌍 openai-compatible"
+          }
+        ],
+        "failure": {
+          "failureClass": "cancelled",
+          "status": 0,
+          "message": "已停止等待文本生成，供应商最终状态需核对"
+        },
+        "updatedAt": 1791882648216
+      }
+    },
+    {
+      "name": "openai-compatible-rejected",
+      "passed": true,
+      "record": {
+        "taskId": "cherry-native-3070ffdd-177b-4783-88ff-03891109af91",
+        "idempotencyKey": "cherry-native-b5b1069c-5015-446b-a71c-1f204e63dcdd",
+        "outputIndices": [
+          0
+        ],
+        "status": "failed",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "failed"
+          }
+        ],
+        "failure": {
+          "failureClass": "rate_limited",
+          "status": 429,
+          "retryAfterSeconds": 7,
+          "message": "供应商拒绝了文本请求，请检查连接、模型和输入"
+        },
+        "updatedAt": 1791882648254
+      }
+    },
+    {
+      "name": "anthropic-messages-complete",
+      "passed": true,
+      "record": {
+        "taskId": "cherry-native-4b09b687-9e05-4aa5-809a-0d5d00f806d9",
+        "idempotencyKey": "cherry-native-2bb18320-b9f6-4908-b556-a395cac56673",
+        "outputIndices": [
+          0
+        ],
+        "status": "succeeded",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "succeeded",
+            "text": "原生 fixture 确认结果 🌍 anthropic-messages"
+          }
+        ],
+        "updatedAt": 1791882648293
+      }
+    },
+    {
+      "name": "anthropic-messages-partial",
+      "passed": true,
+      "record": {
+        "taskId": "cherry-native-3935c225-158e-44df-8535-5cf62424194d",
+        "idempotencyKey": "cherry-native-9bce9e73-c1a3-4607-a0cf-87748b1e8c5b",
+        "outputIndices": [
+          0
+        ],
+        "status": "unknown",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "unknown",
+            "text": "原生 fixture 未确认草稿 🌍 anthropic-messages"
+          }
+        ],
+        "failure": {
+          "failureClass": "provider_unavailable",
+          "status": 0,
+          "message": "文本流提前结束，生成结果尚未确认"
+        },
+        "updatedAt": 1791882648409
+      }
+    },
+    {
+      "name": "anthropic-messages-cancel",
+      "passed": true,
+      "record": {
+        "taskId": "cherry-native-5e6e65b5-49c7-4f65-852b-7d78d85d2900",
+        "idempotencyKey": "cherry-native-543c3b49-c865-49c9-be92-288ae300641c",
+        "outputIndices": [
+          0
+        ],
+        "status": "unknown",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "unknown",
+            "text": "原生 fixture 未确认草稿 🌍 anthropic-messages"
+          }
+        ],
+        "failure": {
+          "failureClass": "cancelled",
+          "status": 0,
+          "message": "已停止等待文本生成，供应商最终状态需核对"
+        },
+        "updatedAt": 1791882648631
+      }
+    },
+    {
+      "name": "anthropic-messages-rejected",
+      "passed": true,
+      "record": {
+        "taskId": "cherry-native-0ebb0e3f-3d58-4f0d-a602-d201359cfc16",
+        "idempotencyKey": "cherry-native-66304758-f104-43a9-900b-bb24dc676224",
+        "outputIndices": [
+          0
+        ],
+        "status": "failed",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "failed"
+          }
+        ],
+        "failure": {
+          "failureClass": "rate_limited",
+          "status": 429,
+          "retryAfterSeconds": 7,
+          "message": "供应商拒绝了文本请求，请检查连接、模型和输入"
+        },
+        "updatedAt": 1791882648768
+      }
+    },
+    {
+      "name": "gemini-complete",
+      "passed": true,
+      "record": {
+        "taskId": "cherry-native-e09b3d7b-a3ca-4eac-8d3e-468225b7055a",
+        "idempotencyKey": "cherry-native-b716c812-8b6e-4ed1-900c-809cd1f72314",
+        "outputIndices": [
+          0
+        ],
+        "status": "succeeded",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "succeeded",
+            "text": "原生 fixture 确认结果 🌍 gemini"
+          }
+        ],
+        "updatedAt": 1791882648902
+      }
+    },
+    {
+      "name": "gemini-partial",
+      "passed": true,
+      "record": {
+        "taskId": "cherry-native-d2387123-9dc2-4b4b-a3ca-57c5a0a59cf7",
+        "idempotencyKey": "cherry-native-b7edb67a-d2aa-49a5-9787-be52ba83e69f",
+        "outputIndices": [
+          0
+        ],
+        "status": "unknown",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "unknown",
+            "text": "原生 fixture 未确认草稿 🌍 gemini"
+          }
+        ],
+        "failure": {
+          "failureClass": "provider_unavailable",
+          "status": 0,
+          "message": "文本流提前结束，生成结果尚未确认"
+        },
+        "updatedAt": 1791882649017
+      }
+    },
+    {
+      "name": "gemini-cancel",
+      "passed": true,
+      "record": {
+        "taskId": "cherry-native-8445c677-b13e-4471-82a7-6a796d787632",
+        "idempotencyKey": "cherry-native-99d6b67b-4331-4776-bae8-d82c83856111",
+        "outputIndices": [
+          0
+        ],
+        "status": "unknown",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "unknown",
+            "text": "原生 fixture 未确认草稿 🌍 gemini"
+          }
+        ],
+        "failure": {
+          "failureClass": "cancelled",
+          "status": 0,
+          "message": "已停止等待文本生成，供应商最终状态需核对"
+        },
+        "updatedAt": 1791882649241
+      }
+    },
+    {
+      "name": "gemini-rejected",
+      "passed": true,
+      "record": {
+        "taskId": "cherry-native-67717165-82de-4cca-801f-b206ac0ccb90",
+        "idempotencyKey": "cherry-native-a18f84b1-0a64-4f72-a29b-2fef11e3c1f1",
+        "outputIndices": [
+          0
+        ],
+        "status": "failed",
+        "assetIds": [],
+        "outputs": [
+          {
+            "index": 0,
+            "status": "failed"
+          }
+        ],
+        "failure": {
+          "failureClass": "rate_limited",
+          "status": 429,
+          "retryAfterSeconds": 7,
+          "message": "供应商拒绝了文本请求，请检查连接、模型和输入"
+        },
+        "updatedAt": 1791882649377
+      }
+    },
+    {
+      "name": "native-alpha-ui-css-and-reload-restoration",
+      "passed": true,
+      "initial": {
+        "supported": true,
+        "enabled": false
+      },
+      "original": {
+        "enabled": "false",
+        "backgrounds": {
+          "html": "rgb(22, 22, 22)",
+          "body": "rgb(22, 22, 22)",
+          "#root": "rgb(22, 22, 22)",
+          ".app": "rgb(22, 22, 22)",
+          ".workspace-content": "rgb(22, 22, 22)",
+          ".canvas": "rgb(10, 10, 10)"
+        },
+        "canvasInlineBackground": "rgb(10, 10, 10)"
+      },
+      "transparent": {
+        "enabled": "true",
+        "backgrounds": {
+          "html": "rgba(0, 0, 0, 0)",
+          "body": "rgba(0, 0, 0, 0)",
+          "#root": "rgba(0, 0, 0, 0)",
+          ".app": "rgba(0, 0, 0, 0)",
+          ".workspace-content": "rgba(0, 0, 0, 0)",
+          ".canvas": "rgba(0, 0, 0, 0)"
+        },
+        "canvasInlineBackground": "rgb(10, 10, 10)"
+      },
+      "restored": {
+        "enabled": "false",
+        "backgrounds": {
+          "html": "rgb(22, 22, 22)",
+          "body": "rgb(22, 22, 22)",
+          "#root": "rgb(22, 22, 22)",
+          ".app": "rgb(22, 22, 22)",
+          ".workspace-content": "rgb(22, 22, 22)",
+          ".canvas": "rgb(10, 10, 10)"
+        },
+        "canvasInlineBackground": "rgb(10, 10, 10)"
+      },
+      "evidenceScope": "Native alpha readback and computed CSS; no installer/signing or desktop pixel claim"
+    }
+  ],
+  "requests": [
+    {
+      "taskId": "cherry-native-611efc62-5553-44d8-9515-97b62be9ad8c",
+      "idempotencyKey": "cherry-native-48ed3ba8-6064-4c4a-a8a5-176a47cea5e7",
+      "protocol": "openai-compatible",
+      "mode": "complete",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "body": {
+        "messages": [
+          {
+            "content": "fixture system one",
+            "role": "system"
+          },
+          {
+            "content": "fixture system two",
+            "role": "system"
+          },
+          {
+            "content": "fixture prior user",
+            "role": "user"
+          },
+          {
+            "content": "fixture prior assistant",
+            "role": "assistant"
+          },
+          {
+            "content": "cherry-native-openai-compatible-complete",
+            "role": "user"
+          }
+        ],
+        "model": "native-fixture-model",
+        "stream": true
+      },
+      "durableBeforePost": true,
+      "authHeadersAbsent": true
+    },
+    {
+      "taskId": "cherry-native-37dc6716-d434-43c6-a2a8-e25d41398bf7",
+      "idempotencyKey": "cherry-native-f25769d9-b5f7-4b7c-9b27-4b5ee0073356",
+      "protocol": "openai-compatible",
+      "mode": "partial",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "body": {
+        "messages": [
+          {
+            "content": "fixture system one",
+            "role": "system"
+          },
+          {
+            "content": "fixture system two",
+            "role": "system"
+          },
+          {
+            "content": "fixture prior user",
+            "role": "user"
+          },
+          {
+            "content": "fixture prior assistant",
+            "role": "assistant"
+          },
+          {
+            "content": "cherry-native-openai-compatible-partial",
+            "role": "user"
+          }
+        ],
+        "model": "native-fixture-model",
+        "stream": true
+      },
+      "durableBeforePost": true,
+      "authHeadersAbsent": true
+    },
+    {
+      "taskId": "cherry-native-315179a2-d0ca-46ad-8463-f7a0675009ce",
+      "idempotencyKey": "cherry-native-1259b8dc-fb13-4639-a9b3-6b67cfa832f0",
+      "protocol": "openai-compatible",
+      "mode": "cancel",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "body": {
+        "messages": [
+          {
+            "content": "fixture system one",
+            "role": "system"
+          },
+          {
+            "content": "fixture system two",
+            "role": "system"
+          },
+          {
+            "content": "fixture prior user",
+            "role": "user"
+          },
+          {
+            "content": "fixture prior assistant",
+            "role": "assistant"
+          },
+          {
+            "content": "cherry-native-openai-compatible-cancel",
+            "role": "user"
+          }
+        ],
+        "model": "native-fixture-model",
+        "stream": true
+      },
+      "durableBeforePost": true,
+      "authHeadersAbsent": true
+    },
+    {
+      "taskId": "cherry-native-3070ffdd-177b-4783-88ff-03891109af91",
+      "idempotencyKey": "cherry-native-b5b1069c-5015-446b-a71c-1f204e63dcdd",
+      "protocol": "openai-compatible",
+      "mode": "rejected",
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "body": {
+        "messages": [
+          {
+            "content": "fixture system one",
+            "role": "system"
+          },
+          {
+            "content": "fixture system two",
+            "role": "system"
+          },
+          {
+            "content": "fixture prior user",
+            "role": "user"
+          },
+          {
+            "content": "fixture prior assistant",
+            "role": "assistant"
+          },
+          {
+            "content": "cherry-native-openai-compatible-rejected",
+            "role": "user"
+          }
+        ],
+        "model": "native-fixture-model",
+        "stream": true
+      },
+      "durableBeforePost": true,
+      "authHeadersAbsent": true
+    },
+    {
+      "taskId": "cherry-native-4b09b687-9e05-4aa5-809a-0d5d00f806d9",
+      "idempotencyKey": "cherry-native-2bb18320-b9f6-4908-b556-a395cac56673",
+      "protocol": "anthropic-messages",
+      "mode": "complete",
+      "method": "POST",
+      "path": "/v1/messages",
+      "body": {
+        "max_tokens": 4096,
+        "messages": [
+          {
+            "content": "fixture prior user",
+            "role": "user"
+          },
+          {
+            "content": "fixture prior assistant",
+            "role": "assistant"
+          },
+          {
+            "content": "cherry-native-anthropic-messages-complete",
+            "role": "user"
+          }
+        ],
+        "model": "native-fixture-model",
+        "stream": true,
+        "system": "fixture system one\n\nfixture system two"
+      },
+      "durableBeforePost": true,
+      "authHeadersAbsent": true
+    },
+    {
+      "taskId": "cherry-native-3935c225-158e-44df-8535-5cf62424194d",
+      "idempotencyKey": "cherry-native-9bce9e73-c1a3-4607-a0cf-87748b1e8c5b",
+      "protocol": "anthropic-messages",
+      "mode": "partial",
+      "method": "POST",
+      "path": "/v1/messages",
+      "body": {
+        "max_tokens": 4096,
+        "messages": [
+          {
+            "content": "fixture prior user",
+            "role": "user"
+          },
+          {
+            "content": "fixture prior assistant",
+            "role": "assistant"
+          },
+          {
+            "content": "cherry-native-anthropic-messages-partial",
+            "role": "user"
+          }
+        ],
+        "model": "native-fixture-model",
+        "stream": true,
+        "system": "fixture system one\n\nfixture system two"
+      },
+      "durableBeforePost": true,
+      "authHeadersAbsent": true
+    },
+    {
+      "taskId": "cherry-native-5e6e65b5-49c7-4f65-852b-7d78d85d2900",
+      "idempotencyKey": "cherry-native-543c3b49-c865-49c9-be92-288ae300641c",
+      "protocol": "anthropic-messages",
+      "mode": "cancel",
+      "method": "POST",
+      "path": "/v1/messages",
+      "body": {
+        "max_tokens": 4096,
+        "messages": [
+          {
+            "content": "fixture prior user",
+            "role": "user"
+          },
+          {
+            "content": "fixture prior assistant",
+            "role": "assistant"
+          },
+          {
+            "content": "cherry-native-anthropic-messages-cancel",
+            "role": "user"
+          }
+        ],
+        "model": "native-fixture-model",
+        "stream": true,
+        "system": "fixture system one\n\nfixture system two"
+      },
+      "durableBeforePost": true,
+      "authHeadersAbsent": true
+    },
+    {
+      "taskId": "cherry-native-0ebb0e3f-3d58-4f0d-a602-d201359cfc16",
+      "idempotencyKey": "cherry-native-66304758-f104-43a9-900b-bb24dc676224",
+      "protocol": "anthropic-messages",
+      "mode": "rejected",
+      "method": "POST",
+      "path": "/v1/messages",
+      "body": {
+        "max_tokens": 4096,
+        "messages": [
+          {
+            "content": "fixture prior user",
+            "role": "user"
+          },
+          {
+            "content": "fixture prior assistant",
+            "role": "assistant"
+          },
+          {
+            "content": "cherry-native-anthropic-messages-rejected",
+            "role": "user"
+          }
+        ],
+        "model": "native-fixture-model",
+        "stream": true,
+        "system": "fixture system one\n\nfixture system two"
+      },
+      "durableBeforePost": true,
+      "authHeadersAbsent": true
+    },
+    {
+      "taskId": "cherry-native-e09b3d7b-a3ca-4eac-8d3e-468225b7055a",
+      "idempotencyKey": "cherry-native-b716c812-8b6e-4ed1-900c-809cd1f72314",
+      "protocol": "gemini",
+      "mode": "complete",
+      "method": "POST",
+      "path": "/v1beta/models/native-fixture-model:streamGenerateContent?alt=sse",
+      "body": {
+        "contents": [
+          {
+            "parts": [
+              {
+                "text": "fixture prior user"
+              }
+            ],
+            "role": "user"
+          },
+          {
+            "parts": [
+              {
+                "text": "fixture prior assistant"
+              }
+            ],
+            "role": "model"
+          },
+          {
+            "parts": [
+              {
+                "text": "cherry-native-gemini-complete"
+              }
+            ],
+            "role": "user"
+          }
+        ],
+        "systemInstruction": {
+          "parts": [
+            {
+              "text": "fixture system one\n\nfixture system two"
+            }
+          ]
+        }
+      },
+      "durableBeforePost": true,
+      "authHeadersAbsent": true
+    },
+    {
+      "taskId": "cherry-native-d2387123-9dc2-4b4b-a3ca-57c5a0a59cf7",
+      "idempotencyKey": "cherry-native-b7edb67a-d2aa-49a5-9787-be52ba83e69f",
+      "protocol": "gemini",
+      "mode": "partial",
+      "method": "POST",
+      "path": "/v1beta/models/native-fixture-model:streamGenerateContent?alt=sse",
+      "body": {
+        "contents": [
+          {
+            "parts": [
+              {
+                "text": "fixture prior user"
+              }
+            ],
+            "role": "user"
+          },
+          {
+            "parts": [
+              {
+                "text": "fixture prior assistant"
+              }
+            ],
+            "role": "model"
+          },
+          {
+            "parts": [
+              {
+                "text": "cherry-native-gemini-partial"
+              }
+            ],
+            "role": "user"
+          }
+        ],
+        "systemInstruction": {
+          "parts": [
+            {
+              "text": "fixture system one\n\nfixture system two"
+            }
+          ]
+        }
+      },
+      "durableBeforePost": true,
+      "authHeadersAbsent": true
+    },
+    {
+      "taskId": "cherry-native-8445c677-b13e-4471-82a7-6a796d787632",
+      "idempotencyKey": "cherry-native-99d6b67b-4331-4776-bae8-d82c83856111",
+      "protocol": "gemini",
+      "mode": "cancel",
+      "method": "POST",
+      "path": "/v1beta/models/native-fixture-model:streamGenerateContent?alt=sse",
+      "body": {
+        "contents": [
+          {
+            "parts": [
+              {
+                "text": "fixture prior user"
+              }
+            ],
+            "role": "user"
+          },
+          {
+            "parts": [
+              {
+                "text": "fixture prior assistant"
+              }
+            ],
+            "role": "model"
+          },
+          {
+            "parts": [
+              {
+                "text": "cherry-native-gemini-cancel"
+              }
+            ],
+            "role": "user"
+          }
+        ],
+        "systemInstruction": {
+          "parts": [
+            {
+              "text": "fixture system one\n\nfixture system two"
+            }
+          ]
+        }
+      },
+      "durableBeforePost": true,
+      "authHeadersAbsent": true
+    },
+    {
+      "taskId": "cherry-native-67717165-82de-4cca-801f-b206ac0ccb90",
+      "idempotencyKey": "cherry-native-a18f84b1-0a64-4f72-a29b-2fef11e3c1f1",
+      "protocol": "gemini",
+      "mode": "rejected",
+      "method": "POST",
+      "path": "/v1beta/models/native-fixture-model:streamGenerateContent?alt=sse",
+      "body": {
+        "contents": [
+          {
+            "parts": [
+              {
+                "text": "fixture prior user"
+              }
+            ],
+            "role": "user"
+          },
+          {
+            "parts": [
+              {
+                "text": "fixture prior assistant"
+              }
+            ],
+            "role": "model"
+          },
+          {
+            "parts": [
+              {
+                "text": "cherry-native-gemini-rejected"
+              }
+            ],
+            "role": "user"
+          }
+        ],
+        "systemInstruction": {
+          "parts": [
+            {
+              "text": "fixture system one\n\nfixture system two"
+            }
+          ]
+        }
+      },
+      "durableBeforePost": true,
+      "authHeadersAbsent": true
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "versions": {
+    "schemaVersion": 1,
+    "desktop": "2.1.16",
+    "web": "2.1.16",
+    "mobile": "2.1.1"
+  },
+  "sourceHashes": {
+    "src-tauri/src/task_host.rs": "f7180a712944018e108bd1f9cf18eb61a91be87187ea8e104bc372333278e44d",
+    "src-tauri/src/task_host_protocol.rs": "901cdf48057a6e84f4418e426e09f25e8e5d18859cf8acbb363bef3f9b97880a",
+    "src-tauri/src/task_host_text.rs": "db9a8bf39e8d220a35a28e90a2f56c7428b17cb5a7839fc34c7d2d4f37964e3e",
+    "src-tauri/src/window_appearance.rs": "709448b89a9083d965be3adf9a4e063b87e8f48bbaceeed7797662fd75084d92",
+    "src-tauri/src/main.rs": "d7904712e1e9f877eb4b7c86b3f421075447c2388d19ec8a033d40e2c4b49308",
+    "src-tauri/Cargo.lock": "bedee1c13331db7ccab46597435b581a32efd50b7ac2113449fbb3be77ae17bd",
+    "src-tauri/tauri.conf.json": "fd5b5f6b72de1d2c9bb9c9a866ffd8daefedc41bfd23bb75a1caa03ff536335b",
+    "src/App.tsx": "2659d6b8b09ad69e119b4b2644b717e64d836270c1c65d327fb209df553159b6",
+    "src/integrations/windowAppearance.ts": "1949781faffd8f87f789810be5acb8712d7f17d06bb94ba0979b99a4a87c0db9",
+    "src/components/settings/WindowTransparencySetting.tsx": "1e6fb61b71f9401697391220369b4a99254acb73e82a0720a1437f96c4a8a582",
+    "src/styles/window-appearance.css": "57c0b8429cec670800ec52f530656cf8d5834e461b2295fe6bb4672c98cf255e",
+    "tests/desktop/cherry-red-native.mjs": "990bcca6e71874041ceab9914d2222442cd3df9555f94cce29ef6c26233fae4b"
+  },
+  "bundleHashes": {
+    "assets/index-BS6d6bUq.js": "19050d096d11309934f5c19423b1184204e76d7ff11f1004939463051f990ad1",
+    "assets/index-DS3TcH7H.css": "fa2928355e7afe1029d0b01e1e0f3816b43d54b6dbe52698e03b64672af67a5e"
+  },
+  "pid": 59428,
+  "stderr": "",
+  "loaded": {
+    "url": "http://tauri.localhost/",
+    "scripts": [
+      "http://tauri.localhost/assets/index-BS6d6bUq.js"
+    ],
+    "styles": [
+      "http://tauri.localhost/assets/index-DS3TcH7H.css"
+    ]
+  },
+  "fixtureProject": {
+    "id": "project-mv6gnx83-ani1lzou",
+    "name": "未命名项目"
+  },
+  "finishedAt": "2026-10-13T09:10:52.938Z"
+}

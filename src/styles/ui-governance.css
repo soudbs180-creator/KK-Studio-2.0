@@ -169,3 +169,8 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
+/* Page-specific pill actions do not override the standard .kk-button geometry. */
+.ui-button,
+.primary-button {
+  border-radius: var(--kk-radius-full);
+}

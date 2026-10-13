@@ -103,8 +103,12 @@ test("模型测试拒绝 HTML 假成功并可从 HTTP 错误恢复", async ({ pa
   });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
+  await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByRole("button", { name: "测试连接", exact: true }).click();
   await expect(page.locator(".provider-status")).toHaveClass(/is-error/);
   mode = "error";
@@ -134,8 +138,12 @@ test("取消、编辑配置与离线状态不会留下过期的连接成功提�
   });
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
+  await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   const request = page.waitForRequest("https://models.example.test/v1/models");
   await page.getByRole("button", { name: "测试连接", exact: true }).click();
   await request;
@@ -171,12 +179,15 @@ test("配置入口定位到对应设置分类，菜单支持 Escape", async ({ p
     .getByRole("button", { name: "关闭任务列表" })
     .click();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
-  await page.getByRole("button", { name: "模型供应商", exact: true }).click();
+  await page.getByRole("button", { name: "模型接入", exact: true }).click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
   await expect(page.getByLabel("接口地址")).toBeVisible();
   await page.keyboard.press("Escape");
   await page
     .getByRole("navigation", { name: "主导航" })
-    .getByRole("button", { name: "技能", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .click();
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   await expect(

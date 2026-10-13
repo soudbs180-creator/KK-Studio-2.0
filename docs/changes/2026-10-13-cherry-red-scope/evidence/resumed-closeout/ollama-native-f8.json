@@ -1,0 +1,238 @@
+{
+  "startedAt": "2026-10-13T11:55:06.445Z",
+  "sourceHead": "f8ead4faa80666f55cba97a037ac855716d8810e",
+  "release": {
+    "releaseExePath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791892366080.1199,
+    "newestInputPath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\dist\\assets\\index-COxNTe7Y.js",
+    "newestInputMtimeMs": 1791892320911.991,
+    "inputSha256": "a2f341434e4b4dd80bed3e2c24142317bcf1adc0dd214880cff208a755109d6c",
+    "executableSha256": "126b1a19a66302c32e29b1dc32db080b4db3320b83752e4df0515331ee4b6721",
+    "desktopVersion": "2.1.17",
+    "receiptPath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current"
+  },
+  "endpoint": "http://127.0.0.1:11434/v1",
+  "models": [
+    "qwen2.5:0.5b",
+    "smollm2:135m"
+  ],
+  "profile": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\195ddaea-b7e5-4efc-a15a-3a96e01dc31e\\profile",
+  "dataRoot": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\195ddaea-b7e5-4efc-a15a-3a96e01dc31e\\data",
+  "restoredRoot": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\195ddaea-b7e5-4efc-a15a-3a96e01dc31e\\restored",
+  "checks": [
+    {
+      "name": "owned-cpu-model-service",
+      "pid": 39228,
+      "executable": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\ollama-real\\runtime-v0.40.3\\ollama.exe",
+      "executableSha256": "61b44cfb6d3aa2393a4a731af33c9329bedd58b1c454bdebd185d4a607d0303d",
+      "originStatus": 403,
+      "cors": null
+    },
+    {
+      "name": "launch",
+      "data": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\195ddaea-b7e5-4efc-a15a-3a96e01dc31e\\data",
+      "pid": 80556,
+      "loadedScripts": [
+        "http://tauri.localhost/assets/index-COxNTe7Y.js"
+      ]
+    },
+    {
+      "name": "synthetic-vault-write-read",
+      "providerId": "kk-cherry-synthetic-195ddaea-b7e5-4efc-a15a-3a96e01dc31e",
+      "passed": true
+    },
+    {
+      "name": "real-ui-local-configuration",
+      "connection": {
+        "authMode": "none",
+        "baseUrl": "http://127.0.0.1:11434/v1",
+        "capabilities": {
+          "async": false,
+          "estimatedLatencyClass": "interactive",
+          "maxOutputs": 10,
+          "maxReferences": 4,
+          "modalities": [
+            "image"
+          ],
+          "operations": [
+            "generate",
+            "edit",
+            "inpaint",
+            "outpaint",
+            "batch"
+          ]
+        },
+        "concurrencyLimit": 2,
+        "credentialRef": "provider-d2af021546ce5a2d",
+        "displayName": "Ollama",
+        "id": "byok-provider-d2af021546ce5a2d",
+        "kind": "user_byok",
+        "model": "qwen2.5:0.5b",
+        "protocol": "openai-compatible",
+        "provider": "Ollama",
+        "state": "active",
+        "verificationStatus": "unverified"
+      },
+      "localMetadataCount": 1
+    },
+    {
+      "name": "real-ui-round",
+      "prompt": "What is 2 plus 2? Answer briefly.",
+      "tasks": [
+        {
+          "id": "conversation-f3308a7b-6620-4cc1-be9e-88f3e8c8ffed-route-0",
+          "model": "qwen2.5:0.5b",
+          "status": "succeeded",
+          "text": "4",
+          "messages": [
+            {
+              "content": "Reply in one short line. Use no tools.",
+              "role": "system"
+            },
+            {
+              "content": "What is 2 plus 2? Answer briefly.",
+              "role": "user"
+            }
+          ]
+        },
+        {
+          "id": "conversation-f3308a7b-6620-4cc1-be9e-88f3e8c8ffed-route-1",
+          "model": "smollm2:135m",
+          "status": "succeeded",
+          "text": "Two or more plus another number equals addition.",
+          "messages": [
+            {
+              "content": "Reply in one short line. Use no tools.",
+              "role": "system"
+            },
+            {
+              "content": "What is 2 plus 2? Answer briefly.",
+              "role": "user"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "launch",
+      "data": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\195ddaea-b7e5-4efc-a15a-3a96e01dc31e\\data",
+      "pid": 53624,
+      "loadedScripts": [
+        "http://tauri.localhost/assets/index-COxNTe7Y.js"
+      ]
+    },
+    {
+      "name": "synthetic-vault-real-restart",
+      "passed": true
+    },
+    {
+      "name": "real-ui-round",
+      "prompt": "Summarize your previous answer in one short line.",
+      "tasks": [
+        {
+          "id": "conversation-9ab8a38a-256c-47a8-bda3-fec1fb79167a-route-0",
+          "model": "qwen2.5:0.5b",
+          "status": "succeeded",
+          "text": "2 plus 2 equals 4.",
+          "messages": [
+            {
+              "content": "Reply in one short line. Use no tools.",
+              "role": "system"
+            },
+            {
+              "content": "What is 2 plus 2? Answer briefly.",
+              "role": "user"
+            },
+            {
+              "content": "4",
+              "role": "assistant"
+            },
+            {
+              "content": "Summarize your previous answer in one short line.",
+              "role": "user"
+            }
+          ]
+        },
+        {
+          "id": "conversation-9ab8a38a-256c-47a8-bda3-fec1fb79167a-route-1",
+          "model": "smollm2:135m",
+          "status": "succeeded",
+          "text": "Yes, you just provided a simple and concise summary of your answer.",
+          "messages": [
+            {
+              "content": "Reply in one short line. Use no tools.",
+              "role": "system"
+            },
+            {
+              "content": "What is 2 plus 2? Answer briefly.",
+              "role": "user"
+            },
+            {
+              "content": "Two or more plus another number equals addition.",
+              "role": "assistant"
+            },
+            {
+              "content": "Summarize your previous answer in one short line.",
+              "role": "user"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "real-native-package-export-preflight-import",
+      "exported": {
+        "checksum": "50a50ef0e6940d983e876fafb12c46bf1b8d87b7d2d8775e16b38835e5edc564",
+        "projectIds": [
+          "project-mv6mj8vi-w98rbm5t"
+        ],
+        "assetIds": []
+      },
+      "preflight": {
+        "checksum": "50a50ef0e6940d983e876fafb12c46bf1b8d87b7d2d8775e16b38835e5edc564",
+        "projectIds": [
+          "project-mv6mj8vi-w98rbm5t"
+        ],
+        "assetIds": []
+      },
+      "imported": {
+        "checksum": "50a50ef0e6940d983e876fafb12c46bf1b8d87b7d2d8775e16b38835e5edc564",
+        "projectIds": [
+          "project-mv6mj8vi-w98rbm5t"
+        ],
+        "assetIds": []
+      },
+      "packageSha256": "c9e2679d1d42b0f79d378f0e4ed46cac5793df6d2193a94133eb1422949e2e1e"
+    },
+    {
+      "name": "launch",
+      "data": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\195ddaea-b7e5-4efc-a15a-3a96e01dc31e\\restored",
+      "pid": 72452,
+      "loadedScripts": [
+        "http://tauri.localhost/assets/index-COxNTe7Y.js"
+      ]
+    },
+    {
+      "name": "real-restored-directory-reopen",
+      "taskCount": 4,
+      "passed": true
+    },
+    {
+      "name": "owned-synthetic-vault-cleanup",
+      "passed": true
+    },
+    {
+      "name": "owned-model-process-tree-cleanup",
+      "pid": 39228,
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "exeHashBefore": "126b1a19a66302c32e29b1dc32db080b4db3320b83752e4df0515331ee4b6721",
+  "discoveryScope": "Real Native loopback GET; the unchanged local server may reject the WebView origin",
+  "exeHashAfter": "126b1a19a66302c32e29b1dc32db080b4db3320b83752e4df0515331ee4b6721",
+  "finishedAt": "2026-10-13T11:55:20.820Z"
+}

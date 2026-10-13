@@ -18,6 +18,8 @@ use tokio::sync::Notify;
 
 #[path = "asset_io.rs"]
 mod io;
+#[path = "task_host_protocol.rs"]
+mod protocol;
 #[path = "task_host_text.rs"]
 mod text;
 
@@ -41,6 +43,12 @@ pub struct TaskHostAttachment {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TaskHostRequest {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub protocol: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub auth_mode: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub messages: Option<Vec<protocol::TextMessage>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub image_edit_required: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -127,6 +135,7 @@ pub struct TaskHost {
     root: PathBuf,
     assets: Arc<AssetRepository>,
     jobs: Mutex<HashMap<String, JobControl>>,
+    journal: Mutex<()>,
 }
 
 impl TaskHost {
@@ -136,13 +145,20 @@ impl TaskHost {
             root,
             assets,
             jobs: Mutex::new(HashMap::new()),
+            journal: Mutex::new(()),
         };
         host.recover_submitted()?;
         Ok(host)
     }
 
-    fn lock(&self) -> Result<fs::File, String> {
-        io::lock(&self.root)
+    fn lock(&self) -> Result<(fs::File, std::sync::MutexGuard<'_, ()>), String> {
+        // Serialize this host's workers before taking the cross-process lock.
+        // The external lock stays exclusive and fails closed for other hosts.
+        let guard = self
+            .journal
+            .lock()
+            .map_err(|_| "io: 原生任务日志锁不可用".to_string())?;
+        Ok((io::lock(&self.root)?, guard))
     }
     fn path(&self, task_id: &str) -> PathBuf {
         self.root.join(format!("{task_id}.json"))
@@ -265,7 +281,7 @@ impl TaskHost {
                 .map_err(|_| "io: 原生任务状态锁不可用".to_string())?;
             if jobs
                 .values()
-                .filter(|job| job.credential_ref == request.credential_ref)
+                .filter(|job| job.credential_ref == protocol::capacity_identity(&request))
                 .count()
                 >= request.concurrency_limit.unwrap_or(1)
             {
@@ -301,7 +317,7 @@ impl TaskHost {
         let control = JobControl {
             cancelled: Arc::new(AtomicBool::new(false)),
             wake: Arc::new(Notify::new()),
-            credential_ref: request.credential_ref.clone(),
+            credential_ref: protocol::capacity_identity(&request),
         };
         self.jobs
             .lock()
@@ -448,9 +464,13 @@ impl TaskHost {
                 Err(_) => return Err(RunError::failed("invalid_request", "请求引用的素材不可用")),
             }
         }
-        let secret = match credential(&request.credential_ref) {
-            Ok(Some(value)) if !value.is_empty() => value,
-            _ => return Err(RunError::failed("unauthorized", "供应商凭据不可用")),
+        let secret = if request.auth_mode.as_deref() == Some("none") {
+            String::new()
+        } else {
+            match credential(&request.credential_ref) {
+                Ok(Some(value)) if !value.is_empty() => value,
+                _ => return Err(RunError::failed("unauthorized", "供应商凭据不可用")),
+            }
         };
         if control.cancelled.load(Ordering::Acquire) {
             return Err(RunError::failed("cancelled", "任务在发送前已取消"));
@@ -998,6 +1018,7 @@ fn append_bounded_chunk(
 }
 
 fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
+    protocol::validate(value)?;
     if value.image_edit_required == Some(true)
         && (value.kind.as_deref() == Some("text") || value.attachments.is_empty())
     {
@@ -1056,7 +1077,9 @@ fn validate_request(value: &TaskHostRequest) -> Result<(), String> {
     {
         return Err("invalid: baseUrl".into());
     }
-    if value.credential_ref.is_empty() || value.credential_ref.chars().count() > MAX_ID {
+    if (value.credential_ref.is_empty() && value.auth_mode.as_deref() != Some("none"))
+        || value.credential_ref.chars().count() > MAX_ID
+    {
         return Err("invalid: credentialRef".into());
     }
     if value.output_indices.is_empty() || value.output_indices.len() > MAX_OUTPUTS || {
@@ -1203,31 +1226,49 @@ fn civil_from_days(days: i64) -> (i32, u32, u32) {
 }
 
 fn credential(provider_id: &str) -> Result<Option<String>, String> {
-    #[cfg(target_os = "windows")]
-    {
-        let entry = keyring::Entry::new("com.kkstudio.provider", provider_id)
-            .map_err(|_| "credential unavailable")?;
-        return match entry.get_password() {
-            Ok(v) => Ok(Some(v)),
-            Err(keyring::Error::NoEntry) => Ok(None),
-            Err(_) => Err("credential unavailable".into()),
-        };
-    }
-    #[cfg(not(target_os = "windows"))]
-    {
-        let _ = provider_id;
-        Ok(None)
-    }
+    crate::system_credentials::get(provider_id).map_err(|_| "credential unavailable".into())
 }
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn journal_operations_on_one_host_wait_for_each_other() {
+        let root = root();
+        let host = Arc::new(
+            TaskHost::new(
+                root.join("jobs"),
+                Arc::new(AssetRepository::new(root.join("assets"))),
+            )
+            .unwrap(),
+        );
+        let held = host.lock().unwrap();
+        let other = Arc::clone(&host);
+        let (send, receive) = std::sync::mpsc::channel();
+        let thread = std::thread::spawn(move || {
+            let result = other.lock();
+            send.send(result.is_ok()).unwrap();
+        });
+        let early = receive.recv_timeout(Duration::from_millis(100));
+        drop(held);
+        let result = early
+            .clone()
+            .unwrap_or_else(|_| receive.recv_timeout(Duration::from_secs(2)).unwrap());
+        thread.join().unwrap();
+        assert!(
+            early.is_err(),
+            "another operation must wait, not fail on the host's own exclusive file lock"
+        );
+        assert!(result);
+        fs::remove_dir_all(root).unwrap();
+    }
     pub(super) fn fail_at(_stage: &str) -> Result<(), String> {
         Ok(())
     }
     fn request(task: &str) -> TaskHostRequest {
         TaskHostRequest {
+            protocol: None,
+            auth_mode: None,
+            messages: None,
             image_edit_required: None,
             mask_asset_id: None,
             task_id: task.into(),

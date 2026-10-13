@@ -88,7 +88,7 @@ for (const [width, height] of [
     await page.screenshot({ path: `${evidence}/${width}-landing.png` });
     for (const [name, heading] of [
       ["项目库", "项目库"],
-      ["技能", "Skill"],
+      ["扩展", "扩展"],
       ["ComfyUI 工作流", "ComfyUI 工作流"],
     ]) {
       if (width < 768 && name === "ComfyUI 工作流")

@@ -40,6 +40,7 @@ export default defineConfig({
     watch: {
       ignored: [
         "**/.tmp/**",
+        "**/.worktrees/**",
         "**/node_modules/**",
         "**/src-tauri/**",
         "**/*.agent_infra_tmp_*",
