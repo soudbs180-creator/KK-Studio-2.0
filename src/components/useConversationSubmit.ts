@@ -54,7 +54,7 @@ export default function useConversationSubmit(options: {
       options.setStatus(
         options.onSend
           ? "任务已提交，状态会显示在画布顶部。"
-          : "内容已记录。连接模型供应商后，即可获取 AI 回复。",
+          : "内容已记录。连接模型接入后，即可获取 AI 回复。",
       );
     } catch {
       options.setStatus("提交失败，请检查模型连接后重试。");

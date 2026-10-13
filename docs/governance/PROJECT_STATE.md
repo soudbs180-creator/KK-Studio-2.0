@@ -2,7 +2,7 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-10-12
+- updatedAt: 2026-10-13
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
@@ -11,17 +11,19 @@
 
 ## CURRENT_FACTS (machine-readable current snapshot)
 
-- `snapshotDate`: 2026-10-12
+- `snapshotDate`: 2026-10-13
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
-- `canonicalHead`: `1f6cbd37091326a899fa600baba53bf6efd9cf16`
+- `canonicalHead`: `694a00607f6f63de1b8c43d0ebb117adf5d34f67`
 - `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the primary checkout; this is the local remote-tracking ref and was not refreshed with `git fetch` in this audit.
-- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `codex/ui-redesign-20261011` at `7f29db98a00a9f0662c9a0dd8909337a988a4baa`; the checkout was clean before the current governance update and is not claimed to be the published `origin/main` tree. This branch contains the B1+B2 governance commits and the current R+B3-1+B3-2 working changes.
-- `taskLedger`: 123 records; 75 DONE, 31 PARTIAL, 11 TODO, 4 BLOCKED, 2 REVIEW; 47 open records.
-- `workspaceWorktrees`: 94 registered worktrees, including nested and external checkouts; the worktree creation policy currently reports 54 active worktrees against a default budget of 4, so this turn does not create another checkout. Existing dirty, active, nested, external, and duplicate-source worktrees remain protected. The current audit pointer is `D:/kk-studio/output/2026-10-10-worktree-reclamation/worktree-reclamation-plan-a32b6b9e-3ff4-402b-913f-d04b64a3de56.json`, relocated out of the repository on 2026-10-12.
+- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `codex/ui-redesign-20261011` at `51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c`, dirty. Original UI changes were preserved in baseline `e0875b3d`; only TASK-AGENT-RECOVERY-20261013 owned changes were integrated after content comparison. Desktop/Web 2.1.16 official canonical build and native acceptance passed; this is not a published origin/main tree.
+- `taskLedger`: 126 records; 75 DONE, 32 PARTIAL, 11 TODO, 4 BLOCKED, 4 REVIEW; 51 open records.
+- `workspaceWorktrees`: 103 registered worktrees from current git inventory, including nested and external checkouts. Existing dirty/active/history worktrees are preserved. This task uses one isolated recovery worktree; no reclamation is authorized.
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
+
+- `agentRecoveryEvidence`: [TASK-AGENT-RECOVERY-20261013 verification](../changes/2026-10-13-agent-recovery/verification.md); 2.1.16 accepted receipts remain archived; the user-requested actual daily-profile supplement found chat UI inconsistencies. Shared 2.1.17 candidate and repeated daily acceptance are in progress.
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->
@@ -565,3 +567,7 @@ TASK-UI-DISMISS-002 修复账号菜单跨窄屏断点、键盘展开后外部点
 - 早期快照记录 `docs/governance/task-ledger.json` 共 96 项：DONE 55、PARTIAL 27、TODO 10、BLOCKED 4；当前台账以文件顶部和实际账本为准。
 - MCP 注册表现在读取合法超限原件而不清空，写入会重读并检测冲突；现代 MCP 先走 `server/discover`，只对明确不支持发现的响应回退旧握手；编排器 `plan_replan` 会持久化稳定的新计划而不重复成功项。
 - 早期验证记录为 Node 661/653/0/8、Agent 174/172/0/2、Playwright 379/379；当前验证以 `docs/changes/2026-10-03-incomplete-tasks/verification.md` 为准。真实第三方 MCP、Provider/GPU、ComfyUI、VPS、Mobile 和完整 TaskHost 运行态仍未证明。
+
+## 2026-10-13 UI 分类执行补充
+
+TASK-UI-CLASSIFY-20261013 已获用户实施确认：canonical 分类修复在隔离任务 worktree 验证后逐文件集成，保留窗口控件和麦克风预存改动。按用户补充移除模型弹层批量/数据项，40 项定向回归和独立补审通过；最终 Web development / preview / Desktop 分别 7/7/14 项通过，Desktop/Web 2.1.14。全量浏览器 492/495，三个既有 UI 失败使任务保持 REVIEW/PARTIAL；实际运行证据以[本轮 verification](../changes/2026-10-13-capability-ui/verification.md)为准，未声称已推送或正式发布。

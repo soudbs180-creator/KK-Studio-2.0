@@ -1,5 +1,16 @@
 # 当前进度
 
+## 2026-10-13 日常 APP 重开验收补充（进行中）
+
+TASK-AGENT-RECOVERY-20261013 按用户新要求复验原数据/profile，已证正常close0/reopen自动同thread及主动断开重开保持暂停、原API metadata未变。日常当前连接关闭前无已保存密钥，实钥保留保持NOT VERIFIED。发现聊天“已连接”染危险色及按钮与设置不一致，已按授权最小修复并新增RED/GREEN；共享Desktop/Web2.1.17最终门禁和日常复验进行中。原2.1.16验收仅按历史范围回读。[验收记录](changes/2026-10-13-agent-recovery/verification.md)。
+
+## 2026-10-13 Agent 自动恢复与凭据安全保存
+
+- TASK-AGENT-RECOVERY-20261013 产品与本地运行验收通过：项目先保存线程归属，桌面打开自动恢复同线程；主动断开/停止持久暂停，设置普通连接入口统一，高级操作折叠。
+- 普通与 Google API 共用原生事务边界，跨窗口CAS/共享锁与严格读取避免误报或覆盖；系统凭据库保存秘密，读取错误可重试，输入与项目不回填明文。
+- 完整verify出口0（浏览器514/514零flaky、Node1076pass/14既有skip、Agent172pass/2既有skip），Rust126/126、development PASS；canonical官方2.1.16 Agent38/38及凭据6/6正常重开通过，桌面快捷方式已更新。
+- 原dirty UI、index、用户数据与凭据保留；生产源6f8ff257、测试补充1cf93cb4已有独立审查。本任务 DONE/PASS，最终文档独立补审通过；Hosted/真实Provider/签名发布/人工验收不冒称完成。详见[验证](changes/2026-10-13-agent-recovery/verification.md) / [审查](changes/2026-10-13-agent-recovery/review.md)。
+
 ## 2026-10-13 审查 P1/P2 修复与运行时边界拆分
 
 - `TASK-REVIEW-REMEDIATION-001` 已完成定向修复：生命周期门禁、日志脱敏、插件同步/异步失败隔离和交付模板规则均有回归证据；治理、运行时、版本一致性改动分别落在独立提交 `057a5d84`、`44195097`、`f0a6b0c4`，格式和 lint 修复随后单独提交。
@@ -975,3 +986,7 @@ TASK-PLUGIN-DEV-001修复开发public import及真实React静态JSX校验后，�
 - 本地已登录 Codex 账号经 KK 浏览器工作区真实验证：文本调用成功、Codex 内置图片生成成功并回写画布、`canvas_apply_ops` 新增文本节点成功，随后由 Codex 只读读取并确认节点存在。
 - 图片卡片按要求显示 `图片模型未报告` 与 `来源：Codex 内置生图`，没有把 Codex 名称误当成图片模型名。
 - 首次联调发现的默认模型问题已修复并复验：旧缓存 `gpt-6.1-sol` 会按 Agent `/models` 列表回退到 `gpt-6-astra`，不显式选模型的 KK 文本调用已成功；项目图片模型也不会传给 Codex 推理接口。详见 [kk 模型能力验证](changes/2026-10-10-kk-model-capability/verification.md)。
+
+## 2026-10-13 模型接入与扩展分类
+
+Codex 主 Agent 移至模型接入；侧栏扩展统一 Skill、MCP、协作伙伴，七种角色职责可加入对应草稿；模型菜单恢复来源层次、320px 紧凑布局与稳定滚动。按用户补充移除模型弹层的批量/数据项，节点数量和旧批次归档的 40 项定向回归通过。独立复核关闭同地址多账号身份、Google 未保存配置保留及角色来源隔离问题后，最终 Web development 7 项、production preview 7 项、Desktop 2.1.14 14 项重新验收通过；Desktop 随包 Agent 启动、健康检查、停止通过。生产浏览器全量 495 项中 492 pass，本轮 20 项全部通过，3 个已记录的既有 UI 失败；任务保持 REVIEW/PARTIAL。[验证记录](changes/2026-10-13-capability-ui/verification.md)包含资源身份、原生持久保存和无关改动哈希。自动分派与 OAuth 授权继续保持未接入。

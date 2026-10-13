@@ -1008,6 +1008,28 @@ mod tests {
     }
 
     #[test]
+    fn agent_thread_ownership_round_trips_and_rejects_invalid_identity() {
+        let source = fixture_root();
+        let (snapshots, assets, asset_id, _) = seed(&source);
+        let mut current = snapshot(&asset_id);
+        current["revision"] = json!(2);
+        current["projects"][0]["agentThreadId"] = json!("owned-thread-20261013");
+        snapshots.write(current.clone(), Some(1)).unwrap();
+        let package_path = source.join("owned-thread.kkproject");
+        export_package(&snapshots, &assets, &package_path).unwrap();
+        let target = source.join("restored-thread");
+        import_package(&package_path, &target).unwrap();
+        let restored = SnapshotRepository::new(target.join("projects").join("creation-v2.json"));
+        assert_eq!(
+            restored.read().unwrap().snapshot.unwrap()["projects"][0]["agentThreadId"],
+            "owned-thread-20261013"
+        );
+        current["projects"][0]["agentThreadId"] = json!("https://foreign/thread");
+        assert!(snapshot_schema::validate(&current).is_err());
+        let _ = fs::remove_dir_all(source);
+    }
+
+    #[test]
     fn exports_normalized_project_with_empty_stage_plans() {
         let source = fixture_root();
         let (snapshots, assets, _, _) = seed(&source);

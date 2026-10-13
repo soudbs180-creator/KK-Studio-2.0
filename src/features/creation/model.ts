@@ -135,6 +135,8 @@ export interface CreationTask {
 }
 
 export interface CreationProject {
+  /** Non-secret Codex ownership; survives native snapshot/WebView recovery. */
+  agentThreadId?: string;
   googleConversation?: GoogleConversation;
   agentGeneratedImageIds?: string[];
   canvas: ProjectCanvas;
@@ -621,6 +623,11 @@ function normalizeProject(value: CreationProject): CreationProject {
     attachments,
     providerBaseUrl: safeBaseUrl(candidate.providerBaseUrl),
     providerName: safeText(candidate.providerName, 80) || undefined,
+    agentThreadId:
+      typeof candidate.agentThreadId === "string" &&
+      /^[A-Za-z0-9_-]{1,160}$/.test(candidate.agentThreadId)
+        ? candidate.agentThreadId
+        : undefined,
     agentGeneratedImageIds: Array.isArray(candidate.agentGeneratedImageIds)
       ? candidate.agentGeneratedImageIds
           .filter(

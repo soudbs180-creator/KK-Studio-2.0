@@ -16,8 +16,8 @@ export default function ComposerExtensionsMenu({
   const sectionRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const sections = [
     ["skill", "Skill"],
-    ["plugin", "插件/MCP"],
-    ["agent", "智能体"],
+    ["plugin", "MCP"],
+    ["agent", "协作伙伴"],
   ] as const;
   const available = skills.filter(
     (record) => record.installed && record.enabled,
@@ -121,13 +121,13 @@ export default function ComposerExtensionsMenu({
         )}
         {section === "agent" && (
           <>
-            <p>在会话助手选择执行方式与可用模型；连接能力以实际状态为准。</p>
+            <p>选择策划、生成或审查等任务角色，在模型菜单选择执行模型。</p>
             <button
               type="button"
               role="menuitem"
-              onClick={() => onOpen("settings/partners")}
+              onClick={() => onOpen("skills/partners")}
             >
-              智能体连接设置
+              选择协作角色
             </button>
           </>
         )}

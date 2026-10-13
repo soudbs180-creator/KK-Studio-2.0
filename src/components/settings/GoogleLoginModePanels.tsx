@@ -1,5 +1,43 @@
 import { GEMINI_BRIDGE_DEFAULT_URL } from "../../features/agent/geminiCliAdapter";
 
+export function GoogleLoginModeChoice({
+  cli,
+  disabled,
+  onChange,
+}: {
+  cli: boolean;
+  disabled: boolean;
+  onChange: (mode: "api-key" | "cli") => void;
+}) {
+  return (
+    <fieldset className="settings-login-modes">
+      <legend>登录方式</legend>
+      <label className="settings-radio">
+        <input
+          type="radio"
+          name="google-login-mode"
+          value="api-key"
+          checked={!cli}
+          disabled={disabled}
+          onChange={() => onChange("api-key")}
+        />
+        密钥登录（对话与生图）
+      </label>
+      <label className="settings-radio">
+        <input
+          type="radio"
+          name="google-login-mode"
+          value="cli"
+          checked={cli}
+          disabled={disabled}
+          onChange={() => onChange("cli")}
+        />
+        Gemini CLI 账号（Google 登录，免 Key，仅对话）
+      </label>
+    </fieldset>
+  );
+}
+
 export function GoogleCliSetup({
   bridgeUrl,
   onChange,

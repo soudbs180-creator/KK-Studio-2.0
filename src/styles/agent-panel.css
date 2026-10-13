@@ -62,6 +62,10 @@
   line-height: var(--kk-line-caption);
 }
 
+.conversation-panel .chat-agent-messages > .chat-agent-banner.is-connected {
+  color: var(--kk-success);
+}
+
 .conversation-panel .chat-agent-messages > .chat-agent-banner .chat-agent-stop {
   position: absolute;
   inset-inline-end: var(--kk-space-2);
@@ -118,18 +122,28 @@
 .conversation-panel
   .chat-agent-messages
   > :is(.agent-action-error, .chat-status),
-.conversation-panel .chat-agent-messages > p[role="status"] {
+.conversation-panel .chat-agent-messages > .chat-agent-warning {
   order: 3;
   margin: 0;
   padding: var(--kk-space-2) var(--kk-space-3);
   border: var(--kk-border-width) solid var(--kk-border-subtle);
   border-radius: var(--kk-radius-menu);
-  color: var(--kk-text-danger);
+  color: var(--kk-text-secondary);
   background: var(--kk-bg-surface);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-body);
   text-align: center;
   overflow-wrap: anywhere;
+}
+
+.conversation-panel
+  .chat-agent-messages
+  > :is(.agent-action-error, .chat-status)[role="alert"] {
+  color: var(--kk-text-danger);
+}
+
+.conversation-panel .chat-agent-messages > .chat-agent-warning {
+  color: var(--kk-warning);
 }
 
 .conversation-panel .chat-agent-messages > .chat-agent-controls {
@@ -144,6 +158,35 @@
   min-height: var(--kk-control-h-md);
   border-radius: var(--kk-radius-full);
   padding-inline: var(--kk-space-3);
+  font-size: var(--kk-font-caption);
+}
+
+.conversation-panel .chat-agent-messages > .chat-agent-controls .is-primary {
+  border-color: var(--kk-accent);
+  background: var(--kk-accent);
+  color: var(--kk-on-accent);
+}
+
+.conversation-panel
+  .chat-agent-messages
+  > .chat-agent-controls
+  .is-primary:not(:disabled):hover {
+  background: var(--kk-accent-hover);
+}
+
+.chat-agent-advanced {
+  width: 100%;
+  text-align: center;
+}
+
+.chat-agent-advanced summary {
+  cursor: pointer;
+}
+
+.chat-agent-advanced p,
+.chat-agent-controls > p {
+  margin: var(--kk-space-2) 0;
+  color: var(--kk-text-secondary);
   font-size: var(--kk-font-caption);
 }
 

@@ -34,3 +34,5 @@
 - 2026-09-21：创建卡片，状态 PARTIAL。
 
 - 2026-09-22（TASK-DS-002）：目录和设置控件按Design System 1.1迁移；新增 `tests/browser/design-system-pages.spec.ts`，Web与实际Tauri证据见 `docs/changes/2026-09-22-design-system-pages/verification.md`。桌面重启已验证偏好和本地Skill记录保留；本证据不覆盖Provider/GPU或任务宿主恢复，功能状态保持PARTIAL。
+
+本轮入口分类：侧栏「扩展」→ Skill，MCP 与协作伙伴并列；创建/导入/编辑/启停/应用职责保持本地操作，见[分类修复](../changes/2026-10-13-capability-ui/spec.md)。

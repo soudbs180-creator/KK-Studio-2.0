@@ -2,11 +2,14 @@
   position: absolute;
   bottom: calc(100% + 8px);
   left: 0;
-  width: 310px;
-  max-width: calc(100vw - 32px);
-  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  width: min(320px, calc(100vw - 16px));
+  max-height: min(480px, calc(100dvh - 16px));
+  overflow-y: auto;
+  padding: var(--kk-space-2);
   border: 1px solid var(--border-default);
-  border-radius: 12px;
+  border-radius: var(--kk-radius-menu);
   background: var(--bg-surface);
   color: var(--text-primary);
   z-index: 80;
@@ -18,6 +21,7 @@
   gap: 8px;
   min-height: 24px;
   margin-bottom: 8px;
+  flex-shrink: 0;
 }
 .kk-model-menu-top > strong {
   flex: 0 0 auto;
@@ -29,6 +33,7 @@
   align-items: center;
   gap: 8px;
   padding-bottom: 6px;
+  flex-shrink: 0;
 }
 .kk-model-menu .kk-model-search {
   width: 0;
@@ -70,7 +75,8 @@
   font-size: 12px;
 }
 .kk-model-menu-list {
-  max-height: 320px;
+  min-height: 32px;
+  flex: 1 1 auto;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -103,7 +109,7 @@
 .kk-model-menu small,
 .kk-model-menu p {
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   line-height: 1.5;
 }
 .kk-model-menu button:hover:not(:disabled):not([aria-disabled="true"]) {
@@ -131,23 +137,10 @@
   border-top: 1px solid var(--border-default);
   margin-top: 6px;
   border-radius: 0;
+  flex-shrink: 0;
 }
 .creation-composer .kk-model-menu {
-  display: flex;
-  flex-direction: column;
-  width: 227px;
-  height: 318px;
-  max-height: min(318px, calc(100dvh - 24px));
-  border-radius: 10px;
   background: var(--bg-card);
-}
-.creation-composer .kk-model-menu-list {
-  min-height: 0;
-  max-height: none;
-  flex: 1;
-}
-.creation-composer .kk-model-menu-row {
-  min-height: 40px;
 }
 .chat-agent-usage {
   border: 1px solid var(--border-default);
@@ -209,51 +202,23 @@
   color: var(--text-primary);
   border-radius: 6px;
 }
-.kk-model-menu {
-  width: min(420px, calc(100vw - 32px));
-  padding: 14px;
-  border-radius: 18px;
-}
-.kk-model-menu-list {
-  max-height: 420px;
-}
-.kk-model-scenes {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 4px;
-  margin: 6px 0 10px;
-  padding: 4px;
-  border-radius: 12px;
-  background: var(--bg-input);
-}
-.kk-model-scenes button {
-  min-height: 36px;
-  border-radius: 10px;
-  font-size: 13px;
-}
-.kk-model-scenes button[aria-selected="true"] {
-  background: var(--bg-surface);
-  color: var(--text-primary);
-}
 .kk-model-choice-name {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
   width: 100%;
+  padding-right: var(--kk-space-4);
 }
 .kk-model-menu-row > button:first-child {
-  min-height: 48px;
-  padding: 10px 12px;
-  border-radius: 12px;
+  position: relative;
+  min-height: var(--kk-control-h-md);
+  padding: var(--kk-space-2);
+  border-radius: var(--kk-radius-control);
 }
 .kk-model-check {
   position: absolute;
-  right: 12px;
+  right: var(--kk-space-2);
   top: 50%;
   transform: translateY(-50%);
   color: var(--ui-success);
-  font-size: 18px;
+  font-size: var(--kk-font-caption);
 }
 .composer-extensions-menu {
   position: absolute;
@@ -297,42 +262,12 @@
   color: var(--text-primary);
   text-align: left;
 }
-/* The image composer uses the same readable model surface as the home picker. */
-.creation-composer .kk-model-menu,
-.start-model-picker .kk-model-menu {
-  width: min(420px, calc(100vw - 32px));
-  height: auto;
-  max-height: min(520px, calc(100dvh - 24px));
-  border-radius: var(--kk-radius-panel);
-}
-.creation-composer .kk-model-menu-list {
-  max-height: 300px;
-}
-.kk-model-menu button {
-  border-radius: var(--kk-radius-full);
-}
-.kk-model-menu .kk-model-configure {
-  border-radius: var(--kk-radius-full);
+.kk-model-menu .start-model-options {
+  flex-shrink: 0;
 }
 .composer-extensions-menu button {
   border-radius: var(--kk-radius-control);
 }
 .composer-extensions-menu .composer-extension-sections button {
   border-radius: var(--kk-radius-full);
-}
-.kk-model-parameter-summary {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 5px 10px;
-  margin: 0 0 10px;
-  padding: 9px 10px;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--kk-radius-menu);
-  background: var(--bg-input);
-  color: var(--text-secondary);
-  font-size: var(--ui-font-caption);
-}
-.kk-model-parameter-summary strong {
-  color: var(--text-primary);
-  font-weight: 500;
 }

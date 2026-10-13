@@ -950,6 +950,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
                 "providerBaseUrl",
                 "providerName",
                 "providerCredentialRef",
+                "agentThreadId",
                 "items",
                 "messages",
                 "tasks",
@@ -964,6 +965,17 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
             &["id", "items"],
         )?;
         text(project, "id", 1, 160)?;
+        if let Some(thread_id) = project.get("agentThreadId") {
+            if !thread_id.as_str().is_some_and(|id| {
+                !id.is_empty()
+                    && id.len() <= 160
+                    && id.bytes().all(|value| {
+                        value.is_ascii_alphanumeric() || value == b'_' || value == b'-'
+                    })
+            }) {
+                return Err(invalid("agentThreadId"));
+            }
+        }
         texts(project, &[("name", 120), ("prompt", 4000), ("model", 120)])?;
         enumeration(project, "kind", KINDS)?;
         finite(project, "createdAt")?;

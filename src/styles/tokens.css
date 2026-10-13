@@ -249,6 +249,10 @@
   --kk-task-workbench-width: 1100px;
   --kk-task-workbench-height: 760px;
   --kk-task-queue-width: 220px;
+  /* Readable task popover from the 2026-10-10 UI review; shared HUD shell. */
+  --kk-task-popover-width: 360px;
+  --kk-task-popover-height: 420px;
+  --kk-task-popover-min-height: 300px;
 }
 
 /* ============================================================================

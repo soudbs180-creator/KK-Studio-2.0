@@ -57,6 +57,8 @@ export default function AgentConversationMessages({
   onConfigure: () => void;
 }) {
   const { messages, sending, connecting, pendingApproval } = agent;
+  const connectionBusy =
+    connecting || agent.preparing || sending || Boolean(pendingApproval);
   const revision = useRef(agent.connectionRevision);
   revision.current = agent.connectionRevision;
   const [busy, setBusy] = useState(false);
@@ -90,7 +92,10 @@ export default function AgentConversationMessages({
           onRefresh={agent.onRefreshUsage}
         />
       )}
-      <p className="chat-agent-banner" role="status">
+      <p
+        className={`chat-agent-banner${agent.connected ? " is-connected" : ""}`}
+        role="status"
+      >
         {sending
           ? "Agent 正在执行…"
           : connecting
@@ -110,7 +115,7 @@ export default function AgentConversationMessages({
         )}
       </p>
       {agent.connected && agent.conversation?.status === "warning" && (
-        <p role="status">
+        <p className="chat-agent-warning" role="status">
           可选工具暂不可用：
           {Object.entries(agent.conversation.mcpStatuses)
             .filter(
@@ -145,22 +150,28 @@ export default function AgentConversationMessages({
         </button>
         <button
           type="button"
-          disabled={connecting || sending}
+          className="ui-button is-primary"
+          disabled={connectionBusy || agent.connected}
           onClick={() => agent.onConnect()}
         >
           {connecting
             ? "连接中…"
             : agent.connected
-              ? "重新连接"
+              ? "已连接"
               : `连接 ${agent.displayName ?? "Codex"}`}
         </button>
-        <button
-          type="button"
-          disabled={connecting || sending}
-          onClick={() => agent.onConnect(true)}
-        >
-          新建 Agent 会话
-        </button>
+        <details className="chat-agent-advanced">
+          <summary>高级会话操作</summary>
+          <p>新建后将切换当前项目的会话。</p>
+          <button
+            type="button"
+            disabled={connectionBusy}
+            onClick={() => agent.onConnect(true)}
+          >
+            新建 Agent 会话
+          </button>
+        </details>
+        {connectionBusy && <p>请先停止任务或处理待审批操作，再切换连接。</p>}
       </div>
       {messages.map((item) => (
         <div key={item.id} className={`chat-agent-item is-${item.role}`}>

@@ -71,6 +71,21 @@ test("视频编辑器只在选中时出现，参数与提示词在切换后保�
   await page.getByRole("button", { name: "生成数量", exact: true }).click();
   await page.keyboard.press("Home");
   await page.keyboard.press("Escape");
+  await expect
+    .poll(() =>
+      editor
+        .getByRole("button", { name: "生成视频", exact: true })
+        .evaluate((element) => {
+          const box = element.getBoundingClientRect();
+          return element.contains(
+            document.elementFromPoint(
+              box.x + box.width / 2,
+              box.y + box.height / 2,
+            ),
+          );
+        }),
+    )
+    .toBe(true);
   await page.getByRole("button", { name: "生成视频", exact: true }).click();
   await expect(
     page.locator('.demo-result-node[data-kind="video"][data-source="demo"]'),
@@ -95,12 +110,12 @@ test("任务面板按 Runtime / Tasks 展示卡片，滚轮和 Escape 不影响�
     .toEqual({
       x: 321,
       y: 108,
-      width: 196,
-      height: 240,
+      width: 360,
+      height: 420,
     });
   await expect(
     panel.getByRole("button", { name: "全部", exact: true }),
-  ).toHaveCSS("min-height", "14px");
+  ).toHaveCSS("min-height", "32px");
   await panel.screenshot({
     path: "test-results/evidence/runtime-tasks-2026-09-11/task-panel.png",
     animations: "disabled",

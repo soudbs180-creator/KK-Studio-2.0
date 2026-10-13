@@ -17,6 +17,7 @@ import {
   type AgentDraftAttachment,
 } from "../features/agent/agentAttachments";
 import "../styles/agent-panel.css";
+import useAgentComposerDraft from "../features/agent/useAgentComposerDraft";
 
 /** Share the composer while isolating Agent text and attachments from API drafts. */
 export default function AgentComposer({
@@ -30,7 +31,8 @@ export default function AgentComposer({
   active: boolean;
   composer: ReactElement<ComponentProps<typeof ConversationComposer>>;
 }) {
-  const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const { input, update, appendInstructions, clearSentDraft } =
+    useAgentComposerDraft(draftKey, Boolean(active && agent));
   const [imageDrafts, setImageDrafts] = useState<
     Record<string, AgentDraftAttachment[]>
   >({});
@@ -64,9 +66,6 @@ export default function AgentComposer({
     setFeedback("");
     setReadingCanvas(false);
   }, [session]);
-  const input = drafts[draftKey] ?? "";
-  const update = (text: string) =>
-    setDrafts((current) => ({ ...current, [draftKey]: text }));
   const { fileInput, addFiles, readingFiles } = useConversationAttachments({
     draftKey: session,
     attachments,
@@ -151,9 +150,7 @@ export default function AgentComposer({
       const result = await agent.onSend(sent.trim(), sentAttachments);
       if (generation.current !== current) return;
       if (result.ok) {
-        setDrafts((previous) =>
-          previous[key] === sent ? { ...previous, [key]: "" } : previous,
-        );
+        clearSentDraft(key, sent);
         setImageDrafts((previous) => ({
           ...previous,
           [key]: (previous[key] ?? []).filter(
@@ -259,13 +256,7 @@ export default function AgentComposer({
           Boolean(readingFiles) ||
           submitting === agent.connectionRevision,
         onApplySkill: (record) => {
-          const text = [input.trimEnd(), record.instructions]
-            .filter(Boolean)
-            .join("\n\n");
-          if (text.length > 7500)
-            return "加入后超过 7,500 字符，请先精简指令。";
-          update(text);
-          return "Skill 指令已加入 Agent 草稿，尚未发送。";
+          return appendInstructions(record.instructions, 7500).message;
         },
         onVoiceStatus: setFeedback,
         onStatus: setFeedback,

@@ -5,11 +5,13 @@ import {
   type ModelProviderProfile,
 } from "../../domain/modelProvider";
 import ProviderApiKeyField from "./ProviderApiKeyField";
+import type { CredentialReadState } from "./useProviderCredentialState";
 
 export default function ProviderProfileFields({
   profile,
   apiKey,
   hasStoredKey,
+  credentialStatus,
   onUpdate,
   onUpdateMany,
   onApiKeyChange,
@@ -17,6 +19,7 @@ export default function ProviderProfileFields({
   profile: ModelProviderProfile;
   apiKey: string;
   hasStoredKey: boolean;
+  credentialStatus?: CredentialReadState;
   onUpdate: (field: keyof ModelProviderProfile, value: string) => void;
   onUpdateMany: (patch: Partial<ModelProviderProfile>) => void;
   onApiKeyChange: (value: string) => void;
@@ -63,6 +66,7 @@ export default function ProviderProfileFields({
       <ProviderApiKeyField
         value={apiKey}
         hasStoredKey={hasStoredKey}
+        credentialStatus={credentialStatus}
         onChange={onApiKeyChange}
       />
       <p className="settings-field-help">

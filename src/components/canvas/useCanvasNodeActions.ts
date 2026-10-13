@@ -11,7 +11,7 @@ import {
   type CanvasItemKind,
   type DemoResult,
 } from "../../domain/canvasItems";
-import { cardLayout } from "../../domain/canvasGraph";
+import { cardLayout, cardSelectionLayout } from "../../domain/canvasGraph";
 import { MIN_SCALE, type Point, type ViewTransform } from "./canvasModel";
 import { fitRects } from "../../domain/canvasViewport";
 import { visibleComposerExtraHeight } from "./composerLayout";
@@ -137,14 +137,19 @@ export function useCanvasNodeActions({
   function locateNode(id: string): void {
     const item = items.find((item) => item.id === id);
     if (!item || !nodes[id]) return;
-    const layout = cardLayout(item);
+    const layout = cardSelectionLayout(item);
+    const height =
+      layout.height +
+      (selectedNode === id
+        ? visibleComposerExtraHeight(composerExtraHeight)
+        : 0);
     const viewport = usableViewport();
     const scale = Math.max(
       MIN_SCALE,
       Math.min(
         1,
         (viewport.width - 40) / layout.width,
-        (viewport.height - 180) / layout.height,
+        (viewport.height - 180) / height,
       ),
     );
     setTransform({
@@ -152,7 +157,7 @@ export function useCanvasNodeActions({
       x:
         viewport.width / 2 -
         (nodes[id].x + layout.left + layout.width / 2) * scale,
-      y: (viewport.height - 30) / 2 - (nodes[id].y + layout.height / 2) * scale,
+      y: (viewport.height - 30) / 2 - (nodes[id].y + height / 2) * scale,
     });
     pendingFocus.current = id;
     setSelectedNode(id);

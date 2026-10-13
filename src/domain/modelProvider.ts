@@ -25,6 +25,8 @@ export const modelProviderSchema = z.object({
       }
     }, "请填写不含账号、密钥参数或片段的 Base URL；密钥请放入 API Key 字段"),
   model: z.string().trim().max(120, "模型名称过长"),
+  /** Non-secret identity of the selected account in the provider registry. */
+  connectionId: z.string().min(1).max(120).optional(),
 });
 
 export type ModelProviderProfile = z.infer<typeof modelProviderSchema>;

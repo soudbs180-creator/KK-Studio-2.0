@@ -290,23 +290,29 @@
 
 /* Review override follows the legacy Figma calibration blocks above. */
 .canvas-hud .task-panel {
-  width: min(360px, calc(100vw - 32px));
-  height: min(420px, calc(100dvh - 96px));
-  min-height: 300px;
+  width: min(var(--kk-task-popover-width), calc(100vw - 32px));
+  height: min(
+    var(--kk-task-popover-height),
+    var(--task-panel-available-height)
+  );
+  min-height: min(
+    var(--kk-task-popover-min-height),
+    var(--task-panel-available-height)
+  );
   padding: 16px;
   border-radius: var(--kk-radius-panel);
 }
 .canvas-hud .task-panel-heading {
   position: static;
   width: 100%;
-  height: 32px;
+  height: var(--kk-control-h-md);
   font-size: var(--ui-font-body);
   line-height: 20px;
 }
 .canvas-hud .task-panel-tabs {
   position: static;
   width: 100%;
-  height: 34px;
+  height: var(--kk-control-h-md);
   margin: 8px 0 12px;
   gap: 6px;
   align-items: stretch;
@@ -314,21 +320,21 @@
 .canvas-hud .task-tab {
   flex: 1 1 0;
   width: auto !important;
-  height: 34px;
-  min-height: 34px;
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   padding: 0 10px;
   border-radius: var(--kk-radius-full);
   font-size: var(--ui-font-caption);
-  line-height: 34px;
+  line-height: var(--kk-control-h-md);
 }
 .canvas-hud .task-tab.active::before {
-  height: 34px;
+  height: var(--kk-control-h-md);
   border-radius: inherit;
 }
 .canvas-hud .task-grid {
   position: static;
   width: 100%;
-  max-height: calc(100% - 136px);
+  max-height: none;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-auto-rows: auto;
   gap: 12px;
@@ -375,13 +381,13 @@
   position: static;
   width: 100%;
   height: auto;
-  min-height: 180px;
+  min-height: 0;
   font-size: var(--ui-font-caption);
 }
 .canvas-hud .task-workbench-link {
   position: static;
   width: 100%;
-  height: 36px;
+  height: var(--kk-control-h-md);
   margin-top: 12px;
   padding: 0 12px;
   border-radius: var(--kk-radius-full);

@@ -6,6 +6,7 @@ import {
 } from "../../domain/providerConnections.ts";
 import type { ModelProviderProfile } from "../../domain/modelProvider.ts";
 import { invoke } from "@tauri-apps/api/core";
+import { withProviderStoreLock } from "./providerCoordination.ts";
 import { credentialId } from "./providerCredentials.ts";
 import { BROWSER_STORAGE_KEYS } from "../../runtime/storage-contract.ts";
 import { modelSupportsKind } from "./model.ts";
@@ -41,7 +42,7 @@ function safeConnections(value: unknown): ProviderConnection[] {
 }
 
 function sanitizeConnections(
-  connections: readonly ProviderConnection[],
+  connections: readonly unknown[],
 ): ProviderConnection[] {
   return connections.map((connection) => {
     const normalized = normalizeProviderConnection(connection);
@@ -69,22 +70,46 @@ export function isDesktopProviderDurable(): boolean {
  * cache. Returns null when no native record exists so the caller can migrate
  * older browser metadata; a recovered backup is honored, not overwritten.
  */
-export async function loadProviderConnectionsDurable(): Promise<
-  ProviderConnection[] | null
-> {
+export async function loadProviderConnectionsDurable(
+  options: {
+    publishCache?: boolean;
+  } = {},
+): Promise<ProviderConnection[] | null> {
+  return withProviderStoreLock(isDesktopProviderDurable(), async () => {
+    const snapshot = await loadProviderConnectionsDurableSnapshot();
+    if (!snapshot) return null;
+    nativeRevision = snapshot.revision;
+    const connections = snapshot.connections;
+    if (!connections) return null;
+    if (
+      options.publishCache !== false &&
+      !writeProviderConnections(connections)
+    )
+      throw new Error(
+        "系统连接已读取，但无法刷新页面缓存，请检查本地存储后重试。",
+      );
+    return connections;
+  });
+}
+
+/** Bind each save and compensation to its own observed revision. */
+export async function loadProviderConnectionsDurableSnapshot(): Promise<{
+  revision: number | null;
+  connections: ProviderConnection[] | null;
+} | null> {
   if (!isDesktopProviderDurable()) return null;
   const result = await invoke<{
     status: "loaded" | "missing" | "recovered";
     revision: number | null;
     connections: unknown;
   }>("read_provider_config");
-  if (result.status === "missing") return null;
-  const connections = safeConnections(result.connections);
-  nativeRevision = result.revision;
-  if (connections.length > 0 || result.status === "recovered") {
-    writeProviderConnections(connections);
+  if (result.status === "missing") {
+    return { revision: null, connections: null };
   }
-  return connections;
+  if (!Array.isArray(result.connections))
+    throw new Error("系统供应商配置必须是数组，已保留原配置；请检查后重试。");
+  const connections = sanitizeConnections(result.connections);
+  return { revision: result.revision, connections };
 }
 
 /**
@@ -93,14 +118,29 @@ export async function loadProviderConnectionsDurable(): Promise<
  */
 export async function persistProviderConnectionsDurable(
   connections: readonly ProviderConnection[],
-): Promise<void> {
-  if (!isDesktopProviderDurable()) return;
-  const sanitized = sanitizeConnections(connections);
-  nativeRevision = await invoke<number>("write_provider_config", {
-    connections: sanitized,
-    expectedRevision: nativeRevision,
-  });
-  writeProviderConnections(sanitized);
+  options: { publishCache?: boolean; expectedRevision?: number | null } = {},
+): Promise<number | null> {
+  if (!isDesktopProviderDurable()) return null;
+  const commit = async () => {
+    const sanitized = sanitizeConnections(connections);
+    const committedRevision = await invoke<number>("write_provider_config", {
+      connections: sanitized,
+      expectedRevision:
+        options.expectedRevision === undefined
+          ? nativeRevision
+          : options.expectedRevision,
+    });
+    nativeRevision = committedRevision;
+    if (options.publishCache !== false && !writeProviderConnections(sanitized))
+      throw new Error(
+        "系统连接已保存，但无法刷新页面缓存，请检查本地存储后重试。",
+      );
+    return committedRevision;
+  };
+  // Metadata-only writers also serialize their acknowledged cache publication.
+  return options.publishCache === false
+    ? commit()
+    : withProviderStoreLock(true, commit);
 }
 
 /** Browser-persisted metadata only. Credentials are never part of this record. */
@@ -138,6 +178,16 @@ export function addProviderConnection(
   connection: ProviderConnection,
 ): ProviderConnection[] {
   const current = readProviderConnections();
+  const next = mergeProviderConnection(connection, current);
+  writeProviderConnections(next);
+  return next;
+}
+
+/** Build an update without publishing uncommitted metadata to consumers. */
+export function mergeProviderConnection(
+  connection: ProviderConnection,
+  current: readonly ProviderConnection[],
+): ProviderConnection[] {
   const previous = current.find((item) => item.id === connection.id);
   const identityChanged =
     previous !== undefined &&
@@ -171,7 +221,6 @@ export function addProviderConnection(
     ...current.filter((item) => item.id !== nextConnection.id),
     normalizeProviderConnection(nextConnection)!,
   ];
-  writeProviderConnections(next);
   return next;
 }
 
@@ -329,8 +378,23 @@ export function managedConnections(
   return connections.filter(canEnterManagedPool);
 }
 
-/** Bridges the existing single-provider settings into the connection registry. */
-export function connectionFromModelProfile(
+/** Legacy profiles are safe to restore only when their account is unique. */
+export function findModelProfileConnection(
+  profile: ModelProviderProfile,
+  connections: ProviderConnection[],
+): ProviderConnection | undefined {
+  const matches = connections.filter(
+    (item) =>
+      item.baseUrl === profile.baseUrl && item.provider === profile.name,
+  );
+  if (profile.connectionId)
+    return matches.find((item) => item.id === profile.connectionId);
+  if (matches.length === 1) return matches[0];
+  return undefined;
+}
+
+/** Build a new account without borrowing another account's opaque identity. */
+export function newModelProfileConnection(
   profile: ModelProviderProfile,
 ): ProviderConnection {
   const credentialRef = credentialId(profile.baseUrl, profile.name);
@@ -356,4 +420,32 @@ export function connectionFromModelProfile(
     concurrencyLimit: 2,
     verificationStatus: "unverified",
   };
+}
+
+/** Bridges a selected settings profile into its exact registered account. */
+export function connectionFromModelProfile(
+  profile: ModelProviderProfile,
+): ProviderConnection {
+  const connections = readProviderConnections();
+  const existing = findModelProfileConnection(profile, connections);
+  if (
+    !existing &&
+    (profile.connectionId ||
+      connections.filter(
+        (item) =>
+          item.baseUrl === profile.baseUrl && item.provider === profile.name,
+      ).length > 1)
+  )
+    throw new Error("请在模型接入中明确选择并保存要使用的账号。");
+  const connection = newModelProfileConnection(profile);
+  return existing
+    ? {
+        ...existing,
+        model: profile.model,
+        capabilities:
+          existing.model === profile.model
+            ? existing.capabilities
+            : connection.capabilities,
+      }
+    : connection;
 }

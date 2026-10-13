@@ -21,10 +21,14 @@ export default function CodeBuddyConnectionSettings({
   const [model, setModel] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [loadedRevision, setLoadedRevision] = useState<number | null>(null);
   const connected = connection.status === "connected";
+  const configReady =
+    connected && loadedRevision === connection.connectionRevision;
 
   useEffect(() => {
     if (!connected) {
+      setLoadedRevision(null);
       setCliPath("");
       setSavedPath("");
       setStatus("disconnected");
@@ -47,10 +51,12 @@ export default function CodeBuddyConnectionSettings({
         setCliPath(result.cliPath);
         setSavedPath(result.cliPath);
         setStatus(result.configured ? "saved" : "empty");
+        setLoadedRevision(connection.connectionRevision);
       })
       .catch((cause: unknown) => {
         if (!active) return;
         setStatus("empty");
+        setLoadedRevision(connection.connectionRevision);
         setError(
           cause instanceof Error ? cause.message : "无法读取 CodeBuddy 配置",
         );
@@ -75,7 +81,7 @@ export default function CodeBuddyConnectionSettings({
   }
 
   async function save() {
-    if (!connected || busy) return;
+    if (!configReady || busy) return;
     const revision = connection.connectionRevision;
     setBusy(true);
     setError("");
@@ -102,7 +108,7 @@ export default function CodeBuddyConnectionSettings({
   }
 
   async function probe() {
-    if (!connected || busy || !savedPath || cliPath.trim() !== savedPath)
+    if (!configReady || busy || !savedPath || cliPath.trim() !== savedPath)
       return;
     const revision = connection.connectionRevision;
     setBusy(true);
@@ -127,7 +133,7 @@ export default function CodeBuddyConnectionSettings({
 
   const statusText = !connected
     ? "先连接 Codex 主 Agent"
-    : status === "loading"
+    : !configReady || status === "loading"
       ? "正在读取本地配置…"
       : status === "verified"
         ? `已验证${model ? ` · ${model}` : ""}`
@@ -158,7 +164,7 @@ export default function CodeBuddyConnectionSettings({
           id="codebuddy-cli-path"
           aria-label="CodeBuddy CLI 路径"
           value={cliPath}
-          disabled={!connected || busy || status === "loading"}
+          disabled={!configReady || busy || status === "loading"}
           onChange={(event) => {
             setCliPath(event.target.value);
             setStatus("editing");
@@ -173,7 +179,7 @@ export default function CodeBuddyConnectionSettings({
         <button
           type="button"
           className="settings-action"
-          disabled={!connected || busy || status === "loading"}
+          disabled={!configReady || busy || status === "loading"}
           onClick={() => void save()}
         >
           保存 CodeBuddy 路径
@@ -182,7 +188,7 @@ export default function CodeBuddyConnectionSettings({
           type="button"
           className="settings-action"
           disabled={
-            !connected || busy || !savedPath || cliPath.trim() !== savedPath
+            !configReady || busy || !savedPath || cliPath.trim() !== savedPath
           }
           onClick={() => void probe()}
         >

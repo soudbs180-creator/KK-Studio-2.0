@@ -15,6 +15,7 @@ export async function startAgentServer(
   const pendingApprovals = new Map<string, unknown>();
   const authentication: { urlToken: boolean; headerPresent: boolean }[] = [];
   let failAction = false;
+  let busyOverride: boolean | undefined;
   let conversation: AgentConversationState = {
     revision: 1,
     conversationId: "fixture-conversation",
@@ -29,6 +30,7 @@ export async function startAgentServer(
         : {},
   };
   const emit = (type: string, data: unknown) => {
+    if (type === "codex_state") busyOverride = (data as { busy: boolean }).busy;
     if (type === "codex_approval")
       pendingApprovals.set((data as { requestId: string }).requestId, data);
     if (type === "codex_approval_resolved")
@@ -69,7 +71,7 @@ export async function startAgentServer(
         clients.delete(clientId);
       });
       response.write(
-        `event: hello\ndata: ${JSON.stringify({ ok: true, protocolVersion: 6, clientId, conversation, workspace: { activeThreadId: conversation.threadId }, codex: { busy: conversation.status === "running" }, pendingApprovals: [...pendingApprovals.values()] })}\n\n`,
+        `event: hello\ndata: ${JSON.stringify({ ok: true, protocolVersion: 6, clientId, conversation, workspace: { activeThreadId: conversation.threadId }, codex: { busy: busyOverride ?? conversation.status === "running" }, pendingApprovals: [...pendingApprovals.values()] })}\n\n`,
       );
       return;
     }
@@ -105,11 +107,12 @@ export async function startAgentServer(
       const result = await prepareIdleConversation(body, {
         hasClient: (id) => clients.has(id),
         conversation: () => conversation,
-        begin: () => {
+        begin: (clientId) => {
           conversation = {
             ...conversation,
             revision: conversation.revision + 1,
             status: "preparing",
+            sourceClientId: clientId,
           };
           emit("conversation_changed", conversation);
         },
@@ -136,6 +139,20 @@ export async function startAgentServer(
       };
       emit("conversation_changed", conversation);
       response.end(JSON.stringify({ ok: true, conversation }));
+      return;
+    }
+    const resumedThread = url.pathname.match(
+      /^\/agent\/codex\/threads\/([^/]+)\/resume$/,
+    );
+    if (resumedThread) {
+      conversation = {
+        ...conversation,
+        threadId: decodeURIComponent(resumedThread[1]),
+        status: "ready",
+        revision: conversation.revision + 1,
+      };
+      emit("conversation_changed", conversation);
+      response.end(JSON.stringify({ ok: true, conversation, messages: [] }));
       return;
     }
     if (url.pathname === "/agent/codex/turn") {

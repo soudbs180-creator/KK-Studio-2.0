@@ -28,14 +28,13 @@ export const SETTINGS_SECTIONS: SettingsSectionItem[] = [
   { id: "memory", label: "记忆" },
   {
     id: "providers",
-    label: "模型供应商",
-    description:
-      "添加自定义提供商和模型后，可在对话中选择。自定义模型请求由本机直接发送给提供商。",
+    label: "模型接入",
+    description: "连接 Codex 主 Agent，或配置模型账号与 API。",
   },
   {
     id: "extensions",
     label: "扩展",
-    description: "统一管理插件、Skill 和伙伴智能体入口。",
+    description: "选择 Skill、MCP 工具和承担专项任务的协作伙伴。",
   },
   { id: "comfy", label: "Comfy UI" },
   { id: "advanced", label: "高级" },

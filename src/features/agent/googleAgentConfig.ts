@@ -1,12 +1,10 @@
+import { credentialId, loadApiKey } from "../creation/providerCredentials.ts";
+import { readProviderConnections } from "../creation/providerRegistry.ts";
 import {
-  credentialId,
-  loadApiKey,
-  saveApiKey,
-} from "../creation/providerCredentials.ts";
-import {
-  readProviderConnections,
-  writeProviderConnections,
-} from "../creation/providerRegistry.ts";
+  restoreProviderConnection,
+  saveProviderConnection,
+} from "../creation/providerSaveRecovery.ts";
+import type { ProviderConnection } from "../../domain/providerConnections.ts";
 import { GOOGLE_API_BASE, GOOGLE_IMAGE_MODEL } from "./googleInteractions.ts";
 import { GEMINI_BRIDGE_DEFAULT_URL } from "./geminiCliAdapter.ts";
 export const GOOGLE_CONNECTION_ID = "google-interactions";
@@ -37,7 +35,7 @@ export function readGoogleCliPreference(): {
 export function writeGoogleCliPreference(
   loginMode: "api-key" | "cli",
   bridgeUrl: string,
-): void {
+): boolean {
   try {
     if (loginMode === "cli") {
       window.localStorage.setItem(GOOGLE_LOGIN_MODE_KEY, "cli");
@@ -49,60 +47,69 @@ export function writeGoogleCliPreference(
       window.localStorage.removeItem(GOOGLE_LOGIN_MODE_KEY);
       window.localStorage.removeItem(GOOGLE_BRIDGE_URL_KEY);
     }
+    return true;
   } catch {
-    /* 偏好保存失败不影响会话内连接。 */
+    return false;
   }
 }
 export async function saveGoogleApiKeyConnection(
   apiKey: string,
 ): Promise<void> {
-  await saveApiKey(GOOGLE_API_BASE, apiKey, GOOGLE_CREDENTIAL_REF);
-  const connections = readProviderConnections();
-  const previous = connections.find((item) => item.id === GOOGLE_CONNECTION_ID);
-  if (
-    !writeProviderConnections([
-      ...connections.filter((item) => item.id !== GOOGLE_CONNECTION_ID),
-      {
-        id: GOOGLE_CONNECTION_ID,
-        provider: "Gemini",
-        displayName: "Google Gemini",
-        kind: "user_byok",
-        baseUrl: GOOGLE_API_BASE,
-        credentialRef: GOOGLE_CREDENTIAL_REF,
-        model: GOOGLE_IMAGE_MODEL,
-        state: "active",
-        concurrencyLimit: 1,
-        healthRevision: (previous?.healthRevision ?? 0) + 1,
-        verificationStatus: "unverified",
-        capabilities: {
-          modalities: ["image"],
-          operations: ["generate", "edit"],
-          maxReferences: 6,
-          maxOutputs: 1,
-          async: false,
-        },
-      },
-    ])
-  )
-    throw new Error("Google provider metadata could not be saved.");
-  writeGoogleCliPreference("api-key", GEMINI_BRIDGE_DEFAULT_URL);
+  await saveProviderConnection(googleApiConnection(), apiKey);
+}
+function googleApiConnection(): ProviderConnection {
+  return {
+    id: GOOGLE_CONNECTION_ID,
+    provider: "Gemini",
+    displayName: "Google Gemini",
+    kind: "user_byok",
+    baseUrl: GOOGLE_API_BASE,
+    credentialRef: GOOGLE_CREDENTIAL_REF,
+    model: GOOGLE_IMAGE_MODEL,
+    state: "active",
+    concurrencyLimit: 1,
+    healthRevision: 0,
+    verificationStatus: "unverified",
+    capabilities: {
+      modalities: ["image"],
+      operations: ["generate", "edit"],
+      maxReferences: 6,
+      maxOutputs: 1,
+      async: false,
+    },
+  };
 }
 export async function getGoogleCredential() {
-  const connection = readProviderConnections().find(
+  let connection = readProviderConnections().find(
     (item) => item.id === GOOGLE_CONNECTION_ID,
   );
   if (
-    !connection ||
-    connection.state === "disabled" ||
-    connection.baseUrl !== GOOGLE_API_BASE ||
-    connection.credentialRef !== GOOGLE_CREDENTIAL_REF
+    connection &&
+    (connection.state === "disabled" ||
+      connection.state === "quarantined" ||
+      connection.baseUrl !== GOOGLE_API_BASE ||
+      connection.credentialRef !== GOOGLE_CREDENTIAL_REF)
   )
-    throw new Error("请先在设置 → 模型供应商中保存 Google API Key。");
+    throw new Error("请先在设置 → 模型接入中保存 Google API Key。");
   const apiKey = await loadApiKey(GOOGLE_API_BASE, GOOGLE_CREDENTIAL_REF);
   if (!apiKey)
     throw new Error(
-      "请在模型供应商设置中填写 Google API Key；网页版刷新后需要重新填写。",
+      "请在模型接入设置中填写 Google API Key；网页版刷新后需要重新填写。",
     );
+  if (!connection) {
+    // Older desktop builds could lose the metadata while the stable vault key
+    // survived. Rebuild only its non-secret connection; never rewrite the key.
+    const restored = await restoreProviderConnection(googleApiConnection());
+    connection = restored.find((item) => item.id === GOOGLE_CONNECTION_ID);
+    if (
+      !connection ||
+      connection.state === "disabled" ||
+      connection.state === "quarantined" ||
+      connection.baseUrl !== GOOGLE_API_BASE ||
+      connection.credentialRef !== GOOGLE_CREDENTIAL_REF
+    )
+      throw new Error("Google 连接未启用，请检查模型接入设置。");
+  }
   return {
     apiKey,
     identity: `${GOOGLE_CONNECTION_ID}:${connection.healthRevision ?? 0}`,

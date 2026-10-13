@@ -301,6 +301,7 @@ test("batch rechecks the bound connection before the next HTTP request and retai
   Object.defineProperty(globalThis, "window", {
     configurable: true,
     value: {
+      location: { protocol: "https:", hostname: "fixture.invalid" },
       setTimeout,
       clearTimeout,
       localStorage: {

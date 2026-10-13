@@ -10,7 +10,7 @@ test("首页没有图片连接时模型菜单只提供配置入口", async ({ pa
   await expect(menu.getByRole("menuitemradio")).toHaveCount(0);
   await expect(menu).toContainText("暂无模型");
   await expect(
-    menu.getByRole("button", { name: /配置供应商与账号/ }),
+    menu.getByRole("button", { name: "模型接入…", exact: true }),
   ).toBeVisible();
 });
 
@@ -34,11 +34,9 @@ test("Figma 483 首页输入保持紧凑尺寸，额外能力仍可访问", asyn
   expect((await chooser).isMultiple()).toBe(true);
   const model = composer.getByRole("button", { name: "模型", exact: true });
   await model.click();
-  const options = composer.getByRole("region", { name: "生成设置" });
-  await expect(options.getByLabel("生成数量")).toBeVisible();
-  await expect(options.getByLabel("隐私模式")).toBeVisible();
-  await options.getByLabel("生成数量").selectOption("4");
-  await expect(options.getByLabel("生成数量")).toHaveValue("4");
+  const menu = composer.getByRole("menu", { name: "选择模型" });
+  await expect(menu.getByLabel("生成数量")).toHaveCount(0);
+  await expect(menu.getByLabel("隐私模式")).toHaveCount(0);
   await model.click();
   expect((await composer.boundingBox())!.height).toBe(desktop.height);
   await page.setViewportSize({ width: 390, height: 844 });
@@ -77,25 +75,29 @@ test("首页模型弹层选择真实 API 图片模型并保存连接身份", asy
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
     .getByRole("menu", { name: "选择模型" })
-    .getByRole("button", { name: /配置供应商与账号/ })
+    .getByRole("button", { name: "模型接入…", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
   await page.getByLabel("提供商", { exact: true }).fill("星河 API");
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
-  await page.getByLabel("API Key").fill("fixture-key");
+  await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
   await page.getByRole("button", { name: "保存", exact: true }).click();
   await page.getByLabel("提供商", { exact: true }).fill("星河 API B");
   await page.getByLabel("接口地址").fill("https://models-b.example.test/v1");
-  await page.getByLabel("API Key").fill("fixture-key-b");
+  await page.getByLabel("API Key", { exact: true }).fill("fixture-key-b");
   await page.getByLabel("模型名称").fill("image-second");
   await page.getByRole("button", { name: "保存", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置" }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
+  const menu = page.getByRole("menu", { name: "选择模型" });
+  await menu.getByRole("button", { name: "切换全部模型", exact: true }).click();
   const choice = page
     .getByRole("menu", { name: "选择模型" })
     .getByRole("menuitemradio", { name: /image-test.*星河 API/ });
   await expect(choice).toBeVisible();
-  const menu = page.getByRole("menu", { name: "选择模型" });
   const options = menu.getByRole("menuitemradio");
   expect(await options.count()).toBeGreaterThan(1);
   await options.first().focus();
@@ -184,8 +186,9 @@ test("Figma 483 画布输入与模型菜单采用独立尺寸", async ({ page })
   await composer.getByRole("button", { name: "画布模型" }).click();
   const menu = composer.getByRole("menu", { name: "选择模型" });
   const box = (await menu.boundingBox())!;
-  expect(box.width).toBeGreaterThanOrEqual(400);
-  expect(box.height).toBeGreaterThan(318);
+  expect(box.width).toBe(320);
+  expect(box.height).toBeGreaterThan(64);
+  expect(box.height).toBeLessThanOrEqual(520);
   await page.screenshot({
     path: "test-results/changes/2026-09-24-ui-regression/evidence/web-canvas-composer-model-1440.png",
   });

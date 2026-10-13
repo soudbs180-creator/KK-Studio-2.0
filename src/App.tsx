@@ -51,6 +51,7 @@ import {
   type AgentBridge,
 } from "./features/agent/agentConnection.ts";
 import { googleAgentConnection } from "./features/agent/googleAgentConnection.ts";
+import { appendToActiveAgentDraft } from "./features/agent/agentDraftActions";
 
 import { pluginLoader } from "./features/plugins/pluginLoader.ts";
 import {
@@ -59,6 +60,7 @@ import {
 } from "./features/plugins/pluginRuntime.ts";
 import type { PluginAi } from "./features/plugins/pluginTypes.ts";
 import { createAgentHost } from "./features/agent/agentHost.ts";
+import { desktopAgentLifecycle } from "./features/agent/desktopAgentLifecycle.ts";
 import { assertCanvasDeliveries } from "./features/agent/agentCanvas.ts";
 import {
   createStageOrchestrator,
@@ -214,6 +216,7 @@ import "./styles/workspace.css";
 import "./styles/sidebar.css";
 import "./styles/account-popup.css";
 import "./styles/catalog-pages.css";
+import "./styles/extensions.css";
 // Keep Figma-scoped conversation geometry after the legacy workspace rules.
 import "./styles/conversation-panel.css";
 import "./styles/model-picker.css";
@@ -233,6 +236,10 @@ const TaskWorkbench = lazy(() => import("./components/TaskWorkbench"));
 
 export default function App() {
   const [active, setActive] = useState("landing");
+  const [extensionView, setExtensionView] = useState<
+    "skills" | "connectors" | "partners"
+  >("skills");
+  const [partnerProjectId, setPartnerProjectId] = useState<string | null>(null);
   const [workspaceVisited, setWorkspaceVisited] = useState(false);
   useEffect(() => {
     if (active === "workspace") setWorkspaceVisited(true);
@@ -389,6 +396,10 @@ export default function App() {
     agentConnection.subscribe,
     agentConnection.getState,
   );
+  const desktopAgentState = useSyncExternalStore(
+    desktopAgentLifecycle.subscribe,
+    desktopAgentLifecycle.getState,
+  );
   const activeProjectIdRef = useRef<string | null>(creation.activeProjectId);
   activeProjectIdRef.current = creation.activeProjectId;
   const [canvasItems, setCanvasItems] = useState<CanvasCollectionItem[]>(
@@ -458,6 +469,46 @@ export default function App() {
     } catch {
       return "应用失败：Skill 指令与当前草稿合计超过 4000 字，原草稿未改变。";
     }
+  }
+  function applyPartnerToHome(instructions: string): string {
+    const project = partnerProjectId
+      ? creationRef.current.projects.find(
+          (item) => item.id === partnerProjectId,
+        )
+      : undefined;
+    if (partnerProjectId && !project) return "原项目已不可用，未修改草稿。";
+    if (project && creationRef.current.activeProjectId !== project.id)
+      return "原项目已不是当前项目，未修改草稿。";
+    if (project) {
+      // The active composer acknowledges its source; inactive Agent drafts
+      // cannot receive instructions or redirect them into the API draft.
+      for (const draftKey of [project.id, `google-${project.id}`]) {
+        const result = appendToActiveAgentDraft(draftKey, instructions);
+        if (result.handled) {
+          if (result.applied) setActive("workspace");
+          return result.message;
+        }
+      }
+    }
+    const draft = project?.composerDraft ?? creationRef.current.homeDraft;
+    const prompt = [draft.prompt.trim(), instructions]
+      .filter(Boolean)
+      .join("\n\n");
+    if (prompt.length > 4000)
+      return "应用失败：角色说明与草稿合计超过 4000 字，原草稿未改变。";
+    if (project)
+      updateProject(project.id, (current) => ({
+        ...current,
+        composerDraft: {
+          ...current.composerDraft,
+          prompt,
+          updatedAt: Date.now(),
+        },
+        updatedAt: Date.now(),
+      }));
+    else updateHomeDraft({ ...draft, prompt, updatedAt: Date.now() });
+    setActive(project ? "workspace" : "landing");
+    return "协作角色已加入草稿，请选择本次任务的模型。";
   }
   function applySkillToProject(record: SkillRecord): string {
     const project = creationRef.current.projects.find(
@@ -555,6 +606,8 @@ export default function App() {
           creationRef.current.projects.find(
             (item) => item.id === activeProjectIdRef.current,
           ),
+        getProjects: () => creationRef.current.projects,
+        flush: () => persistence.flush(),
         commit: (project) => {
           updateProject(project.id, () => project);
           if (activeProjectIdRef.current === project.id)
@@ -660,6 +713,16 @@ export default function App() {
       pluginLoader.setBridge(null);
     };
   }, [agentCanvasBridge]);
+  useEffect(() => {
+    if (saveState === "saved" || saveState === "saving")
+      void desktopAgentLifecycle.ensure();
+  }, [
+    creation.activeProjectId,
+    persistence.loadEpoch,
+    saveState,
+    agentCanvasBridge,
+    desktopAgentState.pending,
+  ]);
   useEffect(() => {
     if (
       import.meta.env.VITE_KK_AGENT_PROXY === "1" &&
@@ -2571,6 +2634,22 @@ export default function App() {
     };
   }, []);
   function open(view: string): void {
+    if (view === "skills" || view.startsWith("skills/")) {
+      setPartnerProjectId(
+        active === "workspace" ? creationRef.current.activeProjectId : null,
+      );
+      const requestedView = view.split("/")[1];
+      setExtensionView(
+        requestedView === "partners"
+          ? "partners"
+          : requestedView === "connectors"
+            ? "connectors"
+            : "skills",
+      );
+      setActive("skills");
+      setModal("");
+      return;
+    }
     if (view === "new-project") {
       handleNewBlankProject();
       return;
@@ -2604,7 +2683,8 @@ export default function App() {
       const sectionAlias: Record<string, SettingsSection> = {
         plugins: "mcp",
         extensions: "extensions",
-        partners: "partners",
+        partners: "providers",
+        codex: "providers",
         skills: "skill",
         skill: "skill",
         mcp: "mcp",
@@ -2957,8 +3037,10 @@ export default function App() {
                           connectionRevision: agentState.connectionRevision,
                           conversation: agentState.conversation,
                           preparing: agentState.preparing,
-                          connecting: agentState.status === "connecting",
-                          error: agentState.error,
+                          connecting:
+                            agentState.status === "connecting" ||
+                            desktopAgentState.pending,
+                          error: agentState.error || desktopAgentState.error,
                           usage: agentState.usage,
                           usageError: agentState.usageError,
                           onRefreshUsage: () => {
@@ -2968,7 +3050,9 @@ export default function App() {
                             (model) => model.model || model.id,
                           ),
                           onConnect: (fresh) => {
-                            void agentConnection.connect(fresh);
+                            void desktopAgentLifecycle
+                              .connect(fresh)
+                              .catch(() => undefined);
                           },
                           sending: agentState.sending,
                           activity: agentState.activity,
@@ -3019,6 +3103,9 @@ export default function App() {
                 registry={skillRegistry}
                 onApply={applySkillToHome}
                 onOpenMcp={() => open("settings/mcp")}
+                onOpenModels={() => open("settings/providers")}
+                onApplyPartner={applyPartnerToHome}
+                defaultView={extensionView}
               />
             </DeferredPanelBoundary>
           )}

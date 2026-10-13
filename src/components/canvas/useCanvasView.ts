@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction, KeyboardEvent } from "react";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
-import { cardLayout } from "../../domain/canvasGraph";
+import { cardLayout, cardSelectionLayout } from "../../domain/canvasGraph";
 import {
   fitRects,
   zoomAtPoint,
@@ -54,7 +54,7 @@ export function useCanvasView({
       if (!point) return [];
       const selected = selectedNode === item.id;
       const image = item.kind === "image";
-      const layout = cardLayout(item);
+      const layout = selected ? cardSelectionLayout(item) : cardLayout(item);
       return [
         {
           x: point.x + (selected ? layout.left : 0),

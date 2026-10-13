@@ -169,8 +169,7 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
-/* Global control contract: text actions are pills; square hit areas remain circles. */
-.kk-button,
+/* Page-specific pill actions do not override the standard .kk-button geometry. */
 .ui-button,
 .primary-button {
   border-radius: var(--kk-radius-full);

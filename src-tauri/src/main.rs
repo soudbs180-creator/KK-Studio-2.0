@@ -8,6 +8,7 @@ mod asset_storage;
 mod creation_storage;
 mod project_package;
 mod provider_config;
+mod provider_transaction;
 mod secret_filter;
 mod storage_paths;
 mod task_host;
@@ -18,7 +19,6 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use tauri::{AppHandle, Emitter, Manager, State};
-use zeroize::Zeroize;
 
 // ========== 配置结构 ==========
 
@@ -336,79 +336,30 @@ fn scan_comfyui_path(root: &Path) -> Result<ComfyUIScanResult, String> {
 
 // ========== 系统凭据命令 ==========
 
-const CREDENTIAL_SERVICE: &str = "com.kkstudio.provider";
-
-fn validate_credential_provider_id(provider_id: &str) -> Result<(), String> {
-    if provider_id.is_empty()
-        || provider_id.len() > 128
-        || !provider_id
-            .chars()
-            .all(|value| value.is_ascii_alphanumeric() || value == '_' || value == '-')
-    {
-        return Err("凭据提供商 ID 无效".to_string());
-    }
-    Ok(())
-}
-
-#[cfg(target_os = "windows")]
-fn system_credential_entry(provider_id: &str) -> Result<keyring::Entry, String> {
-    keyring::Entry::new(CREDENTIAL_SERVICE, provider_id)
-        .map_err(|_| "无法访问 Windows 凭据管理器".to_string())
+#[tauri::command(rename_all = "camelCase")]
+async fn credential_set(provider_id: String, secret: String) -> Result<bool, String> {
+    let secret = zeroize::Zeroizing::new(secret);
+    tauri::async_runtime::spawn_blocking(move || {
+        provider_transaction::set_credential(&provider_id, &secret)
+    })
+    .await
+    .map_err(|_| "系统凭据写入任务中断".to_string())?
 }
 
 #[tauri::command(rename_all = "camelCase")]
-fn credential_set(provider_id: String, mut secret: String) -> Result<bool, String> {
-    validate_credential_provider_id(&provider_id)?;
-    if secret.trim().is_empty() || secret.len() > 64 * 1024 {
-        secret.zeroize();
-        return Err("凭据内容为空或过长".to_string());
-    }
-
-    #[cfg(target_os = "windows")]
-    let result = system_credential_entry(&provider_id)
-        .and_then(|entry| {
-            entry
-                .set_password(secret.trim())
-                .map_err(|_| "无法写入 Windows 凭据管理器".to_string())
-        })
-        .map(|_| true);
-    #[cfg(not(target_os = "windows"))]
-    let result = Err("当前桌面平台不支持系统凭据库".to_string());
-
-    secret.zeroize();
-    result
+async fn credential_get(provider_id: String) -> Result<Option<String>, String> {
+    tauri::async_runtime::spawn_blocking(move || provider_transaction::get_credential(&provider_id))
+        .await
+        .map_err(|_| "系统凭据读取任务中断".to_string())?
 }
 
 #[tauri::command(rename_all = "camelCase")]
-fn credential_get(provider_id: String) -> Result<Option<String>, String> {
-    validate_credential_provider_id(&provider_id)?;
-    #[cfg(target_os = "windows")]
-    {
-        let entry = system_credential_entry(&provider_id)?;
-        return match entry.get_password() {
-            Ok(secret) => Ok(Some(secret)),
-            Err(keyring::Error::NoEntry) => Ok(None),
-            Err(_) => Err("无法读取 Windows 凭据管理器".to_string()),
-        };
-    }
-    #[cfg(not(target_os = "windows"))]
-    Err("当前桌面平台不支持系统凭据库".to_string())
-}
-
-#[tauri::command(rename_all = "camelCase")]
-fn credential_delete(provider_id: String) -> Result<bool, String> {
-    validate_credential_provider_id(&provider_id)?;
-    #[cfg(target_os = "windows")]
-    {
-        let entry = system_credential_entry(&provider_id)?;
-        return match entry.delete_credential() {
-            Ok(()) => Ok(true),
-            Err(keyring::Error::NoEntry) => Ok(false),
-            Err(_) => Err("无法删除 Windows 凭据".to_string()),
-        };
-    }
-    #[cfg(not(target_os = "windows"))]
-    Err("当前桌面平台不支持系统凭据库".to_string())
+async fn credential_delete(provider_id: String) -> Result<bool, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        provider_transaction::delete_credential(&provider_id)
+    })
+    .await
+    .map_err(|_| "系统凭据清除任务中断".to_string())?
 }
 
 // ========== 配置命令 ==========
@@ -530,6 +481,32 @@ async fn write_provider_config(
     tauri::async_runtime::spawn_blocking(move || providers.write(connections, expected_revision))
         .await
         .map_err(|_| "io: 供应商配置保存任务中断".to_string())?
+}
+
+#[tauri::command(rename_all = "camelCase")]
+async fn commit_provider_connection(
+    state: State<'_, AppState>,
+    connections: serde_json::Value,
+    expected_revision: Option<u64>,
+    provider_id: Option<String>,
+    secret: Option<String>,
+    clear_secret: bool,
+) -> Result<provider_transaction::ProviderCommitReceipt, String> {
+    let providers = Arc::clone(&state.providers);
+    let secret = secret.map(zeroize::Zeroizing::new);
+    tauri::async_runtime::spawn_blocking(move || {
+        provider_transaction::commit_provider_connection(
+            &providers,
+            &provider_transaction::SystemCredentialVault,
+            connections,
+            expected_revision,
+            provider_id.as_deref(),
+            secret.as_deref().map(String::as_str),
+            clear_secret,
+        )
+    })
+    .await
+    .map_err(|_| "系统凭据事务中断，请重新读取连接状态".to_string())?
 }
 
 #[tauri::command(rename_all = "camelCase")]
@@ -1728,6 +1705,7 @@ fn main() {
             read_creation_snapshot,
             read_provider_config,
             write_provider_config,
+            commit_provider_connection,
             asset_store,
             asset_read,
             asset_list,

@@ -160,3 +160,7 @@ API Key、OAuth refresh token、代理凭据等只进入系统凭据库（Window
 3. 导入项目先验证 Zod schema、引用完整性和 checksum，再原子写入新 repository。Desktop 的 .kkproject 已校验 schema/checksum/引用并在独立新目录 staging/回读/发布；既有目标（包括空目录）拒绝。Web 文件 adapter 与旧数据迁移仍未完成。
 4. 迁移成功前不删除旧数据；失败时保留诊断和恢复路径。
 5. 数据目录位置、schema 版本、备份保留策略在 `docs/architecture/` 维护，功能变更同步 `docs/PROGRESS.md`。
+
+## Agent 会话归属与连接恢复
+
+项目可保存非敏感 agentThreadId，随原生快照及项目包恢复。旧 kk-agent-thread:<projectId> 缓存保持兼容；Token 与 API 秘密均不进入该字段。服务就绪、项目会话已连接、任务权限和 API 保存是不同状态；未知归属与未完成操作不被自动接管。详见 [ADR-016](adr/ADR-016-agent-and-provider-recovery.md)。

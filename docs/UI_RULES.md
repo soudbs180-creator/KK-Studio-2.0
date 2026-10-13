@@ -80,13 +80,13 @@ Subtitle `16/24/600`、Title `20/28/700`、Display `26/32/700`。任何可见产
 
 **禁止事项**（由 `npm run ui:check` 拦截）：
 
-| 禁止 | 报错形式 | 例外 |
-| --- | --- | --- |
-| 组件 CSS 写颜色字面量 | `新增颜色字面量 #xxx` | 仅 `global.css`、`ui-tokens.css`、`tokens.css` |
-| 使用未定义令牌 | `未定义的 CSS 令牌 --xxx` | 无 |
-| 直接 import 新 `lucide-react` 符号 | `新增 Lucide 导入` | 存量白名单 46 个符号（13 个文件），见下|
-| Iconsax 绕过 `UiIcon` | `Iconsax 必须通过 UiIcon 映射使用` | 仅 `UiIcon.tsx` |
-| 组件超300 行 | `超过 300 行组件边界` | 无 |
+| 禁止                               | 报错形式                           | 例外                                           |
+| ---------------------------------- | ---------------------------------- | ---------------------------------------------- |
+| 组件 CSS 写颜色字面量              | `新增颜色字面量 #xxx`              | 仅 `global.css`、`ui-tokens.css`、`tokens.css` |
+| 使用未定义令牌                     | `未定义的 CSS 令牌 --xxx`          | 无                                             |
+| 直接 import 新 `lucide-react` 符号 | `新增 Lucide 导入`                 | 存量白名单 46 个符号（13 个文件），见下        |
+| Iconsax 绕过 `UiIcon`              | `Iconsax 必须通过 UiIcon 映射使用` | 仅 `UiIcon.tsx`                                |
+| 组件超300 行                       | `超过 300 行组件边界`              | 无                                             |
 
 `scripts/check-ui-standards.mjs` 同时扫描 `src/**` 下全部 `.css` 与 `.tsx`，`src/main.tsx` 必须加载 `./styles/tokens.css`，否则直接报错。
 
@@ -158,3 +158,9 @@ Subtitle `16/24/600`、Title `20/28/700`、Display `26/32/700`。任何可见产
 
 旧版 9 类型页面、旧字号表和旧封闭轴只在 `docs/archive/` 中保留作为历史证据，
 不得作为新功能选型或样式来源。
+
+## 模型接入与扩展入口
+
+模型接入管理 Codex 主 Agent、模型账号与 API 凭据；扩展管理 Skill 指令、MCP 工具和协作角色。角色负责一项任务，使用已接入模型，不重复登记账号。未实现的自动分派/OAuth 必须说明能力边界。旧 settings/partners 连接路由兼容到模型接入；角色使用 skills/partners。UI 交付需从 canonical 实际重建并分别验证 Web development、production preview 和 Desktop，确认加载资源身份及同状态画面，不能以其他 worktree 的源码改动代替生效证据。
+
+通用模型选择只管理来源、供应商和型号，不混入批量数量或数据/隐私模式。图片节点的生成数量属于对应生成操作；已有任务与草稿参数仍按原数据契约保留。

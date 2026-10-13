@@ -130,6 +130,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-GOV-003 | 规则体系收敛与文档同步门禁（B1+B2+R+B3-1+B3-2） | PARTIAL | 进行中 | P1 | none | root | 待用户授权后处理 B3-3 TASKSTATE 分支审查；随后按独立批次处理 B4 worktree/二进制、B5 交付包补齐 |
 | TASK-GOV-004 | 未合并分支全量核验、分类与收敛合并 | PARTIAL | 进行中 | P1 | TASK-GOV-003 | root | P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包 |
 | TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | REVIEW | 进行中 | P1 | TASK-GOV-003 | root | 单独修复并验证 5 个 UI 失败项；补齐开发态 receipt 后再评估是否可标记 DONE。 |
+| TASK-UI-CLASSIFY-20261013 | 模型接入与扩展分类修复并验证三客户端 | REVIEW | 进行中 | P1 | none | root | 另行处理三个既有 UI 失败并取得用户验收；保留自动分派/OAuth 未接入边界 |
+| TASK-AGENT-RECOVERY-20261013 | 桌面 Agent 自动恢复、会话归属与凭据保存 | PARTIAL | 进行中 | P1 | none | root | 完成聊天与凭据状态一致性修复，2.1.17完整门禁和官方日常APP复验，恢复初始连接偏好。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2488,5 +2490,43 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PARTIAL — 定向 43/43 通过；snapshot 4/0、governance 124/0、lint/typecheck/npm test/test:agent/ui:check/format/test:ui 构建通过。npm run verify 因 5 个未触及 UI 测试失败退出 1；test:development 无 receipt。最终 head 62d067fd，tree 8b22bede。
 - Evidence: [docs/changes/2026-10-13-review-remediation/verification.md](../../docs/changes/2026-10-13-review-remediation/verification.md), [docs/changes/2026-10-13-review-remediation/review.md](../../docs/changes/2026-10-13-review-remediation/review.md)
 - Next action: 单独修复并验证 5 个 UI 失败项；补齐开发态 receipt 后再评估是否可标记 DONE。
+- Last verified: 2026-10-13
+- Updated: 2026-10-13
+
+## TASK-UI-CLASSIFY-20261013 — 模型接入与扩展分类修复并验证三客户端
+
+- Goal: 将确认的 UI 清单落到 canonical 并取得实际客户端证据
+- Scope: 模型菜单、模型接入、扩展分类、协作角色职责模板和三客户端验证
+- Display status: 进行中
+- Priority: P1 — 多次修改未落到客户端的分类与交互回归
+- Requirement refs: ledger:TASK-UI-CLASSIFY-20261013
+- Feature IDs: FEAT-011, FEAT-030
+- Owner role: repository-maintainer
+- Acceptance: Codex 接入属于模型接入，扩展含 Skill/MCP/协作伙伴; 保留原草稿及无关改动; Web development、preview、Desktop 独立重建并实际验证
+- Branch: `fix/TASK-UI-CLASSIFY-20261013-capability`
+- Worktree: `D:/kk-studio/KK-Studio-2.0/.worktrees/capability-ui-closeout`
+- Modules: src/components/settings, src/components/SkillsPage.tsx, src/components/ModelPickerMenu.tsx, src/features/partners, tests/browser
+- Verification: PARTIAL — Model popup batch/data removed; targeted model and generation regressions 40/40 PASS; Canonical Web development 7 checks, production preview 7 checks and Desktop 2.1.14 14 checks rebuilt and PASS; Node 1021 pass/14 skipped, Agent 172 pass/2 skipped; browser 492/495, 20 capability cases PASS, 3 pre-existing UI failures remain; independent focused review findings closed
+- Evidence: [docs/changes/2026-10-13-capability-ui/verification.md](../../docs/changes/2026-10-13-capability-ui/verification.md), [docs/changes/2026-10-13-capability-ui/review.md](../../docs/changes/2026-10-13-capability-ui/review.md)
+- Next action: 另行处理三个既有 UI 失败并取得用户验收；保留自动分派/OAuth 未接入边界
+- Last verified: 2026-10-13
+- Updated: 2026-10-13
+
+## TASK-AGENT-RECOVERY-20261013 — 桌面 Agent 自动恢复、会话归属与凭据保存
+
+- Goal: 打开APP可安全恢复本机Agent和已保存API，统一连接操作并修复归属自锁
+- Scope: Agent启动恢复、项目会话非敏感归属、设置连接按钮、Windows凭据与API metadata提交/重读、对应回归与运行证据
+- Display status: 进行中
+- Priority: P1 — 修复正常重开/会话恢复自锁与凭据保存误报，保护用户配置和已有会话。
+- Requirement refs: ledger:TASK-AGENT-RECOVERY-20261013
+- Feature IDs: FEAT-009, FEAT-022
+- Owner role: repository-maintainer
+- Acceptance: 同项目打开APP自动恢复既有线程，无模型turn; 首次prepare后读取失败可重连同thread; WebView缓存缺失可从原生项目归属恢复; 未知外来线程及运行/审批期间不接管或停止; 断开/停止持久暂停，手动重连恢复; 普通与Google API durable保存并在重启保留; 系统读取失败可重试、不要求重填且秘密不落项目/日志; 完整本地门禁、真实原生重启和独立审查
+- Branch: `fix/TASK-AGENT-RECOVERY-20261013`
+- Worktree: `D:/kk-studio/.worktrees/TASK-AGENT-RECOVERY-20261013`
+- Modules: src/features/agent, src/features/creation, src/components/settings, src/App.tsx, tests
+- Verification: PARTIAL — 2.1.16历史完整门禁/38+6原生证据保留；本轮日常原profile正常close0/reopen自动sameThread/project/API metadata和主动disconnect→close0/reopen暂停通过。真实API当前ref基线missing，实钥保留NOT VERIFIED。实际聊天健康状态染危险色与按钮不一致已复现，2.1.17修复/完整门禁/日常复验进行中。
+- Evidence: [docs/changes/2026-10-13-agent-recovery/intent.md](../../docs/changes/2026-10-13-agent-recovery/intent.md), [docs/changes/2026-10-13-agent-recovery/spec.md](../../docs/changes/2026-10-13-agent-recovery/spec.md), [docs/changes/2026-10-13-agent-recovery/plan.md](../../docs/changes/2026-10-13-agent-recovery/plan.md), [docs/changes/2026-10-13-agent-recovery/verification.md](../../docs/changes/2026-10-13-agent-recovery/verification.md), [docs/changes/2026-10-13-agent-recovery/review.md](../../docs/changes/2026-10-13-agent-recovery/review.md), [docs/changes/2026-10-13-agent-recovery/evidence/canonical-agent-native.json](../../docs/changes/2026-10-13-agent-recovery/evidence/canonical-agent-native.json), [docs/changes/2026-10-13-agent-recovery/evidence/canonical-provider-native.json](../../docs/changes/2026-10-13-agent-recovery/evidence/canonical-provider-native.json), [docs/changes/2026-10-13-agent-recovery/evidence/independent-source-review.json](../../docs/changes/2026-10-13-agent-recovery/evidence/independent-source-review.json), [docs/changes/2026-10-13-agent-recovery/evidence/independent-delivery-review.json](../../docs/changes/2026-10-13-agent-recovery/evidence/independent-delivery-review.json), [docs/changes/2026-10-13-agent-recovery/evidence/daily-app-open.json](../../docs/changes/2026-10-13-agent-recovery/evidence/daily-app-open.json), [docs/changes/2026-10-13-agent-recovery/evidence/delivery-document-checks.json](../../docs/changes/2026-10-13-agent-recovery/evidence/delivery-document-checks.json)
+- Next action: 完成聊天与凭据状态一致性修复，2.1.17完整门禁和官方日常APP复验，恢复初始连接偏好。
 - Last verified: 2026-10-13
 - Updated: 2026-10-13

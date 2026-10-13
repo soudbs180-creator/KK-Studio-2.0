@@ -46,3 +46,7 @@ Agent 连接状态/密码输入/会话凭据、平台与版本标识已对齐；
 ## 默认 Agent 与 API 目录补充（2026-09-22）
 
 设置提供已登录 Codex 连接、同步权限偏好与 API 模型目录刷新、手动用途/尺寸/型号分组/搜索别名。能力与账号身份绑定，未知能力不冒充可用。详见本轮 [verification](../changes/2026-09-22-codex-default-agent/verification.md)。
+
+## Agent 与凭据恢复（2026-10-13）
+
+TASK-AGENT-RECOVERY-20261013：模型接入将普通桌面连接合为一个入口，断开为次操作，停止服务进入高级选项。API 输入不回填秘密，系统读取状态区分读取中、已保存、缺失与读取失败并支持重试。普通与 Google API 共用持久保存边界，保留既有系统凭据身份；本轮跨窗口一致性、进程重启与秘密隔离证据见 [验证](../changes/2026-10-13-agent-recovery/verification.md) 和 [ADR-016](../architecture/adr/ADR-016-agent-and-provider-recovery.md)。

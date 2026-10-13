@@ -1,27 +1,43 @@
 import { expect, test, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
+import {
+  CREATION_STORAGE_KEY,
+  emptySnapshot,
+} from "../../src/features/creation/model";
 
 const endpoint = "https://models.example.test/v1/images/generations";
 const pixel =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
 
-async function configure(page: Page) {
+async function configure(page: Page, outputCount = 4) {
+  const snapshot = emptySnapshot();
+  snapshot.revision = Date.now();
+  snapshot.homeDraft.outputCount = outputCount;
+  // Batch semantics belong to the initial task draft, not the model popup.
+  await page.addInitScript(
+    ({ key, initial }) => {
+      const current = JSON.parse(localStorage.getItem(key) ?? "null");
+      if (!current || current.revision < initial.revision)
+        localStorage.setItem(key, JSON.stringify(initial));
+    },
+    { key: CREATION_STORAGE_KEY, initial: snapshot },
+  );
   await page.goto("/");
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
     .getByRole("menu")
-    .getByRole("button", { name: /配置供应商/ })
+    .getByRole("button", { name: "模型接入…", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
-  await page.getByLabel("API Key").fill("fixture-key");
+  await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
   await page.getByRole("button", { name: "保存", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
 }
-async function submit(page: Page, count = "4") {
-  await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page.getByLabel("生成数量").selectOption(count);
-  await page.getByRole("button", { name: "模型", exact: true }).click();
+async function submit(page: Page) {
   await page.getByLabel("创作提示词").fill("带有磨砂材质的白色风扇");
   await page.getByRole("button", { name: "开始创建项目" }).click();
 }
@@ -290,8 +306,8 @@ test("提交后暂停进入受理状态不明并保留已归档结果", async ({
       })
       .catch(() => {});
   });
-  await configure(page);
-  await submit(page, "1");
+  await configure(page, 1);
+  await submit(page);
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect(page.locator(".project-task-running")).toBeVisible();
   await workbench(page);
@@ -361,8 +377,8 @@ test("16 项批次在归档 10 项后暂停，剩余受理状态进入未知", a
       })
       .catch(() => {});
   });
-  await configure(page);
-  await submit(page, "16");
+  await configure(page, 16);
+  await submit(page);
   await page.getByRole("button", { name: "批准并提交" }).click();
   await workbench(page);
   await page.getByRole("tab", { name: "Generate" }).click();
@@ -396,8 +412,8 @@ test("重复重试被锁定，重试任务再次重试后回填原始输出", as
       })
       .catch(() => {});
   });
-  await configure(page);
-  await submit(page, "1");
+  await configure(page, 1);
+  await submit(page);
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect(page.locator(".project-task-failed")).toBeVisible();
   await workbench(page);
@@ -433,8 +449,8 @@ test("相同内容重新导入保持 AI 来源，SHA-256 去重和本地集合�
       body: JSON.stringify({ data: [{ b64_json: preview }] }),
     }),
   );
-  await configure(page);
-  await submit(page, "1");
+  await configure(page, 1);
+  await submit(page);
   await page.getByRole("button", { name: "批准并提交" }).click();
   await expect(page.locator(".project-task-succeeded")).toBeVisible();
   await page.getByRole("button", { name: "文件", exact: true }).click();

@@ -44,6 +44,15 @@ function withTauriStorage(run: () => Promise<void>): Promise<void> {
     configurable: true,
     value: {
       location: { protocol: "tauri:", hostname: "tauri.localhost" },
+      navigator: {
+        locks: {
+          request: (
+            _name: string,
+            _options: unknown,
+            run: () => Promise<unknown>,
+          ) => run(),
+        },
+      },
       __TAURI_INTERNALS__: {
         invoke: (command: string, args?: Record<string, unknown>) => {
           invokeCalls.push({ command, args });

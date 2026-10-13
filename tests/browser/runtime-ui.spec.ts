@@ -117,7 +117,10 @@ test("responsive desktop fills the viewport without scaling readable controls", 
   await page.getByLabel("对话内容", { exact: true }).fill("本地 UI 验证草稿");
   await expect(send).toBeDisabled();
   await page.getByRole("button", { name: "前往模型设置", exact: true }).click();
-  await expect(page.getByLabel("API Key")).toBeVisible();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
+  await expect(page.getByLabel("API Key", { exact: true })).toBeVisible();
   await expect(page.getByLabel("对话内容")).toHaveValue("本地 UI 验证草稿");
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "AI权限模式", exact: true }).click();
