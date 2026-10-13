@@ -6,7 +6,7 @@
 - 交付包角色：`current`
 - cwd / branch：`D:/kk-studio/KK-Studio-2.0` / `codex/ui-redesign-20261011`
 - 被验证 base SHA / head SHA / tree SHA：`bcf55851d296c753d9610e86f1e32bf8db333a41` / `62d067fd83544b94195d0be55fff287232ddda59` / `8b22bede7dfe0dcf64c34f70ef8d04fd4fbce53a`
-- dirty 状态及 patch/文件指纹：工作树仅保留既有无关改动 `src/components/WindowControls.tsx`（2 行注释）；修复提交未包含该文件。
+- dirty 状态及 patch/文件指纹：工作树保留未纳入本任务的并发改动 `src/components/WindowControls.tsx`、`src/styles/composer.css`、`tests/browser/composer-voice.spec.ts`、`tests/browser/interaction-state.spec.ts`；修复提交未包含这些文件。
 
 ## 实际命令和结果
 
