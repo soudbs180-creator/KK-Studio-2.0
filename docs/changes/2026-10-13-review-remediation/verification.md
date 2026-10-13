@@ -17,7 +17,7 @@
 | `governance:check` | 2026-10-13 | 0 | PASS | 终端输出 | 124 tasks，0 violations |
 | `npm run lint` | 2026-10-13 | 0 | PASS | 终端输出 | 含版本、治理、feature、Markdown、index、snapshot、doc command 检查；CHANGELOG 漂移仅 warning |
 | `npm run verify` | 2026-10-13 | 1 | FAIL（部分阶段通过） | 终端输出 | lint、typecheck、`npm test`、`test:agent`（174 tests，172 pass、2 skipped）、`ui:check`、format、`test:ui` 构建通过；Playwright 475 tests 中 470 pass、5 fail |
-| `npm run test:development` | 2026-10-13 | 未产生退出码/receipt | NOT VERIFIED | `test-results/development-plugins/1791856804119-rerun2/` 为空 | Vite `createServer/listen` 阶段在 30 秒内无端口或 receipt；仅终止本次自有进程，未复用其他服务 |
+| `npm run test:development` | 2026-10-13 | 未产生退出码/receipt | NOT VERIFIED | `test-results/development-plugins/1791856804119-rerun2/` 为空 | 30 秒内无最终输出；同配置有界探针可完成 Vite 与 Edge 启动，但在关闭 headed Edge 时挂起；仅终止本次自有进程，未复用其他服务 |
 | `npm run delivery:completeness` | 2026-10-13 | 1 | FAIL（历史遗留） | 终端输出 | 本次交付包完整；7 个旧包缺少文件且未标注 `legacy-incomplete` |
 
 ## 验收覆盖
