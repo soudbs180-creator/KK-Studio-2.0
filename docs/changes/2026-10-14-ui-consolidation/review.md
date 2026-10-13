@@ -6,3 +6,4 @@
 - 当前本机冻结版不是全部候选集成或正式发布；标签/喜欢位置、固定面板、输入描边、绿色和协议目录尚待实现。上传形状已有CSS根因；视频位置尚未运行复现，不预填修复。
 - 最新 main 质量门禁、Hosted、用户产品验收和正式发布分别核验，不用本地构建替代。
 - 首轮完整浏览器515个spec含1flaky（native key identity持久化超时）；原JSON/log保留，根因UNKNOWN。冻结版只作为恢复/开发基线，不能据command exit0说零回归或稳定发布。
+- 定向5次zero retry通过，未代替完整套的首试失败。开发字体403已在694e3d18最小修复并重新取证PASS，fs父目录仍拒绝。独立最终复核结果保存于本机输出的independent-baseline-review.md；未收到结果前仍NOT VERIFIED。

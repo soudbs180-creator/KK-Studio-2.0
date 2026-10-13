@@ -4,6 +4,8 @@
 
 全分支/worktree/dirty来源已盘点并保存恢复refs、hash与校验bundle，原文件/index/资料保持。当前日常2.1.17源码冻结196be1de，候选version/typecheck/build和1082单测通过（14既有skip）；这是本机冻结，不是所有候选集成或正式发布。用户新增绿色/输入描边/按钮规则、固定大小拖动面板、8类协议/CLI、二三栏设置、多端和体积治理已写入[规格](changes/2026-10-14-ui-consolidation/spec.md)与[计划](changes/2026-10-14-ui-consolidation/plan.md)。新产品UI未实现、最新main组合与完整平台验收继续开放。
 
+补充：最终Node1085通过/14skip、Agent172通过/2skip；515生产浏览器514首试通过/1flaky，相关场景5次zero retry通过，根因仍UNKNOWN。开发字体403已最小修复，694e3d18提交实测5步骤PASS/父目录403保护；原失败未覆盖。冻结提交df737905及已校验Web/恢复包已输出，后续在途源继续保留而不冒充已整合。
+
 ## 2026-10-13 日常 APP 重开验收补充（进行中）
 
 TASK-AGENT-RECOVERY-20261013 按用户新要求复验原数据/profile，已证正常close0/reopen自动同thread及主动断开重开保持暂停、原API metadata未变。日常当前连接关闭前无已保存密钥，实钥保留保持NOT VERIFIED。发现聊天“已连接”染危险色及按钮与设置不一致，已按授权最小修复并新增RED/GREEN；共享Desktop/Web2.1.17最终门禁和日常复验进行中。原2.1.16验收仅按历史范围回读。[验收记录](changes/2026-10-13-agent-recovery/verification.md)。

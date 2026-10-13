@@ -132,7 +132,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | REVIEW | 进行中 | P1 | TASK-GOV-003 | root | 单独修复并验证 5 个 UI 失败项；补齐开发态 receipt 后再评估是否可标记 DONE。 |
 | TASK-UI-CLASSIFY-20261013 | 模型接入与扩展分类修复并验证三客户端 | REVIEW | 进行中 | P1 | none | root | 另行处理三个既有 UI 失败并取得用户验收；保留自动分派/OAuth 未接入边界 |
 | TASK-AGENT-RECOVERY-20261013 | 桌面 Agent 自动恢复、会话归属与凭据保存 | PARTIAL | 进行中 | P1 | none | root | 完成聊天与凭据状态一致性修复，2.1.17完整门禁和官方日常APP复验，恢复初始连接偏好。 |
-| TASK-UI-CONSOLIDATE-20261014 | 冻结最新本机版本并统一 UI、模型预设与轻量化规则 | PARTIAL | 进行中 | P1 | none | root | 完成冻结版当前检查和提交，再从最新main逐任务承接并执行spec/plan。 |
+| TASK-UI-CONSOLIDATE-20261014 | 冻结最新本机版本并统一 UI、模型预设与轻量化规则 | PARTIAL | 进行中 | P1 | none | root | 按spec/plan在最新main逐任务承接并统一UI；保留首试flaky风险及Native/Hosted独立验收。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2545,8 +2545,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-UI-BASELINE-20261014`
 - Worktree: `D:/kk-studio/.worktrees/branch-consolidation-20261011`
 - Modules: src/styles, src/components, src/domain, src/features, src-tauri, docs, scripts
-- Verification: PARTIAL — 41恢复refs覆盖36dirty来源；40一致/1volatile、原HEAD/index变动0；bundle verify PASS。当前候选版本/typecheck/build与Node1082pass/14skip/0fail已验证，整体UI/主线/桌面/Hosted未验收。
+- Verification: PARTIAL — 冻结196be1de、已提交df737905；41refs覆盖36dirty、bundle verify PASS。最终Node1085pass/14skip、Agent172pass/2skip、515browser514expected/1flaky（根因UNKNOWN），相关zero-retry5/5。开发字体403在694e3d18最小修复且提交head5步骤PASS；Native/Hosted/全候选整合/新UI未完成。
 - Evidence: [docs/changes/2026-10-14-ui-consolidation/intent.md](../../docs/changes/2026-10-14-ui-consolidation/intent.md), [docs/changes/2026-10-14-ui-consolidation/spec.md](../../docs/changes/2026-10-14-ui-consolidation/spec.md), [docs/changes/2026-10-14-ui-consolidation/plan.md](../../docs/changes/2026-10-14-ui-consolidation/plan.md), [docs/changes/2026-10-14-ui-consolidation/verification.md](../../docs/changes/2026-10-14-ui-consolidation/verification.md), [docs/changes/2026-10-14-ui-consolidation/review.md](../../docs/changes/2026-10-14-ui-consolidation/review.md)
-- Next action: 完成冻结版当前检查和提交，再从最新main逐任务承接并执行spec/plan。
+- Next action: 按spec/plan在最新main逐任务承接并统一UI；保留首试flaky风险及Native/Hosted独立验收。
 - Last verified: 2026-10-14
 - Updated: 2026-10-14
