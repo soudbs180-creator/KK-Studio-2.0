@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "createdAtUtc": "2026-10-13T11:47:10Z",
+  "reviewer": {
+    "identity": "/root/final_review",
+    "role": "Independent read-only source, test and delivery-document reviewer",
+    "effectiveModel": "NOT REPORTED"
+  },
+  "task": "TASK-AGENT-RECOVERY-20261013",
+  "repository": "D:/kk-studio/.worktrees/TASK-AGENT-RECOVERY-20261013",
+  "requestedDocumentHead": "1760e3e04c1b46f17abeca38ed7b155d70fb2d07",
+  "reviewBase": "1cf93cb42ba335e3197d5c282cac33749358c524",
+  "reviewedHead": "b3bdc3d29d0a2912bda4d2d0ac7a85b8bb6100c1",
+  "supplementsReviewed": [
+    "95721b9821de20989d9c57dcc146d7e34c7c9cec",
+    "b3bdc3d29d0a2912bda4d2d0ac7a85b8bb6100c1"
+  ],
+  "result": "PASS",
+  "scope": "Pinned delivery documents, evidence/source/runtime binding, ledger and feature preservation, canonical metadata and staged-content preservation. No production implementation or native/browser rerun.",
+  "findings": [
+    {
+      "id": "DELIVERY-COUNT-001",
+      "severity": "P2",
+      "status": "CLOSED",
+      "originalObservation": "The first comparison assumed 714 meant actual files and exited 1 on 712 != 714. No source mismatch was observed.",
+      "resolution": "95721b9 clarifies 714 declared entries = 712 actual files + two matching absent-input markers. Independent comparison found 690 exact and 22 CRLF/LF-equivalent files, zero mismatches."
+    },
+    {
+      "id": "DELIVERY-INDEX-002",
+      "severity": "P2",
+      "status": "CLOSED",
+      "originalObservation": "Initial index-byte hash 5f55... must not be presented as unchanged after later Git status inspection produced b5e238....",
+      "resolution": "b3bdc3d separates initial byte preservation from later byte changes and staged-content preservation. Reviewer observed both hashes at the relevant snapshots and independently confirmed git diff --cached --quiet exit 0 and original HEAD tree identity."
+    }
+  ],
+  "openFindings": [],
+  "sourceReviewCarryForward": {
+    "originalBase": "e0875b3d3f595a5570702a6ff3e45b8b76b5c861",
+    "sourcePassHead": "6f8ff257e8996eaf11ca4446e8781dd10d9aa1d9",
+    "fullVerifyHead": "59c013ce478d1a4c556da82067b0d69aa625ad4e",
+    "testOnlyPassHeads": [
+      "59c013ce478d1a4c556da82067b0d69aa625ad4e",
+      "1cf93cb42ba335e3197d5c282cac33749358c524"
+    ],
+    "productionAndTestChangesInThisDelta": [],
+    "srcTree": "eb3269f9afc13684cbfa7ccab8d69c586779d2eb",
+    "srcTauriTree": "296b46ad178a9aaef29b0be1c34173071b5f37ef",
+    "allIR001ThroughIR008AndCliFollowup": "CLOSED",
+    "independentSourceReceiptSha256": "ad6acf6e9f5400a022b5ef977bbfc2f9e0908cb4696e082c8a23dcff9d462f5f",
+    "sourceApprovalIsNotNativeExecution": true
+  },
+  "evidenceCrossChecks": {
+    "fullVerify": {
+      "head": "59c013ce478d1a4c556da82067b0d69aa625ad4e",
+      "state": "COMPLETE",
+      "exitCode": 0,
+      "browserExpected": 514,
+      "browserUnexpected": 0,
+      "browserFlaky": 0,
+      "browserSkipped": 0,
+      "nodePassed": 1076,
+      "nodeSkipped": 14,
+      "agentPassed": 172,
+      "agentSkipped": 2,
+      "rustPassed": 126
+    },
+    "development": {
+      "head": "59c013ce478d1a4c556da82067b0d69aa625ad4e",
+      "result": "PASS",
+      "errors": 0
+    },
+    "archivedNative": {
+      "candidateAgentChecks": 38,
+      "canonicalAgentChecks": 38,
+      "candidateProviderChecks": 6,
+      "canonicalProviderChecks": 6,
+      "allPassed": true,
+      "credentialCleanupComplete": true
+    },
+    "canonical": {
+      "head": "51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c",
+      "branch": "codex/ui-redesign-20261011",
+      "dirtyIntegration": true,
+      "localOriginMain": "694a00607f6f63de1b8c43d0ebb117adf5d34f67",
+      "registeredWorktrees": 103,
+      "executableSha256": "b3715cc0eb8ddd03cc2ff329ff23422824946e4ae0f5f4e83ad09bd8f3ed9155",
+      "buildReceiptSha256": "9a2835f8abc5bcff093367ccfb09f0f9d55c86f0745ec546f3c43a18d002de80",
+      "inputSha256": "e5faac471d9c30d582147c9c25381404fa98c8a3e2528307bbcd1ff52ec1e28f",
+      "launcherSha256": "5680e0ad733ea8c4033ca9ffb79aa98fcb455700a922572d5cd18fecb38684f2"
+    },
+    "sourceEquivalence": {
+      "actualFiles": 712,
+      "exactFiles": 690,
+      "crlfEquivalentFiles": 22,
+      "declaredEntries": 714,
+      "matchingMissingInputs": [
+        "tsconfig.app.json",
+        "tsconfig.node.json"
+      ],
+      "mismatches": []
+    },
+    "staging": {
+      "initialObservedByteSha256": "5f55ebe547973db9f57cbca5b1775e4319a3dd6d1112e2ef3f8dcc923406cf53",
+      "finalObservedByteSha256": "b5e238b1f1b5ca850d4137a6a89fb1f4be96759459091f633dee63b376420bf4",
+      "headTree": "868c52bc5d96b2b9e829e7b1263f1752cb776a35",
+      "cachedDiffExitCode": 0,
+      "reviewerDidNotRestoreResetStageOrCommit": true
+    },
+    "governance": {
+      "records": 126,
+      "counts": {
+        "DONE": 75,
+        "PARTIAL": 31,
+        "TODO": 11,
+        "BLOCKED": 4,
+        "REVIEW": 5
+      },
+      "changedRecords": [
+        "TASK-AGENT-RECOVERY-20261013"
+      ],
+      "taskStatus": "REVIEW",
+      "verificationResult": "PASS",
+      "features": 36,
+      "changedFeatures": [
+        "FEAT-009",
+        "FEAT-022"
+      ],
+      "bothRemain": "PARTIAL"
+    },
+    "visuals": "Reviewer inspected archived canonical reopened-Agent and provider-settings PNGs: connected state and empty saved-key field with synthetic endpoint were visible. This is not user visual acceptance."
+  },
+  "reviewerExecuted": [
+    {
+      "command": "git diff --check 1cf93cb42ba335e3197d5c282cac33749358c524 b3bdc3d29d0a2912bda4d2d0ac7a85b8bb6100c1",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --name-only 1cf93cb42ba335e3197d5c282cac33749358c524 b3bdc3d29d0a2912bda4d2d0ac7a85b8bb6100c1 -- src src-tauri tests scripts config package.json package-lock.json VERSION",
+      "exitCode": 0,
+      "outputFiles": []
+    },
+    {
+      "command": "D:/tools/node-v24.20.0-win-x64/node.exe scripts/check-governance.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "D:/tools/node-v24.20.0-win-x64/node.exe scripts/check-features.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "D:/tools/node-v24.20.0-win-x64/node.exe scripts/check-markdown.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "D:/tools/node-v24.20.0-win-x64/node.exe scripts/check-doc-index.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "D:/tools/node-v24.20.0-win-x64/node.exe scripts/check-snapshot-header.mjs",
+      "environment": {
+        "KK_CONTAINER_ROOT": "D:/kk-studio"
+      },
+      "exitCode": 0
+    },
+    {
+      "command": "D:/tools/node-v24.20.0-win-x64/node.exe scripts/check-doc-commands.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "Node read-only parse/assert of pinned ledger/features and archived verify/development/native/source-review receipts",
+      "exitCode": 0
+    },
+    {
+      "command": "Node read-only RELEASE_INPUTS comparison excluding dist, with initial fixed actual-file count of 714",
+      "exitCode": 1,
+      "classification": "COUNT_ASSUMPTION_MISMATCH_ONLY",
+      "sourceMismatches": 0
+    },
+    {
+      "command": "Node read-only RELEASE_INPUTS comparison excluding dist with separate files/missing-marker counts",
+      "exitCode": 0
+    },
+    {
+      "command": "git -C D:/kk-studio/KK-Studio-2.0 diff --cached --quiet",
+      "exitCode": 0
+    },
+    {
+      "command": "git -C D:/kk-studio/KK-Studio-2.0 show -s --format=%T HEAD",
+      "exitCode": 0,
+      "tree": "868c52bc5d96b2b9e829e7b1263f1752cb776a35"
+    },
+    {
+      "command": "PowerShell Get-FileHash of canonical index, EXE, build receipt and launcher; read-only metadata verification",
+      "exitCode": 0
+    }
+  ],
+  "parentEvidenceInspectedNotExecutedByReviewer": [
+    ".tmp/closeout-lint.log",
+    ".tmp/rust-final.log",
+    ".tmp/rust-format-final.log",
+    ".tmp/delivery-final-checks.json"
+  ],
+  "limits": [
+    "Native/browser/full-verify runs were performed by the implementer and inspected through archived receipts; this reviewer did not rerun them.",
+    "Native requests before CDP attachment remain NOT VERIFIED; zero observed after-attachment turns is not a whole-startup zero-turn proof.",
+    "Fixed Google real-vault behavior remains NOT VERIFIED; isolated unique synthetic credentials and shared-boundary fixtures are the stated acceptance scope.",
+    "Forced-crash selected-profile recovery and metadata/vault crash atomicity are not claimed; earlier failures remain historical evidence.",
+    "Hosted CI, signing, installers, formal publishing, real paid-provider/GPU output and human acceptance are separate gates.",
+    "The daily-app shortcut-open receipt mentioned after 1760 is not in this reviewed delta and was not used to replace isolated native evidence.",
+    "Task remains REVIEW in this pinned head. A later DONE/document-receipt commit requires its own bounded supplement."
+  ],
+  "mutations": "Only the user-requested .tmp delivery review receipt was written; no production code, project body documentation or ledger was changed."
+}

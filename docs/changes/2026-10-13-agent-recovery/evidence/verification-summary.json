@@ -1,0 +1,28 @@
+{
+  "sourceHead": "59c013ce478d1a4c556da82067b0d69aa625ad4e",
+  "browser": {
+    "startTime": "2026-10-13T11:24:12.149Z",
+    "duration": 149934.524,
+    "expected": 514,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "node": {
+    "tests": 1090,
+    "passed": 1076,
+    "failed": 0,
+    "skipped": 14
+  },
+  "agent": {
+    "tests": 174,
+    "passed": 172,
+    "failed": 0,
+    "skipped": 2
+  },
+  "rust": {
+    "passed": 126,
+    "failed": 0
+  },
+  "development": "{\"result\":\"PASS\",\"sourceHead\":\"59c013ce478d1a4c556da82067b0d69aa625ad4e\",\"steps\":[\"discover-four-plugins-without-overlay\",\"add-edit-and-render-four-plugin-nodes-without-cdn\",\"disable-reload-restore-enable\",\"reject-unsafe-remote-before-request\"],\"errors\":[],\"evidenceDir\":\"D:\\\\kk-studio\\\\.worktrees\\\\TASK-AGENT-RECOVERY-20261013\\\\test-results\\\\development-plugins\\\\1791890802668\"}\r"
+}

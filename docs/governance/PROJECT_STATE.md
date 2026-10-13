@@ -2,7 +2,7 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-10-13
+- updatedAt: 2026-10-14
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
@@ -11,19 +11,21 @@
 
 ## CURRENT_FACTS (machine-readable current snapshot)
 
-- `snapshotDate`: 2026-10-13
+- `snapshotDate`: 2026-10-14
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: `694a00607f6f63de1b8c43d0ebb117adf5d34f67`
-- `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the primary checkout; this is the local remote-tracking ref and was not refreshed with `git fetch` in this audit.
+- `canonicalHeadVerifiedFrom`: 本轮 git fetch origin 后回读；主线694a006，源2.1.13。
 - `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `codex/ui-redesign-20261011` at `51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c`, dirty. Original UI changes were preserved in baseline `e0875b3d`; only TASK-AGENT-RECOVERY-20261013 owned changes were integrated after content comparison. Desktop/Web 2.1.16 official canonical build and native acceptance passed; this is not a published origin/main tree.
-- `taskLedger`: 126 records; 75 DONE, 32 PARTIAL, 11 TODO, 4 BLOCKED, 4 REVIEW; 51 open records.
-- `workspaceWorktrees`: 103 registered worktrees from current git inventory, including nested and external checkouts. Existing dirty/active/history worktrees are preserved. This task uses one isolated recovery worktree; no reclamation is authorized.
+- `taskLedger`: 127 records; 4 REVIEW, 75 DONE, 11 TODO, 33 PARTIAL, 4 BLOCKED; 52 open records.
+- `workspaceWorktrees`: 本轮盘点104登记项；36 dirty来源通过41个recovery refs保留（40一致/1volatile）。原分支/index/资料保留，未删除或移动。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
 
 - `agentRecoveryEvidence`: [TASK-AGENT-RECOVERY-20261013 verification](../changes/2026-10-13-agent-recovery/verification.md); 2.1.16 accepted receipts remain archived; the user-requested actual daily-profile supplement found chat UI inconsistencies. Shared 2.1.17 candidate and repeated daily acceptance are in progress.
+
+- `uiConsolidationCandidate`: codex/TASK-UI-BASELINE-20261014，复用 D:/kk-studio/.worktrees/branch-consolidation-20261011；当前日常2.1.17源冻结196be1de，不是全部候选集成/正式发布。[本轮验证](../changes/2026-10-14-ui-consolidation/verification.md)。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->

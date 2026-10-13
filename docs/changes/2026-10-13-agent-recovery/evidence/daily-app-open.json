@@ -1,0 +1,12 @@
+{
+  "task": "TASK-AGENT-RECOVERY-20261013",
+  "atUtc": "2026-10-13T11:43:03.3092441Z",
+  "entry": "C:\\Users\\Administrator\\Desktop\\启动 KK Studio.lnk",
+  "processId": 83652,
+  "executablePath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+  "processCreationDate": "2026-10-13T19:43:02.665986+08:00",
+  "fileVersion": "2.1.16",
+  "executableSha256": "b3715cc0eb8ddd03cc2ff329ff23422824946e4ae0f5f4e83ad09bd8f3ed9155",
+  "isolatedDataArgument": false,
+  "claimedScope": "Actual daily Desktop shortcut opened the canonical fresh app using its normal startup context. Isolation acceptance is separate; no real-provider request or default credential content was inspected."
+}

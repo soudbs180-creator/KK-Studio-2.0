@@ -132,6 +132,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | REVIEW | 进行中 | P1 | TASK-GOV-003 | root | 单独修复并验证 5 个 UI 失败项；补齐开发态 receipt 后再评估是否可标记 DONE。 |
 | TASK-UI-CLASSIFY-20261013 | 模型接入与扩展分类修复并验证三客户端 | REVIEW | 进行中 | P1 | none | root | 另行处理三个既有 UI 失败并取得用户验收；保留自动分派/OAuth 未接入边界 |
 | TASK-AGENT-RECOVERY-20261013 | 桌面 Agent 自动恢复、会话归属与凭据保存 | PARTIAL | 进行中 | P1 | none | root | 完成聊天与凭据状态一致性修复，2.1.17完整门禁和官方日常APP复验，恢复初始连接偏好。 |
+| TASK-UI-CONSOLIDATE-20261014 | 冻结最新本机版本并统一 UI、模型预设与轻量化规则 | PARTIAL | 进行中 | P1 | none | root | 完成冻结版当前检查和提交，再从最新main逐任务承接并执行spec/plan。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2530,3 +2531,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 完成聊天与凭据状态一致性修复，2.1.17完整门禁和官方日常APP复验，恢复初始连接偏好。
 - Last verified: 2026-10-13
 - Updated: 2026-10-13
+
+## TASK-UI-CONSOLIDATE-20261014 — 冻结最新本机版本并统一 UI、模型预设与轻量化规则
+
+- Goal: 可恢复地汇总所有分支和工作树，先提交当前版本，再按统一规范完成设置和无限画布优化
+- Scope: 版本恢复、UI 语义与组件、设置二三栏、服务商和 CLI、喜欢标签搜索、资源存储用量、文档目录与体积治理
+- Display status: 进行中
+- Priority: P1 — 解决 UI 风格混杂、版本散落和功能入口冲突，同时保留资料与并行成果。
+- Requirement refs: ledger:TASK-UI-CONSOLIDATE-20261014
+- Feature IDs: FEAT-002, FEAT-022, FEAT-032
+- Owner role: repository-maintainer
+- Acceptance: 所有登记来源留存 refs/dirty/hash 和可校验恢复 bundle，原工作区不丢失; 当前日常源码版本有可复现提交、源码产物和当前检查证据; 默认绿色，中性动作、胶囊文字、方形圆角上传与克制输入聚焦统一; 喜欢和标签固定大小独立拖动，旧收藏可见，上传位置稳定; 设置分类清楚，预设有官网/密钥/文档跳转，协议和 CLI 能力诚实; Desktop/Mobile 布局独立，文档与体积门禁可执行，功能和数据保留
+- Branch: `codex/TASK-UI-BASELINE-20261014`
+- Worktree: `D:/kk-studio/.worktrees/branch-consolidation-20261011`
+- Modules: src/styles, src/components, src/domain, src/features, src-tauri, docs, scripts
+- Verification: PARTIAL — 41恢复refs覆盖36dirty来源；40一致/1volatile、原HEAD/index变动0；bundle verify PASS。当前候选版本/typecheck/build与Node1082pass/14skip/0fail已验证，整体UI/主线/桌面/Hosted未验收。
+- Evidence: [docs/changes/2026-10-14-ui-consolidation/intent.md](../../docs/changes/2026-10-14-ui-consolidation/intent.md), [docs/changes/2026-10-14-ui-consolidation/spec.md](../../docs/changes/2026-10-14-ui-consolidation/spec.md), [docs/changes/2026-10-14-ui-consolidation/plan.md](../../docs/changes/2026-10-14-ui-consolidation/plan.md), [docs/changes/2026-10-14-ui-consolidation/verification.md](../../docs/changes/2026-10-14-ui-consolidation/verification.md), [docs/changes/2026-10-14-ui-consolidation/review.md](../../docs/changes/2026-10-14-ui-consolidation/review.md)
+- Next action: 完成冻结版当前检查和提交，再从最新main逐任务承接并执行spec/plan。
+- Last verified: 2026-10-14
+- Updated: 2026-10-14

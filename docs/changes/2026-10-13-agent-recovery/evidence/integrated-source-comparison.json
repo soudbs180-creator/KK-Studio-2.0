@@ -1,0 +1,23 @@
+{
+  "task": "TASK-AGENT-RECOVERY-20261013",
+  "at": "2026-10-13T11:46:30.207Z",
+  "candidateHead": "95721b9821de20989d9c57dcc146d7e34c7c9cec",
+  "canonicalHead": "51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c",
+  "scope": "All official release source inputs except generated dist; exact bytes or text CRLF/LF equivalence; declared entries include matching missing-input markers. No input was changed by this check.",
+  "declaredEntries": 714,
+  "files": 712,
+  "missingInputs": [
+    "tsconfig.app.json",
+    "tsconfig.node.json"
+  ],
+  "mismatches": [],
+  "indexSha256": "b5e238b1f1b5ca850d4137a6a89fb1f4be96759459091f633dee63b376420bf4",
+  "staging": {
+    "matchesOriginalHead": true,
+    "headTree": "868c52bc5d96b2b9e829e7b1263f1752cb776a35",
+    "probe": "git diff --cached --quiet",
+    "exitCode": 0,
+    "byteIdentityScope": "Initial source integration retained 5f55ebe547973db9f57cbca5b1775e4319a3dd6d1112e2ef3f8dcc923406cf53; later canonical status inspection changed index bytes. Empty staged diff remains preserved; no index restore/reset was performed."
+  },
+  "passed": true
+}

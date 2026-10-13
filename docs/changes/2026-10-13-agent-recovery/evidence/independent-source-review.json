@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "createdAtUtc": "2026-10-13T11:36:02Z",
+  "reviewer": {
+    "identity": "/root/final_review",
+    "role": "Independent read-only code reviewer; no implementation ownership",
+    "effectiveModel": "NOT REPORTED"
+  },
+  "repository": "D:/kk-studio/.worktrees/TASK-AGENT-RECOVERY-20261013",
+  "cumulativeBase": "e0875b3d3f595a5570702a6ff3e45b8b76b5c861",
+  "sourcePassHead": "6f8ff257e8996eaf11ca4446e8781dd10d9aa1d9",
+  "reviewedCandidateHead": "1cf93cb42ba335e3197d5c282cac33749358c524",
+  "result": "PASS",
+  "resultScope": "Source review and the explicitly reviewed test-only deltas; not release, Hosted, real Provider, or user acceptance.",
+  "standardsSources": [
+    "AGENTS.md",
+    "AI_RULES.md",
+    "docs/engineering/REVIEW.md",
+    "docs/engineering/CODING-STANDARDS.md",
+    "docs/engineering/TESTING.md",
+    "docs/changes/2026-10-13-agent-recovery/spec.md",
+    "docs/architecture/adr/ADR-016-agent-and-provider-recovery.md"
+  ],
+  "findings": [
+    {
+      "id": "IR-001",
+      "severity": "P1",
+      "status": "CLOSED",
+      "scope": "Cooperating same-version cross-window metadata/vault/cache serialization; no crash-atomicity claim."
+    },
+    {
+      "id": "IR-002",
+      "severity": "P1",
+      "status": "CLOSED",
+      "scope": "Google metadata recovery preserves an existing authoritative native account."
+    },
+    {
+      "id": "IR-003",
+      "severity": "P2",
+      "status": "CLOSED",
+      "scope": "Owned failed empty preparation supports conditional retry; foreign state remains protected."
+    },
+    {
+      "id": "IR-004",
+      "severity": "P2",
+      "status": "CLOSED",
+      "scope": "Committed credential state and submitted draft reflect cache failure truth."
+    },
+    {
+      "id": "IR-005",
+      "severity": "P2",
+      "status": "CLOSED",
+      "scope": "ADR-016 documents the persistence and recovery contract."
+    },
+    {
+      "id": "IR-006",
+      "severity": "P2",
+      "status": "CLOSED",
+      "scope": "Google API credential commit followed by preference failure reports partial completion."
+    },
+    {
+      "id": "IR-007",
+      "severity": "P1",
+      "status": "CLOSED",
+      "scope": "Invalid durable metadata rejects the whole read; native/cache/vault are preserved."
+    },
+    {
+      "id": "IR-008",
+      "severity": "P2",
+      "status": "CLOSED",
+      "scope": "Owned failed thread resumes once per reconnect; busy/approval blocks preparation."
+    },
+    {
+      "id": "CLI-PREFERENCE-FOLLOWUP",
+      "severity": "P2",
+      "status": "CLOSED",
+      "scope": "CLI preference false result reports failure without activation or success feedback."
+    }
+  ],
+  "reviewHistory": [
+    {
+      "head": "6f8ff257e8996eaf11ca4446e8781dd10d9aa1d9",
+      "result": "SOURCE REVIEW PASS",
+      "scope": "Cumulative standards/spec review from the stated base; final two-file CLI follow-up delta reviewed against edcd8b36f7173a0f13270f8d4de9ce71f83f2787.",
+      "reviewerExecuted": {
+        "command": "D:/tools/node-v24.20.0-win-x64/node.exe --test tests/unit/googleConnectionCommit.test.ts tests/unit/providerSaveRecovery.test.ts tests/unit/providerCredentialState.test.ts tests/unit/googleAgent.test.ts tests/unit/googleAgentCli.test.ts tests/unit/googleInteractions.test.ts",
+        "exitCode": 0,
+        "passed": 52,
+        "failed": 0,
+        "skipped": 0,
+        "isolation": "Synthetic storage, vault and protocol fixtures; no listening ports or real account/data access."
+      },
+      "dirtyProof": "Before/after production and tested files matched the pinned head; only generated Tauri schema files were dirty."
+    },
+    {
+      "base": "6f8ff257e8996eaf11ca4446e8781dd10d9aa1d9",
+      "head": "59c013ce478d1a4c556da82067b0d69aa625ad4e",
+      "result": "TEST-ONLY SCOPE PASS",
+      "files": [
+        "tests/browser/capability-model-access.spec.ts",
+        "tests/browser/provider-credential-recovery.spec.ts",
+        "tests/desktop/provider-credential-recovery.mjs"
+      ],
+      "scope": "Static fixture and native-script review: CAS/revision/vault pause, tab-busy gates, conflict preservation and zero credential writes; normal owned-window close/exit zero, same isolated restart identity, owned credential cleanup and owned-PID exception fallback.",
+      "reviewerExecuted": [
+        {
+          "command": "D:/tools/node-v24.20.0-win-x64/node.exe --check tests/desktop/provider-credential-recovery.mjs",
+          "exitCode": 0
+        },
+        {
+          "command": "git diff --check 6f8ff257e8996eaf11ca4446e8781dd10d9aa1d9 59c013ce478d1a4c556da82067b0d69aa625ad4e",
+          "exitCode": 0
+        }
+      ],
+      "runtimeExecutionByReviewer": "NOT RUN; browser/native acceptance numbers supplied by the parent were not independently rerun."
+    },
+    {
+      "base": "59c013ce478d1a4c556da82067b0d69aa625ad4e",
+      "head": "1cf93cb42ba335e3197d5c282cac33749358c524",
+      "result": "TEST-ONLY SCOPE PASS",
+      "files": [
+        "tests/desktop/agent-startup-recovery.mjs"
+      ],
+      "scope": "Insertion-only 24-line credential scope guard. The unique per-run owned provider passes through to the real native bridge. Fixed/foreign credential reads return null; foreign credential mutation rejects. Runtime, health, thread and all other IPC pass through unchanged. Existing check/assertion code was not removed or weakened.",
+      "reviewerExecuted": [
+        {
+          "command": "D:/tools/node-v24.20.0-win-x64/node.exe --check tests/desktop/agent-startup-recovery.mjs",
+          "exitCode": 0
+        },
+        {
+          "command": "git diff --check 59c013ce478d1a4c556da82067b0d69aa625ad4e 1cf93cb42ba335e3197d5c282cac33749358c524",
+          "exitCode": 0
+        },
+        {
+          "command": "git diff --name-only 59c013ce478d1a4c556da82067b0d69aa625ad4e 1cf93cb42ba335e3197d5c282cac33749358c524",
+          "exitCode": 0,
+          "observedFiles": [
+            "tests/desktop/agent-startup-recovery.mjs"
+          ]
+        },
+        {
+          "command": "git rev-parse 6f8ff257e8996eaf11ca4446e8781dd10d9aa1d9:src 1cf93cb42ba335e3197d5c282cac33749358c524:src 6f8ff257e8996eaf11ca4446e8781dd10d9aa1d9:src-tauri 1cf93cb42ba335e3197d5c282cac33749358c524:src-tauri",
+          "exitCode": 0
+        },
+        {
+          "command": "PowerShell comparison of the four git rev-parse tree results; throw on any mismatch",
+          "exitCode": 0,
+          "productionTreesMatch": true
+        }
+      ],
+      "runtimeExecutionByReviewer": "NOT RUN; no browser/native process or reserved port was started."
+    }
+  ],
+  "productionTreeIdentity": {
+    "src": "eb3269f9afc13684cbfa7ccab8d69c586779d2eb",
+    "srcTauri": "296b46ad178a9aaef29b0be1c34173071b5f37ef",
+    "matchesSourcePass": true
+  },
+  "excludedOrUnverified": [
+    "Generated dirty Tauri schema files and uncommitted evidence were not used as pinned source proof.",
+    "Pre-attachment model-turn and credential-probe observation is NOT VERIFIED.",
+    "Fixed Google credential probes are intentionally isolated and NOT VERIFIED against the real vault.",
+    "No reviewer-run native/browser acceptance is asserted by this receipt.",
+    "Final complete verify, official fresh native acceptance, Hosted CI, real Provider, signing, release and user acceptance require their own evidence.",
+    "The original base includes an explicitly unaccepted dirty UI candidate; this receipt does not approve that baseline UI."
+  ],
+  "workspaceMutations": "Only this specifically requested receipt was written under the task .tmp directory; no production source, project documentation or ledger was modified."
+}

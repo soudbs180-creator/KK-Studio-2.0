@@ -2,13 +2,17 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-13
+- updatedAt: 2026-10-14
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
 本文是最短恢复入口，不是任务状态或产品能力的第二事实源。任务状态只读 [`task-ledger.json`](task-ledger.json)；当前项目事实只读 [`PROJECT_STATE.md`](PROJECT_STATE.md)；历史验证只按带日期的 change package、commit、运行模式和 receipt 回读。
 
-## 当前恢复快照
+## 本轮恢复入口
+
+TASK-UI-CONSOLIDATE-20261014 在既有 consolidation 工作树冻结当前本机源码196be1de。全来源恢复 bundle/清单位于 D:/kk-studio/output/ui-consolidation-20261014；整体UI尚未实现，下一步按[计划](../changes/2026-10-14-ui-consolidation/plan.md)从最新main逐任务承接。主目录和原分支/index保持，不使用旧数量或旧测试当作当前组合证据。
+
+## 2026-10-13 历史恢复快照
 
 - canonical repository：`D:/kk-studio/KK-Studio-2.0`
 - branch：`codex/ui-redesign-20261011`
