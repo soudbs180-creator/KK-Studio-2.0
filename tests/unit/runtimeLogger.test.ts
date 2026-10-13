@@ -212,7 +212,8 @@ test("diagnostic context is allowlisted and location excludes query secrets", ()
     assert.doesNotMatch(text, /secret|arbitrary/);
     assert.match(text, /# version=9\.9\.9/);
   } finally {
-    if (previousLocation === undefined) delete (globalThis as { location?: unknown }).location;
+    if (previousLocation === undefined)
+      delete (globalThis as { location?: unknown }).location;
     else
       Object.defineProperty(globalThis, "location", {
         configurable: true,

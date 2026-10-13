@@ -203,7 +203,10 @@ test("checkDocumentLifecycleHeader 要求当前状态和精确来源", () => {
       now: new Date("2026-10-12T00:00:00Z"),
     },
   );
-  assert.match(issues.join("\n"), /缺少 status=current\|superseded\|historical/);
+  assert.match(
+    issues.join("\n"),
+    /缺少 status=current\|superseded\|historical/,
+  );
   assert.match(issues.join("\n"), /source 应精确为/);
 });
 
@@ -269,7 +272,10 @@ test("checkDocumentLifecycleHeader 要求 supersededBy 指向已登记 current �
   ].join("\n");
   const issues = checkDocumentLifecycleHeader(source, "old.md", {
     source: "docs/governance/task-ledger.json",
-    knownSupersededTargets: new Set(["PROJECT_STATE", "docs/governance/PROJECT_STATE.md"]),
+    knownSupersededTargets: new Set([
+      "PROJECT_STATE",
+      "docs/governance/PROJECT_STATE.md",
+    ]),
     now: new Date("2026-10-12T00:00:00Z"),
   });
   assert.match(issues.join("\n"), /未指向已登记/);

@@ -74,7 +74,8 @@ if (fs.existsSync(governanceDirectory)) {
   for (const fileName of fs.readdirSync(governanceDirectory)) {
     if (!fileName.endsWith(".md")) continue;
     const relativePath = `docs/governance/${fileName}`;
-    if (temporalSources.some((entry) => entry.filePath === relativePath)) continue;
+    if (temporalSources.some((entry) => entry.filePath === relativePath))
+      continue;
     const fullPath = path.join(governanceDirectory, fileName);
     temporalSources.push({
       filePath: relativePath,
@@ -86,9 +87,11 @@ issues.push(...checkCurrentDocumentUniqueness(temporalSources));
 
 issues.forEach((issue) => console.error(issue));
 console.log(
-  `Snapshot/lifecycle headers: ${new Set([
-    ...snapshotRoots.map(({ relativePath }) => relativePath),
-    ...TEMPORAL_DOCUMENTS.map(({ relativePath }) => relativePath),
-  ]).size} unique documents, ${issues.length} violations.`,
+  `Snapshot/lifecycle headers: ${
+    new Set([
+      ...snapshotRoots.map(({ relativePath }) => relativePath),
+      ...TEMPORAL_DOCUMENTS.map(({ relativePath }) => relativePath),
+    ]).size
+  } unique documents, ${issues.length} violations.`,
 );
 process.exitCode = issues.length ? 1 : 0;

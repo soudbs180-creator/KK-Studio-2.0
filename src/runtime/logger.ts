@@ -29,8 +29,7 @@ const SENSITIVE_KEY =
   /token|authorization|api.?key|secret|password|credential/i;
 const SENSITIVE_FIELD_VALUE =
   /(\b(?:api[_-]?key|access[_-]?token|refresh[_-]?token|token|password|secret|authorization|credential|cookie|session(?:[_-]?id)?)\b\s*[:=]\s*)(?:(?:bearer|basic)\s+)?[^&\s,;]+/gi;
-const SENSITIVE_AUTH_VALUE =
-  /\b(?:bearer|basic)\s+[A-Za-z0-9._~+/-]+=*/gi;
+const SENSITIVE_AUTH_VALUE = /\b(?:bearer|basic)\s+[A-Za-z0-9._~+/-]+=*/gi;
 const SENSITIVE_PROVIDER_KEY = /\bsk-[A-Za-z0-9_-]+/gi;
 const MAX_SANITIZE_DEPTH = 8;
 const MAX_SANITIZE_KEYS = 100;
@@ -157,7 +156,11 @@ export function sanitizeLogValue(
     }
     if (Array.isArray(value)) {
       const result: unknown[] = [];
-      for (let index = 0; index < Math.min(value.length, MAX_SANITIZE_KEYS); index++) {
+      for (
+        let index = 0;
+        index < Math.min(value.length, MAX_SANITIZE_KEYS);
+        index++
+      ) {
         try {
           result.push(sanitizeLogValue(value[index], key, seen, depth + 1));
         } catch {
@@ -313,8 +316,7 @@ export function buildDiagnosticsText(context?: Record<string, string>): string {
     ...(readSafeLocation() ? { location: readSafeLocation()! } : {}),
   };
   for (const [key, value] of Object.entries(context ?? {})) {
-    if (DIAGNOSTIC_CONTEXT_KEYS.has(key))
-      header[key] = safeText(value);
+    if (DIAGNOSTIC_CONTEXT_KEYS.has(key)) header[key] = safeText(value);
   }
   return [
     "# KK Studio diagnostics",

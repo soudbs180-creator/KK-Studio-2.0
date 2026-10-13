@@ -237,7 +237,9 @@ export function checkDocumentLifecycleHeader(
     issues.push(`${filePath}: status 应为 ${expectedStatus}，实际为 ${status}`);
   if (!sourceValue) issues.push(`${filePath}: 缺少 source/数据源`);
   else if (expectedSource && sourceValue !== expectedSource)
-    issues.push(`${filePath}: source 应精确为 ${expectedSource}，实际为 ${sourceValue}`);
+    issues.push(
+      `${filePath}: source 应精确为 ${expectedSource}，实际为 ${sourceValue}`,
+    );
   if (supersededBy === null)
     issues.push(
       `${filePath}: 缺少 supersededBy 字段（current 文档也必须写 null）`,
@@ -246,24 +248,25 @@ export function checkDocumentLifecycleHeader(
     issues.push(`${filePath}: status=current 时 supersededBy 必须为 null`);
   else if (status === "superseded" && supersededBy.toLowerCase() === "null")
     issues.push(`${filePath}: status=superseded 时必须指向 supersededBy`);
-  else if (
-    status === "superseded" &&
-    /^null/i.test(supersededBy)
-  )
+  else if (status === "superseded" && /^null/i.test(supersededBy))
     issues.push(`${filePath}: supersededBy 不能使用 null 保留字`);
   else if (
     status === "superseded" &&
     knownSupersededTargets &&
     !knownSupersededTargets.has(supersededBy)
   )
-    issues.push(`${filePath}: supersededBy 未指向已登记的 current 文档（${supersededBy}）`);
+    issues.push(
+      `${filePath}: supersededBy 未指向已登记的 current 文档（${supersededBy}）`,
+    );
   else if (
     status === "superseded" &&
     !/^(?:[A-Za-z0-9._-]+|(?:[A-Za-z0-9._-]+\/)+[A-Za-z0-9._-]+\.md)$/.test(
       supersededBy,
     )
   )
-    issues.push(`${filePath}: supersededBy 必须是稳定 docId 或仓库相对 Markdown 路径`);
+    issues.push(
+      `${filePath}: supersededBy 必须是稳定 docId 或仓库相对 Markdown 路径`,
+    );
   return issues;
 }
 
