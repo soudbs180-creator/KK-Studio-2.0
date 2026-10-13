@@ -1,0 +1,54 @@
+{
+  "agent": "/root/cherry_ci_portability/hosted_windows_evidence",
+  "result": "PASS",
+  "head": "0d61ae0334659d692b62b34a688a4d3f1cd4d842",
+  "actualPrMerge": "4e72c29ace7f6d84580c7bb5e2e1d385c6d11f86",
+  "sourceTree": "ed7ccb00db59cf0ddaadae3ecadd5cb663544e4a",
+  "artifact_id": 11840446343,
+  "zipBytes": 679372,
+  "zipSha256": "3459ea8f861565d0d0285cb9e3e888f649ffb5b77ea193fc75d57ae2894ae506",
+  "rawBytes": 238327,
+  "rawSha256": "47ac16203d67e6e44c1a61c4ae95196d9eb953f6ea916f98629239bfde735f74",
+  "originalEntriesIndependentlyMatch": 4,
+  "independentGitHubArtifactMetadataGet": true,
+  "postflightPerInstall": {
+    "verifiedFiles": 4280,
+    "installCycles": 4,
+    "processEntriesEach": 0,
+    "registry": "CurrentUserRegistry32and64ownedapp/version2.1.18"
+  },
+  "shippingLaunches": 4,
+  "shippingExecutableSha256": "ff83e17226c310cc91a0c5ebad5cfc762077929056f31a0b78f5146c9981d8bc",
+  "installerSha256": "c2fde1f5dd397f8ff1f3409ed4994ee971369ede41d069c2b8a6fa01d6541d63",
+  "agentHealthy": true,
+  "damagedPackageRefused": true,
+  "dataRetention": true,
+  "twoUninstalls": true,
+  "noCleanupOrShutdownError": true,
+  "hostElevated": true,
+  "profile": "D:/a/_temp/kk-installer-profile-51699f1459524046914ebf1667c8e608",
+  "policyRemoval": "2026-10-13T18:48:54.5934295Z",
+  "native": {
+    "checks": 7,
+    "passed": true,
+    "errors": 0,
+    "packageExportRevision": 17,
+    "appearance": {
+      "supported": true,
+      "enabled": [
+        false,
+        true,
+        false
+      ],
+      "setMatchesGet": true
+    },
+    "ownedPids": [
+      6552,
+      1436
+    ],
+    "ownedExitCode": 0
+  },
+  "shippingPidBoundary": "FourshippingPIDsnotindependentlyrecorded;theirclose/portfree/pre/postflight/finalstate[]backedbyunchangedvalidsourceandsuccessfulrun,notfourPIDsceneclaims.Nativeown6552/1436exitsactualcode0.",
+  "localFirstFailureBoundary": "ParentRootreportedfirstlocalNSISpostflightkindprocess/unknownPID GuardFAIL,ownedrecoveryandlaterobservedandunobservedstrictPASS;keptas distinctRoot evidence.NotdiagnosedasproductorpeerandnotrewrittenbyHostedPASS.",
+  "remaining": "Crossversionupgrade/rollback,cleanWindowswithoutWebView2,Authenticode,publicreleaseanduseracceptanceNOTVERIFIED"
+}

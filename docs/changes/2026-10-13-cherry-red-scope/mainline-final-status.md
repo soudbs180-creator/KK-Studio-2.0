@@ -1,6 +1,6 @@
 # 主线候选最终验收记录
 
-当前最近完成验收的候选为 `88740c5b23f1cf5f0896d471b4339d9db39f4b9b`，产品源码与 `cc184e59` 相同；Desktop/Web 2.1.18、Mobile 2.1.1。四个 exact-head Hosted quality/Native 运行全部 SUCCESS，独立源码补审及 Windows 原包证据审计 PASS。最后新增三平台真实原生背景读回/恢复检查尚待冻结提交和实跑。任务保持 PARTIAL，最终用户产品结果/发布范围确认仍按 BRANCH-POLICY 单列；没有合并 main、发布或更新 primary 快捷方式。primary 并发源码与暂存内容保留；不宣称原 index 原始字节跨时刻不变。
+红框范围的技术实施与验证已完成，产品/运行测试证据锚点为 `0d61ae0334659d692b62b34a688a4d3f1cd4d842`，产品源码与 `cc184e59` 相同。Desktop/Web 2.1.18，Mobile 2.1.1。下述原件有 exact-source/feature/input/EXE/ZIP 与独立审查绑定；随后仅文档事实归档不改变产品或测试。最新文档提交的门禁以 PR #58 当前SHA的Actions为准。整项任务保持 PARTIAL，剩余为用户最终产品结果/发布范围验收及其后授权的主线收敛；没有合并 main、发布或改 primary 快捷方式。
 
 ## 前一冻结版本的实际本机验证
 
@@ -97,3 +97,28 @@ cc184 [Hosted原包](evidence/mainline-final/hosted-packages-cc184e59.json)和[c
 本轮采用范围：保留KK Tauri/React18、默认Codex/Google及单一Registry/任务/存储；独立实现三协议/严格本地免密、五原创助手与自定义、2–3文本模型独立多轮、安全Markdown/本地分享，融合既有MCP与三平台runtime/透明能力，局部修复来源身份/保存竞态/协议及打包根因。没有复制Cherry AGPL源码、增加付费调用或另一套底层。许可与不采用项目见research/decisions；真实LM Studio及收费云服务、图片视频生成、通用自动工具/OAuth、Mobile和生产发布仍属分别验收的能力。
 
 7abc冻结后的snapshot真实FAIL：文档头按北京时间写2026-10-14，但检查器严格按UTC日期（当时2026-10-13）拒绝future header。已仅将PROJECT_STATE/AI_HANDOFF的updatedAt及snapshotDate校准为实际UTC13，不改检查器、阈值或其他事实；正文2026-10-14指本地日期，raw证据继续精确UTC。[本机RED](evidence/mainline-final/snapshot-date-7abc7ced-red.log)2violations与[GREEN](evidence/mainline-final/snapshot-date-7abc7ced-green.log)0violations均原样保留。新head仍须完整Hosted，不重跑旧失败以掩盖它。
+
+## 0d61 技术验收完成与最终范围
+
+[当前适用Hosted最终原件](evidence/mainline-final/hosted-0d61ae03-summary-final.json)：PRquality38446362500七job全SUCCESS、pushquality38446354314五SUCCESS与两event skip、PRNative38446362737三OS全SUCCESS。doc-only push未匹配Native paths，明确NOT TRIGGERED，不冒充第四个SUCCESS。PR实际buildmerge4e72c29ace7f6d84580c7bb5e2e1d385c6d11f86完整tree ed7ccb00db59cf0ddaadae3ecadd5cb663544e4a与0d61精确相等，[官方commit与本地比对](evidence/mainline-final/hosted-0d61ae03-pr-merge-tree-identity.json)。两quality真实完整verify通过，Rust154与NativeTaskHost11各PASS；Delivery/治理/三OS snapshot均PASS。
+
+三个fresh Native7的原件分别保存到清单：Windows和Mac initial supported=true/enabled=false，settrue后applied/get均true，setfalse均false；Linux supported=false、enabled始终false，原因“当前 Linux 窗口管理器未提供透明合成能力。”，证明准确禁用，不能声称本次Linux实际透明开启。各7checks、0errors、export revision17；原六项没有删减。Native fixture与默认shipping binary分开，物理桌面透底体验仍由设备条件决定。Linux/Mac严格原包及producer66/4316逐条完整比对见[三平台包证明](evidence/mainline-final/hosted-0d61ae03-package-native-proof-summary.json)。
+
+[Hosted Windows独立原件审计](evidence/mainline-final/hosted-0d61ae03-windows-independent-audit.json)真实strict4280files/四install、四shippingUIlaunch、Agenthealthy、资源修复/同版本重装/卸载再装数据保留/两次卸载及policy清理PASS；源/receipt/ZIPdigest完全绑定4e72/当前tree，driver与shipping hash不混。原shipping报告未记录每次PID/exitCode或独立CIM现场，不能冒称独立现场追踪或完整registry dump。Mac仅ad-hoc，Win已有WebView2；signing/notarization、cleanVM、跨版本upgrade/rollback未验证。
+
+本机[0d61 Native7](evidence/mainline-final/native7-windows-0d61ae03.json)PASS，driver EXEddb9eaef5b53bd81cc42d63810e16542dafa3593118f1cc38a66a4b71f99f726；[最新NSIS回执](evidence/mainline-final/installer-0d61ae03-receipt.json)严格PASS，安装器345790164字节/SHA8e8e2b39c6c328726d2cc54f9de4789c04e0d9f7097a8c61acbe586382896696、包前EXE31ad61a84950935d2f614ae0b9944c699bfb6b8455f6dc0eec7827a28d7f540e、shipping NSS EXE28087c801e6ac6c7820e387b2ef9ae5fd7c903189914f61374b01f83825a09df。input f2fdcc3fbdc54fc7b3122bcd50dbf46d4da2d699eae38fe6696904ab07b7f124与runtime manifest ec3685a32f46807d1e6a524b4c4ee442037b0aabe2e2d4d7fa44eaf06cc2b75d。
+
+[首次本机FAIL](evidence/mainline-final/installer-0d61ae03-first-fail.json)保持原结果：第二install preflight无process，NSIS exit0之后postflight136报kindprocess，原PID未记录，根因UNKNOWN，不能归因owned迟退、NSIS自启动或peer。全局process guard正确保护，未降低断言/过滤/改变等待/终止别人的程序。随后严格核own绝对path/hash执行自有uninstaller与既有guarded残留settings清理，[恢复](evidence/mainline-final/installer-0d61ae03-recovery.json)state[]且testdata保留。[纯日志观察](evidence/mainline-final/installer-0d61ae03-observed.json)9checks/4launch、22actualstate/四ownPIDexit0全PASS；只返回未修改的spawn/exec结果，有少量时序影响。最终[无observer原严格fixture](evidence/mainline-final/installer-0d61ae03-final.json)另在新UUID运行9checks/4launch/4×4280、修复重装/数据保留/清理全部PASS、无cleanup/shutdownError、state[]。详见[调查与原件hash](evidence/mainline-final/installer-0d61ae03-investigation.json)，两次PASS不改写首FAIL或伪造其根因。
+
+[0d61正式独立source审查](evidence/mainline-final/review-0d61ae03.json)PASS，133targets及原source bytes/hash一致、125旧任务文本与语义保留，confirmed openP0/P1/P2=0；UTC日期修正只改3metadata行，checker不改、原RED保留。[primary最新读回](evidence/mainline-final/primary-final-readback-0d61ae03.json)仍51fccfc7/原分支，111捕获文件96same/15随后changed/0missing、暂存为空；并发后续改动原位保留，不归入本候选，不宣称原index raw bytes相同。
+
+| 原计划技术阶段 | 最终结果与事实范围 |
+| --- | --- |
+| 理解现有项目、参考源码/测试/交互/路线图与许可 | 完成；固定Cherry源码/文档/包版本，免费约束与取舍见research/decisions，历史路线图不当作现成能力。 |
+| 安全Markdown/本地分享 | 实现与Web/Native回归完成，复制/导出仍排除内部对象，沿用MIT依赖。 |
+| 三文本协议/本地模型 | 实现及真实Ollama13/协议/边界验证完成；LM Studio和收费云API没有真实调用，不升级其服务验收。 |
+| 五原创助手/自定义/独立多模型 | 实现及真实多轮、保存/重启、失败/取消/迟到围栏验证完成；图片视频角色指令不冒充新生成服务。 |
+| 既有MCP/三桌面平台/主题透明能力 | 两官方SDK Native各18、三OS Native7、默认包/runtime/Windows安装完整PASS；Linux此runner透明不支持有准确理由。 |
+| 质量/治理/独立审查/文档与回归 | 完成技术步骤，旧失败与125任务保留，2个原App advisory未添加豁免；最后事实文档commit须保持当前PR门禁与补审。 |
+
+唯一需要用户决策的本期验收是[BRANCH-POLICY第3项](../../engineering/BRANCH-POLICY.md)：“用户确认最终产品结果/发布范围；对已授权的技术准备不追加形式审批。”确认前task保持PARTIAL；签名/公证/付费服务/新增助手数量、框外功能与Mobile不额外进入本期必做范围。

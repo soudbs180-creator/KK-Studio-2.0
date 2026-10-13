@@ -94,3 +94,5 @@ MR004 root接管后补64层/4096总queued nodes预算，两种schema边在复制
 cc184 exact-SHA独立审查已PASS，见[source review](evidence/mainline-final/review-cc184e59.json)。随后Linuxpush真实export revision冲突已定位为fixture未等autosave，产品guard正确拒绝且不修改；只补UI真实saved/连续durable revision稳定前置，并保留expectedRevision/单次export/原timeout。新冻结SHA正式增量审查和三平台重跑仍待完成。旧AppImage同目录保留按锁定上游CLI重建目录事实校准，见最终记录。
 
 887正式exact-SHA增量review于2026-10-13T17:33:21.926Z PASS，11项独立时序检查、59证据hash与125旧任务保留；[原件](evidence/mainline-final/review-88740c5b.json)。四Hosted与独立Windows artifact审计另见最终记录。当前Native原生背景读回/恢复20行新增及本次文档归档仍须冻结head正式补审，不能使用887审核替代。
+
+本期技术源码锚点0d61正式独立review PASS/openP0/P1/P2=0，[原件](evidence/mainline-final/review-0d61ae03.json)；三平台Native7/原包与Windows原件另有真实runtime及独立artifact审计，见最终记录。Root首本机process postflight FAIL原因仍UNKNOWN，纯观察及原严格fixture后续真实完整PASS，不做未经证据的等待/过滤/终止修复。此后仅文档事实归档需要exact-SHA增量核验；产品/测试与0d61保持相同。

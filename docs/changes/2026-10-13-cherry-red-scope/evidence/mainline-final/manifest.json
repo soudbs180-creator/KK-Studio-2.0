@@ -798,7 +798,271 @@
       "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/snapshot-date-7abc7ced-green.log",
       "bytes": 232,
       "sha256": "a6e97da016f15afe123fed0a9d8400a9eadf620e03f9b9dfc2d1c25c1056aeb9"
+    },
+    {
+      "source": ".tmp/cherry-red/review-0d61ae03.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/review-0d61ae03.json",
+      "bytes": 1840,
+      "sha256": "de52fc342a99abaa9fc0e8a7e69f367ac6ade56e3ffc5f5869370d3d2a757b44"
+    },
+    {
+      "source": ".tmp/cherry-red/native-windows-0d61ae03/receipt.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/native7-windows-0d61ae03.json",
+      "bytes": 5963,
+      "sha256": "573fa6a57fb4250382824907ebf0e2dc73a9f482a77ba3b1733467ac04f329e2"
+    },
+    {
+      "source": ".tmp/cherry-red/native-build-0d61ae03.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/native-build-0d61ae03.log",
+      "bytes": 1182,
+      "sha256": "1901e0ce0e2700a89f7a6350a3d59dee4948ac7ce40ce6aa1230fb701b40d68e"
+    },
+    {
+      "source": ".tmp/cherry-red/installer-0d61ae03/installer-receipt.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/installer-0d61ae03-receipt.json",
+      "bytes": 871597,
+      "sha256": "87fb92ab108dd6e1f37db26cd62b42a2172bbd0c50925a4f8cd56bc1c532d82f"
+    },
+    {
+      "source": ".tmp/cherry-red/installer-build-0d61ae03.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/installer-build-0d61ae03.log",
+      "bytes": 6112,
+      "sha256": "82683bdf35f29af2583d7be9a2339af79a3445b875fb264d7b31af02e7f780a9"
+    },
+    {
+      "source": ".tmp/cherry-red/installer-verify-0d61ae03.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/installer-verify-0d61ae03.log",
+      "bytes": 472,
+      "sha256": "ae559ba94ccbb267eae52703d058105cb5e19e5abbac919cc6c62cdc8de054ef"
+    },
+    {
+      "source": ".tmp/cherry-red/installer-local-0d61ae03/runtime.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/installer-0d61ae03-first-fail.json",
+      "bytes": 2300,
+      "sha256": "dd5fc00d94a44722668da6160785f0a027223462c575c10494fc54bbbceb3b2e"
+    },
+    {
+      "source": ".tmp/cherry-red/installer-local-0d61ae03.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/installer-0d61ae03-first-fail.log",
+      "bytes": 769,
+      "sha256": "324832df571ba4b939dd123a26844172a2febcecae4aecd909ee9c95037728ee"
+    },
+    {
+      "source": ".tmp/cherry-red/installer-recovery-final-0d61ae03.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/installer-0d61ae03-recovery.json",
+      "bytes": 278,
+      "sha256": "121006c5acd5aaed8fbf3a27b9ad6220ff28734b91081b80c01776af2ae7fb2e"
+    },
+    {
+      "source": ".tmp/cherry-red/installer-local-observed-0d61ae03/runtime.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/installer-0d61ae03-observed.json",
+      "bytes": 7118,
+      "sha256": "47304074fb39e9b1cb0723867715ef6e2a43c74cee92e1272d1db8c45d45cb0d"
+    },
+    {
+      "source": ".tmp/cherry-red/installer-state-observer-0d61ae03.ndjson",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/installer-0d61ae03-observer.ndjson",
+      "bytes": 14427,
+      "sha256": "17bd33f00f43247c15b78f97e4dce67d5a44525deff79eab54ab9d1ae05bdc6a"
+    },
+    {
+      "source": ".tmp/cherry-red/installer-state-observer.mjs",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/installer-0d61ae03-observer.mjs",
+      "bytes": 1297,
+      "sha256": "8f164df1b4543575f037e75d116efe245015272b08643f8fa36eb3a9609b8ad8"
+    },
+    {
+      "source": ".tmp/cherry-red/installer-local-final-0d61ae03/runtime.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/installer-0d61ae03-final.json",
+      "bytes": 7111,
+      "sha256": "8ea22f52ae02eb864caef419754d9cadc8acc9a7a2d0d8c6269a03564f80a0b9"
+    },
+    {
+      "source": ".tmp/cherry-red/installer-local-final-0d61ae03/restored-after-uninstall.png",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/installer-0d61ae03-restored.png",
+      "bytes": 562521,
+      "sha256": "5214435f139bd59327a3b2f12a7b6dcd7fe12895f2d80e25bf5ad6cae4726d36"
+    },
+    {
+      "source": ".tmp/cherry-red/installer-investigation-0d61ae03.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/installer-0d61ae03-investigation.json",
+      "bytes": 2507,
+      "sha256": "dec66e0d368481a26cbc61fe768d86585d8391719fc34ac5d323d273081fdc48"
+    },
+    {
+      "source": ".tmp/cherry-red/primary-final-readback-0d61ae03.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/primary-final-readback-0d61ae03.json",
+      "bytes": 20150,
+      "sha256": "8807f1325bf86e48ae7223fab7f8835bcca4603a53506563d321715d710045ac"
+    },
+    {
+      "source": ".tmp/cherry-red/delivery-0d61ae03.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/delivery-0d61ae03.log",
+      "bytes": 247,
+      "sha256": "a6095803055cd0c5fc09f4bfdf883346d6c35e428b1c720d057d62da4b220749"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/summary-final.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-summary-final.json",
+      "bytes": 11866,
+      "sha256": "e69b24c3b3b1ecfb48b4e230bb68e4a21dbe72dbb5ccc7c0144bb1b04dea900c"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/package-native-proof-summary.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-package-native-proof-summary.json",
+      "bytes": 20470,
+      "sha256": "7bf10d2775669df7e1b8f893fe1f372877f544a5e3acaf1ec8d9c14df29a4b67"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/raw-log-identities.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-raw-log-identities.json",
+      "bytes": 768,
+      "sha256": "a9dbb20e44f03278c3a7f8ebc4a4f5c34e4e9a0a8c54532cc5a8085d86eb62dd"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/windows-proof-summary.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-windows-proof-summary.json",
+      "bytes": 15462,
+      "sha256": "aee10e1b2fb49bc0a85a0b30bce379cfb1fca0b9c25ef8bb0ff7aa75cecad831"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/windows-independent-audit.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-windows-independent-audit.json",
+      "bytes": 2212,
+      "sha256": "0a83389894274911452822c54083f1d8019b1182c8c2f2a03f45f4d01d828c32"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/pr-merge-tree-identity.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-pr-merge-tree-identity.json",
+      "bytes": 3259,
+      "sha256": "7fa668d6dddd0fd9bae0a1cd5f4a9929c70774420bdbeee914402c416b8761f6"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/artifacts-38446354314-final.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-artifacts-38446354314-final.json",
+      "bytes": 878,
+      "sha256": "0adb92fbc7458f48266b1e89e2243a5b3d25a3867c29c08d3141ef6bb598cac9"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/artifacts-38446362500-final.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-artifacts-38446362500-final.json",
+      "bytes": 878,
+      "sha256": "f7560d71e59d37c1d90c1d6cd38008e98c9e0b703b26e1b29f7f87165ca5f252"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/artifacts-38446362737-final.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-artifacts-38446362737-final.json",
+      "bytes": 2582,
+      "sha256": "63aa6011bdd5cd1df85257d41eca3587e9edcdefe0efed579bc3ca779cab1949"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/job-115465657318-final.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-job-115465657318-final.log",
+      "bytes": 419832,
+      "sha256": "a449fc1ca91806d4a252073935b1782b78988923fab3f2d3b86d65d05daab969"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/job-115465686737-final.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-job-115465686737-final.log",
+      "bytes": 418136,
+      "sha256": "4c6e06ea9ded6afc544a6592a300c08d84e92f4ee80494b98e1318b1f04b163f"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/job-115465933783-final.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-job-115465933783-final.log",
+      "bytes": 221726,
+      "sha256": "e25a4a01700084367e84b831885ef50a4e7d1c2e1e92a27645fb233d9eac9ec0"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/job-115465934113-final.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-job-115465934113-final.log",
+      "bytes": 337806,
+      "sha256": "e0413752c32df1ec8ffe09e0e50a2f1f9a2e276ce5e1be6bb24a708291c7ea2a"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/job-115465934544-final.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-job-115465934544-final.log",
+      "bytes": 238327,
+      "sha256": "47ac16203d67e6e44c1a61c4ae95196d9eb953f6ea916f98629239bfde735f74"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/jobs-38446354314-final.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-jobs-38446354314-final.json",
+      "bytes": 10503,
+      "sha256": "636f257885693891d66a25e81833259f58756502763e1301efdc423204f9f260"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/jobs-38446362500-final.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-jobs-38446362500-final.json",
+      "bytes": 13507,
+      "sha256": "835e3ddd8bcc515c6dd5cb5c94305e891d15c77a998f33ad1ba2c974286f7dbf"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/jobs-38446362737-final.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-jobs-38446362737-final.json",
+      "bytes": 15861,
+      "sha256": "b92fdc04e1e26a384e516e73fdea449fab7bba58699c64a84b0e9e562cfbb597"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/run-38446354314-final.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-run-38446354314-final.json",
+      "bytes": 15575,
+      "sha256": "0e3439597d01c350943021856f0d56ea9a12932a7dca08fd063dcf187d3e6dac"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/run-38446362500-final.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-run-38446362500-final.json",
+      "bytes": 15588,
+      "sha256": "96536fce45e82c3d015dc14154b029520e260d87e8c7565daa13b11e610b0b2c"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/run-38446362737-final.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-run-38446362737-final.json",
+      "bytes": 15613,
+      "sha256": "3db4aba8017443df1a59f89800a28d5a0e0c07770352361e7a098d7e98ea63e6"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/artifact-11838967817/metadata.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-artifact-11838967817-metadata.json",
+      "bytes": 1943,
+      "sha256": "b6ac83cb3beffbc5d900a995e901b6d64746fb7ce90966c3aa554e5a30fae477"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/artifact-11838967817/native-e2e--receipt.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-artifact-11838967817-native-e2e--receipt.json",
+      "bytes": 6509,
+      "sha256": "ec4d1f0e8d3cc00184b2ffa9bfb4d7a37d404ff8062faf15bf23e57ed80ff29d"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/artifact-11839372214/metadata.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-artifact-11839372214-metadata.json",
+      "bytes": 1531,
+      "sha256": "30743c01a30e233bcd07befb0dc2c2557cd20cb6450de4dff87a304deb36e121"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/artifact-11839372214/native-e2e--receipt.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-artifact-11839372214-native-e2e--receipt.json",
+      "bytes": 6139,
+      "sha256": "f238a058fcfb08fa664ee7adba6b466c196146daebddbb597fa873a669e6572d"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/artifact-11840446343/metadata.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-artifact-11840446343-metadata.json",
+      "bytes": 2172,
+      "sha256": "4d36e934ce4cee5a899289c5abed706fd3bdc3ba8d756e9c5c9b68022f7bcf31"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/artifact-11840446343/native-e2e--receipt.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-artifact-11840446343-native-e2e--receipt.json",
+      "bytes": 6046,
+      "sha256": "0f05cbff7943b04311dd118d2b6fd404265062d7c4c783a85b1b43845cfe9a8f"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-0d61ae03/artifact-11840446343/native-installer--evidence--runtime.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-0d61ae03-artifact-11840446343-native-installer--evidence--runtime.json",
+      "bytes": 6984,
+      "sha256": "5b40fd21fe431bdc003910ecf10b5269682f5e1992ee29bd9a7c3ab894cd6593"
     }
   ],
-  "appendedAt": "2026-10-13T18:23:27.381Z"
+  "appendedAt": "2026-10-13T19:05:02.525Z"
 }

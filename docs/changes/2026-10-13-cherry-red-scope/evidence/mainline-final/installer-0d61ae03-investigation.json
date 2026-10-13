@@ -1,0 +1,73 @@
+{
+  "head": "0d61ae0334659d692b62b34a688a4d3f1cd4d842",
+  "checkedAt": "2026-10-13T18:49:52.001Z",
+  "firstFailure": {
+    "result": "FAIL preserved",
+    "stage": "second install postflight installer.mjs:136 after successful preflight/NSIS exit0",
+    "cause": "UNKNOWN: original PID/PPID/path was not captured; cannot attribute to own delayed exit, installer launch or peer",
+    "cleanup": "Process guard correctly prevented uninstall while process was reported; later guarded own uninstaller and residual settings cleanup returned registry to empty and retained test data"
+  },
+  "observed": {
+    "passed": true,
+    "checks": 9,
+    "launches": 4,
+    "actualStateQueries": 22,
+    "ownedExits": [
+      {
+        "pid": 67740,
+        "code": 0
+      },
+      {
+        "pid": 66644,
+        "code": 0
+      },
+      {
+        "pid": 64904,
+        "code": 0
+      },
+      {
+        "pid": 64188,
+        "code": 0
+      }
+    ],
+    "scope": "Read-only spawn/exec logging returns unchanged actual results, no altered commands/environment/production bridge; slight timing effect"
+  },
+  "final": {
+    "passed": true,
+    "checks": 9,
+    "launches": 4,
+    "scope": "Unmodified strict fixture, no observer or retries; exact new NSIS artifact",
+    "hostElevated": "false",
+    "cleanupError": null,
+    "shutdownError": null
+  },
+  "state": [],
+  "sourceChanges": "None: preserve process/ownership/hash checks and timeouts; no speculative fix or peer termination",
+  "originals": {
+    "first": {
+      "file": ".tmp/cherry-red/installer-local-0d61ae03/runtime.json",
+      "bytes": 2300,
+      "sha256": "dd5fc00d94a44722668da6160785f0a027223462c575c10494fc54bbbceb3b2e"
+    },
+    "observed": {
+      "file": ".tmp/cherry-red/installer-local-observed-0d61ae03/runtime.json",
+      "bytes": 7118,
+      "sha256": "47304074fb39e9b1cb0723867715ef6e2a43c74cee92e1272d1db8c45d45cb0d"
+    },
+    "final": {
+      "file": ".tmp/cherry-red/installer-local-final-0d61ae03/runtime.json",
+      "bytes": 7111,
+      "sha256": "8ea22f52ae02eb864caef419754d9cadc8acc9a7a2d0d8c6269a03564f80a0b9"
+    },
+    "recovery": {
+      "file": ".tmp/cherry-red/installer-recovery-final-0d61ae03.json",
+      "bytes": 278,
+      "sha256": "121006c5acd5aaed8fbf3a27b9ad6220ff28734b91081b80c01776af2ae7fb2e"
+    },
+    "events": {
+      "file": ".tmp/cherry-red/installer-state-observer-0d61ae03.ndjson",
+      "bytes": 14427,
+      "sha256": "17bd33f00f43247c15b78f97e4dce67d5a44525deff79eab54ab9d1ae05bdc6a"
+    }
+  }
+}

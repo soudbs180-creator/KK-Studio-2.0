@@ -6,7 +6,7 @@
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
-当前Cherry已验证88740c5b、产品源码cc184e59，draft PR58/base694a；四Hosted和三OS Native6/默认包/严格NSIS及source/artifact独立审计PASS。新增原生背景读回/恢复检查待冻结新head实跑与补审，用户最终产品结果/发布范围待确认；primary并发源码及暂存内容保留，原index bytes跨时刻不变未宣称。账本126条且125旧任务保留，完整身份/历史失败见[最新记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。
+Cherry本期技术步骤完成：0d61产品/测试锚点（产品源码cc184e59），三适用Hosted/三OS Native7/默认原包/WindowsNSIS与独立审查PASS，最终用户产品结果/发布范围待验收，Task PARTIAL。后续仅事实文档当前门禁见draft PR58。首次本机process保护FAIL未知PID原因及两次完整复查保留，未修改防线；primary96same/15后续changed/0missing、暂存为空，125旧任务原样保留，详见[最终记录](../changes/2026-10-13-cherry-red-scope/mainline-final-status.md)。
 
 ## 2026-10-11 当前收口快照
 

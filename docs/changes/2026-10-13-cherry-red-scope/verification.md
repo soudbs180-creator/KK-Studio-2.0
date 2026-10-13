@@ -147,3 +147,7 @@ MR003 增加两条健康围栏后，当前 code-health 实跑 exit 0：App FILE_
 ## 2026-10-14 当前验证覆盖
 
 887 四exact-head Hosted全部SUCCESS、六Native6、Linux/Mac四种默认包、Windows严格NSIS与同版本生命周期、独立source及Windows artifact审计已完成。各source/feature/input/EXE/ZIP身份、历史失败、原件hash与未验项以[最终记录](mainline-final-status.md)为准。当前只新增Native原生背景get/set/readback/restoration测试，尚待新head实跑；不以旧PASS冒充新Native7。
+
+## 本期最终技术验收
+
+0d61 exact-tree当前适用三Hosted全SUCCESS，三OS Native7、默认原包、Windows安装、全verify/Rust154/TaskHost11、独立source及artifact审查PASS；本机新NSIS原严格9checks/4launch最终PASS。首次本机process guard FAIL/root cause UNKNOWN与真实复查全部保留，未削弱防线。详细源/工件hash、原件、能力限制与用户验收条件见[最终记录](mainline-final-status.md)。后续只归档事实，不把0d61 receipts改成文档新head。

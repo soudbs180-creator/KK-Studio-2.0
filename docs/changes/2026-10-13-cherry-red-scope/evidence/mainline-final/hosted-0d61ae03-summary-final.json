@@ -1,0 +1,335 @@
+{
+  "head": "0d61ae0334659d692b62b34a688a4d3f1cd4d842",
+  "base": "694a00607f6f63de1b8c43d0ebb117adf5d34f67",
+  "prBuiltMerge": "4e72c29ace7f6d84580c7bb5e2e1d385c6d11f86",
+  "sourceTree": "ed7ccb00db59cf0ddaadae3ecadd5cb663544e4a",
+  "exactLocalCandidateAndPrMergeTreesEqual": true,
+  "overall": "PASS for all three applicable exact-HEAD Hosted runs and independent Windows artifact byte audit",
+  "finalJobsReadAt": "2026-10-13 18:58:39 UTC",
+  "runs": [
+    {
+      "run_id": 38446362500,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "0d61ae0334659d692b62b34a688a4d3f1cd4d842",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38446362500",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "job_id": 115465686376,
+          "name": "delivery",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115465686435,
+          "name": "snapshot-portability (ubuntu-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115465686510,
+          "name": "governance",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115465686534,
+          "name": "snapshot-portability (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115465686701,
+          "name": "deploy-linux",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115465686737,
+          "name": "verify",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115465686867,
+          "name": "snapshot-portability (macos-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        }
+      ],
+      "artifacts": [
+        {
+          "artifact_id": 11840385754,
+          "name": "verification-evidence",
+          "size_in_bytes": 22578608,
+          "digest": "sha256:3008ec97cbbf2f41d19dc0f9fa654f1a813ab9c6d0dda9a39066bf78d5c07fca",
+          "actualSmallNativeZipDownloaded": false,
+          "verificationZipDownloaded": false
+        }
+      ]
+    },
+    {
+      "run_id": 38446362737,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "0d61ae0334659d692b62b34a688a4d3f1cd4d842",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38446362737",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "job_id": 115465933783,
+          "name": "native (macos-14)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115465934113,
+          "name": "native (ubuntu-22.04)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115465934544,
+          "name": "native (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        }
+      ],
+      "artifacts": [
+        {
+          "artifact_id": 11840446343,
+          "name": "native-Windows-evidence",
+          "size_in_bytes": 679372,
+          "digest": "sha256:3459ea8f861565d0d0285cb9e3e888f649ffb5b77ea193fc75d57ae2894ae506",
+          "actualSmallNativeZipDownloaded": true,
+          "verificationZipDownloaded": false
+        },
+        {
+          "artifact_id": 11839372214,
+          "name": "native-macOS-evidence",
+          "size_in_bytes": 563132,
+          "digest": "sha256:95308322eb76afd04c39f7d17fc11971bd7b4586885b9c67994832cacc9abf09",
+          "actualSmallNativeZipDownloaded": true,
+          "verificationZipDownloaded": false
+        },
+        {
+          "artifact_id": 11838967817,
+          "name": "native-Linux-evidence",
+          "size_in_bytes": 693034,
+          "digest": "sha256:2ebe23c79891c16e840f523613175b9378e480f12409e836afc07f755e900fb2",
+          "actualSmallNativeZipDownloaded": true,
+          "verificationZipDownloaded": false
+        }
+      ]
+    },
+    {
+      "run_id": 38446354314,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "0d61ae0334659d692b62b34a688a4d3f1cd4d842",
+      "url": "https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38446354314",
+      "run_attempt": 1,
+      "jobs": [
+        {
+          "job_id": 115465656979,
+          "name": "snapshot-portability (macos-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115465657295,
+          "name": "deploy-linux",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115465657318,
+          "name": "verify",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115465657364,
+          "name": "snapshot-portability (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115465657619,
+          "name": "snapshot-portability (ubuntu-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "failedSteps": []
+        },
+        {
+          "job_id": 115465659272,
+          "name": "governance",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "job_id": 115465659416,
+          "name": "delivery",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ],
+      "artifacts": [
+        {
+          "artifact_id": 11839693751,
+          "name": "verification-evidence",
+          "size_in_bytes": 22677741,
+          "digest": "sha256:13ea83814c2f6eb6a73f50d20c44832e74667199af30dd9e2608a125ed2a2fd3",
+          "actualSmallNativeZipDownloaded": false,
+          "verificationZipDownloaded": false
+        }
+      ]
+    }
+  ],
+  "notTriggered": {
+    "nativePush": {
+      "status": "NOT TRIGGERED",
+      "reason": "Current0d61push modifies documentation only, correctly excluded by unchanged native-crossplatform push.paths; no fictionalSUCCESS or extra trigger used."
+    }
+  },
+  "gitGuards": [
+    {
+      "run_id": 38446362450,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "0d61ae0334659d692b62b34a688a4d3f1cd4d842"
+    },
+    {
+      "run_id": 38446354254,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "0d61ae0334659d692b62b34a688a4d3f1cd4d842"
+    }
+  ],
+  "quality": {
+    "pr": {
+      "rustTests": 154,
+      "taskHostChecks": 11
+    },
+    "push": {
+      "rustTests": 154,
+      "taskHostChecks": 11
+    },
+    "prDelivery": "ActualSUCCESS requiredPR job115465686376",
+    "governance": "PRactualSUCCESS;pushbyeventSKIP",
+    "snapshot": "Allsixcurrent3OS×PR/pushactualSUCCESS; strict gate unchanged"
+  },
+  "native": {
+    "run_id": 38446362737,
+    "allThreeOSChecks": 7,
+    "allChecksPassed": true,
+    "allActualBuildSourceHead": "4e72c29ace7f6d84580c7bb5e2e1d385c6d11f86",
+    "allPackageExportRevision": 17,
+    "sourceTreeBoundary": "ActualPR merge tree equals entire local0d61 candidate tree; head labels remain distinct.",
+    "scope": "Productionfrontend/shared Nativehost compiledwithtestonlynative-e2e driver,notbyteidenticalshipping artifact"
+  },
+  "appearance": {
+    "macos": {
+      "supported": true,
+      "enabled": [
+        false,
+        true,
+        false
+      ],
+      "setMatchesGet": true
+    },
+    "windows": {
+      "supported": true,
+      "enabled": [
+        false,
+        true,
+        false
+      ],
+      "setMatchesGet": true
+    },
+    "linux": {
+      "supported": false,
+      "enabled": [
+        false,
+        false,
+        false
+      ],
+      "reason": "当前 Linux 窗口管理器未提供透明合成能力。",
+      "scope": "Accurate disabled/unsupported reporting only; transparency activation NOT PROVEN on this runner"
+    }
+  },
+  "defaultPackages": {
+    "macos": {
+      "formats": [
+        "app",
+        "dmg"
+      ],
+      "runtimeFilesEach": 4314,
+      "node": "v24.20.0 darwin/arm64",
+      "storageMarkersEach": 14,
+      "signing": "Freead-hoc'-';notarizationanddownloadedGatekeeperacceptanceNOTVERIFIED"
+    },
+    "linux": {
+      "formats": [
+        "appimage",
+        "deb"
+      ],
+      "runtimeFilesEach": 4316,
+      "node": "v24.21.0 linux/x64",
+      "storageMarkersEach": 14,
+      "appimageLauncher": "ActualAppRun,packagedusr/bin/kk-studiohashseparate",
+      "producer": {
+        "preservedRpathOperations": 66,
+        "allManifestFiles": 4316,
+        "allFilesExactlyEqualStrictPackageReceipt": true,
+        "beforeAfterHeadAndInputEqual": true,
+        "finalPackageManifestAndPreservationHashesBound": true
+      }
+    }
+  },
+  "windows": {
+    "actualReceiptCommit": "4e72c29ace7f6d84580c7bb5e2e1d385c6d11f86",
+    "sourceTree": "ed7ccb00db59cf0ddaadae3ecadd5cb663544e4a",
+    "releaseInputSha256": "ac99d0036998e2efc07cd3f02fc8732643ec1cc82ff0be8526cf0fa19a9fc754",
+    "installerSha256": "c2fde1f5dd397f8ff1f3409ed4994ee971369ede41d069c2b8a6fa01d6541d63",
+    "shippingNssExecutableSha256": "ff83e17226c310cc91a0c5ebad5cfc762077929056f31a0b78f5146c9981d8bc",
+    "eachOfFourInstallVerifiedFiles": 4280,
+    "eachPostflightProcessEntries": 0,
+    "shippingLaunchLabels": [
+      "installed",
+      "reinstalled",
+      "repaired",
+      "restored-after-uninstall"
+    ],
+    "runtime": "AllfourproductiontauriURL/assets/owneddata/NSSexeidentitiescorrect;damagedpackage refused;bundledAgenthealthy;samerepair/reinstall/uninstall-reinstallretention;twouninstall;nocleanup/shutdownError",
+    "host": "Actualelevated=trueandfreshGUID51699f1459524046914ebf1667c8e608profilematchraw/receipt",
+    "policyCleanup": "Explicitraw18:48:54.593policiesremoved/lifecyclepassed",
+    "independentAudit": "PASS by hosted_windows_evidence: fullraw238327bytes/SHA47ac...,fouroriginalsavedJSON/diffentrybytes/SHA,andoneimmutableGitHubartifactmetadataGET679372bytes/SHA3459.../exacthead independently verified;actualmerge/tree/input correct;allassertions audited.",
+    "pidEvidenceBoundary": "FourshippingPIDsnotindependentlyrecorded;theirclose/portfree/pre/postflight/finalstate[]backedbyunchangedvalidsourceandsuccessfulrun,notfourPIDsceneclaims.Nativeown6552/1436exitsactualcode0.",
+    "remaining": "Crossversionupgrade/rollback,cleanWindowswithoutWebView2,Authenticode,publicreleaseanduseracceptanceNOTVERIFIED"
+  },
+  "localFirstFailureBoundary": "ParentRootreportedfirstlocalNSISpostflightkindprocess/unknownPID GuardFAIL,ownedrecoveryandlaterobservedandunobservedstrictPASS;keptas distinctRoot evidence.NotdiagnosedasproductorpeerandnotrewrittenbyHostedPASS.",
+  "history": "887fourrunsallPASSremainfrozen;cc184pushLinuxrevisionconflictFAILand7abcfutureUTCdatequalityFAIL/PRNativecancelledremainretained.7abcpushNative3OSSUCCESShistoricalonlynotcurrentproof.",
+  "archive": "Currentownworktreehasfivefullfinalrawlogs,threeactualsmallNativeZIPmetadata+savedJSON/diff,threerun/jobs/artifactsfinalAPIoriginals,treeidentity,andproofsummaries.Allrealfilewrite/readback/SHAchecked.Noquality22MBZIPorreleasebinarydownload.",
+  "scope": "No source/docs changes,stage,commit,push,app/buildstartup,oldSHArerun,workflowtrigger/cancel,mergeorpublishbythismonitor."
+}

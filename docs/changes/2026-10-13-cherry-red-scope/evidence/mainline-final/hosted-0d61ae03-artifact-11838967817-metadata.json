@@ -1,0 +1,60 @@
+{
+  "artifact_id": 11838967817,
+  "head": "0d61ae0334659d692b62b34a688a4d3f1cd4d842",
+  "builtHead": "4e72c29ace7f6d84580c7bb5e2e1d385c6d11f86",
+  "run_id": 38446362737,
+  "job_id": 115465934113,
+  "digest": "sha256:2ebe23c79891c16e840f523613175b9378e480f12409e836afc07f755e900fb2",
+  "downloadBytes": 693034,
+  "sha256": "2ebe23c79891c16e840f523613175b9378e480f12409e836afc07f755e900fb2",
+  "entries": [
+    {
+      "name": "native-e2e/native-process.log",
+      "bytes": 416,
+      "sha256": "7a8ab610b97d6f5091e08d3abe1e19d65302a8534a4637901827db3610ccafac",
+      "saved": true
+    },
+    {
+      "name": "native-e2e/receipt.json",
+      "bytes": 6509,
+      "sha256": "ec4d1f0e8d3cc00184b2ffa9bfb4d7a37d404ff8062faf15bf23e57ed80ff29d",
+      "saved": true
+    },
+    {
+      "name": "native-e2e/two-model-round.png",
+      "bytes": 89571,
+      "sha256": "05695cc5a27442694da9aac9b2b518ca1e5900eed0b0dc13343081e9a50abd93",
+      "saved": false
+    },
+    {
+      "name": "package-portability/appimage.log.json",
+      "bytes": 830,
+      "sha256": "ccb90f987012b033035b5480e9ee1ea7decfedd51d3de5a0a907e74b7e49029b",
+      "saved": true
+    },
+    {
+      "name": "package-portability/before.json",
+      "bytes": 291,
+      "sha256": "4891f9ab12d68b392a4bb9326a6163834f98d7f883204820fc608cca90da0b93",
+      "saved": true
+    },
+    {
+      "name": "package-portability/deb.log.json",
+      "bytes": 2378,
+      "sha256": "3f867bcdb9aa586bc488280f56cc8c17c104b0e955cc6ccc166b856542708718",
+      "saved": true
+    },
+    {
+      "name": "package-portability/receipt.json",
+      "bytes": 2118296,
+      "sha256": "719024f4a95d7e0154954c9f3360cddc80e3e8d096dba8a056f3564c20782bc3",
+      "saved": true
+    },
+    {
+      "name": "appimage-runtime-patchelf/f16039a6-c362-43cf-af5d-802ff71895ec.json",
+      "bytes": 925859,
+      "sha256": "f058d2fc5ffe4d99ad4fe6d6a3b845c70070b9d80c67e5a45c7e4f2d126e548c",
+      "saved": true
+    }
+  ]
+}

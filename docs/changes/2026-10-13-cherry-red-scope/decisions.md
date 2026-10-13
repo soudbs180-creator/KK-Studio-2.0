@@ -10,7 +10,7 @@
 |多模型对话|借鉴后自研|每路冻结连接/模型/历史，复用CreationTask，最多三路，部分失败/停止不清空成功结果|
 |Markdown|直接复用既有MIT解析依赖|unified/remark-parse/remark-gfm生成受限React节点，不复制Cherry UI或执行模型HTML|
 |分享|自研本地能力|复制原文与Markdown下载，Unicode文件名、内存URL释放，默认排除内部tool/system/error|
-|MCP|保留并校准文档|已有modern discovery/legacy兼容与KK画布server；两方向不混，第三方自动工具仍独立验收|
+|MCP|融合既有客户端并局部修复协议|官方SDK真实失败驱动精确legacy/modern握手、metadata/header/schema预算修复，保留KK画布server与同一客户端；两SDK Native各18验证，两方向不混，通用自动工具仍单列|
 |三桌面平台|局部重构|同一系统vault模块、按platform/arch/hash的随包runtime；Windows保留JobObject，Unix新增flock/guardian生命周期|
 |透明窗口|独立实现|实际原生背景alpha读回、失败回滚；不将CSS浮岛或blur当native透底；Web明确不可用|
 |Claude/Perplexity/Poe网站|入口整合|在系统浏览器打开官网，不复用cookies/账号订阅，不显示API就绪，不自动发送或购买|

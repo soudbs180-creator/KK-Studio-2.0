@@ -1,6 +1,6 @@
 # 功能与融合规格
 
-当前最近完成验收的候选为 `88740c5b23f1cf5f0896d471b4339d9db39f4b9b`，产品源码与 `cc184e59` 相同；Desktop/Web 2.1.18、Mobile 2.1.1。四个 exact-head Hosted quality/Native 运行全部 SUCCESS，独立源码补审及 Windows 原包证据审计 PASS。最后新增三平台真实原生背景读回/恢复检查尚待冻结提交和实跑。任务保持 PARTIAL，最终用户产品结果/发布范围确认仍按 BRANCH-POLICY 单列；没有合并 main、发布或更新 primary 快捷方式。primary 并发源码与暂存内容保留；不宣称原 index 原始字节跨时刻不变。
+红框范围的技术实施与验证已完成，产品/运行测试证据锚点为 `0d61ae0334659d692b62b34a688a4d3f1cd4d842`，产品源码与 `cc184e59` 相同。Desktop/Web 2.1.18，Mobile 2.1.1。下述原件有 exact-source/feature/input/EXE/ZIP 与独立审查绑定；随后仅文档事实归档不改变产品或测试。最新文档提交的门禁以 PR #58 当前SHA的Actions为准。整项任务保持 PARTIAL，剩余为用户最终产品结果/发布范围验收及其后授权的主线收敛；没有合并 main、发布或改 primary 快捷方式。
 
 任务：TASK-CHERRY-RED-001。日期：2026-10-13。
 
