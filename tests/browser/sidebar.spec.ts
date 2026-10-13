@@ -36,7 +36,7 @@ test("最新70px收起侧栏、38×48导航与保留的搜索入口，搜索关�
     height: 26,
   });
   await search.click();
-  const dialog = page.getByRole("dialog", { name: "搜索与收藏" });
+  const dialog = page.getByRole("dialog", { name: "搜索" });
   await expect(dialog).toBeVisible();
   await dialog.getByLabel("搜索内容").fill("不匹配的搜索文本");
   await page.keyboard.press("Escape");
@@ -101,7 +101,7 @@ test("四视口保留搜索、账号和设置命中，手机端使用固定顶�
     }
     const search =
       width < 768
-        ? page.getByRole("button", { name: "搜索与收藏", exact: true })
+        ? page.getByRole("button", { name: "搜索", exact: true })
         : sidebar.getByRole("button", { name: "搜索", exact: true });
     const settings =
       width < 768
@@ -213,13 +213,13 @@ test("侧栏快速切换后手机搜索承接焦点，减弱动态无残留动�
   await search.focus();
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(
-    page.getByRole("button", { name: "搜索与收藏", exact: true }),
+    page.getByRole("button", { name: "搜索", exact: true }),
   ).toBeFocused();
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("dialog", { name: "搜索与收藏" })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "搜索" })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(
-    page.getByRole("button", { name: "搜索与收藏", exact: true }),
+    page.getByRole("button", { name: "搜索", exact: true }),
   ).toBeFocused();
   expect(
     await page
@@ -235,16 +235,16 @@ test("手机端搜索弹窗不依赖侧栏展开", async ({ page }) => {
   await page.goto("/");
   const toggle = page.locator(".sidebar-toggle");
   await expect(toggle).toHaveCSS("display", "none");
-  const search = page.getByRole("button", { name: "搜索与收藏", exact: true });
+  const search = page.getByRole("button", { name: "搜索", exact: true });
   await search.click();
   await page
-    .getByRole("dialog", { name: "搜索与收藏" })
+    .getByRole("dialog", { name: "搜索" })
     .getByLabel("搜索内容")
     .fill("测试");
   await page.keyboard.press("Escape");
   await expect(search).toBeFocused();
   await page.mouse.click(375, 470);
-  await expect(page.getByRole("dialog", { name: "搜索与收藏" })).toHaveCount(0);
+  await expect(page.getByRole("dialog", { name: "搜索" })).toHaveCount(0);
 });
 
 test("手机对话入口建立独立项目，未连接时保留草稿并提供配置入口", async ({
@@ -297,7 +297,7 @@ test("断点隐藏分组时恢复到用户，手机端保留顶栏操作", async
     page.getByRole("button", { name: "个人信息", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "搜索与收藏", exact: true }),
+    page.getByRole("button", { name: "搜索", exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "切换项目", exact: true }),
@@ -347,8 +347,8 @@ test("粗指针侧栏44px命中区不重叠，搜索、设置可触控", async (
       ).toBe(false);
     }
   }
-  await page.getByRole("button", { name: "搜索与收藏", exact: true }).tap();
-  await expect(page.getByRole("dialog", { name: "搜索与收藏" })).toBeVisible();
+  await page.getByRole("button", { name: "搜索", exact: true }).tap();
+  await expect(page.getByRole("dialog", { name: "搜索" })).toBeVisible();
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "打开设置", exact: true }).tap();
   await expect(page.getByRole("dialog", { name: "设置" })).toBeVisible();

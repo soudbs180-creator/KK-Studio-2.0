@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { X, ArrowLeft } from "lucide-react";
 import {
   filterAssets,
+  getAssetTags,
   type Asset,
   type AssetFilter,
 } from "../../domain/assets";
@@ -173,7 +174,7 @@ export default function AssetPanel({
       </div>
       <AssetFilterControls
         filter={filter}
-        tags={Array.from(new Set(source.map((asset) => asset.tag)))}
+        tags={Array.from(new Set(source.flatMap(getAssetTags)))}
         sourceFilter={sourceFilter}
         onFilter={(patch) => setFilter({ ...filter, ...patch })}
         onSource={setSourceFilter}

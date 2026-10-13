@@ -8,6 +8,9 @@ import type { SettingsSection } from "./SettingsSectionData";
 import ConnectionSettings from "./ConnectionSettings";
 import ProjectPackageActions from "../../features/projects/ProjectPackageActions";
 import type { SaveState } from "../../features/creation/useCreationStorage";
+import type { CreationProject } from "../../features/creation/model";
+import UsageSettings from "./UsageSettings";
+import StorageOverview from "./StorageOverview";
 import type { SkillRegistry } from "../../features/skills/skillRegistry";
 import ExtensionsSettings, { type ExtensionsTab } from "./ExtensionsSettings";
 import CompanionSettings from "./CompanionSettings";
@@ -21,6 +24,7 @@ interface SettingsSectionsProps {
   onFeedback: (message: string) => void;
   saveState: SaveState;
   revision: number;
+  projects: readonly CreationProject[];
   registry: SkillRegistry;
   extensionsTab?: ExtensionsTab;
 }
@@ -32,6 +36,7 @@ export default function SettingsSections({
   onFeedback,
   saveState,
   revision,
+  projects,
   registry,
   extensionsTab,
 }: SettingsSectionsProps) {
@@ -78,12 +83,17 @@ export default function SettingsSections({
           <ConnectionSettings section={section} onFeedback={onFeedback} />
         )}
 
+        {section === "usage" && (
+          <UsageSettings projects={projects} saveState={saveState} />
+        )}
+
         {section === "storage" && (
           <>
+            <StorageOverview projects={projects} saveState={saveState} />
+            <h3 className="settings-detail-label">偏好备份</h3>
             <p className="settings-section-intro">
               在当前设备保存主题、布局等非敏感偏好。
             </p>
-            <CompanionSettings onFeedback={onFeedback} />
             <div className="settings-info-row">
               <span>偏好保存位置</span>
               <strong>{appPlatform()} · 本机</strong>
@@ -103,6 +113,8 @@ export default function SettingsSections({
               项目和资产单独保存在本机，不包含在偏好备份里。浏览器版暂不支持指定资产目录。
             </p>
             <ProjectPackageActions saveState={saveState} revision={revision} />
+            <h3 className="settings-detail-label">网页本机伴随服务</h3>
+            <CompanionSettings onFeedback={onFeedback} />
           </>
         )}
 

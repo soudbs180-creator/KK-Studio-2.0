@@ -14,6 +14,8 @@ import {
 import { googleAgentConnection } from "../../features/agent/googleAgentConnection";
 import {
   geminiCliStatus,
+  geminiCliStatusMessage,
+  type GeminiCliStatus,
   GEMINI_BRIDGE_DEFAULT_URL,
   normalizeGeminiBridgeUrl,
 } from "../../features/agent/geminiCliAdapter";
@@ -40,6 +42,7 @@ export default function GoogleConnectionSettings({
 }) {
   const [initialPreference] = useState(readGoogleCliPreference);
   const [key, setKey] = useState("");
+  const [cliReport, setCliReport] = useState<GeminiCliStatus>();
   const [loginMode, setLoginMode] = useState(initialPreference.loginMode);
   const [bridgeUrl, setBridgeUrl] = useState(initialPreference.bridgeUrl);
   const [busy, setBusy] = useState(false);
@@ -82,6 +85,7 @@ export default function GoogleConnectionSettings({
       request.current = null;
     } else {
       setStatus("");
+      setCliReport(undefined);
       if (mode === "all")
         googleAgentConnection.configure(readGoogleCliPreference());
     }
@@ -178,6 +182,7 @@ export default function GoogleConnectionSettings({
     request.current = controller;
     setBusy(true);
     if (effectiveLoginMode === "cli") {
+      setCliReport(undefined);
       setStatus("正在检测本机 Gemini CLI…");
       try {
         const result = await geminiCliStatus({
@@ -185,18 +190,8 @@ export default function GoogleConnectionSettings({
           signal: controller.signal,
         });
         if (mounted.current && request.current === controller) {
-          if (!result.installed)
-            setStatus(
-              "未安装 Gemini CLI。请先在终端运行 npm install -g @google/gemini-cli。",
-            );
-          else if (!result.login)
-            setStatus(
-              "Gemini CLI 已安装但未登录。请在终端运行 gemini，选择 Login with Google 完成登录。",
-            );
-          else
-            setStatus(
-              `Gemini CLI 已就绪（${result.version ?? "未知版本"}），可连接使用。`,
-            );
+          setCliReport(result);
+          setStatus(geminiCliStatusMessage(result));
         }
       } catch {
         if (mounted.current && request.current === controller)
@@ -261,7 +256,11 @@ export default function GoogleConnectionSettings({
       {cli ? (
         <GoogleCliSetup
           bridgeUrl={bridgeUrl}
-          onChange={setBridgeUrl}
+          report={cliReport}
+          onChange={(value) => {
+            setCliReport(undefined);
+            setBridgeUrl(value);
+          }}
           disabled={disabled}
         />
       ) : (

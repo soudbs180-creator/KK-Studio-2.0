@@ -69,7 +69,10 @@ test("governance primitives define one button and icon contract", () => {
     governance,
     /\.kk-button[^{]*\{[\s\S]*min-(?:height|block-size):\s*var\(--kk-button-h-standard\)/,
   );
-  assert.match(governance, /border-radius:\s*var\(--kk-radius-control\)/);
+  assert.match(
+    governance,
+    /\.kk-button\s*\{[^}]*border-radius:\s*var\(--kk-button-radius\)/,
+  );
   assert.match(
     governance,
     /\.kk-icon-slot\[data-size="sm"\][^{]*\{[\s\S]*width:\s*var\(--kk-icon-glyph-sm\)/,

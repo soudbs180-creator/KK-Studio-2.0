@@ -70,6 +70,41 @@ fn source_item_id_is_optional_bounded_and_history_safe() {
 }
 
 #[test]
+fn collection_labels_survive_native_backup_and_invalid_writes_preserve_original() {
+    let f = Fixture::new();
+    let mut value = snapshot(1);
+    value["projects"][0]["customTags"] = json!(["客户A"]);
+    value["projects"][0]["items"][0]["tags"] = json!(["人物", "最终版"]);
+    value["projects"][0]["favoriteIds"] = json!(["n1"]);
+    value["projects"][0]["likedIds"] = json!(["n1"]);
+    f.repo.write(value.clone(), None).unwrap();
+    let mut next = value.clone();
+    next["revision"] = json!(2);
+    next["projects"][0]["name"] = json!("Renamed");
+    f.repo.write(next.clone(), Some(1)).unwrap();
+    for labels in [
+        json!(["人物", "人物"]),
+        json!([" "]),
+        json!([" spaced "]),
+        json!([42]),
+        json!(["😀".repeat(21)]),
+        json!(vec!["tag"; 33]),
+    ] {
+        let mut bad = next.clone();
+        bad["revision"] = json!(3);
+        bad["projects"][0]["items"][0]["tags"] = labels.clone();
+        assert!(f.repo.write(bad, Some(2)).is_err());
+        let mut bad = next.clone();
+        bad["revision"] = json!(3);
+        bad["projects"][0]["customTags"] = labels;
+        assert!(f.repo.write(bad, Some(2)).is_err());
+        assert_eq!(f.repo.read().unwrap().snapshot.unwrap(), next);
+    }
+    f.main(&json!({"corrupt": true}));
+    assert_eq!(f.repo.read().unwrap().snapshot.unwrap(), value);
+}
+
+#[test]
 fn task_submission_states_and_unknown_outputs_survive_repository_reopen() {
     let f = Fixture::new();
     let mut value = snapshot(1);

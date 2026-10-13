@@ -138,10 +138,20 @@ for (const width of [390, 1920]) {
       info,
     );
     await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await page.getByRole("button", { name: "Gemini CLI", exact: true }).click();
     await inspectPage(
       page,
       page.getByRole("dialog", { name: "设置" }),
       "google-cli",
+      info,
+    );
+    await page
+      .getByRole("button", { name: "CodeBuddy CLI", exact: true })
+      .click();
+    await inspectPage(
+      page,
+      page.getByRole("dialog", { name: "设置" }),
+      "codebuddy-cli",
       info,
     );
     await page.getByRole("button", { name: "关闭设置", exact: true }).click();

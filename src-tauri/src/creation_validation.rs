@@ -31,6 +31,27 @@ fn optional_strings(value: &Value, fields: &[&str]) -> Result<(), String> {
     }
     Ok(())
 }
+pub(crate) fn labels(value: &Value, field: &str) -> Result<(), String> {
+    let Some(value) = value.get(field) else {
+        return Ok(());
+    };
+    let entries = array(value, field)?;
+    if entries.len() > 32 {
+        return Err(corrupt(field));
+    }
+    let mut seen = HashSet::new();
+    for entry in entries {
+        let label = entry.as_str().ok_or_else(|| corrupt(field))?;
+        if label.is_empty()
+            || label.trim() != label
+            || label.encode_utf16().count() > 40
+            || !seen.insert(label)
+        {
+            return Err(corrupt(field));
+        }
+    }
+    Ok(())
+}
 fn optional_ids(value: &Value, fields: &[&str]) -> Result<(), String> {
     for field in fields {
         if let Some(candidate) = value.get(field) {
@@ -165,11 +186,13 @@ pub fn validate(value: &Value) -> Result<(), String> {
         draft(home)?;
     }
     for project in projects {
+        labels(project, "customTags")?;
         optional_strings(project, &["name", "prompt", "model", "kind"])?;
         attachments(project)?;
         let items = array(&project["items"], "items")?;
         let node_ids = unique_ids(items, "items")?;
         for item in items {
+            labels(item, "tags")?;
             if !item["title"].is_string() || !item["description"].is_string() {
                 return Err(corrupt("items"));
             }

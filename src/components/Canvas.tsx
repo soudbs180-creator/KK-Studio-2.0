@@ -172,8 +172,6 @@ export default function Canvas({
           controls={controls}
           items={items}
           onItemsChange={onItemsChange}
-          favoriteIds={favoriteIds}
-          onToggleFavorite={onToggleFavorite}
           likedIds={likedIds}
           onToggleLike={onToggleLike}
           onConfigure={() => onOpen?.("settings/providers")}

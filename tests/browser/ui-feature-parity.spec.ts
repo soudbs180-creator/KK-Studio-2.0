@@ -542,10 +542,13 @@ for (const width of [768, 1920]) {
         const token = themeTokens(theme, accent);
         await expect(
           dialog.getByRole("button", { name: "加入草稿" }),
-        ).toHaveCSS("background-color", cssRgb(token("--bg-accent")));
+        ).toHaveCSS(
+          "background-color",
+          cssRgb(token("--kk-button-primary-bg")),
+        );
         await expect(
           dialog.getByRole("button", { name: "加入草稿" }),
-        ).toHaveCSS("color", cssRgb(token("--text-on-accent")));
+        ).toHaveCSS("color", cssRgb(token("--kk-button-primary-text")));
         const colors = await dialog
           .getByRole("button", { name: "加入草稿" })
           .evaluate((el) => {

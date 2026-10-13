@@ -183,7 +183,7 @@
   background: var(--ui-control-active);
 }
 .ui-button.is-danger {
-  color: var(--ui-text);
+  color: var(--ui-danger);
 }
 .ui-button.is-danger:not(:disabled):not([aria-disabled="true"]):hover,
 .ui-button.is-danger:focus-visible,
@@ -197,20 +197,20 @@
 }
 .primary-button,
 .ui-button.is-primary {
-  border-color: var(--border-accent);
-  background: var(--bg-accent);
-  color: var(--text-on-accent);
+  border-color: transparent;
+  background: var(--kk-button-primary-bg);
+  color: var(--kk-button-primary-text);
 }
 .primary-button:not(:disabled):not([aria-disabled="true"]):hover,
 .ui-button.is-primary:not(:disabled):not([aria-disabled="true"]):hover {
-  background: var(--bg-accent-hover);
+  background: var(--kk-button-primary-hover);
 }
 .primary-button:not(:disabled):active,
 .ui-button.is-primary:not(:disabled):active,
 .primary-button[aria-pressed="true"],
 .ui-button.is-primary[aria-pressed="true"] {
-  background: var(--bg-accent-hover);
-  color: var(--text-on-accent);
+  background: var(--kk-button-primary-hover);
+  color: var(--kk-button-primary-text);
 }
 .ui-button.is-danger-filled {
   background: var(--bg-danger);
@@ -226,7 +226,7 @@
   min-width: 0;
   height: var(--ui-input-height);
   padding: 0 var(--ui-space-3);
-  border: var(--ui-border-width) solid var(--border-control);
+  border: var(--ui-border-width) solid transparent;
   border-radius: var(--ui-radius-control);
   background: var(--bg-input);
   color: var(--text-primary);

@@ -1,10 +1,7 @@
 import { isTauri } from "@tauri-apps/api/core";
-import {
-  PROVIDER_PRESETS,
-  findProviderPreset,
-  type ModelProviderProfile,
-} from "../../domain/modelProvider";
+import { type ModelProviderProfile } from "../../domain/modelProvider";
 import ProviderApiKeyField from "./ProviderApiKeyField";
+import ProviderPresetSelector from "./ProviderPresetSelector";
 import type { CredentialReadState } from "./useProviderCredentialState";
 
 export default function ProviderProfileFields({
@@ -15,6 +12,7 @@ export default function ProviderProfileFields({
   onUpdate,
   onUpdateMany,
   onApiKeyChange,
+  onOpenGoogle,
 }: {
   profile: ModelProviderProfile;
   apiKey: string;
@@ -23,27 +21,16 @@ export default function ProviderProfileFields({
   onUpdate: (field: keyof ModelProviderProfile, value: string) => void;
   onUpdateMany: (patch: Partial<ModelProviderProfile>) => void;
   onApiKeyChange: (value: string) => void;
+  onOpenGoogle: () => void;
 }) {
   return (
     <>
-      <label className="settings-field">
-        <span>预置提供商</span>
-        <select
-          value=""
-          onChange={(event) => {
-            const preset = findProviderPreset(event.target.value);
-            if (!preset) return;
-            onUpdateMany({ name: preset.name, baseUrl: preset.baseUrl });
-          }}
-        >
-          <option value="">选择预置（可选）</option>
-          {PROVIDER_PRESETS.map((preset) => (
-            <option key={preset.id} value={preset.id}>
-              {preset.label}
-            </option>
-          ))}
-        </select>
-      </label>
+      <ProviderPresetSelector
+        onOpenGoogle={onOpenGoogle}
+        onSelect={(preset) =>
+          onUpdateMany({ name: preset.name, baseUrl: preset.baseUrl })
+        }
+      />
       <label className="settings-field">
         <span>提供商</span>
         <input

@@ -13,7 +13,7 @@
 | PROTOTYPE | 只有 UI、本地 fixture 或固定演示素材，无真实后端；界面必须显式标注 Prototype |
 | PLANNED | 只有计划/设计，无实现或无 UI |
 
-当前共 **36** 个功能：REAL（真实可用）2、PARTIAL（部分可用）27、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）2。
+当前共 **37** 个功能：REAL（真实可用）2、PARTIAL（部分可用）28、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）2。
 
 ## 如何新增一个功能（任何 AI 照此执行）
 
@@ -28,6 +28,7 @@
 | --- | --- | --- | --- | --- |
 | FEAT-001 | 创作画布（节点/连线/编辑） | REAL（真实可用） | [卡片](feat-001-canvas-workbench.md) | T2, UI-004, TASK-UI-006, TASK-CANVAS-KAWORKAI-001, TASK-UI-011 |
 | FEAT-036 | 画布图片对比 | PARTIAL（部分可用） | [卡片](feat-036-image-compare.md) | TASK-COMPARE-001, TASK-COMPARE-002, UI-004 |
+| FEAT-039 | 画布喜欢、标签与分类搜索 | PARTIAL（部分可用） | [卡片](feat-039-canvas-collections.md) | TASK-UI-CONSOLIDATE-20261014 |
 
 ## 创作生成
 
@@ -54,7 +55,7 @@
 | FEAT-012 | MCP 客户端 | PARTIAL（部分可用） | [卡片](feat-012-mcp.md) | TASK-CAP-001, BACKEND-MCP-AUTO, TASK-AGENT-001, TASK-AGENT-003, TASK-MINIMAX-001, TASK-MCP-PROTO-001, TASK-MCP-REGISTRY-001, TASK-MCP-REGISTRY-002 |
 | FEAT-013 | 连接器目录 | PARTIAL（部分可用） | [卡片](feat-013-connectors.md) | TASK-CAP-001, TASK-MINIMAX-001, TASK-UI-005, PLUGIN-DESKTOP-001, TASK-PLUGIN-DEV-001, TASK-PLUGIN-RECOVERY-001, TASK-PLUGIN-MARKDOWN-001, TASK-DESKTOP-FLUSH-001 |
 | FEAT-030 | Agent 编排与画布交付契约 | PARTIAL（部分可用） | [卡片](feat-030-agent-orchestration.md) | TASK-ORCH-001, TASK-ORCH-002, TASK-ORCH-003, TASK-CANVAS-001, TASK-UI-CLASSIFY-20261013 |
-| FEAT-032 | 多供应商接入与多目标配置 | PARTIAL（部分可用） | [卡片](feat-032-provider-connectivity.md) | TASK-PROV-002, TASK-PROV-003, TASK-PROV-004 |
+| FEAT-032 | 多供应商接入与多目标配置 | PARTIAL（部分可用） | [卡片](feat-032-provider-connectivity.md) | TASK-PROV-002, TASK-PROV-003, TASK-PROV-004, TASK-UI-CONSOLIDATE-20261014 |
 
 ## 平台服务
 
@@ -74,8 +75,8 @@
 | FEAT-014 | 素材库与资产管理 | REAL（真实可用） | [卡片](feat-014-assets.md) | T3a, TASK-PERF-ASSETS-001, PERF-001 |
 | FEAT-015 | 项目与项目包 | PARTIAL（部分可用） | [卡片](feat-015-projects.md) | T3a, T3b, T9, TASK-DS-002, TASK-PROJECT-SIDEBAR-001 |
 | FEAT-016 | 任务工作台与审批 | PARTIAL（部分可用） | [卡片](feat-016-task-workbench.md) | T4, T5, UI-003, TASK-UI-006, TASK-ORCH-002, TASK-TASKSTATE-001 |
-| FEAT-022 | 设置中心 | PARTIAL（部分可用） | [卡片](feat-022-settings.md) | TASK-PROV-001, UI-004, TASK-DS-001, TASK-DS-002, TASK-UI-005, TASK-AGENT-001, TASK-AGENT-RECOVERY-20261013 |
-| FEAT-023 | 导航、侧栏与多创作页 | PARTIAL（部分可用） | [卡片](feat-023-navigation.md) | TASK-UI-DISMISS-002, UI-004, TASK-UI-006, TASK-PROJECT-SIDEBAR-001, TASK-UI-013 |
+| FEAT-022 | 设置中心 | PARTIAL（部分可用） | [卡片](feat-022-settings.md) | TASK-PROV-001, UI-004, TASK-DS-001, TASK-DS-002, TASK-UI-005, TASK-AGENT-001, TASK-AGENT-RECOVERY-20261013, TASK-UI-CONSOLIDATE-20261014 |
+| FEAT-023 | 导航、侧栏与多创作页 | PARTIAL（部分可用） | [卡片](feat-023-navigation.md) | TASK-UI-DISMISS-002, UI-004, TASK-UI-006, TASK-PROJECT-SIDEBAR-001, TASK-UI-013, TASK-UI-CONSOLIDATE-20261014 |
 | FEAT-025 | 本地演示素材管线（待替换 seam） | PROTOTYPE（仅演示/UI） | [卡片](feat-025-demo-media.md) | UI-003, BACKEND-MEDIA-001, BACKEND-TEXT-NODE |
 | FEAT-026 | Windows 启动器与分享包 | PARTIAL（部分可用） | [卡片](feat-026-launcher.md) | T7, TASK-DESKTOP-INSTALLER-001, TASK-LAUNCH-001 |
 
@@ -91,7 +92,7 @@
 | ID | 功能 | 状态 | 卡片 | 关联任务 |
 | --- | --- | --- | --- | --- |
 | FEAT-027 | Astra 研究助手 | PLANNED（仅计划） | [卡片](feat-027-astra.md) | TASK-ASTRA-001, BACKEND-ASTRA-001 |
-| FEAT-028 | Mobile 适配 | PLANNED（仅计划） | [卡片](feat-028-mobile.md) | T12 |
+| FEAT-028 | Mobile 适配 | PLANNED（仅计划） | [卡片](feat-028-mobile.md) | T12, TASK-UI-CONSOLIDATE-20261014 |
 
 ## 门禁
 

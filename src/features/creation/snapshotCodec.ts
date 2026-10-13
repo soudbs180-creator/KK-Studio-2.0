@@ -41,6 +41,7 @@ const item = z
     description: z.string(),
     kind,
     plugin: plugin.optional(),
+    tags: z.array(z.string().max(40)).max(32).optional(),
     result: z
       .object({
         id,
@@ -97,6 +98,7 @@ const project = z
     composerDraft: draft.optional(),
     favoriteIds: z.array(id).optional(),
     likedIds: z.array(id).optional(),
+    customTags: z.array(z.string().max(40)).max(32).optional(),
   })
   .passthrough();
 const schema = z.object({

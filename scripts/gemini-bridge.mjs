@@ -2,7 +2,7 @@
 /**
  * scripts/gemini-bridge.mjs — 极简本地桥,代理 Gemini CLI(Google 账号登录,免 API Key)。
  *
- * - GET  /status            → { installed, version?, login }
+ * - GET  /status            → { installed, version?, login, loginStatus? }
  * - POST /chat              → body { prompt, resumeSessionId?, model? } → { text, sessionId?, error? }
  * - 仅监听 127.0.0.1;请求体 ≤ 1 MiB;CORS 允许本机来源。
  * - Windows 通过 npm 全局 @google/gemini-cli 的 bin 入口以 node 进程方式执行,避免 shell 注入。
@@ -136,16 +136,16 @@ async function probeLogin(ctx, invocation, signal) {
     ["-p", "ping", "--output-format", "json", "-m", "gemini-2.5-flash"],
     { timeoutMs: PROBE_TIMEOUT_MS, signal },
   );
-  if (!probe.ok) return false;
   const parsed = parseGeminiJson(probe.stdout.trim());
-  if (!parsed) return false;
   if (
-    typeof parsed.error === "object" &&
-    parsed.error &&
-    LOGIN_HINTS.test(JSON.stringify(parsed.error))
+    (parsed?.error && LOGIN_HINTS.test(JSON.stringify(parsed.error))) ||
+    (!probe.ok && LOGIN_HINTS.test(probe.stderr))
   )
-    return false;
-  return typeof parsed.response === "string" || Array.isArray(parsed.items);
+    return "required";
+  if (!probe.ok || !parsed || parsed.error) return "unknown";
+  return typeof parsed.response === "string" || Array.isArray(parsed.items)
+    ? "verified"
+    : "unknown";
 }
 
 export function createGeminiBridge(options = {}) {
@@ -167,11 +167,12 @@ export function createGeminiBridge(options = {}) {
       signal,
     });
     if (version.code === "spawn") return { installed: false, login: false };
-    const login = await probeLogin(ctx, invocation, signal);
+    const loginStatus = await probeLogin(ctx, invocation, signal);
     return {
       installed: true,
       version: version.ok ? version.stdout.trim().split(/\r?\n/)[0] : undefined,
-      login,
+      login: loginStatus === "verified",
+      loginStatus,
     };
   }
 

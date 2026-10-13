@@ -13,6 +13,34 @@ const FORBIDDEN_SECRET =
   /(^|\/)(?:\.env(?:\..*)?|id_rsa(?:\..*)?|credentials(?:\.[^/]*)?|service-account(?:\.[^/]*)?|secrets?(?:\.[^/]*)?|.*\.(?:pem|key|p12|pfx|jks|keystore|secret))$/i;
 const FORBIDDEN_BINARY = /\.(?:exe|msi|dmg|pkg|appimage|deb|rpm)$/i;
 const PACKAGE_NAME = /^\d{4}-\d{2}-\d{2}-[^/]+$/;
+// Finite exception for the PR #55 historical snapshot only. A future package
+// cannot opt out merely by adding a marker file.
+const PR55_HISTORICAL_PACKAGES = new Set([
+  "2026-10-09-capacity-errors",
+  "2026-10-09-docs-structure",
+  "2026-10-09-doubao-integration",
+  "2026-10-09-provider-durable-config",
+  "2026-10-09-provider-gates",
+  "2026-10-10-agent-provider-entry",
+  "2026-10-10-canvas-background-zoom",
+  "2026-10-10-desktop-launch-freshness",
+  "2026-10-10-development-workflow",
+  "2026-10-10-doubao-official-channel",
+  "2026-10-10-kk-model-capability",
+  "2026-10-10-provider-mainline-merge",
+  "2026-10-10-remaining-verification",
+  "2026-10-10-system-audit",
+  "2026-10-10-ui-focus-state",
+  "2026-10-10-uiux-review",
+  "2026-10-10-unified-protocol-kernel",
+  "2026-10-10-version-coherence",
+  "2026-10-11-closeout",
+  "2026-10-11-p1-exact-sha-closeout",
+  "2026-10-11-rules-restructure",
+  "2026-10-11-taskstate-docs-closeout",
+  "2026-10-11-verify-origin-003",
+  "2026-10-12-branch-consolidation",
+]);
 
 function invalidPath(file) {
   return (
@@ -43,7 +71,7 @@ export function checkDeliveryFiles(
   changed,
   exists,
   baseExists = () => false,
-  { headLedger, baseLedger, branch } = {},
+  { headLedger, baseLedger, branch, isLegacyExempt = () => false } = {},
 ) {
   const issues = [];
   const normalized = [...new Set(changed)];
@@ -73,12 +101,14 @@ export function checkDeliveryFiles(
   for (const name of packages) {
     const prefix = `docs/changes/${name}/`;
     const isNew = newPackages.includes(name);
-    if (isNew) {
+    const isExempt =
+      isNew && PR55_HISTORICAL_PACKAGES.has(name) && isLegacyExempt(name);
+    if (isNew && !isExempt) {
       for (const requiredUpdate of REQUIRED_ARTIFACTS)
         if (!normalized.includes(`${prefix}${requiredUpdate}`))
           issues.push(`New change package ${name} must add ${requiredUpdate}.`);
     }
-    if (isNew) {
+    if (isNew && !isExempt) {
       const missing = REQUIRED_ARTIFACTS.filter(
         (file) => !exists(`${prefix}${file}`),
       );
@@ -97,7 +127,11 @@ export function checkDeliveryFiles(
         JSON.stringify(task),
       ]),
     );
-    for (const name of newPackages) {
+    for (const name of newPackages.filter(
+      (packageName) =>
+        !PR55_HISTORICAL_PACKAGES.has(packageName) ||
+        !isLegacyExempt(packageName),
+    )) {
       const evidence = `docs/changes/${name}/verification.md`;
       const bound = (Array.isArray(headTasks) ? headTasks : []).some((task) => {
         if (!task || !task.id || previous.get(task.id) === JSON.stringify(task))

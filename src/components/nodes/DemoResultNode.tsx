@@ -18,16 +18,12 @@ import ResultPreview from "./ResultPreview";
 
 export default function DemoResultNode({
   item,
-  favorite,
-  onFavorite,
   onChange,
   onDelete,
   onResult,
   editing,
 }: {
   item: CanvasCollectionItem;
-  favorite: boolean;
-  onFavorite: () => void;
   onChange: (patch: Partial<CanvasCollectionItem>) => void;
   onDelete: () => void;
   onResult: (result: DemoResult) => void;
@@ -121,17 +117,6 @@ export default function DemoResultNode({
           <footer>
             <CompareImageButton item={item} />
             <button
-              className="ui-button"
-              aria-label={
-                favorite ? `取消收藏${item.title}` : `收藏${item.title}`
-              }
-              aria-pressed={favorite}
-              onClick={onFavorite}
-            >
-              <UiIcon name="favorite" />
-              {favorite ? "已收藏" : "收藏"}
-            </button>
-            <button
               className="ui-button is-danger"
               aria-label={`删除${item.title}`}
               onClick={onDelete}
@@ -156,8 +141,8 @@ export default function DemoResultNode({
           anchor={card}
           selected={Boolean(editing?.selected)}
           onPreview={openPreview}
-          favorite={favorite}
-          onFavorite={onFavorite}
+          liked={editing?.liked}
+          onLike={editing?.onToggleLike}
           onDelete={onDelete}
           references={editing?.references}
         />

@@ -15,11 +15,13 @@ export default function ImageSelectionToolbar({
   anchor,
   selected,
   title,
+  label,
   children,
 }: {
   anchor: RefObject<HTMLElement>;
   selected: boolean;
   title: string;
+  label?: string;
   children: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -64,7 +66,7 @@ export default function ImageSelectionToolbar({
       ref={ref}
       className="image-selection-toolbar"
       role="toolbar"
-      aria-label={`图片操作：${title}`}
+      aria-label={label ?? `图片操作：${title}`}
       aria-orientation="horizontal"
       style={{
         left: position.left,
@@ -92,6 +94,7 @@ export default function ImageSelectionToolbar({
         const index = buttons.indexOf(
           document.activeElement as HTMLButtonElement,
         );
+        if (index < 0) return;
         let next: number | undefined;
         if (event.key === "ArrowRight") next = (index + 1) % buttons.length;
         if (event.key === "ArrowLeft")

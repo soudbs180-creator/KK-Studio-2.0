@@ -5,9 +5,11 @@
   --settings-muted: var(--text-secondary);
   --settings-selected: var(--ui-neutral-selected);
   position: relative;
-  width: min(920px, calc(100vw - 32px));
+  display: grid;
+  grid-template-columns: var(--kk-settings-nav-width) minmax(0, 1fr);
+  width: min(var(--kk-settings-width), calc(100vw - 32px));
   max-width: 100%;
-  height: 700px;
+  height: var(--kk-settings-height);
   max-height: calc(100dvh - 32px);
   border: 1px solid var(--settings-border);
   border-radius: 20px;
@@ -19,28 +21,23 @@
 }
 
 .settings-sidebar {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 337px;
+  position: relative;
+  min-height: 0;
+  padding: var(--kk-space-5);
+  border-right: var(--kk-border-width) solid var(--kk-border-subtle);
 }
 .settings-sidebar h1 {
-  position: absolute;
-  left: 36px;
-  top: 37px;
+  margin-bottom: var(--kk-space-5);
   font-size: 14px;
   line-height: 22px;
   color: var(--settings-muted);
   font-weight: 400;
 }
 .settings-nav {
-  position: absolute;
-  left: 36px;
-  top: 78px;
-  width: 263px;
-  bottom: 22px;
+  height: calc(100% - var(--kk-layout-gutter-lg));
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--kk-space-3);
   overflow-y: auto;
 }
 /* Sidebar grouping (设置 / 功能 / 数据与安全 / 系统). */
@@ -62,12 +59,12 @@
   flex: 0 0 40px;
   display: flex;
   align-items: center;
-  align-self: flex-start;
+  align-self: stretch;
   gap: 8px;
   max-width: 100%;
   height: 40px;
   padding: 0 12px;
-  border-radius: 10px;
+  border-radius: var(--kk-radius-full);
   color: var(--settings-muted);
   font-size: 14px;
   font-weight: 400;
@@ -90,11 +87,9 @@
   object-fit: contain;
 }
 .settings-content {
-  position: absolute;
-  left: 363px;
-  right: 42px;
-  top: 37px;
-  bottom: 38px;
+  min-height: 0;
+  margin: var(--kk-space-6) var(--kk-space-6) var(--kk-space-6)
+    var(--kk-space-5);
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
@@ -247,8 +242,9 @@
   outline-offset: var(--ui-focus-offset);
 }
 .settings-panel :is(input, select):focus-visible {
-  outline: var(--ui-focus-subtle-width) solid var(--ui-focus-subtle);
-  outline-offset: var(--ui-focus-subtle-offset);
+  outline: none;
+  box-shadow: inset 0 calc(-1 * var(--kk-focus-width-subtle))
+    var(--kk-focus-ring-subtle);
 }
 .settings-visually-hidden {
   position: absolute;
@@ -514,7 +510,7 @@
   width: 100%;
   min-width: 0;
   height: var(--ui-input-height);
-  border: var(--ui-border-width) solid var(--border-control);
+  border: var(--ui-border-width) solid transparent;
   border-radius: var(--ui-radius-control);
   padding: 0 12px;
   font-size: var(--ui-font-body);
@@ -552,12 +548,16 @@
   font-weight: 400;
 }
 .settings-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
   min-height: var(--ui-button-height);
   padding: 0 var(--ui-button-padding-inline);
-  background: var(--bg-accent);
-  border: var(--ui-border-width) solid var(--border-accent);
-  border-radius: var(--ui-radius-control);
-  color: var(--text-on-accent);
+  background: var(--kk-button-primary-bg);
+  border: var(--kk-border-width) solid transparent;
+  border-radius: var(--kk-button-radius);
+  color: var(--kk-button-primary-text);
   font-size: var(--ui-font-body);
   line-height: var(--ui-line-height-body);
   font-weight: 500;
@@ -574,13 +574,13 @@
   color: var(--settings-muted);
 }
 .settings-action:not(.settings-danger-button):not(:disabled):hover {
-  background: var(--bg-accent-hover);
+  background: var(--kk-button-primary-hover);
 }
 .settings-action.secondary:not(:disabled):hover {
   background: var(--bg-elevated);
 }
 .settings-action:not(.settings-danger-button):not(:disabled):active {
-  background: var(--bg-accent-hover);
+  background: var(--kk-button-primary-hover);
 }
 .settings-action.secondary:not(:disabled):active {
   background: var(--neutral-selected);
@@ -807,6 +807,9 @@
 .settings-detail-card strong {
   font-weight: 400;
   color: var(--settings-text);
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-align: right;
 }
 .settings-detail-card span {
   color: var(--settings-muted);
@@ -1369,6 +1372,7 @@
 
 @media (max-width: 800px) {
   .settings-panel {
+    display: block;
     height: min(700px, calc(100dvh - 24px));
     max-height: calc(100dvh - 24px);
   }
@@ -1377,6 +1381,8 @@
     left: 0;
     right: 0;
     bottom: 0;
+    padding: 0;
+    border-right: 0;
     height: 78px;
     border-bottom: 0;
     border-top: 1px solid var(--settings-border);
@@ -1387,6 +1393,7 @@
     display: none;
   }
   .settings-nav {
+    position: absolute;
     top: 10px;
     left: 8px;
     right: 8px;
@@ -1431,6 +1438,8 @@
     margin: 0 auto;
   }
   .settings-content {
+    position: absolute;
+    margin: 0;
     top: 16px;
     left: 16px;
     right: 16px;
@@ -1504,26 +1513,6 @@
   }
 }
 
-/* Figma 399:27506 uses one continuous 11-item navigation rail. Keep the
-   mobile rail grouped by category, while the desktop rail follows the frame's
-   40px rows and 13px rhythm without extra headings. */
-@media (min-width: 801px) {
-  .settings-nav-group {
-    display: contents;
-  }
-  .settings-nav-group + .settings-nav-group {
-    margin-top: 0;
-    padding-left: 0;
-    border-left: 0;
-  }
-  .settings-nav-group-label {
-    display: none;
-  }
-  .settings-nav {
-    gap: 13px;
-  }
-}
-
 @media (max-width: 800px) {
   /* Keep the horizontal settings rail flush with the modal's bottom edge. */
   .settings-sidebar {
@@ -1537,6 +1526,82 @@
   flex-wrap: wrap;
   gap: var(--kk-space-2);
   margin-bottom: var(--kk-space-5);
+}
+@media (min-width: 1100px) {
+  .model-access-settings {
+    display: grid;
+    grid-template-columns: var(--kk-settings-method-width) minmax(0, 1fr);
+    gap: var(--kk-space-5);
+    align-items: start;
+  }
+  .model-access-methods {
+    grid-column: 1;
+    grid-row: 1 / span 6;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+  }
+  .model-access-settings > :not(.model-access-methods) {
+    grid-column: 2;
+  }
+}
+.provider-presets {
+  padding: var(--kk-space-4);
+  border-radius: var(--kk-radius-lg);
+  background: var(--kk-bg-card);
+}
+.provider-presets > summary {
+  cursor: pointer;
+  font-weight: var(--kk-weight-semibold);
+}
+.provider-presets[open] > summary {
+  margin-bottom: var(--kk-space-4);
+}
+.provider-preset-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--kk-space-4);
+  margin-top: var(--kk-space-4);
+}
+.provider-preset-list {
+  display: grid;
+  align-content: start;
+  gap: var(--kk-space-1);
+}
+.provider-preset-item {
+  display: grid;
+  gap: var(--kk-space-1);
+  padding: var(--kk-space-3);
+  border-radius: var(--kk-radius-lg);
+  text-align: left;
+}
+.provider-preset-item[aria-pressed="true"] {
+  background: var(--kk-neutral-selected);
+}
+.provider-preset-item span,
+.provider-preset-detail p {
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-body);
+}
+.provider-preset-detail {
+  display: grid;
+  align-content: start;
+  gap: var(--kk-space-3);
+  min-width: 0;
+}
+.provider-preset-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kk-space-3);
+}
+.provider-preset-links a {
+  color: var(--kk-text-accent);
+}
+@media (max-width: 800px) {
+  .provider-preset-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 .model-access-methods button[aria-pressed="true"] {
   background: var(--kk-neutral-selected);

@@ -2,9 +2,9 @@
 
 - Task ID: `TASK-UI-CONSOLIDATE-20261014`
 - 日期：2026-10-14
-- 状态：BASELINE IN PROGRESS；整体 UI/协议/轻量化仍 PARTIAL / NOT VERIFIED。
+- 状态：冻结与当前 Web 验证通过；实际 Desktop、最终提交审查及外部验收继续收口，整体 PARTIAL。
 
-本阶段没有实现新的产品 UI；当前冻结 Desktop/Web 2.1.17、Mobile规划2.1.1。完整主目录恢复输入为 `196be1de6b785b99b07d5409c0e617ecda3de43d`。本机盘点104登记树/150本地分支/103remote refs/10tags，36个dirty树；41个补充恢复refs覆盖36个来源，40个CONSISTENT、1个VOLATILE；原index/HEAD变动0。一次读取期间变动的Cherry测试文件不作为精确源副本证明。
+以下是冻结阶段的历史验证，不能代替后续 UI 候选验收；该阶段没有实现新的产品 UI。当前冻结 Desktop/Web 2.1.17、Mobile规划2.1.1。完整主目录恢复输入为 `196be1de6b785b99b07d5409c0e617ecda3de43d`。本机盘点104登记树/150本地分支/103remote refs/10tags，36个dirty树；41个补充恢复refs覆盖36个来源，40个CONSISTENT、1个VOLATILE；原index/HEAD变动0。一次读取期间变动的Cherry测试文件不作为精确源副本证明。
 
 输出目录：`D:/kk-studio/output/ui-consolidation-20261014/`。其中 inventory-agent 下 recovery-verification.json、recovery-snapshots-all.json、recovery-refs.csv、primary-snapshot.json 提供源路径、排除路径、hash、ref和tree。敏感标记文件仅留path/hash，未打印或复制秘密；原件保留。
 
@@ -31,3 +31,25 @@ Lint首轮在当前工作树容器路径选择失败；正确设置 `KK_CONTAINE
 开发插件原件 `development-plugins/receipt.json` 是FAIL：联接字体目录超出Vite默认fs.allow而403。仅放行真实node_modules目录，保持strict/deny与loopback/strictPort；新增真实HTTP父目录AGENTS403断言，没有放行整个主checkout。配置/开发测试修复提交为 `694e3d18e2fea39edb18bd7b9d0f589673283060`，在该已提交head重新运行开发5步骤PASS、errors0：字体与四插件实际加载/编辑/禁用恢复/危险远程拒绝/依赖父目录继续403。证据 `development-plugins-committed/receipt.json`，不使用dirty运行的旧sourceHead代替。
 
 这两项修复只涉及文档门禁与开发服务，不改变应用产品版本或上述生产Web文件；未递增镜像版本来制造“最新发布”。UI重整仍按spec/plan实施；所有候选的稳定主线整合和Native/Hosted仍未完成。
+
+## UI 源码候选：验证待收口
+
+2026-10-14 在唯一任务工作树新增/更新的 UI、标签持久化、预设和使用记录已可在源码定位；新规则与 [ADR-017](../../architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md) 同步。旧冻结收据仍绑定原 SHA，不更新为新候选 receipt。
+
+browser-contract-migration.patch 只迁移5份既有浏览器合同，保留名称编辑、名称/提示词查找、定位、移除、CAS保存、重读、回焦与布局断言。补丁制作阶段只验证 TS 解析、格式化与 git apply --check；这不表示运行测试 PASS。
+
+根执行方的定向控件/颜色/类型检查和原生契约夹具分别补命令、日志与 dirty/最终 SHA；fixture 不代表真实 Tauri UI/安装包。完整 production browser 当前尚未取得本轮最终回执，端口占用不改写为已通过。开发态、实际 Desktop、真实 Provider、Hosted、Native Mobile、安装器、用户视觉验收与体积预算分别按实际证据更新；整体 PARTIAL / NOT VERIFIED。
+
+根执行方阶段回报（最终回执仍待收口）：Desktop/Web 2.1.18、Mobile规划2.1.1。首轮定向browser18为16通过/2失败，第二轮22为17通过/5失败，包含真实层级、手机按钮宽度与旧控件契约；修正后继续复证，早期失败保留。Node首次1127为1112通过/14既有skip/1旧圆角契约失败；更新旧断言后最终1127为1113通过/14skip/0fail，Agent174为172通过/2skip/0fail，ESLint0、UI234/0、全量格式检查通过，cargo check通过且有5个既有warnings、cargo fmt --check通过。完整browser仍在运行且已出现失败，旧Figma几何/强调色与真实缩放/发送溢出仍在修正；不预填完整PASS。这些数字由根阶段回报提供，最终命令、日志、source SHA及产物绑定由根补录。
+
+## 2.1.18 当前组合验证（2026-10-14）
+
+唯一任务工作树与父提交539fe0bb保持。首次全套零重试529个场景为492通过/37失败，旧契约、重复搜索名称和缩放覆盖均保留原失败。修正后定向96个场景为94通过/2失败，再修正设置标题原点与767/800搜索断点不一致。原件保存在工程外 `output/ui-consolidation-20261014/ui-stage-218` 与该工作树 `.tmp/ui-*`；不改历史baseline收据。
+
+最终 `npm run verify` exit0：Node1132项1118通过/14既有skip/0fail，Agent174项172通过/2skip/0fail，UI235文件/0违规；lint/typecheck/全量格式/production build通过。实际preview1423、Edge、默认12workers执行532个browser场景，532 expected、0 unexpected/flaky/skipped；来源 `browser-full-verify-pass2-results.json`，入口 `/assets/index-DincjUra.js`（SHA256 abe16df06454065d1799d99775146487b228367fa27e7d9b0214dc5246439245）。开发1421的四插件与父目录403保护5步骤PASS、errors0。两者当时为539fe0bb之后的dirty候选，最终源提交和输入指纹由输出回执绑定，不把父SHA说成新UI提交。
+
+Rust `cargo check` 和 `cargo fmt -- --check` exit0，5个既有warnings保留；标签存储17/17与项目包24/24是实际Rust fixture，不代表桌面窗口或安装器。CLI状态/Google提交40个mock场景通过，未执行真实登录或付费供应商。Gemini预设可跳转并聚焦专用Google表单；未接Responses/Messages/Azure认证和本机免密协议仍禁用，现有凭据与草稿身份保留。
+
+相同Python gzip level6/mtime0量测冻结Web zip与当前dist：主入口279510→285940字节，增加6430字节，低于16384预算；全JS gzip368208→377867，CSS51272→52556；150文件、总字节5050790→5092262。新依赖0；没有通过漏构建插件或移除Agent功能凑指标。详见输出 `web-footprint.json`，此量测不含Native/Agent包或运行内存。
+
+健康门禁沿用origin/main的advisory配置：相对539fe0bb仍5项（App体量/复杂度4项、PR55交付函数1项）；新统计函数与卡片操作已按职责分开，函数CC不超20。主线比较44项和Windows2项advisory未冒充零发现，未提高阈值或添加豁免。真实Desktop、安装/Hosted、Native Mobile、用户视觉验收及其他在途分支的稳定集成分别记录，不由Web PASS推导。

@@ -2,12 +2,12 @@
 
 - 状态：PARTIAL
 - 领域：intelligence
-- 最近更新：2026-09-30
-- 关联任务：TASK-PROV-002（已合入）、TASK-PROV-003/004（PARTIAL）
+- 最近更新：2026-10-14
+- 关联任务：TASK-PROV-002（已合入）、TASK-PROV-003/004（PARTIAL）、TASK-UI-CONSOLIDATE-20261014
 
 ## 用户可见入口
 
-- 本批为纯逻辑能力模块，暂无 UI/运行时入口；用户可观察效果由接线任务提供：Agent 配置生成（Codex/Claude）、设置页导入导出、模型上下文窗口选择、MCP 管理页 stdio 服务器。
+- 原配置生成仍是逻辑/CLI能力；App公共预设目录UI候选见FEAT-022，并不表示配置生成全面接线。既有待接线效果包括：Agent 配置生成（Codex/Claude）、设置页导入导出、模型上下文窗口选择、MCP 管理页 stdio 服务器。
 - Desktop / Web / Mobile 差异：逻辑层全平台可复用；MCP stdio 执行仅限 Node 侧（后续接线），浏览器保持 streamable_http。
 
 - Agent CLI 入口：`node vendor/canvas-agent/dist/index.js providers apply/check <config.json>`；仅在显式运行时写入指定的 Codex 配置目录。
@@ -51,3 +51,9 @@
 - 2026-09-24：创建卡片，状态 PARTIAL（TASK-PROV-002）。
 
 - 2026-09-30：集成版本当前验证与剩余边界见 [落地验证](../changes/2026-09-29-project-landing/verification.md)。
+
+## 2026-10-14 源码候选与验收边界
+
+公共目录列出OpenAI、Responses、Gemini、Anthropic、Azure OpenAI、New API、LM Studio、Ollama与豆包；品牌、协议与实例地址策略分开。当前不支持的协议明确禁用或指向专用连接；目录存在不表示CLI配置生成全面接线。原apply/check和凭据身份保持，不借用网站登录、不自动探测；真实新协议/CLI适配仍开放。
+
+新结果见[本轮验证](../changes/2026-10-14-ui-consolidation/verification.md)，未完成的平台/外部服务不由源码或fixture推导PASS。

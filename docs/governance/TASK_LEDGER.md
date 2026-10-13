@@ -132,7 +132,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | REVIEW | 进行中 | P1 | TASK-GOV-003 | root | 单独修复并验证 5 个 UI 失败项；补齐开发态 receipt 后再评估是否可标记 DONE。 |
 | TASK-UI-CLASSIFY-20261013 | 模型接入与扩展分类修复并验证三客户端 | REVIEW | 进行中 | P1 | none | root | 另行处理三个既有 UI 失败并取得用户验收；保留自动分派/OAuth 未接入边界 |
 | TASK-AGENT-RECOVERY-20261013 | 桌面 Agent 自动恢复、会话归属与凭据保存 | PARTIAL | 进行中 | P1 | none | root | 完成聊天与凭据状态一致性修复，2.1.17完整门禁和官方日常APP复验，恢复初始连接偏好。 |
-| TASK-UI-CONSOLIDATE-20261014 | 冻结最新本机版本并统一 UI、模型预设与轻量化规则 | PARTIAL | 进行中 | P1 | none | root | 按spec/plan在最新main逐任务承接并统一UI；保留首试flaky风险及Native/Hosted独立验收。 |
+| TASK-UI-CONSOLIDATE-20261014 | 冻结最新本机版本并统一 UI、模型预设与轻量化规则 | PARTIAL | 进行中 | P1 | none | root | 提交2.1.18当前组合，完成官方Desktop构建和独立最终SHA审查，验证实际Native窗口，刷新最新来源恢复归档并输出绑定产物；保留原数据/历史失败，未接协议、Hosted、NativeMobile分别留边界。 |
+| TASK-GOV-005 | PR #55 历史快照合法集成与门禁修复 | REVIEW | 进行中 | P1 | none | root | 完成独立 exact-SHA review，fast-forward update PR #55 branch，回读 Hosted verify/delivery；不要直接推送 main。 |
+| TASK-ENG-001 | 引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定 | REVIEW | 进行中 | P1 | none | root | 基于最新 origin/main 完成冲突承接、独立 exact-SHA review 和 Hosted verify；未完成前保持 REVIEW。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2539,14 +2541,52 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Display status: 进行中
 - Priority: P1 — 解决 UI 风格混杂、版本散落和功能入口冲突，同时保留资料与并行成果。
 - Requirement refs: ledger:TASK-UI-CONSOLIDATE-20261014
-- Feature IDs: FEAT-002, FEAT-022, FEAT-032
+- Feature IDs: FEAT-002, FEAT-022, FEAT-032, FEAT-023, FEAT-028, FEAT-039
 - Owner role: repository-maintainer
 - Acceptance: 所有登记来源留存 refs/dirty/hash 和可校验恢复 bundle，原工作区不丢失; 当前日常源码版本有可复现提交、源码产物和当前检查证据; 默认绿色，中性动作、胶囊文字、方形圆角上传与克制输入聚焦统一; 喜欢和标签固定大小独立拖动，旧收藏可见，上传位置稳定; 设置分类清楚，预设有官网/密钥/文档跳转，协议和 CLI 能力诚实; Desktop/Mobile 布局独立，文档与体积门禁可执行，功能和数据保留
 - Branch: `codex/TASK-UI-BASELINE-20261014`
 - Worktree: `D:/kk-studio/.worktrees/branch-consolidation-20261011`
 - Modules: src/styles, src/components, src/domain, src/features, src-tauri, docs, scripts
-- Verification: PARTIAL — 冻结196be1de、已提交df737905；41refs覆盖36dirty、bundle verify PASS。最终Node1085pass/14skip、Agent172pass/2skip、515browser514expected/1flaky（根因UNKNOWN），相关zero-retry5/5。开发字体403在694e3d18最小修复且提交head5步骤PASS；Native/Hosted/全候选整合/新UI未完成。
-- Evidence: [docs/changes/2026-10-14-ui-consolidation/intent.md](../../docs/changes/2026-10-14-ui-consolidation/intent.md), [docs/changes/2026-10-14-ui-consolidation/spec.md](../../docs/changes/2026-10-14-ui-consolidation/spec.md), [docs/changes/2026-10-14-ui-consolidation/plan.md](../../docs/changes/2026-10-14-ui-consolidation/plan.md), [docs/changes/2026-10-14-ui-consolidation/verification.md](../../docs/changes/2026-10-14-ui-consolidation/verification.md), [docs/changes/2026-10-14-ui-consolidation/review.md](../../docs/changes/2026-10-14-ui-consolidation/review.md)
-- Next action: 按spec/plan在最新main逐任务承接并统一UI；保留首试flaky风险及Native/Hosted独立验收。
+- Verification: PARTIAL — 冻结阶段原receipts保留原SHA及首试flaky。当前npm run verify退出0：Node1118pass/14skip、Agent172pass/2skip、UI235/0、lint/typecheck/format/build通过；实际preview1423的532 browser全部通过且0flaky/skip，开发1421五步骤通过。Rust check/fmt及17存储/24项目包fixture通过；Web主入口gzip增加6430字节，低于16384预算。原定向和首轮失败留存；实际Native和最终SHA审查仍待完成。健康5项及Windows2项advisory保留，没有提高阈值或增加豁免。
+- Evidence: [docs/changes/2026-10-14-ui-consolidation/intent.md](../../docs/changes/2026-10-14-ui-consolidation/intent.md), [docs/changes/2026-10-14-ui-consolidation/spec.md](../../docs/changes/2026-10-14-ui-consolidation/spec.md), [docs/changes/2026-10-14-ui-consolidation/plan.md](../../docs/changes/2026-10-14-ui-consolidation/plan.md), [docs/changes/2026-10-14-ui-consolidation/verification.md](../../docs/changes/2026-10-14-ui-consolidation/verification.md), [docs/changes/2026-10-14-ui-consolidation/review.md](../../docs/changes/2026-10-14-ui-consolidation/review.md), [docs/architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md](../../docs/architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md), [docs/features/feat-039-canvas-collections.md](../../docs/features/feat-039-canvas-collections.md)
+- Next action: 提交2.1.18当前组合，完成官方Desktop构建和独立最终SHA审查，验证实际Native窗口，刷新最新来源恢复归档并输出绑定产物；保留原数据/历史失败，未接协议、Hosted、NativeMobile分别留边界。
 - Last verified: 2026-10-14
 - Updated: 2026-10-14
+
+## TASK-GOV-005 — PR #55 历史快照合法集成与门禁修复
+
+- Goal: 保留 PR #55 的逐项追溯，在不伪造交付证据的前提下修复 Windows desktopRelease 误判并为历史快照提供有限、显式的交付门禁例外。
+- Scope: 仅限 PR #55 的 delivery/verify 根因、历史包标记和独立审查；不合并 main、不处理 PR #56、不集成 Hermes、不删除分支或工作树。
+- Display status: 进行中
+- Priority: P1 — 一次性历史快照与现行一任务一PR门禁冲突，且 Windows desktopRelease 门禁存在真实路径误判。
+- Requirement refs: ledger:TASK-GOV-005
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: 历史包仅通过包内 legacy-incomplete.md 显式标记豁免，未来无标记新包仍强制五件套和当前任务绑定。; Windows 普通 node_modules 目录不因 8.3/realpath 拼写差异被判为 linked，真实 symlink/junction 仍被拒绝。; 最终 PR 头 SHA 具有本地定向测试、独立 exact-SHA review 和 Hosted verify/delivery 回执；在此之前保持 REVIEW/NOT_VERIFIED。
+- Branch: `codex/TASK-GOV-005-publish-main-20261012`
+- Worktree: `D:/kk-studio/.worktrees/pr55-delivery-repair`
+- Modules: scripts/governance/delivery.mjs, scripts/check-delivery.mjs, scripts/windows/desktop-release.mjs, tests/unit/deliveryPolicy.test.ts, scripts/governance/branch-audit.mjs, src/styles/ui-governance.css, src/styles/workspace.css, src/styles/canvas-hud.css, tests/browser/settings-scroll.spec.ts, tests/browser/ui-motion.spec.ts, tests/browser/unified-image-command.spec.ts, docs/changes/2026-10-12-pr55-historical-integration
+- Verification: NOT_VERIFIED — Hosted 38271663391 at 81226e02 passed desktopAgentRuntime/unit/Agent and delivery; verify stopped at branch-audit Prettier. The 2026-10-13 repair diff passed full local npm run verify (475 browser tests). Final pushed-head independent review and Hosted verify/delivery remain pending; no merge/release claim.
+- Evidence: [docs/changes/2026-10-12-pr55-historical-integration/verification.md](../../docs/changes/2026-10-12-pr55-historical-integration/verification.md), [docs/changes/2026-10-12-pr55-historical-integration/review.md](../../docs/changes/2026-10-12-pr55-historical-integration/review.md)
+- Next action: 完成独立 exact-SHA review，fast-forward update PR #55 branch，回读 Hosted verify/delivery；不要直接推送 main。
+- Last verified: 2026-10-13
+- Updated: 2026-10-13
+
+## TASK-ENG-001 — 引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定
+
+- Goal: 把 hermes-agent（MIT）的 ratchet 与 footgun 扫描语义移植到本仓库 TypeScript 栈：新代码必须达标、存量只许变小、初始 advisory 不阻断 CI；同时把 workflow action 从可变 tag 固定到 commit SHA。
+- Scope: scripts/check-code-health.mjs、scripts/check-windows-footguns.mjs、scripts/governance/{code-health.config,code-health-measure,code-health-compare,diff-scope,footgun-rules}.mjs、package.json 脚本注册与 lint 接线、.github/workflows/{git-guards,quality,auto-merge,main-guard,windows-release}.yml SHA 固定、docs/engineering/{DEVELOPMENT,CODING-STANDARDS}.md 门禁章节与映射、tests/unit/{diffScope,codeHealthCliModes,codeHealthPatternAllowance}.test.ts 回归、docs/changes/2026-10-12-TASK-ENG-001-code-health 五件套；不含产品功能变更与存量超标代码重写。
+- Display status: 进行中
+- Priority: P1 — 工程治理增量门禁；不改变产品运行时行为。
+- Requirement refs: ledger:TASK-ENG-001
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: 超标新代码被棘轮捕获并给出文件/行/指标/上限来源；health: allow 行内豁免生效（CC、FILE_LINES、AS_ANY、EMPTY_CATCH 四类自测覆盖）; advisory 模式下 npm run lint 退出码不变；--report 输出全库存量清单; footgun 扫描只覆盖变化文件并给出 fix 指引；规则元数据目录排除后不自匹配; workflow 中 GitHub Actions 全部固定到 commit SHA 并附版本注释; DEVELOPMENT.md 记录命令表、棘轮语义、豁免语法与总开关行为；markdown:check 与治理门禁通过; 账本登记、五件套齐全，governance:check 与 delivery 门禁在本 SHA 上通过
+- Branch: `feat/TASK-ENG-001-code-health`
+- Worktree: `D:/kk-studio/.worktrees/TASK-ENG-001-code-health`
+- Modules: scripts/check-code-health.mjs, scripts/check-windows-footguns.mjs, scripts/governance/code-health.config.mjs, scripts/governance/code-health-measure.mjs, scripts/governance/code-health-compare.mjs, scripts/governance/diff-scope.mjs, scripts/governance/footgun-rules.mjs, package.json, .github/workflows/git-guards.yml, .github/workflows/quality.yml, .github/workflows/auto-merge.yml, .github/workflows/main-guard.yml, .github/workflows/windows-release.yml, docs/engineering/DEVELOPMENT.md, docs/engineering/CODING-STANDARDS.md, tests/unit/diffScope.test.ts, tests/unit/codeHealthCliModes.test.ts, tests/unit/codeHealthPatternAllowance.test.ts, docs/changes/2026-10-12-TASK-ENG-001-code-health
+- Verification: NOT_VERIFIED — 原始 base 1f6cbd37 与候选 9c849aa 的验证保留为历史。最终复审五项阻断修复工作区：13 项定向回归、lint/typecheck/format/policy sync 通过；1019 项 Node 测试为 1005 pass/14 skipped/0 fail。新提交仍须精确 SHA 的 delivery、独立复审和 Hosted CI 后才能合并。
+- Evidence: [docs/changes/2026-10-12-TASK-ENG-001-code-health/verification.md](../../docs/changes/2026-10-12-TASK-ENG-001-code-health/verification.md), [docs/changes/2026-10-12-TASK-ENG-001-code-health/review.md](../../docs/changes/2026-10-12-TASK-ENG-001-code-health/review.md)
+- Next action: 基于最新 origin/main 完成冲突承接、独立 exact-SHA review 和 Hosted verify；未完成前保持 REVIEW。
+- Last verified: 2026-10-13
+- Updated: 2026-10-12

@@ -516,6 +516,7 @@ fn item(value: &Value) -> Result<(), String> {
             "model",
             "assetId",
             "parentAssetId",
+            "tags",
             "preview",
             "updatedAt",
             "referenceMode",
@@ -534,6 +535,7 @@ fn item(value: &Value) -> Result<(), String> {
     )?;
     text(value, "id", 1, 160)?;
     text(value, "parentAssetId", 1, 160)?;
+    crate::creation_storage::labels(value, "tags")?;
     text(value, "providerConnectionId", 0, 120)?;
     text(value, "imageEditPrompt", 0, 2000)?;
     if let Some(document) = value.get("imageEditDraft") {
@@ -958,6 +960,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
                 "reviewComments",
                 "favoriteIds",
                 "likedIds",
+                "customTags",
                 "composerDraft",
                 "createdAt",
                 "updatedAt",
@@ -965,6 +968,7 @@ pub(super) fn validate(snapshot: &Value) -> Result<(), String> {
             &["id", "items"],
         )?;
         text(project, "id", 1, 160)?;
+        crate::creation_storage::labels(project, "customTags")?;
         if let Some(thread_id) = project.get("agentThreadId") {
             if !thread_id.as_str().is_some_and(|id| {
                 !id.is_empty()

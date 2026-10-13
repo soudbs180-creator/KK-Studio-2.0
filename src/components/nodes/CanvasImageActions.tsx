@@ -1,4 +1,7 @@
-import { useState, type RefObject } from "react";
+import { useContext, useState, type RefObject } from "react";
+import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
+import { effectiveTags } from "../../domain/collectionTags";
+import TagEditor from "../TagEditor";
 import type {
   CanvasCollectionItem,
   CanvasReference,
@@ -13,8 +16,8 @@ export default function CanvasImageActions({
   anchor,
   selected,
   onPreview,
-  favorite,
-  onFavorite,
+  liked,
+  onLike,
   onDelete,
   references,
 }: {
@@ -22,12 +25,17 @@ export default function CanvasImageActions({
   anchor: RefObject<HTMLElement>;
   selected: boolean;
   onPreview: () => void;
-  favorite?: boolean;
-  onFavorite?: () => void;
+  liked?: boolean;
+  onLike?: () => void;
   onDelete?: () => void;
   references?: CanvasReference[];
 }) {
   const [redrawOpen, setRedrawOpen] = useState(false);
+  const command = useContext(CanvasImageCommandContext);
+  const previewReason =
+    item.preview || item.assetId || item.result
+      ? undefined
+      : "请先上传图片或生成结果再预览。";
   // An uploaded generation source is still an original/reference for the
   // preview and redraw actions. `referenceOnly` controls whether the prompt
   // composer is mounted; it must not make those actions disappear.
@@ -47,6 +55,9 @@ export default function CanvasImageActions({
           type="button"
           className="kk-button kk-button--tertiary"
           aria-label={reference ? "放大查看参考图片" : `预览${item.title}`}
+          disabled={Boolean(previewReason)}
+          title={previewReason}
+          aria-description={previewReason}
           onClick={onPreview}
         >
           <UiIcon name="preview" />
@@ -68,19 +79,29 @@ export default function CanvasImageActions({
           item={item}
           className="kk-button kk-button--tertiary"
         />
-        {onFavorite && (
+        {onLike && (
           <button
             type="button"
             className="kk-button kk-button--tertiary"
-            aria-label={
-              favorite ? `取消收藏${item.title}` : `收藏${item.title}`
-            }
-            aria-pressed={favorite}
-            onClick={onFavorite}
+            aria-label={liked ? `取消喜欢${item.title}` : `喜欢${item.title}`}
+            aria-pressed={liked}
+            onClick={onLike}
           >
             <UiIcon name="favorite" />
-            {favorite ? "已收藏" : "收藏"}
+            {liked ? "已喜欢" : "喜欢"}
           </button>
+        )}
+        {command?.updateItemTags && (
+          <TagEditor
+            floating
+            tags={effectiveTags(
+              item.tags,
+              command.favoriteIds?.has(item.id) ?? false,
+            )}
+            customTags={command.customTags}
+            onCreateTag={command.createTag}
+            onChange={(tags) => command.updateItemTags?.(item.id, tags)}
+          />
         )}
         {onDelete && (
           <button

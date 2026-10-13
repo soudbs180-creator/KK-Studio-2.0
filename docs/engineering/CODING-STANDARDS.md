@@ -8,6 +8,8 @@
 
 ## 门禁映射
 
+当前已承接 `npm run health:check` 与 `npm run footguns:check`，并接入 lint。两者基于主线配置的独立开关运行，当前 advisory；执行输出不能冒充 blocking 已启用。函数/文件规模棘轮、差异范围、静态例外和 Windows 模式规则见 [DEVELOPMENT](DEVELOPMENT.md#代码健康棘轮与-windows-不安全模式扫描)。不为本轮 UI 改动放宽阈值或补白名单。Actions 固定到主线已审 SHA；同步其输入契约。
+
 写代码前先确认要满足哪条门禁。以下命令都在仓库根执行，全部已并入 `npm run lint` 或 `npm run verify`。
 
 | 门禁                   | 命令                                                              | 拦截内容                                                                                                                                            |
@@ -24,6 +26,7 @@
 | 交付包完整性           | `node scripts/check-delivery-completeness.mjs`                    | 本次 diff 触及的交付包缺 intent/spec/plan/verification/review 任一件                                                                                |
 | 任务账本               | `node scripts/check-governance.mjs`                               | 账本与 `TASK_LEDGER.md` 不同步、状态字段缺失                                                                                                        |
 | 平台交付与最小 AI 链路 | 人工评审：`AGENTS.md`、`PROJECT_GOALS.md`、`ADR-011` 与功能卡证据 | 当前没有自动 guardrail；检查 Desktop → Web → Mobile 顺序、UI/交互与文本/图片链路、Mobile 目录隔离、VPS 控制面状态，不能仅凭 lint/verify 宣称通过    |
+| UI 体积预算 | 同版本生产构建、gzip 与输入 SHA 的人工量测/评审 | 主入口 JS gzip 增量上限见下节；当前没有自动脚本，不因 lint exit 0 声称预算已检查 |
 
 ### 门禁接入状态
 
@@ -218,3 +221,11 @@ src/features/local-service/store.ts
 提交前跑 `npm run lint`。门禁全绿仍不等于规则正确，规则变更类改动按 [AI-EVALS](AI-EVALS.md) 做场景回归。
 
 参考：[TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)、[ESLint Rules](https://eslint.org/docs/latest/rules/)、[typescript-eslint](https://typescript-eslint.io/rules/)。
+
+## 依赖与体积预算
+
+约定（评审执行，无自动门禁）：本轮 UI 的主入口 JS gzip 允许增长量为 max(冻结基线 gzip 字节 × 3%, 16 × 1024 字节)。对同一平台、同一构建模式与相同 Node/gzip 参数比较冻结基线和候选，分别记录源码 commit/tree、主入口文件 hash、原始字节和 gzip 字节。未量测保持 NOT VERIFIED；超预算先检查重复资源、未用代码与按需功能边界，并记录必要增量的原因和受影响能力，经评审接受后才能交付。
+
+同时报告全部 JS/CSS 和 Agent/插件/原生运行时的包内体积、运行白名单与新增依赖用途；仅把代码移到异步 chunk 不能证明整体变轻。按需加载须有真实入口、离线/失败/重载覆盖，不能通过漏构建插件、删原件/功能或省略 Agent 依赖凑指标。资源重复按 hash 计量，已加载分页数量不当成全库统计。默认复用现有控件、标准库和已安装依赖；新依赖需说明随包字节、收益与退出路径。
+
+文档与产物落点从 [文档入口](../README.md#源码数据与文档的落点) 路由。运行日志、截图、恢复包和构建缓存不随新 change package 大量复制入库；历史原件按既有保留契约处理，体积预算不授权删除。

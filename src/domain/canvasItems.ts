@@ -60,6 +60,7 @@ export interface CanvasCollectionItem {
   model?: string;
   /** Stable local archive identity, never a provider temporary URL. */
   assetId?: string;
+  tags?: string[];
   parentAssetId?: string;
   preview?: string;
   /** Natural media dimensions used to keep image cards proportional. */

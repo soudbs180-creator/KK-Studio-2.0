@@ -1,4 +1,5 @@
 .catalog-panel {
+  max-width: calc(100vw - var(--kk-space-4));
   width: 900px;
   height: 696px;
   max-width: calc(100vw - 24px);
@@ -10,6 +11,30 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+.catalog-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kk-space-3);
+  padding: var(--kk-space-3);
+}
+.catalog-filters label {
+  display: flex;
+  align-items: center;
+  gap: var(--kk-space-2);
+}
+.catalog-filters select {
+  max-width: 100%;
+  min-height: var(--kk-control-h-md);
+  padding-inline: var(--kk-space-2);
+  border: 0;
+  border-radius: var(--kk-radius-control);
+  color: var(--kk-text-primary);
+  background: var(--kk-bg-card);
+}
+.catalog-tabs button[aria-selected="true"] {
+  border-radius: var(--kk-radius-full);
+  background: var(--kk-neutral-selected);
 }
 .catalog-handle {
   position: absolute;
@@ -262,8 +287,8 @@
 }
 .saved-edit input {
   width: 100%;
-  border: 1px solid var(--border-default);
-  border-radius: 5px;
+  border: 1px solid transparent;
+  border-radius: var(--kk-radius-control);
   padding: 5px;
   font-size: 12px;
 }
@@ -330,7 +355,9 @@
   padding: 6px 12px;
 }
 .catalog-footer {
-  height: 38px;
+  min-height: var(--kk-control-h-lg);
+  padding: var(--kk-space-2);
+  flex-wrap: wrap;
   flex-shrink: 0;
   border-top: 1px solid var(--border-default);
   display: flex;

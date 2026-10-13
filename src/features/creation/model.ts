@@ -4,6 +4,7 @@ import type {
   CanvasReferenceSlot,
 } from "../../domain/canvasItems";
 import { CANVAS_REFERENCE_SLOTS } from "../../domain/canvasItems.ts";
+import { normalizeTags } from "../../domain/assets.ts";
 import {
   normalizeGoogleConversation,
   type GoogleConversation,
@@ -157,6 +158,7 @@ export interface CreationProject {
   reviewComments?: ReviewComment[];
   favoriteIds: string[];
   likedIds: string[];
+  customTags?: string[];
   /** Unsubmitted workbench text and attachments survive project switching. */
   composerDraft: CreationDraft;
   createdAt: number;
@@ -481,6 +483,7 @@ function normalizeCanvasItem(
 ): CanvasCollectionItem {
   const result = value.result;
   return {
+    tags: normalizeTags(value.tags),
     // Plugin content is durable project data, independently editable after a read.
     plugin:
       value.plugin === undefined ? undefined : structuredClone(value.plugin),
@@ -919,6 +922,7 @@ function normalizeProject(value: CreationProject): CreationProject {
           .filter((id): id is string => typeof id === "string")
           .map((id) => id.slice(0, 160))
       : [],
+    customTags: normalizeTags(candidate.customTags),
     composerDraft: candidate.composerDraft
       ? normalizeDraft(candidate.composerDraft)
       : {
@@ -1011,6 +1015,7 @@ export function createProject(input: CreateProjectInput): CreationProject {
     tasks: [],
     favoriteIds: [],
     likedIds: [],
+    customTags: [],
     providerBaseUrl: input.providerBaseUrl,
     providerName: input.providerName,
     providerCredentialRef: input.providerCredentialRef,

@@ -25,12 +25,10 @@ export default function CanvasNodeItem({
   item,
   controls,
   addMenu,
-  favorite,
   liked,
   connectionTarget,
   onConnect,
   onConnectionTargetChange,
-  onToggleFavorite,
   onDelete,
   onToggleLike,
   onConfigure,
@@ -45,7 +43,6 @@ export default function CanvasNodeItem({
   item: CanvasCollectionItem;
   controls: ReturnType<typeof useCanvasControls>;
   addMenu: ReturnType<typeof useCanvasAddMenu>;
-  favorite: boolean;
   liked: boolean;
   connectionTarget: boolean;
   onConnect: (
@@ -54,7 +51,6 @@ export default function CanvasNodeItem({
     kind?: CanvasConnection["kind"],
   ) => void;
   onConnectionTargetChange: (sourceId: string, targetId: string | null) => void;
-  onToggleFavorite: (id: string) => void;
   onDelete: (id: string) => void;
   onToggleLike: (id: string) => void;
   onConfigure: () => void;
@@ -134,11 +130,11 @@ export default function CanvasNodeItem({
         onConnect={onConnect}
         onConnectionTargetChange={onConnectionTargetChange}
         connectionTarget={connectionTarget}
+        liked={liked}
+        onLike={() => onToggleLike(item.id)}
       >
         <CanvasNodeContent
           item={item}
-          favorite={favorite}
-          onFavorite={() => onToggleFavorite(item.id)}
           onDelete={() => onDelete(item.id)}
           editing={editing}
           scale={controls.transform.scale}

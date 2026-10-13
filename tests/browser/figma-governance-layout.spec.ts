@@ -54,8 +54,13 @@ test("desktop settings keeps the approved frame and mobile settings uses a botto
   await page.getByRole("button", { name: "设置", exact: true }).click();
   const desktopSettings = await rect(page, ".settings-panel");
   expect(desktopSettings).not.toBeNull();
-  expect(Math.round(desktopSettings!.width)).toBe(920);
-  expect(Math.round(desktopSettings!.height)).toBe(700);
+  expect(Math.round(desktopSettings!.width)).toBe(1280);
+  expect(Math.round(desktopSettings!.height)).toBe(800);
+  const desktopRail = await rect(page, ".settings-sidebar");
+  expect(desktopRail).not.toBeNull();
+  expect(Math.round(desktopRail!.width)).toBe(240);
+  expect(desktopSettings!.x).toBeGreaterThanOrEqual(0);
+  expect(desktopSettings!.x + desktopSettings!.width).toBeLessThanOrEqual(1920);
 
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.setViewportSize({ width: 390, height: 844 });

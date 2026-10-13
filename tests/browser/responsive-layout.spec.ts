@@ -195,7 +195,7 @@ test("crossing phone, tablet and desktop preserves drafts and clears invisible m
     page.getByRole("button", { name: "文件", exact: true }),
   ).toBeFocused();
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.getByRole("button", { name: "搜索与收藏", exact: true }).focus();
+  await page.getByRole("button", { name: "搜索", exact: true }).focus();
   await page.setViewportSize({ width: 834, height: 1112 });
   await expect(page.locator(".sidebar-search")).toBeFocused();
   await draft.focus();

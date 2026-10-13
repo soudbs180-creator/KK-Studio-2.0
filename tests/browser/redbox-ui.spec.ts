@@ -73,7 +73,14 @@ test("主图上传保留同节点编辑器，主体槽预览且操作区不遮�
   await expect(subject.locator("img.reference-thumbnail")).toBeVisible();
   await expect(lastSlot).toBeVisible();
 
-  const like = node.getByRole("button", { name: "喜欢当前卡片", exact: true });
+  const toolbar = page.getByRole("toolbar", {
+    name: "图片操作：blue-hour.png",
+    exact: true,
+  });
+  const like = toolbar.getByRole("button", {
+    name: "喜欢blue-hour.png",
+    exact: true,
+  });
   const expand = node.getByRole("button", { name: "收起提示词", exact: true });
   const [slotBox, likeBox, expandBox] = await Promise.all([
     lastSlot.boundingBox(),
@@ -83,7 +90,11 @@ test("主图上传保留同节点编辑器，主体槽预览且操作区不遮�
   expect(slotBox).not.toBeNull();
   expect(likeBox).not.toBeNull();
   expect(expandBox).not.toBeNull();
-  expect(likeBox!.width).toBe(32);
+  expect(likeBox!.width).toBeGreaterThanOrEqual(32);
+  await expect(like).toHaveCSS("justify-content", "center");
+  expect(
+    await like.evaluate((button) => button.scrollWidth <= button.clientWidth),
+  ).toBe(true);
   expect(likeBox!.height).toBe(32);
   expect(expandBox!.width).toBe(32);
   expect(expandBox!.height).toBe(32);
@@ -99,10 +110,17 @@ test("主图上传保留同节点编辑器，主体槽预览且操作区不遮�
 test("喜欢状态在取消选择并重新选择后保持", async ({ page }, testInfo) => {
   const node = await addImageNode(page);
   await uploadMainImage(node);
-  const like = node.getByRole("button", { name: "喜欢当前卡片", exact: true });
+  const toolbar = page.getByRole("toolbar", {
+    name: "图片操作：blue-hour.png",
+    exact: true,
+  });
+  const like = toolbar.getByRole("button", {
+    name: "喜欢blue-hour.png",
+    exact: true,
+  });
   await like.click();
   await expect(
-    node.getByRole("button", { name: "取消喜欢当前卡片", exact: true }),
+    toolbar.getByRole("button", { name: "取消喜欢blue-hour.png", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
 
   await page.keyboard.press("Escape");
@@ -111,7 +129,7 @@ test("喜欢状态在取消选择并重新选择后保持", async ({ page }, tes
   await page.keyboard.press("Enter");
   await expect(node).toHaveClass(/is-selected/);
   await expect(
-    node.getByRole("button", { name: "取消喜欢当前卡片", exact: true }),
+    toolbar.getByRole("button", { name: "取消喜欢blue-hour.png", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
   await page.screenshot({
     path: testInfo.outputPath("liked-after-reselect.png"),

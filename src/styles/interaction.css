@@ -328,7 +328,7 @@
   width: 16px;
   height: 16px;
 }
-@media (max-width: 800px) {
+@media (max-width: 767px) {
   .mobile-search {
     display: grid;
     place-items: center;

@@ -1,163 +1,127 @@
-import { useLayoutEffect, useRef, useState } from "react";
-import { X } from "lucide-react";
+import { useRef, useState } from "react";
 import {
   CANVAS_KIND_LABELS,
   type CanvasCollectionItem,
 } from "../domain/canvasItems";
-import UiIcon from "./UiIcon";
-import type { Asset } from "../domain/assets";
-import SavedPane from "./SavedPane";
+import { getAssetTags, type Asset } from "../domain/assets";
 import type { CreationProject } from "../features/creation/model";
+import UiIcon from "./UiIcon";
 
-interface CatalogPanelProps {
-  initialTab: string;
-  items: CanvasCollectionItem[];
-  assets: Asset[];
-  favoriteIds: Set<string>;
-  likedIds: Set<string>;
-  onClose: () => void;
-  onOpen: (view: string) => void;
-  projects: CreationProject[];
-  onOpenProject: (id: string) => void;
-  onLocate: (id: string) => void;
-  onToggleFavorite: (id: string) => void;
-  onToggleLike: (id: string) => void;
-  onRename: (id: string, title: string) => void;
-}
-const TABS = ["全部", "喜欢收藏", "创作页", "项目", "类型", "文件资产"];
-
+const TABS = ["全部", "画布卡片", "项目", "已加载资源"];
 export default function CatalogPanel({
-  initialTab,
   items,
   assets,
-  favoriteIds,
-  likedIds,
   onOpen,
   projects,
   onOpenProject,
   onLocate,
-  onToggleFavorite,
-  onToggleLike,
-  onRename,
-}: CatalogPanelProps) {
-  const [tab, setTab] = useState(initialTab);
+}: {
+  items: CanvasCollectionItem[];
+  assets: Asset[];
+  onOpen: (view: string) => void;
+  projects: CreationProject[];
+  onOpenProject: (id: string) => void;
+  onLocate: (id: string) => void;
+}) {
+  const [tab, setTab] = useState("全部");
   const [query, setQuery] = useState("");
-  const [type, setType] = useState("all");
-  const input = useRef<HTMLInputElement>(null);
+  const [kind, setKind] = useState("all");
+  const [tag, setTag] = useState("all");
   const results = useRef<HTMLDivElement>(null);
-  const tabs = useRef<HTMLDivElement>(null);
-  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
-  useLayoutEffect(() => {
-    const list = tabs.current;
-    const active = list?.querySelector<HTMLButtonElement>(
-      '[role="tab"][aria-selected="true"]',
-    );
-    if (!list || !active) return;
-    const place = () =>
-      setIndicator({ left: active.offsetLeft, width: active.offsetWidth });
-    place();
-    active.scrollIntoView({ block: "nearest", inline: "nearest" });
-    const observer = new ResizeObserver(place);
-    observer.observe(list);
-    for (const button of list.querySelectorAll<HTMLButtonElement>(
-      '[role="tab"]',
-    ))
-      observer.observe(button);
-    return () => observer.disconnect();
-  }, [tab]);
   const needle = query.trim().toLocaleLowerCase();
-  const filtered = items.filter(
+  const contains = (value: string) =>
+    value.toLocaleLowerCase().includes(needle);
+  const nodes = items.filter(
     (item) =>
-      `${item.title} ${item.description} ${item.prompt ?? ""}`
-        .toLocaleLowerCase()
-        .includes(needle) &&
-      (type === "all" || item.kind === type),
+      contains(
+        `${item.title} ${item.description} ${item.prompt ?? ""} ${(item.tags ?? []).join(" ")}`,
+      ) &&
+      (kind === "all" || item.kind === kind) &&
+      (tag === "all" || item.tags?.includes(tag)),
   );
-  const assetResults = assets.filter((item) =>
-    item.name.toLocaleLowerCase().includes(needle),
+  const resources = assets.filter(
+    (asset) =>
+      contains(`${asset.name} ${asset.tag} ${(asset.tags ?? []).join(" ")}`) &&
+      (kind === "all" || asset.type === kind) &&
+      (tag === "all" || asset.tag === tag || asset.tags?.includes(tag)),
   );
-  const projectResults = projects.filter((project) =>
-    `${project.name} ${project.prompt}`.toLocaleLowerCase().includes(needle),
-  );
-  const resultCount =
-    (["全部", "创作页", "类型"].includes(tab) ? filtered.length : 0) +
-    (["全部", "项目"].includes(tab) ? projectResults.length : 0) +
-    (["全部", "文件资产"].includes(tab) ? assetResults.length : 0);
+  const projectMatches =
+    kind === "all" && tag === "all"
+      ? projects.filter((project) =>
+          contains(`${project.name} ${project.prompt}`),
+        )
+      : [];
+  const showNodes = tab === "全部" || tab === "画布卡片";
+  const showProjects = tab === "全部" || tab === "项目";
+  const showResources = tab === "全部" || tab === "已加载资源";
+  const count =
+    (showNodes ? nodes.length : 0) +
+    (showProjects ? projectMatches.length : 0) +
+    (showResources ? resources.length : 0);
+  const tags = Array.from(
+    new Set([
+      ...items.flatMap((item) => item.tags ?? []),
+      ...assets.flatMap(getAssetTags),
+    ]),
+  ).filter(Boolean);
   return (
     <section
       className="catalog-panel"
-      aria-label="搜索与收藏面板"
+      aria-label="全局搜索结果"
       data-testid="catalog-panel"
     >
-      <span className="catalog-handle" aria-hidden="true" />
       <label className="catalog-search">
-        <img src="/design/figma/search.svg" alt="" />
+        <UiIcon name="preview" />
         <input
-          ref={input}
           data-initial-focus
           aria-label="搜索内容"
-          placeholder="搜索收藏图片或提示词等操作..."
+          placeholder="搜索项目、卡片、提示词或标签"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.nativeEvent.isComposing) return;
-            if (e.key === "ArrowDown") {
-              e.preventDefault();
-              results.current
-                ?.querySelector<HTMLButtonElement>("button")
-                ?.focus();
+          onChange={(event) => setQuery(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.nativeEvent.isComposing) return;
+            const first =
+              results.current?.querySelector<HTMLButtonElement>(
+                ".catalog-result",
+              );
+            if (event.key === "ArrowDown") {
+              event.preventDefault();
+              first?.focus();
             }
-            if (e.key === "Enter") {
-              e.preventDefault();
-              results.current
-                ?.querySelector<HTMLButtonElement>(
-                  ".saved-preview,.saved-text,.catalog-result",
-                )
-                ?.click();
+            if (event.key === "Enter") {
+              event.preventDefault();
+              first?.click();
             }
           }}
         />
-        {query && (
-          <button
-            aria-label="清除搜索"
-            onClick={() => {
-              setQuery("");
-              input.current?.focus();
-            }}
-          >
-            <X size={16} />
-          </button>
-        )}
       </label>
-      <div
-        ref={tabs}
-        className="catalog-tabs"
-        role="tablist"
-        aria-label="搜索分类"
-      >
+      <div className="catalog-tabs" role="tablist" aria-label="搜索分类">
         {TABS.map((name, index) => (
           <button
+            type="button"
             key={name}
             role="tab"
             aria-selected={tab === name}
             tabIndex={tab === name ? 0 : -1}
-            onClick={() => {
-              setTab(name);
-              setType("all");
-            }}
-            onKeyDown={(e) => {
-              let next: number | undefined;
-              if (e.key === "ArrowRight") next = (index + 1) % TABS.length;
-              if (e.key === "ArrowLeft")
-                next = (index + TABS.length - 1) % TABS.length;
-              if (e.key === "Home") next = 0;
-              if (e.key === "End") next = TABS.length - 1;
+            onClick={() => setTab(name)}
+            onKeyDown={(event) => {
+              const next =
+                event.key === "ArrowRight"
+                  ? (index + 1) % TABS.length
+                  : event.key === "ArrowLeft"
+                    ? (index + TABS.length - 1) % TABS.length
+                    : event.key === "Home"
+                      ? 0
+                      : event.key === "End"
+                        ? TABS.length - 1
+                        : undefined;
               if (next !== undefined) {
-                e.preventDefault();
+                event.preventDefault();
                 setTab(TABS[next]);
-                setType("all");
                 (
-                  e.currentTarget.parentElement?.children[next] as HTMLElement
+                  event.currentTarget.parentElement?.children[
+                    next
+                  ] as HTMLElement
                 )?.focus();
               }
             }}
@@ -165,11 +129,39 @@ export default function CatalogPanel({
             {name}
           </button>
         ))}
-        <span
-          className="catalog-tab-indicator"
-          style={{ left: indicator.left, width: indicator.width }}
-          aria-hidden="true"
-        />
+      </div>
+      <div className="catalog-filters">
+        <label>
+          类型
+          <select
+            aria-label="搜索类型"
+            value={kind}
+            onChange={(event) => setKind(event.target.value)}
+          >
+            <option value="all">全部类型</option>
+            <option value="subject">主体素材</option>
+            {Object.entries(CANVAS_KIND_LABELS).map(([id, name]) => (
+              <option key={id} value={id}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          标签
+          <select
+            aria-label="搜索标签"
+            value={tag}
+            onChange={(event) => setTag(event.target.value)}
+          >
+            <option value="all">全部标签</option>
+            {tags.map((name) => (
+              <option key={name} value={name}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
       <div
         ref={results}
@@ -177,109 +169,71 @@ export default function CatalogPanel({
         role="tabpanel"
         aria-label={tab}
       >
-        {tab === "喜欢收藏" ? (
-          <div className="saved-columns">
-            <SavedPane
-              kind="like"
-              items={filtered.filter((item) => likedIds.has(item.id))}
-              query={query}
-              onRemove={onToggleLike}
-              onRename={onRename}
-              onLocate={onLocate}
-            />
-            <SavedPane
-              kind="favorite"
-              items={filtered.filter((item) => favoriteIds.has(item.id))}
-              query={query}
-              onRemove={onToggleFavorite}
-              onRename={onRename}
-              onLocate={onLocate}
-            />
-          </div>
-        ) : (
-          <div className="catalog-results">
-            {tab === "类型" && (
-              <label className="catalog-type">
-                卡片类型
-                <select
-                  aria-label="卡片类型"
-                  value={type}
-                  onChange={(e) => setType(e.target.value)}
-                >
-                  <option value="all">全部</option>
-                  <option value="image">图片</option>
-                  <option value="video">视频</option>
-                  <option value="audio">音频</option>
-                  <option value="text">文案</option>
-                </select>
-              </label>
-            )}
-            {["全部", "创作页", "类型"].includes(tab) &&
-              filtered.map((item) => (
-                <button
-                  key={item.id}
-                  className="catalog-result"
-                  onClick={() => onLocate(item.id)}
-                >
-                  {item.kind === "audio" || item.kind === "text" ? (
-                    <UiIcon name={item.kind} size={32} />
-                  ) : (
-                    <img
-                      src={
-                        item.preview ||
-                        (item.kind === "image"
-                          ? "/design/figma/asset-image.svg"
-                          : "/design/figma/video-placeholder.svg")
-                      }
-                      alt=""
-                    />
-                  )}
-                  <span>
-                    <strong>{item.title}</strong>
-                    <small>{item.prompt || item.description}</small>
-                  </span>
-                  <small>{CANVAS_KIND_LABELS[item.kind]}</small>
-                </button>
-              ))}
-            {["全部", "项目"].includes(tab) &&
-              projectResults.map((project) => (
-                <button
-                  key={project.id}
-                  className="catalog-result"
-                  onClick={() => onOpenProject(project.id)}
-                >
-                  <span>
-                    <strong>{project.name}</strong>
-                    <small>本地项目 · {project.items.length} 个画布节点</small>
-                  </span>
-                  <small>项目</small>
-                </button>
-              ))}
-            {["全部", "文件资产"].includes(tab) &&
-              assetResults.map((item) => (
-                <button
-                  key={item.id}
-                  className="catalog-result"
-                  onClick={() => onOpen("assets")}
-                >
-                  <span>
-                    <strong>{item.name}</strong>
-                    <small>在资产管理中查看</small>
-                  </span>
-                  <small>文件资产</small>
-                </button>
-              ))}
-            {resultCount === 0 && (
-              <p className="catalog-no-results">
-                没有找到匹配的内容，试试其它关键词或分类。
-              </p>
-            )}
-          </div>
-        )}
+        <div className="catalog-results">
+          {showNodes &&
+            nodes.map((item) => (
+              <button
+                type="button"
+                key={`node:${item.id}`}
+                className="catalog-result"
+                onClick={() => onLocate(item.id)}
+              >
+                <UiIcon name={item.kind} size={24} />
+                <span>
+                  <strong>{item.title}</strong>
+                  <small>{item.prompt || item.description}</small>
+                </span>
+                <small>画布 · {CANVAS_KIND_LABELS[item.kind]}</small>
+              </button>
+            ))}
+          {showProjects &&
+            projectMatches.map((project) => (
+              <button
+                type="button"
+                key={`project:${project.id}`}
+                className="catalog-result"
+                onClick={() => onOpenProject(project.id)}
+              >
+                <UiIcon name="folder" size={24} />
+                <span>
+                  <strong>{project.name}</strong>
+                  <small>{project.items.length} 个画布节点</small>
+                </span>
+                <small>本地项目</small>
+              </button>
+            ))}
+          {showResources &&
+            resources.map((asset) => (
+              <button
+                type="button"
+                key={`asset:${asset.id}`}
+                className="catalog-result"
+                onClick={() => onOpen("assets")}
+              >
+                <UiIcon name="image" size={24} />
+                <span>
+                  <strong>{asset.name}</strong>
+                  <small>{asset.tag}</small>
+                </span>
+                <small>已加载资源</small>
+              </button>
+            ))}
+          {!count && (
+            <p className="catalog-no-results">
+              没有匹配的内容，试试其他关键词、类型或标签。
+            </p>
+          )}
+        </div>
       </div>
       <footer className="catalog-footer">
-        <kbd>Enter</kbd>打开<span>/</span>
-        <kbd>Esc</kbd>退出
+        <span>{count} 项匹配 · 完整归档请到资源库查看</span>
+        <button
+          type="button"
+          className="kk-button kk-button--tertiary"
+          onClick={() => onOpen("assets")}
+        >
+          打开资源库
+        </button>
       </footer>
     </section>
   );

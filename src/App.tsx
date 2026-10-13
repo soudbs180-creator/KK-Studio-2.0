@@ -10,6 +10,9 @@ import React, {
 import { appVersion } from "./runtime/appInfo";
 import { confirmAction } from "./runtime/confirmAction";
 import TopBar from "./components/TopBar";
+import CanvasCollectionsPanels from "./components/CanvasCollectionsPanels";
+import { effectiveTags, splitCollectionTags } from "./domain/collectionTags";
+import { normalizeTags } from "./domain/assets";
 import Sidebar from "./components/Sidebar";
 import type { ModelSelection } from "./features/models/modelSelection";
 import { useSidebarLayout } from "./components/useSidebarLayout";
@@ -245,6 +248,15 @@ export default function App() {
     if (active === "workspace") setWorkspaceVisited(true);
   }, [active]);
   const [modal, setModal] = useState("");
+  const [likesOpen, setLikesOpen] = useState(false);
+  const [tagsOpen, setTagsOpen] = useState(false);
+  const [activeCollection, setActiveCollection] = useState<"likes" | "tags">(
+    "likes",
+  );
+  const [collectionActivation, setCollectionActivation] = useState({
+    likes: 0,
+    tags: 0,
+  });
   const [settingsSection, setSettingsSection] =
     useState<SettingsSection>("general");
   const sidebar = useSidebarLayout();
@@ -2504,6 +2516,38 @@ export default function App() {
       return next;
     });
   }
+  function updateItemTags(id: string, tags: string[]): string | undefined {
+    if (!activeProject) return "请选择一个本地项目，再保存标签。";
+    try {
+      const patch = splitCollectionTags(tags);
+      const next = new Set(activeProject.favoriteIds);
+      if (patch.favorite) next.add(id);
+      else next.delete(id);
+      setFavoriteIds(next);
+      updateProject(activeProject.id, (project) => ({
+        ...project,
+        favoriteIds: [...next],
+        items: project.items.map((item) =>
+          item.id === id ? { ...item, tags: patch.tags } : item,
+        ),
+        updatedAt: Date.now(),
+      }));
+      const saved = creationRef.current.projects.find(
+        (project) => project.id === activeProject.id,
+      );
+      if (saved) replaceCanvasItems(saved.items);
+    } catch (error) {
+      return error instanceof Error ? error.message : "标签未能保存，请重试。";
+    }
+  }
+  function createTag(name: string): void {
+    if (!activeProject) return;
+    updateProject(activeProject.id, (project) => ({
+      ...project,
+      customTags: normalizeTags([...(project.customTags ?? []), name]),
+      updatedAt: Date.now(),
+    }));
+  }
   function locate(id: string): void {
     open("workspace");
     requestAnimationFrame(() =>
@@ -2674,7 +2718,22 @@ export default function App() {
       setModal("");
       return;
     }
-    if (["search", "favorites", "likes"].includes(view)) {
+    if (["favorites", "tags", "likes"].includes(view)) {
+      if (!activeProject) {
+        handleNewBlankProject();
+      } else setActive("workspace");
+      if (view === "likes") setLikesOpen(true);
+      else setTagsOpen(true);
+      const id = view === "likes" ? "likes" : "tags";
+      setActiveCollection(id);
+      setCollectionActivation((current) => ({
+        ...current,
+        [id]: current[id] + 1,
+      }));
+      setModal("");
+      return;
+    }
+    if (view === "search") {
       setModal(view);
       return;
     }
@@ -2827,6 +2886,10 @@ export default function App() {
               <CanvasImageCommandContext.Provider
                 value={{
                   items: activeProject?.items,
+                  updateItemTags,
+                  createTag,
+                  customTags: activeProject?.customTags ?? [],
+                  favoriteIds,
                   updateItem: (id, patch) =>
                     updateCanvasItems((current) =>
                       current.map((item) =>
@@ -3133,6 +3196,27 @@ export default function App() {
           )}
         </main>
       </div>
+      <CanvasCollectionsPanels
+        key={activeProject?.id ?? "empty"}
+        items={canvasItems.map((item) => ({
+          ...item,
+          tags: effectiveTags(item.tags, favoriteIds.has(item.id)),
+        }))}
+        likedIds={likedIds}
+        likesOpen={active === "workspace" && likesOpen}
+        tagsOpen={active === "workspace" && tagsOpen}
+        customTags={activeProject?.customTags ?? []}
+        activation={collectionActivation}
+        activePanel={activeCollection}
+        onActivate={setActiveCollection}
+        onCloseLikes={() => setLikesOpen(false)}
+        onCloseTags={() => setTagsOpen(false)}
+        onLocate={locate}
+        onLike={toggleLike}
+        onRename={renameCanvasItem}
+        onUpdateTags={updateItemTags}
+        onCreateTag={createTag}
+      />
       {pendingApproval && pendingApprovalTask && (
         <TaskExecutionApproval
           task={pendingApprovalTask}
@@ -3144,8 +3228,8 @@ export default function App() {
       {modal && (
         <Modal
           title={
-            ["search", "favorites", "likes"].includes(modal)
-              ? "搜索与收藏"
+            modal === "search"
+              ? "搜索"
               : modal === "prompts"
                 ? "提示词库"
                 : modal === "settings"
@@ -3161,21 +3245,17 @@ export default function App() {
           onClose={() => setModal("")}
         >
           <DeferredPanelBoundary key={modal} onClose={() => setModal("")}>
-            {["search", "favorites", "likes"].includes(modal) ? (
+            {modal === "search" ? (
               <CatalogPanel
-                initialTab={modal === "search" ? "全部" : "喜欢收藏"}
-                items={canvasItems}
+                items={canvasItems.map((item) => ({
+                  ...item,
+                  tags: effectiveTags(item.tags, favoriteIds.has(item.id)),
+                }))}
                 assets={[...assets, ...subjects]}
-                favoriteIds={favoriteIds}
-                likedIds={likedIds}
-                onClose={() => setModal("")}
                 onOpen={open}
                 projects={creation.projects}
                 onOpenProject={openSavedProject}
                 onLocate={locate}
-                onToggleFavorite={toggleFavorite}
-                onToggleLike={toggleLike}
-                onRename={renameCanvasItem}
               />
             ) : modal === "prompts" ? (
               <PromptLibraryPanel
@@ -3221,6 +3301,7 @@ export default function App() {
                 initialSection={settingsSection}
                 saveState={saveState}
                 revision={creation.revision}
+                projects={creation.projects}
                 registry={skillRegistry}
                 onClose={() => setModal("")}
               />

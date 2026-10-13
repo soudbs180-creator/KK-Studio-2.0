@@ -80,17 +80,17 @@ for (const theme of ["dark", "light"]) {
       await page.mouse.move(0, 0);
       await expect(save).toHaveCSS(
         "background-color",
-        cssRgb(expected("--bg-accent")),
+        cssRgb(expected("--kk-button-primary-bg")),
       );
       const normal = await paint(save);
       expect(contrast(normal.color, normal.bg)).toBeGreaterThanOrEqual(4.5);
-      expect(normal.radius).toBe("8px");
+      expect(normal.radius).toBe("999px");
       expect(normal.height).toBe("32px");
       expect(normal.filter).toBe("none");
       await save.hover();
       await expect(save).toHaveCSS(
         "background-color",
-        cssRgb(expected("--bg-accent-hover")),
+        cssRgb(expected("--kk-button-primary-hover")),
       );
       const hover = await paint(save);
       expect(contrast(hover.color, hover.bg)).toBeGreaterThanOrEqual(4.5);
@@ -105,7 +105,7 @@ for (const theme of ["dark", "light"]) {
         .boundingBox())!;
       await page.mouse.move(safeArea.x + 4, safeArea.y + 4);
       await page.mouse.up();
-      const field = dialog.locator(".settings-field input").first();
+      const field = dialog.getByLabel("提供商", { exact: true });
       const fieldPaint = await paint(field);
       const placeholder = await field.evaluate(
         (el) => getComputedStyle(el, "::placeholder").color,
@@ -227,16 +227,18 @@ for (const theme of ["dark", "light"]) {
       await page.mouse.move(0, 0);
       await expect(create).toHaveCSS(
         "background-color",
-        cssRgb(token("--bg-accent")),
+        cssRgb(token("--kk-button-primary-bg")),
       );
       await expect(create).toHaveCSS(
         "color",
-        cssRgb(token("--text-on-accent")),
+        cssRgb(token("--kk-button-primary-text")),
       );
+      const normal = await paint(create);
+      expect(contrast(normal.color, normal.bg)).toBeGreaterThanOrEqual(4.5);
       await create.hover();
       await expect(create).toHaveCSS(
         "background-color",
-        cssRgb(token("--bg-accent-hover")),
+        cssRgb(token("--kk-button-primary-hover")),
       );
       const hover = await paint(create);
       expect(contrast(hover.color, hover.bg)).toBeGreaterThanOrEqual(4.5);

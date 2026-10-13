@@ -59,6 +59,9 @@ test("CodeBuddy delegation distinguishes disconnected, saved and verified states
     await page.goto("/");
     await networkSettings(page);
     await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await page
+      .getByRole("button", { name: "CodeBuddy CLI", exact: true })
+      .click();
     const pathInput = page.getByRole("textbox", { name: "CodeBuddy CLI 路径" });
     await expect(pathInput).toBeDisabled();
     await page
@@ -73,6 +76,9 @@ test("CodeBuddy delegation distinguishes disconnected, saved and verified states
         .getByRole("button", { name: "已连接", exact: true }),
     ).toBeVisible();
     await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await page
+      .getByRole("button", { name: "CodeBuddy CLI", exact: true })
+      .click();
     await pathInput.fill("C:/WorkBuddy/cli/bin/codebuddy");
     await page.getByRole("button", { name: "保存 CodeBuddy 路径" }).click();
     await expect(
@@ -178,6 +184,9 @@ test("CodeBuddy 配置回读未完成时不能编辑或保存，完成后保存�
       return observed;
     });
     await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+    await page
+      .getByRole("button", { name: "CodeBuddy CLI", exact: true })
+      .click();
     await reading;
     expect(await firstFrame.evaluate((observed) => observed.disabled)).toBe(
       true,

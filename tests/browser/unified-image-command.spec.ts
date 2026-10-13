@@ -268,11 +268,18 @@ test("已归档图片结果使用上方选择工具栏，收藏重绘对比删�
       })
       .toBe(true);
   }
-  const favorite = actions.getByRole("button", { name: `收藏${result.title}` });
-  await favorite.click();
+  await actions.getByRole("button", { name: "编辑标签", exact: true }).click();
+  const tagEditor = page.getByRole("dialog", { name: "编辑标签", exact: true });
+  await tagEditor.getByRole("button", { name: "收藏", exact: true }).click();
   await expect(
-    actions.getByRole("button", { name: `取消收藏${result.title}` }),
+    tagEditor.getByRole("button", { name: "收藏", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
+  await expect
+    .poll(async () => (await activeProject(page)).favoriteIds)
+    .toContain(id);
+  await tagEditor
+    .getByRole("button", { name: "关闭标签编辑", exact: true })
+    .click();
   await actions.getByRole("button", { name: /加入对比/ }).click();
   await expect(
     page.getByRole("region", { name: "图片对比选择" }),

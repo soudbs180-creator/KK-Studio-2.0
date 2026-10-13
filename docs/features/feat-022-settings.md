@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：system
-- 最近更新：2026-09-22
-- 关联任务：TASK-UI-005、TASK-PROV-001、UI-004、TASK-DS-001、TASK-DS-002
+- 最近更新：2026-10-14
+- 关联任务：TASK-UI-005、TASK-PROV-001、UI-004、TASK-DS-001、TASK-DS-002、TASK-UI-CONSOLIDATE-20261014
 
 ## 用户可见入口
 
@@ -50,3 +50,9 @@ Agent 连接状态/密码输入/会话凭据、平台与版本标识已对齐；
 ## Agent 与凭据恢复（2026-10-13）
 
 TASK-AGENT-RECOVERY-20261013：模型接入将普通桌面连接合为一个入口，断开为次操作，停止服务进入高级选项。API 输入不回填秘密，系统读取状态区分读取中、已保存、缺失与读取失败并支持重试。普通与 Google API 共用持久保存边界，保留既有系统凭据身份；本轮跨窗口一致性、进程重启与秘密隔离证据见 [验证](../changes/2026-10-13-agent-recovery/verification.md) 和 [ADR-016](../architecture/adr/ADR-016-agent-and-provider-recovery.md)。
+
+## 2026-10-14 源码候选与验收边界
+
+设置分组与公共预设已接入源码；默认绿、中性动作和弱焦点按UI_INDEX消费。目录有官网/密钥/文档，协议未接入时禁用，不自动联网。UsageSettings派生本机项目/任务与有效provider实际USD回执；Token未报告，demo/估算/冲突/其他币种不计。StorageOverview读取原生get_storage_root、伴随服务地址或浏览器位置；storage.estimate仅浏览器估算，项目引用数不是全库大小，Desktop/伴随服务字节未报告且错误有重试。源码补充ProviderPresetSelector/providerPresets/UsageSettings/usageSummary/StorageOverview；完整两端与安装包证据仍待补。
+
+新结果见[本轮验证](../changes/2026-10-14-ui-consolidation/verification.md)，未完成的平台/外部服务不由源码或fixture推导PASS。

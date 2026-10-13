@@ -11,15 +11,11 @@ import PluginNode from "../nodes/PluginNode";
 
 export default function CanvasNodeContent({
   item,
-  favorite,
-  onFavorite,
   onDelete,
   editing,
   scale = 1,
 }: {
   item: CanvasCollectionItem;
-  favorite: boolean;
-  onFavorite: () => void;
   onDelete: () => void;
   editing: NodeEditingProps;
   scale?: number;
@@ -41,8 +37,6 @@ export default function CanvasNodeContent({
     return (
       <DemoResultNode
         item={item}
-        favorite={favorite}
-        onFavorite={onFavorite}
         onDelete={onDelete}
         onChange={editing.onChange}
         onResult={(result) => editing.onDemoResults?.([result])}

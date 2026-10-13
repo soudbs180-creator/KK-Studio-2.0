@@ -1,6 +1,10 @@
 # 当前进度
 
-## 2026-10-14 最新本机版本冻结与 UI 收敛（PARTIAL）
+## 2026-10-14 UI源码候选与当前验收（PARTIAL）
+
+Desktop/Web2.1.18已接入默认绿、中性动作、胶囊/弱焦点、顶部喜欢/标签、独立屏幕面板、分类搜索、分组设置/公共预设、CLI子页及使用/存储概览。当前组合verify通过：Node1118通过/14skip、Agent172通过/2skip、532browser零失败/零flaky、开发5步骤和主入口gzip预算通过。早期失败与健康advisory保留；实际Desktop、最终SHA审查和发布条件继续收口。Native Mobile2.1.1仍规划，窄屏只为响应式Web。[本轮验证](changes/2026-10-14-ui-consolidation/verification.md)、[兼容决定](architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md)。
+
+## 2026-10-14 历史冻结阶段（保留原时点与收据）
 
 全分支/worktree/dirty来源已盘点并保存恢复refs、hash与校验bundle，原文件/index/资料保持。当前日常2.1.17源码冻结196be1de，候选version/typecheck/build和1082单测通过（14既有skip）；这是本机冻结，不是所有候选集成或正式发布。用户新增绿色/输入描边/按钮规则、固定大小拖动面板、8类协议/CLI、二三栏设置、多端和体积治理已写入[规格](changes/2026-10-14-ui-consolidation/spec.md)与[计划](changes/2026-10-14-ui-consolidation/plan.md)。新产品UI未实现、最新main组合与完整平台验收继续开放。
 

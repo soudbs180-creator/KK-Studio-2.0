@@ -1,6 +1,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { createAgentApi } from "../../features/agent/agentApi.ts";
 import { agentConnection } from "../../features/agent/agentConnection.ts";
+import useSettingsBusy from "./useSettingsBusy";
 
 type ConnectionState =
   "disconnected" | "loading" | "empty" | "editing" | "saved" | "verified";
@@ -8,8 +9,10 @@ type ConnectionState =
 /** A bounded text delegation path; Codex remains the primary Agent. */
 export default function CodeBuddyConnectionSettings({
   onFeedback,
+  onBusyChange,
 }: {
   onFeedback: (message: string) => void;
+  onBusyChange?: (busy: boolean) => void;
 }) {
   const connection = useSyncExternalStore(
     agentConnection.subscribe,
@@ -21,6 +24,7 @@ export default function CodeBuddyConnectionSettings({
   const [model, setModel] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  useSettingsBusy(busy, onBusyChange);
   const [loadedRevision, setLoadedRevision] = useState<number | null>(null);
   const connected = connection.status === "connected";
   const configReady =

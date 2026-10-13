@@ -14,7 +14,7 @@ test("手机断点清除账号弹层并保留固定顶栏操作", async ({ page 
     page.getByRole("button", { name: "切换项目", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "搜索与收藏", exact: true }),
+    page.getByRole("button", { name: "搜索", exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "个人信息", exact: true }).click();
   await expect(page.locator(".account-popup")).toBeVisible();

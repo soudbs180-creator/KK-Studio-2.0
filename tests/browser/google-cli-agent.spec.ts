@@ -8,7 +8,12 @@ test("Gemini CLI login mode: configure, connect and chat through the local bridg
     const url = route.request().url();
     if (url.endsWith("/status"))
       return route.fulfill({
-        json: { installed: true, version: "1.2.3", login: true },
+        json: {
+          installed: true,
+          version: "1.2.3",
+          login: true,
+          loginStatus: "verified",
+        },
       });
     const body = route.request().postDataJSON();
     chats.push(body);
@@ -26,6 +31,7 @@ test("Gemini CLI login mode: configure, connect and chat through the local bridg
     .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
   await page.getByRole("button", { name: "CLI 账号", exact: true }).click();
+  await page.getByRole("button", { name: "Gemini CLI", exact: true }).click();
   await page.getByRole("button", { name: "保存登录方式", exact: true }).click();
   await expect(
     page.getByText("已切换为 Gemini CLI 登录方式", { exact: false }),
@@ -33,7 +39,7 @@ test("Gemini CLI login mode: configure, connect and chat through the local bridg
   await page
     .getByRole("button", { name: "检测 Gemini CLI", exact: true })
     .click();
-  await expect(page.getByText(/Gemini CLI 已就绪/)).toBeVisible();
+  await expect(page.getByText(/Gemini CLI 已验证（1.2.3）/)).toBeVisible();
   expect(
     await page.evaluate(() => localStorage.getItem("kk-google-login-mode")),
   ).toBe("cli");

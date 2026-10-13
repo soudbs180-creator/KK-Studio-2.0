@@ -1,6 +1,7 @@
 export type SettingsSection =
   | "general"
   | "account"
+  | "usage"
   | "storage"
   | "network"
   | "memory"
@@ -23,6 +24,11 @@ export interface SettingsSectionItem {
 export const SETTINGS_SECTIONS: SettingsSectionItem[] = [
   { id: "general", label: "通用" },
   { id: "account", label: "账号管理" },
+  {
+    id: "usage",
+    label: "使用记录",
+    description: "查看本机项目、成功结果和已报告的消耗。",
+  },
   { id: "storage", label: "储存" },
   { id: "network", label: "网络" },
   { id: "memory", label: "记忆" },
@@ -46,10 +52,30 @@ export interface SettingsNavGroup {
   items: SettingsSectionItem[];
 }
 
-/** Desktop is a continuous rail; the same list becomes the mobile bottom slider. */
+/** Stable section IDs preserve deep links; groups explain their purpose. */
 export const SETTINGS_NAV_GROUPS: SettingsNavGroup[] = [
   {
-    label: "设置",
-    items: SETTINGS_SECTIONS,
+    label: "个人与外观",
+    items: SETTINGS_SECTIONS.filter(({ id }) =>
+      ["general", "account", "usage"].includes(id),
+    ),
+  },
+  {
+    label: "模型与工具",
+    items: SETTINGS_SECTIONS.filter(({ id }) =>
+      ["providers", "extensions", "comfy"].includes(id),
+    ),
+  },
+  {
+    label: "数据与隐私",
+    items: SETTINGS_SECTIONS.filter(({ id }) =>
+      ["storage", "network", "memory"].includes(id),
+    ),
+  },
+  {
+    label: "应用",
+    items: SETTINGS_SECTIONS.filter(({ id }) =>
+      ["advanced", "updates"].includes(id),
+    ),
   },
 ];

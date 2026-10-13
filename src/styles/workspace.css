@@ -1311,6 +1311,10 @@
 .control-spacer {
   flex: 1;
 }
+.creation-controls .model-anchor {
+  min-width: 0;
+  flex: 0 1 auto;
+}
 .model-button,
 .param-button,
 .generate-button {
@@ -1325,18 +1329,19 @@
   font-size: 11px;
 }
 .model-button {
-  font-size: 12.5px;
-  font-weight: 700;
-  width: 129px;
-}
-.creation-composer:not(.video-composer) .model-button {
-  width: 106px;
+  font-size: var(--kk-font-body);
+  font-weight: var(--kk-weight-medium);
+  width: fit-content;
+  max-width: min(var(--kk-model-capsule-max-width), 100%);
+  min-width: 0;
+  justify-content: center;
 }
 .model-button .model-name {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: center;
 }
 .model-option > span {
   min-width: 0;

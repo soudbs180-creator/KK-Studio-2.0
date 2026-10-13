@@ -27,8 +27,6 @@ interface CanvasNodeLayerProps {
   controls: ReturnType<typeof useCanvasControls>;
   items: CanvasCollectionItem[];
   onItemsChange: Dispatch<SetStateAction<CanvasCollectionItem[]>>;
-  favoriteIds: Set<string>;
-  onToggleFavorite: (id: string) => void;
   likedIds: Set<string>;
   onToggleLike: (id: string) => void;
   onConfigure: () => void;
@@ -49,8 +47,6 @@ export default function CanvasNodeLayer({
   controls,
   items,
   onItemsChange,
-  favoriteIds,
-  onToggleFavorite,
   likedIds,
   onToggleLike,
   onConfigure,
@@ -246,7 +242,6 @@ export default function CanvasNodeLayer({
           item={item}
           controls={controls}
           addMenu={addMenu}
-          favorite={favoriteIds.has(item.id)}
           liked={likedIds.has(item.id)}
           connectionTarget={connectionTarget === item.id}
           onConnect={onConnect}
@@ -264,7 +259,6 @@ export default function CanvasNodeLayer({
                 : null,
             )
           }
-          onToggleFavorite={onToggleFavorite}
           onDelete={controls.removeNode}
           onToggleLike={onToggleLike}
           onConfigure={onConfigure}

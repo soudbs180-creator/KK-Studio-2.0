@@ -1,4 +1,5 @@
 import ComposerExtensionsMenu from "./ComposerExtensionsMenu";
+import UiIcon from "./UiIcon";
 import type { ModelSelection } from "../features/models/modelSelection";
 import type { RefObject, ReactNode } from "react";
 import ConversationModelPicker from "./ConversationModelPicker";
@@ -78,12 +79,7 @@ export default function ConversationActions({
         disabled={(attachmentDisabled ?? submitting) || !composerDraft}
         onClick={() => fileInput.current?.click()}
       >
-        <img
-          src="/design/figma/composer-plus.svg"
-          width="24"
-          height="24"
-          alt=""
-        />
+        <UiIcon name="add" size={20} />
       </button>
       <input
         ref={fileInput}

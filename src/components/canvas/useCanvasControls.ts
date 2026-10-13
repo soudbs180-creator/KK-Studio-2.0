@@ -55,6 +55,7 @@ export function useCanvasControls({
     () => initialCanvas?.viewport ?? INITIAL_TRANSFORM,
   );
   const automaticViewport = useRef<ViewTransform | null>(null);
+  const skipSelectionReveal = useRef(false);
   const [nodes, setNodes] = useState(
     () => initialCanvas?.positions ?? createProjectCanvas(items).positions,
   );
@@ -118,6 +119,10 @@ export function useCanvasControls({
       return;
     }
     if (pointer.dragging) return;
+    if (skipSelectionReveal.current) {
+      skipSelectionReveal.current = false;
+      return;
+    }
     const node = nodes[selectedNode];
     const item = items.find((item) => item.id === selectedNode);
     if (!node || !item) return;
@@ -145,13 +150,10 @@ export function useCanvasControls({
     const toolbar = document.querySelector<HTMLElement>(
       ".image-selection-toolbar",
     );
+    const actionAnchor = item.kind === "image" ? image : frame;
     const imageActions =
-      item.kind === "image" &&
-      Boolean(item.preview || item.result?.src) &&
-      canvas &&
-      image &&
-      toolbar
-        ? getImageSelectionPosition(image, canvas, toolbar)
+      canvas && actionAnchor && toolbar
+        ? getImageSelectionPosition(actionAnchor, canvas, toolbar)
         : undefined;
     const needsImageActions = Boolean(imageActions?.revealDelta);
     const minimumTop = imageActions?.revealDelta
@@ -225,6 +227,7 @@ export function useCanvasControls({
       const pointerX = point.x;
       const pointerY = point.y;
       const zoomFactor = event.deltaY > 0 ? 0.9 : 1.1;
+      skipSelectionReveal.current = true;
       setTransform((current) =>
         zoomAtPoint(
           current,
@@ -295,7 +298,10 @@ export function useCanvasControls({
     selectedNode,
     composerExtraHeight,
     getViewport: usableViewport,
-    setTransform,
+    setTransform: (next) => {
+      skipSelectionReveal.current = true;
+      setTransform(next);
+    },
   });
 
   return {

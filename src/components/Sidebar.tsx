@@ -104,7 +104,7 @@ export default function Sidebar({
           className="sidebar-search sidebar-control"
           aria-label="搜索"
           aria-keyshortcuts="Control+K Meta+K"
-          title="搜索与收藏（Ctrl / ⌘ + K）"
+          title="搜索（Ctrl / ⌘ + K）"
           onClick={() => navigate("search")}
         >
           <SidebarIcon name="search" />

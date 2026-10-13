@@ -236,16 +236,16 @@ for (const theme of ["dark", "light"]) {
           .first();
         await expect(primary).toHaveCSS(
           "background-color",
-          cssRgb(token("--bg-accent")),
+          cssRgb(token("--kk-button-primary-bg")),
         );
         await expect(primary).toHaveCSS(
           "color",
-          cssRgb(token("--text-on-accent")),
+          cssRgb(token("--kk-button-primary-text")),
         );
         await primary.hover();
         await expect(primary).toHaveCSS(
           "background-color",
-          cssRgb(token("--bg-accent-hover")),
+          cssRgb(token("--kk-button-primary-hover")),
         );
         const painted = await colors(primary);
         expect(

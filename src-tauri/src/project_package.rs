@@ -1044,6 +1044,31 @@ mod tests {
     }
 
     #[test]
+    fn collection_labels_and_legacy_preferences_round_trip_in_project_package() {
+        let source = fixture_root();
+        let (snapshots, assets, _, _) = seed(&source);
+        let mut current = snapshots.read().unwrap().snapshot.unwrap();
+        current["revision"] = json!(2);
+        let id = current["projects"][0]["items"][0]["id"].clone();
+        current["projects"][0]["items"][0]["tags"] = json!(["人物", "最终版"]);
+        current["projects"][0]["customTags"] = json!(["客户A"]);
+        current["projects"][0]["favoriteIds"] = json!([id.clone()]);
+        current["projects"][0]["likedIds"] = json!([id.clone()]);
+        snapshots.write(current.clone(), Some(1)).unwrap();
+        let package_path = source.join("labels.kkproject");
+        export_package(&snapshots, &assets, &package_path).unwrap();
+        preflight_package(&package_path).unwrap();
+        let target = source.join("restored-labels");
+        import_package(&package_path, &target).unwrap();
+        let restored = SnapshotRepository::new(target.join("projects").join("creation-v2.json"));
+        let read = restored.read().unwrap().snapshot.unwrap();
+        for field in ["customTags", "favoriteIds", "likedIds", "items"] {
+            assert_eq!(read["projects"][0][field], current["projects"][0][field]);
+        }
+        let _ = fs::remove_dir_all(source);
+    }
+
+    #[test]
     fn task_cost_receipts_round_trip_with_bound_identity() {
         let source = fixture_root();
         let (snapshots, assets, _, _) = seed(&source);

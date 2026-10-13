@@ -14,6 +14,7 @@ import { SETTINGS_NAV_GROUPS } from "./SettingsSectionData";
 import type { SettingsSectionItem } from "./SettingsSectionData";
 import type { ExtensionsTab } from "./ExtensionsSettings";
 import type { SaveState } from "../../features/creation/useCreationStorage";
+import type { CreationProject } from "../../features/creation/model";
 import type { SkillRegistry } from "../../features/skills/skillRegistry";
 import "./settings.css";
 
@@ -73,12 +74,14 @@ export default function SettingsPanel({
   initialSection = "general",
   saveState = "loading",
   revision = 0,
+  projects,
   registry,
 }: {
   onClose: () => void;
   initialSection?: SettingsSection;
   saveState?: SaveState;
   revision?: number;
+  projects: readonly CreationProject[];
   registry: SkillRegistry;
 }) {
   const [initial] = useState(readInitialSettings);
@@ -149,7 +152,7 @@ export default function SettingsPanel({
                 >
                   <img
                     className="settings-nav-icon"
-                    src={`/design/figma/settings-nav-${item.id === "skill" || item.id === "extensions" ? "mcp" : item.id}.svg`}
+                    src={`/design/figma/settings-nav-${item.id === "usage" ? "account" : item.id === "skill" || item.id === "extensions" ? "mcp" : item.id}.svg`}
                     alt=""
                     width="20"
                     height="20"
@@ -177,6 +180,7 @@ export default function SettingsPanel({
             section={section}
             saveState={saveState}
             revision={revision}
+            projects={projects}
             preferences={preferences}
             registry={registry}
             extensionsTab={extensionsTab}

@@ -3,7 +3,7 @@ import { BROWSER_STORAGE_KEYS } from "../runtime/storage-contract.ts";
 
 export const SETTINGS_STORAGE_KEY = BROWSER_STORAGE_KEYS.settings;
 export const ACCENT_PRESETS = [
-  { id: "default", label: "默认蓝紫" },
+  { id: "default", label: "默认绿色" },
   { id: "blue", label: "蓝色" },
   { id: "green", label: "绿色" },
   { id: "yellow", label: "黄色" },

@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
+import CanvasCollectionToolbar from "./CanvasCollectionToolbar";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import { cardLayout } from "../../domain/canvasGraph";
 import type { useCanvasControls } from "./useCanvasControls";
@@ -14,6 +15,8 @@ export default function CanvasNodeFrame({
   onConnect,
   onConnectionTargetChange,
   connectionTarget,
+  liked,
+  onLike,
 }: {
   item: CanvasCollectionItem;
   controls: ReturnType<typeof useCanvasControls>;
@@ -26,7 +29,10 @@ export default function CanvasNodeFrame({
     targetId: string | null,
   ) => void;
   connectionTarget?: boolean;
+  liked: boolean;
+  onLike: () => void;
 }) {
+  const frame = useRef<HTMLDivElement>(null);
   const id = item.id;
   const hasResultComposer = Boolean(
     item.result &&
@@ -48,6 +54,7 @@ export default function CanvasNodeFrame({
   const expanded = controls.selectedNode === id;
   return (
     <div
+      ref={frame}
       className={`canvas-node canvas-node-${variant} ${item.referenceOnly ? "is-reference-only" : ""} ${hasResultComposer ? "has-reference-composer" : ""} ${controls.selectedNode === id ? "is-selected" : ""} ${controls.dragging === "node" && controls.dragRef.current?.nodeId === id ? "is-dragging" : ""} ${connectionTarget ? "is-connection-target" : ""}`}
       data-canvas-node
       data-node-id={id}
@@ -74,6 +81,13 @@ export default function CanvasNodeFrame({
       onKeyDown={(event) => controls.moveNodeWithKeyboard(event, id)}
     >
       {children}
+      <CanvasCollectionToolbar
+        item={item}
+        anchor={frame}
+        selected={expanded}
+        liked={liked}
+        onLike={onLike}
+      />
       <NodeActions
         item={item}
         onOpenMenu={onOpenMenu}

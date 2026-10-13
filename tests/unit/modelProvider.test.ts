@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { isAllowedProviderUrl } from "../../src/domain/providerUrl.ts";
 import {
   DEFAULT_MODEL_PROVIDER,
   PROVIDER_PRESETS,
@@ -22,8 +23,35 @@ test("unknown preset id resolves to undefined and every preset id is unique", ()
   assert.equal(new Set(ids).size, ids.length);
   for (const preset of PROVIDER_PRESETS) {
     assert.ok(preset.name.length > 0, "preset name must not be empty");
-    assert.match(preset.baseUrl, /^https:\/\//i, "preset url must be https");
+    if (preset.baseUrl) assert.ok(isAllowedProviderUrl(preset.baseUrl));
+    else
+      assert.ok(
+        ["new-api", "azure-openai"].includes(preset.id),
+        "Only instance-specific presets may omit an endpoint",
+      );
+    for (const link of [preset.website, preset.keyUrl, preset.docsUrl]) {
+      const url = new URL(link);
+      assert.equal(url.protocol, "https:");
+      assert.equal(url.username + url.password, "");
+    }
   }
+});
+
+test("unsupported protocols cannot be applied as Chat presets and gateway requires a user endpoint", () => {
+  for (const id of [
+    "openai-responses",
+    "anthropic",
+    "gemini",
+    "azure-openai",
+    "ollama",
+  ])
+    assert.ok(findProviderPreset(id)?.unavailableReason);
+  assert.equal(findProviderPreset("new-api")?.baseUrl, "");
+  assert.equal(
+    findProviderPreset("lm-studio")?.baseUrl,
+    "http://127.0.0.1:1234/v1",
+  );
+  assert.equal(isAllowedProviderUrl("http://api.example.com/v1"), false);
 });
 
 test("default provider profile remains OpenAI-compatible for existing users", () => {

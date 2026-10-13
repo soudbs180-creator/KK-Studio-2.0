@@ -18,7 +18,6 @@ import { readReferenceImages } from "./referenceUpload";
 import CanvasImageActions from "./CanvasImageActions";
 import { readImageDimensions } from "../../features/creation/mediaDimensions";
 import { aspectRatioForDimensions } from "../../domain/mediaDimensions";
-import UiIcon from "../UiIcon";
 
 export default function ImageCreationNode({
   item,
@@ -131,18 +130,6 @@ export default function ImageCreationNode({
       <div className="image-node-header">
         <span className="image-caption">{item.title}</span>
         <div className="image-node-header-actions">
-          {onToggleLike && (
-            <button
-              type="button"
-              className="image-card-like"
-              aria-label={liked ? "取消喜欢当前卡片" : "喜欢当前卡片"}
-              title={liked ? `取消喜欢${item.title}` : `喜欢${item.title}`}
-              aria-pressed={liked}
-              onClick={onToggleLike}
-            >
-              <UiIcon name="favorite" size={20} />
-            </button>
-          )}
           {!image && (
             <button
               type="button"
@@ -230,15 +217,15 @@ export default function ImageCreationNode({
           />
         )}
       </div>
-      {image && (
-        <CanvasImageActions
-          item={item}
-          anchor={preview}
-          selected={selected}
-          onPreview={openPreview}
-          references={incomingReferences}
-        />
-      )}
+      <CanvasImageActions
+        item={item}
+        anchor={preview}
+        selected={selected}
+        onPreview={openPreview}
+        references={incomingReferences}
+        liked={liked}
+        onLike={onToggleLike}
+      />
       {!selected && error && (
         <p className="upload-feedback" role="status">
           {error}

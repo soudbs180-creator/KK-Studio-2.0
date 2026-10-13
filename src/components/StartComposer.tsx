@@ -1,10 +1,12 @@
 import { useRef, useState } from "react";
+import UiIcon from "./UiIcon";
 import type { CreationDraft } from "../features/creation/model";
 import StartAttachmentList from "./StartAttachmentList";
 import ComposerTextarea from "./ComposerTextarea";
 import useConversationAttachments from "./useConversationAttachments";
 import ComposerExtensionsMenu from "./ComposerExtensionsMenu";
 import StartModelPicker from "./StartModelPicker";
+import StartGenerationSettings from "./StartGenerationSettings";
 import { StartApproval, StartModePicker } from "./StartComposerModes";
 import VoiceInputButton from "./VoiceInputButton";
 import { useComposerMenus } from "./useComposerMenus";
@@ -45,6 +47,7 @@ export default function StartComposer({
   );
   const pickerRef = useRef<HTMLDivElement>(null);
   const {
+    addMenuOpen,
     modelMenuOpen,
     skillMenuOpen,
     modeMenuOpen,
@@ -145,7 +148,7 @@ export default function StartComposer({
               aria-label="添加参考素材"
               onClick={() => fileInput.current?.click()}
             >
-              <img src="/design/figma/composer-plus.svg" alt="" />
+              <UiIcon name="add" size={20} />
             </button>
             <input
               ref={fileInput}
@@ -175,6 +178,12 @@ export default function StartComposer({
                 closeMenus();
                 onOpenModel();
               }}
+            />
+            <StartGenerationSettings
+              draft={draft}
+              open={addMenuOpen}
+              onToggle={() => toggleMenu("add")}
+              onChange={commit}
             />
             <span
               className="start-composer-divider start-model-divider"

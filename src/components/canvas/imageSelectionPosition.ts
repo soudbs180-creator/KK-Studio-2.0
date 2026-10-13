@@ -7,7 +7,8 @@ export function getImageSelectionPosition(
   toolbar: HTMLElement,
 ) {
   const card = element.getBoundingClientRect();
-  const caption = element.parentElement
+  const caption = element
+    .closest("[data-canvas-node]")
     ?.querySelector(".image-caption")
     ?.getBoundingClientRect();
   const bounds = canvas.getBoundingClientRect();

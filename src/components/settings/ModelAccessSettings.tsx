@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AgentConnectionSettings from "./AgentConnectionSettings";
 import ModelProviderSettings from "./ModelProviderSettings";
 import GoogleConnectionSettings from "./GoogleConnectionSettings";
@@ -23,6 +23,18 @@ export default function ModelAccessSettings({
   const [method, setMethod] = useState<Method>("codex");
   const [apiSaving, setApiSaving] = useState(false);
   const [googleBusy, setGoogleBusy] = useState(false);
+  const [codeBuddyBusy, setCodeBuddyBusy] = useState(false);
+  const [cliTool, setCliTool] = useState<"gemini" | "codebuddy">("gemini");
+  const [focusGoogle, setFocusGoogle] = useState(false);
+  const googlePanel = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (!focusGoogle || method !== "official") return;
+    googlePanel.current?.scrollIntoView({ block: "nearest" });
+    googlePanel.current
+      ?.querySelector<HTMLInputElement>("#google-key")
+      ?.focus({ preventScroll: true });
+    setFocusGoogle(false);
+  }, [focusGoogle, method]);
   return (
     <div className="model-access-settings">
       <div className="model-access-methods" role="group" aria-label="接入方式">
@@ -32,7 +44,7 @@ export default function ModelAccessSettings({
             type="button"
             className="settings-action secondary"
             aria-pressed={method === id}
-            disabled={apiSaving || googleBusy}
+            disabled={apiSaving || googleBusy || codeBuddyBusy}
             aria-controls={`model-access-${id === "official" || id === "relay" ? "api" : id}`}
             onClick={() => setMethod(id)}
           >
@@ -58,6 +70,10 @@ export default function ModelAccessSettings({
           scope={method === "relay" ? "relay" : "official"}
           active={method === "official" || method === "relay"}
           onBusyChange={setApiSaving}
+          onOpenGoogle={() => {
+            setMethod("official");
+            setFocusGoogle(true);
+          }}
           onFeedback={onFeedback}
         />
       </section>
@@ -66,17 +82,43 @@ export default function ModelAccessSettings({
         hidden={method !== "cli"}
         aria-label="CLI 账号配置"
       >
-        {method === "cli" && (
-          <CodeBuddyConnectionSettings onFeedback={onFeedback} />
+        <div
+          className="settings-action-group"
+          role="group"
+          aria-label="CLI 工具"
+        >
+          {(["gemini", "codebuddy"] as const).map((tool) => (
+            <button
+              type="button"
+              className="settings-action secondary"
+              key={tool}
+              aria-pressed={cliTool === tool}
+              disabled={googleBusy || codeBuddyBusy}
+              onClick={() => setCliTool(tool)}
+            >
+              {tool === "gemini" ? "Gemini CLI" : "CodeBuddy CLI"}
+            </button>
+          ))}
+        </div>
+        {method === "cli" && cliTool === "codebuddy" && (
+          <CodeBuddyConnectionSettings
+            onFeedback={onFeedback}
+            onBusyChange={setCodeBuddyBusy}
+          />
         )}
       </section>
       <section
-        hidden={method !== "official" && method !== "cli"}
+        ref={googlePanel}
+        hidden={
+          method !== "official" && !(method === "cli" && cliTool === "gemini")
+        }
         aria-label="Google 账号接入"
       >
         <GoogleConnectionSettings
           mode={method === "cli" ? "cli" : "api-key"}
-          active={method === "official" || method === "cli"}
+          active={
+            method === "official" || (method === "cli" && cliTool === "gemini")
+          }
           onBusyChange={setGoogleBusy}
           onFeedback={onFeedback}
         />

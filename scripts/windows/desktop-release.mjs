@@ -91,13 +91,8 @@ function readJson(filePath) {
 
 function isLinkedPath(filePath) {
   try {
-    const stats = fs.lstatSync(filePath);
-    if (stats.isSymbolicLink()) return true;
-    const absolute = path.resolve(filePath);
-    const resolved = path.resolve(fs.realpathSync.native(filePath));
-    return process.platform === "win32"
-      ? resolved.toLowerCase() !== absolute.toLowerCase()
-      : resolved !== absolute;
+    // Windows 8.3 spellings can differ from realpath without being links.
+    return fs.lstatSync(filePath).isSymbolicLink();
   } catch {
     return false;
   }

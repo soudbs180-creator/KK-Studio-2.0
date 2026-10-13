@@ -27,17 +27,18 @@ import {
 import useScopedModelProviderDraft, {
   readModelProviderDraft,
 } from "./useScopedModelProviderDraft";
-
 export default function ModelProviderSettings({
   onFeedback,
   scope = "official",
   active = true,
   onBusyChange,
+  onOpenGoogle,
 }: {
   onFeedback: (message: string) => void;
   scope?: "official" | "relay";
   active?: boolean;
   onBusyChange?: (busy: boolean) => void;
+  onOpenGoogle: () => void;
 }) {
   const [initial] = useState(readModelProviderDraft);
   const [profile, setProfile] = useState(initial.profile);
@@ -246,6 +247,7 @@ export default function ModelProviderSettings({
         aria-label="API 连接信息"
       >
         <ProviderProfileFields
+          onOpenGoogle={onOpenGoogle}
           profile={profile}
           apiKey={apiKey}
           hasStoredKey={hasStoredKey}

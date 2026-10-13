@@ -632,8 +632,8 @@
   line-height: var(--ui-line-height-body);
 }
 .catalog-page-search:focus-within {
-  outline: var(--ui-focus-subtle-width) solid var(--ui-focus-subtle);
-  outline-offset: var(--ui-focus-subtle-offset);
+  box-shadow: inset 0 calc(-1 * var(--kk-focus-width-subtle))
+    var(--kk-focus-ring-subtle);
 }
 .catalog-page-search input:focus-visible {
   outline: none;

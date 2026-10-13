@@ -1,7 +1,7 @@
 # Spec
 
 - Task ID: `TASK-UI-CONSOLIDATE-20261014`
-- 阶段：BASELINE / 后续 UI 规格 READY；当前不宣称整体 UI 已实现。
+- 阶段：冻结完成；UI SOURCE CANDIDATE / 验收进行中，整体任务保持 PARTIAL。
 
 ## 版本与恢复
 
@@ -33,3 +33,13 @@
 ## 验收
 
 冻结版检查 source hash/commit、版本、类型、构建、相关单测和可运行状态；完整发布另需当前组合完整 verify、Rust/Tauri、独立 SHA 审查、Hosted checks 与用户结果验收。后续 UI 必须覆盖390/1099/1920、常规/长文本、pointer/keyboard/IME、错误/取消/离线、刷新/重开、旧收藏可见、固定面板拖动与视频世界坐标保持。图片/Provider fixture 不冒充真实付费服务。
+
+## 当前源码候选与契约裁决（2026-10-14）
+
+根执行方已在唯一任务工作树接入默认绿色、中性主要动作、胶囊/弱输入焦点、顶部喜欢/标签、独立屏幕面板、分类搜索、设置分组/公共预设和使用记录的源码。此处表示实现候选存在，不表示完整运行验收通过；冻结版段落保留原时点事实。
+
+“旧收藏”在 UI 显示为“收藏”标签，底层 favoriteIds 保留。标签不替代 likedIds，普通标签和 customTags 的存储、32 项边界、原生项目包与回载见 [ADR-017](../../architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md)。位置属于非敏感屏幕偏好，不进入画布世界坐标。旧收藏深链指向标签，搜索单独按全部/画布卡片/项目/已加载资源分类。
+
+预设目录已展示用户列出的协议类别与官网/密钥/文档；“展示协议”不表示执行链已适配。Responses、Gemini、Anthropic、Azure 和本机 Ollama 等按当前实际能力禁用或指向专用连接。费用仅合计完整绑定任务的 provider 实际 USD 回执；缺失/冲突/估算/其他币种不纳入，Token 未报告。
+
+本轮窄屏验收对象是响应式 Web，Native Mobile 仍未实现/未打包。体积预算为主入口 JS gzip 增量不超过冻结基线的 3% 或 16KiB（取较宽者），量测口径与目录规则分别只在 CODING-STANDARDS 与 docs/README 承载。无自动预算脚本；未量测不记 PASS。

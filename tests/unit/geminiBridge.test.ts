@@ -115,6 +115,7 @@ test("status detects installed and logged-in gemini", async () => {
     installed: true,
     version: "Gemini CLI 1.2.3",
     login: true,
+    loginStatus: "verified",
   });
 });
 
@@ -136,6 +137,7 @@ test("status reports not logged in when probe returns a login error", async () =
     installed: true,
     version: "Gemini CLI 1.2.3",
     login: false,
+    loginStatus: "required",
   });
 });
 
@@ -251,6 +253,7 @@ test("http smoke: status and chat over localhost with CORS", async (t) => {
     installed: true,
     version: "Gemini CLI 1.2.3",
     login: true,
+    loginStatus: "verified",
   });
   const chat = await new Promise<{ status: number; body: string }>(
     (resolve, reject) => {
@@ -357,3 +360,22 @@ test(
     assert.equal(killed, true);
   },
 );
+
+test("quota, model failure and malformed probes do not falsely report missing login", async () => {
+  for (const probe of [
+    { exitCode: 1, stdout: '{"error":{"message":"Quota exceeded"}}' },
+    { stdout: '{"error":{"message":"Model unavailable"}}' },
+    { stdout: "not-json" },
+  ]) {
+    const report = await bridgeWith({ probe }).handleStatus();
+    assert.equal(report.installed, true);
+    assert.equal(report.login, false);
+    assert.equal(report.loginStatus, "unknown");
+    assert.deepEqual(Object.keys(report).sort(), [
+      "installed",
+      "login",
+      "loginStatus",
+      "version",
+    ]);
+  }
+});

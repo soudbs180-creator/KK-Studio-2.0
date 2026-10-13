@@ -10,7 +10,7 @@
 
 ## 本轮恢复入口
 
-TASK-UI-CONSOLIDATE-20261014 在既有 consolidation 工作树冻结当前本机源码196be1de。全来源恢复 bundle/清单位于 D:/kk-studio/output/ui-consolidation-20261014；整体UI尚未实现，下一步按[计划](../changes/2026-10-14-ui-consolidation/plan.md)从最新main逐任务承接。主目录和原分支/index保持，不使用旧数量或旧测试当作当前组合证据。
+TASK-UI-CONSOLIDATE-20261014保留2.1.17冻结与恢复输出，2.1.18当前组合verify、532browser零flaky、开发5步骤和gzip预算通过。继续生成实际Desktop、最终提交独立审查与当前源/产物回执，按[验证](../changes/2026-10-14-ui-consolidation/verification.md)与[计划](../changes/2026-10-14-ui-consolidation/plan.md)核对；原用户资料、历史失败和并行成果保留。未接协议、Native Mobile、Hosted与用户验收不随本地PASS关闭。
 
 ## 2026-10-13 历史恢复快照
 

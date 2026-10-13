@@ -9,6 +9,30 @@ export interface GeminiCliStatus {
   installed: boolean;
   version?: string;
   login: boolean;
+  loginStatus?: "verified" | "required" | "unknown";
+}
+/** Legacy false and contradictory bridge reports cannot prove that login is missing. */
+export function resolveGeminiCliLoginStatus(
+  status: Pick<GeminiCliStatus, "login" | "loginStatus">,
+): "verified" | "required" | "unknown" {
+  if (status.loginStatus === "required" && !status.login) return "required";
+  if (status.loginStatus !== undefined && status.loginStatus !== "verified")
+    return "unknown";
+  return status.login ? "verified" : "unknown";
+}
+export function geminiCliStatusMessage(status: GeminiCliStatus): string {
+  if (!status.installed)
+    return "未安装 Gemini CLI，请先在终端运行 npm install -g @google/gemini-cli。";
+  const state = resolveGeminiCliLoginStatus(status);
+  if (state === "required")
+    return "Gemini CLI 需要登录，请在终端运行 gemini 并选择 Login with Google。";
+  if (state === "verified")
+    return (
+      "Gemini CLI 已验证（" +
+      (status.version ?? "版本未报告") +
+      "），可连接对话。"
+    );
+  return "Gemini CLI 已安装，但本次验证未确认。请核对 CLI 登录、网络、额度和模型后重试。";
 }
 export interface GeminiCliChatInput {
   prompt: string;
@@ -117,9 +141,22 @@ export async function geminiCliStatus(options?: {
         errorCodeOf(data.error.code),
         data.error.message ?? "桥状态检查失败。",
       );
+    if (
+      data.loginStatus !== undefined &&
+      !["verified", "required", "unknown"].includes(data.loginStatus)
+    )
+      throw new GeminiCliError(
+        "failed",
+        "桥登录状态格式无效，不能确认可用性。",
+      );
+    const loginStatus = resolveGeminiCliLoginStatus({
+      login: data.login === true,
+      loginStatus: data.loginStatus,
+    });
     return {
       installed: data.installed === true,
-      login: data.login === true,
+      login: loginStatus === "verified",
+      ...(data.loginStatus ? { loginStatus } : {}),
       ...(typeof data.version === "string" ? { version: data.version } : {}),
     };
   } catch (error) {
