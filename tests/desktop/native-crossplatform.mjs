@@ -72,6 +72,7 @@ const report = {
     "Production frontend/shared Native host with explicitly compiled test-only driver; not byte-identical to shipping build",
   data,
   checks: [],
+  startupSignals: [],
   errors: [],
   passed: false,
 };
@@ -192,14 +193,36 @@ async function launch() {
     stream.on("data", (chunk) =>
       fs.appendFile(path.join(output, "native-process.log"), chunk),
     );
+  app.once("exit", (code, signal) =>
+    report.startupSignals.push({
+      stage: "process-exit",
+      at: new Date().toISOString(),
+      pid: app.pid,
+      code,
+      signal,
+    }),
+  );
+  const deadline = Date.now() + 60000;
+  const remaining = () => Math.max(0, deadline - Date.now());
+  const record = (stage, value) =>
+    report.startupSignals.push({
+      stage,
+      at: new Date().toISOString(),
+      pid: app.pid,
+      value,
+    });
+  record("spawn", exe);
   await poll(
     () =>
       fetch(address + "/status", { signal: AbortSignal.timeout(1000) })
-        .then((r) => r.ok)
+        .then(async (response) =>
+          response.ok ? (await response.json()).value?.ready === true : false,
+        )
         .catch(() => false),
     (value) => value,
-    60000,
+    remaining(),
   );
+  record("webview-registered", true);
   const created = await driver("POST", "/session", {
     capabilities: {
       alwaysMatch: { "wdio:tauriServiceOptions": { windowLabel: "main" } },
@@ -207,6 +230,25 @@ async function launch() {
   });
   session = created.sessionId;
   assert(session);
+  // The driver responds to /status before a webview exists. Its sync script
+  // wrapper stores results in the page, so initial navigation can discard them.
+  // Native URL/title commands confirm navigation before that wrapper is used.
+  const pageUrl = await poll(
+    () => driver("GET", `/session/${session}/url`),
+    (value) =>
+      value ===
+      (process.platform === "win32"
+        ? "http://tauri.localhost/"
+        : "tauri://localhost/"),
+    remaining(),
+  );
+  record("production-url", pageUrl);
+  const title = await poll(
+    () => driver("GET", `/session/${session}/title`),
+    (value) => typeof value === "string" && value.startsWith("KK Studio"),
+    remaining(),
+  );
+  record("production-title", title);
   // Hashing the complete bundled runtime on a fresh host precedes startup.
   // This remains a bounded Native call; it is not a provider turn.
   await driver("POST", `/session/${session}/timeouts`, { script: 30000 });
@@ -214,8 +256,9 @@ async function launch() {
     () =>
       execute("return document.querySelector('.app')?.dataset.runtimeMode;"),
     (value) => value === "production",
-    60000,
+    remaining(),
   );
+  record("production-dom", true);
   assert.equal(
     path.resolve(await invoke("get_storage_root")),
     path.resolve(data),

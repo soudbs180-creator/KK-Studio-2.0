@@ -282,19 +282,39 @@ async function unpack(candidate, owned, log) {
   return { extracted: path.join(owned, "squashfs-root") };
 }
 
-async function packageLayout(extracted) {
-  const mac = process.platform === "darwin";
+function validateProductName(productName) {
+  assert(
+    typeof productName === "string" &&
+      productName.length > 0 &&
+      productName !== "." &&
+      productName !== ".." &&
+      !/[\/\\:\u0000-\u001f]/.test(productName),
+    "Product name must be a safe single resource path segment",
+  );
+  return productName;
+}
+
+async function packageLayout(extracted, format, productName) {
+  validateProductName(productName);
+  assert(
+    ["app", "dmg", "appimage", "deb"].includes(format),
+    "Unknown default package format",
+  );
+  const mac = format === "app" || format === "dmg";
   const manifest = await containedFile(
     extracted,
     mac
       ? "Contents/Resources/agent-runtime/runtime-manifest.json"
-      : "usr/lib/kk-studio/agent-runtime/runtime-manifest.json",
+      : `usr/lib/${productName}/agent-runtime/runtime-manifest.json`,
+  );
+  const exe = await containedFile(
+    extracted,
+    mac ? "Contents/MacOS/kk-studio" : "usr/bin/kk-studio",
   );
   return {
-    exe: await containedFile(
-      extracted,
-      mac ? "Contents/MacOS/kk-studio" : "usr/bin/kk-studio",
-    ),
+    exe,
+    launcher:
+      format === "appimage" ? await containedFile(extracted, "AppRun") : exe,
     runtime: path.dirname(manifest),
   };
 }
@@ -482,7 +502,7 @@ async function smoke(executable, owned, log, args = []) {
     markers,
     termination,
     scope:
-      "Default packaged executable startup and Native storage initialization only; UI, IPC, vault and Agent functionality NOT VERIFIED by this smoke",
+      "Default package launcher startup and Native storage initialization only; UI, IPC, vault and Agent functionality NOT VERIFIED by this smoke",
   };
 }
 
@@ -500,7 +520,7 @@ async function cleanupOwned(owned) {
   await fs.rm(canonical, { recursive: true, force: false });
 }
 
-async function verifyCandidate(candidate, expected, report) {
+async function verifyCandidate(candidate, expected, report, productName) {
   const owned = await fs.mkdtemp(path.join(os.tmpdir(), "kk-package-"));
   const log = [];
   let unpacked;
@@ -524,14 +544,20 @@ async function verifyCandidate(candidate, expected, report) {
         "macOS candidate must have the requested free ad-hoc signature",
       );
     }
-    const layout = await packageLayout(unpacked.extracted);
+    const layout = await packageLayout(
+      unpacked.extracted,
+      candidate.format,
+      productName,
+    );
     const executable = await identity(layout.exe);
     assert(
       executable.mode & 0o111,
       "Default package executable is not executable",
     );
+    const launcher = await identity(layout.launcher);
+    assert(launcher.mode & 0o111, "Default package launcher is not executable");
     const runtime = await runtimeProof(layout.runtime, expected, log);
-    const launch = await smoke(layout.exe, owned, log);
+    const launch = await smoke(layout.launcher, owned, log);
     report.packages.push({
       format: candidate.format,
       packagePath: path.relative(root, candidate.file),
@@ -546,6 +572,10 @@ async function verifyCandidate(candidate, expected, report) {
       packagedExecutable: {
         path: path.relative(unpacked.extracted, layout.exe),
         ...executable,
+      },
+      launcher: {
+        path: path.relative(unpacked.extracted, layout.launcher),
+        ...launcher,
       },
       runtime,
       launch,
@@ -603,6 +633,11 @@ async function main(phase) {
   };
   try {
     matchSource(before, sourceSnapshot());
+    report.productName = validateProductName(
+      JSON.parse(
+        await fs.readFile(path.join(root, "src-tauri/tauri.conf.json"), "utf8"),
+      ).productName,
+    );
     report.rawReleaseExecutable = await identity(
       path.join(root, "src-tauri/target/release/kk-studio"),
     );
@@ -612,7 +647,7 @@ async function main(phase) {
       path.join(root, "src-tauri/agent-runtime/runtime-manifest.json"),
     );
     for (const candidate of await candidates())
-      await verifyCandidate(candidate, expected, report);
+      await verifyCandidate(candidate, expected, report, report.productName);
     report.passed = true;
   } catch (error) {
     report.errors.push(String(error.stack ?? error));
@@ -745,6 +780,121 @@ function selfTests() {
         /symbolic link/,
       );
       await assert.rejects(containedFile(owned, "../file"), /resource path/);
+    } finally {
+      await cleanupOwned(owned);
+    }
+  });
+  test("reads actual AppImage and Debian product-name resource layouts", async () => {
+    const owned = await fs.mkdtemp(path.join(os.tmpdir(), "kk-package-"));
+    try {
+      // Tauri's locked Debian generator uses productName for resources; its
+      // AppImage generator copies the same usr tree and adds the real AppRun.
+      await fs.mkdir(path.join(owned, "usr/bin"), { recursive: true });
+      await fs.mkdir(path.join(owned, "usr/lib/KK Studio/agent-runtime"), {
+        recursive: true,
+      });
+      await fs.writeFile(
+        path.join(owned, "usr/bin/kk-studio"),
+        "synthetic-native-exe",
+      );
+      await fs.writeFile(
+        path.join(
+          owned,
+          "usr/lib/KK Studio/agent-runtime/runtime-manifest.json",
+        ),
+        "{}",
+      );
+      await fs.writeFile(
+        path.join(owned, "AppRun"),
+        "synthetic-appimage-launcher",
+      );
+      for (const format of ["appimage", "deb"]) {
+        const layout = await packageLayout(owned, format, "KK Studio");
+        assert.equal(
+          layout.exe,
+          path.join(await fs.realpath(owned), "usr/bin/kk-studio"),
+        );
+        assert.equal(
+          layout.runtime,
+          path.join(
+            await fs.realpath(owned),
+            "usr/lib/KK Studio/agent-runtime",
+          ),
+        );
+        assert.equal(
+          layout.launcher,
+          format === "appimage"
+            ? path.join(await fs.realpath(owned), "AppRun")
+            : layout.exe,
+        );
+        if (format === "appimage")
+          assert.notEqual(
+            (await identity(layout.launcher)).sha256,
+            (await identity(layout.exe)).sha256,
+          );
+      }
+      await assert.rejects(packageLayout(owned, "deb", "kk-studio"), /ENOENT/);
+      await fs.unlink(path.join(owned, "AppRun"));
+      await assert.rejects(
+        packageLayout(owned, "appimage", "KK Studio"),
+        /ENOENT/,
+      );
+      assert.equal(
+        (await packageLayout(owned, "deb", "KK Studio")).launcher,
+        path.join(await fs.realpath(owned), "usr/bin/kk-studio"),
+      );
+    } finally {
+      await cleanupOwned(owned);
+    }
+  });
+  test("rejects unsafe product-name path segments without fallback", () => {
+    assert.equal(validateProductName("KK Studio"), "KK Studio");
+    for (const name of [
+      undefined,
+      "",
+      ".",
+      "..",
+      "../KK Studio",
+      "KK/Studio",
+      "KK\\Studio",
+      "C:KK",
+      "KK\0Studio",
+      "KK\nStudio",
+    ])
+      assert.throws(
+        () => validateProductName(name),
+        /single resource path segment/,
+      );
+  });
+  test("keeps the Mac app and dmg layout independent of the host platform", async () => {
+    const owned = await fs.mkdtemp(path.join(os.tmpdir(), "kk-package-"));
+    try {
+      await fs.mkdir(path.join(owned, "Contents/MacOS"), { recursive: true });
+      await fs.mkdir(path.join(owned, "Contents/Resources/agent-runtime"), {
+        recursive: true,
+      });
+      await fs.writeFile(
+        path.join(owned, "Contents/MacOS/kk-studio"),
+        "synthetic-mac-exe",
+      );
+      await fs.writeFile(
+        path.join(
+          owned,
+          "Contents/Resources/agent-runtime/runtime-manifest.json",
+        ),
+        "{}",
+      );
+      for (const format of ["app", "dmg"]) {
+        const layout = await packageLayout(owned, format, "KK Studio");
+        assert.equal(layout.launcher, layout.exe);
+        assert.equal(
+          layout.runtime,
+          path.join(
+            await fs.realpath(owned),
+            "Contents/Resources/agent-runtime",
+          ),
+        );
+      }
     } finally {
       await cleanupOwned(owned);
     }

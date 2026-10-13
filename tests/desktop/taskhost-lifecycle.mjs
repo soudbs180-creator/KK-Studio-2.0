@@ -11,6 +11,118 @@ import {
   MODEL_PROVIDER_STORAGE_KEY,
 } from "../../src/domain/modelProvider.ts";
 
+async function openProjectFromLibrary(
+  currentPage,
+  readSnapshot,
+  expectedProject,
+) {
+  assert(expectedProject, "Expected recovered project must exist");
+  const cards = currentPage.locator(".project-library-card");
+  await expect(cards).not.toHaveCount(0);
+  const count = await cards.count();
+  const saved = await readSnapshot();
+  // CatalogPageBody preserves creation.projects order with an empty search.
+  assert.equal(
+    count,
+    saved.projects.length,
+    "Project library must show every saved project",
+  );
+  const index = saved.projects.findIndex(
+    (project) => project.id === expectedProject.id,
+  );
+  assert(
+    index >= 0 && index < count,
+    "Expected recovered project card must exist",
+  );
+  const card = cards.nth(index);
+  await expect(card.locator("strong")).toHaveText(expectedProject.name);
+  await card.click();
+  await expect(
+    currentPage.getByRole("region", { name: "无限画布" }),
+  ).toBeVisible();
+  await expect
+    .poll(async () => (await readSnapshot()).activeProjectId)
+    .toBe(expectedProject.id);
+}
+
+async function projectListSelfTest() {
+  const fixtureBrowser = await chromium.launch({
+    channel: "msedge",
+    headless: true,
+  });
+  try {
+    const fixturePage = await fixtureBrowser.newPage();
+    await fixturePage.setContent(`
+      <button id="library">项目库</button><main id="content"></main>
+      <script>
+        window.projects = [
+          {id:'other',name:'未命名项目'},
+          {id:'expected',name:'未命名项目'}
+        ];
+        window.activeProjectId = 'expected';
+        window.clicked = [];
+        window.render = () => {
+          content.innerHTML = '';
+          for (const project of projects) {
+            const card = document.createElement('button');
+            card.className = 'project-library-card';
+            const title = document.createElement('strong');
+            title.textContent = project.name;
+            card.append(title);
+            card.onclick = () => {
+              window.clicked.push(project.id);
+              window.activeProjectId = project.id;
+              content.innerHTML = '<section role="region" aria-label="无限画布">synthetic canvas</section>';
+            };
+            content.append(card);
+          }
+        };
+        library.onclick = () => {
+          content.innerHTML = '';
+          setTimeout(window.render, 200);
+        };
+      </script>
+    `);
+    await fixturePage
+      .getByRole("button", { name: "项目库", exact: true })
+      .click();
+    assert.equal(await fixturePage.locator(".project-library-card").count(), 0);
+    const readSnapshot = () =>
+      fixturePage.evaluate(() => ({
+        projects: window.projects,
+        activeProjectId: window.activeProjectId,
+      }));
+    await openProjectFromLibrary(fixturePage, readSnapshot, {
+      id: "expected",
+      name: "未命名项目",
+    });
+    const clicks = await fixturePage.evaluate(() => window.clicked);
+    console.log(
+      JSON.stringify({
+        delayedRender: true,
+        sameNames: true,
+        restoredActiveProjectId: "expected",
+        clicks,
+      }),
+    );
+    assert.deepEqual(
+      clicks,
+      ["expected"],
+      "Must actually click the expected card after delayed render",
+    );
+    await expect(
+      fixturePage.getByRole("region", { name: "无限画布" }),
+    ).toBeVisible();
+  } finally {
+    await fixtureBrowser.close();
+  }
+}
+
+if (process.argv.includes("--project-list-self-test")) {
+  await projectListSelfTest();
+  process.exit(0);
+}
+
 const root = process.cwd();
 const runId = `${Date.now()}-${randomUUID()}`;
 const output = path.resolve(
@@ -701,15 +813,7 @@ try {
   const expectedProject = (await snapshot()).projects.find((project) =>
     project.tasks.some((task) => task.id === uiPartial.id),
   );
-  for (
-    let index = 0;
-    index < (await page.locator(".project-library-card").count());
-    index++
-  ) {
-    await page.locator(".project-library-card").nth(index).click();
-    if ((await snapshot()).activeProjectId === expectedProject.id) break;
-    await page.getByRole("button", { name: "项目库", exact: true }).click();
-  }
+  await openProjectFromLibrary(page, snapshot, expectedProject);
   assert.equal((await snapshot()).activeProjectId, expectedProject.id);
   await expect(page.getByRole("region", { name: "无限画布" })).toBeVisible();
   await page.getByRole("button", { name: "打开任务列表" }).click();

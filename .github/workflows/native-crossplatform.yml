@@ -18,6 +18,8 @@ on:
       - ".gitattributes"
       - "tests/desktop/package-portability*.mjs"
       - "tests/desktop/native-crossplatform.mjs"
+      - "tests/desktop/installer.mjs"
+      - ".github/scripts/invoke-native-installer.ps1"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/native-crossplatform.yml"
@@ -37,6 +39,8 @@ on:
       - ".gitattributes"
       - "tests/desktop/package-portability*.mjs"
       - "tests/desktop/native-crossplatform.mjs"
+      - "tests/desktop/installer.mjs"
+      - ".github/scripts/invoke-native-installer.ps1"
       - "tests/unit/agentPackage.test.ts"
       - "package.json"
       - "package-lock.json"
@@ -126,8 +130,7 @@ jobs:
           npm run client:installer:verify -- "$taskRelease/installer-receipt.json"
           if ($LASTEXITCODE -ne 0) { throw "Installer verification failed" }
           $env:KK_DESKTOP_AUDIT_OUTPUT = Join-Path $PWD ".tmp/native-installer/evidence"
-          npm run client:installer:test -- "$taskRelease/installer-receipt.json"
-          if ($LASTEXITCODE -ne 0) { throw "Installer runtime failed" }
+          ./.github/scripts/invoke-native-installer.ps1 -ReceiptPath "$taskRelease/installer-receipt.json"
           Get-Content "$env:KK_DESKTOP_AUDIT_OUTPUT/runtime.json" -Raw
       - name: Build an explicitly enabled test driver in a separate target directory
         run: node scripts/agent/native-e2e-build.mjs
