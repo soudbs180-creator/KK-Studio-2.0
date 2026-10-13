@@ -66,20 +66,21 @@ export default function ModelProviderSettings({
     requestRef.current?.abort("user");
     requestRef.current = null;
   }
-  const updateMany = useScopedModelProviderDraft({
-    scope,
-    profile,
-    apiKey,
-    credentialRef,
-    active,
-    saving,
-    onBusyChange,
-    cancelRequest,
-    setProfile,
-    setApiKey,
-    setCredentialRef,
-    setConnection,
-  });
+  const { updateProfile: updateMany, updateApiKey } =
+    useScopedModelProviderDraft({
+      scope,
+      profile,
+      apiKey,
+      credentialRef,
+      active,
+      saving,
+      onBusyChange,
+      cancelRequest,
+      setProfile,
+      setApiKey,
+      setCredentialRef,
+      setConnection,
+    });
   const validate = () =>
     validateModelProviderProfile(profile, setConnection, connections);
   async function save(): Promise<void> {
@@ -260,15 +261,7 @@ export default function ModelProviderSettings({
           hasStoredKey={hasStoredKey}
           onUpdate={(field, value) => updateMany({ [field]: value })}
           onUpdateMany={updateMany}
-          onApiKeyChange={(value) => {
-            if (saving) return;
-            cancelRequest();
-            setApiKey(value);
-            setConnection({
-              kind: "idle",
-              message: "密钥已更改，请重新测试连接。",
-            });
-          }}
+          onApiKeyChange={updateApiKey}
         />
         <ProviderConnectionList
           connections={connections}

@@ -94,16 +94,27 @@ export default function useScopedModelProviderDraft({
     setConnection({ kind: "idle", message: "有尚未测试的更改。" });
     previousScopeRef.current = scope;
   }, [scope]);
-  return (patch: Partial<ModelProviderProfile>): void => {
-    if (saving) return;
-    cancelRequest();
-    const nextProfile = { ...profile, ...patch };
-    if ("baseUrl" in patch || "name" in patch) {
-      nextProfile.connectionId = undefined;
-      setApiKey("");
-      setCredentialRef(credentialId(nextProfile.baseUrl, nextProfile.name));
-    }
-    setProfile(nextProfile);
-    setConnection({ kind: "idle", message: "有尚未测试的更改。" });
+  return {
+    updateProfile: (patch: Partial<ModelProviderProfile>): void => {
+      if (saving) return;
+      cancelRequest();
+      const nextProfile = { ...profile, ...patch };
+      if ("baseUrl" in patch || "name" in patch) {
+        nextProfile.connectionId = undefined;
+        setApiKey("");
+        setCredentialRef(credentialId(nextProfile.baseUrl, nextProfile.name));
+      }
+      setProfile(nextProfile);
+      setConnection({ kind: "idle", message: "有尚未测试的更改。" });
+    },
+    updateApiKey: (value: string): void => {
+      if (saving) return;
+      cancelRequest();
+      setApiKey(value);
+      setConnection({
+        kind: "idle",
+        message: "密钥已更改，请重新测试连接。",
+      });
+    },
   };
 }
