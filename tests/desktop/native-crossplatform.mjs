@@ -400,10 +400,25 @@ try {
   await screenshot("two-model-round");
   const packageFile = path.join(isolated, "native.kkproject");
   const restored = path.join(isolated, "restored");
-  const exportState = await invoke("read_creation_snapshot");
+  let savedRevision;
+  const exportState = await poll(
+    async () => {
+      const saved = await execute(
+        "return document.querySelector('.project-save-state')?.textContent.trim() === '已保存';",
+      );
+      const value = await invoke("read_creation_snapshot");
+      const revision = value.snapshot?.revision;
+      const settled =
+        saved && Number.isSafeInteger(revision) && revision === savedRevision;
+      savedRevision = saved ? revision : undefined;
+      return { value, settled };
+    },
+    (value) => value.settled,
+  );
+  report.packageExportRevision = exportState.value.snapshot.revision;
   await invoke("export_project_package", {
     destination: packageFile,
-    expectedRevision: exportState.snapshot.revision,
+    expectedRevision: report.packageExportRevision,
   });
   await invoke("preflight_project_package", { source: packageFile });
   await invoke("import_project_package", {

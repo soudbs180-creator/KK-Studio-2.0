@@ -1,0 +1,238 @@
+{
+  "startedAt": "2026-10-13T17:12:22.356Z",
+  "sourceHead": "cc184e5928f8cc67a84864822cc3b246e8cb51f0",
+  "release": {
+    "releaseExePath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791911357542.6143,
+    "newestInputPath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\dist\\assets\\index-Dz2hYLqp.js",
+    "newestInputMtimeMs": 1791911310465.13,
+    "inputSha256": "f2fdcc3fbdc54fc7b3122bcd50dbf46d4da2d699eae38fe6696904ab07b7f124",
+    "executableSha256": "37aa6f2854e9fd9a5540c6975133687beda9cdd7370718a61a03376be6974816",
+    "desktopVersion": "2.1.18",
+    "receiptPath": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current"
+  },
+  "endpoint": "http://127.0.0.1:11434/v1",
+  "models": [
+    "qwen2.5:0.5b",
+    "smollm2:135m"
+  ],
+  "profile": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\bcf427f4-5396-4cc5-ad63-601ef749c972\\profile",
+  "dataRoot": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\bcf427f4-5396-4cc5-ad63-601ef749c972\\data",
+  "restoredRoot": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\bcf427f4-5396-4cc5-ad63-601ef749c972\\restored",
+  "checks": [
+    {
+      "name": "owned-cpu-model-service",
+      "pid": 99076,
+      "executable": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\ollama-real\\runtime-v0.40.3\\ollama.exe",
+      "executableSha256": "61b44cfb6d3aa2393a4a731af33c9329bedd58b1c454bdebd185d4a607d0303d",
+      "originStatus": 403,
+      "cors": null
+    },
+    {
+      "name": "launch",
+      "data": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\bcf427f4-5396-4cc5-ad63-601ef749c972\\data",
+      "pid": 57472,
+      "loadedScripts": [
+        "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+      ]
+    },
+    {
+      "name": "synthetic-vault-write-read",
+      "providerId": "kk-cherry-synthetic-bcf427f4-5396-4cc5-ad63-601ef749c972",
+      "passed": true
+    },
+    {
+      "name": "real-ui-local-configuration",
+      "connection": {
+        "authMode": "none",
+        "baseUrl": "http://127.0.0.1:11434/v1",
+        "capabilities": {
+          "async": false,
+          "estimatedLatencyClass": "interactive",
+          "maxOutputs": 10,
+          "maxReferences": 4,
+          "modalities": [
+            "image"
+          ],
+          "operations": [
+            "generate",
+            "edit",
+            "inpaint",
+            "outpaint",
+            "batch"
+          ]
+        },
+        "concurrencyLimit": 2,
+        "credentialRef": "provider-d2af021546ce5a2d",
+        "displayName": "Ollama",
+        "id": "byok-provider-d2af021546ce5a2d",
+        "kind": "user_byok",
+        "model": "qwen2.5:0.5b",
+        "protocol": "openai-compatible",
+        "provider": "Ollama",
+        "state": "active",
+        "verificationStatus": "unverified"
+      },
+      "localMetadataCount": 1
+    },
+    {
+      "name": "real-ui-round",
+      "prompt": "What is 2 plus 2? Answer briefly.",
+      "tasks": [
+        {
+          "id": "conversation-bc36d921-8e0b-4df0-8838-1715ee712273-route-0",
+          "model": "qwen2.5:0.5b",
+          "status": "succeeded",
+          "text": "4.",
+          "messages": [
+            {
+              "content": "Reply in one short line. Use no tools.",
+              "role": "system"
+            },
+            {
+              "content": "What is 2 plus 2? Answer briefly.",
+              "role": "user"
+            }
+          ]
+        },
+        {
+          "id": "conversation-bc36d921-8e0b-4df0-8838-1715ee712273-route-1",
+          "model": "smollm2:135m",
+          "status": "succeeded",
+          "text": "Two plus two is a classic puzzle. While the answer may be an answer of 4, \"two five and six,\" which is the number of units on the six-sided die, it is actually a question in combinatorics and has different solutions in different number systems.",
+          "messages": [
+            {
+              "content": "Reply in one short line. Use no tools.",
+              "role": "system"
+            },
+            {
+              "content": "What is 2 plus 2? Answer briefly.",
+              "role": "user"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "launch",
+      "data": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\bcf427f4-5396-4cc5-ad63-601ef749c972\\data",
+      "pid": 61880,
+      "loadedScripts": [
+        "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+      ]
+    },
+    {
+      "name": "synthetic-vault-real-restart",
+      "passed": true
+    },
+    {
+      "name": "real-ui-round",
+      "prompt": "Summarize your previous answer in one short line.",
+      "tasks": [
+        {
+          "id": "conversation-b504078b-2fdb-4d9e-8ee2-f851fc7fba09-route-0",
+          "model": "qwen2.5:0.5b",
+          "status": "succeeded",
+          "text": "The answer is 4.",
+          "messages": [
+            {
+              "content": "Reply in one short line. Use no tools.",
+              "role": "system"
+            },
+            {
+              "content": "What is 2 plus 2? Answer briefly.",
+              "role": "user"
+            },
+            {
+              "content": "4.",
+              "role": "assistant"
+            },
+            {
+              "content": "Summarize your previous answer in one short line.",
+              "role": "user"
+            }
+          ]
+        },
+        {
+          "id": "conversation-b504078b-2fdb-4d9e-8ee2-f851fc7fba09-route-1",
+          "model": "smollm2:135m",
+          "status": "succeeded",
+          "text": "Two plus two is a classic puzzle.",
+          "messages": [
+            {
+              "content": "Reply in one short line. Use no tools.",
+              "role": "system"
+            },
+            {
+              "content": "What is 2 plus 2? Answer briefly.",
+              "role": "user"
+            },
+            {
+              "content": "Two plus two is a classic puzzle. While the answer may be an answer of 4, \"two five and six,\" which is the number of units on the six-sided die, it is actually a question in combinatorics and has different solutions in different number systems.",
+              "role": "assistant"
+            },
+            {
+              "content": "Summarize your previous answer in one short line.",
+              "role": "user"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "real-native-package-export-preflight-import",
+      "exported": {
+        "checksum": "5463d7d88ec1b360983ae67f0ed38e24006939b1eb93f4614af246ae3986372f",
+        "projectIds": [
+          "project-mv6xvbhr-hlhzdwwc"
+        ],
+        "assetIds": []
+      },
+      "preflight": {
+        "checksum": "5463d7d88ec1b360983ae67f0ed38e24006939b1eb93f4614af246ae3986372f",
+        "projectIds": [
+          "project-mv6xvbhr-hlhzdwwc"
+        ],
+        "assetIds": []
+      },
+      "imported": {
+        "checksum": "5463d7d88ec1b360983ae67f0ed38e24006939b1eb93f4614af246ae3986372f",
+        "projectIds": [
+          "project-mv6xvbhr-hlhzdwwc"
+        ],
+        "assetIds": []
+      },
+      "packageSha256": "2fb9af0a67b86a0be4efd036ac794636726d8f4199c2a905de70a3f2726cafa3"
+    },
+    {
+      "name": "launch",
+      "data": "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\local-native-real\\bcf427f4-5396-4cc5-ad63-601ef749c972\\restored",
+      "pid": 89600,
+      "loadedScripts": [
+        "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+      ]
+    },
+    {
+      "name": "real-restored-directory-reopen",
+      "taskCount": 4,
+      "passed": true
+    },
+    {
+      "name": "owned-synthetic-vault-cleanup",
+      "passed": true
+    },
+    {
+      "name": "owned-model-process-tree-cleanup",
+      "pid": 99076,
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "exeHashBefore": "37aa6f2854e9fd9a5540c6975133687beda9cdd7370718a61a03376be6974816",
+  "discoveryScope": "Real Native loopback GET; the unchanged local server may reject the WebView origin",
+  "exeHashAfter": "37aa6f2854e9fd9a5540c6975133687beda9cdd7370718a61a03376be6974816",
+  "finishedAt": "2026-10-13T17:12:40.699Z"
+}

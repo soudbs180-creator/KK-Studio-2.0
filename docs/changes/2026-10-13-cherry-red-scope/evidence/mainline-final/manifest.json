@@ -222,7 +222,139 @@
       "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/native-38422389807-final.json",
       "bytes": 15743,
       "sha256": "91194cf7d0cc2ad9fe639c27db015a1ebd5eb0bed94c5d745cecba844aa53f03"
+    },
+    {
+      "source": ".tmp/cherry-red/review-cc184e59.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/review-cc184e59.json",
+      "bytes": 1379,
+      "sha256": "9010e6cdd9b8c892898e0ceb5895c3ba3806171928a6cac9b8025fbf9d9aa799"
+    },
+    {
+      "source": ".tmp/cherry-red/browser-218-budget-diagnostic.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/browser528-cc184e59.log",
+      "bytes": 73286,
+      "sha256": "46b41ec1fc349100d3d1d553a498dc68f0b4b5711e14b6d7e8540151d2ecae74"
+    },
+    {
+      "source": ".tmp/cherry-red/development-218-budget-final.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/development-cc184e59.log",
+      "bytes": 451,
+      "sha256": "6393a008c37a9394819f7898244c25a33567425e411fa7ab3b92f671bf1c178d"
+    },
+    {
+      "source": ".tmp/cherry-red/managed-build-cc184e59.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/managed-build-cc184e59.log",
+      "bytes": 6188,
+      "sha256": "1859cb670c784fc6d18064159e7ae12d1c26c3cc7099aef951983c8f9438035c"
+    },
+    {
+      "source": ".tmp/cherry-red/native-e2e-build-cc184e59.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/native-build-cc184e59.log",
+      "bytes": 1271,
+      "sha256": "ba929c1db24eb36ce08fec788c5c10fbc1e5f45deb70a56fe54d6f40e524a102"
+    },
+    {
+      "source": ".tmp/cherry-red/native-windows-cc184e59/receipt.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/native6-cc184e59.json",
+      "bytes": 5348,
+      "sha256": "5e9b86bf126a03fc4cae4caff8f318ca5b55c6e8b0fb435a29dfda114b0b025f"
+    },
+    {
+      "source": ".tmp/cherry-red/default-native-cc184e59/receipt.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/default-native13-cc184e59.json",
+      "bytes": 26780,
+      "sha256": "23afe29660eb0e533ada7c83fc0b01b9add3d228e8b703c52e8b19989ad49c27"
+    },
+    {
+      "source": ".tmp/cherry-red/local-native-real/bcf427f4-5396-4cc5-ad63-601ef749c972/receipt.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/ollama13-cc184e59.json",
+      "bytes": 8381,
+      "sha256": "81a6a6b73f0bcbc30e8e69367d9752c2c61365ac4936b4eed291260deea6854f"
+    },
+    {
+      "source": ".tmp/cherry-red/local-native-real/bcf427f4-5396-4cc5-ad63-601ef749c972/round-4.png",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/ollama-round4-cc184e59.png",
+      "bytes": 228243,
+      "sha256": "75145bde08a5e097d8ed25df7d9995b34378fafcd345103db497b212782ce59a"
+    },
+    {
+      "source": ".tmp/cherry-red/mcp-native-7da/native-combined-cc184e59.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/sdk-native-combined-cc184e59.json",
+      "bytes": 7680,
+      "sha256": "bf997edd8834d962a44a41b4ec9e63f5a46c8c581cbd9823cb91eb8928473d33"
+    },
+    {
+      "source": ".tmp/cherry-red/mcp-native-7da/c2deeff0-4ebe-43bd-b1d3-8ed62a59432a/receipt.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/sdk130-native18-cc184e59.json",
+      "bytes": 70584,
+      "sha256": "7dd4ae23b02478078c78c682ae59cf1120929cb390bbb295b0f5462db989dab1"
+    },
+    {
+      "source": ".tmp/cherry-red/mcp-native-7da/c2deeff0-4ebe-43bd-b1d3-8ed62a59432a/requests.ndjson",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/sdk130-native-cc184e59.ndjson",
+      "bytes": 25877,
+      "sha256": "4d26cf458be90c40eef9a4f7bf58764171352ec062586b22621af7863fbfe74a"
+    },
+    {
+      "source": ".tmp/cherry-red/mcp-native-7da/sdk2/native/9b3c48fd-8634-4b60-ad2d-30681872e3da/receipt.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/sdk2-native18-cc184e59.json",
+      "bytes": 65837,
+      "sha256": "ef621752835a72ec60c79f613e39334825b83fdc5a13195a89ac3648923661c4"
+    },
+    {
+      "source": ".tmp/cherry-red/mcp-native-7da/sdk2/native/9b3c48fd-8634-4b60-ad2d-30681872e3da/requests.ndjson",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/sdk2-native-cc184e59.ndjson",
+      "bytes": 19244,
+      "sha256": "88bf42f1cab86f15897288f9642cae072b194121a8ff0578ad81d906fac8fbbd"
+    },
+    {
+      "source": ".tmp/cherry-red/mcp-native-7da/f03200c3-5226-475c-8141-6f855e49f1c1/receipt.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/sdk130-fixture-dialog-red.json",
+      "bytes": 46523,
+      "sha256": "02a6a5f52817a13c9eb5155c3fbba61cecc0adc5e720f7eeea6ca2c2c313858a"
+    },
+    {
+      "source": ".tmp/cherry-red/mcp-native-7da/native-assistant-geometry/a866aa83-4a58-4e16-bdb6-dd13c57281ce/receipt.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/assistant-native-geometry-cc184e59.json",
+      "bytes": 9873,
+      "sha256": "9af726bf6106050aa57b240956ba6041c0b575592a417e9f5e39a9a3be0fb698"
+    },
+    {
+      "source": ".tmp/cherry-red/mcp-native-7da/native-assistant-geometry/a866aa83-4a58-4e16-bdb6-dd13c57281ce/geometry.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/assistant-native-geometry-detail.json",
+      "bytes": 7006,
+      "sha256": "ba5dfc903665f89ca2d6613a8a9ba3bd155aaf03e6a0f49daeda770ca9302706"
+    },
+    {
+      "source": ".tmp/cherry-red/mcp-native-7da/native-assistant-geometry/a866aa83-4a58-4e16-bdb6-dd13c57281ce/native-codex-default-assistant.png",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/assistant-native-stable-cc184e59.png",
+      "bytes": 121749,
+      "sha256": "502a72e69778cb8c0d2a6e09b70e42a4125aceaaf5287d783e89c6c123579f21"
+    },
+    {
+      "source": ".tmp/cherry-red/assistant-geometry-probe.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/assistant-web-geometry-cc184e59.log",
+      "bytes": 665,
+      "sha256": "0c90fbb4baccef1e900ddc0c2e31cf174b4071035c6f2c42d6a275138bd29c5e"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-cc184e59/package-native-proof-summary.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-packages-cc184e59.json",
+      "bytes": 42286,
+      "sha256": "453023d380b891b18faf2c1ee3a01cc6414742fb486a28ef54af69803e8a7c6c"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-cc184e59/receipt-crosschecks.json",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-package-crosschecks-cc184e59.json",
+      "bytes": 1445,
+      "sha256": "27d54d6eabde096e34db4c23e405a5a2c0c5a24d1ca5876119e50eb72f73bae6"
+    },
+    {
+      "source": ".tmp/cherry-red/hosted-cc184e59/job-115427606356-final.log",
+      "target": "docs/changes/2026-10-13-cherry-red-scope/evidence/mainline-final/hosted-linux-export-race-cc184e59.log",
+      "bytes": 337107,
+      "sha256": "d3b97a85bf1d06c84e21514d1a1b7c13ca9fb35d44f6a5fbafc9480e47062050"
     }
   ],
-  "appendedAt": "2026-10-13T17:00:56.080Z"
+  "appendedAt": "2026-10-13T17:28:56.355Z"
 }

@@ -48,10 +48,10 @@
       "docs/changes/2026-10-13-cherry-red-scope/mainline-integration.md",
       "docs/changes/2026-10-13-cherry-red-scope/mainline-final-status.md"
     ],
-    "verification": "冻结7da源码正式独立review PASS/open P0/P1/P2=0；完整verify1138unit/1124PASS14SKIP、Agent174/172PASS2SKIP、browser528含一次首试超时retryPASS，随后同保存场景8次零重试PASS；Rust154。7da正式Native6/真实Ollama13全PASS。ddacf strictNSIS4280files+实际隔离install/restart/reinstall/resource-repair/uninstall-reinstall/offline保留数据PASS。新三平台Hosted和最终产品验收分别待证据；旧失败/不同产物SHA保留。 7da Hosted实际失败另定位：Mac根URL尾斜线、Win8.3别名、Linuxdeploy重写vendor字节；SDK1.30真实auto握手400也已RED。2.1.18源码修复已实施，完整验证/新正式review/新版工件与三平台重跑待证据。 2.1.18完整候选verify exit0：1157 unit(1143/14)、174 Agent(172/2)、528 browser零重试全部PASS，Rust154/fmt PASS；SDK2真实source HTTP/SSE control PASS，新冻结Native/Hosted仍待验证。 独立预审确认MR004不可信schema CPU预算缺口，已纳入修复，c527未发布且不宣称正式PASS。 MR004最小CPU预算已RED/GREEN，MCP41/41；新1159unit/174Agent/静态/build通过，browser1423冲突原件保留，端口自行释放后继续；新SHA正式review/Native/Hosted仍待验证。",
+    "verification": "冻结7da源码正式独立review PASS/open P0/P1/P2=0；完整verify1138unit/1124PASS14SKIP、Agent174/172PASS2SKIP、browser528含一次首试超时retryPASS，随后同保存场景8次零重试PASS；Rust154。7da正式Native6/真实Ollama13全PASS。ddacf strictNSIS4280files+实际隔离install/restart/reinstall/resource-repair/uninstall-reinstall/offline保留数据PASS。新三平台Hosted和最终产品验收分别待证据；旧失败/不同产物SHA保留。 7da Hosted实际失败另定位：Mac根URL尾斜线、Win8.3别名、Linuxdeploy重写vendor字节；SDK1.30真实auto握手400也已RED。2.1.18源码修复已实施，完整验证/新正式review/新版工件与三平台重跑待证据。 2.1.18完整候选verify exit0：1157 unit(1143/14)、174 Agent(172/2)、528 browser零重试全部PASS，Rust154/fmt PASS；SDK2真实source HTTP/SSE control PASS，新冻结Native/Hosted仍待验证。 独立预审确认MR004不可信schema CPU预算缺口，已纳入修复，c527未发布且不宣称正式PASS。 MR004最小CPU预算已RED/GREEN，MCP41/41；新1159unit/174Agent/静态/build通过，browser1423冲突原件保留，端口自行释放后继续；新SHA正式review/Native/Hosted仍待验证。 cc184source independentPASS/MR004closed；528browser无retry，Native6/default13/Ollama13及SDK1.30+2.3.1各18actualPASS，Native助手geometry无overflow；Linux/Mac原始两格式strictPASS，但Linuxpush Native旧export未等autosave conflict已保留与fixture修复，待新head验证。",
     "verificationResult": "NOT_VERIFIED",
     "displayStatus": "进行中",
-    "nextAction": "完成2.1.18统一验证与冻结SHA、独立补审、SDK真实production UI、默认发行与三平台原始包/安装实跑；保留primary并发改动及所有原任务，最终产品验收后才合并或DONE。",
+    "nextAction": "验证Native导出saved/revision同步小修复并补审；完成新版NSIS/三平台最终Hosted/current-head门禁与证据回写；保留primary及125旧任务，用户产品验收后才决定合并或DONE。",
     "updated": "2026-10-14",
     "lastVerified": "2026-10-14"
   },

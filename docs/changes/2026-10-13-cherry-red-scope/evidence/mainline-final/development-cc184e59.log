@@ -1,0 +1,5 @@
+
+> kk-studio@2.1.18 test:development
+> node tests/development/plugins.mjs
+
+{"result":"PASS","sourceHead":"cc184e5928f8cc67a84864822cc3b246e8cb51f0","steps":["discover-four-plugins-without-overlay","add-edit-and-render-four-plugin-nodes-without-cdn","disable-reload-restore-enable","reject-unsafe-remote-before-request"],"errors":[],"evidenceDir":"D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\test-results\\development-plugins\\1791911245772"}

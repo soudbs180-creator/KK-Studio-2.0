@@ -90,3 +90,5 @@ root 正在重跑这些修复后的完整 verify，尚无可填写的最新最�
 独立预审确认 P2：新增现代工具 header schema 扫描无深度/节点上限，每层 path 复制导致深层输入平方级同步扫描。实际840017字节/40000层无header schema仍返回valid=true且约4750ms，未超2MiB响应边界。c527f421已冻结但尚未push/构建；正在为现有循环添加fail-closed深度及总节点预算并验证深/宽RED→GREEN。关闭需要独立复核与新冻结SHA，不用旧34项通过冒充覆盖。
 
 MR004 root接管后补64层/4096总queued nodes预算，两种schema边在复制path/排队前拒绝。实际40000层property/allOf及10000宽property低于2MiB的RED→GREEN，正常Region保留；[RED](evidence/mainline-final/mcp-schema-budget-red.log)、[41项GREEN](evidence/mainline-final/mcp41-budget-green.log)。源码修复已完成；正式独立新SHA复核待完成。
+
+cc184 exact-SHA独立审查已PASS，见[source review](evidence/mainline-final/review-cc184e59.json)。随后Linuxpush真实export revision冲突已定位为fixture未等autosave，产品guard正确拒绝且不修改；只补UI真实saved/连续durable revision稳定前置，并保留expectedRevision/单次export/原timeout。新冻结SHA正式增量审查和三平台重跑仍待完成。旧AppImage同目录保留按锁定上游CLI重建目录事实校准，见最终记录。

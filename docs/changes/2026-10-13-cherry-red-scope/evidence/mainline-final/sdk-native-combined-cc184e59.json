@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-10-13T17:19:51.5362403Z",
+  "scope": "Actual production Tauri UI with official synthetic SDK1.30 and SDK2.3.1 loopback servers. No product source or product dependencies changed.",
+  "runs": [
+    {
+      "receipt": ".tmp/cherry-red/mcp-native-7da/c2deeff0-4ebe-43bd-b1d3-8ed62a59432a/receipt.json",
+      "receiptSha256": "7dd4ae23b02478078c78c682ae59cf1120929cb390bbb295b0f5462db989dab1",
+      "passed": true,
+      "checks": 18,
+      "errors": [],
+      "sdkVersion": "1.30.0",
+      "sdkLicense": "MIT",
+      "sourceHead": "cc184e5928f8cc67a84864822cc3b246e8cb51f0",
+      "inputSha256": "f2fdcc3fbdc54fc7b3122bcd50dbf46d4da2d699eae38fe6696904ab07b7f124",
+      "exeSha256Before": "37aa6f2854e9fd9a5540c6975133687beda9cdd7370718a61a03376be6974816",
+      "exeSha256After": "37aa6f2854e9fd9a5540c6975133687beda9cdd7370718a61a03376be6974816",
+      "auditHarnessSha256": "a316899fb4ce9b25a8d907e6738f5af0871e6e3ab72d9d3e6b1c359e410a198c",
+      "sourceDirtyBefore": "",
+      "sourceDirtyAfter": "",
+      "loadedScripts": [
+        "http://tauri.localhost/assets/index-Dz2hYLqp.js",
+        "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+      ],
+      "storageRoots": [
+        "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\mcp-native-7da\\c2deeff0-4ebe-43bd-b1d3-8ed62a59432a\\data",
+        "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\mcp-native-7da\\c2deeff0-4ebe-43bd-b1d3-8ed62a59432a\\data"
+      ],
+      "ownPids": [
+        15032,
+        8500
+      ],
+      "ownExitCodes": [
+        0,
+        0
+      ],
+      "actualNativeConfirmations": [
+        "Owned native dialog: accept",
+        "Owned native dialog: accept"
+      ],
+      "actualObservedCredentialCommands": 0,
+      "cleanup": {
+        "ownAppExitCode": 0,
+        "cdpUnavailable": true,
+        "ownHttpServerClosed": true,
+        "profilesRetainedForEvidence": true,
+        "vaultWrites": 0,
+        "vaultWriteMeasurementBoundary": "Actual CDP IPC observation after attachment; pre-attachment IPC unobserved."
+      },
+      "evidenceFiles": [
+        {
+          "name": "confirmed-tool-result.png",
+          "sha256": "38a8cf0fd82487e78c5d288f4c7dea7f12852d46cc33e3621c7de315f928a90c"
+        },
+        {
+          "name": "production-ui-auto-discovery.png",
+          "sha256": "aa385aca7792e57a5308d442ccbb066ac37a6b09fb0454a2a65bd36b67652f29"
+        },
+        {
+          "name": "production-ui-restart-auto-discovery.png",
+          "sha256": "aa385aca7792e57a5308d442ccbb066ac37a6b09fb0454a2a65bd36b67652f29"
+        },
+        {
+          "name": "receipt.json",
+          "sha256": "7dd4ae23b02478078c78c682ae59cf1120929cb390bbb295b0f5462db989dab1"
+        },
+        {
+          "name": "requests.ndjson",
+          "sha256": "4d26cf458be90c40eef9a4f7bf58764171352ec062586b22621af7863fbfe74a"
+        },
+        {
+          "name": "restart-persisted-config.png",
+          "sha256": "46b74ce35c0a6fa0eaa7a421c66e78f1290ca5cd5c82b1cfbf83fa5e580405bf"
+        }
+      ]
+    },
+    {
+      "receipt": ".tmp/cherry-red/mcp-native-7da/sdk2/native/9b3c48fd-8634-4b60-ad2d-30681872e3da/receipt.json",
+      "receiptSha256": "ef621752835a72ec60c79f613e39334825b83fdc5a13195a89ac3648923661c4",
+      "passed": true,
+      "checks": 18,
+      "errors": [],
+      "sdkVersion": "2.3.1",
+      "sdkLicense": "Apache-2.0",
+      "sourceHead": "cc184e5928f8cc67a84864822cc3b246e8cb51f0",
+      "inputSha256": "f2fdcc3fbdc54fc7b3122bcd50dbf46d4da2d699eae38fe6696904ab07b7f124",
+      "exeSha256Before": "37aa6f2854e9fd9a5540c6975133687beda9cdd7370718a61a03376be6974816",
+      "exeSha256After": "37aa6f2854e9fd9a5540c6975133687beda9cdd7370718a61a03376be6974816",
+      "auditHarnessSha256": "d92c450eca5d0db87096b11fc91131c7038d7015ba948c035ca85c0ff58e54e7",
+      "sourceDirtyBefore": "",
+      "sourceDirtyAfter": "",
+      "loadedScripts": [
+        "http://tauri.localhost/assets/index-Dz2hYLqp.js",
+        "http://tauri.localhost/assets/index-Dz2hYLqp.js"
+      ],
+      "storageRoots": [
+        "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\mcp-native-7da\\sdk2\\native\\9b3c48fd-8634-4b60-ad2d-30681872e3da\\data",
+        "D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001\\.tmp\\cherry-red\\mcp-native-7da\\sdk2\\native\\9b3c48fd-8634-4b60-ad2d-30681872e3da\\data"
+      ],
+      "ownPids": [
+        68696,
+        50552
+      ],
+      "ownExitCodes": [
+        0,
+        0
+      ],
+      "actualNativeConfirmations": [
+        "Owned native dialog: accept",
+        "Owned native dialog: accept"
+      ],
+      "actualObservedCredentialCommands": 0,
+      "cleanup": {
+        "ownAppExitCode": 0,
+        "cdpUnavailable": true,
+        "ownHttpServerClosed": true,
+        "profilesRetainedForEvidence": true,
+        "vaultWrites": 0,
+        "vaultWriteMeasurementBoundary": "Actual CDP IPC observation after attachment; pre-attachment IPC unobserved."
+      },
+      "evidenceFiles": [
+        {
+          "name": "client-LICENSE",
+          "sha256": "0382b0057770ca05e9c350a50aa3b1c1fea84da0bc81d723bf00b9aa841be58a"
+        },
+        {
+          "name": "confirmed-tool-result.png",
+          "sha256": "3a9544ab2286261eba72b5011efd297f6e0e823761d9ed44f23d9463cb61a6eb"
+        },
+        {
+          "name": "core-LICENSE",
+          "sha256": "0382b0057770ca05e9c350a50aa3b1c1fea84da0bc81d723bf00b9aa841be58a"
+        },
+        {
+          "name": "node-LICENSE",
+          "sha256": "0382b0057770ca05e9c350a50aa3b1c1fea84da0bc81d723bf00b9aa841be58a"
+        },
+        {
+          "name": "production-ui-auto-discovery.png",
+          "sha256": "c7af978b309c788dc2ddcb44b0a40f4c088732bdb874b9af628b0638d085e3ec"
+        },
+        {
+          "name": "production-ui-restart-auto-discovery.png",
+          "sha256": "c7af978b309c788dc2ddcb44b0a40f4c088732bdb874b9af628b0638d085e3ec"
+        },
+        {
+          "name": "receipt.json",
+          "sha256": "ef621752835a72ec60c79f613e39334825b83fdc5a13195a89ac3648923661c4"
+        },
+        {
+          "name": "requests.ndjson",
+          "sha256": "88bf42f1cab86f15897288f9642cae072b194121a8ff0578ad81d906fac8fbbd"
+        },
+        {
+          "name": "restart-persisted-config.png",
+          "sha256": "0a72b019a639d15a061f058c0b11f6e55d5673633823cf5675fde07066a74476"
+        },
+        {
+          "name": "server-LICENSE",
+          "sha256": "0382b0057770ca05e9c350a50aa3b1c1fea84da0bc81d723bf00b9aa841be58a"
+        }
+      ]
+    }
+  ],
+  "originalFixtureRed": {
+    "receipt": ".tmp/cherry-red/mcp-native-7da/f03200c3-5226-475c-8141-6f855e49f1c1/receipt.json",
+    "log": ".tmp/cherry-red/mcp-native-7da/native-legacy-cc184e59.log",
+    "preserved": true,
+    "reason": "Old confirmation IPC name assertion and non-writable invoke spy. Real connect/native acceptance/tool execution occurred; aggregate was FAIL."
+  },
+  "credentialObservationErratum": "The old invoke assignment did not install a guard; prior credentialGuardInstalled=true claims are invalid. New probes leave the bridge unchanged, positively verify CDP IPC observation through get_storage_root, and assert zero observed credential commands. Pre-attachment IPC is unobserved.",
+  "sourceLocksReleased": true,
+  "ownAppsAndServersStopped": true,
+  "ownedPorts": [
+    9355,
+    9356,
+    9366,
+    9367
+  ],
+  "broaderMcpScopeNotTested": [
+    "OAuth",
+    "automatic third-party tool execution",
+    "MRTR",
+    "subscriptions"
+  ]
+}

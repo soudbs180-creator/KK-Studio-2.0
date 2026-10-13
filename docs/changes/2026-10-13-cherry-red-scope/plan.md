@@ -1,6 +1,6 @@
 # Cherry 红框融合实施计划
 
-当前执行至冻结源码 `7daeba25`，本机正式 Native6、真实 Ollama13 和隔离 NSIS 生命周期已有 PASS；最新完整验证、不同产物身份、Hosted 及最终验收的状态以 [最终记录](mainline-final-status.md) 为准。以下旧阶段保留执行时边界，不提前标 DONE。
+当前产品源码已冻结 `cc184e59`，本机正式 Native6、真实 Ollama13 和隔离 NSIS 生命周期已有 PASS；最新完整验证、不同产物身份、Hosted 及最终验收的状态以 [最终记录](mainline-final-status.md) 为准。以下旧阶段保留执行时边界，不提前标 DONE。
 
 > 执行方式：subagent-driven-development；共用一个隔离 worktree，分配唯一文件写入者，root 负责公共接口、App 接线、治理与整合。
 

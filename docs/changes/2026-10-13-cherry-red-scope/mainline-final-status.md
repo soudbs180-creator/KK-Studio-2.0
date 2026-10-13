@@ -1,6 +1,6 @@
 # 主线候选最终验收记录
 
-当前源码候选：2.1.18（完整本机验证后的待冻结工作树）；上一冻结提交 `7daeba25db511652dbd73833c21b3066f428d7f2`，base `694a00607f6f63de1b8c43d0ebb117adf5d34f67`，[PR #58](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/58) 为 draft。任务仍为 PARTIAL：本机实现与验收有证据，最终三平台 Hosted、补审和用户产品验收分别判定。原 primary/index、11 项后续并发源文件和 125 项原任务均保留，没有合并 main、更新官方快捷方式或发布。
+当前产品源码：2.1.18 `cc184e5928f8cc67a84864822cc3b246e8cb51f0`；后续只调整原生导出测试同步与事实记录。上一冻结提交 `7daeba25db511652dbd73833c21b3066f428d7f2`，base `694a00607f6f63de1b8c43d0ebb117adf5d34f67`，[PR #58](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/58) 为 draft。任务仍为 PARTIAL：本机实现与验收有证据，最终三平台 Hosted、补审和用户产品验收分别判定。原 primary/index、11 项后续并发源文件和 125 项原任务均保留，没有合并 main、更新官方快捷方式或发布。
 
 ## 前一冻结版本的实际本机验证
 
@@ -63,3 +63,19 @@ Linux producer的10项文件/真实子进程委托契约通过，[身份](eviden
 7da PR quality七job全SUCCESS；push applicable verify/deploy/snapshot均SUCCESS，push delivery/governance按事件规则SKIPPED。7da两个Native运行三平台均实际FAIL，分别Linux严格vendor hash、Win8.3路径夹具、Mac根URL夹具；[PR quality](evidence/mainline-final/quality-38422396911-final.json)、[push quality](evidence/mainline-final/quality-38422389843-final.json)、[PR Native](evidence/mainline-final/native-38422396951-final.json)、[push Native](evidence/mainline-final/native-38422389807-final.json)，不把历史失败改为PASS。
 
 [primary读回](evidence/mainline-final/primary-current-readback.json)：51fccfc7/原分支，捕获111文件100相同/11后续改变/0missing，暂存为空。原index当前字节hash不同于捕获时，原因尚未归因，不宣称跨时刻index bytes相同，也不restore别人的index；本任务只在独立工作树提交。
+
+## cc184 产品源码实际收尾证据
+
+独立正式[source review](evidence/mainline-final/review-cc184e59.json)于2026-10-13T17:06:47Z PASS，confirmed openP0/P1/P2=0，MR004关闭；51/51独立窄测试、37原件hash一致、125旧任务保留。源审查不替代runtime。此前端口失败之后[真实528 browser](evidence/mainline-final/browser528-cc184e59.log)全PASS，零重试，[development](evidence/mainline-final/development-cc184e59.log)四步PASS；没有把两次port-busy记录改写为完整verify exit0。
+
+[默认production实际新构建](evidence/mainline-final/managed-build-cc184e59.log) rebuilt:true，Desktop/Web2.1.18，input f2fdcc3fbdc54fc7b3122bcd50dbf46d4da2d699eae38fe6696904ab07b7f124，默认EXE37aa6f2854e9fd9a5540c6975133687beda9cdd7370718a61a03376be6974816。[optional driver Native6](evidence/mainline-final/native6-cc184e59.json)、[默认协议/透明恢复13](evidence/mainline-final/default-native13-cc184e59.json)、[真实Ollama13](evidence/mainline-final/ollama13-cc184e59.json)均PASS，source clean，input相同，driver EXEb6e2ddd32bbd85d697bebca2c3a2112bdcf46e3fb30a6fe1af9c9f9727e7895a独立记录。Ollama模型/许可/本地CPU/NO_CLOUD及小模型质量边界照旧，[实际续聊截图](evidence/mainline-final/ollama-round4-cc184e59.png)。
+
+[官方SDK1.30 Native18](evidence/mainline-final/sdk130-native18-cc184e59.json)、[SDK2.3.1 Native18](evidence/mainline-final/sdk2-native18-cc184e59.json)均PASS，首次与重启保存/连接/manual真实原生确认调用/断开完整。legacy真实initialize/sessionDELETE，modern实际SSE/metadata/标准与参数头/body一致且无session，非法工具过滤；[汇总](evidence/mainline-final/sdk-native-combined-cc184e59.json)及两份raw请求保留。源/EXE before+after完整identity fence，own app exit0/端口关闭。原SDK1第一次虽connect/call成功但错误断言旧confirm IPC而FAIL的[原件](evidence/mainline-final/sdk130-fixture-dialog-red.json)保留；已按锁定plugin-dialog2.7.3实际plugin:dialog|message参数和Native helper点击验证。readonly bridge未改，用实际CDP IPC get_storage_root阳性校验观测；credential命令0仅适用于CDP接入后，接入前IPC未观测，不能声称启动全程vault命令0。SDK2仅own临时Apache-2.0 deps；产品依赖未变。
+
+默认助手按钮截图疑点经当前production Web1440/1920的[几何检查](evidence/mainline-final/assistant-web-geometry-cc184e59.log)和实际[Native稳定几何](evidence/mainline-final/assistant-native-geometry-cc184e59.json)排除：1920×1080/DPR1.5，new按钮右侧仍距panel20.67px，5节点均inside；[稳定截图](evidence/mainline-final/assistant-native-stable-cc184e59.png)。因此没有凭初始截图修改CSS。
+
+cc184 [Hosted原包](evidence/mainline-final/hosted-packages-cc184e59.json)和[crosscheck](evidence/mainline-final/hosted-package-crosschecks-cc184e59.json)：Linux AppImage/deb、Mac app/dmg均分别2checks PASS，每格式14storage markers与ownpid终止；Linux4316files和66次RPATH保护逐条等于strict checker、source before/after同值，原始Node/Codex字节未改，PR/push实际包hash分别记录。Mac4314files/arm64 Node、app/dmg资源与EXE一致，ad-hoc不等于notarization。PRLinux与两Mac Native6已PASS；pushLinux在3checks后的export expectedRevision冲突[原件](evidence/mainline-final/hosted-linux-export-race-cc184e59.log)保留，Windows最终完整结果尚待追加。
+
+已定位原生fixture在两路task成功后没有等180ms autosave，read_revision与export之间仍有合法写入；现在只让测试在UI实际“已保存”且连续两次Native durable revision一致后导出，记录packageExportRevision并保留严格expectedRevision，只有一次export，冲突仍失败。未修改storage、export guard、产品行为、timeout或跳过断言；该同步改动等待新版exact-SHA实跑。
+
+关于旧包措辞：producer自身不额外删除产物，上游锁定[Tauri2.11.4](https://github.com/tauri-apps/tauri/blob/tauri-cli-v2.11.4/crates/tauri-bundler/src/bundle/linux/appimage/linuxdeploy.rs#L38)仍重建bundle/appimage；旧证据原件单独归档保留。mock callback的旧文件断言只证明producer自身不清理，不证明上游CLI保留同目录旧包。

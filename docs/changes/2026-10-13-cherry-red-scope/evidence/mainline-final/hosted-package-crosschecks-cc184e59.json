@@ -1,0 +1,56 @@
+[
+  {
+    "artifactId": 11833382956,
+    "packageCount": 2,
+    "beforeAfterSame": true,
+    "twoManifestHashesEqual": true,
+    "twoResourceFileArraysEqual": true,
+    "allPackagePass": true,
+    "nodePlatformBound": true,
+    "each14Markers": true,
+    "ownedTerminations": true,
+    "producerBeforeAfterSame": true,
+    "packageBound": true,
+    "producerAllFilesEqual": true,
+    "manifestBound": true,
+    "preservedBound": true
+  },
+  {
+    "artifactId": 11833073397,
+    "packageCount": 2,
+    "beforeAfterSame": true,
+    "twoManifestHashesEqual": true,
+    "twoResourceFileArraysEqual": true,
+    "allPackagePass": true,
+    "nodePlatformBound": true,
+    "each14Markers": true,
+    "ownedTerminations": true
+  },
+  {
+    "artifactId": 11832664348,
+    "packageCount": 2,
+    "beforeAfterSame": true,
+    "twoManifestHashesEqual": true,
+    "twoResourceFileArraysEqual": true,
+    "allPackagePass": true,
+    "nodePlatformBound": true,
+    "each14Markers": true,
+    "ownedTerminations": true
+  },
+  {
+    "artifactId": 11832539949,
+    "packageCount": 2,
+    "beforeAfterSame": true,
+    "twoManifestHashesEqual": true,
+    "twoResourceFileArraysEqual": true,
+    "allPackagePass": true,
+    "nodePlatformBound": true,
+    "each14Markers": true,
+    "ownedTerminations": true,
+    "producerBeforeAfterSame": true,
+    "packageBound": true,
+    "producerAllFilesEqual": true,
+    "manifestBound": true,
+    "preservedBound": true
+  }
+]
