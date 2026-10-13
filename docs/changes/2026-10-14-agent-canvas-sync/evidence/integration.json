@@ -1,0 +1,310 @@
+{
+  "status": "INTEGRATED_UNCOMMITTED",
+  "at": "2026-10-13T18:05:35.355Z",
+  "root": "D:/kk-studio/KK-Studio-2.0",
+  "candidate": "D:/kk-studio/.worktrees/TASK-CANVAS-SYNC-20261014",
+  "head": "51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c",
+  "patchSha256": "1ff1bfa90dab2a8432ec83d6c264b4fd48f42f545de4db2a253ce4894b3e38f6",
+  "indexPreserved": true,
+  "indexSha256": "28346dcea2311b07762aa0fec9a079ca9003b4bc17fa8f20c6cbb9decd3ef9cf",
+  "stagedDiffPreserved": true,
+  "originalDirtyFiles": 207,
+  "concurrentChangedFromInitial": [
+    "CHANGELOG.md",
+    "VERSION",
+    "config/platform-versions.json",
+    "docs/PROGRESS.md",
+    "docs/governance/TASK_LEDGER.md",
+    "docs/governance/task-ledger.json",
+    "package-lock.json",
+    "package.json",
+    "src-tauri/Cargo.lock",
+    "src-tauri/Cargo.toml",
+    "src-tauri/tauri.conf.json",
+    "src/components/settings/ModelProviderSettings.tsx",
+    "src/components/settings/ProviderConnectionList.tsx",
+    "src/features/creation/providerRegistry.ts",
+    "tests/browser/frontend.spec.ts",
+    "tests/unit/providerRegistryDurable.test.ts",
+    "src-tauri/src/provider_transaction.rs",
+    "src-tauri/src/provider_transaction_tests.rs",
+    "tests/browser/capability-model-access.spec.ts",
+    "tests/desktop/provider-credential-recovery.mjs",
+    "tests/unit/providerSaveRecovery.test.ts"
+  ],
+  "unrelatedOriginalFiles": 189,
+  "unrelatedDrift": [
+    "docs/changes/2026-10-14-ccswitch-status-recovery/intent.md",
+    "docs/changes/2026-10-14-ccswitch-status-recovery/review.md",
+    "docs/changes/2026-10-14-ccswitch-status-recovery/verification.md"
+  ],
+  "ownedMismatch": [],
+  "sourceVersions": {
+    "desktop": "2.1.19",
+    "web": "2.1.19",
+    "mobile": "2.1.1"
+  },
+  "scopedExistingFiles": [
+    {
+      "file": "src/domain/projectCanvas.ts",
+      "beforeSha256": "f615c4c2d8b3f7442b0e913dc463f1404135aa1e4d99c22b6e20c07815e4c701",
+      "afterSha256": "1d2e21e74933b30cc02590a0601cab4c90165ec9424d3b56209a59c7ca78668b",
+      "finalSha256": "1d2e21e74933b30cc02590a0601cab4c90165ec9424d3b56209a59c7ca78668b"
+    },
+    {
+      "file": "src/components/canvas/useCanvasControls.ts",
+      "beforeSha256": "886318dede604b2c8775a91eb37657a0af5faaa63541e1ee6ad81302662f9216",
+      "afterSha256": "ed85ab370f22b6d2657a937ed587e270879e74fd594e657dbed78dcf3d775ff4",
+      "finalSha256": "fc9b21795de99a2d82c7ec0d15737ae261169c63e4a280c7b99137a94fda8ccb"
+    },
+    {
+      "file": "src/components/canvas/useCanvasConnections.ts",
+      "beforeSha256": "471d9f6113767512573c005b6f0b4b3ea292faff0fec9dda0345830f52da2db5",
+      "afterSha256": "5141da023a4f1191bfee4fc3b52def710b84efcb7bf607021ed69b2e4dd2181e",
+      "finalSha256": "3e75379708087cc8844be3a448f4a2fcba7b75aa567096ec971bd4f0cc24fd39"
+    },
+    {
+      "file": "src/components/canvas/useCanvasPersistence.ts",
+      "beforeSha256": "92ff81e3ecc224dcf02cbe397f867d349eb04bfd91efcd39deaa9cff407432c5",
+      "afterSha256": "496baa0e9f5db76c1ca74158b2752c8f3ae7f782e55b2822f35063e802a48b2e",
+      "finalSha256": "496baa0e9f5db76c1ca74158b2752c8f3ae7f782e55b2822f35063e802a48b2e"
+    },
+    {
+      "file": "src/components/canvas/useCanvasPointer.ts",
+      "beforeSha256": "d7d34bb23a4c720403389ed6ecc14d97f051c6a51fd1dbe803fa22feca42a048",
+      "afterSha256": "9e765764ffa90115dd8806d26eb579d6a34eb956e4ec560fbacea6515e6dd510",
+      "finalSha256": "9e765764ffa90115dd8806d26eb579d6a34eb956e4ec560fbacea6515e6dd510"
+    },
+    {
+      "file": "tests/unit/projectCanvas.test.ts",
+      "beforeSha256": "fdb64035bed89ad796d6df4efef9ec6ab219e791fbf123f587647d6fcd0ae151",
+      "afterSha256": "184b82495834bd502e2d87fb7d55e5749e34b7ca2f86e8375a645720d71ac058",
+      "finalSha256": "184b82495834bd502e2d87fb7d55e5749e34b7ca2f86e8375a645720d71ac058"
+    },
+    {
+      "file": "tests/browser/agent.spec.ts",
+      "beforeSha256": "e93e9625cb45fa426a67b29b85b17dfa56963d87fa8b3ec44d02ea42296fc37f",
+      "afterSha256": "f72ade6010f6117cd49392a68da708cd76d1b74277ea29e706ab578f7e6f63a7",
+      "finalSha256": "f72ade6010f6117cd49392a68da708cd76d1b74277ea29e706ab578f7e6f63a7"
+    },
+    {
+      "file": "VERSION",
+      "beforeSha256": "163608c47421ea933e1799c11d9bb0e87ef3e0b114768a1b9d8894d8a0c3b436",
+      "afterSha256": "1e668cb3b46f328b87fcc7f77d2356c2b06a320aa0cd51834dd9b55670706d3c",
+      "finalSha256": "1e668cb3b46f328b87fcc7f77d2356c2b06a320aa0cd51834dd9b55670706d3c"
+    },
+    {
+      "file": "config/platform-versions.json",
+      "beforeSha256": "97ce7bf7b2fed06d80da2fb7173a41e4e874ebf658291d9e9c70f85f52062882",
+      "afterSha256": "995438e1469a2dc22726910f5be2721a22daee415d47f7a5da700bfdcd86889c",
+      "finalSha256": "995438e1469a2dc22726910f5be2721a22daee415d47f7a5da700bfdcd86889c"
+    },
+    {
+      "file": "package.json",
+      "beforeSha256": "49f75870761e626dd6e659c6390e80f01fdd8514e88c7be655ad2e1637cb6a11",
+      "afterSha256": "27a03e3abac5766df82e331e04f6b1ac13c3eeb93c250d774811b8f05d426205",
+      "finalSha256": "27a03e3abac5766df82e331e04f6b1ac13c3eeb93c250d774811b8f05d426205"
+    },
+    {
+      "file": "package-lock.json",
+      "beforeSha256": "2ddcd10524e1ca0c707c402e929e5220ff0f76c9a537436f2c63a142be8be743",
+      "afterSha256": "670d95910542db86ea10dfcbbe6f6423964dafff137bbe16861889a311410dbb",
+      "finalSha256": "670d95910542db86ea10dfcbbe6f6423964dafff137bbe16861889a311410dbb"
+    },
+    {
+      "file": "src-tauri/tauri.conf.json",
+      "beforeSha256": "a3678ceea4a432d2bb57e43c54d28211f6040e85a74a32fa15b918fdb47e51f1",
+      "afterSha256": "d6b9aa2aeefda8c4adfc7555a1cee4548954de30d5539eaba3293bc9a3e192c8",
+      "finalSha256": "d6b9aa2aeefda8c4adfc7555a1cee4548954de30d5539eaba3293bc9a3e192c8"
+    },
+    {
+      "file": "src-tauri/Cargo.toml",
+      "beforeSha256": "5329e7df1df9fb0a644a7c00319da55924144ec7bf7284fc38ea65495a833d80",
+      "afterSha256": "62ef122c3c8f63cdabebf935a16b976f49c7110902292d65e53850d3b293805f",
+      "finalSha256": "62ef122c3c8f63cdabebf935a16b976f49c7110902292d65e53850d3b293805f"
+    },
+    {
+      "file": "src-tauri/Cargo.lock",
+      "beforeSha256": "46e96762dcf1e22b96a10445395e1df0ea3f005d64f49c73a82132597e42e8a5",
+      "afterSha256": "eff84e0f9557a84b0f5e9d22a543df577feab96c5aed078d06883f6e01318902",
+      "finalSha256": "eff84e0f9557a84b0f5e9d22a543df577feab96c5aed078d06883f6e01318902"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "beforeSha256": "66b11f9b33bcb874043a86350cd72313e03c7fd4cdfae1c32e9f1e7583d46b12",
+      "afterSha256": "7de19cf91953ba2f370a474ca7adb3d5055522eda07343916faf0d3dee5714ed",
+      "finalSha256": "7de19cf91953ba2f370a474ca7adb3d5055522eda07343916faf0d3dee5714ed"
+    },
+    {
+      "file": "docs/PROGRESS.md",
+      "beforeSha256": "15ec4d8fbff8bd29d46c492bf761800b74efc0169e34f848430f7ddc63860e55",
+      "afterSha256": "5f94fe1a4dda04ceb3ed9d6fd25988df3dfd5a4c126b4a27852b0c45f7339c4a",
+      "finalSha256": "4c8a2b834b43c24792479986e53a4a367f803a0832b71717cbd705781074df5c"
+    },
+    {
+      "file": "docs/governance/task-ledger.json",
+      "beforeSha256": "2bd46699348f442d6620c8f504ac85f33c9f838f0840b166cbc72a2cf7257f86",
+      "afterSha256": "ecb68384470785d67925fd094f21dd27f64a3192bc39a5e80fb77146dade33e1",
+      "finalSha256": "5b41ec0897e15f4d45d1ffeb91fdabd0492d3f48bee5d72284afbdcf6436e558"
+    },
+    {
+      "file": "docs/governance/TASK_LEDGER.md",
+      "beforeSha256": "a0a9820d0ad5dc0d12ab8954786ce44d4a186eea46b64a4a513a63aa7cbde6d8",
+      "afterSha256": "900f179178896337081134534360a79316a0827b336f7d02655057a045d4ac65",
+      "finalSha256": "71e83cb4f0e7d8bd9cdcbb52cca851600e83c592f17526ce0238b6ce2e5e2b4e"
+    },
+    {
+      "file": "docs/governance/TASK_STATUS.md",
+      "beforeSha256": "af164cbb282014ef2186c668fdf58ccd283ee6af1b0cd410b9c2b3815b8d646f",
+      "afterSha256": "d574bb2e2ecde6f88ddfaa7ba9688a20eb614a5d0a1b650f684ec786a9fed916",
+      "finalSha256": "d574bb2e2ecde6f88ddfaa7ba9688a20eb614a5d0a1b650f684ec786a9fed916"
+    },
+    {
+      "file": "docs/governance/PROJECT_STATE.md",
+      "beforeSha256": "4a586e1d4046b9ff2d46c41ca46ad9162b369b657e309d4ba9c840fee89b76ee",
+      "afterSha256": "eb25149eba7ae7c473020333b24d74b390bfe85825512ce4eff6e3108edc7078",
+      "finalSha256": "0a292756d0d149330d48a7ce4a2b8e4698f1a5154e24d26ecbe87f54670f49ad"
+    },
+    {
+      "file": "docs/governance/AI_HANDOFF.md",
+      "beforeSha256": "22b8588e69c4aa5ae5f63517138d4e39692a0d707dc08ded9e21dc9a8b09b797",
+      "afterSha256": "fbae95b41612c837353ebf8f3a7fac33a88ab04cc023cb99345ac22cd2cd1565",
+      "finalSha256": "dd14a5e466591cb532163bb822afd2a6e02c94a59ca0bc6d1944cfae1b39d10d"
+    },
+    {
+      "file": "docs/features/features.registry.json",
+      "beforeSha256": "da6a4d22af478c871902bf73f3c4da2104d02172d485bc75a28f15a0a5725300",
+      "afterSha256": "a0aa8d9cf11fa49f7bc83666ad67d21cf6138d211b89a4db1ac2b659f5e9df1c",
+      "finalSha256": "a0aa8d9cf11fa49f7bc83666ad67d21cf6138d211b89a4db1ac2b659f5e9df1c"
+    },
+    {
+      "file": "docs/features/README.md",
+      "beforeSha256": "b0a8b5d38fe582109c6fded7220c4b7af78727750882b32cbf13a2cbad7a821f",
+      "afterSha256": "ef960b93fb6b610d2049801b62339d4e07246ae449c9c5a2ac916a5948dd37de",
+      "finalSha256": "ef960b93fb6b610d2049801b62339d4e07246ae449c9c5a2ac916a5948dd37de"
+    },
+    {
+      "file": "docs/features/feat-001-canvas-workbench.md",
+      "beforeSha256": "5e5c2f718e3f41378b655e7ce9804a59153a8be08e3dce7cd9133494b7559c9b",
+      "afterSha256": "c4b116ae8a1586d4eb2e0b0199077e702647fbce4e46bb228661ecdb38e0cdac",
+      "finalSha256": "777a4e6a621f2b36e7b6de31d235fd3dce784b46d4336e2d3054557306caf716"
+    },
+    {
+      "file": "docs/features/feat-009-conversation.md",
+      "beforeSha256": "34c3a37f30b82b0bfa131b7ce99089c7cf654833064ea43af09442a5fa27e85a",
+      "afterSha256": "5ccf0da831cfdaf347e0eb451206b104c438a8c23cb47d9cb538903c84be4a4a",
+      "finalSha256": "aa88c4d15e3d15c2bcec68b4ac974ade2e2c0d4c3a778f82ddb7568b9f93e738"
+    },
+    {
+      "file": "docs/features/feat-012-mcp.md",
+      "beforeSha256": "44922e3afcdbfc5cccd155bed4cdc8d3b945da4009661023b976b8a62d5147c1",
+      "afterSha256": "b52b5e16b1a42b5c814e7dbd86a8a029a75da9f3998c8363526036267b8360c0",
+      "finalSha256": "adffee18e856fae0687468b9ed970c07307e60ecb7e0352085fccae5e3002bda"
+    },
+    {
+      "file": "src/components/Canvas.tsx",
+      "beforeSha256": "5fbce77ba923303c34db6f575bed2223ebfabd9ddd2ac03fd6705434743a1016",
+      "afterSha256": "c195bf955c1805d6ee40dbb7e6e19f73bb2512a54b9f347a882cae6a11994267",
+      "finalSha256": "c195bf955c1805d6ee40dbb7e6e19f73bb2512a54b9f347a882cae6a11994267"
+    }
+  ],
+  "newTaskFiles": [
+    "docs/changes/2026-10-14-agent-canvas-sync/evidence/active-drag-red.md",
+    "docs/changes/2026-10-14-agent-canvas-sync/evidence/agent-canvas-sync.png",
+    "docs/changes/2026-10-14-agent-canvas-sync/evidence/cancel-drag-red.md",
+    "docs/changes/2026-10-14-agent-canvas-sync/evidence/full-verify.log",
+    "docs/changes/2026-10-14-agent-canvas-sync/evidence/initial-sync-red.md",
+    "docs/changes/2026-10-14-agent-canvas-sync/evidence/integration.json",
+    "docs/changes/2026-10-14-agent-canvas-sync/evidence/isolated-development-fail.log",
+    "docs/changes/2026-10-14-agent-canvas-sync/evidence/primary-checks.json",
+    "docs/changes/2026-10-14-agent-canvas-sync/evidence/production-browser-results.json",
+    "docs/changes/2026-10-14-agent-canvas-sync/evidence/related-unit.log",
+    "docs/changes/2026-10-14-agent-canvas-sync/evidence/source-manifest.json",
+    "docs/changes/2026-10-14-agent-canvas-sync/evidence/task-review.patch",
+    "docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json",
+    "docs/changes/2026-10-14-agent-canvas-sync/intent.md",
+    "docs/changes/2026-10-14-agent-canvas-sync/plan.md",
+    "docs/changes/2026-10-14-agent-canvas-sync/review.md",
+    "docs/changes/2026-10-14-agent-canvas-sync/spec.md",
+    "docs/changes/2026-10-14-agent-canvas-sync/verification.md"
+  ],
+  "backupPath": "D:/kk-studio/.tmp/agent-canvas-sync-20261014/integration-backup",
+  "runtimeDataTouched": false,
+  "staged": false,
+  "committed": false,
+  "pushed": false,
+  "finalPatchSha256": "50feac5330efb52f370f12badd9bca2763408cc3d14ea80c9b4413697a35890f",
+  "sourceFiles": [
+    {
+      "file": "src/domain/projectCanvas.ts",
+      "baselineSha256": "f615c4c2d8b3f7442b0e913dc463f1404135aa1e4d99c22b6e20c07815e4c701",
+      "candidateSha256": "1d2e21e74933b30cc02590a0601cab4c90165ec9424d3b56209a59c7ca78668b"
+    },
+    {
+      "file": "src/components/canvas/useCanvasControls.ts",
+      "baselineSha256": "886318dede604b2c8775a91eb37657a0af5faaa63541e1ee6ad81302662f9216",
+      "candidateSha256": "fc9b21795de99a2d82c7ec0d15737ae261169c63e4a280c7b99137a94fda8ccb"
+    },
+    {
+      "file": "src/components/canvas/useCanvasConnections.ts",
+      "baselineSha256": "471d9f6113767512573c005b6f0b4b3ea292faff0fec9dda0345830f52da2db5",
+      "candidateSha256": "3e75379708087cc8844be3a448f4a2fcba7b75aa567096ec971bd4f0cc24fd39"
+    },
+    {
+      "file": "src/components/canvas/useCanvasPersistence.ts",
+      "baselineSha256": "92ff81e3ecc224dcf02cbe397f867d349eb04bfd91efcd39deaa9cff407432c5",
+      "candidateSha256": "496baa0e9f5db76c1ca74158b2752c8f3ae7f782e55b2822f35063e802a48b2e"
+    },
+    {
+      "file": "src/components/canvas/useCanvasPointer.ts",
+      "baselineSha256": "d7d34bb23a4c720403389ed6ecc14d97f051c6a51fd1dbe803fa22feca42a048",
+      "candidateSha256": "9e765764ffa90115dd8806d26eb579d6a34eb956e4ec560fbacea6515e6dd510"
+    },
+    {
+      "file": "tests/unit/projectCanvas.test.ts",
+      "baselineSha256": "fdb64035bed89ad796d6df4efef9ec6ab219e791fbf123f587647d6fcd0ae151",
+      "candidateSha256": "184b82495834bd502e2d87fb7d55e5749e34b7ca2f86e8375a645720d71ac058"
+    },
+    {
+      "file": "tests/browser/agent.spec.ts",
+      "baselineSha256": "e93e9625cb45fa426a67b29b85b17dfa56963d87fa8b3ec44d02ea42296fc37f",
+      "candidateSha256": "f72ade6010f6117cd49392a68da708cd76d1b74277ea29e706ab578f7e6f63a7"
+    },
+    {
+      "file": "src/components/Canvas.tsx",
+      "baselineSha256": "5fbce77ba923303c34db6f575bed2223ebfabd9ddd2ac03fd6705434743a1016",
+      "candidateSha256": "c195bf955c1805d6ee40dbb7e6e19f73bb2512a54b9f347a882cae6a11994267"
+    }
+  ],
+  "undoAckCorrection": {
+    "files": [
+      "src/components/Canvas.tsx",
+      "src/components/canvas/useCanvasControls.ts",
+      "src/components/canvas/useCanvasConnections.ts"
+    ],
+    "at": "2026-10-13T18:12:28.643Z",
+    "guarded": true
+  },
+  "finalCheckedAt": "2026-10-13T18:29:37.158Z",
+  "externalConcurrentUpdates": [
+    {
+      "file": "docs/changes/2026-10-14-ccswitch-status-recovery/intent.md",
+      "beforeSha256": "9003c140a85a15e0843697b5ac6ba1d5fcee7f10d202b037242ca8d537d96d28",
+      "afterSha256": "29d9a7ef1173faf2e0926fbd5d71b8359a69d6ea6feebab0bfa3720dec97e4c5",
+      "note": "Updated by concurrent supplier task during verification; this task never writes this path."
+    },
+    {
+      "file": "docs/changes/2026-10-14-ccswitch-status-recovery/review.md",
+      "beforeSha256": "ebdcef544b814d151da71fe8cfe46cc7cf7a38a1b66a8749eee40068758241e0",
+      "afterSha256": "02e938a6658b8dbe82184d832306b263ed64617e20b32ab4eec95d86722ac240",
+      "note": "Updated by concurrent supplier task during verification; this task never writes this path."
+    },
+    {
+      "file": "docs/changes/2026-10-14-ccswitch-status-recovery/verification.md",
+      "beforeSha256": "59191922c8c603a39a80e66c8def2f24f1a966ad4af3d5bda5ec9f38ca297954",
+      "afterSha256": "b6201bd9e063f86964882c97222663c3f5d3a2787307fafbe18d5f7de379fcc2",
+      "note": "Updated by concurrent supplier task during verification; this task never writes this path."
+    }
+  ],
+  "unrelatedUnchangedFiles": 186
+}

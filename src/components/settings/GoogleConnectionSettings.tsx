@@ -198,7 +198,7 @@ export default function GoogleConnectionSettings({
           setStatus(
             controller.signal.aborted
               ? "检测已取消。"
-              : "无法连接 Gemini CLI 桥，请先运行 node scripts/gemini-bridge.mjs 启动本地桥。",
+              : "无法连接 Gemini CLI 桥，请复制上方启动桥命令，并在安装 Gemini CLI 的同一 Node/npm 环境中执行。",
           );
       } finally {
         if (mounted.current && request.current === controller) {

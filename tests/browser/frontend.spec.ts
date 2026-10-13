@@ -135,7 +135,9 @@ test("模型接入使用 API 地址，连接状态真实且密钥不落盘", asy
   expect(saved).toContain("models.example.test");
   expect(saved).not.toContain("session-key");
   await page.getByRole("button", { name: "测试连接" }).click();
-  await expect(page.getByText(/连接成功，已刷新 0 个模型/)).toBeVisible();
+  await expect(
+    page.getByText("已获取 0 个模型；生成能力仍需实际验证。", { exact: true }),
+  ).toBeVisible();
   await page
     .getByRole("dialog", { name: "设置" })
     .screenshot({ path: "test-results/runtime/settings-model-provider.png" });
@@ -569,6 +571,48 @@ test("全局搜索按四类导航、筛选并恢复焦点", async ({ page }) => 
   await expect(
     page.getByRole("button", { name: "搜索", exact: true }),
   ).toBeFocused();
+});
+
+test("项目搜索按项目类型筛选，卡片标签不会清空项目结果", async ({ page }) => {
+  await openWorkspace(page);
+  const snapshot = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("kk-studio-next:creation:v1")!),
+  );
+  const text = snapshot.projects[0];
+  text.kind = "text";
+  text.name = "文案筛选项目";
+  text.items[0].tags = ["场景"];
+  snapshot.projects.push({
+    ...structuredClone(text),
+    id: "project-video",
+    kind: "video",
+    name: "视频筛选项目",
+  });
+  snapshot.revision = Date.now() + 1;
+  await page.evaluate(
+    (value) => localStorage.setItem("kk-studio-next:creation:v1", value),
+    JSON.stringify(snapshot),
+  );
+  await page.reload();
+  await page.getByRole("button", { name: "搜索", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "搜索", exact: true });
+  const kind = dialog.getByLabel("搜索类型", { exact: true });
+  const tag = dialog.getByLabel("搜索标签", { exact: true });
+  await dialog.getByRole("tab", { name: "画布卡片", exact: true }).click();
+  await tag.selectOption("场景");
+  await dialog.getByRole("tab", { name: "项目", exact: true }).click();
+  await kind.selectOption("text");
+  await expect(dialog.locator(".catalog-result")).toHaveCount(1);
+  await expect(dialog.locator(".catalog-result")).toContainText("文案筛选项目");
+  await expect(tag).toBeDisabled();
+  await expect(tag).toHaveValue("all");
+  await expect(dialog).toContainText("标签仅用于卡片和已加载资源");
+  await kind.selectOption("video");
+  await expect(dialog.locator(".catalog-result")).toHaveCount(1);
+  await expect(dialog.locator(".catalog-result")).toContainText("视频筛选项目");
+  await dialog.getByRole("tab", { name: "画布卡片", exact: true }).click();
+  await expect(tag).toBeEnabled();
+  await expect(tag).toHaveValue("场景");
 });
 
 for (const [width, height] of [

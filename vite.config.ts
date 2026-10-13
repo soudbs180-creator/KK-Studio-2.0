@@ -3,6 +3,8 @@ import { defineConfig, searchForWorkspaceRoot } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
+  // Settings load this dependency lazily; prebundle it before the first dialog opens.
+  optimizeDeps: { include: ["@tauri-apps/api/path"] },
   plugins: [
     react(),
     {

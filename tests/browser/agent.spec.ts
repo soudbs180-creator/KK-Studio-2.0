@@ -1,9 +1,324 @@
 import { test, expect, type Page } from "@playwright/test";
 import { createServer, type ServerResponse } from "node:http";
 import { openSeededProject } from "./helpers";
+import type { CreationSnapshot } from "../../src/features/creation/model";
 const productionOrigin = "http://127.0.0.1:1423";
 const png =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
+
+async function readCanvasSnapshot(page: Page): Promise<CreationSnapshot> {
+  return page.evaluate(
+    () =>
+      new Promise((resolve, reject) => {
+        const open = indexedDB.open("kk-studio-next", 1);
+        open.onerror = () => reject(open.error);
+        open.onsuccess = () => {
+          const db = open.result;
+          const read = db
+            .transaction("creation")
+            .objectStore("creation")
+            .get("snapshot");
+          read.onsuccess = () => {
+            db.close();
+            resolve(read.result);
+          };
+          read.onerror = () => {
+            db.close();
+            reject(read.error);
+          };
+        };
+      }),
+  );
+}
+
+test("Agent 图变更同步已有/新增节点及 reference 连线并从 IndexedDB 重载", async ({
+  page,
+}, info) => {
+  test.setTimeout(60000);
+  const agent = await fixture(true);
+  try {
+    await page.addInitScript(
+      (url) => localStorage.setItem("canvas-agent-url", url),
+      agent.url,
+    );
+    await project(page);
+    await expect
+      .poll(
+        async () => (await readCanvasSnapshot(page))?.projects[0]?.items.length,
+      )
+      .toBe(3);
+    const original = (await readCanvasSnapshot(page)).projects[0];
+    const oldPath = await page
+      .getByTestId("connector-video1")
+      .getAttribute("d");
+    await page.getByRole("button", { name: "连接 Codex", exact: true }).click();
+    await expect(
+      page.getByText("Codex 主 Agent · 已连接", { exact: true }),
+    ).toBeVisible();
+    await page.getByLabel("对话内容").fill("调整画布位置和引用线");
+    await page.getByRole("button", { name: "发送消息", exact: true }).click();
+    await expect.poll(() => agent.received.turns.length).toBe(1);
+    agent.emit("tool_call", {
+      requestId: "canvas-sync-fixture",
+      name: "canvas_apply_ops",
+      input: {
+        ops: [
+          {
+            type: "update_node",
+            id: "image",
+            patch: { position: { x: 160, y: 180 } },
+          },
+          {
+            type: "add_node",
+            id: "agent-sync-node",
+            nodeType: "image",
+            position: { x: 320, y: 500 },
+            metadata: { prompt: "新增节点内容" },
+          },
+          { type: "delete_connections", ids: ["connector-video2"] },
+          {
+            type: "connect_nodes",
+            id: "agent-reference-sync",
+            fromNodeId: "image",
+            toNodeId: "video2",
+          },
+        ],
+      },
+    });
+    await expect.poll(() => agent.received.tools.length).toBe(1);
+    expect(agent.received.tools[0].result).toMatchObject({
+      ok: true,
+      applied: 4,
+      rejected: [],
+    });
+    const positions = async () =>
+      page
+        .locator(
+          '[data-testid="canvas-node-image"], [data-testid="canvas-node-agent-sync-node"]',
+        )
+        .evaluateAll((nodes) =>
+          nodes.map((node) => ({
+            id: node.getAttribute("data-testid"),
+            left: (node as HTMLElement).style.left,
+            top: (node as HTMLElement).style.top,
+          })),
+        );
+    const expectedPositions = [
+      { id: "canvas-node-image", left: "160px", top: "180px" },
+      { id: "canvas-node-agent-sync-node", left: "320px", top: "500px" },
+    ];
+    await expect.soft
+      .poll(positions, { timeout: 3000 })
+      .toEqual(expectedPositions);
+    await expect
+      .soft(page.getByTestId("agent-reference-sync"))
+      .toBeAttached({ timeout: 3000 });
+    await expect
+      .soft(page.getByTestId("connector-video2"))
+      .toHaveCount(0, { timeout: 3000 });
+    await page.screenshot({ path: info.outputPath("agent-canvas-sync.png") });
+    await info.attach("canvas-dom", {
+      body: JSON.stringify({
+        positions: await positions(),
+        state: agent.received.state,
+      }),
+      contentType: "application/json",
+    });
+    const expectedEdges = [
+      original.canvas.edges[0],
+      {
+        id: "agent-reference-sync",
+        source: "image",
+        target: "video2",
+        kind: "reference",
+      },
+    ];
+    await expect
+      .poll(
+        async () => (await readCanvasSnapshot(page)).projects[0].canvas.edges,
+      )
+      .toEqual(expectedEdges);
+    await expect(page.getByTestId("connector-video1")).not.toHaveAttribute(
+      "d",
+      oldPath!,
+    );
+    expect(
+      (await readCanvasSnapshot(page)).projects[0].items.slice(0, 3),
+    ).toEqual(original.items);
+    await page.evaluate(() => {
+      localStorage.removeItem("kk-studio-next:creation:v1");
+      sessionStorage.removeItem("kk-studio-next:creation:v1:pending");
+      sessionStorage.removeItem("kk-studio-next:creation:v1:pending:recovery");
+    });
+    await page.reload();
+    await page.getByRole("button", { name: "项目库", exact: true }).click();
+    await page
+      .locator(".project-library-card")
+      .filter({ hasText: "Agent 验证项目" })
+      .click();
+    await expect.poll(positions).toEqual(expectedPositions);
+    await expect(page.getByTestId("agent-reference-sync")).toHaveAttribute(
+      "d",
+      /^M/,
+    );
+    const restored = (await readCanvasSnapshot(page)).projects[0];
+    expect(restored.canvas.positions.image).toEqual({ x: 160, y: 180 });
+    expect(restored.canvas.positions["agent-sync-node"]).toEqual({
+      x: 320,
+      y: 500,
+    });
+    expect(restored.canvas.edges).toEqual(expectedEdges);
+    expect(restored.items.slice(0, 3)).toEqual(original.items);
+    expect(restored.items[3].prompt).toBe("新增节点内容");
+    expect(agent.received.images).toHaveLength(0);
+  } finally {
+    await agent.close();
+  }
+});
+test("取消本地拖动保留 Agent 对其他节点的位置和新增节点", async ({ page }) => {
+  const agent = await fixture(true);
+  try {
+    await page.addInitScript(
+      (url) => localStorage.setItem("canvas-agent-url", url),
+      agent.url,
+    );
+    await project(page);
+    await page.getByRole("button", { name: "连接 Codex", exact: true }).click();
+    await expect(
+      page.getByText("Codex 主 Agent · 已连接", { exact: true }),
+    ).toBeVisible();
+    await page.getByLabel("对话内容").fill("调整其他节点");
+    await page.getByRole("button", { name: "发送消息", exact: true }).click();
+    await expect.poll(() => agent.received.turns.length).toBe(1);
+    const image = page.getByTestId("canvas-node-image");
+    const readPosition = (id: string) =>
+      page.getByTestId(`canvas-node-${id}`).evaluate((node) => ({
+        x: (node as HTMLElement).style.left,
+        y: (node as HTMLElement).style.top,
+      }));
+    const original = await readPosition("image");
+    const preview = (await image.locator(".image-preview").boundingBox())!;
+    await page.mouse.move(preview.x + 100, preview.y + 100);
+    await page.mouse.down();
+    await page.mouse.move(preview.x + 180, preview.y + 140, { steps: 8 });
+    await expect.poll(() => readPosition("image")).not.toEqual(original);
+    agent.emit("tool_call", {
+      requestId: "during-drag",
+      name: "canvas_apply_ops",
+      input: {
+        ops: [
+          {
+            type: "update_node",
+            id: "video1",
+            patch: { position: { x: 900, y: 400 } },
+          },
+          {
+            type: "add_node",
+            id: "during-drag-node",
+            nodeType: "image",
+            position: { x: 320, y: 500 },
+          },
+        ],
+      },
+    });
+    await expect.poll(() => agent.received.tools.length).toBe(1);
+    await expect
+      .poll(() => readPosition("video1"))
+      .toEqual({ x: "900px", y: "400px" });
+    await expect
+      .poll(() => readPosition("during-drag-node"))
+      .toEqual({ x: "320px", y: "500px" });
+    await page.keyboard.press("Escape");
+    await page.mouse.up();
+    await expect.poll(() => readPosition("image")).toEqual(original);
+    await expect
+      .poll(() => readPosition("video1"))
+      .toEqual({ x: "900px", y: "400px" });
+    await expect
+      .poll(() => readPosition("during-drag-node"))
+      .toEqual({ x: "320px", y: "500px" });
+  } finally {
+    await page.mouse.up();
+    await agent.close();
+  }
+});
+
+test("已保存的拖动预览不被 Agent 同节点更新覆盖，松开后可重载", async ({
+  page,
+}) => {
+  const agent = await fixture(true);
+  try {
+    await page.addInitScript(
+      (url) => localStorage.setItem("canvas-agent-url", url),
+      agent.url,
+    );
+    await project(page);
+    await page.getByRole("button", { name: "连接 Codex", exact: true }).click();
+    await expect(
+      page.getByText("Codex 主 Agent · 已连接", { exact: true }),
+    ).toBeVisible();
+    await page.getByLabel("对话内容").fill("调整同一节点");
+    await page.getByRole("button", { name: "发送消息", exact: true }).click();
+    await expect.poll(() => agent.received.turns.length).toBe(1);
+    const image = page.getByTestId("canvas-node-image");
+    const position = () =>
+      image.evaluate((node) => ({
+        x: (node as HTMLElement).offsetLeft,
+        y: (node as HTMLElement).offsetTop,
+      }));
+    const original = await position();
+    const preview = (await image.locator(".image-preview").boundingBox())!;
+    await page.mouse.move(preview.x + 100, preview.y + 100);
+    await page.mouse.down();
+    await page.mouse.move(preview.x + 180, preview.y + 140, { steps: 8 });
+    await expect.poll(position).not.toEqual(original);
+    const local = await position();
+    await expect
+      .poll(
+        async () =>
+          (await readCanvasSnapshot(page)).projects[0].canvas.positions.image,
+      )
+      .toEqual(local);
+    agent.emit("tool_call", {
+      requestId: "same-node-drag",
+      name: "canvas_apply_ops",
+      input: {
+        ops: [
+          {
+            type: "update_node",
+            id: "image",
+            patch: { position: { x: 900, y: 400 } },
+          },
+        ],
+      },
+    });
+    await expect.poll(() => agent.received.tools.length).toBe(1);
+    await expect.poll(position).toEqual(local);
+    await page.mouse.up();
+    await expect
+      .poll(
+        async () =>
+          (await readCanvasSnapshot(page)).projects[0].canvas.positions.image,
+      )
+      .toEqual(local);
+    await page.evaluate(() => {
+      localStorage.removeItem("kk-studio-next:creation:v1");
+      sessionStorage.removeItem("kk-studio-next:creation:v1:pending");
+      sessionStorage.removeItem("kk-studio-next:creation:v1:pending:recovery");
+    });
+    await page.reload();
+    await page.getByRole("button", { name: "项目库", exact: true }).click();
+    await page
+      .locator(".project-library-card")
+      .filter({ hasText: "Agent 验证项目" })
+      .click();
+    await expect.poll(position).toEqual(local);
+  } finally {
+    await page.mouse.up();
+    await agent.close();
+  }
+});
+
 async function fixture(nativeImage = false) {
   let stream: ServerResponse | undefined;
   const conversation = {

@@ -61,3 +61,15 @@ UI候选提交ff454541；官方 `client:build:agent -- --no-bundle` exit0，实�
 独立审查ff454541发现USAGE-001/002两项P2：编辑文本少计、部分完成/离线被显示为运行。原报告保留工程外independent-review-ff454541.md；先复现旧统计/旧界面失败，再按稳定卡片绑定和有效原始回执计数、使用“其他任务状态”及范围说明。10个统计单测通过。修复后verify exit0：Node1119pass/14skip、Agent172pass/2skip、UI235/0；533 browser为532首试通过、1flaky（sidebar-real-projects折叠分组创建后展开状态首试超时），开发5步骤PASS。原首试/重试结果不覆盖；该flaky根因仍待核对，不宣称本次零flaky。
 
 收敛期间主目录新增已完成的凭据状态恢复和Agent执行展示，最新一致恢复输入f2b0466ad4069ef74306752ed9be3a9319c94b2f的Desktop/Web已为2.1.20。新版必须逐项携带这些代码和对应测试，再升版本验证；ff2.1.18保留为中间候选，不再称最新日常源码。刷新盘点107登记树/39dirty、39一致快照、原index变动0，872源路径与313排除路径可溯源；all-refs-current-ff454541.bundle校验通过，原工作区保持。后续在途变化按时间边界另列。
+
+## 2.1.21 最新来源组合
+
+限定51路径承接f2b0466的23产品/Rust文件、13测试、15原作者文档；版本镜像由本任务工具统一递增到Desktop/Web2.1.21，Mobile2.1.1保持规划。4任务追加，原129记录除本UI任务阶段说明外保留；41明确引用的历史原件4274483字节，敏感模式扫描与逐项hash校验后原样留存，不改旧SHA/结论。来源映射和复制清单保存在工程外ui-stage-218。凭据恢复12拥有文件与19decc93的比较是Git内容映射，当前组合其中2处另有本轮UI接线/测试，不能声称组合12文件全部字节一致。
+
+Gemini桥脚本列入Agent生产白名单和release输入指纹；桌面使用resolveResource复制安全引用的绝对路径PowerShell命令，并明确采用用户安装CLI的同一Node/npm环境。随包Node不含npm，未借此增加npm或自动执行登录；Web开发指引保留源目录要求。路径含#的入口判断改为标准fileURLToPath/resolve。定向桥套47项46pass/1既有skip，实际Node/HTTP夹具不代表真实Gemini登录。
+
+首轮2.1.21完整verify前置通过、Rust131/131与fmt通过；production543个场景为542通过/1失败/0flaky。失败为插件重载后未打标签的旧卡片被补空tags数组，内容仍完整，原精确原件断言保留。新增有效画布的单测先RED再3/3GREEN，仅保留标签字段缺省、显式标签仍规范化。新独立预检发现SEARCH-001 P2：项目类型筛选隐藏所有项目；先browser RED，再按project.kind筛选、项目页禁用无项目语义的标签且保留其他分类选择，说明“标签仅用于卡片和已加载资源”。修正后的搜索/插件两个production场景零retry通过；reviewer纯单测41/41。当前完整组合复验、实际Native及最终SHA审查仍待新回执。
+
+第二次组合前置全部通过：Node1156项1142pass/14既有skip、Agent174项172pass/2skip、UI236/0、lint/type/format/build通过。production544 expected、0unexpected/flaky/skipped；原件browser-221-pass2-results.json，入口index-F03Lyd2x（SHA256 06fe9210c5b3f7233bd9fa046ed236a1e273a0f134db2d08cd673ad203c7b71f）。compound在development失败：首次懒加载新path依赖触发Vite优化重载、设置弹窗状态丢失。只预优化已安装@tauri-apps/api/path，未扩大fs.allow，随后实际开发5步骤PASS/errors0/父目录AGENTS403。旧FAIL与后续PASS分别留存；最终已提交compound和Native仍分别取得回执。
+
+同算法预算当前主入口gzip289127字节，较冻结279510增加9617，低于16384；Web150文件/5105123字节，生产插件保持齐全。Node真实启动桥入口在含#和单引号路径下工作，只请求未知路径、可信Native Origin回404，没有/status/chat、CLI探测、登录或Provider请求。Native安装器、Hosted、真实供应商、Native Mobile与用户视觉验收仍开放。

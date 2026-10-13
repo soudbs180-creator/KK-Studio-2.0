@@ -99,6 +99,10 @@ export async function packageAgentRuntime({
     path.join(ownDirectory, "desktop-entry.mjs"),
     "desktop-entry.mjs",
   );
+  await copyFile(
+    path.join(ownDirectory, "../gemini-bridge.mjs"),
+    "gemini-bridge.mjs",
+  );
   await copyTree(path.join(agent, "dist"), "agent/dist");
   await copyFile(
     path.join(agent, "agent-instructions.md"),

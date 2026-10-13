@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { createProjectCanvas } from "../../src/domain/projectCanvas.ts";
 import {
   effectiveTags,
   splitCollectionTags,
@@ -48,4 +49,40 @@ test("标签与旧收藏取消保存后重载不复活，喜欢和节点身份�
   assert.deepEqual(restored.projects[0].favoriteIds, []);
   assert.deepEqual(restored.projects[0].likedIds, [id]);
   assert.deepEqual(restored.projects[0].customTags, ["客户A"]);
+});
+
+test("旧插件卡片不补空标签，显式标签仍规范化且内容不变", () => {
+  const project = createProject({
+    prompt: "插件",
+    model: "m",
+    kind: "text",
+    attachments: [],
+  });
+  const plugin = {
+    type: "sticky-note:note",
+    width: 240,
+    height: 200,
+    metadata: { content: "原始正文" },
+  };
+  project.items = [
+    {
+      id: "legacy-plugin",
+      kind: "text",
+      title: "便利贴",
+      description: "",
+      plugin,
+    },
+  ];
+  project.canvas = createProjectCanvas(project.items);
+  const restore = () =>
+    normalizeCreationSnapshot({
+      ...emptySnapshot(),
+      projects: [project],
+      activeProjectId: project.id,
+    })!.projects[0].items[0];
+  assert.equal(restore().tags, undefined);
+  assert.deepEqual(restore().plugin, plugin);
+  project.items[0].tags = [" 场景 ", "场景"];
+  assert.deepEqual(restore().tags, ["场景"]);
+  assert.deepEqual(restore().plugin, plugin);
 });

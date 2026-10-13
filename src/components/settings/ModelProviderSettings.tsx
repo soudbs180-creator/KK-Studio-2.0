@@ -136,7 +136,7 @@ export default function ModelProviderSettings({
     setApiKey("");
     setConnection({
       kind: "idle",
-      message: "已切换连接；请测试或保存后使用。",
+      message: "已选中连接供编辑；保存后生效。",
     });
   }
   async function clearKey(): Promise<void> {
@@ -199,7 +199,7 @@ export default function ModelProviderSettings({
       );
       setConnection({
         kind: "success",
-        message: `连接成功，已刷新 ${models.length} 个模型；这不代表全部生成能力已验证。`,
+        message: `已获取 ${models.length} 个模型；生成能力仍需实际验证。`,
       });
     } catch (error) {
       if (requestRef.current !== controller) return;

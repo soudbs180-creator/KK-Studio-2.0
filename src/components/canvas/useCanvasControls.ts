@@ -24,6 +24,8 @@ import type {
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import {
   createProjectCanvas,
+  mergeCanvasPositions,
+  projectCanvasFingerprint,
   type ProjectCanvas,
 } from "../../domain/projectCanvas";
 import {
@@ -59,6 +61,11 @@ export function useCanvasControls({
   const [nodes, setNodes] = useState(
     () => initialCanvas?.positions ?? createProjectCanvas(items).positions,
   );
+  const [observedCanvas, setObservedCanvas] = useState(initialCanvas);
+  const publishedCanvas = useRef("");
+  const isCanvasEcho =
+    initialCanvas !== undefined &&
+    projectCanvasFingerprint(initialCanvas) === publishedCanvas.current;
   const [selectedNode, setSelectedNode] = useState<CanvasNodeId | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { viewport, measure: usableViewport } = useCanvasViewport(containerRef);
@@ -113,6 +120,30 @@ export function useCanvasControls({
     setSelectedNode,
     snapEnabled: canvasPreferences.preferences.snapEnabled,
   });
+  // Re-render with external geometry before persistence can publish the old graph.
+  if (observedCanvas !== initialCanvas) {
+    setObservedCanvas(initialCanvas);
+    if (initialCanvas && !isCanvasEcho) {
+      const drag = pointer.dragRef.current;
+      setNodes((current) => {
+        const next = mergeCanvasPositions(
+          current,
+          observedCanvas?.positions ?? {},
+          initialCanvas.positions,
+        );
+        if (drag?.kind === "node" && drag.nodeId) {
+          const ids = drag.selection.has(drag.nodeId)
+            ? drag.selection
+            : new Set([drag.nodeId]);
+          // A saved preview is still a local edit until the pointer is released.
+          for (const id of ids)
+            if (current[id] && next[id] && next[id] !== current[id])
+              next[id] = current[id];
+        }
+        return next;
+      });
+    }
+  }
   useLayoutEffect(() => {
     if (!selectedNode) {
       revealSelection.current = null;
@@ -305,6 +336,8 @@ export function useCanvasControls({
   });
 
   return {
+    publishedCanvas,
+    isCanvasEcho,
     ...view,
     setComposerExtraHeight,
     composerExtraHeight,

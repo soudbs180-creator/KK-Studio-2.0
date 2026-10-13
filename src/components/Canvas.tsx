@@ -23,6 +23,7 @@ import {
 } from "../domain/canvasViewport";
 import { useAgentCanvasView } from "./canvas/useAgentCanvasView";
 import type { CanvasProps } from "./canvas/CanvasProps";
+import { projectCanvasFingerprint } from "../domain/projectCanvas";
 import "../styles/canvas-layers.css";
 import ImageCompareProvider from "../features/compare/ImageCompareProvider";
 import ImageCompareControls from "../features/compare/ImageCompareControls";
@@ -81,7 +82,12 @@ export default function Canvas({
     setRemovedEdge,
     connectionNotice,
     setConnectionNotice,
-  } = useCanvasConnections(items, onItemsChange, initialCanvas?.edges);
+  } = useCanvasConnections(
+    items,
+    onItemsChange,
+    initialCanvas?.edges,
+    controls.isCanvasEcho,
+  );
   const { history, layersOpen, setLayersOpen } = useCanvasWorkbenchState({
     controls,
     items,
@@ -95,7 +101,13 @@ export default function Canvas({
     edges,
     transform,
     items,
-    onCanvasChange,
+    onCanvasChange
+      ? (canvas) => {
+          // A delayed save ACK must not overwrite a newer local undo or edit.
+          controls.publishedCanvas.current = projectCanvasFingerprint(canvas);
+          onCanvasChange(canvas);
+        }
+      : undefined,
   );
   const addMenu = useCanvasAddMenu(containerRef, transform, addNode, connect);
   useEffect(() => {

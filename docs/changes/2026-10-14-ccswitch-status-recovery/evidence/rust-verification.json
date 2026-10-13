@@ -1,0 +1,96 @@
+{
+  "artifactType": "observed-tool-result-summary",
+  "isFullRawLog": false,
+  "createdAt": "2026-10-13T17:53:00Z",
+  "worktree": "D:/kk-studio/.worktrees/TASK-CCSWITCH-LEARN-20261014",
+  "source": {
+    "reportedCommittedSource": "3080a89f",
+    "commitRelationship": "Root reported this commit after the verified test gate changes; the commands below ran against the candidate worktree before that commit."
+  },
+  "verification": {
+    "cargoFmt": {
+      "command": "cargo fmt --manifest-path src-tauri/Cargo.toml -- --check",
+      "exitCode": 0,
+      "status": "passed",
+      "diagnosticsObserved": false,
+      "toolOutputChunk": "8a32db"
+    },
+    "cargoTest": {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --offline",
+      "exitCode": 0,
+      "status": "passed",
+      "features": "default",
+      "threads": "default; no --test-threads argument",
+      "packageVersionObserved": "2.1.18",
+      "passed": 129,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filteredOut": 0,
+      "testDurationSeconds": 1.75,
+      "compileDurationSeconds": 5.06,
+      "testExecutable": "src-tauri/target/debug/deps/kk_studio-88c6ad41cf305675.exe",
+      "toolOutputChunk": "8a32db",
+      "warnings": {
+        "count": 5,
+        "kind": "pre-existing dead_code warnings, also observed in the earlier transaction test baseline",
+        "locations": [
+          "src/asset_io.rs:54 original_exists",
+          "src/asset_io.rs:89 temporary",
+          "src/asset_io.rs:101 sync_parent",
+          "src/asset_io.rs:110 atomic_write",
+          "src/task_host.rs:1226 fail_at"
+        ]
+      }
+    },
+    "gitDiffCheck": {
+      "command": "git diff --check -- src-tauri/src/provider_transaction.rs src-tauri/src/provider_transaction_tests.rs src-tauri/src/provider_config_tests.rs",
+      "exitCode": 0,
+      "status": "passed",
+      "toolOutputChunk": "73a337"
+    }
+  },
+  "priorAttempt": {
+    "status": "failed",
+    "features": "default",
+    "threads": "default",
+    "passed": 127,
+    "failed": 2,
+    "ignored": 0,
+    "measured": 0,
+    "filteredOut": 0,
+    "testDurationSeconds": 2.24,
+    "exitCode": null,
+    "exitCodeNote": "The earlier retained log excerpt showed a failed test result; its process exit code was not independently captured in that excerpt.",
+    "logExcerptToolOutputChunk": "68e23d",
+    "originalRawLogPath": "test-results/ccswitch-verify/rust-default.log",
+    "originalRawLogRetained": false,
+    "retentionNote": "Root reported that the initial default Playwright startup removed unopened files under test-results. This summary does not claim that the original failed raw log still exists.",
+    "failures": [
+      {
+        "test": "provider_transaction::tests::receipt_and_metadata_never_contain_the_request_secret",
+        "locationAtFailedRun": "src/provider_transaction_tests.rs:181",
+        "observedError": "lock: 上次凭据保存异常中断，请重新读取连接后重试",
+        "classification": "WAIT_ABANDONED",
+        "cause": "The intentional child termination abandoned the production Windows-session mutex while another parallel fixture was waiting for it."
+      },
+      {
+        "test": "provider_transaction::tests::same_revision_process_contenders_commit_one_matching_pair_and_never_touch_the_losers_vault",
+        "locationAtFailedRun": "src/provider_transaction_tests.rs:401",
+        "observedError": "Owned contender failed",
+        "exactChildErrorAvailable": false,
+        "causeStatus": "Shared mutex collision was suspected, but the original child stderr was discarded and its exact error cannot be recovered."
+      }
+    ]
+  },
+  "repairScope": {
+    "productionBehaviorChanged": false,
+    "description": "A cfg(test) admission gate now serializes the 15 top-level provider fixtures that touch the shared production mutex. Child probes do not take this gate; the two contender child processes still run concurrently. Existing storage and credential assertions were retained. Child failures now record only a non-secret failure classification.",
+    "files": [
+      "src-tauri/src/provider_transaction.rs: cfg(test) helper only",
+      "src-tauri/src/provider_transaction_tests.rs",
+      "src-tauri/src/provider_config_tests.rs"
+    ]
+  },
+  "summaryOnly": "This file summarizes results already observed in tool outputs. Writing this summary did not rerun tests or modify source files."
+}

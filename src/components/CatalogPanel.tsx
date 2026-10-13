@@ -45,12 +45,12 @@ export default function CatalogPanel({
       (kind === "all" || asset.type === kind) &&
       (tag === "all" || asset.tag === tag || asset.tags?.includes(tag)),
   );
-  const projectMatches =
-    kind === "all" && tag === "all"
-      ? projects.filter((project) =>
-          contains(`${project.name} ${project.prompt}`),
-        )
-      : [];
+  const projectMatches = projects.filter(
+    (project) =>
+      contains(`${project.name} ${project.prompt}`) &&
+      (kind === "all" || project.kind === kind) &&
+      (tag === "all" || tab === "项目"),
+  );
   const showNodes = tab === "全部" || tab === "画布卡片";
   const showProjects = tab === "全部" || tab === "项目";
   const showResources = tab === "全部" || tab === "已加载资源";
@@ -151,7 +151,8 @@ export default function CatalogPanel({
           标签
           <select
             aria-label="搜索标签"
-            value={tag}
+            value={tab === "项目" ? "all" : tag}
+            disabled={tab === "项目"}
             onChange={(event) => setTag(event.target.value)}
           >
             <option value="all">全部标签</option>
@@ -163,6 +164,9 @@ export default function CatalogPanel({
           </select>
         </label>
       </div>
+      {tab === "项目" && (
+        <p className="catalog-results-title">标签仅用于卡片和已加载资源</p>
+      )}
       <div
         ref={results}
         className="catalog-body"

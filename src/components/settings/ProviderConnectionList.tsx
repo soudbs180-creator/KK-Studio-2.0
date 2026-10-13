@@ -47,7 +47,7 @@ export default function ProviderConnectionList({
               </span>
               <em>
                 {active
-                  ? "当前"
+                  ? "正在编辑"
                   : connection.kind === "user_byok"
                     ? "BYOK"
                     : "本地"}

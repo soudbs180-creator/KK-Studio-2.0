@@ -163,7 +163,7 @@ export async function geminiCliStatus(options?: {
     if (error instanceof GeminiCliError) throw error;
     throw new GeminiCliError(
       "unreachable",
-      `无法连接 Gemini CLI 桥（${baseUrl}），请先运行 node scripts/gemini-bridge.mjs。`,
+      `无法连接 Gemini CLI 桥（${baseUrl}），请在设置中复制 gemini-bridge.mjs 启动桥命令，并在安装 Gemini CLI 的同一 Node/npm 环境中执行。`,
     );
   }
 }

@@ -1,0 +1,125 @@
+{
+  "status": "WEB_CHECKS_PASS",
+  "at": "2026-10-13T18:26:54.652Z",
+  "sourceVersion": "2.1.19",
+  "head": "51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c",
+  "patchSha256": "50feac5330efb52f370f12badd9bca2763408cc3d14ea80c9b4413697a35890f",
+  "sourceFiles": [
+    {
+      "file": "src/domain/projectCanvas.ts",
+      "baselineSha256": "f615c4c2d8b3f7442b0e913dc463f1404135aa1e4d99c22b6e20c07815e4c701",
+      "candidateSha256": "1d2e21e74933b30cc02590a0601cab4c90165ec9424d3b56209a59c7ca78668b"
+    },
+    {
+      "file": "src/components/canvas/useCanvasControls.ts",
+      "baselineSha256": "886318dede604b2c8775a91eb37657a0af5faaa63541e1ee6ad81302662f9216",
+      "candidateSha256": "fc9b21795de99a2d82c7ec0d15737ae261169c63e4a280c7b99137a94fda8ccb"
+    },
+    {
+      "file": "src/components/canvas/useCanvasConnections.ts",
+      "baselineSha256": "471d9f6113767512573c005b6f0b4b3ea292faff0fec9dda0345830f52da2db5",
+      "candidateSha256": "3e75379708087cc8844be3a448f4a2fcba7b75aa567096ec971bd4f0cc24fd39"
+    },
+    {
+      "file": "src/components/canvas/useCanvasPersistence.ts",
+      "baselineSha256": "92ff81e3ecc224dcf02cbe397f867d349eb04bfd91efcd39deaa9cff407432c5",
+      "candidateSha256": "496baa0e9f5db76c1ca74158b2752c8f3ae7f782e55b2822f35063e802a48b2e"
+    },
+    {
+      "file": "src/components/canvas/useCanvasPointer.ts",
+      "baselineSha256": "d7d34bb23a4c720403389ed6ecc14d97f051c6a51fd1dbe803fa22feca42a048",
+      "candidateSha256": "9e765764ffa90115dd8806d26eb579d6a34eb956e4ec560fbacea6515e6dd510"
+    },
+    {
+      "file": "tests/unit/projectCanvas.test.ts",
+      "baselineSha256": "fdb64035bed89ad796d6df4efef9ec6ab219e791fbf123f587647d6fcd0ae151",
+      "candidateSha256": "184b82495834bd502e2d87fb7d55e5749e34b7ca2f86e8375a645720d71ac058"
+    },
+    {
+      "file": "tests/browser/agent.spec.ts",
+      "baselineSha256": "e93e9625cb45fa426a67b29b85b17dfa56963d87fa8b3ec44d02ea42296fc37f",
+      "candidateSha256": "f72ade6010f6117cd49392a68da708cd76d1b74277ea29e706ab578f7e6f63a7"
+    },
+    {
+      "file": "src/components/Canvas.tsx",
+      "baselineSha256": "5fbce77ba923303c34db6f575bed2223ebfabd9ddd2ac03fd6705434743a1016",
+      "candidateSha256": "c195bf955c1805d6ee40dbb7e6e19f73bb2512a54b9f347a882cae6a11994267"
+    }
+  ],
+  "lint": {
+    "exitCode": 0
+  },
+  "typecheck": {
+    "exitCode": 0
+  },
+  "unit": {
+    "total": 1103,
+    "passed": 1089,
+    "failed": 0,
+    "skipped": 14
+  },
+  "agent": {
+    "total": 174,
+    "passed": 172,
+    "failed": 0,
+    "skipped": 2
+  },
+  "ui": {
+    "files": 224,
+    "violations": 0
+  },
+  "format": {
+    "exitCode": 0
+  },
+  "build": {
+    "exitCode": 0,
+    "indexHtmlSha256": "68f68abaef87d30a7f8b6ff4f59ba274fce388214e083ee0e9700a3926c0b18f",
+    "assets": [
+      {
+        "path": "/assets/index-WjS_aT43.js",
+        "sha256": "c8f485be90d56c7147c83350e44cb03bf003e4785760f6d105faa4bab23c5365"
+      },
+      {
+        "path": "/assets/index-DmCQyY8d.css",
+        "sha256": "fe9418f159b6c6174a42291b1a6ba471a6694ce7ac811a7159a90cc76980a6e6"
+      }
+    ]
+  },
+  "browser": {
+    "runtime": "Vite preview",
+    "url": "http://127.0.0.1:1423",
+    "mode": "production",
+    "entry": "dist/index.html",
+    "sourceVersion": "2.1.19",
+    "passed": 520,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "total": 520,
+    "retries": 0,
+    "failures": []
+  },
+  "development": {
+    "result": "PASS",
+    "errors": [],
+    "steps": [
+      "discover-four-plugins-without-overlay",
+      "add-edit-and-render-four-plugin-nodes-without-cdn",
+      "disable-reload-restore-enable",
+      "reject-unsafe-remote-before-request"
+    ]
+  },
+  "fullVerify": {
+    "exitCode": 1,
+    "reason": "Fixed production1423 port occupied by another task; all browser checks were subsequently rerun independently on the exact final build. The original exit1 log is preserved."
+  },
+  "developmentAgentDiagnostic": {
+    "passed": 34,
+    "failed": 7,
+    "reason": "Existing Agent fixture pins Origin1423; dev1421 cannot connect. Not product validation and not counted as PASS."
+  },
+  "native": "NOT_VERIFIED",
+  "provider": "FIXTURE_ONLY",
+  "committed": false,
+  "pushed": false
+}

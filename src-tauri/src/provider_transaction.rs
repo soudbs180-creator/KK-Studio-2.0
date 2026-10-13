@@ -217,6 +217,13 @@ pub fn commit_provider_connection(
     }
 }
 
+// Intentional process termination must not abandon the session mutex into another fixture.
+#[cfg(test)]
+pub(crate) fn provider_test_guard() -> std::sync::MutexGuard<'static, ()> {
+    static GATE: std::sync::Mutex<()> = std::sync::Mutex::new(());
+    GATE.lock().unwrap_or_else(|error| error.into_inner())
+}
+
 #[cfg(all(test, windows))]
 #[path = "provider_transaction_tests.rs"]
 mod tests;

@@ -15,6 +15,7 @@ import {
   type CanvasAgentSnapshot,
   type AgentTurnResponse,
   type AgentThreadResponse,
+  type AgentActivityDetail,
 } from "./agentTypes.ts";
 import {
   AgentApiError,
@@ -26,6 +27,8 @@ import {
   formatAgentActivity,
   mergeAgentChatItem,
   parseAgentSseEvent,
+  agentActivityMessage,
+  isAgentActivitySettled,
 } from "./agentEvents.ts";
 import {
   createAgentEventStream,
@@ -284,11 +287,16 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
   function message(item: AgentChatItem) {
     const existing = state.messages.find(
       (x) =>
-        x.id === item.id ||
+        (x.id === item.id &&
+          (!x.turnId || !item.turnId || x.turnId === item.turnId) &&
+          (!x.threadId || !item.threadId || x.threadId === item.threadId)) ||
         Boolean(
           x.turnId &&
           x.turnId === item.turnId &&
-          (x.itemId ?? x.id) === (item.itemId ?? item.id) &&
+          ((x.itemId ?? x.id) === (item.itemId ?? item.id) ||
+            Boolean(
+              item.itemId && x.activityItems?.[item.itemId] !== undefined,
+            )) &&
           (!x.threadId || !item.threadId || x.threadId === item.threadId),
         ) ||
         Boolean(
@@ -304,6 +312,13 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
     });
   }
   function handle(event: AgentEvent) {
+    if (
+      "threadId" in event &&
+      event.threadId &&
+      state.conversation?.threadId &&
+      event.threadId !== state.conversation.threadId
+    )
+      return;
     switch (event.kind) {
       case "conversation":
         if (
@@ -331,7 +346,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       case "activity": {
         const text = formatAgentActivity(event.itemType, event.item);
         patch({ activity: text });
-        message({ id: "activity:" + event.item.id, role: "tool", text });
+        message(agentActivityMessage(event, state.conversation?.threadId));
         break;
       }
       case "terminal":
@@ -339,6 +354,12 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
         void finishTurn(event);
         break;
       case "approval":
+        if (
+          event.approval.threadId &&
+          state.conversation?.threadId &&
+          event.approval.threadId !== state.conversation.threadId
+        )
+          return;
         approvals.set(event.approval.requestId, event.approval);
         patch({ pendingApproval: approvals.values().next().value ?? null });
         break;
@@ -431,6 +452,7 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       error = errorText(failure) + "；请重新连接以重试归档，勿重复生成。";
     }
     if (version !== epoch) return;
+    if (event.status === "completed") error ??= state.error;
     approvals.clear();
     patch({
       sending: false,
@@ -438,6 +460,26 @@ export function createAgentConnection(options: AgentConnectionOptions = {}) {
       activity: event.status === "completed" ? "本轮已完成" : "本轮已结束",
       error,
       canvasNodeId: undefined,
+      messages: state.messages.map((item) => {
+        const detail = item.detail as AgentActivityDetail | undefined;
+        if (
+          item.role !== "tool" ||
+          !detail?.phase ||
+          isAgentActivitySettled(detail) ||
+          (event.turnId && item.turnId !== event.turnId)
+        )
+          return item;
+        return {
+          ...item,
+          detail: {
+            ...detail,
+            turnStatus:
+              event.status === "completed" && detail.turnStatus
+                ? detail.turnStatus
+                : event.status,
+          },
+        };
+      }),
     });
     if (error) message({ id: crypto.randomUUID(), role: "error", text: error });
     void refreshUsage();

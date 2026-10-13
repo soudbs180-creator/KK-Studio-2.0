@@ -1,0 +1,148 @@
+{
+  "sourceHead": "19decc9391962fda58295deadc5af05e1a6acc2c",
+  "destinationHead": "51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c",
+  "indexBefore": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "files": [
+    {
+      "file": "CHANGELOG.md",
+      "beforeSha256": "18fd8ad82d91df5191f74e05d2f16928ba08049108b1e0843b707e3c86dfbee8",
+      "afterSha256": "66b11f9b33bcb874043a86350cd72313e03c7fd4cdfae1c32e9f1e7583d46b12"
+    },
+    {
+      "file": "VERSION",
+      "beforeSha256": "e67f1458319ef2835dca80d629a8997a74d2e6f02bd4f9b319d6f5125d32b44e",
+      "afterSha256": "163608c47421ea933e1799c11d9bb0e87ef3e0b114768a1b9d8894d8a0c3b436"
+    },
+    {
+      "file": "config/platform-versions.json",
+      "beforeSha256": "ded563447c146179f00cff5f542b7995c8429ee862cecdc327152f06a8ea3d6b",
+      "afterSha256": "97ce7bf7b2fed06d80da2fb7173a41e4e874ebf658291d9e9c70f85f52062882"
+    },
+    {
+      "file": "docs/PROGRESS.md",
+      "beforeSha256": "a509b7935af0b743b4f5a086bd9e763cf27900becbfcf758c2f90781ab345d37",
+      "afterSha256": "15ec4d8fbff8bd29d46c492bf761800b74efc0169e34f848430f7ddc63860e55"
+    },
+    {
+      "file": "docs/changes/2026-10-14-ccswitch-status-recovery/intent.md",
+      "beforeSha256": null,
+      "afterSha256": "9003c140a85a15e0843697b5ac6ba1d5fcee7f10d202b037242ca8d537d96d28"
+    },
+    {
+      "file": "docs/changes/2026-10-14-ccswitch-status-recovery/plan.md",
+      "beforeSha256": null,
+      "afterSha256": "d82467d3091fee76e5a158e61d6125aeb1dccf2d3dac79bd71dcd9fbaa83cf42"
+    },
+    {
+      "file": "docs/changes/2026-10-14-ccswitch-status-recovery/review.md",
+      "beforeSha256": null,
+      "afterSha256": "ebdcef544b814d151da71fe8cfe46cc7cf7a38a1b66a8749eee40068758241e0"
+    },
+    {
+      "file": "docs/changes/2026-10-14-ccswitch-status-recovery/spec.md",
+      "beforeSha256": null,
+      "afterSha256": "f8a549d77cd76d0ada744e40cb09736f20eaa6860360bfe5fbc3dab81f19b0ba"
+    },
+    {
+      "file": "docs/changes/2026-10-14-ccswitch-status-recovery/verification.md",
+      "beforeSha256": null,
+      "afterSha256": "59191922c8c603a39a80e66c8def2f24f1a966ad4af3d5bda5ec9f38ca297954"
+    },
+    {
+      "file": "docs/governance/TASK_LEDGER.md",
+      "beforeSha256": "ca0da1f97745f8d3401d91d65ae03f53ff182d20beeafd5e167ac802091c9352",
+      "afterSha256": "a0a9820d0ad5dc0d12ab8954786ce44d4a186eea46b64a4a513a63aa7cbde6d8"
+    },
+    {
+      "file": "docs/governance/task-ledger.json",
+      "beforeSha256": "6c716eb0d87f517faa24303f7f89a34625395c438342ba630232d36c4f22929e",
+      "afterSha256": "2bd46699348f442d6620c8f504ac85f33c9f838f0840b166cbc72a2cf7257f86"
+    },
+    {
+      "file": "package-lock.json",
+      "beforeSha256": "4cff50a54975df7318b3f89abd0793a5e8207f47dc807f96b928b9a5d6793786",
+      "afterSha256": "2ddcd10524e1ca0c707c402e929e5220ff0f76c9a537436f2c63a142be8be743"
+    },
+    {
+      "file": "package.json",
+      "beforeSha256": "d783f4cca49cbf05d51d940b08ecb710dad8b8b9b1729f0520cb757f333c6c35",
+      "afterSha256": "49f75870761e626dd6e659c6390e80f01fdd8514e88c7be655ad2e1637cb6a11"
+    },
+    {
+      "file": "src-tauri/Cargo.lock",
+      "beforeSha256": "0931ac549126f3cc42fc0bd62f6e00f267e2956a8855f34407eda14af1170145",
+      "afterSha256": "46e96762dcf1e22b96a10445395e1df0ea3f005d64f49c73a82132597e42e8a5"
+    },
+    {
+      "file": "src-tauri/Cargo.toml",
+      "beforeSha256": "24f052e7d6a2c4b54ef4919678b0b56b173423ce0a3c275ca1d04696272de6bf",
+      "afterSha256": "5329e7df1df9fb0a644a7c00319da55924144ec7bf7284fc38ea65495a833d80"
+    },
+    {
+      "file": "src-tauri/src/provider_config_tests.rs",
+      "beforeSha256": "8e8745a9dcfaa0a01d1739050d60115cabfef172737718dd0c71bbcc10bbbf9b",
+      "afterSha256": "15b57ea87e6685a3a6d8efe56605560481305949a4b354e9376ffccbcb4c9b66"
+    },
+    {
+      "file": "src-tauri/src/provider_transaction.rs",
+      "beforeSha256": "79d3bb385b67b0443c2206d2ce1c69edda50d9c90192e45601d6b009f7f1fb4a",
+      "afterSha256": "292f921a09ffbf51776b467ab3a8e7446c3351f9f9393840898a3de610e26a52"
+    },
+    {
+      "file": "src-tauri/src/provider_transaction_tests.rs",
+      "beforeSha256": "52ce8b7e1b47d35e21940a501ae35fc2f960bffed103af20f2bedc2525750b98",
+      "afterSha256": "d30ea6f516ccfaaa2a005b246326e603503597d4594a514e3113f281c4697aae"
+    },
+    {
+      "file": "src-tauri/tauri.conf.json",
+      "beforeSha256": "5f2117683c7bd71b370d6e2018d75ba5f5b9f5ca641e4dd2b8368987efd27c76",
+      "afterSha256": "a3678ceea4a432d2bb57e43c54d28211f6040e85a74a32fa15b918fdb47e51f1"
+    },
+    {
+      "file": "src/components/settings/ModelProviderSettings.tsx",
+      "beforeSha256": "7b4b20fed52e16f929297ee8c6a6e2ee764b1ef27331d6bfd168d83b82071b04",
+      "afterSha256": "95d4f0a8a66cd05d2fcde8ff633fa033a3f0a7151a4e9631e466ef108934ad3d"
+    },
+    {
+      "file": "src/components/settings/ProviderConnectionList.tsx",
+      "beforeSha256": "6bca131620bbbd3f0cf07d6fb0e02783897aacf922c7adda49a101183b14b145",
+      "afterSha256": "8ca989f91d9bfa8f71c2c7b8852b1b2e249f60bb28c133400080afd5d632a7e5"
+    },
+    {
+      "file": "src/components/settings/ProviderConnectionStatus.tsx",
+      "beforeSha256": "48e26e5d839fba557cc9321064eabcfa6f3be62a0d0ddc96de1241ffc0841a43",
+      "afterSha256": "323cf594988404a3b581d54fdefbecf1701d5eef1f67a799e41b1eb952c90124"
+    },
+    {
+      "file": "src/features/creation/providerRegistry.ts",
+      "beforeSha256": "e8aa6d0748d569725a1893524469beb92848991b351706de3014ecd2fb54d43e",
+      "afterSha256": "93c9e7bae89dc2f865ce80c02035d01232af5e02535bb14f2b081b02db89c5c8"
+    },
+    {
+      "file": "tests/browser/capability-model-access.spec.ts",
+      "beforeSha256": "8633b130ee9878cb30fd01a5f790f00b27e658c638e17f8ca2aa086e8d47a7d0",
+      "afterSha256": "82378dda4d9658a6cdecf67fea70154d2f6643a5b8a1ed623b96a8e0f8f4abe6"
+    },
+    {
+      "file": "tests/browser/frontend.spec.ts",
+      "beforeSha256": "2f42845e2d1457d447ee091eb82e12366d23dcf4f1f757396d88ddc59fa13bd7",
+      "afterSha256": "5b5f58d6bb66e1a2c305206a52bec07588be59eb20e6138ced05d3bce61060ae"
+    },
+    {
+      "file": "tests/desktop/provider-credential-recovery.mjs",
+      "beforeSha256": "1bb5a88d361de52962171fe59bcc83ef56388ab4f867d829a9b4c14f97256b41",
+      "afterSha256": "583714d1876929393d73de3cb81c88fed78aa76763a85461f4bfe239546e2c01"
+    },
+    {
+      "file": "tests/unit/providerRegistryDurable.test.ts",
+      "beforeSha256": "16f2c5e4cbe13ba82df30f35f898caea147f8b0f1dcdd3b556a9148cb3e20dbb",
+      "afterSha256": "c84c2846e4ac07f6f2b470833c7b3c7cb43d3df0e1a04e5df12e19742b6ad786"
+    },
+    {
+      "file": "tests/unit/providerSaveRecovery.test.ts",
+      "beforeSha256": "bd66f9e99f53b1ec545d771011de00f2adb997408dcf6ef7e38bee03e6bd9fd8",
+      "afterSha256": "2cbab24ff48f36619cb62cacd02b5a5b28bc7dc4b6ea261e731f69e017eeebe3"
+    }
+  ],
+  "indexAfter": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

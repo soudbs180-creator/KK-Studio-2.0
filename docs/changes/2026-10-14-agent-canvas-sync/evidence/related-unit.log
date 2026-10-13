@@ -1,0 +1,44 @@
+✔ buildAgentSnapshot 生成节点/连线/视口 (1.543ms)
+✔ add_node 翻译为新卡片（text→文案） (0.421ms)
+✔ update_node 更新标题与位置 (0.2191ms)
+✔ update_node 节点不存在时拒绝 (0.2006ms)
+✔ delete_node 按 id / nodeType 删除 (0.1688ms)
+✔ delete_node 带插件 nodeType 只删除匹配插件节点 (0.1363ms)
+✔ update_node 插件节点合并 metadata 并接受宽高补丁 (0.1725ms)
+✔ connect_nodes 生成连线建议，端点不存在则拒绝 (0.1504ms)
+✔ run_generation 由宿主接管（翻译层拒绝） (0.2081ms)
+✔ summarizeAgentOps 输出中文摘要 (0.2684ms)
+✔ itemKindToAgentNodeType 双向映射一致 (0.0916ms)
+✔ assertCanvasDelivery 拒绝无 node_id / 无资产注册的交付 (0.6239ms)
+✔ assertCanvasDelivery 接受已登记的文案供应商结果 (0.1558ms)
+✔ assertCanvasDelivery 不因文案节点残留 assetId 而接受空供应商结果 (0.164ms)
+✔ collectRecentOutputs 按 result 连线收集已归档产物 (0.1539ms)
+✔ summarizeRecentOutputs 输出当轮产物摘要 (0.1935ms)
+✔ 同时到达的生图归档只提交一次，后续重放不会重复标记 (6.9406ms)
+✔ 图片归档缺少素材身份时拒绝提交到画布 (3.3958ms)
+✔ 视口与多选由真实宿主执行并反映在下一次快照 (0.6654ms)
+✔ 同一毫秒的无 ID 新节点保持独立身份与布局 (0.7889ms)
+✔ 同批新建配置及提示词后生成，返回真实任务 ID (0.3768ms)
+✔ 纯更新、位置及连线操作会落地，删除节点清理悬空边 (0.3267ms)
+✔ 生成错误原样回传；不支持的视频不调用 Provider (0.1858ms)
+✔ 取消在途生成后，不再落地同批后续操作 (0.22ms)
+✔ 连接锚点随两端移动且不改变节点坐标 (0.9854ms)
+✔ 连接在图片、两种视频标签高度和结果卡片的可见侧边中点 (0.272ms)
+✔ 删除和撤销只影响目标连接，节点缺失时不恢复悬空连接 (0.1418ms)
+✔ 媒体自然比例进入画布可见边界 (0.1266ms)
+✔ canvas history ignores identical snapshots and keeps an immutable present (0.5927ms)
+✔ canvas history undoes and redoes bounded snapshots (0.534ms)
+✔ canvas history fingerprint includes items, graph and viewport (0.1027ms)
+✔ external positions update untouched nodes and keep local drag/add/undo positions (1.2676ms)
+✔ external edges add references/results, delete and replace IDs while preserving local edits (0.3404ms)
+✔ native JSON key ordering is not a canvas edit; geometry changes are (3.3682ms)
+✔ project normalization preserves edited positions, edges and viewport (0.3905ms)
+✔ a future graph version is not silently replaced by the default layout (0.3903ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 218.2568

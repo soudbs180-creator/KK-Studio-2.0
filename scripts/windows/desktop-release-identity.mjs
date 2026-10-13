@@ -34,6 +34,7 @@ export const RELEASE_INPUTS = [
   path.join("vendor", "canvas-agent", "package-lock.json"),
   path.join("vendor", "canvas-agent", "tsconfig.json"),
   path.join("scripts", "agent"),
+  path.join("scripts", "gemini-bridge.mjs"),
   path.join("src-tauri", "src"),
   path.join("src-tauri", "build.rs"),
   path.join("src-tauri", "capabilities"),

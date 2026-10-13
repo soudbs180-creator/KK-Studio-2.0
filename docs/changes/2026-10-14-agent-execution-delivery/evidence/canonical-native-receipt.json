@@ -1,0 +1,180 @@
+{
+  "startedAt": "2026-10-13T19:00:06.026Z",
+  "mode": "Tauri release with loopback Agent fixture",
+  "sourceHead": "51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c",
+  "isolated": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-qTaQb0",
+  "dataRoot": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-qTaQb0\\data",
+  "profile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-qTaQb0\\webview",
+  "codexHome": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-agent-recovery-qTaQb0\\codex-home",
+  "checks": [
+    {
+      "name": "prebuilt-release-is-current",
+      "passed": true,
+      "detail": "current"
+    },
+    {
+      "name": "desktop-dependencies-current",
+      "passed": true
+    },
+    {
+      "name": "owned-transport-guard-installed",
+      "passed": true
+    },
+    {
+      "name": "storage-isolation-agent-ux",
+      "passed": true
+    },
+    {
+      "name": "memory-isolation-agent-ux",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-agent-ux-index-C31ISFx5.js",
+      "passed": true
+    },
+    {
+      "name": "loaded-asset-agent-ux-index-CnbkXRxN.css",
+      "passed": true
+    },
+    {
+      "name": "release-identity-agent-ux",
+      "passed": true
+    },
+    {
+      "name": "native-creation-storage-loads",
+      "passed": true
+    },
+    {
+      "name": "native-hud-and-save-state-visible",
+      "passed": true
+    },
+    {
+      "name": "native-fold-and-keyboard-expand",
+      "passed": true
+    },
+    {
+      "name": "native-result-evidence-and-no-late-regression",
+      "passed": true
+    },
+    {
+      "name": "native-approval-entry-retained",
+      "passed": true
+    },
+    {
+      "name": "native-failed-stop-does-not-claim-stopped",
+      "passed": true
+    },
+    {
+      "name": "native-explicit-interruption-display",
+      "passed": true
+    },
+    {
+      "name": "no-model-turn-after-cdp-attach",
+      "passed": true
+    },
+    {
+      "name": "no-loopback-model-turn",
+      "passed": true
+    }
+  ],
+  "launches": [
+    {
+      "tag": "agent-ux",
+      "ProcessId": 60036,
+      "ParentProcessId": 66904,
+      "ExecutablePath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+      "CreationDate": "/Date(1791918007691)/",
+      "url": "http://tauri.localhost/",
+      "loaded": [
+        {
+          "path": "/assets/index-C31ISFx5.js",
+          "sha256": "167a76f10524ed7a9816eb3d9e5f6c7754cac01fa28c14066edc62b6f3c18285"
+        },
+        {
+          "path": "/assets/index-CnbkXRxN.css",
+          "sha256": "1cb7490bddae2a2052630abd24b75f600b5043d2912851d3299be749ae1393c8"
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "observedModelTurnsAfterAttach": 0,
+  "startupTurnObservation": "NOT VERIFIED before CDP attachment; complete startup requests are covered by the loopback browser fixture",
+  "threadMutations": 1,
+  "unknownOwnership": "NOT VERIFIED; covered by the controlled browser fixture",
+  "credential": {
+    "providerId": "agent-recovery-bd99427e-8f75-4dc4-9602-10edccba3021",
+    "secretSha256": "5bfc77189228bc47e87b214a138a56787e1b8dc777fead4fc5395f3682ea63d0",
+    "cleanupComplete": false,
+    "created": false
+  },
+  "credentialScope": "No native vault credential is created or changed. Foreign credential IPC probes are intercepted through fetch/postMessage; native invoke is preserved.",
+  "passed": true,
+  "initialRelease": {
+    "releaseExePath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791917922999.37,
+    "newestInputPath": "D:\\kk-studio\\KK-Studio-2.0\\dist\\assets\\index-C31ISFx5.js",
+    "newestInputMtimeMs": 1791917887210.314,
+    "inputSha256": "ccb59dfb3742a3ea9e951d50630873257a8f1e5da295b3c390d7dee292961362",
+    "executableSha256": "e0003b71a2a4223e382e8621abfab026aac2138408afbb693b5069c0d0e0dcce",
+    "desktopVersion": "2.1.20",
+    "receiptPath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current"
+  },
+  "scriptSha256": "af3b40a29ceb8efa3d822b025239ed69217113c481bd8fec3e3513630dea6106",
+  "behaviorSha256": "9eb34ccf781f9ed56d4dffbd6625cca97bce2a9123350636b046184b49f12ce4",
+  "transportSha256": "8a8a0177d547873ec1234bd1f17dda3ec48095ae2d9add44832e9ccc4a982d77",
+  "upstreamScriptSha256": "7ec51fc43f95291d32ce944d71a7e2e7bc61b519de65c302a50771a02c1bf66e",
+  "sourceStatus": "M CHANGELOG.md\n M VERSION\n M config/platform-versions.json\n M docs/DESIGN-SYSTEM.md\n M docs/DESIGN_TOKENS.md\n M docs/PROGRESS.md\n M docs/UI_RULES.md\n M docs/architecture/DATA-STORAGE.md\n M docs/architecture/adr/README.md\n M docs/engineering/LAUNCHER.md\n M docs/features/README.md\n M docs/features/feat-001-canvas-workbench.md\n M docs/features/feat-009-conversation.md\n M docs/features/feat-011-skills.md\n M docs/features/feat-012-mcp.md\n M docs/features/feat-016-task-workbench.md\n M docs/features/feat-022-settings.md\n M docs/features/feat-030-agent-orchestration.md\n M docs/features/features.registry.json\n M docs/governance/AI_HANDOFF.md\n M docs/governance/PROJECT_STATE.md\n M docs/governance/TASK_LEDGER.md\n M docs/governance/TASK_STATUS.md\n M docs/governance/task-ledger.json\n M package-lock.json\n M package.json\n M scripts/agent/prepareIdleConversation.ts\n M scripts/windows/desktop-release.mjs\n M src-tauri/Cargo.lock\n M src-tauri/Cargo.toml\n M src-tauri/src/main.rs\n M src-tauri/src/project_package.rs\n M src-tauri/src/project_package_snapshot.rs\n M src-tauri/src/provider_config.rs\n M src-tauri/src/provider_config_tests.rs\n M src-tauri/tauri.conf.json\n M src/App.tsx\n M src/components/AgentComposer.tsx\n M src/components/AgentConversationMessages.tsx\n M src/components/Canvas.tsx\n M src/components/ComposerExtensionsMenu.tsx\n M src/components/ConversationPanel.tsx\n M src/components/InfoPanel.tsx\n M src/components/ModelPickerMenu.tsx\n M src/components/ModelPickerRows.tsx\n M src/components/SidebarNavigation.tsx\n M src/components/SkillPageControls.tsx\n M src/components/SkillsPage.tsx\n M src/components/StartComposer.tsx\n M src/components/StartModelPicker.tsx\n M src/components/WindowControls.tsx\n M src/components/canvas/TaskPanelPopover.tsx\n M src/components/canvas/useCanvasConnections.ts\n M src/components/canvas/useCanvasControls.ts\n M src/components/canvas/useCanvasNodeActions.ts\n M src/components/canvas/useCanvasPersistence.ts\n M src/components/canvas/useCanvasPointer.ts\n M src/components/canvas/useCanvasView.ts\n M src/components/settings/AgentConnectionSettings.tsx\n M src/components/settings/CodeBuddyConnectionSettings.tsx\n M src/components/settings/ConnectionSettings.tsx\n M src/components/settings/DesktopAgentControl.tsx\n M src/components/settings/ExtensionsSettings.tsx\n M src/components/settings/GoogleConnectionSettings.tsx\n M src/components/settings/GoogleLoginModePanels.tsx\n M src/components/settings/ModelProviderSettings.tsx\n M src/components/settings/ProviderApiKeyField.tsx\n M src/components/settings/ProviderConnectionList.tsx\n M src/components/settings/ProviderConnectionStatus.tsx\n M src/components/settings/ProviderModelCatalog.tsx\n M src/components/settings/ProviderProfileFields.tsx\n M src/components/settings/ProviderSettingsActions.tsx\n M src/components/settings/SettingsPanel.tsx\n M src/components/settings/SettingsSectionData.tsx\n M src/components/settings/modelProviderSettingsState.ts\n M src/components/settings/settings.css\n M src/components/settings/useProviderCredentialState.ts\n M src/components/useConversationSubmit.ts\n M src/domain/canvasGraph.ts\n M src/domain/modelProvider.ts\n M src/domain/projectCanvas.ts\n M src/domain/uiGovernance.ts\n M src/features/agent/agentApi.ts\n M src/features/agent/agentConnection.ts\n M src/features/agent/agentEvents.ts\n M src/features/agent/agentHost.ts\n M src/features/agent/agentTypes.ts\n M src/features/agent/googleAgentConfig.ts\n M src/features/creation/model.ts\n M src/features/creation/providerCredentials.ts\n M src/features/creation/providerRegistry.ts\n M src/styles/agent-panel.css\n M src/styles/canvas-hud.css\n M src/styles/composer.css\n M src/styles/model-picker.css\n M src/styles/responsive-content.css\n M src/styles/responsive.css\n M src/styles/tokens.css\n M src/styles/ui-governance.css\n M src/styles/workspace.css\n M start-kk-studio.bat\n M tests/browser/agent.spec.ts\n M tests/browser/canvas-history-layers.spec.ts\n M tests/browser/catalog-pages.spec.ts\n M tests/browser/composer-fidelity.spec.ts\n M tests/browser/composer-voice.spec.ts\n M tests/browser/creation-flow.spec.ts\n M tests/browser/design-system-pages.spec.ts\n M tests/browser/design-system.spec.ts\n M tests/browser/desktop-agent.spec.ts\n M tests/browser/desktop-data-stability.spec.ts\n M tests/browser/figma-483-ui.spec.ts\n M tests/browser/frontend.spec.ts\n M tests/browser/generation-flow.spec.ts\n M tests/browser/google-agent.spec.ts\n M tests/browser/google-cli-agent.spec.ts\n M tests/browser/image-edit.spec.ts\n M tests/browser/input-contract.spec.ts\n M tests/browser/interaction-regressions.spec.ts\n M tests/browser/interaction-state.spec.ts\n M tests/browser/mcp-settings.spec.ts\n M tests/browser/model-capabilities.spec.ts\n M tests/browser/model-picker.spec.ts\n M tests/browser/page-alignment.spec.ts\n M tests/browser/plugins.spec.ts\n M tests/browser/provider-scheduling.spec.ts\n M tests/browser/responsive-layout.spec.ts\n M tests/browser/runtime-ui.spec.ts\n M tests/browser/settings-scroll.spec.ts\n M tests/browser/sidebar.spec.ts\n M tests/browser/task-intent.spec.ts\n M tests/browser/task-workbench.spec.ts\n M tests/browser/text-generation.spec.ts\n M tests/browser/ui-architecture.spec.ts\n M tests/browser/ui-feature-parity.spec.ts\n M tests/browser/ui-motion.spec.ts\n M tests/browser/ui-page-rules.spec.ts\n M tests/browser/unified-image-command.spec.ts\n M tests/development/plugins.mjs\n M tests/helpers/agentServer.ts\n M tests/unit/agentConnection.test.ts\n M tests/unit/agentEvents.test.ts\n M tests/unit/modelProvider.test.ts\n M tests/unit/modelRouting.test.ts\n M tests/unit/projectCanvas.test.ts\n M tests/unit/providerRegistryDurable.test.ts\n M tests/unit/providerSubmission.test.ts\n M tests/unit/uiGovernance.test.ts\n M vendor/canvas-agent/src/server/kk-idle-conversation.ts\n M vite.config.ts\n?? docs/architecture/adr/ADR-016-agent-and-provider-recovery.md\n?? docs/changes/2026-10-13-agent-recovery/\n?? docs/changes/2026-10-13-capability-ui/\n?? docs/changes/2026-10-13-ui-remaining-fixes/\n?? docs/changes/2026-10-14-agent-canvas-sync/\n?? docs/changes/2026-10-14-agent-execution-delivery/\n?? docs/changes/2026-10-14-ccswitch-status-recovery/\n?? src-tauri/src/provider_transaction.rs\n?? src-tauri/src/provider_transaction_tests.rs\n?? src/components/AgentExecutionProcess.tsx\n?? src/components/settings/GoogleConnectionActions.tsx\n?? src/components/settings/ModelAccessSettings.tsx\n?? src/components/settings/OAuthAccessPanel.tsx\n?? src/components/settings/ProviderCredentialStatus.tsx\n?? src/components/settings/useScopedModelProviderDraft.ts\n?? src/components/settings/useSettingsBusy.ts\n?? src/features/agent/agentDraftActions.ts\n?? src/features/agent/desktopAgentLifecycle.ts\n?? src/features/agent/useAgentComposerDraft.ts\n?? src/features/creation/providerCoordination.ts\n?? src/features/creation/providerSaveRecovery.ts\n?? src/features/partners/\n?? src/styles/extensions.css\n?? tests/browser/agent-connection-recovery.spec.ts\n?? tests/browser/agent-execution.spec.ts\n?? tests/browser/capability-extensions.spec.ts\n?? tests/browser/capability-google-drafts.spec.ts\n?? tests/browser/capability-model-access.spec.ts\n?? tests/browser/capability-model-picker.spec.ts\n?? tests/browser/generation-save-status.spec.ts\n?? tests/browser/provider-credential-recovery.spec.ts\n?? tests/browser/uiRemainingLayout.spec.ts\n?? tests/desktop/agent-startup-recovery.mjs\n?? tests/desktop/provider-credential-recovery.mjs\n?? tests/unit/agentOwnershipRecovery.test.ts\n?? tests/unit/desktopAgentLifecycle.test.ts\n?? tests/unit/desktopLaunchIsolation.test.ts\n?? tests/unit/googleConnectionCommit.test.ts\n?? tests/unit/modelProviderIdentity.test.ts\n?? tests/unit/providerCredentialState.test.ts\n?? tests/unit/providerCredentialStatus.test.ts\n?? tests/unit/providerCrossWindowSave.test.ts\n?? tests/unit/providerSaveRecovery.test.ts",
+  "versions": {
+    "schemaVersion": 1,
+    "desktop": "2.1.20",
+    "web": "2.1.20",
+    "mobile": "2.1.1"
+  },
+  "capabilityBoundary": "Native launcher, WebView2, loaded assets, storage and HUD are real; Agent runtime IPC and protocol are a loopback fixture. No model, Provider, hosted release, installer or user acceptance is claimed.",
+  "realProvider": "NOT VERIFIED; network calls are blocked after CDP attachment",
+  "transportIsolation": {
+    "wrapperInstalled": true,
+    "guardSelfCheck": true,
+    "invokeUnchanged": true,
+    "invokeWritable": false,
+    "invokeConfigurable": false
+  },
+  "release": {
+    "releaseExePath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.exe",
+    "releaseMtimeMs": 1791917922999.37,
+    "newestInputPath": "D:\\kk-studio\\KK-Studio-2.0\\dist\\assets\\index-C31ISFx5.js",
+    "newestInputMtimeMs": 1791917887210.314,
+    "inputSha256": "ccb59dfb3742a3ea9e951d50630873257a8f1e5da295b3c390d7dee292961362",
+    "executableSha256": "e0003b71a2a4223e382e8621abfab026aac2138408afbb693b5069c0d0e0dcce",
+    "desktopVersion": "2.1.20",
+    "receiptPath": "D:\\kk-studio\\KK-Studio-2.0\\src-tauri\\target\\release\\kk-studio.build-receipt.json",
+    "needsBuild": false,
+    "reason": "current"
+  },
+  "receiptSha256": "1602ed37bf29ca033a870321a0e7416737809237dde283d93359afe5a95b0c70",
+  "externalRequestsBlocked": [],
+  "agentFixture": {
+    "requests": [
+      "/config",
+      "/events",
+      "/canvas/activate",
+      "/canvas/state",
+      "/agent/codex/conversation/prepare",
+      "/agent/codex/threads/fixture-thread",
+      "/agent/codex/models",
+      "/agent/codex/usage",
+      "/canvas/state",
+      "/canvas/state",
+      "/agent/codex/approval",
+      "/agent/codex/interrupt",
+      "/agent/codex/threads/fixture-thread",
+      "/agent/codex/usage"
+    ],
+    "modelTurns": 0,
+    "approvalDecisions": 1
+  },
+  "completedAt": "2026-10-13T19:00:17.650Z"
+}

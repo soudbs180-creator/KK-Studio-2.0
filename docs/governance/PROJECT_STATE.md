@@ -25,7 +25,7 @@
 
 - `agentRecoveryEvidence`: [TASK-AGENT-RECOVERY-20261013 verification](../changes/2026-10-13-agent-recovery/verification.md); 2.1.16 accepted receipts remain archived; the user-requested actual daily-profile supplement found chat UI inconsistencies. Shared 2.1.17 candidate and repeated daily acceptance are in progress.
 
-- `uiConsolidationCandidate`: 同一task工作树保留2.1.17冻结收据；Desktop/Web2.1.18当前组合verify通过，532browser零flaky，开发5步骤与主入口gzip预算通过。PR55/56为定向内容承接，不称主线祖先链已合并；实际Desktop/最终提交审查/Hosted/安装器/用户验收继续收口，Mobile2.1.1仍规划。[本轮验证](../changes/2026-10-14-ui-consolidation/verification.md)。
+- `uiConsolidationCandidate`: 同一task工作树保留2.1.17冻结与2.1.18中间候选；最新主目录2.1.20一致源f2b0466的51源/测试/历史文档路径和4任务记录已逐项承接，当前Desktop/Web2.1.21组合验证中。41引用原件逐项hash保留原SHA；CLI桥已列入生产白名单。PR55/56与在途分支不冒称主线祖先链合并；实际Desktop/最终审查/Hosted/安装器/用户验收继续收口，Mobile2.1.1仍规划。[本轮验证](../changes/2026-10-14-ui-consolidation/verification.md)。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->

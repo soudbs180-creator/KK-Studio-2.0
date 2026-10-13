@@ -194,6 +194,95 @@
   order: 6;
 }
 
+.conversation-panel .chat-agent-messages > .chat-agent-execution {
+  order: 6;
+  min-width: 0;
+  border: var(--kk-border-width) solid var(--kk-border-subtle);
+  border-radius: var(--kk-radius-menu);
+  padding: var(--kk-space-2) var(--kk-space-3);
+  background: var(--kk-bg-surface);
+  color: var(--kk-text-secondary);
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
+  overflow-wrap: anywhere;
+}
+
+.chat-agent-execution summary {
+  min-height: var(--kk-control-h-sm);
+  cursor: pointer;
+  color: var(--kk-text-primary);
+}
+
+.chat-agent-execution summary:focus-visible {
+  outline: var(--kk-border-width-focus) solid var(--kk-focus-ring);
+  outline-offset: var(--kk-space-1);
+  border-radius: var(--kk-radius-menu);
+}
+
+.chat-agent-execution-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kk-space-3);
+  list-style: none;
+  margin: var(--kk-space-2) 0 0;
+  padding: 0;
+}
+
+.chat-agent-execution-item {
+  min-width: 0;
+  padding-top: var(--kk-space-2);
+  border-top: var(--kk-border-width) solid var(--kk-border-subtle);
+}
+
+.chat-agent-execution-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--kk-space-1) var(--kk-space-2);
+}
+
+.chat-agent-execution-heading strong {
+  color: var(--kk-text-primary);
+  font-weight: var(--kk-font-weight-body-strong);
+}
+
+.chat-agent-execution-item p,
+.chat-agent-execution-item pre,
+.chat-agent-execution-item dl {
+  margin: var(--kk-space-1) 0 0;
+  white-space: pre-wrap;
+}
+
+.chat-agent-execution-item pre {
+  overflow: auto;
+  font: inherit;
+  font-family: var(--kk-font-mono);
+}
+
+.chat-agent-execution-item dl > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kk-space-1) var(--kk-space-2);
+}
+
+.chat-agent-execution-item dd {
+  margin: 0;
+}
+
+.chat-agent-execution-item.is-success .chat-agent-execution-state {
+  color: var(--kk-success);
+}
+
+.chat-agent-execution-item.is-failure .chat-agent-execution-state,
+.chat-agent-execution-error {
+  color: var(--kk-text-danger);
+}
+
+.chat-agent-execution-item.is-interrupted .chat-agent-execution-state {
+  color: var(--kk-warning);
+}
+
 .conversation-panel .chat-agent-messages > .chat-approval {
   order: 7;
 }

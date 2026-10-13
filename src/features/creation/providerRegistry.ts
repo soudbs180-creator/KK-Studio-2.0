@@ -4,7 +4,12 @@ import {
   isProviderGenerationVerified,
   type ProviderConnection,
 } from "../../domain/providerConnections.ts";
-import type { ModelProviderProfile } from "../../domain/modelProvider.ts";
+import {
+  MODEL_PROVIDER_STORAGE_KEY,
+  parseModelProvider,
+  serializeModelProvider,
+  type ModelProviderProfile,
+} from "../../domain/modelProvider.ts";
 import { invoke } from "@tauri-apps/api/core";
 import { withProviderStoreLock } from "./providerCoordination.ts";
 import { credentialId } from "./providerCredentials.ts";
@@ -81,13 +86,40 @@ export async function loadProviderConnectionsDurable(
     nativeRevision = snapshot.revision;
     const connections = snapshot.connections;
     if (!connections) return null;
-    if (
-      options.publishCache !== false &&
-      !writeProviderConnections(connections)
-    )
-      throw new Error(
-        "系统连接已读取，但无法刷新页面缓存，请检查本地存储后重试。",
-      );
+    if (options.publishCache !== false) {
+      try {
+        const raw = window.localStorage.getItem(MODEL_PROVIDER_STORAGE_KEY);
+        const { profile, recovered } = parseModelProvider(raw);
+        const matches =
+          raw && !recovered
+            ? connections.filter((item) =>
+                profile.connectionId
+                  ? item.id === profile.connectionId
+                  : item.baseUrl === profile.baseUrl &&
+                    item.provider === profile.name,
+              )
+            : [];
+        const selected = matches.length === 1 ? matches[0] : undefined;
+        if (!writeProviderConnections(connections))
+          throw new Error("Cache unavailable");
+        // Recover an acknowledged account even if its profile cache was interrupted.
+        if (selected?.baseUrl && selected.model !== undefined)
+          window.localStorage.setItem(
+            MODEL_PROVIDER_STORAGE_KEY,
+            serializeModelProvider({
+              version: 1,
+              name: selected.provider,
+              baseUrl: selected.baseUrl,
+              model: selected.model,
+              connectionId: selected.id,
+            }),
+          );
+      } catch {
+        throw new Error(
+          "系统连接已读取，但无法刷新页面缓存，请检查本地存储后重试。",
+        );
+      }
+    }
     return connections;
   });
 }

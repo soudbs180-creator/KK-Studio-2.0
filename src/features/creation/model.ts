@@ -483,7 +483,7 @@ function normalizeCanvasItem(
 ): CanvasCollectionItem {
   const result = value.result;
   return {
-    tags: normalizeTags(value.tags),
+    tags: value.tags === undefined ? undefined : normalizeTags(value.tags),
     // Plugin content is durable project data, independently editable after a read.
     plugin:
       value.plugin === undefined ? undefined : structuredClone(value.plugin),

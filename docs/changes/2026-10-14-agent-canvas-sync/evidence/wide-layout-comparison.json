@@ -1,0 +1,151 @@
+{
+  "runtime": "Vite development",
+  "url": "http://127.0.0.1:1421",
+  "action": "50% menu, then eight 缩小 menu actions",
+  "assertion": "original port elementFromPoint assertion retained",
+  "note": "Dependencies are junctions; development font requests returned 403 in both runs. This is bounded layout evidence, not production or desktop acceptance.",
+  "runs": [
+    {
+      "kind": "baseline",
+      "exitCode": 1,
+      "portHit": false,
+      "geometry": {
+        "expanded": false,
+        "port": {
+          "x": 405.5585632324219,
+          "y": 335.24090576171875,
+          "width": 28,
+          "height": 28,
+          "top": 335.24090576171875,
+          "right": 433.5585632324219,
+          "bottom": 363.24090576171875,
+          "left": 405.5585632324219
+        },
+        "composer": {
+          "x": 284.4305419921875,
+          "y": 348.1912536621094,
+          "width": 137.61968994140625,
+          "height": 55.2811279296875,
+          "top": 348.1912536621094,
+          "right": 422.05023193359375,
+          "bottom": 403.4723815917969,
+          "left": 284.4305419921875
+        },
+        "body": {
+          "x": 308.92218017578125,
+          "y": 323.3497314453125,
+          "width": 88.63641357421875,
+          "height": 22.50897216796875,
+          "top": 323.3497314453125,
+          "right": 397.55859375,
+          "bottom": 345.85870361328125,
+          "left": 308.92218017578125
+        },
+        "scale": 0.23325371176509535,
+        "composerZ": "10",
+        "actionsZ": "8",
+        "hits": [
+          {
+            "class": "creation-composer  ",
+            "node": "canvas-node-project-mv6zdore-c5lynrco-project-mv6zdore-c5lynrco-task-mv6zdpjv-v9c37r-result-1"
+          },
+          {
+            "class": "node-add-follow",
+            "node": "canvas-node-project-mv6zdore-c5lynrco-project-mv6zdore-c5lynrco-task-mv6zdpjv-v9c37r-result-1"
+          },
+          {
+            "class": "node-actions",
+            "node": "canvas-node-project-mv6zdore-c5lynrco-project-mv6zdore-c5lynrco-task-mv6zdpjv-v9c37r-result-1"
+          },
+          {
+            "class": "canvas-node canvas-node-result  has-reference-composer is-selected  ",
+            "node": "canvas-node-project-mv6zdore-c5lynrco-project-mv6zdore-c5lynrco-task-mv6zdpjv-v9c37r-result-1"
+          },
+          {
+            "class": "canvas infinite-canvas   canvas-pattern-dots"
+          },
+          {
+            "class": "workspace-content"
+          },
+          {
+            "class": "workspace "
+          },
+          {
+            "class": "app-body"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "candidate",
+      "exitCode": 1,
+      "portHit": false,
+      "geometry": {
+        "expanded": false,
+        "port": {
+          "x": 405.5585632324219,
+          "y": 335.24090576171875,
+          "width": 28,
+          "height": 28,
+          "top": 335.24090576171875,
+          "right": 433.5585632324219,
+          "bottom": 363.24090576171875,
+          "left": 405.5585632324219
+        },
+        "composer": {
+          "x": 284.4305419921875,
+          "y": 348.1912536621094,
+          "width": 137.61968994140625,
+          "height": 55.2811279296875,
+          "top": 348.1912536621094,
+          "right": 422.05023193359375,
+          "bottom": 403.4723815917969,
+          "left": 284.4305419921875
+        },
+        "body": {
+          "x": 308.92218017578125,
+          "y": 323.3497314453125,
+          "width": 88.63641357421875,
+          "height": 22.50897216796875,
+          "top": 323.3497314453125,
+          "right": 397.55859375,
+          "bottom": 345.85870361328125,
+          "left": 308.92218017578125
+        },
+        "scale": 0.23325371176509535,
+        "composerZ": "10",
+        "actionsZ": "8",
+        "hits": [
+          {
+            "class": "creation-composer  ",
+            "node": "canvas-node-project-mv6zebcm-8qgnrg75-project-mv6zebcm-8qgnrg75-task-mv6zec9k-ki3p3z-result-1"
+          },
+          {
+            "class": "node-add-follow",
+            "node": "canvas-node-project-mv6zebcm-8qgnrg75-project-mv6zebcm-8qgnrg75-task-mv6zec9k-ki3p3z-result-1"
+          },
+          {
+            "class": "node-actions",
+            "node": "canvas-node-project-mv6zebcm-8qgnrg75-project-mv6zebcm-8qgnrg75-task-mv6zec9k-ki3p3z-result-1"
+          },
+          {
+            "class": "canvas-node canvas-node-result  has-reference-composer is-selected  ",
+            "node": "canvas-node-project-mv6zebcm-8qgnrg75-project-mv6zebcm-8qgnrg75-task-mv6zec9k-ki3p3z-result-1"
+          },
+          {
+            "class": "canvas infinite-canvas   canvas-pattern-dots"
+          },
+          {
+            "class": "workspace-content"
+          },
+          {
+            "class": "workspace "
+          },
+          {
+            "class": "app-body"
+          }
+        ]
+      }
+    }
+  ]
+}

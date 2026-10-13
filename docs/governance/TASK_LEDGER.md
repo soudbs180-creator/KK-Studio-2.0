@@ -132,9 +132,13 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | REVIEW | 进行中 | P1 | TASK-GOV-003 | root | 单独修复并验证 5 个 UI 失败项；补齐开发态 receipt 后再评估是否可标记 DONE。 |
 | TASK-UI-CLASSIFY-20261013 | 模型接入与扩展分类修复并验证三客户端 | REVIEW | 进行中 | P1 | none | root | 另行处理三个既有 UI 失败并取得用户验收；保留自动分派/OAuth 未接入边界 |
 | TASK-AGENT-RECOVERY-20261013 | 桌面 Agent 自动恢复、会话归属与凭据保存 | PARTIAL | 进行中 | P1 | none | root | 完成聊天与凭据状态一致性修复，2.1.17完整门禁和官方日常APP复验，恢复初始连接偏好。 |
-| TASK-UI-CONSOLIDATE-20261014 | 冻结最新本机版本并统一 UI、模型预设与轻量化规则 | PARTIAL | 进行中 | P1 | none | root | 提交2.1.18当前组合，完成官方Desktop构建和独立最终SHA审查，验证实际Native窗口，刷新最新来源恢复归档并输出绑定产物；保留原数据/历史失败，未接协议、Hosted、NativeMobile分别留边界。 |
+| TASK-UI-CONSOLIDATE-20261014 | 冻结最新本机版本并统一 UI、模型预设与轻量化规则 | PARTIAL | 进行中 | P1 | none | root | 完成2.1.21全套组合与实际Native验证、最终SHA独立复核、当前产物与增量恢复包；旧flaky与在途分支保留原状态，不把未接协议、Hosted或NativeMobile关闭。 |
 | TASK-GOV-005 | PR #55 历史快照合法集成与门禁修复 | REVIEW | 进行中 | P1 | none | root | 完成独立 exact-SHA review，fast-forward update PR #55 branch，回读 Hosted verify/delivery；不要直接推送 main。 |
 | TASK-ENG-001 | 引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定 | REVIEW | 进行中 | P1 | none | root | 基于最新 origin/main 完成冲突承接、独立 exact-SHA review 和 Hosted verify；未完成前保持 REVIEW。 |
+| TASK-CCSWITCH-LEARN-20261014 | 澄清供应商编辑状态并验证跨存储中断恢复 | DONE | 已完成 | P1 | TASK-AGENT-RECOVERY-20261013 | root | 本轮实现与本地验收完成；Hosted、物理断电、收费Provider、实际用户profile及签名发布仍未验证。 |
+| TASK-CANVAS-SYNC-20261014 | 修复 Agent 与已挂载画布图同步 | PARTIAL | 进行中 | P1 | none | root | Desktop/Tauri2.1.19复验位置/连线/重载；独立宽图问题另属TASK-CANVAS-WIDE-PORT-20261014 |
+| TASK-CANVAS-WIDE-PORT-20261014 | 宽图结果编辑器遮挡下游按钮 | TODO | 未完成 | P2 | none | root | 单独复证production并修正宽图主体几何/端口锚点 |
+| TASK-AGENT-UX-20261014 | Agent 执行过程与生成保存状态提示 | DONE | 已完成 | P2 | none | root | 保留证据并完成日常APP人工验收，真实Provider和发布沿原独立任务推进 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2547,9 +2551,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-UI-BASELINE-20261014`
 - Worktree: `D:/kk-studio/.worktrees/branch-consolidation-20261011`
 - Modules: src/styles, src/components, src/domain, src/features, src-tauri, docs, scripts
-- Verification: PARTIAL — 冻结阶段原receipts保留原SHA及首试flaky。当前npm run verify退出0：Node1118pass/14skip、Agent172pass/2skip、UI235/0、lint/typecheck/format/build通过；实际preview1423的532 browser全部通过且0flaky/skip，开发1421五步骤通过。Rust check/fmt及17存储/24项目包fixture通过；Web主入口gzip增加6430字节，低于16384预算。原定向和首轮失败留存；实际Native和最终SHA审查仍待完成。健康5项及Windows2项advisory保留，没有提高阈值或增加豁免。
+- Verification: PARTIAL — 2.1.21当前Node1156项1142pass/14skip、Agent172pass/2skip、lint/type/format/build、UI236/0、production544零失败/零flaky/零skip、Rust131/131与fmt通过；开发新path依赖重载先FAIL，预优化同一依赖后5步骤PASS/父目录403。统计/搜索/旧插件标签形态均先RED再GREEN，原精确恢复断言保留；主入口gzip+9617B低于16384。已提交compound、实际Native和最终SHA审查待独立回执。历史失败、在途源和advisory保留。
 - Evidence: [docs/changes/2026-10-14-ui-consolidation/intent.md](../../docs/changes/2026-10-14-ui-consolidation/intent.md), [docs/changes/2026-10-14-ui-consolidation/spec.md](../../docs/changes/2026-10-14-ui-consolidation/spec.md), [docs/changes/2026-10-14-ui-consolidation/plan.md](../../docs/changes/2026-10-14-ui-consolidation/plan.md), [docs/changes/2026-10-14-ui-consolidation/verification.md](../../docs/changes/2026-10-14-ui-consolidation/verification.md), [docs/changes/2026-10-14-ui-consolidation/review.md](../../docs/changes/2026-10-14-ui-consolidation/review.md), [docs/architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md](../../docs/architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md), [docs/features/feat-039-canvas-collections.md](../../docs/features/feat-039-canvas-collections.md)
-- Next action: 提交2.1.18当前组合，完成官方Desktop构建和独立最终SHA审查，验证实际Native窗口，刷新最新来源恢复归档并输出绑定产物；保留原数据/历史失败，未接协议、Hosted、NativeMobile分别留边界。
+- Next action: 完成2.1.21全套组合与实际Native验证、最终SHA独立复核、当前产物与增量恢复包；旧flaky与在途分支保留原状态，不把未接协议、Hosted或NativeMobile关闭。
 - Last verified: 2026-10-14
 - Updated: 2026-10-14
 
@@ -2590,3 +2594,79 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: 基于最新 origin/main 完成冲突承接、独立 exact-SHA review 和 Hosted verify；未完成前保持 REVIEW。
 - Last verified: 2026-10-13
 - Updated: 2026-10-12
+
+## TASK-CCSWITCH-LEARN-20261014 — 澄清供应商编辑状态并验证跨存储中断恢复
+
+- Goal: 区分编辑选择与生效配置、模型目录与生成能力，验证中断不丢配置或凭据
+- Scope: 两处状态文案；metadata/vault/cache中断与并发验证；修复原生提交后profile缓存恢复，保留架构
+- Display status: 已完成
+- Priority: P1 — 防止配置草稿与运行状态混淆，并补跨存储中断证据
+- Requirement refs: ledger:TASK-CCSWITCH-LEARN-20261014
+- Feature IDs: FEAT-022
+- Owner role: repository-maintainer
+- Acceptance: 选B未保存不改变A的持久配置，编辑状态明确; 目录成功不表示生成能力已验证; metadata/vault阶段中断保留完整主配置、备份与对应凭据; 原生提交后缓存发布前中断可重复恢复，不盲写密钥; 相同revision并发仅一胜者，秘密不进入配置缓存证据; 相关Web与独立Desktop验证和独立审查
+- Branch: `fix/TASK-CCSWITCH-LEARN-20261014-status-recovery`
+- Worktree: `D:/kk-studio/.worktrees/TASK-CCSWITCH-LEARN-20261014`
+- Modules: src/components/settings, src-tauri/src/provider_transaction_tests.rs, tests, src/features/creation/providerRegistry.ts
+- Verification: PASS — 稳定完整浏览器517/517零retry/flaky；相关单元61/61；Node1087pass14skip/Agent172pass2skip；Rust默认features/threads129/129；主目录官方2.1.18独立native20功能+11视口、两次重启、syntheticvault保留及cleanup；独立代码审查19decc93 PASS，交付文档另绑定HEAD补审。 此证据绑定2.1.18当时快照，后续并行2.1.19组合Desktop未验，不继承current。
+- Evidence: [docs/changes/2026-10-14-ccswitch-status-recovery/intent.md](../../docs/changes/2026-10-14-ccswitch-status-recovery/intent.md), [docs/changes/2026-10-14-ccswitch-status-recovery/spec.md](../../docs/changes/2026-10-14-ccswitch-status-recovery/spec.md), [docs/changes/2026-10-14-ccswitch-status-recovery/plan.md](../../docs/changes/2026-10-14-ccswitch-status-recovery/plan.md), [docs/changes/2026-10-14-ccswitch-status-recovery/verification.md](../../docs/changes/2026-10-14-ccswitch-status-recovery/verification.md), [docs/changes/2026-10-14-ccswitch-status-recovery/review.md](../../docs/changes/2026-10-14-ccswitch-status-recovery/review.md)
+- Next action: 本轮实现与本地验收完成；Hosted、物理断电、收费Provider、实际用户profile及签名发布仍未验证。
+- Last verified: 2026-10-14
+- Updated: 2026-10-14
+
+## TASK-CANVAS-SYNC-20261014 — 修复 Agent 与已挂载画布图同步
+
+- Goal: 节点位置与连线实时同步、原数据保留并可重载恢复
+- Scope: 现有画布 hooks、图合并与相关回归；不改存储身份和 Agent 协议
+- Display status: 进行中
+- Priority: P1 — 未记录
+- Requirement refs: user:agent-canvas-sync-20261014
+- Feature IDs: FEAT-001, FEAT-009, FEAT-012
+- Owner role: repository-maintainer
+- Acceptance: Agent 移动/新增节点和 reference 连线变更在真实 DOM 与权威快照一致; 原内容保留，IndexedDB 重载恢复一致; 拖动、取消、新增、undo 与 result 连线不回归
+- Branch: `fix/TASK-CANVAS-SYNC-20261014-agent`
+- Worktree: `D:/kk-studio/.worktrees/TASK-CANVAS-SYNC-20261014`
+- Modules: src/components/Canvas.tsx, src/components/canvas, src/domain/projectCanvas.ts, tests/browser/agent.spec.ts, tests/unit/projectCanvas.test.ts
+- Verification: PARTIAL — 最终2.1.19共享源及Web专项PASS；Node1089pass/14skip、Agent172pass/2skip、production520/520（0retry/0flaky）、development PASS。Desktop/Tauri2.1.19未验；186非任务SHA不变，3份并发文档更新原件保留，暂存内容不改。
+- Evidence: [docs/changes/2026-10-14-agent-canvas-sync/verification.md](../../docs/changes/2026-10-14-agent-canvas-sync/verification.md), [docs/changes/2026-10-14-agent-canvas-sync/review.md](../../docs/changes/2026-10-14-agent-canvas-sync/review.md), [docs/changes/2026-10-14-agent-canvas-sync/evidence/source-manifest.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/source-manifest.json), [docs/changes/2026-10-14-agent-canvas-sync/evidence/primary-checks.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/primary-checks.json), [docs/changes/2026-10-14-agent-canvas-sync/evidence/final-production-browser-results.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/final-production-browser-results.json)
+- Next action: Desktop/Tauri2.1.19复验位置/连线/重载；独立宽图问题另属TASK-CANVAS-WIDE-PORT-20261014
+- Last verified: 2026-10-14
+- Updated: 2026-10-14
+
+## TASK-CANVAS-WIDE-PORT-20261014 — 宽图结果编辑器遮挡下游按钮
+
+- Goal: 宽图低缩放时下游按钮仍可点击
+- Scope: 既有结果主体尺寸、下游锚点和编辑器层级
+- Display status: 未完成
+- Priority: P2 — 未记录
+- Requirement refs: derived:full-browser-port-hit-test
+- Feature IDs: FEAT-001
+- Owner role: repository-maintainer
+- Acceptance: 1200x300结果在21%–25%缩放、折叠/展开编辑器时下游端口可命中; 保持编辑器生成按钮与连线几何正确
+- Branch: `unassigned`
+- Worktree: `unassigned`
+- Modules: src/domain/canvasGraph.ts, src/components/canvas/NodeActions.tsx, src/styles/workspace.css, tests/browser/unified-image-command.spec.ts
+- Verification: FAIL — 本次同步修复前/后development23.33%同样被composer遮挡；production全量1失败，修复尚未执行。
+- Evidence: [docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json](../../docs/changes/2026-10-14-agent-canvas-sync/evidence/wide-layout-comparison.json), [docs/changes/2026-10-14-agent-canvas-sync/verification.md](../../docs/changes/2026-10-14-agent-canvas-sync/verification.md)
+- Next action: 单独复证production并修正宽图主体几何/端口锚点
+- Last verified: 2026-10-14
+- Updated: 2026-10-14
+
+## TASK-AGENT-UX-20261014 — Agent 执行过程与生成保存状态提示
+
+- Goal: 复用现有事件、任务与归档状态，让执行过程可展开且生成与本地保存事实可辨认
+- Scope: Agent activity消息展示、CanvasHud projectStatus与对应回归
+- Display status: 已完成
+- Priority: P2 — 改善现有核心链路的可理解性，不新增执行权限或付费功能
+- Requirement refs: ledger:TASK-AGENT-UX-20261014
+- Feature IDs: FEAT-009, FEAT-016
+- Owner role: repository-maintainer
+- Acceptance: 活动阶段保真、去重、终态不回退与会话归属; 可折叠执行过程，审批/失败/中断真实显示; 生成/归档/项目保存依据真实回执与saveState，失败保留已生成结果; 取消/partial/unknown/迟到/重载不重复生成且不假成功; 完整相关门禁、浏览器同态与独立增量审查
+- Branch: `codex/TASK-AGENT-UX-20261014-execution-delivery`
+- Worktree: `D:/kk-studio/.worktrees/TASK-AGENT-UX-20261014-execution-delivery`
+- Modules: src/features/agent, src/components/AgentConversationMessages.tsx, src/styles/agent-panel.css, src/App.tsx, src/domain/uiGovernance.ts, tests, src/styles/canvas-hud.css, src/styles/responsive-content.css
+- Verification: PASS — 冻结source4e38351c独立SOURCE PASS/38单测；Node1100pass/14既有skip、Agent172pass/2既有skip；525浏览器零retry/flaky、development与official隔离Tauri17/17通过。compound因1423占用出口1保留，全部剩余阶段同source补跑PASS。真实Provider/日常数据/Hosted发布另验。 主目录源码同SHA、107相关单测与门禁/official2.1.20/隔离native17通过；原暂存内容和140个未拥有源码保持。
+- Evidence: [docs/changes/2026-10-14-agent-execution-delivery/intent.md](../../docs/changes/2026-10-14-agent-execution-delivery/intent.md), [docs/changes/2026-10-14-agent-execution-delivery/spec.md](../../docs/changes/2026-10-14-agent-execution-delivery/spec.md), [docs/changes/2026-10-14-agent-execution-delivery/plan.md](../../docs/changes/2026-10-14-agent-execution-delivery/plan.md), [docs/changes/2026-10-14-agent-execution-delivery/verification.md](../../docs/changes/2026-10-14-agent-execution-delivery/verification.md), [docs/changes/2026-10-14-agent-execution-delivery/review.md](../../docs/changes/2026-10-14-agent-execution-delivery/review.md)
+- Next action: 保留证据并完成日常APP人工验收，真实Provider和发布沿原独立任务推进
+- Last verified: 2026-10-14
+- Updated: 2026-10-14

@@ -433,6 +433,11 @@
   .workspace.chat-mobile .canvas-hud,
   .workspace.chat-mobile .canvas-toolbar {
     visibility: visible;
+  }
+  .workspace.chat-mobile .canvas-hud {
+    pointer-events: none;
+  }
+  .workspace.chat-mobile .canvas-toolbar {
     pointer-events: auto;
   }
   .workspace.chat-mobile .canvas.has-chat .canvas-top-right {

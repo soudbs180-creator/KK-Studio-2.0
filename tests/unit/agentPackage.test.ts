@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { createRequire } from "node:module";
+import { createHash } from "node:crypto";
 import { packageAgentRuntime } from "../../scripts/agent/runtime-package.mjs";
 
 test("runtime package contains production dependencies without repository links or user secrets", async () => {
@@ -90,6 +91,23 @@ test("runtime package contains production dependencies without repository links 
       "2",
     );
     assert.ok(files.includes("desktop-entry.mjs"));
+    const bridge = await fs.readFile(
+      new URL("../../scripts/gemini-bridge.mjs", import.meta.url),
+    );
+    assert.deepEqual(
+      await fs.readFile(path.join(target, "gemini-bridge.mjs")),
+      bridge,
+    );
+    assert.deepEqual(
+      result.files.find(
+        (file: { path: string }) => file.path === "gemini-bridge.mjs",
+      ),
+      {
+        path: "gemini-bridge.mjs",
+        size: bridge.length,
+        sha256: createHash("sha256").update(bridge).digest("hex"),
+      },
+    );
     assert.ok(
       files.includes(process.platform === "win32" ? "node.exe" : "node"),
     );

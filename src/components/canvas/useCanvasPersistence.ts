@@ -23,9 +23,14 @@ export function useCanvasPersistence(
       items,
     );
     const fingerprint = projectCanvasFingerprint(canvas);
-    if (fingerprint !== previous.current) {
+    if (fingerprint === projectCanvasFingerprint(initialCanvas)) {
+      previous.current = fingerprint;
+      return;
+    }
+    // A preserved local gesture must repair a conflicting external snapshot.
+    if (fingerprint !== previous.current || initialCanvas !== undefined) {
       previous.current = fingerprint;
       onChangeRef.current?.(canvas);
     }
-  }, [positions, edges, viewport, items]);
+  }, [positions, edges, viewport, items, initialCanvas]);
 }

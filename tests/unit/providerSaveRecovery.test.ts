@@ -28,7 +28,7 @@ async function withDesktop(
     vault: Map<string, string>;
     failWrite: () => void;
     failCredentialSet: (concurrentUpdate?: boolean) => void;
-    failCache: () => void;
+    failCache: (enabled?: boolean) => void;
     replaceNative: (connections: unknown[]) => void;
     replaceNativePayload: (connections: unknown) => void;
     nativeConnections: () => unknown[];
@@ -167,8 +167,8 @@ async function withDesktop(
         refuseCredentialSet = true;
         concurrentUpdate = supersede;
       },
-      failCache: () => {
-        refuseCache = true;
+      failCache: (enabled = true) => {
+        refuseCache = enabled;
       },
       replaceNative: (next) => {
         payloadOverride = null;
@@ -230,6 +230,46 @@ test("Google metadata recovery preserves an existing authoritative account inste
         vault.get(GOOGLE_CREDENTIAL_REF),
         "synthetic-google-existing",
       );
+    },
+  );
+});
+
+test("a committed save survives stale cache and repeated recovery without rewriting native stores", async () => {
+  await withDesktop(
+    async ({ storage, vault, failCache, nativePayload, nativeWrites }) => {
+      await saveGoogleApiKeyConnection("synthetic-cache-before");
+      const staleCache = storage.get(PROVIDER_CONNECTIONS_STORAGE_KEY);
+      failCache();
+      await assert.rejects(
+        saveGoogleApiKeyConnection("synthetic-cache-after"),
+        (error) =>
+          error instanceof ProviderSaveError &&
+          error.credentialState === "saved",
+      );
+      const committed = structuredClone(nativePayload());
+      const writes = [...nativeWrites()];
+      assert.equal(storage.get(PROVIDER_CONNECTIONS_STORAGE_KEY), staleCache);
+      assert.equal(vault.get(GOOGLE_CREDENTIAL_REF), "synthetic-cache-after");
+
+      failCache(false);
+      for (let recovery = 0; recovery < 2; recovery++) {
+        storage.delete(PROVIDER_CONNECTIONS_STORAGE_KEY);
+        await getGoogleCredential();
+        assert.deepEqual(nativePayload(), committed);
+        assert.deepEqual(nativeWrites(), writes);
+        assert.equal(vault.get(GOOGLE_CREDENTIAL_REF), "synthetic-cache-after");
+        assert.equal(readProviderConnections()[0]?.id, GOOGLE_CONNECTION_ID);
+        assert.equal(
+          readProviderConnections()[0]?.credentialRef,
+          GOOGLE_CREDENTIAL_REF,
+        );
+      }
+      const nonSecretStores = JSON.stringify([
+        nativePayload(),
+        ...storage.values(),
+      ]);
+      assert.equal(nonSecretStores.includes("synthetic-cache-before"), false);
+      assert.equal(nonSecretStores.includes("synthetic-cache-after"), false);
     },
   );
 });

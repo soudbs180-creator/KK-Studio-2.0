@@ -152,7 +152,11 @@ import {
 } from "./features/creation/providerSubmission";
 import { mapWithConcurrency } from "./features/creation/generationQueue";
 import { compileDesignPrompt } from "./features/creation/promptCompiler";
-import { getDisabledReason, getGenerationUiState } from "./domain/uiGovernance";
+import {
+  getDisabledReason,
+  getGenerationUiState,
+  getGenerationProgressLabels,
+} from "./domain/uiGovernance";
 
 /** Capacity failure hint: name connections the user can switch to right away. */
 function capacitySwitchHint(currentId: string | undefined): string {
@@ -372,6 +376,10 @@ export default function App() {
     });
   }
   const taskControllers = useRef<Record<string, AbortController>>({});
+  const [savingResultTaskIds, setSavingResultTaskIds] = useState(
+    new Set<string>(),
+  );
+  useEffect(() => setSavingResultTaskIds(new Set()), [persistence.loadEpoch]);
   useNativeTaskRecovery(
     creationRef,
     taskControllers,
@@ -394,6 +402,12 @@ export default function App() {
   const activeProject = creation.projects.find(
     (project) => project.id === creation.activeProjectId,
   );
+  const latestProjectTask = activeProject?.tasks.at(-1);
+  const generationProgress = getGenerationProgressLabels({
+    task: latestProjectTask,
+    saveState,
+    resultSaving: savingResultTaskIds.has(latestProjectTask?.id ?? ""),
+  });
   const [imagePreview, setImagePreview] = useState<{
     source: CanvasCollectionItem;
     title: string;
@@ -816,6 +830,33 @@ export default function App() {
     }
     const controller = new AbortController();
     taskControllers.current[taskId] = controller;
+    const setResultSaving = (saving: boolean) => {
+      if (
+        taskControllers.current[taskId] !== controller ||
+        (saving && controller.signal.aborted)
+      )
+        return;
+      setSavingResultTaskIds((current) => {
+        if (current.has(taskId) === saving) return current;
+        const next = new Set(current);
+        if (saving) next.add(taskId);
+        else next.delete(taskId);
+        return next;
+      });
+    };
+    controller.signal.addEventListener("abort", () => setResultSaving(false), {
+      once: true,
+    });
+    let terminalPublished = false;
+    let terminalSaveFailed = false;
+    const flushPublishedResult = async () => {
+      try {
+        await persistence.flush();
+      } catch (error) {
+        terminalSaveFailed = terminalPublished;
+        throw error;
+      }
+    };
     let outputs = outputsForTask(task);
     const pendingIndices = outputs
       .filter((output) => output.status !== "succeeded")
@@ -874,6 +915,8 @@ export default function App() {
           );
         }
         const publishedStatus = deliveryErrorMessage ? "unknown" : status;
+        terminalPublished =
+          publishedStatus !== "running" && publishedStatus !== "queued";
         const publishedError = deliveryErrorMessage ?? error;
         const publishedSubmissionState = deliveryErrorMessage
           ? ("unknown" as const)
@@ -1101,6 +1144,18 @@ export default function App() {
             pendingIndices,
           );
           nativeTaskRecords.current[taskId] = record;
+          setResultSaving(
+            record.status !== "unknown" &&
+              record.outputs.some(
+                (output) =>
+                  output.status === "succeeded" &&
+                  outputs.some(
+                    (prior) =>
+                      prior.index === output.index &&
+                      prior.status !== "succeeded",
+                  ),
+              ),
+          );
           const recordOutputs = new Map(
             record.outputs.map((output) => [output.index, output]),
           );
@@ -1362,7 +1417,8 @@ export default function App() {
                 : "submitted"
               : "terminal",
           );
-          await persistence.flush();
+          await flushPublishedResult();
+          setResultSaving(false);
           return record;
         };
         if (
@@ -1447,7 +1503,7 @@ export default function App() {
           error: undefined,
         };
         publish("succeeded", undefined, "terminal");
-        await persistence.flush();
+        await flushPublishedResult();
         if (task.providerConnectionId && reservation?.healthUnchanged())
           markProviderConnectionHealthy(task.providerConnectionId);
         return;
@@ -1470,6 +1526,7 @@ export default function App() {
           providerRequestStarted = true;
         },
         onChunk: async (sources, offset) => {
+          setResultSaving(true);
           const archived = await mapWithConcurrency(
             sources,
             2,
@@ -1587,6 +1644,7 @@ export default function App() {
             );
           });
           publish("running");
+          setResultSaving(false);
         },
       });
       if (controller.signal.aborted) throw new Error("任务已停止。");
@@ -1648,7 +1706,7 @@ export default function App() {
                     `${completed}/${task.requestedOutputs} 张已归档，可重试未归档结果。`),
         generatedUncertain || archiveUncertain ? "unknown" : "terminal",
       );
-      await persistence.flush();
+      await flushPublishedResult();
       if (task.providerConnectionId) {
         const failure = generated.failure;
         if (
@@ -1688,6 +1746,8 @@ export default function App() {
           });
       }
     } catch (error) {
+      // A failed project save cannot undo a completed generation receipt.
+      if (terminalSaveFailed) return;
       const uncertain =
         abortedAfterProviderSubmission({
           durableSubmission,
@@ -1794,6 +1854,7 @@ export default function App() {
         );
       }
     } finally {
+      setResultSaving(false);
       try {
         await reservation?.release();
       } catch {
@@ -2967,23 +3028,7 @@ export default function App() {
                             key={task.id}
                             className={`project-task-${task.status}`}
                           >
-                            {task.status === "queued"
-                              ? "排队中"
-                              : task.status === "running"
-                                ? "正在生成"
-                                : task.status === "unknown"
-                                  ? "受理状态不明 · 请核对供应商"
-                                  : task.status === "partial"
-                                    ? `部分完成（${task.completedOutputs}/${task.requestedOutputs}）`
-                                    : task.status === "succeeded"
-                                      ? "已完成"
-                                      : task.status === "offline"
-                                        ? "网络断开"
-                                        : task.status === "cancelled"
-                                          ? "已取消"
-                                          : task.status === "interrupted"
-                                            ? "上次任务未完成"
-                                            : `失败：${task.error ?? "请重试"}`}
+                            {generationProgress.taskLabel}
                             {task.status === "running" && (
                               <button
                                 className="ui-button"
@@ -3011,13 +3056,7 @@ export default function App() {
                           </span>
                         ))}
                         <span className="project-save-state">
-                          {saveState === "loading"
-                            ? "读取中…"
-                            : saveState === "saving"
-                              ? "保存中…"
-                              : saveState === "saved"
-                                ? "已保存"
-                                : "未保存 · 请查看恢复提示"}
+                          {generationProgress.saveLabel}
                         </span>
                       </div>
                     )

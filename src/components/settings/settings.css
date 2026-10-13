@@ -1046,6 +1046,7 @@
   color: var(--settings-muted);
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
+  overflow-wrap: anywhere;
 }
 .settings-network-field {
   display: flex;

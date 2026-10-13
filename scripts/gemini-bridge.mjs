@@ -11,7 +11,8 @@
  */
 import { createServer } from "node:http";
 import { spawn } from "node:child_process";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { readFile } from "node:fs/promises";
 
 const DEFAULT_PORT = 1424;
@@ -392,8 +393,7 @@ export function createGeminiBridge(options = {}) {
 
 if (
   process.argv[1] &&
-  import.meta.url ===
-    new URL(`file://${process.argv[1].replaceAll("\\", "/")}`).href
+  resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 ) {
   const portArg = process.argv.indexOf("--port");
   const port = portArg >= 0 ? Number(process.argv[portArg + 1]) : DEFAULT_PORT;

@@ -81,6 +81,142 @@ test("官方和中转站草稿隔离，切换不保存密钥或发起连接", as
   await expect(profile.getByLabel("API Key", { exact: true })).toHaveValue("");
 });
 
+test("选择连接供编辑不会改变已保存的生效账号", async ({ page }) => {
+  const accountB = {
+    ...opaqueConnection,
+    id: "draft-provider-account",
+    displayName: "Draft account B",
+    credentialRef: "vault_account_draft",
+  };
+  const savedProfile = {
+    version: 1,
+    name: opaqueConnection.provider,
+    baseUrl: opaqueConnection.baseUrl,
+    model: opaqueConnection.model,
+    connectionId: opaqueConnection.id,
+  };
+  await page.addInitScript(
+    ({ keys, accounts, saved }) => {
+      localStorage.setItem(keys.providerConnections, JSON.stringify(accounts));
+      localStorage.setItem(keys.modelProvider, JSON.stringify(saved));
+    },
+    {
+      keys: BROWSER_STORAGE_KEYS,
+      accounts: [opaqueConnection, accountB],
+      saved: savedProfile,
+    },
+  );
+  let requests = 0;
+  await page.route(`${opaqueConnection.baseUrl}/models`, (route) => {
+    requests += 1;
+    return route.abort();
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "设置" });
+  await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
+  await dialog
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
+  const profile = dialog.getByRole("region", { name: "官方 API Key 配置" });
+  const registryBefore = await page.evaluate(
+    (key) => localStorage.getItem(key),
+    BROWSER_STORAGE_KEYS.providerConnections,
+  );
+  const rowB = profile
+    .getByRole("listitem")
+    .filter({ hasText: accountB.displayName });
+  await rowB.click();
+  expect(
+    await page.evaluate(
+      (key) => JSON.parse(localStorage.getItem(key) ?? "{}"),
+      BROWSER_STORAGE_KEYS.modelProvider,
+    ),
+  ).toEqual(savedProfile);
+  expect(
+    await page.evaluate(
+      (key) => localStorage.getItem(key),
+      BROWSER_STORAGE_KEYS.providerConnections,
+    ),
+  ).toBe(registryBefore);
+  expect(requests).toBe(0);
+  await expect(rowB.getByText("正在编辑", { exact: true })).toBeVisible();
+  await expect(
+    profile.getByText("已选中连接供编辑；保存后生效。", { exact: true }),
+  ).toBeVisible();
+});
+
+test("获取模型目录不会验证生成能力或改写保存配置", async ({ page }) => {
+  const account = { ...opaqueConnection, verificationStatus: "unverified" };
+  const savedProfile = {
+    version: 1,
+    name: account.provider,
+    baseUrl: account.baseUrl,
+    model: account.model,
+    connectionId: account.id,
+  };
+  await page.addInitScript(
+    ({ keys, saved, profile }) => {
+      localStorage.setItem(keys.providerConnections, JSON.stringify([saved]));
+      localStorage.setItem(keys.modelProvider, JSON.stringify(profile));
+    },
+    { keys: BROWSER_STORAGE_KEYS, saved: account, profile: savedProfile },
+  );
+  await page.route(`${account.baseUrl}/models`, (route) =>
+    route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({ data: [{ id: "discovered-image-model" }] }),
+    }),
+  );
+  await page.goto("/");
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "设置" });
+  await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
+  await dialog
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
+  const profile = dialog.getByRole("region", { name: "官方 API Key 配置" });
+  await profile.getByRole("button", { name: "测试连接", exact: true }).click();
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        JSON.parse(localStorage.getItem("kk-studio:model-catalog:v1") ?? "[]"),
+      ),
+    )
+    .toEqual([
+      expect.objectContaining({
+        id: account.id,
+        models: [
+          expect.objectContaining({
+            id: "discovered-image-model",
+            kind: "unknown",
+          }),
+        ],
+      }),
+    ]);
+  const stored = await page.evaluate(
+    (key) => JSON.parse(localStorage.getItem(key) ?? "[]"),
+    BROWSER_STORAGE_KEYS.providerConnections,
+  );
+  expect(stored).toEqual([account]);
+  expect(stored[0].lastSuccessfulGenerationAt).toBeUndefined();
+  expect(
+    await page.evaluate(
+      (key) => JSON.parse(localStorage.getItem(key) ?? "{}"),
+      BROWSER_STORAGE_KEYS.modelProvider,
+    ),
+  ).toEqual(savedProfile);
+  await expect(
+    profile.getByText("模型列表已获取", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    profile.getByText("已获取 1 个模型；生成能力仍需实际验证。", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(profile.getByText("未验证生成", { exact: true })).toBeVisible();
+});
+
 test("官方与中转站切换保留已有连接的 opaque 引用、保存身份和会话密钥", async ({
   page,
 }) => {
@@ -119,7 +255,7 @@ test("官方与中转站切换保留已有连接的 opaque 引用、保存身份
     profile
       .getByRole("listitem")
       .filter({ hasText: "Existing opaque account" }),
-  ).toContainText("当前");
+  ).toContainText("正在编辑");
   await profile
     .getByLabel("API Key", { exact: true })
     .fill("fixture-opaque-key");
@@ -133,7 +269,7 @@ test("官方与中转站切换保留已有连接的 opaque 引用、保存身份
     profile
       .getByRole("listitem")
       .filter({ hasText: "Existing opaque account" }),
-  ).toContainText("当前");
+  ).toContainText("正在编辑");
   await profile.getByRole("button", { name: "保存", exact: true }).click();
   await expect(
     profile.getByText(
@@ -153,7 +289,9 @@ test("官方与中转站切换保留已有连接的 opaque 引用、保存身份
   await profile.getByLabel("API Key", { exact: true }).fill("");
   await profile.getByRole("button", { name: "测试连接", exact: true }).click();
   await expect.poll(() => authorization).toBe("Bearer fixture-opaque-key");
-  await expect(profile.getByText(/连接成功，已刷新 1 个模型/)).toBeVisible();
+  await expect(
+    profile.getByText(/已获取 1 个模型；生成能力仍需实际验证/),
+  ).toBeVisible();
   await profile.getByRole("button", { name: "清除密钥", exact: true }).click();
   await expect(
     profile.getByText("已清除当前供应商的密钥。", { exact: true }),
@@ -233,7 +371,9 @@ test("同地址同模型多账号重开设置保留所选身份，保存和清�
       .getByRole("button", { name: "测试连接", exact: true })
       .click();
     await expect.poll(() => authorization).toBe(value);
-    await expect(profile.getByText(/连接成功，已刷新 1 个模型/)).toBeVisible();
+    await expect(
+      profile.getByText(/已获取 1 个模型；生成能力仍需实际验证/),
+    ).toBeVisible();
   };
   await open();
   await profile
@@ -250,12 +390,12 @@ test("同地址同模型多账号重开设置保留所选身份，保存和清�
   await open();
   await expect(
     profile.getByRole("listitem").filter({ hasText: accountB.displayName }),
-  ).toContainText("当前");
+  ).toContainText("正在编辑");
   await expect(
     profile
       .getByRole("listitem")
       .filter({ hasText: opaqueConnection.displayName }),
-  ).not.toContainText("当前");
+  ).not.toContainText("正在编辑");
   expect(
     await page.evaluate(
       (key) => JSON.parse(localStorage.getItem(key) ?? "{}").connectionId,
@@ -367,7 +507,7 @@ test("旧配置同地址多账号没有明确身份时，保存测试清除均�
   for (const account of [derived, opaqueConnection])
     await expect(
       profile.getByRole("listitem").filter({ hasText: account.displayName }),
-    ).not.toContainText("当前");
+    ).not.toContainText("正在编辑");
   await profile
     .getByLabel("API Key", { exact: true })
     .fill("fixture-ambiguous-key");

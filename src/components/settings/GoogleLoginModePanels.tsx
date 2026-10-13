@@ -1,4 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { isTauri } from "@tauri-apps/api/core";
+import { resolveResource } from "@tauri-apps/api/path";
+import {
+  GEMINI_BRIDGE_DEVELOPMENT_COMMAND,
+  packagedGeminiBridgePowerShellCommand,
+} from "../../features/agent/geminiBridgeCommand";
 import {
   GEMINI_BRIDGE_DEFAULT_URL,
   resolveGeminiCliLoginStatus,
@@ -54,7 +60,28 @@ export function GoogleCliSetup({
   disabled: boolean;
   report?: GeminiCliStatus;
 }) {
+  const desktop = isTauri();
   const [copyStatus, setCopyStatus] = useState("");
+  const [bridgeCommand, setBridgeCommand] = useState<string | null>(
+    desktop ? null : GEMINI_BRIDGE_DEVELOPMENT_COMMAND,
+  );
+  const [bridgeCommandError, setBridgeCommandError] = useState("");
+  useEffect(() => {
+    if (!desktop) return;
+    let mounted = true;
+    void resolveResource("agent-runtime/gemini-bridge.mjs")
+      .then((resourcePath) => {
+        if (mounted)
+          setBridgeCommand(packagedGeminiBridgePowerShellCommand(resourcePath));
+      })
+      .catch(() => {
+        if (mounted)
+          setBridgeCommandError("无法解析随包桥脚本路径，请检查桌面安装包。");
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [desktop]);
   const login = report ? resolveGeminiCliLoginStatus(report) : undefined;
   async function copyCommand(command: string) {
     try {
@@ -69,10 +96,25 @@ export function GoogleCliSetup({
       <p>
         用本机 Gemini CLI 登录 Google 账号，经本地桥免 API Key 对话。首次使用：
       </p>
+      <p>
+        请先安装 Node.js/npm，并使用安装 Gemini CLI 的同一 Node/npm
+        环境完成以下步骤。
+        {desktop
+          ? "桌面版启动桥无需源码目录，请在 PowerShell 中执行复制的命令。"
+          : "网页版开发预览请在 KK Studio 源码根目录的终端中执行启动桥命令。"}
+      </p>
       <ol className="settings-guide">
         <li>安装：npm install -g @google/gemini-cli</li>
         <li>登录：终端运行 gemini，选择 Login with Google</li>
-        <li>启动桥：node scripts/gemini-bridge.mjs（默认端口 1424）</li>
+        <li>
+          启动桥：
+          {bridgeCommand ? (
+            <code>{bridgeCommand}</code>
+          ) : (
+            bridgeCommandError || "正在解析随包桥脚本路径…"
+          )}
+          （默认端口 1424）
+        </li>
       </ol>
       <div className="settings-action-group" aria-label="CLI 准备命令">
         <button
@@ -92,7 +134,10 @@ export function GoogleCliSetup({
         <button
           type="button"
           className="settings-action secondary"
-          onClick={() => void copyCommand("node scripts/gemini-bridge.mjs")}
+          disabled={!bridgeCommand}
+          onClick={() => {
+            if (bridgeCommand) void copyCommand(bridgeCommand);
+          }}
         >
           复制启动桥命令
         </button>

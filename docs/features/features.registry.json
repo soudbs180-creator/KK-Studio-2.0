@@ -68,16 +68,19 @@
       "tests/unit/canvasPreferences.test.ts",
       "tests/browser/ui-interactions.spec.ts",
       "tests/browser/ui-interaction-matrix.spec.ts",
-      "tests/desktop/project-landing.mjs"
+      "tests/desktop/project-landing.mjs",
+      "tests/browser/agent.spec.ts"
     ],
     "tasks": [
       "T2",
       "UI-004",
       "TASK-UI-006",
       "TASK-CANVAS-KAWORKAI-001",
-      "TASK-UI-011"
+      "TASK-UI-011",
+      "TASK-CANVAS-SYNC-20261014",
+      "TASK-CANVAS-WIDE-PORT-20261014"
     ],
-    "updated": "2026-09-30",
+    "updated": "2026-10-14",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -107,6 +110,10 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-29-project-landing/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-14-agent-canvas-sync/verification.md"
       }
     ]
   },
@@ -476,9 +483,11 @@
       "TASK-AGENT-005",
       "TASK-AGENT-007",
       "TASK-AGENT-008",
-      "TASK-AGENT-RECOVERY-20261013"
+      "TASK-AGENT-RECOVERY-20261013",
+      "TASK-CANVAS-SYNC-20261014",
+      "TASK-AGENT-UX-20261014"
     ],
-    "updated": "2026-10-13",
+    "updated": "2026-10-14",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -512,6 +521,10 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-10-13-agent-recovery/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-14-agent-canvas-sync/verification.md"
       }
     ]
   },
@@ -605,9 +618,10 @@
       "TASK-MINIMAX-001",
       "TASK-MCP-PROTO-001",
       "TASK-MCP-REGISTRY-001",
-      "TASK-MCP-REGISTRY-002"
+      "TASK-MCP-REGISTRY-002",
+      "TASK-CANVAS-SYNC-20261014"
     ],
-    "updated": "2026-09-26",
+    "updated": "2026-10-14",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -621,6 +635,10 @@
       {
         "platform": "desktop",
         "path": "docs/changes/2026-09-23-agent-attachments/verification.md"
+      },
+      {
+        "platform": "web",
+        "path": "docs/changes/2026-10-14-agent-canvas-sync/verification.md"
       }
     ]
   },
@@ -798,9 +816,10 @@
       "UI-003",
       "TASK-UI-006",
       "TASK-ORCH-002",
-      "TASK-TASKSTATE-001"
+      "TASK-TASKSTATE-001",
+      "TASK-AGENT-UX-20261014"
     ],
-    "updated": "2026-10-08",
+    "updated": "2026-10-14",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
@@ -997,7 +1016,8 @@
       "TASK-UI-005",
       "TASK-AGENT-001",
       "TASK-AGENT-RECOVERY-20261013",
-      "TASK-UI-CONSOLIDATE-20261014"
+      "TASK-UI-CONSOLIDATE-20261014",
+      "TASK-CCSWITCH-LEARN-20261014"
     ],
     "updated": "2026-10-14",
     "platforms": ["web", "desktop"],

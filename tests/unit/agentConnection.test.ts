@@ -272,6 +272,163 @@ function jsonResponse(status: number, body: unknown): Response {
   });
 }
 
+test("活动按 thread/turn/item 合并，不串会话或合并另一轮同名活动", async (t) => {
+  const harness = createHarness();
+  const conn = createAgentConnection({
+    storage: memoryStorage(),
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async () =>
+      jsonResponse(200, {
+        ok: true,
+        protocolVersion: 6,
+        conversation: readyConversation().data,
+        data: [],
+      })) as typeof fetch,
+  });
+  t.after(() => conn.disconnect());
+  await conn.connect();
+  const emit = (
+    threadId: string,
+    turnId: string,
+    phase: string,
+    item: object,
+  ) =>
+    harness.sources[0].emit({
+      type: "agent_event",
+      data: {
+        thread_id: threadId,
+        turn_id: turnId,
+        type: `item.${phase}`,
+        item: { id: "cmd", type: "command_execution", ...item },
+      },
+    });
+  emit("thread-1", "turn-1", "started", { command: "npm test" });
+  emit("thread-1", "turn-1", "updated", { delta: "working\n" });
+  emit("thread-1", "turn-1", "completed", {
+    aggregatedOutput: "working\nfailed",
+    exitCode: 1,
+  });
+  emit("thread-1", "turn-1", "updated", { delta: "late" });
+  emit("thread-1", "turn-2", "started", { command: "npm build" });
+  emit("other-thread", "turn-2", "started", { command: "private" });
+  const tools = conn.getState().messages.filter((item) => item.role === "tool");
+  assert.equal(tools.length, 2);
+  assert.equal(tools[0].threadId, "thread-1");
+  assert.equal(tools[0].turnId, "turn-1");
+  assert.equal(tools[0].itemId, "cmd");
+  assert.match(tools[0].text, /npm test/);
+  assert.equal((tools[0].detail as { phase: string }).phase, "completed");
+  assert.equal((tools[0].detail as { exitCode: number }).exitCode, 1);
+  assert.equal(
+    (tools[0].detail as { output: string }).output,
+    "working\nfailed",
+  );
+  assert.equal(tools[1].turnId, "turn-2");
+  assert.match(tools[1].text, /npm build/);
+});
+
+test("停止回执未到时保持执行中，明确中断事件才结束未完成活动", async (t) => {
+  const harness = createHarness();
+  const conn = createAgentConnection({
+    storage: memoryStorage(),
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async () =>
+      jsonResponse(200, {
+        ok: true,
+        protocolVersion: 6,
+        conversation: readyConversation().data,
+        data: [],
+      })) as typeof fetch,
+  });
+  t.after(() => conn.disconnect());
+  await conn.connect();
+  harness.sources[0].emit({ type: "codex_state", data: { busy: true } });
+  harness.sources[0].emit({
+    type: "agent_event",
+    data: {
+      thread_id: "thread-1",
+      turn_id: "turn-1",
+      type: "item.started",
+      item: { id: "cmd", type: "command_execution", command: "long task" },
+    },
+  });
+  assert.equal((await conn.interrupt()).ok, true);
+  assert.equal(conn.getState().sending, true);
+  assert.match(conn.getState().activity, /已请求停止.*等待/);
+  harness.sources[0].emit({
+    type: "agent_event",
+    data: {
+      thread_id: "thread-1",
+      turn_id: "turn-1",
+      type: "turn.completed",
+      status: "interrupted",
+    },
+  });
+  harness.sources[0].emit({ type: "codex_state", data: { busy: false } });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(conn.getState().sending, false);
+  assert.equal(
+    (conn.getState().messages[0].detail as { turnStatus?: string } | undefined)
+      ?.turnStatus,
+    "interrupted",
+  );
+});
+
+test("聚合推理历史的 source item 重放合并原记录，不追加重复活动", async (t) => {
+  const harness = createHarness({
+    codex: { busy: false },
+    conversation: readyConversation().data,
+  });
+  const storage = memoryStorage();
+  storage.setItem("kk-agent-thread:workspace", "thread-1");
+  const conn = createAgentConnection({
+    storage,
+    eventSourceFactory: harness.eventSourceFactory,
+    fetcher: (async (input) => {
+      if (String(input).endsWith("/models")) {
+        harness.sources[0].emit({
+          type: "agent_event",
+          data: {
+            thread_id: "thread-1",
+            turn_id: "turn-1",
+            type: "item.completed",
+            item: { id: "r1", type: "reasoning", text: "first thought" },
+          },
+        });
+      }
+      return jsonResponse(200, {
+        ok: true,
+        protocolVersion: 6,
+        data: [],
+        messages: [
+          {
+            id: "thread-1:turn-1:synthetic:reasoning",
+            itemId: "synthetic:reasoning",
+            threadId: "thread-1",
+            turnId: "turn-1",
+            role: "tool",
+            title: "思考摘要",
+            text: "first thought\n\nsecond thought",
+            activityItems: { r1: "first thought", r2: "second thought" },
+            detail: {
+              kind: "reasoning",
+              status: "completed",
+              sourceItemIds: ["r1", "r2"],
+            },
+          },
+        ],
+      });
+    }) as typeof fetch,
+  });
+  t.after(() => conn.disconnect());
+  await conn.connect();
+  assert.equal(conn.getState().messages.length, 1);
+  assert.equal(
+    conn.getState().messages[0].text,
+    "first thought\n\nsecond thought",
+  );
+});
+
 test("恢复连接期间的工具明确返回未执行，结束事件取消排队写入", async (t) => {
   const harness = createHarness({
     codex: { busy: true },

@@ -2,7 +2,7 @@
 
 ## 2026-10-14 UI源码候选与当前验收（PARTIAL）
 
-Desktop/Web2.1.18已接入默认绿、中性动作、胶囊/弱焦点、顶部喜欢/标签、独立屏幕面板、分类搜索、分组设置/公共预设、CLI子页及使用/存储概览。当前组合verify通过：Node1118通过/14skip、Agent172通过/2skip、532browser零失败/零flaky、开发5步骤和主入口gzip预算通过。早期失败与健康advisory保留；实际Desktop、最终SHA审查和发布条件继续收口。Native Mobile2.1.1仍规划，窄屏只为响应式Web。[本轮验证](changes/2026-10-14-ui-consolidation/verification.md)、[兼容决定](architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md)。
+默认绿、中性动作/胶囊/上传方角/弱焦点、独立固定大小喜欢/标签面板、收藏兼容、分类搜索、分组设置/预设、CLI子页及使用/存储概览已接入。2.1.18中间候选532browser零flaky、开发及预算通过，复审修正后533含1分组flaky，原件均保留。主目录随后推进2.1.20，凭据恢复/Agent展示/画布同步及51限定路径已逐项承接，当前Desktop/Web2.1.21组合验证中；随包Gemini桥和绝对路径命令已修正。实际Desktop、最终SHA审查及发布分别收口。Native Mobile2.1.1仍规划，窄屏为响应式Web。[本轮验证](changes/2026-10-14-ui-consolidation/verification.md)、[兼容决定](architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md)。
 
 ## 2026-10-14 历史冻结阶段（保留原时点与收据）
 

@@ -10,7 +10,7 @@
 
 ## 本轮恢复入口
 
-TASK-UI-CONSOLIDATE-20261014保留2.1.17冻结与恢复输出，2.1.18当前组合verify、532browser零flaky、开发5步骤和gzip预算通过。继续生成实际Desktop、最终提交独立审查与当前源/产物回执，按[验证](../changes/2026-10-14-ui-consolidation/verification.md)与[计划](../changes/2026-10-14-ui-consolidation/plan.md)核对；原用户资料、历史失败和并行成果保留。未接协议、Native Mobile、Hosted与用户验收不随本地PASS关闭。
+TASK-UI-CONSOLIDATE-20261014保留2.1.17冻结与2.1.18中间候选；最新主目录2.1.20一致源f2b0466的凭据恢复、Agent展示和画布同步已逐项承接，当前统一源码Desktop/Web2.1.21正在组合验证，账本133项。CLI随包桥文件与绝对路径命令已修正，仍使用用户已有Node/npm环境。按[验证](../changes/2026-10-14-ui-consolidation/verification.md)与[计划](../changes/2026-10-14-ui-consolidation/plan.md)补实际Desktop、最终提交审查和产物回执；原资料、历史失败与在途源保留。Native Mobile、未接协议、Hosted和用户验收分别开放。
 
 ## 2026-10-13 历史恢复快照
 
