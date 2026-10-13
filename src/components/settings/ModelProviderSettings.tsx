@@ -1,29 +1,21 @@
 import { useRef, useState } from "react";
 import { checkModelProvider } from "../../integrations/modelProvider";
 import {
-  deleteApiKey,
   credentialId,
   loadApiKey,
-  saveApiKey,
 } from "../../features/creation/providerCredentials";
-import {
-  MODEL_PROVIDER_STORAGE_KEY,
-  serializeModelProvider,
-  isStrictLoopbackProviderUrl,
-} from "../../domain/modelProvider";
+import { isStrictLoopbackProviderUrl } from "../../domain/modelProvider";
 import ProviderConnectionStatus from "./ProviderConnectionStatus";
 import ProviderConnectionList from "./ProviderConnectionList";
 import ProviderProfileFields from "./ProviderProfileFields";
 import ProviderSettingsActions from "./ProviderSettingsActions";
 import ProviderModelCatalog from "./ProviderModelCatalog";
 import { saveModelCatalog } from "../../features/models/modelCatalog";
+import { readProviderConnections } from "../../features/creation/providerRegistry";
 import {
-  addProviderConnection,
-  isDesktopProviderDurable,
-  markProviderConnectionUnverified,
-  persistProviderConnectionsDurable,
-  readProviderConnections,
-} from "../../features/creation/providerRegistry";
+  persistModelProviderSettings,
+  clearModelProviderKey,
+} from "./persistModelProviderSettings";
 import type { ProviderConnection } from "../../domain/providerConnections";
 import { useProviderCredentialState } from "./useProviderCredentialState";
 import {
@@ -101,20 +93,14 @@ export default function ModelProviderSettings({
         connections,
       );
       valid.connectionId = savedConnection.id;
-      if (valid.authMode !== "none" && apiKey.trim()) {
-        await saveApiKey(valid.baseUrl, apiKey, credentialRef);
-        markProviderConnectionUnverified(savedConnection.id);
-        setHasStoredKey(true);
-      }
-      window.localStorage.setItem(
-        MODEL_PROVIDER_STORAGE_KEY,
-        serializeModelProvider(valid),
+      const next = await persistModelProviderSettings(
+        valid,
+        savedConnection,
+        apiKey,
+        credentialRef,
       );
+      if (valid.authMode !== "none" && apiKey.trim()) setHasStoredKey(true);
       setProfile(valid);
-      const next = addProviderConnection(savedConnection);
-      if (isDesktopProviderDurable()) {
-        await persistProviderConnectionsDurable(next);
-      }
       setConnections(next);
       setConnection({
         kind: "idle",
@@ -125,6 +111,7 @@ export default function ModelProviderSettings({
         "模型接入连接信息已保存；API Key 未写入浏览器存储或项目快照。",
       );
     } catch {
+      setConnections(readProviderConnections());
       setConnection({
         kind: "error",
         message: "无法保存连接信息或系统凭据，请检查权限后重试。",
@@ -153,17 +140,17 @@ export default function ModelProviderSettings({
     cancelRequest();
     setSaving(true);
     try {
-      await deleteApiKey(profile.baseUrl, credentialRef);
-      const next = markProviderConnectionUnverified(
+      await clearModelProviderKey(
+        profile.baseUrl,
+        credentialRef,
         resolveModelProviderConnection(profile, credentialRef, connections).id,
       );
-      if (isDesktopProviderDurable()) {
-        await persistProviderConnectionsDurable(next);
-      }
+      setConnections(readProviderConnections());
       setApiKey("");
       setHasStoredKey(false);
       setConnection({ kind: "idle", message: "已清除当前供应商的密钥。" });
     } catch {
+      setConnections(readProviderConnections());
       setConnection({
         kind: "error",
         message: "无法清除系统凭据，请稍后重试。",

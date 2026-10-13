@@ -135,6 +135,7 @@ pub struct TaskHost {
     root: PathBuf,
     assets: Arc<AssetRepository>,
     jobs: Mutex<HashMap<String, JobControl>>,
+    journal: Mutex<()>,
 }
 
 impl TaskHost {
@@ -144,13 +145,20 @@ impl TaskHost {
             root,
             assets,
             jobs: Mutex::new(HashMap::new()),
+            journal: Mutex::new(()),
         };
         host.recover_submitted()?;
         Ok(host)
     }
 
-    fn lock(&self) -> Result<fs::File, String> {
-        io::lock(&self.root)
+    fn lock(&self) -> Result<(fs::File, std::sync::MutexGuard<'_, ()>), String> {
+        // Serialize this host's workers before taking the cross-process lock.
+        // The external lock stays exclusive and fails closed for other hosts.
+        let guard = self
+            .journal
+            .lock()
+            .map_err(|_| "io: 原生任务日志锁不可用".to_string())?;
+        Ok((io::lock(&self.root)?, guard))
     }
     fn path(&self, task_id: &str) -> PathBuf {
         self.root.join(format!("{task_id}.json"))
@@ -1223,6 +1231,36 @@ fn credential(provider_id: &str) -> Result<Option<String>, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn journal_operations_on_one_host_wait_for_each_other() {
+        let root = root();
+        let host = Arc::new(
+            TaskHost::new(
+                root.join("jobs"),
+                Arc::new(AssetRepository::new(root.join("assets"))),
+            )
+            .unwrap(),
+        );
+        let held = host.lock().unwrap();
+        let other = Arc::clone(&host);
+        let (send, receive) = std::sync::mpsc::channel();
+        let thread = std::thread::spawn(move || {
+            let result = other.lock();
+            send.send(result.is_ok()).unwrap();
+        });
+        let early = receive.recv_timeout(Duration::from_millis(100));
+        drop(held);
+        let result = early
+            .clone()
+            .unwrap_or_else(|_| receive.recv_timeout(Duration::from_secs(2)).unwrap());
+        thread.join().unwrap();
+        assert!(
+            early.is_err(),
+            "another operation must wait, not fail on the host's own exclusive file lock"
+        );
+        assert!(result);
+        fs::remove_dir_all(root).unwrap();
+    }
     pub(super) fn fail_at(_stage: &str) -> Result<(), String> {
         Ok(())
     }

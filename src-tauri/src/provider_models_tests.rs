@@ -159,12 +159,14 @@ async fn cancel_disconnects_the_real_pending_socket_and_precancel_never_connects
         .unwrap()
         .unwrap_err()
         .starts_with("cancelled:"));
-    assert_eq!(
-        tokio::time::timeout(Duration::from_secs(2), socket.read(&mut bytes))
-            .await
-            .unwrap()
-            .unwrap(),
-        0
+    // TCP cancellation can close with FIN or RST (macOS commonly sends RST
+    // when unread response bytes remain). Both prove the real peer disconnected.
+    let disconnected = tokio::time::timeout(Duration::from_secs(2), socket.read(&mut bytes))
+        .await
+        .expect("cancelled peer must disconnect promptly");
+    assert!(
+        matches!(disconnected, Ok(0))
+            || disconnected.is_err_and(|error| error.kind() == std::io::ErrorKind::ConnectionReset)
     );
     assert!(service.pending.lock().unwrap().active.is_empty());
 }

@@ -19,6 +19,108 @@ const opaqueConnection = {
   concurrencyLimit: 2,
 };
 
+for (const failureStage of [
+  "first-write",
+  "key-write",
+  "final-write",
+] as const) {
+  test(`原生保存失败保持配置与验证状态一致 ${failureStage}`, async ({
+    page,
+  }) => {
+    const original = {
+      ...opaqueConnection,
+      verificationStatus: "verified",
+      lastSuccessfulGenerationAt: new Date().toISOString(),
+      healthRevision: 4,
+    };
+    const profile = {
+      version: 1,
+      connectionId: original.id,
+      name: original.provider,
+      baseUrl: original.baseUrl,
+      model: original.model,
+    };
+    await page.addInitScript(
+      ({ keys, original, profile }) => {
+        localStorage.setItem(
+          keys.providerConnections,
+          JSON.stringify([original]),
+        );
+        localStorage.setItem(keys.modelProvider, JSON.stringify(profile));
+      },
+      { keys: BROWSER_STORAGE_KEYS, original, profile },
+    );
+    await page.goto("/");
+    await page.getByRole("button", { name: "打开设置", exact: true }).click();
+    const dialog = page.getByRole("dialog", { name: "设置" });
+    await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
+    await dialog
+      .getByRole("button", { name: "API Key（官方）", exact: true })
+      .click();
+    const fields = dialog.getByRole("region", { name: "官方 API Key 配置" });
+    await fields
+      .getByLabel("模型名称", { exact: true })
+      .fill("replacement-model");
+    await fields
+      .getByLabel("API Key", { exact: true })
+      .fill("synthetic-replacement-key");
+    await page.evaluate((failureStage) => {
+      const state = window as Window & { __failedSaveCalls?: string[] };
+      state.__failedSaveCalls = [];
+      let writes = 0;
+      Object.assign(window, {
+        __TAURI_INTERNALS__: {
+          invoke: async (command: string) => {
+            state.__failedSaveCalls!.push(command);
+            if (command === "write_provider_config") {
+              writes++;
+              if (
+                failureStage === "first-write" ||
+                (failureStage === "final-write" && writes === 2)
+              )
+                throw new Error("fixture durable write denied");
+              return writes;
+            }
+            if (command === "credential_set" && failureStage === "key-write")
+              throw new Error("fixture vault write denied");
+            return null;
+          },
+        },
+      });
+    }, failureStage);
+    await fields.getByRole("button", { name: "保存", exact: true }).click();
+    await expect(
+      fields.getByText("无法保存连接信息或系统凭据，请检查权限后重试。", {
+        exact: true,
+      }),
+    ).toBeVisible();
+    const observed = await page.evaluate(
+      (keys) => ({
+        profile: JSON.parse(localStorage.getItem(keys.modelProvider)!),
+        connections: JSON.parse(
+          localStorage.getItem(keys.providerConnections)!,
+        ),
+        calls: (window as Window & { __failedSaveCalls: string[] })
+          .__failedSaveCalls,
+      }),
+      BROWSER_STORAGE_KEYS,
+    );
+    expect(observed.profile.model).toBe(original.model);
+    expect(observed.connections[0].model).toBe(original.model);
+    if (failureStage === "first-write")
+      expect(observed.calls).not.toContain("credential_set");
+    const untouched = failureStage === "first-write";
+    expect(observed.connections[0].verificationStatus).toBe(
+      untouched ? "verified" : "unverified",
+    );
+    await expect(
+      fields.getByText(untouched ? "已验证生成" : "未验证生成", {
+        exact: true,
+      }),
+    ).toBeVisible();
+  });
+}
+
 test("隐藏或免密的提供商不读取凭据，切回 API Key 才读取精确引用", async ({
   page,
 }) => {

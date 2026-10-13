@@ -1626,6 +1626,23 @@ fn task_host_cancel(
 // ========== 主函数 ==========
 
 fn main() {
+    #[cfg(feature = "native-e2e")]
+    let test_driver_port = {
+        assert_eq!(
+            std::env::var("KK_NATIVE_E2E").as_deref(),
+            Ok("1"),
+            "test-only driver requires explicit opt-in"
+        );
+        assert!(
+            std::env::args().any(|arg| arg == "--data-dir"),
+            "test-only driver requires an isolated data directory"
+        );
+        std::env::var("TAURI_WEBDRIVER_PORT")
+            .ok()
+            .and_then(|value| value.parse::<u16>().ok())
+            .filter(|port| *port > 1024)
+            .expect("test-only driver requires an explicit local port")
+    };
     let paths = storage_paths::AppPaths::initialize().expect("KK Studio 无法初始化用户数据目录");
     let (memory_path, legacy_memory_path) = memory_paths(paths.memory.clone(), paths.isolated);
     let config_path = paths.config;
@@ -1652,9 +1669,14 @@ fn main() {
         AppConfig::default()
     };
 
-    tauri::Builder::default()
+    let builder = tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
-        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_dialog::init());
+    #[cfg(feature = "native-e2e")]
+    let builder = builder.plugin(tauri_plugin_wdio_webdriver::init_with_port(
+        test_driver_port,
+    ));
+    builder
         .setup(|app| {
             window_appearance::initialize_opaque(app)?;
             Ok(())

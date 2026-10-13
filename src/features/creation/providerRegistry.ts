@@ -134,10 +134,10 @@ export function writeProviderConnections(
   }
 }
 
-export function addProviderConnection(
+export function mergeProviderConnection(
+  current: readonly ProviderConnection[],
   connection: ProviderConnection,
 ): ProviderConnection[] {
-  const current = readProviderConnections();
   const previous = current.find((item) => item.id === connection.id);
   const identityChanged =
     previous !== undefined &&
@@ -176,6 +176,13 @@ export function addProviderConnection(
     ...current.filter((item) => item.id !== nextConnection.id),
     normalizeProviderConnection(nextConnection)!,
   ];
+  return next;
+}
+
+export function addProviderConnection(
+  connection: ProviderConnection,
+): ProviderConnection[] {
+  const next = mergeProviderConnection(readProviderConnections(), connection);
   writeProviderConnections(next);
   return next;
 }

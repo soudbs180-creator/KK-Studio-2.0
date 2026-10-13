@@ -93,7 +93,8 @@ fn inspect(directory: &Path, verify_hashes: bool) -> Result<PathBuf, String> {
                 .components()
                 .all(|part| matches!(part, Component::Normal(_)))
             || !paths.insert(resource.path.clone())
-            || resource.size > 256 * 1024 * 1024
+            // Current bundled Codex is 307 MB; retain a finite per-file bound.
+            || resource.size > 512 * 1024 * 1024
             || resource.sha256.len() != 64
             || !resource.sha256.bytes().all(|byte| byte.is_ascii_hexdigit())
         {
@@ -186,6 +187,30 @@ mod tests {
             serde_json::to_vec(manifest).unwrap(),
         )
         .unwrap();
+    }
+
+    #[test]
+    fn current_large_bundled_codex_is_supported_but_oversized_resources_are_rejected() {
+        let (directory, mut manifest) = fixture();
+        let file = directory.join("codex-fixture");
+        let output = fs::File::create(&file).unwrap();
+        output.set_len(307_108_144).unwrap();
+        manifest["files"]
+            .as_array_mut()
+            .unwrap()
+            .push(json!({"path":"codex-fixture","size":307_108_144_u64,"sha256":"0".repeat(64)}));
+        write_manifest(&directory, &manifest);
+        assert!(diagnose(&directory).is_ok());
+        output.set_len(512 * 1024 * 1024 + 1).unwrap();
+        manifest["files"]
+            .as_array_mut()
+            .unwrap()
+            .last_mut()
+            .unwrap()["size"] = json!(512_u64 * 1024 * 1024 + 1);
+        write_manifest(&directory, &manifest);
+        assert!(diagnose(&directory).is_err());
+        drop(output);
+        fs::remove_dir_all(directory).unwrap();
     }
 
     #[test]
