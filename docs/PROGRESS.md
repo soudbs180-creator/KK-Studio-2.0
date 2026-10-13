@@ -4,6 +4,8 @@
 
 最新Desktop/Web2.1.21产品提交7a463742已通过完整verify：545production场景全部首试通过、Node1142pass/14既有skip、Agent172pass/2skip、UI236/0、开发5步骤PASS。官方Agent桌面构建与真实Tauri9项检查通过，原生保存/重载、视频坐标/原件、面板层级和随包桥绝对命令均有独立数据目录回执；0e与7a两段源码独立审查通过，早期失败保留。主入口gzip增加9625B，低于16384预算；新依赖0。最终分享包与恢复增量按工程外哈希收据绑定；这些本地检查不代表未接协议、日常用户资料、安装器、Hosted和Native Mobile已验收。
 
+### 此前阶段记录（7a463742完整验收前，保留历史）
+
 默认绿、中性动作/胶囊/上传方角/弱焦点、独立固定大小喜欢/标签面板、收藏兼容、分类搜索、分组设置/预设、CLI子页及使用/存储概览已接入。2.1.18中间候选532browser零flaky、开发及预算通过，复审修正后533含1分组flaky，原件均保留。主目录随后推进2.1.20，凭据恢复/Agent展示/画布同步及51限定路径已逐项承接，当前Desktop/Web2.1.21组合验证中；随包Gemini桥和绝对路径命令已修正。0e5087e6的完整verify通过（544browser零flaky），实际桌面确认视频坐标和原件保存后，发现图片工具栏遮挡面板关闭按钮；共享层级修正先browser RED再8场景零重试GREEN，当前修正组合仍待完整复验和新桌面回执。最终SHA审查及发布分别收口。Native Mobile2.1.1仍规划，窄屏为响应式Web。[本轮验证](changes/2026-10-14-ui-consolidation/verification.md)、[兼容决定](architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md)。
 
 ## 2026-10-14 历史冻结阶段（保留原时点与收据）
