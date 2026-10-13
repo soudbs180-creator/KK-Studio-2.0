@@ -86,6 +86,7 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
   expect(headerButtons).toEqual([
     { width: 44, height: 44 },
     { width: 44, height: 44 },
+    { width: 44, height: 44 },
   ]);
   const panelBox = await page.locator(".conversation-panel").boundingBox();
   const closeBox = await page
@@ -124,6 +125,7 @@ test("平板会话分栏时画布控件左移且标题和输入控件尺寸稳�
       }),
     );
   expect(headerIcons).toEqual([
+    { width: 20, height: 20 },
     { width: 20, height: 20 },
     { width: 20, height: 20 },
   ]);

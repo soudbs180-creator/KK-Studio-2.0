@@ -77,6 +77,62 @@ test("only the successful-generation health transition records verification", ()
   });
 });
 
+test("successful text restores connection health without creating image proof", () => {
+  withStorage(() => {
+    const connection = fixture();
+    writeProviderConnections([
+      {
+        ...connection,
+        state: "cooldown",
+        cooldownUntil: Date.now() + 60_000,
+        healthRevision: 7,
+        activeJobs: 1,
+        activeLeaseIds: ["text-lease"],
+      },
+    ]);
+    markProviderConnectionHealthy(
+      connection.id,
+      { baseUrl: connection.baseUrl, credentialRef: connection.credentialRef },
+      "text",
+    );
+    const saved = readProviderConnections()[0];
+    assert.equal(saved.state, "active");
+    assert.equal(saved.cooldownUntil, undefined);
+    assert.ok(saved.lastHealthCheckAt);
+    assert.equal(saved.healthRevision, 8);
+    assert.equal(saved.activeJobs, 1);
+    assert.deepEqual(saved.activeLeaseIds, ["text-lease"]);
+    assert.equal(saved.verificationStatus, "unverified");
+    assert.equal(saved.lastSuccessfulGenerationAt, undefined);
+  });
+});
+
+test("successful text preserves the timestamp of earlier real image verification", () => {
+  withStorage(() => {
+    const connection = fixture();
+    const imageProofAt = "2026-09-18T12:00:00.000Z";
+    writeProviderConnections([
+      {
+        ...connection,
+        state: "degraded",
+        verificationStatus: "verified",
+        lastSuccessfulGenerationAt: imageProofAt,
+        lastHealthCheckAt: imageProofAt,
+      },
+    ]);
+    markProviderConnectionHealthy(
+      connection.id,
+      { baseUrl: connection.baseUrl, credentialRef: connection.credentialRef },
+      "text",
+    );
+    const saved = readProviderConnections()[0];
+    assert.equal(saved.state, "active");
+    assert.notEqual(saved.lastHealthCheckAt, imageProofAt);
+    assert.equal(saved.verificationStatus, "verified");
+    assert.equal(saved.lastSuccessfulGenerationAt, imageProofAt);
+  });
+});
+
 test("saving the same identity preserves verification history and scheduler health", () => {
   withStorage(() => {
     const connection = fixture();

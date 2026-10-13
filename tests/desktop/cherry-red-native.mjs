@@ -397,6 +397,54 @@ async function protocolCase(protocol, mode) {
 }
 
 const appearance = () => invoke("window_appearance_get");
+const creationSnapshot = async () =>
+  JSON.parse(
+    await fs.readFile(path.join(dataRoot, "projects/creation-v2.json"), "utf8"),
+  );
+let fixtureProjectId;
+async function enterFixtureWorkspace(create = false) {
+  await expect(page.locator(".app")).toHaveAttribute(
+    "data-runtime-mode",
+    "production",
+  );
+  await expect(
+    page.getByText("正在读取本地项目…", { exact: true }),
+  ).toHaveCount(0);
+  await page.getByRole("button", { name: "项目库", exact: true }).click();
+  if (create) {
+    await page.getByRole("button", { name: "新建项目", exact: true }).click();
+    await expect
+      .poll(
+        async () => {
+          try {
+            return (await creationSnapshot()).projects.length;
+          } catch (cause) {
+            // The first native snapshot is asynchronous. Absence is pending;
+            // unreadable or malformed snapshots must still fail acceptance.
+            if (cause?.code === "ENOENT") return "pending";
+            throw cause;
+          }
+        },
+        { timeout: 10000 },
+      )
+      .toBe(1);
+    const snapshot = await creationSnapshot();
+    const project = snapshot.projects[0];
+    fixtureProjectId = project.id;
+    assert.equal(snapshot.activeProjectId, fixtureProjectId);
+    assert.deepEqual(project.items, []);
+    assert.deepEqual(project.tasks, []);
+    report.fixtureProject = { id: project.id, name: project.name };
+  } else {
+    const cards = page.locator(".project-library-card");
+    await expect(cards).toHaveCount(1);
+    await cards.click();
+    assert.equal((await creationSnapshot()).activeProjectId, fixtureProjectId);
+  }
+  await expect(page.locator(".workspace-content")).toBeVisible();
+  await expect(page.getByTestId("infinite-canvas")).toBeVisible();
+  await expect(page.getByTestId("infinite-canvas")).toHaveClass(/\bcanvas\b/);
+}
 const css = () =>
   page.evaluate(() => {
     const backgrounds = {};
@@ -409,15 +457,19 @@ const css = () =>
       ".canvas",
     ]) {
       const element = document.querySelector(selector);
-      if (element)
-        backgrounds[selector] = getComputedStyle(element).backgroundColor;
+      if (!element)
+        throw new Error(`Required workspace surface missing: ${selector}`);
+      backgrounds[selector] = getComputedStyle(element).backgroundColor;
     }
     return {
       enabled: document.documentElement.dataset.windowTransparent,
       backgrounds,
+      canvasInlineBackground:
+        document.querySelector(".canvas").style.backgroundColor,
     };
   });
 async function transparencyCase() {
+  await enterFixtureWorkspace(true);
   await expect.poll(async () => (await css()).enabled).toBe("false");
   const initial = await appearance();
   assert.equal(
@@ -453,15 +505,6 @@ async function transparencyCase() {
   await expect(toggle).toHaveAttribute("aria-checked", "true");
   await expect.poll(async () => (await appearance()).enabled).toBe(true);
   await expect.poll(async () => (await css()).enabled).toBe("true");
-  const transparent = await css();
-  for (const selector of [
-    "html",
-    "body",
-    "#root",
-    ".app",
-    ".workspace-content",
-  ])
-    assert.equal(transparent.backgrounds[selector], "rgba(0, 0, 0, 0)");
   assert.equal(
     await page.evaluate(
       (key) => JSON.parse(localStorage.getItem(key)).transparentWindow,
@@ -470,8 +513,26 @@ async function transparencyCase() {
     true,
   );
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
+  await expect(page.getByTestId("infinite-canvas")).toBeVisible();
+  const transparent = await css();
+  assert(
+    original.canvasInlineBackground,
+    "Canvas must retain its real inline preference",
+  );
+  assert.equal(
+    transparent.canvasInlineBackground,
+    original.canvasInlineBackground,
+  );
+  for (const [selector, background] of Object.entries(transparent.backgrounds))
+    assert.equal(
+      background,
+      "rgba(0, 0, 0, 0)",
+      `${selector} must reveal the native background`,
+    );
+  assert.notEqual(original.backgrounds[".canvas"], "rgba(0, 0, 0, 0)");
   await page.screenshot({ path: path.join(output, "transparent.png") });
   await page.reload();
+  await enterFixtureWorkspace();
   await expect.poll(async () => (await css()).enabled).toBe("true");
   assert.equal((await appearance()).enabled, true);
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
@@ -483,10 +544,15 @@ async function transparencyCase() {
   await expect.poll(async () => (await css()).enabled).toBe("false");
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.reload();
+  await enterFixtureWorkspace();
   await expect.poll(async () => (await css()).enabled).toBe("false");
   assert.equal((await appearance()).enabled, false);
   const restored = await css();
   assert.deepEqual(restored.backgrounds, original.backgrounds);
+  assert.equal(
+    restored.canvasInlineBackground,
+    original.canvasInlineBackground,
+  );
   assert.equal(
     await page.evaluate(
       (key) => JSON.parse(localStorage.getItem(key)).transparentWindow,

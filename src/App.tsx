@@ -1416,7 +1416,14 @@ export default function App() {
         publish("succeeded", undefined, "terminal");
         await persistence.flush();
         if (task.providerConnectionId && reservation?.healthUnchanged())
-          markProviderConnectionHealthy(task.providerConnectionId);
+          markProviderConnectionHealthy(
+            task.providerConnectionId,
+            {
+              baseUrl: task.providerBaseUrl,
+              credentialRef: task.providerCredentialRef,
+            },
+            "text",
+          );
         return;
       }
       const generated = await generateImages({

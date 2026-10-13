@@ -89,10 +89,11 @@ fn runtime_binary(directory: &Path, verify_hashes: bool) -> Result<PathBuf, Stri
     Ok(node)
 }
 
-// The fixture workflow exercises the real guardian on both Unix platforms.
-// Enable only after those exact-head results and the native integration review.
+// Real ownership/EOF/SIGKILL/output-disconnect fixtures passed on Linux and
+// macOS at 318676d8300b062aa23a940d80c858c4baedc609 (run 38373366178).
+// The final candidate is still checked by the same three-platform workflow.
 #[cfg(unix)]
-const UNIX_LIFECYCLE_VERIFIED: bool = false;
+const UNIX_LIFECYCLE_VERIFIED: bool = true;
 
 fn available(directory: &Path) -> bool {
     runtime_binary(directory, false).is_ok()

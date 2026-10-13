@@ -124,6 +124,17 @@ test("local Markdown export includes originals and excludes internal status obje
   page,
 }) => {
   const panel = await openMessages(page, "dark");
+  const buttons = await panel.locator("header > button").all();
+  const boxes = await Promise.all(
+    buttons.map((button) => button.boundingBox()),
+  );
+  expect(boxes).toHaveLength(3);
+  for (let index = 1; index < boxes.length; index++)
+    expect(boxes[index - 1]!.x + boxes[index - 1]!.width).toBeLessThanOrEqual(
+      boxes[index]!.x,
+    );
+  await panel.getByRole("button", { name: "对话记录", exact: true }).click();
+  await expect(panel).toContainText("本次会话共");
   const exported = page.waitForEvent("download");
   await panel.getByRole("button", { name: "导出对话 Markdown" }).click();
   const download = await exported;

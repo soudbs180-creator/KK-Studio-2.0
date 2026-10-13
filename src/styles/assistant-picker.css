@@ -87,6 +87,37 @@
   color: var(--kk-text-danger);
 }
 
+@media (max-width: 1200px) and (max-height: 600px) {
+  .workspace.chat-mobile .conversation-panel:has(> .assistant-picker) {
+    gap: 0;
+  }
+  .conversation-panel > .assistant-picker {
+    margin-block: 0;
+  }
+  .conversation-panel:has(> .assistant-picker) .conversation-messages {
+    min-height: 0;
+  }
+  .conversation-panel:has(> .assistant-picker) .chat-composer {
+    min-height: 0;
+  }
+  .workspace:has(.workspace-content:not([hidden]) .assistant-picker) {
+    display: flex;
+    flex-direction: column;
+  }
+  .workspace:has(.workspace-content:not([hidden]) .assistant-picker)
+    > .creation-storage-notice {
+    position: static;
+    flex-shrink: 0;
+    max-width: 100%;
+    padding: var(--kk-space-2);
+  }
+  .workspace:has(.workspace-content:not([hidden]) .assistant-picker)
+    > .workspace-content {
+    flex: 1;
+    height: auto;
+  }
+}
+
 .assistant-editor-actions {
   display: flex;
   flex-wrap: wrap;

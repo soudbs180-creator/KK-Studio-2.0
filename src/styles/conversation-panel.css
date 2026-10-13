@@ -52,6 +52,13 @@
   width: 18px;
   height: 18px;
 }
+@media (min-width: 1201px) {
+  .conversation-panel
+    > header:has([aria-label="导出对话 Markdown"])
+    button:first-of-type {
+    right: 81px;
+  }
+}
 @media (min-width: 768px) and (max-width: 1200px) {
   /* Match the canvas reopen anchor across the panel border and 8px inset. */
   .conversation-panel > header button:last-child {
