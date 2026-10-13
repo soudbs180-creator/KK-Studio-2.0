@@ -1,0 +1,1763 @@
+
+> kk-studio@2.1.16 test
+> node --test tests/unit/*.test.ts tests/deploy/*.test.mjs
+
+✔ manifest has stable hashes and excludes no files silently (15.692ms)
+✔ packaging emits archive and verification sidecars (154.8213ms)
+✔ deploying a recovered archive uses its verified bytes without dist (79.7212ms)
+✔ recovered archive with a damaged byte is refused before upload (83.0449ms)
+✔ deploy refuses ambiguous archive and dist inputs (0.2586ms)
+✔ deploy rejects root aliases before staging an archive (96.2592ms)
+✔ deploy preflights staging directories against symlinks (78.4842ms)
+✔ same release deployments use distinct staging and bind the archive digest (135.2469ms)
+✔ concurrent dist deployments keep independent local archives (102.9087ms)
+✔ shell quoting prevents remote path injection (0.2139ms)
+✔ sensitive files are rejected before packaging (3.2186ms)
+﹣ rollback switches only to a verified named release (0.7968ms) # SKIP
+﹣ rollback refuses stale current and damaged target without changing links (0.0774ms) # SKIP
+﹣ activation and rollback both wait for the same release lock (0.6202ms) # SKIP
+﹣ rollback leaves current unchanged when the previous-pointer move fails (0.0502ms) # SKIP
+﹣ rollback refuses traversal and release symlink targets (0.0524ms) # SKIP
+﹣ activation preserves current and unrelated previous files or directories (0.1127ms) # SKIP
+﹣ activation and rollback reject a releases directory symlink (0.0537ms) # SKIP
+﹣ activation binds the archive digest under the release lock (0.0941ms) # SKIP
+✔ canvas batch upload skips rejected slots and fills later valid capacity (1.8416ms)
+✔ canvas reference nodes avoid the target card when the viewport is tight (0.2579ms)
+✔ canvas reference placement preserves negative visible world coordinates (0.1394ms)
+✔ 所有请求带 token 与 clientId (37.8625ms)
+✔ postState 携带 hasCanvas 快照 (1.0407ms)
+✔ postTurn 提交对话并返回 threadId (0.4974ms)
+✔ 非 2xx 抛出 AgentApiError 并保留 code (0.4847ms)
+✔ resolveApproval / interrupt 发送正确端点 (0.6355ms)
+✔ CodeBuddy 设置与连通测试只走本地鉴权端点 (0.8706ms)
+✔ 附件从校验过的原件读取，按实际字节计量并去重 (1.0834ms)
+✔ 缺失或错配原件不能退化成发送缩略图，远程 URL 不会被抓取 (0.598ms)
+✔ 数量、真实字节、编码总量及尺寸限制在发送前拒绝 (199.163ms)
+✔ 读取原件时取消不解码、不发送后续内容 (0.2827ms)
+✔ buildAgentSnapshot 生成节点/连线/视口 (1.6738ms)
+✔ add_node 翻译为新卡片（text→文案） (0.3805ms)
+✔ update_node 更新标题与位置 (0.1542ms)
+✔ update_node 节点不存在时拒绝 (0.1282ms)
+✔ delete_node 按 id / nodeType 删除 (0.1375ms)
+✔ delete_node 带插件 nodeType 只删除匹配插件节点 (0.1002ms)
+✔ update_node 插件节点合并 metadata 并接受宽高补丁 (0.121ms)
+✔ connect_nodes 生成连线建议，端点不存在则拒绝 (0.1095ms)
+✔ run_generation 由宿主接管（翻译层拒绝） (0.1086ms)
+✔ summarizeAgentOps 输出中文摘要 (0.2022ms)
+✔ itemKindToAgentNodeType 双向映射一致 (0.0664ms)
+✔ assertCanvasDelivery 拒绝无 node_id / 无资产注册的交付 (0.4864ms)
+✔ assertCanvasDelivery 接受已登记的文案供应商结果 (0.1259ms)
+✔ assertCanvasDelivery 不因文案节点残留 assetId 而接受空供应商结果 (0.1084ms)
+✔ collectRecentOutputs 按 result 连线收集已归档产物 (0.2407ms)
+✔ summarizeRecentOutputs 输出当轮产物摘要 (0.1791ms)
+✔ 连接初始化期间的新 SSE 状态、回复和已解决审批不被旧 hello 覆盖 (31.345ms)
+✔ 图片发送冻结附件快照并携带实际图片和名称，不混入凭据 (1.6024ms)
+✔ 附件读取被取消或失败时，不受理一个缺图的 turn (0.983ms)
+✔ 持久历史与握手重放使用同一 itemId 去重，已完成回复不重复追加 delta (0.6258ms)
+✔ 恢复连接期间的工具明确返回未执行，结束事件取消排队写入 (2.0333ms)
+✔ 停止发生在 turn 发出之前时不能继续提交，切换项目后旧事件无效 (1.3515ms)
+✔ connect 成功：discover → SSE hello → activate → 快照 → thread 就绪 (0.8367ms)
+✔ connect 失败：/config 不可用 → error (0.3943ms)
+✔ sendMessage：先回显用户消息，再提交 turn (0.8901ms)
+✔ assistant 增量通过 SSE 合并到消息 (0.8675ms)
+✔ 工具回执等待期间串行写入，回执未知后阻断新 requestId 自动重试并停止回合 (44.2125ms)
+✔ tool_call：canvas_apply_ops 应用并回执 /canvas/result (15.9149ms)
+✔ 权限审批：approval 事件 → resolveApproval → 清除 (1.3991ms)
+✔ setCredentials 更新端点并持久化 (0.11ms)
+✔ 重连读取到的新会话状态优先于启动期间的 hello 快照 (0.5756ms)
+✔ fetch SSE 跨字节解析具名事件且使用头部鉴权 (20.6262ms)
+✔ 未认证 SSE 返回 401，不能进入 ready (0.782ms)
+✔ 解析 conversation_changed 事件 (0.8144ms)
+✔ 解析 chat_message 用户回显 (0.1505ms)
+✔ 解析 agent_event assistant 增量 (0.1529ms)
+✔ 解析 agent_event 工具活动（command_execution） (0.269ms)
+✔ 解析 codex_approval 权限请求 (0.129ms)
+✔ 解析 tool_call 画布工具请求 (0.0924ms)
+✔ 无法识别的事件返回 null (0.0727ms)
+✔ 解析 SSE 帧（event: type + data: JSON） (0.1089ms)
+✔ 同时到达的生图归档只提交一次，后续重放不会重复标记 (88.2109ms)
+✔ 图片归档缺少素材身份时拒绝提交到画布 (3.3859ms)
+✔ 视口与多选由真实宿主执行并反映在下一次快照 (0.8075ms)
+✔ 同一毫秒的无 ID 新节点保持独立身份与布局 (0.9639ms)
+✔ 同批新建配置及提示词后生成，返回真实任务 ID (0.3941ms)
+✔ 纯更新、位置及连线操作会落地，删除节点清理悬空边 (0.5047ms)
+✔ 生成错误原样回传；不支持的视频不调用 Provider (0.2741ms)
+✔ 取消在途生成后，不再落地同批后续操作 (0.3319ms)
+✔ 刷新后按持久化的项目和 turn 找回生图来源，不使用另一轮卡片 (0.5414ms)
+✔ 只导入服务确认完成的内置生图，不把任意文本路径当作图片 (0.5016ms)
+✔ 图片归档使用上游 effectiveModel，缺失时显示明确未知状态 (0.1183ms)
+✔ Codex 选择器保留当前账号支持的显式模型 (0.4888ms)
+✔ 旧配置或项目模型不在 Agent 列表时回退账号默认模型 (0.0921ms)
+✔ Agent 未报告默认项时使用第一个可用模型，空列表不传未知模型 (0.0875ms)
+✔ runtime package contains production dependencies without repository links or user secrets (406.1058ms)
+✔ runtime packaging rejects an OS or architecture different from the Node build host before writing (1.8798ms)
+✔ runtime packaging finds the official Unix distribution license above bin and preserves its bytes (106.1333ms)
+✔ actual service preparation handler rejects disconnected before any mutation (0.6307ms)
+✔ actual service preparation handler rejects stale before any mutation (0.0811ms)
+✔ actual service preparation handler rejects existing before any mutation (0.0593ms)
+✔ actual service preparation handler rejects preparing before any mutation (0.056ms)
+✔ 真实 hello 握手携带会话而不是普通 message 包装 (0.8644ms)
+✔ assistant final 是权威全文，不重复拼接部分文本 (0.2679ms)
+✔ 终态错误能结束回合并显示真实错误 (0.1266ms)
+✔ Token 仅经请求头传输，不进入 URL (13.7827ms)
+✔ 旧持久化 Token 被清除，新的 Token 只留在请求内存 (0.2543ms)
+✔ 画布激活 401 必须拒绝，不得吞错 (0.5105ms)
+✔ shutdown is atomic with incoming work and rejects active or unacknowledged work (0.7183ms)
+✔ empty hello uses CAS preparation, repeated turns/model switch/reconnect retain thread; only explicit new creates thread (450.7747ms)
+✔ conditional prepare rejects another window's changed revision without replacing its thread (31.0283ms)
+✔ old services fail closed when safe preparation is missing (41.1791ms)
+✔ owned ready hello restores session and entire approval queue without replacing it (87.2971ms)
+✔ owned warning hello restores session and entire approval queue without replacing it (78.3223ms)
+✔ owned running hello restores session and entire approval queue without replacing it (77.2475ms)
+✔ unowned existing session is not adopted or replaced (6.4804ms)
+✔ 额度优先使用多个 bucket，usedPercent 转为剩余且未知不当零 (0.9487ms)
+✔ 已过期额度和其他模型的 bucket 不会阻止默认 Codex (0.1226ms)
+✔ only real endpoint ids are accepted, never bare model names (1.2116ms)
+✔ Ark chat operation calls the OpenAI-compatible chat endpoint (23.8643ms)
+✔ Ark chat rejects a successful response with no assistant text (0.6314ms)
+✔ content policy refusals outrank the shared 400 status (0.604ms)
+✔ quota and rate limit are separated by cooldown length (0.2766ms)
+✔ a vendor retry-after hint wins over our default cooldown (0.1864ms)
+✔ unmapped 4xx stays non-retryable and unmapped 5xx retries (0.1799ms)
+✔ alreadyNormalized preserves a classification made deeper in the stack (0.236ms)
+✔ a synchronous adapter refuses async polling instead of looping (0.2403ms)
+✔ registry refuses duplicate adapters and unknown providers (0.3992ms)
+✔ candidate filtering honours model, operation and channel state (0.3433ms)
+✔ public model projection omits channel secrets and quarantined models (0.2907ms)
+✔ credentialRefFor resolves the vault reference, not the channel id (0.1296ms)
+✔ tiers order by descending priority for deterministic failover (0.2282ms)
+✔ prompt flattening keeps system text ahead of the turns (0.8065ms)
+✔ the request schema rejects unknown fields and bad roles (2.7566ms)
+✔ a client cannot smuggle a credential into a prompt (0.5604ms)
+✔ buildInput merges both sampling parameters (0.6303ms)
+✔ every error class maps to an OpenAI error type (0.2947ms)
+✔ completion ids look like OpenAI ids and do not repeat (4.6911ms)
+✔ credentials reach the vault through the channel reference (1.293ms)
+✔ polling resolves the secret through the credential ref (0.2493ms)
+✔ a failing channel surfaces a normalized error to the caller (0.3314ms)
+✔ a successful completion returns an OpenAI-shaped envelope (4.3316ms)
+✔ chat dispatch selects a channel that declares only the chat operation (0.2335ms)
+✔ a chat completion rejects an inline image result instead of decoding it (0.4125ms)
+✔ an upstream failure surfaces as an OpenAI error body (0.4051ms)
+✔ streaming completion dispatches the same buffered text result (0.3034ms)
+✔ an async channel is redirected to the jobs surface (0.284ms)
+✔ a bare secret is rejected before the format check runs (0.9867ms)
+✔ secret detection covers the common provider prefixes (0.1141ms)
+✔ malformed references are rejected with their own error code (0.1395ms)
+✔ memory store round-trips and lists in sorted order (0.4774ms)
+✔ protected store keeps plaintext out of storage (0.2417ms)
+✔ protected store refuses to key a vault entry by a secret (0.1493ms)
+✔ layered store prefers the durable side so rotation takes effect (1.4671ms)
+✔ every store rejects secret-shaped references on read (0.1963ms)
+✔ a successful dispatch reports the channel that served it (1.4159ms)
+✔ a retryable failure moves to the next tier, never the same account (0.5612ms)
+✔ a non-retryable error aborts the whole dispatch (0.5408ms)
+✔ nothing is retried once the first chunk reached the client (0.2615ms)
+✔ a sticky session stays on its account across turns (0.2796ms)
+✔ a failing pinned account is released so the conversation cannot stall (0.2936ms)
+✔ an account in cooldown is skipped until it recovers (0.2004ms)
+✔ a vendor cooldown hint outranks locally computed backoff (0.1889ms)
+✔ repeated failures quarantine an account (0.4843ms)
+✔ success clears the accumulated failure state (0.2227ms)
+✔ an unservable model rejects with NO_CHANNEL_AVAILABLE (0.2467ms)
+✔ polling an unknown channel is a routing error, not a transient 503 (0.1755ms)
+✔ polling resolves the secret through the credential reference (0.7393ms)
+✔ the attempt plan steps down tiers and stops at the last one (0.1004ms)
+✔ extractNormalized always yields a usable classification (0.0638ms)
+✔ 非图片缩略图不读取原件，也不要求浏览器存储或解码环境 (0.4975ms)
+✔ 归档没有可用存储时必须拒绝成功 (80.9563ms)
+✔ Desktop 归档发送原件与无预览元数据，错误不会回退到浏览器 (0.8877ms)
+✔ Web 连接本机服务后资产读写走服务而不创建浏览器归档 (19.1805ms)
+✔ 中文搜索与类型、标签过滤同时生效 (0.9233ms)
+✔ 最近时间使用传入当前时间，未来日期也不匹配 (0.1287ms)
+✔ 搜索无结果后清空可以恢复所有资产 (0.0872ms)
+✔ 生成结果归档为内容寻址资产并不保留供应商 URL (51.3754ms)
+✔ 归档保留 Provider 返回的 C2PA 和 SynthID 信号 (0.9269ms)
+✔ 资源包拒绝错误版本、非数组、远程URL和重复ID (3.5898ms)
+✔ curated assistants reuse the skill registry and retain existing bundled skills (7.3363ms)
+✔ a custom assistant restores through the existing skill store with a stable identity (3.5336ms)
+✔ failed custom assistant persistence does not replace the previous record (0.5013ms)
+✔ assistant editing cannot overwrite an unrelated skill or accept embedded credentials (0.9991ms)
+✔ custom assistant instructions leave room for the user's task (0.2752ms)
+✔ assistant composition follows existing prompt bounds and never enables disabled profiles (0.3145ms)
+✔ generic Skill editing cannot overwrite a bundled assistant or disguise it as local (5.9468ms)
+✔ manifest registration cannot replace an existing bundled assistant (2.1572ms)
+✔ imports cannot replace an existing bundled assistant (0.9832ms)
+✔ the read-only guard preserves ordinary bundled Skill editing and custom assistant editing (3.7571ms)
+✔ 音色/格式/语速规范化：非法值回退默认 (0.7571ms)
+✔ 展示标签与 MIME 映射 (0.2336ms)
+✔ requestAudioGeneration 构造正确的 /audio/speech 请求 (27.7674ms)
+✔ requestAudioGeneration 支持本地转发代理地址拼接 (0.9376ms)
+✔ requestAudioGeneration 校验必填项与空文本 (0.5498ms)
+✔ requestAudioGeneration 透出服务端错误信息 (0.7616ms)
+✔ 连接锚点随两端移动且不改变节点坐标 (1.5072ms)
+✔ 连接在图片、两种视频标签高度和结果卡片的可见侧边中点 (0.3911ms)
+✔ 删除和撤销只影响目标连接，节点缺失时不恢复悬空连接 (0.2147ms)
+✔ 媒体自然比例进入画布可见边界 (0.1746ms)
+✔ canvas history ignores identical snapshots and keeps an immutable present (0.6591ms)
+✔ canvas history undoes and redoes bounded snapshots (0.5947ms)
+✔ canvas history fingerprint includes items, graph and viewport (0.1169ms)
+✔ canvas preferences fall back safely and preserve supported toggles (1.2728ms)
+✔ canvas preferences serialization does not include unknown data (0.2045ms)
+✔ background pattern reaches its minimum and maximum at the range bounds (0.7174ms)
+✔ background pattern fades out completely at 50% zoom (0.1633ms)
+✔ background pattern is fully opaque at the upper bound (0.1882ms)
+✔ background pitch interpolates linearly with no jumps across the range (14.9586ms)
+✔ background pitch stays continuous across the legacy 49%/50% seam (0.1766ms)
+✔ dot size and grid line track the zoom range (0.3392ms)
+✔ background metrics ignore non-finite scales (0.2241ms)
+✔ conversation Markdown preserves visible user/assistant originals and excludes internal roles (0.5443ms)
+✔ filename keeps Unicode while removing path separators and Windows reserved names (0.3494ms)
+✔ clipboard success copies the exact original, without rendering or trimming (0.1798ms)
+✔ clipboard rejection and absent clipboard report failure without throwing or false success (0.3649ms)
+✔ Markdown download creates complete UTF-8 file and releases its Blob URL after dispatch (2.9085ms)
+✔ a failed download still releases the URL and an empty visible conversation creates none (0.4291ms)
+✔ assistant choice and frozen conversation routing survive the existing project store (4.1942ms)
+✔ corrupt protocol/history cannot silently become a different request on restore (0.3789ms)
+✔ creation snapshots normalize old drafts without losing project content (3.8039ms)
+✔ new tasks keep cost unknown until a provider returns a quote (0.3459ms)
+✔ task source item provenance is optional and survives normalization (0.525ms)
+✔ empty completed slot metadata falls back to the legacy completion count (0.1316ms)
+✔ unknown submissions normalize conservatively and retain the stable identity (0.1276ms)
+✔ project deletion protects uncertain provider submissions and outputs after status changes (0.1687ms)
+✔ image capability rejects common text models and accepts image variants (0.2799ms)
+✔ doubao/Ark text models are text, seedream models are image (0.2573ms)
+✔ provider credentials use one canonical URL identity without exposing the key (0.2562ms)
+✔ provider connection metadata is pool-safe and contains no secret field (0.199ms)
+✔ same endpoint accounts receive different vault references (0.0851ms)
+✔ snapshot normalization strips secret-like unknown fields (0.1063ms)
+✔ prompt compiler keeps designer wording and explicit constraints (0.2048ms)
+✔ prompt compiler sends explicit image roles in attachment order without guessing generic roles (0.1016ms)
+✔ approval gates cover remote transfer and expensive batches (0.466ms)
+✔ a queued flush rejects when the preceding native conflict pauses saving and keeps the newer draft (107.7681ms)
+✔ queued flushes for an acknowledged revision resolve without duplicate writes (40.5921ms)
+✔ flushing an already durable revision restores saved status without writing again (28.2972ms)
+✔ the actual hook drains the latest revision before native destruction (15.0825ms)
+✔ native save failure keeps the hook draft and safe error visible until retry (14.4837ms)
+✔ a native subscription resolving after unmount is released without a stale close (16.8026ms)
+✔ resolvePackageDir 解析合规交付包路径 (0.5435ms)
+✔ resolvePackageDir 忽略非交付包与命名不合规目录 (0.1168ms)
+✔ checkPackageCompleteness 五件套齐全时放行 (0.4678ms)
+✔ checkPackageCompleteness 列出全部缺失文件 (0.1654ms)
+✔ checkPackageCompleteness 放行显式豁免的历史包 (0.0768ms)
+✔ checkChangedPackages 对同一交付包只判定一次 (0.1066ms)
+✔ checkChangedPackages 忽略非交付包变更 (0.0675ms)
+warning: in the working copy of 'removed.txt', LF will be replaced by CRLF the next time Git touches it
+✔ delivery accepts a complete scoped artifact package (1.6765ms)
+✔ delivery cannot substitute unrelated historical files for a missing current review (0.2013ms)
+✔ every changed package must be complete; an unrelated complete package cannot satisfy a partial one (0.172ms)
+✔ a changed package must update both verification and review (0.1148ms)
+✔ historical packages alone cannot pass, while a new package must bind to a changed ledger task (0.912ms)
+✔ delivery rejects code-only PR and missing current ledger update (0.0855ms)
+✔ delivery blocks secret/generated payloads and competing locks but permits an env example (0.264ms)
+✔ deleting a secret/generated file or competing lock is allowed, but deleting required governance files is not (0.1118ms)
+✔ delivery rejects path traversal and alternate Windows path spellings (0.1316ms)
+✔ delivery CLI rejects an unknown base instead of treating it as an empty review (492.4042ms)
+✔ delivery CLI includes a pure deletion in the real diff (3004.3791ms)
+✔ delivery CLI binds a new package to the changed task and rejects stale base, history reuse and invalid ledger (5661.7081ms)
+✔ contrast reference examples use the WCAG relative luminance formula (1.0301ms)
+✔ dark/default: regular text, placeholders, focus and filled controls stay readable (8.3772ms)
+✔ dark/blue: regular text, placeholders, focus and filled controls stay readable (1.4503ms)
+✔ dark/green: regular text, placeholders, focus and filled controls stay readable (6.0581ms)
+✔ dark/yellow: regular text, placeholders, focus and filled controls stay readable (1.6512ms)
+✔ dark/pink: regular text, placeholders, focus and filled controls stay readable (1.3426ms)
+✔ dark/orange: regular text, placeholders, focus and filled controls stay readable (1.3617ms)
+✔ dark/purple: regular text, placeholders, focus and filled controls stay readable (0.646ms)
+✔ dark/white: regular text, placeholders, focus and filled controls stay readable (0.9585ms)
+✔ light/default: regular text, placeholders, focus and filled controls stay readable (0.7734ms)
+✔ light/blue: regular text, placeholders, focus and filled controls stay readable (0.6577ms)
+✔ light/green: regular text, placeholders, focus and filled controls stay readable (0.7576ms)
+✔ light/yellow: regular text, placeholders, focus and filled controls stay readable (0.6021ms)
+✔ light/pink: regular text, placeholders, focus and filled controls stay readable (0.7706ms)
+✔ light/orange: regular text, placeholders, focus and filled controls stay readable (0.6333ms)
+✔ light/purple: regular text, placeholders, focus and filled controls stay readable (0.7855ms)
+✔ light/white: regular text, placeholders, focus and filled controls stay readable (0.5904ms)
+✔ status semantics do not follow the selected accent (7.3114ms)
+✔ Agent configuration never saves a generated connection secret without environment credentials (276.8576ms)
+✔ desktop Agent waits for its owner, authenticates readiness and clears on owner disconnect (5600.0376ms)
+✔ Windows icon installer creates a GUI launcher with no console and current icon (5532.037ms)
+✔ Windows background batch failure exits without an interactive pause (157.8618ms)
+✔ Windows startup logs failures and cancellation only stops its own process tree (1883.7591ms)
+Windows entry fixture: {"phase":"compile-existing-executable","command":"C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe","args":["/nologo","/target:winexe","/out:C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-desktop-release-MTTyhw\\src-tauri\\target\\release\\kk-studio.exe","C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-desktop-release-MTTyhw\\ReleaseStub.cs"],"cwd":"D:\\kk-studio\\.worktrees\\TASK-CHERRY-RED-001","parentNode":{"executable":"D:\\tools\\node-v24.20.0-win-x64\\node.exe","version":"v24.20.0"},"elapsedMs":355,"pid":64568,"status":0,"signal":null,"error":null,"stdout":"","stderr":"","checker":null}
+Windows entry fixture: {"phase":"freshness-success","command":"C:\\Windows\\system32\\cmd.exe","args":["/d","/c","start-kk-studio.bat"],"cwd":"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-desktop-release-MTTyhw","parentNode":{"executable":"D:\\tools\\node-v24.20.0-win-x64\\node.exe","version":"v24.20.0"},"elapsedMs":447,"pid":97036,"status":0,"signal":null,"error":null,"stdout":"","stderr":"","checker":"{\"phase\":\"freshness-success\",\"node\":\"D:\\\\tools\\\\node-v24.20.0-win-x64\\\\node.exe\",\"version\":\"v24.20.0\"}"}
+Windows entry fixture: {"phase":"freshness-rejected","command":"C:\\Windows\\system32\\cmd.exe","args":["/d","/c","start-kk-studio.bat"],"cwd":"C:\\Users\\Administrator\\AppData\\Local\\Temp\\kk-desktop-release-MTTyhw","parentNode":{"executable":"D:\\tools\\node-v24.20.0-win-x64\\node.exe","version":"v24.20.0"},"elapsedMs":476,"pid":97724,"status":1,"signal":null,"error":null,"stdout":"[KK Studio] Desktop launch failed. The previous release was not started.\r\n�밴���������. . . \r\n","stderr":"","checker":"{\"phase\":\"freshness-rejected\",\"node\":\"D:\\\\tools\\\\node-v24.20.0-win-x64\\\\node.exe\",\"version\":\"v24.20.0\"}"}
+✔ stale desktop release is rebuilt before it can launch (45.9746ms)
+✔ failed desktop rebuild cannot launch the previous release (22.7457ms)
+✔ a build that leaves the executable stale cannot launch it (16.6859ms)
+✔ current desktop release launches without another rebuild (21.63ms)
+✔ desktop launch rebuilds when input content changes without a newer mtime (49.1485ms)
+✔ desktop launch rebuilds when a tracked input is deleted (51.9713ms)
+✔ desktop launch rejects a missing receipt until a build replaces the executable (72.0975ms)
+✔ desktop launch does not treat a missing lockfile as aligned (16.7846ms)
+✔ desktop dependencies do not treat a linked node_modules directory as aligned (19.1984ms)
+﹣ desktop release identity rejects linked runtime inputs (19.2957ms) # symbolic link creation unavailable: Error: EPERM: operation not permitted, symlink 'C:\Users\Administrator\AppData\Local\Temp\kk-desktop-input-target.txt' -> 'C:\Users\Administrator\AppData\Local\Temp\kk-desktop-release-9qZfpO\src\linked.ts'
+✔ desktop release fingerprint changes when a tracked input changes (15.5187ms)
+✔ desktop release fingerprint ignores package scripts but tracks runtime metadata (51.1357ms)
+✔ desktop launch detects node_modules drift from the lockfile (22.6235ms)
+✔ desktop dependency inspection catches non-toolchain lockfile drift (14.5371ms)
+✔ desktop launch rebuilds when dependencies drift even if the release is current (34.0981ms)
+✔ desktop launch accepts node_modules aligned with the lockfile (13.105ms)
+✔ desktop launch detects a newer runtime input: dist/index.css (16.231ms)
+✔ desktop launch detects a newer runtime input: vendor/canvas-agent/src/index.ts (20.5281ms)
+✔ desktop launch detects a newer runtime input: vendor/canvas-agent/agent-instructions.md (10.4444ms)
+✔ desktop launch detects a newer runtime input: scripts/agent/desktop-entry.mjs (16.5493ms)
+✔ desktop launch detects a newer runtime input: config/platform-versions.json (14.1402ms)
+✔ desktop launch detects a newer runtime input: src-tauri/build.rs (6.5231ms)
+✔ desktop launch detects a newer runtime input: src-tauri/tauri.agent.conf.json (9.2496ms)
+✔ desktop launch detects a newer runtime input: src-tauri/capabilities/default.json (7.5829ms)
+✔ Windows entry checks freshness even when an executable already exists (1287.603ms)
+✔ extractNpmRunScripts 提取并去重脚本名 (2.4295ms)
+✔ extractNpmRunScripts 跳过 shell 变量与占位符 (0.1945ms)
+✔ checkDocumentCommands 检出不存在的脚本 (0.2575ms)
+✔ checkDocumentCommands 放行真实存在的脚本 (0.1185ms)
+✔ checkDocumentCommands 支持冒号命名的脚本 (0.118ms)
+✔ isExemptPath 豁免历史交付包与归档 (0.119ms)
+✔ checkIndexCoverage 检出未登记文档并放行已登记文档 (1.1237ms)
+✔ checkIndexCoverage 放行 README.md 与已登记文档 (0.5275ms)
+✔ checkAdrNumbering 检出重复编号 (0.2274ms)
+✔ checkAdrNumbering 放行唯一编号与非 ADR 文件 (0.0922ms)
+✔ checkAdrNumbering 检出文件名不合规 (0.7274ms)
+✔ checkRetiredAdrDirectories 检出已废止的第二处 ADR 目录 (0.1429ms)
+✔ checkRetiredAdrDirectories 放行归并后的目录结构 (0.0908ms)
+✔ checkSnapshotHeader 要求数据源、日期和非权威声明 (0.2648ms)
+✔ checkSnapshotHeader 放行完整快照头 (0.6661ms)
+✔ checkSnapshotHeader 拒绝无效日期和过期未标注快照 (0.2059ms)
+✔ checkDocumentLifecycleHeader 要求稳定身份、更新时间和替代字段 (0.5945ms)
+✔ checkDocumentLifecycleHeader 拒绝当前文档指向旧版本 (0.1161ms)
+✔ checkDocumentLifecycleHeader 要求当前状态和精确来源 (0.1006ms)
+✔ checkDocumentLifecycleHeader 不把正文中的字段当作元数据 (0.187ms)
+✔ checkDocumentLifecycleHeader 忽略代码块中的伪元数据并拒绝重复字段 (0.1487ms)
+✔ checkDocumentLifecycleHeader 拒绝 malformed supersededBy (0.0905ms)
+✔ checkDocumentLifecycleHeader 要求 supersededBy 指向已登记 current 文档 (0.0922ms)
+✔ checkCurrentDocumentUniqueness 拒绝重复 current docId (0.1072ms)
+✔ REAL requires explicit platform evidence and a DONE/PASS task (25.7077ms)
+✔ non-REAL cannot use DONE, OBSOLETE or invalid tasks as open work (21.0957ms)
+✔ card status is exact metadata, not a historical mention (25.1927ms)
+✔ malformed feature and task fields report issues without throwing (69.727ms)
+✔ all referenced paths remain within the repository and have the expected type (20.3551ms)
+✔ symlinked evidence cannot escape the repository (6.0345ms)
+✔ unknown statuses, tasks, duplicate IDs and unregistered cards fail (34.3987ms)
+✔ board lists every feature and explains the stricter gate (6.2866ms)
+✔ status detects installed and logged-in gemini (54.658ms)
+✔ status reports not installed when spawn fails (13.8708ms)
+✔ status reports not logged in when probe returns a login error (47.146ms)
+✔ chat builds gemini args and returns text with sessionId (55.9496ms)
+✔ chat omits resume when absent (33.657ms)
+✔ chat reads the official Gemini CLI session_id for resume (49.9804ms)
+✔ chat always passes user text as a process argument without a shell (43.8867ms)
+✔ chat rejects CLI option-like model and session values (0.4921ms)
+✔ chat maps login hint errors to not-logged-in (22.4993ms)
+✔ chat rejects empty prompt (0.4815ms)
+✔ http smoke: status and chat over localhost with CORS (168.92ms)
+✔ aborting the browser request terminates the active Gemini CLI child (57.928ms)
+✔ bridge URLs are restricted to explicit loopback HTTP ports (0.8309ms)
+✔ status parses installed and logged in bridge response (17.0114ms)
+✔ status reports unreachable when the bridge is down (0.2587ms)
+✔ status maps bridge error payloads to codes (0.2771ms)
+✔ chat sends prompt, resume session and model and parses text with sessionId (0.3857ms)
+✔ chat omits empty resume and model fields (0.2362ms)
+✔ chat maps not-logged-in bridge errors (1.3716ms)
+✔ chat rejects aborted signals as timeout (0.2105ms)
+✔ chat rejects empty and oversized prompts before any request (0.1865ms)
+✔ queue only starts active connections below concurrency and cooldown (0.5483ms)
+✔ retry delay respects provider Retry-After and caps exponential backoff (0.1054ms)
+✔ connection selection excludes local OAuth and chooses the least-loaded API (0.1475ms)
+✔ batch state distinguishes complete, partial and failed output sets (0.0725ms)
+✔ bounded worker map preserves result order (17.5166ms)
+✔ expired cooldown is eligible without treating an active cooldown as ready (0.3544ms)
+✔ account preserves an existing credit ledger while applying concurrency policy (9.3483ms)
+✔ re-registering a connection applies config and revokes removed ACL entries (4.8643ms)
+✔ token collisions across principals fail closed during authenticator setup (0.511ms)
+✔ semantic idempotency canonicalizes workflow key ordering and never reserves twice (9.2354ms)
+✔ poll retries keep their durable provider identity and occupy concurrency (3.4602ms)
+✔ SQLite accounts for 1 outputs including identical image bytes (1.9872ms)
+✔ SQLite accounts for 4 outputs including identical image bytes (16.1113ms)
+✔ SQLite accounts for 20 outputs including identical image bytes (13.1629ms)
+✔ SQLite accounts for 100 outputs including identical image bytes (143.4221ms)
+✔ restart preserves held credits, resumes known jobs, and fences unknown submission (77.8908ms)
+✔ cancel while provider is in flight discards results and retains uncertain bill for review (2.309ms)
+✔ partial single-output retry charges only its new successful slot (4.2245ms)
+✔ preflight rejects privacy, ACL, secrets, credit exhaustion and global fuse (17.2592ms)
+✔ poll quarantine preserves accepted-job credit until review and fences other in-flight slots (3.3219ms)
+✔ administrator rotation, disable, budget and platform controls persist and affect claims (1.7787ms)
+✔ managed API is opt-in and closing platform_backed blocks new submissions (1.9232ms)
+✔ all connections in cooldown fail closed without account hopping (10.3083ms)
+✔ archives valid PNG bytes with full SHA-256 identity and deduplicates concurrent results (102.1267ms)
+✔ rejects damaged CRC, missing PNG trailer, false MIME, and invalid decoded scanlines (11.6808ms)
+✔ rejects malformed base64 and oversized bytes before writing objects (1.6462ms)
+✔ read verifies full identity, byte count, and digest after storage damage (25.1537ms)
+✔ downloads only registered local ComfyUI /view results without retaining signed URLs (63.0697ms)
+✔ expired URLs and redirects fail safely without exposing source URLs or error bodies (26.9142ms)
+✔ rejects external loopback, private, metadata, non-HTTPS, and non-allowlisted origins (5.775ms)
+✔ enforces streaming byte limit and validates remote MIME and declared length (26.1242ms)
+✔ aborting a download leaves no stored object (14.7125ms)
+✔ chat route validates auth and idempotency before dispatching (41.0826ms)
+✔ models route exposes safe model and capability metadata (10.3534ms)
+✔ chat route stays disabled when no gateway dependency is injected (13.7512ms)
+✔ chat route returns a buffered OpenAI SSE stream (13.0229ms)
+✔ OpenAI managed_api sends host header credentials and one output with a stable opaque request key (58.9377ms)
+✔ OpenAI user_byok sends host header credentials and one output with a stable opaque request key (14.4543ms)
+✔ OpenAI image edits transmit the selected bytes as multipart and do not silently ignore references (7.134ms)
+✔ Gemini managed_api uses header auth, inline reference data, and returns a single PNG (5.2706ms)
+✔ Gemini user_byok uses header auth, inline reference data, and returns a single PNG (4.116ms)
+✔ provider HTTP 429/rate_limited is bounded and classified (9.2821ms)
+✔ provider HTTP 401/unauthorized is bounded and classified (5.118ms)
+✔ provider HTTP 403/invalid_scope is bounded and classified (3.8877ms)
+✔ provider HTTP 403/project_disabled is bounded and classified (3.0269ms)
+✔ provider HTTP 403/forbidden is bounded and classified (3.8098ms)
+✔ provider HTTP 503/provider_unavailable is bounded and classified (3.5318ms)
+✔ provider HTTP 400/invalid_request is bounded and classified (2.3376ms)
+✔ Retry-After HTTP dates preserve the complete server cooldown beyond a minute (2.7603ms)
+✔ accepted malformed or missing output is uncertain and cannot trigger an automatic fresh generation (2.8148ms)
+✔ accepted malformed or missing output is uncertain and cannot trigger an automatic fresh generation (6.3234ms)
+✔ accepted malformed or missing output is uncertain and cannot trigger an automatic fresh generation (5.3038ms)
+✔ accepted malformed or missing output is uncertain and cannot trigger an automatic fresh generation (5.2448ms)
+✔ accepted malformed or missing output is uncertain and cannot trigger an automatic fresh generation (4.9084ms)
+✔ accepted malformed or missing output is uncertain and cannot trigger an automatic fresh generation (5.9157ms)
+✔ network failure during submission is uncertain while a history read can retry its existing prompt (10.8371ms)
+✔ preflight rejects OAuth, unsafe metadata, multiple outputs and absent credentials before transmitting (3.5221ms)
+✔ ComfyUI only completes on actual success, ignores partial previews, and cancels its exact queued prompt (76.9123ms)
+✔ actual Gateway process restart resumes async Provider ID, retains SQLite balance, and never resubmits (2400.117ms)
+✔ real HTTP Gateway/Worker archives and privately serves 1 outputs (205.6367ms)
+✔ real HTTP Gateway/Worker archives and privately serves 4 outputs (148.7596ms)
+✔ real HTTP Gateway/Worker archives and privately serves 20 outputs (334.529ms)
+✔ real HTTP Gateway/Worker archives and privately serves 100 outputs (1626.2989ms)
+✔ HTTP disconnect does not cancel a committed job; cancellation fences active provider results (60.495ms)
+✔ HTTP 401 reaches durable quarantine/cooldown/backoff (83.027ms)
+✔ HTTP 403 reaches durable quarantine/cooldown/backoff (52.1292ms)
+✔ HTTP 429 reaches durable quarantine/cooldown/backoff (50.4286ms)
+✔ HTTP 503 reaches durable quarantine/cooldown/backoff (103.9289ms)
+✔ unknown submit transport failure retains reservation for manual reconciliation (46.108ms)
+✔ webhook signature binds timestamp/raw body and rejects replay outside window (16.9721ms)
+✔ signed duplicates, changed delivery bodies, out-of-order events and cancellation are fenced (5.6955ms)
+✔ webhook arriving before provider id is stored remains durable and wakes a later poll (2.7663ms)
+✔ real Git hook permits topic creation and fast-forward: single directory with spaces (5409.2191ms)
+✔ real Git hook rejects protected and non-FF pushes: single directory with spaces (2445.2757ms)
+✔ real Git hook permits topic creation and fast-forward: nested directories with spaces (2437.9614ms)
+✔ real Git hook rejects protected and non-FF pushes: nested directories with spaces (3304.0214ms)
+✔ real Git hook permits topic creation and fast-forward: long path over 260 characters (4643.9466ms)
+✔ real Git hook rejects protected and non-FF pushes: long path over 260 characters (14051.2278ms)
+﹣ emulated native launch converts one script argument and preserves cwd, stdin and remote args (0.0579ms) # SKIP
+﹣ emulated cygpath fail fails closed with readable diagnosis (0.0587ms) # SKIP
+﹣ emulated cygpath empty fails closed with readable diagnosis (0.0384ms) # SKIP
+✔ missing installed policy fails closed before Node emits a module stack (3673.1599ms)
+✔ real hook denies direct main/master/release pushes and protected deletion (6282.6286ms)
+✔ real hook allows topic creation and fast-forward, denies every non-FF form and topic deletion (3970.6029ms)
+✔ real hook allows new lightweight/annotated tags and blocks all existing tag changes/deletions (6002.4506ms)
+✔ one forbidden ref stops all refs in atomic and ordinary multi-ref pushes (2845.8755ms)
+✔ unknown remote object fails closed without a fetch or blind forced overwrite (11556.8393ms)
+✔ malformed input, missing objects and unsupported namespaces cannot open the guard (5255.1639ms)
+✔ installer preserves other hooks, is idempotent, changes no config and rejects modified installed files (1896.6141ms)
+✔ installer refuses existing pre-push and effective global/local/worktree custom hook paths (6555.6364ms)
+✔ installed common hook runs in another worktree even without policy source files (3684.5111ms)
+﹣ reviewed v1 upgrade refuses symlinked hooks and policies (0.119ms) # SKIP
+✔ explicit reviewed v1 upgrade preserves backup, config and other hooks, then runs real pushes (2057.2466ms)
+﹣ reviewed v1 upgrade preserves an executable guard under restrictive umask (0.0559ms) # SKIP
+✔ reviewed v1 upgrade refuses pre-push without changing existing files (698.0307ms)
+✔ reviewed v1 upgrade refuses kk-studio-push-policy.mjs without changing existing files (881.4173ms)
+✔ reviewed v1 upgrade refuses missing policy without changing existing files (642.283ms)
+✔ reviewed v1 upgrade refuses backup occupied without changing existing files (625.2917ms)
+✔ reviewed v1 upgrade refuses temporary occupied without changing existing files (647.3289ms)
+✔ Google conversation continues the previous interaction, persists no credentials and archives images once (33.6071ms)
+✔ image archive note cannot corrupt a maximum-length Google reply (1.9802ms)
+✔ unknown acceptance is persisted and never automatically reissued (0.615ms)
+✔ switching project aborts a late response before it can write images or history (1.3076ms)
+✔ Google canvas writes wait for approval and send the real function result without resubmitting the user prompt (5.6843ms)
+✔ CLI connect marks connected with CLI models when installed and logged in (7.3025ms)
+✔ CLI connect reports install guidance when gemini is missing (0.3213ms)
+✔ CLI connect reports login guidance when not logged in (0.192ms)
+✔ CLI send persists resume session for the next turn (1.8156ms)
+✔ CLI send rejects attachments (0.3661ms)
+✔ CLI send maps GeminiCliError messages (0.3271ms)
+✔ CLI timeout after submission keeps the result unknown and blocks retry (0.3052ms)
+✔ CLI oversized reply keeps a recoverable unknown conversation (0.6503ms)
+✔ CLI configure forces text mode (5.4422ms)
+✔ Google sends current Interactions fields with header credentials and exact normalized model (28.6012ms)
+✔ Google ignores thought images and exposes function calls for the KK tool loop (0.6755ms)
+✔ Google rejects malformed outputs and never exposes an upstream credential echo (1.4441ms)
+✔ Google aborts before a request and stable image identity deduplicates output replay (17.746ms)
+✔ ledger rejects fake DONE, missing dependencies, and dependency cycles (1.4272ms)
+✔ blocked and active tasks require an external condition and allocated isolation (0.2137ms)
+✔ ledger view includes ownership, acceptance, evidence and escapes table delimiters (0.3726ms)
+✔ ledger reports malformed blocker data and simultaneous worktree ownership (0.3015ms)
+✔ active isolation compares normalized absolute paths and rejects ambiguous relative paths (0.2168ms)
+✔ browser boundaries reject Node builtins and server directory imports in every supported syntax (5.6347ms)
+✔ domain dependencies reject presentation and adapters without blocking valid pure modules (0.5094ms)
+✔ ruleset readback requires active main merge queue, squash, strict checks and stale independent review policy (0.9792ms)
+✔ ruleset readback does not treat an unknown default branch as main (0.17ms)
+✔ auto-merge gate fails closed for missing, stale or unresolved evidence (2.2436ms)
+✔ activation requires explicit successful readback of both variables (0.1105ms)
+✔ native mutation is impossible when a gate is incomplete and uses exact head SHA (0.7482ms)
+✔ native auto-merge denial disables an existing exact PR setting (0.149ms)
+✔ main guard identifies failed checks and records rollback evidence (0.3669ms)
+✔ main guard rejects successful checks without an exact head SHA (0.1373ms)
+✔ merge queue gate rejects base drift and ancestry failures (0.2047ms)
+✔ policy sync is silent when MEMORY-CONTRACT is unchanged (1.1254ms)
+✔ MEMORY-CONTRACT changes require the data, feature, implementation, test and governance set (0.3931ms)
+✔ a complete memory contract change passes the sync gate (0.2053ms)
+✔ the CLI requires full base and accepts HEAD as the default head (0.5127ms)
+✔ maps canonical task states to the three user-facing states (0.6844ms)
+✔ normalizes a task without inventing a product owner or feature (0.7591ms)
+✔ classifies workspace entries without deleting or moving them (0.1973ms)
+✔ workspace entries retain absolute path and preservation action (0.1914ms)
+✔ worktree reclamation only targets rebuildable paths in clean worktrees (0.2387ms)
+✔ only a ready image with a readable source can enter comparison (0.8903ms)
+✔ comparison selection preserves click order, toggles and stops at four (0.2006ms)
+✔ deleted, duplicate and invalid images cannot remain in comparison (0.0937ms)
+✔ continuous edit prompt budgets the total without truncating this round's instructions (4.5748ms)
+✔ capsule brush raster matches pixel-center distances for diagonal, clipped and fractional segments (3.1121ms)
+✔ rectangles and continuous brushes share clipped original pixel runs (0.9424ms)
+✔ crop uses 5 percent each side, rounds upward even and shifts at edges (0.5333ms)
+✔ expanded-square merging iterates until later overlaps are included (0.5352ms)
+✔ final independent region count controls local versus full-image strategy (0.5521ms)
+✔ resolution thresholds and model size fallback never invent unsupported parameters (0.2085ms)
+✔ fill rejects uncontrolled backgrounds and recognizes a bounded island (0.5134ms)
+✔ color identities remain stable past 26 and ambiguous references cannot be sent (0.4932ms)
+✔ composition feathers inside mask while all unselected RGBA bytes stay identical (0.2426ms)
+✔ image-edit fixture refuses existing credentials without claiming cleanup ownership (0.77ms)
+✔ image-edit fixture verifies owned credential removal and exposes cleanup failures (0.2048ms)
+✔ native required edit receipt cannot publish a crop when its entire snapshot is missing (12.5596ms)
+✔ legacy compiled local edit without metadata is quarantined without reading raw assets (2.4826ms)
+✔ legacy and marked whole-image edits accept literal local instructions and inherited asset tags (3.0139ms)
+✔ invalid edit snapshot and malformed required marker quarantine the live receipt (0.5745ms)
+✔ malformed composition marker cannot normalize to a successful ordinary receipt (2.0462ms)
+✔ a real local compiler's quoted whole-image suffix cannot publish its raw crop (4.0327ms)
+✔ a confirmed whole-image role accepts template text in its known root and current instruction (0.9928ms)
+✔ legacy whole-image recovery preserves both recent-instruction budgets and truncation (6.1128ms)
+✔ legacy ambiguous root or recent compiler bodies are quarantined while an explicit whole-image role is accepted (3.814ms)
+✔ legacy whole-image recovery rejects an unbound prefix or missing current instruction (0.7773ms)
+✔ legacy whole-image recovery accepts ordinary root wording and a bound current template quote (0.4486ms)
+✔ a local edit whose truncated root also fits the whole compiler cannot publish raw output (0.8625ms)
+✔ portable image schema: ordinary mask (1.1347ms)
+✔ portable image schema: continuous context (0.198ms)
+✔ portable image schema: annotated edit (0.4352ms)
+✔ portable image schema: unknown document field (0.2104ms)
+✔ portable image schema: unknown region field (0.0923ms)
+✔ portable image schema: unknown context field (0.0807ms)
+✔ portable image schema: unknown snapshot field (0.0774ms)
+✔ portable image schema: unknown crop field (0.1175ms)
+✔ portable image schema: null counters (0.0885ms)
+✔ portable image schema: zero counters (0.1052ms)
+✔ portable image schema: false counters (0.1635ms)
+✔ portable image schema: empty string counters (0.0612ms)
+✔ portable image schema: empty counters (0.0518ms)
+✔ portable image schema: bounded orphan name (0.0817ms)
+✔ portable image schema: long orphan name (0.0471ms)
+✔ portable image schema: nonstring orphan name (0.0799ms)
+✔ portable image schema: null orphan name (0.036ms)
+✔ portable image schema: valid orphan number (0.0457ms)
+✔ portable image schema: object orphan number (0.0469ms)
+✔ portable image schema: zero orphan number (0.0606ms)
+✔ portable image schema: null orphan number (4.8579ms)
+✔ edit snapshots preserve original-coordinate mask and reject corruption rather than drop protection (10.2653ms)
+✔ local editing requires declared edit or inpaint and checks annotation reference overhead (0.3192ms)
+✔ a mask contour excludes internal scanline edges and retains a hole boundary (1.4111ms)
+✔ even one colored native region retains its labeled reference image (0.7032ms)
+✔ canvas upload capacity subtracts existing incoming assets once (1.0655ms)
+✔ reported image declarations preserve unsupported operations and zero reference allowance (0.9435ms)
+✔ malformed capability values stay unknown instead of disabling or authorizing an operation (0.2215ms)
+✔ catalog saves and reloads only whitelisted capability metadata (1.2798ms)
+✔ manual declarations survive reported refresh for the same exact account and model (0.92ms)
+✔ same route in two accounts keeps separate declarations and identity edits invalidate old capabilities (1.7991ms)
+✔ legacy v1 catalogs retain sizes while absent capability declarations remain unknown (2.0635ms)
+✔ explicitly unsupported generate or edit is rejected by the shared submission gate (4.7845ms)
+✔ model zero and tighter reference limits prevent submission without enlarging provider permission (1.4279ms)
+✔ model task output limit rejects excess outputs but does not mistake legacy HTTP limits for task limits (0.7082ms)
+✔ lease recheck observes a late model declaration change before the next request (3.6609ms)
+✔ canvas connection affordance refuses references beyond the exact model limit (1.677ms)
+✔ image declarations do not restrict a text model on the same account (0.5083ms)
+✔ canvas reference permission counts the same archived asset once and still rejects an edit prohibition (0.4642ms)
+✔ new canvas nodes without an explicit model use the current command selection for reference limits (0.3596ms)
+✔ adaptive or missing quality omits the provider size (0.7819ms)
+✔ square ratios resolve to the quality long edge (0.2445ms)
+✔ orientation follows the ratio (0.1413ms)
+✔ short edge snaps to the 8px grid (0.3141ms)
+✔ invalid ratios omit size instead of sending garbage (0.1106ms)
+✔ extreme ratios clamp the short edge to the supported minimum (0.0663ms)
+✔ whitespace around ratio tokens is tolerated (0.0664ms)
+✔ text cannot submit a deleted source, cancelled task or changed identity (1.7579ms)
+✔ text input cannot exceed the durable snapshot prompt limit (0.3971ms)
+✔ archived results connect to the originating node and tolerate a deleted source (0.9689ms)
+✔ image task input rejects oversized prompts, invalid counts and unsupported modes (0.7651ms)
+✔ appendImageTask binds the source node and preserves the unsubmitted draft (0.7649ms)
+✔ appendImageTask rejects a deleted source before creating a task (0.3153ms)
+✔ canvasImageAttachments reads each archived self or incoming asset once without downloading previews (0.5982ms)
+✔ canvas image attachments retain explicit roles and reject ordinary Mask references (0.4301ms)
+✔ 画布文本提示词连线不被当作未归档图片附件 (0.2432ms)
+✔ canvasImageAttachments fails closed for missing or invalid archived originals (0.6849ms)
+✔ archived-asset deduplication cannot hide malformed or dangling references (0.3938ms)
+✔ installer preflight finds an MSI registered under a GUID (2210.7466ms)
+✔ installer preflight refuses a running portable before executing any installer (1570.7054ms)
+✔ installer verification rejects corrupted bytes before execution (45.2267ms)
+✔ installed executable identity accounts for Tauri NSIS bundle marker and rejects ambiguous inputs (0.6572ms)
+✔ receipt freshness rejects newer installer configuration and runtime inputs (12.7833ms)
+✔ installed runtime verifies executable and each resource; missing or corrupt files fail (28.5546ms)
+✔ installed release verification requires provenance and checks package plus installed bytes (28.889ms)
+✔ receipt paths cannot read outside the selected installation directory (0.5049ms)
+✔ installer config includes the Agent and offline WebView2 without changing data identity (7.3353ms)
+✔ connection endpoints stay loopback-only and metadata contains no session token (3.8127ms)
+✔ pairing uses HttpOnly cookie credentials and stores only non-secret connection metadata (21.588ms)
+✔ service checks distinguish offline, unauthenticated, and protocol incompatibility (3.612ms)
+✔ snapshot writes only report success after a 2xx and preserve conflict details (2.0593ms)
+✔ disconnect revokes the session and clears the connection metadata (0.346ms)
+✔ disconnect clears local metadata when the service is already offline (0.2766ms)
+✔ asset adapter sends encoded metadata and verifies the response identity (22.694ms)
+✔ configured companion origins accept exact URL origins and reject paths (0.9753ms)
+✔ canonical JSON sorts object keys recursively but preserves array order (18.5829ms)
+✔ manifest hashing is stable for the same bytes and file list (4.6536ms)
+✔ preflight returns an exact manifest and does not mutate legacy data (83.8676ms)
+✔ preflight refuses a missing referenced asset and leaves the source unchanged (0.8349ms)
+✔ preflight detects a changed blob hash before any upload (4.3335ms)
+✔ interrupted import does not delete the legacy source or publish a snapshot (1.8866ms)
+✔ a complete import uploads checked assets before publishing the service snapshot (1.0352ms)
+✔ protocol exposes a stable version and rejects unknown error codes (1.3659ms)
+✔ pairing payload is bounded and strict (1.9631ms)
+✔ asset metadata requires content-addressed identity and supported media (3.3967ms)
+✔ snapshot writes require a version two snapshot and expected revision (1.2388ms)
+✔ origins are exact allowlist matches (0.1442ms)
+✔ secret-like fields are rejected before persistence (1.1764ms)
+✔ backup manifests are strict and content-addressed (1.5181ms)
+✔ health honors exact CORS origins and exposes protocol metadata (63.0297ms)
+✔ pairing is one-time and authenticated routes require the HttpOnly cookie (51.2937ms)
+✔ snapshot writes use expected revision and stale clients get 409 (45.3981ms)
+✔ asset PUT and GET keep the content-addressed identity (44.1775ms)
+✔ body limits reject oversized requests before store mutation (14.4177ms)
+✔ migration preflight stages assets before publishing one checked snapshot (60.7067ms)
+✔ backup export, listing, and restore keep the service snapshot recoverable (74.3769ms)
+✔ store initializes with a missing snapshot and enforces revisions (35.1767ms)
+✔ store recovers the previous valid snapshot from its backup (21.1925ms)
+✔ snapshot writes reject missing asset references and accept hydrated service assets (43.0718ms)
+✔ store refuses to create an empty project when both snapshot copies are corrupt (11.6608ms)
+✔ staged asset validates hash and publishes content-addressed bytes (16.8271ms)
+✔ duplicate asset content merges tags without replacing the original blob (37.6414ms)
+✔ a failed staged publish leaves the current asset untouched (22.2312ms)
+✔ backup contains a verified manifest for the snapshot and assets (30.1833ms)
+✔ backup restore rolls back earlier files when a later publish fails (77.0697ms)
+✔ current Markdown links detect missing files without treating examples as links (34.6878ms)
+✔ balanced links and fence boundaries retain real targets (9.723ms)
+✔ nested images, escapes, and Markdown block boundaries are respected (11.8503ms)
+✔ MCP endpoint accepts loopback HTTP and remote HTTPS only (3.8201ms)
+✔ server registry persists endpoint metadata without credentials or session state (1.4225ms)
+✔ server registry never writes more servers than it can read back (16.8865ms)
+✔ MCP server labels reject credential-like text before persistence (0.4629ms)
+✔ corrupted MCP persistence is reported and cannot be overwritten (0.2798ms)
+✔ MCP registry serializes concurrent writers without losing either entry (0.259ms)
+✔ default browser MCP storage delegates all mutations to the same exclusive Web Lock (0.5574ms)
+✔ default browser MCP storage rejects mutations without Web Locks and preserves readable export (0.9767ms)
+✔ MCP registry rebases independent instances instead of overwriting newer entries (8.9532ms)
+✔ MCP registry reports a capacity conflict instead of hiding the first writer (7.2639ms)
+✔ MCP registry rejects stale same-id updates and preserves the newer value (0.5928ms)
+✔ MCP registry rejects stale deletes after another tab removes or adds the id (0.649ms)
+✔ MCP registry rejects stale adds after another tab removes the id (0.1856ms)
+✔ legacy over-limit MCP persistence remains viewable, exportable, and explicitly recoverable (2.8631ms)
+✔ MCP auto negotiation uses modern discover and keeps modern calls sessionless (19.8317ms)
+✔ MCP auto negotiation falls back to legacy only when discovery is unsupported (1.0435ms)
+✔ MCP discovery authentication and service failures never masquerade as legacy support (0.5519ms)
+✔ MCP auto negotiation fails closed on a malformed successful discovery response (0.4109ms)
+✔ MCP discovery errors mentioning unsupported auth never fall back to legacy (0.7471ms)
+✔ Streamable HTTP performs initialize, initialized, paginated tools/list, and SSE parsing (1.4591ms)
+✔ unknown MCP tool and malformed tool list fail closed (0.5823ms)
+✔ MCP request timeout and caller cancellation abort safely (6.0273ms)
+✔ MCP response size limit rejects bodies larger than 2 MB (2.8033ms)
+✔ MCP tool discovery rejects more than 500 tools (2.0769ms)
+✔ MCP tool pagination rejects repeated cursors and more than 32 pages (2.8436ms)
+✔ stdio 命令白名单：裸名与绝对路径放行 (0.9011ms)
+✔ stdio 命令白名单：注入与越权形态拒绝 (0.188ms)
+✔ stdio schema：合法配置通过，空参数/非法命令拒绝 (2.3021ms)
+✔ stdio env：疑似密钥值被拒绝写入本地配置 (1.1388ms)
+✔ v2 契约：streamable_http（现状）与 stdio 均可解析，非法 transport 拒绝 (0.8994ms)
+✔ normalizes valid media dimensions to a bounded aspect ratio (0.8189ms)
+✔ parses persisted image size values (0.7656ms)
+✔ extracts user preference sentence from user message (0.9002ms)
+✔ extracts user constraint with high confidence (0.21ms)
+✔ extracts habit type (0.1296ms)
+✔ ignores low-value chit-chat even with trigger words (0.1356ms)
+✔ does not extract when no trigger word present (0.1017ms)
+✔ does not save credentials even when a memory trigger is present (0.6514ms)
+✔ does not treat assistant summary as a user preference (0.1281ms)
+✔ splits multiple sentences and filters too-short fragments (0.1047ms)
+✔ skips empty and too-short messages (0.183ms)
+✔ normalizeContent strips whitespace, punctuation and case (0.3314ms)
+✔ fingerprint is stable and differs across contents (29.5127ms)
+✔ lexicalScore is higher for related content (0.7048ms)
+✔ selectMemoryRecords filters inactive and low confidence (1.144ms)
+✔ selectMemoryRecords respects max count and total limit (0.1866ms)
+✔ selectMemoryRecords returns empty when no lexical match (0.099ms)
+✔ formatInjectionBlock formats records with dates and conflict note (0.1392ms)
+✔ formatInjectionBlock returns empty string for no records (0.878ms)
+✔ a newly appended user message cannot reuse an old assistant reply (0.6ms)
+✔ streaming assistant text is ignored until the turn completes (0.1135ms)
+✔ a reply from a different turn or thread is ignored (0.0859ms)
+✔ completed extraction stays bound to its client message when another turn follows (0.0832ms)
+✔ disabled by default and does not ingest when off (0.9522ms)
+✔ ingestMessage stores record when enabled (shared, no namespace) (59.1447ms)
+✔ browser shared read-only mode does not auto-write (0.3811ms)
+✔ ingestMessage deduplicates identical content by fingerprint (0.8127ms)
+✔ parallel user messages preserve both memory records (30.114ms)
+✔ two service instances retry a stale write and preserve both records (33.5926ms)
+✔ ingestMessage failure is silent (0.4447ms)
+✔ buildInjection returns empty when disabled (0.1517ms)
+✔ buildInjection returns memory block when enabled and matched (2.2927ms)
+✔ buildInjection returns empty when no match (0.498ms)
+✔ saveCodexExtraction parses 记忆： lines and deduplicates (1.4541ms)
+✔ saveCodexExtraction ignores malformed lines (0.2244ms)
+✔ saveCodexExtraction skips oversized lines without losing valid ones (0.4607ms)
+✔ deleteRecord removes one record (0.4301ms)
+✔ clearAll empties records and keeps store shape (0.369ms)
+✔ storageMode and storageStatus expose sharing state (0.1416ms)
+✔ resetIdentity returns empty store (0.5335ms)
+✔ normalizeStore rejects null/undefined without fallback (1.4625ms)
+✔ normalizeStore rejects unsupported version without fallback (0.2918ms)
+✔ normalizeStore preserves valid records and drops legacy namespace (0.2156ms)
+✔ normalizeStore rejects corrupt records without turning them into empty memory (0.1401ms)
+✔ shared file contract uses the cross-product names (0.0767ms)
+✔ an existing empty shared file is corruption, while a missing file is a fresh store (1.0524ms)
+✔ createMemoryStorage exposes the shared storage contract (0.2816ms)
+✔ message Markdown renders headings, quotes, lists and GFM tables without losing text (9.4039ms)
+✔ GFM checklists, deletion and literal URLs have usable safe output (3.9521ms)
+✔ code blocks retain complete Unicode and unclosed streaming fences (3.9567ms)
+✔ embedded HTML remains escaped text and unsafe links/images never receive URLs (1.9864ms)
+✔ safe URLs reject credential URLs and control-character protocol tricks (3.8369ms)
+✔ reference links and images resolve definitions through the same URL guard (4.9631ms)
+✔ the actual message renderer emits semantic GFM and full code rather than Markdown source (11.6329ms)
+✔ the actual renderer escapes HTML and refuses active unsafe links/images (3.0663ms)
+✔ safe images and links carry privacy and external-navigation guards (1.3286ms)
+✔ 模型目录只接收非敏感元数据，未知模型不虚构能力 (1.1901ms)
+✔ 同名模型保留账号身份，换地址或凭据后旧目录失效 (0.1578ms)
+✔ 尺寸与比例来自明确规格，不把 16:9 任意换算为供应商尺寸 (0.1516ms)
+✔ 后缀解析：M/K/纯数字三种形态 (1.255ms)
+✔ 后缀解析：无后缀与非法后缀均为 no-op (0.1642ms)
+✔ catalog 生成：带窗口条目写入 context/max，无窗口条目回落，auto_compact 为 null (1.7879ms)
+✔ catalog 生成：priority 保留，displayName 缺省用 slug (0.2239ms)
+✔ renderModelCatalogJson：相对路径指针与 JSON payload (0.2203ms)
+✔ catalog profile id 不得逸出 model-catalogs 目录 (0.2819ms)
+✔ suffixes group display only, preserve versions/namespaces/exact available routes (1.254ms)
+✔ searches provider, exact suffix, declared sizes/ratio; fuzzy words never change numbers or ratio orientation (0.8689ms)
+✔ image API rows show the exact verified model id before its family (1.6572ms)
+✔ image selection labels preserve exact API ids and unknown Codex state (0.5827ms)
+✔ provider presets expose the Doubao Ark preset with a valid HTTPS base url (2.4111ms)
+✔ unknown preset id resolves to undefined and every preset id is unique (3.1596ms)
+✔ default provider profile remains OpenAI-compatible for existing users (0.1378ms)
+✔ 显式模型选择绑定具体账号；旧项目不覆盖新选择，尺寸必须属于所选模型 (6.323ms)
+✔ native close is prevented synchronously until durable save resolves (1.0882ms)
+✔ duplicate native close events cannot bypass the same pending save (0.1729ms)
+✔ failed save keeps the window open and a later successful retry may close (0.1617ms)
+✔ disposed native listener cannot close or report against an unmounted owner (0.1177ms)
+✔ close drains edits arriving while a preceding revision is being saved (0.2774ms)
+✔ protected read with a dirty draft rejects close without issuing any write (0.415ms)
+✔ native destroy failure is reported without escaping an async event callback (0.5275ms)
+✔ native text recovery restores bounded content and result edge exactly once (8.0519ms)
+✔ native text success without final text does not promote a draft (0.3565ms)
+✔ native recovery retains success evidence without resurrecting a user-deleted image candidate (0.8333ms)
+✔ native recovery rejects a mismatched identity {"taskId":"task-1","idempotencyKey":"foreign-key"} with archived=false (0.3125ms)
+✔ native recovery rejects a mismatched identity {"taskId":"task-1","idempotencyKey":"foreign-key"} with archived=true (0.2447ms)
+✔ native recovery rejects a mismatched identity {"taskId":"foreign-task","idempotencyKey":"stable-1"} with archived=false (0.3971ms)
+✔ native recovery rejects a mismatched identity {"taskId":"foreign-task","idempotencyKey":"stable-1"} with archived=true (0.1648ms)
+✔ native recovery fences conflicting duplicate outputs and preserves archived evidence (0.2301ms)
+✔ native recovery fences duplicate successes and preserves archived evidence (0.1637ms)
+✔ native recovery fences duplicate declared indices and preserves archived evidence (0.2002ms)
+✔ native recovery fences undeclared output and preserves archived evidence (0.1301ms)
+✔ native recovery fences unexpected output and preserves archived evidence (0.1118ms)
+✔ native recovery fences unexpected declared index and preserves archived evidence (0.1221ms)
+✔ native recovery fences missing declared receipt and preserves archived evidence (0.0769ms)
+✔ native recovery fences malformed extra index and preserves archived evidence (0.138ms)
+✔ native recovery accepts a consistent subset and preserves other archived slots (0.3567ms)
+✔ legacy assetIds receipts retain their declared output identity (0.1351ms)
+✔ explicit "corrupt-output-vector" outputs cannot fall back to legacy assetIds (0.2484ms)
+✔ explicit {"index":0} outputs cannot fall back to legacy assetIds (0.2038ms)
+✔ explicit null outputs cannot fall back to legacy assetIds (0.131ms)
+✔ native TaskHost adapter forwards stable request and command arguments (0.2474ms)
+✔ native reconciliation fences a missing submitted task as unknown (2.7611ms)
+✔ native unknown receipt marks pending outputs unknown (0.2272ms)
+✔ native unknown output keeps previously archived evidence (0.2834ms)
+✔ native image success without an asset identity is treated as unknown (0.4016ms)
+✔ native recovery preserves an archived image when a terminal receipt omits its asset (0.4426ms)
+✔ native image success without per-output receipts is treated as unknown (0.2468ms)
+✔ native image recovery reconnects the result edge to its source (0.3229ms)
+✔ native terminal output failures do not become a succeeded task (0.2789ms)
+✔ native failure preserves already archived output evidence (0.3228ms)
+✔ native failure with complete archived evidence resolves as succeeded (0.2434ms)
+✔ a stale workbench decision cannot approve the same plan in another project (5.7102ms)
+✔ a stale workbench retry cannot unblock another project's matching plan (0.65ms)
+✔ a stale workbench approval request cannot target another project's matching plan (0.6722ms)
+✔ upsertPlan persists a plan into the project (idempotent by id) (0.5ms)
+✔ replaying an existing plan preserves completed stages and assets (2.0459ms)
+✔ result rejection requeues selected work for revised output and a second review (3.7786ms)
+✔ reworking an upstream result invalidates succeeded downstream work and review (0.8053ms)
+✔ plan_patch_stage rejects invalid input without persisting a plan (2.407ms)
+✔ plan_patch_stage rejects duplicate work item IDs without writing (0.2493ms)
+✔ plan_patch_stage is durable and replay cannot reset progress (8.6347ms)
+✔ upsertPlan refuses plans beyond the storage limit (2.6841ms)
+✔ requestStageApproval moves doing to plan_review with CAS (0.3522ms)
+✔ plan-gated work cannot run or enter result review before host approval (0.6399ms)
+✔ queued work cannot be reported as a completed stage (0.206ms)
+✔ stage tool rejects an old revision after the same status returns (0.3536ms)
+✔ host approval rejects a stale result review after rejection and resubmission (0.3259ms)
+✔ dependent work cannot start before its prerequisite succeeds (0.2815ms)
+✔ decideStage approve plan continues doing; reject blocks (0.391ms)
+✔ decideStage cannot approve a stage not in review (0.2891ms)
+✔ result gate completes on approve and returns to doing on reject (1.3733ms)
+✔ markStageBlocked and retryStage requeue only failed work items (0.5408ms)
+✔ late work results cannot overwrite an approved plan (0.3771ms)
+✔ approvalSummary lists pending gates across plans (0.5114ms)
+✔ planTools expose the four plan tools with working invocations (0.7227ms)
+✔ plan_replan persists an idempotent plan that requeues failures and downstream work (1.1799ms)
+✔ plan_replan treats partial work as recoverable input (0.6299ms)
+✔ plan_replan refuses an unrelated plan occupying its deterministic id (0.5981ms)
+✔ Agent plan tool cannot approve or unblock its own stages (0.4292ms)
+✔ the runtime registry exposes exactly the five Figma page templates (2.4306ms)
+✔ work display resolves to grid and selection is deterministic (0.2425ms)
+✔ mixed pages have one primary template and only detail may be nested (0.3219ms)
+✔ patch ten remains a three-segment version; major and minor reset lower segments (1.1888ms)
+✔ desktop bump updates only desktop metadata and leaves Web and Mobile untouched (39.1748ms)
+✔ Web and Mobile can advance independently without changing dependency versions (62.9788ms)
+✔ invalid platform or stale package version fails without partially writing files (18.1652ms)
+✔ plugin jsxs preserves static child validation, Fragment and element key (161.3333ms)
+✔ plugin jsx retains validation for genuinely dynamic unkeyed lists (9.3857ms)
+✔ plugin jsxDEV preserves the compiler's static-child distinction (30.0885ms)
+[kk:plugins] 事件处理器执行失败 { event: 'ready', error: '[UNSERIALIZABLE]' }
+[kk:plugins] 事件处理器执行失败 {
+  event: 'ready',
+  error: {
+    name: 'Error',
+    message: 'api_key=[REDACTED]',
+    stack: 'Error: api_key=[REDACTED]\n' +
+      '    at file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/tests/unit/pluginLoader.test.ts:338:13\n' +
+      '    at file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/src/features/plugins/pluginLoader.ts:48:26\n' +
+      '    at Set.forEach (<anonymous>)\n' +
+      '    at Object.emit (file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/src/features/plugins/pluginLoader.ts:46:29)\n' +
+      '    at TestContext.<anonymous> (file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/tests/unit/pluginLoader.test.ts:353:21)\n' +
+      '    at Test.runInAsyncScope (node:async_hooks:227:14)\n' +
+      '    at Test.run (node:internal/test_runner/test:1397:25)\n' +
+      '    at Test.processPendingSubtests (node:internal/test_runner/test:969:18)\n' +
+      '    at Test.postRun (node:internal/test_runner/test:1537:19)\n' +
+      '    at Test.run (node:internal/test_runner/test:1462:12)'
+  }
+}
+✔ installFromUrl：求值工厂、登记节点、写 store 并激活 (17.9857ms)
+✔ setPluginEnabled：禁用卸载节点与样式，重新启用恢复 (0.5599ms)
+✔ uninstall：清 store 并卸载节点 (0.3209ms)
+✔ ensurePluginsLoaded：rehydrate → 发现本地插件 → 只激活启用项 (0.7818ms)
+✔ 随包插件从同源模块 URL 直接导入，不生成 blob 模块 (0.5785ms)
+✔ update：带缓存戳重新拉取并替换版本 (0.5073ms)
+✔ 无效导出被拒绝 (0.4583ms)
+✔ 远程插件拒绝明文、凭据和片段地址，且不发起下载 (0.6255ms)
+✔ 远程插件拒绝从 HTTPS 重定向到明文响应 (0.2637ms)
+✔ 远程插件禁止自动重定向，避免中途经过明文地址 (0.2497ms)
+✔ 旧版明文插件缓存不会在启动或重新启用时执行 (0.4022ms)
+✔ deactivate 执行 setup/css 清理 (0.2649ms)
+✔ 事件总线隔离同步异常和异步拒绝，且继续通知其他订阅者 (29.2343ms)
+✔ all bundled plugin payloads survive repeated snapshot reads without truncation (10.1721ms)
+✔ normalization copies plugin metadata independently of the source snapshot (0.2268ms)
+✔ invalid plugin payloads are rejected before normalization preserves the original (3.7272ms)
+✔ non-JSON plugin metadata, extensions and nonfinite dimensions cannot be saved (1.2256ms)
+✔ nested plugin secrets are rejected without altering the input (0.4166ms)
+✔ plain legacy canvas items remain readable without acquiring a plugin (0.2332ms)
+✔ native JSON key ordering is not a canvas edit; geometry changes are (4.5356ms)
+✔ project normalization preserves edited positions, edges and viewport (0.8389ms)
+✔ a future graph version is not silently replaced by the default layout (0.3355ms)
+✔ Web package export and preflight both reject unknown nested editing fields (181.9547ms)
+✔ canonical JSON sorts object keys while preserving array order (0.2931ms)
+✔ image edit packages retain masks and references that exist only in editing history (12.7496ms)
+✔ canonical JSON matches native fixture for numeric, escaped and astral keys (0.8169ms)
+✔ portable packages reject unarchived media and preserve user text (2.9548ms)
+✔ package creation collects graph, attachment and task output references (1.5673ms)
+✔ package creation includes an asset referenced only by a stage work item (6.9771ms)
+✔ Web package export rejects duplicate stage indexes and plan IDs (2.2682ms)
+✔ Web package export rejects a plan owned by another project (0.8707ms)
+✔ valid package preflight verifies checksum, references and original bytes (2.686ms)
+✔ preflight rejects malformed paths, duplicates and unreferenced entries (4.4457ms)
+✔ preflight rejects missing, wrong-hash and checksum-tampered packages (3.3694ms)
+✔ preflight rejects secrets, unknown manifest fields and duplicate metadata (2.5394ms)
+✔ package creation rejects normalization loss, invalid output status and bad metadata (1.6444ms)
+✔ preflight rejects secret-shaped fields, zero-byte assets and UTC offsets, and clones bytes (5.8688ms)
+✔ cached browsing never starts a network request and cancelled refresh preserves cache (36.1092ms)
+✔ malformed cache entries are normalized before rendering (3.4821ms)
+✔ 内置 7 个提示词来源且全部启用 (0.2536ms)
+✔ runSource 解析 JSON 并归一化字段 (1.6162ms)
+✔ fetchPrompts 返回分页、分类与标签 (1.0387ms)
+✔ 缓存生效：二次请求不再触发 fetcher (0.704ms)
+✔ 来源拉取失败时保留上次缓存并记录错误 (1.0835ms)
+✔ refreshAllSources 汇总成功/失败数量 (0.4443ms)
+✔ formatPromptDate 格式化合法日期并容忍空值 (14.346ms)
+✔ 导出→导入 round-trip：连接完整保留；credentialRef 作为不透明引用透传，密钥明文不出现 (6.5468ms)
+✔ 导出防线：未知密钥字段被 schema 剥离，不进入文件 (0.5781ms)
+✔ 导入拒绝：非法 JSON、错误版本、非法地址 (1.4155ms)
+✔ 合并导入：keep-existing 保留现有运行状态，新 id 追加 (0.1517ms)
+✔ 合并导入：replace 模式整体替换同 id (0.0827ms)
+✔ seed 导入：cc-switch 风格 name/baseUrl/model → user_byok 连接 (0.692ms)
+✔ 中文 seed 生成稳定且不同的连接 id，合并不会静默丢项 (0.3437ms)
+✔ 同名 ASCII seed 的不同地址生成不同 id 并可同时导入 (0.2224ms)
+✔ 导入两个相同 id 时显式拒绝碰撞 (0.1638ms)
+✔ only explicit keyless text can bypass the credential gate; image and changed protocol cannot (5.8863ms)
+✔ explicit local text preparation does not require a stored or fake API key (1.968ms)
+✔ a conversation task without a canvas source needs the exact project, round and user message (1.2053ms)
+✔ comparison prepares independent existing text tasks with exact credentials and stable submission keys (15.4909ms)
+✔ history includes only the selected route's successful outputs, never system messages or another model (1.8891ms)
+✔ comparison rejects missing, disabled, duplicate, non-text and unsafe routes without fallback (3.8248ms)
+✔ history trimming preserves complete user/reply groups and reports a bounded context (2.2051ms)
+✔ reply projection and cancellation preserve another route's success and accepted-unknown state (0.577ms)
+✔ changed project, route or frozen messages cannot receive a comparison receipt (0.2009ms)
+✔ an already persisted round cannot be regenerated, even when its acceptance is unknown (0.1864ms)
+✔ three explicit routes and a 64 KiB history stay bounded without mutating input (4.1625ms)
+✔ each route's failure or cancellation preserves completed siblings and partial drafts (0.7661ms)
+✔ two models on one connection require enough currently available connection slots (0.4956ms)
+✔ 429：保留上游原始错误且 Retry-After 驱动重试窗口 (16.6276ms)
+✔ 429：无 Retry-After 时不标记可重试且提示冷却后手动重试 (0.2592ms)
+✔ 401：保留原始错误并分类为 unauthorized 不可重试 (0.1835ms)
+✔ 500：保留原始错误并分类为 provider_unavailable (0.1282ms)
+✔ 无上游 body 时回退到状态分类文案 (0.1237ms)
+✔ new and legacy connections are configured but unverified (5.4805ms)
+✔ model-list health does not create image verification (1.3925ms)
+✔ only the successful-generation health transition records verification (1.5495ms)
+✔ successful text restores connection health without creating image proof (0.8426ms)
+✔ successful text preserves the timestamp of earlier real image verification (0.9212ms)
+✔ saving the same identity preserves verification history and scheduler health (0.5103ms)
+✔ changing identity clears verification and invalidates an in-flight lease (0.3938ms)
+✔ changing or clearing a key explicitly invalidates prior verification (2.4335ms)
+✔ failure：expected 身份匹配时正常回写 cooldown (4.1092ms)
+✔ failure：baseUrl 已变更的迟到回执不污染新配置 (0.3724ms)
+✔ failure：credentialRef 已变更的迟到回执不污染新配置 (0.205ms)
+✔ healthy：expected 身份匹配时恢复正常 (0.2997ms)
+✔ healthy：expected 身份不匹配的迟到成功回执不重置新配置 (0.2162ms)
+✔ a comparison route B never changes the original project A follow-up binding (4.6998ms)
+✔ a project without a normal task restores only its complete registry binding (1.2758ms)
+✔ an original frozen connection cannot be replaced by a comparison account (0.6139ms)
+✔ a single-output text request rejects another output index or multiple choices (31.8154ms)
+✔ explicit loopback authentication and protocol survive profile and registry mapping (5.5432ms)
+✔ remote and noncanonical hosts cannot opt into keyless authentication (1.0278ms)
+✔ legacy profiles retain their stored object without adding defaults (0.8297ms)
+✔ keyless local Anthropic retains the protocol-version header without exposing a key (0.3556ms)
+✔ Ollama and LM Studio presets select only an explicit local OpenAI-compatible interface (0.2046ms)
+✔ local discovery and generation omit authentication rather than using a fake key (3.3885ms)
+✔ an empty key never silently enables local or remote requests (0.5497ms)
+✔ Anthropic discovery and Messages use native headers and preserve multi-turn content (1.2132ms)
+✔ Gemini discovery and SSE use model resources and header-only credentials (1.8045ms)
+✔ HTTP 401 is not retried and does not leak the response body (0.97ms)
+✔ HTTP 429 is not retried and does not leak the response body (0.5057ms)
+✔ anthropic-messages requires an actual success terminal and rejects tool/error/oversized output (0.8494ms)
+✔ gemini requires an actual success terminal and rejects tool/error/oversized output (0.5617ms)
+✔ a text submission freezes its model and messages before reading credentials (0.6541ms)
+✔ Anthropic includes text from content-block start as well as deltas (0.2456ms)
+✔ openai-compatible preserves UTF-8 splits and cancels the source at terminal (2.0575ms)
+✔ openai-compatible aborts a stalled stream and enforces a 2 MiB wire limit (3.1424ms)
+✔ anthropic-messages preserves UTF-8 splits and cancels the source at terminal (2.156ms)
+✔ anthropic-messages aborts a stalled stream and enforces a 2 MiB wire limit (3.1855ms)
+✔ gemini preserves UTF-8 splits and cancels the source at terminal (1.0327ms)
+✔ gemini aborts a stalled stream and enforces a 2 MiB wire limit (3.0151ms)
+✔ native discovery follows bounded pages without changing host or authentication (1.6696ms)
+✔ discovery cannot hang after cancellation or loop forever on repeated page tokens (5.9293ms)
+✔ 桌面 load：native loaded 返回连接并刷新浏览器缓存 (5.0966ms)
+✔ 桌面 load：missing 返回 null 且不覆盖浏览器缓存 (0.1667ms)
+✔ 桌面 load：recovered 备份被采用并刷新缓存 (0.2741ms)
+✔ 桌面 persist：先 load 后写，携带 expectedRevision，成功后刷新缓存 (0.3873ms)
+✔ 桌面 persist：conflict/失败时抛错且浏览器缓存不更新 (0.5971ms)
+✔ Web 环境：load 与 persist 均为 no-op，不调用 invoke (0.164ms)
+✔ submission gates preserve identity, capacity and health across reserve/release (17.1657ms)
+✔ stale leases cannot release a connection re-added with the same id (1.6992ms)
+✔ coordinated reservations serialize browser windows and reclaim orphaned leases (2.1757ms)
+✔ batch rechecks the bound connection before the next HTTP request and retains completed results (23.338ms)
+✔ Codex 渲染：稳定键、baseUrl 与模型，无密钥明文 (2.2304ms)
+✔ Codex 渲染：可显式指定 responses 协议；无凭据时不生成 envKey (0.3002ms)
+✔ Claude 渲染：默认不假定 Anthropic 协议，env 只含 baseUrl (0.7333ms)
+✔ OpenAI 环境渲染：OPENAI_BASE_URL 与模型 (0.3693ms)
+✔ renderAllTargets：默认 2 目标，显式 Anthropic 假设时 3 目标 (0.2654ms)
+✔ 序列化：Codex TOML 与 Claude settings.json 形态正确且无密钥 (0.3358ms)
+✔ assertNoSecrets：拒绝密钥形态文本 (0.2315ms)
+✔ providerKey / envKeyFor：清洗非法字符并截断 (0.1324ms)
+✔ 合法中文连接 id 生成三种目标配置，异常输入不被静默跳过 (0.9946ms)
+✔ Codex 输出使用当前受支持协议，并把模型选择放在 provider 表之外 (0.2284ms)
+✔ Codex TOML 把连接显示名中的换行转义为字符串内容 (0.2119ms)
+✔ Bash 环境导出把 URL 中的命令替换保持为字面量 (0.16ms)
+✔ 不同连接 id 不共享 Codex 配置键或凭据环境变量 (0.1202ms)
+✔ proxy 根路径返回版本探测信息 (43.982ms)
+✔ proxy OPTIONS 预检返回宽松 CORS 头 (7.1921ms)
+16:57:01 GET http://127.0.0.1:52192/v1/models?limit=2 -> 200 0.0s
+✔ proxy GET 转发到目标地址并透传响应头 (33.1447ms)
+16:57:01 POST http://127.0.0.1:52196/v1/images/generations -> 200 0.0s
+✔ proxy POST 透传 JSON body (11.6699ms)
+16:57:01 GET http://127.0.0.1:1/nothing -> failed (fetch failed) 0.0s
+✔ proxy 目标不可达时返回 502 (4.1531ms)
+[kk:unit] kept-info undefined
+[kk:unit] kept-warn { attempt: 2 }
+[kk:unit] kept-error {
+  name: 'Error',
+  message: 'fail',
+  stack: 'Error: fail\n' +
+    '    at TestContext.<anonymous> (file:///D:/kk-studio/.worktrees/TASK-CHERRY-RED-001/tests/unit/runtimeLogger.test.ts:67:27)\n' +
+    '    at Test.runInAsyncScope (node:async_hooks:227:14)\n' +
+    '    at Test.run (node:internal/test_runner/test:1397:25)\n' +
+    '    at Test.processPendingSubtests (node:internal/test_runner/test:969:18)\n' +
+    '    at Test.postRun (node:internal/test_runner/test:1537:19)\n' +
+    '    at Test.run (node:internal/test_runner/test:1462:12)\n' +
+    '    at async Test.processPendingSubtests (node:internal/test_runner/test:969:7)'
+}
+[kk:unit] now-visible undefined
+[kk:[UNSERIALIZABLE]] [UNSERIALIZABLE] { token: '[REDACTED]' }
+[kk:ring] entry-0 undefined
+[kk:ring] entry-1 undefined
+[kk:ring] entry-2 undefined
+[kk:ring] entry-3 undefined
+[kk:ring] entry-4 undefined
+[kk:ring] entry-5 undefined
+[kk:ring] entry-6 undefined
+[kk:ring] entry-7 undefined
+[kk:ring] entry-8 undefined
+[kk:ring] entry-9 undefined
+[kk:ring] entry-10 undefined
+[kk:ring] entry-11 undefined
+[kk:ring] entry-12 undefined
+[kk:ring] entry-13 undefined
+[kk:ring] entry-14 undefined
+[kk:ring] entry-15 undefined
+[kk:ring] entry-16 undefined
+[kk:ring] entry-17 undefined
+[kk:ring] entry-18 undefined
+[kk:ring] entry-19 undefined
+[kk:ring] entry-20 undefined
+[kk:ring] entry-21 undefined
+[kk:ring] entry-22 undefined
+[kk:ring] entry-23 undefined
+[kk:ring] entry-24 undefined
+[kk:ring] entry-25 undefined
+[kk:ring] entry-26 undefined
+[kk:ring] entry-27 undefined
+[kk:ring] entry-28 undefined
+[kk:ring] entry-29 undefined
+[kk:ring] entry-30 undefined
+[kk:ring] entry-31 undefined
+[kk:ring] entry-32 undefined
+[kk:ring] entry-33 undefined
+[kk:ring] entry-34 undefined
+[kk:ring] entry-35 undefined
+[kk:ring] entry-36 undefined
+[kk:ring] entry-37 undefined
+[kk:ring] entry-38 undefined
+[kk:ring] entry-39 undefined
+[kk:ring] entry-40 undefined
+[kk:ring] entry-41 undefined
+[kk:ring] entry-42 undefined
+[kk:ring] entry-43 undefined
+[kk:ring] entry-44 undefined
+[kk:ring] entry-45 undefined
+[kk:ring] entry-46 undefined
+[kk:ring] entry-47 undefined
+[kk:ring] entry-48 undefined
+[kk:ring] entry-49 undefined
+[kk:ring] entry-50 undefined
+[kk:ring] entry-51 undefined
+[kk:ring] entry-52 undefined
+[kk:ring] entry-53 undefined
+[kk:ring] entry-54 undefined
+[kk:ring] entry-55 undefined
+[kk:ring] entry-56 undefined
+[kk:ring] entry-57 undefined
+[kk:ring] entry-58 undefined
+[kk:ring] entry-59 undefined
+[kk:ring] entry-60 undefined
+[kk:ring] entry-61 undefined
+[kk:ring] entry-62 undefined
+[kk:ring] entry-63 undefined
+[kk:ring] entry-64 undefined
+[kk:ring] entry-65 undefined
+[kk:ring] entry-66 undefined
+[kk:ring] entry-67 undefined
+[kk:ring] entry-68 undefined
+[kk:ring] entry-69 undefined
+[kk:ring] entry-70 undefined
+[kk:ring] entry-71 undefined
+[kk:ring] entry-72 undefined
+[kk:ring] entry-73 undefined
+[kk:ring] entry-74 undefined
+[kk:ring] entry-75 undefined
+[kk:ring] entry-76 undefined
+[kk:ring] entry-77 undefined
+[kk:ring] entry-78 undefined
+[kk:ring] entry-79 undefined
+[kk:ring] entry-80 undefined
+[kk:ring] entry-81 undefined
+[kk:ring] entry-82 undefined
+[kk:ring] entry-83 undefined
+[kk:ring] entry-84 undefined
+[kk:ring] entry-85 undefined
+[kk:ring] entry-86 undefined
+[kk:ring] entry-87 undefined
+[kk:ring] entry-88 undefined
+[kk:ring] entry-89 undefined
+[kk:ring] entry-90 undefined
+[kk:ring] entry-91 undefined
+[kk:ring] entry-92 undefined
+[kk:ring] entry-93 undefined
+[kk:ring] entry-94 undefined
+[kk:ring] entry-95 undefined
+[kk:ring] entry-96 undefined
+[kk:ring] entry-97 undefined
+[kk:ring] entry-98 undefined
+[kk:ring] entry-99 undefined
+[kk:ring] entry-100 undefined
+[kk:ring] entry-101 undefined
+[kk:ring] entry-102 undefined
+[kk:ring] entry-103 undefined
+[kk:ring] entry-104 undefined
+[kk:ring] entry-105 undefined
+[kk:ring] entry-106 undefined
+[kk:ring] entry-107 undefined
+[kk:ring] entry-108 undefined
+[kk:ring] entry-109 undefined
+[kk:ring] entry-110 undefined
+[kk:ring] entry-111 undefined
+[kk:ring] entry-112 undefined
+[kk:ring] entry-113 undefined
+[kk:ring] entry-114 undefined
+[kk:ring] entry-115 undefined
+[kk:ring] entry-116 undefined
+[kk:ring] entry-117 undefined
+[kk:ring] entry-118 undefined
+[kk:ring] entry-119 undefined
+[kk:ring] entry-120 undefined
+[kk:ring] entry-121 undefined
+[kk:ring] entry-122 undefined
+[kk:ring] entry-123 undefined
+[kk:ring] entry-124 undefined
+[kk:ring] entry-125 undefined
+[kk:ring] entry-126 undefined
+[kk:ring] entry-127 undefined
+[kk:ring] entry-128 undefined
+[kk:ring] entry-129 undefined
+[kk:ring] entry-130 undefined
+[kk:ring] entry-131 undefined
+[kk:ring] entry-132 undefined
+[kk:ring] entry-133 undefined
+[kk:ring] entry-134 undefined
+[kk:ring] entry-135 undefined
+[kk:ring] entry-136 undefined
+[kk:ring] entry-137 undefined
+[kk:ring] entry-138 undefined
+[kk:ring] entry-139 undefined
+[kk:ring] entry-140 undefined
+[kk:ring] entry-141 undefined
+[kk:ring] entry-142 undefined
+[kk:ring] entry-143 undefined
+[kk:ring] entry-144 undefined
+[kk:ring] entry-145 undefined
+[kk:ring] entry-146 undefined
+[kk:ring] entry-147 undefined
+[kk:ring] entry-148 undefined
+[kk:ring] entry-149 undefined
+[kk:ring] entry-150 undefined
+[kk:ring] entry-151 undefined
+[kk:ring] entry-152 undefined
+[kk:ring] entry-153 undefined
+[kk:ring] entry-154 undefined
+[kk:ring] entry-155 undefined
+[kk:ring] entry-156 undefined
+[kk:ring] entry-157 undefined
+[kk:ring] entry-158 undefined
+[kk:ring] entry-159 undefined
+[kk:ring] entry-160 undefined
+[kk:ring] entry-161 undefined
+[kk:ring] entry-162 undefined
+[kk:ring] entry-163 undefined
+[kk:ring] entry-164 undefined
+[kk:ring] entry-165 undefined
+[kk:ring] entry-166 undefined
+[kk:ring] entry-167 undefined
+[kk:ring] entry-168 undefined
+[kk:ring] entry-169 undefined
+[kk:ring] entry-170 undefined
+[kk:ring] entry-171 undefined
+[kk:ring] entry-172 undefined
+[kk:ring] entry-173 undefined
+[kk:ring] entry-174 undefined
+[kk:ring] entry-175 undefined
+[kk:ring] entry-176 undefined
+[kk:ring] entry-177 undefined
+[kk:ring] entry-178 undefined
+[kk:ring] entry-179 undefined
+[kk:ring] entry-180 undefined
+[kk:ring] entry-181 undefined
+[kk:ring] entry-182 undefined
+[kk:ring] entry-183 undefined
+[kk:ring] entry-184 undefined
+[kk:ring] entry-185 undefined
+[kk:ring] entry-186 undefined
+[kk:ring] entry-187 undefined
+[kk:ring] entry-188 undefined
+[kk:ring] entry-189 undefined
+[kk:ring] entry-190 undefined
+[kk:ring] entry-191 undefined
+[kk:ring] entry-192 undefined
+[kk:ring] entry-193 undefined
+[kk:ring] entry-194 undefined
+[kk:ring] entry-195 undefined
+[kk:ring] entry-196 undefined
+[kk:ring] entry-197 undefined
+[kk:ring] entry-198 undefined
+[kk:ring] entry-199 undefined
+[kk:ring] entry-200 undefined
+[kk:ring] entry-201 undefined
+[kk:ring] entry-202 undefined
+[kk:ring] entry-203 undefined
+[kk:ring] entry-204 undefined
+[kk:ring] entry-205 undefined
+[kk:ring] entry-206 undefined
+[kk:ring] entry-207 undefined
+[kk:ring] entry-208 undefined
+[kk:ring] entry-209 undefined
+[kk:ring] entry-210 undefined
+[kk:ring] entry-211 undefined
+[kk:ring] entry-212 undefined
+[kk:ring] entry-213 undefined
+[kk:ring] entry-214 undefined
+[kk:ring] entry-215 undefined
+[kk:ring] entry-216 undefined
+[kk:ring] entry-217 undefined
+[kk:ring] entry-218 undefined
+[kk:ring] entry-219 undefined
+[kk:ring] entry-220 undefined
+[kk:ring] entry-221 undefined
+[kk:ring] entry-222 undefined
+[kk:ring] entry-223 undefined
+[kk:ring] entry-224 undefined
+[kk:ring] entry-225 undefined
+[kk:ring] entry-226 undefined
+[kk:ring] entry-227 undefined
+[kk:ring] entry-228 undefined
+[kk:ring] entry-229 undefined
+[kk:ring] entry-230 undefined
+[kk:ring] entry-231 undefined
+[kk:ring] entry-232 undefined
+[kk:ring] entry-233 undefined
+[kk:ring] entry-234 undefined
+[kk:ring] entry-235 undefined
+[kk:ring] entry-236 undefined
+[kk:ring] entry-237 undefined
+[kk:ring] entry-238 undefined
+[kk:ring] entry-239 undefined
+[kk:ring] entry-240 undefined
+[kk:ring] entry-241 undefined
+[kk:ring] entry-242 undefined
+[kk:ring] entry-243 undefined
+[kk:ring] entry-244 undefined
+[kk:ring] entry-245 undefined
+[kk:ring] entry-246 undefined
+[kk:ring] entry-247 undefined
+[kk:ring] entry-248 undefined
+[kk:ring] entry-249 undefined
+[kk:ring] entry-250 undefined
+[kk:ring] entry-251 undefined
+[kk:ring] entry-252 undefined
+[kk:ring] entry-253 undefined
+[kk:ring] entry-254 undefined
+[kk:ring] entry-255 undefined
+[kk:ring] entry-256 undefined
+[kk:ring] entry-257 undefined
+[kk:ring] entry-258 undefined
+[kk:ring] entry-259 undefined
+[kk:ring] entry-260 undefined
+[kk:ring] entry-261 undefined
+[kk:ring] entry-262 undefined
+[kk:ring] entry-263 undefined
+[kk:ring] entry-264 undefined
+[kk:ring] entry-265 undefined
+[kk:ring] entry-266 undefined
+[kk:ring] entry-267 undefined
+[kk:ring] entry-268 undefined
+[kk:ring] entry-269 undefined
+[kk:ring] entry-270 undefined
+[kk:ring] entry-271 undefined
+[kk:ring] entry-272 undefined
+[kk:ring] entry-273 undefined
+[kk:ring] entry-274 undefined
+[kk:ring] entry-275 undefined
+[kk:ring] entry-276 undefined
+[kk:ring] entry-277 undefined
+[kk:ring] entry-278 undefined
+[kk:ring] entry-279 undefined
+[kk:ring] entry-280 undefined
+[kk:ring] entry-281 undefined
+[kk:ring] entry-282 undefined
+[kk:ring] entry-283 undefined
+[kk:ring] entry-284 undefined
+[kk:ring] entry-285 undefined
+[kk:ring] entry-286 undefined
+[kk:ring] entry-287 undefined
+[kk:ring] entry-288 undefined
+[kk:ring] entry-289 undefined
+[kk:ring] entry-290 undefined
+[kk:ring] entry-291 undefined
+[kk:ring] entry-292 undefined
+[kk:ring] entry-293 undefined
+[kk:ring] entry-294 undefined
+[kk:ring] entry-295 undefined
+[kk:ring] entry-296 undefined
+[kk:ring] entry-297 undefined
+[kk:ring] entry-298 undefined
+[kk:ring] entry-299 undefined
+[kk:ring] entry-300 undefined
+[kk:ring] entry-301 undefined
+[kk:ring] entry-302 undefined
+[kk:ring] entry-303 undefined
+[kk:ring] entry-304 undefined
+[kk:ring] entry-305 undefined
+[kk:ring] entry-306 undefined
+[kk:ring] entry-307 undefined
+[kk:ring] entry-308 undefined
+[kk:ring] entry-309 undefined
+[kk:ring] entry-310 undefined
+[kk:ring] entry-311 undefined
+[kk:ring] entry-312 undefined
+[kk:ring] entry-313 undefined
+[kk:ring] entry-314 undefined
+[kk:ring] entry-315 undefined
+[kk:ring] entry-316 undefined
+[kk:ring] entry-317 undefined
+[kk:ring] entry-318 undefined
+[kk:ring] entry-319 undefined
+[kk:ring] entry-320 undefined
+[kk:ring] entry-321 undefined
+[kk:ring] entry-322 undefined
+[kk:ring] entry-323 undefined
+[kk:ring] entry-324 undefined
+[kk:ring] entry-325 undefined
+[kk:ring] entry-326 undefined
+[kk:ring] entry-327 undefined
+[kk:ring] entry-328 undefined
+[kk:ring] entry-329 undefined
+[kk:ring] entry-330 undefined
+[kk:ring] entry-331 undefined
+[kk:ring] entry-332 undefined
+[kk:ring] entry-333 undefined
+[kk:ring] entry-334 undefined
+[kk:ring] entry-335 undefined
+[kk:ring] entry-336 undefined
+[kk:ring] entry-337 undefined
+[kk:ring] entry-338 undefined
+[kk:ring] entry-339 undefined
+[kk:ring] entry-340 undefined
+[kk:ring] entry-341 undefined
+[kk:ring] entry-342 undefined
+[kk:ring] entry-343 undefined
+[kk:ring] entry-344 undefined
+[kk:ring] entry-345 undefined
+[kk:ring] entry-346 undefined
+[kk:ring] entry-347 undefined
+[kk:ring] entry-348 undefined
+[kk:ring] entry-349 undefined
+[kk:ring] entry-350 undefined
+[kk:ring] entry-351 undefined
+[kk:ring] entry-352 undefined
+[kk:ring] entry-353 undefined
+[kk:ring] entry-354 undefined
+[kk:ring] entry-355 undefined
+[kk:ring] entry-356 undefined
+[kk:ring] entry-357 undefined
+[kk:ring] entry-358 undefined
+[kk:ring] entry-359 undefined
+[kk:ring] entry-360 undefined
+[kk:ring] entry-361 undefined
+[kk:ring] entry-362 undefined
+[kk:ring] entry-363 undefined
+[kk:ring] entry-364 undefined
+[kk:ring] entry-365 undefined
+[kk:ring] entry-366 undefined
+[kk:ring] entry-367 undefined
+[kk:ring] entry-368 undefined
+[kk:ring] entry-369 undefined
+[kk:ring] entry-370 undefined
+[kk:ring] entry-371 undefined
+[kk:ring] entry-372 undefined
+[kk:ring] entry-373 undefined
+[kk:ring] entry-374 undefined
+[kk:ring] entry-375 undefined
+[kk:ring] entry-376 undefined
+[kk:ring] entry-377 undefined
+[kk:ring] entry-378 undefined
+[kk:ring] entry-379 undefined
+[kk:ring] entry-380 undefined
+[kk:ring] entry-381 undefined
+[kk:ring] entry-382 undefined
+[kk:ring] entry-383 undefined
+[kk:ring] entry-384 undefined
+[kk:ring] entry-385 undefined
+[kk:ring] entry-386 undefined
+[kk:ring] entry-387 undefined
+[kk:ring] entry-388 undefined
+[kk:ring] entry-389 undefined
+[kk:ring] entry-390 undefined
+[kk:ring] entry-391 undefined
+[kk:ring] entry-392 undefined
+[kk:ring] entry-393 undefined
+[kk:ring] entry-394 undefined
+[kk:ring] entry-395 undefined
+[kk:ring] entry-396 undefined
+[kk:ring] entry-397 undefined
+[kk:ring] entry-398 undefined
+[kk:ring] entry-399 undefined
+[kk:ring] entry-400 undefined
+[kk:ring] entry-401 undefined
+[kk:ring] entry-402 undefined
+[kk:ring] entry-403 undefined
+[kk:ring] entry-404 undefined
+[kk:ring] entry-405 undefined
+[kk:ring] entry-406 undefined
+[kk:ring] entry-407 undefined
+[kk:ring] entry-408 undefined
+[kk:ring] entry-409 undefined
+[kk:ring] entry-410 undefined
+[kk:ring] entry-411 undefined
+[kk:ring] entry-412 undefined
+[kk:ring] entry-413 undefined
+[kk:ring] entry-414 undefined
+[kk:ring] entry-415 undefined
+[kk:ring] entry-416 undefined
+[kk:ring] entry-417 undefined
+[kk:ring] entry-418 undefined
+[kk:ring] entry-419 undefined
+[kk:ring] entry-420 undefined
+[kk:ring] entry-421 undefined
+[kk:ring] entry-422 undefined
+[kk:ring] entry-423 undefined
+[kk:ring] entry-424 undefined
+[kk:ring] entry-425 undefined
+[kk:ring] entry-426 undefined
+[kk:ring] entry-427 undefined
+[kk:ring] entry-428 undefined
+[kk:ring] entry-429 undefined
+[kk:ring] entry-430 undefined
+[kk:ring] entry-431 undefined
+[kk:ring] entry-432 undefined
+[kk:ring] entry-433 undefined
+[kk:ring] entry-434 undefined
+[kk:ring] entry-435 undefined
+[kk:ring] entry-436 undefined
+[kk:ring] entry-437 undefined
+[kk:ring] entry-438 undefined
+[kk:ring] entry-439 undefined
+[kk:ring] entry-440 undefined
+[kk:ring] entry-441 undefined
+[kk:ring] entry-442 undefined
+[kk:ring] entry-443 undefined
+[kk:ring] entry-444 undefined
+[kk:ring] entry-445 undefined
+[kk:ring] entry-446 undefined
+[kk:ring] entry-447 undefined
+[kk:ring] entry-448 undefined
+[kk:ring] entry-449 undefined
+[kk:ring] entry-450 undefined
+[kk:ring] entry-451 undefined
+[kk:ring] entry-452 undefined
+[kk:ring] entry-453 undefined
+[kk:ring] entry-454 undefined
+[kk:ring] entry-455 undefined
+[kk:ring] entry-456 undefined
+[kk:ring] entry-457 undefined
+[kk:ring] entry-458 undefined
+[kk:ring] entry-459 undefined
+[kk:ring] entry-460 undefined
+[kk:ring] entry-461 undefined
+[kk:ring] entry-462 undefined
+[kk:ring] entry-463 undefined
+[kk:ring] entry-464 undefined
+[kk:ring] entry-465 undefined
+[kk:ring] entry-466 undefined
+[kk:ring] entry-467 undefined
+[kk:ring] entry-468 undefined
+[kk:ring] entry-469 undefined
+[kk:ring] entry-470 undefined
+[kk:ring] entry-471 undefined
+[kk:ring] entry-472 undefined
+[kk:ring] entry-473 undefined
+[kk:ring] entry-474 undefined
+[kk:ring] entry-475 undefined
+[kk:ring] entry-476 undefined
+[kk:ring] entry-477 undefined
+[kk:ring] entry-478 undefined
+[kk:ring] entry-479 undefined
+[kk:ring] entry-480 undefined
+[kk:ring] entry-481 undefined
+[kk:ring] entry-482 undefined
+[kk:ring] entry-483 undefined
+[kk:ring] entry-484 undefined
+[kk:ring] entry-485 undefined
+[kk:ring] entry-486 undefined
+[kk:ring] entry-487 undefined
+[kk:ring] entry-488 undefined
+[kk:ring] entry-489 undefined
+[kk:ring] entry-490 undefined
+[kk:ring] entry-491 undefined
+[kk:ring] entry-492 undefined
+[kk:ring] entry-493 undefined
+[kk:ring] entry-494 undefined
+[kk:ring] entry-495 undefined
+[kk:ring] entry-496 undefined
+[kk:ring] entry-497 undefined
+[kk:ring] entry-498 undefined
+[kk:ring] entry-499 undefined
+[kk:ring] entry-500 undefined
+[kk:ring] entry-501 undefined
+[kk:ring] entry-502 undefined
+[kk:ring] entry-503 undefined
+[kk:ring] entry-504 undefined
+[kk:ring] entry-505 undefined
+[kk:ring] entry-506 undefined
+[kk:ring] entry-507 undefined
+[kk:ring] entry-508 undefined
+[kk:ring] entry-509 undefined
+[kk:ring] entry-510 undefined
+[kk:ring] entry-511 undefined
+[kk:ring] entry-512 undefined
+[kk:ring] entry-513 undefined
+[kk:ring] entry-514 undefined
+[kk:ring] entry-515 undefined
+[kk:ring] entry-516 undefined
+[kk:ring] entry-517 undefined
+[kk:ring] entry-518 undefined
+[kk:ring] entry-519 undefined
+[kk:ring] entry-520 undefined
+[kk:ring] entry-521 undefined
+[kk:ring] entry-522 undefined
+[kk:ring] entry-523 undefined
+[kk:ring] entry-524 undefined
+[kk:ring] entry-525 undefined
+[kk:ring] entry-526 undefined
+[kk:ring] entry-527 undefined
+[kk:ring] entry-528 undefined
+[kk:ring] entry-529 undefined
+[kk:ring] entry-530 undefined
+[kk:ring] entry-531 undefined
+[kk:ring] entry-532 undefined
+[kk:ring] entry-533 undefined
+[kk:ring] entry-534 undefined
+[kk:ring] entry-535 undefined
+[kk:ring] entry-536 undefined
+[kk:ring] entry-537 undefined
+[kk:ring] entry-538 undefined
+[kk:ring] entry-539 undefined
+[kk:ring] entry-540 undefined
+[kk:ring] entry-541 undefined
+[kk:ring] entry-542 undefined
+[kk:ring] entry-543 undefined
+[kk:ring] entry-544 undefined
+[kk:ring] entry-545 undefined
+[kk:ring] entry-546 undefined
+[kk:ring] entry-547 undefined
+[kk:ring] entry-548 undefined
+[kk:ring] entry-549 undefined
+[kk:ring] entry-550 undefined
+[kk:ring] entry-551 undefined
+[kk:ring] entry-552 undefined
+[kk:ring] entry-553 undefined
+[kk:ring] entry-554 undefined
+[kk:ring] entry-555 undefined
+[kk:ring] entry-556 undefined
+[kk:ring] entry-557 undefined
+[kk:ring] entry-558 undefined
+[kk:ring] entry-559 undefined
+[kk:ring] entry-560 undefined
+[kk:ring] entry-561 undefined
+[kk:ring] entry-562 undefined
+[kk:ring] entry-563 undefined
+[kk:ring] entry-564 undefined
+[kk:ring] entry-565 undefined
+[kk:ring] entry-566 undefined
+[kk:ring] entry-567 undefined
+[kk:ring] entry-568 undefined
+[kk:ring] entry-569 undefined
+[kk:ring] entry-570 undefined
+[kk:ring] entry-571 undefined
+[kk:ring] entry-572 undefined
+[kk:ring] entry-573 undefined
+[kk:ring] entry-574 undefined
+[kk:ring] entry-575 undefined
+[kk:ring] entry-576 undefined
+[kk:ring] entry-577 undefined
+[kk:ring] entry-578 undefined
+[kk:ring] entry-579 undefined
+[kk:ring] entry-580 undefined
+[kk:ring] entry-581 undefined
+[kk:ring] entry-582 undefined
+[kk:ring] entry-583 undefined
+[kk:ring] entry-584 undefined
+[kk:ring] entry-585 undefined
+[kk:ring] entry-586 undefined
+[kk:ring] entry-587 undefined
+[kk:ring] entry-588 undefined
+[kk:ring] entry-589 undefined
+[kk:ring] entry-590 undefined
+[kk:ring] entry-591 undefined
+[kk:ring] entry-592 undefined
+[kk:ring] entry-593 undefined
+[kk:ring] entry-594 undefined
+[kk:ring] entry-595 undefined
+[kk:ring] entry-596 undefined
+[kk:ring] entry-597 undefined
+[kk:ring] entry-598 undefined
+[kk:ring] entry-599 undefined
+[kk:sink] to-sink undefined
+[kk:sink] after-detach undefined
+[kk:sink] still-recorded undefined
+[kk:diag] with-details { reason: 'probe' }
+✔ sanitizeLogValue redacts sensitive fields and truncates data URLs (1.6513ms)
+✔ sanitizeLogValue structures errors and marks circular references (0.4109ms)
+✔ logger drops entries below the threshold and keeps the rest (4.4631ms)
+✔ logger honors level changes and validates level values (0.4143ms)
+✔ sanitization redacts secrets in strings, errors, and hostile objects (0.2011ms)
+✔ logger sanitizes message and scope before console, sink, and diagnostics (0.3786ms)
+✔ ring buffer keeps the most recent entries within capacity (6.2782ms)
+✔ configureLogSink receives entries and detaches on null (0.2908ms)
+✔ sink failures do not break the logging path (0.9212ms)
+✔ buildDiagnosticsText emits a header and one line per entry (0.4115ms)
+✔ diagnostic context is allowlisted and location excludes query secrets (0.1809ms)
+✔ downloadDiagnostics is a no-op without a DOM (0.1012ms)
+✔ broken browser data recovers to usable defaults (0.8894ms)
+✔ invalid preference values cannot reach the interface (1.8776ms)
+✔ saved preferences restore user choices after reload (0.6995ms)
+✔ old v1 settings gain a default accent without losing existing choices (0.1369ms)
+✔ all eight accent choices survive serialization and an invalid accent falls back locally (0.3787ms)
+✔ unknown fields including secrets are excluded from exported preferences (0.1321ms)
+✔ newer unsupported storage versions recover without accepting an incompatible schema (0.1677ms)
+✔ first visit starts with defaults without reporting data damage (0.0817ms)
+✔ model provider accepts loopback HTTP links and normalizes the models endpoint (1.5161ms)
+✔ model provider rejects remote HTTP links before an API key can be sent (0.3911ms)
+✔ provider connection records reject remote HTTP links (1.5143ms)
+✔ model provider rejects non-network protocols (0.1524ms)
+✔ parseSkillManifest applies metadata defaults and preserves read-only mode (4.9722ms)
+✔ manifest validation rejects executable fields and write permissions (1.3084ms)
+✔ manifest validation rejects self-dependencies and duplicate permissions (0.4242ms)
+✔ registry installs registered manifests and persists only installed IDs (2.2135ms)
+✔ seedSkill adds bundled records without persisting during render setup (0.3903ms)
+✔ malformed persisted IDs are reported and failed writes do not mutate memory (3.1821ms)
+✔ imports bounded SKILL.md text, preserves imports, and round trips JSON (0.5562ms)
+✔ rejects malformed imports and secret-like content (1.2894ms)
+✔ rejects secret-like Skill metadata before persistence (0.213ms)
+✔ persists complete local records and does not silently overwrite on write failure (0.4656ms)
+✔ rejects a combined Skill prompt above the safe composer limit (0.1196ms)
+✔ corrupted Skill persistence is reported and cannot be overwritten (0.1439ms)
+✔ 大于16MiB的已归档媒体用稳定引用保存并完整恢复，独立poster不被替换 (91.4816ms)
+✔ 缺失引用不能被静默水合，旧内嵌素材不自动迁移 (132.3694ms)
+✔ 内存媒体与assetId原件不符时拒绝剥离 (59.2431ms)
+✔ 引用附件发送前恢复原件，缺失时不能降级为文生图 (0.4015ms)
+✔ 引用与附件身份冲突时阻止发出另一张图片 (0.2183ms)
+✔ 原生素材缺失提示保留可操作原因且不泄露原始错误 (0.5845ms)
+✔ malformed members, duplicated identities and unknown versions cannot become writable empty data (10.3232ms)
+✔ normalization may add defaults but cannot truncate existing content on read (1.5269ms)
+✔ secret fields are rejected at browser and draft-export boundaries (0.2203ms)
+✔ createStagePlan assigns indexes, doing status and revision 0 (4.8031ms)
+✔ createStagePlan rejects empty or oversized stage lists (0.3817ms)
+✔ createStagePlan rejects a plan that storage normalization would discard (0.8715ms)
+✔ stage plans reject duplicate work item IDs across stages (1.0373ms)
+✔ stage plan normalization rejects duplicate stage indexes (0.5094ms)
+✔ stage plan collection keeps only the first duplicate plan ID (1.4577ms)
+✔ stage plans reject missing, self-referential and cyclic dependencies (0.5766ms)
+✔ normalization rejects impossible approval and completion states (0.577ms)
+✔ casAdvanceStage advances doing to plan_review/result_review/blocked (0.5126ms)
+✔ casAdvanceStage rejects stale expected status (concurrent write) (0.2943ms)
+✔ casAdvanceStage rejects unknown stage and illegal transitions (0.2048ms)
+✔ stageApprovalGateFor maps status to gate and null otherwise (0.1529ms)
+✔ pendingStageApprovals lists waiting gates only (0.1799ms)
+✔ stagePlanProgress counts done/blocked/inFlight/pending (0.16ms)
+✔ retryStageWorkItems requeues only failed/partial items (0.2231ms)
+✔ stageWorkItemCounts aggregates per-status counts (0.1327ms)
+✔ stagePlanSummary includes approval hint and progress (0.2024ms)
+✔ normalizeStagePlan rebuilds valid plans and drops invalid ones (0.6464ms)
+✔ connected Codex explains that the home composer still uses providers (1.1651ms)
+✔ disconnected Codex keeps the provider setup guidance (0.372ms)
+✔ a provider model does not show setup guidance (0.2466ms)
+✔ cost receipts validate complete bounded provenance and nonnegative finite amounts (1.6675ms)
+✔ applying provider quotes preserves task identity and never marks an estimate as actual (0.2227ms)
+✔ cost application rejects cross-task and cross-idempotency receipts (0.1332ms)
+✔ duplicate receipts are idempotent and conflicting receipts cannot overwrite accepted costs (0.1648ms)
+✔ fixture receipts and non-USD records never become dollar billing claims (0.1522ms)
+✔ snapshot readback preserves receipt identity and derives the bound provider USD amount (1.645ms)
+✔ snapshot readback keeps missing costs unknown and strips invalid or misbound receipts (0.5945ms)
+✔ snapshot receipt metadata prevents fixture/non-USD scalar spoofing (0.1994ms)
+✔ snapshot receipts require a durable source task idempotency key (0.1826ms)
+✔ interrupted conversation tasks do not mark an unrelated canvas source as failed (2.3689ms)
+✔ marks each explicit source and leaves unrelated image nodes untouched (0.3731ms)
+✔ marks an explicit source even when the source already has a result (0.1911ms)
+✔ does not fall back when an explicit source was deleted (0.1539ms)
+✔ uses the historical root or first unmaterialized image for old tasks (0.2711ms)
+✔ queued tasks with an unknown submission boundary stay fenced after restart (0.1876ms)
+✔ unknown or submitted tasks cannot enter the ordinary retry path (0.0889ms)
+✔ retryable output selection excludes unknown slots from mixed batches (0.1912ms)
+✔ restart reconciles an accepted retry child into its parent (0.5837ms)
+✔ retry recovery materializes a missing parent output slot (0.4229ms)
+✔ known legacy retry failure remains retryable instead of becoming unknown (0.296ms)
+✔ legacy terminal failure resolves an unknown parent when every slot is covered (0.1958ms)
+✔ retry recovery preserves legacy completion evidence without an output vector (0.2051ms)
+✔ restart merges a successful legacy retry into the parent without creating an output vector (0.175ms)
+✔ retry selection fences persisted accepted descendants before parent merge (0.3769ms)
+✔ retry selection fences a legacy terminal success before parent merge (0.1225ms)
+✔ retry selection maps accepted nested descendants to root slots (0.1368ms)
+✔ one recovery pass merges a nested terminal descendant into the root (0.2286ms)
+✔ retry selection fences legacy uncertain children without slot metadata (0.151ms)
+✔ retry child uncertainty propagates to the parent and locks ordinary retry (0.2181ms)
+✔ delivery rejection fences only the rejected batch slot (0.1073ms)
+✔ archive failure fences only the unarchived provider slot (0.0919ms)
+✔ terminal retry failure closes a stale waiting parent slot (0.1242ms)
+✔ aborting after a provider request starts is always treated as unknown (0.0758ms)
+✔ unifiedTaskStatuses covers the full 9-state contract (1.8397ms)
+✔ unified task helpers keep the existing provider acceptance boundary (0.114ms)
+✔ retryFailedOutputIndices excludes uncertain outputs and submissions (0.1204ms)
+✔ estimateTaskCostUsd bounds inputs and returns finite estimates (0.0929ms)
+✔ formatCostUsd labels estimates as estimates (0.0886ms)
+✔ taskStateRank orders states for UI (0.0578ms)
+✔ text stream preserves split UTF-8 and emits cumulative text only from valid deltas (19.0907ms)
+✔ text stream rejects truncated without leaking response body (0.5635ms)
+✔ text stream rejects malformed without leaking response body (0.2306ms)
+✔ text stream rejects empty without leaking response body (0.2187ms)
+✔ text stream rejects error without leaking response body (0.2302ms)
+✔ text stream rejects limit without leaking response body (4.3894ms)
+✔ text stream rejects length finish without leaking response body (0.3797ms)
+✔ text stream abort cancels a stalled read (0.2544ms)
+✔ maps the Figma state matrix to the eleven canonical UI states (0.9278ms)
+✔ does not allow submit when model or service is unconfigured (0.228ms)
+✔ running and queued tasks keep view/cancel but reject duplicate submit (0.1147ms)
+✔ failure and cancellation preserve recovery actions (0.5929ms)
+✔ the application imports the Figma governance token source before compatibility tokens (5.9606ms)
+✔ canonical typography and control scales match the Figma governance page (0.8714ms)
+✔ governance primitives define one button and icon contract (0.7672ms)
+✔ UiIcon normalizes glyphs to the three Figma size tiers (0.8292ms)
+✔ unsupported production ports are rejected before browser startup (1467.7445ms)
+✔ default and explicit production ports resolve to the exact supported origin (656.4744ms)
+✔ version consistency accepts synchronized platform and nested package metadata (206.3589ms)
+✔ version consistency catches nested lock drift and active source literals (174.4927ms)
+✔ version consistency reports changelog drift without blocking (155.8384ms)
+✔ version consistency accepts a changelog that matches the platform version (56.8477ms)
+✔ 上传 manifest 自动创建目录层级并落盘 (67.0349ms)
+✔ 下载不存在的 manifest 返回 null 而非报错 (14.3884ms)
+✔ 上传后能按原内容下载 (30.9427ms)
+✔ 连接测试会发送 PROPFIND 到根目录 (12.6955ms)
+✔ 认证信息以 Basic 头透传 (15.7533ms)
+✔ 缺少服务器地址时报错 (0.5332ms)
+✔ browser reports native transparency unavailable instead of faking opacity (1.975ms)
+✔ appearance only applies a verified native state and propagates refusal (0.3847ms)
+✔ a late initial read cannot undo the successful maximize button state (59.1669ms)
+✔ resize reads apply the newest state when native responses arrive out of order (11.7457ms)
+✔ starting a window action invalidates an older failing state read immediately (7.2668ms)
+✔ a rejected older resize read does not replace a newer valid state with an error (6.5767ms)
+✔ unmount during a pending toggle prevents further queries and state writes (5.8857ms)
+✔ asynchronous listener cleanup failure is handled on unmount (9.0749ms)
+✔ asynchronous listener cleanup failure is handled after late registration (7.6438ms)
+✔ parses a ComfyUI API prompt and counts nodes (2.2336ms)
+✔ converts a ComfyUI UI export without executing node data (0.6395ms)
+✔ rejects invalid or empty workflow payloads (0.3568ms)
+✔ starter and imported records retain a bounded local workflow (2.6561ms)
+✔ reclamation output defaults to the dated container output directory (1.4581ms)
+✔ worktree removal requires every task DONE and a main-reachable commit (0.2484ms)
+✔ candidate validation rejects escape paths, tracked content, symlinks, and evidence (4.1222ms)
+✔ recovery inventory is deterministic and hashes source files (7.1659ms)
+✔ only candidates present in an immutable plan may be approved (0.2441ms)
+✔ apply results are written as unique audit records (6.6958ms)
+✔ immutable plan captures source hashes and never overwrites the same run (15.9368ms)
+✔ worktree creation enforces the active and generated budgets while reusing a branch (0.6113ms)
+✔ worktree storage accounting includes temporary agent output (1.6822ms)
+ℹ tests 1105
+ℹ suites 0
+ℹ pass 1091
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 14
+ℹ todo 0
+ℹ duration_ms 54661.9148

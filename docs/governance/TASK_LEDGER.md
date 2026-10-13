@@ -6,7 +6,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 | ID | Title | Status | Display | Priority | Dependencies | Owner | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TASK-CHERRY-RED-001 | Cherry 红框能力选择性融合与三桌面平台补齐 | PARTIAL | 进行中 | P1 | none | root | 运行三平台免费标准CI与最终Windowsfixture，复核提交并仅整合自有改动；不预填外部/安装/签名验收。 |
+| TASK-CHERRY-RED-001 | Cherry 红框能力选择性融合与三桌面平台补齐 | PARTIAL | 进行中 | P1 | none | root | 对拍并发UI/角色/模型设置后整合候选；既有5项UI和跨仓CI门禁保留，真实服务/三系统GUI/安装/签名另验。 |
 | TASK-FIX-PUSH-GUARD-SPACES-001 | 修复 Windows Git pre-push 空格及长路径启动 | REVIEW | 进行中 | P1 | none | root | 补 merged-SHA 独立 review receipt、原始 Hosted artifact manifest 及当前 SHA 的 delivery 结果；本任务验收补齐前保持 REVIEW，签名/安装/用户验收仍属独立发布边界。 |
 | TASK-WINDOWS-ENTRY-DIAG-002 | 补齐Windows入口子进程失败诊断 | DONE | 已完成 | P2 | TASK-LAUNCH-001 | root | 保留当前证据，合并后按原验收范围回读主线 |
 | TASK-WINDOWS-ENTRY-RECOVERY-003 | 继续定位Hosted Windows入口未正常退出的原始原因 | TODO | 未完成 | P1 | TASK-LAUNCH-001 | root | 将 fa78ed12 候选同步到当前 origin/main 后重跑 Hosted Windows，并读取 windows-entry.jsonl；保留 PR43 原失败和本机未复现原件，未取得新分类前保持 TODO。 |
@@ -145,9 +145,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-CHERRY-RED-001`
 - Worktree: `D:/kk-studio/.worktrees/TASK-CHERRY-RED-001`
 - Modules: src/components, src/domain, src/features/creation, src/features/agent, src/features/models, src/integrations, src-tauri, tests, docs/changes/2026-10-13-cherry-red-scope
-- Verification: NOT_VERIFIED — 本地基线及实现完整unit1103/1089PASS14skip、10浏览器PASS、Windows136Rust及实际TaskHost11步PASS；独立dirty预检136PASS。候选2.1.16仍须最终检查、Windows新fixture及Mac/Linux Hosted/设备验收。
+- Verification: NOT_VERIFIED — 源码81cfd11f：unit1105/1091PASS14skip、Agent172PASS2skip、Windows138Rust、21浏览器及3header、真实Native13、正式2.1.16随包构建、静态检查PASS；两段独立源码审查PASS。exact源三平台native Hosted矩阵全SUCCESS。完整浏览器479PASS6FAIL，1项旧两按钮断言更新后6定向PASS，其余5基线项未通过；Hosted quality跨仓snapshotFAIL。
 - Evidence: [docs/changes/2026-10-13-cherry-red-scope/verification.md](../../docs/changes/2026-10-13-cherry-red-scope/verification.md), [docs/changes/2026-10-13-cherry-red-scope/review.md](../../docs/changes/2026-10-13-cherry-red-scope/review.md)
-- Next action: 运行三平台免费标准CI与最终Windowsfixture，复核提交并仅整合自有改动；不预填外部/安装/签名验收。
+- Next action: 对拍并发UI/角色/模型设置后整合候选；既有5项UI和跨仓CI门禁保留，真实服务/三系统GUI/安装/签名另验。
 - Last verified: 2026-10-13
 - Updated: 2026-10-13
 

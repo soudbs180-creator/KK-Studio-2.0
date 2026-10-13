@@ -4,7 +4,7 @@
 
 `TASK-CHERRY-RED-001` 在隔离分支实施少量原创助手/自定义、三文本协议/本机免密、多模型对话、安全Markdown/本地分享、跨平台vault/runtime/guardian及原生透明读回。复用KK已有TaskHost、项目/账号身份和MCP，不引入Cherry许可矛盾包、不调用付费服务。候选Desktop/Web2.1.16，保留primary2.1.15并发改动。
 
-当前完整unit1103/1089PASS/14skip、10定向浏览器、Windows136Rust及实际TaskHost11步PASS；新fixture、最新构建/最终静态检查与Mac/Linux标准Hosted待完成。独立dirty预检136单测通过并关闭已复现账号/恢复/取消等问题；不是最终提交或三平台安装验收。详见[验证](changes/2026-10-13-cherry-red-scope/verification.md)、[取舍](changes/2026-10-13-cherry-red-scope/decisions.md)。任务仍PARTIAL。
+候选源码81cfd11f已通过完整unit1105/1091PASS/14skip、21定向浏览器与3消息头检查、Windows138Rust、真实Native13和正式2.1.16随包构建；两段不可变源码独立审查PASS（增量51测试由审查者实跑）。最终Hosted三平台native矩阵均SUCCESS，包含Mac/Linux真实guardian与随包构建。[验证](changes/2026-10-13-cherry-red-scope/verification.md)保留全量浏览器479PASS/6FAIL，其中1个旧两按钮断言更新后定向6PASS，其余5项实跑baseline亦失败；Hosted quality因跨仓快照缺失失败。主目录并发UI/角色/模型配置未覆盖，尚未整合、发布或三平台安装验收；任务仍PARTIAL。[取舍](changes/2026-10-13-cherry-red-scope/decisions.md)。
 
 ## 2026-10-13 审查 P1/P2 修复与运行时边界拆分
 

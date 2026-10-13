@@ -18,7 +18,7 @@
 - task ledger：125 条，75 `DONE`、32 `PARTIAL`、11 `TODO`、4 `BLOCKED`、3 `REVIEW`；50 条未关闭
 - 当前分支是治理候选分支，不是已发布的 `origin/main` 树；任何 Hosted、Provider、Tauri、签名、安装和用户验收都必须重新取得当前 head 证据
 
-Cherry当前任务：`TASK-CHERRY-RED-001`，`D:/kk-studio/.worktrees/TASK-CHERRY-RED-001`，`codex/TASK-CHERRY-RED-001`，候选Desktop/Web2.1.16；primary并发dirty保留。恢复与实际平台证据见[verification](../changes/2026-10-13-cherry-red-scope/verification.md)。
+Cherry当前任务：`TASK-CHERRY-RED-001`，`D:/kk-studio/.worktrees/TASK-CHERRY-RED-001`，`codex/TASK-CHERRY-RED-001`，候选Desktop/Web2.1.16，productSourceHead `81cfd11fe79279df2379e402ddefa00a908099a8`已push；三平台native Hosted全SUCCESS、Windows Native13 PASS，两段独立源码审查PASS。后续仅测试/证据文档提交，primary2.1.15并发UI/角色/模型设置dirty保留；未整合或发布。恢复、浏览器/Hosted quality尚未通过项与实际平台边界见[verification](../changes/2026-10-13-cherry-red-scope/verification.md)，可移植的[研究快照](../changes/2026-10-13-cherry-red-scope/research.md)已收入本仓，容器原报告未移动。
 
 ## 权威顺序
 

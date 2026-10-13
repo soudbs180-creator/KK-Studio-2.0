@@ -1,0 +1,51 @@
+{
+  "sourceHead": "81cfd11fe79279df2379e402ddefa00a908099a8",
+  "normalization": "LF line endings; trailing horizontal whitespace and surplus trailing blank lines only. Original local outputs retained; outcomes unchanged.",
+  "entries": [
+    {
+      "path": "agent-174.log",
+      "originalSha256": "776eb57094f54aae5661baab1dc22878bba5e1e24fbabbf33a6bbd848100f9db",
+      "storedSha256": "a8af0ca5f77aad7abc120edc32d9c795225b1be4c126716c0c800c09635e0321"
+    },
+    {
+      "path": "browser-baseline-13.log",
+      "originalSha256": "dd1d00ae3ac4deb1c2b6878df097ed2e9891aaefa802be0e1a81c50a05a465ef",
+      "storedSha256": "f6602efa5ca476f835de439aeb364fbeb601a739103492b8bc2c57dead40a0d8"
+    },
+    {
+      "path": "browser-final-81cfd11f.log",
+      "originalSha256": "3070403f857f8e8e63eaea480d632eaa5f2220870173ebb27d1f6c28dac86eab",
+      "storedSha256": "9693588c9d2cc25f7b4e92db07c87b662050eef3d40d7d96719925978024f396"
+    },
+    {
+      "path": "browser-header-3.log",
+      "originalSha256": "bb05ae396209f2cdefb3bf93d771561f915102ec5944c33a5644642944b9366c",
+      "storedSha256": "28dc21620806b2a4fefc03d9f8cfc7964dfc7108b552e6a813b4f5cb89b08cd2"
+    },
+    {
+      "path": "browser-panel-6.log",
+      "originalSha256": "43017c5fbbef073b5c8de2a865688ce78c41b6b8d9a61f14478642009716a308",
+      "storedSha256": "be1e4e602ec82cd6e721244060ab9587412206d21ba51b296e47a360109a39ef"
+    },
+    {
+      "path": "browser-targeted-21.log",
+      "originalSha256": "2fb7f569600b24bfa862156a1c1074182b9d8f77e404cd3de9dfa11e234b84c3",
+      "storedSha256": "47ffec679bef9a54b116af6243aacae68a639049d5a4fd3af19a2690766eff7b"
+    },
+    {
+      "path": "native-build-216.log",
+      "originalSha256": "647e7686fc74a1586034e9d2b73ee83ad771430d91b9a890afee927834b0b3e0",
+      "storedSha256": "ad12f33eda1fb1304f72ddcd7c0b7f170381b31c522e9c19f024f555c083c031"
+    },
+    {
+      "path": "rust-windows-81cfd11f.log",
+      "originalSha256": "27bcbbdc81c4293c7e2f757999c42f24632238353415b08b873117009337af96",
+      "storedSha256": "96a8ffc8847dd7cc1d81713dfa9508f62ecc16a1043826085d06ba2d897ee8a6"
+    },
+    {
+      "path": "unit-1105.log",
+      "originalSha256": "d8671aa3f233293f790196cd38d0325cc17254a2d06a5e3225c11e8c34cec95a",
+      "storedSha256": "98b92e1b5e1c012865fd652211167c03778c23c11dbbda7221b4bd5f303dd9df"
+    }
+  ]
+}
