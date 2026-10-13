@@ -118,3 +118,7 @@ code-health report: 607 files in scope
 | `test:ui`（Playwright msedge）                   | NOT RUN | 基线环境受限，非本任务引入                                         |
 | CODING-STANDARDS.md 门禁表补齐                   | 后续    | 该文件在未合并的 `codex/ui-redesign-20261011` 上，避免制造第二来源 |
 | `windows-release.yml` rust-toolchain@stable 固定 | 后续    | 同上（文件不在 base）                                              |
+
+### 4.1 主线承接复验（2026-10-13）
+
+原始 verification 的 base/head 与失败边界按历史结果保留。当前候选以 `origin/main@bcf55851d296c753d9610e86f1e32bf8db333a41` 为 base，补齐当前 `.github/workflows/*.yml` 的 action SHA 固定（包括 `dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f`），并验证 `--head` 检查读取指定 git revision、无效 revision fail-closed。新的 lint、测试、delivery 与独立 exact-SHA review 结果不覆盖本节之前的历史命令回执。

@@ -2495,7 +2495,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## TASK-ENG-001 — 引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定
 
 - Goal: 把 hermes-agent（MIT）的 ratchet 与 footgun 扫描语义移植到本仓库 TypeScript 栈：新代码必须达标、存量只许变小、初始 advisory 不阻断 CI；同时把 workflow action 从可变 tag 固定到 commit SHA。
-- Scope: scripts/check-code-health.mjs、scripts/check-windows-footguns.mjs、scripts/governance/{code-health.config,code-health-measure,code-health-compare,diff-scope,footgun-rules}.mjs、package.json 脚本注册与 lint 接线、.github/workflows/{git-guards,quality}.yml SHA 固定、docs/engineering/DEVELOPMENT.md 门禁章节、docs/changes/2026-10-12-TASK-ENG-001-code-health 五件套；不含产品功能变更与存量超标代码重写。
+- Scope: scripts/check-code-health.mjs、scripts/check-windows-footguns.mjs、scripts/governance/{code-health.config,code-health-measure,code-health-compare,diff-scope,footgun-rules}.mjs、package.json 脚本注册与 lint 接线、.github/workflows/{git-guards,quality,auto-merge,main-guard,windows-release}.yml SHA 固定、docs/engineering/DEVELOPMENT.md 门禁章节、docs/changes/2026-10-12-TASK-ENG-001-code-health 五件套；不含产品功能变更与存量超标代码重写。
 - Display status: 进行中
 - Priority: P1 — 工程治理增量门禁；不改变产品运行时行为。
 - Requirement refs: ledger:TASK-ENG-001

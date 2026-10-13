@@ -73,3 +73,7 @@
 ## 计划变更记录
 
 - 2026-10-12：scope 增加 `scripts/**/*.ts`（自测发现 scripts 下 .ts 不在范围）；footgun 规则表移入 scripts/governance/ 并排除出扫描范围（自匹配修复）；glob `**/` 语义修正为零或多目录段（修复 src/App.tsx 漏测）。均未改变产品意图与验收标准。
+
+## 主线承接补充（2026-10-13）
+
+基于最新 `origin/main` 重建后，新增的 `auto-merge.yml`、`main-guard.yml`、`windows-release.yml` 纳入同一 AC-4 复核并固定所有 action SHA；同时修复 `--head` 检查读取工作区而非指定修订的问题，并为无效 revision 增加 fail-closed。原始 base 与未合并分支的历史判断不改写。

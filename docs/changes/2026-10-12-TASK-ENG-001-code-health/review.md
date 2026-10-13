@@ -64,6 +64,10 @@ ESLint 三处：`compare.mjs` 未使用的 `oldQual`、重抛错误未附 `cause
 | C4  | 度量只覆盖 TS/TSX，不含 Rust                            | 项目当前无Rust 源码；若后续引入需另配                                            |
 | C5  | 存量 69 个 CC 超标函数                                  | 棘轮已冻结其上限；是否主动拆分属产品决策，非本任务范围                           |
 
+## 主线承接复核补充（2026-10-13）
+
+原 review 的 C1 结论绑定原始 base `1f6cbd37`，因此保留不变。当前候选基于 `origin/main@bcf55851d296c753d9610e86f1e32bf8db333a41`，已将全部 workflow action（含 `windows-release.yml` 的 `dtolnay/rust-toolchain`）固定到 commit SHA，并把健康/footgun 的 `--head` 读取绑定到指定 revision；C1 与 exact-SHA 结果需以当前候选的独立复审为准。
+
 ## 4. 对照hermes-agent 的偏离
 
 | 偏离                        | 原因                    | 风险                             |

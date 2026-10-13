@@ -4,7 +4,7 @@
 
 - 基于 `origin/main@bcf55851d296c753d9610e86f1e32bf8db333a41` 重建承接提交；候选精确 HEAD 以本 checkout 的 `git rev-parse HEAD` 与对应 delivery 日志为准；PR #56 原 HEAD、主线历史和 `TASK-ENG-001` 独立交付包均保留。
 - 已解决 `package.json`、`docs/engineering/DEVELOPMENT.md`、`docs/governance/task-ledger.json`、`docs/governance/TASK_LEDGER.md` 四处冲突；主线版本/治理命令保留，代码健康与 Windows footgun 检查追加，账本从主线 124 条记录加上当前 schema 的 `TASK-ENG-001`。
-- 修复 `**/` glob 的零层/多层目录匹配并补回归测试；本地 lint、typecheck、1009 项 Node 测试（995 pass、14 skipped、0 fail）、版本、治理、文档和 footgun 检查均已通过。基线缺少治理配置时工具按 fail-closed 回退 blocking，未声称 advisory。
+- 修复 `**/` glob 的零层/多层目录匹配并补回归测试；补齐所有当前 workflow action 的 commit SHA 固定（含 `dtolnay/rust-toolchain`）；本地 lint、typecheck、1009 项 Node 测试（995 pass、14 skipped、0 fail）、版本、治理、文档和 footgun 检查均已通过。基线缺少治理配置时工具按 fail-closed 回退 blocking，未声称 advisory。
 - Hosted verify/delivery、当前 exact-SHA 独立 review 和用户合并授权仍待完成；本记录不表示 PR #56 已合并 main 或已发布。
 
 ## 2026-10-12 PR #55 历史快照集成修复（REVIEW）

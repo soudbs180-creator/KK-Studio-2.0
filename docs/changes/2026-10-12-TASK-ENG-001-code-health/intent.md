@@ -58,3 +58,9 @@
 - 必须由用户决定的产品语义/范围事项（无则写无）：无。advisory→blocking 的翻转时机建议由维护者在存量 burn-down 后决定，本任务不替用户决定。
 - 外部条件、费用或不可逆动作及已有授权：无外部依赖、无费用、无可逆动作；仅本地文件与分支推送（用户授权范围内）。
 - 不在本次范围的问题与账本 ID：hermes 功能层思路（FTS5 搜索、cron、subagent RPC、Honcho 用户建模）——记入本任务 ledger nextAction，另行评估；CODING-STANDARDS.md 门禁表合入——后续任务；windows-release.yml 的 rust-toolchain 固定——后续任务。
+
+## 主线承接补充（2026-10-13）
+
+以上范围与“不在本次范围”记录以原始 base `1f6cbd37` 为历史意图证据保留。当前 PR #56 按最新 `origin/main@bcf55851d296c753d9610e86f1e32bf8db333a41` 重建时，主线已包含 `auto-merge.yml`、`main-guard.yml`、`windows-release.yml`；为使 AC-4 对当前候选仍然成立，本次承接将全部 `.github/workflows/*.yml` action 固定到 commit SHA，并将 `dtolnay/rust-toolchain` 的 `stable` 固定为 `e2a55d2ffb04f378e9626c28d38b36d230d1e12f`。这不是产品功能扩展，而是对同一供应链验收条件的主线适配。
+
+本次承接还让 `--head` 的健康/footgun 检查真正读取指定修订，并对不存在的 revision 失败关闭；原始验证记录不被改写，新的 exact-SHA 结果以当前候选 delivery 与独立 review 回执为准。

@@ -11,13 +11,13 @@
  *
  * --all 扫全库（清单用）；默认只扫变化文件。退出码：0 通过或 advisory；1 blocking 发现；2 工具失败。
  */
-import { readFileSync } from "node:fs";
 import {
   changedFiles,
   commitOrNone,
   defaultBase,
   git,
   globToRegExp,
+  readFileAt,
   readSwitch,
 } from "./governance/diff-scope.mjs";
 import { RULES } from "./governance/footgun-rules.mjs";
@@ -104,12 +104,16 @@ function fail(message) {
 
 function collectPaths() {
   if (has("all")) {
-    return git(root, ["ls-files", "-z"], { check: false })
-      .split("\0")
-      .filter(Boolean)
-      .filter(inScope);
+    return {
+      head: null,
+      paths: git(root, ["ls-files", "-z"], { check: false })
+        .split("\0")
+        .filter(Boolean)
+        .filter(inScope),
+    };
   }
   const baseArg = flag("base");
+  if (args.includes("--base") && !baseArg) fail("base revision required");
   const base = baseArg ? commitOrNone(root, baseArg) : defaultBase(root);
   if (!base) {
     if (baseArg) fail(`base revision not found: ${baseArg}`);
@@ -118,11 +122,17 @@ function collectPaths() {
     );
     return null;
   }
-  const head = flag("head") ? commitOrNone(root, flag("head")) : null;
+  const headArg = flag("head");
+  if (args.includes("--head") && !headArg) fail("head revision required");
+  const head = headArg ? commitOrNone(root, headArg) : null;
+  if (headArg && !head) fail(`head revision not found: ${headArg}`);
   const changes = changedFiles(root, base, head);
-  return [...new Set(changes.map((c) => c.new).filter(Boolean))].filter(
-    inScope,
-  );
+  return {
+    head,
+    paths: [...new Set(changes.map((c) => c.new).filter(Boolean))].filter(
+      inScope,
+    ),
+  };
 }
 
 function main() {
@@ -143,8 +153,9 @@ function main() {
     process.stdout.write("footguns: off\n");
     return 0;
   }
-  const paths = collectPaths();
-  if (paths === null) return 0;
+  const collected = collectPaths();
+  if (collected === null) return 0;
+  const { head, paths } = collected;
   if (paths.length === 0) {
     process.stdout.write("footguns: no scanned files changed\n");
     return 0;
@@ -153,7 +164,8 @@ function main() {
   for (const path of paths) {
     let text;
     try {
-      text = readFileSync(path, "utf8");
+      text = readFileAt(root, head, path);
+      if (text === null) continue;
     } catch {
       continue;
     }

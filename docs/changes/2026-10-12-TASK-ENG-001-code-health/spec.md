@@ -66,3 +66,9 @@
 - 与 intent 的差异及授权依据：无差异。
 - 明确未承诺的能力：不做存量修复；不做跨文件迁移抵扣；不提供 JSON 输出开关；不自动 bump action SHA。
 
+## 主线承接补充（2026-10-13）
+
+原始规范基于 `1f6cbd37` 的文件集合，相关范围说明保留为历史证据。当前候选基于 `origin/main@bcf55851d296c753d9610e86f1e32bf8db333a41`，因此 AC-4 在承接时按当前主线的全部 `.github/workflows/*.yml` 复核：checkout、setup-node、upload-artifact 和 rust-toolchain 均使用 commit SHA + 版本注释。原本因文件不在 base 而列出的 `windows-release.yml` 例外已在当前候选中消除。
+
+为保持 exact-SHA 审查语义，两个检查器的 `--head` 现在从指定 git revision 读取文件；缺失或无效的 `--base/--head` 会以工具错误退出，不再静默回退到工作区。
+

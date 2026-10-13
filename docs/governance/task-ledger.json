@@ -5917,7 +5917,7 @@
     "id": "TASK-ENG-001",
     "title": "引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定",
     "goal": "把 hermes-agent（MIT）的 ratchet 与 footgun 扫描语义移植到本仓库 TypeScript 栈：新代码必须达标、存量只许变小、初始 advisory 不阻断 CI；同时把 workflow action 从可变 tag 固定到 commit SHA。",
-    "scope": "scripts/check-code-health.mjs、scripts/check-windows-footguns.mjs、scripts/governance/{code-health.config,code-health-measure,code-health-compare,diff-scope,footgun-rules}.mjs、package.json 脚本注册与 lint 接线、.github/workflows/{git-guards,quality}.yml SHA 固定、docs/engineering/DEVELOPMENT.md 门禁章节、docs/changes/2026-10-12-TASK-ENG-001-code-health 五件套；不含产品功能变更与存量超标代码重写。",
+    "scope": "scripts/check-code-health.mjs、scripts/check-windows-footguns.mjs、scripts/governance/{code-health.config,code-health-measure,code-health-compare,diff-scope,footgun-rules}.mjs、package.json 脚本注册与 lint 接线、.github/workflows/{git-guards,quality,auto-merge,main-guard,windows-release}.yml SHA 固定、docs/engineering/DEVELOPMENT.md 门禁章节、docs/changes/2026-10-12-TASK-ENG-001-code-health 五件套；不含产品功能变更与存量超标代码重写。",
     "acceptance": [
       "超标新代码被棘轮捕获并给出文件/行/指标/上限来源；health: allow 行内豁免生效（CC、FILE_LINES、AS_ANY、EMPTY_CATCH 四类自测覆盖）",
       "advisory 模式下 npm run lint 退出码不变；--report 输出全库存量清单",
@@ -5953,7 +5953,7 @@
     "verification": "原始 base 1f6cbd37 的验证记录保留为历史证据；当前承接 origin/main 后需重新运行本地门禁、delivery、独立 exact-SHA review 和 Hosted verify。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-12",
-    "notes": "PR #56 https://github.com/soudbs180-creator/KK-Studio-2.0/pull/56（未合并）。后续：① codex/ui-redesign-20261011 合并后把两个新门禁补进 CODING-STANDARDS.md 门禁映射表；② windows-release.yml 的 dtolnay/rust-toolchain@stable 需 SHA 固定（不在本 base）；③ advisory→blocking 翻转时机由维护者在存量 burn-down 后决定，翻转前需用真实历史 diff 校准相似度阈值 0.6；④ hermes 功能层思路（FTS5 会话搜索、cron、subagent RPC、Honcho 用户建模）另行评估，不在本任务实现。 当前 PR #56 正在基于 origin/main bcf55851d296c753d9610e86f1e32bf8db333a41 重新整理，未合并 main。",
+    "notes": "PR #56 https://github.com/soudbs180-creator/KK-Studio-2.0/pull/56（未合并）。当前主线承接已将 origin/main 上的 auto-merge.yml、main-guard.yml、windows-release.yml 纳入审查范围，并把全部 workflow action（含 dtolnay/rust-toolchain）固定到 commit SHA；原始 base 不含这些文件的历史说明保留在 intent/verification 中。后续：① codex/ui-redesign-20261011 合并后把两个新门禁补进 CODING-STANDARDS.md 门禁映射表；② advisory→blocking 翻转时机由维护者在存量 burn-down 后决定，翻转前需用真实历史 diff 校准相似度阈值 0.6；③ hermes 功能层思路（FTS5 会话搜索、cron、subagent RPC、Honcho 用户建模）另行评估，不在本任务实现。 当前 PR #56 正在基于 origin/main bcf55851d296c753d9610e86f1e32bf8db333a41 重新整理，未合并 main。",
     "displayStatus": "进行中",
     "nextAction": "基于最新 origin/main 完成冲突承接、独立 exact-SHA review 和 Hosted verify；未完成前保持 REVIEW。",
     "lastVerified": "2026-10-13",
