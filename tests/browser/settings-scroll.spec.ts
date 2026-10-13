@@ -49,7 +49,11 @@ test("插件、技能、伙伴标签可用方向键切换并显示对应内容",
   await skills.press("ArrowRight");
   await expect(partners).toBeFocused();
   await expect(partners).toHaveAttribute("aria-selected", "true");
-  await expect(page.getByRole("tabpanel")).toContainText("Agent");
+  await expect(
+    page
+      .getByRole("dialog", { name: "设置", exact: true })
+      .getByRole("tabpanel", { name: /伙伴/ }),
+  ).toContainText("Agent");
 });
 
 test("手机扩展标签保持单行和触屏命中区", async ({ page }) => {

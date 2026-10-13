@@ -2525,7 +2525,7 @@
 .canvas-hud .task-panel-tabs {
   position: static;
   width: 100%;
-  height: 34px;
+  height: var(--kk-control-h-md);
   margin: 8px 0 12px;
   gap: 6px;
   align-items: stretch;
@@ -2534,16 +2534,16 @@
 .canvas-hud .task-tab {
   flex: 1 1 0;
   width: auto !important;
-  height: 34px;
-  min-height: 34px;
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   padding: 0 10px;
   border-radius: var(--kk-radius-full);
   font-size: var(--ui-font-caption);
-  line-height: 34px;
+  line-height: var(--kk-control-h-md);
 }
 .task-tab.active::before,
 .canvas-hud .task-tab.active::before {
-  height: 34px;
+  height: var(--kk-control-h-md);
   border-radius: inherit;
 }
 .task-grid,

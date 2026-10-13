@@ -71,3 +71,13 @@ Native input SHA256：`9a4cd9f624d1f698799e7b2e9892ce0baa49c3b0da68c3305807deb93
 为仓库diff规范，上述console文本只整理CRLF、行尾水平空白和多余末尾空行；原本机输出仍保留，原始/存储SHA256在[规范化清单](evidence/log-normalization.json)，没有改变测试内容、结果或失败记录。JSON原始收据和报告未作结果改写。
 
 独立补审核对时发现，最初Windows138 Rust输出直接生成在evidence目录，规范化前没有另外保留原件。随后对完全相同的Rust源码重新执行完整138项并通过，真实原始输出保存到 `.tmp/cherry-red/rust-proof-raw.log`，更新该项原始/存储hash及执行HEAD；旧规范化记录仍留在74eeae94提交中，没有用重建或推测内容冒充原始输出。
+
+## 已批准继续执行：浏览器与独立克隆收口
+
+本节是20cb之后的新执行证据，不改写以上历史失败。5项既有浏览器失败逐项实跑RED后修复：设置tabpanel限定设置dialog；标准按钮恢复规范8px圆角；视频选中范围包括编辑器而不改变卡片/连线；任务标签从实际34px修正为32px token并检查真实命中；模型选择走现有图片场景菜单。视频生成按钮增加elementFromPoint命中断言，未用force点击掩盖遮挡。canvasGraph/useCanvasControls/ui-governance仅复用当前primary对应相关片段，其余并发候选尚未整体验收。
+
+最终4文件浏览器29/29 PASS，0 skipped/flaky/unexpected，单worker且retries=0；相关canvasGraph单测最终9/9；完整单测1117项，1103 PASS、14 SKIP、0 FAIL。完整单测早于最后两处CSS token替换，最终构建、定向ESLint/Prettier、UI232/0与diff-check再次PASS。原始RED及GREEN日志/JSON保存在`.tmp/cherry-red/browser-closeout-*`、`video-hit-red.log`、`task-tabs-red.log`；尚不能据此声称完整浏览器或新Desktop通过。
+
+独立clone的snapshot根因、实际RED→GREEN和合法Actions事件修复见[CI专项](ci-portability.md)。完整单测1117项另实跑通过；Hosted仍须对新HEAD回读。没有绕过仓库治理检查，未请求的外部container明确显示NOT VERIFIED；显式错误container仍失败。
+
+primary的111个相关src/tests/UI文档候选以独立Git tree保存，源HEAD51fccfc7，候选c79cfaca36241ac38f4e1d2306e16029ae21abda；捕获前后全部文件hash稳定且primary index hash相同。该候选仅用于隔离三方融合，不是primary验收或已发布版本。原工作区/index未被覆盖。
