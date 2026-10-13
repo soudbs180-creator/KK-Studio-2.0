@@ -15,7 +15,7 @@ CanvasCollectionsPanels、FloatingCollectionPanel、SavedPane、CatalogPanel、C
 
 ## 测试与证据
 
-collectionTags / assets 单测；canvas-collection-panels、ui-unification 及迁移后的 frontend / ui-motion / redbox-ui / design-corrections / desktop-data-stability 浏览器规格；原生标签/项目包 fixture。实际结果见 [本轮验证](../changes/2026-10-14-ui-consolidation/verification.md)：当前完整browser532首试通过且0flaky；官方Desktop构建与实际窗口版本通过，新标签/上传原生链路继续验证，安装器尚未验收。
+collectionTags / assets 单测；canvas-collection-panels、ui-unification 及迁移后的 frontend / ui-motion / redbox-ui / design-corrections / desktop-data-stability 浏览器规格；原生标签/项目包 fixture。实际结果见 [本轮验证](../changes/2026-10-14-ui-consolidation/verification.md)：2.1.21产品提交7a463742完整browser545首试通过且0flaky；官方Desktop构建与实际Tauri9项检查通过，标签/收藏、独立面板、视频上传/重载及原件字节均核对。安装器尚未验收。
 
 ## 当前能力
 
@@ -23,4 +23,4 @@ collectionTags / assets 单测；canvas-collection-panels、ui-unification 及�
 
 ## 差距与后端化
 
-完整首试、窗口层级/回焦和旧收藏兼容已有Web证据；新 Tauri 标签/上传 UI 及项目包实际窗口证据继续补录，不能借用基础画布 FEAT-001 的历史 REAL 状态。搜索只覆盖当前项目与已加载归档页；全库索引、远端同步、Native Mobile和真实模型不在此能力声明范围。位置保存失败显示原因并允许继续本次拖动，不移动/复制原件。
+完整首试、窗口层级/回焦和旧收藏兼容已有Web及当前Tauri标签/上传证据；项目包真实导入/导出窗口、日常用户资料和Native Mobile仍有独立验收边界，不能借用基础画布 FEAT-001 的历史 REAL 状态。搜索只覆盖当前项目与已加载归档页；全库索引、远端同步、Native Mobile和真实模型不在此能力声明范围。位置保存失败显示原因并允许继续本次拖动，不移动/复制原件。

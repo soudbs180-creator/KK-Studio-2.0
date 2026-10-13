@@ -5330,14 +5330,14 @@
       "FEAT-028",
       "FEAT-039"
     ],
-    "notes": "2.1.17冻结与2.1.18中间UI候选保留；主目录最新2.1.20源f2b0466的凭据恢复、Agent展示、画布同步已逐项承接，当前统一Desktop/Web2.1.21组合验证中。107登记树、39一致dirty恢复快照，原index无变动；新CLI随包桥保留已有Node/npm环境，无自动登录。",
-    "openQuestions": "两项产品歧义均已确认；当前进行中候选和最终主线组合未验收。",
+    "notes": "已保存2.1.17冻结、2.1.18中间候选与最新2.1.20源f2b0466的恢复输入；当前Desktop/Web2.1.21产品7a463742完成本地UI验证。107树/39一致dirty快照，原index未变；CLI桥4270生产白名单保留用户Node/npm环境。",
+    "openQuestions": "产品歧义均已确认；未接协议、Native Mobile、真实CLI/Provider、日常用户资料、安装器/Hosted及用户视觉仍分别开放。",
     "lastVerified": "2026-10-14",
     "updated": "2026-10-14",
     "priorityRationale": "解决 UI 风格混杂、版本散落和功能入口冲突，同时保留资料与并行成果。",
-    "verification": "2.1.21当前Node1156项1142pass/14skip、Agent172pass/2skip、lint/type/format/build、UI236/0、production544零失败/零flaky/零skip、Rust131/131与fmt通过；开发新path依赖重载先FAIL，预优化同一依赖后5步骤PASS/父目录403。统计/搜索/旧插件标签形态均先RED再GREEN，原精确恢复断言保留；主入口gzip+9617B低于16384。已提交compound、实际Native和最终SHA审查待独立回执。历史失败、在途源和advisory保留。",
+    "verification": "7a463742 clean完整verify出口0：Node1142pass/14skip、Agent172pass/2skip、UI236/0、production545首试通过/0flaky/0skip、development5PASS/父目录403。Rust131/131与fmt同源，官方Agent构建和真实Tauri9项PASS、原件/视频坐标/重载/层级/随包桥绝对路径均核对，0e及7a独立source review CLEAR。主入口gzip+9625B<16384；健康50与Windows2项advisory保持，旧失败保留。产物及最终doc-head由工程外当前收据绑定。",
     "displayStatus": "进行中",
-    "nextAction": "完成2.1.21全套组合与实际Native验证、最终SHA独立复核、当前产物与增量恢复包；旧flaky与在途分支保留原状态，不把未接协议、Hosted或NativeMobile关闭。",
+    "nextAction": "从已验证2.1.21继续未接协议与原生Mobile等开放范围；单独验收真实CLI/Provider、日常资料、用户视觉、安装器和Hosted，保留在途分支与旧flaky原状态。",
     "verificationResult": "PARTIAL"
   },
   {

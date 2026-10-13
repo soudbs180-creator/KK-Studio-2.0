@@ -19,3 +19,7 @@
 上述为阶段边界。2.1.18当前组合的完整verify与532首试browser现已通过、flaky0，gzip预算实测通过；不能据此改写2.1.17历史flaky根因。最终Desktop/提交审查与发布范围按[验证记录](verification.md)和工程外当前回执继续核对。自审已覆盖标签/收藏的TS与Rust兼容、坏快照保护、CLI矛盾登录证据、手动缩放保持、固定屏幕面板层级与跨项目草稿隔离；未启用不支持的协议或真实费用推算。
 
 2.1.21承接最新日常2.1.20后，新独立上下文预检复核CLI/凭据/画布同步/Agent执行/保存状态/收藏兼容；41纯单测通过，发现SEARCH-001 P2，已先复现后修正项目类型筛选与标签适用范围。组合首轮插件精确原件失败已修正缺省tags字段，未删除或放宽恢复断言。此前USAGE-001/002与本轮SEARCH-001均需最终提交绑定复验；dirty预检不是正式review。历史源和Native证据只保留原范围，完整当前结果由工程外最终receipt保存。
+
+## 最终产品源码复审
+
+0e5087e6全组合独立review CLEAR（41纯单测）；真实Native随后发现工具栏100覆盖面板21/22，旧CLEAR原范围保留，未覆盖实际FAIL。共享层级修复提交7a463742的独立delta review CLEAR，token顺序100<101/102<200/300/400、top-layer与TagEditor边界和RED/GREEN普通命中检查通过。根完整verify545首试/0flaky与真实新EXE9项PASS补齐本地运行边界；原错误driver精度、旧真实Native FAIL、各轮失败与flaky原件保留。最终docs-only HEAD另行独立核对，不改写上述code SHA，也不声称Hosted、安装器、真实Provider或用户视觉已通过。

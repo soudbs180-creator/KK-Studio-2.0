@@ -1476,7 +1476,7 @@
     "area": "canvas",
     "status": "PARTIAL",
     "card": "docs/features/feat-039-canvas-collections.md",
-    "summary": "顶部喜欢/标签、旧收藏兼容、独立固定屏幕面板与分类搜索已有源码候选；完整浏览器和实际Desktop验收待完成。",
+    "summary": "顶部喜欢/标签、旧收藏兼容、固定屏幕面板和分类搜索已通过2.1.21完整545浏览器与真实Tauri9项验证；全库索引、项目包窗口、日常资料和Native Mobile保持独立边界。",
     "entryPoints": [
       "选中卡片的顶部工具栏",
       "画布底栏喜欢与标签菜单",

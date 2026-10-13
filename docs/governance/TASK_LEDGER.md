@@ -132,7 +132,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | REVIEW | 进行中 | P1 | TASK-GOV-003 | root | 单独修复并验证 5 个 UI 失败项；补齐开发态 receipt 后再评估是否可标记 DONE。 |
 | TASK-UI-CLASSIFY-20261013 | 模型接入与扩展分类修复并验证三客户端 | REVIEW | 进行中 | P1 | none | root | 另行处理三个既有 UI 失败并取得用户验收；保留自动分派/OAuth 未接入边界 |
 | TASK-AGENT-RECOVERY-20261013 | 桌面 Agent 自动恢复、会话归属与凭据保存 | PARTIAL | 进行中 | P1 | none | root | 完成聊天与凭据状态一致性修复，2.1.17完整门禁和官方日常APP复验，恢复初始连接偏好。 |
-| TASK-UI-CONSOLIDATE-20261014 | 冻结最新本机版本并统一 UI、模型预设与轻量化规则 | PARTIAL | 进行中 | P1 | none | root | 完成2.1.21全套组合与实际Native验证、最终SHA独立复核、当前产物与增量恢复包；旧flaky与在途分支保留原状态，不把未接协议、Hosted或NativeMobile关闭。 |
+| TASK-UI-CONSOLIDATE-20261014 | 冻结最新本机版本并统一 UI、模型预设与轻量化规则 | PARTIAL | 进行中 | P1 | none | root | 从已验证2.1.21继续未接协议与原生Mobile等开放范围；单独验收真实CLI/Provider、日常资料、用户视觉、安装器和Hosted，保留在途分支与旧flaky原状态。 |
 | TASK-GOV-005 | PR #55 历史快照合法集成与门禁修复 | REVIEW | 进行中 | P1 | none | root | 完成独立 exact-SHA review，fast-forward update PR #55 branch，回读 Hosted verify/delivery；不要直接推送 main。 |
 | TASK-ENG-001 | 引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定 | REVIEW | 进行中 | P1 | none | root | 基于最新 origin/main 完成冲突承接、独立 exact-SHA review 和 Hosted verify；未完成前保持 REVIEW。 |
 | TASK-CCSWITCH-LEARN-20261014 | 澄清供应商编辑状态并验证跨存储中断恢复 | DONE | 已完成 | P1 | TASK-AGENT-RECOVERY-20261013 | root | 本轮实现与本地验收完成；Hosted、物理断电、收费Provider、实际用户profile及签名发布仍未验证。 |
@@ -2551,9 +2551,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-UI-BASELINE-20261014`
 - Worktree: `D:/kk-studio/.worktrees/branch-consolidation-20261011`
 - Modules: src/styles, src/components, src/domain, src/features, src-tauri, docs, scripts
-- Verification: PARTIAL — 2.1.21当前Node1156项1142pass/14skip、Agent172pass/2skip、lint/type/format/build、UI236/0、production544零失败/零flaky/零skip、Rust131/131与fmt通过；开发新path依赖重载先FAIL，预优化同一依赖后5步骤PASS/父目录403。统计/搜索/旧插件标签形态均先RED再GREEN，原精确恢复断言保留；主入口gzip+9617B低于16384。已提交compound、实际Native和最终SHA审查待独立回执。历史失败、在途源和advisory保留。
+- Verification: PARTIAL — 7a463742 clean完整verify出口0：Node1142pass/14skip、Agent172pass/2skip、UI236/0、production545首试通过/0flaky/0skip、development5PASS/父目录403。Rust131/131与fmt同源，官方Agent构建和真实Tauri9项PASS、原件/视频坐标/重载/层级/随包桥绝对路径均核对，0e及7a独立source review CLEAR。主入口gzip+9625B<16384；健康50与Windows2项advisory保持，旧失败保留。产物及最终doc-head由工程外当前收据绑定。
 - Evidence: [docs/changes/2026-10-14-ui-consolidation/intent.md](../../docs/changes/2026-10-14-ui-consolidation/intent.md), [docs/changes/2026-10-14-ui-consolidation/spec.md](../../docs/changes/2026-10-14-ui-consolidation/spec.md), [docs/changes/2026-10-14-ui-consolidation/plan.md](../../docs/changes/2026-10-14-ui-consolidation/plan.md), [docs/changes/2026-10-14-ui-consolidation/verification.md](../../docs/changes/2026-10-14-ui-consolidation/verification.md), [docs/changes/2026-10-14-ui-consolidation/review.md](../../docs/changes/2026-10-14-ui-consolidation/review.md), [docs/architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md](../../docs/architecture/adr/ADR-017-unified-ui-and-collection-compatibility.md), [docs/features/feat-039-canvas-collections.md](../../docs/features/feat-039-canvas-collections.md)
-- Next action: 完成2.1.21全套组合与实际Native验证、最终SHA独立复核、当前产物与增量恢复包；旧flaky与在途分支保留原状态，不把未接协议、Hosted或NativeMobile关闭。
+- Next action: 从已验证2.1.21继续未接协议与原生Mobile等开放范围；单独验收真实CLI/Provider、日常资料、用户视觉、安装器和Hosted，保留在途分支与旧flaky原状态。
 - Last verified: 2026-10-14
 - Updated: 2026-10-14
 

@@ -79,3 +79,15 @@ Gemini桥脚本列入Agent生产白名单和release输入指纹；桌面使用re
 已提交0e5087e6的完整verify退出0：Node1142pass/14skip、Agent172pass/2skip、UI236/0，production544 expected且unexpected/flaky/skipped均0，development5步骤PASS。当前真实Tauri原件在工程外native-candidate/runs留存：首轮driver把CSSOM六位舍入与原生完整精度直接比较导致FAIL，改为原生上传前后坐标精确比较、DOM与原生容许0.001显示舍入；原driver和失败receipt保留。后续真实桌面确认喜欢/标签/收藏写入、固定面板独立移动与缩放、视频卡片移动后上传保持世界坐标及视频原件hash，但重载后图片工具栏挡住喜欢面板关闭按钮，真实点击被重绘按钮截获。
 
 共享层级原为面板sticky-header+1/+2（21/22）而图片工具栏dropdown（100）。新增语义floating-panel/active token（dropdown+1、panel+1），两类面板均使用，保持低于overlay200/modal300/popover400。新增浏览器通过真实拖动使关闭按钮中心与图片工具栏重叠、elementFromPoint命中与正常关闭断言，旧dist RED，修正后面板和风险8场景零重试GREEN。不使用force click或隐藏图片工具栏绕过。后续完整组合、实际新EXE及独立最终review待新回执。
+
+## 已提交2.1.21最终产品检查
+
+产品源7a463742894f9250eafd39c3570e81eaf83eba65，tree bcf6e83a420ff133e8b810508049e005ea04f139，检查和Native启动期间工作树干净。npm run verify退出0：Node1156项1142pass/14既有skip、Agent174项172pass/2既有skip、UI236文件/0违规；lint/type/format/build通过。实际preview1423、Edge、1920默认及窄屏规格545expected、0unexpected/flaky/skipped；工程外browser-221-panels-final-results.json。开发1421五步骤PASS/errors0，父目录AGENTS仍403，receipt sourceHead绑定7a。健康advisory与origin导入配置保持：脚本比较历史base1f6cbd37报告50项advisory，Windows2项；未提高阈值或增加豁免，不能把lint出口0表述成健康零发现。Rust131/131、fmt通过的源与当前Rust相同；CSS增量未改Rust。
+
+官方client:build:agent -- --no-bundle退出0，5个既有Rust warnings保留；EXE SHA256 a252ff41d46346032a5e669405ce4b6ca2344b9c767f60313f35e32cc0f08d02，release input SHA256 b51693ca7445557f52b559a844914ccf31857a70ec16192fb1d9794d9bb1df19。writeDesktopReleaseReceipt后inspectDesktopRelease needsBuild=false/reason=current，表示本机构建输入身份，不是Hosted/签名/安装验收。Agent生产白名单4270文件包含gemini-bridge.mjs，source/manifest/实际设置命令字节一致。
+
+实际Tauri release以--data-dir独立数据目录、隔离WebView profile和独占CDP9350运行，http://tauri.localhost/生产入口加载index-CtztK-ZP.js（SHA256 d46c0fe63329ce2139eb7be9a837d8ea29fcd6cd4a4eeab19a7a60276adc6b5e）及index-CJt9EWbb.css。App→Workspace→Canvas/CanvasCollectionsPanels；App→SettingsPanel→StorageOverview/ModelProviderSettings/GoogleAgentSettings为当前渲染链。9项PASS：EXE/源/真实存储root/加载bundle；顶部喜欢/标签/收藏及自定义标签写入；独立面板固定360×480、拖动与缩放；视频移动后的原生世界坐标上传前后精确一致，DOM舍入容许0.001、图/视频原件hash一致；JSON重载恢复；设置真实modal命中隔离；存储真实路径与未报告配额；Gemini预设真实聚焦API表单；CLI子页及随包绝对命令/manifest身份。原面板普通关闭不再被图片工具栏遮挡。9张同状态截图、errors空、cleanupComplete=true，未使用IPC mock/force click/hide toolbar。原件路径ui-stage-218/native-candidate/runs/1791924003594-f21e8fdf-b4a8-4fd6-825c-cf85fb0ca84d/evidence/receipt.json，driver SHA25680de073ec9e6d24b9651e3edc7f765476a54e83534d0f8599ad34fd259ca0c4f；原失败和旧driver仍保留。
+
+相同gzip算法当前主入口289135B，冻结279510B，增9625B<16384预算；Web150文件/5105233B，CSS gzip52844B，新依赖0、插件完整。0e→7a独立已提交增量source review CLEAR，报告independent-review-7a463742.md；0e全组合独立审查41单测和历史source报告保留。最终doc-head不改产品树，工程外产物收据同时绑定最终完整HEAD和已验证code-head，保存不同原件SHA，不能把7a运行收据改写为未来docs HEAD。
+
+边界：Native使用隔离资料，未接OpenAI Responses/Anthropic/Azure/免密Ollama真实协议仍禁用；未执行真实CLI登录/付费Provider、用户日常资料验收、安装器/签名/Hosted或Native Mobile。Mobile2.1.1仍规划；在途源只恢复留存，未作为全部已集成分支。当前本地UI候选与输出可供用户验收，整体任务保持PARTIAL以承接这些开放范围。

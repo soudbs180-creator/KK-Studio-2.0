@@ -17,15 +17,15 @@
 - `canonicalHead`: `694a00607f6f63de1b8c43d0ebb117adf5d34f67`
 - `canonicalHeadVerifiedFrom`: 本轮 git fetch origin 后回读；主线694a006，源2.1.13。
 - `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `codex/ui-redesign-20261011` at `51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c`, dirty. Original UI changes were preserved in baseline `e0875b3d`; only TASK-AGENT-RECOVERY-20261013 owned changes were integrated after content comparison. Desktop/Web 2.1.16 official canonical build and native acceptance passed; this is not a published origin/main tree.
-- `taskLedger`: 129 records; 6 REVIEW, 75 DONE, 11 TODO, 33 PARTIAL, 4 BLOCKED; 54 open records.
-- `workspaceWorktrees`: 本轮盘点104登记项；36 dirty来源通过41个recovery refs保留（40一致/1volatile）。原分支/index/资料保留，未删除或移动。
+- `taskLedger`: 133 records; 6 REVIEW, 77 DONE, 12 TODO, 34 PARTIAL, 4 BLOCKED; 56 open records.
+- `workspaceWorktrees`: 当前恢复盘点107登记项、39 dirty来源、39一致快照；原index变动0，872源路径与313排除路径可溯源。首轮104项/40一致与1volatile记录保留原时点。原分支/index/资料保留，未删除或移动。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
 
 - `agentRecoveryEvidence`: [TASK-AGENT-RECOVERY-20261013 verification](../changes/2026-10-13-agent-recovery/verification.md); 2.1.16 accepted receipts remain archived; the user-requested actual daily-profile supplement found chat UI inconsistencies. Shared 2.1.17 candidate and repeated daily acceptance are in progress.
 
-- `uiConsolidationCandidate`: 同一task工作树保留2.1.17冻结与2.1.18中间候选；最新主目录2.1.20一致源f2b0466的51源/测试/历史文档路径和4任务记录已逐项承接，当前Desktop/Web2.1.21组合验证中。41引用原件逐项hash保留原SHA；CLI桥已列入生产白名单。PR55/56与在途分支不冒称主线祖先链合并；实际Desktop/最终审查/Hosted/安装器/用户验收继续收口，Mobile2.1.1仍规划。[本轮验证](../changes/2026-10-14-ui-consolidation/verification.md)。
+- `uiConsolidationCandidate`: 同一task工作树保留2.1.17冻结与2.1.18中间候选；最新主目录2.1.20一致源f2b0466的51源/测试/历史文档路径和4任务记录已逐项承接，Desktop/Web2.1.21产品提交7a463742完整verify通过（545browser零flaky）、官方Agent构建与真实Tauri9项检查通过，0e/7a源码独立审查通过。41引用原件保留旧SHA，4270生产白名单文件保留且CLI桥绝对路径经实际设置验证。最终分享包/源码/恢复增量由工程外收据绑定，PR55/56与在途分支不冒称主线祖先链合并；Hosted/安装器/用户资料与视觉验收、未接协议和Mobile2.1.1规划继续开放。[本轮验证](../changes/2026-10-14-ui-consolidation/verification.md)。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->
