@@ -43,6 +43,13 @@ function fail(message) {
   process.exit(2);
 }
 
+function requireRevision(name, revision) {
+  if (!revision) fail(`${name} revision required`);
+  const resolved = commitOrNone(root, revision);
+  if (!resolved) fail(`${name} revision not found: ${revision}`);
+  return resolved;
+}
+
 function measureSide(paths, tree) {
   const measured = new Map();
   for (const path of paths) {
@@ -109,9 +116,9 @@ function burnDown(tree) {
 function main() {
   if (has("report")) return burnDown(null);
 
-  if (has("base") && !baseArg) fail("base revision required");
-  if (has("head") && !headArg) fail("head revision required");
-  const base = baseArg ? commitOrNone(root, baseArg) : defaultBase(root);
+  const base = has("base")
+    ? requireRevision("base", baseArg)
+    : defaultBase(root);
   if (!base) {
     if (baseArg) fail(`base revision not found: ${baseArg}`);
     process.stdout.write(
@@ -119,8 +126,7 @@ function main() {
     );
     return 0;
   }
-  const head = headArg ? commitOrNone(root, headArg) : null;
-  if (headArg && !head) fail(`head revision not found: ${headArg}`);
+  const head = has("head") ? requireRevision("head", headArg) : null;
 
   // 总开关从 origin/main tip 读取（CI 的 GOVERNANCE_BASE 优先），分支不能自我放宽。
   const switchRev =
