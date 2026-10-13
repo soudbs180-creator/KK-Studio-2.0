@@ -39,6 +39,18 @@ npm ci
 
 以当前 `package.json`、Playwright 和 CI 配置核对上述含义。改脚本时同步本表；没有命令、依赖或真实服务时报告失败/未运行，不写预测结果。
 
+## 代码健康棘轮与 Windows 不安全模式扫描
+
+两个静态检查移植自 [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) 的工程实践（MIT），配置与规则在 `scripts/governance/`，入口为 `scripts/check-code-health.mjs` 与 `scripts/check-windows-footguns.mjs`。
+
+**代码健康棘轮**（`npm run health:check`）：每个函数和文件有自己的上限——圈复杂度 ≤20、函数 ≤300 行、嵌套深度 ≤6、文件 ≤2000 行。已超标单元取其在 base 修订上的实测值为上限，只许变小；新单元必须达标。base 默认为 HEAD 与 `origin/main` 的 merge-base（CI 用 `GOVERNANCE_BASE` 指定），只评变化的文件；解析失败按度量缺口失败，不读作"无发现"。`npm run health:check -- --report` 输出全库存量清单。行内豁免写在违规行或上一行的真实注释里：`// health: allow <RULE> -- 理由`。总开关 `ENFORCEMENT`（blocking/advisory/off）从 `origin/main` 的配置读取，分支不能自我放宽；若基线尚未存在配置，按 fail-closed 回退为 blocking，不能把首个引入分支声称为 advisory；配置进入主线后再由维护者决定是否保持 advisory 或改 blocking。
+
+**Windows 不安全模式扫描**（`npm run footguns:check`）：规则表在 `scripts/governance/footgun-rules.mjs`，覆盖硬编码 POSIX 临时目录、硬编码用户目录、shebang 启动 node、无确认递归删除、生成 Windows 脚本未用 CRLF、schtasks 引号、OneDrive 已知文件夹假设、单反斜杠路径字面量、curl/irm 管道进 shell。只扫变化文件，`--all` 出全库清单；总开关 `FOOTGUNS_ENFORCEMENT` 同为 advisory。
+
+GitHub Actions 统一固定到 commit SHA 并附版本注释；新增 action 时同样处理，不用可变 tag。
+
+健康与 footgun 开关按完整变量名独立读取。`--report` 与 `--all` 只输出当前工作区清单，不接受 `--base`/`--head`；不支持的组合返回工具错误 2，普通 diff 检查使用指定 revision 的文件内容。固定 action SHA 时同时核对该 SHA 的输入契约；Rust toolchain action 必须显式传入 `toolchain: stable`。
+
 修改期间运行与影响相关的定向检查。交付前执行仓库要求的 `npm run verify`，涉及 Desktop/Rust 时加对应检查、构建和原生运行；安装/升级、数据恢复和真实外部服务按验收计划额外执行。文档修改需检查当前 Markdown 文件格式、链接及治理一致性；专用校验不替代仓库要求的交付检查。
 
 ## UI 的三个实际运行入口
@@ -72,3 +84,4 @@ npm ci
 验证失败时先复现、归因、最小修复，再重跑受影响检查；不要禁用有效检查、放宽断言或增加重试掩盖问题。额外缺陷入账，不未经说明扩张任务。没有真实凭据、ComfyUI/GPU 或 live eval 预算时，只继续可完成的本地工作，外部验收标 NOT RUN/NOT VERIFIED。
 
 完成或中断前更新 change package、任务账本、PROJECT_STATE/AI_HANDOFF 的适用部分和 PROGRESS。恢复时重新读当前 SHA、worktree、端口/进程和文档，确认哪些旧 review/证据已失效。不要凭聊天中的“之前通过”继续发布。
+

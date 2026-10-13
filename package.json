@@ -30,7 +30,7 @@
     "test:ui": "npm run build && node node_modules/@playwright/test/cli.js test",
     "format:check": "prettier --check src tests scripts *.ts *.mjs *.json design/figma-plugin/*.js design/figma-plugin/*.json config/*.json",
     "ui:check": "node scripts/check-ui-standards.mjs",
-    "lint": "eslint src tests scripts *.config.{ts,mjs} --max-warnings 0 && npm run version:check && npm run version:consistency && node scripts/check-project-goals.mjs && node scripts/check-governance.mjs && node scripts/check-features.mjs && node scripts/check-markdown.mjs && npm run index:check && npm run doc:commands:check",
+    "lint": "eslint src tests scripts *.config.{ts,mjs} --max-warnings 0 && npm run version:check && npm run version:consistency && node scripts/check-project-goals.mjs && node scripts/check-governance.mjs && node scripts/check-features.mjs && node scripts/check-markdown.mjs && npm run index:check && npm run doc:commands:check && npm run health:check && npm run footguns:check",
     "verify": "npm run lint && npm run typecheck && npm test && npm run test:agent && npm run ui:check && npm run format:check && npm run test:ui && npm run test:development",
     "tauri": "tauri",
     "client:dev": "tauri dev",
@@ -61,7 +61,9 @@
     "governance:normalize": "node scripts/governance/normalize-ledger.mjs --write",
     "workspace:inventory": "node scripts/governance/workspace-inventory.mjs --write",
     "worktree:reclaim": "node scripts/governance/worktree-reclaim.mjs",
-    "worktree:check": "node scripts/governance/worktree-policy.mjs --check-create"
+    "worktree:check": "node scripts/governance/worktree-policy.mjs --check-create",
+    "health:check": "node scripts/check-code-health.mjs",
+    "footguns:check": "node scripts/check-windows-footguns.mjs"
   },
   "engines": {
     "node": ">=24"
