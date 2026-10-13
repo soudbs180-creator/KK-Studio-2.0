@@ -15,7 +15,12 @@ import { useCanvasConnections } from "./canvas/useCanvasConnections";
 import { useCanvasPersistence } from "./canvas/useCanvasPersistence";
 import { useCanvasWorkbenchState } from "./canvas/useCanvasWorkbenchState";
 import { useCanvasContextMenu } from "./canvas/useCanvasContextMenu";
-import { canvasPatternPitch } from "../domain/canvasViewport";
+import {
+  canvasPatternDotSize,
+  canvasPatternGridLine,
+  canvasPatternOpacity,
+  canvasPatternPitch,
+} from "../domain/canvasViewport";
 import { useAgentCanvasView } from "./canvas/useAgentCanvasView";
 import type { CanvasProps } from "./canvas/CanvasProps";
 import "../styles/canvas-layers.css";
@@ -157,10 +162,9 @@ export default function Canvas({
             "--canvas-pan-x": `${transform.x}px`,
             "--canvas-pan-y": `${transform.y}px`,
             "--canvas-dot-cell": `${canvasPatternPitch(transform.scale)}px`,
-            "--canvas-pattern-opacity": Math.min(
-              1,
-              Math.max(0.2, (transform.scale - 0.45) / 0.55),
-            ),
+            "--canvas-pattern-opacity": canvasPatternOpacity(transform.scale),
+            "--canvas-dot-size": `${canvasPatternDotSize(transform.scale)}px`,
+            "--canvas-grid-line": `${canvasPatternGridLine(transform.scale)}px`,
           } as CSSProperties
         }
       >

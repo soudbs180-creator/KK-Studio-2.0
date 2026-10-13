@@ -42,6 +42,7 @@ export default function CreationModelPicker({
               source: item?.generationSource === "codex" ? "codex" : "api",
               model: value,
               connectionId: item?.providerConnectionId,
+              kind,
             },
             value,
           )}
@@ -61,6 +62,7 @@ export default function CreationModelPicker({
             source: item?.generationSource === "codex" ? "codex" : "api",
             model: value,
             connectionId: item?.providerConnectionId,
+            kind,
           }}
           onSelect={(choice) => onChange(choice.model, choice)}
           onConfigure={onConfigure}

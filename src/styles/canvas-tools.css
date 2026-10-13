@@ -103,8 +103,8 @@
   color: var(--text-primary);
 }
 .canvas-toolbar > .toolbar-save .toolbar-icon-favorite {
-  width: 24px;
-  height: 24px;
+  width: var(--ui-control-h-toolbar);
+  height: var(--ui-control-h-toolbar);
 }
 .tool-hand-current {
   width: 18px;
@@ -195,4 +195,11 @@
 .infinite-canvas.is-panning,
 .infinite-canvas.is-panning .canvas-node {
   cursor: grabbing;
+}
+/* Selection is intentionally quiet: one boundary and a light wash keep the
+   selected set legible without decorative handles or stacked ornaments. */
+.canvas-marquee {
+  border: 1px solid var(--ui-selected);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--ui-selected) 8%, transparent);
 }

@@ -111,15 +111,15 @@ KK Studio 已经形成一套可辨认的深色创作工作台语言：黑色应�
 
 代码侧的重要入口：
 
-- [main.tsx](../../../src/main.tsx:1)：React 入口和全局样式首层。
-- [App.tsx](../../../src/App.tsx:159)：页面 CSS 加载顺序；[App.tsx](../../../src/App.tsx:1428)：运行态标识、壳层和 state-driven 页面切换。
-- [global.css](../../../src/styles/global.css:5)：语义颜色、侧栏/对话宽度、桌面 1920×1080 surface 缩放。
-- [ui-tokens.css](../../../src/styles/ui-tokens.css:53)：圆角、字体、控件高度、间距、图标和 motion token；[ui-tokens.css](../../../src/styles/ui-tokens.css:164)：现有 `.ui-button` CSS utility。
-- [catalog-pages.css](../../../src/styles/catalog-pages.css:71)：Landing composer 的桌面 Figma 测量值；[catalog-pages.css](../../../src/styles/catalog-pages.css:566)：窄屏覆盖。
-- [conversation-panel.css](../../../src/styles/conversation-panel.css:158)：对话 model picker 的 min/max/ellipsis 行为。
-- [TaskPanel.tsx](../../../src/components/canvas/TaskPanel.tsx:11)：固定 Prototype task fixture；[TaskPanel.tsx](../../../src/components/canvas/TaskPanel.tsx:81)：live task 为空时回退到 fixture。
-- [TaskWorkbench.tsx](../../../src/components/TaskWorkbench.tsx:49)：任务工作台的 Prototype 边界文案。
-- [check-ui-standards.mjs](../../../scripts/check-ui-standards.mjs:27)：当前标准检查的实际范围。
+- [main.tsx](../../../src/main.tsx)（历史行号 1）：React 入口和全局样式首层。
+- [App.tsx](../../../src/App.tsx)（历史行号 159）：页面 CSS 加载顺序；[App.tsx](../../../src/App.tsx)（历史行号 1428）：运行态标识、壳层和 state-driven 页面切换。
+- [global.css](../../../src/styles/global.css)（历史行号 5）：语义颜色、侧栏/对话宽度、桌面 1920×1080 surface 缩放。
+- [ui-tokens.css](../../../src/styles/ui-tokens.css)（历史行号 53）：圆角、字体、控件高度、间距、图标和 motion token；[ui-tokens.css](../../../src/styles/ui-tokens.css)（历史行号 164）：现有 `.ui-button` CSS utility。
+- [catalog-pages.css](../../../src/styles/catalog-pages.css)（历史行号 71）：Landing composer 的桌面 Figma 测量值；[catalog-pages.css](../../../src/styles/catalog-pages.css)（历史行号 566）：窄屏覆盖。
+- [conversation-panel.css](../../../src/styles/conversation-panel.css)（历史行号 158）：对话 model picker 的 min/max/ellipsis 行为。
+- [TaskPanel.tsx](../../../src/components/canvas/TaskPanel.tsx)（历史行号 11）：固定 Prototype task fixture；[TaskPanel.tsx](../../../src/components/canvas/TaskPanel.tsx)（历史行号 81）：live task 为空时回退到 fixture。
+- [TaskWorkbench.tsx](../../../src/components/TaskWorkbench.tsx)（历史行号 49）：任务工作台的 Prototype 边界文案。
+- [check-ui-standards.mjs](../../../scripts/check-ui-standards.mjs)（历史行号 27）：当前标准检查的实际范围。
 
 ### Figma 真相
 

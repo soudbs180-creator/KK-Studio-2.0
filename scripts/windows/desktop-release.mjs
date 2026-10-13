@@ -2,40 +2,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawn, spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-
-const RELEASE_EXECUTABLE = path.join(
-  "src-tauri",
-  "target",
-  "release",
-  "kk-studio.exe",
-);
-
-const RELEASE_INPUTS = [
-  "src",
-  "public",
-  "index.html",
-  "package.json",
-  "package-lock.json",
-  "tsconfig.json",
-  "tsconfig.app.json",
-  "tsconfig.node.json",
-  "vite.config.ts",
-  path.join("config", "platform-versions.json"),
-  path.join("vendor", "canvas-agent", "src"),
-  path.join("vendor", "canvas-agent", "agent-instructions.md"),
-  path.join("vendor", "canvas-agent", "package.json"),
-  path.join("vendor", "canvas-agent", "package-lock.json"),
-  path.join("vendor", "canvas-agent", "tsconfig.json"),
-  path.join("scripts", "agent"),
-  path.join("src-tauri", "src"),
-  path.join("src-tauri", "build.rs"),
-  path.join("src-tauri", "capabilities"),
-  path.join("src-tauri", "icons"),
-  path.join("src-tauri", "Cargo.toml"),
-  path.join("src-tauri", "Cargo.lock"),
-  path.join("src-tauri", "tauri.conf.json"),
-  path.join("src-tauri", "tauri.agent.conf.json"),
-];
+import {
+  RELEASE_EXECUTABLE,
+  RELEASE_INPUTS,
+  fingerprintDesktopInputs,
+  hashDesktopExecutable,
+  readDesktopReleaseReceipt,
+  writeDesktopReleaseReceipt,
+} from "./desktop-release-identity.mjs";
 
 function findNewestFile(candidatePath, current) {
   if (!fs.existsSync(candidatePath)) return current;
@@ -66,11 +40,21 @@ export function inspectDesktopRelease(projectRoot) {
       findNewestFile(path.join(projectRoot, relativePath), newest),
     { path: null, mtimeMs: Number.NEGATIVE_INFINITY },
   );
+  const inputSha256 = fingerprintDesktopInputs(projectRoot);
+  const executableSha256 = hashDesktopExecutable(projectRoot);
+  const receipt = readDesktopReleaseReceipt(projectRoot);
+  const configuredDesktopVersion = readJson(
+    path.join(projectRoot, "config", "platform-versions.json"),
+  )?.desktop;
   const reason =
     releaseMtimeMs === null
       ? "missing"
-      : newestInput.mtimeMs > releaseMtimeMs
-        ? "stale"
+      : !receipt ||
+          receipt.inputSha256 !== inputSha256 ||
+          receipt.executableSha256 !== executableSha256 ||
+          (configuredDesktopVersion &&
+            receipt.desktopVersion !== configuredDesktopVersion)
+        ? "unverified"
         : "current";
 
   return {
@@ -81,16 +65,117 @@ export function inspectDesktopRelease(projectRoot) {
       newestInput.mtimeMs === Number.NEGATIVE_INFINITY
         ? null
         : newestInput.mtimeMs,
+    inputSha256,
+    executableSha256,
+    desktopVersion: configuredDesktopVersion ?? null,
+    receiptPath: path.join(
+      projectRoot,
+      "src-tauri",
+      "target",
+      "release",
+      "kk-studio.build-receipt.json",
+    ),
     needsBuild: reason !== "current",
     reason,
   };
 }
 
+function readJson(filePath) {
+  if (!fs.existsSync(filePath)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function isLinkedPath(filePath) {
+  try {
+    // realpath() may return a different but equivalent spelling on Windows
+    // (for example an 8.3 path). Only lstat() tells us whether the directory
+    // entry itself is a symlink/junction; comparing path spellings creates
+    // false positives for ordinary directories on hosted runners.
+    return fs.lstatSync(filePath).isSymbolicLink();
+  } catch {
+    return false;
+  }
+}
+
+export function inspectDesktopDependencies(projectRoot) {
+  const lockfile = readJson(path.join(projectRoot, "package-lock.json"));
+  if (!lockfile?.packages) {
+    return {
+      needsInstall: true,
+      mismatches: [
+        {
+          name: "package-lock.json",
+          expected: "valid packages",
+          actual: "missing or invalid",
+        },
+      ],
+    };
+  }
+
+  const nodeModulesPath = path.join(projectRoot, "node_modules");
+  if (isLinkedPath(nodeModulesPath)) {
+    return {
+      needsInstall: true,
+      mismatches: [
+        {
+          name: "node_modules",
+          expected: "local directory",
+          actual: "linked directory",
+        },
+      ],
+    };
+  }
+
+  const mismatches = Object.entries(lockfile.packages).flatMap(
+    ([packagePath, lockEntry]) => {
+      if (!packagePath.startsWith("node_modules/") || !lockEntry?.version) {
+        return [];
+      }
+      const packageRoot = path.join(projectRoot, ...packagePath.split("/"));
+      const name = packagePath.slice("node_modules/".length);
+      const expected = lockEntry.version;
+      if (!fs.existsSync(packageRoot) && lockEntry.optional) return [];
+      if (isLinkedPath(packageRoot)) {
+        return [{ name, expected, actual: "linked package" }];
+      }
+      const installed = readJson(path.join(packageRoot, "package.json"));
+      const actual = installed?.version ?? null;
+      if (actual === expected) return [];
+      return [{ name, expected, actual }];
+    },
+  );
+  return { needsInstall: mismatches.length > 0, mismatches };
+}
+
 export function ensureDesktopRelease(projectRoot, buildRelease) {
-  const before = inspectDesktopRelease(projectRoot);
+  const beforeRelease = inspectDesktopRelease(projectRoot);
+  const dependencyState = inspectDesktopDependencies(projectRoot);
+  const before = {
+    ...beforeRelease,
+    needsBuild: beforeRelease.needsBuild || dependencyState.needsInstall,
+  };
   if (!before.needsBuild) return { ...before, rebuilt: false };
 
   buildRelease(projectRoot);
+  const afterBuild = inspectDesktopRelease(projectRoot);
+  const replaced =
+    beforeRelease.releaseMtimeMs === null ||
+    afterBuild.releaseMtimeMs > beforeRelease.releaseMtimeMs ||
+    afterBuild.executableSha256 !== beforeRelease.executableSha256;
+  if (
+    afterBuild.releaseMtimeMs === null ||
+    !replaced ||
+    inspectDesktopDependencies(projectRoot).needsInstall
+  ) {
+    throw new Error(
+      "Desktop release build did not produce a replaced executable with aligned dependencies.",
+    );
+  }
+  writeDesktopReleaseReceipt(projectRoot);
   const after = inspectDesktopRelease(projectRoot);
   if (after.needsBuild) {
     throw new Error(
@@ -109,9 +194,10 @@ export function runDesktopRelease(
   return release;
 }
 
-function resolveNpmCliPath() {
+function resolveNpmCliPath(projectRoot) {
   const candidates = [
     process.env.npm_execpath,
+    path.join(projectRoot, "node_modules", "npm", "bin", "npm-cli.js"),
     path.join(
       path.dirname(process.execPath),
       "node_modules",
@@ -127,10 +213,60 @@ function resolveNpmCliPath() {
   return npmCliPath;
 }
 
-function buildDesktopRelease(projectRoot) {
+function installDesktopDependencies(projectRoot) {
+  const nodeModulesPath = path.join(projectRoot, "node_modules");
+  if (isLinkedPath(nodeModulesPath)) {
+    throw new Error(
+      "Desktop dependency repair requires a local node_modules directory; linked dependencies must be repaired in their owner checkout.",
+    );
+  }
   const result = spawnSync(
     process.execPath,
-    [resolveNpmCliPath(), "run", "client:build:agent", "--", "--no-bundle"],
+    [
+      resolveNpmCliPath(projectRoot),
+      "ci",
+      "--ignore-scripts",
+      "--no-audit",
+      "--no-fund",
+    ],
+    { cwd: projectRoot, stdio: "inherit", windowsHide: true },
+  );
+  if (result.error) throw result.error;
+  if (result.status !== 0) {
+    throw new Error(
+      `Desktop dependency repair failed with exit code ${result.status}.`,
+    );
+  }
+  const after = inspectDesktopDependencies(projectRoot);
+  if (after.needsInstall) {
+    throw new Error(
+      "Desktop dependency repair completed but node_modules is still out of sync with package-lock.json.",
+    );
+  }
+}
+
+function buildDesktopRelease(projectRoot) {
+  const dependencies = inspectDesktopDependencies(projectRoot);
+  if (dependencies.needsInstall) {
+    console.log(
+      `[KK Studio] Repairing desktop dependencies from package-lock.json: ${dependencies.mismatches
+        .map(
+          ({ name, expected, actual }) =>
+            `${name} ${actual ?? "missing"} -> ${expected}`,
+        )
+        .join(", ")}`,
+    );
+    installDesktopDependencies(projectRoot);
+  }
+  const result = spawnSync(
+    process.execPath,
+    [
+      resolveNpmCliPath(projectRoot),
+      "run",
+      "client:build:agent",
+      "--",
+      "--no-bundle",
+    ],
     { cwd: projectRoot, stdio: "inherit", windowsHide: true },
   );
   if (result.error) throw result.error;
@@ -166,12 +302,12 @@ if (isMainModule()) {
   );
   try {
     const initial = inspectDesktopRelease(projectRoot);
-    if (initial.reason === "stale") {
-      console.log(
-        `[KK Studio] Desktop release is older than ${initial.newestInputPath}; rebuilding...`,
-      );
-    } else if (initial.reason === "missing") {
+    if (initial.reason === "missing") {
       console.log("[KK Studio] Desktop release is missing; building...");
+    } else if (initial.reason === "unverified") {
+      console.log(
+        "[KK Studio] Desktop release identity is unverified; rebuilding before launch...",
+      );
     }
     const result = runDesktopRelease(projectRoot, {
       buildRelease: buildDesktopRelease,

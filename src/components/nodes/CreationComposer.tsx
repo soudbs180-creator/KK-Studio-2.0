@@ -1,6 +1,5 @@
 import type { ModelSelection } from "../../features/models/modelSelection";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Heart } from "lucide-react";
 import CreationParameterControl from "./CreationParameterControl";
 import GenerationCount from "./GenerationCount";
 import {
@@ -13,9 +12,10 @@ import { useLocalGeneration } from "./useLocalGeneration";
 import { GenerationAction, GenerationStatus } from "./GenerationAction";
 import CreationModelPicker from "./CreationModelPicker";
 import ReferenceStrip from "./ReferenceStrip";
+import ComposerActions from "./ComposerActions";
 import UiIcon from "../UiIcon";
 import { useCanvasImageGeneration } from "../../features/creation/CanvasImageCommand";
-
+import { composerReportedHeight } from "../canvas/composerLayout";
 interface CreationComposerProps {
   parameters?: CanvasParameters;
   onParametersChange?: (parameters: CanvasParameters) => void;
@@ -25,8 +25,6 @@ interface CreationComposerProps {
   onReference: (slot?: CanvasReference["slot"]) => void;
   error?: string;
   onPromptChange: (value: string) => void;
-  liked: boolean;
-  onToggleLike: () => void;
   onExtraHeightChange: (height: number) => void;
   onDemoResults?: (results: DemoResult[]) => void;
   onGenerationStart?: (count: number) => void;
@@ -40,7 +38,6 @@ interface CreationComposerProps {
   referenceLimit?: number;
   onRemoveReference?: (connectionId: string) => void;
 }
-
 export default function CreationComposer({
   kind,
   selected,
@@ -48,8 +45,6 @@ export default function CreationComposer({
   onReference,
   error,
   onPromptChange,
-  liked,
-  onToggleLike,
   onExtraHeightChange,
   onDemoResults,
   onGenerationStart,
@@ -88,16 +83,16 @@ export default function CreationComposer({
   const imageGeneration = useCanvasImageGeneration({
     references,
   });
-  const incomingReferenceCount = video
-    ? references.length
-    : imageGeneration.incomingReferenceCount;
   const generation = video ? localGeneration : imageGeneration;
+  const incomingReferenceCount = new Set(
+    references
+      .filter((reference) => reference.id)
+      .map((reference) => reference.assetId ?? reference.id),
+  ).size;
   const selectedModel = modelProp ?? (video ? model : imageGeneration.model);
   const ref = useRef<HTMLDivElement>(null);
-  const selectedPrompt = promptProp ?? prompt;
   useLayoutEffect(() => {
-    if (selected)
-      onExtraHeightChange((expanded ? 93 : 0) + (error ? 80 : 0) + 60);
+    if (selected) onExtraHeightChange(composerReportedHeight(expanded, error));
   }, [selected, expanded, error, onExtraHeightChange]);
   useEffect(() => {
     if (!selected) {
@@ -143,19 +138,10 @@ export default function CreationComposer({
         setMenu("");
       }}
     >
-      <button
-        className="expand-composer"
-        aria-label={expanded ? "收起提示词" : "展开提示词"}
-        aria-expanded={expanded}
-        onClick={() => setExpanded(!expanded)}
-      >
-        <img
-          src={
-            expanded ? "/design/figma/collapse.svg" : "/design/figma/expand.svg"
-          }
-          alt=""
-        />
-      </button>
+      <ComposerActions
+        expanded={expanded}
+        onToggleExpanded={() => setExpanded(!expanded)}
+      />
       {expanded ? (
         <ReferenceStrip
           references={references}
@@ -199,21 +185,13 @@ export default function CreationComposer({
       <textarea
         aria-label={`${label}提示词`}
         maxLength={video ? 7500 : 4000}
-        value={selectedPrompt}
+        value={promptProp ?? prompt}
         onChange={(e) => {
           setPrompt(e.target.value);
           onPromptChange(e.target.value);
         }}
         placeholder="描述你想要生成的内容"
       />
-      <button
-        className="like-node"
-        aria-label={liked ? "取消喜欢当前卡片" : "喜欢当前卡片"}
-        aria-pressed={liked}
-        onClick={onToggleLike}
-      >
-        <Heart size={16} fill={liked ? "currentColor" : "none"} />
-      </button>
       <div className="creation-controls">
         <CreationModelPicker
           kind={kind}
@@ -282,10 +260,15 @@ export default function CreationComposer({
           onRun={() => {
             setMenu("");
             const copies = Number(count);
-            if (video && selectedPrompt.trim()) onGenerationStart?.(copies);
-            if (video) void localGeneration.run(selectedPrompt, copies);
+            if (video && (promptProp ?? prompt).trim())
+              onGenerationStart?.(copies);
+            if (video) void localGeneration.run(promptProp ?? prompt, copies);
             else
-              void imageGeneration.run(selectedPrompt, copies, selectedModel);
+              void imageGeneration.run(
+                promptProp ?? prompt,
+                copies,
+                selectedModel,
+              );
           }}
         />
       </div>

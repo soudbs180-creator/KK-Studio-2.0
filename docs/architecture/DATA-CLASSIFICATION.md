@@ -13,4 +13,4 @@
 | 缩略图、模型列表、临时响应 | `cache/` | L1 | 可随时清空，不作为事实来源 |
 | 诊断日志 | `logs/` | L1 | 脱敏、限期保留，不写请求头和密钥 |
 
-浏览器当前只有两个非敏感 key，详见 `src/runtime/storage-contract.ts`。账号、积分和记忆页面尚未接入持久化服务，必须显示 Prototype 或禁用原因。
+浏览器当前只有 5 个非敏感 key（`BROWSER_STORAGE_KEYS`，事实源 `src/runtime/storage-contract.ts`）：`settings` / `model-provider` / `provider-connections` / `asset-collections` / `companion`，前缀均为 `kk-studio-next:…:v1`。快照的 localStorage 有界恢复副本（`creation`）属存储通道内部机制，不在此白名单内，见 `DATA-STORAGE.md`。账号、积分和记忆页面尚未接入持久化服务，必须显示 Prototype 或禁用原因。

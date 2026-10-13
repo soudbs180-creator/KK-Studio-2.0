@@ -47,24 +47,45 @@ export function useComposerMenus(boundary: RefObject<HTMLElement>) {
       if (!controls) return;
       // Home generation options are also actions: a popup must clear them.
       const home = boundary.current?.closest(".start-composer");
+      // Keep the desktop workbench hierarchy (home popovers open above the
+      // composer) while using the full form top as the collision boundary.
+      // Anchoring to the footer alone makes a tall menu cover the textarea.
+      // Compact layouts keep the existing below-placement algorithm; the
+      // home page reserves local flow space so discovery controls stay clear.
+      const homePopoverAbove = !!home && window.innerWidth >= 1024;
       const controlBottom = home
         ? home.getBoundingClientRect().bottom
         : controls.bottom;
-      const above = Math.max(0, controls.top - top - 8);
+      const homeTop = home?.getBoundingClientRect().top ?? controls.top;
+      const above = Math.max(
+        0,
+        (homePopoverAbove ? homeTop : controls.top) - top - 8,
+      );
       const below = Math.max(0, bottom - controlBottom - 8);
       const scrollTop = popover.scrollTop;
       popover.style.maxWidth = `${Math.max(0, right - left)}px`;
       popover.style.translate = "none";
       popover.style.maxHeight = "none";
       const naturalHeight = popover.getBoundingClientRect().height;
+      // Prefer the desktop home hierarchy (above the composer) while the
+      // composer is in view. Once the page has scrolled far enough that the
+      // upper slot is clipped, use the visible space below the composer so a
+      // menu does not collapse to a zero-height strip at the viewport edge.
+      const aboveFits = above >= naturalHeight;
       const down =
-        below >= naturalHeight || (above < naturalHeight && below > above);
+        (!homePopoverAbove &&
+          (below >= naturalHeight ||
+            (above < naturalHeight && below > above))) ||
+        (homePopoverAbove && !aboveFits && below > above);
       popover.style.maxHeight = `${down ? below : above}px`;
       popover.style.overflowY = "auto";
       const rect = popover.getBoundingClientRect();
       const x = Math.max(left - rect.left, Math.min(0, right - rect.right));
       const y =
-        (down ? controlBottom + 8 : controls.top - 8 - rect.height) - rect.top;
+        (down
+          ? controlBottom + 8
+          : (homePopoverAbove ? homeTop : controls.top) - 8 - rect.height) -
+        rect.top;
       popover.style.translate = `${x}px ${y}px`;
       popover.scrollTop = scrollTop;
     };

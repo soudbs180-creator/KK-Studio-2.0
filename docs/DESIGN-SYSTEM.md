@@ -15,6 +15,7 @@ Dark / Light 通过根节点 `data-theme` 切换，强调色通过 `data-accent`
 ## 基础组件
 
 - Primary / Secondary / Tertiary / Danger 复用相同语义尺寸和状态 token。
+- 输入和选择控件使用主题中性的弱焦点边界；醒目 accent 只保留给 Primary、关键状态和明确的操作目标。
 - 图标使用 [`UiIcon`](../src/components/UiIcon.tsx) 或 Figma 导出的 SVG，图形与命中区分开。
 - 输入区复用 [`ComposerTextarea`](../src/components/ComposerTextarea.tsx)，保留 IME、增长高度、语音和附件行为。
 - 弹层使用真实 Escape、外部点击与回焦路径；手机设置分类位于底部横向 rail。

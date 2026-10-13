@@ -1,0 +1,57 @@
+name: windows-release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: read
+
+jobs:
+  installer:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Verify tag and repository versions
+        shell: pwsh
+        run: |
+          $versions = Get-Content config/platform-versions.json -Raw | ConvertFrom-Json
+          $expected = "v$($versions.desktop)"
+          if ($env:GITHUB_REF_NAME -ne $expected) {
+            throw "Release tag $env:GITHUB_REF_NAME does not match desktop version $expected"
+          }
+          npm run version:check
+          npm run version:consistency
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Build the tagged Windows installer
+        run: npm run client:installer
+      - name: Write and verify immutable installer receipt
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem src-tauri/target/release/bundle/nsis -Filter "*-setup.exe" |
+            Sort-Object LastWriteTimeUtc -Descending |
+            Select-Object -First 1
+          if (-not $installer) { throw "Tauri did not produce an NSIS installer" }
+          $output = Join-Path "releases" "installer-$env:GITHUB_SHA"
+          npm run client:installer:receipt -- $installer.FullName $output
+          npm run client:installer:verify -- (Join-Path $output "installer-receipt.json")
+          Get-FileHash (Join-Path $output $installer.Name) -Algorithm SHA256 |
+            ConvertTo-Json | Out-File (Join-Path $output "installer-sha256.json") -Encoding utf8
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kk-studio-windows-${{ github.ref_name }}-${{ github.sha }}
+          path: releases/installer-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 90

@@ -13,10 +13,15 @@ export async function readReferenceImages(
   ]);
   if (
     files.some(
-      (file) => !allowed.has(file.type) || file.size > 10 * 1024 * 1024,
+      (file) =>
+        !allowed.has(file.type) ||
+        file.size === 0 ||
+        file.size > 10 * 1024 * 1024,
     )
   )
-    throw new Error("请选择 10 MB 以内的 PNG、JPG、WebP 或 GIF 参考图片。");
+    throw new Error(
+      "请选择 10 MB 以内且不为空的 PNG、JPG、WebP 或 GIF 参考图片。",
+    );
   return Promise.all(
     files.map(
       (file, index) =>

@@ -105,8 +105,8 @@
   z-index: 2;
   display: grid;
   place-items: center;
-  width: 17px;
-  height: 17px;
+  width: var(--kk-control-h-sm);
+  height: var(--kk-control-h-sm);
   padding: 0;
   border: 1px solid var(--border-default);
   border-radius: 50%;
@@ -137,7 +137,8 @@
 .reference-slots {
   position: absolute;
   left: 22px;
-  right: 56px;
+  /* Reserve a stable action gutter for Like + expand at every state. */
+  right: 100px;
   top: 15px;
   display: grid;
   gap: 6px;
@@ -199,10 +200,10 @@
   place-items: center;
 }
 .reference-slot .reference-remove {
-  top: -5px;
-  right: -5px;
-  width: 14px;
-  height: 14px;
+  top: -6px;
+  right: -6px;
+  width: var(--kk-control-h-sm);
+  height: var(--kk-control-h-sm);
 }
 .reference-slot:hover .reference-remove,
 .reference-slot .reference-remove:focus-visible {
@@ -221,6 +222,10 @@
 .reference-slot-add:focus-visible {
   color: var(--text-primary);
   border-color: var(--ui-selected);
+}
+.reference-slot-add.is-unavailable {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 .reference-slots-footer {
   display: flex;

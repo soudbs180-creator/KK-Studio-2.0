@@ -69,7 +69,7 @@ test("phone menus leave all composer actions reachable", async ({ page }) => {
   await page.goto("/");
   const form = page.locator(".start-composer");
   await form.locator("textarea").fill("菜单切换保持草稿");
-  for (const name of ["模型", "Skill", /^当前模式：/]) {
+  for (const name of ["模型", "扩展", /^当前模式：/]) {
     const trigger = form.getByRole("button", { name, exact: true });
     await trigger.click();
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
@@ -153,11 +153,26 @@ for (const [width, height] of [
         path: `${evidence}/${width}-${kind}-focused.png`,
       });
       await expect(input).toHaveCSS("outline-style", "none");
-      await expect(form).toHaveCSS("outline-width", "2px");
+      await expect(form).toHaveCSS("outline-style", "none");
+      await expect(form).toHaveCSS("border-width", "1px");
+      const focus = await form.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return {
+          outlineStyle: style.outlineStyle,
+          borderWidth: style.borderWidth,
+          boxShadow: style.boxShadow,
+          filter: style.filter,
+          subtleColor: style.getPropertyValue("--ui-focus-subtle").trim(),
+        };
+      });
+      expect(focus.subtleColor).not.toBe("");
+      expect(focus.outlineStyle).toBe("none");
+      expect(focus.borderWidth).toBe("1px");
+      expect(focus.boxShadow).toBe("none");
+      expect(focus.filter).toBe("none");
       const initial = (await input.boundingBox())!.height;
-      expect(
-        (await form.locator(".composer-toolbar").boundingBox())!.height,
-      ).toBe(24);
+      const toolbarBox = await form.locator(".composer-toolbar").boundingBox();
+      expect(toolbarBox!.height).toBe(32);
       await input.fill(
         Array.from({ length: 6 }, (_, i) => `第 ${i + 1} 行输入`).join("\n"),
       );

@@ -363,11 +363,14 @@ test("rapid Escape after a breakpoint closes menus while conversation remains op
   await openWorkspace(page);
   const opener = page.getByRole("button", { name: "打开对话", exact: true });
   const panel = page.locator(".conversation-panel");
-  for (const name of ["模型", "Skill", "插件", "AI权限模式"]) {
+  for (const name of ["模型", "扩展", "AI权限模式"]) {
     await opener.click();
     await page.getByLabel("执行方式").selectOption("direct");
     const menu = panel.getByRole("button", { name, exact: true });
     await menu.click();
+    if (name === "扩展") {
+      await expect(page.getByRole("menu", { name: "扩展" })).toBeVisible();
+    }
     await page.setViewportSize({ width: 1440, height: 900 });
     await expect(panel).toHaveAttribute("data-overlay", "false");
     await page.setViewportSize({ width: 390, height: 844 });

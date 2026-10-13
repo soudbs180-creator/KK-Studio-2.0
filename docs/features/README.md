@@ -13,7 +13,7 @@
 | PROTOTYPE | 只有 UI、本地 fixture 或固定演示素材，无真实后端；界面必须显式标注 Prototype |
 | PLANNED | 只有计划/设计，无实现或无 UI |
 
-当前共 **35** 个功能：REAL（真实可用）2、PARTIAL（部分可用）27、PROTOTYPE（仅演示/UI）4、PLANNED（仅计划）2。
+当前共 **36** 个功能：REAL（真实可用）2、PARTIAL（部分可用）27、PROTOTYPE（仅演示/UI）5、PLANNED（仅计划）2。
 
 ## 如何新增一个功能（任何 AI 照此执行）
 
@@ -84,6 +84,7 @@
 | ID | 功能 | 状态 | 卡片 | 关联任务 |
 | --- | --- | --- | --- | --- |
 | FEAT-024 | Generation Gateway/Worker（持久后端） | PARTIAL（部分可用） | [卡片](feat-024-gateway.md) | T5, T8 |
+| FEAT-038 | 多平台 AI 模型网关 | PROTOTYPE（仅演示/UI） | [卡片](feat-038-ai-model-gateway.md) | TASK-AI-GATEWAY-001 |
 
 ## 未来规划
 

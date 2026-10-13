@@ -68,11 +68,11 @@ test("latest Figma shell is loaded by the real production page", async ({
   const input = boxes[".chat-composer textarea"];
   const toolbar = boxes[".chat-composer .composer-toolbar"];
   expect(input).toEqual([form[0] + 13, form[1] + 13, form[2] - 26, 64]);
-  expect(toolbar).toEqual([input[0], form[1] + form[3] - 37, input[2], 24]);
+  expect(toolbar).toEqual([input[0], form[1] + form[3] - 45, input[2], 32]);
   expect(form[3]).toBe(170);
   await expect(
     page.getByRole("button", { name: "开启语音输入", exact: true }),
-  ).toHaveCSS("height", "24px");
+  ).toHaveCSS("height", "32px");
   await page.screenshot({
     path: evidence + "/after-workspace.png",
     animations: "disabled",

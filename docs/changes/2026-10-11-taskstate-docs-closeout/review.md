@@ -1,0 +1,20 @@
+# Review：TASK-DOCS-HISTORY-001 最小收口
+
+## 范围
+
+复核 2026-09-23 审计记录的 37 项链接问题及本轮允许的 29 项入口修复。没有复写历史正文、测试结果或缺失日志。
+
+## 本地复核结论
+
+- 归档两页的 16 个相对路径现在指向已跟踪的 release evidence 文件。
+- UI 审计的 13 个源码/脚本链接现在是可解析的文件链接；旧行号作为“历史行号”保留，避免把历史位置误报为当前代码行。
+- 输入契约、导航复查、重规划的 8 个日志只存在工作树忽略副本或完全不存在，未将它们纳入证据；来源和可恢复性已在 `docs-history-audit.json` 标记。
+- 定向脚本在当前工作树通过，且断言只允许上述链接变化。
+
+## 独立只读复核
+
+2026-10-11 由独立 reviewer 在当前共享 dirty 工作树复核，未发现 P0/P1/P2 代码或安全缺陷；文档历史审计、链接修复边界和不补造 8 条日志的结论可接受。正式审查结论为 `PASS WITH FOLLOW-UPS`。
+
+## Exact-SHA 独立审查补录
+
+`docs_history_exact_review` 在基线 `5199557752f14438407b966e07fc8a965bdb9671` 与文档限定提交 `dc53317b36cb604b77db10fdebc56666c662e215` 上复核了 16 个文件。结论为 `PASS WITH FOLLOW-UPS`，无 P0-P2 发现；37/37 分类、29 个 tracked 修复、8 个无 Git 不可变来源的原始日志、Markdown 115/0、治理 120/0 和历史正文 exact-compare 均通过。完整收据见 [exact-independent-review.md](exact-independent-review.md)。

@@ -1,6 +1,8 @@
 # AI 开发总规则
 
-本文件适用于所有开发本项目的 AI。必须先读 [AGENTS.md](AGENTS.md)，再读本文件、[流程](docs/engineering/SDLC.md)、[分支规则](docs/engineering/BRANCH-POLICY.md)、[评审规则](docs/engineering/REVIEW.md)、[当前状态](docs/governance/PROJECT_STATE.md)和相关实现。规则与代码一起版本管理；不依赖聊天记忆或特定模型。兼容入口只引用这些文件，不复制另一套政策。
+本文件适用于所有开发本项目的 AI。必须先读 [AGENTS.md](AGENTS.md)，再读本文件、[流程](docs/engineering/SDLC.md)、[编码规范](docs/engineering/CODING-STANDARDS.md)、[测试规范](docs/engineering/TESTING.md)、[分支规则](docs/engineering/BRANCH-POLICY.md)、[评审规则](docs/engineering/REVIEW.md)、[当前状态](docs/governance/PROJECT_STATE.md)和相关实现。文档索引与冲突裁决见 [docs/README.md](docs/README.md)。规则与代码一起版本管理；不依赖聊天记忆或特定模型。兼容入口只引用这些文件，不复制另一套政策。
+
+本文件只承载「协作契约」：用户与 AI 分工、事实纪律、审核与交付。技术边界与硬约束在 `AGENTS.md`，具体编码与测试规则在专项文档，三者不重复承载同类条目。
 
 ## 用户与 AI 的分工
 
@@ -22,7 +24,7 @@
 
 ## 架构和实现质量
 
-先读相关实现再设计；复用现有组件/服务/契约，不新增第二套状态源、队列或工程。新功能提供端到端验收，明确 Desktop/Web/Mobile 分工；共享领域层不得依赖 UI、原生宿主或系统密钥库。
+先读相关实现再设计；复用现有组件/服务/契约，不新增第二套状态源、队列或工程。新功能提供端到端验收，明确 Desktop/Web/Mobile 分工；共享领域层不得依赖 UI、原生宿主或系统密钥库。跨平台技术约束与交付顺序以 `AGENTS.md`、`docs/governance/PROJECT_GOALS.md` 和 `docs/architecture/adr/ADR-011-platform-delivery-gates-and-vps-control-plane.md` 为准，本文件不重复定义产品规则。
 
 每个功能必须在 `docs/features/features.registry.json` 登记并对应一张 `docs/features/feat-*.md` 卡片：新功能先建卡、在账本建任务，再写代码；功能做完按证据把状态从 PROTOTYPE/PLANNED/PARTIAL 推进到 REAL，并运行 `npm run features:write` 刷新看板。REAL 必须有同态运行证据（Web 与 Desktop 分别验证），证据不足只能保持 PARTIAL/PROTOTYPE；非 REAL 功能必须挂开放账本任务（排除 DONE/OBSOLETE）。把本地演示接入真实后端时，按 `docs/features/BACKEND-ROADMAP.md` 的波次推进，逐模态替换 `useLocalGeneration` 演示 seam，不允许演示结果与真实结果混作同一状态。该门禁已并入 `npm run lint`/`verify`，漏登卡片、路径失效、看板过期或状态与任务矛盾都会失败。
 
@@ -39,3 +41,7 @@ AI 不得使用作者身份伪造 GitHub approval。单用户仓库采用 PR + �
 本地 pre-push、CI、远端 ruleset 分层防护。文档不能保证所有工具自动读取，本地 hook 可被绕过，CI 配置存在也不等于远端强制。新 AI/新机器必须先验证入口和本地防线，未加载规则的工具不得执行写操作。远端未生效时明确 BLOCKED；禁止声称已不可绕过。
 
 交付必须更新 ledger/PROGRESS/verification；只完成实现、只通过构建、只在 Web 验证都不能替代完整能力验收。规则/提示词改动也需要 [AI 场景回归](docs/engineering/AI-EVALS.md)。没有模型调用凭据/预算时保留场景和人工独立复核，不能把静态检查说成 live 模型评估。
+
+桌面源码更新必须经过当前 checkout 的 GUI 启动器或 `start-kk-studio.bat`：先检查 release 新鲜度、源码内容指纹/构建收据和 `node_modules` 与 `package-lock.json` 的 Tauri 依赖一致性，再构建并核对实际 EXE 路径、mtime/hash 与运行进程。缺少或不匹配收据、锁文件异常、依赖修复或构建失败时不得启动旧包；自动依赖修复使用 `npm ci --ignore-scripts`，不得在启动时触碰随包 Agent 目录。直接运行已有 `kk-studio.exe` 不算更新验收；修改 GUI 启动器源码还必须重新运行 `npm run client:shortcut`，不能把应用 release 验收当成启动器自身已更新。相关实现与证据规则见 [Windows 启动与分享](docs/engineering/LAUNCHER.md)。
+
+产品版本变更还必须从 `config/platform-versions.json` 出发，并运行 `npm run version:check` 与 `npm run version:consistency`。后者检查根/嵌套 lock、Tauri 依赖和活动源码中的应用版本硬编码；警告必须说明它是协议/schema、插件/供应商版本还是误用的产品版本。分支合并必须绑定当前 base/head SHA 和 receipt；旧 worktree、旧快捷方式、旧 EXE、mtime 或构建缓存不能证明其他环境已经更新。

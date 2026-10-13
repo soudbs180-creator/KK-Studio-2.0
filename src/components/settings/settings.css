@@ -84,9 +84,9 @@
 }
 .settings-nav-icon {
   display: block;
-  flex: 0 0 22px;
-  width: 22px;
-  height: 22px;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
 }
 .settings-content {
@@ -175,7 +175,7 @@
   color: var(--settings-muted);
 }
 .settings-system-label span {
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
   opacity: 0.85;
 }
 .settings-system-label + .settings-row .settings-row-control {
@@ -242,9 +242,13 @@
   cursor: not-allowed;
   opacity: var(--ui-disabled-opacity);
 }
-.settings-panel :is(button, input, select):focus-visible {
-  outline: 2px solid var(--ui-focus);
-  outline-offset: 3px;
+.settings-panel button:focus-visible {
+  outline: var(--ui-focus-width) solid var(--ui-focus);
+  outline-offset: var(--ui-focus-offset);
+}
+.settings-panel :is(input, select):focus-visible {
+  outline: var(--ui-focus-subtle-width) solid var(--ui-focus-subtle);
+  outline-offset: var(--ui-focus-subtle-offset);
 }
 .settings-visually-hidden {
   position: absolute;
@@ -280,8 +284,9 @@
 .settings-feedback button {
   display: grid;
   place-items: center;
-  flex: 0 0 22px;
-  height: 22px;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
   margin-left: auto;
   color: inherit;
 }
@@ -325,7 +330,7 @@
   gap: 6px;
   height: 32px;
   padding: 0 14px;
-  border-radius: 7px;
+  border-radius: var(--ui-radius-control);
   color: var(--settings-muted);
   font-size: var(--kk-font-body);
   line-height: 18px;
@@ -377,8 +382,8 @@
   right: 8px;
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
   transform: translateY(-50%);
   border-radius: var(--ui-radius-control);
   color: var(--settings-muted);
@@ -504,7 +509,8 @@
   font-size: 14px;
   line-height: 20px;
 }
-.settings-field input {
+.settings-field input,
+.settings-field select {
   width: 100%;
   min-width: 0;
   height: var(--ui-input-height);
@@ -516,7 +522,8 @@
   color: var(--settings-text);
   background: var(--bg-input);
 }
-.settings-field input:disabled {
+.settings-field input:disabled,
+.settings-field select:disabled {
   cursor: not-allowed;
   opacity: 0.85;
 }
@@ -1022,8 +1029,8 @@
   accent-color: var(--focus-ring);
 }
 .settings-radio input[type="radio"]:focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 2px;
+  outline: var(--ui-focus-subtle-width) solid var(--ui-focus-subtle);
+  outline-offset: var(--ui-focus-subtle-offset);
 }
 @media (max-width: 720px) {
   .settings-radio {
@@ -1300,7 +1307,7 @@
 }
 .provider-connection-list button:hover,
 .provider-connection-list button.is-active {
-  border-color: var(--ui-selected);
+  border-color: var(--border-control);
   background: var(--settings-selected);
 }
 .provider-connection-list button span {
@@ -1495,22 +1502,6 @@
   .settings-toggle span {
     transition: none;
   }
-}
-
-/* Sidebar grouping (设置 / 功能 / 数据与安全 / 系统). */
-.settings-nav-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.settings-nav-group + .settings-nav-group {
-  margin-top: 18px;
-}
-.settings-nav-group-label {
-  padding: 0 12px;
-  font-size: var(--ui-font-caption);
-  line-height: 1.4;
-  color: var(--text-tertiary);
 }
 
 /* Figma 399:27506 uses one continuous 11-item navigation rail. Keep the

@@ -217,7 +217,7 @@ pub fn validate_snapshot_value(snapshot: &Value) -> Result<(), String> {
     validation::validate(snapshot)
 }
 
-fn unique_path(path: &Path, label: &str) -> PathBuf {
+pub(crate) fn unique_path(path: &Path, label: &str) -> PathBuf {
     static NEXT: AtomicU64 = AtomicU64::new(0);
     let nonce = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
@@ -229,7 +229,7 @@ fn unique_path(path: &Path, label: &str) -> PathBuf {
         NEXT.fetch_add(1, Ordering::Relaxed)
     ))
 }
-fn durable_temp(path: &Path, raw: &[u8]) -> Result<PathBuf, String> {
+pub(crate) fn durable_temp(path: &Path, raw: &[u8]) -> Result<PathBuf, String> {
     let temp = unique_path(path, "tmp");
     let result = (|| {
         let mut file = OpenOptions::new()
@@ -249,7 +249,7 @@ fn durable_temp(path: &Path, raw: &[u8]) -> Result<PathBuf, String> {
     }
     Ok(temp)
 }
-fn atomic_write(path: &Path, raw: &[u8]) -> Result<(), String> {
+pub(crate) fn atomic_write(path: &Path, raw: &[u8]) -> Result<(), String> {
     let temp = durable_temp(path, raw)?;
     if let Err(error) = fs::rename(&temp, path)
         .map_err(io_error)
@@ -260,7 +260,7 @@ fn atomic_write(path: &Path, raw: &[u8]) -> Result<(), String> {
     }
     Ok(())
 }
-fn sync_parent(path: &Path) -> Result<(), String> {
+pub(crate) fn sync_parent(path: &Path) -> Result<(), String> {
     // Windows cannot open directories through std File for sync_all. Replacement
     // payloads have already been flushed through the temporary file handle.
     #[cfg(unix)]

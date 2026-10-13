@@ -126,6 +126,64 @@ test("historical packages alone cannot pass, while a new package must bind to a 
     /bound to a changed task-ledger/,
   );
 });
+test("an explicit legacy marker permits a historical snapshot package while a current package stays strict", () => {
+  const historical = "docs/changes/2026-10-09-capacity-errors/";
+  const historicalMarker = historical + "legacy-incomplete.md";
+  const current = "docs/changes/2026-09-20-current/";
+  const currentFiles = [
+    "intent.md",
+    "spec.md",
+    "plan.md",
+    "verification.md",
+    "review.md",
+  ].map((file) => current + file);
+  const ledgerTask = {
+    id: "TASK-HISTORICAL-SNAPSHOT",
+    branch: "fix/TASK-HISTORICAL-SNAPSHOT",
+    evidence: [current + "verification.md"],
+  };
+  const files = [
+    "docs/PROGRESS.md",
+    "docs/governance/task-ledger.json",
+    historicalMarker,
+    ...currentFiles,
+  ];
+  assert.deepEqual(
+    checkDeliveryFiles(
+      files,
+      (file: string) => files.includes(file),
+      () => false,
+      {
+        headLedger: [ledgerTask],
+        baseLedger: [],
+        branch: ledgerTask.branch,
+        isLegacyExempt: (name: string) => name === "2026-10-09-capacity-errors",
+      },
+    ),
+    [],
+  );
+});
+test("an unknown package cannot self-exempt with a legacy marker", () => {
+  const packageDir = "docs/changes/2099-01-01-future/";
+  const marker = packageDir + "legacy-incomplete.md";
+  const files = [
+    "docs/PROGRESS.md",
+    "docs/governance/task-ledger.json",
+    marker,
+  ];
+  const issues = checkDeliveryFiles(
+    files,
+    (file: string) => files.includes(file),
+    () => false,
+    {
+      headLedger: [],
+      baseLedger: [],
+      branch: "fix/future",
+      isLegacyExempt: () => true,
+    },
+  );
+  assert.match(issues.join("\n"), /must add intent\.md|must be bound/);
+});
 test("delivery rejects code-only PR and missing current ledger update", () => {
   const result = checkDeliveryFiles(["src/App.tsx"], () => true).join();
   assert.match(result, /dated/);
@@ -158,6 +216,21 @@ test("delivery blocks secret/generated payloads and competing locks but permits 
   assert.equal(
     result.filter((message: string) => message.endsWith(".env.example")).length,
     1,
+  );
+  const sourceCredentialModule = "src/features/ai-gateway/credentials.ts";
+  const sourceResult = checkDeliveryFiles(
+    [...changed, sourceCredentialModule],
+    (file: string) =>
+      manifest.includes(file) ||
+      file === sourceCredentialModule ||
+      file === "docs/PROGRESS.md" ||
+      file === "docs/governance/task-ledger.json",
+  );
+  assert.equal(
+    sourceResult.some((message: string) =>
+      message.includes(sourceCredentialModule),
+    ),
+    false,
   );
 });
 test("deleting a secret/generated file or competing lock is allowed, but deleting required governance files is not", () => {

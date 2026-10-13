@@ -139,12 +139,30 @@ export function readSwitch(root, rev, file, name, fallback = "blocking") {
  * 单星不跨目录。
  */
 export function globToRegExp(glob) {
-  const escaped = glob.replace(/[.+^${}()|[\]\\]/g, "\\$&");
-  const pattern = escaped
-    .split("/**/")
-    .map((segment) => segment.replace(/\*/g, "[^/]*"))
-    .join("(?:[^/]*/)*");
-  return new RegExp(`^${pattern}$`);
+  const normalized = glob.replaceAll("\\", "/");
+  let pattern = "^";
+  for (let index = 0; index < normalized.length; ) {
+    if (normalized.startsWith("**/", index)) {
+      pattern += "(?:[^/]+/)*";
+      index += 3;
+      continue;
+    }
+    if (normalized.startsWith("**", index)) {
+      pattern += ".*";
+      index += 2;
+      continue;
+    }
+    const character = normalized[index];
+    if (character === "*") {
+      pattern += "[^/]*";
+    } else if (/[.+^${}()|[\]\\]/.test(character)) {
+      pattern += `\\${character}`;
+    } else {
+      pattern += character;
+    }
+    index += 1;
+  }
+  return new RegExp(`${pattern}$`);
 }
 
 /** 路径是否命中 include 且不命中 exclude。 */

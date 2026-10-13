@@ -3,7 +3,7 @@ import type { CreationDraft } from "../features/creation/model";
 import StartAttachmentList from "./StartAttachmentList";
 import ComposerTextarea from "./ComposerTextarea";
 import useConversationAttachments from "./useConversationAttachments";
-import StartResourcePopover from "./StartResourcePopover";
+import ComposerExtensionsMenu from "./ComposerExtensionsMenu";
 import StartModelPicker from "./StartModelPicker";
 import { StartApproval, StartModePicker } from "./StartComposerModes";
 import VoiceInputButton from "./VoiceInputButton";
@@ -22,6 +22,7 @@ export default function StartComposer({
   onSubmit,
   onOpenModel,
   onOpenSkills,
+  onOpenExtension,
   defaultModel = "",
   modelConfigured = false,
   skills = [],
@@ -33,6 +34,7 @@ export default function StartComposer({
   onSubmit: (input: CreationDraft) => void;
   onOpenModel: () => void;
   onOpenSkills: () => void;
+  onOpenExtension: (id: string) => void;
   defaultModel?: string;
   modelConfigured?: boolean;
   skills?: SkillRecord[];
@@ -118,9 +120,10 @@ export default function StartComposer({
           value={draft.prompt}
           onChange={(event) => {
             commit({ prompt: event.target.value });
-            setStatus(
-              event.target.value.trim() && disabledReason ? disabledReason : "",
-            );
+            // The inline feedback below is the single visible source for a
+            // disabled generation reason. Clear transient submit/status text
+            // while editing so the page does not render the same reason twice.
+            setStatus("");
           }}
           placeholder="描述你想要生成的内容"
           rows={3}
@@ -184,24 +187,24 @@ export default function StartComposer({
                 className="start-tool-button"
                 aria-haspopup="menu"
                 aria-expanded={skillMenuOpen}
-                title="技能（Skill）"
+                title="扩展"
                 onClick={() => toggleMenu("skill")}
               >
                 <img src="/design/figma/composer-puzzle.svg" alt="" />
-                <span>Skill</span>
+                <span>扩展</span>
               </button>
               {skillMenuOpen && (
-                <StartResourcePopover
-                  kind="skill"
+                <ComposerExtensionsMenu
                   skills={skills}
                   onApplySkill={(record) => {
                     const message = onApplySkill?.(record);
                     closeMenus();
                     setStatus(message ?? "当前草稿不可用，未应用技能。");
                   }}
-                  onOpen={() => {
+                  onOpen={(id) => {
                     closeMenus();
-                    onOpenSkills();
+                    if (id === "skills") onOpenSkills();
+                    else onOpenExtension(id);
                   }}
                 />
               )}

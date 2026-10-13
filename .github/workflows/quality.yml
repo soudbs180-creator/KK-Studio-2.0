@@ -33,7 +33,7 @@ jobs:
           node-version: 24
       - run: node --test tests/deploy/*.test.mjs
   delivery:
-    if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+    if: github.event_name == 'pull_request' || github.event_name == 'merge_group' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: windows-latest
     timeout-minutes: 5
     steps:
@@ -45,10 +45,34 @@ jobs:
           node-version: 24
       - name: Validate current change package
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
           HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: node scripts/check-delivery.mjs --base "$env:BASE_SHA" --head "$env:HEAD_SHA"
+  governance:
+    if: github.event_name == 'pull_request' || github.event_name == 'merge_group' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --ignore-scripts
+      - run: npm run governance:check
+      - name: Enforce memory contract synchronization
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
+        run: node scripts/governance/check-policy-sync.mjs --base "$BASE_SHA"
+      - name: Revalidate merge-group base, head, and ancestry
+        if: github.event_name == 'merge_group'
+        env:
+          BASE_SHA: ${{ github.event.merge_group.base_sha }}
+          HEAD_SHA: ${{ github.event.merge_group.head_sha }}
+          CHECKOUT_SHA: ${{ github.sha }}
+        run: node scripts/governance/merge-group-gate.mjs
   verify:
     runs-on: windows-latest
     timeout-minutes: 45
@@ -61,6 +85,8 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - run: npm run version:check
+      - run: npm run version:consistency
       - run: node node_modules/@playwright/test/cli.js install msedge
       - name: Run repository verification
         env:

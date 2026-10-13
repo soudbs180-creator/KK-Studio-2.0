@@ -1,6 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import { createServer, type ServerResponse } from "node:http";
 import { openSeededProject } from "./helpers";
+const productionOrigin = "http://127.0.0.1:1423";
 const png =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=";
 async function fixture(nativeImage = false) {
@@ -22,10 +23,7 @@ async function fixture(nativeImage = false) {
   const emit = (type: string, data: unknown) =>
     stream?.write(`event: ${type}\r\ndata: ${JSON.stringify(data)}\r\n\r\n`);
   const server = createServer(async (req, res) => {
-    res.setHeader(
-      "Access-Control-Allow-Origin",
-      `http://127.0.0.1:${process.env.KK_TEST_PORT ?? "1423"}`,
-    );
+    res.setHeader("Access-Control-Allow-Origin", productionOrigin);
     res.setHeader(
       "Access-Control-Allow-Headers",
       "content-type,x-canvas-agent-token,authorization,idempotency-key",
@@ -562,8 +560,10 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     await source.press("Enter");
     await source.getByRole("button", { name: "画布模型", exact: true }).click();
     const menu = source.getByRole("menu", { name: "选择模型" });
-    await menu.getByRole("menuitem", { name: "Codex ›", exact: false }).click();
-    await menu.getByRole("menuitemradio", { name: /Fixture Codex/ }).click();
+    await menu.getByRole("menuitemradio", { name: /图片模型未报告/ }).click();
+    await expect(
+      source.getByText("图片模型未报告", { exact: true }),
+    ).toBeVisible();
     await page.getByLabel("图片提示词").fill("用内置工具生成蓝色球");
     await source.getByRole("button", { name: "生成图片", exact: true }).click();
     await expect.poll(() => agent.received.turns.length).toBe(1);
@@ -595,7 +595,7 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     expect(agent.received.images).toHaveLength(0);
     await page.getByRole("button", { name: "模型", exact: true }).click();
     const chatMenu = page.getByRole("menu", { name: "选择模型" });
-    await chatMenu.getByRole("button", { name: "切换全部模型" }).click();
+    await chatMenu.getByRole("tab", { name: "图片", exact: true }).click();
     await chatMenu
       .getByRole("menuitemradio", { name: /image-fixture/ })
       .click();

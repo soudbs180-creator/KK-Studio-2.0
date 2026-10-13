@@ -302,6 +302,13 @@ for (const scenario of [
             }
             if (command === "credential_get") return null;
             if (command === "credential_set") return true;
+            if (command === "read_provider_config")
+              return {
+                status: "missing",
+                revision: null,
+                connections: [],
+              };
+            if (command === "write_provider_config") return 1;
             if (command === "task_host_list") {
               // Recovery reads the index before probing a task. Live polling
               // reads the task directly, while its controller is still active.
@@ -534,6 +541,13 @@ test("durable intent write failure prevents every provider POST", async ({
             return { status: "missing", snapshot: null };
           if (command === "credential_get") return null;
           if (command === "credential_set") return true;
+          if (command === "read_provider_config")
+            return {
+              status: "missing",
+              revision: null,
+              connections: [],
+            };
+          if (command === "write_provider_config") return 1;
           if (command === "write_creation_snapshot") {
             state.writes++;
             throw new Error("io: synthetic durable write failure");

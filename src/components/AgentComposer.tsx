@@ -16,6 +16,7 @@ import {
   MAX_AGENT_IMAGE_BYTES,
   type AgentDraftAttachment,
 } from "../features/agent/agentAttachments";
+import "../styles/agent-panel.css";
 
 /** Share the composer while isolating Agent text and attachments from API drafts. */
 export default function AgentComposer({
@@ -175,50 +176,59 @@ export default function AgentComposer({
   const visibleFeedback =
     importError || (feedback !== agent.error ? feedback : "");
   return (
-    <>
-      {visibleFeedback && (
-        <p className="agent-action-error" role="alert">
-          {visibleFeedback}
-        </p>
+    <div className="agent-composer-region">
+      {(visibleFeedback || importError) && (
+        <div className="agent-composer-feedback">
+          {visibleFeedback && (
+            <p className="agent-action-error" role="alert">
+              {visibleFeedback}
+            </p>
+          )}
+          {importError && (
+            <button
+              type="button"
+              className="ui-button"
+              onClick={() => {
+                setImportError(null);
+                setFeedback("");
+              }}
+            >
+              忽略未添加的图片
+            </button>
+          )}
+        </div>
       )}
-      {importError && (
-        <button
-          type="button"
-          className="ui-button"
-          onClick={() => {
-            setImportError(null);
-            setFeedback("");
-          }}
-        >
-          忽略未添加的图片
-        </button>
-      )}
-      <div className="agent-reference-picker">
-        <select
-          className="ui-select"
-          aria-label="引用画布图片"
-          value=""
-          disabled={
-            readingCanvas ||
-            Boolean(readingFiles) ||
-            agent.sending ||
-            !agent.canvasImages?.length
-          }
-          onChange={(event) => void addCanvasImage(event.target.value)}
-        >
-          <option value="">
-            {agent.canvasImages?.length
-              ? "引用画布图片…"
-              : "画布暂无已归档图片"}
-          </option>
-          {agent.canvasImages?.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.title}
+      <section className="agent-reference-region" aria-label="Agent 参考图">
+        <div className="agent-reference-heading">
+          <span>参考图</span>
+          <span>可选 · 最多 6 张 · 单张 8 MiB</span>
+        </div>
+        <div className="agent-reference-picker">
+          <select
+            className="ui-select"
+            aria-label="引用画布图片"
+            value=""
+            disabled={
+              readingCanvas ||
+              Boolean(readingFiles) ||
+              agent.sending ||
+              !agent.canvasImages?.length
+            }
+            onChange={(event) => void addCanvasImage(event.target.value)}
+          >
+            <option value="">
+              {agent.canvasImages?.length
+                ? "引用画布图片…"
+                : "画布暂无已归档图片"}
             </option>
-          ))}
-        </select>
-        <span>最多 6 张 · 单张 8 MiB</span>
-      </div>
+            {agent.canvasImages?.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.title}
+              </option>
+            ))}
+          </select>
+        </div>
+      </section>
       {cloneElement(composer, {
         input,
         onInputChange: update,
@@ -262,6 +272,6 @@ export default function AgentComposer({
         readingFiles: readingFiles + (readingCanvas ? 1 : 0),
         voiceSessionKey: `agent-${draftKey}`,
       })}
-    </>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 {
   "name": "kk-studio",
   "private": true,
-  "version": "2.1.12",
+  "version": "2.1.13",
   "type": "module",
   "scripts": {
     "postinstall": "npm run agent:install && npm run agent:build && npm run plugins:install && npm run plugins:build",
@@ -30,9 +30,7 @@
     "test:ui": "npm run build && node node_modules/@playwright/test/cli.js test",
     "format:check": "prettier --check src tests scripts *.ts *.mjs *.json design/figma-plugin/*.js design/figma-plugin/*.json config/*.json",
     "ui:check": "node scripts/check-ui-standards.mjs",
-    "health:check": "node scripts/check-code-health.mjs",
-    "footguns:check": "node scripts/check-windows-footguns.mjs",
-    "lint": "eslint src tests scripts *.config.{ts,mjs} --max-warnings 0 && npm run version:check && node scripts/check-project-goals.mjs && node scripts/check-governance.mjs && node scripts/check-features.mjs && node scripts/check-markdown.mjs && npm run health:check && npm run footguns:check",
+    "lint": "eslint src tests scripts *.config.{ts,mjs} --max-warnings 0 && npm run version:check && npm run version:consistency && node scripts/check-project-goals.mjs && node scripts/check-governance.mjs && node scripts/check-features.mjs && node scripts/check-markdown.mjs && npm run index:check && npm run doc:commands:check && npm run health:check && npm run footguns:check",
     "verify": "npm run lint && npm run typecheck && npm test && npm run test:agent && npm run ui:check && npm run format:check && npm run test:ui && npm run test:development",
     "tauri": "tauri",
     "client:dev": "tauri dev",
@@ -40,7 +38,9 @@
     "client:build:agent": "npm run agent:package && tauri build --config src-tauri/tauri.agent.conf.json",
     "client:installer": "npm run agent:package && tauri build --config src-tauri/tauri.installer.conf.json",
     "client:installer:receipt": "node scripts/windows/installer-receipt.mjs",
+    "client:installer:verify": "node scripts/windows/verify-installer-receipt.mjs",
     "client:installer:test": "node tests/desktop/installer.mjs",
+    "client:installed:verify": "node scripts/windows/verify-installed-release.mjs",
     "client:taskhost:test": "node tests/desktop/taskhost-lifecycle.mjs",
     "client:check": "cargo check --manifest-path src-tauri/Cargo.toml",
     "client:shortcut": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/windows/install-shortcut.ps1 -Desktop",
@@ -48,12 +48,22 @@
     "governance:write": "node scripts/check-governance.mjs --write",
     "goals:check": "node scripts/check-project-goals.mjs",
     "markdown:check": "node scripts/check-markdown.mjs",
+    "index:check": "node scripts/check-doc-index.mjs",
+    "doc:commands:check": "node scripts/check-doc-commands.mjs",
+    "delivery:completeness": "node scripts/check-delivery-completeness.mjs",
     "features:check": "node scripts/check-features.mjs",
     "features:write": "node scripts/check-features.mjs --write",
     "version:check": "node scripts/platform-versions.mjs check",
+    "version:consistency": "node scripts/check-version-consistency.mjs",
     "version:bump": "node scripts/platform-versions.mjs bump",
     "git:guards": "node scripts/install-git-guards.mjs",
-    "delivery:check": "node scripts/check-delivery.mjs"
+    "delivery:check": "node scripts/check-delivery.mjs",
+    "governance:normalize": "node scripts/governance/normalize-ledger.mjs --write",
+    "workspace:inventory": "node scripts/governance/workspace-inventory.mjs --write",
+    "worktree:reclaim": "node scripts/governance/worktree-reclaim.mjs",
+    "worktree:check": "node scripts/governance/worktree-policy.mjs --check-create",
+    "health:check": "node scripts/check-code-health.mjs",
+    "footguns:check": "node scripts/check-windows-footguns.mjs"
   },
   "engines": {
     "node": ">=24"

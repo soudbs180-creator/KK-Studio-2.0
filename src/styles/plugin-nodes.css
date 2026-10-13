@@ -7,7 +7,7 @@
 }
 .canvas-node.canvas-node-plugin.is-selected {
   box-shadow:
-    0 0 0 2px var(--bg-accent),
+    0 0 0 1px var(--border-control),
     var(--ui-shadow);
 }
 .plugin-node {

@@ -29,7 +29,7 @@ test("未配置连接时保留首页草稿并打开供应商设置", async ({ pa
 
 test("首页权限模式询问可取消确认且输入仍保留", async ({ page }) => {
   await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page.getByRole("button", { name: /配置供应商与模型/ }).click();
+  await page.getByRole("button", { name: /配置供应商与账号/ }).click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key").fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
@@ -51,17 +51,15 @@ test("首页权限模式询问可取消确认且输入仍保留", async ({ page 
   await expect(page.getByLabel("创作提示词")).toHaveValue(prompt);
 });
 
-test("输入栏 Skill 弹层先列内置 Skill，再可进入 Skill 目录", async ({
-  page,
-}) => {
+test("输入栏扩展弹层先列内置 Skill，再可进入 Skill 目录", async ({ page }) => {
   // Contract since the local Skill registry: the app seeds built-in skills on
   // first open, so the start composer offers them directly instead of an empty
   // state. Catalog management still lives behind the browse entry.
   await page
     .getByRole("region", { name: "开始创作" })
-    .getByRole("button", { name: "Skill", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .click();
-  const menu = page.getByRole("menu", { name: "选择 Skill" });
+  const menu = page.getByRole("menu", { name: "扩展" });
   await expect(
     menu.getByRole("menuitem", { name: "镜头规划助手", exact: true }),
   ).toBeVisible();
@@ -138,7 +136,7 @@ test("首页加号添加图片并支持删除，模型入口是本次创作选�
   await expect(page.getByLabel("已添加的参考素材")).toHaveCount(0);
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await expect(page.getByRole("menu", { name: "选择模型" })).toContainText(
-    "没有匹配的图片模型",
+    "暂无模型，请在设置中保存连接并刷新模型列表。",
   );
 });
 

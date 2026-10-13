@@ -68,6 +68,16 @@ export default function ImageModelParameters({
           </button>
         ))}
       </div>
+      <div className="parameter-capability-grid" aria-label="模型能力参数">
+        <span>思考强度</span>
+        <strong>最大（默认）</strong>
+        <span>图像搜索</span>
+        <strong>按模型类型显示</strong>
+        <span>参考图</span>
+        <strong>
+          {capabilities.operations.edit === "supported" ? "支持编辑" : "未声明"}
+        </strong>
+      </div>
       <small>
         {options.length
           ? "只发送当前模型声明支持的尺寸；自适应使用供应商默认值。"

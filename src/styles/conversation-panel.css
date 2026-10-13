@@ -270,11 +270,16 @@
 .agent-reference-picker select:disabled {
   opacity: var(--ui-disabled-opacity);
 }
-.chat-agent-controls button:focus-visible,
-.chat-agent-controls select:focus-visible,
-.agent-reference-picker select:focus-visible {
+.chat-agent-controls button:focus-visible {
   outline: var(--ui-focus-width) solid var(--ui-focus);
   outline-offset: var(--ui-focus-offset);
+}
+.chat-agent-controls select:focus-visible,
+.agent-reference-picker select:focus-visible,
+.google-agent-controls input:focus-visible,
+.google-agent-controls select:focus-visible {
+  outline: var(--ui-focus-subtle-width) solid var(--ui-focus-subtle);
+  outline-offset: var(--ui-focus-subtle-offset);
 }
 .chat-agent-item.is-error {
   color: var(--ui-danger);
@@ -410,8 +415,10 @@
   font-size: var(--ui-font-caption);
   margin: 0;
 }
-.google-agent-controls input:focus-visible,
-.google-agent-controls select:focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 3px;
+
+.conversation-panel .composer-extensions-menu {
+  width: min(320px, calc(100vw - 48px));
+}
+.conversation-panel .chat-skill-trigger {
+  border-radius: 999px;
 }

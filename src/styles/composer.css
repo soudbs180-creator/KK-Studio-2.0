@@ -30,8 +30,7 @@
   margin: 0;
 }
 .composer-surface:has(> .composer-textarea:focus) {
-  outline: var(--ui-focus-width) solid var(--focus-ring);
-  outline-offset: var(--ui-focus-offset);
+  outline: none;
 }
 .composer-surface > .composer-textarea {
   display: block;
@@ -500,9 +499,9 @@
   }
   .start-composer .start-submit-button {
     order: 6;
-    flex: 0 0 24px;
-    width: 24px;
-    min-width: 24px;
+    flex: 0 0 var(--kk-control-h-md);
+    width: var(--kk-control-h-md);
+    min-width: var(--kk-control-h-md);
   }
   .start-composer .start-composer-divider {
     display: none;
@@ -511,12 +510,12 @@
 
 /*
  * Current Figma composer contracts (483:695 / 483:753 / 407:29265).
- * Keep the engineering hit targets compact and let the visible controls share
- * one 24px baseline. Batch and data mode live inside the model menu;
+ * Keep the visible controls on the shared 32px hit target. Batch and data mode
+ * live inside the model menu;
  * plugins and partners remain accessible through settings.
  */
 .start-composer {
-  --composer-target: 24px;
+  --composer-target: 32px;
   box-sizing: border-box;
   width: 652px;
   min-height: 170px;
@@ -560,8 +559,8 @@
   align-items: center;
   width: 625px;
   max-width: none;
-  height: 24px;
-  min-height: 24px;
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   margin-top: auto;
   gap: 0;
 }
@@ -570,8 +569,8 @@
 .start-composer .start-footer-right {
   display: flex;
   align-items: center;
-  height: 24px;
-  min-height: 24px;
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   gap: 0;
 }
 
@@ -581,18 +580,18 @@
 }
 
 .start-composer .start-footer-right {
-  flex: 0 0 126px;
-  width: 126px;
+  flex: 0 0 140px;
+  width: 140px;
   margin-left: auto;
 }
 
 .start-composer .start-add-button {
   order: initial;
-  flex: 0 0 24px;
-  width: 24px;
-  min-width: 24px;
-  height: 24px;
-  border-radius: 12px;
+  flex: 0 0 var(--kk-control-h-md);
+  width: var(--kk-control-h-md);
+  min-width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  border-radius: var(--kk-radius-full);
 }
 
 .start-composer .start-add-button > img,
@@ -607,7 +606,7 @@
   width: 58px;
   min-width: 58px;
   max-width: 58px;
-  height: var(--kk-control-h-sm);
+  height: var(--kk-control-h-md);
 }
 
 .start-composer .start-model-picker {
@@ -625,8 +624,8 @@
   box-sizing: border-box;
   width: 58px;
   min-width: 58px;
-  height: var(--kk-control-h-sm);
-  min-height: var(--kk-control-h-sm);
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   padding: 0 5px;
   gap: 4px;
   border-radius: var(--kk-radius-control);
@@ -693,11 +692,11 @@
 
 .start-composer .start-footer-right [data-voice-state] {
   order: initial;
-  flex: 0 0 var(--kk-control-h-sm);
-  width: var(--kk-control-h-sm);
-  min-width: var(--kk-control-h-sm);
-  height: var(--kk-control-h-sm);
-  min-height: var(--kk-control-h-sm);
+  flex: 0 0 var(--kk-control-h-md);
+  width: var(--kk-control-h-md);
+  min-width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   margin-left: 0;
   border-radius: 50%;
 }
@@ -717,14 +716,14 @@
   width: 53px;
   max-width: 53px;
   min-width: 53px;
-  height: var(--kk-control-h-sm);
+  height: var(--kk-control-h-md);
 }
 
 .start-composer .start-mode-button {
   width: 53px;
   min-width: 53px;
-  height: var(--kk-control-h-sm);
-  min-height: var(--kk-control-h-sm);
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   padding: 0 4px;
   border-radius: var(--kk-radius-control);
   font-size: var(--kk-font-caption);
@@ -738,17 +737,49 @@
 
 .start-composer .start-submit-button {
   order: initial;
-  flex: 0 0 24px;
-  width: 24px;
-  min-width: 24px;
-  height: 24px;
-  min-height: 24px;
+  flex: 0 0 var(--kk-control-h-md);
+  width: var(--kk-control-h-md);
+  min-width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   margin-left: 9px;
-  border-radius: 12px;
+  border-radius: var(--kk-radius-full);
 }
 
 .start-composer .start-composer-divider + .start-footer-right {
   margin-left: auto;
+}
+
+/* Desktop keeps enough room for the model label while the phone contract
+   remains the compact 58px control defined below. */
+@media (min-width: 768px) {
+  .start-composer .start-footer-left {
+    flex-basis: 220px;
+    width: 220px;
+  }
+
+  .start-composer .start-model-picker {
+    flex-basis: calc(var(--kk-control-h-lg) * 2 + var(--kk-space-2));
+    width: calc(var(--kk-control-h-lg) * 2 + var(--kk-space-2));
+    max-width: none;
+  }
+
+  .start-composer .composer-ext-skill {
+    flex-basis: calc(var(--kk-control-h-lg) * 2);
+    width: calc(var(--kk-control-h-lg) * 2);
+    max-width: none;
+  }
+
+  .start-composer .start-footer-right {
+    flex-basis: 144px;
+    width: 144px;
+  }
+
+  .start-composer .start-model-picker > button,
+  .start-composer .composer-ext-skill > button {
+    width: 100%;
+    min-width: 100%;
+  }
 }
 
 /* The conversation frame has a separate 426x170 Figma contract. */
@@ -791,20 +822,20 @@
   display: flex;
   align-items: center;
   width: 100%;
-  height: 24px;
-  min-height: 24px;
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   margin-top: auto;
   gap: 0;
 }
 
 .conversation-panel .chat-composer .chat-attachment-trigger,
 .conversation-panel .chat-composer .chat-send {
-  flex: 0 0 24px;
-  width: 24px;
-  min-width: 24px;
-  height: 24px;
-  min-height: 24px;
-  border-radius: 12px;
+  flex: 0 0 var(--kk-control-h-md);
+  width: var(--kk-control-h-md);
+  min-width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
+  border-radius: var(--kk-radius-full);
 }
 
 .conversation-panel .chat-composer .chat-attachment-trigger {
@@ -817,15 +848,15 @@
   width: 58px;
   min-width: 58px;
   max-width: 58px;
-  height: var(--kk-control-h-sm);
+  height: var(--kk-control-h-md);
   margin-left: 5px;
 }
 
 .conversation-panel .chat-composer .chat-model-picker {
   width: 58px;
   min-width: 58px;
-  height: var(--kk-control-h-sm);
-  min-height: var(--kk-control-h-sm);
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   padding: 0 5px;
   gap: 4px;
   border-radius: var(--kk-radius-control);
@@ -867,7 +898,7 @@
 
 .conversation-panel .chat-composer .chat-skill-picker,
 .conversation-panel .chat-composer .chat-plugin-picker {
-  height: var(--kk-control-h-sm);
+  height: var(--kk-control-h-md);
 }
 
 .conversation-panel .chat-composer .chat-skill-picker {
@@ -889,8 +920,8 @@
   box-sizing: border-box;
   width: 58px;
   min-width: 58px;
-  height: var(--kk-control-h-sm);
-  min-height: var(--kk-control-h-sm);
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   padding: 0 5px;
   gap: 4px;
   border-radius: var(--kk-radius-control);
@@ -906,11 +937,11 @@
 
 .conversation-panel .chat-composer [data-voice-state] {
   order: 7;
-  flex: 0 0 var(--kk-control-h-sm);
-  width: var(--kk-control-h-sm);
-  min-width: var(--kk-control-h-sm);
-  height: var(--kk-control-h-sm);
-  min-height: var(--kk-control-h-sm);
+  flex: 0 0 var(--kk-control-h-md);
+  width: var(--kk-control-h-md);
+  min-width: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   margin-left: auto;
   border-radius: 50%;
 }
@@ -929,14 +960,14 @@
   flex: 0 0 53px;
   width: 53px;
   min-width: 53px;
-  height: var(--kk-control-h-sm);
+  height: var(--kk-control-h-md);
 }
 
 .conversation-panel .chat-composer .chat-mode-trigger {
   width: 53px;
   min-width: 53px;
-  height: var(--kk-control-h-sm);
-  min-height: var(--kk-control-h-sm);
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   padding: 0 4px;
   border-radius: var(--kk-radius-control);
   font-size: var(--kk-font-caption);
@@ -1071,5 +1102,71 @@
 
   .conversation-panel .chat-composer .chat-send {
     margin-left: 4px;
+  }
+}
+/* Keep the three composer surfaces aligned at the same hit target. */
+.composer-toolbar
+  :is(
+    .start-tool-button,
+    .chat-model-picker,
+    .chat-skill-trigger,
+    .chat-plugin-trigger,
+    .chat-mode-trigger,
+    .start-mode-button
+  ) {
+  min-height: var(--kk-control-h-md);
+  height: var(--kk-control-h-md);
+  border-radius: var(--kk-radius-full);
+}
+.composer-toolbar
+  :is(
+    .start-add-button,
+    .chat-attachment-trigger,
+    .start-submit-button,
+    .chat-send,
+    [data-voice-state]
+  ) {
+  border-radius: var(--kk-radius-full);
+}
+
+/* Compact home controls keep the model affordance readable instead of
+   truncating the three-character fallback inside the fixed tool slot. */
+@media (max-width: 1200px) {
+  /* Keep the action row inside the responsive composer content box. */
+  .start-composer .start-composer-footer {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .start-composer .start-model-picker > button > span {
+    font-size: 0;
+  }
+
+  .start-composer .start-model-picker > button > span::before {
+    display: inline;
+    content: "模型";
+    font-size: var(--ui-font-body);
+  }
+}
+
+@media (max-width: 767px) {
+  /* The compact phone row has no room for desktop separators. */
+  .start-composer .start-footer-left,
+  .start-composer .start-footer-right {
+    display: contents;
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  .start-composer .start-model-picker {
+    margin-left: 0;
+  }
+
+  .start-composer [data-voice-state] {
+    margin-left: 0;
+  }
+
+  .start-composer .start-composer-divider {
+    display: none;
   }
 }

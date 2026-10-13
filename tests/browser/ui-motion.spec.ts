@@ -71,6 +71,7 @@ test("视频编辑器只在选中时出现，参数与提示词在切换后保�
   await page.getByRole("button", { name: "生成数量", exact: true }).click();
   await page.keyboard.press("Home");
   await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "收起对话", exact: true }).click();
   await page.getByRole("button", { name: "生成视频", exact: true }).click();
   await expect(
     page.locator('.demo-result-node[data-kind="video"][data-source="demo"]'),

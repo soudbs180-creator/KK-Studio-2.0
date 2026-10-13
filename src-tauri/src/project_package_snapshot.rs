@@ -113,6 +113,84 @@ fn routing(value: &Value) -> Result<(), String> {
     Ok(())
 }
 
+fn opaque_id(value: &Value, field: &str, max: usize) -> Result<(), String> {
+    text(value, field, 1, max)?;
+    if let Some(raw) = value.get(field) {
+        let raw = raw.as_str().ok_or_else(|| invalid(field))?;
+        if !raw
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'-' | b'.' | b':'))
+        {
+            return Err(invalid(field));
+        }
+    }
+    Ok(())
+}
+
+fn cost_receipt(
+    value: &Value,
+    field: &str,
+    task_id: &str,
+    idempotency_key: Option<&str>,
+) -> Result<(), String> {
+    let receipt = match value.get(field) {
+        None => return Ok(()),
+        Some(value) => value,
+    };
+    shape(
+        receipt,
+        field,
+        &[
+            "kind",
+            "amount",
+            "currency",
+            "source",
+            "providerId",
+            "receiptId",
+            "receivedAt",
+            "taskId",
+            "idempotencyKey",
+        ],
+        &[
+            "kind",
+            "amount",
+            "currency",
+            "source",
+            "providerId",
+            "receiptId",
+            "receivedAt",
+            "taskId",
+            "idempotencyKey",
+        ],
+    )?;
+    let expected_kind = if field == "estimatedCostQuote" {
+        "estimate"
+    } else {
+        "actual"
+    };
+    enumeration(receipt, "kind", &[expected_kind])?;
+    number(receipt, "amount", 0.0, 1_000_000_000.0, false)?;
+    let currency = receipt
+        .get("currency")
+        .and_then(Value::as_str)
+        .ok_or_else(|| invalid("currency"))?;
+    if currency.len() != 3 || !currency.bytes().all(|byte| byte.is_ascii_uppercase()) {
+        return Err(invalid("currency"));
+    }
+    enumeration(receipt, "source", &["provider", "fixture"])?;
+    opaque_id(receipt, "providerId", 120)?;
+    opaque_id(receipt, "receiptId", 160)?;
+    opaque_id(receipt, "taskId", 200)?;
+    opaque_id(receipt, "idempotencyKey", 200)?;
+    if receipt.get("taskId").and_then(Value::as_str) != Some(task_id)
+        || receipt.get("idempotencyKey").and_then(Value::as_str) != idempotency_key
+    {
+        return Err(invalid(field));
+    }
+    number(receipt, "receivedAt", 0.0, MAX_SAFE_INTEGER, true)?;
+    Ok(())
+}
+
 fn attachments(value: &Value) -> Result<(), String> {
     for attachment in array(value, "attachments")? {
         shape(
@@ -589,6 +667,8 @@ fn task(value: &Value) -> Result<(), String> {
             "outputs",
             "estimatedCostUsd",
             "actualCostUsd",
+            "estimatedCostQuote",
+            "actualCostReceipt",
             "approvedGates",
             "retryOfTaskId",
             "retryOutputIndices",
@@ -619,6 +699,11 @@ fn task(value: &Value) -> Result<(), String> {
         ],
     )?;
     text(value, "idempotencyKey", 1, 200)?;
+    let task_id = value
+        .get("id")
+        .and_then(Value::as_str)
+        .ok_or_else(|| invalid("id"))?;
+    let idempotency_key = value.get("idempotencyKey").and_then(Value::as_str);
     text(value, "retryOfTaskId", 1, 160)?;
     enumeration(value, "kind", KINDS)?;
     enumeration(
@@ -650,8 +735,10 @@ fn task(value: &Value) -> Result<(), String> {
     number(value, "attempt", 1.0, 100.0, true)?;
     number(value, "requestedOutputs", 1.0, 64.0, true)?;
     number(value, "completedOutputs", 0.0, MAX_SAFE_INTEGER, true)?;
-    number(value, "estimatedCostUsd", 0.0, f64::MAX, false)?;
-    number(value, "actualCostUsd", 0.0, f64::MAX, false)?;
+    number(value, "estimatedCostUsd", 0.0, 1_000_000_000.0, false)?;
+    number(value, "actualCostUsd", 0.0, 1_000_000_000.0, false)?;
+    cost_receipt(value, "estimatedCostQuote", task_id, idempotency_key)?;
+    cost_receipt(value, "actualCostReceipt", task_id, idempotency_key)?;
     routing(value)?;
     attachments(value)?;
     let outputs = array(value, "outputs")?;

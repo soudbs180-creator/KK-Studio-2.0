@@ -2,7 +2,27 @@ import type {
   CanvasCollectionItem,
   CanvasReference,
 } from "../../domain/canvasItems";
-import type { CanvasConnection } from "../../domain/canvasGraph";
+import { cardLayout, type CanvasConnection } from "../../domain/canvasGraph";
+import type { Point } from "../../domain/canvasViewport";
+
+export function canvasOccupiedRects(
+  items: CanvasCollectionItem[],
+  nodes: Record<string, Point>,
+): { x: number; y: number; width: number; height: number }[] {
+  return items.flatMap((item) => {
+    const point = nodes[item.id];
+    if (!point) return [];
+    const layout = cardLayout(item);
+    return [
+      {
+        x: point.x + layout.left,
+        y: point.y,
+        width: layout.width,
+        height: layout.height,
+      },
+    ];
+  });
+}
 
 /** Reference edges share the same source metadata as uploaded references. */
 export function canvasReferencesFor(

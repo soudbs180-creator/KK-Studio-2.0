@@ -1,19 +1,44 @@
 import type { DemoResult } from "../../domain/canvasItems";
 import UiIcon from "../UiIcon";
+import { aspectRatioForDimensions } from "../../domain/mediaDimensions";
 
 export default function ResultPreview({
   result,
   title,
   onPreview,
+  mediaWidth,
+  mediaHeight,
+  onDimensions,
 }: {
   result: DemoResult;
   title: string;
   onPreview: () => void;
+  mediaWidth?: number;
+  mediaHeight?: number;
+  onDimensions?: (width: number, height: number) => void;
 }) {
   const content = (
     <>
       {result.poster || result.kind === "image" ? (
-        <img src={result.poster ?? result.src} alt={title} draggable={false} />
+        <img
+          src={result.poster ?? result.src}
+          alt={title}
+          draggable={false}
+          onLoad={
+            result.kind === "image"
+              ? (event) => {
+                  const { naturalWidth, naturalHeight } = event.currentTarget;
+                  if (
+                    naturalWidth > 1 &&
+                    naturalHeight > 1 &&
+                    (naturalWidth !== mediaWidth ||
+                      naturalHeight !== mediaHeight)
+                  )
+                    onDimensions?.(naturalWidth, naturalHeight);
+                }
+              : undefined
+          }
+        />
       ) : result.kind === "audio" ? (
         <div className="demo-wave" aria-hidden="true">
           {Array.from({ length: 27 }, (_, i) => (
@@ -36,6 +61,12 @@ export default function ResultPreview({
   return result.kind === "image" ? (
     <div
       className="demo-result-preview is-image"
+      style={{
+        aspectRatio: aspectRatioForDimensions(
+          mediaWidth ?? 1,
+          mediaHeight ?? 1,
+        ),
+      }}
       onDoubleClick={(event) => {
         event.stopPropagation();
         onPreview();

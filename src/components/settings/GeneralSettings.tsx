@@ -93,19 +93,13 @@ export default function GeneralSettings({
         <SettingRow
           id="watermark"
           title="去除水印"
-          description="关闭AI生成内容中的可见水印。仅对未来生成内容生效，已生成的资产保留原状。"
+          description="当前模型协议未提供水印参数，暂不能影响生成结果。"
           className="settings-watermark-row"
         >
           <SettingsToggle
             id="watermark"
-            checked={preferences.removeWatermark}
-            hint="仅保存本地偏好；当前模型协议未支持水印选项，不会修改已有资产。"
-            onChange={(removeWatermark) =>
-              onChange(
-                { removeWatermark },
-                "已保存本地偏好。当前模型协议未支持水印选项，不会修改已有资产。",
-              )
-            }
+            checked={false}
+            disabledReason="Prototype · 当前模型协议未提供水印参数，暂不能影响生成结果。"
           />
         </SettingRow>
         <p className="settings-system-label">

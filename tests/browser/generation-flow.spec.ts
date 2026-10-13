@@ -48,11 +48,8 @@ test("图片上传预览和重绘未配置时保留草稿并打开供应商设�
   await expect(page.getByLabel("重绘指令")).toHaveValue(redrawPrompt);
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "取消", exact: true }).click();
-  // An uploaded reference card intentionally has no composer. Create a
-  // separate image module for the generation path under test.
-  await page.getByRole("button", { name: "添加资源", exact: true }).click();
-  await page.getByRole("menuitem", { name: "图片", exact: true }).click();
-  const generator = page.getByTestId(/^canvas-node-added-image-/).nth(1);
+  // The uploaded 主体 remains the generation source and keeps its composer.
+  const generator = source;
   await generator.getByLabel("图片提示词").fill("海边的蓝调时刻");
   await generator
     .getByRole("button", { name: "生成数量", exact: true })

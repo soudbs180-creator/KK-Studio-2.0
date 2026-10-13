@@ -248,7 +248,7 @@ for (const theme of ["dark", "light"]) {
     await page.getByRole("button", { name: "打开设置", exact: true }).click();
     await page
       .getByRole("dialog", { name: "设置" })
-      .getByRole("button", { name: "MCP", exact: true })
+      .getByRole("button", { name: "扩展", exact: true })
       .click();
     const uninstall = page
       .getByRole("button", { name: "卸载", exact: true })

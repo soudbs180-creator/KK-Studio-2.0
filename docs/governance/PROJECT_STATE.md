@@ -1,9 +1,31 @@
+<!-- CURRENT_FACTS_BEGIN -->
+
+## CURRENT_FACTS (machine-readable current snapshot)
+
+- `snapshotDate`: 2026-10-11
+- `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
+- `canonicalRef`: `origin/main`
+- `canonicalHead`: `7736c99bd5e900e7c5cd8a36663aadcb45326143`
+- `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the primary checkout
+- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on local `main` at `6bc45cada7966531452d6826be5fe731ad0918d8`; `origin/main` is the separately read-back remote ref at `7736c99bd5e900e7c5cd8a36663aadcb45326143` (PR #51 merge). The checkout currently has 102 dirty paths across concurrent governance, UI, tests, and Tauri changes; this snapshot preserves unrelated paths while this turn is limited to the scoped docs-history and TaskState closeout evidence/source/test files.
+- `taskLedger`: 120 records; 75 DONE, 29 PARTIAL, 11 TODO, 4 BLOCKED, 1 REVIEW; 45 open records.
+- `workspaceWorktrees`: 87 registered worktrees, with 49 under `D:/kk-studio/.worktrees`, 34 nested under the primary checkout, 2 external Codex checkouts under `C:/Users/Administrator/.codex/worktrees`, 1 external sibling checkout at `D:/kk-studio/KK-Studio-2.0-taskstate`, and the primary checkout; the current audit pointer is `worktree-reclamation-plan-a32b6b9e-3ff4-402b-913f-d04b64a3de56.json`. The audit has zero generated-directory candidates and zero whole-worktree removal candidates. Previously reclaimed generated output remains covered by immutable SHA inventories; dirty, active, nested, external, and duplicate-source worktrees remain protected.
+- `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
+- `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
+- `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
+
+<!-- CURRENT_FACTS_END -->
+<!-- HISTORICAL_SNAPSHOTS_BEGIN -->
+
+## 2026-10-10 当前主线剩余回归验证
+
+本地 `main@4b4ceb93` 已承接 `TASK-AGENT-001` 的 Web 回归修复：Codex 画布生图门禁、设置选择器几何、Google 图片归档和插件开发态断言均已修复。隔离工作树的完整 `npm run verify` 通过（Node 911、Agent 172/174、生产浏览器 455/455、UI 215/0、development receipt PASS）；开发态 receipt 已归档在 `docs/changes/2026-10-10-remaining-verification/evidence/development-plugins-receipt.json`。根 checkout 的合并后 development 重试在 Edge 启动阶段无输出挂起，未计为新 PASS；隔离 receipt 与生产 455/455 仍是本轮证据。`TASK-AGENT-001` 保持 PARTIAL；Provider/GPU、Hosted、Tauri、Mobile 和用户产品验收继续开放。详见 [验证](../changes/2026-10-10-remaining-verification/verification.md)、[审查](../changes/2026-10-10-remaining-verification/review.md)。
+
 # 当前项目状态
 
 ## 2026-10-09 失败任务 source105 本地复验
 
 主线仍6a97f456，实际post-main37845923441失败；PR43新source105诊断已独立PASS，完整verify出口0但9flaky原件保留，默认production1423补充447/447零重试通过。误用1431十失败和历史report误读的勘误均保留。入口原Hosted原因UNKNOWN，Recovery003、并发002和来源契约003继续TODO。当前114项{"DONE":68,"TODO":16,"PARTIAL":26,"BLOCKED":4}、46开放；原109任务/全部功能保留。最终docs/当前Hosted/普通合并和新main仍待实际回执，不预填成功。UI012原owner本轮已收尾36eb8f6、当前独立复核；UI014继续原失败；ProviderPR44当前CI。原用户数据、快捷方式、历史分支不改。[当前验收](../changes/2026-10-09-windows-entry-diagnostics/verification.md) / [完整任务状态](../changes/2026-10-09-image-retry-verification/status.md)。下方仅各阶段历史记录。
-
 
 ## 2026-10-09 主线失败续修候选完成本地验收
 
@@ -11,11 +33,9 @@ PR42已普通落地main6a97f456ab7334f97c604461e8d29789caa754cb、全tree与已�
 
 [本轮验证](../changes/2026-10-09-image-retry-verification/verification.md) / [任务报告](../changes/2026-10-09-image-retry-verification/status.md)。以下保留历史时点原义。
 
-
 ## 2026-10-09 随包插件及关闭保存本地验收完成
 
 PR41已普通合入main8c921a5，实际post-main37826264108全部必需检查成功；PR38/39/40亦已合并。root独立插件分支修复开发模块、JSX、完整插件恢复、Markdown离线和立即关闭丢失；804root/172Agent（原skip8/2）、447browser零retry/flaky、严格开发、Rust102/fmt/clientcheck/fresh Agent及原生8步/TaskHost11/上方动作13/CSP和最终标题栏通过，c8独立关闭两阻断。Desktop/Web2.1.12、Mobile规划2.1.1；109任务DONE66/TODO13/PARTIAL26/BLOCKED4，43项开放，105上游无关对象完整保留。本地产品DONE，最终doc review/当前Hosted/普通PR合并、landing全树及post-main CI须分别实际回读。UI012/UI014继续原作者收尾；19条旧健康审计须在当前main复证并承接，不能整合未完成候选。原首轮titlebar拖动FAIL原因UNKNOWN，未改写成PASS；外部live/物理设备/用户视觉与整体UI规范仍开放。恢复入口 [状态报告](../changes/2026-10-09-plugin-development/status.md) / [验证](../changes/2026-10-09-plugin-development/verification.md)。
-
 
 ## 2026-10-09 统一Mask最新主线组合本地验收完成
 
@@ -32,7 +52,6 @@ PR38 已普通合入main2cb73d，source a550f31与landing完整tree相同，当�
 ## 2026-10-08 标题栏承接静默启动主线
 
 PR38 source a550f31 经独立审查与最新 Hosted37792689982/37792680207 全部SUCCESS，普通squash落地main2cb73d，完整tree相同；合并后main37797150560仍在运行。TASK-UI-013保留静默启动/首页按需加载、图片上方动作和T5生命周期；预检发现001乱序状态及002异步监听清理，真实组件7条先RED后GREEN，独立关闭和完整新组合验收待完成。当前账本104项（DONE60/TODO13/PARTIAL26/BLOCKED4/REVIEW1），UI012/蒙版原在途执行者保留。以下两侧记录按各自时间保留；不能将旧证据或中途GREEN当最终合并通过。
-
 
 ## 2026-10-08 启动分支最新主线组合验收完成
 
@@ -81,6 +100,7 @@ TASK-IMAGE-EDIT-001 在独立任务分支承接 main@78cea37（PR #37），保�
 ## 2026-10-08 统一图片编辑蒙版本地候选
 
 框选、画笔、色块产生原像素Mask，共用扩边/合并/裁剪、能力校验、Web/native模型请求、Mask内融合；保存/导出/恢复与连续编辑保持原件不可变。完整verify739root/172Agent/419browser（原skip8/2、0flaky）、Rust100、fresh Tauri两次Mask请求/包恢复/删除再生/重启通过，Web/Desktop实际bundle同hash。候选Desktop2.1.7/Web2.1.8；正式独立head复验待补，未推送/合并/发布。FEAT-035仍PARTIAL，真实Provider/语义几何偏移/真机/用户视觉归TASK-IMAGE-EDIT-VERIFY-002。[验证](../changes/2026-10-08-unified-image-mask/verification.md)。
+
 ## 2026-10-08 Hosted 空 Registry 属性返修
 
 T5当前本机/源码验收完成、REVIEW。21ac独立补审PASS、ENV003 CLOSED；其Hosted37765011214完整Web/Rust/release/Runtime通过，实际CI包装器在新建空key的Properties.Name严格模式失败，native尚未启动。修正mock空属性集合并复现真实RED；四处逐项枚举后26/26边界回归PASS，产品/harness与d521 native十一组hash不变。新head独立关闭ENV004、Hosted与主线整合仍待满足，未假填High IL。UI976db独立PASS关闭两P2、422browser/fresh Native13组通过，当前Hosted待创建。main仍1af/PR36合并后CI通过；其他执行者任务保留。
@@ -106,6 +126,7 @@ PR #35 阶段工作台已合并 main@5dd6e6dddaf00cf2d5c14ae02ef5974c72238232，
 当前草稿PR#38：7a1c3358首轮Hosted的WSH路径失败已本地RED→Unicode接口GREEN，native3/3及完整verify726Node/172Agent/413browser再次PASS；实际桌面已重装，产物哈希不变。最终Unicode增量收据`startup-review-unicode-20261008.md`与PR当前SHA独立回读，不能用旧本地PASS覆盖旧CI失败。main/线上仍未推广。
 
 TASK-LAUNCH-001 最终融合main@1af0357b，在登记worktree本地AC完成；候选Desktop2.1.7/Web2.1.8/Mobile2.1.1。完整verify726Node/172Agent/413browser（既有skip8/2，0flaky）、clientcheck、GUI带Agent新Tauri和原生能力回归PASS。当前桌面及canonical忽略的lnk引用本任务树GUI，正常窗口304ms、退出0/无新增可见控制台、实际窗口Logo正确；原目标与raw备份保留。Web entry减19.0%、CSS一致，受控5次中位数1656→1405ms。R1/R2/R3独立复验关闭、源码694a237/f74548d PASS，最终组合SHA补审/PR与主线推广按实际收据，见[验证](../changes/2026-10-08-startup-experience/verification.md)。main尚未集成本任务，线上未部署，禁止清理被入口引用的worktree；FEAT-026/T7外部边界保留。
+
 ## 2026-10-08 单排标题栏主线集成准备
 
 用户明确授权合并已检查分支，TASK-UI-013原535 clean且原作者已结束，由root单一写入承接main f922。保留UI011图片上方动作及T5生命周期，App CSS按统一末端顺序合并。当前为预备组合REVIEW；启动PR38落地后再承接最新main并做最终当前source/fresh native/独立review/Hosted和普通合并，不把旧535的验收冒充新组合。历史双方段落保留其时间含义；UI012/蒙版仍由原在途执行者维护。

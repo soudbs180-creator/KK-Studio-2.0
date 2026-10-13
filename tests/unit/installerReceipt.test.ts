@@ -7,6 +7,7 @@ import {
   fileIdentity,
   verifyInstaller,
   verifyInstalledFiles,
+  verifyInstalledRelease,
   assertInstallerFresh,
   nsisExecutableIdentity,
 } from "../../scripts/windows/installer-receipt.mjs";
@@ -89,6 +90,60 @@ test("installed runtime verifies executable and each resource; missing or corrup
   await assert.rejects(
     verifyInstalledFiles({ installedFiles }, root),
     /ENOENT/,
+  );
+});
+
+test("installed release verification requires provenance and checks package plus installed bytes", async (t) => {
+  const root = await fs.mkdtemp(
+    path.join(os.tmpdir(), "kk-installed-release-"),
+  );
+  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  const packageRoot = path.join(root, "package");
+  const installRoot = path.join(root, "install");
+  await fs.mkdir(packageRoot);
+  await fs.mkdir(installRoot);
+  await fs.writeFile(path.join(packageRoot, "setup.exe"), "installer");
+  await fs.mkdir(path.join(installRoot, "agent-runtime"));
+  await fs.writeFile(path.join(installRoot, "kk-studio.exe"), "application");
+  const receipt = {
+    schemaVersion: 1,
+    commit: "a".repeat(40),
+    sourceTree: "b".repeat(40),
+    platform: "windows-x64",
+    versions: { desktop: "2.1.13" },
+    installer: {
+      path: "setup.exe",
+      ...(await fileIdentity(path.join(packageRoot, "setup.exe"))),
+    },
+    installedFiles: [
+      {
+        path: "kk-studio.exe",
+        ...(await fileIdentity(path.join(installRoot, "kk-studio.exe"))),
+      },
+    ],
+  };
+  const result = await verifyInstalledRelease({
+    receipt,
+    receiptDirectory: packageRoot,
+    installDirectory: installRoot,
+  });
+  assert.equal(result.installedFiles, 1);
+  await fs.writeFile(path.join(installRoot, "kk-studio.exe"), "tampered");
+  await assert.rejects(
+    verifyInstalledRelease({
+      receipt,
+      receiptDirectory: packageRoot,
+      installDirectory: installRoot,
+    }),
+    /verification failed/,
+  );
+  await assert.rejects(
+    verifyInstalledRelease({
+      receipt: { ...receipt, sourceTree: "invalid" },
+      receiptDirectory: packageRoot,
+      installDirectory: installRoot,
+    }),
+    /source provenance/,
   );
 });
 

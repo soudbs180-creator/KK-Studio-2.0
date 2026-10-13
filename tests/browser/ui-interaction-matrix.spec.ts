@@ -178,14 +178,18 @@ test("sidebar menus, app menus and prompt dialog keep closure and focus contract
   await expect(trigger).toBeFocused();
 });
 
-test("minimum-zoom patterns remain visible for both themes and all accents", async ({
+test("working-zoom patterns stay visible for both themes and all accents", async ({
   page,
 }) => {
   await openWorkspace(page);
   await showCanvasNavigation(page);
   const canvas = page.getByTestId("infinite-canvas");
   await canvas.focus();
-  for (let i = 0; i < 20; i++) await page.keyboard.press("Control+-");
+  // 100% is the default working scale where the pattern must be fully legible
+  // in every theme and accent. The 50% floor intentionally hides it, so
+  // visibility is asserted at 100% rather than at minimum zoom.
+  await page.getByRole("button", { name: "画布缩放", exact: true }).click();
+  await page.getByRole("menuitemradio", { name: "100%" }).click();
   for (const theme of ["dark", "light"]) {
     for (const accent of ACCENTS) {
       await page.getByRole("button", { name: "打开设置", exact: true }).click();
@@ -215,7 +219,7 @@ test("minimum-zoom patterns remain visible for both themes and all accents", asy
         });
         expect(paint.pitch).toBeGreaterThanOrEqual(12);
         expect(paint.image).not.toBe("none");
-        expect(paint.opacity).toBeGreaterThan(0.1);
+        expect(paint.opacity).toBeGreaterThan(0.9);
       }
     }
   }

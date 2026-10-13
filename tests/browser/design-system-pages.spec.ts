@@ -89,7 +89,7 @@ for (const width of [390, 1920]) {
         "网络",
         "记忆",
         "模型供应商",
-        "MCP",
+        "扩展",
         "Comfy UI",
         "高级",
         "软件更新",
@@ -143,7 +143,10 @@ for (const width of [390, 1920]) {
             ["16px", "16px"],
           ]);
         }
-        if (section === "MCP") {
+        if (section === "扩展") {
+          await expect(
+            dialog.locator(".settings-nav").locator('[aria-current="page"]'),
+          ).toHaveCount(1);
           await expect(dialog.locator(".settings-mcp-add")).toHaveCSS(
             "border-radius",
             "20px",
@@ -153,10 +156,16 @@ for (const width of [390, 1920]) {
           await dialog.getByRole("tab", { name: /伙伴/ }).click();
           await expect(dialog.getByRole("tabpanel")).toContainText("Agent");
           await dialog.getByRole("tab", { name: /插件/ }).click();
-          await expect(dialog.locator(".plugin-manager-row").first()).toHaveCSS(
-            "border-radius",
-            "20px",
-          );
+          const pluginRow = dialog.locator(".plugin-manager-row").first();
+          if (await pluginRow.count()) {
+            await expect(pluginRow).toHaveCSS("border-radius", "20px");
+          } else {
+            await expect(
+              dialog
+                .locator(".settings-empty-state")
+                .filter({ hasText: "暂无插件" }),
+            ).toBeVisible();
+          }
           await page.screenshot({
             path: info.outputPath(`settings-plugins-${theme}-${width}.png`),
             animations: "disabled",

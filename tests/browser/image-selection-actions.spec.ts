@@ -134,14 +134,13 @@ test("键盘工具栏、双击预览与切换卡片保留唯一选择和焦点",
   await uploadImage(first);
   await selectImage(page, first);
   const position = await first.getAttribute("style");
-  await toolbar(page).getByRole("button").first().focus();
+  const toolbarButtons = toolbar(page).getByRole("button");
+  await toolbarButtons.first().focus();
   await page.keyboard.press("End");
-  await expect(
-    toolbar(page).getByRole("button", { name: /加入对比/ }),
-  ).toBeFocused();
+  await expect(toolbarButtons.last()).toBeFocused();
   await page.keyboard.press("ArrowLeft");
   await expect(
-    toolbar(page).getByRole("button", { name: "重绘参考图片" }),
+    toolbarButtons.nth((await toolbarButtons.count()) - 2),
   ).toBeFocused();
   await expect(first).toHaveAttribute("style", position!);
   await page.keyboard.press("Escape");
@@ -225,7 +224,12 @@ for (const width of [390, 1099, 1920]) {
     await page.mouse.down({ button: "middle" });
     await page.mouse.move(canvas.x + 24, canvas.y + 500 + delta, { steps: 8 });
     await page.mouse.up({ button: "middle" });
-    await selectImage(page, node);
+    // The narrow-screen HUD can cover the card after the deliberate pan.
+    // Recover through the card's keyboard contract instead of forcing a click
+    // through another interactive control.
+    await node.focus();
+    await node.press("Enter");
+    await expect(node).toHaveClass(/is-selected/);
     await expectAboveImage(page, node);
   });
 }

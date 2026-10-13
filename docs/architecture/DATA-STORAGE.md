@@ -44,7 +44,7 @@ kk-studio/
 
 ## 当前代码中的实际形状
 
-当前 KK Studio 2.1.1 源码的浏览器端保存主题偏好、供应商元数据和创作快照恢复副本；完整创作快照在 Web 使用 IndexedDB，在 Tauri 使用 `projects/creation-v2.json` IPC 命令。历史 `kk-studio-next:*` 存储 key 继续保留以兼容已有数据。浏览器端 API Key 只在当前会话内存中，Windows 桌面端通过 `com.kkstudio.provider` 凭据命令读写系统凭据库：
+当前 KK Studio 2.1.12 源码的浏览器端保存主题偏好、供应商元数据和创作快照恢复副本；完整创作快照在 Web 使用 IndexedDB，在 Tauri 使用 `projects/creation-v2.json` IPC 命令。历史 `kk-studio-next:*` 存储 key 继续保留以兼容已有数据。浏览器端 API Key 只在当前会话内存中，Windows 桌面端通过 `com.kkstudio.provider` 凭据命令读写系统凭据库：
 
 ## Web 本机伴随服务（2026-09-29，当前为 PARTIAL）
 
@@ -71,17 +71,28 @@ companion/
 
 当前证据覆盖临时数据根目录下的真实 Node loopback 服务、fresh Playwright browser context、迁移/备份/断线/重启和 Web bundle 边界。安装器/自动更新、跨平台服务打包、真实账号登录、Mobile 原生持久层和 VPS 部署仍未验收，不能从本机 smoke 推断这些能力已完成。
 
+## Web VPS 控制面目标（2026-10-09，规划 / 未验收）
+
+Web 的静态应用和主要服务部署目标是 VPS；账号、会话、积分、会员、用量和权限审计属于 VPS 控制面。该控制面负责身份和可选的服务端生成/Gateway，不改变 Desktop 的本地优先路径，也不把登录状态解释为项目或素材已经云同步。
+
+项目与素材的保存策略必须单独声明：当前 Web 本机伴随服务和 IndexedDB 仍是已实现/部分实现的本地路径；云端项目、素材、跨设备同步和对象存储只有在各自 schema、权限、备份、恢复和真实部署证据齐全后才能启用。VPS 账号/积分/会员可以先于云同步上线。
+
+Web 控制面未验收前，账号、余额、会员状态和用量显示必须保持 `Prototype`、`PARTIAL` 或禁用原因；不能用演示数据、静态页面或本机服务 smoke 冒充 VPS 真实服务。
+
 ## 仍未实现的后续目标
 
-用户指定 Desktop 优先，Web 随后，Mobile 再按手机能力裁剪。Desktop 允许离线免登录或选择登录；Web/Mobile 目标为登录后使用。个人项目和素材应在用户设备本地：Web 需要安装本机伴随服务，由服务持久化而不是把浏览器 IndexedDB 作为最终数据根；Mobile 采用设备本地持久层。账号只用于身份及可选服务，不能据此宣称数据云同步。
+用户指定 Desktop 优先，Web 随后，Mobile 最后。Desktop 允许离线免登录或选择登录；Web/Mobile 目标为登录后使用。Web 的账号、会话、积分、会员和用量控制面位于 VPS；个人项目和素材仍可按本地优先契约留在用户设备，Web 本机伴随服务是当前本地持久路径，云端保存/同步另行验收；Mobile 采用设备本地持久层。账号只用于身份及已验收的可选服务，不能据此宣称数据云同步。
 
-本机服务已经建立通信/权限边界、稳定数据目录、用户触发的无损导入、备份/恢复及断线提示；安装器、自动更新、真实账号绑定和云端能力仍未接线。当前 IndexedDB、localStorage 与演示账号仍照现状工作，不会自动搬迁；对应未完成任务为 `BACKEND-PLATFORM` 和本任务的安装/发布补充项。Mobile 仍由 T12 验收，不把响应式网页或 `config/platform-versions.json` 中的规划版本称为已发布 App。
+本机服务已经建立通信/权限边界、稳定数据目录、用户触发的无损导入、备份/恢复及断线提示；安装器、自动更新、VPS 真实账号绑定、积分/会员服务和云端能力仍未接线。当前 IndexedDB、localStorage 与演示账号仍照现状工作，不会自动搬迁；对应未完成任务为 `BACKEND-PLATFORM` 和本任务的安装/发布补充项。Mobile 仍由 T12 验收，未来代码必须放在独立 `mobile/` 工程，不把响应式网页或 `config/platform-versions.json` 中的规划版本称为已发布 App。
 
 | Key                                | Schema                                      | 用途                                                 | 风险/边界                                                  |
 | ---------------------------------- | ------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
 | `kk-studio-next:settings:v1`       | `src/domain/settings.ts`，version=1         | 主题、语言、浮动布局、水印偏好                       | 只允许非敏感偏好                                           |
 | `kk-studio-next:model-provider:v1` | `src/domain/modelProvider.ts`，version=1    | 供应商名称、Base URL、默认模型                       | API Key 只在当前 React state                               |
-| `kk-studio-next:creation:v1`       | `src/features/creation/model.ts`，version=2 | 小型恢复副本；项目、任务、消息、附件草稿不含 API Key | 大附件优先以 IndexedDB 为耐久源，localStorage 仅作恢复副本 |
+| `kk-studio-next:provider-connections:v1` | `src/domain/providerConnections.ts` | 供应商连接元数据（不含凭据）                         | 凭据只存系统凭据库，此处仅引用                              |
+| `kk-studio-next:asset-collections:v1` | `src/domain/assets.ts`                    | 素材集合与筛选偏好                                   | 只允许非敏感偏好                                           |
+| `kk-studio-next:companion:v1`      | `src/features/local-service/protocol.ts`    | 本机伴随服务配对与授权状态                           | 只存配对码引用，不存服务凭据                                |
+| `kk-studio-next:creation:v1`       | `src/features/creation/model.ts`，version=2 | 小型恢复副本；项目、任务、消息、附件草稿不含 API Key | **不在 `BROWSER_STORAGE_KEYS` 白名单内**：属存储通道内部恢复机制，大附件以 IndexedDB 为耐久源 |
 
 ## 创作快照与画布契约（2026-09-16）
 

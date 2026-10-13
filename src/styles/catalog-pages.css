@@ -97,6 +97,14 @@
   background: var(--ui-composer-surface);
   color: var(--text-primary);
 }
+.start-model-empty-state {
+  padding: 8px 10px;
+}
+.start-model-empty-state p {
+  margin: 0;
+  color: var(--text-secondary);
+  white-space: normal;
+}
 .start-model-popover .start-model-configure {
   margin-top: 4px;
   border-top: 1px solid var(--border-default);
@@ -250,6 +258,7 @@
   border-bottom: 2px solid var(--text-primary);
 }
 .start-chip-row {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: 11.693px;
@@ -278,6 +287,14 @@
   gap: 18.708px;
   padding-top: 21.047px;
 }
+.start-discovery-panel:focus {
+  outline: none;
+}
+.start-discovery-panel:focus-visible {
+  outline: var(--ui-focus-subtle-width) solid var(--ui-focus-subtle);
+  outline-offset: var(--ui-focus-subtle-offset);
+  border-radius: var(--ui-radius-control);
+}
 .start-inspiration-card {
   height: 367.151px;
   overflow: hidden;
@@ -285,11 +302,60 @@
   border: 0.78px solid var(--border-subtle);
   border-radius: 18.708px;
   background: var(--bg-card);
+  transition:
+    background-color var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    transform var(--motion-fast) var(--motion-ease);
+}
+.start-inspiration-card:hover {
+  border-color: var(--border-default);
+  background: var(--bg-card-hover);
+  box-shadow: var(--ui-shadow);
+  transform: translateY(-2px);
+}
+.start-inspiration-card:focus-visible {
+  border-color: var(--ui-focus);
+  box-shadow: 0 0 0 1px var(--ui-focus-subtle);
+}
+.start-inspiration-card:active {
+  background: var(--neutral-selected);
+  transform: translateY(0);
+}
+.start-inspiration-empty {
+  display: grid;
+  grid-column: 1 / -1;
+  justify-items: center;
+  gap: 8px;
+  min-height: 148px;
+  padding: 28px 20px;
+  border: 1px dashed var(--border-default);
+  border-radius: var(--kk-radius-card);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  text-align: center;
+}
+.start-inspiration-empty strong {
+  color: var(--text-primary);
+  font-size: var(--ui-font-label);
+}
+.start-inspiration-empty p {
+  margin: 0;
+  font-size: var(--ui-font-body);
+}
+.start-inspiration-empty button {
+  min-height: var(--ui-button-height);
+  padding: 0 var(--ui-space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--ui-radius-control);
+  color: var(--text-primary);
+  background: var(--bg-elevated);
 }
 .start-inspiration-card img {
   display: block;
   width: 100%;
-  height: 254.901px;
+  height: auto;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
   filter: none;
 }
@@ -414,6 +480,16 @@
   .start-inspiration-card p {
     font-size: 12px;
     line-height: 1.5;
+  }
+}
+
+@media (max-width: 1023px) {
+  /* Keep a compact popover below the composer without covering the discovery
+     controls. The menu remains anchored to the existing toolbar; this local
+     reserve only gives the page enough flow space while it is open. */
+  .start-composer:has(.start-composer-footer [role="menu"]),
+  .start-composer:has(.start-composer-footer [role="dialog"]) {
+    margin-bottom: 288px;
   }
 }
 
@@ -556,8 +632,8 @@
   line-height: var(--ui-line-height-body);
 }
 .catalog-page-search:focus-within {
-  outline: var(--ui-focus-width) solid var(--ui-focus);
-  outline-offset: var(--ui-focus-offset);
+  outline: var(--ui-focus-subtle-width) solid var(--ui-focus-subtle);
+  outline-offset: var(--ui-focus-subtle-offset);
 }
 .catalog-page-search input:focus-visible {
   outline: none;
@@ -1091,4 +1167,11 @@
   .start-inspiration-card strong {
     font-size: 14px;
   }
+}
+
+.start-model-popover {
+  min-width: 360px;
+  width: min(420px, calc(100vw - 32px));
+  padding: 12px;
+  border-radius: 16px;
 }

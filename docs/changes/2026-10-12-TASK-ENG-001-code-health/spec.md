@@ -65,3 +65,4 @@
 - 规范冲突、外部依赖与阻断范围：CODING-STANDARDS.md 门禁表需在本分支合并 ui-redesign 后补齐——记录为后续任务，不在本任务 BLOCKED（不影响本次验收）。
 - 与 intent 的差异及授权依据：无差异。
 - 明确未承诺的能力：不做存量修复；不做跨文件迁移抵扣；不提供 JSON 输出开关；不自动 bump action SHA。
+
