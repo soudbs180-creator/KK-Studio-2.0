@@ -141,7 +141,7 @@ export function readSwitch(root, rev, file, name, fallback = "blocking") {
 export function globToRegExp(glob) {
   const normalized = glob.replaceAll("\\", "/");
   let pattern = "^";
-  for (let index = 0; index < normalized.length; ) {
+  for (let index = 0; index < normalized.length;) {
     if (normalized.startsWith("**/", index)) {
       pattern += "(?:[^/]+/)*";
       index += 3;
