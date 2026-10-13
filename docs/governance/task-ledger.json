@@ -5941,6 +5941,9 @@
       "package.json",
       ".github/workflows/git-guards.yml",
       ".github/workflows/quality.yml",
+      ".github/workflows/auto-merge.yml",
+      ".github/workflows/main-guard.yml",
+      ".github/workflows/windows-release.yml",
       "docs/engineering/DEVELOPMENT.md",
       "docs/changes/2026-10-12-TASK-ENG-001-code-health"
     ],
