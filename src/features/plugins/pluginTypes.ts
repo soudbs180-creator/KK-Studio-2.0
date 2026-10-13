@@ -141,7 +141,10 @@ export interface PluginNodeDefinition {
 export interface PluginApp {
   version: string;
   emit: (event: string, payload?: unknown) => void;
-  on: (event: string, handler: (payload: unknown) => void) => () => void;
+  on: (
+    event: string,
+    handler: (payload: unknown) => void | PromiseLike<void>,
+  ) => () => void;
   injectCSS: (css: string, key?: string) => () => void;
 }
 

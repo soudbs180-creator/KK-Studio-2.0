@@ -23,17 +23,38 @@ import type {
 } from "./pluginTypes.ts";
 import type { AgentBridge } from "../agent/agentConnection.ts";
 import { appVersion } from "../../runtime/appInfo.ts";
+import { createLogger } from "../../runtime/logger.ts";
+
+// 插件域诊断日志：替代散落的 console 调用，失败可定位、可导出。
+const pluginLog = createLogger("plugins");
 
 export interface PluginEventBus {
   emit(event: string, payload?: unknown): void;
-  on(event: string, handler: (payload: unknown) => void): () => void;
+  on(
+    event: string,
+    handler: (payload: unknown) => void | PromiseLike<void>,
+  ): () => void;
 }
 
 function createDefaultBus(): PluginEventBus {
-  const listeners = new Map<string, Set<(payload: unknown) => void>>();
+  const listeners = new Map<
+    string,
+    Set<(payload: unknown) => void | PromiseLike<void>>
+  >();
   return {
     emit(event, payload) {
-      listeners.get(event)?.forEach((handler) => handler(payload));
+      listeners.get(event)?.forEach((handler) => {
+        try {
+          const result = handler(payload);
+          if (result && typeof result.then === "function")
+            Promise.resolve(result).catch((error) => {
+              pluginLog.error("事件处理器执行失败", { event, error });
+            });
+        } catch (error) {
+          // 单个插件处理器崩溃不得影响其他订阅者（上游 canvas-event-bus 同款隔离）。
+          pluginLog.error("事件处理器执行失败", { event, error });
+        }
+      });
     },
     on(event, handler) {
       const set = listeners.get(event) ?? new Set();
@@ -318,7 +339,7 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
             local: true,
           });
         } catch (error) {
-          console.error(`[plugins] 发现本地插件失败：${url}`, error);
+          pluginLog.error("发现本地插件失败", { url, error });
         }
       }),
     );
@@ -351,7 +372,7 @@ export function createPluginLoader(options: PluginLoaderOptions = {}) {
             : record.source;
           activatePlugin(await evaluatePluginSource(source, moduleUrl));
         } catch (error) {
-          console.error(`[plugins] 加载失败：${record.id}`, error);
+          pluginLog.error("插件加载失败", { pluginId: record.id, error });
         }
       }),
     );

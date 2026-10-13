@@ -6,6 +6,11 @@ import {
   getPluginNodeDefinition,
   hasPluginNodeType,
 } from "../../src/features/plugins/nodeRegistry.ts";
+import {
+  clearLog,
+  configureLogSink,
+  getLogEntries,
+} from "../../src/runtime/logger.ts";
 import type { CanvasPlugin } from "../../src/features/plugins/pluginTypes.ts";
 
 function memoryStorage() {
@@ -319,4 +324,41 @@ test("deactivate 执行 setup/css 清理", async () => {
   custom.deactivatePlugin(plugin.id);
   assert.equal(cleanupRan, true);
   assert.equal(hasPluginNodeType("cleanup:node"), false);
+});
+
+test("事件总线隔离同步异常和异步拒绝，且继续通知其他订阅者", async () => {
+  clearLog();
+  const received: unknown[] = [];
+  configureLogSink((entry) => received.push(entry));
+  try {
+    const loader = createPluginLoader();
+    const calls: string[] = [];
+    loader.getBus().on("ready", async () => {
+      calls.push("async");
+      throw new Error("api_key=should-not-leak");
+    });
+    loader.getBus().on("ready", () => {
+      calls.push("sync");
+      throw new Proxy(
+        {},
+        {
+          ownKeys() {
+            throw new Error("hostile proxy");
+          },
+        },
+      );
+    });
+    loader.getBus().on("ready", () => calls.push("after"));
+
+    loader.getBus().emit("ready");
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    assert.deepEqual(calls, ["async", "sync", "after"]);
+    assert.equal(received.length, 2);
+    const diagnostics = JSON.stringify(getLogEntries());
+    assert.doesNotMatch(diagnostics, /should-not-leak/);
+    assert.doesNotMatch(diagnostics, /hostile proxy/);
+  } finally {
+    configureLogSink(null);
+  }
 });
