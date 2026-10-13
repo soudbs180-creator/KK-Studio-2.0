@@ -89,3 +89,18 @@ export function resolveModelProviderConnection(
       }
     : { ...newModelProfileConnection(profile), credentialRef };
 }
+
+export function modelProfileFromConnection(
+  connection: ProviderConnection,
+): ModelProviderProfile {
+  if (!connection.baseUrl) throw new Error("此连接没有可用的 API 地址。");
+  return {
+    version: 1,
+    connectionId: connection.id,
+    name: connection.provider,
+    baseUrl: connection.baseUrl,
+    model: connection.model ?? "",
+    ...(connection.protocol ? { protocol: connection.protocol } : {}),
+    ...(connection.authMode ? { authMode: connection.authMode } : {}),
+  };
+}

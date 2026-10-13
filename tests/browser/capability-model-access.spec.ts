@@ -19,6 +19,88 @@ const opaqueConnection = {
   concurrencyLimit: 2,
 };
 
+test("隐藏或免密的提供商不读取凭据，切回 API Key 才读取精确引用", async ({
+  page,
+}) => {
+  const name = "keyless-vault-read-guard";
+  const baseUrl = "http://127.0.0.1:11434/v1";
+  const ref = credentialId(baseUrl, name);
+  await page.addInitScript(
+    ({ key, profile }) => {
+      localStorage.setItem(key, JSON.stringify(profile));
+    },
+    {
+      key: BROWSER_STORAGE_KEYS.modelProvider,
+      profile: {
+        version: 1,
+        name,
+        baseUrl,
+        model: "qwen2.5:0.5b",
+        protocol: "openai-compatible",
+        authMode: "none",
+      },
+    },
+  );
+  await page.goto("/");
+  await page.evaluate(() => {
+    const state = window as Window & { __vaultReadGuard?: string[] };
+    state.__vaultReadGuard = [];
+    Object.assign(window, {
+      __TAURI_INTERNALS__: {
+        invoke: async (command: string, args: { providerId?: string }) => {
+          if (command === "credential_get") {
+            state.__vaultReadGuard!.push(args.providerId!);
+            return "fixture-secret-used-only-in-memory";
+          }
+          if (command === "window_appearance_get")
+            return { supported: false, enabled: false, reason: "fixture" };
+          if (command === "asset_list") return [];
+          return { available: false, running: false };
+        },
+      },
+    });
+  });
+  const reads = () =>
+    page.evaluate(
+      (ref) =>
+        (
+          window as Window & { __vaultReadGuard: string[] }
+        ).__vaultReadGuard.filter((id) => id === ref).length,
+      ref,
+    );
+  await page.getByRole("button", { name: "打开设置", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "设置", exact: true });
+  await dialog.getByRole("button", { name: "模型接入", exact: true }).click();
+  await expect(
+    dialog.getByRole("region", { name: "Codex 主 Agent 接入" }),
+  ).toBeVisible();
+  expect(await reads()).toBe(0);
+  await dialog
+    .getByRole("button", { name: "API Key（官方）", exact: true })
+    .click();
+  const profile = dialog.getByRole("region", { name: "官方 API Key 配置" });
+  await expect(profile.getByLabel("认证方式", { exact: true })).toHaveValue(
+    "none",
+  );
+  await expect(
+    profile.getByRole("button", { name: "清除密钥", exact: true }),
+  ).toHaveCount(0);
+  expect(await reads()).toBe(0);
+  await profile.getByLabel("认证方式", { exact: true }).selectOption("api_key");
+  await expect.poll(reads).toBe(1);
+  await expect(
+    profile.getByRole("button", { name: "清除密钥", exact: true }),
+  ).toBeVisible();
+  await profile
+    .getByLabel("API Key", { exact: true })
+    .fill("unsaved-fixture-secret");
+  await profile.getByLabel("认证方式", { exact: true }).selectOption("none");
+  await expect(
+    profile.getByRole("button", { name: "清除密钥", exact: true }),
+  ).toHaveCount(0);
+  expect(await reads()).toBe(1);
+});
+
 test("Codex 主 Agent 在模型接入，手动字段折叠且状态真实", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
@@ -100,7 +182,9 @@ test("官方与中转站切换保留已有连接的 opaque 引用、保存身份
     { keys: BROWSER_STORAGE_KEYS, saved: opaqueConnection },
   );
   let authorization = "";
+  let requestCount = 0;
   await page.route(`${opaqueConnection.baseUrl}/models`, async (route) => {
+    requestCount++;
     authorization = route.request().headers().authorization ?? "";
     await route.fulfill({
       contentType: "application/json",
@@ -159,7 +243,11 @@ test("官方与中转站切换保留已有连接的 opaque 引用、保存身份
     profile.getByText("已清除当前供应商的密钥。", { exact: true }),
   ).toBeVisible();
   await profile.getByRole("button", { name: "测试连接", exact: true }).click();
-  await expect.poll(() => authorization).toBe("");
+  const callsAfterClear = requestCount;
+  await expect(
+    profile.getByText("原绑定连接缺少密钥，请配置后重试。", { exact: true }),
+  ).toBeVisible();
+  expect(requestCount).toBe(callsAfterClear);
   expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain(
     "fixture-opaque-key",
   );
@@ -200,7 +288,9 @@ test("同地址同模型多账号重开设置保留所选身份，保存和清�
     { keys: BROWSER_STORAGE_KEYS, accounts: [opaqueConnection, accountB] },
   );
   let authorization = "";
+  let requestCount = 0;
   await page.route(`${opaqueConnection.baseUrl}/models`, async (route) => {
+    requestCount++;
     authorization = route.request().headers().authorization ?? "";
     await route.fulfill({
       contentType: "application/json",
@@ -228,12 +318,25 @@ test("同地址同模型多账号重开设置保留所选身份，保存和清�
     ).toBeVisible();
   };
   const testKey = async (value: string) => {
+    const previousCalls = requestCount;
     await profile.getByLabel("API Key", { exact: true }).fill("");
     await profile
       .getByRole("button", { name: "测试连接", exact: true })
       .click();
-    await expect.poll(() => authorization).toBe(value);
-    await expect(profile.getByText(/连接成功，已刷新 1 个模型/)).toBeVisible();
+    if (value) {
+      await expect.poll(() => requestCount).toBe(previousCalls + 1);
+      await expect.poll(() => authorization).toBe(value);
+      await expect(
+        profile.getByText(/连接成功，已刷新 1 个模型/),
+      ).toBeVisible();
+    } else {
+      await expect(
+        profile.getByText("原绑定连接缺少密钥，请配置后重试。", {
+          exact: true,
+        }),
+      ).toBeVisible();
+      expect(requestCount).toBe(previousCalls);
+    }
   };
   await open();
   await profile
@@ -452,6 +555,9 @@ test("离开 API 接入会取消连接测试，迟到目录不覆盖隐藏草稿
   await profile
     .getByLabel("接口地址", { exact: true })
     .fill("https://delayed.example.test/v1");
+  await profile
+    .getByLabel("API Key", { exact: true })
+    .fill("fixture-local-test-only");
   await profile.getByRole("button", { name: "测试连接", exact: true }).click();
   await expect.poll(() => received).toBe(true);
   try {

@@ -9,6 +9,7 @@ mod asset_storage;
 mod creation_storage;
 mod project_package;
 mod provider_config;
+mod provider_models;
 mod runtime_resources;
 mod secret_filter;
 mod storage_paths;
@@ -144,6 +145,7 @@ struct AppState {
     providers: Arc<provider_config::ProviderConfigRepository>,
     assets: Arc<asset_storage::AssetRepository>,
     task_host: Arc<task_host::TaskHost>,
+    model_discovery: provider_models::ModelDiscovery,
     restored_roots: Mutex<std::collections::HashSet<PathBuf>>,
 }
 
@@ -570,6 +572,24 @@ fn open_restored_project_package(
     Ok(())
 }
 // ========== 测试连接命令 ==========
+
+#[tauri::command(rename_all = "camelCase")]
+async fn provider_models_read(
+    state: State<'_, AppState>,
+    request_id: String,
+    url: String,
+    protocol: String,
+) -> Result<provider_models::ModelPage, String> {
+    state
+        .model_discovery
+        .read(&request_id, &url, &protocol)
+        .await
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn provider_models_cancel(state: State<'_, AppState>, request_id: String) -> Result<bool, String> {
+    state.model_discovery.cancel(&request_id)
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 struct TestResult {
@@ -1659,6 +1679,7 @@ fn main() {
             creation: Arc::new(creation_storage::SnapshotRepository::new(paths.creation)),
             assets,
             task_host,
+            model_discovery: provider_models::ModelDiscovery::default(),
             restored_roots: Mutex::new(std::collections::HashSet::new()),
         })
         .invoke_handler(tauri::generate_handler![
@@ -1686,6 +1707,8 @@ fn main() {
             import_project_package,
             open_restored_project_package,
             test_connection,
+            provider_models_read,
+            provider_models_cancel,
             list_conversations,
             save_conversation,
             delete_conversation,

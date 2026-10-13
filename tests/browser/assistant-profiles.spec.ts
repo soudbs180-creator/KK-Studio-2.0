@@ -158,9 +158,9 @@ test("the Skills entry keeps bundled assistant editing read-only and rejects an 
   await expandSidebar(page);
   await page
     .getByRole("navigation", { name: "主导航" })
-    .getByRole("button", { name: "技能", exact: true })
+    .getByRole("button", { name: "扩展", exact: true })
     .click();
-  const skills = page.getByRole("region", { name: "Skill", exact: true });
+  const skills = page.getByRole("region", { name: "扩展", exact: true });
   const card = skills
     .locator("article.catalog-card")
     .filter({ hasText: "代码审查助手" });

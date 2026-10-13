@@ -10,6 +10,8 @@ import {
   parseCatalogModels,
   type CatalogModel,
 } from "../features/models/modelCatalog.ts";
+import { isTauri } from "@tauri-apps/api/core";
+import { readNativeModelPage } from "./nativeModelDiscovery.ts";
 
 export async function checkModelProvider(
   baseUrl: string,
@@ -32,16 +34,19 @@ export async function checkModelProvider(
   const tokens = new Set<string>();
   for (let page = 0; page < 10; page++) {
     signal.throwIfAborted();
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        ...headers,
-      },
-      credentials: "omit",
-      redirect: "error",
-      signal,
-    });
+    const response =
+      isTauri() && options.authMode === "none"
+        ? await readNativeModelPage(url, protocol, signal)
+        : await fetch(url, {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              ...headers,
+            },
+            credentials: "omit",
+            redirect: "error",
+            signal,
+          });
     if (!response.ok) {
       await response.body?.cancel().catch(() => undefined);
       throw new Error(

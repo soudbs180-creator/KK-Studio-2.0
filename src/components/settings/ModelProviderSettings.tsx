@@ -28,6 +28,8 @@ import type { ProviderConnection } from "../../domain/providerConnections";
 import { useProviderCredentialState } from "./useProviderCredentialState";
 import {
   resolveModelProviderConnection,
+  modelProfileFromConnection,
+  requiresModelProviderSelection,
   validateModelProviderProfile,
   type ConnectionState,
 } from "./modelProviderSettingsState";
@@ -61,6 +63,9 @@ export default function ModelProviderSettings({
     profile.baseUrl,
     credentialRef,
     requestRef,
+    active &&
+      profile.authMode !== "none" &&
+      !requiresModelProviderSelection(profile, connections),
   );
   function cancelRequest(): void {
     requestRef.current?.abort("user");
@@ -131,15 +136,7 @@ export default function ModelProviderSettings({
   function selectConnection(connection: ProviderConnection): void {
     if (saving || !connection.baseUrl) return;
     cancelRequest();
-    setProfile({
-      version: 1,
-      connectionId: connection.id,
-      name: connection.provider,
-      baseUrl: connection.baseUrl,
-      model: connection.model ?? "",
-      ...(connection.protocol ? { protocol: connection.protocol } : {}),
-      ...(connection.authMode ? { authMode: connection.authMode } : {}),
-    });
+    setProfile(modelProfileFromConnection(connection));
     setCredentialRef(
       connection.credentialRef ??
         credentialId(connection.baseUrl, connection.provider),
@@ -284,7 +281,7 @@ export default function ModelProviderSettings({
       </fieldset>
       <ProviderSettingsActions
         saving={saving}
-        hasKey={Boolean(hasStoredKey || apiKey)}
+        hasKey={profile.authMode !== "none" && Boolean(hasStoredKey || apiKey)}
         testing={connection.kind === "loading"}
         onSave={() => void save()}
         onClear={() => void clearKey()}
