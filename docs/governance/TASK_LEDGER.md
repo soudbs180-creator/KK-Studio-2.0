@@ -127,8 +127,9 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROV-BYOK-001 | 用户自有 API 产品化接入 | TODO | 未完成 | P1 | TASK-AI-GATEWAY-001 | root | 依赖TASK-AI-GATEWAY-001与Web VPS控制面；先补intent/spec/plan和Desktop/Web/Mobile边界，外部契约稳定前不扩展产品实现。 |
 | TASK-UI-015 | 画布点状/网状背景缩放插值修正 | DONE | 已完成 | P2 | none | root | 保留当前证据；主线回读完成 |
 | TASK-AGENT-010 | 统一版本一致性与跨环境启动新鲜度 | REVIEW | 进行中 | P1 | TASK-LAUNCH-001 | root | 先收窄并同步候选到当前 origin/main，再取得 Hosted CI、不可变发布 receipt 和第二环境版本/commit/hash/进程路径回读；当前候选范围过宽，保持 REVIEW。 |
-| TASK-GOV-003 | 规则体系收敛与文档同步门禁（B1+B2） | DONE | 已完成 | P1 | none | root | B3（AI_HANDOFF 瘦身）、B4（worktree/二进制收敛）、B5（交付包补齐）待用户授权后按批次执行 |
+| TASK-GOV-003 | 规则体系收敛与文档同步门禁（B1+B2+R+B3-1+B3-2） | PARTIAL | 进行中 | P1 | none | root | 待用户授权后处理 B3-3 TASKSTATE 分支审查；随后按独立批次处理 B4 worktree/二进制、B5 交付包补齐 |
 | TASK-GOV-004 | 未合并分支全量核验、分类与收敛合并 | PARTIAL | 进行中 | P1 | TASK-GOV-003 | root | P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包 |
+| TASK-REVIEW-REMEDIATION-001 | 修复审查发现的治理生命周期与交付边界问题 | REVIEW | 进行中 | P1 | TASK-GOV-003 | root | 完成最终提交、运行完整验证并追加精确 base/head/tree 证据。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2433,23 +2434,23 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Last verified: 2026-10-12
 - Updated: 2026-10-12
 
-## TASK-GOV-003 — 规则体系收敛与文档同步门禁（B1+B2）
+## TASK-GOV-003 — 规则体系收敛与文档同步门禁（B1+B2+R+B3-1+B3-2）
 
 - Goal: 收敛 UI 入口覆盖、ADR 编号与索引唯一性，新增文档索引/命令/交付完整度三个门禁
-- Scope: 仅文档修正与新增只读门禁脚本，不改产品行为；B3-B5（AI_HANDOFF 瘦身、worktree 收敛、交付包补齐）不在本轮
-- Display status: 已完成
+- Scope: B1+B2 的索引/编号/命令/交付门禁已完成；本轮授权 R（文档生命周期与时间冲突规则）、B3-1（TASK_STATUS 当前快照）和 B3-2（AI_HANDOFF 恢复入口瘦身）；B3-3、B4、B5 不在本轮。
+- Display status: 进行中
 - Priority: P1 — 治理收敛，门禁已接入 lint
 - Requirement refs: ledger:TASK-GOV-003
 - Feature IDs: none
 - Owner role: repository-maintainer
-- Acceptance: UI_INDEX.md 完整列出全部现行 UI 承载文件，docs/README.md 补齐 engineering 与 governance 索引; ADR 编号去重归并至 docs/architecture/adr 唯一目录并留映射记录; check-doc-index 与 check-doc-commands 接入 lint 且全绿; 新增 20 个单测通过，ui:check 与 markdown:check 0 违规
+- Acceptance: UI_INDEX.md 完整列出全部现行 UI 承载文件，docs/README.md 补齐 engineering 与 governance 索引; ADR 编号去重归并至 docs/architecture/adr 唯一目录并留映射记录; check-doc-index 与 check-doc-commands 接入 lint 且全绿; 新增 20 个单测通过，ui:check 与 markdown:check 0 违规; 当前治理入口使用稳定 docId、updatedAt、source、status、supersededBy，重复 current 由 snapshot:check 拦截; TASK_STATUS 与 AI_HANDOFF 使用当前账本/事实快照，旧入口通过 supersededBy 退出当前路由; 新 dated change package、账本、PROJECT_STATE/AI_HANDOFF 与治理/Markdown 门禁结果可追溯
 - Branch: `codex/ui-redesign-20261011`
 - Worktree: `D:/kk-studio/KK-Studio-2.0`
-- Modules: docs/UI_INDEX.md, docs/README.md, docs/architecture/adr, docs/engineering/CODING-STANDARDS.md, docs/governance/UNIFIED-PROJECT-RULES.md, scripts/check-doc-index.mjs, scripts/check-doc-commands.mjs, scripts/check-delivery-completeness.mjs, scripts/governance/doc-index.mjs, scripts/governance/doc-commands.mjs, scripts/governance/delivery-completeness.mjs, tests/unit/docIndex.test.ts, tests/unit/docCommands.test.ts, tests/unit/deliveryCompleteness.test.ts, package.json
-- Verification: PASS — B1+B2 于 2026-10-11 执行：lint 全绿（含 2 个新门禁）、typecheck exit 0、ui:check 219 文件 0 违规、markdown:check 117 文件 0 违规、新增单测 20/20；交付包 docs/changes/2026-10-11-rules-restructure/ 五件套齐全，本轮提交进入版本控制。B3-B5 待授权未执行。
-- Evidence: [docs/changes/2026-10-11-rules-restructure/verification.md](../../docs/changes/2026-10-11-rules-restructure/verification.md), [docs/changes/2026-10-11-rules-restructure/review.md](../../docs/changes/2026-10-11-rules-restructure/review.md)
-- Next action: B3（AI_HANDOFF 瘦身）、B4（worktree/二进制收敛）、B5（交付包补齐）待用户授权后按批次执行
-- Last verified: 2026-10-11
+- Modules: docs/UI_INDEX.md, docs/README.md, docs/architecture/adr, docs/engineering/CODING-STANDARDS.md, docs/governance/UNIFIED-PROJECT-RULES.md, scripts/check-doc-index.mjs, scripts/check-doc-commands.mjs, scripts/check-delivery-completeness.mjs, scripts/governance/doc-index.mjs, scripts/governance/doc-commands.mjs, scripts/governance/delivery-completeness.mjs, tests/unit/docIndex.test.ts, tests/unit/docCommands.test.ts, tests/unit/deliveryCompleteness.test.ts, package.json, docs/governance/TASK_STATUS.md, docs/governance/PROJECT_STATE.md, docs/governance/AI_HANDOFF.md, docs/governance/AUTHORITY_MAP.md, docs/governance/AUTHORITY_MAP.json, scripts/check-snapshot-header.mjs
+- Verification: PARTIAL — B1+B2 已于 2026-10-11 通过既有索引/命令/交付门禁；2026-10-12 已完成 R+B3-1+B3-2 的文档生命周期门禁、任务快照刷新和 AI_HANDOFF 恢复入口瘦身，最终门禁与独立复核绑定本轮 exact head。B3-3、B4、B5 未执行。
+- Evidence: [docs/changes/2026-10-11-rules-restructure/verification.md](../../docs/changes/2026-10-11-rules-restructure/verification.md), [docs/changes/2026-10-11-rules-restructure/review.md](../../docs/changes/2026-10-11-rules-restructure/review.md), [docs/changes/2026-10-12-governance-currentness/verification.md](../../docs/changes/2026-10-12-governance-currentness/verification.md), [docs/changes/2026-10-12-governance-currentness/review.md](../../docs/changes/2026-10-12-governance-currentness/review.md)
+- Next action: 待用户授权后处理 B3-3 TASKSTATE 分支审查；随后按独立批次处理 B4 worktree/二进制、B5 交付包补齐
+- Last verified: 2026-10-12
 - Updated: 2026-10-12
 
 ## TASK-GOV-004 — 未合并分支全量核验、分类与收敛合并
@@ -2470,3 +2471,22 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Next action: P2 家族收敛 ×11 → B2 文档类 → B3 小代码 24 → B4 中代码 15 → B5 UI-012 两步（已授权）；每单元快照+门禁+交付包
 - Last verified: 2026-10-12
 - Updated: 2026-10-12
+
+## TASK-REVIEW-REMEDIATION-001 — 修复审查发现的治理生命周期与交付边界问题
+
+- Goal: 让 current 治理入口、supersededBy 关系和 dated change package 规则 fail closed 且可追溯。
+- Scope: 仅治理生命周期脚本、模板、交付包勘误和账本记录；不改产品运行时、远端设置或其他 worktree。
+- Display status: 进行中
+- Priority: P1 — 治理门禁 fail-open 会让错误 current 入口进入合并候选。
+- Requirement refs: ledger:TASK-REVIEW-REMEDIATION-001
+- Feature IDs: none
+- Owner role: repository-maintainer
+- Acceptance: snapshot:check 精确校验 current docId/source/status，并拒绝重复、伪元数据和无效 supersededBy。; 新交付包完整且绑定本次 taskId；旧包保留原始结论并追加勘误。; 治理、文档和版本校验改动与运行时提交可独立审阅。
+- Branch: `codex/ui-redesign-20261011`
+- Worktree: `D:/kk-studio/KK-Studio-2.0`
+- Modules: scripts/governance/doc-index.mjs, scripts/check-snapshot-header.mjs, tests/unit/docIndex.test.ts, docs/templates, docs/changes/2026-10-13-review-remediation, docs/governance/task-ledger.json
+- Verification: NOT_VERIFIED — 修复已完成，完整验证与最终 head 绑定待记录。
+- Evidence: [docs/changes/2026-10-13-review-remediation/verification.md](../../docs/changes/2026-10-13-review-remediation/verification.md), [docs/changes/2026-10-13-review-remediation/review.md](../../docs/changes/2026-10-13-review-remediation/review.md)
+- Next action: 完成最终提交、运行完整验证并追加精确 base/head/tree 证据。
+- Last verified: 2026-10-13
+- Updated: 2026-10-13

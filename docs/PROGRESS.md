@@ -1,5 +1,9 @@
 # 当前进度
 
+## 2026-10-12 规则生命周期与治理入口收敛
+
+按用户确认继续 TASK-GOV-003：同一任务使用稳定 `taskId`，同一治理文档使用稳定 `docId`；更新时刷新 `updated`/`updatedAt`，旧入口用 `supersededBy` 退出 current 路由。`TASK_STATUS` 已刷新为 123 条账本快照（75 `DONE` / 31 `PARTIAL` / 11 `TODO` / 4 `BLOCKED` / 2 `REVIEW`，47 项开放），`AI_HANDOFF` 已收敛为当前恢复入口，`PROJECT_STATE` 补齐生命周期元数据；`snapshot:check` 现在检查身份、来源、更新时间、替代关系和重复 current。B3-3、B4、B5 未执行。
+
 ## 2026-10-12 P1 审计收口与当前证据边界
 
 - 当前事实已刷新：primary `codex/ui-redesign-20261011@ac5e6a4a` 在本轮开始时 clean，当前包含本轮 5 个 tracked 文件改动和 1 个新证据目录；本地 `origin/main` ref `1f6cbd37`；实时台账 123 条（76 DONE / 30 PARTIAL / 11 TODO / 4 BLOCKED / 2 REVIEW）；94 个 worktree。旧 `PROJECT_STATE` 快照不再作为当前事实。

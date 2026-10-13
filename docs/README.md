@@ -68,25 +68,25 @@
 
 `governance/`：项目级当前状态、规范索引、任务账本、已知问题和 AI 交接。不重复 feature change evidence。
 
-| 文档                                                         | 承载内容                                                      |
-| ------------------------------------------------------------ | ------------------------------------------------------------- |
-| [task-ledger.json](governance/task-ledger.json)              | **任务状态唯一事实源**                                        |
-| [TASK_LEDGER.md](governance/TASK_LEDGER.md)                  | 账本生成视图，由 `npm run governance:write` 产出，不手改      |
-| [TASK_STATUS](governance/TASK_STATUS.md)                     | 任务状态日期快照（只读路由用，不改状态）                      |
-| [PROJECT_STATE.md](governance/PROJECT_STATE.md)              | 当前项目事实                                                  |
-| [AI_HANDOFF.md](governance/AI_HANDOFF.md)                    | AI 交接上下文                                                 |
-| [PROJECT_GOALS](governance/PROJECT_GOALS.md)                 | 项目目标                                                      |
-| [SPEC_BASELINE](governance/SPEC_BASELINE.md)                 | 各类状态的唯一来源映射                                        |
-| [AUTHORITY_MAP](governance/AUTHORITY_MAP.md)                 | 权威来源地图与冲突处理顺序（机器可读版 `AUTHORITY_MAP.json`） |
-| [KNOWN_ISSUES](governance/KNOWN_ISSUES.md)                   | 已知问题清单                                                  |
-| [WORKSPACE_MAP](governance/WORKSPACE_MAP.md)                 | 本机审计路径分布（非跨设备契约）                              |
-| [RETENTION_MANIFEST](governance/RETENTION_MANIFEST.md)       | 保留意图声明（不授权删除或移动）                              |
-| [MARKDOWN_AUDIT](governance/MARKDOWN_AUDIT.md)               | Markdown 链接审计与历史勘误索引                               |
-| [UNIFIED-PROJECT-RULES](governance/UNIFIED-PROJECT-RULES.md) | 跨主题统一规则、目录/命名、编码流程、冲突裁决与规则变更机制   |
+| 文档                                                         | 承载内容                                                                                  |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| [task-ledger.json](governance/task-ledger.json)              | **任务状态唯一事实源**                                                                    |
+| [TASK_LEDGER.md](governance/TASK_LEDGER.md)                  | 账本生成视图，由 `npm run governance:write` 产出，不手改                                  |
+| [TASK_STATUS](governance/TASK_STATUS.md)                     | 任务状态日期快照（current 路由；带 docId/updatedAt/source/status/supersededBy，不改状态） |
+| [PROJECT_STATE.md](governance/PROJECT_STATE.md)              | 当前项目事实                                                                              |
+| [AI_HANDOFF.md](governance/AI_HANDOFF.md)                    | AI 最短恢复入口（current 路由；历史证据回到 dated change package）                        |
+| [PROJECT_GOALS](governance/PROJECT_GOALS.md)                 | 项目目标                                                                                  |
+| [SPEC_BASELINE](governance/SPEC_BASELINE.md)                 | 各类状态的唯一来源映射                                                                    |
+| [AUTHORITY_MAP](governance/AUTHORITY_MAP.md)                 | 权威来源地图与冲突处理顺序（机器可读版 `AUTHORITY_MAP.json`）                             |
+| [KNOWN_ISSUES](governance/KNOWN_ISSUES.md)                   | 已知问题清单                                                                              |
+| [WORKSPACE_MAP](governance/WORKSPACE_MAP.md)                 | 本机审计路径分布（非跨设备契约）                                                          |
+| [RETENTION_MANIFEST](governance/RETENTION_MANIFEST.md)       | 保留意图声明（不授权删除或移动）                                                          |
+| [MARKDOWN_AUDIT](governance/MARKDOWN_AUDIT.md)               | Markdown 链接审计与历史勘误索引                                                           |
+| [UNIFIED-PROJECT-RULES](governance/UNIFIED-PROJECT-RULES.md) | 跨主题统一规则、目录/命名、编码流程、冲突裁决与规则变更机制                               |
 
 > 本表必须完整覆盖 `docs/engineering/`、`docs/architecture/`、`docs/governance/` 下的全部 `.md`。`npm run index:check` 会校验覆盖率、ADR 编号唯一性与单一 ADR 目录。
 
-`PROJECT_STATE.md` 与 `AI_HANDOFF.md` 存在大量同名二级章节（历史累积，尚未拆分）。读到重复内容时以 `PROJECT_STATE.md` 为当前事实，`AI_HANDOFF.md` 仅作交接线索。
+`PROJECT_STATE.md` 与 `AI_HANDOFF.md` 使用稳定 `docId` 和 `updatedAt`。`PROJECT_STATE.md` 承载当前事实，`AI_HANDOFF.md` 只承载恢复入口；历史 change package 不参与当前路由。旧入口必须写 `status: superseded` 与 `supersededBy`，同一 `docId` 不得出现两份 `current`。
 
 ## 其他目录
 
@@ -136,6 +136,7 @@
 - **同层级文档冲突**时，以本文件的承载内容划分为准：一份文档只承载一类事实。若两份文档出现同类条目，说明归属划分有误，需删除其中一处并补链接，不允许两处都留。
 - **汇总文档不新增事实**。`TASK_LEDGER.md`、`docs/README.md`、看板等派生视图只能从来源生成或索引，不手工维护第二份内容。
 - **历史材料不参与裁决**。`archive/` 与已合并存根只用于追溯。
+- **当前文档按稳定身份更新**。任务使用稳定 `taskId`，文档使用稳定 `docId`；更新时修改 `updated`/`updatedAt` 和来源，不因日期新建第二条 current。旧版本保留历史含义并通过 `supersededBy` 指向新入口；文件名、目录名和 mtime 不能单独决定最新版本。
 - 规则变更必须同步「门禁映射」：`docs/engineering/CODING-STANDARDS.md` 的门禁表列出了每条规则对应的可执行检查，新增或放宽门禁时同表更新。
 
 ## 文档与代码同步

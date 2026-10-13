@@ -1,3 +1,12 @@
+<!-- DOCUMENT_METADATA_BEGIN -->
+
+- docId: PROJECT_STATE
+- status: current
+- updatedAt: 2026-10-12
+- source: `docs/governance/task-ledger.json`
+- supersededBy: null
+
+<!-- DOCUMENT_METADATA_END -->
 <!-- CURRENT_FACTS_BEGIN -->
 
 ## CURRENT_FACTS (machine-readable current snapshot)
@@ -7,8 +16,8 @@
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: `1f6cbd37091326a899fa600baba53bf6efd9cf16`
 - `canonicalHeadVerifiedFrom`: `git rev-parse origin/main` in the primary checkout; this is the local remote-tracking ref and was not refreshed with `git fetch` in this audit.
-- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `codex/ui-redesign-20261011` at `ac5e6a4a5c963577fe4252312b1e2fc0550d70ee`; the checkout was clean at the start of this audit and now contains this audit's 5 modified tracked files plus the new `docs/changes/2026-10-12-p1-audit-closeout/` directory. The current branch is an audit/consolidation candidate and is not claimed to be the published `origin/main` tree.
-- `taskLedger`: 123 records; 76 DONE, 30 PARTIAL, 11 TODO, 4 BLOCKED, 2 REVIEW; 47 open records.
+- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `codex/ui-redesign-20261011` at `7f29db98a00a9f0662c9a0dd8909337a988a4baa`; the checkout was clean before the current governance update and is not claimed to be the published `origin/main` tree. This branch contains the B1+B2 governance commits and the current R+B3-1+B3-2 working changes.
+- `taskLedger`: 123 records; 75 DONE, 31 PARTIAL, 11 TODO, 4 BLOCKED, 2 REVIEW; 47 open records.
 - `workspaceWorktrees`: 94 registered worktrees, including nested and external checkouts; the worktree creation policy currently reports 54 active worktrees against a default budget of 4, so this turn does not create another checkout. Existing dirty, active, nested, external, and duplicate-source worktrees remain protected. The current audit pointer is `D:/kk-studio/output/2026-10-10-worktree-reclamation/worktree-reclamation-plan-a32b6b9e-3ff4-402b-913f-d04b64a3de56.json`, relocated out of the repository on 2026-10-12.
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.

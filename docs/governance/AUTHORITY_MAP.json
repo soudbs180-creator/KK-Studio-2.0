@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "updated": "2026-10-09",
+  "updated": "2026-10-12",
   "scope": "KK Studio 2.0 governance source routing",
   "rule_hierarchy": {
     "description": "This ordered list resolves conflicting instructions or claims. It is separate from domain ownership: a lower-order domain source can still be the only source allowed to state its own kind of fact.",
@@ -8,9 +8,7 @@
       {
         "order": 1,
         "authority": "user_intent",
-        "paths": [
-          "user request / accepted clarification"
-        ],
+        "paths": ["user request / accepted clarification"],
         "owner": "user",
         "lastReviewed": "2026-10-09",
         "supersedes": null,
@@ -20,9 +18,7 @@
       {
         "order": 2,
         "authority": "repository_operating_rules",
-        "paths": [
-          "AGENTS.md"
-        ],
+        "paths": ["AGENTS.md"],
         "owner": "repository maintainers",
         "lastReviewed": "2026-10-09",
         "supersedes": null,
@@ -32,9 +28,7 @@
       {
         "order": 3,
         "authority": "ai_policy",
-        "paths": [
-          "AI_RULES.md"
-        ],
+        "paths": ["AI_RULES.md"],
         "owner": "repository maintainers",
         "lastReviewed": "2026-10-09",
         "supersedes": null,
@@ -44,9 +38,7 @@
       {
         "order": 4,
         "authority": "prompt_translation_rules",
-        "paths": [
-          "docs/engineering/PROMPTING.md"
-        ],
+        "paths": ["docs/engineering/PROMPTING.md"],
         "owner": "engineering maintainers",
         "lastReviewed": "2026-10-09",
         "supersedes": null,
@@ -56,9 +48,7 @@
       {
         "order": 5,
         "authority": "approved_specification_baseline",
-        "paths": [
-          "docs/governance/SPEC_BASELINE.md"
-        ],
+        "paths": ["docs/governance/SPEC_BASELINE.md"],
         "owner": "governance maintainers",
         "lastReviewed": "2026-10-09",
         "supersedes": null,
@@ -135,9 +125,7 @@
   "domain_authority": [
     {
       "domain": "task_state",
-      "paths": [
-        "docs/governance/task-ledger.json"
-      ],
+      "paths": ["docs/governance/task-ledger.json"],
       "generatedView": "docs/governance/TASK_LEDGER.md",
       "rule": "Task status, owner, dependencies and task evidence live here. This is orthogonal to feature capability status.",
       "owner": "task owner",
@@ -152,9 +140,9 @@
         "docs/governance/PROJECT_STATE.md",
         "docs/governance/AI_HANDOFF.md"
       ],
-      "rule": "Current project facts and restart context are dated; older segments retain historical meaning and require source re-check.",
+      "rule": "PROJECT_STATE is the current-facts source and AI_HANDOFF is the current recovery entry; both use stable docId/updatedAt/status/supersededBy metadata. Historical content requires source re-check.",
       "owner": "governance maintainers",
-      "lastReviewed": "2026-10-09",
+      "lastReviewed": "2026-10-12",
       "supersedes": null,
       "nextReview": "when project facts or restart guidance changes",
       "status": "current_dated"
@@ -200,10 +188,7 @@
       "rule": "UI_INDEX.md routes each UI question to its current owner. Historical UI files are evidence only.",
       "owner": "design and frontend maintainers",
       "lastReviewed": "2026-10-09",
-      "supersedes": [
-        "docs/UI-STANDARDS.md",
-        "docs/UI-ALIGNMENT.md"
-      ],
+      "supersedes": ["docs/UI-STANDARDS.md", "docs/UI-ALIGNMENT.md"],
       "nextReview": "when UI source or Figma baseline changes",
       "status": "current_routed"
     },
@@ -240,12 +225,7 @@
     }
   ],
   "conflict_policy": {
-    "labels": [
-      "FACT",
-      "INFERENCE",
-      "UNKNOWN",
-      "CONFLICT"
-    ],
+    "labels": ["FACT", "INFERENCE", "UNKNOWN", "CONFLICT"],
     "rule": "Record the source and date, preserve historical evidence, and do not infer a provider integration or product capability from a keyword, prototype, static comparison, or build-only result.",
     "domain_rule": "Domain authority determines which source owns a fact; rule hierarchy determines which instruction wins when sources prescribe incompatible behavior."
   },
@@ -258,9 +238,7 @@
     {
       "order": 1,
       "authority": "user_intent",
-      "paths": [
-        "user request / accepted clarification"
-      ],
+      "paths": ["user request / accepted clarification"],
       "owner": "user",
       "lastReviewed": "2026-10-09",
       "supersedes": null,
@@ -270,9 +248,7 @@
     {
       "order": 2,
       "authority": "repository_operating_rules",
-      "paths": [
-        "AGENTS.md"
-      ],
+      "paths": ["AGENTS.md"],
       "owner": "repository maintainers",
       "lastReviewed": "2026-10-09",
       "supersedes": null,
@@ -282,9 +258,7 @@
     {
       "order": 3,
       "authority": "ai_policy",
-      "paths": [
-        "AI_RULES.md"
-      ],
+      "paths": ["AI_RULES.md"],
       "owner": "repository maintainers",
       "lastReviewed": "2026-10-09",
       "supersedes": null,
@@ -294,9 +268,7 @@
     {
       "order": 4,
       "authority": "prompt_translation_rules",
-      "paths": [
-        "docs/engineering/PROMPTING.md"
-      ],
+      "paths": ["docs/engineering/PROMPTING.md"],
       "owner": "engineering maintainers",
       "lastReviewed": "2026-10-09",
       "supersedes": null,
@@ -306,9 +278,7 @@
     {
       "order": 5,
       "authority": "approved_specification_baseline",
-      "paths": [
-        "docs/governance/SPEC_BASELINE.md"
-      ],
+      "paths": ["docs/governance/SPEC_BASELINE.md"],
       "owner": "governance maintainers",
       "lastReviewed": "2026-10-09",
       "supersedes": null,
@@ -394,10 +364,7 @@
       ],
       "owner": "design and frontend maintainers",
       "lastReviewed": "2026-10-09",
-      "supersedes": [
-        "docs/UI-STANDARDS.md",
-        "docs/UI-ALIGNMENT.md"
-      ],
+      "supersedes": ["docs/UI-STANDARDS.md", "docs/UI-ALIGNMENT.md"],
       "nextReview": "when UI source or Figma baseline changes",
       "status": "current_routed"
     },
@@ -405,10 +372,7 @@
       "topic": "memory",
       "authority": "docs/MEMORY-CONTRACT.md",
       "governance": "docs/MEMORY-GOVERNANCE.md",
-      "implementation": [
-        "src/features/memory/",
-        "src-tauri/src/"
-      ],
+      "implementation": ["src/features/memory/", "src-tauri/src/"],
       "owner": "architecture and memory maintainers",
       "lastReviewed": "2026-10-09",
       "supersedes": null,

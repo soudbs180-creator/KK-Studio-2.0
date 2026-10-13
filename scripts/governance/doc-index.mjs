@@ -31,6 +31,28 @@ export const CONTAINER_SNAPSHOT_DOCUMENTS = Object.freeze([
   "docs/plans/KK-Studio-功能台账与四向推进-2026-10-09.md",
 ]);
 
+/**
+ * 当前治理入口的生命周期元数据。历史 change package 不在这里登记：它们
+ * 是 dated evidence，不能与当前文档竞争事实来源。
+ */
+export const TEMPORAL_DOCUMENTS = Object.freeze([
+  {
+    relativePath: "docs/governance/TASK_STATUS.md",
+    documentId: "TASK_STATUS",
+    source: "docs/governance/task-ledger.json",
+  },
+  {
+    relativePath: "docs/governance/PROJECT_STATE.md",
+    documentId: "PROJECT_STATE",
+    source: "docs/governance/task-ledger.json",
+  },
+  {
+    relativePath: "docs/governance/AI_HANDOFF.md",
+    documentId: "AI_HANDOFF",
+    source: "docs/governance/PROJECT_STATE.md",
+  },
+]);
+
 /** ADR 文件名格式：ADR-NNN-kebab-title.md */
 const ADR_FILE_PATTERN = /^ADR-(\d{3})-[a-z0-9]+(?:-[a-z0-9]+)*\.md$/;
 
@@ -162,5 +184,171 @@ export function checkSnapshotHeader(source, filePath, now = new Date()) {
     )
   )
     issues.push(`${filePath}: 缺少“本文不替代权威账本”声明`);
+  return issues;
+}
+
+/**
+ * 校验当前治理文档的稳定身份、更新时间和替代关系。
+ *
+ * 日期是版本元数据，不参与 documentId/taskId 身份；旧内容必须通过
+ * status=superseded 与 supersededBy 离开当前路由，而不是再产生第二份 current。
+ *
+ * @param {string} source Markdown 文档全文
+ * @param {string} filePath 用于错误信息的仓库相对路径
+ * @param {{documentId?: string, source?: string, now?: Date}} options
+ * @returns {string[]}
+ */
+export function checkDocumentLifecycleHeader(
+  source,
+  filePath,
+  {
+    documentId: expectedId,
+    source: expectedSource,
+    expectedStatus,
+    knownSupersededTargets,
+    now = new Date(),
+  } = {},
+) {
+  const issues = [];
+  const header = source.split(/\r?\n/).slice(0, 40).join("\n");
+  const metadata = parseLifecycleMetadata(header);
+  const { id, updatedAt, status, source: sourceValue, supersededBy } = metadata;
+  for (const [field, count] of Object.entries(metadata.counts)) {
+    if (count > 1) issues.push(`${filePath}: ${field} 元数据出现重复字段`);
+  }
+
+  if (!id) issues.push(`${filePath}: 缺少稳定 docId`);
+  else if (expectedId && id !== expectedId)
+    issues.push(`${filePath}: docId 应为 ${expectedId}，实际为 ${id}`);
+  if (!updatedAt) issues.push(`${filePath}: 缺少 updatedAt/更新时间`);
+  else {
+    const parsed = new Date(`${updatedAt}T00:00:00Z`);
+    if (
+      Number.isNaN(parsed.getTime()) ||
+      updatedAt !== parsed.toISOString().slice(0, 10)
+    )
+      issues.push(`${filePath}: updatedAt 不是有效的 YYYY-MM-DD 日期`);
+    else if (parsed.getTime() > now.getTime())
+      issues.push(`${filePath}: updatedAt 不能晚于当前日期`);
+  }
+  if (!status)
+    issues.push(`${filePath}: 缺少 status=current|superseded|historical`);
+  else if (expectedStatus && status !== expectedStatus)
+    issues.push(`${filePath}: status 应为 ${expectedStatus}，实际为 ${status}`);
+  if (!sourceValue) issues.push(`${filePath}: 缺少 source/数据源`);
+  else if (expectedSource && sourceValue !== expectedSource)
+    issues.push(`${filePath}: source 应精确为 ${expectedSource}，实际为 ${sourceValue}`);
+  if (supersededBy === null)
+    issues.push(
+      `${filePath}: 缺少 supersededBy 字段（current 文档也必须写 null）`,
+    );
+  else if (status === "current" && supersededBy.toLowerCase() !== "null")
+    issues.push(`${filePath}: status=current 时 supersededBy 必须为 null`);
+  else if (status === "superseded" && supersededBy.toLowerCase() === "null")
+    issues.push(`${filePath}: status=superseded 时必须指向 supersededBy`);
+  else if (
+    status === "superseded" &&
+    /^null/i.test(supersededBy)
+  )
+    issues.push(`${filePath}: supersededBy 不能使用 null 保留字`);
+  else if (
+    status === "superseded" &&
+    knownSupersededTargets &&
+    !knownSupersededTargets.has(supersededBy)
+  )
+    issues.push(`${filePath}: supersededBy 未指向已登记的 current 文档（${supersededBy}）`);
+  else if (
+    status === "superseded" &&
+    !/^(?:[A-Za-z0-9._-]+|(?:[A-Za-z0-9._-]+\/)+[A-Za-z0-9._-]+\.md)$/.test(
+      supersededBy,
+    )
+  )
+    issues.push(`${filePath}: supersededBy 必须是稳定 docId 或仓库相对 Markdown 路径`);
+  return issues;
+}
+
+/**
+ * 读取头部的生命周期元数据。字段必须独占一行，避免正文中的相似文字
+ * 被当成门禁元数据；返回值供唯一性门禁复用。
+ */
+export function parseLifecycleMetadata(headerSource) {
+  const metadata = {
+    id: null,
+    updatedAt: null,
+    status: null,
+    source: null,
+    supersededBy: null,
+    counts: {
+      docId: 0,
+      updatedAt: 0,
+      status: 0,
+      source: 0,
+      supersededBy: 0,
+    },
+  };
+  let inFence = false;
+  for (const line of headerSource.split(/\r?\n/).slice(0, 40)) {
+    if (/^\s*```/.test(line)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+    const value = (pattern) => line.match(pattern)?.[1]?.trim() ?? null;
+    const id = value(
+      /^\s*(?:[-*]\s*)?(?:docId|文档\s*ID)\s*[:：]\s*`?([A-Za-z0-9._-]+)`?\s*$/i,
+    );
+    if (id !== null) {
+      metadata.counts.docId++;
+      metadata.id ??= id;
+    }
+    const updatedAt = value(
+      /^\s*(?:[-*]\s*)?(?:updatedAt|更新时间)\s*[:：]\s*`?(\d{4}-\d{2}-\d{2})`?\s*$/i,
+    );
+    if (updatedAt !== null) {
+      metadata.counts.updatedAt++;
+      metadata.updatedAt ??= updatedAt;
+    }
+    const status = value(
+      /^\s*(?:[-*]\s*)?(?:status|状态)\s*[:：]\s*`?(current|superseded|historical)`?\s*$/i,
+    );
+    if (status !== null) {
+      metadata.counts.status++;
+      metadata.status ??= status;
+    }
+    const source = value(
+      /^\s*(?:[-*]\s*)?(?:source|数据源)\s*[:：]\s*`?([^`\r\n]+?)`?\s*$/i,
+    );
+    if (source !== null) {
+      metadata.counts.source++;
+      metadata.source ??= source;
+    }
+    const supersededBy = value(
+      /^\s*(?:[-*]\s*)?(?:supersededBy|替代文档)\s*[:：]\s*`?([^`\r\n]+?)`?\s*$/i,
+    );
+    if (supersededBy !== null) {
+      metadata.counts.supersededBy++;
+      metadata.supersededBy ??= supersededBy;
+    }
+  }
+  return metadata;
+}
+
+/**
+ * 当前入口不能出现同一 docId 的多份 current 记录。
+ * @param {Array<{filePath: string, source: string}>} documents
+ * @returns {string[]}
+ */
+export function checkCurrentDocumentUniqueness(documents) {
+  const issues = [];
+  const current = new Map();
+  for (const { filePath, source } of documents) {
+    const { id, status } = parseLifecycleMetadata(source);
+    if (id && status === "current") {
+      const previous = current.get(id);
+      if (previous)
+        issues.push(`重复 current docId ${id}: ${previous} 与 ${filePath}`);
+      else current.set(id, filePath);
+    }
+  }
   return issues;
 }

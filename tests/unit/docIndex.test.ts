@@ -4,6 +4,8 @@ import {
   checkAdrNumbering,
   checkIndexCoverage,
   checkRetiredAdrDirectories,
+  checkCurrentDocumentUniqueness,
+  checkDocumentLifecycleHeader,
   checkSnapshotHeader,
 } from "../../scripts/governance/doc-index.mjs";
 
@@ -144,5 +146,142 @@ test("checkSnapshotHeader 拒绝无效日期和过期未标注快照", () => {
       new Date("2026-10-12T00:00:00Z"),
     ).join("\n"),
     /超过 14 天/,
+  );
+});
+
+test("checkDocumentLifecycleHeader 要求稳定身份、更新时间和替代字段", () => {
+  const complete = [
+    "- docId: TASK_STATUS",
+    "- status: current",
+    "- updatedAt: 2026-10-12",
+    "- source: `docs/governance/task-ledger.json`",
+    "- supersededBy: null",
+  ].join("\n");
+  assert.deepEqual(
+    checkDocumentLifecycleHeader(complete, "docs/governance/TASK_STATUS.md", {
+      documentId: "TASK_STATUS",
+      source: "docs/governance/task-ledger.json",
+      now: new Date("2026-10-12T00:00:00Z"),
+    }),
+    [],
+  );
+});
+
+test("checkDocumentLifecycleHeader 拒绝当前文档指向旧版本", () => {
+  const stale = [
+    "- docId: AI_HANDOFF",
+    "- status: current",
+    "- updatedAt: 2026-10-12",
+    "- source: `docs/governance/PROJECT_STATE.md`",
+    "- supersededBy: docs/archive/AI_HANDOFF.md",
+  ].join("\n");
+  assert.match(
+    checkDocumentLifecycleHeader(stale, "docs/governance/AI_HANDOFF.md", {
+      documentId: "AI_HANDOFF",
+      source: "docs/governance/PROJECT_STATE.md",
+      now: new Date("2026-10-12T00:00:00Z"),
+    }).join("\n"),
+    /status=current 时 supersededBy 必须为 null/,
+  );
+});
+
+test("checkDocumentLifecycleHeader 要求当前状态和精确来源", () => {
+  const currentWithWrongSource = [
+    "- docId: TASK_STATUS",
+    "- status: current-copy",
+    "- updatedAt: 2026-10-12",
+    "- source: docs/governance/task-ledger.json.bak",
+    "- supersededBy: null",
+  ].join("\n");
+  const issues = checkDocumentLifecycleHeader(
+    currentWithWrongSource,
+    "docs/governance/TASK_STATUS.md",
+    {
+      documentId: "TASK_STATUS",
+      source: "docs/governance/task-ledger.json",
+      expectedStatus: "current",
+      now: new Date("2026-10-12T00:00:00Z"),
+    },
+  );
+  assert.match(issues.join("\n"), /缺少 status=current\|superseded\|historical/);
+  assert.match(issues.join("\n"), /source 应精确为/);
+});
+
+test("checkDocumentLifecycleHeader 不把正文中的字段当作元数据", () => {
+  const source = [
+    "# Governance entry",
+    "正文提到 status: current 和 source: docs/governance/task-ledger.json。",
+  ].join("\n");
+  const issues = checkDocumentLifecycleHeader(source, "entry.md", {
+    expectedStatus: "current",
+    now: new Date("2026-10-12T00:00:00Z"),
+  });
+  assert.match(issues.join("\n"), /缺少稳定 docId/);
+  assert.match(issues.join("\n"), /缺少 source/);
+});
+
+test("checkDocumentLifecycleHeader 忽略代码块中的伪元数据并拒绝重复字段", () => {
+  const source = [
+    "# Entry",
+    "```yaml",
+    "- docId: FAKE",
+    "- status: current",
+    "```",
+    "- docId: TASK_STATUS",
+    "- docId: TASK_STATUS_COPY",
+    "- status: current",
+    "- updatedAt: 2026-10-12",
+    "- source: `docs/governance/task-ledger.json`",
+    "- supersededBy: null",
+  ].join("\n");
+  const issues = checkDocumentLifecycleHeader(source, "entry.md", {
+    documentId: "TASK_STATUS",
+    source: "docs/governance/task-ledger.json",
+    expectedStatus: "current",
+    now: new Date("2026-10-12T00:00:00Z"),
+  });
+  assert.match(issues.join("\n"), /docId 元数据出现重复字段/);
+  assert.doesNotMatch(issues.join("\n"), /FAKE/);
+});
+
+test("checkDocumentLifecycleHeader 拒绝 malformed supersededBy", () => {
+  const source = [
+    "- docId: OLD",
+    "- status: superseded",
+    "- updatedAt: 2026-10-12",
+    "- source: `docs/governance/task-ledger.json`",
+    "- supersededBy: nullx",
+  ].join("\n");
+  const issues = checkDocumentLifecycleHeader(source, "old.md", {
+    source: "docs/governance/task-ledger.json",
+    now: new Date("2026-10-12T00:00:00Z"),
+  });
+  assert.match(issues.join("\n"), /supersededBy/);
+});
+
+test("checkDocumentLifecycleHeader 要求 supersededBy 指向已登记 current 文档", () => {
+  const source = [
+    "- docId: OLD",
+    "- status: superseded",
+    "- updatedAt: 2026-10-12",
+    "- source: `docs/governance/task-ledger.json`",
+    "- supersededBy: docs/governance/MISSING.md",
+  ].join("\n");
+  const issues = checkDocumentLifecycleHeader(source, "old.md", {
+    source: "docs/governance/task-ledger.json",
+    knownSupersededTargets: new Set(["PROJECT_STATE", "docs/governance/PROJECT_STATE.md"]),
+    now: new Date("2026-10-12T00:00:00Z"),
+  });
+  assert.match(issues.join("\n"), /未指向已登记/);
+});
+
+test("checkCurrentDocumentUniqueness 拒绝重复 current docId", () => {
+  const source = ["- docId: PROJECT_STATE", "- status: current"].join("\n");
+  assert.match(
+    checkCurrentDocumentUniqueness([
+      { filePath: "a.md", source },
+      { filePath: "b.md", source },
+    ]).join("\n"),
+    /重复 current docId PROJECT_STATE/,
   );
 });
