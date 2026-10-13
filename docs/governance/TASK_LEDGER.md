@@ -2495,7 +2495,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 ## TASK-ENG-001 — 引入 hermes-agent 工程实践：代码健康棘轮、Windows 不安全模式扫描与 Actions SHA 固定
 
 - Goal: 把 hermes-agent（MIT）的 ratchet 与 footgun 扫描语义移植到本仓库 TypeScript 栈：新代码必须达标、存量只许变小、初始 advisory 不阻断 CI；同时把 workflow action 从可变 tag 固定到 commit SHA。
-- Scope: scripts/check-code-health.mjs、scripts/check-windows-footguns.mjs、scripts/governance/{code-health.config,code-health-measure,code-health-compare,diff-scope,footgun-rules}.mjs、package.json 脚本注册与 lint 接线、.github/workflows/{git-guards,quality,auto-merge,main-guard,windows-release}.yml SHA 固定、docs/engineering/DEVELOPMENT.md 门禁章节、docs/changes/2026-10-12-TASK-ENG-001-code-health 五件套；不含产品功能变更与存量超标代码重写。
+- Scope: scripts/check-code-health.mjs、scripts/check-windows-footguns.mjs、scripts/governance/{code-health.config,code-health-measure,code-health-compare,diff-scope,footgun-rules}.mjs、package.json 脚本注册与 lint 接线、.github/workflows/{git-guards,quality,auto-merge,main-guard,windows-release}.yml SHA 固定、docs/engineering/{DEVELOPMENT,CODING-STANDARDS}.md 门禁章节与映射、tests/unit/{diffScope,codeHealthCliModes,codeHealthPatternAllowance}.test.ts 回归、docs/changes/2026-10-12-TASK-ENG-001-code-health 五件套；不含产品功能变更与存量超标代码重写。
 - Display status: 进行中
 - Priority: P1 — 工程治理增量门禁；不改变产品运行时行为。
 - Requirement refs: ledger:TASK-ENG-001
@@ -2504,8 +2504,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Acceptance: 超标新代码被棘轮捕获并给出文件/行/指标/上限来源；health: allow 行内豁免生效（CC、FILE_LINES、AS_ANY、EMPTY_CATCH 四类自测覆盖）; advisory 模式下 npm run lint 退出码不变；--report 输出全库存量清单; footgun 扫描只覆盖变化文件并给出 fix 指引；规则元数据目录排除后不自匹配; workflow 中 GitHub Actions 全部固定到 commit SHA 并附版本注释; DEVELOPMENT.md 记录命令表、棘轮语义、豁免语法与总开关行为；markdown:check 与治理门禁通过; 账本登记、五件套齐全，governance:check 与 delivery 门禁在本 SHA 上通过
 - Branch: `feat/TASK-ENG-001-code-health`
 - Worktree: `D:/kk-studio/.worktrees/TASK-ENG-001-code-health`
-- Modules: scripts/check-code-health.mjs, scripts/check-windows-footguns.mjs, scripts/governance/code-health.config.mjs, scripts/governance/code-health-measure.mjs, scripts/governance/code-health-compare.mjs, scripts/governance/diff-scope.mjs, scripts/governance/footgun-rules.mjs, package.json, .github/workflows/git-guards.yml, .github/workflows/quality.yml, .github/workflows/auto-merge.yml, .github/workflows/main-guard.yml, .github/workflows/windows-release.yml, docs/engineering/DEVELOPMENT.md, docs/changes/2026-10-12-TASK-ENG-001-code-health
-- Verification: NOT_VERIFIED — 原始 base 1f6cbd37 的验证记录保留为历史证据；当前承接 origin/main 后需重新运行本地门禁、delivery、独立 exact-SHA review 和 Hosted verify。
+- Modules: scripts/check-code-health.mjs, scripts/check-windows-footguns.mjs, scripts/governance/code-health.config.mjs, scripts/governance/code-health-measure.mjs, scripts/governance/code-health-compare.mjs, scripts/governance/diff-scope.mjs, scripts/governance/footgun-rules.mjs, package.json, .github/workflows/git-guards.yml, .github/workflows/quality.yml, .github/workflows/auto-merge.yml, .github/workflows/main-guard.yml, .github/workflows/windows-release.yml, docs/engineering/DEVELOPMENT.md, docs/engineering/CODING-STANDARDS.md, tests/unit/diffScope.test.ts, tests/unit/codeHealthCliModes.test.ts, tests/unit/codeHealthPatternAllowance.test.ts, docs/changes/2026-10-12-TASK-ENG-001-code-health
+- Verification: NOT_VERIFIED — 原始 base 1f6cbd37 与候选 9c849aa 的验证保留为历史。最终复审五项阻断修复工作区：13 项定向回归、lint/typecheck/format/policy sync 通过；1019 项 Node 测试为 1005 pass/14 skipped/0 fail。新提交仍须精确 SHA 的 delivery、独立复审和 Hosted CI 后才能合并。
 - Evidence: [docs/changes/2026-10-12-TASK-ENG-001-code-health/verification.md](../../docs/changes/2026-10-12-TASK-ENG-001-code-health/verification.md), [docs/changes/2026-10-12-TASK-ENG-001-code-health/review.md](../../docs/changes/2026-10-12-TASK-ENG-001-code-health/review.md)
 - Next action: 基于最新 origin/main 完成冲突承接、独立 exact-SHA review 和 Hosted verify；未完成前保持 REVIEW。
 - Last verified: 2026-10-13

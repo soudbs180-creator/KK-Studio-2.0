@@ -20,6 +20,8 @@
 | Markdown 链接 | `node scripts/check-markdown.mjs` | 断链、跨仓库链接 |
 | 文档索引与 ADR 编号 | `node scripts/check-doc-index.mjs` | `docs/{engineering,architecture,governance}/` 下的 `.md` 未在 `docs/README.md` 索引、ADR 编号重复、ADR 文件名不合规、重建已废止的 `docs/decisions/` |
 | 文档命令引用 | `node scripts/check-doc-commands.mjs` | 文档中引用的 `npm run` 脚本在 `package.json` 中不存在 |
+| 代码健康棘轮 | `npm run health:check` | 只评变化文件；新增单元须达标，超标存量只许变小；主线 ENFORCEMENT 为 blocking 时拦截未豁免增长，配置缺失同样失败关闭 |
+| Windows 不安全模式 | `npm run footguns:check` | 扫描变化脚本与 workflow 中的不安全模式；主线 FOOTGUNS_ENFORCEMENT 独立决定 advisory/blocking/off，缺失回退 blocking |
 | 交付包完整性 | `node scripts/check-delivery-completeness.mjs` | 本次 diff 触及的交付包缺 intent/spec/plan/verification/review 任一件 |
 | 任务账本 | `node scripts/check-governance.mjs` | 账本与 `TASK_LEDGER.md` 不同步、状态字段缺失 |
 | 平台交付与最小 AI 链路 | 人工评审：`AGENTS.md`、`PROJECT_GOALS.md`、`ADR-011` 与功能卡证据 | 当前没有自动 guardrail；检查 Desktop → Web → Mobile 顺序、UI/交互与文本/图片链路、Mobile 目录隔离、VPS 控制面状态，不能仅凭 lint/verify 宣称通过 |
@@ -30,6 +32,7 @@
 | --- | --- | --- |
 | 文档索引与 ADR 编号 | 是 | 全库静态校验，无历史欠账 |
 | 文档命令引用 | 是 | 全库静态校验，无历史欠账 |
+| 代码健康棘轮与 Windows 不安全模式 | 是 | `npm run lint` 顺序执行；两个总开关仅读主线配置，不能由任务分支自行放宽 |
 | 交付包完整性 | **否**，需显式执行 | 依赖 `origin/main...HEAD` diff。本分支存在 7 个早于本门禁的历史缺件包，属存量欠账；清零或标注 `legacy-incomplete` 后再并入 `lint` |
 
 **ESLint 实际覆盖范围小于命令字面**：`eslint.config.mjs` 的 `files` 为 `src/**/*.{ts,tsx}`、`tests/**/*.ts`、`scripts/**/*.mjs`、`*.config.{ts,mjs}`。因此：

@@ -50,6 +50,14 @@ function requireRevision(name, revision) {
   return resolved;
 }
 
+function validateReportOptions() {
+  if (has("report") && (has("base") || has("head"))) {
+    fail(
+      "--report cannot be combined with --base or --head; it lists the worktree",
+    );
+  }
+}
+
 function measureSide(paths, tree) {
   const measured = new Map();
   for (const path of paths) {
@@ -114,6 +122,7 @@ function burnDown(tree) {
 }
 
 function main() {
+  validateReportOptions();
   if (has("report")) return burnDown(null);
 
   const base = has("base")

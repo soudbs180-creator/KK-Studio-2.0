@@ -23,6 +23,8 @@ jobs:
           node-version: 24
           cache: npm
       - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f  # stable
+        with:
+          toolchain: stable
       - name: Verify tag and repository versions
         shell: pwsh
         run: |

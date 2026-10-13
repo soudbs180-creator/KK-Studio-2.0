@@ -77,3 +77,5 @@
 ## 主线承接补充（2026-10-13）
 
 基于最新 `origin/main` 重建后，新增的 `auto-merge.yml`、`main-guard.yml`、`windows-release.yml` 纳入同一 AC-4 复核并固定所有 action SHA；同时修复 `--head` 检查读取工作区而非指定修订的问题，并为无效 revision 增加 fail-closed。原始 base 与未合并分支的历史判断不改写。
+
+最终合并复审发现 5 项阻断后继续原 PR：补 Rust action 的必需输入、同分支门禁映射、独立开关读取、重复 occurrence 豁免抵扣和清单/revision 组合拒绝；以失败回归证明根因再修复，提交后重新 review 与 Hosted CI，不创建重复分支、不合并未通过候选。

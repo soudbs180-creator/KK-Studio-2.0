@@ -16,6 +16,7 @@
  *   - 以上差异只会让判定更严（多报），不会放行，advisory 模式下不影响门禁结论。
  */
 import { MODULE_SCOPE, TARGETS } from "./code-health.config.mjs";
+import { parseAllows } from "./code-health-measure.mjs";
 
 const SIMILAR = 0.6;
 
@@ -298,7 +299,16 @@ function fileFindings(path, hf, bf) {
   ];
 }
 
-/** 模式命中：head 中超出同文件 base 指纹多重集的部分是新违规。 */
+function hasPatternAllowance(hit, allows) {
+  return (allows.get(hit.rule) ?? []).some(
+    (entry) => entry.line === hit.line || entry.line === hit.line - 1,
+  );
+}
+
+/**
+ * 模式增长按指纹多重集裁决；重复 occurrence 无法确定来源时，优先报告未豁免命中，
+ * 避免新增违规继承旧行豁免。歧义只会保守多报，不会静默放行。
+ */
 function hitFindings(path, hf, bf, rulesById) {
   if (hf.error || !hf.hits.length) return [];
   const baseCounts = new Map();
@@ -314,12 +324,17 @@ function hitFindings(path, hf, bf, rulesById) {
     headCounts.set(key, (headCounts.get(key) ?? 0) + 1);
   }
   const findings = [];
+  const allows = parseAllows(hf.comments);
   for (const [key, count] of headCounts) {
     const [rule, scope] = key.split("\u0000");
     const extra = count - (baseCounts.get(key) ?? 0);
-    const occurrences = hf.hits.filter(
-      (hit) => `${hit.rule}\u0000${hit.scope}\u0000${hit.text}` === key,
-    );
+    const occurrences = hf.hits
+      .filter((hit) => `${hit.rule}\u0000${hit.scope}\u0000${hit.text}` === key)
+      .sort(
+        (a, b) =>
+          Number(hasPatternAllowance(a, allows)) -
+          Number(hasPatternAllowance(b, allows)),
+      );
     for (let i = 0; i < extra; i += 1) {
       const hit = occurrences[Math.min(i, occurrences.length - 1)];
       findings.push({

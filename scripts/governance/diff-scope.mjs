@@ -128,7 +128,7 @@ export function readSwitch(root, rev, file, name, fallback = "blocking") {
   if (text === null) return fallback;
   const match = [
     ...text.matchAll(
-      new RegExp(`${name}\\s*=\\s*["'](advisory|blocking|off)["']`, "g"),
+      new RegExp(`\\b${name}\\s*=\\s*["'](advisory|blocking|off)["']`, "g"),
     ),
   ].at(-1);
   return match ? match[1] : fallback;

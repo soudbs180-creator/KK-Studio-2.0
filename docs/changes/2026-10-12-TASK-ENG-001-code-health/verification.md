@@ -122,3 +122,15 @@ code-health report: 607 files in scope
 ### 4.1 主线承接复验（2026-10-13）
 
 原始 verification 的 base/head 与失败边界按历史结果保留。当前候选以 `origin/main@bcf55851d296c753d9610e86f1e32bf8db333a41` 为 base，补齐当前 `.github/workflows/*.yml` 的 action SHA 固定（包括 `dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f`），并验证 `--head` 检查读取指定 git revision、无效 revision fail-closed。新的 lint、测试、delivery 与独立 exact-SHA review 结果不覆盖本节之前的历史命令回执。
+
+### 4.2 合并复审修复（2026-10-13，待新 HEAD Hosted 回执）
+
+`9c849aa2ac640a3db4a05335a537247fbe1b2a4d` 的[PR quality run](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38334665495) 与[git-guards run](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38334665501) 全部成功，但随后独立复审仍复现 5 项阻断。保留这些旧 SHA 的成功记录，不把它们移作新 HEAD 证明。
+
+在隔离副本 `D:/kk-studio/post-pr55-main-20261013`，`node --test tests/unit/diffScope.test.ts` 首次为 5 项/3 pass/2 fail（健康 blocking 错读为 advisory/off），修复后 5/5 pass；`node --test tests/unit/codeHealthCliModes.test.ts` 首次 0/4 pass（错误退出码 0/1），修复后 4/4 pass。两个模式明确拒绝 revision 参数，工具错误 2；不更改正常工作区清单入口。
+
+Rust action 以固定 SHA 的官方 input 定义核对并显式提供 `toolchain: stable`；未创建 release tag、未修改已发布版本、未声称正式安装器已验收。完整本地门禁、重复模式真实 CLI 回归以及最终独立审查/Hosted 结果须绑定后续精确 HEAD。
+
+重复模式的真实 CLI 回归首次 3 项/2 pass/1 fail：新增未豁免 `AS_ANY` 被错误报在旧豁免行，CLI 为 exit 0；修复后 3/3 pass，插入前后未豁免重复均 exit 1，全部显式豁免仍 exit 0。另补“旧语句新加豁免不能覆盖新重复”场景；不能根据旧允许行排在首位而放行增长。
+
+上述修复工作区完成后，13 项定向回归全过；`npm run lint`、`typecheck`、`format:check`、policy sync 均 exit 0，健康/footguns 10 文件零发现（blocking）。完整 `npm test` 为 1019 项/1005 pass/14 skipped/0 fail，日志在 `D:/kk-studio/git-diagnostic-20261013/pr56-merge-repair-tests.log`。这些结果证明本地修复内容，随后提交的精确 SHA 必须单独通过 delivery、独立复审和 Hosted CI。

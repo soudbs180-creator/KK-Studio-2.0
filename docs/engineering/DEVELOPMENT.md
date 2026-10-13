@@ -49,6 +49,8 @@ npm ci
 
 GitHub Actions 统一固定到 commit SHA 并附版本注释；新增 action 时同样处理，不用可变 tag。
 
+健康与 footgun 开关按完整变量名独立读取。`--report` 与 `--all` 只输出当前工作区清单，不接受 `--base`/`--head`；不支持的组合返回工具错误 2，普通 diff 检查使用指定 revision 的文件内容。固定 action SHA 时同时核对该 SHA 的输入契约；Rust toolchain action 必须显式传入 `toolchain: stable`。
+
 修改期间运行与影响相关的定向检查。交付前执行仓库要求的 `npm run verify`，涉及 Desktop/Rust 时加对应检查、构建和原生运行；安装/升级、数据恢复和真实外部服务按验收计划额外执行。文档修改需检查当前 Markdown 文件格式、链接及治理一致性；专用校验不替代仓库要求的交付检查。
 
 ## UI 的三个实际运行入口

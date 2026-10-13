@@ -4,8 +4,8 @@
 
 - 基于 `origin/main@bcf55851d296c753d9610e86f1e32bf8db333a41` 重建承接提交；候选精确 HEAD 以本 checkout 的 `git rev-parse HEAD` 与对应 delivery 日志为准；PR #56 原 HEAD、主线历史和 `TASK-ENG-001` 独立交付包均保留。
 - 已解决 `package.json`、`docs/engineering/DEVELOPMENT.md`、`docs/governance/task-ledger.json`、`docs/governance/TASK_LEDGER.md` 四处冲突；主线版本/治理命令保留，代码健康与 Windows footgun 检查追加，账本从主线 124 条记录加上当前 schema 的 `TASK-ENG-001`。
-- 修复 `**/` glob 的零层/多层目录匹配并补回归测试；补齐所有当前 workflow action 的 commit SHA 固定（含 `dtolnay/rust-toolchain`）；本地 lint、typecheck、1009 项 Node 测试（995 pass、14 skipped、0 fail）、版本、治理、文档和 footgun 检查均已通过。基线缺少治理配置时工具按 fail-closed 回退 blocking，未声称 advisory。
-- Hosted verify/delivery、当前 exact-SHA 独立 review 和用户合并授权仍待完成；本记录不表示 PR #56 已合并 main 或已发布。
+- 修复 `**/` glob 的零层/多层目录匹配并补回归测试；补齐所有当前 workflow action 的 commit SHA 固定（含 `dtolnay/rust-toolchain` 与 stable 输入）；最终复审修复工作区的本地 lint、typecheck、1019 项 Node 测试（1005 pass、14 skipped、0 fail）、版本、治理、文档和 footgun 检查均已通过。基线缺少治理配置时工具按 fail-closed 回退 blocking，未声称 advisory。
+- `9c849aa2ac640a3db4a05335a537247fbe1b2a4d` 的 Hosted quality/git-guards 全部成功；用户随后授权合并。最终独立复审仍发现 Rust action 输入、门禁映射、开关串读、重复模式豁免及清单 revision 五项阻断，因此继续在原 PR 修复并等待新 HEAD 的独立复审与 Hosted CI；本记录不表示 PR #56 已合并 main 或已发布。
 
 ## 2026-10-12 PR #55 历史快照集成修复（REVIEW）
 

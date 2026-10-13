@@ -87,3 +87,17 @@ ESLint 三处：`compare.mjs` 未使用的 `oldQual`、重抛错误未附 `cause
 ## 6. 结论
 
 改动方向正确、边界清晰、失败模式（工具崩溃、规则被放宽、噪声自匹配）都被显式处理，且自测过程中发现的 5 个缺陷已全部修复，其中 R1 属于会静默削弱门禁的 blocker 级问题。建议合并，后续按 §3.3 逐项跟进。
+
+## 最终合并复审追加（2026-10-13）
+
+独立 reviewer `/root/pr56_final_merge_review` 以新只读上下文审查 `bcf55851d296c753d9610e86f1e32bf8db333a41..9c849aa2ac640a3db4a05335a537247fbe1b2a4d`，尽管该 HEAD 的 Hosted quality/git-guards 已全绿，结论仍为 CHANGES REQUIRED。此前“建议合并”仅为旧 base 的历史结论，不能用于当前候选。
+
+| ID | 严重度/阻断 | 证据与修复 | 当前状态 |
+| --- | --- | --- | --- |
+| STD-01 | P1 / merge-release | 固定 Rust action SHA 后缺 `toolchain` 必需输入；补 `with: toolchain: stable`，依据该 SHA 的[官方 action.yml](https://raw.githubusercontent.com/dtolnay/rust-toolchain/e2a55d2ffb04f378e9626c28d38b36d230d1e12f/action.yml) | 新 HEAD 待独立复验；未触发正式 tag/release |
+| STD-02 | P2 / 规范验收 | 主线已有 CODING-STANDARDS，不能再延期；同分支补健康/footgun 映射和接入状态 | 新 HEAD 待独立复验 |
+| SPEC-01 | P2 / 总开关 | ENFORCEMENT 匹配到 FOOTGUNS_ENFORCEMENT；补完整变量边界与不同值/缺失开关测试 | 2 项测试先失败后通过，新 HEAD 待复验 |
+| SPEC-02 | P2 / AC-1 | 相同新增模式被报告在旧豁免行；指纹增长时优先报告未豁免 occurrence，身份歧义保守拦截，并补真实 CLI 回归 | 新 HEAD 待独立复验 |
+| SPEC-03 | P2 / revision | report/all 忽略非法 base/head；明确拒绝不支持组合并 exit 2 | 4 项测试先失败后通过，新 HEAD 待复验 |
+
+负责人：PR #56 作者。用户已授权正常 Squash Merge，但合并必须等待修复后精确 HEAD 的独立结论与 Hosted CI。最终 exact-SHA 回执另行记录，不通过改写本文件的 HEAD 冒充已审。

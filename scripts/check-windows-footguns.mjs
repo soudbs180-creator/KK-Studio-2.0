@@ -102,6 +102,14 @@ function fail(message) {
   process.exit(2);
 }
 
+function validateAllOptions() {
+  if (has("all") && (has("base") || has("head"))) {
+    fail(
+      "--all cannot be combined with --base or --head; it lists the worktree",
+    );
+  }
+}
+
 function collectPaths() {
   if (has("all")) {
     return {
@@ -136,6 +144,7 @@ function collectPaths() {
 }
 
 function main() {
+  validateAllOptions();
   const switchRev = commitOrNone(
     root,
     process.env.GOVERNANCE_BASE?.trim() || "origin/main",
