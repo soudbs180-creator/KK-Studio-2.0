@@ -1,4 +1,5 @@
-import { defineConfig } from "vite";
+import { realpathSync } from "node:fs";
+import { defineConfig, searchForWorkspaceRoot } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
@@ -25,6 +26,13 @@ export default defineConfig({
     },
   ],
   server: {
+    fs: {
+      // Linked dependencies must load without exposing their parent checkout.
+      allow: [
+        searchForWorkspaceRoot(process.cwd()),
+        realpathSync("node_modules"),
+      ],
+    },
     port: 1421,
     host: "127.0.0.1",
     strictPort: true,
