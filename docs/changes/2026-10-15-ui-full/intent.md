@@ -15,3 +15,9 @@ Hosted承接更正：ready [PR59](https://github.com/soudbs180-creator/KK-Studio
 
 
 最新修复本地状态：snapshot可移植性完整verify-5无KK_CONTAINER_ROOT exit0（Node1301/14skip、Agent199/2skip、Browser747、development四步），显式外部容器4/0亦PASS。产品/Rust/Native字节与版本2.1.27不变；最终修复提交HEAD、独立exact-SHA review与新Hosted/main仍待验，整体REVIEW/NOT_VERIFIED。
+
+
+后续Hosted更正：c498独立exact aggregate review PASS，snapshot已Hosted3/0；但Windows发布夹具short-path触发既有canonical/no-link guard，quality38643592443 Node8FAIL、Browser/Rust未运行。仅修owned fixture realpath，不改安全脚本或回滚断言；修复/短TEMP完整Node与静态检查及新Hosted待验，REVIEW/NOT_VERIFIED、main694/PR59未合并。
+
+
+最新短TEMP本地结论：short-temp run2本地PASS：Node1315=1301PASS/14既有platform skip/0fail，lint/typecheck/format全部exit0；这不是完整verify-6。真实8.3 fixture RED11项3PASS/8FAIL复现Hosted，GREEN11/11PASS/0skip，junction/unowned-stage/identity-swap/rollback守卫均实际执行；只改agentPackage测试fixture根await realpath（4+/1-），产品安全脚本零变更。 产品/config/Rust与2.1.27版本未变，Browser747/Native56/Rust163仅沿用原未变产品范围；新提交head/独立exact-SHA复审/新Hosted及PR59/main仍待验，REVIEW/NOT_VERIFIED。

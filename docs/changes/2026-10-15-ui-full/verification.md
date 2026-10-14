@@ -1,7 +1,7 @@
 # Verification：全页面新UI收敛与主线集成
 
 - Task ID：TASK-UI-FULL-20261015；状态：REVIEW / NOT_VERIFIED（本地验收PASS，Hosted/PR/main待验）；日期2026-10-15（Asia/Shanghai）。
-- 最新本地组合：f090已提交head加snapshot可移植性scripts/tests/docs修复，完整verify-5无KK_CONTAINER_ROOT退出0；最终修复提交SHA、精确独立复审与新Hosted待验，f090首次Hosted失败仍保留。
+- 最新本地组合：c498已提交head加agentPackage单测试fixture canonical root修复，short-temp run2完整Node及lint/typecheck/format均PASS；产品UI/安全脚本/Rust/config未变，旧verify-5 Browser747/Native56/Rust163保持未变产品范围。最终修复提交SHA、精确独立复审与新Hosted待验，f090/c498 Hosted失败均保留。
 - 产品source HEAD（本地验收身份）：241f3050124ad7773ced0b47a55629373177205e；本地main承接提交1653966f652390d93d490f90c0b7e9a9423f4026，修复checkpoint为0f506ae10e59d90222b399bbd54298849a8ca55f。实际fetch与API确认origin/main仍为694a00607f6f63de1b8c43d0ebb117adf5d34f67，本地任务分支承接不表示远端main已落地。首次完整verify与正式review绑定165，241产品源码加本轮test-only音频定位修正已完成verify-3本地验收；最终提交HEAD及Hosted/PR/main仍待完成。
 - 版本脚本已真实递增Desktop/Web2.1.27，Mobile2.1.1规划不变；165的ui:check已PASS。首次完整verify在Browser阶段失败；241完整verify-3已PASS；当前2.1.27隔离Native56checks与资源字节身份已通过，精确source/integration review241均PASS。历史2.1.26的635browser/38Native保持原SHA范围。
 - 独立数据/配置身份和原件保持；primary实际254条dirty、109登记worktree只读保留，未reset/clean/清理或改原index。
@@ -136,3 +136,19 @@ root正在修复scripts与CLI回归测试：默认只核对仓库内快照，仓
 `verify-merged-5.log`实际exit0，不设KK_CONTAINER_ROOT：snapshot3/0、external not configured；Node1315总数中1301 PASS/14既有skip/0fail，Agent201中199 PASS/2既有skip/0fail；生产Browser747 PASS（2.9m），对应新`verify-merged-5-browser-results.json`已存在；完整lint/typecheck/UI242/0/format/build及development四步骤PASS，development sourceHead为f090加dirty tooling。`snapshot-explicit-container.log`4/0、external1 PASS，显式配置外部容器亦验证。前轮verify-4的lint失败、未运行Browser及继承JSON NOT-RUN、f090 Hosted snapshot失败均保留，不覆盖为通过。
 
 `release-identity-after-portability.json`仍current，input79c3a8e5/EXE37a82390与原完整SHA一致；产品/Rust/Native源码字节不变，Desktop/Web2.1.27、Mobile2.1.1规划均不变，原Native56/Rust163/精确source241审查保持其范围。独立source dirty预检实际CLI24 PASS与offline AI-evals PASS只是本次有限离线范围，不是多模型或新提交exact-SHA批准。当前最新修复的完整本地验收PASS，整体REVIEW/NOT_VERIFIED；root待提交修复最终HEAD，再独立exact-SHA复审/推送/回读新Hosted，PR59未合并、main仍694。
+
+
+## c498后续Hosted发布夹具失败（修复与短TEMP Node/静态待验）
+
+交付head `c49852fbc17020ebda96266938d64cc50e45eef8` 在Hosted前独立exact aggregate review PASS；但[quality38643592443](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38643592443)实际FAIL：snapshot3/0已通过，Node1315总计1294 PASS/8 FAIL/13 skip（Windows额外symlink case可用），Browser/Rust尚未运行。8失败来自agentPackage Windows发布夹具的 `C:\Users\RUNNER~1...` 非canonical临时根，被既有canonical/no-link guard拒绝；不是产品UI验收失败，也不表示Hosted通过。原verify-5本地PASS保留原范围。
+
+source agent仅获tests/unit/agentPackage.test.ts写入权，拟用realpath规范本次拥有的fixture根；安全脚本保持、回滚断言不放宽。该修复及证明仍PENDING；root计划在同8.3短TEMP/TMP下运行完整npm test与lint/typecheck/format（short-temp-verification），当前PENDING；产品源码/Native哈希未变，既有verify-5 Browser747保留未变产品范围，新Hosted仍执行完整verify/Rust/Native。新修复head独立补审/Hosted/PR59普通合并/main/post-main继续待验；任务REVIEW/整体NOT_VERIFIED，main仍694、PR59未合并。
+
+
+## 真实8.3 TEMP复现及最终短TEMP本地收据（新SHA/Hosted待验）
+
+`short-temp-root.json`记录实际8.3 TEMP `C:\Users\Administrator\AppData\Local\Temp\KK-CI-~1`。`agent-package-short-temp-red-1.log`11项3 PASS/8 FAIL，实际复现Hosted的8失败；`agent-package-short-temp-green-1.log`11/11 PASS、0skip，junction、unowned stage、identity swap和rollback保护均运行。源码差量仅`tests/unit/agentPackage.test.ts`拥有的fixture根await realpath（4+/1-）；产品安全脚本不变、断言不放宽。
+
+首轮`short-temp-test-1.log`1315总数为1299 PASS/2 FAIL/14skip，agentPackage全部修复；两失败仅原gitPushGuardPaths fixture因本次自建TEMP过深，canonical cwd/config路径越过Win32前置条件。`short-temp-git-path-canary.log`保留同两失败，不归作产品新bug，也未改Git guard。换用本次owned较浅actual8.3根 `C:\KK-UI-~1\full\LONG-T~1`（canonical `C:\kk-ui-temp-20261015\full\long-temp-name`），收据`short-temp-root-3.json`；canary2为7 PASS/3 Linux-emulation skip/0fail，保留policy路径>260、cwd+config<260原测试条件。
+
+最终`short-temp-test-2.log`1315总数1301 PASS/14既有platform skip/0fail；`short-temp-lint-2.log`、`short-temp-typecheck-2.log`、`short-temp-format-check-2.log`全部exit0。该轮为short-temp-verification（完整Node及静态），不是完整verify-6；产品/config/Rust未变，原Browser747/0实际retry、Native56、Rust163仅沿用未变产品范围。当前修复本地PASS，最终提交head/独立exact-SHA审查/新Hosted完整门禁/PR59/main/post-main继续PENDING；整体REVIEW/NOT_VERIFIED，main仍694。

@@ -32,3 +32,9 @@
 
 
 最新本地完成：verify-5不设KK_CONTAINER_ROOT exit0（snapshot3/0、Node1301/14skip、Agent199/2skip、Browser747、development四步），显式外部snapshot4/0亦PASS。Native仍current/input与EXE未变；CLI24/offline AI-evals为有限dirty预检。仅最终修复提交HEAD的独立exact-SHA review、推送后的新Hosted/PR59普通合并与post-main仍待完成，远端两步骤不勾选。
+
+
+- [x] 修复c498 Hosted Windows发布fixture非canonical临时根：仅测试用realpath，不改安全guard/回滚断言；保存Node1294PASS/8FAIL/13skip及snapshot3/0的实际Hosted范围。真实8.3 fixture11/11及较浅短TEMP完整Node1301/14skip、lint/typecheck/format已PASS；新head独立补审/Hosted待验，旧Hosted未运行Browser/Rust不补PASS。
+
+
+最新本地完成：short-temp run2本地PASS：Node1315=1301PASS/14既有platform skip/0fail，lint/typecheck/format全部exit0；这不是完整verify-6。真实8.3 fixture RED11项3PASS/8FAIL复现Hosted，GREEN11/11PASS/0skip，junction/unowned-stage/identity-swap/rollback守卫均实际执行；只改agentPackage测试fixture根await realpath（4+/1-），产品安全脚本零变更。 首轮短TEMP Node1299/2fail/14skip与canary1两失败保留；较浅actual8.3根下canary7PASS/3Linux skip、完整Node1301/14skip及静态通过。原Browser747/Native56/Rust163沿用未变产品范围；最终修复提交head精确独立审查、新Hosted完整门禁、PR59/main/post-main仍未完成。

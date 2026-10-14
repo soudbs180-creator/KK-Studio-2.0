@@ -148,7 +148,10 @@ async function withPublishFixture(
   run: (fixture: PublishFixture) => Promise<void>,
 ) {
   assert.equal(typeof runtimePackaging.publishAgentRuntime, "function");
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "kk-runtime-publish-"));
+  // Windows TEMP can use an 8.3 alias; publication expects canonical paths.
+  const root = await fs.realpath(
+    await fs.mkdtemp(path.join(os.tmpdir(), "kk-runtime-publish-")),
+  );
   const temporary = path.join(root, ".tmp");
   const staging = path.join(
     temporary,

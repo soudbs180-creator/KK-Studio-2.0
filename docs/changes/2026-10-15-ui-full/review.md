@@ -29,3 +29,13 @@
 
 
 可移植性修复复核：完整verify-5无外部env exit0、Browser747、Node1301/14skip、Agent199/2skip与development四步PASS；显式容器4/0及Native当前字节身份PASS。独立dirty source预检实际CLI24PASS、offline AI-evals PASS仅属有限离线检查，不是多模型或最终提交SHA批准。f090原Hosted失败保留；当前修复HEAD待root提交后独立exact-SHA补审/新Hosted，任务继续REVIEW/NOT_VERIFIED，PR59/main未合并。
+
+
+## c498独立审查与后续Hosted边界
+
+交付head `c49852fbc17020ebda96266938d64cc50e45eef8` 在Hosted前独立exact aggregate review PASS；但[quality38643592443](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38643592443)实际FAIL：snapshot3/0已通过，Node1315总计1294 PASS/8 FAIL/13 skip（Windows额外symlink case可用），Browser/Rust尚未运行。8失败来自agentPackage Windows发布夹具的 `C:\Users\RUNNER~1...` 非canonical临时根，被既有canonical/no-link guard拒绝；不是产品UI验收失败，也不表示Hosted通过。原verify-5本地PASS保留原范围。
+
+source agent仅获tests/unit/agentPackage.test.ts写入权，拟用realpath规范本次拥有的fixture根；安全脚本保持、回滚断言不放宽。该修复及证明仍PENDING；root计划在同8.3短TEMP/TMP下运行完整npm test与lint/typecheck/format（short-temp-verification），当前PENDING；产品源码/Native哈希未变，既有verify-5 Browser747保留未变产品范围，新Hosted仍执行完整verify/Rust/Native。新修复head独立补审/Hosted/PR59普通合并/main/post-main继续待验；任务REVIEW/整体NOT_VERIFIED，main仍694、PR59未合并。
+
+
+fixture修复本地补证：short-temp run2本地PASS：Node1315=1301PASS/14既有platform skip/0fail，lint/typecheck/format全部exit0；这不是完整verify-6。真实8.3 fixture RED11项3PASS/8FAIL复现Hosted，GREEN11/11PASS/0skip，junction/unowned-stage/identity-swap/rollback守卫均实际执行；只改agentPackage测试fixture根await realpath（4+/1-），产品安全脚本零变更。 首轮短TEMP全Node的两个gitPushGuardPaths失败来自自建目录过深，原log和canary失败保留；较浅actual8.3根下canary7PASS/3Linux skip、完整Node/静态PASS，未改Git guard。此为dirty修复证明，最终提交head独立exact-SHA复审与新Hosted仍PENDING，main694/PR59未合并。
