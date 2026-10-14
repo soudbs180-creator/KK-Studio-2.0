@@ -2,7 +2,7 @@
 
 - docId: AI_HANDOFF
 - status: current
-- updatedAt: 2026-10-14
+- updatedAt: 2026-10-15
 - source: `docs/governance/PROJECT_STATE.md`
 - supersededBy: null
 
@@ -10,7 +10,7 @@
 
 ## 本轮恢复入口
 
-TASK-223-ACTIONS-20261014：基线6b5a2012b0cafeeb334db01f7c61df0df4124b3e，分支codex/TASK-223-ACTIONS-20261014，Desktop/Web源码2.1.24，状态PARTIAL。先读[规格](../changes/2026-10-14-action-usability-223/spec.md)和[验证](../changes/2026-10-14-action-usability-223/verification.md)，再核对当前diff、工程外审计/回归和实际运行身份。CLI原件/恢复副本、设置异步所有权、记忆与检测迟到结果、画布取消/删除/撤销及短屏入口为本轮范围；TOML仅声明词法/受管键保护。完整verify、产品SHA、官方Agent/Native、独立review和最终output尚未完成。手机沿用已确认的新布局，Native Mobile2.1.1仍规划；保留primary dirty/index、原资料与旧证据。
+TASK-223-ACTIONS-20261014：Desktop/Web2.1.24产品58b5c07f34718769e10b76c89d510615bea2fefc，本地授权范围DONE/PASS。先读[验证](../changes/2026-10-14-action-usability-223/verification.md)及[独立审查](../changes/2026-10-14-action-usability-223/review.md)，按最终收据回读实际官方/便携Native与CLI、输入哈希、最终纯文档和output；不复用64fc失败或旧0e的过期产物身份。保留primary dirty/index、原资料与全部历史失败；手机布局/主题/独立背景沿用确认版本，Native Mobile2.1.1、真人账号/付费Provider/Hosted/签名及人工验收仍分别开放。
 
 ### 此前2.1.23交付基线（保留历史）
 

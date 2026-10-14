@@ -19,7 +19,7 @@
 
 ## 测试与证据
 
-- 2.1.24源码候选（TASK-223，PARTIAL）：本机服务检测按连接revision核对迟到结果，主动断开后不由旧检测恢复连接；完整verify、Native和独立审查未完成，结果见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+- 2.1.24本地验证（TASK-223，本任务DONE/PASS；功能主状态保持）：伴随服务父子操作独立busy，连接revision/身份约束迟到成功和错误；同renderer同身份重新配对受保护，跨renderer同字节ABA不冒称闭合；最终产品58b5c07f与完整验证、官方/便携回执见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
 
 - 2.1.23本地按钮修复：`tests/browser/local-service-migration.spec.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
 

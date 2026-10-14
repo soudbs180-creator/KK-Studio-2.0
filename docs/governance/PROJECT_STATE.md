@@ -2,7 +2,7 @@
 
 - docId: PROJECT_STATE
 - status: current
-- updatedAt: 2026-10-14
+- updatedAt: 2026-10-15
 - source: `docs/governance/task-ledger.json`
 - supersededBy: null
 
@@ -11,14 +11,14 @@
 
 ## CURRENT_FACTS (machine-readable current snapshot)
 
-- `snapshotDate`: 2026-10-14
+- `snapshotDate`: 2026-10-15
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: `694a00607f6f63de1b8c43d0ebb117adf5d34f67`
 - `canonicalHeadVerifiedFrom`: 本轮git ls-remote origin refs/heads/main与本地origin/main回读一致；主线694a006，源2.1.13。
-- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `codex/ui-redesign-20261011` at `51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c`, dirty. 本轮实时读取源码版本Desktop/Web2.1.20，一致恢复输入f2b0466；原有UI、凭据恢复和Agent展示等并行改动保留。2.1.16/2.1.17回执是历史产品验收；此前2.1.21基线见uiConsolidationCandidate；2.1.22验收见protocolCliCandidate；此前2.1.23按钮修复基线见actionUsabilityCandidate；当前2.1.24候选见actionUsability224Candidate，不是已发布origin/main树。
-- `taskLedger`: 136 records; 6 REVIEW, 79 DONE, 12 TODO, 35 PARTIAL, 4 BLOCKED; 57 open records.
-- `workspaceWorktrees`: 本轮末次只读git worktree list回读108登记项。此前恢复盘点107登记项、39 dirty来源、39一致快照；该盘点时原index变动0，872源路径与313排除路径可溯源。首轮104项/40一致与1volatile记录保留原时点；历史107项快照不覆盖后续登记来源。原分支/index/资料保留，本任务未删除、移动或覆盖其他来源。
+- `primaryCheckoutState`: `D:/kk-studio/KK-Studio-2.0` is on `codex/ui-redesign-20261011` at `51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c`, dirty. 本轮实时读取源码版本Desktop/Web2.1.20，一致恢复输入f2b0466；原有UI、凭据恢复和Agent展示等并行改动保留。2.1.16/2.1.17回执是历史产品验收；此前2.1.21基线见uiConsolidationCandidate；2.1.22验收见protocolCliCandidate；此前2.1.23按钮修复基线见actionUsabilityCandidate；当前2.1.24候选见actionUsability224Candidate，不是已发布origin/main树。 当前只读状态248条与before/原HEAD一致，本任务未改primary/index。
+- `taskLedger`: 136 records; 6 REVIEW, 80 DONE, 12 TODO, 34 PARTIAL, 4 BLOCKED; 56 open records.
+- `workspaceWorktrees`: 本轮末次只读worktree登记回读109项。此前恢复盘点107登记项、39 dirty来源、39一致快照；该盘点时原index变动0，872源路径与313排除路径可溯源。首轮104项/40一致与1volatile记录保留原时点；历史107项快照不覆盖后续登记来源。原分支/index/资料保留，本任务未删除、移动或覆盖其他来源。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
 - `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
@@ -31,7 +31,7 @@
 
 - `actionUsabilityCandidate`: Desktop/Web2.1.23产品b4fa7b0e，本地授权范围DONE/PASS。九步verify：Node1251/14既有skip、Agent180/2既有skip、production Edge574首试/0flaky、UI241/0、development5步骤PASS；官方带Agent构建与实际Tauri/同字节便携各35项通过。沿用已确认手机布局，原数据身份及primary dirty/index保留；新依赖0、入口gzip增加1244B。最终文档提交、ZIP/源码/Web/恢复及独立补审分别按工程外收据回读；真实账号、付费Provider、Hosted、签名安装器、实体手机与人工验收继续开放，Mobile2.1.1仍规划。[本轮验证](../changes/2026-10-14-action-usability-222/verification.md)。
 
-- `actionUsability224Candidate`: TASK-223-ACTIONS-20261014，基线6b5a2012b0cafeeb334db01f7c61df0df4124b3e；Desktop/Web源码2.1.24，Mobile2.1.1仍规划，状态PARTIAL。当前候选覆盖CLI配置与失败保全、设置busy/迟到状态、记忆清除竞态和画布取消/删除/撤销、快捷键、背景及短屏菜单；沿用已确认手机新布局和原数据身份。TOML保护为词法与受管键保守边界，CLI多文件发布保留恢复副本，未声明完整解析或操作系统级事务。产品源码SHA、完整verify、官方Agent/Native、独立审查和最终output尚待当前回执；2.1.23证据保持原历史范围。[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+- `actionUsability224Candidate`: Desktop/Web2.1.24产品源码58b5c07f34718769e10b76c89d510615bea2fefc，TASK-223本地授权范围DONE/PASS。完整九步verify退出0：Node1273pass/14既有skip，Agent199pass/2既有skip，Edge608全部首试/0flaky/0skip，UI242/0，development5步骤PASS；Rust163与fmt通过。最终源码核心/UI独立审查PASS，官方CLI20项、便携CLI20项，实际Tauri官方46项、同字节便携46项通过。新依赖0，入口gzip增加1221B<16384；生产运行时4280文件/519481278B。用户确认手机布局、主题/独立背景、存储identifier/路径、原件与primary dirty/index保留；旧135任务及37功能状态逐项不变。Native Mobile2.1.1仍PLANNED；Hosted、真人CLI账号/付费Provider、签名安装器、日常资料、实体手机与用户视觉验收分别开放。[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->

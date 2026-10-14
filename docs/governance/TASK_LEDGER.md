@@ -141,7 +141,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-AGENT-UX-20261014 | Agent 执行过程与生成保存状态提示 | DONE | 已完成 | P2 | none | root | 保留证据并完成日常APP人工验收，真实Provider和发布沿原独立任务推进 |
 | TASK-PROTOCOL-CLI-20261014 | 从2.1.21接通Provider协议和CLI实际执行，优化分端控件 | DONE | 已完成 | P1 | TASK-UI-CONSOLIDATE-20261014 | root | 从2.1.22继续真实供应商与真人CLI登录/安装、签名安装器、日常资料和人工视觉验收；最终产物回读工程外current-release哈希收据。 |
 | TASK-222-ACTIONS-20261014 | 2.1.22 CLI、设置与画布按钮真实行为和分端修复 | DONE | 已完成 | P1 | TASK-PROTOCOL-CLI-20261014 | root | 回读最终current-release与独立文档补审；从2.1.23继续真人CLI/供应商、签名安装器、日常资料与实体手机验收，沿用已确认手机布局。 |
-| TASK-223-ACTIONS-20261014 | 2.1.23 CLI、设置与画布按钮实际行为和分端修复 | PARTIAL | 进行中 | P1 | TASK-222-ACTIONS-20261014 | root | 先记录回归RED并修复，再完成双端运行证据、独立审查与当前包输出。 |
+| TASK-223-ACTIONS-20261014 | 2.1.23 CLI、设置与画布按钮实际行为和分端修复 | DONE | 已完成 | P1 | TASK-222-ACTIONS-20261014 | root | 回读最终纯文档审查与current-release产物哈希；真人账号/付费Provider、Hosted、签名安装器、日常资料与Native Mobile由既有开放任务分别继续。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2716,7 +2716,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 修复配置损坏、迟到状态覆盖与不可用按钮，保留数据并交付当前版本
 - Scope: CLI协议与配置合并/发布/连接检查、设置busy所有权/握手/迟到回执、记忆清除守卫、画布取消删除历史/运行参数/快捷键/背景入口与短屏菜单
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 修复配置损坏、迟到覆盖和按钮状态不一致，维持现有交互与数据。
 - Requirement refs: ledger:TASK-223-ACTIONS-20261014
 - Feature IDs: FEAT-001, FEAT-014, FEAT-020, FEAT-022, FEAT-026, FEAT-032, FEAT-039, FEAT-012, FEAT-028, FEAT-037
@@ -2725,8 +2725,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `codex/TASK-223-ACTIONS-20261014`
 - Worktree: `D:/kk-studio/.worktrees/branch-consolidation-20261011`
 - Modules: vendor/canvas-agent, src/features/local-service, src/features/memory, src/components/settings, src/components/canvas, src/components/nodes, src/styles, tests, docs
-- Verification: NOT_VERIFIED — 基线typecheck PASS；并行只读审计和工程外RED探针已记录，实际实现/全量验证/Native/独立审查待完成。
+- Verification: PASS — Desktop/Web2.1.24产品源码58b5c07f34718769e10b76c89d510615bea2fefc，TASK-223本地授权范围DONE/PASS。完整九步verify退出0：Node1273pass/14既有skip，Agent199pass/2既有skip，Edge608全部首试/0flaky/0skip，UI242/0，development5步骤PASS；Rust163与fmt通过。最终源码核心/UI独立审查PASS，官方CLI20项、便携CLI20项，实际Tauri官方46项、同字节便携46项通过。新依赖0，入口gzip增加1221B<16384；生产运行时4280文件/519481278B。用户确认手机布局、主题/独立背景、存储identifier/路径、原件与primary dirty/index保留；旧135任务及37功能状态逐项不变。Native Mobile2.1.1仍PLANNED；Hosted、真人CLI账号/付费Provider、签名安装器、日常资料、实体手机与用户视觉验收分别开放。
 - Evidence: [docs/changes/2026-10-14-action-usability-223/intent.md](../../docs/changes/2026-10-14-action-usability-223/intent.md), [docs/changes/2026-10-14-action-usability-223/spec.md](../../docs/changes/2026-10-14-action-usability-223/spec.md), [docs/changes/2026-10-14-action-usability-223/plan.md](../../docs/changes/2026-10-14-action-usability-223/plan.md), [docs/changes/2026-10-14-action-usability-223/verification.md](../../docs/changes/2026-10-14-action-usability-223/verification.md), [docs/changes/2026-10-14-action-usability-223/review.md](../../docs/changes/2026-10-14-action-usability-223/review.md)
-- Next action: 先记录回归RED并修复，再完成双端运行证据、独立审查与当前包输出。
-- Last verified: 2026-10-14
-- Updated: 2026-10-14
+- Next action: 回读最终纯文档审查与current-release产物哈希；真人账号/付费Provider、Hosted、签名安装器、日常资料与Native Mobile由既有开放任务分别继续。
+- Last verified: 2026-10-15
+- Updated: 2026-10-15

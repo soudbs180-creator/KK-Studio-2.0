@@ -5750,7 +5750,7 @@
       "tests",
       "docs"
     ],
-    "status": "PARTIAL",
+    "status": "DONE",
     "priority": "P1",
     "risk": "high",
     "reviewRequired": true,
@@ -5777,12 +5777,12 @@
     ],
     "notes": "继续2.1.23；保留用户确认的手机新布局、数据身份、primary dirty/index与旧证据。手机为响应式Web/WebView。",
     "openQuestions": "真人账号/付费调用/签名与实体手机依独立条件验收。",
-    "lastVerified": "2026-10-14",
-    "updated": "2026-10-14",
+    "lastVerified": "2026-10-15",
+    "updated": "2026-10-15",
     "priorityRationale": "修复配置损坏、迟到覆盖和按钮状态不一致，维持现有交互与数据。",
-    "verification": "基线typecheck PASS；并行只读审计和工程外RED探针已记录，实际实现/全量验证/Native/独立审查待完成。",
-    "displayStatus": "进行中",
-    "nextAction": "先记录回归RED并修复，再完成双端运行证据、独立审查与当前包输出。",
-    "verificationResult": "NOT_VERIFIED"
+    "verification": "Desktop/Web2.1.24产品源码58b5c07f34718769e10b76c89d510615bea2fefc，TASK-223本地授权范围DONE/PASS。完整九步verify退出0：Node1273pass/14既有skip，Agent199pass/2既有skip，Edge608全部首试/0flaky/0skip，UI242/0，development5步骤PASS；Rust163与fmt通过。最终源码核心/UI独立审查PASS，官方CLI20项、便携CLI20项，实际Tauri官方46项、同字节便携46项通过。新依赖0，入口gzip增加1221B<16384；生产运行时4280文件/519481278B。用户确认手机布局、主题/独立背景、存储identifier/路径、原件与primary dirty/index保留；旧135任务及37功能状态逐项不变。Native Mobile2.1.1仍PLANNED；Hosted、真人CLI账号/付费Provider、签名安装器、日常资料、实体手机与用户视觉验收分别开放。",
+    "displayStatus": "已完成",
+    "nextAction": "回读最终纯文档审查与current-release产物哈希；真人账号/付费Provider、Hosted、签名安装器、日常资料与Native Mobile由既有开放任务分别继续。",
+    "verificationResult": "PASS"
   }
 ]

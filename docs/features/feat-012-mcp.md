@@ -16,7 +16,7 @@
 
 ## 测试与证据
 
-- 2.1.24源码候选（TASK-223，PARTIAL）：MCP握手/工具请求的busy所有权与停止等待保护进入修复候选；停止等待不表示撤回远端执行；完整verify、Native和独立审查未完成，结果见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+- 2.1.24本地验证（TASK-223，本任务DONE/PASS；功能主状态保持）：MCP握手、工具与插件busy由独立所有者维持，取消/停止等待后导航恢复；停止等待不表示撤回远端执行；最终产品58b5c07f与完整验证、官方/便携回执见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
 
 - 2.1.23本地按钮修复：`tests/browser/mcp-settings.spec.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
 

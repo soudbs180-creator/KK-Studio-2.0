@@ -21,7 +21,7 @@
 
 ## 测试与证据
 
-- 2.1.24源码候选（TASK-223，PARTIAL）：2.1.24官方Agent/Native重建、同字节便携与分享包receipt/hash交付仍待本轮回执；完整verify、Native和独立审查未完成，结果见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+- 2.1.24本地验证（TASK-223，本任务DONE/PASS；功能主状态保持）：最终产品源码对应官方Agent/Tauri、同字节便携及CLI受控运行验证通过；产物与纯文档提交分别由工程外最终收据绑定；最终产品58b5c07f与完整验证、官方/便携回执见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
 
 - 2.1.23本地按钮修复：`tests/unit/agentDesktopSupportInstaller.test.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
 

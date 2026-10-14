@@ -22,7 +22,7 @@
 
 ## 测试与证据
 
-- 2.1.24源码候选（TASK-223，PARTIAL）：显式CLI协议/认证、TOML词法/受管键保守边界、发布恢复副本、损坏env拒绝与有界模型JSON检查进入修复候选；完整verify、Native和独立审查未完成，结果见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+- 2.1.24本地验证（TASK-223，本任务DONE/PASS；功能主状态保持）：显式CLI协议/认证、TOML词法/受管键保守保护、配置失败恢复副本、损坏env拒绝及有界模型JSON检查通过；受控CLI/HTTP夹具不表示真实账号或付费供应商验收；最终产品58b5c07f与完整验证、官方/便携回执见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
 
 - 2.1.23本地按钮修复：`tests/unit/geminiBridge.test.ts`、`tests/unit/agentDesktopSupportInstaller.test.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
 

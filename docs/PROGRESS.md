@@ -1,6 +1,12 @@
 # 当前进度
 
-## 2026-10-14 2.1.24按钮续修候选（PARTIAL）
+## 2026-10-15 2.1.24按钮续修本机交付
+
+Desktop/Web2.1.24产品源码58b5c07f34718769e10b76c89d510615bea2fefc，TASK-223本地授权范围DONE/PASS。完整九步verify退出0：Node1273pass/14既有skip，Agent199pass/2既有skip，Edge608全部首试/0flaky/0skip，UI242/0，development5步骤PASS；Rust163与fmt通过。最终源码核心/UI独立审查PASS，官方CLI20项、便携CLI20项，实际Tauri官方46项、同字节便携46项通过。新依赖0，入口gzip增加1221B<16384；生产运行时4280文件/519481278B。用户确认手机布局、主题/独立背景、存储identifier/路径、原件与primary dirty/index保留；旧135任务及37功能状态逐项不变。Native Mobile2.1.1仍PLANNED；Hosted、真人CLI账号/付费Provider、签名安装器、日常资料、实体手机与用户视觉验收分别开放。
+
+[当前验证](changes/2026-10-14-action-usability-223/verification.md)与[独立审查](changes/2026-10-14-action-usability-223/review.md)分别绑定已测产品源码。最终纯文档/输出以工程外current-release为准。
+
+### 本轮初始候选（以下保留当时PARTIAL含义）
 
 - TASK-223-ACTIONS-20261014从6b5a2012继续：CLI显式协议/认证、合法多行TOML与受管键、配置发布失败保全、Claude损坏env和模型JSON检查进入源码候选；TOML边界为保守词法识别，恢复副本不等于跨文件崩溃事务。
 - 设置busy按操作所有者保持，记忆和本机服务检测增加迟到结果守卫；画布取消/删除/撤销、生成参数、快捷键、背景入口与短屏菜单沿现有链路修复。手机沿用已确认的新布局，原数据身份、主题与独立背景偏好保留；窄屏仍是响应式Web/WebView。

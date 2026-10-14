@@ -17,7 +17,7 @@
 
 ## 测试与证据
 
-- 2.1.24源码候选（TASK-223，PARTIAL）：设置busy按操作所有者维持，插件/MCP操作互不解除导航与关闭保护；完整verify、Native和独立审查未完成，结果见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
+- 2.1.24本地验证（TASK-223，本任务DONE/PASS；功能主状态保持）：MCP/插件与伴随服务父子操作采用独立busy所有权；未受理动作禁用，迟到检查的成功/失败不覆盖新连接，关闭/返回在操作完成后恢复；最终产品58b5c07f与完整验证、官方/便携回执见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
 
 - 2.1.23本地按钮修复：`tests/browser/settings-control-usability.spec.ts`、`tests/browser/settings-persistence-failures.spec.ts`、`tests/unit/pluginStartupRace.test.ts`；结果及Web/Desktop边界见[2.1.23历史验证](../changes/2026-10-14-action-usability-222/verification.md)。
 
