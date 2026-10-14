@@ -1,7 +1,7 @@
 # Verification：全页面新UI收敛与主线集成
 
-- Task ID：TASK-UI-FULL-20261015；状态：REVIEW / NOT_VERIFIED（本地验收PASS，Hosted/PR/main待验）；日期2026-10-15（Asia/Shanghai）。
-- 最新本地组合：54a2已提交head加generationServerRestart单测试启动握手修复；实际8.3 TEMP完整Node1304PASS/14既有skip与lint/typecheck/format均PASS。产品/config/Rust不变，Browser747/Native56/Rust163沿用未变产品范围；最终修复提交head、独立exact-SHA审查与新Hosted待验，所有先前Hosted失败保持原证据。
+- Task ID：TASK-UI-FULL-20261015；状态：REVIEW / NOT_VERIFIED（本地2.1.28验收PASS，最终SHA/Hosted/PR/main待验）；日期2026-10-15（Asia/Shanghai）。
+- 最新本地组合：2d4be5fca4c2167d4bc0d500634645624f311505加最小设置草稿竞态修复、版本2.1.28与测试/docs，完整verify-6 exit0（Node1304/14skip、Agent199/2skip、Browser747首试/0实际retry、UI242/0及development四步骤）；新版官方Native56/0/10图及TaskHost11/0/凭据清理通过，实际input/EXE与verify-6后同字节。最终提交SHA/独立精确review/新Hosted/PR/main待验，旧失败与夹具边界见文末。
 - 产品source HEAD（本地验收身份）：241f3050124ad7773ced0b47a55629373177205e；本地main承接提交1653966f652390d93d490f90c0b7e9a9423f4026，修复checkpoint为0f506ae10e59d90222b399bbd54298849a8ca55f。实际fetch与API确认origin/main仍为694a00607f6f63de1b8c43d0ebb117adf5d34f67，本地任务分支承接不表示远端main已落地。首次完整verify与正式review绑定165，241产品源码加本轮test-only音频定位修正已完成verify-3本地验收；最终提交HEAD及Hosted/PR/main仍待完成。
 - 版本脚本已真实递增Desktop/Web2.1.27，Mobile2.1.1规划不变；165的ui:check已PASS。首次完整verify在Browser阶段失败；241完整verify-3已PASS；当前2.1.27隔离Native56checks与资源字节身份已通过，精确source/integration review241均PASS。历史2.1.26的635browser/38Native保持原SHA范围。
 - 独立数据/配置身份和原件保持；primary实际254条dirty、109登记worktree只读保留，未reset/clean/清理或改原index。
@@ -161,3 +161,52 @@ source agent仅获tests/unit/agentPackage.test.ts写入权，拟用realpath规�
 已实证的是测试计时缺口：`gateway-startup-delay-red-1.log` actual child preload7s、首次ready6553ms，同一栈RED；`gateway-startup-delay-green-1.log`两次冷启动各7s、真实restart15297ms<原20s，4/4 PASS，含exit/error/abort三个负向。source agent只修改`tests/unit/generationServerRestart.test.ts`（84+/14-）：每child stdout完整own-port marker后显式HTTP200+health identity握手；早退/error/原test signal abort拒绝。原20s、postsubmit/recovery until60×100及全部断言保持，产品无变更。`gateway-startup-focused-green-1.log`普通focused21 PASS；这些不能倒推Hosted当次child的真实状态。
 
 真实8.3 TEMP最终`gateway-final-test-1.log`1318总数1304 PASS/14既有platform skip/0fail；`gateway-final-lint-1.log`、`gateway-final-typecheck-1.log`、`gateway-final-format-check-1.log`全部exit0。此为完整Node+静态检查，不是完整verify-6；Browser747/0实际retry、Native56、Rust163仅沿用未变产品范围。新修复HEAD待提交、独立exact-SHA复审和新Hosted完整门禁待验；旧54 push结果亦待回读。任务REVIEW/整体NOT_VERIFIED，PR59未合并、main仍694。
+
+## 2.1.28设置竞态修复阶段（首轮文档冻结时，保留当时待验范围）
+
+以下为2026-10-15新增事实；此前各轮收据保留原SHA与版本范围，不合并为一次全量PASS。当前提交基线为 `2d4be5fca4c2167d4bc0d500634645624f311505`，其上有最小产品/测试及Desktop/Web2.1.28版本候选；尚无最终提交SHA。Mobile2.1.1仍为规划，main `694a00607f6f63de1b8c43d0ebb117adf5d34f67` / PR59未合并，任务REVIEW / 整体NOT_VERIFIED。
+
+| 新阶段 / 工程外证据 | 实际结果与边界 |
+| --- | --- |
+| [54 push38645320833](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38645320833) / hosted-54-verification-evidence.zip | Repository verification exit0，完整Node/Agent/Rust163/clientcheck/build通过；Browser746 PASS、1 flaky、0最终失败。sidebar-real-projects“移动到折叠的项目组后目标文件夹自动显示”首试目标文件夹缺失、30s超时，retry1通过；原缺trace，根因UNKNOWN。后续Native在旧“配置供应商”按钮定位30s失败，receipt只有8项检查且passed=false，不算Hosted全绿。 |
+| [2d push38647654947](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38647654947) / hosted-2d-verification-evidence.zip | Browser746 PASS、1 FAIL、0 flaky，目录刷新保留草稿case初试/retry均FAIL：expected Updated draft-image-b，received Draft account A a；不是重试通过。先前2d exact aggregate review PASS / Delivery707/0不覆盖这次运行缺陷或后续dirty修复。 |
+| race-red-1.log / race-red-1-browser-results.json | 诊断运行期间测试源在2026-10-14T22:50:20.475Z发生修改；原件保留，仅取具体case诊断证据，不作为整轮单一冻结源码的RED/GREEN收据。 |
+| settings-race-red-2.log / settings-race-red-2-browser-results.json | 冻结旧产品并对真实select连续change B→A，无中间让出事件循环；3/3 FAIL、0retry/flaky/skip，有效复现同一目录草稿污染。 |
+| ProviderModelCatalog最小修复 / settings-draft-race-source-audit.md | 仅字段同步effect从useEffect改为useLayoutEffect，事件订阅/status清理仍原effect；使draft key、refs与字段在下一次交互前同步。dirty比较、账号/协议/auth/model隔离键、保存与trim校验均保留，无新schema/凭据或Provider能力。测试保留全部业务断言，不用增加等待隐藏竞态。 |
+| settings-race-version-bump.log / settings-race-build-green-1.log | 版本脚本真实递增Desktop/Web2.1.27→2.1.28，Mobile2.1.1不变；2.1.28生产build通过，构建不代替Native验收。 |
+| settings-race-green-1.log / settings-race-green-1-browser-results.json | 修复后完整settingsDraftRetention七case×六次=42 PASS、0 FAIL/flaky/skip/实际retry（24.5s）；覆盖dirty/刷新、账号隔离、规范化及分类切换与不外发/不持久化凭据。仅此定向浏览器范围。 |
+| sidebar-probe-2026-10-14T22-53-58.559Z/results.json | full_pages隔离probe原seed五个cold contexts全部PASS，含CPU4x一轮；trusted创建click后folder0→1为2/2/12/2/2ms，groups identity始终1、无remount，0 pageerror、blockedrequests=[]，自有preview已关闭。只证明本轮不复现，不确认原Hosted根因或已修复。 |
+| native-taskhost-current-1/receipt.json / native-taskhost-current-1.log | fixture对齐真实“模型接入…”/“API Key（官方）”及精确模型菜单；用既有原生快照CAS准备四结果草稿，保留所有生成/重启/幂等/未知态/秘密断言与超时。实际Desktop/Web2.1.27 release、sourceHead2d、fixture SHA256 4058265f8d38c14ab6cbacf8b73c57dff08ed99117dd2b8845c32c3a2acf8b85：11/11 PASS、exit0、errors=[]、credentialCleanupComplete=true；5个自有进程均退出，9349/9426/1423/1421端口均释放。这是旧release2.1.27证据，不能代填2.1.28。 |
+
+工程外证据统一位于 `D:/kk-studio/.analysis/ui-full-20261015/`。2.1.28完整verify、fresh Desktop/Native及资源身份、最终提交SHA独立source/integration复审、新Hosted/PR/main/post-main均PENDING。sidebar原flaky根因UNKNOWN继续由root诊断，不用本地成功改写历史失败；真实Provider、用户资料/视觉接受、签名安装器及Native Mobile仍分别开放。
+
+本次待验阶段文档初稿检查：governance:write/check为139任务/0 violations，snapshot:check为3 unique documents/0（未配置外部容器），markdown:check为122 active files/0，index:check为19 ADR/0，doc:commands:check为140 active Markdown/0，git diff --check exit0；仅TASK-UI-FULL-20261015对象变化，原138对象及其原始文本保留，TASK_LEDGER.md由生成器更新且仅当前任务行/段变化。日志docs-convergence-checks-1.log与docs-convergence-preservation-1.json在工程外证据目录。这些是文档结构门禁，不是当前产品完整验证或独立精确SHA批准。
+
+## 2.1.28最终本地组合验收（最新，REVIEW / 整体NOT_VERIFIED）
+
+本轮已完成当前dirty组合的真实本地验收：提交基线 `2d4be5fca4c2167d4bc0d500634645624f311505` 加最小ProviderModelCatalog字段同步layout修复、Desktop/Web2.1.28及当前测试/docs；最终提交SHA尚未形成。Mobile2.1.1仍规划。root再次fetch确认origin/main为 `694a00607f6f63de1b8c43d0ebb117adf5d34f67`，PR59未合并。
+
+| 最新工程外收据 | 实际结果与证明范围 |
+| --- | --- |
+| verify-merged-6.log | 完整npm run verify实际exit0：Node1318总数=1304 PASS/14既有platform skip/0 FAIL；Agent201=199 PASS/2既有skip/0 FAIL；lint/typecheck、UI242文件/0违规、format、build、production Browser及development四步骤全部PASS。lint中code-health42/advisory与footguns2/advisory保留，不写成0 findings；CHANGELOG drift warning同样保留。 |
+| verify-merged-6-browser-results.json / verify6-browser-independent-readback.json | JSON startTime=2026-10-14T22:59:53.196Z、duration=190200.396ms；expected747/unexpected0/flaky0/skipped0。文档owner独立递归遍历747 tests及747 result records，全部passed、每case恰一记录，retry>0记录=0；确认实际retry0，未将配置上允许retry误写成发生重试。 |
+| native-5/native-ui-full.json / native-5/release-identity.json | 官方2.1.28重建34.34s后真实Tauri production、src/main.tsx、tauri.localhost：56 checks PASS、errors=[]、10截图。root目视image-empty/image-reopened/settings-update三图，版本显示2.1.28；这是root目视结果，文档owner仅独立回读收据。自有data为native-5/desktop-official/data，root实查CIM WebView参数 --user-data-dir 指向native-5/webview-profile/EBWebView，使用真正fresh profile。 |
+| native-5/profile-observation.json | root将当时live CIM输出人工转录（kind=manual transcription），非自动机器收据或新运行；WebView PID20432/parent3988、PID72696/parent20432的 --user-data-dir 均为native-5/webview-profile/EBWebView。捕获时间仅界定为Native5验证之后、正常关闭2026-10-14T22:58:40.551Z之前，不编造精确时刻；证据边界保持。 |
+| native-5/close-owned-native.json | exact dataRoot匹配、正常关闭passed=true/errors=[]，不接管或清理default profile。 |
+| native-taskhost-current-2/receipt.json / native-taskhost-current-2.log | 同一真实2.1.28 EXE：11/11 PASS、exit0、errors=[]、credentialCleanupComplete=true；Desktop/Web2.1.28、Mobile2.1.1，5次自有app均CDP ready且记录退出，root实查均已退出。取消三阶段、幂等、四结果耐久intent与进程恢复、unknown slot无普通重试、文本恢复及秘密隔离断言均保持。与先前旧release2.1.27的current-1收据分别保存。 |
+| local-final-verification-6.json | verify-6重新build后release仍reason=current、needsBuild=false，input与EXE哈希与Native5精确一致，unchangedProductSinceNative5=true；不是仅以mtime推断。input SHA256=28c2f285e8aad35a686080aee9e50c4119704c8630113e329c4d2324b6084121；EXE SHA256=638b5df5345f47943b1d0061f1fea00bcdf037871200d0d38d3f51fa3e6bc722。 |
+
+### Native2/3/4前置夹具失败（原件保留，不能洗成产品PASS）
+
+- native-2只更新expectedVersion metadata，漏改校验中的旧2.1.27常量；5 checks后拒绝，未完成验收。其exact dataRoot实例正常关闭。
+- native-3在HTTP/CDP ready前连接，0 checks、ECONNREFUSED；不是产品检查结果。其exact dataRoot实例正常关闭。
+- native-4复用native-3同一自有project data，共49 checks；未设置WEBVIEW2_USER_DATA_FOLDER，实际使用default WebView既有image-test配置，因此“未配置时生成disabled”夹具前提不成立而FAIL。这不是干净profile的验收成功，也未据此改产品或删default profile。无生成/Provider请求，IPC guard拒绝凭据mutation/runtime。
+- native-5统一所有版本常量、明确fresh WebView profile/env并等待HTTP-ready，从新空profile完整重跑，才取得上方56 PASS收据。native2/3/5正常close均按exact dataRoot；上述失败收据与截图保持。
+
+### 2d PR quality补充（保留Hosted失败）
+
+[quality38647660224](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38647660224)最终FAIL：Node1305 PASS/13skip、Agent199 PASS/2skip、Rust163/fmt/check/build PASS；Browser746 PASS/1 settings flaky，首次草稿目录刷新失败、retry通过，已确认同一设置竞态。后续Native仍在旧配置供应商菜单line567失败，仅8 checks。该运行与2d push38647654947的746 PASS/1 FAIL且retry FAIL分别记录，不合并成Hosted全绿。旧54 sidebar flaky原缺trace根因UNKNOWN，本地五cold contexts与当前747首试通过仅证明本轮未复现，不宣称已修复。
+
+当前本地2.1.28组合PASS不等于最终提交HEAD批准、Hosted成功或main落地。仍须形成最终head、运行固定base694→head独立source/integration审查和精确Hosted门禁，再普通合并PR59、fetch校验main/post-main；任务REVIEW / verificationResult=NOT_VERIFIED。真实付费Provider、用户资料/视觉最终接受、签名安装器、Native Mobile及其他功能成熟度沿用原开放范围，原138历史任务不改。
+
+终稿文档后的静态/局部门禁结果以工程外docs-convergence-final-checks-1.log实际exit回读；不再重跑Browser，受验产品/测试未被本docs批次修改。

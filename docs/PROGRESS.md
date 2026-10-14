@@ -1,6 +1,20 @@
 # 当前进度
 
-## 2026-10-15 全页面新UI与主线保全（REVIEW / 本地PASS，整体NOT_VERIFIED）
+## 2026-10-15 2.1.28最终本地验收（REVIEW / 本地PASS，整体NOT_VERIFIED）
+
+TASK-UI-FULL-20261015基于2d4be5fca4c2167d4bc0d500634645624f311505加最小字段同步修复、版本2.1.28与测试/docs，完整verify-6 exit0：Node1318=1304 PASS/14既有platform skip、Agent201=199 PASS/2skip，production Browser747/747首试PASS/0实际retry/flaky/skip，lint/typecheck/UI242/0/format/build/development四步骤PASS。文档owner独立遍历747 result records确认0实际retry；health42及footguns2为advisory，原警告保持。
+
+官方2.1.28重建34.34s，fresh Native5 56 PASS/0errors/10图，root实查独立WebView profile并目视空态/重开/更新三图；新版TaskHost11 PASS/0error/credentialCleanupComplete=true，五自有app退出。verify-6后release仍current，input28c2f285与EXE638b5df5同Native5完整哈希相同。Native2/3/4版本硬编码/CDP早连/default profile前提失败保留，只有Native5是fresh完整验收；2d PR quality38647660224 Browser746 PASS/1 settings flaky且Native旧菜单8 checks后FAIL，非Hosted全绿。sidebar原缺trace根因UNKNOWN，本地不复现不称已修复。
+
+当前本地组合PASS；最终提交SHA独立source/integration review、新Hosted/PR59普通合并及main/post-main仍待验，main fetch仍694、PR59未合并。原138任务/功能状态、primary资料与历史失败保持，Mobile2.1.1规划。[最终验证](changes/2026-10-15-ui-full/verification.md)。
+
+## 2026-10-15 设置草稿竞态与Native夹具续修（首轮文档冻结时，保留原范围）
+
+TASK-UI-FULL-20261015当前基于2d4be5fca4c2167d4bc0d500634645624f311505追加最小ProviderModelCatalog字段同步useEffect→useLayoutEffect，保留dirty/账号隔离/保存校验；Desktop/Web2.1.27→2.1.28已版本脚本递增并build，Mobile2.1.1仍规划。Hosted54 push38645320833 Repository verify exit0含Browser746 PASS/1 sidebar flaky，Native旧模型菜单定位FAIL；2d push38647654947 Browser746 PASS/1 FAIL且retry FAIL，B型号收到A草稿。冻结旧产品真实select B→A RED2为3/3 FAIL；修复后settings七case×六次42 PASS/0retry/flaky/skip。原race-red-1运行中测试源曾修改，仅作单case诊断；sidebar首试目标文件夹缺失但原缺trace，根因UNKNOWN。
+
+Native TaskHost夹具对齐当前模型接入/官方API表单、精确模型菜单及既有快照CAS四结果草稿，真实旧release2.1.27为11 PASS、exit0、0error、credentialCleanupComplete=true，五自有进程退出与端口释放。此收据不能代填2.1.28；新版本完整verify、fresh Native/资源身份、最终SHA独立review及新Hosted/PR/main/post-main待验。main694 / PR59未合并，原138任务和功能状态保持。[当前验证](changes/2026-10-15-ui-full/verification.md)。
+
+## 2026-10-15 全页面新UI与主线保全（此前2.1.27阶段，保留原范围）
 
 - TASK-UI-FULL-20261015 当前source241f3050124ad7773ced0b47a55629373177205e，Desktop/Web2.1.27；Mobile2.1.1规划不变。用户新增空card仅upload/内容才toolbar、状态互斥与真实功能链按新矩阵验收，旧79/50 GREEN只保留原范围。
 - main694经真实checkpoint0f506ae1→任务分支merge1653966f承接，tree一致；104实际冲突、25自动差量逐项核验、21外移历史blob保全。main独有历史文档补回，当前任务承接15包，原任务branch/status保持；Delivery704 paths/0 violations。origin/main仍694，未远端落地。

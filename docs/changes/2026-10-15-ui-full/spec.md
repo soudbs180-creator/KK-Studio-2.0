@@ -1,6 +1,6 @@
 # Spec：全页面新UI收敛与主线集成
 
-- Task ID：TASK-UI-FULL-20261015；状态：REVIEW（本地验收PASS，托管交付待验）。
+- Task ID：TASK-UI-FULL-20261015；状态：REVIEW / NOT_VERIFIED（本地2.1.28验收PASS，最终SHA/Hosted/PR/main待验）。
 - 页面矩阵：实际App所有可达首页、项目、扩展Skill/MCP/伙伴、ComfyUI、设置所有分类、资源/搜索/任务、个人信息、帮助与快捷键及相关弹窗；不存在或禁用能力准确记录，不假造节点。
 - 卡片矩阵：图片空/上传/参考/生成、视频空/非空、文字/音频输入、HTML/Markdown/便利贴/SVG插件、历史collection归一化。各节点采用同一套角色规则，来源只改变数据与可用动作。
 - 模型与输入：首页/Agent/对话消费共享菜单与文字控件，画布保留生成专属参数；重绘和Google路径保留原能力并收敛可达模型UI。长模型、变体、窄屏、菜单/Escape和重载不遮挡或退回旧几何。
@@ -9,7 +9,7 @@
 - 验收：先真实浏览器RED并保存，再修共享根因和GREEN；390/1099/1920生产浏览器、完整verify、Desktop当前构建及同态证据、精确SHA独立审查。UI检查与真人Provider/发布/用户接受分别记录。
 - 主线：保留既有治理与功能记录，提交PR；当前head的托管门禁/Delivery及独立审查完成后普通合并，fetch后复核origin/main和post-merge检查。不得直推main、force或绕过规则。
 
-- 覆盖与非同义状态见[coverage](coverage.md)。主线102个预检冲突与104个实际冲突逐路径裁决，不能整份选ours/theirs；15份历史交付包作为当前整合来源引用，不把原任务开放能力改为DONE。候选Desktop/Web2.1.27已由版本脚本递增，Mobile2.1.1规划不变，产物与托管完成状态分别验收。
+- 覆盖与非同义状态见[coverage](coverage.md)。主线102个预检冲突与104个实际冲突逐路径裁决，不能整份选ours/theirs；15份历史交付包作为当前整合来源引用，不把原任务开放能力改为DONE。历史候选Desktop/Web2.1.27已由版本脚本递增；当前最小设置竞态修复候选Desktop/Web2.1.28已递增并build，Mobile2.1.1规划不变，产物与托管完成状态分别验收。
 
 ## 用户追加的状态与功能验收（必须满足）
 
@@ -35,3 +35,11 @@
 
 
 最终本地验收：verify-3完整PASS（Browser747/747、Node1295/14skip、Agent199/2skip、UI242/0及development），Native56与精确source/integration241复审PASS。旧失败及test-only音频selector修正保留；最终提交head/Hosted/PR/main仍待验，整体NOT_VERIFIED。
+
+## 当前续修验收约束（2.1.28）
+
+当前提交基线2d4be5fca4c2167d4bc0d500634645624f311505上新增最小设置竞态修复候选。真实select连续B→A不得把A字段缓存为B的dirty草稿；目录更新仍保留用户dirty、clean字段采用最新目录，账号/协议/auth/model隔离、trim/save校验与秘密不外发/不持久化继续保留。冻结旧产品RED2三项全失败→layout同步修复后settings42项全通过；这份定向收据不代替当前完整verify、fresh Desktop/Web同态或精确SHA独立审查。
+
+Native TaskHost夹具必须消费当前共享模型菜单/官方API入口，不向模型菜单重新加入批量/数据项；四结果持久草稿通过既有原生快照CAS准备，实际提交body.n、持久intent、重启恢复、未知slot无普通重试及秘密清理断言保持。旧release2.1.27已有11项PASS，当前2.1.28完整verify/fresh Native/资源身份、最终SHA复审与新Hosted/PR/main/post-main待验。sidebar历史flaky原缺trace根因UNKNOWN，本地五次未复现不能代填已修复。Mobile2.1.1规划及既有功能状态不变，旧失败与混合源码诊断边界见[verification](verification.md)。
+
+当前本地验收已达到本轮2.1.28组合范围：完整verify-6含747 Browser首试/0实际retry、development四步骤及全部本地步骤通过；fresh Native5 56项与新版TaskHost11项分别PASS，verify后实际input/EXE同字节。Native2/3/4前置夹具失败、2d PR质量门禁settings flaky及旧Native菜单FAIL保持原义。最终提交SHA独立source/integration审查、新Hosted/PR59/main/post-main仍是规格必需而尚未完成的交付门禁，任务REVIEW/整体NOT_VERIFIED。具体统计、哈希与范围按[verification](verification.md)最新收据，不用本地fixture替代真实Provider或用户最终接受。

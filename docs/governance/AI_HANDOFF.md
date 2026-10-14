@@ -10,6 +10,14 @@
 
 ## 本轮恢复入口
 
+先读[verification最新2.1.28本地收据](../changes/2026-10-15-ui-full/verification.md)和[计划](../changes/2026-10-15-ui-full/plan.md)。当前2d4be5fca4c2167d4bc0d500634645624f311505+最小设置字段同步修复/版本2.1.28/测试/docs尚未形成最终head，本地完整verify-6 PASS（Node1304/14skip、Agent199/2skip、Browser747首试/0实际retry、UI242/0与development四步），fresh官方Native5 56/0/10图及新版TaskHost11/0/secretcleanup true，verify后input/EXE同Native5完整哈希且current。Native2/3/4前置夹具失败、54/2d Hosted失败与mixed诊断边界全保留，sidebar原缺trace根因UNKNOWN。main fetch仍694 / PR59未合并；下一步最终head独立source/integration审查、新Hosted完整门禁、普通合并及main/post-main。任务REVIEW / 本地PASS / 整体NOT_VERIFIED，Mobile2.1.1规划与其他功能状态不变。
+
+### 此前2.1.28完整验证前冻结入口（历史保留）
+
+先读[当前验证](../changes/2026-10-15-ui-full/verification.md)文末2.1.28阶段及[当前计划](../changes/2026-10-15-ui-full/plan.md)。提交基线2d4be5fca4c2167d4bc0d500634645624f311505上最小ProviderModelCatalog字段同步竞态修复与Desktop/Web2.1.28候选未最终提交；build与settings42定向PASS，2.1.28完整verify/fresh Native/资源身份及最终SHA独立审查待验。旧release2.1.27 TaskHost夹具11 PASS、0error、凭据清理true仅原版本范围。54 push38645320833 Repository verify exit0含746 PASS/1 sidebar flaky，后续Native旧菜单FAIL；2d push38647654947设置case初试/retry FAIL。冻结旧产品RED2三项全FAIL后最小layout同步修复；mixed race-red-1仅单case诊断，sidebar原缺trace根因UNKNOWN。main694 / PR59未合并，任务REVIEW/整体NOT_VERIFIED，Mobile2.1.1规划；等待root的新全量与Native收据，再终稿/提交/精确审查/Hosted/普通合并，不沿用旧版本PASS。
+
+### 此前2.1.27托管与修复阶段（历史保留）
+
 最新54a2 aggregate PASS/Delivery706/0后quality38645328109 Node1301PASS/1FAIL/13skip，仅gateway首次ready超时；无child日志，alive/crash UNKNOWN，未POST/Provider/恢复/Browser/Rust，时长variance不证明slow CI。单测试启动握手84+/14-保留20s/恢复断言，preload7s RED→延迟4GREEN/focused21PASS，真实8.3 Node1304PASS/14skip与lint/typecheck/format PASS。非完整verify-6，产品不变、Browser747/Native56/Rust163沿用；新head独立复审/Hosted/PR59/main及旧54 push38645320833结果待验，REVIEW/NOT_VERIFIED、main694。
 
 最新阻断：c498独立exact aggregate review PASS，quality38643592443 snapshot3/0后Node1294PASS/8FAIL/13skip，Windows agentPackage发布fixture的非canonical short TEMP被既有no-link guard拒绝，Browser/Rust未运行。source agent只修测试realpath；安全脚本/回滚断言保持。fixture await realpath仅4+/1-，真实8.3 RED3PASS/8FAIL→GREEN11/11；首轮短TEMP Node1299PASS/2FAIL/14skip与canary1的失败是自建目录过深的git路径前置条件，原件保留。较浅actual8.3根下canary7PASS/3Linux skip、run2 Node1301PASS/14skip与lint/typecheck/format全部PASS。非完整verify-6；产品/config/Rust及安全脚本不变，Browser747/Native56/Rust163沿用原范围。最终修复head exact review/新Hosted待验，PR59未合并/main694，REVIEW/NOT_VERIFIED。

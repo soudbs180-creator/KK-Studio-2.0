@@ -1,6 +1,6 @@
 # 本轮可达 UI 覆盖与验证边界
 
-Task ID：TASK-UI-FULL-20261015；2026-10-15；状态 REVIEW / NOT_VERIFIED（本地验收PASS，托管交付待验）。当前源码 HEAD 为 241f3050124ad7773ced0b47a55629373177205e；固定main694已本地承接为1653966f。下列为入口映射及各次收据范围，241产品源码及test-only音频定位修正已通过完整verify-3与Native56；最终提交head及Hosted/PR/main仍待验。
+Task ID：TASK-UI-FULL-20261015；2026-10-15；状态 REVIEW / NOT_VERIFIED（本地2.1.28验收PASS，最终SHA/Hosted/PR/main待验）。当前提交基线为2d4be5fca4c2167d4bc0d500634645624f311505，其上最小设置竞态修复与版本2.1.28尚未形成最终SHA；历史已验收产品为241f3050124ad7773ced0b47a55629373177205e；固定main694已本地承接为1653966f。下列为入口映射及各次收据范围，241产品源码及test-only音频定位修正已通过完整verify-3与Native56；最终提交head及Hosted/PR/main仍待验。
 
 用户追加纠正后，本矩阵是覆盖入口清单，不是全卡片验收通过。旧79定向GREEN和green-checkpoint的50 GREEN保留原scope；其工具栏存在/几何断言不能证明空态仅upload与内容态toolbar互斥，部分旧断言须按新用户契约补充负向状态断言。
 
@@ -66,3 +66,23 @@ Task ID：TASK-UI-FULL-20261015；2026-10-15；状态 REVIEW / NOT_VERIFIED（�
 
 
 最终覆盖收据：verify-3生产Browser747/747 PASS、无flaky/skip/实际retry；完整Node/Agent/lint/typecheck/UI242/0/format/build/development PASS。verify-2唯一audio selector双匹配为夹具定位问题，改为可见预览dialog并断言hidden audio保持paused后，严格播放2条及完整套件通过；原746/1失败保留。Native56/资源身份与source241/integration241复审PASS继续有效；真实Provider、用户最终接受及Hosted/PR/main不由这些本地收据代填。
+
+## 2.1.28新增覆盖与证据断点（首轮文档冻结时）
+
+- Hosted54 push38645320833：Repository verify exit0，Browser746 PASS/1 sidebar flaky；目标折叠文件夹首试缺失而retry1通过，原缺trace，根因UNKNOWN。Native在旧模型配置按钮失败，8项检查不构成完整Native PASS。
+- Hosted2d push38647654947：Browser746 PASS/1 FAIL，目录刷新case初试与retry都把B字段恢复成A；原747本地全绿不覆盖此产品竞态。
+- 冻结settings-race-red-2对真实select连续change B→A：3/3 FAIL；最小字段同步layout修复后settingsDraftRetention七case×六次42 PASS、0retry/flaky/skip，覆盖dirty/clean刷新、账号与分类隔离、trim/save、秘密不持久化。race-red-1有22:50:20.475Z测试源变更，只保留单case诊断含义。
+- Native TaskHost当前菜单/官方API表单/精确模型选择及四结果持久草稿夹具，实际旧release2.1.27为11 PASS/0error/credentialCleanupComplete=true；durable intent/restart、未知slot不普通重试、幂等及秘密隔离保留全部断言。此收据未覆盖2.1.28。
+- Desktop/Web2.1.28已构建；当前完整verify、fresh Native及同字节资源、最终SHA独立复审与Hosted/PR/main/post-main仍PENDING。Mobile2.1.1为规划；既有各版本的747 Browser/56 Native保留原范围。
+
+详细证据文件与来源见[最新阶段验证](verification.md)。
+
+## 当前2.1.28完整覆盖收据
+
+verify-6完整exit0，production Browser747全部首试PASS；文档owner独立遍历747 tests/747 results确认retry0、无flaky/skip/失败。Node1304 PASS/14既有platform skip、Agent199 PASS/2skip、lint/typecheck/UI242/0/format/build及development四步骤通过；settings42定向重复作为竞态补证保留，混合源码race-red-1不作整轮冻结收据。
+
+fresh官方Native5 56 PASS/0errors/10截图，包含空image无toolbar、uploaded唯一toolbar/无主upload、重开归档身份及settings版本2.1.28；root实查fresh WebView profile参数并目视空态/重开/更新三图。新版TaskHost11 PASS/0error/credentialCleanupComplete=true，真实四结果提交、耐久intent/重启恢复、unknown无普通重试、幂等及秘密隔离通过；五自有app退出。verify-6后input/EXE与Native5同哈希、reason=current。
+
+Native2/3/4的旧版本硬编码/CDP早连/default WebView非fresh前提失败保留5/0/49 checks，不能当作产品PASS或干净运行证据；Native5从新空profile重跑才完整通过。2d PR quality38647660224的settings首fail retryPASS与Native旧菜单FAIL也保留。当前747与sidebar五轮cold probe仅证明本轮未复现，原Hosted sidebar缺trace根因UNKNOWN。
+
+当前组合本地PASS；最终提交SHA独立source/integration审查、新Hosted及PR/main/post-main仍待验。390仍仅响应式Web；Native Mobile2.1.1规划、真实Provider与用户最终接受不由本轮fixture/本地收据代填。精确资源哈希与失败边界见[verification](verification.md)最新阶段。

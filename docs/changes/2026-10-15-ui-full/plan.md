@@ -19,7 +19,7 @@
 风险重点：Google/重绘模型能力和配置身份、长型号/variant、浮动菜单、旧项目文字/媒体恢复、squash后主线治理保全、真实运行资源新鲜度。
 
 
-当前执行位置：source `241f3050124ad7773ced0b47a55629373177205e`。165完整verify在Browser740/745、5失败处退出，source/integration review三P2均CHANGES_REQUIRED；241修复后的14条定向GREEN已回读。当前等待完整verify-2、新Desktop/Native及241或后续最终head独立复审，之后才做Hosted/PR/main；以上未勾选的最终验收不由中间GREEN补齐。
+此前执行位置（241阶段历史记录）：source `241f3050124ad7773ced0b47a55629373177205e`。165完整verify在Browser740/745、5失败处退出，source/integration review三P2均CHANGES_REQUIRED；241修复后的14条定向GREEN已回读。当前等待完整verify-2、新Desktop/Native及241或后续最终head独立复审，之后才做Hosted/PR/main；以上未勾选的最终验收不由中间GREEN补齐。
 
 
 阶段补充：241官方隔离Desktop2.1.27 Native56checks/0errors、dist资源字节与release身份、owned正常关闭均PASS，source241/integration241精确复审PASS关闭三P2。完整verify-2/最终文档head及Hosted/PR/main仍未完成，相关整体步骤保持未勾选。
@@ -42,3 +42,16 @@
 
 - [x] 对54a2 Hosted gateway首次ready超时实证启动夹具计时缺口：preload7s同栈RED，双冷启动GREEN4/4与focused21PASS；仅测试84+/14-，保留20s及提交/恢复断言。实际8.3完整Node1304PASS/14skip、lint/typecheck/format PASS，不称完整verify-6。
 - [ ] 回读旧54 push38645320833；提交新修复head并独立exact-SHA复审、新Hosted完整门禁、PR59普通合并和post-main。Hosted当次child alive/crash仍UNKNOWN，时长variance不是slow CI根因证据。
+
+## 当前执行位置：2.1.28设置竞态候选
+
+- [x] 回读54 push38645320833：Repository verify exit0但Browser746 PASS/1 flaky（sidebar目标文件夹首试缺失、retry通过，原缺trace根因UNKNOWN）；Native旧“配置供应商”定位FAIL，保留原8检查收据。
+- [x] 回读2d push38647654947：Browser746 PASS/1 FAIL且retry FAIL；冻结真实select连续B→A在旧产品RED2为3/3 FAIL，race-red-1混合源码仅保留单case诊断证据。
+- [x] 最小修复ProviderModelCatalog字段同步useLayoutEffect，dirty/账号/保存校验保持；Desktop/Web自动递增2.1.28、build PASS；完整settings七case×六次42 PASS/0retry/flaky/skip。
+- [x] Native TaskHost夹具对齐当前模型菜单/官方API表单与持久草稿四结果，真实旧release2.1.27的11项PASS、0error、秘密清理true，五进程退出且端口释放；不作为2.1.28验收。
+- [x] 2.1.28完整verify-6 exit0、747 Browser首试/0实际retry、Node1304/14skip与Agent199/2skip；fresh Native5 56/0/10图、新版TaskHost11/0/凭据清理通过，verify-6后input/EXE同字节。sidebar原缺trace根因仍UNKNOWN，Native2/3/4夹具前置失败全保留。
+- [ ] 形成最终产品/测试/版本/docs head，独立base694→head精确source/integration补审，新Hosted门禁通过后普通合并PR59，fetch核对main/post-main。
+
+当前提交基线2d4be5fca4c2167d4bc0d500634645624f311505；新候选尚未提交，main694 / PR59未合并，REVIEW/整体NOT_VERIFIED。Mobile2.1.1规划及其他功能成熟度保持；旧版本本地PASS不能补齐上述未勾选门禁。
+
+当前本地阶段完成：2.1.28完整verify-6、fresh官方Native5、TaskHost新版及资源字节身份均PASS，具体计数/原失败边界见[verification](verification.md)。文档owner独立确认747结果均首试通过、实际retry0。2d PR quality38647660224最终FAIL（settings flaky+Native旧菜单），不能代填新Hosted成功。最终产品/测试/版本/docs head尚未形成；下一步为最终SHA独立source/integration审查、新Hosted、普通合并PR59与main/post-main，相关步骤仍不勾选。main694未合并，REVIEW/整体NOT_VERIFIED，Mobile2.1.1仍规划。

@@ -190,12 +190,15 @@ test("目录更新保留 dirty 草稿，未改动和保存后的字段采用最�
   page,
 }) => {
   const { catalog, requests } = await openDrafts(page);
+  // 连续选择不让出当前事件任务，覆盖型号标识与字段尚未同步的窗口。
   await catalog
     .getByLabel("已发现的模型", { exact: true })
-    .selectOption("draft-image-b");
-  await catalog
-    .getByLabel("已发现的模型", { exact: true })
-    .selectOption("draft-image-a");
+    .evaluate((select: HTMLSelectElement) => {
+      for (const model of ["draft-image-b", "draft-image-a"]) {
+        select.value = model;
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    });
   await catalog
     .getByLabel("模型分组名称", { exact: true })
     .fill("Dirty family");

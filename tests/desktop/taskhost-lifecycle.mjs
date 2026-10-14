@@ -10,6 +10,7 @@ import {
   DEFAULT_MODEL_PROVIDER,
   MODEL_PROVIDER_STORAGE_KEY,
 } from "../../src/domain/modelProvider.ts";
+import { emptySnapshot } from "../../src/features/creation/model.ts";
 
 const root = process.cwd();
 const runId = `${Date.now()}-${randomUUID()}`;
@@ -87,6 +88,28 @@ async function snapshot() {
   return JSON.parse(
     await fs.readFile(path.join(dataRoot, "projects/creation-v2.json"), "utf8"),
   );
+}
+async function seedHomeBatch() {
+  const loaded = await invoke("read_creation_snapshot");
+  const saved = loaded.snapshot ?? emptySnapshot();
+  // Batch size belongs to the persisted draft, not the shared model menu.
+  await invoke("write_creation_snapshot", {
+    expectedRevision: loaded.status === "missing" ? null : saved.revision,
+    snapshot: {
+      ...saved,
+      revision: saved.revision + 1,
+      homeDraft: {
+        ...saved.homeDraft,
+        outputCount: 4,
+        updatedAt: Date.now(),
+      },
+    },
+  });
+  await page.reload();
+  await page.getByRole("button", { name: "开始创作", exact: true }).click();
+  await expect
+    .poll(async () => (await snapshot()).homeDraft.outputCount)
+    .toBe(4);
 }
 const server = createServer(async (request, response) => {
   try {
@@ -560,21 +583,30 @@ try {
       },
     },
   );
+  await seedHomeBatch();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   await page
-    .getByRole("menu")
-    .getByRole("button", { name: /配置供应商/ })
+    .getByRole("menu", { name: "选择模型", exact: true })
+    .getByRole("button", { name: "模型接入…", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
   await page.getByLabel("提供商", { exact: true }).fill(providerName);
   await page.getByLabel("接口地址").fill(baseUrl);
-  await page.getByLabel("API Key").fill(secret);
+  await page.getByLabel("API Key", { exact: true }).fill(secret);
   await page.getByLabel("模型名称").fill("image-test");
   ownedCredentials.add(uiRef);
   await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page.getByLabel("生成数量").selectOption("4");
-  await page.getByRole("button", { name: "模型", exact: true }).click();
+  const initialModelMenu = page.getByRole("menu", {
+    name: "选择模型",
+    exact: true,
+  });
+  await initialModelMenu.getByRole("searchbox").fill("image-test");
+  await expect(initialModelMenu.getByRole("menuitemradio")).toHaveCount(1);
+  await initialModelMenu.getByRole("menuitemradio").click();
   await page.getByLabel("创作提示词").fill("ui-success");
   await page.getByRole("button", { name: "开始创建项目" }).click();
   const approval = page.getByRole("dialog", { name: "人工审批任务" });
@@ -622,19 +654,17 @@ try {
     true,
     "The saved fixture credential must survive a native process restart",
   );
+  await seedHomeBatch();
   // Creating a project clears the Home draft. Select the persisted connection
   // through the real menu rather than rewriting settings or credentials.
   await page.getByRole("button", { name: "模型", exact: true }).click();
-  const modelMenu = page.getByRole("menu", { name: "选择模型" });
+  const modelMenu = page.getByRole("menu", { name: "选择模型", exact: true });
   await modelMenu.getByRole("searchbox").fill("image-test");
   await expect(modelMenu.getByRole("menuitemradio")).toHaveCount(1);
   await modelMenu.getByRole("menuitemradio").click();
-  await page.getByRole("button", { name: "模型", exact: true }).click();
-  await page.getByLabel("生成数量").selectOption("4");
   await expect
     .poll(async () => (await snapshot()).homeDraft.outputCount)
     .toBe(4);
-  await page.getByRole("button", { name: "模型", exact: true }).click();
   await page.getByLabel("创作提示词").fill("ui-partial-restart");
   await page.getByRole("button", { name: "开始创建项目" }).click();
   await expect

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   catalogForConnection,
   saveModelCatalog,
@@ -76,7 +76,7 @@ export default function ProviderModelCatalog({
     return () =>
       window.removeEventListener("kk:model-provider-changed", update);
   }, []);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const switching = previousKey.current !== draftKey;
     if (switching)
       drafts.current.set(previousKey.current, {
