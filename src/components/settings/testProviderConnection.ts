@@ -16,6 +16,16 @@ import {
   type ConnectionState,
 } from "./modelProviderSettingsState.ts";
 
+async function discoveryKey(
+  valid: ModelProviderProfile,
+  apiKey: string,
+  credentialRef: string,
+) {
+  if (!providerNeedsKey(valid)) return "";
+  if (apiKey.trim() || isTauri()) return apiKey.trim();
+  return loadApiKey(valid.baseUrl, credentialRef);
+}
+
 function assertCatalogTargetCurrent(
   tested: ProviderConnection,
   initial: ProviderConnection | undefined,
@@ -72,10 +82,7 @@ export async function testProviderConnection({
   setConnection({ kind: "loading", message: "正在请求模型列表…" });
   const timeout = window.setTimeout(() => controller.abort("timeout"), 10_000);
   try {
-    const key = providerNeedsKey(valid)
-      ? apiKey.trim() ||
-        (isTauri() ? "" : await loadApiKey(valid.baseUrl, credentialRef))
-      : "";
+    const key = await discoveryKey(valid, apiKey, credentialRef);
     if (requestRef.current !== controller) return;
     const models = await checkModelProvider(
       valid.baseUrl,
