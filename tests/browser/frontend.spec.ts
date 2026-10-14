@@ -128,13 +128,13 @@ test("模型接入使用 API 地址，连接状态真实且密钥不落盘", asy
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("session-key");
   await page.getByLabel("模型名称").fill("image-model-v2");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   const saved = await page.evaluate(() =>
     localStorage.getItem("kk-studio-next:model-provider:v1"),
   );
   expect(saved).toContain("models.example.test");
   expect(saved).not.toContain("session-key");
-  await page.getByRole("button", { name: "测试连接" }).click();
+  await page.getByRole("button", { name: "测试连接并刷新模型" }).click();
   await expect(
     page.getByText("已获取 0 个模型；生成能力仍需实际验证。", { exact: true }),
   ).toBeVisible();
@@ -200,7 +200,7 @@ test("模型接入可以登记多个非敏感连接并切换当前配置", async
     await page.getByRole("textbox", { name: "提供商" }).fill(name);
     await page.getByLabel("接口地址").fill(baseUrl);
     await page.getByLabel("模型名称").fill(model);
-    await page.getByRole("button", { name: "保存", exact: true }).click();
+    await page.getByRole("button", { name: "保存连接", exact: true }).click();
   };
   await save("连接一", "https://one.example.test/v1", "image-one");
   await save("连接二", "https://two.example.test/v1", "image-two");

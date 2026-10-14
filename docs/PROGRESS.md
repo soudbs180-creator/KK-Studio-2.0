@@ -1,5 +1,11 @@
 # 当前进度
 
+## 2026-10-15 最新 UI 设置修复（IN_PROGRESS）
+
+TASK-SETTINGS-LATEST-20261015 在 `fix/TASK-SETTINGS-LATEST-20261015` / `D:/kk-studio/.worktrees/branch-consolidation-20261011` 从最新 UI `c1fae190618be3bb5a4e00208b8f4776ec8c0be5` 继续已授权设置修复：溢出、提示遮挡、模型布局/交互和保存风险，保留原配置与用户数据。基线 Desktop/Web2.1.24，候选2.1.25；1280/240/192、绿色及手机逐级导航沿用当前规范。primary `51fccfc7` 与修复 `428a3a2d` 是误启动的旧 UI 基线，旧证据保留历史含义，不能作为本次完成依据。当前实现/浏览器/保存回归、Desktop 构建和独立 SHA review 均 NOT_VERIFIED；已有2.1.24验收也不自动覆盖本次差异。primary 并发 dirty/index 与原资料身份保留。
+
+[本次意图](changes/2026-10-15-settings-latest-ui/intent.md)、[计划](changes/2026-10-15-settings-latest-ui/plan.md)、[验证](changes/2026-10-15-settings-latest-ui/verification.md)、[审查](changes/2026-10-15-settings-latest-ui/review.md)。以下2.1.24记录保留其原版本与范围。
+
 ## 2026-10-15 2.1.24按钮续修本机交付
 
 Desktop/Web2.1.24产品源码58b5c07f34718769e10b76c89d510615bea2fefc，TASK-223本地授权范围DONE/PASS。完整九步verify退出0：Node1273pass/14既有skip，Agent199pass/2既有skip，Edge608全部首试/0flaky/0skip，UI242/0，development5步骤PASS；Rust163与fmt通过。最终源码核心/UI独立审查PASS，官方CLI20项、便携CLI20项，实际Tauri官方46项、同字节便携46项通过。新依赖0，入口gzip增加1221B<16384；生产运行时4280文件/519481278B。用户确认手机布局、主题/独立背景、存储identifier/路径、原件与primary dirty/index保留；旧135任务及37功能状态逐项不变。Native Mobile2.1.1仍PLANNED；Hosted、真人CLI账号/付费Provider、签名安装器、日常资料、实体手机与用户视觉验收分别开放。

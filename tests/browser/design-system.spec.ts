@@ -85,7 +85,7 @@ for (const theme of ["dark", "light"]) {
         .getByRole("button", { name: "API Key（官方）", exact: true })
         .click();
       const save = dialog.getByRole("button", {
-        name: "保存",
+        name: "保存连接",
         exact: true,
       });
       await page.mouse.move(0, 0);

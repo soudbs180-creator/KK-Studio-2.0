@@ -27,13 +27,15 @@ const PENDING_SETTINGS: Partial<
 
 export default function ConnectionSettings({
   section,
+  active = true,
   onFeedback,
 }: {
   section: SettingsSection;
+  active?: boolean;
   onFeedback: (message: string) => void;
 }) {
   if (section === "providers")
-    return <ModelAccessSettings onFeedback={onFeedback} />;
+    return <ModelAccessSettings active={active} onFeedback={onFeedback} />;
   if (section === "updates")
     return (
       <div className="settings-version">

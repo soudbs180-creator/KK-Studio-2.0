@@ -24,7 +24,7 @@ async function submit(page: Page) {
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByLabel("创作提示词").fill("生成保存状态 fixture");
   await page.getByRole("button", { name: "开始创建项目" }).click();

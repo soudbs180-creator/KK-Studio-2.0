@@ -175,7 +175,7 @@ test("ordinary API native conflict does not replace the existing key or publish 
   await page.evaluate(() => {
     (window as CredentialFixtureWindow).credentialFixture.writeFailure = true;
   });
-  await profile.getByRole("button", { name: "保存", exact: true }).click();
+  await profile.getByRole("button", { name: "保存连接", exact: true }).click();
   await expect(
     profile.getByRole("status").filter({ hasText: "无法保存" }),
   ).toBeVisible();
@@ -214,7 +214,7 @@ test("ordinary API native conflict does not replace the existing key or publish 
   await page.evaluate(() => {
     (window as CredentialFixtureWindow).credentialFixture.writeFailure = false;
   });
-  await profile.getByRole("button", { name: "保存", exact: true }).click();
+  await profile.getByRole("button", { name: "保存连接", exact: true }).click();
   await expect(
     profile.getByRole("status").filter({ hasText: "连接信息已保存" }),
   ).toBeVisible();

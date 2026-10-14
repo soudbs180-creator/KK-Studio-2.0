@@ -206,24 +206,40 @@ export default function ModelProviderSettings({
         className="provider-edit-fields"
         aria-label="API 连接信息"
       >
-        <ProviderProfileFields
-          onOpenGoogle={onOpenGoogle}
-          profile={profile}
-          apiKey={apiKey}
-          hasStoredKey={hasStoredKey}
-          credentialStatus={credentialStatus}
-          onUpdate={(field, value) => updateMany({ [field]: value })}
-          onUpdateMany={updateMany}
-          onApiKeyChange={(value) => {
-            if (saving) return;
-            cancelRequest();
-            setApiKey(value);
-            setConnection({
-              kind: "idle",
-              message: "密钥已更改，请重新测试连接。",
-            });
-          }}
-        />
+        <div className="provider-connection-editor">
+          <ProviderProfileFields
+            onOpenGoogle={onOpenGoogle}
+            profile={profile}
+            apiKey={apiKey}
+            hasStoredKey={hasStoredKey}
+            credentialStatus={credentialStatus}
+            onUpdate={(field, value) => updateMany({ [field]: value })}
+            onUpdateMany={updateMany}
+            onApiKeyChange={(value) => {
+              if (saving) return;
+              cancelRequest();
+              setApiKey(value);
+              setConnection({
+                kind: "idle",
+                message: "密钥已更改，请重新测试连接。",
+              });
+            }}
+          />
+          <ProviderSettingsActions
+            saving={saving || credentialBlocked}
+            hasKey={
+              providerNeedsKey(profile) && Boolean(hasStoredKey || apiKey)
+            }
+            testing={connection.kind === "loading"}
+            onSave={() => void save()}
+            onClear={() => void clearKey()}
+            onTest={() => void testConnection()}
+            onCancel={() => {
+              requestRef.current?.abort("user");
+              setConnection({ kind: "loading", message: "正在取消连接测试…" });
+            }}
+          />
+        </div>
         <ProviderConnectionList
           connections={connections}
           activeBaseUrl={profile.baseUrl}
@@ -239,22 +255,9 @@ export default function ModelProviderSettings({
           )}
           profile={profile}
           onSelect={(model) => updateMany({ model })}
-          onRefresh={() => void testConnection()}
           loading={connection.kind === "loading"}
         />
       </fieldset>
-      <ProviderSettingsActions
-        saving={saving || credentialBlocked}
-        hasKey={providerNeedsKey(profile) && Boolean(hasStoredKey || apiKey)}
-        testing={connection.kind === "loading"}
-        onSave={() => void save()}
-        onClear={() => void clearKey()}
-        onTest={() => void testConnection()}
-        onCancel={() => {
-          requestRef.current?.abort("user");
-          setConnection({ kind: "loading", message: "正在取消连接测试…" });
-        }}
-      />
     </form>
   );
 }

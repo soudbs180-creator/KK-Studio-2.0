@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createAgentApi } from "../../features/agent/agentApi.ts";
 import { agentConnection } from "../../features/agent/agentConnection.ts";
+import { confirmAction } from "../../runtime/confirmAction";
 import useSettingsBusy from "./useSettingsBusy";
 
 type ConnectionState =
@@ -113,15 +114,26 @@ export default function CodeBuddyConnectionSettings({
   async function save() {
     if (!configReady || busy) return;
     const revision = connection.connectionRevision;
+    const current = () =>
+      mounted.current &&
+      agentConnection.getState().status === "connected" &&
+      agentConnection.getState().connectionRevision === revision;
     setBusy(true);
     setError("");
     try {
+      if (!cliPath.trim() && savedPath) {
+        const confirmed = await confirmAction(
+          "确认移除已保存的 CodeBuddy 路径？移除后 CodeBuddy 委派将不可用。",
+        );
+        if (!current()) return;
+        if (!confirmed) {
+          setCliPath(savedPath);
+          setStatus("saved");
+          return;
+        }
+      }
       const result = await api().saveCodebuddyConfig(cliPath.trim());
-      if (
-        !mounted.current ||
-        agentConnection.getState().connectionRevision !== revision
-      )
-        return;
+      if (!current()) return;
       setCliPath(result.cliPath);
       setSavedPath(result.cliPath);
       setStatus(result.configured ? "saved" : "empty");
@@ -132,20 +144,12 @@ export default function CodeBuddyConnectionSettings({
           : "CodeBuddy 路径已移除。",
       );
     } catch (cause) {
-      if (
-        !mounted.current ||
-        agentConnection.getState().connectionRevision !== revision
-      )
-        return;
+      if (!current()) return;
       setError(
         cause instanceof Error ? cause.message : "保存 CodeBuddy 路径失败",
       );
     } finally {
-      if (
-        mounted.current &&
-        agentConnection.getState().connectionRevision === revision
-      )
-        setBusy(false);
+      if (current()) setBusy(false);
     }
   }
 

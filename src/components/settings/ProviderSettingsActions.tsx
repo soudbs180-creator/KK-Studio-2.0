@@ -23,7 +23,7 @@ export default function ProviderSettingsActions({
         onClick={onSave}
         disabled={saving}
       >
-        保存
+        保存连接
       </button>
       {hasKey && (
         <button
@@ -50,7 +50,7 @@ export default function ProviderSettingsActions({
           onClick={onTest}
           disabled={saving}
         >
-          测试连接
+          测试连接并刷新模型
         </button>
       )}
     </div>

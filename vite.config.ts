@@ -1,4 +1,5 @@
 import { realpathSync } from "node:fs";
+import { resolve } from "node:path";
 import { defineConfig, searchForWorkspaceRoot } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -50,7 +51,7 @@ export default defineConfig({
     watch: {
       ignored: [
         "**/.tmp/**",
-        "**/.worktrees/**",
+        resolve(".worktrees").replaceAll("\\", "/") + "/**",
         "**/node_modules/**",
         "**/src-tauri/**",
         "**/*.agent_infra_tmp_*",

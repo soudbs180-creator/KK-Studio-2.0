@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   catalogForConnection,
   saveModelCatalog,
@@ -23,13 +23,11 @@ import ImageModelCapabilityFields, {
 export default function ProviderModelCatalog({
   profile,
   onSelect,
-  onRefresh,
   loading,
   connection: selectedConnection,
 }: {
   profile: ModelProviderProfile;
   onSelect: (id: string) => void;
-  onRefresh: () => void;
   loading: boolean;
   connection?: ProviderConnection;
 }) {
@@ -43,8 +41,9 @@ export default function ProviderModelCatalog({
       ? newModelProfileConnection(profile)
       : connectionFromModelProfile(profile));
   const [, setRevision] = useState(0);
-  const models = catalogForConnection(connection);
-  const selected = models.find((model) => model.id === profile.model);
+  const modelId = profile.model.trim();
+  const models = catalogForConnection({ ...connection, model: modelId });
+  const selected = models.find((model) => model.id === modelId);
   const [kind, setKind] = useState<ModelKind>(selected?.kind ?? "unknown");
   const [sizes, setSizes] = useState(selected?.sizes?.join(", ") ?? "");
   const [family, setFamily] = useState(selected?.family ?? "");
@@ -54,6 +53,23 @@ export default function ProviderModelCatalog({
     imageCapabilityDraft(selected?.image),
   );
   const [status, setStatus] = useState("");
+  const currentDraft = { kind, sizes, family, variant, aliases, image };
+  const draftKey = JSON.stringify([
+    connection.id,
+    connection.baseUrl,
+    connection.credentialRef,
+    connection.protocol,
+    connection.authMode,
+    modelId,
+  ]);
+  const previousKey = useRef(draftKey);
+  const drafts = useRef(
+    new Map<
+      string,
+      { draft: typeof currentDraft; loaded: typeof currentDraft }
+    >(),
+  );
+  const loadedDraft = useRef(currentDraft);
   useEffect(() => {
     const update = () => setRevision((value) => value + 1);
     window.addEventListener("kk:model-provider-changed", update);
@@ -61,18 +77,39 @@ export default function ProviderModelCatalog({
       window.removeEventListener("kk:model-provider-changed", update);
   }, []);
   useEffect(() => {
-    setKind(selected?.kind ?? "unknown");
-    setSizes(selected?.sizes?.join(", ") ?? "");
-    setFamily(selected?.family ?? "");
-    setVariant(selected?.variant ?? "");
-    setAliases(selected?.aliases?.join(", ") ?? "");
-    setImage(imageCapabilityDraft(selected?.image));
+    const switching = previousKey.current !== draftKey;
+    if (switching)
+      drafts.current.set(previousKey.current, {
+        draft: currentDraft,
+        loaded: loadedDraft.current,
+      });
+    else if (
+      JSON.stringify(currentDraft) !== JSON.stringify(loadedDraft.current)
+    )
+      return;
+    const stored = switching ? drafts.current.get(draftKey) : undefined;
+    const cached =
+      stored && JSON.stringify(stored.draft) !== JSON.stringify(stored.loaded)
+        ? stored
+        : undefined;
+    const next = cached?.draft ?? {
+      kind: selected?.kind ?? "unknown",
+      sizes: selected?.sizes?.join(", ") ?? "",
+      family: selected?.family ?? "",
+      variant: selected?.variant ?? "",
+      aliases: selected?.aliases?.join(", ") ?? "",
+      image: imageCapabilityDraft(selected?.image),
+    };
+    setKind(next.kind);
+    setSizes(next.sizes);
+    setFamily(next.family);
+    setVariant(next.variant);
+    setAliases(next.aliases);
+    setImage(next.image);
+    loadedDraft.current = cached?.loaded ?? next;
+    previousKey.current = draftKey;
   }, [
-    connection.id,
-    connection.credentialRef,
-    profile.model,
-    profile.baseUrl,
-    profile.name,
+    draftKey,
     selected?.kind,
     selected?.sizes?.join(", "),
     selected?.family,
@@ -112,7 +149,7 @@ export default function ProviderModelCatalog({
       return;
     }
     const model = {
-      id: profile.model,
+      id: valid.data.model,
       family: family.trim() || undefined,
       variant: variant.trim() || undefined,
       aliases: aliases
@@ -130,6 +167,7 @@ export default function ProviderModelCatalog({
         [...models.filter((item) => item.id !== model.id), model],
         true,
       );
+      loadedDraft.current = currentDraft;
       setStatus("已保存此模型的参数声明；生成结果仍以服务返回为准。");
     } catch {
       setStatus("目录保存失败，请检查本地存储。");
@@ -141,14 +179,11 @@ export default function ProviderModelCatalog({
       {selectionRequired && (
         <p role="status">请先在已登记连接中选择账号，再编辑或刷新模型能力。</p>
       )}
-      <button type="button" disabled={loading} onClick={onRefresh}>
-        {loading ? "刷新中…" : "刷新模型列表"}
-      </button>
       <label>
         已发现的模型
         <select
           aria-label="已发现的模型"
-          value={profile.model}
+          value={modelId}
           onChange={(event) => onSelect(event.target.value)}
         >
           <option value="">选择模型</option>
@@ -241,7 +276,7 @@ export default function ProviderModelCatalog({
           ID，不根据后缀拼造参数或不存在的型号。
         </p>
       </details>
-      <button type="button" disabled={!profile.model || loading} onClick={save}>
+      <button type="button" disabled={!modelId || loading} onClick={save}>
         保存此模型能力
       </button>
       {status && <p role="status">{status}</p>}

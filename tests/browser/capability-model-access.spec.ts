@@ -181,7 +181,9 @@ test("获取模型目录不会验证生成能力或改写保存配置", async ({
   await profile
     .getByLabel("API Key", { exact: true })
     .fill("fixture-discovery-key");
-  await profile.getByRole("button", { name: "测试连接", exact: true }).click();
+  await profile
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect
     .poll(() =>
       page.evaluate(() =>
@@ -281,7 +283,7 @@ test("官方与中转站切换保留已有连接的 opaque 引用、保存身份
       .getByRole("listitem")
       .filter({ hasText: "Existing opaque account" }),
   ).toContainText("正在编辑");
-  await profile.getByRole("button", { name: "保存", exact: true }).click();
+  await profile.getByRole("button", { name: "保存连接", exact: true }).click();
   await expect(
     profile.getByText(
       "连接信息已保存。API Key 不会写入浏览器存储或项目快照。",
@@ -298,7 +300,9 @@ test("官方与中转站切换保留已有连接的 opaque 引用、保存身份
     credentialRef: opaqueConnection.credentialRef,
   });
   await profile.getByLabel("API Key", { exact: true }).fill("");
-  await profile.getByRole("button", { name: "测试连接", exact: true }).click();
+  await profile
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect.poll(() => authorization).toBe("Bearer fixture-opaque-key");
   await expect(
     profile.getByText(/已获取 1 个模型；生成能力仍需实际验证/),
@@ -308,7 +312,9 @@ test("官方与中转站切换保留已有连接的 opaque 引用、保存身份
     profile.getByText("已清除当前供应商的密钥。", { exact: true }),
   ).toBeVisible();
   const requestsBeforeMissingKey = requests;
-  await profile.getByRole("button", { name: "测试连接", exact: true }).click();
+  await profile
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect(profile).toContainText("原绑定连接缺少密钥，请配置后重试。");
   expect(requests).toBe(requestsBeforeMissingKey);
   expect(authorization).toBe("Bearer fixture-opaque-key");
@@ -316,7 +322,7 @@ test("官方与中转站切换保留已有连接的 opaque 引用、保存身份
     "fixture-opaque-key",
   );
   await profile.getByLabel("模型名称", { exact: true }).fill("gpt-6-astra");
-  await profile.getByRole("button", { name: "保存", exact: true }).click();
+  await profile.getByRole("button", { name: "保存连接", exact: true }).click();
   await expect
     .poll(() =>
       page.evaluate(
@@ -373,7 +379,9 @@ test("同地址同模型多账号重开设置保留所选身份，保存和清�
   };
   const saveKey = async (value: string) => {
     await profile.getByLabel("API Key", { exact: true }).fill(value);
-    await profile.getByRole("button", { name: "保存", exact: true }).click();
+    await profile
+      .getByRole("button", { name: "保存连接", exact: true })
+      .click();
     await expect(
       profile.getByText(
         "连接信息已保存。API Key 不会写入浏览器存储或项目快照。",
@@ -384,7 +392,7 @@ test("同地址同模型多账号重开设置保留所选身份，保存和清�
   const testKey = async (value: string) => {
     await profile.getByLabel("API Key", { exact: true }).fill("");
     await profile
-      .getByRole("button", { name: "测试连接", exact: true })
+      .getByRole("button", { name: "测试连接并刷新模型", exact: true })
       .click();
     await expect.poll(() => authorization).toBe(value);
     await expect(
@@ -426,7 +434,9 @@ test("同地址同模型多账号重开设置保留所选身份，保存和清�
     profile.getByText("已清除当前供应商的密钥。", { exact: true }),
   ).toBeVisible();
   const requestsBeforeMissingKey = requests;
-  await profile.getByRole("button", { name: "测试连接", exact: true }).click();
+  await profile
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect(profile).toContainText("原绑定连接缺少密钥，请配置后重试。");
   expect(requests).toBe(requestsBeforeMissingKey);
   expect(authorization).toBe("Bearer fixture-account-b-updated");
@@ -444,7 +454,7 @@ test("同地址同模型多账号重开设置保留所选身份，保存和清�
   await profile
     .getByLabel("API Key", { exact: true })
     .fill("fixture-must-not-replace-identity");
-  await profile.getByRole("button", { name: "保存", exact: true }).click();
+  await profile.getByRole("button", { name: "保存连接", exact: true }).click();
   await expect(profile).toContainText("此配置未明确选择账号");
   const saved = await page.evaluate(
     (key) => JSON.parse(localStorage.getItem(key) ?? "[]"),
@@ -531,7 +541,7 @@ test("旧配置同地址多账号没有明确身份时，保存测试清除均�
   await profile
     .getByLabel("API Key", { exact: true })
     .fill("fixture-ambiguous-key");
-  for (const action of ["保存", "测试连接", "清除密钥"]) {
+  for (const action of ["保存连接", "测试连接并刷新模型", "清除密钥"]) {
     await profile.getByRole("button", { name: action, exact: true }).click();
     await expect(profile).toContainText("此配置未明确选择账号");
   }
@@ -560,7 +570,7 @@ test("旧配置同地址多账号没有明确身份时，保存测试清除均�
     .getByRole("listitem")
     .filter({ hasText: opaqueConnection.displayName })
     .click();
-  await profile.getByRole("button", { name: "保存", exact: true }).click();
+  await profile.getByRole("button", { name: "保存连接", exact: true }).click();
   await expect(profile).toContainText("连接信息已保存");
   expect(
     await page.evaluate(
@@ -613,7 +623,9 @@ test("API 测试锁定切页，取消后离开且迟到目录不覆盖草稿", a
   await profile
     .getByLabel("API Key", { exact: true })
     .fill("fixture-delayed-key");
-  await profile.getByRole("button", { name: "测试连接", exact: true }).click();
+  await profile
+    .getByRole("button", { name: "测试连接并刷新模型", exact: true })
+    .click();
   await expect.poll(() => received).toBe(true);
   try {
     const cli = dialog.getByRole("button", { name: "CLI 账号", exact: true });
@@ -664,7 +676,7 @@ test("原生凭据保存等待期间禁止切换接入方式，完成后恢复�
     .getByRole("button", { name: "API Key（官方）", exact: true })
     .click();
   const profile = dialog.getByRole("region", { name: "官方 API Key 配置" });
-  const save = profile.getByRole("button", { name: "保存", exact: true });
+  const save = profile.getByRole("button", { name: "保存连接", exact: true });
   // Finish the initial production credential read before installing native IO.
   await expect(save).toBeEnabled();
   await page.evaluate(() => {

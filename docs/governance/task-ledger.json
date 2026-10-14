@@ -5784,5 +5784,56 @@
     "displayStatus": "已完成",
     "nextAction": "回读最终纯文档审查与current-release产物哈希；真人账号/付费Provider、Hosted、签名安装器、日常资料与Native Mobile由既有开放任务分别继续。",
     "verificationResult": "PASS"
+  },
+  {
+    "id": "TASK-SETTINGS-LATEST-20261015",
+    "title": "在最新 UI 修复设置溢出、提示遮挡与配置保存风险",
+    "goal": "使用最新绿色 UI 完成已授权设置修复，保留原配置并验证当前加载来源",
+    "scope": "最新设置外壳与模型接入布局/交互、长文案与短屏可达性、提示和保存失败保护、worktree Vite源码监听、最新geometry回归及当前Browser/Desktop证据",
+    "acceptance": [
+      "从c1fae190最新UI承接，当前script/runtime/bundle和版本身份可核对，不用旧UI或2.1.24验收代填",
+      "保留1280/240/192、绿色和手机分级导航，长文案与窄/短屏操作及提示可达",
+      "模型接入busy/取消/错误/回焦一致，保存失败保留已有配置与credentialRef",
+      "当前worktree源码变更可刷新，latest geometry guard防止误加载旧UI",
+      "当前相关回归/完整门禁、Web与Desktop及独立SHA审查有证据，primary并发dirty/index与资料保留"
+    ],
+    "dependencies": ["TASK-223-ACTIONS-20261014"],
+    "owner": "root",
+    "ownerRole": "repository-maintainer",
+    "branch": "fix/TASK-SETTINGS-LATEST-20261015",
+    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "affectedModules": [
+      "src/components/settings",
+      "src/features/creation",
+      "src/domain/settings.ts",
+      "vite.config.ts",
+      "config/platform-versions.json",
+      "tests/browser",
+      "tests/unit/codebuddyConnectionSettings.test.ts",
+      "docs"
+    ],
+    "status": "IN_PROGRESS",
+    "displayStatus": "进行中",
+    "priority": "P1",
+    "priorityRationale": "用户发现误启动旧UI；设置溢出、遮挡与保存风险需要在最新来源修复并保留原配置",
+    "risk": "high",
+    "reviewRequired": true,
+    "platforms": ["Desktop", "Web"],
+    "evidence": [
+      "docs/changes/2026-10-15-settings-latest-ui/intent.md",
+      "docs/changes/2026-10-15-settings-latest-ui/spec.md",
+      "docs/changes/2026-10-15-settings-latest-ui/plan.md",
+      "docs/changes/2026-10-15-settings-latest-ui/verification.md",
+      "docs/changes/2026-10-15-settings-latest-ui/review.md"
+    ],
+    "requirementRefs": ["ledger:TASK-SETTINGS-LATEST-20261015"],
+    "featureIds": ["FEAT-022"],
+    "notes": "用户在原设置修复授权后纠正旧UI启动。primary51fccfc7+修复428a3a2d为错基线历史；本次承接c1fae190 / Desktop/Web2.1.24，版本已递增2.1.25。保留配置身份、primary dirty/index与原资料；Mobile2.1.1仍规划。",
+    "openQuestions": "本次源码、运行/配置保留、Desktop构建、独立SHA审查与用户视觉结果待新证据；真人账号/付费Provider/Hosted/签名和实体手机分别验收。",
+    "lastVerified": "2026-10-15",
+    "updated": "2026-10-15",
+    "verification": "基线HEAD c1fae190、Desktop/Web2.1.24和settings tokens1280/240/192已直接回读；当前配置版本已递增2.1.25。已发现Vite watch对**/.worktrees/**过宽忽略使worktree源码不刷新，限定内部resolve('.worktrees')修复与latest geometry回归由root执行。实际最新UI、保存保护、完整回归/当前Desktop与独立SHA审查尚未有最终证据，保持IN_PROGRESS；旧51fcc+428a及已有2.1.24验证仅保留历史范围。",
+    "nextAction": "在最新UI实际失败基础上完成最小修复，确认worktree源码刷新与geometry guard，冻结当前SHA后取得浏览器/保存/Desktop和独立审查证据并同步本包。",
+    "verificationResult": "NOT_VERIFIED"
   }
 ]

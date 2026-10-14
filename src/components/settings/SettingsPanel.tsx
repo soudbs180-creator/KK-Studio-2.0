@@ -115,6 +115,9 @@ export default function SettingsPanel({
   const [preferences, setPreferences] = useState(initial.preferences);
   const [resolved] = useState(() => resolveInitialSection(initialSection));
   const [section, setSection] = useState<SettingsSection>(resolved.section);
+  const [modelsMounted, setModelsMounted] = useState(
+    resolved.section === "providers",
+  );
   const [extensionsTab, setExtensionsTab] = useState<ExtensionsTab | undefined>(
     resolved.extensionsTab,
   );
@@ -202,6 +205,7 @@ export default function SettingsPanel({
                       if (busy) return;
                       setNavigation("detail");
                       setSection(item.id);
+                      if (item.id === "providers") setModelsMounted(true);
                       if (item.id !== "extensions") setExtensionsTab(undefined);
                       setFeedback({ message: "", error: false });
                     }}
@@ -225,21 +229,28 @@ export default function SettingsPanel({
           aria-labelledby="settings-section-title"
           tabIndex={0}
         >
-          {section === "general" ? (
+          {section === "general" && (
             <GeneralSettings
               preferences={preferences}
               onChange={updatePreferences}
             />
-          ) : (
+          )}
+          {[
+            ...(modelsMounted ? ["providers" as const] : []),
+            ...(section !== "general" && section !== "providers"
+              ? [section]
+              : []),
+          ].map((item) => (
             <SettingsSections
-              key={section}
-              section={section}
+              key={item}
+              section={item}
+              active={item === section}
               saveState={saveState}
               revision={revision}
               projects={projects}
               preferences={preferences}
               registry={registry}
-              extensionsTab={extensionsTab}
+              extensionsTab={item === "extensions" ? extensionsTab : undefined}
               onReset={() =>
                 updatePreferences(
                   { ...DEFAULT_SETTINGS },
@@ -248,7 +259,7 @@ export default function SettingsPanel({
               }
               onFeedback={(message) => setFeedback({ message, error: false })}
             />
-          )}
+          ))}
         </main>
         <button
           type="button"

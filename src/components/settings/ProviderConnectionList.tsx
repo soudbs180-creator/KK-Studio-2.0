@@ -42,7 +42,9 @@ export default function ProviderConnectionList({
               title={connection.baseUrl ?? connection.displayName}
             >
               <span>
-                <strong>{connection.displayName}</strong>
+                <strong title={connection.displayName}>
+                  {connection.displayName}
+                </strong>
                 <small>{connection.baseUrl ?? "本地连接"}</small>
               </span>
               <em>

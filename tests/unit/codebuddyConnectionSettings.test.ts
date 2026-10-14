@@ -13,6 +13,7 @@ async function harness(loadFails = false) {
     feedback: string[] = [],
     saves: string[] = [];
   let cursor = 0;
+  let confirmation: ((confirmed: boolean) => void) | undefined;
   let pending:
     { signal: AbortSignal; resolve: (value: unknown) => void } | undefined;
   const connection = {
@@ -80,6 +81,13 @@ async function harness(loadFails = false) {
         if (name === "react") return hooks;
         if (name === "react/jsx-runtime") return { jsx, jsxs: jsx };
         if (name.includes("useSettingsBusy")) return { default: () => {} };
+        if (name.includes("confirmAction"))
+          return {
+            confirmAction: () =>
+              new Promise<boolean>((resolve) => {
+                confirmation = resolve;
+              }),
+          };
         if (name.includes("agentConnection"))
           return {
             agentConnection: {
@@ -151,6 +159,18 @@ async function harness(loadFails = false) {
     connection,
     feedback,
     saves,
+    confirm(confirmed: boolean) {
+      assert.ok(confirmation, "removal confirmation must be pending");
+      confirmation(confirmed);
+      confirmation = undefined;
+    },
+    changePath(value: string) {
+      const input = nodes(view).find(
+        (element) => element.props?.id === "codebuddy-cli-path",
+      )!;
+      (input.props.onChange as (event: unknown) => void)({ target: { value } });
+      render();
+    },
     get pending() {
       return pending!;
     },
@@ -214,4 +234,75 @@ test("closing CodeBuddy settings aborts probe and rejects a late verified result
   for (let i = 0; i < 12; i++) await Promise.resolve();
   assert.deepEqual(h.feedback, []);
   assert.deepEqual(h.saves, []);
+});
+
+test("cancelling removal keeps the saved CodeBuddy path and sends no write", async () => {
+  const h = await harness();
+  await h.settle();
+  h.changePath("   ");
+  h.button("保存 CodeBuddy 路径").onClick();
+  h.render();
+  assert.deepEqual(h.saves, []);
+  assert.equal(h.button("保存 CodeBuddy 路径").disabled, true);
+  h.confirm(false);
+  await h.settle();
+  assert.deepEqual(h.saves, []);
+  assert.equal(h.path, "C:\\complete\\codebuddy.js");
+  assert.match(h.content, /已保存，尚未测试/);
+  assert.equal(h.button("保存 CodeBuddy 路径").disabled, false);
+});
+
+test("confirming removal sends one empty CodeBuddy path only after confirmation", async () => {
+  const h = await harness();
+  await h.settle();
+  h.changePath("");
+  h.button("保存 CodeBuddy 路径").onClick();
+  h.render();
+  assert.deepEqual(h.saves, []);
+  h.button("保存 CodeBuddy 路径").onClick();
+  h.confirm(true);
+  await h.settle();
+  assert.deepEqual(h.saves, [""]);
+  assert.equal(h.path, "");
+  assert.match(h.content, /尚未配置/);
+});
+
+test("a late CodeBuddy removal confirmation cannot write after connection replacement", async () => {
+  const h = await harness();
+  await h.settle();
+  h.changePath("");
+  h.button("保存 CodeBuddy 路径").onClick();
+  h.render();
+  assert.deepEqual(h.saves, []);
+  h.connection.connectionRevision++;
+  await h.settle();
+  await h.settle();
+  h.confirm(true);
+  await h.settle();
+  assert.deepEqual(h.saves, []);
+  assert.equal(h.path, "C:\\complete\\codebuddy.js");
+  assert.equal(h.button("保存 CodeBuddy 路径").disabled, false);
+});
+
+test("saving a replacement CodeBuddy path proceeds without removal confirmation", async () => {
+  const h = await harness();
+  await h.settle();
+  h.changePath(" C:/replacement/codebuddy.js ");
+  h.button("保存 CodeBuddy 路径").onClick();
+  await h.settle();
+  assert.deepEqual(h.saves, ["C:/replacement/codebuddy.js"]);
+  assert.equal(h.path, "C:/replacement/codebuddy.js");
+});
+
+test("a CodeBuddy removal confirmation cannot write after settings unmount", async () => {
+  const h = await harness();
+  await h.settle();
+  h.changePath("");
+  h.button("保存 CodeBuddy 路径").onClick();
+  h.render();
+  h.unmount();
+  h.confirm(true);
+  for (let i = 0; i < 12; i++) await Promise.resolve();
+  assert.deepEqual(h.saves, []);
+  assert.deepEqual(h.feedback, []);
 });

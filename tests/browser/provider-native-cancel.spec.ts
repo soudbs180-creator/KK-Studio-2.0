@@ -16,7 +16,7 @@ async function nativeCancellationFixture(page: Page) {
     .getByLabel("API Key", { exact: true })
     .fill("synthetic-cancel-key");
   await expect(
-    form.getByRole("button", { name: "测试连接", exact: true }),
+    form.getByRole("button", { name: "测试连接并刷新模型", exact: true }),
   ).toBeEnabled();
   await page.evaluate(() => {
     const state = { calls: [] as string[], rejectCancel: () => {} };
@@ -38,7 +38,7 @@ async function nativeCancellationFixture(page: Page) {
       },
     });
   });
-  await form.getByRole("button", { name: "测试连接", exact: true }).click();
+  await form.getByRole("button", { name: "测试连接并刷新模型", exact: true }).click();
   const calls = () =>
     page.evaluate(
       () =>
@@ -74,7 +74,7 @@ test("取消按钮等待原生回执，失败时保留错误且不伪报已取�
   await expect.poll(calls).toContain("provider_models_release");
   await expect(form.getByLabel("接口地址", { exact: true })).toBeEnabled();
   await expect(
-    form.getByRole("button", { name: "保存", exact: true }),
+    form.getByRole("button", { name: "保存连接", exact: true }),
   ).toBeEnabled();
 });
 

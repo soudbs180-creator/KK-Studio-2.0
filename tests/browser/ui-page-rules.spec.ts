@@ -129,7 +129,7 @@ for (const width of [390, 1920]) {
       .getByRole("button", { name: "API Key（官方）", exact: true })
       .click();
     await page
-      .getByRole("button", { name: "保存", exact: true })
+      .getByRole("button", { name: "保存连接", exact: true })
       .scrollIntoViewIfNeeded();
     await inspectPage(
       page,

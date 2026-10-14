@@ -866,7 +866,7 @@ test("卡片 Codex 生图在刷新后归档并恢复来源；切 API 清除旧�
     await page.getByLabel("接口地址").fill(agent.url + "/v1");
     await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
     await page.getByLabel("模型名称").fill("image-fixture");
-    await page.getByRole("button", { name: "保存", exact: true }).click();
+    await page.getByRole("button", { name: "保存连接", exact: true }).click();
     await page.getByRole("button", { name: "关闭设置", exact: true }).click();
     await project(page);
     await page.getByRole("button", { name: "连接 Codex", exact: true }).click();
@@ -956,7 +956,7 @@ test("KK 输入框 → 命名 SSE → MCP → 已配置图片 API，重复工具
     await page.getByLabel("接口地址").fill(agent.url + "/v1");
     await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
     await page.getByLabel("模型名称").fill("image-fixture");
-    await page.getByRole("button", { name: "保存", exact: true }).click();
+    await page.getByRole("button", { name: "保存连接", exact: true }).click();
     await page.getByRole("button", { name: "关闭设置", exact: true }).click();
     await page.getByRole("button", { name: "连接 Codex", exact: true }).click();
     await expect(

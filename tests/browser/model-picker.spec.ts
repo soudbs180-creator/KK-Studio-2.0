@@ -43,8 +43,8 @@ test("模型前缀分组、参数选择和模糊搜索保留实际厂商 ID", as
   await page.getByLabel("接口地址").fill("https://variants.example/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("aurora-1-2k-low");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
-  await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
+  await page.getByRole("button", { name: "测试连接并刷新模型", exact: true }).click();
   await expect(page.getByLabel("已发现的模型")).toContainText(
     "aurora-1-4k-high",
   );
@@ -201,9 +201,9 @@ test("分级菜单展示同名 API 图片模型、未知用途原因并保留账
       .fill("https://" + name.toLowerCase() + ".example/v1");
     await page.getByLabel("API Key", { exact: true }).fill("fixture-" + name);
     await page.getByLabel("模型名称").fill("image-same");
-    await page.getByRole("button", { name: "保存", exact: true }).click();
+    await page.getByRole("button", { name: "保存连接", exact: true }).click();
     await page
-      .getByRole("button", { name: "刷新模型列表", exact: true })
+      .getByRole("button", { name: "测试连接并刷新模型", exact: true })
       .click();
     await expect(page.getByLabel("已发现的模型")).toContainText(
       "brand-new-model",
@@ -318,8 +318,8 @@ test("视频和音频模型明确保持禁用并可键盘阅读原因", async ({
   await page.getByLabel("接口地址").fill("https://media.example/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-media");
   await page.getByLabel("模型名称").fill("media-video");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
-  await page.getByRole("button", { name: "刷新模型列表", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
+  await page.getByRole("button", { name: "测试连接并刷新模型", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   await page.getByRole("button", { name: "项目库", exact: true }).click();
   await page.getByRole("button", { name: "新建项目", exact: true }).click();

@@ -324,6 +324,8 @@
 }
 .settings-ext-tabs {
   display: inline-flex;
+  max-width: 100%;
+  overflow-x: auto;
   align-self: flex-start;
   gap: 4px;
   padding: 4px;
@@ -672,8 +674,12 @@
   flex-direction: column;
   gap: 4px;
   min-width: 0;
+  max-width: 100%;
 }
 .settings-mcp-server-copy strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--settings-text);
   font-size: var(--ui-font-label);
   line-height: var(--ui-line-height-label);
@@ -1305,13 +1311,23 @@
 }
 .provider-connection-list [role="list"] {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 6px;
+}
+.provider-connection-editor {
+  display: grid;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-5);
+  border: 1px solid var(--settings-border);
+  border-radius: var(--ui-radius-card);
+  background: var(--bg-card);
 }
 .provider-connection-list button {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  min-width: 0;
   min-height: 44px;
   padding: 8px 10px;
   border: 1px solid var(--settings-border);
@@ -1327,8 +1343,14 @@
 }
 .provider-connection-list button span {
   display: grid;
+  flex: 1;
   min-width: 0;
   gap: 2px;
+}
+.provider-connection-list button strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .provider-connection-list button small {
   overflow: hidden;
@@ -1516,6 +1538,12 @@
   }
   .settings-memory-tools select {
     width: 78px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 800px) {
+  .settings-feedback {
+    bottom: 92px;
   }
 }
 

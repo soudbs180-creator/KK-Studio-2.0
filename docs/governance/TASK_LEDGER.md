@@ -142,6 +142,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROTOCOL-CLI-20261014 | 从2.1.21接通Provider协议和CLI实际执行，优化分端控件 | DONE | 已完成 | P1 | TASK-UI-CONSOLIDATE-20261014 | root | 从2.1.22继续真实供应商与真人CLI登录/安装、签名安装器、日常资料和人工视觉验收；最终产物回读工程外current-release哈希收据。 |
 | TASK-222-ACTIONS-20261014 | 2.1.22 CLI、设置与画布按钮真实行为和分端修复 | DONE | 已完成 | P1 | TASK-PROTOCOL-CLI-20261014 | root | 回读最终current-release与独立文档补审；从2.1.23继续真人CLI/供应商、签名安装器、日常资料与实体手机验收，沿用已确认手机布局。 |
 | TASK-223-ACTIONS-20261014 | 2.1.23 CLI、设置与画布按钮实际行为和分端修复 | DONE | 已完成 | P1 | TASK-222-ACTIONS-20261014 | root | 回读最终纯文档审查与current-release产物哈希；真人账号/付费Provider、Hosted、签名安装器、日常资料与Native Mobile由既有开放任务分别继续。 |
+| TASK-SETTINGS-LATEST-20261015 | 在最新 UI 修复设置溢出、提示遮挡与配置保存风险 | IN_PROGRESS | 进行中 | P1 | TASK-223-ACTIONS-20261014 | root | 在最新UI实际失败基础上完成最小修复，确认worktree源码刷新与geometry guard，冻结当前SHA后取得浏览器/保存/Desktop和独立审查证据并同步本包。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2728,5 +2729,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — Desktop/Web2.1.24产品源码58b5c07f34718769e10b76c89d510615bea2fefc，TASK-223本地授权范围DONE/PASS。完整九步verify退出0：Node1273pass/14既有skip，Agent199pass/2既有skip，Edge608全部首试/0flaky/0skip，UI242/0，development5步骤PASS；Rust163与fmt通过。最终源码核心/UI独立审查PASS，官方CLI20项、便携CLI20项，实际Tauri官方46项、同字节便携46项通过。新依赖0，入口gzip增加1221B<16384；生产运行时4280文件/519481278B。用户确认手机布局、主题/独立背景、存储identifier/路径、原件与primary dirty/index保留；旧135任务及37功能状态逐项不变。Native Mobile2.1.1仍PLANNED；Hosted、真人CLI账号/付费Provider、签名安装器、日常资料、实体手机与用户视觉验收分别开放。
 - Evidence: [docs/changes/2026-10-14-action-usability-223/intent.md](../../docs/changes/2026-10-14-action-usability-223/intent.md), [docs/changes/2026-10-14-action-usability-223/spec.md](../../docs/changes/2026-10-14-action-usability-223/spec.md), [docs/changes/2026-10-14-action-usability-223/plan.md](../../docs/changes/2026-10-14-action-usability-223/plan.md), [docs/changes/2026-10-14-action-usability-223/verification.md](../../docs/changes/2026-10-14-action-usability-223/verification.md), [docs/changes/2026-10-14-action-usability-223/review.md](../../docs/changes/2026-10-14-action-usability-223/review.md)
 - Next action: 回读最终纯文档审查与current-release产物哈希；真人账号/付费Provider、Hosted、签名安装器、日常资料与Native Mobile由既有开放任务分别继续。
+- Last verified: 2026-10-15
+- Updated: 2026-10-15
+
+## TASK-SETTINGS-LATEST-20261015 — 在最新 UI 修复设置溢出、提示遮挡与配置保存风险
+
+- Goal: 使用最新绿色 UI 完成已授权设置修复，保留原配置并验证当前加载来源
+- Scope: 最新设置外壳与模型接入布局/交互、长文案与短屏可达性、提示和保存失败保护、worktree Vite源码监听、最新geometry回归及当前Browser/Desktop证据
+- Display status: 进行中
+- Priority: P1 — 用户发现误启动旧UI；设置溢出、遮挡与保存风险需要在最新来源修复并保留原配置
+- Requirement refs: ledger:TASK-SETTINGS-LATEST-20261015
+- Feature IDs: FEAT-022
+- Owner role: repository-maintainer
+- Acceptance: 从c1fae190最新UI承接，当前script/runtime/bundle和版本身份可核对，不用旧UI或2.1.24验收代填; 保留1280/240/192、绿色和手机分级导航，长文案与窄/短屏操作及提示可达; 模型接入busy/取消/错误/回焦一致，保存失败保留已有配置与credentialRef; 当前worktree源码变更可刷新，latest geometry guard防止误加载旧UI; 当前相关回归/完整门禁、Web与Desktop及独立SHA审查有证据，primary并发dirty/index与资料保留
+- Branch: `fix/TASK-SETTINGS-LATEST-20261015`
+- Worktree: `D:/kk-studio/.worktrees/branch-consolidation-20261011`
+- Modules: src/components/settings, src/features/creation, src/domain/settings.ts, vite.config.ts, config/platform-versions.json, tests/browser, tests/unit/codebuddyConnectionSettings.test.ts, docs
+- Verification: NOT_VERIFIED — 基线HEAD c1fae190、Desktop/Web2.1.24和settings tokens1280/240/192已直接回读；当前配置版本已递增2.1.25。已发现Vite watch对**/.worktrees/**过宽忽略使worktree源码不刷新，限定内部resolve('.worktrees')修复与latest geometry回归由root执行。实际最新UI、保存保护、完整回归/当前Desktop与独立SHA审查尚未有最终证据，保持IN_PROGRESS；旧51fcc+428a及已有2.1.24验证仅保留历史范围。
+- Evidence: [docs/changes/2026-10-15-settings-latest-ui/intent.md](../../docs/changes/2026-10-15-settings-latest-ui/intent.md), [docs/changes/2026-10-15-settings-latest-ui/spec.md](../../docs/changes/2026-10-15-settings-latest-ui/spec.md), [docs/changes/2026-10-15-settings-latest-ui/plan.md](../../docs/changes/2026-10-15-settings-latest-ui/plan.md), [docs/changes/2026-10-15-settings-latest-ui/verification.md](../../docs/changes/2026-10-15-settings-latest-ui/verification.md), [docs/changes/2026-10-15-settings-latest-ui/review.md](../../docs/changes/2026-10-15-settings-latest-ui/review.md)
+- Next action: 在最新UI实际失败基础上完成最小修复，确认worktree源码刷新与geometry guard，冻结当前SHA后取得浏览器/保存/Desktop和独立审查证据并同步本包。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15

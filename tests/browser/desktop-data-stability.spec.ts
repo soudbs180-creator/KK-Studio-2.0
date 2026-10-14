@@ -499,7 +499,7 @@ test("画布参数不会在重开项目后回到默认值", async ({ page }) => 
     .click();
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByLabel("当前模型用途").selectOption("image");
   await page.getByLabel("支持的图片尺寸").fill("1024x1024, 1536x1024");
   await page

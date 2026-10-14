@@ -10,6 +10,10 @@
 
 ## 本轮恢复入口
 
+TASK-SETTINGS-LATEST-20261015：当前 IN_PROGRESS / NOT_VERIFIED。先读[意图](../changes/2026-10-15-settings-latest-ui/intent.md)、[计划](../changes/2026-10-15-settings-latest-ui/plan.md)、[验证](../changes/2026-10-15-settings-latest-ui/verification.md)和[审查](../changes/2026-10-15-settings-latest-ui/review.md)。只在最新UI `c1fae190618be3bb5a4e00208b8f4776ec8c0be5` 的 `fix/TASK-SETTINGS-LATEST-20261015` 工作树继续；基线Desktop/Web2.1.24，候选2.1.25，沿用绿色、1280/240/192和手机分级导航。primary51fccfc7+修复428a3a2d是误启动旧UI，任何旧验证或已有2.1.24验收不得代填当前结果。root继续已授权设置布局、提示与保存风险修复，保留原配置、primary dirty/index与资料身份；浏览器当前加载来源、配置恢复、Desktop工件和独立SHA review都要新证据。
+
+### 此前2.1.24交付基线（保留历史）
+
 TASK-223-ACTIONS-20261014：Desktop/Web2.1.24产品58b5c07f34718769e10b76c89d510615bea2fefc，本地授权范围DONE/PASS。先读[验证](../changes/2026-10-14-action-usability-223/verification.md)及[独立审查](../changes/2026-10-14-action-usability-223/review.md)，按最终收据回读实际官方/便携Native与CLI、输入哈希、最终纯文档和output；不复用64fc失败或旧0e的过期产物身份。保留primary dirty/index、原资料与全部历史失败；手机布局/主题/独立背景沿用确认版本，Native Mobile2.1.1、真人账号/付费Provider/Hosted/签名及人工验收仍分别开放。
 
 ### 此前2.1.23交付基线（保留历史）

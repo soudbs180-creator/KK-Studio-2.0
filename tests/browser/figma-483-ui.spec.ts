@@ -84,12 +84,12 @@ test("首页模型弹层选择真实 API 图片模型并保存连接身份", asy
   await page.getByLabel("接口地址").fill("https://models.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key");
   await page.getByLabel("模型名称").fill("image-test");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByLabel("提供商", { exact: true }).fill("星河 API B");
   await page.getByLabel("接口地址").fill("https://models-b.example.test/v1");
   await page.getByLabel("API Key", { exact: true }).fill("fixture-key-b");
   await page.getByLabel("模型名称").fill("image-second");
-  await page.getByRole("button", { name: "保存", exact: true }).click();
+  await page.getByRole("button", { name: "保存连接", exact: true }).click();
   await page.getByRole("button", { name: "关闭设置" }).click();
   await page.getByRole("button", { name: "模型", exact: true }).click();
   const menu = page.getByRole("menu", { name: "选择模型" });

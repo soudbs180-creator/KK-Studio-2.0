@@ -67,7 +67,7 @@ test("待提交凭据事务期间返回、分类、预设和关闭都不能卸�
 }) => {
   await openApi(page);
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
-  const save = dialog.getByRole("button", { name: "保存", exact: true });
+  const save = dialog.getByRole("button", { name: "保存连接", exact: true });
   await expect(save).toBeEnabled();
   await page.evaluate(() => {
     const state = window as Window & {

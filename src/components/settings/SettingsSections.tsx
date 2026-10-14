@@ -19,6 +19,7 @@ export type { SettingsSection } from "./SettingsSectionData";
 
 interface SettingsSectionsProps {
   section: SettingsSection;
+  active?: boolean;
   preferences: SettingsPreferences;
   onReset: () => void;
   onFeedback: (message: string) => void;
@@ -31,6 +32,7 @@ interface SettingsSectionsProps {
 
 export default function SettingsSections({
   section,
+  active: isActive = true,
   preferences,
   onReset,
   onFeedback,
@@ -62,8 +64,11 @@ export default function SettingsSections({
   const defaultExtensionTab = extensionsTab;
 
   return (
-    <>
-      <h2 className="settings-page-title" id="settings-section-title">
+    <div hidden={!isActive}>
+      <h2
+        className="settings-page-title"
+        id={isActive ? "settings-section-title" : undefined}
+      >
         {active?.label}
       </h2>
       {active?.description && (
@@ -80,7 +85,11 @@ export default function SettingsSections({
           />
         )}
         {!extensionsSection && (
-          <ConnectionSettings section={section} onFeedback={onFeedback} />
+          <ConnectionSettings
+            section={section}
+            active={isActive}
+            onFeedback={onFeedback}
+          />
         )}
 
         {section === "usage" && (
@@ -170,6 +179,6 @@ export default function SettingsSections({
           </>
         )}
       </div>
-    </>
+    </div>
   );
 }

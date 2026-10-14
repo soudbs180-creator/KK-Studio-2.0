@@ -2,8 +2,8 @@
 
 - 状态：PARTIAL
 - 领域：system
-- 最近更新：2026-10-14
-- 关联任务：TASK-UI-005、TASK-PROV-001、UI-004、TASK-DS-001、TASK-DS-002、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014
+- 最近更新：2026-10-15
+- 关联任务：TASK-UI-005、TASK-PROV-001、UI-004、TASK-DS-001、TASK-DS-002、TASK-UI-CONSOLIDATE-20261014、TASK-PROTOCOL-CLI-20261014、TASK-222-ACTIONS-20261014、TASK-223-ACTIONS-20261014、TASK-SETTINGS-LATEST-20261015
 
 ## 用户可见入口
 
@@ -16,6 +16,8 @@
 - 连接与凭据：`src/features/creation/providerRegistry.ts`、`providerCredentials.ts`、`src/domain/providerConnections.ts`、`src/domain/settings.ts`
 
 ## 测试与证据
+
+- 2026-10-15最新UI设置修复（IN_PROGRESS/NOT_VERIFIED）：从c1fae190 / Desktop/Web2.1.24承接；本次溢出、提示遮挡、模型布局/交互及保存风险须有新浏览器和配置恢复证据。primary51fccfc7+修复428a3a2d是错误UI基线，已有2.1.24验收仅保留原范围；不能代填本次2.1.25。状态继续PARTIAL，见[本次验证](../changes/2026-10-15-settings-latest-ui/verification.md)。
 
 - 2.1.24本地验证（TASK-223，本任务DONE/PASS；功能主状态保持）：MCP/插件与伴随服务父子操作采用独立busy所有权；未受理动作禁用，迟到检查的成功/失败不覆盖新连接，关闭/返回在操作完成后恢复；最终产品58b5c07f与完整验证、官方/便携回执见[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
 
@@ -50,7 +52,6 @@
 ## TASK-UI-005 更新
 
 Agent 连接状态/密码输入/会话凭据、平台与版本标识已对齐；独立代理尚未全局接线的边界明确。 见 [核对与验证](../changes/2026-09-22-ui-feature-parity/verification.md)。
-
 
 ## 默认 Agent 与 API 目录补充（2026-09-22）
 

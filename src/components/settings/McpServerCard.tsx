@@ -37,7 +37,7 @@ export default function McpServerCard({
     <article className="settings-mcp-server">
       <header>
         <div className="settings-mcp-server-copy">
-          <strong>{server.name}</strong>
+          <strong title={server.name}>{server.name}</strong>
           <code>{server.endpoint}</code>
           <span>
             {state === "connected"

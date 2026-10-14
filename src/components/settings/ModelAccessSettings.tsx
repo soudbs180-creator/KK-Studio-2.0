@@ -27,8 +27,10 @@ type Method = (typeof METHODS)[number][0];
 /** Connections belong here; specialist task roles belong to extensions. */
 export default function ModelAccessSettings({
   onFeedback,
+  active = true,
 }: {
   onFeedback: (message: string) => void;
+  active?: boolean;
 }) {
   const setBusy = useSettingsNavigationBusy();
   const [navigation, setNavigation] = useState<"methods" | "detail">("methods");
@@ -47,6 +49,7 @@ export default function ModelAccessSettings({
   const [codexCliBusy, setCodexCliBusy] = useState(false);
   const [nativeCliBusy, setNativeCliBusy] = useState(false);
   const [cliTool, setCliTool] = useState<"gemini" | "codebuddy">("gemini");
+  const [codeBuddyMounted, setCodeBuddyMounted] = useState(false);
   const [focusGoogle, setFocusGoogle] = useState(false);
   const busy =
     apiSaving ||
@@ -56,7 +59,7 @@ export default function ModelAccessSettings({
     nativeCliBusy ||
     agent.status === "connecting" ||
     lifecycle.pending;
-  useLayoutEffect(() => setBusy(busy), [busy, setBusy]);
+  useLayoutEffect(() => setBusy(active && busy), [active, busy, setBusy]);
   const accessRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     if (
@@ -126,7 +129,7 @@ export default function ModelAccessSettings({
         <AgentConnectionSettings onFeedback={onFeedback} />
         <NativeCliControls
           tool="codex"
-          active={method === "codex"}
+          active={active && method === "codex"}
           onBusyChange={setCodexCliBusy}
         />
       </section>
@@ -139,7 +142,7 @@ export default function ModelAccessSettings({
       >
         <ModelProviderSettings
           scope={method === "relay" ? "relay" : "official"}
-          active={method === "official" || method === "relay"}
+          active={active && (method === "official" || method === "relay")}
           onBusyChange={setApiSaving}
           onOpenGoogle={() => {
             if (busy) return;
@@ -167,21 +170,26 @@ export default function ModelAccessSettings({
               key={tool}
               aria-pressed={cliTool === tool}
               disabled={busy}
-              onClick={() => setCliTool(tool)}
+              onClick={() => {
+                setCliTool(tool);
+                if (tool === "codebuddy") setCodeBuddyMounted(true);
+              }}
             >
               {tool === "gemini" ? "Gemini CLI" : "CodeBuddy CLI"}
             </button>
           ))}
         </div>
-        {method === "cli" && cliTool === "codebuddy" && (
-          <CodeBuddyConnectionSettings
-            onFeedback={onFeedback}
-            onBusyChange={setCodeBuddyBusy}
-          />
+        {codeBuddyMounted && (
+          <div hidden={cliTool !== "codebuddy"}>
+            <CodeBuddyConnectionSettings
+              onFeedback={onFeedback}
+              onBusyChange={setCodeBuddyBusy}
+            />
+          </div>
         )}
         <NativeCliControls
           tool={cliTool}
-          active={method === "cli"}
+          active={active && method === "cli"}
           onBusyChange={setNativeCliBusy}
         />
       </section>
@@ -195,7 +203,9 @@ export default function ModelAccessSettings({
         <GoogleConnectionSettings
           mode={method === "cli" ? "cli" : "api-key"}
           active={
-            method === "official" || (method === "cli" && cliTool === "gemini")
+            active &&
+            (method === "official" ||
+              (method === "cli" && cliTool === "gemini"))
           }
           onBusyChange={setGoogleBusy}
           onFeedback={onFeedback}

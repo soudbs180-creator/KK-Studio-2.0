@@ -45,9 +45,10 @@ export default function ProviderProfileFields({
         <span>提供商</span>
         <input
           value={profile.name}
+          required
           maxLength={60}
           onChange={(event) => onUpdate("name", event.target.value)}
-          placeholder="选填：用于区分供应商"
+          placeholder="必填：用于区分供应商"
         />
       </label>
       <label className="settings-field">

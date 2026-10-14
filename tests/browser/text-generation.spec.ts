@@ -23,7 +23,7 @@ async function setup(
     await page.getByLabel("接口地址").fill(baseUrl);
     await page.getByLabel("API Key", { exact: true }).fill("fixture-text-key");
     await page.getByLabel("模型名称").fill("gpt-text-test");
-    await page.getByRole("button", { name: "保存", exact: true }).click();
+    await page.getByRole("button", { name: "保存连接", exact: true }).click();
     await page.getByRole("button", { name: "关闭设置", exact: true }).click();
   }
   await page.getByRole("button", { name: "项目库", exact: true }).click();

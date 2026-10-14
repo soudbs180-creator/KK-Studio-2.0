@@ -1068,9 +1068,10 @@
       "TASK-CCSWITCH-LEARN-20261014",
       "TASK-PROTOCOL-CLI-20261014",
       "TASK-222-ACTIONS-20261014",
-      "TASK-223-ACTIONS-20261014"
+      "TASK-223-ACTIONS-20261014",
+      "TASK-SETTINGS-LATEST-20261015"
     ],
-    "updated": "2026-10-14",
+    "updated": "2026-10-15",
     "platforms": ["web", "desktop"],
     "runtimeEvidence": [
       {
