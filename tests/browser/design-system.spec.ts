@@ -8,9 +8,9 @@ import {
   themeTokens,
 } from "../helpers/designSystem.ts";
 
-async function paint(locator: Locator) {
-  return locator.evaluate((element) => {
-    const style = getComputedStyle(element);
+async function paint(locator: Locator, pseudo: string | null = null) {
+  return locator.evaluate((element, pseudo) => {
+    const style = getComputedStyle(element, pseudo);
     return {
       color: style.color,
       bg: style.backgroundColor,
@@ -18,7 +18,7 @@ async function paint(locator: Locator) {
       radius: style.borderRadius,
       height: style.height,
     };
-  });
+  }, pseudo);
 }
 
 for (const theme of ["dark", "light"]) {
@@ -57,8 +57,19 @@ for (const theme of ["dark", "light"]) {
         bg: getComputedStyle(el.closest(".settings-panel")!).backgroundColor,
       }));
       expect(contrast(focus.outline, focus.bg)).toBeGreaterThanOrEqual(3);
-      const switchPaint = await paint(
-        dialog.getByRole("switch", { name: "浮岛布局", exact: true }),
+      const switchControl = dialog.getByRole("switch", {
+        name: "浮岛布局",
+        exact: true,
+      });
+      const switchPaint = await paint(switchControl, "::before");
+      expect(switchPaint.bg).toBe(
+        cssRgb(
+          expected(
+            (await switchControl.getAttribute("aria-checked")) === "true"
+              ? "--bg-accent"
+              : "--ui-control-off",
+          ),
+        ),
       );
       const thumbPaint = await paint(
         dialog

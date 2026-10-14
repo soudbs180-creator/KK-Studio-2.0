@@ -43,3 +43,7 @@
 - fresh生产Web和官方Tauri重建：实际启动命令、1421/1423或Tauri模式、route/import链、bundle身份、同状态DOM/截图与320/390/1099/1920px交互证据。
 - 最终base/head绑定的独立审查、提交、便携目录实测、源码/Web/ZIP白名单及hash/receipt回读；未取得前不更新为DONE或宣称最新产物已交付。
 - Hosted、真人CLI安装/登录、付费Provider、签名安装器、日常用户资料/实钥、实体手机与人工视觉验收继续保持各自未验证边界；本地fixture或旧2.1.22成功不关闭这些任务。
+
+## f3d2ab86完整检查与轨道测量纠正
+
+f3d2ab86的完整verify退出1：Node1248通过/14既有跳过、Agent180通过/2既有跳过、浏览器568通过/2失败，development因前步失败未执行。两个dark/light颜色规格仍测量按钮透明命中区；实际开关轨道已移到::before。保持对比度>=3及全部8种颜色，改测实际伪元素并新增轨道token配对断言。首次补测误用不存在的token而失败，改为已注册的--bg-accent/--ui-control-off；当前8/8首试通过。三次原件分别为verify-current、switch-track-measure-green和switch-track-measure-second-green日志/JSON，不能以最新结果回填旧失败。新clean提交完整verify、原生与产物仍须独立复验。
