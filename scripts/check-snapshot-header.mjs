@@ -11,6 +11,11 @@ import {
 } from "./governance/doc-index.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const containerRoot = process.env.KK_CONTAINER_ROOT;
+if (containerRoot !== undefined && !containerRoot.trim()) {
+  console.error("KK_CONTAINER_ROOT must not be blank.");
+  process.exit(1);
+}
 const issues = [];
 const lifecycleTargets = new Set(
   TEMPORAL_DOCUMENTS.flatMap(({ relativePath, documentId }) => [
@@ -24,13 +29,13 @@ const snapshotRoots = [
     relativePath,
     fullPath: path.join(root, relativePath),
   })),
-  ...CONTAINER_SNAPSHOT_DOCUMENTS.map((relativePath) => ({
-    relativePath: `../${relativePath}`,
-    fullPath: path.join(
-      process.env.KK_CONTAINER_ROOT ?? path.resolve(root, ".."),
-      relativePath.replace(/^\.\.\//, ""),
-    ),
-  })),
+  // External documents are outside Git; audit them only with an explicit root.
+  ...(containerRoot === undefined ? [] : CONTAINER_SNAPSHOT_DOCUMENTS).map(
+    (relativePath) => ({
+      relativePath: `../${relativePath}`,
+      fullPath: path.join(containerRoot, relativePath),
+    }),
+  ),
 ];
 
 for (const { relativePath, fullPath } of snapshotRoots) {
@@ -92,6 +97,10 @@ console.log(
       ...snapshotRoots.map(({ relativePath }) => relativePath),
       ...TEMPORAL_DOCUMENTS.map(({ relativePath }) => relativePath),
     ]).size
-  } unique documents, ${issues.length} violations.`,
+  } unique documents, ${issues.length} violations. Container snapshots: ${
+    containerRoot === undefined
+      ? "not configured"
+      : CONTAINER_SNAPSHOT_DOCUMENTS.length
+  }.`,
 );
 process.exitCode = issues.length ? 1 : 0;

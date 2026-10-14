@@ -9,3 +9,9 @@
 - 非范围：付费Provider/秘密配置、真实资料迁移、Mobile实现、发布签名/安装器、旧分支清理；保留primary并发dirty/index与原件，合成恢复数据只用于隔离验收。
 - 主线保全与Delivery：相对main新增15份历史包、75个五件套文件均存在；由本任务明确承接来源和当前组合验证，保留原任务branch/status和历史结论，不修改门禁或历史例外集。
 - 关联：[规格](spec.md)、[计划](plan.md)、[验证](verification.md)、[审查](review.md)、[覆盖矩阵](coverage.md)。
+
+
+Hosted承接更正：ready [PR59](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/59) 的精确f090独立aggregate review PASS，但quality verify在测试前因默认扫描仓库外快照FAIL；main694未合并。当前仅修复治理脚本可移植性及其测试，显式外部范围仍fail-closed，产品/Rust/Native字节不变；完整verify-4及新SHA Hosted待验，保持REVIEW/NOT_VERIFIED。
+
+
+最新修复本地状态：snapshot可移植性完整verify-5无KK_CONTAINER_ROOT exit0（Node1301/14skip、Agent199/2skip、Browser747、development四步），显式外部容器4/0亦PASS。产品/Rust/Native字节与版本2.1.27不变；最终修复提交HEAD、独立exact-SHA review与新Hosted/main仍待验，整体REVIEW/NOT_VERIFIED。

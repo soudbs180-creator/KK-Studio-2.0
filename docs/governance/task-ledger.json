@@ -5923,11 +5923,11 @@
       "docs/changes/2026-10-15-ui-details/verification.md",
       "docs/changes/2026-10-15-ui-full/coverage.md"
     ],
-    "verification": "本地验收PASS：source241f3050+test-only音频定位修正，verify-merged-3 exit0；Node1309=1295PASS14skip0fail，Agent201=199PASS2skip0fail，Browser747/747首试PASS（0flaky/skip/实际retry），lint/typecheck/UI242/0/format/build/development PASS。Native56/0errors与资源字节身份、owned关闭及Rust163/fmt/clientcheck PASS；source241/integration241精确复审PASS关闭三P2。104实际冲突/25自动差量逐项核验、21历史blob及15来源包/原任务branch状态保持，Delivery704/0仅结构。verify-1五失败、verify-2音频全局selector一失败及修正后严格播放2PASS、所有原始RED/无效夹具/JSON覆盖勘误保留。整体NOT_VERIFIED：最终doc/test-only提交head、Hosted/PR/main/post-main待实际回执，远端main仍694。",
+    "verification": "本地验收PASS：source241f3050+test-only音频定位修正，verify-merged-3 exit0；Node1309=1295PASS14skip0fail，Agent201=199PASS2skip0fail，Browser747/747首试PASS（0flaky/skip/实际retry），lint/typecheck/UI242/0/format/build/development PASS。Native56/0errors与资源字节身份、owned关闭及Rust163/fmt/clientcheck PASS；source241/integration241精确复审PASS关闭三P2。104实际冲突/25自动差量逐项核验、21历史blob及15来源包/原任务branch状态保持，Delivery704/0仅结构。verify-1五失败、verify-2音频全局selector一失败及修正后严格播放2PASS、所有原始RED/无效夹具/JSON覆盖勘误保留。整体NOT_VERIFIED：最终doc/test-only提交head、Hosted/PR/main/post-main待实际回执，远端main仍694。 f09051ec独立aggregate review PASS、ready PR59已建立；Gitguards push/PR与governance/delivery/deploy-linux PASS，但quality38641803780 verify在测试前snapshot检查因默认外部父目录依赖FAIL。root仅修scripts/tests，产品/Rust/Native源与字节不变；有效RED2FAIL3PASS、当前定向GREEN23PASS，完整无外部env的verify-4及新SHA复审/Hosted PENDING；main694未合并。 可移植性修复最终本地PASS：verify-merged-5无KK_CONTAINER_ROOT exit0，snapshot3/0、Node1315=1301PASS14skip0fail、Agent201=199PASS2skip0fail、Browser747PASS2.9m与development四步骤PASS；显式容器snapshot4/0 external1PASS。Nativeinspect仍current且EXE/input字节不变，产品/Rust/版本2.1.27未变。CLI24PASS/offline AI-evals PASS只属有限dirty source预检；verify4 lint失败及继承JSON NOT-RUN/f090Hosted失败保留。最终修复HEAD待提交并独立exact-SHA复审/新Hosted，整体仍NOT_VERIFIED。",
     "verificationResult": "NOT_VERIFIED",
     "updated": "2026-10-15",
     "displayStatus": "进行中",
-    "nextAction": "提交最终docs与test-only音频定位修正，绑定最终head补审及显式branch Delivery；当前本地verify-3/Native56/source241与integration241已PASS。按真实Hosted门禁完成普通PR合并，fetch复核main树/祖先与post-main验证。",
+    "nextAction": "提交snapshot可移植性修复最终HEAD（完整verify-5无外部env与显式外部检查均本地PASS），独立exact-SHA复审后推送PR59并回读新Hosted全部必需门禁；通过后普通合并，fetch复核main及post-main，main当前仍694。",
     "ownerRole": "repository-maintainer",
     "requirementRefs": [
       "ledger:TASK-UI-FULL-20261015"

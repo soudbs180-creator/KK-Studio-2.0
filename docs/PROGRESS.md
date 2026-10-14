@@ -7,6 +7,10 @@
 - 首轮完整verify：Node1295PASS/14skip、Agent199PASS/2skip、Browser740PASS/5FAIL/0flaky，lint/typecheck/UI242/0/format/build及单独Rust163/clientcheck通过；Browser失败使完整verify未通过，development未运行。正式source/integration review三P2均CHANGES_REQUIRED。
 - 241已修text纯prompt分类、坏audio媒体可用性和rightpan，并修首页16:9与旧screen/LG夹具；green-review-fixes-1真实14/14 PASS、0retry。首次五失败与text/audio等有效RED全部保留；当前官方隔离Native56checks/0errors与资源字节身份、owned正常关闭PASS，source241/integration241复审PASS关闭三P2；完整verify-3已exit0：Node1295/14skip、Agent199/2skip、Browser747/747首试、UI242/0及development PASS；verify-2音频selector夹具一失败与修正后严格播放2PASS保留。最终doc/test-only提交head复审及Hosted/PR/main/post-main仍待实际回执，任务转REVIEW、不提前DONE。primary254条dirty/index、109登记worktree与原件保留。[本轮验证](changes/2026-10-15-ui-full/verification.md) / [覆盖](changes/2026-10-15-ui-full/coverage.md)。
 
+- Hosted更正：ready [PR59](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/59)精确f090独立aggregate review PASS；Gitguards push/PR及governance/delivery/deploy-linux PASS，[quality38641803780](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38641803780) verify在产品测试前因默认扫描未入库外部snapshot FAIL。main694未合并。root仅修scripts/tests可移植性、显式外部范围仍fail-closed；有效RED2FAIL/3PASS与定向23PASS保留，完整无外部env的verify-4/新SHA Hosted待验，整体REVIEW/NOT_VERIFIED；产品/Rust/Native2.1.27源与字节未变。
+
+- 可移植性修复最终本地PASS：verify-5无KK_CONTAINER_ROOT exit0，snapshot3/0、Node1301/14skip、Agent199/2skip、Browser747（2.9m）、development四步；显式容器snapshot4/0亦PASS。Native仍current且input/EXE字节不变，版本2.1.27不变；CLI24与offline AI-evals仅有限dirty预检。verify-4 lint失败/继承JSON NOT-RUN和f090 Hosted失败保留，最终修复提交head/独立exact-SHA复审/新Hosted/PR59/main待验，整体REVIEW/NOT_VERIFIED。
+
 ## 2026-10-15 最新 UI 设置修复（本地DONE/PASS）
 
 TASK-SETTINGS-LATEST-20261015从正确最新UI c1fae190承接，Desktop/Web2.1.25保留1280/240/192、默认绿色与手机分级导航。设置长名称、提示避让、主动清空确认、能力/连接/分类草稿、型号trim与连接操作范围已修；原新版async owner锁、协议/CLI及配置身份保留。完整verify退出0：Node1278/14既有skip，Agent199/2既有skip，Edge629首试0flaky/0skip，UI242/0，development5步骤。当前Web和实际官方Tauri几何与bundle一致；EXEc9c3b4e/input2a09db54，Native20功能+11视觉+1中断阶段+5无秘密metadata通过，owned凭据/fixture清理完成。默认Desktop入口已切到最新工作区并实际启动；primary旧代码/并发dirty/index保留，只追加来源指针。独立c1→054源/测试审查PASS，无finding；本次所有失败与首轮Native旧fixture纠正留证。入口gzip增量0，无新依赖；Mobile/外部Provider/Hosted/签名与用户视觉接受另验。

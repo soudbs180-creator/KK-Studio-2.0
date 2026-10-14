@@ -1,7 +1,8 @@
 # Verification：全页面新UI收敛与主线集成
 
 - Task ID：TASK-UI-FULL-20261015；状态：REVIEW / NOT_VERIFIED（本地验收PASS，Hosted/PR/main待验）；日期2026-10-15（Asia/Shanghai）。
-- 当前source HEAD：241f3050124ad7773ced0b47a55629373177205e；本地main承接提交1653966f652390d93d490f90c0b7e9a9423f4026，修复checkpoint为0f506ae10e59d90222b399bbd54298849a8ca55f。实际fetch与API确认origin/main仍为694a00607f6f63de1b8c43d0ebb117adf5d34f67，本地任务分支承接不表示远端main已落地。首次完整verify与正式review绑定165，241产品源码加本轮test-only音频定位修正已完成verify-3本地验收；最终提交HEAD及Hosted/PR/main仍待完成。
+- 最新本地组合：f090已提交head加snapshot可移植性scripts/tests/docs修复，完整verify-5无KK_CONTAINER_ROOT退出0；最终修复提交SHA、精确独立复审与新Hosted待验，f090首次Hosted失败仍保留。
+- 产品source HEAD（本地验收身份）：241f3050124ad7773ced0b47a55629373177205e；本地main承接提交1653966f652390d93d490f90c0b7e9a9423f4026，修复checkpoint为0f506ae10e59d90222b399bbd54298849a8ca55f。实际fetch与API确认origin/main仍为694a00607f6f63de1b8c43d0ebb117adf5d34f67，本地任务分支承接不表示远端main已落地。首次完整verify与正式review绑定165，241产品源码加本轮test-only音频定位修正已完成verify-3本地验收；最终提交HEAD及Hosted/PR/main仍待完成。
 - 版本脚本已真实递增Desktop/Web2.1.27，Mobile2.1.1规划不变；165的ui:check已PASS。首次完整verify在Browser阶段失败；241完整verify-3已PASS；当前2.1.27隔离Native56checks与资源字节身份已通过，精确source/integration review241均PASS。历史2.1.26的635browser/38Native保持原SHA范围。
 - 独立数据/配置身份和原件保持；primary实际254条dirty、109登记worktree只读保留，未reset/clean/清理或改原index。
 
@@ -118,3 +119,20 @@ root正式回读source241与integration241 review均PASS，三项P2 CLOSED；这
 `verify-merged-3.log`实际exit0：Node1309总数中1295 PASS/14既有skip/0fail；Agent201中199 PASS/2既有skip/0fail；生产Browser747/747 PASS（2.7m，JSON expected747/unexpected0/flaky0/skipped0，无实际retry）；lint/typecheck/UI242/0/format/build全PASS。development收据sourceHead=241f3050124ad7773ced0b47a55629373177205e，四插件发现、编辑渲染、禁用重开启用、unsafe远端请求前拒绝四步骤PASS。
 
 verify-2/3重建后Nativeinspect仍current，EXE/input SHA与前述Native56检查收据一致；产品源码和Rust未变，原Rustfmt/163test/clientcheck及Native56收据继续适用。精确source241/integration241 review PASS不变。当前转REVIEW，本地授权范围验收PASS；整体verificationResult保持NOT_VERIFIED，远端main仍694。当前已提交241加dirty docs及test-only定位修正，最终HEAD由root提交后绑定文档/测试补审、显式branch Delivery、Hosted/PR/main与post-main；历史失败及所有前置无效勘误保留。
+
+
+## f090首次Hosted阻断与可移植性修复（verify-4待验）
+
+最终交付提交 `f09051ecbd2cfb92f7be834eb5a216c049dfcafc` 已建立ready的[PR59](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/59)，精确f090独立aggregate review PASS；Gitguards push/PR PASS，Hosted governance/delivery/deploy-linux PASS。但[quality38641803780](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38641803780)的verify在`snapshot:check`、产品测试之前FAIL：默认父目录扫描意外要求未入库的 `../docs/plans/KK-Studio-功能台账与四向推进-2026-10-09.md`。这不是产品播放/UI失败，也不是Hosted全绿；main仍694、PR未合并。旧verify-3/Native与独立review记录保留原范围，不能批准后续修复SHA。
+
+root正在修复scripts与CLI回归测试：默认只核对仓库内快照，仓库snapshots/current/lifecycle规则始终必需；仅显式`KK_CONTAINER_ROOT`扩展外部范围，显式空值、缺失或malformed仍fail-closed。产品/Rust/Native2.1.27的源与字节不变。`red-hosted-snapshot-portability.log`首轮因重复source夹具不适用，原件保留；有效`red-hosted-snapshot-portability-valid.log`为2 FAIL/3 PASS（含clean clone与显式blank），`green-hosted-snapshot-portability.log`当前23 PASS，仅定向证明。root仍在扩CLI不变量守卫，完整verify-4将不设外部环境变量运行，当前PENDING，未记PASS。新提交SHA、独立补审、新Hosted及main/post-main继续待验，任务维持REVIEW/整体NOT_VERIFIED。
+
+
+后续失败边界：`green-hosted-snapshot-portability-2.log`为24 PASS。完整verify-4在lint因新fixture的未使用解构变量停止，root改为clone env后delete，未抑制规则；本轮未执行Browser。误拷的前次报告已保留并改名`verify-merged-4-inherited-browser-results-NOT-RUN.json`，不作为新运行结果。当前完整verify-5在不设KK_CONTAINER_ROOT下运行，尚无最终回执，不记PASS；只有成功exit0后的对应新JSON才可记录。
+
+
+## 可移植性修复最终本地收据（verify-5 PASS，新SHA托管待验）
+
+`verify-merged-5.log`实际exit0，不设KK_CONTAINER_ROOT：snapshot3/0、external not configured；Node1315总数中1301 PASS/14既有skip/0fail，Agent201中199 PASS/2既有skip/0fail；生产Browser747 PASS（2.9m），对应新`verify-merged-5-browser-results.json`已存在；完整lint/typecheck/UI242/0/format/build及development四步骤PASS，development sourceHead为f090加dirty tooling。`snapshot-explicit-container.log`4/0、external1 PASS，显式配置外部容器亦验证。前轮verify-4的lint失败、未运行Browser及继承JSON NOT-RUN、f090 Hosted snapshot失败均保留，不覆盖为通过。
+
+`release-identity-after-portability.json`仍current，input79c3a8e5/EXE37a82390与原完整SHA一致；产品/Rust/Native源码字节不变，Desktop/Web2.1.27、Mobile2.1.1规划均不变，原Native56/Rust163/精确source241审查保持其范围。独立source dirty预检实际CLI24 PASS与offline AI-evals PASS只是本次有限离线范围，不是多模型或新提交exact-SHA批准。当前最新修复的完整本地验收PASS，整体REVIEW/NOT_VERIFIED；root待提交修复最终HEAD，再独立exact-SHA复审/推送/回读新Hosted，PR59未合并、main仍694。

@@ -13,7 +13,7 @@
 - [x] 已取得79条定向生产浏览器GREEN、三宽全部设置3条PASS；普通菜单最终2条GREEN及完整verify-3已通过。各轮失败/误设均保留。
 - [x] 审计主线squash差量并本地承接固定main694：checkpoint0f506ae1→merge1653966f；104冲突/25自动差量逐项核验、21历史blob保全，Delivery704/0；这不是远端main落地。
 - [x] Desktop/Web受影响版本递增，完整verify-3、Delivery704/0与新Desktop56项资源身份验收、source/integration241精确审查已PASS；最终文档/test-only head另补审。
-- [ ] 推送task分支并建PR，回读精确head托管必需检查、审查与线程；通过后普通合并。
+- [ ] 已推送f090并建立ready PR59、精确aggregate review PASS；首次Hosted verify因外部snapshot依赖FAIL。修复后完成新SHA独立补审、全部必需托管检查与线程，通过后普通合并。
 - [ ] fetch复核merge SHA/main实际树与post-merge检查，收尾账本/恢复入口；不更改primary并发文件或清理历史分支。
 
 风险重点：Google/重绘模型能力和配置身份、长型号/variant、浮动菜单、旧项目文字/媒体恢复、squash后主线治理保全、真实运行资源新鲜度。
@@ -26,3 +26,9 @@
 
 
 最终本地阶段已完成：verify-3 exit0 / Browser747首试全PASS / development PASS；Native56、Rust163及source/integration241审查PASS。verify-2音频全局selector夹具失败和修正后的实际播放2PASS保留；当前REVIEW/整体NOT_VERIFIED。最终doc/test-only提交head尚待root形成，远端两个步骤保持未勾选。
+
+
+- [x] 修复Hosted snapshot默认父目录扫描，保留仓库内必需规则和显式外部fail-closed；有效RED2FAIL/3PASS、当前定向GREEN23PASS均留存，扩CLI不变量后运行不设外部env的完整verify-4。当前PENDING，不由verify-3或23条定向通过代填。
+
+
+最新本地完成：verify-5不设KK_CONTAINER_ROOT exit0（snapshot3/0、Node1301/14skip、Agent199/2skip、Browser747、development四步），显式外部snapshot4/0亦PASS。Native仍current/input与EXE未变；CLI24/offline AI-evals为有限dirty预检。仅最终修复提交HEAD的独立exact-SHA review、推送后的新Hosted/PR59普通合并与post-main仍待完成，远端两步骤不勾选。

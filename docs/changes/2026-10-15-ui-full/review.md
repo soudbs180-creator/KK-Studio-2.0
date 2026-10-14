@@ -4,7 +4,7 @@
 - 固定main base `694a00607f6f63de1b8c43d0ebb117adf5d34f67`；本地承接head `1653966f652390d93d490f90c0b7e9a9423f4026` 的正式source及integration审查均为CHANGES_REQUIRED，发现text纯prompt误算正文、audio坏src假可用、rightpan三项P2；不是批准回执。
 - 当前source `241f3050124ad7773ced0b47a55629373177205e` 已最小修复上述三项及首页16:9，修正screen按钮旧40px断言和L/G空image夹具；14条定向真实Browser GREEN见[verification](verification.md)。当前官方隔离Native56checks PASS；root已回读精确source241与integration241正式review均PASS、三P2 CLOSED，165的CHANGES_REQUIRED保留。完整verify-3（747/747 Browser、development及全部本地步骤）已PASS，最终文档/test-only补丁head复审仍待完成，不把静态review当独立动态/Native/Hosted审查。
 - 本地main承接实际104冲突、25自动差量已逐项审计，21外移历史blob精确保全；两个新增renderer冲突补审main尺寸/标题/preview不变量后保留checkpoint。15份来源包由当前任务承接，原任务branch/status与能力状态保持；Delivery704 paths/0 violations只证结构。
-- 任务分支合入main基线不等于远端main落地；实际origin/main仍694。Hosted、普通PR/main与post-main尚未进行。最终review须绑定真实base/head、独立上下文与真实diff，核对新增用户空/内容/运行/失败状态矩阵及原失败记录。
+- 任务分支合入main基线不等于远端main落地；实际origin/main仍694。PR59已建立；f090首次Hosted部分通过但verify失败，main/post-main尚未进行，最新纠正见下。最终review须绑定真实base/head、独立上下文与真实diff，核对新增用户空/内容/运行/失败状态矩阵及原失败记录。
 - 关联：[Intent](intent.md)、[Spec](spec.md)、[Plan](plan.md)、[Verification](verification.md)、[Coverage](coverage.md)。
 
 ## checkpoint前的预检记录（历史范围）
@@ -21,3 +21,11 @@
 - 用户追加空card仅upload/内容card才toolbar及功能分类一致性验收后，旧79及checkpoint50 GREEN不再覆盖完整当前验收；root重新修复/回归前保持CHANGES REQUIRED（新增验收）与最终review NOT_VERIFIED。
 
 - 新状态RED为媒体6/6、retry4/4；model5失败中只有草稿1/Escape2是有效产品RED。重试源已按共享owner修复全部caller、34unit与owned lint/format通过，新caller运行GREEN/整体验证待root统一执行。全typecheck首轮在另一owner hasContent在途错误处exit1，不提前记PASS。
+
+
+## f090最终文档/test-only审查与Hosted失败后的边界
+
+精确 `f09051ecbd2cfb92f7be834eb5a216c049dfcafc` 独立aggregate review PASS，ready [PR59](https://github.com/soudbs180-creator/KK-Studio-2.0/pull/59)已存在；Gitguards push/PR、governance/delivery/deploy-linux PASS。[quality38641803780](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38641803780) verify在snapshot检查、产品测试之前失败，根因是默认父目录扫描要求未入库的外部快照。main694仍未合并。该review不批准后续scripts/tests修复；定向23 PASS并非完整verify-4或新Hosted PASS。可移植性修复保留仓库内所有快照/生命周期规则、显式外部空/缺失/损坏fail-closed。产品/Rust/Native源与字节未变，完整无外部env的verify-4、新SHA独立复审与Hosted仍PENDING，整体NOT_VERIFIED。
+
+
+可移植性修复复核：完整verify-5无外部env exit0、Browser747、Node1301/14skip、Agent199/2skip与development四步PASS；显式容器4/0及Native当前字节身份PASS。独立dirty source预检实际CLI24PASS、offline AI-evals PASS仅属有限离线检查，不是多模型或最终提交SHA批准。f090原Hosted失败保留；当前修复HEAD待root提交后独立exact-SHA补审/新Hosted，任务继续REVIEW/NOT_VERIFIED，PR59/main未合并。

@@ -171,6 +171,8 @@
 
 文档改动同样受门禁约束：`npm run markdown:check` 校验相对链接（跨仓库链接会失败，跨仓库引用写纯文本路径）；`npm run index:check` 校验本索引覆盖率、顶层文档覆盖率、ADR 编号唯一性与单一 ADR 目录；`npm run snapshot:check` 校验任务快照的日期、数据源和非权威声明；`npm run doc:commands:check` 校验文档中 `npm run` 脚本真实存在；`npm run delivery:check` 校验交付包完整性。
 
+`snapshot:check` 始终严格校验仓库内快照、当前治理入口与 current 唯一性，不依赖 checkout 的父目录。需要同时审计仓库外的容器快照时显式设置 `KK_CONTAINER_ROOT`；配置后文档缺失或头部无效均失败，空路径也失败。未配置时输出 `Container snapshots: not configured`，不代表仓库外文档已验收。
+
 ## 本地记忆机制
 
 本地记忆是 **AI 客户端的上下文辅助机制**，不是产品功能、不是数据存储、不参与运行时，也不能作为事实来源。它的唯一作用是让 AI 在跨会话时快速恢复工作上下文。
