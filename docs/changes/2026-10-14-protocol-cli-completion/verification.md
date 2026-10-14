@@ -28,3 +28,7 @@
 ## d4bd37e2复验后的凭据/释放边界补充
 
 `verify-222-final-code.exit=0`与550browser首试通过、development5步骤PASS原件保留。运行browser阶段只追加了未执行的RED unit fixture，未改产品源码；此回执不代表新增fixture或最终修复已全量验收。独立复审指出两条未覆盖路径：Native已保存密钥在可取消fetch前额外读取，release等待时取消仍能保存late catalog。`discovery-cancel-release-vault-red.log/.exit`两项实际失败；修复后`discovery-cancel-release-vault-green.log/.exit`8/8通过。最终clean提交完整复验、Native与独立审查另验，不能以此旧绿覆盖。
+
+## 7113901b与旧检测取消错误补充
+
+7113901b的完整verify退出0：Node1214pass/14既有skip，Agent172pass/2既有skip，production550首试/零flaky，UI241/0，development5步骤PASS；官方Agent no-bundle构建退出0、4278生产文件，未先运行该EXE。独立复审发现编辑新草稿导致旧ref失效后cancel:/release错误会被吞掉；保持原有编辑行为，将旧检测取消失败通过现有独立feedback提示，不覆盖新draft或新busy。正常点击/编辑的browser RED复现后20/20 GREEN（含原有交互与手机导航）通过。短暂fieldset锁定候选未提交且已回撤，失败原件保留，不能作为最终UI。最新修复提交的完整门禁、新EXE与Native/portable仍另验。

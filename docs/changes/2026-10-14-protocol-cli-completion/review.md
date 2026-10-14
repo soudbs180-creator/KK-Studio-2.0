@@ -6,3 +6,4 @@
 - 重点：协议/认证贯通与legacy fingerprint；无秘密外泄/损失、取消/unknown；真实完整CLI与按钮生命周期；手机世界缩放和固定控件分工。
 
 - d4bd37e2复审另发现两个P2：已保存Native账号在请求前额外await凭据IPC，以及release回执等待期间取消后仍可能保存目录。两个RED复现保留；修复Desktop前置密钥读取和保存前signal围栏后8/8定向GREEN，最终SHA复审待回执。完整d4 verify退出0/550browser仍不能覆盖这两个未覆盖的边界。
+- 7113901b复审指出旧检测被编辑失效时Native取消错误不能无声丢弃；当前修复通过独立feedback提示，保留新草稿/新检测状态，20项真实browser交互首试通过。711完整verify和构建通过仅按711范围保留；最终修复SHA独立结论及实际Native另验。

@@ -1,6 +1,6 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
-test("取消按钮等待原生回执，失败时保留错误且不伪报已取消", async ({ page }) => {
+async function nativeCancellationFixture(page: Page) {
   await page.goto("/");
   await page.getByRole("button", { name: "打开设置", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "设置", exact: true });
@@ -46,6 +46,11 @@ test("取消按钮等待原生回执，失败时保留错误且不伪报已取�
           .cancelFixture.calls,
     );
   await expect.poll(calls).toContain("provider_models_fetch");
+  return { dialog, form, calls };
+}
+
+test("取消按钮等待原生回执，失败时保留错误且不伪报已取消", async ({ page }) => {
+  const { dialog, form, calls } = await nativeCancellationFixture(page);
   await form.getByRole("button", { name: "取消测试", exact: true }).click();
   await expect.poll(calls).toContain("provider_models_cancel");
   await expect(
@@ -66,5 +71,38 @@ test("取消按钮等待原生回执，失败时保留错误且不伪报已取�
   await expect(
     dialog.getByRole("button", { name: "CLI 账号", exact: true }),
   ).toBeEnabled();
+  await expect.poll(calls).toContain("provider_models_release");
+  await expect(form.getByLabel("接口地址", { exact: true })).toBeEnabled();
+  await expect(
+    form.getByRole("button", { name: "保存", exact: true }),
+  ).toBeEnabled();
+});
+
+test("检测中编辑保留新草稿，旧原生取消失败独立提示且不覆盖新状态", async ({
+  page,
+}) => {
+  const { dialog, form, calls } = await nativeCancellationFixture(page);
+  await form.getByLabel("API Key", { exact: true }).fill("synthetic-next-key");
+  await expect.poll(calls).toContain("provider_models_cancel");
+  await expect(
+    form.getByText("密钥已更改，请重新测试连接。", { exact: true }),
+  ).toBeVisible();
+  await page.evaluate(() =>
+    (
+      window as Window & { cancelFixture: { rejectCancel: () => void } }
+    ).cancelFixture.rejectCancel(),
+  );
+  await expect(
+    dialog.getByText(/此前的连接测试：未能确认原生请求已取消/),
+  ).toBeVisible();
+  await expect(form.getByLabel("API Key", { exact: true })).toHaveValue(
+    "synthetic-next-key",
+  );
+  await expect(
+    form.getByText("密钥已更改，请重新测试连接。", { exact: true }),
+  ).toBeVisible();
+  await expect(form.getByText("已取消连接测试。", { exact: true })).toHaveCount(
+    0,
+  );
   await expect.poll(calls).toContain("provider_models_release");
 });

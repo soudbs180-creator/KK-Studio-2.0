@@ -26,6 +26,14 @@ async function discoveryKey(
   return loadApiKey(valid.baseUrl, credentialRef);
 }
 
+function reportStaleCancellation(
+  error: unknown,
+  onFeedback: ((message: string) => void) | undefined,
+) {
+  if (error instanceof Error && error.message.startsWith("cancel:"))
+    onFeedback?.(`此前的连接测试：${error.message.replace(/^cancel:\s*/, "")}`);
+}
+
 function assertCatalogTargetCurrent(
   tested: ProviderConnection,
   initial: ProviderConnection | undefined,
@@ -56,6 +64,7 @@ export async function testProviderConnection({
   connections,
   requestRef,
   setConnection,
+  onFeedback,
 }: {
   valid: ModelProviderProfile;
   apiKey: string;
@@ -63,6 +72,7 @@ export async function testProviderConnection({
   connections: ProviderConnection[];
   requestRef: MutableRefObject<AbortController | null>;
   setConnection: (value: ConnectionState) => void;
+  onFeedback?: (message: string) => void;
 }): Promise<void> {
   if (!navigator.onLine && !isLocalProviderUrl(valid.baseUrl)) {
     setConnection({
@@ -99,7 +109,10 @@ export async function testProviderConnection({
       message: `已获取 ${models.length} 个模型；生成能力仍需实际验证。`,
     });
   } catch (error) {
-    if (requestRef.current !== controller) return;
+    if (requestRef.current !== controller) {
+      reportStaleCancellation(error, onFeedback);
+      return;
+    }
     if (
       controller.signal.aborted &&
       !(error instanceof Error && error.message.startsWith("cancel:"))

@@ -185,6 +185,7 @@ export default function ModelProviderSettings({
         connections,
         requestRef,
         setConnection,
+        onFeedback,
       });
   }
   return (
