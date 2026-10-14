@@ -81,7 +81,7 @@ function HtmlContent({ ctx }: CanvasNodeContentProps) {
         return (
             <div style={{ height: "100%", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, color: ctx.theme.node.placeholder }}>
                 <span style={{ fontSize: 26 }}>{"</>"}</span>
-                <span style={{ fontSize: 13 }}>选中节点,点上方工具条的 ✎ 编辑 HTML</span>
+                <span style={{ fontSize: 13 }}>选中节点,点击卡片内的编辑按钮编写 HTML</span>
             </div>
         );
     }

@@ -123,6 +123,12 @@ test("大素材库按页读取元数据、可见缩略图与全库搜索，详�
   await page.getByRole("button", { name: "资产管理", exact: true }).click();
   const panel = page.getByTestId("asset-panel");
   await expect(panel.locator(".asset-card")).toHaveCount(49);
+  const loadMore = panel.getByRole("button", {
+    name: "加载更多素材",
+    exact: true,
+  });
+  await expect(loadMore).toHaveCSS("height", "32px");
+  await expect(loadMore).toHaveCSS("border-radius", "999px");
   await panel
     .getByRole("button", { name: "加载更多素材", exact: true })
     .click();

@@ -614,7 +614,10 @@ function normalizeCanvasItem(
     kind: normalizeKind(value.kind),
     prompt:
       typeof value.prompt === "string"
-        ? value.prompt.slice(0, 4000)
+        ? value.prompt.slice(
+            0,
+            value.kind === "video" || value.kind === "audio" ? 7500 : 4000,
+          )
         : undefined,
     model:
       typeof value.model === "string" ? value.model.slice(0, 120) : undefined,

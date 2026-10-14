@@ -1,4 +1,5 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
+import { useDismissible } from "../useDismissible";
 import BrandLogo from "../BrandLogo";
 import ModelPickerMenu from "../ModelPickerMenu";
 import { selectedModelLabel } from "../../features/models/modelPresentation";
@@ -24,8 +25,14 @@ export default function CreationModelPicker({
   actualModels?: string[];
 }) {
   const item = useContext(CanvasImageNodeContext);
+  const boundary = useRef<HTMLDivElement>(null);
+  useDismissible(open && !disabled, boundary, onToggle);
   return (
-    <div className="control-anchor model-anchor" data-control="model">
+    <div
+      ref={boundary}
+      className="control-anchor model-anchor"
+      data-control="model"
+    >
       <button
         type="button"
         className="model-button"
@@ -33,7 +40,7 @@ export default function CreationModelPicker({
         title={disabled ? "生成中暂不能修改模型，取消或结束后可继续" : value}
         aria-label="画布模型"
         aria-haspopup="menu"
-        aria-expanded={open}
+        aria-expanded={open && !disabled}
         onClick={onToggle}
       >
         <span className="logo">

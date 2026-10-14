@@ -10,6 +10,12 @@
 
 ## 本轮恢复入口
 
+TASK-UI-FULL-20261015 IN_PROGRESS / NOT_VERIFIED。先读[验证](../changes/2026-10-15-ui-full/verification.md)、[覆盖矩阵](../changes/2026-10-15-ui-full/coverage.md)及[计划](../changes/2026-10-15-ui-full/plan.md)。当前工作树 D:/kk-studio/.worktrees/branch-consolidation-20261011，branch fix/TASK-UI-FULL-20261015，source HEAD6bc2e3da加dirty；Desktop/Web候选2.1.27已版本脚本递增，Mobile2.1.1仍规划。root实际fetch/API确认main694a006，102预检冲突裁决与15历史包承接映射在D:/kk-studio/.analysis/ui-full-20261015；main独有历史段落已补回，真实merge由root串行完成。
+
+79条production浏览器定向GREEN、全部设置三宽3条PASS；普通菜单中间失败及Google误设持久化、Enter RED JSON覆盖勘误保留。恢复时先核对新build与最新菜单日志，菜单最终2条GREEN已通过，再完成真实merge后的完整verify、当前Desktop、已提交SHA独立审查、实际Hosted/普通PR合并和post-main，不复用旧2.1.26批准。primary254条dirty/index及109登记worktree只读保留；不清理、不操作日常资料或秘密。
+
+### 此前2.1.26基线（保留历史）
+
 TASK-UI-DETAILS-20261015 本地DONE/PASS。先读[验证](../changes/2026-10-15-ui-details/verification.md)和[审查](../changes/2026-10-15-ui-details/review.md)。当前Desktop/Web2.1.26工作区 D:/kk-studio/.worktrees/branch-consolidation-20261011 / fix/TASK-UI-DETAILS-20261015；base18e143f，产品ab878ffd。用户五处细节已统一：紧凑设置、首页/Agent职责、控件形状与尾组、空/非空上传、扩展轴线。完整verify退出0：Node1278/14skip、Agent199/2skip、browser635首试、UI239/0及development PASS；精确源码独立审查与新官方Desktop38项Native PASS，EXE0f65d382/input864b0376，production JS/CSS和当前dist同字节。现有快捷方式同路径，下次打开是新版；两个owned实例均正常关闭，未接管日常资料。所有失败记录在D:/kk-studio/.analysis/ui-details-20261015，primary旧dirty/index保留。Mobile2.1.1规划、真实Provider/Hosted/签名及用户视觉接受继续分别开放。
 
 ### 此前2.1.25基线（保留历史）

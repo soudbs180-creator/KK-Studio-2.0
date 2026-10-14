@@ -51,6 +51,7 @@ export function TaskPanelPopover({
   setTab,
   visibleTasks,
   selectedTask,
+  tasks,
   setSelectedTask,
   onOpenTasks,
   onCancelTask,
@@ -62,6 +63,7 @@ export function TaskPanelPopover({
   setTab: Dispatch<SetStateAction<TaskFilter>>;
   visibleTasks: PrototypeTask[];
   selectedTask: PrototypeTask | null;
+  tasks?: readonly CreationTask[];
   setSelectedTask: Dispatch<SetStateAction<PrototypeTask | null>>;
   onOpenTasks?: () => void;
   onCancelTask?: (taskId: string) => void;
@@ -208,6 +210,7 @@ export function TaskPanelPopover({
       {selectedTask && (
         <TaskDetail
           selectedTask={selectedTask}
+          tasks={tasks}
           onCancelTask={onCancelTask}
           onRetryTask={onRetryTask}
           onClose={() => setSelectedTask(null)}

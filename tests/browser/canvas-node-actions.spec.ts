@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import type { CreationSnapshot } from "../../src/features/creation/model";
-import { openWorkspace } from "./helpers";
+import { openWorkspace, uploadCanvasMedia } from "./helpers";
 
 test.use({ hasTouch: true });
 
@@ -38,7 +38,7 @@ async function assertPreferences(page: Page, toolbar: Locator) {
   await tags.getByRole("button", { name: "关闭标签编辑", exact: true }).tap();
 }
 
-test("手机四类草稿卡片可点击顶部删除并撤销", async ({ page }) => {
+test("窄屏四类空卡片通过卡片菜单删除并撤销", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openWorkspace(page);
   for (const [kind, menuName, title] of [
@@ -48,12 +48,15 @@ test("手机四类草稿卡片可点击顶部删除并撤销", async ({ page }) 
     ["audio", "音频", "新音频卡片"],
   ]) {
     const node = await addDraft(page, kind, menuName);
-    const toolbar = page.getByRole("toolbar", {
-      name: `${kind === "image" ? "图片" : "卡片"}操作：${title}`,
+    await expect(page.locator(".image-selection-toolbar")).toHaveCount(0);
+    await node.focus();
+    await node.press("Shift+F10");
+    const menu = page.getByRole("menu", {
+      name: `卡片菜单：${title}`,
       exact: true,
     });
-    await toolbar
-      .getByRole("button", { name: `删除${title}`, exact: true })
+    await menu
+      .getByRole("menuitem", { name: `删除${title}`, exact: true })
       .tap();
     await expect(node).toHaveCount(0);
     await page.getByTestId("infinite-canvas").focus();
@@ -62,7 +65,7 @@ test("手机四类草稿卡片可点击顶部删除并撤销", async ({ page }) 
   }
 });
 
-test("未加载的插件卡片也有可点击的顶部删除", async ({ page }) => {
+test("未加载的插件卡片可通过卡片菜单删除", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openWorkspace(page);
   await page.evaluate(() => {
@@ -86,9 +89,12 @@ test("未加载的插件卡片也有可点击的顶部删除", async ({ page }) 
   await reopenProject(page);
   const node = page.getByTestId("canvas-node-added-plugin-actions");
   await node.locator(".plugin-node").tap();
+  await expect(page.locator(".image-selection-toolbar")).toHaveCount(0);
+  await node.focus();
+  await node.press("Shift+F10");
   await page
-    .getByRole("toolbar", { name: "卡片操作：待恢复插件", exact: true })
-    .getByRole("button", { name: "删除待恢复插件", exact: true })
+    .getByRole("menu", { name: "卡片菜单：待恢复插件", exact: true })
+    .getByRole("menuitem", { name: "删除待恢复插件", exact: true })
     .tap();
   await expect(node).toHaveCount(0);
   await page.getByTestId("infinite-canvas").focus();
@@ -177,13 +183,15 @@ for (const deletion of ["toolbar", "keyboard"]) {
     await page.setViewportSize({ width: 390, height: 844 });
     await openWorkspace(page);
     const node = await addDraft(page, "video", "视频");
+    await expect(page.locator(".image-selection-toolbar")).toHaveCount(0);
+    await uploadCanvasMedia(node, "video");
     const id = (await node.getAttribute("data-node-id"))!;
     const toolbar = page.getByRole("toolbar", {
-      name: "卡片操作：新视频卡片",
+      name: "卡片操作：blue-hour-motion.webm",
       exact: true,
     });
     await toolbar
-      .getByRole("button", { name: "喜欢新视频卡片", exact: true })
+      .getByRole("button", { name: "喜欢blue-hour-motion.webm", exact: true })
       .tap();
     await toolbar.getByRole("button", { name: "编辑标签", exact: true }).tap();
     const tags = page.getByRole("dialog", { name: "编辑标签", exact: true });
@@ -193,7 +201,7 @@ for (const deletion of ["toolbar", "keyboard"]) {
     await assertPreferences(page, toolbar);
     if (deletion === "toolbar")
       await toolbar
-        .getByRole("button", { name: "删除新视频卡片", exact: true })
+        .getByRole("button", { name: "删除blue-hour-motion.webm", exact: true })
         .tap();
     else {
       await node.focus();
@@ -203,7 +211,7 @@ for (const deletion of ["toolbar", "keyboard"]) {
     await page.getByTestId("infinite-canvas").focus();
     await page.keyboard.press("Control+Z");
     await expect(node).toHaveCount(1);
-    await node.locator(".video-placeholder").tap();
+    await node.locator(".video-node > span").tap();
     await assertPreferences(page, toolbar);
     await expect
       .poll(() =>
@@ -223,7 +231,7 @@ for (const deletion of ["toolbar", "keyboard"]) {
       )
       .toEqual({ exists: true, favorite: true, liked: true });
     await reopenProject(page);
-    await node.locator(".video-placeholder").tap();
+    await node.locator(".video-node > span").tap();
     await assertPreferences(page, toolbar);
   });
 }

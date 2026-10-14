@@ -1,5 +1,12 @@
 # 当前进度
 
+## 2026-10-15 全页面新UI与主线保全（IN_PROGRESS / NOT_VERIFIED）
+
+- TASK-UI-FULL-20261015在最新6bc2e3da基线上收敛可达页面、11设置分类、模型caller及当前/历史卡片；Desktop/Web候选已由版本脚本递增2.1.27，Mobile2.1.1规划不变。账号、资源主体/详情、共享模型、卡片动作和长草稿恢复修复已有定向证据。
+- 当前79条生产Edge定向GREEN（0retry/flaky/skip），全部设置三宽3条PASS；普通菜单RED及1099响应式串入的中间失败留存，应用菜单最终2条GREEN已通过。Google新增测试误设reload持久化已按原会话契约更正，模型Enter RED的JSON被并行--list覆盖已注明不适用，原log/error-context保留。
+- root本轮实际fetch及API确认main694a006；102历史squash预检冲突按逐路径证据保全，main独有历史两段/规范三行补回。当前整合任务承接15份历史五件套，不改原任务branch/status或Delivery检查；真实merge及新组合仍待验。
+- primary254条dirty/index、109登记worktree与原件保留。完整verify、当前Desktop、最终SHA独立审查、Hosted/PR/main/post-merge均未完成，任务保持进行中，不以旧2.1.26 PASS代填。[本轮验证](changes/2026-10-15-ui-full/verification.md) / [覆盖](changes/2026-10-15-ui-full/coverage.md)。
+
 ## 2026-10-15 最新 UI 设置修复（本地DONE/PASS）
 
 TASK-SETTINGS-LATEST-20261015从正确最新UI c1fae190承接，Desktop/Web2.1.25保留1280/240/192、默认绿色与手机分级导航。设置长名称、提示避让、主动清空确认、能力/连接/分类草稿、型号trim与连接操作范围已修；原新版async owner锁、协议/CLI及配置身份保留。完整verify退出0：Node1278/14既有skip，Agent199/2既有skip，Edge629首试0flaky/0skip，UI242/0，development5步骤。当前Web和实际官方Tauri几何与bundle一致；EXEc9c3b4e/input2a09db54，Native20功能+11视觉+1中断阶段+5无秘密metadata通过，owned凭据/fixture清理完成。默认Desktop入口已切到最新工作区并实际启动；primary旧代码/并发dirty/index保留，只追加来源指针。独立c1→054源/测试审查PASS，无finding；本次所有失败与首轮Native旧fixture纠正留证。入口gzip增量0，无新依赖；Mobile/外部Provider/Hosted/签名与用户视觉接受另验。
@@ -68,6 +75,21 @@ TASK-AGENT-RECOVERY-20261013 按用户新要求复验原数据/profile，已证�
 - PR #53 已合并至 `1f6cbd37`，Windows/Ubuntu hook、verify、deploy-linux 为 Hosted SUCCESS，delivery 为 SKIPPED；merged-SHA 独立 review receipt、原始 artifact、签名、安装和用户验收仍未补齐。
 - `TASK-WINDOWS-ENTRY-RECOVERY-003`、`TASK-AGENT-010`、`TASK-TASKSTATE-002`、`TASK-AI-GATEWAY-001` 和 `TASK-IMAGE-EDIT-VERIFY-002` 保持未完成/未验证边界；本轮未推送、合并、触发 CI、读取凭据或调用真实 Provider。
 - 证据包：`docs/changes/2026-10-12-p1-audit-closeout/`。
+
+## 2026-10-13 TASK-ENG-001 PR #56 主线承接（REVIEW / NOT_VERIFIED）
+
+- 基于 `origin/main@bcf55851d296c753d9610e86f1e32bf8db333a41` 重建承接提交；候选精确 HEAD 以本 checkout 的 `git rev-parse HEAD` 与对应 delivery 日志为准；PR #56 原 HEAD、主线历史和 `TASK-ENG-001` 独立交付包均保留。
+- 已解决 `package.json`、`docs/engineering/DEVELOPMENT.md`、`docs/governance/task-ledger.json`、`docs/governance/TASK_LEDGER.md` 四处冲突；主线版本/治理命令保留，代码健康与 Windows footgun 检查追加，账本从主线 124 条记录加上当前 schema 的 `TASK-ENG-001`。
+- 修复 `**/` glob 的零层/多层目录匹配并补回归测试；补齐所有当前 workflow action 的 commit SHA 固定（含 `dtolnay/rust-toolchain` 与 stable 输入）；最终复审修复工作区的本地 lint、typecheck、1019 项 Node 测试（1005 pass、14 skipped、0 fail）、版本、治理、文档和 footgun 检查均已通过。基线缺少治理配置时工具按 fail-closed 回退 blocking，未声称 advisory。
+- `9c849aa2ac640a3db4a05335a537247fbe1b2a4d` 的 Hosted quality/git-guards 全部成功；用户随后授权合并。最终独立复审仍发现 Rust action 输入、门禁映射、开关串读、重复模式豁免及清单 revision 五项阻断，因此继续在原 PR 修复并等待新 HEAD 的独立复审与 Hosted CI；本记录不表示 PR #56 已合并 main 或已发布。
+
+## 2026-10-12 PR #55 历史快照集成修复（REVIEW）
+
+- `TASK-GOV-005` 已登记为一次性历史快照修复任务：保留 PR #55 的 128 提交/424 文件逐项证据，不把跨任务历史成果伪装成新的单任务交付。
+- 历史交付包仅在包内明确写入 `legacy-incomplete.md` 时获得有限豁免；同一变更中的新修复包仍必须具备五件套并绑定当前台账任务。
+- Windows `desktopRelease` 的链接判定改为直接读取 `lstat().isSymbolicLink()`，避免 hosted runner 的 8.3/realpath 等价路径误报普通 `node_modules`；真实 symlink/junction 仍拒绝。
+- 本节在本地定向测试、独立 exact-SHA review 和 Hosted `verify`/`delivery` 回执完成前保持 `REVIEW/NOT_VERIFIED`；不代表 PR #55 已合并、客户端已发布或 Hermes 已集成。
+
 
 ## 2026-10-12 分支收敛 P0-P1：规则门禁入主线 + 100 分支全量分类
 

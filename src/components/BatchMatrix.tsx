@@ -5,19 +5,24 @@ import type {
 } from "../features/creation/model";
 import { loadStoredAsset } from "../features/creation/assetRepository";
 import { retryableOutputIndices } from "../features/creation/taskRecovery";
+import { taskRetryAvailability } from "../features/creation/taskRetryAvailability";
 
 export default function BatchMatrix({
   task,
+  tasks,
   outputs,
   onRetryOutput,
 }: {
   task: CreationTask;
+  tasks?: readonly CreationTask[];
   outputs: CreationTaskOutput[];
   onRetryOutput: (taskId: string, outputIndex: number) => void;
 }) {
   const [previews, setPreviews] = useState<Record<string, string>>({});
   const [loadError, setLoadError] = useState(false);
   const retryableIndices = new Set(retryableOutputIndices(task, outputs));
+  const availability = taskRetryAvailability(task, tasks);
+  const availableIndices = new Set(availability.indices);
   const assetIds = outputs
     .flatMap((output) => (output.assetId ? [output.assetId] : []))
     .join(",");
@@ -53,7 +58,7 @@ export default function BatchMatrix({
         <h3>Batch Matrix</h3>
         <span>
           {outputs.length} 个输出
-          {retryableIndices.size > 0 && " · 单项可重试"}
+          {availableIndices.size > 0 && " · 单项可重试"}
         </span>
       </div>
       {loadError && <p role="status">本地预览读取失败，素材标识仍保留。</p>}
@@ -106,6 +111,12 @@ export default function BatchMatrix({
               <button
                 type="button"
                 className="kk-button kk-button--secondary"
+                disabled={!availableIndices.has(output.index)}
+                title={
+                  !availableIndices.has(output.index)
+                    ? availability.blockedReason
+                    : undefined
+                }
                 onClick={() => onRetryOutput(task.id, output.index)}
               >
                 单项重试

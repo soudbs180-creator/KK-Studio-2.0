@@ -293,10 +293,7 @@ export function useCanvasControls({
         setSelectedNode(nodeId);
         return;
       }
-      if (
-        (event.key === "Delete" || event.key === "Backspace") &&
-        nodeId.startsWith("added-")
-      ) {
+      if (event.key === "Delete" || event.key === "Backspace") {
         event.preventDefault();
         onDelete();
         setSelectedNode(null);

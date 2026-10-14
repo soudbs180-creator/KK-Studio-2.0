@@ -60,6 +60,16 @@ test("Gemini CLI login mode: configure, connect and chat through the local bridg
     page.getByText("Google Gemini · 已连接", { exact: true }),
   ).toBeVisible();
 
+  const model = "gemini-cli-fixture-custom";
+  await page.getByRole("button", { name: "Google 模型", exact: true }).click();
+  await page.getByLabel("搜索或输入 Google 型号", { exact: true }).fill(model);
+  await page
+    .getByLabel("搜索或输入 Google 型号", { exact: true })
+    .press("Enter");
+  await expect(
+    page.getByRole("button", { name: "Google 模型", exact: true }),
+  ).toHaveAttribute("title", model);
+
   const input = page.getByPlaceholder(
     "和 Google 聊天（Gemini CLI 通道，仅文字）",
   );
@@ -73,10 +83,11 @@ test("Gemini CLI login mode: configure, connect and chat through the local bridg
   await expect(
     page.getByText("CLI fixture reply 2", { exact: true }),
   ).toBeVisible();
-  expect(chats[0]).toMatchObject({ prompt: "Hello CLI" });
+  expect(chats[0]).toMatchObject({ prompt: "Hello CLI", model });
   expect(chats[1]).toMatchObject({
     prompt: "Again",
     resumeSessionId: "cli-session-1",
+    model,
   });
 
   const output = page.getByLabel("Google 输出", { exact: true });

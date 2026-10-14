@@ -396,14 +396,11 @@
   font-size: var(--ui-font-caption);
   min-width: 0;
 }
-.google-agent-controls .google-agent-model {
-  flex: 1 1 180px;
-}
-.google-agent-controls input,
 .google-agent-controls select {
   min-width: 0;
   max-width: 100%;
   min-height: 32px;
+  border-radius: var(--kk-radius-control);
   padding: var(--ui-space-1) var(--ui-space-2);
   border: 1px solid var(--border-control);
   background: var(--bg-input);

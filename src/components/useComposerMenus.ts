@@ -1,4 +1,10 @@
-import { useLayoutEffect, useRef, useState, type RefObject } from "react";
+import {
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import { useDismissible } from "./useDismissible";
 import { useHiddenControlFocus } from "./useHiddenControlFocus";
 
@@ -110,6 +116,7 @@ export function useComposerMenus(boundary: RefObject<HTMLElement>) {
   }, [boundary, menu, restoreHiddenFocus]);
 
   useDismissible(menu !== null, anchor, () => setMenu(null), trigger);
+  const closeMenus = useCallback(() => setMenu(null), []);
 
   return {
     addMenuOpen: menu === "add",
@@ -120,6 +127,6 @@ export function useComposerMenus(boundary: RefObject<HTMLElement>) {
     toggleMenu: (requested: ComposerMenu) =>
       setMenu((current) => (current === requested ? null : requested)),
     openMenu: (requested: ComposerMenu) => setMenu(requested),
-    closeMenus: () => setMenu(null),
+    closeMenus,
   };
 }

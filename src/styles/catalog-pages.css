@@ -232,18 +232,18 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 .start-tabs {
-  height: 40.924px;
-  gap: 28.063px;
-  border-bottom-width: 0.78px;
+  height: var(--kk-control-h-lg);
+  gap: var(--kk-space-6);
+  border-bottom-width: 1px;
 }
 .start-tabs button[aria-selected="true"] {
-  border-bottom-width: 2.339px;
+  border-bottom-width: 2px;
 }
 .start-tabs button {
-  height: 40.924px;
-  padding: 0 0 16.37px;
+  height: var(--kk-control-h-lg);
+  padding: 0 0 var(--kk-space-3);
   color: var(--text-secondary);
-  font-size: 18.708px;
+  font-size: var(--kk-font-subtitle);
 }
 .catalog-page-tabs button {
   min-height: var(--ui-button-height);
@@ -261,20 +261,19 @@
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  gap: 11.693px;
-  height: 61.971px;
+  gap: var(--kk-space-3);
   margin: 0;
-  padding-top: 21.047px;
+  padding-top: var(--kk-space-4);
 }
 .start-chip-row button {
-  height: 40.924px;
-  border: 0.78px solid var(--border-default);
-  border-radius: 999px;
-  padding: 10.134px 17.15px;
+  height: var(--kk-control-h-lg);
+  border: 1px solid var(--border-default);
+  border-radius: var(--kk-radius-full);
+  padding: 0 var(--kk-space-4);
   color: var(--text-secondary);
 }
 .start-chip-row button {
-  font-size: 15.201px;
+  font-size: var(--kk-font-body);
 }
 .start-chip-row button.is-selected {
   background: var(--bg-card-hover);
@@ -284,8 +283,8 @@
 .start-inspiration-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18.708px;
-  padding-top: 21.047px;
+  gap: var(--kk-space-4);
+  padding-top: var(--kk-space-4);
 }
 .start-discovery-panel:focus {
   outline: none;
@@ -296,11 +295,11 @@
   border-radius: var(--ui-radius-control);
 }
 .start-inspiration-card {
-  height: 367.151px;
+  height: 100%;
   overflow: hidden;
   text-align: left;
-  border: 0.78px solid var(--border-subtle);
-  border-radius: 18.708px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--kk-radius-card);
   background: var(--bg-card);
   transition:
     background-color var(--motion-fast) var(--motion-ease),
@@ -361,21 +360,23 @@
 }
 .start-inspiration-card > div {
   display: grid;
-  gap: 8.185px;
-  padding: 16.37px;
+  gap: var(--kk-space-2);
+  padding: var(--kk-space-4);
 }
 .start-inspiration-card span {
   color: var(--text-accent);
-  font-size: 12.862px;
+  font-size: var(--kk-font-caption);
+  line-height: var(--kk-line-caption);
 }
 .start-inspiration-card strong {
   color: var(--text-primary);
-  font-size: 17.539px;
+  font-size: var(--kk-font-subtitle);
+  line-height: var(--kk-line-subtitle);
 }
 .start-inspiration-card p {
   color: var(--text-secondary);
-  font-size: 14.031px;
-  line-height: 21.047px;
+  font-size: var(--kk-font-body);
+  line-height: var(--kk-line-body);
 }
 .start-skill-callout {
   display: flex;
@@ -451,8 +452,6 @@
     gap: 10px;
   }
   .start-chip-row button {
-    height: auto;
-    padding: 8px 14px;
   }
   .start-inspiration-grid {
     padding-top: 0;
@@ -460,26 +459,12 @@
   }
   .start-inspiration-card {
     height: auto;
-    border-width: 1px;
-    border-radius: 16px;
   }
   .start-inspiration-card img {
     height: auto;
     aspect-ratio: 16 / 9;
   }
   .start-inspiration-card > div {
-    gap: 7px;
-    padding: 14px;
-  }
-  .start-inspiration-card span {
-    font-size: 11px;
-  }
-  .start-inspiration-card strong {
-    font-size: 15px;
-  }
-  .start-inspiration-card p {
-    font-size: 12px;
-    line-height: 1.5;
   }
 }
 
@@ -687,32 +672,6 @@
   overflow: hidden;
   background: var(--bg-card-hover);
 }
-.catalog-page-skills .catalog-card-image::after {
-  content: "查看详情      ↓ 下载 Skill";
-  position: absolute;
-  left: 14px;
-  right: 14px;
-  bottom: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 36px;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--bg-app) 84%, transparent);
-  color: var(--text-primary);
-  font-size: 12px;
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity var(--motion-fast) var(--motion-ease),
-    transform var(--motion-fast) var(--motion-ease);
-  pointer-events: none;
-}
-.catalog-page-skills .catalog-card:hover .catalog-card-image::after,
-.catalog-page-skills .catalog-card:focus-visible .catalog-card-image::after {
-  opacity: 1;
-  transform: translateY(0);
-}
 .catalog-card-image img {
   width: 100%;
   height: 100%;
@@ -724,10 +683,10 @@
   top: 0;
   left: 0;
   padding: 5px 12px;
-  border-radius: 0 0 12px 0;
+  border-radius: var(--kk-radius-full);
   background: var(--bg-accent);
   color: var(--text-on-accent);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
 }
 .catalog-card-body {
   display: grid;
@@ -816,10 +775,10 @@
 }
 .workflow-image span {
   padding: 5px 9px;
-  border-radius: 6px;
+  border-radius: var(--kk-radius-full);
   background: color-mix(in srgb, var(--bg-app) 60%, transparent);
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
 }
 .project-library-content {
   max-width: 1600px;
@@ -999,10 +958,10 @@
   top: 0;
   left: 0;
   padding: 5px 12px;
-  border-radius: 0 0 12px 0;
+  border-radius: var(--kk-radius-full);
   background: var(--bg-accent);
   color: var(--text-on-accent);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
 }
 .skill-card-preview:hover,
 .skill-card-preview:focus-visible,

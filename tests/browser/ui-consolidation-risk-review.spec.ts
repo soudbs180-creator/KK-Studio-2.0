@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { openWorkspace } from "./helpers";
+import { openWorkspace, uploadCanvasMedia } from "./helpers";
 import type { CreationSnapshot } from "../../src/features/creation/model";
 
 async function reopenProject(page: Page) {
@@ -37,6 +37,7 @@ test("非图片工具栏跟随本卡片，画外图片标题不能隐藏同行�
   await reopenProject(page);
   for (const id of ["video1", "video2"]) {
     const node = page.getByTestId("canvas-node-" + id);
+    await uploadCanvasMedia(node, "video");
     await node.locator(".video-node > span").click();
     const toolbar = page.getByRole("toolbar", { name: /^卡片操作：/ });
     await expect(toolbar).toBeVisible();
@@ -68,19 +69,27 @@ test("非图片工具栏跟随本卡片，画外图片标题不能隐藏同行�
   });
 });
 
-test("空图片仍有喜欢和标签入口，预览及重绘给出禁用原因", async ({ page }) => {
+test("空图片只显示上传，有图后才显示内容操作", async ({ page }) => {
   await openWorkspace(page);
   const node = page.getByTestId("canvas-node-image");
   await expect(node.locator(".uploaded-image")).toHaveCount(0);
   await node.locator(".image-preview").click();
   const toolbar = page.getByRole("toolbar", { name: /^图片操作：/ });
+  await expect(toolbar).toHaveCount(0);
+  await expect(
+    node.getByRole("button", { name: "上传图片", exact: true }),
+  ).toBeVisible();
+  await uploadCanvasMedia(node, "image");
   await expect(toolbar).toBeVisible();
-  await expect(toolbar.getByRole("button", { name: /^预览/ })).toBeDisabled();
-  await expect(toolbar.getByRole("button", { name: /^预览/ })).toHaveAttribute(
-    "title",
-    /上传图片或生成结果/,
-  );
-  await expect(toolbar.getByRole("button", { name: /^重绘/ })).toBeDisabled();
+  await expect(
+    node.getByRole("button", { name: "上传图片", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    toolbar.getByRole("button", { name: "放大查看参考图片", exact: true }),
+  ).toBeEnabled();
+  await expect(
+    toolbar.getByRole("button", { name: "重绘参考图片", exact: true }),
+  ).toBeEnabled();
   await toolbar.getByRole("button", { name: /^喜欢/ }).click();
   await expect(
     toolbar.getByRole("button", { name: /^取消喜欢/ }),

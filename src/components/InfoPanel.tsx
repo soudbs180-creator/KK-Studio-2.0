@@ -12,7 +12,12 @@ export default function InfoPanel({
     <section className="info-panel">
       <header>
         <h2>{view === "tasks" ? "任务列表" : "使用说明"}</h2>
-        <button aria-label="关闭" onClick={onClose}>
+        <button
+          type="button"
+          className="ui-icon-button"
+          aria-label="关闭"
+          onClick={onClose}
+        >
           <X size={20} />
         </button>
       </header>

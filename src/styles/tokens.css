@@ -259,6 +259,7 @@
   --kk-task-queue-width: 220px;
   /* Readable task popover from the 2026-10-10 UI review; shared HUD shell. */
   --kk-task-popover-width: 360px;
+  --kk-account-popup-width: 320px;
   --kk-task-popover-height: 420px;
   --kk-task-popover-min-height: 300px;
   /* 2026-10-15 density feedback: compact settings, wider connection forms. */

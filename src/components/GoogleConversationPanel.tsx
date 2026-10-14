@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { CreationProject } from "../features/creation/model";
 import { googleAgentConnection } from "../features/agent/googleAgentConnection";
 import { readGoogleCliPreference } from "../features/agent/googleAgentConfig";
+import type { AgentDraftState } from "../features/agent/useAgentComposerDraft";
 import AgentConversationMessages, {
   type AgentConversationProps,
 } from "./AgentConversationMessages";
@@ -10,10 +11,12 @@ import ConversationComposer from "./ConversationComposer";
 import ConversationHeader from "./ConversationHeader";
 import ConversationChannelSelector from "./ConversationChannelSelector";
 import GoogleAgentControls from "./GoogleAgentControls";
+import GoogleModelPicker from "./GoogleModelPicker";
 import { useConversationOverlay } from "./useConversationOverlay";
 
 export default function GoogleConversationPanel({
   project,
+  draftState,
   onClose,
   onOpen,
   onChannelChange,
@@ -21,6 +24,7 @@ export default function GoogleConversationPanel({
   codexBusy,
 }: {
   project: CreationProject;
+  draftState: AgentDraftState;
   onClose: () => void;
   onOpen: (id: string) => void;
   onChannelChange: (channel: string) => void;
@@ -103,6 +107,7 @@ export default function GoogleConversationPanel({
       <AgentComposer
         agent={agent}
         draftKey={`google-${project.id}`}
+        draftState={draftState}
         active
         composer={
           <ConversationComposer
@@ -110,6 +115,7 @@ export default function GoogleConversationPanel({
             onInputChange={() => {}}
             onSubmitMessage={async () => {}}
             disabled={state.sending}
+            modelDisabled={state.sending || state.status === "connecting"}
             placeholder={
               cli
                 ? "和 Google 聊天（Gemini CLI 通道，仅文字）"
@@ -120,9 +126,14 @@ export default function GoogleConversationPanel({
             onRemoveAttachment={() => {}}
             readingFiles={0}
             onStatus={setStatus}
-            modelControl={
-              <span className="chat-model-name">Google Gemini</span>
-            }
+            renderModelControl={(open, onToggle, onClose) => (
+              <GoogleModelPicker
+                state={state}
+                open={open}
+                onToggle={onToggle}
+                onClose={onClose}
+              />
+            )}
             onSelectModel={() => {}}
             onOpen={onOpen}
             approvalMode={state.permissionMode === "request" ? "ask" : "auto"}

@@ -223,6 +223,7 @@ export default function ModelPickerMenu({
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onKeyDown={(event) => {
+            if (event.key === "Enter") event.preventDefault();
             if (event.key !== "Escape") event.stopPropagation();
           }}
         />

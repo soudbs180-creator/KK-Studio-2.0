@@ -22,6 +22,7 @@ export default function AssetProvenanceDetail({
               : "设计示例"}
         </span>
         <button
+          className="kk-button kk-button--secondary"
           type="button"
           aria-pressed={inCollection}
           onClick={onToggleCollection}

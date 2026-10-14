@@ -2,6 +2,7 @@ import ModelPickerMenu from "./ModelPickerMenu";
 import type { ModelSelection } from "../features/models/modelSelection";
 export default function ConversationModelPicker({
   currentModel,
+  disabled = false,
   open,
   onToggle,
   onSelect,
@@ -9,6 +10,7 @@ export default function ConversationModelPicker({
   selection,
 }: {
   currentModel?: string;
+  disabled?: boolean;
   options: string[];
   open: boolean;
   onToggle: () => void;
@@ -20,10 +22,11 @@ export default function ConversationModelPicker({
     <>
       <button
         type="button"
+        disabled={disabled}
         aria-label="模型"
         className="chat-model-picker"
         aria-haspopup="menu"
-        aria-expanded={open}
+        aria-expanded={open && !disabled}
         title={currentModel || "模型"}
         onClick={onToggle}
       >
@@ -35,7 +38,7 @@ export default function ConversationModelPicker({
         />
         <span className="chat-model-name">{currentModel || "主 Agent"}</span>
       </button>
-      {open && (
+      {open && !disabled && (
         <ModelPickerMenu
           scope="conversation"
           current={selection}

@@ -1,8 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { openWorkspace } from "./helpers";
+import { openWorkspace, uploadCanvasMedia } from "./helpers";
 
 test("喜欢面板覆盖图片工具栏时关闭按钮仍可点击", async ({ page }, testInfo) => {
   await openWorkspace(page);
+  await uploadCanvasMedia(page.getByTestId("canvas-node-image"), "image");
   await page.getByTestId("canvas-node-image").locator(".image-preview").click();
   const toolbar = page.getByRole("toolbar", { name: /^图片操作/ });
   await page.getByRole("button", { name: "喜欢与标签", exact: true }).click();
@@ -44,6 +45,7 @@ test("喜欢面板覆盖图片工具栏时关闭按钮仍可点击", async ({ pa
 
 test("顶部喜欢与独立收藏面板保持固定屏幕尺寸", async ({ page }, testInfo) => {
   await openWorkspace(page);
+  await uploadCanvasMedia(page.getByTestId("canvas-node-image"), "image");
   await page.getByTestId("canvas-node-image").locator(".image-preview").click();
   const toolbar = page.getByRole("toolbar", { name: /^图片操作/ });
   await toolbar.getByRole("button", { name: /^喜欢/ }).click();
@@ -122,4 +124,16 @@ test("旧收藏进入标签，取消收藏标签后重载不复活", async ({ pa
       ),
     )
     .toEqual([]);
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await page.reload();
+    await page.getByRole("button", { name: "项目库", exact: true }).click();
+    await page
+      .locator(".project-library-card")
+      .filter({ hasText: "Agent 验证项目" })
+      .click();
+    await page.getByRole("button", { name: "喜欢与标签", exact: true }).click();
+    await page.getByRole("menuitem", { name: "画布标签", exact: true }).click();
+    await tags.getByLabel("标签分类", { exact: true }).selectOption("收藏");
+    await expect(tags.locator(".catalog-tag-card")).toHaveCount(0);
+  }
 });

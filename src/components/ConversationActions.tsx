@@ -14,6 +14,7 @@ export default function ConversationActions({
   composerDraft,
   submitting,
   attachmentDisabled,
+  modelDisabled,
   currentModel,
   modelControl,
   modelOptions,
@@ -44,6 +45,7 @@ export default function ConversationActions({
   composerDraft?: CreationDraft;
   submitting: boolean;
   attachmentDisabled?: boolean;
+  modelDisabled?: boolean;
   currentModel?: string;
   modelControl?: ReactNode;
   modelOptions: string[];
@@ -95,6 +97,7 @@ export default function ConversationActions({
       <div className="chat-model-picker-wrap">
         {modelControl ?? (
           <ConversationModelPicker
+            disabled={modelDisabled}
             currentModel={currentModel}
             options={modelOptions}
             selection={modelSelection}

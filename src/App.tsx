@@ -191,6 +191,7 @@ import {
   retryableOutputIndices,
   submissionMayHaveBeenAccepted,
 } from "./features/creation/taskRecovery";
+import { taskRetryAvailability } from "./features/creation/taskRetryAvailability";
 import {
   cancelNativeTask,
   getNativeTask,
@@ -2980,38 +2981,50 @@ export default function App() {
                             {activeProject.name}
                           </strong>
                         )}
-                        {activeProject.tasks.slice(-1).map((task) => (
-                          <span
-                            key={task.id}
-                            className={`project-task-${task.status}`}
-                          >
-                            {generationProgress.taskLabel}
-                            {task.status === "running" && (
-                              <button
-                                className="ui-button"
-                                type="button"
-                                onClick={() => cancelTask(task.id)}
-                              >
-                                取消
-                              </button>
-                            )}
-                            {(task.status === "partial" ||
-                              task.status === "failed" ||
-                              task.status === "offline" ||
-                              task.status === "cancelled" ||
-                              task.status === "interrupted") && (
-                              <button
-                                className="ui-button"
-                                type="button"
-                                onClick={() =>
-                                  retryTask(activeProject.id, task.id)
-                                }
-                              >
-                                重试
-                              </button>
-                            )}
-                          </span>
-                        ))}
+                        {activeProject.tasks.slice(-1).map((task) => {
+                          const retry = taskRetryAvailability(
+                            task,
+                            activeProject.tasks,
+                          );
+                          const retryReason = !retry.indices.length
+                            ? retry.blockedReason
+                            : undefined;
+                          return (
+                            <span
+                              key={task.id}
+                              className={`project-task-${task.status}`}
+                            >
+                              {generationProgress.taskLabel}
+                              {task.status === "running" && (
+                                <button
+                                  className="ui-button"
+                                  type="button"
+                                  onClick={() => cancelTask(task.id)}
+                                >
+                                  取消
+                                </button>
+                              )}
+                              {(task.status === "partial" ||
+                                task.status === "failed" ||
+                                task.status === "offline" ||
+                                task.status === "cancelled" ||
+                                task.status === "interrupted") && (
+                                <button
+                                  className="ui-button"
+                                  type="button"
+                                  disabled={!retry.indices.length}
+                                  title={retryReason}
+                                  aria-description={retryReason}
+                                  onClick={() =>
+                                    retryTask(activeProject.id, task.id)
+                                  }
+                                >
+                                  重试
+                                </button>
+                              )}
+                            </span>
+                          );
+                        })}
                         <span className="project-save-state">
                           {generationProgress.saveLabel}
                         </span>

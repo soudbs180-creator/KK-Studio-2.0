@@ -2,6 +2,24 @@ import { expect, test } from "@playwright/test";
 import { expandSidebar } from "./helpers";
 import { openWorkspace, showCanvasNavigation } from "./helpers";
 
+for (const width of [1099, 1920]) {
+  test(`应用菜单使用统一几何 ${width}`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 1080 });
+    await page.goto("/");
+    for (const name of ["文件", "编辑", "窗口", "帮助"]) {
+      await page.getByRole("button", { name, exact: true }).click();
+      const menu = page.locator(".menu-popover");
+      await expect(menu).toHaveCSS("border-radius", "10px");
+      for (const button of await menu.locator("button").all()) {
+        await expect(button).toHaveCSS("height", "32px");
+        await expect(button).toHaveCSS("border-radius", "8px");
+      }
+      await page.keyboard.press("Escape");
+      await expect(menu).toHaveCount(0);
+    }
+  });
+}
+
 test("手机断点清除账号弹层并保留固定顶栏操作", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");

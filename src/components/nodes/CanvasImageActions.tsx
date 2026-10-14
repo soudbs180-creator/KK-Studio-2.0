@@ -15,6 +15,7 @@ export default function CanvasImageActions({
   item,
   anchor,
   selected,
+  hasContent,
   onPreview,
   liked,
   onLike,
@@ -24,6 +25,7 @@ export default function CanvasImageActions({
   item: CanvasCollectionItem;
   anchor: RefObject<HTMLElement>;
   selected: boolean;
+  hasContent: boolean;
   onPreview: () => void;
   liked?: boolean;
   onLike?: () => void;
@@ -32,23 +34,28 @@ export default function CanvasImageActions({
 }) {
   const [redrawOpen, setRedrawOpen] = useState(false);
   const command = useContext(CanvasImageCommandContext);
+  const unresolvedResultReason =
+    item.generationIndex !== undefined && !item.result
+      ? "此结果卡片尚无可用图片，请在任务记录查看进度或核对状态。"
+      : undefined;
   const previewReason =
-    item.preview || item.assetId || item.result
+    unresolvedResultReason ??
+    (item.preview || item.assetId || item.result
       ? undefined
-      : "请先上传图片或生成结果再预览。";
+      : "请先上传图片或生成结果再预览。");
   // An uploaded generation source is still an original/reference for the
   // preview and redraw actions. `referenceOnly` controls whether the prompt
   // composer is mounted; it must not make those actions disappear.
   const reference =
     !item.result && (item.referenceOnly || item.referenceSlot === "主体");
-  const redrawReason = item.assetId
-    ? undefined
-    : "请先导入归档原件，再使用重绘。";
+  const redrawReason =
+    unresolvedResultReason ??
+    (item.assetId ? undefined : "请先导入归档原件，再使用重绘。");
   return (
     <>
       <ImageSelectionToolbar
         anchor={anchor}
-        selected={selected}
+        selected={selected && hasContent}
         title={item.title}
       >
         <button

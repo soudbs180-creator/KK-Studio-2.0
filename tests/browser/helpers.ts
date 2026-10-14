@@ -15,6 +15,32 @@ export async function openWorkspace(page: Page): Promise<void> {
   await openSeededProject(page);
 }
 
+export async function uploadCanvasMedia(
+  node: Locator,
+  kind: "image" | "video",
+): Promise<void> {
+  await node
+    .locator(`input[type="file"][accept^="${kind}/"]:not([multiple])`)
+    .setInputFiles(
+      kind === "image"
+        ? "public/fixtures/demo/blue-hour.png"
+        : "public/fixtures/demo/blue-hour-motion.webm",
+    );
+  const media = node.locator(
+    kind === "image" ? ".uploaded-image" : ".video-placeholder video",
+  );
+  await expect(media).toBeVisible();
+  await expect
+    .poll(() =>
+      media.evaluate((element) =>
+        element instanceof HTMLImageElement
+          ? element.naturalWidth > 0
+          : (element as HTMLVideoElement).readyState >= 1,
+      ),
+    )
+    .toBe(true);
+}
+
 /** Exercise project controls in the expanded rail; the current home defaults compact. */
 export async function expandSidebar(page: Page): Promise<void> {
   const sidebar = page.getByRole("complementary", { name: "工作台侧栏" });

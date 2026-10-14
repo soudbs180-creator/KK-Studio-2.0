@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import CreationModelPicker from "./CreationModelPicker";
 import ModelVariantControl from "../ModelVariantControl";
 import UiIcon from "../UiIcon";
@@ -52,6 +52,9 @@ export default function PromptCreationNode({
   const textGeneration = useCanvasImageGeneration();
   const generation = item.kind === "text" ? textGeneration : demoGeneration;
   const busy = generation.phase === "loading";
+  useEffect(() => {
+    if (!selected || busy) setModelOpen(false);
+  }, [selected, busy]);
   useLayoutEffect(() => {
     if (selected) onExtraHeightChange(60);
   }, [selected, onExtraHeightChange]);
@@ -137,54 +140,59 @@ export default function PromptCreationNode({
             value={item.prompt ?? ""}
             onChange={(e) => onChange({ prompt: e.target.value })}
           />
-          {item.kind === "text" && (
-            <CreationModelPicker
-              disabled={busy}
-              kind="text"
-              value={item.model ?? textGeneration.model}
-              open={!busy && modelOpen}
-              onToggle={() => setModelOpen(!modelOpen)}
-              onChange={(model, selection) => {
-                onChange({
-                  model,
-                  providerConnectionId: selection?.connectionId,
-                  generationSource:
-                    selection?.source === "codex" ? "codex" : undefined,
-                });
-                setModelOpen(false);
+          <div className="creation-controls">
+            {item.kind === "text" && (
+              <CreationModelPicker
+                disabled={busy}
+                kind="text"
+                value={item.model ?? textGeneration.model}
+                open={!busy && modelOpen}
+                onToggle={() => setModelOpen(!modelOpen)}
+                onChange={(model, selection) => {
+                  onChange({
+                    model,
+                    providerConnectionId: selection?.connectionId,
+                    generationSource:
+                      selection?.source === "codex" ? "codex" : undefined,
+                  });
+                  setModelOpen(false);
+                }}
+                onConfigure={() => {
+                  setModelOpen(false);
+                  onConfigure();
+                }}
+              />
+            )}
+            {item.kind === "text" && (
+              <ModelVariantControl
+                disabled={busy}
+                selection={{
+                  source: item.generationSource === "codex" ? "codex" : "api",
+                  model: item.model ?? textGeneration.model,
+                  connectionId: item.providerConnectionId,
+                }}
+                onSelect={(selection) =>
+                  onChange({
+                    model: selection.model,
+                    providerConnectionId: selection.connectionId,
+                  })
+                }
+              />
+            )}
+            <GenerationAction
+              generation={generation}
+              label={label}
+              onRun={() => {
+                if (item.kind === "text")
+                  void textGeneration.run(
+                    item.prompt ?? "",
+                    1,
+                    textGeneration.model,
+                  );
+                else void demoGeneration.run(item.prompt ?? "");
               }}
-              onConfigure={onConfigure}
             />
-          )}
-          {item.kind === "text" && (
-            <ModelVariantControl
-              disabled={busy}
-              selection={{
-                source: item.generationSource === "codex" ? "codex" : "api",
-                model: item.model ?? textGeneration.model,
-                connectionId: item.providerConnectionId,
-              }}
-              onSelect={(selection) =>
-                onChange({
-                  model: selection.model,
-                  providerConnectionId: selection.connectionId,
-                })
-              }
-            />
-          )}
-          <GenerationAction
-            generation={generation}
-            label={label}
-            onRun={() => {
-              if (item.kind === "text")
-                void textGeneration.run(
-                  item.prompt ?? "",
-                  1,
-                  textGeneration.model,
-                );
-              else void demoGeneration.run(item.prompt ?? "");
-            }}
-          />
+          </div>
           <GenerationStatus generation={generation} />
           <span className="prompt-composer-label">
             {item.kind === "text"

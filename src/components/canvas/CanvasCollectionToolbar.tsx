@@ -1,4 +1,4 @@
-import { useContext, type RefObject } from "react";
+import { useContext, type ReactNode, type RefObject } from "react";
 import type { CanvasCollectionItem } from "../../domain/canvasItems";
 import { effectiveTags } from "../../domain/collectionTags";
 import { CanvasImageCommandContext } from "../../features/creation/CanvasImageCommand";
@@ -10,26 +10,31 @@ export default function CanvasCollectionToolbar({
   item,
   anchor,
   selected,
+  hasContent,
   liked,
   onLike,
   onDelete,
+  children,
 }: {
   item: CanvasCollectionItem;
   anchor: RefObject<HTMLElement>;
   selected: boolean;
+  hasContent: boolean;
   liked: boolean;
   onLike: () => void;
   onDelete: () => void;
+  children?: ReactNode;
 }) {
   const command = useContext(CanvasImageCommandContext);
   if (item.kind === "image" && !item.plugin) return null;
   return (
     <ImageSelectionToolbar
       anchor={anchor}
-      selected={selected}
+      selected={selected && hasContent}
       title={item.title}
       label={`卡片操作：${item.title}`}
     >
+      {children}
       <button
         type="button"
         className="kk-button kk-button--tertiary"
@@ -52,18 +57,16 @@ export default function CanvasCollectionToolbar({
           onChange={(tags) => command.updateItemTags?.(item.id, tags)}
         />
       )}
-      {(item.plugin || (!item.result && !item.generationStatus)) && (
-        <button
-          type="button"
-          className="kk-button kk-button--danger"
-          aria-label={`删除${item.title}`}
-          title="移除画布卡片，归档原件保留"
-          onClick={onDelete}
-        >
-          <UiIcon name="delete" />
-          删除
-        </button>
-      )}
+      <button
+        type="button"
+        className="kk-button kk-button--danger"
+        aria-label={`删除${item.title}`}
+        title="移除画布卡片，归档原件保留"
+        onClick={onDelete}
+      >
+        <UiIcon name="delete" />
+        删除
+      </button>
     </ImageSelectionToolbar>
   );
 }

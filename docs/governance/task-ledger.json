@@ -5873,5 +5873,72 @@
     "featureIds": ["FEAT-001", "FEAT-009", "FEAT-011", "FEAT-022"],
     "priorityRationale": "用户五处可见UI混乱和重复旧入口。",
     "lastVerified": "2026-10-15"
+  },
+  {
+    "id": "TASK-UI-FULL-20261015",
+    "title": "完成全页面新UI收敛并验证后合入主线",
+    "goal": "覆盖全部可达页面和已实现卡片，修复模型、输入、圆角、对齐及旧项目恢复缺陷，通过当前SHA门禁后PR集成main。",
+    "scope": "沿用2.1.26新UI与全部既有能力，不新增插件/依赖，不改秘密配置或数据身份；主线差量逐项保全。承接相对main新入库的15份历史交付包及原证据来源，保留原任务branch/status；本任务负责当前2.1.27整合SHA验证。",
+    "acceptance": [
+      "全部实际可达页面/卡片及模型caller有覆盖矩阵，旧分支控件修到共享owner",
+      "各类型空card仅upload、有内容才唯一toolbar，运行/失败/恢复互斥及实际动作链通过；同类分类、任务与连接动作遵循真实状态谓词",
+      "390/1099/1920浏览器验证形状、同排、命中与旧项目恢复，无静默丢稿",
+      "完整verify、Delivery、当前Desktop与精确SHA独立审查通过",
+      "当前head托管检查通过后普通PR合并，fetch复核main与post-merge"
+    ],
+    "dependencies": [
+      "TASK-UI-DETAILS-20261015"
+    ],
+    "owner": "root",
+    "branch": "fix/TASK-UI-FULL-20261015",
+    "worktree": "D:/kk-studio/.worktrees/branch-consolidation-20261011",
+    "affectedModules": [
+      "src/components",
+      "src/styles",
+      "src/features",
+      "tests/browser",
+      "tests/unit",
+      "src/App.tsx",
+      "docs/changes/2026-10-15-ui-full"
+    ],
+    "status": "IN_PROGRESS",
+    "priority": "P1",
+    "evidence": [
+      "docs/changes/2026-10-15-ui-full/verification.md",
+      "docs/changes/2026-10-15-ui-full/review.md",
+      "docs/changes/2026-10-12-governance-currentness/verification.md",
+      "docs/changes/2026-10-12-p1-audit-closeout/verification.md",
+      "docs/changes/2026-10-13-agent-recovery/verification.md",
+      "docs/changes/2026-10-13-capability-ui/verification.md",
+      "docs/changes/2026-10-13-review-remediation/verification.md",
+      "docs/changes/2026-10-13-ui-remaining-fixes/verification.md",
+      "docs/changes/2026-10-14-action-usability-222/verification.md",
+      "docs/changes/2026-10-14-action-usability-223/verification.md",
+      "docs/changes/2026-10-14-agent-canvas-sync/verification.md",
+      "docs/changes/2026-10-14-agent-execution-delivery/verification.md",
+      "docs/changes/2026-10-14-ccswitch-status-recovery/verification.md",
+      "docs/changes/2026-10-14-protocol-cli-completion/verification.md",
+      "docs/changes/2026-10-14-ui-consolidation/verification.md",
+      "docs/changes/2026-10-15-settings-latest-ui/verification.md",
+      "docs/changes/2026-10-15-ui-details/verification.md",
+      "docs/changes/2026-10-15-ui-full/coverage.md"
+    ],
+    "verification": "用户追加空card仅upload/内容toolbar与功能分类互斥仍待新验收；旧79及checkpoint50仅保留原scope。79条定向production Edge GREEN（0retry/flaky/skip），11设置分类三宽3条PASS；合法7500字video/audio恢复单测2PASS。菜单最终2条GREEN、其他资产/侧栏等30条PASS；新增media6/6与retry4/4真实RED，retry全部caller已共享修复/34保护unitPASS待browserGREEN；model5fail中3有效/2前置不适用；中间失败与Google误设持久化/RED JSON覆盖勘误保留；15历史包75必需文件已静态核验并承接。完整verify、新Desktop、最终SHA独立审查、Hosted/PR/main仍待验证。",
+    "verificationResult": "NOT_VERIFIED",
+    "updated": "2026-10-15",
+    "displayStatus": "进行中",
+    "nextAction": "普通菜单最终GREEN已通过；真实merge main694并逐项保全后完成2.1.27完整verify/显式branch Delivery/新Desktop/精确SHA独立审查，再按实际Hosted门禁普通PR合并与post-main验证。",
+    "ownerRole": "repository-maintainer",
+    "requirementRefs": [
+      "ledger:TASK-UI-FULL-20261015"
+    ],
+    "featureIds": [
+      "FEAT-001",
+      "FEAT-009",
+      "FEAT-011",
+      "FEAT-022"
+    ],
+    "priorityRationale": "用户要求全页面/卡片转到新UI，并验证旧项目恢复后合主线。",
+    "lastVerified": "2026-10-15"
   }
 ]

@@ -17,30 +17,30 @@ import {
   type AgentDraftAttachment,
 } from "../features/agent/agentAttachments";
 import "../styles/agent-panel.css";
-import useAgentComposerDraft from "../features/agent/useAgentComposerDraft";
+import useAgentComposerDraft, {
+  type AgentDraftState,
+} from "../features/agent/useAgentComposerDraft";
 
 /** Share the composer while isolating Agent text and attachments from API drafts. */
 export default function AgentComposer({
   agent,
   draftKey,
+  draftState,
   active,
   composer,
 }: {
   agent?: AgentConversationProps;
   draftKey: string;
+  draftState: AgentDraftState;
   active: boolean;
   composer: ReactElement<ComponentProps<typeof ConversationComposer>>;
 }) {
   const { input, update, appendInstructions, clearSentDraft } =
-    useAgentComposerDraft(draftKey, Boolean(active && agent));
-  const [imageDrafts, setImageDrafts] = useState<
-    Record<string, AgentDraftAttachment[]>
-  >({});
+    useAgentComposerDraft(draftKey, Boolean(active && agent), draftState);
+  const [imageDrafts, setImageDrafts] = draftState.images;
   const attachments = imageDrafts[draftKey] ?? [];
   const [readingCanvas, setReadingCanvas] = useState(false);
-  const [importErrors, setImportErrors] = useState<
-    Record<string, string | null>
-  >({});
+  const [importErrors, setImportErrors] = draftState.errors;
   const importError = importErrors[draftKey];
   const setImportError = (error: string | null) =>
     setImportErrors((previous) => ({ ...previous, [draftKey]: error }));
@@ -242,6 +242,11 @@ export default function AgentComposer({
         fileInput,
         onAddFiles: addFiles,
         disabled: false,
+        modelDisabled:
+          composer.props.modelDisabled ||
+          agent.connecting ||
+          agent.sending ||
+          submitting === agent.connectionRevision,
         attachmentDisabled:
           agent.sending ||
           readingCanvas ||

@@ -55,14 +55,14 @@
 }
 .catalog-search {
   margin: 50px 44px 32px;
-  padding: 0 26px;
-  height: 58px;
+  padding: 0 var(--kk-space-4);
+  height: var(--kk-control-h-lg);
   flex-shrink: 0;
   border-radius: var(--ui-radius-control);
   background: var(--bg-card);
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: var(--kk-space-3);
 }
 .catalog-search > img {
   width: 15px;
@@ -71,7 +71,7 @@
 .catalog-search input {
   min-width: 0;
   flex: 1;
-  font-size: 20px;
+  font-size: var(--kk-font-body);
   height: 100%;
 }
 .catalog-search input::placeholder {
@@ -331,10 +331,10 @@
   min-width: 0;
 }
 .catalog-result strong {
-  font-size: 13px;
+  font-size: var(--kk-font-body-strong);
 }
 .catalog-result small {
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   color: var(--text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -395,11 +395,7 @@
   .catalog-search {
     margin: 48px 16px 20px;
     padding: 0 14px;
-    height: 48px;
     gap: 12px;
-  }
-  .catalog-search input {
-    font-size: 14px;
   }
   .catalog-tabs {
     padding: 0 16px;

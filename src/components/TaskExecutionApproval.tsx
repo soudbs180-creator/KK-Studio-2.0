@@ -44,10 +44,19 @@ export default function TaskExecutionApproval({
         </dl>
         <p>审批只适用于本次任务。暂停后恢复仍使用同一任务；重试将重新审批。</p>
         <footer>
-          <button type="button" data-initial-focus onClick={onCancel}>
+          <button
+            type="button"
+            className="kk-button kk-button--secondary"
+            data-initial-focus
+            onClick={onCancel}
+          >
             取消任务
           </button>
-          <button type="button" className="primary-button" onClick={onApprove}>
+          <button
+            type="button"
+            className="kk-button kk-button--primary"
+            onClick={onApprove}
+          >
             批准并提交
           </button>
         </footer>

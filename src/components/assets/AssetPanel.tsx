@@ -241,7 +241,7 @@ export default function AssetPanel({
       </div>
       {!detail && tab === "canvas" && archive?.hasMore && (
         <button
-          className="text-button asset-load-more"
+          className="kk-button kk-button--secondary asset-load-more"
           type="button"
           disabled={archive.loading}
           onClick={archive.loadMore}

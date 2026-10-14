@@ -310,7 +310,7 @@
   min-width: 0;
 }
 .composer-surface .kk-model-variants select {
-  min-height: var(--composer-target);
+  min-height: var(--kk-control-h-md);
   border-radius: var(--ui-radius-control);
   border-color: var(--border-control);
 }

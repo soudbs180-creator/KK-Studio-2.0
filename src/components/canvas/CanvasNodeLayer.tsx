@@ -275,6 +275,7 @@ export default function CanvasNodeLayer({
             markPending(id, "cancelled");
             controls.removeNode(id);
           }}
+          activeLocalResultIds={Object.values(pendingByParent.current).flat()}
           onToggleLike={onToggleLike}
           onConfigure={onConfigure}
           onItemsChange={onItemsChange}

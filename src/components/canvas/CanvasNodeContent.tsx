@@ -29,6 +29,7 @@ export default function CanvasNodeContent({
         item={item as CanvasCollectionItem & { plugin: PluginItemPayload }}
         editing={editing}
         scale={scale}
+        onDelete={onDelete}
       />
     );
   if (

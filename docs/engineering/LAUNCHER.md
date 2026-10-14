@@ -10,7 +10,7 @@ GUI 启动器继续调用根目录 `start-kk-studio.bat --background` 和唯一�
 
 链接读写使用 `scripts/windows/unicode-shortcut.cs` 的 Unicode Shell Link 接口，支持包含中文和 emoji 的目录，不依赖 Windows 系统 ANSI 编码。重复安装会保留原链接 metadata；测试通过真实 `.lnk` 启动并检查无控制台、工作目录和后台参数。
 
-当前开发 checkout 的 Desktop/Web 版本为 2.1.17；`2.1.2` portable ZIP 是历史交付，不能用来证明本次源码已更新。portable 的正式交付收据仍保存在 `releases/DELIVERY.md`；解压整个目录后运行 `kk-studio.exe`，保留旁边的 agent-runtime，无需 Node/Rust。portable 需要已有 WebView2。用户数据仍写入 `%APPDATA%/kk-studio`，应用标识和凭据服务保持不变。
+当前任务 checkout 的 Desktop/Web 源码候选已由版本脚本递增至2.1.27（Mobile2.1.1规划）；本轮新Desktop构建、收据与实际进程验收尚待完成，历史2.1.26产物不代填当前源码。`2.1.2` portable ZIP 是历史交付，不能用来证明本次源码已更新。portable 的正式交付收据仍保存在 `releases/DELIVERY.md`；解压整个目录后运行 `kk-studio.exe`，保留旁边的 agent-runtime，无需 Node/Rust。portable 需要已有 WebView2。用户数据仍写入 `%APPDATA%/kk-studio`，应用标识和凭据服务保持不变。
 
 隔离桌面验收可使用 `start-kk-studio.bat --background --data-dir "C:\绝对路径\独立测试数据"`；路径原样传给应用，重复、缺失、相对路径和未知参数会在启动前拒绝。日常快捷方式不传这个参数，继续使用原数据目录。测试还需独立 WebView2 profile 与 CODEX_HOME，系统凭据使用唯一 synthetic ID，验收后只清理本次拥有的进程与凭据。
 

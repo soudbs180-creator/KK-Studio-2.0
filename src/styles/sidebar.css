@@ -340,7 +340,7 @@
 }
 .sidebar.is-collapsed .account-popup {
   bottom: 62px;
-  width: min(260px, calc(100vw - 24px));
+  width: min(var(--kk-account-popup-width), calc(100vw - 24px));
   z-index: 31;
 }
 @media (max-width: 800px) {

@@ -244,14 +244,14 @@
 .reference-slots-footer .reference-add {
   position: static;
   width: auto;
-  height: var(--kk-control-h-sm);
-  min-height: 18px;
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   padding: 0 6px;
   display: inline-flex;
   align-items: center;
   gap: 3px;
   border: 1px solid var(--border-subtle);
-  border-radius: 6px;
+  border-radius: var(--kk-radius-full);
   font-size: var(--kk-font-caption);
 }
 .reference-slots-footer .reference-limit {

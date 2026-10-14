@@ -1,4 +1,11 @@
-import { useContext, useRef, type Dispatch, type SetStateAction } from "react";
+import {
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import type {
   CanvasCollectionItem,
   CanvasReference,
@@ -39,6 +46,7 @@ export default function CanvasNodeItem({
   onAddReferences,
   onRemoveReference,
   onGenerationState,
+  activeLocalResultIds = [],
 }: {
   item: CanvasCollectionItem;
   controls: ReturnType<typeof useCanvasControls>;
@@ -61,11 +69,48 @@ export default function CanvasNodeItem({
   onAddReferences: (id: string, references: CanvasReference[]) => void;
   onRemoveReference: (id: string) => void;
   onGenerationState: (id: string, phase: GenerationPhase) => void;
+  activeLocalResultIds?: readonly string[];
 }) {
   const command = useContext(CanvasImageCommandContext);
   const uploadInput = useRef<HTMLInputElement>(null);
+  const mediaSource =
+    item.result?.poster ||
+    item.result?.src ||
+    item.preview ||
+    item.assetId ||
+    "";
+  const [mediaContent, setMediaContent] = useState({
+    source: "",
+    ready: false,
+  });
+  const onContentReadyChange = useCallback(
+    (ready: boolean) =>
+      setMediaContent((current) =>
+        current.source === mediaSource && current.ready === ready
+          ? current
+          : { source: mediaSource, ready },
+      ),
+    [mediaSource],
+  );
+  const hasContent = item.plugin
+    ? Boolean(
+        typeof item.plugin.metadata?.content === "string" &&
+        item.plugin.metadata.content.trim(),
+      )
+    : item.kind === "text"
+      ? Boolean(item.result?.text?.trim() || item.prompt?.trim())
+      : item.kind === "audio"
+        ? Boolean(item.result?.kind === "audio" && item.result.src?.trim())
+        : Boolean(
+            mediaSource &&
+            mediaContent.source === mediaSource &&
+            mediaContent.ready,
+          );
   const editing: NodeEditingProps = {
     selected: controls.selectedNode === item.id,
+    hasContent,
+    onContentReadyChange,
+    generationActive: activeLocalResultIds.includes(item.id),
     liked,
     onToggleLike: () => onToggleLike(item.id),
     onConfigure,
@@ -125,6 +170,7 @@ export default function CanvasNodeItem({
     <CanvasImageNodeContext.Provider value={item}>
       <CanvasNodeFrame
         item={item}
+        hasContent={hasContent}
         controls={controls}
         onOpenMenu={addMenu.open}
         menuOpen={addMenu.menu?.parentId === item.id}

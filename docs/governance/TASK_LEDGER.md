@@ -144,6 +144,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-223-ACTIONS-20261014 | 2.1.23 CLI、设置与画布按钮实际行为和分端修复 | DONE | 已完成 | P1 | TASK-222-ACTIONS-20261014 | root | 回读最终纯文档审查与current-release产物哈希；真人账号/付费Provider、Hosted、签名安装器、日常资料与Native Mobile由既有开放任务分别继续。 |
 | TASK-SETTINGS-LATEST-20261015 | 在最新 UI 修复设置溢出、提示遮挡与配置保存风险 | DONE | 已完成 | P1 | TASK-223-ACTIONS-20261014 | root | 保持当前桌面入口指向最新工作区；产品源码改变后按官方launcher重建并重新验证，用户视觉与外部能力另验。 |
 | TASK-UI-DETAILS-20261015 | 统一输入框、设置密度和卡片空态UI | DONE | 已完成 | P1 | TASK-SETTINGS-LATEST-20261015 | root | 本次本地UI范围完成；用户视觉接受、真实Provider、Hosted/安装器及实体手机另验，不自动关闭原开放能力。 |
+| TASK-UI-FULL-20261015 | 完成全页面新UI收敛并验证后合入主线 | IN_PROGRESS | 进行中 | P1 | TASK-UI-DETAILS-20261015 | root | 普通菜单最终GREEN已通过；真实merge main694并逐项保全后完成2.1.27完整verify/显式branch Delivery/新Desktop/精确SHA独立审查，再按实际Hosted门禁普通PR合并与post-main验证。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2768,5 +2769,24 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Verification: PASS — ab878ffd完整verify退出0：Node1278/14skip、Agent199/2skip、browser635首试、UI239/0、development PASS；精确源码独立审查PASS。官方2.1.26重建与38项Native/资源字节一致性通过，owned实例正常关闭。
 - Evidence: [docs/changes/2026-10-15-ui-details/verification.md](../../docs/changes/2026-10-15-ui-details/verification.md), [docs/changes/2026-10-15-ui-details/review.md](../../docs/changes/2026-10-15-ui-details/review.md)
 - Next action: 本次本地UI范围完成；用户视觉接受、真实Provider、Hosted/安装器及实体手机另验，不自动关闭原开放能力。
+- Last verified: 2026-10-15
+- Updated: 2026-10-15
+
+## TASK-UI-FULL-20261015 — 完成全页面新UI收敛并验证后合入主线
+
+- Goal: 覆盖全部可达页面和已实现卡片，修复模型、输入、圆角、对齐及旧项目恢复缺陷，通过当前SHA门禁后PR集成main。
+- Scope: 沿用2.1.26新UI与全部既有能力，不新增插件/依赖，不改秘密配置或数据身份；主线差量逐项保全。承接相对main新入库的15份历史交付包及原证据来源，保留原任务branch/status；本任务负责当前2.1.27整合SHA验证。
+- Display status: 进行中
+- Priority: P1 — 用户要求全页面/卡片转到新UI，并验证旧项目恢复后合主线。
+- Requirement refs: ledger:TASK-UI-FULL-20261015
+- Feature IDs: FEAT-001, FEAT-009, FEAT-011, FEAT-022
+- Owner role: repository-maintainer
+- Acceptance: 全部实际可达页面/卡片及模型caller有覆盖矩阵，旧分支控件修到共享owner; 各类型空card仅upload、有内容才唯一toolbar，运行/失败/恢复互斥及实际动作链通过；同类分类、任务与连接动作遵循真实状态谓词; 390/1099/1920浏览器验证形状、同排、命中与旧项目恢复，无静默丢稿; 完整verify、Delivery、当前Desktop与精确SHA独立审查通过; 当前head托管检查通过后普通PR合并，fetch复核main与post-merge
+- Branch: `fix/TASK-UI-FULL-20261015`
+- Worktree: `D:/kk-studio/.worktrees/branch-consolidation-20261011`
+- Modules: src/components, src/styles, src/features, tests/browser, tests/unit, src/App.tsx, docs/changes/2026-10-15-ui-full
+- Verification: NOT_VERIFIED — 用户追加空card仅upload/内容toolbar与功能分类互斥仍待新验收；旧79及checkpoint50仅保留原scope。79条定向production Edge GREEN（0retry/flaky/skip），11设置分类三宽3条PASS；合法7500字video/audio恢复单测2PASS。菜单最终2条GREEN、其他资产/侧栏等30条PASS；新增media6/6与retry4/4真实RED，retry全部caller已共享修复/34保护unitPASS待browserGREEN；model5fail中3有效/2前置不适用；中间失败与Google误设持久化/RED JSON覆盖勘误保留；15历史包75必需文件已静态核验并承接。完整verify、新Desktop、最终SHA独立审查、Hosted/PR/main仍待验证。
+- Evidence: [docs/changes/2026-10-15-ui-full/verification.md](../../docs/changes/2026-10-15-ui-full/verification.md), [docs/changes/2026-10-15-ui-full/review.md](../../docs/changes/2026-10-15-ui-full/review.md), [docs/changes/2026-10-12-governance-currentness/verification.md](../../docs/changes/2026-10-12-governance-currentness/verification.md), [docs/changes/2026-10-12-p1-audit-closeout/verification.md](../../docs/changes/2026-10-12-p1-audit-closeout/verification.md), [docs/changes/2026-10-13-agent-recovery/verification.md](../../docs/changes/2026-10-13-agent-recovery/verification.md), [docs/changes/2026-10-13-capability-ui/verification.md](../../docs/changes/2026-10-13-capability-ui/verification.md), [docs/changes/2026-10-13-review-remediation/verification.md](../../docs/changes/2026-10-13-review-remediation/verification.md), [docs/changes/2026-10-13-ui-remaining-fixes/verification.md](../../docs/changes/2026-10-13-ui-remaining-fixes/verification.md), [docs/changes/2026-10-14-action-usability-222/verification.md](../../docs/changes/2026-10-14-action-usability-222/verification.md), [docs/changes/2026-10-14-action-usability-223/verification.md](../../docs/changes/2026-10-14-action-usability-223/verification.md), [docs/changes/2026-10-14-agent-canvas-sync/verification.md](../../docs/changes/2026-10-14-agent-canvas-sync/verification.md), [docs/changes/2026-10-14-agent-execution-delivery/verification.md](../../docs/changes/2026-10-14-agent-execution-delivery/verification.md), [docs/changes/2026-10-14-ccswitch-status-recovery/verification.md](../../docs/changes/2026-10-14-ccswitch-status-recovery/verification.md), [docs/changes/2026-10-14-protocol-cli-completion/verification.md](../../docs/changes/2026-10-14-protocol-cli-completion/verification.md), [docs/changes/2026-10-14-ui-consolidation/verification.md](../../docs/changes/2026-10-14-ui-consolidation/verification.md), [docs/changes/2026-10-15-settings-latest-ui/verification.md](../../docs/changes/2026-10-15-settings-latest-ui/verification.md), [docs/changes/2026-10-15-ui-details/verification.md](../../docs/changes/2026-10-15-ui-details/verification.md), [docs/changes/2026-10-15-ui-full/coverage.md](../../docs/changes/2026-10-15-ui-full/coverage.md)
+- Next action: 普通菜单最终GREEN已通过；真实merge main694并逐项保全后完成2.1.27完整verify/显式branch Delivery/新Desktop/精确SHA独立审查，再按实际Hosted门禁普通PR合并与post-main验证。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15

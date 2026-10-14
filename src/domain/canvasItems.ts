@@ -181,6 +181,10 @@ export interface CanvasReference {
 
 export interface NodeEditingProps {
   selected: boolean;
+  /** Transient rendered-content state; never persisted in the project. */
+  hasContent?: boolean;
+  onContentReadyChange?: (ready: boolean) => void;
+  generationActive?: boolean;
   onConfigure: () => void;
   onChange: (patch: Partial<CanvasCollectionItem>) => void;
   liked: boolean;

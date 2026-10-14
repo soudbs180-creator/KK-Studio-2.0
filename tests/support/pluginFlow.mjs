@@ -37,6 +37,16 @@ export async function addAndEditBundledPlugins(page) {
       .click();
     const node = page.locator(`[data-plugin-type="${plugin.type}"]`);
     await expect(node).toBeVisible();
+    const frame = page.locator(
+      `[data-canvas-node]:has([data-plugin-type="${plugin.type}"])`,
+    );
+    await frame.focus();
+    await frame.press("Enter");
+    const toolbar = page.getByRole("toolbar", {
+      name: `卡片操作：${plugin.title}`,
+      exact: true,
+    });
+    await expect(toolbar).toHaveCount(0);
     if (plugin.title === "HTML" || plugin.title === "Markdown") {
       await node
         .getByTitle(`编辑 ${plugin.title} 源码`, { exact: true })
@@ -47,8 +57,9 @@ export async function addAndEditBundledPlugins(page) {
       await node.dblclick();
     }
     await node.locator("textarea").fill(plugin.content);
+    await expect(toolbar).toBeVisible();
     if (plugin.title === "HTML" || plugin.title === "Markdown") {
-      await node.getByTitle("预览渲染结果", { exact: true }).click();
+      await toolbar.getByTitle("预览渲染结果", { exact: true }).click();
     } else {
       await node.locator("textarea").press("Escape");
     }

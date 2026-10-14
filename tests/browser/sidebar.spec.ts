@@ -182,11 +182,12 @@ test("个人信息弹层提供可读的账户信息和可用的更新入口", as
   const popup = page.locator(".account-popup");
   await expect(popup).toBeVisible();
   const bounds = await popup.boundingBox();
-  expect(bounds?.width).toBe(260);
-  expect(bounds?.height).toBe(230);
+  expect(bounds?.width).toBe(320);
+  expect(bounds!.height).toBeGreaterThan(230);
+  expect(bounds!.height).toBeLessThan(page.viewportSize()!.height);
   await expect(popup.locator(".account-identity strong")).toHaveCSS(
     "font-size",
-    "12px",
+    "14px",
   );
   await expect(popup.locator(".account-popup-actions button")).toHaveCount(2);
   for (const button of await popup

@@ -15,12 +15,12 @@
 - `canonicalRepository`: `D:/kk-studio/KK-Studio-2.0`
 - `canonicalRef`: `origin/main`
 - `canonicalHead`: `694a00607f6f63de1b8c43d0ebb117adf5d34f67`
-- `canonicalHeadVerifiedFrom`: 沿用c1fae190基线的main694a006来源记录；本次未fetch或回读Hosted，不宣称当前远端新鲜度。
-- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0 保留 codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c 的并发dirty与原index，旧UI源码Desktop/Web2.1.24；51fcc+旧修复428a属于错误UI基线。上一轮2.1.25在primary追加过来源指针与SHA备份，本次2.1.26不写primary。实际Desktop默认入口仍指向branch-consolidation-20261011，当前已重建2.1.26；旧版本/盘点记录只保留历史范围。
-- `taskLedger`: 138 records; 6 REVIEW, 82 DONE, 12 TODO, 34 PARTIAL, 4 BLOCKED; 56 open records.
+- `canonicalHeadVerifiedFrom`: 2026-10-15 root实际git fetch及GitHub API回读确认694a006；本轮Hosted检查与PR/main合并尚未验收。
+- `primaryCheckoutState`: D:/kk-studio/KK-Studio-2.0 保留codex/ui-redesign-20261011@51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c并发dirty与原index，本轮只读计数254条；不reset/clean/覆盖。当前task位于branch-consolidation-20261011 / fix/TASK-UI-FULL-20261015，source HEAD6bc2e3da加在途修复；Desktop/Web候选2.1.27已版本脚本递增，实际新Desktop构建待验；历史2.1.26产物不代填。
+- `taskLedger`: 139 records; 82 DONE, 1 IN_PROGRESS, 34 PARTIAL, 12 TODO, 6 REVIEW, 4 BLOCKED; 57 open records.
 - `workspaceWorktrees`: 本轮末次只读worktree登记回读109项。此前恢复盘点107登记项、39 dirty来源、39一致快照；该盘点时原index变动0，872源路径与313排除路径可溯源。首轮104项/40一致与1volatile记录保留原时点；历史107项快照不覆盖后续登记来源。原分支/index/资料保留，本任务未删除、移动或覆盖其他来源。
 - `reclamationPolicy`: generated dependencies/build output may be reclaimed only from a recorded, non-primary worktree after immutable SHA inventory and explicit candidate approval; source changes and evidence paths are protected.
-- `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
+- `remoteAutoMerge`: 本轮root已GET回读3个active ruleset；stable23866925对main/master/release启用PR、stale-dismiss/threads和strict verify/delivery（Actions15368）、0强制approving、无bypass/merge_queue；允许merge/squash/rebase。main protected=true由ruleset保护；legacy protection.enabled=false不表示未保护。自动helper activation/paused状态尚无本轮证据，不宣称已启用，不改远端配置。
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
 
 - `settingsLatestUiCandidate`: 历史2.1.25基线（保留原证据），TASK-SETTINGS-LATEST-20261015本地DONE/PASS；当时基于c1fae190，branch-consolidation-20261011 / fix/TASK-SETTINGS-LATEST-20261015的Desktop/Web2.1.25。产品源码2a4e66d1、完整verify784039e7、独立源/测试054cd53f；Node1278/Agent199（既有skip14/2）、Edge629首试0failure/flaky/skip、UI242/0、development5步。当时production Web/Tauri1280/240/192/#21a673/overflow0；官方EXEc9c3b4e/input2a09db54，Native20+11+1+5及owned凭据/fixture清理PASS。该轮将Desktop入口指向此工作树并实际启动日常PID64772；primary/index和配置身份保留，所有失败原件保留。此后2.1.26以uiDetailsCandidate为准，历史PASS不代填新几何。[原轮验证](../changes/2026-10-15-settings-latest-ui/verification.md)。
@@ -36,6 +36,8 @@
 - `actionUsability224Candidate`: Desktop/Web2.1.24产品源码58b5c07f34718769e10b76c89d510615bea2fefc，TASK-223本地授权范围DONE/PASS。完整九步verify退出0：Node1273pass/14既有skip，Agent199pass/2既有skip，Edge608全部首试/0flaky/0skip，UI242/0，development5步骤PASS；Rust163与fmt通过。最终源码核心/UI独立审查PASS，官方CLI20项、便携CLI20项，实际Tauri官方46项、同字节便携46项通过。新依赖0，入口gzip增加1221B<16384；生产运行时4280文件/519481278B。用户确认手机布局、主题/独立背景、存储identifier/路径、原件与primary dirty/index保留；旧135任务及37功能状态逐项不变。Native Mobile2.1.1仍PLANNED；Hosted、真人CLI账号/付费Provider、签名安装器、日常资料、实体手机与用户视觉验收分别开放。[本轮验证](../changes/2026-10-14-action-usability-223/verification.md)。
 
 - `uiDetailsCandidate`: TASK-UI-DETAILS-20261015 本地DONE/PASS；fix/TASK-UI-DETAILS-20261015复用branch-consolidation-20261011，base18e143f、产品ab878ffd，Desktop/Web2.1.26，Mobile2.1.1规划不变。完整verify退出0：Node1278/14skip、Agent199/2skip、browser635首试、UI239/0、development PASS；精确源码独立审查PASS。官方Agent重建、实际Tauri38项与dist字节一致性通过，EXE0f65d382/input864b0376；现有快捷方式同路径，owned实例正常关闭，未启动日常profile。primary dirty/index和所有失败保留；用户视觉接受、真实Provider、Hosted/签名/实体手机另验。[本次验证](../changes/2026-10-15-ui-details/verification.md)。
+
+- `uiFullCandidate`: TASK-UI-FULL-20261015 IN_PROGRESS/NOT_VERIFIED；79定向browser GREEN与全部设置三宽3条PASS，菜单最终2条GREEN已通过；完整verify/新Desktop/exact SHA review/Hosted/普通merge/post-main仍待实际回执。主线102预检冲突按证据裁决，15历史交付包由本任务承接，原任务branch/status与历史能力保持；main独有历史文档已补回。[验证](../changes/2026-10-15-ui-full/verification.md) / [覆盖](../changes/2026-10-15-ui-full/coverage.md)。
 
 <!-- CURRENT_FACTS_END -->
 <!-- HISTORICAL_SNAPSHOTS_BEGIN -->

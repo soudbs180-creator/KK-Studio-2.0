@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { openWorkspace } from "./helpers";
+import { openWorkspace, uploadCanvasMedia } from "./helpers";
 
 test("资产搜索、空态恢复、列表、紧凑视图及创建主体", async ({ page }) => {
   const errors: string[] = [];
@@ -500,16 +500,20 @@ test("画布新增卡片可拖动删除，喜欢内容同步到独立面板", as
   await expect(added).toHaveCount(1);
   await expect(page.getByTestId("image-composer")).toBeVisible();
   await page.screenshot({ path: "test-results/runtime/canvas-added-card.png" });
+  await expect(page.getByRole("toolbar", { name: /^图片操作：/ })).toHaveCount(
+    0,
+  );
+  await uploadCanvasMedia(added, "image");
   await page
-    .getByRole("toolbar", { name: "图片操作：新图片卡片", exact: true })
-    .getByRole("button", { name: "喜欢新图片卡片", exact: true })
+    .getByRole("toolbar", { name: "图片操作：blue-hour.png", exact: true })
+    .getByRole("button", { name: "喜欢blue-hour.png", exact: true })
     .click();
   const library = page.getByRole("button", { name: "喜欢与标签", exact: true });
   await library.click();
   await page.getByRole("menuitem", { name: "我喜欢的", exact: true }).click();
   const likes = page.getByTestId("canvas-likes-panel");
   await expect(
-    likes.locator(".saved-like-card").getByText("新图片卡片"),
+    likes.locator(".saved-like-card").getByText("blue-hour.png"),
   ).toBeVisible();
   await page.screenshot({
     path: "test-results/runtime/collection-from-canvas.png",

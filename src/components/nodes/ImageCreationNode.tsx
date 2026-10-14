@@ -17,6 +17,7 @@ import type {
 import DemoMediaPreview from "./DemoMediaPreview";
 import { readReferenceImages } from "./referenceUpload";
 import CanvasImageActions from "./CanvasImageActions";
+import { useCanvasMediaContent } from "../canvas/useCanvasMediaContent";
 import { readImageDimensions } from "../../features/creation/mediaDimensions";
 import { aspectRatioForDimensions } from "../../domain/mediaDimensions";
 
@@ -24,6 +25,8 @@ export default function ImageCreationNode({
   item,
   onConfigure,
   selected,
+  hasContent,
+  onContentReadyChange,
   onChange,
   liked,
   onToggleLike,
@@ -53,6 +56,7 @@ export default function ImageCreationNode({
       ? command.openPreview(item.id, "参考图片")
       : setPreviewOpen(true);
   const preview = useRef<HTMLDivElement>(null);
+  const imageElement = useRef<HTMLImageElement>(null);
   const referenceFile = useRef<HTMLInputElement>(null);
   const referenceSlot = useRef<CanvasReference["slot"]>();
   const uploadVersion = useRef(0);
@@ -63,6 +67,11 @@ export default function ImageCreationNode({
     [],
   );
   useEffect(() => setImage(item.preview ?? ""), [item.preview]);
+  const reportContentReady = useCanvasMediaContent(
+    imageElement,
+    image,
+    onContentReadyChange,
+  );
   useEffect(() => {
     if (item.referenceOnly) onExtraHeightChange(0);
   }, [item.referenceOnly, onExtraHeightChange]);
@@ -98,7 +107,6 @@ export default function ImageCreationNode({
     void readReferenceImages([value])
       .then(async ([asset]) => {
         if (version !== uploadVersion.current) return;
-        setImage(asset.preview ?? "");
         const dimensions = await readImageDimensions(asset.preview ?? "");
         if (version !== uploadVersion.current) return;
         onChange({
@@ -113,6 +121,7 @@ export default function ImageCreationNode({
           // are created exclusively by the composer slot upload flow.
           referenceOnly: false,
         });
+        setImage(asset.preview ?? "");
         setError("");
       })
       .catch((reason: unknown) => {
@@ -136,7 +145,7 @@ export default function ImageCreationNode({
       <div className="image-node-header">
         <span className="image-caption">{item.title}</span>
         <div className="image-node-header-actions">
-          {!image && (
+          {!image && !hasContent && (
             <button
               type="button"
               className="upload-image"
@@ -192,11 +201,13 @@ export default function ImageCreationNode({
         {image ? (
           <>
             <img
+              ref={imageElement}
               className="uploaded-image"
               src={image}
               alt="参考图片"
               draggable={false}
               onLoad={(event) => {
+                reportContentReady();
                 const { naturalWidth, naturalHeight } = event.currentTarget;
                 if (
                   naturalWidth > 1 &&
@@ -208,6 +219,11 @@ export default function ImageCreationNode({
                     mediaWidth: naturalWidth,
                     mediaHeight: naturalHeight,
                   });
+              }}
+              onError={() => {
+                onContentReadyChange?.(false);
+                setImage("");
+                setError("本地图片无法预览，请重新导入原件。");
               }}
               onDoubleClick={(event) => {
                 event.stopPropagation();
@@ -227,6 +243,7 @@ export default function ImageCreationNode({
         item={item}
         anchor={preview}
         selected={selected}
+        hasContent={Boolean(hasContent)}
         onPreview={openPreview}
         references={incomingReferences}
         liked={liked}

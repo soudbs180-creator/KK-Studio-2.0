@@ -238,16 +238,9 @@
 }
 .asset-provenance-badges > span {
   padding: 4px 7px;
-  border-radius: 7px;
+  border-radius: var(--kk-radius-full);
   background: var(--bg-card-hover);
   color: var(--text-accent);
-  font-size: var(--kk-font-caption);
-  line-height: var(--kk-line-caption);
-}
-.asset-provenance-badges button {
-  padding: 5px 8px;
-  border: 1px solid var(--border-default);
-  border-radius: 8px;
   font-size: var(--kk-font-caption);
   line-height: var(--kk-line-caption);
 }
@@ -342,13 +335,6 @@
   position: absolute;
   right: 30px;
   bottom: 35px;
-  padding: 6px 10px;
-  border: 1px solid var(--border-default);
-  border-radius: 6px;
-  background: var(--bg-card);
-  color: var(--text-primary);
-  font-size: var(--kk-font-caption);
-  line-height: var(--kk-line-caption);
 }
 .asset-empty {
   grid-column: 1/-1;
@@ -384,7 +370,7 @@
   display: grid;
   place-items: center;
   background: var(--bg-input);
-  border-radius: 12px;
+  border-radius: var(--kk-radius-lg);
 }
 .asset-large-preview > .asset-icon {
   width: 80px;
@@ -407,7 +393,7 @@
   display: grid;
   gap: 20px;
   border: 1px solid var(--border-default);
-  border-radius: 16px;
+  border-radius: var(--kk-radius-panel);
   background: var(--bg-surface);
 }
 .asset-create h3 {
@@ -426,14 +412,15 @@
 .asset-create input {
   background: var(--bg-card-hover);
   border: 1px solid var(--border-default);
-  padding: 12px;
-  border-radius: 8px;
   width: 100%;
 }
 .asset-create form > div {
   display: flex;
   justify-content: flex-end;
   gap: 20px;
+}
+.asset-create form > div .kk-button {
+  min-height: var(--kk-control-h-lg);
 }
 .asset-panel.compact {
   width: 305px;

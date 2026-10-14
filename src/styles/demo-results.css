@@ -39,7 +39,7 @@
   left: 22px;
   top: 18px;
   color: var(--ui-muted);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
 }
 .demo-result-pending {
   height: 190px;
@@ -47,7 +47,7 @@
   place-items: center;
   align-content: center;
   gap: 8px;
-  border-radius: 14px;
+  border-radius: var(--kk-radius-lg);
   background: var(--bg-app);
   color: var(--ui-muted);
   text-align: center;
@@ -59,7 +59,7 @@
 }
 .demo-result-pending p {
   margin: 0;
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
 }
 .demo-pending-spinner {
   width: 24px;
@@ -88,7 +88,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   color: var(--ui-muted);
 }
 .demo-badge {
@@ -98,7 +98,7 @@
   border: 1px solid var(--border-default);
   border-radius: 12px;
   padding: 3px 8px;
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
 }
 .demo-result-node h3 {
   font-size: 14px;
@@ -112,7 +112,7 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  border-radius: 14px;
+  border-radius: var(--kk-radius-lg);
   background: var(--bg-app);
 }
 .demo-result-preview img {
@@ -166,11 +166,11 @@
   border-radius: 8px;
   background: var(--bg-card);
   color: var(--ui-text);
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
 }
 .demo-description {
   color: var(--ui-muted);
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   margin: 10px 0 12px;
 }
 .demo-wave {
@@ -188,7 +188,7 @@
   align-items: center;
   gap: 8px;
   color: var(--ui-muted);
-  font-size: 10px;
+  font-size: var(--kk-font-caption);
 }
 .demo-run [role="status"] {
   max-width: 280px;
@@ -207,7 +207,7 @@
   width: 100%;
   padding: 8px 12px;
   border: 1px solid var(--border-default);
-  border-radius: 14px;
+  border-radius: var(--kk-radius-lg);
   background: var(--bg-card);
 }
 .creation-composer:has(.generation-feedback) > .demo-run {
@@ -217,7 +217,7 @@
   width: 100%;
   height: 186px;
   border: 1px solid var(--border-default);
-  border-radius: 14px;
+  border-radius: var(--kk-radius-lg);
   padding: 14px;
   font-size: 13px;
   resize: none;
@@ -231,7 +231,7 @@
   width: min(900px, calc(100vw - 32px));
   max-height: calc(100dvh - 32px);
   padding: 28px;
-  border-radius: 28px;
+  border-radius: var(--kk-radius-panel);
   overflow: auto;
   color: var(--ui-text);
   background: var(--bg-surface);
@@ -259,7 +259,7 @@
 }
 .demo-eyebrow {
   letter-spacing: 2px;
-  font-size: 10px !important;
+  font-size: var(--kk-font-caption) !important;
 }
 .demo-library-grid {
   display: grid;

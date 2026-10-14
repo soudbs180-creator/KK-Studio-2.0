@@ -28,11 +28,21 @@ export default function AccountPopup({
         </div>
       </div>
       <div className="account-popup-actions">
-        <button type="button" disabled title="账号切换暂未接入">
+        <button
+          type="button"
+          className="kk-button kk-button--secondary"
+          disabled
+          title="账号切换暂未接入"
+        >
           <img src="/design/figma/account-user.svg" alt="" />
           切换账号
         </button>
-        <button type="button" disabled title="退出登录暂未接入">
+        <button
+          type="button"
+          className="kk-button kk-button--secondary"
+          disabled
+          title="退出登录暂未接入"
+        >
           <img src="/design/figma/account-logout.svg" alt="" />
           退出登录
         </button>
@@ -53,16 +63,6 @@ export default function AccountPopup({
           <span>订阅</span>
         </div>
         <span className="account-badge">普通用户</span>
-        <img
-          className="account-credit-chevron account-credit-chevron-top"
-          src="/design/figma/account-chevron.svg"
-          alt=""
-        />
-        <img
-          className="account-credit-chevron account-credit-chevron-bottom"
-          src="/design/figma/account-chevron.svg"
-          alt=""
-        />
       </div>
       <div className="account-popup-row account-theme-row">
         <div className="account-popup-row-label">
@@ -71,11 +71,11 @@ export default function AccountPopup({
         </div>
         <button
           type="button"
-          className="account-theme-button"
+          className="account-theme-button kk-button kk-button--secondary"
           aria-label="打开主题设置"
           onClick={() => onOpenSettings("general")}
         >
-          <img src="/design/figma/account-theme.svg" alt="" />
+          外观设置
         </button>
       </div>
       <div className="account-popup-row account-version-row">
@@ -85,6 +85,7 @@ export default function AccountPopup({
         </div>
         <button
           type="button"
+          className="kk-button kk-button--secondary"
           title="打开软件更新设置"
           onClick={() => onOpenSettings("updates")}
         >

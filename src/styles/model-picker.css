@@ -54,15 +54,17 @@
   align-items: center;
   gap: 6px;
   margin: 6px 0;
-  font-size: 11px;
+  font-size: var(--kk-font-caption);
   color: var(--text-secondary);
 }
 .kk-model-variants select {
+  height: var(--kk-control-h-md);
+  min-height: var(--kk-control-h-md);
   max-width: 100%;
   min-width: 0;
   padding: 4px;
   border: 1px solid var(--border-default);
-  border-radius: 4px;
+  border-radius: var(--kk-radius-control);
   background: var(--bg-surface);
   color: var(--text-primary);
 }

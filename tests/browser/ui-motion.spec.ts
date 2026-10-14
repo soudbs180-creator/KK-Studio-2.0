@@ -1,13 +1,18 @@
 import { expect, test } from "@playwright/test";
-import { openWorkspace, showCanvasNavigation } from "./helpers";
+import {
+  openWorkspace,
+  showCanvasNavigation,
+  uploadCanvasMedia,
+} from "./helpers";
 
 test("独立喜欢面板可编辑、查找和移除，标签分类保持分开", async ({ page }) => {
   await openWorkspace(page);
+  await uploadCanvasMedia(page.getByTestId("canvas-node-image"), "image");
   await page.locator(".image-preview").click();
   await page.getByLabel("图片提示词").fill("清晨森林中的小屋");
   await page
-    .getByRole("toolbar", { name: "图片操作：图片创建卡片", exact: true })
-    .getByRole("button", { name: "喜欢图片创建卡片", exact: true })
+    .getByRole("toolbar", { name: "图片操作：blue-hour.png", exact: true })
+    .getByRole("button", { name: "喜欢blue-hour.png", exact: true })
     .click();
   const library = page.getByRole("button", { name: "喜欢与标签", exact: true });
   await library.click();

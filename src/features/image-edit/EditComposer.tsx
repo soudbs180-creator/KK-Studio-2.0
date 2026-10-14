@@ -3,8 +3,10 @@ import ComposerTextarea from "../../components/ComposerTextarea.tsx";
 import UiIcon from "../../components/UiIcon.tsx";
 import { readReferenceImages } from "../../components/nodes/referenceUpload.ts";
 import { CanvasImageCommandContext } from "../creation/CanvasImageCommand.tsx";
-import { catalogForConnection } from "../models/modelCatalog.ts";
-import { readProviderConnections } from "../creation/providerRegistry.ts";
+import ModelPickerMenu from "../../components/ModelPickerMenu.tsx";
+import { useDismissible } from "../../components/useDismissible.ts";
+import { selectedModelLabel } from "../models/modelPresentation.ts";
+import type { ModelSelection } from "../models/modelSelection.ts";
 import { nextColorLabel, type MaskDocument, type MaskRegion } from "./mask.ts";
 import type {
   CanvasCollectionItem,
@@ -67,10 +69,23 @@ export default function EditComposer({
     candidates = document.regions.filter((r) => r.color),
     showCandidates = /@[^\s@]*$/u.test(prompt);
   const connectionId =
-      source.providerConnectionId ?? command?.providerConnectionId,
-    connections = readProviderConnections().filter((c) =>
-      c.capabilities.modalities.includes("image"),
-    );
+    source.providerConnectionId ?? command?.providerConnectionId;
+  const [modelOpen, setModelOpen] = useState(false);
+  const modelBoundary = useRef<HTMLDivElement>(null);
+  const modelTrigger = useRef<HTMLButtonElement>(null);
+  const modelLocked = loading || source.generationSource === "codex";
+  const currentModel: ModelSelection = {
+    source: source.generationSource === "codex" ? "codex" : "api",
+    model: source.model ?? command?.model ?? "",
+    connectionId,
+    kind: "image",
+  };
+  useDismissible(
+    modelOpen && !modelLocked,
+    modelBoundary,
+    () => setModelOpen(false),
+    modelTrigger,
+  );
   return (
     <div className="image-edit-composer">
       <div className="image-edit-tags">
@@ -199,36 +214,53 @@ export default function EditComposer({
         </button>
       </div>
       <div className="image-edit-model">
-        <label>
-          模型
-          <select
+        <div className="control-anchor model-anchor" ref={modelBoundary}>
+          <button
+            type="button"
+            ref={modelTrigger}
+            className="model-button"
             aria-label="重绘模型"
-            disabled={loading || source.generationSource === "codex"}
-            value={`${connectionId ?? ""}|${source.model ?? command?.model ?? ""}`}
-            onChange={(e) => {
-              const [id, model] = e.target.value.split("|");
-              command?.updateItem?.(source.id, {
-                model,
-                providerConnectionId: id,
-              });
-            }}
+            aria-haspopup="menu"
+            aria-expanded={modelOpen && !modelLocked}
+            disabled={modelLocked}
+            title={
+              source.generationSource === "codex"
+                ? "Codex 来源重绘沿用当前模型"
+                : loading
+                  ? "生成中暂不能修改模型"
+                  : currentModel.model
+            }
+            onClick={() => setModelOpen(!modelOpen)}
           >
-            <option
-              value={`${connectionId ?? ""}|${source.model ?? command?.model ?? ""}`}
-            >
-              {source.model ?? command?.model ?? "未选择模型"}
-            </option>
-            {connections.flatMap((c) =>
-              catalogForConnection(c)
-                .filter((m) => m.kind === "image" || m.kind === "unknown")
-                .map((m) => (
-                  <option key={`${c.id}|${m.id}`} value={`${c.id}|${m.id}`}>
-                    {c.displayName} · {m.id}
-                  </option>
-                )),
-            )}
-          </select>
-        </label>
+            <span className="model-name">
+              {selectedModelLabel(
+                currentModel,
+                currentModel.model || "未选择模型",
+              )}
+            </span>
+          </button>
+          {modelOpen && !modelLocked && (
+            <ModelPickerMenu
+              scope="canvas-image"
+              kind="image"
+              apiOnly
+              current={currentModel}
+              onSelect={(choice) => {
+                if (choice.source !== "api") return;
+                command?.updateItem?.(source.id, {
+                  model: choice.model,
+                  providerConnectionId: choice.connectionId,
+                  generationSource: undefined,
+                });
+                setModelOpen(false);
+              }}
+              onConfigure={() => {
+                setModelOpen(false);
+                command?.configure?.();
+              }}
+            />
+          )}
+        </div>
         <span>
           Enter 发送 · Shift+Enter 换行{uploading ? " · 正在归档参考图…" : ""}
         </span>
