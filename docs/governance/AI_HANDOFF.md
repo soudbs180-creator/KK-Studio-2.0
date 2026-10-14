@@ -10,7 +10,9 @@
 
 ## 本轮恢复入口
 
-TASK-SETTINGS-LATEST-20261015：当前 IN_PROGRESS / NOT_VERIFIED。先读[意图](../changes/2026-10-15-settings-latest-ui/intent.md)、[计划](../changes/2026-10-15-settings-latest-ui/plan.md)、[验证](../changes/2026-10-15-settings-latest-ui/verification.md)和[审查](../changes/2026-10-15-settings-latest-ui/review.md)。只在最新UI `c1fae190618be3bb5a4e00208b8f4776ec8c0be5` 的 `fix/TASK-SETTINGS-LATEST-20261015` 工作树继续；基线Desktop/Web2.1.24，候选2.1.25，沿用绿色、1280/240/192和手机分级导航。primary51fccfc7+修复428a3a2d是误启动旧UI，任何旧验证或已有2.1.24验收不得代填当前结果。root继续已授权设置布局、提示与保存风险修复，保留原配置、primary dirty/index与资料身份；浏览器当前加载来源、配置恢复、Desktop工件和独立SHA review都要新证据。
+TASK-SETTINGS-LATEST-20261015 本地DONE/PASS。先读[验证](../changes/2026-10-15-settings-latest-ui/verification.md)和[审查](../changes/2026-10-15-settings-latest-ui/review.md)。最新UI基线c1fae190，当前2.1.25工作区 D:/kk-studio/.worktrees/branch-consolidation-20261011 / fix/TASK-SETTINGS-LATEST-20261015；源2a4e66d1，完整verify784039e7，独立源/测试054cd53f。Desktop快捷方式已指向此工作区，正式新建EXEc9c3b4e/input2a09db54；最新1280/240/192绿色和手机分级导航有Web/Tauri当前证据。原primary51fcc+428a旧基线保留源码/index恢复，不据此启动最新版；旧截图、旧2.1.24包和历史PASS不代填新差异。
+
+本次629浏览器首试、Node1278/Agent199及原skip14/2、UI242/0、development5步，Native20+11+1+5均PASS且owned凭据/fixture清理。全部失败与旧Native浏览器route纠正保留，工程外证据 D:/kk-studio/.analysis/settings-ui-latest-20261015。Mobile2.1.1、真实账号/付费Provider、Hosted/签名及用户视觉验收继续按原开放任务分开验收。
 
 ### 此前2.1.24交付基线（保留历史）
 

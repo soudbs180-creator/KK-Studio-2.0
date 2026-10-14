@@ -23,7 +23,7 @@
 - `remoteAutoMerge`: `NOT_READ_BACK`; local workflow and runbooks are reviewable, but no remote setting is claimed as enabled.
 - `historicalRule`: paragraphs after `<!-- HISTORICAL_SNAPSHOTS_BEGIN -->` are dated evidence only and cannot overwrite these facts.
 
-- `settingsLatestUiCandidate`: TASK-SETTINGS-LATEST-20261015 在 `fix/TASK-SETTINGS-LATEST-20261015` / `D:/kk-studio/.worktrees/branch-consolidation-20261011` 承接最新 UI `c1fae190618be3bb5a4e00208b8f4776ec8c0be5` / Desktop/Web2.1.24，候选2.1.25；保留绿色、1280/240/192 与手机分级导航，修复设置溢出、提示遮挡、模型交互和保存风险。此前primary51fccfc7+修复428a3a2d属于错误UI基线，不能作最新版证据；旧2.1.24验收也不代填本次差异。任务IN_PROGRESS/NOT_VERIFIED，当前浏览器/配置保留、Desktop构建、独立SHA审查待新回执；primary并发dirty/index与资料保留。[本次验证](../changes/2026-10-15-settings-latest-ui/verification.md)。
+- `settingsLatestUiCandidate`: TASK-SETTINGS-LATEST-20261015 在 `fix/TASK-SETTINGS-LATEST-20261015` / `D:/kk-studio/.worktrees/branch-consolidation-20261011` 承接最新 UI `c1fae190618be3bb5a4e00208b8f4776ec8c0be5` / Desktop/Web2.1.24，候选2.1.25；保留绿色、1280/240/192 与手机分级导航，修复设置溢出、提示遮挡、模型交互和保存风险。此前primary51fccfc7+修复428a3a2d属于错误UI基线，不能作最新版证据；旧2.1.24验收也不代填本次差异。当前development布局12/12、Browser CodeBuddy取消/确认2/2与HMR探针通过；完整verify、production/Native、配置恢复与独立SHA审查待新回执，任务仍IN_PROGRESS/NOT_VERIFIED。原失败、primary并发dirty/index与资料保留。[本次验证](../changes/2026-10-15-settings-latest-ui/verification.md)。
 
 - `agentRecoveryEvidence`: [TASK-AGENT-RECOVERY-20261013 verification](../changes/2026-10-13-agent-recovery/verification.md)保留原版本范围；最新凭据状态恢复来源与旧profile/保存边界按[2026-10-14原作者证据](../changes/2026-10-14-ccswitch-status-recovery/verification.md)回读，不改旧SHA。本轮2.1.21组合Native使用独立资料，不代替日常profile、实钥或真实Provider验收。
 

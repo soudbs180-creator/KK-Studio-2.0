@@ -1,67 +1,46 @@
-# Verification：最新 UI 设置修复
+# 最新 UI 设置修复验证
 
-- Task ID：TASK-SETTINGS-LATEST-20261015；记录状态：IN PROGRESS；验证：NOT_VERIFIED；交付包角色：`current`。
-- 日期/时区：2026-10-15 / Asia/Shanghai；[intent](intent.md)、[spec](spec.md)、[plan](plan.md)、[review](review.md)。
-- cwd：`D:/kk-studio/.worktrees/branch-consolidation-20261011`；branch：`fix/TASK-SETTINGS-LATEST-20261015`。
-- Base / 开工 HEAD：`c1fae190618be3bb5a4e00208b8f4776ec8c0be5`；被验证最终 head/tree/dirty patch 指纹：待 root 冻结与回读。
-- Node 24.20.0 / npm 11.19.0；Rust/浏览器/OS 与运行版本：待本次回执。
-- 基线 Desktop/Web 2.1.24；候选 2.1.25。此处版本计划不证明构建或发布。
+TASK-SETTINGS-LATEST-20261015：本地授权范围 DONE / PASS。日期 2026-10-15（Asia/Shanghai）。[意图](intent.md)、[规格](spec.md)、[计划](plan.md)、[独立审查](review.md)。
 
-## 本次命令与证据
+## 来源与运行身份
 
-| 命令/检查                                                        | 时间                    | 退出码 | 结果    | 范围与限制                                                                               |
-| ---------------------------------------------------------------- | ----------------------- | ------ | ------- | ---------------------------------------------------------------------------------------- |
-| `git log -1 --format='%H %cs %s'`、`git status --short --branch` | 2026-10-15              | 0      | PASS    | HEAD c1fae190、正确任务分支；设置源码/测试由 root 所有，非最终候选验证                   |
-| `git show c1fae190:config/platform-versions.json`                | 2026-10-15              | 0      | PASS    | 基线 Desktop/Web 2.1.24、Mobile 2.1.1                                                    |
-| `rg -n` 设置几何 tokens                                          | 2026-10-15              | 0      | PASS    | 源码 tokens 1280/240/192；不是实际加载浏览器证据                                         |
-| 当前 `config/platform-versions.json` 回读                        | 2026-10-15              | 0      | PASS    | Desktop/Web 已递增2.1.25，Mobile2.1.1；不是构建或发布证明                                |
-| `npm run governance:check`                                       | 2026-10-15 02:05 +08:00 | 0      | PASS    | 137 tasks / 0 violations；[日志](evidence/governance-check.log)，只证明治理结构          |
-| `npm run features:check`                                         | 2026-10-15 02:05 +08:00 | 0      | PASS    | 37 features / 0 violations；[日志](evidence/features-check.log)，成熟度原状态保持        |
-| `npm run markdown:check`                                         | 2026-10-15 02:05 +08:00 | 0      | PASS    | 122 active files / 0 violations；[日志](evidence/markdown-check.log)，只检查当前文件目标 |
-| `npm run snapshot:check` / `git diff --check`                    | 2026-10-15 02:05 +08:00 | 0      | PASS    | snapshot/lifecycle 4 documents / 0 violations；工作树diff无空白错误                      |
-| Node `assert.deepEqual` 与c1fae190账本/功能状态对比              | 2026-10-15 02:05 +08:00 | 0      | PASS    | 原136条task记录逐项不变；37个feature成熟度逐项不变；只新增本task与FEAT-022关联           |
-| 相关保存单元/故障注入、浏览器回归、完整 `npm run verify`         | 待运行                  | —      | NOT RUN | 由 root 保存当前源日志、失败与退出码                                                     |
-| 当前 Tauri 重建/配置重启与当前 SHA 独立审查                      | 待运行                  | —      | NOT RUN | 不能借旧版本 Native 或 review 代填                                                       |
+- 正确基线：c1fae190618be3bb5a4e00208b8f4776ec8c0be5 / Desktop、Web2.1.24。工作区 D:/kk-studio/.worktrees/branch-consolidation-20261011，分支 fix/TASK-SETTINGS-LATEST-20261015。产品源码冻结2a4e66d154cc61c0ba500bb06b27467b67a782fe；完整门禁head784039e7b9c25f42908acdc67c0430e7c86c27fd；Native测试补修与独立审查head054cd53fffa888a3a3b626917199cbc0b9e0539b。后续文档提交不改变已测产品输入，最终文档SHA另绑定工程外收据。
+- Desktop/Web2.1.25；Mobile2.1.1规划保留。标识com.kkstudio.app、storage keys、credentialRef与provider协议均保留；未做配置迁移。
+- 官方启动命令：在上述cwd运行 start-kk-studio.bat --background --data-dir D:/kk-studio/.analysis/settings-ui-latest-20261015/desktop-official/data。启动器先判旧收据unverified，按锁文件检查244个本地依赖后重建，才打开当前EXE。共享node_modules引用保留在本次.tmp，原目标不改；本地npm ci --ignore-scripts成功，依赖漂移0。
+- 当前EXE：src-tauri/target/release/kk-studio.exe，SHA256 c9c3b4e3295fefebbf1364521e2d45cc612180b6cea618d2bf36b74279242744；inputSHA256 2a09db543e8bdc704d52429514ba8094ab1a2037f9c1b90c447b938dab9961fb。desktopVersion2.1.25，inspectDesktopRelease=reason current / needsBuild false。官方隔离窗口PID66976已正常关闭；日常桌面快捷方式实际打开PID64772，同路径EXE且不带data-dir，继续原用户数据身份。
+- Web production：http://127.0.0.1:1423/；Tauri：http://tauri.localhost/。两端data-runtime-mode=production、entry=src/main.tsx、实际加载assets/index-CQ5GFu08.js。入口链main.tsx→App.tsx→SettingsPanel→SettingsSections→ConnectionSettings→ModelAccessSettings→Provider组件，页面CSS由现有App链路加载。
 
-原始日志/DOM/截图、执行时间、失败与修复后结果由 root 追加本包或引用当前任务证据；不覆盖历史记录。
+## 本次检查
 
-root 2026-10-15 报告：首轮开发回归为7 fail / 5 pass，涉及缓存原始c1源码和1项手机lazy测试竞态，已增加dialog visible等待。原始失败上下文保留在 `.tmp/latest-layout-results/`；新source使用 `.tmp/latest-layout-green/`，目录名不代表结果通过，最终日志/退出码待root归档。发现 `vite.config.ts` 的 `**/.worktrees/**` 过宽忽略使当前worktree源码不刷新，修复为内部 `resolve('.worktrees')` 并保留其他 ignored。当前失败不隐藏，根因结论与修复效果仍须新浏览器/geometry guard证明。
+| 检查                     | 当前结果        | 证据和边界                                                                                                                                            |
+| ------------------------ | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 完整npm run verify       | 退出0 / PASS    | Node1278 pass、14既有skip；Agent199 pass、2既有skip；UI242/0；格式/构建/全部治理门禁通过；Edge629首试通过，0失败/0flaky/0skip；development5步骤PASS   |
+| 开发态定向布局及草稿     | PASS            | layout12/12、CodeBuddy确认/取消2/2、草稿及相关交互18/18；source HMR探针无需重启可见且原字节恢复                                                       |
+| 生产定向回归             | 29/29，retries0 | design-system-pages、最新布局及草稿；全部有效断言保留                                                                                                 |
+| Web/Tauri实际DOM与截图   | PASS            | 1280面板、240分类栏、192接入方式栏；computed accent=#21a673；内容水平溢出0；390手机分类/详情逐级返回                                                  |
+| 官方启动器当前Desktop    | PASS            | 锁文件依赖一致、重新构建/收据/EXE/hash/运行进程及当前版本2.1.25回读；5条既有Rust dead-code警告、既有Vite大chunk警告保留，不调阈值掩盖                 |
+| 当前Native配置与凭据恢复 | PASS            | 20功能、11视觉、1原生提交后缓存未发布阶段、5无秘密元数据检查；正常保存、重载、强制中断及进程重启保持绑定和原密钥；仅唯一synthetic凭据被触及且清理完成 |
+| Native真实目录fixture    | PASS            | 127.0.0.1临时端口，GET /v1/models仅1次，owned Bearer匹配，服务已关闭；不保存配置、不误验证生成，不调用外部Provider                                    |
+| 原primary/index保护      | PASS            | index字节SHA保持不变；仅追加最新启动来源指针，原文件先存SHA备份；原源码/并发改动和用户配置身份保留                                                    |
+| 启动入口                 | PASS            | client:shortcut重新生成新版工作区GUI入口，Desktop目标/工作目录实际回读；原快捷方式metadata另存恢复副本                                                |
+| JS入口预算               | PASS            | 同production构建/Node gzip：冻结2.1.24与本次均962043B、gzip296429B，增量0，预算16384B；无新增依赖                                                     |
+| 独立源码/测试审查        | PASS            | c1fae190→054cd53，由独立上下文检查；两P2已闭合，无未关闭finding；最终纯文档另补审                                                                     |
 
-已直接读取工程外本次证据：
+Node24.20.0 / npm11.19.0；Edge/WebView2真实浏览器，非Chromium替身。原始证据统一保留在工程外 D:/kk-studio/.analysis/settings-ui-latest-20261015，文件名不代表PASS：verify-latest-complete.log、browser-accepted.json、production-runtime.json、native-runtime.json、desktop-build-receipt.json、desktop-credential-recovery-final/provider-credential-recovery.json、native-credential-recovery-final.log、shortcut-before.json、shortcut-after.json、daily-launch-process.json、primary-state-correction.json、bundle-budget.json及本次PNG。
 
-- `D:/kk-studio/.analysis/settings-ui-latest-20261015/runtime-baseline.json`：绑定sourceHead c1fae190、version2.1.24、`http://127.0.0.1:1421/`、development、`src/main.tsx`；实际panel为1280×800，nav列为240px与1038px。对应原图为同目录 `latest-ui-baseline.png`。
-- `D:/kk-studio/.analysis/settings-ui-latest-20261015/defects-before.json`：长名称场景内容宽度/scroll为1423px，超出1280px外壳；反馈矩形y576–620与底部分类栏y547–631重叠。此为修复前失败，不能填入AC成功栏。
+## 验收
 
-这些基线资料证明本次选中了最新2.1.24及其实际缺陷；2.1.25修复效果另取当前source与产物证据。
+AC-1至AC-5均在上述本地范围PASS：最新来源、长文案/短屏可达与提示命中、模型busy/取消/失败/草稿、配置身份与恢复、完整门禁及独立源审查。保存连接与保存此模型能力分开，连接操作紧邻输入；测试连接与刷新目录合并；主动清空已有CodeBuddy路径需确认；读取失败保护沿用新版实现。模型、账号、目录及分类切换保留dirty草稿，clean字段更新为最新目录，型号trim不产生第二份目录项。
 
-## 验收覆盖
+## 失败原件与修正
 
-| AC   | 本次观察                                                              | 状态         |
-| ---- | --------------------------------------------------------------------- | ------------ |
-| AC-1 | 基线2.1.24的Git/runtime/DOM已确认；本次2.1.25刷新与geometry guard待证 | NOT VERIFIED |
-| AC-2 | 长文案/窄屏/短屏溢出、提示遮挡、控件命中与截图待证                    | NOT VERIFIED |
-| AC-3 | 模型列表/详情、busy、取消、返回/关闭与失败反馈待证                    | NOT VERIFIED |
-| AC-4 | 合成旧配置/写失败保护、重载及 Desktop 凭据重启保留待证                | NOT VERIFIED |
-| AC-5 | 当前完整门禁、独立 SHA review、primary/index 保护最终回读待证         | NOT VERIFIED |
+1. 旧primary51fccfc7+修复428a3a2d是误选UI基线，仅保留旧范围历史；本次从c1fae190重做。旧2.1.24源码/便携包及已有验收也不代填当前差异。
+2. 开发首轮7fail/5pass加载cached原始c1组件；Vite忽略整个.worktrees导致不刷新，现限定内部resolve('.worktrees')。390的lazy/返回可见性竞态改为等待dialog并读取当前导航层；HMR真实探针与新布局12PASS。
+3. 草稿RED6失败和CodeBuddy路径重置RED保留；StrictMode初次2GET导致测试误期望1fail/6pass，改为捕获初始读取后断言导航无新增GET/POST，最终18首试PASS。
+4. verify-latest.log格式4文件FAIL；修Prettier。verify-latest-final.log为626pass/2title失败/1flaky；保留隐藏模型页时h2重复已修，未弱化标题断言。单次宽图下游端口hit=false重试通过：本次无canvas源码/CSS变更，确切遮挡原因UNKNOWN，几何风险只属INFERENCE；后续628与最终629首试0flaky，但不把重试当旧轮PASS。
+5. verify-latest-accepted.log为628pass/1phone测试失败：第二主题循环保留了API detail，测试需通过公开返回接入方式恢复methods再继续原断言。29定向及最终完整门禁均通过。
+6. Native首轮旧page.route不能拦截新版Rust原生HTTP目录请求，fixture失败但自有凭据已清理；改为真实loopback服务后20/11/1/5全部PASS。旧FAIL文件desktop-credential-recovery及native-credential-recovery.log保留。
 
-## UI 与运行态记录（待证）
+## 未验范围
 
-- 启动命令/cwd/进程、URL/端口：root 另记；development 固定 1421，production preview 固定 1423，Tauri release 另记。
-- 预期源码入口链：`main.tsx → App.tsx → settings modal → SettingsPanel → 当前分区 / ModelProviderSettings / Provider 组件`；实际加载链待浏览器核对。
-- `data-runtime-mode` / `data-runtime-entry` / `index.html script`、当前 bundle hash、EXE hash/receipt 与 profile：NOT VERIFIED。
-- 视口：390/1099/1920 及实际失败的短屏/长文案；保存、失败、busy、取消、Escape、回焦、回退与重载均待证。
-- 原始 DOM/computed style/元素几何、实际命中、同状态截图路径：NOT VERIFIED；本次沿用用户当前设计，旧 Figma/旧图仅未被覆盖规则的溯源。
-
-## 自查与真实性边界
-
-- 本次实现和回归由 root 继续完成；本包建立不等于实现通过。
-- isolated fixture/合成资料只证明相应本地路径；不外推日常真实资料、系统凭据、真人 CLI/账号、Provider 或付费账单。
-- Desktop 当前重建/重启、Hosted CI、签名安装器、实体手机与用户视觉验收各自待证；Mobile 2.1.1 仍规划。
-- 未对 primary dirty/index、用户配置、秘密或历史证据作写入；最终保护证据由 root 回读。
-- 独立 review 待冻结源码 SHA；dirty 预检和作者自审均不能改名为正式独立 PASS。
-
-## 基线勘误
-
-2026-10-15：用户指出此前误启动旧 UI。primary `51fccfc7879cf90f7caaf3ae8e10af4d97a2aa2c` 与修复 `428a3a2de741a963ce491a49878e50698b14eecd` 属错误基线，其任何旧 PASS 仅保留原版本/范围含义。本次从最新 UI `c1fae190` 重做源和运行验证；已有 2.1.24 验收不能覆盖 2.1.25 的新差异。
-
-结论保持 IN_PROGRESS / NOT_VERIFIED，用户产品验收、合并和发布未发生。新 SHA、配置或构建变化后，按实际影响重新验证。
+测试使用隔离Web profile/data目录与唯一synthetic系统凭据。真人CLI/API账号、付费外部模型生成、日常资料全库恢复、Hosted CI、合并、签名安装器/发布、实体手机及用户视觉接受未发生，不属于本次本地设置修复PASS。Mobile保持规划；FEAT-022保持PARTIAL。原始失败、既有skip和旧产物均未删除。

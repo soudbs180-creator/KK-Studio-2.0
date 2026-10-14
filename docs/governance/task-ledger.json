@@ -5812,8 +5812,8 @@
       "tests/unit/codebuddyConnectionSettings.test.ts",
       "docs"
     ],
-    "status": "IN_PROGRESS",
-    "displayStatus": "进行中",
+    "status": "DONE",
+    "displayStatus": "已完成",
     "priority": "P1",
     "priorityRationale": "用户发现误启动旧UI；设置溢出、遮挡与保存风险需要在最新来源修复并保留原配置",
     "risk": "high",
@@ -5828,12 +5828,12 @@
     ],
     "requirementRefs": ["ledger:TASK-SETTINGS-LATEST-20261015"],
     "featureIds": ["FEAT-022"],
-    "notes": "用户在原设置修复授权后纠正旧UI启动。primary51fccfc7+修复428a3a2d为错基线历史；本次承接c1fae190 / Desktop/Web2.1.24，版本已递增2.1.25。保留配置身份、primary dirty/index与原资料；Mobile2.1.1仍规划。",
-    "openQuestions": "本次源码、运行/配置保留、Desktop构建、独立SHA审查与用户视觉结果待新证据；真人账号/付费Provider/Hosted/签名和实体手机分别验收。",
+    "notes": "用户在原设置修复授权后纠正旧UI启动。primary51fccfc7+修复428a3a2d为错基线历史；本次承接c1fae190 / Desktop/Web2.1.24，版本已递增2.1.25。保留配置身份、primary dirty/index与原资料；Mobile2.1.1仍规划。 当前默认桌面入口已回读并实际打开最新EXE，原primary源码/并发改动/index与原配置身份保留，失败原件保留。",
+    "openQuestions": "本次本地授权范围完成；真人CLI/付费Provider、Hosted/签名发布、实体手机及用户视觉接受按各自范围另验，FEAT-022仍PARTIAL。",
     "lastVerified": "2026-10-15",
     "updated": "2026-10-15",
-    "verification": "基线HEAD c1fae190、Desktop/Web2.1.24和settings tokens1280/240/192已直接回读；当前配置版本已递增2.1.25。已发现Vite watch对**/.worktrees/**过宽忽略使worktree源码不刷新，限定内部resolve('.worktrees')修复与latest geometry回归由root执行。实际最新UI、保存保护、完整回归/当前Desktop与独立SHA审查尚未有最终证据，保持IN_PROGRESS；旧51fcc+428a及已有2.1.24验证仅保留历史范围。",
-    "nextAction": "在最新UI实际失败基础上完成最小修复，确认worktree源码刷新与geometry guard，冻结当前SHA后取得浏览器/保存/Desktop和独立审查证据并同步本包。",
-    "verificationResult": "NOT_VERIFIED"
+    "verification": "本地2.1.25完整verify退出0：Node1278/14既有skip，Agent199/2既有skip，Edge629首试0failure/flaky/skip，UI242/0，development5步；当前Web/Tauri1280/240/192/#21a673/overflow0；官方launcher重建exe c9c3b4e/input2a09db54；Native20功能+11视觉+1中断阶段+5metadata，真实loopback目录一次且owned凭据/fixture清理；独立c1→054源码测试审查PASS。",
+    "nextAction": "保持当前桌面入口指向最新工作区；产品源码改变后按官方launcher重建并重新验证，用户视觉与外部能力另验。",
+    "verificationResult": "PASS"
   }
 ]

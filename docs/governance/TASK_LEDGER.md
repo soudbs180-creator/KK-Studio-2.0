@@ -142,7 +142,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 | TASK-PROTOCOL-CLI-20261014 | 从2.1.21接通Provider协议和CLI实际执行，优化分端控件 | DONE | 已完成 | P1 | TASK-UI-CONSOLIDATE-20261014 | root | 从2.1.22继续真实供应商与真人CLI登录/安装、签名安装器、日常资料和人工视觉验收；最终产物回读工程外current-release哈希收据。 |
 | TASK-222-ACTIONS-20261014 | 2.1.22 CLI、设置与画布按钮真实行为和分端修复 | DONE | 已完成 | P1 | TASK-PROTOCOL-CLI-20261014 | root | 回读最终current-release与独立文档补审；从2.1.23继续真人CLI/供应商、签名安装器、日常资料与实体手机验收，沿用已确认手机布局。 |
 | TASK-223-ACTIONS-20261014 | 2.1.23 CLI、设置与画布按钮实际行为和分端修复 | DONE | 已完成 | P1 | TASK-222-ACTIONS-20261014 | root | 回读最终纯文档审查与current-release产物哈希；真人账号/付费Provider、Hosted、签名安装器、日常资料与Native Mobile由既有开放任务分别继续。 |
-| TASK-SETTINGS-LATEST-20261015 | 在最新 UI 修复设置溢出、提示遮挡与配置保存风险 | IN_PROGRESS | 进行中 | P1 | TASK-223-ACTIONS-20261014 | root | 在最新UI实际失败基础上完成最小修复，确认worktree源码刷新与geometry guard，冻结当前SHA后取得浏览器/保存/Desktop和独立审查证据并同步本包。 |
+| TASK-SETTINGS-LATEST-20261015 | 在最新 UI 修复设置溢出、提示遮挡与配置保存风险 | DONE | 已完成 | P1 | TASK-223-ACTIONS-20261014 | root | 保持当前桌面入口指向最新工作区；产品源码改变后按官方launcher重建并重新验证，用户视觉与外部能力另验。 |
 
 ## TASK-FIX-PUSH-GUARD-SPACES-001 — 修复 Windows Git pre-push 空格及长路径启动
 
@@ -2736,7 +2736,7 @@ Historical DONE applies only to the linked verification scope. The full-project 
 
 - Goal: 使用最新绿色 UI 完成已授权设置修复，保留原配置并验证当前加载来源
 - Scope: 最新设置外壳与模型接入布局/交互、长文案与短屏可达性、提示和保存失败保护、worktree Vite源码监听、最新geometry回归及当前Browser/Desktop证据
-- Display status: 进行中
+- Display status: 已完成
 - Priority: P1 — 用户发现误启动旧UI；设置溢出、遮挡与保存风险需要在最新来源修复并保留原配置
 - Requirement refs: ledger:TASK-SETTINGS-LATEST-20261015
 - Feature IDs: FEAT-022
@@ -2745,8 +2745,8 @@ Historical DONE applies only to the linked verification scope. The full-project 
 - Branch: `fix/TASK-SETTINGS-LATEST-20261015`
 - Worktree: `D:/kk-studio/.worktrees/branch-consolidation-20261011`
 - Modules: src/components/settings, src/features/creation, src/domain/settings.ts, vite.config.ts, config/platform-versions.json, tests/browser, tests/unit/codebuddyConnectionSettings.test.ts, docs
-- Verification: NOT_VERIFIED — 基线HEAD c1fae190、Desktop/Web2.1.24和settings tokens1280/240/192已直接回读；当前配置版本已递增2.1.25。已发现Vite watch对**/.worktrees/**过宽忽略使worktree源码不刷新，限定内部resolve('.worktrees')修复与latest geometry回归由root执行。实际最新UI、保存保护、完整回归/当前Desktop与独立SHA审查尚未有最终证据，保持IN_PROGRESS；旧51fcc+428a及已有2.1.24验证仅保留历史范围。
+- Verification: PASS — 本地2.1.25完整verify退出0：Node1278/14既有skip，Agent199/2既有skip，Edge629首试0failure/flaky/skip，UI242/0，development5步；当前Web/Tauri1280/240/192/#21a673/overflow0；官方launcher重建exe c9c3b4e/input2a09db54；Native20功能+11视觉+1中断阶段+5metadata，真实loopback目录一次且owned凭据/fixture清理；独立c1→054源码测试审查PASS。
 - Evidence: [docs/changes/2026-10-15-settings-latest-ui/intent.md](../../docs/changes/2026-10-15-settings-latest-ui/intent.md), [docs/changes/2026-10-15-settings-latest-ui/spec.md](../../docs/changes/2026-10-15-settings-latest-ui/spec.md), [docs/changes/2026-10-15-settings-latest-ui/plan.md](../../docs/changes/2026-10-15-settings-latest-ui/plan.md), [docs/changes/2026-10-15-settings-latest-ui/verification.md](../../docs/changes/2026-10-15-settings-latest-ui/verification.md), [docs/changes/2026-10-15-settings-latest-ui/review.md](../../docs/changes/2026-10-15-settings-latest-ui/review.md)
-- Next action: 在最新UI实际失败基础上完成最小修复，确认worktree源码刷新与geometry guard，冻结当前SHA后取得浏览器/保存/Desktop和独立审查证据并同步本包。
+- Next action: 保持当前桌面入口指向最新工作区；产品源码改变后按官方launcher重建并重新验证，用户视觉与外部能力另验。
 - Last verified: 2026-10-15
 - Updated: 2026-10-15

@@ -1,10 +1,10 @@
 # 当前进度
 
-## 2026-10-15 最新 UI 设置修复（IN_PROGRESS）
+## 2026-10-15 最新 UI 设置修复（本地DONE/PASS）
 
-TASK-SETTINGS-LATEST-20261015 在 `fix/TASK-SETTINGS-LATEST-20261015` / `D:/kk-studio/.worktrees/branch-consolidation-20261011` 从最新 UI `c1fae190618be3bb5a4e00208b8f4776ec8c0be5` 继续已授权设置修复：溢出、提示遮挡、模型布局/交互和保存风险，保留原配置与用户数据。基线 Desktop/Web2.1.24，候选2.1.25；1280/240/192、绿色及手机逐级导航沿用当前规范。primary `51fccfc7` 与修复 `428a3a2d` 是误启动的旧 UI 基线，旧证据保留历史含义，不能作为本次完成依据。当前实现/浏览器/保存回归、Desktop 构建和独立 SHA review 均 NOT_VERIFIED；已有2.1.24验收也不自动覆盖本次差异。primary 并发 dirty/index 与原资料身份保留。
+TASK-SETTINGS-LATEST-20261015从正确最新UI c1fae190承接，Desktop/Web2.1.25保留1280/240/192、默认绿色与手机分级导航。设置长名称、提示避让、主动清空确认、能力/连接/分类草稿、型号trim与连接操作范围已修；原新版async owner锁、协议/CLI及配置身份保留。完整verify退出0：Node1278/14既有skip，Agent199/2既有skip，Edge629首试0flaky/0skip，UI242/0，development5步骤。当前Web和实际官方Tauri几何与bundle一致；EXEc9c3b4e/input2a09db54，Native20功能+11视觉+1中断阶段+5无秘密metadata通过，owned凭据/fixture清理完成。默认Desktop入口已切到最新工作区并实际启动；primary旧代码/并发dirty/index保留，只追加来源指针。独立c1→054源/测试审查PASS，无finding；本次所有失败与首轮Native旧fixture纠正留证。入口gzip增量0，无新依赖；Mobile/外部Provider/Hosted/签名与用户视觉接受另验。
 
-[本次意图](changes/2026-10-15-settings-latest-ui/intent.md)、[计划](changes/2026-10-15-settings-latest-ui/plan.md)、[验证](changes/2026-10-15-settings-latest-ui/verification.md)、[审查](changes/2026-10-15-settings-latest-ui/review.md)。以下2.1.24记录保留其原版本与范围。
+[当前验证](changes/2026-10-15-settings-latest-ui/verification.md)和[独立审查](changes/2026-10-15-settings-latest-ui/review.md)。以下旧版本保留原义；primary51fcc+428a错误UI基线不作最新证据。
 
 ## 2026-10-15 2.1.24按钮续修本机交付
 
