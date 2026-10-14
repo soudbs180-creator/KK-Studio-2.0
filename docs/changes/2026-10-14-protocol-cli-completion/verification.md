@@ -32,3 +32,7 @@
 ## 7113901b与旧检测取消错误补充
 
 7113901b的完整verify退出0：Node1214pass/14既有skip，Agent172pass/2既有skip，production550首试/零flaky，UI241/0，development5步骤PASS；官方Agent no-bundle构建退出0、4278生产文件，未先运行该EXE。独立复审发现编辑新草稿导致旧ref失效后cancel:/release错误会被吞掉；保持原有编辑行为，将旧检测取消失败通过现有独立feedback提示，不覆盖新draft或新busy。正常点击/编辑的browser RED复现后20/20 GREEN（含原有交互与手机导航）通过。短暂fieldset锁定候选未提交且已回撤，失败原件保留，不能作为最终UI。最新修复提交的完整门禁、新EXE与Native/portable仍另验。
+
+## 66a144ee全量发现的展开间距
+
+66a144ee完整verify浏览器550pass/1fail（首次与重试均差1px），development因前步失败未执行，原目录与JSON保留。实际同帧DOM：工具栏40px、textarea bottom66px，空隙7px；旧CSS仍按35px预留导致不足，不是舍入或字体推断。改为共享`--kk-control-h-lg`，同一时点读取边界并保持原>=8px断言，再覆盖动画完成状态；28项控件/画布/响应式首试GREEN。新最终提交完整复验/构建/Native仍待回执。

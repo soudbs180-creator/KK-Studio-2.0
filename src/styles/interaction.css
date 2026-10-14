@@ -151,7 +151,7 @@
 .creation-composer.expanded:has(.reference-slots) textarea {
   top: 110px;
   /* Anchor to the controls throughout the shell's expansion animation. */
-  bottom: calc(var(--kk-space-3) + 19px + 35px);
+  bottom: calc(var(--kk-space-3) + 19px + var(--kk-control-h-lg));
   height: auto;
 }
 .reference-slot-grid {
