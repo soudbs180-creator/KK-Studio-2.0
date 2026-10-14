@@ -1,7 +1,7 @@
 # Verification：全页面新UI收敛与主线集成
 
 - Task ID：TASK-UI-FULL-20261015；状态：REVIEW / NOT_VERIFIED（本地验收PASS，Hosted/PR/main待验）；日期2026-10-15（Asia/Shanghai）。
-- 最新本地组合：c498已提交head加agentPackage单测试fixture canonical root修复，short-temp run2完整Node及lint/typecheck/format均PASS；产品UI/安全脚本/Rust/config未变，旧verify-5 Browser747/Native56/Rust163保持未变产品范围。最终修复提交SHA、精确独立复审与新Hosted待验，f090/c498 Hosted失败均保留。
+- 最新本地组合：54a2已提交head加generationServerRestart单测试启动握手修复；实际8.3 TEMP完整Node1304PASS/14既有skip与lint/typecheck/format均PASS。产品/config/Rust不变，Browser747/Native56/Rust163沿用未变产品范围；最终修复提交head、独立exact-SHA审查与新Hosted待验，所有先前Hosted失败保持原证据。
 - 产品source HEAD（本地验收身份）：241f3050124ad7773ced0b47a55629373177205e；本地main承接提交1653966f652390d93d490f90c0b7e9a9423f4026，修复checkpoint为0f506ae10e59d90222b399bbd54298849a8ca55f。实际fetch与API确认origin/main仍为694a00607f6f63de1b8c43d0ebb117adf5d34f67，本地任务分支承接不表示远端main已落地。首次完整verify与正式review绑定165，241产品源码加本轮test-only音频定位修正已完成verify-3本地验收；最终提交HEAD及Hosted/PR/main仍待完成。
 - 版本脚本已真实递增Desktop/Web2.1.27，Mobile2.1.1规划不变；165的ui:check已PASS。首次完整verify在Browser阶段失败；241完整verify-3已PASS；当前2.1.27隔离Native56checks与资源字节身份已通过，精确source/integration review241均PASS。历史2.1.26的635browser/38Native保持原SHA范围。
 - 独立数据/配置身份和原件保持；primary实际254条dirty、109登记worktree只读保留，未reset/clean/清理或改原index。
@@ -152,3 +152,12 @@ source agent仅获tests/unit/agentPackage.test.ts写入权，拟用realpath规�
 首轮`short-temp-test-1.log`1315总数为1299 PASS/2 FAIL/14skip，agentPackage全部修复；两失败仅原gitPushGuardPaths fixture因本次自建TEMP过深，canonical cwd/config路径越过Win32前置条件。`short-temp-git-path-canary.log`保留同两失败，不归作产品新bug，也未改Git guard。换用本次owned较浅actual8.3根 `C:\KK-UI-~1\full\LONG-T~1`（canonical `C:\kk-ui-temp-20261015\full\long-temp-name`），收据`short-temp-root-3.json`；canary2为7 PASS/3 Linux-emulation skip/0fail，保留policy路径>260、cwd+config<260原测试条件。
 
 最终`short-temp-test-2.log`1315总数1301 PASS/14既有platform skip/0fail；`short-temp-lint-2.log`、`short-temp-typecheck-2.log`、`short-temp-format-check-2.log`全部exit0。该轮为short-temp-verification（完整Node及静态），不是完整verify-6；产品/config/Rust未变，原Browser747/0实际retry、Native56、Rust163仅沿用未变产品范围。当前修复本地PASS，最终提交head/独立exact-SHA审查/新Hosted完整门禁/PR59/main/post-main继续PENDING；整体REVIEW/NOT_VERIFIED，main仍694。
+
+
+## 54a2 Hosted首次ready超时及启动夹具修复（新HEAD待验）
+
+交付head `54a2d71285f024b2bc7e4f1a66b592bc5ec0a91b` 独立aggregate review PASS、Delivery706/0；但[quality38645328109](https://github.com/soudbs180-creator/KK-Studio-2.0/actions/runs/38645328109) verify实际FAIL：Node1315总数1301 PASS/1 FAIL/13skip，仅generationServerRestart首次ready（line156→until29）CONDITION_TIMEOUT约6747ms。尚未POST、调用Provider、恢复、Browser或Rust；旧fixture未输出捕获的child日志，Hosted当次child alive/crash UNKNOWN，不能声称已确定slow CI。c498当次gateway2726ms/全Node64802ms与54全Node312748ms仅是variance线索。54 push run38645320833仍在旧head完整验证，其结果PENDING，不因产品未变忽略后续失败。
+
+已实证的是测试计时缺口：`gateway-startup-delay-red-1.log` actual child preload7s、首次ready6553ms，同一栈RED；`gateway-startup-delay-green-1.log`两次冷启动各7s、真实restart15297ms<原20s，4/4 PASS，含exit/error/abort三个负向。source agent只修改`tests/unit/generationServerRestart.test.ts`（84+/14-）：每child stdout完整own-port marker后显式HTTP200+health identity握手；早退/error/原test signal abort拒绝。原20s、postsubmit/recovery until60×100及全部断言保持，产品无变更。`gateway-startup-focused-green-1.log`普通focused21 PASS；这些不能倒推Hosted当次child的真实状态。
+
+真实8.3 TEMP最终`gateway-final-test-1.log`1318总数1304 PASS/14既有platform skip/0fail；`gateway-final-lint-1.log`、`gateway-final-typecheck-1.log`、`gateway-final-format-check-1.log`全部exit0。此为完整Node+静态检查，不是完整verify-6；Browser747/0实际retry、Native56、Rust163仅沿用未变产品范围。新修复HEAD待提交、独立exact-SHA复审和新Hosted完整门禁待验；旧54 push结果亦待回读。任务REVIEW/整体NOT_VERIFIED，PR59未合并、main仍694。

@@ -39,3 +39,6 @@ source agent仅获tests/unit/agentPackage.test.ts写入权，拟用realpath规�
 
 
 fixture修复本地补证：short-temp run2本地PASS：Node1315=1301PASS/14既有platform skip/0fail，lint/typecheck/format全部exit0；这不是完整verify-6。真实8.3 fixture RED11项3PASS/8FAIL复现Hosted，GREEN11/11PASS/0skip，junction/unowned-stage/identity-swap/rollback守卫均实际执行；只改agentPackage测试fixture根await realpath（4+/1-），产品安全脚本零变更。 首轮短TEMP全Node的两个gitPushGuardPaths失败来自自建目录过深，原log和canary失败保留；较浅actual8.3根下canary7PASS/3Linux skip、完整Node/静态PASS，未改Git guard。此为dirty修复证明，最终提交head独立exact-SHA复审与新Hosted仍PENDING，main694/PR59未合并。
+
+
+54a2后续审查边界：该精确head aggregate PASS/Delivery706/0后quality38645328109首次gateway ready超时（Node1301PASS/1FAIL/13skip），旧child日志缺失，alive/crash UNKNOWN；c498/54时长差仅线索，不确认为slow CI。actual child preload7s同栈RED已复现；单测试stdout own-port marker→HTTP200/health identity握手、exit/error/test abort拒绝，保留20s及提交/恢复全部断言。延迟GREEN4/4、focused21PASS，实际8.3 Node1304PASS/14skip及静态PASS；产品无变更、非完整verify-6。新修复提交head独立exact-SHA审查与新Hosted尚未完成，旧54 push38645320833仍PENDING，main694/PR59未合并。

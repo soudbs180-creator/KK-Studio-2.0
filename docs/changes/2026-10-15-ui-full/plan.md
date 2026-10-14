@@ -38,3 +38,7 @@
 
 
 最新本地完成：short-temp run2本地PASS：Node1315=1301PASS/14既有platform skip/0fail，lint/typecheck/format全部exit0；这不是完整verify-6。真实8.3 fixture RED11项3PASS/8FAIL复现Hosted，GREEN11/11PASS/0skip，junction/unowned-stage/identity-swap/rollback守卫均实际执行；只改agentPackage测试fixture根await realpath（4+/1-），产品安全脚本零变更。 首轮短TEMP Node1299/2fail/14skip与canary1两失败保留；较浅actual8.3根下canary7PASS/3Linux skip、完整Node1301/14skip及静态通过。原Browser747/Native56/Rust163沿用未变产品范围；最终修复提交head精确独立审查、新Hosted完整门禁、PR59/main/post-main仍未完成。
+
+
+- [x] 对54a2 Hosted gateway首次ready超时实证启动夹具计时缺口：preload7s同栈RED，双冷启动GREEN4/4与focused21PASS；仅测试84+/14-，保留20s及提交/恢复断言。实际8.3完整Node1304PASS/14skip、lint/typecheck/format PASS，不称完整verify-6。
+- [ ] 回读旧54 push38645320833；提交新修复head并独立exact-SHA复审、新Hosted完整门禁、PR59普通合并和post-main。Hosted当次child alive/crash仍UNKNOWN，时长variance不是slow CI根因证据。

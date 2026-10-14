@@ -28,10 +28,45 @@ async function until<T>(read: () => Promise<T>, done: (value: T) => boolean) {
   }
   throw new Error("CONDITION_TIMEOUT");
 }
+function gatewayListening(
+  child: ChildProcess,
+  port: number,
+  signal: AbortSignal,
+) {
+  return new Promise<void>((resolve, reject) => {
+    let output = "";
+    const finish = (error?: Error) => {
+      child.stdout?.off("data", data);
+      child.off("error", failed);
+      child.off("exit", exited);
+      signal.removeEventListener("abort", aborted);
+      if (error) reject(error);
+      else resolve();
+    };
+    const data = (chunk: Buffer) => {
+      output += String(chunk);
+      if (
+        output.includes(
+          `KK Generation Gateway listening on 127.0.0.1:${port}\n`,
+        )
+      )
+        finish();
+    };
+    const failed = (error: Error) => finish(error);
+    const exited = (code: number | null) =>
+      finish(new Error(`Gateway exited before listening: ${code}`));
+    const aborted = () => finish(new Error("Gateway startup aborted"));
+    child.stdout?.on("data", data);
+    child.once("error", failed);
+    child.once("exit", exited);
+    signal.addEventListener("abort", aborted, { once: true });
+    if (signal.aborted) aborted();
+  });
+}
 test(
   "actual Gateway process restart resumes async Provider ID, retains SQLite balance, and never resubmits",
   { timeout: 20000 },
-  async () => {
+  async (t) => {
     let submissions = 0;
     let completed = false;
     const provider = createServer((req, res) => {
@@ -130,18 +165,19 @@ test(
       child.stderr?.on("data", (b) => {
         output += String(b);
       });
-      return child;
+      return { child, listening: gatewayListening(child, port, t.signal) };
     };
-    let child = launch();
+    let running = launch();
     const url = `http://127.0.0.1:${port}`;
-    const ready = () =>
-      until(async () => {
-        try {
-          return (await fetch(url + "/health")).ok;
-        } catch {
-          return false;
-        }
-      }, Boolean);
+    const ready = async () => {
+      await running.listening;
+      const response = await fetch(url + "/health", { signal: t.signal });
+      assert.equal(response.status, 200);
+      assert.deepEqual(await response.json(), {
+        status: "ok",
+        service: "kk-generation-gateway",
+      });
+    };
     const get = (path: string, method = "GET", body?: unknown) =>
       fetch(url + path, {
         method,
@@ -171,9 +207,9 @@ test(
           },
         (j) => j.outputs[0].status === "waiting_provider",
       );
-      await stop(child);
+      await stop(running.child);
       completed = true;
-      child = launch();
+      running = launch();
       await ready();
       const result = await until(
         async () =>
@@ -188,8 +224,42 @@ test(
       assert.equal(output.includes("process-test-access-token"), false);
       assert.equal(output.includes("result.png"), false);
     } finally {
-      await stop(child);
+      await stop(running.child);
       await new Promise<void>((r) => provider.close(() => r()));
     }
   },
 );
+
+for (const mode of ["exit", "error"] as const)
+  test(`Gateway startup rejects child ${mode} before listening`, async (t) => {
+    const child = spawn(
+      mode === "exit"
+        ? process.execPath
+        : process.execPath + ".missing-gateway-test",
+      ["-e", "process.exit(7)"],
+      { windowsHide: true, stdio: ["ignore", "pipe", "pipe"] },
+    );
+    try {
+      await assert.rejects(
+        gatewayListening(child, 4318, t.signal),
+        mode === "exit" ? /Gateway exited before listening: 7/ : /ENOENT/,
+      );
+    } finally {
+      await stop(child);
+    }
+  });
+
+test("Gateway startup rejects an aborted wait", async () => {
+  const controller = new AbortController();
+  const child = spawn(process.execPath, ["-e", "setInterval(() => {}, 1000)"], {
+    windowsHide: true,
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  const listening = gatewayListening(child, 4318, controller.signal);
+  try {
+    controller.abort();
+    await assert.rejects(listening, /Gateway startup aborted/);
+  } finally {
+    await stop(child);
+  }
+});

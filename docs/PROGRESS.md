@@ -15,6 +15,8 @@
 
 - 最新短TEMP本地PASS：真实8.3 fixture11项RED3PASS/8FAIL→GREEN11PASS/0skip，只有测试fixture await realpath 4+/1-，产品安全脚本无变更。首轮完整Node1299PASS/2FAIL/14skip及canary1失败来自自建TEMP过深的git路径前置条件；较浅actual8.3根下canary7PASS/3Linux skip、run2 Node1301PASS/14skip和lint/typecheck/format全部PASS。不是完整verify-6；Browser747/Native56/Rust163沿用未变产品范围，最终head/新Hosted/PR59/main待验，REVIEW/NOT_VERIFIED。
 
+- 最新54a2独立aggregate PASS/Delivery706/0，但quality38645328109 Node1301PASS/1FAIL/13skip，仅首次gateway ready超时；POST/Provider/恢复/Browser/Rust未运行，未输出child日志故alive/crash UNKNOWN，时长差不定slow CI。单测试握手84+/14-实证preload7s RED→双冷启动4GREEN/focused21PASS，保留20s及恢复断言；实际8.3 Node1318=1304PASS/14skip与静态全PASS，非完整verify-6。产品未变，Browser747/Native56/Rust163沿用；新head/独立review/新Hosted/PR59/main及旧54 push38645320833结果待验，REVIEW/NOT_VERIFIED。
+
 ## 2026-10-15 最新 UI 设置修复（本地DONE/PASS）
 
 TASK-SETTINGS-LATEST-20261015从正确最新UI c1fae190承接，Desktop/Web2.1.25保留1280/240/192、默认绿色与手机分级导航。设置长名称、提示避让、主动清空确认、能力/连接/分类草稿、型号trim与连接操作范围已修；原新版async owner锁、协议/CLI及配置身份保留。完整verify退出0：Node1278/14既有skip，Agent199/2既有skip，Edge629首试0flaky/0skip，UI242/0，development5步骤。当前Web和实际官方Tauri几何与bundle一致；EXEc9c3b4e/input2a09db54，Native20功能+11视觉+1中断阶段+5无秘密metadata通过，owned凭据/fixture清理完成。默认Desktop入口已切到最新工作区并实际启动；primary旧代码/并发dirty/index保留，只追加来源指针。独立c1→054源/测试审查PASS，无finding；本次所有失败与首轮Native旧fixture纠正留证。入口gzip增量0，无新依赖；Mobile/外部Provider/Hosted/签名与用户视觉接受另验。
